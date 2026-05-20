@@ -1,47 +1,57 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053763E8C75;
-	Wed, 20 May 2026 13:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7FC3EC2CE;
+	Wed, 20 May 2026 14:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779284434; cv=none; b=C+ebFXlzizMECia69yS9ZCv07yNzjn4Ps+qOpXyHXnHHmBiIw1KnKtYWGG5+sqDYRxsCwZkymbdrfJLVhFM5SxY3ZU4QClRmRYc0i0kGiqnPCXICW5/SIvqXnmqlm+UwAkTy+Kj8l7wEKWhsT/Qd9HLaZyvmuVzIP7uMIh9IiZ4=
+	t=1779287506; cv=none; b=CjvhbPuqUi7bpoXXZyKArKhdMlIm2P6p+myZqu1dAjqSwDpXepgCeVUf//iRk+Yqfv1o/BwVNe1AvnF9rbH7AkfTAZr2GOYXmgr51Lv2DolEtDGW8aIb58+KJYdeRWpy8Bdbcne6CXOZ5pLCkzTGr5BvJmi8GcgxsI9zaIZ7KvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779284434; c=relaxed/simple;
-	bh=ysieHJgULLrDz40Hw9B33+kWYMHRAEGf4bYsWCZnjGc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KJ7rPl9KkijY6U8qFgI1iEQ+lBVXOLaJDbTNPMgFroT5cvz+c0csVwbcYtAPN+pl/Wf8JuZTnLelk33NpqHdsapob4x6WztV4CNgOA1yxaUa+vF32jxyUrfRVjWXdeTVSLjTrb5rxZHln7iElFax64fCp6DGoUyXPwQpYfWksHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CrWZT/Wa; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1779287506; c=relaxed/simple;
+	bh=6ccqmCGqz/HpAmPfEsckEGefveGaHqzhJd05zzrUCvY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iDKg8WHsTKYr1bx0Lq/4mFi+0w5wjN4/Y5TIQbTf+OxXxb3OvD8OJEJ0j1oXL3uWPeBxIGUMjfIvTnyrejvN0gMOzyXpyIq5LZ7kNplk0o0wdJLOv3BuVif6xgVQs89kdkJ1PIa2n0d5StDYgYT1oAKX4AHhZ/mz93IA5aIlcRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LdupXEP+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CrWZT/Wa"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1779284415; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=zz6r7l/Raw9+q6fJMv+zgPcO9HIwuiNFYsMU6mgqg9I=;
-	b=CrWZT/WaKJc51o6idrEfzC55+I0eHFDcnCW87XeRTCpzbxJz/9loPntf3yYTjavNjeiwZvDDzzwv94gH/uOE1TLZSMjezLF8iUBZ77BvdguiBQ7M40JbIOdB/Q8/1BgE+EAIbY21+KahsPI/DCIHTr8CFNy85Ews9ME5uyBLVTY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X3J2wot_1779284410;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X3J2wot_1779284410 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 20 May 2026 21:40:14 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	dapeng1.mi@linux.intel.com,
-	pjw@kernel.org,
-	alex@ghiti.fr,
-	guoren@kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LdupXEP+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A421F00897;
+	Wed, 20 May 2026 14:31:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779287504;
+	bh=4wqF2syvd/6X3KHXfFgHP9JmZv7Goy11NEgHhMwEGm8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=LdupXEP+svoNI4R28eY8YaLngiyxhltn+W794u9sBohWtGqvzUzL5EepScIPiwp6D
+	 rtl3vihRHWEBBBR4s8NYybqwAYAODI/r43gOtgXZioYK6Kiq+Baq6YUCQQIBNRRdqj
+	 LdPUvE6u7IUPIY60f7JI65lVDE6rnANCfdCS2L9zozDp/rt8FXn/jcXZl+lmSVl5Ni
+	 qDxsy34udVl7JnKJLaGMrf48a4Tumlc9ogOIBAYq6ULcvEnkTZ5nB5gQ8niRttDY1l
+	 gLf+wLiKmDgDACGNALH4TR3xYcd/rtYOGWlzNAU5EpO0y3f7+zDjgss0NXOR9pSUCf
+	 rfe1a2vuYACpw==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Chen Pei <cp0613@linux.alibaba.com>
-Subject: [PATCH v3] perf riscv: Add SDT argument parsing for RISC-V
-Date: Wed, 20 May 2026 21:40:04 +0800
-Message-ID: <20260520134004.30573-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
+	bpf@vger.kernel.org,
+	llvm@lists.linux.dev,
+	bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH stable 6.1 0/3] perf build fixes
+Date: Wed, 20 May 2026 10:31:37 -0400
+Message-ID: <stable-reply-0002-perf-build-6.1@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260519185154.2987285-1-florian.fainelli@broadcom.com>
+References: <20260519185154.2987285-1-florian.fainelli@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,235 +60,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement __perf_sdt_arg_parse_op_riscv() to convert RISC-V GCC-generated
-SDT probe operands into uprobe-compatible format, and register it in the
-perf_sdt_arg_parse_op() dispatcher for EM_RISCV.
+> This patch series contains "perf" build fixes specific to 6.1. We have
+> seen occasional build failures in our CI looking like these:
+[...]
+> Ian Rogers (3):
+>   perf build: Conditionally define NDEBUG
+>   perf parse-events: Make YYDEBUG dependent on doing a debug build
+>   perf build: Disable fewer bison warnings
 
-RISC-V GCC uses the 'nor' constraint for SDT arguments, producing operands
-in the following formats:
+Thanks for the series.
 
-  Format       Example      Uprobe format
-  -----------  -----------  -------------
-  register     a0           %a0
-  memory (+)   8(a0)        +8(%a0)
-  memory (-)   -20(s0)      -20(%s0)
-  constant     99           (skip, not supported by uprobe)
+Patch 3/3 (ddc8e4c96692) has an upstream Fixes: follow-up,
+878460e8d0ff8 ("perf build: Remove -Wno-unused-but-set-variable from
+the flex flags when building with clang < 13.0.0"), which we need on
+6.1 alongside 3/3 to keep clang<13 perf builds working. Without it,
+3/3 unconditionally adds -Wno-unused-but-set-variable and drops the
+-Wno-unknown-warning-option guard that was previously gated by
+BISON_GE_35, so clang 11/12 fails under WERROR=1.
 
-Key differences from other architectures:
- - Register names use ABI aliases (a0-a7, t0-t6, s0-s11, sp, ra, etc.)
-   without any '%' prefix, unlike x86 (%rax) or arm64 (x0).
- - Memory operands use OFFSET(REG) syntax where OFFSET may be negative,
-   unlike arm64's [sp, NUM] or powerpc's NUM(%rREG).
+878460e8d0ff8 does not cherry-pick cleanly onto 6.1 - it references
+the 'version-lt3' make macro (introduced by a9b451509565d, not in 6.1)
+and bpf-filter-flex.o (no such file in 6.1's tools/perf). I wasn't
+comfortable resolving that conflict blind on a 6.1-only perf change.
 
-Two regexes are used:
- - SDT_OP_REGEX1: matches RISC-V ABI register names saved in pt_regs
- - SDT_OP_REGEX2: matches [-]NUM(REG) memory operands
+Could you send a v2 6.1 series that includes 878460e8d0ff8 adapted to
+6.1 (or an equivalent 6.1-specific patch that preserves the
+-Wno-unknown-warning-option guard for clang<13)? I'll queue the whole
+thing once that piece is in.
 
-Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Guo Ren <guoren@kernel.org>
----
-
-Tested on RISC-V QEMU(rv64gc) with GCC-generated SDT probes.
-Requires systemtap-sdt-dev (provides <sys/sdt.h>) on the target system.
-
-  # cat sdt_test.c
-  #include <sys/sdt.h>
-  #include <stdio.h>
-  void my_func(int a, long b) {
-      DTRACE_PROBE2(myapp, my_probe, a, b);
-      printf("a=%d b=%ld\n", a, b);
-  }
-  int main() { my_func(42, -100); return 0; }
-
-  # gcc -O0 -Wl,--build-id -o sdt_test_O0 sdt_test.c  # stack args: -20(s0)
-  # gcc -O2 -Wl,--build-id -o sdt_test_O2 sdt_test.c  # reg args:   a0
-  # perf buildid-cache --add sdt_test_O0
-  # perf buildid-cache --add sdt_test_O2
-  # find ~/.debug -name "probes" | xargs cat
-  p:sdt_myapp/my_probe .../sdt_test_O0:0x530 arg1=-20(%s0):s32 arg2=-32(%s0):s64
-  p:sdt_myapp/my_probe .../sdt_test_O2:0x538 arg1=%a0:s32 arg2=%a1:s64
-
-Changes in v3:
- - Add two Reviewed-by tags.
- - No actual update, just to re-trigger sashiko's review.
-
-Changes in v2:
- - Remove 'zero' (x0) from register regexes.
- - Fix sdt_init_op_regex() to return -ret on error.
-
- .../util/perf-regs-arch/perf_regs_riscv.c     | 128 ++++++++++++++++++
- tools/perf/util/perf_regs.c                   |   3 +
- tools/perf/util/perf_regs.h                   |   1 +
- 3 files changed, 132 insertions(+)
-
-diff --git a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c b/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
-index 5b5f21fcba8c..bf769304c97c 100644
---- a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
-+++ b/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
-@@ -1,8 +1,136 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <errno.h>
-+#include <regex.h>
-+#include <string.h>
-+#include <linux/kernel.h>
-+#include <linux/zalloc.h>
-+
-+#include "../debug.h"
- #include "../perf_regs.h"
- #include "../../arch/riscv/include/perf_regs.h"
- 
-+/*
-+ * RISC-V SDT argument formats (GCC 'nor' constraint):
-+ *
-+ * Register:  REG        e.g. a0, t1, s0, sp
-+ * Memory:    NUM(REG)   e.g. 8(a0), -20(s0)
-+ * Constant:  NUM        e.g. 99  (not supported by uprobe, skip)
-+ *
-+ * Note: 'zero' (x0) is hardwired to 0 and not in pt_regs; skip it.
-+ *
-+ * Uprobe target format:
-+ *   Register: %REG       e.g. %a0
-+ *   Memory:   +NUM(%REG) or -NUM(%REG)
-+ */
-+
-+/* RISC-V register ABI names: ra, sp, gp, tp, t0-t6, s0-s11, a0-a7 */
-+#define SDT_OP_REGEX1  "^(ra|sp|gp|tp|t[0-6]|s[0-9]|s1[01]|a[0-7])$"
-+
-+/* RISC-V memory operand: [-]NUM(REG) */
-+#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((ra|sp|gp|tp|t[0-6]|s[0-9]|s1[01]|a[0-7])\\)$"
-+
-+static regex_t sdt_op_regex1, sdt_op_regex2;
-+
-+static int sdt_init_op_regex(void)
-+{
-+	static int initialized;
-+	int ret = 0;
-+
-+	if (initialized)
-+		return 0;
-+
-+	ret = regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-+	if (ret)
-+		goto error;
-+
-+	ret = regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-+	if (ret)
-+		goto free_regex1;
-+
-+	initialized = 1;
-+	return 0;
-+
-+free_regex1:
-+	regfree(&sdt_op_regex1);
-+error:
-+	pr_debug4("Regex compilation error.\n");
-+	return -ret;
-+}
-+
-+/*
-+ * Parse OP and convert it into uprobe format.
-+ * Possible variants of OP (RISC-V, GCC 'nor' constraint):
-+ *
-+ *   Format         Example       Uprobe
-+ *   ----------------------------------------
-+ *   REG            a0            %a0
-+ *   NUM(REG)       8(a0)         +8(%a0)
-+ *   -NUM(REG)      -20(s0)       -20(%s0)
-+ *   NUM            99            (skip, constant not supported)
-+ */
-+int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op)
-+{
-+	int ret, new_len;
-+	regmatch_t rm[4];
-+	char prefix;
-+
-+	/*
-+	 * Constant argument: pure integer with no trailing '(' (e.g. "99", "-1").
-+	 * uprobe does not support immediate values, so skip them.
-+	 * Memory operands like "8(a0)" or "-20(s0)" contain '(' so are NOT
-+	 * treated as constants here; they will be matched by REGEX2 below.
-+	 */
-+	if (strchr(old_op, '(') == NULL &&
-+	    ((*old_op >= '0' && *old_op <= '9') ||
-+	     (*old_op == '-' && old_op[1] >= '0' && old_op[1] <= '9'))) {
-+		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
-+		return SDT_ARG_SKIP;
-+	}
-+
-+	ret = sdt_init_op_regex();
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!regexec(&sdt_op_regex1, old_op, 2, rm, 0)) {
-+		/* REG --> %REG */
-+		new_len = 2;	/* % NULL */
-+		new_len += (int)(rm[1].rm_eo - rm[1].rm_so);
-+
-+		*new_op = zalloc(new_len);
-+		if (!*new_op)
-+			return -ENOMEM;
-+
-+		scnprintf(*new_op, new_len, "%%%.*s",
-+			(int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].rm_so);
-+	} else if (!regexec(&sdt_op_regex2, old_op, 4, rm, 0)) {
-+		/*
-+		 * NUM(REG) or -NUM(REG) --> +NUM(%REG) or -NUM(%REG)
-+		 * rm[1]: optional '-'
-+		 * rm[2]: decimal offset
-+		 * rm[3]: register name
-+		 */
-+		prefix = (rm[1].rm_so == -1) ? '+' : '-';
-+
-+		new_len = 5;	/* sign ( % ) NULL */
-+		new_len += (int)(rm[2].rm_eo - rm[2].rm_so);
-+		new_len += (int)(rm[3].rm_eo - rm[3].rm_so);
-+
-+		*new_op = zalloc(new_len);
-+		if (!*new_op)
-+			return -ENOMEM;
-+
-+		scnprintf(*new_op, new_len, "%c%.*s(%%%.*s)", prefix,
-+			(int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].rm_so,
-+			(int)(rm[3].rm_eo - rm[3].rm_so), old_op + rm[3].rm_so);
-+	} else {
-+		pr_debug4("Skipping unsupported SDT argument: %s\n", old_op);
-+		return SDT_ARG_SKIP;
-+	}
-+
-+	return SDT_ARG_VALID;
-+}
-+
- uint64_t __perf_reg_mask_riscv(bool intr __maybe_unused)
- {
- 	return PERF_REGS_MASK;
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index 5b8f34beb24e..57a1d227d1b2 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -19,6 +19,9 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_op)
- 	case EM_PPC64:
- 		ret = __perf_sdt_arg_parse_op_powerpc(old_op, new_op);
- 		break;
-+	case EM_RISCV:
-+		ret = __perf_sdt_arg_parse_op_riscv(old_op, new_op);
-+		break;
- 	case EM_386:
- 	case EM_X86_64:
- 		ret = __perf_sdt_arg_parse_op_x86(old_op, new_op);
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 7c04700bf837..e0b51b514ee0 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -53,6 +53,7 @@ const char *__perf_reg_name_powerpc(int id);
- uint64_t __perf_reg_ip_powerpc(void);
- uint64_t __perf_reg_sp_powerpc(void);
- 
-+int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op);
- uint64_t __perf_reg_mask_riscv(bool intr);
- const char *__perf_reg_name_riscv(int id);
- uint64_t __perf_reg_ip_riscv(void);
--- 
-2.50.1
-
+--
+Thanks,
+Sasha
