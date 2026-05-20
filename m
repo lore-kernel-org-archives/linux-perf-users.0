@@ -1,274 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011033.outbound.protection.outlook.com [52.101.62.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE3B3A6EFC
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 08:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779266493; cv=none; b=VVf7UDRsMZoj3tjggUqySfWy9eOnyH29Lv5PW0ZG/4u41rvh51UHxt3DDWu7gX3luW7Lm4kBzDCtYE+8mHV4SSrAKcrY5Kf6Y4pjRO1Nu+IV3yGLwVK18j4sQ3glPtSSdYCT1g2xIf8fDt1MPkX0Ai4S0jgfYJm9kuE47ITt5zg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779266493; c=relaxed/simple;
-	bh=ps0+x7v8o1h4E3fWbb3MftmOd0t4fPH3H7ubcRwieT4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Ix1Dl1q6HHYjmMiukyceqj4KdG1Q+BNEvyIVjZaaBt+/XktqAotPBm+wb2NjHaQ+9fSzcigt9c9uZiPNDiF+HkTx37yjMl0Iq2/rimGFUx3wM/Pb3pPeucUB/iVNUewNfRZemhQ7K51DZw/NDaguYCnmCzb68kIMSnJvh6ZZsEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JcuHHXFb; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEAC27E045;
+	Wed, 20 May 2026 10:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779272473; cv=fail; b=WiYF+qzoW0Ld5zLsPqVTKLUYfHOuKhajJmFMXHiBgQA8/rISl6HAnPy/jkrcgbpH/6P8kGetIVV23T3lecf48QJ/EN1XUF8Kb8LpC4JBtl6mFUhj638DXhiH/GZ07lTmydKG2sK3Wce/hGhkjNdWx6Rhd5VOMIYCd+q719aSN7s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779272473; c=relaxed/simple;
+	bh=s8L7Ex62mIOcgmo3C4eGdYzVvvPmku0kQMX+Pz7ciz0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rFvfU8FSPeC45t2uFXIAaqmMRcySBYB8pHsaAUS5PsDYPHAd9xinmrgvSwNid6fB+uUfnCwDtm1809AbcptEPyrqmAEsdyvZjL+ddZkUas+Ku2HH7BOYZqHP1UCWa8xfiHbgffSa+ybUqj0lMhZzZPmkdR/cT3DezFL18AF+uxE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0dENNT7I; arc=fail smtp.client-ip=52.101.62.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JcuHHXFb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECFD1F000E9;
-	Wed, 20 May 2026 08:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779266491;
-	bh=dPu8pNwUzJsJZxG9zkfhSU0aZ7NNk4Se2VAPDWZ6eWM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JcuHHXFbk8ycJLt2I8QtWCojh8Ji27vV2IFxA0J+riJWotkw+pjC4Y8bTE7C2SC8s
-	 HV9WV9Xpj6gh8Fcjx4CfPXsqqoXy51+WI/QyQzUcphZO06Je07iVN0lxlQ4sJrCjrY
-	 TqT12HIzQPLtqzcShcXaBjGJ5aHfhVK7pjh1+g0jsCMa2XuyBVpgzIuii8gdjmuaQ2
-	 ZlLiHYvgpsbC78w3vgu7gft6DLT5Y1fHBDl7KlJVcCUILOeBIbF4gKNmz6mWE12Q3v
-	 qvxnrAPqYBJqQH/Msi1zQjcBTCOKsOPi+FpzGlcJPi236C+MTW8kfwPa7QJPrlGAy4
-	 W5TmglBYPDZgg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 4/4] perf aslr: Strip sample registers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260520063050.3917261-5-irogers@google.com>
-References: <20260520063050.3917261-5-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 20 May 2026 08:41:27 +0000
-Message-Id: <20260520084131.2ECFD1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0dENNT7I"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RcbyB2XunhJuQRZvXLTfvzZspCZ6DWKyLWCD+Z5nnQJhv7TgI9lFAZ0t3ueRdjYyhjHV/BvBTAqnyrmxzLoAlM3Qt4ZLG/ceP3RUuXiKIobKbi3lUf9hG7PKB7tKQDTx7NGQz7fPXIGNX9zNseS4zF3eKlUqn870dYUyUK3YKGueyeXdgYpw6WxFTF1FhNT6H4+iWkfFfXicYpjhq7sSQkGOioezqhpdjmdnkMxgN7hqNrixhVmiElD2s5Molyq31eyBjgzvRiYGEprWLD5uAzzv+skdCKC6fE98cPaFZiM6TMSBaoqhIa5qsCCmgl+NhOI+VtzEeMt1fi+GIfL1eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GRJdMv5XU5hws/SvZFYwfBOosQNgkw7cnY06lv2rY0g=;
+ b=ltgYd3uVnXkk52Y8MMWAkzOKa4/G0Wyek02ofutByqg1DLaOJYCq1vF5kAWg6Ze5GDdiCVi8X04zz5T80QiggD8WPIZkmHJbiQBxgyam4tPhhMinV3+tYmn6bfVboE6wQHE++rHXUjhWtw4ATlWvMlOlE1Ba1M5CT4RQyso4XhXZFWjQdMLobdWB7um681yV5BxnwsmydWL1DTPC+8HsFKXn5Tf7CjtyK0zY2VnNlPjH6rpII/cpIDYnSDhXREoey/mAVMWbhJBZF3xa5GaNb4UVylbmYCWh3tdDiT1Tf8iCoAgKRCNT+xgLm/ROyvgHh2iBLw5HxqFMc1GPRWWo/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GRJdMv5XU5hws/SvZFYwfBOosQNgkw7cnY06lv2rY0g=;
+ b=0dENNT7IFKyeluANeOuEGkg4Nn/+wpr2qlaUMHKRO9GmQiJ33rVzl9RRJND7yRf61IbfDKOETLPaPl2CGukFAd71OOslFzsDwHmsH/rqSAq9Ym5peym2W941n730ztN8vI7gHI4TkW8e8D/sorRi9LtgO24S2hTNjeoj7Tyj9/o=
+Received: from PH0PR07CA0091.namprd07.prod.outlook.com (2603:10b6:510:4::6) by
+ SN7PR12MB8601.namprd12.prod.outlook.com (2603:10b6:806:26e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Wed, 20 May
+ 2026 10:21:06 +0000
+Received: from SA2PEPF00003F62.namprd04.prod.outlook.com
+ (2603:10b6:510:4:cafe::6f) by PH0PR07CA0091.outlook.office365.com
+ (2603:10b6:510:4::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.48.16 via Frontend Transport; Wed, 20
+ May 2026 10:21:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SA2PEPF00003F62.mail.protection.outlook.com (10.167.248.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.48.11 via Frontend Transport; Wed, 20 May 2026 10:21:05 +0000
+Received: from tapi.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 20 May
+ 2026 05:21:00 -0500
+From: Swapnil Sapkal <swapnil.sapkal@amd.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <irogers@google.com>, <james.clark@linaro.org>
+CC: <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <adrian.hunter@intel.com>, <ravi.bangoria@amd.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Swapnil
+ Sapkal" <swapnil.sapkal@amd.com>
+Subject: [PATCH v4 0/3] perf: Fix SIGCHLD vs pause() race with short-lived workloads
+Date: Wed, 20 May 2026 10:20:14 +0000
+Message-ID: <20260520102017.293419-1-swapnil.sapkal@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F62:EE_|SN7PR12MB8601:EE_
+X-MS-Office365-Filtering-Correlation-Id: d69eb84e-afd8-4852-126f-08deb6598098
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|376014|7416014|3023799007|13003099007|11063799006|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	lPqccVEhBRt88oNzclhLi3mIdzjpF4nwa/40NKLjR9iJFUCZXSZSrW1uMWqmx9dgRfXl4q7gnSG/qpe6w1fYoE5czjdmrgu5pDfyCjbsMUnOU82Q1ArSZA81KFovJYnUOMIrGGMgRH7eF6SrMNUVGMVpOglbsM+616/fzHRM9RVGTVGx8xx+/hfKZDwIXHkoEmCNV5Wd3c2cc04VgDj84MjDvvgxIHaTJ+QtGuWL1W+QgE/kitd10B+kkjhShFjYYJgxCZM+ahUjXry2TBFHVVJ6zlPmkBZu9ij2s4V78+pS8/Xy+fBZwyga4T0QPSXQf/vpK0HnxWkRf/2ZGHAAKl1JXDXNRMBuWucKKvlmsJuwAxNvY2ZRIcnU28oyhvx5qT1Mns8sIyOVT9+dutyJoAnsO/2aoGPFc5Qwr+as+BVNmolG9ld2jF0Zpm2fwAVHVJuPewkdcItSGtVLRTAZtCdYMZaJMUox1YescxY3JKHiW16NjhoYItnJVB0sLf9gHu5kNEGdf7JQnEJUxJdJhdlEklRwbfPbXM7ppRfb12qx4d/HsmXlRWVyhbETRoUo0c6LA/pqQaPR91dOXVkHYy4gHTq63ePlZWjKz0VUKDLDJZfWlD6s4ZJGY9cE43oQV/wrbWiOemv7pkTzuSkwVBn1DPTzqYfQI9TmnBBAf0nCwY5wlzMfmPBqi+8YbHxGhd7ddqxeoVx/t35Y2QSkL3Ma5ypEONP+h4XarNVpxUY=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(376014)(7416014)(3023799007)(13003099007)(11063799006)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	q7j/YdvQuuTBQnlW2u63c29stkszWII0NDe64DlHGZ/mC/WzM+vZ1LvR19RDhC9z9uOJi8phKCaosQvxwgYhv/QOIg6ZaTyoA6A79wx0wRBj8/bprj4YbUItH+aTMBzP1OEAV8I+Z5KJScLjDhaNX8nFE5vpBe4Cw6WKSmtpcaUIsKzb/3k0DF3vRgXRcmOyMcINXFhWfMWn16S9R5wAKfTFHNIIMeom2diq4iMVJDEm+rF7LMIImteSAPojyB7Ov+RWlgkroAgjX1uAGb3+UmuhJMNBbJrUu1p60UtBVGfLmQuRlGFJlWRXWW/3SE+3ZdwYA1zf1RNWV7P22APTzxYIWcew7mckwSHZeTmqMbgSEWuRwzYKub2ph3zGW5/pPCERLbKMZHYONlJcuPhzpGi6vQwcZ+Ya6LDdEgGh7frhDo3RzX/vk8WI31SFr65K
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2026 10:21:05.8371
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d69eb84e-afd8-4852-126f-08deb6598098
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003F62.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8601
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
+Several perf subcommands (sched stats, lock contention) use the pattern
+of forking a workload child, calling evlist__start_workload() to uncork
+it, and then calling pause() to wait for a signal (typically SIGCHLD
+when the child exits, or SIGINT/SIGTERM from the user).
 
-New issues:
-- [High] Restoring unstripped `evsel` attributes before delegating the stri=
-pped sample event corrupts downstream processors.
-- [High] In pipe mode, synthesized headers bypass `aslr_tool__process_attr`=
-, causing the output stream to start with unstripped attributes.
-- [High] The manual attribute stripping loop in `__cmd_inject` misses `bp_a=
-ddr` and unsupported sample types, leaking ASLR data in the file header.
-- [High] Stripping `sample_type` attributes during pipe mode inline attribu=
-te processing corrupts subsequent input sample parsing.
-- [Medium] Silently ignoring allocation failures when caching original attr=
-ibutes leads to trace parsing desynchronization and potential out-of-bounds=
- reads.
+This pattern has a race condition: if the workload is very short-lived,
+the child can exit and deliver SIGCHLD in the window between
+evlist__start_workload() and pause(). Since pause() only returns when a
+signal is received *while the process is suspended*, and SIGCHLD has
+already been delivered and handled by the empty sighandler(), pause()
+blocks indefinitely.
 
-Pre-existing issues:
-- [Critical] Stack buffer overflow when copying a variable-length `perf_eve=
-nt` into a statically sized `union perf_event` local variable.
---
+The fix replaces pause() with a simpler approach:
 
-commit fb30fb1bb4e2af08887645a167b8d9c8ef4d7b2b
-Author: Ian Rogers <irogers@google.com>
+ - The signal handler now sets a 'volatile sig_atomic_t done' flag
+   to record delivery.  The flag is reset before handler registration
+   so that a signal arriving during the setup phase is not discarded.
 
-perf aslr: Strip sample registers
+ - Replace pause() with a unified loop:
 
-When the ASLR tracking tool encounters sample events containing user
-or interrupt register dumps, it previously dropped the entire sample event
-conservatively to prevent absolute virtual memory pointers leakage.
-Refactor the ASLR tool to strip out only the register dump payload by
-masking out the relevant perf_event_attr fields when the delegated
-tool is handling the data.
+       while (!done) {
+           if (argc && waitpid(evlist->workload.pid, NULL, WNOHANG) > 0)
+               break;
+           sleep(1);
+       }
 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index f42b315199b3d..a34902ff0e77b 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -239,6 +239,8 @@ static int perf_event__repipe_attr(const struct perf_=
-tool *tool,
-> =20
->  		memcpy(&stripped_event, event, event->header.size);
+   This handles both workload mode (child exit detected via waitpid)
+   and system-wide mode (user sends SIGINT/SIGTERM setting done).
+   Using WNOHANG avoids the SA_RESTART problem where a blocking
+   waitpid() would auto-restart and ignore the done flag if the child
+   doesn't exit on signal.
 
-[Severity: Critical]
-This is a pre-existing issue, but stripped_event is a statically sized union
-on the stack.=20
+Three call sites are affected across two files:
+  - perf_sched__schedstat_record() in builtin-sched.c
+  - perf_sched__schedstat_live()   in builtin-sched.c
+  - __cmd_contention()             in builtin-lock.c
 
-Since PERF_RECORD_HEADER_ATTR events can be almost 64KB due to the
-variable-length ID array, could copying event->header.size bytes cause a
-massive stack buffer overflow?
+The two pause() sites in builtin-kwork.c are NOT affected because they
+do not register SIGCHLD or fork workload children; they only wait for
+user-initiated SIGINT/SIGTERM.
 
->  		stripped_event.attr.attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
-> +		stripped_event.attr.attr.sample_regs_user =3D 0;
-> +		stripped_event.attr.attr.sample_regs_intr =3D 0;
->  		return perf_event__repipe_synth(tool, &stripped_event);
->  	}
+v3: https://lore.kernel.org/all/20260422064700.12345-1-swapnil.sapkal@amd.com/
+Changes since v3:
+  - Replaced blocking waitpid() with waitpid(WNOHANG) in a unified
+    loop that also checks 'done'.  Because perf is compiled with
+    _GNU_SOURCE, glibc's signal() sets SA_RESTART, causing a blocking
+    waitpid() to auto-restart after the handler returns.  If the
+    workload ignores SIGINT, the tool would hang.  (Sashiko review)
+  - Moved 'done = 0' before signal handler registration so that an
+    early signal during the setup phase is not discarded by a later
+    reset.  (Sashiko review)
+  - Used single unified loop for both workload and system-wide cases
+    as suggested by Namhyung.
 
-[ ... ]
+v2: https://lore.kernel.org/all/20260409162249.25581-1-swapnil.sapkal@amd.com/
+Changes since v2:
+  - The signal handler now sets a 'volatile sig_atomic_t done' flag
+    instead of being an empty function.  pause()/sigsuspend() alone
+    cannot cover the window between signal() handler registration and
+    sigprocmask(): a signal consumed during that unblocked window was
+    silently lost.  The while(!done) loop detects such early delivery.
+    (Sashiko review)
+  - Replaced sigprocmask()/sigsuspend() approach with the much simpler
+    waitpid() + while(!done) sleep(1) pattern as suggested by the
+    maintainer.
 
-> @@ -2470,7 +2472,16 @@ static int __cmd_inject(struct perf_inject *inject)
->  			}
->  		}
-> =20
-> +		if (inject->aslr) {
-> +			struct evsel *evsel;
-> =20
-> +			evlist__for_each_entry(session->evlist, evsel) {
-> +				evsel__reset_sample_bit(evsel, REGS_USER);
-> +				evsel__reset_sample_bit(evsel, REGS_INTR);
-> +				evsel->core.attr.sample_regs_user =3D 0;
-> +				evsel->core.attr.sample_regs_intr =3D 0;
-> +			}
-> +		}
-> =20
->  		session->header.data_offset =3D output_data_offset;
->  		session->header.data_size =3D inject->bytes_written;
+v1: https://lore.kernel.org/all/20260401064114.141066-1-swapnil.sapkal@amd.com/
+Changes since v1:
+  - Moved sigprocmask() to after evlist__prepare_workload() so the
+    forked child does not inherit a blocked SIGCHLD mask, which would
+    break workloads relying on SIGCHLD (e.g., Node.js, Python asyncio).
+    (Sashiko review)
+  - Block SIGINT and SIGTERM in addition to SIGCHLD to prevent an
+    early Ctrl+C during setup from being consumed before sigsuspend().
+  - Added signal mask restoration on error paths.
+    (Sashiko review)
 
-[Severity: High]
-This loop strips REGS_USER and REGS_INTR before the file header is
-serialized, but it doesn't clear bp_addr for breakpoints or apply the
-ASLR_SUPPORTED_SAMPLE_TYPE mask.
+Swapnil Sapkal (3):
+  perf sched stats: Fix SIGCHLD vs pause() race in schedstat_record()
+  perf sched stats: Fix SIGCHLD vs pause() race in schedstat_live()
+  perf lock contention: Fix SIGCHLD vs pause() race in __cmd_contention()
 
-Since those are only cleared at the end of cmd_inject() after the header
-is written, does this leak breakpoint virtual addresses and defeat ASLR
-for those events?
+ tools/perf/builtin-lock.c  | 12 ++++++++++--
+ tools/perf/builtin-sched.c | 20 ++++++++++++++++----
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
-[ ... ]
+-- 
+2.43.0
 
-> @@ -2730,6 +2741,17 @@ int cmd_inject(int argc, const char **argv)
->  	if (zstd_init(&(inject.session->zstd_data), 0) < 0)
->  		pr_warning("Decompression initialization failed.\n");
-> =20
-> +	if (inject.aslr) {
-> +		struct evsel *evsel;
-> +
-> +		evlist__for_each_entry(inject.session->evlist, evsel) {
-> +			ret =3D aslr_tool__cache_orig_attrs(tool, evsel);
-> +			if (ret) {
-> +				pr_err("Failed to cache original attributes: %d\n", ret);
-> +				goto out_delete;
-> +			}
-> +		}
-> +	}
-
-[Severity: High]
-When processing pipe output, perf_event__synthesize_for_pipe() uses
-perf_event__repipe directly rather than the tool's configured attr callback.
-
-Will the output pipe stream begin with unstripped ATTR headers claiming
-registers are present? Does this cause trace consumers to fail when parsing
-the stripped SAMPLE records?
-
-[ ... ]
-
-> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> index 901b563048fa2..457813812a34a 100644
-> --- a/tools/perf/util/aslr.c
-> +++ b/tools/perf/util/aslr.c
-
-[ ... ]
-
-> @@ -983,8 +1013,22 @@ static int aslr_tool__process_sample(const struct p=
-erf_tool *tool,
-> =20
->  	new_event->sample.header.size =3D sizeof(struct perf_event_header) + j =
-* sizeof(u64);
-> =20
-> +	/* Temporarily override evsel attributes to match the stripped new_even=
-t format! */
-> +	orig_sample_size =3D evsel->sample_size;
-> +	evsel->sample_size =3D __evsel__sample_size(sample_type);
-> +	evsel->core.attr.sample_type =3D sample_type;
-> +	evsel->core.attr.sample_regs_user =3D 0;
-> +	evsel->core.attr.sample_regs_intr =3D 0;
-> +
->  	perf_sample__init(&new_sample, /*all=3D*/ true);
->  	ret =3D evsel__parse_sample(evsel, new_event, &new_sample);
-> +
-> +	/* Restore original attributes immediately so trace ingestion never des=
-ynchronizes! */
-> +	evsel->sample_size =3D orig_sample_size;
-> +	evsel->core.attr.sample_type =3D orig_sample_type;
-> +	evsel->core.attr.sample_regs_user =3D orig_regs_user;
-> +	evsel->core.attr.sample_regs_intr =3D orig_regs_intr;
-> +
->  	if (ret) {
->  		perf_sample__exit(&new_sample);
->  		goto out_put;
-
-[Severity: High]
-If downstream delegates like perf_event__convert_sample_callchain use
-evsel->core.attr.sample_type to parse the event, will they expect register
-data that is no longer present in new_event?
-
-Since we restored the original attributes before calling the delegate, could
-this read past the end of new_event and cause data corruption?
-
-Should we restore the attributes after the delegate returns?
-
-[ ... ]
-
-> @@ -1010,6 +1054,7 @@ static int aslr_tool__process_attr(const struct per=
-f_tool *tool,
->  	struct aslr_tool *aslr;
->  	struct perf_tool *delegate;
->  	union perf_event *new_event;
-> +	int err;
-> =20
->  	del_tool =3D container_of(tool, struct delegate_tool, tool);
->  	aslr =3D container_of(del_tool, struct aslr_tool, tool);
-> @@ -1020,9 +1065,32 @@ static int aslr_tool__process_attr(const struct pe=
-rf_tool *tool,
->  	if (new_event->attr.attr.type =3D=3D PERF_TYPE_BREAKPOINT)
->  		new_event->attr.attr.bp_addr =3D 0;  /* Conservatively remove addresse=
-s. */
-> =20
-> +	if (new_event->attr.attr.sample_type & PERF_SAMPLE_REGS_USER) {
-> +		new_event->attr.attr.sample_type &=3D ~PERF_SAMPLE_REGS_USER;
-> +		new_event->attr.attr.sample_regs_user =3D 0;
-> +	}
-> +	if (new_event->attr.attr.sample_type & PERF_SAMPLE_REGS_INTR) {
-> +		new_event->attr.attr.sample_type &=3D ~PERF_SAMPLE_REGS_INTR;
-> +		new_event->attr.attr.sample_regs_intr =3D 0;
-> +	}
-> +
-
-[Severity: High]
-When processing inline attributes in pipe mode, this strips the register fl=
-ags
-before delegating to perf_event__repipe_attr().=20
-
-When subsequent PERF_RECORD_SAMPLE events arrive from the input pipe, will
-evsel__parse_sample() use this stripped evsel to parse the unstripped raw
-input buffer? Could this cause the parser to misinterpret the unread regist=
-er
-data as subsequent fields and drop the samples?
-
->  	new_event->attr.attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
-> =20
-> -	return delegate->attr(delegate, new_event, pevlist);
-> +	err =3D delegate->attr(delegate, new_event, pevlist);
-> +	if (!err && pevlist && *pevlist) {
-> +		struct evsel *evsel =3D evlist__last(*pevlist);
-> +		struct aslr_evsel_priv *priv =3D zalloc(sizeof(*priv));
-> +
-> +		if (priv) {
-> +			priv->orig_sample_type =3D event->attr.attr.sample_type;
-> +			priv->orig_sample_regs_user =3D event->attr.attr.sample_regs_user;
-> +			priv->orig_sample_regs_intr =3D event->attr.attr.sample_regs_intr;
-> +			if (hashmap__add(&aslr->evsel_orig_attrs, evsel, priv) !=3D 0)
-> +				free(priv);
-> +		}
-> +	}
-> +
-> +	return err;
->  }
-
-[Severity: Medium]
-If zalloc() or hashmap__add() fails here, the error is silently ignored.
-
-When aslr_tool__process_sample() later fails the hashmap lookup, it will fa=
-ll
-back to an evsel->core.attr.sample_type that lacks the register flags. Will
-parsing the unstripped raw kernel sample array with this stripped mask cause
-the manual parser to desynchronize and misinterpret the unread register dat=
-a?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260520063050.3917=
-261-1-irogers@google.com?part=3D4
