@@ -1,121 +1,257 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00833EA979;
-	Wed, 20 May 2026 18:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663A129ACC5
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 19:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779303176; cv=none; b=KTgu6KA1C27etY+E2HSJAOkhETglMwL5VyqmNCilpQQNKfYiVUlNQgS9IAO5QKcM26EQH3VDCr/Qsze/5BQ5+RMXlkl7a/FEg0fJJkDUUCQyKUnmdXL6oMlJihJV53fELgTxtWPPmd9yW7Gn/mUlFoZed802KlNPyuPghiGXMSg=
+	t=1779303945; cv=none; b=Ae10388BI8IpZ1LzcfjEjmS9xu2EaMQSMKmGfA9UJKSMKliI7z0BIepmuMVfljxE1q5gNqj2xVMBHWQ/61mJIYX8bNMKajmCOHEmIdLRWi3eZb28hPGFpNPxCs902p14YbO4xT/LDoSLJUG0uTu6mRP9d2Vdgtmp4p8CEZItRco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779303176; c=relaxed/simple;
-	bh=KMS0F32bwXiosObItDNiyt1nom0a6B4MGSkOAOt2+rI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=svqhyngttv1DHtRLMi5/8UuCymCHEQSCg3FACTB4cDIkDuaNiQcsc9k5vu+uX2ucd5cFWnj4N4/Cv9VAZPL/5EWT0e0gR22Q8IPqFiZ1XkAmp9ahto7JWTtdS1vZXfgfZRa36A4mDY/W/E/PjYgtyvDZHfm6f+Y/CixztvCgzyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQke5ll3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779303945; c=relaxed/simple;
+	bh=yFLp7OkD8qybCjZ/mz35/8xkE7X7XG2e83t1oyk3NJU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dvUBJgX1ljmsgIj516vo77lR7ehiedn8t1D9GKy2CVA4f2I5n9BcWg+5IdW7LYF6743o9q9+PyZmQ7lD95PYtzEuJ1dHPq9lr7WLx5/Gpi+pfXwuWwmoDH0OcJnle+PxtQhBshws1MZBOtPQkkLdAkkLm8sD15pHRELGs5TjpYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vyrfHbjU; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQke5ll3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2061F000E9;
-	Wed, 20 May 2026 18:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779303174;
-	bh=mVoL27wzhu14AxaDri3hYol07T2Q0IpMApk1h7KaMlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IQke5ll3n4zGwO6PlZnCFx+OETutaqYEuzaShV3qmVsVAs1uMf2r2LQkMAxnn4eAx
-	 6AvUjWcIYKBcmxSpZfvBoP5tY4Tczt132Foka6ZkdvVNU1Nhfj7VM5ZCYUsAgZ2QI6
-	 YHUmyPnR8oH/m+MkmrDA9gE7d5IIy1mKHGOE0nNfwl4bmKNB6rM9A86pZoRSVpx0JW
-	 S/Yjq6Ccshvb6q+MlLQ23NoJfsnwaLc7PFrs7G89gA4NGTuk7h2cjVZtSZiAVILGh/
-	 rJUH6GvfaWc0XaW+3v9cZOd0vIID4dzr+xdBb0gMFpSsUdECjPenTuVbQvToSzlVad
-	 O5J6X0hBOlQOg==
-Date: Wed, 20 May 2026 15:52:51 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Michael Jeanson <mjeanson@efficios.com>,
-	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Derek Foreman <derek.foreman@collabora.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] perf data ctf: replace libbabeltrace with
- babeltrace2-ctf-writer
-Message-ID: <ag4DA1FMVtmaY9On@x1>
-References: <20260512194710.162215-1-mjeanson@efficios.com>
- <CAP-5=fXMtbO=7JMg2YvhQNbqOEFH_ze=8EifYM7bDfR945=KHA@mail.gmail.com>
- <e6d88ec4-c6fa-473c-ae70-071bb6f040c1@efficios.com>
- <CAP-5=fVnNyScv=fWy++iucCWWe8G7jcEn=AiDbLEV6PaeBooHQ@mail.gmail.com>
- <CAP-5=fX5QpRcVhnZCd230FQWsJ8KHbCrv6y_47vcrBK0fhWWxA@mail.gmail.com>
- <33978160-74a3-42ee-a4a2-1b0ad968a46e@efficios.com>
- <CAP-5=fUxAGG1Cs9yHqy7qjJNa4KP6E_Q0cCdLfmYwcPnHKLdyA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vyrfHbjU"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2f3ec2e8d07so24954813eec.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779303943; x=1779908743; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VbuwTTpbTAwc6bD3PJul+LcfHorJYQhpkz2OkION4H8=;
+        b=vyrfHbjUB5I0htbhvbNEshTGZEa6KTUWmUuP3YoHl5xkhMn4GCH1oqQrBFCGa83rDC
+         ktm+w0phMj/um3At5lN5BB6eFqi52LuXKDtl97zl4aFqQdM0FYvZOZWEPqQ1FCFxTfUv
+         GRBP1DjqjLgy2TDaQihY1qfrxNZfSavlVeD1lFjz4bhAMzrNI4SxvfKKJ/RRPPFwWpJJ
+         j0e5oYF8/z2LRzGRbTdUMeIKrOA9RsmlaPI+8UH2kep2Dp5LeBCIC5Y7vN8HXgraqH4Q
+         PbcBcrSt+hKx1YELeU9/LSH9jF1vWZy1hVSnQe/v2LvoOnNIEmOsz6STnoL8W0jByXAz
+         Ko+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779303943; x=1779908743;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VbuwTTpbTAwc6bD3PJul+LcfHorJYQhpkz2OkION4H8=;
+        b=i4caPBInw2eKC0JanbOo7elkreAAYOW+ds5gUWAHkc3LyqOZk8zzo2fm/9mez1JxO8
+         jrRjaJ+W11urf2qufn8+vd6PlNAsXG/sSVPtM/9FcLTOVP/9lHXjUuK+cuBLt9F8tYp0
+         ZewqpA9BgrQ1S5A3EbKpTtlHv/kxtKrRczZ+QFjHJp7ChsnAmumPG3kF1qWoTHBmJrs8
+         g6PKFoit9IJJUjN7xm+yj5U2xU0OWURT6qsZqtEktiuQi639KO+sjDwoPh+zPO4SNqip
+         oL/gX7bn56omtdUpXX+4LNzHavqftWxdF2VotNJB2lhvD7YTR/Ckw1szBslYwFLHnkC/
+         jX2A==
+X-Forwarded-Encrypted: i=1; AFNElJ9TbkjSMJo3nk1Pf2wv7l6GXKa1xwr87GxTH7gYa0yAFOeXsaprAfYoSbI20xlyBCXp8UqNrU0Kv1Eim0pi3PlN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy35h8xG7TjoSC/dePYJaUqVGOHpFhtoDN8YqryUxGurdDU+jqX
+	a3IfNzPs7przcvsRG8i0kGu5aGk4TRkLhgHnhC9uGX7oK+CaYc10eYSLkhE9AfnGcV2NVW9tofN
+	g9cfPypQ8Nw==
+X-Received: from dybic41.prod.google.com ([2002:a05:7300:c729:b0:303:9bd4:479a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e28b:b0:2ed:6f94:9d9f
+ with SMTP id 5a478bee46e88-30398170710mr13308022eec.11.1779303943258; Wed, 20
+ May 2026 12:05:43 -0700 (PDT)
+Date: Wed, 20 May 2026 12:05:06 -0700
+In-Reply-To: <20260512223001.2952848-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUxAGG1Cs9yHqy7qjJNa4KP6E_Q0cCdLfmYwcPnHKLdyA@mail.gmail.com>
+Mime-Version: 1.0
+References: <20260512223001.2952848-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.746.g67dd491aae-goog
+Message-ID: <20260520190538.142018-1-irogers@google.com>
+Subject: [PATCH v14 00/32] perf tools: Add evsel to perf_sample
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
+	alex@ghiti.fr, alexander.shishkin@linux.intel.com, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, atrajeev@linux.ibm.com, blakejones@google.com, 
+	ctshao@google.com, dapeng1.mi@linux.intel.com, derek.foreman@collabora.com, 
+	dvyukov@google.com, howardchu95@gmail.com, hrishikesh123s@gmail.com, 
+	james.clark@linaro.org, jolsa@kernel.org, krzysztof.m.lopatowski@gmail.com, 
+	leo.yan@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux@treblig.org, mingo@redhat.com, 
+	nichen@iscas.ac.cn, palmer@dabbelt.com, peterz@infradead.org, pjw@kernel.org, 
+	ravi.bangoria@amd.com, swapnil.sapkal@amd.com, tanze@kylinos.cn, 
+	thomas.falcon@intel.com, tianyou.li@intel.com, yujie.liu@intel.com, 
+	zhouquan@iscas.ac.cn
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 20, 2026 at 11:12:37AM -0700, Ian Rogers wrote:
-> On Wed, May 20, 2026 at 10:58 AM Michael Jeanson <mjeanson@efficios.com> wrote:
-> >
-> > On 2026-05-20 12:13, Ian Rogers wrote:
-> > > On Wed, May 13, 2026 at 9:06 AM Ian Rogers <irogers@google.com> wrote:
-> > >> On Wed, May 13, 2026 at 7:14 AM Michael Jeanson <mjeanson@efficios.com> wrote:
-> > >>> On 2026-05-12 17:54, Ian Rogers wrote:
-> > >>>> This is cool, I'm surprised at how non-invasive the change is. I'd
-> > >>>> done a similar thing but keeping both babeltrace 1 and 2. I'll post my
-> > >>>> WIP in reply just as a heads up, but I have to do much more heavy
-> > >>>> engineering.
-> > >>>
-> > >>> I think I can rework this to try babeltrace2-ctf-writer first and fall
-> > >>> back on libbabeltrace1. The change is non-invasive because
-> > >>> bt2-ctf-writer is basically just a compat API for the ctf-writer of bt1
-> > >>> but it doesn't expose any of the new features of bt2.
-> > >>>
-> > >>> Your WIP patch that uses the proper libbabeltrace2 API is definitely the
-> > >>> way to go for the long term. In the meantime would you like a v2 of this
-> > >>> patch?
-> > >>
-> > >> We have a problem with the perf tool in that it carries too much
-> > >> baggage due to its library dependencies, so I'd prefer we stick with
-> > >> v2 support and your cleaner/simpler patch. I'm also hugely
-> > >> appreciative of the work you've put in! I'm too busy to review my own
-> > >> work right now, and cleaning this up ASAP offers an advantage.
-> > > ...
-> > >>
-> > >> * We support libbfd although libbfd is GPLv3 and license incompatible
-> > >> with perf, which is mainly GPLv2. We carry around libunwind support
-> > >> but that project appears unmaintained. We have LLVM support but the
-> > >> LLVM dependency is huge in terms of size and dependencies it brings
-> > >> in, so people avoid building with it, etc.
-> > >
-> > > What's the plan here? I'd prefer to carry the v1 patch, ie let's lose
-> > > libbabeltrace (version 1) as a dependency.
-> >
-> > I think I misunderstood you, I thought you wanted to keep the bt1
-> > support as a fallback. I'm fine with either version of the patch being
-> > merged.
-> >
-> > I can send an updated version of the v1 patch addressing your review
-> > comments.
-> 
-> Arnaldo, Namhyung, do you mind losing libbabeltrace v1 support? As the
-> commit message states:
-> 
->   The 1.x branch of Babeltrace has been superseded by 2.x in 2020 and has
->   been unmaintained since 2022, efforts have started to remove it from
->   popular distributions.
-> 
-> My choice would be to go with the v1 patch with the few fixes I'd mentioned.
+Nearly all perf code ends up passing an evsel with the perf_sample,
+which is problematic if you want to rewrite the evsel (such as with
+off-CPU processing) because all uses of the evsel need to be fixed
+up. Since the perf_sample now carries its own resolved evsel pointer,
+passing evsel separately is redundant and error-prone (allowing
+parameter divergence bugs).
 
-Right, this is from the people working directly in babeltrace, so I'll
-take their advice, Michael, can you please address Ian's comments, check
-that it applies cleanly to perf-tools-next and resubmit, please?
+This series cleans up the redundant evsel parameter across all perf
+tool subcommands and APIs, ensuring that tools uniformly retrieve
+event attributes directly from the sample itself. This simplifies
+function signatures and improves API consistency.
 
-- Arnaldo
+Additionally, this series incorporates subsequent memory safety
+improvements, robust bounds checking, and memory leak corrections
+prompted by address sanitizers and Sashiko code reviews.
+
+The original combined RFC patch:
+https://lore.kernel.org/lkml/20260126071822.447368-1-irogers@google.com/
+was split up per reviewer requests.
+
+v14:
+ - Incorporate Acked-by tags from Namhyung Kim.
+ - Re-polish and expand commit descriptions to provide thorough explanations
+   of the changes and their rationale.
+
+v13: Rebase removing patches merged by Namhyung. Namhyung proposed
+     changes that are in this series, but we became diverged. Address
+     some minor Sashiko issues.
+     https://lore.kernel.org/linux-perf-users/20260512223001.2952848-1-irogers@google.com/
+
+v12: Add missing byteswap for tracepoint rawptr for dynamic
+     offsets. Avoid some unsigned <0 compiler warnings.
+     https://lore.kernel.org/linux-perf-users/20260413041143.1736055-1-irogers@google.com/
+
+v11: Separate any remaining error path or other fixes out of
+     refactoring the evsel into sample. Incorporate Sashiko
+     feedback. Improve bounds checking for tracepoint data in
+     samples. Incorporate changes from Namhyung.
+     https://lore.kernel.org/lkml/20260413012227.1089445-1-irogers@google.com/
+
+v10: Changes to some of the bounds checks as prompted by Sashiko.
+     https://lore.kernel.org/linux-perf-users/20260412020833.641177-1-irogers@google.com/
+
+v9: Clean up some error path nits caught by Sashiko and simple bound
+    checks Sashiko recommended.
+    https://lore.kernel.org/linux-perf-users/20260411191710.524998-1-irogers@google.com/
+
+v8: Fix address sanitizer issues with kwork and move patches, along
+    with bound check additions, to end of series.
+    https://lore.kernel.org/linux-perf-users/20260411065718.372240-1-irogers@google.com/
+
+v7: Separate out kwork work->name to a strdup into its own patch, now patch 4.
+    https://lore.kernel.org/linux-perf-users/20260408072601.210837-1-irogers@google.com/
+
+v6: Address more Sashiko feedback.
+    https://lore.kernel.org/lkml/20260404034325.3172592-1-irogers@google.com/
+
+v5: Address feedback from Sashiko and Namhyung.
+    https://lore.kernel.org/lkml/20260403204017.2919994-1-irogers@google.com/
+
+v4: Fix more sashiko issues: bounds checks, memory safety, making
+    refactors better, inconsistent evsels, mmap2 buildid injection
+    choice of evsel, mismatched function arguments.
+    https://sashiko.dev/#/patchset/20260320080835.724836-1-irogers%40google.com
+    https://lore.kernel.org/lkml/20260320192627.368357-1-irogers@google.com/
+
+v3: Fix various sashiko review comments particularly about unintended
+    behavior changes.
+    https://lore.kernel.org/lkml/20260320080835.724836-1-irogers@google.com/
+
+v2: Add review feedback on the first 2 patches from Namhyung, fix a
+    missed evsel assignment running event2evsel in builtin-inject.
+    https://lore.kernel.org/lkml/20260319232334.287517-1-irogers@google.com/
+
+v1: https://lore.kernel.org/lkml/20260209174032.4142096-1-irogers@google.com/
+
+
+Ian Rogers (32):
+  perf tool: Remove evsel from tool APIs that pass the sample
+  perf kvm: Don't pass evsel with sample
+  perf evsel: Refactor evsel tracepoint sample accessors perf_sample
+  perf trace: Don't pass evsel with sample
+  perf callchain: Don't pass evsel and sample
+  perf lock: Only pass sample to handlers
+  perf hist: Remove evsel parameter from inc samples functions
+  perf db-export: Remove evsel from struct export_sample
+  perf hist: Remove evsel from struct hist_entry_iter
+  perf report: Directly use sample->evsel to avoid computing from
+    sample->id
+  perf annotate: Don't pass evsel to add_sample
+  perf inject: Don't pass evsel with sample
+  perf kmem: Don't pass evsel with sample
+  perf kwork: Don't pass evsel with sample
+  perf sched: Don't pass evsel with sample
+  perf timechart: Don't pass evsel with sample
+  perf trace: Don't pass evsel with sample
+  perf evlist: Try to avoid computing evsel from sample
+  perf script: Don't pass evsel with sample
+  perf s390-sample-raw: Don't pass evsel or its PMU with sample
+  perf evsel: Don't pass evsel with sample
+  perf lock: Constify trace_lock_handler variables
+  perf lock: Avoid segv if event is missing a callchain
+  perf timechart: Fix memory leaks
+  perf kmem: Fix memory leaks on error path and when skipping
+  perf synthetic-events: Bound check when synthesizing mmap2 and
+    build_id events
+  perf kmem: Add bounds checks to tracepoint read values
+  perf sched: Bounds check CPU in sched switch events
+  perf timechart: Bounds check CPU
+  perf evsel: Add bounds checking to trace point raw data accessors
+  perf kwork: Fix address sanitizer issues
+  perf kwork: Fix memory management of kwork_work
+
+ tools/perf/builtin-annotate.c                 |  28 +-
+ tools/perf/builtin-c2c.c                      |   6 +-
+ tools/perf/builtin-diff.c                     |   5 +-
+ tools/perf/builtin-inject.c                   |  75 +++---
+ tools/perf/builtin-kmem.c                     |  95 ++++---
+ tools/perf/builtin-kvm.c                      |  22 +-
+ tools/perf/builtin-kwork.c                    | 249 +++++++++++-------
+ tools/perf/builtin-lock.c                     | 128 +++++----
+ tools/perf/builtin-mem.c                      |   1 -
+ tools/perf/builtin-record.c                   |   3 +-
+ tools/perf/builtin-report.c                   |  38 ++-
+ tools/perf/builtin-sched.c                    | 198 +++++++-------
+ tools/perf/builtin-script.c                   |  22 +-
+ tools/perf/builtin-timechart.c                | 164 +++++++-----
+ tools/perf/builtin-top.c                      |  19 +-
+ tools/perf/builtin-trace.c                    | 121 +++++----
+ tools/perf/tests/hists_cumulate.c             |   1 -
+ tools/perf/tests/hists_filter.c               |   1 -
+ tools/perf/tests/hists_output.c               |   1 -
+ tools/perf/tests/mmap-basic.c                 |   4 +-
+ tools/perf/tests/openat-syscall-tp-fields.c   |   2 +-
+ tools/perf/tests/switch-tracking.c            |   9 +-
+ tools/perf/util/annotate.c                    |  19 +-
+ tools/perf/util/annotate.h                    |   6 +-
+ tools/perf/util/bpf_kwork.c                   |  22 +-
+ tools/perf/util/build-id.c                    |   3 +-
+ tools/perf/util/build-id.h                    |   7 +-
+ tools/perf/util/callchain.c                   |   8 +-
+ tools/perf/util/callchain.h                   |   6 +-
+ tools/perf/util/data-convert-bt.c             |   2 +-
+ tools/perf/util/data-convert-json.c           |   5 +-
+ tools/perf/util/db-export.c                   |  13 +-
+ tools/perf/util/db-export.h                   |   3 +-
+ tools/perf/util/evsel.c                       | 137 +++++++---
+ tools/perf/util/evsel.h                       |  12 +-
+ tools/perf/util/hist.c                        |  26 +-
+ tools/perf/util/hist.h                        |   3 +-
+ tools/perf/util/intel-pt.c                    |   2 +-
+ tools/perf/util/intel-tpebs.c                 |   3 +-
+ tools/perf/util/jitdump.c                     |   2 +-
+ .../perf/util/kvm-stat-arch/kvm-stat-arm64.c  |  19 +-
+ .../util/kvm-stat-arch/kvm-stat-loongarch.c   |  17 +-
+ .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  17 +-
+ .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  17 +-
+ tools/perf/util/kvm-stat-arch/kvm-stat-s390.c |  20 +-
+ tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  70 ++---
+ tools/perf/util/kvm-stat.c                    |  19 +-
+ tools/perf/util/kvm-stat.h                    |  18 +-
+ tools/perf/util/kwork.h                       |  11 +-
+ tools/perf/util/machine.c                     |  14 +-
+ tools/perf/util/machine.h                     |   3 -
+ tools/perf/util/s390-sample-raw.c             |  31 ++-
+ .../util/scripting-engines/trace-event-perl.c |  23 +-
+ .../scripting-engines/trace-event-python.c    |  47 ++--
+ tools/perf/util/session.c                     |  38 +--
+ tools/perf/util/synthetic-events.c            |  49 ++--
+ tools/perf/util/synthetic-events.h            |   2 -
+ tools/perf/util/tool.c                        |   4 +-
+ tools/perf/util/tool.h                        |   4 +-
+ tools/perf/util/trace-event-scripting.c       |   5 +-
+ tools/perf/util/trace-event.h                 |   3 -
+ 61 files changed, 991 insertions(+), 911 deletions(-)
+
+-- 
+2.54.0.746.g67dd491aae-goog
+
