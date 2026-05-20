@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646684028EC
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 19:06:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5891F3446AB
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 19:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779304003; cv=none; b=uxUJDQrLAJe035qVXCH81aaj8pakmDposUQ5Fm74Rs1/mW5Et9jU23q1FNOHi6wa8mfXCivn7rr1LDGmC5ORqciTFsujffEOzqBjyu0W4S4bTPeDiXnW8xoqmhPbNJrHAk5/SNykO4k7XDbB3BUtfdJln0KbH/uCEjKUZ4ffPF0=
+	t=1779304005; cv=none; b=KibaoxsKaAzAtV+kWpWxqAx62os5TMyrvVntggD1YbrCr9X4fE+aIN+nEUmnG82WHDTRo0QRUBjYDIQwcWco4PUyr5bukJ2T+JB8UZadVQc7j5zyBrF8s71u/AGVedMaVSc/e6BO7EQ0Tha6yLSo4hj+bUwcWcOJxYsMBYsi+zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779304003; c=relaxed/simple;
-	bh=MPppRBe60tvJYp0BqyDgLh3vcNIT2ZeLAESbSxhot3g=;
+	s=arc-20240116; t=1779304005; c=relaxed/simple;
+	bh=G4ZCgqQkYPCZXfmnCPqbemBVgH/8qiJZrouE6lHFM4I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=a3mxk5y1J3uu3kw1Va4umv0EYg1K0Z0lXSqjIke5k5qu6h8n3JzBnzTBeU9IzIYEGofLC5Vp0rZ6udOIQMsS8pL1V/6fhga3Cvx/3rcDMR6x/xY4hxjufTNGOtOTUo2yPEu32XLeoQgURT0WyI/tPTlA/OEpJyXrpc2KWnnIKuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IjWJlYJu; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=K19FeJ8kWEdruDQkGfKQ41Ma1dytLZQIrksvaar87NL8/8a7JW1apjH2la9/kRYyFAX1F+6qizrOp23mCjaOivEd5jat4rATS4QMNR/ZCBjjjkHVj7liKy0q53ejzkTCJkEnG5NuV2IcX3eQTNrzzc8RLTkVY4HkALod+buwq/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pyMBod6O; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IjWJlYJu"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-303b38ec2f6so7339593eec.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:06:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pyMBod6O"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-303b38ec2f6so7339692eec.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779304001; x=1779908801; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779304003; x=1779908803; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UvZIoBAdPpGsvWc5QRVNgc1NcfjcXh8BPa+JunnxBOs=;
-        b=IjWJlYJuZhYf/sOK2sHfD9gYYxWytjq/+L8ABv/us1Ba+Glrtk4MO7YQZEw1GFnqsG
-         iDZkka6BadAP4lAqMUKd5ysv7oJOYGALxsMrhkBGodBND3+DU1dVFLysOtsBKDjNrp5H
-         IZYQI9XKVle22X9TSSCcJV0ZAc+PPR2q0PI6UbkXe922zpskAAXFyiiIcRWsiBXAnnus
-         sic285HOdXVRuGfIMP8Ov/GOEbRyN62C/GdjMdVtx1kFoFN23A5HR+LWiwxqxcKjeu+/
-         j5wusDjGj4HBmKrpZyHDqxVu4ND0DBwa9U3bvLnV9JUnhTSMMfVzrEbQbGcXjMT67ZxK
-         fK9g==
+        bh=D7pQMmzSBP78K6l1cH4FM1ptkAldOCxyM7ssZb+L56w=;
+        b=pyMBod6OYQR9g46coq+vfmMPskFSJlr7yVCouetsiUWjbpO6RxHs1Cr0eMJqhY4r86
+         BsEiEk/4pxmTWYhUm6t+WgM2WUyI7BUMY1Xvy878EaYdJxEwQYswVMEHYKW5YKyqbfDE
+         aNGYmiCHcZSxV8/2/ECNiTjl/j/LsRvSAAlnDOHCGRBMU2F9/jd+8ugOix52WGzjuQIq
+         7x1deuyy2nB5hzaNxueSNPQoNVM+gGqKaE1xx7fc7VQrQQvmFaeqTQ0+pY+r1dzY2u2j
+         LC6G6gk8OE1Ii9Zg08qNSn19ROmdoi4VoJRnB0WnnWDatcTNBMd6y5RgT6Aks78brVhg
+         RhLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779304001; x=1779908801;
+        d=1e100.net; s=20251104; t=1779304003; x=1779908803;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UvZIoBAdPpGsvWc5QRVNgc1NcfjcXh8BPa+JunnxBOs=;
-        b=Jt0V61N1cLacf+si37yuytIkjxX6zAdvoo/gsodsbHhnLj1fuipfoso81azfpAqir2
-         WDBmGNF6FK8toMB5lOkiHJTgJyovDv/wnqdiNPNOeCxnNAhWnQMqBRax5nXKeH31Uv71
-         oLzvSbL1U4i4qCX2O58Y74/Aq8SP6YTrpJDyZhaTLCO8cvIW/LcQ8NA4sKf4c6iOyIxg
-         pvnOULjUWBaWxzZN07X9CnebP6uuCyu/Kf6v0qFf4a90FVLbOcv9CVcxERfubMN3DZFX
-         0NFgAE+NmFAKLLQ6YmVnxRq8vWCs2rp+v4bKWNgJgJjAIoERBpypoiIFJVnCG+4k2usn
-         RRmQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+6QBmiSHL0PaWkzg8G/Mio7TN4yQq5cmUm0XH/oQYFk7bleZPPZ82Oqb3RVpKdZeyRyIpWxOzkuFtTqDV7mWDw@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqgqTFzvUfLqMzICjfrFub/anp/x2aRpme6R9zJzMcshdZ5owC
-	vt9FOGHa9Rlk2aczsbunl++/84B66h8mcdzLV/YJhJGWhMGo67PR6JAN0XY7UDV8eSIcPJUbsWm
-	cywFcfcAJMA==
-X-Received: from dydr14.prod.google.com ([2002:a05:7300:50ee:b0:2ca:9b08:e7c9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d511:b0:2de:cc07:e83
- with SMTP id 5a478bee46e88-303982ac0c2mr11066871eec.15.1779304001266; Wed, 20
- May 2026 12:06:41 -0700 (PDT)
-Date: Wed, 20 May 2026 12:05:34 -0700
+        bh=D7pQMmzSBP78K6l1cH4FM1ptkAldOCxyM7ssZb+L56w=;
+        b=DBkWL0ukNv1pQ4J4dLt3aUO8eylE3RBGMJxJ2jvacet9MhhqqFf5LG8JknSV6umXCx
+         u3WgJVPK6GBqYEi8NepvmG3/akT3aly5zqpOKvMf7BrxNuvwGGTOacwAgj4J/ZVMZwdM
+         /Py1+tW/fpsLLkZc/uqMtDdPc/3OONluQoL1+XgN8QOedX9ukyURd7kiTvH6rift/19Y
+         UsUbTd+MDQDtNza925iqc/CQZ9RKvAkWO9mtX6i+41Uf4/HEUtpv6cFL3s7lhZ6U9fdf
+         arm1LwquLJuw5rRU+0vkREMsuCNZdr6ssX01CSjeHXmOwNCZCe+C00d1+0SxHx+NTP+Y
+         gtbQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/0mUC6kk8Tfs+FuCf4D7BKMLK/CKc6SkXofmWXixKl1ayQBoHb8wtMV0M+94GKQGjKa482ase/DeLVajI9nAgb@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOUh2TYH7RtDUBbziurKEFmxWFPe5ADk1CSiXZm0wppnYnzIgi
+	Adq5UY9Cw7S6GSUGA/ntywedsp+P+LpQS6bKtA+dMcN2A7Y7FePSJ0WSYuteksKCIU/wfrzV85z
+	rX9ljj26Kkw==
+X-Received: from dycnr6-n1.prod.google.com ([2002:a05:7300:e9c6:10b0:2da:2af9:bfe2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e28b:b0:2c4:dd55:ffc1
+ with SMTP id 5a478bee46e88-3039816dcfcmr11801389eec.2.1779304003233; Wed, 20
+ May 2026 12:06:43 -0700 (PDT)
+Date: Wed, 20 May 2026 12:05:35 -0700
 In-Reply-To: <20260520190538.142018-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260512223001.2952848-1-irogers@google.com> <20260520190538.142018-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.746.g67dd491aae-goog
-Message-ID: <20260520190538.142018-29-irogers@google.com>
-Subject: [PATCH v14 28/32] perf sched: Bounds check CPU in sched switch events
+Message-ID: <20260520190538.142018-30-irogers@google.com>
+Subject: [PATCH v14 29/32] perf timechart: Bounds check CPU
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
@@ -76,61 +76,124 @@ Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-Ensure CPU indexes parsed from sched switch and runtime events fit within the
-MAX_CPUS limit to prevent out-of-bounds indexing.
+Prevent out-of-bounds writes/reads in CPU state tracking arrays by enforcing
+strict MAX_CPUS bounds checks in timechart's tracepoint handlers.
 
-Add explicit bounds checks for sample->cpu against MAX_CPUS inside
-process_sched_switch_event, process_sched_runtime_event, and
-timehist_sched_change_event. This prevents indexing beyond the boundaries
-of the sched->curr_pid tracking array, avoiding potential memory corruption or
-undefined behavior.
+Ensure that cpu_id retrieved from idle/frequency and sched tracepoints is less
+than MAX_CPUS before indexing into cpus_cstate_state, cpus_cstate_start_times,
+and similar tracking arrays. Also, fix an off-by-one error in the CPU iteration
+loop inside end_sample_processing() by changing the loop condition from
+'cpu <= tchart->numcpus' to 'cpu < tchart->numcpus'.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-sched.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ tools/perf/builtin-timechart.c | 35 +++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index d984e58c7dbf..9d73c7043182 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1791,6 +1791,11 @@ static int process_sched_switch_event(const struct perf_tool *tool,
- 	u32 prev_pid = perf_sample__intval(sample, "prev_pid"),
- 	    next_pid = perf_sample__intval(sample, "next_pid");
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index d2e15d02304e..630756bebe32 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -605,6 +605,10 @@ process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
+ 	u32 state  = perf_sample__intval(sample, "state");
+ 	u32 cpu_id = perf_sample__intval(sample, "cpu_id");
  
-+	if (this_cpu < 0 || this_cpu >= MAX_CPUS) {
-+		pr_warning("Out-of-bound sample CPU %d. Skipping sample\n", this_cpu);
-+		return 0;
++	if (cpu_id >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu_id %u\n", cpu_id);
++		return -1;
 +	}
-+
- 	if (sched->curr_pid[this_cpu] != (u32)-1) {
- 		/*
- 		 * Are we trying to switch away a PID that is
-@@ -1813,6 +1818,11 @@ static int process_sched_runtime_event(const struct perf_tool *tool,
+ 	if (state == (u32)PWR_EVENT_EXIT)
+ 		c_state_end(tchart, cpu_id, sample->time);
+ 	else
+@@ -620,6 +624,10 @@ process_sample_cpu_frequency(struct timechart *tchart,
+ 	u32 state  = perf_sample__intval(sample, "state");
+ 	u32 cpu_id = perf_sample__intval(sample, "cpu_id");
+ 
++	if (cpu_id >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu_id %u\n", cpu_id);
++		return -1;
++	}
+ 	p_state_change(tchart, cpu_id, sample->time, state);
+ 	return 0;
+ }
+@@ -633,6 +641,10 @@ process_sample_sched_wakeup(struct timechart *tchart,
+ 	int waker = perf_sample__intval(sample, "common_pid");
+ 	int wakee = perf_sample__intval(sample, "pid");
+ 
++	if (sample->cpu >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
++		return -1;
++	}
+ 	sched_wakeup(tchart, sample->cpu, sample->time, waker, wakee, flags, backtrace);
+ 	return 0;
+ }
+@@ -646,6 +658,10 @@ process_sample_sched_switch(struct timechart *tchart,
+ 	int next_pid   = perf_sample__intval(sample, "next_pid");
+ 	u64 prev_state = perf_sample__intval(sample, "prev_state");
+ 
++	if (sample->cpu >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
++		return -1;
++	}
+ 	sched_switch(tchart, sample->cpu, sample->time, prev_pid, next_pid,
+ 		     prev_state, backtrace);
+ 	return 0;
+@@ -660,6 +676,10 @@ process_sample_power_start(struct timechart *tchart __maybe_unused,
+ 	u64 cpu_id = perf_sample__intval(sample, "cpu_id");
+ 	u64 value  = perf_sample__intval(sample, "value");
+ 
++	if (cpu_id >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu_id %llu\n", (unsigned long long)cpu_id);
++		return -1;
++	}
+ 	c_state_start(cpu_id, sample->time, value);
+ 	return 0;
+ }
+@@ -669,6 +689,10 @@ process_sample_power_end(struct timechart *tchart,
+ 			 struct perf_sample *sample,
+ 			 const char *backtrace __maybe_unused)
  {
- 	struct perf_sched *sched = container_of(tool, struct perf_sched, tool);
- 
 +	if (sample->cpu >= MAX_CPUS) {
-+		pr_warning("Out-of-bound sample CPU %u. Skipping sample\n", sample->cpu);
-+		return 0;
++		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
++		return -1;
 +	}
-+
- 	if (sched->tp_handler->runtime_event)
- 		return sched->tp_handler->runtime_event(sched, sample, machine);
+ 	c_state_end(tchart, sample->cpu, sample->time);
+ 	return 0;
+ }
+@@ -681,6 +705,10 @@ process_sample_power_frequency(struct timechart *tchart,
+ 	u64 cpu_id = perf_sample__intval(sample, "cpu_id");
+ 	u64 value  = perf_sample__intval(sample, "value");
  
-@@ -2775,6 +2785,11 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
- 	int rc = 0;
- 	const char state = perf_sample__taskstate(sample, "prev_state");
- 
-+	if (sample->cpu >= MAX_CPUS) {
-+		pr_warning("Out-of-bound sample CPU %d. Skipping sample\n", sample->cpu);
-+		return 0;
++	if (cpu_id >= MAX_CPUS) {
++		pr_debug("Out-of-bounds cpu_id %llu\n", (unsigned long long)cpu_id);
++		return -1;
 +	}
-+
- 	addr_location__init(&al);
- 	if (machine__resolve(machine, &al, sample) < 0) {
- 		pr_err("problem processing %d event. skipping it\n",
+ 	p_state_change(tchart, cpu_id, sample->time, value);
+ 	return 0;
+ }
+@@ -692,10 +720,9 @@ process_sample_power_frequency(struct timechart *tchart,
+  */
+ static void end_sample_processing(struct timechart *tchart)
+ {
+-	u64 cpu;
+-	struct power_event *pwr;
++	for (u64 cpu = 0; cpu < tchart->numcpus; cpu++) {
++		struct power_event *pwr;
+ 
+-	for (cpu = 0; cpu <= tchart->numcpus; cpu++) {
+ 		/* C state */
+ #if 0
+ 		pwr = zalloc(sizeof(*pwr));
+@@ -1515,6 +1542,8 @@ static int process_header(struct perf_file_section *section __maybe_unused,
+ 	switch (feat) {
+ 	case HEADER_NRCPUS:
+ 		tchart->numcpus = ph->env.nr_cpus_avail;
++		if (tchart->numcpus > MAX_CPUS)
++			tchart->numcpus = MAX_CPUS;
+ 		break;
+ 
+ 	case HEADER_CPU_TOPOLOGY:
 -- 
 2.54.0.746.g67dd491aae-goog
 
