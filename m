@@ -1,356 +1,186 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3495B3EF0D7
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 15:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A845B33ADA0
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 15:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779290764; cv=pass; b=ugTwXAeVIkov0h1ePVTsCzP+cGABsM4r0jde7cUsbGLuqDvBFmB+sgX8aGaj/5Y+hrP1nOAQaleKCUcSL1t14pDKqo8ETPYloyGvY3zLMLqufiWeOExN5O0Lg3B+vCdjqslcZI8lVxaG5X/TSzFKU+vVio2+vNdGCXxXphCBEfM=
+	t=1779291106; cv=pass; b=rbR1EOk2QZC4QExmLfapA7hVsqI8NyxPbQsX+iarSrVeVVQjuDVeOthXCET2FU3f5QpFSZ/1a+ieptmzumo6l9HLG0ADGbiRoKyHzVzjYix+uw4WmrwrnaCsCwwFV4aLMK8qSFZDejHxmx0w6tegqpgJ5GGDgbCBNJ9X/Lj52uk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779290764; c=relaxed/simple;
-	bh=tfxETcZ7bbFmY/uAHyh3oU/nmNQy/wA5MYwMD7XULDk=;
+	s=arc-20240116; t=1779291106; c=relaxed/simple;
+	bh=t/LeLsFeqvU9pme+8GhNrpGzANUHP38OETaaGdEtI04=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IXnxJVILh6/1rp5C6t+kGiMVTE4Ex50Ik3wecSyTJvE3Lkrh4NLVI/uurMS1a7QLSsaahaDaSZGQQRrxgVmOqtdc46NqCJrFb3u1o13cEEudRiR7R91LJIaQ9P610PDFDmgAwc+5OVDNavpWab01LB4rNzw4GvXCfDDvk5Blffk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ltd2wj2U; arc=pass smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=Gu1qqPj/Ypybp0renIPrxrDVl40tLs2SZXMKoTzDHdcwwICb67qtMKCB9/Cq8dP1UeGBOW2eQ/PGijqJV+ndqyilaZyLqns+Iok79hH/WQyoMCwS8QvvogJ+E4/V4KDcOzBaHjQEMl7VDzYRkZNZbHjBRyhIdg/+CZEjSk1iRVU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iwKt4xO7; arc=pass smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ltd2wj2U"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2b46da8c48eso4855ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 08:26:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779290762; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iwKt4xO7"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so785ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 08:31:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779291104; cv=none;
         d=google.com; s=arc-20240605;
-        b=TrHBaUdXJHIMVMtW0d7hkT7xNDb93oJL1oHbtev44D7SexwsvmdaCNxqLese5ByXO3
-         lm8tU2PRHMHpjoar2BO7x71LsY8aTrZpAUlCFyAKefOpKeCGFABRBHfVummJnuBlrtKr
-         s5ENsXLGtEhQlaEoP09hDzD0h2kB6tp0Ah3TFqSo6dqxRo5c7WLbEOim0HeCHuoa3BDg
-         ZGXp5SWQuDlY5ZVRYW7iN9JFFq1ZWHiU/DVy5fawGdK05kvpMjAaEFJnOP5TFvnjQiW4
-         qeXTAMOkVbaoAQsq20dENxq4lIBW4kxvgU6tOpTz7c7jDxOMXInYnjCapnPlxiu2N2Cn
-         bYqQ==
+        b=LbmYdeqOMO4aKuTBlOdwdBXKAp/1QeyvWxVC3ZltQNPEeDofL8K6aSmXYphG+wk93a
+         ipYaxVprFeUK3MPjrKpQOR1lqN3BJai6XQofHFChqIH2ULeC4rVfdty29xwT8zKsz/6O
+         eLl1UjOSzd16q1kO9RUSURDyqh19HEBRSySEyyP2WpbVBObu5oiezgAboIURC83DBK5E
+         obkUC56V5Vpe58W9g9UfR7TG279N6buCiQ3jk4ZsnEKkKzNyjWB0+1YwVUitYmZ2sQvO
+         O7t4anYznHMnAI6VBRmfoTsx0sOuYI5C5B0gH79gVZDkBWbyGL8WF9KqpPMVG7lUfvV/
+         2tVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=8PefTSc4iLEYlhheHnaoh74ekYBU5SjriHCT/hG3qzY=;
-        fh=wpal3VtkrxfkcVYNiY0kMb4z884+CscTzC97HD/sE+Y=;
-        b=HkQIPvkah6uf0MVdnhrzkKGs/G5RS9BU2EWttudg4aCANkR74KFbcodoIymMQ4sUIj
-         sd+5eIVa2OGNCR+5fJrcPFZheKesZrnf0/zS6LkDcpH04lpfX6eMx+9AUlVLCDYfKwr2
-         MCC5HtWdgCsUOdZ4FLc7ETXCs8g/g0ES54SWHe+hTgmqU+ifgaBySd0c9uERCIPlaJa5
-         BhcU00Qw9DltW+wvbyODlzEinACRSGA+BKpH4m64CQMCrEaVI2t0mNJjYoVorgmoOj3N
-         uobYTgKPS0WJmG06xshxHefNuzJzeYrdsMRr6hCdwRmf1r8sj4lzamQ2nayttxJR5Zaa
-         c2Kg==;
+        bh=WOsobkPKc/oq/wTpzPw1ddUlE/zH0ia7SLxEHdVAlCM=;
+        fh=WGuCUoaYLSJyG0wTKzuWq93t+vrqUQRJr5kE5iYMYc0=;
+        b=ZDutzDdogRJLuLP2lPUTOrd/xGymJmPL+1OyoMpkW+4I0Moy2ESO0Od94HjHc0slgx
+         ZAYYhGC9b5vfF94o5BpPGS4A22k+MhGPuMGQSwr6suvqL4Oa9l9W2+stMyRsAjUJJSEp
+         6mjg5D91yz1zPRH47liYHA8KJ0Pag92yn9MLMyxAdA8u8bH5hO2XVydm889OHlEpqiBj
+         2q4V5OjefhhoQFQR5dr1Pc+BR8n8MDZBW0a0vN0TseEKW69TeAyJ2C+m8y1CDF6tGJgM
+         17S3z1PE0765GR79Wrquk+k5ALuev4dxXeVus5C9bJiks9RP6fgN8yvZLKM5a7uhjJoa
+         sNmQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779290762; x=1779895562; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779291104; x=1779895904; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8PefTSc4iLEYlhheHnaoh74ekYBU5SjriHCT/hG3qzY=;
-        b=Ltd2wj2UBPM0xrFUQ5N8I1XtLDEMj4+rsycU/9Vpe2RAu0I2OktMA/70h6WUxQxRL2
-         dYmby7+vvTqVfLMAGh1/MuxdvnNg+bAQvhzKc1VC4gwk+IG2QG7OCQoQbSTykF0lSDH9
-         /uY34YKE4R2IKjX/Eb/FkdHohYeEtcCK+6Kfase4t0BrUuVX9Soj/k7Rr5imAJe+Ok3U
-         NYpEG4LIuHltJXBkGayMegAmMFSUntpDa7ULB4MKKc9+J5qBdptqTV3VPVJev6WHQv29
-         QFVxbCPKtqpeVIgm5dZXEEXwgN5Udxyt6Bc0t7m1Zay3TLnwVioUQ5E+cwuHHVRjr6bn
-         7gSA==
+        bh=WOsobkPKc/oq/wTpzPw1ddUlE/zH0ia7SLxEHdVAlCM=;
+        b=iwKt4xO73bSKar9b8TSm0C98WarPvF4LxAqZkpQlyN5fwQ7hxHauZa43xKt28UcJp5
+         HmFI7vtQNnqQ9vA4roLU+kxujMDq1AMOYBSdm05IOGtyPmkjPaxrDese6bMuRWxFYZFf
+         ssn9ncCBsGCGIoTMQw9vkvW+fg4zPaD8izVy7oafP3j1tooxwrh3g84zG4NImB9uoao9
+         aKCCrPAzXAdDmzHhm9N0jnTVxnAMy0NHsdPcYhB+esO3I/xzmHYgcpELWgLfM0yJtE+K
+         k1v3DWCEqeq/PPW86ltH1VmtbRUoSqoLkaCMcFlqfWncxvDf0NrG6gTzy4v3NBzCZx6i
+         LMbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779290762; x=1779895562;
+        d=1e100.net; s=20251104; t=1779291104; x=1779895904;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=8PefTSc4iLEYlhheHnaoh74ekYBU5SjriHCT/hG3qzY=;
-        b=iguoKcZVgfuZuWma1kncgbtEcdr/RHuRcmAMtcro67uVH21iWA4cPb0ebCsKYtfkNH
-         SVGnr0c1k2H//d96ma9T/2SLidcDgFbbRb/z55nfjMrmTht9pN6gBotwFsTCfCPrdQQ2
-         Okb8Li0Mu+ia4OxKuRm2JDPBXGk6cwfv1S2ktj1KlFc4d4DrCyQFCLW7wIJ5LuQgXTX9
-         GAji0CofLJ6mwHkuuii6CGQVsUYdmyu2EXTljBKkEet2EAnFmdmMaYzHX2qK9x6LjCWh
-         Ts/2Fj5j/N6wLyS4fsj2xnXLc5ChRSbAOYB6K+SY1q/KNOjLaN1EhYn5OlX/Iqzl1Ffj
-         oWdQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+H+B/9XS30KC8KUKC2iOrnKYZ+VfNqI8QrIK2UHhnvxE9BsGCXV6OYhfGu8L4SODQc9ScuJ0A2h4DOguj192C0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzpeyr36LMzB5gh2rQrzO5jGVnr1oN83gWuZzfU21ej+llgDwKo
-	+wfU5KgK/8g0qjfi75NiNjymzGu14iVnitqiE9138jGWCfnQC/wYGjqisRq/eNsYjAG59/xOlvC
-	mAllO+OMrSw1Rl6BFEmf4tqFEECVGp9yaK0tH7P/u
-X-Gm-Gg: Acq92OEHzCPGmNZ92AvuaHwbqW2FKz1Enj1qyOCaqAoXTc459ai8s55f/f8VI18iiLX
-	yyH7wpbexwqsL9/7xulJqO24myJ48ksZKNXNg5wZ47tQPIu+O++qafkqIWYVgTH8o+upaJVLMcQ
-	/2Qc1d6nBQ+Q87UcSHIaVmb/ffJlsLII4q+6JcOEIalSXPc1tPYVWULFa60jpc49cD+/vNuikxo
-	oCkqG5HLqtSNO/B4ZEU3rhpRe4Mh5tuLkSdFFmBOJT8HQ8G9vr+V/y+Xwk5ZBLDXdFgLNw/WJS8
-	aRFvlkJMTx70Xucuo+i77cY9LCFwqOatiW1G44XizbPQTrvC
-X-Received: by 2002:a17:903:1a2d:b0:2b8:e82d:ff7c with SMTP id
- d9443c01a7336-2bdb32c3f0cmr9316015ad.9.1779290762016; Wed, 20 May 2026
- 08:26:02 -0700 (PDT)
+        bh=WOsobkPKc/oq/wTpzPw1ddUlE/zH0ia7SLxEHdVAlCM=;
+        b=GrBIQErr7zNRuWFF3/hWKXRuDoEPerBbTi4JDESmwg1NQjAFUIW792PAxYrlBn1fxY
+         myS8LjJ2cacK3zUHwqa/ky2MvTU1jQGjSA/T1he+0nDumqnNteNv++YOM+jxKjbiBzdb
+         QnpXYRuzgW1OWRPQlBqUaU/ZqkZd+stQlgNjWdYh71IHQk1Dn7ZY1x2mQcgWT7Ah3W67
+         oq6NX/jm0o4aUKMCIGrqYsBoIaEblXkhD6kLN1lrxnGCp9EBuSJL0XU1AwhAWc/Jcqvw
+         liRzW+WsJIq7eIMBBW+PMStGzpU/Cja8Ie+zz8+Zap/RtelzVcvM6elnaTWWos6kKfPq
+         aygg==
+X-Forwarded-Encrypted: i=1; AFNElJ/i5h7zTlBA1z1/s7SlFFGn7phnYiKCLqubkGaRdpARiCPHH2pj43u8fr1kuL2oojg9j8tR6gBwUb2ud3elrsBh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHvi5SdkN3YNmgLZZtSghIWtuGmFhpm7L45g1rzgvkZYkAtIk0
+	b6TRJ1GeGv2vCnM2EowXY+kft1z1zFYgBNji8eI8ZDUN1nDjHsTVZ5eAzc09syDjv5q0KpTq6+7
+	U89tXuxJi403gaBY/6uHDotwlmFXP6G9Wlt8dPFv8
+X-Gm-Gg: Acq92OE2N6wOz7aoBu0DB4PkfvXyfBe9z1QiyqMLOBJ4QXw5g1+4AKKyjD8omH4FVEH
+	BiIdi+uE0JXQfGhC3dYpDkchrcKyB3H95ZzUmiMjzgF4iquMtUaUAsdOmge17pF895iy4cuDNCv
+	Lr/YDDCCGv0Pz6wJ/I9ISh7f084LoWMVwpBo0O9HEa5zSv0bVv9i11HmY72HaRTHdDulB+XMtH/
+	jSnQpFx+QAP1+4zOkXIuAfI7Ap1sNQ8m0vKeSs2Vc9P06AsTYpIWrZfcfUg69Eoc+cW8DX02dKS
+	1y8TYpGfW5ZL1c+5avGfUL9k0/4/9r9mLniG9mdsUfhYlbfq
+X-Received: by 2002:a17:903:2f03:b0:2bd:6727:d689 with SMTP id
+ d9443c01a7336-2bdb03a2b85mr10761065ad.12.1779291103496; Wed, 20 May 2026
+ 08:31:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260520134004.30573-1-cp0613@linux.alibaba.com>
-In-Reply-To: <20260520134004.30573-1-cp0613@linux.alibaba.com>
+References: <20260518043140.2522141-1-irogers@google.com> <20260518062904.2591616-1-irogers@google.com>
+In-Reply-To: <20260518062904.2591616-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 20 May 2026 08:25:50 -0700
-X-Gm-Features: AVHnY4KtZnOAHpZqJftZ9HaF6hdfCe1raaXuZ_951WO0YLw8CS266uo-KDA5RoI
-Message-ID: <CAP-5=fWApAYb33pSnfW+gRmY7TsPUcfAP1UnBCJW5UpFudpr5A@mail.gmail.com>
-Subject: Re: [PATCH v3] perf riscv: Add SDT argument parsing for RISC-V
-To: Chen Pei <cp0613@linux.alibaba.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, dapeng1.mi@linux.intel.com, pjw@kernel.org, 
-	alex@ghiti.fr, guoren@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Date: Wed, 20 May 2026 08:31:31 -0700
+X-Gm-Features: AVHnY4IeN_0JW2OSfJ0cjs0ho2uUwLsk4-alBbqIlOYk5yVrZGOot9ulb8rSWjw
+Message-ID: <CAP-5=fVQ_t-kd0ZcN-GO32-SsRkO2q3QYRU76TKYYG6pqYSs1w@mail.gmail.com>
+Subject: Re: [PATCH v8 0/2] perf tests: Add uncore and x86 topdown event
+ sorting tests
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, collin.funk1@gmail.com, 
+	german.gomez@arm.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, zide.chen@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 20, 2026 at 6:40=E2=80=AFAM Chen Pei <cp0613@linux.alibaba.com>=
- wrote:
+On Sun, May 17, 2026 at 11:29=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> Implement __perf_sdt_arg_parse_op_riscv() to convert RISC-V GCC-generated
-> SDT probe operands into uprobe-compatible format, and register it in the
-> perf_sdt_arg_parse_op() dispatcher for EM_RISCV.
->
-> RISC-V GCC uses the 'nor' constraint for SDT arguments, producing operand=
-s
-> in the following formats:
->
->   Format       Example      Uprobe format
->   -----------  -----------  -------------
->   register     a0           %a0
->   memory (+)   8(a0)        +8(%a0)
->   memory (-)   -20(s0)      -20(%s0)
->   constant     99           (skip, not supported by uprobe)
->
-> Key differences from other architectures:
->  - Register names use ABI aliases (a0-a7, t0-t6, s0-s11, sp, ra, etc.)
->    without any '%' prefix, unlike x86 (%rax) or arm64 (x0).
->  - Memory operands use OFFSET(REG) syntax where OFFSET may be negative,
->    unlike arm64's [sp, NUM] or powerpc's NUM(%rREG).
->
-> Two regexes are used:
->  - SDT_OP_REGEX1: matches RISC-V ABI register names saved in pt_regs
->  - SDT_OP_REGEX2: matches [-]NUM(REG) memory operands
->
-> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Guo Ren <guoren@kernel.org>
-> ---
->
-> Tested on RISC-V QEMU(rv64gc) with GCC-generated SDT probes.
-> Requires systemtap-sdt-dev (provides <sys/sdt.h>) on the target system.
->
->   # cat sdt_test.c
->   #include <sys/sdt.h>
->   #include <stdio.h>
->   void my_func(int a, long b) {
->       DTRACE_PROBE2(myapp, my_probe, a, b);
->       printf("a=3D%d b=3D%ld\n", a, b);
->   }
->   int main() { my_func(42, -100); return 0; }
->
->   # gcc -O0 -Wl,--build-id -o sdt_test_O0 sdt_test.c  # stack args: -20(s=
-0)
->   # gcc -O2 -Wl,--build-id -o sdt_test_O2 sdt_test.c  # reg args:   a0
->   # perf buildid-cache --add sdt_test_O0
->   # perf buildid-cache --add sdt_test_O2
->   # find ~/.debug -name "probes" | xargs cat
->   p:sdt_myapp/my_probe .../sdt_test_O0:0x530 arg1=3D-20(%s0):s32 arg2=3D-=
-32(%s0):s64
->   p:sdt_myapp/my_probe .../sdt_test_O2:0x538 arg1=3D%a0:s32 arg2=3D%a1:s6=
-4
->
-> Changes in v3:
->  - Add two Reviewed-by tags.
->  - No actual update, just to re-trigger sashiko's review.
+> A patch thread changing event sorting highlighted a lack of testing
+> for the more complicated uncore and x86 perf metric event sorting:
+> https://lore.kernel.org/linux-perf-users/CAP-5=3DfWRgDo7UnJAD4C--d=3DmVPR=
+hOEWZVyU7nVM1YEp3jncAgg@mail.gmail.com/
 
-The Sashiko review is green, I think this can be merged.
-https://sashiko.dev/#/patchset/20260520134004.30573-1-cp0613%40linux.alibab=
-a.com
+Purely test changes with green analysis from Sashiko:
+https://sashiko.dev/#/patchset/20260518062904.2591616-1-irogers%40google.co=
+m
+It would be nice to get help landing this.
 
 Thanks,
 Ian
 
-> Changes in v2:
->  - Remove 'zero' (x0) from register regexes.
->  - Fix sdt_init_op_regex() to return -ret on error.
+> v8: Simplify event_cb in the uncore event sorting test by removing the
+>     unreachable dead-code else block (reported by Sashiko).
 >
->  .../util/perf-regs-arch/perf_regs_riscv.c     | 128 ++++++++++++++++++
->  tools/perf/util/perf_regs.c                   |   3 +
->  tools/perf/util/perf_regs.h                   |   1 +
->  3 files changed, 132 insertions(+)
+> v7: - Prevent double-free of m.event1 and dangling pointer access upon
+>       PMU scanning loop termination or early continue in the uncore
+>       event sorting test by utilizing standard perf zfree() helpers
+>       (reported by Sashiko).
+>     - Document Intel Hybrid CPU architectural invariants in the x86
+>       topdown test to clarify why instructions correctly leads a group
+>       of 2 on E-cores (cpu_atom) where slots is unsupported and
+>       filtered out (reported by Sashiko).
 >
-> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c b/tools/per=
-f/util/perf-regs-arch/perf_regs_riscv.c
-> index 5b5f21fcba8c..bf769304c97c 100644
-> --- a/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
-> +++ b/tools/perf/util/perf-regs-arch/perf_regs_riscv.c
-> @@ -1,8 +1,136 @@
->  // SPDX-License-Identifier: GPL-2.0
+> v6: - Ensure robust error initialization and resource cleanup in both
+>       uncore and topdown tests by initializing evlist to NULL and
+>       parse_events_error at function entry, preventing uninitialized
+>       stack access or resource leaks on early return paths (reported
+>       by Sashiko).
+>     - Prevent double evaluation and duplicate debug logging upon test
+>       assertion failure in the x86 topdown test by caching test_sort()
+>       return values into local variables (reported by Sashiko).
 >
-> +#include <errno.h>
-> +#include <regex.h>
-> +#include <string.h>
-> +#include <linux/kernel.h>
-> +#include <linux/zalloc.h>
-> +
-> +#include "../debug.h"
->  #include "../perf_regs.h"
->  #include "../../arch/riscv/include/perf_regs.h"
+> v5: - Strengthen uncore event sorting test assertions to require at
+>       least 4 total events (>=3D 2 groups of 2 events) instead of > 0
+>       events, guaranteeing that multi-PMU wildcard expansion is
+>       genuinely exercised across multiple sibling PMUs (reported by Sashi=
+ko).
+>     - Fix memory leaks on assertion failure across both uncore and
+>       topdown test suites by replacing standard TEST_ASSERT macros
+>       with local CHECK macros that correctly branch to out_err cleanup
+>       handlers (reported by Sashiko).
+>     - Fix test_sort() in the x86 topdown test to correctly return TEST_FA=
+IL (-1)
+>       instead of parse_events() internal error codes (e.g., -EINVAL) when=
+ event
+>       parsing fails (reported by Namhyung).
 >
-> +/*
-> + * RISC-V SDT argument formats (GCC 'nor' constraint):
-> + *
-> + * Register:  REG        e.g. a0, t1, s0, sp
-> + * Memory:    NUM(REG)   e.g. 8(a0), -20(s0)
-> + * Constant:  NUM        e.g. 99  (not supported by uprobe, skip)
-> + *
-> + * Note: 'zero' (x0) is hardwired to 0 and not in pt_regs; skip it.
-> + *
-> + * Uprobe target format:
-> + *   Register: %REG       e.g. %a0
-> + *   Memory:   +NUM(%REG) or -NUM(%REG)
-> + */
-> +
-> +/* RISC-V register ABI names: ra, sp, gp, tp, t0-t6, s0-s11, a0-a7 */
-> +#define SDT_OP_REGEX1  "^(ra|sp|gp|tp|t[0-6]|s[0-9]|s1[01]|a[0-7])$"
-> +
-> +/* RISC-V memory operand: [-]NUM(REG) */
-> +#define SDT_OP_REGEX2  "^(\\-)?([0-9]+)\\((ra|sp|gp|tp|t[0-6]|s[0-9]|s1[=
-01]|a[0-7])\\)$"
-> +
-> +static regex_t sdt_op_regex1, sdt_op_regex2;
-> +
-> +static int sdt_init_op_regex(void)
-> +{
-> +       static int initialized;
-> +       int ret =3D 0;
-> +
-> +       if (initialized)
-> +               return 0;
-> +
-> +       ret =3D regcomp(&sdt_op_regex1, SDT_OP_REGEX1, REG_EXTENDED);
-> +       if (ret)
-> +               goto error;
-> +
-> +       ret =3D regcomp(&sdt_op_regex2, SDT_OP_REGEX2, REG_EXTENDED);
-> +       if (ret)
-> +               goto free_regex1;
-> +
-> +       initialized =3D 1;
-> +       return 0;
-> +
-> +free_regex1:
-> +       regfree(&sdt_op_regex1);
-> +error:
-> +       pr_debug4("Regex compilation error.\n");
-> +       return -ret;
-> +}
-> +
-> +/*
-> + * Parse OP and convert it into uprobe format.
-> + * Possible variants of OP (RISC-V, GCC 'nor' constraint):
-> + *
-> + *   Format         Example       Uprobe
-> + *   ----------------------------------------
-> + *   REG            a0            %a0
-> + *   NUM(REG)       8(a0)         +8(%a0)
-> + *   -NUM(REG)      -20(s0)       -20(%s0)
-> + *   NUM            99            (skip, constant not supported)
-> + */
-> +int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op)
-> +{
-> +       int ret, new_len;
-> +       regmatch_t rm[4];
-> +       char prefix;
-> +
-> +       /*
-> +        * Constant argument: pure integer with no trailing '(' (e.g. "99=
-", "-1").
-> +        * uprobe does not support immediate values, so skip them.
-> +        * Memory operands like "8(a0)" or "-20(s0)" contain '(' so are N=
-OT
-> +        * treated as constants here; they will be matched by REGEX2 belo=
-w.
-> +        */
-> +       if (strchr(old_op, '(') =3D=3D NULL &&
-> +           ((*old_op >=3D '0' && *old_op <=3D '9') ||
-> +            (*old_op =3D=3D '-' && old_op[1] >=3D '0' && old_op[1] <=3D =
-'9'))) {
-> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> +               return SDT_ARG_SKIP;
-> +       }
-> +
-> +       ret =3D sdt_init_op_regex();
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (!regexec(&sdt_op_regex1, old_op, 2, rm, 0)) {
-> +               /* REG --> %REG */
-> +               new_len =3D 2;    /* % NULL */
-> +               new_len +=3D (int)(rm[1].rm_eo - rm[1].rm_so);
-> +
-> +               *new_op =3D zalloc(new_len);
-> +               if (!*new_op)
-> +                       return -ENOMEM;
-> +
-> +               scnprintf(*new_op, new_len, "%%%.*s",
-> +                       (int)(rm[1].rm_eo - rm[1].rm_so), old_op + rm[1].=
-rm_so);
-> +       } else if (!regexec(&sdt_op_regex2, old_op, 4, rm, 0)) {
-> +               /*
-> +                * NUM(REG) or -NUM(REG) --> +NUM(%REG) or -NUM(%REG)
-> +                * rm[1]: optional '-'
-> +                * rm[2]: decimal offset
-> +                * rm[3]: register name
-> +                */
-> +               prefix =3D (rm[1].rm_so =3D=3D -1) ? '+' : '-';
-> +
-> +               new_len =3D 5;    /* sign ( % ) NULL */
-> +               new_len +=3D (int)(rm[2].rm_eo - rm[2].rm_so);
-> +               new_len +=3D (int)(rm[3].rm_eo - rm[3].rm_so);
-> +
-> +               *new_op =3D zalloc(new_len);
-> +               if (!*new_op)
-> +                       return -ENOMEM;
-> +
-> +               scnprintf(*new_op, new_len, "%c%.*s(%%%.*s)", prefix,
-> +                       (int)(rm[2].rm_eo - rm[2].rm_so), old_op + rm[2].=
-rm_so,
-> +                       (int)(rm[3].rm_eo - rm[3].rm_so), old_op + rm[3].=
-rm_so);
-> +       } else {
-> +               pr_debug4("Skipping unsupported SDT argument: %s\n", old_=
-op);
-> +               return SDT_ARG_SKIP;
-> +       }
-> +
-> +       return SDT_ARG_VALID;
-> +}
-> +
->  uint64_t __perf_reg_mask_riscv(bool intr __maybe_unused)
->  {
->         return PERF_REGS_MASK;
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index 5b8f34beb24e..57a1d227d1b2 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -19,6 +19,9 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old=
-_op, char **new_op)
->         case EM_PPC64:
->                 ret =3D __perf_sdt_arg_parse_op_powerpc(old_op, new_op);
->                 break;
-> +       case EM_RISCV:
-> +               ret =3D __perf_sdt_arg_parse_op_riscv(old_op, new_op);
-> +               break;
->         case EM_386:
->         case EM_X86_64:
->                 ret =3D __perf_sdt_arg_parse_op_x86(old_op, new_op);
-> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> index 7c04700bf837..e0b51b514ee0 100644
-> --- a/tools/perf/util/perf_regs.h
-> +++ b/tools/perf/util/perf_regs.h
-> @@ -53,6 +53,7 @@ const char *__perf_reg_name_powerpc(int id);
->  uint64_t __perf_reg_ip_powerpc(void);
->  uint64_t __perf_reg_sp_powerpc(void);
+> v4: Fix malformed event group string formatting in the uncore event
+>     sorting test when running on AMD systems (where sysfs event
+>     aliases lack JSON descriptions - reported by Namhyung). Added a
+>     helper to strip redundant PMU prefixes and trailing slashes to
+>     ensure parse_events() receives valid syntax across all
+>     architectures.
 >
-> +int __perf_sdt_arg_parse_op_riscv(char *old_op, char **new_op);
->  uint64_t __perf_reg_mask_riscv(bool intr);
->  const char *__perf_reg_name_riscv(int id);
->  uint64_t __perf_reg_ip_riscv(void);
+> v3: Address sashiko nits on using evsel__name and ensuring slots is injec=
+ted.
+> https://lore.kernel.org/linux-perf-users/20260331185419.4085479-1-irogers=
+@google.com/
+>
+> v2: Address indentation and other nits from Namhyung. Add Zide Chen's
+>     tested-by tags.
+> https://lore.kernel.org/lkml/20260331165207.4016392-1-irogers@google.com/
+>
+> v1: https://lore.kernel.org/lkml/20260325183045.1229502-1-irogers@google.=
+com/
+>
+> Ian Rogers (2):
+>   perf tests: Add test for uncore event sorting
+>   perf arch x86 tests: Add test for topdown event sorting
+>
+>  tools/perf/arch/x86/tests/topdown.c     | 166 +++++++++++++++++++++-
+>  tools/perf/tests/Build                  |   1 +
+>  tools/perf/tests/builtin-test.c         |   1 +
+>  tools/perf/tests/tests.h                |   1 +
+>  tools/perf/tests/uncore-event-sorting.c | 176 ++++++++++++++++++++++++
+>  5 files changed, 344 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/perf/tests/uncore-event-sorting.c
+>
 > --
-> 2.50.1
+> 2.54.0.563.g4f69b47b94-goog
 >
