@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EB534D93B
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 19:42:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCB2313E36
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 19:45:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779306161; cv=none; b=kHdh6ZAe8rNmuu+j3R3igrs/TxApUP69UaWuy+V+XmL3Wrp5PnXGrhgB9/t4K0hfIYaPufkloJOqYfVn6EiPaKXV32ck9IX0JMAOziZRUyM5IeWmw1XG2VYxRlMG1N4tgBTy3p8wEdeT3G13n4guB08z/i8Wc19IUatFNHVXz9M=
+	t=1779306325; cv=none; b=EfXfJ8Ox/oYue3NrEMRjvHoibdjwK3i86AdXjNHX7tp+XChIT1Rm8F1cWCmrElyRrLtvPNTpU8idtZcCOgU+rJzKNfnsnJBjl67fOPjuK9tjXjFy/fsjqn7kPHsf5dzCPtcMWAXDq+otOf2ZAQ8NJoYjFRmAdzINCUL7Oa2Mf9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779306161; c=relaxed/simple;
-	bh=gXLh4JA3jvkWSIRfVaf8WwFYKkm/e5hnOTjAK+elvE0=;
+	s=arc-20240116; t=1779306325; c=relaxed/simple;
+	bh=EoGoH+kQ0ipFze0gS9bE3kl+6fYXG/Vet3YPNmGC2b0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nbYZMdT4DR4lAqlBl0UtAkP/N7mX1NA8HcnnvBhmGZYNTpb9NPZ4TA3LiB3qJhGsViEY0MQWGc/DFl8kB80jnWNeW6ICg+KdP4imxGPZUg761IAHIuDMYctVRBtvoUMWAHa2Sj62ptHEfDBtLiqhTAzf+bL/7DM+gp0c5Cy72Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aOKas1KO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ZivMCKAjyMY0qMa5Tb1ScWHfIxBr0Yi2NDtEzHCH/sNkiIB9qArR/gsuuZWPJkSB4OBM+71ug7xFb4PzgmIwLhPXm+CZKE3pD/QLS9YFx0gOdNUUk/sx2jGV0GxFoByXav4fOzs8w1lguDRrbKYbPiAMlmnda/LolPAuPBs0HTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SY1oQ+Ef; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aOKas1KO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B61B1F000E9;
-	Wed, 20 May 2026 19:42:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SY1oQ+Ef"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733A01F00893;
+	Wed, 20 May 2026 19:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779306160;
-	bh=Z0FDjIDVZRRPMDaih5BUps7mparYC34D+3MBIbpS6aM=;
+	s=k20260515; t=1779306323;
+	bh=CorxJypD7xUmYkTnHUBEpzf550bElUwnkqrXaaYjBcc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aOKas1KOEF3a1s4uhvVDMA9Og1R2eJEFXvQpv+PYOGat0Fd+9x0ucgP0z7PzV995K
-	 Xy/ABazaI7PQI3XVFJ22TuGfF23PI+7EMznWzC0jB/0xecO3aje+bxkfbXVWc4zV9r
-	 1hGkUnCb7R8TcQQzQ/nkO+CCnOMCM5sSetxJrL9cmbXs3kQa1Fp1GxGXagHxKULIlL
-	 8uv7q+agZdINDrflK+49QCvLeIsIdoceIC1hea8tP72nsVjotEov5Evh7Lxj7lSC7h
-	 GWfHxyBOQDuAscZsA7luZsKXQZhWsj0xeBYi12SKfAUvVQy7bMtHuYXfNwyzdvYpQY
-	 g9Rx/4iDYXqaw==
+	b=SY1oQ+EfFFeUbvl5yaVqMZSB378F1eMUGGqxM/byTiD39Air4sXzbVov+HIINBZVj
+	 dxtQS5xwlfTfCZLNn5YjT+KDHMIqxjd1mUst+miqszSCaBu8fwwX5wJpppcxSr58Hl
+	 tVTV6BCnrAS7JSyh2pT6j/ke67qgHUAF3mPZzDpsEzaaOQr9I94v12DL99YRUan8Vn
+	 zNwBW+Jmdo8rWxmxPxUTZHTfOmtll6BfuMCdBZakWuKmOJgSYV5C8dtAzrjdK9FAWs
+	 LoF3YIZ67QnKPqr7yTlvKT/Xr/dsJiRSuQXAlpXDWkN9q3EBfY4ahSEeXvGJLijtWp
+	 lnw7TOyOdM3Yw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v14 12/32] perf inject: Don't pass evsel with sample
+Subject: Re: [PATCH v14 23/32] perf lock: Avoid segv if event is missing a
+ callchain
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260520190538.142018-13-irogers@google.com>
-References: <20260520190538.142018-13-irogers@google.com>
+In-Reply-To: <20260520190538.142018-24-irogers@google.com>
+References: <20260520190538.142018-24-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 20 May 2026 19:42:39 +0000
-Message-Id: <20260520194240.4B61B1F000E9@smtp.kernel.org>
+Date: Wed, 20 May 2026 19:45:23 +0000
+Message-Id: <20260520194523.733A01F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,63 +46,61 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Buffer overflow and event corruption in `perf_event__synthesize_mm=
-ap2_build_id()` due to a typo when capping `build_id_size`.
+- [Medium] The patch conflates a missing callchain condition with a memory =
+allocation failure, causing out-of-memory errors to be silently ignored.
 --
 
-commit 2cd2e94f594b8a44bc5330a9f9007347d463ab0e
+commit a2151c29777424e46f4107c3691772f24c892171
 Author: Ian Rogers <irogers@google.com>
 
-perf inject: Don't pass evsel with sample
+perf lock: Avoid segv if event is missing a callchain
 
-As struct perf_sample now directly contains its own resolved evsel pointer,
-passing the evsel separately is redundant and clutters the interface.
-Remove the redundant evsel parameter from inject-specific handlers and
-structures, ensuring the tool always directly accesses the evsel bound to
-the sample.
+This commit avoids a potential segmentation fault by checking for a
+missing callchain pointer in get_callstack(), returning NULL if it is
+missing. It also updates the caller to return 0 instead of -ENOMEM when
+a NULL callstack is returned.
 
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 85bee747f4cd2..de812a2befbc7 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 89a40d385b27d..064b3aa4bad75 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
 [ ... ]
+> @@ -938,9 +938,16 @@ static u64 *get_callstack(struct perf_sample *sample=
+, int max_stack)
+>  	u64 i;
+>  	int c;
+> =20
+> +	if (!sample->callchain) {
+> +		pr_debug("Sample unexpectedly missing callchain\n");
+> +		return NULL;
+> +	}
+> +
+>  	callstack =3D calloc(max_stack, sizeof(*callstack));
+> -	if (callstack =3D=3D NULL)
+> +	if (callstack =3D=3D NULL) {
+> +		pr_debug("Failed to allocate callstack\n");
+>  		return NULL;
+> +	}
+[ ... ]
+> @@ -1059,7 +1066,7 @@ static int report_lock_contention_begin_event(struc=
+t perf_sample *sample)
+>  	if (needs_callstack()) {
+>  		u64 *callstack =3D get_callstack(sample, max_stack_depth);
+>  		if (callstack =3D=3D NULL)
+> -			return -ENOMEM;
+> +			return 0;
 
-> @@ -2309,6 +2304,7 @@ int perf_event__synthesize_mmap2_build_id(const str=
-uct perf_tool *tool,
->  {
->  	union perf_event ev;
->  	size_t ev_len;
-> +	u64 sample_type =3D sample->evsel ? sample->evsel->core.attr.sample_typ=
-e : 0;
->  	void *array;
->  	int ret;
+[Severity: Medium]
+Will this change inadvertently swallow memory allocation failures?
 
-[Severity: High]
-This is a pre-existing issue, but while reviewing this function, I noticed
-a buffer overflow in the build ID capping logic further down in the
-function.
+Because get_callstack() returns NULL both when the callchain is missing and
+when calloc() fails, returning 0 here means out-of-memory errors will now be
+silently ignored and treated as gracefully skipped events.
 
-When capping the build ID size, the code assigns the capped size to
-ev.build_id.size instead of ev.mmap2.build_id_size:
-
-	ev.mmap2.build_id_size =3D bid->size;
-	if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
-		ev.build_id.size =3D sizeof(ev.mmap2.build_id);
-	memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
-
-Because ev.mmap2.build_id_size remains untouched, the subsequent memcpy()
-can write past the end of the ev.mmap2.build_id array on the stack.
-
-Does this typo allow for a stack buffer overflow when processing crafted
-perf.data files or ELF notes with arbitrarily large build IDs?
-
-I understand this is fixed later in the patch series by the commit "perf
-synthetic-events: Bound check when synthesizing mmap2 and build_id events".
+Should get_callstack() perhaps return an error pointer or an explicit
+status code so the caller can distinguish between a missing callchain
+(returning 0) and an actual ENOMEM condition?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260520190538.1420=
-18-1-irogers@google.com?part=3D12
+18-1-irogers@google.com?part=3D23
