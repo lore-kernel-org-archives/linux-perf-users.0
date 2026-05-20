@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5868E352026;
-	Wed, 20 May 2026 19:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4351E30AABE;
+	Wed, 20 May 2026 19:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779306645; cv=none; b=EMgFt6QhgKOaNE2Ek+1YHIAVQwUQDU4d/JyIYvY8cLx64wVAC46/bTQzaL5+oLAGullVmwJ5aTFJhJRfj6zadC99OVXcLku0Nj+S9EnXPENhoTnxvNFcR9Wym2wO6dzoMdLqLlZNNBHoe/RjnT64/Ydkkq7zHw34pL+taoz5fac=
+	t=1779307101; cv=none; b=Hw2ngVlo/hsW3vcox3rTk+WFCOJSpUEOBjC/U3OwyWS0HkSIx5/37O9YiIOkqJDDKCa4WCiFZaGS9q8prRxPatFGACAxB+Teerlsiy+S09R39U0gpLbIvz/aVqfnGajnU16qpBt8vsxwSHKwCOzx1Qpjt42Sa3JOsEeB/ZwcP+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779306645; c=relaxed/simple;
-	bh=AXZ8xJNsowxaTzVYTmh1M/5dnlbzZ3GKUtBHTtJxfjg=;
+	s=arc-20240116; t=1779307101; c=relaxed/simple;
+	bh=z6YDFF/F/G9KRUXz6hjp/SsQ3nqabfGLtqJYh2V7fRE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HsIUF01/zQNP374AA2D64BI149W+xAEIRF+ebzk6lOG6Ru14yEOOxmVchki1ggMbenhMTIXw9abH59xP88iW9loHaVw6kt5HJxM8YjLvoGYHGsr2z+5pVzRg7fWdSIjHzUC6AUfNqJPgb2OwIALTuTIzLKjQK81jfx5fO7SInSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKeZglcT; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=hKAGR/ijpMHlEf0ZP8ZrLFBrJjKYeL+CXAbINw8ZjD8c4Qzc5CwXwZIMlkljxLArOorc2CKGYTggWkYJe/UG/cwclxN86wjO3he6WEtQd98L8YVMhFwLjPmlNVqMsbMmpsKt0n9350GP9Izol2C3XL5Gi0G7dZdZEOcgB0pIfcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLB/HoQB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKeZglcT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558171F000E9;
-	Wed, 20 May 2026 19:50:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLB/HoQB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E97E1F00893;
+	Wed, 20 May 2026 19:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779306644;
-	bh=Qx1idctS2JaBxqH1vrfL+qgfWIMqAd6ofslwgR2FEk0=;
+	s=k20260515; t=1779307099;
+	bh=uzxapyiocbfI1LGh1K06T5Oc18KznljB3gV4rIxT3Mw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UKeZglcTfQStNMMp3vMx60u285iChBAdXJ1UtKfS/4K9gl+3MKaXxNOzsjDE3YHPb
-	 jcnAYOe0s5m/ldJNUqn6QsD1z3ZOuM+VZpVZhITwshn4QoNKv5cUdRkbvLhwZWZibU
-	 IsLt5CoWxgj0miuV2KN3cCtclBuutESD5nbXuwfRhFZnifiN4p6hKAQPMSqxHy28AH
-	 AN1N3hszJfSDKkclIToVUgU5uqDYpp0mV/MMyagEuIqblw/fRsgjQgxW1fZme7WM+F
-	 0b3ZT0/9XWVR3w7NIlEaBdT+vRMykbz+MW9AbCGAyTiWfR171uKZG8eWGv+deCX8EC
-	 ihmv9xrRizTsQ==
-Date: Wed, 20 May 2026 16:50:40 -0300
+	b=dLB/HoQBogzhFCpRBQMcVo7n6otJ2D9ZuSOFScisIHQpeBmIv8NXIiQTCFTopFSlj
+	 9jv+Fgr6pc12c1Qcv0WT08C7bPLGgLVe0wI0NxvUhj8xlMsvjxtzlIVlcEXgGfTZMo
+	 x105TehnGMr/NMUZGfRLIA8G6QyVvxZyij93K7LeyfIu+MN0BDIK6kmULCqa9zFJlD
+	 kJZuegbDhmZ0JQziqdZObTsoavXfwpEuvVPQNLHuUWyAyBh6uxC7HgkjghL0/iImOe
+	 NuzUNw6uTn7SP1kgTuGem2A8ejHVHjEW/bSHylKfhokKN//jbJtp2mODid9lvp+ifh
+	 YaM/bv9h2S0Ug==
+Date: Wed, 20 May 2026 16:58:17 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: sashiko-reviews@lists.linux.dev, dmitry.torokhov@gmail.com,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] tools/build: selftests: Allow versioning LLVM lld
-Message-ID: <ag4QkPOCQ5LWy-U3@x1>
-References: <20260518-james-perf-llvm-version-v2-5-f12cc4f031d8@linaro.org>
- <20260518093237.90640C2BCC6@smtp.kernel.org>
- <ef5688a7-3e1d-47be-aca7-cc6e564e059c@linaro.org>
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	irogers@google.com, james.clark@linaro.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] perf: Fix SIGCHLD vs pause() race with
+ short-lived workloads
+Message-ID: <ag4SWXqjAWsjuCsE@x1>
+References: <20260520102017.293419-1-swapnil.sapkal@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,57 +46,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ef5688a7-3e1d-47be-aca7-cc6e564e059c@linaro.org>
+In-Reply-To: <20260520102017.293419-1-swapnil.sapkal@amd.com>
 
-On Mon, May 18, 2026 at 10:47:53AM +0100, James Clark wrote:
+On Wed, May 20, 2026 at 10:20:14AM +0000, Swapnil Sapkal wrote:
+> Several perf subcommands (sched stats, lock contention) use the pattern
+> of forking a workload child, calling evlist__start_workload() to uncork
+> it, and then calling pause() to wait for a signal (typically SIGCHLD
+> when the child exits, or SIGINT/SIGTERM from the user).
 > 
+> This pattern has a race condition: if the workload is very short-lived,
+> the child can exit and deliver SIGCHLD in the window between
+> evlist__start_workload() and pause(). Since pause() only returns when a
+> signal is received *while the process is suspended*, and SIGCHLD has
+> already been delivered and handled by the empty sighandler(), pause()
+> blocks indefinitely.
 > 
-> On 18/05/2026 10:32 am, sashiko-bot@kernel.org wrote:
-> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> > - [Medium] Empty USE_LD variable causes clang build failure in selftests when ld.lld is not in PATH.
-> > --
-> > 
-> > commit 371ca22c55bb0fa6502ac06f7b33d63418ad16ff
-> > Author: James Clark <james.clark@linaro.org>
-> > 
-> > tools/build: selftests: Allow versioning LLVM lld
-> > 
-> > This commit adds an LLD variable to Makefile.include to allow versioning of
-> > LLVM's linker, keeping it consistent with the rest of the LLVM toolchain. It
-> > modifies the BPF selftests Makefile to resolve the full path of the linker
-> > using the command -v shell utility.
-> > 
-> > > diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-> > > index 6ef6872adbc3e..836e783f0170e 100644
-> > > --- a/tools/testing/selftests/bpf/Makefile
-> > > +++ b/tools/testing/selftests/bpf/Makefile
-> > 
-> > [ ... ]
-> > 
-> > > @@ -245,9 +245,9 @@ $(OUTPUT)/%:%.c
-> > >   # LLVM's ld.lld doesn't support all the architectures, so use it only on x86
-> > >   ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 riscv))
-> > > -LLD := lld
-> > > +USE_LD := $(shell command -v $(LLD))
-> > 
-> > Does this cause the build to fail if the toolchain directory is not in the
-> > system PATH?
-> > 
-> > If a user explicitly specifies the compiler using an absolute path like
-> > CLANG=/path/to/clang, but does not add the toolchain directory to their PATH,
-> > the command -v utility will return an empty string.
+> The fix replaces pause() with a simpler approach:
 > 
-> If they don't use LLVM= and use CLANG= with an absolute path then they need
-> to set all the tools with an absolute path. That's the problem that setting
-> the path with a prefix for all tools with LLVM= solved.
+>  - The signal handler now sets a 'volatile sig_atomic_t done' flag
+>    to record delivery.  The flag is reset before handler registration
+>    so that a signal arriving during the setup phase is not discarded.
 > 
-> I suppose this could _technically_ be a regression, but so could adding any
-> new build rule that added a new tool that wouldn't be set in someones
-> existing build command. Being that strict would mean we can't ever add new
-> tools so I don't think this is an issue. And I don't think there's a way to
-> solve this and also respect the documented rules of LLVM=
+>  - Replace pause() with a unified loop:
+> 
+>        while (!done) {
+>            if (argc && waitpid(evlist->workload.pid, NULL, WNOHANG) > 0)
+>                break;
+>            sleep(1);
+>        }
+> 
+>    This handles both workload mode (child exit detected via waitpid)
+>    and system-wide mode (user sends SIGINT/SIGTERM setting done).
+>    Using WNOHANG avoids the SA_RESTART problem where a blocking
+>    waitpid() would auto-restart and ignore the done flag if the child
+>    doesn't exit on signal.
+> 
+> Three call sites are affected across two files:
+>   - perf_sched__schedstat_record() in builtin-sched.c
+>   - perf_sched__schedstat_live()   in builtin-sched.c
+>   - __cmd_contention()             in builtin-lock.c
+> 
+> The two pause() sites in builtin-kwork.c are NOT affected because they
+> do not register SIGCHLD or fork workload children; they only wait for
+> user-initiated SIGINT/SIGTERM.
 
-Hey, this touches several tools and libs, did you get acks besides the
-one from Ian?
+Thanks, applied to perf-tools-next, for v7.2.
 
 - Arnaldo
