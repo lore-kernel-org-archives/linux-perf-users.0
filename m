@@ -1,121 +1,139 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74083D811E
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69C63E275F;
+	Wed, 20 May 2026 12:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779281097; cv=none; b=njE6QqsntLJo8TANulc7FE+DViRZV0ssBZjf2zqXv1Tq/Jic2XV+2H0zuyJ78I/ZKDpXGvPrTfjphH6AABA/IHcEhXLsiOd9HviXeTIJ0UGi47vvlnXZNQqKzXIAza+944qeTGfcjqfrUVltYrhUGCcPIH6N9cmaGK/+bElJVB4=
+	t=1779281838; cv=none; b=LN7W40b5TeCw9vDMgbyubcWApNDISXUpF3A3TbylaQjRFh1cML9loswbLpkIT0Yu/Kz95Za5nfkOB09g7V/px4xz5eXzZFMwnFqwZD6v8ad7ClTj3CwT6Jx5S6mJKNGcHmnjiDhazybzvTkG7I7k2btmqICQQroPvYaxMtmKQKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779281097; c=relaxed/simple;
-	bh=90dTr1Qi9yuACudF20aHkhxWz9US003iAdGh3vLNMVg=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=Wl+aJVo3nDOZQyAlmJhm5d0yLWFLkb62Sff2946kDnwhUiWsbC+Qs2tacmXqdEX9rZkje/3fFAI7qIBMjIURQ3Bl63AswXURSvcZD7beF2k+G47HB0VVsQluLLQkAWIt0K1Wy5/IZ+YXe7q8adGEBZeg999Js2KYHO+kg7GRVD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Tq3UF9cb; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1779281838; c=relaxed/simple;
+	bh=tRcXdh4KlP6nur+ndfrHB76TXeuEEvedvf+Ef9QwBJw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kC1L0b67mnIM87d7QJF+mzUpEysjBwmAKyljRjEmVyq3AkGsP6ku2CCGsAP0f50oD6QKRp/Hihcs7yV5wlD2KTNQc2VVQ9NdgA6KJNFts6jfGWfD/0BtniJW+O8tepSfd028rBPDv7IcbylsEOaihyR64nWNDq4S3PYtTtEr6ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IpVLpw+5; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Tq3UF9cb"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64KArbhs3991710
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=Sns0GUJ/XY12OEqiv4hazkqDCWRp
-	KQM2m2rwx6a/zEA=; b=Tq3UF9cb2AXB8MvCD9zHpB+trRaDpIp0RRA4JviXeaoU
-	9EkN6PDC/UdcbBgNhxwNEeLXLI7KVdCwyPp+ttbJ73SPKnIqjNp+UY9lH3guGXJS
-	B3Hen98bKkrN4HAgIfPkOUmEW3V/CQfXsNNsJqrtuh5Va1+uWAM595uo7c2+ODWZ
-	TYy/l6q7MQAr4/Kg5iAGMtNw9FyfHOdAjvppZvp6ag7pFFkyChVM3vY9ZXrPJ4Fv
-	+msido7UclGWIyaP/kzEaB7bliPHVRhXF2XusI10M1Vp+fNeV9vBxAVzPuA/zLEy
-	UpqvXBEtBwhe+x6XinKvRq8bL052xpp/DC6IkC1FzA==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6hb8h1rt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:55 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64KCdGbX009945
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:55 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IpVLpw+5"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64K5ItcE271835;
+	Wed, 20 May 2026 12:56:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=oZDWSFTwZMq5+xqXGz4ywKE55za8Ur32lcEqkICOW
+	wI=; b=IpVLpw+5rgRtano782WPmf5hD3MQy32U0L1UCHC40xSHNzJXLzsWnSC/o
+	FU4KXxCRJn0gcc3lYjMk+m4XoS8qDPiOKIwT22a9OiOzeLNk3/mZNbK9D/XD26bX
+	djmbhzjS2GXTBHRSetD9rKpCIU1w6f1pAeXsLr+YkUbR9tko84DzZTTkx9/AlO4A
+	Ox9AQog1oUZwd2jMaBXVSoFuUO6lA/5ziGllXRVKlTXFAthyz4f+AXq9rVLhv5XD
+	smvi0cClzKsLGmJRftLmfxNovbEp0FPJAhkJcYkaryaJogxKDsvld8tYlSiLIz/8
+	/n8/JNJk1Uhj+1hyZr3S5oY+NYjbQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e6h752336-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 May 2026 12:56:44 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64KCdOqA028150;
+	Wed, 20 May 2026 12:56:43 GMT
 Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4e739vyesm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:54 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64KCiqsg51183948
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:53 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DFB0120040
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:52 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BE9B320049
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:52 +0000 (GMT)
-Received: from [9.111.38.205] (unknown [9.111.38.205])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:44:52 +0000 (GMT)
-Message-ID: <314df838-4c38-4f03-9515-ae1dabd09a54@linux.ibm.com>
-Date: Wed, 20 May 2026 14:44:52 +0200
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4e75ky73vv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 20 May 2026 12:56:43 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64KCud4P50528746
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 20 May 2026 12:56:39 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 850432004B;
+	Wed, 20 May 2026 12:56:39 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4903520043;
+	Wed, 20 May 2026 12:56:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 20 May 2026 12:56:39 +0000 (GMT)
+From: Jan Polensky <japo@linux.ibm.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+        tmricht@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] perf build: Fix Python extension build with GCC 16 hardening
+Date: Wed, 20 May 2026 14:56:37 +0200
+Message-ID: <20260520125637.105681-1-japo@linux.ibm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: perf test case 'perf kwork record' fails due to abortion
-Organization: IBM
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDEyMiBTYWx0ZWRfXzazXY5wjUYhi
- w3Gb3BTo+r88kMRR/UpxujalPhwRUpoocNSP4zBK7QsOtWX0RdWtKTqqYDqVGjLuLXJI1BcuTB5
- QoppSqsiE8DcP95GWHLrqq3ud50Ccwz6BSppTuEzi4NBoLUjkwyvyD+VLMk6n/LGu9It2UKDEal
- gXbFLFzPAoSnEs07/614CBBAI5+VuC6YtFy9bV7qzHVsxfKJTyvd4tjM0zmI09tiWItQmFOY46d
- mm4v4hYLjTMy8XbdwoX4dz0r+Bnx+wwJGIm0LQ2uIYhoAKVZsRVQ7u+Cl23Xy9NBsuYh+5gbHHU
- 1zIFvNI0aejVFJntAeeG3grARASyF3AwpjjqfP9O2Rp+Gecz/RDT9ftIlJA5Pa4yCNdrh0mGENY
- VR3g5lWE4WB6eAijmyuTwuQz8h10HynQ/ThdFYxggrPvNmR7QegD3t/AUF6zAcVinwh0MVjdwnE
- edq5+Gi37e0+p+Fr6fA==
-X-Proofpoint-GUID: 2Bz7Z3vhK6x1yiMMbXC5YfgbE6lB1LhS
-X-Proofpoint-ORIG-GUID: 2Bz7Z3vhK6x1yiMMbXC5YfgbE6lB1LhS
-X-Authority-Analysis: v=2.4 cv=aYBRWxot c=1 sm=1 tr=0 ts=6a0dacc7 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=HVa9FsKFN9bTpKEVuYAA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=ffCdDUQF c=1 sm=1 tr=0 ts=6a0daf8c cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=m2xt6vH2UB2CAm34afMA:9
+X-Proofpoint-ORIG-GUID: 33qOUNenD4asW3gO7f4pYa_KR0e1EoS5
+X-Proofpoint-GUID: 3mTvReuXuIiSmUeiSsNZFUNkrduh6EBa
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIwMDEyMiBTYWx0ZWRfX1UYxaCkkgKrk
+ aoRS6QbY2oIhLPJrF0QOSoIpNm/8a0jTizSnnBiF5LtMqkcFFkNNSkZ8HDA6MHD/yl/fexwJr0/
+ awy4Q++3KklGizlzoofT5g790Ay/T3iklZtM84S5USRUZ6by1JXDsGKIemJhpiqcfyMmHx2o1Pi
+ 8f47gl5x8gCDHjENcaUYQhTZ5PUvaBw03I/t7OtFmxa+YVAVdaOCCBHOB7sJJ2UUCFjsBRc5B5G
+ q352AE9+ZnwuA00hgwtB3Hkn9VLjgzinDhaXrMm08iOosS/8oC4PAi0LlTyyDdIFjgl+T2uNtxZ
+ xUmLdpjy5ijg0N4B55JRe3lfAHxNQB9uRms72BKYIzpPXR3EN3o4CFDHlIjHpuc5GFMLjdDRvxa
+ mpV1U2GFFAOMlgxP7mzmWiDHqOIn12JOdyt/0jkC+omFSGkFPLQ2x5ADlhNzeIoDfD9aXeSIF9i
+ LO9r+TyH0uPXfQV0LCg==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
  definitions=2026-05-20_02,2026-05-18_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 adultscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
- clxscore=1015 spamscore=0 phishscore=0 priorityscore=1501 malwarescore=0
+ priorityscore=1501 spamscore=0 phishscore=0 suspectscore=0 adultscore=0
+ clxscore=1011 impostorscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605200122
 
-The test case 
-# perf kwork record -- sleep 1
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.280 MB perf.data (568 samples) ]
-double free or corruption (!prev)
-Aborted                    perf kwork record -- sleep 1
-# echo $?
-134
-# 
+The Python extension build fails with modern GCC versions (16+) due to
+the new hardening feature that prevents dynamic relocations in read-only
+segments:
 
-The perf kwork record is kill with signal 6 (SIGABRT) and the test fails
-on x86_64 and s390, probably on other platforms as well.
+  /usr/bin/ld.bfd: error: read-only segment has dynamic relocations
+  collect2: error: ld returned 1 exit status
 
-Is this a known issue? 
+This occurs when building the perf Python bindings because the linker
+enforces stricter security policies by default.
 
-Thanks
+Add -Wl,-z,notext to LDSHARED to explicitly allow text relocations in
+the Python extension shared object. This is necessary for the Python
+C extension to link successfully while maintaining compatibility with
+the Python build system.
+
+The flag only affects the Python extension build and does not impact
+the security of the main perf binary or other components.
+
+Tested on Fedora 44 with GCC 16.1.1 20260501 (Red Hat 16.1.1-1) and
+Python 3.14.4 on s390x architecture.
+
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Jan Polensky <japo@linux.ibm.com>
+---
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index bfb37f527241..12af424dd5c1 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -749,7 +749,7 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+ $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+ 
+ $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py $(PERFLIBS_PY)
+-	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
++	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared -Wl,-z,notext" \
+         CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS_PY)' \
+ 	  $(PYTHON_WORD) util/setup.py \
+ 	  --quiet build_ext; \
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.51.0
 
