@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DF130AABE
-	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 19:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEAC3FE37D
+	for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 19:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779303989; cv=none; b=G2lpMZaUK1aRHayYr1+kbZKCrO5xlcPU4ckLyBg8Y3KNGEHhKNAzoatK6AXc0ekSDkdyckdRPAAY9TuALICdiTuuTJT6+7B329Cux1wdsL21+HelZtvtHdNuWgnxNQLWcu4h+nJD/MJeI81busqMH//+PGDypfl3lYagZ51Dwc0=
+	t=1779303991; cv=none; b=ZvK9cKnrVhkppx5WgDyjSy1eWGd/HGaOwpa8t+IXC8f3X/ziobfXlrdknHfV/4cNgswQ//wzV0rwYGxCZTQBi9Rav1n0obpcrq4HZ6pSnE0GqvyQslcVjpY0jGsRm9mJ96+rl0f8XT849cG2mQDt6/Q3BYTd670l91VflZ6hnDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779303989; c=relaxed/simple;
-	bh=vy9gFtxicEvRQRhH1oNkjKBCnnTRmSyz8w9SefOu5Nw=;
+	s=arc-20240116; t=1779303991; c=relaxed/simple;
+	bh=apVy9ur16wbOiVtPPb2fN+IDEQPmSjVHCdfsyETc200=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fEJFXGkg60DFh5tU0eavk+W/MJG5q9IiqBEnXYm/txB/5h023cpAgYD471mgeMLnQK3Ui2qWIkAhNPu9xL9wgfKpjthtJWYMi/SL8pArbvN+L/lBGyjRXUzdA0Bq/HcRqZliJeMe52CH6Ircjccu42rlvwM2vTuYNDf7qSYgSlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ob9L5kfz; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=VlwF5+h9hO06l7Efzko9hk3x3fHDliDb6WmU8yIfFqTB0qsTjIwzaeizwfaSVMAMd2dzhJBMbn/78zveXZXVuIUJtwvtSdxrUXqn0hNLNRRUrfIp09ZNj6+7T2iBDEGQHT3gS8a5z1DijdMhAORR7Bt0UETQsAM5ENxuJ465+NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lrcu1cfV; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ob9L5kfz"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1361d52b3a0so1151760c88.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:06:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lrcu1cfV"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1361d52b3a0so1151795c88.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 12:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779303987; x=1779908787; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779303990; x=1779908790; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C91qOHURWTNDFdyNm82ZF7Zgtjl+yaK/jp0Ihx0VYt4=;
-        b=ob9L5kfzEd8neeUceMG6Fv4/iefYcSfTyGh8edbIKSqUVey92aR0rUWvxZT8cbb2Z6
-         KFf6pn+N24FI5MUnkc0TEWarnzQ3FuR5LWP8nb0HoOdkLe7nAeF06PetkA1rcbC7Z7cV
-         dlGvERaq+XrgiiSt6lRMdWcrkMyVP1TA0rSVtwnAJLAWZ/P1VUPWng+DRkVugnA9fAFf
-         AAuaHB2vSe9YKIuRZ9xprYa2Rxr1Gw+kwuNqzoi038QodtckaUuKwQFkdt7/kfnSRPlP
-         N1qnehp6Oi5t+7fPD1yp60pVTDAOOXMMvy5nEF/SUchtT60IBZJ4IzEIqDJgB71g572y
-         Zdzw==
+        bh=gfrm14HIpsT+y1+N0gKKl5Ph2oM5BFJPWR0ZCkGuD9Y=;
+        b=lrcu1cfVoCXkmt2ii7OWHbXpoqereOWAvYUU34dEP3+JQNwfhRlIO0h6lQ2rulticE
+         s8Vll5wLFCeumXJ6CSliKlMU9xbBMYKtLY0pA9Qdn4GuDppfqU2jshjuy3PASvcKoEpN
+         29epEz+oTGZ6TvTwaRC0O/Jd6phwJEBwO3iel6NruKocPpBUFRhdkBw7O7Qq4ytQqjSb
+         W8zC+oN9H+H9wT0h6DzMmDNy1kuJAXmNnCg1YEo2XiNjoanNiDdiACpUtjpyIIOOHQP3
+         pbUEbNHyfJEYpxmZvoNReW3hpG8BcsQiv/F2HFusS37k+/KjM+OjZk30lJ4mpZtXhJHr
+         OKLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779303987; x=1779908787;
+        d=1e100.net; s=20251104; t=1779303990; x=1779908790;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C91qOHURWTNDFdyNm82ZF7Zgtjl+yaK/jp0Ihx0VYt4=;
-        b=IuTgKhfL1aUuylhvZYiOWx5NqOa4/CHPDbHBw4ZnwVvdfY1zStArPGv7ZwsVqwBSag
-         YLkLb1kGTOeekzLqUP7cJwrwzBwruvmPVjHK8CAFXcvlPvAdbHbaAKjDrtFlMCsUGKej
-         xkw+xXSYIx0lJbRwUOqdQB9HVHJy0ait790iLBSnPspxdUSkJh5QmQ0FjXaVtCoUXR9W
-         XLQiiz76YHvyLt5opsBxykifMyE8HcfJ5eirOM2jxJ/EadGyjqZQs/IlgfZCeDMJCxFo
-         B5+SZcmAKVAoE3jxXM4I47LRYfr3ckl5O+ctkpb9DvjoJzKvtxklS9DIhL+Uw/XRU7Pc
-         Wr2w==
-X-Forwarded-Encrypted: i=1; AFNElJ95D8U+1u+x73yfcaClrdZQNGiK1QyUCSifFaw1+dFETovwsv1zFS8TIbXiDx6wo/LqAdQE8Zadrx7ExXpfJnZW@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVPIXQdLeSQIDKO5n+yiVlyaLs5tGKxh+TUUcaOshgTBLjekAp
-	PIsSYVk50k/RTe/hooTmMCSGq7x3WbfoJUzCtwG4IuECd/39sIPdWN0NbVYh86bjKNmB+Ej4AuV
-	xuEsnuQIUxg==
-X-Received: from dleb1-n2.prod.google.com ([2002:a05:701b:4241:20b0:135:d2a6:35f2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:221a:b0:135:e455:e1e0
- with SMTP id a92af1059eb24-135e455e2eemr2203259c88.10.1779303987158; Wed, 20
- May 2026 12:06:27 -0700 (PDT)
-Date: Wed, 20 May 2026 12:05:27 -0700
+        bh=gfrm14HIpsT+y1+N0gKKl5Ph2oM5BFJPWR0ZCkGuD9Y=;
+        b=iMSw3EgYNLYQ7v+CCt2eey79Q46mkYaPz/Ixk8Z24+7g8Yc8AANInioYP9CMm1PMk7
+         JsLWuugAhA8B83SZkM0GQPLa/qgWRSBpyCtHT8FoorhJBBYi6YysGKq7Xl+BCEt1HD5z
+         9zkYdFceR+FFhKLFVUZh7c5+tMDioHjxHKmDn79Bx4eBbBiL39CmzAwtq1/YaEJPJR87
+         fsot/NOYESg2Ckqs+8QzM+qeSmo90SJ+DcwCOHWpERw842ZE+NVtVkDQPoZTWs8KFgPC
+         krKZHa3Z7zOwkpJeXcivrEkPlK6w6Y/gsNrCbGccmhyK7oba3DDYRJdoAoqBaWaSyCsN
+         SvKw==
+X-Forwarded-Encrypted: i=1; AFNElJ/ZFDQARVe8nxRikpFbLSxGHRka1TcAFuwALXSkgY/XByqtmoJGTsRUPbKs+VdnHAsH12zO/BkTcmSdV7FWyg3a@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiiYp/TovVvP5ynmv9p3XO7lxgNapC+jpCHpVbeuDva07SW7gV
+	lHTJNZaoQka0ukpKEh/fZEXvoLhV7hfbpSGqBe+NGO+PTLOr4x7s6+MbRQd84rknt03yt3mR4kg
+	Mq0i2vqzUiw==
+X-Received: from dlbem2.prod.google.com ([2002:a05:7022:1002:b0:132:8d92:4d6e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2201:b0:12d:de3f:f3db
+ with SMTP id a92af1059eb24-135049521b4mr9969757c88.37.1779303989258; Wed, 20
+ May 2026 12:06:29 -0700 (PDT)
+Date: Wed, 20 May 2026 12:05:28 -0700
 In-Reply-To: <20260520190538.142018-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260512223001.2952848-1-irogers@google.com> <20260520190538.142018-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.746.g67dd491aae-goog
-Message-ID: <20260520190538.142018-22-irogers@google.com>
-Subject: [PATCH v14 21/32] perf evsel: Don't pass evsel with sample
+Message-ID: <20260520190538.142018-23-irogers@google.com>
+Subject: [PATCH v14 22/32] perf lock: Constify trace_lock_handler variables
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com, 
@@ -76,151 +76,46 @@ Cc: adrian.hunter@intel.com, ajones@ventanamicro.com, ak@linux.intel.com,
 	zhouquan@iscas.ac.cn
 Content-Type: text/plain; charset="UTF-8"
 
-As struct perf_sample now directly contains its own resolved evsel pointer,
-passing the evsel separately is redundant and clutters the interface.
+Constify the static trace_lock_handler structures.
 
-Remove the redundant evsel parameter from evsel-specific handlers and
-structures, ensuring the tool always directly accesses the evsel bound to the
-sample. This simplifies the API signatures and eliminates the risk of passing
-an inconsistent evsel.
+Since the trace lock handler callbacks and definitions do not change at runtime,
+declare them const to enforce read-only memory placement and improve safety.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/evsel.c | 61 +++++++++++++++++++++++++----------------
- 1 file changed, 37 insertions(+), 24 deletions(-)
+ tools/perf/builtin-lock.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ee30e15af054..bb48568b8101 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3003,52 +3003,62 @@ int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads)
- 	return ret;
- }
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index b6533483ba64..89a40d385b27 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1179,7 +1179,7 @@ static int report_lock_contention_end_event(struct perf_sample *sample)
  
--static int perf_evsel__parse_id_sample(const struct evsel *evsel,
--				       const union perf_event *event,
-+static int perf_evsel__parse_id_sample(const union perf_event *event,
- 				       struct perf_sample *sample)
+ /* lock oriented handlers */
+ /* TODO: handlers for CPU oriented, thread oriented */
+-static struct trace_lock_handler report_lock_ops  = {
++static const struct trace_lock_handler report_lock_ops  = {
+ 	.acquire_event		= report_lock_acquire_event,
+ 	.acquired_event		= report_lock_acquired_event,
+ 	.contended_event	= report_lock_contended_event,
+@@ -1188,13 +1188,13 @@ static struct trace_lock_handler report_lock_ops  = {
+ 	.contention_end_event	= report_lock_contention_end_event,
+ };
+ 
+-static struct trace_lock_handler contention_lock_ops  = {
++static const struct trace_lock_handler contention_lock_ops  = {
+ 	.contention_begin_event	= report_lock_contention_begin_event,
+ 	.contention_end_event	= report_lock_contention_end_event,
+ };
+ 
+ 
+-static struct trace_lock_handler *trace_handler;
++static const struct trace_lock_handler *trace_handler;
+ 
+ static int evsel__process_lock_acquire(struct perf_sample *sample)
  {
-+	const struct evsel *evsel = sample->evsel;
- 	u64 type = evsel->core.attr.sample_type;
- 	const __u64 *array = event->sample.array;
- 	bool swapped = evsel->needs_swap;
- 	union u64_swap u;
--
--	array += ((event->header.size -
--		   sizeof(event->header)) / sizeof(u64)) - 1;
-+	int i = ((event->header.size - sizeof(event->header)) / sizeof(u64)) - 1;
- 
- 	if (type & PERF_SAMPLE_IDENTIFIER) {
--		sample->id = *array;
--		array--;
-+		if (i < 0)
-+			return -EFAULT;
-+
-+		sample->id = array[i--];
- 	}
- 
- 	if (type & PERF_SAMPLE_CPU) {
--		u.val64 = *array;
-+		if (i < 0)
-+			return -EFAULT;
-+
-+		u.val64 = array[i--];
- 		if (swapped) {
- 			/* undo swap of u64, then swap on individual u32s */
- 			u.val64 = bswap_64(u.val64);
- 			u.val32[0] = bswap_32(u.val32[0]);
- 		}
--
- 		sample->cpu = u.val32[0];
--		array--;
- 	}
- 
- 	if (type & PERF_SAMPLE_STREAM_ID) {
--		sample->stream_id = *array;
--		array--;
-+		if (i < 0)
-+			return -EFAULT;
-+
-+		sample->stream_id = array[i--];
- 	}
- 
- 	if (type & PERF_SAMPLE_ID) {
--		sample->id = *array;
--		array--;
-+		if (i < 0)
-+			return -EFAULT;
-+
-+		sample->id = array[i--];
- 	}
- 
- 	if (type & PERF_SAMPLE_TIME) {
--		sample->time = *array;
--		array--;
-+		if (i < 0)
-+			return -EFAULT;
-+
-+		sample->time = array[i--];
- 	}
- 
- 	if (type & PERF_SAMPLE_TID) {
--		u.val64 = *array;
-+		if (i < 0)
-+			return -EFAULT;
-+
-+		u.val64 = array[i--];
- 		if (swapped) {
- 			/* undo swap of u64, then swap on individual u32s */
- 			u.val64 = bswap_64(u.val64);
-@@ -3058,7 +3068,6 @@ static int perf_evsel__parse_id_sample(const struct evsel *evsel,
- 
- 		sample->pid = u.val32[0];
- 		sample->tid = u.val32[1];
--		array--;
- 	}
- 
- 	return 0;
-@@ -3244,15 +3253,18 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 
- 		data->deferred_cookie = event->callchain_deferred.cookie;
- 
--		if (evsel->core.attr.sample_id_all)
--			perf_evsel__parse_id_sample(evsel, event, data);
--
-+		if (evsel->core.attr.sample_id_all) {
-+			if (perf_evsel__parse_id_sample(event, data))
-+				goto out_efault;
-+		}
- 		return 0;
- 	}
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
--		if (evsel->core.attr.sample_id_all)
--			perf_evsel__parse_id_sample(evsel, event, data);
-+		if (evsel->core.attr.sample_id_all) {
-+			if (perf_evsel__parse_id_sample(event, data))
-+				goto out_efault;
-+		}
- 		return 0;
- 	}
- 
-@@ -3614,12 +3626,13 @@ int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
- 
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
- 		struct perf_sample data = {
-+			.evsel = evsel,
- 			.time = -1ULL,
- 		};
- 
- 		if (!evsel->core.attr.sample_id_all)
- 			return -1;
--		if (perf_evsel__parse_id_sample(evsel, event, &data))
-+		if (perf_evsel__parse_id_sample(event, &data))
- 			return -1;
- 
- 		*timestamp = data.time;
 -- 
 2.54.0.746.g67dd491aae-goog
 
