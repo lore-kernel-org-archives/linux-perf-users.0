@@ -1,213 +1,341 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590813EA970
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 17:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779385857; cv=pass; b=WB95lwgACtpbne5ryWeluf1Hm5nQijC1MG9PkfhmeaEzZwPS2lrtn4lnHM37DWm4vM3UHwnAAuNSss+N5ScW7EbHxyTx57qlV2g1qLf01zw6khKlgfrM2Ii1ghygyrX1H7EMvKhYitWprOhf/ZtntwNv/vsnTOHgRE/nfDJGRcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779385857; c=relaxed/simple;
-	bh=uZEmKQEPtBiulFq5qAYPUwHEbakFqp23BZT72IvQHOI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hfXa9n7xsj4Ck0DPGcGv5bKeB+s4YusvU5faIrvUKNelJLoHqOWh8W5RW3T+OhoojdrbyOc0YU4OsrBaBZaAN0yegMyvpq8q+r8bZgt+Le7MMcYoDciWVMHIGvh6Rp+2AqjA7pZsFXchUmBhjDUTPTWpkS9o2MQx5X1qoQNtymo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SCxlMUHS; arc=pass smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172FA383991;
+	Thu, 21 May 2026 17:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779386107; cv=none; b=pERuW9LPSwSrp1jC1xkClI2hgyRF2UnEeansn0y0Eh341w//Qa3SrGGB3bClVXBkOW0J3x4aRfhmHVi7cNjUlBOAbJ0nsr/j93JzCWTDegUcajDQVmr70jrMkEMyAUtLf30pwTxZbQiiXfp4J/XN7VboKrgyzFsjYruCWmzObq8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779386107; c=relaxed/simple;
+	bh=gaBZf0xgijk3ADHndlwJWy7ORRG1lWmztC5hSDwgckM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Udks5yGMK8+3bJV7BDDst1wEbexIvHHqAUt6sHNopUyZwIqJ5JDRrxeh7g7+cChObCoe02sP25GM+u39UI8qADW7/0xgs6AmbhqHkkUXfD/ZHuqWH03dauWy5YzXP2j+jl0m8NNd1jixFe5HnGRmOh+yqjuoeHXr18OuSSfK5zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aC8vy/LH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SCxlMUHS"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2ba180a022dso85ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 10:50:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779385856; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Yom7sdTvywU2tMl7z0ffygQFzEdEvIvcRwKe/LMEKl7PNw9fHscMECJSiDYMhaCqK2
-         aEQsVBOKS1mdXjedsi6rIdBLP226+vl0qxu2OYBmSwG8xQe7PCN7inzowN113wRhJ3FD
-         3MYnbsTij5I1JNKt2rnHzUG6ShSTYiekLJV6hlsxJkdVyb0KxfYUtgxq81I5By7hLzHN
-         b6H8bUNoevKKgxvzoFOFcvenO5fz1HBbsUd5L/jGoftRlh4qRhWkwP8mEhgGs4LLJsjc
-         ndjXcyfXjmB372Jf8anEIE/AEGTdVeCWRl99Scuss85hiekjEVyNZnxAFMx1zEPjUVsf
-         SbSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=207OftV959LjRYpr372rL5wikkcj8n/uFnR1W8tNHp0=;
-        fh=hmpecbPvmRpGuRe7Bn9h9GRmW51UvzyfXdOlpWNA+sA=;
-        b=kn3pv1gb3ClSdb4v23DhyyPI/kzV9ZNaLHGV73VqQ1cbhrY9vgXYv7z0Fl0hkcJDBW
-         gyywS8R+W8yUs5cKSWrUxYN6QwU5M7XJIQwcrSgxK4WivlcUyhmeTSNha0fQ72tscmT5
-         C6ao1Vz4PJh9700PEvvV31EcqdB4IifdTamGuPTvov+jlYAFKnepc+sgq8ViDARPBLhK
-         MVLbn64fyU4WnuJGX3wTNpkBb73poq3O2ZwQRNnwXrVEfeflQyahFtwfmYAHkF5G4Rf1
-         JwaKzRrltNkFicZOmXjdZmPEfkodRBc1WtDr4owx2cbWxV0slXZ9qQCV8go1lhmaeUxD
-         TcXw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779385856; x=1779990656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=207OftV959LjRYpr372rL5wikkcj8n/uFnR1W8tNHp0=;
-        b=SCxlMUHSAPXlPlkqX/WpGsxAQT5sKPOoUHFBnj82G31PyQIBl7XkRRxt91QB5FY2K0
-         9duKw4VdccWEhI3ZpLnMnHxUsgv6Pv0DtbllhfLyvxj5FphzD6g8ZzbFGmqVlIcPr8/k
-         SkJaomPAPVuQdUi6gbPKj15xtjA4FUW9h0E4IqccBZ3Yc32pW0zz4XSB2YWrlY5X5v+Y
-         c6RcTaU+M4lE3gIJBDsp58NBIqDv8FFa9OCrke7sIshMdNk4xeoAPAfEi6VTaVwA9bw9
-         VcidS5/2b7xgbG8+IP0mVDTK20Zthau+peFWPI3qSzstc8wNL+YoJ1mKBf8bxEP/hWkW
-         31RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779385856; x=1779990656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=207OftV959LjRYpr372rL5wikkcj8n/uFnR1W8tNHp0=;
-        b=d/PmdhnfEVJodbiJNMFSKR3izCrha4yoj5OSSh8v1Q9+it+1ilxqndK9Tlzsw19g6q
-         kqNmF+VBazZgxP5toeuF6recdlccw+xicACcThmsvZ04JwkRlBrT5zG/VSrgscF1ZVLQ
-         WYmPBms6GkimpvD4uMIbDJEI3LzQQAuyOA/rFIEERwKj6q92tXUbH8i4PGG3+cVOx7xh
-         N05FdRzcNKZt8Gv6TWpSmlULVmKlpUJo81sh4DSX4p8xKoKdv0kPW0aRCKnxLQjIGRpc
-         94bnrDY7CfAcrYl79YGR3ErUFaLByO7bTEC3x8pOKkI25x8eB2pL+CLnHvyGdwgBm/XE
-         TgZQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+M70NlTwtS3h+H8kbmLMZSDC4N4XV803VW+LV88SZ59sIR3/3jfOjEKlxd53x02fvGEOvGCfHl+bVchULP+zam@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2S52bPLgW4Ouvv4S56BE8jq5+KrTkpL7OdzZ0Rs6wPvuJ4lk4
-	H3x3Iv8ECag/femDt55449LcaqNYEWnwQpdhuE+RTreBgd+RandnWd1lm8ZevJvhyfqHZUzfYMS
-	ZWEldRfWJ7xBEMULy9HGufq6BfJPRXTligy5PlquZ
-X-Gm-Gg: Acq92OGks3y4E2VZ7OA9p5A9b7YR7TbQkzJTA9tXDP4bA4J7LD6AzrdMhAyp4k+I17N
-	e+LDTcbjS7N9o31Ix7a4lrXDWnh091zgrvcfqDwBXKhDSelp0l4tMnfTCxpR8I1rIagRZzgA73e
-	jKR5daMwIaBr0AZ/0Y3zA8BeLMYHLcNeqOf7okiZiN942Ddx7isMg0xAa6TyugyuvniQwzTR3Ap
-	YmYuQx103InDSKFq0YmoEWJw49Y1hpRCb2OdwgYWfRTDs70MwPKP4/we3yDZios8EF/8BR1znrM
-	kD4sm9ObHy5fdPZeg+JPnzKBPs99kZHkbeCS4syfzpTu5q9R
-X-Received: by 2002:a17:902:f78f:b0:2bd:6dad:7ccc with SMTP id
- d9443c01a7336-2bea22258d8mr2812855ad.24.1779385855086; Thu, 21 May 2026
- 10:50:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aC8vy/LH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506081F000E9;
+	Thu, 21 May 2026 17:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779386105;
+	bh=vlAEN5PPlUm3ATKJz3BeUhXMqXrr2jnTmejiLaEyQKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=aC8vy/LH+/tqS5YVZcN6eknx4S+rSMHoze+Rd6eCHHZZL1J7rZoAd/m8k9QuGfLhs
+	 8JAr7qP5BuHlXg6N4Wh6joZmTotu865j1O18ZrwsxrTdM5tGTNUHzmsHUUTufVH0rk
+	 vk+Cu91rGB3ZrT/BajAZyqrBGDnqRQg2CIyEjzhhcPPha8eofPCy1AnVRCsYv5SBH3
+	 fhDGu3sYzJLaha/KK0DKqzb7EPd3L4427WQQl2AQJ0qXwBMIjAk19B/xrrxx75M3Q5
+	 7oTAGs3vw/C6txRPvnu4dQOa7951MVPmsGg42wLspx01xScaxvOE/wduKAwT+4OeG/
+	 Fi2jSV16Tq2lg==
+Date: Thu, 21 May 2026 10:55:02 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Ian Rogers <irogers@google.com>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [FYI] [PATCH] merge resolution commit for perf trace beauty
+ conflict
+Message-ID: <ag9G9nKxz8JsiUQc@google.com>
+References: <ag88OnWBm2Ce6A2s@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ag8X7gcDw6jpJsLq@decadent.org.uk>
-In-Reply-To: <ag8X7gcDw6jpJsLq@decadent.org.uk>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 21 May 2026 10:50:42 -0700
-X-Gm-Features: AVHnY4KHqHkaTccso9Ae1JwavhgkDWK8Q23HikysKTcCQJ7I9OB_ihLrUTe10XE
-Message-ID: <CAP-5=fUy-hwmD2WXpmzJAE4k3U4WNYEezy3Dh1cVSFw_LPGJzw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Fix out-of-tree build of some tools
-To: Ben Hutchings <benh@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ag88OnWBm2Ce6A2s@x1>
 
-On Thu, May 21, 2026 at 7:57=E2=80=AFAM Ben Hutchings <benh@debian.org> wro=
-te:
->
-> perf and rtla currently don't fully support out-of-tree builds, as
-> they may still create files in their source directory.  This series
-> fixes all the instances of this problem that I have found.
->
-> Ben.
+On Thu, May 21, 2026 at 02:09:14PM -0300, Arnaldo Carvalho de Melo wrote:
+> Just FYI, this is the merge commit solving this conflict.
+> 
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> commit 86c8774ce08b931debdaa3f61f5a033639c183ca
+> Merge: f8d0db39bcc536ef 758c807bb943138f
+>     Merge remote-tracking branch 'torvalds/master' into perf-tools-next
+>     
+>     Fixup clash of:
+>     
+>       552636b9317c8a84 ("perf trace: Add beautifier script for fsmount flags")
+>     
+>     That went via Namhyung upstream and the following ones in the
+>     perf-tools-next tree:
+>     
+>       32969ef6e3e1979a ("perf build: Pre-generate BPF skeleton tooling during umbrella prepare phase")
+>       537609924c43715e ("perf trace beauty: Make beauty generated C code standalone .o files")
+>     
+>     This complements sent by Ian Rogers.
 
-Thanks for the cleanup! I ran Sashiko locally and it noted that we
-should also fix the clean steps to remove these files (I'll copy the
-full text below).
-Reviewed-by: Ian Rogers <irogers@google.com>
+As long as you have this with Ian's fix,
 
-```
-commit cf212be834ce6b0df5cccdbc4ad977a917ff8e48
-   Author: Ben Hutchings <benh@debian.org>
-
-   perf tools: Put Python egg info in output directory
-
-   Installing the Python extension currently creates an egg-info
-   directory in the source tree, preventing a fully out-of-tree build.
-
-   Add the necessary runes to the setup.py comamnd line to relocate the
-   egg-info directory in an out-of-tree build.
-
-   > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-   > index fc92d6ceac5b..b9a9bdddb89a 100644
-   > --- a/tools/perf/Makefile.perf
-   > +++ b/tools/perf/Makefile.perf
-   > @@ -905,7 +910,9 @@ install-bin: install-tools install-tests
-   >  install: install-bin try-install-man
-   >
-   >  install-python_ext:
-   > -       $(PYTHON_WORD) util/setup.py --quiet install
---root=3D'/$(DESTDIR_SQ)'
-   > +       $(PYTHON_WORD) util/setup.py --quiet \
-   > +               $(if $(OUTPUT),egg_info --egg-base $(OUTPUT)) \
-   > +               install --root=3D'/$(DESTDIR_SQ)'
-
-   This relocates the egg-info directory to the output directory, which
-   helps keep the source tree clean. However, does the `python-clean`
-   target need to be updated to clean up this directory?
-
-   Currently, `python-clean` is defined as:
-
-   python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r
-$(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
-
-   Should we also clean `$(OUTPUT)/perf.egg-info` (or `perf.egg-info` for
-   in-tree builds) to ensure `make clean` removes all generated python
-   metadata? For example:
-
-   python-clean :=3D $(call QUIET_CLEAN, python) \
-                   $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so \
-                   $(OUTPUT)perf.egg-info perf.egg-info
-
-   commit dd754ea75966ec7ade41500afeb32d944f20a8f9
-   Author: Ben Hutchings <benh@debian.org>
-
-   perf tools: Put Python bytecode in output directory
-
-   The PMU events are processed into C sources by Python scripts,
-which
-   normally results in writing bytecode for each module into the
-source
-   tree.  This prevents a fully out-of-tree build.
-
-   To fix this, set $PYTHONPYCACHEPREFIX to relocate the bytecode cache
-   directory in an out-of-tree build.
-
-   > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-   > index fc92d6ceac5b..b9a9bdddb89a 100644
-   > --- a/tools/perf/Makefile.perf
-   > +++ b/tools/perf/Makefile.perf
-   > @@ -400,6 +400,11 @@ PYTHON_EXTBUILD_LIB :=3D
-$(PYTHON_EXTBUILD)lib/
-   >  PYTHON_EXTBUILD_TMP :=3D $(PYTHON_EXTBUILD)tmp/
-   >  export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
-   >
-   > +# Put Python bytecode in output directory
-   > +ifdef OUTPUT
-   > +export PYTHONPYCACHEPREFIX :=3D $(OUTPUT)/__pycache__
-   > +endif
-   > +
-   >  python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r
-$(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
-
-   Similar to the egg-info relocation, does `python-clean` need to
-clean up
-   the relocated `__pycache__` directory under `$(OUTPUT)`?
-
-   If `PYTHONPYCACHEPREFIX` is exported to `$(OUTPUT)/__pycache__`, running
-   `make clean` currently leaves this directory behind. Should we add it to
-   the `RM` list in `python-clean`? For example:
-
-   python-clean :=3D $(call QUIET_CLEAN, python) \
-                   $(RM) -r $(PYTHON_EXTBUILD)
-$(OUTPUT)python/perf*.so \
-                   $(if $(OUTPUT),$(OUTPUT)/__pycache__)
-```
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
-Ian
+Namhyung
 
-> Ben Hutchings (3):
->   rtla: Fix output files in source tree
->   perf tools: Put Python egg info in output directory
->   perf tools: Put Python bytecode in output directory
->
->  tools/perf/Makefile.perf            |  9 ++++++++-
->  tools/tracing/rtla/Makefile         | 31 ++++++++++++++++++-----------
->  tools/tracing/rtla/tests/timerlat.t |  4 ++--
->  3 files changed, 29 insertions(+), 15 deletions(-)
->
+>     
+>     Cc: Ian Rogers <irogers@google.com>
+>     Cc: Mark Brown <broonie@kernel.org>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Cc: Thorsten Leemhuis <linux@leemhuis.info>
+>     Fixes: f8d0db39bcc536ef ("perf build: Fix fsmount.o build")
+>     
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> diff --cc tools/perf/Makefile.perf
+> index fc92d6ceac5b0c98,76b35ac19acbfb20..4ac2a0cec9ee22a2
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@@ -509,7 -508,232 +508,6 @@@ arm64-sysreg-defs-clean
+>   	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) O=$(arm64_gen_sysreg_outdir) \
+>   		prefix= subdir= clean > /dev/null
+>   
+>  -beauty_linux_dir := $(srctree)/tools/perf/trace/beauty/include/linux/
+>  -beauty_uapi_linux_dir := $(srctree)/tools/perf/trace/beauty/include/uapi/linux/
+>  -beauty_uapi_sound_dir := $(srctree)/tools/perf/trace/beauty/include/uapi/sound/
+>  -beauty_arch_asm_dir := $(srctree)/tools/perf/trace/beauty/arch/x86/include/asm/
+>  -beauty_x86_arch_asm_uapi_dir := $(srctree)/tools/perf/trace/beauty/arch/x86/include/uapi/asm/
+>  -
+>  -linux_uapi_dir := $(srctree)/tools/include/uapi/linux
+>  -asm_generic_uapi_dir := $(srctree)/tools/include/uapi/asm-generic
+>  -arch_asm_uapi_dir := $(srctree)/tools/arch/$(SRCARCH)/include/uapi/asm/
+>  -x86_arch_asm_dir := $(srctree)/tools/arch/x86/include/asm/
+>  -
+>  -beauty_outdir := $(OUTPUT)trace/beauty/generated
+>  -beauty_ioctl_outdir := $(beauty_outdir)/ioctl
+>  -
+>  -# Create output directory if not already present
+>  -$(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
+>  -
+>  -syscall_array := $(beauty_outdir)/syscalltbl.c
+>  -syscall_tbl := $(srctree)/tools/perf/trace/beauty/syscalltbl.sh
+>  -syscall_tbl_data := $(srctree)/tools/scripts/syscall.tbl \
+>  -	$(wildcard $(srctree)/tools/perf/arch/*/entry/syscalls/syscall*.tbl)
+>  -
+>  -$(syscall_array): $(syscall_tbl) $(syscall_tbl_data)
+>  -	$(Q)$(SHELL) '$(syscall_tbl)' $(srctree)/tools $@
+>  -
+>  -fs_at_flags_array := $(beauty_outdir)/fs_at_flags_array.c
+>  -fs_at_flags_tbl := $(srctree)/tools/perf/trace/beauty/fs_at_flags.sh
+>  -
+>  -$(fs_at_flags_array): $(beauty_uapi_linux_dir)/fcntl.h $(fs_at_flags_tbl)
+>  -	$(Q)$(SHELL) '$(fs_at_flags_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -clone_flags_array := $(beauty_outdir)/clone_flags_array.c
+>  -clone_flags_tbl := $(srctree)/tools/perf/trace/beauty/clone.sh
+>  -
+>  -$(clone_flags_array): $(beauty_uapi_linux_dir)/sched.h $(clone_flags_tbl)
+>  -	$(Q)$(SHELL) '$(clone_flags_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -drm_ioctl_array := $(beauty_ioctl_outdir)/drm_ioctl_array.c
+>  -drm_hdr_dir := $(srctree)/tools/perf/trace/beauty/include/uapi/drm
+>  -drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
+>  -
+>  -$(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
+>  -	$(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
+>  -
+>  -fadvise_advice_array := $(beauty_outdir)/fadvise_advice_array.c
+>  -fadvise_advice_tbl := $(srctree)/tools/perf/trace/beauty/fadvise.sh
+>  -
+>  -$(fadvise_advice_array): $(beauty_uapi_linux_dir)/fadvise.h $(fadvise_advice_tbl)
+>  -	$(Q)$(SHELL) '$(fadvise_advice_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -fsmount_arrays := $(beauty_outdir)/fsmount_arrays.c
+>  -fsmount_tbls := $(srctree)/tools/perf/trace/beauty/fsmount.sh
+>  -
+>  -$(fsmount_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsmount_tbls)
+>  -	$(Q)$(SHELL) '$(fsmount_tbls)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -fsmount_attr_arrays := $(beauty_outdir)/fsmount_attr_arrays.c
+>  -fsmount_attr_tbls := $(srctree)/tools/perf/trace/beauty/fsmount_attr.sh
+>  -
+>  -$(fsmount_attr_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsmount_attr_tbls)
+>  -	$(Q)$(SHELL) '$(fsmount_attr_tbls)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -fspick_arrays := $(beauty_outdir)/fspick_arrays.c
+>  -fspick_tbls := $(srctree)/tools/perf/trace/beauty/fspick.sh
+>  -
+>  -$(fspick_arrays): $(beauty_uapi_linux_dir)/mount.h $(fspick_tbls)
+>  -	$(Q)$(SHELL) '$(fspick_tbls)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -fsconfig_arrays := $(beauty_outdir)/fsconfig_arrays.c
+>  -fsconfig_tbls := $(srctree)/tools/perf/trace/beauty/fsconfig.sh
+>  -
+>  -$(fsconfig_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsconfig_tbls)
+>  -	$(Q)$(SHELL) '$(fsconfig_tbls)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -pkey_alloc_access_rights_array := $(beauty_outdir)/pkey_alloc_access_rights_array.c
+>  -asm_generic_hdr_dir := $(srctree)/tools/include/uapi/asm-generic/
+>  -pkey_alloc_access_rights_tbl := $(srctree)/tools/perf/trace/beauty/pkey_alloc_access_rights.sh
+>  -
+>  -$(pkey_alloc_access_rights_array): $(asm_generic_hdr_dir)/mman-common.h $(pkey_alloc_access_rights_tbl)
+>  -	$(Q)$(SHELL) '$(pkey_alloc_access_rights_tbl)' $(asm_generic_hdr_dir) > $@
+>  -
+>  -sndrv_ctl_ioctl_array := $(beauty_ioctl_outdir)/sndrv_ctl_ioctl_array.c
+>  -sndrv_ctl_hdr_dir := $(srctree)/tools/include/uapi/sound
+>  -sndrv_ctl_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/sndrv_ctl_ioctl.sh
+>  -
+>  -$(sndrv_ctl_ioctl_array): $(beauty_uapi_sound_dir)/asound.h $(sndrv_ctl_ioctl_tbl)
+>  -	$(Q)$(SHELL) '$(sndrv_ctl_ioctl_tbl)' $(beauty_uapi_sound_dir) > $@
+>  -
+>  -sndrv_pcm_ioctl_array := $(beauty_ioctl_outdir)/sndrv_pcm_ioctl_array.c
+>  -sndrv_pcm_hdr_dir := $(srctree)/tools/include/uapi/sound
+>  -sndrv_pcm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/sndrv_pcm_ioctl.sh
+>  -
+>  -$(sndrv_pcm_ioctl_array): $(beauty_uapi_sound_dir)/asound.h $(sndrv_pcm_ioctl_tbl)
+>  -	$(Q)$(SHELL) '$(sndrv_pcm_ioctl_tbl)' $(beauty_uapi_sound_dir) > $@
+>  -
+>  -kcmp_type_array := $(beauty_outdir)/kcmp_type_array.c
+>  -kcmp_hdr_dir := $(srctree)/tools/include/uapi/linux/
+>  -kcmp_type_tbl := $(srctree)/tools/perf/trace/beauty/kcmp_type.sh
+>  -
+>  -$(kcmp_type_array): $(kcmp_hdr_dir)/kcmp.h $(kcmp_type_tbl)
+>  -	$(Q)$(SHELL) '$(kcmp_type_tbl)' $(kcmp_hdr_dir) > $@
+>  -
+>  -kvm_ioctl_array := $(beauty_ioctl_outdir)/kvm_ioctl_array.c
+>  -kvm_hdr_dir := $(srctree)/tools/include/uapi/linux
+>  -kvm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/kvm_ioctl.sh
+>  -
+>  -$(kvm_ioctl_array): $(kvm_hdr_dir)/kvm.h $(kvm_ioctl_tbl)
+>  -	$(Q)$(SHELL) '$(kvm_ioctl_tbl)' $(kvm_hdr_dir) > $@
+>  -
+>  -socket_arrays := $(beauty_outdir)/socket.c
+>  -socket_tbl := $(srctree)/tools/perf/trace/beauty/socket.sh
+>  -
+>  -$(socket_arrays): $(linux_uapi_dir)/in.h $(beauty_linux_dir)/socket.h $(socket_tbl)
+>  -	$(Q)$(SHELL) '$(socket_tbl)' $(linux_uapi_dir) $(beauty_linux_dir) > $@
+>  -
+>  -sockaddr_arrays := $(beauty_outdir)/sockaddr.c
+>  -sockaddr_tbl := $(srctree)/tools/perf/trace/beauty/sockaddr.sh
+>  -
+>  -$(sockaddr_arrays): $(beauty_linux_dir)/socket.h $(sockaddr_tbl)
+>  -	$(Q)$(SHELL) '$(sockaddr_tbl)' $(beauty_linux_dir) > $@
+>  -
+>  -vhost_virtio_ioctl_array := $(beauty_ioctl_outdir)/vhost_virtio_ioctl_array.c
+>  -vhost_virtio_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/vhost_virtio_ioctl.sh
+>  -
+>  -$(vhost_virtio_ioctl_array): $(beauty_uapi_linux_dir)/vhost.h $(vhost_virtio_ioctl_tbl)
+>  -	$(Q)$(SHELL) '$(vhost_virtio_ioctl_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -perf_ioctl_array := $(beauty_ioctl_outdir)/perf_ioctl_array.c
+>  -perf_hdr_dir := $(srctree)/tools/include/uapi/linux
+>  -perf_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/perf_ioctl.sh
+>  -
+>  -$(perf_ioctl_array): $(perf_hdr_dir)/perf_event.h $(perf_ioctl_tbl)
+>  -	$(Q)$(SHELL) '$(perf_ioctl_tbl)' $(perf_hdr_dir) > $@
+>  -
+>  -madvise_behavior_array := $(beauty_outdir)/madvise_behavior_array.c
+>  -madvise_hdr_dir := $(srctree)/tools/include/uapi/asm-generic/
+>  -madvise_behavior_tbl := $(srctree)/tools/perf/trace/beauty/madvise_behavior.sh
+>  -
+>  -$(madvise_behavior_array): $(madvise_hdr_dir)/mman-common.h $(madvise_behavior_tbl)
+>  -	$(Q)$(SHELL) '$(madvise_behavior_tbl)' $(madvise_hdr_dir) > $@
+>  -
+>  -mmap_flags_array := $(beauty_outdir)/mmap_flags_array.c
+>  -mmap_flags_tbl := $(srctree)/tools/perf/trace/beauty/mmap_flags.sh
+>  -
+>  -$(mmap_flags_array): $(linux_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman-common.h $(mmap_flags_tbl)
+>  -	$(Q)$(SHELL) '$(mmap_flags_tbl)' $(linux_uapi_dir) $(asm_generic_uapi_dir) $(arch_asm_uapi_dir) > $@
+>  -
+>  -mremap_flags_array := $(beauty_outdir)/mremap_flags_array.c
+>  -mremap_flags_tbl := $(srctree)/tools/perf/trace/beauty/mremap_flags.sh
+>  -
+>  -$(mremap_flags_array): $(linux_uapi_dir)/mman.h $(mremap_flags_tbl)
+>  -	$(Q)$(SHELL) '$(mremap_flags_tbl)' $(linux_uapi_dir) > $@
+>  -
+>  -mount_flags_array := $(beauty_outdir)/mount_flags_array.c
+>  -mount_flags_tbl := $(srctree)/tools/perf/trace/beauty/mount_flags.sh
+>  -
+>  -$(mount_flags_array): $(beauty_uapi_linux_dir)/mount.h $(mount_flags_tbl)
+>  -	$(Q)$(SHELL) '$(mount_flags_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -move_mount_flags_array := $(beauty_outdir)/move_mount_flags_array.c
+>  -move_mount_flags_tbl := $(srctree)/tools/perf/trace/beauty/move_mount_flags.sh
+>  -
+>  -$(move_mount_flags_array): $(beauty_uapi_linux_dir)/mount.h $(move_mount_flags_tbl)
+>  -	$(Q)$(SHELL) '$(move_mount_flags_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -mmap_prot_array := $(beauty_outdir)/mmap_prot_array.c
+>  -mmap_prot_tbl := $(srctree)/tools/perf/trace/beauty/mmap_prot.sh
+>  -
+>  -$(mmap_prot_array): $(asm_generic_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman-common.h $(mmap_prot_tbl)
+>  -	$(Q)$(SHELL) '$(mmap_prot_tbl)' $(asm_generic_uapi_dir) $(arch_asm_uapi_dir) > $@
+>  -
+>  -prctl_option_array := $(beauty_outdir)/prctl_option_array.c
+>  -prctl_option_tbl := $(srctree)/tools/perf/trace/beauty/prctl_option.sh
+>  -
+>  -$(prctl_option_array): $(beauty_uapi_linux_dir)/prctl.h $(prctl_option_tbl)
+>  -	$(Q)$(SHELL) '$(prctl_option_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -usbdevfs_ioctl_array := $(beauty_ioctl_outdir)/usbdevfs_ioctl_array.c
+>  -usbdevfs_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/usbdevfs_ioctl.sh
+>  -
+>  -$(usbdevfs_ioctl_array): $(beauty_uapi_linux_dir)/usbdevice_fs.h $(usbdevfs_ioctl_tbl)
+>  -	$(Q)$(SHELL) '$(usbdevfs_ioctl_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -x86_arch_prctl_code_array := $(beauty_outdir)/x86_arch_prctl_code_array.c
+>  -x86_arch_prctl_code_tbl := $(srctree)/tools/perf/trace/beauty/x86_arch_prctl.sh
+>  -
+>  -$(x86_arch_prctl_code_array): $(beauty_x86_arch_asm_uapi_dir)/prctl.h $(x86_arch_prctl_code_tbl)
+>  -	$(Q)$(SHELL) '$(x86_arch_prctl_code_tbl)' $(beauty_x86_arch_asm_uapi_dir) > $@
+>  -
+>  -x86_arch_irq_vectors_array := $(beauty_outdir)/x86_arch_irq_vectors_array.c
+>  -x86_arch_irq_vectors_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
+>  -
+>  -$(x86_arch_irq_vectors_array): $(beauty_arch_asm_dir)/irq_vectors.h $(x86_arch_irq_vectors_tbl)
+>  -	$(Q)$(SHELL) '$(x86_arch_irq_vectors_tbl)' $(beauty_arch_asm_dir) > $@
+>  -
+>  -x86_arch_MSRs_array := $(beauty_outdir)/x86_arch_MSRs_array.c
+>  -x86_arch_MSRs_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_msr.sh
+>  -
+>  -$(x86_arch_MSRs_array): $(x86_arch_asm_dir)/msr-index.h $(x86_arch_MSRs_tbl)
+>  -	$(Q)$(SHELL) '$(x86_arch_MSRs_tbl)' $(x86_arch_asm_dir) > $@
+>  -
+>  -rename_flags_array := $(beauty_outdir)/rename_flags_array.c
+>  -rename_flags_tbl := $(srctree)/tools/perf/trace/beauty/rename_flags.sh
+>  -
+>  -$(rename_flags_array): $(beauty_uapi_linux_dir)/fs.h $(rename_flags_tbl)
+>  -	$(Q)$(SHELL) '$(rename_flags_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -arch_errno_name_array := $(beauty_outdir)/arch_errno_name_array.c
+>  -arch_errno_hdr_dir := $(srctree)/tools
+>  -arch_errno_tbl := $(srctree)/tools/perf/trace/beauty/arch_errno_names.sh
+>  -
+>  -$(arch_errno_name_array): $(arch_errno_tbl)
+>  -	$(Q)$(SHELL) '$(arch_errno_tbl)' '$(patsubst -%,,$(CC))' $(arch_errno_hdr_dir) > $@
+>  -
+>  -statx_mask_array := $(beauty_outdir)/statx_mask_array.c
+>  -statx_mask_tbl := $(srctree)/tools/perf/trace/beauty/statx_mask.sh
+>  -
+>  -$(statx_mask_array): $(beauty_uapi_linux_dir)/stat.h $(statx_mask_tbl)
+>  -	$(Q)$(SHELL) '$(statx_mask_tbl)' $(beauty_uapi_linux_dir) > $@
+>  -
+>  -sync_file_range_arrays := $(beauty_outdir)/sync_file_range_arrays.c
+>  -sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
+>  -
+>  -$(sync_file_range_arrays): $(beauty_uapi_linux_dir)/fs.h $(sync_file_range_tbls)
+>  -	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(beauty_uapi_linux_dir) > $@
+> --
+>   TESTS_CORESIGHT_DIR := $(srctree)/tools/perf/tests/shell/coresight
+>   
+>   tests-coresight-targets: FORCE
+> diff --cc tools/perf/builtin-trace.c
+> index 0730c1d9f0b3adc7,48615ddccd93a1e8..2530b4035e4f57e1
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@@ -783,11 -771,10 +783,6 @@@ static const char *bpf_cmd[] = 
+>   };
+>   static DEFINE_STRARRAY(bpf_cmd, "BPF_");
+>   
+> - static const char *fsmount_flags[] = {
+> - 	[1] = "CLOEXEC",
+> - };
+> - static DEFINE_STRARRAY(fsmount_flags, "FSMOUNT_");
+>  -#include "trace/beauty/generated/fsconfig_arrays.c"
+>  -
+>  -static DEFINE_STRARRAY(fsconfig_cmds, "FSCONFIG_");
+> --
+>   static const char *epoll_ctl_ops[] = { "ADD", "DEL", "MOD", };
+>   static DEFINE_STRARRAY_OFFSET(epoll_ctl_ops, "EPOLL_CTL_", 1);
+>   
