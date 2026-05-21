@@ -1,95 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1950235F5FB
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 11:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC68C3C76B8;
+	Thu, 21 May 2026 12:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779363492; cv=none; b=mv/otssmPogwkzQ4nNquY8MLm96rqyTkmwW/OSV0RsXIZ65LB+WWPI2b0xZZIJHTmz9WBvpWf7OanfteeX8hr3nzjdk6hTaRduaR5dxypsHXvfTHpsTWGjdUvHT614qK8PDA6Xulc+5WNsmLm/6qTWekerdw28R8s0esjzx2NcM=
+	t=1779368249; cv=none; b=rbvTwQUyrhrhUMqllZrKsF8iyL3rvPiEUcP99jmHZLj4XaHMW9qO4PMJWBQD4zrRJB3oIQQw5yADA3LDfmxP7WKAzMpzYfXgZ58KVdLsSE2L1RzGf5HjIsVTe3eP/oUJC9YwIuBY79nTAEnnHg+f969U9urC81wnTbqpAqA39O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779363492; c=relaxed/simple;
-	bh=TMWCW5hTceqttJL1ckArMeadhJb2uOOuAJfcfxAt09Y=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GphU295tBABb9pT6UEZCPdotEF+L38XaeTkQJQlnuR7aSqNAPXC1ylEPlpaw5FkUANiI+Kh5vm9TIURfOyp8lj9+9LzdAOteZcfxlTNL/BnaZLLdtOfGt0w/T9cg3ly5O0TMHeOViGGB+mFpXS5iarkhuefL9cxRr4eeLyB7HCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Av4wX6B9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779368249; c=relaxed/simple;
+	bh=qN5TuMnx+cQyXEC/L+JVunM7W124rW6VLj27VBE57lM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cEN4p4m9oSZzZLAopGD9wZdFmBV7FaSx5QZZzIooPCPxSxHe08DjCVrfLT4vTW6zXbIL5DNmRj3Y9BesQj33gHS6aQd9mVzeLxja6pLP8iX3fxFqelrguExx9FWwyqiGpr2AQtEuJvfQb8QfP67mBagwgrcWw8jcHiyzw5SaL4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YG9xm2KM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Av4wX6B9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5BAB1F000E9;
-	Thu, 21 May 2026 11:38:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YG9xm2KM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0CE51F000E9;
+	Thu, 21 May 2026 12:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779363490;
-	bh=U82/xZQO0kTKcLX/3Y31h7VnDL+e9iYZYvibXkGf7DA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Av4wX6B9c9IsFy1O9L1Zc6q1FMiS93YhqrmXzCc8UyKwNLUgyXOGR42kNQRVTvKiS
-	 eK6fKxpaD/a+0USKxKrbZimGgd7Q+uXk8m/1BghKoQ2RosjXFZ3gQsfJSwgabC3J9d
-	 VQTuKHSsSb1RqlsGw7EjoCIptqXlYuapqyUlOfcxc+3z4s4IrSgycoZlVhqHqhhYGD
-	 7n7fQaxk1ZHuzz3bYdczTY7jtiyR+cGG9PmLBb9Eg3sZrBsI65zL6Y3c8K7aDmuVYy
-	 +eKF0fS4hOIYD/M146P2Rtr7W+fp73gg1aHP12ZyReYZlgFal2cJ215uqnuYmlylAl
-	 +bJ/chM5Ekq7A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf: Fix off-by-one stack buffer overflow in
- kallsyms__parse()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Rui Qi" <qirui.001@bytedance.com>
+	s=k20260515; t=1779368247;
+	bh=FREUpEoryvYyTQmrjQgHhs51TfdO7ahUBt7LIV+ChZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YG9xm2KMCrOZ4mDpYC7wWL7rpy1xBmd0aYCKj15bvNaWpOSxQbw/gCN1KIyF0kLV4
+	 a/H+jqayMLrGcLio/WNvThyweUw8Zz//J4YnWkpkeMviSkm6ovqMkbbBLxcPs61PO6
+	 8QZ5lKHwlfRsTaEHW1KilXZfk4mbXZi7lq2BbXbI2qSp89IEcmeP3EivGfxCS+3ZJq
+	 SR5nRyK9h7zvJSGEroMG+lHbTIOHy44S3t7btxS2N7qxQC0q1I3TzmSGse6erLnqMv
+	 hBiE3Ttj4P73jvlN2YB2B8fz70QhKcvjtfp37u3S9pNe01CGXKgpO5XlqyWwoSplid
+	 lrotT1XqeLPqA==
+Date: Thu, 21 May 2026 09:57:24 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260521111429.4042238-1-qirui.001@bytedance.com>
-References: <20260521111429.4042238-1-qirui.001@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 21 May 2026 11:38:10 +0000
-Message-Id: <20260521113810.A5BAB1F000E9@smtp.kernel.org>
+Subject: Re: [PATCH 27/27] perf test: Add truncated perf.data robustness test
+Message-ID: <ag8BNL5po6NB7g7e@x1>
+References: <20260521011027.622268-28-acme@kernel.org>
+ <20260521020751.8BF2C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260521020751.8BF2C1F000E9@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Parser desynchronization causing valid symbols to be skipped whe=
-n encountering symbols of exactly KSYM_NAME_LEN length.
---
+On Thu, May 21, 2026 at 02:07:50AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] The test fails to detect OOM (Out Of Memory) kills as failures, allowing resource exhaustion bugs to pass the robustness test.
+> --
 
-commit 6a5c6924aa13657b35988b3648db68dd1a6e6f83
-Author: Rui Qi <qirui.001@bytedance.com>
+> > +++ b/tools/perf/tests/shell/data_validation.sh
+> [ ... ]
+> > +	# Detect crash signals portably — signal numbers differ
+> > +	# across architectures (e.g. SIGBUS is 7 on x86/ARM but
+> > +	# 10 on MIPS/SPARC).  Use kill -l to map the number to a
+> > +	# name on the running system.
+> > +	if [ ${exit_code} -gt 128 ] && [ ${exit_code} -lt 200 ]; then
+> > +		sig_name=$(kill -l $((exit_code - 128)) 2>/dev/null)
+> > +		case ${sig_name} in
+> > +		ILL|ABRT|BUS|FPE|SEGV|TRAP|SYS)
+ 
+> [Severity: Medium]
+> Will this miss Out-Of-Memory (OOM) kills?
+ 
+> If a truncated perf.data file causes perf report to read an abnormally large
+> size from a partial header and attempt a massive memory allocation, the
+> kernel's OOM killer may terminate it with SIGKILL (exit code 137).
+ 
+> Because KILL is missing from the case statement, the test will ignore the OOM
+> kill and consider the run a graceful error exit. Should KILL be added to the
+> list of failing signals to ensure resource exhaustion bugs are caught?
 
-perf: Fix off-by-one stack buffer overflow in kallsyms__parse()
+Will address in v2.
 
-This commit changes the loop bound in kallsyms__parse() to prevent a stack
-buffer overflow when reading long symbol names. It ensures the null
-terminator always fits within the symbol_name array bounds.
-
-> diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-> index e335ac2b9e197..f7100d43ecf49 100644
-> --- a/tools/lib/symbol/kallsyms.c
-> +++ b/tools/lib/symbol/kallsyms.c
-> @@ -60,7 +60,7 @@ int kallsyms__parse(const char *filename, void *arg,
->  			read_to_eol(&io);
->  			continue;
->  		}
-> -		for (i =3D 0; i < sizeof(symbol_name); i++) {
-> +		for (i =3D 0; i < sizeof(symbol_name) - 1; i++) {
-
-[Severity: Medium]
-Will this change leave a trailing newline in the stream for symbols that
-are exactly KSYM_NAME_LEN characters long?
-
-If a symbol name is exactly 128 characters, the loop terminates without
-reading the newline character since the bound is now restricted to 128
-iterations.
-
-When the outer loop continues to the next symbol entry, io__get_hex()
-would encounter this leftover newline and fail. This triggers the error
-recovery path which calls read_to_eol(), skipping over the entire next
-valid symbol entry.
-
-Could this cause the parser to silently drop valid kernel symbols when
-it encounters symbols of exactly this length?
-
->  			ch =3D io__get_char(&io);
->  			if (ch < 0 || ch =3D=3D '\n')
->  				break;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521111429.4042=
-238-1-qirui.001@bytedance.com?part=3D1
+- Arnaldo
