@@ -1,113 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-112.ptr.blmpb.com (va-1-112.ptr.blmpb.com [209.127.230.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F61F376A12
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 09:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5F53BCD2C
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 11:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779356091; cv=none; b=WaArXrz+lyv1ROxX9BSLCuhrUrQjj/Dn3gfB5+w6ouj5nngoUmikBMjhJrQB26+LPRQ88P1bNjrQPk3GqoovhbtvEfhEJtXtka0olyNruIzXhKmHTaUxJW8f563151N4BVFby2L970xRSWDa8XQYHMaPWzwUnUMLhdAuPwVbsgI=
+	t=1779362094; cv=none; b=IXew5nvyR84qdi2Jx/v/UWFIPOoZvaOdblwlcksZ12t6+cmOfDxGw4mj1soVjDezEhYPr8Qw0ihbfbhUk21+tHw0L73A00T4nTXPh/JqeeU4xpOI8BlDpNgXxigmjz8d7UBgGCB5aaKtrdmB7aOIEVo3sBl4KtCrE4Ttj6DjZ2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779356091; c=relaxed/simple;
-	bh=jFzvjiI2WvET81VnNYvF4B2DJpojBVT/qBYlIgxHOX0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fbe5FjokB+RL4hYomQHNaS9pUrRb1gE8/8hyJpHZAly0A5SFe8ff0/TAwRPx9rKDBtPb3FdoSHiwEN8CtmodjlmzxuLQEMAO4jH+Bs7ZveUTVwOz8vDVGwiMJafhrIyBS2QeUhWq1RTfQVp96S0l9BfVDwmop1ziJ/h3jOVy35g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoiVX8yS; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779362094; c=relaxed/simple;
+	bh=8MQncbk3PkKdWLQOQBcSX2uFmzw7dIsaDKTVDxl4RUY=;
+	h=To:From:Message-Id:Cc:Date:Content-Type:Subject:Mime-Version; b=UFZCgybCWiG1J+It5BurzAOKAq5etPz11xxuH241ZBqM+nS32UGe/GKIeLhar3hGk2q5uJKpj7kVdL5cR4SXNWEF5OJYFG+i4Twiw4s8Wl9ZRisfbmBs/2ym980ZPdssi6F6oGw3RPResHp9JQJL7dWR5T+qI3dGwe8GQPmBiQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Ppbmf3D9; arc=none smtp.client-ip=209.127.230.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoiVX8yS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FA51F000E9;
-	Thu, 21 May 2026 09:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779356090;
-	bh=sT+14C9wKd2ei6pCm+gsKyRMBcWOwR2s6qKvk+Hhuuk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XoiVX8ySLwt7ajRi/WkbBbXdziS+BIKxJSc2QIdLWMWXaY8ACNyK9juxoMzPuRo5E
-	 pNXSo5g5lKnWWUi+rbMLakyWnK6s1I1KFBvSzq0cs0oOAizJoEgGlalupEwzYm7iFL
-	 t+r3+a+bqPwHS6t2dzOI8GHEPzMhprOqOGIqobSZCOntYq/Isi+Puu/w26pesel9dJ
-	 ScxQilYDu0SkM4gnhwSIt24850o8d9VhgzbL4CTyL6jX4pfPUN0pBYzL6m+SFymwLt
-	 LXo3KytG+UgJqpmQWoFFPnVfrts6YGVSr/5wSujw9b9B7sgtooU267LS3C4HUHl+lU
-	 RsLgW0V+0TUmA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 3/3] perf kwork: Fix memory management of kwork_work
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260521072429.1283423-4-irogers@google.com>
-References: <20260521072429.1283423-4-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 21 May 2026 09:34:49 +0000
-Message-Id: <20260521093450.48FA51F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Ppbmf3D9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1779362086; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=d7ZCh8m2voWK3gzcY2pJKmDWXfZxjO+ytTGSGQ+ql5I=;
+ b=Ppbmf3D9jN2akvssgmPrb7FLkzeB7wVpTuKiI8w7Zru+RUBU8/e8VjZsDU4kTydsBJy2eW
+ fQDYhc2waVDbRYMdtUuO5vlFpi+DniZ1Y63xkDfYbBo0oyt9g4vlGGjgika0m580vhfPOh
+ 4MC2Fcvh5CSeHNkC6FeqbdakuzgwRPCazjzUisR7iQ+eF7HEo6ph7k+OWrpO/Y2niG0YzL
+ uDrYibFWZoXGh8euaDFvOwFLcYgejp7maulUuQmTzmRrHFHDkySn9RcMpVkmL1r+PLF91e
+ 7EelpfODmU896jKrmLGj81kb7twPqop8YRNZK3D9y84GA6VUh8E5WElE3gKuHw==
+Content-Transfer-Encoding: 7bit
+To: "Peter Zijlstra" <peterz@infradead.org>, 
+	"Ingo Molnar" <mingo@redhat.com>, 
+	"Arnaldo Carvalho de Melo" <acme@kernel.org>, 
+	"Namhyung Kim" <namhyung@kernel.org>
+From: "Rui Qi" <qirui.001@bytedance.com>
+Message-Id: <20260521111429.4042238-1-qirui.001@bytedance.com>
+Cc: "Mark Rutland" <mark.rutland@arm.com>, 
+	"Alexander Shishkin" <alexander.shishkin@linux.intel.com>, 
+	"Jiri Olsa" <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, 
+	"Adrian Hunter" <adrian.hunter@intel.com>, 
+	"James Clark" <james.clark@linaro.org>, 
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
+	"Rui Qi" <qirui.001@bytedance.com>
+Date: Thu, 21 May 2026 19:14:29 +0800
+X-Lms-Return-Path: <lba+26a0ee924+cd3296+vger.kernel.org+qirui.001@bytedance.com>
+X-Mailer: git-send-email 2.20.1
+Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH] perf: Fix off-by-one stack buffer overflow in kallsyms__parse()
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Original-From: Rui Qi <qirui.001@bytedance.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+In kallsyms__parse(), the loop reading symbol names iterates with
+i < sizeof(symbol_name), which allows i to reach sizeof(symbol_name)
+upon loop exit. The subsequent symbol_name[i] = '\0' then writes one
+byte past the end of the stack-allocated symbol_name[] array.
 
-Pre-existing issues:
-- [Medium] The top_print_work function passes work->name to printf without =
-verifying it is non-NULL, which can cause a crash.
---
+Fix this by changing the loop bound to sizeof(symbol_name) - 1, so
+the null terminator always lands within the array. The overflow is
+triggerable by a kallsyms entry with a symbol name of KSYM_NAME_LEN+1
+or more characters (e.g., long Rust mangled names or a malicious
+/proc/kallsyms).
 
-commit 03666bc88a2d8e65da244923eb1ef63e0a473153
-Author: Ian Rogers <irogers@google.com>
+Signed-off-by: Rui Qi <qirui.001@bytedance.com>
+---
+ tools/lib/symbol/kallsyms.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-perf kwork: Fix memory management of kwork_work
-
-This commit implements a global cleanup function to free all kwork_work
-and kwork_atom_page objects at exit. It also fixes memory leaks during
-task merging and ensures all name fields in struct kwork_work are properly
-allocated and freed, while adding robustness checks for NULL names.
-
-> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-> index a4604e1520023..f793ea578515d 100644
-> --- a/tools/perf/builtin-kwork.c
-> +++ b/tools/perf/builtin-kwork.c
-[ ... ]
-> @@ -1002,13 +1051,16 @@ static void irq_work_init(struct perf_kwork *kwor=
-k,
->  		work->name =3D NULL;
->  	} else {
->  		work->id =3D perf_sample__intval(sample, "irq");
-> -		work->name =3D perf_sample__strval(sample, "name");
-> +		work->name =3D strdup(perf_sample__strval(sample, "name") ?: "<unknown=
->");
->  	}
->  }
-> =20
->  static void irq_work_name(struct kwork_work *work, char *buf, int len)
->  {
-> -	snprintf(buf, len, "%s:%" PRIu64 "", work->name, work->id);
-> +	if (work->name !=3D NULL)
-> +		snprintf(buf, len, "%s:%" PRIu64 "", work->name, work->id);
-> +	else
-> +		snprintf(buf, len, "%" PRIu64 "", work->id);
->  }
-
-[Severity: Medium]
-This is a pre-existing issue, but while you are adding NULL checks for
-work->name here, should top_print_work() also be updated?
-
-If strdup() fails due to memory pressure, or if bpf_map_lookup_elem() fails
-in BPF mode, work->name can be NULL. In top_print_work(), work->name is
-passed directly to printf() as a string, which can cause a segmentation fau=
-lt
-on strict libc implementations:
-
-tools/perf/builtin-kwork.c:top_print_work() {
-    ...
-	if (kwork->use_bpf)
-		ret +=3D printf(" %s%s%s",
-			      work->is_kthread ? "[" : "",
-			      work->name,
-			      work->is_kthread ? "]" : "");
-	else
-		ret +=3D printf(" %-*s", PRINT_TASK_NAME_WIDTH, work->name);
-    ...
-}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521072429.1283=
-423-1-irogers@google.com?part=3D3
+diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
+index e335ac2b9e19..f7100d43ecf4 100644
+--- a/tools/lib/symbol/kallsyms.c
++++ b/tools/lib/symbol/kallsyms.c
+@@ -60,7 +60,7 @@ int kallsyms__parse(const char *filename, void *arg,
+ 			read_to_eol(&io);
+ 			continue;
+ 		}
+-		for (i = 0; i < sizeof(symbol_name); i++) {
++		for (i = 0; i < sizeof(symbol_name) - 1; i++) {
+ 			ch = io__get_char(&io);
+ 			if (ch < 0 || ch == '\n')
+ 				break;
+-- 
+2.20.1
