@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB5E399017
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 07:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD45B395AE6
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 07:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779348286; cv=none; b=R8JDcH1dJ80C3vOdw9SfmvIRAJbRDgebHMPGQGG1DDOGiIwS8cwa4Axzjl86dRCKSmdhE6ybtAjOeiHx94LCedPf0WtVbEdH1nvqpcMFN8rmfG/CNkmuxZF86dgwkn1DoRojLxaJZvZnyWiVfMDRqXYX0YvhXlhS127GPcpGqBI=
+	t=1779348287; cv=none; b=iRN84c5d+Bc0p70TgAvpbyhOUMUfzcBaKAmjzmlBn2wns0vQ5/i/lfp7cOcgDHZDKj4FvPsdvDJZEfpv3ltTTSCVum/pLnEgzUnfeZk3q8h39jzYS1TO+HNxCkhlZcIMXJaEtD949S3UYTC57qrL1S+62vGIxH2ldqVEvaNdJJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779348286; c=relaxed/simple;
-	bh=2tq54+G1DHd3j5mugKeaTTS/fpsXiXue33lWment8Pw=;
+	s=arc-20240116; t=1779348287; c=relaxed/simple;
+	bh=Z4k5aPDSUnZVyff/4DWQFPnTg8uNxhX33iZgLEmRQc4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=o6xQAngu8hNEbFSFNELbhTtu7TO7yRyVxTk/PVzy2nEHjwIqhVkhDOEf5qHVJvfqrQb5Zqd7tdlKyfQQWXfdCYsiYdLbAfcvyvsw6xMLk5LoQMKM2VdzP8kKuvmeT6UGhg29oh2azqAeN7Wp3oYVfJx86tIuclNRCg+arnzWp/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ukahJsZa; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=KC5PBIOtJjylUoaO7WVxrHPglqxdUmZroF7IAmW6m4RNjCT8bkeAvXBuBJfy/odSx0ut5jDHdGUe1TVmDfHYl7RmTrXtjVOVrxlZL1AV/49OlDJ+e8QQhEbjI/niWG8NwWgw7PtLFxHB30/YoygdDXOnbtJMXFicWAZmpY5lkPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uKUGOL0K; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ukahJsZa"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-134cf343c58so10625623c88.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 00:24:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uKUGOL0K"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2ee1da7a13fso7033327eec.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 00:24:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779348282; x=1779953082; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779348283; x=1779953083; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=f7gtESKLXiPD0tkvR99qaYWajcafSY5Lz8pSfIu9ikg=;
-        b=ukahJsZaPp8zVXWoAcnxx/H/lLm5IERNFsZfV5qOC6CGAaEepUduwxHvH+w3r0/8c/
-         Bop/DFRfZJHUE5mlRLokMST2KXwoV+Oj9NpOUyXNEg+GqgV/UEQecPtyKiLrkPord1Ma
-         BuyGkxs/jBIFaVkj8bEAVMBzudpSNpi9MorMTeW1LLK8DEyqRVclCaZP7kABLnoiUXMA
-         re2TMKmGvBBrJHuYvUto6FmcRULnW5ik1FfZ+icNq1a38ABTuGE68rhSwQUMDqTv6lm/
-         tWVPJzdj3+KYM8gkLA021dgX2wU3BrpQietImwWpkN6Jao3wgLIymVEK/IfyRz/D+ysR
-         afZw==
+        bh=5WaPoD3mwOT0QqFAF1FBTEvv1PUPRMcMoIqd4RO4LvQ=;
+        b=uKUGOL0KHy+mKx15IeNXaX2oLzclJL/4CRqJmKc5wEwTLFh8m5YTmE52dF1yGCk3Y2
+         FHmtvdSIZWP++5Xw9op7jIXzrvY5g3HxEhmcSspJDMgs1eBe3LPHDi1rPYyFQq0PsCRL
+         sPSSVB31L+XWHdI/gz7h7BFgEDt3/DYb/UB+zNYRoyjESYduvhBYwlkOj2m0g5F8riul
+         n4N3IFoGgBr5nd/+DnXKcoWs40AmhQi+uq6bUqbMWCRa8kM911gGAW6/XhBYVoL/CCIO
+         GlbA3/JoGNe0tBJ6jmD81pGR4ILOJ0DdIdPVZXZwwy3RnYlwNhEYgvyMTrzG6hi4qn46
+         FMmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779348282; x=1779953082;
+        d=1e100.net; s=20251104; t=1779348283; x=1779953083;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f7gtESKLXiPD0tkvR99qaYWajcafSY5Lz8pSfIu9ikg=;
-        b=AlAvEQNOWDkuXKPTtvfPRZnCpWm69599x1P3sm1VRscUepVqXComwcD5/B3BwmuY9Y
-         m0A8MS+S2WM+XFnzmAp9x3FhLoHYuG5V4OOjeECDiD3LzKes1JNZNKBg7zxBlNiG7mt2
-         0B8pdMUOqqt9N9ZwByxXYLhfgIRmxBIVN9Uq+BWtLLjHu8K7jcNnoW+nezaiur+w9mkr
-         pGXe28WDgFoEhfPXg9wK90A5wMneq9eUwDyLkt0kDcPShTEslqNa5AoSTDUHkRkmcKWv
-         rG5Noc/z7VgO72WH2M1psfqGjm4X4nMf2sQ2kNI6zaOjh/1RKKVARIiVC6m5vF2VcZFl
-         rhyw==
-X-Forwarded-Encrypted: i=1; AFNElJ88t3sTWDhQviV6UmhsOmgWfPJFpngtgN9kgOnHpBKTnDw3/iG1h3vP12BEO0OL+B+wydkh1J9iD0AF9Pco8l0K@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgxjGF1qjA4Nt3w6h7jQgdpcruiMqK8t4jww30VJ04x3Jh6vCC
-	0bs9zxwmSY3OKjpcErCuCzP8PXpUsUyNngSwjk/Q5bUbG8H7cccezrUdm7pHsyZrHKxPakZg6Hq
-	jmwroea9OyA==
-X-Received: from dlbrh26.prod.google.com ([2002:a05:7022:f31a:b0:135:ebea:dc20])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4b:b0:130:ab68:2b5e
- with SMTP id a92af1059eb24-136326e9d5amr855125c88.4.1779348281773; Thu, 21
- May 2026 00:24:41 -0700 (PDT)
-Date: Thu, 21 May 2026 00:24:27 -0700
+        bh=5WaPoD3mwOT0QqFAF1FBTEvv1PUPRMcMoIqd4RO4LvQ=;
+        b=LHdzW7Hb9zcqsyONNcWEXToqwypmF+py39KQaZOBq/KTOOsQzHVt/jOaOcPIkCFRTx
+         RTwzSJ7XIwR0X7c5bcp3lcDYbIr6vL4apyCiIv2h9BRaqlpcP6EHzrWW8GNkYJCtSOsK
+         s7It0L9qJRO/BXPrGtnKkfetjODAsDo3FGkx0WB4ZRfD6A8LzFntluGCRl5g3aVmuS5O
+         rDFYn4pj6eBJH2GlNqk3oN4swDPTYcZPhgT9o8i4HtnOfyOCi6g+jRi3SZwHTY168kj7
+         /uo/gD0slC7jJ0IcyAa9M3AyaEfQaHhKQdAroLTzv4Ao7ilQ3FQ0wMMEySbuOQT0GmVm
+         eE8A==
+X-Forwarded-Encrypted: i=1; AFNElJ/1djWf0dt1xy4nHoYz9gnNGcpgVuNB6dmangZTkGW3yifan6KRT47wUKUiI3q1XfxuA3+/e61jqfau7ADuRUTc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq2z6LrHZGsiGPuRphJ+ISkSgVOmIRCAM/1x1DcxRJEtyfNI/u
+	Z9LQj2h3Bjw3DDXaxIl2Irbr/uRKx7EGF89smwjjMZlj/9nR/Da6Iw0aVohKjvdIAEI/YMjNxYb
+	Ul3KJJS+WPw==
+X-Received: from dycns20.prod.google.com ([2002:a05:7300:f794:b0:303:971a:154d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:a897:b0:2e1:e3e6:2909
+ with SMTP id 5a478bee46e88-3042f5c28d5mr1000547eec.9.1779348283394; Thu, 21
+ May 2026 00:24:43 -0700 (PDT)
+Date: Thu, 21 May 2026 00:24:28 -0700
 In-Reply-To: <20260521072429.1283423-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260521072429.1283423-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.746.g67dd491aae-goog
-Message-ID: <20260521072429.1283423-2-irogers@google.com>
-Subject: [PATCH v1 1/3] perf build: Unconditionally set up libunwind feature
- build flags
+Message-ID: <20260521072429.1283423-3-irogers@google.com>
+Subject: [PATCH v1 2/3] perf kwork: Fix address sanitizer issues
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,160 +68,118 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-A "make feature-dump" build does not specify LIBUNWIND=1 because it is
-run with the default configuration to detect system-wide capabilities.
-This sets NO_LIBUNWIND := 1, causing Makefile.config to skip setting
-LIBUNWIND_LIBS and FEATURE_CHECK_LDFLAGS-libunwind.
+There is a double free in the record array due to how parse_options
+will mutate the array. Fix by keeping an array that isn't
+mutated. Ensure kwork_usage is freed on all paths.
 
-Consequently, when Makefile.feature is included and attempts to run
-all feature checks (via FEATURE_TESTS := all), the local feature test
-test-libunwind.bin compiles without the required architecture-specific
-library flags (-lunwind-x86_64) and fails to link on x86_64. This
-results in a corrupted cached BUILD_TEST_FEATURE_DUMP showing
-feature-libunwind=0 even when the host supports it.
-
-Subsequent test builds (like make_libunwind_O in the build-test suite)
-which reuse the feature dump and specify LIBUNWIND=1 will fail to
-compile due to a mismatch where CONFIG_LIBUNWIND is set (via remote
-architecture checks which are self-contained) but HAVE_LIBUNWIND_SUPPORT
-is disabled, causing compiler errors due to missing maps__e_machine
-definitions in maps.h.
-
-Fix this by unconditionally setting up the libunwind library lists
-and feature check LDFLAGS in Makefile.config so they are always
-populated and available to the feature detection engine regardless
-of whether LIBUNWIND=1 is opted-in for the current run.
-
-Fixes: 444508cd7c7b ("perf build: Be more programmatic when setting up libunwind variables")
 Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Makefile.config | 103 +++++++++++++++++++------------------
- 1 file changed, 52 insertions(+), 51 deletions(-)
+ tools/perf/builtin-kwork.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b56fa8419f7d..c531b9315609 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -79,42 +79,43 @@ ifeq ($(ARCH),s390)
-   CFLAGS += -fPIC
- endif
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 59a54d11f7fa..a4604e152002 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -2258,7 +2258,7 @@ static void setup_event_list(struct perf_kwork *kwork,
+ static int perf_kwork__record(struct perf_kwork *kwork,
+ 			      int argc, const char **argv)
+ {
+-	const char **rec_argv;
++	const char **rec_argv, **to_free = NULL;
+ 	unsigned int rec_argc, i, j;
+ 	struct kwork_class *class;
+ 	int ret;
+@@ -2295,16 +2295,27 @@ static int perf_kwork__record(struct perf_kwork *kwork,
  
-+# Unconditionally set up the libunwind feature build flags as a
-+# feature-dump build doesn't specify LIBUNWIND=1. This means that
-+# dumping the libunwind features will be broken that can impact later
-+# builds that use the feature dump.
-+ifeq ($(SRCARCH),arm)
-+  LIBUNWIND_LIBS = -lunwind -lunwind-arm
-+endif
-+ifeq ($(SRCARCH),arm64)
-+  LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
-+endif
-+ifeq ($(SRCARCH),loongarch)
-+  LIBUNWIND_LIBS = -lunwind -lunwind-loongarch64
-+endif
-+ifeq ($(ARCH),mips)
-+  LIBUNWIND_LIBS = -lunwind -lunwind-mips
-+endif
-+ifeq ($(SRCARCH),powerpc)
-+  LIBUNWIND_LIBS := -lunwind -lunwind-ppc64
-+endif
-+ifeq ($(SRCARCH),riscv)
-+  LIBUNWIND_LIBS := -lunwind -lunwind-riscv
-+endif
-+ifeq ($(SRCARCH),s390)
-+  LIBUNWIND_LIBS := -lunwind -lunwind-s390x
-+endif
-+ifeq ($(SRCARCH),x86)
-+  ifeq (${IS_64_BIT}, 1)
-+    LIBUNWIND_LIBS = -lunwind-x86_64 -lunwind -llzma
-+  else
-+    LIBUNWIND_LIBS = -lunwind-x86 -lunwind -llzma
-+  endif
-+endif
- ifneq ($(LIBUNWIND),1)
-   NO_LIBUNWIND := 1
- endif
--
--ifndef NO_LIBUNWIND
--  ifeq ($(SRCARCH),arm)
--    LIBUNWIND_LIBS = -lunwind -lunwind-arm
--  endif
--  ifeq ($(SRCARCH),arm64)
--    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
--  endif
--  ifeq ($(SRCARCH),loongarch)
--    LIBUNWIND_LIBS = -lunwind -lunwind-loongarch64
--  endif
--  ifeq ($(ARCH),mips)
--    LIBUNWIND_LIBS = -lunwind -lunwind-mips
--  endif
--  ifeq ($(SRCARCH),powerpc)
--    LIBUNWIND_LIBS := -lunwind -lunwind-ppc64
--  endif
--  ifeq ($(SRCARCH),riscv)
--    LIBUNWIND_LIBS := -lunwind -lunwind-riscv
--  endif
--  ifeq ($(SRCARCH),s390)
--    LIBUNWIND_LIBS := -lunwind -lunwind-s390x
--  endif
--  ifeq ($(SRCARCH),x86)
--    ifeq (${IS_64_BIT}, 1)
--      LIBUNWIND_LIBS = -lunwind-x86_64 -lunwind -llzma
--    else
--      LIBUNWIND_LIBS = -lunwind-x86 -lunwind -llzma
--    endif
--  endif
--  ifeq ($(LIBUNWIND_LIBS),)
--    NO_LIBUNWIND := 1
--  endif
-+ifeq ($(LIBUNWIND_LIBS),)
-+  NO_LIBUNWIND := 1
- endif
+ 	BUG_ON(i != rec_argc);
  
- #
-@@ -124,24 +125,24 @@ endif
- #
- LIBUNWIND_ARCHS:=aarch64 arm loongarch64 mips ppc32 ppc64 riscv s390x x86 x86_64
- 
--ifndef NO_LIBUNWIND
--  FEATURE_CHECK_CFLAGS-libunwind = $(LIBUNWIND_CFLAGS)
--  FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
--  FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
--  FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
--
--  ifdef LIBUNWIND_DIR
--    LIBUNWIND_CFLAGS  = -I$(LIBUNWIND_DIR)/include
--    LIBUNWIND_LDFLAGS = -L$(LIBUNWIND_DIR)/lib
--
--    define libunwind_arch_set_flags
--      FEATURE_CHECK_CFLAGS-libunwind-$(1)  = -I$(LIBUNWIND_DIR)/include
--      FEATURE_CHECK_LDFLAGS-libunwind-$(1) = -L$(LIBUNWIND_DIR)/lib -lunwind -lunwind-$(1)
--    endef
--    $(foreach arch,$(LIBUNWIND_ARCHS), \
--      $(eval $(call libunwind_arch_set_flags,$(arch))) \
--    )
--  endif
-+# "Local" (no arch specified) feature test flags.
-+FEATURE_CHECK_CFLAGS-libunwind = $(LIBUNWIND_CFLAGS)
-+FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
-+FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
-+FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
++	/* Save the pointers as the array will be mutated by cmd_record. */
++	to_free = calloc(rec_argc + 1, sizeof(char *));
++	if (to_free == NULL) {
++		ret = -ENOMEM;
++		goto EXIT;
++	}
 +
-+# Add directory into the "remote" (build for a a specific arch) feature tests.
-+ifdef LIBUNWIND_DIR
-+  LIBUNWIND_CFLAGS  = -I$(LIBUNWIND_DIR)/include
-+  LIBUNWIND_LDFLAGS = -L$(LIBUNWIND_DIR)/lib
-+
-+  define libunwind_arch_set_flags
-+    FEATURE_CHECK_CFLAGS-libunwind-$(1)  = -I$(LIBUNWIND_DIR)/include
-+    FEATURE_CHECK_LDFLAGS-libunwind-$(1) = -L$(LIBUNWIND_DIR)/lib -lunwind -lunwind-$(1)
-+  endef
-+  $(foreach arch,$(LIBUNWIND_ARCHS), \
-+    $(eval $(call libunwind_arch_set_flags,$(arch))) \
-+  )
- endif
+ 	pr_debug("record comm: ");
+-	for (j = 0; j < rec_argc; j++)
++	for (j = 0; j < rec_argc; j++) {
+ 		pr_debug("%s ", rec_argv[j]);
++		to_free[j] = rec_argv[j];
++	}
+ 	pr_debug("\n");
  
- ifdef CSINCLUDES
+ 	ret = cmd_record(i, rec_argv);
+ 
+ EXIT:
+ 	for (i = 0; i < rec_argc; i++)
+-		free((void *)rec_argv[i]);
++		free((void *)(to_free ? to_free[i] : rec_argv[i]));
++
++	free(to_free);
+ 	free(rec_argv);
+ 	return ret;
+ }
+@@ -2447,6 +2458,7 @@ int cmd_kwork(int argc, const char **argv)
+ 	const char *const kwork_subcommands[] = {
+ 		"record", "report", "latency", "timehist", "top", NULL
+ 	};
++	int ret = 0;
+ 
+ 	perf_tool__init(&kwork.tool, /*ordered_events=*/true);
+ 	kwork.tool.mmap	  = perf_event__process_mmap;
+@@ -2463,7 +2475,7 @@ int cmd_kwork(int argc, const char **argv)
+ 
+ 	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		setup_event_list(&kwork, kwork_options, kwork_usage);
+-		return perf_kwork__record(&kwork, argc, argv);
++		ret = perf_kwork__record(&kwork, argc, argv);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
+ 		kwork.sort_order = default_report_sort_order;
+ 		if (argc > 1) {
+@@ -2474,7 +2486,7 @@ int cmd_kwork(int argc, const char **argv)
+ 		kwork.report = KWORK_REPORT_RUNTIME;
+ 		setup_sorting(&kwork, report_options, report_usage);
+ 		setup_event_list(&kwork, kwork_options, kwork_usage);
+-		return perf_kwork__report(&kwork);
++		ret = perf_kwork__report(&kwork);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("latency", argv[0])) {
+ 		kwork.sort_order = default_latency_sort_order;
+ 		if (argc > 1) {
+@@ -2485,7 +2497,7 @@ int cmd_kwork(int argc, const char **argv)
+ 		kwork.report = KWORK_REPORT_LATENCY;
+ 		setup_sorting(&kwork, latency_options, latency_usage);
+ 		setup_event_list(&kwork, kwork_options, kwork_usage);
+-		return perf_kwork__report(&kwork);
++		ret = perf_kwork__report(&kwork);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("timehist", argv[0])) {
+ 		if (argc > 1) {
+ 			argc = parse_options(argc, argv, timehist_options, timehist_usage, 0);
+@@ -2494,7 +2506,7 @@ int cmd_kwork(int argc, const char **argv)
+ 		}
+ 		kwork.report = KWORK_REPORT_TIMEHIST;
+ 		setup_event_list(&kwork, kwork_options, kwork_usage);
+-		return perf_kwork__timehist(&kwork);
++		ret = perf_kwork__timehist(&kwork);
+ 	} else if (strlen(argv[0]) > 2 && strstarts("top", argv[0])) {
+ 		kwork.sort_order = default_top_sort_order;
+ 		if (argc > 1) {
+@@ -2507,12 +2519,12 @@ int cmd_kwork(int argc, const char **argv)
+ 			kwork.event_list_str = "sched, irq, softirq";
+ 		setup_event_list(&kwork, kwork_options, kwork_usage);
+ 		setup_sorting(&kwork, top_options, top_usage);
+-		return perf_kwork__top(&kwork);
++		ret = perf_kwork__top(&kwork);
+ 	} else
+ 		usage_with_options(kwork_usage, kwork_options);
+ 
+ 	/* free usage string allocated by parse_options_subcommand */
+ 	free((void *)kwork_usage[0]);
+ 
+-	return 0;
++	return ret;
+ }
 -- 
 2.54.0.746.g67dd491aae-goog
 
