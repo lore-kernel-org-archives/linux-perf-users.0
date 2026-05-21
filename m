@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39260306768;
-	Thu, 21 May 2026 01:12:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1CB306768;
+	Thu, 21 May 2026 01:12:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779325934; cv=none; b=GIMsjjkFUc5bKf5LAV/TmbD92CQDiFMqRx8Jav6yn1TS7SN8DKuJLQyHFEdg+dL5JOr32g4eLhMDvtZpCQiw8ejakMbbxOPVvnkqN+yVxQiI7GrY6ATM1FNguzpEbs+WdB+dOYFUhqpstPaHEI5B+/5APEHh3vwd5yl//TvL34I=
+	t=1779325938; cv=none; b=Zl0NB3lX3pQXxcuU5fkNY8HZ0KnAstm10AYU5ZhXEjzvNyZy7fk/NtJ10NctGudzLOwTPW8LN2c+V5AoQcuYPl8e7LXiMWk20SBQAi6fXHniznoeCh2jMhvT5flRo8AKd/KKPMx6/9UE6NP/83vSfW+5SbnQk9LNJWVJSZnjryY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779325934; c=relaxed/simple;
-	bh=/DCnT6jDug1BmvSNjveuZ+WerLEOJejT2NJhiI8D0/o=;
+	s=arc-20240116; t=1779325938; c=relaxed/simple;
+	bh=zGoAvfeDHH+BkAyY76shjc5a4ne36SGhKh2c5ZUb1j8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a4lud1pXhRDbcYD87FwwtsvdKiKbLPriIvivHOha/G5JzSHOZ3FMKE+gqtqjJlMS/Z7S/kVjnvf39WvsACBZIi7imQO6PWgYytM/tvz91M4X+a6nTkg07slK4kBealbEc8cvV+9bqENzo27rx7kRt8xsoxKLdiURA2esczQNOuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFmfVL30; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=iWm71bUknpOGaTn7HnmREx1tOJQlEMEw3LR15ll9N6JnwIEUF/2edhJlVJU77acIj3dzk+pQhbQdfemG5H3bd/wWjbqzVnM1EdgrhIfphX118rPXB6FltZkFtopVNMMm6CmH+MDHQkYjufpcwlKt/tGhg3bYo7OzCcf2ESpIF3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWJfDUkE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFmfVL30"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB871F000E9;
-	Thu, 21 May 2026 01:12:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWJfDUkE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6561F00A3B;
+	Thu, 21 May 2026 01:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779325933;
-	bh=XbcPDwGAi64vr2qIRi1JYjbatAK0bs/CUotXphvheJ0=;
+	s=k20260515; t=1779325937;
+	bh=fzPDW85BQ/78gPmMmw8IfPSrWQgBIdw3iKIypcBad8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HFmfVL30lA2uiSX4wss2NV7Xnq+JJ4VaoVPA8uCezLTM4bcx7Djk9Qx1hUfUAtwgk
-	 s1fTIRioij1duA/QBTosFgN9DF2ff1mpoX7UK3Xjp4d8j1norm2X4H74ivBQX9/9M+
-	 cUILB+4OW6Q/CI/7vhRrKJgq9yaFOdgkC8ns0kqHFzYBtGSd7xnuayjba7BUobP9gK
-	 chlFASSA2Sm85gKi/7vXD+hsb1kWh+jA60KBY1gB+fVWy5fhU0L4uUSAxxXR+pVgqO
-	 a89oe8WYXVU0XcSbTRGLxyJENM0mTLhlzuN+FksXJ3l4+GT/gr/vPtF82kQRTWW04c
-	 JQXKIzFf/HtEw==
+	b=GWJfDUkEyBlIcNOlYZyM2/HprmdfgPKWplsSYfIiicZvIY4MnLD11fS9+238xJbxs
+	 QYZSs1s3NIF2vuB82fd7gME+7gQML3FLJlQabaBLO7s2ufVRDmJIUIGPfEff7jNDDW
+	 VZwq0mJ7OEZbnygzU6yoOBrRT1Ch6CC1I1tfLV8PyBiDk6EGDvWT4ArsYxXD1a/A/w
+	 kqzuJ3uPftL5gnCHJBL9i9CfNob2/6j4QOkfL9agZdnwXxPY51GHEQEF1IIj0wCtxV
+	 gmgjS9Jf+RNJ1a3wSEuU56643MbGzjKSD2ZQsCjlJjdTxKwVA/DYyuvB+l/Dhyj7uh
+	 m8OPhZj+4ifpQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 24/27] perf session: Check for decompression buffer size overflow
-Date: Wed, 20 May 2026 22:10:09 -0300
-Message-ID: <20260521011027.622268-25-acme@kernel.org>
+Subject: [PATCH 25/27] perf session: Bound nr_cpus_avail and validate sample CPU
+Date: Wed, 20 May 2026 22:10:10 -0300
+Message-ID: <20260521011027.622268-26-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260521011027.622268-1-acme@kernel.org>
 References: <20260521011027.622268-1-acme@kernel.org>
@@ -52,25 +52,38 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On 32-bit systems, sizeof(struct decomp) + decomp_len can wrap
-size_t when comp_mmap_len is large.  The preceding patch caps
-comp_mmap_len at ~2 GB, which bounds individual values, but two
-additions can still overflow:
+Several downstream consumers (timechart, kwork, sched) use fixed-size
+arrays indexed by CPU.  A crafted perf.data can supply arbitrary CPU
+values that index past these arrays, causing out-of-bounds access.
 
-1. decomp_len += decomp_last_rem: on 32-bit, adding a u64 to
-   size_t silently truncates, producing a corrupted decomp_len
-   that would bypass the subsequent overflow check and result
-   in an undersized buffer allocation.
+Clamp nr_cpus_avail to MAX_NR_CPUS when reading HEADER_NRCPUS, and
+fall back to MAX_NR_CPUS when the header is missing (truncated files,
+pipe mode, pre-2017 perf).  Then validate sample.cpu against
+nr_cpus_avail in perf_session__deliver_event() before any tool
+callback runs.
 
-2. sizeof(struct decomp) + decomp_len: even with the cap, the
-   final addition could overflow on systems with small size_t.
+Only validate when PERF_SAMPLE_CPU is set in sample_type — when
+absent, evsel__parse_sample() leaves sample.cpu as (u32)-1, a
+sentinel that downstream tools (script, inject) check to identify
+events without CPU info.  Clamping it to 0 would break those checks.
 
-Add explicit overflow checks before each addition as
-defense-in-depth.
+Also refactor the sample parsing in perf_session__deliver_event()
+to call evsel__parse_sample() directly (via evlist__event2evsel()
+for evsel lookup), with explicit guest VM SID resolution for
+machine_pid and vcpu fields.
+
+Fix an off-by-one in end_sample_processing(): change the loop bound
+from cpu <= numcpus to cpu < numcpus to prevent accessing one
+element past the array.
+
+For pipe-mode streams where HEADER_NRCPUS may arrive late or not at
+all, the MAX_NR_CPUS fallback ensures the bounds check is still
+effective against the fixed-size downstream arrays.
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Cc: Ian Rogers <irogers@google.com>
@@ -79,36 +92,179 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/tool.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/perf/util/header.c  | 43 ++++++++++++++++++++++
+ tools/perf/util/session.c | 77 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 119 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index 18641919473a859f..25c9b378aa163664 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -34,9 +34,22 @@ static int perf_session__process_compressed_event(const struct perf_tool *tool _
- 		if (decomp_last->head > decomp_last->size)
- 			return -1;
- 		decomp_last_rem = decomp_last->size - decomp_last->head;
-+		/*
-+		 * Check before adding: on 32-bit, size_t += u64
-+		 * silently truncates, bypassing the overflow check
-+		 * below and producing an undersized buffer.
-+		 */
-+		if (decomp_last_rem > SIZE_MAX - decomp_len - sizeof(struct decomp)) {
-+			pr_err("Decompression buffer size overflow\n");
-+			return -1;
-+		}
- 		decomp_len += decomp_last_rem;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 8ab05d46021b73af..8bc5904591d49a68 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -48,6 +48,7 @@
+ #include <api/io_dir.h>
+ #include "asm/bug.h"
+ #include "tool.h"
++#include "../perf.h"
+ #include "time-utils.h"
+ #include "units.h"
+ #include "util/util.h" // perf_exe()
+@@ -2894,12 +2895,36 @@ static int process_nrcpus(struct feat_fd *ff, void *data __maybe_unused)
+ 	if (ret)
+ 		return ret;
+ 
++	/* Validate raw values before clamping */
+ 	if (nr_cpus_online > nr_cpus_avail) {
+ 		pr_err("Invalid HEADER_NRCPUS: nr_cpus_online (%u) > nr_cpus_avail (%u)\n",
+ 		       nr_cpus_online, nr_cpus_avail);
+ 		return -1;
  	}
  
-+	if (decomp_len > SIZE_MAX - sizeof(struct decomp)) {
-+		pr_err("Decompression buffer size overflow\n");
-+		return -1;
++	/*
++	 * FIXME: Several downstream consumers use fixed-size arrays
++	 * indexed by CPU (timechart MAX_CPUS, kwork/sched/annotate
++	 * DECLARE_BITMAP(MAX_NR_CPUS)).  Until these are converted
++	 * to dynamic allocation, clamp nr_cpus_avail so per-event
++	 * CPU bounds checks reject samples above the array limit.
++	 * Data from CPUs beyond MAX_NR_CPUS will be lost.
++	 *
++	 * Pipe-mode streams from pre-2017 perf or third-party tools
++	 * that lack HEADER_NRCPUS will hit the MAX_NR_CPUS fallback
++	 * in perf_session__deliver_event() instead.
++	 */
++	if (nr_cpus_avail > MAX_NR_CPUS) {
++		pr_warning("WARNING: perf.data recorded on a %u-CPU machine but perf is compiled with MAX_NR_CPUS=%d.\n"
++			   "         Samples from CPUs >= %d will be clamped to CPU 0.  Consider rebuilding\n"
++			   "         perf with a larger MAX_NR_CPUS, or help convert fixed-size CPU arrays to\n"
++			   "         dynamic allocation.\n",
++			   nr_cpus_avail, MAX_NR_CPUS, MAX_NR_CPUS);
++		nr_cpus_avail = MAX_NR_CPUS;
++		if (nr_cpus_online > nr_cpus_avail)
++			nr_cpus_online = nr_cpus_avail;
 +	}
- 	mmap_len = sizeof(struct decomp) + decomp_len;
- 	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
- 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
++
+ 	env->nr_cpus_avail = (int)nr_cpus_avail;
+ 	env->nr_cpus_online = (int)nr_cpus_online;
+ 	return 0;
+@@ -5248,6 +5273,24 @@ int perf_session__read_header(struct perf_session *session)
+ #endif
+ 	}
+ 
++	/*
++	 * Without nr_cpus_avail the sample CPU bounds check in
++	 * perf_session__deliver_event() is bypassed, allowing crafted
++	 * CPU IDs to reach downstream consumers that index fixed-size
++	 * arrays (timechart, kwork, sched — all sized MAX_NR_CPUS).
++	 *
++	 * This can happen with truncated files (interrupted recording
++	 * loses all feature sections), very old files that predate
++	 * HEADER_NRCPUS, or crafted files that omit it.  Fall back to
++	 * MAX_NR_CPUS so the bounds check is still effective — any
++	 * CPU ID below that limit is safe for all downstream arrays.
++	 */
++	if (header->env.nr_cpus_avail == 0) {
++		header->env.nr_cpus_avail = MAX_NR_CPUS;
++		pr_warning("WARNING: perf.data is missing HEADER_NRCPUS, using MAX_NR_CPUS (%d) as CPU bound\n",
++			   MAX_NR_CPUS);
++	}
++
+ 	return 0;
+ out_errno:
+ 	return -errno;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 7e25f75de37abce4..bf14fa8c52f65604 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2076,14 +2076,89 @@ static int perf_session__deliver_event(struct perf_session *session,
+ 				       const char *file_path)
+ {
+ 	struct perf_sample sample;
++	struct evsel *evsel;
+ 	int ret;
+ 
+ 	perf_sample__init(&sample, /*all=*/false);
+-	ret = evlist__parse_sample(session->evlist, event, &sample);
++	evsel = evlist__event2evsel(session->evlist, event);
++	if (!evsel) {
++		pr_err("No evsel found for event type %u\n",
++		       event->header.type);
++		ret = -EFAULT;
++		goto out;
++	}
++	ret = evsel__parse_sample(evsel, event, &sample);
+ 	if (ret) {
+ 		pr_err("Can't parse sample, err = %d\n", ret);
+ 		goto out;
+ 	}
++	/*
++	 * evsel__parse_sample() doesn't populate machine_pid/vcpu,
++	 * which are needed by machines__find_for_cpumode() to
++	 * attribute samples to guest VMs.  The SID table maps
++	 * sample IDs to the guest that owns the event.
++	 */
++	if (perf_guest && sample.id) {
++		struct perf_sample_id *sid = evlist__id2sid(session->evlist, sample.id);
++
++		if (sid) {
++			sample.machine_pid = sid->machine_pid;
++			sample.vcpu = sid->vcpu.cpu;
++		}
++	}
++
++	/*
++	 * Validate sample.cpu before any callback can use it as an
++	 * array index (kwork cpus_runtime, timechart cpus_cstate_*,
++	 * sched cpu_last_switched).
++	 *
++	 * When PERF_SAMPLE_CPU is absent, evsel__parse_sample() leaves
++	 * sample.cpu as (u32)-1 — a sentinel that downstream tools
++	 * (script, inject) check to identify events without CPU info.
++	 * Only check when sample.cpu was actually populated from event
++	 * data: PERF_RECORD_SAMPLE always has it when PERF_SAMPLE_CPU
++	 * is set; non-sample events only have it when sample_id_all is
++	 * enabled.  Otherwise sample.cpu is the (u32)-1 sentinel from
++	 * evsel__parse_sample() and must not be validated or clamped.
++	 */
++	if ((evsel->core.attr.sample_type & PERF_SAMPLE_CPU) &&
++	    (event->header.type == PERF_RECORD_SAMPLE ||
++	     evsel->core.attr.sample_id_all)) {
++		int nr_cpus_avail = perf_session__env(session)->nr_cpus_avail;
++
++		/*
++		 * For perf.data files the MAX_NR_CPUS fallback in
++		 * perf_session__read_header() guarantees this is set.
++		 * For pipe mode, HEADER_NRCPUS may arrive late or not
++		 * at all (pre-2017 perf, third-party tools).  Fall
++		 * back to MAX_NR_CPUS so the bounds check still works
++		 * against fixed-size downstream arrays.
++		 */
++		if (nr_cpus_avail <= 0) {
++			nr_cpus_avail = MAX_NR_CPUS;
++			perf_session__env(session)->nr_cpus_avail = nr_cpus_avail;
++			pr_warning_once("WARNING: HEADER_NRCPUS not set, using MAX_NR_CPUS (%d) as CPU bound\n",
++					MAX_NR_CPUS);
++		}
++		if (sample.cpu >= (u32)nr_cpus_avail &&
++		    sample.cpu != (u32)-1) {
++			/*
++			 * Warn rather than abort: synthesized events
++			 * (MMAP, COMM) lack sample_id_all data, so
++			 * parse_id_sample reads garbage from the event
++			 * payload.  Clamping to 0 protects downstream
++			 * array indexing while keeping the session alive.
++			 *
++			 * Preserve (u32)-1: perf script and perf inject
++			 * use it as a sentinel for "CPU not applicable."
++			 * Downstream array users (timechart, kwork) have
++			 * their own per-callback bounds checks.
++			 */
++			pr_warning_once("WARNING: sample CPU %u >= nr_cpus_avail %u, clamping to 0\n",
++					sample.cpu, nr_cpus_avail);
++			sample.cpu = 0;
++		}
++	}
+ 
+ 	ret = auxtrace__process_event(session, event, &sample, tool);
+ 	if (ret < 0)
 -- 
 2.54.0
 
