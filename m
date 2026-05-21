@@ -1,91 +1,175 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509E8368D46;
-	Thu, 21 May 2026 02:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6EA2CCB9
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 03:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779332273; cv=none; b=QJLCMX+AhaYZW3gMCwEQCtdXSACHNlPuZ6TifTxq/qmh8PSV4mVfaAOaQhwlJFdYphPqEtlf9G+9XRCXVxXreHbN4OGM3GmtGJmz4GSWxEx9VcYayGPZIk/3sL+3XB6PmPZd2w5K7Ax/HENRNIQMQIk9Fy44kFopkjTFzh22WnY=
+	t=1779334250; cv=none; b=WXdf+x9gpQSE0mABTu16bAz3XYKwQtsS5Duck0T2qsjSU52cvvQMKS4rpS1YyXKx9fv4FGWrOqtRhvC0h+QaDqGVDcLBbSl1RCmjiUxUwYqeyazT3hybCKqr6qLWpvHM3vC6oW9xd6I2ho3a8DIJbwmeGVtvVILFIU9HpJXs+AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779332273; c=relaxed/simple;
-	bh=BcyMzFHs2CZuCLhQkiQSw7Aj7jkE4V678WKmCthggUQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YlbszlFTGejYf/qpMTO3jdvAP5xyBPpgF8AEIVfAHajg2fXUef8ZuUForVhC7mBalCaxRqi+MOlFU3eokbbCx0uN95UKRL/j8A/Tg3Va7H1i519Zrz3AAihncakSY3UBO9xRt/62Z4t89cmPrWUR6sHycl1dVlknwhvbODixFCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: d639743c54c011f1aa26b74ffac11d73-20260521
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:f2dd0df6-48aa-4c11-8efc-1a0711ca8790,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:e7bac3a,CLOUDID:a71d0b093bf17ff626bd6ce8af797cd7,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
-	DM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA
-	:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: d639743c54c011f1aa26b74ffac11d73-20260521
-X-User: zenghongling@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <zenghongling@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 2135940198; Thu, 21 May 2026 10:57:42 +0800
-From: Hongling Zeng <zenghongling@kylinos.cn>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	thomas.falcon@intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhongling0719@126.com,
-	Hongling Zeng <zenghongling@kylinos.cn>
-Subject: [PATCH] perf: evsel: Fix error handling in tp_format lookup
-Date: Thu, 21 May 2026 10:57:38 +0800
-Message-Id: <20260521025738.17867-1-zenghongling@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1779334250; c=relaxed/simple;
+	bh=i6h2KHd3JeP72E0wdMAWV07yv//i6u0EDwH9Ye/dx5E=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=P5X+UtH3gOjwI1RzuaaXfTYArSp0im3KGeZE0B3seLsTf7A3c2i7ELOc7iZHr/6Lixpggvutd3VQOE0rViTAdDZEbm+uL7Z09rYhvUsPS/cJIyvYTnx8HEjC6uwN38is8z/PS3WcWM6QT++eK4TQHyexLkg5oSVbab8P1wAeB+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwXDEn13; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwXDEn13"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C05411F000E9;
+	Thu, 21 May 2026 03:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779334248;
+	bh=4vb9bopg9pWRDYgqFNfqDSOPfK6qqgTSKfgpTg63+v0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EwXDEn13P3wYmaHrRjzSMUSto1l2y6Um7yzg4joVJwPEC3IVX2+70j7ygY0T8b4qd
+	 l25daCcMnMR7j6esPRK8SVL1596bpJMqZmviBJD1aA3y5uOCHD8xfZpcbC84Ld3WYD
+	 ZKHy8IWuqkC3/eVQ2EnjblbUApJ9MZLU2n4mLc4NFpO3j9DYv7Xs+9FjU13gjYofQI
+	 SctblSCoYKLIMwHA55mRmVSpSyKNYf7lrMbJeiS73M03wQcIceMBqn5yCFUYZh8cER
+	 anIc7mRq/8FUFQ9b7qN9BFQ1XXyRavJOUO/sLMPl/PThBx+22PDxvLoghDL56UudoQ
+	 ax8T/+qoTEsWA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/2] drm/xe: gate observation streams with
+ perf_allow_cpu()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "John Hubbard" <jhubbard@nvidia.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260521024904.331912-3-jhubbard@nvidia.com>
+References: <20260521024904.331912-3-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 21 May 2026 03:30:48 +0000
+Message-Id: <20260521033048.C05411F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In evsel__tp_format(), when trace_event__tp_format*() returns an error,
-IS_ERR() checks the local variable 'tp_format', but PTR_ERR() incorrectly
-uses 'evsel->tp_format' which hasn't been assigned yet.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-Fix this by using PTR_ERR(tp_format) to extract the error code from the
-correct variable.
+New issues:
+- [Low] Unconditional call to `perf_allow_cpu()` causes a build failure whe=
+n `CONFIG_PERF_EVENTS` is disabled.
 
-Fixes: 6c8310e8380d ("perf evsel: Allow evsel__newtp without libtraceevent")
-Signed-off-by: Hongling Zeng <zenghongling@kylinos.cn>
----
- tools/perf/util/evsel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Pre-existing issues:
+- [High] Reference count leak of `xe_exec_queue` on the error path in `xe_o=
+a_stream_open_ioctl()`.
+- [High] Memory leak of the `stream->syncs` array when an OA stream is disa=
+bled or fails to emit config.
+--
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 2ee87fd84d3e..0cefeba41236 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -647,7 +647,7 @@ struct tep_event *evsel__tp_format(struct evsel *evsel)
- 		tp_format = trace_event__tp_format(evsel->tp_sys, evsel->tp_name);
- 
- 	if (IS_ERR(tp_format)) {
--		int err = -PTR_ERR(evsel->tp_format);
-+		int err = -PTR_ERR(tp_format);
- 
- 		errno = err;
- 		pr_err("Error getting tracepoint format '%s': %m\n",
--- 
-2.25.1
+commit c928d2e2efb93b79ed4af6b5c4bcf6b62b0a9acb
+Author: John Hubbard <jhubbard@nvidia.com>
+Subject: drm/xe: gate observation streams with perf_allow_cpu()
 
+This patch introduces xe_observation_paranoid_check() to replace open-coded=
+=20
+privilege checks in the xe driver. It wraps perf_allow_cpu(), meaning xe=20
+observation now respects the system-wide kernel.perf_event_paranoid policy=
+=20
+and the security_perf_event_open() LSM hook.
+
+> diff --git a/drivers/gpu/drm/xe/xe_oa.c b/drivers/gpu/drm/xe/xe_oa.c
+> index 6337e671c97ae..f15847be01bc2 100644
+> --- a/drivers/gpu/drm/xe/xe_oa.c
+> +++ b/drivers/gpu/drm/xe/xe_oa.c
+[ ... ]
+> @@ -2052,10 +2053,12 @@ int xe_oa_stream_open_ioctl(struct drm_device *de=
+v, u64 data, struct drm_file *f
+>  		privileged_op =3D true;
+>  	}
+> =20
+> -	if (privileged_op && xe_observation_paranoid && !perfmon_capable()) {
+> -		drm_dbg(&oa->xe->drm, "Insufficient privileges to open xe OA stream\n"=
+);
+> -		ret =3D -EACCES;
+> -		goto err_exec_q;
+> +	if (privileged_op) {
+> +		ret =3D xe_observation_paranoid_check();
+> +		if (ret) {
+> +			drm_dbg(&oa->xe->drm, "Insufficient privileges to open xe OA stream\n=
+");
+> +			goto err_exec_q;
+> +		}
+>  	}
+
+[Severity: High]
+This is a pre-existing issue, but does this code leak the xe_exec_queue
+reference on the error path?
+
+Looking earlier in xe_oa_stream_open_ioctl():
+
+    param.exec_q =3D xe_exec_queue_lookup(xef, param.exec_queue_id);
+    if (XE_IOCTL_DBG(oa->xe, !param.exec_q))
+        return -ENOENT;
+
+    if (XE_IOCTL_DBG(oa->xe, param.exec_q->width > 1))
+        return -EOPNOTSUPP;
+
+When the execution queue width is greater than 1, it directly returns
+-EOPNOTSUPP instead of jumping to the err_exec_q label. This bypasses
+xe_exec_queue_put() and leaves the reference incremented, which could allow
+a malicious user space program to repeatedly leak execution queue reference=
+s.
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does the stream opening
+process leak the stream->syncs array if the stream is disabled?
+
+When xe_oa_stream_open_ioctl() calls xe_oa_stream_open_ioctl_locked(), the
+stream->syncs array is allocated via xe_oa_parse_syncs(). This array is
+usually freed inside xe_oa_emit_oa_config() when the stream is enabled.
+
+If a stream is opened with the disabled parameter set to true,
+xe_oa_enable_locked() is skipped, and xe_oa_emit_oa_config() is never
+called. When the stream is subsequently destroyed upon file release,
+xe_oa_stream_destroy() does not appear to free stream->syncs, which might
+result in a memory leak.
+
+[ ... ]
+> diff --git a/drivers/gpu/drm/xe/xe_observation.c b/drivers/gpu/drm/xe/xe_=
+observation.c
+> index e3f9b546207e4..39e05b9131a74 100644
+> --- a/drivers/gpu/drm/xe/xe_observation.c
+> +++ b/drivers/gpu/drm/xe/xe_observation.c
+[ ... ]
+> @@ -12,9 +13,28 @@
+>  #include "xe_oa.h"
+>  #include "xe_observation.h"
+> =20
+> -u32 xe_observation_paranoid =3D true;
+> +static u32 xe_observation_paranoid =3D true;
+>  static struct ctl_table_header *sysctl_header;
+> =20
+> +/**
+> + * xe_observation_paranoid_check - Gate access to xe observation streams.
+> + *
+> + * When the xe-specific observation_paranoid sysctl is enabled (the
+> + * default), defer to perf_allow_cpu() so that access is governed by the
+> + * same policy as system-wide perf CPU events: kernel.perf_event_paranoid
+> + * plus the security_perf_event_open() LSM hook. When the sysctl has been
+> + * cleared by a privileged user, observation is open to all callers.
+> + *
+> + * Return: 0 if access is permitted, a negative errno otherwise.
+> + */
+> +int xe_observation_paranoid_check(void)
+> +{
+> +	if (!xe_observation_paranoid)
+> +		return 0;
+> +
+> +	return perf_allow_cpu();
+> +}
+
+[Severity: Low]
+Will this cause a build failure when CONFIG_PERF_EVENTS is disabled?
+
+The function perf_allow_cpu() is only defined if CONFIG_PERF_EVENTS is
+enabled, and there is no fallback stub provided in
+include/linux/perf_event.h for the disabled case. Since the DRM_XE
+subsystem does not strictly depend on CONFIG_PERF_EVENTS, building the
+driver without perf events support might result in an undefined reference
+linker error.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521024904.3319=
+12-1-jhubbard@nvidia.com?part=3D2
