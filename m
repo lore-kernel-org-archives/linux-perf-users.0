@@ -1,179 +1,268 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6DDA367287;
-	Thu, 21 May 2026 16:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90717379C49;
+	Thu, 21 May 2026 16:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779379364; cv=none; b=ZAYjdz7mWsABNZvR3QpNPXIV8cFXd5usBcjAV/Bc9t/NXP6fkiibK33yc+zZKSUP6paUadeG8qWg8j9UzdfZ3EgVOY4qhWp+NQ86HVPSxWiCtgl+hx2Fs6Ra+26Yev65bp4x0M9bgFAP/BHXcKk2zhgOK/birtg7Jt8Gb9Fjbj8=
+	t=1779380176; cv=none; b=QSMYneSQBAl38mkcEsvUCDGgwXfewL+iQsOJrvwuTwSHrwvtW8PQlQW5NqVqUDIz6R2hvpOxHgp1sMyuQYz5Bt9yr1U18IFdNAD16BvSvseseO0sNPQAlgppMQ4IlDH0qK5vROT1Gqcg5wC2G+7nAggEh5yqXVEQhCB+BNenoxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779379364; c=relaxed/simple;
-	bh=XM29D7iPUunyxNUrBD0yY0EWuJn4Z+yCZPfjI3A0bwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=njN+fGUceBtdOXwuANx8TUNmbuECQBEwwJUM2bGnjKNlSBHgaYGJqiNTO1RM1cgb7a1A9NfirWmqOuDlPy3tFuBqsg5hFufH82ty8FdTLxGSd2HB3Diu0uXLXO0Sj4uDXWUQyuTRRrBxyq3LzlTPUrpyqmkjb8ufCrkm5j0RbOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VCraftv2; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1779380176; c=relaxed/simple;
+	bh=h1STcp0V/4Swp9okpNxX5m6mXG3IH5u518En9NVZYjA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=P682HJdau23unTuFQR7p0EpwzFccosmlS4T+0VT8zbkMMVPoHRI5gq8Kv0INmCa1TFffU6aS565VSRoM3K8Ayz80d8wqGhNGoJ5QCA1uQVPFWiPfJUcNJKJZVyHiTSiYWMcg+bsJ1i4pBZA7Fmx9+Zs0+KLJAg0VZ+k+Zbha6m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=t7kwLlRY; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VCraftv2"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C971168F;
-	Thu, 21 May 2026 09:02:37 -0700 (PDT)
-Received: from [10.57.33.205] (unknown [10.57.33.205])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C816C3F632;
-	Thu, 21 May 2026 09:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1779379362; bh=XM29D7iPUunyxNUrBD0yY0EWuJn4Z+yCZPfjI3A0bwQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VCraftv2925M7X6jExStT/wSW5s5JX0NWpAiBizlmsBSFQP1dLO0EEXjldGprAiTA
-	 j74scLLrDd1tQrCydJ7Mm1PggCuIZ2DWHlu66eMzw+ajFhtHbWCMZAFqcmoI/wHiVW
-	 VD26xbG6VTfBt9dQd4i1e2kGg61pFYIt5M3JgIb4=
-Message-ID: <dd188101-5edd-4787-8217-4edf4bde094a@arm.com>
-Date: Thu, 21 May 2026 17:02:33 +0100
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="t7kwLlRY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=c2KSnlZfvNvIK/8DF8+f3WK12BTgpI7JujkuE2tGtL8=; b=t7kwLlRYkAUlSQLsyI0KAcJTGt
+	F5MIDB61n7ID161jhn+yBdhzu1GkLHrFHDJXnaIkgw/UdJTwBgTXGA4g7ACJjGcoElOfci9+dBPUB
+	KZ7UqVzxWwNAFw1gM8rgGuNp29GoBYkOjm86nA2UROwL7yArg8zXTRI7nDJ456SIXvI1fa2GXg2Pm
+	X6yoHKluKO+Ik8xSRNBbv7YE3TQk6KxSjlJg55+h/cvenfpB/TanyW3POP8je0no8HYl8Mpkr4VX9
+	T1EG3akcjS00zgqUNy3oLT5lQ8caWO30XEZsoT8KgTqOigx1RW76X9Wr0CMoS26ndYGHU1bmw5wlm
+	BS7zHhXA==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wQ63x-0040XW-1Z;
+	Thu, 21 May 2026 16:15:58 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Thu, 21 May 2026 09:15:37 -0700
+Subject: [PATCH v2] perf bench: add --write-size option to sched pipe
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
-To: Aviv Bakal <avivb@amazon.com>, will@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zeev@amazon.com, blakgeof@amazon.com
-References: <20260503155118.16191-1-avivb@amazon.com>
- <20260504133923.23373-1-avivb@amazon.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260504133923.23373-1-avivb@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260521-perf_bench_pipe-v2-1-720b6ff7f0fa@debian.org>
+X-B4-Tracking: v=1; b=H4sIAKgvD2oC/3XNQQqDMBCF4auEWZti0qYRV96jiGTiqNNFDImVF
+ vHuRbvu8sHP9zbIlJgy1GKDRCtnngPUQhcC/OTCSJJ7qAXoUt9Lo4yMlIYOKfipixxJoiNN3lr
+ rbwiFgJho4PcpPtrfzi98kl8O5igmzsucPuflqo7uv74qqeTVG6xKg07ZqukJ2YXLnEZo933/A
+ qa7NbHBAAAA
+X-Change-ID: 20260515-perf_bench_pipe-bae2ec777c4b
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-team@meta.com, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.16-dev-d5d98
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6547; i=leitao@debian.org;
+ h=from:subject:message-id; bh=h1STcp0V/4Swp9okpNxX5m6mXG3IH5u518En9NVZYjA=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqDy+5lki0gk6aHINcwNe+Jlcy912TQCTlQCxKT
+ NFD3DpRFFiJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCag8vuQAKCRA1o5Of/Hh3
+ bSsCEACJLzye2qhmbpZOCb/3LC3QY3SPX3Evq0Kzr4rcCp3o1g2hPC6fBllIUgQOOIMmc2a6GbB
+ zp6LKJme7ja2wFU5D8uKOtTgte3B7SltYnVzsM6O+i5Hg5XmognFwYjEmGXIQfKbN60IM47FgEu
+ MSBCdgz+KOhtv3P8iD6s1I0JXdhnJsxVK4eCw9wvEKbrJ67xgBLB2E7YT1nREyVVbxlEtkuKQgr
+ hexY98Fc/GOaNrrHyyFfih/iqSZ/a7h9KdQzeJrvWBCVLo33jTt/wBMjQPRxpe61YbGt20I+j8l
+ DdhcPFAvZEKxl2XGlu6ZDBGlPj3uLtiWjN1LvGpSqnVPDBrUZ20k71I5T8s+wuIzCjY1kTxG0s8
+ vtUb02msslbfJY9v8wHGN+X8H+aMKswBPqY8g1uYBkuYVa2cyBw9soCb4/5dWah3qoC+l0DeQro
+ cW4HSPj4DKYzp9e03YystWAO6IJayfFg2o3YcFl6iO7T7Ie1ZOKBC4BaShtruHBOMCyjwMWGuU0
+ SnkKJ42IPNKq6h0TnTSx6O5Sa9bXCTvWXlH7sHcIFXpa/g4A5Xqet/sAij3UAD17TNsuHG2HFMU
+ q57IE1wP2DLEYJVt4jhUxxdSkC3vR+O6Hj7lPEJvUM8WJF/YYeij7W46LC24B63lDK4G0ZlFR0H
+ a4aJ2mvEqfli02g==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-On 2026-05-04 2:39 pm, Aviv Bakal wrote:
-> Graviton5 uses a customised CMN-S3 implementation where certain
-> discovery registers report zeroed fields. Add the following workarounds:
-> 
->   - Introduce a dedicated ACPI HID to identify the Graviton5 CMN variant.
->   - Derive the DTC domain from the XP node ID, since the unit info
->     register reports it as zero.
->   - Set the DTC logical ID from the computed domain ID, since the node
->     info register's logical ID field is also zeroed.
-> 
-> Signed-off-by: Aviv Bakal <avivb@amazon.com>
-> ---
-> v2:
->   - Use computed domain ID (xp->dtc) instead of XP logical ID for DTC
->     logical ID assignment.
-> 
->   drivers/perf/arm-cmn.c | 32 +++++++++++++++++++++++++++++++-
->   1 file changed, 31 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index f5305c8fdca4..8ee3f8638602 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -31,7 +31,8 @@
->   #define CMN_CHILD_NODE_ADDR		GENMASK(29, 0)
->   #define CMN_CHILD_NODE_EXTERNAL		BIT(31)
->   
-> -#define CMN_MAX_DIMENSION		12
-> +/* Some implementations use a mesh larger than the architectural max of 12 */
-> +#define CMN_MAX_DIMENSION		14
->   #define CMN_MAX_XPS			(CMN_MAX_DIMENSION * CMN_MAX_DIMENSION)
->   #define CMN_MAX_DTMS			(CMN_MAX_XPS + (CMN_MAX_DIMENSION - 1) * 4)
->   
-> @@ -214,6 +215,8 @@ enum cmn_part {
->   	PART_CMN700 = 0x43c,
->   	PART_CI700 = 0x43a,
->   	PART_CMN_S3 = 0x43e,
-> +	/* Synthetic part number, overridden to PART_CMN_S3 during discovery */
-> +	PART_GRAVITON5 = 0xa5,
->   };
->   
->   /* CMN-600 r0px shouldn't exist in silicon, thankfully */
-> @@ -2221,6 +2224,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_cmn *cmn, void __iomem *xp_reg
->   	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region + offset));
->   }
->   
-> +static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
-> +{
-> +	unsigned int x = (xp_id >> 7) & 0xf;
-> +	unsigned int y = (xp_id >> 3) & 0xf;
-> +
-> +	/*
-> +	 * The unit info register reads as zero; derive the DTC domain from
-> +	 * the XP's mesh coordinates over the 10x14 mesh.
-> +	 */
-> +	return (x / 5) + (y / 7) * 2;
-> +}
-> +
->   static void arm_cmn_init_node_info(struct arm_cmn *cmn, u32 offset, struct arm_cmn_node *node)
->   {
->   	int level;
-> @@ -2266,6 +2281,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->   	u64 reg;
->   	int i, j;
->   	size_t sz;
-> +	bool graviton5_workaround = false;
->   
->   	arm_cmn_init_node_info(cmn, rgn_offset, &cfg);
->   	if (cfg.type != CMN_TYPE_CFG)
-> @@ -2276,6 +2292,13 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->   	reg = readq_relaxed(cfg_region + CMN_CFGM_PERIPH_ID_01);
->   	part = FIELD_GET(CMN_CFGM_PID0_PART_0, reg);
->   	part |= FIELD_GET(CMN_CFGM_PID1_PART_1, reg) << 8;
-> +
-> +	/* Graviton5 has a customised CMN-S3 which needs some fixups */
-> +	if (cmn->part == PART_GRAVITON5) {
-> +		cmn->part = PART_CMN_S3;
-> +		graviton5_workaround = true;
-> +	}
-> +
->   	/* 600AE is close enough that it's not really worth more complexity */
->   	if (part == PART_CMN600AE)
->   		part = PART_CMN600;
-> @@ -2365,6 +2388,8 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->   
->   		if (cmn->part == PART_CMN600)
->   			xp->dtc = -1;
-> +		else if (graviton5_workaround)
-> +			xp->dtc = arm_cmn_graviton5_dtc_domain(xp->id);
->   		else
->   			xp->dtc = arm_cmn_dtc_domain(cmn, xp_region);
->   
-> @@ -2443,6 +2468,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->   
->   			switch (dn->type) {
->   			case CMN_TYPE_DTC:
-> +				if (graviton5_workaround) {
-> +					/* Node info logical ID is zeroed; use the domain ID */
-> +					dn->logid = xp->dtc;
+The default ping-pong uses sizeof(int) (4 bytes) per iteration, which
+exercises only the pipe-buffer merge path and keeps allocation entirely
+out of the picture. That makes the bench a useful scheduler / context-
+switch latency probe but unable to surface anything from the pipe
+page-allocation hot path.
 
-No, this really should be xp->logid - other than DTC0 whose logical ID 
-is always forced to 0, but if it naturally lines up that way anyway then 
-all the better - since that is consistent with how the tooling generates 
-a regular hardware configuration. The cmn->dtc array ends up sorted by 
-logical ID as that is a guaranteed stable order for all CMN versions (as 
-the domain numbers themselves aren't always known), and it is the 
-interrupt order defined by the firmware bindings which we need to match. 
-If it's not guaranteed that the actual domain numbers are in the same 
-order then we have an existing bug in general (I'll have to check...)
+Add a -s/--write-size option that sets the bytes written and read per
+ping-pong iteration. The buffer is allocated for each side via
+struct thread_data and replaces the on-stack int previously used. The
+default remains sizeof(int) so existing invocations are unchanged.
 
-Otherwise, this looks OK to me - in fact surprisingly pleasant and 
-unobtrusive given that it's a pretty horrible hardware issue to work 
-around. I guess we get lucky that it's an easy topology to compute.
+With --write-size set above PAGE_SIZE the bench drives anon_pipe_write()
+through alloc_page() (or the bulk pre-alloc, if the relevant patch is
+applied), which is what we want when measuring pipe locking and page
+allocation work.
 
-Thanks,
-Robin.
+The bench is a ping-pong: both sides call write() before read(), so a
+single write_size payload must fit entirely in the pipe buffer or both
+sides deadlock waiting for the other to drain. Resize the pipe via
+F_SETPIPE_SZ to match write_size (skipped at the sizeof(int) default),
+and error out cleanly when the request exceeds
+/proc/sys/fs/pipe-max-size.
 
-> +				}
->   				cmn->num_dtcs++;
->   				dn++;
->   				break;
-> @@ -2658,6 +2687,7 @@ static const struct acpi_device_id arm_cmn_acpi_match[] = {
->   	{ "ARMHC650" },
->   	{ "ARMHC700" },
->   	{ "ARMHC003" },
-> +	{ "AMZN0070", PART_GRAVITON5 },
->   	{}
->   };
->   MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+This patch has been valuable for testing and verifying the pipe
+enhancements currently under discussion at
+https://lore.kernel.org/all/20260515-fix_pipe-v1-0-b14c840c7555@debian.org/
+---
+Changes in v2:
+- Reject --write-size == 0 to avoid a zero-byte ping-pong that spins
+  (blocking mode) or hangs on epoll_wait (non-blocking mode).
+- Validate --write-size <= INT_MAX and drop the (int) casts in the
+  read/write BUG_ON and fcntl(F_SETPIPE_SZ) checks, so the comparisons
+  are unambiguous regardless of the requested size.
+- Fix "acommodate" typo in the pipe-resize comment.
+- Link to v1: https://patch.msgid.link/20260515-perf_bench_pipe-v1-1-3c5b805ba178@debian.org
+
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: Jiri Olsa <jolsa@kernel.org>
+To: Ian Rogers <irogers@google.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ tools/perf/bench/sched-pipe.c | 47 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 41 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
+index 70139036d68f0..216d3121d438d 100644
+--- a/tools/perf/bench/sched-pipe.c
++++ b/tools/perf/bench/sched-pipe.c
+@@ -22,6 +22,7 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#include <limits.h>
+ #include <assert.h>
+ #include <sys/epoll.h>
+ #include <sys/time.h>
+@@ -39,6 +40,7 @@ struct thread_data {
+ 	int			epoll_fd;
+ 	bool			cgroup_failed;
+ 	pthread_t		pthread;
++	char			*buf;
+ };
+ 
+ #define LOOPS_DEFAULT 1000000
+@@ -48,6 +50,7 @@ static	int			loops = LOOPS_DEFAULT;
+ static bool			threaded;
+ 
+ static bool			nonblocking;
++static unsigned int		write_size = sizeof(int);
+ static char			*cgrp_names[2];
+ static struct cgroup		*cgrps[2];
+ 
+@@ -88,6 +91,8 @@ static const struct option options[] = {
+ 	OPT_BOOLEAN('n', "nonblocking",	&nonblocking,	"Use non-blocking operations"),
+ 	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
+ 	OPT_BOOLEAN('T', "threaded",	&threaded,	"Specify threads/process based task setup"),
++	OPT_UINTEGER('s', "write-size", &write_size,
++		     "Bytes per ping-pong write (default 4-bytes). Use larger values to exercise the pipe page-allocation path."),
+ 	OPT_CALLBACK('G', "cgroups", NULL, "SEND,RECV",
+ 		     "Put sender and receivers in given cgroups",
+ 		     parse_two_cgroups),
+@@ -172,14 +177,14 @@ static void exit_cgroup(int nr)
+ 
+ static inline int read_pipe(struct thread_data *td)
+ {
+-	int ret, m;
++	int ret;
+ retry:
+ 	if (nonblocking) {
+ 		ret = epoll_wait(td->epoll_fd, &td->epoll_ev, 1, -1);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+-	ret = read(td->pipe_read, &m, sizeof(int));
++	ret = read(td->pipe_read, td->buf, write_size);
+ 	if (nonblocking && ret < 0 && errno == EWOULDBLOCK)
+ 		goto retry;
+ 	return ret;
+@@ -188,7 +193,7 @@ static inline int read_pipe(struct thread_data *td)
+ static void *worker_thread(void *__tdata)
+ {
+ 	struct thread_data *td = __tdata;
+-	int i, ret, m = 0;
++	int i, ret;
+ 
+ 	ret = enter_cgroup(td->nr);
+ 	if (ret < 0) {
+@@ -204,10 +209,10 @@ static void *worker_thread(void *__tdata)
+ 	}
+ 
+ 	for (i = 0; i < loops; i++) {
+-		ret = write(td->pipe_write, &m, sizeof(int));
+-		BUG_ON(ret != sizeof(int));
++		ret = write(td->pipe_write, td->buf, write_size);
++		BUG_ON(ret < 0 || (unsigned int)ret != write_size);
+ 		ret = read_pipe(td);
+-		BUG_ON(ret != sizeof(int));
++		BUG_ON(ret < 0 || (unsigned int)ret != write_size);
+ 	}
+ 
+ 	return NULL;
+@@ -233,12 +238,39 @@ int bench_sched_pipe(int argc, const char **argv)
+ 
+ 	argc = parse_options(argc, argv, options, bench_sched_pipe_usage, 0);
+ 
++	if (write_size == 0 || write_size > INT_MAX) {
++		fprintf(stderr, "--write-size must be in 1..%d\n", INT_MAX);
++		return -1;
++	}
++
+ 	if (nonblocking)
+ 		flags |= O_NONBLOCK;
+ 
+ 	BUG_ON(pipe2(pipe_1, flags));
+ 	BUG_ON(pipe2(pipe_2, flags));
+ 
++	/*
++	 * On a custom write_size, resize the pipes so a single payload fits.
++	 */
++	if (write_size > sizeof(int)) {
++		int r1 = fcntl(pipe_1[1], F_SETPIPE_SZ, write_size);
++		int r2 = fcntl(pipe_2[1], F_SETPIPE_SZ, write_size);
++
++		if (r1 < 0 || r2 < 0 ||
++		    (unsigned int)r1 < write_size ||
++		    (unsigned int)r2 < write_size) {
++			fprintf(stderr,
++				"--write-size %u exceeds /proc/sys/fs/pipe-max-size\n",
++				write_size);
++			return -1;
++		}
++	}
++
++	for (t = 0; t < nr_threads; t++) {
++		threads[t].buf = calloc(1, write_size);
++		BUG_ON(!threads[t].buf);
++	}
++
+ 	gettimeofday(&start, NULL);
+ 
+ 	for (t = 0; t < nr_threads; t++) {
+@@ -287,6 +319,9 @@ int bench_sched_pipe(int argc, const char **argv)
+ 	gettimeofday(&stop, NULL);
+ 	timersub(&stop, &start, &diff);
+ 
++	for (t = 0; t < nr_threads; t++)
++		free(threads[t].buf);
++
+ 	exit_cgroup(0);
+ 	exit_cgroup(1);
+ 
+
+---
+base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
+change-id: 20260515-perf_bench_pipe-bae2ec777c4b
+
+Best regards,
+--  
+Breno Leitao <leitao@debian.org>
 
