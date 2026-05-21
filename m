@@ -1,205 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2768433D6FC;
-	Thu, 21 May 2026 01:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D783101B6
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 01:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779325946; cv=none; b=b/3yt2KxuJ3X+4y7nWQYpqvQsGX1BU7Jbrpyj0VgwuDcBdjCE79sOWyRbfrH/gKp78d4s3t7gU0n+Vz1d7+8IBS0iUkhc4c0SftOjoxPAsyImyPbW2+LUjq2tct6Lmzdy/TPPOGEkoh93AVKhfbNSiF1VMydriAA0gRSB78rNIg=
+	t=1779328171; cv=none; b=E6eD6AUe8BbCvnaLiKLAd9O3kC3Qp01YHfv2AStZLfz8UbfuVdBtdrpnKcaFCT2rdNfC4P1GjOs6mwTm+x/gviNxe0tEvxHhA/mNvDow/cmwgJOT2lMBQ7DRkaWwAWlJKOmN5iMUzlaTkapDhKJvwqHeeGshqFOFQzmGBdh6CpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779325946; c=relaxed/simple;
-	bh=KIEkF3EaJz77SDF5mxDrTXlVeJG2dBXvwn8aBmMRo2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QAPKxaxX/oIBk4hcAcMVmuDr2gZ7p6TCcymWX+7SYdq3Xda3zXLbBQ2lyhSHpeArbgNYASH5Fx6eZUerzvNEj8cHIMdaXaZ0qNIFF70jefuekJHfSQVffUX2FJzNiVaETrqiym1LKl0AlXgpx4j5DcrPH9pr01bMx8PZtvjEiSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZ9l3siI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779328171; c=relaxed/simple;
+	bh=Lne8TopiaGTUHpK3jptOVN4rg84Na2YcL0i2vEQ1fG8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=H3FZr++/ssjE1/O8Q3EOgr2j0eHUk+j+Nv0m4oJxwhcLUlBfr98mSRbOFG8z7qCFYwS6NrqwZmlutnWVkfNQ/ABFWxlA9L9deWhBlcvNrIndm4MaFd7WxI57L/iOWrg/JXwUsIZfExz3OZ9Hxv8jOacJUJs2w86uYY2bx9TAPd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmUCjzpg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZ9l3siI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21C41F00A3B;
-	Thu, 21 May 2026 01:12:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmUCjzpg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514871F000E9;
+	Thu, 21 May 2026 01:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779325944;
-	bh=rS1Jh9K0PvkOY4v1OPA2sgP8wFd1Za7efBuvZ/20nLI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KZ9l3siI9JdIcyuR6C2/Qq2j8+Sb9uz23JQuZeNXGH7BF9hfYSbNvsBizghLIr7SK
-	 XTzamN/oxYffNaGyNfQZ0cdH+KnFBQh3pqGSbvkfDHqyx/AEXeHW4xZAA+XNx0uAEK
-	 JV96AqzIWQRuIH3EEvGo53D+SocJIedfWu+3heRrsnf9M9067+QqtUIWEsfzukmepJ
-	 1dkDrrQ4Sf8/coVpL4IoT7baZ7kd9mXmSsmMdlplyy/3P81odFbYjI2Zcej8sFVm8V
-	 RsDVjqjLhNfrK0LQCXIJ9xiFmVOHOW3EzlEjV+/jCJQojbIHf2z3bz5Ywb8UvgoV80
-	 45+QohRdSy7ww==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 27/27] perf test: Add truncated perf.data robustness test
-Date: Wed, 20 May 2026 22:10:12 -0300
-Message-ID: <20260521011027.622268-28-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260521011027.622268-1-acme@kernel.org>
-References: <20260521011027.622268-1-acme@kernel.org>
+	s=k20260515; t=1779328162;
+	bh=J2ycN9mmk2cRqyo+b/tHZZokRcYBcQ930Uww0rSR0PY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mmUCjzpgiYiGH6kolcCvNxQRz6VPXpJMGLwGGhtsllluN+vGRYxVvPEN5rWSAz5OL
+	 V0so5hR5+OoklFDsOLM5CMYM6r2wf/WUX/r/Vsxz2pCPkgfjTKc95elr3sxTVa8PGr
+	 IrpfmcrDyxC1MyB0Q+6JMCUg9WRznDlGp/6vzZe83vbhuBYP5YloacFa+cyAnotZH1
+	 ua7LclGO6v3K22DBizcZLjfOXcbuattMFOC533Ruz7r+EHWpgceQN34/xMmaaVuAwW
+	 TfdCQHnuv6afy1bPuWPmpSR1mzuQsPYTAoMoK8y0MNZZKtpA83F2ebuIf00AMXf97o
+	 uEAYsnKtEL5qg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 03/27] perf zstd: Fix compression error path in
+ zstd_compress_stream_to_records()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260521011027.622268-4-acme@kernel.org>
+References: <20260521011027.622268-4-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 21 May 2026 01:49:21 +0000
+Message-Id: <20260521014922.514871F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-Add a shell test that verifies perf report handles truncated perf.data
-files gracefully — exiting with an error code rather than crashing with
-SIGSEGV or SIGABRT.
+Pre-existing issues:
+- [High] zstd_compress_stream_to_records produces unaligned event headers w=
+hen splitting streams.
+- [High] record__pushfn corrupts multi-record compressed output by forceful=
+ly overwriting the first header, treating interleaved headers as payload.
+- [High] zstd_decompress_stream corrupts the destination buffer and leaks m=
+emory contents due to an unreset output.pos variable.
+--
 
-The test records a simple workload, then truncates the resulting
-perf.data at four offsets that exercise different parsing stages:
+commit 560499759a9003b90691766e1e9ac645ad871d8e
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-  8 bytes   — file header magic only
-  64 bytes  — partial file header (attr section incomplete)
-  256 bytes — into the first events (partial event headers)
-  75% size  — mid-stream truncation (partial event data)
+perf zstd: Fix compression error path in zstd_compress_stream_to_records()
 
-For each truncation, perf report is run and the exit code is checked:
+The error fallback does memcpy(dst, src, src_size) intending to store
+uncompressed data when compression fails, but this has three bugs.
 
-- Exit code 0 (success) fails the test — a truncated file should
-  never parse without error.
+> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+> index 57027e0ac7b65..ecda9deb53b73 100644
+> --- a/tools/perf/util/zstd.c
+> +++ b/tools/perf/util/zstd.c
 
-- Crash signals are detected portably via kill -l, which maps the
-  signal number to a name on the running system.  This handles
-  architectures where signal numbers differ (e.g. SIGBUS is 7 on
-  x86/ARM but 10 on MIPS/SPARC).  Core-dump signals (ILL, ABRT,
-  BUS, FPE, SEGV, TRAP, SYS) fail the test.
+[ ... ]
 
-- Higher exit codes (200+) are perf's own negative-errno returns
-  (e.g. -EINVAL = 234) and are expected.
+> @@ -65,10 +72,18 @@ ssize_t zstd_compress_stream_to_records(struct zstd_d=
+ata *data, void *dst, size_
+>  		if (ZSTD_isError(ret)) {
+>  			pr_err("failed to compress %ld bytes: %s\n",
+>  				(long)src_size, ZSTD_getErrorName(ret));
+> -			memcpy(dst, src, src_size);
+> -			return src_size;
+> +			goto reset;
+>  		}
+>  		size =3D output.pos;
+> +		/*
+> +		 * No progress: ZSTD couldn't emit any bytes into the
+> +		 * remaining output buffer.  Calling process_header
+> +		 * with size=3D0 would re-trigger header initialization,
+> +		 * double-subtracting the header size from dst_size and
+> +		 * underflowing the unsigned counter.
+> +		 */
+> +		if (size =3D=3D 0)
+> +			goto reset;
+>  		size =3D process_header(record, size);
+>  		compressed +=3D size;
+>  		dst +=3D size;
 
-This exercises the bounds checking, minimum-size validation, and error
-propagation added by the preceding patches in this series.
+[Severity: High]
+This is a pre-existing issue, but does advancing dst exactly by size (which
+includes output.pos, the raw compressed payload size) cause subsequent loop
+iterations to write new perf_event_header structures to unaligned memory
+addresses?
 
-Testing it:
+Since output.pos is not guaranteed to be 8-byte aligned, will this cause
+unaligned memory access crashes on architectures with strict alignment
+requirements, and violate the perf.data specification?
 
-  root@number:~# perf test truncat
-   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).: Ok
-  root@number:~# perf test -vv truncat
-   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).:
-  --- start ---
-  test child forked, pid 62890
-  ---- end(0) ----
-   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).: Ok
-  root@number:~#
+>  		dst_size -=3D size;
+>  	}
+> =20
+>  	return compressed;
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
-[ Fixed the SPDX on the line where 'perf test' expects the test description, reviewed by Ian Rogers ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/data_validation.sh | 85 +++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_validation.sh
+[Severity: High]
+This is a pre-existing issue, but does record__pushfn() corrupt multi-record
+compressed output when calling this function?
 
-diff --git a/tools/perf/tests/shell/data_validation.sh b/tools/perf/tests/shell/data_validation.sh
-new file mode 100755
-index 0000000000000000..fa7980c4ddd30954
---- /dev/null
-+++ b/tools/perf/tests/shell/data_validation.sh
-@@ -0,0 +1,85 @@
-+#!/bin/bash
-+# Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Exercises the bounds checking and minimum-size validation added
-+# by the perf-data-validation hardening series.
-+
-+err=0
-+
-+cleanup() {
-+	rm -f "${perfdata}" "${perfdata}.old" "${truncated}" "${stderrfile}"
-+	trap - EXIT TERM INT
-+}
-+trap 'cleanup; exit 1' TERM INT
-+trap cleanup EXIT
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+truncated=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+stderrfile=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+# Record a simple workload
-+if ! perf record -o "${perfdata}" -- perf test -w noploop 2>/dev/null; then
-+	echo "Skip: perf record failed"
-+	cleanup
-+	exit 2
-+fi
-+
-+file_size=$(stat -c %s "${perfdata}")
-+if [ "${file_size}" -lt 512 ]; then
-+	echo "Skip: perf.data too small (${file_size} bytes)"
-+	cleanup
-+	exit 2
-+fi
-+
-+# Test truncation at various offsets that exercise different
-+# parsing stages:
-+#   8    — file header magic only, no attrs or data
-+#   64   — partial file header (attr section incomplete)
-+#   256  — into the first events (partial event headers)
-+#   75%  — mid-stream truncation (partial event data)
-+for cut_at in 8 64 256 $((file_size * 3 / 4)); do
-+	if [ "${cut_at}" -ge "${file_size}" ]; then
-+		continue
-+	fi
-+	head -c "${cut_at}" "${perfdata}" > "${truncated}"
-+
-+	# perf report should exit with an error, not crash.
-+	# Capture stderr to detect sanitizer violations.
-+	perf report -i "${truncated}" --stdio > /dev/null 2> "${stderrfile}"
-+	exit_code=$?
-+
-+	# A truncated file should never parse successfully
-+	if [ ${exit_code} -eq 0 ]; then
-+		echo "FAIL: perf report exited 0 (success) on ${cut_at}-byte truncated file — expected an error"
-+		err=1
-+		continue
-+	fi
-+
-+	# Detect sanitizer violations — ASAN/MSAN/TSAN/UBSAN exit
-+	# with code 1 by default, which would otherwise look like a
-+	# clean error exit.  Check stderr for their markers.
-+	if grep -qE "^(==[0-9]+==ERROR:|SUMMARY: [A-Za-z]*Sanitizer)" "${stderrfile}" 2>/dev/null; then
-+		sanitizer=$(grep -oE "(Address|Memory|Thread|UndefinedBehavior)Sanitizer" "${stderrfile}" | head -1)
-+		echo "FAIL: perf report triggered ${sanitizer:-sanitizer} on ${cut_at}-byte truncated file"
-+		err=1
-+		continue
-+	fi
-+
-+	# Detect crash signals portably — signal numbers differ
-+	# across architectures (e.g. SIGBUS is 7 on x86/ARM but
-+	# 10 on MIPS/SPARC).  Use kill -l to map the number to a
-+	# name on the running system.
-+	if [ ${exit_code} -gt 128 ] && [ ${exit_code} -lt 200 ]; then
-+		sig_name=$(kill -l $((exit_code - 128)) 2>/dev/null)
-+		case ${sig_name} in
-+		ILL|ABRT|BUS|FPE|SEGV|TRAP|SYS)
-+			echo "FAIL: perf report crashed (SIG${sig_name}) on ${cut_at}-byte truncated file"
-+			err=1
-+			;;
-+		esac
-+	fi
-+done
-+
-+cleanup
-+exit ${err}
--- 
-2.54.0
+Since zstd_compress_stream_to_records() splits large streams into multiple
+independent events by interleaving raw perf_event_header structures, will
+record__pushfn() forcibly overwrite the first header to span the entire
+compressed byte count?
 
+During decompression, will ZSTD_decompressStream() encounter these raw bina=
+ry
+headers inside the ZSTD stream and fail?
+
+> +
+> +reset:
+> +	/* Reset so the context is usable if the caller retries */
+> +	ret =3D ZSTD_initCStream(data->cstream, data->comp_level);
+> +	if (ZSTD_isError(ret))
+> +		pr_err("failed to reset compression context: %s\n",
+> +			ZSTD_getErrorName(ret));
+> +	return -1;
+>  }
+> =20
+>  size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t =
+src_size,
+
+[Severity: High]
+This is a pre-existing issue, but does zstd_decompress_stream() corrupt the
+destination buffer and leak memory contents?
+
+Inside the zstd_decompress_stream() loop, the code dynamically updates
+output.dst =3D dst + output.pos, but does it fail to reset output.pos to 0?
+
+Because ZSTD_decompressStream() always writes to output.dst + output.pos,
+will the second iteration skip old_pos bytes of the destination buffer,
+leaving them uninitialized, and write the next chunk of decompressed data
+after the gap?
+
+Note: This was fixed in commit 3c5751e39541b ("perf zstd: Fix multi-iterati=
+on
+decompression and error handling") later in the series.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521011027.6222=
+68-1-acme@kernel.org?part=3D3
