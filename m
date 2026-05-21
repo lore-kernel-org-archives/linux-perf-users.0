@@ -1,341 +1,388 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172FA383991;
-	Thu, 21 May 2026 17:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD423ED3A6
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 17:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779386107; cv=none; b=pERuW9LPSwSrp1jC1xkClI2hgyRF2UnEeansn0y0Eh341w//Qa3SrGGB3bClVXBkOW0J3x4aRfhmHVi7cNjUlBOAbJ0nsr/j93JzCWTDegUcajDQVmr70jrMkEMyAUtLf30pwTxZbQiiXfp4J/XN7VboKrgyzFsjYruCWmzObq8=
+	t=1779386142; cv=none; b=BiqzWeDkrRZ8bEEiHG7JDXDPExJnDqWC93C6pd551BBKexmfayXWgqAIYiGeGRrNDunwirRu+z0mo+cjaMr474avEL+TO46OIoyFJGk+Dp+nOqgQSU+mD+Dy88NH3K1Y0+l5plgTPnjRlNuLTHwi/tZNFJa2hPuxTOj9cWEMDwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779386107; c=relaxed/simple;
-	bh=gaBZf0xgijk3ADHndlwJWy7ORRG1lWmztC5hSDwgckM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Udks5yGMK8+3bJV7BDDst1wEbexIvHHqAUt6sHNopUyZwIqJ5JDRrxeh7g7+cChObCoe02sP25GM+u39UI8qADW7/0xgs6AmbhqHkkUXfD/ZHuqWH03dauWy5YzXP2j+jl0m8NNd1jixFe5HnGRmOh+yqjuoeHXr18OuSSfK5zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aC8vy/LH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779386142; c=relaxed/simple;
+	bh=PWE9Gdh37LLWr2tuhdLq7S0nam4hEYHuSpRBBLVwGH8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=NWPJOiFLPC895Ttud/t3CF4in2myvTg2ljX966LkeYAWd5XwGeLWxYiIQOEHbIKl3CcCCJ9pqdTSE9+k+dgS6p+1eDbxG7sEtVSDAy6y6rGIOJsA5MFiiYvpmZVXASqt4kjz3S0uMbpyHAeAUWK5vOC6Zy9N3mgfWH+khZK6Ly4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IqvmpDlK; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aC8vy/LH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506081F000E9;
-	Thu, 21 May 2026 17:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779386105;
-	bh=vlAEN5PPlUm3ATKJz3BeUhXMqXrr2jnTmejiLaEyQKQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aC8vy/LH+/tqS5YVZcN6eknx4S+rSMHoze+Rd6eCHHZZL1J7rZoAd/m8k9QuGfLhs
-	 8JAr7qP5BuHlXg6N4Wh6joZmTotu865j1O18ZrwsxrTdM5tGTNUHzmsHUUTufVH0rk
-	 vk+Cu91rGB3ZrT/BajAZyqrBGDnqRQg2CIyEjzhhcPPha8eofPCy1AnVRCsYv5SBH3
-	 fhDGu3sYzJLaha/KK0DKqzb7EPd3L4427WQQl2AQJ0qXwBMIjAk19B/xrrxx75M3Q5
-	 7oTAGs3vw/C6txRPvnu4dQOa7951MVPmsGg42wLspx01xScaxvOE/wduKAwT+4OeG/
-	 Fi2jSV16Tq2lg==
-Date: Thu, 21 May 2026 10:55:02 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Ian Rogers <irogers@google.com>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [FYI] [PATCH] merge resolution commit for perf trace beauty
- conflict
-Message-ID: <ag9G9nKxz8JsiUQc@google.com>
-References: <ag88OnWBm2Ce6A2s@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IqvmpDlK"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-3041ab826ddso3655307eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 10:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779386139; x=1779990939; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OwJZ4rFsTmpxwL5qtXdjOZznkVLQwCVlL2xsNs7R4ac=;
+        b=IqvmpDlK/jgf7Z+WIqA9PFOok65Yo6m9r82eXiUfmzgjZnSdZcKv3UORCsDUYAW1Lm
+         Vw8w9h/C8VHmarok44C08i2HRTbB9hFnoj9DhubzZ2LN0vPQhJGOVcnasoo27BCFzuqM
+         CoGyg6emUQYaDxMsmK6aICaKuJLBfIcuyEYJm/k0CnjKBaONOMP6aN3zEPXumM+S1kil
+         nJOyNvMCzEJ2P6JxqQpzThggv2wvnBvSno0gJ8tnPBCpStWDJXQHFU6IQH/Zy2voK6UZ
+         DoJ9kMcFwdRg2irSVlRCEMjMG9ONyF7Yzs46t3fwyswmRbFbktwktgqO0ea9cXH0iPaK
+         o7aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779386139; x=1779990939;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OwJZ4rFsTmpxwL5qtXdjOZznkVLQwCVlL2xsNs7R4ac=;
+        b=OYE6sbXY5aUxiQ1o/dVp7GjxWSAPr/XiLZfDcp+laYQ644krYREAypNC5cE9345OIz
+         kLMwDM0CcCHMqmTzOEJcHuXeQ3sEc0OfiyuiBXfWrou6I5VB7eK/t/RyBQOsRAO4F71w
+         URySCuvS0n5L0LURSORCNYw72ldsY7hoHFHrLzXf6Una6q8UNvz5HFg/fqH9dYl3e4D8
+         MzPlGQxwO00tOfw0CIVaSSu+Zsb91EeQ8zDyw+6Cy61HeLhRVLSHxOBMvDvTqpfiVH0y
+         LoRfz5GEbDJewGbG5w+qdUqzvicVxjQGCnCx+YEhMX+FEfumbzdRTN5IC7n79aDZL1Rx
+         FC+w==
+X-Forwarded-Encrypted: i=1; AFNElJ85mipKzUzn9ptGYmOBfpc5psWFC6YhqYDEHV6JGBbFe1EsQTQZ17T3CFySKuMN5uIfdnS/08iuIc2Flcp+PdID@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8K7vpFZTKwKCy/7tpn5eLCcZOw9v7XZCTuAM6vEXDlNOOhMNL
+	Ar4uRk/nh0Hjqj0iWm/21qD4p9cSbUesggk/Z9Z/vKcW94qIvX2ooridkelOv3A/SePDNy2W+pG
+	WduMA08tIzA==
+X-Received: from dlbpk2.prod.google.com ([2002:a05:7022:3842:b0:134:ce13:c1a1])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:6da7:b0:2f2:6dde:df50
+ with SMTP id 5a478bee46e88-30449054359mr112838eec.17.1779386138766; Thu, 21
+ May 2026 10:55:38 -0700 (PDT)
+Date: Thu, 21 May 2026 10:55:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ag88OnWBm2Ce6A2s@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.794.g4f17f83d09-goog
+Message-ID: <20260521175535.1531810-1-irogers@google.com>
+Subject: [PATCH v1] perf python: Clean up and restructure setup.py
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 21, 2026 at 02:09:14PM -0300, Arnaldo Carvalho de Melo wrote:
-> Just FYI, this is the merge commit solving this conflict.
-> 
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> commit 86c8774ce08b931debdaa3f61f5a033639c183ca
-> Merge: f8d0db39bcc536ef 758c807bb943138f
->     Merge remote-tracking branch 'torvalds/master' into perf-tools-next
->     
->     Fixup clash of:
->     
->       552636b9317c8a84 ("perf trace: Add beautifier script for fsmount flags")
->     
->     That went via Namhyung upstream and the following ones in the
->     perf-tools-next tree:
->     
->       32969ef6e3e1979a ("perf build: Pre-generate BPF skeleton tooling during umbrella prepare phase")
->       537609924c43715e ("perf trace beauty: Make beauty generated C code standalone .o files")
->     
->     This complements sent by Ian Rogers.
+Clean up and restructure the python setup script to resolve pylint
+warnings, improve code quality, and increase robustness and
+readability, targeting Python 3.9+ (the Linux kernel build minimum
+Python version).
 
-As long as you have this with Ian's fix,
+Changes:
+- Restructure the script to use a `main()` function as the entry point,
+  leaving only imports, classes, and pure functions at module level.
+- Eliminate all global/module-level variables, making them local to
+  `main()` or the respective classes/functions.
+- Make `clang_has_option` a pure function by passing all necessary
+  parameters explicitly.
+- Extract clang compiler flag filtering into a new
+  `filter_clang_options` helper function. This function uses a loop
+  over a tuple of options, replacing ~30 lines of repetitive blocks
+  and reducing branch/statement complexity in the main flow.
+- Cleanly define attributes in `__init__` for `BuildExt` and `InstallLib`
+  and read environment variables dynamically within the methods, removing
+  their dependency on global variables.
+- Replace legacy Popen with subprocess.run for safer process handling.
+- Use list-based flag filtering (split, filter, re-join) instead of regex
+  `re.sub` substitutions on space-separated compiler flag strings. This
+  avoids boundary bugs and safely handles flags with arguments (e.g.
+  `-fcf-protection=full`).
+- Safely parse `CC` env var using `shlex.split` to handle quotes and pass
+  compiler arguments as `list[str]` lists to helper functions, avoiding
+  redundant string formatting and parsing.
+- Remove unused `import re`.
+- Rename setuptools command subclasses to PascalCase (BuildExt, InstallLib).
+- Add type annotations to functions and methods.
+- Add missing docstrings for module, functions, and classes.
+- Split long lines to adhere to standard limits.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/setup.py | 253 +++++++++++++++++++++++++--------------
+ 1 file changed, 166 insertions(+), 87 deletions(-)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index b65b1792ca05..55ff7d8cba7e 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -1,108 +1,187 @@
+-from os import getenv, path
+-from subprocess import Popen, PIPE
+-from re import sub
++"""Setup script for perf python extension.
++
++This script is used to build and install the perf python binding.
++It handles compiler-specific flags, especially for clang, and configures
++the setuptools Extension.
++"""
++
++import os
+ import shlex
++import subprocess
++import sysconfig
+ 
+-cc = getenv("CC")
+-assert cc, "Environment variable CC not set"
++from setuptools import setup, Extension
++from setuptools.command.build_ext import build_ext as _build_ext
++from setuptools.command.install_lib import install_lib as _install_lib
+ 
+-# Check if CC has options, as is the case in yocto, where it uses CC="cc --sysroot..."
+-cc_tokens = cc.split()
+-if len(cc_tokens) > 1:
+-    cc = cc_tokens[0]
+-    cc_options = " ".join([str(e) for e in cc_tokens[1:]]) + " "
+-else:
+-    cc_options = ""
+ 
+-# ignore optional stderr could be None as it is set to PIPE to avoid that.
+-# mypy: disable-error-code="union-attr"
+-cc_is_clang = b"clang version" in Popen([cc, "-v"], stderr=PIPE).stderr.readline()
++def clang_has_option(cc: str, cc_args: list[str], src_feature_tests: str, option: str) -> bool:
++    """Check if clang supports a specific option.
+ 
+-srctree = getenv('srctree')
+-assert srctree, "Environment variable srctree, for the Linux sources, not set"
+-src_feature_tests  = f'{srctree}/tools/build/feature'
++    Args:
++        cc: The compiler executable.
++        cc_args: Compiler arguments from CC environment variable.
++        src_feature_tests: Path to the feature tests directory.
++        option: The compiler option to check (e.g., "-mcet").
+ 
+-def clang_has_option(option):
++    Returns:
++        True if the option is supported, False otherwise.
++    """
+     error_substrings = (
+         b"unknown argument",
+         b"is not supported",
+         b"unknown warning option"
+     )
+-    cmd = shlex.split(f"{cc} {cc_options} {option}") + [
++    cmd = [cc] + cc_args + [
++        option,
+         "-o", "/dev/null",
+-        path.join(src_feature_tests, "test-hello.c")
++        os.path.join(src_feature_tests, "test-hello.c")
+     ]
+-    cc_output = Popen(cmd, stderr=PIPE).stderr.readlines()
++    try:
++        res = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL, check=False)
++        cc_output = res.stderr.splitlines()
++    except OSError:
++        return False
+     return not any(any(error in line for error in error_substrings) for line in cc_output)
+ 
+-if cc_is_clang:
+-    from sysconfig import get_config_vars
+-    vars = get_config_vars()
++
++def filter_clang_options(cc: str, cc_args: list[str], src_feature_tests: str) -> None:
++    """Filter out unsupported clang options from sysconfig CFLAGS and OPT.
++
++    Args:
++        cc: The compiler executable.
++        cc_args: Compiler arguments from CC environment variable.
++        src_feature_tests: Path to the feature tests directory.
++    """
++    config_vars = sysconfig.get_config_vars()
+     for var in ('CFLAGS', 'OPT'):
+-        vars[var] = sub("-specs=[^ ]+", "", vars[var])
+-        if not clang_has_option("-mcet"):
+-            vars[var] = sub("-mcet", "", vars[var])
+-        if not clang_has_option("-fcf-protection"):
+-            vars[var] = sub("-fcf-protection", "", vars[var])
+-        if not clang_has_option("-fstack-clash-protection"):
+-            vars[var] = sub("-fstack-clash-protection", "", vars[var])
+-        if not clang_has_option("-fstack-protector-strong"):
+-            vars[var] = sub("-fstack-protector-strong", "", vars[var])
+-        if not clang_has_option("-fno-semantic-interposition"):
+-            vars[var] = sub("-fno-semantic-interposition", "", vars[var])
+-        if not clang_has_option("-ffat-lto-objects"):
+-            vars[var] = sub("-ffat-lto-objects", "", vars[var])
+-        if not clang_has_option("-ftree-loop-distribute-patterns"):
+-            vars[var] = sub("-ftree-loop-distribute-patterns", "", vars[var])
+-        if not clang_has_option("-gno-variable-location-views"):
+-            vars[var] = sub("-gno-variable-location-views", "", vars[var])
++        if var not in config_vars:
++            continue
++
++        # Split into individual flags to avoid regex boundary issues
++        flags = config_vars[var].split()
++
++        # Remove -specs=...
++        flags = [f for f in flags if not f.startswith("-specs=")]
++
++        options = (
++            "-mcet",
++            "-fcf-protection",
++            "-fstack-clash-protection",
++            "-fstack-protector-strong",
++            "-fno-semantic-interposition",
++            "-ffat-lto-objects",
++            "-ftree-loop-distribute-patterns",
++            "-gno-variable-location-views"
++        )
++        for option in options:
++            if not clang_has_option(cc, cc_args, src_feature_tests, option):
++                # Remove the option and any variant (e.g. -option=...)
++                flags = [f for f in flags if not f.startswith(option)]
++
++        # Re-join flags
++        config_vars[var] = " ".join(flags)
++
++
++class BuildExt(_build_ext):
++    """Custom build_ext command to set output directories."""
++
++    def __init__(self, *args, **kwargs):
++        self.build_lib = None
++        self.build_temp = None
++        super().__init__(*args, **kwargs)
++
++    def finalize_options(self) -> None:
++        _build_ext.finalize_options(self)
++        build_lib = os.getenv('PYTHON_EXTBUILD_LIB')
++        build_tmp = os.getenv('PYTHON_EXTBUILD_TMP')
++        if build_lib:
++            self.build_lib = build_lib
++        if build_tmp:
++            self.build_temp = build_tmp
+ 
+-from setuptools import setup, Extension
+ 
+-from setuptools.command.build_ext   import build_ext   as _build_ext
+-from setuptools.command.install_lib import install_lib as _install_lib
++class InstallLib(_install_lib):
++    """Custom install_lib command to set output directory."""
+ 
+-class build_ext(_build_ext):
+-    def finalize_options(self):
+-        _build_ext.finalize_options(self)
+-        self.build_lib  = build_lib
+-        self.build_temp = build_tmp
++    def __init__(self, *args, **kwargs):
++        self.build_dir = None
++        super().__init__(*args, **kwargs)
+ 
+-class install_lib(_install_lib):
+-    def finalize_options(self):
++    def finalize_options(self) -> None:
+         _install_lib.finalize_options(self)
+-        self.build_dir = build_lib
+-
+-
+-cflags = getenv('CFLAGS', '').split()
+-# switch off several checks (need to be at the end of cflags list)
+-cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls' ]
+-if cc_is_clang:
+-    cflags += ["-Wno-unused-command-line-argument" ]
+-    if clang_has_option("-Wno-cast-function-type-mismatch"):
+-        cflags += ["-Wno-cast-function-type-mismatch" ]
+-else:
+-    cflags += ['-Wno-cast-function-type' ]
+-
+-# The python headers have mixed code with declarations (decls after asserts, for instance)
+-cflags += [ "-Wno-declaration-after-statement" ]
+-
+-src_perf  = f'{srctree}/tools/perf'
+-build_lib = getenv('PYTHON_EXTBUILD_LIB')
+-build_tmp = getenv('PYTHON_EXTBUILD_TMP')
+-
+-perf = Extension('perf',
+-                 sources = [ src_perf + '/util/python.c' ],
+-		         include_dirs = ['util/include'],
+-		         extra_compile_args = cflags,
+-                 )
+-
+-setup(name='perf',
+-      version='0.1',
+-      description='Interface with the Linux profiling infrastructure',
+-      author='Arnaldo Carvalho de Melo',
+-      author_email='acme@redhat.com',
+-      license='GPLv2',
+-      url='http://perf.wiki.kernel.org',
+-      ext_modules=[perf],
+-      cmdclass={'build_ext': build_ext, 'install_lib': install_lib})
++        build_lib = os.getenv('PYTHON_EXTBUILD_LIB')
++        if build_lib:
++            self.build_dir = build_lib
++
++
++def main() -> None:
++    """Main entry point for the setup script."""
++    cc_env = os.getenv("CC")
++    assert cc_env, "Environment variable CC not set"
++
++    # Safe parsing of CC environment variable which might contain options/quotes
++    cc_tokens = shlex.split(cc_env)
++    cc = cc_tokens[0]
++    cc_args = cc_tokens[1:]
++
++    # Run CC -v to check if it is clang.
++    try:
++        cc_info = subprocess.run(
++            [cc, "-v"], stderr=subprocess.PIPE, stdout=subprocess.DEVNULL, check=False
++        )
++        cc_is_clang = b"clang version" in cc_info.stderr
++    except OSError as e:
++        raise RuntimeError(f"Failed to execute compiler '{cc}': {e}") from e
++
++    srctree = os.getenv('srctree')
++    assert srctree, "Environment variable srctree, for the Linux sources, not set"
++    src_feature_tests = f'{srctree}/tools/build/feature'
++
++    if cc_is_clang:
++        filter_clang_options(cc, cc_args, src_feature_tests)
++
++    cflags = os.getenv('CFLAGS', '').split()
++    # switch off several checks (need to be at the end of cflags list)
++    cflags += [
++        '-fno-strict-aliasing',
++        '-Wno-write-strings',
++        '-Wno-unused-parameter',
++        '-Wno-redundant-decls'
++    ]
++    if cc_is_clang:
++        cflags += ["-Wno-unused-command-line-argument"]
++        if clang_has_option(
++            cc, cc_args, src_feature_tests, "-Wno-cast-function-type-mismatch"
++        ):
++            cflags += ["-Wno-cast-function-type-mismatch"]
++    else:
++        cflags += ['-Wno-cast-function-type']
++
++    # The python headers have mixed code with declarations (decls after asserts, for instance)
++    cflags += ["-Wno-declaration-after-statement"]
++
++    src_perf = f'{srctree}/tools/perf'
++
++    perf = Extension(
++        'perf',
++        sources=[os.path.join(src_perf, 'util/python.c')],
++        include_dirs=['util/include'],
++        extra_compile_args=cflags,
++    )
++
++    setup(
++        name='perf',
++        version='0.1',
++        description='Interface with the Linux profiling infrastructure',
++        author='Arnaldo Carvalho de Melo',
++        author_email='acme@redhat.com',
++        license='GPLv2',
++        url='http://perf.wiki.kernel.org',
++        ext_modules=[perf],
++        cmdclass={'build_ext': BuildExt, 'install_lib': InstallLib},
++    )
++
++
++if __name__ == '__main__':
++    main()
+-- 
+2.54.0.794.g4f17f83d09-goog
 
->     
->     Cc: Ian Rogers <irogers@google.com>
->     Cc: Mark Brown <broonie@kernel.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Thorsten Leemhuis <linux@leemhuis.info>
->     Fixes: f8d0db39bcc536ef ("perf build: Fix fsmount.o build")
->     
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --cc tools/perf/Makefile.perf
-> index fc92d6ceac5b0c98,76b35ac19acbfb20..4ac2a0cec9ee22a2
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@@ -509,7 -508,232 +508,6 @@@ arm64-sysreg-defs-clean
->   	$(Q)$(MAKE) -C $(arm64_gen_sysreg_dir) O=$(arm64_gen_sysreg_outdir) \
->   		prefix= subdir= clean > /dev/null
->   
->  -beauty_linux_dir := $(srctree)/tools/perf/trace/beauty/include/linux/
->  -beauty_uapi_linux_dir := $(srctree)/tools/perf/trace/beauty/include/uapi/linux/
->  -beauty_uapi_sound_dir := $(srctree)/tools/perf/trace/beauty/include/uapi/sound/
->  -beauty_arch_asm_dir := $(srctree)/tools/perf/trace/beauty/arch/x86/include/asm/
->  -beauty_x86_arch_asm_uapi_dir := $(srctree)/tools/perf/trace/beauty/arch/x86/include/uapi/asm/
->  -
->  -linux_uapi_dir := $(srctree)/tools/include/uapi/linux
->  -asm_generic_uapi_dir := $(srctree)/tools/include/uapi/asm-generic
->  -arch_asm_uapi_dir := $(srctree)/tools/arch/$(SRCARCH)/include/uapi/asm/
->  -x86_arch_asm_dir := $(srctree)/tools/arch/x86/include/asm/
->  -
->  -beauty_outdir := $(OUTPUT)trace/beauty/generated
->  -beauty_ioctl_outdir := $(beauty_outdir)/ioctl
->  -
->  -# Create output directory if not already present
->  -$(shell [ -d '$(beauty_ioctl_outdir)' ] || mkdir -p '$(beauty_ioctl_outdir)')
->  -
->  -syscall_array := $(beauty_outdir)/syscalltbl.c
->  -syscall_tbl := $(srctree)/tools/perf/trace/beauty/syscalltbl.sh
->  -syscall_tbl_data := $(srctree)/tools/scripts/syscall.tbl \
->  -	$(wildcard $(srctree)/tools/perf/arch/*/entry/syscalls/syscall*.tbl)
->  -
->  -$(syscall_array): $(syscall_tbl) $(syscall_tbl_data)
->  -	$(Q)$(SHELL) '$(syscall_tbl)' $(srctree)/tools $@
->  -
->  -fs_at_flags_array := $(beauty_outdir)/fs_at_flags_array.c
->  -fs_at_flags_tbl := $(srctree)/tools/perf/trace/beauty/fs_at_flags.sh
->  -
->  -$(fs_at_flags_array): $(beauty_uapi_linux_dir)/fcntl.h $(fs_at_flags_tbl)
->  -	$(Q)$(SHELL) '$(fs_at_flags_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -clone_flags_array := $(beauty_outdir)/clone_flags_array.c
->  -clone_flags_tbl := $(srctree)/tools/perf/trace/beauty/clone.sh
->  -
->  -$(clone_flags_array): $(beauty_uapi_linux_dir)/sched.h $(clone_flags_tbl)
->  -	$(Q)$(SHELL) '$(clone_flags_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -drm_ioctl_array := $(beauty_ioctl_outdir)/drm_ioctl_array.c
->  -drm_hdr_dir := $(srctree)/tools/perf/trace/beauty/include/uapi/drm
->  -drm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/drm_ioctl.sh
->  -
->  -$(drm_ioctl_array): $(drm_hdr_dir)/drm.h $(drm_hdr_dir)/i915_drm.h $(drm_ioctl_tbl)
->  -	$(Q)$(SHELL) '$(drm_ioctl_tbl)' $(drm_hdr_dir) > $@
->  -
->  -fadvise_advice_array := $(beauty_outdir)/fadvise_advice_array.c
->  -fadvise_advice_tbl := $(srctree)/tools/perf/trace/beauty/fadvise.sh
->  -
->  -$(fadvise_advice_array): $(beauty_uapi_linux_dir)/fadvise.h $(fadvise_advice_tbl)
->  -	$(Q)$(SHELL) '$(fadvise_advice_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -fsmount_arrays := $(beauty_outdir)/fsmount_arrays.c
->  -fsmount_tbls := $(srctree)/tools/perf/trace/beauty/fsmount.sh
->  -
->  -$(fsmount_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsmount_tbls)
->  -	$(Q)$(SHELL) '$(fsmount_tbls)' $(beauty_uapi_linux_dir) > $@
->  -
->  -fsmount_attr_arrays := $(beauty_outdir)/fsmount_attr_arrays.c
->  -fsmount_attr_tbls := $(srctree)/tools/perf/trace/beauty/fsmount_attr.sh
->  -
->  -$(fsmount_attr_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsmount_attr_tbls)
->  -	$(Q)$(SHELL) '$(fsmount_attr_tbls)' $(beauty_uapi_linux_dir) > $@
->  -
->  -fspick_arrays := $(beauty_outdir)/fspick_arrays.c
->  -fspick_tbls := $(srctree)/tools/perf/trace/beauty/fspick.sh
->  -
->  -$(fspick_arrays): $(beauty_uapi_linux_dir)/mount.h $(fspick_tbls)
->  -	$(Q)$(SHELL) '$(fspick_tbls)' $(beauty_uapi_linux_dir) > $@
->  -
->  -fsconfig_arrays := $(beauty_outdir)/fsconfig_arrays.c
->  -fsconfig_tbls := $(srctree)/tools/perf/trace/beauty/fsconfig.sh
->  -
->  -$(fsconfig_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsconfig_tbls)
->  -	$(Q)$(SHELL) '$(fsconfig_tbls)' $(beauty_uapi_linux_dir) > $@
->  -
->  -pkey_alloc_access_rights_array := $(beauty_outdir)/pkey_alloc_access_rights_array.c
->  -asm_generic_hdr_dir := $(srctree)/tools/include/uapi/asm-generic/
->  -pkey_alloc_access_rights_tbl := $(srctree)/tools/perf/trace/beauty/pkey_alloc_access_rights.sh
->  -
->  -$(pkey_alloc_access_rights_array): $(asm_generic_hdr_dir)/mman-common.h $(pkey_alloc_access_rights_tbl)
->  -	$(Q)$(SHELL) '$(pkey_alloc_access_rights_tbl)' $(asm_generic_hdr_dir) > $@
->  -
->  -sndrv_ctl_ioctl_array := $(beauty_ioctl_outdir)/sndrv_ctl_ioctl_array.c
->  -sndrv_ctl_hdr_dir := $(srctree)/tools/include/uapi/sound
->  -sndrv_ctl_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/sndrv_ctl_ioctl.sh
->  -
->  -$(sndrv_ctl_ioctl_array): $(beauty_uapi_sound_dir)/asound.h $(sndrv_ctl_ioctl_tbl)
->  -	$(Q)$(SHELL) '$(sndrv_ctl_ioctl_tbl)' $(beauty_uapi_sound_dir) > $@
->  -
->  -sndrv_pcm_ioctl_array := $(beauty_ioctl_outdir)/sndrv_pcm_ioctl_array.c
->  -sndrv_pcm_hdr_dir := $(srctree)/tools/include/uapi/sound
->  -sndrv_pcm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/sndrv_pcm_ioctl.sh
->  -
->  -$(sndrv_pcm_ioctl_array): $(beauty_uapi_sound_dir)/asound.h $(sndrv_pcm_ioctl_tbl)
->  -	$(Q)$(SHELL) '$(sndrv_pcm_ioctl_tbl)' $(beauty_uapi_sound_dir) > $@
->  -
->  -kcmp_type_array := $(beauty_outdir)/kcmp_type_array.c
->  -kcmp_hdr_dir := $(srctree)/tools/include/uapi/linux/
->  -kcmp_type_tbl := $(srctree)/tools/perf/trace/beauty/kcmp_type.sh
->  -
->  -$(kcmp_type_array): $(kcmp_hdr_dir)/kcmp.h $(kcmp_type_tbl)
->  -	$(Q)$(SHELL) '$(kcmp_type_tbl)' $(kcmp_hdr_dir) > $@
->  -
->  -kvm_ioctl_array := $(beauty_ioctl_outdir)/kvm_ioctl_array.c
->  -kvm_hdr_dir := $(srctree)/tools/include/uapi/linux
->  -kvm_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/kvm_ioctl.sh
->  -
->  -$(kvm_ioctl_array): $(kvm_hdr_dir)/kvm.h $(kvm_ioctl_tbl)
->  -	$(Q)$(SHELL) '$(kvm_ioctl_tbl)' $(kvm_hdr_dir) > $@
->  -
->  -socket_arrays := $(beauty_outdir)/socket.c
->  -socket_tbl := $(srctree)/tools/perf/trace/beauty/socket.sh
->  -
->  -$(socket_arrays): $(linux_uapi_dir)/in.h $(beauty_linux_dir)/socket.h $(socket_tbl)
->  -	$(Q)$(SHELL) '$(socket_tbl)' $(linux_uapi_dir) $(beauty_linux_dir) > $@
->  -
->  -sockaddr_arrays := $(beauty_outdir)/sockaddr.c
->  -sockaddr_tbl := $(srctree)/tools/perf/trace/beauty/sockaddr.sh
->  -
->  -$(sockaddr_arrays): $(beauty_linux_dir)/socket.h $(sockaddr_tbl)
->  -	$(Q)$(SHELL) '$(sockaddr_tbl)' $(beauty_linux_dir) > $@
->  -
->  -vhost_virtio_ioctl_array := $(beauty_ioctl_outdir)/vhost_virtio_ioctl_array.c
->  -vhost_virtio_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/vhost_virtio_ioctl.sh
->  -
->  -$(vhost_virtio_ioctl_array): $(beauty_uapi_linux_dir)/vhost.h $(vhost_virtio_ioctl_tbl)
->  -	$(Q)$(SHELL) '$(vhost_virtio_ioctl_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -perf_ioctl_array := $(beauty_ioctl_outdir)/perf_ioctl_array.c
->  -perf_hdr_dir := $(srctree)/tools/include/uapi/linux
->  -perf_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/perf_ioctl.sh
->  -
->  -$(perf_ioctl_array): $(perf_hdr_dir)/perf_event.h $(perf_ioctl_tbl)
->  -	$(Q)$(SHELL) '$(perf_ioctl_tbl)' $(perf_hdr_dir) > $@
->  -
->  -madvise_behavior_array := $(beauty_outdir)/madvise_behavior_array.c
->  -madvise_hdr_dir := $(srctree)/tools/include/uapi/asm-generic/
->  -madvise_behavior_tbl := $(srctree)/tools/perf/trace/beauty/madvise_behavior.sh
->  -
->  -$(madvise_behavior_array): $(madvise_hdr_dir)/mman-common.h $(madvise_behavior_tbl)
->  -	$(Q)$(SHELL) '$(madvise_behavior_tbl)' $(madvise_hdr_dir) > $@
->  -
->  -mmap_flags_array := $(beauty_outdir)/mmap_flags_array.c
->  -mmap_flags_tbl := $(srctree)/tools/perf/trace/beauty/mmap_flags.sh
->  -
->  -$(mmap_flags_array): $(linux_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman-common.h $(mmap_flags_tbl)
->  -	$(Q)$(SHELL) '$(mmap_flags_tbl)' $(linux_uapi_dir) $(asm_generic_uapi_dir) $(arch_asm_uapi_dir) > $@
->  -
->  -mremap_flags_array := $(beauty_outdir)/mremap_flags_array.c
->  -mremap_flags_tbl := $(srctree)/tools/perf/trace/beauty/mremap_flags.sh
->  -
->  -$(mremap_flags_array): $(linux_uapi_dir)/mman.h $(mremap_flags_tbl)
->  -	$(Q)$(SHELL) '$(mremap_flags_tbl)' $(linux_uapi_dir) > $@
->  -
->  -mount_flags_array := $(beauty_outdir)/mount_flags_array.c
->  -mount_flags_tbl := $(srctree)/tools/perf/trace/beauty/mount_flags.sh
->  -
->  -$(mount_flags_array): $(beauty_uapi_linux_dir)/mount.h $(mount_flags_tbl)
->  -	$(Q)$(SHELL) '$(mount_flags_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -move_mount_flags_array := $(beauty_outdir)/move_mount_flags_array.c
->  -move_mount_flags_tbl := $(srctree)/tools/perf/trace/beauty/move_mount_flags.sh
->  -
->  -$(move_mount_flags_array): $(beauty_uapi_linux_dir)/mount.h $(move_mount_flags_tbl)
->  -	$(Q)$(SHELL) '$(move_mount_flags_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -mmap_prot_array := $(beauty_outdir)/mmap_prot_array.c
->  -mmap_prot_tbl := $(srctree)/tools/perf/trace/beauty/mmap_prot.sh
->  -
->  -$(mmap_prot_array): $(asm_generic_uapi_dir)/mman.h $(asm_generic_uapi_dir)/mman-common.h $(mmap_prot_tbl)
->  -	$(Q)$(SHELL) '$(mmap_prot_tbl)' $(asm_generic_uapi_dir) $(arch_asm_uapi_dir) > $@
->  -
->  -prctl_option_array := $(beauty_outdir)/prctl_option_array.c
->  -prctl_option_tbl := $(srctree)/tools/perf/trace/beauty/prctl_option.sh
->  -
->  -$(prctl_option_array): $(beauty_uapi_linux_dir)/prctl.h $(prctl_option_tbl)
->  -	$(Q)$(SHELL) '$(prctl_option_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -usbdevfs_ioctl_array := $(beauty_ioctl_outdir)/usbdevfs_ioctl_array.c
->  -usbdevfs_ioctl_tbl := $(srctree)/tools/perf/trace/beauty/usbdevfs_ioctl.sh
->  -
->  -$(usbdevfs_ioctl_array): $(beauty_uapi_linux_dir)/usbdevice_fs.h $(usbdevfs_ioctl_tbl)
->  -	$(Q)$(SHELL) '$(usbdevfs_ioctl_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -x86_arch_prctl_code_array := $(beauty_outdir)/x86_arch_prctl_code_array.c
->  -x86_arch_prctl_code_tbl := $(srctree)/tools/perf/trace/beauty/x86_arch_prctl.sh
->  -
->  -$(x86_arch_prctl_code_array): $(beauty_x86_arch_asm_uapi_dir)/prctl.h $(x86_arch_prctl_code_tbl)
->  -	$(Q)$(SHELL) '$(x86_arch_prctl_code_tbl)' $(beauty_x86_arch_asm_uapi_dir) > $@
->  -
->  -x86_arch_irq_vectors_array := $(beauty_outdir)/x86_arch_irq_vectors_array.c
->  -x86_arch_irq_vectors_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
->  -
->  -$(x86_arch_irq_vectors_array): $(beauty_arch_asm_dir)/irq_vectors.h $(x86_arch_irq_vectors_tbl)
->  -	$(Q)$(SHELL) '$(x86_arch_irq_vectors_tbl)' $(beauty_arch_asm_dir) > $@
->  -
->  -x86_arch_MSRs_array := $(beauty_outdir)/x86_arch_MSRs_array.c
->  -x86_arch_MSRs_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_msr.sh
->  -
->  -$(x86_arch_MSRs_array): $(x86_arch_asm_dir)/msr-index.h $(x86_arch_MSRs_tbl)
->  -	$(Q)$(SHELL) '$(x86_arch_MSRs_tbl)' $(x86_arch_asm_dir) > $@
->  -
->  -rename_flags_array := $(beauty_outdir)/rename_flags_array.c
->  -rename_flags_tbl := $(srctree)/tools/perf/trace/beauty/rename_flags.sh
->  -
->  -$(rename_flags_array): $(beauty_uapi_linux_dir)/fs.h $(rename_flags_tbl)
->  -	$(Q)$(SHELL) '$(rename_flags_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -arch_errno_name_array := $(beauty_outdir)/arch_errno_name_array.c
->  -arch_errno_hdr_dir := $(srctree)/tools
->  -arch_errno_tbl := $(srctree)/tools/perf/trace/beauty/arch_errno_names.sh
->  -
->  -$(arch_errno_name_array): $(arch_errno_tbl)
->  -	$(Q)$(SHELL) '$(arch_errno_tbl)' '$(patsubst -%,,$(CC))' $(arch_errno_hdr_dir) > $@
->  -
->  -statx_mask_array := $(beauty_outdir)/statx_mask_array.c
->  -statx_mask_tbl := $(srctree)/tools/perf/trace/beauty/statx_mask.sh
->  -
->  -$(statx_mask_array): $(beauty_uapi_linux_dir)/stat.h $(statx_mask_tbl)
->  -	$(Q)$(SHELL) '$(statx_mask_tbl)' $(beauty_uapi_linux_dir) > $@
->  -
->  -sync_file_range_arrays := $(beauty_outdir)/sync_file_range_arrays.c
->  -sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
->  -
->  -$(sync_file_range_arrays): $(beauty_uapi_linux_dir)/fs.h $(sync_file_range_tbls)
->  -	$(Q)$(SHELL) '$(sync_file_range_tbls)' $(beauty_uapi_linux_dir) > $@
-> --
->   TESTS_CORESIGHT_DIR := $(srctree)/tools/perf/tests/shell/coresight
->   
->   tests-coresight-targets: FORCE
-> diff --cc tools/perf/builtin-trace.c
-> index 0730c1d9f0b3adc7,48615ddccd93a1e8..2530b4035e4f57e1
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@@ -783,11 -771,10 +783,6 @@@ static const char *bpf_cmd[] = 
->   };
->   static DEFINE_STRARRAY(bpf_cmd, "BPF_");
->   
-> - static const char *fsmount_flags[] = {
-> - 	[1] = "CLOEXEC",
-> - };
-> - static DEFINE_STRARRAY(fsmount_flags, "FSMOUNT_");
->  -#include "trace/beauty/generated/fsconfig_arrays.c"
->  -
->  -static DEFINE_STRARRAY(fsconfig_cmds, "FSCONFIG_");
-> --
->   static const char *epoll_ctl_ops[] = { "ADD", "DEL", "MOD", };
->   static DEFINE_STRARRAY_OFFSET(epoll_ctl_ops, "EPOLL_CTL_", 1);
->   
