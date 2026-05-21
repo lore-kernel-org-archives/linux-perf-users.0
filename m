@@ -1,99 +1,117 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CE725B086
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 14:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773852EF653
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 14:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779372284; cv=none; b=J31vVFSmBQe++Axx2fY6ZiLI2XESnGJcnSs8zNaAK74oubdGwZXVzzSlMGgbXlDDhhi4viD4NOLA5ANCwRMWIXTqIDBSjYOX26xejWQYg1JV/m7NskK5poCtqWeOSIRBwRCcVrWFc6kO6RHyhUT0gZ5DsYDs9AuF94vefUYXqG0=
+	t=1779373082; cv=none; b=XSBh0aM1LMAusk4dXLpQZEH++YEbUAYFHEHCFmJa23QXtTtLbAnJO2QouFCYE2+geebvctC6i75KACRFn7foBp75ymEVrWnXeMmsyf18+7EeatumAeY0T5bVlVa+3VNFuM4Swz7Uh26bPELGb2HoiVL0NONacYFcDRGl0LNwzpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779372284; c=relaxed/simple;
-	bh=NnstC5Hke9f+n/cl42WhEXFSYAsNvzvaQit4caagZaM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VvV7IaknsNw4Vq2W3gKLT0/O+7BM+2aby157gveDic5D/k7jV9yRxw9YPDsr+osmB10frUYzLn0mbc4G5fBhUjx/lPvhbg1rOJFgFfmBOYe9Kgc6KWGg29Q4RhI3djw8zGuXzhTtrzDUSHhUsZebK+rD6nE1jFarnNryDQoT6Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EemmA8cN; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1779373082; c=relaxed/simple;
+	bh=J3oAsPwZR2QbHty4A0QeSooUfi8YB3kVpxm16huHj14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EhX7C/YFrlo6JkdFWIVVm/K9tanE6Y7BYEkVzpPTYjJWGcci5ND3hr87TWDKyUW5IKPKgnDQILM9bycTxwHlbLnQfCuYVxaoFjxYYQM5BbT2fL0sCiOFuf2XzcQTNIxOIFJZncWjmIHh2PFC543mP1FDUeCOcLlSPrc0l9EiEqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEw4Oz5F; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EemmA8cN"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-8354503d9acso8020476b3a.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 07:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779372282; x=1779977082; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hUtO7rz9VBhPIeAyEinR1g2aBGB2g8CuUCtOdEHoYPA=;
-        b=EemmA8cNBpso7yPCHBanQLxIKLzSXtXcnkLIpurNMW+QtCh7cUZLCfV2f+VbG7Mbxr
-         TVcRLNWy4H5618YiNoybkmu4K/03uyRngtF7nQujBTZ3m437p5TJrVlrYRNtXPdBbVnq
-         GveyZKG7/SPYgL2gGvrXvLWMsNu75Ts6Hz+kkFdEnUTxTq8xQXW+v0ft51E0OqdXNJk7
-         flnRaQaUDEFpIWApjySu7EHuR4Zd+wjw+REnOv9Mfpfi/bJXX8+OPcJaEP30na6RzXTZ
-         hhrMT+bnjOVbnqXyK0TK23jXzngW6GAWaA3lepPPM5R9NsL1r2WU95p+mocyMYVdL7rF
-         EPeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779372282; x=1779977082;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hUtO7rz9VBhPIeAyEinR1g2aBGB2g8CuUCtOdEHoYPA=;
-        b=T6KirnHV9G7CGTU6TKIqPdZrTLHcZPxzB3xRlJ1mf2HkriZYSXOiUfiE806rCxNVYB
-         dsAwaPUWmVuUyCv+NQYqA5dHkHlxHnZuD1fI77udKfQT6kWJgu29xmQp+nkjuJLYs3yP
-         SQfXih0kzWYXf5kcHUBUgg4XuUqt9/yYXMhsCYc/s0ofjLRmM2g99rWlvnTdghh8FYAe
-         gwsFQOOZ2/4Z85ROQCnk00YCBVKpykgXLQ+eoofBFZr23PZjHp31bpBAs1TTjjAEHQCt
-         OJyiBV3jKNf35OqYQzjsKBjn3UD4EzB8TfkQHjLAH9nEKvfxeA2YC1yFsZujBz9BcdNH
-         E5DA==
-X-Forwarded-Encrypted: i=1; AFNElJ8sJRsyhS1C7St4JFP2ijKpDICLDn1J3aK2sKElNX3BtaZBbLpkHnG+Vdkk1JpVC+wDyXpYxg65E8X9dSMCTYfU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz84i8P6QNXRAMutYteRp64NoFwQ4cXAkHQ1XQahxaZkqMDgEFo
-	exlCszr6Lcn+F+Z7+rH3VBzNPXv/+ft9GfeQ9EwbeZG3tkfdYqQXXHC+2xt4IlSQyRlktrpF4VG
-	OZdTbug==
-X-Received: from pfblg6.prod.google.com ([2002:a05:6a00:7086:b0:839:7c0f:3e02])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:21ca:b0:83e:e05d:ebb
- with SMTP id d2e1a72fcca58-8414adf7bf5mr3255925b3a.25.1779372282132; Thu, 21
- May 2026 07:04:42 -0700 (PDT)
-Date: Thu, 21 May 2026 07:04:41 -0700
-In-Reply-To: <a75397bd-6122-4fa8-8197-334b2fbbb5af@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEw4Oz5F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C30191F000E9;
+	Thu, 21 May 2026 14:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779373081;
+	bh=CU7Jj/X6QYmcmszy64Ym5CLJFYdXggn2LGX/XrIXs6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=AEw4Oz5FwLp5Q4ZQCje3wIdhbs4n701tJg1D6NntHxCY1enISj0o/kIYTYiycJHBK
+	 n0y2N9/nYiQWGEDW6eCtizXtfL0z9Z4nPhMR1FEvyJR6+b7Al+8DTBrzzqwJO2RX65
+	 4kAqp0NHgZPVGYXaV+KAdFAlhWJfD9T21T+KAGyPBCWtzcSRSYGw7H5Pz37Xl4h2HM
+	 1YsrjrK2Br8MBQJyr+Bca4TJOp6VBsgzaCYT/Y07XxzoGiN/StSuaow94UZ7gzHvsn
+	 0CknFojpO0wbLHIINZoQvZHT7YZSrHA4ygG2W/LL5iEB5aoVjQ+xl1PAXLnsjD2b7W
+	 ZSBYHUCqJf8Vg==
+Date: Thu, 21 May 2026 11:17:58 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	jolsa@kernel.org, adrian.hunter@intel.com, mpetlan@redhat.com,
+	tmricht@linux.ibm.com, maddy@linux.ibm.com,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
+	Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Subject: Re: [PATCH] tools/perf/sched: Update process names of processes in
+ zombie state for both -s and -S options
+Message-ID: <ag8UFqPmRu8v4g_9@x1>
+References: <20260426093930.47809-1-atrajeev@linux.ibm.com>
+ <ae76k1BvfgcYI18K@google.com>
+ <230801A2-5F9C-42A6-9390-B44786309E30@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260508231353.406465-2-seanjc@google.com> <20260508234018.F06AEC2BCB0@smtp.kernel.org>
- <ccea937f-8ad5-4a6e-b6a4-917f2ee02579@linux.intel.com> <agZiTeGgRO4PJ9mI@google.com>
- <02461927-589b-4179-9f93-2f9e10172879@linux.intel.com> <a75397bd-6122-4fa8-8197-334b2fbbb5af@linux.intel.com>
-Message-ID: <ag8Q-UM5dcVtBijd@google.com>
-Subject: Re: [PATCH v3 1/9] perf/x86/intel: Ensure guest PEBS path doesn't set
- unwanted PERF_GLOBAL_CTRL bits
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: sashiko@lists.linux.dev, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <230801A2-5F9C-42A6-9390-B44786309E30@linux.ibm.com>
 
-On Thu, May 21, 2026, Dapeng Mi wrote:
-> On 5/15/2026 9:49 AM, Mi, Dapeng wrote:
-> > On 5/15/2026 8:01 AM, Sean Christopherson wrote:
-> >>> Anyway, we could optimize the code further like below and thoroughly filter
-> >>> away these extra bits. (only building, not test on real HW)
-> >> Hmm, I think I'd rather figure out what it would take to drop the FIXME entirely.
-> >> And if we need to keep the check, I'm a-ok risking false positives until we have
-> >> a better understanding of why the check exists.
-> > Kan Liang should be the best man who knows the history, but he has left
-> > Intel. I would check this with other guys internally and look at if they
-> > know the reason.
+On Thu, May 21, 2026 at 02:02:53PM +0530, Athira Rajeev wrote:
+> > On 27 Apr 2026, at 11:26 AM, Namhyung Kim <namhyung@kernel.org> wrote:
+> > On Sun, Apr 26, 2026 at 03:09:30PM +0530, Athira Rajeev wrote:
+> >> In redhat perftool testsuite, observed fail for this test:
+> >>    -- [ FAIL ] -- perf_sched :: test_timehist :: --with-summary (output regexp parsing)
+> >> 
+> >> This led to analysis of "perf sched timehist" summary options.
+> >> 
+> >>  # perf sched record -a -o ./perf.data -- sleep 0.1
+> >>   This will record using perf sched record
+> >> 
+> >> perf sched timeliest has two options "-s" and "-S"
+> >>  # perf sched -i ./perf.data timehist -S
+> >> -S : Captures summary also at the end
+> >> 
+> >>  # perf sched -i ./perf.data timehist -s
+> >> -s : Captures only summary
+> >> 
+> >> The test saves -s result which has only summary and compares with
+> >> summary which comes at the end from -S . Since there is a difference
+> >> in these two, test fails.
+> >> 
+> >> Checking the behaviour change in -S and -s results, difference is:
+> >> 
+> >>                  rcu_sched[16]       2          4        0.013      0.001       0.003       0.006   33.23       0
+> >>               migration/11[73]       2          1        0.006      0.006       0.006       0.006    0.00       0
+> >>                migration/3[33]       2          1        0.006      0.006       0.006       0.006    0.00       0
+> >> -               :216753[216753]      -1          1        0.041      0.041       0.041       0.041    0.00       0
+> >> +                 sleep[216753]      -1          1        0.041      0.041       0.041       0.041    0.00       0
+> >>                migration/8[58]       2          1        0.005      0.005       0.005       0.005    0.00       0
+> >>            NetworkManager[811]       1          2        0.089      0.028       0.044       0.060   36.06       0
+> >>               migration/13[83]       2          1        0.005      0.005       0.005       0.005    0.00       0
+> >> 
+> >> Here 216753 is pid for sleep which is a zombie process. This is
+> >> happening in latest kernel due to an update in "-S" result.
+> >> In -S, the process name appears in the results "sleep[216753]",
+> >> where as in the -s, only pid is present in the summary result
+> >> ":216753[216753]".
+> >> 
+> >> After commit 39f473f6d0b2 ("perf sched timehist: decode process names
+> >> of processes in zombie state")
+> >> for -S option, if process name is using pid, it uses different way to
+> >> set it. So that we get the process name and not just Pid.
+> >> 
+> >> This change went in only for timehist_print_sample() function.
+> >> Add this improvement in generic place so that even -s option (which
+> >> captures summary) also will have meaningful information.
+> >> 
+> >> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> > 
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > 
+> > Thanks,
+> > Namhyung
+> Hi,
 > 
-> Just checked the commit history, It looks the reason of disabling guest
-> PEBS here is to avoid breaking the host !exclude_guest PEBS event sampling.
-> Host may create !exclude_guest event to profile both root and non-root
-> mode, but it's conflicted with guest PEBS sampling in non-root mode. So
-> guest PEBS sampling has to be disabled if there are active host PEBS
-> events. Thanks.
+> Can we please have this pulled in, if the patch looks fine ?
 
-But that doesn't make any sense, because the host can't use PEBS to sample non-root
-mode due to the DS area being virtually addressed.  It's entirely possible that
-was pure oversight, given that commit 58f6217e5d01 ("perf/x86/intel: KVM: Mask
-PEBS_ENABLE loaded for guest with vCPU's value.") was necessary.
+Can you please check applying it on top of current perf-tools-next?
 
-But I'm still not convinced: if that _really_ was the motivation, then I would
-hope that scenario was at least smoke tested, and any testing whatsoever would
-have crashed the guest.
+Thanks,
 
-Though given how buggy this code has been, I suppose it's plausible there was
-simply testing.
+- Arnaldo
