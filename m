@@ -1,104 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BCA37D10A
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 16:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62313383982;
+	Thu, 21 May 2026 16:49:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779381592; cv=none; b=mHhTtuSt46mW72kh8vmVIqn4lu6eu/ohla5FAUQiRl4YFSrQj5eKK8YO2tZDYt+eduhxfTu5DX5FkDX5k8J4fQcQmrQo8FxRQx610oSUh1Jky76NAd5fDrQkj250s5wTE7Ur2uIfUtgbCbBt9GbET+H89hsfO0cUv3vOFleMjHw=
+	t=1779382176; cv=none; b=Peb0a0LeAHHNlFbZmWBsOIYZ9qxcyH8LgrohVraJ1Zqsv2Y41yNxIgTz++0bMA8NKkKCzT3R8SYMr1kmv3yIpZvcxZ2nODeNROlhPNrhIjMHcGFybHQPF9nkrciXA9pnu+5vXS31HERZR1myj4NSFabvdaNk4va3PHaQT6ICstw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779381592; c=relaxed/simple;
-	bh=YHPvEd+7R3rd3MNNDRNixFdLdi1rBU4Tb/PT9XoaD6A=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VWZ/DMRvXUQPw1U7NGd2vtEWeOOfvJ/8hifOavOHH8SScrlEd8IsA/lOqZkTRWptTOC1e8mFZNP0XUh615WgW7TUHFSHxmlUNhbM1XcWxb91MLwDjPUOYySwpNJdjv9fsjZ3zNg9XtRHOC5KG4MoCeAy5ZLQg/Ae/95FgDp0v5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QgVfNvxZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779382176; c=relaxed/simple;
+	bh=uwIa0Z/ok4zc2TAdzNwVt3NEcQIHZ6z91FWezO15WdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Vv2voWX8aYZ0/Ru4knvhboa+SRQ6eMtizaDA9YRx7cvOAwbHV3i7gR2NEHCldvR/cc6+qMADSIiBnm2OCO69ua9iiqlKHxb4a2gY0Lh1k+o6ffN3woyqMiMcFcBI5XXqmQRys1hNY6VJ4HILwjcbL+gNVe6ho1wmjeo3uTFpc3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bj5Gznu+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QgVfNvxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E2FB1F000E9;
-	Thu, 21 May 2026 16:39:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bj5Gznu+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9681F000E9;
+	Thu, 21 May 2026 16:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779381591;
-	bh=mjLi6CvR6vrgd0iqo9Pctjav/W0QtN8rLeOjYi1E7+I=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QgVfNvxZ1XUwOLU2t1eILVKby78HjopyZVT5cRbZDVQJhYpWLe9KZnKDhxL9gOoS7
-	 F4BIRHur8Lqg8vCVIHr9ETxPULClSs9VlpKgaWrSndWLz0G/LtkV63UGh41TmOoRVh
-	 n+HaGiVlOhyEUQdqjGQLwVxUsl9jS9fbVFQHRvadeatpfAgkE8KC3hKpdt90sIfD3c
-	 6ioUlfySF5/7LhgA/CqwSwWnQqKNsn9I2Ng9+xwXP3V97ZVqIL0rRPf/B1AgcZHroJ
-	 sTrSxFvbN88fKwDRI2nrK1bSAfVIt+KzR0kCrKwrGdInjbDGNlaFkRkvxO2x26YLT7
-	 80He+R9zZ+VNA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf bench: add --write-size option to sched pipe
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Breno Leitao" <leitao@debian.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260521-perf_bench_pipe-v2-1-720b6ff7f0fa@debian.org>
-References: <20260521-perf_bench_pipe-v2-1-720b6ff7f0fa@debian.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 21 May 2026 16:39:50 +0000
-Message-Id: <20260521163951.2E2FB1F000E9@smtp.kernel.org>
+	s=k20260515; t=1779382173;
+	bh=zcenPJOvfJLDezljSJNclDrIU4pp2pyRhFZrVvbE1kk=;
+	h=Date:From:To:Cc:Subject;
+	b=Bj5Gznu+vAFsARABlgaKf/OHi2GZWGW22hJjbC2gJsJxir8Xn4ocwoQnS7+M7Nlfh
+	 XCRNaFXnilDHAWSRGr9X4jLBoMlx7SbGma2oFqMAk4NqD0HAnu4AeepmiI4pVyRpKA
+	 aiESz2+jIxM1lAaCvja81pHTdszHJUWuicplTxYjm7/2N2Impaxrzl7mdJzw/kznaV
+	 febdlsJiB868tiI/zd/ay+2DIK0XEuT00tSRKOgRlySAdbnsLvr/aA6UbzxPHgJwyT
+	 0j6MMnxY9wyKzhgRY4SJNqGbII+9IdKEnsp7fT+XRaKrTKc/KUydsMoc93SzvjXvrF
+	 YuIA6PFk7Wiyw==
+Date: Thu, 21 May 2026 13:49:28 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+	Mark Brown <broonie@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1] perf build: Fix fsmount.o build
+Message-ID: <20260521153558.1421014-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] File descriptors allocated for pipes are leaked when returning e=
-arly due to an fcntl() failure.
---
+> A merge conflict between:
+> commit 552636b9317c8 ("perf trace: Add beautifier script for fsmount flags")
+> commit 32969ef6e3e19 ("perf build: Pre-generate BPF skeleton tooling during umbrella prepare phase")
+> Resulted in a missed build dependency in the merge:
+> commit 61da860eee07 Merge branch 'perf-tools-next' of https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
 
-commit a15da46bb7bbcff2fe4b600fd4cd1fdf6d6d3ff0
-Author: Breno Leitao <leitao@debian.org>
+> Fix the build by adding the necessary build dependencies.
 
-perf bench: add --write-size option to sched pipe
+This is not enough, after applying this I still get a conflict when
+merging torvalds/master into perf-tools-next, working on it now.
 
-This commit adds a --write-size option to the sched pipe benchmark in perf =
-to
-allow testing the pipe page-allocation path. It updates the benchmark to
-allocate a buffer per thread and resize the pipe capacity via fcntl() when a
-larger write size is specified.
+And yeah, my bad, I should've test merged this before pushing out
+perf-tools-next to avoid this issue.
 
-> diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-> index 70139036d68f0..216d3121d438d 100644
-> --- a/tools/perf/bench/sched-pipe.c
-> +++ b/tools/perf/bench/sched-pipe.c
-[ ... ]
-> @@ -233,12 +238,39 @@ int bench_sched_pipe(int argc, const char **argv)
-[ ... ]
->  	BUG_ON(pipe2(pipe_1, flags));
->  	BUG_ON(pipe2(pipe_2, flags));
-> =20
-> +	/*
-> +	 * On a custom write_size, resize the pipes so a single payload fits.
-> +	 */
-> +	if (write_size > sizeof(int)) {
-> +		int r1 =3D fcntl(pipe_1[1], F_SETPIPE_SZ, write_size);
-> +		int r2 =3D fcntl(pipe_2[1], F_SETPIPE_SZ, write_size);
-> +
-> +		if (r1 < 0 || r2 < 0 ||
-> +		    (unsigned int)r1 < write_size ||
-> +		    (unsigned int)r2 < write_size) {
-> +			fprintf(stderr,
-> +				"--write-size %u exceeds /proc/sys/fs/pipe-max-size\n",
-> +				write_size);
-> +			return -1;
+- Arnaldo
 
-[Severity: Medium]
-Are the file descriptors allocated for pipe_1 and pipe_2 leaked on this err=
-or
-path?
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Link: https://lore.kernel.org/r/20260521153558.1421014-1-irogers@google.com
+> Cc: arnaldo.melo@gmail.com
+> Cc: broonie@kernel.org
+> Cc: namhyung@kernel.org
+> Cc: linux@leemhuis.info
+> Cc: acme@redhat.com
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-next@vger.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+> tools/perf/trace/beauty/Build | 9 ++++++++-
+> 1 file changed, 8 insertions(+), 1 deletion(-)
 
-The pipe2() calls just above this block allocate four file descriptors. If =
-the
-fcntl() operations fail and this path returns -1, those descriptors appear =
-to
-be left open.
+> diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Build
+> index 93cde93461a3..996e63cdf765 100644
+> --- a/tools/perf/trace/beauty/Build
+> +++ b/tools/perf/trace/beauty/Build
+> @@ -111,6 +111,13 @@ $(fsmount_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsmount_tbls)
+> 	$(call rule_mkdir)
+> 	$(Q)$(call echo-cmd,gen)$(SHELL) '$(fsmount_tbls)' $(beauty_uapi_linux_dir) > $@
+> 
+>+fsmount_attr_arrays := $(beauty_outdir)/fsmount_attr_arrays.c
+>+fsmount_attr_tbls := $(srctree)/tools/perf/trace/beauty/fsmount_attr.sh
+>+
+>+$(fsmount_attr_arrays): $(beauty_uapi_linux_dir)/mount.h $(fsmount_attr_tbls)
+>+	$(call rule_mkdir)
+>+	$(Q)$(call echo-cmd,gen)$(SHELL) '$(fsmount_attr_tbls)' $(beauty_uapi_linux_dir) > $@
+>+
+> fspick_arrays := $(beauty_outdir)/fspick_arrays.c
+> fspick_tbls := $(srctree)/tools/perf/trace/beauty/fspick.sh
+ 
+>@@ -285,7 +292,7 @@ $(OUTPUT)trace/beauty/syscalltbl.o: $(syscall_array)
+> $(OUTPUT)trace/beauty/fsconfig.o: $(fsconfig_arrays)
+> $(OUTPUT)trace/beauty/clone.o: $(clone_flags_array)
+> $(OUTPUT)trace/beauty/fs_at_flags.o: $(fs_at_flags_array)
+>-$(OUTPUT)trace/beauty/fsmount.o: $(fsmount_arrays)
+>+$(OUTPUT)trace/beauty/fsmount.o: $(fsmount_arrays) $(fsmount_attr_arrays)
+> $(OUTPUT)trace/beauty/fspick.o: $(fspick_arrays)
+> $(OUTPUT)trace/beauty/ioctl.o: $(drm_ioctl_array) $(sndrv_pcm_ioctl_array) $(sndrv_ctl_ioctl_array) $(kvm_ioctl_array) $(vhost_virtio_ioctl_array) $(perf_ioctl_array) $(usbdevfs_ioctl_array)
+> $(OUTPUT)trace/beauty/kcmp.o: $(kcmp_type_array)
+-- 
+2.54.0.746.g67dd491aae-goog
 
-> +		}
-> +	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260521-perf_bench=
-_pipe-v2-1-720b6ff7f0fa@debian.org?part=3D1
