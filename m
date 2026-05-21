@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1352F7462;
-	Thu, 21 May 2026 01:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34378317161;
+	Thu, 21 May 2026 01:11:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779325907; cv=none; b=A2IqnJXleO9xbh0VvhXPe1Nfomk5kF5hNkAPG9pyTOiXFmZ30UbBIIxfvM87YTqYT5mIT5sNbTqg4RubHx/LXYuaB1cK0W4/NzCLsVqeZ/wFqkBeQnBwbwMC7vjJDvY4ov0zIVGrX5t4qcFbQAoRCXvOuph1OkA/7gTQk/xEi8s=
+	t=1779325911; cv=none; b=JHuy5pPcxQs92kbB/WnOGKP984JA24+f0Ck0L6IFsMSGZQE57VI+09LWacxpYBa7CPmWF9Mau45AnkUU7/rca1MYhIVp/kWUOT5iicwIOgYlfoRL252R0uK3QTcaWgdTg3iZCVQ9V2upDOjmW6H0NMSzRs17lJjXYqXI8oGoRpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779325907; c=relaxed/simple;
-	bh=5SqcVoDwhs4O02snWyVxoXrBgVRcq0XH16OtXUHvxlQ=;
+	s=arc-20240116; t=1779325911; c=relaxed/simple;
+	bh=UH8qZMtB0dZev38iw6EV5IiGwNP/HJWHgd1a5/fm4p0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=akfPTItZs4USxBeDqu41o+sCmrSztKlGlNu/fe0OvzAd0K6DFFVvvOsv8pF2KNP1/FQXY9W9UQ4x4hsX23c5P4mOzkwOhK+JUEVK4fYGA7+Pq9m1V6Gz8Hc24Oox1DgAXtmHI499EmrhIEbV1nHUgHVx/reOZresjxPscSOyZrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1eyvceU; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=PtJXTeHXet5/49A29/P6NNDdmW/VO0w+JyllDKDA8bTtf5XLWthI8wWne30YWIjUeBzg0qsEboq3fNpP2K3CXDB7NhfHBfjNnpJBpPUN8Cn6RE4aQ1CpEi0+vUcaGhhS64hRSdLNRMRFzvWI/J5tbk21+w8qXDz3CxSfv0+yPrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2oKHQ4h; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1eyvceU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56C7C1F00A3B;
-	Thu, 21 May 2026 01:11:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2oKHQ4h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73241F000E9;
+	Thu, 21 May 2026 01:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779325906;
-	bh=9pOInj+H9hw3UiddnFH9fPrGOAwkA73UYr1q6TNMXWc=;
+	s=k20260515; t=1779325910;
+	bh=WkDyanjkd0fsHYlYgKixcxHkfdMbK2pEV7ITx3xVGFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=S1eyvceUUiETRoh/NFcj/ZT0wPrHk14WUHvA0sNfsHyInqoL+1+s+JU9T/tmHO4eO
-	 7s8eeupAxyDY3ZqEXgSWyY5R0Uapl+W8TqlnTe7tE9T7AO1UypvQxXQrNHWAl1qAOv
-	 aHLJUpCpaQeAJiT3Vh7nDiflfVpTHnya3AcxJDh1wJl6rk3WK4+jSTKMhrD/YnHDc5
-	 HpcoGJh+MhsLkkob2KjKQcMOnPCb6UQGzS3dHsL7TqXfAAMjiwKiTMEkJI2FiBWLTR
-	 Xa18PG10cHYnrU7bjP9uaG+k84GphS7JAhz1ggu2osQvDlqggLXyjEGsLDGgH80pCR
-	 /ag6sLgxJmqCQ==
+	b=N2oKHQ4hSzJrHKMlx605NUnEyZ43O3RjwDHSQdEhrvCIg1vngGNyQvFFHFntGkih4
+	 AkXJ/tsxJQylfBsyYgFTesYmt2etVvHJ6f8oEe83krDOjFLSM03ZrJvkDwXDbOwZQE
+	 F8/bAA/SijdpoNZetyLVacrOvh4qhxGlgkludNG/eYecExCkebzogWVM74HZnqOslQ
+	 rLbtydNkrdrAoYs60uKPbIH1RxeOlNBOJ4OpD7qyH9P4QquVnF58mlr00rDOUcqeZ7
+	 kDId60c2IqfqmekKhWbs/CfliR8mRemgGkFXIri/eiNnC8piVfWrzaDAZjLyinqNJ/
+	 qcWVv2Y7PyrUg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,10 +38,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 17/27] perf header: Propagate feature section processing errors
-Date: Wed, 20 May 2026 22:10:02 -0300
-Message-ID: <20260521011027.622268-18-acme@kernel.org>
+Subject: [PATCH 18/27] perf header: Validate f_attr.ids section before use in perf_session__read_header()
+Date: Wed, 20 May 2026 22:10:03 -0300
+Message-ID: <20260521011027.622268-19-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260521011027.622268-1-acme@kernel.org>
 References: <20260521011027.622268-1-acme@kernel.org>
@@ -56,153 +57,171 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf_session__read_header() discards the return value from
-perf_header__process_sections(), so any error from a feature
-section processor (process_nrcpus, process_compressed, etc.)
-is silently ignored and the session opens as if nothing went
-wrong.
+perf_session__read_header() reads f_attr.ids.size from the perf.data
+file and divides it by sizeof(u64) to compute nr_ids, which is
+declared as int.  No validation is performed on the value before it
+is used to allocate arrays and drive a read loop.
 
-This defeats the validation added by subsequent commits in this
-series: a crafted perf.data that fails a feature section check
-would still be processed with partially-initialized state.
+On 32-bit architectures, a crafted f_attr.ids.size of 0x100000000
+(4 GB) produces nr_ids = 0x20000000, but the allocation size
+1 * 0x20000000 * 8 overflows size_t to 0, so zalloc(0) returns a
+valid pointer.  The subsequent loop writes 0x20000000 IDs into that
+zero-length buffer, corrupting the heap.
 
-Check the return value and fail the session if any feature
-section processor returns an error.
+On 64-bit, the u64-to-int truncation silently drops high bits,
+processing fewer IDs than the file claims.  While not exploitable,
+this is a data integrity issue.
 
-For truncated files (data.size == 0, i.e. recording was
-interrupted before the header was finalized), skip feature
-section processing entirely and clear the feature bitmap so
-tools use their "feature not present" fallbacks instead of
-accessing uninitialized env fields.
+Add validation before using f_attr.ids:
 
-Change the feature processor stubs for optional libraries
-(libtraceevent, libbpf) from returning -1 to returning 0,
-so that perf.data files containing these features can still be
-opened on builds without the optional library — the feature is
-simply skipped rather than causing a fatal error.
+- Cap nr_attrs (attrs.size / attr_size) to MAX_NR_ATTRS (1 << 16)
+  with overflow-safe u64 comparison before assigning to int
+- Reject ids.size not aligned to sizeof(u64)
+- Cap ids.size / sizeof(u64) to MAX_IDS_PER_ATTR (1 << 24) to
+  prevent int truncation and size_t overflow on 32-bit
+- Reject ids sections that extend past the end of the file,
+  guarded by S_ISREG() so non-regular files (block devices,
+  pipes) are not falsely rejected
 
-Also fix evlist__prepare_tracepoint_events() failure to return
--EINVAL instead of -ENOMEM, since the failure is a data
-validation issue, not an allocation failure.
+Also fix perf_header__getbuffer64() to set errno = EIO when
+readn() returns 0 (EOF).  Without this, the out_errno path in
+perf_session__read_header() returns -errno which is 0 (success)
+on truncated files, causing downstream NULL dereferences.
 
-Fixes: 1c0b04d12ae9 ("perf tools: Add perf_session__read_header function")
+Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 51 ++++++++++++++++++++++++++++++----------
- 1 file changed, 38 insertions(+), 13 deletions(-)
+ tools/perf/util/header.c | 77 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 76 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index a5acdcb1a4c02fca..01288c08b6e09284 100644
+index 01288c08b6e09284..ad0a6aab8a6d5336 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -2748,8 +2748,9 @@ static int process_tracing_data(struct feat_fd *ff __maybe_unused, void *data __
- 
- 	return ret < 0 ? -1 : 0;
- #else
--	pr_err("ERROR: Trying to read tracing data without libtraceevent support.\n");
--	return -1;
-+	/* Not an error — the feature is simply unsupported in this build */
-+	pr_debug("Tracing data present but libtraceevent not available, skipping.\n");
-+	return 0;
+@@ -64,6 +64,25 @@
+ #include <event-parse.h>
  #endif
- }
  
-@@ -3643,8 +3644,9 @@ static int process_bpf_prog_info(struct feat_fd *ff __maybe_unused, void *data _
- 	up_write(&env->bpf_progs.lock);
- 	return err;
- #else
--	pr_err("ERROR: Trying to read bpf_prog_info without libbpf support.\n");
--	return -1;
-+	/* Not an error — the feature is simply unsupported in this build */
-+	pr_debug("BPF prog info present but libbpf not available, skipping.\n");
-+	return 0;
- #endif // HAVE_LIBBPF_SUPPORT
- }
++/*
++ * nr_ids * sizeof(struct perf_sample_id) must not overflow
++ * size_t on 32-bit; the struct is ~104 bytes (32-bit) or
++ * ~184 bytes (64-bit), so 1<<24 (16M) keeps the product
++ * under 2 GB on 32-bit.
++ *
++ * This is a per-attribute cap only — the total across all
++ * attributes is not capped because legitimate high-core-count
++ * workloads (e.g. 5000 tracepoints × 4096 CPUs) can exceed
++ * a single-attribute limit.
++ */
++#define MAX_IDS_PER_ATTR	(1 << 24)
++/*
++ * Cap nr_attrs to prevent resource exhaustion from crafted
++ * files.  65536 is well beyond any real workload (perf stat
++ * typically uses < 100 events) but prevents u64-to-int
++ * truncation on the attr count.
++ */
++#define MAX_NR_ATTRS		(1 << 16)
+ #define MAX_BPF_DATA_LEN	(256 * 1024 * 1024)
+ #define MAX_BPF_PROGS		131072
+ #define MAX_CACHE_ENTRIES	32768
+@@ -4468,8 +4487,13 @@ int perf_session__inject_header(struct perf_session *session,
+ static int perf_header__getbuffer64(struct perf_header *header,
+ 				    int fd, void *buf, size_t size)
+ {
+-	if (readn(fd, buf, size) <= 0)
++	ssize_t n = readn(fd, buf, size);
++
++	if (n <= 0) {
++		if (n == 0)
++			errno = EIO;
+ 		return -1;
++	}
  
-@@ -3712,8 +3714,9 @@ static int process_bpf_btf(struct feat_fd *ff  __maybe_unused, void *data __mayb
- 	free(node);
- 	return err;
- #else
--	pr_err("ERROR: Trying to read btf data without libbpf support.\n");
--	return -1;
-+	/* Not an error — the feature is simply unsupported in this build */
-+	pr_debug("BTF data present but libbpf not available, skipping.\n");
-+	return 0;
- #endif // HAVE_LIBBPF_SUPPORT
- }
+ 	if (header->needs_swap)
+ 		mem_bswap_64(buf, size);
+@@ -4803,6 +4827,8 @@ static int read_attr(int fd, struct perf_header *ph,
+ 	if (ret <= 0) {
+ 		pr_debug("cannot read %d bytes of header attr\n",
+ 			 PERF_ATTR_SIZE_VER0);
++		if (ret == 0)
++			errno = EIO;
+ 		return -1;
+ 	}
  
-@@ -4900,7 +4903,7 @@ int perf_session__read_header(struct perf_session *session)
+@@ -4903,6 +4929,7 @@ int perf_session__read_header(struct perf_session *session)
  	struct perf_file_header	f_header;
  	struct perf_file_attr	f_attr;
  	u64			f_id;
--	int nr_attrs, nr_ids, i, j, err;
-+	int nr_attrs, nr_ids, i, j, err = -ENOMEM;
++	struct stat		input_stat;
+ 	int nr_attrs, nr_ids, i, j, err = -ENOMEM;
  	int fd = perf_data__fd(data);
  
- 	session->evlist = evlist__new();
-@@ -4920,6 +4923,7 @@ int perf_session__read_header(struct perf_session *session)
- 		return err;
- 	}
- 
-+	err = -ENOMEM;
- 	if (perf_file_header__read(&f_header, header, fd) < 0)
+@@ -4951,6 +4978,15 @@ int perf_session__read_header(struct perf_session *session)
  		return -EINVAL;
- 
-@@ -4997,15 +5001,36 @@ int perf_session__read_header(struct perf_session *session)
- 		lseek(fd, tmp, SEEK_SET);
  	}
  
-+	/*
-+	 * Skip feature section processing for truncated files
-+	 * (data.size == 0 means recording was interrupted).  The
-+	 * section table is unreliable in that case, and the event
-+	 * data can still be processed without the feature headers.
-+	 * Clear the bitmap so has_feat() returns false and tools
-+	 * use their "feature not present" fallbacks instead of
-+	 * accessing uninitialized env fields.
-+	 */
-+	if (f_header.data.size == 0) {
-+		bitmap_zero(header->adds_features, HEADER_FEAT_BITS);
-+	} else {
- #ifdef HAVE_LIBTRACEEVENT
--	perf_header__process_sections(header, fd, &session->tevent,
--				      perf_file_section__process);
-+		err = perf_header__process_sections(header, fd, &session->tevent,
-+						    perf_file_section__process);
-+		if (err < 0)
-+			goto out_delete_evlist;
++	if (fstat(fd, &input_stat) < 0)
++		return -errno;
++
++	/* Check before assigning to int to avoid u64-to-int truncation */
++	if (f_header.attrs.size / f_header.attr_size > MAX_NR_ATTRS) {
++		pr_err("Too many attributes: %" PRIu64 " (max %d)\n",
++		       f_header.attrs.size / f_header.attr_size, MAX_NR_ATTRS);
++		return -EINVAL;
++	}
+ 	nr_attrs = f_header.attrs.size / f_header.attr_size;
+ 	lseek(fd, f_header.attrs.offset, SEEK_SET);
  
--	if (evlist__prepare_tracepoint_events(session->evlist, session->tevent.pevent))
--		goto out_delete_evlist;
-+		if (evlist__prepare_tracepoint_events(session->evlist,
-+						      session->tevent.pevent)) {
+@@ -4967,6 +5003,45 @@ int perf_session__read_header(struct perf_session *session)
+ 			perf_event__attr_swap(&f_attr.attr);
+ 		}
+ 
++		/*
++		 * Validate ids section: must be aligned to u64, and
++		 * the count must fit in an int to avoid truncation in
++		 * nr_ids and size_t overflow in perf_evsel__alloc_id()
++		 * on 32-bit architectures.
++		 */
++		if (f_attr.ids.size % sizeof(u64)) {
++			pr_err("Invalid ids section size %" PRIu64 " for attr %d, not aligned to u64\n",
++			       f_attr.ids.size, i);
 +			err = -EINVAL;
 +			goto out_delete_evlist;
 +		}
- #else
--	perf_header__process_sections(header, fd, NULL, perf_file_section__process);
-+		err = perf_header__process_sections(header, fd, NULL,
-+						    perf_file_section__process);
-+		if (err < 0)
++
++		/*
++		 * Cap the ID count to avoid int truncation of nr_ids
++		 * on 64-bit and size_t overflow in the allocation
++		 * paths (nr_ids * sizeof(u64), nr_ids *
++		 * sizeof(struct perf_sample_id)) on 32-bit.
++		 */
++		if (f_attr.ids.size / sizeof(u64) > MAX_IDS_PER_ATTR) {
++			pr_err("Invalid ids section size %" PRIu64 " for attr %d, too many IDs\n",
++			       f_attr.ids.size, i);
++			err = -EINVAL;
 +			goto out_delete_evlist;
- #endif
-+	}
++		}
++
++		/*
++		 * FIXME: see perf_header__process_sections() — block
++		 * devices bypass this check because st_size is 0.
++		 */
++		if (S_ISREG(input_stat.st_mode) &&
++		    (f_attr.ids.offset > (u64)input_stat.st_size ||
++		     f_attr.ids.size > (u64)input_stat.st_size - f_attr.ids.offset)) {
++			pr_err("Invalid ids section for attr %d: offset=%" PRIu64 " size=%" PRIu64 " exceeds file size %" PRIu64 "\n",
++			       i, f_attr.ids.offset, f_attr.ids.size, (u64)input_stat.st_size);
++			err = -EINVAL;
++			goto out_delete_evlist;
++		}
++
+ 		tmp = lseek(fd, 0, SEEK_CUR);
+ 		evsel = evsel__new(&f_attr.attr);
  
- 	return 0;
- out_errno:
-@@ -5014,7 +5039,7 @@ int perf_session__read_header(struct perf_session *session)
- out_delete_evlist:
- 	evlist__delete(session->evlist);
- 	session->evlist = NULL;
--	return -ENOMEM;
-+	return err;
- }
- 
- int perf_event__process_feature(const struct perf_tool *tool __maybe_unused,
 -- 
 2.54.0
 
