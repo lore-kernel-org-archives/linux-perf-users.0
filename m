@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232B83DB636
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 14:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61F33A75B1
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 14:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779373146; cv=none; b=eHE9TRLJJ2xOVwxiboI6Aw24xA4q9jaxm8bXp36H/qtPUWjyEkMOy3efBkuga4fuGVGKgABspnF64hY+UbBolplpntBs3v4AlImF+zDLGVY4nF6OrpbV/K13u6cpEzLnC8cnloR0hc/4FzUmT/YA8o52tfxsmyW9QUY5gt5g4zE=
+	t=1779373166; cv=none; b=upa0ZXs+0VJQpbZ26BD7ocEku5cEDxnuTVUK0BFi6oc7qCdU/hhccViBEdX5UmkV+pzEivGG4EM2YQBPYVLp0cM6BxBbl/0lMzw/XiyP+WdoqYYkzg1IOju/fEN9lAc5wKPzB+CaeLpsU8cKVjCGx1wOP1AfdGXOEhNLP+mKae0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779373146; c=relaxed/simple;
-	bh=u94mWAcQH9VoBoBHBMNBqbzenxuSOnadHvjBa3SQRxg=;
+	s=arc-20240116; t=1779373166; c=relaxed/simple;
+	bh=Jvya3ZuBR7T7+GLQKjRyyv37cDSNBtI0Ejw1tNuKJCw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p2z4RU8PnDA56/R5xbJoECLbnYn4qC4Npl8DGcHfe3/Y16qWDKCWiUD2vCXmUJ0qK/g859ENz9p2SbZ5a1SeQVK7+I8ZMEgWTViTks5xJ4iWRHMNA+F9TaZIL5XO885TV8GxPWowADwG6EpZgcM2PrO/p4S7Qnlww2OavhmM+HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fy+s2neV; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=s80OOpHW+lCH0uZ3M5lgD2ID0g62GXmqrqTo9K+e7QZwAGD4TaYj/OO6cX4DYIXhnJWUhohT+Mw5aEjkJ92lOW+0+LdNKh1txBW0kcQURddIp0lVFivI1PcLUBcfdI1ROyqSpaqQWzqXUYPjq7T8otdc67X7FmU7l3kRYMNbsQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rxeu37Ti; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fy+s2neV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rxeu37Ti"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779373140;
+	s=mimecast20190719; t=1779373162;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aGoY94Fm6JxP8yLXk9zcaU6r6KchyIK0b/MHv8tGafY=;
-	b=fy+s2neVMgoPPx5jxR6QFjKXoxdIkeIW0FPw33cQrxrsWrMrjA6sV2iRGKNaX0Rp4nGamc
-	7dZpWo7dZzsV9KnBQXtNom1Zrmd2SPWmU4BIkx8f3+TioUe5OjFkJ1bMTpwfXK0F0YdjmZ
-	VVBEyRW8g32fb6FdY7YjDkyGEB7zvks=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=Q0q5TN8aNLEUi6dYvfKTD8Pb49y0VBIbW3CT2wMjCCU=;
+	b=Rxeu37Tij6XNopXN19hHp5GgRlBtVx0JMM1cJPmX89fx3T8Ev9DZmnWbmEaZw3cWrGakh7
+	uI/hm+B5KyN8FTKhXxZvEhfNM4w6UK7IRGwSgaLX8arFl2OtvzMkxa4QQ2FCb2DDU3nb5+
+	K6MgNOM8D5d7J5BiX+GdkUO9yrrwR/I=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-504-VopOugzTNiyijjBJ8RVrGA-1; Thu,
- 21 May 2026 10:18:56 -0400
-X-MC-Unique: VopOugzTNiyijjBJ8RVrGA-1
-X-Mimecast-MFC-AGG-ID: VopOugzTNiyijjBJ8RVrGA_1779373135
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-199-7twkPLmsNH-F14r9UxDfRw-1; Thu,
+ 21 May 2026 10:19:00 -0400
+X-MC-Unique: 7twkPLmsNH-F14r9UxDfRw-1
+X-Mimecast-MFC-AGG-ID: 7twkPLmsNH-F14r9UxDfRw_1779373139
 Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE81A19560B4;
-	Thu, 21 May 2026 14:18:54 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D588F1800633;
+	Thu, 21 May 2026 14:18:58 +0000 (UTC)
 Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6D86A1684;
-	Thu, 21 May 2026 14:18:51 +0000 (UTC)
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 55A33176E;
+	Thu, 21 May 2026 14:18:55 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>
@@ -57,9 +57,9 @@ Cc: John Kacur <jkacur@redhat.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
 	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v2 4/6] rtla: Parse cmdline using libsubcmd
-Date: Thu, 21 May 2026 16:18:31 +0200
-Message-ID: <20260521141833.2353025-5-tglozar@redhat.com>
+Subject: [PATCH v2 5/6] rtla/tests: Add unit tests for _parse_args() functions
+Date: Thu, 21 May 2026 16:18:32 +0200
+Message-ID: <20260521141833.2353025-6-tglozar@redhat.com>
 In-Reply-To: <20260521141833.2353025-1-tglozar@redhat.com>
 References: <20260521141833.2353025-1-tglozar@redhat.com>
 Precedence: bulk
@@ -71,2976 +71,2653 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
 
-Instead of using getopt_long() directly to parse the command line
-arguments given to an RTLA tool, use libsubcmd's parse_options().
+Add a test suite for the _parse_args() function of each tool that checks
+the params structures (struct common_params, struct osnoise_params,
+struct timerlat_params) returned by them for correctness.
 
-Utilizing libsubcmd for parsing command line arguments has several
-benefits:
+One test case is added per option, as well as a few special cases for
+tricky combinations of options. Test cases are ordered the same as the
+option arrays and help message to allow easy checking of whether all
+options are covered.
 
-- A help message is automatically generated by libsubcmd from the
-  specification, removing the need of writing it by hand.
-- Options are sorted into groups based on which part of tracing (CPU,
-  thread, auto-analysis, tuning, histogram) they relate to.
-- Common parsing patterns for numerical and boolean values now share
-  code, with the target variable being stored in the option array.
+This should help clarify what the proper command line behavior of RTLA
+is in case there are holes in the documentation and verify that the
+intended behavior is implemented correctly.
 
-To avoid duplication of the option parsing logic, RTLA-specific
-macros defining struct option values are created:
+A few necessary changes to the unit tests were done as part of this
+commit:
 
-- RTLA_OPT_* for options common to all tools
-- OSNOISE_OPT_* and TIMERLAT_OPT_* for options specific to
-  osnoise/timerlat tools
-- HIST_OPT_* macros for options specific to histogram-based tools.
+- Unit tests now also link to libsubcmd and its dependencies.
+- A new global variable in_unit_test is added to RTLA's CLI interface,
+  causing it to skip check for root if running in unit tests. This
+  allows the CLI unit tests to run as non-root, like existing unit
+  tests.
 
-Individual *_parse_args() functions then construct an array out of
-these macros that is then passed to libsubcmd's parse_options().
+There is quite a lot of duplication, some of it is mitigated with macros,
+but partially it is intentional so that future changes in behavior are
+tracked across tools.
 
-All code specific to command line options parsing is moved out of the
-individual tool files into a new file, cli.c, which also contains the
-contents of the rtla.c file. A private header, cli_p.h, is added
-alongside the public header cli.h, so that unit tests are able to test
-statically declared option callbacks.
-
-Minor changes:
-
-- The return value of tool-level help option changes to 129, as this is
-  the value set by libsubcmd; this is reflected in affected test cases.
-  The implementation of help for command-level and tracer-level help
-  is set to 129 as well for consistency, and the change is reflected in
-  exit value documentation.
-- Related to the above, {rtla,osnoise,timerlat}_usage() are marked
-  __noreturn and exit() is removed from after they are called for
-  cleaner code.
-- The error messages for invalid argument for options --dma-latency and
-  -E/--entries were corrected, fixing off-by-one in the limits.
-
-Note that unsetting options (using --no-<opt> syntax) is currently not
-implemented for options that use custom callbacks. For --irq and
---thread, it will never be implemented, as they conflict with already
-existing --no-irq and --no-thread with a different meaning.
-
-Assisted-by: Composer:composer-1.5
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- Documentation/tools/rtla/common_appendix.txt |   7 +-
- tools/tracing/rtla/src/Build                 |   2 +-
- tools/tracing/rtla/src/cli.c                 | 537 +++++++++++++++
- tools/tracing/rtla/src/cli.h                 |   7 +
- tools/tracing/rtla/src/cli_p.h               | 670 +++++++++++++++++++
- tools/tracing/rtla/src/common.c              | 109 ---
- tools/tracing/rtla/src/common.h              |  27 +-
- tools/tracing/rtla/src/osnoise.c             |   9 +-
- tools/tracing/rtla/src/osnoise_hist.c        | 221 +-----
- tools/tracing/rtla/src/osnoise_top.c         | 200 +-----
- tools/tracing/rtla/src/rtla.c                |  92 ---
- tools/tracing/rtla/src/timerlat.c            |   9 +-
- tools/tracing/rtla/src/timerlat.h            |   4 +-
- tools/tracing/rtla/src/timerlat_hist.c       | 317 +--------
- tools/tracing/rtla/src/timerlat_top.c        | 286 +-------
- tools/tracing/rtla/src/utils.c               |  28 +-
- tools/tracing/rtla/src/utils.h               |   3 +-
- tools/tracing/rtla/tests/hwnoise.t           |   2 +-
- tools/tracing/rtla/tests/osnoise.t           |   6 +-
- tools/tracing/rtla/tests/timerlat.t          |   6 +-
- 20 files changed, 1256 insertions(+), 1286 deletions(-)
- create mode 100644 tools/tracing/rtla/src/cli.c
- create mode 100644 tools/tracing/rtla/src/cli.h
- create mode 100644 tools/tracing/rtla/src/cli_p.h
- delete mode 100644 tools/tracing/rtla/src/rtla.c
+ tools/tracing/rtla/src/cli.c                  |   8 +-
+ tools/tracing/rtla/src/cli.h                  |   2 +
+ tools/tracing/rtla/tests/unit/Build           |   4 +
+ tools/tracing/rtla/tests/unit/Makefile.unit   |   2 +-
+ .../rtla/tests/unit/cli_params_assert.h       |  68 ++
+ .../rtla/tests/unit/osnoise_hist_cli.c        | 557 ++++++++++++++
+ .../tracing/rtla/tests/unit/osnoise_top_cli.c | 503 +++++++++++++
+ .../rtla/tests/unit/timerlat_hist_cli.c       | 702 ++++++++++++++++++
+ .../rtla/tests/unit/timerlat_top_cli.c        | 634 ++++++++++++++++
+ tools/tracing/rtla/tests/unit/unit_tests.c    |  11 +
+ 10 files changed, 2486 insertions(+), 5 deletions(-)
+ create mode 100644 tools/tracing/rtla/tests/unit/cli_params_assert.h
+ create mode 100644 tools/tracing/rtla/tests/unit/osnoise_hist_cli.c
+ create mode 100644 tools/tracing/rtla/tests/unit/osnoise_top_cli.c
+ create mode 100644 tools/tracing/rtla/tests/unit/timerlat_hist_cli.c
+ create mode 100644 tools/tracing/rtla/tests/unit/timerlat_top_cli.c
 
-diff --git a/Documentation/tools/rtla/common_appendix.txt b/Documentation/tools/rtla/common_appendix.txt
-index 8c90a02588e7..68cb15840d3a 100644
---- a/Documentation/tools/rtla/common_appendix.txt
-+++ b/Documentation/tools/rtla/common_appendix.txt
-@@ -26,9 +26,10 @@ EXIT STATUS
- 
- ::
- 
-- 0  Passed: the test did not hit the stop tracing condition
-- 1  Error: invalid argument
-- 2  Failed: the test hit the stop tracing condition
-+ 0    Passed: the test did not hit the stop tracing condition
-+ 1    Error: invalid argument
-+ 2    Failed: the test hit the stop tracing condition
-+ 129  Help: either user requested help or incorrect option was specified
- 
- REPORTING BUGS
- ==============
-diff --git a/tools/tracing/rtla/src/Build b/tools/tracing/rtla/src/Build
-index 329e24a40cf7..a1f3ab927207 100644
---- a/tools/tracing/rtla/src/Build
-+++ b/tools/tracing/rtla/src/Build
-@@ -11,4 +11,4 @@ rtla-y += timerlat_hist.o
- rtla-y += timerlat_u.o
- rtla-y += timerlat_aa.o
- rtla-y += timerlat_bpf.o
--rtla-y += rtla.o
-+rtla-y += cli.o
 diff --git a/tools/tracing/rtla/src/cli.c b/tools/tracing/rtla/src/cli.c
-new file mode 100644
-index 000000000000..7f531519df44
---- /dev/null
+index 7f531519df44..709219341a56 100644
+--- a/tools/tracing/rtla/src/cli.c
 +++ b/tools/tracing/rtla/src/cli.c
-@@ -0,0 +1,537 @@
+@@ -124,7 +124,7 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv)
+ 	if (cb_data.trace_output)
+ 		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
+ 
+-	if (geteuid())
++	if (geteuid() && !in_unit_test)
+ 		fatal("osnoise needs root permission");
+ 
+ 	return &params->common;
+@@ -206,7 +206,7 @@ struct common_params *osnoise_hist_parse_args(int argc, char **argv)
+ 	if (cb_data.trace_output)
+ 		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
+ 
+-	if (geteuid())
++	if (geteuid() && !in_unit_test)
+ 		fatal("rtla needs root permission");
+ 
+ 	if (params->common.hist.no_index && !params->common.hist.with_zeros)
+@@ -301,7 +301,7 @@ struct common_params *timerlat_top_parse_args(int argc, char **argv)
+ 	if (cb_data.trace_output)
+ 		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
+ 
+-	if (geteuid())
++	if (geteuid() && !in_unit_test)
+ 		fatal("rtla needs root permission");
+ 
+ 	/*
+@@ -427,7 +427,7 @@ struct common_params *timerlat_hist_parse_args(int argc, char **argv)
+ 	if (cb_data.trace_output)
+ 		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
+ 
+-	if (geteuid())
++	if (geteuid() && !in_unit_test)
+ 		fatal("rtla needs root permission");
+ 
+ 	if (params->common.hist.no_irq && params->common.hist.no_thread)
+diff --git a/tools/tracing/rtla/src/cli.h b/tools/tracing/rtla/src/cli.h
+index c49ccb3e92f5..633a2322cf89 100644
+--- a/tools/tracing/rtla/src/cli.h
++++ b/tools/tracing/rtla/src/cli.h
+@@ -5,3 +5,5 @@ struct common_params *osnoise_top_parse_args(int argc, char **argv);
+ struct common_params *osnoise_hist_parse_args(int argc, char **argv);
+ struct common_params *timerlat_top_parse_args(int argc, char **argv);
+ struct common_params *timerlat_hist_parse_args(int argc, char **argv);
++
++extern bool in_unit_test;
+diff --git a/tools/tracing/rtla/tests/unit/Build b/tools/tracing/rtla/tests/unit/Build
+index 2749f4cf202a..16139f17ea1f 100644
+--- a/tools/tracing/rtla/tests/unit/Build
++++ b/tools/tracing/rtla/tests/unit/Build
+@@ -1,3 +1,7 @@
+ unit_tests-y += utils.o
+ unit_tests-y += actions.o
+ unit_tests-y += unit_tests.o
++unit_tests-y += osnoise_top_cli.o
++unit_tests-y += osnoise_hist_cli.o
++unit_tests-y += timerlat_top_cli.o
++unit_tests-y += timerlat_hist_cli.o
+diff --git a/tools/tracing/rtla/tests/unit/Makefile.unit b/tools/tracing/rtla/tests/unit/Makefile.unit
+index bacb00164e46..8c33a9583c30 100644
+--- a/tools/tracing/rtla/tests/unit/Makefile.unit
++++ b/tools/tracing/rtla/tests/unit/Makefile.unit
+@@ -3,7 +3,7 @@
+ UNIT_TESTS := $(OUTPUT)unit_tests
+ UNIT_TESTS_IN := $(UNIT_TESTS)-in.o
+ 
+-$(UNIT_TESTS): $(UNIT_TESTS_IN) $(RTLA_IN)
++$(UNIT_TESTS): $(UNIT_TESTS_IN) $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R)
+ 	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $@ $^ $(EXTLIBS) -lcheck
+ 
+ $(UNIT_TESTS_IN): fixdep
+diff --git a/tools/tracing/rtla/tests/unit/cli_params_assert.h b/tools/tracing/rtla/tests/unit/cli_params_assert.h
+new file mode 100644
+index 000000000000..4bc7d582fcf4
+--- /dev/null
++++ b/tools/tracing/rtla/tests/unit/cli_params_assert.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#pragma once
++
++#include "../../src/timerlat.h"
++
++/* Tracing Options */
++
++#define CLI_ASSERT_SINGLE_EVENT(_system, _event) do {\
++	ck_assert_ptr_nonnull(params->events);\
++	ck_assert_str_eq(params->events->system, _system);\
++	ck_assert_str_eq(params->events->event, _event);\
++	ck_assert_ptr_null(params->events->next);\
++} while (0)
++
++#define CLI_ASSERT_SINGLE_FILTER(_filter) do {\
++	ck_assert_ptr_nonnull(params->events);\
++	ck_assert_str_eq(params->events->filter, _filter);\
++	ck_assert_ptr_null(params->events->next);\
++} while (0)
++
++#define CLI_ASSERT_SINGLE_TRIGGER(_trigger) do {\
++	ck_assert_ptr_nonnull(params->events);\
++	ck_assert_str_eq(params->events->trigger, _trigger);\
++	ck_assert_ptr_null(params->events->next);\
++} while (0)
++
++/* CPU Configuration */
++
++#define CLI_ASSERT_CPUSET(_field, ...) do {\
++	int n;\
++	int cpus[] = { __VA_ARGS__ };\
++	for (n = 0; n < sizeof(cpus) / sizeof(int); n++)\
++		ck_assert(CPU_ISSET(cpus[n], &params->_field));\
++	ck_assert_int_eq(CPU_COUNT(&params->_field), n);\
++} while (0)
++
++/* Auto Analysis and Actions */
++
++#define CLI_OSNOISE_ASSERT_AUTO(_stop) do {\
++	ck_assert_int_eq(params->stop_us, _stop);\
++	ck_assert_int_eq(osn_params->threshold, 1);\
++	ck_assert_int_eq(params->threshold_actions.len, 1);\
++	ck_assert_int_eq(params->threshold_actions.list[0].type, ACTION_TRACE_OUTPUT);\
++	ck_assert_str_eq(params->threshold_actions.list[0].trace_output, "osnoise_trace.txt");\
++} while (0)
++
++#define CLI_TIMERLAT_ASSERT_AUTO(_threshold) do {\
++	ck_assert_int_eq(params->stop_us, _threshold);\
++	ck_assert_int_eq(params->stop_total_us, _threshold);\
++	ck_assert_int_eq(tlat_params->print_stack, _threshold);\
++	ck_assert_int_eq(params->threshold_actions.len, 1);\
++	ck_assert_int_eq(params->threshold_actions.list[0].type, ACTION_TRACE_OUTPUT);\
++	ck_assert_str_eq(params->threshold_actions.list[0].trace_output, "timerlat_trace.txt");\
++} while (0)
++
++#define CLI_TIMERLAT_ASSERT_AA_ONLY(_threshold) do {\
++	ck_assert_int_eq(params->stop_us, _threshold);\
++	ck_assert_int_eq(params->stop_total_us, _threshold);\
++	ck_assert_int_eq(tlat_params->print_stack, _threshold);\
++	ck_assert_int_eq(params->threshold_actions.len, 0);\
++	ck_assert(params->aa_only);\
++} while (0)
++
++#define CLI_ASSERT_SINGLE_ACTION(_actions, _type, _arg, _valtype, _value) do {\
++	ck_assert_int_eq(params->_actions.len, 1);\
++	ck_assert_int_eq(params->_actions.list[0].type, _type);\
++	ck_assert_##_valtype##_eq(params->_actions.list[0]._arg, _value);\
++} while (0)
+diff --git a/tools/tracing/rtla/tests/unit/osnoise_hist_cli.c b/tools/tracing/rtla/tests/unit/osnoise_hist_cli.c
+new file mode 100644
+index 000000000000..3661529f93dc
+--- /dev/null
++++ b/tools/tracing/rtla/tests/unit/osnoise_hist_cli.c
+@@ -0,0 +1,557 @@
 +// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
-+ */
 +
 +#define _GNU_SOURCE
-+#include <stdlib.h>
-+#include <string.h>
++#include <check.h>
 +#include <stdio.h>
++#include <stdlib.h>
++#include <sched.h>
++#include <limits.h>
 +#include <unistd.h>
-+#include <sys/types.h>
++#include <sys/sysinfo.h>
 +
-+#include <linux/compiler.h>
++#include "cli_params_assert.h"
++#include "../../src/cli.h"
 +
-+#define RTLA_ALLOW_CLI_P_H
-+#include "cli_p.h"
++#define PARSE_ARGS(...) char *argv[] = { __VA_ARGS__, NULL  };\
++			int argc = sizeof(argv) / sizeof(char *) - 1;\
++			struct common_params *params =\
++				osnoise_hist_parse_args(argc, argv);\
++			struct osnoise_params *osn_params __maybe_unused =\
++				to_osnoise_params(params)
 +
-+static const char * const osnoise_top_usage[] = {
-+	"rtla osnoise [top] [<options>] [-h|--help]",
-+	NULL,
-+};
++/* Tracing Options */
 +
-+static const char * const osnoise_hist_usage[] = {
-+	"rtla osnoise hist [<options>] [-h|--help]",
-+	NULL,
-+};
-+
-+static const char * const timerlat_top_usage[] = {
-+	"rtla timerlat [top] [<options>] [-h|--help]",
-+	NULL,
-+};
-+
-+static const char * const timerlat_hist_usage[] = {
-+	"rtla timerlat hist [<options>] [-h|--help]",
-+	NULL,
-+};
-+
-+static const char * const hwnoise_usage[] = {
-+	"rtla hwnoise [<options>] [-h|--help]",
-+	NULL,
-+};
-+
-+static const int common_parse_options_flags = PARSE_OPT_OPTARG_ALLOW_NEXT;
-+
-+bool in_unit_test;
-+
-+/*
-+ * osnoise_top_parse_args - allocs, parse and fill the cmd line parameters
-+ */
-+struct common_params *osnoise_top_parse_args(int argc, char **argv)
++START_TEST(test_period_short)
 +{
-+	struct osnoise_params *params;
-+	struct osnoise_cb_data cb_data;
-+	const char * const *usage;
++	PARSE_ARGS("osnoise", "hist", "-p", "100000");
 +
-+	params = calloc_fatal(1, sizeof(*params));
-+
-+	cb_data.params = params;
-+	cb_data.trace_output = NULL;
-+
-+	if (strcmp(argv[0], "hwnoise") == 0) {
-+		params->mode = MODE_HWNOISE;
-+		/*
-+		 * Reduce CPU usage for 75% to avoid killing the system.
-+		 */
-+		params->runtime = 750000;
-+		params->period = 1000000;
-+		usage = hwnoise_usage;
-+	} else {
-+		usage = osnoise_top_usage;
-+	}
-+
-+	const struct option osnoise_top_options[] = {
-+	OPT_GROUP("Tracing Options:"),
-+		OSNOISE_OPT_PERIOD,
-+		OSNOISE_OPT_RUNTIME,
-+		RTLA_OPT_STOP('s', "stop", "single sample"),
-+		RTLA_OPT_STOP_TOTAL('S', "stop-total", "total sample"),
-+		OSNOISE_OPT_THRESHOLD,
-+		RTLA_OPT_TRACE_OUTPUT("osnoise", opt_osnoise_trace_output_cb),
-+
-+	OPT_GROUP("Event Configuration:"),
-+		RTLA_OPT_EVENT,
-+		RTLA_OPT_FILTER,
-+		RTLA_OPT_TRIGGER,
-+
-+	OPT_GROUP("CPU Configuration:"),
-+		RTLA_OPT_CPUS,
-+		RTLA_OPT_HOUSEKEEPING,
-+
-+	OPT_GROUP("Thread Configuration:"),
-+		RTLA_OPT_PRIORITY,
-+		RTLA_OPT_CGROUP,
-+
-+	OPT_GROUP("Output:"),
-+		RTLA_OPT_QUIET,
-+
-+	OPT_GROUP("System Tuning:"),
-+		RTLA_OPT_TRACE_BUFFER_SIZE,
-+		RTLA_OPT_WARM_UP,
-+
-+	OPT_GROUP("Auto Analysis and Actions:"),
-+		RTLA_OPT_AUTO(opt_osnoise_auto_cb),
-+		RTLA_OPT_ON_THRESHOLD("stop-total", opt_osnoise_on_threshold_cb),
-+		RTLA_OPT_ON_END(opt_osnoise_on_end_cb),
-+
-+	OPT_GROUP("General:"),
-+		RTLA_OPT_DURATION,
-+		RTLA_OPT_DEBUG,
-+
-+	OPT_END(),
-+	};
-+
-+	actions_init(&params->common.threshold_actions);
-+	actions_init(&params->common.end_actions);
-+
-+	argc = parse_options(argc, (const char **)argv,
-+			     osnoise_top_options,
-+			     usage,
-+			     common_parse_options_flags);
-+	if (argc < 0)
-+		return NULL;
-+
-+	if (cb_data.trace_output)
-+		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
-+
-+	if (geteuid())
-+		fatal("osnoise needs root permission");
-+
-+	return &params->common;
++	ck_assert_int_eq(osn_params->period, 100000);
 +}
++END_TEST
 +
-+/*
-+ * osnoise_hist_parse_args - allocs, parse and fill the cmd line parameters
-+ */
-+struct common_params *osnoise_hist_parse_args(int argc, char **argv)
++START_TEST(test_period_long)
 +{
-+	struct osnoise_params *params;
-+	struct osnoise_cb_data cb_data;
++	PARSE_ARGS("osnoise", "hist", "--period", "100000");
 +
-+	params = calloc_fatal(1, sizeof(*params));
-+
-+	cb_data.params = params;
-+	cb_data.trace_output = NULL;
-+
-+	const struct option osnoise_hist_options[] = {
-+	OPT_GROUP("Tracing Options:"),
-+		OSNOISE_OPT_PERIOD,
-+		OSNOISE_OPT_RUNTIME,
-+		RTLA_OPT_STOP('s', "stop", "single sample"),
-+		RTLA_OPT_STOP_TOTAL('S', "stop-total", "total sample"),
-+		OSNOISE_OPT_THRESHOLD,
-+		RTLA_OPT_TRACE_OUTPUT("osnoise", opt_osnoise_trace_output_cb),
-+
-+	OPT_GROUP("Event Configuration:"),
-+		RTLA_OPT_EVENT,
-+		RTLA_OPT_FILTER,
-+		RTLA_OPT_TRIGGER,
-+
-+	OPT_GROUP("CPU Configuration:"),
-+		RTLA_OPT_CPUS,
-+		RTLA_OPT_HOUSEKEEPING,
-+
-+	OPT_GROUP("Thread Configuration:"),
-+		RTLA_OPT_PRIORITY,
-+		RTLA_OPT_CGROUP,
-+
-+	OPT_GROUP("Histogram Options:"),
-+		HIST_OPT_BUCKET_SIZE,
-+		HIST_OPT_ENTRIES,
-+		HIST_OPT_NO_HEADER,
-+		HIST_OPT_NO_SUMMARY,
-+		HIST_OPT_NO_INDEX,
-+		HIST_OPT_WITH_ZEROS,
-+
-+	OPT_GROUP("System Tuning:"),
-+		RTLA_OPT_TRACE_BUFFER_SIZE,
-+		RTLA_OPT_WARM_UP,
-+
-+	OPT_GROUP("Auto Analysis and Actions:"),
-+		RTLA_OPT_AUTO(opt_osnoise_auto_cb),
-+		RTLA_OPT_ON_THRESHOLD("stop-total", opt_osnoise_on_threshold_cb),
-+		RTLA_OPT_ON_END(opt_osnoise_on_end_cb),
-+
-+	OPT_GROUP("General:"),
-+		RTLA_OPT_DURATION,
-+		RTLA_OPT_DEBUG,
-+
-+	OPT_END(),
-+	};
-+
-+	actions_init(&params->common.threshold_actions);
-+	actions_init(&params->common.end_actions);
-+
-+	/* display data in microseconds */
-+	params->common.output_divisor = 1000;
-+	params->common.hist.bucket_size = 1;
-+	params->common.hist.entries = 256;
-+
-+	argc = parse_options(argc, (const char **)argv,
-+			     osnoise_hist_options, osnoise_hist_usage,
-+			     common_parse_options_flags);
-+	if (argc < 0)
-+		return NULL;
-+
-+	if (cb_data.trace_output)
-+		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
-+
-+	if (geteuid())
-+		fatal("rtla needs root permission");
-+
-+	if (params->common.hist.no_index && !params->common.hist.with_zeros)
-+		fatal("no-index set and with-zeros not set - it does not make sense");
-+
-+	return &params->common;
++	ck_assert_int_eq(osn_params->period, 100000);
 +}
++END_TEST
 +
-+struct common_params *timerlat_top_parse_args(int argc, char **argv)
++START_TEST(test_runtime_short)
 +{
-+	struct timerlat_params *params;
-+	struct timerlat_cb_data cb_data;
++	PARSE_ARGS("osnoise", "hist", "-r", "95000");
 +
-+	params = calloc_fatal(1, sizeof(*params));
-+
-+	cb_data.params = params;
-+	cb_data.trace_output = NULL;
-+
-+	const struct option timerlat_top_options[] = {
-+	OPT_GROUP("Tracing Options:"),
-+		TIMERLAT_OPT_PERIOD,
-+		RTLA_OPT_STOP('i', "irq", "irq latency"),
-+		RTLA_OPT_STOP_TOTAL('T', "thread", "thread latency"),
-+		TIMERLAT_OPT_STACK,
-+		RTLA_OPT_TRACE_OUTPUT("timerlat", opt_timerlat_trace_output_cb),
-+
-+	OPT_GROUP("Event Configuration:"),
-+		RTLA_OPT_EVENT,
-+		RTLA_OPT_FILTER,
-+		RTLA_OPT_TRIGGER,
-+
-+	OPT_GROUP("CPU Configuration:"),
-+		RTLA_OPT_CPUS,
-+		RTLA_OPT_HOUSEKEEPING,
-+
-+	OPT_GROUP("Thread Configuration:"),
-+		RTLA_OPT_PRIORITY,
-+		RTLA_OPT_CGROUP,
-+		RTLA_OPT_USER_THREADS,
-+		RTLA_OPT_KERNEL_THREADS,
-+		RTLA_OPT_USER_LOAD,
-+
-+	OPT_GROUP("Output:"),
-+		TIMERLAT_OPT_NANO,
-+		RTLA_OPT_QUIET,
-+
-+	OPT_GROUP("System Tuning:"),
-+		TIMERLAT_OPT_DMA_LATENCY,
-+		TIMERLAT_OPT_DEEPEST_IDLE_STATE,
-+		RTLA_OPT_TRACE_BUFFER_SIZE,
-+		RTLA_OPT_WARM_UP,
-+
-+	OPT_GROUP("Auto Analysis and Actions:"),
-+		RTLA_OPT_AUTO(opt_timerlat_auto_cb),
-+		TIMERLAT_OPT_AA_ONLY,
-+		TIMERLAT_OPT_NO_AA,
-+		TIMERLAT_OPT_DUMPS_TASKS,
-+		RTLA_OPT_ON_THRESHOLD("latency", opt_timerlat_on_threshold_cb),
-+		RTLA_OPT_ON_END(opt_timerlat_on_end_cb),
-+		TIMERLAT_OPT_BPF_ACTION,
-+		TIMERLAT_OPT_STACK_FORMAT,
-+
-+	OPT_GROUP("General:"),
-+		RTLA_OPT_DURATION,
-+		RTLA_OPT_DEBUG,
-+
-+	OPT_END(),
-+	};
-+
-+	actions_init(&params->common.threshold_actions);
-+	actions_init(&params->common.end_actions);
-+
-+	/* disabled by default */
-+	params->dma_latency = -1;
-+	params->deepest_idle_state = -2;
-+
-+	/* display data in microseconds */
-+	params->common.output_divisor = 1000;
-+
-+	/* default to BPF mode */
-+	params->mode = TRACING_MODE_BPF;
-+
-+	/* default to truncate stack format */
-+	params->stack_format = STACK_FORMAT_TRUNCATE;
-+
-+	argc = parse_options(argc, (const char **)argv,
-+			     timerlat_top_options, timerlat_top_usage,
-+			     common_parse_options_flags);
-+	if (argc < 0)
-+		return NULL;
-+
-+	if (cb_data.trace_output)
-+		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
-+
-+	if (geteuid())
-+		fatal("rtla needs root permission");
-+
-+	/*
-+	 * Auto analysis only happens if stop tracing, thus:
-+	 */
-+	if (!params->common.stop_us && !params->common.stop_total_us)
-+		params->no_aa = 1;
-+
-+	if (params->no_aa && params->common.aa_only)
-+		fatal("--no-aa and --aa-only are mutually exclusive!");
-+
-+	if (params->common.kernel_workload && params->common.user_workload)
-+		fatal("--kernel-threads and --user-threads are mutually exclusive!");
-+
-+	/*
-+	 * If auto-analysis or trace output is enabled, switch from BPF mode to
-+	 * mixed mode
-+	 */
-+	if (params->mode == TRACING_MODE_BPF &&
-+		(params->common.threshold_actions.present[ACTION_TRACE_OUTPUT] ||
-+		params->common.end_actions.present[ACTION_TRACE_OUTPUT] ||
-+		!params->no_aa))
-+		params->mode = TRACING_MODE_MIXED;
-+
-+	return &params->common;
++	ck_assert_int_eq(osn_params->runtime, 95000);
 +}
++END_TEST
 +
-+struct common_params *timerlat_hist_parse_args(int argc, char **argv)
++START_TEST(test_runtime_long)
 +{
-+	struct timerlat_params *params;
-+	struct timerlat_cb_data cb_data;
++	PARSE_ARGS("osnoise", "hist", "--runtime", "95000");
 +
-+	params = calloc_fatal(1, sizeof(*params));
-+
-+	cb_data.params = params;
-+	cb_data.trace_output = NULL;
-+
-+	const struct option timerlat_hist_options[] = {
-+	OPT_GROUP("Tracing Options:"),
-+		TIMERLAT_OPT_PERIOD,
-+		RTLA_OPT_STOP('i', "irq", "irq latency"),
-+		RTLA_OPT_STOP_TOTAL('T', "thread", "thread latency"),
-+		TIMERLAT_OPT_STACK,
-+		RTLA_OPT_TRACE_OUTPUT("timerlat", opt_timerlat_trace_output_cb),
-+
-+	OPT_GROUP("Event Configuration:"),
-+		RTLA_OPT_EVENT,
-+		RTLA_OPT_FILTER,
-+		RTLA_OPT_TRIGGER,
-+
-+	OPT_GROUP("CPU Configuration:"),
-+		RTLA_OPT_CPUS,
-+		RTLA_OPT_HOUSEKEEPING,
-+
-+	OPT_GROUP("Thread Configuration:"),
-+		RTLA_OPT_PRIORITY,
-+		RTLA_OPT_CGROUP,
-+		RTLA_OPT_USER_THREADS,
-+		RTLA_OPT_KERNEL_THREADS,
-+		RTLA_OPT_USER_LOAD,
-+
-+	OPT_GROUP("Histogram Options:"),
-+		HIST_OPT_BUCKET_SIZE,
-+		HIST_OPT_ENTRIES,
-+		HIST_OPT_NO_IRQ,
-+		HIST_OPT_NO_THREAD,
-+		HIST_OPT_NO_HEADER,
-+		HIST_OPT_NO_SUMMARY,
-+		HIST_OPT_NO_INDEX,
-+		HIST_OPT_WITH_ZEROS,
-+
-+	OPT_GROUP("Output:"),
-+		TIMERLAT_OPT_NANO,
-+
-+	OPT_GROUP("System Tuning:"),
-+		TIMERLAT_OPT_DMA_LATENCY,
-+		TIMERLAT_OPT_DEEPEST_IDLE_STATE,
-+		RTLA_OPT_TRACE_BUFFER_SIZE,
-+		RTLA_OPT_WARM_UP,
-+
-+	OPT_GROUP("Auto Analysis and Actions:"),
-+		RTLA_OPT_AUTO(opt_timerlat_auto_cb),
-+		TIMERLAT_OPT_NO_AA,
-+		TIMERLAT_OPT_DUMPS_TASKS,
-+		RTLA_OPT_ON_THRESHOLD("latency", opt_timerlat_on_threshold_cb),
-+		RTLA_OPT_ON_END(opt_timerlat_on_end_cb),
-+		TIMERLAT_OPT_BPF_ACTION,
-+		TIMERLAT_OPT_STACK_FORMAT,
-+
-+	OPT_GROUP("General:"),
-+		RTLA_OPT_DURATION,
-+		RTLA_OPT_DEBUG,
-+
-+	OPT_END(),
-+	};
-+
-+	actions_init(&params->common.threshold_actions);
-+	actions_init(&params->common.end_actions);
-+
-+	/* disabled by default */
-+	params->dma_latency = -1;
-+
-+	/* disabled by default */
-+	params->deepest_idle_state = -2;
-+
-+	/* display data in microseconds */
-+	params->common.output_divisor = 1000;
-+	params->common.hist.bucket_size = 1;
-+	params->common.hist.entries = 256;
-+
-+	/* default to BPF mode */
-+	params->mode = TRACING_MODE_BPF;
-+
-+	/* default to truncate stack format */
-+	params->stack_format = STACK_FORMAT_TRUNCATE;
-+
-+	argc = parse_options(argc, (const char **)argv,
-+			     timerlat_hist_options, timerlat_hist_usage,
-+			     common_parse_options_flags);
-+	if (argc < 0)
-+		return NULL;
-+
-+	if (cb_data.trace_output)
-+		actions_add_trace_output(&params->common.threshold_actions, cb_data.trace_output);
-+
-+	if (geteuid())
-+		fatal("rtla needs root permission");
-+
-+	if (params->common.hist.no_irq && params->common.hist.no_thread)
-+		fatal("no-irq and no-thread set, there is nothing to do here");
-+
-+	if (params->common.hist.no_index && !params->common.hist.with_zeros)
-+		fatal("no-index set with with-zeros is not set - it does not make sense");
-+
-+	/*
-+	 * Auto analysis only happens if stop tracing, thus:
-+	 */
-+	if (!params->common.stop_us && !params->common.stop_total_us)
-+		params->no_aa = 1;
-+
-+	if (params->common.kernel_workload && params->common.user_workload)
-+		fatal("--kernel-threads and --user-threads are mutually exclusive!");
-+
-+	/*
-+	 * If auto-analysis or trace output is enabled, switch from BPF mode to
-+	 * mixed mode
-+	 */
-+	if (params->mode == TRACING_MODE_BPF &&
-+		(params->common.threshold_actions.present[ACTION_TRACE_OUTPUT] ||
-+		params->common.end_actions.present[ACTION_TRACE_OUTPUT] ||
-+		!params->no_aa))
-+		params->mode = TRACING_MODE_MIXED;
-+
-+	return &params->common;
++	ck_assert_int_eq(osn_params->runtime, 95000);
 +}
++END_TEST
 +
-+/*
-+ * rtla_usage - print rtla usage
-+ */
-+__noreturn static void rtla_usage(int err)
++START_TEST(test_stop_short)
 +{
-+	int i;
++	PARSE_ARGS("osnoise", "hist", "-s", "20");
 +
-+	static const char * const msg[] = {
-+		"",
-+		"rtla version " VERSION,
-+		"",
-+		"  usage: rtla COMMAND ...",
-+		"",
-+		"  commands:",
-+		"     osnoise  - gives information about the operating system noise (osnoise)",
-+		"     hwnoise  - gives information about hardware-related noise",
-+		"     timerlat - measures the timer irq and thread latency",
-+		"",
-+		NULL,
-+	};
-+
-+	for (i = 0; msg[i]; i++)
-+		fprintf(stderr, "%s\n", msg[i]);
-+	exit(err);
++	ck_assert_int_eq(params->stop_us, 20);
 +}
++END_TEST
 +
-+/*
-+ * run_tool_command - try to run a rtla tool command
-+ *
-+ * It returns 0 if it fails. The tool's main will generally not
-+ * return as they should call exit().
-+ */
-+int run_tool_command(int argc, char **argv, int start_position)
++START_TEST(test_stop_long)
 +{
-+	if (strcmp(argv[start_position], "osnoise") == 0) {
-+		osnoise_main(argc-start_position, &argv[start_position]);
-+		goto ran;
-+	} else if (strcmp(argv[start_position], "hwnoise") == 0) {
-+		hwnoise_main(argc-start_position, &argv[start_position]);
-+		goto ran;
-+	} else if (strcmp(argv[start_position], "timerlat") == 0) {
-+		timerlat_main(argc-start_position, &argv[start_position]);
-+		goto ran;
-+	}
++	PARSE_ARGS("osnoise", "hist", "--stop", "20");
 +
-+	return 0;
-+ran:
-+	return 1;
++	ck_assert_int_eq(params->stop_us, 20);
 +}
++END_TEST
 +
-+/* Set main as weak to allow overriding it for building unit test binary */
-+#pragma weak main
-+
-+int main(int argc, char *argv[])
++START_TEST(test_stop_total_short)
 +{
-+	int retval;
++	PARSE_ARGS("osnoise", "hist", "-S", "20");
 +
-+	/* is it an alias? */
-+	retval = run_tool_command(argc, argv, 0);
-+	if (retval)
-+		exit(0);
-+
-+	if (argc < 2)
-+		goto usage;
-+
-+	if (strcmp(argv[1], "-h") == 0)
-+		rtla_usage(129);
-+	else if (strcmp(argv[1], "--help") == 0)
-+		rtla_usage(129);
-+
-+	retval = run_tool_command(argc, argv, 1);
-+	if (retval)
-+		exit(0);
-+
-+usage:
-+	rtla_usage(129);
++	ck_assert_int_eq(params->stop_total_us, 20);
 +}
-diff --git a/tools/tracing/rtla/src/cli.h b/tools/tracing/rtla/src/cli.h
++END_TEST
++
++START_TEST(test_stop_total_long)
++{
++	PARSE_ARGS("osnoise", "hist", "--stop-total", "20");
++
++	ck_assert_int_eq(params->stop_total_us, 20);
++}
++END_TEST
++
++START_TEST(test_threshold_short)
++{
++	PARSE_ARGS("osnoise", "hist", "-T", "5");
++
++	ck_assert_int_eq(osn_params->threshold, 5);
++}
++END_TEST
++
++START_TEST(test_threshold_long)
++{
++	PARSE_ARGS("osnoise", "hist", "--threshold", "5");
++
++	ck_assert_int_eq(osn_params->threshold, 5);
++}
++END_TEST
++
++START_TEST(test_trace_short_noarg)
++{
++	PARSE_ARGS("osnoise", "hist", "-t");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++}
++END_TEST
++
++START_TEST(test_trace_short_followarg)
++{
++	PARSE_ARGS("osnoise", "hist", "-t", "-d", "20");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++	ck_assert_int_eq(params->duration, 20); /* check if next argument is read correctly */
++}
++END_TEST
++
++START_TEST(test_trace_short_space)
++{
++	PARSE_ARGS("osnoise", "hist", "-t", "tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_short_equals)
++{
++	PARSE_ARGS("osnoise", "hist", "-t=tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_long_noarg)
++{
++	PARSE_ARGS("osnoise", "hist", "--trace");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++}
++END_TEST
++
++START_TEST(test_trace_long_followarg)
++{
++	PARSE_ARGS("osnoise", "hist", "--trace", "-d", "20");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++	ck_assert_int_eq(params->duration, 20); /* check if next argument is read correctly */
++}
++END_TEST
++
++START_TEST(test_trace_long_space)
++{
++	PARSE_ARGS("osnoise", "hist", "--trace", "tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_long_equals)
++{
++	PARSE_ARGS("osnoise", "hist", "--trace=tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++/* Event Configuration */
++
++START_TEST(test_event_short)
++{
++	PARSE_ARGS("osnoise", "hist", "-e", "system:event");
++
++	CLI_ASSERT_SINGLE_EVENT("system", "event");
++}
++END_TEST
++
++START_TEST(test_event_long)
++{
++	PARSE_ARGS("osnoise", "hist", "--event", "system:event");
++
++	CLI_ASSERT_SINGLE_EVENT("system", "event");
++}
++END_TEST
++
++START_TEST(test_filter)
++{
++	PARSE_ARGS("osnoise", "hist", "-e", "system:event", "--filter", "filter");
++
++	CLI_ASSERT_SINGLE_FILTER("filter");
++}
++END_TEST
++
++START_TEST(test_trigger)
++{
++	PARSE_ARGS("osnoise", "hist", "-e", "system:event", "--trigger", "trigger");
++
++	CLI_ASSERT_SINGLE_TRIGGER("trigger");
++}
++END_TEST
++
++/* CPU Configuration */
++
++START_TEST(test_cpus_short)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("osnoise", "hist", "-c", "0-1,3");
++
++	ck_assert_str_eq(params->cpus, "0-1,3");
++	CLI_ASSERT_CPUSET(monitored_cpus, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_cpus_long)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("osnoise", "hist", "--cpus", "0-1,3");
++
++	ck_assert_str_eq(params->cpus, "0-1,3");
++	CLI_ASSERT_CPUSET(monitored_cpus, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_housekeeping_short)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("osnoise", "hist", "-H", "0-1,3");
++
++	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_housekeeping_long)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("osnoise", "hist", "--house-keeping", "0-1,3");
++
++	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 3);
++}
++END_TEST
++
++/* Thread Configuration */
++
++START_TEST(test_cgroup_short_noarg)
++{
++	PARSE_ARGS("osnoise", "hist", "-C");
++
++	ck_assert(params->cgroup);
++	ck_assert_ptr_null(params->cgroup_name);
++}
++END_TEST
++
++START_TEST(test_cgroup_short_space)
++{
++	PARSE_ARGS("osnoise", "hist", "-C", "cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_short_equals)
++{
++	PARSE_ARGS("osnoise", "hist", "-C=cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_long_noarg)
++{
++	PARSE_ARGS("osnoise", "hist", "--cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_ptr_null(params->cgroup_name);
++}
++END_TEST
++
++START_TEST(test_cgroup_long_space)
++{
++	PARSE_ARGS("osnoise", "hist", "--cgroup", "cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_long_equals)
++{
++	PARSE_ARGS("osnoise", "hist", "--cgroup=cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_priority_short)
++{
++	PARSE_ARGS("osnoise", "hist", "-P", "f:95");
++
++	ck_assert_int_eq(params->sched_param.sched_policy, SCHED_FIFO);
++	ck_assert_int_eq(params->sched_param.sched_priority, 95);
++}
++END_TEST
++
++START_TEST(test_priority_long)
++{
++	PARSE_ARGS("osnoise", "hist", "--priority", "f:95");
++
++	ck_assert_int_eq(params->sched_param.sched_policy, SCHED_FIFO);
++	ck_assert_int_eq(params->sched_param.sched_priority, 95);
++}
++END_TEST
++
++/* Histogram Options */
++
++START_TEST(test_bucket_size_short)
++{
++	PARSE_ARGS("osnoise", "hist", "-b", "2");
++
++	ck_assert_int_eq(params->hist.bucket_size, 2);
++}
++END_TEST
++
++START_TEST(test_bucket_size_long)
++{
++	PARSE_ARGS("osnoise", "hist", "--bucket-size", "2");
++
++	ck_assert_int_eq(params->hist.bucket_size, 2);
++}
++END_TEST
++
++START_TEST(test_entries_short)
++{
++	PARSE_ARGS("osnoise", "hist", "-E", "512");
++
++	ck_assert_int_eq(params->hist.entries, 512);
++}
++END_TEST
++
++START_TEST(test_entries_long)
++{
++	PARSE_ARGS("osnoise", "hist", "--entries", "512");
++
++	ck_assert_int_eq(params->hist.entries, 512);
++}
++END_TEST
++
++START_TEST(test_no_header)
++{
++	PARSE_ARGS("osnoise", "hist", "--no-header");
++
++	ck_assert(params->hist.no_header);
++}
++END_TEST
++
++START_TEST(test_no_index)
++{
++	PARSE_ARGS("osnoise", "hist", "--with-zeros", "--no-index");
++
++	ck_assert(params->hist.no_index);
++}
++END_TEST
++
++START_TEST(test_no_summary)
++{
++	PARSE_ARGS("osnoise", "hist", "--no-summary");
++
++	ck_assert(params->hist.no_summary);
++}
++END_TEST
++
++START_TEST(test_with_zeros)
++{
++	PARSE_ARGS("osnoise", "hist", "--with-zeros");
++
++	ck_assert(params->hist.with_zeros);
++}
++END_TEST
++
++/* System Tuning */
++
++START_TEST(test_trace_buffer_size)
++{
++	PARSE_ARGS("osnoise", "hist", "--trace-buffer-size", "200");
++
++	ck_assert_int_eq(params->buffer_size, 200);
++}
++END_TEST
++
++START_TEST(test_warm_up)
++{
++	PARSE_ARGS("osnoise", "hist", "--warm-up", "5");
++
++	ck_assert_int_eq(params->warmup, 5);
++}
++END_TEST
++
++/* Auto Analysis and Actions */
++
++START_TEST(test_auto)
++{
++	PARSE_ARGS("osnoise", "hist", "-a", "20");
++
++	CLI_OSNOISE_ASSERT_AUTO(20);
++}
++END_TEST
++
++START_TEST(test_on_end)
++{
++	PARSE_ARGS("osnoise", "hist", "--on-end", "trace");
++
++	CLI_ASSERT_SINGLE_ACTION(end_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++}
++END_TEST
++
++START_TEST(test_on_threshold)
++{
++	PARSE_ARGS("osnoise", "hist", "--on-threshold", "trace");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++}
++END_TEST
++
++/* General */
++
++START_TEST(test_debug_short)
++{
++	PARSE_ARGS("osnoise", "hist", "-D");
++
++	ck_assert(config_debug);
++}
++END_TEST
++
++START_TEST(test_debug_long)
++{
++	PARSE_ARGS("osnoise", "hist", "--debug");
++
++	ck_assert(config_debug);
++}
++END_TEST
++
++START_TEST(test_duration_short)
++{
++	PARSE_ARGS("osnoise", "hist", "-d", "1m");
++
++	ck_assert_int_eq(params->duration, 60);
++}
++END_TEST
++
++START_TEST(test_duration_long)
++{
++	PARSE_ARGS("osnoise", "hist", "--duration", "1m");
++
++	ck_assert_int_eq(params->duration, 60);
++}
++END_TEST
++
++Suite *osnoise_hist_cli_suite(void)
++{
++	Suite *s = suite_create("osnoise_hist_cli");
++	TCase *tc;
++
++	tc = tcase_create("tracing_options");
++	tcase_add_test(tc, test_period_short);
++	tcase_add_test(tc, test_period_long);
++	tcase_add_test(tc, test_runtime_short);
++	tcase_add_test(tc, test_runtime_long);
++	tcase_add_test(tc, test_stop_short);
++	tcase_add_test(tc, test_stop_long);
++	tcase_add_test(tc, test_stop_total_short);
++	tcase_add_test(tc, test_stop_total_long);
++	tcase_add_test(tc, test_threshold_short);
++	tcase_add_test(tc, test_threshold_long);
++	tcase_add_test(tc, test_trace_short_noarg);
++	tcase_add_test(tc, test_trace_short_followarg);
++	tcase_add_test(tc, test_trace_short_space);
++	tcase_add_test(tc, test_trace_short_equals);
++	tcase_add_test(tc, test_trace_long_noarg);
++	tcase_add_test(tc, test_trace_long_followarg);
++	tcase_add_test(tc, test_trace_long_space);
++	tcase_add_test(tc, test_trace_long_equals);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("event_configuration");
++	tcase_add_test(tc, test_event_short);
++	tcase_add_test(tc, test_event_long);
++	tcase_add_test(tc, test_filter);
++	tcase_add_test(tc, test_trigger);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("cpu_configuration");
++	tcase_add_test(tc, test_cpus_short);
++	tcase_add_test(tc, test_cpus_long);
++	tcase_add_test(tc, test_housekeeping_short);
++	tcase_add_test(tc, test_housekeeping_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("thread_configuration");
++	tcase_add_test(tc, test_cgroup_short_noarg);
++	tcase_add_test(tc, test_cgroup_short_space);
++	tcase_add_test(tc, test_cgroup_short_equals);
++	tcase_add_test(tc, test_cgroup_long_noarg);
++	tcase_add_test(tc, test_cgroup_long_space);
++	tcase_add_test(tc, test_cgroup_long_equals);
++	tcase_add_test(tc, test_priority_short);
++	tcase_add_test(tc, test_priority_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("histogram_options");
++	tcase_add_test(tc, test_bucket_size_short);
++	tcase_add_test(tc, test_bucket_size_long);
++	tcase_add_test(tc, test_entries_short);
++	tcase_add_test(tc, test_entries_long);
++	tcase_add_test(tc, test_no_header);
++	tcase_add_test(tc, test_no_index);
++	tcase_add_test(tc, test_no_summary);
++	tcase_add_test(tc, test_with_zeros);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("system_tuning");
++	tcase_add_test(tc, test_trace_buffer_size);
++	tcase_add_test(tc, test_warm_up);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("aa_actions");
++	tcase_add_test(tc, test_auto);
++	tcase_add_test(tc, test_on_end);
++	tcase_add_test(tc, test_on_threshold);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("general");
++	tcase_add_test(tc, test_debug_short);
++	tcase_add_test(tc, test_debug_long);
++	tcase_add_test(tc, test_duration_short);
++	tcase_add_test(tc, test_duration_long);
++	suite_add_tcase(s, tc);
++
++	return s;
++}
+diff --git a/tools/tracing/rtla/tests/unit/osnoise_top_cli.c b/tools/tracing/rtla/tests/unit/osnoise_top_cli.c
 new file mode 100644
-index 000000000000..c49ccb3e92f5
+index 000000000000..f3a8633cc84e
 --- /dev/null
-+++ b/tools/tracing/rtla/src/cli.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#pragma once
++++ b/tools/tracing/rtla/tests/unit/osnoise_top_cli.c
+@@ -0,0 +1,503 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+struct common_params *osnoise_top_parse_args(int argc, char **argv);
-+struct common_params *osnoise_hist_parse_args(int argc, char **argv);
-+struct common_params *timerlat_top_parse_args(int argc, char **argv);
-+struct common_params *timerlat_hist_parse_args(int argc, char **argv);
-diff --git a/tools/tracing/rtla/src/cli_p.h b/tools/tracing/rtla/src/cli_p.h
++#define _GNU_SOURCE
++#include <check.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sched.h>
++#include <limits.h>
++#include <unistd.h>
++#include <sys/sysinfo.h>
++
++#include "cli_params_assert.h"
++#include "../../src/cli.h"
++
++#define PARSE_ARGS(...) char *argv[] = { __VA_ARGS__, NULL  };\
++			int argc = sizeof(argv) / sizeof(char *) - 1;\
++			struct common_params *params =\
++				osnoise_top_parse_args(argc, argv);\
++			struct osnoise_params *osn_params __maybe_unused =\
++				to_osnoise_params(params)
++
++/* Tracing Options */
++
++START_TEST(test_period_short)
++{
++	PARSE_ARGS("osnoise", "top", "-p", "100000");
++
++	ck_assert_int_eq(osn_params->period, 100000);
++}
++END_TEST
++
++START_TEST(test_period_long)
++{
++	PARSE_ARGS("osnoise", "top", "--period", "100000");
++
++	ck_assert_int_eq(osn_params->period, 100000);
++}
++END_TEST
++
++START_TEST(test_runtime_short)
++{
++	PARSE_ARGS("osnoise", "top", "-r", "95000");
++
++	ck_assert_int_eq(osn_params->runtime, 95000);
++}
++END_TEST
++
++START_TEST(test_runtime_long)
++{
++	PARSE_ARGS("osnoise", "top", "--runtime", "95000");
++
++	ck_assert_int_eq(osn_params->runtime, 95000);
++}
++END_TEST
++
++START_TEST(test_stop_short)
++{
++	PARSE_ARGS("osnoise", "top", "-s", "20");
++
++	ck_assert_int_eq(params->stop_us, 20);
++}
++END_TEST
++
++START_TEST(test_stop_long)
++{
++	PARSE_ARGS("osnoise", "top", "--stop", "20");
++
++	ck_assert_int_eq(params->stop_us, 20);
++}
++END_TEST
++
++START_TEST(test_stop_total_short)
++{
++	PARSE_ARGS("osnoise", "top", "-S", "20");
++
++	ck_assert_int_eq(params->stop_total_us, 20);
++}
++END_TEST
++
++START_TEST(test_stop_total_long)
++{
++	PARSE_ARGS("osnoise", "top", "--stop-total", "20");
++
++	ck_assert_int_eq(params->stop_total_us, 20);
++}
++END_TEST
++
++START_TEST(test_threshold_short)
++{
++	PARSE_ARGS("osnoise", "top", "-T", "5");
++
++	ck_assert_int_eq(osn_params->threshold, 5);
++}
++END_TEST
++
++START_TEST(test_threshold_long)
++{
++	PARSE_ARGS("osnoise", "top", "--threshold", "5");
++
++	ck_assert_int_eq(osn_params->threshold, 5);
++}
++END_TEST
++
++START_TEST(test_trace_short_noarg)
++{
++	PARSE_ARGS("osnoise", "top", "-t");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++}
++END_TEST
++
++START_TEST(test_trace_short_followarg)
++{
++	PARSE_ARGS("osnoise", "top", "-t", "-d", "20");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++	ck_assert_int_eq(params->duration, 20); /* check if next argument is read correctly */
++}
++END_TEST
++
++START_TEST(test_trace_short_space)
++{
++	PARSE_ARGS("osnoise", "top", "-t", "tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_short_equals)
++{
++	PARSE_ARGS("osnoise", "top", "-t=tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_long_noarg)
++{
++	PARSE_ARGS("osnoise", "top", "--trace");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++}
++END_TEST
++
++START_TEST(test_trace_long_followarg)
++{
++	PARSE_ARGS("osnoise", "top", "--trace", "-d", "20");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++	ck_assert_int_eq(params->duration, 20); /* check if next argument is read correctly */
++}
++END_TEST
++
++START_TEST(test_trace_long_space)
++{
++	PARSE_ARGS("osnoise", "top", "--trace", "tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_long_equals)
++{
++	PARSE_ARGS("osnoise", "top", "--trace=tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++/* Event Configuration */
++
++START_TEST(test_event_short)
++{
++	PARSE_ARGS("osnoise", "top", "-e", "system:event");
++
++	CLI_ASSERT_SINGLE_EVENT("system", "event");
++}
++END_TEST
++
++START_TEST(test_event_long)
++{
++	PARSE_ARGS("osnoise", "top", "--event", "system:event");
++
++	CLI_ASSERT_SINGLE_EVENT("system", "event");
++}
++END_TEST
++
++START_TEST(test_filter)
++{
++	PARSE_ARGS("osnoise", "top", "-e", "system:event", "--filter", "filter");
++
++	CLI_ASSERT_SINGLE_FILTER("filter");
++}
++END_TEST
++
++START_TEST(test_trigger)
++{
++	PARSE_ARGS("osnoise", "top", "-e", "system:event", "--trigger", "trigger");
++
++	CLI_ASSERT_SINGLE_TRIGGER("trigger");
++}
++END_TEST
++
++/* CPU Configuration */
++
++START_TEST(test_cpus_short)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("osnoise", "top", "-c", "0-1,3");
++
++	ck_assert_str_eq(params->cpus, "0-1,3");
++	CLI_ASSERT_CPUSET(monitored_cpus, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_cpus_long)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("osnoise", "top", "--cpus", "0-1,3");
++
++	ck_assert_str_eq(params->cpus, "0-1,3");
++	CLI_ASSERT_CPUSET(monitored_cpus, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_housekeeping_short)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("osnoise", "top", "-H", "0-1,3");
++
++	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_housekeeping_long)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("osnoise", "top", "--house-keeping", "0-1,3");
++
++	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 3);
++}
++END_TEST
++
++/* Thread Configuration */
++
++START_TEST(test_cgroup_short_noarg)
++{
++	PARSE_ARGS("osnoise", "top", "-C");
++
++	ck_assert(params->cgroup);
++	ck_assert_ptr_null(params->cgroup_name);
++}
++END_TEST
++
++START_TEST(test_cgroup_short_space)
++{
++	PARSE_ARGS("osnoise", "top", "-C", "cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_short_equals)
++{
++	PARSE_ARGS("osnoise", "top", "-C=cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_long_noarg)
++{
++	PARSE_ARGS("osnoise", "top", "--cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_ptr_null(params->cgroup_name);
++}
++END_TEST
++
++START_TEST(test_cgroup_long_space)
++{
++	PARSE_ARGS("osnoise", "top", "--cgroup", "cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_long_equals)
++{
++	PARSE_ARGS("osnoise", "top", "--cgroup=cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_priority_short)
++{
++	PARSE_ARGS("osnoise", "top", "-P", "f:95");
++
++	ck_assert_int_eq(params->sched_param.sched_policy, SCHED_FIFO);
++	ck_assert_int_eq(params->sched_param.sched_priority, 95);
++}
++END_TEST
++
++START_TEST(test_priority_long)
++{
++	PARSE_ARGS("osnoise", "top", "--priority", "f:95");
++
++	ck_assert_int_eq(params->sched_param.sched_policy, SCHED_FIFO);
++	ck_assert_int_eq(params->sched_param.sched_priority, 95);
++}
++END_TEST
++
++/* Output */
++
++START_TEST(test_quiet_short)
++{
++	PARSE_ARGS("osnoise", "top", "-q");
++
++	ck_assert(params->quiet);
++}
++END_TEST
++
++START_TEST(test_quiet_long)
++{
++	PARSE_ARGS("osnoise", "top", "--quiet");
++
++	ck_assert(params->quiet);
++}
++END_TEST
++
++/* Auto Analysis and Actions */
++
++START_TEST(test_auto)
++{
++	PARSE_ARGS("osnoise", "top", "-a", "20");
++
++	CLI_OSNOISE_ASSERT_AUTO(20);
++}
++END_TEST
++
++START_TEST(test_on_end)
++{
++	PARSE_ARGS("osnoise", "top", "--on-end", "trace");
++
++	CLI_ASSERT_SINGLE_ACTION(end_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++}
++END_TEST
++
++START_TEST(test_on_threshold)
++{
++	PARSE_ARGS("osnoise", "top", "--on-threshold", "trace");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "osnoise_trace.txt");
++}
++END_TEST
++
++/* System Tuning */
++
++START_TEST(test_trace_buffer_size)
++{
++	PARSE_ARGS("osnoise", "top", "--trace-buffer-size", "200");
++
++	ck_assert_int_eq(params->buffer_size, 200);
++}
++END_TEST
++
++START_TEST(test_warm_up)
++{
++	PARSE_ARGS("osnoise", "top", "--warm-up", "5");
++
++	ck_assert_int_eq(params->warmup, 5);
++}
++END_TEST
++
++/* General */
++
++START_TEST(test_debug_short)
++{
++	PARSE_ARGS("osnoise", "top", "-D");
++
++	ck_assert(config_debug);
++}
++END_TEST
++
++START_TEST(test_debug_long)
++{
++	PARSE_ARGS("osnoise", "top", "--debug");
++
++	ck_assert(config_debug);
++}
++END_TEST
++
++START_TEST(test_duration_short)
++{
++	PARSE_ARGS("osnoise", "top", "-d", "1m");
++
++	ck_assert_int_eq(params->duration, 60);
++}
++END_TEST
++
++START_TEST(test_duration_long)
++{
++	PARSE_ARGS("osnoise", "top", "--duration", "1m");
++
++	ck_assert_int_eq(params->duration, 60);
++}
++END_TEST
++
++Suite *osnoise_top_cli_suite(void)
++{
++	Suite *s = suite_create("osnoise_top_cli");
++	TCase *tc;
++
++	tc = tcase_create("tracing_options");
++	tcase_add_test(tc, test_period_short);
++	tcase_add_test(tc, test_period_long);
++	tcase_add_test(tc, test_runtime_short);
++	tcase_add_test(tc, test_runtime_long);
++	tcase_add_test(tc, test_stop_short);
++	tcase_add_test(tc, test_stop_long);
++	tcase_add_test(tc, test_stop_total_short);
++	tcase_add_test(tc, test_stop_total_long);
++	tcase_add_test(tc, test_threshold_short);
++	tcase_add_test(tc, test_threshold_long);
++	tcase_add_test(tc, test_trace_short_noarg);
++	tcase_add_test(tc, test_trace_short_followarg);
++	tcase_add_test(tc, test_trace_short_space);
++	tcase_add_test(tc, test_trace_short_equals);
++	tcase_add_test(tc, test_trace_long_noarg);
++	tcase_add_test(tc, test_trace_long_followarg);
++	tcase_add_test(tc, test_trace_long_space);
++	tcase_add_test(tc, test_trace_long_equals);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("event_configuration");
++	tcase_add_test(tc, test_event_short);
++	tcase_add_test(tc, test_event_long);
++	tcase_add_test(tc, test_filter);
++	tcase_add_test(tc, test_trigger);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("cpu_configuration");
++	tcase_add_test(tc, test_cpus_short);
++	tcase_add_test(tc, test_cpus_long);
++	tcase_add_test(tc, test_housekeeping_short);
++	tcase_add_test(tc, test_housekeeping_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("thread_configuration");
++	tcase_add_test(tc, test_cgroup_short_noarg);
++	tcase_add_test(tc, test_cgroup_short_space);
++	tcase_add_test(tc, test_cgroup_short_equals);
++	tcase_add_test(tc, test_cgroup_long_noarg);
++	tcase_add_test(tc, test_cgroup_long_space);
++	tcase_add_test(tc, test_cgroup_long_equals);
++	tcase_add_test(tc, test_priority_short);
++	tcase_add_test(tc, test_priority_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("output");
++	tcase_add_test(tc, test_quiet_short);
++	tcase_add_test(tc, test_quiet_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("system_tuning");
++	tcase_add_test(tc, test_trace_buffer_size);
++	tcase_add_test(tc, test_warm_up);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("aa_actions");
++	tcase_add_test(tc, test_auto);
++	tcase_add_test(tc, test_on_end);
++	tcase_add_test(tc, test_on_threshold);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("general");
++	tcase_add_test(tc, test_debug_short);
++	tcase_add_test(tc, test_debug_long);
++	tcase_add_test(tc, test_duration_short);
++	tcase_add_test(tc, test_duration_long);
++	suite_add_tcase(s, tc);
++
++	return s;
++}
+diff --git a/tools/tracing/rtla/tests/unit/timerlat_hist_cli.c b/tools/tracing/rtla/tests/unit/timerlat_hist_cli.c
 new file mode 100644
-index 000000000000..3cea4f6e976e
+index 000000000000..81dc04596cd1
 --- /dev/null
-+++ b/tools/tracing/rtla/src/cli_p.h
-@@ -0,0 +1,670 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#pragma once
++++ b/tools/tracing/rtla/tests/unit/timerlat_hist_cli.c
+@@ -0,0 +1,702 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+#ifndef RTLA_ALLOW_CLI_P_H
-+#error "Private header file included outside of cli.c module"
-+#endif
++#define _GNU_SOURCE
++#include <check.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sched.h>
++#include <limits.h>
++#include <unistd.h>
++#include <sys/sysinfo.h>
 +
-+#include <linux/kernel.h>
-+#include <subcmd/parse-options.h>
++#include <linux/container_of.h>
 +
-+#include "cli.h"
-+#include "osnoise.h"
-+#include "timerlat.h"
++#include "cli_params_assert.h"
++#include "../../src/cli.h"
 +
-+struct osnoise_cb_data {
-+	struct osnoise_params *params;
-+	char *trace_output;
-+};
++#define PARSE_ARGS(...) char *argv[] = { __VA_ARGS__, NULL  };\
++			int argc = sizeof(argv) / sizeof(char *) - 1;\
++			struct common_params *params =\
++				timerlat_hist_parse_args(argc, argv);\
++			struct timerlat_params *tlat_params __maybe_unused =\
++				to_timerlat_params(params)
 +
-+struct timerlat_cb_data {
-+	struct timerlat_params *params;
-+	char *trace_output;
-+};
++/* Tracing Options */
 +
-+/*
-+ * Macros for command line options common to all tools
-+ *
-+ * Note: Some of the options are common to both timerlat and osnoise, but
-+ * have a slightly different meaning. Such options take additional arguments
-+ * that have to be provided by the *_parse_args() function of the corresponding
-+ * tool.
-+ *
-+ * All macros defined here assume the presence of a params variable of
-+ * the corresponding tool type (i.e struct timerlat_params or struct osnoise_params)
-+ * and a cb_data variable of the matching type.
-+ */
-+
-+ #define RTLA_OPT_STOP(short, long, name) OPT_CALLBACK_FLAG(short, long, \
-+	&params->common.stop_us, \
-+	"us", \
-+	"stop trace if " name " is higher than the argument in us", \
-+	opt_llong_callback, PARSE_OPT_NOAUTONEG)
-+
-+#define RTLA_OPT_STOP_TOTAL(short, long, name) OPT_CALLBACK_FLAG(short, long, \
-+	&params->common.stop_total_us, \
-+	"us", \
-+	"stop trace if " name " is higher than the argument in us", \
-+	opt_llong_callback, PARSE_OPT_NOAUTONEG)
-+
-+#define RTLA_OPT_TRACE_OUTPUT(tracer, cb) OPT_CALLBACK_OPTARG('t', "trace", \
-+	(const char **)&cb_data.trace_output, \
-+	tracer "_trace.txt", \
-+	"[file]", \
-+	"save the stopped trace to [file|" tracer "_trace.txt]", \
-+	cb)
-+
-+#define RTLA_OPT_CPUS OPT_CALLBACK('c', "cpus", &params->common, \
-+	"cpu-list", \
-+	"run the tracer only on the given cpus", \
-+	opt_cpus_cb)
-+
-+#define RTLA_OPT_CGROUP OPT_CALLBACK_OPTARG('C', "cgroup", &params->common, \
-+	"[cgroup_name]", NULL, \
-+	"set cgroup, no argument means rtla's cgroup will be inherited", \
-+	opt_cgroup_cb)
-+
-+#define RTLA_OPT_USER_THREADS OPT_CALLBACK_NOOPT('u', "user-threads", params, NULL, \
-+	"use rtla user-space threads instead of kernel-space timerlat threads", \
-+	opt_user_threads_cb)
-+
-+#define RTLA_OPT_KERNEL_THREADS OPT_BOOLEAN('k', "kernel-threads", \
-+	&params->common.kernel_workload, \
-+	"use timerlat kernel-space threads instead of rtla user-space threads")
-+
-+#define RTLA_OPT_USER_LOAD OPT_BOOLEAN('U', "user-load", &params->common.user_data, \
-+	"enable timerlat for user-defined user-space workload")
-+
-+#define RTLA_OPT_DURATION OPT_CALLBACK('d', "duration", &params->common, \
-+	"time[s|m|h|d]", \
-+	"set the duration of the session", \
-+	opt_duration_cb)
-+
-+#define RTLA_OPT_EVENT OPT_CALLBACK('e', "event", &params->common.events, \
-+	"sys:event", \
-+	"enable the <sys:event> in the trace instance, multiple -e are allowed", \
-+	opt_event_cb)
-+
-+#define RTLA_OPT_HOUSEKEEPING OPT_CALLBACK('H', "house-keeping", &params->common, \
-+	"cpu-list", \
-+	"run rtla control threads only on the given cpus", \
-+	opt_housekeeping_cb)
-+
-+#define RTLA_OPT_PRIORITY OPT_CALLBACK('P', "priority", &params->common, \
-+	"o:prio|r:prio|f:prio|d:runtime:period", \
-+	"set scheduling parameters", \
-+	opt_priority_cb)
-+
-+#define RTLA_OPT_TRIGGER OPT_CALLBACK(0, "trigger", &params->common.events, \
-+	"trigger", \
-+	"enable a trace event trigger to the previous -e event", \
-+	opt_trigger_cb)
-+
-+#define RTLA_OPT_FILTER OPT_CALLBACK(0, "filter", &params->common.events, \
-+	"filter", \
-+	"enable a trace event filter to the previous -e event", \
-+	opt_filter_cb)
-+
-+#define RTLA_OPT_QUIET OPT_BOOLEAN('q', "quiet", &params->common.quiet, \
-+	"print only a summary at the end")
-+
-+#define RTLA_OPT_TRACE_BUFFER_SIZE OPT_CALLBACK(0, "trace-buffer-size", \
-+	&params->common.buffer_size, "kB", \
-+	"set the per-cpu trace buffer size in kB", \
-+	opt_int_callback)
-+
-+#define RTLA_OPT_WARM_UP OPT_CALLBACK(0, "warm-up", &params->common.warmup, "s", \
-+	"let the workload run for s seconds before collecting data", \
-+	opt_int_callback)
-+
-+#define RTLA_OPT_AUTO(cb) OPT_CALLBACK('a', "auto", &cb_data, "us", \
-+	"set automatic trace mode, stopping the session if argument in us sample is hit", \
-+	cb)
-+
-+#define RTLA_OPT_ON_THRESHOLD(threshold, cb) OPT_CALLBACK(0, "on-threshold", \
-+	&params->common.threshold_actions, \
-+	"action", \
-+	"define action to be executed at " threshold " threshold, multiple are allowed", \
-+	cb)
-+
-+#define RTLA_OPT_ON_END(cb) OPT_CALLBACK(0, "on-end", &params->common.end_actions, \
-+	"action", \
-+	"define action to be executed at measurement end, multiple are allowed", \
-+	cb)
-+
-+#define RTLA_OPT_DEBUG OPT_BOOLEAN('D', "debug", &config_debug, \
-+	"print debug info")
-+
-+/*
-+ * Common callback functions for command line options
-+ */
-+
-+static int opt_llong_callback(const struct option *opt, const char *arg, int unset)
++START_TEST(test_irq_short)
 +{
-+	long long *value = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-i", "20");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	*value = get_llong_from_str((char *)arg);
-+	return 0;
++	ck_assert_int_eq(params->stop_us, 20);
 +}
++END_TEST
 +
-+static int opt_int_callback(const struct option *opt, const char *arg, int unset)
++START_TEST(test_irq_long)
 +{
-+	int *value = opt->value;
++	PARSE_ARGS("timerlat", "hist", "--irq", "20");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	if (strtoi(arg, value))
-+		return -1;
-+
-+	return 0;
++	ck_assert_int_eq(params->stop_us, 20);
 +}
++END_TEST
 +
-+static int opt_cpus_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_period_short)
 +{
-+	struct common_params *params = opt->value;
-+	int retval;
++	PARSE_ARGS("timerlat", "hist", "-p", "200");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	retval = parse_cpu_set((char *)arg, &params->monitored_cpus);
-+	if (retval)
-+		fatal("Invalid -c cpu list");
-+	params->cpus = (char *)arg;
-+
-+	return 0;
++	ck_assert_int_eq(tlat_params->timerlat_period_us, 200);
 +}
++END_TEST
 +
-+static int opt_cgroup_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_period_long)
 +{
-+	struct common_params *params = opt->value;
++	PARSE_ARGS("timerlat", "hist", "--period", "200");
 +
-+	if (unset)
-+		return -1;
-+
-+	params->cgroup = 1;
-+	params->cgroup_name = (char *)arg;
-+	if (params->cgroup_name && params->cgroup_name[0] == '=')
-+		/* Allow -C=<cgroup_name> next to -C[ ]<cgroup_name> */
-+		++params->cgroup_name;
-+
-+	return 0;
++	ck_assert_int_eq(tlat_params->timerlat_period_us, 200);
 +}
++END_TEST
 +
-+static int opt_duration_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_stack_short)
 +{
-+	struct common_params *params = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-s", "20");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	params->duration = parse_seconds_duration((char *)arg);
-+	if (!params->duration)
-+		fatal("Invalid -d duration");
-+
-+	return 0;
++	ck_assert_int_eq(tlat_params->print_stack, 20);
 +}
++END_TEST
 +
-+static int opt_event_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_stack_long)
 +{
-+	struct trace_events **events = opt->value;
-+	struct trace_events *tevent;
++	PARSE_ARGS("timerlat", "hist", "--stack", "20");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	tevent = trace_event_alloc((char *)arg);
-+	if (!tevent)
-+		fatal("Error alloc trace event");
-+
-+	if (*events)
-+		tevent->next = *events;
-+	*events = tevent;
-+
-+	return 0;
++	ck_assert_int_eq(tlat_params->print_stack, 20);
 +}
++END_TEST
 +
-+static int opt_housekeeping_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_thread_short)
 +{
-+	struct common_params *params = opt->value;
-+	int retval;
++	PARSE_ARGS("timerlat", "hist", "-T", "20");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	params->hk_cpus = 1;
-+	retval = parse_cpu_set((char *)arg, &params->hk_cpu_set);
-+	if (retval)
-+		fatal("Error parsing house keeping CPUs");
-+
-+	return 0;
++	ck_assert_int_eq(params->stop_total_us, 20);
 +}
++END_TEST
 +
-+static int opt_priority_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_thread_long)
 +{
-+	struct common_params *params = opt->value;
-+	int retval;
++	PARSE_ARGS("timerlat", "hist", "--thread", "20");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	retval = parse_prio((char *)arg, &params->sched_param);
-+	if (retval == -1)
-+		fatal("Invalid -P priority");
-+	params->set_sched = 1;
-+
-+	return 0;
++	ck_assert_int_eq(params->stop_total_us, 20);
 +}
++END_TEST
 +
-+static int opt_trigger_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trace_short_noarg)
 +{
-+	struct trace_events **events = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-t");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	if (!*events)
-+		fatal("--trigger requires a previous -e");
-+
-+	trace_event_add_trigger(*events, (char *)arg);
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
 +}
++END_TEST
 +
-+static int opt_filter_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trace_short_followarg)
 +{
-+	struct trace_events **events = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-t", "-d", "20");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	if (!*events)
-+		fatal("--filter requires a previous -e");
-+
-+	trace_event_add_filter(*events, (char *)arg);
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++	ck_assert_int_eq(params->duration, 20); /* check if next argument is read correctly */
 +}
++END_TEST
 +
-+/*
-+ * Macros for command line options specific to osnoise
-+ */
-+#define OSNOISE_OPT_PERIOD OPT_CALLBACK('p', "period", &params->period, "us", \
-+	"osnoise period in us", \
-+	opt_osnoise_period_cb)
-+
-+#define OSNOISE_OPT_RUNTIME OPT_CALLBACK('r', "runtime", &params->runtime, "us", \
-+	"osnoise runtime in us", \
-+	opt_osnoise_runtime_cb)
-+
-+#define OSNOISE_OPT_THRESHOLD OPT_CALLBACK('T', "threshold", &params->threshold, "us", \
-+	"the minimum delta to be considered a noise", \
-+	opt_llong_callback)
-+
-+/*
-+ * Callback functions for command line options for osnoise tools
-+ */
-+
-+static int opt_osnoise_auto_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trace_short_space)
 +{
-+	struct osnoise_cb_data *cb_data = opt->value;
-+	struct osnoise_params *params = cb_data->params;
-+	long long auto_thresh;
++	PARSE_ARGS("timerlat", "hist", "-t", "tracefile");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	auto_thresh = get_llong_from_str((char *)arg);
-+	params->common.stop_us = auto_thresh;
-+	params->threshold = 1;
-+
-+	if (!cb_data->trace_output)
-+		cb_data->trace_output = "osnoise_trace.txt";
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
 +}
++END_TEST
 +
-+static int opt_osnoise_period_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trace_short_equals)
 +{
-+	unsigned long long *period = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-t=tracefile");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	*period = get_llong_from_str((char *)arg);
-+	if (*period > 10000000)
-+		fatal("Period longer than 10 s");
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
 +}
++END_TEST
 +
-+static int opt_osnoise_runtime_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trace_long_noarg)
 +{
-+	unsigned long long *runtime = opt->value;
++	PARSE_ARGS("timerlat", "hist", "--trace");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	*runtime = get_llong_from_str((char *)arg);
-+	if (*runtime < 100)
-+		fatal("Runtime shorter than 100 us");
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
 +}
++END_TEST
 +
-+static int opt_osnoise_trace_output_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trace_long_followarg)
 +{
-+	const char **trace_output = opt->value;
++	PARSE_ARGS("timerlat", "hist", "--trace", "-d", "20");
 +
-+	if (unset)
-+		return -1;
-+
-+	if (!arg) {
-+		*trace_output = "osnoise_trace.txt";
-+	} else {
-+		*trace_output = (char *)arg;
-+		if (*trace_output && (*trace_output)[0] == '=')
-+			/* Allow -t=<trace_output> next to -t[ ]<trace_output> */
-+			++*trace_output;
-+	}
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++	ck_assert_int_eq(params->duration, 20); /* check if next argument is read correctly */
 +}
++END_TEST
 +
-+static int opt_osnoise_on_threshold_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trace_long_space)
 +{
-+	struct actions *actions = opt->value;
-+	int retval;
++	PARSE_ARGS("timerlat", "hist", "--trace", "tracefile");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	retval = actions_parse(actions, (char *)arg, "osnoise_trace.txt");
-+	if (retval)
-+		fatal("Invalid action %s", arg);
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
 +}
++END_TEST
 +
-+static int opt_osnoise_on_end_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trace_long_equals)
 +{
-+	struct actions *actions = opt->value;
-+	int retval;
++	PARSE_ARGS("timerlat", "hist", "--trace=tracefile");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	retval = actions_parse(actions, (char *)arg, "osnoise_trace.txt");
-+	if (retval)
-+		fatal("Invalid action %s", arg);
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
 +}
++END_TEST
 +
-+/*
-+ * Macros for command line options specific to timerlat
-+ */
-+#define TIMERLAT_OPT_PERIOD OPT_CALLBACK('p', "period", &params->timerlat_period_us, "us", \
-+	"timerlat period in us", \
-+	opt_timerlat_period_cb)
++/* Event Configuration */
 +
-+#define TIMERLAT_OPT_STACK OPT_CALLBACK('s', "stack", &params->print_stack, "us", \
-+	"save the stack trace at the IRQ if a thread latency is higher than the argument in us", \
-+	opt_llong_callback)
-+
-+#define TIMERLAT_OPT_NANO OPT_CALLBACK_NOOPT('n', "nano", params, NULL, \
-+	"display data in nanoseconds", \
-+	opt_nano_cb)
-+
-+#define TIMERLAT_OPT_DMA_LATENCY OPT_CALLBACK(0, "dma-latency", &params->dma_latency, "us", \
-+	"set /dev/cpu_dma_latency latency <us> to reduce exit from idle latency", \
-+	opt_dma_latency_cb)
-+
-+#define TIMERLAT_OPT_DEEPEST_IDLE_STATE OPT_CALLBACK(0, "deepest-idle-state", \
-+	&params->deepest_idle_state, "n", \
-+	"only go down to idle state n on cpus used by timerlat to reduce exit from idle latency", \
-+	opt_int_callback)
-+
-+#define TIMERLAT_OPT_AA_ONLY OPT_CALLBACK(0, "aa-only", params, "us", \
-+	"stop if <us> latency is hit, only printing the auto analysis (reduces CPU usage)", \
-+	opt_aa_only_cb)
-+
-+#define TIMERLAT_OPT_NO_AA OPT_BOOLEAN(0, "no-aa", &params->no_aa, \
-+	"disable auto-analysis, reducing rtla timerlat cpu usage")
-+
-+#define TIMERLAT_OPT_DUMPS_TASKS OPT_BOOLEAN(0, "dump-tasks", &params->dump_tasks, \
-+	"prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)")
-+
-+#define TIMERLAT_OPT_BPF_ACTION OPT_STRING(0, "bpf-action", &params->bpf_action_program, \
-+	"program", \
-+	"load and execute BPF program when latency threshold is exceeded")
-+
-+#define TIMERLAT_OPT_STACK_FORMAT OPT_CALLBACK(0, "stack-format", &params->stack_format, "format", \
-+	"set the stack format (truncate, skip, full)", \
-+	opt_stack_format_cb)
-+
-+/*
-+ * Callback functions for command line options for timerlat tools
-+ */
-+
-+static int opt_timerlat_period_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_event_short)
 +{
-+	long long *period = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-e", "system:event");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	*period = get_llong_from_str((char *)arg);
-+	if (*period > 1000000)
-+		fatal("Period longer than 1 s");
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_EVENT("system", "event");
 +}
++END_TEST
 +
-+static int opt_timerlat_auto_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_event_long)
 +{
-+	struct timerlat_cb_data *cb_data = opt->value;
-+	struct timerlat_params *params = cb_data->params;
-+	long long auto_thresh;
++	PARSE_ARGS("timerlat", "hist", "--event", "system:event");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	auto_thresh = get_llong_from_str((char *)arg);
-+	params->common.stop_total_us = auto_thresh;
-+	params->common.stop_us = auto_thresh;
-+	params->print_stack = auto_thresh;
-+
-+	if (!cb_data->trace_output)
-+		cb_data->trace_output = "timerlat_trace.txt";
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_EVENT("system", "event");
 +}
++END_TEST
 +
-+static int opt_dma_latency_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_filter)
 +{
-+	int *dma_latency = opt->value;
-+	int retval;
++	PARSE_ARGS("timerlat", "hist", "-e", "system:event", "--filter", "filter");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	retval = strtoi((char *)arg, dma_latency);
-+	if (retval)
-+		fatal("Invalid -dma-latency %s", arg);
-+	if (*dma_latency < 0 || *dma_latency > 10000)
-+		fatal("--dma-latency needs to be >= 0 and <= 10000");
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_FILTER("filter");
 +}
++END_TEST
 +
-+static int opt_aa_only_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_trigger)
 +{
-+	struct timerlat_params *params = opt->value;
-+	long long auto_thresh;
++	PARSE_ARGS("timerlat", "hist", "-e", "system:event", "--trigger", "trigger");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	auto_thresh = get_llong_from_str((char *)arg);
-+	params->common.stop_total_us = auto_thresh;
-+	params->common.stop_us = auto_thresh;
-+	params->print_stack = auto_thresh;
-+	params->common.aa_only = 1;
-+
-+	return 0;
++	CLI_ASSERT_SINGLE_TRIGGER("trigger");
 +}
++END_TEST
 +
-+static int opt_timerlat_trace_output_cb(const struct option *opt, const char *arg, int unset)
++/* CPU Configuration */
++
++START_TEST(test_cpus_short)
 +{
-+	const char **trace_output = opt->value;
++	nr_cpus = 4;
 +
-+	if (unset)
-+		return -1;
++	PARSE_ARGS("timerlat", "hist", "-c", "0-1,3");
 +
-+	if (!arg) {
-+		*trace_output = "timerlat_trace.txt";
-+	} else {
-+		*trace_output = (char *)arg;
-+		if (*trace_output && (*trace_output)[0] == '=')
-+			/* Allow -t=<trace_output> next to -t[ ]<trace_output> */
-+			++*trace_output;
-+	}
-+
-+	return 0;
++	ck_assert_str_eq(params->cpus, "0-1,3");
++	CLI_ASSERT_CPUSET(monitored_cpus, 0, 1, 3);
 +}
++END_TEST
 +
-+static int opt_timerlat_on_threshold_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_cpus_long)
 +{
-+	struct actions *actions = opt->value;
-+	int retval;
++	nr_cpus = 4;
 +
-+	if (unset || !arg)
-+		return -1;
++	PARSE_ARGS("timerlat", "hist", "--cpus", "0-1,3");
 +
-+	retval = actions_parse(actions, (char *)arg, "timerlat_trace.txt");
-+	if (retval)
-+		fatal("Invalid action %s", arg);
-+
-+	return 0;
++	ck_assert_str_eq(params->cpus, "0-1,3");
++	CLI_ASSERT_CPUSET(monitored_cpus, 0, 1, 3);
 +}
++END_TEST
 +
-+static int opt_timerlat_on_end_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_housekeeping_short)
 +{
-+	struct actions *actions = opt->value;
-+	int retval;
++	nr_cpus = 4;
 +
-+	if (unset || !arg)
-+		return -1;
++	PARSE_ARGS("timerlat", "hist", "-H", "0-1,3");
 +
-+	retval = actions_parse(actions, (char *)arg, "timerlat_trace.txt");
-+	if (retval)
-+		fatal("Invalid action %s", arg);
-+
-+	return 0;
++	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 3);
 +}
++END_TEST
 +
-+static int opt_user_threads_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_housekeeping_long)
 +{
-+	struct timerlat_params *params = opt->value;
++	nr_cpus = 4;
 +
-+	if (unset)
-+		return -1;
++	PARSE_ARGS("timerlat", "hist", "--house-keeping", "0-1,3");
 +
-+	params->common.user_workload = true;
-+	params->common.user_data = true;
-+
-+	return 0;
++	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 3);
 +}
++END_TEST
 +
-+static int opt_nano_cb(const struct option *opt, const char *arg, int unset)
++/* Thread Configuration */
++
++START_TEST(test_cgroup_short_noarg)
 +{
-+	struct timerlat_params *params = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-C");
 +
-+	if (unset)
-+		return -1;
-+
-+	params->common.output_divisor = 1;
-+
-+	return 0;
++	ck_assert(params->cgroup);
++	ck_assert_ptr_null(params->cgroup_name);
 +}
++END_TEST
 +
-+static int opt_stack_format_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_cgroup_short_space)
 +{
-+	int *format = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-C", "cgroup");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	*format = parse_stack_format((char *)arg);
-+
-+	if (*format == -1)
-+		fatal("Invalid --stack-format option");
-+
-+	return 0;
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
 +}
++END_TEST
 +
-+/*
-+ * Macros for command line options specific to histogram-based tools
-+ */
-+
-+#define HIST_OPT_BUCKET_SIZE OPT_CALLBACK('b', "bucket-size", \
-+	&params->common.hist.bucket_size, "N", \
-+	"set the histogram bucket size (default 1)", \
-+	opt_bucket_size_cb)
-+
-+#define HIST_OPT_ENTRIES OPT_CALLBACK('E', "entries", &params->common.hist.entries, "N", \
-+	"set the number of entries of the histogram (default 256)", \
-+	opt_entries_cb)
-+
-+#define HIST_OPT_NO_IRQ OPT_BOOLEAN_FLAG(0, "no-irq", &params->common.hist.no_irq, \
-+	"ignore IRQ latencies", PARSE_OPT_NOAUTONEG)
-+
-+#define HIST_OPT_NO_THREAD OPT_BOOLEAN_FLAG(0, "no-thread", &params->common.hist.no_thread, \
-+	"ignore thread latencies", PARSE_OPT_NOAUTONEG)
-+
-+#define HIST_OPT_NO_HEADER OPT_BOOLEAN(0, "no-header", &params->common.hist.no_header, \
-+	"do not print header")
-+
-+#define HIST_OPT_NO_SUMMARY OPT_BOOLEAN(0, "no-summary", &params->common.hist.no_summary, \
-+	"do not print summary")
-+
-+#define HIST_OPT_NO_INDEX OPT_BOOLEAN(0, "no-index", &params->common.hist.no_index, \
-+	"do not print index")
-+
-+#define HIST_OPT_WITH_ZEROS OPT_BOOLEAN(0, "with-zeros", &params->common.hist.with_zeros, \
-+	"print zero only entries")
-+
-+/* Histogram-specific callbacks */
-+
-+static int opt_bucket_size_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_cgroup_short_equals)
 +{
-+	int *bucket_size = opt->value;
++	PARSE_ARGS("timerlat", "hist", "-C=cgroup");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	*bucket_size = get_llong_from_str((char *)arg);
-+	if (*bucket_size == 0 || *bucket_size >= 1000000)
-+		fatal("Bucket size needs to be > 0 and <= 1000000");
-+
-+	return 0;
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
 +}
++END_TEST
 +
-+static int opt_entries_cb(const struct option *opt, const char *arg, int unset)
++START_TEST(test_cgroup_long_noarg)
 +{
-+	int *entries = opt->value;
++	PARSE_ARGS("timerlat", "hist", "--cgroup");
 +
-+	if (unset || !arg)
-+		return -1;
-+
-+	*entries = get_llong_from_str((char *)arg);
-+	if (*entries < 10 || *entries > 9999999)
-+		fatal("Entries must be > 10 and < 10000000");
-+
-+	return 0;
++	ck_assert(params->cgroup);
++	ck_assert_ptr_null(params->cgroup_name);
 +}
-diff --git a/tools/tracing/rtla/src/common.c b/tools/tracing/rtla/src/common.c
-index effad523e8cf..d0a8a6edbf0c 100644
---- a/tools/tracing/rtla/src/common.c
-+++ b/tools/tracing/rtla/src/common.c
-@@ -5,7 +5,6 @@
- #include <signal.h>
- #include <stdlib.h>
- #include <string.h>
--#include <getopt.h>
- #include <sys/sysinfo.h>
++END_TEST
++
++START_TEST(test_cgroup_long_space)
++{
++	PARSE_ARGS("timerlat", "hist", "--cgroup", "cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_long_equals)
++{
++	PARSE_ARGS("timerlat", "hist", "--cgroup=cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_kernel_threads_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-k");
++
++	ck_assert(params->kernel_workload);
++	ck_assert(!params->user_workload);
++	ck_assert(!params->user_data);
++}
++END_TEST
++
++START_TEST(test_kernel_threads_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--kernel-threads");
++
++	ck_assert(params->kernel_workload);
++	ck_assert(!params->user_workload);
++	ck_assert(!params->user_data);
++}
++END_TEST
++
++START_TEST(test_priority_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-P", "f:95");
++
++	ck_assert_int_eq(params->sched_param.sched_policy, SCHED_FIFO);
++	ck_assert_int_eq(params->sched_param.sched_priority, 95);
++}
++END_TEST
++
++START_TEST(test_priority_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--priority", "f:95");
++
++	ck_assert_int_eq(params->sched_param.sched_policy, SCHED_FIFO);
++	ck_assert_int_eq(params->sched_param.sched_priority, 95);
++}
++END_TEST
++
++START_TEST(test_user_load_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-U");
++
++	ck_assert(!params->kernel_workload);
++	ck_assert(!params->user_workload);
++	ck_assert(params->user_data);
++}
++END_TEST
++
++START_TEST(test_user_load_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--user-load");
++
++	ck_assert(!params->kernel_workload);
++	ck_assert(!params->user_workload);
++	ck_assert(params->user_data);
++}
++END_TEST
++
++START_TEST(test_user_threads_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-u");
++
++	ck_assert(!params->kernel_workload);
++	ck_assert(params->user_workload);
++	ck_assert(params->user_data);
++}
++END_TEST
++
++START_TEST(test_user_threads_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--user-threads");
++
++	ck_assert(!params->kernel_workload);
++	ck_assert(params->user_workload);
++	ck_assert(params->user_data);
++}
++END_TEST
++
++/* Histogram Options */
++
++START_TEST(test_bucket_size_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-b", "2");
++
++	ck_assert_int_eq(params->hist.bucket_size, 2);
++}
++END_TEST
++
++START_TEST(test_bucket_size_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--bucket-size", "2");
++
++	ck_assert_int_eq(params->hist.bucket_size, 2);
++}
++END_TEST
++
++START_TEST(test_entries_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-E", "512");
++
++	ck_assert_int_eq(params->hist.entries, 512);
++}
++END_TEST
++
++START_TEST(test_entries_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--entries", "512");
++
++	ck_assert_int_eq(params->hist.entries, 512);
++}
++END_TEST
++
++START_TEST(test_no_header)
++{
++	PARSE_ARGS("timerlat", "hist", "--no-header");
++
++	ck_assert(params->hist.no_header);
++}
++END_TEST
++
++START_TEST(test_no_index)
++{
++	PARSE_ARGS("timerlat", "hist", "--with-zeros", "--no-index");
++
++	ck_assert(params->hist.no_index);
++}
++END_TEST
++
++START_TEST(test_no_irq)
++{
++	PARSE_ARGS("timerlat", "hist", "--no-irq");
++
++	ck_assert(params->hist.no_irq);
++}
++END_TEST
++
++START_TEST(test_no_summary)
++{
++	PARSE_ARGS("timerlat", "hist", "--no-summary");
++
++	ck_assert(params->hist.no_summary);
++}
++END_TEST
++
++START_TEST(test_no_thread)
++{
++	PARSE_ARGS("timerlat", "hist", "--no-thread");
++
++	ck_assert(params->hist.no_thread);
++}
++END_TEST
++
++START_TEST(test_with_zeros)
++{
++	PARSE_ARGS("timerlat", "hist", "--with-zeros");
++
++	ck_assert(params->hist.with_zeros);
++}
++END_TEST
++
++/* Output */
++
++START_TEST(test_nano_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-n");
++
++	ck_assert_int_eq(params->output_divisor, 1);
++}
++END_TEST
++
++START_TEST(test_nano_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--nano");
++
++	ck_assert_int_eq(params->output_divisor, 1);
++}
++END_TEST
++
++/* System Tuning */
++
++START_TEST(test_deepest_idle_state)
++{
++	PARSE_ARGS("timerlat", "hist", "--deepest-idle-state", "1");
++
++	ck_assert_int_eq(tlat_params->deepest_idle_state, 1);
++}
++END_TEST
++
++START_TEST(test_dma_latency)
++{
++	PARSE_ARGS("timerlat", "hist", "--dma-latency", "10");
++
++	ck_assert_int_eq(tlat_params->dma_latency, 10);
++}
++END_TEST
++
++START_TEST(test_trace_buffer_size)
++{
++	PARSE_ARGS("timerlat", "hist", "--trace-buffer-size", "200");
++
++	ck_assert_int_eq(params->buffer_size, 200);
++}
++END_TEST
++
++START_TEST(test_warm_up)
++{
++	PARSE_ARGS("timerlat", "hist", "--warm-up", "5");
++
++	ck_assert_int_eq(params->warmup, 5);
++}
++END_TEST
++
++/* Auto Analysis and Actions */
++
++START_TEST(test_auto)
++{
++	PARSE_ARGS("timerlat", "hist", "-a", "20");
++
++	CLI_TIMERLAT_ASSERT_AUTO(20);
++}
++END_TEST
++
++START_TEST(test_bpf_action)
++{
++	PARSE_ARGS("timerlat", "hist", "--bpf-action", "program");
++
++	ck_assert_str_eq(tlat_params->bpf_action_program, "program");
++}
++END_TEST
++
++START_TEST(test_dump_tasks)
++{
++	PARSE_ARGS("timerlat", "hist", "--dump-tasks");
++
++	ck_assert(tlat_params->dump_tasks);
++}
++END_TEST
++
++START_TEST(test_no_aa)
++{
++	PARSE_ARGS("timerlat", "hist", "--no-aa");
++
++	ck_assert(tlat_params->no_aa);
++}
++END_TEST
++
++START_TEST(test_on_end)
++{
++	PARSE_ARGS("timerlat", "hist", "--on-end", "trace");
++
++	CLI_ASSERT_SINGLE_ACTION(end_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++}
++END_TEST
++
++START_TEST(test_on_threshold)
++{
++	PARSE_ARGS("timerlat", "hist", "--on-threshold", "trace");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++}
++END_TEST
++
++START_TEST(test_stack_format)
++{
++	PARSE_ARGS("timerlat", "hist", "--stack-format", "truncate");
++
++	ck_assert_int_eq(tlat_params->stack_format, STACK_FORMAT_TRUNCATE);
++}
++END_TEST
++
++/* General */
++
++START_TEST(test_debug_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-D");
++
++	ck_assert(config_debug);
++}
++END_TEST
++
++START_TEST(test_debug_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--debug");
++
++	ck_assert(config_debug);
++}
++END_TEST
++
++START_TEST(test_duration_short)
++{
++	PARSE_ARGS("timerlat", "hist", "-d", "1m");
++
++	ck_assert_int_eq(params->duration, 60);
++}
++END_TEST
++
++START_TEST(test_duration_long)
++{
++	PARSE_ARGS("timerlat", "hist", "--duration", "1m");
++
++	ck_assert_int_eq(params->duration, 60);
++}
++END_TEST
++
++Suite *timerlat_hist_cli_suite(void)
++{
++	Suite *s = suite_create("timerlat_hist_cli");
++	TCase *tc;
++
++	tc = tcase_create("tracing_options");
++	tcase_add_test(tc, test_irq_short);
++	tcase_add_test(tc, test_irq_long);
++	tcase_add_test(tc, test_period_short);
++	tcase_add_test(tc, test_period_long);
++	tcase_add_test(tc, test_stack_short);
++	tcase_add_test(tc, test_stack_long);
++	tcase_add_test(tc, test_thread_short);
++	tcase_add_test(tc, test_thread_long);
++	tcase_add_test(tc, test_trace_short_noarg);
++	tcase_add_test(tc, test_trace_short_followarg);
++	tcase_add_test(tc, test_trace_short_space);
++	tcase_add_test(tc, test_trace_short_equals);
++	tcase_add_test(tc, test_trace_long_noarg);
++	tcase_add_test(tc, test_trace_long_followarg);
++	tcase_add_test(tc, test_trace_long_space);
++	tcase_add_test(tc, test_trace_long_equals);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("event_configuration");
++	tcase_add_test(tc, test_event_short);
++	tcase_add_test(tc, test_event_long);
++	tcase_add_test(tc, test_filter);
++	tcase_add_test(tc, test_trigger);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("cpu_configuration");
++	tcase_add_test(tc, test_cpus_short);
++	tcase_add_test(tc, test_cpus_long);
++	tcase_add_test(tc, test_housekeeping_short);
++	tcase_add_test(tc, test_housekeeping_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("thread_configuration");
++	tcase_add_test(tc, test_cgroup_short_noarg);
++	tcase_add_test(tc, test_cgroup_short_space);
++	tcase_add_test(tc, test_cgroup_short_equals);
++	tcase_add_test(tc, test_cgroup_long_noarg);
++	tcase_add_test(tc, test_cgroup_long_space);
++	tcase_add_test(tc, test_cgroup_long_equals);
++	tcase_add_test(tc, test_kernel_threads_short);
++	tcase_add_test(tc, test_kernel_threads_long);
++	tcase_add_test(tc, test_priority_short);
++	tcase_add_test(tc, test_priority_long);
++	tcase_add_test(tc, test_user_load_short);
++	tcase_add_test(tc, test_user_load_long);
++	tcase_add_test(tc, test_user_threads_short);
++	tcase_add_test(tc, test_user_threads_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("histogram_options");
++	tcase_add_test(tc, test_bucket_size_short);
++	tcase_add_test(tc, test_bucket_size_long);
++	tcase_add_test(tc, test_entries_short);
++	tcase_add_test(tc, test_entries_long);
++	tcase_add_test(tc, test_no_header);
++	tcase_add_test(tc, test_no_index);
++	tcase_add_test(tc, test_no_irq);
++	tcase_add_test(tc, test_no_summary);
++	tcase_add_test(tc, test_no_thread);
++	tcase_add_test(tc, test_with_zeros);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("output");
++	tcase_add_test(tc, test_nano_short);
++	tcase_add_test(tc, test_nano_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("system_tuning");
++	tcase_add_test(tc, test_deepest_idle_state);
++	tcase_add_test(tc, test_dma_latency);
++	tcase_add_test(tc, test_trace_buffer_size);
++	tcase_add_test(tc, test_warm_up);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("aa_actions");
++	tcase_add_test(tc, test_auto);
++	tcase_add_test(tc, test_bpf_action);
++	tcase_add_test(tc, test_dump_tasks);
++	tcase_add_test(tc, test_no_aa);
++	tcase_add_test(tc, test_on_end);
++	tcase_add_test(tc, test_on_threshold);
++	tcase_add_test(tc, test_stack_format);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("general");
++	tcase_add_test(tc, test_debug_short);
++	tcase_add_test(tc, test_debug_long);
++	tcase_add_test(tc, test_duration_short);
++	tcase_add_test(tc, test_duration_long);
++	suite_add_tcase(s, tc);
++
++	return s;
++}
+diff --git a/tools/tracing/rtla/tests/unit/timerlat_top_cli.c b/tools/tracing/rtla/tests/unit/timerlat_top_cli.c
+new file mode 100644
+index 000000000000..1c39008564c5
+--- /dev/null
++++ b/tools/tracing/rtla/tests/unit/timerlat_top_cli.c
+@@ -0,0 +1,634 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#define _GNU_SOURCE
++#include <check.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sched.h>
++#include <limits.h>
++#include <unistd.h>
++#include <sys/sysinfo.h>
++
++#include <linux/container_of.h>
++
++#include "cli_params_assert.h"
++#include "../../src/cli.h"
++
++#define PARSE_ARGS(...) char *argv[] = { __VA_ARGS__, NULL  };\
++			int argc = sizeof(argv) / sizeof(char *) - 1;\
++			struct common_params *params =\
++				timerlat_top_parse_args(argc, argv);\
++			struct timerlat_params *tlat_params __maybe_unused =\
++				to_timerlat_params(params)
++
++/* Tracing Options */
++
++START_TEST(test_irq_short)
++{
++	PARSE_ARGS("timerlat", "top", "-i", "20");
++
++	ck_assert_int_eq(params->stop_us, 20);
++}
++END_TEST
++
++START_TEST(test_irq_long)
++{
++	PARSE_ARGS("timerlat", "top", "--irq", "20");
++
++	ck_assert_int_eq(params->stop_us, 20);
++}
++END_TEST
++
++START_TEST(test_period_short)
++{
++	PARSE_ARGS("timerlat", "top", "-p", "200");
++
++	ck_assert_int_eq(tlat_params->timerlat_period_us, 200);
++}
++END_TEST
++
++START_TEST(test_period_long)
++{
++	PARSE_ARGS("timerlat", "top", "--period", "200");
++
++	ck_assert_int_eq(tlat_params->timerlat_period_us, 200);
++}
++END_TEST
++
++START_TEST(test_stack_short)
++{
++	PARSE_ARGS("timerlat", "top", "-s", "20");
++
++	ck_assert_int_eq(tlat_params->print_stack, 20);
++}
++END_TEST
++
++START_TEST(test_stack_long)
++{
++	PARSE_ARGS("timerlat", "top", "--stack", "20");
++
++	ck_assert_int_eq(tlat_params->print_stack, 20);
++}
++END_TEST
++
++START_TEST(test_thread_short)
++{
++	PARSE_ARGS("timerlat", "top", "-T", "20");
++
++	ck_assert_int_eq(params->stop_total_us, 20);
++}
++END_TEST
++
++START_TEST(test_thread_long)
++{
++	PARSE_ARGS("timerlat", "top", "--thread", "20");
++
++	ck_assert_int_eq(params->stop_total_us, 20);
++}
++END_TEST
++
++/* Event Configuration */
++
++START_TEST(test_event_short)
++{
++	PARSE_ARGS("timerlat", "top", "-e", "system:event");
++
++	CLI_ASSERT_SINGLE_EVENT("system", "event");
++}
++END_TEST
++
++START_TEST(test_event_long)
++{
++	PARSE_ARGS("timerlat", "top", "--event", "system:event");
++
++	CLI_ASSERT_SINGLE_EVENT("system", "event");
++}
++END_TEST
++
++START_TEST(test_filter)
++{
++	PARSE_ARGS("timerlat", "top", "-e", "system:event", "--filter", "filter");
++
++	CLI_ASSERT_SINGLE_FILTER("filter");
++}
++END_TEST
++
++START_TEST(test_trigger)
++{
++	PARSE_ARGS("timerlat", "top", "-e", "system:event", "--trigger", "trigger");
++
++	CLI_ASSERT_SINGLE_TRIGGER("trigger");
++}
++END_TEST
++
++START_TEST(test_trace_short_noarg)
++{
++	PARSE_ARGS("timerlat", "top", "-t");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++}
++END_TEST
++
++START_TEST(test_trace_short_followarg)
++{
++	PARSE_ARGS("timerlat", "top", "-t", "-d", "20");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++	ck_assert_int_eq(params->duration, 20); /* check if next argument is read correctly */
++}
++END_TEST
++
++START_TEST(test_trace_short_space)
++{
++	PARSE_ARGS("timerlat", "top", "-t", "tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_short_equals)
++{
++	PARSE_ARGS("timerlat", "top", "-t=tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_long_noarg)
++{
++	PARSE_ARGS("timerlat", "top", "--trace");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++}
++END_TEST
++
++START_TEST(test_trace_long_followarg)
++{
++	PARSE_ARGS("timerlat", "top", "--trace", "-d", "20");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++	ck_assert_int_eq(params->duration, 20); /* check if next argument is read correctly */
++}
++END_TEST
++
++START_TEST(test_trace_long_space)
++{
++	PARSE_ARGS("timerlat", "top", "--trace", "tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++START_TEST(test_trace_long_equals)
++{
++	PARSE_ARGS("timerlat", "top", "--trace=tracefile");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "tracefile");
++}
++END_TEST
++
++/* CPU Configuration */
++
++START_TEST(test_cpus_short)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("timerlat", "top", "-c", "0-1,3");
++
++	ck_assert_str_eq(params->cpus, "0-1,3");
++	CLI_ASSERT_CPUSET(monitored_cpus, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_cpus_long)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("timerlat", "top", "--cpus", "0-1,3");
++
++	ck_assert_str_eq(params->cpus, "0-1,3");
++	CLI_ASSERT_CPUSET(monitored_cpus, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_housekeeping_short)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("timerlat", "top", "-H", "0-1,3");
++
++	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 3);
++}
++END_TEST
++
++START_TEST(test_housekeeping_long)
++{
++	nr_cpus = 4;
++
++	PARSE_ARGS("timerlat", "top", "--house-keeping", "0-1,3");
++
++	CLI_ASSERT_CPUSET(hk_cpu_set, 0, 1, 3);
++}
++END_TEST
++
++/* Thread Configuration */
++
++START_TEST(test_cgroup_short_noarg)
++{
++	PARSE_ARGS("timerlat", "top", "-C");
++
++	ck_assert(params->cgroup);
++	ck_assert_ptr_null(params->cgroup_name);
++}
++END_TEST
++
++START_TEST(test_cgroup_short_space)
++{
++	PARSE_ARGS("timerlat", "top", "-C", "cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_short_equals)
++{
++	PARSE_ARGS("timerlat", "top", "-C=cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_long_noarg)
++{
++	PARSE_ARGS("timerlat", "top", "--cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_ptr_null(params->cgroup_name);
++}
++END_TEST
++
++START_TEST(test_cgroup_long_space)
++{
++	PARSE_ARGS("timerlat", "top", "--cgroup", "cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_cgroup_long_equals)
++{
++	PARSE_ARGS("timerlat", "top", "--cgroup=cgroup");
++
++	ck_assert(params->cgroup);
++	ck_assert_str_eq(params->cgroup_name, "cgroup");
++}
++END_TEST
++
++START_TEST(test_kernel_threads_short)
++{
++	PARSE_ARGS("timerlat", "top", "-k");
++
++	ck_assert(params->kernel_workload);
++	ck_assert(!params->user_workload);
++	ck_assert(!params->user_data);
++}
++END_TEST
++
++START_TEST(test_kernel_threads_long)
++{
++	PARSE_ARGS("timerlat", "top", "--kernel-threads");
++
++	ck_assert(params->kernel_workload);
++	ck_assert(!params->user_workload);
++	ck_assert(!params->user_data);
++}
++END_TEST
++
++START_TEST(test_priority_short)
++{
++	PARSE_ARGS("timerlat", "top", "-P", "f:95");
++
++	ck_assert_int_eq(params->sched_param.sched_policy, SCHED_FIFO);
++	ck_assert_int_eq(params->sched_param.sched_priority, 95);
++}
++END_TEST
++
++START_TEST(test_priority_long)
++{
++	PARSE_ARGS("timerlat", "top", "--priority", "f:95");
++
++	ck_assert_int_eq(params->sched_param.sched_policy, SCHED_FIFO);
++	ck_assert_int_eq(params->sched_param.sched_priority, 95);
++}
++END_TEST
++
++START_TEST(test_user_load_short)
++{
++	PARSE_ARGS("timerlat", "top", "-U");
++
++	ck_assert(!params->kernel_workload);
++	ck_assert(!params->user_workload);
++	ck_assert(params->user_data);
++}
++END_TEST
++
++START_TEST(test_user_load_long)
++{
++	PARSE_ARGS("timerlat", "top", "--user-load");
++
++	ck_assert(!params->kernel_workload);
++	ck_assert(!params->user_workload);
++	ck_assert(params->user_data);
++}
++END_TEST
++
++START_TEST(test_user_threads_short)
++{
++	PARSE_ARGS("timerlat", "top", "-u");
++
++	ck_assert(!params->kernel_workload);
++	ck_assert(params->user_workload);
++	ck_assert(params->user_data);
++}
++END_TEST
++
++START_TEST(test_user_threads_long)
++{
++	PARSE_ARGS("timerlat", "top", "--user-threads");
++
++	ck_assert(!params->kernel_workload);
++	ck_assert(params->user_workload);
++	ck_assert(params->user_data);
++}
++END_TEST
++
++/* Output */
++
++START_TEST(test_nano_short)
++{
++	PARSE_ARGS("timerlat", "top", "-n");
++
++	ck_assert_int_eq(params->output_divisor, 1);
++}
++END_TEST
++
++START_TEST(test_nano_long)
++{
++	PARSE_ARGS("timerlat", "top", "--nano");
++
++	ck_assert_int_eq(params->output_divisor, 1);
++}
++END_TEST
++
++START_TEST(test_quiet_short)
++{
++	PARSE_ARGS("timerlat", "top", "-q");
++
++	ck_assert(params->quiet);
++}
++END_TEST
++
++START_TEST(test_quiet_long)
++{
++	PARSE_ARGS("timerlat", "top", "--quiet");
++
++	ck_assert(params->quiet);
++}
++END_TEST
++
++/* System Tuning */
++
++START_TEST(test_deepest_idle_state)
++{
++	PARSE_ARGS("timerlat", "top", "--deepest-idle-state", "1");
++
++	ck_assert_int_eq(tlat_params->deepest_idle_state, 1);
++}
++END_TEST
++
++START_TEST(test_dma_latency)
++{
++	PARSE_ARGS("timerlat", "top", "--dma-latency", "10");
++
++	ck_assert_int_eq(tlat_params->dma_latency, 10);
++}
++END_TEST
++
++START_TEST(test_trace_buffer_size)
++{
++	PARSE_ARGS("timerlat", "top", "--trace-buffer-size", "200");
++
++	ck_assert_int_eq(params->buffer_size, 200);
++}
++END_TEST
++
++START_TEST(test_warm_up)
++{
++	PARSE_ARGS("timerlat", "top", "--warm-up", "5");
++
++	ck_assert_int_eq(params->warmup, 5);
++}
++END_TEST
++
++/* Auto Analysis and Actions */
++
++START_TEST(test_auto)
++{
++	PARSE_ARGS("timerlat", "top", "-a", "20");
++
++	CLI_TIMERLAT_ASSERT_AUTO(20);
++}
++END_TEST
++
++START_TEST(test_aa_only)
++{
++	PARSE_ARGS("timerlat", "top", "--aa-only", "20");
++
++	CLI_TIMERLAT_ASSERT_AA_ONLY(20);
++}
++END_TEST
++
++START_TEST(test_bpf_action)
++{
++	PARSE_ARGS("timerlat", "top", "--bpf-action", "program");
++
++	ck_assert_str_eq(tlat_params->bpf_action_program, "program");
++}
++END_TEST
++
++START_TEST(test_dump_tasks)
++{
++	PARSE_ARGS("timerlat", "top", "--dump-tasks");
++
++	ck_assert(tlat_params->dump_tasks);
++}
++END_TEST
++
++START_TEST(test_no_aa)
++{
++	PARSE_ARGS("timerlat", "top", "--no-aa");
++
++	ck_assert(tlat_params->no_aa);
++}
++END_TEST
++
++START_TEST(test_on_end)
++{
++	PARSE_ARGS("timerlat", "top", "--on-end", "trace");
++
++	CLI_ASSERT_SINGLE_ACTION(end_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++}
++END_TEST
++
++START_TEST(test_on_threshold)
++{
++	PARSE_ARGS("timerlat", "top", "--on-threshold", "trace");
++
++	CLI_ASSERT_SINGLE_ACTION(threshold_actions, ACTION_TRACE_OUTPUT, trace_output, str,
++				 "timerlat_trace.txt");
++}
++END_TEST
++
++START_TEST(test_stack_format)
++{
++	PARSE_ARGS("timerlat", "top", "--stack-format", "truncate");
++
++	ck_assert_int_eq(tlat_params->stack_format, STACK_FORMAT_TRUNCATE);
++}
++END_TEST
++
++/* General */
++
++START_TEST(test_debug_short)
++{
++	PARSE_ARGS("timerlat", "top", "-D");
++
++	ck_assert(config_debug);
++}
++END_TEST
++
++START_TEST(test_debug_long)
++{
++	PARSE_ARGS("timerlat", "top", "--debug");
++
++	ck_assert(config_debug);
++}
++END_TEST
++
++START_TEST(test_duration_short)
++{
++	PARSE_ARGS("timerlat", "top", "-d", "1m");
++
++	ck_assert_int_eq(params->duration, 60);
++}
++END_TEST
++
++START_TEST(test_duration_long)
++{
++	PARSE_ARGS("timerlat", "top", "--duration", "1m");
++
++	ck_assert_int_eq(params->duration, 60);
++}
++END_TEST
++
++Suite *timerlat_top_cli_suite(void)
++{
++	Suite *s = suite_create("timerlat_top_cli");
++	TCase *tc;
++
++	tc = tcase_create("tracing_options");
++	tcase_add_test(tc, test_irq_short);
++	tcase_add_test(tc, test_irq_long);
++	tcase_add_test(tc, test_period_short);
++	tcase_add_test(tc, test_period_long);
++	tcase_add_test(tc, test_stack_short);
++	tcase_add_test(tc, test_stack_long);
++	tcase_add_test(tc, test_thread_short);
++	tcase_add_test(tc, test_thread_long);
++	tcase_add_test(tc, test_trace_short_noarg);
++	tcase_add_test(tc, test_trace_short_followarg);
++	tcase_add_test(tc, test_trace_short_space);
++	tcase_add_test(tc, test_trace_short_equals);
++	tcase_add_test(tc, test_trace_long_noarg);
++	tcase_add_test(tc, test_trace_long_followarg);
++	tcase_add_test(tc, test_trace_long_space);
++	tcase_add_test(tc, test_trace_long_equals);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("event_configuration");
++	tcase_add_test(tc, test_event_short);
++	tcase_add_test(tc, test_event_long);
++	tcase_add_test(tc, test_filter);
++	tcase_add_test(tc, test_trigger);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("cpu_configuration");
++	tcase_add_test(tc, test_cpus_short);
++	tcase_add_test(tc, test_cpus_long);
++	tcase_add_test(tc, test_housekeeping_short);
++	tcase_add_test(tc, test_housekeeping_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("thread_configuration");
++	tcase_add_test(tc, test_cgroup_short_noarg);
++	tcase_add_test(tc, test_cgroup_short_space);
++	tcase_add_test(tc, test_cgroup_short_equals);
++	tcase_add_test(tc, test_cgroup_long_noarg);
++	tcase_add_test(tc, test_cgroup_long_space);
++	tcase_add_test(tc, test_cgroup_long_equals);
++	tcase_add_test(tc, test_kernel_threads_short);
++	tcase_add_test(tc, test_kernel_threads_long);
++	tcase_add_test(tc, test_priority_short);
++	tcase_add_test(tc, test_priority_long);
++	tcase_add_test(tc, test_user_load_short);
++	tcase_add_test(tc, test_user_load_long);
++	tcase_add_test(tc, test_user_threads_short);
++	tcase_add_test(tc, test_user_threads_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("output");
++	tcase_add_test(tc, test_nano_short);
++	tcase_add_test(tc, test_nano_long);
++	tcase_add_test(tc, test_quiet_short);
++	tcase_add_test(tc, test_quiet_long);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("system_tuning");
++	tcase_add_test(tc, test_deepest_idle_state);
++	tcase_add_test(tc, test_dma_latency);
++	tcase_add_test(tc, test_trace_buffer_size);
++	tcase_add_test(tc, test_warm_up);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("aa_actions");
++	tcase_add_test(tc, test_auto);
++	tcase_add_test(tc, test_aa_only);
++	tcase_add_test(tc, test_bpf_action);
++	tcase_add_test(tc, test_dump_tasks);
++	tcase_add_test(tc, test_no_aa);
++	tcase_add_test(tc, test_on_end);
++	tcase_add_test(tc, test_on_threshold);
++	tcase_add_test(tc, test_stack_format);
++	suite_add_tcase(s, tc);
++
++	tc = tcase_create("general");
++	tcase_add_test(tc, test_debug_short);
++	tcase_add_test(tc, test_debug_long);
++	tcase_add_test(tc, test_duration_short);
++	tcase_add_test(tc, test_duration_long);
++	suite_add_tcase(s, tc);
++
++	return s;
++}
+diff --git a/tools/tracing/rtla/tests/unit/unit_tests.c b/tools/tracing/rtla/tests/unit/unit_tests.c
+index f87d761f9b12..64884f6cbdeb 100644
+--- a/tools/tracing/rtla/tests/unit/unit_tests.c
++++ b/tools/tracing/rtla/tests/unit/unit_tests.c
+@@ -5,17 +5,28 @@
+ #include <stdbool.h>
  
- #include "common.h"
-@@ -57,114 +56,6 @@ static void unset_signals(struct common_params *params)
- 	}
- }
+ #include "../../src/utils.h"
++#include "../../src/cli.h"
  
--/*
-- * getopt_auto - auto-generates optstring from long_options
-- */
--int getopt_auto(int argc, char **argv, const struct option *long_opts)
--{
--	char opts[256];
--	int n = 0;
--
--	for (int i = 0; long_opts[i].name; i++) {
--		if (long_opts[i].val < 32 || long_opts[i].val > 127)
--			continue;
--
--		if (n + 4 >= sizeof(opts))
--			fatal("optstring buffer overflow");
--
--		opts[n++] = long_opts[i].val;
--
--		if (long_opts[i].has_arg == required_argument)
--			opts[n++] = ':';
--		else if (long_opts[i].has_arg == optional_argument) {
--			opts[n++] = ':';
--			opts[n++] = ':';
--		}
--	}
--
--	opts[n] = '\0';
--
--	return getopt_long(argc, argv, opts, long_opts, NULL);
--}
--
--/*
-- * common_parse_options - parse common command line options
-- *
-- * @argc: argument count
-- * @argv: argument vector
-- * @common: common parameters structure
-- *
-- * Parse command line options that are common to all rtla tools.
-- *
-- * Returns: non zero if a common option was parsed, or 0
-- * if the option should be handled by tool-specific parsing.
-- */
--int common_parse_options(int argc, char **argv, struct common_params *common)
--{
--	struct trace_events *tevent;
--	int saved_state = optind;
--	int c;
--
--	static struct option long_options[] = {
--		{"cpus",                required_argument,      0, 'c'},
--		{"cgroup",              optional_argument,      0, 'C'},
--		{"debug",               no_argument,            0, 'D'},
--		{"duration",            required_argument,      0, 'd'},
--		{"event",               required_argument,      0, 'e'},
--		{"house-keeping",       required_argument,      0, 'H'},
--		{"priority",            required_argument,      0, 'P'},
--		{0, 0, 0, 0}
--	};
--
--	opterr = 0;
--	c = getopt_auto(argc, argv, long_options);
--	opterr = 1;
--
--	switch (c) {
--	case 'c':
--		if (parse_cpu_set(optarg, &common->monitored_cpus))
--			fatal("Invalid -c cpu list");
--		common->cpus = optarg;
--		break;
--	case 'C':
--		common->cgroup = 1;
--		common->cgroup_name = parse_optional_arg(argc, argv);
--		break;
--	case 'D':
--		config_debug = 1;
--		break;
--	case 'd':
--		common->duration = parse_seconds_duration(optarg);
--		if (!common->duration)
--			fatal("Invalid -d duration");
--		break;
--	case 'e':
--		tevent = trace_event_alloc(optarg);
--		if (!tevent)
--			fatal("Error alloc trace event");
--
--		if (common->events)
--			tevent->next = common->events;
--		common->events = tevent;
--		break;
--	case 'H':
--		common->hk_cpus = 1;
--		if (parse_cpu_set(optarg, &common->hk_cpu_set))
--			fatal("Error parsing house keeping CPUs");
--		break;
--	case 'P':
--		if (parse_prio(optarg, &common->sched_param) == -1)
--			fatal("Invalid -P priority");
--		common->set_sched = 1;
--		break;
--	default:
--		optind = saved_state;
--		return 0;
--	}
--
--	return c;
--}
--
- /*
-  * common_apply_config - apply common configs to the initialized tool
-  */
-diff --git a/tools/tracing/rtla/src/common.h b/tools/tracing/rtla/src/common.h
-index eba40b6d9504..0dfca83bd726 100644
---- a/tools/tracing/rtla/src/common.h
-+++ b/tools/tracing/rtla/src/common.h
-@@ -1,7 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #pragma once
+ Suite *utils_suite(void);
+ Suite *actions_suite(void);
++Suite *osnoise_top_cli_suite(void);
++Suite *osnoise_hist_cli_suite(void);
++Suite *timerlat_top_cli_suite(void);
++Suite *timerlat_hist_cli_suite(void);
  
--#include <getopt.h>
- #include "actions.h"
- #include "timerlat_u.h"
- #include "trace.h"
-@@ -57,12 +56,12 @@ struct osnoise_context {
- extern volatile int stop_tracing;
- 
- struct hist_params {
--	char			no_irq;
--	char			no_thread;
--	char			no_header;
--	char			no_summary;
--	char			no_index;
--	char			with_zeros;
-+	bool			no_irq;
-+	bool			no_thread;
-+	bool			no_header;
-+	bool			no_summary;
-+	bool			no_index;
-+	bool			with_zeros;
- 	int			bucket_size;
- 	int			entries;
- };
-@@ -95,12 +94,12 @@ struct common_params {
- 	/* Other parameters */
- 	struct hist_params	hist;
- 	int			output_divisor;
--	int			pretty_output;
--	int			quiet;
--	int			user_workload;
--	int			kernel_workload;
--	int			user_data;
--	int			aa_only;
-+	bool			pretty_output;
-+	bool			quiet;
-+	bool			user_workload;
-+	bool			kernel_workload;
-+	bool			user_data;
-+	bool			aa_only;
- 
- 	struct actions		threshold_actions;
- 	struct actions		end_actions;
-@@ -176,8 +175,6 @@ int osnoise_set_stop_us(struct osnoise_context *context, long long stop_us);
- int osnoise_set_stop_total_us(struct osnoise_context *context,
- 			      long long stop_total_us);
- 
--int getopt_auto(int argc, char **argv, const struct option *long_opts);
--int common_parse_options(int argc, char **argv, struct common_params *common);
- int common_apply_config(struct osnoise_tool *tool, struct common_params *params);
- int top_main_loop(struct osnoise_tool *tool);
- int hist_main_loop(struct osnoise_tool *tool);
-diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
-index 2db3db155c44..e1e32898af2d 100644
---- a/tools/tracing/rtla/src/osnoise.c
-+++ b/tools/tracing/rtla/src/osnoise.c
-@@ -15,6 +15,8 @@
- #include <stdio.h>
- #include <sched.h>
- 
-+#include <linux/compiler.h>
-+
- #include "osnoise.h"
- 
- #define DEFAULT_SAMPLE_PERIOD	1000000			/* 1s */
-@@ -1171,7 +1173,7 @@ int osnoise_enable(struct osnoise_tool *tool)
- 	return 0;
- }
- 
--static void osnoise_usage(int err)
-+__noreturn static void osnoise_usage(int err)
+ int main(int argc, char *argv[])
  {
- 	int i;
+ 	int num_failed;
+ 	SRunner *sr;
  
-@@ -1209,7 +1211,7 @@ int osnoise_main(int argc, char *argv[])
- 	}
- 
- 	if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
--		osnoise_usage(0);
-+		osnoise_usage(129);
- 	} else if (str_has_prefix(argv[1], "-")) {
- 		/* the user skipped the tool, call the default one */
- 		run_tool(&osnoise_top_ops, argc, argv);
-@@ -1223,8 +1225,7 @@ int osnoise_main(int argc, char *argv[])
- 	}
- 
- usage:
--	osnoise_usage(1);
--	exit(1);
-+	osnoise_usage(129);
- }
- 
- int hwnoise_main(int argc, char *argv[])
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 8ad816b80265..dfa91d0681f8 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -4,7 +4,6 @@
-  */
- 
- #define _GNU_SOURCE
--#include <getopt.h>
- #include <stdlib.h>
- #include <string.h>
- #include <signal.h>
-@@ -13,6 +12,7 @@
- #include <time.h>
- 
- #include "osnoise.h"
-+#include "cli.h"
- 
- struct osnoise_hist_cpu {
- 	int			*samples;
-@@ -400,225 +400,6 @@ osnoise_print_stats(struct osnoise_tool *tool)
- 	osnoise_report_missed_events(tool);
- }
- 
--/*
-- * osnoise_hist_usage - prints osnoise hist usage message
-- */
--static void osnoise_hist_usage(void)
--{
--	static const char * const msg_start[] = {
--		"[-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
--		"	  [-T us] [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
--		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-b N] [-E N] [--no-header] [--no-summary] \\",
--		"	  [--no-index] [--with-zeros] [-C [cgroup_name]] [--warm-up]",
--		NULL,
--	};
--
--	static const char * const msg_opts[] = {
--		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
--		"	  -p/--period us: osnoise period in us",
--		"	  -r/--runtime us: osnoise runtime in us",
--		"	  -s/--stop us: stop trace if a single sample is higher than the argument in us",
--		"	  -S/--stop-total us: stop trace if the total sample is higher than the argument in us",
--		"	  -T/--threshold us: the minimum delta to be considered a noise",
--		"	  -c/--cpus cpu-list: list of cpus to run osnoise threads",
--		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
--		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
--		"	  -d/--duration time[s|m|h|d]: duration of the session",
--		"	  -D/--debug: print debug info",
--		"	  -t/--trace [file]: save the stopped trace to [file|osnoise_trace.txt]",
--		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
--		"	     --filter <filter>: enable a trace event filter to the previous -e event",
--		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
--		"	  -b/--bucket-size N: set the histogram bucket size (default 1)",
--		"	  -E/--entries N: set the number of entries of the histogram (default 256)",
--		"	     --no-header: do not print header",
--		"	     --no-summary: do not print summary",
--		"	     --no-index: do not print index",
--		"	     --with-zeros: print zero only entries",
--		"	  -P/--priority o:prio|r:prio|f:prio|d:runtime:period: set scheduling parameters",
--		"		o:prio - use SCHED_OTHER with prio",
--		"		r:prio - use SCHED_RR with prio",
--		"		f:prio - use SCHED_FIFO with prio",
--		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
--		"						       in nanoseconds",
--		"	     --warm-up: let the workload run for s seconds before collecting data",
--		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
--		"	     --on-threshold <action>: define action to be executed at stop-total threshold, multiple are allowed",
--		"	     --on-end <action>: define action to be executed at measurement end, multiple are allowed",
--		NULL,
--	};
--
--	common_usage("osnoise", "hist", "a per-cpu histogram of the OS noise",
--		     msg_start, msg_opts);
--}
--
--/*
-- * osnoise_hist_parse_args - allocs, parse and fill the cmd line parameters
-- */
--static struct common_params
--*osnoise_hist_parse_args(int argc, char *argv[])
--{
--	struct osnoise_params *params;
--	int retval;
--	int c;
--	char *trace_output = NULL;
--
--	params = calloc_fatal(1, sizeof(*params));
--
--	actions_init(&params->common.threshold_actions);
--	actions_init(&params->common.end_actions);
--
--	/* display data in microseconds */
--	params->common.output_divisor = 1000;
--	params->common.hist.bucket_size = 1;
--	params->common.hist.entries = 256;
--
--	while (1) {
--		static struct option long_options[] = {
--			{"auto",		required_argument,	0, 'a'},
--			{"bucket-size",		required_argument,	0, 'b'},
--			{"entries",		required_argument,	0, 'E'},
--			{"help",		no_argument,		0, 'h'},
--			{"period",		required_argument,	0, 'p'},
--			{"runtime",		required_argument,	0, 'r'},
--			{"stop",		required_argument,	0, 's'},
--			{"stop-total",		required_argument,	0, 'S'},
--			{"trace",		optional_argument,	0, 't'},
--			{"threshold",		required_argument,	0, 'T'},
--			{"no-header",		no_argument,		0, '0'},
--			{"no-summary",		no_argument,		0, '1'},
--			{"no-index",		no_argument,		0, '2'},
--			{"with-zeros",		no_argument,		0, '3'},
--			{"trigger",		required_argument,	0, '4'},
--			{"filter",		required_argument,	0, '5'},
--			{"warm-up",		required_argument,	0, '6'},
--			{"trace-buffer-size",	required_argument,	0, '7'},
--			{"on-threshold",	required_argument,	0, '8'},
--			{"on-end",		required_argument,	0, '9'},
--			{0, 0, 0, 0}
--		};
--
--		if (common_parse_options(argc, argv, &params->common))
--			continue;
--
--		c = getopt_auto(argc, argv, long_options);
--
--		/* detect the end of the options. */
--		if (c == -1)
--			break;
--
--		switch (c) {
--		case 'a':
--			/* set sample stop to auto_thresh */
--			params->common.stop_us = get_llong_from_str(optarg);
--
--			/* set sample threshold to 1 */
--			params->threshold = 1;
--
--			/* set trace */
--			if (!trace_output)
--				trace_output = "osnoise_trace.txt";
--
--			break;
--		case 'b':
--			params->common.hist.bucket_size = get_llong_from_str(optarg);
--			if (params->common.hist.bucket_size == 0 ||
--			    params->common.hist.bucket_size >= 1000000)
--				fatal("Bucket size needs to be > 0 and <= 1000000");
--			break;
--		case 'E':
--			params->common.hist.entries = get_llong_from_str(optarg);
--			if (params->common.hist.entries < 10 ||
--			    params->common.hist.entries > 9999999)
--				fatal("Entries must be > 10 and < 9999999");
--			break;
--		case 'h':
--		case '?':
--			osnoise_hist_usage();
--			break;
--		case 'p':
--			params->period = get_llong_from_str(optarg);
--			if (params->period > 10000000)
--				fatal("Period longer than 10 s");
--			break;
--		case 'r':
--			params->runtime = get_llong_from_str(optarg);
--			if (params->runtime < 100)
--				fatal("Runtime shorter than 100 us");
--			break;
--		case 's':
--			params->common.stop_us = get_llong_from_str(optarg);
--			break;
--		case 'S':
--			params->common.stop_total_us = get_llong_from_str(optarg);
--			break;
--		case 'T':
--			params->threshold = get_llong_from_str(optarg);
--			break;
--		case 't':
--			trace_output = parse_optional_arg(argc, argv);
--			if (!trace_output)
--				trace_output = "osnoise_trace.txt";
--			break;
--		case '0': /* no header */
--			params->common.hist.no_header = 1;
--			break;
--		case '1': /* no summary */
--			params->common.hist.no_summary = 1;
--			break;
--		case '2': /* no index */
--			params->common.hist.no_index = 1;
--			break;
--		case '3': /* with zeros */
--			params->common.hist.with_zeros = 1;
--			break;
--		case '4': /* trigger */
--			if (params->common.events)
--				trace_event_add_trigger(params->common.events, optarg);
--			else
--				fatal("--trigger requires a previous -e");
--			break;
--		case '5': /* filter */
--			if (params->common.events)
--				trace_event_add_filter(params->common.events, optarg);
--			else
--				fatal("--filter requires a previous -e");
--			break;
--		case '6':
--			params->common.warmup = get_llong_from_str(optarg);
--			break;
--		case '7':
--			params->common.buffer_size = get_llong_from_str(optarg);
--			break;
--		case '8':
--			retval = actions_parse(&params->common.threshold_actions, optarg,
--					       "osnoise_trace.txt");
--			if (retval)
--				fatal("Invalid action %s", optarg);
--			break;
--		case '9':
--			retval = actions_parse(&params->common.end_actions, optarg,
--					       "osnoise_trace.txt");
--			if (retval)
--				fatal("Invalid action %s", optarg);
--			break;
--		default:
--			fatal("Invalid option");
--		}
--	}
--
--	if (trace_output)
--		actions_add_trace_output(&params->common.threshold_actions, trace_output);
--
--	if (geteuid())
--		fatal("rtla needs root permission");
--
--	if (params->common.hist.no_index && !params->common.hist.with_zeros)
--		fatal("no-index set and with-zeros not set - it does not make sense");
--
--	return &params->common;
--}
--
- /*
-  * osnoise_hist_apply_config - apply the hist configs to the initialized tool
-  */
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 244bdce022ad..512a6299cb01 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -4,7 +4,6 @@
-  */
- 
- #define _GNU_SOURCE
--#include <getopt.h>
- #include <stdlib.h>
- #include <string.h>
- #include <signal.h>
-@@ -13,6 +12,7 @@
- #include <time.h>
- 
- #include "osnoise.h"
-+#include "cli.h"
- 
- struct osnoise_top_cpu {
- 	unsigned long long	sum_runtime;
-@@ -245,204 +245,6 @@ osnoise_print_stats(struct osnoise_tool *top)
- 	osnoise_report_missed_events(top);
- }
- 
--/*
-- * osnoise_top_usage - prints osnoise top usage message
-- */
--static void osnoise_top_usage(struct osnoise_params *params)
--{
--	const char *tool, *mode, *desc;
--
--	static const char * const msg_start[] = {
--		"[-q] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
--		"	  [-T us] [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
--		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-C [cgroup_name]] [--warm-up s]",
--		NULL,
--	};
--
--	static const char * const msg_opts[] = {
--		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
--		"	  -p/--period us: osnoise period in us",
--		"	  -r/--runtime us: osnoise runtime in us",
--		"	  -s/--stop us: stop trace if a single sample is higher than the argument in us",
--		"	  -S/--stop-total us: stop trace if the total sample is higher than the argument in us",
--		"	  -T/--threshold us: the minimum delta to be considered a noise",
--		"	  -c/--cpus cpu-list: list of cpus to run osnoise threads",
--		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
--		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
--		"	  -d/--duration time[s|m|h|d]: duration of the session",
--		"	  -D/--debug: print debug info",
--		"	  -t/--trace [file]: save the stopped trace to [file|osnoise_trace.txt]",
--		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
--		"	     --filter <filter>: enable a trace event filter to the previous -e event",
--		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
--		"	  -q/--quiet print only a summary at the end",
--		"	  -P/--priority o:prio|r:prio|f:prio|d:runtime:period : set scheduling parameters",
--		"		o:prio - use SCHED_OTHER with prio",
--		"		r:prio - use SCHED_RR with prio",
--		"		f:prio - use SCHED_FIFO with prio",
--		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
--		"						       in nanoseconds",
--		"	     --warm-up s: let the workload run for s seconds before collecting data",
--		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
--		"	     --on-threshold <action>: define action to be executed at stop-total threshold, multiple are allowed",
--		"	     --on-end: define action to be executed at measurement end, multiple are allowed",
--		NULL,
--	};
--
--	if (params->mode == MODE_OSNOISE) {
--		tool = "osnoise";
--		mode = "top";
--		desc = "a per-cpu summary of the OS noise";
--	} else {
--		tool = "hwnoise";
--		mode = "";
--		desc = "a summary of hardware-related noise";
--	}
--
--	common_usage(tool, mode, desc, msg_start, msg_opts);
--}
--
--/*
-- * osnoise_top_parse_args - allocs, parse and fill the cmd line parameters
-- */
--struct common_params *osnoise_top_parse_args(int argc, char **argv)
--{
--	struct osnoise_params *params;
--	int retval;
--	int c;
--	char *trace_output = NULL;
--
--	params = calloc_fatal(1, sizeof(*params));
--
--	actions_init(&params->common.threshold_actions);
--	actions_init(&params->common.end_actions);
--
--	if (strcmp(argv[0], "hwnoise") == 0) {
--		params->mode = MODE_HWNOISE;
--		/*
--		 * Reduce CPU usage for 75% to avoid killing the system.
--		 */
--		params->runtime = 750000;
--		params->period = 1000000;
--	}
--
--	while (1) {
--		static struct option long_options[] = {
--			{"auto",		required_argument,	0, 'a'},
--			{"help",		no_argument,		0, 'h'},
--			{"period",		required_argument,	0, 'p'},
--			{"quiet",		no_argument,		0, 'q'},
--			{"runtime",		required_argument,	0, 'r'},
--			{"stop",		required_argument,	0, 's'},
--			{"stop-total",		required_argument,	0, 'S'},
--			{"threshold",		required_argument,	0, 'T'},
--			{"trace",		optional_argument,	0, 't'},
--			{"trigger",		required_argument,	0, '0'},
--			{"filter",		required_argument,	0, '1'},
--			{"warm-up",		required_argument,	0, '2'},
--			{"trace-buffer-size",	required_argument,	0, '3'},
--			{"on-threshold",	required_argument,	0, '4'},
--			{"on-end",		required_argument,	0, '5'},
--			{0, 0, 0, 0}
--		};
--
--		if (common_parse_options(argc, argv, &params->common))
--			continue;
--
--		c = getopt_auto(argc, argv, long_options);
--
--		/* Detect the end of the options. */
--		if (c == -1)
--			break;
--
--		switch (c) {
--		case 'a':
--			/* set sample stop to auto_thresh */
--			params->common.stop_us = get_llong_from_str(optarg);
--
--			/* set sample threshold to 1 */
--			params->threshold = 1;
--
--			/* set trace */
--			if (!trace_output)
--				trace_output = "osnoise_trace.txt";
--
--			break;
--		case 'h':
--		case '?':
--			osnoise_top_usage(params);
--			break;
--		case 'p':
--			params->period = get_llong_from_str(optarg);
--			if (params->period > 10000000)
--				fatal("Period longer than 10 s");
--			break;
--		case 'q':
--			params->common.quiet = 1;
--			break;
--		case 'r':
--			params->runtime = get_llong_from_str(optarg);
--			if (params->runtime < 100)
--				fatal("Runtime shorter than 100 us");
--			break;
--		case 's':
--			params->common.stop_us = get_llong_from_str(optarg);
--			break;
--		case 'S':
--			params->common.stop_total_us = get_llong_from_str(optarg);
--			break;
--		case 't':
--			trace_output = parse_optional_arg(argc, argv);
--			if (!trace_output)
--				trace_output = "osnoise_trace.txt";
--			break;
--		case 'T':
--			params->threshold = get_llong_from_str(optarg);
--			break;
--		case '0': /* trigger */
--			if (params->common.events)
--				trace_event_add_trigger(params->common.events, optarg);
--			else
--				fatal("--trigger requires a previous -e");
--			break;
--		case '1': /* filter */
--			if (params->common.events)
--				trace_event_add_filter(params->common.events, optarg);
--			else
--				fatal("--filter requires a previous -e");
--			break;
--		case '2':
--			params->common.warmup = get_llong_from_str(optarg);
--			break;
--		case '3':
--			params->common.buffer_size = get_llong_from_str(optarg);
--			break;
--		case '4':
--			retval = actions_parse(&params->common.threshold_actions, optarg,
--					       "osnoise_trace.txt");
--			if (retval)
--				fatal("Invalid action %s", optarg);
--			break;
--		case '5':
--			retval = actions_parse(&params->common.end_actions, optarg,
--					       "osnoise_trace.txt");
--			if (retval)
--				fatal("Invalid action %s", optarg);
--			break;
--		default:
--			fatal("Invalid option");
--		}
--	}
--
--	if (trace_output)
--		actions_add_trace_output(&params->common.threshold_actions, trace_output);
--
--	if (geteuid())
--		fatal("osnoise needs root permission");
--
--	return &params->common;
--}
--
- /*
-  * osnoise_top_apply_config - apply the top configs to the initialized tool
-  */
-diff --git a/tools/tracing/rtla/src/rtla.c b/tools/tracing/rtla/src/rtla.c
-deleted file mode 100644
-index f4342ca684c3..000000000000
---- a/tools/tracing/rtla/src/rtla.c
-+++ /dev/null
-@@ -1,92 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
-- */
--
--#include <getopt.h>
--#include <stdlib.h>
--#include <string.h>
--#include <stdio.h>
--
--#include "osnoise.h"
--#include "timerlat.h"
--
--/*
-- * rtla_usage - print rtla usage
-- */
--static void rtla_usage(int err)
--{
--	int i;
--
--	static const char *msg[] = {
--		"",
--		"rtla version " VERSION,
--		"",
--		"  usage: rtla COMMAND ...",
--		"",
--		"  commands:",
--		"     osnoise  - gives information about the operating system noise (osnoise)",
--		"     hwnoise  - gives information about hardware-related noise",
--		"     timerlat - measures the timer irq and thread latency",
--		"",
--		NULL,
--	};
--
--	for (i = 0; msg[i]; i++)
--		fprintf(stderr, "%s\n", msg[i]);
--	exit(err);
--}
--
--/*
-- * run_tool_command - try to run a rtla tool command
-- *
-- * It returns 0 if it fails. The tool's main will generally not
-- * return as they should call exit().
-- */
--int run_tool_command(int argc, char **argv, int start_position)
--{
--	if (strcmp(argv[start_position], "osnoise") == 0) {
--		osnoise_main(argc-start_position, &argv[start_position]);
--		goto ran;
--	} else if (strcmp(argv[start_position], "hwnoise") == 0) {
--		hwnoise_main(argc-start_position, &argv[start_position]);
--		goto ran;
--	} else if (strcmp(argv[start_position], "timerlat") == 0) {
--		timerlat_main(argc-start_position, &argv[start_position]);
--		goto ran;
--	}
--
--	return 0;
--ran:
--	return 1;
--}
--
--/* Set main as weak to allow overriding it for building unit test binary */
--#pragma weak main
--
--int main(int argc, char *argv[])
--{
--	int retval;
--
--	/* is it an alias? */
--	retval = run_tool_command(argc, argv, 0);
--	if (retval)
--		exit(0);
--
--	if (argc < 2)
--		goto usage;
--
--	if (strcmp(argv[1], "-h") == 0) {
--		rtla_usage(0);
--	} else if (strcmp(argv[1], "--help") == 0) {
--		rtla_usage(0);
--	}
--
--	retval = run_tool_command(argc, argv, 1);
--	if (retval)
--		exit(0);
--
--usage:
--	rtla_usage(1);
--	exit(1);
--}
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index 637f68d684f5..f990c8365776 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -13,6 +13,8 @@
- #include <stdio.h>
- #include <sched.h>
- 
-+#include <linux/compiler.h>
++	in_unit_test = true;
 +
- #include "timerlat.h"
- #include "timerlat_aa.h"
- #include "timerlat_bpf.h"
-@@ -231,7 +233,7 @@ void timerlat_free(struct osnoise_tool *tool)
- 	free_cpu_idle_disable_states();
- }
+ 	sr = srunner_create(utils_suite());
+ 	srunner_add_suite(sr, actions_suite());
++	srunner_add_suite(sr, osnoise_top_cli_suite());
++	srunner_add_suite(sr, osnoise_hist_cli_suite());
++	srunner_add_suite(sr, timerlat_top_cli_suite());
++	srunner_add_suite(sr, timerlat_hist_cli_suite());
  
--static void timerlat_usage(int err)
-+__noreturn static void timerlat_usage(int err)
- {
- 	int i;
- 
-@@ -269,7 +271,7 @@ int timerlat_main(int argc, char *argv[])
- 	}
- 
- 	if ((strcmp(argv[1], "-h") == 0) || (strcmp(argv[1], "--help") == 0)) {
--		timerlat_usage(0);
-+		timerlat_usage(129);
- 	} else if (str_has_prefix(argv[1], "-")) {
- 		/* the user skipped the tool, call the default one */
- 		run_tool(&timerlat_top_ops, argc, argv);
-@@ -283,6 +285,5 @@ int timerlat_main(int argc, char *argv[])
- 	}
- 
- usage:
--	timerlat_usage(1);
--	exit(1);
-+	timerlat_usage(129);
- }
-diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
-index 364203a29abd..37a808f1611e 100644
---- a/tools/tracing/rtla/src/timerlat.h
-+++ b/tools/tracing/rtla/src/timerlat.h
-@@ -23,8 +23,8 @@ struct timerlat_params {
- 	long long		timerlat_period_us;
- 	long long		print_stack;
- 	int			dma_latency;
--	int			no_aa;
--	int			dump_tasks;
-+	bool			no_aa;
-+	bool			dump_tasks;
- 	int			deepest_idle_state;
- 	enum timerlat_tracing_mode mode;
- 	const char		*bpf_action_program;
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 3a15a85b7d72..df7b1398a966 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -4,7 +4,6 @@
-  */
- 
- #define _GNU_SOURCE
--#include <getopt.h>
- #include <stdlib.h>
- #include <string.h>
- #include <signal.h>
-@@ -17,6 +16,7 @@
- #include "timerlat.h"
- #include "timerlat_aa.h"
- #include "timerlat_bpf.h"
-+#include "cli.h"
- #include "common.h"
- 
- struct timerlat_hist_cpu {
-@@ -685,321 +685,6 @@ timerlat_print_stats(struct osnoise_tool *tool)
- 	osnoise_report_missed_events(tool);
- }
- 
--/*
-- * timerlat_hist_usage - prints timerlat top usage message
-- */
--static void timerlat_hist_usage(void)
--{
--	static const char * const msg_start[] = {
--		"[-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] \\",
--		"         [-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
--		"	  [-P priority] [-E N] [-b N] [--no-irq] [--no-thread] [--no-header] [--no-summary] \\",
--		"	  [--no-index] [--with-zeros] [--dma-latency us] [-C [cgroup_name]] [--no-aa] [--dump-tasks] [-u|-k]",
--		"	  [--warm-up s] [--deepest-idle-state n]",
--		NULL,
--	};
--
--	static const char * const msg_opts[] = {
--		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
--		"	  -p/--period us: timerlat period in us",
--		"	  -i/--irq us: stop trace if the irq latency is higher than the argument in us",
--		"	  -T/--thread us: stop trace if the thread latency is higher than the argument in us",
--		"	  -s/--stack us: save the stack trace at the IRQ if a thread latency is higher than the argument in us",
--		"	  -c/--cpus cpus: run the tracer only on the given cpus",
--		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
--		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
--		"	  -d/--duration time[m|h|d]: duration of the session in seconds",
--		"	     --dump-tasks: prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)",
--		"	  -D/--debug: print debug info",
--		"	  -t/--trace [file]: save the stopped trace to [file|timerlat_trace.txt]",
--		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
--		"	     --filter <filter>: enable a trace event filter to the previous -e event",
--		"	     --trigger <trigger>: enable a trace event trigger to the previous -e event",
--		"	  -n/--nano: display data in nanoseconds",
--		"	     --no-aa: disable auto-analysis, reducing rtla timerlat cpu usage",
--		"	  -b/--bucket-size N: set the histogram bucket size (default 1)",
--		"	  -E/--entries N: set the number of entries of the histogram (default 256)",
--		"	     --no-irq: ignore IRQ latencies",
--		"	     --no-thread: ignore thread latencies",
--		"	     --no-header: do not print header",
--		"	     --no-summary: do not print summary",
--		"	     --no-index: do not print index",
--		"	     --with-zeros: print zero only entries",
--		"	     --dma-latency us: set /dev/cpu_dma_latency latency <us> to reduce exit from idle latency",
--		"	  -P/--priority o:prio|r:prio|f:prio|d:runtime:period : set scheduling parameters",
--		"		o:prio - use SCHED_OTHER with prio",
--		"		r:prio - use SCHED_RR with prio",
--		"		f:prio - use SCHED_FIFO with prio",
--		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
--		"						       in nanoseconds",
--		"	  -u/--user-threads: use rtla user-space threads instead of kernel-space timerlat threads",
--		"	  -k/--kernel-threads: use timerlat kernel-space threads instead of rtla user-space threads",
--		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
--		"	     --warm-up s: let the workload run for s seconds before collecting data",
--		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
--		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
--		"	     --on-threshold <action>: define action to be executed at latency threshold, multiple are allowed",
--		"	     --on-end <action>: define action to be executed at measurement end, multiple are allowed",
--		"	     --bpf-action <program>: load and execute BPF program when latency threshold is exceeded",
--		"	     --stack-format <format>: set the stack format (truncate, skip, full)",
--		NULL,
--	};
--
--	common_usage("timerlat", "hist", "a per-cpu histogram of the timer latency",
--		     msg_start, msg_opts);
--}
--
--/*
-- * timerlat_hist_parse_args - allocs, parse and fill the cmd line parameters
-- */
--static struct common_params
--*timerlat_hist_parse_args(int argc, char *argv[])
--{
--	struct timerlat_params *params;
--	int auto_thresh;
--	int retval;
--	int c;
--	char *trace_output = NULL;
--
--	params = calloc_fatal(1, sizeof(*params));
--
--	actions_init(&params->common.threshold_actions);
--	actions_init(&params->common.end_actions);
--
--	/* disabled by default */
--	params->dma_latency = -1;
--
--	/* disabled by default */
--	params->deepest_idle_state = -2;
--
--	/* display data in microseconds */
--	params->common.output_divisor = 1000;
--	params->common.hist.bucket_size = 1;
--	params->common.hist.entries = 256;
--
--	/* default to BPF mode */
--	params->mode = TRACING_MODE_BPF;
--
--	/* default to truncate stack format */
--	params->stack_format = STACK_FORMAT_TRUNCATE;
--
--	while (1) {
--		static struct option long_options[] = {
--			{"auto",		required_argument,	0, 'a'},
--			{"bucket-size",		required_argument,	0, 'b'},
--			{"entries",		required_argument,	0, 'E'},
--			{"help",		no_argument,		0, 'h'},
--			{"irq",			required_argument,	0, 'i'},
--			{"nano",		no_argument,		0, 'n'},
--			{"period",		required_argument,	0, 'p'},
--			{"stack",		required_argument,	0, 's'},
--			{"thread",		required_argument,	0, 'T'},
--			{"trace",		optional_argument,	0, 't'},
--			{"user-threads",	no_argument,		0, 'u'},
--			{"kernel-threads",	no_argument,		0, 'k'},
--			{"user-load",		no_argument,		0, 'U'},
--			{"no-irq",		no_argument,		0, '0'},
--			{"no-thread",		no_argument,		0, '1'},
--			{"no-header",		no_argument,		0, '2'},
--			{"no-summary",		no_argument,		0, '3'},
--			{"no-index",		no_argument,		0, '4'},
--			{"with-zeros",		no_argument,		0, '5'},
--			{"trigger",		required_argument,	0, '6'},
--			{"filter",		required_argument,	0, '7'},
--			{"dma-latency",		required_argument,	0, '8'},
--			{"no-aa",		no_argument,		0, '9'},
--			{"dump-tasks",		no_argument,		0, '\1'},
--			{"warm-up",		required_argument,	0, '\2'},
--			{"trace-buffer-size",	required_argument,	0, '\3'},
--			{"deepest-idle-state",	required_argument,	0, '\4'},
--			{"on-threshold",	required_argument,	0, '\5'},
--			{"on-end",		required_argument,	0, '\6'},
--			{"bpf-action",		required_argument,	0, '\7'},
--			{"stack-format",	required_argument,	0, '\10'},
--			{0, 0, 0, 0}
--		};
--
--		if (common_parse_options(argc, argv, &params->common))
--			continue;
--
--		c = getopt_auto(argc, argv, long_options);
--
--		/* detect the end of the options. */
--		if (c == -1)
--			break;
--
--		switch (c) {
--		case 'a':
--			auto_thresh = get_llong_from_str(optarg);
--
--			/* set thread stop to auto_thresh */
--			params->common.stop_total_us = auto_thresh;
--			params->common.stop_us = auto_thresh;
--
--			/* get stack trace */
--			params->print_stack = auto_thresh;
--
--			/* set trace */
--			if (!trace_output)
--				trace_output = "timerlat_trace.txt";
--
--			break;
--		case 'b':
--			params->common.hist.bucket_size = get_llong_from_str(optarg);
--			if (params->common.hist.bucket_size == 0 ||
--			    params->common.hist.bucket_size >= 1000000)
--				fatal("Bucket size needs to be > 0 and <= 1000000");
--			break;
--		case 'E':
--			params->common.hist.entries = get_llong_from_str(optarg);
--			if (params->common.hist.entries < 10 ||
--			    params->common.hist.entries > 9999999)
--				fatal("Entries must be > 10 and < 9999999");
--			break;
--		case 'h':
--		case '?':
--			timerlat_hist_usage();
--			break;
--		case 'i':
--			params->common.stop_us = get_llong_from_str(optarg);
--			break;
--		case 'k':
--			params->common.kernel_workload = 1;
--			break;
--		case 'n':
--			params->common.output_divisor = 1;
--			break;
--		case 'p':
--			params->timerlat_period_us = get_llong_from_str(optarg);
--			if (params->timerlat_period_us > 1000000)
--				fatal("Period longer than 1 s");
--			break;
--		case 's':
--			params->print_stack = get_llong_from_str(optarg);
--			break;
--		case 'T':
--			params->common.stop_total_us = get_llong_from_str(optarg);
--			break;
--		case 't':
--			trace_output = parse_optional_arg(argc, argv);
--			if (!trace_output)
--				trace_output = "timerlat_trace.txt";
--			break;
--		case 'u':
--			params->common.user_workload = 1;
--			/* fallback: -u implies in -U */
--		case 'U':
--			params->common.user_data = 1;
--			break;
--		case '0': /* no irq */
--			params->common.hist.no_irq = 1;
--			break;
--		case '1': /* no thread */
--			params->common.hist.no_thread = 1;
--			break;
--		case '2': /* no header */
--			params->common.hist.no_header = 1;
--			break;
--		case '3': /* no summary */
--			params->common.hist.no_summary = 1;
--			break;
--		case '4': /* no index */
--			params->common.hist.no_index = 1;
--			break;
--		case '5': /* with zeros */
--			params->common.hist.with_zeros = 1;
--			break;
--		case '6': /* trigger */
--			if (params->common.events)
--				trace_event_add_trigger(params->common.events, optarg);
--			else
--				fatal("--trigger requires a previous -e");
--			break;
--		case '7': /* filter */
--			if (params->common.events)
--				trace_event_add_filter(params->common.events, optarg);
--			else
--				fatal("--filter requires a previous -e");
--			break;
--		case '8':
--			params->dma_latency = get_llong_from_str(optarg);
--			if (params->dma_latency < 0 || params->dma_latency > 10000)
--				fatal("--dma-latency needs to be >= 0 and < 10000");
--			break;
--		case '9':
--			params->no_aa = 1;
--			break;
--		case '\1':
--			params->dump_tasks = 1;
--			break;
--		case '\2':
--			params->common.warmup = get_llong_from_str(optarg);
--			break;
--		case '\3':
--			params->common.buffer_size = get_llong_from_str(optarg);
--			break;
--		case '\4':
--			params->deepest_idle_state = get_llong_from_str(optarg);
--			break;
--		case '\5':
--			retval = actions_parse(&params->common.threshold_actions, optarg,
--					       "timerlat_trace.txt");
--			if (retval)
--				fatal("Invalid action %s", optarg);
--			break;
--		case '\6':
--			retval = actions_parse(&params->common.end_actions, optarg,
--					       "timerlat_trace.txt");
--			if (retval)
--				fatal("Invalid action %s", optarg);
--			break;
--		case '\7':
--			params->bpf_action_program = optarg;
--			break;
--		case '\10':
--			params->stack_format = parse_stack_format(optarg);
--			if (params->stack_format == -1)
--				fatal("Invalid --stack-format option");
--			break;
--		default:
--			fatal("Invalid option");
--		}
--	}
--
--	if (trace_output)
--		actions_add_trace_output(&params->common.threshold_actions, trace_output);
--
--	if (geteuid())
--		fatal("rtla needs root permission");
--
--	if (params->common.hist.no_irq && params->common.hist.no_thread)
--		fatal("no-irq and no-thread set, there is nothing to do here");
--
--	if (params->common.hist.no_index && !params->common.hist.with_zeros)
--		fatal("no-index set with with-zeros is not set - it does not make sense");
--
--	/*
--	 * Auto analysis only happens if stop tracing, thus:
--	 */
--	if (!params->common.stop_us && !params->common.stop_total_us)
--		params->no_aa = 1;
--
--	if (params->common.kernel_workload && params->common.user_workload)
--		fatal("--kernel-threads and --user-threads are mutually exclusive!");
--
--	/*
--	 * If auto-analysis or trace output is enabled, switch from BPF mode to
--	 * mixed mode
--	 */
--	if (params->mode == TRACING_MODE_BPF &&
--	    (params->common.threshold_actions.present[ACTION_TRACE_OUTPUT] ||
--	     params->common.end_actions.present[ACTION_TRACE_OUTPUT] ||
--	     !params->no_aa))
--		params->mode = TRACING_MODE_MIXED;
--
--	return &params->common;
--}
--
- /*
-  * timerlat_hist_apply_config - apply the hist configs to the initialized tool
-  */
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index e3a374005690..18e1071a2e24 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -4,7 +4,6 @@
-  */
- 
- #define _GNU_SOURCE
--#include <getopt.h>
- #include <stdlib.h>
- #include <string.h>
- #include <signal.h>
-@@ -17,6 +16,7 @@
- #include "timerlat.h"
- #include "timerlat_aa.h"
- #include "timerlat_bpf.h"
-+#include "cli.h"
- #include "common.h"
- 
- struct timerlat_top_cpu {
-@@ -459,290 +459,6 @@ timerlat_print_stats(struct osnoise_tool *top)
- 	osnoise_report_missed_events(top);
- }
- 
--/*
-- * timerlat_top_usage - prints timerlat top usage message
-- */
--static void timerlat_top_usage(void)
--{
--	static const char *const msg_start[] = {
--		"[-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
--		"	  [[-t [file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
--		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C [cgroup_name]] [--dump-tasks] [-u|-k] [--warm-up s]\\",
--		"	  [--deepest-idle-state n]",
--		NULL,
--	};
--
--	static const char *const msg_opts[] = {
--		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us latency is hit",
--		"	     --aa-only us: stop if <us> latency is hit, only printing the auto analysis (reduces CPU usage)",
--		"	  -p/--period us: timerlat period in us",
--		"	  -i/--irq us: stop trace if the irq latency is higher than the argument in us",
--		"	  -T/--thread us: stop trace if the thread latency is higher than the argument in us",
--		"	  -s/--stack us: save the stack trace at the IRQ if a thread latency is higher than the argument in us",
--		"	  -c/--cpus cpus: run the tracer only on the given cpus",
--		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
--		"	  -C/--cgroup [cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
--		"	  -d/--duration time[s|m|h|d]: duration of the session",
--		"	  -D/--debug: print debug info",
--		"	     --dump-tasks: prints the task running on all CPUs if stop conditions are met (depends on !--no-aa)",
--		"	  -t/--trace [file]: save the stopped trace to [file|timerlat_trace.txt]",
--		"	  -e/--event <sys:event>: enable the <sys:event> in the trace instance, multiple -e are allowed",
--		"	     --filter <command>: enable a trace event filter to the previous -e event",
--		"	     --trigger <command>: enable a trace event trigger to the previous -e event",
--		"	  -n/--nano: display data in nanoseconds",
--		"	     --no-aa: disable auto-analysis, reducing rtla timerlat cpu usage",
--		"	  -q/--quiet print only a summary at the end",
--		"	     --dma-latency us: set /dev/cpu_dma_latency latency <us> to reduce exit from idle latency",
--		"	  -P/--priority o:prio|r:prio|f:prio|d:runtime:period : set scheduling parameters",
--		"		o:prio - use SCHED_OTHER with prio",
--		"		r:prio - use SCHED_RR with prio",
--		"		f:prio - use SCHED_FIFO with prio",
--		"		d:runtime[us|ms|s]:period[us|ms|s] - use SCHED_DEADLINE with runtime and period",
--		"						       in nanoseconds",
--		"	  -u/--user-threads: use rtla user-space threads instead of kernel-space timerlat threads",
--		"	  -k/--kernel-threads: use timerlat kernel-space threads instead of rtla user-space threads",
--		"	  -U/--user-load: enable timerlat for user-defined user-space workload",
--		"	     --warm-up s: let the workload run for s seconds before collecting data",
--		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
--		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
--		"	     --on-threshold <action>: define action to be executed at latency threshold, multiple are allowed",
--		"	     --on-end: define action to be executed at measurement end, multiple are allowed",
--		"	     --bpf-action <program>: load and execute BPF program when latency threshold is exceeded",
--		"	     --stack-format <format>: set the stack format (truncate, skip, full)",
--		NULL,
--	};
--
--	common_usage("timerlat", "top", "a per-cpu summary of the timer latency",
--		     msg_start, msg_opts);
--}
--
--/*
-- * timerlat_top_parse_args - allocs, parse and fill the cmd line parameters
-- */
--static struct common_params
--*timerlat_top_parse_args(int argc, char **argv)
--{
--	struct timerlat_params *params;
--	long long auto_thresh;
--	int retval;
--	int c;
--	char *trace_output = NULL;
--
--	params = calloc_fatal(1, sizeof(*params));
--
--	actions_init(&params->common.threshold_actions);
--	actions_init(&params->common.end_actions);
--
--	/* disabled by default */
--	params->dma_latency = -1;
--
--	/* disabled by default */
--	params->deepest_idle_state = -2;
--
--	/* display data in microseconds */
--	params->common.output_divisor = 1000;
--
--	/* default to BPF mode */
--	params->mode = TRACING_MODE_BPF;
--
--	/* default to truncate stack format */
--	params->stack_format = STACK_FORMAT_TRUNCATE;
--
--	while (1) {
--		static struct option long_options[] = {
--			{"auto",		required_argument,	0, 'a'},
--			{"help",		no_argument,		0, 'h'},
--			{"irq",			required_argument,	0, 'i'},
--			{"nano",		no_argument,		0, 'n'},
--			{"period",		required_argument,	0, 'p'},
--			{"quiet",		no_argument,		0, 'q'},
--			{"stack",		required_argument,	0, 's'},
--			{"thread",		required_argument,	0, 'T'},
--			{"trace",		optional_argument,	0, 't'},
--			{"user-threads",	no_argument,		0, 'u'},
--			{"kernel-threads",	no_argument,		0, 'k'},
--			{"user-load",		no_argument,		0, 'U'},
--			{"trigger",		required_argument,	0, '0'},
--			{"filter",		required_argument,	0, '1'},
--			{"dma-latency",		required_argument,	0, '2'},
--			{"no-aa",		no_argument,		0, '3'},
--			{"dump-tasks",		no_argument,		0, '4'},
--			{"aa-only",		required_argument,	0, '5'},
--			{"warm-up",		required_argument,	0, '6'},
--			{"trace-buffer-size",	required_argument,	0, '7'},
--			{"deepest-idle-state",	required_argument,	0, '8'},
--			{"on-threshold",	required_argument,	0, '9'},
--			{"on-end",		required_argument,	0, '\1'},
--			{"bpf-action",		required_argument,	0, '\2'},
--			{"stack-format",	required_argument,	0, '\3'},
--			{0, 0, 0, 0}
--		};
--
--		if (common_parse_options(argc, argv, &params->common))
--			continue;
--
--		c = getopt_auto(argc, argv, long_options);
--
--		/* detect the end of the options. */
--		if (c == -1)
--			break;
--
--		switch (c) {
--		case 'a':
--			auto_thresh = get_llong_from_str(optarg);
--
--			/* set thread stop to auto_thresh */
--			params->common.stop_total_us = auto_thresh;
--			params->common.stop_us = auto_thresh;
--
--			/* get stack trace */
--			params->print_stack = auto_thresh;
--
--			/* set trace */
--			if (!trace_output)
--				trace_output = "timerlat_trace.txt";
--
--			break;
--		case '5':
--			/* it is here because it is similar to -a */
--			auto_thresh = get_llong_from_str(optarg);
--
--			/* set thread stop to auto_thresh */
--			params->common.stop_total_us = auto_thresh;
--			params->common.stop_us = auto_thresh;
--
--			/* get stack trace */
--			params->print_stack = auto_thresh;
--
--			/* set aa_only to avoid parsing the trace */
--			params->common.aa_only = 1;
--			break;
--		case 'h':
--		case '?':
--			timerlat_top_usage();
--			break;
--		case 'i':
--			params->common.stop_us = get_llong_from_str(optarg);
--			break;
--		case 'k':
--			params->common.kernel_workload = true;
--			break;
--		case 'n':
--			params->common.output_divisor = 1;
--			break;
--		case 'p':
--			params->timerlat_period_us = get_llong_from_str(optarg);
--			if (params->timerlat_period_us > 1000000)
--				fatal("Period longer than 1 s");
--			break;
--		case 'q':
--			params->common.quiet = 1;
--			break;
--		case 's':
--			params->print_stack = get_llong_from_str(optarg);
--			break;
--		case 'T':
--			params->common.stop_total_us = get_llong_from_str(optarg);
--			break;
--		case 't':
--			trace_output = parse_optional_arg(argc, argv);
--			if (!trace_output)
--				trace_output = "timerlat_trace.txt";
--			break;
--		case 'u':
--			params->common.user_workload = true;
--			/* fallback: -u implies -U */
--		case 'U':
--			params->common.user_data = true;
--			break;
--		case '0': /* trigger */
--			if (params->common.events)
--				trace_event_add_trigger(params->common.events, optarg);
--			else
--				fatal("--trigger requires a previous -e");
--			break;
--		case '1': /* filter */
--			if (params->common.events)
--				trace_event_add_filter(params->common.events, optarg);
--			else
--				fatal("--filter requires a previous -e");
--			break;
--		case '2': /* dma-latency */
--			params->dma_latency = get_llong_from_str(optarg);
--			if (params->dma_latency < 0 || params->dma_latency > 10000)
--				fatal("--dma-latency needs to be >= 0 and < 10000");
--			break;
--		case '3': /* no-aa */
--			params->no_aa = 1;
--			break;
--		case '4':
--			params->dump_tasks = 1;
--			break;
--		case '6':
--			params->common.warmup = get_llong_from_str(optarg);
--			break;
--		case '7':
--			params->common.buffer_size = get_llong_from_str(optarg);
--			break;
--		case '8':
--			params->deepest_idle_state = get_llong_from_str(optarg);
--			break;
--		case '9':
--			retval = actions_parse(&params->common.threshold_actions, optarg,
--					       "timerlat_trace.txt");
--			if (retval)
--				fatal("Invalid action %s", optarg);
--			break;
--		case '\1':
--			retval = actions_parse(&params->common.end_actions, optarg,
--					       "timerlat_trace.txt");
--			if (retval)
--				fatal("Invalid action %s", optarg);
--			break;
--		case '\2':
--			params->bpf_action_program = optarg;
--			break;
--		case '\3':
--			params->stack_format = parse_stack_format(optarg);
--			if (params->stack_format == -1)
--				fatal("Invalid --stack-format option");
--			break;
--		default:
--			fatal("Invalid option");
--		}
--	}
--
--	if (trace_output)
--		actions_add_trace_output(&params->common.threshold_actions, trace_output);
--
--	if (geteuid())
--		fatal("rtla needs root permission");
--
--	/*
--	 * Auto analysis only happens if stop tracing, thus:
--	 */
--	if (!params->common.stop_us && !params->common.stop_total_us)
--		params->no_aa = 1;
--
--	if (params->no_aa && params->common.aa_only)
--		fatal("--no-aa and --aa-only are mutually exclusive!");
--
--	if (params->common.kernel_workload && params->common.user_workload)
--		fatal("--kernel-threads and --user-threads are mutually exclusive!");
--
--	/*
--	 * If auto-analysis or trace output is enabled, switch from BPF mode to
--	 * mixed mode
--	 */
--	if (params->mode == TRACING_MODE_BPF &&
--	    (params->common.threshold_actions.present[ACTION_TRACE_OUTPUT] ||
--	     params->common.end_actions.present[ACTION_TRACE_OUTPUT] ||
--	     !params->no_aa))
--		params->mode = TRACING_MODE_MIXED;
--
--	return &params->common;
--}
--
- /*
-  * timerlat_top_apply_config - apply the top configs to the initialized tool
-  */
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index 9cec5b3e02c8..cb187e7d48d1 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -22,7 +22,7 @@
- #include "common.h"
- 
- #define MAX_MSG_LENGTH	1024
--int config_debug;
-+bool config_debug;
- 
- /*
-  * err_msg - print an error message to the stderr
-@@ -1011,32 +1011,6 @@ int auto_house_keeping(cpu_set_t *monitored_cpus)
- 	return 1;
- }
- 
--/**
-- * parse_optional_arg - Parse optional argument value
-- *
-- * Parse optional argument value, which can be in the form of:
-- * -sarg, -s/--long=arg, -s/--long arg
-- *
-- * Returns arg value if found, NULL otherwise.
-- */
--char *parse_optional_arg(int argc, char **argv)
--{
--	if (optarg) {
--		if (optarg[0] == '=') {
--			/* skip the = */
--			return &optarg[1];
--		} else {
--			return optarg;
--		}
--	/* parse argument of form -s [arg] and --long [arg]*/
--	} else if (optind < argc && argv[optind][0] != '-') {
--		/* consume optind */
--		return argv[optind++];
--	} else {
--		return NULL;
--	}
--}
--
- /*
-  * strtoi - convert string to integer with error checking
-  *
-diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
-index 96fd72042717..2ba3333669bb 100644
---- a/tools/tracing/rtla/src/utils.h
-+++ b/tools/tracing/rtla/src/utils.h
-@@ -39,7 +39,7 @@ static inline bool str_has_prefix(const char *str, const char *prefix)
- 	return strncmp(str, prefix, strlen(prefix)) == 0;
- }
- 
--extern int config_debug;
-+extern bool config_debug;
- void debug_msg(const char *fmt, ...);
- void err_msg(const char *fmt, ...);
- void fatal(const char *fmt, ...);
-@@ -47,7 +47,6 @@ void fatal(const char *fmt, ...);
- long parse_seconds_duration(char *val);
- void get_duration(time_t start_time, char *output, int output_size);
- 
--char *parse_optional_arg(int argc, char **argv);
- long long get_llong_from_str(char *start);
- 
- static inline void
-diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
-index 23ce250a6852..cfe687ff5ee1 100644
---- a/tools/tracing/rtla/tests/hwnoise.t
-+++ b/tools/tracing/rtla/tests/hwnoise.t
-@@ -6,7 +6,7 @@ test_begin
- set_timeout 2m
- 
- check "verify help page" \
--	"hwnoise --help" 0 "summary of hardware-related noise"
-+	"hwnoise --help" 129 "Usage: rtla hwnoise"
- check "detect noise higher than one microsecond" \
- 	"hwnoise -c 0 -T 1 -d 5s -q" 0
- check "set the automatic trace mode" \
-diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
-index 06787471d0e8..c3dce1c9d197 100644
---- a/tools/tracing/rtla/tests/osnoise.t
-+++ b/tools/tracing/rtla/tests/osnoise.t
-@@ -6,9 +6,9 @@ test_begin
- set_timeout 2m
- 
- check "verify help page" \
--	"osnoise --help" 0 "osnoise version"
-+	"osnoise --help" 129 "osnoise version"
- check_top_hist "verify help page" \
--	"osnoise TOOL --help" 0 "rtla osnoise"
-+	"osnoise TOOL --help" 129 "rtla osnoise"
- check_top_q_hist "verify the --stop/-s param" \
- 	"osnoise TOOL -s 30 -T 1" 2 "osnoise hit stop tracing"
- check_top_q_hist "verify the --trace param" \
-@@ -32,7 +32,7 @@ check "hist with -b/--bucket-size" \
- check "hist with -E/--entries" \
- 	"osnoise hist -E 10 -d 1s"
- check "hist with -E/--entries out of range" \
--	"osnoise hist -E 1 -d 1s" 1 "^Entries must be > 10 and < 9999999$"
-+	"osnoise hist -E 1 -d 1s" 1 "^Entries must be > 10 and < 10000000$"
- check "hist with --no-header" \
- 	"osnoise hist --no-header -d 1s" 0 "" "RTLA osnoise histogram"
- check "hist with --with-zeros" \
-diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
-index 3ebfe316b39e..27fd3143b379 100644
---- a/tools/tracing/rtla/tests/timerlat.t
-+++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -21,9 +21,9 @@ export RTLA_NO_BPF=$option
- 
- # Basic tests
- check "verify help page" \
--	"timerlat --help" 0 "timerlat version"
-+	"timerlat --help" 129 "timerlat version"
- check_top_hist "verify help page" \
--	"timerlat TOOL --help" 0 "rtla timerlat"
-+	"timerlat TOOL --help" 129 "rtla timerlat"
- check_top_hist "verify -s/--stack" \
- 	"timerlat TOOL -s 3 -T 10 -t" 2 "Blocking thread stack trace"
- check_top_hist "test in nanoseconds" \
-@@ -61,7 +61,7 @@ check "hist with -b/--bucket-size" \
- check "hist with -E/--entries" \
- 	"timerlat hist -E 10 -d 1s"
- check "hist with -E/--entries out of range" \
--	"timerlat hist -E 1 -d 1s" 1 "^Entries must be > 10 and < 9999999$"
-+	"timerlat hist -E 1 -d 1s" 1 "^Entries must be > 10 and < 10000000$"
- check "hist with --no-header" \
- 	"timerlat hist --no-header -d 1s" 0 "" "RTLA timerlat histogram"
- check "hist with --with-zeros" \
+ 	srunner_run_all(sr, CK_VERBOSE);
+ 	num_failed = srunner_ntests_failed(sr);
 -- 
 2.54.0
 
