@@ -1,54 +1,54 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E3D384CDA
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 03:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08772386424
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 03:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779335988; cv=none; b=H1EhyB4Bdp1vZgznOI4OeDbh3OzOcwXgm6h8w0mkhBNUfOrFLSAOFFleHDXogkRvHlVfzcCfvY0A8sBtX5CA1lzMa6F4LZOX4tPUUEA0pV+68k9Yu0PzDcqpy4mjN/Vxh9R5/BLCwf5KNyYM1I1X4RAvKOaK+gpQA2WkHrHkuCg=
+	t=1779335990; cv=none; b=rVx1ZeKQJDC9ospFoTtovBW5m2va/QOwgFGDrxQtucCtMMQWY9IOv/yPEZF6K0IoEsenmYqqnDl0SjUFXB29D42B/AYsgDnCBPGKMNI3e8o5QMQPvMqtbjjq4M24yRUPJxkELeMqH6vWdcfOXwnz+IeBnNqNLg0FDP5jLHg3j5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779335988; c=relaxed/simple;
-	bh=JF8wm3tZh9rnMOpXDieXBi5M2TeA1yUouuQY69iy1nU=;
+	s=arc-20240116; t=1779335990; c=relaxed/simple;
+	bh=oIraJFcdmCZeZxqwqAXFF/MvJAlmRPO/Y9o6YnJ1k2I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=maE+yXUMea/YkzmolFSssN8SMlixj1YbIWM7ug1J+y3h4laP3GbmfZACvVtXrb2NYfjPD4O8F+PM5ov+wrMNa8Cn/zmTvlbUOrEy1jUc4VXCVEpNJhxZ2kpHpbBw5VuMhwYoxtsYx2kOhnME6o2V5yX85PySqv4QvznJZShn3mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d+pW69vc; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=HZ5Z/u/eB1NgiQ0swMYSOwKYXSY78Mg0oq2BJQcMgHURDMlwheOnV1+wep3DjBM39Hdta4f31pmSY188SVOSnGhoyUmy2dILgYetNPqojF8GYZp6HfLGai/Q2wNejKIUb+MkcoxTOmMvJH5Wcs6SlviGYD/AqxqegJdsLm4ZZKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tvk/pgEh; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d+pW69vc"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-368f2d76b04so5209548a91.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 20:59:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tvk/pgEh"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-82fa5ecd760so3025363b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 20 May 2026 20:59:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779335986; x=1779940786; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779335987; x=1779940787; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Es5OLNZJR1f68aIHWnCqNasuOCwHoEK1cPtEA+NE838=;
-        b=d+pW69vcXILApPyl6h9U5JXddCJjKQRrQJ7iNAEwkyCCzdt3yPfgtV5q91H85rpLTD
-         +0FtBJhruIjcKNQ9p8+yVd3o5NPB8iz4PQchUYR4Sw5vVIcu/rJyEAkotNhxHEADUp1z
-         QmNn9bmJdtVYNA7J9ESo3PqJ6CTNcUuLxTIod8XA7biunKYFdZMLeCOh6InmFAxGnPNW
-         m6JBMZmovadMMRQ2JBrv1h2muGxaAzO8xtSOjkgLhPKR9oS0m1bkBs8ybSY2I0XbAnmR
-         2ejaYYVylWHgqpShBjlX1v7HIAkHnuBIfUuU671tRKNAjLHvegT+rYXNNorziMeRmtD2
-         JO+g==
+        bh=Km7j/1fh2HMB9gyR4gTuaHGP0nXdKFB9TrlgcUk5uNw=;
+        b=tvk/pgEh4wCHrSa+WIuM9D2SKqwm7f2dPK4BQIgDiM8WPnri3S1VPS7aj2BOb+6Mb2
+         V0JnfIhLzrF1Oi19+OVLbeat8y+t7i7LbXBFa1fDFIZPilX53toCCnN7XYvqhyX30+Nk
+         tS7pqb5FEazWxoYYRY/ogglUoBiiDySjmqG7bX4Wa7r3nA6aYRpo02F27bq2LBJKspWR
+         NbdfoYBS0ff7Y9T8BxyNphvlAfzTIY2FyAP47i0C+y6X/SnGK0YpgtYeL90VHQQYjz1j
+         4K3ZZudan4AzN9EIOsXaEcimxfrG3kEFyRG+J4yOscvFYde92CqHplHBKGXVb1sjIVdK
+         qYtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779335986; x=1779940786;
+        d=1e100.net; s=20251104; t=1779335987; x=1779940787;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Es5OLNZJR1f68aIHWnCqNasuOCwHoEK1cPtEA+NE838=;
-        b=mODC6GpL2DDYoJtI7ytFUiEkqrFOR2o/64mcqOo4VMB/p0F2ysFfHu0mc06hv5o1k5
-         9FymxW480QHO/VKXpGdFfaq0v0Jtkz8socY0AZEtwQFBy6LfsX7pz9DKEeSkuD/BVyBZ
-         WFgEJsswvfg14uq+fAYKNKAGz2J+ZfyuEgBis/4v6mvy7inWPWTJPc6bMVgExmdyXjdJ
-         Y5deFIW0uev1Tc1S3wAIpQZHTf9I1B7vHgbJuZjUxOJIPYAtw8Ag7aLBgTDcxLG2fiW5
-         ZGpkyUePxVFw6gxjaQIgEKfF3q51B2s5yJDg4zuKS6rig665kEy6BO4nMJ0vDv46XDMw
-         Y0Tg==
-X-Forwarded-Encrypted: i=1; AFNElJ91J83AGRfwkAEpOg4K/i+OkzRMfFLR46eoJEyy8eFAXFXJ9LwnZIPAmZAYj7SUJICfVbtI2EFCupuRYnHbzNuc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIEYHKq+9vsmI4tYSYe93ZDsE6jv4UZDW17XrKogN39l1snIGV
-	zq51w9KLcAgzbY0pb+e8/+F7qpEMK6k32A2RN9IE4iJLnPjorycXm2/QXI+NspUfuI4uw7SMJJf
-	iocosSQ==
-X-Received: from pjwt6.prod.google.com ([2002:a17:90a:d146:b0:368:3aec:213])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3fcc:b0:368:d839:28d5
- with SMTP id 98e67ed59e1d1-36a455f9526mr1147017a91.18.1779335985944; Wed, 20
- May 2026 20:59:45 -0700 (PDT)
-Date: Wed, 20 May 2026 20:59:40 -0700
+        bh=Km7j/1fh2HMB9gyR4gTuaHGP0nXdKFB9TrlgcUk5uNw=;
+        b=p4FJAHNq+Da7wCKcat/s53OM2tLHkJhz89dC5lbwsSBsAP9nGoBgszZlTCY7SqQexs
+         g30pSC0xzJhnij3tv089iw/4Jm83gjFPFIR7oDsSA5cLpmAk/pK56pCG0r0mhgAUbniQ
+         RM0Jal4vs7Y/wdEv3064w8SGy0uuGWrDPrjyGetvtxpR8UfO9FgwEQEFpkzotLBXj0i4
+         szvICinANoEZd/jAB2/4iWl1F33P413mOEELWMWuHbJCTGobXZipEb4J+UGvveYX/v5S
+         KjRI9y5UQSYb1MC2rnGQrzTV+MijeMPwlx4B1vvcFsaTQEBK8bC2aiUFGZXPtR3D22yy
+         daRw==
+X-Forwarded-Encrypted: i=1; AFNElJ/Caq+EhfWxZ/tNJelVpthq/I63+knlp5+4VBFeBrxjP1pgG0Er2v+0Nn3Pff7mM48MTJ92FXcnpo3IABD8Z9Qb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy56+ywX3hl4NlMIiQqc4FkjcGv87CM6nzJsDZ2WdU9zTNw/BwR
+	gYTun/Rik4iikDqUoQcTBr6CTzq38CC7SMef8RpcmkJUt8Y3iI0FmQd5G70yTx2bl7Oii+tW3sW
+	m9RR5qA==
+X-Received: from pfbik6.prod.google.com ([2002:a05:6a00:8d06:b0:835:394c:6e39])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:88cd:0:b0:837:d746:8e1a
+ with SMTP id d2e1a72fcca58-8414ad4a498mr1255250b3a.22.1779335986920; Wed, 20
+ May 2026 20:59:46 -0700 (PDT)
+Date: Wed, 20 May 2026 20:59:41 -0700
 In-Reply-To: <20260521035941.3860145-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260521035941.3860145-1-ctshao@google.com>
 X-Mailer: git-send-email 2.54.0.669.g59709faab0-goog
-Message-ID: <20260521035941.3860145-2-ctshao@google.com>
-Subject: [PATCH v2 1/2] perf stat: Add aggr_nr metric parser support
+Message-ID: <20260521035941.3860145-3-ctshao@google.com>
+Subject: [PATCH v2 2/2] perf stat: Use aggr_nr scaling for Intel uncore miss
+ latency metrics
 From: Chun-Tse Shao <ctshao@google.com>
 To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
 	namhyung@kernel.org
@@ -70,233 +71,80 @@ Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
 	linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Introduce the `aggr_nr` function to the metric expression parser.
-`aggr_nr` allows metric formulas to dynamically utilize the number of
-aggregated targets (`aggr->nr`) instead of relying on the static
-`source_count` (which represents the static socket or node count).
-
-This adds the `AGGR_NR` token to the lexer and parser, updates the
-expression parsing context helpers to store `aggr_nr`, and feeds
-`aggr->nr` from the aggregation structure in `prepare_metric`.
+Update `metric.py` to support the new `aggr_nr` keyword in the python
+metric generator. Replace the usage of `source_count` with `aggr_nr` in
+`IntelMissLat` inside `intel_metrics.py` so that uncore latency metrics
+(like `lpm_miss_lat`) scale correctly on multi-socket and SNC systems when
+aggregated globally.
 
 Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 Assisted-by: Gemini:gemini-3.1-pro-preview
 ---
- tools/perf/util/expr.c        | 26 ++++++++++++++++++++++----
- tools/perf/util/expr.h        |  6 +++++-
- tools/perf/util/expr.l        |  1 +
- tools/perf/util/expr.y        | 24 +++++++++++++++++-------
- tools/perf/util/stat-shadow.c |  6 +++++-
- 5 files changed, 50 insertions(+), 13 deletions(-)
+ tools/perf/pmu-events/intel_metrics.py |  6 +++---
+ tools/perf/pmu-events/metric.py        | 10 ++++++++--
+ 2 files changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 644769e92708..232998fef72b 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -27,6 +27,7 @@ struct expr_id_data {
- 		struct {
- 			double val;
- 			int source_count;
-+			int aggr_nr;
- 		} val;
- 		struct {
- 			double val;
-@@ -151,8 +152,8 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
- }
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index 52035433b505..d99c7dd43797 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -7,7 +7,7 @@ import os
+ import re
+ from typing import Optional
+ from common_metrics import Cycles
+-from metric import (d_ratio, has_event, max, source_count, CheckPmu, Event,
++from metric import (d_ratio, has_event, max, aggr_nr, CheckPmu, Event,
+                     JsonEncodeMetric, JsonEncodeMetricGroupDescriptions,
+                     Literal, LoadEvents, Metric, MetricConstraint, MetricGroup,
+                     MetricRef, Select)
+@@ -674,10 +674,10 @@ def IntelMissLat() -> Optional[MetricGroup]:
+     else:
+         assert data_rd_loc_occ.name == "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_LOCAL", data_rd_loc_occ
  
- /* Caller must make sure id is allocated */
--int expr__add_id_val_source_count(struct expr_parse_ctx *ctx, const char *id,
--				  double val, int source_count)
-+int expr__add_id_val_source_count_aggr_nr(struct expr_parse_ctx *ctx, const char *id,
-+					  double val, int source_count, int aggr_nr)
- {
- 	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
- 	char *old_key = NULL;
-@@ -163,6 +164,7 @@ int expr__add_id_val_source_count(struct expr_parse_ctx *ctx, const char *id,
- 		return -ENOMEM;
- 	data_ptr->val.val = val;
- 	data_ptr->val.source_count = source_count;
-+	data_ptr->val.aggr_nr = aggr_nr;
- 	data_ptr->kind = EXPR_ID_DATA__VALUE;
+-    ticks_per_cha = ticks / source_count(data_rd_loc_ins)
++    ticks_per_cha = ticks / aggr_nr(data_rd_loc_ins)
+     loc_lat = interval_sec * 1e9 * data_rd_loc_occ / \
+         (ticks_per_cha * data_rd_loc_ins)
+-    ticks_per_cha = ticks / source_count(data_rd_rem_ins)
++    ticks_per_cha = ticks / aggr_nr(data_rd_rem_ins)
+     rem_lat = interval_sec * 1e9 * data_rd_rem_occ / \
+         (ticks_per_cha * data_rd_rem_ins)
+     return MetricGroup("lpm_miss_lat", [
+diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+index ac582db785fc..6bce4eeed875 100644
+--- a/tools/perf/pmu-events/metric.py
++++ b/tools/perf/pmu-events/metric.py
+@@ -93,7 +93,7 @@ def CheckEveryEvent(*names: str) -> None:
+       name = name[:name.find(':')]
+     elif '/' in name:
+       name = name[:name.find('/')]
+-      if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power']]):
++      if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power', 'cha', 'uncore']]):
+         continue
+     if name not in all_events_all_models:
+       raise Exception(f"Is {name} a named json event?")
+@@ -576,6 +576,12 @@ def source_count(event: Event) -> Function:
+   return Function('source_count', event)
  
- 	ret = hashmap__set(ctx->ids, id, data_ptr, &old_key, &old_data);
-@@ -171,12 +173,20 @@ int expr__add_id_val_source_count(struct expr_parse_ctx *ctx, const char *id,
- 	} else if (old_data) {
- 		data_ptr->val.val += old_data->val.val;
- 		data_ptr->val.source_count += old_data->val.source_count;
-+		data_ptr->val.aggr_nr += old_data->val.aggr_nr;
- 	}
- 	free(old_key);
- 	free(old_data);
- 	return ret;
- }
  
-+/* Caller must make sure id is allocated */
-+int expr__add_id_val_source_count(struct expr_parse_ctx *ctx, const char *id,
-+				  double val, int source_count)
-+{
-+	return expr__add_id_val_source_count_aggr_nr(ctx, id, val, source_count, 1);
-+}
++def aggr_nr(event: Event) -> Function:
++  # pylint: disable=redefined-builtin
++  # pylint: disable=invalid-name
++  return Function('aggr_nr', event)
 +
- int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
- {
- 	struct expr_id_data *data_ptr = NULL, *old_data = NULL;
-@@ -390,8 +400,16 @@ double expr_id_data__value(const struct expr_id_data *data)
- 
- double expr_id_data__source_count(const struct expr_id_data *data)
- {
--	assert(data->kind == EXPR_ID_DATA__VALUE);
--	return data->val.source_count;
-+	if (data->kind == EXPR_ID_DATA__VALUE)
-+		return data->val.source_count;
-+	return 1.0;
-+}
 +
-+double expr_id_data__aggr_nr(const struct expr_id_data *data)
-+{
-+	if (data->kind == EXPR_ID_DATA__VALUE)
-+		return data->val.aggr_nr;
-+	return 1.0;
- }
- 
- double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx)
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index c0cec29ddc29..ed12e4007d2d 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -36,7 +36,9 @@ void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
- int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
- int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
- int expr__add_id_val_source_count(struct expr_parse_ctx *ctx, const char *id,
--				double val, int source_count);
-+				  double val, int source_count);
-+int expr__add_id_val_source_count_aggr_nr(struct expr_parse_ctx *ctx, const char *id,
-+					  double val, int source_count, int aggr_nr);
- int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
- int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
- 		 struct expr_id_data **data);
-@@ -53,6 +55,8 @@ int expr__find_ids(const char *expr, const char *one,
- 
- double expr_id_data__value(const struct expr_id_data *data);
- double expr_id_data__source_count(const struct expr_id_data *data);
-+double expr_id_data__aggr_nr(const struct expr_id_data *data);
-+
- double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx);
- double expr__has_event(const struct expr_parse_ctx *ctx, bool compute_ids, const char *id);
- double expr__strcmp_cpuid_str(const struct expr_parse_ctx *ctx, bool compute_ids, const char *id);
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index a2fc43159ee9..f16ccff278d0 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -121,6 +121,7 @@ min		{ return MIN; }
- if		{ return IF; }
- else		{ return ELSE; }
- source_count	{ return SOURCE_COUNT; }
-+aggr_nr		{ return AGGR_NR; }
- has_event	{ return HAS_EVENT; }
- strcmp_cpuid_str	{ return STRCMP_CPUID_STR; }
- NaN		{ return nan_value(yyscanner); }
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index e364790babb5..e20f649354cf 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -41,7 +41,7 @@ int expr_lex(YYSTYPE * yylval_param , void *yyscanner);
- 	} ids;
- }
- 
--%token ID NUMBER MIN MAX IF ELSE LITERAL D_RATIO SOURCE_COUNT HAS_EVENT STRCMP_CPUID_STR EXPR_ERROR
-+%token ID NUMBER MIN MAX IF ELSE LITERAL D_RATIO SOURCE_COUNT AGGR_NR HAS_EVENT STRCMP_CPUID_STR EXPR_ERROR
- %left MIN MAX IF
- %left '|'
- %left '^'
-@@ -87,8 +87,14 @@ static struct ids union_expr(struct ids ids1, struct ids ids2)
- 	return result;
- }
- 
-+enum expr_id_kind {
-+	EXPR_ID_KIND__VALUE,
-+	EXPR_ID_KIND__SOURCE_COUNT,
-+	EXPR_ID_KIND__AGGR_NR,
-+};
-+
- static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
--			    bool compute_ids, bool source_count)
-+			    bool compute_ids, enum expr_id_kind kind)
- {
- 	struct ids result;
- 
-@@ -101,9 +107,12 @@ static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
- 
- 		result.val = NAN;
- 		if (expr__resolve_id(ctx, id, &data) == 0) {
--			result.val = source_count
--				? expr_id_data__source_count(data)
--				: expr_id_data__value(data);
-+			if (kind == EXPR_ID_KIND__SOURCE_COUNT)
-+				result.val = expr_id_data__source_count(data);
-+			else if (kind == EXPR_ID_KIND__AGGR_NR)
-+				result.val = expr_id_data__aggr_nr(data);
-+			else
-+				result.val = expr_id_data__value(data);
- 		}
- 		result.ids = NULL;
- 		free(id);
-@@ -201,8 +210,9 @@ expr: NUMBER
- 	$$.val = $1;
- 	$$.ids = NULL;
- }
--| ID				{ $$ = handle_id(ctx, $1, compute_ids, /*source_count=*/false); }
--| SOURCE_COUNT '(' ID ')'	{ $$ = handle_id(ctx, $3, compute_ids, /*source_count=*/true); }
-+| ID				{ $$ = handle_id(ctx, $1, compute_ids, EXPR_ID_KIND__VALUE); }
-+| SOURCE_COUNT '(' ID ')'	{ $$ = handle_id(ctx, $3, compute_ids, EXPR_ID_KIND__SOURCE_COUNT); }
-+| AGGR_NR '(' ID ')'		{ $$ = handle_id(ctx, $3, compute_ids, EXPR_ID_KIND__AGGR_NR); }
- | HAS_EVENT '(' ID ')'
- {
- 	$$.val = expr__has_event(ctx, compute_ids, $3);
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index bc2d44df7baf..c17373bb0e1e 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -53,6 +53,7 @@ static int prepare_metric(struct perf_stat_config *config,
- 
- 	for (i = 0; metric_events[i]; i++) {
- 		int source_count = 0, tool_aggr_idx;
-+		int aggr_nr = 1;
- 		bool is_tool_time =
- 			tool_pmu__is_time_event(config, metric_events[i], &tool_aggr_idx);
- 		struct perf_stat_evsel *ps = metric_events[i]->stats;
-@@ -89,6 +90,7 @@ static int prepare_metric(struct perf_stat_config *config,
- 			 */
- 			val = NAN;
- 			source_count = 0;
-+			aggr_nr = 0;
- 		} else {
- 			struct perf_stat_aggr *aggr =
- 				&ps->aggr[is_tool_time ? tool_aggr_idx : aggr_idx];
-@@ -96,6 +98,7 @@ static int prepare_metric(struct perf_stat_config *config,
- 			if (aggr->counts.run == 0) {
- 				val = NAN;
- 				source_count = 0;
-+				aggr_nr = 0;
- 			} else {
- 				val = aggr->counts.val;
- 				if (is_tool_time) {
-@@ -104,13 +107,14 @@ static int prepare_metric(struct perf_stat_config *config,
- 				}
- 				if (!source_count)
- 					source_count = evsel__source_count(metric_events[i]);
-+				aggr_nr = aggr->nr ?: 1;
- 			}
- 		}
- 		n = strdup(evsel__metric_id(metric_events[i]));
- 		if (!n)
- 			return -ENOMEM;
- 
--		expr__add_id_val_source_count(pctx, n, val, source_count);
-+		expr__add_id_val_source_count_aggr_nr(pctx, n, val, source_count, aggr_nr);
- 	}
- 
- 	for (int j = 0; metric_refs && metric_refs[j].metric_name; j++) {
+ def has_event(event: Event) -> Function:
+   # pylint: disable=redefined-builtin
+   # pylint: disable=invalid-name
+@@ -762,7 +768,7 @@ def ParsePerfJson(orig: str) -> Expression:
+   # Convert accidentally converted scientific notation constants back
+   py = re.sub(r'([0-9]+)Event\(r"(e[0-9]*)"\)', r'\1\2', py)
+   # Convert all the known keywords back from events to just the keyword
+-  keywords = ['if', 'else', 'min', 'max', 'd_ratio', 'source_count', 'has_event', 'strcmp_cpuid_str']
++  keywords = ['if', 'else', 'min', 'max', 'd_ratio', 'source_count', 'aggr_nr', 'has_event', 'strcmp_cpuid_str']
+   for kw in keywords:
+     py = re.sub(rf'Event\(r"{kw}"\)', kw, py)
+   try:
 -- 
 2.54.0.669.g59709faab0-goog
 
