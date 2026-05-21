@@ -1,319 +1,161 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011030.outbound.protection.outlook.com [40.93.194.30])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013023.outbound.protection.outlook.com [40.107.201.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E54374E67;
-	Thu, 21 May 2026 02:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FB3279DC9;
+	Thu, 21 May 2026 02:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.23
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779331761; cv=fail; b=odDIIzVIhbvzlyYFrJZFZ4J++wnpUdOWNaNuTAkIcDmyBO8OYuccaLpHgC6rzo0EO8rkhfmftyReys3WLP1h64l4eFE2OX2AOceGFjXkbyHc1q/tAdLMqky92E3FfTSjEgrc6kgbCPRhsH3jojF5/V+7R/IkGL1kHrAjxwDvJ38=
+	t=1779331956; cv=fail; b=BRL46IC08WoQ19tzTT4WlhePpt2NDiNQ5tbUF0kwLjmrSAlJVjYFuOM5I2HTuZGmWWicVdfmiKVAb+USQ2fvilCtopcZCk7p8ne2xkWsBE9LhH/iZ6VEiNBSxG2nO5RMOHAf4sjHgzIZLBe6eArDoMHZtyubEzmTbWtZ5UVndCg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779331761; c=relaxed/simple;
-	bh=wiTaFaZft+Rhts5F49hlMoLxfYZbD69qU6U9bDXHYAc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tuIUzxvtF41/k/d+/jUZ+9LNfS0LNeeuRHe0FwvNoeu93pRk3z4XVy5djisx96zStUbJfc8HLKfTpg+VhmKSSp1PvWk2I3iFXgLsdEtYbA6mMpoyP9rtmZu0WI3U3riHMc7U5GmLyhb4iV+5bHqfu0NIBiM+a38dquBFnHmw+YI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kYbY+Mhf; arc=fail smtp.client-ip=40.93.194.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1779331956; c=relaxed/simple;
+	bh=2Josya71q9KTuKi6k+YtaaIHkBqf85GCAU2jJyUuXbY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fxdFvT+haKZw0h/VtaBjIfrlrO33UbGB6VicFFIznACaOXNAmE73hQBs1RY+8WDMoxwCYIdgr1foTjpq5kmbVJvq/lWGCGGg6IiCdEFY3rL4fkkj8fEVjHNtRvzrxP1Rm4unkT6jiLGWU4N3DVvYbb6mG1aU7IYk6azYyDsz86s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WvL7lppz; arc=fail smtp.client-ip=40.107.201.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kYbY+Mhf"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WvL7lppz"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Kv2l62bmYVtDlRT7mfo8vzAfxe92rm5DG9EuDU9d9CwLfFonI15S5D5+XV4+Dz7GhxzesSVUkLIPyzDogl4lruKPf822ulrORJV5WXFyB1OxWtSYeWGxSPvlWCNB8QlXUKwQmvmGeOkyN0Uem0x95VDzWa7ral7iBFDyg7CaeHaIsp0InFdsmVWyDc2l9RRWfbCeI24G237d6X40FseN4aPnu7TcJIeTRjirmBBoJ4S84OVMr17NHotWXYtPsARkMfds2HrFe/U/P2uWXYvit0e0oTCX4nEB8HFEC2lJNYuFIcghqTMgD40xt4BHCJj9oQSDu6POXsGqlL6mIT7i1w==
+ b=OQqTkm5q+z2L7Iqf0BK8Pcx23V5TMbKbU4b7XbB7lrZO1sI6FL1DM1pTBQTGjbLEmef8PTlHhP4P/0JC3Cm4DfZhTB6dctFZmYmXObOck5v/rKuX8pKc/J2XO+RXdPbNppyxhQueZzfFw800etYdx6wqB0JXWNXwn+zYAeRXfk8a8O29H/YAwgHKuX4T6Ir+3MQ9w/6xvctxHAmAjguXYIeQHFwvMGSEJZ/Urn1hjzwUsUek/lS8z+O//ymLXfbWfIEuChgjnhSfLedntQX6YfaH5ALXpjzfbe2HD4VknDVAXSV9G0KBH3CPGl8xc9lXklAXDUJ5eJXgxx4QMSmp8A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JG/ZhQTusUZ2rJWK/Oxb1tpvuuqK1WFDG8pM9/niPDQ=;
- b=G38VXc/sN9cqmdomq/ELVQM9rRlltViik9cWMtx041wa/89qwawePfTLbq90gX3WeJ1OVidBApbIFZjApqYZA+44+qBy0TgqhkyERjM7nCtEd2JvuzdoGLlruGdetHsKppt7U5KdA8XPVk5mO2o6s99acTzF5fzeTckfiQ0SKeyYcKWLGRedcFyPFBjxjkaZ90xsdXOb4oW2HSAMHvFL/0kB+wLU0sWDUDIdqiXysNBnl1FV/UiGHEFk2SO3qUtvAz67ri9Ogv8gKprohctsdZLJ+U6IbukEEZtecVx/gCR5Q2fKG8OGbAW1Wy3K8S8D9aKSWjLXkPD5r+KGB4F3qA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=MQB2u4teT8q2sUP6DvDt4HzDDmg5axmmdIAc1jkre3s=;
+ b=QZr/WH2XncFyOoAlEKX/etN0Ay6Gu7hA/LUILxObcDyOJfe/FI425pCviXLDHwtCZjfS6EUAysF6VXyMPB/kfKRjNVrPZkON4NFk4G5M7H6RIdl5YP4ZOK1Nhre7cQi+Xs0VkSwBpdSOG86LQtDPLz2OLMJWHTriNshZrsczgn3D4PcRZh+27WFHJCBJowu46VQ5AqClr2nfch8qWByrQyepTZ7XNkAvxHSIorm3+wBDq5oXZigxnIuZpVmwmDkjFdTnFBmBD/RO8kM2UnWfHU3agWs477qTbVSNJhKEq14mINXcjS5q+uepPt9eV353tjNz7HF2mG/rel2nmViqqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JG/ZhQTusUZ2rJWK/Oxb1tpvuuqK1WFDG8pM9/niPDQ=;
- b=kYbY+Mhf2sUuIAmxymw1/ETQIVBFkHG1Ff94wdUDL0mrfGlVaLrFxIBbKkEkqXiuxoQoTcRej1tv1fXfTKLJGDs3INXyF0msCFpftm6BuDs0/zUx9zJJT7YxqHcRkjwV5ZqH0QuVAAJYO5HUUa/jy8RAwPyvhzTEDf04daP230FclHpm7KBpPa1iNp1TPHN/IKwcZXLZzbYaNBUk7se0ebFaa5cIOrsYYAJkrKPPOXuUQ3fZL9Leg1ihq8qWyN8DS54Nh2kQ6IOl7Kstm57jxRHFaQg/1LyFE4IQChvbHvqs7eJFRau+MNAO8oZKiqwetUOCFkpVfLfbYGm/mzCcYQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM3PR12MB9416.namprd12.prod.outlook.com (2603:10b6:0:4b::8) by
- DS0PR12MB8296.namprd12.prod.outlook.com (2603:10b6:8:f7::6) with Microsoft
+ bh=MQB2u4teT8q2sUP6DvDt4HzDDmg5axmmdIAc1jkre3s=;
+ b=WvL7lppzT+PzJ3JbkSWdhJTW+XoX2fTWeDDjBWzFLF/zNjGk57QcYBKZfcjXaSKYg9mWBx9ut/dY53TlMlXca0F+D6OgG+OkOTWVIwhgGFw8DjIutjeL9Y4DgVZ6x+YQwpKevBRFvm1LwdQEWuYRvztOfwPsx4E7Zf6w5HIuI9c=
+Received: from PH0PR07CA0085.namprd07.prod.outlook.com (2603:10b6:510:f::30)
+ by BY5PR12MB4274.namprd12.prod.outlook.com (2603:10b6:a03:206::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.17; Thu, 21 May
+ 2026 02:52:28 +0000
+Received: from CY4PEPF0000EE39.namprd03.prod.outlook.com
+ (2603:10b6:510:f:cafe::ab) by PH0PR07CA0085.outlook.office365.com
+ (2603:10b6:510:f::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.48.17 via Frontend Transport; Thu, 21
+ May 2026 02:52:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CY4PEPF0000EE39.mail.protection.outlook.com (10.167.242.11) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.48.14; Thu, 21 May 2026 02:49:08 +0000
-Received: from DM3PR12MB9416.namprd12.prod.outlook.com
- ([fe80::8cdd:504c:7d2a:59c8]) by DM3PR12MB9416.namprd12.prod.outlook.com
- ([fe80::8cdd:504c:7d2a:59c8%5]) with mapi id 15.20.9913.012; Thu, 21 May 2026
- 02:49:08 +0000
-From: John Hubbard <jhubbard@nvidia.com>
-To: Matthew Brost <matthew.brost@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-perf-users@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH 2/2] drm/xe: gate observation streams with perf_allow_cpu()
-Date: Wed, 20 May 2026 19:49:04 -0700
-Message-ID: <20260521024904.331912-3-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260521024904.331912-1-jhubbard@nvidia.com>
-References: <20260521024904.331912-1-jhubbard@nvidia.com>
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0140.namprd13.prod.outlook.com
- (2603:10b6:a03:2c6::25) To DM3PR12MB9416.namprd12.prod.outlook.com
- (2603:10b6:0:4b::8)
+ 15.21.71.7 via Frontend Transport; Thu, 21 May 2026 02:52:28 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.41; Wed, 20 May
+ 2026 21:52:27 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 20 May
+ 2026 21:52:27 -0500
+Received: from [10.85.42.212] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Wed, 20 May 2026 21:52:23 -0500
+Message-ID: <299d7023-fbb1-4e17-8931-5bd73ffd947a@amd.com>
+Date: Thu, 21 May 2026 08:22:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/8] perf tools amd ibs: Fixes + Zen6 enhancements
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
+	<acme@kernel.org>
+CC: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, James
+ Clark <james.clark@linaro.org>, <x86@kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Manali
+ Shukla" <manali.shukla@amd.com>, Santosh Shukla <santosh.shukla@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20260508060004.2575-1-ravi.bangoria@amd.com>
+ <agAok_vgqBrZzMhA@google.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <agAok_vgqBrZzMhA@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Received-SPF: None (SATLEXMB03.amd.com: ravi.bangoria@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM3PR12MB9416:EE_|DS0PR12MB8296:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1ce51a5b-2c2c-4e8b-2b0f-08deb6e387ef
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE39:EE_|BY5PR12MB4274:EE_
+X-MS-Office365-Filtering-Correlation-Id: c62ae23e-a225-47b9-d212-08deb6e3fed2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|11063799006|18002099003|22082099003|56012099003|5023799004;
+	BCL:0;ARA:13230040|376014|7416014|36860700016|1800799024|82310400026|3023799007|11063799006|6133799003|4143699003|56012099003|22082099003|18002099003|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	tC4dN5tmGND3t6FwZNm9L9wGVaOUPUO+LIYz62LtfX2Yr61r4Yx68nfHImKaTnJPKUwrkgBRdhu/5fWgC2FJ71MyXf3oZa5jTHySbJLuwjjX49n1db4siCp8Jgssn2Pr5cGCbBN1zBXQNDz1f/E54azWFScKwqyUHDGPjfK6fckHgVshj+IMowWZ4e4E6j3WIKQmbB9Qb5ukOQ1LyDEMol6QHRvjPNpWAipwYt+UTdkJKqyKKzYwqY/XrDBSHCwg1WAChaMQ8CVG6PIOHjkCItmeuEY2O1iniPxPwC+u6TTiTUEHg6frA3rSRs9YDNOU0CeiiUkDtu7jRWKGx4LXbEyJPDJbXuvX1ZkRpb4Tjw4baB4O4LZ0k+XuFnEi5ViM02v6aeK3YleA0834Q0Qd8/TW4C4i4f/f0nF562So3o8ycQoElmU52NvCkiSWq5wK7sb5oeyCkNMXcYfUrivuqESeQzn863X0uOeH5fr3fGX7+D9fzv0YwXBRvk5+0d17rq2MXmy1ZkDMoeJPpi6kRAM9n1Dv8ZfBli5dqPeyXH2sw73uz173c34UuqTSVpB9CDeEvDnFV6gDFQJL1/clgjNLZ2rDeRhqoWn5nLuoet3V53k1xBuHJyicLUCt/UYs3yHqKkNely2FgHVRSdnDn0IPPOD8KCU9STpiVL05H05dpoMtu255j44J/Fxx93zM
+	gP8BlbXlnP1u3e+doPOYv+z2PaY99NXdsXFggzVdwOVp6Z7HCgSt1rDqspqkIprFAVNkVWgS1Et3+esurZT9ZYq3y27qMzL3EMneNVLYTyvE+xB1B7CLYMhCrhn1cAn3mQ5Yqkmfkg9V5Cudg7doSkKVY8jJE/PpoMq5pVU90FJyyRtSR1ITS6zVDkK0cWEjVlBepquuDnkihJnbbM45jaJDD+9cgImoCDAi6ePMeyNBA0+JZWm58lUeXiw6XBJBcWCFPF600eXdgv8Es436nPytbvo1pfue+98DWcIbrs5IpogsvJgJFxPTJCnWdePA6C52k8CFpwMiXnqrPmro0vI2xR3678VB/mmoyUkSVYHXdqwS84be7m2kgNmozP8UTJ2DxhH7VCWxJNLC/0nUP/NIStI706f+DImPwidME1rM+2w3jXJGgE9Wh+tcEx/aTyqSw8+LgnGngUj9xoJr0oCXzTlUU0TcKHCbNfrfCl/mXj3EllbdDoqoaBBFhjVsDT0SfDbjRRC50L5Yfd1wS2TxeyQlJr5DDiqE3C4zHwHLvwsrM6PvZ21L9FgjlFUCy0iRbm5/WbgsVfFesQCnXJsb0nIe9oA2OAHuYdkfWEUmzsORnBtuKixxTqcW3COp4qn0bKfGcBn9H2b1Hp5yW7UVVnIJn8IFKn5Dti03HE4Kwa7jPEDK8Msph03RODbY4oKbJ+ylJYbHs4AlUlcn1bLcXOO5n0D9S/DWkqOq9ig=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM3PR12MB9416.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(11063799006)(18002099003)(22082099003)(56012099003)(5023799004);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700016)(1800799024)(82310400026)(3023799007)(11063799006)(6133799003)(4143699003)(56012099003)(22082099003)(18002099003)(13003099007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9dz3OY+NIRkOUpBZZKR/T5tgZkwqndr1mPtKSq/lr8AQYsnGROzjc7OxuuiG?=
- =?us-ascii?Q?MPE4sNkWkDUalWFOd+rcw6TCTmgAuU1dsyIzd7EQ5NLDy0ofYaCF92HtVOeH?=
- =?us-ascii?Q?M40KL601Frc2O0qlrIbFf4D8tlqZESOd4czQiI2tJ64KjP1CM7dm4Y/uued2?=
- =?us-ascii?Q?MAoFmlMkE5kIySrcImBb5l1TxBQFStLA3kARp7hlkv8FslMw6vnanhvyC+hL?=
- =?us-ascii?Q?H4oNcSC9q+fHU9PqxTDUhrOIGm/cr0xJ2kyHPymS2foC192fO/LtOEYb2cFu?=
- =?us-ascii?Q?xggHghzJsrxYSi9CNx/uIlpfqSZq/RBJ3moanTzt9vmwk86F9cYgHp0NCpSy?=
- =?us-ascii?Q?I9RKV4IExgijeqxIOfDMjXyCHYZDYcbahAw72HJaQDsPUKsWf8q2IvzKdCCR?=
- =?us-ascii?Q?ahWrXBEAKR/ZusrlOOsSggu3Yi9eCbbFofpR/40btGUDad7Oj0uW3g5UYGX9?=
- =?us-ascii?Q?St9TVgyhhQaVXJuNB8XD2XN7tyWGGiHHAU6nBzMCrzJ5MS8pLurY0GW90Oug?=
- =?us-ascii?Q?v0cdZ0lulJINqyFlq20zXoGJQm5VzxSUNkaBrbWfd/etMV7qiNZ0BXZP/oqG?=
- =?us-ascii?Q?9TXIbDdxuLsXvoBLa4hQZOvBDeihg871q9Zg22ePAmn3ZFu94KsJ4guVLdRg?=
- =?us-ascii?Q?L+D+KEew5KBofmVR4HYPH9B2qLqT3IQNpI36UM9d4EiXKKVmZF+sJDDThdpj?=
- =?us-ascii?Q?Effb8+w1yOqYd0nMurkrZTlLYVFBnnA3Ud9J857DZwfmMbqv9EaTFk3ZFRYO?=
- =?us-ascii?Q?FsYWmjLgAAbFEGSODQmgpyg90Jiq+HuYLoVgmVPh5/yHb/NlfW9vrruFCQDJ?=
- =?us-ascii?Q?DN2P3zMXVrk6EcYl61saBFkViUy92PI4neOKPDUcOXQHm7IicrEO7BUNGDRq?=
- =?us-ascii?Q?76sorJlLV7Pq2WYT95Wnyq/mLQjO27QZDCmSy3azcgpahv83J6Zg+4oozTU2?=
- =?us-ascii?Q?gNCR2eDXQZFV+W6gRk1jo0pbSBcn6yWZrXlMNav2hqmJxOAuhkIbJ8+6FxNp?=
- =?us-ascii?Q?esi8d/lPwGkQkBO4fCRMZT/UEHSNQcnU+kgNPF95+gg0O8vwbaxq8G5Hx4pp?=
- =?us-ascii?Q?Jzik57ZKBlRZnDHyugZBoFMwQc1RESYHIf0ZqjS/lWRrphAu5Z8rZrg8x4GK?=
- =?us-ascii?Q?Y40NFyDAMYzChybG77hDaaBs+Gjf3RvdOl+I+0PDd2zqRJBLqyhkX7xn9mPj?=
- =?us-ascii?Q?ZCUHc4YSuRYBFwJ7FG2tX957zwT0SHo+J0RDbfOuf3Hc7o/ePfmpurHTGGbc?=
- =?us-ascii?Q?0ML5xK8a+609LSpInvzk08B4j1mN1H2ARtQ1f0SHsML4GNZfS2uK1OuC9K8X?=
- =?us-ascii?Q?LUSO72l0Eqzfw8fu8V77WUUWrYO8T3pOLkR6OldeDe+cN+IS08lyj/m9ZD5j?=
- =?us-ascii?Q?aF5lLi3k2ufMn8Uw0ww2DB8M2Ubx6gkslbIB8vwDlvrlq14KUEeV3gq7DLyB?=
- =?us-ascii?Q?etMuwy2+gomsnpBhshXxp3efa8SKTz/he0cVs+xEBza2KU/Q1gmpsJIeurIi?=
- =?us-ascii?Q?nrMy/DYdBYWsBq0P4iR05q4uHgkH69QssysmRd6p1k5Dj48bw4cSAEXh7sew?=
- =?us-ascii?Q?Vgf2lmTldErleHuGgOdEAsMuQn5ETlhvdhOFlcSHjnqxYrDMIhfwAWbeJSlO?=
- =?us-ascii?Q?xKybnF55FjAo6+/nXwYRTucB2q/4ujJpYkcLILENYDXCwCNcQWR/o+0qpVNt?=
- =?us-ascii?Q?bzw81fcP9a/TuFQPksnfWvSv//ZYD2ucnlBPFGb6Yc6R1MMEaW8KU+hW0i+9?=
- =?us-ascii?Q?jWMy/0zf/g=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ce51a5b-2c2c-4e8b-2b0f-08deb6e387ef
-X-MS-Exchange-CrossTenant-AuthSource: DM3PR12MB9416.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 02:49:08.8597
+	YDtHwi/d/6hiLnj2ECmS0L6LXnvkRAoSQWXFjzTRUcFk5nABA1vVRMfk0xCbgg3QOyCCbDmVen656+yOi4/K42qWt9lVwbO931ZYn0D0rMTw4IO/nWcd10hqlNjf52S2pdm5cKxBn8vI1+77c51HbkXQpjnmczX8d3350CIi24wlLGZyb3+mDJV4FxAOZDlSHzVsU3wid+AvV/VISrxyRWfdPkJdGtGtnvHi1YE5y6iPHJnhIuDhe9WIH1Jmni3NM32467QyfAUjQ9puGrXUuuGmHQGLV3dVX9d60RIyn2Z76Wamn3IQWgEfVhKADpPeAtSUQasQnoyVpb2gxK87HyWULx0Rc2LEZP4h68mK47DoUsNR6DKasXZ7z8E//dBl9JnxMroMNpFrggyH3vQRrffERm+oL9Jk1QijR8WSzskYbf7KlFLV/zld/J3NiRBN
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 02:52:28.1372
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dnBpa6maRv0VpxVvRsQVOGE+MTFK9C3yQst7MExxIJxYa16oEW6a7SaYgo/jXfP27AfEBjIDfCjzvhBIBRrKtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8296
+X-MS-Exchange-CrossTenant-Network-Message-Id: c62ae23e-a225-47b9-d212-08deb6e3fed2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE39.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4274
 
-xe OA and EU-stall paths open-code a partial copy of the system-wide
-perf CPU-event permission check:
+>> o Fix kernel version check in perf IBS unit test.
+>> o On Zen6 and newer platforms, skip perf unit test that assumes IBS don't
+>>   have hardware-assisted privilege filter.
+>> o Starting with Zen4, the validity of several IBS fields changes. Add
+>>   the required dependency checks when decoding IBS MSRs.
+>> o Zen6 and future platforms extends IBS OP with Streaming-Store and
+>>   Remote-Socket indicators for load/store instructions. Add decoding
+>>   support for these new bits.
+>> o Document new IBS features in perf-amd-ibs man page 
+>>
+>> IBS Zen6 enhancements doc:
+>>   AMD64 Zen6 Instruction Based Sampling (IBS) Extensions and Features,
+>>   Pub. 69205 Rev. 1.00 March 2026 
+>>   https://bugzilla.kernel.org/attachment.cgi?id=310002
+>>
+>> Patches are prepared on perf-tools-next/perf-tools-next (53bc03289278).
+>>
+>> v2: https://lore.kernel.org/r/20260430061115.10266-1-ravi.bangoria@amd.com  
+>> v2->v3:
+>>  - Instead of removing the priv modifier unit test completely, skip
+>>    it on platforms that supports hardware privilege filtering. (Namhyung)
+>>  - Rebased the series on latest perf-tools-next/perf-tools-next.
+>>
+>> Ravi Bangoria (8):
+>>   perf test amd ibs: Fix incorrect kernel version check
+>>   perf tool ibs: Sync AMD IBS header file
+>>   perf test ibs: Skip privilege test on Zen6 and newer platforms
+>>   perf amd ibs: Suppress bogus TlbRefillLat and DCPhysAd on Zen4+
+>>   perf amd ibs: Make Fetch status bits dependent on PhyAddrValid for
+>>     newer platforms
+>>   perf amd ibs: Decode Remote-Socket flag in IBS OP raw dump
+>>   perf amd ibs: Decode Streaming-store flag in IBS OP raw dump
+>>   perf doc: Document new IBS capabilities in man page
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-    if (xe_observation_paranoid && !perfmon_capable())
-            return -EACCES;
+Thanks Namhyung.
 
-This open-coded check skips two things perf_allow_cpu() handles: the
-graduated kernel.perf_event_paranoid policy that an administrator
-may have tuned, and the security_perf_event_open() LSM hook.
+Arnaldo, mind picking this up?
 
-Introduce xe_observation_paranoid_check() to wrap perf_allow_cpu(),
-and convert the open-coded sites in xe_oa.c and xe_eu_stall.c. The
-dev.xe.observation_paranoid sysctl still acts as an escape hatch
-when cleared.
-
-xe observation now consults kernel.perf_event_paranoid and the LSM
-perf hook on every open. Sites that have already configured an LSM
-perf policy or tuned the paranoid sysctl will see those settings
-extend to xe.
-
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- drivers/gpu/drm/xe/xe_eu_stall.c    |  5 +++--
- drivers/gpu/drm/xe/xe_oa.c          | 25 +++++++++++++---------
- drivers/gpu/drm/xe/xe_observation.c | 32 ++++++++++++++++++++++++-----
- drivers/gpu/drm/xe/xe_observation.h |  3 +--
- 4 files changed, 46 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/gpu/drm/xe/xe_eu_stall.c b/drivers/gpu/drm/xe/xe_eu_stall.c
-index dddcdd0bb7a3..ede8e3c98b2b 100644
---- a/drivers/gpu/drm/xe/xe_eu_stall.c
-+++ b/drivers/gpu/drm/xe/xe_eu_stall.c
-@@ -963,9 +963,10 @@ int xe_eu_stall_stream_open(struct drm_device *dev, u64 data, struct drm_file *f
- 		return -ENODEV;
- 	}
- 
--	if (xe_observation_paranoid && !perfmon_capable()) {
-+	ret = xe_observation_paranoid_check();
-+	if (ret) {
- 		drm_dbg(&xe->drm,  "Insufficient privileges for EU stall monitoring\n");
--		return -EACCES;
-+		return ret;
- 	}
- 
- 	/* Initialize and set default values */
-diff --git a/drivers/gpu/drm/xe/xe_oa.c b/drivers/gpu/drm/xe/xe_oa.c
-index 6337e671c97a..f15847be01bc 100644
---- a/drivers/gpu/drm/xe/xe_oa.c
-+++ b/drivers/gpu/drm/xe/xe_oa.c
-@@ -1676,9 +1676,10 @@ static int xe_oa_mmap(struct file *file, struct vm_area_struct *vma)
- 	unsigned long start = vma->vm_start;
- 	int i, ret;
- 
--	if (xe_observation_paranoid && !perfmon_capable()) {
-+	ret = xe_observation_paranoid_check();
-+	if (ret) {
- 		drm_dbg(&stream->oa->xe->drm, "Insufficient privilege to map OA buffer\n");
--		return -EACCES;
-+		return ret;
- 	}
- 
- 	/* Can mmap the entire OA buffer or nothing (no partial OA buffer mmaps) */
-@@ -2052,10 +2053,12 @@ int xe_oa_stream_open_ioctl(struct drm_device *dev, u64 data, struct drm_file *f
- 		privileged_op = true;
- 	}
- 
--	if (privileged_op && xe_observation_paranoid && !perfmon_capable()) {
--		drm_dbg(&oa->xe->drm, "Insufficient privileges to open xe OA stream\n");
--		ret = -EACCES;
--		goto err_exec_q;
-+	if (privileged_op) {
-+		ret = xe_observation_paranoid_check();
-+		if (ret) {
-+			drm_dbg(&oa->xe->drm, "Insufficient privileges to open xe OA stream\n");
-+			goto err_exec_q;
-+		}
- 	}
- 
- 	if (!param.exec_q && !param.sample) {
-@@ -2334,9 +2337,10 @@ int xe_oa_add_config_ioctl(struct drm_device *dev, u64 data, struct drm_file *fi
- 		return -ENODEV;
- 	}
- 
--	if (xe_observation_paranoid && !perfmon_capable()) {
-+	err = xe_observation_paranoid_check();
-+	if (err) {
- 		drm_dbg(&oa->xe->drm, "Insufficient privileges to add xe OA config\n");
--		return -EACCES;
-+		return err;
- 	}
- 
- 	err = copy_from_user(&param, u64_to_user_ptr(data), sizeof(param));
-@@ -2436,9 +2440,10 @@ int xe_oa_remove_config_ioctl(struct drm_device *dev, u64 data, struct drm_file
- 		return -ENODEV;
- 	}
- 
--	if (xe_observation_paranoid && !perfmon_capable()) {
-+	ret = xe_observation_paranoid_check();
-+	if (ret) {
- 		drm_dbg(&oa->xe->drm, "Insufficient privileges to remove xe OA config\n");
--		return -EACCES;
-+		return ret;
- 	}
- 
- 	ret = get_user(arg, ptr);
-diff --git a/drivers/gpu/drm/xe/xe_observation.c b/drivers/gpu/drm/xe/xe_observation.c
-index e3f9b546207e..39e05b9131a7 100644
---- a/drivers/gpu/drm/xe/xe_observation.c
-+++ b/drivers/gpu/drm/xe/xe_observation.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/errno.h>
-+#include <linux/perf_event.h>
- #include <linux/sysctl.h>
- 
- #include <uapi/drm/xe_drm.h>
-@@ -12,9 +13,28 @@
- #include "xe_oa.h"
- #include "xe_observation.h"
- 
--u32 xe_observation_paranoid = true;
-+static u32 xe_observation_paranoid = true;
- static struct ctl_table_header *sysctl_header;
- 
-+/**
-+ * xe_observation_paranoid_check - Gate access to xe observation streams.
-+ *
-+ * When the xe-specific observation_paranoid sysctl is enabled (the
-+ * default), defer to perf_allow_cpu() so that access is governed by the
-+ * same policy as system-wide perf CPU events: kernel.perf_event_paranoid
-+ * plus the security_perf_event_open() LSM hook. When the sysctl has been
-+ * cleared by a privileged user, observation is open to all callers.
-+ *
-+ * Return: 0 if access is permitted, a negative errno otherwise.
-+ */
-+int xe_observation_paranoid_check(void)
-+{
-+	if (!xe_observation_paranoid)
-+		return 0;
-+
-+	return perf_allow_cpu();
-+}
-+
- static int xe_oa_ioctl(struct drm_device *dev, struct drm_xe_observation_param *arg,
- 		       struct drm_file *file)
- {
-@@ -83,11 +103,13 @@ static const struct ctl_table observation_ctl_table[] = {
- };
- 
- /**
-- * xe_observation_sysctl_register - Register xe_observation_paranoid sysctl
-+ * xe_observation_sysctl_register - Register the observation_paranoid sysctl
-  *
-- * Normally only superuser/root can access observation stream
-- * data. However, superuser can set xe_observation_paranoid sysctl to 0 to
-- * allow non-privileged users to also access observation data.
-+ * When dev.xe.observation_paranoid is set (the default), access to
-+ * observation streams follows the system-wide perf_allow_cpu() policy:
-+ * kernel.perf_event_paranoid plus the security_perf_event_open() LSM
-+ * hook. A privileged user can clear the sysctl to bypass that gate and
-+ * allow unprivileged access to observation data.
-  *
-  * Return: always returns 0
-  */
-diff --git a/drivers/gpu/drm/xe/xe_observation.h b/drivers/gpu/drm/xe/xe_observation.h
-index 17816998e966..73a03e03c96a 100644
---- a/drivers/gpu/drm/xe/xe_observation.h
-+++ b/drivers/gpu/drm/xe/xe_observation.h
-@@ -11,8 +11,7 @@
- struct drm_device;
- struct drm_file;
- 
--extern u32 xe_observation_paranoid;
--
-+int xe_observation_paranoid_check(void);
- int xe_observation_ioctl(struct drm_device *dev, void *data, struct drm_file *file);
- int xe_observation_sysctl_register(void);
- void xe_observation_sysctl_unregister(void);
--- 
-2.54.0
-
+Thanks,
+Ravi
