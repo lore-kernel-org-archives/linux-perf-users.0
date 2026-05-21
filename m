@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571E93C4B91
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 14:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171BD3D6CB7
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 May 2026 14:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779373135; cv=none; b=Z99ijkqyV4v8OYGrMUChI9Qk688jWz/O70u0l/bhG34W7KnRTyBPo9dKtdxbX2LomomTCkDh6ajjoHQS+WSfVWKhTKZoM41oukUQ3fVaC8lBFcrhLOcizHFULBcdG6FixmiZTitaYE2Anc5D1pFgD1H3EeXfsp141eMpU7Vm0Vc=
+	t=1779373138; cv=none; b=XNxGuhSmGbK2l6a4AX7SMEXOfGVm3soDlNmoRglSURayyclIndK4rFXy0u/SpxBCnBLPKW9BV6R1wmebd+7aX5+ag59qkG7d3UtHErx4CgzcXdQE/BEaklMVheNZBcgqq53PW2uAxsRl4GoZBR+TshwKTspCE7RYffmxMb2W+Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779373135; c=relaxed/simple;
-	bh=gzqgFNoB5ibYYcggtyU17s+jVSr4H2qmZTUcTXw6d1I=;
+	s=arc-20240116; t=1779373138; c=relaxed/simple;
+	bh=pP9zymcXj1EdhFLVo2c4W4swf8P6e2WPmGdTahTiMxs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l182/CDAP4F5OeBR4d5WWSwG+/dZElKj6TX7GRQcEJAK/77tMqyCWU5oYL3dIm6XQb0nh6i9cvoFUzotoUnNpRIcSYUuUkko/7Jdw24gSdpQNEKDcdF3EGjqtqXeFPxmENmvh2N86dm+JVMDC/FI9zSC4y8AVWIVRpwsC2ubRc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chU2xX/O; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=nAnKSkJK3GfFsEAmht4+Htxg61tbS1sHvdEXgTXbvxPS1LKtfS3pA3jHAIyMP4tMIiLPVFcyi+qk60LgskkTdnon9P+fUz9egA8pUXCpvEuSwgOQ8c3LpLdoST+0STa5H1Cq0MV7rrhktx3SuXMDQGivrwDQORlJJVZeAjbVtos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eAnhDzJT; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chU2xX/O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eAnhDzJT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779373133;
+	s=mimecast20190719; t=1779373136;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uZYGTasRkRL1pH2vV9nYtelkEq8mhaLf0iEW2VMecWQ=;
-	b=chU2xX/OUo3KBzPzb5WRFEfIVssk+r2X7tGemKDsAVdyL4I5Hn5g+A45aVz1LIoDrx2xED
-	KY4IO66R2kNwm31sfOrmvwBnLdHvtdt1AUJ1eySc1pKUZMfWH5Ud2VSPWBeJiNFqNox/am
-	wenC4SMgIF5YTYgxo4TqiKDtGkKdOXc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=A6jNa+GQSgA+jzK73QK9g09OBoehVz9w9jxoOFMsCm4=;
+	b=eAnhDzJTaxGfMjVTsZ+/FNQTtD4xU2VpPkmkGAdwUYhS8InRbeRqWhZ5ZHYwv0q0DI1bwv
+	Skq6TX2YRov2Ehkw034Insn3umG1JI+WVOQL3xExpPAm/XfWE1ChdHB1K7pwoxf4xiaJ/w
+	kQa7Lwq1DEdIQ0SLyQp1no45AGp24CI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-658-NR4FxkqOOVSlPMf5bQQMsA-1; Thu,
- 21 May 2026 10:18:49 -0400
-X-MC-Unique: NR4FxkqOOVSlPMf5bQQMsA-1
-X-Mimecast-MFC-AGG-ID: NR4FxkqOOVSlPMf5bQQMsA_1779373127
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-282-WlQ7H0M6OTqEd4TdNH7h-g-1; Thu,
+ 21 May 2026 10:18:52 -0400
+X-MC-Unique: WlQ7H0M6OTqEd4TdNH7h-g-1
+X-Mimecast-MFC-AGG-ID: WlQ7H0M6OTqEd4TdNH7h-g_1779373131
 Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 89A5A180062C;
-	Thu, 21 May 2026 14:18:47 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 11DB21956062;
+	Thu, 21 May 2026 14:18:51 +0000 (UTC)
 Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 55AC51684;
-	Thu, 21 May 2026 14:18:44 +0000 (UTC)
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E4F4A1687;
+	Thu, 21 May 2026 14:18:47 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>
@@ -57,9 +57,9 @@ Cc: John Kacur <jkacur@redhat.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
 	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v2 2/6] tools subcmd: support optarg as separate argument
-Date: Thu, 21 May 2026 16:18:29 +0200
-Message-ID: <20260521141833.2353025-3-tglozar@redhat.com>
+Subject: [PATCH v2 3/6] tools subcmd: allow parsing distinct --opt and --no-opt
+Date: Thu, 21 May 2026 16:18:30 +0200
+Message-ID: <20260521141833.2353025-4-tglozar@redhat.com>
 In-Reply-To: <20260521141833.2353025-1-tglozar@redhat.com>
 References: <20260521141833.2353025-1-tglozar@redhat.com>
 Precedence: bulk
@@ -71,164 +71,86 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
 
-In addition to "-ovalue" and "--opt=value" syntax, allow also "-o value"
-and "--opt value" for options with optional argument when the newly
-added PARSE_OPT_OPTARG_ALLOW_NEXT flag is set.
+libsubcmd automatically generates for every option --opt an equivalent
+negated option, --no-opt, to unset the option. Vice versa, for every
+option declared as --no-opt, a shorthand --opt is declared for
+convenience.
 
-This behavior is turned off by default since it does not make sense for
-tools using non-option command line arguments. Consider the ambiguity
-of "cmd -d x", where "-d x" can mean either "-d with argument of x" or
-"-d without argument, followed by non-option argument x". This is not an
-issue in the case that the tool takes no non-option arguments.
+Add a flag, PARSE_OPT_NOAUTONEG, to disable this behavior. This new flag
+behaves similarly to the already existing PARSE_OPT_NONEG, only it does
+not reject the --no-opt variant, but leaves it undefined. That is useful
+when there is a conflicting distinct --no-opt option in the syntax of
+the tool.
 
-To implement this, a new local variable, force_defval, is created in
-get_value(), along with a comment explaining the logic.
+PARSE_OPT_NOAUTONEG is enabled per-option, allowing to unset other
+options that do not have this conflict.
 
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/lib/subcmd/parse-options.c | 53 +++++++++++++++++++++++++++-----
- tools/lib/subcmd/parse-options.h |  1 +
- 2 files changed, 46 insertions(+), 8 deletions(-)
+ tools/lib/subcmd/parse-options.c | 10 ++++++----
+ tools/lib/subcmd/parse-options.h |  3 +++
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-index 555d617c1f50..664b2053bb77 100644
+index 664b2053bb77..e83200e9f56a 100644
 --- a/tools/lib/subcmd/parse-options.c
 +++ b/tools/lib/subcmd/parse-options.c
-@@ -72,6 +72,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 	const char *s, *arg = NULL;
- 	const int unset = flags & OPT_UNSET;
- 	int err;
-+	bool force_defval = false;
- 
- 	if (unset && p->opt)
- 		return opterror(opt, "takes no value", flags);
-@@ -123,6 +124,42 @@ static int get_value(struct parse_opt_ctx_t *p,
+@@ -427,7 +427,8 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
+ 			return 0;
  		}
+ 		if (!rest) {
+-			if (strstarts(options->long_name, "no-")) {
++			if (strstarts(options->long_name, "no-") &&
++			    !(options->flags & PARSE_OPT_NOAUTONEG)) {
+ 				/*
+ 				 * The long name itself starts with "no-", so
+ 				 * accept the option without "no-" so that users
+@@ -465,12 +466,12 @@ static int parse_long_opt(struct parse_opt_ctx_t *p, const char *arg,
+ 				continue;
+ 			}
+ 			/* negated and abbreviated very much? */
+-			if (strstarts("no-", arg)) {
++			if (strstarts("no-", arg) && !(options->flags & PARSE_OPT_NOAUTONEG)) {
+ 				flags |= OPT_UNSET;
+ 				goto is_abbreviated;
+ 			}
+ 			/* negated? */
+-			if (strncmp(arg, "no-", 3))
++			if (strncmp(arg, "no-", 3) || (options->flags & PARSE_OPT_NOAUTONEG))
+ 				continue;
+ 			flags |= OPT_UNSET;
+ 			rest = skip_prefix(arg + 3, options->long_name);
+@@ -1019,7 +1020,8 @@ int parse_options_usage(const char * const *usagestr,
+ 		if (strstarts(opts->long_name, optstr))
+ 			print_option_help(opts, 0);
+ 		if (strstarts("no-", optstr) &&
+-		    strstarts(opts->long_name, optstr + 3))
++		    strstarts(opts->long_name, optstr + 3) &&
++			!(opts->flags & PARSE_OPT_NOAUTONEG))
+ 			print_option_help(opts, 0);
  	}
  
-+	if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (!(p->flags & PARSE_OPT_OPTARG_ALLOW_NEXT)) {
-+			/*
-+			 * If the option has an optional argument, and the argument is not
-+			 * provided in the option itself, do not attempt to get it from
-+			 * the next argument, unless PARSE_OPT_OPTARG_ALLOW_NEXT is set.
-+			 *
-+			 * This prevents a non-option argument from being interpreted as an
-+			 * optional argument of a preceding option, for example:
-+			 *
-+			 * $ cmd --opt val
-+			 * -> is "val" argument of "--opt" or a separate non-option
-+			 * argument?
-+			 *
-+			 * With PARSE_OPT_OPTARG_ALLOW_NEXT, "val" is interpreted as
-+			 * the argument of "--opt", i.e. the same as "--opt=val".
-+			 * Without PARSE_OPT_OPTARG_ALLOW_NEXT, --opt is interpreted
-+			 * as having the default value, and "val" as a separate non-option
-+			 * argument.
-+			 *
-+			 * PARSE_OPT_OPTARG_ALLOW_NEXT is useful for commands that take no
-+			 * non-option arguments and want to allow more flexibility in
-+			 * optional argument passing.
-+			 */
-+			force_defval = true;
-+		}
-+
-+		if (p->argc <= 1 || p->argv[1][0] == '-') {
-+			/*
-+			 * If next argument is an option or does not exist,
-+			 * use the default value.
-+			 */
-+			force_defval = true;
-+		}
-+	}
-+
- 	if (opt->flags & PARSE_OPT_NOBUILD) {
- 		char reason[128];
- 		bool noarg = false;
-@@ -148,7 +185,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			noarg = true;
- 		if (opt->flags & PARSE_OPT_NOARG)
- 			noarg = true;
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt)
-+		if (force_defval)
- 			noarg = true;
- 
- 		switch (opt->type) {
-@@ -212,7 +249,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 		err = 0;
- 		if (unset)
- 			*(const char **)opt->value = NULL;
--		else if (opt->flags & PARSE_OPT_OPTARG && !p->opt)
-+		else if (force_defval)
- 			*(const char **)opt->value = (const char *)opt->defval;
- 		else
- 			err = get_arg(p, opt, flags, (const char **)opt->value);
-@@ -244,7 +281,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			return (*opt->callback)(opt, NULL, 1) ? (-1) : 0;
- 		if (opt->flags & PARSE_OPT_NOARG)
- 			return (*opt->callback)(opt, NULL, 0) ? (-1) : 0;
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt)
-+		if (force_defval)
- 			return (*opt->callback)(opt, NULL, 0) ? (-1) : 0;
- 		if (get_arg(p, opt, flags, &arg))
- 			return -1;
-@@ -255,7 +292,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(int *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(int *)opt->value = opt->defval;
- 			return 0;
- 		}
-@@ -271,7 +308,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(unsigned int *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(unsigned int *)opt->value = opt->defval;
- 			return 0;
- 		}
-@@ -289,7 +326,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(long *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(long *)opt->value = opt->defval;
- 			return 0;
- 		}
-@@ -305,7 +342,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(unsigned long *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(unsigned long *)opt->value = opt->defval;
- 			return 0;
- 		}
-@@ -321,7 +358,7 @@ static int get_value(struct parse_opt_ctx_t *p,
- 			*(u64 *)opt->value = 0;
- 			return 0;
- 		}
--		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
-+		if (force_defval) {
- 			*(u64 *)opt->value = opt->defval;
- 			return 0;
- 		}
 diff --git a/tools/lib/subcmd/parse-options.h b/tools/lib/subcmd/parse-options.h
-index 8e9147358a28..c573a0ca5ca6 100644
+index c573a0ca5ca6..38df5fd21963 100644
 --- a/tools/lib/subcmd/parse-options.h
 +++ b/tools/lib/subcmd/parse-options.h
-@@ -33,6 +33,7 @@ enum parse_opt_flags {
- 	PARSE_OPT_KEEP_ARGV0 = 4,
- 	PARSE_OPT_KEEP_UNKNOWN = 8,
- 	PARSE_OPT_NO_INTERNAL_HELP = 16,
-+	PARSE_OPT_OPTARG_ALLOW_NEXT = 32,
+@@ -47,6 +47,7 @@ enum parse_opt_option_flags {
+ 	PARSE_OPT_NOEMPTY  = 128,
+ 	PARSE_OPT_NOBUILD  = 256,
+ 	PARSE_OPT_CANSKIP  = 512,
++	PARSE_OPT_NOAUTONEG = 1024,
  };
  
- enum parse_opt_option_flags {
+ struct option;
+@@ -149,6 +150,8 @@ struct option {
+ 	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = "time", .help = (h), .callback = parse_opt_approxidate_cb }
+ #define OPT_CALLBACK(s, l, v, a, h, f) \
+ 	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = (a), .help = (h), .callback = (f) }
++#define OPT_CALLBACK_FLAG(s, l, v, a, h, f, fl) \
++	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = (a), .help = (h), .callback = (f), .flags = (fl) }
+ #define OPT_CALLBACK_SET(s, l, v, os, a, h, f) \
+ 	{ .type = OPTION_CALLBACK, .short_name = (s), .long_name = (l), .value = (v), .argh = (a), .help = (h), .callback = (f), .set = check_vtype(os, bool *)}
+ #define OPT_CALLBACK_NOOPT(s, l, v, a, h, f) \
 -- 
 2.54.0
 
