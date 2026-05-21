@@ -1,52 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6D833B6F6;
-	Thu, 21 May 2026 15:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D4C33A6E2;
+	Thu, 21 May 2026 15:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779377441; cv=none; b=iOka7r1dolf7GTsNuT+xWgramC5jsKT5zSKfJIFi+FkxL+nslXOEm2I17BliKzzmYVAWRMKQ0Lnsz/Chgb+4gETCCQk8U71vtrBWI7Kt11SWeJE2VU7IKUXIi1Ev7XkBomfc0OOh6KL1NtkvFHauKIUOgXxvL+nPQ92qv7dFO3o=
+	t=1779378471; cv=none; b=pgph9l7E4db+s3nZrF5KzUdTYUFLTS4MxtkEnydkINYuPCSEfoT1RQj+bt5Ph4RxdkLRQe+W53Ls/x34w9GRG+qzTw6YvgQ59YARPuesFD69pIXHiBYCGapZ9VttkYuNFIbBCMtDzFhjH5bs6vOinCKZfN4iRnmLp7Z3aatGv/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779377441; c=relaxed/simple;
-	bh=X+LcL4d8IoZEBu4qCH4rWM1ShYAUxLN4lGjDroNcJ6I=;
+	s=arc-20240116; t=1779378471; c=relaxed/simple;
+	bh=RgWQMXXU8OZw0HauN9rRLacyNAndnfWJBnV9GM2xzbc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IkNMdJzEURglJWFiU29/7HPP3WU4VPNfWqQxVNxdaRjVYesThUnPatTfsBQ0q0w5FIeWqBlrISQG2cBasyK6+rt8S4Jb0oyQDJoEEsaluyXUgPkI16uuSYYUi5jBzqAaXhynezsLIXEz/W/Y2WPPGlnEfYZEFhA2QTWzLU2W6A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IVlNyrL6; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=pTn7n52ydpThJErI0Ci5p2Jb1Vz6s5tibkk5ZmCwHbSSYTMRUdhu5PU+AkcgjIZ/99WkbAugEqICCz3DAETYWenW/dt7HeTGS6v03GNu61+YycCg8gAwqDvmh9AX/fCt3LYtqFVd+7Tfwh6qU38rv9Ay/ZxKF0HXR7MiGJcRAc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=HTm7dY7M; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IVlNyrL6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8FF21F000E9;
-	Thu, 21 May 2026 15:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779377440;
-	bh=8pXURKq8v8zQW/FW10nRc2NCZs+G7pfHGg21oIYc6E8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=IVlNyrL6WYlZUME7Rqr3JrT18HaZuZlXGybQ6rlNzjau/CHsTVmzaNqZL16i0FhO7
-	 nH1zfbXMp6Kv83AglEN+zzlKeNB4jM5ttbLZ+ntQoYp2kSFio87P/S9Ih/JXLfZ1J+
-	 4qISDZA3UIYrO8fqt14sLbCvRG9Yiy/bdfpRsp3E4I4Afd4xo3dkJEZ1v7Dv2gt7+J
-	 khqdnYKHTbEUp97bBBd0ATw4tHngIQtpFZV4tOC6EnuIg88S1hpXfc2rfmbpQ07EOK
-	 MDGjJXQlxiZPSjtLQ5so/BiOzbzcycs3v/BqVOtfz9ewVTWf3+bvDOIDQrmHr/4Iyc
-	 l6+x6suuFsShQ==
-Date: Thu, 21 May 2026 17:30:32 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jiri Kosina <jikos@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, ihor.solodrai@linux.dev, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-input@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] selftests: Remove unused LLD variable
-Message-ID: <ag8k4k6f_dlchcuA@beelink>
-References: <20260518-james-perf-llvm-version-v2-0-f12cc4f031d8@linaro.org>
- <20260518-james-perf-llvm-version-v2-3-f12cc4f031d8@linaro.org>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="HTm7dY7M"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SKIBGGk0aJOb4JUAlROUeYlj7NRw6OTASU16kTkeIoM=; b=HTm7dY7M4HT8U2MLKsLsuJ2ZOH
+	00JzvN4yrEZBV/7byMjnnI3iEWFqKnKYc+bM2z4nhmlV8EbNiiffbp2QxbCgvHi9e4dIURIJYM5iH
+	YiSuZf/8NweZivPlC/Ukkr8x6Gc3trgQZyZ0eQ+5ZM9+8lDLt+P8t00TMqWE9OfcTMp5PrPg7atc3
+	nc0PnCH3Yjy9aP19QBGAV/AYaw2b6ZDCwuChj0yi9bokEu+XRk8FYIzdhjK3NzNwn8WV4eZ0N16+f
+	ZNap+iDa/SImMmmi4r+CQWbg7SqSBYYzQdSTAjAHj1xvQBd7peVqYjhtMeq4uNx58PMchR4dhRM7g
+	7YW/34Yw==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wQ5ch-003zUD-0n;
+	Thu, 21 May 2026 15:47:47 +0000
+Date: Thu, 21 May 2026 08:47:43 -0700
+From: Breno Leitao <leitao@debian.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf bench: add --write-size option to sched pipe
+Message-ID: <ag8o3KZ2NAXoR6I2@gmail.com>
+References: <20260515-perf_bench_pipe-v1-1-3c5b805ba178@debian.org>
+ <20260515120550.8DEA0C2BCB0@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,50 +48,44 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260518-james-perf-llvm-version-v2-3-f12cc4f031d8@linaro.org>
+In-Reply-To: <20260515120550.8DEA0C2BCB0@smtp.kernel.org>
+X-Debian-User: leitao
 
-On May 18 2026, James Clark wrote:
-> This file was mostly copied from selftests/bpf/Makefile, but the LLD
-> variable is not used here. Also, this copied block didn't get the same
-> fixes as the original one did later.
-> 
-> Remove it to avoid confusion and so future fixes don't have to be in two
-> places.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
+On Fri, May 15, 2026 at 12:05:49PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [High] Integer overflow in write_size cast bypasses pipe capacity validation and causes a deadlock.
+> - [High] Missing validation for write_size == 0 causes benchmark hangs or bogus results.
+> - [Medium] File descriptor leak on the fcntl error path.
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git (for-7.2/bpf), thanks!
+Thanks for the review. Going through them:
 
-[3/6] selftests: Remove unused LLD variable
-      https://git.kernel.org/hid/hid/c/08918b98b02b
+> Is there a missing lower-bound check for write_size? If a user passes
+> 0, the vfs_write system call will return 0 immediately [...]
 
-Cheers,
-Benjamin
+Agreed, write_size == 0 is a foot-gun in both modes. I'll add an
+explicit rejection in v2.
 
+> Could this cast to (int) cause an unexpected crash? If write_size is
+> larger than INT_MAX [...]
+> Does this signed cast bypass the pipe capacity validation when
+> write_size exceeds INT_MAX?
 
->  tools/testing/selftests/hid/Makefile | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-> index 50ec9e0406ab..96071b4800e8 100644
-> --- a/tools/testing/selftests/hid/Makefile
-> +++ b/tools/testing/selftests/hid/Makefile
-> @@ -105,13 +105,6 @@ $(MAKE_DIRS):
->  	$(call msg,MKDIR,,$@)
->  	$(Q)mkdir -p $@
->  
-> -# LLVM's ld.lld doesn't support all the architectures, so use it only on x86
-> -ifeq ($(SRCARCH),x86)
-> -LLD := lld
-> -else
-> -LLD := ld
-> -endif
-> -
->  DEFAULT_BPFTOOL := $(HOST_SCRATCH_DIR)/sbin/bpftool
->  
->  TEST_GEN_PROGS_EXTENDED += $(DEFAULT_BPFTOOL)
-> 
-> -- 
-> 2.34.1
-> 
+Right -- the (int) casts on an unsigned int are sloppy. In practice
+/proc/sys/fs/pipe-max-size defaults to 1 MiB so the fcntl would refuse
+long before INT_MAX, but the comparison logic shouldn't depend on that.
+
+v2 will validate write_size up front (0 < write_size <= INT_MAX) and
+drop the casts entirely, so both the BUG_ON checks and the fcntl
+return-value comparison become unambiguous.
+
+> Does this return path leak the pipe file descriptors?
+
+Strictly yes, but bench_sched_pipe() returning -1 propagates out to
+the perf bench dispatcher and the process exits, so the kernel reaps
+the four fds. The surrounding code is consistent with this -- e.g.
+the BUG_ON(pipe2(...)) above doesn't unwind either. 
+
+I'd rather keep the style consistent than sprinkle close() calls on one error
+path, so I'll leave this as-is unless someone objects.
+
+v2 with the first two fixes coming shortly.
