@@ -1,149 +1,207 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2393921CC
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175AD37DAA8
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779489274; cv=none; b=qnW6Pqd/8iVBGS9Nu4dqg/L9OPNLOblEFAcwuNGa4B0lnZFjsEIX63wCtRxavRACof/Q+OURm4IkRiZpj627HkocxMb0lfb+4wiw03lVqzanBjvkWX1jEvHV1g2hXhui1oB0fEYiRHAoPZ5AJNEpilqte4ismedIlKlCPkI1qeU=
+	t=1779489313; cv=none; b=FMNdc/+xvxBTCFu43ip/gvrhor7aa9fAUbCpviNgexF1i/d8fJgy5Zq3ZI/ZSBaF0hSRBCOiXPKXx739VxVc6ctDfyYGyG6Xz5aFEImH074EM8MxtJs+KQqOt9ZZKGf+MF7UUGBTex9j4XnI3jhSPA5dzE2VGbsDHqHlxGripsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779489274; c=relaxed/simple;
-	bh=82oRk4SsWFkLEO66xqJJ3QJWj63Uj/yIgFDzEE7VIJY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=lik9U3Vt2z90eYB4xjNtw5DAO0k7jgtRUTd3xIbR1wEODk1c6dIHCJwJBAxk92VHCkou5bl8mQeChDKKGTVrSAwiy0K5XugC96UfpjAWBG27J30CMkNpd8vSKQJ04DjbDtZJwC+X1l8ftJUo3t3hycitsb6oOQWYgNAV0zNDlbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f/nrjuOI; arc=none smtp.client-ip=74.125.82.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1779489313; c=relaxed/simple;
+	bh=5wStwq5Eu2ZRvrExPk0XyE3BmUpUSLzGHl/N9qvywak=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=qiYBCLuf3HcOMeZzP5sVwyDKiWiX7GA1a/0depC/ml6HEATKPAH4pMisChcJgmrP041xf1qOQGLALokjJxLtqmpiG3cINt2MRxSL2svmET0aEalbfeYKLzce+46ywWlyWSTThO8JrOv41uq4ytxhuQs2F47wrwMH/KgcyW96cZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyDqyZF6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f/nrjuOI"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ee1da7a13fso9393914eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 15:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779489270; x=1780094070; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3CcYRk/hjgf1eQJiKdM92hfT80JcCdgJogs5qRtn8pU=;
-        b=f/nrjuOIqiO2pGp8LxXeYM/NZXTxmg2m/hpD1wW8F/UhWjZm7KxW1lgDdeia8/117I
-         dOMyI4nNsmDQUOlLHKqdufW2Y7cewkOBYhgEM88sTzzNCzV40EdlzHPKncZUBB6W7EwS
-         VCRTG5niOfCdlMXDyMruTrMayWamSjviz9s1hOtlEGta8A4uKgyplE9HNLYQN/f+/AaQ
-         a2041m4osClcf8lcrv20sirtxGjrp8wy2lmCr6jVWa+tZkcxI4RUO7Grv+DclLupPfPF
-         9l2a74/kOIHZSDppW5wFnLEsPa0k4RRTB1nsGbN6fLQmC9T7Jjc4sLI5PgN4hdfZAiMK
-         Qp3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779489270; x=1780094070;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3CcYRk/hjgf1eQJiKdM92hfT80JcCdgJogs5qRtn8pU=;
-        b=SzdFLl5wg+rFeoZ34JfFOuzJEEuMumRGCTb9bdJBR8Q1NlcgoB4B8y5b7K+J5mIMN3
-         2deu+sD44diac3FXrgfH/JmvM1wMjePod9WBqYgEBRxX69fPupan4TMUZsB6o1F4281F
-         KG3oOuweX+oPRml+RGCExYS2HBf3AmNgQk3JIWkqZeGaSHE6cIvkYy1uQK/iZLhFC/+Q
-         K7HnlyzPrh5+HILVem5gKf1drGK7xHewg95dktu4CC7QwngpWIUt3ZmwK3GdqS2fxivK
-         4VUx23+muIkcf9HtPk6UAeNAxG3bARbrmrxtUbY/IwQJCWKhxrdhpF8Em/JHHDzv0/KU
-         Odzw==
-X-Forwarded-Encrypted: i=1; AFNElJ/v/2tSxiM+xZ2Sie6p3vrc77fqXDgngJ3B1Clt92+DiWAvu/MT7WugsgZNBA0UkixiK49B6djgiLdlaFzvYdt9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqryX5EEXJl02Oi7sQ/8oYyireVIH/WK0bhB4+Q5p58FHL12Oz
-	YBw+Dm/L/UcGyJeMOiibbquTRG7t0CapHVwKMP5zdVcWNFQ0I8fxppY9dmcwpAYpIcCoKmsPmUU
-	ipPRwgpg+rQ==
-X-Received: from dylq22.prod.google.com ([2002:a05:7300:5996:b0:2de:ed01:5510])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:b104:b0:2da:1874:f3bd
- with SMTP id 5a478bee46e88-30449051bd3mr3000405eec.16.1779489269488; Fri, 22
- May 2026 15:34:29 -0700 (PDT)
-Date: Fri, 22 May 2026 15:33:41 -0700
-In-Reply-To: <20260522223342.2393553-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyDqyZF6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9847A1F000E9;
+	Fri, 22 May 2026 22:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779489311;
+	bh=aGqV6kz2/875qnZ84wcdVqjclps8P4oE7gAgZxzLORE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=LyDqyZF6sgAovKgaF3Bnqn5HW3u98ZI5qdu8+CX12+yVTyBHABt0cXoR4qez/jc5Y
+	 vvDoQaao8daPEvg0NDbhRSZRoSWsvUzWyljGapbXS12J1fRpp3OkhENoK2t7+uPSDk
+	 ba2Z/ejIMI3PCqPD3NiI2xYgMySp2ryjtc7dsFmQfRHVFacsAuqyaoxblKqDUC68XD
+	 9Xaezaj7Dz8dKh9aVl+hyAjMiYm7F+ohuwqMn3xX09lEJIPaxqXzNh38qwSAVg/Gyt
+	 hC6JgLv6YhTd/m9gWYH2qdF0lM1r51vnddqBCoLwBiZ5aNHO6g3HBS6zSAOmFGtqUh
+	 ALw2CLvBbJxBA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 17/23] perf python: Add callchain support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260522220435.2378363-18-irogers@google.com>
+References: <20260522220435.2378363-18-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 22 May 2026 22:35:10 +0000
+Message-Id: <20260522223511.9847A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260522223342.2393553-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.794.g4f17f83d09-goog
-Message-ID: <20260522223342.2393553-14-irogers@google.com>
-Subject: [RFC PATCH v1 13/14] perf stat: Add --new support to PMU metrics
- Python validator
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-This patch extends the performance metrics value Python validation script
-tools/perf/tests/shell/lib/perf_metric_validation.py to support a new
-command-line argument `-new`:
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] A circular reference between `pyrf_event` and `pyrf_callchain` cre=
+ates a permanent memory leak for every processed event containing a callcha=
+in.
+- [Medium] Eager callchain resolution contradicts the 'lazy iteration' desi=
+gn, causing severe parsing overhead and leaving behind dead code.
+- [Medium] The `.callchain` property returns an exhaustible iterator instea=
+d of a repeatable iterable, causing silent failures on subsequent accesses.
+--
 
-  parser.add_argument("-new", help="Use new printing API (--new)", ...)
+commit 2ae22d7a748138d318f9939992a43e386f407964
+Author: Ian Rogers <irogers@google.com>
 
-When set, the Validator class appends the `--new` option flag to its internally
-spawned `perf stat` commands:
+perf python: Add callchain support
 
-  command = [tool, 'stat']
-  if self.new_print:
-      command.append('--new')
+This commit adds support for callchains to the perf Python extension,
+introducing new types for callchains and nodes, and appending a
+callchain property to sample events.
 
-This enables validating Intel PMU metric mathematical values generated
-specifically by the decoupled, streaming JSON printing callbacks.
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index daedd67f12d58..de7a513895728 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+[ ... ]
 
-TAG=agy
-CONV=7c33d6a0-70a2-454a-82f7-4de2101a5b9c
----
- tools/perf/tests/shell/lib/perf_metric_validation.py | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+> @@ -669,6 +672,181 @@ static PyObject *pyrf_sample_event__insn(PyObject *=
+self, PyObject *args __maybe_
 
-diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
-index dea8ef1977bf..f69cf0e0de57 100644
---- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-+++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-@@ -36,7 +36,7 @@ class TestError:
- 
- class Validator:
-     def __init__(self, rulefname, reportfname='', t=5, debug=False, datafname='', fullrulefname='',
--                 workload='true', metrics='', cputype='cpu'):
-+                 workload='true', metrics='', cputype='cpu', new_print=False):
-         self.rulefname = rulefname
-         self.reportfname = reportfname
-         self.rules = None
-@@ -68,6 +68,7 @@ class Validator:
-         self.datafname = datafname
-         self.debug = debug
-         self.fullrulefname = fullrulefname
-+        self.new_print = new_print
- 
-     def __set_metrics(self, metrics=''):
-         if metrics != '':
-@@ -379,7 +380,10 @@ class Validator:
- 
-     def _run_perf(self, metric, workload: str):
-         tool = 'perf'
--        command = [tool, 'stat', '--cputype', self.cputype, '-j', '-M', f"{metric}", "-a"]
-+        command = [tool, 'stat']
-+        if self.new_print:
-+            command.append('--new')
-+        command.extend(['--cputype', self.cputype, '-j', '-M', f"{metric}", "-a"])
-         wl = workload.split()
-         command.extend(wl)
-         print(" ".join(command))
-@@ -584,6 +588,8 @@ def main() -> None:
-     parser.add_argument("-m", help="Metric list to validate", default="")
-     parser.add_argument("-cputype", help="Only test metrics for the given CPU/PMU type",
-                         default="cpu")
-+    parser.add_argument("-new", help="Use new printing API (--new)",
-+                        action="store_true", default=False)
-     args = parser.parse_args()
-     outpath = Path(args.output_dir)
-     reportf = Path.joinpath(outpath, 'perf_report.json')
-@@ -592,7 +598,7 @@ def main() -> None:
- 
-     validator = Validator(args.rule, reportf, debug=args.debug,
-                           datafname=datafile, fullrulefname=fullrule, workload=args.wl,
--                          metrics=args.m, cputype=args.cputype)
-+                          metrics=args.m, cputype=args.cputype, new_print=args.new)
-     ret = validator.test()
- 
-     return ret
--- 
-2.54.0.794.g4f17f83d09-goog
+[ ... ]
 
+> +static PyObject *pyrf_callchain__next(struct pyrf_callchain *pchain)
+> +{
+> +	struct pyrf_callchain_node *pnode;
+> +
+> +	if (!pchain->resolved) {
+> +		struct evsel *evsel =3D pchain->pevent->sample.evsel;
+> +		struct evlist *evlist =3D evsel->evlist;
+
+[Severity: Medium]
+The commit message states this implements "lazy iteration over callchain
+frames", but is this block ever executed?
+
+Since thread__resolve_callchain() is called eagerly during pyrf_event__new(=
+),
+pchain->resolved is always true here. This seems to defeat the lazy
+resolution and leaves this block as unused dead code.
+
+Does this also force heavy symbol resolution on all events immediately upon
+creation, even if the Python script doesn't access the callchain property?
+
+> +		struct perf_session *session =3D evlist ? evlist__session(evlist) : NU=
+LL;
+> +		struct addr_location al;
+> +		struct callchain_cursor *cursor;
+
+[ ... ]
+
+> +		pchain->resolved =3D true;
+> +		addr_location__exit(&al);
+> +	}
+> +
+> +	if (pchain->pos >=3D pchain->nr_frames)
+> +		return NULL;
+> +
+> +	pnode =3D PyObject_New(struct pyrf_callchain_node, &pyrf_callchain_node=
+__type);
+> +	if (!pnode)
+> +		return NULL;
+> +
+> +	pnode->ip =3D pchain->frames[pchain->pos].ip;
+> +	pnode->map =3D map__get(pchain->frames[pchain->pos].map);
+> +	pnode->sym =3D pchain->frames[pchain->pos].sym;
+> +
+> +	pchain->pos++;
+
+[Severity: Medium]
+Does returning an exhaustible iterator from the property cause issues on
+subsequent accesses?
+
+Because the .callchain property caches this single iterator instance and
+pyrf_callchain__next() increments pchain->pos without any reset mechanism,
+the iterator will be permanently exhausted on the first pass.
+
+Will subsequent attempts to iterate over event.callchain silently yield
+zero elements instead of repeating the iteration?
+
+> +	return (PyObject *)pnode;
+> +}
+
+[ ... ]
+
+> @@ -1046,6 +1239,49 @@ static PyObject *pyrf_event__new(const union perf_=
+event *event, struct evsel *ev
+>  		return PyErr_Format(PyExc_OSError,
+>  				    "perf: can't parse sample, err=3D%d", err);
+>  	}
+> +	sample =3D &pevent->sample;
+> +	if (machine && sample->callchain) {
+> +		struct addr_location al;
+> +		struct callchain_cursor *cursor;
+> +		u64 i;
+> +		struct pyrf_callchain *pchain;
+> +
+> +		addr_location__init(&al);
+> +		if (machine__resolve(machine, &al, sample) >=3D 0) {
+> +			cursor =3D get_tls_callchain_cursor();
+> +			if (thread__resolve_callchain(al.thread, cursor, sample,
+> +						      NULL, NULL, PERF_MAX_STACK_DEPTH) =3D=3D 0) {
+> +				callchain_cursor_commit(cursor);
+> +
+> +				pchain =3D PyObject_New(struct pyrf_callchain, &pyrf_callchain__type=
+);
+> +				if (pchain) {
+> +					pchain->pevent =3D pevent;
+> +					Py_INCREF(pevent);
+
+[Severity: High]
+Does this create a circular reference that leaks memory?
+
+The pchain object holds a strong reference to pevent via Py_INCREF, and
+then pevent takes ownership of pchain by storing it in pevent->callchain
+below.
+
+Since neither pyrf_event__type nor pyrf_callchain__type implement Python's
+garbage collector traversal functions (tp_traverse, tp_clear), this cycle
+is invisible to the GC. When processing large files, will this permanently
+leak the event object, the callchain object, and all associated kernel map
+references for every event with a callchain?
+
+> +					pchain->nr_frames =3D cursor->nr;
+> +					pchain->pos =3D 0;
+> +					pchain->resolved =3D true;
+> +					pchain->frames =3D calloc(pchain->nr_frames,
+> +								sizeof(*pchain->frames));
+> +					if (pchain->frames) {
+> +						struct callchain_cursor_node *node;
+> +
+> +						for (i =3D 0; i < pchain->nr_frames; i++) {
+> +							node =3D callchain_cursor_current(cursor);
+> +							pchain->frames[i].ip =3D node->ip;
+> +							pchain->frames[i].map =3D
+> +								map__get(node->ms.map);
+> +							pchain->frames[i].sym =3D node->ms.sym;
+> +							callchain_cursor_advance(cursor);
+> +						}
+> +						pevent->callchain =3D (PyObject *)pchain;
+> +					} else {
+> +						Py_DECREF(pchain);
+> +					}
+> +				}
+> +			}
+> +			addr_location__exit(&al);
+> +		}
+> +	}
+>  	return (PyObject *)pevent;
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260522220435.2378=
+363-1-irogers@google.com?part=3D17
