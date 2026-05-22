@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6696D36C9E4
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCC63769F3
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:48:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779490005; cv=none; b=oeu/+ngNT7n3a/cDcj1foQbFYg6DJQ+VWEL+i+ATHhMp3JNSEO/o9xGIwiRvGvL9d0gf+T9GsFIF6ngHgA/mSKONnRUclAHVnOuVy+oOUm7bbarCaOR3qxOx119JQBUr0hnK/IL8+c8XGd/a8Vp0HdckXpOUUlTivXbnHUJmhY8=
+	t=1779490117; cv=none; b=BRatP47UjbITh8HvyW54pa+RH4kut7G2IrjFtQwBGv2QNj0UeolIzdyIc0o4ai4Xltgtn4gDpuxXHytcAj7tvDqFTVdCLbNTZ1pazPwykoYISN4cub/0Ob2axnVJRpo9rss5Ug6OxbqGGc8nnIRA//duLsbSfmynK46l7lD0Ouo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779490005; c=relaxed/simple;
-	bh=RpWvF5fpTsPUTXEY79u5HFHm0BqpyLg7UT/qqWNF9Ug=;
+	s=arc-20240116; t=1779490117; c=relaxed/simple;
+	bh=oKrcnP7UnOuHaCg1uCzkSlMtjHi6VDmUZBEtsMiVJFU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GUlNxx/KBt5DZ87rTvLPYNjRi/X2cZiSOq6YPytx8ouF+Nv/i0MOcywfm1VJmtgpOYwhDeRiFS91djDEy9fZASXnhsaRIVp/hidZvcebfmK7wvLzgXbO+dpETlEyOV19cqyJqgG09tArLg+A4C8FbXnNZAfkmiKSi6NoPREZLPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxxNbF2Y; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=lFDOoJ3xbFep+nYGMcCe4k3hAf/X05O9Q1TxKusS3PtZmdn/Oo4o4MongFZX4ocd96qGsqOY3WpT3klet6hU5zd9LTg6OCXohz8ysJBelDb2f1XB3g8nleqE6f3beM6MdQLb8kanVtzEf6Qzy2jirFX3g/cVRisYJDAuyMRv7T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xf45/r9q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxxNbF2Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F401B1F000E9;
-	Fri, 22 May 2026 22:46:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xf45/r9q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2F411F00A3D;
+	Fri, 22 May 2026 22:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779490004;
-	bh=RpWvF5fpTsPUTXEY79u5HFHm0BqpyLg7UT/qqWNF9Ug=;
+	s=k20260515; t=1779490114;
+	bh=8vmv1pLWF1XIr5+Dx4ooVMeVpHoGv/+4J+ql2kE/iOk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AxxNbF2YuuVJ+k73ps7MOAtc07ILb59258mvuatghkhaAROi3wc0Cby7Mfg36fQ/E
-	 rFNpyxQ2V6Hd9vgz59VH3RtzRtPu9Bo9C0yBMQ2d7ClVGeB0sPxj8brVNxYGO/D2dB
-	 Mrlc49TrALrHg1EgyrOc09KEqYHBmQSGNeOeLKclm5Oa89vqA6KnKX3xrf6lpERyXH
-	 vUGL+wMh66WQUPva2SCXIgT+T9l2lmDw0nfoRJJgJ/5mwAA7qNHK/Y90kiy0ytlu1Q
-	 vKu17TxaCFQOEQEUVGtm2jNjWLomMJ0VJAzHnDdytz0AgrGyFezRO9iUrTYV5P2fEs
-	 S2569lNQP3tVQ==
+	b=Xf45/r9q3XGqIszjJCWVJOpuqbx04Njp63dKlu/B6XghrexvmN2/6JHTp0PrMMK+A
+	 5UeLqW1GONu9ATx6eeipWWPN7oAn1jloF0h07fxghnvSHUV/dr78y/gb1fW+U2XjQl
+	 IjbBus/lZpSEzWZ+xptRnFDQ3PTBbO4O6SHdh1XWr+myNmakUcfegQ4SlgOhf1bdGU
+	 FdUdOI6W04O3rXSH4kB4bX698yk7i5Ri1y8rSczRlK/zjKdpdTaVHhXwmqptjYOG13
+	 dUpuARnQC21yUarKY225KClU6C/jpqEu/1LDGwuXFMHHSN67HGGnIQeu198jQTvBPo
+	 lulIRn0bL0gRw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 10/23] perf evsel: Add reference count
+Subject: Re: [RFC PATCH v1 09/14] perf stat: Extend CSV output linter to
+ test advanced PMU and metric-only checks
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260522220435.2378363-11-irogers@google.com>
-References: <20260522220435.2378363-11-irogers@google.com>
+In-Reply-To: <20260522223342.2393553-10-irogers@google.com>
+References: <20260522223342.2393553-10-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 May 2026 22:46:43 +0000
-Message-Id: <20260522224643.F401B1F000E9@smtp.kernel.org>
+Date: Fri, 22 May 2026 22:48:34 +0000
+Message-Id: <20260522224834.D2F411F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,49 +46,58 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] An unbalanced `evsel__put()` on a borrowed reference in `evlist__d=
-eliver_deferred_callchain()` causes a use-after-free.
-- [Medium] Python bindings for `perf.evsel` fail to protect against uniniti=
-alized objects, allowing trivial NULL pointer dereferences that crash the t=
-ool.
+- [Low] A redundant `if [ $skip_test -ne 1 ]` block was introduced instead =
+of grouping the checks together.
+- [Low] The commit message incorrectly references JSON layouts in a patch t=
+hat strictly tests CSV output formatting.
 --
 
-Note: The format of this report has been altered to a free-form summary
-without direct code quotes due to recitation restrictions.
-
-commit 29ffdfbf96c8b534064a1d8cc8529de746fdc594
+commit 02bae29bcacfe6b2ac713a32abfb3c12b7c4b5c2
 Author: Ian Rogers <irogers@google.com>
-perf evsel: Add reference count
 
-This commit adds a reference count to the evsel structure, primarily to
-improve memory management for the python code. The python wrapper is
-updated to use the reference count rather than cloning the evsel object.
+perf stat: Extend CSV output linter to test advanced PMU and metric-only ch=
+ecks
 
-[Severity: High]
-In the tools/perf/util/session.c file within the function
-evlist__deliver_deferred_callchain(), the code now calls evsel__put() on
-sample->evsel. However, sample->evsel is assigned using evlist__id2evsel(),
-which returns a borrowed pointer to an event in the evlist without
-incrementing its reference count.
+This commit extends the perf stat CSV output linter tests to run advanced
+hardware PMU, topology-aware aggregation, and metric-only checks a second
+time using the new CSV print flag.
 
-Does this unbalanced put result in prematurely dropping the reference count?
-Since the object remains linked in the evlist, this looks like it might
-lead to a use-after-free when the evlist or other subsystems later try to
-access or free the same evsel.
+> This guarantees that CSV outputs produced by the decoupled printing callb=
+acks
+> are verified and column-valid under advanced aggregation modes and metric=
+-only
+> JSON row-column layouts.
 
-[Severity: Medium]
-In the python wrapper (tools/perf/util/python.c), the pyrf_evsel structure
-dynamically allocates the internal evsel pointer and initializes it to null.
-While pyrf_evsel__getattro is provided to intercept read accesses and
-prevent issues, other paths seem to lack this protection.
+[Severity: Low]
+This isn't a bug, but the commit message references testing JSON row-column
+layouts. Since this patch strictly modifies stat+csv_output.sh to verify CSV
+outputs, is the reference to JSON an accidental carryover from a different
+testing patch?
 
-For example, property setters like pyrf_evsel__set_tracking, class methods
-like pyrf_evsel__str, and pyrf_evlist__add appear to directly dereference
-the internal evsel pointer without checking if it has been initialized. If
-an uninitialized evsel object is created directly via the python __new__
-method, could this result in a null pointer dereference and crash the python
-interpreter?
+> diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests=
+/shell/stat+csv_output.sh
+> --- a/tools/perf/tests/shell/stat+csv_output.sh
+> +++ b/tools/perf/tests/shell/stat+csv_output.sh
+> @@ -103,6 +103,12 @@ then
+>  	check_per_die "CSV (New API)" "$perf_cmd"
+>  	check_per_socket "CSV (New API)" "$perf_cmd"
+>  fi
+> +if [ $skip_test -ne 1 ]
+> +then
+> +	check_per_cache_instance "CSV (New API)" "$perf_cmd"
+> +	check_per_cluster "CSV (New API)" "$perf_cmd"
+> +fi
+
+[Severity: Low]
+This isn't a bug, but could these new checks simply be appended inside the
+existing conditional block immediately above this, rather than opening a
+new identical conditional block?
+
+> +check_metric_only "CSV (New API)" "$perf_cmd"
+> =20
+>  cleanup
+>  exit 0
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260522220435.2378=
-363-1-irogers@google.com?part=3D10
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260522223342.2393=
+553-1-irogers@google.com?part=3D9
