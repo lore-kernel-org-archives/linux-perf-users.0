@@ -1,40 +1,32 @@
-Received: from va-1-111.ptr.blmpb.com (va-1-111.ptr.blmpb.com [209.127.230.111])
+Received: from va-1-113.ptr.blmpb.com (va-1-113.ptr.blmpb.com [209.127.230.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18AA37C916
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 08:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7660F3A71AA
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 08:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779438389; cv=none; b=M22BVsdsH00/cHqjabTibxaFyV/woelkYDqxR1NacoF3Q6dMtIu/xubaMLbd7n1+5e6/LjXxRoXRD/liOtr2Rzlj3IMRK7wJmzJiMa6YjpQD00IRo2xnImjh8n1Z3Rz90veHj8+Riekqso+elJfC5T8N3aXYASTa6CTRMAcsuqM=
+	t=1779438401; cv=none; b=sYlbDTVSaFlxHubgI8UCiRQRhgx3VlTEj1wRVzXhEcNbtkM5Gix8Hn9x703gTI7Ut85exCF1TgPZB7XuwYZdgiNmqzdegGNsQIFvO9xNWq10v5P5yVgaDaLwa4SNbrfzlcTWOUpAWRODcGTylrwD98MZeSFtFPRUKgJ4PQWaHLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779438389; c=relaxed/simple;
-	bh=xZGmwKY+DHs4nfJyYJLfriOXR01UwEjxfi2hVJQIC1o=;
-	h=Content-Type:Date:Message-Id:Subject:References:From:Cc:
-	 Mime-Version:In-Reply-To:To; b=rffpgHeSgjr/lBNjTTPCDSUZr2dfWtPTKjeh7rk4+h1dViOTSxWlIXdR+5Y5wJhjc8l33jC+bgqf8QBCAXXHEWvlXFXaJfEv5Gzu1XwSyuLL6xwWwurRVJ0rxAZNTSBnIP5ReA8UnxhrBHN5URHi47qTf3HRe0oVYZgVlhqAPNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=cSAzcx/U; arc=none smtp.client-ip=209.127.230.111
+	s=arc-20240116; t=1779438401; c=relaxed/simple;
+	bh=fYeg5MTOYEEP3bfwW7O2z9k0LRolcbIkNFMsYotBOHg=;
+	h=Cc:From:References:To:Mime-Version:In-Reply-To:Content-Type:
+	 Subject:Date:Message-Id; b=cmvpxqsf8XVIwPzzTKjDx2JsmYggITqynXTIegGOviexx7+lZxvCRpZu1NRtsTu9GRfF8flYX003YTzJz0OOaCDl/mKpYiaOtdWLh4pLyVkS2cgJarqnVl/GOiqyc1txOwcIu2n/+a+l8irQ2xBq7dNve1c+qQ60vY9YiKaH30k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=g/BTKqT4; arc=none smtp.client-ip=209.127.230.113
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="cSAzcx/U"
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="g/BTKqT4"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1779438381; h=from:subject:
+ s=2212171451; d=bytedance.com; t=1779438394; h=from:subject:
  mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
  mime-version:in-reply-to:message-id;
- bh=3MJU/Kq0Y82slIKcHQIjfR1fVotTqC/55pra9suCazg=;
- b=cSAzcx/U9SIstnRBFk9ynwM0a+n8T3ghTQGe/SszOrry/MjHyC9mzsIbqApKmWDwwtTv56
- 3XLfYFO66lCEmcD/CcufzWo1Uf4SKB5Q/Xo6BvT/SMplmtrUPeiFH7rUWhCVd/FpFxbO5n
- YKvS/bHuj15cM59EzdQx5MV5IA9XHDc5BPbmVBRWRlblr9knha2/U1CjZIkqn6fndF1Hke
- lv1079pSmWSIHV/D9wXBXD/WMogL0xp9+B6GrVbntygpqPKy31/YXjB4dQxIRRH8BMJ7X/
- IPQyho8x5LV6qxJQNBq5sehkR3yg6YhoMLED6bIzK6zapJDxtLUIDmcT4qEmOQ==
-X-Original-From: Rui Qi <qirui.001@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 22 May 2026 16:26:02 +0800
-Message-Id: <20260522082604.89447-1-qirui.001@bytedance.com>
-X-Lms-Return-Path: <lba+26a10132b+693339+vger.kernel.org+qirui.001@bytedance.com>
-Content-Transfer-Encoding: 7bit
-Subject: [PATCH v4 0/2] perf: Add is_ignored_kernel_symbol() for kernel symbol filtering
-References: <20260507071103.2772577-1-qirui.001@bytedance.com>
-From: "Rui Qi" <qirui.001@bytedance.com>
+ bh=/QeToWwHjCm4j+wwEu3mC7hfaKb7rk0SUmjPJl/Utu8=;
+ b=g/BTKqT4ElC9dKoqrI0sTF5WRea68BQkg4QjNaMxyY8RkOoykEVNMgmOo/me4nGLbyC+n5
+ OkHPzExzvkwwVyqU+9SJAwN2SzFhyT4yKvaOzPQMIgXNSYZikQL4v7qChpFQVfQ+v/c8dW
+ z+yXoaP++AklSvnYaElX2cGEG3s8HE8bCBrawKYZsgaD5n/4kJnxrEv96ZjwW+rYA+1QPG
+ FNkrmqlSJcrefrRpKvmPIxeDMFc7V3s+0a/JwEQ3aKMy4tRgLCt130uPt9AtOrkjCdYWNl
+ U/RJRlw0IDu3SlSUGHSkCHuUWiYakegexi533fLnhfMmmLTdX07oBBwnhJDwfA==
+X-Mailer: git-send-email 2.20.1
 Cc: "Mark Rutland" <mark.rutland@arm.com>, 
 	"Alexander Shishkin" <alexander.shishkin@linux.intel.com>, 
 	"Jiri Olsa" <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, 
@@ -42,69 +34,136 @@ Cc: "Mark Rutland" <mark.rutland@arm.com>,
 	"James Clark" <james.clark@linaro.org>, 
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
 	"Rui Qi" <qirui.001@bytedance.com>
+From: "Rui Qi" <qirui.001@bytedance.com>
+X-Original-From: Rui Qi <qirui.001@bytedance.com>
+References: <20260507071103.2772577-1-qirui.001@bytedance.com> <20260522082604.89447-1-qirui.001@bytedance.com>
+Content-Transfer-Encoding: 7bit
+To: "Peter Zijlstra" <peterz@infradead.org>, 
+	"Ingo Molnar" <mingo@redhat.com>, 
+	"Arnaldo Carvalho de Melo" <acme@kernel.org>, 
+	"Namhyung Kim" <namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20260507071103.2772577-1-qirui.001@bytedance.com>
-To: "Peter Zijlstra" <peterz@infradead.org>, 
-	"Ingo Molnar" <mingo@redhat.com>, 
-	"Arnaldo Carvalho de Melo" <acme@kernel.org>, 
-	"Namhyung Kim" <namhyung@kernel.org>
+X-Lms-Return-Path: <lba+26a101338+f6d50e+vger.kernel.org+qirui.001@bytedance.com>
+In-Reply-To: <20260522082604.89447-1-qirui.001@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v4 1/2] perf: Extract is_ignored_kernel_symbol() for kernel mapping symbol filtering
+Date: Fri, 22 May 2026 16:26:03 +0800
+Message-Id: <20260522082604.89447-2-qirui.001@bytedance.com>
 
-The perf tool currently has ad-hoc logic to filter out ELF mapping
-symbols scattered across multiple files. ARM, AArch64 and RISC-V each
-have their own inline checks in dso__load_sym_internal(), and kallsym
-processing has yet another check for ARM module symbols.
+Mapping symbol filtering is scattered across multiple files with
+inconsistent checks.  The kernel's own is_mapping_symbol() covers
+x86 local symbols ('.L*' and 'L0*') on top of the '$' prefix used
+by ARM/AArch64/RISC-V, but the perf tool only checks '$'.
 
-This patch series introduces a single is_ignored_kernel_symbol() inline
-helper in symbol.h and converts the kernel symbol handling paths to use it.
-The helper covers the existing "$" prefix used by ARM, AArch64 and RISC-V,
-and also adds the x86 local symbol prefixes so that perf stays consistent
-with the kernel's own is_mapping_symbol() logic.
+Extract is_ignored_kernel_symbol() into symbol.h matching the kernel
+definition, and convert the kallsyms and ksymbol event paths to
+use it.  Add ksymbol event name validation and early mapping symbol
+filtering before any state mutation.
 
-Changes in v4:
-  - Rename the helper from is_mapping_symbol() to is_ignored_kernel_symbol()
-    to make its purpose clearer.
-  - Split the single patch into two logical patches:
-    - Patch 1 introduces the helper and applies it to kallsyms and ksymbol events.
-    - Patch 2 applies the helper to the ELF loading path for kernel DSOs.
+Signed-off-by: Rui Qi <qirui.001@bytedance.com>
+---
+ tools/perf/util/machine.c | 18 +++++++++++++++++-
+ tools/perf/util/symbol.c  |  4 ++--
+ tools/perf/util/symbol.h  | 15 +++++++++++++++
+ 3 files changed, 34 insertions(+), 3 deletions(-)
 
-Link (v3): https://lore.kernel.org/all/20260507071103.2772577-1-qirui.001@bytedance.com/
-
-Changes in v3:
-  - Add is_mapping_symbol() check for kernel modules in dso__load_sym_internal()
-  - Add is_mapping_symbol() check in machine__process_ksymbol_unregister()
-
-Link (v2): https://lore.kernel.org/all/20260506073820.2419087-1-qirui.001@bytedance.com/
-
-Changes in v2:
-  - Only apply is_mapping_symbol() filtering to kernel symbols (kallsyms
-    and ksymbol events), not to user-space symbols from ELF files,
-    BFD libraries, or perf map files.  This avoids incorrectly
-    discarding valid user-space function names that start with '$',
-    which is a legal character in identifiers for many languages
-    (e.g., Java, Scala) and compilers (GCC).
-  - Move the mapping symbol check in machine__process_ksymbol_register()
-    to the beginning of the function, before any map/dso allocation
-    or insertion, to avoid leaving empty maps in the kernel map tree.
-
-Link (v1): https://lore.kernel.org/all/20260504090609.1801880-1-qirui.001@bytedance.com/
-
-Rui Qi (2):
-  perf: Extract is_ignored_kernel_symbol() for kernel mapping symbol
-    filtering
-  perf: Apply is_ignored_kernel_symbol() filter in ELF loading path for
-    kernel DSOs
-
- tools/perf/util/machine.c    | 18 +++++++++++++++++-
- tools/perf/util/symbol-elf.c | 10 ++++++++--
- tools/perf/util/symbol.c     |  4 ++--
- tools/perf/util/symbol.h     | 15 +++++++++++++++
- 4 files changed, 42 insertions(+), 5 deletions(-)
-
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index e76f8c86e62a..07e4ad56d757 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -4,6 +4,7 @@
+ #include <inttypes.h>
+ #include <regex.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include "callchain.h"
+ #include "debug.h"
+ #include "dso.h"
+@@ -729,9 +730,15 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ {
+ 	struct symbol *sym;
+ 	struct dso *dso = NULL;
+-	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
++	struct map *map;
+ 	int err = 0;
+ 
++	/* Ignore mapping symbols in ksymbol events - check early before any state mutation */
++	if (is_ignored_kernel_symbol(event->ksymbol.name))
++		return 0;
++
++	map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
++
+ 	if (!map) {
+ 		dso = dso__new(event->ksymbol.name);
+ 
+@@ -790,6 +797,10 @@ static int machine__process_ksymbol_unregister(struct machine *machine,
+ 	struct symbol *sym;
+ 	struct map *map;
+ 
++	/* Ignore mapping symbols in ksymbol events */
++	if (is_ignored_kernel_symbol(event->ksymbol.name))
++		return 0;
++
+ 	map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
+ 	if (!map)
+ 		return 0;
+@@ -814,6 +825,11 @@ int machine__process_ksymbol(struct machine *machine __maybe_unused,
+ 	if (dump_trace)
+ 		perf_event__fprintf_ksymbol(event, stdout);
+ 
++	if (event->header.size < offsetof(struct perf_record_ksymbol, name) + 2 ||
++	    !memchr(event->ksymbol.name, '\0',
++		    event->header.size - offsetof(struct perf_record_ksymbol, name)))
++		return -EINVAL;
++
+ 	/* no need to process non-JIT BPF as it cannot get samples */
+ 	if (event->ksymbol.len == 0)
+ 		return 0;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index fcaeeddbbb6b..714b6e6048fa 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -770,8 +770,8 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
+ 	if (!symbol_type__filter(type))
+ 		return 0;
+ 
+-	/* Ignore local symbols for ARM modules */
+-	if (name[0] == '$')
++	/* Ignore mapping symbols in kallsyms */
++	if (is_ignored_kernel_symbol(name))
+ 		return 0;
+ 
+ 	/*
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index bd6eb90c8668..95592779eb77 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -28,6 +28,21 @@ struct maps;
+ struct option;
+ struct build_id;
+ 
++/*
++ * Ignore kernel mapping symbols, matching kernel is_mapping_symbol() logic.
++ * This checks for '$' prefix (used by ARM, AArch64, RISC-V) and
++ * x86 local symbol prefixes (.L* and L0*).
++ * Only use this for kernel symbols (kallsyms, ksymbol events, kernel ELF DSOs).
++ */
++static inline bool is_ignored_kernel_symbol(const char *str)
++{
++	if (str[0] == '.' && str[1] == 'L')
++		return true;
++	if (str[0] == 'L' && str[1] == '0')
++		return true;
++	return str[0] == '$';
++}
++
+ /*
+  * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
+  * for newer versions we can use mmap to reduce memory usage:
 -- 
 2.20.1
