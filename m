@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B0A82866
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 23:01:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9C326E6E1
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 23:02:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779490895; cv=none; b=qDACCwN19S1UusKKrkyb1M709Ykqdep78INfNZhZE4ruOd44Q8VIxEqDRcnTfRy/ANURGtHOIbbpGMIdAGFBjqRgGcVOmIwlJgs1yIQurzNerSRKKx3Lwgg0SkjoBsNTixZuKN8dCQ/s+uZGBCUD4ZJjbyKsd5xIrqTYbD+efMA=
+	t=1779490980; cv=none; b=c5xlWrBX7xz4MW3ry/PwJS0UuGdPiN6EjNqweu08LAAf8me9Fjbm3ul9Y8DgwI8W4feGcReIhwIxnzuncnLMNUHgu7y8cZKGAxzFRInOljKj8ZgKGTOk49G+0Bo+Av6qwzuwPjl05JT1eD0APhqI4iUGxYhEqV6BE/HHePSuCEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779490895; c=relaxed/simple;
-	bh=MGxYLwmchUS/XD0WDbuHpCXs12+QkccqZsfwJZvB4F8=;
+	s=arc-20240116; t=1779490980; c=relaxed/simple;
+	bh=ZFFzmy77F8c/+YMEvItrxM8EX/0z3Em/n1K12LYzCJ4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lWWSi2lLco+Sg0s+y8Fh64r4LFJMeX+ePa8PNZeOgesCbFuJo639SD4zHGkByQB+xTiIlHeE+zVGcYY9lrjboFFDoNFNL4HGCuCtg5a65seTe7RRoOtEk21gHIOb+3cerYhUXDjG2L+eBTWbrT8Gu5lwGPzcR5CC3UdNPgYl5Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8I8Q6Jv; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=goJ0mRRvE+HZQr5SOzx8gkSnDqbsThUL3QlBer0ajKgP0Uv56u89iwzou+HjvfrY4bZ7oVWktncB72SmMHc3BC4vXJf5uetNSv86X791DgZOb0CFkcDxpsfbBHegBxEhMgLxGH0aVoI33dkRMt+Y1wQp78mEk0DdWd9YF5Y6i+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSxvF63N; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8I8Q6Jv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 939C21F000E9;
-	Fri, 22 May 2026 23:01:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSxvF63N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 932091F000E9;
+	Fri, 22 May 2026 23:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779490893;
-	bh=plHW6ps1QTxnUqa1H6f2T/ShDt6Ev1ZGch6BN9tCcoQ=;
+	s=k20260515; t=1779490978;
+	bh=6Vdg0dirCWF2OLAINRLlVLpzIVSwJzOQVqsdKW4LhKw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=j8I8Q6JvkR/BYMDNu+t2aibDM/XqBbt0G/02Iwq5eT/fBYpaHHSOGSQKeflKWaX47
-	 6CipQ2cY9zsmiT9EL/3+VH+2Hk1IU2CBXNbNyo/9M9u/1gPNciKDYuMG8Xs2CWfebO
-	 DOv2IzRDpFNutqrJ/3j+lIaHpjQ3wIYhoaoZBNg6fSremtfPIu1VoQL7+sCPSTOgn1
-	 xK3TLoYl8cHP6tucXNusYNtHHsfP3JoD/psb/pxnbDzbrhSDiAp7P+ID+FI5dZpE0B
-	 xKM4q78CaR2l8sgMS01FQ25Rebg9dab8SkvrugKQqyIGJvV3OLOjzC5/6NXkcJ67Nz
-	 GOsRfVyk6JqEw==
+	b=fSxvF63NUQ9XYndxGdWGiIE1V+Xrm89w1r8eVc5dfG/ijU+gVwvtSxWnRapq07nxL
+	 ZUoHkMWQEg06bO+po5Ef90Ob7/eMw+ocl1WaZLtiwWmM+Hk7P+FWdR7Hkk6f152NKI
+	 XYBhO9tSInisXBrqpIRzgEoxVjrBegMBvyCTu0mNN7/maoKK4taCeD6pLhILD0yWCi
+	 gpr6b61RHpfOH/fPOtuYKWBy2qAUpOb7MZyptDd4SaPmJY4FgjLkU5Lr7meEP8sIJc
+	 w5l30E2CqKDn6KiftGZdV1mF2uUV+AMKP6VjXwZNnOKjKOCzyhD7q198zSk8sj0KRW
+	 LDnHlN5ZQfycA==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v1 07/14] perf stat: Implement CSV formatting
- callbacks
+Subject: Re: [RFC PATCH v1 10/14] perf stat: Implement streaming JSON
+ formatting callbacks
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260522223342.2393553-8-irogers@google.com>
-References: <20260522223342.2393553-8-irogers@google.com>
+In-Reply-To: <20260522223342.2393553-11-irogers@google.com>
+References: <20260522223342.2393553-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 May 2026 23:01:32 +0000
-Message-Id: <20260522230133.939C21F000E9@smtp.kernel.org>
+Date: Fri, 22 May 2026 23:02:58 +0000
+Message-Id: <20260522230258.932091F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,103 +46,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] The CSV metric-only mode outputs dynamic data values (timestamps=
- and aggregation IDs) instead of static column labels in the header row, an=
-d prints this header unconditionally on every interval.
-- [Medium] The data row prefix (timestamp and aggregation ID) is completely=
- skipped for the first row if its aggregation index is -1, causing column m=
-isalignment.
+- [High] The JSON metric output permanently drops the metric unit string, i=
+mproperly placing the metric name inside the 'metric-unit' field.
+- [Medium] Dynamic memory allocation in `json_metric_only_print_metric` con=
+tradicts the commit's 'zero-allocation' claim and introduces unnecessary ov=
+erhead.
 --
 
-commit 93e85eab3ddfd8a1be43f26569da0f314f8e2adc
+commit 739e10b4f20e27c02302af087d48ca22809c20c9
 Author: Ian Rogers <irogers@google.com>
 
-perf stat: Implement CSV formatting callbacks
+perf stat: Implement streaming JSON formatting callbacks
 
-This commit implements CSV output formatting callbacks in stat-print-csv.c.
-It defines queued DOM nodes to buffer traversal streams and encapsulates CSV
-lists lifecycle. It also incorporates interval-mode timestamp printing
-support.
+This patch implements streaming JSON formatting callbacks inside
+util/stat-print-json.c, replacing previous empty stubs. It bypasses
+dynamic queue events and metric lists entirely, formatting JSON objects
+directly onto the output file descriptor.
 
-> diff --git a/tools/perf/util/stat-print-csv.c b/tools/perf/util/stat-prin=
-t-csv.c
-> --- a/tools/perf/util/stat-print-csv.c
-> +++ b/tools/perf/util/stat-print-csv.c
+> Delivers a highly optimized, zero-allocation, and 100% streaming print en=
+gine
+> for JSON normal and metric-only modes. It bypasses dynamic queue events a=
+nd
+> metric lists entirely, formatting and streaming JSON objects directly ont=
+o the
+> output file descriptor.
+
 [ ... ]
-> +static int csv_metric_only_print_end(void *ctx, const struct perf_stat_c=
-onfig *config)
+
+> --- a/tools/perf/util/stat-print-json.c
+> +++ b/tools/perf/util/stat-print-json.c
+
+[ ... ]
+
+> +static int json_print_metric(void *ctx, const struct perf_stat_config *c=
+onfig, struct evsel *evsel,
+> +			     int aggr_idx, const char *name, const char *unit __maybe_unused,
+> +			     double val, enum metric_threshold_classify thresh)
 > +{
-> +	struct csv_metric_only_print_state *ps =3D ctx;
-> +	FILE *output =3D ps->fp;
-> +	const char *sep =3D ps->sep;
-> +	struct queued_metric *b, *tmp;
-> +	int first_aggr =3D -1;
-> +	int current_aggr =3D -1;
-> +	int ret =3D 0;
-> +	int err;
-> +
-> +	if (list_empty(&ps->queued_metrics))
-> +		return 0;
-> +
-> +	first_aggr =3D list_first_entry(&ps->queued_metrics, struct queued_metr=
-ic, list)->aggr_idx;
-> +
-> +	/* Print interval timestamp header if configured */
-> +	if (config->interval && ps->timestamp[0])
-> +		fprintf(output, "%s", ps->timestamp);
-> +
-> +	/* Print aggregation prefix header in CSV metric-only mode */
-> +	if (config->aggr_map && first_aggr >=3D 0) {
-> +		struct aggr_cpu_id id =3D config->aggr_map->map[first_aggr];
-> +		struct evsel *mock_evsel =3D
-> +			list_first_entry(&ps->evlist->core.entries, struct evsel, core.node);
-> +		int aggr_nr =3D 0;
-> +
-> +		if (mock_evsel->stats && mock_evsel->stats->aggr)
-> +			aggr_nr =3D mock_evsel->stats->aggr[first_aggr].nr;
-> +
-> +		print_aggr_id_csv(config, output, mock_evsel, id, aggr_nr);
-> +	}
 
-[Severity: Medium]
-Does this output dynamic data values, such as current timestamps and
-runtime aggregation IDs, into the header row instead of static column
-labels like time or core?
-
-Also, since this header block runs every time csv_metric_only_print_end()
-is called, will the header row be unconditionally printed on every interval
-rather than just once at the start?
-
-> +
-> +	/* Print headers */
-> +	list_for_each_entry(b, &ps->queued_metrics, list) {
 [ ... ]
+
+> +	fprintf(output, ", \"metric-value\" : \"%f\"", val);
+> +	if (name && name[0])
+> +		fprintf(output, ", \"metric-unit\" : \"%s\"", name);
+
+[Severity: High]
+Does this inadvertently drop the metric unit string?
+
+The unit argument is marked __maybe_unused, and the name argument is printed
+in the "metric-unit" JSON field instead. This seems like it might break
+downstream JSON parsers that expect the actual unit string.
+
+[ ... ]
+
+> +static int json_metric_only_print_metric(void *ctx,
+> +					 const struct perf_stat_config *config __maybe_unused,
+> +					 struct evsel *evsel __maybe_unused, int aggr_idx,
+> +					 const char *name, const char *unit, double val,
+> +					 enum metric_threshold_classify thresh __maybe_unused)
+> +{
+> +	struct json_metric_only_print_state *ps =3D ctx;
+> +	FILE *output =3D ps->fp;
+> +	char *header_name;
+> +	int err;
+
+[ ... ]
+
+> +	if (unit && unit[0]) {
+> +		err =3D asprintf(&header_name, "%s  %s", unit, name);
+> +	} else {
+> +		header_name =3D strdup(name);
+> +		err =3D header_name ? 0 : -1;
 > +	}
-> +	fprintf(output, "\n");
+> +	if (err < 0)
+> +		return -ENOMEM;
 > +
-> +	/* Print values */
-> +	list_for_each_entry_safe(b, tmp, &ps->queued_metrics, list) {
-> +		if (b->aggr_idx !=3D current_aggr) {
-> +			if (current_aggr !=3D -1)
-> +				fprintf(output, "\n");
-> +			current_aggr =3D b->aggr_idx;
-> +			if (config->interval && ps->timestamp[0])
-> +				fprintf(output, "%s", ps->timestamp);
-> +			if (config->aggr_map && current_aggr >=3D 0) {
+> +	fprintf(output, "\"%s\" : \"%.1f\"", header_name, val);
+> +	free(header_name);
+> +	return 0;
+> +}
 
 [Severity: Medium]
-Since current_aggr is initialized to -1, what happens if the first
-metric's aggr_idx is also -1, such as with global aggregation?
+The commit message states this delivers a "zero-allocation" print engine,
+but memory is dynamically allocated here using asprintf() and strdup() on
+every invocation.
 
-It appears the condition checking if b->aggr_idx !=3D current_aggr would
-evaluate to false, completely bypassing this block.
-
-Could this cause the interval timestamp and aggregation ID prefix to be
-skipped for the data row, leading to permanent column misalignment since
-the timestamp was already printed in the header?
-
-> +				struct aggr_cpu_id id =3D config->aggr_map->map[current_aggr];
+Could these allocations be avoided to prevent a potential -ENOMEM failure on
+the fast path? It looks like the combined string could be formatted directly
+into the stream without intermediate allocations.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260522223342.2393=
-553-1-irogers@google.com?part=3D7
+553-1-irogers@google.com?part=3D10
