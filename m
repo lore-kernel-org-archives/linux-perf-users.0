@@ -1,160 +1,247 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947FD280331
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D955538CFE8
 	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:40:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779489640; cv=none; b=le1T+iVbTyPoljulTpCpAmF6+nS5y9KP8KkAZjcO/FndaKbeA+vBt5HrCIBvZ1ePt/tH02CmtIWhVWXuSL6QKgMw1YyHb49ChL0gBuXAqZ4tU4dhSg1zJ6oDteWNbn4p3BONNw6K97hhcNKqNLdcvsVSexHDhjBTURLrV7WH6UQ=
+	t=1779489641; cv=none; b=nv5AI9Cl69871FOUuIDNuLeuuUirt4RaKOmtLThnpXG8qWqtYo63bd/ILfN4nbF2K1ci4304NtLmgN/Q9Mun9k2Ldw3+yHHPbZ6BtxcVORaKXR36Elg3MxLmzNAxJQat1qyGIl+xMrDkYuL1A0ck70wFyRYiP9rp+cEr8xuK8+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779489640; c=relaxed/simple;
-	bh=yDaw9BA1e05DzWcVt5vyLdhtWAdY5zqGBN8bIU4sTsE=;
+	s=arc-20240116; t=1779489641; c=relaxed/simple;
+	bh=a7ABK3AsnkjqyqshOOV2j8dNJhNFvijHIVbFF6yJUJU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=P0/OLCcg9pD0jMd3mlckyxztMMc2mQJiNgtrLQ/tQS74iZ2dwnVSaobYLS8NpCMjbPxS6qTDSDI2Vrf0sScQFZ+eT4rTVBDNOnOG4/BHkiRhC+VZLuJ/9ssgUuWepS45c9ayzsFBfu9S6laszS0vozaFiLSkVJg9UItldwuFhYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LySs77DC; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ol3O0dNonezxhGnk0Ic7TgF4G0r/2rHwz58QoT7k6dJPqJ7w6m/uXxHcgKFpmO8I8Fqc2nM4EZ0a6FTBQwF3SXPXOHz9IMlS8kAZN7cmPkNmPB+Hry+DfBSnC51K7ytd4Xpzj2jZB1O28n9R28fVwqske+KJ9ujLeTcBFox43UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VE/10brM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LySs77DC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21DBB1F000E9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VE/10brM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD5C1F00A3D;
 	Fri, 22 May 2026 22:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1779489639;
-	bh=4kDdGCP0JDL8PDBqHlcr1xYF+wyV+D3GutPeoxX1Fpk=;
+	bh=hEL9oq0IkOP0jPmEw8obW3wicZ9GaWpdxu+/9HePqQM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LySs77DCfVz5LoQrSbnlaNCrtzU5hZ47fG2S9TCUMrQVuh2CemFLcGTAFDKYwvUV3
-	 RuuOqO2y9D4Lskez4r+AcSJPo0+K4RkHMcvHJw6yX5yHRmY0vazHwfihmtyQYYzb2G
-	 CRYiD5ikBxl/VoJia6OEePyjR2+yptJJ9a0L19LVbumDIltrrJYznQsOAECvWnowpX
-	 Ns2YMCc+GwJua8ZvfHG8w9NWIry/LChI5TJBWKr3W5PJDb2FZiylyZ1hjdrDUZeyI2
-	 wKNtsq47fr1rrGAolvAjaWMQLRllSl9GITSTX99a4Mx9WLaX30A1Ku+XafzLTqFz6O
-	 2LucmUXpiQBdg==
+	b=VE/10brMZNym9WZFKXSWLdS2NFCupYcIuOSKh6pSETl1ViJZ5ojFuq/wDJsVAs2Xr
+	 6YBOf91Ma4KTFvULZIgR6k1s6aHMT6ZUPj1De8C44g+x6B+ndBS5GItLt6nkBMPIpg
+	 NNOo4TIKLP7ZiZnsomH7MiCwpo9GCF2nTq2unhab4yhyX8as5FoHEsIfCC+NGGyCkF
+	 ijt8pj4yo/qoyW6/LrqjTrztpY60MtDhtRux95rHq+4PMxcGsubjJlKNt3DLtnH1u0
+	 qy0gWdPZOyTrlSNRdTEgLITHX3xIjjxO959/DrG88mbKNiIQybox+q8iASQA788/6E
+	 l9VnDK3knpojw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 18/23] perf python: Extend API for stat events in
- python.c
+Subject: Re: [PATCH v9 11/23] perf evlist: Add reference count checking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260522220435.2378363-19-irogers@google.com>
-References: <20260522220435.2378363-19-irogers@google.com>
+In-Reply-To: <20260522220435.2378363-12-irogers@google.com>
+References: <20260522220435.2378363-12-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 May 2026 22:40:38 +0000
-Message-Id: <20260522224039.21DBB1F000E9@smtp.kernel.org>
+Date: Fri, 22 May 2026 22:40:39 +0000
+Message-Id: <20260522224039.9DD5C1F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [Medium] The same Python callback is used for both 'stat' and 'stat_round=
-' events, but is invoked with different numbers of arguments.
-- [Medium] The new 'perf.stat_event' and 'perf.stat_round_event' types are =
-not added to the Python module namespace.
+
+New issues:
+- [High] Asymmetric reference counting of `sample->evsel` causes memory lea=
+ks and premature frees when processing synthesized events or deferred sampl=
+es.
+- [High] Concurrent calls to `evlist__put` can result in a double-free or U=
+se-After-Free of the `evlist` object due to a TOCTOU race.
+- [Low] Missing cleanup of dynamically allocated `evsel` on `malloc` failur=
+e in `do_test()`.
+- [Low] Mixed declaration and statement violates C89 standard in `cs_etm__s=
+ynth_branch_sample`.
+
+Pre-existing issues:
+- [High] Reassigning the passed `evlist` pointer by value in `iostat_prepar=
+e()` causes a Use-After-Free in the caller.
 --
 
-commit 98e6cac4d71c905dd640dddfae6ccd27bae799e7
+commit f7fbc61f05122c32f095347ca87933eb1cf01ec1
 Author: Ian Rogers <irogers@google.com>
-Date:   Fri May 22 22:04:29 2026 +0000
+Date:   Fri May 22 22:04:22 2026 +0000
 
-perf python: Extend API for stat events in python.c
-   =20
-This commit adds stat information to the perf python session API. It
-introduces definitions for stat and stat_round event types and links them
-into the perf tool callbacks.
+    perf evlist: Add reference count checking
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index de7a513895728..4ee3fdbf35de4 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-[ ... ]
-> @@ -1034,6 +1105,12 @@ static int pyrf_event__setup_types(void)
->  	if (err < 0)
->  		goto out;
->  	err =3D PyType_Ready(&pyrf_context_switch_event__type);
-> +	if (err < 0)
-> +		goto out;
-> +	err =3D PyType_Ready(&pyrf_stat_event__type);
-> +	if (err < 0)
-> +		goto out;
-> +	err =3D PyType_Ready(&pyrf_stat_round_event__type);
+    Now the evlist is reference counted, add reference count checking so
+    that gets and puts are paired and easy to debug. This patch is adding
+    accessors to evlist functions and switching to their use.
 
-[Severity: Medium]
-Will these new event types be missing from the Python module namespace?
-
-It looks like the types are prepared here, but they aren't exported using
-PyModule_AddObject() in the module initialization function like the other
-event types. This would prevent users from accessing them directly (for
-instance, to check isinstance(event, perf.stat_event)).
-
->  	if (err < 0)
->  		goto out;
->  	err =3D PyType_Ready(&pyrf_callchain_node__type);
-[ ... ]
-> @@ -3294,6 +3409,50 @@ static int pyrf_session_tool__sample(const struct =
-perf_tool *tool,
->  	return 0;
->  }
+> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util=
+/iostat.c
+> index e0417552b0cbd..a0baa6cdefd89 100644
+> --- a/tools/perf/arch/x86/util/iostat.c
+> +++ b/tools/perf/arch/x86/util/iostat.c
+> @@ -334,7 +334,7 @@ static int iostat_event_group(struct evlist *evl,
 > =20
-> +static int pyrf_session_tool__stat(const struct perf_tool *tool,
-> +				   struct perf_session *session,
-> +				   union perf_event *event)
-> +{
-> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
-n, tool);
-> +	struct evsel *evsel =3D evlist__id2evsel(session->evlist, event->stat.i=
-d);
-> +	PyObject *pyevent =3D pyrf_event__new(event, evsel, psession->session);
-> +	const char *name =3D evsel ? evsel__name(evsel) : "unknown";
-> +	PyObject *ret;
+>  int iostat_prepare(struct evlist *evlist, struct perf_stat_config *confi=
+g)
+>  {
+> -	if (evlist->core.nr_entries > 0) {
+> +	if (evlist__nr_entries(evlist) > 0) {
+>  		pr_warning("The -e and -M options are not supported."
+>  			   "All chosen events/metrics will be dropped\n");
+>  		evlist__put(evlist);
+>  		evlist =3D evlist__new();
+
+[Severity: High]
+This is a pre-existing issue, but doesn't reassigning the evlist parameter
+by value here cause a use-after-free in the caller? Since the caller in
+cmd_stat retains its original pointer after iostat_prepare returns, it
+seems it would point to freed memory.
+
+> diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-=
+parsing.c
+> index 55f0b73ca20e0..5db85f996cd8c 100644
+> --- a/tools/perf/tests/sample-parsing.c
+> +++ b/tools/perf/tests/sample-parsing.c
+[ ... ]
+> @@ -311,7 +312,7 @@ static int do_test(u64 sample_type, u64 sample_regs, =
+u64 read_format)
+>  	}
+> =20
+>  	sz =3D perf_event__sample_event_size(&sample, sample_type, read_format,
+> -					   evsel.core.attr.branch_sample_type);
+> +					   evsel->core.attr.branch_sample_type);
+>  	bufsz =3D sz + 4096; /* Add a bit for overrun checking */
+>  	event =3D malloc(bufsz);
+>  	if (!event) {
+>  		pr_debug("malloc failed\n");
+>  		return -1;
+>  	}
+
+[Severity: Low]
+Does this leak the dynamically allocated evsel when malloc fails?
+Because the function returns -1 directly here, it bypasses the out_free
+label and evsel__put, losing the reference to the newly created evsel.
+
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 6ec48de294410..fff1f38b50619 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1636,8 +1636,10 @@ static int cs_etm__synth_branch_sample(struct cs_e=
+tm_queue *etmq,
+>  {
+>  	int ret =3D 0;
+>  	struct cs_etm_auxtrace *etm =3D etmq->etm;
+> -	struct perf_sample sample =3D {.ip =3D 0,};
+> +	struct perf_sample sample;
+>  	union perf_event *event =3D tidq->event_buf;
 > +
-> +	if (pyevent =3D=3D NULL)
-> +		return -ENOMEM;
+> +	perf_sample__init(&sample, /*all=3D*/true);
+>  	struct dummy_branch_stack {
+>  		u64			nr;
+>  		u64			hw_idx;
+
+[Severity: Low]
+Could this cause a build failure on compilers enforcing C89 standards?
+The function call to perf_sample__init is placed before the declaration of
+the dummy_branch_stack struct, creating a mixed declaration and statement.
+
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index a362f338f1044..82e9a7ade4fc2 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+[ ... ]
+> @@ -208,18 +215,35 @@ static void evlist__exit(struct evlist *evlist)
+> =20
+>  void evlist__put(struct evlist *evlist)
+>  {
+> +	struct evsel *evsel;
+> +	unsigned int count, ref_cnt;
 > +
-> +	ret =3D PyObject_CallFunction(psession->stat, "Os", pyevent, name);
-
-[Severity: Medium]
-Since both PERF_RECORD_STAT and PERF_RECORD_STAT_ROUND share the same
-psession->stat callback, will calling it with two arguments here ("Os")
-and one argument below ("O") cause issues?
-
-If a Python function is defined to take two arguments for stat events,
-it will raise a TypeError when called with one argument for stat_round
-events, which would abort the perf session event processing unless the
-user implements a workaround like *args.
-
-> +	if (!ret) {
-> +		Py_DECREF(pyevent);
-> +		return -1;
+>  	if (evlist =3D=3D NULL)
+>  		return;
+> =20
+> -	if (!refcount_dec_and_test(&evlist->refcnt))
+> -		return;
+> +	if (refcount_dec_and_test(evlist__refcnt(evlist)))
+> +		goto out_delete;
+> +
+> +retry:
+> +	count =3D refcount_read(evlist__refcnt(evlist));
+> +	ref_cnt =3D count;
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		if (RC_CHK_EQUAL(evsel->evlist, evlist) && count)
+> +			count--;
 > +	}
-> +	Py_DECREF(ret);
-> +	Py_DECREF(pyevent);
-> +	return 0;
-> +}
-> +
-> +static int pyrf_session_tool__stat_round(const struct perf_tool *tool,
-> +					 struct perf_session *session __maybe_unused,
-> +					 union perf_event *event)
-> +{
-> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
-n, tool);
-> +	PyObject *pyevent =3D pyrf_event__new(event, /*evsel=3D*/NULL, psession=
-->session);
-> +	PyObject *ret;
-> +
-> +	if (pyevent =3D=3D NULL)
-> +		return -ENOMEM;
-> +
-> +	ret =3D PyObject_CallFunction(psession->stat, "O", pyevent);
-> +	if (!ret) {
-> +		Py_DECREF(pyevent);
-> +		return -1;
+> +	if (refcount_read(evlist__refcnt(evlist)) !=3D ref_cnt)
+> +		goto retry;
+> =20
+> +	if (count !=3D 0) {
+> +		/*
+> +		 * Not the last reference except for back references from
+> +		 * evsels.
+> +		 */
+> +		RC_CHK_PUT(evlist);
+> +		return;
 > +	}
-> +	Py_DECREF(ret);
-> +	Py_DECREF(pyevent);
-> +	return 0;
-> +}
-> +
+> +out_delete:
+
+[Severity: High]
+Is this custom cyclic reference checking algorithm thread-safe?
+If two threads concurrently drop an external reference via evlist__put,
+could one thread reach 0 and proceed to out_delete to free the object,
+while the other thread evaluates count =3D=3D 0 after subtracting cyclic
+references and jumps to out_delete as well? This TOCTOU race seems like
+it could result in a double-free or use-after-free.
+
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 43fef473bbb49..32c99dbfd42b8 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+[ ... ]
+> @@ -1400,6 +1402,8 @@ static int evlist__deliver_deferred_callchain(struc=
+t evlist *evlist,
+>  			orig_sample.deferred_callchain =3D false;
+> =20
+>  		orig_sample.evsel =3D evlist__id2evsel(evlist, orig_sample.id);
+> +		if (orig_sample.evsel)
+> +			orig_sample.evsel =3D evsel__get(orig_sample.evsel);
+>  		ret =3D evlist__deliver_sample(evlist, tool, de->event,
+>  					     &orig_sample, machine);
+> =20
+[ ... ]
+> @@ -1438,6 +1442,8 @@ static int session__flush_deferred_samples(struct p=
+erf_session *session,
+>  		}
+> =20
+>  		sample.evsel =3D evlist__id2evsel(evlist, sample.id);
+> +		if (sample.evsel)
+> +			sample.evsel =3D evsel__get(sample.evsel);
+>  		ret =3D evlist__deliver_sample(evlist, tool, de->event,
+>  					     &sample, machine);
+> =20
+[ ... ]
+> @@ -1465,21 +1469,23 @@ static int machines__deliver_event(struct machine=
+s *machines,
+> =20
+>  	dump_event(evlist, event, file_offset, sample, file_path);
+> =20
+> -	if (!sample->evsel)
+> +	if (!sample->evsel) {
+>  		sample->evsel =3D evlist__id2evsel(evlist, sample->id);
+> -	else
+> +		if (sample->evsel)
+> +			sample->evsel =3D evsel__get(sample->evsel);
+> +	} else {
+
+[Severity: High]
+Can the asymmetric reference counting of sample->evsel cause a memory leak
+or premature free? It appears that evsel__get is called in these new code
+blocks when resolving the evsel by ID, but perf_sample__exit does not call
+evsel__put. This looks like it would result in a permanent memory leak.
+
+Additionally, if the evsel is populated via evlist__parse_sample it does
+not hold a reference, creating an ownership inconsistency that could lead
+to a use-after-free if an explicit put is called elsewhere expecting the
+get to have occurred.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260522220435.2378=
-363-1-irogers@google.com?part=3D18
+363-1-irogers@google.com?part=3D11
