@@ -1,130 +1,199 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C635430CDB6
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483FA33EB1A
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:34:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779489227; cv=none; b=shfBN+6L9gbwXiH9CXb5e9oqifXhjn4YCAABjrEO4SdeTnt2LAs7qTWzN0xsTilQYKprS5Zm45XK4LfOBnnRN1xawcdBhngb83Rsu5ACieBs+LOjSJNR2imkt1Uv++KnsSbNiDy4evGGE1EOEswz+cnkwvHqCXO5PjwLnWtMmEc=
+	t=1779489244; cv=none; b=tMF/qh3CdxjHTRBXDihn72PpWcFaHpisSdzRssWNruNLZuCnD29EHx+HhTO68Qph/Hzpt/L7U+1ElJ6CXIfk2ljE9E4L7OZi3q5ANeysXlG86BtJxUE5LY9qFzJvoG4MsZ4wDxJd9afbJrmxennzwmOIx6xombzpEATJTLr67+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779489227; c=relaxed/simple;
-	bh=0OwWLQpKXA9U/LDFGGQcf7CgJ/yAVsHaT0Q9KLHXPoE=;
+	s=arc-20240116; t=1779489244; c=relaxed/simple;
+	bh=ZfnaJQ90TdHNTs4Ja4LBFZ0rbLOCrCGYmsdbWezafUQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=CqN1mclsbvy7uih0QbYLA6z3tG1tDJWJp61HfQ+ZmkJhukWncZBwg0oLpe+SeT7bQIHlLfX9+7UK89ItRgAg/HEZjE2MxAtGBcKvt9UmpfvLfu71d2zB/4vyW28Vyjr3uI0WJcJ1htYldGt5LcBSVNkZuz7kHIrwr3qGYXAPAKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QkSaw9tI; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=LTlpBfOAo/cs2YecJaxpZs+/sFymw3cqVPnCsB2/DdAV1exHNCENBacPKYnrPzU8/RgcLRYxNPUcUmwNkCTCceNNzz2JymXk93Bki1Ne97s91nLE50IBSpUbn5dbNoJSjxWdxQlUOry55QAkAXk1/Zmqhsd0LPnZsomYAMfZ4YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2rV1UqL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QkSaw9tI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C0A1F000E9;
-	Fri, 22 May 2026 22:33:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2rV1UqL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D803A1F000E9;
+	Fri, 22 May 2026 22:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779489226;
-	bh=FDd8Wf+WLWjyCvcKwIyiETiJU5TCgmKa4wYVLN/MgME=;
+	s=k20260515; t=1779489243;
+	bh=ULVC540lenYEJFAVFW72hTIEmn06EQnvqjpFdO/bbZM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QkSaw9tIwXSx8+ZKbwxqwBL94WzMrwt6tfWWiYeKXB6kPTJxYh3Od9VOKUt1V9ccj
-	 X4BMVl9nmncEhX1vnnLhFcgvfMx3uXUHCXmCTyhgcLURlmZwDsKU9i7Sh58/DsTdB/
-	 fXQiXYRkTiBdC2XmXb1EjqWpE055rLMU/+orErqo4m/WxkWug4T9uzg1Snn+kChIQy
-	 TqcZkwHhg1z9Tg4WCv3gjv3WYdGLtwLryFa6Q3qI8xVKB34MSZAbJi98vRBNRSE1RB
-	 OcEQ7hFRQPTe+hGfWMMY3TLcY5fWyITxBTDOAl8kAdwnH5AeXl/fMkcMhHqQ0ABOl1
-	 F9JkK8bL9m96A==
+	b=Q2rV1UqLmxCZP4D/8yg3qrlnyQi1RnbVYGC9qZXUjGRDo8Kf+uY7hHYsXVGnj1Ovw
+	 Ul/GLQoBcf2xnLWsIENiKKfNBLUlAMtpB7duWvHw+eKfR0JJn6zHqaVq/lo/EkYRtP
+	 +CiPgbwmsLCtT84uAifGmxGg/NQMVyMm7cFoWhb249sgvkaP0qKeU3MxkZTY8MZGq2
+	 rlsAjfp9y33YY9OHJwCon3hKNZKk8sCsuz8yf2ut6vIgVNwldwM+YItIvT1f9XSUmR
+	 o6acUbxXHyybGFmRvhYGhm39i5O385snzSgQyX9n1jQVVkd0Q/ioQx2Jdroodfp+5A
+	 7f1pZ7AXC/0Aw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 19/23] perf python: Expose brstack in sample event
+Subject: Re: [PATCH v9 09/23] perf evlist: Add reference count
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260522220435.2378363-20-irogers@google.com>
-References: <20260522220435.2378363-20-irogers@google.com>
+In-Reply-To: <20260522220435.2378363-10-irogers@google.com>
+References: <20260522220435.2378363-10-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 May 2026 22:33:45 +0000
-Message-Id: <20260522223346.32C0A1F000E9@smtp.kernel.org>
+Date: Fri, 22 May 2026 22:34:02 +0000
+Message-Id: <20260522223402.D803A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [High] An unbreakable circular reference between `pyrf_event` and `pyrf_b=
-ranch_stack` causes a memory leak for every event containing a branch stack.
-- [Medium] Returning a valid object while a Python exception is set trigger=
-s a fatal `SystemError` in the interpreter.
+
+New issues:
+- [Critical] Deleting a Python `evlist` triggers an invalid free of embedde=
+d `evsel` structures, causing heap corruption.
+- [Critical] The new `pyrf_evlist__item` implementation uses `evsel__clone(=
+)`, introducing multiple critical flaws including Denial of Service and Use=
+-After-Free.
+- [Medium] Uninitialized Python C extension objects dereference `NULL` when=
+ `pevlist->evlist` is accessed.
+
+Pre-existing issues:
+- [Critical] The `iostat_prepare` function drops the caller's `evlist` but =
+overwrites only its local pointer with a newly allocated list, leading to a=
+ Use-After-Free in the caller.
 --
 
-commit c44b624d7ee17549d2a93cdf268bc3540d223c20
+commit f9adb4fe9dff92225e3ea6d5e52725181ce8314e
 Author: Ian Rogers <irogers@google.com>
+Subject: perf evlist: Add reference count
 
-perf python: Expose brstack in sample event
+This patch adds a reference count to the evlist structure. The reference
+count is initialized to 1, and evlist__put decrements it, freeing the object
+when it reaches 0. This is primarily to help the Python code operate
+correctly by avoiding clones.
 
-This commit implements pyrf_branch_entry and pyrf_branch_stack objects in t=
-he
-perf python extension. This allows lazy iteration over branch stack entries=
- in
-a sample event.
+Assisted-by: Gemini:gemini-3.1-pro-preview
+
+> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util=
+/iostat.c
+> --- a/tools/perf/arch/x86/util/iostat.c
+> +++ b/tools/perf/arch/x86/util/iostat.c
+> @@ -337,7 +337,7 @@ int iostat_prepare(struct evlist *evlist, struct perf=
+_stat_config *config)
+>  	if (evlist->core.nr_entries > 0) {
+>  		pr_warning("The -e and -M options are not supported."
+>  			   "All chosen events/metrics will be dropped\n");
+> -		evlist__delete(evlist);
+> +		evlist__put(evlist);
+>  		evlist =3D evlist__new();
+>  		if (!evlist)
+>  			return -ENOMEM;
+
+[Severity: Critical]
+This is a pre-existing issue, but I noticed that iostat_prepare takes
+evlist as a pointer by value. When it calls evlist__put and then assigns
+a new evlist to the local variable, the caller's evlist pointer is left
+dangling. Could this lead to a use-after-free when the caller resumes
+execution?
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 4ee3fdbf35de4..218d772346e2b 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
+[ ... ]
+> @@ -1284,18 +1284,27 @@ static int pyrf_evlist__init(struct pyrf_evlist *=
+pevlist,
+[ ... ]
+>  static void pyrf_evlist__delete(struct pyrf_evlist *pevlist)
+>  {
+> -	evlist__exit(&pevlist->evlist);
+> +	evlist__put(pevlist->evlist);
+>  	Py_TYPE(pevlist)->tp_free((PyObject*)pevlist);
+>  }
+
+[Severity: Critical]
+Does changing evlist__exit to evlist__put here cause an invalid free?
+When the reference count reaches zero, evlist__put will eventually call
+evlist__purge, which triggers evsel__delete. Because the Python bindings
+currently embed the evsel structure directly within pyrf_evsel, calling
+free on that interior pointer might corrupt the heap.
+
+I see that this is resolved in a later patch (commit 29ffdfbf96c8b
+perf evsel: Add reference count), but thought it was worth mentioning
+for the intermediate state.
 
 [ ... ]
-
-> @@ -1361,6 +1516,27 @@ static PyObject *pyrf_event__new(const union perf_=
-event *event, struct evsel *ev
->  			addr_location__exit(&al);
->  		}
->  	}
-> +	if (sample->branch_stack) {
-> +		struct branch_stack *bs =3D sample->branch_stack;
-> +		struct branch_entry *entries =3D perf_sample__branch_entries(sample);
-> +		struct pyrf_branch_stack *pstack;
+> @@ -1788,7 +1797,23 @@ static Py_ssize_t pyrf_evlist__length(PyObject *ob=
+j)
+[ ... ]
+> +static PyObject *pyrf_evsel__from_evsel(struct evsel *evsel)
+> +{
+> +	struct pyrf_evsel *pevsel =3D PyObject_New(struct pyrf_evsel, &pyrf_evs=
+el__type);
 > +
-> +		pstack =3D PyObject_New(struct pyrf_branch_stack, &pyrf_branch_stack__=
-type);
+> +	if (!pevsel)
+> +		return NULL;
+> +
+> +	memset(&pevsel->evsel, 0, sizeof(pevsel->evsel));
+> +	evsel__init(&pevsel->evsel, &evsel->core.attr, evsel->core.idx);
+> +
+> +	evsel__clone(&pevsel->evsel, evsel);
+> +	if (evsel__is_group_leader(evsel))
+> +		evsel__set_leader(&pevsel->evsel, &pevsel->evsel);
+> +	return (PyObject *)pevsel;
+> +}
+> =20
+>  static PyObject *pyrf_evlist__item(PyObject *obj, Py_ssize_t i)
+>  {
+>  	struct pyrf_evlist *pevlist =3D (void *)obj;
+>  	struct evsel *pos;
+> =20
+> -	if (i >=3D pevlist->evlist.core.nr_entries) {
+> +	if (i >=3D pevlist->evlist->core.nr_entries) {
+>  		PyErr_SetString(PyExc_IndexError, "Index out of range");
+>  		return NULL;
+>  	}
+> =20
+> -	evlist__for_each_entry(&pevlist->evlist, pos) {
+> +	evlist__for_each_entry(pevlist->evlist, pos) {
+>  		if (i-- =3D=3D 0)
+>  			break;
+>  	}
+> -
+> -	return Py_BuildValue("O", container_of(pos, struct pyrf_evsel, evsel));
+> +	return pyrf_evsel__from_evsel(pos);
+>  }
+
+[Severity: Critical]
+Is it safe to use evsel__clone here? The evsel__clone function has a
+BUG_ON(orig->core.fd), meaning if the item is accessed after the evlist
+has been opened, it will trigger a crash. Additionally, if the parent
+evlist is freed, the shallow copy might leave dangling pointers.
+
+I noticed this is also addressed in the later commit 29ffdfbf96c8b by
+using evsel__get instead of cloning.
+
+[ ... ]
+> @@ -1854,9 +1878,19 @@ static PyTypeObject pyrf_evlist__type =3D {
+>  	.tp_str         =3D pyrf_evlist__str,
+>  };
+> =20
+> +static PyObject *pyrf_evlist__new(PyTypeObject *type, PyObject *args, Py=
+Object *kwargs)
+> +{
+> +	struct pyrf_evlist *pevlist;
+> +
+> +	pevlist =3D (struct pyrf_evlist *)PyType_GenericNew(type, args, kwargs);
+> +	if (pevlist)
+> +		pevlist->evlist =3D NULL;
+> +	return (PyObject *)pevlist;
+> +}
 
 [Severity: Medium]
-If PyObject_New() fails to allocate memory for pstack, it returns NULL and
-sets a Python MemoryError exception. Because the code falls through and
-returns pevent below, does returning a valid object while an exception is
-set trigger a fatal SystemError in the Python interpreter?
-
-To handle OOM without crashing the interpreter, it seems the code needs to
-either propagate the error by returning NULL, or clear the exception using
-PyErr_Clear() before returning pevent.
-
-> +		if (pstack) {
-> +			Py_INCREF(pevent);
-> +			pstack->pevent =3D pevent;
-> +			pstack->pos =3D 0;
-> +			pstack->nr =3D bs->nr;
-> +			pstack->entries =3D calloc(bs->nr, sizeof(struct branch_entry));
-> +			if (pstack->entries) {
-> +				memcpy(pstack->entries, entries,
-> +				       bs->nr * sizeof(struct branch_entry));
-> +				pevent->brstack =3D (PyObject *)pstack;
-
-[Severity: High]
-Does this create an unbreakable circular reference between pevent and pstac=
-k?
-
-pstack holds a reference to pevent via Py_INCREF(pevent), and pevent holds a
-reference to pstack via pevent->brstack =3D (PyObject *)pstack. Since neith=
-er
-type uses the Python cyclic garbage collector (via Py_TPFLAGS_HAVE_GC and
-tp_traverse), it appears this cycle cannot be broken by Python.
-
-This could cause an indefinite memory leak of the event object, the branch
-stack object, and the dynamically allocated pstack->entries array for every
-event containing a branch stack.
-
-> +			} else {
-> +				Py_DECREF(pstack);
-> +			}
-> +		}
-> +	}
->  	return (PyObject *)pevent;
->  }
+Will this NULL initialization cause issues if a Python user bypasses
+the init function and directly invokes the new method? In that scenario,
+pevlist->evlist remains NULL, and subsequent calls to other methods like
+pyrf_evlist__length or pyrf_evlist__mmap will dereference it without
+checking, crashing the interpreter. Is it possible to add validation
+checks in the other methods?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260522220435.2378=
-363-1-irogers@google.com?part=3D19
+363-1-irogers@google.com?part=3D9
