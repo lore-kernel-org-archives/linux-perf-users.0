@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86771391E4E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2393921CC
 	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779489274; cv=none; b=QkauXcabS6HBk7d3o73EQFNJlCh1JG7KqRbj9H1Pj8JkOJSXm1Qxd3zAXsuTNRua1dHtDFy3DZKPQFpG399poukXZo6TQSObQgagLIuEsVUrS5wer5iJO9EB3ACLt3ANS7lIbnJ2J5sYKeDyZsUlHx3Wbm5mtRZPW88Z22b3dMw=
+	t=1779489274; cv=none; b=qnW6Pqd/8iVBGS9Nu4dqg/L9OPNLOblEFAcwuNGa4B0lnZFjsEIX63wCtRxavRACof/Q+OURm4IkRiZpj627HkocxMb0lfb+4wiw03lVqzanBjvkWX1jEvHV1g2hXhui1oB0fEYiRHAoPZ5AJNEpilqte4ismedIlKlCPkI1qeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1779489274; c=relaxed/simple;
-	bh=tvhSffwPee9SSUcUYA6HQ3/aeT7HT6qFfUHo3kEyz70=;
+	bh=82oRk4SsWFkLEO66xqJJ3QJWj63Uj/yIgFDzEE7VIJY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=nGMLTu5WNlzhjcsJ8d29Rv73zNjtaTn9EseVeGEovP0+ZojBvbxfR3md/QntO06LLtNIFxuKo1WZ49hN5X3ZDH3vJUf4c0hYLdLQihq6b1C4D54UzamFQ4dd5vBW8WV2WkorYFhxnTJzO26+Fr+bAGLIMMKKzY4fwcRAKpSJnGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MinXX8f6; arc=none smtp.client-ip=74.125.82.201
+	 To:Content-Type; b=lik9U3Vt2z90eYB4xjNtw5DAO0k7jgtRUTd3xIbR1wEODk1c6dIHCJwJBAxk92VHCkou5bl8mQeChDKKGTVrSAwiy0K5XugC96UfpjAWBG27J30CMkNpd8vSKQJ04DjbDtZJwC+X1l8ftJUo3t3hycitsb6oOQWYgNAV0zNDlbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f/nrjuOI; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MinXX8f6"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2f2d983d109so4384785eec.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f/nrjuOI"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-2ee1da7a13fso9393914eec.1
         for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 15:34:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779489272; x=1780094072; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779489270; x=1780094070; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lVqEIj3RzCuef4mURYGhNpGwQ7/i8dQl4B1awkm/B+0=;
-        b=MinXX8f6V2E4i4XE2tofw8CXWyJBCLY8SKWUJfKhMGiLkFt6ZO6ff1cvvfaA2Dmw4g
-         U625x42SW5eJPM+8vEkINZ1TnOXnWxlsClDcpNQblMboWjSvNMbMiCl55jUQAAqJJTHU
-         CBCpmj5gwoqzEbtbgM+41+2aYZWaIO4gjfumbplUFdlz9NGYfuoizaTAcihbh8IMal+b
-         KJylRREyrZyDi7wipBWZ0Pldywd6ck40NgvUX0+1vPtCLAOy0WxflsNFQUXOHXK6w6Hr
-         GSB9YQWS5UxQ69Jzh4/O+lTTXLVyWirXrJUec41ySdfTWntuYREFt11pzqc65Tps24Qm
-         nEIg==
+        bh=3CcYRk/hjgf1eQJiKdM92hfT80JcCdgJogs5qRtn8pU=;
+        b=f/nrjuOIqiO2pGp8LxXeYM/NZXTxmg2m/hpD1wW8F/UhWjZm7KxW1lgDdeia8/117I
+         dOMyI4nNsmDQUOlLHKqdufW2Y7cewkOBYhgEM88sTzzNCzV40EdlzHPKncZUBB6W7EwS
+         VCRTG5niOfCdlMXDyMruTrMayWamSjviz9s1hOtlEGta8A4uKgyplE9HNLYQN/f+/AaQ
+         a2041m4osClcf8lcrv20sirtxGjrp8wy2lmCr6jVWa+tZkcxI4RUO7Grv+DclLupPfPF
+         9l2a74/kOIHZSDppW5wFnLEsPa0k4RRTB1nsGbN6fLQmC9T7Jjc4sLI5PgN4hdfZAiMK
+         Qp3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779489272; x=1780094072;
+        d=1e100.net; s=20251104; t=1779489270; x=1780094070;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lVqEIj3RzCuef4mURYGhNpGwQ7/i8dQl4B1awkm/B+0=;
-        b=RL5zusrw7sPhIW3Bc3l2itpQPB45ogsdLCInjs5Jnz3zX8i37qeJ+KwjMTZQyCi/4/
-         PseEhX4WHvC0nuwXeh6wCbG2S6kq9CevTrLlK3EUUROZ8LIfXcV/dROQQB+mKVrku0zt
-         fU46sHYaqhJTjph7wjAHQ+fXjCSF+IrYDuVIhgGCginZfr4rKROcov6u3WvCLKsFdzMx
-         56aDcLZ12QqjyaEPKdZHwscjdCYXfhaLeZbv8XONWzEXti7zWUBGX4n70vlrN+BCEjpB
-         bTBHXahS10gFOGHKKTRadIf068O0f1Ar+oYSJ4E3eA48EAc58NCS96EoSgZVUNDNpcIW
-         cSRg==
-X-Forwarded-Encrypted: i=1; AFNElJ8cMis0xZqez+0iK6cGLsG4GkcirriSYN91U1KacAXKHElISxNV3+ieqdsLdfwVXAnF9uKvTb9ZUDGyVBuv8Z9N@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDnlbZTez2lXG0Z6jLdiN+oadx+S699tYbE8HinoNRAx+jbkej
-	ZE0Hk5uLwrjewwPb+P8gTGHWKliGhWjmrnjRYYAlWAikH320fHEYSEyZrkCFsBLxg4Sbus6QxBo
-	93wNe+mUg+A==
-X-Received: from dycnn6.prod.google.com ([2002:a05:7301:1406:b0:303:9118:b1ef])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:6920:b0:2c5:ed1b:ca9
- with SMTP id 5a478bee46e88-30448ffc876mr2782355eec.1.1779489271486; Fri, 22
- May 2026 15:34:31 -0700 (PDT)
-Date: Fri, 22 May 2026 15:33:42 -0700
+        bh=3CcYRk/hjgf1eQJiKdM92hfT80JcCdgJogs5qRtn8pU=;
+        b=SzdFLl5wg+rFeoZ34JfFOuzJEEuMumRGCTb9bdJBR8Q1NlcgoB4B8y5b7K+J5mIMN3
+         2deu+sD44diac3FXrgfH/JmvM1wMjePod9WBqYgEBRxX69fPupan4TMUZsB6o1F4281F
+         KG3oOuweX+oPRml+RGCExYS2HBf3AmNgQk3JIWkqZeGaSHE6cIvkYy1uQK/iZLhFC/+Q
+         K7HnlyzPrh5+HILVem5gKf1drGK7xHewg95dktu4CC7QwngpWIUt3ZmwK3GdqS2fxivK
+         4VUx23+muIkcf9HtPk6UAeNAxG3bARbrmrxtUbY/IwQJCWKhxrdhpF8Em/JHHDzv0/KU
+         Odzw==
+X-Forwarded-Encrypted: i=1; AFNElJ/v/2tSxiM+xZ2Sie6p3vrc77fqXDgngJ3B1Clt92+DiWAvu/MT7WugsgZNBA0UkixiK49B6djgiLdlaFzvYdt9@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqryX5EEXJl02Oi7sQ/8oYyireVIH/WK0bhB4+Q5p58FHL12Oz
+	YBw+Dm/L/UcGyJeMOiibbquTRG7t0CapHVwKMP5zdVcWNFQ0I8fxppY9dmcwpAYpIcCoKmsPmUU
+	ipPRwgpg+rQ==
+X-Received: from dylq22.prod.google.com ([2002:a05:7300:5996:b0:2de:ed01:5510])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:b104:b0:2da:1874:f3bd
+ with SMTP id 5a478bee46e88-30449051bd3mr3000405eec.16.1779489269488; Fri, 22
+ May 2026 15:34:29 -0700 (PDT)
+Date: Fri, 22 May 2026 15:33:41 -0700
 In-Reply-To: <20260522223342.2393553-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260522223342.2393553-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.794.g4f17f83d09-goog
-Message-ID: <20260522223342.2393553-15-irogers@google.com>
-Subject: [RFC PATCH v1 14/14] perf stat: Extend PMU metrics value linter to
- validate --new outputs
+Message-ID: <20260522223342.2393553-14-irogers@google.com>
+Subject: [RFC PATCH v1 13/14] perf stat: Add --new support to PMU metrics
+ Python validator
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,51 +69,81 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This patch updates tools/perf/tests/shell/stat_metrics_values.sh to run
-the metrics value validation linter twice: once for the legacy path,
-and once under the --new print flag using the newly introduced python
-validator `-new` argument:
+This patch extends the performance metrics value Python validation script
+tools/perf/tests/shell/lib/perf_metric_validation.py to support a new
+command-line argument `-new`:
 
-  $PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir ... -new
+  parser.add_argument("-new", help="Use new printing API (--new)", ...)
 
-This mathematically guarantees that calculated Intel PMU metric values
-staged inside the decoupled streaming JSON callbacks are parsed and
-validated cleanly against the formal rules engine.
+When set, the Validator class appends the `--new` option flag to its internally
+spawned `perf stat` commands:
+
+  command = [tool, 'stat']
+  if self.new_print:
+      command.append('--new')
+
+This enables validating Intel PMU metric mathematical values generated
+specifically by the decoupled, streaming JSON printing callbacks.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 
 TAG=agy
 CONV=7c33d6a0-70a2-454a-82f7-4de2101a5b9c
 ---
- tools/perf/tests/shell/stat_metrics_values.sh | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/lib/perf_metric_validation.py | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/tests/shell/stat_metrics_values.sh
-index 30566f0b5427..02c0bcf6e078 100755
---- a/tools/perf/tests/shell/stat_metrics_values.sh
-+++ b/tools/perf/tests/shell/stat_metrics_values.sh
-@@ -22,9 +22,20 @@ for cputype in /sys/bus/event_source/devices/cpu_*; do
- 	$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "${workload}" \
- 		-cputype "${cputype}"
- 	ret=$?
--	rm -rf $tmpdir
- 	if [ $ret -ne 0 ]; then
- 		echo "Metric validation return with errors. Please check metrics reported with errors."
-+		rm -rf $tmpdir
-+		exit $ret
-+	fi
-+
-+	echo "Testing metrics for: $cputype (New API)"
-+	$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "${workload}" \
-+		-cputype "${cputype}" -new
-+	ret=$?
-+	rm -rf $tmpdir
-+	if [ $ret -ne 0 ]; then
-+		echo "Metric validation return with errors (New API). Please check metrics reported with errors."
-+		exit $ret
- 	fi
- done
- exit $ret
+diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
+index dea8ef1977bf..f69cf0e0de57 100644
+--- a/tools/perf/tests/shell/lib/perf_metric_validation.py
++++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
+@@ -36,7 +36,7 @@ class TestError:
+ 
+ class Validator:
+     def __init__(self, rulefname, reportfname='', t=5, debug=False, datafname='', fullrulefname='',
+-                 workload='true', metrics='', cputype='cpu'):
++                 workload='true', metrics='', cputype='cpu', new_print=False):
+         self.rulefname = rulefname
+         self.reportfname = reportfname
+         self.rules = None
+@@ -68,6 +68,7 @@ class Validator:
+         self.datafname = datafname
+         self.debug = debug
+         self.fullrulefname = fullrulefname
++        self.new_print = new_print
+ 
+     def __set_metrics(self, metrics=''):
+         if metrics != '':
+@@ -379,7 +380,10 @@ class Validator:
+ 
+     def _run_perf(self, metric, workload: str):
+         tool = 'perf'
+-        command = [tool, 'stat', '--cputype', self.cputype, '-j', '-M', f"{metric}", "-a"]
++        command = [tool, 'stat']
++        if self.new_print:
++            command.append('--new')
++        command.extend(['--cputype', self.cputype, '-j', '-M', f"{metric}", "-a"])
+         wl = workload.split()
+         command.extend(wl)
+         print(" ".join(command))
+@@ -584,6 +588,8 @@ def main() -> None:
+     parser.add_argument("-m", help="Metric list to validate", default="")
+     parser.add_argument("-cputype", help="Only test metrics for the given CPU/PMU type",
+                         default="cpu")
++    parser.add_argument("-new", help="Use new printing API (--new)",
++                        action="store_true", default=False)
+     args = parser.parse_args()
+     outpath = Path(args.output_dir)
+     reportf = Path.joinpath(outpath, 'perf_report.json')
+@@ -592,7 +598,7 @@ def main() -> None:
+ 
+     validator = Validator(args.rule, reportf, debug=args.debug,
+                           datafname=datafile, fullrulefname=fullrule, workload=args.wl,
+-                          metrics=args.m, cputype=args.cputype)
++                          metrics=args.m, cputype=args.cputype, new_print=args.new)
+     ret = validator.test()
+ 
+     return ret
 -- 
 2.54.0.794.g4f17f83d09-goog
 
