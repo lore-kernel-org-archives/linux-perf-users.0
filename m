@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13D233EB1A
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BA337BE97
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 22:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779489251; cv=none; b=LmEvbsD1SmEC9AinV5L+CTSoKbtHbM13AZhyY5g580TMu2jTHhkwVrnTa4KdBD8OzoqEXpSpZc1BCChjiIwEGDzMGDuT3/r5PlGXfPmD/vbYvC6S5eWAr8z7X9YwdIxV2M0NgNh8v1SsS8L5MPxNKB7rw+xXKQV2Mg1tAB8b+GY=
+	t=1779489253; cv=none; b=kD1dp82PX4rcVff5Sl8BPQFuRqHkqIXBm0kG+337UXYIGOaG/cNgTTIFQasHbXh2htW3IRhI7EMSOaAEOtVmk94TZPiTfTGkpo/s1LcHpiSPjlwKyV2Q91tBzxuUrKdyAKHHI6D/qFE99UdRYfCgsdKNK7P+rbhVnXQcv8IStvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779489251; c=relaxed/simple;
-	bh=mMukkELF64vPLpVVMICsa3x2PclcZaqcw9gihFqiBKg=;
+	s=arc-20240116; t=1779489253; c=relaxed/simple;
+	bh=QHZVshflFmrjjhMtKUhjVH9MQLmvIRgweRvpXHjw4uY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=W6Qi2F4wguvMuxxmWdl94aN8iNPVPTizK8a4aQ7fZqVlyTlxPbD5mVHhJNdlNGgYzQIiF/lCgaStvL2yHC0Mt7FHRSrGIWvsQEH52dNJ+6bvvdPFjHs004mTgOfx+z/pkH+HAh8MIvmvzECr18mpV3OI05ADs9zZyyhUPcajcb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G/SjEtVh; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=hvzFQPNwxsKfUkbdlVJZcvC/x8G9yei1aXZINA5wLLqnVuWaOZqeOK1ONUTZlK60ZTPpWUpnNZmtH0D5Ibuvg3V6lIq1VR+NcLVULTYSiIL5VDnYta8tXleNsKoY6vo9J+Up+M8mS73I/QArMUiAdV2u4XhQ+8WShJH0P+WJ52E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qghj5dG3; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G/SjEtVh"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-132d631edaaso46041774c88.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 15:34:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qghj5dG3"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-2fe1cf409a1so12950941eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 May 2026 15:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779489249; x=1780094049; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779489251; x=1780094051; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PbZge+S6GxcXFo7SrT3BdTOqtxic4O2pzIUUOXH6H6k=;
-        b=G/SjEtVhG3+WIZs9HsOGURl9Jz7AlpmtIJiY/kgqlLDHtiuAsb3M6tbwMP7Ajls1RW
-         7AmwGl80yka072XN+JCK0y7dDohRArmUrJpWowEHsVWNQrUqLaYFVA0UWUxJe+Snfpvr
-         X8dUcfVlDBFgTLWjm0wHqy3XXDhTa8r94QB4n4Sgk7tLoxcIyTbr9VG01lCg8IcQ12Rw
-         IeNGngeGYbBjsAFdGWOHXq2dWGJC6/fayaYxRM4BZDPdBII1DUaG9HN3+GwGlwTFiSMe
-         RP9mJQbmXrzTs7JKTcCKTs09r+kdwc1g1qqExcxEa3v9UWiiqzDoqggWqxFUzGBR6zIV
-         NFfA==
+        bh=DqzxQW2AbIPTH9tTCQP9t1PgzS1BV2Rl09I1wSbSwmk=;
+        b=Qghj5dG3sJaXWlK4MXcc1NiTax+P+y2OZ7L82bSb9SI7ZcCfkVWwo3e6jQRpgl9cs6
+         jwNSaJebqrZimuoqCr/ATO4WWpwxT/HDg60v38n+puPMFO1bFtMxOHFu1I1+vM61dYUO
+         P/KmWJTbpgY1+nULwkRs/nVHFl87VBY//4BkedfMObxA619q122Y3vqnIMq/VdEYfcYD
+         WwjxMutEd6LBXLalkcthHm+i3nDi0ntn9KhvNx/WAzeMooBP3z/V0wT6kjpwCj+tGvP0
+         FUDct3Gj6B9AG1M5rhqaMDFH4lBndVp9YaWivgug9UBinsfPElIeohuV3LRcKAfWl2RO
+         9ZGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779489249; x=1780094049;
+        d=1e100.net; s=20251104; t=1779489251; x=1780094051;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PbZge+S6GxcXFo7SrT3BdTOqtxic4O2pzIUUOXH6H6k=;
-        b=Cn8yTCHdEgvrGqaS+thIXpa2aXdA2ygOYMnlP9A/jef3I35fTJswt7cpboFuqmmYVZ
-         mkfAc3u7AtTQ+NlLa63oCF+r8BuPAd4D6hkuH6JNYC7hpgAN2pOZrOgaeo9hKq0tNrYg
-         0Uf0EpYwFNBC2mpA9zNkBq9NpFldn8iHaO5IcALILj7a5wL8mTGtFsIZb+BniL3hgfdB
-         tVXZM9+detiX419mSnTKD8YWdKT2Uz616TIJH43XbuL0ZGD1rEFSdPGB78nrJyICcilP
-         5sZtMkqfXhdb6Io0DT+yGk0DL1b6//3rOcGo/1a7OAOk+0NP69kfBiygmTrsiMDCto7Q
-         sRSQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8BG1OM+f93HWwdaOKvb851dRLAw0Pvymlui2hpspVM4tFyqDsJvSqQ37gV6sq0/NBJ6Tg0nt2RlipLsNKARkkl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1VJaF4ZVKos1eN1yNKIS4LFFIKN47/4fGujAH+GZqRo7wRjPy
-	Gl8rDP4w3+WTlgRitFaxGe4ZABy9qh3XmDie2E+AqvvGlwFbvyO9QQ/KeyT/KIDCiOylMpYIvDX
-	Qs6XE9GNi/A==
-X-Received: from dlb38.prod.google.com ([2002:a05:7022:626:b0:134:a774:d28e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6727:b0:134:a701:de8
- with SMTP id a92af1059eb24-1365f810954mr2223740c88.5.1779489248683; Fri, 22
- May 2026 15:34:08 -0700 (PDT)
-Date: Fri, 22 May 2026 15:33:31 -0700
+        bh=DqzxQW2AbIPTH9tTCQP9t1PgzS1BV2Rl09I1wSbSwmk=;
+        b=dgUEcU9kmsrekSj48jsKKueJbQZ1FHanbWv4dtAJrxHsDFZ0rcBfQs5maY4wb2RQca
+         9IbxknpuM644EyX/qWZt+qggToUUFZidrvALUQSpebHKTDxc0uSSaqNaNqlzQ6Zym/Qk
+         SObOyyNxXS1/U/5Ty1LVpKWiqA30c7YEnQkYQxp0tljap0Ik7mZmMXftlA7pSWa2dpFt
+         9rLPNVP3JkJnZzlSOvtmwLeHADNJ/ExaCS5Z0ZiBf2+JMR0boEFAHlrhCU8AgDxrtQpb
+         8+Col0Nn+Aj/wNjopk1JeVm3PkzYgH1n3fMLWpntV9N+xRnx/p1x3JDVL+gd5VE8s5MP
+         Ad7A==
+X-Forwarded-Encrypted: i=1; AFNElJ+30Neg+OVVK+hijb85Emfqirkt1hGA/H2RFTle+EhOI6AqHhFzo/o95k9wRiJNvhcavYHobcgTvjRL/BloxDGc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww7WrMpLR2cds48ajnxcdGcKh8mrhNR4lAw/v1MwHGTYFSUcMD
+	MCK7CWIDujBFf3TxMzDHYlsyZLPhPg3+Ch96KAG/3FaJGaph07BjB9yuKwPv9fckZnjx+IHIL7S
+	GrVElGwRBVw==
+X-Received: from dlb3.prod.google.com ([2002:a05:7022:603:b0:135:e6d6:d14d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:258a:b0:136:4317:a163
+ with SMTP id a92af1059eb24-1365fa35574mr2034112c88.25.1779489250537; Fri, 22
+ May 2026 15:34:10 -0700 (PDT)
+Date: Fri, 22 May 2026 15:33:32 -0700
 In-Reply-To: <20260522223342.2393553-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260522223342.2393553-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.794.g4f17f83d09-goog
-Message-ID: <20260522223342.2393553-4-irogers@google.com>
-Subject: [RFC PATCH v1 03/14] perf stat: Extend STD output linter to test
- basic New API checks
+Message-ID: <20260522223342.2393553-5-irogers@google.com>
+Subject: [RFC PATCH v1 04/14] perf stat: Extend STD output linter to test core
+ aggregation checks
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,36 +69,49 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This patch extends the standard console (STD) output linter script
-tools/perf/tests/shell/stat+std_output.sh to run the basic no-argument
-check a second time using the --new print flag:
+This patch extends tools/perf/tests/shell/stat+std_output.sh to run all
+standard CPU and thread aggregation checks under the --new print flag:
 
-  perf_cmd="--new -o ${stat_output}"
-  check_no_args "STD (New API)" "$perf_cmd"
+  - check_system_wide
+  - check_system_wide_no_aggr
+  - check_interval
+  - check_per_thread
+  - check_per_node
+  - check_per_core
+  - check_per_socket
+  - check_per_die
 
-This ensures that standard console outputs produced by the decoupled
-printing callbacks are formally validated by the test suite.
+This guarantees that standard console outputs produced by the decoupled
+printing engine are verified across all core CPU-aggregation modes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 
 TAG=agy
 CONV=7c33d6a0-70a2-454a-82f7-4de2101a5b9c
 ---
- tools/perf/tests/shell/stat+std_output.sh | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/tests/shell/stat+std_output.sh | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index 9c4b92ecf448..233e0a50eb33 100755
+index 233e0a50eb33..8dee005a7281 100755
 --- a/tools/perf/tests/shell/stat+std_output.sh
 +++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -118,5 +118,9 @@ then
- else
- 	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
- fi
-+# New API basic checks
-+perf_cmd="--new -o ${stat_output}"
-+check_no_args "STD (New API)" "$perf_cmd"
-+
+@@ -121,6 +121,17 @@ fi
+ # New API basic checks
+ perf_cmd="--new -o ${stat_output}"
+ check_no_args "STD (New API)" "$perf_cmd"
++check_system_wide "STD (New API)" "$perf_cmd"
++check_interval "STD (New API)" "$perf_cmd"
++check_per_thread "STD (New API)" "$perf_cmd"
++check_per_node "STD (New API)" "$perf_cmd"
++if [ $skip_test -ne 1 ]
++then
++	check_system_wide_no_aggr "STD (New API)" "$perf_cmd"
++	check_per_core "STD (New API)" "$perf_cmd"
++	check_per_die "STD (New API)" "$perf_cmd"
++	check_per_socket "STD (New API)" "$perf_cmd"
++fi
+ 
  cleanup
  exit 0
 -- 
