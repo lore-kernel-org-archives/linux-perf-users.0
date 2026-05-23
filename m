@@ -1,115 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C892D30C606;
-	Sat, 23 May 2026 19:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A42E1FB1;
+	Sat, 23 May 2026 22:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779565389; cv=none; b=rubHpQB+2r/SRLmCleTOplK/txevwF3folcK+Lra66WIWxDSaNY4gPG/dVGIsT9CVuQDdABoshARVlsYHzrht/6kYGlD7aQxS/fAwDW9kk0sQ8zP0e7ZFIhQpZVM27moBpTI/BL6QHPn5JoMtUqAqSmL7Rri2SpHGyzQsgHEleI=
+	t=1779576282; cv=none; b=oZTRInYzbLXBUBsMAtG7MUM3+q+iF3TvLSNSkz9J0/XhebV+FXLZqX27LOpR4yNb6OiUodCG7qkGMuUanmvpZCfEK5vDoFeDrtE4bWF/GgE0zgC//AS3AN3+3hkgnzWPo08/I5ddAsyub4iJyAW5c41LCyUSgWNNocYf3ZHo+eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779565389; c=relaxed/simple;
-	bh=D3zxq48jpNb8NeX8OBIi5fswzSbQEgmlY+KRsUrVG/o=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=asEtAFrckqqDcFDg6itGW9DzD0bHrX4SUHx4AuL9f8nGiXDWzQyQqmdX6ndj7xM6/8gRIJRM+XC8Au6sChjyUmC+Tbt/QaYMnut3iCOWYsnUXKY6/4Wa0wrebWHyB/n1GoF1PYnKvBM4ERuq7O0VvBN5zmnxq20F38hQlRPWGa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1W7libw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779576282; c=relaxed/simple;
+	bh=2a3l92U7oMlc1CTx1JlHFc++euwbKy/QtJhml9688lA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SmAbE3yFj38w7rmkCD1gWbbyXsZdUDFbfiONnx1XTPKLT51O7ngLvPGMVIFGiQOJS9Gsxlic95VQIRKDyyq1pMRV55jjj9sv/WMlBt5sO6ZbKpDf+zmN7kEWRmmSnjZvkK3cOFx6O9NI50adlGoy45eH+xXeY1ASV0lAiR62Tac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kuiRxfMA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1W7libw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 636C6C2BCB0;
-	Sat, 23 May 2026 19:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779565389;
-	bh=D3zxq48jpNb8NeX8OBIi5fswzSbQEgmlY+KRsUrVG/o=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=N1W7libwE4pGw34rdpUaYygrGuVgH4XFm8AxUcVSxmj6nqnanNSxFh/uEz+Xvxfab
-	 /ouAj5rlypPe3VJNhi/k8FHRELxD35Rs/PapDF35s/pIK2yOBQlEDa9uej9bHhZASA
-	 yGObZxnEwTxKrBuQu+MUpt3Bml7vRUG1zDQJSOTnuR9eim9WFj9X2xz/cDIdXzHdp3
-	 ndtRItrgtK24O4qaxecV1luOdQvmAYr3jpFIekM+AyEhjsNUf5B+FYAQtiSHaqeyPB
-	 ok3SQGNyuZEOdRhuQJxm8jVWcC8jKtG1wgb/GzbIzMJM+tnokdV7FPiwj+hyNQOVvt
-	 dGJYiO73DRmBQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B0DCD5BC6;
-	Sat, 23 May 2026 19:43:09 +0000 (UTC)
-From: Demi Marie Obenour via B4 Relay <devnull+demiobenour.gmail.com@kernel.org>
-Subject: [PATCH 0/3] AF_ALG: Remove support for AIO and old-style drivers
-Date: Sat, 23 May 2026 15:43:01 -0400
-Message-Id: <20260523-af-alg-harden-v1-0-c76755c3a5c5@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kuiRxfMA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 191671F000E9;
+	Sat, 23 May 2026 22:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779576280;
+	bh=Ly0RA4VR9deG/+GQfcotwpWhgxpylLFnae+5Pv9ttM4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kuiRxfMAnmum87HB0p5Jf+HbK3f+Q6KJxqfksoT3Z1colDAfSu4CVUnK6DwY3uzND
+	 qAo9Cvv2OmNGdbwQ/j0fGuYPxYuDJ+PXH7cCI9EUmJrslTkoRmXeVuT3lLh5wtc2ZR
+	 BJhhQs3WY3uIpesOKy7tguT6Cb8M34q07ME530AvdFCvlIHbz49m+ERnbnp+oDlFol
+	 MeTqUlIf1SIFFEhXpf9y9H3eiXMAV50ih4UYDs7QUMkfHVT3vW63j0gAv51pa1nXFX
+	 8124VZO1ljYRsB/7HbMBQnHqtBR6ZWiqY9JVeA8k0277L0VUa3/qz79Kij8MrTaW8G
+	 0qdwvc8C3dFIg==
+Date: Sat, 23 May 2026 19:44:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Cc: namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	palmer@dabbelt.com, pjw@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf riscv: Fix discarded const qualifier in
+ _get_field()
+Message-ID: <ahIt1ArEyRH8HIXf@x1>
+References: <20260513154851.1085334-3-guanli.oerv@isrc.iscas.ac.cn>
+ <20260513180721.1179904-1-guanli.oerv@isrc.iscas.ac.cn>
+ <6f54fc06-1a75-4910-82a5-172a42f34284@isrc.iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDUwMj3cQ03cScdN2MxKKU1DxdSwMDCxNLE1NDM1NjJaCegqLUtMwKsHn
- RsbW1AAl0ZOpfAAAA
-X-Change-ID: 20260502-af-alg-harden-900849451653
-To: Herbert Xu <herbert@gondor.apana.org.au>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Kuniyuki Iwashima <kuniyu@google.com>, Paolo Abeni <pabeni@redhat.com>, 
- Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>, Eric Biggers <ebiggers@google.com>, 
- Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
- io-uring@vger.kernel.org, netdev@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
- Demi Marie Obenour <demiobenour@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779565388; l=1545;
- i=demiobenour@gmail.com; s=20250731; h=from:subject:message-id;
- bh=D3zxq48jpNb8NeX8OBIi5fswzSbQEgmlY+KRsUrVG/o=;
- b=UWO/qocMd43s589G/tauUvyAgol1bxSgtpx423ChGfzN9f//3VW16eJhzkctofOPU6zoYSfaG
- lOI3O1+/rnwA0dZf4yBziamZeyECAINgeTNroGcSZIlvhNlXeYFNVWc
-X-Developer-Key: i=demiobenour@gmail.com; a=ed25519;
- pk=4iGY+ynEKxIfs+fIUK9EzsvZ44yGE0GvXLeLTPKKPhI=
-X-Endpoint-Received: by B4 Relay for demiobenour@gmail.com/20250731 with
- auth_id=473
-X-Original-From: Demi Marie Obenour <demiobenour@gmail.com>
-Reply-To: demiobenour@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f54fc06-1a75-4910-82a5-172a42f34284@isrc.iscas.ac.cn>
 
-AF_ALG is a deprecated API only useful for compatibility with existing
-userspace.  It has had a lot of vulnerabilities, including the infamous
-CopyFail.
+On Sun, May 24, 2026 at 02:41:26AM +0800, Li Guan wrote:
+> Hi Arnaldo, Namhyung,
+> 
+> Just a gentle ping on this patch. It has received a Reviewed-by from Ian.
+> Could you please consider picking it up for perf-tools-next?
 
-Rip out support for offload drivers, which tend to be buggy.  Also rip
-out support for AIO, which actually bloats the entire socket subsystem.
+Thanks, applying.
 
-Only compile-tested.
+- Arnaldo
 
-Signed-off-by: Demi Marie Obenour <demiobenour@gmail.com>
----
-Demi Marie Obenour (3):
-      net: Remove support for AIO on sockets
-      AF_ALG: Drop support for off-CPU cryptography
-      AF_ALG: Document that it is *always* slower
-
- Documentation/crypto/userspace-if.rst          | 26 ++++++++--
- crypto/af_alg.c                                | 35 ++------------
- crypto/algif_aead.c                            | 43 ++++-------------
- crypto/algif_hash.c                            |  4 +-
- crypto/algif_rng.c                             |  4 +-
- crypto/algif_skcipher.c                        | 66 ++++++--------------------
- include/crypto/if_alg.h                        | 19 ++++++--
- include/linux/socket.h                         |  1 -
- io_uring/net.c                                 |  1 -
- net/compat.c                                   |  1 -
- net/socket.c                                   |  7 +--
- tools/perf/trace/beauty/include/linux/socket.h |  1 -
- 12 files changed, 70 insertions(+), 138 deletions(-)
----
-base-commit: 49e05bb00f2e8168695f7af4d694c39e1423e8a2
-change-id: 20260502-af-alg-harden-900849451653
-
-Best regards,
--- 
-Demi Marie Obenour <demiobenour@gmail.com>
-
-
+> Thanks,
+> Li Guan
+> 
+> On 5/14/2026 2:07 AM, Li Guan wrote:
+> > The assignment of strrchr() return values to non-const char * variables
+> > triggers a -Werror=discarded-qualifiers warning when building with GCC 14.
+> > This happens because in newer glibc versions, strrchr() returns a
+> > const char * if the input string is const.
+> > 
+> > Properly declare 'line2' and 'nl' as const char * to match the glibc
+> > function signature and ensure type safety. This avoids the need for
+> > explicit type casting and aligns with the design pattern of not
+> > modifying read-only memory in the perf tool.
+> > 
+> > Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+> > ---
+> > v2:
+> >   - Drop the auxtrace decoupling and weak stub approach as they interfered
+> >     with the cross-platform analysis intent, per Ian's feedback.
+> >   - Focus on a clean fix for the const qualifier issue in RISC-V header.c
+> >     by properly declaring local variables as const.
+> >   - Use Li Guan as the preferred name format for consistency.
+> >   - Verified that this fix is not yet present in acme/perf-tools-next.
+> > 
+> >   tools/perf/arch/riscv/util/header.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
+> > index 4b839203d4..891984e909 100644
+> > --- a/tools/perf/arch/riscv/util/header.c
+> > +++ b/tools/perf/arch/riscv/util/header.c
+> > @@ -19,7 +19,7 @@
+> >   static char *_get_field(const char *line)
+> >   {
+> > -	char *line2, *nl;
+> > +	const char *line2, *nl;
+> >   	line2 = strrchr(line, ' ');
+> >   	if (!line2)
