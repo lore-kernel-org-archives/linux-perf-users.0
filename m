@@ -1,66 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A371862;
-	Sat, 23 May 2026 00:02:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6056A2BB1D;
+	Sat, 23 May 2026 00:34:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779494559; cv=none; b=sBjaB+S2h8brM7XYENyTsBwvuDk0TnWfOvXXFao2hgy9KLR6UNhkM5rrdh5natA+AGkanM+wcx22G7YXTWYhqK5aWzeUJ1BlKWYEkDhPtqu9U31SBVkHFxsxcdaof6m1U3lO0vA4ICle9F0N02v6AGCv7tY60t4+C+66mBBvUGU=
+	t=1779496465; cv=none; b=O89t7627SO0ywkWpxD1ldMDUNX8GJAoHDxFBqRO3wbqjdhpcnGBK+yrvE/t2C+mz26POTPS3sMqUl+2WG+SJSnYykMZc/QWmuRExiblt6G7eEW7xw1YX/7Hjc2fEueeHx6NKyCrYONegPMYD4bsw7B3uQMtJIlCj8kHqu9l4wnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779494559; c=relaxed/simple;
-	bh=JxoGcNc+m+doRoo428iSMbwlhF+9G8Cr5gQdnj7QVcI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NzHGTLenSaMLkmD6PwDgGuZRhhdhFTGqYD43AGvisivt6lSwnC/SGl9K5BtqEXyvhakvXnX3sLVxHZrp7g0OWfhXxxC71efvWmjN9IcBNuJQC0Ye/FUURmdLSJkmqAMT6JruMKqRkQcXciR/GBiaWCnsv9ZIvsnSKzwZnu+Yz5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9GVleRJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779496465; c=relaxed/simple;
+	bh=ntSl5IU76GACRRUM1sAkWMFAuoKIhS2vF8FEafhecSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R9lU6WuNcaKGtpnETWHseRSHMxI/6XS+kWnBJnNhxztYcdBFGG2B5+D3aMEth8GxF/vG5+51oH0gyp54G7Vo+6FbxQVUvvFLmdqo8lA44YjliLyZUDSzTzbm9IrTBvy1Xic8oGY4yr8aFds78M3deDLg3EHMtkadqF33DXq0ubQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNeyET/I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9GVleRJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E301F000E9;
-	Sat, 23 May 2026 00:02:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNeyET/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E10B1F000E9;
+	Sat, 23 May 2026 00:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779494558;
-	bh=BGTkKvSPuE5al+MftdgA9e0ramgmtr0IIHqjMaXwx04=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=h9GVleRJKUXdUhTip+xz6cMjbDOYNtn3Xh1gIy0zbrlaxezb/5rJ88G3TJA1Y4YQS
-	 QmA2sicC7w1LM7RMDeMLMj5fgMngt02/P+ynQ+pW0oiLv1W9if7ifzOd8ClIio+KiF
-	 L93vcztxZ2W+XiRa3L8hSK+uozTi9FoF7kA9VNTZ+BjyyjD52VS4IM3F+MfpbwPvCA
-	 hnBImDXhI1vruuxCvAQfbhKcpX5AxyMrRVXyx30oqgA346PjevKB7nYlv6GoKwuSw4
-	 4ydgogNxbHebiuS+mR5LjO2GOdbN//L3mFcstZOJ2uJKpHsXTDuvp+LLIMXzI4NwY6
-	 A2AOwAHidcUJw==
-Date: Fri, 22 May 2026 18:02:36 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Chen Pei <cp0613@linux.alibaba.com>
-cc: acme@kernel.org, alex@ghiti.fr, dapeng1.mi@linux.intel.com, 
-    guoren@kernel.org, irogers@google.com, linux-kernel@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org, 
-    mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org, 
-    pjw@kernel.org
-Subject: Re: [PATCH v2] perf riscv: Add SDT argument parsing for RISC-V
-In-Reply-To: <20260508082658.3982-1-cp0613@linux.alibaba.com>
-Message-ID: <b9f0c9a6-01bb-c111-2153-60c2b3407dae@kernel.org>
-References: <20260416124945.121699-1-cp0613@linux.alibaba.com> <20260508082658.3982-1-cp0613@linux.alibaba.com>
+	s=k20260515; t=1779496464;
+	bh=MZa0FJnwFZestBXXn2qMGSh9RE19TAiiEdYB968NsTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kNeyET/IesSwuK2wCCJ+aqgUI5D9jMY9kTPPWnONiojgktpNFpOwY/Fy+6MFnlS1+
+	 BryXiiF9XJtZdoQOpPtrc12M5rcpwRVQpTVUP5HwK9sT/GYb9SxB2iviQ6NTiGMgFn
+	 /zN9wDY5ViIsaMu9M4Y1rPXLJwe8y/Bil74grKTXXi5zkv+rn4kmuebQFlvcACWKHr
+	 NqFylpVvi1Ns/2uA5EPltpSzVMCYJs8dPvvjA7rNGLmZ7iWnD4d40imzaRlO4S4ABl
+	 x3JEr2JlUa5puY4URgqCxjKakAUixgoHPdTphVG4x/66UXUY3IVVBomlGjRy1Mg6iM
+	 rmYpBgkDYdLBQ==
+Date: Fri, 22 May 2026 21:34:20 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Manali Shukla <manali.shukla@amd.com>,
+	Santosh Shukla <santosh.shukla@amd.com>,
+	Ananth Narayan <ananth.narayan@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>
+Subject: Re: [PATCH v3 0/8] perf tools amd ibs: Fixes + Zen6 enhancements
+Message-ID: <ahD2DCMTqRSOyjyo@x1>
+References: <20260508060004.2575-1-ravi.bangoria@amd.com>
+ <agAok_vgqBrZzMhA@google.com>
+ <299d7023-fbb1-4e17-8931-5bd73ffd947a@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <299d7023-fbb1-4e17-8931-5bd73ffd947a@amd.com>
 
-Hi,
-
-On Fri, 8 May 2026, Chen Pei wrote:
-
-> Gentle ping.
+On Thu, May 21, 2026 at 08:22:23AM +0530, Ravi Bangoria wrote:
+> >> o Fix kernel version check in perf IBS unit test.
+> >> o On Zen6 and newer platforms, skip perf unit test that assumes IBS don't
+> >>   have hardware-assisted privilege filter.
+> >> o Starting with Zen4, the validity of several IBS fields changes. Add
+> >>   the required dependency checks when decoding IBS MSRs.
+> >> o Zen6 and future platforms extends IBS OP with Streaming-Store and
+> >>   Remote-Socket indicators for load/store instructions. Add decoding
+> >>   support for these new bits.
+> >> o Document new IBS features in perf-amd-ibs man page 
+> >>
+> >> IBS Zen6 enhancements doc:
+> >>   AMD64 Zen6 Instruction Based Sampling (IBS) Extensions and Features,
+> >>   Pub. 69205 Rev. 1.00 March 2026 
+> >>   https://bugzilla.kernel.org/attachment.cgi?id=310002
+> >>
+> >> Patches are prepared on perf-tools-next/perf-tools-next (53bc03289278).
+> >>
+> >> v2: https://lore.kernel.org/r/20260430061115.10266-1-ravi.bangoria@amd.com  
+> >> v2->v3:
+> >>  - Instead of removing the priv modifier unit test completely, skip
+> >>    it on platforms that supports hardware privilege filtering. (Namhyung)
+> >>  - Rebased the series on latest perf-tools-next/perf-tools-next.
+> >>
+> >> Ravi Bangoria (8):
+> >>   perf test amd ibs: Fix incorrect kernel version check
+> >>   perf tool ibs: Sync AMD IBS header file
+> >>   perf test ibs: Skip privilege test on Zen6 and newer platforms
+> >>   perf amd ibs: Suppress bogus TlbRefillLat and DCPhysAd on Zen4+
+> >>   perf amd ibs: Make Fetch status bits dependent on PhyAddrValid for
+> >>     newer platforms
+> >>   perf amd ibs: Decode Remote-Socket flag in IBS OP raw dump
+> >>   perf amd ibs: Decode Streaming-store flag in IBS OP raw dump
+> >>   perf doc: Document new IBS capabilities in man page
+> > 
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> Please let me know if there's anything I can do to help move this forward.
+> Thanks Namhyung.
+> 
+> Arnaldo, mind picking this up?
 
-Probably the best thing that you could do is to find at least one other 
-person -- ideally, more -- to review and test, and to send a Reviewed-by: 
-and Tested-by: to the list.  
+Sure, thanks, applied to perf-tools-next, for v7.2.
 
-> Thank you very much for your time and guidance.
-
-Thanks for sending the patch!
-
-
-- Paul
+- Arnaldo
