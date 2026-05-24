@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDBC2874E3;
-	Sun, 24 May 2026 03:27:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23DF2848BA;
+	Sun, 24 May 2026 03:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779593270; cv=none; b=TiliAUV8x5g6K3piVdEm9kS2Ee/eIjz1s1YLvxz9ODtBsN0Or6G9DCAzxlmrQ3yoVdNWhix5B16ueZKKiKghi3gctMRW64+R30pIwG55+mtjyZ6VFHzAhG0roJvdn3qC4J05cOqq/sOuJ/te/ipEK7d9OxncuTUXEguztc10xT4=
+	t=1779593276; cv=none; b=LzkkvrsNiHKuXTonzZQeX7DDZIpAFjxmcfco4uncwcfKoL/DJmjzsNtDxdYpaLzE9r3GoGCZJQLR076pYxMosRynRhNiIOCe5VRS3W6bb9z+OSVdGvP9TyL9HwoC66p7C0m9NySHEDTyTgztG60rF+G7XH0f4o6UDo5xy9k+aWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779593270; c=relaxed/simple;
-	bh=+FrKb/aPODbOMn4tQ14jFX4fEXNRcobwejc6zdUYsII=;
+	s=arc-20240116; t=1779593276; c=relaxed/simple;
+	bh=t4MWiZOVnbvgN1FLY3y20WYpEcIeoyhE5ptaJr2ZZp4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ECUMBWVNlse1vwKVlAWepLRdVquzFQhu84yx5DtBKE8Ls/S7YadVEyJqj4UHk1YDYCVtK19pitpQcsglJlRTLegIT21zHk2qIsRK6qI0MK53NaMwOC6ubmlt4Ek6trGXZQg3OMjQU/vm3Ox9KUAA970T1cL/mZwV310na6GVM1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4NPiS50; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=MxU+YclZ6weO5353gXu30WC9zIbEJoCkQQ4xinfvqdZv/1PdTzCxznyRZUwnBKRzKzxK+T40+v2CVrSfk7ceBctRWoCRYk4BMcqlaAy4t5et2z2mMjA58MUNsIs0UN2sujJtbD58LXF5nCyuBVS9haYdaPq0n2x5+m6QnTNdgIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMXppHDX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4NPiS50"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E14DE1F000E9;
-	Sun, 24 May 2026 03:27:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMXppHDX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73AFA1F00A3A;
+	Sun, 24 May 2026 03:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779593268;
-	bh=k+eYrXi6ugs6c61M2VwpDukIgVhLCh3dx5xvKu/yrMQ=;
+	s=k20260515; t=1779593274;
+	bh=J8t0BS/K7fNTh75SuO9HWTTq8JhLusrqBgf02oogCjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=G4NPiS50sZ0A/oP8LzhZ4lcCTSG4u5O+wsLrNdKhKyvpy3KI7Ep2m3GDmnDRXm8i+
-	 GJ9LB2anB1yzlkxfP4gspBJ+WHytMMf2zo0APYAiw/M9vBc6N01TYA/hXD1XzEssOp
-	 qBp94KTB0qNDYVsKM9rWmoIg1loNLokvOgEd0xnek1dSCdyknS1k1Tbwek8aFcrBbR
-	 NXcRhgKUZGSgjnY2i0C7fll7zI02kFimtG9DPIiXIvmtIm8iKeehF9pn9VzYKfdOuT
-	 pyalWvOa0Ah4h1VnQZm4hQcWbQ2zQfdoqMQMHTDIbpjDJM/8mkTsRupQSWWh6qbF8S
-	 x3vZ9a/C+gEcA==
+	b=bMXppHDXZyG9STJ27RosQNkTOIsv22DOl/0ddIFPyF6dxgWk2IsiF1s6t0Bi3nGbf
+	 xWpKdvtiVeKH6l1TfuDyLXDdIwdSsCTFm5BMgmlBNuV9sh4X/7HiC7G3XXBD8bK22j
+	 Q/HHeGHzQsFWfVNuFkiuFl1Ps20s8zwDBYHF9e64KujEDLh71LD6yTgNBnWPIoWeXo
+	 M2oiSwHYfKbehUP6f3E3si8r7F62CeEpwZZnv8SuB/06OjK5R9YGsgvvTA1xolqK79
+	 lRJ3ohNby9m3DWTGdkoihns14OCMGAF/tfAfPGpKAIP4eEP4YmsrDzAS+HhjLUTgY5
+	 jUrFgHD2bGD3Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 04/29] perf zstd: Fix compression error path in zstd_compress_stream_to_records()
-Date: Sun, 24 May 2026 00:26:38 -0300
-Message-ID: <20260524032709.1080771-5-acme@kernel.org>
+Subject: [PATCH 05/29] perf zstd: Fix multi-iteration decompression and error handling
+Date: Sun, 24 May 2026 00:26:39 -0300
+Message-ID: <20260524032709.1080771-6-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260524032709.1080771-1-acme@kernel.org>
 References: <20260524032709.1080771-1-acme@kernel.org>
@@ -57,56 +57,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The error fallback does memcpy(dst, src, src_size) intending to store
-uncompressed data when compression fails, but this has three bugs:
+zstd_decompress_stream() has two bugs in its multi-iteration loop:
 
-1. dst has been advanced past the record header (and potentially
-   past earlier compressed records), so the copy writes to the
-   wrong offset in the output buffer.
+1. After each ZSTD_decompressStream() call, the code advances
+   output.dst by output.pos but doesn't reset output.pos to 0.
+   ZSTD interprets output.pos relative to output.dst, so the
+   next iteration writes at (dst + pos) + pos = dst + 2*pos,
+   skipping a gap and potentially writing out of bounds.
 
-2. src still points to the start of the input, not to the
-   remaining uncompressed data at src + input.pos.  On a second
-   or later iteration, previously compressed data would be
-   duplicated.
+2. On ZSTD_decompressStream() error, the loop executes break
+   and returns output.pos (which is > 0 if some bytes were
+   decompressed before the error).  The caller checks
+   !decomp_size and skips the error, silently accepting
+   truncated or corrupted data.
 
-3. No check that dst_size >= src_size — if the remaining output
-   space is smaller, this is an out-of-bounds write.
+Fix both by removing the output buffer adjustment — ZSTD
+correctly accumulates output.pos across calls without it.
+Return 0 on decompression error so the caller detects it.
+Add a no-progress guard to prevent infinite loops if the
+output buffer fills before all input is consumed.
 
-Replace with return -1 after resetting the ZSTD compression
-context via ZSTD_initCStream().  The -1 propagates through
-zstd_compress() -> record__pushfn() -> perf_mmap__push() to the
-recording loop, which breaks out and terminates recording.
-
-Add an out_child_no_flush label in __cmd_record() so the
-mmap-read failure path skips the final record__mmap_read_all()
-flush — retrying the same read that just failed would just fail
-again, and the flush is only useful when the mmap data is intact
-but the control path (auxtrace, switch_output) had an error.
-
-Consolidate all error paths through a single 'reset' label to
-ensure the compression context is always reset on failure —
-including the output-buffer-full path, where a bare return
-without resetting would leave stale stream state that corrupts
-output if the caller retries.
-
-Also guard against process_header() writing the event header
-before the buffer-full check: add a sizeof(perf_event_header)
-pre-check so the callback never writes past the output buffer.
-
-Guard against ZSTD making no progress: if output.pos is zero
-after ZSTD_compressStream(), calling process_header(record, 0)
-would re-trigger header initialization, double-subtracting the
-header size from dst_size and underflowing the unsigned counter.
-
-Also fix two pre-existing issues in the same function:
-
-- Add a dst_size guard before subtracting the record header
-  size: if the output buffer is nearly full, the unsigned
-  dst_size -= size underflows to a huge value, causing
-  ZSTD_compressStream to write past the buffer boundary.
-
-- Check the ZSTD_initCStream() return value and log an error
-  if the context reset itself fails.
+Note: the compressed event data_size is validated against
+header.size by a subsequent patch in this series
+("perf tools: Harden compressed event processing").
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Cc: Ian Rogers <irogers@google.com>
@@ -115,96 +88,44 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c |  6 +++++-
- tools/perf/util/zstd.c      | 27 +++++++++++++++++++++++++--
- 2 files changed, 30 insertions(+), 3 deletions(-)
+ tools/perf/util/zstd.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index cc601796b2c8ae60..f1877bac815d76b2 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2743,7 +2743,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 			trigger_error(&auxtrace_snapshot_trigger);
- 			trigger_error(&switch_output_trigger);
- 			err = -1;
--			goto out_child;
-+			goto out_child_no_flush;
- 		}
- 
- 		if (auxtrace_record__snapshot_started) {
-@@ -2890,6 +2890,10 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- out_child:
- 	record__stop_threads(rec);
- 	record__mmap_read_all(rec, true);
-+	goto out_free_threads;
-+out_child_no_flush:
-+	/* mmap read already failed — retrying would just fail again */
-+	record__stop_threads(rec);
- out_free_threads:
- 	record__free_thread_data(rec);
- 	evlist__finalize_ctlfd(rec->evlist);
 diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 57027e0ac7b658a8..ecda9deb53b738fa 100644
+index ecda9deb53b738fa..21a0eb58597c21f9 100644
 --- a/tools/perf/util/zstd.c
 +++ b/tools/perf/util/zstd.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- #include <string.h>
-+#include <linux/perf_event.h>
- 
- #include "util/compress.h"
- #include "util/debug.h"
-@@ -54,7 +55,13 @@ ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_
- 
- 	while (input.pos < input.size) {
- 		record = dst;
-+		/* process_header writes the event header into record */
-+		if (dst_size < sizeof(struct perf_event_header))
-+			goto reset;
- 		size = process_header(record, 0);
-+		/* Output buffer full — cannot fit even the record header */
-+		if (size > dst_size)
-+			goto reset;
- 		compressed += size;
- 		dst += size;
- 		dst_size -= size;
-@@ -65,10 +72,18 @@ ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_
- 		if (ZSTD_isError(ret)) {
- 			pr_err("failed to compress %ld bytes: %s\n",
- 				(long)src_size, ZSTD_getErrorName(ret));
--			memcpy(dst, src, src_size);
--			return src_size;
-+			goto reset;
+@@ -123,14 +123,26 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
  		}
- 		size = output.pos;
+ 	}
+ 	while (input.pos < input.size) {
++		size_t prev_in = input.pos;
++		size_t prev_out = output.pos;
++
+ 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+ 		if (ZSTD_isError(ret)) {
+ 			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
+-			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+-			break;
++			       src_size, output.pos, dst_size, ZSTD_getErrorName(ret));
++			return 0;
+ 		}
+-		output.dst  = dst + output.pos;
+-		output.size = dst_size - output.pos;
 +		/*
-+		 * No progress: ZSTD couldn't emit any bytes into the
-+		 * remaining output buffer.  Calling process_header
-+		 * with size=0 would re-trigger header initialization,
-+		 * double-subtracting the header size from dst_size and
-+		 * underflowing the unsigned counter.
++		 * Neither stream advanced — decompression is stuck.
++		 * Return 0 (error) rather than partial output: perf
++		 * uses ZSTD_flushStream (not ZSTD_endStream), so the
++		 * stream is continuous across compressed events.
++		 * Discarding unconsumed input would desynchronize the
++		 * decompressor, causing the next call to produce
++		 * garbage that could be misinterpreted as valid events.
 +		 */
-+		if (size == 0)
-+			goto reset;
- 		size = process_header(record, size);
- 		compressed += size;
- 		dst += size;
-@@ -76,6 +91,14 @@ ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_
++		if (input.pos == prev_in && output.pos == prev_out)
++			return 0;
  	}
  
- 	return compressed;
-+
-+reset:
-+	/* Reset so the context is usable if the caller retries */
-+	ret = ZSTD_initCStream(data->cstream, data->comp_level);
-+	if (ZSTD_isError(ret))
-+		pr_err("failed to reset compression context: %s\n",
-+			ZSTD_getErrorName(ret));
-+	return -1;
- }
- 
- size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size,
+ 	return output.pos;
 -- 
 2.54.0
 
