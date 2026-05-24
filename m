@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92E125B09C
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:13:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3768025B09C
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:13:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779595995; cv=none; b=qHxjWILcB/jAO0qRMsWtbs1XNBwwfiSsbK3j0HWEqRv8mS+OqqKfBVUGgEN6TRE5rLDSPsqXJ7czGCeuDF1R4uhPWxXgDZ/BdNVIue8w7Z2lZ9mV+aM+vMQuOihjRZxG6yw2c+a618Tu4KOABa6x4WdQKvUubUjcLVa7b64EyHQ=
+	t=1779596015; cv=none; b=iexyPbOsEnAlJq13yGmcM4YhsdNytFycMClnxa3VQ5XIIR/222l0Kpw7yYpOW9qncJIW0KcNQBPuuoebSHb3gatlQPsrhQC3tSQ2oWjJK693DZCYewo+xSZgHCZKlSxpXWO3cD86zoH3Rj7CmqXShL+OpqzjKKpOoWS+Nvcc4BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779595995; c=relaxed/simple;
-	bh=xTu/iN1ft/ZcSlAX3mnvAmMR7eJUbtwJbK3WaBwBplw=;
+	s=arc-20240116; t=1779596015; c=relaxed/simple;
+	bh=zFP8wdmPUPLY8hTzb7h5TUfx0YnGribwrqzmud5ciUc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=CB8/AV4IGSxlMPHcvGD/ibNDaB0YNxbj6kEIshHB+dkujdjgx/joG1oaV1sjFtq901Nqn3zNtIdbDV86ueqtGazGCUn2v+5w0XB3th46+dq3OYp9o6SPaCjGULdlP77m6KxD+iBfXARNMGVNZc1ez+fhM2A7q3xi21cf7NLMDKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jceUqRsF; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IZM2xVHf8zLMYseSPizCq8pzbaTwnGDn/30d3gxEA/qu9oYPE7hCLGSRzxJ+4IuEM0VMfIQK4ntnRVEV1s5WrxZQJZeqmp5OhfeshSN4PXfiqN+CUhE5HuH4OIJYGS1NAXm0amJSaRrIupeEGNIN+w8sbPxIq2Ed7VNdoAxBf2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBbTNuXo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jceUqRsF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D1C1F000E9;
-	Sun, 24 May 2026 04:13:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBbTNuXo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3B721F000E9;
+	Sun, 24 May 2026 04:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779595994;
-	bh=n01LfVbXl5wTahkyHeyh47Ksp1bauKKP5yZHZP1NsL8=;
+	s=k20260515; t=1779596013;
+	bh=sZJSb1v1bZEJUxVzUOLbiiRFC86h8n4pxMPHVRg/Flo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jceUqRsFKLyw6zRhpFI7pJsIZRawhStthIfSpC+dXOfD9DLeR5mbPD4omWlMWHVpj
-	 GCqLVZ65UUD+UMBJD5Q0e/qjM4EOKzedSOfqx60+CqBvL7Y7kzMzInN5ryJ+FCeTIG
-	 ZkHXEy5gZ43kdykyNYO+kKuDApqYU6XwR1RcuukOE1oRLdW4tzjWsmF82G4Nxrxy2z
-	 fXIwwCpDng4LCdrEaiBIjxbdvSvew+/zbNwRP9qcoQENUGmhE+N59l2WVeefOKq+Z+
-	 zhEnqfQLZc3LXXVkLs+RjpDfcmh+JJyxgK7ju71s6cNY0NUVMgQ282b6S0o+QT2nZU
-	 k0+WU5unyzzrQ==
+	b=gBbTNuXoM47cZMBlivCjGrxP5YOzSq43usMddTsKAYVEZYDxrcNxzeLOQMXXGPD3I
+	 RCf0Ex0h+7n8OexfYfww98DAp3uROyDbCj+T7d7P4yQKk3Rita9U001cgHvgfE3nwJ
+	 y7q7jX4tQkDaHznoQ/fdaIfeg5o2ZXS7vYMzVb8TZPwiSYosYDYouqwZfkl4ZhKIRR
+	 4zhy5PbnqoFgv3uM7OJsLAFgTdAMBtrCQMiDw1hIlJZYOWwSwl+I01AlKBqRS7teGu
+	 1qpFcQ72ZbmGtB1RlfJVw3OSXG0z8s7PqA1agfwf9M8Bkb2Dh2mDA5Y4ETBL5xUDik
+	 +kl9Xsb5c1eVQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/29] perf session: Add minimum event size and
- alignment validation
+Subject: Re: [PATCH 15/29] perf session: Add byte-swap and bounds check for
+ PERF_RECORD_BPF_METADATA events
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260524032709.1080771-2-acme@kernel.org>
-References: <20260524032709.1080771-2-acme@kernel.org>
+In-Reply-To: <20260524032709.1080771-16-acme@kernel.org>
+References: <20260524032709.1080771-16-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 24 May 2026 04:13:13 +0000
-Message-Id: <20260524041314.59D1C1F000E9@smtp.kernel.org>
+Date: Sun, 24 May 2026 04:13:33 +0000
+Message-Id: <20260524041333.C3B721F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,74 +46,53 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Callers of `perf_session__peek_event()` completely abort process=
-ing on undersized events, breaking the intended 'skip' behavior.
+- [Medium] Re-fetching `event->header.size` in `perf_session__process_user_=
+event` bypasses core bounds validation, leading to out-of-bounds reads.
 --
 
-commit b42afb24726ad9701717fde2cf945b69f1cdd644
+commit a969bd48aeaaebd10cf33ba371bb6523a1e2faf9
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: perf session: Add byte-swap and bounds check for PERF_RECORD_BPF_M=
+ETADATA events
 
-perf session: Add minimum event size and alignment validation
-
-This commit adds a per-type minimum size table for perf events to prevent
-out-of-bounds accesses during swapping and processing. It enforces this by
-checking event sizes before swap operations and verifying that event sizes
-are 8-byte aligned.
+This commit adds a byte-swap handler for PERF_RECORD_BPF_METADATA events to
+handle cross-endian perf.data files. It also adds bounds checking and string
+termination validation to prevent out-of-bounds reads during downstream
+processing.
 
 > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 1e25892963b78..0523fd243e02c 100644
+> index f6ce36f515207..ec7da1e1a00f7 100644
 > --- a/tools/perf/util/session.c
 > +++ b/tools/perf/util/session.c
 [ ... ]
-> +/*
-> + * Read and validate the event at @file_offset.
-> + *
-> + * Returns:
-> + *   0  =E2=80=94 success: *event_ptr is set and safe to access.
-> + *  -1  =E2=80=94 error; check *event_ptr to decide whether to advance o=
-r abort:
-> + *          *event_ptr set  =E2=80=94 event header was read but the even=
-t is
-> + *                            malformed (too small for its type, or byte=
--swap
-> + *                            failed).  header.size is still valid, so t=
-he
-> + *                            caller can advance past the event.
-> + *          *event_ptr NULL =E2=80=94 fatal: couldn't read the header at=
- all
-> + *                            (I/O error, offset out of range, pipe mode=
-).
-> + *                            Caller must abort.
-> + */
->  int perf_session__peek_event(struct perf_session *session, off_t file_of=
-fset,
->  			     void *buf, size_t buf_sz,
->  			     union perf_event **event_ptr,
-[ ... ]
-> +	if (perf_event__too_small(event, &min_sz)) {
-> +		pr_warning("WARNING: peek_event: %s event size %u too small (min %u)\n=
-",
-> +			   perf_event__name(event->header.type),
-> +			   event->header.size, min_sz);
->  		return -1;
-> +	}
+> @@ -2192,9 +2235,53 @@ static s64 perf_session__process_user_event(struct=
+ perf_session *session,
+>  	case PERF_RECORD_FINISHED_INIT:
+>  		err =3D tool->finished_init(tool, session, event);
+>  		break;
+> -	case PERF_RECORD_BPF_METADATA:
+> +	case PERF_RECORD_BPF_METADATA: {
+> +		u64 nr_entries, max_entries;
+> +		u32 hdr_size =3D READ_ONCE(event->header.size);
 
 [Severity: Medium]
-The API contract for perf_session__peek_event() was changed to return -1 on
-undersized events, requiring callers to inspect *event_ptr to advance.
+Can re-fetching event->header.size here bypass the core bounds validation?
 
-Does this break bisectability if the callers (such as
-perf_session__peek_events()) were not updated in this commit to perform
-this check?
+The core event processing loop validates that the event fits within the mem=
+ory
+mapped region using the initial fetch of the size field. Because native-end=
+ian
+files are mapped using MAP_SHARED, the memory can be modified concurrently =
+if
+the file is shared or backed by a FUSE filesystem.
 
-If a caller hasn't been updated, it might completely abort the file parsing
-loop when encountering a single undersized event, breaking the intended skip
-behavior.
-
-I see this is resolved in a later commit (37f83323fcf82: "perf session: Add
-validated swap infrastructure with null-termination checks"), but wanted to
-ask about the intermediate state in this commit.
+By re-fetching the size via READ_ONCE(event->header.size) after the initial
+validation, a concurrent modification could inflate hdr_size. This artifici=
+ally
+inflates the max_entries calculation beyond the actual memory bounds of the
+mmap, which could lead to out-of-bounds reads during the strnlen() loop and
+potentially cause a segmentation fault.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260524032709.1080=
-771-1-acme@kernel.org?part=3D1
+771-1-acme@kernel.org?part=3D15
