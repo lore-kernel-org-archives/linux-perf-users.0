@@ -1,128 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A731199931
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4AB25C804
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779595715; cv=none; b=JNu7swJ4/Ui62YIctrnoFAq1zbYT4HERjCdKgHobpZIZhAukAecoWddypdRWWj8bsRgRZSvnnw6hJXfxBeb39iB8BPf18uq4jul6O0Z0ZkZNlYLA7tTYbRNR5ad/gr66zg5juuMhgAvb1NuDT1/J3HanJEuFOklvzqSxO/q17yo=
+	t=1779595715; cv=none; b=WssZ+nOuzUq6KG+pyloNJmVRF2sVUti6/17w6JtlSBn6ZSlGo89/s/sOdy7c2kAE0RTqVLqynVpnw47IqA3zvd3AM2pGZBz3O2m9CvjNeahKTJUfN/SbgH4gBDbQ4rIjomz0fIowd0sZrpPR8AVVJ1VLmR/ZomRS5sdpm/OJZsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1779595715; c=relaxed/simple;
-	bh=QA9HfFHlTSVTPt934TM3cLkIzyM6CMbNn4QZcBFXFWQ=;
+	bh=OU+EpCtDyutcuUvAkI6y0BDE7WHNfddRXAP/eF5pnhE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Qb8zoQNImE65W/hMnLzu+lVKuWKJprWH1M2kbgNxodRiI4L8uG0YcwzfQud4Zmf6fxmUv7LcWBv/9aziVrPLJ93qjdTMhYxIETxgu04CZVjO2xSg72sa2pMzZX+KIM6jqru1ix+BSRe31Pl7Jyhf/6LtMm9hmYY4KAZ0uomh1mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQEDOne2; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=C+2TfT3+RUnoX+3vzsPpNAff2RVobHIoDc6pOHIGIpNpZjAOWd95E0dHjst8i0JGE1gQF+MksTZ2BC8q3arzIBWAYf5PIlvbhTS9VdPC+2ZsFcW5mWr+wtiHkBk3x/c6BcxlEqSyl0r/a6PANnpoP3vbOrShFZkowRq/fkduNh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pqzg0Qjn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQEDOne2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B8971F000E9;
-	Sun, 24 May 2026 04:08:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pqzg0Qjn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E0AC1F00A3A;
+	Sun, 24 May 2026 04:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779595713;
-	bh=K7t9bcp+nvH5dywkAZrxTf+9vokiLFElaaZTK/wfWFg=;
+	s=k20260515; t=1779595714;
+	bh=fa3d59/1CoGT6N7xwRjVrC+ESAa4F2BIx7dCoTOdCAE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HQEDOne2WwuONN/ggq8M60/YdgiMFPPq3sH9bgVZxUiDFntMCWuH6XHXnj3ImfFWB
-	 7oqwHkMuzqF8e4VyJPiMI+saAHaF0gC2h0GpF+ox50expMfJjAmxwXIy4XbUkw0ufc
-	 s8xjU22bfUr9JkyL+7v4aKymmTxskuojPr4sSUQOS8KfLRpdkIUMLa5skJ/8BkRN5t
-	 5IcTvAzBYQ3crmm5z8N1ehFlRF0oke6gehGgo4S7l5VTGMznYfMGQgg7+ztK+9ikk8
-	 uPVJQ3C360CHiSqNkHGCusDp3D4sOnjiXIGyik2q4s+BXgGnGjxIedt4QbyDtTjYQO
-	 UbNo/4zz+QriA==
+	b=Pqzg0Qjnw+/wWqSMZBx/ZbhJVAVZYasi4Dz0N/nuCNVtK6gLU0Y0rJ+wVp1RZkH5v
+	 jzuEFFz/ELPy8t57K8Nd9QM558aP/8EfUUoBh60slELPA22W9/4JSbDCezsmsACvLb
+	 YfNDw6maUQTWjllxw/ldDtjITsKCHAgWyef8m7ICMvkbm65I2SXg1ePtvE+NMyMhLs
+	 J6FK9qaLa6JGDLiuzPI2YznZlYbqsNVUtZMIXCIQfDZd8PwGhJwcNQrc96NkYB6XEp
+	 3MRcoTCQytDEctrUXnVAP8A6UecDjM28suzGDRY5+V9w1KdihTMGVxNQiASx7dR6t0
+	 lbvuLscA4RGsA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 10/29] perf session: Validate HEADER_ATTR attr.size
- before swapping
+Subject: Re: [PATCH 12/29] perf header: Byte-swap build ID event pid and
+ bounds check section entries
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260524032709.1080771-11-acme@kernel.org>
-References: <20260524032709.1080771-11-acme@kernel.org>
+In-Reply-To: <20260524032709.1080771-13-acme@kernel.org>
+References: <20260524032709.1080771-13-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 24 May 2026 04:08:32 +0000
-Message-Id: <20260524040833.9B8971F000E9@smtp.kernel.org>
+Date: Sun, 24 May 2026 04:08:33 +0000
+Message-Id: <20260524040834.2E0AC1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Double-fetch of `event->header.size` from a shared memory mapping =
-allows an attacker to bypass bounds validation and trigger an out-of-bounds=
- read.
-
-Pre-existing issues:
-- [High] The patch fails to apply the ABI0 (attr.size =3D 0) fix to `perf_e=
-vent__repipe_attr()` in `tools/perf/builtin-inject.c`, causing `perf inject=
-` to synthesize corrupted events.
+- [High] The newly added `perf_event__build_id_swap` callback ignores the `=
+sample_id_all` flag, failing to byte-swap the trailing sample ID fields of =
+stream-mode build ID events.
 --
 
-commit 3c40045df7139a78501fe156fe285fc86c33951e
+commit ef67469fd36e5fce5748002d1210d212fdcc1c74
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf session: Validate HEADER_ATTR attr.size before swapping
+perf header: Byte-swap build ID event pid and bounds check section entries
 
-This commit hardens PERF_RECORD_HEADER_ATTR handling against crafted perf.d=
-ata
-by validating attr.size. It copies only bounded sizes into a local attr and
-handles ABI0 pipe/inject events where attr.size is 0.
+This commit fixes cross-endian perf.data processing by byte-swapping the
+build ID event PID. It also adds a stream-mode build ID swap callback,
+enforces bounds checking, and ensures NUL-termination for build ID filenames
+to prevent hangs or out-of-bounds reads on corrupted data.
 
->     Handle ABI0 pipe/inject events where attr.size is 0: use a local
->     attr_size variable set to PERF_ATTR_SIZE_VER0 for both the bounded
->     copy and ID array position, instead of writing back to the event.
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+[ ... ]
+> @@ -686,6 +686,14 @@ static int perf_event__hdr_attr_swap(union perf_even=
+t *event,
+>  	return 0;
+>  }
+> =20
+> +static int perf_event__build_id_swap(union perf_event *event,
+> +				     bool sample_id_all __maybe_unused)
+> +{
 
 [Severity: High]
-This is a pre-existing issue, but does the patch miss applying the ABI0 fix
-to perf_event__repipe_attr() in tools/perf/builtin-inject.c?
+If sample_id_all is enabled, perf_event__synthesize_build_id() appends
+id_sample fields (like timestamps, PIDs, and CPUs) to the end of the
+PERF_RECORD_HEADER_BUILD_ID event payload.
 
-In tools/perf/builtin-inject.c, perf_event__repipe_attr() still directly
-reads event->attr.attr.size. For native-endian ABI0 events, this size remai=
-ns
-0, causing memcpy to copy 0 bytes (zeroing the local attr) and n_ids to be
-heavily overcalculated.
+Since this callback explicitly ignores the sample_id_all flag and does
+not locate the end of the filename to call swap_sample_id_all(), will the
+trailing sample ID fields remain in their foreign-endian format?
 
-perf_record_header_attr_id(event) then incorrectly points the ID array to
-the start of the attribute payload. This causes perf inject to synthesize
-a corrupted event, breaking functionality for legacy perf.data files.
-
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index f30e48eb3fc32..967c3d8ff12c8 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-[ ... ]
-> @@ -5094,11 +5110,42 @@ int perf_event__process_attr(const struct perf_to=
-ol *tool __maybe_unused,
-[ ... ]
-> +	raw_attr_size =3D event->attr.attr.size;
-> +	if (event->header.size < sizeof(event->header) + PERF_ATTR_SIZE_VER0 ||
-> +	    (raw_attr_size && (raw_attr_size < PERF_ATTR_SIZE_VER0 ||
-> +			      raw_attr_size % sizeof(u64) ||
-> +			      raw_attr_size > event->header.size - sizeof(event->header)))) {
-> +		pr_err("PERF_RECORD_HEADER_ATTR: invalid attr.size %u (event size %u, =
-min %d)\n",
-> +		       raw_attr_size, event->header.size, PERF_ATTR_SIZE_VER0);
-> +		return -EINVAL;
-> +	}
-[ ... ]
-> -	n_ids =3D event->header.size - sizeof(event->header) - event->attr.attr=
-.size;
-> +	n_ids =3D event->header.size - sizeof(event->header) - attr_size;
-
-[Severity: High]
-Does this code introduce a double-fetch of event->header.size from a shared
-memory mapping?
-
-For native-endian files mapped via MAP_SHARED, could a concurrent change
-provide a valid event->header.size to pass the bounds check in the if
-condition, and then overwrite it with a large value before it is fetched
-again for the n_ids calculation?
-
-This might inflate n_ids, causing the subsequent ID array loop to perform
-out-of-bounds reads past the event, which could lead to a segmentation fault
-or leak adjacent memory contents. Could we cache event->header.size to
-prevent this?
+> +	/* Only pid needs swapping =E2=80=94 build_id[] is a raw byte array */
+> +	event->build_id.pid =3D bswap_32(event->build_id.pid);
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260524032709.1080=
-771-1-acme@kernel.org?part=3D10
+771-1-acme@kernel.org?part=3D12
