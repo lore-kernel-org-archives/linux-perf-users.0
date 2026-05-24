@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A692571DA
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:05:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFEE199931
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779595534; cv=none; b=nuk5lHSeXDbsMcAKhXfnmKVV6svvtyl344Zt/H618QoMPP5hDr1VkEWEq4kRPqu+p0WuaPL/j5fvqyZqGHEkfsrskJ4nTfTXYxhesLvhEXlWEZU64fqkp1YjZbCHSWZafnvMn232M5j3HnEnurGxRTGIM4yxNTRiYJo1wZkKO6Y=
+	t=1779595615; cv=none; b=X7zSLsG++afzCcRTwBb9lMj6PrfpqdzlscSlF/SxvXtr6LHNEdixlFjrLNxcrRcsKTiFkWRYfYK+ultKPkBoS3BXxioviG4l+xoxid5MNgVRKrmN56Dp82vfNe7kOqYGKPZnjCMQkPO2VcjQSoZjtAaESrGsbLkG/Bl94gRIxA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779595534; c=relaxed/simple;
-	bh=j2T65UrEnJ/NYmQdXsMok/5WUNOEYTBejBl/wf2N3w0=;
+	s=arc-20240116; t=1779595615; c=relaxed/simple;
+	bh=rCVtHVuy+/UQALCqQyMMN2uSscitEov9cO3yA/hf5bI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rV6XcysMqSmRuuFFA2WMUqnaO+/V/YCYjaccxmYh7kDQATPfxhi43XMHRbhZO1BoXxgUsDie5JTwH6wBbq0zFlxrRGq1v/hWPsLzh3Kb32HIWoxI1RdO/85GE4QU7L5DNa2E4FFCFT+kEaVahyWxsn9dvbOo30+NrG+ngU/2pW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cg8oQNfg; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=NZlNWLRUjUFmUf6OIarDAqfgjPAXF14BksJxEYvIGU2mxbnx53edxQLh2dJsc842jpmbvWyaSJetHoaBqHgSK7QkkN5cmz+owAYh3B6qoHONOkZPRPMfdqF0Hyvuo/PR+t5PNn0ngIvYbyzTA/VXCaPKDWW2Bx2JpsuryAIUU1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzmtTyDA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cg8oQNfg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522BF1F000E9;
-	Sun, 24 May 2026 04:05:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzmtTyDA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4871F000E9;
+	Sun, 24 May 2026 04:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779595533;
-	bh=j2T65UrEnJ/NYmQdXsMok/5WUNOEYTBejBl/wf2N3w0=;
+	s=k20260515; t=1779595613;
+	bh=HuQWWqJfx0n+feUCVX4pxTn6CSBoty6LPP18jqhTDH8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Cg8oQNfg8423oEd+bO33o3aXQM0ope9oXmoMng/Akt+8vbwcXkgzbZ3nXSnM2ZCUK
-	 pMzTpIRs56rvCoY78JJnHwNRsi1B3pd3F5PZjqMhhMwGL8GVo7bdg9yS6P3sNaZQTx
-	 fGmJLL90nxPG4q09fhX/2Jr7Eh8oeFC93C2x+0mb52eDjJXrm+vg6ENiVvdJbDYsSO
-	 TFh7dBhN/fj3DKYcl4WYoOdU3Xzg9MiZSCBItDancnMRhuS2R/WzZgnaLQc5RxkAdA
-	 k02b+Xf2hcO8RKjvKEUETynXcpXRbrNMxHJG5UAr6Fq75hEorwX1loOWuS82qHVbpr
-	 FnCVar7xAlGPA==
+	b=AzmtTyDApt4IGhPaneep0gdyyRst2IvfQpyDboWPMaFnuQMA9FXLczbtNqciQI2YP
+	 BNyRdbDQbkMiqj28hcwNQewLb+dMe4LMyXcfzOaK+xt0VDHFOwPs0ooIiJuYEghyPW
+	 ZTfNKxd8o5IuKg3zlnWB6DOTyz7lwGNBuC6g8d3OJIP/Yn75UtF9uvMPJGc8GMNO/C
+	 z7x+Q1BmkiF8/wWSj7V7Ya2j1t0CFvTls1yBZ+rN+lLHD4DNENyaQz4m4L+c6bYLLQ
+	 gsfkGuNrBemzl4RKFaj6J8IjakSAo3QCG6olPNWUgNtGpG4N4BBGo/ESDiedVrXxuk
+	 NIovDf9APRF0w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 08/29] perf session: Add validated swap infrastructure
- with null-termination checks
+Subject: Re: [PATCH 04/29] perf zstd: Fix compression error path in
+ zstd_compress_stream_to_records()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260524032709.1080771-9-acme@kernel.org>
-References: <20260524032709.1080771-9-acme@kernel.org>
+In-Reply-To: <20260524032709.1080771-5-acme@kernel.org>
+References: <20260524032709.1080771-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 24 May 2026 04:05:32 +0000
-Message-Id: <20260524040533.522BF1F000E9@smtp.kernel.org>
+Date: Sun, 24 May 2026 04:06:53 +0000
+Message-Id: <20260524040653.6A4871F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,59 +47,141 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
+New issues:
+- [High] The patch skips the final record__mmap_read_all() flush on error i=
+n the main thread to avoid retrying a failed read, but misses the identical=
+ retry path in parallel worker threads.
+
 Pre-existing issues:
-- [Medium] The swap handler for PERF_RECORD_STAT_CONFIG calculates the byte=
- size incorrectly, leaving the last 64-bit value unswapped.
-- [Medium] Remaining `deferred_samples` are leaked if sample parsing or del=
-ivery fails during `session__flush_deferred_samples`.
-- [Medium] Integer overflow in `perf_session__peek_events` allows an infini=
-te loop via crafted `auxtrace.size`.
+- [High] ZSTD compression silently corrupts the perf.data stream if the out=
+put requires multiple records, because record__pushfn overwrites the multi-=
+record headers and incorrectly wraps them into a single record.
+- [High] The `zstd_compress_stream_to_records` loop advances the `dst` buff=
+er by unaligned sizes, which can trigger unaligned memory access exceptions=
+ on strict architectures.
 --
 
-(Note: The format of this review has been altered to provide a free-form
-summary of the findings without directly quoting the patch, in order to
-comply with recitation restrictions.)
-
-commit 37f83323fcf820defdbb6fa04353de5f871f8615
+commit 62a2343957107fded20fb827b93d6a1cadb0934a
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf session: Add validated swap infrastructure with null-termination checks
+perf zstd: Fix compression error path in zstd_compress_stream_to_records()
 
-This commit changes swap callbacks to return an int instead of void to
-allow error propagation, adding null-termination checks for several string
-event fields.
+This commit fixes bugs in the error fallback path of
+zstd_compress_stream_to_records(). It returns -1 on error instead of doing
+an unsafe memcpy, skips the final flush on mmap-read failure, and adds
+boundary checks to ensure the compression context is properly reset.
 
-[Severity: Medium]
-This is a pre-existing issue, but I noticed something unusual in the size
-calculation for perf_event__stat_config_swap(). When calculating the size
-passed to mem_bswap_64(), the code does size +=3D 1 to account for the nr
-item itself. However, since mem_bswap_64() expects a byte count and swaps
-8-byte chunks, adding just 1 byte results in (16 * nr + 1) total bytes.
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
 
-Does this cause the function to swap only 2 * nr elements, skipping the
-final 64-bit value of the payload on cross-endian machines?
+[ ... ]
 
-[Severity: Medium]
-This is a pre-existing issue, but looking at
-session__flush_deferred_samples(), if evlist__parse_sample() or
-evlist__deliver_sample() fails, the loop terminates immediately via a
-break statement.
+> @@ -2890,6 +2890,10 @@ static int __cmd_record(struct record *rec, int ar=
+gc, const char **argv)
+>  out_child:
+>  	record__stop_threads(rec);
+>  	record__mmap_read_all(rec, true);
+> +	goto out_free_threads;
+> +out_child_no_flush:
+> +	/* mmap read already failed =E2=80=94 retrying would just fail again */
+> +	record__stop_threads(rec);
 
-Are the remaining items in the evlist->deferred_samples list leaked in
-this scenario, since they are not unlinked or freed during an early error
-return?
+[Severity: High]
+The patch avoids retrying the failed read in the main thread by skipping
+record__mmap_read_all() here, but what happens in parallel worker threads?
 
-[Severity: Medium]
-This is a pre-existing issue, but I have a question about how the offset
-is advanced in perf_session__peek_events() for AUXTRACE events. The offset
-is incremented by event->auxtrace.size, which is read directly from the
-file.
+If a parallel worker thread running record__thread() encounters a read
+error, it breaks its loop and unconditionally calls
+record__mmap_read_all(thread->rec, true).=20
 
-If an excessively large value is provided, could this cause an integer
-overflow that wraps around? If offset wraps, could this bypass the
-offset < max_offset loop condition and result in an infinite loop when
-parsing a malformed perf.data file?
+Does this circumvent the error handling logic and cause the worker thread
+to immediately retry the failed read?
+
+>  out_free_threads:
+>  	record__free_thread_data(rec);
+>  	evlist__finalize_ctlfd(rec->evlist);
+
+> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+> --- a/tools/perf/util/zstd.c
+> +++ b/tools/perf/util/zstd.c
+
+[ ... ]
+
+> @@ -54,7 +55,13 @@ ssize_t zstd_compress_stream_to_records(struct zstd_da=
+ta *data, void *dst, size_
+> =20
+>  	while (input.pos < input.size) {
+>  		record =3D dst;
+> +		/* process_header writes the event header into record */
+> +		if (dst_size < sizeof(struct perf_event_header))
+> +			goto reset;
+>  		size =3D process_header(record, 0);
+
+[Severity: High]
+This is a pre-existing issue, but does this function corrupt the perf.data
+stream if the output requires multiple records?
+
+If the compressed output exceeds max_record_size, this loop splits it into
+multiple chunks with a new perf_event_header for each. However,
+record__pushfn() assumes a single event is returned and blindly overwrites
+the first event's header.size and data_size with the total size of all
+chunks.
+
+Since header.size is a u16, will it overflow and truncate if the total size
+exceeds 65535 bytes, while also swallowing subsequent headers into the
+payload?
+
+> +		/* Output buffer full =E2=80=94 cannot fit even the record header */
+> +		if (size > dst_size)
+> +			goto reset;
+>  		compressed +=3D size;
+>  		dst +=3D size;
+>  		dst_size -=3D size;
+
+[ ... ]
+
+> @@ -65,10 +72,18 @@ ssize_t zstd_compress_stream_to_records(struct zstd_d=
+ata *data, void *dst, size_
+>  		if (ZSTD_isError(ret)) {
+>  			pr_err("failed to compress %ld bytes: %s\n",
+>  				(long)src_size, ZSTD_getErrorName(ret));
+> -			memcpy(dst, src, src_size);
+> -			return src_size;
+> +			goto reset;
+>  		}
+>  		size =3D output.pos;
+> +		/*
+> +		 * No progress: ZSTD couldn't emit any bytes into the
+> +		 * remaining output buffer.  Calling process_header
+> +		 * with size=3D0 would re-trigger header initialization,
+> +		 * double-subtracting the header size from dst_size and
+> +		 * underflowing the unsigned counter.
+> +		 */
+> +		if (size =3D=3D 0)
+> +			goto reset;
+>  		size =3D process_header(record, size);
+>  		compressed +=3D size;
+>  		dst +=3D size;
+
+[Severity: High]
+This is a pre-existing issue, but does advancing dst by an unaligned
+size cause a crash on strict architectures?
+
+Since output.pos is not guaranteed to be 8-byte or 4-byte aligned, dst
+can become unaligned here.=20
+
+On the next iteration, process_header() casts this unaligned address to
+struct perf_record_compressed2 * and writes a 32-bit value to
+event->header.type. Will this raise a SIGBUS exception on architectures
+like SPARC?
+
+>  	}
+> =20
+>  	return compressed;
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260524032709.1080=
-771-1-acme@kernel.org?part=3D8
+771-1-acme@kernel.org?part=3D4
