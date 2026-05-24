@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF3D1CD1E4
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:37:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444C410F2
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 06:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779597471; cv=none; b=RwsLZN5QtNll24xoOqhmQnO8juFxtfGNL5bdArFafjzOAZOq6h+iUOxnAFn7iHyKEAUyLoyqmk6+RxhAvz653Qx5cT8YJG4LjqYngUKjgr6fHfYpGj5UV8juGKddOjoJqYzEuVMEcFPwHu5xJhGtrYRfFqWOKcguBQdSF+jtPFI=
+	t=1779603794; cv=none; b=fbwq7ae/D3YGLtQBfkNZU11FEU/NJIY5asjp2T+jXIoQF9G5FUcX7i/1ihyWZXBaN5QcG4AJZAS2bnXCH/9Q88Yr3WabZ886lcbO1ZBmX/3VwhfgpsRX8zYpxcDDtTIL0PsE0yP6pK6TDTZuMT2W97qjXWwRIF2XrdyjsaEng94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779597471; c=relaxed/simple;
-	bh=ujOeILi2GuB4kJiYDFgu4378Wkvz63fvpnLjD7mgMws=;
+	s=arc-20240116; t=1779603794; c=relaxed/simple;
+	bh=riILPKl9Hpbw8wEACKQvGqHkQhfbY5Ss8YjYCNH7Pmw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nKSx533dwIoMLw8EUk1sYo2XEdU308lEap0LcY4hstpQ56DtnPqM2Kc9Qvq6qV64kTdMwJTAVIUV+LvNs+0uI4kCN3OLPk34kwqdeFoVY6WIGGRw79x4hn0SSvehjnZG85ioko7MdfFyiMe6foYPVgTZR2dwHsYlStRD0Qpep7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kh7v3bFV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YbICEngbx9FdqYFz43Aho8PcuPmS95SRIJ5KssYzdQkL+B1v2qT7JHiFCPagwtoAR7jWKUZEOB/ajjUAusjXXfsDtBNhPtvBK0WB0e9z0OmrPbhUOqAQvUTLe0z2fqhu2zib4OQAfq3kY16aqN5BC76PeyzM0K4U2PF1qYLTrg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlAeCeKt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kh7v3bFV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 884621F000E9;
-	Sun, 24 May 2026 04:37:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlAeCeKt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC22C1F000E9;
+	Sun, 24 May 2026 06:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779597469;
-	bh=eMhT2+bv6Cw9ItplAhQ5+LrQ4hU66qp+jVDTve2kSEs=;
+	s=k20260515; t=1779603792;
+	bh=4pzUJ+7YlYawZF27lQJwR5WLLyxNpT7EnQIS5XFZB6M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Kh7v3bFVqkcsu96ckXULY9Q4JyAeZ8Jrf2mYOQKkvqRjW2E8oDT0bCP4eZ9YN3arn
-	 /Y657n/ALoyUF+bsZY6ByLanXEF8cN8NME6hkqHDFn2eIxDuEMNqBKw8JWf/yaHy3b
-	 3L5ZwzOWlUqQDraYLWX51fU/toz8fyWzEOM4i1NlqePMjaSp33teKR1ut8lhxNqelO
-	 GdoXhFpFhb+1sBW5Ntv3kEzHAG+nfD1NPcdzC03+kmgOCUMU4vFcdUyxI9mdL1Mfhf
-	 iNyZGVzyDB8jSqMmoIRmgL6ggAVgo45nHG4fcFpuWTWpyS4xwQUXcS0KXK4TLqcXGg
-	 Eji/6+PpVi8+Q==
+	b=AlAeCeKtDvnh80KfSJFMLw47KNnYIywH6JEFfhbKmvC0UQ4zUjTlLvd9NsORA1+aP
+	 b40v5EoIjpuVYJ6FArFrprldzXMsXf+bD02yX4T4p7p6JfSr//e4ecPYGRMRcaqq+v
+	 DJHURxmC/hTZazO0mTiFpkogJluFDUNzep7fyrLDj6TRg5l0CiwNt2mZoarskzRaUL
+	 Iqbm0kPa+PXf3/WB4WGW9igFBe6nzycqnTJTVWmuXKD5dNSaJ3kcATuV9dSJ9uuy56
+	 sJywrzgqK9fF55A+1iYZ7Tor8tRTXSHs0yrrHt8vhcAiwzRpHw5jEUSTqkOR9cEKY5
+	 0PJIcLv62nEGg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 20/29] perf header: Validate feature section size and
- add read path bounds checking
+Subject: Re: [PATCH 26/29] perf session: Bound nr_cpus_avail and validate
+ sample CPU
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260524032709.1080771-21-acme@kernel.org>
-References: <20260524032709.1080771-21-acme@kernel.org>
+In-Reply-To: <20260524032709.1080771-27-acme@kernel.org>
+References: <20260524032709.1080771-27-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 24 May 2026 04:37:48 +0000
-Message-Id: <20260524043749.884621F000E9@smtp.kernel.org>
+Date: Sun, 24 May 2026 06:23:11 +0000
+Message-Id: <20260524062312.AC22C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,80 +46,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [Critical] Heap-based buffer overflow in `do_read_bitmap` due to integer =
-truncation when allocating memory for the bitmap.
+- [High] Aggressive global clamping of `sample.cpu` to 0 destroys valid eve=
+nt data on systems with large CPU counts.
 --
 
-commit cc5b58f0cdfbb325e108ed3d2172a494b021af26
+commit e0720e6d1df18694dab6abee90c753e65bca2269
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf header: Validate feature section size and add read path bounds checking
+perf session: Bound nr_cpus_avail and validate sample CPU
 
-This commit hardens feature section parsing against crafted perf.data files
-by validating section offsets and sizes against the actual file size. It
-also adds uniform bounds checking in __do_read() and explicit null-terminat=
-ion
-for strings to prevent out-of-bounds reads.
+This commit introduces a bounds check on sample.cpu before calling tool
+callbacks to prevent out-of-bounds access in downstream consumers. The
+validation caps the CPU limit at MAX_NR_CPUS and clamps any out-of-range
+CPU values to 0.
 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index fe23bbd8370c0..90417a478c8db 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -233,23 +233,32 @@ static int __do_read_fd(struct feat_fd *ff, void *a=
-ddr, ssize_t size)
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index cb1d851686d9c..69eb404f805d8 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+
 [ ... ]
->  static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
->  {
-> +	/*
-> +	 * Reject negative sizes, which on 32-bit can occur when a
-> +	 * u32 >=3D 0x80000000 is passed as ssize_t.  The cast to
-> +	 * ssize_t is safe because perf_header__process_sections()
-> +	 * validates that each section fits within the file size
-> +	 * before any feature callback reaches here, and only
-> +	 * feature sections (metadata like build IDs, topology, etc.)
-> +	 * use this path =E2=80=94 these cannot legitimately approach 2GB.
-> +	 */
-> +	if (size < 0 || size > (ssize_t)ff->size - ff->offset)
-> +		return -1;
-> +
 
-[Severity: Critical]
-This isn't a bug introduced by this patch, but exists in the handling of
-malformed perf.data files.
+> @@ -2099,14 +2099,100 @@ static int perf_session__deliver_event(struct pe=
+rf_session *session,
+> +		/*
+> +		 * Cap at MAX_NR_CPUS for the bounds check =E2=80=94 downstream
+> +		 * consumers use fixed-size arrays of that size.  Keep
+> +		 * the true nr_cpus_avail in env for header parsing
+> +		 * (e.g. process_cpu_topology) which needs the real count.
+> +		 */
+> +		if (nr_cpus_avail > MAX_NR_CPUS)
+> +			nr_cpus_avail =3D MAX_NR_CPUS;
+> +		if (sample.cpu >=3D (u32)nr_cpus_avail &&
+> +		    sample.cpu !=3D (u32)-1) {
 
-In do_read_bitmap(), we read a 64-bit size value and pass it to
-bitmap_zalloc():
+[Severity: High]
+Does this global clamping destroy valid event data on systems with large
+CPU counts?
 
-tools/perf/util/header.c:do_read_bitmap() {
-	u64 size, *p;
-	...
-	ret =3D do_read_u64(ff, &size);
-	...
-	set =3D bitmap_zalloc(size);
-	...
-	for (i =3D 0; (u64) i < BITS_TO_U64(size); i++) {
-		ret =3D do_read_u64(ff, p + i);
-	...
-}
+If a system has more CPUs than MAX_NR_CPUS, capping nr_cpus_avail here
+causes legitimate samples originating from CPUs beyond the maximum to
+be evaluated as out-of-bounds. This permanently overwrites their CPU
+telemetry to 0 for all subsequent event consumers, even those that
+dynamically allocate arrays and do not require this limit.
 
-Because bitmap_zalloc() takes a 32-bit 'int nbits', could a crafted 64-bit
-value like 0x100000001 be silently truncated to 1?
-
-This would result in a tiny 8-byte heap allocation.
-
-Since the loop calculates its iteration count using the full, untruncated
-64-bit size, could it proceed to read 64-bit words into the undersized heap
-buffer via do_read_u64()?
-
-Given that the loop's reads are only constrained by the overall section size
-(ff->size) checked here in __do_read(), could an attacker craft a section
-large enough to copy arbitrary data over adjacent heap memory?
-
-(Note: This issue is fixed later in the patch series by commit "perf header:
-Validate bitmap size before allocating in do_read_bitmap()".)
+> +			/*
+> +			 * Warn rather than abort: synthesized events
+> +			 * (MMAP, COMM) lack sample_id_all data, so
+> +			 * parse_id_sample reads garbage from the event
+> +			 * payload.  Clamping to 0 protects downstream
+> +			 * array indexing while keeping the session alive.
+> +			 *
+> +			 * Preserve (u32)-1: perf script and perf inject
+> +			 * use it as a sentinel for "CPU not applicable."
+> +			 * Downstream array users (timechart, kwork) have
+> +			 * their own per-callback bounds checks.
+> +			 */
+> +			pr_warning_once("WARNING: sample CPU %u >=3D nr_cpus_avail %u, clampi=
+ng to 0\n",
+> +					sample.cpu, nr_cpus_avail);
+> +			sample.cpu =3D 0;
+> +		}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260524032709.1080=
-771-1-acme@kernel.org?part=3D20
+771-1-acme@kernel.org?part=3D26
