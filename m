@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4AB25C804
-	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:08:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92E125B09C
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:13:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779595715; cv=none; b=WssZ+nOuzUq6KG+pyloNJmVRF2sVUti6/17w6JtlSBn6ZSlGo89/s/sOdy7c2kAE0RTqVLqynVpnw47IqA3zvd3AM2pGZBz3O2m9CvjNeahKTJUfN/SbgH4gBDbQ4rIjomz0fIowd0sZrpPR8AVVJ1VLmR/ZomRS5sdpm/OJZsA=
+	t=1779595995; cv=none; b=qHxjWILcB/jAO0qRMsWtbs1XNBwwfiSsbK3j0HWEqRv8mS+OqqKfBVUGgEN6TRE5rLDSPsqXJ7czGCeuDF1R4uhPWxXgDZ/BdNVIue8w7Z2lZ9mV+aM+vMQuOihjRZxG6yw2c+a618Tu4KOABa6x4WdQKvUubUjcLVa7b64EyHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779595715; c=relaxed/simple;
-	bh=OU+EpCtDyutcuUvAkI6y0BDE7WHNfddRXAP/eF5pnhE=;
+	s=arc-20240116; t=1779595995; c=relaxed/simple;
+	bh=xTu/iN1ft/ZcSlAX3mnvAmMR7eJUbtwJbK3WaBwBplw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=C+2TfT3+RUnoX+3vzsPpNAff2RVobHIoDc6pOHIGIpNpZjAOWd95E0dHjst8i0JGE1gQF+MksTZ2BC8q3arzIBWAYf5PIlvbhTS9VdPC+2ZsFcW5mWr+wtiHkBk3x/c6BcxlEqSyl0r/a6PANnpoP3vbOrShFZkowRq/fkduNh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pqzg0Qjn; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=CB8/AV4IGSxlMPHcvGD/ibNDaB0YNxbj6kEIshHB+dkujdjgx/joG1oaV1sjFtq901Nqn3zNtIdbDV86ueqtGazGCUn2v+5w0XB3th46+dq3OYp9o6SPaCjGULdlP77m6KxD+iBfXARNMGVNZc1ez+fhM2A7q3xi21cf7NLMDKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jceUqRsF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pqzg0Qjn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E0AC1F00A3A;
-	Sun, 24 May 2026 04:08:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jceUqRsF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D1C1F000E9;
+	Sun, 24 May 2026 04:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779595714;
-	bh=fa3d59/1CoGT6N7xwRjVrC+ESAa4F2BIx7dCoTOdCAE=;
+	s=k20260515; t=1779595994;
+	bh=n01LfVbXl5wTahkyHeyh47Ksp1bauKKP5yZHZP1NsL8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Pqzg0Qjnw+/wWqSMZBx/ZbhJVAVZYasi4Dz0N/nuCNVtK6gLU0Y0rJ+wVp1RZkH5v
-	 jzuEFFz/ELPy8t57K8Nd9QM558aP/8EfUUoBh60slELPA22W9/4JSbDCezsmsACvLb
-	 YfNDw6maUQTWjllxw/ldDtjITsKCHAgWyef8m7ICMvkbm65I2SXg1ePtvE+NMyMhLs
-	 J6FK9qaLa6JGDLiuzPI2YznZlYbqsNVUtZMIXCIQfDZd8PwGhJwcNQrc96NkYB6XEp
-	 3MRcoTCQytDEctrUXnVAP8A6UecDjM28suzGDRY5+V9w1KdihTMGVxNQiASx7dR6t0
-	 lbvuLscA4RGsA==
+	b=jceUqRsFKLyw6zRhpFI7pJsIZRawhStthIfSpC+dXOfD9DLeR5mbPD4omWlMWHVpj
+	 GCqLVZ65UUD+UMBJD5Q0e/qjM4EOKzedSOfqx60+CqBvL7Y7kzMzInN5ryJ+FCeTIG
+	 ZkHXEy5gZ43kdykyNYO+kKuDApqYU6XwR1RcuukOE1oRLdW4tzjWsmF82G4Nxrxy2z
+	 fXIwwCpDng4LCdrEaiBIjxbdvSvew+/zbNwRP9qcoQENUGmhE+N59l2WVeefOKq+Z+
+	 zhEnqfQLZc3LXXVkLs+RjpDfcmh+JJyxgK7ju71s6cNY0NUVMgQ282b6S0o+QT2nZU
+	 k0+WU5unyzzrQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 12/29] perf header: Byte-swap build ID event pid and
- bounds check section entries
+Subject: Re: [PATCH 01/29] perf session: Add minimum event size and
+ alignment validation
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260524032709.1080771-13-acme@kernel.org>
-References: <20260524032709.1080771-13-acme@kernel.org>
+In-Reply-To: <20260524032709.1080771-2-acme@kernel.org>
+References: <20260524032709.1080771-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 24 May 2026 04:08:33 +0000
-Message-Id: <20260524040834.2E0AC1F00A3A@smtp.kernel.org>
+Date: Sun, 24 May 2026 04:13:13 +0000
+Message-Id: <20260524041314.59D1C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,48 +46,74 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] The newly added `perf_event__build_id_swap` callback ignores the `=
-sample_id_all` flag, failing to byte-swap the trailing sample ID fields of =
-stream-mode build ID events.
+- [Medium] Callers of `perf_session__peek_event()` completely abort process=
+ing on undersized events, breaking the intended 'skip' behavior.
 --
 
-commit ef67469fd36e5fce5748002d1210d212fdcc1c74
+commit b42afb24726ad9701717fde2cf945b69f1cdd644
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf header: Byte-swap build ID event pid and bounds check section entries
+perf session: Add minimum event size and alignment validation
 
-This commit fixes cross-endian perf.data processing by byte-swapping the
-build ID event PID. It also adds a stream-mode build ID swap callback,
-enforces bounds checking, and ensures NUL-termination for build ID filenames
-to prevent hangs or out-of-bounds reads on corrupted data.
+This commit adds a per-type minimum size table for perf events to prevent
+out-of-bounds accesses during swapping and processing. It enforces this by
+checking event sizes before swap operations and verifying that event sizes
+are 8-byte aligned.
 
 > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 1e25892963b78..0523fd243e02c 100644
 > --- a/tools/perf/util/session.c
 > +++ b/tools/perf/util/session.c
 [ ... ]
-> @@ -686,6 +686,14 @@ static int perf_event__hdr_attr_swap(union perf_even=
-t *event,
->  	return 0;
->  }
-> =20
-> +static int perf_event__build_id_swap(union perf_event *event,
-> +				     bool sample_id_all __maybe_unused)
-> +{
+> +/*
+> + * Read and validate the event at @file_offset.
+> + *
+> + * Returns:
+> + *   0  =E2=80=94 success: *event_ptr is set and safe to access.
+> + *  -1  =E2=80=94 error; check *event_ptr to decide whether to advance o=
+r abort:
+> + *          *event_ptr set  =E2=80=94 event header was read but the even=
+t is
+> + *                            malformed (too small for its type, or byte=
+-swap
+> + *                            failed).  header.size is still valid, so t=
+he
+> + *                            caller can advance past the event.
+> + *          *event_ptr NULL =E2=80=94 fatal: couldn't read the header at=
+ all
+> + *                            (I/O error, offset out of range, pipe mode=
+).
+> + *                            Caller must abort.
+> + */
+>  int perf_session__peek_event(struct perf_session *session, off_t file_of=
+fset,
+>  			     void *buf, size_t buf_sz,
+>  			     union perf_event **event_ptr,
+[ ... ]
+> +	if (perf_event__too_small(event, &min_sz)) {
+> +		pr_warning("WARNING: peek_event: %s event size %u too small (min %u)\n=
+",
+> +			   perf_event__name(event->header.type),
+> +			   event->header.size, min_sz);
+>  		return -1;
+> +	}
 
-[Severity: High]
-If sample_id_all is enabled, perf_event__synthesize_build_id() appends
-id_sample fields (like timestamps, PIDs, and CPUs) to the end of the
-PERF_RECORD_HEADER_BUILD_ID event payload.
+[Severity: Medium]
+The API contract for perf_session__peek_event() was changed to return -1 on
+undersized events, requiring callers to inspect *event_ptr to advance.
 
-Since this callback explicitly ignores the sample_id_all flag and does
-not locate the end of the filename to call swap_sample_id_all(), will the
-trailing sample ID fields remain in their foreign-endian format?
+Does this break bisectability if the callers (such as
+perf_session__peek_events()) were not updated in this commit to perform
+this check?
 
-> +	/* Only pid needs swapping =E2=80=94 build_id[] is a raw byte array */
-> +	event->build_id.pid =3D bswap_32(event->build_id.pid);
-> +	return 0;
-> +}
+If a caller hasn't been updated, it might completely abort the file parsing
+loop when encountering a single undersized event, breaking the intended skip
+behavior.
+
+I see this is resolved in a later commit (37f83323fcf82: "perf session: Add
+validated swap infrastructure with null-termination checks"), but wanted to
+ask about the intermediate state in this commit.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260524032709.1080=
-771-1-acme@kernel.org?part=3D12
+771-1-acme@kernel.org?part=3D1
