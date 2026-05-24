@@ -1,209 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5080F2DCC13;
-	Sun, 24 May 2026 03:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A70C156C6A
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 04:01:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779593415; cv=none; b=CRFXtTJgAnx9AwEdOKxKxPp8FTdoWPrvcKUI4KSHRSIrmQowS6dLFgpyf3W3VuHJn6rs1DQa+QvM4uphRCx59XsGPSMfTRJIvNXWQEVwBy/G3LiQB7dugsylXkVgi5yYcAmukLbKENyM3QCrwF+CbMagkk5ndsWDS7z594aXIZY=
+	t=1779595316; cv=none; b=bMYLbibwnRapFmvNecxQIlHOGyWtFDEv0H4jqUVMeoVBFBZyxg0VM+q0uQ4u9TRFtm+EelIi4LTqGKKPc7cyBkDQXxEh5Y3AA194wMaMvQsJGwu1D/GosU2fzmsBuFE0rc/itF5Cme+OXgVkNq/7UuR6UbYTKoPPz9/gV5jM7Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779593415; c=relaxed/simple;
-	bh=ZtrW+WoSyUYMkRDcoNRU7CDxqnijO3ULdR81H38eEDo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UNhPlu813BHyTSFPO4b1kZ7tqbpqPcD9mbMnxmV/fC6RBybiu+iOfdaRdLYklBUBGjmUIOBQV4vJs1jiEFI5LdTiJ7QuGO3oV8xa1JwzmTnOKRAGe+tKweHqoxNaPkdzLaOIZKjgh9L/Fn2e3XYFQzxzbb9N6NXoZFmMRrVZjOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFQY4CQA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779595316; c=relaxed/simple;
+	bh=nBku2pcpDMzk5iXpimoM3CmcuMd0NEI9Um5JYKhdN4I=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Bw9a7zPVOVYGc8lXamF7jDV7kr1jqSTN4bby30m7PRmehltYf523h8+VKhTn3h56SNu/pyPjev4vWrcaZWNaaysVkHQfrFbNt/hhDiFIfMqPTWVmvn7TlI85QcUugJ4ZPlQE/8xipjyUACL6UCd9IOA+ySq5QpHFCPhCK/T9kC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J77/Ar1q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFQY4CQA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A0041F00A3A;
-	Sun, 24 May 2026 03:30:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J77/Ar1q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D68C91F000E9;
+	Sun, 24 May 2026 04:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779593413;
-	bh=ckdEd7h4Bs1FgfAoEx6vjUROO/k+cf4Jdpc6WLh3LU8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CFQY4CQAs/D0/xvSP3qqlyIR5Y3YE5hqCmprAXg3Y1Lf91K0fAmbarQQx9cyrb+Ng
-	 gTzUYEJmjxXdAqJIcI1IVoAwDfWTOXCwT1ggU4CQ0QyenHRD4LAuoxwL9oS7bBYz+y
-	 jACOHqpZRO0kQDX0/N5PrdKU/tb4ZHoHFweglsgV2QlwDTHuqbLgeI8OYf+7drz0ZS
-	 CuddmvC/lF4n/IjgWh8SzF7M6f83957udB6r5Tg2Qz2OVu7llRWyTNuTilgNk5g3zv
-	 eFagkjSfRubsWDQSzaNRSCoMYxwvpUDA/oxhFCOF7vVODj86M9VjBLUF1dXteazJd/
-	 yFjwNF3GKgYKA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 29/29] perf test: Add truncated perf.data robustness test
-Date: Sun, 24 May 2026 00:27:03 -0300
-Message-ID: <20260524032709.1080771-30-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260524032709.1080771-1-acme@kernel.org>
-References: <20260524032709.1080771-1-acme@kernel.org>
+	s=k20260515; t=1779595315;
+	bh=1azCBfh4hrnz7TISEeiUQp3oOO7ay2FmE8E+A2AccdI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=J77/Ar1qQvxRPoJkyPqoXbMSgnUUDKERmtYkCymQb9ilJQNBc7Aose6P4vYH5JzBw
+	 F5L8j+4jbpoYO6rIqJgXkWVvjc90V0YZKRL9UWKjIfepIYo2ayYFIcehNV/L5+o9tS
+	 P8Hw03fCeHoAY07KHSlSv2eKaiFKEuIM5QgMeY+7/YhIVQALkXTXbX8RzXx4t1AtKe
+	 934ryxNegOBsKZACM8St3RlFGoj75MKDIxbWQUzwq6umznAZAvJjz7NaeTRCBLmRm+
+	 KdRzZcsvHo1UN4M7kwetaHb3noi9RtKwJ6kJYxHG9H4xxgVbE7rP7aSgb61zd23vQG
+	 nfPrw9WL93FCQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 17/29] perf tools: Bounds check perf_event_attr fields
+ against attr.size before printing
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260524032709.1080771-18-acme@kernel.org>
+References: <20260524032709.1080771-18-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 24 May 2026 04:01:54 +0000
+Message-Id: <20260524040154.D68C91F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Add a shell test that verifies perf report handles truncated perf.data
-files gracefully — exiting with an error code rather than crashing with
-SIGSEGV or SIGABRT.
+New issues:
+- [High] The newly added fallback logic in `syscall_arg__scnprintf_augmente=
+d_perf_event_attr` blindly copies 64 bytes from the payload, causing an out=
+-of-bounds read if the actual payload is smaller.
 
-The test records a simple workload, then truncates the resulting
-perf.data at four offsets that exercise different parsing stages:
+Pre-existing issues:
+- [High] `perf_event_attr__fprintf()` trusts the user-controlled `attr->siz=
+e` field for bounds checking without validating it against the actual buffe=
+r limits in the `perf trace` path.
+--
 
-  8 bytes   — file header magic only
-  64 bytes  — partial file header (attr section incomplete)
-  256 bytes — into the first events (partial event headers)
-  75% size  — mid-stream truncation (partial event data)
+commit 45122ffcfc4c42d20283944fff0ce0ea20c80919
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-For each truncation, perf report is run and the exit code is checked:
+perf tools: Bounds check perf_event_attr fields against attr.size before pr=
+inting
 
-- Exit code 0 (success) fails the test — a truncated file should
-  never parse without error.
+perf_event_attr__fprintf() accessed all struct fields unconditionally,
+but attrs from older perf.data files or BPF-captured syscall payloads
+may have a smaller size than the current struct.  Fields beyond the
+recorded size contain uninitialized or zero-filled data.
 
-- Crash signals are detected portably via kill -l, which maps the
-  signal number to a name on the running system.  This handles
-  architectures where signal numbers differ (e.g. SIGBUS is 7 on
-  x86/ARM but 10 on MIPS/SPARC).  Core-dump and fatal signals
-  (KILL, ILL, ABRT, BUS, FPE, SEGV, TRAP, SYS) fail the test.
+> diff --git a/tools/perf/trace/beauty/perf_event_open.c b/tools/perf/trace=
+/beauty/perf_event_open.c
+> index c1c7445dcff99..6315b46bcdf02 100644
+> --- a/tools/perf/trace/beauty/perf_event_open.c
+> +++ b/tools/perf/trace/beauty/perf_event_open.c
+[ ... ]
+> @@ -80,7 +81,27 @@ static size_t perf_event_attr___scnprintf(struct perf_=
+event_attr *attr, char *bf
+> =20
+>  static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct sy=
+scall_arg *arg, char *bf, size_t size)
+>  {
+> -	return perf_event_attr___scnprintf((void *)arg->augmented.args->value, =
+bf, size,
+> +	struct perf_event_attr *attr =3D (void *)arg->augmented.args->value;
+> +	struct perf_event_attr local_attr;
+> +
+> +	/*
+> +	 * augmented_raw_syscalls.bpf.c (shipped with perf) copies
+> +	 * PERF_ATTR_SIZE_VER0 bytes when the tracee passes size=3D0,
+> +	 * but leaves the size field as 0.  The payload size is
+> +	 * guaranteed by perf's own BPF program, not externally
+> +	 * controllable.  Copy to a local so we can fix up size
+> +	 * without writing to the potentially read-only augmented
+> +	 * args buffer.
+> +	 */
+> +	if (!attr->size) {
+> +		memcpy(&local_attr, attr, PERF_ATTR_SIZE_VER0);
 
-- Higher exit codes (200+) are perf's own negative-errno returns
-  (e.g. -EINVAL = 234) and are expected.
+[Severity: High]
+Can this memcpy() read out of bounds if the actual payload is smaller than
+PERF_ATTR_SIZE_VER0?
 
-This exercises the bounds checking, minimum-size validation, and error
-propagation added by the preceding patches in this series.
+If a tracee uses a TOCTOU race to pass a small payload size (like 8 bytes)
+to the first read, but modifies attr->size to 0 before the second read, the
+user-space payload might only be 8 bytes long.
 
-Testing it:
+Since the BPF program sys_enter_perf_event_open dynamically sizes its output
+based on the tracee's attr->size using bpf_perf_event_output(), could blind=
+ly
+copying 64 bytes here read past the end of the perf ring buffer and cause a
+crash?
 
-  root@number:~# perf test truncat
-   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).: Ok
-  root@number:~# perf test -vv truncat
-   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).:
-  --- start ---
-  test child forked, pid 62890
-  ---- end(0) ----
-   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).: Ok
-  root@number:~#
+> +		memset((void *)&local_attr + PERF_ATTR_SIZE_VER0, 0,
+> +		       sizeof(local_attr) - PERF_ATTR_SIZE_VER0);
+> +		local_attr.size =3D PERF_ATTR_SIZE_VER0;
+> +		attr =3D &local_attr;
+> +	}
+> +
+> +	return perf_event_attr___scnprintf(attr, bf, size,
+>  					   trace__show_zeros(arg->trace));
+>  }
+[ ... ]
+> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/=
+perf_event_attr_fprintf.c
+> index 741c3d657a8b6..3933639d76c54 100644
+> --- a/tools/perf/util/perf_event_attr_fprintf.c
+> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+[ ... ]
+> @@ -275,24 +275,56 @@ static void __p_config_id(struct perf_pmu *pmu, cha=
+r *buf, size_t size, u32 type
+[ ... ]
+>  int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+>  			     attr__fprintf_f attr__fprintf, void *priv)
+>  {
+>  	struct perf_pmu *pmu =3D perf_pmus__find_by_type(attr->type);
+> +	/*
+> +	 * size =3D=3D 0 means ABI0 =E2=80=94 the producer didn't set attr.size.
+> +	 * perf_event__fprintf_attr() may pass the raw mmap'd event
+> +	 * before the local copy, so default to PERF_ATTR_SIZE_VER0
+> +	 * (the ABI0 footprint) to avoid reading past the attr into
+> +	 * the ID array that follows it in HEADER_ATTR events.
+> +	 */
+> +	u32 attr_size =3D attr->size ?: PERF_ATTR_SIZE_VER0;
+>  	char buf[BUF_SIZE];
+>  	int ret =3D 0;
+> =20
+> -	if (!pmu && (attr->type =3D=3D PERF_TYPE_HARDWARE || attr->type =3D=3D =
+PERF_TYPE_HW_CACHE)) {
+> +	/*
+> +	 * Cap to what we understand: all callers store the attr in a
+> +	 * buffer of sizeof(*attr) bytes (perf.data read path copies
+> +	 * min(attr.size, sizeof), BPF augmented path copies into a
+> +	 * fixed-size value[] array).  A spoofed attr->size larger
+> +	 * than sizeof would cause PRINT_ATTRn to read past the
+> +	 * actual buffer.
+> +	 */
+> +	if (attr_size > sizeof(*attr))
+> +		attr_size =3D sizeof(*attr);
 
-Changes in v2:
-- Add SIGKILL to the list of fatal signals so OOM kills from
-  resource exhaustion bugs are detected (Reported-by: sashiko-bot@kernel.org)
+[Severity: High]
+This is a pre-existing issue, but does capping attr_size to sizeof(*attr)
+fully prevent out-of-bounds reads in the perf trace path?
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
-[ Fixed the SPDX on the line where 'perf test' expects the test description, reviewed by Ian Rogers ]
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/shell/data_validation.sh | 85 +++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_validation.sh
+The comment mentions the BPF augmented path copies into a fixed-size value[]
+array, but augmented__output actually trims the emitted ring buffer event to
+exactly the copied size (len + size).
 
-diff --git a/tools/perf/tests/shell/data_validation.sh b/tools/perf/tests/shell/data_validation.sh
-new file mode 100755
-index 0000000000000000..36b3ba508e4f2753
---- /dev/null
-+++ b/tools/perf/tests/shell/data_validation.sh
-@@ -0,0 +1,85 @@
-+#!/bin/bash
-+# Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Exercises the bounds checking and minimum-size validation added
-+# by the perf-data-validation hardening series.
-+
-+err=0
-+
-+cleanup() {
-+	rm -f "${perfdata}" "${perfdata}.old" "${truncated}" "${stderrfile}"
-+	trap - EXIT TERM INT
-+}
-+trap 'cleanup; exit 1' TERM INT
-+trap cleanup EXIT
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+truncated=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+stderrfile=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+# Record a simple workload
-+if ! perf record -o "${perfdata}" -- perf test -w noploop 2>/dev/null; then
-+	echo "Skip: perf record failed"
-+	cleanup
-+	exit 2
-+fi
-+
-+file_size=$(wc -c < "${perfdata}")
-+if [ "${file_size}" -lt 512 ]; then
-+	echo "Skip: perf.data too small (${file_size} bytes)"
-+	cleanup
-+	exit 2
-+fi
-+
-+# Test truncation at various offsets that exercise different
-+# parsing stages:
-+#   8    — file header magic only, no attrs or data
-+#   64   — partial file header (attr section incomplete)
-+#   256  — into the first events (partial event headers)
-+#   75%  — mid-stream truncation (partial event data)
-+for cut_at in 8 64 256 $((file_size * 3 / 4)); do
-+	if [ "${cut_at}" -ge "${file_size}" ]; then
-+		continue
-+	fi
-+	dd if="${perfdata}" of="${truncated}" bs=1 count="${cut_at}" 2>/dev/null
-+
-+	# perf report should exit with an error, not crash.
-+	# Capture stderr to detect sanitizer violations.
-+	perf report -i "${truncated}" --stdio > /dev/null 2> "${stderrfile}"
-+	exit_code=$?
-+
-+	# A truncated file should never parse successfully
-+	if [ ${exit_code} -eq 0 ]; then
-+		echo "FAIL: perf report exited 0 (success) on ${cut_at}-byte truncated file — expected an error"
-+		err=1
-+		continue
-+	fi
-+
-+	# Detect sanitizer violations — ASAN/MSAN/TSAN/UBSAN exit
-+	# with code 1 by default, which would otherwise look like a
-+	# clean error exit.  Check stderr for their markers.
-+	if grep -qE "^(==[0-9]+==ERROR:|SUMMARY: [A-Za-z]*Sanitizer)" "${stderrfile}" 2>/dev/null; then
-+		sanitizer=$(grep -oE "(Address|Memory|Thread|UndefinedBehavior)Sanitizer" "${stderrfile}" | head -1)
-+		echo "FAIL: perf report triggered ${sanitizer:-sanitizer} on ${cut_at}-byte truncated file"
-+		err=1
-+		continue
-+	fi
-+
-+	# Detect crash signals portably — signal numbers differ
-+	# across architectures (e.g. SIGBUS is 7 on x86/ARM but
-+	# 10 on MIPS/SPARC).  Use kill -l to map the number to a
-+	# name on the running system.
-+	if [ ${exit_code} -gt 128 ] && [ ${exit_code} -lt 200 ]; then
-+		sig_name=$(kill -l $((exit_code - 128)) 2>/dev/null)
-+		case ${sig_name} in
-+		KILL|ILL|ABRT|BUS|FPE|SEGV|TRAP|SYS)
-+			echo "FAIL: perf report crashed (SIG${sig_name}) on ${cut_at}-byte truncated file"
-+			err=1
-+			;;
-+		esac
-+	fi
-+done
-+
-+cleanup
-+exit ${err}
--- 
-2.54.0
+If a tracee uses a TOCTOU race to supply a small payload while spoofing
+attr->size to 136, this function will use 136 as the size. Will the PRINT_A=
+TTRn
+macros then read up to 136 bytes from a much smaller payload, resulting in
+an out-of-bounds read?
 
+> +
+> +	if (!pmu && attr_size >=3D offsetof(struct perf_event_attr, config) + s=
+izeof(attr->config) &&
+> +	    (attr->type =3D=3D PERF_TYPE_HARDWARE || attr->type =3D=3D PERF_TYP=
+E_HW_CACHE)) {
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260524032709.1080=
+771-1-acme@kernel.org?part=3D17
