@@ -1,171 +1,177 @@
-Received: from pdx-out-003.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-003.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.246.68.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C6E3A7F40;
-	Sun, 24 May 2026 15:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.246.68.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887873AA1A7
+	for <linux-perf-users@vger.kernel.org>; Sun, 24 May 2026 16:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779637149; cv=none; b=B6qW6txqZDcdkL4M5BfnqbYdbbUqIImHrch9DUyIwmSTM5XkG1CkUegIMK7v6dm7ZEaEHni89MB7IpvNLgokDaiLHxt4kIlK3/X6w/z+md4LxIMkGRz7VEmsKvQE+zmCL7G70hHfa6x9irPwVp6WuES+RN/KuGVChvEhtBmcUGM=
+	t=1779639216; cv=none; b=pRASzhAmFhvJOGEjdIFjnSr1d6Jwozort6AJXeQrxLvx5Eal1fqLtGpjzmTD1WJM6hSwJImZTiG2tjHXmvSuwPK666OqdzvG/t7pNkOgK0fzU3O79CeRPunPcB8spqibXpW7O74FrQ6U2p4xHbWDKtg2i7RO7r4hoRJ9/GnPoMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779637149; c=relaxed/simple;
-	bh=EjY0qyypSox9dx1PxErXpoQFpc2MXcm/AQ/FyD7nASc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=isrMinhTW0d4y9SW6Dcm1UD0Q/xeun8XKpQeJxrv2VSuWKkwKwGH7Tv9pB7j+ZS2DiHEJ2w+oe1VJEqUPkk69Jbb01KPCyP37SAfzdZZiZ0M/D2gRJedPrZUFZKH2G+VfjKQkJb982rJSez9WKfsgBs1N5UkN0ghkC1vwSLGtck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=RCzFZM1d; arc=none smtp.client-ip=44.246.68.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1779639216; c=relaxed/simple;
+	bh=9bPnS+GFENYLOrlL7H9apS3jx8Iafb+D4gylwX7jkb8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gZ+aueijLJG1n32s09iiwdfeuVNyusbZw4U/2Ym3PCEwq89gfxMKixryId5FKBwohl8ThhlaFkc8KINwvUrDBK95twKKLa3GRLQ4uCqTPt0mdAsV+6kqRjBxZjUuwLtziDEyVGrW0lYaBJLcXHVnXo19q3JTu0XJ0LyBol9mxgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNA6u/ua; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="RCzFZM1d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1779637147; x=1811173147;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8g9UgLLxo2Fuh4J8hCO+Zlk0sbgEK3VZTNEp9tiWrc8=;
-  b=RCzFZM1dUUUZ2mhsTkj9O4MLAdmtTx0jNAq/w10gLJcDFdugT+IZ+wWJ
-   R+5972KmxKYUNpDoWOWB202rLqO2JZz7WO0i/mLMTIywML6LIAne+IR77
-   +PbjDay5if5iwTDtvxSlgfQap+lqU4tuEoukQfSnkt+yNSTXpe/0nxAU9
-   PxZtpPgbRVhWPYiHqmUyKJ94b2nG5IjIW5rdCAHajtXrKrVL/21pHS4Sz
-   EgeLwYRK459foX9G2nyj4Xl6csouPFQAz7w41gl3nB3T+JLa3vah+hSh9
-   NVWjlA6apSkHaGOdcHZuqUg1rB5TPprEFBcQ1eq1dJf4cfFnKC3PHtElN
-   A==;
-X-CSE-ConnectionGUID: kY/91ROSQ6yS+JKmk3U+iQ==
-X-CSE-MsgGUID: txIf5C8sS1+zlUX3/hKIjQ==
-X-IronPort-AV: E=Sophos;i="6.24,166,1774310400"; 
-   d="scan'208";a="20391560"
-Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
-  by internal-pdx-out-003.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2026 15:39:05 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.53:13066]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.53.254:2525] with esmtp (Farcaster)
- id 59be0b91-0c87-4ae3-b7fe-25fe0a37c103; Sun, 24 May 2026 15:39:05 +0000 (UTC)
-X-Farcaster-Flow-ID: 59be0b91-0c87-4ae3-b7fe-25fe0a37c103
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Sun, 24 May 2026 15:39:03 +0000
-Received: from dev-dsk-avivb-1b-e28f450e.eu-west-1.amazon.com (10.15.33.9) by
- EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.37;
- Sun, 24 May 2026 15:39:02 +0000
-From: Aviv Bakal <avivb@amazon.com>
-To: <robin.murphy@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>
-CC: <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<avivb@amazon.com>, <zeev@amazon.com>, <blakgeof@amazon.com>
-Subject: [PATCH v3 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
-Date: Sun, 24 May 2026 18:38:48 +0300
-Message-ID: <20260524153848.16334-3-avivb@amazon.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260524153848.16334-1-avivb@amazon.com>
-References: <20260504133923.23373-1-avivb@amazon.com>
- <20260524153848.16334-1-avivb@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNA6u/ua"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1805B1F000E9;
+	Sun, 24 May 2026 16:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779639209;
+	bh=g3qZHxEN6CyiBbhG6XUsO1pMQFuc47gfagHBUHwyn1w=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=eNA6u/uaSke9INesgl4cWbuYO5/F2vtMS/yK9FEWNbmouQKAleWKvOArhINdWTN0i
+	 +pNs6MW/isNrfJKHg3bntPHwnoPUtz4beviMLnZ8DBviAu5GWNSqcJCmDOYHjPKq5A
+	 7jtIiVbsNlD00Xk49n6JDHfMtdxLnbvG544Hwvs6BIhF5uOm+DxNAu/ZLq4QWDCRKi
+	 41WKxXGMse00S6v3x7v3ECEHhBvYCdd8dA3eA13Ci16WfvPiidEPE0Zfehz8/fyQkc
+	 Lnil62TQDFGc6OvRK99ltcppxUm+GY4NTEIVbRz5DJ1klgB2nmxbCY9M3kHhetjIF0
+	 zl3VyndPfM35w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 1/2] perf/arm-cmn: Move struct arm_cmn_hw_event into
+ struct hw_perf_event
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aviv Bakal" <avivb@amazon.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260524153848.16334-2-avivb@amazon.com>
+References: <20260524153848.16334-2-avivb@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 24 May 2026 16:13:28 +0000
+Message-Id: <20260524161329.1805B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D033UWC004.ant.amazon.com (10.13.139.225) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Graviton5 uses a customised CMN-S3 implementation where certain
-discovery registers report zeroed fields. Add the following workarounds:
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
 
- - Introduce a dedicated ACPI HID to identify the Graviton5 CMN variant.
- - Derive the DTC domain from the XP node ID, since the unit info
-   register reports it as zero.
- - Set the DTC logical ID from the XP's logical ID, since the node info
-   register's logical ID field is also zeroed.
+New issues:
+- [Low] The patch breaks the build when `arm-cmn` is configured as a module=
+ due to an incorrect `#ifdef` guard in `include/linux/perf_event.h`.
 
-Signed-off-by: Aviv Bakal <avivb@amazon.com>
----
- drivers/perf/arm-cmn.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Pre-existing issues:
+- [Critical] Integer truncation of `cmn->num_dns` leads to an undersized he=
+ap allocation followed by an out-of-bounds write.
+- [High] Unbounded `cmn->num_dtcs` leads to an out-of-bounds memset in `arm=
+_cmn_event_init()`.
+- [High] Unbounded counting of `hw->num_dns` leads to an out-of-bounds writ=
+e in the `hw->dtm_idx` array.
+- [High] Unbounded DTM pointer advancement leads to an out-of-bounds write =
+in `arm_cmn_init_dtm()`.
+--
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 3443b819afed..0184e598777a 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -208,6 +208,8 @@ enum cmn_part {
- 	PART_CMN700 = 0x43c,
- 	PART_CI700 = 0x43a,
- 	PART_CMN_S3 = 0x43e,
-+	/* Synthetic part number, overridden to PART_CMN_S3 during discovery */
-+	PART_GRAVITON5 = 0xa5,
- };
- 
- /* CMN-600 r0px shouldn't exist in silicon, thankfully */
-@@ -2197,6 +2199,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_cmn *cmn, void __iomem *xp_reg
- 	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region + offset));
- }
- 
-+static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
-+{
-+	unsigned int x = (xp_id >> 7) & 0xf;
-+	unsigned int y = (xp_id >> 3) & 0xf;
-+
-+	/*
-+	 * The unit info register reads as zero; derive the DTC domain from
-+	 * the XP's mesh coordinates over the 10x14 mesh.
-+	 */
-+	return (x / 5) + (y / 7) * 2;
-+}
-+
- static void arm_cmn_init_node_info(struct arm_cmn *cmn, u32 offset, struct arm_cmn_node *node)
- {
- 	int level;
-@@ -2242,6 +2256,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 	u64 reg;
- 	int i, j;
- 	size_t sz;
-+	bool graviton5_workaround = false;
- 
- 	arm_cmn_init_node_info(cmn, rgn_offset, &cfg);
- 	if (cfg.type != CMN_TYPE_CFG)
-@@ -2252,6 +2267,13 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 	reg = readq_relaxed(cfg_region + CMN_CFGM_PERIPH_ID_01);
- 	part = FIELD_GET(CMN_CFGM_PID0_PART_0, reg);
- 	part |= FIELD_GET(CMN_CFGM_PID1_PART_1, reg) << 8;
-+
-+	/* Graviton5 has a customised CMN-S3 which needs some fixups */
-+	if (cmn->part == PART_GRAVITON5) {
-+		cmn->part = PART_CMN_S3;
-+		graviton5_workaround = true;
-+	}
-+
- 	/* 600AE is close enough that it's not really worth more complexity */
- 	if (part == PART_CMN600AE)
- 		part = PART_CMN600;
-@@ -2341,6 +2363,8 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 
- 		if (cmn->part == PART_CMN600)
- 			xp->dtc = -1;
-+		else if (graviton5_workaround)
-+			xp->dtc = arm_cmn_graviton5_dtc_domain(xp->id);
- 		else
- 			xp->dtc = arm_cmn_dtc_domain(cmn, xp_region);
- 
-@@ -2419,6 +2443,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 
- 			switch (dn->type) {
- 			case CMN_TYPE_DTC:
-+				if (graviton5_workaround) {
-+					/* Node info logical ID is zeroed; use the XP's */
-+					dn->logid = xp->logid;
-+				}
- 				cmn->num_dtcs++;
- 				dn++;
- 				break;
-@@ -2634,6 +2662,7 @@ static const struct acpi_device_id arm_cmn_acpi_match[] = {
- 	{ "ARMHC650" },
- 	{ "ARMHC700" },
- 	{ "ARMHC003" },
-+	{ "AMZN0070", PART_GRAVITON5 },
- 	{}
- };
- MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
--- 
-2.47.3
+commit 783e16d4bed9e2f619820aa17251b0f781f0cd6e
+Author: Aviv Bakal <avivb@amazon.com>
 
+perf/arm-cmn: Move struct arm_cmn_hw_event into struct hw_perf_event
+
+This patch moves the arm_cmn_hw_event structure out of the driver file and
+directly into the hw_perf_event union to allow expanding its size for larger
+mesh topologies without violating static bounds.
+
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 48d851fbd8ea5..c38576a8e3383 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -200,6 +201,27 @@ struct hw_perf_event {
+>  			u64	conf;
+>  			u64	conf1;
+>  		};
+> +#ifdef CONFIG_ARM_CMN
+
+[Severity: Low]
+Will this break the build when the arm-cmn driver is compiled as a module?
+
+When the driver is built as a module, Kbuild defines CONFIG_ARM_CMN_MODULE
+instead of CONFIG_ARM_CMN. If the ifdef block is skipped, the cmn field is
+omitted from struct hw_perf_event, resulting in compiler errors when
+drivers/perf/arm-cmn.c attempts to access it.
+
+Does this need to use IS_ENABLED(CONFIG_ARM_CMN)?
+
+> +/* Some implementations use a mesh larger than the architectural max of =
+12 */
+> +#define CMN_MAX_DIMENSION		14
+
+[Severity: High]
+This is a pre-existing issue, but is the DTM initialization logic vulnerable
+to an out-of-bounds heap write with larger meshes?
+
+When multi_dtm is enabled, the driver allocates 2 * num_xps + 1 DTMs.
+However, if multiple XPs have more than 4 connected ports, the logic in
+arm_cmn_init_dtm() can initialize up to 3 DTMs per XP.
+
+For meshes containing multiple such XPs, the total number of initialized
+DTMs could exceed the allocated capacity, overwriting adjacent heap memory.
+
+> +#define CMN_MAX_XPS			(CMN_MAX_DIMENSION * CMN_MAX_DIMENSION)
+> +#define CMN_MAX_NODES_PER_EVENT		CMN_MAX_XPS
+
+[Severity: Critical]
+This isn't a bug introduced by this patch, but does the discovery phase
+have an integer truncation regression when accumulating the total node coun=
+t?
+
+In struct arm_cmn, num_dns is declared as a 16-bit integer (u16). During
+arm_cmn_discover(), accumulating child_count across all XPs can wrap around
+this 16-bit boundary if an unexpectedly large number of children are report=
+ed.
+
+Because devm_kcalloc() uses this truncated value to allocate the dn array,
+the subsequent pass that advances the dn pointer based on the true number
+of children could write past the end of the undersized heap allocation.
+
+> +#define CMN_MAX_DTCS			4
+> +		struct arm_cmn_hw_event { /* arm_cmn */
+> +			/*
+> +			 * CMN PMU event state overlaid on hw_perf_event.
+> +			 * Must fit before the 'target' field.
+> +			 */
+> +			struct arm_cmn_node	*dn;
+> +			u64			dtm_idx[DIV_ROUND_UP(CMN_MAX_NODES_PER_EVENT * 2, 64)];
+
+[Severity: High]
+This isn't a bug introduced by this patch, but what prevents hw->num_dns
+from exceeding the capacity of the dtm_idx array?
+
+While the driver restricts individual dn->logid values, it does not limit
+the total number of nodes of a specific type. If firmware declares more than
+224 nodes of the same type, hw->num_dns will exceed the space allocated for
+dtm_idx.
+
+During event addition, the driver calls arm_cmn_set_index() for values of i
+up to hw->num_dns - 1. Does this result in an out-of-bounds bitwise write
+that corrupts nearby structure members?
+
+> +			s8			dtc_idx[CMN_MAX_DTCS];
+
+[Severity: High]
+This is a pre-existing issue, but is there a missing bounds check for
+cmn->num_dtcs during discovery?
+
+In arm_cmn_discover(), the driver increments cmn->num_dtcs for every
+CMN_TYPE_DTC node found. If the firmware reports more than CMN_MAX_DTCS (4)
+nodes, arm_cmn_event_init() will perform a memset() using the unbounded cou=
+nt:
+
+memset(hw->dtc_idx, 0, cmn->num_dtcs);
+
+Since dtc_idx has a fixed capacity of 4, could this lead to an out-of-bounds
+write that corrupts adjacent perf_event fields?
+
+> +			u8			num_dns;
+> +			u8			dtm_offset;
+> +			DECLARE_BITMAP(wp_idx, CMN_MAX_XPS);
+> +			bool			wide_sel;
+> +			int			filter_sel;
+> +		} cmn;
+> +#endif
+>  	};
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260524153848.1633=
+4-1-avivb@amazon.com?part=3D1
