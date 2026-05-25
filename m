@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F25245008;
-	Mon, 25 May 2026 01:06:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD7825228D;
+	Mon, 25 May 2026 01:06:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779671206; cv=none; b=u/UsCHmsgSUeyZA/8fA8uj2wI5yivYk0nyEizAyZOfNIO6ThTh/2luYRyw71LAN4/Nf7vzJazmj4Zym6ZRQdqRKqD2DmafixWOKegsIPUlEHsYyomQxdBM3IWS/Wc6v0XS8fJZXKweQS/2wj0B5vLO/TwFsUu5QWV/M1BuWH0pc=
+	t=1779671209; cv=none; b=aDQ5+MqYzuJ2sn+YyqtKCzDN4ORRC/RYwlmWmtgb0b02CTsFT4fFfsDB1ty0TMbIPkU2sfid5C9PZjCYqLlJ6KKCl11aBbWtJbw32NKn4xQ+5DOB1J1U/vwwptvTwgjm7juyT7lSI8h8cbOPP39oRq0atigJstp6+nIetAB26nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779671206; c=relaxed/simple;
-	bh=IMm6QqciKoj9L86ffNAHT3CHzVjj1Uev6t0eb+VdG2w=;
+	s=arc-20240116; t=1779671209; c=relaxed/simple;
+	bh=jpJOzq+jJ4TOARSX9r2mgNN7gWRRi6NiutiJi0+5S98=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nyy6fGdc1nDVOSxP2Yel/g/P+q39do5YkGLCuAPipwYYUZAYFkFAe3pEhMYukPrVwbwyOBaDUDTy10tj8mnvCXXb7Yqw3gGFDMK37In8bMBFizDXoS2r6fK60viIKNmvf7Mo825iIcv1vLCL2NivwVvQIbvcM/M7gB7iwvOlzqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blNgQL92; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=o4v3qvhORzehCrErc68hAIYYQ7xRgeZMml6NcHy5iGdskN+HOBsN81blXQu+ewZNM8PkGVK9divw7oK4BbIXbGUxUhYpaZ21G9BGf1kLCZ0R0Yq1e54+O3sO2oubvAKwbub5hnKSUFZKdv1CeNC4McIdzlLnEhqj9gDk8euhxrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASgBPF5f; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blNgQL92"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83601F000E9;
-	Mon, 25 May 2026 01:06:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASgBPF5f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDC51F00A3A;
+	Mon, 25 May 2026 01:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779671203;
-	bh=PqqN3TMSovKEaOntcbHHKrbyahaJzHRxFuKowFiVyu0=;
+	s=k20260515; t=1779671207;
+	bh=PRRMEZI1ciOv6zdG3OAY209euY2o8p2qL1Z0agAyrtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=blNgQL92meJfSpoLitSlAYGVMC6HmZ6bCYfEVXE9t+UZmae2zL8Oww73h1yvS0oag
-	 oyw+dGTi0L6TL8gc7sq0J0dx7ksYSw87g0P+Cs1vSe1fucreGxP2SSQlq9B96hF96B
-	 P6RsKLMzGdsg+tCU5+TnQiODYtqjax+kpA9lbAekhSSlbr77QKPScB40iU/BrujcAl
-	 FOLVifmc3ffA+LjrCWjd84awhuF0sGBEFLcK81uShMIwVCZ5GJ10cZNJKRX49bKdgK
-	 W85Dz2eIAf1nvcmU+/DmnMN4S4YVAW1YhfAuYwEHgpNH27nthUNzHiKOYkl62eyfLM
-	 5cGbtHSHdnhaA==
+	b=ASgBPF5fwQ+3oGmaw5RuPPAt+1N1MuXepNEoEiWP0Nr+PV3sjliCnNM/p6ycbIdpm
+	 P1oxWHS47MjMQXoH+NqEFG1lhuLLOEo/v17wRglw709AgaNEzWjwl2XRJHr5LG/SI2
+	 f9cyN3WbV+Or88yKnhYTLuqTouZQxXCJbh6GnOhIX4JZD7fCB0wa1EQzh7agIDUK+L
+	 IPVy2/b4GeAk82vla07mrG5FDmdMifPLkEzjXFEksJukEYLzobSfYSOvRNSURSZ/fZ
+	 XtQheCXMo4KEMTy5338vhDLSkjuyeyFrtjC+pkNPj7u+YCca11rZAXNlV2Tw8HM2Xz
+	 5WKz3XLOUhtyA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 11/29] perf session: Validate nr fields against event size on both swap and common paths
-Date: Sun, 24 May 2026 22:05:31 -0300
-Message-ID: <20260525010550.1100375-12-acme@kernel.org>
+Subject: [PATCH 12/29] perf header: Byte-swap build ID event pid and bounds check section entries
+Date: Sun, 24 May 2026 22:05:32 -0300
+Message-ID: <20260525010550.1100375-13-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260525010550.1100375-1-acme@kernel.org>
 References: <20260525010550.1100375-1-acme@kernel.org>
@@ -57,396 +57,203 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Several event types use an nr field to control iteration over
-variable-length arrays.  The swap handlers byte-swap and loop using
-these fields without bounds checks, and the native processing path
-trusts them as well.
+perf_header__read_build_ids() swaps the event header fields for cross-endian
+perf.data files but not bev.pid. This causes perf_session__findnew_machine()
+to look up the wrong machine for guest VM build IDs, misattributing them.
+Swap bev.pid alongside the header fields.
 
-Add bounds checks on both paths for:
+Also add a build_id_swap callback for stream-mode build ID events,
+and validate NUL-termination of build_id.filename on the native-endian
+delivery path (perf_session__process_user_event) — events with
+unterminated filenames are skipped.
 
-- PERF_RECORD_THREAD_MAP: validate nr against payload, return -1
-  on the swap path.  On the native path, reject with -EINVAL.
+Harden perf_header__read_build_ids() against crafted perf.data files:
 
-- PERF_RECORD_NAMESPACES: clamp nr on the swap path (safe because
-  each entry is indexed by type; missing entries just won't be
-  resolved).  Skip the event on the native path.
-
-- PERF_RECORD_CPU_MAP: clamp nr for CPUS and MASK sub-types on
-  the swap path.  Add bounds checks for mask64 which previously
-  had no nr validation.  Skip the event on the native path.
-
-- PERF_RECORD_STAT_CONFIG: clamp nr on the swap path (safe because
-  each config entry is self-describing via its tag).  Skip the
-  event on the native path.
-
-The swap path (cross-endian, writable MAP_PRIVATE mapping) can
-safely clamp by writing back to the event.  The native path
-(read-only MAP_SHARED mapping) must skip instead of clamping
-because writing to the mmap'd event would segfault.
-
-Also fix stat_config swap range: change size += 1 to
-size += sizeof(event->stat_config.nr) for clarity.  The old +1
-happened to work because mem_bswap_64 processes 8-byte chunks,
-but the intent is to include the 8-byte nr field in the swap
-range.
-
-Changes in v2:
-- Document that PERF_RECORD_NAMESPACES max_nr includes trailing
-  sample_id space when sample_id_all is present — harmless on the
-  swap path because both per-element bswap_64 and swap_sample_id_all()
-  perform the same u64 byte swap (Reported-by: sashiko-bot@kernel.org)
+- Add overflow check on offset + size to prevent wrap past ULLONG_MAX.
+- Reject bev.header.size == 0 which would loop forever.
+- Reject bev.header.size > remaining section to prevent reading past
+  the section boundary.
+- Guard memcmp(filename, "nel.kallsyms]", 13) with len >= 13 to avoid
+  reading uninitialized stack memory on short filenames.
+- Force NUL-termination of filename before passing it to functions
+  like machine__findnew_dso() that use strlen/strcmp.
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 253 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 234 insertions(+), 19 deletions(-)
+ tools/perf/util/header.c  | 50 +++++++++++++++++++++++++++++++++++----
+ tools/perf/util/session.c | 27 ++++++++++++++++++++-
+ 2 files changed, 72 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index aef10d42be35487a..8588e12f110fca70 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -496,13 +496,35 @@ static int perf_event__throttle_swap(union perf_event *event,
- static int perf_event__namespaces_swap(union perf_event *event,
- 				       bool sample_id_all)
- {
--	u64 i;
-+	u64 i, nr, max_nr;
- 
- 	event->namespaces.pid		= bswap_32(event->namespaces.pid);
- 	event->namespaces.tid		= bswap_32(event->namespaces.tid);
- 	event->namespaces.nr_namespaces	= bswap_64(event->namespaces.nr_namespaces);
- 
--	for (i = 0; i < event->namespaces.nr_namespaces; i++) {
-+	nr = event->namespaces.nr_namespaces;
-+	/*
-+	 * Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof.
-+	 * When sample_id_all is present max_nr slightly overestimates the
-+	 * array space because header.size includes the trailing sample_id.
-+	 * Harmless: both the per-element bswap_64 loop and swap_sample_id_all()
-+	 * perform the same u64 byte swap, so the result is correct regardless
-+	 * of where the boundary between array and sample_id falls.
-+	 */
-+	max_nr = (event->header.size - sizeof(event->namespaces)) /
-+		 sizeof(event->namespaces.link_info[0]);
-+	/*
-+	 * Safe to clamp: each namespace entry is indexed by type;
-+	 * missing entries just won't be resolved.
-+	 */
-+	if (nr > max_nr) {
-+		pr_warning("WARNING: PERF_RECORD_NAMESPACES: nr_namespaces %" PRIu64 " exceeds payload (max %" PRIu64 "), clamping\n",
-+			   nr, max_nr);
-+		nr = max_nr;
-+		event->namespaces.nr_namespaces = nr;
-+	}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 967c3d8ff12c8676..c0b5c99f462ad925 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <errno.h>
+ #include <inttypes.h>
++#include <limits.h>
+ #include "string2.h"
+ #include <sys/param.h>
+ #include <sys/types.h>
+@@ -2578,7 +2579,13 @@ static int perf_header__read_build_ids_abi_quirk(struct perf_header *header,
+ 	} old_bev;
+ 	struct perf_record_header_build_id bev;
+ 	char filename[PATH_MAX];
+-	u64 limit = offset + size;
++	u64 limit;
 +
-+	for (i = 0; i < nr; i++) {
- 		struct perf_ns_link_info *ns = &event->namespaces.link_info[i];
- 
- 		ns->dev = bswap_64(ns->dev);
-@@ -734,11 +756,23 @@ static int perf_event__auxtrace_error_swap(union perf_event *event,
- static int perf_event__thread_map_swap(union perf_event *event,
- 				       bool sample_id_all __maybe_unused)
- {
--	unsigned i;
-+	unsigned int i;
-+	u64 nr;
- 
- 	event->thread_map.nr = bswap_64(event->thread_map.nr);
- 
--	for (i = 0; i < event->thread_map.nr; i++)
-+	/*
-+	 * Reject rather than clamp: unlike namespaces (indexed by type)
-+	 * or stat_config (self-describing tags), a truncated thread map
-+	 * is structurally broken — downstream would get a wrong map.
-+	 */
-+	/* Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof */
-+	nr = event->thread_map.nr;
-+	if (nr > (event->header.size - sizeof(event->thread_map)) /
-+		  sizeof(event->thread_map.entries[0]))
++	/* Prevent offset + size from wrapping past ULLONG_MAX */
++	if (size > ULLONG_MAX - offset)
 +		return -1;
 +
-+	for (i = 0; i < nr; i++)
- 		event->thread_map.entries[i].pid = bswap_64(event->thread_map.entries[i].pid);
- 	return 0;
- }
-@@ -747,32 +781,80 @@ static int perf_event__cpu_map_swap(union perf_event *event,
- 				    bool sample_id_all __maybe_unused)
- {
- 	struct perf_record_cpu_map_data *data = &event->cpu_map.data;
-+	u32 payload = event->header.size - sizeof(event->header);
++	limit = offset + size;
  
- 	data->type = bswap_16(data->type);
+ 	while (offset < limit) {
+ 		ssize_t len;
+@@ -2589,6 +2596,10 @@ static int perf_header__read_build_ids_abi_quirk(struct perf_header *header,
+ 		if (header->needs_swap)
+ 			perf_event_header__bswap(&old_bev.header);
  
-+	/*
-+	 * Safe to clamp: a shorter CPU map just means some CPUs
-+	 * are absent; tools process the CPUs that are present.
-+	 */
- 	switch (data->type) {
--	case PERF_CPU_MAP__CPUS:
--		data->cpus_data.nr = bswap_16(data->cpus_data.nr);
-+	case PERF_CPU_MAP__CPUS: {
-+		u16 nr, max_nr;
- 
--		for (unsigned i = 0; i < data->cpus_data.nr; i++)
-+		data->cpus_data.nr = bswap_16(data->cpus_data.nr);
-+		nr = data->cpus_data.nr;
-+		max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
-+					     cpus_data.cpu)) /
-+			 sizeof(data->cpus_data.cpu[0]);
-+		if (nr > max_nr) {
-+			pr_warning("WARNING: PERF_RECORD_CPU_MAP: nr %u exceeds payload (max %u), clamping\n",
-+				   nr, max_nr);
-+			nr = max_nr;
-+			data->cpus_data.nr = nr;
-+		}
-+		for (unsigned int i = 0; i < nr; i++)
- 			data->cpus_data.cpu[i] = bswap_16(data->cpus_data.cpu[i]);
- 		break;
-+	}
- 	case PERF_CPU_MAP__MASK:
- 		data->mask32_data.long_size = bswap_16(data->mask32_data.long_size);
- 
- 		switch (data->mask32_data.long_size) {
--		case 4:
-+		case 4: {
-+			u16 nr, max_nr;
++		/* size == 0 loops forever; size > remaining reads past section */
++		if (old_bev.header.size == 0 || old_bev.header.size > limit - offset)
++			return -1;
 +
- 			data->mask32_data.nr = bswap_16(data->mask32_data.nr);
--			for (unsigned i = 0; i < data->mask32_data.nr; i++)
-+			nr = data->mask32_data.nr;
-+			max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
-+						     mask32_data.mask)) /
-+				 sizeof(data->mask32_data.mask[0]);
-+			if (nr > max_nr) {
-+				pr_warning("WARNING: PERF_RECORD_CPU_MAP mask32: nr %u exceeds payload (max %u), clamping\n",
-+					   nr, max_nr);
-+				nr = max_nr;
-+				data->mask32_data.nr = nr;
-+			}
-+			for (unsigned int i = 0; i < nr; i++)
- 				data->mask32_data.mask[i] = bswap_32(data->mask32_data.mask[i]);
- 			break;
--		case 8:
-+		}
-+		case 8: {
-+			u16 nr, max_nr;
-+
- 			data->mask64_data.nr = bswap_16(data->mask64_data.nr);
--			for (unsigned i = 0; i < data->mask64_data.nr; i++)
-+			nr = data->mask64_data.nr;
-+			if (payload < offsetof(struct perf_record_cpu_map_data, mask64_data.mask)) {
-+				data->mask64_data.nr = 0;
-+				break;
-+			}
-+			max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
-+						     mask64_data.mask)) /
-+				 sizeof(data->mask64_data.mask[0]);
-+			if (nr > max_nr) {
-+				pr_warning("WARNING: PERF_RECORD_CPU_MAP mask64: nr %u exceeds payload (max %u), clamping\n",
-+					   nr, max_nr);
-+				nr = max_nr;
-+				data->mask64_data.nr = nr;
-+			}
-+			for (unsigned int i = 0; i < nr; i++)
- 				data->mask64_data.mask[i] = bswap_64(data->mask64_data.mask[i]);
- 			break;
-+		}
- 		default:
--			pr_err("cpu_map swap: unsupported long size\n");
-+			pr_err("cpu_map swap: unsupported long size %u\n",
-+			       data->mask32_data.long_size);
- 		}
- 		break;
- 	case PERF_CPU_MAP__RANGE_CPUS:
-@@ -788,11 +870,27 @@ static int perf_event__cpu_map_swap(union perf_event *event,
- static int perf_event__stat_config_swap(union perf_event *event,
- 					bool sample_id_all __maybe_unused)
- {
--	u64 size;
-+	u64 nr, max_nr, size;
+ 		len = old_bev.header.size - sizeof(old_bev);
+ 		if (len < 0 || len >= PATH_MAX) {
+ 			pr_warning("invalid build_id filename length %zd\n", len);
+@@ -2597,6 +2608,13 @@ static int perf_header__read_build_ids_abi_quirk(struct perf_header *header,
  
--	size  = bswap_64(event->stat_config.nr) * sizeof(event->stat_config.data[0]);
--	size += 1; /* nr item itself */
-+	nr = bswap_64(event->stat_config.nr);
-+	/* Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof */
-+	max_nr = (event->header.size - sizeof(event->stat_config)) /
-+		 sizeof(event->stat_config.data[0]);
-+	/*
-+	 * Safe to clamp: each config entry is self-describing
-+	 * via its tag; missing entries keep their defaults.
-+	 */
-+	if (nr > max_nr) {
-+		pr_warning("WARNING: PERF_RECORD_STAT_CONFIG: nr %" PRIu64 " exceeds payload (max %" PRIu64 "), clamping\n",
-+			   nr, max_nr);
-+		nr = max_nr;
-+	}
-+	size = nr * sizeof(event->stat_config.data[0]);
-+	/* The swap starts at &nr, so add its size to cover the full range */
-+	size += sizeof(event->stat_config.nr);
- 	mem_bswap_64(&event->stat_config.nr, size);
-+	/* Persist the clamped value in native byte order */
-+	event->stat_config.nr = nr;
- 	return 0;
- }
- 
-@@ -1730,8 +1828,27 @@ static int machines__deliver_event(struct machines *machines,
- 					   "COMM"))
- 			return 0;
- 		return tool->comm(tool, event, sample, machine);
--	case PERF_RECORD_NAMESPACES:
-+	case PERF_RECORD_NAMESPACES: {
+ 		if (readn(input, filename, len) != len)
+ 			return -1;
 +		/*
-+		 * Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof.
-+		 * Includes trailing sample_id space when present, but prevents OOB.
++		 * The file data may lack a null terminator, which could
++		 * indicate a corrupt or crafted perf.data file.  Ensure
++		 * filename is always a valid C string before passing it
++		 * to functions like machine__findnew_dso().
 +		 */
-+		u64 max_nr = (event->header.size - sizeof(event->namespaces)) /
-+			     sizeof(event->namespaces.link_info[0]);
++		filename[len] = '\0';
+ 
+ 		bev.header = old_bev.header;
+ 
+@@ -2624,17 +2642,32 @@ static int perf_header__read_build_ids(struct perf_header *header,
+ 	struct perf_session *session = container_of(header, struct perf_session, header);
+ 	struct perf_record_header_build_id bev;
+ 	char filename[PATH_MAX];
+-	u64 limit = offset + size, orig_offset = offset;
++	u64 limit, orig_offset = offset;
+ 	int err = -1;
+ 
++	/* Prevent offset + size from wrapping past ULLONG_MAX */
++	if (size > ULLONG_MAX - offset)
++		return -1;
++
++	limit = offset + size;
++
+ 	while (offset < limit) {
+ 		ssize_t len;
+ 
+ 		if (readn(input, &bev, sizeof(bev)) != sizeof(bev))
+ 			goto out;
+ 
+-		if (header->needs_swap)
++		if (header->needs_swap) {
+ 			perf_event_header__bswap(&bev.header);
++			bev.pid = bswap_32(bev.pid);
++		}
 +
 +		/*
-+		 * Native-endian events are mmap'd read-only, so we
-+		 * cannot clamp nr in place.  Skip the event instead.
-+		 * The swap handler already clamps on the writable
-+		 * cross-endian path.
++		 * size == 0 would loop forever (offset never advances);
++		 * size > remaining would read past the section boundary.
 +		 */
-+		if (event->namespaces.nr_namespaces > max_nr) {
-+			pr_warning("WARNING: PERF_RECORD_NAMESPACES: nr_namespaces %" PRIu64 " exceeds payload (max %" PRIu64 "), skipping\n",
-+				   (u64)event->namespaces.nr_namespaces, max_nr);
-+			return 0;
-+		}
- 		return tool->namespaces(tool, event, sample, machine);
-+	}
- 	case PERF_RECORD_CGROUP:
- 		if (!perf_event__check_nul(event->cgroup.path,
- 					   (void *)event + event->header.size,
-@@ -1912,15 +2029,112 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		perf_session__auxtrace_error_inc(session, event);
- 		err = tool->auxtrace_error(tool, session, event);
- 		break;
--	case PERF_RECORD_THREAD_MAP:
-+	case PERF_RECORD_THREAD_MAP: {
-+		u64 max_nr;
-+
-+		if (event->header.size < sizeof(event->thread_map)) {
-+			pr_err("PERF_RECORD_THREAD_MAP: header.size (%u) too small\n",
-+			       event->header.size);
-+			err = -EINVAL;
-+			break;
-+		}
-+
-+		max_nr = (event->header.size - sizeof(event->thread_map)) /
-+			 sizeof(event->thread_map.entries[0]);
-+		if (event->thread_map.nr > max_nr) {
-+			pr_err("PERF_RECORD_THREAD_MAP: nr %" PRIu64 " exceeds max %" PRIu64 "\n",
-+			       (u64)event->thread_map.nr, max_nr);
-+			err = -EINVAL;
-+			break;
-+		}
-+
- 		err = tool->thread_map(tool, session, event);
- 		break;
--	case PERF_RECORD_CPU_MAP:
-+	}
-+	case PERF_RECORD_CPU_MAP: {
-+		struct perf_record_cpu_map_data *data = &event->cpu_map.data;
-+		u32 payload = event->header.size - sizeof(event->header);
-+
-+		/*
-+		 * Native-endian events are mmap'd read-only, so we
-+		 * cannot clamp nr fields in place.  Skip the event
-+		 * if any variant overflows.
-+		 */
-+		switch (data->type) {
-+		case PERF_CPU_MAP__CPUS: {
-+			u16 max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
-+							 cpus_data.cpu)) /
-+				     sizeof(data->cpus_data.cpu[0]);
-+
-+			if (data->cpus_data.nr > max_nr) {
-+				pr_warning("WARNING: PERF_RECORD_CPU_MAP: nr %u exceeds payload (max %u), skipping\n",
-+					   data->cpus_data.nr, max_nr);
-+				err = 0;
-+				goto out;
-+			}
-+			break;
-+		}
-+		case PERF_CPU_MAP__MASK:
-+			if (data->mask32_data.long_size == 4) {
-+				u16 max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
-+								 mask32_data.mask)) /
-+					     sizeof(data->mask32_data.mask[0]);
-+
-+				if (data->mask32_data.nr > max_nr) {
-+					pr_warning("WARNING: PERF_RECORD_CPU_MAP mask32: nr %u exceeds payload (max %u), skipping\n",
-+						   data->mask32_data.nr, max_nr);
-+					err = 0;
-+					goto out;
-+				}
-+			} else if (data->mask64_data.long_size == 8) {
-+				u16 max_nr;
-+
-+				if (payload < offsetof(struct perf_record_cpu_map_data, mask64_data.mask)) {
-+					err = 0;
-+					goto out;
-+				}
-+				max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
-+							     mask64_data.mask)) /
-+					 sizeof(data->mask64_data.mask[0]);
-+				if (data->mask64_data.nr > max_nr) {
-+					pr_warning("WARNING: PERF_RECORD_CPU_MAP mask64: nr %u exceeds payload (max %u), skipping\n",
-+						   data->mask64_data.nr, max_nr);
-+					err = 0;
-+					goto out;
-+				}
-+			} else {
-+				pr_warning("WARNING: PERF_RECORD_CPU_MAP: unsupported long_size %u, skipping\n",
-+					   data->mask32_data.long_size);
-+				err = 0;
-+				goto out;
-+			}
-+			break;
-+		default:
-+			break;
-+		}
-+
- 		err = tool->cpu_map(tool, session, event);
- 		break;
--	case PERF_RECORD_STAT_CONFIG:
-+	}
-+	case PERF_RECORD_STAT_CONFIG: {
-+		/* Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof */
-+		u64 max_nr = (event->header.size - sizeof(event->stat_config)) /
-+			     sizeof(event->stat_config.data[0]);
-+
-+		/*
-+		 * Native-endian events are mmap'd read-only, so we
-+		 * cannot clamp nr in place.  Skip the event instead.
-+		 */
-+		if (event->stat_config.nr > max_nr) {
-+			pr_warning("WARNING: PERF_RECORD_STAT_CONFIG: nr %" PRIu64 " exceeds payload (max %" PRIu64 "), skipping\n",
-+				   (u64)event->stat_config.nr, max_nr);
-+			err = 0;
++		if (bev.header.size == 0 || bev.header.size > limit - offset)
 +			goto out;
-+		}
-+
- 		err = tool->stat_config(tool, session, event);
- 		break;
-+	}
- 	case PERF_RECORD_STAT:
- 		err = tool->stat(tool, session, event);
- 		break;
-@@ -1963,6 +2177,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		err = -EINVAL;
- 		break;
- 	}
-+out:
- 	perf_sample__exit(&sample);
- 	return err;
+ 
+ 		len = bev.header.size - sizeof(bev);
+ 		if (len < 0 || len >= PATH_MAX) {
+@@ -2644,6 +2677,13 @@ static int perf_header__read_build_ids(struct perf_header *header,
+ 
+ 		if (readn(input, filename, len) != len)
+ 			goto out;
++		/*
++		 * The file data may lack a null terminator, which could
++		 * indicate a corrupt or crafted perf.data file.  Ensure
++		 * filename is always a valid C string before passing it
++		 * to functions like machine__findnew_dso().
++		 */
++		filename[len] = '\0';
+ 		/*
+ 		 * The a1645ce1 changeset:
+ 		 *
+@@ -2657,7 +2697,9 @@ static int perf_header__read_build_ids(struct perf_header *header,
+ 		 * '[kernel.kallsyms]' string for the kernel build-id has the
+ 		 * first 4 characters chopped off (where the pid_t sits).
+ 		 */
+-		if (memcmp(filename, "nel.kallsyms]", 13) == 0) {
++		/* Guard short filenames against memcmp reading past the buffer */
++		if (len >= (ssize_t)sizeof("nel.kallsyms]") - 1 &&
++		    memcmp(filename, "nel.kallsyms]", sizeof("nel.kallsyms]") - 1) == 0) {
+ 			if (lseek(input, orig_offset, SEEK_SET) == (off_t)-1)
+ 				return -1;
+ 			return perf_header__read_build_ids_abi_quirk(header, input, offset, size);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 8588e12f110fca70..0fac8f4e0e22310f 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -686,6 +686,25 @@ static int perf_event__hdr_attr_swap(union perf_event *event,
+ 	return 0;
  }
+ 
++static int perf_event__build_id_swap(union perf_event *event,
++				     bool sample_id_all)
++{
++	event->build_id.pid = bswap_32(event->build_id.pid);
++
++	if (sample_id_all) {
++		void *data = &event->build_id.filename;
++		void *end = (void *)event + event->header.size;
++		size_t len = strnlen(data, end - data);
++
++		/* See comment in perf_event__comm_swap() */
++		if (len == (size_t)(end - data))
++			return -1;
++		data += PERF_ALIGN(len + 1, sizeof(u64));
++		swap_sample_id_all(event, data);
++	}
++	return 0;
++}
++
+ static int perf_event__event_update_swap(union perf_event *event,
+ 					 bool sample_id_all __maybe_unused)
+ {
+@@ -1014,7 +1033,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+ 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
+ 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
+-	[PERF_RECORD_HEADER_BUILD_ID]	  = NULL,
++	[PERF_RECORD_HEADER_BUILD_ID]	  = perf_event__build_id_swap,
+ 	[PERF_RECORD_HEADER_FEATURE]	  = perf_event__header_feature_swap,
+ 	[PERF_RECORD_ID_INDEX]		  = perf_event__all64_swap,
+ 	[PERF_RECORD_AUXTRACE_INFO]	  = perf_event__auxtrace_info_swap,
+@@ -2004,6 +2023,12 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		err = tool->tracing_data(tool, session, event);
+ 		break;
+ 	case PERF_RECORD_HEADER_BUILD_ID:
++		if (!perf_event__check_nul(event->build_id.filename,
++					   (void *)event + event->header.size,
++					   "HEADER_BUILD_ID")) {
++			err = 0;
++			break;
++		}
+ 		err = tool->build_id(tool, session, event);
+ 		break;
+ 	case PERF_RECORD_FINISHED_ROUND:
 -- 
 2.54.0
 
