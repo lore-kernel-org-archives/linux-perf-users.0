@@ -1,126 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93A97E792
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 01:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713C11F94F
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 02:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779674353; cv=none; b=paZOxvPWVM2X23bO3JUreWJeA6qstWZrk+tH/+c8XS6d7bnGt3ELzQFOdS71g02Jp2JYgY9GB+p5YrjoAbOPx4pydsvETzAKv31YruVBz8hBvEj2pmm2Mlh6Cc2oCbM2Co5vCNo4M6Zc+zh6kWjM0ZpdO0IaHZYh2rtIDUShhK0=
+	t=1779674664; cv=none; b=N8nyGlmC/VBZWEYetdp7Z1k8/I75a/tHC3PaV5b4EEJGycVvKOvMYh5Ek4G3a36xHepKV852m0G7WileCnVldcQ0fCwKkSgpfYe2doNCmR9Y+KOHWrlcgQ2D1WMb9lpKSMizyoLvAnlR5PZgtSjqciYwn6HmLkOjk69Qs8P//i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779674353; c=relaxed/simple;
-	bh=tfN3L5x5RpRMtcLNbxTYnfAiuFHoxIPK0/dqXLhz4Y8=;
+	s=arc-20240116; t=1779674664; c=relaxed/simple;
+	bh=h8cTCprN1JVU6cykn2LrOrzQOBAx6LbABmL8nI1W4w8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=g5TcgsHotvnmt+ddAzzOgdZUSK/L4AcrdrCxttINfGPU5yanBDA2HbysgllyLJg/RcpaFrgp+zrw6Nosk/5XaU1W8ySRWW6aEt4phq/t4hceCAjdD5Er3l/VfZdQ2kMP+QsaQszEO9oef5cWVU9BBLH26bQIlUyGos21dyCtx50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxU0CQUl; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=qxy85LqYc7rZkuj/PrPjURNjsdgfmLb1zxip3fxwYxB0kyUNj3OkDsdYDE01ROmVpuNsqre2K2j3a2iv/SfhOt+q1Sz+XqpKmvX0q2BcvnYO2+zKF4k1vQbX7cuicZxDc0VjjhWd5RC6IrCzt2GrRyko6YzOHufa35MDbmj3pUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jEBSrmLo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxU0CQUl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 326961F000E9;
-	Mon, 25 May 2026 01:59:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jEBSrmLo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAE1C1F000E9;
+	Mon, 25 May 2026 02:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779674352;
-	bh=c9+pfKPfFN1tomhAFjt8NfSmgT/TpoUTJ7DdJg2+rmE=;
+	s=k20260515; t=1779674663;
+	bh=ktZkgDcxyO9XkHRLwjchuPCIG6b/EaRInR9rETfreSs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jxU0CQUlwp7UmdKFKI280rQ3kCtDmxpMlS6vPvDTQBzSgWNV0utGmdri3LtmPpW6o
-	 knaJg7je5VzZLl9jIuSMGdHjbZXBWxXR8C4fkmsPl3c1Ak5+kdB378VZxCJPmOYMSo
-	 A2dQoSYmu/ei0PXTXYqE3No5jH60WGLiyRGSe9Wz6w1VAyJRqtIrfB5mjmkOs3OdEZ
-	 clXlAddy7dhwVLf40X+3MdSU3mJ68Rt3NKJDYGXOA2VWqnhdKivS4VRIxiFe2Mz6sC
-	 ifjv/4hS8Ft7zJ4uKYn8RV2d61RVbZ/wXWLuHc+fUe2G2lSF7ONrN0yVcWx320cDZY
-	 RqZOw/lO278FA==
+	b=jEBSrmLoYSei+VKCeVwD5f7iKdsiTAEiJOI0CVFo7W0SwS+jofKxzCsLWi5WUOYSL
+	 BRkl3BUvuaSLCjHv4ucOVrLGBlgvqykhwyFS6v+6K8OEMLPyoVf+m5mLzla3BHHkS0
+	 BaMXMfSS/qurRlfBJWu/8yhVBdhz8rTu7KzAAn9DfGKJuqEq+Y5TZLZyHk8zil4C/T
+	 Q2Ysg7RlRNWN09rnLK7QY+Qu77eG6+A8xf8z0POefPy0gbJtzgHoOBGAZ2LoAxpord
+	 Gc+h3L4aN3A+v2gKT4RK7cNivz8KjILxl7cx7fYxJzxW72alagjt/G3vY3CavljFQ2
+	 787/NuG0OhbWg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 17/29] perf tools: Bounds check perf_event_attr fields
- against attr.size before printing
+Subject: Re: [PATCH 29/29] perf test: Add truncated perf.data robustness
+ test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260525010550.1100375-18-acme@kernel.org>
-References: <20260525010550.1100375-18-acme@kernel.org>
+In-Reply-To: <20260525010550.1100375-30-acme@kernel.org>
+References: <20260525010550.1100375-30-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 25 May 2026 01:59:11 +0000
-Message-Id: <20260525015912.326961F000E9@smtp.kernel.org>
+Date: Mon, 25 May 2026 02:04:22 +0000
+Message-Id: <20260525020422.EAE1C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] The newly added bounds-checking logic relies on the untrusted `att=
-r->size` without validating it against the actual container buffer size, le=
-ading to out-of-bounds memory accesses.
+- [Medium] Unchecked `mktemp` failures lead to unintended file deletions an=
+d false positive test results.
+- [Low] The use of `dd bs=3D1` forces an excessive number of 1-byte system =
+calls, causing unnecessary performance degradation.
 --
 
-commit 367d8eeae300d18773dd9a06dc2cf5c691cad24e
+commit 44bbb01cefd526160c464bb6e4d6a81af952c364
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf tools: Bounds check perf_event_attr fields against attr.size before pr=
-inting
+perf test: Add truncated perf.data robustness test
 
-This commit adds size-guarded macros to prevent out-of-bounds reads
-when printing perf_event_attr structures that may be smaller than the
-current struct definition. It also updates the BPF trace path to populate
-the size field if the tracee passes a size of 0.
+This commit adds a shell test to verify that perf report handles truncated
+perf.data files gracefully by exiting with an error code rather than
+crashing. It records a simple workload and truncates the file at various
+offsets, checking the exit code and stderr output for sanitizer violations
+or crashes.
 
-> diff --git a/tools/perf/trace/beauty/perf_event_open.c b/tools/perf/trace=
-/beauty/perf_event_open.c
-> index c1c7445dcff99..6315b46bcdf02 100644
-> --- a/tools/perf/trace/beauty/perf_event_open.c
-> +++ b/tools/perf/trace/beauty/perf_event_open.c
-> @@ -80,7 +81,27 @@ static size_t perf_event_attr___scnprintf(struct perf_=
-event_attr *attr, char *bf
-> =20
->  static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct sy=
-scall_arg *arg, char *bf, size_t size)
->  {
-> -	return perf_event_attr___scnprintf((void *)arg->augmented.args->value, =
-bf, size,
-> +	struct perf_event_attr *attr =3D (void *)arg->augmented.args->value;
-> +	struct perf_event_attr local_attr;
-> +
-> +	/*
-> +	 * augmented_raw_syscalls.bpf.c (shipped with perf) copies
-> +	 * PERF_ATTR_SIZE_VER0 bytes when the tracee passes size=3D0,
-> +	 * but leaves the size field as 0.  The payload size is
-> +	 * guaranteed by perf's own BPF program, not externally
-> +	 * controllable.  Copy to a local so we can fix up size
-> +	 * without writing to the potentially read-only augmented
-> +	 * args buffer.
-> +	 */
-> +	if (!attr->size) {
-
-[Severity: High]
-Is it possible for the augmented BPF payload to be smaller than 8 bytes her=
-e?
-
-If a tracee calls perf_event_open with a small size (e.g. 4 bytes), only
-those 4 bytes might be copied into the argbuf buffer.
-
-Reading attr->size (which is at offset 4) would then read stale data left
-over in argbuf from previously intercepted syscalls.
-
-If that stale data evaluates to a large value, the bounds checks in
-perf_event_attr__fprintf() would trust it, potentially leaking up to
-sizeof(*attr) bytes of stale argbuf data to the trace output.
-
-Should this code verify that the augmented payload size contains at least
-offsetof(struct perf_event_attr, size) + sizeof(attr->size) before attempti=
-ng
-to read attr->size?
-
-> +		memcpy(&local_attr, attr, PERF_ATTR_SIZE_VER0);
-> +		memset((void *)&local_attr + PERF_ATTR_SIZE_VER0, 0,
-> +		       sizeof(local_attr) - PERF_ATTR_SIZE_VER0);
-> +		local_attr.size =3D PERF_ATTR_SIZE_VER0;
-> +		attr =3D &local_attr;
-> +	}
-> +
-> +	return perf_event_attr___scnprintf(attr, bf, size,
->  					   trace__show_zeros(arg->trace));
->  }
+> diff --git a/tools/perf/tests/shell/data_validation.sh b/tools/perf/tests=
+/shell/data_validation.sh
+> new file mode 100755
+> index 0000000000000..36b3ba508e4f2
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/data_validation.sh
+> @@ -0,0 +1,85 @@
+> +#!/bin/bash
 
 [ ... ]
 
+> +cleanup() {
+> +	rm -f "${perfdata}" "${perfdata}.old" "${truncated}" "${stderrfile}"
+> +	trap - EXIT TERM INT
+> +}
+> +trap 'cleanup; exit 1' TERM INT
+> +trap cleanup EXIT
+> +
+> +perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +truncated=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +stderrfile=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+
+[Severity: Medium]
+Are we missing checks for mktemp failures here?
+
+If mktemp fails (for instance, due to a full or unwritable /tmp), the
+perfdata, truncated, and stderrfile variables will remain empty.
+
+When cleanup executes rm -f "${perfdata}.old", an empty variable causes
+it to evaluate to rm -f .old, which destructively removes any file named
+.old in the current working directory.
+
+Additionally, if stderrfile is empty, the redirection 2> "${stderrfile}"
+later in the script causes a bash syntax error, exiting with code 1.
+The script interprets this non-zero exit code as a successful test, masking
+the setup failure and falsely reporting a pass.
+
+[ ... ]
+
+> +for cut_at in 8 64 256 $((file_size * 3 / 4)); do
+> +	if [ "${cut_at}" -ge "${file_size}" ]; then
+> +		continue
+> +	fi
+> +	dd if=3D"${perfdata}" of=3D"${truncated}" bs=3D1 count=3D"${cut_at}" 2>=
+/dev/null
+
+[Severity: Low]
+Does using bs=3D1 force an excessive number of system calls?
+
+In the truncation loop, dd is invoked with bs=3D1 and count=3D${cut_at}, wh=
+ich
+forces dd to perform a 1-byte read() and 1-byte write() system call for
+every byte. For example, truncating to 75% of a 100KB file would require
+75,000 reads and writes.
+
+While the noploop workload generates a small file, this is highly
+inefficient and risks slowing down CI execution on emulators or slower
+nodes. Could we use bs=3D"${cut_at}" count=3D1 or head -c instead, which
+would read the entire chunk in one pass?
+
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260525010550.1100=
-375-1-acme@kernel.org?part=3D17
+375-1-acme@kernel.org?part=3D29
