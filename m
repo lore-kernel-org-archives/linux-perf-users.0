@@ -1,90 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6C15478D
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 01:31:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D48258EE0
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 01:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779672691; cv=none; b=qAdZu6xSelvSKtLB+/Q5YmbJFVSo9+Esma2PnKhD5Z9VA02zhVtZSTlLNFvzDHD3Tx+8TYy8+X4ropvylOu7nboTRrGX7l5IyrSMMml01yQRFCis6yWZdJR17/3RPH8VYK2Sk1zsAyWK7qu0m0tX0pfkeKZ3x1bQ4iN/ABZhJnU=
+	t=1779673208; cv=none; b=Bnvhx99tvAXoD07xWplUvjtnsn5PqPjnNQQ/gCpIR/SyEFin5/epND1kt/43DE/FwR1v7aMx+7tLXhhPAVEgSSinCTpiiDGXL3wy/nuPK+imJi4cir1KdPzcK4i+OEyY5NEvA9eyWAtTFn3bGdRCUYKmsHKwZ0YtEuLMA95OB0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779672691; c=relaxed/simple;
-	bh=BqGDw1bTnweiDKuuJ7YEivQ0zEXZ2mDrhFyD/ODuZ0E=;
+	s=arc-20240116; t=1779673208; c=relaxed/simple;
+	bh=UYvC17n49B+sBXGO58MvyFogJYDdX91kf7Xp53rWwy0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dzd5Ldn9/jdKRn95kHsmvf0iHbeNkqmjC02StxY3fF8boAkiAGs/M6YISdCUAsTmsHXiPtN6s5xrK9sx1bmS55nLpNcva8t8IIJ7KaFwhoq5n1kDQmy/VL4w1LbghkxCp5wf0gfzukayuge/yVpYllNttyCsMMzvlwsFNDDC7NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzvZULQ+; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=oTpcJileRQ+n7aOnkPei32SK7K6RE5xJ8t4mlHsP56mjeLxs3LX0anAUk+DCCJD4SnxhV96URku/RVJzdhxcR0xtW/wG1RyeM+DcnIXOhnrAdFAg/Qfzcw3BC5/vqOtocMsN5QrmD4NuIcEJ8K8KFeu7nOMJVwh+Mt1/v5b2lFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=foISkxlm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzvZULQ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F04641F000E9;
-	Mon, 25 May 2026 01:31:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="foISkxlm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DDF71F000E9;
+	Mon, 25 May 2026 01:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779672690;
-	bh=EgvVWbJL+InjqZyd5sSF0z6Oi6jgc4wjH0xmELpY+Qg=;
+	s=k20260515; t=1779673206;
+	bh=Gt7ZqU+7Q0aREe13bQ6GUvwiB8YAcFavepFHYOCJFO0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AzvZULQ+kXzW6cisQR5HOfuI99j7TsK7acD2yEKWuWjYC4pqyaOrDelRuNV0C/iGs
-	 XUep0gmhkp4/OEWjrp6rr2D/w95+vMg81iaILSzHI8Xiz8Cvn1Ru9QYvztY5TcMq9s
-	 Hes3nQoXv45ivyF7mywgchYYFUQY7JYR8oOiOGsl+p1bO29FX1WMIfxMHra4UvolNC
-	 iggY0MIIhQKlhF8hGH/5jhE4t1MCfXCS4wasAetdiIea+KBz0p5CN31n+Fz7YsD64T
-	 JzG5QIgBoRzl9/m8N854mpK+Gyesdpb/cy09zFJGMoJZ43jXJMUbRobq0fGladAx2z
-	 pET83UKQgc1Bw==
+	b=foISkxlmwOFaVbwchGv6Bmw0XMFL+IuuY+yJYLbftq91N2GCkyXAI2ZH4hxF+/lyd
+	 x1TCYc2PxmocwVEtfOzdtprzjAsWc85xy7xfcIITuDT57yNo27vfIZTsWhBMvyDhHn
+	 Ec4TBhATysNgYlzci8y/IZsbInYvv6XKC6LpQ8Kex7xoyIk+ianY+vjFsKRSbT7Ubt
+	 LQNCAO+n3XHSeo8gf2R0XH8wm0K36+0CqIC+dc+PzjDQzQ/9iZtt860NuDLLsGgsj9
+	 k01QSrP92QCGJh3tk2wN9xpMRCFvs/4XRjbzH9bzDHYtDAAKD+aO+b68zFufKqwUd8
+	 HWTEB8sYBN4ng==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] perf trace: Include copied headers in the beauty
- directory
+Subject: Re: [PATCH 13/29] perf cpumap: Reject RANGE_CPUS with start_cpu >
+ end_cpu
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260525011133.179130-1-namhyung@kernel.org>
-References: <20260525011133.179130-1-namhyung@kernel.org>
+In-Reply-To: <20260525010550.1100375-14-acme@kernel.org>
+References: <20260525010550.1100375-14-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 25 May 2026 01:31:29 +0000
-Message-Id: <20260525013129.F04641F000E9@smtp.kernel.org>
+Date: Mon, 25 May 2026 01:40:05 +0000
+Message-Id: <20260525014006.6DDF71F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] The copied UAPI header `fcntl.h` includes `<linux/openat2.h>`, whic=
-h was not copied into the `tools/include/uapi/linux/` directory, causing bu=
-ild failures on older host systems.
+
+Pre-existing issues:
+- [High] Cross-file TOCTOU vulnerability in cpu_map__from_entries() and cpu=
+_map__from_mask() leads to out-of-bounds read.
+- [High] TOCTOU double-read in cpu_map__from_mask() results in uninitialize=
+d array elements and downstream out-of-bounds accesses.
 --
 
-commit 7bb011deeef80e2496028a3477432fac108a240f
-Author: Namhyung Kim <namhyung@kernel.org>
+commit 9fea5c7d4c9b27133ef761a257813e84f9929191
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf trace: Include copied headers in the beauty directory
+perf cpumap: Reject RANGE_CPUS with start_cpu > end_cpu
 
-This commit updates the trace beauty scripts to use local copies of UAPI=20
-kernel headers directly, rather than relying on system headers or manual=20
-macro definitions.
+This commit fixes a huge allocation attempt in perf_cpu_map__empty_new()
+by returning NULL when start_cpu > end_cpu. It also clamps any_cpu to a
+boolean, rejects unsupported long_size values, and snapshots mmap'd
+fields using READ_ONCE() to prevent TOCTOU re-reads.
 
-> diff --git a/tools/perf/trace/beauty/fcntl.c b/tools/perf/trace/beauty/fc=
-ntl.c
-> index e1b99b8f55eb0..10fd6a2b75c35 100644
-> --- a/tools/perf/trace/beauty/fcntl.c
-> +++ b/tools/perf/trace/beauty/fcntl.c
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
 [ ... ]
-> -#include "trace/beauty/beauty.h"
->  #include <linux/kernel.h>
-> -#include <linux/fcntl.h>
+> @@ -64,24 +66,27 @@ static void perf_record_cpu_map_data__read_one_mask(c=
+onst struct perf_record_cpu
+>  }
+>  static struct perf_cpu_map *cpu_map__from_entries(const struct perf_reco=
+rd_cpu_map_data *data)
+>  {
+> +	/* Snapshot nr =E2=80=94 data is mmap'd and could change between reads =
+*/
+> +	u16 nr =3D READ_ONCE(data->cpus_data.nr);
+
+[Severity: High]
+This is a pre-existing issue, but does this snapshot fully resolve the TOCT=
+OU
+vulnerability if the length isn't validated against the event payload bound=
+s?
+
+While READ_ONCE() captures the value safely, if a FUSE filesystem inflates
+the length between the check in session.c and the read here in cpumap.c, the
+subsequent loop might still read past the end of the event buffer or mmap
+region.
+
+Could this result in an out-of-bounds read and crash the tool?
+
+>  	struct perf_cpu_map *map;
+> =20
+> -	map =3D perf_cpu_map__empty_new(data->cpus_data.nr);
+> +	map =3D perf_cpu_map__empty_new(nr);
+>  	if (!map)
+>  		return NULL;
 [ ... ]
-> +#include "trace/beauty/beauty.h"
-> +#include "trace/beauty/include/uapi/linux/fcntl.h"
+> @@ -106,11 +121,14 @@ static struct perf_cpu_map *cpu_map__from_mask(cons=
+t struct perf_record_cpu_map_
+>  		return NULL;
+> =20
+>  	for (int i =3D 0, j =3D 0; i < mask_nr; i++) {
+> -		int cpus_per_i =3D (i * data->mask32_data.long_size  * BITS_PER_BYTE);
+> +		int cpus_per_i =3D (i * long_size * BITS_PER_BYTE);
+>  		int cpu;
+> =20
+> -		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
+> +		perf_record_cpu_map_data__read_one_mask(data, i, local_copy, long_size=
+);
+>  		for_each_set_bit(cpu, local_copy, 64) {
+> +			/* Guard against more set bits than the first pass counted */
+> +			if (j >=3D weight)
+> +				break;
 
-[Severity: Low]
-Will this cause a build failure on systems with older kernel headers?
+[Severity: High]
+This isn't a bug introduced by this patch, but how does this code handle the
+case where the second pass over the mmap'd mask array yields fewer set bits
+than the first pass?
 
-The newly copied uapi/linux/fcntl.h includes <linux/openat2.h>, but it=20
-appears openat2.h was not copied into the tools directory. On build=20
-environments with kernel headers older than v5.6, the compiler will fall=20
-back to the host system's include paths, fail to find linux/openat2.h,=20
-and halt the build.
+If the memory is altered between passes, the trailing elements of the
+allocated map would retain their -1 initialization from
+perf_cpu_map__empty_new(). Downstream consumers expect valid CPUs.
 
-Should linux/openat2.h also be copied into the tools include directory to
-prevent this?
+Could this cause perf_cpu_map__max() to return -1 and trigger 0-byte
+allocations, or cause negative out-of-bounds reads in downstream arrays like
+cpunode_map?
+
+>  			if (cpu + cpus_per_i < INT16_MAX) {
+>  				RC_CHK_ACCESS(map)->map[j++].cpu =3D cpu + cpus_per_i;
+>  			} else {
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260525011133.1791=
-30-1-namhyung@kernel.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260525010550.1100=
+375-1-acme@kernel.org?part=3D13
