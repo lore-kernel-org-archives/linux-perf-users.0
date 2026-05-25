@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED61B2BE035;
-	Mon, 25 May 2026 01:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A812C11FA;
+	Mon, 25 May 2026 01:07:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779671253; cv=none; b=WU+9+9VFdTillcAJhOlRuUU+WSsmXwbJ3Ro8ZmxHpnDrpShigsaaPDfLqJyn86lZhr7mWbw0KONdo88Ssv96iWRksutmZpq5y7t85fKTUbYkUWbagSUm9oFSOy/Xb3LvPryqaxAH7IzbW5ExnnRmsfxULamwADtBmB4cY9YgWQw=
+	t=1779671256; cv=none; b=ZCWY2ZDFJ9rm01oS1CRbhTBqhmJ6YGkp9OmnA+7s25xb3cm+OfjclpNOZRGwKgQv264lg/QgG04O7wun6eLpXfdE429tg5R1O/gvKxwilPp5F4FpI0DRiUM8xWgU32j4RzU8Pc0iMGbJYypdmxDBaRrvko0iXT33j8oKoa2c9z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779671253; c=relaxed/simple;
-	bh=fOhx0DCWqAZZ0Mipf3gpm1J+VHbmvuXUuiBmXLjjIiQ=;
+	s=arc-20240116; t=1779671256; c=relaxed/simple;
+	bh=/DCnT6jDug1BmvSNjveuZ+WerLEOJejT2NJhiI8D0/o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lYtybeFSOFQFFE5VUKktoSAIEvVBmGpsFmI4PTTin73z/NXjWhjgGEUxCUHfem6KBOL6cQz9s4Ih1dtaLkHG2II+qRKiIfk9uqBt61GuEBZp1rTllt0An+ZXOn9FslhvpDDETDYkzK63ac7Pd10ZrY49WMY+AQZSTgd1jaor16A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L07B9XJk; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=bbbtnCWuY5DFUw9Lf0GR/MbPMTiblEmUib0NbuxfeWEKBhSt/v/SZoPq0xCrqZxDtLRdeijiVRB4+KJAGlefACT4q0IF+FlqIPmoVP1EPz6TS1VOjgGy2mHDFn60WEwEXsnaBuZ15N2L3xSCzQJo2k0SWt6G/cirWoGeFIYMEZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxcgUZ7Z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L07B9XJk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76FCB1F00A3A;
-	Mon, 25 May 2026 01:07:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxcgUZ7Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2111F000E9;
+	Mon, 25 May 2026 01:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779671251;
-	bh=Wmd+8WDl/8IMp/uIJtQHlHyCjBLXvBhcpRhRpozXKas=;
+	s=k20260515; t=1779671255;
+	bh=XbcPDwGAi64vr2qIRi1JYjbatAK0bs/CUotXphvheJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=L07B9XJkmr2KzATuIX3xkwbnBI9Z2SFhJzLarGkGJuD/vQQzd9UrRBU761hEP9E0K
-	 Oj243Qq/xOlFpK6itXLjs9eATBYyFpQ4ya8JGXs5xVl9DQCOLnVPzijzENa4TMebYj
-	 5BFOmXyqpIM1SmttbNbli1mI2fY8AmzGoD1VsHOSNrmKZHajXESjRWXgGkMGpy2Q3k
-	 hnybPtP2rQZ8layIrDkTIOyjqfjjhn4bkiEMLoYPkmv369sYwzu3NOwg0X/+lyMBxe
-	 K2b+uMjWalXPAvu2u8UHnX2jINaCGF6EAf7Icjt4HqwH07gBYZ0M1hX96FsrhVHC0K
-	 7h42cQGjp8BUA==
+	b=oxcgUZ7ZJGcL0gN/bzY783fD6l4tfyYpbg3w+qIKdnBD7v/+kD8ljfBANYW5JTQg5
+	 by7Qq0tPqGhVVob3EIq9kxlrV2v+8OD+rz6uSz6a3duVQPv9chuXWeMosq4Bfdwvhj
+	 Sdqz6kyjIQOIozeF3YGuYipmEQN0RfaB6jruLHb1td3BbVtBQSJTryho4Gq2Fh6cBA
+	 vy7nwCfyZUjbvOIJglUnKuxdGUFmXSB4cw57ho7cHYvpelMJbvOEhnlDrbV1O6UteF
+	 ckWWpCQuynYVXRpAuEjJAkOad+3QLQ3ckACaJSktJqdD7MZcqSARtkhmHX+BTUJG21
+	 Tuvb+QeTgXxVw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 24/29] perf tools: Harden compressed event processing
-Date: Sun, 24 May 2026 22:05:44 -0300
-Message-ID: <20260525010550.1100375-25-acme@kernel.org>
+Subject: [PATCH 25/29] perf session: Check for decompression buffer size overflow
+Date: Sun, 24 May 2026 22:05:45 -0300
+Message-ID: <20260525010550.1100375-26-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260525010550.1100375-1-acme@kernel.org>
 References: <20260525010550.1100375-1-acme@kernel.org>
@@ -52,35 +52,25 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add several hardening checks to the compressed event decompression
-pipeline:
+On 32-bit systems, sizeof(struct decomp) + decomp_len can wrap
+size_t when comp_mmap_len is large.  The preceding patch caps
+comp_mmap_len at ~2 GB, which bounds individual values, but two
+additions can still overflow:
 
-1. Guard against decomp_last_rem underflow: check that
-   decomp_last->head does not exceed decomp_last->size before
-   subtracting.  A u64 underflow here would produce a huge
-   decomp_len, causing an oversized mmap allocation.
+1. decomp_len += decomp_last_rem: on 32-bit, adding a u64 to
+   size_t silently truncates, producing a corrupted decomp_len
+   that would bypass the subsequent overflow check and result
+   in an undersized buffer allocation.
 
-2. Validate comp_mmap_len from the HEADER_COMPRESSED feature
-   section: reject values that are not 4K-aligned or smaller than
-   4096.  The downstream decompression path checks allocation
-   sizes against SIZE_MAX, which handles 32-bit safety.
+2. sizeof(struct decomp) + decomp_len: even with the cap, the
+   final addition could overflow on systems with small size_t.
 
-3. Validate COMPRESSED event header size: reject events where
-   header.size is too small to contain the fixed struct fields,
-   preventing underflow in the payload size calculation.
-
-4. Validate COMPRESSED2 event data_size: check that data_size
-   does not exceed the available payload (header.size minus the
-   fixed struct fields) for the newer compressed format.
-
-5. Reject compressed events when the HEADER_COMPRESSED feature
-   is missing from the file header, which means no decompression
-   context was initialized.
+Add explicit overflow checks before each addition as
+defense-in-depth.
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Cc: Ian Rogers <irogers@google.com>
@@ -89,109 +79,36 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 17 +++++++++++++++++
- tools/perf/util/tool.c   | 38 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 54 insertions(+), 1 deletion(-)
+ tools/perf/util/tool.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 66929c5557b21494..af8781f81b574b88 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3861,6 +3861,23 @@ static int process_compressed(struct feat_fd *ff,
- 	if (do_read_u32(ff, &(env->comp_mmap_len)))
- 		return -1;
- 
-+	/*
-+	 * FIXME: perf.data should record the recording system's page
-+	 * size — it affects mmap buffer alignment, sample addresses,
-+	 * and data_page_size/code_page_size interpretation.  Without
-+	 * it we assume 4K (the smallest Linux page size) as a safe
-+	 * minimum alignment for comp_mmap_len validation.
-+	 *
-+	 * No upper-bound cap: perf_session__process_compressed_event()
-+	 * checks decomp_len + sizeof(struct decomp) against SIZE_MAX
-+	 * before allocating, which handles 32-bit safety.
-+	 */
-+	if (env->comp_mmap_len < 4096 || env->comp_mmap_len % 4096) {
-+		pr_err("Invalid HEADER_COMPRESSED: comp_mmap_len (%u) must be a 4K-aligned value >= 4096\n",
-+		       env->comp_mmap_len);
-+		return -1;
-+	}
-+
- 	return 0;
- }
- 
 diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index 225a77d530ce8ab3..18641919473a859f 100644
+index 18641919473a859f..25c9b378aa163664 100644
 --- a/tools/perf/util/tool.c
 +++ b/tools/perf/util/tool.c
-@@ -24,7 +24,15 @@ static int perf_session__process_compressed_event(const struct perf_tool *tool _
- 	size_t mmap_len, decomp_len = perf_session__env(session)->comp_mmap_len;
- 	struct decomp *decomp, *decomp_last = session->active_decomp->decomp_last;
- 
-+	if (!decomp_len) {
-+		pr_err("Compressed events found but HEADER_COMPRESSED not set\n");
-+		return -1;
-+	}
-+
- 	if (decomp_last) {
-+		/* Prevent u64 underflow in decomp_last_rem */
-+		if (decomp_last->head > decomp_last->size)
-+			return -1;
+@@ -34,9 +34,22 @@ static int perf_session__process_compressed_event(const struct perf_tool *tool _
+ 		if (decomp_last->head > decomp_last->size)
+ 			return -1;
  		decomp_last_rem = decomp_last->size - decomp_last->head;
++		/*
++		 * Check before adding: on 32-bit, size_t += u64
++		 * silently truncates, bypassing the overflow check
++		 * below and producing an undersized buffer.
++		 */
++		if (decomp_last_rem > SIZE_MAX - decomp_len - sizeof(struct decomp)) {
++			pr_err("Decompression buffer size overflow\n");
++			return -1;
++		}
  		decomp_len += decomp_last_rem;
  	}
-@@ -47,14 +55,37 @@ static int perf_session__process_compressed_event(const struct perf_tool *tool _
- 		decomp->size = decomp_last_rem;
- 	}
  
-+	/*
-+	 * Events are read directly from the mmap'd file; fields could
-+	 * theoretically change via a FUSE-backed file, but that applies
-+	 * to the entire event processing pipeline, not just here.
-+	 */
- 	if (event->header.type == PERF_RECORD_COMPRESSED) {
-+		if (event->header.size < sizeof(struct perf_record_compressed))
-+			goto err_decomp;
- 		src = (void *)event + sizeof(struct perf_record_compressed);
- 		src_size = event->pack.header.size - sizeof(struct perf_record_compressed);
- 	} else if (event->header.type == PERF_RECORD_COMPRESSED2) {
-+		/*
-+		 * prefetch_event() only guarantees that the 8-byte
-+		 * event header fits; validate that header.size covers
-+		 * the data_size field before accessing it, otherwise a
-+		 * crafted event reads data_size from adjacent memory.
-+		 */
-+		if (event->header.size < sizeof(struct perf_record_compressed2))
-+			goto err_decomp;
- 		src = (void *)event + sizeof(struct perf_record_compressed2);
- 		src_size = event->pack2.data_size;
-+		/*
-+		 * data_size is independent of header.size (which
-+		 * includes padding); verify it doesn't exceed the
-+		 * actual payload to prevent out-of-bounds reads in
-+		 * zstd_decompress_stream().
-+		 */
-+		if (src_size > event->header.size - sizeof(struct perf_record_compressed2))
-+			goto err_decomp;
- 	} else {
--		return -1;
-+		goto err_decomp;
- 	}
- 
- 	decomp_size = zstd_decompress_stream(session->active_decomp->zstd_decomp, src, src_size,
-@@ -77,6 +108,11 @@ static int perf_session__process_compressed_event(const struct perf_tool *tool _
- 	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
- 
- 	return 0;
-+
-+err_decomp:
-+	munmap(decomp, mmap_len);
-+	pr_err("Couldn't decompress data\n");
-+	return -1;
- }
- #endif
- 
++	if (decomp_len > SIZE_MAX - sizeof(struct decomp)) {
++		pr_err("Decompression buffer size overflow\n");
++		return -1;
++	}
+ 	mmap_len = sizeof(struct decomp) + decomp_len;
+ 	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
+ 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
 -- 
 2.54.0
 
