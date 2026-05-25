@@ -1,101 +1,96 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9735639A05E;
-	Mon, 25 May 2026 08:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5AF39A80E
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 09:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779696254; cv=none; b=M9ecfzriVRwS9SNQJdB8NFZQDKvfr3Kf0BiF0tzbaA7QN3+oqkMSgmW+3QjNooO4dT/GEZakLASrdCNUJslhGjLk7AJIDo9n37jR4XfYqUC8gzJW8PRcYsm790hwB+M4WrgZOCxHQismEXtf+Pe8tAfRIjG53fFr8OgMUljcQiI=
+	t=1779701102; cv=none; b=Wu1Tdx+5VU/9UF22wdAcMwNba4Td4Jx/CCVayP12+muTXt9sy5JCZ5PCL3qCTrIZ82bIP7zAVKSV1R5ELqlgalMuwG5RtwOvRhO6LZgKe4cQ7WsqyJQSvA6T+FV81UnOAdKIjHRjNlzWLNWGYzOHesxqnQKN8b42nGLahjZuuow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779696254; c=relaxed/simple;
-	bh=73vrApxNrpCy4XDyoCbJ2fXnIkf1Vpko4vO94TZdns8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cN1VoO4DQwfUfX/j5vZksq7ZjpfjonYFabSeppCKF92dt54ypmEvY37essWO1xFAd6UPdwoDYG/cfvofO86LVn/xFRQVYY9RpVCudkk80A/UbVdlIwtXWKTJaVeEusSfFrsjE7o9CpZgw4+k4nCylYAYP9LO+i04LYQ3qTSjJXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FW65Xy4+; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1779701102; c=relaxed/simple;
+	bh=V02sakPukpSZGzMyKfhyDXi17gYfpEoQjUbGir9AWFI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KGDtz1YiAOWHZ1Rdg/fiBSHbqvUFUsHu2YSdksY5cFbrUf2PNHgWdlYhuUMDmRcS29DRJuLBDKr5SuL3H6RI9AtCWJsWluX5bHsVIYXIhtSH+QQkoopFmRabCi78UNkQobI/jZ3RcTLmoWvTj6eQEi0LqIaTIaIfjhDzEUCnVII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ahvSs0Co; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FW65Xy4+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GfaKXox8b6tZQOz6rQuRsRCazGocmiCFA5bwNHls9ME=; b=FW65Xy4+/qqB/Y4d5VUshtof0n
-	B1qpRzV3dT6ABeoVvQLisbxpMvMaLmHHgGUuotvM13Oq8y+yYLeQUSVwda+11TXZK3v0fokYftvXJ
-	cyWpf4mLpjcN7aUkfNHq+sYYEb/nm/olSXmzzlszTr6RS+YrGR5SbSFBiuylLbHU2l7PiwKaxINv9
-	zqxKyu3Wj4flIUFqFwr3fZR9CFduLqMY65OMTt+ohC5o+j4imP0wqxfk44LoJSsz7r+/EsHjXAsCV
-	JIjPnzXn4055g+A/20FRnLo3CteESpuvFsQL6/iYeYE3DODc1ZSpv4PLAZGgxPgQc3C1wwAp+US+/
-	R7/FwfoA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wRQHt-0000000GaTu-1YS9;
-	Mon, 25 May 2026 08:03:49 +0000
-Date: Mon, 25 May 2026 01:03:49 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: demiobenour@gmail.com
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ahvSs0Co"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1779701098;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oZRzOesaTWAp0x7FPwLyvcL6uegKl8tfVJmsD5Lkv38=;
+	b=ahvSs0CoubSeIX9hoXlJHmCN6Qg3Hyg1dQ3V85dqTUlC07r25mJFKkrhAQgbCDQHlDFi2B
+	cJ1SJWNn6pb9DkE+y1hgJLutuhEFPYi+8kEttuwHeMeSDYnzx0y2NSbTbfCE06zT7RBZbC
+	gDdFCdSSUlKsOeXPn1iqKKbw3bpXXZQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
-	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH 1/3] net: Remove support for AIO on sockets
-Message-ID: <ahQCZQNoyO8GQt3H@infradead.org>
-References: <20260523-af-alg-harden-v1-0-c76755c3a5c5@gmail.com>
- <20260523-af-alg-harden-v1-1-c76755c3a5c5@gmail.com>
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND v2] perf/x86/intel/uncore: Use sysfs_emit() in uncore_event_show()
+Date: Mon, 25 May 2026 11:24:41 +0200
+Message-ID: <20260525092440.818322-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260523-af-alg-harden-v1-1-c76755c3a5c5@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1315; i=thorsten.blum@linux.dev; h=from:subject; bh=V02sakPukpSZGzMyKfhyDXi17gYfpEoQjUbGir9AWFI=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFkiohH+W8p+MWvNULsbo3ZA9937ZSGrn2+UN8rvyvPW/ 5NhHr63o5SFQYyLQVZMkeXBrB8zfEtrKjeZROyEmcPKBDKEgYtTACYiO42R4c85K8uejovJcxVK FJm+Xb3Y+k/h0/VZH2NC791K+u56ZAEjwzGV1au6JIOvpe7NX+Lje1/4iJLQhaLlV14dNH78sPj lfTYA
+X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, May 23, 2026 at 03:43:02PM -0400, Demi Marie Obenour via B4 Relay wrote:
-> From: Demi Marie Obenour <demiobenour@gmail.com>
-> 
-> The only user of msg->msg_iocb was AF_ALG, but that's deprecated.
-> It can be removed entirely at the cost of only supporting synchronous
-> operations.  This doesn't break userspace, which will silently block
-> (for a bounded amount of time) in io_submit instead of operating
-> asynchronously.
-> 
-> This also makes struct msghdr smaller, helping every other caller of
-> sendmsg().
+Replace sprintf() with sysfs_emit() in uncore_event_show(). sysfs_emit()
+is preferred for formatting sysfs output because it provides safer
+bounds checking.
 
-So we just had a discussion at LLC about how networking needs to support
-AIO better for zero copy.
+Add a terminating newline as suggested by checkpatch.
 
-The current TCP zerocopy implementation provides completion notification
-through the socket error code, which is freaking weird and doesn't
-integrate well with either io_uring or in-kernel callers.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+Changes in v2:
+- Add a terminating newline as suggested by checkpatch
+- Link to v1: https://lore.kernel.org/lkml/20260206194254.36105-2-thorsten.blum@linux.dev/
+---
+ arch/x86/events/intel/uncore.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-So we really want to pass the iocb down into networking and have it
-call ki_complete on completion, with something higher up in the stack
-adding that to the error queue for the legacy user interface.
-
-Now I'm not sure if we wouldn't be better off passing that iocb
-explicitly instead of in a weird hidden way, but this seemed like
-a good place to bring this up.
-
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index e9cc1ba921c5..befc03152b90 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/module.h>
++#include <linux/sysfs.h>
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+@@ -134,7 +135,7 @@ ssize_t uncore_event_show(struct device *dev,
+ {
+ 	struct uncore_event_desc *event =
+ 		container_of(attr, struct uncore_event_desc, attr);
+-	return sprintf(buf, "%s", event->config);
++	return sysfs_emit(buf, "%s\n", event->config);
+ }
+ 
+ struct intel_uncore_box *uncore_pmu_to_box(struct intel_uncore_pmu *pmu, int cpu)
