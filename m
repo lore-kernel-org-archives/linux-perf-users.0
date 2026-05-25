@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A5826A08A;
-	Mon, 25 May 2026 01:07:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D253D2F069D;
+	Mon, 25 May 2026 01:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779671267; cv=none; b=Sy3VXrqVfklEg58o9vR8mgaduko8hafgns38xHQ82Pa8AZ0tNGI7QND8zGOvgh2PtQA/tX+GkaZufsc4LhZjmIwPJL5mQowHGtaUwVkCFqgqM0cHg6HwruDLF/kARWG7YHzGzWVg6M0xtl0BS9HTKD26ayTzBpM7EyEWwXBJi1Q=
+	t=1779671271; cv=none; b=CF+XQdbGn/R+jv4eStdNBdq8eXGbkugw+cL5HcsgyluBbQ7eneRoBWUDiaXvCNvr8SCT6jHgD8LnQD6gK65H+Y3pQ7hBZUBL3N7KSbetkskRk9sMVTZbbPGq0L3UZNRZHgH+dyRaryrobWEm0eoXhg8RwxCg2r0xHCEbva09YO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779671267; c=relaxed/simple;
-	bh=KHaK6TV1L+WqQwQ3G7IF1H5tzBLYca3Yc478KX1vzc8=;
+	s=arc-20240116; t=1779671271; c=relaxed/simple;
+	bh=ZtrW+WoSyUYMkRDcoNRU7CDxqnijO3ULdR81H38eEDo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dIQHFPZh0gUWA3YwntLeyLEa+ueJGZswpqTEJEjHT+Fn1pXRiAmC8iJ7hgNpztIgUimWIDJmvynlKV9/Z+n+ezuBimxv24XWO1y/F9Y937Xwq+uqhGnH4IA8txdwGpHgmAReZMrsUJjX5v7X2T8/bmeLkg8z6Xf7YYb6e0mWbTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBaMtl+k; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=XwdzPXOndw3nktlLUjWHZxsVgE5RzE7sqBlBLm6sgHytj4dLrx+QrKRFdEKuNgqMRaEF7D9Q7QzET+Yrm4o+l1Cdz1BqoFH5bGDE112mEdfxPfcp0+Z8oB25aC08n/et6lPV8GEd8eGEjFJq9TxorKu+9P8WUkqmMVd7k4FubYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnDpAhAb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBaMtl+k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31DC91F00A3A;
-	Mon, 25 May 2026 01:07:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnDpAhAb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C946E1F000E9;
+	Mon, 25 May 2026 01:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779671266;
-	bh=MAhgt6MF/Lvwd+vbi4l3VmdHB5RN7EJYTE2MMA7COA4=;
+	s=k20260515; t=1779671269;
+	bh=ckdEd7h4Bs1FgfAoEx6vjUROO/k+cf4Jdpc6WLh3LU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HBaMtl+kkh0HNbNR18Vz93vQThAcf2REZINk32GTpCqkVDt7FJF6sJAyU1kqw2vMN
-	 jnHSv4oydjhsjnzxsdzQwjHZx/fU4jep1QCC1azBVRjGW5x2RyUZDn7ALb2YqXoykp
-	 QeZBbJaiNdqw3wcoXJ2v12MC5rg1GpWMhy+yiGbOSR5KbpUxCdNrm34ZDDeevHWOtN
-	 tiGYzuEIDfyLUPRy9EDJsPDC1nTxfALaE7upOHV8wfbdN6WaMhJKyUhiuqR89XNgre
-	 +vrzAz5p69YYxRCxBz3pRR/MGum2WBPA7sxRjaAOLV75nRTra3AjM/AWhpxE11DACU
-	 AaEUSvUSplbXA==
+	b=OnDpAhAbWYeRgstOaD92eeUL64hgrcCJvskbs80Uct3wwUUukKwYPfvMFD5PfIon0
+	 U3Ark/BOlpExL+g76fVOd0i5eswLowRa6ldbgSyAUQnkMsY7eVaexTkjd4ryVD/FKt
+	 h3wwNly5sLexzihADtbqYIAniD7u1Qjw3SztSCGJSB3e74j2aZIFap+t+r/QwX9tYH
+	 VGgoIJw5twCo7vc0IZ8FNodYnURz5TmUSobW6OKNfhacxRfjXa4+si7jSVTqJIjwPM
+	 ea2g7iv/xUdnEazIOKirkokHDhkctaLx8S1skJS52yArskKoj4qGcBfvo17ttOZAuQ
+	 zHMrV46+DsnwQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,11 +38,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 28/29] perf session: Snapshot event->header.size in process_user_event()
-Date: Sun, 24 May 2026 22:05:48 -0300
-Message-ID: <20260525010550.1100375-29-acme@kernel.org>
+Subject: [PATCH 29/29] perf test: Add truncated perf.data robustness test
+Date: Sun, 24 May 2026 22:05:49 -0300
+Message-ID: <20260525010550.1100375-30-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260525010550.1100375-1-acme@kernel.org>
 References: <20260525010550.1100375-1-acme@kernel.org>
@@ -57,129 +56,154 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On native-endian files, events are read from MAP_SHARED memory.
-Multiple reads of event->header.size can return different values
-if the file is concurrently modified, allowing an attacker to
-bypass bounds checks performed on an earlier read.
+Add a shell test that verifies perf report handles truncated perf.data
+files gracefully — exiting with an error code rather than crashing with
+SIGSEGV or SIGABRT.
 
-Snapshot header.size into a local variable at function entry using
-READ_ONCE() to prevent compiler rematerialization, and use it for
-all size-dependent arithmetic within the function.  This ensures
-every bounds calculation uses the same value that was validated
-by the reader.
+The test records a simple workload, then truncates the resulting
+perf.data at four offsets that exercise different parsing stages:
 
-Reported-by: sashiko-bot@kernel.org # Running on a local machine
+  8 bytes   — file header magic only
+  64 bytes  — partial file header (attr section incomplete)
+  256 bytes — into the first events (partial event headers)
+  75% size  — mid-stream truncation (partial event data)
+
+For each truncation, perf report is run and the exit code is checked:
+
+- Exit code 0 (success) fails the test — a truncated file should
+  never parse without error.
+
+- Crash signals are detected portably via kill -l, which maps the
+  signal number to a name on the running system.  This handles
+  architectures where signal numbers differ (e.g. SIGBUS is 7 on
+  x86/ARM but 10 on MIPS/SPARC).  Core-dump and fatal signals
+  (KILL, ILL, ABRT, BUS, FPE, SEGV, TRAP, SYS) fail the test.
+
+- Higher exit codes (200+) are perf's own negative-errno returns
+  (e.g. -EINVAL = 234) and are expected.
+
+This exercises the bounds checking, minimum-size validation, and error
+propagation added by the preceding patches in this series.
+
+Testing it:
+
+  root@number:~# perf test truncat
+   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).: Ok
+  root@number:~# perf test -vv truncat
+   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).:
+  --- start ---
+  test child forked, pid 62890
+  ---- end(0) ----
+   84: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).: Ok
+  root@number:~#
+
+Changes in v2:
+- Add SIGKILL to the list of fatal signals so OOM kills from
+  resource exhaustion bugs are detected (Reported-by: sashiko-bot@kernel.org)
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+[ Fixed the SPDX on the line where 'perf test' expects the test description, reviewed by Ian Rogers ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ tools/perf/tests/shell/data_validation.sh | 85 +++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100755 tools/perf/tests/shell/data_validation.sh
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 6de665d3c9054179..e2e821b77766dbfc 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2230,6 +2230,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- {
- 	struct ordered_events *oe = &session->ordered_events;
- 	const struct perf_tool *tool = session->tool;
-+	const u32 event_size = READ_ONCE(event->header.size);
- 	struct perf_sample sample;
- 	int fd = perf_data__fd(session->data);
- 	s64 err;
-@@ -2271,7 +2272,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		break;
- 	case PERF_RECORD_HEADER_BUILD_ID:
- 		if (!perf_event__check_nul(event->build_id.filename,
--					   (void *)event + event->header.size,
-+					   (void *)event + event_size,
- 					   "HEADER_BUILD_ID")) {
- 			err = 0;
- 			break;
-@@ -2294,7 +2295,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		 * place already.
- 		 */
- 		if (!perf_data__is_pipe(session->data))
--			lseek(fd, file_offset + event->header.size, SEEK_SET);
-+			lseek(fd, file_offset + event_size, SEEK_SET);
- 		err = tool->auxtrace(tool, session, event);
- 		break;
- 	case PERF_RECORD_AUXTRACE_ERROR:
-@@ -2304,14 +2305,14 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 	case PERF_RECORD_THREAD_MAP: {
- 		u64 max_nr;
- 
--		if (event->header.size < sizeof(event->thread_map)) {
-+		if (event_size < sizeof(event->thread_map)) {
- 			pr_err("PERF_RECORD_THREAD_MAP: header.size (%u) too small\n",
--			       event->header.size);
-+			       event_size);
- 			err = -EINVAL;
- 			break;
- 		}
- 
--		max_nr = (event->header.size - sizeof(event->thread_map)) /
-+		max_nr = (event_size - sizeof(event->thread_map)) /
- 			 sizeof(event->thread_map.entries[0]);
- 		if (event->thread_map.nr > max_nr) {
- 			pr_err("PERF_RECORD_THREAD_MAP: nr %" PRIu64 " exceeds max %" PRIu64 "\n",
-@@ -2325,7 +2326,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 	}
- 	case PERF_RECORD_CPU_MAP: {
- 		struct perf_record_cpu_map_data *data = &event->cpu_map.data;
--		u32 payload = event->header.size - sizeof(event->header);
-+		u32 payload = event_size - sizeof(event->header);
- 
- 		/*
- 		 * Native-endian events are mmap'd read-only, so we
-@@ -2389,8 +2390,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		break;
- 	}
- 	case PERF_RECORD_STAT_CONFIG: {
--		/* Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof */
--		u64 max_nr = (event->header.size - sizeof(event->stat_config)) /
-+		/* Cannot underflow: perf_event__min_size[] guarantees event_size >= sizeof */
-+		u64 max_nr = (event_size - sizeof(event->stat_config)) /
- 			     sizeof(event->stat_config.data[0]);
- 
- 		/*
-@@ -2421,7 +2422,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		 */
- 		memset(&session->time_conv, 0, sizeof(session->time_conv));
- 		memcpy(&session->time_conv, &event->time_conv,
--		       min((size_t)event->header.size, sizeof(session->time_conv)));
-+		       min((size_t)event_size, sizeof(session->time_conv)));
- 		err = tool->time_conv(tool, session, event);
- 		break;
- 	case PERF_RECORD_HEADER_FEATURE:
-@@ -2438,11 +2439,10 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		break;
- 	case PERF_RECORD_BPF_METADATA: {
- 		u64 nr_entries, max_entries;
--		u32 hdr_size = READ_ONCE(event->header.size);
- 
--		if (hdr_size < sizeof(event->bpf_metadata)) {
-+		if (event_size < sizeof(event->bpf_metadata)) {
- 			pr_warning("WARNING: PERF_RECORD_BPF_METADATA: header.size (%u) too small, skipping\n",
--				   hdr_size);
-+				   event_size);
- 			err = 0;
- 			break;
- 		}
-@@ -2458,9 +2458,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 			break;
- 		}
- 
--		/* Snapshot — event is mmap'd and could change between reads */
- 		nr_entries = READ_ONCE(event->bpf_metadata.nr_entries);
--		max_entries = (hdr_size - sizeof(event->bpf_metadata)) /
-+		max_entries = (event_size - sizeof(event->bpf_metadata)) /
- 			      sizeof(event->bpf_metadata.entries[0]);
- 		if (nr_entries > max_entries) {
- 			pr_warning("WARNING: PERF_RECORD_BPF_METADATA: nr_entries %" PRIu64 " exceeds max %" PRIu64 ", skipping\n",
+diff --git a/tools/perf/tests/shell/data_validation.sh b/tools/perf/tests/shell/data_validation.sh
+new file mode 100755
+index 0000000000000000..36b3ba508e4f2753
+--- /dev/null
++++ b/tools/perf/tests/shell/data_validation.sh
+@@ -0,0 +1,85 @@
++#!/bin/bash
++# Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).
++# SPDX-License-Identifier: GPL-2.0
++#
++# Exercises the bounds checking and minimum-size validation added
++# by the perf-data-validation hardening series.
++
++err=0
++
++cleanup() {
++	rm -f "${perfdata}" "${perfdata}.old" "${truncated}" "${stderrfile}"
++	trap - EXIT TERM INT
++}
++trap 'cleanup; exit 1' TERM INT
++trap cleanup EXIT
++
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++truncated=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++stderrfile=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++
++# Record a simple workload
++if ! perf record -o "${perfdata}" -- perf test -w noploop 2>/dev/null; then
++	echo "Skip: perf record failed"
++	cleanup
++	exit 2
++fi
++
++file_size=$(wc -c < "${perfdata}")
++if [ "${file_size}" -lt 512 ]; then
++	echo "Skip: perf.data too small (${file_size} bytes)"
++	cleanup
++	exit 2
++fi
++
++# Test truncation at various offsets that exercise different
++# parsing stages:
++#   8    — file header magic only, no attrs or data
++#   64   — partial file header (attr section incomplete)
++#   256  — into the first events (partial event headers)
++#   75%  — mid-stream truncation (partial event data)
++for cut_at in 8 64 256 $((file_size * 3 / 4)); do
++	if [ "${cut_at}" -ge "${file_size}" ]; then
++		continue
++	fi
++	dd if="${perfdata}" of="${truncated}" bs=1 count="${cut_at}" 2>/dev/null
++
++	# perf report should exit with an error, not crash.
++	# Capture stderr to detect sanitizer violations.
++	perf report -i "${truncated}" --stdio > /dev/null 2> "${stderrfile}"
++	exit_code=$?
++
++	# A truncated file should never parse successfully
++	if [ ${exit_code} -eq 0 ]; then
++		echo "FAIL: perf report exited 0 (success) on ${cut_at}-byte truncated file — expected an error"
++		err=1
++		continue
++	fi
++
++	# Detect sanitizer violations — ASAN/MSAN/TSAN/UBSAN exit
++	# with code 1 by default, which would otherwise look like a
++	# clean error exit.  Check stderr for their markers.
++	if grep -qE "^(==[0-9]+==ERROR:|SUMMARY: [A-Za-z]*Sanitizer)" "${stderrfile}" 2>/dev/null; then
++		sanitizer=$(grep -oE "(Address|Memory|Thread|UndefinedBehavior)Sanitizer" "${stderrfile}" | head -1)
++		echo "FAIL: perf report triggered ${sanitizer:-sanitizer} on ${cut_at}-byte truncated file"
++		err=1
++		continue
++	fi
++
++	# Detect crash signals portably — signal numbers differ
++	# across architectures (e.g. SIGBUS is 7 on x86/ARM but
++	# 10 on MIPS/SPARC).  Use kill -l to map the number to a
++	# name on the running system.
++	if [ ${exit_code} -gt 128 ] && [ ${exit_code} -lt 200 ]; then
++		sig_name=$(kill -l $((exit_code - 128)) 2>/dev/null)
++		case ${sig_name} in
++		KILL|ILL|ABRT|BUS|FPE|SEGV|TRAP|SYS)
++			echo "FAIL: perf report crashed (SIG${sig_name}) on ${cut_at}-byte truncated file"
++			err=1
++			;;
++		esac
++	fi
++done
++
++cleanup
++exit ${err}
 -- 
 2.54.0
 
