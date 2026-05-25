@@ -1,96 +1,97 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5AF39A80E
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 09:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1102931F999;
+	Mon, 25 May 2026 11:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779701102; cv=none; b=Wu1Tdx+5VU/9UF22wdAcMwNba4Td4Jx/CCVayP12+muTXt9sy5JCZ5PCL3qCTrIZ82bIP7zAVKSV1R5ELqlgalMuwG5RtwOvRhO6LZgKe4cQ7WsqyJQSvA6T+FV81UnOAdKIjHRjNlzWLNWGYzOHesxqnQKN8b42nGLahjZuuow=
+	t=1779709583; cv=none; b=srCPm+qv6oHdGWai4I9kzuJyRmXsCy9IcYY6GjLOMRWBgTsaHDrkYEsO2kS2mu7jgtyJd7F7aE24UpmMo8QxC3f5pnVCqFSUah6vEOcaPAIVTjn5joHr+ArLReSlKH9SumXfxk+sHuekUhK8Pc2EHFnjApmBK5nWOI8M+zyqp98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779701102; c=relaxed/simple;
-	bh=V02sakPukpSZGzMyKfhyDXi17gYfpEoQjUbGir9AWFI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KGDtz1YiAOWHZ1Rdg/fiBSHbqvUFUsHu2YSdksY5cFbrUf2PNHgWdlYhuUMDmRcS29DRJuLBDKr5SuL3H6RI9AtCWJsWluX5bHsVIYXIhtSH+QQkoopFmRabCi78UNkQobI/jZ3RcTLmoWvTj6eQEi0LqIaTIaIfjhDzEUCnVII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ahvSs0Co; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1779709583; c=relaxed/simple;
+	bh=KCxFtCOIeO6j/U2jIdYhsf33DsAK8s6KeZQC7GzokQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yp4e3+rlw9GB0noj7rg56d83UmAZh9BmIJvl22liIRMAk1ZypJcCtN5jgRrdsQ52Ovx85ki2+EarblTEcVSO+xslElnvOmfH+cXZs4QuvBRu2FSAwNeF+Ax6hv3tAwKDYkdv84litG1EHW7AOdTuEjm6wYFU4P/ZEa5SMn7NKzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWPDiik6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ahvSs0Co"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779701098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oZRzOesaTWAp0x7FPwLyvcL6uegKl8tfVJmsD5Lkv38=;
-	b=ahvSs0CoubSeIX9hoXlJHmCN6Qg3Hyg1dQ3V85dqTUlC07r25mJFKkrhAQgbCDQHlDFi2B
-	cJ1SJWNn6pb9DkE+y1hgJLutuhEFPYi+8kEttuwHeMeSDYnzx0y2NSbTbfCE06zT7RBZbC
-	gDdFCdSSUlKsOeXPn1iqKKbw3bpXXZQ=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWPDiik6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C8C1F000E9;
+	Mon, 25 May 2026 11:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779709581;
+	bh=mYd4gJtdtUVKRaSvEZKRfv4z5xfoRFCDZrzzDzpR470=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=iWPDiik65jZKIp2K8lZY8yBEgzM5fYk2kegCd2PWl7QdFN0q2sfAcGGl8RBhW78yz
+	 y4sX/vcuaPys7ze41reqhesh1/03WgOSjI/+dLHCZwMI3KCKpKTrU48vYbTawcrYjK
+	 uHpyuoe3q1q2LyAj+keZlSqOFlE+m/BgUahevKLoNvPCnpv1XLfEVuu3N/1QwhoFy3
+	 7SeUlKJD7icqqP0kWjS84CS6hFrBWcK4ykoDon0AHUMQWElbFa8gNIX5m6hBZpUz/C
+	 RnKb0v+lvKFQbtEF2YR72KthgjPsgixEkELWznftJRVbNnkXWVFajU/vLA09r3RTqH
+	 YO6K+EYRlQfDw==
+Date: Mon, 25 May 2026 08:46:18 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND v2] perf/x86/intel/uncore: Use sysfs_emit() in uncore_event_show()
-Date: Mon, 25 May 2026 11:24:41 +0200
-Message-ID: <20260525092440.818322-2-thorsten.blum@linux.dev>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf trace: Include copied headers in the beauty
+ directory
+Message-ID: <ahQ2iko9pk1VDkdx@x1>
+References: <20260525011133.179130-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1315; i=thorsten.blum@linux.dev; h=from:subject; bh=V02sakPukpSZGzMyKfhyDXi17gYfpEoQjUbGir9AWFI=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFkiohH+W8p+MWvNULsbo3ZA9937ZSGrn2+UN8rvyvPW/ 5NhHr63o5SFQYyLQVZMkeXBrB8zfEtrKjeZROyEmcPKBDKEgYtTACYiO42R4c85K8uejovJcxVK FJm+Xb3Y+k/h0/VZH2NC791K+u56ZAEjwzGV1au6JIOvpe7NX+Lje1/4iJLQhaLlV14dNH78sPj lfTYA
-X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260525011133.179130-1-namhyung@kernel.org>
 
-Replace sprintf() with sysfs_emit() in uncore_event_show(). sysfs_emit()
-is preferred for formatting sysfs output because it provides safer
-bounds checking.
+On Sun, May 24, 2026 at 06:11:31PM -0700, Namhyung Kim wrote:
+> We keep uptodate copied of the kernel headers, let's use it directly and
+> don't worry about missing definitions.
 
-Add a terminating newline as suggested by checkpatch.
+Using it directly with the latest header, when reasonable, is indeed
+better than having those conditional defines.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Changes in v2:
-- Add a terminating newline as suggested by checkpatch
-- Link to v1: https://lore.kernel.org/lkml/20260206194254.36105-2-thorsten.blum@linux.dev/
----
- arch/x86/events/intel/uncore.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Sometimes it is warranted as having the latest headers may involve
+dragging many files (header dependencies) into the tools/include/ copy
+of kernel headers we try to keep in sync.
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index e9cc1ba921c5..befc03152b90 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- #include <linux/module.h>
-+#include <linux/sysfs.h>
- 
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
-@@ -134,7 +135,7 @@ ssize_t uncore_event_show(struct device *dev,
- {
- 	struct uncore_event_desc *event =
- 		container_of(attr, struct uncore_event_desc, attr);
--	return sprintf(buf, "%s", event->config);
-+	return sysfs_emit(buf, "%s\n", event->config);
- }
- 
- struct intel_uncore_box *uncore_pmu_to_box(struct intel_uncore_pmu *pmu, int cpu)
+> +++ b/tools/perf/trace/beauty/fcntl.c
+> @@ -5,25 +5,10 @@
+>   *  Copyright (C) 2017, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+>   */
+
+<SNIP>
+
+> -#ifndef F_GET_FILE_RW_HINT
+> -#define F_GET_FILE_RW_HINT	(F_LINUX_SPECIFIC_BASE + 13)
+> -#endif
+> +#include "trace/beauty/beauty.h"
+> +#include "trace/beauty/include/uapi/linux/fcntl.h"
+
+The intention isn't documented anywhere, but files in
+trace/beauty/include/uapi were not intended to be used in compiling,
+just scraping, i.e. it didn't need to be compileable, no need to have
+things it includes in turn nor have defines in Makefiles, it would just
+be used by the scripts to extract info from it, info that otherwise
+isn't available as enums (which they should, but that is a digression)
+or as BTF (which would be even better).
+
+Things for compiling would remain in tools/include/, as other tools may
+need them and then the maintainainace of these headers would be shared
+to some degree.
+
+Otherwise each and every tools/ living code that needed copies of header
+files would end up with its own copy, which seems excessive.
+
+What do you think?
+
+- Arnaldo
+  
+> -#ifndef F_SET_FILE_RW_HINT
+> -#define F_SET_FILE_RW_HINT	(F_LINUX_SPECIFIC_BASE + 14)
+> -#endif
