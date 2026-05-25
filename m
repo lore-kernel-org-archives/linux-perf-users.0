@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23D32820C6;
-	Mon, 25 May 2026 01:07:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276C228643C;
+	Mon, 25 May 2026 01:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779671260; cv=none; b=A5fRtIzQR88Giyl6iqtT7zS/DCzPUvvrLgr4nxNw7sQd3ayHIN8ek8whMK49MLTN8qC8AzGiLhisTaBVjPwrfiOD4g66oE1zZ7p/E09Ho7DlXh4YJLU9uR4C/wsd7ssHBwWPF63UHOxHhIRPjnphMwYQmcSCzvy8mXf/bmDrXNg=
+	t=1779671264; cv=none; b=L0lA1Z6DajFOHqRLO9XBW3aOcCsK5v1hGzH03vMXcB57+5tEVM5Hx2+KDiYU/gXTTjyp9SKy7Y4s96nuZEo+HEMdy/526r1ciyt/eTFMAuDUhEn3GgCnGORWVQVaZvNWrPNFyKVi+tBlMUcjKaDpe1BBHs4NV4B0WPobguGoOds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779671260; c=relaxed/simple;
-	bh=RXeT7MngnzYuS8+tSOGWb56ibAZyNYwj6midX0lFW40=;
+	s=arc-20240116; t=1779671264; c=relaxed/simple;
+	bh=cFbcd6tg4S4vTQ4OH5ZDXc6IUgIdEztjTvppO5X9nXs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TCA6ncAkeYvocBbvcNXhiSJeU0VDsnF7wXtblBnqxiLnWcED+fLZdh1pQ5P2P7mcLhHud0wONKCn0ujJ53rAGb6sipFYpMwOdxoQeH4XesAh3oo9NsiwqYFyYSgLIrlCkNGi+SPKdVcS9LWXQEt0FxVzE+xlew80CRFJ2VCL8io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8oTBUni; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=cqhkdOcOGeiKGXnEViAxwx7i2t9DawV/cYXLmSpGyKUZ5oKV2qS5rWDr+LoRDDFI5tMcHgszqJXw8QhxlqYSwT9Dp5hsJkI5scjAH9xOVuIUY+IXeXuML8xPHlwrpvI+rL78+Mdf4pVxP5oNTjEp4ix8EPYpdSjQtgCCHrbCcNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHOYSQB/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8oTBUni"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C781F00A3A;
-	Mon, 25 May 2026 01:07:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHOYSQB/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D3D01F000E9;
+	Mon, 25 May 2026 01:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779671258;
-	bh=auqk1nWYGfaSXNILkhsjsanUeE+X7C4w9AnKDjh/538=;
+	s=k20260515; t=1779671262;
+	bh=Gu5rtWBHTYXbvUrpZQHMBKoyRKvBtzO1Zg4Rx3KVL50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=j8oTBUni5KczlDlz04fiZkpFki2R3RyaiQB2Am2iXFfdz7wX/8g2o/0eUZc6EIo3A
-	 yaD0C+eqhCd9X076SDdO5/J2MqY8KdJ+5qiGpwEMvQMLvW1MsQSTofwnovwxBDXtal
-	 ZWqZ4p/SSTUTzwLHc4tUsTyRLLz0tPZta5ojYFLXRzR88VMkWGqac4unEh1l7DSh29
-	 jPpDzzk2wPqjiqCOxKKMI5D4TPvkqDnxYS+Ot+0EhCwyvZb55CxUkAqzitR2AIu5io
-	 P8f8LHvlHJE95LiHMQ4ciVesU/Wj9yAO8Wf/VJ6JmnstpKwihDmaXFzGKu6M0PKpfb
-	 EjO0TT88Mb1/g==
+	b=gHOYSQB/macOswx+RD8vy+A3n3biGtNt/BcD398Yni26pQtzE+ufkCecxiMfUi98x
+	 mQDVpf8bVxTf+DG02qkAi0tO+ljYgO3jc0/fsCAAWY8FIV9G4qPj2l1HswGeE0I2Oe
+	 cylEAkUlr4zmfpSCRl88vFwdC5RhdJCpCt2vrcFUqG/Zulh7Gm12oF3LdMbxEZHnFe
+	 AfPuY7zTrNMxskM9+dKRZGBBs9GOQmPfTbLeSH6sBA2trmwAnbzN0U5RV4gO3roH8Y
+	 wj7kciHf4XwecgUSZ8U8DfcmtVu+k7fnz1jAf6egDsI89MDWMqWwRFOR2QhR1btgkJ
+	 vxCiu/J0WhH9Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,10 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
+	Yang Jihong <yangjihong@bytedance.com>,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 26/29] perf session: Bound nr_cpus_avail and validate sample CPU
-Date: Sun, 24 May 2026 22:05:46 -0300
-Message-ID: <20260525010550.1100375-27-acme@kernel.org>
+Subject: [PATCH 27/29] perf kwork: Bounds check work->cpu before indexing cpus_runtime[]
+Date: Sun, 24 May 2026 22:05:47 -0300
+Message-ID: <20260525010550.1100375-28-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260525010550.1100375-1-acme@kernel.org>
 References: <20260525010550.1100375-1-acme@kernel.org>
@@ -57,205 +58,146 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Several downstream consumers (timechart, kwork, sched) use fixed-size
-arrays indexed by CPU.  A crafted perf.data can supply arbitrary CPU
-values that index past these arrays, causing out-of-bounds access.
+work->cpu comes from sample->cpu which is (u32)-1 when
+PERF_SAMPLE_CPU is absent.  Stored as int, this becomes -1
+which passes the signed BUG_ON(work->cpu >= MAX_NR_CPUS) but
+causes an out-of-bounds access on cpus_runtime[-1].
 
-Validate sample.cpu against min(nr_cpus_avail, MAX_NR_CPUS) in
-perf_session__deliver_event() before any tool callback runs.  The
-cap at MAX_NR_CPUS protects fixed-size downstream arrays; the true
-nr_cpus_avail is preserved in env for header parsing (e.g.
-process_cpu_topology) which needs the real count.
+Replace the BUG_ON in top_calc_total_runtime() with an unsigned
+bounds check that skips entries with invalid CPU values, counting
+them for a summary warning.
 
-Fall back to MAX_NR_CPUS when HEADER_NRCPUS is missing (truncated
-files, pipe mode, pre-2017 perf).
-
-Only validate when PERF_SAMPLE_CPU is set in sample_type — when
-absent, evsel__parse_sample() leaves sample.cpu as (u32)-1, a
-sentinel that downstream tools (script, inject) check to identify
-events without CPU info.  Clamping it to 0 would break those checks.
-
-Inline evlist__parse_sample() into perf_session__deliver_event()
-so the evsel lookup needed for sample_type checking reuses the same
-evsel that parsed the sample, avoiding a second evlist__event2evsel()
-call on every event.
-
-For pipe-mode streams where HEADER_NRCPUS may arrive late or not at
-all, the MAX_NR_CPUS fallback ensures the bounds check is still
-effective against the fixed-size downstream arrays.
+Guard the same index in profile_event_match() (bitmap OOB),
+top_calc_idle_time(), top_calc_irq_runtime(), top_calc_cpu_usage(),
+and top_calc_load_runtime().  Also guard against division by zero
+in top_calc_cpu_usage() when no runtime was accumulated.
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Yang Jihong <yangjihong@bytedance.com>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c  | 30 +++++++++++++
- tools/perf/util/session.c | 88 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 117 insertions(+), 1 deletion(-)
+ tools/perf/builtin-kwork.c | 45 +++++++++++++++++++++++++++++++++-----
+ tools/perf/util/kwork.h    |  1 +
+ 2 files changed, 40 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index af8781f81b574b88..351369ac4dc2c0a2 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -48,6 +48,7 @@
- #include <api/io_dir.h>
- #include "asm/bug.h"
- #include "tool.h"
-+#include "../perf.h"
- #include "time-utils.h"
- #include "units.h"
- #include "util/util.h" // perf_exe()
-@@ -2895,6 +2896,17 @@ static int process_nrcpus(struct feat_fd *ff, void *data __maybe_unused)
- 	if (ret)
- 		return ret;
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index f793ea578515d08c..99dc293a0744726e 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -467,7 +467,9 @@ static bool profile_event_match(struct perf_kwork *kwork,
+ 	u64 time = sample->time;
+ 	struct perf_time_interval *ptime = &kwork->ptime;
  
-+	/*
-+	 * Cap at 1M CPUs — generous for any real system but prevents
-+	 * stack overflow from VLA allocations sized by nr_cpus_avail
-+	 * (e.g. DECLARE_BITMAP in builtin-c2c.c node_entry()).
-+	 */
-+	if (nr_cpus_avail > (1U << 20)) {
-+		pr_err("Invalid HEADER_NRCPUS: nr_cpus_avail (%u) exceeds maximum (%u)\n",
-+		       nr_cpus_avail, 1U << 20);
-+		return -1;
-+	}
-+
- 	if (nr_cpus_online > nr_cpus_avail) {
- 		pr_err("Invalid HEADER_NRCPUS: nr_cpus_online (%u) > nr_cpus_avail (%u)\n",
- 		       nr_cpus_online, nr_cpus_avail);
-@@ -5250,6 +5262,24 @@ int perf_session__read_header(struct perf_session *session)
- #endif
- 	}
+-	if ((kwork->cpu_list != NULL) && !test_bit(cpu, kwork->cpu_bitmap))
++	/* Guard test_bit: cpu == -1 (absent PERF_SAMPLE_CPU) would index past the bitmap */
++	if ((kwork->cpu_list != NULL) &&
++	    ((unsigned int)cpu >= MAX_NR_CPUS || !test_bit(cpu, kwork->cpu_bitmap)))
+ 		return false;
  
-+	/*
-+	 * Without nr_cpus_avail the sample CPU bounds check in
-+	 * perf_session__deliver_event() is bypassed, allowing crafted
-+	 * CPU IDs to reach downstream consumers that index fixed-size
-+	 * arrays (timechart, kwork, sched — all sized MAX_NR_CPUS).
-+	 *
-+	 * This can happen with truncated files (interrupted recording
-+	 * loses all feature sections), very old files that predate
-+	 * HEADER_NRCPUS, or crafted files that omit it.  Fall back to
-+	 * MAX_NR_CPUS so the bounds check is still effective — any
-+	 * CPU ID below that limit is safe for all downstream arrays.
-+	 */
-+	if (header->env.nr_cpus_avail == 0) {
-+		header->env.nr_cpus_avail = MAX_NR_CPUS;
-+		pr_warning("WARNING: perf.data is missing HEADER_NRCPUS, using MAX_NR_CPUS (%d) as CPU bound\n",
-+			   MAX_NR_CPUS);
-+	}
-+
- 	return 0;
- out_errno:
- 	return -errno;
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 9271885e3920f897..6de665d3c9054179 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2110,14 +2110,100 @@ static int perf_session__deliver_event(struct perf_session *session,
- 				       const char *file_path)
+ 	if (((ptime->start != 0) && (ptime->start > time)) ||
+@@ -2041,7 +2043,18 @@ static void top_calc_total_runtime(struct perf_kwork *kwork)
+ 	next = rb_first_cached(&class->work_root);
+ 	while (next) {
+ 		work = rb_entry(next, struct kwork_work, node);
+-		BUG_ON(work->cpu >= MAX_NR_CPUS);
++		/*
++		 * work->cpu comes from sample->cpu which is -1 when
++		 * PERF_SAMPLE_CPU is absent.  As int that's -1, but as
++		 * unsigned it exceeds MAX_NR_CPUS — skip to avoid OOB
++		 * on cpus_runtime[].
++		 */
++		/* Counted and reported in perf_kwork__top_report() */
++		if ((unsigned int)work->cpu >= MAX_NR_CPUS) {
++			stat->nr_skipped_cpu++;
++			next = rb_next(next);
++			continue;
++		}
+ 		stat->cpus_runtime[work->cpu].total += work->total_runtime;
+ 		stat->cpus_runtime[MAX_NR_CPUS].total += work->total_runtime;
+ 		next = rb_next(next);
+@@ -2053,7 +2066,8 @@ static void top_calc_idle_time(struct perf_kwork *kwork,
  {
- 	struct perf_sample sample;
-+	struct evsel *evsel;
- 	int ret;
+ 	struct kwork_top_stat *stat = &kwork->top_stat;
  
- 	perf_sample__init(&sample, /*all=*/false);
--	ret = evlist__parse_sample(session->evlist, event, &sample);
-+	evsel = evlist__event2evsel(session->evlist, event);
-+	if (!evsel) {
-+		pr_err("No evsel found for event type %u\n",
-+		       event->header.type);
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+	ret = evsel__parse_sample(evsel, event, &sample);
- 	if (ret) {
- 		pr_err("Can't parse sample, err = %d\n", ret);
- 		goto out;
+-	if (work->id == 0) {
++	/* See comment in top_calc_total_runtime() */
++	if (work->id == 0 && (unsigned int)work->cpu < MAX_NR_CPUS) {
+ 		stat->cpus_runtime[work->cpu].idle += work->total_runtime;
+ 		stat->cpus_runtime[MAX_NR_CPUS].idle += work->total_runtime;
  	}
-+	/*
-+	 * evsel__parse_sample() doesn't populate machine_pid/vcpu,
-+	 * which are needed by machines__find_for_cpumode() to
-+	 * attribute samples to guest VMs.  The SID table maps
-+	 * sample IDs to the guest that owns the event.
-+	 */
-+	if (perf_guest && sample.id) {
-+		struct perf_sample_id *sid = evlist__id2sid(session->evlist, sample.id);
-+
-+		if (sid) {
-+			sample.machine_pid = sid->machine_pid;
-+			sample.vcpu = sid->vcpu.cpu;
-+		}
-+	}
-+
-+	/*
-+	 * Validate sample.cpu before any callback can use it as an
-+	 * array index (kwork cpus_runtime, timechart cpus_cstate_*,
-+	 * sched cpu_last_switched).
-+	 *
-+	 * When PERF_SAMPLE_CPU is absent, evsel__parse_sample() leaves
-+	 * sample.cpu as (u32)-1 — a sentinel that downstream tools
-+	 * (script, inject) check to identify events without CPU info.
-+	 * Only check when sample.cpu was actually populated from event
-+	 * data: PERF_RECORD_SAMPLE always has it when PERF_SAMPLE_CPU
-+	 * is set; non-sample events only have it when sample_id_all is
-+	 * enabled.  Otherwise sample.cpu is the (u32)-1 sentinel from
-+	 * evsel__parse_sample() and must not be validated or clamped.
-+	 */
-+	if ((evsel->core.attr.sample_type & PERF_SAMPLE_CPU) &&
-+	    (event->header.type == PERF_RECORD_SAMPLE ||
-+	     evsel->core.attr.sample_id_all)) {
-+		int nr_cpus_avail = perf_session__env(session)->nr_cpus_avail;
-+
-+		/*
-+		 * For perf.data files the MAX_NR_CPUS fallback in
-+		 * perf_session__read_header() guarantees this is set.
-+		 * For pipe mode, HEADER_NRCPUS may arrive late or not
-+		 * at all (pre-2017 perf, third-party tools).  Fall
-+		 * back to MAX_NR_CPUS so the bounds check still works
-+		 * against fixed-size downstream arrays.
-+		 *
-+		 * Do NOT write back to env: this function runs during
-+		 * recording (synthesized events) when nr_cpus_avail is
-+		 * legitimately 0.  Writing MAX_NR_CPUS would cause
-+		 * write_cpu_topology() to emit 4096 core_id/socket_id
-+		 * pairs instead of the real CPU count, corrupting the
-+		 * topology section in the generated perf.data.
-+		 */
-+		if (nr_cpus_avail <= 0)
-+			nr_cpus_avail = MAX_NR_CPUS;
-+		/*
-+		 * Cap at MAX_NR_CPUS for the bounds check — downstream
-+		 * consumers use fixed-size arrays of that size.  Keep
-+		 * the true nr_cpus_avail in env for header parsing
-+		 * (e.g. process_cpu_topology) which needs the real count.
-+		 */
-+		if (nr_cpus_avail > MAX_NR_CPUS)
-+			nr_cpus_avail = MAX_NR_CPUS;
-+		if (sample.cpu >= (u32)nr_cpus_avail &&
-+		    sample.cpu != (u32)-1) {
-+			/*
-+			 * Warn rather than abort: synthesized events
-+			 * (MMAP, COMM) lack sample_id_all data, so
-+			 * parse_id_sample reads garbage from the event
-+			 * payload.  Clamping to 0 protects downstream
-+			 * array indexing while keeping the session alive.
-+			 *
-+			 * Preserve (u32)-1: perf script and perf inject
-+			 * use it as a sentinel for "CPU not applicable."
-+			 * Downstream array users (timechart, kwork) have
-+			 * their own per-callback bounds checks.
-+			 */
-+			pr_warning_once("WARNING: sample CPU %u >= nr_cpus_avail %u, clamping to 0\n",
-+					sample.cpu, nr_cpus_avail);
-+			sample.cpu = 0;
-+		}
-+	}
+@@ -2065,6 +2079,10 @@ static void top_calc_irq_runtime(struct perf_kwork *kwork,
+ {
+ 	struct kwork_top_stat *stat = &kwork->top_stat;
  
- 	ret = auxtrace__process_event(session, event, &sample, tool);
- 	if (ret < 0)
++	/* See comment in top_calc_total_runtime() */
++	if ((unsigned int)work->cpu >= MAX_NR_CPUS)
++		return;
++
+ 	if (type == KWORK_CLASS_IRQ) {
+ 		stat->cpus_runtime[work->cpu].irq += work->total_runtime;
+ 		stat->cpus_runtime[MAX_NR_CPUS].irq += work->total_runtime;
+@@ -2117,12 +2135,19 @@ static void top_calc_cpu_usage(struct perf_kwork *kwork)
+ 		if (work->total_runtime == 0)
+ 			goto next;
+ 
++		/* See comment in top_calc_total_runtime() */
++		if ((unsigned int)work->cpu >= MAX_NR_CPUS)
++			goto next;
++
+ 		__set_bit(work->cpu, stat->all_cpus_bitmap);
+ 
+ 		top_subtract_irq_runtime(kwork, work);
+ 
+-		work->cpu_usage = work->total_runtime * 10000 /
+-			stat->cpus_runtime[work->cpu].total;
++		/* Guard against division by zero if no runtime was accumulated */
++		if (stat->cpus_runtime[work->cpu].total) {
++			work->cpu_usage = work->total_runtime * 10000 /
++				stat->cpus_runtime[work->cpu].total;
++		}
+ 
+ 		top_calc_idle_time(kwork, work);
+ next:
+@@ -2135,7 +2160,8 @@ static void top_calc_load_runtime(struct perf_kwork *kwork,
+ {
+ 	struct kwork_top_stat *stat = &kwork->top_stat;
+ 
+-	if (work->id != 0) {
++	/* See comment in top_calc_total_runtime() */
++	if (work->id != 0 && (unsigned int)work->cpu < MAX_NR_CPUS) {
+ 		stat->cpus_runtime[work->cpu].load += work->total_runtime;
+ 		stat->cpus_runtime[MAX_NR_CPUS].load += work->total_runtime;
+ 	}
+@@ -2211,6 +2237,13 @@ static void perf_kwork__top_report(struct perf_kwork *kwork)
+ 		next = rb_next(next);
+ 	}
+ 
++	if (kwork->top_stat.nr_skipped_cpu) {
++		printf("  Warning: %u work entries with invalid CPU were excluded from totals.\n"
++		       "  Task runtimes may appear inflated (IRQ time not subtracted).\n"
++		       "  Consider re-recording with PERF_SAMPLE_CPU enabled.\n",
++		       kwork->top_stat.nr_skipped_cpu);
++	}
++
+ 	printf("\n");
+ }
+ 
+diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
+index 81d39a7f78c8b811..6ec70dcc4157a1f2 100644
+--- a/tools/perf/util/kwork.h
++++ b/tools/perf/util/kwork.h
+@@ -202,6 +202,7 @@ struct __top_cpus_runtime {
+ struct kwork_top_stat {
+ 	DECLARE_BITMAP(all_cpus_bitmap, MAX_NR_CPUS);
+ 	struct __top_cpus_runtime *cpus_runtime;
++	unsigned int nr_skipped_cpu;
+ };
+ 
+ struct perf_kwork {
 -- 
 2.54.0
 
