@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE6021D596
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 01:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8ED9343890
+	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 01:52:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779673511; cv=none; b=sfs3nVKb6iR/BNYNDZsxSLxeMHO3MAoFz6zerhbrZ3qwYIBJt/uwkqyKfg5bw3+kEjNFk60bKyv5sl/Q1ddpEjJQr+2lxD1MqsAVJMVFVu77UNK7H4IyTXohDkaF2gIrO3HcIUSaKA5znM66nJBX0KyVGatg8tQ/MXMfkKzen1k=
+	t=1779673946; cv=none; b=dK6ENJhOeQX8Mswsikk3QJ1WKblxUfB0oF7k2DxHDIIb3Pf31OOX96q93ZyIq2xt4xzEo11BSaHBeG98d1dFVzet2JYcaOTNLwK1DR7jGzug9c//0E5PClZB6f2YWHMHEI6f42REU5JboiaidKD2cG+c2DR77zrcX+fBUtlsABE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779673511; c=relaxed/simple;
-	bh=7zPNlXivNYTph/OBev2OhE9izvinj7qCoeo5RicGgx0=;
+	s=arc-20240116; t=1779673946; c=relaxed/simple;
+	bh=P/SCzxev01h0hjQCLcL00Lf7l0zCbM7JJTnE5mN9B7E=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=p3afIpGDLVlJTaIFYCvoa3F0sp8WVqltg4mL9rpVLEscbDVPI/UrUXmyyIb/oi4ErHQ8EBpV0HaEMI9myRocPsuf8iihoWC7fcrbvSLfM9KfPlTfC78maCJjXunE5kX9kbGFsSDdVXjPwb+9EEaL1prxn851X3bh58O6ZTyNcBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CV0PQQEH; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=h8psxawsQmlvA0gs41ioMg9iHz12rnj+CWtNPRxi6oOkhvlyc0AcImHJM7lhgUfROZto3WuuQXViONFokW2u5qVQu95ZXHC39Chmc3X5be7y9biK0y+XLdGv7FhPIlps/MDrKy8dM4PK54DtMhv4TYPQpD6DBVEM1ZUSw/NXBvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsDLhZkP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CV0PQQEH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD3951F000E9;
-	Mon, 25 May 2026 01:45:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsDLhZkP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C8241F000E9;
+	Mon, 25 May 2026 01:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779673509;
-	bh=/ie1dbZGvKIomxo4fpok03AxplwwUViIx4qZ2YLUL/s=;
+	s=k20260515; t=1779673944;
+	bh=ff2aD5mHyET0bIJtTlrChjCVTHSg79rn0iBvfwkF6rA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CV0PQQEH0OGdsdb4nrl5eIliREjZ0xiWjYCchpUmMRh03EOZUYMqykkl8th+IJvSv
-	 DT3dty4tPnQe/hBnLtcGnF4GgJpcXNjm6EoILXBgo3eO2uex3yTQszqK+pGd2+qNEj
-	 /yHg6pizR5OO/cxPawVmdUhWlJW1cGW4mn1PNAAQeHd5k4ANK7Arn60vv7fKC6t6l+
-	 ej+37j10ySnoVZuAC3spP/w9dhT31krfiMq/XAjcIelOqcJkeHgXC2ezTI3w27Ml+r
-	 QhieIXIy21FPSi0mdrlML47/0APdlV19W5zMo3WtkpdDqdOY4dV1pRGEoQklbuqgu9
-	 1+JV0bH3tFIVQ==
+	b=TsDLhZkPcistUB5ojF3pRvDqORj2/b0+ZHzfPUghudjqB23KD0p+OXQJQbF9bYbPL
+	 05sGbi5PiaAsvIY9UUjjnxC5tnRqeLzEHeIcNDQckKyejLF5P7vHDzO0OtJwQp+uKu
+	 DnaPO2aB9hjd6g99KQL7wkDJ80gKYN1+V33zAkLUSX7Nl++dtI1mU25yGPtNEI9Qjb
+	 /UAb2GrvLyIJaAVOhaDc4AE/pf6GH8v0lpq+si6S6GgdOIjrrP7wBF/to6ty57FGFn
+	 4rvDE7VnCZeWAx+0kQo4iLo83yH9oh0nY50htsvGkRCUt/cy8QOSgVzRze5uAZ1LRE
+	 zAiwdCA4FEhfg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/29] perf session: Add minimum event size and
- alignment validation
+Subject: Re: [PATCH 04/29] perf zstd: Fix compression error path in
+ zstd_compress_stream_to_records()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260525010550.1100375-2-acme@kernel.org>
-References: <20260525010550.1100375-2-acme@kernel.org>
+In-Reply-To: <20260525010550.1100375-5-acme@kernel.org>
+References: <20260525010550.1100375-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 25 May 2026 01:45:09 +0000
-Message-Id: <20260525014509.BD3951F000E9@smtp.kernel.org>
+Date: Mon, 25 May 2026 01:52:23 +0000
+Message-Id: <20260525015224.3C8241F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,64 +46,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] perf_session__peek_event returns -1 for undersized events, prema=
-turely aborting peek_events loops, whereas process_event skips them.
+
+Pre-existing issues:
+- [High] `record__pushfn` overwrites the first compressed record's header w=
+ith the total compressed size, corrupting multi-record streams and causing =
+16-bit integer overflows.
 --
 
-commit 8d4b5789ad1a0d60851429197cd2d50673cbbabd
+commit e64058a4ff7a3dc25fc5fbbc6baeab2ab6b31aa4
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Mon May 25 01:05:24 2026 +0000
 
-perf session: Add minimum event size and alignment validation
+    perf zstd: Fix compression error path in zstd_compress_stream_to_record=
+s()
 
-This commit adds per-type minimum size validation for perf events before sw=
-ap
-and processing to prevent out-of-bounds access. It enforces 8-byte alignment
-on event sizes and rejects unaligned sizes to avoid corrupting the event
-stream. It also updates peek_event and process_event to handle undersized or
-unknown event types.
+This commit replaces the compression error fallback in
+zstd_compress_stream_to_records() with an explicit error return after reset=
+ting
+the ZSTD context. It also adds a new label out_child_no_flush in __cmd_reco=
+rd()
+to skip the final flush on mmap read failures, and guards against missing
+output buffer space before writing headers.
 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
+> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+> index 57027e0ac7b65..ecda9deb53b73 100644
+> --- a/tools/perf/util/zstd.c
+> +++ b/tools/perf/util/zstd.c
 [ ... ]
-> @@ -1775,52 +1881,85 @@ int perf_session__peek_event(struct perf_session =
-*session, off_t file_offset,
+> @@ -65,10 +72,18 @@ ssize_t zstd_compress_stream_to_records(struct zstd_d=
+ata *data, void *dst, size_
+>  		if (ZSTD_isError(ret)) {
+>  			pr_err("failed to compress %ld bytes: %s\n",
+>  				(long)src_size, ZSTD_getErrorName(ret));
+> -			memcpy(dst, src, src_size);
+> -			return src_size;
+> +			goto reset;
+>  		}
+>  		size =3D output.pos;
 [ ... ]
-> +	if (event->header.type >=3D PERF_RECORD_HEADER_MAX) {
-> +		pr_warning("WARNING: peek_event: unsupported event type %u, skipping\n=
-",
-> +			   event->header.type);
-> +		return 0;
-> +	}
+>  		size =3D process_header(record, size);
+>  		compressed +=3D size;
+>  		dst +=3D size;
+> @@ -76,6 +91,14 @@ ssize_t zstd_compress_stream_to_records(struct zstd_da=
+ta *data, void *dst, size_
+>  	}
 > =20
-> -	if (event->header.size < hdr_sz || event->header.size > buf_sz)
-> +	if (perf_event__too_small(event, &min_sz)) {
-> +		pr_warning("WARNING: peek_event: %s event size %u too small (min %u)\n=
-",
-> +			   perf_event__name(event->header.type),
-> +			   event->header.size, min_sz);
->  		return -1;
-> +	}
-> =20
->  	if (session->header.needs_swap)
->  		event_swap(event, evlist__sample_id_all(session->evlist));
+>  	return compressed;
 
-[Severity: Medium]
-Does returning -1 here cause peek_event loops to prematurely abort?
+[Severity: High]
+This is a pre-existing issue, but I have a question about how this returned
+value is handled by the caller.
 
-In the updated perf_session__process_event logic, undersized events are
-safely stepped over by returning 0, as they are 8-byte aligned and won't
-desynchronize the stream.
+When zstd_compress_stream_to_records() emits multiple chunks and returns the
+total combined size of all chunks, does the caller handle it correctly?
 
-Since callers of perf_session__peek_event typically abort entirely on any
-error rather than inspecting the returned event pointer to advance, returni=
-ng
--1 for an undersized event might permanently abort processing for partially
-corrupted trace files.=20
+Looking at record__pushfn() in tools/perf/builtin-record.c, it unconditiona=
+lly
+assumes a single chunk is returned and overwrites the first chunk's header =
+with
+this total size:
 
-Should this return 0 to skip the undersized event, matching the behavior
-introduced just above it for unknown event types?
+    ssize_t compressed =3D zstd_compress(rec->session, map, map->data,
+                                       mmap__mmap_len(map), bf, size);
+    ...
+    event->data_size =3D compressed - sizeof(struct perf_record_compressed2=
+);
+    event->header.size =3D PERF_ALIGN(compressed, sizeof(u64));
+
+If the total combined size exceeds 65535 bytes, will this truncate header.s=
+ize
+(which is a u16) and corrupt the stream's event boundaries?
+
+Also, by treating the concatenated chunks as a single payload, will the ZSTD
+decompressor eventually read the embedded perf_event_header of the second c=
+hunk
+as if it were compressed ZSTD data, irreparably corrupting the profile and
+causing decompression to fail?
+
+> +
+> +reset:
+> +	/* Reset so the context is usable if the caller retries */
+> +	ret =3D ZSTD_initCStream(data->cstream, data->comp_level);
+> +	if (ZSTD_isError(ret))
+> +		pr_err("failed to reset compression context: %s\n",
+> +			ZSTD_getErrorName(ret));
+> +	return -1;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260525010550.1100=
-375-1-acme@kernel.org?part=3D1
+375-1-acme@kernel.org?part=3D4
