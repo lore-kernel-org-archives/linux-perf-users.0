@@ -1,137 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7704F27B35F
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 03:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9735639A05E;
+	Mon, 25 May 2026 08:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779678083; cv=none; b=ufakK1d2N7iFCHFahrcHJSNmgebl6V5JClJPDFnxwMrVvBpgW8qYSqARms6VT+mlOTJCiob0mmgnUahfEadk+oooTN4/aUN9CVaZAQ+G7DG+2vIdhz1O1XCd9eyUoA9+uOHoBad8E6x55hhHm5bEtp9BTIANfAtubjmqC0V9wAc=
+	t=1779696254; cv=none; b=M9ecfzriVRwS9SNQJdB8NFZQDKvfr3Kf0BiF0tzbaA7QN3+oqkMSgmW+3QjNooO4dT/GEZakLASrdCNUJslhGjLk7AJIDo9n37jR4XfYqUC8gzJW8PRcYsm790hwB+M4WrgZOCxHQismEXtf+Pe8tAfRIjG53fFr8OgMUljcQiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779678083; c=relaxed/simple;
-	bh=2Tzli9vxMnNyLYX7VcYESewoHZ3/QVuycV8Q0tLFoZ8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TAJdPPU6aaFa+vl0brs7TvcrfvikGrXxeB/Bc3XMPOKlLvPXyVuWT8Q1d7LvL+JJI2TDOVs3OmZU5x3AYZGd6Xa+4LY7WvrGWTEqyuI6fLAOFdcBitHIjH2B89ubLirRZaKKAOkYUjwZzEfHJTNYOwbNFTcyHQ+8yZcaJq/jKx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNjnK68j; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779696254; c=relaxed/simple;
+	bh=73vrApxNrpCy4XDyoCbJ2fXnIkf1Vpko4vO94TZdns8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cN1VoO4DQwfUfX/j5vZksq7ZjpfjonYFabSeppCKF92dt54ypmEvY37essWO1xFAd6UPdwoDYG/cfvofO86LVn/xFRQVYY9RpVCudkk80A/UbVdlIwtXWKTJaVeEusSfFrsjE7o9CpZgw4+k4nCylYAYP9LO+i04LYQ3qTSjJXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FW65Xy4+; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNjnK68j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3EDB1F000E9;
-	Mon, 25 May 2026 03:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779678082;
-	bh=aECRJc3xB1kJlGTJFX5OJ5sbT4ftMONXwF1wU85j+bk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lNjnK68jKI3QgPuOJYU2AHJ34cUMMgUnAPs3fvlIzB5GgDv3GCGq9MdPb52Gzdkxz
-	 Ol1GbBLwhYkha6VE9iVcCmBUGiQ9RqSrAV51nzL91mTYO0hTXkqm8yQ+P6qhDh3VAO
-	 slP20YLEQxOh1jDfftPqru3gJB63Z1MdMiIuqUyD2B3gZo/VqHsCTBywsdbhNYHnJY
-	 Vl5YFrTSrOyQrf9KO+qWTRtEDyap28PYPQDxU0CLzckv+Gz06skSzjCN5z3Nk4Um5W
-	 zRlBFPnNOoa26NpTLHGIUCTwPLLKRbsNcG6ynxGcc6aQ34fPHOnpQ6dSUw5SeVnRB+
-	 voC2Fmy9mQZ9A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 18/29] perf header: Propagate feature section processing
- errors
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260525010550.1100375-19-acme@kernel.org>
-References: <20260525010550.1100375-19-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 25 May 2026 03:01:11 +0000
-Message-Id: <20260525030121.E3EDB1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FW65Xy4+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=GfaKXox8b6tZQOz6rQuRsRCazGocmiCFA5bwNHls9ME=; b=FW65Xy4+/qqB/Y4d5VUshtof0n
+	B1qpRzV3dT6ABeoVvQLisbxpMvMaLmHHgGUuotvM13Oq8y+yYLeQUSVwda+11TXZK3v0fokYftvXJ
+	cyWpf4mLpjcN7aUkfNHq+sYYEb/nm/olSXmzzlszTr6RS+YrGR5SbSFBiuylLbHU2l7PiwKaxINv9
+	zqxKyu3Wj4flIUFqFwr3fZR9CFduLqMY65OMTt+ohC5o+j4imP0wqxfk44LoJSsz7r+/EsHjXAsCV
+	JIjPnzXn4055g+A/20FRnLo3CteESpuvFsQL6/iYeYE3DODc1ZSpv4PLAZGgxPgQc3C1wwAp+US+/
+	R7/FwfoA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wRQHt-0000000GaTu-1YS9;
+	Mon, 25 May 2026 08:03:49 +0000
+Date: Mon, 25 May 2026 01:03:49 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: demiobenour@gmail.com
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH 1/3] net: Remove support for AIO on sockets
+Message-ID: <ahQCZQNoyO8GQt3H@infradead.org>
+References: <20260523-af-alg-harden-v1-0-c76755c3a5c5@gmail.com>
+ <20260523-af-alg-harden-v1-1-c76755c3a5c5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260523-af-alg-harden-v1-1-c76755c3a5c5@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Skipping tracepoint event preparation for truncated files causes=
- tools to parse trace data using the local system's tracefs format instead =
-of the recorded format.
---
+On Sat, May 23, 2026 at 03:43:02PM -0400, Demi Marie Obenour via B4 Relay wrote:
+> From: Demi Marie Obenour <demiobenour@gmail.com>
+> 
+> The only user of msg->msg_iocb was AF_ALG, but that's deprecated.
+> It can be removed entirely at the cost of only supporting synchronous
+> operations.  This doesn't break userspace, which will silently block
+> (for a bounded amount of time) in io_submit instead of operating
+> asynchronously.
+> 
+> This also makes struct msghdr smaller, helping every other caller of
+> sendmsg().
 
-commit 6b472d4fefea1e2e6c372f8fb473b94680a6af08
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+So we just had a discussion at LLC about how networking needs to support
+AIO better for zero copy.
 
-perf header: Propagate feature section processing errors
+The current TCP zerocopy implementation provides completion notification
+through the socket error code, which is freaking weird and doesn't
+integrate well with either io_uring or in-kernel callers.
 
-This commit updates perf_session__read_header() to propagate errors from
-feature section processors, ensuring invalid perf.data files are rejected
-rather than partially initialized. It also modifies the behavior for
-truncated files to skip feature section processing and clear the feature
-bitmap.
+So we really want to pass the iocb down into networking and have it
+call ki_complete on completion, with something higher up in the stack
+adding that to the error queue for the legacy user interface.
 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
+Now I'm not sure if we wouldn't be better off passing that iocb
+explicitly instead of in a weird hidden way, but this seemed like
+a good place to bring this up.
 
-[ ... ]
-
-> @@ -4997,15 +5001,36 @@ int perf_session__read_header(struct perf_session=
- *session)
->  		lseek(fd, tmp, SEEK_SET);
->  	}
-> =20
-> +	/*
-> +	 * Skip feature section processing for truncated files
-> +	 * (data.size =3D=3D 0 means recording was interrupted).  The
-> +	 * section table is unreliable in that case, and the event
-> +	 * data can still be processed without the feature headers.
-> +	 * Clear the bitmap so has_feat() returns false and tools
-> +	 * use their "feature not present" fallbacks instead of
-> +	 * accessing uninitialized env fields.
-> +	 */
-> +	if (f_header.data.size =3D=3D 0) {
-> +		bitmap_zero(header->adds_features, HEADER_FEAT_BITS);
-> +	} else {
->  #ifdef HAVE_LIBTRACEEVENT
-> -	perf_header__process_sections(header, fd, &session->tevent,
-> -				      perf_file_section__process);
-> +		err =3D perf_header__process_sections(header, fd, &session->tevent,
-> +						    perf_file_section__process);
-> +		if (err < 0)
-> +			goto out_delete_evlist;
-> =20
-> -	if (evlist__prepare_tracepoint_events(session->evlist, session->tevent.=
-pevent))
-> -		goto out_delete_evlist;
-> +		if (evlist__prepare_tracepoint_events(session->evlist,
-> +						      session->tevent.pevent)) {
-> +			err =3D -ENOMEM;
-> +			goto out_delete_evlist;
-> +		}
->  #else
-
-[Severity: Medium]
-When f_header.data.size =3D=3D 0, the new logic skips calling
-evlist__prepare_tracepoint_events(). Does this cause tools to parse trace
-data using the local system's tracefs format instead of the recorded format?
-
-If evlist__prepare_tracepoint_events() is bypassed, any tracepoint events
-present in the file will lack their tp_format initialization. Later, when
-processing these samples, evsel__tp_format() will find tp_format =3D=3D NULL
-and fall back to reading the format from the local host's
-/sys/kernel/tracing/events.
-
-This could lead to out-of-bounds reads or garbage data extraction if the
-binary payload from the perf.data file is interpreted using a local tracepo=
-int
-format that belongs to a different kernel version or architecture. Before t=
-his
-change, evlist__prepare_tracepoint_events() was called unconditionally.
-
-> -	perf_header__process_sections(header, fd, NULL, perf_file_section__proc=
-ess);
-> +		err =3D perf_header__process_sections(header, fd, NULL,
-> +						    perf_file_section__process);
-> +		if (err < 0)
-> +			goto out_delete_evlist;
->  #endif
-> +	}
-> =20
->  	return 0;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260525010550.1100=
-375-1-acme@kernel.org?part=3D18
