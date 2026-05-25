@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57183234973;
-	Mon, 25 May 2026 01:06:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F25245008;
+	Mon, 25 May 2026 01:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779671202; cv=none; b=VYQvXrN9irPWDPHg2O1IcorPsoTU8hMzkiMBPqygZt1JEhM9ZlFufOhyOMiT8+h4jsWKMfIfZN+dOz/tlEma5OxLyZeGLPDBXSUqG33ePJF1U1ydR+3SlmtLrhoSdvCYfSWqMsSnKKrgXw1+ug5DffnBu+gkDCZPm1kP1SU6ae0=
+	t=1779671206; cv=none; b=u/UsCHmsgSUeyZA/8fA8uj2wI5yivYk0nyEizAyZOfNIO6ThTh/2luYRyw71LAN4/Nf7vzJazmj4Zym6ZRQdqRKqD2DmafixWOKegsIPUlEHsYyomQxdBM3IWS/Wc6v0XS8fJZXKweQS/2wj0B5vLO/TwFsUu5QWV/M1BuWH0pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779671202; c=relaxed/simple;
-	bh=eiVYkRqohCAAgwJ1x4LdrDqpvvrJJ2X8doypd8lLppQ=;
+	s=arc-20240116; t=1779671206; c=relaxed/simple;
+	bh=IMm6QqciKoj9L86ffNAHT3CHzVjj1Uev6t0eb+VdG2w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SLCVxWMz2jKeD9JJvnMSjgpvVqNHgeYv4BRKKFTXMjfDW4K+WQK9+4SPfuYWqsDJ4YghQNLMlVHT8+YcpERLUZqYd9KmJ/yRkxQGOxPI4f6faPywTC8V87RputLbjZimtgOWXXuzSpe+RcVCXtelY8eeoVXQwyNj537WA0aL6yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYDhpxHC; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=nyy6fGdc1nDVOSxP2Yel/g/P+q39do5YkGLCuAPipwYYUZAYFkFAe3pEhMYukPrVwbwyOBaDUDTy10tj8mnvCXXb7Yqw3gGFDMK37In8bMBFizDXoS2r6fK60viIKNmvf7Mo825iIcv1vLCL2NivwVvQIbvcM/M7gB7iwvOlzqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blNgQL92; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYDhpxHC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 099CF1F00A3C;
-	Mon, 25 May 2026 01:06:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blNgQL92"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83601F000E9;
+	Mon, 25 May 2026 01:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779671200;
-	bh=2zHJwBEeIA/Pf+33FPHv0njK7SPUFwC+poNQl/qO5lQ=;
+	s=k20260515; t=1779671203;
+	bh=PqqN3TMSovKEaOntcbHHKrbyahaJzHRxFuKowFiVyu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lYDhpxHCb/7uaZV6f9rZO6i6C84UigPytUrALOlWSG/+rVXjflmGI/HQVA3kIbrUk
-	 8iyGtW6YUqGgbtt6rSAyULnn9bAXP92dhdqN4m6pdXMa4HaiXgBp+MLqb49pyKYt+t
-	 EaGftCZgdYqKvdh64YXZrw6kCiSfgBLhT8ECwhui61LPT7xG7YIdvq9q1Vh4BoZTsZ
-	 oo2lS/9S5dJXJzV4Z9eBv1vSsBkpeCv3jZKpxzc+ZNmqfIGAY3yUAC8/yfOghrPC65
-	 BVI3QZpR8UOpwlhJVU5jkLridLaUS05mwrCyne7xSctiVLZxXIeln0YU9JF3EN010J
-	 BuPSSP1gAXyJg==
+	b=blNgQL92meJfSpoLitSlAYGVMC6HmZ6bCYfEVXE9t+UZmae2zL8Oww73h1yvS0oag
+	 oyw+dGTi0L6TL8gc7sq0J0dx7ksYSw87g0P+Cs1vSe1fucreGxP2SSQlq9B96hF96B
+	 P6RsKLMzGdsg+tCU5+TnQiODYtqjax+kpA9lbAekhSSlbr77QKPScB40iU/BrujcAl
+	 FOLVifmc3ffA+LjrCWjd84awhuF0sGBEFLcK81uShMIwVCZ5GJ10cZNJKRX49bKdgK
+	 W85Dz2eIAf1nvcmU+/DmnMN4S4YVAW1YhfAuYwEHgpNH27nthUNzHiKOYkl62eyfLM
+	 5cGbtHSHdnhaA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 10/29] perf session: Validate HEADER_ATTR attr.size before swapping
-Date: Sun, 24 May 2026 22:05:30 -0300
-Message-ID: <20260525010550.1100375-11-acme@kernel.org>
+Subject: [PATCH 11/29] perf session: Validate nr fields against event size on both swap and common paths
+Date: Sun, 24 May 2026 22:05:31 -0300
+Message-ID: <20260525010550.1100375-12-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260525010550.1100375-1-acme@kernel.org>
 References: <20260525010550.1100375-1-acme@kernel.org>
@@ -57,370 +57,396 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Harden PERF_RECORD_HEADER_ATTR handling against crafted perf.data:
+Several event types use an nr field to control iteration over
+variable-length arrays.  The swap handlers byte-swap and loop using
+these fields without bounds checks, and the native processing path
+trusts them as well.
 
-- Validate attr.size: must be >= PERF_ATTR_SIZE_VER0, a multiple
-  of sizeof(u64), and fit within the event payload.
-- Copy only min(attr.size, sizeof(struct perf_event_attr)) bytes
-  into a local attr, zeroing the rest so legacy files don't leak
-  adjacent event data into new fields.
-- Keep the original attr.size so perf_event__synthesize_attr()
-  uses it for both allocation and ID-array placement.
+Add bounds checks on both paths for:
 
-Fix perf_event__synthesize_attr() to use attr->size (not the
-compiled sizeof) for event allocation and layout, so perf inject
-correctly re-synthesizes attrs from files recorded by a different
-perf version.  Without this, the ID array destination pointer
-(computed via perf_record_header_attr_id()) would be inconsistent
-with the allocation when attr->size differs from sizeof.
+- PERF_RECORD_THREAD_MAP: validate nr against payload, return -1
+  on the swap path.  On the native path, reject with -EINVAL.
 
-Also fix the parse-no-sample-id-all test to set attr.size, which
-is now validated, and improve error handling in read_attr() for
-short reads and invalid attr sizes.
+- PERF_RECORD_NAMESPACES: clamp nr on the swap path (safe because
+  each entry is indexed by type; missing entries just won't be
+  resolved).  Skip the event on the native path.
 
-Handle ABI0 pipe/inject events where attr.size is 0: use a local
-attr_size variable set to PERF_ATTR_SIZE_VER0 for both the bounded
-copy and ID array position, instead of writing back to the event.
-Native-endian files may be MAP_SHARED (read-only mmap), so writing
-to the event buffer would SIGSEGV.  The swap path handles ABI0 in
-perf_event__attr_swap() which writes to the MAP_PRIVATE copy.
+- PERF_RECORD_CPU_MAP: clamp nr for CPUS and MASK sub-types on
+  the swap path.  Add bounds checks for mask64 which previously
+  had no nr validation.  Skip the event on the native path.
 
-header.size alignment is now validated centrally in
-perf_session__process_event() (see "Add minimum event size and
-alignment validation").
+- PERF_RECORD_STAT_CONFIG: clamp nr on the swap path (safe because
+  each config entry is self-describing via its tag).  Skip the
+  event on the native path.
+
+The swap path (cross-endian, writable MAP_PRIVATE mapping) can
+safely clamp by writing back to the event.  The native path
+(read-only MAP_SHARED mapping) must skip instead of clamping
+because writing to the mmap'd event would segfault.
+
+Also fix stat_config swap range: change size += 1 to
+size += sizeof(event->stat_config.nr) for clarity.  The old +1
+happened to work because mem_bswap_64 processes 8-byte chunks,
+but the intent is to include the 8-byte nr field in the swap
+range.
+
+Changes in v2:
+- Document that PERF_RECORD_NAMESPACES max_nr includes trailing
+  sample_id space when sample_id_all is present — harmless on the
+  swap path because both per-element bswap_64 and swap_sample_id_all()
+  perform the same u64 byte swap (Reported-by: sashiko-bot@kernel.org)
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
-Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-inject.c               | 23 ++++--
- tools/perf/tests/parse-no-sample-id-all.c |  6 ++
- tools/perf/util/header.c                  | 96 +++++++++++++++++++++--
- tools/perf/util/session.c                 | 31 ++++++++
- tools/perf/util/synthetic-events.c        | 25 +++++-
- 5 files changed, 166 insertions(+), 15 deletions(-)
+ tools/perf/util/session.c | 253 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 234 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 41a3721a194dc9b9..d8cb1f562f690ce4 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -229,6 +229,7 @@ static int perf_event__repipe_attr(const struct perf_tool *tool,
- 	struct perf_inject *inject = container_of(tool, struct perf_inject,
- 						  tool);
- 	struct perf_event_attr attr;
-+	u32 raw_attr_size, attr_size;
- 	size_t n_ids;
- 	u64 *ids;
- 	int ret;
-@@ -244,24 +245,34 @@ static int perf_event__repipe_attr(const struct perf_tool *tool,
- 	if (!inject->itrace_synth_opts.set)
- 		return perf_event__repipe_synth(tool, event);
- 
--	if (event->header.size < sizeof(struct perf_event_header) + sizeof(u64)) {
-+	if (event->header.size < sizeof(struct perf_event_header) + PERF_ATTR_SIZE_VER0) {
- 		pr_err("Attribute event size %u is too small\n", event->header.size);
- 		return -EINVAL;
- 	}
- 
--	if (event->header.size - sizeof(event->header) < event->attr.attr.size) {
-+	/*
-+	 * ABI0 pipe/inject events have attr.size == 0; default to
-+	 * PERF_ATTR_SIZE_VER0 (the ABI0 footprint) for the bounded
-+	 * copy and ID array position.  Same pattern as
-+	 * perf_event__process_attr() in header.c.
-+	 */
-+	raw_attr_size = event->attr.attr.size;
-+	attr_size = raw_attr_size ?: PERF_ATTR_SIZE_VER0;
-+
-+	if (raw_attr_size && (raw_attr_size < PERF_ATTR_SIZE_VER0 ||
-+			      raw_attr_size > event->header.size - sizeof(event->header))) {
- 		pr_err("Attribute event size %u is too small for attr.size %u\n",
--		       event->header.size, event->attr.attr.size);
-+		       event->header.size, raw_attr_size);
- 		return -EINVAL;
- 	}
- 
- 	memset(&attr, 0, sizeof(attr));
- 	memcpy(&attr, &event->attr.attr,
--	       min_t(size_t, sizeof(attr), (size_t)event->attr.attr.size));
-+	       min_t(size_t, sizeof(attr), attr_size));
- 
--	n_ids = event->header.size - sizeof(event->header) - event->attr.attr.size;
-+	n_ids = event->header.size - sizeof(event->header) - attr_size;
- 	n_ids /= sizeof(u64);
--	ids = perf_record_header_attr_id(event);
-+	ids = (void *)&event->attr.attr + attr_size;
- 
- 	attr.size = sizeof(struct perf_event_attr);
- 	attr.sample_type &= ~PERF_SAMPLE_AUX;
-diff --git a/tools/perf/tests/parse-no-sample-id-all.c b/tools/perf/tests/parse-no-sample-id-all.c
-index 50e68b7d43aad030..8ac862c94879f3a3 100644
---- a/tools/perf/tests/parse-no-sample-id-all.c
-+++ b/tools/perf/tests/parse-no-sample-id-all.c
-@@ -82,6 +82,9 @@ static int test__parse_no_sample_id_all(struct test_suite *test __maybe_unused,
- 			.type = PERF_RECORD_HEADER_ATTR,
- 			.size = sizeof(struct test_attr_event),
- 		},
-+		.attr = {
-+			.size = sizeof(struct perf_event_attr),
-+		},
- 		.id = 1,
- 	};
- 	struct test_attr_event event2 = {
-@@ -89,6 +92,9 @@ static int test__parse_no_sample_id_all(struct test_suite *test __maybe_unused,
- 			.type = PERF_RECORD_HEADER_ATTR,
- 			.size = sizeof(struct test_attr_event),
- 		},
-+		.attr = {
-+			.size = sizeof(struct perf_event_attr),
-+		},
- 		.id = 2,
- 	};
- 	struct perf_record_mmap event3 = {
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index f30e48eb3fc32da2..967c3d8ff12c8676 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -4770,9 +4770,15 @@ static int read_attr(int fd, struct perf_header *ph,
- 	if (sz == 0) {
- 		/* assume ABI0 */
- 		sz =  PERF_ATTR_SIZE_VER0;
-+	} else if (sz < PERF_ATTR_SIZE_VER0) {
-+		pr_debug("bad attr size %zu, expected at least %d\n",
-+			 sz, PERF_ATTR_SIZE_VER0);
-+		errno = EINVAL;
-+		return -1;
- 	} else if (sz > our_sz) {
- 		pr_debug("file uses a more recent and unsupported ABI"
- 			 " (%zu bytes extra)\n", sz - our_sz);
-+		errno = EINVAL;
- 		return -1;
- 	}
- 	/* what we have not yet read and that we know about */
-@@ -4782,11 +4788,21 @@ static int read_attr(int fd, struct perf_header *ph,
- 		ptr += PERF_ATTR_SIZE_VER0;
- 
- 		ret = readn(fd, ptr, left);
-+		if (ret <= 0) {
-+			if (ret == 0)
-+				errno = EIO;
-+			return -1;
-+		}
- 	}
- 	/* read perf_file_section, ids are read in caller */
- 	ret = readn(fd, &f_attr->ids, sizeof(f_attr->ids));
-+	if (ret <= 0) {
-+		if (ret == 0)
-+			errno = EIO;
-+		return -1;
-+	}
- 
--	return ret <= 0 ? -1 : 0;
-+	return 0;
- }
- 
- #ifdef HAVE_LIBTRACEEVENT
-@@ -5094,11 +5110,42 @@ int perf_event__process_attr(const struct perf_tool *tool __maybe_unused,
- 			     union perf_event *event,
- 			     struct evlist **pevlist)
- {
--	u32 i, n_ids;
-+	struct perf_event_attr attr;
-+	u32 i, n_ids, raw_attr_size;
- 	u64 *ids;
-+	size_t attr_size, copy_size;
- 	struct evsel *evsel;
- 	struct evlist *evlist = *pevlist;
- 
-+	/*
-+	 * HEADER_ATTR event layout (pipe/inject mode):
-+	 *
-+	 *   [header (8 bytes)] [attr (attr_size bytes)] [id0 id1 ... idN]
-+	 *   |<------------------ header.size --------------------------->|
-+	 *
-+	 * attr_size varies across perf versions: VER0 = 64 bytes,
-+	 * current sizeof(struct perf_event_attr) = larger.  A newer
-+	 * producer may emit a larger attr than we understand.
-+	 *
-+	 * attr.size == 0 (ABI0) means the producer didn't set it
-+	 * (e.g., bench/inject-buildid, older perf).  Treat as VER0.
-+	 *
-+	 * Require 8-byte alignment so the u64 ID array is aligned
-+	 * and attr.size fits cleanly within the payload.
-+	 *
-+	 * Read attr.size once — the event may be on a shared mmap
-+	 * and re-reading could yield a different value.
-+	 */
-+	raw_attr_size = event->attr.attr.size;
-+	if (event->header.size < sizeof(event->header) + PERF_ATTR_SIZE_VER0 ||
-+	    (raw_attr_size && (raw_attr_size < PERF_ATTR_SIZE_VER0 ||
-+			      raw_attr_size % sizeof(u64) ||
-+			      raw_attr_size > event->header.size - sizeof(event->header)))) {
-+		pr_err("PERF_RECORD_HEADER_ATTR: invalid attr.size %u (event size %u, min %d)\n",
-+		       raw_attr_size, event->header.size, PERF_ATTR_SIZE_VER0);
-+		return -EINVAL;
-+	}
-+
- 	if (dump_trace)
- 		perf_event__fprintf_attr(event, stdout);
- 
-@@ -5108,13 +5155,46 @@ int perf_event__process_attr(const struct perf_tool *tool __maybe_unused,
- 			return -ENOMEM;
- 	}
- 
--	evsel = evsel__new(&event->attr.attr);
-+	/*
-+	 * attr_size = footprint of the attr in the event — determines
-+	 * where the ID array starts.  For ABI0, assume VER0 (64 bytes).
-+	 *
-+	 * copy_size = how much we copy into our local struct, capped at
-+	 * sizeof(attr) so a newer producer's larger attr doesn't
-+	 * overflow.  Fields beyond copy_size are zeroed.
-+	 *
-+	 * Do NOT write attr_size back to the event — native-endian
-+	 * files use MAP_SHARED (read-only), writing would SIGSEGV.
-+	 * The swap path handles ABI0 in perf_event__attr_swap()
-+	 * which writes to the writable MAP_PRIVATE copy instead.
-+	 */
-+	attr_size = raw_attr_size ?: PERF_ATTR_SIZE_VER0;
-+	copy_size = min(attr_size, sizeof(attr));
-+	memcpy(&attr, &event->attr.attr, copy_size);
-+	if (copy_size < sizeof(attr))
-+		memset((void *)&attr + copy_size, 0, sizeof(attr) - copy_size);
-+
-+	/*
-+	 * Normalize ABI0: the swap path sets attr.size = VER0 on the
-+	 * event, but the native path leaves it as 0.  Set it on the
-+	 * local copy so perf inject re-synthesizes with consistent
-+	 * layout regardless of endianness.
-+	 */
-+	attr.size = attr_size;
-+
-+	evsel = evsel__new(&attr);
- 	if (evsel == NULL)
- 		return -ENOMEM;
- 
- 	evlist__add(evlist, evsel);
- 
--	n_ids = event->header.size - sizeof(event->header) - event->attr.attr.size;
-+	/*
-+	 * IDs occupy the remainder after header + attr.  Use attr_size
-+	 * (not copy_size) — even if the producer's attr is larger than
-+	 * our struct, the IDs start after attr_size bytes in the event.
-+	 * Validation above guarantees attr_size <= payload size.
-+	 */
-+	n_ids = event->header.size - sizeof(event->header) - attr_size;
- 	n_ids = n_ids / sizeof(u64);
- 	/*
- 	 * We don't have the cpu and thread maps on the header, so
-@@ -5124,7 +5204,13 @@ int perf_event__process_attr(const struct perf_tool *tool __maybe_unused,
- 	if (perf_evsel__alloc_id(&evsel->core, 1, n_ids))
- 		return -ENOMEM;
- 
--	ids = perf_record_header_attr_id(event);
-+	/*
-+	 * Locate IDs at attr_size bytes past the attr start in the
-+	 * event.  Cannot use perf_record_header_attr_id() — that
-+	 * macro reads event->attr.attr.size, which is 0 for ABI0
-+	 * on the native-endian path (no swap handler to fix it up).
-+	 */
-+	ids = (void *)&event->attr.attr + attr_size;
- 	for (i = 0; i < n_ids; i++) {
- 		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, ids[i]);
- 	}
 diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 3f72b80aac56b04e..aef10d42be35487a 100644
+index aef10d42be35487a..8588e12f110fca70 100644
 --- a/tools/perf/util/session.c
 +++ b/tools/perf/util/session.c
-@@ -623,8 +623,39 @@ do { 						\
- static int perf_event__hdr_attr_swap(union perf_event *event,
- 				     bool sample_id_all __maybe_unused)
+@@ -496,13 +496,35 @@ static int perf_event__throttle_swap(union perf_event *event,
+ static int perf_event__namespaces_swap(union perf_event *event,
+ 				       bool sample_id_all)
  {
-+	u32 attr_size, payload_size;
- 	size_t size;
+-	u64 i;
++	u64 i, nr, max_nr;
  
+ 	event->namespaces.pid		= bswap_32(event->namespaces.pid);
+ 	event->namespaces.tid		= bswap_32(event->namespaces.tid);
+ 	event->namespaces.nr_namespaces	= bswap_64(event->namespaces.nr_namespaces);
+ 
+-	for (i = 0; i < event->namespaces.nr_namespaces; i++) {
++	nr = event->namespaces.nr_namespaces;
 +	/*
-+	 * Validate attr.size (still foreign-endian) before calling
-+	 * perf_event__attr_swap(), which uses it via bswap_safe()
-+	 * to decide which fields to swap.  A crafted attr.size
-+	 * larger than the event payload would swap past the event
-+	 * boundary and corrupt adjacent memory.
-+	 *
-+	 * header.size alignment is already validated by
-+	 * perf_session__process_event().  The min_size table
-+	 * guarantees header.size >= sizeof(header) +
-+	 * PERF_ATTR_SIZE_VER0, so attr.size is safe to access.
++	 * Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof.
++	 * When sample_id_all is present max_nr slightly overestimates the
++	 * array space because header.size includes the trailing sample_id.
++	 * Harmless: both the per-element bswap_64 loop and swap_sample_id_all()
++	 * perform the same u64 byte swap, so the result is correct regardless
++	 * of where the boundary between array and sample_id falls.
 +	 */
-+	attr_size = bswap_32(event->attr.attr.size);
++	max_nr = (event->header.size - sizeof(event->namespaces)) /
++		 sizeof(event->namespaces.link_info[0]);
 +	/*
-+	 * ABI0: size field not set.  This only happens in pipe/inject
-+	 * mode where HEADER_ATTR events carry their own attr.  For
-+	 * regular perf.data files, read_attr() uses f_header.attr_size
-+	 * from the file header instead.  Assume PERF_ATTR_SIZE_VER0.
++	 * Safe to clamp: each namespace entry is indexed by type;
++	 * missing entries just won't be resolved.
 +	 */
-+	if (!attr_size)
-+		attr_size = PERF_ATTR_SIZE_VER0;
-+	payload_size = event->header.size - sizeof(event->header);
-+
-+	if (attr_size < PERF_ATTR_SIZE_VER0 || attr_size % sizeof(u64) ||
-+	    attr_size > payload_size) {
-+		pr_err("PERF_RECORD_HEADER_ATTR: invalid attr.size %u (min: %d, max: %u, 8-byte aligned)\n",
-+		       attr_size, PERF_ATTR_SIZE_VER0, payload_size);
-+		return -1;
++	if (nr > max_nr) {
++		pr_warning("WARNING: PERF_RECORD_NAMESPACES: nr_namespaces %" PRIu64 " exceeds payload (max %" PRIu64 "), clamping\n",
++			   nr, max_nr);
++		nr = max_nr;
++		event->namespaces.nr_namespaces = nr;
 +	}
 +
- 	perf_event__attr_swap(&event->attr.attr);
++	for (i = 0; i < nr; i++) {
+ 		struct perf_ns_link_info *ns = &event->namespaces.link_info[i];
  
- 	size = event->header.size;
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index d665b0f94b321433..5307d707711d876c 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -2181,11 +2181,21 @@ int perf_event__synthesize_attr(const struct perf_tool *tool, struct perf_event_
- 				u32 ids, u64 *id, perf_event__handler_t process)
+ 		ns->dev = bswap_64(ns->dev);
+@@ -734,11 +756,23 @@ static int perf_event__auxtrace_error_swap(union perf_event *event,
+ static int perf_event__thread_map_swap(union perf_event *event,
+ 				       bool sample_id_all __maybe_unused)
  {
- 	union perf_event *ev;
--	size_t size;
-+	size_t attr_size, size;
- 	int err;
+-	unsigned i;
++	unsigned int i;
++	u64 nr;
  
--	size = sizeof(struct perf_event_attr);
--	size = PERF_ALIGN(size, sizeof(u64));
+ 	event->thread_map.nr = bswap_64(event->thread_map.nr);
+ 
+-	for (i = 0; i < event->thread_map.nr; i++)
 +	/*
-+	 * Use attr->size for the event layout, not the compiled
-+	 * sizeof(struct perf_event_attr), so that synthesized events
-+	 * match the source perf.data layout.  This matters for perf
-+	 * inject, which re-synthesizes attrs from a file that may
-+	 * have been recorded by a different version of perf.
-+	 * perf_record_header_attr_id() locates the ID array at
-+	 * attr->size bytes past the attr.
++	 * Reject rather than clamp: unlike namespaces (indexed by type)
++	 * or stat_config (self-describing tags), a truncated thread map
++	 * is structurally broken — downstream would get a wrong map.
 +	 */
-+	attr_size = attr->size ?: sizeof(struct perf_event_attr);
++	/* Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof */
++	nr = event->thread_map.nr;
++	if (nr > (event->header.size - sizeof(event->thread_map)) /
++		  sizeof(event->thread_map.entries[0]))
++		return -1;
 +
-+	size = PERF_ALIGN(attr_size, sizeof(u64));
- 	size += sizeof(struct perf_event_header);
- 	size += ids * sizeof(u64);
++	for (i = 0; i < nr; i++)
+ 		event->thread_map.entries[i].pid = bswap_64(event->thread_map.entries[i].pid);
+ 	return 0;
+ }
+@@ -747,32 +781,80 @@ static int perf_event__cpu_map_swap(union perf_event *event,
+ 				    bool sample_id_all __maybe_unused)
+ {
+ 	struct perf_record_cpu_map_data *data = &event->cpu_map.data;
++	u32 payload = event->header.size - sizeof(event->header);
  
-@@ -2194,7 +2204,14 @@ int perf_event__synthesize_attr(const struct perf_tool *tool, struct perf_event_
- 	if (ev == NULL)
- 		return -ENOMEM;
+ 	data->type = bswap_16(data->type);
  
--	ev->attr.attr = *attr;
 +	/*
-+	 * Copy only the bytes we understand; zalloc ensures that any
-+	 * extra bytes between sizeof(struct perf_event_attr) and
-+	 * attr_size are zero when the source file uses a newer, larger
-+	 * struct.
++	 * Safe to clamp: a shorter CPU map just means some CPUs
++	 * are absent; tools process the CPUs that are present.
 +	 */
-+	memcpy(&ev->attr.attr, attr, min(sizeof(struct perf_event_attr), attr_size));
-+	ev->attr.attr.size = attr_size;
- 	memcpy(perf_record_header_attr_id(ev), id, ids * sizeof(u64));
+ 	switch (data->type) {
+-	case PERF_CPU_MAP__CPUS:
+-		data->cpus_data.nr = bswap_16(data->cpus_data.nr);
++	case PERF_CPU_MAP__CPUS: {
++		u16 nr, max_nr;
  
- 	ev->attr.header.type = PERF_RECORD_HEADER_ATTR;
+-		for (unsigned i = 0; i < data->cpus_data.nr; i++)
++		data->cpus_data.nr = bswap_16(data->cpus_data.nr);
++		nr = data->cpus_data.nr;
++		max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
++					     cpus_data.cpu)) /
++			 sizeof(data->cpus_data.cpu[0]);
++		if (nr > max_nr) {
++			pr_warning("WARNING: PERF_RECORD_CPU_MAP: nr %u exceeds payload (max %u), clamping\n",
++				   nr, max_nr);
++			nr = max_nr;
++			data->cpus_data.nr = nr;
++		}
++		for (unsigned int i = 0; i < nr; i++)
+ 			data->cpus_data.cpu[i] = bswap_16(data->cpus_data.cpu[i]);
+ 		break;
++	}
+ 	case PERF_CPU_MAP__MASK:
+ 		data->mask32_data.long_size = bswap_16(data->mask32_data.long_size);
+ 
+ 		switch (data->mask32_data.long_size) {
+-		case 4:
++		case 4: {
++			u16 nr, max_nr;
++
+ 			data->mask32_data.nr = bswap_16(data->mask32_data.nr);
+-			for (unsigned i = 0; i < data->mask32_data.nr; i++)
++			nr = data->mask32_data.nr;
++			max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
++						     mask32_data.mask)) /
++				 sizeof(data->mask32_data.mask[0]);
++			if (nr > max_nr) {
++				pr_warning("WARNING: PERF_RECORD_CPU_MAP mask32: nr %u exceeds payload (max %u), clamping\n",
++					   nr, max_nr);
++				nr = max_nr;
++				data->mask32_data.nr = nr;
++			}
++			for (unsigned int i = 0; i < nr; i++)
+ 				data->mask32_data.mask[i] = bswap_32(data->mask32_data.mask[i]);
+ 			break;
+-		case 8:
++		}
++		case 8: {
++			u16 nr, max_nr;
++
+ 			data->mask64_data.nr = bswap_16(data->mask64_data.nr);
+-			for (unsigned i = 0; i < data->mask64_data.nr; i++)
++			nr = data->mask64_data.nr;
++			if (payload < offsetof(struct perf_record_cpu_map_data, mask64_data.mask)) {
++				data->mask64_data.nr = 0;
++				break;
++			}
++			max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
++						     mask64_data.mask)) /
++				 sizeof(data->mask64_data.mask[0]);
++			if (nr > max_nr) {
++				pr_warning("WARNING: PERF_RECORD_CPU_MAP mask64: nr %u exceeds payload (max %u), clamping\n",
++					   nr, max_nr);
++				nr = max_nr;
++				data->mask64_data.nr = nr;
++			}
++			for (unsigned int i = 0; i < nr; i++)
+ 				data->mask64_data.mask[i] = bswap_64(data->mask64_data.mask[i]);
+ 			break;
++		}
+ 		default:
+-			pr_err("cpu_map swap: unsupported long size\n");
++			pr_err("cpu_map swap: unsupported long size %u\n",
++			       data->mask32_data.long_size);
+ 		}
+ 		break;
+ 	case PERF_CPU_MAP__RANGE_CPUS:
+@@ -788,11 +870,27 @@ static int perf_event__cpu_map_swap(union perf_event *event,
+ static int perf_event__stat_config_swap(union perf_event *event,
+ 					bool sample_id_all __maybe_unused)
+ {
+-	u64 size;
++	u64 nr, max_nr, size;
+ 
+-	size  = bswap_64(event->stat_config.nr) * sizeof(event->stat_config.data[0]);
+-	size += 1; /* nr item itself */
++	nr = bswap_64(event->stat_config.nr);
++	/* Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof */
++	max_nr = (event->header.size - sizeof(event->stat_config)) /
++		 sizeof(event->stat_config.data[0]);
++	/*
++	 * Safe to clamp: each config entry is self-describing
++	 * via its tag; missing entries keep their defaults.
++	 */
++	if (nr > max_nr) {
++		pr_warning("WARNING: PERF_RECORD_STAT_CONFIG: nr %" PRIu64 " exceeds payload (max %" PRIu64 "), clamping\n",
++			   nr, max_nr);
++		nr = max_nr;
++	}
++	size = nr * sizeof(event->stat_config.data[0]);
++	/* The swap starts at &nr, so add its size to cover the full range */
++	size += sizeof(event->stat_config.nr);
+ 	mem_bswap_64(&event->stat_config.nr, size);
++	/* Persist the clamped value in native byte order */
++	event->stat_config.nr = nr;
+ 	return 0;
+ }
+ 
+@@ -1730,8 +1828,27 @@ static int machines__deliver_event(struct machines *machines,
+ 					   "COMM"))
+ 			return 0;
+ 		return tool->comm(tool, event, sample, machine);
+-	case PERF_RECORD_NAMESPACES:
++	case PERF_RECORD_NAMESPACES: {
++		/*
++		 * Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof.
++		 * Includes trailing sample_id space when present, but prevents OOB.
++		 */
++		u64 max_nr = (event->header.size - sizeof(event->namespaces)) /
++			     sizeof(event->namespaces.link_info[0]);
++
++		/*
++		 * Native-endian events are mmap'd read-only, so we
++		 * cannot clamp nr in place.  Skip the event instead.
++		 * The swap handler already clamps on the writable
++		 * cross-endian path.
++		 */
++		if (event->namespaces.nr_namespaces > max_nr) {
++			pr_warning("WARNING: PERF_RECORD_NAMESPACES: nr_namespaces %" PRIu64 " exceeds payload (max %" PRIu64 "), skipping\n",
++				   (u64)event->namespaces.nr_namespaces, max_nr);
++			return 0;
++		}
+ 		return tool->namespaces(tool, event, sample, machine);
++	}
+ 	case PERF_RECORD_CGROUP:
+ 		if (!perf_event__check_nul(event->cgroup.path,
+ 					   (void *)event + event->header.size,
+@@ -1912,15 +2029,112 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		perf_session__auxtrace_error_inc(session, event);
+ 		err = tool->auxtrace_error(tool, session, event);
+ 		break;
+-	case PERF_RECORD_THREAD_MAP:
++	case PERF_RECORD_THREAD_MAP: {
++		u64 max_nr;
++
++		if (event->header.size < sizeof(event->thread_map)) {
++			pr_err("PERF_RECORD_THREAD_MAP: header.size (%u) too small\n",
++			       event->header.size);
++			err = -EINVAL;
++			break;
++		}
++
++		max_nr = (event->header.size - sizeof(event->thread_map)) /
++			 sizeof(event->thread_map.entries[0]);
++		if (event->thread_map.nr > max_nr) {
++			pr_err("PERF_RECORD_THREAD_MAP: nr %" PRIu64 " exceeds max %" PRIu64 "\n",
++			       (u64)event->thread_map.nr, max_nr);
++			err = -EINVAL;
++			break;
++		}
++
+ 		err = tool->thread_map(tool, session, event);
+ 		break;
+-	case PERF_RECORD_CPU_MAP:
++	}
++	case PERF_RECORD_CPU_MAP: {
++		struct perf_record_cpu_map_data *data = &event->cpu_map.data;
++		u32 payload = event->header.size - sizeof(event->header);
++
++		/*
++		 * Native-endian events are mmap'd read-only, so we
++		 * cannot clamp nr fields in place.  Skip the event
++		 * if any variant overflows.
++		 */
++		switch (data->type) {
++		case PERF_CPU_MAP__CPUS: {
++			u16 max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
++							 cpus_data.cpu)) /
++				     sizeof(data->cpus_data.cpu[0]);
++
++			if (data->cpus_data.nr > max_nr) {
++				pr_warning("WARNING: PERF_RECORD_CPU_MAP: nr %u exceeds payload (max %u), skipping\n",
++					   data->cpus_data.nr, max_nr);
++				err = 0;
++				goto out;
++			}
++			break;
++		}
++		case PERF_CPU_MAP__MASK:
++			if (data->mask32_data.long_size == 4) {
++				u16 max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
++								 mask32_data.mask)) /
++					     sizeof(data->mask32_data.mask[0]);
++
++				if (data->mask32_data.nr > max_nr) {
++					pr_warning("WARNING: PERF_RECORD_CPU_MAP mask32: nr %u exceeds payload (max %u), skipping\n",
++						   data->mask32_data.nr, max_nr);
++					err = 0;
++					goto out;
++				}
++			} else if (data->mask64_data.long_size == 8) {
++				u16 max_nr;
++
++				if (payload < offsetof(struct perf_record_cpu_map_data, mask64_data.mask)) {
++					err = 0;
++					goto out;
++				}
++				max_nr = (payload - offsetof(struct perf_record_cpu_map_data,
++							     mask64_data.mask)) /
++					 sizeof(data->mask64_data.mask[0]);
++				if (data->mask64_data.nr > max_nr) {
++					pr_warning("WARNING: PERF_RECORD_CPU_MAP mask64: nr %u exceeds payload (max %u), skipping\n",
++						   data->mask64_data.nr, max_nr);
++					err = 0;
++					goto out;
++				}
++			} else {
++				pr_warning("WARNING: PERF_RECORD_CPU_MAP: unsupported long_size %u, skipping\n",
++					   data->mask32_data.long_size);
++				err = 0;
++				goto out;
++			}
++			break;
++		default:
++			break;
++		}
++
+ 		err = tool->cpu_map(tool, session, event);
+ 		break;
+-	case PERF_RECORD_STAT_CONFIG:
++	}
++	case PERF_RECORD_STAT_CONFIG: {
++		/* Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof */
++		u64 max_nr = (event->header.size - sizeof(event->stat_config)) /
++			     sizeof(event->stat_config.data[0]);
++
++		/*
++		 * Native-endian events are mmap'd read-only, so we
++		 * cannot clamp nr in place.  Skip the event instead.
++		 */
++		if (event->stat_config.nr > max_nr) {
++			pr_warning("WARNING: PERF_RECORD_STAT_CONFIG: nr %" PRIu64 " exceeds payload (max %" PRIu64 "), skipping\n",
++				   (u64)event->stat_config.nr, max_nr);
++			err = 0;
++			goto out;
++		}
++
+ 		err = tool->stat_config(tool, session, event);
+ 		break;
++	}
+ 	case PERF_RECORD_STAT:
+ 		err = tool->stat(tool, session, event);
+ 		break;
+@@ -1963,6 +2177,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		err = -EINVAL;
+ 		break;
+ 	}
++out:
+ 	perf_sample__exit(&sample);
+ 	return err;
+ }
 -- 
 2.54.0
 
