@@ -1,124 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2492609E3
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 21:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CA53B4E9D
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 21:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779832481; cv=none; b=XhrkkqyjH3T/g8JezHZCNUpHp8NX5ex4W/MR9VBCxvs783M3tZjiBQ7kF8aW/JwOgsv8Fo7rjhsLfw6IjvMPn/ymcHPpy25j8LxaQmfwSerT9udKCrs+BWDKdk8LKjkZJmADMnutj6PF0QjxyWQX2vo/zNZqsmpWn0aA/SvbXqs=
+	t=1779832548; cv=none; b=Rp9Mr0GVUYXS9tn77boFGgkr2T7RdBfsy277GhAI3D/WdDFHicrs7Uy9B+NSYlkBDUYoFZDmQPchAbiaco2o/4rPtLieO1PXE18RLM6ffNoAbZcrjnkw3sROOxzTehW0d9A9ZNRXmKhy58ttJptbdiMcBD+lDexMUBNTqtEqjVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779832481; c=relaxed/simple;
-	bh=lIKlc80afw52CeRZ90doUcgiddXwN4AeWLSLGUW5b3M=;
+	s=arc-20240116; t=1779832548; c=relaxed/simple;
+	bh=PcvcUAdcDJ+LryHTx02YSJUOdB0VV5n02zByE7dFw34=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZVWqcZ76CWRFuMqQ+qn0btuMXk770rFbaskyCyKb7JMc6qH9djTEDkhQ26eOREY+uhDkPMbemPQoYavj2y7s9TSKzml4GUtkiA+kO5NfsJd1qe32jBWJmGHY+pTEVEadCSdOnMiHc38K+fSqroU+wGHBNDFXrSh87rbJ2HLwmFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkFFFnFP; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=q8cFWwjprdrd00NlIbJe1OUqT5BwVvdXvBJOKuMHsbUqrFrpP4cfAkMP20SLDxF1SeGd9U5mXnnRjN7xxVqqTmOlf5mGmaW8U4kawMEkDoeMrGu9VDSHx5WwyFUy6VKZePtiSSZNGM2itNQN4GHhXFf4alvDkgWHPN99hDr33Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVukfuzD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkFFFnFP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 950D31F000E9;
-	Tue, 26 May 2026 21:54:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVukfuzD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3AA11F000E9;
+	Tue, 26 May 2026 21:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779832480;
-	bh=xd02oMXX2SuJiL/BWCA0x7Cm6KaS/u+fjtl9TEzSLPU=;
+	s=k20260515; t=1779832547;
+	bh=2pLnQE7E6Eyzu3IhkGJoAyqmDZdCFO5UbNgPl5ZLEvY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RkFFFnFP7ut9o1WgJmfTiywqG+WNzGThm4qrCS2duJTlBHd4AyzThNCYGXRug46gQ
-	 0aRYLSGwCRzqeSxBWdF59fIXWIo0xbkgqnDNuGOsPNcbLvoopx6/rUzJSlSkGjEFeK
-	 rmxHOem6UPcG/Ol3ZFr4EMh9WqYBvQSs1Yy3zH85CxhaFvGENbV1Cs4COieGl/DtyK
-	 aLM5tqLjUWJE7owXbULy8NeAcfKhCjLIZJL+tM/teky+6D0eGjoAis12VzsaNpB2LC
-	 h2AFO653U/3l7Ij7qndO5BAtn6g41IXqKBK/QSdkJrJdkAxnrC/wbYCj0/rlORB7aT
-	 3UM2G5aXWrTXg==
+	b=SVukfuzDQmdvy1JUX3ddsK3F0XBs4WZjMkoMEDc8TolNrX29U5BNJiB6k7emJHl/D
+	 ngI24wYU4DWbtqEiUtY2XlZagebokAtNJuM1I335XUqUF2csfg8lWVtsqtIViKBgqa
+	 29EGF5Pl7BCHCaX1Mg81OZEFIPcxGHwV43/IuiEiruxqjtz0jIwrs8F0HAFvMlW6zq
+	 CkypdnGtFUNXTY1LemfJK4rtLSaKKm4GZHD2BpFrBKRN0wCLqUj4oUY82lkkLQGKT4
+	 44hyitK9hH6buYEHWmVZNWdl7ePGhtQkJtrkycV+xrLc0hf+s+DInhMTLY68K+nc//
+	 9u34dwIZjVpRg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 11/29] perf session: Validate nr fields against event
- size on both swap and common paths
+Subject: Re: [PATCH 08/29] perf session: Add validated swap infrastructure
+ with null-termination checks
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260526211806.1193848-12-acme@kernel.org>
-References: <20260526211806.1193848-12-acme@kernel.org>
+In-Reply-To: <20260526211806.1193848-9-acme@kernel.org>
+References: <20260526211806.1193848-9-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 26 May 2026 21:54:40 +0000
-Message-Id: <20260526215440.950D31F000E9@smtp.kernel.org>
+Date: Tue, 26 May 2026 21:55:46 +0000
+Message-Id: <20260526215546.C3AA11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Inconsistent error handling for malformed PERF_RECORD_THREAD_MAP=
- events leads to unnecessary session aborts on native architectures.
+
+Pre-existing issues:
+- [High] The `prot` and `flags` fields in `PERF_RECORD_MMAP2` are completel=
+y ignored during endianness swap.
+- [High] The `perf_event__event_update_swap` function fails to byte-swap th=
+e variable union fields of `PERF_RECORD_EVENT_UPDATE`.
 --
 
-commit 8cc6c3cf14b21b51f888c8eeb92fee4d28388fbd
+commit bc0a5c7da863b9ea5a7bf13cf8099e8bd03a1abc
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf session: Validate nr fields against event size on both swap and common=
- paths
+perf session: Add validated swap infrastructure with null-termination checks
 
-This commit adds bounds checking to variable-length arrays in events such as
-PERF_RECORD_THREAD_MAP, PERF_RECORD_NAMESPACES, PERF_RECORD_CPU_MAP, and
-PERF_RECORD_STAT_CONFIG. It applies these checks on both the native and
-cross-endian processing paths.
+This commit changes swap callbacks to return an int instead of void to allow
+error propagation. It also adds a string null-termination check and includes
+several security hardenings for cross-endian swap handlers.
 
 > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index aef10d42be354..8588e12f110fc 100644
+> index 37544a3574185..d5864e380c1bd 100644
 > --- a/tools/perf/util/session.c
 > +++ b/tools/perf/util/session.c
+[ ... ]
+> -static void perf_event__mmap2_swap(union perf_event *event,
+> +static int perf_event__mmap2_swap(union perf_event *event,
+>  				  bool sample_id_all)
+>  {
+>  	event->mmap2.pid   =3D bswap_32(event->mmap2.pid);
+
+[Severity: High]
+This is a pre-existing issue, but I noticed the prot and flags fields of
+PERF_RECORD_MMAP2 are skipped during the endianness swap.=20
+
+When processing cross-endian perf.data files, these 32-bit values will be=20
+interpreted with the wrong endianness. Could this result in garbage values=
+=20
+when the flags field is read directly during processing (such as in=20
+machine__process_mmap2_event to check for MAP_SHARED), leading to incorrect=
+=20
+memory permissions or misattribution of samples in memory maps?
 
 [ ... ]
+> -static void perf_event__event_update_swap(union perf_event *event,
+> -					  bool sample_id_all __maybe_unused)
+> +static int perf_event__event_update_swap(union perf_event *event,
+> +					 bool sample_id_all __maybe_unused)
+>  {
+>  	event->event_update.type =3D bswap_64(event->event_update.type);
+>  	event->event_update.id   =3D bswap_64(event->event_update.id);
+> +	return 0;
+>  }
 
-> @@ -1912,15 +2029,112 @@ static s64 perf_session__process_user_event(stru=
-ct perf_session *session,
->  		perf_session__auxtrace_error_inc(session, event);
->  		err =3D tool->auxtrace_error(tool, session, event);
->  		break;
-> -	case PERF_RECORD_THREAD_MAP:
-> +	case PERF_RECORD_THREAD_MAP: {
-> +		u64 max_nr;
-> +
-> +		if (event->header.size < sizeof(event->thread_map)) {
-> +			pr_err("PERF_RECORD_THREAD_MAP: header.size (%u) too small\n",
-> +			       event->header.size);
-> +			err =3D -EINVAL;
-> +			break;
-> +		}
-> +
-> +		max_nr =3D (event->header.size - sizeof(event->thread_map)) /
-> +			 sizeof(event->thread_map.entries[0]);
-> +		if (event->thread_map.nr > max_nr) {
-> +			pr_err("PERF_RECORD_THREAD_MAP: nr %" PRIu64 " exceeds max %" PRIu64 =
-"\n",
-> +			       (u64)event->thread_map.nr, max_nr);
-> +			err =3D -EINVAL;
+[Severity: High]
+This is a pre-existing issue, but it looks like the variable union fields
+in struct perf_record_event_update are never byte-swapped.
 
-[Severity: Medium]
-Does returning -EINVAL here introduce inconsistent error handling between t=
-he
-native-endian path and the cross-endian swap path?
-
-On the cross-endian swap path, perf_event__thread_map_swap() returns -1
-if the thread map nr exceeds the payload size. perf_session__process_event()
-handles this swap failure by skipping the event and allowing the session to
-continue.
-
-Here on the native-endian path, the bounds check detects the same condition
-but sets err =3D -EINVAL. This -EINVAL propagates up to
-__perf_session__process_events() and causes the entire perf session to abor=
-t.
-
-Since other events like CPU_MAP and STAT_CONFIG are skipped on error, and t=
-he
-swap path skips malformed THREAD_MAP events, should the native path also sk=
-ip
-them to prevent a single malformed event from breaking the entire session?
-
-> +			break;
-> +		}
-> +
->  		err =3D tool->thread_map(tool, session, event);
->  		break;
+The struct contains a union payload (like cpus, scale, or name) based on
+event->event_update.type. For cross-endian captures, multi-byte fields
+inside the union remain unswapped. Could this lead to data corruption in
+downstream stats processing, or potential memory exhaustion and
+out-of-bounds reads when allocating CPU maps using unswapped nr values in
+cpu_map__new_data?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526211806.1193=
-848-1-acme@kernel.org?part=3D11
+848-1-acme@kernel.org?part=3D8
