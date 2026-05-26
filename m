@@ -1,252 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1D32E888C;
-	Tue, 26 May 2026 02:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779761870; cv=none; b=OP1r7gbZbi2F88/JgCNICJ6GwmVLJ3vX7cWAueYdf+TxMBaAhkKYKiua8LlPt8T1u1OcWdmzUjOt1AyUj/IoBPlVSGQpMOzEEotLldHTXVi+7meyt2eyNN3Stjl8f90wwa2moPs7jJqDSCNK9tegZkyjIQN+E2bGOlr7amfaMMM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779761870; c=relaxed/simple;
-	bh=XtP89NEvX0PZf4LMKaWnzQXpWyjm68KcE6/0MWWj9TM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jjvxd3owMgoAcRBvaJx6wsIticZdgFDOYkJxkAvwWKFOU/VQPd9pE3X1K0Vcy+IfRWrfXLqNOyzZI/ZhCkf2a8UoiXUtrZcZf7IAzN+1VNfHiE0oUjgslUe4JemBsH1TDicHewl9i4Rt5IUs6Sg5qZwRTYjrRJMjSGNtjky1Tbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+Wknrlt; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042022FE575
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 03:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779764832; cv=pass; b=VZdXy9nUdDetppasnYhgqKpn5lS09fVonc8TQH6R6NyQYY9vs7ZKsBRvW6pp9M9RDra6XrmMx7IhKFIC9ueFIus3aeGAtppzufW49MS5YrNjYeIWc/oYPW6hgWXAceZZqbLTRS1Zp55ZpPVCxC+0AOshUOHuA/u5O2zVssFMsrQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779764832; c=relaxed/simple;
+	bh=JxegEAoD6cH9yM+BzeK5zY1BHi17M+18lCvI/sgUcBc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fdXbFChAT4QJeXQqwHIRo1llKDAql6RDQB2w72LSb96mYGY+jmIpeQ1KI9IGG7QW0gW3vVOp4HZb0xvdXJNHHeO+HTid+C62bZ37qwM8z10tCWui0CAxNq0KNT0spZuKICjI/3/wJwqFqgV/M2+qXNNe+6yZyI2g0JYIkPv0d8k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KEoicKyt; arc=pass smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+Wknrlt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A1A31F000E9;
-	Tue, 26 May 2026 02:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779761868;
-	bh=ClHZoH3mCUv8PrqBqmqfTLoUL38iUeJp4u0/Xgy0mOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=B+WknrltdMHcJgv0Msz1tuAvnP4n9UE6jPkC4MGzDVQqhMzrgIu2av2dKAPLFzT2J
-	 F3eIbd9z6AB2yFvsOsWWw9JurKptbFjlS20HdseujnsIjN18fa6S/0KEp5nbLHBwZO
-	 97dePEHez8vN+3awvF3oM4iJTAd10CjhveQ38R3AS40WecgMVe68eGD01ILur/bukX
-	 8ImWIQWeaRY3hajzGuuPx1pwZ4EgS87hO7gZBS2TGHA5ZV8O+BBQf2foch2r3LSQ1c
-	 tk05SushtccF+7eaV2dPcJ31RilO4T1cw1WOYXrJYx9k/RBkHWf/a62GlHYF/4ScBi
-	 clyJfKCT/mQIw==
-Date: Mon, 25 May 2026 21:17:45 -0500
-From: Namhyung Kim <namhyung@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v2] perf bench: add --write-size option to sched pipe
-Message-ID: <ahUCyRwNPKV1VAZ8@google.com>
-References: <20260521-perf_bench_pipe-v2-1-720b6ff7f0fa@debian.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KEoicKyt"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so365ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 20:07:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779764830; cv=none;
+        d=google.com; s=arc-20240605;
+        b=b8NWNA/vT5AvT91wDs/hQbXLHhrGh/zJtho4E83mRQKCbG1G46eSTgFUSPhkfSeUf1
+         KEUaL3BruZ/lW/nrh+o/5FCARmBIkgcde/Q2pGTxn2apEEll3krXKygy1ZjRIRWcnqyP
+         gQ4PIY82OyBY6xz82Y64bpmKca10hiQfzIw3brZ4gnbTGUFwhoygOu9j45Xzgufsh1tV
+         fFBNFc/FMfQoZkpzrEiz6yCt25m2PRNUrGqQG7VfQxWm2evwcebkB09oCv9NHjeem6og
+         SgSrssNv/OHge0Ty6b1GswivECzxC19NaCExU1EMqqONWd6AubjgjOFVJnI2pO5Ti8j3
+         EeQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=uHvGGTdsOqkhJoAEyNoo3QUdmha9JKeI2beers3/JOA=;
+        fh=JcJkPN28YG/jDf1qD6/bZDwLv2Ztf6BQDCymz6W0Uw4=;
+        b=bodXgCmuuER2Lgtno438I9JTheZ8ztQO8W5DcacfSiQ2CqLZdZKdJhTLOHKmmRP524
+         rnQH3Nz1oF9PHDEg2si0oghQhYk6i/IyJDmeNsRdbcUI7cGf9LNREMNNjRwX/DC+DoFw
+         5BA6vPJRKTbQ/tjG7qpMW2U0vzklhzPPAcbSMGXlx4z1bltO4tJZqwoohqv3L/oFsKWZ
+         QdyjjVW++Vq5fSl74/uf4PApvhHS++UuIHMafnVPPCMYDttL+U+/4Al9EXu56HYj3Hc7
+         MLmQQKWM1jyZT0PWWbYdq0NT/VYtXVvl27Q6+tejmXztyMWpFqJL1phZsQADQzyEoX1p
+         TFLQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779764830; x=1780369630; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uHvGGTdsOqkhJoAEyNoo3QUdmha9JKeI2beers3/JOA=;
+        b=KEoicKytGIrdsCS4TmoNrHeyXKa5lufWT5ZfM1MC4a+i0g3F9DtoGbJJZjMMNeaJO3
+         JhgTxn51AJWZO/uPbAjmPJrCJLb3HPlpQ4+LIwYc4M6gAH7eHxrqKBiLIEtjDT8sLaJC
+         sQqlKygLiz5ATrqEWqUskPSo3NHJEFK3enkvidzruOs672/jfzTLptq0d4H34eoPoUgs
+         eMrZrcP1ifIg3PA56O0FDCIKNStLdWPE7UhwYRkunP0L+skMDEUV2VI/oOy7PKGfCSwJ
+         n9j6dB7bsUpi7sz/d/J+ZTH+EoG6qo8uMiV5boAFpRdx++FMSCBNVuJgSXhJnxOx61tT
+         /pmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779764830; x=1780369630;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uHvGGTdsOqkhJoAEyNoo3QUdmha9JKeI2beers3/JOA=;
+        b=RXjLdIrXbJ+pKsrSxYEI184f69TvzzN/5jOr+UzwM4fVbS5IRZoHzz6TfPKzjJpMXH
+         vm+eFidstCAGn3Uzje2Cweg+mcgPGJdPdvEcWh1sIdgppuLHP7YfGBN6kNzvIhXB4cBE
+         AHZDgMZPvT7XrTntqIl/oaih0Tb/yylRkP4BoI69ZL3I6TixRLBUuDODe5xQw8REZH+M
+         hwnqSJxesZ0o45CS/zm4dgoF4W3SSDvfsCe5NDKUlAQbeYnb8a3nJCZ0PwrBTILjVUBT
+         x+gacGh7/K1CV4P04EWbMU2RlzLkLJ+64YKJl7AVzHRlpj7QprKB5Ksh47iNM1urOVe3
+         AO7A==
+X-Forwarded-Encrypted: i=1; AFNElJ8IcGhhiTUnDfxOov29F9vcmXjrUcBtNuTbD5lsvw86v1boGJzVNQ/+aCvVPfnzZQJZxJWgQX6LFRCo9mJRXjCv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy0OiQEp04Sy/0gHWmyjGW4T4tvpdbt6J/s1lLecvhVzXYyXub
+	ORLKmwclmlT0JjxCw11syimKpmzPfgRSzgL4LjfHWog7sLZHuVuFsY8O9rzsCYVxR11wUDZzskd
+	oWU6EQo6xZQBPdU49HtYECZV9tgiZEQGoMdZE2HIlu3b8EXjiBQY1ESva8Fk=
+X-Gm-Gg: Acq92OH1RVKxOjzPI0gpTfOcpMMwa0vzJwMEshFnsNEcN1rbu+iJDQfCN5XwHX1A1Lk
+	sm1Ra/2j5Jk1lOd29mKsTj5Sxmq5TbPZVGK1VXpGAebCfCXym/7JzTKjVBZycGzH3046lusjOWV
+	7ea+5uOFi4u90BeAdO30WWytQ5HSTVLIR/wxOh0MixtKOxzYehdcfDshDniXLi3y1oBxXeCxkJ/
+	fDWWAiWX6cfnS0x6s5Lh1whGWiEmQs0vH27Y1Bfb0f/tMuv45PrS7o+qhx5i7jqTyg1HHzxakAy
+	ADHh25SR7BL6VrPltIQ=
+X-Received: by 2002:a17:903:1210:b0:2bc:dc0b:ab29 with SMTP id
+ d9443c01a7336-2bebe127843mr4023405ad.0.1779764829398; Mon, 25 May 2026
+ 20:07:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260521-perf_bench_pipe-v2-1-720b6ff7f0fa@debian.org>
+References: <CAP-5=fX=vEmTaz6mWgExmrgyYMJmSyOD+1sMCzf7JTk1SkA-zQ@mail.gmail.com>
+ <ahTn2SnHbe4QHdEo@google.com>
+In-Reply-To: <ahTn2SnHbe4QHdEo@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 25 May 2026 20:06:58 -0700
+X-Gm-Features: AVHnY4KreH7Sy1kh-IR_iGLT8IehppPewNRSaCjOCUv6DFZL7jew355xo6k-1qY
+Message-ID: <CAP-5=fVERhArE0NyTUU6Yg57YEJ4793NDVzGUPkARSjMR8c7PQ@mail.gmail.com>
+Subject: Re: Summary of perf-tools-next changes and patches sent to linux-perf-users
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 21, 2026 at 09:15:37AM -0700, Breno Leitao wrote:
-> The default ping-pong uses sizeof(int) (4 bytes) per iteration, which
-> exercises only the pipe-buffer merge path and keeps allocation entirely
-> out of the picture. That makes the bench a useful scheduler / context-
-> switch latency probe but unable to surface anything from the pipe
-> page-allocation hot path.
-> 
-> Add a -s/--write-size option that sets the bytes written and read per
-> ping-pong iteration. The buffer is allocated for each side via
-> struct thread_data and replaces the on-stack int previously used. The
-> default remains sizeof(int) so existing invocations are unchanged.
-> 
-> With --write-size set above PAGE_SIZE the bench drives anon_pipe_write()
-> through alloc_page() (or the bulk pre-alloc, if the relevant patch is
-> applied), which is what we want when measuring pipe locking and page
-> allocation work.
-> 
-> The bench is a ping-pong: both sides call write() before read(), so a
-> single write_size payload must fit entirely in the pipe buffer or both
-> sides deadlock waiting for the other to drain. Resize the pipe via
-> F_SETPIPE_SZ to match write_size (skipped at the sizeof(int) default),
-> and error out cleanly when the request exceeds
-> /proc/sys/fs/pipe-max-size.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
-> This patch has been valuable for testing and verifying the pipe
-> enhancements currently under discussion at
-> https://lore.kernel.org/all/20260515-fix_pipe-v1-0-b14c840c7555@debian.org/
-> ---
-> Changes in v2:
-> - Reject --write-size == 0 to avoid a zero-byte ping-pong that spins
->   (blocking mode) or hangs on epoll_wait (non-blocking mode).
-> - Validate --write-size <= INT_MAX and drop the (int) casts in the
->   read/write BUG_ON and fcntl(F_SETPIPE_SZ) checks, so the comparisons
->   are unambiguous regardless of the requested size.
-> - Fix "acommodate" typo in the pipe-resize comment.
-> - Link to v1: https://patch.msgid.link/20260515-perf_bench_pipe-v1-1-3c5b805ba178@debian.org
-> 
-> To: Peter Zijlstra <peterz@infradead.org>
-> To: Ingo Molnar <mingo@redhat.com>
-> To: Arnaldo Carvalho de Melo <acme@kernel.org>
-> To: Namhyung Kim <namhyung@kernel.org>
-> To: Mark Rutland <mark.rutland@arm.com>
-> To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> To: Jiri Olsa <jolsa@kernel.org>
-> To: Ian Rogers <irogers@google.com>
-> To: Adrian Hunter <adrian.hunter@intel.com>
-> To: James Clark <james.clark@linaro.org>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  tools/perf/bench/sched-pipe.c | 47 +++++++++++++++++++++++++++++++++++++------
->  1 file changed, 41 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/bench/sched-pipe.c b/tools/perf/bench/sched-pipe.c
-> index 70139036d68f0..216d3121d438d 100644
-> --- a/tools/perf/bench/sched-pipe.c
-> +++ b/tools/perf/bench/sched-pipe.c
-> @@ -22,6 +22,7 @@
->  #include <string.h>
->  #include <errno.h>
->  #include <fcntl.h>
-> +#include <limits.h>
->  #include <assert.h>
->  #include <sys/epoll.h>
->  #include <sys/time.h>
-> @@ -39,6 +40,7 @@ struct thread_data {
->  	int			epoll_fd;
->  	bool			cgroup_failed;
->  	pthread_t		pthread;
-> +	char			*buf;
->  };
->  
->  #define LOOPS_DEFAULT 1000000
-> @@ -48,6 +50,7 @@ static	int			loops = LOOPS_DEFAULT;
->  static bool			threaded;
->  
->  static bool			nonblocking;
-> +static unsigned int		write_size = sizeof(int);
->  static char			*cgrp_names[2];
->  static struct cgroup		*cgrps[2];
->  
-> @@ -88,6 +91,8 @@ static const struct option options[] = {
->  	OPT_BOOLEAN('n', "nonblocking",	&nonblocking,	"Use non-blocking operations"),
->  	OPT_INTEGER('l', "loop",	&loops,		"Specify number of loops"),
->  	OPT_BOOLEAN('T', "threaded",	&threaded,	"Specify threads/process based task setup"),
-> +	OPT_UINTEGER('s', "write-size", &write_size,
-> +		     "Bytes per ping-pong write (default 4-bytes). Use larger values to exercise the pipe page-allocation path."),
->  	OPT_CALLBACK('G', "cgroups", NULL, "SEND,RECV",
->  		     "Put sender and receivers in given cgroups",
->  		     parse_two_cgroups),
-> @@ -172,14 +177,14 @@ static void exit_cgroup(int nr)
->  
->  static inline int read_pipe(struct thread_data *td)
->  {
-> -	int ret, m;
-> +	int ret;
->  retry:
->  	if (nonblocking) {
->  		ret = epoll_wait(td->epoll_fd, &td->epoll_ev, 1, -1);
->  		if (ret < 0)
->  			return ret;
->  	}
-> -	ret = read(td->pipe_read, &m, sizeof(int));
-> +	ret = read(td->pipe_read, td->buf, write_size);
->  	if (nonblocking && ret < 0 && errno == EWOULDBLOCK)
->  		goto retry;
->  	return ret;
-> @@ -188,7 +193,7 @@ static inline int read_pipe(struct thread_data *td)
->  static void *worker_thread(void *__tdata)
->  {
->  	struct thread_data *td = __tdata;
-> -	int i, ret, m = 0;
-> +	int i, ret;
->  
->  	ret = enter_cgroup(td->nr);
->  	if (ret < 0) {
-> @@ -204,10 +209,10 @@ static void *worker_thread(void *__tdata)
->  	}
->  
->  	for (i = 0; i < loops; i++) {
-> -		ret = write(td->pipe_write, &m, sizeof(int));
-> -		BUG_ON(ret != sizeof(int));
-> +		ret = write(td->pipe_write, td->buf, write_size);
-> +		BUG_ON(ret < 0 || (unsigned int)ret != write_size);
->  		ret = read_pipe(td);
-> -		BUG_ON(ret != sizeof(int));
-> +		BUG_ON(ret < 0 || (unsigned int)ret != write_size);
+On Mon, May 25, 2026 at 5:22=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hi Ian,
+>
+> On Mon, May 25, 2026 at 04:35:51PM -0700, Ian Rogers wrote:
+> > Hi,
+> >
+> > I've been working on a script [1] to summarize what's been sent to the
+> > linux-perf-users mailing list (using nntp) and compare it to what's
+> > merged into the perf-tools-next branch (using git). The idea is to
+> > make it slightly easier to track down patches that might have been
+> > missed. The script shows what has been merged and what's pending, what
+> > Sashiko thinks, and whose turn it is to work on the patch (author,
+> > reviewer or maintainer) using some naive tag analysis. The output is
+> > quite large, so rather than adding it below, I will send the last 4
+> > weeks in separate e-mail replies to this message.
+>
+> Great!  It'd be very helpful for me.  I have two requests.
+>
+> 1. can you make it not to wrap the long lines?  I guess it may be an
+>    email client setting.
 
-Is it possible to return smaller values than required due to signal or
-something?
+Yeah, I sent from gmail. If I'd sent from the command line then
+hopefully things wouldn't get wrapped.
+
+> 2. can it show only summary of the series, not whole list of patches?
+
+So the reason for listing the patches is that it better fits my use
+case, which likely differs from Arnaldo's and yours. Often times we'll
+skip a patch here and there and then I'll get surprised something is
+missing. You can see this with Dapeng's series, where 4 of the 5
+patches were merged:
+
+  Series : perf/x86/intel: Fix bugs of auto counter reload sampling
+  Author : Dapeng Mi <dapeng1.mi@linux.intel.com>
+  Version: v4
+  Date   : Thu, 30 Apr 2026 00:25:58 +0000 (Latest Activity)
+  Status : Reviewer work (No replies to series)
+  Sashiko: Reviewed
+(https://sashiko.dev/#/patchset/20260430002558.712334-1-dapeng1.mi%40linux.=
+intel.com)
+  Unapplied Patches (1):
+    -> [5] [Patch v4 5/5] perf/x86/intel: Consolidate
+MSR_IA32_PERF_CFG_C tracking
+       Link   :
+https://lore.kernel.org/linux-perf-users/20260430002558.712334-6-dapeng1.mi=
+%40linux.intel.com/
+       Sashiko: Reviewed (No regressions)
+  Applied Patches (4):
+    -> [1] [Patch v4 1/5] perf/x86/intel: Improve validation and
+configuration of ACR masks
+       Commit: 5ad732a56be4 (date: 2026-05-05)
+    -> [2] [Patch v4 2/5] perf/x86/intel: Always reprogram ACR events
+to prevent stale masks
+       Commit: 8ba0b706a485 (date: 2026-05-05)
+    -> [3] [Patch v4 3/5] perf/x86/intel: Disable PMI for
+self-reloaded ACR events
+       Commit: 1271aeccc307 (date: 2026-05-05)
+    -> [4] [Patch v4 4/5] perf/x86/intel: Enable auto counter reload for DM=
+R
+       Commit: aa4384bc8f43 (date: 2026-05-05)
+
+or similarly in this series of mine:
+
+  Series : perf DWARF: Fix libdw API contract violations and crashes
+  Author : Ian Rogers <irogers@google.com>
+  Version: v4
+  Date   : Sun, 03 May 2026 17:10:32 +0000 (Latest Activity)
+  Status : Patch author work (Feedback present in series, but no relevant t=
+ags)
+  Sashiko: Not Found
+  Unapplied Patches (1):
+    -> [3] [PATCH v3 3/6] perf libdw: Fix libdw API contract violations
+       Link   :
+https://lore.kernel.org/linux-perf-users/20260503003552.1063540-4-irogers%4=
+0google.com/
+       Sashiko: Not Found
+  Applied Patches (5):
+    -> [1] [PATCH v3 1/6] perf dwarf-aux: Fix libdw segmentation fault
+in cu_walk_functions_at
+       Commit: d37a5467709e (date: 2026-05-05)
+    -> [2] [PATCH v3 2/6] perf dwarf-aux: Fix libdw API contract violations
+       Commit: 17e9b4243e76 (date: 2026-05-05)
+    -> [4] [PATCH v3 4/6] perf probe-finder: Fix libdw API contract violati=
+ons
+       Commit: 9a2ef19b5f52 (date: 2026-05-05)
+    -> [5] [PATCH v3 5/6] perf annotate-data: Fix libdw API contract violat=
+ions
+       Commit: 5aa194190005 (date: 2026-05-05)
+    -> [6] [PATCH v3 6/6] perf debuginfo: Fix libdw API contract violations
+       Commit: 31088ccf0312 (date: 2026-05-05)
+
+The patch flagged as missing in my case was broken apart with
+different commit messages, which is why it's being flagged. But in
+general it is easy for an individual patch to go missing. If
+everything is merged the patch appears in the merged section;
+otherwise, there's some action required from the patch author,
+reviewers or maintainers. I think the cover message also often misses
+other things happening in a series. Hopefully, grouping of the commits
+allows you to quickly skip through the verbosity.
 
 Thanks,
-Namhyung
+Ian
 
-
->  	}
->  
->  	return NULL;
-> @@ -233,12 +238,39 @@ int bench_sched_pipe(int argc, const char **argv)
->  
->  	argc = parse_options(argc, argv, options, bench_sched_pipe_usage, 0);
->  
-> +	if (write_size == 0 || write_size > INT_MAX) {
-> +		fprintf(stderr, "--write-size must be in 1..%d\n", INT_MAX);
-> +		return -1;
-> +	}
-> +
->  	if (nonblocking)
->  		flags |= O_NONBLOCK;
->  
->  	BUG_ON(pipe2(pipe_1, flags));
->  	BUG_ON(pipe2(pipe_2, flags));
->  
-> +	/*
-> +	 * On a custom write_size, resize the pipes so a single payload fits.
-> +	 */
-> +	if (write_size > sizeof(int)) {
-> +		int r1 = fcntl(pipe_1[1], F_SETPIPE_SZ, write_size);
-> +		int r2 = fcntl(pipe_2[1], F_SETPIPE_SZ, write_size);
-> +
-> +		if (r1 < 0 || r2 < 0 ||
-> +		    (unsigned int)r1 < write_size ||
-> +		    (unsigned int)r2 < write_size) {
-> +			fprintf(stderr,
-> +				"--write-size %u exceeds /proc/sys/fs/pipe-max-size\n",
-> +				write_size);
-> +			return -1;
-> +		}
-> +	}
-> +
-> +	for (t = 0; t < nr_threads; t++) {
-> +		threads[t].buf = calloc(1, write_size);
-> +		BUG_ON(!threads[t].buf);
-> +	}
-> +
->  	gettimeofday(&start, NULL);
->  
->  	for (t = 0; t < nr_threads; t++) {
-> @@ -287,6 +319,9 @@ int bench_sched_pipe(int argc, const char **argv)
->  	gettimeofday(&stop, NULL);
->  	timersub(&stop, &start, &diff);
->  
-> +	for (t = 0; t < nr_threads; t++)
-> +		free(threads[t].buf);
-> +
->  	exit_cgroup(0);
->  	exit_cgroup(1);
->  
-> 
-> ---
-> base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
-> change-id: 20260515-perf_bench_pipe-bae2ec777c4b
-> 
-> Best regards,
-> --  
-> Breno Leitao <leitao@debian.org>
-> 
+> Thanks,
+> Namhyung
+>
+> >
+> > [1] https://github.com/captain5050/ian_tools/blob/main/missing.py
