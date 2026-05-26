@@ -1,39 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924858F7D;
-	Tue, 26 May 2026 00:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A73269CE7;
+	Tue, 26 May 2026 00:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779755885; cv=none; b=aOT5sz8oYY1Xal06Tpgw4ezNIq4BjdKOzmnFRtfwzDgXTkVMBhUS5pugvvyhDBt15oI1xVbbqWn9mZoECSLQWCaKoFUmvqz3RC8sZNwfpS53dGdGQ8IPGNs56KMHlai47avlDmJHMTX/7w90ClcDRN+bm652WgaZ9FZEHBwcmY0=
+	t=1779755914; cv=none; b=GaUwdxr3SDwFVjpZqqRlviJZzeWrJhkQbJ98zLsKcbFobag+t5qa4ja692+XgzkwORJ24whVg2ZGKEdcJwwRtHFzBfx+4h1CSxMtpH1qnQGpxh5LYdnPTaqEewUEaJHQH9V0bc4S+z4EpEgvCywpXilHzXZEY/xYRsDxBAHkgUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779755885; c=relaxed/simple;
-	bh=7b9WUA6Oon073MXqg3OXf9hN5UxNB0RyTY4LvxBeBzo=;
+	s=arc-20240116; t=1779755914; c=relaxed/simple;
+	bh=H/5GODmyDBgk1tQIc8wvDX2DoC+LUj0xBMMxYC3c7K8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=REjHaU3en6w7asaEQOy2+ua1EgofGW18lGYbpIPiSDum/HmGbA0of4lCaJsC32VbhrvKmmxZyHRujKycwBHr1VEHd28/CyPe+clKzBPmMF4YfxMW1q1vZnVgZhQTpRukBruI3bso09+6lNk1tDbMW8huYXmNkHmvHol8l3WrfG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfyACkcb; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dz70JmuaJ1Uj+kk91DvmjwMv70yqckgh+MRMvygJLemTLIYdPb2F/HQb4E4LSzfkaVL0Z1CoQbvgFJ6j2XVzlk5XMFRVwguJoLSSmwNHiF4blYN4xQIpAuC9V8vb1PLKtrgoBGrFQvVKy5Q2BBrhNIc+hbe7Jb7KpQojNDAbsJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDMv2isJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfyACkcb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAEEF1F000E9;
-	Tue, 26 May 2026 00:38:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDMv2isJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D88B41F000E9;
+	Tue, 26 May 2026 00:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779755884;
-	bh=J+l//ukBHDQhg9StbUnckzWIkb3cLxIvbJtICtk6JWY=;
+	s=k20260515; t=1779755913;
+	bh=+8bg39MIcg+2fCN2CcreG9UKxic/kHUFI16hwnrIPTc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WfyACkcbDyzemRP2TKut34NN6NcERlFmal2l2A+zYUrWnqHo5kQm8s3ZT4BWavcVA
-	 YV5vJ4srj8SwoTgcsLJanP2JjNotU5WwHpTJGY7QPhqMDhfyczGdERTaIwO/xMEraC
-	 LRPJNpvM85aKv7/BIMweGS1lc6t9vE3ECYBtE5QCSSXqGjkEHHfpTjtxHVtA3IAOnx
-	 ocbIQ4BH+u534lmP3Js9hdbdkjztrx/khsnmCNm3t4psqKYkWAgUz/hDHXZsC2Xi0u
-	 koQgkrv534gQ6kLz9qDoPVuo5cdaA4S//OsePM74cPQj0amdE90+jpmgAEa3mx+oqC
-	 M/gcyKSzg/sCQ==
-Date: Mon, 25 May 2026 19:38:01 -0500
+	b=BDMv2isJG+a49bLqmydipTEXev0lODsV4+5mDUq3oczED3dZEF0iShW5RHdqk2O82
+	 NFHC7OoCxoP8jXQeIKoyooWPI/+4fT2pOgT+STKnuHdzCExMt7DsrHg8efowqs11tZ
+	 9rzy5QLcF8NrBJ/EJuL+tMx2Mb5FIRTQceHDmq1wcsFIQd0rqAF6Cm6asJFNzFcidL
+	 HstRwuWkMFw/WZAApuU39gGNbrGFrgI4nO5mio4qQQ1h5bIm589dIUH7I30/NAsSgW
+	 tq+j4jvQv4GCLwokY87SlHCWy8wZ3cbAN4EBpgaTBhVr6c2Z1lO2bzQszausBU44mE
+	 XDfp60DN+jYIQ==
+Date: Mon, 25 May 2026 19:38:29 -0500
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 06/23] perf python: Add missed explicit dependencies
-Message-ID: <ahTraRGMGowOJ4II@google.com>
-References: <20260522220435.2378363-7-irogers@google.com>
- <20260522221338.039751F000E9@smtp.kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org,
+	leo.yan@linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
+Subject: Re: [PATCH v9 07/23] perf evsel/evlist: Avoid unnecessary #includes
+Message-ID: <ahTrhaHGEtHLEAIM@google.com>
+References: <20260428071903.1886173-1-irogers@google.com>
+ <20260522220435.2378363-1-irogers@google.com>
+ <20260522220435.2378363-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,50 +47,111 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260522221338.039751F000E9@smtp.kernel.org>
+In-Reply-To: <20260522220435.2378363-8-irogers@google.com>
 
-On Fri, May 22, 2026 at 10:13:37PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Including `<Python.h>` after standard system headers violates the Python C-API contract and can lead to macro redefinition warnings, build failures, or ABI mismatches.
-> --
+On Fri, May 22, 2026 at 03:04:18PM -0700, Ian Rogers wrote:
+> Use forward declarations and remove unnecessary #includes in
+> evsel.h. Sort the forward declarations in evsel.h and evlist.h.
 > 
-> commit 37ded89f453597ef269f0bcb73c5907738b8e5d9
-> Author: Ian Rogers <irogers@google.com>
-> 
-> perf python: Add missed explicit dependencies
-> 
-> This commit fixes a missing include of pmus.h that was discovered
-> while cleaning up the evsel and evlist header files. It also sorts
-> the include directives alphabetically.
-> 
-> > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> > index cc1019d29a5d0..dd937d714e991 100644
-> > --- a/tools/perf/util/python.c
-> > +++ b/tools/perf/util/python.c
-> > @@ -1,30 +1,35 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> > -#include <Python.h>
-> > -#include <structmember.h>
-> >  #include <inttypes.h>
-> > -#include <poll.h>
-> > +
-> >  #include <linux/err.h>
-> > +#include <poll.h>
-> > +
-> > +#include <Python.h>
-> 
-> [Severity: Medium]
-> Could moving Python.h here cause build warnings or ABI mismatches?
-> 
-> The Python C API requires that Python.h must be included before any
-> standard system headers. Python.h defines preprocessor macros that
-> alter the behavior of standard headers. Because this alphabetizes the
-> list, standard headers like inttypes.h and poll.h are now included
-> before Python.h.
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-I think it's worth following the suggestion.  I'm not sure if it's
-possible to add an exception for the python headers to clang format.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+> ---
+>  tools/perf/util/evlist.h | 15 +++++++++------
+>  tools/perf/util/evsel.h  | 20 +++++++++++---------
+>  2 files changed, 20 insertions(+), 15 deletions(-)
+> 
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index e507f5f20ef6..e54761c670b6 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -2,29 +2,32 @@
+>  #ifndef __PERF_EVLIST_H
+>  #define __PERF_EVLIST_H 1
+>  
+> +#include <signal.h>
+> +
+>  #include <linux/compiler.h>
+>  #include <linux/kernel.h>
+> -#include <linux/refcount.h>
+>  #include <linux/list.h>
+> +#include <linux/refcount.h>
+> +#include <pthread.h>
+> +#include <unistd.h>
+> +
+>  #include <api/fd/array.h>
+>  #include <internal/evlist.h>
+>  #include <internal/evsel.h>
+>  #include <perf/evlist.h>
+> +
+>  #include "affinity.h"
+>  #include "events_stats.h"
+>  #include "evsel.h"
+>  #include "rblist.h"
+> -#include <pthread.h>
+> -#include <signal.h>
+> -#include <unistd.h>
+>  
+> -struct pollfd;
+> -struct thread_map;
+>  struct perf_cpu_map;
+>  struct perf_stat_config;
+> +struct pollfd;
+>  struct record_opts;
+>  struct strbuf;
+>  struct target;
+> +struct thread_map;
+>  
+>  /*
+>   * State machine of bkw_mmap_state:
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 927e5b4756cc..2221694bb819 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -2,28 +2,30 @@
+>  #ifndef __PERF_EVSEL_H
+>  #define __PERF_EVSEL_H 1
+>  
+> -#include <linux/list.h>
+>  #include <stdbool.h>
+> -#include <sys/types.h>
+> +
+> +#include <linux/list.h>
+>  #include <linux/perf_event.h>
+>  #include <linux/types.h>
+> +#include <sys/types.h>
+> +
+>  #include <internal/evsel.h>
+>  #include <perf/evsel.h>
+> +
+>  #include "symbol_conf.h"
+> -#include "pmus.h"
+> -#include "pmu.h"
+>  
+> +struct bperf_follower_bpf;
+> +struct bperf_leader_bpf;
+> +struct bpf_counter_ops;
+>  struct bpf_object;
+>  struct cgroup;
+> +struct hashmap;
+>  struct perf_counts;
+> +struct perf_pmu;
+>  struct perf_stat_config;
+>  struct perf_stat_evsel;
+> -union perf_event;
+> -struct bpf_counter_ops;
+>  struct target;
+> -struct hashmap;
+> -struct bperf_leader_bpf;
+> -struct bperf_follower_bpf;
+> +union perf_event;
+>  
+>  typedef int (evsel__sb_cb_t)(union perf_event *event, void *data);
+>  
+> -- 
+> 2.54.0.794.g4f17f83d09-goog
+> 
