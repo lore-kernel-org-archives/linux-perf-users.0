@@ -1,332 +1,239 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00CC34028DA
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 17:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37123409639;
+	Tue, 26 May 2026 17:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779814849; cv=none; b=K6vhj7mzioR3WXUNzwgHFqt0SDoLj5NjM8vCyq0S0obSd8LZYZ9xjjeTC5aGhjUAM9D55OXNZnJqduf3SQuKuBBM/V0i3hhWNsudnbthLdURJiWGUYdcP0pROJurqQk+FiXw/s457MuDsyo2T6PKsRcgXEy1hp2st8TF4+WBZDA=
+	t=1779816129; cv=none; b=EnqgJBSoQuknaUpGRxjTOpgOGE1a8UOXPp94dI9vhed1HYjmPlMc7hSvfHtSvl0caTU4/Rh1rRTl1rbocp9/bDAZzVRORWUO4CDWYqmhdJYWF1a4hhAa8L25g3+R+ugfPShS0JEkBmhhg/lWisZquH3lHCg2y0x6WEbglaLnzvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779814849; c=relaxed/simple;
-	bh=7WlkOoaE/RMqjgbj6G1MbXEsmIn23jDaiZiX8j542bI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WccgSg3sFCTbL1IKIqcn94V0BJ9r1nCh78dI/Pnu9fmArBgAvYrqqZlxl8wsdOzFDGG83M9g6OsacnMw5Ux7EbTLbO/5EIFrH4FAF4lFmYsj3RJft/IAfmmSUDwYoy4DwokYiAohK8kGu5I3C5SntzFq//K2M7nJTxDO5tJwYxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=pzwO60gd; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1779816129; c=relaxed/simple;
+	bh=cftIROrufN5KTHvbTf1Hh1vHNPzf4GvBCrZkNiIfiWg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=YWe/tCNzc2QgMZUSRgktVElCdU73pgqtJx5Eq9HPJEjdLZwGRprH6GiCJEVirsMjygZiMOHkAGu0X9aoRbqRKxTaGCe01Q6MRfjPm/dy4/LLpAGKzWoydN3P6J4yYWNPoQjdAgdUujWK4/aF0lxwI+t3VbK8o2SbIGmYPGMJpHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbQe3kXp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="pzwO60gd"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 706CF2944;
-	Tue, 26 May 2026 10:00:42 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2089E3F7B4;
-	Tue, 26 May 2026 10:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1779814847; bh=7WlkOoaE/RMqjgbj6G1MbXEsmIn23jDaiZiX8j542bI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pzwO60gd4diW64UcQ5crqbNRahVnOLgAtjSFb/rh1KHRUvObLGdeftOaX8ZygvssS
-	 QlALxi07BPipfInujbnGOE4w2vwzc/uGvvpYNzAhFOlK4REMc9UDwKUaILt1o7wUCM
-	 gvRfFNBGNT0Du6jjfScdNvF3ewZz0Sbv/nELAH2o=
-From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 26 May 2026 17:59:44 +0100
-Subject: [PATCH v6 8/8] perf test: Add Arm CoreSight callchain test
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbQe3kXp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B63D1F000E9;
+	Tue, 26 May 2026 17:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779816127;
+	bh=+pb9u8md+1jJKMPsMcJZxTXZuOwvAJj4vCNPcj+GWUg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=JbQe3kXpvxApoj8V8CpfZ1VWs6W+t+k6ze/7V6QHC8Fytr0K5ZVkSuQRHowIBxVGV
+	 40SW0kokfKaCNPMho1OpTV0GrDjtyvy/zyCr9plmUuZADserdo111MRPQUMVmTuinu
+	 SFxa0f+/NAT0A1G7ajbUGTR6V3TmBJeJGk4d4EEaUbnWOvifzcQ2ZPvzF8isDBKt9V
+	 gd1jvl9mb64pFX3nSUDfRwD4NS/PW9TcN/W3QNfrMuAt3XOjMUgJe5WcYWzMzVMl+8
+	 84X9Mgl1ICmhyuw/MceHHMgR8p5dBPUox/3rMsnCqF4hePiQBQ07KhipPFi0rbQ6BY
+	 4DkkH/kFp4UhQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 2/2] perf: marvell: Add CN20K DDR PMU support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geetha sowjanya" <gakula@marvell.com>
+Cc: robh@kernel.org, conor+dt@kernel.org, linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20260526164330.23878-3-gakula@marvell.com>
+References: <20260526164330.23878-3-gakula@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 26 May 2026 17:22:07 +0000
+Message-Id: <20260526172207.8B63D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260526-b4-arm_cs_callchain_support_v1-v6-8-f9f49f53c9dd@arm.com>
-References: <20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com>
-In-Reply-To: <20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>, 
- Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
- linux-perf-users@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779814822; l=6359;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=7WlkOoaE/RMqjgbj6G1MbXEsmIn23jDaiZiX8j542bI=;
- b=YIbR2VfgZ7s5gODkXaxRPPzhT9ryH1uDOX8j/3Ysscp8o3Yvt/mudI7IlYHcedGnbATow3UjY
- VVCq6HaAqx/BlwP4170dTfUb79F0uF+WikErwnLZ6RhYY1U3FqiM0OG
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Add a shell test for synthesized callchains from Arm CoreSight trace.
-The test runs only on arm64 systems with cs_etm event and gcc available.
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
 
-Build a small test program for syscall, record them with CoreSight trace
-data, and decode with itrace callchain synthesis enabled. Verify that
-the push and pop callchain.
+New issues:
+- [High] Overlapping switch case ranges cause a compilation error, and brok=
+en fallthrough logic prevents Odyssey DFI events from being handled.
+- [Medium] New CAS events are exported via sysfs but unhandled in the drive=
+r, rendering them unusable.
+- [Medium] Incomplete configuration of CN20K ZQ events causes hardware stat=
+e leakage and potential enablement failures.
 
-After:
+Pre-existing issues:
+- [Critical] The error path in `cn10k_ddr_perf_event_add()` leaks a counter=
+ allocation and leaves a dangling pointer, leading to a Use-After-Free.
+--
 
-  perf test 150 -vvv
+commit d7ca37a605c64e38783da21352c22989b06d59ba
+Author: Geetha sowjanya <gakula@marvell.com>
 
-  150: Check Arm CoreSight synthesized callchain:
-  --- start ---
-  test child forked, pid 13528
-  Test callchain push: PASS
-  Test callchain pop: PASS
-  ---- end(0) ----
-  150: Check Arm CoreSight synthesized callchain                       : Ok
+perf: marvell: Add CN20K DDR PMU support
 
-Assisted-by: Codex:GPT-5.5
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- .../tests/shell/test_arm_coresight_callchain.sh    | 235 +++++++++++++++++++++
- 1 file changed, 235 insertions(+)
+This patch adds support for the CN20K DRAM Subsystem PMU, which monitors DDR
+traffic. It introduces new events, sysfs attributes, and device match data
+for the CN20K variant. The PMU logic is also updated to handle
+CN20K-specific event mappings and register offsets.
 
-diff --git a/tools/perf/tests/shell/test_arm_coresight_callchain.sh b/tools/perf/tests/shell/test_arm_coresight_callchain.sh
-new file mode 100755
-index 0000000000000000000000000000000000000000..0e5a5d1129ae7d34f8e0c5942fb62d27db3e862d
---- /dev/null
-+++ b/tools/perf/tests/shell/test_arm_coresight_callchain.sh
-@@ -0,0 +1,235 @@
-+#!/bin/bash
-+# Check Arm CoreSight synthesized callchain (exclusive)
-+# SPDX-License-Identifier: GPL-2.0
-+
-+glb_err=1
-+
-+if ! tmpdir=$(mktemp -d /tmp/perf-cs-callchain-test.XXXXXX); then
-+	echo "mktemp failed"
-+	exit 1
-+fi
-+
-+cleanup_files()
-+{
-+	rm -rf "$tmpdir"
-+}
-+
-+trap cleanup_files EXIT
-+trap 'cleanup_files; exit $glb_err' TERM INT
-+
-+skip_if_system_is_not_ready()
-+{
-+	[ "$(uname -m)" = "aarch64" ] || {
-+		echo "Skip: arm64 only test" >&2
-+		return 2
-+	}
-+
-+	perf list | grep -q 'cs_etm//' || {
-+		echo "Skip: cs_etm event is not available" >&2
-+		return 2
-+	}
-+
-+	command -v gcc >/dev/null 2>&1 || {
-+		echo "Skip: gcc is not available" >&2
-+		return 2
-+	}
-+
-+	return 0
-+}
-+
-+build_test_program()
-+{
-+	local src=$1
-+	local bin=$2
-+
-+	gcc -g -O0 -o "$bin" "$src"
-+}
-+
-+record_trace()
-+{
-+	local bin=$1
-+	local data=$2
-+	local script=$3
-+
-+	perf record -m ,32M -o "$data" --per-thread -e cs_etm// -- "$bin" >/dev/null 2>&1 &&
-+	perf script --itrace=g16i10il64 -i "$data" > "$script"
-+}
-+
-+check_regex()
-+{
-+	local name=$1
-+	local regex=$2
-+	local script=$3
-+
-+	if grep -Pzo "$regex" "$script" >/dev/null; then
-+		echo "Test $name: PASS"
-+		return 0
-+	else
-+		echo "Test $name: FAIL"
-+		return 1
-+	fi
-+}
-+
-+run_test()
-+{
-+	local name=$1
-+	local src=$tmpdir/$name.S
-+	local bin=$tmpdir/$name
-+	local data=$tmpdir/perf.$name.data
-+	local script=$tmpdir/perf.$name.script
-+	local regex
-+
-+	"${name}_src" "$src"
-+
-+	if ! build_test_program "$src" "$bin"; then
-+		echo "$name: build failed"
-+		return
-+	fi
-+
-+	if ! record_trace "$bin" "$data" "$script"; then
-+		echo "$name: perf record/script failed"
-+		return
-+	fi
-+
-+	regex=$("${name}_push_regex")
-+	check_regex "${name} push" "$regex" "$script" || return
-+
-+	regex=$("${name}_pop_regex")
-+	check_regex "${name} pop" "$regex" "$script" || return
-+
-+	glb_err=0
-+}
-+
-+callchain_src()
-+{
-+	cat > "$1" <<'EOF'
-+/* callchain.S */
-+	.text
-+
-+	.global do_svc
-+	.type do_svc, %function
-+do_svc:
-+	stp	x29, x30, [sp, #-16]!
-+	mov	x29, sp
-+
-+	mov	x0, #1
-+	adr	x1, msg
-+	mov	x2, #23
-+	mov	x8, #64
-+
-+	nop
-+	nop	// Pad nops for 9 insns before svc
-+
-+	b	1f
-+1:
-+	svc	#0
-+
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop	// Pad nops for 10 insns after svc
-+
-+	ldp	x29, x30, [sp], #16
-+	ret
-+	.size do_svc, .-do_svc
-+
-+	.global foo
-+	.type foo, %function
-+foo:
-+	stp	x29, x30, [sp, #-16]!
-+	mov	x29, sp
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop	// Pad nops for 9 insns before call
-+
-+	bl	do_svc
-+
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop
-+	nop	// Pad nops for 10 insns after call
-+
-+	ldp	x29, x30, [sp], #16
-+	ret
-+	.size foo, .-foo
-+
-+	.global main
-+	.type main, %function
-+main:
-+	stp	x29, x30, [sp, #-16]!
-+	mov	x29, sp
-+
-+	bl	foo
-+
-+	mov	w0, #0
-+	ldp	x29, x30, [sp], #16
-+	.size main, .-main
-+	ret
-+
-+	.section .rodata
-+msg:
-+	.asciz	"hello from svc syscall\n"
-+EOF
-+}
-+
-+callchain_push_regex()
-+{
-+	printf '%s' \
-+'callchain[[:space:]]+[0-9]+ \[[0-9]+\][[:space:]]+10 instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ foo\+0x[[:xdigit:]]+ \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ main\+0xc \(.*/callchain\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'\
-+'\n'\
-+'callchain[[:space:]]+[0-9]+ \[[0-9]+\][[:space:]]+10 instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ do_svc\+0x[[:xdigit:]]+ \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ foo\+0x28 \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ main\+0xc \(.*/callchain\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'\
-+'\n'\
-+'callchain[[:space:]]+[0-9]+ \[[0-9]+\][[:space:]]+10 instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ (vectors|el.*_64_sync|tramp_vectors)\+0x[[:xdigit:]]+ \(\[kernel\.kallsyms\]\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ do_svc\+0x28 \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ foo\+0x28 \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ main\+0xc \(.*/callchain\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'
-+}
-+
-+callchain_pop_regex()
-+{
-+	printf '%s' \
-+'callchain[[:space:]]+[0-9]+ \[[0-9]+\][[:space:]]+10 instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ (ret_to_user|tramp_exit)\+0x[[:xdigit:]]+ \(\[kernel\.kallsyms\]\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ do_svc\+0x28 \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ foo\+0x28 \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ main\+0xc \(.*/callchain\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'\
-+'\n'\
-+'callchain[[:space:]]+[0-9]+ \[[0-9]+\][[:space:]]+10 instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ do_svc\+0x[[:xdigit:]]+ \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ foo\+0x28 \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ main\+0xc \(.*/callchain\)\n' \
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'\
-+'\n'\
-+'callchain[[:space:]]+[0-9]+ \[[0-9]+\][[:space:]]+10 instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ foo\+0x[[:xdigit:]]+ \(.*/callchain\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ main\+0xc \(.*/callchain\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'
-+}
-+
-+skip_if_system_is_not_ready || exit 2
-+
-+run_test "callchain"
-+
-+exit $glb_err
+> diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_=
+cn10k_ddr_pmu.c
+> index 72ac17efd846a..4d8bdd9233bd9 100644
+> --- a/drivers/perf/marvell_cn10k_ddr_pmu.c
+> +++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
 
--- 
-2.34.1
+[ ... ]
 
+> @@ -87,6 +117,9 @@
+>  #define EVENT_OP_IS_SPEC_REF			41
+>  #define EVENT_OP_IS_CRIT_REF			40
+>  #define EVENT_OP_IS_REFRESH			39
+> +#define EVENT_OP_IS_CAS_WCK_SUS			38
+> +#define EVENT_OP_IS_CAS_WS_OFF			37
+> +#define EVENT_OP_IS_CAS_WS			36
+>  #define EVENT_OP_IS_ENTER_MPSM			35
+
+[ ... ]
+
+> @@ -336,6 +369,80 @@ static struct attribute *odyssey_ddr_perf_events_att=
+rs[] =3D {
+
+[ ... ]
+
+> +	CN10K_DDR_PMU_EVENT_ATTR(ddr_cas_ws, EVENT_OP_IS_CAS_WS),
+> +	CN10K_DDR_PMU_EVENT_ATTR(ddr_cas_ws_off, EVENT_OP_IS_CAS_WS_OFF),
+> +	CN10K_DDR_PMU_EVENT_ATTR(ddr_cas_wck_sus, EVENT_OP_IS_CAS_WCK_SUS),
+
+[Severity: Medium]
+Will these new CAS events return -EINVAL when configured?
+
+The IDs for these events (36, 37, and 38) fall into the gap between
+EVENT_WAW_HAZARD (26) and EVENT_OP_IS_REFRESH (39).
+
+Because ddr_perf_get_event_bitmap() was not updated to handle this range:
+
+    case EVENT_HIF_RD_OR_WR ... EVENT_WAW_HAZARD:
+    case EVENT_OP_IS_REFRESH ... EVENT_OP_IS_ZQLATCH:
+        *event_bitmap =3D (1ULL << (eventid - 1));
+        break;
+
+it seems userspace attempts to use these attributes will fall to the default
+case and fail.
+
+> +	CN10K_DDR_PMU_EVENT_ATTR(ddr_refresh, EVENT_OP_IS_REFRESH),
+
+[ ... ]
+
+> @@ -411,8 +525,22 @@ static int ddr_perf_get_event_bitmap(int eventid, u6=
+4 *event_bitmap,
+>  	int err =3D 0;
+> =20
+>  	switch (eventid) {
+> +	case EVENT_PERF_OP_IS_WR32 ... EVENT_PERF_OP_IS_RD16:
+
+[Severity: High]
+Does this code introduce overlapping switch case ranges?
+
+EVENT_PERF_OP_IS_WR32 is 58 and EVENT_PERF_OP_IS_RD16 is 61, so this covers
+values 58 to 61.
+
+However, the existing code already handles EVENT_DFI_PARITY_POISON to
+EVENT_DFI_CMD_IS_RETRY:
+
+    case EVENT_DFI_PARITY_POISON ...EVENT_DFI_CMD_IS_RETRY:
+
+If EVENT_DFI_PARITY_POISON is 56 and EVENT_DFI_CMD_IS_RETRY is 61, these
+ranges overlap, which will cause a compiler error.
+
+> +		if (ddr_pmu->p_data->silicon_flags & IS_CN20K) {
+> +			*event_bitmap =3D (1ULL << (eventid - 1));
+> +			break;
+> +		}
+> +		/* Same numeric IDs as Odyssey DFI events 58..61 */
+> +		fallthrough;
+
+[Severity: High]
+Does the fallthrough correctly handle non-CN20K silicon events here?
+
+It falls into the ZQLATCH/ZQSTART block below, which performs an explicit
+check for IS_CN20K:
+
+> +	case EVENT_CN20K_OP_IS_ZQLATCH ... EVENT_CN20K_OP_IS_ZQSTART:
+> +		if (ddr_pmu->p_data->silicon_flags & IS_CN20K) {
+> +			*event_bitmap =3D (1ULL << (eventid - 42));
+> +			break;
+> +		}
+> +		err =3D -EINVAL;
+> +		break;
+
+If an Odyssey device processes an event between 58 and 61, it will fail the
+IS_CN20K check, hit err =3D -EINVAL, and break. This rejects all valid Odys=
+sey
+events in this range instead of falling through to the DFI block below.
+
+>  	case EVENT_DFI_PARITY_POISON ...EVENT_DFI_CMD_IS_RETRY:
+> -		if (!ddr_pmu->p_data->is_ody) {
+> +		if (!(ddr_pmu->p_data->silicon_flags & IS_ODY)) {
+>  			err =3D -EINVAL;
+>  			break;
+>  		}
+
+[ ... ]
+
+> @@ -642,10 +771,15 @@ static int cn10k_ddr_perf_event_add(struct perf_eve=
+nt *event, int flags)
+>  	if (counter < DDRC_PERF_NUM_GEN_COUNTERS) {
+>  		/* Generic counters, configure event id */
+>  		reg_offset =3D DDRC_PERF_CFG(p_data->cfg_base, counter);
+> +
+>  		ret =3D ddr_perf_get_event_bitmap(config, &val, pmu);
+>  		if (ret)
+>  			return ret;
+
+[Severity: Critical]
+This is a pre-existing issue, but does this error path lead to a
+Use-After-Free?
+
+Earlier in cn10k_ddr_perf_event_add(), the driver calls
+cn10k_ddr_perf_alloc_counter() which stores the event pointer in pmu->events
+via pmu->events[counter] =3D event.
+
+If ddr_perf_get_event_bitmap() fails here and returns early, the counter is
+not freed, active_events is not decremented, and the pointer remains in
+pmu->events.
+
+When the perf core eventually frees the event, pmu->events[counter] is left
+dangling.
+
+The background hrtimer then triggers an overflow, calls
+cn10k_ddr_perf_event_update_all(), and dereferences the freed event pointer.
+
+> -
+> +		if (silicon_flags & IS_CN20K) {
+> +			if (config =3D=3D EVENT_CN20K_OP_IS_ZQSTART ||
+> +			    config =3D=3D EVENT_CN20K_OP_IS_ZQLATCH)
+> +				reg_offset =3D DDRC_PERF_CFG(p_data->cfg1_base, counter);
+
+[Severity: Medium]
+Will this leave hardware state behind and cause enablement failures?
+
+When configuring a CN20K ZQ event, the code writes the event configuration =
+to
+cfg1_base, but fails to clear the primary configuration register at cfg_bas=
+e.
+
+Later, cn10k_ddr_perf_counter_enable() unconditionally uses cfg_base to ena=
+ble
+the event:
+
+    reg =3D DDRC_PERF_CFG(p_data->cfg_base, counter);
+    val =3D readq_relaxed(pmu->base + reg);
+    if (enable)
+        val |=3D EVENT_ENABLE;
+
+Because PMU counters do not clear cfg_base on event deletion, enabling a new
+ZQ event might inadvertently enable a stale event still left over in cfg_ba=
+se,
+leading to corrupted performance counts.
+
+> +		}
+>  		writeq_relaxed(val, pmu->base + reg_offset);
+>  	} else {
+>  		/* fixed event counter, clear counter value */
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526164330.2387=
+8-1-gakula@marvell.com?part=3D2
