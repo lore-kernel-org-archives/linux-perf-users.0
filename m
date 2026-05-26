@@ -1,154 +1,248 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F8E3A8741
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 03:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779766110; cv=pass; b=ltlatwJwypsZxDEJl6iZPaCNut6TyyZbzS5fmiONYPYgY7Sja5e1MBG2oFToab5GIMGD9hIKVmEE3u/gPtUbbBOZFzN7FHRP5TQx4IPmfc1hveNNUV+WW6gJryre7Y/onSpD3ENF8NdsCsw77X7X4CJZIa3Z1xTVzQL5lIxBbQ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779766110; c=relaxed/simple;
-	bh=rRu/0iaWsJif1xb7hh/aBKf9EfrFCNCKKgFYn26sXOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iLCxs/HGO5/ed8q02L2E2n7c2Ko5hOoNyazB3cLxEY88WtQzavFY4eEHHWR/Z2eYY0xc72goYZZcQ/E2oZTL87g/d/dqh1493bX69n9kSfTz9zyp9MWRQmHuKEFamAN2Leox7XFrHoEZXJgF9N/8cWQjhdsTs6r5GsFgqpWsGw4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JiagGTc3; arc=pass smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787DD2C326F;
+	Tue, 26 May 2026 10:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779791462; cv=none; b=oNmQ1THJcP4z7XvJN0Fs8P8g7E0Xjd9S2uUCCj5EcYBr7pKZZLUEmvmlWUDnVgM7P75oS5JszWC0fgBV7TxqFoRXht0l0qB/6AO2xLxJvJ7jG6M8NVKpF/d1ecOStw03AcvJKpEKnKTjYrAva3J1OuxEsb4aSMY4wQ66woQyrMY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779791462; c=relaxed/simple;
+	bh=9nI/XZXWx0TRJY53v1ueqo3AtordZ7Q+StNAST4h1Es=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ne0pV8YaqaggEFNRJcg75ioB/8RK8A/ZE6vYHgOXA5YKPq66AZv/iUNO1obV9U6bLAXCS0QKMVcinEwzouLurio4QEDztC39R8DGGv5G1WDnZJXLkBG/3BLM+UatM5mnB2aDuptyvg2OUx1p1QtDBcWvB0lIuVRjW4I9lSAgaXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TTE9TRb4; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JiagGTc3"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so265ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 20:28:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779766108; cv=none;
-        d=google.com; s=arc-20240605;
-        b=NiFQoEnJDhcHQsh8k/Pyuinoo2Lm3yvdsV6kbsttw0ibrmlhHgZbP1PXXOX7F7B+xw
-         N6u+ytKk9ByN3LCAt5Z6H53lOEm1ri2zJvEQj4ZT9MICarGP925P5gFf/i6kKCkJ/szf
-         l6rntlxitEhDAmH8mZ3foMOqSbr/VQK2ICkf7fM5jdBlAc3qNowYu06tU/D8tN/HGUfb
-         48hfdjxTsN2DA+rJu5XV1Gr/+FinfpW/mXc7rZgub8Vf00uA5FklDea8zzSYqWWDPswd
-         TmC82fekxtBzJPaD8Vh1eJvs7ssCkGLmPe56yyM7aWhiyrQbc8k04LqOLOD/BWcKc2pT
-         LSQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=bCIgfrQN2ixgyY5Hi0sknw40cEjtfKKbdudOPWJQGso=;
-        fh=NZfqYDOHp6UYNrQSGcKGSnJxQPCyFk06T2ou+cv7ucM=;
-        b=GAA6j8nXHpUPJ7L4fo53InaXY+1AVqQ2QTRmVTwJFXSOtcaa5emLYs9b9dq3/Jb8tZ
-         XXvt/baEpBhpR9Qz0BPS/uJ6YC3qvRkeCcLLb6GqgA6WKkviSH93JqjWKFCdH3VTGYgx
-         y98b0IbguR3YfaIv8OuTSKw9HZ5Zi6bMrfTTgUN3mpWmOKGSLfnziKCEldQ0c30agGW/
-         IMdaseSu1iPfdLPt41I1raRlyrBag20r2CoSboK0O0s57EHYZjJmdiZYc7+gxtOJt4Qp
-         o3uBwOyn717473zjMPlgdNq7RwAy/fZTZ9xy3e5zQGc1p2PkWkY0NML34eFMmdkRI71C
-         XEOg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779766108; x=1780370908; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bCIgfrQN2ixgyY5Hi0sknw40cEjtfKKbdudOPWJQGso=;
-        b=JiagGTc3kC9tnZAYFPQ2vtgoOPrJwgyD344QFPgdxjjF5paLo0i/EZMYNX1v73ofa0
-         mers4t41ytnpTL6OrrCBJj4odJaYQH4Ek9CuIHeQ1La97l3Ptruh5IyUuMlgKI/hz/C8
-         gJ2kUa4P/JiDWSWhxvclcTX/Qw/hx9S5vN7g61l4cpD7YG70uqOGiylLKmJoqLJsOH/l
-         FOuXDNJEqyqtfqz4qZGxGq4y9vAbe9ygU7e0ni1BY84Q2+kBI+H0tLOSO9ap8H8AhU+h
-         cbUgVPUwKTMLSAJojqRmxClvWBjvQR1/MZ/6V7iiVNcU67OBqWEfEq31QHrVSG9Uji2l
-         qMdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779766108; x=1780370908;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bCIgfrQN2ixgyY5Hi0sknw40cEjtfKKbdudOPWJQGso=;
-        b=OOyO7du+2Xs/ZMrBVuJemWhildaPx8vZLDTRSomanCsYk5fr6eGK+Ad5uPS6VFRB4q
-         Wyr9TKxK9Nz3ve5DscO3o+urRVL1k5gGVuUiDloOrzsL3+LbiAJoA67WYYp5m9/yPNcp
-         IWeTxwc3UNjSdWieRR7tOfeKzLuAjAJXqmAB7wXUxLFwbRABV89Zan/5hTFzzxyH/I7+
-         LFsDYlvWgOOoMjWkYoQ7RiEkXdG63ryTTzrKHNYKzVplgSDEZKbi0UZPGr6DRXWPBh1U
-         cnSMybRwyzEqoFGSINCKfut3aKsdZrfKba8gYEEXVW9d7I38qy9VDaQpK2i+rJcIsQkA
-         GHNw==
-X-Forwarded-Encrypted: i=1; AFNElJ84C00jg++ceZoxXbZkeNAoIxljEv3ipw/skjTrIcywWxLEDO8ESt7dSXebEjYBd0QmmY85NfFaOj1zJnKktlDq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwahLbTZgdvucwWj1gG2eIZ7ofF7TBC5sRZajag1lJGTTFBzAnf
-	zY921B5gcov+utJrvptirJyDO157kQvREXc14rnDpfjG9XK0TRRFqa+oJTWWkM9QqOZQ//WyZOl
-	v2rZJ0F/jrdIRWbY1TpRQVSwUmawxOtlyhJHkOJy8
-X-Gm-Gg: Acq92OFbabEKgPEkMfE8mpDGBf3QRws7hzCboISjE73cxOa6Kozba9OqcXxaHENluhc
-	jQy+YaCkyXqdf2dO2GWJ6MdQPTxLSWgHcZUqFBpiq7ZybSZdRdx/7uXumQOlJr4zgI9i0uJZBEz
-	/3EfkhhyNil9wx25S8+wGMlp8t+6WUz1dCTm4nZYcFz/+ccGJzPTB4MEbM120b346FsGYXxa4QR
-	Ayr80Ep2750RUuXWGsVEUxpncyUj4zhiBLOGlrJ9C6t/yLxC3z2xEKR013ndIdTBajeTEJKMiFq
-	0ne8jE8ggy0fsXzCXIg=
-X-Received: by 2002:a17:903:41c2:b0:2bd:6dad:3df8 with SMTP id
- d9443c01a7336-2bebf442ccbmr4086065ad.22.1779766107809; Mon, 25 May 2026
- 20:28:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TTE9TRb4"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64Q9cwoO3034174;
+	Tue, 26 May 2026 10:30:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=RUMLh3
+	hrCrad4s6AFjrGCGgdTQpgoSnw812imxo8H94=; b=TTE9TRb4v0mX/LbfZ1AxkK
+	VocqoVUq0NXwoSCg59re9SQe1lQnl8o2pND4XhpDbjIlh6uoDrPHfNoMOaNqdgNB
+	80D3HdGJzpzITVNVarL0qpBiFVEWtnF9Oxv81eH5CXkX/ldVyzt3fUoxEoiNyUUR
+	BObmUVOtf6dwBABo+UQQqP08WBiOc+MZFM4hFAjbCWQSgzy5oyyCow5MpKVM7HFI
+	ZprcYQlZdUMOSod8ymgsTd/7xKZ3xNLtzRwsQ2Lqv4meRi+vX0MX31cfFatcvLP2
+	itqhSgzeoix7OvVuynYZfPEDU8E+Y4J52jP/wkIvTrnpmtinPXIDEverbFQ1YXAw
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eb4nc2kxq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 May 2026 10:30:57 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64QAOAsC031853;
+	Tue, 26 May 2026 10:30:56 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ebr2h0t84-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 May 2026 10:30:56 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64QAUsml13107682
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 May 2026 10:30:54 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8E7022004F;
+	Tue, 26 May 2026 10:30:54 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B2AA2004B;
+	Tue, 26 May 2026 10:30:54 +0000 (GMT)
+Received: from li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com (unknown [9.87.150.50])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 26 May 2026 10:30:54 +0000 (GMT)
+Date: Tue, 26 May 2026 12:30:52 +0200
+From: Jan Polensky <japo@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jens Remus <jremus@linux.ibm.com>
+Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf build: Fix Python extension build with GCC 16
+ hardening
+Message-ID: <ahV2XGx_6h7upuc3@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+References: <20260520125637.105681-1-japo@linux.ibm.com>
+ <20260520130905.9C85D1F000E9@smtp.kernel.org>
+ <ahJnMnOr4i9urrRk@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260522220435.2378363-7-irogers@google.com> <20260522221338.039751F000E9@smtp.kernel.org>
- <ahTraRGMGowOJ4II@google.com>
-In-Reply-To: <ahTraRGMGowOJ4II@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 25 May 2026 20:28:16 -0700
-X-Gm-Features: AVHnY4KuArnCnt7mY6XU0OGJU2WK8KdEGLopxP7iwwk64vnlxEPfo1VFnUdES1k
-Message-ID: <CAP-5=fUFKEdLQEjfW7aiwpO0fEeumcJ-djDuibsd4sr5NLW9Ug@mail.gmail.com>
-Subject: Re: [PATCH v9 06/23] perf python: Add missed explicit dependencies
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ahJnMnOr4i9urrRk@x1>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=VvYTxe2n c=1 sm=1 tr=0 ts=6a157661 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=4Z9HsFBe0V0Fvg4R7qgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: j4N9mQ1Ze3luG7q_TyQggw0yHsV5xmFK
+X-Proofpoint-GUID: j4N9mQ1Ze3luG7q_TyQggw0yHsV5xmFK
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI2MDA4OCBTYWx0ZWRfXxiBZxKRwjxB3
+ rjw+Jbjn9X5bOAHXg0l4ME5pAtER1Ytb9z4tvGwCDjhkgoFPa4K4eormnESpkgf6iGFQN3LLfW2
+ /6oP/76sgGX1qN0wiHvGdlFBGjEmbOVcKFsRNhkGB3Y0Y0jme3Ia6gLzuRRKLs1qXzkJNwFw3Ou
+ qyRsUkD0D3Q21IvBiCuZnzBrg7Y0BaOWqGMuHYDM0rmOGO0qnzCFqhdxAixujdv3aOP+wam7oxG
+ lkRdO+BC3f4V+XjzZCYnfXOk1BnYJuHoeFSla0p/Q1IrM0LK/SFtmqPUmXwqYONZHydxcOjMaUO
+ cseo1i9Qzoz6SFNciv2kLXvtVp8OdYsW6+vURJWduBbyyIT0TtvlvjAVBJneGbXk3pX7SavKZ1k
+ JiJYQpJjczemQ0zBwQ54J27be3zMNVa3V9N+wzHMOFiq8PQ1FHO7x889VcAsHjbdsw4uxMY1WKF
+ U54LxsaHwwY036NeWGg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-05-26_02,2026-05-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605130000 definitions=main-2605260088
 
-On Mon, May 25, 2026 at 5:38=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Fri, May 22, 2026 at 10:13:37PM +0000, sashiko-bot@kernel.org wrote:
-> > Thank you for your contribution! Sashiko AI review found 1 potential is=
-sue(s) to consider:
-> > - [Medium] Including `<Python.h>` after standard system headers violate=
-s the Python C-API contract and can lead to macro redefinition warnings, bu=
-ild failures, or ABI mismatches.
+On Sat, May 23, 2026 at 11:49:22PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, May 20, 2026 at 01:09:05PM +0000, sashiko-bot@kernel.org wrote:
+> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > - [Medium] The patch explicitly allows text relocations in the Python extension shared object (`perf.so`) by adding `-Wl,-z,notext`, masking the root cause of missing `-fPIC` flags and breaking W^X (Write XOR Execute) security protections.
 > > --
 > >
-> > commit 37ded89f453597ef269f0bcb73c5907738b8e5d9
-> > Author: Ian Rogers <irogers@google.com>
+> > commit f3832fb0ad0d1f9c2e69039b2a5110f77d220d5e
+> > Author: Jan Polensky <japo@linux.ibm.com>
 > >
-> > perf python: Add missed explicit dependencies
+> > perf build: Fix Python extension build with GCC 16 hardening
 > >
-> > This commit fixes a missing include of pmus.h that was discovered
-> > while cleaning up the evsel and evlist header files. It also sorts
-> > the include directives alphabetically.
+> > This commit addresses a build failure in the Python extension caused by GCC 16
+> > stricter security policies regarding dynamic relocations in read-only segments.
+> > It adds the -Wl,-z,notext flag to the linker to explicitly allow text
+> > relocations in the Python extension shared object.
 > >
-> > > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> > > index cc1019d29a5d0..dd937d714e991 100644
-> > > --- a/tools/perf/util/python.c
-> > > +++ b/tools/perf/util/python.c
-> > > @@ -1,30 +1,35 @@
-> > >  // SPDX-License-Identifier: GPL-2.0
-> > > -#include <Python.h>
-> > > -#include <structmember.h>
-> > >  #include <inttypes.h>
-> > > -#include <poll.h>
-> > > +
-> > >  #include <linux/err.h>
-> > > +#include <poll.h>
-> > > +
-> > > +#include <Python.h>
+> > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > > index 76b35ac19acbf..eea170d6576db 100644
+> > > --- a/tools/perf/Makefile.perf
+> > > +++ b/tools/perf/Makefile.perf
+> > > @@ -749,7 +749,7 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+> > >  $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+> > >
+> > >  $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py $(PERFLIBS_PY)
+> > > -	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
+> > > +	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared -Wl,-z,notext" \
 > >
 > > [Severity: Medium]
-> > Could moving Python.h here cause build warnings or ABI mismatches?
+> > Does adding -Wl,-z,notext mask the root cause of the GCC 16 linker error?
 > >
-> > The Python C API requires that Python.h must be included before any
-> > standard system headers. Python.h defines preprocessor macros that
-> > alter the behavior of standard headers. Because this alphabetizes the
-> > list, standard headers like inttypes.h and poll.h are now included
-> > before Python.h.
+> > The error regarding dynamic relocations in a read-only segment usually
+> > indicates that non-position-independent code from the static libraries
+> > is being linked into the shared library.
+> >
+> > Using -Wl,-z,notext suppresses this error by allowing text relocations, which
+> > forces the dynamic linker to map the executable text segment as writable at
+> > load time. This breaks W^X security protections and weakens the security of
+> > any Python process loading the extension.
+> >
+> > Should the required object files be compiled with -fPIC instead to properly
+> > resolve the linker error without compromising security?
 >
-> I think it's worth following the suggestion.  I'm not sure if it's
-> possible to add an exception for the python headers to clang format.
-
-I believe we can set Python.h as having the highest priority and
-always including it first. I want to make sure the Sashiko is advice
-is accurate first :-)
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
+> So I asked Claude about this and he suggests doing like other parts of
+> perf and using -fPIC, can you try to do that?
 >
+> ---------------------------------------
+>
+> ● Sashiko is right. -Wl,-z,notext is a band-aid that weakens security —
+>   it makes the text segment writable at load time, defeating W^X.
+>
+>   The root cause is that PERFLIBS_PY (the static libraries linked into
+>   the Python .so) are compiled without -fPIC. When you link non-PIC .a
+>   archives into a shared library, the linker needs text relocations. GCC
+>   16 correctly rejects this by default.
+>
+>   The proper fix is to build the static libraries that go into the
+>   Python extension with -fPIC. The perf build system already has
+>   precedent for this — look for how libperf and libsubcmd handle PIC
+>   builds. The Python extension's dependencies need a parallel -fPIC
+>   build, or the existing objects need to be compiled with -fPIC when the
+>   Python binding is enabled.
+>
+>   The -Wl,-z,notext approach would also cause issues on distros that
+>   enforce RELRO + BIND_NOW hardening, and some package builders would
+>   reject the resulting .so outright.
+>
+> - Arnaldo
+
+Hi Arnaldo,
+
+thanks for the pointer. I double-checked this on s390x and did some reduced-link
+testing for the ET_DYN / Python-extension case.
+
+The failure is not triggered by the perf Python binding object alone.
+
+A reduced reproducer succeeds when linking:
+  python.o
+  + libapi.a
+  + libperf.a
+  + libsubcmd.a
+  + libsymbol.a
+  + libbpf.a
+  + libperf-ui.a
+
+The link starts to fail with:
+  /usr/bin/ld.bfd: error: read-only segment has dynamic relocations
+
+as soon as libperf-util.a is added.
+
+In my tree, libperf-util.a currently contains only perf-util-in.o, and replacing
+the archive with that single object still reproduces the same failure.
+
+Reduced reproducer:
+
+  gcc -pthread -shared \
+    -Wl,-z,noexecstack \
+    -o /tmp/try-perf-util-only.so \
+    /root/linux/tools/perf/python_ext_build/tmp/root/linux/tools/perf/util/python.o \
+    -Wl,--whole-archive \
+      /root/linux/tools/perf/libapi/libapi.a \
+      /root/linux/tools/perf/libperf/libperf.a \
+      /root/linux/tools/perf/libsubcmd/libsubcmd.a \
+      /root/linux/tools/perf/libsymbol/libsymbol.a \
+      /root/linux/tools/perf/libbpf/libbpf.a \
+      /root/linux/tools/perf/libperf-ui.a \
+    -Wl,--no-whole-archive \
+    /root/perf-util-one/perf-util-in.o \
+    -lpython3.14 -lpthread -ldl -lm -lutil
+
+Inspection of perf-util-in.o on s390x shows many direct R_390_PC32DBL
+relocations from .text against .data.rel.ro, .data.rel.ro.local,
+.data.rel.local, .bss, and .rodata.
+
+Representative examples include:
+
+  arm64__associate_instruction_ops:
+    larl %r6  -> R_390_PC32DBL .data.rel.ro+0x2
+
+  loongarch__associate_ins_ops:
+    larl %r9  -> R_390_PC32DBL .data.rel.ro+0x22
+    larl %r9  -> R_390_PC32DBL .data.rel.ro+0x42
+
+  check_ppc_insn:
+    larl %r4  -> R_390_PC32DBL .data.rel.local+0x4c2
+    larl %r2  -> R_390_PC32DBL .data.rel.ro.local+0x22
+    larl %r1  -> R_390_PC32DBL .data.rel.local+0x2
+    larl %r2  -> R_390_PC32DBL .data.rel.ro.local+0x2
+
+  s390__associate_ins_ops:
+    larl %r10 -> R_390_PC32DBL .data.rel.ro+0x732
+    larl %r10 -> R_390_PC32DBL .data.rel.ro+0x752
+
+So from my reproducer, I don't think we can describe this simply as
+"all Python-extension dependency archives are missing -fPIC".
+
+The issue narrows down much more specifically to perf-util-in.o in the ET_DYN
+link of the Python extension, and the direct text-to-data section relocations
+above look like the most relevant candidates.
+
+So I agree that -Wl,-z,notext is only a workaround. I'd prefer to understand
+and fix the underlying relocation pattern in perf-util-in.o rather than merge
+that as-is.
+
+If useful, I can send the relevant readelf/objdump snippets in a follow-up.
+
+Best regards,
+Jan
