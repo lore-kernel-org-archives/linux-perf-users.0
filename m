@@ -1,228 +1,154 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70533A901F
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 03:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F8E3A8741
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 03:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779765950; cv=pass; b=Rl1u08AosAtQ+nwbOKO5saFgqtPVc89tUPRYEU3EBd8dgP1tickwVmdhAFdOlHl6t1ir5Kte2AGHO3LZbrghxdnVBxg09iRFbUTTgopD64m6wbwyTDuHv+M/zA1h3ohDMINZ7MjgGVZ/13U2o5Qh1hPG/wLt26RgZvb2FaOPCTE=
+	t=1779766110; cv=pass; b=ltlatwJwypsZxDEJl6iZPaCNut6TyyZbzS5fmiONYPYgY7Sja5e1MBG2oFToab5GIMGD9hIKVmEE3u/gPtUbbBOZFzN7FHRP5TQx4IPmfc1hveNNUV+WW6gJryre7Y/onSpD3ENF8NdsCsw77X7X4CJZIa3Z1xTVzQL5lIxBbQ8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779765950; c=relaxed/simple;
-	bh=9+t0PTDmXz3uGFh7g6kfWm0b54smP6oXM8ybWDfA3Ec=;
+	s=arc-20240116; t=1779766110; c=relaxed/simple;
+	bh=rRu/0iaWsJif1xb7hh/aBKf9EfrFCNCKKgFYn26sXOk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ToWRO6dXb/qhpUM7RlbDn3eyBsyAV2glVNe3xVgZKVabnG3A+08GHZC8VxceUcUobhygIAeccJKcg/S1VBRK5aAA19RlBkW7h14bDNjCnqKKeuIK/K/+X+bvCTihzZKs9FLiZknkQwAMxVD0rWsNsh5Ztmf5xpPJfw8G3eVeAYE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D6x9r5tG; arc=pass smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=iLCxs/HGO5/ed8q02L2E2n7c2Ko5hOoNyazB3cLxEY88WtQzavFY4eEHHWR/Z2eYY0xc72goYZZcQ/E2oZTL87g/d/dqh1493bX69n9kSfTz9zyp9MWRQmHuKEFamAN2Leox7XFrHoEZXJgF9N/8cWQjhdsTs6r5GsFgqpWsGw4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JiagGTc3; arc=pass smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D6x9r5tG"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2b2e8b95bdbso195ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 20:25:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779765948; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JiagGTc3"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so265ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 25 May 2026 20:28:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779766108; cv=none;
         d=google.com; s=arc-20240605;
-        b=IEpqAeqsw3+04X3dj96dMAuQJYGKL1BzsVz9mlPpX1Nl9JMEMeQ6wOAppafgmUvdx8
-         UXfZJCpifUwCWgN4OZY3NKLGHcN6COXl+rAb1rIdxoOSXdHcq/rXAtCDfA/svYvFnCLi
-         mxwEGxwdf5fvJQcOelPt1XotXGwbAYdpfhvUz5cETvaEv2+2BcOcthqL6fBkFWMqZKvZ
-         lhuzJx8Ndzjt+SoAnjf14vw2tDlNesxBpp0I34xT6otX/kt75olT/ohNtgHyFm+REthK
-         4WKfiYNaUXCIfSqPRb1ihTCSi5utvTRQ3QSaqi8T8X62zw2XR10HWk5xfz5btFa0FxWV
-         4toQ==
+        b=NiFQoEnJDhcHQsh8k/Pyuinoo2Lm3yvdsV6kbsttw0ibrmlhHgZbP1PXXOX7F7B+xw
+         N6u+ytKk9ByN3LCAt5Z6H53lOEm1ri2zJvEQj4ZT9MICarGP925P5gFf/i6kKCkJ/szf
+         l6rntlxitEhDAmH8mZ3foMOqSbr/VQK2ICkf7fM5jdBlAc3qNowYu06tU/D8tN/HGUfb
+         48hfdjxTsN2DA+rJu5XV1Gr/+FinfpW/mXc7rZgub8Vf00uA5FklDea8zzSYqWWDPswd
+         TmC82fekxtBzJPaD8Vh1eJvs7ssCkGLmPe56yyM7aWhiyrQbc8k04LqOLOD/BWcKc2pT
+         LSQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=TnY5QSCxxW0i9su2GJWBJDqK4zBU/pea9Pn+MqhXD1g=;
-        fh=KFKlQ78/vrw/axGaXZphGxtnL+sbdopQmUubSyFatjs=;
-        b=GmkyjZPasB1jRoWplkKYEQ/f9b/hmKWVYuqDw/Ja+QaGusf5sfom8URWjDlQvqaPTb
-         LyYM6mnFvvAZWXBiCjsKROXjEmNjlR8XngJDnKvTaN9LHpLg3MqIUXTr3cCThXmzJq6Y
-         XAF4VjNzdg3L1g89gEPy3FtVBkkJwGHW3ZP6L2wCkT2Vu+57GiSOtZMTjT/f5WglkRTD
-         Bg4s90ItvAFHQEuVjMVzlQDc6ZtGFWZ8304vr2GIFTGaYxUNjgP8rHtfR0ZtuXe5AFtb
-         0wMWA3UzfxD8TIdLoVwmwNc0wfKVZmCuAxZcPNQdQ7Bck63ZNR+DjVQsgQaA/A5cPm0z
-         zNPA==;
+        bh=bCIgfrQN2ixgyY5Hi0sknw40cEjtfKKbdudOPWJQGso=;
+        fh=NZfqYDOHp6UYNrQSGcKGSnJxQPCyFk06T2ou+cv7ucM=;
+        b=GAA6j8nXHpUPJ7L4fo53InaXY+1AVqQ2QTRmVTwJFXSOtcaa5emLYs9b9dq3/Jb8tZ
+         XXvt/baEpBhpR9Qz0BPS/uJ6YC3qvRkeCcLLb6GqgA6WKkviSH93JqjWKFCdH3VTGYgx
+         y98b0IbguR3YfaIv8OuTSKw9HZ5Zi6bMrfTTgUN3mpWmOKGSLfnziKCEldQ0c30agGW/
+         IMdaseSu1iPfdLPt41I1raRlyrBag20r2CoSboK0O0s57EHYZjJmdiZYc7+gxtOJt4Qp
+         o3uBwOyn717473zjMPlgdNq7RwAy/fZTZ9xy3e5zQGc1p2PkWkY0NML34eFMmdkRI71C
+         XEOg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779765948; x=1780370748; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1779766108; x=1780370908; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TnY5QSCxxW0i9su2GJWBJDqK4zBU/pea9Pn+MqhXD1g=;
-        b=D6x9r5tGRZLYBPGuMpTXCsTisZ/GEoaQXQO2Uhz5Yn6QcZJ8cUbsdzyCrSXXlts5CY
-         45Z3EqQDslmDy7QYEQt5l6dd5TkPQranY0A+7hEoyNBOTOXCgXVoarjHo5vVMwLzl8H6
-         37lxz2WL7gSe44vqd9WDZ7y2WtWhM1nQHsOxsYFnsHS1g7lioYh7LOS+f0s35jwBZM9o
-         yf4KFqeBc8vIRv+1agkW3jD/7dYoukGkzAKZ4sXcb7mQMOgp0F6ZOaG7aP2zf+MwLWKR
-         LuwybM6irQALZjUKDtPTy0zP7YTMFynu05Fee0DkW6pMQvJKKtDF01TXEgNYWb022xad
-         EVLw==
+        bh=bCIgfrQN2ixgyY5Hi0sknw40cEjtfKKbdudOPWJQGso=;
+        b=JiagGTc3kC9tnZAYFPQ2vtgoOPrJwgyD344QFPgdxjjF5paLo0i/EZMYNX1v73ofa0
+         mers4t41ytnpTL6OrrCBJj4odJaYQH4Ek9CuIHeQ1La97l3Ptruh5IyUuMlgKI/hz/C8
+         gJ2kUa4P/JiDWSWhxvclcTX/Qw/hx9S5vN7g61l4cpD7YG70uqOGiylLKmJoqLJsOH/l
+         FOuXDNJEqyqtfqz4qZGxGq4y9vAbe9ygU7e0ni1BY84Q2+kBI+H0tLOSO9ap8H8AhU+h
+         cbUgVPUwKTMLSAJojqRmxClvWBjvQR1/MZ/6V7iiVNcU67OBqWEfEq31QHrVSG9Uji2l
+         qMdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779765948; x=1780370748;
+        d=1e100.net; s=20251104; t=1779766108; x=1780370908;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=TnY5QSCxxW0i9su2GJWBJDqK4zBU/pea9Pn+MqhXD1g=;
-        b=c9TcjtXAsc0GsqWEbHXowpDevvT52CNxEjg3gWOn+cD077ZTKwY2n+1EoHaFGVcD1b
-         tAzrICYfcmZ3It8ZOKbUmf583My7MEgzBYiQ6uuFKPMcVlGg3lEnCugzuMh1fJ8mcxKI
-         KVVeOLgvkluVcj2mI6NOC5jMLPI0YLIbB14FcpIgAzHA4HqVnz5t0hsP6ORYOEXKNuZf
-         3R8mD8GGeFfqe85xjAloge4oAtnUb6DNuY4YrDXriX5lUB7AbA2/yxLMNpZa0Kkip6C1
-         YX2Vk8rnvJ+nKJqu2ErvsJ4E8h6coHO4ope+tXQpg/TjQ3h2WCJ24J6AHjXnct8ZjtvA
-         /XHw==
-X-Forwarded-Encrypted: i=1; AFNElJ9WUMtprV7leR+00qR8G25OTk0kJATS2kZ0f2pNkajoEC5aYL1tIrAq1Ni/t1NOImDwCnUCP/xAjiV9rmelwvZl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh4KBmBYOnCWhtpOiko2UbnWi+UZfBRGBPR1B6G+4OSs/m5Xca
-	kj0yX/Ar+m70RWLwa0Ix6/to051DOtDKTUwMcm7y1f8Hjv+vqvTvynsD6ykheaSodA+FjTbdRgA
-	ODMBfw3Xph16CP4vVDc9IeJxDa2qJ83dVIX3DenLd
-X-Gm-Gg: Acq92OHRCX9sWym0PG2RVaDWbxrX/vqvykSAAVw5ne1SDvmPTEyI6DacN4nSWrsFHPa
-	nd19f4ZQXytGuaNWj/nX3ym+o3MQ55RWLOxPdMBtBwKu6k17ZnjJ36vYCNQRjc67Y7KTq2a+O3i
-	tk6mBFrt3LvFWLzk2RMXXpcEkTfGmqJKAyzaXdkUTYg6+lJPci6hxa0Hf1RL0FjyeFpsheALW/Z
-	KTBEU13t1u2s02B2VymveKX6FN1LSWqRv1G8WqaK24IyyknKNuDOSYjSFsuiDBiFK+q5dJ+N99d
-	EPN88ftOKwUlOQIdEf8=
-X-Received: by 2002:a17:902:cf0d:b0:2bd:18b2:a78 with SMTP id
- d9443c01a7336-2bebea09694mr4731665ad.14.1779765947335; Mon, 25 May 2026
- 20:25:47 -0700 (PDT)
+        bh=bCIgfrQN2ixgyY5Hi0sknw40cEjtfKKbdudOPWJQGso=;
+        b=OOyO7du+2Xs/ZMrBVuJemWhildaPx8vZLDTRSomanCsYk5fr6eGK+Ad5uPS6VFRB4q
+         Wyr9TKxK9Nz3ve5DscO3o+urRVL1k5gGVuUiDloOrzsL3+LbiAJoA67WYYp5m9/yPNcp
+         IWeTxwc3UNjSdWieRR7tOfeKzLuAjAJXqmAB7wXUxLFwbRABV89Zan/5hTFzzxyH/I7+
+         LFsDYlvWgOOoMjWkYoQ7RiEkXdG63ryTTzrKHNYKzVplgSDEZKbi0UZPGr6DRXWPBh1U
+         cnSMybRwyzEqoFGSINCKfut3aKsdZrfKba8gYEEXVW9d7I38qy9VDaQpK2i+rJcIsQkA
+         GHNw==
+X-Forwarded-Encrypted: i=1; AFNElJ84C00jg++ceZoxXbZkeNAoIxljEv3ipw/skjTrIcywWxLEDO8ESt7dSXebEjYBd0QmmY85NfFaOj1zJnKktlDq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwahLbTZgdvucwWj1gG2eIZ7ofF7TBC5sRZajag1lJGTTFBzAnf
+	zY921B5gcov+utJrvptirJyDO157kQvREXc14rnDpfjG9XK0TRRFqa+oJTWWkM9QqOZQ//WyZOl
+	v2rZJ0F/jrdIRWbY1TpRQVSwUmawxOtlyhJHkOJy8
+X-Gm-Gg: Acq92OFbabEKgPEkMfE8mpDGBf3QRws7hzCboISjE73cxOa6Kozba9OqcXxaHENluhc
+	jQy+YaCkyXqdf2dO2GWJ6MdQPTxLSWgHcZUqFBpiq7ZybSZdRdx/7uXumQOlJr4zgI9i0uJZBEz
+	/3EfkhhyNil9wx25S8+wGMlp8t+6WUz1dCTm4nZYcFz/+ccGJzPTB4MEbM120b346FsGYXxa4QR
+	Ayr80Ep2750RUuXWGsVEUxpncyUj4zhiBLOGlrJ9C6t/yLxC3z2xEKR013ndIdTBajeTEJKMiFq
+	0ne8jE8ggy0fsXzCXIg=
+X-Received: by 2002:a17:903:41c2:b0:2bd:6dad:3df8 with SMTP id
+ d9443c01a7336-2bebf442ccbmr4086065ad.22.1779766107809; Mon, 25 May 2026
+ 20:28:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fX=vEmTaz6mWgExmrgyYMJmSyOD+1sMCzf7JTk1SkA-zQ@mail.gmail.com>
- <ahTmJyLLZYOPpnKa@x1> <ahTnmDoG6i_7nO8-@x1> <ahTo9zn-NAw5fUb5@x1>
-In-Reply-To: <ahTo9zn-NAw5fUb5@x1>
+References: <20260522220435.2378363-7-irogers@google.com> <20260522221338.039751F000E9@smtp.kernel.org>
+ <ahTraRGMGowOJ4II@google.com>
+In-Reply-To: <ahTraRGMGowOJ4II@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 25 May 2026 20:25:36 -0700
-X-Gm-Features: AVHnY4Kwj-yinJi7WWJVu2CS3eVvKPrShkdJ3SyF55-AtqcIwxn0oQwG76u4X6Y
-Message-ID: <CAP-5=fXnecMfon9zE=YXsHQcu+iMW7MLL6fbrFpnBz0+=b5-qw@mail.gmail.com>
-Subject: Re: Summary of perf-tools-next changes and patches sent to linux-perf-users
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>
+Date: Mon, 25 May 2026 20:28:16 -0700
+X-Gm-Features: AVHnY4KuArnCnt7mY6XU0OGJU2WK8KdEGLopxP7iwwk64vnlxEPfo1VFnUdES1k
+Message-ID: <CAP-5=fUFKEdLQEjfW7aiwpO0fEeumcJ-djDuibsd4sr5NLW9Ug@mail.gmail.com>
+Subject: Re: [PATCH v9 06/23] perf python: Add missed explicit dependencies
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 25, 2026 at 5:27=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Mon, May 25, 2026 at 5:38=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Mon, May 25, 2026 at 09:21:44PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Mon, May 25, 2026 at 09:15:35PM -0300, Arnaldo Carvalho de Melo wrot=
-e:
-> > > On Mon, May 25, 2026 at 04:35:51PM -0700, Ian Rogers wrote:
-> > > > I've been working on a script [1] to summarize what's been sent to =
-the
-> > > > linux-perf-users mailing list (using nntp) and compare it to what's
-> > > > merged into the perf-tools-next branch (using git). The idea is to
-> > > > make it slightly easier to track down patches that might have been
-> > > > missed. The script shows what has been merged and what's pending, w=
-hat
-> > > > Sashiko thinks, and whose turn it is to work on the patch (author,
-> > > > reviewer or maintainer) using some naive tag analysis. The output i=
-s
-> > > > quite large, so rather than adding it below, I will send the last 4
-> > > > weeks in separate e-mail replies to this message.
-> > >
-> > > I'm doing this locally as well, helps.
+> On Fri, May 22, 2026 at 10:13:37PM +0000, sashiko-bot@kernel.org wrote:
+> > Thank you for your contribution! Sashiko AI review found 1 potential is=
+sue(s) to consider:
+> > - [Medium] Including `<Python.h>` after standard system headers violate=
+s the Python C-API contract and can lead to macro redefinition warnings, bu=
+ild failures, or ABI mismatches.
+> > --
 > >
-> > For instance, from earlier today:
+> > commit 37ded89f453597ef269f0bcb73c5907738b8e5d9
+> > Author: Ian Rogers <irogers@google.com>
 > >
-> > $ cat /tmp/outstanding.txt
+> > perf python: Add missed explicit dependencies
 > >
-> > Outstanding patches for perf-tools-next =E2=80=94 2026-05-25
-> > (checked against next2/perf-tools-next)
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
+> > This commit fixes a missing include of pmus.h that was discovered
+> > while cleaning up the evsel and evlist header files. It also sorts
+> > the include directives alphabetically.
 > >
-> > Tier 2 =E2=80=94 Likely ready, needs closer look
-> > -----------------------------------------
+> > > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> > > index cc1019d29a5d0..dd937d714e991 100644
+> > > --- a/tools/perf/util/python.c
+> > > +++ b/tools/perf/util/python.c
+> > > @@ -1,30 +1,35 @@
+> > >  // SPDX-License-Identifier: GPL-2.0
+> > > -#include <Python.h>
+> > > -#include <structmember.h>
+> > >  #include <inttypes.h>
+> > > -#include <poll.h>
+> > > +
+> > >  #include <linux/err.h>
+> > > +#include <poll.h>
+> > > +
+> > > +#include <Python.h>
+> >
+> > [Severity: Medium]
+> > Could moving Python.h here cause build warnings or ABI mismatches?
+> >
+> > The Python C API requires that Python.h must be included before any
+> > standard system headers. Python.h defines preprocessor macros that
+> > alter the behavior of standard headers. Because this alphabetizes the
+> > list, standard headers like inttypes.h and poll.h are now included
+> > before Python.h.
 >
-> I had alredy processed Tier 1 at this point so deleted it from the file
-> :-)
+> I think it's worth following the suggestion.  I'm not sure if it's
+> possible to add an exception for the python headers to clang format.
 
-That's cool! I haven't got a notion of tiering in mine, but I guess
-the "Status : Maintainer work" is a match. I wonder if there's some
-middle ground with the scripts and a weekly cron job could update the
-list of current patch status. This could help bring people up to speed
-on what's being sent to the list, whose turn it is to act, encourage
-reviewers to review, maintainers to merge and authors to fix their
-patch issues. It may also reduce the need to ping people about
-patches.
-
-I wonder if we can also go further. I have a change for Chris Mason's
-kernel prompts where patch size is reviewed (smallest meaningful
-change; don't mix refactoring, bug fixes and/or new features; don't
-cross subsystems) - I just need to figure out stacked PRs on github
-before sending it out. Similarly I have a strict header include prompt
-that should help with musl builds. There are likely other bits of
-feedback we can automate sending out. We can probably help people to
-rebase changes against the tip of perf-tools-next automatically. It
-should also be possible to automate handling Sashiko and other
-feedback, so a cleaned up patch could be automatically sent as a reply
-to the list.
+I believe we can set Python.h as having the highest priority and
+always including it first. I want to make sure the Sashiko is advice
+is accurate first :-)
 
 Thanks,
 Ian
 
-> - Arnaldo
+> Thanks,
+> Namhyung
 >
-> > 1. perf stat: Fix uncore metric scaling across aggregation modes
-> >    Author: Chun-Tse Shao <ctshao@google.com>
-> >    Version: v3, 2 patches
-> >    Reviews: Namhyung reviewed v1; no reviews on v3 yet
-> >    Message-ID: <20260521201505.124690-1-ctshao@google.com>
-> >
-> > 2. perf python: Improvements and callchain support
-> >    Author: Ian Rogers <irogers@google.com>
-> >    Version: v9, 23 patches
-> >    Message-ID: <20260522220435.2378363-1-irogers@google.com>
-> >
-> > 3. perf data ctf: Replace libbabeltrace with babeltrace2-ctf-writer
-> >    Author: Michael Jeanson <mjeanson@efficios.com>
-> >    Version: v1, 1 patch + Ian's 2-patch feature test
-> >    Message-ID: <20260512194710.162215-1-mjeanson@efficios.com>
-> >    Ian's follow-up: <20260512215621.468685-1-irogers@google.com>
-> >
-> > 4. perf test: Harness improvements
-> >    Author: Ian Rogers <irogers@google.com>
-> >    Version: v1, 14 patches
-> >    Message-ID: <20260513230450.529380-1-irogers@google.com>
-> >
-> > Tier 3 =E2=80=94 Single patches, needs review
-> > --------------------------------------
-> >
-> > 5. perf bench: Add --write-size option to sched pipe
-> >    Author: Breno Leitao <leitao@debian.org>
-> >    Version: v1, 1 patch
-> >    Message-ID: <20260515-perf_bench_pipe-v1-1-3c5b805ba178@debian.org>
-> >
-> > 6. perf evsel: Fix error handling in tp_format lookup
-> >    Author: Hongling Zeng <zenghongling@kylinos.cn>
-> >    Version: v1, 1 patch
-> >    Message-ID: <20260521025738.17867-1-zenghongling@kylinos.cn>
-> >
-> > 7. perf kvm stat: Update the exit reason mappings
-> >    Author: Gautam Menghani <gautam@linux.ibm.com>
-> >    Version: v1, 1 patch
-> >    Reviews: Ian reviewed (needs v2 per feedback)
-> >    Message-ID: <20260512120408.59332-1-gautam@linux.ibm.com>
-> >
-> > 8. perf build: Fix Python extension build with GCC 16 hardening
-> >    Author: Jan Polensky <japo@linux.ibm.com>
-> >    Version: v1, 1 patch
-> >    Reviews: Thomas Richter Reviewed-by
-> >    Message-ID: <20260520125637.105681-1-japo@linux.ibm.com>
-> >
-> > Already merged in next2/perf-tools-next
-> > -----------------------------------------
-> >
-> > - perf tests: uncore/topdown event sorting (Ian, v8) =E2=80=94 9f116f4b=
-811b
-> > - perf build: parallel build cleanup (Ian, v7) =E2=80=94 85cc481af5ff +=
- 5 more
-> > - perf build: Update kernel headers (Namhyung, v3) =E2=80=94 aa13e4b120=
-f9..5a433107fab6
-> > - Fix SIGCHLD vs pause() race (Swapnil, v4) =E2=80=94 35c9fb22000f
-> > - Fix kwork ASAN + libunwind test (Ian, v1) =E2=80=94 e898c505b0ee, fde=
-c0a81cad5
-> > - Fix cgroup metric with BPF counters (Ian, v4) =E2=80=94 65bd18199ad5,=
- bd2a5be1fe73
-> > - tool_pmu enable/disable (Ian, v2) =E2=80=94 0b18bced5444
-> > - libunwind multiple remote (Ian, v5) =E2=80=94 fdec0a81cad5
-> > - tools/build: LLVM versioning (James, v2) =E2=80=94 98e68cb77823
-> > - perf inject intel-PT LBR/brstack (Ian, v3) =E2=80=94 daac18e7c42c
-> > - perf trace --show-cpu (Aaron, v4) =E2=80=94 e445b78ffb8d
-> > - stat delay duration_time test (Ian) =E2=80=94 f83deb058025
