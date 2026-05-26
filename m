@@ -1,209 +1,171 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB1E3DFC84
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 11:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1013F58EB
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 11:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779794312; cv=none; b=MNMapYBRJqmx9DS/W7oE/AXgyVxYmgo3gIPJdpbTLemqpOvEJHiJCtO6cIleHIL7GoM26UFx/mdbgzEWSZUOS95A4OynS0t9KnT6j2XY0T6p9MFprWW48guXE2kLtjfMpCzbPkD7xoWSRAb2wyp484frJy6mICHLqNCFMivdCDo=
+	t=1779796416; cv=none; b=LlRo3mfcjhzLT7DTRzKPUDk4PJKIuceCfUAYNM2E9Zdb+uCA4IxcXHtdbAgdVxqr08ccupsahqikyD9+0uBYlwHfKHhIYDx9Lspg+TCbu8G33yzL/b5WaJdiHqlUJ/+viXIYIBwnOWwJSfEf1PWZ2quFI6FVzh6oGmnppcfFA5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779794312; c=relaxed/simple;
-	bh=WXyxERZkAF0LlknC4H8opQvQi25M6gfBOrIFzH8Jgu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q2RvPK3n5Vkya9QriY1UFRwwaOA8CqxdvBTJO1Hpm4fkmJBph5UaB0iByIm1t7Bj5mu5NBu9pQVMTawZpzGSxeyt+Z9531QtXXSsjSuMN3ey3WAhLrsl9VTW+Mq95BqtNDS3J4agKKh9OItvHdi7ElaWgwniDMiRgnzbfP5nQl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Whqwe4D6; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1779796416; c=relaxed/simple;
+	bh=xkA8iD74FBcQMvYlgirbV7TOcamdJ4oK/cEhHER7XzA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=cGyyZ+/+/9ua7NXJL4UkK/9sJ81ALD/wUR9+GypBovdQHnGk/AB9kb90a5BwufWfxYgrCAAVDQ3gcjjIL5WWRmvgoOqPOBGn2KR1+udeY+eUTqxTWIOeX94bI4Ahy3uCjfPZ3VI4/ksC+4AoDp58XeZqI8cGJJ5OVfXMfocDOYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWaDsN5E; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Whqwe4D6"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4891b0786beso70339745e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 04:18:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1779794309; x=1780399109; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Iel9G2dSq5mVeEVrZU7ubpkoHb7PNbJx58eC9mITM2Y=;
-        b=Whqwe4D6Evk2cto9uUaFrD5Q+gP27VvhZwh9NUsFXDiK8di0F3WB/ZOeaXrleQEdx5
-         MGS6Lwlx0D5JxNn+4aFO3W0Kao9BbdbPAlRVuCXXo3lF0haWRQQ5Gqvbrfv3WEsTFwbK
-         vQ7fEdKPa4U/23Dl7dXpo13lxX35W69VKNssQktL0OCeN8Q5omSR4jpfY5KqQJzVp1KA
-         pO+mzlpeq/xmMdVjlZSN4e2ZxZ5s9q4qDK9eBOrEqEIUYlKBHyG8/jf+EAblCgq/oGYq
-         xu3XmSJHLaVDIivUtqTXQUiIoFj6bV1Z7JYYHmJd7NGipRkA2sIQ0vy98+RwzCHwAWFa
-         KbKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779794309; x=1780399109;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Iel9G2dSq5mVeEVrZU7ubpkoHb7PNbJx58eC9mITM2Y=;
-        b=IptBaWOFr0gxmkIOTsifKNnEZYdyfdvdfynry3s3ZT4PoKVjO+rqeyX1qjICInfqoL
-         NOr8PxeHEBAtWZ+Af8AxkI+QVxsCv2gilsNQhO1J+AcI/C2FLDBQywWOX6BYHK5Dko76
-         5TLCf6LliendAC1vOeaOo7VsehHQRQvEI+KkPlCdX0QaoHHkNQuWXMlXrcjF0puimPlJ
-         kq6Hia127/5tRHM+BX4riglrLHiLwm2ivi/Eg/XoFMqko8f/uKrZmosr5bMCeqlUB+Pa
-         CJ7GtpWi5bsZVQVuJQtXBs1C7mZj7p2rO939FdbWmVyV/NeZvAiI6Pe9P1PeFVlum9r1
-         I0Kw==
-X-Forwarded-Encrypted: i=1; AFNElJ9dogAI/iruG4nTfS5pmgIbeRhKq0qMWnfQjZnfFZ/yvMpDIviPdAxf5pUwKpmL90htBsOZjbxuIzsWCoL1wmaR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyaj7HBS/op/qLtKSv3UG5Aqq8Db1e6Kyfta9yDstd33hi8urSQ
-	62z8L13uXVejDofWUx+RVhhiQrqVIw8YaC4SUMMS5QGwlVgnTJCGU6Akc8ETV0QlQsg=
-X-Gm-Gg: Acq92OEKaYA5FhWYRJpNjVDxbLKRZu0Nd4bgcfA8WbOaUW3hqjniLPi+IOWiPTcfGMI
-	xpJcmhm2vrnQ3AenAdlv6WU+gaMQpozqQPUHV0vL0NatGKRjuiP37gyA+il99e3+h1/dA3+kNSj
-	C8x2o3KAP8hoDqJ55j2vZfcWYWAlLupAhpAlnrbOGmBmvajaW6YCAr96t3ABDu0pyV1+clbSMN9
-	X4pmmaNDhkTQ6/dffIWdmgFnRya7aVKmfQWAE41MczxDHvqcd9Z5Ixa/Zu/gvF8S78JSaLkZ0yH
-	JmxiFEytvTC1mX2WwTc1we6gzeZqFBBplJNFh/Bh3M62i+1I12TGjHkkM2nss10UW+YnTQhSD0X
-	TWQ1roiHn6T3g9vrufiNA7iPIcrKMK37QjEW6CC/YFlu695hKTtoth5r/ZJEwyRewNrpKzoAbX8
-	KxNIS458EREWrQK9A9BFK9PNmDiPHG
-X-Received: by 2002:a05:600c:4510:b0:48a:53ea:140b with SMTP id 5b1f17b1804b1-490428ddf15mr282865845e9.28.1779794309281;
-        Tue, 26 May 2026 04:18:29 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490428d4d8asm109534425e9.16.2026.05.26.04.18.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2026 04:18:28 -0700 (PDT)
-Message-ID: <f767dc3b-9796-4b12-a776-1de6a9ff3f99@linaro.org>
-Date: Tue, 26 May 2026 12:18:27 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWaDsN5E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E34971F000E9;
+	Tue, 26 May 2026 11:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779796409;
+	bh=BGAIrqDVvaH6tC3gSAhvwugU4mlex5p23X20E51lQlI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ZWaDsN5E7JnRiRKQPT2lkzZqrM86FMzqXzz57idyBg6DSIaxdwVOrX04VDnDcdb7+
+	 2BMsxfvlo6jkgJQYiQBDq0XeXaFIduDJjp8QbPUq9MNT/wltwM4d2oBpF/E9sdp3rb
+	 dkljisY+D7mDyQP7pqEzQc98p8VlwhZUK9gX490Gm7pezPBa76xwJQqIZo6HIS6Ui2
+	 C+zGIk3h7mjYvW3hUjad4qAUDNJ+A59W9J8L/ZMkiPjVjhkvWZONqzoyzOUjKteNVj
+	 7RKL6p+2vJwjp8Qm//Ox2gqfv0wNQd6LePAXxb++HR6TIc33CcC6isGLhDDDJfT2hM
+	 YE/ZcET/L06tA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] perf cs-etm: Queue context packets for frontend
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260526-james-cs-context-tracking-fix-v1-1-ebd602e18287@linaro.org>
+References: <20260526-james-cs-context-tracking-fix-v1-1-ebd602e18287@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 26 May 2026 11:53:28 +0000
+Message-Id: <20260526115328.E34971F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf cs-etm: stamp pid/tid/EL on each buffered packet to
- fix cross-pid attribution
-To: Amir Ayupov <aaupov@meta.com>
-Cc: stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260515021135.1729028-1-aaupov@meta.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260515021135.1729028-1-aaupov@meta.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
+New issues:
+- [High] CS_ETM_CONTEXT packets fail to act as branch sample boundaries bec=
+ause they are not swapped into prev_packet, causing dead code, missing boun=
+daries, and misattributed samples.
+- [High] Helper functions do not handle CS_ETM_CONTEXT, which would lead to=
+ invalid address reads and leakage of CS_ETM_INVAL_ADDR if context packets =
+were correctly processed as boundaries.
 
-On 15/05/2026 3:11 am, Amir Ayupov wrote:
-> In a system-wide `perf record -e cs_etm/.../u` capture on aarch64,
-> synthesized samples emitted by `perf script --itrace=il64` are
-> sometimes attributed to the WRONG sample.pid/tid (and to the wrong
-> EL/cpumode) for the chunk of branches that straddle a context-switch
-> boundary on a CPU. A branch actually retired by process A is emitted
-> with sample.pid set to the thread that next ran on the same CPU.
-> 
-> Mechanism:
->    1. ETM emits CONTEXTIDR/EL packets in-stream when the kernel updates
->       CONTEXTIDR_EL1 on context switch / EL change. OpenCSD turns these
->       into OCSD_GEN_TRC_ELEM_PE_CONTEXT elements interleaved with
->       OCSD_GEN_TRC_ELEM_INSTR_RANGE elements for retired branch ranges.
->    2. cs_etm_decoder__buffer_range() queues each INSTR_RANGE into
->       packet_queue->packet_buffer[]; packets carry start/end addrs,
->       instr_count, last-instruction info, etc., but NO owner identity.
->    3. PE_CONTEXT goes through cs_etm_decoder__set_tid() ->
->       cs_etm__set_thread(), which immediately mutates tidq->thread and
->       tidq->el. Queued packets are not drained first; reset_timestamp()
->       is called so the next TIMESTAMP triggers OCSD_RESP_WAIT and a
->       drain.
->    4. By drain time in cs_etm__process_traceid_queue() ->
->       cs_etm__sample(), sample.pid/tid is read from the now-mutated
->       tidq->thread and sample.cpumode from the now-mutated tidq->el.
->       Pre-context INSTR_RANGEs get the post-context owner.
-> 
-> The same race affects branch samples via tidq->prev_packet_thread /
-> tidq->prev_packet_el, captured at packet-swap time from
-> tidq->thread / tidq->el (which may already have flipped).
-> 
-> This is independent of PERF_RECORD_SWITCH_CPU_WIDE, which is
-> deliberately not used to assign sample identity in this path. The
-> bug applies to any cs_etm capture with in-stream CONTEXTIDR
-> (PIDFMT_CTXTID or PIDFMT_CTXTID2).
-> 
-> Effect on downstream tools: branches that should belong to the
-> previous thread on the CPU get attributed to the next thread. When
-> the two threads share a binary, leaked branches' VAs land in the
-> wrong thread's mappings; samples whose IPs land in r-x mappings
-> silently pollute that binary's profile, while samples landing in
-> R-only/RW mappings show up as out-of-range / non-text samples.
-> Either way, AutoFDO/BOLT profiles built from `perf script --itrace`
-> output of system-wide cs_etm captures contain misattributed samples.
-> 
-> Concrete example from `perf script --itrace=il64` of the same
-> captured branch (same timestamp, same IP, same from/to addrs) before
-> and after this fix:
-> 
->    before: launcher_multia 2638146/2638146 705897.219172: \
->                fffcda6b124c 0xfffcda641958/0xfffcda6b123c
->    after:  ws-tcf-sr-io13  2736581/2741587 705897.219172: \
->                fffcda6b124c 0xfffcda641958/0xfffcda6b123c
-> 
-> The branch was retired by ws-tcf-sr-io13 (tid 2741587) but, before
-> the fix, was attributed to launcher_multia (the next thread to run on
-> that CPU after the context switch). After the fix, it is correctly
-> attributed to ws-tcf-sr-io13.
-> 
-> Why not "drain on PE_CONTEXT then switch" (deferred-set_thread):
-> tidq->thread has two consumers \u2014 sample emission needs the OUTGOING
-> identity for queued packets, but cs_etm__mem_access() needs the
-> CURRENT thread's maps to fetch instruction bytes for OpenCSD. The
-> two needs are temporally inverted; a single tidq->thread cannot
-> serve both. Keeping tidq->thread current and stamping owner identity
-> per packet is the only design that decouples them cleanly.
-> 
-> Fix: capture the owning pid/tid/EL on each buffered packet at
-> cs_etm_decoder__buffer_packet() time (before any subsequent
-> PE_CONTEXT can mutate tidq->thread / tidq->el), and read them at
-> sample emission time.
-> 
->    - struct cs_etm_packet gains pid_t pid, pid_t tid, int el (storing
->      an ocsd_ex_level value; typed as int so the struct does not
->      depend on OpenCSD headers, which are only included inside
->      HAVE_CSTRACE_SUPPORT).
->    - cs_etm__etmq_get_pid_tid_el() (formerly cs_etm__etmq_get_pid_tid)
->      returns all three.
->    - cs_etm__synth_instruction_sample() reads sample.pid / sample.tid
->      from tidq->packet->{pid,tid} and derives sample.cpumode from
->      tidq->packet->el.
->    - cs_etm__synth_branch_sample() reads sample.pid / sample.tid /
->      cpumode from tidq->prev_packet->{pid,tid,el}.
->    - The separate prev_packet_thread / prev_packet_el bookkeeping in
->      cs_etm__packet_swap() / cs_etm__init_traceid_queue() /
->      cs_etm__free_traceid_queues() is removed; the per-packet stamp
->      on prev_packet now carries that information.
-> 
-> Cost: 12 bytes added to struct cs_etm_packet (~12-16 KB per
-> packet_queue with CS_ETM_PACKET_MAX_BUFFER=1024), 16 bytes saved per
-> cs_etm_traceid_queue (one struct thread * + one ocsd_ex_level).
-> 
-> A residual gap: cs_etm__copy_insn() reads sample.insn bytes via
-> cs_etm__mem_access(), which still uses tidq->thread (the current
-> thread), so the inline insn bytes for an outgoing-thread sample may
-> be looked up against the wrong address space. Fixing this requires
-> threading the packet's owner pid through cs_etm__mem_access and is
-> left for a follow-up. sample.ip / sample.pid attribution \u2014 what
-> AutoFDO/BOLT consume \u2014 is correct.
-> 
+Pre-existing issues:
+- [High] Dereferencing a potentially NULL thread pointer during memory acce=
+ss under memory pressure.
+--
 
+commit a4e7b7904659c1a9053158e048dc4b6daf7453f5
+Author: Leo Yan <leo.yan@arm.com>
 
-Hi Amir,
+perf cs-etm: Queue context packets for frontend
 
-Can you test the patch here to see if it fixes your issue [1]?
+Add a CS_ETM_CONTEXT packet carrying the TID and EL to the frontend to keep
+context changes ordered. Separate memory access functions for decoding and
+frontend. Treat context packets as boundaries for branch sample generation.
 
-We thought it didn't make sense to store the thread on every packet when 
-there is only one active thread for the decoder and one for sample 
-generation. We also fixed the other issue mentioned above about 
-cs_etm__copy_insn() not working.
+Reported-by: Amir Ayupov <aaupov@meta.com>
+Closes: https://lore.kernel.org/linux-perf-users/20260515021135.1729028-1-a=
+aupov@meta.com/
 
-Thanks
-James
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
 
-[1]: 
-https://lore.kernel.org/linux-perf-users/20260526-james-cs-context-tracking-fix-v1-0-ebd602e18287@linaro.org/T/#t
+[ ... ]
 
+> @@ -1083,9 +1083,10 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *et=
+mq, u64 address,
+>  	}
+>  }
+> =20
+> -static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_i=
+d,
+> -			      u64 address, size_t size, u8 *buffer,
+> -			      const ocsd_mem_space_acc_t mem_space)
+> +static u32 __cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan=
+_id,
+> +				u64 address, size_t size, u8 *buffer,
+> +				const ocsd_mem_space_acc_t mem_space,
+> +				bool is_decoder)
+>  {
+
+[ ... ]
+
+> +	if (is_decoder) {
+> +		el =3D tidq->decode_el;
+> +		thread =3D tidq->decode_thread;
+> +	} else {
+> +		el =3D tidq->frontend_el;
+> +		thread =3D tidq->frontend_thread;
+> +	}
+
+[ ... ]
+
+>  	map__load(al.map);
+> =20
+> -	len =3D dso__data_read_offset(dso, maps__machine(thread__maps(tidq->thr=
+ead)),
+> +	len =3D dso__data_read_offset(dso, maps__machine(thread__maps(thread)),
+>  				    offset, buffer, size);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but if the fallback allocation in
+machine__idle_thread() fails under memory pressure and returns a NULL point=
+er,
+could thread__maps(thread) cause a null pointer dereference here?
+
+[ ... ]
+
+> @@ -1874,7 +1920,8 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+>  		bool generate_sample =3D false;
+> =20
+>  		/* Generate sample for tracing on packet */
+> -		if (tidq->prev_packet->sample_type =3D=3D CS_ETM_DISCONTINUITY)
+> +		if (tidq->prev_packet->sample_type =3D=3D CS_ETM_DISCONTINUITY ||
+> +		    tidq->prev_packet->sample_type =3D=3D CS_ETM_CONTEXT)
+>  			generate_sample =3D true;
+
+[Severity: High]
+If a context packet were correctly swapped into prev_packet, generate_sample
+would be true and cs_etm__synth_branch_sample() would be called.
+
+Looking at cs_etm__synth_branch_sample(), it calls
+cs_etm__last_executed_instr(tidq->prev_packet), which doesn't seem to handle
+context packets and would return CS_ETM_INVAL_ADDR. Additionally,
+cs_etm__copy_insn() doesn't appear to exempt context packets.
+
+Could this lead to invalid address reads and out-of-bounds memory accesses?
+Do we need to add exemptions for context packets in these helper functions
+similar to how we handle discontinuity packets?
+
+[ ... ]
+
+> @@ -2451,6 +2499,9 @@ static int cs_etm__process_traceid_queue(struct cs_=
+etm_queue *etmq,
+>  			 */
+>  			cs_etm__sample(etmq, tidq);
+>  			break;
+> +		case CS_ETM_CONTEXT:
+> +			cs_etm__etmq_set_frontend_tid_el(etmq, tidq);
+> +			break;
+>  		case CS_ETM_EXCEPTION:
+>  		case CS_ETM_EXCEPTION_RET:
+
+[Severity: High]
+Because the context packet case breaks out of the switch here, we never rea=
+ch
+the cs_etm__packet_swap() call at the end of cs_etm__sample().
+
+Does this mean the context packet is overwritten on the next iteration and
+tidq->prev_packet never actually becomes a context packet? If so, this would
+make the new boundary check in cs_etm__sample() unreachable dead code.
+Should context packets also trigger a packet swap?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526-james-cs-c=
+ontext-tracking-fix-v1-0-ebd602e18287@linaro.org?part=3D1
