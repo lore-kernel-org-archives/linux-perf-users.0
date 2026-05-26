@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544C43C09EB;
-	Tue, 26 May 2026 21:18:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758AA3ABD83;
+	Tue, 26 May 2026 21:18:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779830315; cv=none; b=SEe/13X9nNdwOgqKA19EsNnDfocjyKeepHKfIwl0DF8SHYdG4KIn3wmfAj5JMuiIfI1aKDBZy+COtKFAB+6h5w9ojo6bWXS7kXfRZxvYzoNve8KeFvwkgCM5owg/KkMFoxpKM546xN5XSIdA8MdGe09El3kOvda7AiAYTd+J5Ac=
+	t=1779830318; cv=none; b=SK4pSddpl2PgGd3oCrl6xzWCow6KdVKhoJC2W7GK2rg2jzqkCddqgZCv7JOIAinrmViIdZ9ZwIsE6vXyynxDZ1/Y1eSdIVSmbBeSOONNsyexOLHwig0sBnSvB1MuE2pO6OYt6PBhvKbeedCisNcm8Vrn4ce9isG8wASMtwmewgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779830315; c=relaxed/simple;
-	bh=t4MWiZOVnbvgN1FLY3y20WYpEcIeoyhE5ptaJr2ZZp4=;
+	s=arc-20240116; t=1779830318; c=relaxed/simple;
+	bh=1icRCEUVUbNpEULRDqf7Od1F6V14idhuhW/lrdRGItg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EMTci3EkuVBsvnB9XOexUZvoHQVT+uXKbxx0CR4ReHVOJAQrnmK4SzW+63hnKkpiBzb1FpX7pP91vHWRznS9aBU+5stSLY7gRZwlXF9UD9cjdkPsnh0PkQqOXkSfyAgzbqrtIXnK8QG53SQv0yqv1kn+NUCTBM2KFx2ww+iUhNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsjk8Z/5; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=L9xqxYRegtP6PUgndTm4mMrYN2lxDhab78iijbRMIj+V0F8RVFrXE+Ol0ZrkjS/hrFnJRfhtZdX61fLkomknk91Y9Sirn56rcLARg4K/RSMG6bx36SEy1Rsyb2L4V1tbVTtcAd8FlWnwQxMgspjEjCrQxDllRDmfLah3NKXKghM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XwqHsIn2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsjk8Z/5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66ABA1F000E9;
-	Tue, 26 May 2026 21:18:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XwqHsIn2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB1B51F00A3A;
+	Tue, 26 May 2026 21:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779830314;
-	bh=J8t0BS/K7fNTh75SuO9HWTTq8JhLusrqBgf02oogCjw=;
+	s=k20260515; t=1779830317;
+	bh=5DHJa/rQqcvUROnaKpJ3Zcfqv/577LXlWJV3fLKo5RY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=lsjk8Z/5iKv03b5ZmB4yRHbhxxEa0WwYDqpYnQTelAX1S7NeImR0IzLBEdahcUHA1
-	 AgFpGakCo9lU5OXE69Gn1C4WJqKg819qhANpgr/aga248Ynlc37p3b4HTcQD1Gj8a4
-	 bylogTnGgri3OUktPPTlQlq5ZZ7t+jq2wxuQM/gypxmlsn9TuZzsH71AuJ1j7sLjz4
-	 60Jq9yTFoklYmiGguHt8h42WAQDvMZ24sZurXr5Iab+Trn+BYV45hKCl5jCy2dPf5z
-	 2UbAXqlO79e2yIHIFBQcL7VFTbkbg3J1ByMnR93f1QhDGDPQR2Jh+dPakBGeVeV2E2
-	 9gJ5DOYZMyUYA==
+	b=XwqHsIn2XCAb362MWQv0zuGr7krma9bA0FZqdrpARzmpTzcQdHTGEXvlYIPTZ09V5
+	 XQ+/dJXbMcUTJGbvKmuUXUlkZzNWKUSgl5nzu5cI3LALY+eva8sVvY8dg7g8rFZk4o
+	 XplFTrVxPtpaHX3IMKMptYgai2q4AJMVQHMzFQ346c7DO29XQd8h37aDtDfoc6F86l
+	 lENqHORZFqZ8wxULmuy7XnvGcHn4svkkR/D6PsgNEn4aS0R2Pp93r3jhk9fyuL4DU9
+	 GK5aTUZf5NE9YM0HTr9CT3meWZ4XWIv/SQ9eE8NMSYYONr4N6HjVUi2H2WFy1l2Mjh
+	 sej171TvtzBrw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,11 +38,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot@kernel.org,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 05/29] perf zstd: Fix multi-iteration decompression and error handling
-Date: Tue, 26 May 2026 18:17:41 -0300
-Message-ID: <20260526211806.1193848-6-acme@kernel.org>
+Subject: [PATCH 06/29] perf session: Fix PERF_RECORD_READ swap and dump for variable-length events
+Date: Tue, 26 May 2026 18:17:42 -0300
+Message-ID: <20260526211806.1193848-7-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260526211806.1193848-1-acme@kernel.org>
 References: <20260526211806.1193848-1-acme@kernel.org>
@@ -57,75 +56,132 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-zstd_decompress_stream() has two bugs in its multi-iteration loop:
+The kernel dynamically sizes PERF_RECORD_READ based on
+attr.read_format: only the fields enabled by PERF_FORMAT_TOTAL_TIME_ENABLED,
+PERF_FORMAT_TOTAL_TIME_RUNNING, PERF_FORMAT_ID, and PERF_FORMAT_LOST
+are emitted, packed with no gaps.
 
-1. After each ZSTD_decompressStream() call, the code advances
-   output.dst by output.pos but doesn't reset output.pos to 0.
-   ZSTD interprets output.pos relative to output.dst, so the
-   next iteration writes at (dst + pos) + pos = dst + 2*pos,
-   skipping a gap and potentially writing out of bounds.
+perf_event__read_swap() unconditionally byte-swapped time_enabled,
+time_running, and id at their fixed struct offsets, causing
+out-of-bounds access on smaller events and swapping the wrong
+bytes when not all format fields are present.  It also swapped
+sample_id_all at a fixed offset past the full struct, which is
+wrong for shorter events.
 
-2. On ZSTD_decompressStream() error, the loop executes break
-   and returns output.pos (which is > 0 if some bytes were
-   decompressed before the error).  The caller checks
-   !decomp_size and skips the error, silently accepting
-   truncated or corrupted data.
+Replace the individual field swaps with a single mem_bswap_64()
+over the entire tail from value onward.  Since every field after
+pid/tid is u64 regardless of which combination is present, this
+correctly handles any read_format combination and any trailing
+sample_id_all fields.
 
-Fix both by removing the output buffer adjustment — ZSTD
-correctly accumulates output.pos across calls without it.
-Return 0 on decompression error so the caller detects it.
-Add a no-progress guard to prevent infinite loops if the
-output buffer fills before all input is consumed.
+Similarly, dump_read() accessed optional fields via fixed struct
+offsets, displaying values from wrong positions when not all
+format bits are set.  Walk the packed u64 array sequentially
+instead, with bounds checks against event->header.size.
 
-Note: the compressed event data_size is validated against
-header.size by a subsequent patch in this series
-("perf tools: Harden compressed event processing").
-
-Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/zstd.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ tools/perf/util/session.c | 61 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 44 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index ecda9deb53b738fa..21a0eb58597c21f9 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -123,14 +123,26 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 		}
- 	}
- 	while (input.pos < input.size) {
-+		size_t prev_in = input.pos;
-+		size_t prev_out = output.pos;
-+
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
- 			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
--			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
--			break;
-+			       src_size, output.pos, dst_size, ZSTD_getErrorName(ret));
-+			return 0;
- 		}
--		output.dst  = dst + output.pos;
--		output.size = dst_size - output.pos;
-+		/*
-+		 * Neither stream advanced — decompression is stuck.
-+		 * Return 0 (error) rather than partial output: perf
-+		 * uses ZSTD_flushStream (not ZSTD_endStream), so the
-+		 * stream is continuous across compressed events.
-+		 * Discarding unconsumed input would desynchronize the
-+		 * decompressor, causing the next call to produce
-+		 * garbage that could be misinterpreted as valid events.
-+		 */
-+		if (input.pos == prev_in && output.pos == prev_out)
-+			return 0;
- 	}
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index c4cd8ad6d810a74c..24f2ba599b8079bd 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -354,17 +354,24 @@ static void perf_event__task_swap(union perf_event *event, bool sample_id_all)
+ 		swap_sample_id_all(event, &event->fork + 1);
+ }
  
- 	return output.pos;
+-static void perf_event__read_swap(union perf_event *event, bool sample_id_all)
++static void perf_event__read_swap(union perf_event *event,
++				  bool sample_id_all __maybe_unused)
+ {
++	size_t tail;
++
+ 	event->read.pid		 = bswap_32(event->read.pid);
+ 	event->read.tid		 = bswap_32(event->read.tid);
+-	event->read.value	 = bswap_64(event->read.value);
+-	event->read.time_enabled = bswap_64(event->read.time_enabled);
+-	event->read.time_running = bswap_64(event->read.time_running);
+-	event->read.id		 = bswap_64(event->read.id);
+-
+-	if (sample_id_all)
+-		swap_sample_id_all(event, &event->read + 1);
++	/*
++	 * Everything after pid/tid is u64: the read values (variable
++	 * set determined by attr.read_format, which we don't have
++	 * here) optionally followed by sample_id_all fields.
++	 * Since all are u64, swap the entire remaining tail at once.
++	 */
++	tail = event->header.size - offsetof(struct perf_record_read, value);
++	/* mem_bswap_64 rounds up to 8-byte chunks — unaligned tail overruns the buffer */
++	if (tail % sizeof(u64))
++		return;
++	mem_bswap_64(&event->read.value, tail);
+ }
+ 
+ static void perf_event__aux_swap(union perf_event *event, bool sample_id_all)
+@@ -1200,8 +1207,9 @@ static void dump_deferred_callchain(union perf_event *event, struct perf_sample
+ 
+ static void dump_read(struct evsel *evsel, union perf_event *event)
+ {
+-	struct perf_record_read *read_event = &event->read;
+ 	u64 read_format;
++	__u64 *array;
++	void *end;
+ 
+ 	if (!dump_trace)
+ 		return;
+@@ -1213,18 +1221,37 @@ static void dump_read(struct evsel *evsel, union perf_event *event)
+ 		return;
+ 
+ 	read_format = evsel->core.attr.read_format;
++	/*
++	 * The kernel packs only the enabled read_format fields
++	 * after value, with no gaps.  Walk the packed array
++	 * instead of using fixed struct offsets.
++	 */
++	array = &event->read.value + 1;
++	end = (void *)event + event->header.size;
+ 
+-	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+-		printf("... time enabled : %" PRI_lu64 "\n", read_event->time_enabled);
++	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED) {
++		if ((void *)(array + 1) > end)
++			return;
++		printf("... time enabled : %" PRI_lu64 "\n", *array++);
++	}
+ 
+-	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+-		printf("... time running : %" PRI_lu64 "\n", read_event->time_running);
++	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING) {
++		if ((void *)(array + 1) > end)
++			return;
++		printf("... time running : %" PRI_lu64 "\n", *array++);
++	}
+ 
+-	if (read_format & PERF_FORMAT_ID)
+-		printf("... id           : %" PRI_lu64 "\n", read_event->id);
++	if (read_format & PERF_FORMAT_ID) {
++		if ((void *)(array + 1) > end)
++			return;
++		printf("... id           : %" PRI_lu64 "\n", *array++);
++	}
+ 
+-	if (read_format & PERF_FORMAT_LOST)
+-		printf("... lost         : %" PRI_lu64 "\n", read_event->lost);
++	if (read_format & PERF_FORMAT_LOST) {
++		if ((void *)(array + 1) > end)
++			return;
++		printf("... lost         : %" PRI_lu64 "\n", *array++);
++	}
+ }
+ 
+ static struct machine *machines__find_for_cpumode(struct machines *machines,
 -- 
 2.54.0
 
