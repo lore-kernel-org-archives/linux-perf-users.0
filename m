@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1870B3C343C;
-	Tue, 26 May 2026 21:19:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42AF3C3426;
+	Tue, 26 May 2026 21:19:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779830365; cv=none; b=YkIJenEkq/uSepLfdCWVIfzjvlgsIz1oeukP4p9ys42wMNo/R1iiJFC2JtDx7/bOhznqSvbIvp+zhFd8fZfLvHTEpGkPpaNESvo/9MACLgQj5qy7GFOg/Mo/MaGYkpwU2wvVFPzCybVTeg7n8rA/t/j3LpN9CJ0wL2Z51nX8F+g=
+	t=1779830369; cv=none; b=lRByO0k6TlgEhVsqJNoIegxhmIqCEWoG/TzJKThkxNkI8RoWgokMKk0L0A6Omkl80OhLS3McJuQv4aFkGpOnII+0XIH58Ni4mq6ATn2tC14fzytUeUmV65H2OJ3DKD5v/H5Evb2qB4EkwSGTiTsoD/A9bQXdUWxliLbnm139ngA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779830365; c=relaxed/simple;
-	bh=rXpWMVq0vZNm/1G8S/G4aTJpj/1iyln2NW4PkO9AbbU=;
+	s=arc-20240116; t=1779830369; c=relaxed/simple;
+	bh=2tspnYnFV2/mcTNat8MjyF0yJMZPMqCkwJiD0xzu5Pc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BryK/5aK+iYtOaqK0TiEyDbr83SJ/dWdDpjQ7kKlKZWs+ZgQsaS/sVnZFn8X51kxY9aLNsIfZMbRBuNFWMCgk2mSOKE0gjGKK6UNukWweuYmHvS5MP3Qe3LXfmsf1ACyFDaoZC7kGAkJUnu1vcyhvBgP+PD65aO1OT9wuUyQYG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5KTSBJe; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=ZokOXEPskOQR5CF2Hyupibc3pTRmfmEZWalTWC3JssjpP59Kn5zlon27lerMHtzm7HoVRum9ZN2JMStZhDboIyhjFuQEHQ/LLSLWtO5EOGRQSWKTDmUGmsASh9D+h2Mirke20owzZjMWB/siIowep3xTvn6ZsQSIreXO0uir2Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QlZEYxEX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5KTSBJe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F38421F000E9;
-	Tue, 26 May 2026 21:19:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QlZEYxEX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FAFE1F00A3A;
+	Tue, 26 May 2026 21:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779830364;
-	bh=qkKddOM1EB8b+sluilVDNZPKGYWZkmZB4j/EQLMORI0=;
+	s=k20260515; t=1779830367;
+	bh=mVc8jbO9aj9r6TWlD3OrE7dSxeoBoQfzzEhSx+Srlww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=H5KTSBJeMuM5LBfaDv3/OugL7CIFlLuBGSl5z/hqjP6tLyM4SiZL0xN9TktEGF36w
-	 t2y/Br54uPYmKxIiJZcX8dvn1Df5fuiafFliHV3JBG07udrrWHw4VcOJLApbUNQqq9
-	 8zFqoQC9CFqKIXj3MwcfepQ8mHnmJC9rIZPQoljess55jZM3awlAFyrQVnwmAHUpza
-	 z6GhduoUtouoWI+3lsBgvDWAQh8GAu0nIPfEmXXAfAWlG7edhscmvkzN9aqpPFSAOW
-	 ltLKskGCBTEbzC10nCA6iUBngP6lMUk/dmU1thQeE1MrtohndrJJW1G5Rgxscbvndg
-	 FTgY2N9+FWqag==
+	b=QlZEYxEXptfKu9Dl4m4zRwpTaiaFaNF3v157w5V36SaC/5DF9cjBQnxbGXwjuT6sE
+	 qxQ715ZYWXciEnIy0Ini6SyphLAtILU8N6npwGa5e3lqJO1+8bEx1jibe5DZPV/3lQ
+	 7eAqZfgZgOPcku0xQjgL2myQVfNmU/kQUaKcXVQs98YpZOs0+eKrjFxEwut+iWMZ34
+	 kivQoRIAlhydOhDnP1cMIKsbvjmFboatj3Jn1VOvSzvJEgNoqRjZxLsyOP08eE91qh
+	 XVt1sMDvA7uXgOeN7/bKdu93fHniE8FHsF1v4tYZJBlYC0YVaOUumSx3K1jyhwMdsa
+	 qN7lwPt7OByDw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
-	David Carrillo-Cisneros <davidcc@google.com>,
+	Wang Nan <wangnan0@huawei.com>,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 20/29] perf header: Validate feature section size and add read path bounds checking
-Date: Tue, 26 May 2026 18:17:56 -0300
-Message-ID: <20260526211806.1193848-21-acme@kernel.org>
+Subject: [PATCH 21/29] perf header: Sanity check HEADER_EVENT_DESC attr.size before swap
+Date: Tue, 26 May 2026 18:17:57 -0300
+Message-ID: <20260526211806.1193848-22-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260526211806.1193848-1-acme@kernel.org>
 References: <20260526211806.1193848-1-acme@kernel.org>
@@ -58,193 +58,130 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Harden feature section parsing against crafted perf.data files:
+read_event_desc() reads nre (event count), sz (attr size), and nr
+(IDs per event) from the file and uses them to control allocations
+and loops without validating them against the section size.
 
-1. perf_header__process_sections() reads the feature section table
-   and passes each section's offset and size directly to the
-   processing callbacks without validating them against the actual
-   file size.  A crafted section size would make all downstream
-   bounds checks against ff->size ineffective since they compare
-   against the untrusted, inflated bound.  Add an fstat() check
-   with S_ISREG() guard and verify that each section's offset +
-   size does not extend past EOF.
+A crafted perf.data could trigger large allocations or many loop
+iterations before __do_read() eventually rejects the reads.
 
-2. __do_read_buf() validates reads against ff->size (section size),
-   but __do_read_fd() had no such check, so a malformed perf.data
-   with an understated section size could cause reads past the end
-   of the current section into the next section's data.  Add the
-   bounds check in __do_read(), the common caller of both helpers,
-   so it is enforced uniformly for both the fd and buf paths.
-   Track the section-relative offset in __do_read_fd() so the
-   check works for the fd path.  Reject negative sizes which on
-   32-bit can occur when a u32 >= 0x80000000 is passed as ssize_t.
+Add bounds checks in read_event_desc():
+- Reject sz smaller than PERF_ATTR_SIZE_VER0.
+- Require at least one event (nre > 0).
+- Check that nre events fit in the remaining section, using the
+  minimum per-event footprint of sz + sizeof(u32).
+- Pre-swap attr->size to native byte order, then reject values
+  below PERF_ATTR_SIZE_VER0 or above sz before calling
+  perf_event__attr_swap() to prevent heap out-of-bounds access.
+- Handle ABI0 (attr.size == 0): substitute PERF_ATTR_SIZE_VER0,
+  and on native-endian files write the value back so
+  free_event_desc() does not treat the zero as its end-of-array
+  sentinel (it iterates while attr.size != 0).  The swap path
+  skips the write-back — perf_event__attr_swap() has its own
+  ABI0 fallback that sets VER0 after swapping.
+- Check that nr IDs fit in the remaining section before allocating.
 
-3. do_read_string() relied on file data being null-padded.  Add
-   explicit null-termination (buf[len-1] = '\0') after reading
-   and validate length (>= 1, fits within section) before
-   allocating, so callers like process_cpu_topology() never
-   receive an unterminated string.
-
-4. Initialize feat_fd.offset to 0 (section-relative) instead of
-   section->offset (file-absolute) so the bounds tracking is
-   consistent with __do_read()'s section-relative comparison.
-   Adjust process_build_id() to use lseek() for its file-absolute
-   offset needs since it cannot rely on ff->offset for that.
-
-5. Propagate ff->size to perf_file_section__fprintf_info() so its
-   reads are also bounded.
-
+Fixes: b30b61729246 ("perf tools: Fix a problem when opening old perf.data with different byte order")
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
-Cc: David Carrillo-Cisneros <davidcc@google.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 66 ++++++++++++++++++++++++++++++++++------
- 1 file changed, 57 insertions(+), 9 deletions(-)
+ tools/perf/util/header.c | 54 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index fe23bbd8370c0190..90417a478c8db2e1 100644
+index 90417a478c8db2e1..37d7c9849e0e9199 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -233,23 +233,32 @@ static int __do_read_fd(struct feat_fd *ff, void *addr, ssize_t size)
+@@ -2173,9 +2173,28 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 	if (do_read_u32(ff, &nre))
+ 		goto error;
  
- 	if (ret != size)
- 		return ret < 0 ? (int)ret : -1;
-+	ff->offset += size;
- 	return 0;
- }
++	/* Size of each of the nre attributes. */
+ 	if (do_read_u32(ff, &sz))
+ 		goto error;
  
- static int __do_read_buf(struct feat_fd *ff, void *addr, ssize_t size)
- {
--	if (size > (ssize_t)ff->size - ff->offset)
--		return -1;
--
- 	memcpy(addr, ff->buf + ff->offset, size);
- 	ff->offset += size;
- 
- 	return 0;
--
- }
- 
- static int __do_read(struct feat_fd *ff, void *addr, ssize_t size)
- {
 +	/*
-+	 * Reject negative sizes, which on 32-bit can occur when a
-+	 * u32 >= 0x80000000 is passed as ssize_t.  The cast to
-+	 * ssize_t is safe because perf_header__process_sections()
-+	 * validates that each section fits within the file size
-+	 * before any feature callback reaches here, and only
-+	 * feature sections (metadata like build IDs, topology, etc.)
-+	 * use this path — these cannot legitimately approach 2GB.
++	 * Require at least one event with an attr no smaller than the
++	 * first published struct, and reject sz values where
++	 * sz + sizeof(u32) would overflow size_t (possible on 32-bit)
++	 * or nre == UINT32_MAX where nre + 1 wraps to 0 in the calloc.
++	 *
++	 * The minimum section footprint per event is sz bytes for the
++	 * attr plus a u32 for the id count, check that nre events fit.
 +	 */
-+	if (size < 0 || size > (ssize_t)ff->size - ff->offset)
-+		return -1;
-+
- 	if (!ff->buf)
- 		return __do_read_fd(ff, addr, size);
- 	return __do_read_buf(ff, addr, size);
-@@ -289,16 +298,25 @@ static char *do_read_string(struct feat_fd *ff)
- 	if (do_read_u32(ff, &len))
- 		return NULL;
- 
-+	/* At least the null terminator. */
-+	if (len < 1 || len > ff->size - ff->offset) {
-+		pr_debug("do_read_string: invalid length %u (remaining %zu)\n",
-+			 len, (size_t)(ff->size - ff->offset));
-+		return NULL;
++	if (!nre || sz < PERF_ATTR_SIZE_VER0 ||
++	    sz > ff->size || (size_t)sz > SIZE_MAX - sizeof(u32) ||
++	    nre == UINT32_MAX ||
++	    nre > (ff->size - ff->offset) / (sz + sizeof(u32))) {
++		pr_err("Invalid HEADER_EVENT_DESC: nre=%u sz=%u (min %d)\n",
++		       nre, sz, PERF_ATTR_SIZE_VER0);
++		goto error;
 +	}
 +
- 	buf = malloc(len);
+ 	/* buffer to hold on file attr struct */
+ 	buf = malloc(sz);
  	if (!buf)
- 		return NULL;
+@@ -2191,6 +2210,9 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 		msz = sz;
  
- 	if (!__do_read(ff, buf, len)) {
+ 	for (i = 0, evsel = events; i < nre; evsel++, i++) {
++		struct perf_event_attr *attr = buf;
++		u32 attr_size;
++
+ 		evsel->core.idx = i;
+ 
  		/*
--		 * strings are padded by zeroes
--		 * thus the actual strlen of buf
--		 * may be less than len
-+		 * do_write_string() writes len including the null
-+		 * terminator, padded to NAME_ALIGN.  Ensure the
-+		 * string is always null-terminated even if the file
-+		 * data has been tampered with.
- 		 */
-+		buf[len - 1] = '\0';
- 		return buf;
- 	}
+@@ -2200,6 +2222,32 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 		if (__do_read(ff, buf, sz))
+ 			goto error;
  
-@@ -2775,7 +2793,13 @@ static int process_tracing_data(struct feat_fd *ff __maybe_unused, void *data __
- 
- static int process_build_id(struct feat_fd *ff, void *data __maybe_unused)
- {
--	if (perf_header__read_build_ids(ff->ph, ff->fd, ff->offset, ff->size))
-+	/* lseek fails in pipe mode — fall back to ff->offset */
-+	off_t offset = lseek(ff->fd, 0, SEEK_CUR);
-+
-+	if (offset == (off_t)-1)
-+		offset = ff->offset;
-+
-+	if (perf_header__read_build_ids(ff->ph, ff->fd, offset, ff->size))
- 		pr_debug("Failed to read buildids, continuing...\n");
- 	return 0;
- }
-@@ -4152,6 +4176,7 @@ static int perf_file_section__fprintf_info(struct perf_file_section *section,
- 	ff = (struct  feat_fd) {
- 		.fd = fd,
- 		.ph = ph,
-+		.size = section->size,
- 	};
- 
- 	if (!feat_ops[feat].full_only || hd->full)
-@@ -4512,6 +4537,7 @@ int perf_header__process_sections(struct perf_header *header, int fd,
- 	int sec_size;
- 	int feat;
- 	int err;
-+	struct stat st;
- 
- 	nr_sections = bitmap_weight(header->adds_features, HEADER_FEAT_BITS);
- 	if (!nr_sections)
-@@ -4529,7 +4555,29 @@ int perf_header__process_sections(struct perf_header *header, int fd,
- 	if (err < 0)
- 		goto out_free;
- 
-+	if (fstat(fd, &st) < 0) {
-+		pr_err("Failed to stat the perf data file\n");
-+		err = -1;
-+		goto out_free;
-+	}
-+
- 	for_each_set_bit(feat, header->adds_features, header->last_feat) {
-+		/*
-+		 * FIXME: block devices have st_size == 0, so we skip
-+		 * bounds checking entirely.  Historically perf never
-+		 * prevented using a block device as input, but it
-+		 * probably should — there's no valid use case for it
-+		 * and it bypasses all file-size validation.
-+		 */
-+		if (S_ISREG(st.st_mode) &&
-+		    (sec->offset > (u64)st.st_size ||
-+		     sec->size > (u64)st.st_size - sec->offset)) {
-+			pr_err("Feature %s (%d) section extends past EOF (offset=%" PRIu64 ", size=%" PRIu64 ", file=%" PRIu64 ")\n",
-+			       header_feat__name(feat), feat,
-+			       sec->offset, sec->size, (u64)st.st_size);
-+			err = -1;
-+			goto out_free;
++		/* Reject before attr_swap to prevent OOB via bswap_safe() */
++		attr_size = ff->ph->needs_swap ? bswap_32(attr->size) : attr->size;
++		/* ABI0: size == 0 means the producer didn't set it */
++		if (!attr_size) {
++			attr_size = PERF_ATTR_SIZE_VER0;
++			/*
++			 * Write back so free_event_desc() doesn't
++			 * treat this event as the end-of-array sentinel
++			 * (it iterates while attr.size != 0).
++			 *
++			 * Only for native — the swap path must NOT
++			 * write native-endian VER0 here because
++			 * perf_event__attr_swap() would re-swap it
++			 * to 0x40000000, defeating bswap_safe() bounds.
++			 * perf_event__attr_swap() has its own ABI0
++			 * fallback that sets VER0 after swapping.
++			 */
++			if (!ff->ph->needs_swap)
++				attr->size = attr_size;
 +		}
- 		err = process(sec++, header, feat, fd, data);
- 		if (err < 0)
- 			goto out_free;
-@@ -4756,7 +4804,7 @@ static int perf_file_section__process(struct perf_file_section *section,
- 		.fd	= fd,
- 		.ph	= ph,
- 		.size	= section->size,
--		.offset	= section->offset,
-+		.offset	= 0,
- 	};
++		if (attr_size < PERF_ATTR_SIZE_VER0 || attr_size > sz) {
++			pr_err("Event %d attr.size (%u) invalid (min: %d, max: %u)\n",
++			       i, attr_size, PERF_ATTR_SIZE_VER0, sz);
++			goto error;
++		}
++
+ 		if (ff->ph->needs_swap)
+ 			perf_event__attr_swap(buf);
  
- 	if (lseek(fd, section->offset, SEEK_SET) == (off_t)-1) {
+@@ -2221,6 +2269,12 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 		if (!nr)
+ 			continue;
+ 
++		/* Prevent oversized allocation from crafted nr */
++		if (nr > (ff->size - ff->offset) / sizeof(*id)) {
++			pr_err("Event %d: id count %u exceeds remaining section\n", i, nr);
++			goto error;
++		}
++
+ 		id = calloc(nr, sizeof(*id));
+ 		if (!id)
+ 			goto error;
 -- 
 2.54.0
 
