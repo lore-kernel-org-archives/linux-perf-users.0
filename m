@@ -1,46 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F581427A;
-	Tue, 26 May 2026 00:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBD318EB0
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 00:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779754834; cv=none; b=Mh5S+rWQ50Ia2tXvVOjgAsucu402KnLDE8aLUB2nA/sTjGmioRCSfSGZlt/IWoclvnaDcvvARPvYOGhr6JPveGKDzPxh7zreEIKb/MbKvHccvtRhH5CW3M0bGlLJ/XTivuVuwBaA6GAqvroj2ZmPwFZKQyKUK82Boj96IDwpR2A=
+	t=1779754909; cv=none; b=MPC4o+qwYKKPN+d9fHBIbE0KOr2VHxrL1VcjPRBKHk/XuyFSXW5l3fiHKw+JxDp54ml5UCUcuWvdvY2Lirh4CICgMrlwEE0DW6P1f9uz5VL6tNWQSbT62/d7AEhLrHZiNXY3lvFslT424CA+1e7CQI/Pls9ev/+erIkMvJnvAYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779754834; c=relaxed/simple;
-	bh=Eehw0pjAuzvYLoxl5Z8qYyKfjsrQE24AIXFTV8/3wF8=;
+	s=arc-20240116; t=1779754909; c=relaxed/simple;
+	bh=oJO6WiWM1OC4uA/XTtln85ObORmKmu07CtlXquy5EAI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7I3tNgEbsGsJhSHBA2V2ulDV1A6p7NBmOHqws+1sw6XjDu1F6iwAGVV9cibzhH2Av7ICXQ9Efcz26pRhzk1PtftR96Q+EeZEhKoVU0jdhqlzlGI/T1zfLlneWBNoDJmxKDblr/xMYJTGE1F6/YZYgzIqa8khZMFEzgW0v71yTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdTamvgO; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJ4iT8rlVDu46PUpxlsf4IxDfD4BzNoV+jhs501YBsO6v8e+S+f3qZTVOvsRUPpJOb7MQ1iRc/92tMah5YkJ1nkls2a2rS6IUNwjP4tIf+sMhm0mMOYPPHrKSupYWpdJ5sq8MrB9A0KCVSn1i8UkI44bsjwP/LpSFxl/KFfBMis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hq2ixnIp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdTamvgO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D6A1F000E9;
-	Tue, 26 May 2026 00:20:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hq2ixnIp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B43A1F000E9;
+	Tue, 26 May 2026 00:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779754833;
-	bh=4CulJcCeZVlUBQrdj1nQhc0A6uCK8N+OzSwaopGGZS8=;
+	s=k20260515; t=1779754907;
+	bh=2aYWc8PUiYXRi4lGOabblXmb3uCLGzTj+CSJlDzlyl8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FdTamvgOovWyvmwQIjnxgav6oSB4DOV1+LIBt6L0zV2NmV10d+0F+mhyKFYNUryAv
-	 eE2UOt7UcKUqBuQ50JLzNEWQ4XJwoN9eBW32GNl2l0LVjLwxMniIxChkxuVh9rGLE5
-	 w93NXfBgczvBvUul+ER3LkxjeFvezLJyTYSEzoTUJ+0vifiiKefAk8UBGh7MM7Y1vZ
-	 i5amL24IAW2lUV0NQZos4BS6lRb8D7G5xJ9tFknBJT60ZWSbNd/z+ODl5/zHCAVefh
-	 21snhx+sI4nrpmK2yMfZRpWwy991w8QqwNf35AfcH/l01AmnwtYhexWnYOI/4uUIMj
-	 6wVCiNdZDH8Gw==
-Date: Mon, 25 May 2026 21:20:30 -0300
+	b=hq2ixnIpEsKHjTNdTOt7t/QCj8/QYmtJ/exDyiXIoLlDne4mynceur8Fi5xTJSuoK
+	 FPLY9FYJ6TEcJRCdihr6084Q8+NC0qyhKNfL86U6AUqC8WGtDvQuyrRreizT3YtYsv
+	 rJCdkjboZEmEZf+Yy8rRumtEpfECDjayb2zIGd1ZOjoZYjWR2kuKbFUH9u1Sivi46I
+	 sALGB47El1ZN542pTskfCyPyMMgByGDH2/48eoCwELuw28jV2PvW5SSWzpUdUjB7H2
+	 QQwXbctmjkSZXXqrhV7b45YJDWp1LSih08dIY72K/CHhrtVVjMQpHzmUjyDQpBxwg+
+	 8rUuWt3cyUuxQ==
+Date: Mon, 25 May 2026 21:21:44 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-	adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, mingo@redhat.com,
-	peterz@infradead.org
-Subject: Re: [RFC PATCH v2 01/14] perf stat: Introduce core generic print
- traversal engine and header stubs
-Message-ID: <ahTnTt2HWa5Zx-0l@x1>
-References: <20260522223342.2393553-1-irogers@google.com>
- <20260525231900.3527228-1-irogers@google.com>
- <20260525231900.3527228-2-irogers@google.com>
- <ahTdcAqLUH_Za7qe@x1>
- <CAP-5=fWoetmpFuxAwWyj5cMPn7rsJjPBdK-MvJxw06aVj=DNKw@mail.gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: Summary of perf-tools-next changes and patches sent to
+ linux-perf-users
+Message-ID: <ahTnmDoG6i_7nO8-@x1>
+References: <CAP-5=fX=vEmTaz6mWgExmrgyYMJmSyOD+1sMCzf7JTk1SkA-zQ@mail.gmail.com>
+ <ahTmJyLLZYOPpnKa@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,43 +45,92 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWoetmpFuxAwWyj5cMPn7rsJjPBdK-MvJxw06aVj=DNKw@mail.gmail.com>
+In-Reply-To: <ahTmJyLLZYOPpnKa@x1>
 
-On Mon, May 25, 2026 at 04:48:57PM -0700, Ian Rogers wrote:
-> On Mon, May 25, 2026 at 4:38 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Mon, May 25, 2026 at 04:18:47PM -0700, Ian Rogers wrote:
-> > > This patch introduces the initial infrastructure for decoupling the
-> > > perf stat printing API. It declares the struct perf_stat_print_callbacks
-> > > interface and the core traversal driver perf_stat__print_cb() inside
-> > > the newly created util/stat-print.h and util/stat-print.c files.
-> >
-> > Can we avoid these kinds of reflowings:
-> >
-> >                 OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
-> > -                       "Set the metrics level for the top-down statistics (0: max level)"),
-> > -               OPT_BOOLEAN(0, "smi-cost", &smi_cost,
-> > -                       "measure SMI cost"),
-> > +                            "Set the metrics level for the top-down statistics (0: max level)"),
-> > +               OPT_BOOLEAN(0, "smi-cost", &smi_cost, "measure SMI cost")
-> >
-> > There is a lot to process and these things gets in the way.
-> >
-> > I'm trying to make sure this doesnt' happen in my patches with or
-> > without AI assistance :-)
-> >
-> > We need to have this as a skill so that AI don't do this.
+On Mon, May 25, 2026 at 09:15:35PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, May 25, 2026 at 04:35:51PM -0700, Ian Rogers wrote:
+> > I've been working on a script [1] to summarize what's been sent to the
+> > linux-perf-users mailing list (using nntp) and compare it to what's
+> > merged into the perf-tools-next branch (using git). The idea is to
+> > make it slightly easier to track down patches that might have been
+> > missed. The script shows what has been merged and what's pending, what
+> > Sashiko thinks, and whose turn it is to work on the patch (author,
+> > reviewer or maintainer) using some naive tag analysis. The output is
+> > quite large, so rather than adding it below, I will send the last 4
+> > weeks in separate e-mail replies to this message.
 > 
-> Actually, it was primarily from running "git clang-format" to clean up
-> the #includes, but also for the layout of the AI aided stuff. git
-> clang-format likes to think that if you edited a function then tidying
-> up any style issues within it is fair game. I can resend with a fix.
+> I'm doing this locally as well, helps.
 
-If the patch is just about reflowing to standardize on some format, then
-we expect that to be what the patch is about, but then it still doesn't
-add value at all, its just something we have to look at to see if it
-isn't introducing a problem even when obviously it probably will not add
-any.
+For instance, from earlier today: 
 
-- Arnaldo
+$ cat /tmp/outstanding.txt
+
+Outstanding patches for perf-tools-next — 2026-05-25
+(checked against next2/perf-tools-next)
+=====================================================
+
+Tier 2 — Likely ready, needs closer look
+-----------------------------------------
+
+1. perf stat: Fix uncore metric scaling across aggregation modes
+   Author: Chun-Tse Shao <ctshao@google.com>
+   Version: v3, 2 patches
+   Reviews: Namhyung reviewed v1; no reviews on v3 yet
+   Message-ID: <20260521201505.124690-1-ctshao@google.com>
+
+2. perf python: Improvements and callchain support
+   Author: Ian Rogers <irogers@google.com>
+   Version: v9, 23 patches
+   Message-ID: <20260522220435.2378363-1-irogers@google.com>
+
+3. perf data ctf: Replace libbabeltrace with babeltrace2-ctf-writer
+   Author: Michael Jeanson <mjeanson@efficios.com>
+   Version: v1, 1 patch + Ian's 2-patch feature test
+   Message-ID: <20260512194710.162215-1-mjeanson@efficios.com>
+   Ian's follow-up: <20260512215621.468685-1-irogers@google.com>
+
+4. perf test: Harness improvements
+   Author: Ian Rogers <irogers@google.com>
+   Version: v1, 14 patches
+   Message-ID: <20260513230450.529380-1-irogers@google.com>
+
+Tier 3 — Single patches, needs review
+--------------------------------------
+
+5. perf bench: Add --write-size option to sched pipe
+   Author: Breno Leitao <leitao@debian.org>
+   Version: v1, 1 patch
+   Message-ID: <20260515-perf_bench_pipe-v1-1-3c5b805ba178@debian.org>
+
+6. perf evsel: Fix error handling in tp_format lookup
+   Author: Hongling Zeng <zenghongling@kylinos.cn>
+   Version: v1, 1 patch
+   Message-ID: <20260521025738.17867-1-zenghongling@kylinos.cn>
+
+7. perf kvm stat: Update the exit reason mappings
+   Author: Gautam Menghani <gautam@linux.ibm.com>
+   Version: v1, 1 patch
+   Reviews: Ian reviewed (needs v2 per feedback)
+   Message-ID: <20260512120408.59332-1-gautam@linux.ibm.com>
+
+8. perf build: Fix Python extension build with GCC 16 hardening
+   Author: Jan Polensky <japo@linux.ibm.com>
+   Version: v1, 1 patch
+   Reviews: Thomas Richter Reviewed-by
+   Message-ID: <20260520125637.105681-1-japo@linux.ibm.com>
+
+Already merged in next2/perf-tools-next
+-----------------------------------------
+
+- perf tests: uncore/topdown event sorting (Ian, v8) — 9f116f4b811b
+- perf build: parallel build cleanup (Ian, v7) — 85cc481af5ff + 5 more
+- perf build: Update kernel headers (Namhyung, v3) — aa13e4b120f9..5a433107fab6
+- Fix SIGCHLD vs pause() race (Swapnil, v4) — 35c9fb22000f
+- Fix kwork ASAN + libunwind test (Ian, v1) — e898c505b0ee, fdec0a81cad5
+- Fix cgroup metric with BPF counters (Ian, v4) — 65bd18199ad5, bd2a5be1fe73
+- tool_pmu enable/disable (Ian, v2) — 0b18bced5444
+- libunwind multiple remote (Ian, v5) — fdec0a81cad5
+- tools/build: LLVM versioning (James, v2) — 98e68cb77823
+- perf inject intel-PT LBR/brstack (Ian, v3) — daac18e7c42c
+- perf trace --show-cpu (Aaron, v4) — e445b78ffb8d
+- stat delay duration_time test (Ian) — f83deb058025
