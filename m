@@ -1,306 +1,209 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D7D3DEFE7
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 11:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB1E3DFC84
+	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 11:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779794105; cv=none; b=lO0AqLz2F4M+EK7XQESRa6scEFX8lfOb0FnuIPtaUhoBPAym40SnK4PG3um3vEWU4Qnx5upKSR6g4mQMWN3DB1m7qr+0CeKWu0SbXMEVf4nJi6lB57eL0WTVQU3LWlySrWpjb9NKSNhDjtdUh3IlK7qNYfqkZNzyRGdBRCWEkqI=
+	t=1779794312; cv=none; b=MNMapYBRJqmx9DS/W7oE/AXgyVxYmgo3gIPJdpbTLemqpOvEJHiJCtO6cIleHIL7GoM26UFx/mdbgzEWSZUOS95A4OynS0t9KnT6j2XY0T6p9MFprWW48guXE2kLtjfMpCzbPkD7xoWSRAb2wyp484frJy6mICHLqNCFMivdCDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779794105; c=relaxed/simple;
-	bh=DZvZtVaDVjgtTMrzxG2c64n+J7UyBOrBeYeDJdKv4PU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QILU0XHIQTft3T+2PC4wjDqU0jjmDZevwT4eclKf5dPxOqKsFaosct6M7KppT2Eu1KO6eu2zVVbCi8w5gDwqDocvkrK9/9Ljm4kPqBlD9YvXwad34ZHTwxeajb0ldNdX7dNHLyai24W11o1kDNMeFmokxOOoBM7HgsNAtr8+DxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xIzqOKK6; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1779794312; c=relaxed/simple;
+	bh=WXyxERZkAF0LlknC4H8opQvQi25M6gfBOrIFzH8Jgu4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q2RvPK3n5Vkya9QriY1UFRwwaOA8CqxdvBTJO1Hpm4fkmJBph5UaB0iByIm1t7Bj5mu5NBu9pQVMTawZpzGSxeyt+Z9531QtXXSsjSuMN3ey3WAhLrsl9VTW+Mq95BqtNDS3J4agKKh9OItvHdi7ElaWgwniDMiRgnzbfP5nQl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Whqwe4D6; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xIzqOKK6"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-45ebafde87cso2349086f8f.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 04:15:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Whqwe4D6"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4891b0786beso70339745e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 04:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1779794101; x=1780398901; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A/gStB7riG3y0hEx2ktfiQB2K0otiavQ178eEzNn/V0=;
-        b=xIzqOKK6rhB+bM9sgSSFRzVzlqw85f2mYLjd6H8d1fECX0wp+j6y+cO95s8QLS+SHp
-         q2dX8glk+0jsfY8wWHlIdbLAtOBBLjm7dgTGfMle52+QbFcnvZSXYGRSla/wde+Zw49e
-         6S6vTNE7OHEwz373iU5p+ePkt0zwSTJVLRh7jq2bGQFzh9GJR/6HXb0embcuQ0rNhPDx
-         f2Km3EFWRWgtfhdu82PZ5kcwDRenyrlV/VuOIFyESvLCWCFssGzNxaTb8TuziEB8GLCX
-         3Z8DK7hnPj57c5th4UZDHM8UacN81PdfZ5Bu//Vj6PVPtHxq3dKlJ5WYKeJmgOhn+1JF
-         ZWUw==
+        d=linaro.org; s=google; t=1779794309; x=1780399109; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Iel9G2dSq5mVeEVrZU7ubpkoHb7PNbJx58eC9mITM2Y=;
+        b=Whqwe4D6Evk2cto9uUaFrD5Q+gP27VvhZwh9NUsFXDiK8di0F3WB/ZOeaXrleQEdx5
+         MGS6Lwlx0D5JxNn+4aFO3W0Kao9BbdbPAlRVuCXXo3lF0haWRQQ5Gqvbrfv3WEsTFwbK
+         vQ7fEdKPa4U/23Dl7dXpo13lxX35W69VKNssQktL0OCeN8Q5omSR4jpfY5KqQJzVp1KA
+         pO+mzlpeq/xmMdVjlZSN4e2ZxZ5s9q4qDK9eBOrEqEIUYlKBHyG8/jf+EAblCgq/oGYq
+         xu3XmSJHLaVDIivUtqTXQUiIoFj6bV1Z7JYYHmJd7NGipRkA2sIQ0vy98+RwzCHwAWFa
+         KbKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779794101; x=1780398901;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=A/gStB7riG3y0hEx2ktfiQB2K0otiavQ178eEzNn/V0=;
-        b=S6cfiZOaHRPy46yGkpjQQm9CQFogZriChkYNYdnj9pVoCgLmc8UwAPwysJIPngEUT+
-         lj0rfXHsWJI/ec5ZQ1QrhN8rWhO9v/gteMw7nDfSYEy+Rd4U9Uc0M3yAd3rMfyUjwJDR
-         p2kdCDBjQ1Hdn0/Gr7d8A6iVvO9+FGdCk4nWCAScdYuB8fDg7VJ8+2DSgStPvGqdVN2Y
-         fkbkGNwD1+Uzcidc0myQBt9ihXp79GjZHRuhG0EPTf+HVECFy4Z39kmDx31JkZGcP1bO
-         VnlDOSIF6uTp1El13fLoZQXY4sL6uGsI8mcwzOJbmLsLfT8rdwPPZX+/b5iIZGz8f7KU
-         dKJw==
-X-Forwarded-Encrypted: i=1; AFNElJ9aAqF/b3ngCUPfqVn6bfP2hR0mu9vEAcM7KB0TqGMrNwdpF4fiv5tJCs0ojsWEbcPEYcJMLZMcOEkU0RCGSK73@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa3EmwhoeJL7tTm1BTEwMYlBkhOnlIbWMTkzwzzEkA+bqcyHeI
-	fpeiBGXkDe5/kWtAguBfEtjHAsnT73anq0b0rasL89Ke/Ang0MJEyyKTMXUXWAcu6DM=
-X-Gm-Gg: Acq92OHjSX5Nn1S13gC3qQ0xQDzHdinom3r7XLaIFAUo3Hm+1ubv8aEinVEkLiDNUD8
-	2K77W6LqhWVs2Pp2SZYLCypNekovQWH0WSZnUtu6wKpTCE3u14iOaZKeifpBdQ1FoMEykq4ze26
-	IhobEiGrDLyCFaiL/XHH91z1DPsSQs1GJVC0XBdbUmnjtCZFrZBI0C9fIyTcg46e1edLZz8HjRg
-	ScZr7sM9pUJf3l7yKPafHz0y4QU23oMrv6qlH6DgdZiSGJotYDX4QUf0t5jn5OG/b/lubZyIz16
-	bQfQHHUwwl986QhYB/aw+3Ymyo8Sdiy4HTNiiENtghMkLX5eAYowL3El5+kkOACkKWsXRd1dpRr
-	5N65lNsn8hM2UBAurqH79ZYjGeaP+ptiWlqIJcSRnTVvwKIGxiNpClL3tSqzGVf0jFusC4WZxXl
-	MHu6hlgNA0ZtGU9YESnrpsC9hfNUwJm7gR
-X-Received: by 2002:a05:6000:4707:b0:455:7e5d:9142 with SMTP id ffacd0b85a97d-45eb38bb01fmr30064916f8f.32.1779794101143;
-        Tue, 26 May 2026 04:15:01 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eb6c9f598sm35375627f8f.6.2026.05.26.04.15.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2026 04:15:00 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Tue, 26 May 2026 12:14:37 +0100
-Subject: [PATCH 2/2] perf test cs-etm: Test thread attribution
+        d=1e100.net; s=20251104; t=1779794309; x=1780399109;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Iel9G2dSq5mVeEVrZU7ubpkoHb7PNbJx58eC9mITM2Y=;
+        b=IptBaWOFr0gxmkIOTsifKNnEZYdyfdvdfynry3s3ZT4PoKVjO+rqeyX1qjICInfqoL
+         NOr8PxeHEBAtWZ+Af8AxkI+QVxsCv2gilsNQhO1J+AcI/C2FLDBQywWOX6BYHK5Dko76
+         5TLCf6LliendAC1vOeaOo7VsehHQRQvEI+KkPlCdX0QaoHHkNQuWXMlXrcjF0puimPlJ
+         kq6Hia127/5tRHM+BX4riglrLHiLwm2ivi/Eg/XoFMqko8f/uKrZmosr5bMCeqlUB+Pa
+         CJ7GtpWi5bsZVQVuJQtXBs1C7mZj7p2rO939FdbWmVyV/NeZvAiI6Pe9P1PeFVlum9r1
+         I0Kw==
+X-Forwarded-Encrypted: i=1; AFNElJ9dogAI/iruG4nTfS5pmgIbeRhKq0qMWnfQjZnfFZ/yvMpDIviPdAxf5pUwKpmL90htBsOZjbxuIzsWCoL1wmaR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyaj7HBS/op/qLtKSv3UG5Aqq8Db1e6Kyfta9yDstd33hi8urSQ
+	62z8L13uXVejDofWUx+RVhhiQrqVIw8YaC4SUMMS5QGwlVgnTJCGU6Akc8ETV0QlQsg=
+X-Gm-Gg: Acq92OEKaYA5FhWYRJpNjVDxbLKRZu0Nd4bgcfA8WbOaUW3hqjniLPi+IOWiPTcfGMI
+	xpJcmhm2vrnQ3AenAdlv6WU+gaMQpozqQPUHV0vL0NatGKRjuiP37gyA+il99e3+h1/dA3+kNSj
+	C8x2o3KAP8hoDqJ55j2vZfcWYWAlLupAhpAlnrbOGmBmvajaW6YCAr96t3ABDu0pyV1+clbSMN9
+	X4pmmaNDhkTQ6/dffIWdmgFnRya7aVKmfQWAE41MczxDHvqcd9Z5Ixa/Zu/gvF8S78JSaLkZ0yH
+	JmxiFEytvTC1mX2WwTc1we6gzeZqFBBplJNFh/Bh3M62i+1I12TGjHkkM2nss10UW+YnTQhSD0X
+	TWQ1roiHn6T3g9vrufiNA7iPIcrKMK37QjEW6CC/YFlu695hKTtoth5r/ZJEwyRewNrpKzoAbX8
+	KxNIS458EREWrQK9A9BFK9PNmDiPHG
+X-Received: by 2002:a05:600c:4510:b0:48a:53ea:140b with SMTP id 5b1f17b1804b1-490428ddf15mr282865845e9.28.1779794309281;
+        Tue, 26 May 2026 04:18:29 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490428d4d8asm109534425e9.16.2026.05.26.04.18.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2026 04:18:28 -0700 (PDT)
+Message-ID: <f767dc3b-9796-4b12-a776-1de6a9ff3f99@linaro.org>
+Date: Tue, 26 May 2026 12:18:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf cs-etm: stamp pid/tid/EL on each buffered packet to
+ fix cross-pid attribution
+To: Amir Ayupov <aaupov@meta.com>
+Cc: stable@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260515021135.1729028-1-aaupov@meta.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260515021135.1729028-1-aaupov@meta.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260526-james-cs-context-tracking-fix-v1-2-ebd602e18287@linaro.org>
-References: <20260526-james-cs-context-tracking-fix-v1-0-ebd602e18287@linaro.org>
-In-Reply-To: <20260526-james-cs-context-tracking-fix-v1-0-ebd602e18287@linaro.org>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- Amir Ayupov <aaupov@meta.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
 
-Add a workload that creates two threads that read and write to a pipe so
-that every read/write results in the other thread being scheduled. If
-this is run on one CPU then the threads will alternate and we can test
-that processor trace always attributes symbols to the correct thread and
-that the attribution changes at the exact point that the thread switch
-happened.
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/tests/shell/coresight/Makefile          |  1 +
- .../shell/coresight/context_switch_loop/.gitignore |  1 +
- .../shell/coresight/context_switch_loop/Makefile   | 29 ++++++++
- .../context_switch_loop/context_switch_loop.c      | 83 ++++++++++++++++++++++
- .../tests/shell/coresight/context_switch_thread.sh | 48 +++++++++++++
- 5 files changed, 162 insertions(+)
 
-diff --git a/tools/perf/tests/shell/coresight/Makefile b/tools/perf/tests/shell/coresight/Makefile
-index fa08fd9a5991..710e742d9def 100644
---- a/tools/perf/tests/shell/coresight/Makefile
-+++ b/tools/perf/tests/shell/coresight/Makefile
-@@ -6,6 +6,7 @@ include ../../../../../tools/scripts/utilities.mak
- 
- SUBDIRS = \
- 	asm_pure_loop \
-+	context_switch_loop \
- 	memcpy_thread \
- 	thread_loop \
- 	unroll_loop_thread
-diff --git a/tools/perf/tests/shell/coresight/context_switch_loop/.gitignore b/tools/perf/tests/shell/coresight/context_switch_loop/.gitignore
-new file mode 100644
-index 000000000000..86a7becebba4
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/context_switch_loop/.gitignore
-@@ -0,0 +1 @@
-+context_switch_loop
-diff --git a/tools/perf/tests/shell/coresight/context_switch_loop/Makefile b/tools/perf/tests/shell/coresight/context_switch_loop/Makefile
-new file mode 100644
-index 000000000000..722afc993cb0
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/context_switch_loop/Makefile
-@@ -0,0 +1,29 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+include ../Makefile.miniconfig
-+
-+BIN=context_switch_loop
-+LIB=
-+
-+all: $(BIN)
-+
-+$(BIN): $(BIN).c
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+	$(Q)$(CC) $(CFLAGS) $(BIN).c -O0 -o $(BIN) $(LIB)
-+endif
-+endif
-+
-+install-tests: all
-+ifdef CORESIGHT
-+ifeq ($(ARCH),arm64)
-+	$(call QUIET_INSTALL, tests) \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)'; \
-+		$(INSTALL) $(BIN) '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/$(INSTDIR_SUB)/$(BIN)/$(BIN)'
-+endif
-+endif
-+
-+clean:
-+	$(Q)$(RM) -f $(BIN)
-+
-+.PHONY: all clean install-tests
-diff --git a/tools/perf/tests/shell/coresight/context_switch_loop/context_switch_loop.c b/tools/perf/tests/shell/coresight/context_switch_loop/context_switch_loop.c
-new file mode 100644
-index 000000000000..6b7cd11952a2
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/context_switch_loop/context_switch_loop.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/compiler.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/prctl.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+static int loops = 100;
-+static char buf;
-+int work = 1234;
-+
-+#define write_block(fd) \
-+	do { \
-+		if (write(fd, &buf, 1) <= 0) \
-+			exit(1); \
-+	} while (0)
-+
-+#define read_block(fd) \
-+	do { \
-+		if (read(fd, &buf, 1) <= 0) \
-+			exit(1); \
-+	} while (0)
-+
-+static noinline void thread1(int in_fd, int out_fd)
-+{
-+	for (int i = 0; i < loops; i++) {
-+		read_block(in_fd);
-+		work += i * 3;
-+		write_block(out_fd);
-+	}
-+}
-+
-+static noinline void thread2(int in_fd, int out_fd)
-+{
-+	for (int i = 0; i < loops; i++) {
-+		write_block(out_fd);
-+		work += i * 7;
-+		read_block(in_fd);
-+	}
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	int a_to_b[2], b_to_a[2];
-+	pid_t thread1_pid;
-+	int status;
-+
-+	if (argc > 1) {
-+		loops = atoi(argv[1]);
-+		if (loops < 0) {
-+			fprintf(stderr, "Invalid number of loops: %s\n", argv[1]);
-+			return 1;
-+		}
-+	}
-+
-+	if (pipe(a_to_b) || pipe(b_to_a)) {
-+		perror("Pipe error");
-+		return 1;
-+	}
-+
-+	thread1_pid = fork();
-+	if (thread1_pid < 0) {
-+		perror("Fork error");
-+		return 1;
-+	}
-+
-+	if (!thread1_pid) {
-+		prctl(PR_SET_NAME, "thread1", 0, 0, 0);
-+		thread1(b_to_a[0], a_to_b[1]);
-+		exit(0);
-+	}
-+
-+	prctl(PR_SET_NAME, "thread2", 0, 0, 0);
-+	thread2(a_to_b[0], b_to_a[1]);
-+
-+	if (waitpid(thread1_pid, &status, 0) != thread1_pid || !WIFEXITED(status) ||
-+	    WEXITSTATUS(status))
-+		return 1;
-+
-+	return 0;
-+}
-diff --git a/tools/perf/tests/shell/coresight/context_switch_thread.sh b/tools/perf/tests/shell/coresight/context_switch_thread.sh
-new file mode 100755
-index 000000000000..10b4118dff9b
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/context_switch_thread.sh
-@@ -0,0 +1,48 @@
-+#!/bin/bash -e
-+# CoreSight / Context switch thread attribution (exclusive)
-+
-+# SPDX-License-Identifier: GPL-2.0
-+
-+TEST="context_switch_loop"
-+
-+if [ "$(id -u)" != 0 ]; then
-+	# Requires root for "-C 0" in record command
-+	echo "[Skip] No root permission"
-+	exit 2
-+fi
-+
-+# shellcheck source=../lib/coresight.sh
-+. "$(dirname $0)"/../lib/coresight.sh
-+
-+DATA="$DATD/perf-$TEST.data"
-+SCRIPT="$DATD/perf-$TEST.script"
-+
-+check_samples() {
-+	owner_samples=$(grep -c "thread1.*thread1" "$SCRIPT" || true)
-+	next_samples=$(grep -c "thread2.*thread2" "$SCRIPT" || true)
-+
-+	if [ "$owner_samples" -eq 0 ] || [ "$next_samples" -eq 0 ]; then
-+		err "No samples found"
-+	fi
-+
-+	if grep "thread2.*thread1" "$SCRIPT"; then
-+		err "Thread1 symbol was attributed to thread2"
-+	fi
-+
-+	if grep "thread1.*thread2" "$SCRIPT"; then
-+		err "Thread2 symbol was attributed to thread1"
-+	fi
-+}
-+
-+# Pin to one CPU so the two threads alternate running but record into the
-+# same trace buffer.
-+perf record -o "$DATA" -e cs_etm/timestamp=0/u -C 0 \
-+	-- taskset --cpu-list 0 "$BIN" 20 > /dev/null 2>&1
-+
-+# Test both instruction and branch sample generation modes.
-+perf script -i "$DATA" --itrace=i4 -F comm,pid,tid,ip,sym > "$SCRIPT" 2>/dev/null
-+check_samples
-+perf script -i "$DATA" --itrace=b -F comm,pid,tid,ip,sym > "$SCRIPT" 2>/dev/null
-+check_samples
-+
-+exit 0
+On 15/05/2026 3:11 am, Amir Ayupov wrote:
+> In a system-wide `perf record -e cs_etm/.../u` capture on aarch64,
+> synthesized samples emitted by `perf script --itrace=il64` are
+> sometimes attributed to the WRONG sample.pid/tid (and to the wrong
+> EL/cpumode) for the chunk of branches that straddle a context-switch
+> boundary on a CPU. A branch actually retired by process A is emitted
+> with sample.pid set to the thread that next ran on the same CPU.
+> 
+> Mechanism:
+>    1. ETM emits CONTEXTIDR/EL packets in-stream when the kernel updates
+>       CONTEXTIDR_EL1 on context switch / EL change. OpenCSD turns these
+>       into OCSD_GEN_TRC_ELEM_PE_CONTEXT elements interleaved with
+>       OCSD_GEN_TRC_ELEM_INSTR_RANGE elements for retired branch ranges.
+>    2. cs_etm_decoder__buffer_range() queues each INSTR_RANGE into
+>       packet_queue->packet_buffer[]; packets carry start/end addrs,
+>       instr_count, last-instruction info, etc., but NO owner identity.
+>    3. PE_CONTEXT goes through cs_etm_decoder__set_tid() ->
+>       cs_etm__set_thread(), which immediately mutates tidq->thread and
+>       tidq->el. Queued packets are not drained first; reset_timestamp()
+>       is called so the next TIMESTAMP triggers OCSD_RESP_WAIT and a
+>       drain.
+>    4. By drain time in cs_etm__process_traceid_queue() ->
+>       cs_etm__sample(), sample.pid/tid is read from the now-mutated
+>       tidq->thread and sample.cpumode from the now-mutated tidq->el.
+>       Pre-context INSTR_RANGEs get the post-context owner.
+> 
+> The same race affects branch samples via tidq->prev_packet_thread /
+> tidq->prev_packet_el, captured at packet-swap time from
+> tidq->thread / tidq->el (which may already have flipped).
+> 
+> This is independent of PERF_RECORD_SWITCH_CPU_WIDE, which is
+> deliberately not used to assign sample identity in this path. The
+> bug applies to any cs_etm capture with in-stream CONTEXTIDR
+> (PIDFMT_CTXTID or PIDFMT_CTXTID2).
+> 
+> Effect on downstream tools: branches that should belong to the
+> previous thread on the CPU get attributed to the next thread. When
+> the two threads share a binary, leaked branches' VAs land in the
+> wrong thread's mappings; samples whose IPs land in r-x mappings
+> silently pollute that binary's profile, while samples landing in
+> R-only/RW mappings show up as out-of-range / non-text samples.
+> Either way, AutoFDO/BOLT profiles built from `perf script --itrace`
+> output of system-wide cs_etm captures contain misattributed samples.
+> 
+> Concrete example from `perf script --itrace=il64` of the same
+> captured branch (same timestamp, same IP, same from/to addrs) before
+> and after this fix:
+> 
+>    before: launcher_multia 2638146/2638146 705897.219172: \
+>                fffcda6b124c 0xfffcda641958/0xfffcda6b123c
+>    after:  ws-tcf-sr-io13  2736581/2741587 705897.219172: \
+>                fffcda6b124c 0xfffcda641958/0xfffcda6b123c
+> 
+> The branch was retired by ws-tcf-sr-io13 (tid 2741587) but, before
+> the fix, was attributed to launcher_multia (the next thread to run on
+> that CPU after the context switch). After the fix, it is correctly
+> attributed to ws-tcf-sr-io13.
+> 
+> Why not "drain on PE_CONTEXT then switch" (deferred-set_thread):
+> tidq->thread has two consumers \u2014 sample emission needs the OUTGOING
+> identity for queued packets, but cs_etm__mem_access() needs the
+> CURRENT thread's maps to fetch instruction bytes for OpenCSD. The
+> two needs are temporally inverted; a single tidq->thread cannot
+> serve both. Keeping tidq->thread current and stamping owner identity
+> per packet is the only design that decouples them cleanly.
+> 
+> Fix: capture the owning pid/tid/EL on each buffered packet at
+> cs_etm_decoder__buffer_packet() time (before any subsequent
+> PE_CONTEXT can mutate tidq->thread / tidq->el), and read them at
+> sample emission time.
+> 
+>    - struct cs_etm_packet gains pid_t pid, pid_t tid, int el (storing
+>      an ocsd_ex_level value; typed as int so the struct does not
+>      depend on OpenCSD headers, which are only included inside
+>      HAVE_CSTRACE_SUPPORT).
+>    - cs_etm__etmq_get_pid_tid_el() (formerly cs_etm__etmq_get_pid_tid)
+>      returns all three.
+>    - cs_etm__synth_instruction_sample() reads sample.pid / sample.tid
+>      from tidq->packet->{pid,tid} and derives sample.cpumode from
+>      tidq->packet->el.
+>    - cs_etm__synth_branch_sample() reads sample.pid / sample.tid /
+>      cpumode from tidq->prev_packet->{pid,tid,el}.
+>    - The separate prev_packet_thread / prev_packet_el bookkeeping in
+>      cs_etm__packet_swap() / cs_etm__init_traceid_queue() /
+>      cs_etm__free_traceid_queues() is removed; the per-packet stamp
+>      on prev_packet now carries that information.
+> 
+> Cost: 12 bytes added to struct cs_etm_packet (~12-16 KB per
+> packet_queue with CS_ETM_PACKET_MAX_BUFFER=1024), 16 bytes saved per
+> cs_etm_traceid_queue (one struct thread * + one ocsd_ex_level).
+> 
+> A residual gap: cs_etm__copy_insn() reads sample.insn bytes via
+> cs_etm__mem_access(), which still uses tidq->thread (the current
+> thread), so the inline insn bytes for an outgoing-thread sample may
+> be looked up against the wrong address space. Fixing this requires
+> threading the packet's owner pid through cs_etm__mem_access and is
+> left for a follow-up. sample.ip / sample.pid attribution \u2014 what
+> AutoFDO/BOLT consume \u2014 is correct.
+> 
 
--- 
-2.34.1
+
+Hi Amir,
+
+Can you test the patch here to see if it fixes your issue [1]?
+
+We thought it didn't make sense to store the thread on every packet when 
+there is only one active thread for the decoder and one for sample 
+generation. We also fixed the other issue mentioned above about 
+cs_etm__copy_insn() not working.
+
+Thanks
+James
+
+[1]: 
+https://lore.kernel.org/linux-perf-users/20260526-james-cs-context-tracking-fix-v1-0-ebd602e18287@linaro.org/T/#t
 
