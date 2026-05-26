@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F813C09E6;
-	Tue, 26 May 2026 21:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C6B3C2BA7;
+	Tue, 26 May 2026 21:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779830388; cv=none; b=CfNFYP3UdcKp9L+a2+hl3jP/q4p8j0n66wEImvIQMknxKcCnjppPu9vp2thBBMu+aB/kk6xtRQLA4qnTVAFzsH3Skx3TrYr/n1bgJiALyR9YATdRX3RI/gqv4Qj98uszgO7vC4rgbiIYME+wLnpUvnepSZgqjL3qEwQxuFqMg9A=
+	t=1779830392; cv=none; b=T9hcE7Pl124fK4lsd459kXyvx99FO3ZUxSip5cwfjayBcJV0yXEsU2bL9ZoUkoMi6CACGjmsO5oQ/60jlIt/9BsWntGRbMaJPRCvtdQyuhDlOMpabUwnrEppl77xSD6g9HxqlEjsYsmP9YFtz/HhLFt339h1fEdmuwFESS8NA8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779830388; c=relaxed/simple;
-	bh=cFbcd6tg4S4vTQ4OH5ZDXc6IUgIdEztjTvppO5X9nXs=;
+	s=arc-20240116; t=1779830392; c=relaxed/simple;
+	bh=KHaK6TV1L+WqQwQ3G7IF1H5tzBLYca3Yc478KX1vzc8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DPhY6w6bj9F2NoIrDvMfKke0jwruydcaY5sT2dHA94rTmCSu8fIw9ge0BbC0CZp2b6Jvkho+bzqCpdxe+74PbpI308JFVl5hg2Y6rdKJyCOKFy8I8fnncIfjlz2cSEanH/+Zl7EjixKqBQKriMV7osqKsDXBvZjinRW12ITRhxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4EC+gbG; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=j4XJ1mceZH5JIqRO0TPefhlOIxD+E+DRZKFLnyaKrD227JaStDA7nC1Bgw/zi+5TT5vNZNKnfXUfgRm1oIim2RINMBNW0ifHfTpPuq+qAQKr2FVT+vObRYqCPrfVBAG2PT72TGDQOtvW4wjewyZ5l3b1gron8WZ3f0IXyVMHeow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ua0ii8c0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4EC+gbG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B021F00A3C;
-	Tue, 26 May 2026 21:19:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ua0ii8c0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EF91F000E9;
+	Tue, 26 May 2026 21:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779830387;
-	bh=Gu5rtWBHTYXbvUrpZQHMBKoyRKvBtzO1Zg4Rx3KVL50=;
+	s=k20260515; t=1779830390;
+	bh=MAhgt6MF/Lvwd+vbi4l3VmdHB5RN7EJYTE2MMA7COA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=S4EC+gbG5T+tNTUyoiC8OxuZyucuIKWtATGuAgSnEBP6r0Th/TRjzxfpwvO7GiZpS
-	 Cfods/zxMvMwGQdCVN9KfuEOFNaTg/s4H9KSBxaLo6/VwboPjiMFtIPgWHOqTkhITS
-	 rTrnHeWMPSse3WU5Cy2p0+I3GAkHWsTlo2wwFS9VCttKPu0389Iuk3hNQyFdR2zxoT
-	 dUizXXfVt7Hxzw5M1CWRGLrEZACfWSBwWh5tXhJbyI/h9BdSt/97cwAm9yVPKRFWmv
-	 5gM5gp+TneTU3THUU+SLCGnfRo73flRAMoAjA+vD0D3CxkEVwV/ScGBD9k8eUyUA/z
-	 jwcgAI2JHlY2w==
+	b=Ua0ii8c01hQkjr5KlEQRy6J03iz6ykswmrNMlVYeuYuVMyaWOzoh4GqTSU3hsvMse
+	 Ba3mGgZyeEY/hXx6Q79tda4x4ePWTOQcxVxL+J6zAqvYZsqwW7x+TVvwYRUa/ba7l3
+	 U3tIHlM95wDaQ84ysu9zc2KMfzrQmleYWtdqv9Y/F3CzEzQz6xpQaGNdKg/cpysSD0
+	 CRCT4HoddZyk9fz1Ce+ZfVJd0WaOo3aR46c8JoqFtlMEr6esetFESTTQph7jhHyKid
+	 NVfKIbiFSEceUuW0N8xpf0Hp43reaJYtsGtCZ1/2l23pqeCLu8G+o5djyaeRRbjj5p
+	 Jxxz+4iL/7e+A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot@kernel.org,
-	Yang Jihong <yangjihong@bytedance.com>,
 	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
-Subject: [PATCH 27/29] perf kwork: Bounds check work->cpu before indexing cpus_runtime[]
-Date: Tue, 26 May 2026 18:18:03 -0300
-Message-ID: <20260526211806.1193848-28-acme@kernel.org>
+Subject: [PATCH 28/29] perf session: Snapshot event->header.size in process_user_event()
+Date: Tue, 26 May 2026 18:18:04 -0300
+Message-ID: <20260526211806.1193848-29-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260526211806.1193848-1-acme@kernel.org>
 References: <20260526211806.1193848-1-acme@kernel.org>
@@ -58,146 +57,129 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-work->cpu comes from sample->cpu which is (u32)-1 when
-PERF_SAMPLE_CPU is absent.  Stored as int, this becomes -1
-which passes the signed BUG_ON(work->cpu >= MAX_NR_CPUS) but
-causes an out-of-bounds access on cpus_runtime[-1].
+On native-endian files, events are read from MAP_SHARED memory.
+Multiple reads of event->header.size can return different values
+if the file is concurrently modified, allowing an attacker to
+bypass bounds checks performed on an earlier read.
 
-Replace the BUG_ON in top_calc_total_runtime() with an unsigned
-bounds check that skips entries with invalid CPU values, counting
-them for a summary warning.
-
-Guard the same index in profile_event_match() (bitmap OOB),
-top_calc_idle_time(), top_calc_irq_runtime(), top_calc_cpu_usage(),
-and top_calc_load_runtime().  Also guard against division by zero
-in top_calc_cpu_usage() when no runtime was accumulated.
+Snapshot header.size into a local variable at function entry using
+READ_ONCE() to prevent compiler rematerialization, and use it for
+all size-dependent arithmetic within the function.  This ensures
+every bounds calculation uses the same value that was validated
+by the reader.
 
 Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Yang Jihong <yangjihong@bytedance.com>
 Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-kwork.c | 45 +++++++++++++++++++++++++++++++++-----
- tools/perf/util/kwork.h    |  1 +
- 2 files changed, 40 insertions(+), 6 deletions(-)
+ tools/perf/util/session.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index f793ea578515d08c..99dc293a0744726e 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -467,7 +467,9 @@ static bool profile_event_match(struct perf_kwork *kwork,
- 	u64 time = sample->time;
- 	struct perf_time_interval *ptime = &kwork->ptime;
- 
--	if ((kwork->cpu_list != NULL) && !test_bit(cpu, kwork->cpu_bitmap))
-+	/* Guard test_bit: cpu == -1 (absent PERF_SAMPLE_CPU) would index past the bitmap */
-+	if ((kwork->cpu_list != NULL) &&
-+	    ((unsigned int)cpu >= MAX_NR_CPUS || !test_bit(cpu, kwork->cpu_bitmap)))
- 		return false;
- 
- 	if (((ptime->start != 0) && (ptime->start > time)) ||
-@@ -2041,7 +2043,18 @@ static void top_calc_total_runtime(struct perf_kwork *kwork)
- 	next = rb_first_cached(&class->work_root);
- 	while (next) {
- 		work = rb_entry(next, struct kwork_work, node);
--		BUG_ON(work->cpu >= MAX_NR_CPUS);
-+		/*
-+		 * work->cpu comes from sample->cpu which is -1 when
-+		 * PERF_SAMPLE_CPU is absent.  As int that's -1, but as
-+		 * unsigned it exceeds MAX_NR_CPUS — skip to avoid OOB
-+		 * on cpus_runtime[].
-+		 */
-+		/* Counted and reported in perf_kwork__top_report() */
-+		if ((unsigned int)work->cpu >= MAX_NR_CPUS) {
-+			stat->nr_skipped_cpu++;
-+			next = rb_next(next);
-+			continue;
-+		}
- 		stat->cpus_runtime[work->cpu].total += work->total_runtime;
- 		stat->cpus_runtime[MAX_NR_CPUS].total += work->total_runtime;
- 		next = rb_next(next);
-@@ -2053,7 +2066,8 @@ static void top_calc_idle_time(struct perf_kwork *kwork,
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 6de665d3c9054179..e2e821b77766dbfc 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2230,6 +2230,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
  {
- 	struct kwork_top_stat *stat = &kwork->top_stat;
+ 	struct ordered_events *oe = &session->ordered_events;
+ 	const struct perf_tool *tool = session->tool;
++	const u32 event_size = READ_ONCE(event->header.size);
+ 	struct perf_sample sample;
+ 	int fd = perf_data__fd(session->data);
+ 	s64 err;
+@@ -2271,7 +2272,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		break;
+ 	case PERF_RECORD_HEADER_BUILD_ID:
+ 		if (!perf_event__check_nul(event->build_id.filename,
+-					   (void *)event + event->header.size,
++					   (void *)event + event_size,
+ 					   "HEADER_BUILD_ID")) {
+ 			err = 0;
+ 			break;
+@@ -2294,7 +2295,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		 * place already.
+ 		 */
+ 		if (!perf_data__is_pipe(session->data))
+-			lseek(fd, file_offset + event->header.size, SEEK_SET);
++			lseek(fd, file_offset + event_size, SEEK_SET);
+ 		err = tool->auxtrace(tool, session, event);
+ 		break;
+ 	case PERF_RECORD_AUXTRACE_ERROR:
+@@ -2304,14 +2305,14 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 	case PERF_RECORD_THREAD_MAP: {
+ 		u64 max_nr;
  
--	if (work->id == 0) {
-+	/* See comment in top_calc_total_runtime() */
-+	if (work->id == 0 && (unsigned int)work->cpu < MAX_NR_CPUS) {
- 		stat->cpus_runtime[work->cpu].idle += work->total_runtime;
- 		stat->cpus_runtime[MAX_NR_CPUS].idle += work->total_runtime;
+-		if (event->header.size < sizeof(event->thread_map)) {
++		if (event_size < sizeof(event->thread_map)) {
+ 			pr_err("PERF_RECORD_THREAD_MAP: header.size (%u) too small\n",
+-			       event->header.size);
++			       event_size);
+ 			err = -EINVAL;
+ 			break;
+ 		}
+ 
+-		max_nr = (event->header.size - sizeof(event->thread_map)) /
++		max_nr = (event_size - sizeof(event->thread_map)) /
+ 			 sizeof(event->thread_map.entries[0]);
+ 		if (event->thread_map.nr > max_nr) {
+ 			pr_err("PERF_RECORD_THREAD_MAP: nr %" PRIu64 " exceeds max %" PRIu64 "\n",
+@@ -2325,7 +2326,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
  	}
-@@ -2065,6 +2079,10 @@ static void top_calc_irq_runtime(struct perf_kwork *kwork,
- {
- 	struct kwork_top_stat *stat = &kwork->top_stat;
+ 	case PERF_RECORD_CPU_MAP: {
+ 		struct perf_record_cpu_map_data *data = &event->cpu_map.data;
+-		u32 payload = event->header.size - sizeof(event->header);
++		u32 payload = event_size - sizeof(event->header);
  
-+	/* See comment in top_calc_total_runtime() */
-+	if ((unsigned int)work->cpu >= MAX_NR_CPUS)
-+		return;
-+
- 	if (type == KWORK_CLASS_IRQ) {
- 		stat->cpus_runtime[work->cpu].irq += work->total_runtime;
- 		stat->cpus_runtime[MAX_NR_CPUS].irq += work->total_runtime;
-@@ -2117,12 +2135,19 @@ static void top_calc_cpu_usage(struct perf_kwork *kwork)
- 		if (work->total_runtime == 0)
- 			goto next;
- 
-+		/* See comment in top_calc_total_runtime() */
-+		if ((unsigned int)work->cpu >= MAX_NR_CPUS)
-+			goto next;
-+
- 		__set_bit(work->cpu, stat->all_cpus_bitmap);
- 
- 		top_subtract_irq_runtime(kwork, work);
- 
--		work->cpu_usage = work->total_runtime * 10000 /
--			stat->cpus_runtime[work->cpu].total;
-+		/* Guard against division by zero if no runtime was accumulated */
-+		if (stat->cpus_runtime[work->cpu].total) {
-+			work->cpu_usage = work->total_runtime * 10000 /
-+				stat->cpus_runtime[work->cpu].total;
-+		}
- 
- 		top_calc_idle_time(kwork, work);
- next:
-@@ -2135,7 +2160,8 @@ static void top_calc_load_runtime(struct perf_kwork *kwork,
- {
- 	struct kwork_top_stat *stat = &kwork->top_stat;
- 
--	if (work->id != 0) {
-+	/* See comment in top_calc_total_runtime() */
-+	if (work->id != 0 && (unsigned int)work->cpu < MAX_NR_CPUS) {
- 		stat->cpus_runtime[work->cpu].load += work->total_runtime;
- 		stat->cpus_runtime[MAX_NR_CPUS].load += work->total_runtime;
+ 		/*
+ 		 * Native-endian events are mmap'd read-only, so we
+@@ -2389,8 +2390,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		break;
  	}
-@@ -2211,6 +2237,13 @@ static void perf_kwork__top_report(struct perf_kwork *kwork)
- 		next = rb_next(next);
- 	}
+ 	case PERF_RECORD_STAT_CONFIG: {
+-		/* Cannot underflow: perf_event__min_size[] guarantees header.size >= sizeof */
+-		u64 max_nr = (event->header.size - sizeof(event->stat_config)) /
++		/* Cannot underflow: perf_event__min_size[] guarantees event_size >= sizeof */
++		u64 max_nr = (event_size - sizeof(event->stat_config)) /
+ 			     sizeof(event->stat_config.data[0]);
  
-+	if (kwork->top_stat.nr_skipped_cpu) {
-+		printf("  Warning: %u work entries with invalid CPU were excluded from totals.\n"
-+		       "  Task runtimes may appear inflated (IRQ time not subtracted).\n"
-+		       "  Consider re-recording with PERF_SAMPLE_CPU enabled.\n",
-+		       kwork->top_stat.nr_skipped_cpu);
-+	}
-+
- 	printf("\n");
- }
+ 		/*
+@@ -2421,7 +2422,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		 */
+ 		memset(&session->time_conv, 0, sizeof(session->time_conv));
+ 		memcpy(&session->time_conv, &event->time_conv,
+-		       min((size_t)event->header.size, sizeof(session->time_conv)));
++		       min((size_t)event_size, sizeof(session->time_conv)));
+ 		err = tool->time_conv(tool, session, event);
+ 		break;
+ 	case PERF_RECORD_HEADER_FEATURE:
+@@ -2438,11 +2439,10 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 		break;
+ 	case PERF_RECORD_BPF_METADATA: {
+ 		u64 nr_entries, max_entries;
+-		u32 hdr_size = READ_ONCE(event->header.size);
  
-diff --git a/tools/perf/util/kwork.h b/tools/perf/util/kwork.h
-index 81d39a7f78c8b811..6ec70dcc4157a1f2 100644
---- a/tools/perf/util/kwork.h
-+++ b/tools/perf/util/kwork.h
-@@ -202,6 +202,7 @@ struct __top_cpus_runtime {
- struct kwork_top_stat {
- 	DECLARE_BITMAP(all_cpus_bitmap, MAX_NR_CPUS);
- 	struct __top_cpus_runtime *cpus_runtime;
-+	unsigned int nr_skipped_cpu;
- };
+-		if (hdr_size < sizeof(event->bpf_metadata)) {
++		if (event_size < sizeof(event->bpf_metadata)) {
+ 			pr_warning("WARNING: PERF_RECORD_BPF_METADATA: header.size (%u) too small, skipping\n",
+-				   hdr_size);
++				   event_size);
+ 			err = 0;
+ 			break;
+ 		}
+@@ -2458,9 +2458,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 			break;
+ 		}
  
- struct perf_kwork {
+-		/* Snapshot — event is mmap'd and could change between reads */
+ 		nr_entries = READ_ONCE(event->bpf_metadata.nr_entries);
+-		max_entries = (hdr_size - sizeof(event->bpf_metadata)) /
++		max_entries = (event_size - sizeof(event->bpf_metadata)) /
+ 			      sizeof(event->bpf_metadata.entries[0]);
+ 		if (nr_entries > max_entries) {
+ 			pr_warning("WARNING: PERF_RECORD_BPF_METADATA: nr_entries %" PRIu64 " exceeds max %" PRIu64 ", skipping\n",
 -- 
 2.54.0
 
