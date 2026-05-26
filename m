@@ -1,137 +1,226 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4B83AA9DA
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 20:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2877F1F427C;
+	Tue, 26 May 2026 21:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779828975; cv=none; b=QMLmlf/uqkTR6zGOmF9fjn+L/C7wGRqDeJzD+QA62UJr/1SCbjs8+3xR/Ju76wXkph0lKfQV6E0Ufs22yeu5TR2agJlnojvuFg2ctFbs5kjSNuwkYStA0xxQSoj7BRaHu5P2i2FWk7D73vKWU/IQ9DXxgpM8TLXFL4IQCbuDQhs=
+	t=1779830299; cv=none; b=XU9MXcRp76VD8C0g979Q1gqP6f/KSO6K11ysOuYwjxPOiMdkifbkV1VDcHxMVh/9YL/7XCT7LkQpyv1pcWxRIfksKmNGtwAI4kflaTQLrabvCJG2ygwLs/7ypu5A5KWqHDXIawZHauTxtTTVb/gXcHiImlE8EbBdaH/NbUnwCmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779828975; c=relaxed/simple;
-	bh=RTBdwc/TaC1uiY739CUAv1o6cw5bbTD5vUuaGJI5gMI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NPkaRRTYLJX1528pMlTRkXHxH+gP36991wILRhFOAaHm/OtDYyrFC7Rs4lxGT/70JRMeJ/UTAR2Xw0KADvfHDeac6/MkYzSyDWz27oti5gWTWFN2uSsMjnMaiW1D7NIRUZmjyIepGjAFFIwxl0jzUwDPBxL9coNSqswdEA5q0uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRkNt7Zu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779830299; c=relaxed/simple;
+	bh=x1GH7+1uWoBSTfLLdsHB+fleHXFZSpik1V6o/dx71YM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cwGMIEel2FeZ2DjokCXAM1JWy+pBk1kIE0MpsVt8aSiS9jnYZoOt9PSAhJOMOc0yhPHFS5nqodkI3i19MBuZu+K0OEVRXXAJcAfFEDwtvCj8uiu9vKPuRlAk8WrEhFxyr6hmw/MR/3wwGcD1tkfOHiPRSfAARNejfYSPhKvSEJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZDUFu+q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRkNt7Zu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17C191F000E9;
-	Tue, 26 May 2026 20:56:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZDUFu+q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A6571F00A3C;
+	Tue, 26 May 2026 21:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779828974;
-	bh=4xWpMRqGiUdz88mlVMwOTy3suaSFK4i+zIij7xyXTbU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IRkNt7Zui/dDJS4h2kIHHfg7uhVyaMlN8NYbtqpDI31dXkh7n6b7O+yazfDTejeTv
-	 QXs7leQMtBhh6lNEavp2joEW+duxv14EzaUlKBnI6Gjq5yrHsOcB1uUhreQ9JaQoWC
-	 JQaFuPuBCSRgcM9cXqZqhzAfCbtqOs84baD6mEiqoU/5pOlEaVEJp2T6s2boulrlJ5
-	 2YMQHlhpTIGAFDZBHBbOT+OGFGUVG0skATTf0RG/eLho0fVfSchDQuOhcljrwteKKt
-	 MFX8NsXV0VC3ljvWFK1Q6cI3t7cvyjMoc1YfCmtXB7MHKv/K6/ze4c4YiVlNl8xGwm
-	 WosX4AvYs+yHQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 8/8] perf test: Add Arm CoreSight callchain test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leo Yan" <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260526-b4-arm_cs_callchain_support_v1-v6-8-f9f49f53c9dd@arm.com>
-References: <20260526-b4-arm_cs_callchain_support_v1-v6-8-f9f49f53c9dd@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 26 May 2026 20:56:13 +0000
-Message-Id: <20260526205614.17C191F000E9@smtp.kernel.org>
+	s=k20260515; t=1779830297;
+	bh=fweuWgZhbQ8k3MAwae3dAhRX3rYNyPlqlYzdX3RJ9cI=;
+	h=From:To:Cc:Subject:Date;
+	b=ZZDUFu+q1PKj8eeHZyyUCtBWXMo6oTPBRXk+szXvaEDeEbey1bv/xMuY6+q3txyH3
+	 7Agg58KZNRJ4GK8oSXQKy32k9DKfQQ70/2d+wIZuQsPGcfoinQ+FSHZg4LfC+8kXwE
+	 ZtaRsE9oJSpG4SOKMGZwsTS/0Sv9OeUL6oz2oF0R+PZQ/whjFYZ2Kh9a56/G2RadsX
+	 EHTD0HAdcjUFrzqSLuGR69XSdHKzr4+BDfyClnr0bfk7pjolOOaAmiyuO8PLuUIfYj
+	 K7zpImkql6ClzaFh5ZZHA0gUIqiFsv9GdWbvnu3xN62d9LNxeOeamDyYh+sgHF6lQY
+	 5WAuViqUiF0IQ==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v4 00/29] perf: Harden perf.data parsing against crafted/corrupted files
+Date: Tue, 26 May 2026 18:17:36 -0300
+Message-ID: <20260526211806.1193848-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] The regular expressions for matching `perf script` output do not a=
-ccount for the timestamp field, guaranteeing test failure.
-- [Low] The `.size` directive for the `main` function incorrectly excludes =
-its `ret` instruction.
-- [Low] The `adr` instruction is used to reference a symbol in a different =
-section, which can cause a linker error.
---
+perf.data validation and hardening (29 patches)
 
-commit c68e5facc9f76be5097ddc178f00bfa18d0f188f
-Author: Leo Yan <leo.yan@arm.com>
+A crafted or corrupted perf.data file can cause out-of-bounds
+reads/writes, infinite loops, heap overflows, and segfaults in perf
+report, perf script, perf inject, perf timechart, and perf kwork.
+This series adds defense-in-depth validation for file parsing:
 
-perf test: Add Arm CoreSight callchain test
+- Per-event-type minimum size table, enforced before swap and
+  processing on both native and cross-endian paths.
 
-This commit adds a shell test for synthesized callchains from Arm CoreSight
-trace data. It builds a test program for syscalls, records them, and
-decodes with itrace callchain synthesis enabled to verify the push and pop
-callchains.
+- Bounds-checking the one_mmap fast path in peek_event against the
+  mapped region size, preventing OOB reads from crafted file_offset.
 
-> diff --git a/tools/perf/tests/shell/test_arm_coresight_callchain.sh b/too=
-ls/perf/tests/shell/test_arm_coresight_callchain.sh
-> new file mode 100755
-> index 0000000000000..0e5a5d1129ae7
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/test_arm_coresight_callchain.sh
+- Swap handler return values (void -> int) so handlers can propagate
+  errors instead of silently corrupting adjacent memory.
 
-[ ... ]
+- Bounds checking for string fields (null-termination), array counts
+  (nr vs payload size), feature section sizes (vs file size), and
+  CPU indices (vs nr_cpus_avail / array allocation).
 
-> +do_svc:
-> +	stp	x29, x30, [sp, #-16]!
-> +	mov	x29, sp
-> +
-> +	mov	x0, #1
-> +	adr	x1, msg
+- ABI0 handling for perf_event_attr.size == 0 across all code paths
+  (swap, native, synthesize, read_event_desc), with consistent
+  behavior regardless of file endianness.
 
-[Severity: Low]
-Can this adr instruction cause a linker error?
+- READ_ONCE() snapshot of event->header.size in process_user_event()
+  to prevent compiler rematerialization from MAP_SHARED memory.
 
-The adr instruction computes a pc-relative offset but has a strict +/- 1 MB
-range limit. If the linker places .text and .rodata further apart than 1 MB
-(due to page size alignment or hardening constraints), the build will fail
-with an out-of-range relocation error.
+- Sanitizer-aware shell test: the truncated perf.data test captures
+  stderr and checks for ASAN/MSAN/TSAN/UBSAN markers, since sanitizer
+  exits use code 1 which otherwise looks like a clean error exit.
 
-Would it be safer to use adrp and add here?
+Pre-existing bugs fixed along the way:
 
-[ ... ]
+- event_contains() macro off-by-one (checked start, not full extent)
 
-> +main:
-> +	stp	x29, x30, [sp, #-16]!
-> +	mov	x29, sp
-> +
-> +	bl	foo
-> +
-> +	mov	w0, #0
-> +	ldp	x29, x30, [sp], #16
-> +	.size main, .-main
-> +	ret
+- zstd_decompress_stream multi-iteration output.pos bug
 
-[Severity: Low]
-Does this .size directive incorrectly exclude the ret instruction from the
-main function bounds?
+- zstd_compress_stream_to_records: broken memcpy fallback -> return -1
+  + ZSTD context reset + dst_size underflow guard
 
-Placing it before the ret instruction might cause profiling tools to fail to
-correctly attribute an execution sample on that instruction to the main
-function.
+- PERF_RECORD_SWITCH sample_id_all offset wrong for non-CPU_WIDE
 
-[ ... ]
+- cpu_map__from_range any_cpu used as count instead of boolean
 
-> +callchain_push_regex()
-> +{
-> +	printf '%s' \
-> +'callchain[[:space:]]+[0-9]+ \[[0-9]+\][[:space:]]+10 instructions:[[:sp=
-ace:]]*\n'\
+- cpu_map__from_mask double-fetch heap overflow (j >= weight guard)
 
-[Severity: High]
-Will this regex fail to match because of the perf script timestamp field?
+- kwork cpus_runtime BUG_ON with signed comparison
 
-By default, perf script output includes a timestamp field, formatting lines
-as "comm tid [cpu] time: event:". The test invokes perf script without
-restricting the output fields (for example, it does not use -F,-time to
-disable the timestamp).
+- perf_header__getbuffer64 EOF without errno (silent success)
 
-Since this regex strictly requires spaces immediately between the cpu
-identifier and the event name, it seems it will fail to match the timestamp
-and cause the test to fail.
+- read_event_desc ABI0 sentinel (attr.size=0 -> free_event_desc early stop)
 
-[ ... ]
+- EVENT_UPDATE MASK: missing offsetof underflow guard + pr_warning on
+  mask32/mask64 validation paths
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526-b4-arm_cs_=
-callchain_support_v1-v6-0-f9f49f53c9dd@arm.com?part=3D8
+Additional pre-existing issues were noticed during review and will be
+addressed in follow-up series.
+
+Testing
+-------
+
+- perf test at baseline and at patches 1, 8, 11, 17, 21, 26, 29
+  with 300s timeout -- no regressions detected.
+- Build with both gcc and clang at every patch.
+- checkpatch.pl on all 29 patches.
+- Full root perf test on x86_64 (x1, i7-1260P) and aarch64
+  (Raspberry Pi 4, Cortex-A72, Debian trixie).
+
+Developed with AI assistance (Claude/sashiko), tagged in commits.
+
+It is available at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-data-validation
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=perf-data-validation
+
+I think this is the last one, followup series will deal with the
+pre-existing issues found while working on this series, its all in
+several TODO files.
+
+Best regards,
+
+- Arnaldo
+
+Changes in v4
+-------------
+
+- Patch 22: fix comment in process_mem_topology() — per-node fields
+  are node_id + mem_size + bitmap_nr_bits, not version + bitmap_size.
+- Patch 29: add mktemp failure guards (exit 2 = skip) so empty
+  variables don't cause 'rm -f .old' in cleanup.  Use dd bs=$cut_at
+  count=1 instead of bs=1 count=$cut_at to avoid one syscall per byte.
+
+Changes in v3
+-------------
+
+- Patch 10: fix perf_event__repipe_attr() in builtin-inject.c to
+  handle ABI0 attr.size==0 — was using the raw size for memcpy and
+  the perf_record_header_attr_id() macro, which both break when
+  attr.size is 0.
+- Patch 12: add sample_id_all handling to perf_event__build_id_swap()
+  — perf_event__synthesize_build_id() appends id_sample data, so
+  cross-endian pipe mode must swap those trailing fields.
+- Patch 24: remove comp_mmap_len upper-bound cap that rejected valid
+  perf record -m 2G recordings (mmap_len exceeds 2GB - 4096).  The
+  downstream decompression path already checks against SIZE_MAX.
+
+Changes in v2
+-------------
+
+- Patch 8: strnlen with 'end - data' limit instead of open-ended strlen
+- Patch 10: ABI0 attr.size==0 handling for native-endian path
+- Patch 13: READ_ONCE snapshot for mask32_data.nr, long_size validation
+- Patch 17: attr_size bounds check for all PRINT_ATTRn macros
+
+Arnaldo Carvalho de Melo (29):
+  perf session: Add minimum event size and alignment validation
+  perf session: Bounds-check one_mmap event pointer in peek_event
+  perf tools: Fix event_contains() macro to verify full field extent
+  perf zstd: Fix compression error path in zstd_compress_stream_to_records()
+  perf zstd: Fix multi-iteration decompression and error handling
+  perf session: Fix PERF_RECORD_READ swap and dump for variable-length events
+  perf session: Fix swap_sample_id_all() crash on crafted events
+  perf session: Add validated swap infrastructure with null-termination checks
+  perf session: Use bounded copy for PERF_RECORD_TIME_CONV
+  perf session: Validate HEADER_ATTR attr.size before swapping
+  perf session: Validate nr fields against event size on both swap and common paths
+  perf header: Byte-swap build ID event pid and bounds check section entries
+  perf cpumap: Reject RANGE_CPUS with start_cpu > end_cpu
+  perf auxtrace: Harden auxtrace_error event handling
+  perf session: Add byte-swap and bounds check for PERF_RECORD_BPF_METADATA events
+  perf header: Validate null-termination in PERF_RECORD_EVENT_UPDATE string fields
+  perf tools: Bounds check perf_event_attr fields against attr.size before printing
+  perf header: Propagate feature section processing errors
+  perf header: Validate f_attr.ids section before use in perf_session__read_header()
+  perf header: Validate feature section size and add read path bounds checking
+  perf header: Sanity check HEADER_EVENT_DESC attr.size before swap
+  perf header: Validate bitmap size before allocating in do_read_bitmap()
+  perf session: Add byte-swap handler for PERF_RECORD_COMPRESSED2
+  perf tools: Harden compressed event processing
+  perf session: Check for decompression buffer size overflow
+  perf session: Bound nr_cpus_avail and validate sample CPU
+  perf kwork: Bounds check work->cpu before indexing cpus_runtime[]
+  perf session: Snapshot event->header.size in process_user_event()
+  perf test: Add truncated perf.data robustness test
+
+ tools/lib/perf/include/perf/event.h           |    9 +-
+ tools/perf/builtin-inject.c                   |   23 +-
+ tools/perf/builtin-kwork.c                    |   45 +-
+ tools/perf/builtin-record.c                   |    6 +-
+ tools/perf/tests/parse-no-sample-id-all.c     |    6 +
+ tools/perf/tests/shell/data_validation.sh     |   85 ++
+ tools/perf/trace/beauty/perf_event_open.c     |   23 +-
+ tools/perf/util/arm-spe.c                     |    2 +-
+ tools/perf/util/auxtrace.c                    |   24 +-
+ tools/perf/util/cpumap.c                      |   62 +-
+ tools/perf/util/cs-etm.c                      |    2 +-
+ tools/perf/util/header.c                      |  625 +++++++-
+ tools/perf/util/jitdump.c                     |    2 +-
+ tools/perf/util/kwork.h                       |    1 +
+ tools/perf/util/perf_event_attr_fprintf.c     |  141 +-
+ .../scripting-engines/trace-event-python.c    |   28 +-
+ tools/perf/util/session.c                     | 1355 +++++++++++++++--
+ tools/perf/util/session.h                     |    2 +
+ tools/perf/util/synthetic-events.c            |   25 +-
+ tools/perf/util/tool.c                        |   51 +-
+ tools/perf/util/tsc.c                         |    2 +-
+ tools/perf/util/zstd.c                        |   47 +-
+ 22 files changed, 2272 insertions(+), 294 deletions(-)
+ create mode 100755 tools/perf/tests/shell/data_validation.sh
+
+-- 
+2.54.0
+
