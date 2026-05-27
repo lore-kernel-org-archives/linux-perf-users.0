@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E063D300A;
-	Wed, 27 May 2026 12:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08BF3F789C;
+	Wed, 27 May 2026 12:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779883957; cv=none; b=u6l6FfMtRt5jMYSl2ube4VhwFLTpzXA70FPQqhf3jtmClT8GqMslUZqgZecz4hOFZW3RQk0pwHvwV9Z7BucQ137Q2FCZv1DHhfkg+wucfX/PU85RkZaMckVf9DrznoBh9tTf1NYzTPlPZcJXYlL83wDQ8frj38JB2OWAxtv6OPM=
+	t=1779883962; cv=none; b=P9s6bzFGJPfR6kYBmSNUApf/apRUo97X313UQk33lIixETJIHQVrQ6qKCv7fkvLu9Q4spJoRuzF5GH9NBXns50/UllSEDBDWODVqMTQnJwllsCqPkS8TM/CUJ9lyHNb3DVJNIx6N2F1SchRhQe77CVW2J1H78UV9JayMooQ5bhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779883957; c=relaxed/simple;
-	bh=WNve4Qv/Rl5QRo4zwTm8opNq9U5rLZq/sZnOVIU2QCM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aRnkP2qyRhbCIeIbOooJAYlFlcZV0otjrJkyi5WnA6AQct7VMARCpXH5hAy8COnZskQ1hSzVy5OrkBwPjzvol9kRSGE+QCsWbadlN85qeTR7B8N7UCoWb/0MWziUM0yQnvixGIbrmXr575frpYRExCLtK7pk8cdZtL80Csd0ZoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4Va1NG3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779883962; c=relaxed/simple;
+	bh=h3ExjGlQ/IfRfWlCDyhOHXurhQr8Q4T+X+082Em90IQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S9MI6QXLSPWlyZQuOBV5HjLexkU6KAFUnedJVlV+3c2Fu6nl/UL3Kg8aLB7PdEUSuNDQX5tgs7MEOmL6z+/MN00jEEI8SNQuX5veIsO3crUPajELN3eUeIl27xSOzoojI84n+LglR5IytOgleOezxZtMjdaxncEoIJ9lvaZv97s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfwtHf0f; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4Va1NG3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF9F91F000E9;
-	Wed, 27 May 2026 12:12:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfwtHf0f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D2601F00A3A;
+	Wed, 27 May 2026 12:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779883955;
-	bh=6sWvLyCB663VOfXWnEEFD9PNivnGE6oBxTlxpaLrXdQ=;
-	h=From:To:Cc:Subject:Date;
-	b=m4Va1NG3iFlc3dEB78wKICpqBDlPM4Uqfti9z/CilgK4meF+xuwIWX0hBfzxxU4KG
-	 1urjasKyfGlgx8mNsfNA3BsPP9pHC4tkaoRz4gBVHREqryl/UQkpHwCz+uWvIUBpq+
-	 nJoZJwGmjcPkenzK9hG+FN3voXcdmyOd4/9sk41/s+t4NHZ9UF+phkB6U3wHWQcgNb
-	 ykLyrSas7k3SjtTD4h5+yRbSDygoJGzAEf2BEXu3HijIU/rDw/RC/61SBRwUHNp0k4
-	 geQzaxTJU5NdGmDGnflUG3iOcn2/7EPAkV5GT4C18kb7wG8Vv3QSn0oB5ZzXPWX73L
-	 qpKjBXeepyBlQ==
+	s=k20260515; t=1779883958;
+	bh=Gvz8PiwvGk6Y72u5ZGZh0QDA7xEjtRQQxZQEXXA8yJQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=YfwtHf0fCRwSCsi0j+YSaW/YJZ2YIrGStbHkIksFR7bUuKI0CBtGimWacS+sceB0v
+	 3RA84khyfuBEAr35jrluhAudumFm5x4Js412+QPGwuRrWKbO/k1CaPCtlHOM+ZG6Lj
+	 ouasmclyuaKE3TJkM1O1Ldlra6/sk2mdoiSXHuIEIQz2kv37voWgJdi/wV8g26lb83
+	 GWgi3KODu4gnvHhtn91x7XCiDW46NmRbTWhPQJYaMCFEpzoCXSDsbHG4pmdhdDbYX0
+	 HyIb2apud3R6SNaVlE1sbJbUu7JRCb+OEg+u8tdeQgjz8pHHKsxOXNzW2UEYxxFhaE
+	 J+252EyBhmNBg==
 From: Puranjay Mohan <puranjay@kernel.org>
 To: bpf@vger.kernel.org
 Cc: Puranjay Mohan <puranjay@kernel.org>,
@@ -60,10 +61,12 @@ Cc: Puranjay Mohan <puranjay@kernel.org>,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v4 0/4] arm64: Add BRBE support for bpf_get_branch_snapshot()
-Date: Wed, 27 May 2026 05:11:56 -0700
-Message-ID: <20260527121207.2312181-1-puranjay@kernel.org>
+Subject: [PATCH v4 1/4] perf/core: Fix sched_task callbacks for CPU-wide branch stack events
+Date: Wed, 27 May 2026 05:11:57 -0700
+Message-ID: <20260527121207.2312181-2-puranjay@kernel.org>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260527121207.2312181-1-puranjay@kernel.org>
+References: <20260527121207.2312181-1-puranjay@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,183 +75,87 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v3: https://lore.kernel.org/all/20260413185740.3286146-1-puranjay@kernel.org/
-Changes in v4:
-- Fix leaking branch records when scheduled task has an unrelated perf event (Sashiko)
-- Update tools/include/uapi/linux/perf_event.h as well for patch 2
-- Introduce cpu_has_brbe() and use it in
-  arm_brbe_snapshot_branch_stack(0 to make sure we don't run on a CPU
-  without BRBE.
-- Add explicit isb() after after writing to SYS_BRBFCR_EL1.
-- Rebase on latest arm64 tree.
+perf_pmu_sched_task() returns early when cpuctx->task_ctx is non-NULL,
+deferring to perf_ctx_sched_task_cb() in the context sched_in/out
+paths. But perf_ctx_sched_task_cb() only walks the task context's
+pmu_ctx_list -- PMUs that have only CPU-wide events are not on that
+list and their sched_task callback is silently skipped.
 
-v2: https://lore.kernel.org/all/20260318171706.2840512-1-puranjay@kernel.org/
-Changes in v3:
-- Move NULL pmu_ctx fix from arm_pmuv3.c to perf core (Leo Yan)
-- Use union to clear branch entry bitfields instead of per-field
-  zeroing (Leo Yan)
-- Remove per-CPU brbe_active flag; check BRBCR_EL1 == 0 instead (Rob
-  Herring)
-- Remove redundant valid_brbidr() check in snapshot path (Rob Herring)
-- Introduce for_each_brbe_entry() iterator to deduplicate bank
-  iteration (Rob Herring)
-- Include perf core maintainers (Leo Yan, Rob Herring)
+On ARM64 with CPU-wide branch recording:
 
-v1: https://lore.kernel.org/all/20260313180352.3800358-1-puranjay@kernel.org/
-Changes in v2:
-- Rebased on arm64/for-next/core
-- Add per-CPU brbe_active flag to guard against UNDEFINED sysreg access
-  on non-BRBE CPUs in heterogeneous big.LITTLE systems.
-- Fix pre-existing bug in perf_clear_branch_entry_bitfields() that missed
-  zeroing new_type and priv bitfields, added as a separate patch with
-  Fixes tags (new patch 2).
-- Use architecture-specific selftest threshold (#if defined(__aarch64__))
-  instead of raising the global threshold, to preserve x86 regression
-  detection.
+  perf record -b -e cycles -a -- ls
 
-RFC: https://lore.kernel.org/all/20260102214043.1410242-1-puranjay@kernel.org/
-Changes from RFC:
- - Fix pre-existing NULL pointer dereference in armv8pmu_sched_task()
-   found by Leo Yan during testing (patch 1)
- - Pause BRBE before local_daif_save() to avoid branch pollution from
-   trace_hardirqs_off()
- - Use local_daif_save() to prevent pNMI race from counter overflow
-   (Mark Rutland)
- - Reuse perf_entry_from_brbe_regset() instead of duplicating register
-   read logic, by making it accept NULL event (Mark Rutland)
- - Invalidate BRBE after reading to maintain record contiguity for
-   other consumers (Mark Rutland)
- - Adjust selftest wasted_entries threshold for ARM64 (patch 3)
- - Tested on ARM FVP with BRBE enabled
+armv8pmu_sched_task() is skipped whenever the scheduled task has an
+unrelated perf event (e.g. a software event), and branch records leak
+across task boundaries.
 
-This series enables the bpf_get_branch_snapshot() BPF helper on ARM64
-by implementing the perf_snapshot_branch_stack static call for ARM's
-Branch Record Buffer Extension (BRBE).
+A second problem exists in __perf_pmu_sched_task(): it passes
+cpc->task_epc directly to pmu->sched_task(), but task_epc is NULL for
+PMUs with only CPU-wide events. When perf_pmu_sched_task() does reach
+the loop (because cpuctx->task_ctx is NULL), this causes a NULL
+pointer dereference:
 
-bpf_get_branch_snapshot() [1] allows BPF programs to capture hardware
-branch records on-demand from any BPF tracing context. This was
-previously only available on x86 (Intel LBR) since v5.16. With BRBE
-available on ARMv9, this series closes the gap for ARM64.
+  Unable to handle kernel NULL pointer dereference at virtual address 00[.]
+  PC is at armv8pmu_sched_task+0x14/0x50
+  Call trace:
+    armv8pmu_sched_task+0x14/0x50 (P)
+    perf_pmu_sched_task+0xac/0x108
+    __perf_event_task_sched_out+0x6c/0xe0
 
-Usage model
------------
+Fix both:
 
-The helper works in conjunction with perf events. The userspace
-component of the BPF application opens a perf event with
-PERF_SAMPLE_BRANCH_STACK on each CPU, which configures the hardware
-to continuously record branches into BRBE (on ARM64) or LBR (on x86).
-A BPF program attached to a tracepoint, kprobe, or fentry hook can
-then call bpf_get_branch_snapshot() to snapshot the branch buffer at
-any point. Without an active perf event, BRBE is not recording and
-the buffer is empty.
+ - Remove the blanket early return in perf_pmu_sched_task() when
+   cpuctx->task_ctx is set. Instead, skip individual CPCs that have a
+   task_epc (those are handled by perf_ctx_sched_task_cb()). CPCs
+   without a task_epc are CPU-only and must be handled here.
 
-On-demand branch snapshots from BPF are useful for diagnosing which
-specific code path was taken inside a function. Stack traces only show
-function boundaries, but branch records reveal the exact sequence of
-jumps, calls, and returns within a function -- making it possible to
-identify which specific error check triggered a failure, or which
-callback implementation was invoked through a function pointer.
+ - Fall back to &cpc->epc in __perf_pmu_sched_task() when task_epc is
+   NULL, so the callback always gets a valid pmu_ctx.
 
-For example, retsnoop [2] is a BPF-based tool for non-intrusive
-mass-tracing of kernel internals. Its LBR mode (--lbr) creates per-CPU
-perf events with PERF_SAMPLE_BRANCH_STACK and then uses
-bpf_get_branch_snapshot() in its fentry/fexit BPF programs to capture
-branch records whenever a traced function returns an error.
+Fixes: bd2756811766 ("perf: Rewrite core context handling")
+Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+---
+ kernel/events/core.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-Consider debugging a bpf() syscall that returns -EINVAL when creating
-a BPF map with invalid parameters. Running retsnoop on an ARM64 FVP
-with BRBE to trace the bpf() syscall and array_map_alloc_check():
-
-  $ retsnoop -e '*sys_bpf' -a 'array_map_alloc_check' --lbr=any \
-             -F -k vmlinux --debug full-lbr
-  $ simfail bpf-bad-map-max-entries-array  # in another terminal
-
-Output of retsnoop:
-
-  --- fentry BPF program (entries #63-#17) ---
-
-  [#63-#59] __htab_map_lookup_elem: hash table walk with memcmp        (hashtab.c)
-  [#58] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xc850           (hashtab.c:750)
-  [#57-#55] ... dump_bpf_prog internal branches ...
-  [#54] dump_bpf_prog+0xcab8        -> bpf_get_current_pid_tgid+0x0    (helpers.c:225)
-  [#53] bpf_get_current_pid_tgid+0x1c -> dump_bpf_prog+0xcabc          (helpers.c:225)
-  [#52-#51] ... dump_bpf_prog -> __htab_map_lookup_elem ...
-  [#50-#47] __htab_map_lookup_elem: htab_map_hash (jhash2), select_bucket
-  [#46-#42] lookup_nulls_elem_raw: hash chain walk with memcmp         (hashtab.c:717)
-  [#41] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xcaf8           (hashtab.c:750)
-  [#40-#37] ... dump_bpf_prog -> bpf_ktime_get_ns ...
-  [#36] bpf_ktime_get_ns+0x10       -> ktime_get_mono_fast_ns+0x0      (helpers.c:178)
-  [#35-#32] ktime_get_mono_fast_ns: tk_clock_read -> arch_counter_get_cntpct
-  [#31] ktime_get_mono_fast_ns+0x9c -> bpf_ktime_get_ns+0x14           (timekeeping.c:493)
-  [#30] bpf_ktime_get_ns+0x18       -> dump_bpf_prog+0xcd50            (helpers.c:178)
-  [#29-#25] ... dump_bpf_prog internal branches ...
-  [#24] dump_bpf_prog+0x11b28       -> __bpf_prog_exit_recur+0x0       (trampoline.c:1190)
-  [#23-#17] __bpf_prog_exit_recur: rcu_read_unlock, migrate_enable     (trampoline.c:1195)
-
-  --- array_map_alloc_check (entries #16-#12) ---
-
-  [#16] dump_bpf_prog+0x11b38       -> array_map_alloc_check+0x8       (arraymap.c:55)
-  [#15] array_map_alloc_check+0x18  -> array_map_alloc_check+0xb8      (arraymap.c:56)
-        . bpf_map_attr_numa_node       . bpf_map_attr_numa_node
-  [#14] array_map_alloc_check+0xbc  -> array_map_alloc_check+0x20      (arraymap.c:59)
-        . bpf_map_attr_numa_node
-  [#13] array_map_alloc_check+0x24  -> array_map_alloc_check+0x94      (arraymap.c:64)
-  [#12] array_map_alloc_check+0x98  -> dump_bpf_prog+0x11b3c           (arraymap.c:82)
-
-  --- fexit trampoline overhead (entries #11-#00) ---
-
-  [#11] dump_bpf_prog+0x11b5c       -> __bpf_prog_enter_recur+0x0      (trampoline.c:1145)
-  [#10-#03] __bpf_prog_enter_recur: rcu_read_lock, migrate_disable     (trampoline.c:1146)
-  [#02] __bpf_prog_enter_recur+0x114 -> dump_bpf_prog+0x11b60          (trampoline.c:1157)
-  [#01] dump_bpf_prog+0x11b6c       -> dump_bpf_prog+0xd230
-  [#00] dump_bpf_prog+0xd340        -> arm_brbe_snapshot_branch_stack+0x0 (arm_brbe.c:814)
-
-                   el0t_64_sync+0x168
-                   el0t_64_sync_handler+0x98
-                   el0_svc+0x28
-                   do_el0_svc+0x4c
-                   invoke_syscall.constprop.0+0x54
-    373us [-EINVAL] __arm64_sys_bpf+0x8
-                    __sys_bpf+0x87c
-                    map_create+0x120
-     95us [-EINVAL] array_map_alloc_check+0x8
-
-The FVP's BRBE buffer has 64 entries (BRBE supports 8, 16, 32, or
-64). Of these, entries #63-#17 (47) are consumed by the fentry BPF
-trampoline that ran before the function, and entries #11-#00 (12)
-are consumed by the fexit trampoline that runs after. Entry #00
-shows the very last branch recorded before BRBE is paused: the call
-into arm_brbe_snapshot_branch_stack().
-
-The 5 useful entries (#16-#12) show the exact path taken inside
-array_map_alloc_check(). Record #14 shows a jump from line 56
-(bpf_map_attr_numa_node) to line 59 (the if-condition), and #13
-shows an immediate jump from line 59 (attr->max_entries == 0) to
-line 64 (return -EINVAL), skipping lines 60-63. This pinpoints
-max_entries==0 as the cause -- a diagnosis impossible with stack
-traces alone.
-
-[1] 856c02dbce4f ("bpf: Introduce helper bpf_get_branch_snapshot")
-[2] https://github.com/anakryiko/retsnoop
-
-Puranjay Mohan (4):
-  perf/core: Fix sched_task callbacks for CPU-wide branch stack events
-  perf: Use a union to clear branch entry bitfields
-  perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
-  selftests/bpf: Adjust wasted entries threshold for ARM64 BRBE
-
- drivers/perf/arm_brbe.c                       | 127 +++++++++++++++---
- drivers/perf/arm_brbe.h                       |   9 ++
- drivers/perf/arm_pmuv3.c                      |   5 +-
- include/linux/perf_event.h                    |   9 +-
- include/uapi/linux/perf_event.h               |  25 ++--
- kernel/events/core.c                          |  17 ++-
- tools/include/uapi/linux/perf_event.h         |  25 ++--
- .../bpf/prog_tests/get_branch_snapshot.c      |  13 +-
- 8 files changed, 172 insertions(+), 58 deletions(-)
-
-
-base-commit: c754aa6b881ade764510b8539a6a313326501e3d
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 6d1f8bad7e1c..6604f6e8f352 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3906,7 +3906,8 @@ static void __perf_pmu_sched_task(struct perf_cpu_pmu_context *cpc,
+ 	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+ 	perf_pmu_disable(pmu);
+ 
+-	pmu->sched_task(cpc->task_epc, task, sched_in);
++	pmu->sched_task(cpc->task_epc ? cpc->task_epc : &cpc->epc,
++			task, sched_in);
+ 
+ 	perf_pmu_enable(pmu);
+ 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+@@ -3919,12 +3920,20 @@ static void perf_pmu_sched_task(struct task_struct *prev,
+ 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+ 	struct perf_cpu_pmu_context *cpc;
+ 
+-	/* cpuctx->task_ctx will be handled in perf_event_context_sched_in/out */
+-	if (prev == next || cpuctx->task_ctx)
++	if (prev == next)
+ 		return;
+ 
+-	list_for_each_entry(cpc, this_cpu_ptr(&sched_cb_list), sched_cb_entry)
++	list_for_each_entry(cpc, this_cpu_ptr(&sched_cb_list), sched_cb_entry) {
++		/*
++		 * PMUs with per-task events are handled by
++		 * perf_ctx_sched_task_cb() via perf_event_context_sched_in/out
++		 * when a task context is active.
++		 */
++		if (cpuctx->task_ctx && cpc->task_epc)
++			continue;
++
+ 		__perf_pmu_sched_task(cpc, sched_in ? next : prev, sched_in);
++	}
+ }
+ 
+ static void perf_event_switch(struct task_struct *task,
 -- 
 2.53.0-Meta
 
