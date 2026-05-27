@@ -1,93 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1B32D3EEB;
-	Wed, 27 May 2026 05:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0287F2E6116
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 May 2026 07:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779859383; cv=none; b=PnG2zvNbTEqQl0XHA3DqOp18ZfNySqkEneDANZZSfVXeAHYvhpY5pGIyNDdbkkMJru6jj8Pp3TkdVIik2FeuNX0gGQoHUdK1g40nZ8Q8B+FSUAl3jb1BDrPpD82wBqJei4r5NfQcNbODp/9j6ap8VJ4Cg3z8vRHLWOpBO+i7QIU=
+	t=1779868661; cv=none; b=syvxjHy+vySln2/poJiZHDTbIUxVFmVAza1fREia+a8GJIvegWElQlhoIDO5bKKWmS3H8/Wi0B5N+uuSyq6c8DgmibcHdeCclbbNNVB4UxQjsgGUfX5Sj8HwJL3RPQ5hHH/red2W4jcNvTZG/7324Z6Gy7guyP8bBgj58A7YAvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779859383; c=relaxed/simple;
-	bh=oLeOZoKtbgVvPpct5Nfmac1WqVX6VF6XbNN68DdO/wk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m5V1Q0YwDWOCGH/iocxY5fzVfkkHCe/05y6r66Ghl/dU+I9CYRAnhRaX/jqyU/yPMoAPJ38KiRucfy3/Kik66BabDUYBubfa+Aw20QCT4SGB9Vu0RdmMxef2MEomgG6bk8A0mlBoibevTvMUR47gWNT7pAqhUre54Qsyzn8Ecao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZTYKE0kE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779868661; c=relaxed/simple;
+	bh=sB8lPGWD1DfVrrJ+Dvc46nu00meWYwPmxK8tVGR6r6w=;
+	h=Cc:Subject:Date:In-Reply-To:To:Mime-Version:From:Message-Id:
+	 References:Content-Type; b=DUs24IHCBkb26d0aHIf+WDo90cao58IAWO5VcUZgEr85MH3y674pZYdzTWmYE9w7p53UvrY5yVU56XoAqulzYPRl0jqQ8GKyMgVMdKonjtGKwiPGwGPk2SD/q4ZQgFZQ+W6vvw+PNRus7++4xhAbA70Uo09tX2sdNmMpN+oDmL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=mHuuWNls; arc=none smtp.client-ip=209.127.230.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZTYKE0kE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AE21F000E9;
-	Wed, 27 May 2026 05:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779859382;
-	bh=Bm3s4ePDaenze67k2mji9CpBs36IDLFInYw3LIfuKEY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZTYKE0kEuk7ZGMiTasUgn0ft4NtSZK9fxHEgJSgWLF82+3q5EUaH70DobkLPKNQoD
-	 3oAuRoz9GlozGjLJBk7+m7h1OXQvFK++1ecw53qdhqJG4fGLotuAdTg7qO10UqmHKT
-	 yiHgXySAQO7V+rizZcW0/2sU6DWQNpEgJjP3v3JKGRU3FTYBTJBNTGexXM2dcnokiA
-	 fiYPu8Fg/yy0wmhSdy7US0zuQRK477FvGxiDnXWfaELeKNApdkVVz3yU1m9Q9GWzez
-	 wFQ/8l6ZUQbO5eXJT2m/BDYd9e6CiyB3KQKS6Rl8Pt+53YljLzAGZOc+LRnf44SoYV
-	 NoIih+mN8U+lA==
-Date: Tue, 26 May 2026 22:22:58 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v2] perf bench: add --write-size option to sched pipe
-Message-ID: <ahZ_sr1bzkoul_tq@google.com>
-References: <20260521-perf_bench_pipe-v2-1-720b6ff7f0fa@debian.org>
- <ahUCyRwNPKV1VAZ8@google.com>
- <ahXWIrGvsC3_gIkC@gmail.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="mHuuWNls"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1779868654; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=EzAqVnPXXfFeony1PZV7lcZnibd4znJbLgx5j4usx2Q=;
+ b=mHuuWNls4fpIumt4Tsw35XaePszW6MzW7Oj75tqtYDqEXTefgCxf2ErKyDWqA8a5BD5UZH
+ IOf/lpW9PHj6dYhoQKie0/6sBQyCP02h/1bOFTHp5UDde87c4y+M4ler4WWh+VLkYf81EU
+ jOTn/iotroUanT+1qyhi4p52hMn5zDNansM9KzA8QHYtAm2vYj7GxzQ6d2U+7gPvxPwezu
+ JnxTu1RsdEzhKOeTUYVk29VqQ2HhmMu4lwsuVUSe24USGDtLgIRjSvQd1WTF/x2+8qVchu
+ jrvEH5mD1fVxqVFIkl36bufmztUayK75KQq3vRexSiQRCS1F316as5Fp89EMfQ==
+Cc: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>, 
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>, 
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>, 
+	<james.clark@linaro.org>, <linux-perf-users@vger.kernel.org>, 
+	<linux-kernel@vger.kernel.org>, "Rui Qi" <qirui.001@bytedance.com>
+Subject: [PATCH v3] perf: Fix off-by-one stack buffer overflow in kallsyms__parse()
+Date: Wed, 27 May 2026 15:57:16 +0800
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <ahUAyRcMsJv4_W_Y@google.com>
+To: <namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ahXWIrGvsC3_gIkC@gmail.com>
+Mime-Version: 1.0
+X-Original-From: Rui Qi <qirui.001@bytedance.com>
+X-Mailer: git-send-email 2.20.1
+X-Lms-Return-Path: <lba+26a16a3ec+9916f2+vger.kernel.org+qirui.001@bytedance.com>
+From: "Rui Qi" <qirui.001@bytedance.com>
+Message-Id: <20260527075716.1642712-1-qirui.001@bytedance.com>
+References: <ahUAyRcMsJv4_W_Y@google.com>
+Content-Type: text/plain; charset=UTF-8
 
-On Tue, May 26, 2026 at 06:55:33PM +0100, Breno Leitao wrote:
-> hello Namhyung,
-> 
-> On Mon, May 25, 2026 at 09:17:45PM +0000, Namhyung Kim wrote:
-> > On Thu, May 21, 2026 at 09:15:37AM -0700, Breno Leitao wrote:
-> > > +		ret = write(td->pipe_write, td->buf, write_size);
-> > > +		BUG_ON(ret < 0 || (unsigned int)ret != write_size);
-> > >  		ret = read_pipe(td);
-> > > -		BUG_ON(ret != sizeof(int));
-> > > +		BUG_ON(ret < 0 || (unsigned int)ret != write_size);
-> > 
-> > Is it possible to return smaller values than required due to signal or
-> > something?
-> 
-> I tested this on a VM with the patch applied, running the ping-pong with
-> write_size from 4 B up to 1 MiB, including multi-process and single-CPU
-> contention runs (millions of iterations). I observed zero short reads or short
-> writes.
-> 
-> Looking at fs/pipe.c, this matches the kernel behavior for this access pattern:
-> the bench has a single writer per pipe and the pipe capacity is set to
-> write_size, so the writer never has to sleep mid-write, and the kernel does a
-> sync wake of the reader only after the full payload is queued.
-> 
-> EINTR is also not reachable today because the bench installs no signal
-> handlers and nothing in the call chain delivers signals to the workers
-> 
-> At the same time, I understand the concern and If you'd still prefer defensive
-> handling (short-return loop + EINTR retry) I can add it in v3 — happy to either
-> way.
+In kallsyms__parse(), the loop reading symbol names iterates with
+i < sizeof(symbol_name), which allows i to reach sizeof(symbol_name)
+upon loop exit. The subsequent symbol_name[i] = '\0' then writes one
+byte past the end of the stack-allocated symbol_name[] array.
 
-Thanks for looking into it.  I think it's better to go defensive for any
-unexpected behavior or changes.
+Fix this by changing the loop bound to sizeof(symbol_name) - 1, so
+the null terminator always lands within the array. The overflow is
+triggerable by a kallsyms entry with a symbol name of KSYM_NAME_LEN+1
+or more characters (e.g., long Rust mangled names or a malicious
+/proc/kallsyms).
 
-Thanks,
-Namhyung
+Fixes: 53df2b934412 ("libsymbols kallsyms: Parse using io api")
+Signed-off-by: Rui Qi <qirui.001@bytedance.com>
 
+---
+
+Changes in v3:
+- Use KSYM_NAME_LEN instead of sizeof(symbol_name) - 1 for the
+  overflow check, as suggested by Namhyung.
+
+Changes in v2:
+- Added read_to_eol(&io) when a symbol name exceeds the buffer size,
+  preventing remaining characters from being parsed as the next symbol entry.
+- Added Fixes tag.
+---
+ tools/lib/symbol/kallsyms.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
+index e335ac2b9e19..198bfc7c1f63 100644
+--- a/tools/lib/symbol/kallsyms.c
++++ b/tools/lib/symbol/kallsyms.c
+@@ -60,7 +60,7 @@ int kallsyms__parse(const char *filename, void *arg,
+ 			read_to_eol(&io);
+ 			continue;
+ 		}
+-		for (i = 0; i < sizeof(symbol_name); i++) {
++		for (i = 0; i < sizeof(symbol_name) - 1; i++) {
+ 			ch = io__get_char(&io);
+ 			if (ch < 0 || ch == '\n')
+ 				break;
+@@ -68,6 +68,9 @@ int kallsyms__parse(const char *filename, void *arg,
+ 		}
+ 		symbol_name[i]  = '\0';
+ 
++		if (i == KSYM_NAME_LEN)
++			read_to_eol(&io);
++
+ 		err = process_symbol(arg, symbol_name, symbol_type, start);
+ 		if (err)
+ 			break;
+-- 
+2.20.1
