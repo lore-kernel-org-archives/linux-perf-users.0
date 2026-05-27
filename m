@@ -1,54 +1,57 @@
 Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A8E29405;
-	Wed, 27 May 2026 15:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BB83EF664;
+	Wed, 27 May 2026 15:41:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779896505; cv=none; b=TI4sxmpIEQUvVhDE7gx2cqOiuxqXGaYq4bs3+SOgMmvJJI1SKzuY4qytFn05C9nrwP/TI6587P1bbq/uE+w4B/E522iatwD3UdGJYpQeJHeO7z5HqXxQDsdMWZsvfp68K7f7i6EOk/kTX3K2vahq1+i7lbeGNyMnDFqJ/cnxICc=
+	t=1779896507; cv=none; b=TYfnmK7ACaLdBb7NmtqWC5BJFXKAjT8rqWNuFAC2d50+1xG53g4ghiK5Jn6mk9MlqmeCa0uHmHB1kcejq0U3R27Y3J7+E7f7F+wSBsFMVh2xuMgQ7m6u2y12UBsQathY+vDbVLvEh6TDtRGAjbXfBcQnqVn9CzzlmWNn6Qg68wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779896505; c=relaxed/simple;
-	bh=51gVXyA4OBCAPXWFwW/XpGjkEtuxmzNDx28k6XpMSC4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C7CWz+CEJbPM9qmML1Z+hHA6yxrAbosHLuuQKdXU6B7BoE3JbyOR3/VEH3Wy+/JC5K+OAwH7JvwWlwA6ApwniRAnomOwqWbbyuN5/TSXWy9rHgKThSu0/aSRzWkWSUTWO3ShRiHPR7vHCbTcy/bU8JTqYfqibVNLs4ajgmU5fPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=lZU3yPf2; arc=none smtp.client-ip=67.231.156.173
+	s=arc-20240116; t=1779896507; c=relaxed/simple;
+	bh=28elNLG8Zz2GgjTgyRawXFa8z2y9tAXbpQ01pI5AitU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SReiCNljk3cUxbYpc9UklbfPeN544MsjDh7ggcbtyrDYuSg37KtoIp85X8uW/JULtFipHwSpNw3xkX7Za1KEMI1oiX+3TrpBCD3ubASo7fo1v0HmNAqRPe8hibWK1h8nQysYgrGgv/Fm8prk7GXQ2MWQddDEbqrIfjnIZ0UrRAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=baKAW8cg; arc=none smtp.client-ip=67.231.156.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="lZU3yPf2"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="baKAW8cg"
 Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64RAKMKB3852642;
-	Wed, 27 May 2026 08:41:23 -0700
+	by mx0b-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64RAKh9i3853038;
+	Wed, 27 May 2026 08:41:26 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	pfpt0220; bh=m+yW0YI9v+aTDr43rbPKu5hLCh2aj79A80qAF73oHAs=; b=lZU
-	3yPf2x/lE0hS7gfM7dRE7cqjuhy/LGdQX85MUyvkmCOZUvs4K53gDgvvEo8FB8kl
-	nTch6+LUCwbgvxmMRzjDa+JmlEz937vzH0AOAHtFm7lUdmEsbDan8Y9zN/MHtYSJ
-	UJ/0EgljTdVemj3FwgQ4MxTi1LeqQpulrUafNoS8nFfN/JWbJbYWt282/n1EdWFx
-	fmW02Vp5ewPgWGAyghylIF0Tc4QqCyF7aa4XDCfrTGjVciT+fNWAZaBpWWoPK8Ky
-	1jlpcHhFHhsejc2mm5fZKjfuYH1bJeiHR2F5X1cXbEd9za4J4JjpBFadjcNofva9
-	Hwmc68O7Auv9VD2StgQ==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 4edxs6guec-1
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=iDKaVgU/uqAUUgwIe7SfTOUIi
+	/O764lV4nrmVXkUdWU=; b=baKAW8cgGMK6Plelv1f/b2xdDj+K4hLeYjptvaCJ4
+	dnd/mieCSXh2oDLFq5tQ1QSZM/p/x67WPxwEUS/5TKduKkL10KaRigPSq/EjvHmA
+	jbtwP31nmuPPVrDjlb29gcoBDZeVRwqaWJJOWxVUbvL87K1xd/ZJwEw1yVsRFp8C
+	ExO7fCcJsXMQ4E35AByWzTCuyE3eHtl5ssJOdEmdOpFKhG/Ji8NTEY6nR07NFfXT
+	FhK1DNCB24205hO47uOkMuxzKH5unUyJtTzQNgNvfnnmqTtXTQ0obyTLQd+AGf96
+	BXpFJ+eV4qZvYDCPkGK/4cNcMCYCd2wZNx9UiacpS9zJQ==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 4edxs6gueh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 May 2026 08:41:23 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+	Wed, 27 May 2026 08:41:26 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 27 May 2026 08:41:22 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
- Transport; Wed, 27 May 2026 08:41:22 -0700
+ 15.2.1544.25; Wed, 27 May 2026 08:41:25 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
+ Transport; Wed, 27 May 2026 08:41:25 -0700
 Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id C65E13F7057;
-	Wed, 27 May 2026 08:41:19 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id AF6933F7068;
+	Wed, 27 May 2026 08:41:22 -0700 (PDT)
 From: Geetha sowjanya <gakula@marvell.com>
 To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
 CC: <mark.rutland@arm.com>, <will@kernel.org>, <krzk+dt@kernel.org>
-Subject: [PATCH v7 0/2] perf: marvell: Add CN20K DDR PMU support
-Date: Wed, 27 May 2026 21:11:16 +0530
-Message-ID: <20260527154118.12884-1-gakula@marvell.com>
+Subject: [PATCH v7 1/2] dt-bindings: perf: marvell: Add CN20K DDR PMU binding
+Date: Wed, 27 May 2026 21:11:17 +0530
+Message-ID: <20260527154118.12884-2-gakula@marvell.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260527154118.12884-1-gakula@marvell.com>
+References: <20260527154118.12884-1-gakula@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,94 +59,75 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-GUID: CM2n0PRux09vVVSnWfI5_ZLtwPOU0Ifj
-X-Authority-Analysis: v=2.4 cv=ScjHsPRu c=1 sm=1 tr=0 ts=6a1710a3 cx=c_pps
- a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17
+X-Proofpoint-GUID: FhN5udkyJK38i6kh7tk-dKGWiK1kg3kZ
+X-Authority-Analysis: v=2.4 cv=ScjHsPRu c=1 sm=1 tr=0 ts=6a1710a6 cx=c_pps
+ a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17
  a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22 a=l0iWHRpgs5sLHlkKQ1IR:22
- a=qit2iCtTFQkLgVSMPQTB:22 a=M5GUcnROAAAA:8 a=jmD4vOC-WGh-49o7kLYA:9
- a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-ORIG-GUID: CM2n0PRux09vVVSnWfI5_ZLtwPOU0Ifj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI3MDE1NyBTYWx0ZWRfXz7qxPUUXYa87
- OlJKIHqs7pMYq9fN7QgbmcoV+g3ht5RDTJJoKfk6SUesj6n5Aqhp8vPNQfzP+ecwsYcgXzeYz3h
- v5zjX61YhKscJMYshgpNfRoD49eEvHWeCKvdAhxi3LhhCTITtzF4inkgEjHHVoGt799JvPes88u
- 5PQCvMQ/1+BSxzgKH5e7gj/Uk756Tksx2gbfMYUOA05XV5V+9l30K6pY8zMRmPXNmfAMNLDMo4C
- FzCRL9o+6EMEQh5kCKJGsrFw4N4w2yvZGYwy/j0HxX4x1NXCd8ZG7DS8lV0NuDcqAaEDjsGzp1E
- 3ILF+ynvXqQ97XQRdVo2pCok6nGqmGBih6jsW/T+Cn2ZnJx8CY6AQS7qhFNAWhi9DcMEf/+sYDz
- usr1HTz5mbIrPiwtQoRpB17T2vjw/Nod10TWANrk9HdLkFw0N5qB3c/0yKhbULsvklfec+75Cig
- E5Y3jSAoFdKafyyjzog==
+ a=qit2iCtTFQkLgVSMPQTB:22 a=gEfo2CItAAAA:8 a=M5GUcnROAAAA:8
+ a=cPq5-T7l7yds4WLDPVIA:9 a=sptkURWiP4Gy88Gu7hUp:22 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-ORIG-GUID: FhN5udkyJK38i6kh7tk-dKGWiK1kg3kZ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTI3MDE1NyBTYWx0ZWRfXwec3TSnidsLJ
+ RknTZ+LNq2b8sxC0NT8i2Y2dGIefKfoM4OqQ1gUeLvkUjyZrscMt5TMYFUIl48hPFZjUhWAECuG
+ r/3XofHhsPg/bFUnkZdscEi02pDl4iLa1xLZFDetYiYVImnu7zhiqMoztcW4KD/7Zxu8LH6r8it
+ aIOL4Wr+rdL4DFWrFIXKNXpMYeR2kY/U16TDXtDFpQIo2whdgroK/Ype8lmspeoRMJHpjjtVfXG
+ ArSlXz/dVWd5SckGOlbuVe1vS5wzVc/afVBnFOm2H2RkzUppU3sXR6J/+0aVSkgTlLK55lYLi6/
+ 4qTmeJKZeFKUDT/8/P81iWPR0JVsl0jPufadSjbWdEYgj+uV5bJ1NamoOcZgJy85HJEJdiqyyd2
+ rzsnW850dHFya/CULaSH0/UKac51Bz1J6NWj9/SMovKsiT+mN8Qx9DqcvaVp6cEoo1ta/oiHJES
+ tjf8m644B3SowUJdE9g==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-05-27_02,2026-05-26_03,2025-10-01_01
 
-This series adds support for the DDR Performance Monitoring Unit (PMU)
-present in Marvell CN20K SoCs.
+Marvell CN20K SoCs integrate a DDR Performance Monitoring Unit (PMU)
+associated with the DDR controller. The block provides hardware counters
+to monitor DDR traffic and performance events and is accessed via a
+dedicated MMIO region.
 
-The DDR PMU is part of the DRAM Subsystem (DSS) and provides hardware
-counters to monitor DDR traffic and performance events. The block
-implements eight programmable counters and two fixed-function counters
-tracking DDR read and write activity, and is accessed via a dedicated
-MMIO region.
+The CN20K DDR PMU is functionally equivalent to the CN10K DDR PMU, with
+minor register offset differences.
 
-CN20K is the successor to CN10K, and the DDR PMU hardware is functionally
-equivalent to the CN10K implementation, with only minor differences in
-register offsets and event mappings. To allow software to distinguish
-between the two silicon variants, this series introduces a specific
-"marvell,cn20k-ddr-pmu" compatible and extends the existing
-marvell_cn10k_ddr_pmu driver to handle CN20K via variant-specific data.
+Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+---
 
 Changes in v7:
-- dt-bindings: dropped the CN20K DeviceTree example.
-- perf: Handle ZQ sysfs IDs (62/63) in a dedicated switch case before the
-  DFI range so GCC does not see overlapping case labels and Odyssey IDs
-  58-61 no longer fall through into ZQ handling.
-- perf: Resolve shared numeric IDs 58-61 inside the DFI case for CN20K vs
-  Odyssey (identical bitmap); extend programmable-event coverage to CAS
-  events (36-38) for CN20K sysfs.
-- perf: On event_add failure from ddr_perf_get_event_bitmap, cancel the
-  hrtimer if needed and free the counter slot instead of returning with
-  partial setup.
-- perf: For CN20K, zero CFG0 before writing ZQ to CFG1 and zero CFG1
-  before non-ZQ CFG0 so stale masks do not combine across banks.
+- Dropped the CN20K DeviceTree example.
 
 Changes in v6:
 - dt-bindings: Document CN20K in the existing marvell-cn10k-ddr.yaml;
   add maintainer, description, compatible enum entry, and a CN20K example
   with unit-address aligned to reg.
-- perf: Route CN20K ZQ events via dedicated sysfs IDs (62/63) and CFG1
-  programming; use (eventid - 42) for CFG1 bit positions and reject those IDs
-  on non-CN20K silicon.
-- perf: Disambiguate CN20K perf width events (58-61) from Odyssey DFI events
-  at the same numeric IDs using an early CN20K branch and fallthrough into the
-  existing DFI + programmable-event path on Odyssey.
-- perf: Run CN20K programmable counters through the same manual-mode / start
-  sequence as Odyssey.
 
-Changes in v4:
-- Fixed document file name.
+ .../devicetree/bindings/perf/marvell-cn10k-ddr.yaml       | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Changes in v3:
-- Expanded cover letter and commit message to better describe the DDR PMU
-  hardware and its relationship to CN10K
-- Fixed the file name.
-
-Changes in v2:
-- Fixed YAML syntax error triggered by a tab character in the examples
-  section, which caused dt_binding_check to fail.
-
-Changes in v1:
-- Added a description field to the binding.
-- Simplified the compatible property using 'const' instead of 'items/enum'.
-- Updated the example node name to include a unit-address matching the reg base.
-
-Signed-off-by: Geetha sowjanya <gakula@marvell.com>
-
-Geetha sowjanya (2):
-  dt-bindings: perf: marvell: Extend CN10K DDR PMU binding for CN20K
-  perf: marvell: Add CN20K DDR PMU support
-
- .../bindings/perf/marvell-cn10k-ddr.yaml      |  18 +-
- drivers/perf/marvell_cn10k_ddr_pmu.c          | 197 ++++++++++++++++--
- 2 files changed, 200 insertions(+), 15 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/perf/marvell-cn10k-ddr.yaml b/Documentation/devicetree/bindings/perf/marvell-cn10k-ddr.yaml
+index a18dd0a8c43a..f2f0d6b61eac 100644
+--- a/Documentation/devicetree/bindings/perf/marvell-cn10k-ddr.yaml
++++ b/Documentation/devicetree/bindings/perf/marvell-cn10k-ddr.yaml
+@@ -4,16 +4,22 @@
+ $id: http://devicetree.org/schemas/perf/marvell-cn10k-ddr.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: Marvell CN10K DDR performance monitor
++title: Marvell CN10K / CN20K DDR performance monitor
++
++description:
++  Performance Monitoring Unit (PMU) for the DDR controller on Marvell
++  CN10K and CN20K SoCs. The block is accessed via a dedicated MMIO region.
+ 
+ maintainers:
+   - Bharat Bhushan <bbhushan2@marvell.com>
++  - Geetha sowjanya <gakula@marvell.com>
+ 
+ properties:
+   compatible:
+     items:
+       - enum:
+           - marvell,cn10k-ddr-pmu
++          - marvell,cn20k-ddr-pmu
+ 
+   reg:
+     maxItems: 1
 -- 
 2.25.1
+
