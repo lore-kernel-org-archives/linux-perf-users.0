@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CA9426EC1;
-	Wed, 27 May 2026 15:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512EB423161;
+	Wed, 27 May 2026 15:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779895236; cv=none; b=P43JycXkeurL4rpPqt9QdiIa7/jBeL4jreB9WSGy1lUnGKvs0XXH2ZsBNIYAjCT5dY6/SB8Fm45e2WtK8mCXNaCtgFPPI5RW0gLjx0m4415UEeERK2ihgZEvVtvzp9SBQ/gMdaw86bmBw6OfjCbNHQLUh5leh2GGBmT458/MuFU=
+	t=1779895238; cv=none; b=Pu2nlu/l8fVSGw4CeipWg8qGy1Bx94v34iq3cblc75WEmnc/VydLLp/3UQcdrpoGcWf0mKohmyL+antHbqhG+dG5jz4ZQnPNuKCl6X+kfCkFYOw3AQa7o2mHyCTD73Lx3Jyl5h3DUqxb9WyOeUcMLEzGPhI79qhZi9tgSAOWsIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779895236; c=relaxed/simple;
-	bh=OUH2QCdYG+UL1lkzFiq1f89c/t/gBn57HqTS+mgcBzw=;
+	s=arc-20240116; t=1779895238; c=relaxed/simple;
+	bh=0MGgZsEcZWUPCVucsCaHJcvq2qbVXBiKYaWja+vf5WE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VmiOqMH91Hu3D5Hmp1GulLRpGlnvrusqwO1Wmk+aHFlpE7FJQ28CDAAyxmGjnDk7RcV60NeNv+1zmEgPQD13glrq/6ixxKYiXJk0lCsfcBiyITpDjBtoOpnuD+wlE5TNrhFIyXuQGGqsr+JDI7hLeXNKOEF0Ozaojoya9lv7+xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jq4CoVW8; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=SdIAfjdtgKkImhH9aB23UFCdk8em4hwZQNc9E0KgT+7j1TGuSEVsVtBLx49Y8s5uC8NuLoRKdxiPrQjiKphT+epN8rPzTDv4m2v9z+379WLGu8QhHOTr1F0e6w0o60ePQN+CTuK08BY2q8UrmllFDM3TO8EnB5JZzfGK8kl+ewU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jM0GCeHG; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jq4CoVW8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jM0GCeHG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779895234; x=1811431234;
+  t=1779895236; x=1811431236;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=OUH2QCdYG+UL1lkzFiq1f89c/t/gBn57HqTS+mgcBzw=;
-  b=jq4CoVW8cpdcx2yJUs8EDM6royQiHRjzR1jiGUNqj4Z084sygnCeVL6g
-   H3mzlNVsvALI2YFy52SqBoOL7HzwFJ0u4R/QpMME8DcJlVZN1o1JPW7Xn
-   /EYjDJyWM9m7HCFAEyalPzvyBRuvpr4+uLACCtqOMEKwM37wf25EUXake
-   duofbaqJAkAQY9GNMtEOt4Qt0pnJiqGOuI0u3BKtrfwQcQ/xGJF07gTp7
-   wOmGCL5FCj7WoT+ZJYPYK3ZOKiwZiLYIehwfEEdshDAK7MhoTSrgazPGZ
-   yoaZpTnFaMhfsbrkoScZutavUqFhWxSEXfOB/ZsD0eovnO5Kj3cuLbgQ4
-   w==;
-X-CSE-ConnectionGUID: gp2TuZ7qS2izOAa3lh25Iw==
-X-CSE-MsgGUID: Xf5YGPVERniWulFhl1lXRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="98149319"
+  bh=0MGgZsEcZWUPCVucsCaHJcvq2qbVXBiKYaWja+vf5WE=;
+  b=jM0GCeHGOcNEMEqHvyLCnNsBUj+N6kIvBd6Ao+u6v2mIpwIr+x/iNPWx
+   uv+tgMjpRk2+rjXthadaKWrtBjLUwQhPvLVrOZQ5M9rGrfWv6jjaaswmf
+   5FvOX2VylFywgdD9tawaLqE5nQCLAbwCzkZK7LLa6sILaEyXzv55RAtsM
+   4GEyiw7V6l/Jv9Vu9ANuTKD7jdSG3/Bc3fzl/CQPXZBMvwd0bPd+YqDE1
+   nld2/4yo0ERF2O9duwC6+NhM+LZoeTAWACR+a3D54ggPv9TCOGa4cnf1N
+   pFM0+xad35uR8ZYfydK9X7lh17P5nUZHISRK+GKFf1lmbokfBLjbCl1uF
+   A==;
+X-CSE-ConnectionGUID: 0j2p/UcvRSWG1OxwIwqyFA==
+X-CSE-MsgGUID: yFASoOtmQCO+CXVkd44sHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="98149335"
 X-IronPort-AV: E=Sophos;i="6.24,171,1774335600"; 
-   d="scan'208";a="98149319"
+   d="scan'208";a="98149335"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 08:20:31 -0700
-X-CSE-ConnectionGUID: fgGLB5lPR82EX3T/aZTy9g==
-X-CSE-MsgGUID: DwC7PIxySWy0XeRGntJhGg==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 08:20:32 -0700
+X-CSE-ConnectionGUID: axOojIv9SH6S7RzR1VRQXQ==
+X-CSE-MsgGUID: A73AD5ZZTfakH63RM6EPhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,171,1774335600"; 
-   d="scan'208";a="241231399"
+   d="scan'208";a="241231408"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 08:20:31 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 08:20:32 -0700
 From: Zide Chen <zide.chen@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -56,11 +56,10 @@ To: Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH V2 4/7] perf/x86/intel/uncore: Defer ADL global PMON enable to enable_box()
-Date: Wed, 27 May 2026 08:11:51 -0700
-Message-ID: <20260527151154.130505-4-zide.chen@intel.com>
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH V2 7/7] perf/x86/intel/uncore: Implement global init callback for GNR uncore
+Date: Wed, 27 May 2026 08:11:54 -0700
+Message-ID: <20260527151154.130505-7-zide.chen@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260527151154.130505-1-zide.chen@intel.com>
 References: <20260527151154.130505-1-zide.chen@intel.com>
@@ -72,46 +71,88 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On some Raptor Cove CPUs, enabling uncore PMON globally at driver init
-may increase power consumption even when no perf events are in use.
+On Sierra Forest and Clearwater Forest, the FRZ_ALL bit in the global
+control register defaults to 0 at boot, but UBOX PMON units do not
+work until the global control register is explicitly written with 0
+to trigger hardware initialization properly.
 
-Drop adl_uncore_msr_init_box() and defer programming the global control
-register to enable_box(), so it is only set when a box is actually used.
+Implement the generic uncore_msr_global_init() callback and add it to
+gnr_uncore_init[], which is shared by GNR, GRR, SRF, and CWF.
 
-IMC and IMC freerunning counters use a separate control path and are
-unaffected.
-
-Cc: stable@vger.kernel.org
 Signed-off-by: Zide Chen <zide.chen@intel.com>
 ---
- arch/x86/events/intel/uncore_snb.c | 7 -------
- 1 file changed, 7 deletions(-)
+V2:
+- Propagate return value of wrmsrq_on_cpu() to global_init().
+---
+ arch/x86/events/intel/uncore.c           | 13 ++++++++++++-
+ arch/x86/events/intel/uncore.h           |  2 +-
+ arch/x86/events/intel/uncore_discovery.c |  2 +-
+ 3 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 3dbc6bacbd9d..edddd4f9ab5f 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -563,12 +563,6 @@ void tgl_uncore_cpu_init(void)
- 	skl_uncore_msr_ops.init_box = rkl_uncore_msr_init_box;
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 4b3a1fa5b41b..7857959c6e82 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1716,7 +1716,7 @@ static int __init uncore_mmio_init(void)
+ 	return ret;
  }
  
--static void adl_uncore_msr_init_box(struct intel_uncore_box *box)
--{
--	if (box->pmu->pmu_idx == 0)
--		wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
--}
--
- static void adl_uncore_msr_enable_box(struct intel_uncore_box *box)
+-static int uncore_mmio_global_init(u64 ctl)
++static int uncore_mmio_global_init(int die, u64 ctl)
  {
- 	wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
-@@ -587,7 +581,6 @@ static void adl_uncore_msr_exit_box(struct intel_uncore_box *box)
+ 	void __iomem *io_addr;
+ 
+@@ -1731,6 +1731,16 @@ static int uncore_mmio_global_init(u64 ctl)
+ 	return 0;
  }
  
- static struct intel_uncore_ops adl_uncore_msr_ops = {
--	.init_box	= adl_uncore_msr_init_box,
- 	.enable_box	= adl_uncore_msr_enable_box,
- 	.disable_box	= adl_uncore_msr_disable_box,
- 	.exit_box	= adl_uncore_msr_exit_box,
++static int uncore_msr_global_init(int die, u64 msr)
++{
++	int cpu = uncore_die_to_cpu(die);
++
++	if (cpu == -1)
++		return -ENODEV;
++
++	return wrmsrq_on_cpu(cpu, msr, 0);
++}
++
+ static const struct uncore_plat_init nhm_uncore_init __initconst = {
+ 	.cpu_init = nhm_uncore_cpu_init,
+ };
+@@ -1871,6 +1881,7 @@ static const struct uncore_plat_init gnr_uncore_init __initconst = {
+ 	.domain[0].base_is_pci = true,
+ 	.domain[0].discovery_base = UNCORE_DISCOVERY_TABLE_DEVICE,
+ 	.domain[0].units_ignore = gnr_uncore_units_ignore,
++	.domain[0].global_init = uncore_msr_global_init,
+ };
+ 
+ static const struct uncore_plat_init dmr_uncore_init __initconst = {
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 94c68e3417b6..c2e5ccb1d72c 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -53,7 +53,7 @@ struct uncore_discovery_domain {
+ 	/* MSR address or PCI device used as the discovery base */
+ 	u32	discovery_base;
+ 	bool	base_is_pci;
+-	int	(*global_init)(u64 ctl);
++	int	(*global_init)(int die, u64 ctl);
+ 
+ 	/* The units in the discovery table should be ignored. */
+ 	int	*units_ignore;
+diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+index af2217b44a81..e36613d934b1 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -287,7 +287,7 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
+ 	if (!io_addr)
+ 		return -ENOMEM;
+ 
+-	if (domain->global_init && domain->global_init(global.ctl)) {
++	if (domain->global_init && domain->global_init(die, global.ctl)) {
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
 -- 
 2.54.0
 
