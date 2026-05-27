@@ -1,104 +1,105 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC4919A288;
-	Wed, 27 May 2026 16:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A196C3F164D;
+	Wed, 27 May 2026 16:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779899425; cv=none; b=s/S9NtkgxecGtUBofvYryC1QRxNB9USAGEz7C6mdWkQkXPcSBGgthUgfTmV4J4yKAl+SgyI8RjmenW+EpbUQuXR0IM76IAExnmgb3ST8/v45S2TibqgWJSRiKcifRJ1OJr61cYHKuZlar3yUd7fR0GbqYm5u7o6QI6zjNZJzFG4=
+	t=1779900817; cv=none; b=XFyu9gQgea5OBpftwNzquwMG5YS0LUjS9rx7MgV+S+K5KIYThTY0OVw1ed/7qr9ClYhqjvOoWODNNS9q3UNBo73kmkvnJdBPb+r3hup9Py2G81f97An25N8UedTSnaDmlNJJl0OkrpFYOt/h6hjUGXzY6DfQlve/LlLZ3ulHnI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779899425; c=relaxed/simple;
-	bh=iSdz8ADlh7SmbRG7RwaWkpOoauiAdWfqFXI8F6QWd14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k9rQQ38qmR/BB3lS0B2x7d80CcRVuxwP/AAqF83FEYeW5leoLMZIiVkZ+UFLX8ltiFpHXFkATjmwfzImsUNVGkNHSEc7ntSt9KQxwijLJp8GsFZ5KFAyNw/CVzbB4z1JnKo6VprQC6OL+qyGbJxQvHQ/bYQelH87CYMDAEDglt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TydIpMij; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1779900817; c=relaxed/simple;
+	bh=rRqyvJfHs8n1tE/OfXST04kLa/4UKsV0mDX8EGPbOuY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=P+FDQr6VpbkRh0RENlqH9t34F9C9NAZuagGjJLoqyRdU7z+byVLOJqKWhI0IEMAyFXVJFpxSzKyuIMFloazE8pjDSxTLN8EEJqXegW4PvFeZahqAITRi/NsImcWeamd2j1hrra+3BVsv4rDyAW01Vi+mePE7bF4xblbc5TZOvWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0hPoM2j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TydIpMij"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hjubwyUGpvii4yHrQN7iWzf9058y+MhOuurWOoQQtoU=; b=TydIpMijDe4+FJpLkzynelnYRK
-	VNJ9izAdgq8fYnktpyOTgB5E00ytSNQsFYRHl6ioo0y7Qq5hm6Bn5Hg+efQ1/kFjAbo0ZWgjaX84M
-	rBbH7+2d61R/Y29S52qfADU1wPPtB49DsId57QDyAlYpWMFbnGD4eMKm5smUIKk8MtQuNLdA49L3D
-	zqE3Iv60SGRCONJE31I1YpvUzgUZnJAHcDaUhrFmwwtvPsawIbBhbTrN4V5PCkPMATC9KK6vkIVTZ
-	jpW06LeZImeIzGbDYH/hUJts4UPFAHj3qbFO8pqQJWz31/B9ktN7JQS8n5Ly0QMnTZFCH9sap5K8v
-	odAAJHFg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSH94-0000000EUWv-2M56;
-	Wed, 27 May 2026 16:30:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6249E300673; Wed, 27 May 2026 18:30:14 +0200 (CEST)
-Date: Wed, 27 May 2026 18:30:14 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-perf-users@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] complete perf_allow_* trio and use in drm/xe
-Message-ID: <20260527163014.GI3102624@noisy.programming.kicks-ass.net>
-References: <20260523013326.129491-1-jhubbard@nvidia.com>
- <20260523084056.GE3102624@noisy.programming.kicks-ass.net>
- <8871a158-7a68-4247-a09f-bb3d970d6dc2@nvidia.com>
- <87ecixv82m.wl-ashutosh.dixit@intel.com>
- <ahcQ9Ns5mjsnrbEa@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0hPoM2j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B50F11F000E9;
+	Wed, 27 May 2026 16:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779900814;
+	bh=eo/+7L8mF01Yjie7mzgiNCrnqacT5ORoW57yVAEacLw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=L0hPoM2jdXbxZUHRZl7xnlIpqAxDK2EHfCEOOXrU7g89/i/ezMgehh9fA2WnK3+b+
+	 ysYzDYzAE+uohN0DMvqjK7VvraUYKslEq6jzAxdDe52KIOohyGliep6xu8vkwjmXUz
+	 ETO0+9tVKHIJyYMGJk+sVb5mZl3QeZWyK/0c+NTCFqQy3qld8phqrdWyzOkcqpKdvA
+	 I+0WogCZEcYnwu2Ngs5NzVNvLJvwZ1QYkSR5o7oFLkrn3OPzsMV1vW0plUZ5V+YOvA
+	 1IMofFeDSKT+UestqS5xcCNdo0yZi6O+JzmLyGsmHfwZyEZnhG6eHF+xvWoVBGdBpa
+	 pcH+NjGv3YZ7w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 2/2] perf: marvell: Add CN20K DDR PMU support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geetha sowjanya" <gakula@marvell.com>
+Cc: conor+dt@kernel.org, linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org
+In-Reply-To: <20260527154118.12884-3-gakula@marvell.com>
+References: <20260527154118.12884-3-gakula@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 27 May 2026 16:53:32 +0000
+Message-Id: <20260527165333.B50F11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ahcQ9Ns5mjsnrbEa@intel.com>
 
-On Wed, May 27, 2026 at 11:42:44AM -0400, Rodrigo Vivi wrote:
-> On Tue, May 26, 2026 at 08:34:57PM -0700, Dixit, Ashutosh wrote:
-> > On Sat, 23 May 2026 10:52:16 -0700, John Hubbard wrote:
-> > >
-> > > On 5/23/26 1:40 AM, Peter Zijlstra wrote:
-> > > > On Fri, May 22, 2026 at 06:33:24PM -0700, John Hubbard wrote:
-> > > ...
-> > > >>    perf/core: out-of-line and export perf_allow_cpu/tracepoint()
-> > > >>    drm/xe: gate observation streams with perf_allow_cpu()
-> > > >>
-> > > >>   drivers/gpu/drm/xe/xe_eu_stall.c    |  5 +++--
-> > > >>   drivers/gpu/drm/xe/xe_oa.c          | 25 +++++++++++++---------
-> > > >>   drivers/gpu/drm/xe/xe_observation.c | 32 ++++++++++++++++++++++++-----
-> > > >>   drivers/gpu/drm/xe/xe_observation.h |  3 +--
-> > > >>   include/linux/perf_event.h          | 31 ++++++++++++++--------------
-> > > >>   kernel/events/core.c                | 18 ++++++++++++++++
-> > > >>   6 files changed, 79 insertions(+), 35 deletions(-)
-> > > >
-> > > > Sure, works for me. How do you want to route these things, Xe tree or
-> > > > -tip?
-> > >
-> > > Hi Peter,
-> > >
-> > > Maybe -tip, but really, either way is perfectly OK with me.
-> > 
-> > I've R-b'd both the patches. If you want to merge via Xe tree, let me know
-> > and we can get them merged.
-> 
-> To get them through drm-xe trees we need ack from performance events subsystem
-> maintainers.
-> 
-> Peter, Ilgo, anyone, ack here?
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Pre-existing issues:
+- [High] The PMU driver unregisters the PMU but fails to cancel the hrtimer=
+ during device removal, leading to a Use-After-Free when the device memory =
+is freed.
+--
+
+commit d18b18c0fd01da6bd683596bdd96464d25ed18a9
+Author: Geetha sowjanya <gakula@marvell.com>
+
+perf: marvell: Add CN20K DDR PMU support
+
+The CN20K DRAM Subsystem exposes performance counters for DDR traffic.
+This commit adds CN20K register offsets, event maps, and sysfs attributes,
+and matches the device via OF and ACPI. Platform data is updated to use
+silicon flags to reuse the CN10K PMU code path.
+
+> diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_=
+cn10k_ddr_pmu.c
+> index 72ac17efd846a..6f638dfe829b8 100644
+> --- a/drivers/perf/marvell_cn10k_ddr_pmu.c
+> +++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
+
+[ ... ]
+
+> @@ -1098,6 +1294,7 @@ static void cn10k_ddr_perf_remove(struct platform_d=
+evice *pdev)
+
+[Severity: High]
+This is a pre-existing issue, but does this function need to cancel the
+hrtimer before returning?
+
+Looking at how the driver manages memory, struct cn10k_ddr_pmu is allocated
+with devm_kzalloc() in cn10k_ddr_perf_probe(). This means the memory will be
+automatically freed by devres immediately after cn10k_ddr_perf_remove()
+finishes.
+
+If the device is unbound via sysfs while a perf event is still active, the
+hrtimer could still be running or queued. Because perf_pmu_unregister() does
+not stop the PMU's internal timers, would the timer callback
+(cn10k_ddr_pmu_timer_handler) execute after the devres cleanup and cause a
+use-after-free on the freed ddr_pmu structure?
+
+Could we add hrtimer_cancel(&ddr_pmu->hrtimer) to cn10k_ddr_perf_remove()
+to prevent this?
+
+>  #ifdef CONFIG_OF
+>  static const struct of_device_id cn10k_ddr_pmu_of_match[] =3D {
+>  	{ .compatible =3D "marvell,cn10k-ddr-pmu", .data =3D &cn10k_ddr_pmu_pda=
+ta },
+> +	{ .compatible =3D "marvell,cn20k-ddr-pmu", .data =3D &cn20k_ddr_pmu_pda=
+ta },
+>  	{ },
+>  };
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527154118.1288=
+4-1-gakula@marvell.com?part=3D2
