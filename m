@@ -1,101 +1,174 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CE940489A;
-	Wed, 27 May 2026 12:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBA6403E9A;
+	Wed, 27 May 2026 13:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779885354; cv=none; b=gL38sfjqZm7PwMerhrA0/Et3SsC2xAevx7dz66V3VsmfR+hWfM0C6z/akoxzRMC483BODSyNq5TaVq2dnX/aEzZVhDvhJlMoExvzOnobbcGYQwLVGRfIHVsVhPp0uKWUux30J9wSvWJp0Gsl3WWloRHeQf4JGIdHbOZ0CJU2+SQ=
+	t=1779886860; cv=none; b=rrfls7dd3ue1pWtqT9MjiQHUJ2dmbs6nuiD0J9lCyUYFPDPuxGJH2Eg42U9skIz0VkghYIfTNBpmL162Yf3G/tYynPbPxcQfkeeeOitvZrjnAf2yFuu9gVfEdXxTOtryHsDY0NOrF1YlioRTbAyv7ZNren36at5xc7Fy1yhANrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779885354; c=relaxed/simple;
-	bh=ST8sVv15BkGc6tul0HT2Tw24HvBjqn1GDstZ12DU3DE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RqnqSOFwbf1PilUt+jW7ix2SI0+DO/YAaZmjRURizscpA+W3WH7suLDCiYXnKmsyKqKHThWBd4scm1gr7J9fdIbfiQbD+UA/tw9lI4AvUKShFdqznZmfS2pwGQv68q823IWoU0NGsEXkm2SCaTkhRWgpYo9tfyakeIZjJPyfTrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Sv1dNNyS; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1779886860; c=relaxed/simple;
+	bh=TwZr8bHwu+sl4F5v/6B8sISxG0NLlTexW1hZQxoqWFU=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=jQKo3f/ZdleUFR31EZcXn9kU7dmhkwpQcCMIArDBeI6i69rucMBGoq0FJUL3RaFKKYXllPmsucEfHXKBoi5gv55u4aYvqfKEEtNFG2HX/38MItMhCXu0yW5MvQq081IRvxAmthmppLbuK1xm8dA9QQu+woirEZ23qVvTNvMQIIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUUlIxD5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Sv1dNNyS"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1779885349; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=maEd3fP452xbwDQt8y5z93ErC5Xch2tj81t6Keb7XOE=;
-	b=Sv1dNNySZFkjy5WihyQMN183lvH1Ru1UTldYTP3KyALmcIT/egSLcVzT/qn954nM1nELNDnhZAFKRTiZL3sRyU6v0KPpW832zxvB/NqULAqorQu997xgCu1tcOkNkyLErZpZ3Qpmfxns44TdI8ik6B4MnZGjHOrA94/ZlrmjGAQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=wanghan@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0X3jh1Eu_1779885346;
-Received: from wanghan-Workstation..(mailfrom:wanghan@linux.alibaba.com fp:SMTPD_---0X3jh1Eu_1779885346 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 27 May 2026 20:35:47 +0800
-From: Wang Han <wanghan@linux.alibaba.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chen Pei <cp0613@linux.alibaba.com>,
-	Andy Chiu <andybnac@gmail.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 8/8] selftests/livepatch: Add RISC-V syscall wrapper prefix
-Date: Wed, 27 May 2026 20:35:30 +0800
-Message-ID: <20260527123530.2593918-9-wanghan@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
-References: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUUlIxD5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B04E1F000E9;
+	Wed, 27 May 2026 13:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779886859;
+	bh=Y49yKLCcUdOoPfuJLpPT3hWr1AHwnP3o2LT5mHHv2+o=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=iUUlIxD5zKEkXPE9ZMfaoUy+x4nykjkWV7nZM1MFpvc+pMmlTn4fcZJWfETdYNttm
+	 IGyd340RlAqTs2vyhTDP0SnHMcaY/hSCbcmwJ1EgAUB3Nvik6yP6cBQh/gDsyEEgp0
+	 +jGTWZt99xk32pDMY0RXW3sL4EjqYdxFsPmsl0CucgM5QdCkBIZLw7XL60bNdRmLdR
+	 bAEZ1FZlLB00aHNwznFc5CS0sunq8xOvAh5OC8hmOSYbN97g1bjp76iJsMZVUY9Ejl
+	 yTZaBEnxXPztXhEWuFgE3U0KdzNMtaPh1qannEzAZ2xWDmPfhWLjH5DppNZJtPdO6G
+	 lQNO2vNASlkNg==
+Content-Type: multipart/mixed; boundary="===============4572472540278009869=="
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <c76146b9af70845f55114d28e59d8a94a15e9365aecc7f28d42f08b157f10065@mail.kernel.org>
+In-Reply-To: <20260527121207.2312181-3-puranjay@kernel.org>
+References: <20260527121207.2312181-3-puranjay@kernel.org>
+Subject: Re: [PATCH v4 2/4] perf: Use a union to clear branch entry bitfields
+From: bot+bpf-ci@kernel.org
+To: puranjay@kernel.org,bpf@vger.kernel.org
+Cc: puranjay@kernel.org,puranjay12@gmail.com,ast@kernel.org,daniel@iogearbox.net,john.fastabend@gmail.com,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,song@kernel.org,yonghong.song@linux.dev,will@kernel.org,mark.rutland@arm.com,catalin.marinas@arm.com,leo.yan@arm.com,robh@kernel.org,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,james.clark@linaro.org,irogers@google.com,adrian.hunter@intel.com,shuah@kernel.org,leitao@debian.org,ravi.bangoria@amd.com,eranian@google.com,memxor@gmail.com,usama.arif@linux.dev,linux-arm-kernel@lists.infradead.org,linux-perf-users@vger.kernel.org,linux-kselftest@vger.kernel.org,linux-kernel@vger.kernel.org,kernel-team@meta.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Wed, 27 May 2026 13:00:58 +0000 (UTC)
 
-The syscall livepatch selftest resolves and patches a syscall wrapper
-symbol. To use that test for RISC-V livepatch validation, add the
-RISC-V FN_PREFIX definition for ARCH_HAS_SYSCALL_WRAPPER.
+--===============4572472540278009869==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-Without this macro, the syscall livepatch selftest cannot resolve the
-RISC-V target symbol, and the syscall-related livepatch test fails on
-RISC-V.
+>     perf: Use a union to clear branch entry bitfields
+>
+>     perf_clear_branch_entry_bitfields() zeroes individual bitfields of struct
+>     perf_branch_entry but has repeatedly fallen out of sync when new fields
+>     were added (new_type and priv were missed).
+>
+>     Wrap the bitfields in an anonymous struct inside a union with a u64
+>     bitfields member, and clear them all with a single assignment. This
+>     avoids having to update the clearing function every time a new bitfield
+>     is added.
+>
+>     Fixes: bfe4daf850f4 ("perf/core: Add perf_clear_branch_entry_bitfields() helper")
+>     Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 
-Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+The Fixes tag points to commit bfe4daf850f4 which introduced the
+perf_clear_branch_entry_bitfields() helper, but that commit was correct
+at the time.
+
+The actual bug was introduced by commit b190bc4ac9e6 which added the
+'new_type' field without updating the clearing function. Commit
+5402d25aa571 also added the 'priv' field with the same issue.
+
+Should the Fixes tag be:
+
+  Fixes: b190bc4ac9e6 ("perf: Extend branch type classification")
+
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 48d851fbd8ea..f7360c43f902 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1474,14 +1474,7 @@ static inline u32 perf_sample_data_size(struct perf_sample_data *data,
+>   */
+>  static inline void perf_clear_branch_entry_bitfields(struct perf_branch_entry *br)
+>  {
+> -	br->mispred	= 0;
+> -	br->predicted	= 0;
+> -	br->in_tx	= 0;
+> -	br->abort	= 0;
+> -	br->cycles	= 0;
+> -	br->type	= 0;
+> -	br->spec	= PERF_BR_SPEC_NA;
+> -	br->reserved	= 0;
+> +	br->bitfields = 0;
+>  }
+>
+>  extern void perf_output_sample(struct perf_output_handle *handle,
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index fd10aa8d697f..c2e7b1b1c4fa 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1491,16 +1491,21 @@ union perf_mem_data_src {
+>  struct perf_branch_entry {
+>  	__u64	from;
+>  	__u64	to;
+> -	__u64	mispred   :  1, /* target mispredicted */
+> -		predicted :  1, /* target predicted */
+> -		in_tx     :  1, /* in transaction */
+> -		abort     :  1, /* transaction abort */
+> -		cycles    : 16, /* cycle count to last branch */
+> -		type      :  4, /* branch type */
+> -		spec      :  2, /* branch speculation info */
+> -		new_type  :  4, /* additional branch type */
+> -		priv      :  3, /* privilege level */
+> -		reserved  : 31;
+> +	union {
+> +		struct {
+> +			__u64	mispred   :  1, /* target mispredicted */
+> +				predicted :  1, /* target predicted */
+> +				in_tx     :  1, /* in transaction */
+> +				abort     :  1, /* transaction abort */
+> +				cycles    : 16, /* cycle count to last branch */
+> +				type      :  4, /* branch type */
+> +				spec      :  2, /* branch speculation info */
+> +				new_type  :  4, /* additional branch type */
+> +				priv      :  3, /* privilege level */
+> +				reserved  : 31;
+> +		};
+> +		__u64	bitfields;
+> +	};
+>  };
+>
+>  /* Size of used info bits in struct perf_branch_entry */
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+> index fd10aa8d697f..c2e7b1b1c4fa 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -1491,16 +1491,21 @@ union perf_mem_data_src {
+>  struct perf_branch_entry {
+>  	__u64	from;
+>  	__u64	to;
+> -	__u64	mispred   :  1, /* target mispredicted */
+> -		predicted :  1, /* target predicted */
+> -		in_tx     :  1, /* in transaction */
+> -		abort     :  1, /* transaction abort */
+> -		cycles    : 16, /* cycle count to last branch */
+> -		type      :  4, /* branch type */
+> -		spec      :  2, /* branch speculation info */
+> -		new_type  :  4, /* additional branch type */
+> -		priv      :  3, /* privilege level */
+> -		reserved  : 31;
+> +	union {
+> +		struct {
+> +			__u64	mispred   :  1, /* target mispredicted */
+> +				predicted :  1, /* target predicted */
+> +				in_tx     :  1, /* in transaction */
+> +				abort     :  1, /* transaction abort */
+> +				cycles    : 16, /* cycle count to last branch */
+> +				type      :  4, /* branch type */
+> +				spec      :  2, /* branch speculation info */
+> +				new_type  :  4, /* additional branch type */
+> +				priv      :  3, /* privilege level */
+> +				reserved  : 31;
+> +		};
+> +		__u64	bitfields;
+> +	};
+>  };
+>
+>  /* Size of used info bits in struct perf_branch_entry */
+
 ---
- .../testing/selftests/livepatch/test_modules/test_klp_syscall.c | 2 ++
- 1 file changed, 2 insertions(+)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-index dd802783ea84..275e4b10cf59 100644
---- a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-+++ b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-@@ -18,6 +18,8 @@
- #define FN_PREFIX __s390x_
- #elif defined(__aarch64__)
- #define FN_PREFIX __arm64_
-+#elif defined(__riscv)
-+#define FN_PREFIX __riscv_
- #else
- /* powerpc does not select ARCH_HAS_SYSCALL_WRAPPER */
- #define FN_PREFIX
--- 
-2.43.0
-
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/26510917353
+--===============4572472540278009869==--
