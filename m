@@ -1,104 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F73A48CFC;
-	Wed, 27 May 2026 05:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1B32D3EEB;
+	Wed, 27 May 2026 05:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779859055; cv=none; b=ABG0LktqhG5MvwOh7AmGoYrPrqnd7Km7LEihyrTR4aXKX+5bcRwQ02Muu0FF/2LMwMoAglggzp+JsUL0eQXsSJXyoYcbfV0JfHjJI+nIDpxFUdIS0mB1HKrfpLxd9vlxmE5cx7ltxYobJBc6XpYtajIa/V8Sl9CUtAazdXJrJDI=
+	t=1779859383; cv=none; b=PnG2zvNbTEqQl0XHA3DqOp18ZfNySqkEneDANZZSfVXeAHYvhpY5pGIyNDdbkkMJru6jj8Pp3TkdVIik2FeuNX0gGQoHUdK1g40nZ8Q8B+FSUAl3jb1BDrPpD82wBqJei4r5NfQcNbODp/9j6ap8VJ4Cg3z8vRHLWOpBO+i7QIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779859055; c=relaxed/simple;
-	bh=JqnWVoffGGyD09Jxe6YkAqJSDjyKJcvh/iHSY+5Uv7s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YlWVFLnwiIX/Lc/FgL1YUgnDnwUUF7H6Se0LqBitVUT1yT5Cb5BU7LskeOnJXCShUIjArD9ry26NmENVy2QtbPVEO64JiuzLUQiLJzT4g330G7KuLuMVRXtpV1I9THZC/th6QJQ1bl3pIhU/q8jPlro/DHvC4BTgtI0aZZJJZ2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SzJpA6Bu; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779859383; c=relaxed/simple;
+	bh=oLeOZoKtbgVvPpct5Nfmac1WqVX6VF6XbNN68DdO/wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m5V1Q0YwDWOCGH/iocxY5fzVfkkHCe/05y6r66Ghl/dU+I9CYRAnhRaX/jqyU/yPMoAPJ38KiRucfy3/Kik66BabDUYBubfa+Aw20QCT4SGB9Vu0RdmMxef2MEomgG6bk8A0mlBoibevTvMUR47gWNT7pAqhUre54Qsyzn8Ecao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZTYKE0kE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SzJpA6Bu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779859054; x=1811395054;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JqnWVoffGGyD09Jxe6YkAqJSDjyKJcvh/iHSY+5Uv7s=;
-  b=SzJpA6BuA3IKaOlDpY1rZFSX5qo/33/80GrS5MdoZkP4fjjiDngxfpqW
-   KHDBFZdpOnnCskjBn9ORrDLkTWud/j/Jrvi/Ipl0JZJo/znfweL72fVr2
-   KhwEHxzTyxmnnRBduqvaCpd8jsePK/Ylu4tyULtKYY7kz3X9waBiyI5fu
-   kVHWRkXMplKQCNBf/thDqjMg0XMow7VvmP/qAzKYbPM/elOy1z/y5twP5
-   oyEb4n/Ln5d18sQwgtC9Q5+TQuEZIBtAfVs3v8U2puipKbSGf/6BV8ljo
-   0bGsZ276KVhJHFXRtYUSj39fDFnldRmqVyJcsg+nnSlA4fXGcks9RFjYd
-   g==;
-X-CSE-ConnectionGUID: a2gnPPzARAe7kI/cEGZT5Q==
-X-CSE-MsgGUID: vBQdL5//TI2ZENXbMeZsQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11798"; a="103355677"
-X-IronPort-AV: E=Sophos;i="6.24,170,1774335600"; 
-   d="scan'208";a="103355677"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 22:17:33 -0700
-X-CSE-ConnectionGUID: XfzJbBRzQnC20YlMlA4daQ==
-X-CSE-MsgGUID: 8L6KT0pMQkySkvP/32lhLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,170,1774335600"; 
-   d="scan'208";a="239123905"
-Received: from unknown (HELO [10.238.3.232]) ([10.238.3.232])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 22:17:30 -0700
-Message-ID: <22cb9525-3cdd-4962-bc98-d9e905f195ab@linux.intel.com>
-Date: Wed, 27 May 2026 13:17:28 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZTYKE0kE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AE21F000E9;
+	Wed, 27 May 2026 05:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779859382;
+	bh=Bm3s4ePDaenze67k2mji9CpBs36IDLFInYw3LIfuKEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZTYKE0kEuk7ZGMiTasUgn0ft4NtSZK9fxHEgJSgWLF82+3q5EUaH70DobkLPKNQoD
+	 3oAuRoz9GlozGjLJBk7+m7h1OXQvFK++1ecw53qdhqJG4fGLotuAdTg7qO10UqmHKT
+	 yiHgXySAQO7V+rizZcW0/2sU6DWQNpEgJjP3v3JKGRU3FTYBTJBNTGexXM2dcnokiA
+	 fiYPu8Fg/yy0wmhSdy7US0zuQRK477FvGxiDnXWfaELeKNApdkVVz3yU1m9Q9GWzez
+	 wFQ/8l6ZUQbO5eXJT2m/BDYd9e6CiyB3KQKS6Rl8Pt+53YljLzAGZOc+LRnf44SoYV
+	 NoIih+mN8U+lA==
+Date: Tue, 26 May 2026 22:22:58 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v2] perf bench: add --write-size option to sched pipe
+Message-ID: <ahZ_sr1bzkoul_tq@google.com>
+References: <20260521-perf_bench_pipe-v2-1-720b6ff7f0fa@debian.org>
+ <ahUCyRwNPKV1VAZ8@google.com>
+ <ahXWIrGvsC3_gIkC@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 0/7] perf/x86/intel/uncore: Bug fixes and cleanups
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260526211846.121640-1-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260526211846.121640-1-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ahXWIrGvsC3_gIkC@gmail.com>
 
-Seems only cover letter is here. Where are the patches?
+On Tue, May 26, 2026 at 06:55:33PM +0100, Breno Leitao wrote:
+> hello Namhyung,
+> 
+> On Mon, May 25, 2026 at 09:17:45PM +0000, Namhyung Kim wrote:
+> > On Thu, May 21, 2026 at 09:15:37AM -0700, Breno Leitao wrote:
+> > > +		ret = write(td->pipe_write, td->buf, write_size);
+> > > +		BUG_ON(ret < 0 || (unsigned int)ret != write_size);
+> > >  		ret = read_pipe(td);
+> > > -		BUG_ON(ret != sizeof(int));
+> > > +		BUG_ON(ret < 0 || (unsigned int)ret != write_size);
+> > 
+> > Is it possible to return smaller values than required due to signal or
+> > something?
+> 
+> I tested this on a VM with the patch applied, running the ping-pong with
+> write_size from 4 B up to 1 MiB, including multi-process and single-CPU
+> contention runs (millions of iterations). I observed zero short reads or short
+> writes.
+> 
+> Looking at fs/pipe.c, this matches the kernel behavior for this access pattern:
+> the bench has a single writer per pipe and the pipe capacity is set to
+> write_size, so the writer never has to sleep mid-write, and the kernel does a
+> sync wake of the reader only after the full payload is queued.
+> 
+> EINTR is also not reachable today because the bench installs no signal
+> handlers and nothing in the call chain delivers signals to the workers
+> 
+> At the same time, I understand the concern and If you'd still prefer defensive
+> handling (short-return loop + EINTR retry) I can add it in v3 — happy to either
+> way.
 
-On 5/27/2026 5:18 AM, Zide Chen wrote:
-> This series includes bug fixes and cleanups for the Intel uncore PMU
-> driver.
->
-> - Patch 1 fixes a theoretical bug in discovery unit lookup on multi-die
->   systems.
-> - Patch 2 guards against an invalid box control address.
-> - Patch 3 fixes a PCI device refcount leak in UPI topology discovery.
-> - Patch 4 works around a hardware issue on Raptor Cove CPUs.
-> - Patches 5-7 implement a global MSR init callback for GNR/GRR/SRF/CWF
->   uncore.
->
-> Changes in v2:
-> - Add patch 2 to guard against invalid box control address (Sashiko)
-> - Remove WARN_ON_ONCE() from patch 1
-> - Move cpus_read_{lock,unlock}() out of uncore_die_to_cpu() (Sashiko)
->
-> Zide Chen (7):
->   perf/x86/intel/uncore: Fix discovery unit lookup for multi-die systems
->   perf/x86/intel/uncore: Guard against invalid box control address
->   perf/x86/intel/uncore: Fix PCI device refcount leak in UPI discovery
->   perf/x86/intel/uncore: Defer ADL global PMON enable to enable_box()
->   perf/x86/intel/uncore: Move die_to_cpu() to uncore.c
->   perf/x86/intel/uncore: Fix uncore_die_to_cpu() for offline dies
->   perf/x86/intel/uncore: Implement global init callback for GNR uncore
->
->  arch/x86/events/intel/uncore.c           | 32 ++++++++++++++++++-
->  arch/x86/events/intel/uncore.h           |  3 +-
->  arch/x86/events/intel/uncore_discovery.c | 40 +++++++++++++++++-------
->  arch/x86/events/intel/uncore_snb.c       |  7 -----
->  arch/x86/events/intel/uncore_snbep.c     | 36 +++++++--------------
->  5 files changed, 74 insertions(+), 44 deletions(-)
->
+Thanks for looking into it.  I think it's better to go defensive for any
+unexpected behavior or changes.
+
+Thanks,
+Namhyung
+
