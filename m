@@ -1,105 +1,93 @@
-Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0287F2E6116
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 May 2026 07:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337223D25BC;
+	Wed, 27 May 2026 08:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779868661; cv=none; b=syvxjHy+vySln2/poJiZHDTbIUxVFmVAza1fREia+a8GJIvegWElQlhoIDO5bKKWmS3H8/Wi0B5N+uuSyq6c8DgmibcHdeCclbbNNVB4UxQjsgGUfX5Sj8HwJL3RPQ5hHH/red2W4jcNvTZG/7324Z6Gy7guyP8bBgj58A7YAvw=
+	t=1779869597; cv=none; b=ZjcX/1mUFSQGrs48Z9XCxO3LaUDtqnK5irhmDdolVUEl37Uay/yzWEoOGTAGaHghKwKrmO4f+mUs2YCSrgPWcsXE7TsX+UzziTwprg7LcXwYJyNT4EYTjRH4O5mTp5dd3uOcunqjiyGDu1zqzcpxKmyOpoAFDB65XB6PwGDBbno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779868661; c=relaxed/simple;
-	bh=sB8lPGWD1DfVrrJ+Dvc46nu00meWYwPmxK8tVGR6r6w=;
-	h=Cc:Subject:Date:In-Reply-To:To:Mime-Version:From:Message-Id:
-	 References:Content-Type; b=DUs24IHCBkb26d0aHIf+WDo90cao58IAWO5VcUZgEr85MH3y674pZYdzTWmYE9w7p53UvrY5yVU56XoAqulzYPRl0jqQ8GKyMgVMdKonjtGKwiPGwGPk2SD/q4ZQgFZQ+W6vvw+PNRus7++4xhAbA70Uo09tX2sdNmMpN+oDmL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=mHuuWNls; arc=none smtp.client-ip=209.127.230.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1779869597; c=relaxed/simple;
+	bh=GhKDKXXyIH4kIr3JVOhFU06kiXOMzOSHjbQQZ/ZbR5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gPY+1kyTkfJ8M4/QRGa9EjFYF38FrQM+MbEcn91xYJwtAphFqe3VlN0+9LsxN3b05E+RpBEv410fdvy8hURdN7RUBSBXFHz0tgQrHoG/SG13tzIH2tg7xUpBYndL0E1Z5S7DSOzRgVcNDP6B10zWqd9jBbwJIAqyD+8KCr7BqK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fUL444P1; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="mHuuWNls"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fUL444P1"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=2212171451; d=bytedance.com; t=1779868654; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=EzAqVnPXXfFeony1PZV7lcZnibd4znJbLgx5j4usx2Q=;
- b=mHuuWNls4fpIumt4Tsw35XaePszW6MzW7Oj75tqtYDqEXTefgCxf2ErKyDWqA8a5BD5UZH
- IOf/lpW9PHj6dYhoQKie0/6sBQyCP02h/1bOFTHp5UDde87c4y+M4ler4WWh+VLkYf81EU
- jOTn/iotroUanT+1qyhi4p52hMn5zDNansM9KzA8QHYtAm2vYj7GxzQ6d2U+7gPvxPwezu
- JnxTu1RsdEzhKOeTUYVk29VqQ2HhmMu4lwsuVUSe24USGDtLgIRjSvQd1WTF/x2+8qVchu
- jrvEH5mD1fVxqVFIkl36bufmztUayK75KQq3vRexSiQRCS1F316as5Fp89EMfQ==
-Cc: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>, 
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>, 
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>, 
-	<james.clark@linaro.org>, <linux-perf-users@vger.kernel.org>, 
-	<linux-kernel@vger.kernel.org>, "Rui Qi" <qirui.001@bytedance.com>
-Subject: [PATCH v3] perf: Fix off-by-one stack buffer overflow in kallsyms__parse()
-Date: Wed, 27 May 2026 15:57:16 +0800
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <ahUAyRcMsJv4_W_Y@google.com>
-To: <namhyung@kernel.org>
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FrPMCYt0RVmsLS2gLqKLKdA3THwEriMb+/HgR8lhLd0=; b=fUL444P1egWomb3h+0tbz+HT7t
+	r3EeUqQeOMKRBmzoHgNsg6yN6mhDLCZ7CMxmp5BDiHloG+QrrBrXrHhmMrQXGg9kBLgCeLOzwRsgB
+	bt6LFVqw/LYIGtdH9dQtBnQrc7BZWxuIoM6ZV3rAI+cdC4X1+j5/LMCUlX7wAGN86E6v6J9t0sVEe
+	r6A8GqDChv86NFPfeqxMal8ed55t/wh2MbgFgboHXjGj7nUydYj/kTCXHpGjbUTxn1y/R6LqfNr26
+	7tlzbWI99zEY9evZ4k0/MVJayfRgv66EZR7p6z2KUMNtmDRVpWDr0b/1sRtT1JULbZckcEq9S3gAm
+	EB0QgEAg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wS9Nt-00000003Wbb-2WV1;
+	Wed, 27 May 2026 08:13:01 +0000
+Date: Wed, 27 May 2026 01:13:01 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@infradead.org>, demiobenour@gmail.com,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
+	linux-api@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/3] net: Remove support for AIO on sockets
+Message-ID: <ahanjVfIDlCmeCUE@infradead.org>
+References: <20260523-af-alg-harden-v1-0-c76755c3a5c5@gmail.com>
+ <20260523-af-alg-harden-v1-1-c76755c3a5c5@gmail.com>
+ <ahQCZQNoyO8GQt3H@infradead.org>
+ <92db3ff0-8f0b-4b61-a167-5004ffcf9025@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Original-From: Rui Qi <qirui.001@bytedance.com>
-X-Mailer: git-send-email 2.20.1
-X-Lms-Return-Path: <lba+26a16a3ec+9916f2+vger.kernel.org+qirui.001@bytedance.com>
-From: "Rui Qi" <qirui.001@bytedance.com>
-Message-Id: <20260527075716.1642712-1-qirui.001@bytedance.com>
-References: <ahUAyRcMsJv4_W_Y@google.com>
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <92db3ff0-8f0b-4b61-a167-5004ffcf9025@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-In kallsyms__parse(), the loop reading symbol names iterates with
-i < sizeof(symbol_name), which allows i to reach sizeof(symbol_name)
-upon loop exit. The subsequent symbol_name[i] = '\0' then writes one
-byte past the end of the stack-allocated symbol_name[] array.
+On Tue, May 26, 2026 at 09:58:27AM -0600, Jens Axboe wrote:
+> > The current TCP zerocopy implementation provides completion notification
+> > through the socket error code, which is freaking weird and doesn't
+> > integrate well with either io_uring or in-kernel callers.
+> 
+> We already have that via io_uring
 
-Fix this by changing the loop bound to sizeof(symbol_name) - 1, so
-the null terminator always lands within the array. The overflow is
-triggerable by a kallsyms entry with a symbol name of KSYM_NAME_LEN+1
-or more characters (e.g., long Rust mangled names or a malicious
-/proc/kallsyms).
+Where?  And how do make that available to in-kernel users like
+storage protocols and network file system, which really suffer from
+the current MSG_SPLICE_PAGES semantics.
 
-Fixes: 53df2b934412 ("libsymbols kallsyms: Parse using io api")
-Signed-off-by: Rui Qi <qirui.001@bytedance.com>
+> , and without needing msg_kiocb or the
 
----
+What do you think is the downside of using a kiocb here like for
+everything else with async notifications?
 
-Changes in v3:
-- Use KSYM_NAME_LEN instead of sizeof(symbol_name) - 1 for the
-  overflow check, as suggested by Namhyung.
-
-Changes in v2:
-- Added read_to_eol(&io) when a symbol name exceeds the buffer size,
-  preventing remaining characters from being parsed as the next symbol entry.
-- Added Fixes tag.
----
- tools/lib/symbol/kallsyms.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-index e335ac2b9e19..198bfc7c1f63 100644
---- a/tools/lib/symbol/kallsyms.c
-+++ b/tools/lib/symbol/kallsyms.c
-@@ -60,7 +60,7 @@ int kallsyms__parse(const char *filename, void *arg,
- 			read_to_eol(&io);
- 			continue;
- 		}
--		for (i = 0; i < sizeof(symbol_name); i++) {
-+		for (i = 0; i < sizeof(symbol_name) - 1; i++) {
- 			ch = io__get_char(&io);
- 			if (ch < 0 || ch == '\n')
- 				break;
-@@ -68,6 +68,9 @@ int kallsyms__parse(const char *filename, void *arg,
- 		}
- 		symbol_name[i]  = '\0';
- 
-+		if (i == KSYM_NAME_LEN)
-+			read_to_eol(&io);
-+
- 		err = process_symbol(arg, symbol_name, symbol_type, start);
- 		if (err)
- 			break;
--- 
-2.20.1
