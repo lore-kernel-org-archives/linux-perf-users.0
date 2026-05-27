@@ -1,143 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C533644DE;
-	Wed, 27 May 2026 19:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F092641EE
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 May 2026 19:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779909026; cv=none; b=iAKdaNERpuiu/CsiMB87UNWXldtX+zSo1xqfUl7kAmLpsVewxJoMmyb2J1PV5XX8ef46s2kgsIcEv9I+qcoa0krKV9XHk38G7gIpFci+UY52UdGK/ioKg1zayENMRoBg5+pDYyoVZsw+gN2o8fF245mgpa3lxgSFa7su+Uk+zpY=
+	t=1779911763; cv=none; b=BjseCH1oW4NgjnbyIW6Oynro4Uqtl4QfbfMF7umZJN4dVYwzbGSOIGsBH6xT5KbpEdLVR0lAks3xEhqGJW/XJWPfy4g/UNes/KLnewbVqxMdoxqPL9rPV7/CZuh596vVEq+LMN3UWdNMZdpg31cBMJWGFEruBuXkYrUJOaWr8T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779909026; c=relaxed/simple;
-	bh=sDy65VXpI0480GwaDK5gTrn9Jq4MN/tchC/ReXwJYA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FWc2OfRu9K9c1VgWVlEwJAeKP3Of9/wSSp/rdolUOZE54n28WlehfpagaMf5VsCEwYq9DAidZvc75CMCZKujYN9v/al9YWQnXs045GPeeUA4VSyagTeefV2TQJuNPVdm4S3uaNcn1DBIN7ZuAgILgm8AY/HzyN4uPp7oBb09FTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fBmhLWjG; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779911763; c=relaxed/simple;
+	bh=PEgYszr3C0/80DXj9fpELQ8jt6gYhIAhYk0e4gbcO4g=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=TZEHk8ghLuTJ4MJ0hV5j+7ATJdWzb9ppZ9P1a6WNIRLnl4IqnoDpqBIZJnIWfapRGi5ByXZTHZXIkokheW8IMj/wgigRhCL2Vu3+AARP8X1l4cg6aF0ZWWS6Ju7zcuEjdyGK9gWLT/ywcEHqnu5Z0pSUBR4fkAnBGcIfcXiwLnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CceXB88o; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBmhLWjG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779909025; x=1811445025;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sDy65VXpI0480GwaDK5gTrn9Jq4MN/tchC/ReXwJYA4=;
-  b=fBmhLWjG1966wbsjmonzkttcGCF+dt7tVqcYjK62gg4/nd4Q6mNv7ptw
-   R+DxhU3fl0Khy9NyBCMqe95oe+p+BNTb0V3zHG0LcLBb0ptJyHZAF5cE+
-   sVoaufkusf37m5tHo5Hp4k7gs67XUZjP4aeqWW3k2J+ezNaNDQd+JFkVi
-   2U8zEfjgCSmV48Uym7Fgnw88G1n4vMr7H7k//7q1NbFtaGBD7aAHv0eWZ
-   Md4wDYlyVDqsglvDhkI6/eGphGotqv4qNlr/S+tcaM201c2UR27lsxTi3
-   ztK0Taojl7ehdTVz6vI414voPFPGtUFsHFi2/RfKGlTZ7C9wLBfSzh8Su
-   w==;
-X-CSE-ConnectionGUID: 7BvcvWarQyS6ESlHotII5A==
-X-CSE-MsgGUID: M0pVoLPnTNaFF/RDd/B1Hg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="80806928"
-X-IronPort-AV: E=Sophos;i="6.24,172,1774335600"; 
-   d="scan'208";a="80806928"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 12:10:24 -0700
-X-CSE-ConnectionGUID: bd/v6tYaSuSezL9SyPTBVw==
-X-CSE-MsgGUID: m/+z08aBT0C0g1+2zcGitQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,172,1774335600"; 
-   d="scan'208";a="242176621"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 12:10:22 -0700
-Message-ID: <f3b6f7f1-df15-4e72-a1d8-ca72abdca561@intel.com>
-Date: Wed, 27 May 2026 14:10:21 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CceXB88o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20AF1F000E9;
+	Wed, 27 May 2026 19:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779911762;
+	bh=NummqP1mBbU7sy9QVHom4VF6oTxQ0g8IRMRDwJOeHVc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=CceXB88oQi1mxz+e5PUmYQjzKLY8nuDNnnJm4XJci//oXZJbSsbv52sFYJfmuGx+J
+	 p5kHAPCvZ5W0L9rlo1s5DAmFNTg3pqRuazA/zv0VVcARPGr+ZwfN9l/ob0TwHMPed/
+	 ATSziLJZaG4Xz2wPUtwmsXDPP3V7VILudVozQ+QSUwShdJTzT+uloKqlhTciUfLKwJ
+	 47mEpTWMUnqR8BKHWyAJTbr2aSb9m5cgmOrHnswkFtzXigUxqnfGi5ju02T6kXU1we
+	 SVa9u5hAaOVlikeSa5RjmitbwzQ/S/FgNmfOKh9x5iceNtAMZI6pTZyWG1ZKlq+Z67
+	 zITfmzbnhsfWg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH V2 6/7] perf/x86/intel/uncore: Fix uncore_die_to_cpu()
+ for offline dies
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Zide Chen" <zide.chen@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260527151154.130505-6-zide.chen@intel.com>
+References: <20260527151154.130505-6-zide.chen@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 27 May 2026 19:56:01 +0000
+Message-Id: <20260527195601.F20AF1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] perf stat: Fix uncore metric scaling across
- aggregation modes
-To: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
- james.clark@linaro.org, sandipan.das@amd.com, leo.yan@arm.com,
- thomas.falcon@intel.com, yang.lee@linux.alibaba.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260521201505.124690-1-ctshao@google.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20260521201505.124690-1-ctshao@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but in `pmu_alloc_to=
+pology()`, if the memory allocation for `topology[die]` fails, the error cl=
+eanup loop dereferences the newly-NULL pointer, causing a kernel crash.
+- [High] This problem wasn't introduced by this patch, but there is an unpr=
+otected list traversal of PCI buses in `uncore_die_to_segment()` leading to=
+ a potential Use-After-Free if a PCI bus is hot-removed.
+--
 
-On 5/21/2026 3:15 PM, Chun-Tse Shao wrote:
-> This series fixes a scaling issue for metrics (like lpm_miss_lat) across
-> different runtime aggregation modes.
-> 
-> Uncore metrics currently use `source_count` to scale events. However,
-> `source_count` returns the total uncore unit count regardless of the
-> selected aggregation mode. When evaluating metrics in different
-> aggregation mode other than `--per-socket`, this incorrectly divides
-> aggregated uncore events against the total uncore count rather than the
-> uncores belonging to the aggregation, leading to wrong metric results.
-> 
-> To fix this, we:
-> 1. Introduce the aggr_nr() keyword to the metric parser, which
-> dynamically resolves to the active units in the current aggregation
-> group (`gr->nr`).
-> 
-> 2. Update the python metrics to use `aggr_nr` instead of `source_count`,
-> ensuring correct scaling across all runtime aggregation boundaries.
-> 
-> Before the fix (incorrect low latency in global mode):
->   $ perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
->   {"ns  lpm_miss_lat_rem" : "122.8", "ns  lpm_miss_lat_loc" : "114.5"}
->   $ perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
->   {"socket" : "S0", "ns  lpm_miss_lat_rem" : "232.1", "ns  lpm_miss_lat_loc" : "278.2"}
->   {"socket" : "S1", "ns  lpm_miss_lat_rem" : "233.9", "ns  lpm_miss_lat_loc" : "257.5"}
-> 
-> After the fix (correct scaled latency in all aggregation modes):
->   $ perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
->   {"ns  lpm_miss_lat_rem" : "231.7", "ns  lpm_miss_lat_loc" : "245.0"}
->   $ perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
->   {"socket" : "S0", "ns  lpm_miss_lat_rem" : "238.3", "ns  lpm_miss_lat_loc" : "249.4"}
->   {"socket" : "S1", "ns  lpm_miss_lat_rem" : "259.1", "ns  lpm_miss_lat_loc" : "253.1"}
-> 
-> v3:
->   Fixed based on Sashiko review:
->   - Removed the unnecessary, copied `redefined-builtin` pylint-disable
->     comment from `aggr_nr` definition inside `metric.py`.
-> 
-> v2: lore.kernel.org/20260521035941.3860145-1-ctshao@google.com
->   Fixed based on Sashiko review:
->   - Fixed `aggr_nr` setting when an uncore event fails to run
->     (counts.run == 0) to explicitly set it to 0 instead of defaulting to
->     1.
->   - Accumulated `aggr_nr` when multiple unmerged PMU events are
->     associated with the same metric ID to prevent incorrect scaling
->     across active sockets.
->   - Removed unused `List` import from `typing` in `intel_metrics.py`.
-> 
-> v1: lore.kernel.org/20260520180032.3045144-1-ctshao@google.com
-> 
-> Chun-Tse Shao (2):
->   perf stat: Add aggr_nr metric parser support
->   perf stat: Use aggr_nr scaling for Intel uncore miss latency metrics
-> 
->  tools/perf/pmu-events/intel_metrics.py |  6 +++---
->  tools/perf/pmu-events/metric.py        |  9 +++++++--
->  tools/perf/util/expr.c                 | 26 ++++++++++++++++++++++----
->  tools/perf/util/expr.h                 |  6 +++++-
->  tools/perf/util/expr.l                 |  1 +
->  tools/perf/util/expr.y                 | 24 +++++++++++++++++-------
->  tools/perf/util/stat-shadow.c          |  6 +++++-
->  7 files changed, 60 insertions(+), 18 deletions(-)
-> 
-> --
-> 2.54.0.746.g67dd491aae-goog
+commit ff1f5cc12e40244014f762aa4e444d2ef1d867a3
+Author: Zide Chen <zide.chen@intel.com>
 
-Tested the series on Intel CPUs.
+perf/x86/intel/uncore: Fix uncore_die_to_cpu() for offline dies
 
-Tested-by: Zide Chen <zide.chen@intel.com>
+If the die is offline when uncore_die_to_cpu() is called, it silently
+returns 0, which is misleading. This patch modifies the function to return
+-1 in this case, indicating that all CPUs on the die are offline. It also
+opportunistically replaces -EPERM with -ENODEV.
 
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
+e.c
+> index 22256ded2d67d..4b3a1fa5b41b7 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -91,7 +91,7 @@ int uncore_device_to_die(struct pci_dev *dev)
+>   */
+>  int uncore_die_to_cpu(int die)
+>  {
+> -	int res =3D 0, cpu;
+> +	int res =3D -1, cpu;
+> =20
+>  	for_each_online_cpu(cpu) {
+>  		if (topology_logical_die_id(cpu) =3D=3D die) {
 
+[ ... ]
+
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel=
+/uncore_snbep.c
+> index 772b78237424c..334dc384b5b93 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -3772,12 +3772,17 @@ static void pmu_free_topology(struct intel_uncore=
+_type *type)
+>  static int skx_pmu_get_topology(struct intel_uncore_type *type,
+>  				 int (*topology_cb)(struct intel_uncore_type*, int, int, u64))
+>  {
+> -	int die, ret =3D -EPERM;
+> +	int die, ret =3D -ENODEV;
+>  	u64 cpu_bus_msr;
+> +	int cpu;
+> =20
+>  	cpus_read_lock();
+>  	for (die =3D 0; die < uncore_max_dies(); die++) {
+> -		ret =3D skx_msr_cpu_bus_read(uncore_die_to_cpu(die), &cpu_bus_msr);
+> +		cpu =3D uncore_die_to_cpu(die);
+> +		if (cpu =3D=3D -1)
+> +			continue;
+> +
+> +		ret =3D skx_msr_cpu_bus_read(cpu, &cpu_bus_msr);
+>  		if (ret)
+>  			break;
+
+[Severity: High]
+This isn't a bug introduced by this patch, but later in this function, we
+call uncore_die_to_segment() which iterates over PCI root buses using
+pci_find_next_bus():
+
+arch/x86/events/intel/uncore.c:uncore_die_to_segment() {
+	struct pci_bus *bus =3D NULL;
+
+	/* Find first pci bus which attributes to specified die. */
+	while ((bus =3D pci_find_next_bus(bus)) &&
+	       (die !=3D uncore_pcibus_to_dieid(bus)))
+		;
+
+	return bus ? pci_domain_nr(bus) : -EINVAL;
+}
+
+The pci_find_next_bus() function acquires and releases pci_bus_sem internal=
+ly,
+returning a raw bus pointer without holding a lock or taking a reference co=
+unt.
+
+If an unrelated hot-pluggable PCI root bus is hot-removed concurrently, cou=
+ld
+the bus pointer be freed before the next iteration?
+
+Passing this freed pointer back to pci_find_next_bus() could cause a
+use-after-free when accessing from->node.next.=20
+
+While cpus_read_lock() is held in skx_pmu_get_topology(), does it prevent
+concurrent hotplug of unrelated PCI root buses?
+
+[Severity: High]
+This is a pre-existing issue, but I noticed a potential NULL pointer
+dereference in pmu_alloc_topology() in this same file.
+
+If kzalloc_objs() for topology[die] fails, the code jumps to the clear labe=
+l:
+
+arch/x86/events/intel/uncore_snbep.c:pmu_alloc_topology() {
+	...
+	for (die =3D 0; die < uncore_max_dies(); die++) {
+		topology[die] =3D kzalloc_objs(**topology, type->num_boxes);
+		if (!topology[die])
+			goto clear;
+	...
+clear:
+	for (; die >=3D 0; die--) {
+		for (idx =3D 0; idx < type->num_boxes; idx++)
+			kfree(topology[die][idx].untyped);
+		kfree(topology[die]);
+	...
+}
+
+At the clear label, the loop variable die still points to the index that
+failed allocation, so topology[die] is NULL.
+
+Does the cleanup loop's attempt to execute kfree(topology[die][idx].untyped)
+evaluate to (topology[die] + idx)->untyped and crash the kernel?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527151154.1305=
+05-1-zide.chen@intel.com?part=3D6
