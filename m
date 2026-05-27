@@ -1,93 +1,117 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337223D25BC;
-	Wed, 27 May 2026 08:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5933E1720;
+	Wed, 27 May 2026 08:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779869597; cv=none; b=ZjcX/1mUFSQGrs48Z9XCxO3LaUDtqnK5irhmDdolVUEl37Uay/yzWEoOGTAGaHghKwKrmO4f+mUs2YCSrgPWcsXE7TsX+UzziTwprg7LcXwYJyNT4EYTjRH4O5mTp5dd3uOcunqjiyGDu1zqzcpxKmyOpoAFDB65XB6PwGDBbno=
+	t=1779871522; cv=none; b=FdR/BSlgw5tJbVEgA1FluaSxXS4BJxX+rsx5ESmdkQAjHxr3jm84mZiH0xPwqD3c+D8MX4CLJuPyXGwKMq+Y7Af3XK+WxzY6YMfMk+rzHp7UGZqqtQVbnoh9GNBzYRkUcKzdlR5zgjq5d4Vr2kyCtrLWYFXrGr/E7OFvPM3H2YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779869597; c=relaxed/simple;
-	bh=GhKDKXXyIH4kIr3JVOhFU06kiXOMzOSHjbQQZ/ZbR5w=;
+	s=arc-20240116; t=1779871522; c=relaxed/simple;
+	bh=w+DLE+GeSHpDuq4ZaFpzrPwbfVNn/738OqZhq1TDZNU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gPY+1kyTkfJ8M4/QRGa9EjFYF38FrQM+MbEcn91xYJwtAphFqe3VlN0+9LsxN3b05E+RpBEv410fdvy8hURdN7RUBSBXFHz0tgQrHoG/SG13tzIH2tg7xUpBYndL0E1Z5S7DSOzRgVcNDP6B10zWqd9jBbwJIAqyD+8KCr7BqK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fUL444P1; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=WIAVzC3fq5DdZhRJATMCN9KLu1gkF/Vs7ItezDchJymPnPohd1dJCRdzdQIqhKO1OpLgbKH00zQdvHQmy3XsFfUFOq3tU6WdSSekOrqyo7qJ9ycemykHK+sd66HGEZyvjZ6Dcd+HItE+2WWbCoa3Vs92nbHJ/C6OcAwsvMI/I94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQOC9cFu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fUL444P1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FrPMCYt0RVmsLS2gLqKLKdA3THwEriMb+/HgR8lhLd0=; b=fUL444P1egWomb3h+0tbz+HT7t
-	r3EeUqQeOMKRBmzoHgNsg6yN6mhDLCZ7CMxmp5BDiHloG+QrrBrXrHhmMrQXGg9kBLgCeLOzwRsgB
-	bt6LFVqw/LYIGtdH9dQtBnQrc7BZWxuIoM6ZV3rAI+cdC4X1+j5/LMCUlX7wAGN86E6v6J9t0sVEe
-	r6A8GqDChv86NFPfeqxMal8ed55t/wh2MbgFgboHXjGj7nUydYj/kTCXHpGjbUTxn1y/R6LqfNr26
-	7tlzbWI99zEY9evZ4k0/MVJayfRgv66EZR7p6z2KUMNtmDRVpWDr0b/1sRtT1JULbZckcEq9S3gAm
-	EB0QgEAg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wS9Nt-00000003Wbb-2WV1;
-	Wed, 27 May 2026 08:13:01 +0000
-Date: Wed, 27 May 2026 01:13:01 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@infradead.org>, demiobenour@gmail.com,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
-	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
-	linux-api@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 1/3] net: Remove support for AIO on sockets
-Message-ID: <ahanjVfIDlCmeCUE@infradead.org>
-References: <20260523-af-alg-harden-v1-0-c76755c3a5c5@gmail.com>
- <20260523-af-alg-harden-v1-1-c76755c3a5c5@gmail.com>
- <ahQCZQNoyO8GQt3H@infradead.org>
- <92db3ff0-8f0b-4b61-a167-5004ffcf9025@kernel.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQOC9cFu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 546901F00ADE;
+	Wed, 27 May 2026 08:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779871520;
+	bh=4fwiisoH+O10cDKs9SXUnzu9+RWmKRkE9L4Uzj4ctHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HQOC9cFuUcgCMXNBo6VkwORPXpnIugUKP/csgboHOPNzfgseAadNARfktDGu04yVj
+	 DYV2JlKt5GvM3gS5zbgt0O2Xo+UAcgDgsrQLtG9MUWQSo+S6yzmhrCuzD0N44HWq89
+	 fdcJaHjeFGnnzZChGdZxBjy0Umt0KZ56DJUN9coeOVUag+xs/pSXi0DP4/4G/1qqod
+	 DiA0jN2ZepWFKzBDhTBIWRezNqSorYSnjSiQMs246enKuPcIW0s4uUoVQfRZWiVSzd
+	 Z9SIADgHxI18lB64dN++7w9iWu0xtTG1GHO0ky6122YxD6ZG+ZeV5UbvpUcI+XrVUM
+	 tRj/44c1eMJXw==
+Date: Wed, 27 May 2026 10:45:16 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Geetha sowjanya <gakula@marvell.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mark.rutland@arm.com, 
+	will@kernel.org, krzk+dt@kernel.org
+Subject: Re: [PATCH v6 1/2] dt-bindings: perf: marvell: Extend CN10K DDR PMU
+ binding for CN20K
+Message-ID: <20260527-wise-cobra-of-feminism-2720a6@quoll>
+References: <20260526164330.23878-1-gakula@marvell.com>
+ <20260526164330.23878-2-gakula@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <92db3ff0-8f0b-4b61-a167-5004ffcf9025@kernel.dk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20260526164330.23878-2-gakula@marvell.com>
 
-On Tue, May 26, 2026 at 09:58:27AM -0600, Jens Axboe wrote:
-> > The current TCP zerocopy implementation provides completion notification
-> > through the socket error code, which is freaking weird and doesn't
-> > integrate well with either io_uring or in-kernel callers.
+On Tue, May 26, 2026 at 10:13:29PM +0530, Geetha sowjanya wrote:
+> Marvell CN20K SoCs integrate a DDR Performance Monitoring Unit (PMU)
+> associated with the DDR controller. The block provides hardware counters
+> to monitor DDR traffic and performance events and is accessed via a
+> dedicated MMIO region.
 > 
-> We already have that via io_uring
+> The CN20K DDR PMU is functionally equivalent to the CN10K DDR PMU, with
+> minor register offset differences.
+> 
+> Changes in v6:
+> - dt-bindings: Document CN20K in the existing marvell-cn10k-ddr.yaml;
+>   add maintainer, description, compatible enum entry, and a CN20K example
+>   with unit-address aligned to reg.
 
-Where?  And how do make that available to in-kernel users like
-storage protocols and network file system, which really suffer from
-the current MSG_SPLICE_PAGES semantics.
+Changelog is not part of commit msg, but changelog area, so after ---.
 
-> , and without needing msg_kiocb or the
+> 
+> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+> ---
+>  .../bindings/perf/marvell-cn10k-ddr.yaml       | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/perf/marvell-cn10k-ddr.yaml b/Documentation/devicetree/bindings/perf/marvell-cn10k-ddr.yaml
+> index a18dd0a8c43a..79fae9fdb6f1 100644
+> --- a/Documentation/devicetree/bindings/perf/marvell-cn10k-ddr.yaml
+> +++ b/Documentation/devicetree/bindings/perf/marvell-cn10k-ddr.yaml
+> @@ -4,16 +4,22 @@
+>  $id: http://devicetree.org/schemas/perf/marvell-cn10k-ddr.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Marvell CN10K DDR performance monitor
+> +title: Marvell CN10K / CN20K DDR performance monitor
+> +
+> +description:
+> +  Performance Monitoring Unit (PMU) for the DDR controller on Marvell
+> +  CN10K and CN20K SoCs. The block is accessed via a dedicated MMIO region.
+>  
+>  maintainers:
+>    - Bharat Bhushan <bbhushan2@marvell.com>
+> +  - Geetha sowjanya <gakula@marvell.com>
+>  
+>  properties:
+>    compatible:
+>      items:
+>        - enum:
+>            - marvell,cn10k-ddr-pmu
+> +          - marvell,cn20k-ddr-pmu
+>  
+>    reg:
+>      maxItems: 1
+> @@ -35,3 +41,13 @@ examples:
+>              reg = <0x87e1 0xc0000000 0x0 0x10000>;
+>          };
+>      };
+> +  - |
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        pmu@c20000000000 {
+> +            compatible = "marvell,cn20k-ddr-pmu";
+> +            reg = <0xc200 0x00000000 0x0 0x100000>;
 
-What do you think is the downside of using a kiocb here like for
-everything else with async notifications?
+No need for a new example.
+
+Best regards,
+Krzysztof
 
