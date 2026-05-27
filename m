@@ -1,152 +1,135 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C600639891E
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 May 2026 22:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E355112D1F1;
+	Wed, 27 May 2026 22:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779920380; cv=none; b=e4+F4h3lmDYUi/WKDS0G/TwhdwdneazDjLoF63wzUzzjTJx75C/KlTFOZ988MLBhQdiwoTPVW4d2K2S5tkS0yxxNip5cYH6l/+FH64haTU5upZrkP3M/h5Yd/F0Wco/GRKPMbbLg1mErtdF5+NwHCcJUE8gYQEV3Ign+Vc+bNOY=
+	t=1779921067; cv=none; b=GO4XyhC6m1HOPq5A9EsaCUy9BJoXf3Y/HRxc8/6TYPHVW2GxScM5WTGt1DTJ7klllsnS7XQu9fZy449P1yMEiTKiAyiF0yxJMfDm3A0ZqeSOt/ZfOXrpxatWuuZI8ZyGMgrjqPvYdExE+OQM3+Uwul1n9znSU6JbMtSiQyEZebI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779920380; c=relaxed/simple;
-	bh=OwjjbUXIh/Q8uHSaHlWGNZW15jr4+wuurC/oCQI5Ah8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T+VqsNMDsMM1iXgubA3EHq8MxegMi1D/6pyiPCSvRm785LJ32nVz4rs0sKZef9vJyWBy0ENGT/rgLNX4rYD/MYtRXczMMFNX9zaVGzzNjF4R5r8SVr2By8LbLfwtboF8KeWGPsi53vB1P3h37dkYq46zy8mwAx6L9LxeI3uYc9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wFOxxVvq; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1779921067; c=relaxed/simple;
+	bh=959JmWaaNqjTRE1kUJy/QtlcvpTcnosmFJGHXyuDKdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R2ZvjIWZLjktibteb7OYxmmevdTLEtTMThw26R4HlSPpRTZ5+9T8jAitDqvfKOVov+lUFsqQ6BsnA37QQf5MaG9gc5xXt/Aq5QL9d6F2sShy7igVCXcULFcB40uBKGEaH1t9rbuOVmA6s9wfAJ4xv+/lPQ/eE78foWy2AdDIuCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XDZinpNJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wFOxxVvq"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2ba054e0304so105842325ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 May 2026 15:19:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1779920378; x=1780525178; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZRXJCfwRo3QkGaLw7zb+TtC40Urk7RfXrq7asrwHnPY=;
-        b=wFOxxVvqhtxFTIJugpXeV/BdZx6zg60mCoCe/+6lEhU6Lm4WY+frY2xc2zWN//xmmD
-         sHLucOz343bRl12aLt8ixqpawtCeizPT+BsrkDXHllxK/TppVpu5wAJOjUUNhYxEo7Mn
-         Lq2Lwjrof1vOCRqHnzPoD/L/8Hnp9Rvrb36loMrExbDqXxSN/6sppo/34lGz3LciCzkx
-         ywUGLoITCq+OgurMXOpeoU4Nya5PKtMzbFgAr/iUhfAe9UIl44R2+zRboEtQp6KQn63m
-         EONEiI7ZHzKcVyryZZl/7zygjuH/hiNBlHN6Yj3xRbKhQqKnKggrHBeZZG/w0MqX0qBx
-         ZoTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779920378; x=1780525178;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZRXJCfwRo3QkGaLw7zb+TtC40Urk7RfXrq7asrwHnPY=;
-        b=Uj8yJZZD263O+wmkEfnjJSNufPqoPxAP5AdaR973c6ucWdFo04mbDAfYrq8STb3Ufe
-         xHh8HwcF9r7G6d5H+STEjjsuxf7re2xawQGKFuqzbSuPI1zdm8Q1F3SxjyCqdIHVmBUl
-         rHoWIYZZKBFqtITM2UJZwS95me0L13mLDx4SEtcRHHXe2Oe+d2hh+3FQ13DQMS7U1MKs
-         miyJmfwOoXc6nwSt265C5VZ8afDg2P3GSRqFZ7loiCjjxrJ1FBnGgj/TKH47lkbX3Fnk
-         LCnNzPN/3pN3jFKLqBbj5RPn4xgcc//tqEX4wvnk0IMlcYO9GcK+Ftck3LyCyJmu7p50
-         LZww==
-X-Forwarded-Encrypted: i=1; AFNElJ/kzTGQpH2AdiaWEzHKTSOVRLZxtlKpuZIaX5cIUcvLO7/+egPsqnle1aEA5ODMIlUkyMwdJSuQ3krvhTElKMMl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxtBmPk7jSdqiu3cmMC+nmMTIvTgTsJ05+JZdjpqUE97CpjhFQ
-	Iwh0H3lQK0YZKSUY77K0AzJf9iLtlNAXY3Mhd2+LGklKYSOdI8jL50ARSRgL3+2Dm8njmvdVXzj
-	+l9dw+g==
-X-Received: from plble4.prod.google.com ([2002:a17:902:fb04:b0:2ae:66c7:db93])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ccca:b0:2ba:4086:ef93
- with SMTP id d9443c01a7336-2bea2221e87mr258185225ad.10.1779920377684; Wed, 27
- May 2026 15:19:37 -0700 (PDT)
-Date: Wed, 27 May 2026 15:19:34 -0700
-In-Reply-To: <20260527221934.3830896-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XDZinpNJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9281F000E9;
+	Wed, 27 May 2026 22:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779921065;
+	bh=VPJs/RUbF5BvcxPfEa6YTmu4xeHBBJF/HKNvAnrYcSM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=XDZinpNJo+cDCUJjYZKHG33mcrcyCpcsX4bFUBPHzSviQhlDngm4jFUenhv4pThl1
+	 B7b+ySmbkyLcySRlmQmfjsO8xPiYUAt5B6dkOkqoJMDOGQvjzbLYAHZj67vDHS78jJ
+	 THV8+mqUmKVv9Qep1+eRxvKYtrhFGpX6OskVDgediFyhan6SeUw04xV7nvPxNlWA8b
+	 gxZd7gl9GrqsD7fgArVYteDmLDbnaOq9RTffqXviA8oRzIMY1aMjBYIoNfn8LAAQbZ
+	 WepNqqHHxI6/Uvsofu+LkujMOrRSMimHgRMPtWCrbI/ENlbSnylEsKSa0v9FIeqkGQ
+	 Tw+q7Y7pQ+WEg==
+Date: Wed, 27 May 2026 15:31:03 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>, sashiko-bot@kernel.org,
+	"Claude Opus 4.6 (1M context)" <noreply@anthropic.com>
+Subject: Re: [PATCH 01/29] perf session: Add minimum event size and alignment
+ validation
+Message-ID: <ahdwp4LW9H7gdJxg@google.com>
+References: <20260526211806.1193848-1-acme@kernel.org>
+ <20260526211806.1193848-2-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260527221934.3830896-1-ctshao@google.com>
-X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260527221934.3830896-2-ctshao@google.com>
-Subject: [PATCH RESEND v7 2/2] perf pmu intel: Adjust cpumasks for sub-NUMA
- clusters on Sapphire Rapids and Emerald Rapids
-From: Chun-Tse Shao <ctshao@google.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Zide Chen <zide.chen@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Chun-Tse Shao <ctshao@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260526211806.1193848-2-acme@kernel.org>
 
-Similar to GNR [1], Sapphire Rapids and Emerald Rapids support sub-NUMA
-clusters as well. Adjust cpumasks using the same logic as GNR in [1].
+On Tue, May 26, 2026 at 06:17:37PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Add a per-type minimum size table (perf_event__min_size[]) and
+> enforce it before swap and processing, so that both cross-endian
+> and native-endian paths are protected from accessing fields past
+> the event boundary.
+> 
+> The table uses offsetof() for types with trailing variable-length
+> fields (filenames, strings, msg arrays) and sizeof() for
+> fixed-size types.  Zero entries mean no minimum beyond the 8-byte
+> header already enforced by the reader.
+> 
+> Undersized events are skipped with a warning in process_event
+> and rejected in peek_event — both checked before the swap
+> handler runs, preventing OOB access on crafted event fields.
+> 
+> Also reject events whose header.size is not 8-byte aligned.  The
+> kernel aligns all event sizes to sizeof(u64) — see
+> perf_event_comm_event() (ALIGN), perf_event_mmap_event(),
+> perf_event_cgroup(), perf_event_ksymbol() (IS_ALIGNED loops),
+> and perf_event_text_poke() (ALIGN) in kernel/events/core.c.
+> An unaligned size means the file is corrupted or crafted; reject
+> early so downstream code that divides by sizeof(u64) to compute
+> array element counts gets exact results.
+> 
+> Three legacy user events are exempted from the alignment check:
+> TRACING_DATA (66) had a 12-byte struct before commit b39c915a4f36
+> ("libperf event: Ensure tracing data is multiple of 8 sized")
+> added padding, COMPRESSED (81) carries raw ZSTD output (already
+> superseded by COMPRESSED2 with PERF_ALIGN), and HEADER_FEATURE
+> (80) uses do_write_string() with a 4-byte length prefix.
+> 
+> Also guard event_swap() against crafted event types >=
+> PERF_RECORD_HEADER_MAX to prevent OOB reads on the
+> perf_event__swap_ops[] array.
+> 
+> Changes in v2:
+> - Fix double-skip for unsupported event types: return 0 instead
+>   of event->header.size in perf_session__process_event() for
+>   HEADER_MAX, since reader__read_event() already advances by
+>   event->header.size (Reported-by: sashiko-bot@kernel.org)
+> - Exempt TRACING_DATA, COMPRESSED, and HEADER_FEATURE from the
+>   alignment check — these legacy user events predate the 8-byte
+>   alignment rule (Reported-by: sashiko-bot@kernel.org)
+> - peek_event: return 0 (skip) for unknown event types instead of
+>   -1 (error), consistent with process_event which already skips
+>   unsupported types gracefully (Reported-by: sashiko-bot@kernel.org)
+> 
+> Reported-by: sashiko-bot@kernel.org # Running on a local machine
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Assisted-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+[SNIP]
+> +	/*
+> +	 * Check alignment before type: an unaligned size misaligns the
+> +	 * stream for all subsequent reads regardless of event type.
+> +	 * Three legacy user events predate the 8-byte rule — exempt them.
+> +	 */
+> +	if (event->header.size % sizeof(u64) &&
+> +	    event->header.type != PERF_RECORD_HEADER_TRACING_DATA &&
+> +	    event->header.type != PERF_RECORD_COMPRESSED &&
+> +	    event->header.type != PERF_RECORD_HEADER_FEATURE) {
 
-Tested on Emerald Rapids with SNC2 enabled:
-  $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a -- sleep 1
+Do we still allow misaligned data for these types?  I think we should
+maintain 8 bytes alignment.  Can we add some paddings?
 
-   Performance counter stats for 'system wide':
+Thanks,
+Namhyung
 
-  N0       30        72125876670      UNC_CHA_CLOCKTICKS
-  N0        4         8815163648      UNC_M_CLOCKTICKS
-  N1       30        72124958844      UNC_CHA_CLOCKTICKS
-  N1        4         8815014974      UNC_M_CLOCKTICKS
-  N2       30        72121049022      UNC_CHA_CLOCKTICKS
-  N2        4         8814592626      UNC_M_CLOCKTICKS
-  N3       30        72117133854      UNC_CHA_CLOCKTICKS
-  N3        4         8814012840      UNC_M_CLOCKTICKS
 
-         1.001574118 seconds time elapsed
-
-[1] lore.kernel.org/20250515181417.491401-1-irogers@google.com
-
-Reviewed-by: Zide Chen <zide.chen@intel.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-Assisted-by: Gemini:gemini-3.1-pro-preview
----
- tools/perf/arch/x86/util/pmu.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index 9b00d5720fb7..2c24ef3140da 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -23,6 +23,8 @@
- #include "util/env.h"
- #include "util/header.h"
-
-+#define GENUINE_INTEL_SPR "GenuineIntel-6-8F"
-+#define GENUINE_INTEL_EMR "GenuineIntel-6-CF"
- #define GENUINE_INTEL_GNR "GenuineIntel-6-A[DE]"
-
- static bool cached_snc_supported;
-@@ -30,8 +32,10 @@ static pthread_once_t snc_support_once = PTHREAD_ONCE_INIT;
-
- static void init_snc_support(void)
- {
--	/* Graniterapids supports SNC configuration. */
-+	/* Sapphirerapids Emeraldrapids Graniterapids support SNC configuration. */
- 	static const char *const supported_cpuids[] = {
-+		GENUINE_INTEL_SPR, /* Sapphirerapids */
-+		GENUINE_INTEL_EMR, /* Emeraldrapids */
- 		GENUINE_INTEL_GNR, /* Graniterapids */
- 	};
- 	char *cpuid = get_cpuid_str((struct perf_cpu){0});
-@@ -161,6 +165,7 @@ static void init_snc_map(void)
- {
- 	int snc_nodes = snc_nodes_per_l3_cache();
- 	char *cpuid;
-+	static const u8 spr_emr_snc2_map[] = { 0, 0, 1, 1 };
- 	static const u8 gnr_snc2_map[] = { 1, 1, 0, 0 };
- 	static const u8 snc3_map[] = { 1, 1, 0, 0, 2, 2 };
-
-@@ -168,7 +173,11 @@ static void init_snc_map(void)
- 	case 2:
- 		cpuid = get_cpuid_str((struct perf_cpu){ 0 });
- 		if (cpuid) {
--			if (strcmp_cpuid_str(GENUINE_INTEL_GNR, cpuid) == 0) {
-+			if (strcmp_cpuid_str(GENUINE_INTEL_SPR, cpuid) == 0 ||
-+			    strcmp_cpuid_str(GENUINE_INTEL_EMR, cpuid) == 0) {
-+				cached_imc_snc_map = spr_emr_snc2_map;
-+				cached_imc_snc_map_len = ARRAY_SIZE(spr_emr_snc2_map);
-+			} else if (strcmp_cpuid_str(GENUINE_INTEL_GNR, cpuid) == 0) {
- 				cached_imc_snc_map = gnr_snc2_map;
- 				cached_imc_snc_map_len = ARRAY_SIZE(gnr_snc2_map);
- 			}
---
-2.54.0.823.g6e5bcc1fc9-goog
-
+> +		pr_warning("WARNING: peek_event: event type %u size %u not aligned to %zu\n",
+> +			   event->header.type,
+> +			   event->header.size, sizeof(u64));
+>  		return -1;
+> +	}
