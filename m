@@ -1,105 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349B0478E38
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 May 2026 18:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C533644DE;
+	Wed, 27 May 2026 19:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779905877; cv=none; b=CSllUNBw6Uv8Eysf4wHyFBhJdmmvu/6aZ57fwoH7PQBX81jAEcyCMJ4rbkHosJrZqFF3lrvcGxYvzs/LqysjHQXU6vnn59HGt1Jdd5WZ+YCClwqg3JlDrNGSkb4W5XPok/+oEPyYsELg+4sy7wCCYJda+zWfCDJMf9cH/NTnU9s=
+	t=1779909026; cv=none; b=iAKdaNERpuiu/CsiMB87UNWXldtX+zSo1xqfUl7kAmLpsVewxJoMmyb2J1PV5XX8ef46s2kgsIcEv9I+qcoa0krKV9XHk38G7gIpFci+UY52UdGK/ioKg1zayENMRoBg5+pDYyoVZsw+gN2o8fF245mgpa3lxgSFa7su+Uk+zpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779905877; c=relaxed/simple;
-	bh=D2UfcNra0GNucxnHj3eW7+fkp4Q9/+2phAh+6TmbNUE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dONVSTDQ6WoUHfg23H4aWwW4EbaDpGVhwZlQxHHxbu+BYIpsodrcyqXKi4Ikj9mnYD5jDeHnh3ZpvC/5sppdLQdDLpsPp/Xl7GA5a/1ZsN6moTto/CKh6HBu1FwigLAftnA9EhH4oYukpRwPwq3QYd3w0OCydw6zM7kyV3/4sNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQkxbmWQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779909026; c=relaxed/simple;
+	bh=sDy65VXpI0480GwaDK5gTrn9Jq4MN/tchC/ReXwJYA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FWc2OfRu9K9c1VgWVlEwJAeKP3Of9/wSSp/rdolUOZE54n28WlehfpagaMf5VsCEwYq9DAidZvc75CMCZKujYN9v/al9YWQnXs045GPeeUA4VSyagTeefV2TQJuNPVdm4S3uaNcn1DBIN7ZuAgILgm8AY/HzyN4uPp7oBb09FTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fBmhLWjG; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQkxbmWQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CE01F000E9;
-	Wed, 27 May 2026 18:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779905875;
-	bh=Z9WqbbyAQt26evl2COb7HpkgCiZs2U9hBDcOwvP6uGc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UQkxbmWQB7KwxshWUD8Gp7aFW8etk5qzIjax+V6j4ybp2pJuX1An24YHybl5Cc54+
-	 6UqwpUMrnpyGCpU57uYzFG5hkf29ubanJxLi+18nZjJbttOfZMh2x4nrUIIDlUKQpy
-	 buCVEFWn3ikWqLZN/eDTTSLkRGQI6kJlwnqbeqlHqFMfBhSkCeFzVb1sbPE/WrY5m4
-	 snrsDuuftn/KtHvDANnA5smq+B0pzh3We8P5SnR5TWvb7GdyfakIgdeePFKeH6yFLz
-	 cpWrbzuufZVuKqngVqDbJGB6cEP6AN0MQt/Hn+Tw2cZNn+1OT9GEkqS0myrWkja/jg
-	 YyCbC+DhZ1C4w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V2 4/7] perf/x86/intel/uncore: Defer ADL global PMON
- enable to enable_box()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zide Chen" <zide.chen@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260527151154.130505-4-zide.chen@intel.com>
-References: <20260527151154.130505-4-zide.chen@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 27 May 2026 18:17:55 +0000
-Message-Id: <20260527181755.B2CE01F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBmhLWjG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779909025; x=1811445025;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sDy65VXpI0480GwaDK5gTrn9Jq4MN/tchC/ReXwJYA4=;
+  b=fBmhLWjG1966wbsjmonzkttcGCF+dt7tVqcYjK62gg4/nd4Q6mNv7ptw
+   R+DxhU3fl0Khy9NyBCMqe95oe+p+BNTb0V3zHG0LcLBb0ptJyHZAF5cE+
+   sVoaufkusf37m5tHo5Hp4k7gs67XUZjP4aeqWW3k2J+ezNaNDQd+JFkVi
+   2U8zEfjgCSmV48Uym7Fgnw88G1n4vMr7H7k//7q1NbFtaGBD7aAHv0eWZ
+   Md4wDYlyVDqsglvDhkI6/eGphGotqv4qNlr/S+tcaM201c2UR27lsxTi3
+   ztK0Taojl7ehdTVz6vI414voPFPGtUFsHFi2/RfKGlTZ7C9wLBfSzh8Su
+   w==;
+X-CSE-ConnectionGUID: 7BvcvWarQyS6ESlHotII5A==
+X-CSE-MsgGUID: M0pVoLPnTNaFF/RDd/B1Hg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="80806928"
+X-IronPort-AV: E=Sophos;i="6.24,172,1774335600"; 
+   d="scan'208";a="80806928"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 12:10:24 -0700
+X-CSE-ConnectionGUID: bd/v6tYaSuSezL9SyPTBVw==
+X-CSE-MsgGUID: m/+z08aBT0C0g1+2zcGitQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,172,1774335600"; 
+   d="scan'208";a="242176621"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 12:10:22 -0700
+Message-ID: <f3b6f7f1-df15-4e72-a1d8-ca72abdca561@intel.com>
+Date: Wed, 27 May 2026 14:10:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] perf stat: Fix uncore metric scaling across
+ aggregation modes
+To: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+ james.clark@linaro.org, sandipan.das@amd.com, leo.yan@arm.com,
+ thomas.falcon@intel.com, yang.lee@linux.alibaba.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260521201505.124690-1-ctshao@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20260521201505.124690-1-ctshao@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The global PMON control MSR remains permanently enabled after th=
-e first perf event is removed, defeating the patch's intended dynamic power=
--saving goal.
---
 
-commit cfa3cf64f648ad5bd39932da84def0d92dadb8dc
-Author: Zide Chen <zide.chen@intel.com>
 
-perf/x86/intel/uncore: Defer ADL global PMON enable to enable_box()
+On 5/21/2026 3:15 PM, Chun-Tse Shao wrote:
+> This series fixes a scaling issue for metrics (like lpm_miss_lat) across
+> different runtime aggregation modes.
+> 
+> Uncore metrics currently use `source_count` to scale events. However,
+> `source_count` returns the total uncore unit count regardless of the
+> selected aggregation mode. When evaluating metrics in different
+> aggregation mode other than `--per-socket`, this incorrectly divides
+> aggregated uncore events against the total uncore count rather than the
+> uncores belonging to the aggregation, leading to wrong metric results.
+> 
+> To fix this, we:
+> 1. Introduce the aggr_nr() keyword to the metric parser, which
+> dynamically resolves to the active units in the current aggregation
+> group (`gr->nr`).
+> 
+> 2. Update the python metrics to use `aggr_nr` instead of `source_count`,
+> ensuring correct scaling across all runtime aggregation boundaries.
+> 
+> Before the fix (incorrect low latency in global mode):
+>   $ perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
+>   {"ns  lpm_miss_lat_rem" : "122.8", "ns  lpm_miss_lat_loc" : "114.5"}
+>   $ perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
+>   {"socket" : "S0", "ns  lpm_miss_lat_rem" : "232.1", "ns  lpm_miss_lat_loc" : "278.2"}
+>   {"socket" : "S1", "ns  lpm_miss_lat_rem" : "233.9", "ns  lpm_miss_lat_loc" : "257.5"}
+> 
+> After the fix (correct scaled latency in all aggregation modes):
+>   $ perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
+>   {"ns  lpm_miss_lat_rem" : "231.7", "ns  lpm_miss_lat_loc" : "245.0"}
+>   $ perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
+>   {"socket" : "S0", "ns  lpm_miss_lat_rem" : "238.3", "ns  lpm_miss_lat_loc" : "249.4"}
+>   {"socket" : "S1", "ns  lpm_miss_lat_rem" : "259.1", "ns  lpm_miss_lat_loc" : "253.1"}
+> 
+> v3:
+>   Fixed based on Sashiko review:
+>   - Removed the unnecessary, copied `redefined-builtin` pylint-disable
+>     comment from `aggr_nr` definition inside `metric.py`.
+> 
+> v2: lore.kernel.org/20260521035941.3860145-1-ctshao@google.com
+>   Fixed based on Sashiko review:
+>   - Fixed `aggr_nr` setting when an uncore event fails to run
+>     (counts.run == 0) to explicitly set it to 0 instead of defaulting to
+>     1.
+>   - Accumulated `aggr_nr` when multiple unmerged PMU events are
+>     associated with the same metric ID to prevent incorrect scaling
+>     across active sockets.
+>   - Removed unused `List` import from `typing` in `intel_metrics.py`.
+> 
+> v1: lore.kernel.org/20260520180032.3045144-1-ctshao@google.com
+> 
+> Chun-Tse Shao (2):
+>   perf stat: Add aggr_nr metric parser support
+>   perf stat: Use aggr_nr scaling for Intel uncore miss latency metrics
+> 
+>  tools/perf/pmu-events/intel_metrics.py |  6 +++---
+>  tools/perf/pmu-events/metric.py        |  9 +++++++--
+>  tools/perf/util/expr.c                 | 26 ++++++++++++++++++++++----
+>  tools/perf/util/expr.h                 |  6 +++++-
+>  tools/perf/util/expr.l                 |  1 +
+>  tools/perf/util/expr.y                 | 24 +++++++++++++++++-------
+>  tools/perf/util/stat-shadow.c          |  6 +++++-
+>  7 files changed, 60 insertions(+), 18 deletions(-)
+> 
+> --
+> 2.54.0.746.g67dd491aae-goog
 
-This commit removes adl_uncore_msr_init_box() to stop unconditionally
-enabling uncore PMON globally at driver init on Raptor Cove CPUs, which
-was increasing power consumption. Instead, it defers programming the
-global control register to enable_box() so it is only turned on when a
-box is in use.
+Tested the series on Intel CPUs.
 
-> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/u=
-ncore_snb.c
-> index 3dbc6bacbd9de..edddd4f9ab5fc 100644
-> --- a/arch/x86/events/intel/uncore_snb.c
-> +++ b/arch/x86/events/intel/uncore_snb.c
-[ ... ]
-> @@ -563,12 +563,6 @@ void tgl_uncore_cpu_init(void)
->  	skl_uncore_msr_ops.init_box =3D rkl_uncore_msr_init_box;
->  }
-> =20
-> -static void adl_uncore_msr_init_box(struct intel_uncore_box *box)
-> -{
-> -	if (box->pmu->pmu_idx =3D=3D 0)
-> -		wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
-> -}
-> -
->  static void adl_uncore_msr_enable_box(struct intel_uncore_box *box)
->  {
->  	wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
+Tested-by: Zide Chen <zide.chen@intel.com>
 
-[Severity: Medium]
-When the last perf event is removed, will the MSR remain permanently enable=
-d?
 
-The perf core framework wraps PMU transactions in perf_pmu_disable() and
-perf_pmu_enable(). For example, when removing the last event,
-perf_remove_from_context() ends with a call to perf_pmu_enable().
-
-This ultimately invokes uncore_pmu_enable(), which unconditionally calls
-the enable_box() callback. Since adl_uncore_msr_enable_box() doesn't
-check if there are any active events (like checking box->n_active > 0),
-it writes SNB_UNC_GLOBAL_CTL_EN to the MSR.
-
-While this saves power before the first event is created, does it fail to
-dynamically power down the hardware after its first use?
-
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527151154.1305=
-05-1-zide.chen@intel.com?part=3D4
