@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B293840626E;
-	Wed, 27 May 2026 15:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90EE4279F6;
+	Wed, 27 May 2026 15:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779895235; cv=none; b=DYcKyhzh4l2o/K3dg9f2uh20IMuCBhWjh5btUlyx4ArDwmYHwa1/G9V1Lx23qeJ82Cu2TnHf4U5TqSHE/qbMu2hZscRlzfFyCojTfh+aFfBZE+csH5My8LmEXJPD47Wri0kVPQWqeZCqbpG3Q1i7+OOPU+JqlrgFTJHFoHrZFA4=
+	t=1779895236; cv=none; b=MuVozMqesAmWeWaGWph3+ORVplHyuXBcgF/lA1mihQEnDKs71ubYM+A0T8hhVvcAMgmuK5dszb75h0FR90ecZx+55WxOrOjFOYon9QEVmbyMRifisc4raMYz/JqWTEBkJHaLhUYsyvjXqUhxXIsEXzaMlWelgF2fR0R2si0eoic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779895235; c=relaxed/simple;
-	bh=4H9iY6p4klO+8V5I9C0fpg1tx5s/nV+3FfjItpbFmsw=;
+	s=arc-20240116; t=1779895236; c=relaxed/simple;
+	bh=ElUvFtlm3JnLoB17y6kOah187E9KO4WBehmEBCT0sEE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mXT8bPWjy5vqiGyLh3UkXUs5zavo2yPBCXjFyKFqxIzMfqYHljT91UWoQbYy0Z/hhEDz1swt+U5C6VH7hskijwP0+tmIh4IwQQJaW+4BJ6twu2feg0do2YK7DLDvQpnr6rkHWWb2h9z0VMBglD1xqc1opfxGmOqILK18uYv8jGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SmAfTE8/; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=fa3ZPjHCIXtzErRjCu/3LsDIb/bFqWibLZor5KWpc1r/GijgYtpIlqymHxIdT+jhTS3ILwyyKHuWVKxsAP1KSLKdPzRDCJDzOn9UPWkKfCqTP8zg5jBXzEU9lZ9f+1mCxOijSUPOsGcMN1ecZVZ2phdiqzSiy73CNT2uEkAg7+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WuX1/uZY; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SmAfTE8/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WuX1/uZY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779895233; x=1811431233;
+  t=1779895235; x=1811431235;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4H9iY6p4klO+8V5I9C0fpg1tx5s/nV+3FfjItpbFmsw=;
-  b=SmAfTE8/ZI1oKGgEUVCyZFjrRwX1G0cjZ+OsbeXEwl2ipM6Ps1Q7wXdp
-   OTqnGKAEHwjFPglTFIqYHM3E1+fM+Ln7aPZjP14Z8YhfYU9BSXgefC0/5
-   x3/KF4IqIWRL6QlUohY/m4p0tXPn9OfnAZ3qd4yeuv3clqu1eiABdR8gG
-   Cmtpu5TlKm4epKcn5hDlGmQZD3pv+gkuYv5r3mevX7wYA/Ezl68QC5ni9
-   V0Yvu4TSJk1ZiHcDHfj5Y+CryWLMwqA7D8hfuUwT/04sXfVlGu/rPUPkS
-   ZhR1QiR2y2n+D4UGumw8X59wFyUh71+csAUKZixGgHOooO6QgFLCbhoKi
-   Q==;
-X-CSE-ConnectionGUID: brighQ2lT1aUK32hXw3yGA==
-X-CSE-MsgGUID: iengQqebTHabxVpO/g+8yw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="98149314"
+  bh=ElUvFtlm3JnLoB17y6kOah187E9KO4WBehmEBCT0sEE=;
+  b=WuX1/uZYdGMIf7C6k6jcxBycHOHreDEjA9nczFvIqDxVvKvBm+6qD7VK
+   +vKRjr05pZ8Jqv7KguO54hHxRZlB/CjBojxWKP2vkO54L4bkan+FagLuA
+   UIjbP5bg8kuPYx7Nr2QxA2NfSlJR/Da2ANS4LyNeB8bY+SgGCC6jXmiNS
+   4q42KCBKueKYEh/NydBRN6lmlkUJcD+r9hayS3OH3CzzI15QagoxcUr2o
+   /2CVeqsbpZib84Iy7zGsk3aCEJZPO9z28gzGyY21/8cG1CBS/v7M2bru/
+   /Oo7Y1cF2hrasgkHilQcmxxbq8HhaNzOyAZxwaLh2zOzsLm/Wtpi7LLYg
+   g==;
+X-CSE-ConnectionGUID: +R263cYOQ3W6dphr8xzQjw==
+X-CSE-MsgGUID: OVPmeqaJTeyZPPqbqbP9Iw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="98149325"
 X-IronPort-AV: E=Sophos;i="6.24,171,1774335600"; 
-   d="scan'208";a="98149314"
+   d="scan'208";a="98149325"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
   by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 08:20:31 -0700
-X-CSE-ConnectionGUID: qlh1sUL9SN6kJSCaXhYdRA==
-X-CSE-MsgGUID: U4ZbW5nsSuCrdMa4J4KRWQ==
+X-CSE-ConnectionGUID: 8ay3kd6uRdCI888YDAArZg==
+X-CSE-MsgGUID: J/WzFWIoTHCD8mJYvXSXxA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,171,1774335600"; 
-   d="scan'208";a="241231397"
+   d="scan'208";a="241231403"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
   by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 08:20:31 -0700
 From: Zide Chen <zide.chen@intel.com>
@@ -57,9 +57,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Zide Chen <zide.chen@intel.com>
-Subject: [PATCH V2 3/7] perf/x86/intel/uncore: Fix PCI device refcount leak in UPI discovery
-Date: Wed, 27 May 2026 08:11:50 -0700
-Message-ID: <20260527151154.130505-3-zide.chen@intel.com>
+Subject: [PATCH V2 5/7] perf/x86/intel/uncore: Move die_to_cpu() to uncore.c
+Date: Wed, 27 May 2026 08:11:52 -0700
+Message-ID: <20260527151154.130505-5-zide.chen@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260527151154.130505-1-zide.chen@intel.com>
 References: <20260527151154.130505-1-zide.chen@intel.com>
@@ -71,69 +71,118 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pci_get_domain_bus_and_slot() increments the reference count of the
-returned PCI device and therefore requires a matching pci_dev_put().
+Move die_to_cpu() into uncore.c so it can be reused by the MSR
+initialization path, preparing for the introduction of an MSR global
+initialization callback.
 
-In skx_upi_topology_cb() and discover_upi_topology(), the lookup is
-performed inside a loop, but pci_dev_put() is only called once after
-the loop. As a result, references from all previous iterations are
-leaked.
+Move the cpus_read_{lock,unlock}() out of the API, in order to make
+it possible to be called when the lock is being held.
 
-Move pci_dev_put(dev) into the if (dev) block immediately after
-upi_fill_topology() returns.
+Add the uncore_ prefix for consistency with other uncore APIs.
 
-Opportunistically, fix uninitialized variable in skx_upi_topology_cb().
-
-Fixes: 4cfce57fa42d ("perf/x86/intel/uncore: Enable UPI topology discovery for Skylake Server")
-Fixes: f680b6e6062e ("perf/x86/intel/uncore: Enable UPI topology discovery for Icelake Server")
 Signed-off-by: Zide Chen <zide.chen@intel.com>
----
- arch/x86/events/intel/uncore_snbep.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
+V2:
+- Move cpus_read_{lock,unlock}() out of uncore_die_to_cpu() and rely
+  on callers to manage the lock. (Sashiko)
+- Remove "No functional change intended" from the changelog.
+---
+ arch/x86/events/intel/uncore.c       | 19 +++++++++++++++++++
+ arch/x86/events/intel/uncore.h       |  1 +
+ arch/x86/events/intel/uncore_snbep.c | 23 +++--------------------
+ 3 files changed, 23 insertions(+), 20 deletions(-)
+
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index e9cc1ba921c5..22256ded2d67 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -83,6 +83,25 @@ int uncore_device_to_die(struct pci_dev *dev)
+ 	return -1;
+ }
+ 
++/*
++ * Using cpus_read_lock() to ensure cpu is not going down between
++ * looking at cpu_online_mask.
++ *
++ * The lock must be held by the caller.
++ */
++int uncore_die_to_cpu(int die)
++{
++	int res = 0, cpu;
++
++	for_each_online_cpu(cpu) {
++		if (topology_logical_die_id(cpu) == die) {
++			res = cpu;
++			break;
++		}
++	}
++	return res;
++}
++
+ static void uncore_free_pcibus_map(void)
+ {
+ 	struct pci2phy_map *map, *tmp;
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index c35918c01afa..94c68e3417b6 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -235,6 +235,7 @@ struct pci2phy_map *__find_pci2phy_map(int segment);
+ int uncore_pcibus_to_dieid(struct pci_bus *bus);
+ int uncore_die_to_segment(int die);
+ int uncore_device_to_die(struct pci_dev *dev);
++int uncore_die_to_cpu(int die);
+ 
+ ssize_t uncore_event_show(struct device *dev,
+ 			  struct device_attribute *attr, char *buf);
 diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 215d33e260ed..c9ce206fcbb6 100644
+index c9ce206fcbb6..772b78237424 100644
 --- a/arch/x86/events/intel/uncore_snbep.c
 +++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -4261,7 +4261,7 @@ static int upi_fill_topology(struct pci_dev *dev, struct intel_uncore_topology *
- static int skx_upi_topology_cb(struct intel_uncore_type *type, int segment,
- 				int die, u64 cpu_bus_msr)
- {
--	int idx, ret;
-+	int idx, ret = 0;
- 	struct intel_uncore_topology *upi;
- 	unsigned int devfn;
- 	struct pci_dev *dev = NULL;
-@@ -4274,12 +4274,12 @@ static int skx_upi_topology_cb(struct intel_uncore_type *type, int segment,
- 		dev = pci_get_domain_bus_and_slot(segment, bus, devfn);
- 		if (dev) {
- 			ret = upi_fill_topology(dev, upi, idx);
-+			pci_dev_put(dev);
- 			if (ret)
- 				break;
- 		}
- 	}
- 
--	pci_dev_put(dev);
- 	return ret;
+@@ -3704,25 +3704,6 @@ static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
+ 	return 0;
  }
  
-@@ -5499,6 +5499,7 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
- 							  devfn);
- 			if (dev) {
- 				ret = upi_fill_topology(dev, upi, idx);
-+				pci_dev_put(dev);
- 				if (ret)
- 					goto err;
- 			}
-@@ -5506,7 +5507,6 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
+-static int die_to_cpu(int die)
+-{
+-	int res = 0, cpu, current_die;
+-	/*
+-	 * Using cpus_read_lock() to ensure cpu is not going down between
+-	 * looking at cpu_online_mask.
+-	 */
+-	cpus_read_lock();
+-	for_each_online_cpu(cpu) {
+-		current_die = topology_logical_die_id(cpu);
+-		if (current_die == die) {
+-			res = cpu;
+-			break;
+-		}
+-	}
+-	cpus_read_unlock();
+-	return res;
+-}
+-
+ enum {
+ 	IIO_TOPOLOGY_TYPE,
+ 	UPI_TOPOLOGY_TYPE,
+@@ -3794,8 +3775,9 @@ static int skx_pmu_get_topology(struct intel_uncore_type *type,
+ 	int die, ret = -EPERM;
+ 	u64 cpu_bus_msr;
+ 
++	cpus_read_lock();
+ 	for (die = 0; die < uncore_max_dies(); die++) {
+-		ret = skx_msr_cpu_bus_read(die_to_cpu(die), &cpu_bus_msr);
++		ret = skx_msr_cpu_bus_read(uncore_die_to_cpu(die), &cpu_bus_msr);
+ 		if (ret)
+ 			break;
+ 
+@@ -3807,6 +3789,7 @@ static int skx_pmu_get_topology(struct intel_uncore_type *type,
+ 		if (ret)
+ 			break;
  	}
- err:
- 	pci_dev_put(ubox);
--	pci_dev_put(dev);
++	cpus_read_unlock();
+ 
  	return ret;
  }
- 
 -- 
 2.54.0
 
