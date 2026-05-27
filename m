@@ -1,104 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886CD26B08F;
-	Wed, 27 May 2026 03:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F73A48CFC;
+	Wed, 27 May 2026 05:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779852900; cv=none; b=AJp8KJ3O1unbMqYUzlbOefinEi8ug7M1TdPbLAFv1Su5gWQXTLOCIwsbcC7g2/HUeQeGHTXf/PW1WtSYDiTclEAk5SPO6NeVWmJbwZcGA9QwtCIzqFibGf2L7eH+vJGdbidcmUJOS0nVPcTK75g5heu4glbhrXWw8q4tTkEEDpc=
+	t=1779859055; cv=none; b=ABG0LktqhG5MvwOh7AmGoYrPrqnd7Km7LEihyrTR4aXKX+5bcRwQ02Muu0FF/2LMwMoAglggzp+JsUL0eQXsSJXyoYcbfV0JfHjJI+nIDpxFUdIS0mB1HKrfpLxd9vlxmE5cx7ltxYobJBc6XpYtajIa/V8Sl9CUtAazdXJrJDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779852900; c=relaxed/simple;
-	bh=0jMtXdyR+XkBSElTR5vKC1YNbrZAX2spWw06dn6oYAk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kx/0D/T2ojTm2ayaMzdoxSHCdzUSO5mEJip9zv8eQPHw8kWT/ds0Jt8diTovvzbuELv8KhWOrXf614rjgZKsCFM8h4Kv3/651dBSPWMfn+Yl1wiCJEjV50/z4kd0l60I58DRfeKrUp5IqhgdEbURSwaA6BDaHoGPfftSaaeGwxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G7MDPZSA; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779859055; c=relaxed/simple;
+	bh=JqnWVoffGGyD09Jxe6YkAqJSDjyKJcvh/iHSY+5Uv7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YlWVFLnwiIX/Lc/FgL1YUgnDnwUUF7H6Se0LqBitVUT1yT5Cb5BU7LskeOnJXCShUIjArD9ry26NmENVy2QtbPVEO64JiuzLUQiLJzT4g330G7KuLuMVRXtpV1I9THZC/th6QJQ1bl3pIhU/q8jPlro/DHvC4BTgtI0aZZJJZ2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SzJpA6Bu; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G7MDPZSA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SzJpA6Bu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779852899; x=1811388899;
-  h=date:message-id:from:to:cc:subject:in-reply-to:
-   references:mime-version;
-  bh=0jMtXdyR+XkBSElTR5vKC1YNbrZAX2spWw06dn6oYAk=;
-  b=G7MDPZSAS/u5LdQLTvm/iCyUyIHXz01i7YmnmXVqP3G5tdIP5U1gKddZ
-   /Dm0Vib/1HdRN3p+ZJVEjbJ2mLia3lXjaliVuSDK8rNXVPy0QHR9rw2LK
-   0aykjQiPHzk4/9Mr5GEpu4DaiKBsSRIWW5aQEij0sosPgAmYtBcMD+hNd
-   uT940io+EG0INYOPRwzWyiTbt5d6/wlAdU/PPNaeGNFtOmF2LonA5vPM3
-   1zOGR/Xzi7RO/LmWTK4XIa3I7HgA2Q5Q6WrXiOhT7qstKQrlqGNgTgbhW
-   fmigIqHkKlp7+d1VbI9Ke7ZSzwpozxDXFsW4zNh9fd2teB57sTuhec3IN
-   w==;
-X-CSE-ConnectionGUID: pzdnMrPoTOW5jTkpJfBZig==
-X-CSE-MsgGUID: 8TuBsAWuQ9GTsCpfxj+q8w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11798"; a="68201567"
+  t=1779859054; x=1811395054;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=JqnWVoffGGyD09Jxe6YkAqJSDjyKJcvh/iHSY+5Uv7s=;
+  b=SzJpA6BuA3IKaOlDpY1rZFSX5qo/33/80GrS5MdoZkP4fjjiDngxfpqW
+   KHDBFZdpOnnCskjBn9ORrDLkTWud/j/Jrvi/Ipl0JZJo/znfweL72fVr2
+   KhwEHxzTyxmnnRBduqvaCpd8jsePK/Ylu4tyULtKYY7kz3X9waBiyI5fu
+   kVHWRkXMplKQCNBf/thDqjMg0XMow7VvmP/qAzKYbPM/elOy1z/y5twP5
+   oyEb4n/Ln5d18sQwgtC9Q5+TQuEZIBtAfVs3v8U2puipKbSGf/6BV8ljo
+   0bGsZ276KVhJHFXRtYUSj39fDFnldRmqVyJcsg+nnSlA4fXGcks9RFjYd
+   g==;
+X-CSE-ConnectionGUID: a2gnPPzARAe7kI/cEGZT5Q==
+X-CSE-MsgGUID: vBQdL5//TI2ZENXbMeZsQw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11798"; a="103355677"
 X-IronPort-AV: E=Sophos;i="6.24,170,1774335600"; 
-   d="scan'208";a="68201567"
+   d="scan'208";a="103355677"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 20:34:59 -0700
-X-CSE-ConnectionGUID: 5dvCwfWzTnuhR6eLWC2Mag==
-X-CSE-MsgGUID: raVGjmYoSeu4E/nJR5jfuw==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 22:17:33 -0700
+X-CSE-ConnectionGUID: XfzJbBRzQnC20YlMlA4daQ==
+X-CSE-MsgGUID: 8L6KT0pMQkySkvP/32lhLA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,170,1774335600"; 
-   d="scan'208";a="239109059"
-Received: from gauravga-mobl1.amr.corp.intel.com (HELO adixit-MOBL3.intel.com) ([10.125.67.21])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 20:34:58 -0700
-Date: Tue, 26 May 2026 20:34:57 -0700
-Message-ID: <87ecixv82m.wl-ashutosh.dixit@intel.com>
-From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Matthew Brost
- <matthew.brost@intel.com>, Thomas =?ISO-8859-1?Q?Hellstr=F6m?=
- <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- "Ingo Molnar" <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
- Clark <james.clark@linaro.org>,<intel-xe@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>,<linux-perf-users@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] complete perf_allow_* trio and use in drm/xe
-In-Reply-To: <8871a158-7a68-4247-a09f-bb3d970d6dc2@nvidia.com>
-References: <20260523013326.129491-1-jhubbard@nvidia.com>	<20260523084056.GE3102624@noisy.programming.kicks-ass.net>	<8871a158-7a68-4247-a09f-bb3d970d6dc2@nvidia.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
- Emacs/30.2 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+   d="scan'208";a="239123905"
+Received: from unknown (HELO [10.238.3.232]) ([10.238.3.232])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 22:17:30 -0700
+Message-ID: <22cb9525-3cdd-4962-bc98-d9e905f195ab@linux.intel.com>
+Date: Wed, 27 May 2026 13:17:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 0/7] perf/x86/intel/uncore: Bug fixes and cleanups
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260526211846.121640-1-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260526211846.121640-1-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, 23 May 2026 10:52:16 -0700, John Hubbard wrote:
->
-> On 5/23/26 1:40 AM, Peter Zijlstra wrote:
-> > On Fri, May 22, 2026 at 06:33:24PM -0700, John Hubbard wrote:
-> ...
-> >>    perf/core: out-of-line and export perf_allow_cpu/tracepoint()
-> >>    drm/xe: gate observation streams with perf_allow_cpu()
-> >>
-> >>   drivers/gpu/drm/xe/xe_eu_stall.c    |  5 +++--
-> >>   drivers/gpu/drm/xe/xe_oa.c          | 25 +++++++++++++---------
-> >>   drivers/gpu/drm/xe/xe_observation.c | 32 ++++++++++++++++++++++++-----
-> >>   drivers/gpu/drm/xe/xe_observation.h |  3 +--
-> >>   include/linux/perf_event.h          | 31 ++++++++++++++--------------
-> >>   kernel/events/core.c                | 18 ++++++++++++++++
-> >>   6 files changed, 79 insertions(+), 35 deletions(-)
-> >
-> > Sure, works for me. How do you want to route these things, Xe tree or
-> > -tip?
->
-> Hi Peter,
->
-> Maybe -tip, but really, either way is perfectly OK with me.
+Seems only cover letter is here. Where are the patches?
 
-I've R-b'd both the patches. If you want to merge via Xe tree, let me know
-and we can get them merged.
-
-Thanks.
---
-Ashutosh
+On 5/27/2026 5:18 AM, Zide Chen wrote:
+> This series includes bug fixes and cleanups for the Intel uncore PMU
+> driver.
+>
+> - Patch 1 fixes a theoretical bug in discovery unit lookup on multi-die
+>   systems.
+> - Patch 2 guards against an invalid box control address.
+> - Patch 3 fixes a PCI device refcount leak in UPI topology discovery.
+> - Patch 4 works around a hardware issue on Raptor Cove CPUs.
+> - Patches 5-7 implement a global MSR init callback for GNR/GRR/SRF/CWF
+>   uncore.
+>
+> Changes in v2:
+> - Add patch 2 to guard against invalid box control address (Sashiko)
+> - Remove WARN_ON_ONCE() from patch 1
+> - Move cpus_read_{lock,unlock}() out of uncore_die_to_cpu() (Sashiko)
+>
+> Zide Chen (7):
+>   perf/x86/intel/uncore: Fix discovery unit lookup for multi-die systems
+>   perf/x86/intel/uncore: Guard against invalid box control address
+>   perf/x86/intel/uncore: Fix PCI device refcount leak in UPI discovery
+>   perf/x86/intel/uncore: Defer ADL global PMON enable to enable_box()
+>   perf/x86/intel/uncore: Move die_to_cpu() to uncore.c
+>   perf/x86/intel/uncore: Fix uncore_die_to_cpu() for offline dies
+>   perf/x86/intel/uncore: Implement global init callback for GNR uncore
+>
+>  arch/x86/events/intel/uncore.c           | 32 ++++++++++++++++++-
+>  arch/x86/events/intel/uncore.h           |  3 +-
+>  arch/x86/events/intel/uncore_discovery.c | 40 +++++++++++++++++-------
+>  arch/x86/events/intel/uncore_snb.c       |  7 -----
+>  arch/x86/events/intel/uncore_snbep.c     | 36 +++++++--------------
+>  5 files changed, 74 insertions(+), 44 deletions(-)
+>
