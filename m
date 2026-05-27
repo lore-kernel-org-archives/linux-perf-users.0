@@ -1,198 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7029521D590;
-	Wed, 27 May 2026 14:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D1C37B016;
+	Wed, 27 May 2026 15:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779890990; cv=none; b=jLO81F1w51gG+YdGb9DQtFJOGDOkxzcGIpO5x5KT/WHi+TMhz7tUxsu6RwwQXRTDArhsWFfl5erj0WRQxsFeysncJBbP0K3Y9wq90Zqc1H1HfDCPMLkLRHajz1vI48yR05di0WQ6/UoNeE1jmpwvCagXHg4YJX4vY5B9ZQwpA/Y=
+	t=1779895233; cv=none; b=VdrMwC9IlG4QmZHor2yG4mh1Sx9WrktSfRor48Acgn4eCgVlqgLqerWXCkKVdHW5nXE4H4wf1WB6R0TYGpA8/ZSIuCbqchgGWZQuHAfCLCPR2jPSKjNddV2PG4RPcC4+msrYtWVpRwHaBUvH21O6aLeHTnXQCVhK7ghu9Ay4npM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779890990; c=relaxed/simple;
-	bh=t3GCGLTtE1Q/9glAbzqgh8oazNh984uILkl3fXKHnwM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Y55ylNlnYSuQQ6HFQjBgJ+dhx9pqE7ShAZZtzJq7MI5pkTKXUwomIhYmfJRJjkkPpZp8yijMgRqH8s2oUkzg36bUp4pXu3g3dSvaWLjPjgVOAYzOf/fuU8cKvZNZgoblnuGdr2ubvfFOgZQR0DsOHPKoPJUtbPyLuK8aXWT44i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hZe08RKW; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779895233; c=relaxed/simple;
+	bh=APKN6YP/PSCz0hYKNhU4R9s89dm1ethWku0geaKhlU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ceWfPk4atLK9Xy0tCGmXQBqIuLDkLZUtiBlcI6CeJUyPnMjxXSAmFIQ3hcC4rYtcvkA4pdh5zvRHer2/VwooLpjFo3ll9uPtGoKy/dmgy5fU0EJxekZ4DvPs2LQvE0OV7Wzx25D1moKizlDg75LVVv/4y7Mx2AC6PC170UChl60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cVHWxfUv; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZe08RKW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D61C1F000E9;
-	Wed, 27 May 2026 14:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779890989;
-	bh=+kCQabNR70NwHBc3LPpyv3HzITw+mLzNMCmdJgCbjRI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hZe08RKWlGUsFV1tC+ZrXvAcWt6CgUV+4kzxoonRmLJlqiPpmqkChpnrEZjGa3rto
-	 s1Bz23bXdbp3TEsSurtJK5Qd5JO6YuZ97J9rTGrG9jL2H3SqLGy239QwdDnoRojMjn
-	 Iaqf3GVwtixybZ+v07nv7q8rsgTbTjAr5bSFyLXFuT89WrrS+BSyQoovAOe1qc9MN/
-	 IkikaN3utqo6GGkAZ0grc8cCIL+s0yqOz4qnOqqJ6+0lZHWdkRw3RVhjelpecgfCed
-	 ZA1ZXaTSCUxxb8FTgRjJ5zcfNTTCxTV0LQVvvlNjd9LZmiFJKrw9eTMhsB6fdFDwzX
-	 11X1TqURBF62A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 3/4] perf/arm64: Add BRBE support for
- bpf_get_branch_snapshot()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Puranjay Mohan" <puranjay@kernel.org>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260527121207.2312181-4-puranjay@kernel.org>
-References: <20260527121207.2312181-4-puranjay@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 27 May 2026 14:09:47 +0000
-Message-Id: <20260527140948.3D61C1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cVHWxfUv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779895232; x=1811431232;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=APKN6YP/PSCz0hYKNhU4R9s89dm1ethWku0geaKhlU4=;
+  b=cVHWxfUvWIdpJRp1vKqqacYvGBuA0oMXrqpfIhZSV8ex2/CrUvPtLYHw
+   kKk5ApKQDFXWC375CAf/CaC4/jz4onzEedM5c6F7QS+xKD2kWAY1NeBwE
+   m0+/OI6iG8Ou8gk6dMaviyZvJcNTeVyMYwXWwV9iRU1IFsaDheNvbgRmM
+   5UV+6sy7d7lC8QSUjIBeok90SzazihSjrs7AY8bDC3pgWHzJKIqtcc6gF
+   BfCXSmuRiM0MH3fUjDXCIfy47ssqke+158zleKJpoGLdEyw5Br4ffdMHw
+   pqRj41+U2nC1Hc3UBKZQs/paeKpUudoVXjm9zJFPoqA+eDblIKVyCJPmH
+   Q==;
+X-CSE-ConnectionGUID: YeCVZtfQTcS7D+2qqvjGgg==
+X-CSE-MsgGUID: PhcQEhovRQq+ZF21FAZKcQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="98149301"
+X-IronPort-AV: E=Sophos;i="6.24,171,1774335600"; 
+   d="scan'208";a="98149301"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 08:20:31 -0700
+X-CSE-ConnectionGUID: 2xWfGRxeRSyH9yueCD21Kw==
+X-CSE-MsgGUID: 7NGzyFy3TOycK2M/fv7STw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,171,1774335600"; 
+   d="scan'208";a="241231391"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 08:20:31 -0700
+From: Zide Chen <zide.chen@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH V2 1/7] perf/x86/intel/uncore: Fix discovery unit lookup for multi-die systems
+Date: Wed, 27 May 2026 08:11:48 -0700
+Message-ID: <20260527151154.130505-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] TOCTOU race in `arm_brbe_snapshot_branch_stack` leads to hardware =
-state corruption.
-- [High] Unconditional calls to `brbe_invalidate()` destructively clear har=
-dware branch records, breaking concurrent perf events.
-- [High] `bpf_get_branch_snapshot()` unconditionally fails when invoked fro=
-m a PMU NMI handler.
---
+In uncore_find_add_unit(), PMON units with the same unit ID may be
+added to the uncore discovery RB-tree for different dies. These units
+are distinguished by node->die.
 
-commit 4683208c7439e46b2ca26814f22b69f16e4ad0c2
-Author: Puranjay Mohan <puranjay@kernel.org>
+However, intel_generic_uncore_box_ctl() uses a fixed die ID of -1 when
+looking up the discovery unit, which may retrieve the wrong node on
+multi-die systems.
 
-perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+Use box->dieid instead so the correct discovery unit is selected.
 
-This commit enables bpf_get_branch_snapshot() on ARM64 by implementing the
-perf_snapshot_branch_stack static call for BRBE. It pauses BRBE, reads the
-records into a buffer, invalidates the buffer, and unpauses BRBE.
+No functional issue has been observed so far because currently supported
+platforms happen to use the same unit control register for such units.
 
-> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-> index ba554e0c846c4..aede95e277842 100644
-> --- a/drivers/perf/arm_brbe.c
-> +++ b/drivers/perf/arm_brbe.c
-[ ... ]
-> @@ -774,32 +795,96 @@ void brbe_read_filtered_entries(struct perf_branch_=
-stack *branch_stack,
-[ ... ]
-> +/*
-> + * Best-effort BRBE snapshot for BPF tracing. Pause BRBE to avoid
-> + * self-recording and return 0 if the snapshot state appears disturbed.
-> + */
-> +int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries, un=
-signed int cnt)
-> +{
-> +	unsigned long flags;
-> +	int nr_hw, nr_copied =3D 0;
-> +	u64 brbfcr, brbcr;
-> +
-> +	if (!cnt)
-> +		return 0;
-> +
-> +	/* Guard against running on a CPU without BRBE (e.g. big.LITTLE). */
-> +	if (!cpu_has_brbe())
-> +		return 0;
-> +
-> +	/*
-> +	 * Pause BRBE first to avoid recording our own branches. The
-> +	 * sysreg read/write and ISB are branchless, so pausing before
-> +	 * checking BRBCR avoids polluting the buffer with our own
-> +	 * conditional branches.
-> +	 */
-> +	brbfcr =3D read_sysreg_s(SYS_BRBFCR_EL1);
-> +	brbcr =3D read_sysreg_s(SYS_BRBCR_EL1);
-> +	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-> +	isb();
-> +
-> +	/* Bail out if BRBE is not enabled (BRBCR_EL1 =3D=3D 0). */
-> +	if (!brbcr) {
-> +		write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-> +		return 0;
-> +	}
+Remove WARN_ON_ONCE() because with the above change a NULL unit can be
+expected, e.g. when a CPU die is offline during uncore enumeration and
+the unit is not added to the RB-tree. In this case,
+intel_uncore_find_discovery_unit() returns NULL once the die becomes
+online, and it is expected that the PMU box is not functional for that
+die.
 
-[Severity: High]
-Is this check incompatible with PMU NMI handlers?
+Fixes: b1d9ea2e1ca4 ("perf/x86/uncore: Apply the unit control RB tree to MSR uncore units")
+Signed-off-by: Zide Chen <zide.chen@intel.com>
+---
+v2:
+- Remove WARN_ON_ONCE().
+---
+ arch/x86/events/intel/uncore_discovery.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If a BPF program attaches to a perf event overflow, armv8pmu_handle_irq()
-calls armv8pmu_stop() before processing overflows, which calls brbe_disable=
-()
-and sets SYS_BRBCR_EL1 to 0.
+diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+index 583cbd06b9b8..60e1200c4691 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -481,8 +481,8 @@ static u64 intel_generic_uncore_box_ctl(struct intel_uncore_box *box)
+ 	struct intel_uncore_discovery_unit *unit;
+ 
+ 	unit = intel_uncore_find_discovery_unit(box->pmu->type->boxes,
+-						-1, box->pmu->pmu_idx);
+-	if (WARN_ON_ONCE(!unit))
++						box->dieid, box->pmu->pmu_idx);
++	if (!unit)
+ 		return 0;
+ 
+ 	return unit->addr;
+-- 
+2.54.0
 
-Would this cause bpf_get_branch_snapshot() to unconditionally fail and retu=
-rn
-0 when triggered from these PMU events?
-
-> +
-> +	/* Block local exception delivery while reading the buffer. */
-> +	flags =3D local_daif_save();
-
-[Severity: High]
-Is there a TOCTOU race window here that could corrupt hardware state?
-
-The function reads and caches SYS_BRBFCR_EL1 and SYS_BRBCR_EL1 before
-disabling local exceptions via local_daif_save().
-
-If an interrupt or NMI arrives in this window (such as a perf_event_disable
-IPI) and modifies the BRBE hardware configuration, the function later writes
-back the stale cached brbcr and brbfcr values at the end of the function,
-overwriting the PMU subsystem's intentional changes.
-
-Does the mitigation check below catch this?
-
-	if (!(read_sysreg_s(SYS_BRBFCR_EL1) & BRBFCR_EL1_PAUSED)) {
-
-It looks like it might fail to catch this because brbe_disable() leaves the
-PAUSED bit set, leading to the function silently re-enabling BRBE and
-corrupting the hardware state when restoring the cached registers.
-
-> +
-> +	/*
-> +	 * A PMU overflow before local_daif_save() could have re-enabled
-> +	 * BRBE, clearing the PAUSED bit. The overflow handler already
-> +	 * restored BRBE to its correct state, so just bail out.
-> +	 */
-> +	if (!(read_sysreg_s(SYS_BRBFCR_EL1) & BRBFCR_EL1_PAUSED)) {
-> +		local_daif_restore(flags);
-> +		return 0;
-> +	}
-> +
-> +	nr_hw =3D FIELD_GET(BRBIDR0_EL1_NUMREC_MASK,
-> +			  read_sysreg_s(SYS_BRBIDR0_EL1));
-> +
-> +	for_each_brbe_entry(i, nr_hw) {
-> +		if (nr_copied >=3D cnt)
-> +			break;
-> +
-> +		if (!perf_entry_from_brbe_regset(i, &entries[nr_copied], NULL))
-> +			break;
-> +
-> +		nr_copied++;
-> +	}
-> +
-> +	brbe_invalidate();
-
-[Severity: High]
-Does unconditionally clearing hardware branch records here break concurrent
-perf events?
-
-Since bpf_get_branch_snapshot() can be invoked asynchronously at any time
-(e.g., from a BPF kprobe or tracepoint program), if another perf event is
-actively profiling, would this snapshot silently wipe the hardware BRBE
-buffer?
-
-When the active perf event later overflows, it would read an empty or sever=
-ely
-truncated branch stack, potentially corrupting the profiling data. Should
-snapshots be read-only?
-
-> +
-> +	/* Restore BRBCR before unpausing via BRBFCR, matching brbe_enable(). */
-> +	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
-> +	isb();
-> +	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-> +	/* Ensure BRBE is unpaused before returning to the caller. */
-> +	isb();
-> +	local_daif_restore(flags);
-> +
-> +	return nr_copied;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527121207.2312=
-181-1-puranjay@kernel.org?part=3D3
