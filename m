@@ -1,78 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABEB3491E1
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 May 2026 22:48:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C32F1A683A;
+	Wed, 27 May 2026 00:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779835683; cv=none; b=CY3/Bs8knoy9omeKuqkmdvcinxDdTh2we+zLsU6JCVeEkHt7gRCh2QLo0xXFoKhyKFvra8stSNxMfhk2fUvRqgSOJHUefWjdKgYhY2RkYt2eRt/ReRPpReGlc0iODLLLe4olyyhRfIRPYnknrf/LnYGxSNnZu+kEDrwurwPnn1U=
+	t=1779843017; cv=none; b=pQqXGpACpgMY6GKl/IQPvRB/driODfvyo/BCL3iGrtrFHm8kWWvKxn6Bl2heItDGvsky6zblN52cTLYWqnZd6vmsAED/LzGOekVgfeb0sRsGa3GFcpf7X2vBGqs5IxmOnJkUSfnbQeU8+/BoOVA78tj49nvHqzL3w+jNZi74eJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779835683; c=relaxed/simple;
-	bh=fLI1ZF9NyZxPf97XPsZo9PsYVDOz80muHQfmm2oKxC0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nBW3WttpedtBHGy7/tbNk0B2TjiUAXOgFcW9NHZRpP6o4A5g3IQO9V/urFZ7Hu9EnOv44HmIleGY++8NEb55/DQ1aPjetUWy/42SKo7r88oZd7qfh6SBraFZX3jIEJwujE+zKwfwIWNf+YOHfnD+RG95t3Vbib9kUVpx4re4Pgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqLMFzNc; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779843017; c=relaxed/simple;
+	bh=KP4eZR4aMzEyXVRm91xOOTNia3o1zlwLIb8aPYPItyE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mZGgNZlpUztoeYUTt6ECxLzXIQJQrRKqloRQKAFeDPtgTt/JUmyKczgdVUsvJeZM1nF+KpxW2pq86s7/sknD5J/YYnhc+7P7MBC/eSQcKe9FjP7Mlw/mueu0hzicpilX7chusF/Px4rSavlbUqTe5fgEor2eni94jxdXwTYU/xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ksJzaw23; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqLMFzNc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A6711F000E9;
-	Tue, 26 May 2026 22:48:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ksJzaw23"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706F81F000E9;
+	Wed, 27 May 2026 00:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779835682;
-	bh=KMOR62NevvpHrBJyKYXKrc1bF5z4cFlC3oJ1rqbkpjk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oqLMFzNcdLFM+ruxGp5RpKUGPCNe03IB4Tw9Uj5QRzGRv2+LjUPOSdl3BYTuyGMh/
-	 vlg10FRVUKimCEdEAZD8Rmyjw6b7gULnttS3S1rOrq/IMZ8yqGP6jlFDMcdwEcNB65
-	 wWEOhG8Old0MPLGGWn70kIejwD/eiGuCtW1luBdotRSX1PRJrSRcjq2WRQBJj27nSJ
-	 wJcDtjwOIdkQB+Kq1BcPo0pzhO7006Mq4Q8Vcbimy776ed2+PzDqZ08Z3fqJQxLu+b
-	 obKKoyAWmXZBngScWQ7MdyTiQWEpDLIpSceF3+nliKwZBthGC3Ta4IqF2Cl2FLqKAY
-	 fHiElFrSpDunA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf clang-format: Prioritize Python.h and expand
- other categories
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+	s=k20260515; t=1779843016;
+	bh=KPrWi2VMdrVIKBDKSVmaf8ckz+OwWS2ppmMbkUG1Z4Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ksJzaw23fAGyTM18l15nUfq6RW6kXrCZy3+ZzXjCCFYo/YL4Lccx6a9HmzubhwZ29
+	 Rkq5oXNYAXKyrJ+Mj8oVaWrDehv3jyXC/Og28k4zQ7NQKodN4FxQ0zLv3jzhetAEku
+	 mZknKEIg78ALv3eMM3gDURQLJxv6hMKQD+4+DymlZGIGJi4SEBh80basPXtuCRyohw
+	 OSSDJIC+4Ajz8BBnXshANYuTFw9mccRkQcE5MKrEm7RfYKNWt8etQG88/V3NXWJQEj
+	 FkJiXOOFTQAnxdB8PdvTaurpnv0FGaYEc4zuZpp71tiwSsbHeTKfbvwjwYyv7jPLyZ
+	 XgUvPnHr2PDVQ==
+Date: Tue, 26 May 2026 21:50:12 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260526224241.4016312-1-irogers@google.com>
-References: <20260526224241.4016312-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 26 May 2026 22:48:01 +0000
-Message-Id: <20260526224802.1A6711F000E9@smtp.kernel.org>
+Subject: Re: [PATCH 29/29] perf test: Add truncated perf.data robustness test
+Message-ID: <ahY_xHU9rLRP6M6X@x1>
+References: <20260526211806.1193848-30-acme@kernel.org>
+ <20260526221941.5806C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260526221941.5806C1F000E9@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The commit message contradicts the actual patch implementation r=
-egarding header sorting priorities.
---
+On Tue, May 26, 2026 at 10:19:40PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] The cleanup routine may delete a file named '.old' in the current working directory if temporary file creation fails.
+> --
+> 
+> commit 6d5a7740cf583f089ba666236f38032085207496
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> perf test: Add truncated perf.data robustness test
+> 
+> This commit adds a shell test to verify that perf report gracefully handles
+> truncated perf.data files. It records a simple workload, truncates the file
+> at various offsets, and checks that perf report exits cleanly with an error
+> rather than crashing.
+> 
+> > diff --git a/tools/perf/tests/shell/data_validation.sh b/tools/perf/tests/shell/data_validation.sh
+> > new file mode 100755
+> > index 0000000000000..5c3e6fced6fce
+> > --- /dev/null
+> > +++ b/tools/perf/tests/shell/data_validation.sh
+> > @@ -0,0 +1,85 @@
+> [ ... ]
+> > +err=0
+> > +
+> > +cleanup() {
+> > +	rm -f "${perfdata}" "${perfdata}.old" "${truncated}" "${stderrfile}"
+> > +	trap - EXIT TERM INT
+> > +}
+> > +trap 'cleanup; exit 1' TERM INT
+> > +trap cleanup EXIT
+> > +
+> > +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
+> 
+> [Severity: Medium]
+> If mktemp fails (for example, if /tmp is out of space), the perfdata
+> variable will be empty and the script will exit, triggering the EXIT trap.
+> 
+> Will the cleanup function then expand the command to rm -f "" ".old" and
+> silently delete a file named .old in the current working directory?
 
-commit 6df1a36d29968fecb941bfb94a7d676143f46552
-Author: Ian Rogers <irogers@google.com>
+Good catch, added the following patch to it:
 
-perf clang-format: Prioritize Python.h and expand other categories
+   err=0
+ 
+   cleanup() {
+  -  rm -f "${perfdata}" "${perfdata}.old" "${truncated}" "${stderrfile}"
+  +  [ -n "${perfdata}" ] && rm -f "${perfdata}" "${perfdata}.old"
+  +  rm -f "${truncated}" "${stderrfile}"
+     trap - EXIT TERM INT
+   }
+   trap 'cleanup; exit 1' TERM INT
 
-This commit updates the .clang-format rules for the perf tools. It
-prioritizes Python.h sorting and expands the regex lists for C standard
-library and OS specific headers.
-
->     - Prioritize Python.h by sorting it first (Priority 0).
->     - Shift other header priorities down to accommodate Python.h.
-
-[Severity: Medium]
-Is this description accurate regarding the patch implementation?
-
-The commit message states Python.h is set to Priority 0 and other
-priorities are shifted down. However, the patch actually assigns
-Priority -1 to Python.h and leaves the other categories at their
-original priorities (1 and 2).
-
-Setting the priority to -1 also means Python.h will be sorted before
-the C file's main header, which implicitly has Priority 0.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260526224241.4016=
-312-1-irogers@google.com?part=3D1
