@@ -1,173 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F092641EE
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 May 2026 19:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A489F3203B6
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 May 2026 20:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779911763; cv=none; b=BjseCH1oW4NgjnbyIW6Oynro4Uqtl4QfbfMF7umZJN4dVYwzbGSOIGsBH6xT5KbpEdLVR0lAks3xEhqGJW/XJWPfy4g/UNes/KLnewbVqxMdoxqPL9rPV7/CZuh596vVEq+LMN3UWdNMZdpg31cBMJWGFEruBuXkYrUJOaWr8T4=
+	t=1779914748; cv=none; b=YmxTqs/6f/3aUpcpBKMHl5JIUF8CWnrhYEUPbVrfZjPe6xKydbXQzg69T4f2WsA7zCo+H1/HY7Qe36scpms7ZGiF/ptMNnV5DvX4HH8IE40VtrS+wfV+hfAxhFFc0LK5BoCv2f22OXvWs1mqmh4sK5FUVDwGIaA4GmPfOH5EUCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779911763; c=relaxed/simple;
-	bh=PEgYszr3C0/80DXj9fpELQ8jt6gYhIAhYk0e4gbcO4g=;
+	s=arc-20240116; t=1779914748; c=relaxed/simple;
+	bh=hcWBxsBepECWNMYXxlLmOuimBDC3+IfynmSXGDx8jNE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TZEHk8ghLuTJ4MJ0hV5j+7ATJdWzb9ppZ9P1a6WNIRLnl4IqnoDpqBIZJnIWfapRGi5ByXZTHZXIkokheW8IMj/wgigRhCL2Vu3+AARP8X1l4cg6aF0ZWWS6Ju7zcuEjdyGK9gWLT/ywcEHqnu5Z0pSUBR4fkAnBGcIfcXiwLnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CceXB88o; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Bam1BT9QSG9Kt6PLGav5qxtFpKp/AmefTsS4icozS37C4JGNUwqgnAVfuwHNB+dbG2PPynfFi8MvdHy5418GZU/a9YBGacC/DwmTKcECXdN4MEoszHurAzJHX3ffNwHIXskFmNEa1X8/jp+zfq12AVgh60Di3PGSCv10sE75uKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjKvMSXD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CceXB88o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20AF1F000E9;
-	Wed, 27 May 2026 19:56:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjKvMSXD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E3D11F000E9;
+	Wed, 27 May 2026 20:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779911762;
-	bh=NummqP1mBbU7sy9QVHom4VF6oTxQ0g8IRMRDwJOeHVc=;
+	s=k20260515; t=1779914747;
+	bh=+sd4hOCEzi9py7VRPKIzbVObDWFoZV1hsDPMcq7qSkI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CceXB88oQi1mxz+e5PUmYQjzKLY8nuDNnnJm4XJci//oXZJbSsbv52sFYJfmuGx+J
-	 p5kHAPCvZ5W0L9rlo1s5DAmFNTg3pqRuazA/zv0VVcARPGr+ZwfN9l/ob0TwHMPed/
-	 ATSziLJZaG4Xz2wPUtwmsXDPP3V7VILudVozQ+QSUwShdJTzT+uloKqlhTciUfLKwJ
-	 47mEpTWMUnqR8BKHWyAJTbr2aSb9m5cgmOrHnswkFtzXigUxqnfGi5ju02T6kXU1we
-	 SVa9u5hAaOVlikeSa5RjmitbwzQ/S/FgNmfOKh9x5iceNtAMZI6pTZyWG1ZKlq+Z67
-	 zITfmzbnhsfWg==
+	b=PjKvMSXDKqg5xB6w+grhByHKRoiiurVv4nBb8iIdaZxDKyl1xjGpoUP1xvG6+HMrJ
+	 tacvrlq3/JlPgu16o0kql8Mpu9s8p0UNtbp9BEfWxhHXK+BxGpkaWdGp/VHPutrnBf
+	 vnr8iA4uNJqWm8HVkd6+RwTWdLzeu/XxJsMIhP4Mt5WWSH1K/bQl5lxqD/mGkbXygl
+	 1adm38bybSleyVy0JMuaQl8vaEzeqyAVWTBUc9c11Q0B/pENXHyCivyewObHTWGX1r
+	 YfPd0FVVRLhT+pgREYT7hvu1HHM4csegfx3jOgKQdT+flwKYQFDC5uyO2eAF0nIEAu
+	 6U54R+TFn56mA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V2 6/7] perf/x86/intel/uncore: Fix uncore_die_to_cpu()
- for offline dies
+Subject: Re: [PATCH V2 7/7] perf/x86/intel/uncore: Implement global init
+ callback for GNR uncore
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zide Chen" <zide.chen@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260527151154.130505-6-zide.chen@intel.com>
-References: <20260527151154.130505-6-zide.chen@intel.com>
+In-Reply-To: <20260527151154.130505-7-zide.chen@intel.com>
+References: <20260527151154.130505-7-zide.chen@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 27 May 2026 19:56:01 +0000
-Message-Id: <20260527195601.F20AF1F000E9@smtp.kernel.org>
+Date: Wed, 27 May 2026 20:45:46 +0000
+Message-Id: <20260527204547.2E3D11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] This problem wasn't introduced by this patch, but in `pmu_alloc_to=
-pology()`, if the memory allocation for `topology[die]` fails, the error cl=
-eanup loop dereferences the newly-NULL pointer, causing a kernel crash.
-- [High] This problem wasn't introduced by this patch, but there is an unpr=
-otected list traversal of PCI buses in `uncore_die_to_segment()` leading to=
- a potential Use-After-Free if a PCI bus is hot-removed.
+- [High] Calling `uncore_die_to_cpu()` without holding `cpus_read_lock()` i=
+ntroduces a race condition with CPU hotplug, potentially aborting PMU disco=
+very.
+- [High] Use of the unsafe `wrmsrq_on_cpu()` function with an unvalidated M=
+SR index can trigger a General Protection Fault (#GP) and crash the kernel.
+- [High] The required global initialization write is only performed during =
+discovery and is missed upon system resume, leaving PMON units uninitialize=
+d after sleep.
+- [Medium] PMU discovery permanently fails for a die if all of its CPUs are=
+ offline during module initialization.
 --
 
-commit ff1f5cc12e40244014f762aa4e444d2ef1d867a3
+commit d885055ecaea97356a710a83b6d4de7ee7d6ba76
 Author: Zide Chen <zide.chen@intel.com>
+Subject: perf/x86/intel/uncore: Implement global init callback for GNR unco=
+re
 
-perf/x86/intel/uncore: Fix uncore_die_to_cpu() for offline dies
-
-If the die is offline when uncore_die_to_cpu() is called, it silently
-returns 0, which is misleading. This patch modifies the function to return
--1 in this case, indicating that all CPUs on the die are offline. It also
-opportunistically replaces -EPERM with -ENODEV.
+This commit implements a global initialization callback for GNR uncore to
+explicitly write 0 to the global control register at boot. This triggers
+hardware initialization properly for UBOX PMON units on Sierra Forest and
+Clearwater Forest.
 
 > diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
 e.c
-> index 22256ded2d67d..4b3a1fa5b41b7 100644
+> index 4b3a1fa5b41b7..7857959c6e823 100644
 > --- a/arch/x86/events/intel/uncore.c
 > +++ b/arch/x86/events/intel/uncore.c
-> @@ -91,7 +91,7 @@ int uncore_device_to_die(struct pci_dev *dev)
->   */
->  int uncore_die_to_cpu(int die)
->  {
-> -	int res =3D 0, cpu;
-> +	int res =3D -1, cpu;
+[ ... ]
+> @@ -1731,6 +1731,16 @@ static int uncore_mmio_global_init(u64 ctl)
+>  	return 0;
+>  }
 > =20
->  	for_each_online_cpu(cpu) {
->  		if (topology_logical_die_id(cpu) =3D=3D die) {
+> +static int uncore_msr_global_init(int die, u64 msr)
+> +{
+> +	int cpu =3D uncore_die_to_cpu(die);
+> +
+> +	if (cpu =3D=3D -1)
+> +		return -ENODEV;
+
+[Severity: Medium]
+If a die has no online CPUs during module load or boot, this will return
+-ENODEV and abort parsing the discovery table for that die. Since there
+is no mechanism to re-trigger discovery when a CPU on that die is later
+brought online via hotplug, will the uncore PMUs for that die remain
+permanently unavailable?
+
+[Severity: High]
+Is this safe against CPU hotplug? uncore_discovery_pci() invokes
+__parse_discovery_table() without holding cpus_read_lock(). If the
+selected CPU goes offline in the narrow window between uncore_die_to_cpu()
+and the subsequent wrmsrq_on_cpu() call, smp_call_function_single() will
+return -ENXIO and silently abort PMU discovery for the entire die.
+
+> +
+> +	return wrmsrq_on_cpu(cpu, msr, 0);
+> +}
+
+[Severity: High]
+Can this trigger a General Protection Fault (#GP)? The msr parameter is
+derived from a 64-bit value dynamically read from the hardware/firmware
+discovery table. If the firmware provides an invalid value, an MMIO physical
+address, or if the table is corrupted, wrmsrq_on_cpu() will execute a bare
+wrmsr instruction. Should this use wrmsrq_safe_on_cpu() to gracefully handle
+invalid MSR indices?
+
+[Severity: High]
+Since domain->global_init() is only called once during initial uncore
+discovery, what happens during S3 suspend or hibernation? The hardware drops
+power and loses its state, reverting the FRZ_ALL bit back to the default.
+Without a suspend/resume callback to re-trigger this explicit global
+initialization write, will the UBOX PMON units silently fail to work after
+the system resumes from sleep?
 
 [ ... ]
-
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel=
-/uncore_snbep.c
-> index 772b78237424c..334dc384b5b93 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -3772,12 +3772,17 @@ static void pmu_free_topology(struct intel_uncore=
-_type *type)
->  static int skx_pmu_get_topology(struct intel_uncore_type *type,
->  				 int (*topology_cb)(struct intel_uncore_type*, int, int, u64))
->  {
-> -	int die, ret =3D -EPERM;
-> +	int die, ret =3D -ENODEV;
->  	u64 cpu_bus_msr;
-> +	int cpu;
+> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/i=
+ntel/uncore_discovery.c
+> index af2217b44a814..e36613d934b1f 100644
+> --- a/arch/x86/events/intel/uncore_discovery.c
+> +++ b/arch/x86/events/intel/uncore_discovery.c
+[ ... ]
+> @@ -287,7 +287,7 @@ static int __parse_discovery_table(struct uncore_disc=
+overy_domain *domain,
+>  	if (!io_addr)
+>  		return -ENOMEM;
 > =20
->  	cpus_read_lock();
->  	for (die =3D 0; die < uncore_max_dies(); die++) {
-> -		ret =3D skx_msr_cpu_bus_read(uncore_die_to_cpu(die), &cpu_bus_msr);
-> +		cpu =3D uncore_die_to_cpu(die);
-> +		if (cpu =3D=3D -1)
-> +			continue;
-> +
-> +		ret =3D skx_msr_cpu_bus_read(cpu, &cpu_bus_msr);
->  		if (ret)
->  			break;
-
-[Severity: High]
-This isn't a bug introduced by this patch, but later in this function, we
-call uncore_die_to_segment() which iterates over PCI root buses using
-pci_find_next_bus():
-
-arch/x86/events/intel/uncore.c:uncore_die_to_segment() {
-	struct pci_bus *bus =3D NULL;
-
-	/* Find first pci bus which attributes to specified die. */
-	while ((bus =3D pci_find_next_bus(bus)) &&
-	       (die !=3D uncore_pcibus_to_dieid(bus)))
-		;
-
-	return bus ? pci_domain_nr(bus) : -EINVAL;
-}
-
-The pci_find_next_bus() function acquires and releases pci_bus_sem internal=
-ly,
-returning a raw bus pointer without holding a lock or taking a reference co=
-unt.
-
-If an unrelated hot-pluggable PCI root bus is hot-removed concurrently, cou=
-ld
-the bus pointer be freed before the next iteration?
-
-Passing this freed pointer back to pci_find_next_bus() could cause a
-use-after-free when accessing from->node.next.=20
-
-While cpus_read_lock() is held in skx_pmu_get_topology(), does it prevent
-concurrent hotplug of unrelated PCI root buses?
-
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential NULL pointer
-dereference in pmu_alloc_topology() in this same file.
-
-If kzalloc_objs() for topology[die] fails, the code jumps to the clear labe=
-l:
-
-arch/x86/events/intel/uncore_snbep.c:pmu_alloc_topology() {
-	...
-	for (die =3D 0; die < uncore_max_dies(); die++) {
-		topology[die] =3D kzalloc_objs(**topology, type->num_boxes);
-		if (!topology[die])
-			goto clear;
-	...
-clear:
-	for (; die >=3D 0; die--) {
-		for (idx =3D 0; idx < type->num_boxes; idx++)
-			kfree(topology[die][idx].untyped);
-		kfree(topology[die]);
-	...
-}
-
-At the clear label, the loop variable die still points to the index that
-failed allocation, so topology[die] is NULL.
-
-Does the cleanup loop's attempt to execute kfree(topology[die][idx].untyped)
-evaluate to (topology[die] + idx)->untyped and crash the kernel?
+> -	if (domain->global_init && domain->global_init(global.ctl)) {
+> +	if (domain->global_init && domain->global_init(die, global.ctl)) {
+>  		ret =3D -ENODEV;
+>  		goto out;
+>  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527151154.1305=
-05-1-zide.chen@intel.com?part=3D6
+05-1-zide.chen@intel.com?part=3D7
