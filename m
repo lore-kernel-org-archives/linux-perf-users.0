@@ -1,139 +1,114 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BF03F44F3
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 13:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00810176238;
+	Thu, 28 May 2026 15:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779975230; cv=none; b=TpjE0Hm0cZuaERpNenbZwJw2Jfbmb/5dQ14kkOtjoUZUJQevPNDLMS05X4Z8RVt6+vABYjbHtxkvv6IzwMhu7YHREHNZ6njsO23d+9PrWN8OUhCqfMPGlUXZf4KrobeHTE6QIv67yKzi8wco1VgogWiU+a8fwfuNGGXopBzfg0Q=
+	t=1779981891; cv=none; b=juEvRTKQew8JKaboE324aDVxfhZvODGddZ5n+KILslCVw9fhl5Hb1ZI40II2VhnCP5ug5Jh8f+vWEi3DK15GnrfyxLgfwGxrXy98bmaBp5IKwRF/FiN5kb7RVeyqcHr+ARonw8Ga+GorXNXMgZBfmNhLsTmkNXaGFU0N6B9bb+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779975230; c=relaxed/simple;
-	bh=e6IS64LlvzH31ZmTnvUmp+zTDi1i4OKg3KMzKx5frzQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KJ6yTZ9vII0UTbweP99dpwNdNfzhn/klaxyjZlWEyr/kpEhUMWE+MQzmqdFYAagrivD43+p4pFD5m8EMNRIV4RI3CyAcrMg/mmuAYrgyH7gERq+8fRYq884GDuMf25wFNgKBYhimppPkiUTOgP3uC0hYQaxTmlJcDTrWM31DOGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=L+ObAeqE; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1779981891; c=relaxed/simple;
+	bh=iEoDD9p9uw1ANVN2s1Yk4Mak2MDKLl2JMK4XsVy2rQQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dfa+UF7algxWqvGjqB7aHnB95+w5g5ClqQ/F7QnZWP5hj2YSCMkN/M7a/Rhmj9JUyQbCufZiQtAkuwLa5gYyKxbdlTh1Ic2KZjUAeIfIL5JTppistQeiZY5M0hKaOTldn/gdyAblbkJW9H9sGwsyki4k6l5jgJRNJLURwlhXdKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MdnxburT; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="L+ObAeqE"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-45eedc94d37so175230f8f.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 06:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1779975227; x=1780580027; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=e6IS64LlvzH31ZmTnvUmp+zTDi1i4OKg3KMzKx5frzQ=;
-        b=L+ObAeqE6S+PJZ0hpS24yC4i/tNYh7TOSRa297QaPqsf/6Vbokqjq25Igmo/Xe6kq5
-         cMV1tRqVBaRsCxRyRx6QW76NijsTCbBEIbNJPKVBqtEGuCOwSOut7DVNMn5b8sevFaZG
-         m0TZbIPSDlh/HsYBXXwmaDAIIWjPsm6Uxc5Or5kYDtZFPs/IhGpT/fcU5pTOAKEMLHi4
-         ktqK/DyCx8f2T67r1lIF/jgq2z44e4HcFvkHHN40urqMKmrBBPIRw1NOnPX/gk06/Svs
-         GoW3lXNH/U0n+58VZgoUBdR2Avo6Z2unTZDPRfdgVP/42pW3+o42btIAToC54bNZfqwh
-         WjaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779975227; x=1780580027;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e6IS64LlvzH31ZmTnvUmp+zTDi1i4OKg3KMzKx5frzQ=;
-        b=Lrr1llT65wA3xxSDZ1tm+ihVSbOnJjUcO5RlRgYqjU0cjiWtV5V1QfGTKLuqtVpPd0
-         o/RLHKeEss4z2z3Qs7YSsIUCg1h+qBxW/3m9lPmGaJHsGTRilCpra785cRxofPknYllG
-         TVlc92Zzmr+/ULkH6HpAKdDCm5PfL9buNnWS3tB1ipv1IIx4bEEDuV0GoJEqX8mTzSzC
-         kfcHL+feAdzPpzTOrSPe7mX0qJCUHmnkdoz+McHQSYb+A6SE6CjV63QLzR1H3QkoRy42
-         VY4jF9eLKt2n4G9f7G418PWO/MtwVPGa8R82+7N1oPGJfjA8dSV6ml26iCdBtGj1gCcR
-         c6hQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8HgYyu7MLB++qvvx5xiry2405BjOfpK2zFl/fDlXIfQJJfV3Q25InJ1KuaMh3+BUetLoqMO3mUfvSl6fgjjoZd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0thNtfywxPrLDqBh04tJvzyMtnEuY+vpQUWT2IJh30wOehmTH
-	TMSPWIUtKDGK27U8V9Sz+QE25N+K8UBqptdiFsRsbTYGAyQeczWXLlFqae0D2mmcO/8=
-X-Gm-Gg: Acq92OFtwX7D/yARNaVaHEMgdM7vxg/unj+7dT8l1qoaQy72QbBR83PzaWTbBlpAMij
-	oSfhtwHcdo3kYcx5VYnPEnj/rHExxNoA090heqDvPJKNrqeAAaqYXdkBRhRPAZU67ESKi+5oi31
-	54pIXa6xSIEnSWJAn5wvm9lRzFh7sXYFFh47cJiy21Q8AcGO64eZRygqM4vgrQNQevtG7RyStFA
-	YF03UT3eusteHFlcF8t84//VWp37+hMK5iDWQM5gp8hpEWM2wdEgWA7kyQ/y04bocQBckN6OjCT
-	8J/v7vgUcWPxTLJwCjB0GDD+iUl84Lb9d1xXOrcRceOtTbUGxInn8pXGVFJFXO7DD5/cMway1Ji
-	0eI6ct7S3f7RBXQAiyZziQavFklRnxyVOd/B8yPigC0Pw8qPCkfYlw+ZPDc6YmPsisIoTBuK25g
-	1u0thLTFl03MXq1NJujy01exUUUOhLYNcxWsLd7HdIyl/Oi8YyZEOhhiqM85KMWlb+COaNeY4Lf
-	3JTUg==
-X-Received: by 2002:a05:600c:c3cd:20b0:48a:58ae:993b with SMTP id 5b1f17b1804b1-490428c97a1mr317936895e9.16.1779975226585;
-        Thu, 28 May 2026 06:33:46 -0700 (PDT)
-Received: from ?IPv6:2804:1bc4:224:7800:585c:db3a:fcb:e21f? ([2804:1bc4:224:7800:585c:db3a:fcb:e21f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49092a817d3sm48318915e9.10.2026.05.28.06.33.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 06:33:46 -0700 (PDT)
-Message-ID: <5df8ff7bcf1f85a21eea3d4f74451fe6b57c118d.camel@suse.com>
-Subject: Re: [PATCH v2 8/8] selftests/livepatch: Add RISC-V syscall wrapper
- prefix
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-To: Wang Han <wanghan@linux.alibaba.com>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Alexandre Ghiti <alex@ghiti.fr>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>,  Chen
- Pei <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>, 
- =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?=	 <bjorn@rivosinc.com>, Deepak Gupta
- <debug@rivosinc.com>, Puranjay Mohan	 <puranjay@kernel.org>, Conor Dooley
- <conor.dooley@microchip.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Jiri
- Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,  Petr Mladek
- <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>, Shuah Khan
- <shuah@kernel.org>,  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,  Namhyung
- Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com,
- xueshuai@linux.alibaba.com, 	zhuo.song@linux.alibaba.com,
- jkchen@linux.alibaba.com, 	linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, 	linux-trace-kernel@vger.kernel.org,
- live-patching@vger.kernel.org, 	linux-kselftest@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Date: Thu, 28 May 2026 10:33:34 -0300
-In-Reply-To: <20260528082310.1994388-9-wanghan@linux.alibaba.com>
-References: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
-	 <20260528082310.1994388-9-wanghan@linux.alibaba.com>
-Autocrypt: addr=mpdesouza@suse.com; prefer-encrypt=mutual;
- keydata=mDMEZ/0YqhYJKwYBBAHaRw8BAQdA4JZz0FED+JD5eKlhkNyjDrp6lAGmgR3LPTduPYGPT
- Km0Kk1hcmNvcyBQYXVsbyBkZSBTb3V6YSA8bXBkZXNvdXphQHN1c2UuY29tPoiTBBMWCgA7FiEE2g
- gC66iLbhUsCBoBemssEuRpLLUFAmf9GKoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- QemssEuRpLLWGxwD/S1I0bjp462FlKb81DikrOfWbeJ0FOJP44eRzmn20HmEBALBZIMrfIH2dJ5eM
- GO8seNG8sYiP6JfRjl7Hyqca6YsE
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.1 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MdnxburT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779981891; x=1811517891;
+  h=date:message-id:from:to:cc:subject:in-reply-to:
+   references:mime-version;
+  bh=iEoDD9p9uw1ANVN2s1Yk4Mak2MDKLl2JMK4XsVy2rQQ=;
+  b=MdnxburTK1+6uUG4Us2/76tCuz8KSYdIBGWFuTpkrkTk8ifHBW/KqYIG
+   IVmTgEeIq+CQjxAk9n22eOztD8PetzrVzW7o5+t8Vvyg0hw5MlucnSqpN
+   UakIJKbwV93VxPhMKvzhzXFdSduecgek/eTSCjBmcdahY/tQwhJOnZkXE
+   llAgGyaAWzWt5P5qM+FD33GxJgAhKYLmcoljBwvLbRjX2Q2K1mpKrcjhW
+   XByH+fhqEmAXugbN+WSH5A18mnZwsOcJBbLsfd1jPKW2iiYLZuDPgPCL1
+   EJHgPVbdh6zRTwG7xYKNqVqW3sdIQJuZ56xFXyvNWdpSOybOkGbb9OsM1
+   Q==;
+X-CSE-ConnectionGUID: YF4appZbTV6kCluHf+tVzA==
+X-CSE-MsgGUID: vDjRJ0aeTy6vSZ14MvuhnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="80550255"
+X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
+   d="scan'208";a="80550255"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 08:24:51 -0700
+X-CSE-ConnectionGUID: yIiwNmIKS2GF9Z22aFbcaQ==
+X-CSE-MsgGUID: GTn2F/hvQdC5OMbi/sQRyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
+   d="scan'208";a="239564712"
+Received: from tharipra-mobl.gar.corp.intel.com (HELO adixit-MOBL3.intel.com) ([10.125.35.95])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 08:24:49 -0700
+Date: Thu, 28 May 2026 08:24:48 -0700
+Message-ID: <87bjdzmu9r.wl-ashutosh.dixit@intel.com>
+From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Matthew Brost <matthew.brost@intel.com>, Thomas
+ =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, David
+ Airlie <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, Ingo Molnar
+ <mingo@redhat.com>, "Arnaldo Carvalho de Melo" <acme@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "James Clark"
+ <james.clark@linaro.org>,<intel-xe@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>,<linux-perf-users@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] complete perf_allow_* trio and use in drm/xe
+In-Reply-To: <542aef46-583b-412e-bd1b-50cd77c76289@nvidia.com>
+References: <20260523013326.129491-1-jhubbard@nvidia.com>	<20260523084056.GE3102624@noisy.programming.kicks-ass.net>	<8871a158-7a68-4247-a09f-bb3d970d6dc2@nvidia.com>	<87ecixv82m.wl-ashutosh.dixit@intel.com>	<ahcQ9Ns5mjsnrbEa@intel.com>	<20260527163014.GI3102624@noisy.programming.kicks-ass.net>	<87a4tkv4oo.wl-ashutosh.dixit@intel.com>	<542aef46-583b-412e-bd1b-50cd77c76289@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
+ Emacs/30.2 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 2026-05-28 at 16:23 +0800, Wang Han wrote:
-> The syscall livepatch selftest resolves and patches a syscall wrapper
-> symbol. To use that test for RISC-V livepatch validation, add the
-> RISC-V FN_PREFIX definition for ARCH_HAS_SYSCALL_WRAPPER.
->=20
-> Without this macro, the syscall livepatch selftest cannot resolve the
-> RISC-V target symbol, and the syscall-related livepatch test fails on
-> RISC-V.
->=20
-> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+On Wed, 27 May 2026 17:24:36 -0700, John Hubbard wrote:
+>
+> On 5/27/26 4:00 PM, Dixit, Ashutosh wrote:
+> > On Wed, 27 May 2026 09:30:14 -0700, Peter Zijlstra wrote:
+> ...
+> >>>>>> Sure, works for me. How do you want to route these things, Xe tree or
+> >>>>>> -tip?
+> >>>>>
+> >>>>> Hi Peter,
+> >>>>>
+> >>>>> Maybe -tip, but really, either way is perfectly OK with me.
+> >>>>
+> >>>> I've R-b'd both the patches. If you want to merge via Xe tree, let me know
+> >>>> and we can get them merged.
+> >>>
+> >>> To get them through drm-xe trees we need ack from performance events subsystem
+> >>> maintainers.
+> >>>
+> >>> Peter, Ilgo, anyone, ack here?
+> >>
+> >> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >
+> > I have submitted the patches for the Xe tree CI. Once that completes, we
+> > will merge them:
+> >
+> > https://patchwork.freedesktop.org/series/167137/#rev2
+> >
+> Thanks Ashutosh, Rodrigo, and Peter for the reviews and for sending this
+> on up!
 
-Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Merged the the Xe tree:
 
-> ---
-> =C2=A0.../testing/selftests/livepatch/test_modules/test_klp_syscall.c | 2
-> ++
-> =C2=A01 file changed, 2 insertions(+)
->=20
-> diff --git
-> a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-> b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-> index dd802783ea84..275e4b10cf59 100644
-> ---
-> a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-> +++
-> b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-> @@ -18,6 +18,8 @@
-> =C2=A0#define FN_PREFIX __s390x_
-> =C2=A0#elif defined(__aarch64__)
-> =C2=A0#define FN_PREFIX __arm64_
-> +#elif defined(__riscv)
-> +#define FN_PREFIX __riscv_
-> =C2=A0#else
-> =C2=A0/* powerpc does not select ARCH_HAS_SYSCALL_WRAPPER */
-> =C2=A0#define FN_PREFIX
+https://gitlab.freedesktop.org/drm/xe/kernel/-/commits/drm-xe-next
+
+Thanks John for the patches!
+
+Thanks.
+--
+Ashutosh
