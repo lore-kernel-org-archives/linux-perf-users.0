@@ -1,45 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED723ADB9A
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 10:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEB63B9DAD
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 10:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779964405; cv=none; b=sJBCROJbegno69KV3vDXh01gr/4WPnnu1S9Kjm8nes34xnRbXSsLcvfKX/XJA6ZN2i0WP8JWB4/k+SgWvARMEbEE8Yz9SKrLLRimqZrPwzWEJa/pkg7/2+fIVjBACK6SMaRO7pmzJ1TBYnsTCjJ7BOKSQgn2nYGxf4PH7pyiJSM=
+	t=1779964409; cv=none; b=OCPOXGnM7AhNsTnqMxZF8dUc893thv4O3iBDdteS11EhhsW0ux+UK6lA+KwtvUnANjUaFszbPcC3cG930Qbdp9nkuTp5I4H8/kAL2cOqoBmjA//Iw4BQ0ewEg2JRjYIpf0peQCEUxU+88UJezEL/HD75fUINbOu9Ggw6vzk4s7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779964405; c=relaxed/simple;
-	bh=06NFDs70pBKyvXF9/kiQEJamMmI3DUg7PiGAvmLv7sg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CBwB19sinmsdfqB7ng6km/94G8KWeFrPH/eQCM6XFs6s4eRJAsJs9Uf7EdxtHTZ4zWVR1EbZrrSM2ZDVkPZHW5CUHbWhw+vgo4fjnPQWf6QvOut3TFe34JqYTG3mvEN+RJoYTktoY9Aty0L2RG2eQWUWcjOqEcVfvYzl5RqMKaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ChO1dmRV; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1779964409; c=relaxed/simple;
+	bh=++LEFLH/sUU3IXNxmJLkLeLZ14JcepcBU1CyiCKptPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ouNZbkQ0PPdL3RP2DFSqH4ROZf7XGpveLaQzSUTWdq2QeUiJ6ROjUMrYq8akkEFnWgKVmyWBE0YJ5FkcqC3AfbOnXZYXarGXYXxuRW6qd1mJChYZzGrG2NIQYr49pojiyyJKzgHXgMTNFOqgMFw/xbauPv2vd1FXDpC6rej3GBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WY2iATvc; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ChO1dmRV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WY2iATvc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779964402;
+	s=mimecast20190719; t=1779964406;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YiMXLgfWuZbBqGosW+nu60OIaYV4oWx2k3HHbeuOOkQ=;
-	b=ChO1dmRVwCd8EnSPVHZJwDTfNS+NjNYRkb+2+TXcjinH3KzEy8ZAF4F7e7v8SudGOJgG6C
-	JEcwvb8YtsX01ZOTZiPfZdYlQc+3ZrKHPhHF5u529kDmRrA+lGY0Wcij/pjQh2FOVGQlRB
-	ZzzJ6qKt6v3XD/JPDP4s5nqQF4EyxNQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hn4/UQ5e0wUHKrpSyBLV9hekT0/PWSGhfrvPBL30tpA=;
+	b=WY2iATvcOxTK0GXhouIU7En63+2eIsRQuDesRMlWHCaSpI053NgOMyC4jJ8hoViuyBmxjW
+	JkBnOeuWNV9Jhf8lp1WsYcYNpAuAAft/Ti5St3so6dzwy7xX0P1rlt+JwUdH99lg/jYyO/
+	nSGPHk+9Btb41S7Koz9Zyhoi8VuTzT0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-482-J7YeRa4rNf-mXxeDWFj2qQ-1; Thu,
- 28 May 2026 06:33:18 -0400
-X-MC-Unique: J7YeRa4rNf-mXxeDWFj2qQ-1
-X-Mimecast-MFC-AGG-ID: J7YeRa4rNf-mXxeDWFj2qQ_1779964397
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-646-mXd2k7_4OSG2PHw0Zh7OQw-1; Thu,
+ 28 May 2026 06:33:22 -0400
+X-MC-Unique: mXd2k7_4OSG2PHw0Zh7OQw-1
+X-Mimecast-MFC-AGG-ID: mXd2k7_4OSG2PHw0Zh7OQw_1779964401
 Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 48F7F19560B1;
-	Thu, 28 May 2026 10:33:17 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DB2E91956067;
+	Thu, 28 May 2026 10:33:20 +0000 (UTC)
 Received: from fedora.brq.redhat.com (unknown [10.43.17.109])
-	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 785021688;
-	Thu, 28 May 2026 10:33:13 +0000 (UTC)
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A50C51688;
+	Thu, 28 May 2026 10:33:17 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Tomas Glozar <tglozar@redhat.com>
@@ -55,9 +57,11 @@ Cc: John Kacur <jkacur@redhat.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
 	linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v3 0/6] rtla: Migrate to libsubcmd for command line option parsing
-Date: Thu, 28 May 2026 12:32:48 +0200
-Message-ID: <20260528103254.2990068-1-tglozar@redhat.com>
+Subject: [PATCH v3 1/6] rtla: Add libsubcmd dependency
+Date: Thu, 28 May 2026 12:32:49 +0200
+Message-ID: <20260528103254.2990068-2-tglozar@redhat.com>
+In-Reply-To: <20260528103254.2990068-1-tglozar@redhat.com>
+References: <20260528103254.2990068-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,155 +71,201 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
 
-[ CC to linux-perf-users for the libsubcmd code changes ]
+In preparation for migrating RTLA to libsubcmd, build libsubcmd from the
+appropriate directory next to the RTLA build proper, and link the
+resulting object to RTLA.
 
-rtla currently uses its own implementation that uses getopt_long() to
-parse command-line arguments.
+libsubcmd uses str_error_r() and strlcpy() at several places. To support
+these, also link the respective libraries from tools/lib.
 
-Migrate rtla to use libsubcmd for command line argument parsing,
-similarly to what is already done by other tools like perf, bpftool,
-and objtool. Among other benefits, this allows help messages to be
-generated automatically rather than having to be typed out manually
-for each tool.
+For completeness, also add tools/include to include path. This will
+allow other userspace functions and macros shipped with the kernel to be
+used in RTLA; perf and bpftool, two other users of libsubcmd, already do
+that.
 
-libsubcmd is extended with a flag to parse optarg from separate
-argument if a new flag is turned on. Without the flag, the old behavior
-is preserved. That keeps the parsing working for tools that use
-positional arguments, and allows RTLA to keep its flexible syntax for -C
-and -t options and their long variants, --cgroup and --trace-output.
-Another flag is added to disable automatic definition of --no-xy for
-every option --xy and vice versa, which overlaps for RTLA's --irq and
---thread options.
+To prevent a name conflict, rename RTLA's run_command() function to
+run_tool_command(), and replace RTLA's own container_of implementation
+with the one in tools/include/linux/container_of.h.
 
-The new implementation is moved into a separate file, cli.c, together
-with a tiny header counterpart, cli.h. This helps separate the parsing
-logic, which has little in common with the rest of RTLA, in a separate
-module. Another new file, cli_p.h, is used as a private header to contain
-macros and static function declarations that are also used by unit tests
-next to cli.c, but should not be imported from elsewhere.
+Assisted-by: Composer:composer-1
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/.gitignore  |  2 ++
+ tools/tracing/rtla/Makefile    | 66 ++++++++++++++++++++++++++++++----
+ tools/tracing/rtla/src/rtla.c  |  8 ++---
+ tools/tracing/rtla/src/utils.h |  6 ++--
+ 4 files changed, 67 insertions(+), 15 deletions(-)
 
-Macros to generate struct option array fields for libsubcmd's
-parse_args() are used to preserve the consolidation of argument parsing
-code across different RTLA tools. Kernel and user threads are, as
-an exception, treated as common, although they are currently implemented
-for timerlat only, in line with earlier consolidation changes.
-
-The test suite is expanded to include two levels of unit tests, one testing
-the already existing tool_parse_args() functions, one tests option callbacks,
-which are a new level of the CLI parser added in this patchset. This helps
-to verify that no regressions are caused by this refactoring.
-
-I expect more improvements to the code being possible in the future,
-like creating macros for option groups to further deduplicate the code,
-reducing the amount of extra code in the _parse_args() functions, or
-implementing support for unsetting options (which is currently only
-supported for those that do not use a custom callback).
-
-Base commit:
-- https://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git/commit/?h=rtla-for-next&id=f03a59f949176ce4312cb466245d1243aaf40389
-
-Dependencies:
-- https://lore.kernel.org/linux-trace-kernel/20260423130558.882022-1-tglozar@redhat.com/T/
-- https://lore.kernel.org/linux-trace-kernel/20260424140244.958495-1-tglozar@redhat.com/
-- https://lore.kernel.org/linux-trace-kernel/20260414185223.65353-1-costa.shul@redhat.com/
-(apply in reverse order, alternatively, use base commit above)
-
-v3 changes (all in cover letter or first commit):
-- Add FORCE to all targets that feature a make subcommand to ensure changes
-in the dependency will trigger rebuild correctly.
-- Convert all dependencies on directory targets LIBSUBCMD_OUTPUT and
-LIB_OUTPUT into order-only prerequisites to prevent modifications of
-the directory content triggering rebuild of targets inside it.
-- Properly mention depedencies of the patchset in the cover letter, as well
-as the base commit.
-
-v2: https://lore.kernel.org/linux-trace-kernel/20260521141833.2353025-1-tglozar@redhat.com/T/
-
-v2 changes:
-- Two unit test suites are added to cover regressions, after several
-options were broken by the v1. The test suites cover all parsing
-issues reported in the v1 as well as those found during additional
-testing.
-- Return value of all paths that print help, including those that
-are handled in RTLA, are set to libsubcmd's help exit code of 129.
-Previously, only the tool help returned 129. While some other tools
-(e.g. bpftool) do that, RTLA unifies those for consistency. The return
-value is also added to the corresponding section in documentation.
-- Incorrect parsing of --no-irq and --no-thread is fixed using a newly
-added libsubcmd option flag.
-- Incorrect parsing of -n and -u timerlat options (which erroneously
-required an argument in v1) is fixed.
-- A now stale declaration of removed function common_parse_options()
-is removed from common.h.
-- Segmentation fault on abbreviated --help (e.g. --he) is fixed.
-- Incorrect formatting of OPT_END macro (spurious tab) is fixed.
-- All opt_* callbacks now reject unimplemented unset (--no-) correctly.
-- opt_trigger_cb() and opt_filter_cb() now take only the required events
-field, not the whole params structure.
-- Spurious opt_osnoise_threshold_cb() which is actually just a wrapper for
-opt_llong_callback() is removed.
-- Old off-by-one typo is fixed in --dma-latency and -E/--entries error
-messages, to make it consistent with the newly added unit tests.
-- Fix a bug in Makefile that defined LIBSUBCMD_INCLUDES as -I... and then
-used it as a target name: define it as the path only, and then add -I$(...)
-to CFLAGS, as this is the only include path that is generated during the build
-itself.
-
-v1: https://lore.kernel.org/linux-trace-kernel/20260320150651.51057-1-tglozar@redhat.com/T
-
-Tomas Glozar (6):
-  rtla: Add libsubcmd dependency
-  tools subcmd: support optarg as separate argument
-  tools subcmd: allow parsing distinct --opt and --no-opt
-  rtla: Parse cmdline using libsubcmd
-  rtla/tests: Add unit tests for _parse_args() functions
-  rtla/tests: Add unit tests for CLI option callbacks
-
- Documentation/tools/rtla/common_appendix.txt  |   7 +-
- tools/lib/subcmd/parse-options.c              |  63 +-
- tools/lib/subcmd/parse-options.h              |   4 +
- tools/tracing/rtla/.gitignore                 |   2 +
- tools/tracing/rtla/Makefile                   |  66 +-
- tools/tracing/rtla/src/Build                  |   2 +-
- tools/tracing/rtla/src/cli.c                  | 537 +++++++++++++
- tools/tracing/rtla/src/cli.h                  |   9 +
- tools/tracing/rtla/src/cli_p.h                | 670 +++++++++++++++++
- tools/tracing/rtla/src/common.c               | 109 ---
- tools/tracing/rtla/src/common.h               |  27 +-
- tools/tracing/rtla/src/osnoise.c              |   9 +-
- tools/tracing/rtla/src/osnoise_hist.c         | 221 +-----
- tools/tracing/rtla/src/osnoise_top.c          | 200 +----
- tools/tracing/rtla/src/rtla.c                 |  92 ---
- tools/tracing/rtla/src/timerlat.c             |   9 +-
- tools/tracing/rtla/src/timerlat.h             |   6 +-
- tools/tracing/rtla/src/timerlat_hist.c        | 317 +-------
- tools/tracing/rtla/src/timerlat_top.c         | 286 +------
- tools/tracing/rtla/src/utils.c                |  28 +-
- tools/tracing/rtla/src/utils.h                |   9 +-
- tools/tracing/rtla/tests/hwnoise.t            |   2 +-
- tools/tracing/rtla/tests/osnoise.t            |   6 +-
- tools/tracing/rtla/tests/timerlat.t           |   6 +-
- tools/tracing/rtla/tests/unit/Build           |   5 +
- tools/tracing/rtla/tests/unit/Makefile.unit   |   4 +-
- .../rtla/tests/unit/cli_opt_callback.c        | 704 ++++++++++++++++++
- .../rtla/tests/unit/cli_params_assert.h       |  68 ++
- .../rtla/tests/unit/osnoise_hist_cli.c        | 557 ++++++++++++++
- .../tracing/rtla/tests/unit/osnoise_top_cli.c | 503 +++++++++++++
- .../rtla/tests/unit/timerlat_hist_cli.c       | 702 +++++++++++++++++
- .../rtla/tests/unit/timerlat_top_cli.c        | 634 ++++++++++++++++
- tools/tracing/rtla/tests/unit/unit_tests.c    |  13 +
- 33 files changed, 4566 insertions(+), 1311 deletions(-)
- create mode 100644 tools/tracing/rtla/src/cli.c
- create mode 100644 tools/tracing/rtla/src/cli.h
- create mode 100644 tools/tracing/rtla/src/cli_p.h
- delete mode 100644 tools/tracing/rtla/src/rtla.c
- create mode 100644 tools/tracing/rtla/tests/unit/cli_opt_callback.c
- create mode 100644 tools/tracing/rtla/tests/unit/cli_params_assert.h
- create mode 100644 tools/tracing/rtla/tests/unit/osnoise_hist_cli.c
- create mode 100644 tools/tracing/rtla/tests/unit/osnoise_top_cli.c
- create mode 100644 tools/tracing/rtla/tests/unit/timerlat_hist_cli.c
- create mode 100644 tools/tracing/rtla/tests/unit/timerlat_top_cli.c
-
+diff --git a/tools/tracing/rtla/.gitignore b/tools/tracing/rtla/.gitignore
+index 231fb8d67f97..c7b4bf1c8ba9 100644
+--- a/tools/tracing/rtla/.gitignore
++++ b/tools/tracing/rtla/.gitignore
+@@ -10,3 +10,5 @@ custom_filename.txt
+ osnoise_irq_noise_hist.txt
+ osnoise_trace.txt
+ timerlat_trace.txt
++libsubcmd/
++lib/
+diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
+index 45690ee14544..60a102538988 100644
+--- a/tools/tracing/rtla/Makefile
++++ b/tools/tracing/rtla/Makefile
+@@ -27,6 +27,30 @@ endif
+ RTLA		:= $(OUTPUT)rtla
+ RTLA_IN		:= $(RTLA)-in.o
+ 
++LIBSUBCMD_DIR = $(srctree)/tools/lib/subcmd/
++ifneq ($(OUTPUT),)
++  LIBSUBCMD_OUTPUT = $(abspath $(OUTPUT))/libsubcmd
++else
++  LIBSUBCMD_OUTPUT = $(CURDIR)/libsubcmd
++endif
++LIBSUBCMD = $(LIBSUBCMD_OUTPUT)/libsubcmd.a
++LIBSUBCMD_INCLUDES = $(LIBSUBCMD_OUTPUT)/include
++LIBSUBCMD_MAKEFLAGS = O=$(LIBSUBCMD_OUTPUT) DESTDIR=$(LIBSUBCMD_OUTPUT) prefix= subdir=
++
++TOOLS_INCLUDES = -I$(srctree)/tools/include
++
++ifneq ($(OUTPUT),)
++  LIB_OUTPUT = $(abspath $(OUTPUT))/lib
++else
++  LIB_OUTPUT = $(CURDIR)/lib
++endif
++
++LIB_STRING = $(LIB_OUTPUT)/string.o
++LIB_STRING_SRC = $(srctree)/tools/lib/string.c
++
++LIB_STR_ERROR_R = $(LIB_OUTPUT)/str_error_r.o
++LIB_STR_ERROR_R_SRC = $(srctree)/tools/lib/str_error_r.c
++
+ VERSION		:= $(shell sh -c "make -sC ../../.. kernelversion | grep -v make")
+ DOCSRC		:= ../../../Documentation/tools/rtla/
+ 
+@@ -66,7 +90,7 @@ ifeq ($(config),1)
+   include Makefile.config
+ endif
+ 
+-CFLAGS		+= $(INCLUDES) $(LIB_INCLUDES)
++CFLAGS		+= $(INCLUDES) $(LIB_INCLUDES) $(TOOLS_INCLUDES) -I$(LIBSUBCMD_INCLUDES)
+ 
+ export CFLAGS OUTPUT srctree
+ 
+@@ -93,20 +117,48 @@ tests/bpf/bpf_action_map.o: tests/bpf/bpf_action_map.c
+ 	$(Q)echo "BPF skeleton support is disabled, skipping tests/bpf/bpf_action_map.o"
+ endif
+ 
+-$(RTLA): $(RTLA_IN)
+-	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $(RTLA) $(RTLA_IN) $(EXTLIBS)
++$(RTLA): $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R)
++	$(QUIET_LINK)$(CC) $(LDFLAGS) -o $(RTLA) $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R) $(EXTLIBS)
+ 
+-static: $(RTLA_IN)
++static: $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R)
+ 	$(eval LDFLAGS += -static)
+-	$(QUIET_LINK)$(CC) -static $(LDFLAGS) -o $(RTLA)-static $(RTLA_IN)  $(EXTLIBS)
++	$(QUIET_LINK)$(CC) -static $(LDFLAGS) -o $(RTLA)-static $(RTLA_IN) $(LIBSUBCMD) $(LIB_STRING) $(LIB_STR_ERROR_R) $(EXTLIBS)
+ 
+ rtla.%: fixdep FORCE
+ 	make -f $(srctree)/tools/build/Makefile.build dir=. $@
+ 
+-$(RTLA_IN): fixdep FORCE src/timerlat.skel.h
++$(RTLA_IN): fixdep FORCE src/timerlat.skel.h $(LIBSUBCMD_INCLUDES)
+ 	make $(build)=rtla
+ 
+-clean: doc_clean fixdep-clean
++$(LIBSUBCMD_OUTPUT):
++	$(Q)$(MKDIR) -p $@
++
++$(LIBSUBCMD_INCLUDES): FORCE | $(LIBSUBCMD_OUTPUT)
++	$(Q)$(MAKE) -C $(LIBSUBCMD_DIR) $(LIBSUBCMD_MAKEFLAGS) \
++		install_headers
++
++$(LIBSUBCMD): FORCE | $(LIBSUBCMD_OUTPUT)
++	$(Q)$(MAKE) -C $(LIBSUBCMD_DIR) $(LIBSUBCMD_MAKEFLAGS) \
++		$@
++
++$(LIB_OUTPUT):
++	$(Q)$(MKDIR) -p $@
++
++$(LIB_STR_ERROR_R): $(LIB_STR_ERROR_R_SRC) | $(LIB_OUTPUT)
++	$(QUIET_CC)$(CC) $(CFLAGS) -c -o $@ $<
++
++$(LIB_STRING): $(LIB_STRING_SRC) | $(LIB_OUTPUT)
++	$(QUIET_CC)$(CC) $(CFLAGS) -c -o $@ $<
++
++libsubcmd-clean:
++	$(call QUIET_CLEAN, libsubcmd)
++	$(Q)$(RM) -r -- $(LIBSUBCMD_OUTPUT)
++
++lib-clean:
++	$(call QUIET_CLEAN, lib)
++	$(Q)$(RM) -r -- $(LIB_OUTPUT)
++
++clean: doc_clean fixdep-clean libsubcmd-clean lib-clean
+ 	$(call QUIET_CLEAN, rtla)
+ 	$(Q)find . -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)rm -f rtla rtla-static fixdep FEATURE-DUMP rtla-*
+diff --git a/tools/tracing/rtla/src/rtla.c b/tools/tracing/rtla/src/rtla.c
+index 3398250076ea..f4342ca684c3 100644
+--- a/tools/tracing/rtla/src/rtla.c
++++ b/tools/tracing/rtla/src/rtla.c
+@@ -38,12 +38,12 @@ static void rtla_usage(int err)
+ }
+ 
+ /*
+- * run_command - try to run a rtla tool command
++ * run_tool_command - try to run a rtla tool command
+  *
+  * It returns 0 if it fails. The tool's main will generally not
+  * return as they should call exit().
+  */
+-int run_command(int argc, char **argv, int start_position)
++int run_tool_command(int argc, char **argv, int start_position)
+ {
+ 	if (strcmp(argv[start_position], "osnoise") == 0) {
+ 		osnoise_main(argc-start_position, &argv[start_position]);
+@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
+ 	int retval;
+ 
+ 	/* is it an alias? */
+-	retval = run_command(argc, argv, 0);
++	retval = run_tool_command(argc, argv, 0);
+ 	if (retval)
+ 		exit(0);
+ 
+@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
+ 		rtla_usage(0);
+ 	}
+ 
+-	retval = run_command(argc, argv, 1);
++	retval = run_tool_command(argc, argv, 1);
+ 	if (retval)
+ 		exit(0);
+ 
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index e794ede64b2c..96fd72042717 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -7,6 +7,8 @@
+ #include <stdbool.h>
+ #include <stdlib.h>
+ 
++#include <linux/container_of.h>
++
+ /*
+  * '18446744073709551615\0'
+  */
+@@ -37,10 +39,6 @@ static inline bool str_has_prefix(const char *str, const char *prefix)
+ 	return strncmp(str, prefix, strlen(prefix)) == 0;
+ }
+ 
+-#define container_of(ptr, type, member)({			\
+-	const typeof(((type *)0)->member) *__mptr = (ptr);	\
+-	(type *)((char *)__mptr - offsetof(type, member)) ; })
+-
+ extern int config_debug;
+ void debug_msg(const char *fmt, ...);
+ void err_msg(const char *fmt, ...);
 -- 
 2.54.0
 
