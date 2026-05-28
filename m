@@ -1,124 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841D519A288;
-	Wed, 27 May 2026 23:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEC964
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 00:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779922831; cv=none; b=LkwoEsgus+WpqAHT9LSQtxSxA5jimiMU5059FZLJrhIPpxc6pXwDm3j4NoOxiMoYAY2VpUmAlUULIt6IGZ/Q/+3WCkisxYo9l3wqRX8D6Jp77+TzBNupW4u0GkfIQynBVMHurMKEvFif3HPhhOpbzkOWrNb4EGJ9wX20DrGeaHI=
+	t=1779927078; cv=none; b=Z1frhfzhLurt7sGpGtIbFzTWzRIw0XD54ZHw3ewDbh4VUH6bTx9S4Q28VGORCiaC0b9VvSOBQJ4/xRAToXAEVBtiUdpU11p400g+oonoK4R+keHMUtRV9t40p+8n/Jq/H+U/Z5P0WdI/3HfUxAO+r7xerWzf7SD/AseTTEZQbjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779922831; c=relaxed/simple;
-	bh=d5p/0u8zyb3Czb+i19QyWu1dJFMjsoTY2LZtetEdHhY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oWy7SC/U/6dhJ7KY+CF6/A8KqndDG4EeubzbS0lbF8iAbIJTmgCZJAPBIuT+pVy3ZgqJmTW9QynyY5O6mbDZcTIswJvAo41B3pCoTJmigKU3+mOLkK5siGSUWtWf2q4A7z1szDrpD0IRRCunZSkXya24CsTxCANtkSl2FsEoh18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FgFoFwlu; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779927078; c=relaxed/simple;
+	bh=IBoWIZ1sBaidutMaeNkOQvz2X8WBV0uTzdCGe0lgQ3k=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ITh+VIObBYLtqn3frHCezAWJDbqIvfTvt0beaYsrI5791VfQwVXqtEqTifJ2bXF2gsEufIH0pVYbqEC8z1hyJfSHCvTllU/2Hj8Ze7/NwdLGyhi89aWCPHVapl4NEjH8/s3GFcPTva3uvXbEHJaK1a0XoUttSlVk0Z4PUi0W5mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyrRkNRt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FgFoFwlu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779922828; x=1811458828;
-  h=date:message-id:from:to:cc:subject:in-reply-to:
-   references:mime-version;
-  bh=d5p/0u8zyb3Czb+i19QyWu1dJFMjsoTY2LZtetEdHhY=;
-  b=FgFoFwluiCcHO9mW0u9rzpZ4gZKQmwHmoKwfqBYiyDJOYsx1//BaKqsR
-   +dfF/rz7WDLoP5RyXkhVdA1DBtBlvVJr8jLmv/0OnTG81h/yCMqgSDomt
-   i51VduizxGaudOwCm2yppehP2of0pR5Go0cuethv/CcZFcaUmRXhu+N1H
-   Lmn0cS1VXixpRWTl4e9bTD7SoTq8hNULj0+0oIUq3s98sW8BN1/s/UkfV
-   giZhEkR4cLTgOi2GVqThHYPgaCvA2wzu+NCL4AgKZsMV45cCuBtSrieQM
-   vgwwVlRMrvuzPvJK971t14+/xr6Dd3MvOG40dskjQPwvQPsHDX+K90D7l
-   g==;
-X-CSE-ConnectionGUID: Hjt8DSxWRreMKWpctDurSA==
-X-CSE-MsgGUID: FeVG+TyWSZKHd6pH7t1wmw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="98340976"
-X-IronPort-AV: E=Sophos;i="6.24,172,1774335600"; 
-   d="scan'208";a="98340976"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 16:00:28 -0700
-X-CSE-ConnectionGUID: +8NzEw63QUaF3SEhwh4sdg==
-X-CSE-MsgGUID: HPtOejEJRraZExDw+y0cIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,172,1774335600"; 
-   d="scan'208";a="266262474"
-Received: from unknown (HELO adixit-MOBL3.intel.com) ([10.241.243.147])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 16:00:25 -0700
-Date: Wed, 27 May 2026 16:00:23 -0700
-Message-ID: <87a4tkv4oo.wl-ashutosh.dixit@intel.com>
-From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>,	John Hubbard
- <jhubbard@nvidia.com>,	Matthew Brost <matthew.brost@intel.com>,	Thomas
- =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,	David
- Airlie <airlied@gmail.com>,	Simona Vetter <simona@ffwll.ch>,	Ingo Molnar
- <mingo@redhat.com>,	Arnaldo Carvalho de Melo <acme@kernel.org>,	Namhyung
- Kim <namhyung@kernel.org>,	Mark Rutland <mark.rutland@arm.com>,	Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,	Jiri Olsa
- <jolsa@kernel.org>,	Ian Rogers <irogers@google.com>,	Adrian Hunter
- <adrian.hunter@intel.com>,	James Clark <james.clark@linaro.org>,
-	intel-xe@lists.freedesktop.org,	dri-devel@lists.freedesktop.org,
-	linux-perf-users@vger.kernel.org,	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] complete perf_allow_* trio and use in drm/xe
-In-Reply-To: <20260527163014.GI3102624@noisy.programming.kicks-ass.net>
-References: <20260523013326.129491-1-jhubbard@nvidia.com>
-	<20260523084056.GE3102624@noisy.programming.kicks-ass.net>
-	<8871a158-7a68-4247-a09f-bb3d970d6dc2@nvidia.com>
-	<87ecixv82m.wl-ashutosh.dixit@intel.com>
-	<ahcQ9Ns5mjsnrbEa@intel.com>
-	<20260527163014.GI3102624@noisy.programming.kicks-ass.net>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
- Emacs/30.2 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyrRkNRt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BBF11F00A3A;
+	Thu, 28 May 2026 00:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779927077;
+	bh=DAj4dxg1qUUxSrkSfKijVbSBzPAQb2ljKEhO0EfP0X8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ZyrRkNRttoK+LZZcSdHN1GKke+Pgv/LlhuFE1IKPL/LIlBwdzor+TSYjsXkdIOqzl
+	 N8tFnRaBbUa8o/Er+1LSmrNgKUtxVZXz8HIQf1OTYcrzdhtPwwS7xSFJQP3nrJplx5
+	 NL7w0Z3o7tyD0pu+NPk6GLoixJ0Wrb7Z1iBj0iFHkLGILznSJYXxFzRMJVs8yMhBV4
+	 g7YQ3UyF3eTti8W/V6h7XKtKYi60F01F7xDBkwpAJTVc6t3Ur74aFdvF17rgnNXgaf
+	 YpSS/yzJo6JJIbqcQSmEFbmFfdujfOyGJzL8VkjwV9AT8D4QL3whDuYk9d95TZEqaX
+	 K2AzuqtowcwRA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH RESEND v7 1/2] perf pmu intel: Generalize SNC cpumask
+ adjustment for multiple platforms
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Chun-Tse Shao" <ctshao@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260527221934.3830896-1-ctshao@google.com>
+References: <20260527221934.3830896-1-ctshao@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 28 May 2026 00:11:16 +0000
+Message-Id: <20260528001117.3BBF11F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 27 May 2026 09:30:14 -0700, Peter Zijlstra wrote:
->
-> On Wed, May 27, 2026 at 11:42:44AM -0400, Rodrigo Vivi wrote:
-> > On Tue, May 26, 2026 at 08:34:57PM -0700, Dixit, Ashutosh wrote:
-> > > On Sat, 23 May 2026 10:52:16 -0700, John Hubbard wrote:
-> > > >
-> > > > On 5/23/26 1:40 AM, Peter Zijlstra wrote:
-> > > > > On Fri, May 22, 2026 at 06:33:24PM -0700, John Hubbard wrote:
-> > > > ...
-> > > > >>    perf/core: out-of-line and export perf_allow_cpu/tracepoint()
-> > > > >>    drm/xe: gate observation streams with perf_allow_cpu()
-> > > > >>
-> > > > >>   drivers/gpu/drm/xe/xe_eu_stall.c    |  5 +++--
-> > > > >>   drivers/gpu/drm/xe/xe_oa.c          | 25 +++++++++++++---------
-> > > > >>   drivers/gpu/drm/xe/xe_observation.c | 32 ++++++++++++++++++++++++-----
-> > > > >>   drivers/gpu/drm/xe/xe_observation.h |  3 +--
-> > > > >>   include/linux/perf_event.h          | 31 ++++++++++++++--------------
-> > > > >>   kernel/events/core.c                | 18 ++++++++++++++++
-> > > > >>   6 files changed, 79 insertions(+), 35 deletions(-)
-> > > > >
-> > > > > Sure, works for me. How do you want to route these things, Xe tree or
-> > > > > -tip?
-> > > >
-> > > > Hi Peter,
-> > > >
-> > > > Maybe -tip, but really, either way is perfectly OK with me.
-> > >
-> > > I've R-b'd both the patches. If you want to merge via Xe tree, let me know
-> > > and we can get them merged.
-> >
-> > To get them through drm-xe trees we need ack from performance events subsystem
-> > maintainers.
-> >
-> > Peter, Ilgo, anyone, ack here?
->
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-I have submitted the patches for the Xe tree CI. Once that completes, we
-will merge them:
-
-https://patchwork.freedesktop.org/series/167137/#rev2
-
-Thanks.
+Pre-existing issues:
+- [Critical] An integer overflow in `uncore_cha_snc()` can result in a nega=
+tive Sub-NUMA Clustering (SNC) node index. This bypasses the upper-bound ch=
+eck against `MAX_SNCS` and causes subsequent out-of-bounds array accesses.
 --
-Ashutosh
+
+commit be394e8b7ddbe730c3fc40fb608337fe19c7b33b
+Author: Chun-Tse Shao <ctshao@google.com>
+
+perf pmu intel: Generalize SNC cpumask adjustment for multiple platforms
+
+This commit generalizes the Sub-NUMA Clustering (SNC) logic previously
+specific to Granite Rapids to support multiple Intel platforms. It uses
+CPUID to determine SNC support and caches various PMU configurations
+to improve thread safety.
+
+> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pm=
+u.c
+> index 7c9d238922a6c..9b00d5720fb7a 100644
+> --- a/tools/perf/arch/x86/util/pmu.c
+> +++ b/tools/perf/arch/x86/util/pmu.c
+
+[ ... ]
+
+> @@ -121,46 +142,73 @@ static int uncore_cha_snc(struct perf_pmu *pmu)
+>  		return 0;
+>  	}
+>  	chas_per_node =3D num_cha / snc_nodes;
+> +	if (chas_per_node =3D=3D 0) {
+> +		pr_warning("Unexpected: chas_per_node is 0 (num_cha=3D%d, snc_nodes=3D=
+%d)\n",
+> +			   num_cha, snc_nodes);
+> +		return 0;
+> +	}
+>  	cha_snc =3D cha_num / chas_per_node;
+> =20
+>  	/* Range check cha_snc. for unexpected out of bounds. */
+>  	return cha_snc >=3D MAX_SNCS ? 0 : cha_snc;
+
+[Severity: Critical]
+This is a pre-existing issue, but does this range check safely handle very
+large values for cha_num?
+
+Since cha_num is parsed as an unsigned int via sscanf() from the PMU name,
+and cha_snc is a signed int, a sufficiently large cha_num could cause the
+division result to overflow into a negative value.
+
+If cha_snc becomes negative, the cha_snc >=3D MAX_SNCS check evaluates to
+false, allowing the function to return a negative index.
+
+Could this negative index then cause out-of-bounds array accesses when used
+later in uncore_cha_imc_compute_cpu_adjust()?
+
+uncore_cha_imc_compute_cpu_adjust() {
+    static bool checked_cpu_adjust[MAX_SNCS];
+    ...
+    if (checked_cpu_adjust[pmu_snc])
+    ...
+}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260527221934.3830=
+896-1-ctshao@google.com?part=3D1
