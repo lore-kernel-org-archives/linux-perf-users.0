@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BC22D3A7B;
-	Thu, 28 May 2026 06:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7202F0661;
+	Thu, 28 May 2026 06:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779948120; cv=none; b=soHvi/vbfIa8UN33koUJhHKR0yg5aj3PV7fmcW7GNSOTA5b2EmyuH8Iix1VO+D/ehrLBVCFVmGF/fmtFXjL8UEeig86hdjmSIBl1kU1OX7okeseGRaZKwv8JZMTOFsydKYjkIGhBswS9rVEGvFl4O+6RVeLTM4kCZ1UGEpcDbhU=
+	t=1779948202; cv=none; b=D1akFQ+Nb3mBtO26P27mGawXDrFSCkt7VOmpatXRJBdFaIzUCO7437LoURFBIsT272uyyRYD4eS4eBRMOxTfNqPEPJBtPMlYThRpt2tWI7+dTM9CKWT8i9NftFFpyNFW4QZs0Tt4Jdos7qcGxbbBtZramBqfdgjxfXX3O/N4hXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779948120; c=relaxed/simple;
-	bh=Dfs0rkc7BwIjh3zfY7LNfYMDDok5JbpuW/2bfyz7tVQ=;
+	s=arc-20240116; t=1779948202; c=relaxed/simple;
+	bh=w2aziwmc4ab/Uq/FPz13DWaFuTWrWhshk/hOSR7cHzA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LRq8hhWw+eGfUi/ivNcxNw32J7gOR87fuI6EniSDGYDfvreSagUWngmIHM8m3l45UzRPxtpbvyi4Cf+MuhDqBehXmGTcJJo4sVGI/6WF72ZNUnuJsGGEvneBqQtlSLFiUKs6ghLdFEwWF3kCJy/wpQtoQOrfUyawk9fs5HEljkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkX6Cs/2; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=Sb4xgHQtCI6ArRgAjtTkIVdU9U0NAVsrGzQVAZ1xs5Djzs3r7QnJRbuMa8BOsHoU9nW9G50juGJImr3IHewZ6rWOIZImU+9ImhgBSEdoXeLoZg8FDhPWvXSRMFIGmaMAD/5xa9naCD6dQiXkctBacUpFvt8ZOm/MdeB/QpF0QeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O9RoMmRt; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkX6Cs/2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O9RoMmRt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779948118; x=1811484118;
+  t=1779948200; x=1811484200;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Dfs0rkc7BwIjh3zfY7LNfYMDDok5JbpuW/2bfyz7tVQ=;
-  b=lkX6Cs/27FCiUjzDKD/QZ2JITCwvWhqhLWv6vqR+0ifmwE+5wPpj6YzD
-   GJo9teS3OhXUnEjzZTJPFjjyeaiWP5kArXlh3k7Sernh0ThtxX0O6Rx/7
-   wj4UqtbxpwqZPexwT/jYOTCcWKpTd3W1EDh2VWlIrmvKCShoFetrw7QxL
-   Jepyt3igR1PabkSH8AhZZHonIyaUlmTt1ctJL4d1b2vUOXq4OA7O/6ubc
-   gjb71iKKJu+2D+JrBBrFvxKFuIXpoVxmJrKWrYbRvlAFs2uFWrVoGMVPH
-   mnCJKJ7axEoMS7NpqOdYyd3QR8j0w78Tn0YHqb8OF0x31QFJlM721Muso
+  bh=w2aziwmc4ab/Uq/FPz13DWaFuTWrWhshk/hOSR7cHzA=;
+  b=O9RoMmRtEHElfGbuqCrr8yRpEGF7RJNNtbVvHuf/QD6ldQHFTSqWmyYd
+   ILNRgNUpWeM92Re1o6ynJCi0lnJCSNjkuzdhDROMRBKsDkZKfdgJiYLsm
+   CzamHSiRZv1dSYIBGfcpdjqbc6LOx1bO2BVgIJzM/MzcVtCqupLodkBTp
+   kS+kc2ZMkOW9ziVd8WASzSFizPsfhGO1vLcI4CBEyiAfj6oh+V3EEXWvK
+   1qOkiiAVOw63LTGq/0zMlrj2tKfIMIQ1ZtkRmyeroGtWY6CQobBrFtEnU
+   9ICLHHz1w8LrTuyFbXRjOy6SJt/6oZXu9Jn55lIfbWOJ6K5NODTooF2Iw
    A==;
-X-CSE-ConnectionGUID: JDFp0p/qSVOh+8Psy3B4hQ==
-X-CSE-MsgGUID: 29RwTn/jTsKyqZB5hC7MAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="80777205"
+X-CSE-ConnectionGUID: giRjd6QeSGWPYjYl4uKBaw==
+X-CSE-MsgGUID: 19ZiWoZ6QiijQXCaCeenwA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="80777320"
 X-IronPort-AV: E=Sophos;i="6.24,172,1774335600"; 
-   d="scan'208";a="80777205"
+   d="scan'208";a="80777320"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 23:01:57 -0700
-X-CSE-ConnectionGUID: JzFWjWsGQd2JETA1armMug==
-X-CSE-MsgGUID: wyJmAyLTTfWa/o8xp0KCew==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 23:03:20 -0700
+X-CSE-ConnectionGUID: PIL2toTWQUCVXdxBN3N0NA==
+X-CSE-MsgGUID: 3DXIEF3pT0GLZrCy5QKH1w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,172,1774335600"; 
-   d="scan'208";a="272789224"
+   d="scan'208";a="272789581"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 23:01:54 -0700
-Message-ID: <2f354a07-20e6-46ff-8959-47a107c4d664@linux.intel.com>
-Date: Thu, 28 May 2026 14:01:51 +0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 23:03:16 -0700
+Message-ID: <6b5428ae-d31f-4a21-b7c2-65b0db00a9e8@linux.intel.com>
+Date: Thu, 28 May 2026 14:03:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/7] perf/x86/intel/uncore: Fix discovery unit lookup
- for multi-die systems
+Subject: Re: [PATCH V2 2/7] perf/x86/intel/uncore: Guard against invalid box
+ control address
 To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
  Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
@@ -62,58 +62,114 @@ To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
  Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 References: <20260527151154.130505-1-zide.chen@intel.com>
+ <20260527151154.130505-2-zide.chen@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260527151154.130505-1-zide.chen@intel.com>
+In-Reply-To: <20260527151154.130505-2-zide.chen@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-LGTM.
-
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
+
 On 5/27/2026 11:11 PM, Zide Chen wrote:
-> In uncore_find_add_unit(), PMON units with the same unit ID may be
-> added to the uncore discovery RB-tree for different dies. These units
-> are distinguished by node->die.
+> Theoretically, intel_uncore_find_discovery_unit() could return NULL,
+> e.g., when a CPU die is offline during uncore enumeration and its PMU
+> units are not added to the discovery RB-tree.
 >
-> However, intel_generic_uncore_box_ctl() uses a fixed die ID of -1 when
-> looking up the discovery unit, which may retrieve the wrong node on
-> multi-die systems.
+> Guard against a NULL return value and the resulting invalid box control
+> address (0) before accessing hardware.
 >
-> Use box->dieid instead so the correct discovery unit is selected.
->
-> No functional issue has been observed so far because currently supported
-> platforms happen to use the same unit control register for such units.
->
-> Remove WARN_ON_ONCE() because with the above change a NULL unit can be
-> expected, e.g. when a CPU die is offline during uncore enumeration and
-> the unit is not added to the RB-tree. In this case,
-> intel_uncore_find_discovery_unit() returns NULL once the die becomes
-> online, and it is expected that the PMU box is not functional for that
-> die.
->
-> Fixes: b1d9ea2e1ca4 ("perf/x86/uncore: Apply the unit control RB tree to MSR uncore units")
 > Signed-off-by: Zide Chen <zide.chen@intel.com>
 > ---
-> v2:
-> - Remove WARN_ON_ONCE().
+> V2:
+> - New patch.
+> - Address pre-existing invalid box control address issue (Sashiko).
 > ---
->  arch/x86/events/intel/uncore_discovery.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/x86/events/intel/uncore_discovery.c | 36 ++++++++++++++++++------
+>  1 file changed, 27 insertions(+), 9 deletions(-)
 >
 > diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-> index 583cbd06b9b8..60e1200c4691 100644
+> index 60e1200c4691..af2217b44a81 100644
 > --- a/arch/x86/events/intel/uncore_discovery.c
 > +++ b/arch/x86/events/intel/uncore_discovery.c
-> @@ -481,8 +481,8 @@ static u64 intel_generic_uncore_box_ctl(struct intel_uncore_box *box)
->  	struct intel_uncore_discovery_unit *unit;
+> @@ -490,17 +490,28 @@ static u64 intel_generic_uncore_box_ctl(struct intel_uncore_box *box)
 >  
->  	unit = intel_uncore_find_discovery_unit(box->pmu->type->boxes,
-> -						-1, box->pmu->pmu_idx);
-> -	if (WARN_ON_ONCE(!unit))
-> +						box->dieid, box->pmu->pmu_idx);
-> +	if (!unit)
->  		return 0;
+>  void intel_generic_uncore_msr_init_box(struct intel_uncore_box *box)
+>  {
+> -	wrmsrq(intel_generic_uncore_box_ctl(box), GENERIC_PMON_BOX_CTL_INT);
+> +	u64 box_ctl = intel_generic_uncore_box_ctl(box);
+> +
+> +	if (!box_ctl)
+> +		return;
+> +
+> +	wrmsrq(box_ctl, GENERIC_PMON_BOX_CTL_INT);
+>  }
 >  
->  	return unit->addr;
+>  void intel_generic_uncore_msr_disable_box(struct intel_uncore_box *box)
+>  {
+> -	wrmsrq(intel_generic_uncore_box_ctl(box), GENERIC_PMON_BOX_CTL_FRZ);
+> +	u64 box_ctl = intel_generic_uncore_box_ctl(box);
+> +
+> +	if (box_ctl)
+> +		wrmsrq(box_ctl, GENERIC_PMON_BOX_CTL_FRZ);
+>  }
+>  
+>  void intel_generic_uncore_msr_enable_box(struct intel_uncore_box *box)
+>  {
+> -	wrmsrq(intel_generic_uncore_box_ctl(box), 0);
+> +	u64 box_ctl = intel_generic_uncore_box_ctl(box);
+> +
+> +	if (box_ctl)
+> +		wrmsrq(box_ctl, 0);
+>  }
+>  
+>  static void intel_generic_uncore_msr_enable_event(struct intel_uncore_box *box,
+> @@ -549,6 +560,10 @@ bool intel_generic_uncore_assign_hw_event(struct perf_event *event,
+>  
+>  	if (box->pci_dev) {
+>  		box_ctl = UNCORE_DISCOVERY_PCI_BOX_CTRL(box_ctl);
+> +
+> +		if (!box_ctl)
+> +			return false;
+> +
+>  		hwc->config_base = box_ctl + uncore_pci_event_ctl(box, hwc->idx);
+>  		hwc->event_base  = box_ctl + uncore_pci_perf_ctr(box, hwc->idx);
+>  		return true;
+> @@ -567,27 +582,30 @@ static inline int intel_pci_uncore_box_ctl(struct intel_uncore_box *box)
+>  
+>  void intel_generic_uncore_pci_init_box(struct intel_uncore_box *box)
+>  {
+> -	struct pci_dev *pdev = box->pci_dev;
+>  	int box_ctl = intel_pci_uncore_box_ctl(box);
+>  
+> +	if (!box_ctl)
+> +		return;
+> +
+>  	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
+> -	pci_write_config_dword(pdev, box_ctl, GENERIC_PMON_BOX_CTL_INT);
+> +	pci_write_config_dword(box->pci_dev, box_ctl, GENERIC_PMON_BOX_CTL_INT);
+>  }
+>  
+>  void intel_generic_uncore_pci_disable_box(struct intel_uncore_box *box)
+>  {
+> -	struct pci_dev *pdev = box->pci_dev;
+>  	int box_ctl = intel_pci_uncore_box_ctl(box);
+>  
+> -	pci_write_config_dword(pdev, box_ctl, GENERIC_PMON_BOX_CTL_FRZ);
+> +	if (box_ctl)
+> +		pci_write_config_dword(box->pci_dev, box_ctl,
+> +				       GENERIC_PMON_BOX_CTL_FRZ);
+>  }
+>  
+>  void intel_generic_uncore_pci_enable_box(struct intel_uncore_box *box)
+>  {
+> -	struct pci_dev *pdev = box->pci_dev;
+>  	int box_ctl = intel_pci_uncore_box_ctl(box);
+>  
+> -	pci_write_config_dword(pdev, box_ctl, 0);
+> +	if (box_ctl)
+> +		pci_write_config_dword(box->pci_dev, box_ctl, 0);
+>  }
+>  
+>  static void intel_generic_uncore_pci_enable_event(struct intel_uncore_box *box,
