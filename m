@@ -1,282 +1,322 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012049.outbound.protection.outlook.com [52.101.53.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67215423A7C;
-	Thu, 28 May 2026 18:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FA932FA3C
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 18:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779993463; cv=fail; b=gI/TZMJJB/CAYCBXsvos6hRZzCR0p8TD9fI5HLzG7Zo7aGZAauHO4+f18YbJpw4mzWqkZBNwqXsWrRd9zlfOnDBj64Irh6zgq1SrJY2Hj4ZSznhvv8TAlTfsRlS9R6tPBfqf8UpaIdcEMqAlKs3pAgzI+kw+5hcUJo+awfeobtc=
+	t=1779994652; cv=pass; b=DKq0KRBje4JphV+R7EsF/sskrwCV8L9phfw9J0hXP8yHTbyLv3EbqYaZXJPqIWQ5JxYREeGLRtD3hISR4ZC6xWCLa2AeVQasGGbXdCgNgUCoeEBZnGEaUaUo8CNCz47RyUGR4gMt+oOxfGdc5Euu/vUuBw15vUvmQePpdCD6VQk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779993463; c=relaxed/simple;
-	bh=pF5s743zBvTo2xvtFS9DzQr0KbP2TfPwVfUvWFW6+xs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GEoWUEzs17BNi7qbuUfKPqgDUvKIv8FHQeZZxvVWWkNfE29KxU16Yt1r7cavwsu1W8nxNcq3431HunvK9jHouW2YkZy9QMRuVZSWxDNqAd9YUXXoWpCLiKYzjliTiNzpS5xN5rCpspjlE74HHKq98XzrgfEFw6t4IRnCRFsoirA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OeqoXeL8; arc=fail smtp.client-ip=52.101.53.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1779994652; c=relaxed/simple;
+	bh=1vmu/Bfvp2W1SJ+AdIKbaoKE21e74Zlyc14lOgqsKQ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CT9Bn490nTb7oyCrFCWa08F7ehH7a3CiC98HPuL3BtWb4aYFy1TDmCk5tKP1rlc05YWcCpWHj8mCM4skabZi/y/u6fE/qXuOXLmjr1gHLN43gHEV9TUWP8E+FANjRXo1EZ1MSE3Pf5/bzrB2chHYJjZq0SsCFl5NGNnmOiZa1Uc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fV0tGhEF; arc=pass smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OeqoXeL8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YKHXnmUR2W7VPGTNcEgCjGds49ybDyh5E+020713oo5xe4Rmka1Q2B192CaTpdtmIFl4CA5djhrgSCzQu2AoMy6P3HhaqcSED1mcLBNMlDgE/+soSBGkZ+3hWlG45KpPAlwy/VZmz+OsdhqFLijJZqBoHnuONpEhBqMVOpM3jiN7ykc/rNHXXebNaa4f1jIZn3gOkeH1MvYq/IPlAogCChadr1HgDvlVlq3jb6zyIAIrJ6CLYOins0HPS+2YvUAcS+QMF85saqbUCWKh3YCBAj0tcak/ZP/17QWuTjU0m9A05U8xuAPM9usLeD8EcfC/b8QMmQmIcFbKq4zc/jJ+MA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TN/bgsrICrWpLaMM60zlFci3WLACSKTW0IfzHL6qfrg=;
- b=XBfjuSnBwasJER5le8TqUDa4aOlsEqjVNMl68UNHI7Y9s8KU8IfV0n2cgiX71wzzdHuecox11itzvZ56IWO4tyxxFhpE09qa4TPRNzZ0kz121N5JqsloayboLPz6cYXb0OKNKStw/aYYjQZVn8D+hK2UvnRNKYTO2rYy81xw2Aqj/QV91YXsfiriNNbGZDqVBI60nnILy1K5zOEujs+Q9wMNbepGr8zN2lGzn4tPtFG4VyH2i4h/u/i/mBmXqgUvZuFWWAT6vpdEP/wtuPCGiFfN9iDL/DH2Qgy8b+x7v6g49IOqrj6g4RXkdnChUZAB05pH4bc9qizP5AqFKNr7Pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TN/bgsrICrWpLaMM60zlFci3WLACSKTW0IfzHL6qfrg=;
- b=OeqoXeL8w+T+BnhZAQr41IyeJJLIgTkGnYJDi949v6xtH4mX7QlkJ8vnV5+47+Si8oWZZGM6QPkysDU7Jlnie4TPrDe64GjvkqS+iD/uwZCUNjYm7d8yVT6Myb1Tv7JcukR6KbfK5ND4S2YRPgwnthU17xeXzLSmyWIkg7dQG/89yM1EuU+ADlQc0d0/po+Fm1m0L/5MpwZb9Qv7//1ZGBBwaOshZQhweEtYrbTN/1tt1F0O0xzBS8p8EBiodcoV5735WKGptGeyc2ogaxqI+axawFHvUSDwNxss7tgrjudWb5E9uHzxtrpw4WK06v1V9Mya0A8ApbVLSEd2Aeht2w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV3PR12MB9356.namprd12.prod.outlook.com (2603:10b6:408:20c::21)
- by DS0PR12MB6389.namprd12.prod.outlook.com (2603:10b6:8:cf::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.71.12; Thu, 28 May 2026 18:37:23 +0000
-Received: from LV3PR12MB9356.namprd12.prod.outlook.com
- ([fe80::1c36:31b4:c420:6286]) by LV3PR12MB9356.namprd12.prod.outlook.com
- ([fe80::1c36:31b4:c420:6286%5]) with mapi id 15.21.0071.011; Thu, 28 May 2026
- 18:37:23 +0000
-From: Yury Norov <ynorov@nvidia.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Yury Norov <ynorov@nvidia.com>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Will Deacon <will@kernel.org>,
-	Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Linu Cherian <lcherian@marvell.com>,
-	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
-	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Kees Cook <kees@kernel.org>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Besar Wicaksono <bwicaksono@nvidia.com>,
-	Ma Ke <make24@iscas.ac.cn>,
-	Chengwen Feng <fengchengwen@huawei.com>,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-perf-users@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	linux-pm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-fpga@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	linux-cxl@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH 16/16] lib/bitmap-str: get rid of cpumap_print_to_pagebuf()
-Date: Thu, 28 May 2026 14:36:23 -0400
-Message-ID: <20260528183625.870813-17-ynorov@nvidia.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260528183625.870813-1-ynorov@nvidia.com>
-References: <20260528183625.870813-1-ynorov@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0202.namprd13.prod.outlook.com
- (2603:10b6:a03:2c3::27) To LV3PR12MB9356.namprd12.prod.outlook.com
- (2603:10b6:408:20c::21)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fV0tGhEF"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2ba180a022dso685ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 11:57:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779994650; cv=none;
+        d=google.com; s=arc-20240605;
+        b=h9dxgLjfjTzBUEz3v3NCHeYx7UUTfzmIHxPhKF3ZsWd2+7eEs2GQyNcwiYs19nK/Fc
+         On0GCErYqx2JHhFDWjXJtJYveJXrImnWP3ZwLLKIK0IBxlRaP4o5YYzIQthjtiVJdtJI
+         iNGaf0LcrQVII1WvPROnT0hdhiUgEVW+xM8uaDotR5ii31ggrS+KCpM9HK1f3SfqdPqO
+         tU+XBKEnpNedDQy8JnIc43SgqEb5cebtftdseStCaQ+SaBgLeDjFGVqtI0rYHEGftQa9
+         zm0Qm4HN9l9onlyYwhGoY6ImWpdwWAhv3eFIWzDPAoKsbPQODpZa4+bg6Po8ZuqRyuns
+         s7Vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=CjdDq7vYHR8fX0qtYCUiCkr7KhheLzVgFpHo15St/kY=;
+        fh=dQbUi58L6axqHT1MbgZjZaZTiiBBFuseb65TAiOV+H0=;
+        b=Yw49g3P7z3UAflUUPAkIsHPQGB9+joBZRE/GvM4IH3DCi+mUH5yHKBR3rDx1XQ+pfu
+         FHCw94iDoLKez7xX1CuN8Apd+on9eHSxeOdFbaoMWzJHZXr+duT8Sw5Fllu73nQ2FOda
+         nqulJMAchu/78Y3GzpOnIBUDPjkaDuJPj8kFCxlPk8wzIyfXj7k/4XXGEaOx7JzPya3a
+         Jtzvo5s5yHYR8vkYoAgoMlIp2u0uWJwOqgVu7cVpbkc/lmPREx1pUmWym7yqEAFBADBa
+         0W0Y1g6VFHc0Hl/WS5KEHC6jlfuE+zqs6Rq1gXVkwofkIvPg28Jmmwwg80QLGap8uODq
+         4oQw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779994650; x=1780599450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CjdDq7vYHR8fX0qtYCUiCkr7KhheLzVgFpHo15St/kY=;
+        b=fV0tGhEFihyGGou0W/i2Xdrso4/WiMyRMJjjGSzWF5T1h/wS/SV6htwYzIvqGql30p
+         x6UM0TcXwUB6y/e0XqLCaOOjh7EeUvk8Mgd+LoWQg6QX/tSpkCp/plnbVlKV/GL6lVZx
+         UHTQKPM/9CtPJikUMYO7h0u/lPqSG2P9cEgPi4pUARbfAtB5jz04vqVabFbg5aDJ5e0B
+         2F8053SYjAwLKWahHCnO3LHJpcBUJKeKqxaWvGMP9bfRq8UbLBu4qfm5KoWRIfPCX9Rs
+         QQsI3x8tgEBqhELZ5hq5bhi/QDZQF1uXT/S9mPtPzOn30cBXu8LSppvZ8vBW3eT7ggTB
+         lNvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779994650; x=1780599450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=CjdDq7vYHR8fX0qtYCUiCkr7KhheLzVgFpHo15St/kY=;
+        b=H7YDC5xHyGPeejfMANlm7h9l80deYZXl0c33oT64ZE25UmeX7bL/LXJ6M4a6nAqxeH
+         pyJT0lU/tkogAZ//fgroMYP2sRnpHGghcRWzKzQ/0fXg4cU9RuqbypQgEzNlKdsMZIF6
+         YUCp31y4uo4EIZYeRgtfEhDly3JOHxqlgBNiY/exqlzbvSBSWLVIX62iwQ4LXW3ALIX0
+         uANK6Qq9wGdlNSFUe/nLCJjROcpc1t4Ow+DQusCCBhF9MyWjJCJsr9nhkMWaGYzTuQev
+         kYG2xJljP55thyfeRIPs+pE2Rl3IXDpm9S5Oyy2N4aOPeRgHMazsQNUDWxO/KnUcTOsu
+         +nlQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9s4qr2jB0gwIjQWbIlbPauBEVdazS01NmxVEVNCnk86qUcSQfeFH+rLKie1dctbKtvun5Qgp8HadaCP95NhUuM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUlUjrIjmyKcdyU0yIQl1rNmER17jv1OZFwY2doiiPK5Sq1zx1
+	b6JV+7EsP0OuGkOh5ZJ7KhJHATKRJallLAIrbrlpev0essHG5O+bsA5R95tEJMs1qFhAFpxbbo5
+	jPe0h8mTLK6enB06XIfPU2C0L3WADrBEPm6jGcFLTL6YNS2nSDjw7tev3
+X-Gm-Gg: Acq92OHqdwsp116WZu9pnUH2xvsupGT0lp+789qm49ARX5LPBxqzKPBNQffWiDCq5c3
+	/jHGZyg5LmsBUUU0FQIx97QziXGPKtd5vF1s2kLLujXPTGaFGtvLn9n76s6/mJV55xl57fFJn6i
+	QTHtz6GsNB5NUYpm2MAs50HtHz+qZnKxUgh2k8vLMJ18+pHoYswyerGzdB06wtsccLNfBh5HnvA
+	xOtRgtCch7ASbwFYlzrY8yMl5k5LwL4qbQjvhtUDP5Qz/9XqyCnnKbZHK3MCFDtTACYvahoMjde
+	5lemsOetUwGnb9RHFmw=
+X-Received: by 2002:a17:903:2383:b0:2bf:1153:54a0 with SMTP id
+ d9443c01a7336-2bf1f0886edmr28855ad.23.1779994649766; Thu, 28 May 2026
+ 11:57:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR12MB9356:EE_|DS0PR12MB6389:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e0a7e4b-8d0a-4da0-4b18-08debce8286c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|10070799003|22082099003|18002099003|56012099006|6133799003|3023799007|5023799004|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	0yxUcvigTQAQf4cq96z0WS7J+a/gS3Xn6CCYSPP/aTLuJUlxK/kk8rIKg5DEn19Oj8V7K96HhcIs+ZDPHhKzVmnKKF3rojnQX5dv3OC6SHFPUpzkDk5+TSa5zdeOk9Mkh9v418BdbBKcePfIj12dU2Z70a6tYMnWyko2XdnkINaE6u5vN/B3TLYbS0CJJ2E1DAHoX4UYiSNlzdbBXTfTQGWObeEGB+7WYX5KrvtLI/a/9aJYvbwexfWbRPyZofQwtRSCxeLOc7emJn1WljikAsnsAHWKTWU4c/0yrcUY12ZJor8m14zn5HY7G4kbHVpOj9jQpS+0mmHlhVxDzyHDIlLbMhNPI6r1x7ju0uKTxjhBO8LkAsXsXxSd2w7HNSynzjcyBDmZsd59/Ic85Y3BVpTuGD1yh5jCQ3bVDEr6QgSsloL8xPB0R3HF2zqZL+Hu+ZF0O9aGIei2Gai9mVw7UqHvCJ+ut60wc+DPz5350iHmCdBPhvO4hmmFVuQ8u/ZTwF4Cv9Mp2BLQk8v0ZXpHmKNgbfzshnXXhptSCHRR5GPkHcKqqkxTBSrdmcer/mkOcoS2bCm7JDUdOEzmn3WLA/StL+Vf/pFAvnvEbQbFsXCpg92znkcsPfQtSyzEc6+pWDoHmF+rMFgsDA86wyrWFwvVAgZINTbY5QeFfSYvOrEOC6mulnxF0zOu+UhKVm0P
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(10070799003)(22082099003)(18002099003)(56012099006)(6133799003)(3023799007)(5023799004)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ccvgfHoBnQLLSR/J1pS0U6yvx6BD6QA0SVTzFT/utOs5jHviWzrqFy8r3nMI?=
- =?us-ascii?Q?CVJgZEwfHK1TF14cCdETc9bF8apW1mXDDGh2GlrRldVAkp31pgSPx7NUbT7F?=
- =?us-ascii?Q?OvtyFxppCb0vrUvQ3fe5tcYjNtDzcvoi6rMAA6aRhDiZvWXJ6KO8X/sFuCd7?=
- =?us-ascii?Q?XubRUfXsxHEV47gcMGk6hDFpiU//XTFGSF2hUKRPPg3Yu2VvKUVn5KYbGR9X?=
- =?us-ascii?Q?e4//2WPsrohAGVxEzwIxP8j9yYDtcIytBYVZNgyDWI9c9HMEkjMpDKR8cORb?=
- =?us-ascii?Q?ChRbLgD5CUDWEDl/gpP/0ezpb98him98rhMPMSXhE1Qdm3D2a0OqVTK+86mF?=
- =?us-ascii?Q?TULXxKfQeoPrMXlmKFz5w7VrqMPjNRigmPLtBCtsqDv5n5URybT/q3Bl/Lku?=
- =?us-ascii?Q?8fCNT1YkhM9JEPtgNogPzjFPz3/Vol5lDb3tQ7uFkVH48e9WB/uP7Vcp34Sr?=
- =?us-ascii?Q?f8S6T8WghgeBdP9LkVChRBxMjBbQxBXWmjNrdUriTDDeFJR/QxZ8ccVoe8Zn?=
- =?us-ascii?Q?yv1S+g4sInobQoydFw6aGVZm+VjozXkvZoxMT+g7bdRElZmOX8nMxmIQE2W5?=
- =?us-ascii?Q?9ChtL8CRADFuTg6bIf5CsPrSfYLg/4AxJ+e4ahFF9QrDipGCi2xzpnP8yfge?=
- =?us-ascii?Q?eLEulVJJ1WZ7tTajZ18X4kM8mqNYoTCS4eIvx4kpU1ss3sWE4zE6XFrPZl6u?=
- =?us-ascii?Q?J7wFc8I1CoLDRj9tTWvd8dLEPeOE/aOjtIHshMjGObl/ZXk61vPQNc6xoipu?=
- =?us-ascii?Q?RKnQYpwgv9KchHiQPpMamiSwz82AZJmpfyyep1qCoUgp+xciaEiEhJaj3Ir5?=
- =?us-ascii?Q?LjP82lhAOL+Cp7F9MDyr6rniwzqz0uN8/zD/zk7XvcMivP3kfs4YdRGvf6f/?=
- =?us-ascii?Q?z9WVe95bV+dDYHhQVlp4iwf4BsU6IFDIw9w63+8ZWN0fxqRSA1aRM/VZ5eYW?=
- =?us-ascii?Q?4D3d/s/Ow76sBQHeThd1xCRpKn+52HeD9ginzYzdT7ayCoCHAjKCyg+A8hjm?=
- =?us-ascii?Q?8VO9KaODkIXuldWjXGljhQ1A9tPx0ZE4C7L4me3Av5979M/DMsiWT4FzPNpe?=
- =?us-ascii?Q?v8bk50J2id9Uo+OVanAyPSp1sgrXf5e9QYeGHBs9tNyV2lMmuPTQPK31YUyB?=
- =?us-ascii?Q?jTq/7j9szKuDrRzZ4yWDLRi7tFP6uETXyA2PH2oTL7rDh/9FdSfilIlkVsct?=
- =?us-ascii?Q?cO/cia4wJpUC1vfQz9nSJppIcCp315hkMDv77K5PWuqNlZEyaRxKedsQKDDc?=
- =?us-ascii?Q?56EY6zkOjDYsjFbd19WtDiaFxsVWHeZBvUoUIefwBD8abPV/FIbL37uzovbY?=
- =?us-ascii?Q?j1TG/YbJRKV4PlVeSqYVxSgL8si9lFxJ9EuCgUqHMDFqHR/DKefpWxSbhiRf?=
- =?us-ascii?Q?UivrGptF5KJlRvXlx44otVz3wzub6QwmstYWsrUtERuAdWE/L/XPhrffw2ak?=
- =?us-ascii?Q?QZz7nHcO1B++vxTnO9WljfN3Ps87t/hZ4LNnB71Xxr+SC3tpMmebyTOO9iXT?=
- =?us-ascii?Q?LuV2hGmQHLmBRs/YwmJtG3Lb/HrP61CyvRUGZvqT6kTYY3sEl33MOeP/2jMD?=
- =?us-ascii?Q?mGO7e+NS+hRQbsU4HMrEHyVp1e3aUPD2j7+sHFTTQYibi1udocC7KLghT2u8?=
- =?us-ascii?Q?PtkFYGQ0uRkS+2AwoKYBozEGPhjaHv2sefosB4/r8uzp6JfSeBGhh1AGVx3f?=
- =?us-ascii?Q?mQRdVvO7UWhtt9/MAZgl5n+TfCpYm85PTAuaL5FnOS7ASuGH4QOrBztJtG++?=
- =?us-ascii?Q?PSubPxTGCY/1WIAg4JK1/PmiejLVNbjkX8tvFthe0KVCyXj7hQYN?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e0a7e4b-8d0a-4da0-4b18-08debce8286c
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9356.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 18:37:23.1955
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jIGgcj+twIC1Rv9I++JAGp60jRaiM+8zrwaHSQ68Y3xJphvCxe/jOB960xdg1Ymc4u1icfQ/9Cd5yUkn3YN8/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6389
+References: <20260527223917.3845056-1-ctshao@google.com>
+In-Reply-To: <20260527223917.3845056-1-ctshao@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 28 May 2026 11:57:18 -0700
+X-Gm-Features: AVHnY4LUs1ZNpyG9vEUpVykCxGK2gYZZvyO2YPSMs5Ajp4wXs-oFjy816YkF1_s
+Message-ID: <CAP-5=fXTRo=nYoue-e-UvFvm3DD=B=sd0VDm1m0PtxaKo=77yg@mail.gmail.com>
+Subject: Re: [PATCH] perf jevents: Add IOMMU metrics for AMD and Intel
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Mi, Dapeng1" <dapeng1.mi@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that all users of the function are switched to the alternatives,
-drop the function.
+On Wed, May 27, 2026 at 3:39=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
+>
+> Add IOMMU Translation Lookaside Buffer (TLB) and interrupt cache metrics
+> to perf jevents for both AMD and Intel platforms. This enhances I/O
+> performance observability, allowing fleet-wide monitoring of IOMMU
+> overhead.
+>
+> For AMD, these metrics are supported on Zen 2 and newer processors and
+> are implemented using the standard `amd_iommu` PMU events. The
+> implementation uses the existing `_zen_model` helper to ensure these are
+> only generated for Zen 2+.
+>
+> For Intel, these metrics are supported on platforms that expose the
+> required uncore IIO IOMMU events (such as Emerald Rapids and Granite
+> Rapids). The Intel implementation dynamically detects event availability
+> at generation time. It requires at least the TLB events to expose the
+> metric group, while the interrupt cache events are optional. This allows
+> platforms like Emerald Rapids, which lack IOMMU interrupt cache events,
+> to still expose the IOMMU TLB metrics.
+>
+> The following metrics are added:
+> - iotlb_total_hit: Total IOTLB hits (4K, 2M, 1G pages).
+> - iotlb_total_miss: Total IOTLB misses.
+> - iotlb_miss_rate: IOTLB miss rate.
+> - iotlb_interrupt_cache_hit: Interrupt cache hits.
+> - iotlb_interrupt_cache_miss: Interrupt cache misses (calculated for
+>   Intel as lookup - hit, clamped to zero).
+> - iotlb_interrupt_cache_lookup: Interrupt cache lookups.
+> - iotlb_interrupt_cache_miss_rate: Interrupt cache miss rate.
+>
+> Tested:
+>   # perf stat -M iotlb_total_hit,iotlb_total_miss,iotlb_miss_rate --per-s=
+ocket --metric-only -a -j -- sleep 10
+>   {"socket" : "S0", "counters" : 10, "hits  iotlb_total_hit" : "3579249.0=
+", "%  iotlb_miss_rate" : "0.0", "misses  iotlb_total_miss" : "3.0"}
+>   {"socket" : "S1", "counters" : 10, "hits  iotlb_total_hit" : "0.0", "% =
+ iotlb_miss_rate" : "0.0", "misses  iotlb_total_miss" : "0.0"}
+>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> Assisted-by: Gemini:gemini-3.1-pro-preview
 
-Signed-off-by: Yury Norov <ynorov@nvidia.com>
----
- include/linux/cpumask.h | 19 -------------------
- lib/bitmap-str.c        |  9 ++++-----
- 2 files changed, 4 insertions(+), 24 deletions(-)
++Taylor, Perry, +Mi, Dapeng1
 
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index d3cda0544954..4c8bb6953107 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -13,7 +13,6 @@
- #include <linux/cpumask_types.h>
- #include <linux/gfp_types.h>
- #include <linux/numa.h>
--#include <linux/sprintf.h>
- #include <linux/threads.h>
- #include <linux/types.h>
- #include <vdso/page.h>
-@@ -1315,24 +1314,6 @@ static __always_inline bool cpu_dying(unsigned int cpu)
- }
- #endif /* NR_CPUS > BITS_PER_LONG */
- 
--/**
-- * cpumap_print_to_pagebuf  - copies the cpumask into the buffer either
-- *	as comma-separated list of cpus or hex values of cpumask
-- * @list: indicates whether the cpumap must be list
-- * @mask: the cpumask to copy
-- * @buf: the buffer to copy into
-- *
-- * Return: the length of the (null-terminated) @buf string, zero if
-- * nothing is copied.
-- */
--static __always_inline ssize_t
--cpumap_print_to_pagebuf(bool list, char *buf, const struct cpumask *mask)
--{
--	/* Opencode offset_in_page(buf) to not include linux/mm.h */
--	return scnprintf(buf, PAGE_SIZE - ((unsigned long)buf & ~PAGE_MASK),
--			 list ? "%*pbl\n" : "%*pb\n", cpumask_pr_args(mask));
--}
--
- /**
-  * cpumap_print_bitmask_to_buf  - copies the cpumask into the buffer as
-  *	hex values of cpumask
-diff --git a/lib/bitmap-str.c b/lib/bitmap-str.c
-index 26d36c938c6a..dd9aa0635fa5 100644
---- a/lib/bitmap-str.c
-+++ b/lib/bitmap-str.c
-@@ -75,8 +75,7 @@ static int bitmap_print_to_buf(bool list, char *buf, const unsigned long *maskp,
-  * @off: in the string from which we are copying, We copy to @buf
-  * @count: the maximum number of bytes to print
-  *
-- * The sprintf("%*pb[l]") is used indirectly via its cpumap wrapper
-- * cpumap_print_to_pagebuf() or directly by drivers to export hexadecimal
-+ * The sprintf("%*pb[l]") format is used by drivers to export hexadecimal
-  * bitmask and decimal list to userspace by sysfs ABI.
-  * Drivers might be using a normal attribute for this kind of ABIs. A
-  * normal attribute typically has show entry as below::
-@@ -115,9 +114,9 @@ static int bitmap_print_to_buf(bool list, char *buf, const unsigned long *maskp,
-  * parameters such as off, count from bin_attribute show entry to this API.
-  *
-  * The role of cpumap_print_bitmask_to_buf() and cpumap_print_list_to_buf()
-- * is similar with cpumap_print_to_pagebuf(),  the difference is that
-- * scnprintf("%*pb[l]") mainly serves sysfs attribute with the assumption
-- * the destination buffer is exactly one page and won't be more than one page.
-+ * is similar to direct sysfs_emit("%*pb[l]") formatting, but the latter
-+ * assumes the destination buffer is exactly one page and won't be more than
-+ * one page.
-  * cpumap_print_bitmask_to_buf() and cpumap_print_list_to_buf(), on the other
-  * hand, mainly serves bin_attribute which doesn't work with exact one page,
-  * and it can break the size limit of converted decimal list and hexadecimal
--- 
-2.51.0
+Reviewed-by: Ian Rogers <irogers@google.com>
 
+Nit: It may be better to have 2 patches, 1 for Intel and 1 for AMD.
+
+Thanks,
+Ian
+
+> ---
+>  tools/perf/pmu-events/amd_metrics.py   | 56 +++++++++++++++++++++++
+>  tools/perf/pmu-events/intel_metrics.py | 62 ++++++++++++++++++++++++++
+>  2 files changed, 118 insertions(+)
+>
+> diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events=
+/amd_metrics.py
+> index 971f6e7af1f8..4558e7ce20f2 100755
+> --- a/tools/perf/pmu-events/amd_metrics.py
+> +++ b/tools/perf/pmu-events/amd_metrics.py
+> @@ -265,6 +265,61 @@ def AmdDtlb() -> Optional[MetricGroup]:
+>      ], description=3D"Data TLB metrics")
+>
+>
+> +def AmdIotlb() -> Optional[MetricGroup]:
+> +  global _zen_model
+> +  if _zen_model < 2:
+> +    return None
+> +
+> +  total_hit =3D Event("amd_iommu/mem_iommu_tlb_pte_hit/") + Event(
+> +      "amd_iommu/mem_iommu_tlb_pde_hit/"
+> +  )
+> +  total_miss =3D Event("amd_iommu/mem_iommu_tlb_pte_mis/") + Event(
+> +      "amd_iommu/mem_iommu_tlb_pde_mis/"
+> +  )
+> +  miss_rate =3D d_ratio(total_miss, total_miss + total_hit)
+> +
+> +  interrupt_cache_hit =3D Event("amd_iommu/int_dte_hit/")
+> +  interrupt_cache_miss =3D Event("amd_iommu/int_dte_mis/")
+> +  interrupt_cache_lookup =3D interrupt_cache_hit + interrupt_cache_miss
+> +  interrupt_cache_miss_rate =3D d_ratio(
+> +      interrupt_cache_miss, interrupt_cache_miss + interrupt_cache_hit
+> +  )
+> +
+> +  return MetricGroup(
+> +      "iotlb",
+> +      [
+> +          Metric("iotlb_total_hit", "IOTLB total hit", total_hit, "hits"=
+),
+> +          Metric("iotlb_total_miss", "IOTLB total miss", total_miss, "mi=
+sses"),
+> +          Metric("iotlb_miss_rate", "IOTLB miss rate", miss_rate, "100%"=
+),
+> +          Metric(
+> +              "iotlb_interrupt_cache_hit",
+> +              "IOTLB interrupt cache hit",
+> +              interrupt_cache_hit,
+> +              "hits",
+> +          ),
+> +          Metric(
+> +              "iotlb_interrupt_cache_miss",
+> +              "IOTLB interrupt cache miss",
+> +              interrupt_cache_miss,
+> +              "misses",
+> +          ),
+> +          Metric(
+> +              "iotlb_interrupt_cache_lookup",
+> +              "IOTLB interrupt cache lookup",
+> +              interrupt_cache_lookup,
+> +              "lookups",
+> +          ),
+> +          Metric(
+> +              "iotlb_interrupt_cache_miss_rate",
+> +              "IOTLB interrupt cache miss rate",
+> +              interrupt_cache_miss_rate,
+> +              "100%",
+> +          ),
+> +      ],
+> +      description=3D"IOMMU TLB metrics",
+> +  )
+> +
+> +
+>  def AmdItlb():
+>      global _zen_model
+>      l2h =3D Event("bp_l1_tlb_miss_l2_tlb_hit", "bp_l1_tlb_miss_l2_hit")
+> @@ -473,6 +528,7 @@ def main() -> None:
+>          AmdBr(),
+>          AmdCtxSw(),
+>          AmdDtlb(),
+> +        AmdIotlb(),
+>          AmdItlb(),
+>          AmdLdSt(),
+>          AmdUpc(),
+> diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-even=
+ts/intel_metrics.py
+> index 52035433b505..c3a5c2965f74 100755
+> --- a/tools/perf/pmu-events/intel_metrics.py
+> +++ b/tools/perf/pmu-events/intel_metrics.py
+> @@ -457,6 +457,67 @@ def IntelIlp() -> MetricGroup:
+>      ])
+>
+>
+> +def IntelIotlb() -> Optional[MetricGroup]:
+> +  try:
+> +    total_hit =3D (
+> +        Event("UNC_IIO_IOMMU0.4K_HITS")
+> +        + Event("UNC_IIO_IOMMU0.2M_HITS")
+> +        + Event("UNC_IIO_IOMMU0.1G_HITS")
+> +    )
+> +    total_miss =3D Event("UNC_IIO_IOMMU0.MISSES")
+> +  except:
+> +    return None
+> +
+> +  miss_rate =3D d_ratio(total_miss, total_miss + total_hit)
+> +  metrics =3D [
+> +      Metric("iotlb_total_hit", "IOTLB total hit", total_hit, "hits"),
+> +      Metric("iotlb_total_miss", "IOTLB total miss", total_miss, "misses=
+"),
+> +      Metric("iotlb_miss_rate", "IOTLB miss rate", miss_rate, "100%"),
+> +  ]
+> +
+> +  try:
+> +    interrupt_cache_hit =3D Event("UNC_IIO_IOMMU3.INT_CACHE_HITS")
+> +    interrupt_cache_lookup =3D Event("UNC_IIO_IOMMU3.INT_CACHE_LOOKUPS")
+> +    interrupt_cache_miss =3D max(interrupt_cache_lookup - interrupt_cach=
+e_hit, 0)
+> +    interrupt_cache_miss_rate =3D d_ratio(
+> +        interrupt_cache_miss, interrupt_cache_miss + interrupt_cache_hit
+> +    )
+> +    metrics +=3D [
+> +        Metric(
+> +            "iotlb_interrupt_cache_hit",
+> +            "IOTLB interrupt cache hit",
+> +            interrupt_cache_hit,
+> +            "hits",
+> +        ),
+> +        Metric(
+> +            "iotlb_interrupt_cache_miss",
+> +            "IOTLB interrupt cache miss",
+> +            interrupt_cache_miss,
+> +            "misses",
+> +        ),
+> +        Metric(
+> +            "iotlb_interrupt_cache_lookup",
+> +            "IOTLB interrupt cache lookup",
+> +            interrupt_cache_lookup,
+> +            "lookups",
+> +        ),
+> +        Metric(
+> +            "iotlb_interrupt_cache_miss_rate",
+> +            "IOTLB interrupt cache miss rate",
+> +            interrupt_cache_miss_rate,
+> +            "100%",
+> +        ),
+> +    ]
+> +  except:
+> +    pass
+> +
+> +  return MetricGroup(
+> +      "iotlb",
+> +      metrics,
+> +      description=3D"IOMMU TLB metrics",
+> +  )
+> +
+> +
+>  def IntelL2() -> Optional[MetricGroup]:
+>      try:
+>          DC_HIT =3D Event("L2_RQSTS.DEMAND_DATA_RD_HIT")
+> @@ -1105,6 +1166,7 @@ def main() -> None:
+>          IntelCtxSw(),
+>          IntelFpu(),
+>          IntelIlp(),
+> +        IntelIotlb(),
+>          IntelL2(),
+>          IntelLdSt(),
+>          IntelMissLat(),
+> --
+> 2.54.0.823.g6e5bcc1fc9-goog
+>
