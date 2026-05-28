@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD343D6474;
-	Thu, 28 May 2026 10:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7743D412B;
+	Thu, 28 May 2026 10:58:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779965877; cv=none; b=SjEYZoC7KxMPsKIXK8oGyzVP+K1FYz9hzGAu3mtIWjzKqtjCqCMlrPfeXLlJfiflr+pC/+UDqb8SHUQg902rCEXdcE4FiyRxIEnV4acSNSFY7+DI+4Xj3LrsR76jNFvgEoKiJbxxat44M29niq+z6Il19euRp4YARosn1Hyhl+M=
+	t=1779965891; cv=none; b=Jw4cu4ZevmywMm09hbk+XtRvaG+UZ3jvrp+l7jt+nyni64841gUvUljjXP/9A1pl5KG/Rnu0XcBk2v6gM83nIJ3eQ8tclEbA4NEGWlKwd3aKYh+Ef1x0E9zoR0QZrDB9P4lSBCMdJgqEFMz8/eJN/DZYYQzWU1HhA6cvLjieWb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779965877; c=relaxed/simple;
-	bh=YGtkcjrhopnf0FWykF3WR0bpqvOTM6s0JXacR/g+l50=;
+	s=arc-20240116; t=1779965891; c=relaxed/simple;
+	bh=JDQKtL4IVUGpe0Zwan6l7S7qn77w7Olw9yMuVULXJTM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nsfWivuQDYddMGXoXvsh4A32Pa/kALLjCM4Hh8mUXwpv2FDoAKjjEMXb151eu/r3bKYVQl5430WpaslifJoURTbOvPquUS3wv1/JidCJ9wcywQMhM4zO6wAdMNBJEtHYU1MjiETvtxuNmtwHH0rb2fUtMcz+YR5l3Fy+rdOpZjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEkKoxVo; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHv4Y02RSBhE2J+RRPeoPMIYgtoMWECgBMwSbxjxafL1agy31OZYU+jSdZgtd9YI9fNVBXTF39KH5r/yEMsp5jq7VIqi6HtCD3kOYspu+8caL0kfNCg4l5ObERWhgQfdZ6eWEQ71BhAhoT77EbNbhChIwgogMSOj/fhEWELARwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yt5eziJj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEkKoxVo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D1161F000E9;
-	Thu, 28 May 2026 10:57:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yt5eziJj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7C61F00A3A;
+	Thu, 28 May 2026 10:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779965874;
-	bh=uf8OOS9w8K2nnKpcG8N7Or//SZ7kw7jH9ROTyM2KyWY=;
+	s=k20260515; t=1779965890;
+	bh=HAvav6R5t93mPf+IsV6oM8wi/DYmL7Av8BLO8+paoBc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DEkKoxVoorrPdTxtupr2rvWQFXSCXdd2vYUnDkDTq4rdf8mTSR5uOW/DRTJSwA26o
-	 609khKhGlox+UYDSKgxr9FqU27djS4eFqeok1Q3N/Pz6+SZq+bpR/pUDk2+fl5DkXX
-	 6F6eGcG3tAgrmCzRqNym+Q+kUyxUn9m0+mQUjr6oPRiw16AvZO0EOxV3oxWU5HL+7n
-	 jdl6kjRd+AcpE1S+oAnMYimCEgqSvDaM9hqWx12ThU7zphz7T3FjOZ8W3Psr30Xq5w
-	 WCKsmMJ2mOMcQkXYEvKZDskSIMaQT408znIGE/fYFL0ANb+PgRaWp8WlSCF+fjTiXt
-	 gMSnaOP66gfqA==
-Date: Thu, 28 May 2026 11:57:49 +0100
+	b=Yt5eziJjWJqM7GXD/h+c6lzlAku8RwBBV96jYEEcKlMRhjH7G85ZYwZYbQehFJXoC
+	 e5t17t9T+Pqat0BJPsqkuWALIXQ8ihQ3Tf+REUVsUVljuNPq7H1Y+jX/hYLeXfCqr2
+	 83GDe99jo9dNCjashkHxDyxJkdp5C1/PNHlyCCqGQ2O7SUXhZYs7jTpo/8xNAfXAVm
+	 cx85YgTkpTYgYAbQuj4MZY01pW8xGgJC7YZDxXZGMv0SwfvRwkhPYaww8sYC5k5URz
+	 kt68nx+4/kTiABgo4X4MxqcQumcQnqII3HAyYY8y9DGs4plkqhVR/veXimb4crheTi
+	 5jZ29U4Gcugfg==
+Date: Thu, 28 May 2026 11:58:05 +0100
 From: Will Deacon <will@kernel.org>
 To: "Rob Herring (Arm)" <robh@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>,
@@ -36,12 +36,13 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Anshuman Khandual <anshuman.khandual@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, maz@kernel.org
-Subject: Re: [PATCH v4 4/6] arm64/cpufeature: Add field details for
- ID_AA64DFR1_EL1 register
-Message-ID: <ahgfrdlEioodRPQ1@willie-the-truck>
+	linux-doc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+	kvmarm@lists.linux.dev, Oliver Upton <oupton@kernel.org>
+Subject: Re: [PATCH v4 5/6] arm64/boot: Enable EL2 requirements for
+ FEAT_Debugv8p9
+Message-ID: <ahgfvfw5Yb0XLEr4@willie-the-truck>
 References: <20260407-arm-debug-8-9-v4-0-a4864e69b0ea@kernel.org>
- <20260407-arm-debug-8-9-v4-4-a4864e69b0ea@kernel.org>
+ <20260407-arm-debug-8-9-v4-5-a4864e69b0ea@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,87 +51,91 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260407-arm-debug-8-9-v4-4-a4864e69b0ea@kernel.org>
+In-Reply-To: <20260407-arm-debug-8-9-v4-5-a4864e69b0ea@kernel.org>
 
-On Tue, Apr 07, 2026 at 09:29:46AM -0500, Rob Herring (Arm) wrote:
+On Tue, Apr 07, 2026 at 09:29:47AM -0500, Rob Herring (Arm) wrote:
 > From: Anshuman Khandual <anshuman.khandual@arm.com>
 > 
-> This adds required field details for ID_AA64DFR1_EL1, and also drops dummy
-> ftr_raz[] array which is now redundant. These register fields will be used
-> to enable increased breakpoint and watchpoint registers via FEAT_Debugv8p9
-> later. The register fields have been marked as FTR_STRICT, unless there is
-> a known variation in practice.
+> Fine grained trap control for MDSELR_EL1 register needs to be configured in
+> HDFGRTR2_EL2, and HDFGWTR2_EL2 registers when kernel enters at EL1, but EL2
+> is also present.
 > 
+> MDCR_EL2.EBWE needs to be enabled for additional (beyond 16) breakpoint and
+> watchpoint exceptions when kernel enters at EL1, but EL2 is also present.
+> 
+> While here, also update booting.rst with MDCR_EL3 and SCR_EL3 requirements.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: kvmarm@lists.linux.dev
 > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  arch/arm64/kernel/cpufeature.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
+> v4:
+>  - Add that the requirements only apply when there are >16
+>    breakpoints/watchpoints
+>  - Adapt to changes in v7.0-rc1
+> ---
+>  Documentation/arch/arm64/booting.rst | 13 +++++++++++++
+>  arch/arm64/include/asm/el2_setup.h   | 14 ++++++++++++++
+>  2 files changed, 27 insertions(+)
 > 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index c31f8e17732a..24c8e9147e35 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -570,6 +570,21 @@ static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
->  	ARM64_FTR_END,
->  };
+> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+> index 13ef311dace8..00ba91bbd278 100644
+> --- a/Documentation/arch/arm64/booting.rst
+> +++ b/Documentation/arch/arm64/booting.rst
+> @@ -369,6 +369,19 @@ Before jumping into the kernel, the following conditions must be met:
+>      - ZCR_EL2.LEN must be initialised to the same value for all CPUs the
+>        kernel will execute on.
 >  
-> +static const struct arm64_ftr_bits ftr_id_aa64dfr1[] = {
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_ABL_CMPs_SHIFT, 8, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_DPFZS_SHIFT, 4, 0),
-
-Why does FTR_LOWER_SAFE make sense for DPFZS? From what I can tell, the
-new behaviour isn't opt-in, so maybe an FTR_EXACT of 0 would make more
-sense if we have to be non-strict (along with a comment like we have for
-DFR0.PMUVer)?
-
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_EBEP_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_ITE_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_ABLE_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_PMICNTR_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_SPMU_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_CTX_CMPs_SHIFT, 8, 0),
-
-I find it very weird for this to be non-strict when DFR0.CTX_CMPs _is_
-strict.
-
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_WRPs_SHIFT, 8, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_BRPs_SHIFT, 8, 0),
-
-Given that things like hw_breakpoint_reset() rely on the sanitised
-register view to determine the number of {break,watch}points, I think we
-have to be strict here unless that is changed.
-
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR1_EL1_SYSPMUID_SHIFT, 8, 0),
-
-Again, I'm not sure that FTR_LOWER_SAFE makes a lot of sense here, but
-it's hard to tell without an upstream driver for the system PMU.
-
-> +	ARM64_FTR_END,
-> +};
+> +  For CPUs with FEAT_Debugv8p9 extension present and >16 breakpoints or
+> +  watchpoints:
 > +
->  static const struct arm64_ftr_bits ftr_mvfr0[] = {
->  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, MVFR0_EL1_FPRound_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, MVFR0_EL1_FPShVec_SHIFT, 4, 0),
-> @@ -756,10 +771,6 @@ static const struct arm64_ftr_bits ftr_single32[] = {
->  	ARM64_FTR_END,
->  };
+> +  - If the kernel is entered at EL1 and EL2 is present:
+> +
+> +    - HDFGRTR2_EL2.nMDSELR_EL1 (bit 5) must be initialized to 0b1
+> +    - HDFGWTR2_EL2.nMDSELR_EL1 (bit 5) must be initialized to 0b1
+> +    - MDCR_EL2.EBWE (bit 43) must be initialized to 0b1
+> +
+> +  - If EL3 is present:
+> +
+> +    - MDCR_EL3.EBWE (bit 43) must be initialized to 0b1
+> +
+>    For CPUs with the Scalable Matrix Extension (FEAT_SME):
 >  
-> -static const struct arm64_ftr_bits ftr_raz[] = {
-> -	ARM64_FTR_END,
-> -};
-> -
->  #define __ARM64_FTR_REG_OVERRIDE(id_str, id, table, ovr) {	\
->  		.sys_id = id,					\
->  		.reg = 	&(struct arm64_ftr_reg){		\
-> @@ -832,7 +843,7 @@ static const struct __ftr_reg_entry {
+>    - If EL3 is present:
+> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> index 85f4c1615472..b51a280c18c0 100644
+> --- a/arch/arm64/include/asm/el2_setup.h
+> +++ b/arch/arm64/include/asm/el2_setup.h
+> @@ -174,6 +174,13 @@
+>  						// to own it.
 >  
->  	/* Op1 = 0, CRn = 0, CRm = 5 */
->  	ARM64_FTR_REG(SYS_ID_AA64DFR0_EL1, ftr_id_aa64dfr0),
-> -	ARM64_FTR_REG(SYS_ID_AA64DFR1_EL1, ftr_raz),
-> +	ARM64_FTR_REG(SYS_ID_AA64DFR1_EL1, ftr_id_aa64dfr1),
+>  .Lskip_trace_\@:
+> +	mrs	x1, id_aa64dfr0_el1
+> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_DebugVer_SHIFT, #4
+> +	cmp	x1, #ID_AA64DFR0_EL1_DebugVer_V8P9
+> +	b.lt	.Lskip_dbg_v8p9_\@
 
-I'm guessing that KVM will need some updates for this in its sys reg
-handling code?
+Why do you need to check the id register here?
+
+> +
+> +	orr	x2, x2, #MDCR_EL2_EBWE
+> +.Lskip_dbg_v8p9_\@:
+>  	msr	mdcr_el2, x2			// Configure debug traps
+>  .endm
+>  
+> @@ -438,6 +445,13 @@
+>  	orr	x0, x0, #HDFGRTR2_EL2_nPMSDSFR_EL1
+>  
+>  .Lskip_spefds_\@:
+> +	mrs	x1, id_aa64dfr0_el1
+> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_DebugVer_SHIFT, #4
+> +	cmp	x1, #ID_AA64DFR0_EL1_DebugVer_V8P9
+> +	b.lt	.Lskip_dbg_v8p9_\@
+> +
+> +	mov_q   x0, HDFGWTR2_EL2_nMDSELR_EL1
+
+Doesn't this clobber the trap configuration from the previous blocks?
 
 Will
