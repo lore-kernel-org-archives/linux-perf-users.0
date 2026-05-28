@@ -1,169 +1,296 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012022.outbound.protection.outlook.com [52.101.48.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75E93FE348;
-	Thu, 28 May 2026 18:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779992062; cv=none; b=odG5tf493RFJbGC4T9Me+7DcYIIXgdagwJ4ULCZA9dBQOm5Vo5sSCWIECXDlsD7EDwysnbuBezWaq1/oab5y/YmW3f03d+ptn3H4KGT8vbnlSwV7yH8L4KSiuoICZDd6gEBHkm0T66zBuywH9gqW9XsZesZ1NfQblzbJtOlRSgY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779992062; c=relaxed/simple;
-	bh=TdyKsBeSOKF98DKddh3R0euizQWVwUseyk1l9hZHlyw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sFH8ZrdRzoN6xMGLp6i13PmNFxBRzBpO0ory8URhvmu+GiU+OZhjdxhCGXaJghweAKwytDGv96RCbmcdnRtOkBu6DE/+r6lx0xsm0UBbwKVOEJVqGbkFDI/nqmKGdlqoZKIzHV3zT7BydRf9ctm8yukul/JMmmrY6vSGNd4rFjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JlOAzRNK; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0C02F8E88;
+	Thu, 28 May 2026 18:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779993400; cv=fail; b=jfd731kQDssIKwCW0ZRjTwfoLHKB4VkHIBkTYH/n+6IfE4cJF+iMMMWqzu/f9ZQ+ohtEett7WLtBe/NkIWMcogr0oKPG3y/sifW2J5vL74zyZfG+5Tkqqdzzx9qKGLi0ABXG2ogzQzEMJPH3bKlkJ6LrQUz7d4yy+uXtRZ53muU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779993400; c=relaxed/simple;
+	bh=kqlqK19rITWjanXFkHDrssZv0f7J9mf9zo7UMBGik2w=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=N5di27aMyQ37rV+i2XedSTLIOimMiWj93+paPA1RmJ1t7/UH/Ye3X+Rij1AQRHfZnkEAkt4h/uBoyylICXxmz0bpQAJQp7+8tG0xLQxzvhn2yA8cesfPwk7GVmYAWJOef9iiY3fA8r79g+n3V+VAJXRmSmdBG4jkQiFv1o45zVU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=h922R/VY; arc=fail smtp.client-ip=52.101.48.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JlOAzRNK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779992061; x=1811528061;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TdyKsBeSOKF98DKddh3R0euizQWVwUseyk1l9hZHlyw=;
-  b=JlOAzRNKNxEMDh3WBnlakNU3DRvrPhzGJkFU+FLKu90cOixM2tn9tSv2
-   BQZ3Vz/sWgFWSAhRcsB9mtXeJsBrYV9GlGJb2vhhXSx9FGqja3HqUtXiM
-   N+VQpGexKNPifWMkgUfLjsaGn62MrnzKuy3bg7VuP1dhklEqmVHVMw4Ry
-   1qlIleVVA266+l7k+C3/ekE/r5JZWV62ffsc0uuHL9jJP5mdFZQvLv8lu
-   juxoynSuoN8WS/NFuh6j+aqW7OOnt2bEK3I2mCZBFdsNs9teot16Hv+pq
-   V9at74utkMuPSp0SIYsi0fh9UUPtVoiR3Q/0mFFPzruTlc6+BegpeJ/8y
-   g==;
-X-CSE-ConnectionGUID: QcW9Boe3TOOkpsWqcsnGkg==
-X-CSE-MsgGUID: bkLqV0LJS5aFb1pp7f4mrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="80567373"
-X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="80567373"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 11:14:20 -0700
-X-CSE-ConnectionGUID: kwLEUKPNQOSOe59LX5g+Cg==
-X-CSE-MsgGUID: 5B3Ka+nYQ9qt5mViVT+SqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="244443507"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 11:14:19 -0700
-Message-ID: <03ad940f-747b-432c-9dca-1be305ee5cc7@intel.com>
-Date: Thu, 28 May 2026 13:14:18 -0500
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="h922R/VY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=W4rc1G8PRNEF63wnNNLGvJE16l8KgrKiwAeEz3bPzrqxfSAQrxkGURK0u6ar9hg6HAPQqDQTXnFE4ACzSIonGYHazhC4B4DleEbmCQWDo82KPtQvfwlPUntMvSVI7t/Ca7Eq2oKUFiVvldfUyOlWhR9rqe86HmpErjt1zqIssEn77WBGbNVigeikAnlwMqTCNOGGZZZens/OTGIyTTi34FMpw2DMQjzAKS5csTIVFf7WS3AKaup8xA4FnpMhnNvu0lrj/KO5SZ32v351BGZaiZ2nXEoyXY/c4C4NMGzz3Buzs/P7Mt+h32hT/1ISNZzwIP9knOt33hexviFKXlbQxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pm3RxOlUziMIipQdyQHT2pcKu2ESuFD9ZeBKDhFFqu8=;
+ b=m5RB8GrzCcx8H0fKPhUE613qwJk7kZSuxiAsh5leLQQoD7xBr4GHWcXAPlHT3dCBvTk7TdKoWIhp7SJAlEvs2r3q7zGvq29smyj/i3mCzx+pKwCcKOfkpkLhTOPAt2QboMXBYbdzTJlvpy1d2agc8ABH47tX3ebWXbofEaTc9pmo6OArI8YzHHeHd+0+IthDzJBW1d7CL1XLRtLp9eB8TgKLJOGurUU/hJ/Wc3gmp1viPBDaUbzNr/bqrdglTeesxFxWE9xKYSgG2jK6MNOHM5ExSh9EkrGUM2Rj5hJgyBSWvy3Fa2ZJv47ixO0ToU/JqHWJOU1X3ZkKmj6KKSC7ZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pm3RxOlUziMIipQdyQHT2pcKu2ESuFD9ZeBKDhFFqu8=;
+ b=h922R/VYYBrfQii2qD3ohQUoRXHoYuXC/tMwX4kGaSDBTjuwG6p4kQvU1DmzY4DgEh3wBrYoN1iZNtv+0s+8PFbTjMFhiOnYzxsOR7xnHGfqeCPyb/dI+boOmgU749k2WpC0577xYdTBC0Ojvsc7JHElGTx4XeTL4xjmgovFttijlMr4LvErTumd+o4Iamz0fp8JmAzE+/5qDjqBqynvu6jAGjr8fofKbqhW8dfrboM7/WRDpIZqx5iSjmc2SWVIbCNORItLYhnTi8Ih4jMirKSSk15e60dKQrbb0GJO/5Q+KPnhxDANU4V9xIrF8V8krSq6fM3QxRJ6pVXQrCIeDQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV3PR12MB9356.namprd12.prod.outlook.com (2603:10b6:408:20c::21)
+ by SA3PR12MB9228.namprd12.prod.outlook.com (2603:10b6:806:39c::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.13; Thu, 28 May
+ 2026 18:36:30 +0000
+Received: from LV3PR12MB9356.namprd12.prod.outlook.com
+ ([fe80::1c36:31b4:c420:6286]) by LV3PR12MB9356.namprd12.prod.outlook.com
+ ([fe80::1c36:31b4:c420:6286%5]) with mapi id 15.21.0071.011; Thu, 28 May 2026
+ 18:36:29 +0000
+From: Yury Norov <ynorov@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Yury Norov <ynorov@nvidia.com>
+Cc: Russell King <linux@armlinux.org.uk>,
+	Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Dan Williams <djbw@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>,
+	Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Linu Cherian <lcherian@marvell.com>,
+	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Besar Wicaksono <bwicaksono@nvidia.com>,
+	Ma Ke <make24@iscas.ac.cn>,
+	Chengwen Feng <fengchengwen@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-perf-users@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-fpga@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: [PATCH 00/16] lib/cpumask: get rid of cpumap_print_to_pagebuf()
+Date: Thu, 28 May 2026 14:36:07 -0400
+Message-ID: <20260528183625.870813-1-ynorov@nvidia.com>
+X-Mailer: git-send-email 2.51.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0077.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::22) To LV3PR12MB9356.namprd12.prod.outlook.com
+ (2603:10b6:408:20c::21)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 7/7] perf/x86/intel/uncore: Implement global init
- callback for GNR uncore
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260527151154.130505-1-zide.chen@intel.com>
- <20260527151154.130505-7-zide.chen@intel.com>
- <507feaea-25fc-4111-a39b-648ce44e3316@linux.intel.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <507feaea-25fc-4111-a39b-648ce44e3316@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR12MB9356:EE_|SA3PR12MB9228:EE_
+X-MS-Office365-Filtering-Correlation-Id: 19749e33-0ed2-4e6e-5dfa-08debce80877
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|10070799003|366016|18002099003|11063799006|6133799003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	vUVY3uUYl2ZVcZRHFt1uUn0nw6d4ieHKXH/HFZHDcNyi+nyEY3JWsme1sfsPs/mo4L5wojaKHKkLm6i9jZd37fgEOchKCZjvVTPXs7H4+XchbPQ7IjHXVLLf0it0Dxzb0uqYwO8oTBxiF6QtifK3qfeyZ5YDTkl6r7LuwIM1ep19fQaUygG+jixUgouokBSdvnZwBCxDZIYRfNtyxosgZxBQxgsdpG92HvzZEA6lYYqB/x8Z+ShgH8f4SE5ozE9tU+ZJlUx+Dw9UvbpXvam6rt7WjJ1x7x2WldP2ijm6fSAmvPAPEBJGcOKGL5ns9f3ofAK2wHejW7hmd9KctxBbrK8nNeo+7f2Zfz+O+/4IX3eEKowaGO6kpkGOFiXvvuvRpOVs1aB7qfUef0Z0CaI74+hVxrZAM8h2mHXiXNUeTgI8fMoWNuU0u2hpNw43P4bC2JBur76cI3EfaSaIsoKxjPIlvmo2mv8qyWV8gMbPATH5ghs2c6E9TNFX4dxEyPu7D01eqevnJAb3J9Kocs6tM1J9jgRYMzJzxyY6ke9ae/6ta/NHHppfwZVQEnc3HVn/45w7/HQjBG2TIKOIkLo/RtN5Dya+P9VWaukhmKFkcHs1S7JBjhEGhLCTaCKOBVeTd0uRIQUS8pkpMaRKgbuT6FYYognFaBxGhIt0Yef9qn5BiUSBcYy2G6HWIuswNBdf
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(10070799003)(366016)(18002099003)(11063799006)(6133799003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+HRz9lewdEfK9kpquRoYwbH1o6nEJdTpOVIrWceCHDdXJw+rIVJYAtbW9fpm?=
+ =?us-ascii?Q?pep5r+3N/cL1LNM7IsQeX1u/4M9ga28u25o4PZp9drsrxv0EFABK3/uv9LjJ?=
+ =?us-ascii?Q?PDinK5HONprFSfiQeEv0OhA3N3aKjTkeSEhK+F0zdbaDeZtDKS+PFAcHwcXy?=
+ =?us-ascii?Q?07fd6FV5IsDS4f65wzKl6LTi/kbLhTHmQC64sIyfnuRP0uMGlhcYPua+QKX+?=
+ =?us-ascii?Q?SW1ys5X6fHpRIUqVqwCySqR7l2jFNNaNNgI2n3KRiUwBTxPUYs7p4l677Xx8?=
+ =?us-ascii?Q?rZhRoXNmv1vJpMlD3WhpsC3KeG6UTtM8O2xqYXAvYTJ48r68QUD9d7OwnF9G?=
+ =?us-ascii?Q?WlcDoI96GtAsXHd8HGfYTx/yuze4W/AUOsevJx+BH14UDB0RL57tDWuqO1UE?=
+ =?us-ascii?Q?DNzu0Qelq5XVTaLK82e0DDy5+Cclzo+H4ZPzAPO2kfyk79Qdc/ZJET7MlPs0?=
+ =?us-ascii?Q?1qGuzPUfTGfccUFzSm0mCV54GtHvyV23vXJf8uOjgMCmYpwPEQBFxLZbxRd9?=
+ =?us-ascii?Q?+T9zKCoAgKGZjz8WP5LUBNtSfizXXN4BmzeTidi6m5YwEE8NBmZhBgJ92EXD?=
+ =?us-ascii?Q?GXQE2apDmHJzh5UqoNjFrFymljw7bLiBZVicHdXeFMzpWt8aRje1CFDhumL6?=
+ =?us-ascii?Q?QuNWzgjP1dr4V6a9gS+t5V9Z6YSdOtgQ8+pd9PEzduurpzK5vRGhRqrxK05i?=
+ =?us-ascii?Q?r9Hnx9blmNX9iSf+XMvy09yM9/M0zB3RpxNjjUWSgnVgP+lka9e8nbW65Wj8?=
+ =?us-ascii?Q?WTyBRssTzReZWiHvlt1YYpwv3a4WsVF145fOPIqSR13Zh6ooJRrA5sEdCTbA?=
+ =?us-ascii?Q?8xREizGwWocXScjgjSyKoF7nQNtY3qB997G+7NAc76J5puv8TVnIYKIEh+z2?=
+ =?us-ascii?Q?zQL2cvAxSDlThv10Lo6/UHsQV7SxKzdi3GNzixhjbWQQmV9tPAymRMPin2vB?=
+ =?us-ascii?Q?YVYh2cp6SPuiltlksxK0+pCE9+ZevFKuvsiijEvhxTnc8r874YXIiHTlByhJ?=
+ =?us-ascii?Q?qvB430xktTYisRP17Y36mUlta7o5ghDghBnn4v/piKxiW2PhpYuDqBSEpKXC?=
+ =?us-ascii?Q?Nl1VyviwA1C+e2s81rpsnkjslzRWYZRyUAK+z75+Wx5dqnLYxM8bVQFvSJ8z?=
+ =?us-ascii?Q?iVQtYQH/Kd0JyKSEki0dvMW3LP6aK6OCWzLZFHXQfYZ4MrPxS9oK0gj7w8Vr?=
+ =?us-ascii?Q?Ty3Kugvk3qDzf07xgP0MVoW/fUHPpBU0QDk9spsmJX5ZfbMBQol6G7BeGslH?=
+ =?us-ascii?Q?IfggJMss6ucFIRDnaRTPVpKPe+05bTDAnxy0mm2ZGhO054tZ7kK/5IfaRlec?=
+ =?us-ascii?Q?Js0Umh0Ogbsf2a8Grcxz1jdQsKAYREmWHPqonMnEuAIUF+jBVi5V/BnehoFM?=
+ =?us-ascii?Q?jOd2Yw1XPhl2YLMRw+BqANd9ZrGUwLPKpc32TFbROVWlGPYbm9b5pIM2bFR5?=
+ =?us-ascii?Q?8AQMmf/RMhTjuDq5co1uWiEBeNGTT4N2dn6VObhphUm/ardD+9wVCWCGHwo1?=
+ =?us-ascii?Q?TPtBtot8XTZkFTat8T9ps7FGHPtfs8BkRxgYXZKi7VpPdENosbSIFlA0oJEn?=
+ =?us-ascii?Q?RbB0K8vl1tKSfNCxRx0m4z9EnISN1bLVAmwYiA+VlHtQvW3HLxkEXuRmTfDP?=
+ =?us-ascii?Q?ATzAYV0Gay2/xzLeX2WROMBt3VBw05qqINQjZsgti55xlz2voB3YYCK+vfxY?=
+ =?us-ascii?Q?Ce6JvZj1cstRum7uN9hfUOdwBQbe3FxT1O3dxCGMyr8eNRcwrPp8LjX9mQ10?=
+ =?us-ascii?Q?njuLgRKiJWhPPZA59OfRzUBXiqbQZA4MCoHY/0GRQo66nRi+Ic4k?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19749e33-0ed2-4e6e-5dfa-08debce80877
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9356.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 18:36:29.7574
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Tc2GFQcS1qEMQ+1rOuwfNOGwp/zyCZQCEGjU4f399Zyt8Q/60ZuB32VMy2PiEPOG/h/szipm3VhUxO9zg2CODw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9228
 
+cpumap_print_to_pagebuf() is the equivalent for the "&*pb[l]" notation
+in printk-like functions. In some cases, it makes people to create
+temporary buffers for the printed cpumasks, where it can be avoided.
 
+Get rid of it in a favor of more standard printing API.
 
-On 5/28/2026 1:46 AM, Mi, Dapeng wrote:
-> 
-> On 5/27/2026 11:11 PM, Zide Chen wrote:
->> On Sierra Forest and Clearwater Forest, the FRZ_ALL bit in the global
->> control register defaults to 0 at boot, but UBOX PMON units do not
->> work until the global control register is explicitly written with 0
->> to trigger hardware initialization properly.
->>
->> Implement the generic uncore_msr_global_init() callback and add it to
->> gnr_uncore_init[], which is shared by GNR, GRR, SRF, and CWF.
-> 
-> Need a "Fixes" tag?
-No Fixes tag needed. This is a hardware initialization workaround rather
-than a fix for a software bug. The register defaults to 0, but the
-hardware requires an explicit write to trigger PMON functionality.
+Each patch, except for the last one, is independent and may be moved with
+the corresponding subsystem. Or I can take it in bitmap-for-next, at
+maintainers' discretion.
 
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> 
-> 
->> Signed-off-by: Zide Chen <zide.chen@intel.com>
->> ---
->> V2:
->> - Propagate return value of wrmsrq_on_cpu() to global_init().
->> ---
->>  arch/x86/events/intel/uncore.c           | 13 ++++++++++++-
->>  arch/x86/events/intel/uncore.h           |  2 +-
->>  arch/x86/events/intel/uncore_discovery.c |  2 +-
->>  3 files changed, 14 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->> index 4b3a1fa5b41b..7857959c6e82 100644
->> --- a/arch/x86/events/intel/uncore.c
->> +++ b/arch/x86/events/intel/uncore.c
->> @@ -1716,7 +1716,7 @@ static int __init uncore_mmio_init(void)
->>  	return ret;
->>  }
->>  
->> -static int uncore_mmio_global_init(u64 ctl)
->> +static int uncore_mmio_global_init(int die, u64 ctl)
->>  {
->>  	void __iomem *io_addr;
->>  
->> @@ -1731,6 +1731,16 @@ static int uncore_mmio_global_init(u64 ctl)
->>  	return 0;
->>  }
->>  
->> +static int uncore_msr_global_init(int die, u64 msr)
->> +{
->> +	int cpu = uncore_die_to_cpu(die);
->> +
->> +	if (cpu == -1)
->> +		return -ENODEV;
->> +
->> +	return wrmsrq_on_cpu(cpu, msr, 0);
->> +}
->> +
->>  static const struct uncore_plat_init nhm_uncore_init __initconst = {
->>  	.cpu_init = nhm_uncore_cpu_init,
->>  };
->> @@ -1871,6 +1881,7 @@ static const struct uncore_plat_init gnr_uncore_init __initconst = {
->>  	.domain[0].base_is_pci = true,
->>  	.domain[0].discovery_base = UNCORE_DISCOVERY_TABLE_DEVICE,
->>  	.domain[0].units_ignore = gnr_uncore_units_ignore,
->> +	.domain[0].global_init = uncore_msr_global_init,
->>  };
->>  
->>  static const struct uncore_plat_init dmr_uncore_init __initconst = {
->> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
->> index 94c68e3417b6..c2e5ccb1d72c 100644
->> --- a/arch/x86/events/intel/uncore.h
->> +++ b/arch/x86/events/intel/uncore.h
->> @@ -53,7 +53,7 @@ struct uncore_discovery_domain {
->>  	/* MSR address or PCI device used as the discovery base */
->>  	u32	discovery_base;
->>  	bool	base_is_pci;
->> -	int	(*global_init)(u64 ctl);
->> +	int	(*global_init)(int die, u64 ctl);
->>  
->>  	/* The units in the discovery table should be ignored. */
->>  	int	*units_ignore;
->> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
->> index af2217b44a81..e36613d934b1 100644
->> --- a/arch/x86/events/intel/uncore_discovery.c
->> +++ b/arch/x86/events/intel/uncore_discovery.c
->> @@ -287,7 +287,7 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
->>  	if (!io_addr)
->>  		return -ENOMEM;
->>  
->> -	if (domain->global_init && domain->global_init(global.ctl)) {
->> +	if (domain->global_init && domain->global_init(die, global.ctl)) {
->>  		ret = -ENODEV;
->>  		goto out;
->>  	}
+On top of bitmap-for-next.
 
+(Apologize for the bulky CC list. Feel free to review only relevant
+patches.)
+
+Yury Norov (16):
+  psci: simplify hotplug_tests()
+  arm: Use sysfs_emit() for cpumask show callbacks
+  powerpc: Use sysfs_emit() for cpumask show callbacks
+  x86/events: Use sysfs_emit() for cpumask show callbacks
+  ACPI: pad: Use sysfs_emit() for idlecpus show
+  cpu: Use sysfs_emit() for cpumask show callback
+  devfreq: Use sysfs_emit() for cpumask show callbacks
+  fpga: dfl-fme-perf: Use sysfs_emit() for cpumask show
+  hwtracing: hisi_ptt: Use sysfs_emit() for cpumask show
+  RDMA/hfi1: Use sysfs_emit() for cpumask show helper
+  nvdimm: Use sysfs_emit() for cpumask show callback
+  PCI/sysfs: Use sysfs_emit() for cpumask show callbacks
+  perf: Use sysfs_emit() for cpumask show callbacks
+  powercap: intel_rapl: Use sysfs_emit() for cpumask show
+  thermal: intel: Use sysfs_emit() for powerclamp cpumask
+  lib/bitmap-str: get rid of cpumap_print_to_pagebuf()
+
+ arch/arm/mach-imx/mmdc.c                    |  2 +-
+ arch/arm/mm/cache-l2x0-pmu.c                |  2 +-
+ arch/powerpc/kernel/cacheinfo.c             |  3 ++-
+ arch/powerpc/perf/hv-24x7.c                 |  2 +-
+ arch/powerpc/perf/hv-gpci.c                 |  2 +-
+ arch/powerpc/perf/imc-pmu.c                 |  2 +-
+ arch/x86/events/amd/iommu.c                 |  2 +-
+ arch/x86/events/amd/power.c                 |  2 +-
+ arch/x86/events/amd/uncore.c                |  2 +-
+ arch/x86/events/intel/core.c                |  2 +-
+ arch/x86/events/intel/uncore.c              |  2 +-
+ drivers/acpi/acpi_pad.c                     |  4 ++--
+ drivers/base/cpu.c                          |  2 +-
+ drivers/devfreq/event/rockchip-dfi.c        |  2 +-
+ drivers/devfreq/hisi_uncore_freq.c          |  2 +-
+ drivers/firmware/psci/psci_checker.c        | 14 ++------------
+ drivers/fpga/dfl-fme-perf.c                 |  2 +-
+ drivers/hwtracing/ptt/hisi_ptt.c            |  2 +-
+ drivers/infiniband/hw/hfi1/sdma.c           |  3 ++-
+ drivers/nvdimm/nd_perf.c                    |  2 +-
+ drivers/pci/pci-sysfs.c                     |  7 ++++---
+ drivers/perf/alibaba_uncore_drw_pmu.c       |  2 +-
+ drivers/perf/amlogic/meson_ddr_pmu_core.c   |  2 +-
+ drivers/perf/arm-cci.c                      |  2 +-
+ drivers/perf/arm-ccn.c                      |  2 +-
+ drivers/perf/arm-cmn.c                      |  2 +-
+ drivers/perf/arm-ni.c                       |  2 +-
+ drivers/perf/arm_cspmu/arm_cspmu.c          |  2 +-
+ drivers/perf/arm_dmc620_pmu.c               |  4 ++--
+ drivers/perf/arm_dsu_pmu.c                  |  2 +-
+ drivers/perf/arm_pmu.c                      |  2 +-
+ drivers/perf/arm_smmuv3_pmu.c               |  2 +-
+ drivers/perf/arm_spe_pmu.c                  |  2 +-
+ drivers/perf/cxl_pmu.c                      |  2 +-
+ drivers/perf/dwc_pcie_pmu.c                 |  2 +-
+ drivers/perf/fsl_imx8_ddr_perf.c            |  2 +-
+ drivers/perf/fsl_imx9_ddr_perf.c            |  2 +-
+ drivers/perf/fujitsu_uncore_pmu.c           |  2 +-
+ drivers/perf/hisilicon/hisi_pcie_pmu.c      |  2 +-
+ drivers/perf/hisilicon/hisi_uncore_pmu.c    |  2 +-
+ drivers/perf/marvell_cn10k_ddr_pmu.c        |  2 +-
+ drivers/perf/marvell_cn10k_tad_pmu.c        |  2 +-
+ drivers/perf/marvell_pem_pmu.c              |  2 +-
+ drivers/perf/nvidia_t410_c2c_pmu.c          |  2 +-
+ drivers/perf/nvidia_t410_cmem_latency_pmu.c |  2 +-
+ drivers/perf/qcom_l2_pmu.c                  |  2 +-
+ drivers/perf/qcom_l3_pmu.c                  |  2 +-
+ drivers/perf/starfive_starlink_pmu.c        |  2 +-
+ drivers/perf/thunderx2_pmu.c                |  2 +-
+ drivers/perf/xgene_pmu.c                    |  2 +-
+ drivers/powercap/intel_rapl_common.c        |  2 +-
+ drivers/thermal/intel/intel_powerclamp.c    |  2 +-
+ include/linux/cpumask.h                     | 19 -------------------
+ kernel/events/core.c                        |  2 +-
+ lib/bitmap-str.c                            |  9 ++++-----
+ 55 files changed, 65 insertions(+), 92 deletions(-)
+
+-- 
+2.51.0
