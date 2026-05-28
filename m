@@ -1,160 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0FA2DAFA9;
-	Thu, 28 May 2026 06:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C7732AAA8;
+	Thu, 28 May 2026 07:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779950824; cv=none; b=EDrLo+Ysb+rdwxnFOksWkbE6i0/feML4r0pxK2/zPO6OJTXYV1e5+UxXFhmKPPXxqwlCkBNE7f9FY8mskpcz/AlKl+8RMxIP4MiAX5onj84EF7T/eBNoTUtCJ+O0YPyGbgYacxvgv3BJH2fZEnSC3sk2JbGm5HIycFfr+i9a/jA=
+	t=1779953314; cv=none; b=YiXNpb6iidbAshhba/FI8i+ZxZqdwZbVuntDhL/I06eDXB2nhDeeunmYotDJPfqmXNSyk3K3t4j0TRJtwyMpQ1ehe2WPGnnOz6nmsyxliwzgUGstt5Qf7502MdxWmZMXTNSH5f7e5uwcZk7lajMn6BxT9aL9yXsbaLgGEss+zZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779950824; c=relaxed/simple;
-	bh=8ECSsgntb8bFsVpcc1EZDrg2NEzVJD89sATTSwDwrWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VbJYKIyTi0Z3p0cxsDpvSc6gHLddbS6riw7S5eVGjtXe11KrUBa5x6ZFG7Gd1zVoog+HY8CojiuRbpSF3YM6ilLTxDx1SnE/S4AkJJ+dDxFmFoQh5JMi2egrZGYW7sxkxXYtmgOsFSt05nqCI31TFFaTdEFJGrFWnwrnjWLRlsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LPvBiN30; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LPvBiN30"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779950823; x=1811486823;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8ECSsgntb8bFsVpcc1EZDrg2NEzVJD89sATTSwDwrWc=;
-  b=LPvBiN30Fly8My7rvVAVqEYEcBUTp63A+3VeBZK4Ho0ZaDTSpVXPf04G
-   iHiKM40hYpZ2loZB8XgOCNQBdlT3m2i2ljpr8hjmb+tzgAeDlOXnNvEUZ
-   31YkPglK8kL5xN+/dw8B+6U0xloU5696DBiks0kAsnOXbTLQiKVi1TSku
-   FyH//cbBDvir1JGaxqmT4R85EPTt92QAK94PRTxQm3zea3y1dc2mwdFB1
-   N0RQQklMIN2t74jk1mL+eFFB9Mv74wobORW2oRd9ixicOGMo9l9+k2IsV
-   Lqe+uthM0p8DVPcvInCBFTkMWkiWRwSPt4VM0i3Ux5ecgnXxlmmJ7waLm
-   A==;
-X-CSE-ConnectionGUID: wXYnyK+CT5mX0na+9zk/Kg==
-X-CSE-MsgGUID: 86dJt7bnQfus2dOtKg84JA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="84647415"
-X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="84647415"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 23:46:44 -0700
-X-CSE-ConnectionGUID: JEhX145USdSXCMeZD+4JFg==
-X-CSE-MsgGUID: 58VO9UflReqSi85/WjGDMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="247541531"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2026 23:46:41 -0700
-Message-ID: <507feaea-25fc-4111-a39b-648ce44e3316@linux.intel.com>
-Date: Thu, 28 May 2026 14:46:39 +0800
+	s=arc-20240116; t=1779953314; c=relaxed/simple;
+	bh=bTpkOgWsu469H7oaGBOSi88Y7S9zXSuEy6WKbvBX4jk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pbo2edDWjS/esxropmzS7BeQtLOFIQtSs2scVXWqI53Wyv5XRy57nhlgIepg06+fzkSW1wDkGJ2z7NkiJTJTwJe7lBJS+Ttz3t8DFUYdWxHLoefvMHiU4ADi/ZLa7zQQFd1DZC/uFEbUs+yJWuWH2QtChFOb9Mg48B2FdkzY4h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
+Received: from 8bytes.org (p200300f6af4fc5001a5b4667a2accba1.dip0.t-ipconnect.de [IPv6:2003:f6:af4f:c500:1a5b:4667:a2ac:cba1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id A802B1C59BB;
+	Thu, 28 May 2026 09:28:31 +0200 (CEST)
+Date: Thu, 28 May 2026 09:28:30 +0200
+From: =?utf-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
+To: Vasant Hegde <vasant.hegde@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, x86@kernel.org, 
+	dave.hansen@linux.intel.com, tglx@kernel.org, bp@alien8.de, hpa@zytor.com, 
+	iommu@lists.linux.dev, suravee.suthikulpanit@amd.com, sandipan.das@amd.com
+Subject: Re: [PATCH] x86/events/amd/iommu: Fix cpumask of IOMMU events
+Message-ID: <ahfujybXeL-GHNmr@8bytes.org>
+References: <20260517114026.6817-1-vasant.hegde@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 7/7] perf/x86/intel/uncore: Implement global init
- callback for GNR uncore
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260527151154.130505-1-zide.chen@intel.com>
- <20260527151154.130505-7-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260527151154.130505-7-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260517114026.6817-1-vasant.hegde@amd.com>
 
+On Sun, May 17, 2026 at 11:40:26AM +0000, Vasant Hegde wrote:
+> IOMMU performance counters are accessed via MMIO space. Currently IOMMU
+> PMUs uses a single global cpumask (iommu_cpumask) shared across all AMD
+> IOMMU PMU instances. This prevents collecting per-socket numbers
+> (ex: perf stat --per-socket).
+> 
+> Fix this by adjusting cpumask based on IOMMUs NUMA node.
+> 
+> Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
 
-On 5/27/2026 11:11 PM, Zide Chen wrote:
-> On Sierra Forest and Clearwater Forest, the FRZ_ALL bit in the global
-> control register defaults to 0 at boot, but UBOX PMON units do not
-> work until the global control register is explicitly written with 0
-> to trigger hardware initialization properly.
->
-> Implement the generic uncore_msr_global_init() callback and add it to
-> gnr_uncore_init[], which is shared by GNR, GRR, SRF, and CWF.
+Acked-by: Joerg Roedel <joerg.roedel@amd.com>
 
-Need a "Fixes" tag?
-
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-
-
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
 > ---
-> V2:
-> - Propagate return value of wrmsrq_on_cpu() to global_init().
-> ---
->  arch/x86/events/intel/uncore.c           | 13 ++++++++++++-
->  arch/x86/events/intel/uncore.h           |  2 +-
->  arch/x86/events/intel/uncore_discovery.c |  2 +-
->  3 files changed, 14 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 4b3a1fa5b41b..7857959c6e82 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -1716,7 +1716,7 @@ static int __init uncore_mmio_init(void)
->  	return ret;
->  }
+>  arch/x86/events/amd/iommu.c | 29 +++++++++++++++++++++++------
+>  drivers/iommu/amd/init.c    |  7 +++++++
+>  include/linux/amd-iommu.h   |  1 +
+>  3 files changed, 31 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/iommu.c b/arch/x86/events/amd/iommu.c
+> index 07b110e8418a..b1848300028d 100644
+> --- a/arch/x86/events/amd/iommu.c
+> +++ b/arch/x86/events/amd/iommu.c
+> @@ -10,6 +10,7 @@
 >  
-> -static int uncore_mmio_global_init(u64 ctl)
-> +static int uncore_mmio_global_init(int die, u64 ctl)
+>  #define pr_fmt(fmt)	"perf/amd_iommu: " fmt
+>  
+> +#include <linux/device.h>
+>  #include <linux/perf_event.h>
+>  #include <linux/init.h>
+>  #include <linux/cpumask.h>
+> @@ -43,6 +44,7 @@ struct perf_amd_iommu {
+>  	u8 max_counters;
+>  	u64 cntr_assign_mask;
+>  	raw_spinlock_t lock;
+> +	cpumask_t cpumask;
+>  };
+>  
+>  static LIST_HEAD(perf_amd_iommu_list);
+> @@ -131,13 +133,15 @@ static struct amd_iommu_event_desc amd_iommu_v2_event_descs[] = {
+>  /*---------------------------------------------
+>   * sysfs cpumask attributes
+>   *---------------------------------------------*/
+> -static cpumask_t iommu_cpumask;
+> -
+>  static ssize_t _iommu_cpumask_show(struct device *dev,
+>  				   struct device_attribute *attr,
+>  				   char *buf)
 >  {
->  	void __iomem *io_addr;
+> -	return cpumap_print_to_pagebuf(true, buf, &iommu_cpumask);
+> +	struct pmu *pmu = dev_get_drvdata(dev);
+> +	struct perf_amd_iommu *perf_iommu =
+> +			container_of(pmu, struct perf_amd_iommu, pmu);
+> +
+> +	return cpumap_print_to_pagebuf(true, buf, &perf_iommu->cpumask);
+>  }
+>  static DEVICE_ATTR(cpumask, S_IRUGO, _iommu_cpumask_show, NULL);
 >  
-> @@ -1731,6 +1731,16 @@ static int uncore_mmio_global_init(u64 ctl)
+> @@ -420,7 +424,8 @@ static const struct pmu iommu_pmu __initconst = {
+>  static __init int init_one_iommu(unsigned int idx)
+>  {
+>  	struct perf_amd_iommu *perf_iommu;
+> -	int ret;
+> +	struct device *dev;
+> +	int node, cpu, ret;
+>  
+>  	perf_iommu = kzalloc_obj(struct perf_amd_iommu);
+>  	if (!perf_iommu)
+> @@ -440,6 +445,20 @@ static __init int init_one_iommu(unsigned int idx)
+>  		return -EINVAL;
+>  	}
+>  
+> +	dev = amd_iommu_idx_to_dev(idx);
+> +	node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+> +	if (node != NUMA_NO_NODE)
+> +		cpu = cpumask_any_and(cpumask_of_node(node), cpu_online_mask);
+> +	else
+> +		cpu = cpumask_any(cpu_online_mask);
+> +
+> +	if (cpu >= nr_cpu_ids) {
+> +		pr_warn("Failed to find online CPU for IOMMU %d.\n", idx);
+> +		kfree(perf_iommu);
+> +		return -ENODEV;
+> +	}
+> +	cpumask_set_cpu(cpu, &perf_iommu->cpumask);
+> +
+>  	snprintf(perf_iommu->name, IOMMU_NAME_SIZE, "amd_iommu_%u", idx);
+>  
+>  	ret = perf_pmu_register(&perf_iommu->pmu, perf_iommu->name, -1);
+> @@ -483,8 +502,6 @@ static __init int amd_iommu_pc_init(void)
+>  		return -ENODEV;
+>  	}
+>  
+> -	/* Init cpumask attributes to only core 0 */
+> -	cpumask_set_cpu(0, &iommu_cpumask);
 >  	return 0;
 >  }
 >  
-> +static int uncore_msr_global_init(int die, u64 msr)
+> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+> index 3bdb380d23e9..2c35d171b5ae 100644
+> --- a/drivers/iommu/amd/init.c
+> +++ b/drivers/iommu/amd/init.c
+> @@ -3939,6 +3939,13 @@ struct amd_iommu *get_amd_iommu(unsigned int idx)
+>  	return NULL;
+>  }
+>  
+> +struct device *amd_iommu_idx_to_dev(unsigned int idx)
 > +{
-> +	int cpu = uncore_die_to_cpu(die);
+> +	struct amd_iommu *iommu = get_amd_iommu(idx);
 > +
-> +	if (cpu == -1)
-> +		return -ENODEV;
-> +
-> +	return wrmsrq_on_cpu(cpu, msr, 0);
+> +	return iommu ? &iommu->dev->dev : NULL;
 > +}
 > +
->  static const struct uncore_plat_init nhm_uncore_init __initconst = {
->  	.cpu_init = nhm_uncore_cpu_init,
->  };
-> @@ -1871,6 +1881,7 @@ static const struct uncore_plat_init gnr_uncore_init __initconst = {
->  	.domain[0].base_is_pci = true,
->  	.domain[0].discovery_base = UNCORE_DISCOVERY_TABLE_DEVICE,
->  	.domain[0].units_ignore = gnr_uncore_units_ignore,
-> +	.domain[0].global_init = uncore_msr_global_init,
->  };
+>  /****************************************************************************
+>   *
+>   * IOMMU EFR Performance Counter support functionality. This code allows
+> diff --git a/include/linux/amd-iommu.h b/include/linux/amd-iommu.h
+> index edcee9f5335a..6b8d6b53b4e9 100644
+> --- a/include/linux/amd-iommu.h
+> +++ b/include/linux/amd-iommu.h
+> @@ -67,6 +67,7 @@ int amd_iommu_pc_set_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn,
+>  int amd_iommu_pc_get_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn,
+>  		u64 *value);
+>  struct amd_iommu *get_amd_iommu(unsigned int idx);
+> +struct device *amd_iommu_idx_to_dev(unsigned int idx);
 >  
->  static const struct uncore_plat_init dmr_uncore_init __initconst = {
-> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-> index 94c68e3417b6..c2e5ccb1d72c 100644
-> --- a/arch/x86/events/intel/uncore.h
-> +++ b/arch/x86/events/intel/uncore.h
-> @@ -53,7 +53,7 @@ struct uncore_discovery_domain {
->  	/* MSR address or PCI device used as the discovery base */
->  	u32	discovery_base;
->  	bool	base_is_pci;
-> -	int	(*global_init)(u64 ctl);
-> +	int	(*global_init)(int die, u64 ctl);
->  
->  	/* The units in the discovery table should be ignored. */
->  	int	*units_ignore;
-> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-> index af2217b44a81..e36613d934b1 100644
-> --- a/arch/x86/events/intel/uncore_discovery.c
-> +++ b/arch/x86/events/intel/uncore_discovery.c
-> @@ -287,7 +287,7 @@ static int __parse_discovery_table(struct uncore_discovery_domain *domain,
->  	if (!io_addr)
->  		return -ENOMEM;
->  
-> -	if (domain->global_init && domain->global_init(global.ctl)) {
-> +	if (domain->global_init && domain->global_init(die, global.ctl)) {
->  		ret = -ENODEV;
->  		goto out;
->  	}
+>  #ifdef CONFIG_KVM_AMD_SEV
+>  int amd_iommu_snp_disable(void);
+> -- 
+> 2.31.1
+> 
