@@ -1,114 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB003FFACB;
-	Thu, 28 May 2026 17:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB24318BA6;
+	Thu, 28 May 2026 18:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779989701; cv=none; b=AggfMnJEF13/qIvoZUftKCiA09Hv8o/+GEmuVIylYbphRS33PECnDmgtvldt8uzlHTgaEyBiziqsmCCeRx/vTwNMZWCvX6NVVSC7Jh1hUalesAabFyWcv5+iuP4lm5eqYqpK+9xZj1PUDUCOnFw/aUWiBp3vDJecXQCHlszzDMI=
+	t=1779991660; cv=none; b=ZuNTkLqKFIN7MHB7SryB5EHLc6QSbZh8VPK+pacDSvwDwWsxIbBe1RsYkMkpo5WcRxVti9cuxmnlZwdWj+ls4RYNaQl7b7hqQyQwmjM4Y8Mn2iDLK9oq31A/+0NOHbSvdu2mHENSBI85tKpJ8nPf209pGzTxy8S5UxXYGzdYHNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779989701; c=relaxed/simple;
-	bh=9gQ6/nkgNTTcbsQ5LBkr6wTuk65Y2PVq76wusJRSLTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T3ftPemSByj9vksCHNx5UpwTCRJ55qsHvFYnUwRJI1R6tiebRZ8iHV2CvaeFJoqYRYEKVLdcZbiBIWpRHMUOv9NIVhiuS1j7cAb4InusCq4WCiXoKL8Q5WtiKv1epAF6N422GaWBaYda5wjHGPHpLEIRI3cWHpi5xN2Yb/HOeWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geSJbu/3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779991660; c=relaxed/simple;
+	bh=tMelLFH+iAL0BW0b/Gdpw2FXWvd2zu83e6Vm8CX7ldk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g2Iwuaw098Be5PhiB796eB+5hWJwZ1xcm34x82jPqsYMPaHMWzeCN+aqfTtj6TeOYpfnMQZTWyqeI97h4jcx8EodR895LpwCvehFnlt2HICgSGbDKS36ok/aRQIB2+IbPHdCErwBXY5vINkwnw7+9oNMkdwx1NKkwQB3Hn7GLRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iLuk9nui; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geSJbu/3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A8451F000E9;
-	Thu, 28 May 2026 17:34:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779989698;
-	bh=jA+7JOr+xAG/3B/JVLxUm/6Q3nvgTPEegvhTonQHRMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=geSJbu/3LrN5aLP8hO4lEDSKeoV5YN5DaiVTJb4QsKgssrDcdMD0S5sM9F9wTnB1j
-	 OTfxvNgdzKais7hyXe613WXveiImAD2tLr2WoAfL07nw856s9k/yNNbO0OvOF20Drl
-	 Jgaw6w20/c5tIjY3/wX/HGnlWKHedXOAowVCvYf+fCBSOd5oyCoaEevosgIpvwEWgm
-	 E3p2xpDhTY1xsUWB19sw1gvO6H4YqaonyJYPsitqMz3lU8ICDj1fFnumcxv2z5sYCT
-	 Ocnw5K6Dke25hrwfUgKKfilIuBIaoWcOw0/Ol4enqwod9X92bASNsGh9dyGXG3rvSL
-	 BRpZpHX4+2Jhw==
-Date: Thu, 28 May 2026 10:34:55 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Rui Qi <qirui.001@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] perf: Fix off-by-one stack buffer overflow in
- kallsyms__parse()
-Message-ID: <ahh8v0Zvh7iFz9i8@google.com>
-References: <ahcrYd2xj1gWvl0m@google.com>
- <20260528062355.2320045-1-qirui.001@bytedance.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iLuk9nui"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779991659; x=1811527659;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tMelLFH+iAL0BW0b/Gdpw2FXWvd2zu83e6Vm8CX7ldk=;
+  b=iLuk9nuivxqiTfm3w4EQVX6Kt8O+xw4aFnMchBJxTy213Gc4ljefNDtW
+   U0zmTx/f/ony25vRf6sIC6Eyzni6+bmSBIcYajCD10vcNJHfEJUqOVU71
+   i7cy6P18GhfYXrMJkyddplHViVtYb89CEzu4At9v5PUuytsTgueXtpDsG
+   BCJBsnAoKMc4KbZuTeh7AkmnLVeGwn52/W/UzrNgBdQb3Ok1RAbEYYuPK
+   hFdi03ArlWWYl4wn0d7JHwWF3xKhpiQw7ljgoktWFmh12mUzd7HXIh5Fx
+   D3gc9gMQKLL8tj97w1SG5kih1ukGpRU9wUqhrhv+NFniDsfk9Bh5Xi4rT
+   A==;
+X-CSE-ConnectionGUID: KEsj76Q/Rl2FyPP5N8zYvw==
+X-CSE-MsgGUID: QM5Mbs2zTfii5e1ItOtLtA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="80566456"
+X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
+   d="scan'208";a="80566456"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 11:07:39 -0700
+X-CSE-ConnectionGUID: 2A9BV3v2Qc+kVX9T3qCDeg==
+X-CSE-MsgGUID: 6ycwWnXTQvOzVPrmTbFklQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
+   d="scan'208";a="244441491"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 11:07:38 -0700
+Message-ID: <73ec703b-ad87-4afc-8bff-1d86a895bea8@intel.com>
+Date: Thu, 28 May 2026 13:07:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260528062355.2320045-1-qirui.001@bytedance.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 4/7] perf/x86/intel/uncore: Defer ADL global PMON
+ enable to enable_box()
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260527151154.130505-1-zide.chen@intel.com>
+ <20260527151154.130505-4-zide.chen@intel.com>
+ <66f281e5-0653-4f67-80c7-de64adb0a4e7@linux.intel.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <66f281e5-0653-4f67-80c7-de64adb0a4e7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 28, 2026 at 02:23:55PM +0800, Rui Qi wrote:
-> In kallsyms__parse(), the loop reading symbol names iterates with
-> i < sizeof(symbol_name), which allows i to reach sizeof(symbol_name)
-> upon loop exit. The subsequent symbol_name[i] = '\0' then writes one
-> byte past the end of the stack-allocated symbol_name[] array.
-> 
-> Fix this by changing the loop bound to KSYM_NAME_LEN, so
-> the null terminator always lands within the array. The overflow is
-> triggerable by a kallsyms entry with a symbol name of KSYM_NAME_LEN+1
-> or more characters (e.g., long Rust mangled names or a malicious
-> /proc/kallsyms).
-> 
-> Fixes: 53df2b934412 ("libsymbols kallsyms: Parse using io api")
-> Signed-off-by: Rui Qi <qirui.001@bytedance.com>
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Thanks,
-Namhyung
+On 5/28/2026 1:35 AM, Mi, Dapeng wrote:
+> 
+> On 5/27/2026 11:11 PM, Zide Chen wrote:
+>> On some Raptor Cove CPUs, enabling uncore PMON globally at driver init
+>> may increase power consumption even when no perf events are in use.
+>>
+>> Drop adl_uncore_msr_init_box() and defer programming the global control
+>> register to enable_box(), so it is only set when a box is actually used.
+>>
+>> IMC and IMC freerunning counters use a separate control path and are
+>> unaffected.
+>>
+>> Cc: stable@vger.kernel.org
+> 
+> Need a "Fixes" tag?
 
+Not really. This is a workaround for hardware issues rather than a fix
+for software bugs.
+
+> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > 
-> ---
 > 
-> Changes in v4:
-> - Use KSYM_NAME_LEN for the loop bound as well, as suggested by Namhyung.
-> 
-> Changes in v3:
-> - Use KSYM_NAME_LEN instead of sizeof(symbol_name) - 1 for the
->   overflow check, as suggested by Namhyung.
-> 
-> Changes in v2:
-> - Added read_to_eol(&io) when a symbol name exceeds the buffer size,
->   preventing remaining characters from being parsed as the next symbol entry.
-> - Added Fixes tag.
-> ---
->  tools/lib/symbol/kallsyms.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/lib/symbol/kallsyms.c b/tools/lib/symbol/kallsyms.c
-> index e335ac2b9e19..d64bd9cc82a9 100644
-> --- a/tools/lib/symbol/kallsyms.c
-> +++ b/tools/lib/symbol/kallsyms.c
-> @@ -60,7 +60,7 @@ int kallsyms__parse(const char *filename, void *arg,
->  			read_to_eol(&io);
->  			continue;
->  		}
-> -		for (i = 0; i < sizeof(symbol_name); i++) {
-> +		for (i = 0; i < KSYM_NAME_LEN; i++) {
->  			ch = io__get_char(&io);
->  			if (ch < 0 || ch == '\n')
->  				break;
-> @@ -68,6 +68,9 @@ int kallsyms__parse(const char *filename, void *arg,
->  		}
->  		symbol_name[i]  = '\0';
->  
-> +		if (i == KSYM_NAME_LEN)
-> +			read_to_eol(&io);
-> +
->  		err = process_symbol(arg, symbol_name, symbol_type, start);
->  		if (err)
->  			break;
-> -- 
-> 2.20.1
+>> Signed-off-by: Zide Chen <zide.chen@intel.com>
+>> ---
+>>  arch/x86/events/intel/uncore_snb.c | 7 -------
+>>  1 file changed, 7 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+>> index 3dbc6bacbd9d..edddd4f9ab5f 100644
+>> --- a/arch/x86/events/intel/uncore_snb.c
+>> +++ b/arch/x86/events/intel/uncore_snb.c
+>> @@ -563,12 +563,6 @@ void tgl_uncore_cpu_init(void)
+>>  	skl_uncore_msr_ops.init_box = rkl_uncore_msr_init_box;
+>>  }
+>>  
+>> -static void adl_uncore_msr_init_box(struct intel_uncore_box *box)
+>> -{
+>> -	if (box->pmu->pmu_idx == 0)
+>> -		wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
+>> -}
+>> -
+>>  static void adl_uncore_msr_enable_box(struct intel_uncore_box *box)
+>>  {
+>>  	wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
+>> @@ -587,7 +581,6 @@ static void adl_uncore_msr_exit_box(struct intel_uncore_box *box)
+>>  }
+>>  
+>>  static struct intel_uncore_ops adl_uncore_msr_ops = {
+>> -	.init_box	= adl_uncore_msr_init_box,
+>>  	.enable_box	= adl_uncore_msr_enable_box,
+>>  	.disable_box	= adl_uncore_msr_disable_box,
+>>  	.exit_box	= adl_uncore_msr_exit_box,
+
