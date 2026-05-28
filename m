@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814CA3F7ABE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27E23F86FC;
 	Thu, 28 May 2026 15:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779982637; cv=none; b=kOzuoNclPPVQ0lDF4g592y9OtdDlhuNuTQmJJr5n88auinsld/lAynq4PPgUaFnpdGP+7ns5A1p84IW0yI9Bmk/slcvYVGxCeZxxAnJQTH1WCzXdf6JXfeIvR6AH6jrCCcldQxYwOjZOGQfq/FMfPVVGftus5XlY9xcGZIzxHVo=
+	t=1779982638; cv=none; b=mIxJFPh6xxiKWFEUzqSlIWLDzYQD7a+2QradfFynj1WT49fwwbohi6qzyR6N76CoyvuPWyWvIXJEsyoEdt4yzeRSHOMrRhYP7nTOIH5Kq9zJFYo0olovX8Y3TW4gReJ16LCyWe+CRV570c9grmPBGop1pdtxysgY9Idq/HzUYT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779982637; c=relaxed/simple;
-	bh=P0vwPUGmhTVVwGE8Q38vjEouuttL6DxHAI3dQg9RsnM=;
+	s=arc-20240116; t=1779982638; c=relaxed/simple;
+	bh=T0akOmjnAyWqBw9ksqG6dqy082Z1lwctdCyO4znESRY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ltHJmVBEtcRLNnhn5J2XHDmPJ42Cft1pMjaYF33Qjdhl5GPWPabym+u4+LJZ2QrOA3/72FDNbmiZAkn+Kx3HoIBZLEQveHVdFuHem+LWjw/HA5Fu6gRCMA3xZnJ2z+czK/M2b5bP1lv/pmY33Db1mXwoKr3UBXPANCpKE5sFi9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JeX/xvZo; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=oWFlFmxYVGAtA/LYz+YSHAsXW2zm4Epd5u4ZG76pZTsBBV49nDHHVtjSSMMegJZRrIr0WBOqawQkE49CdDO2Ow10mWGQ4OuvwANWdaz0AJlnM50xur61HsTVyuqQLdRNUwaJ850DEZ2cXUOjtK0nzUNUdYfnRsm3CPvEPJexvgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iGhxzo8X; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JeX/xvZo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iGhxzo8X"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1779982638; x=1811518638;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=P0vwPUGmhTVVwGE8Q38vjEouuttL6DxHAI3dQg9RsnM=;
-  b=JeX/xvZotivePGlbojl40vk3+dvAB+7NQ/LnFYWvG7dzJszzyNRU604e
-   FGf+jwfTzMrWp/JyI5U+LZk6im5wgRHbBBZp+Gt5r3sCzX/IIchkOfuQ2
-   c5SvyFAbEY8GwPLW26C/RScSm1k5apg9/+xyfcWLtnJxI27akMhXAFHfk
-   ca1z0AFOJzXFoTP+OPDPDI0Z9+ofbv/FnGwL1m0nP1dtGeVAeBNGgoFAb
-   ES6PxzYA6hfPDwe/xsYuVh/zlySJBy+c4knmkOwI1dQEaGTqn+rdSk4Dn
-   oGXIHXqNA5ahSNnNbNmpfMrMIJVnD42fTwvl26MaTACM0KEaUnuq5qmg9
+  bh=T0akOmjnAyWqBw9ksqG6dqy082Z1lwctdCyO4znESRY=;
+  b=iGhxzo8Xw8nLoprZzuEnMVO2TL/I1OCGa+kXo+QZ+7oZ1BnL+nhjIRlH
+   6MjUvFLXdx4uDeAcwXYcz5JPhMMramxnJTdocHk7o+4196uqhcVsEDPGi
+   cMaq+Ym02x6tv+aX0SVim1SeDRa8Nq0XwEPJ5zDd9kelyaUdGV656H4PX
+   d0bWbw7K727AR/25xTBLvS7/RWshIvIv++lzQrEm76L/9ouQLvqj83IqC
+   4/QnV7Ua8MiOiEQ5CUugrQ3taiwwnEtXl9+pI0OvR+uXnHZo4kooxcLFq
+   u4zVvcIkPpGb6vwgJmU9vPE03pn9lJwR+qhl8T89npISr0c7SzLjb7BOJ
    w==;
-X-CSE-ConnectionGUID: RI33Ww3eSy+ztUV+zorzJA==
-X-CSE-MsgGUID: 4HVQMfcbTxu1EGbwYmz3vg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="91396804"
+X-CSE-ConnectionGUID: wfJB3xgFQcCxm2HFq64FMA==
+X-CSE-MsgGUID: N15wRuj+S1SroHF5WlIKnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="91396812"
 X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="91396804"
+   d="scan'208";a="91396812"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 08:37:16 -0700
-X-CSE-ConnectionGUID: W8O9eEx3S5GCU3ZKP2/oZg==
-X-CSE-MsgGUID: RRAsuJn4RDiosCiiz9+zgg==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 08:37:17 -0700
+X-CSE-ConnectionGUID: VOqn/DWoTLaqX3qIkPZU2w==
+X-CSE-MsgGUID: jDXjQ5WvS2amc+PodopnFQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="236226862"
+   d="scan'208";a="236226866"
 Received: from rodrigoa-mobl1.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.220.237])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 08:37:15 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 08:37:16 -0700
 From: Thomas Falcon <thomas.falcon@intel.com>
 To: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -57,9 +57,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH v3 1/2] perf script: Fix missing '+' indicator when branch counter reaches upper limit
-Date: Thu, 28 May 2026 10:36:36 -0500
-Message-ID: <20260528153637.300213-2-thomas.falcon@intel.com>
+Subject: [PATCH v3 2/2] perf/annotate: Fix missing branch counter column in TUI mode
+Date: Thu, 28 May 2026 10:36:37 -0500
+Message-ID: <20260528153637.300213-3-thomas.falcon@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260528153637.300213-1-thomas.falcon@intel.com>
 References: <20260528153637.300213-1-thomas.falcon@intel.com>
@@ -71,59 +71,48 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-
-When displaying branch counter (br_cntr) information, a "+"
-suffix represents that event occurrences may have been lost
-due to branch counter saturation. However, this indicator was
-missing in perf script. Add it back.
-
-Before:
-
- # Branch counter abbr list:
- # cpu_core/event=0xc4,umask=0x20/ppp = A
- # cpu_core/instructions/ = B
- # cpu_core/MEM_INST_RETIRED.ALL_LOADS/ = C
- # cpu_core/MEM_LOAD_RETIRED.L2_MISS/ = D
- # '-' No event occurs
- # '+' Event occurrences may be lost due to branch counter saturated
-...
-        datasym+190:
-        00005567f9951676        jz 0x5567f995162dr_cntr: BBBC   # PRED 1 cycles [1]
-...
-After:
-...
-        datasym+190:
-        00005567f9951676        jz 0x5567f995162dr_cntr: BBB+C  # PRED 1 cycles [1]
-...
+perf annotate checks that evlist->nr_br_cntr has been incremented
+to determine whether to show branch counter information. However,
+this data is not populated until after the check when events are
+processed. Therefore, this counter will always be less than zero
+and the Branch Count column is never shown. Do this check after
+events have been processed and branch counter data is updated.
 
 Acked-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
 ---
- tools/perf/builtin-script.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/builtin-annotate.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index c0918006e0ab..7d78adb7995a 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1288,8 +1288,12 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			if (!verbose) {
- 				for (j = 0; j < num; j++)
- 					printed += fprintf(fp, "%s", pos->abbr_name);
--			} else
--				printed += fprintf(fp, "%s %d ", pos->name, num);
-+				if (mask && (num == mask))
-+					printed += fprintf(fp, "+");
-+			} else {
-+				printed += fprintf(fp, "%s %d%s", pos->name,
-+						   num, mask && (num == mask) ? "+ " : " ");
-+			}
- 		}
- 		if (numprinted == 0 && !verbose)
- 			printed += fprintf(fp, "-");
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 719b36d4eed5..5f450c8093c0 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -559,6 +559,10 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 	if (ret)
+ 		goto out;
+ 
++	if ((use_browser == 1 || ann->use_stdio2) && ann->has_br_stack)
++		if (session->evlist->nr_br_cntr > 0)
++			annotate_opts.show_br_cntr = true;
++
+ 	if (dump_trace) {
+ 		perf_session__fprintf_nr_events(session, stdout);
+ 		evlist__fprintf_nr_events(session->evlist, stdout);
+@@ -922,11 +926,8 @@ int cmd_annotate(int argc, const char **argv)
+ 	 * branch counters, if the corresponding branch info is available
+ 	 * in the perf data in the TUI mode.
+ 	 */
+-	if ((use_browser == 1 || annotate.use_stdio2) && annotate.has_br_stack) {
++	if ((use_browser == 1 || annotate.use_stdio2) && annotate.has_br_stack)
+ 		sort__mode = SORT_MODE__BRANCH;
+-		if (annotate.session->evlist->nr_br_cntr > 0)
+-			annotate_opts.show_br_cntr = true;
+-	}
+ 
+ 	if (setup_sorting(/*evlist=*/NULL, perf_session__env(annotate.session)) < 0)
+ 		usage_with_options(annotate_usage, options);
 -- 
 2.43.0
 
