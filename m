@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2A63B38AA;
-	Fri, 29 May 2026 08:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A573BA222;
+	Fri, 29 May 2026 08:04:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780041845; cv=none; b=tGjNV9RGOdUOe9bnRPYdxeUt5QTXigo8yqBRg2xztajk0CFVlgUubwHfr7qwthBwEP4ApcKbAHbZiTCNdHdVz+s2UORfbNN15aX+BrYJSSBIUOFlQXoeg/3fn6pffB6lTYaqDbDylJNZeth2Rq1KlJgkaxYYUWQE+vR97s2037I=
+	t=1780041852; cv=none; b=WEHi+jaBhcOBfbxCyHvPIwP6wiCILp49a/N8+PVXAWT4y680mZr4XxbYmhWqQsJPjSuNK77uA062YjQhr4zInEXrZjIuyneyaAkRdwkdkF2eWOSpPllDJrY7BuM6cLAr8DKOD14Isd3iLA+vcCHoBI36rImDzz5V/4mTi1O2Mj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780041845; c=relaxed/simple;
-	bh=zji4kzmOkTMEUSi2LnhVML9fZRR/rYsSGCekPnWAnGk=;
+	s=arc-20240116; t=1780041852; c=relaxed/simple;
+	bh=lsVhnPtPlS5vmfuMTBFCkTvB3OVqtxoR3bmXqFoTHWU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jV58RXL8/DY8p8VcFfIkY58I9ArDw3OyLKu7nbwlOt57iE+QF27F3Q+rIhz8bhGp2rZX5TiUSXjnXUF4mVMIS+G9+KdqQIuwRgim1wGenUdl8Ueol+eHE3NOgmrQJXDNLLSd4fOgXw6oqc599W89y24Td+7PY9oM2gt3E+N0E08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jUGghkDo; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=fnvUB+OWlMbNoEZOLYKOOr4h35EYelqm7MTLZtVM8OELC3AKjPEHy/D0YZt3GY5qU6lUgt0iuJ6z5Mx4Y3INlY0NV6n9ZwP+BeBrWa0j1+vrJQ42zEOSOYXnKIp4yr8pgfP0e7OpTs33bcjLFfXva3AKVOjMc7215dxHhp2USNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L0xraY76; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jUGghkDo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L0xraY76"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780041844; x=1811577844;
+  t=1780041849; x=1811577849;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=zji4kzmOkTMEUSi2LnhVML9fZRR/rYsSGCekPnWAnGk=;
-  b=jUGghkDoJg04wclTVCZ0mBVZagX5lR7Cj3z0SwuqO36e4+SBof5X2DIP
-   rpj+RTJOAa08sGAyy5jjqvjTzHnx16bKnyqEjdd6FaUVZohmWMBmHFiZW
-   8HZKENH4q2Sr0q3wj4IhQOivQ66BuS+l9ud5xDN9FqzoAZ3/nJmdb0yRA
-   9d46iGKa2TLCjtWd3e1EZPr0RWK+2bf+gzHOUuxLDbc42iZzqXCMPger3
-   ozODOuLfygDe2dfTFKACYUixZ7Qk+HCKtGfSnOkhqGU+0GsTDphF7ANJA
-   TOaH/fSCxGswj/spCxBswNfQk/8SPmni1mgTJ65eEduSfvHhatNH3E8N8
-   w==;
-X-CSE-ConnectionGUID: 1FRgVifpT160ZP3wSt1rVw==
-X-CSE-MsgGUID: 9g7nIiEqR3a0FZTvxe2SxQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106342094"
+  bh=lsVhnPtPlS5vmfuMTBFCkTvB3OVqtxoR3bmXqFoTHWU=;
+  b=L0xraY765b7xFAHqSdDcRgVJsyz+ttRnebT9arQ/9IhHy8K1u6D5d4JB
+   SiaCUlWg4vKololTNz8BxbWxu7bNaGEpA/AZJRZhmDWobx3K8do+YjvRd
+   Su13azVbmZDjqlYq5uj0Blstb1NBkgFeCKWny4UFZO+vMofkd2swekN9z
+   cI4pjbJMg0M6CikWfwjRbqKVUYfbGATNW16jTYRpKi5qRjLVRbnKZA7xW
+   m8/+Nu0H+bPWS0x0BiCEg30F2LKYqj2D5c1Wyn9tmpDfk8BDUq6zCv38s
+   a4EBVQFkqQzBo2r+ke9tX4BlNr82lA4mfXIUlwN/PHZQpi3WjgTOqEfuA
+   Q==;
+X-CSE-ConnectionGUID: hiltHg68RgqXPaf9Tdvwcw==
+X-CSE-MsgGUID: foZQkzbjSMu5D+x7xvOSFg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106342112"
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="106342094"
+   d="scan'208";a="106342112"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:04:04 -0700
-X-CSE-ConnectionGUID: GtWtFA1RTvKuaM3rIRY0Ug==
-X-CSE-MsgGUID: G11wQUw+RHGknPHLD9BJ4A==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:04:09 -0700
+X-CSE-ConnectionGUID: kI/NT3ewSx+qDmfIv2XkEw==
+X-CSE-MsgGUID: QzLGesZiRSGRbRpEh+hxHg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="246802440"
+   d="scan'208";a="246802470"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa003.jf.intel.com with ESMTP; 29 May 2026 01:03:59 -0700
+  by orviesa003.jf.intel.com with ESMTP; 29 May 2026 01:04:04 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -65,10 +65,11 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v8 17/23] perf: Enhance perf_reg_validate() with simd_enabled argument
-Date: Fri, 29 May 2026 15:56:39 +0800
-Message-Id: <20260529075645.580362-18-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [Patch v8 18/23] perf/x86: Support eGPRs sampling using sample_regs_* fields
+Date: Fri, 29 May 2026 15:56:40 +0800
+Message-Id: <20260529075645.580362-19-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
 References: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
@@ -80,216 +81,299 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The upcoming patch will support x86 APX eGPRs sampling by using the
-reclaimed XMM register space to represent eGPRs in sample_regs_* fields.
+This patch supports sampling of APX eGPRs (R16 ~ R31) via the
+sample_regs_* fields.
 
-To differentiate between XMM and eGPRs in sample_regs_* fields, an
-additional argument, simd_enabled, is introduced to the
-perf_reg_validate() helper. If simd_enabled is set to 1, it indicates
-that eGPRs are represented in sample_regs_* fields for the x86 platform;
-otherwise, XMM registers are represented.
+To sample eGPRs, the sample_simd_regs_enabled field must be set. This
+allows the spare space (reclaimed from the original XMM space) in the
+sample_regs_* fields to be used for representing eGPRs.
 
+The perf_reg_value() function needs to check if the
+PERF_SAMPLE_REGS_ABI_SIMD flag is set first, and then determine whether
+to output eGPRs or legacy XMM registers to userspace.
+
+The perf_reg_validate() function first checks the simd_enabled argument
+to determine if the eGPRs bitmap is represented in sample_regs_* fields.
+It then validates the eGPRs bitmap accordingly.
+
+Currently, eGPRs sampling is only supported on the x86_64 architecture, as
+APX is only available on x86_64 platforms.
+
+Please note eGPRs sampling is not enabled yet, it will be enabled in a
+later patch when PERF_PMU_CAP_SIMD_REGS is set.
+
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/arm/kernel/perf_regs.c       | 2 +-
- arch/arm64/kernel/perf_regs.c     | 2 +-
- arch/csky/kernel/perf_regs.c      | 2 +-
- arch/loongarch/kernel/perf_regs.c | 2 +-
- arch/mips/kernel/perf_regs.c      | 2 +-
- arch/parisc/kernel/perf_regs.c    | 2 +-
- arch/powerpc/perf/perf_regs.c     | 2 +-
- arch/riscv/kernel/perf_regs.c     | 2 +-
- arch/s390/kernel/perf_regs.c      | 2 +-
- arch/x86/kernel/perf_regs.c       | 4 ++--
- include/linux/perf_regs.h         | 2 +-
- kernel/events/core.c              | 8 +++++---
- 12 files changed, 17 insertions(+), 15 deletions(-)
+ arch/x86/events/core.c                | 43 ++++++++++++++++++---------
+ arch/x86/events/intel/core.c          |  4 ++-
+ arch/x86/events/perf_event.h          | 10 +++++++
+ arch/x86/include/asm/perf_event.h     |  4 +++
+ arch/x86/include/uapi/asm/perf_regs.h | 26 ++++++++++++++++
+ arch/x86/kernel/perf_regs.c           | 43 ++++++++++++++++-----------
+ 6 files changed, 98 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm/kernel/perf_regs.c b/arch/arm/kernel/perf_regs.c
-index d575a4c3ca56..838d701adf4d 100644
---- a/arch/arm/kernel/perf_regs.c
-+++ b/arch/arm/kernel/perf_regs.c
-@@ -18,7 +18,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index d4516d3b5d5a..af874ff3d048 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -708,26 +708,24 @@ int x86_pmu_hw_config(struct perf_event *event)
+ 	}
  
- #define REG_RESERVED (~((1ULL << PERF_REG_ARM_MAX) - 1))
+ 	if (event->attr.sample_type & (PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER)) {
+-		/*
+-		 * Besides the general purpose registers, XMM registers may
+-		 * be collected as well.
+-		 */
+-		if (event_has_extended_regs(event)) {
+-			if (!(event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS))
+-				return -EINVAL;
+-			if (is_sampling_event(event) && !event->attr.precise_ip &&
+-			    !this_cpu_has(X86_FEATURE_XSAVES))
+-				return -EINVAL;
+-			if (event->attr.sample_simd_regs_enabled)
+-				return -EINVAL;
+-		}
+-
+ 		if (event_has_simd_regs(event)) {
++			u64 reserved = ~GENMASK_ULL(PERF_REG_MISC_MAX - 1, 0);
++
+ 			if (!(event->pmu->capabilities & PERF_PMU_CAP_SIMD_REGS))
+ 				return -EINVAL;
+ 			if (is_sampling_event(event) && !event->attr.precise_ip &&
+ 			    !this_cpu_has(X86_FEATURE_XSAVES))
+ 				return -EINVAL;
++			/*
++			 * The XMM space in the perf_event_x86_regs is reclaimed
++			 * for eGPRs and other general registers.
++			 */
++			if ((event->attr.sample_regs_user & reserved) ||
++			    (event->attr.sample_regs_intr & reserved))
++				return -EINVAL;
++			if (event_needs_egprs(event) &&
++			    !(x86_pmu.ext_regs_mask & XFEATURE_MASK_APX))
++				return -EINVAL;
+ 			/* The vector registers set is not supported */
+ 			if (event_needs_xmm(event) &&
+ 			    !(x86_pmu.ext_regs_mask & XFEATURE_MASK_SSE))
+@@ -744,6 +742,18 @@ int x86_pmu_hw_config(struct perf_event *event)
+ 			if (event_needs_opmask(event) &&
+ 			    !(x86_pmu.ext_regs_mask & XFEATURE_MASK_OPMASK))
+ 				return -EINVAL;
++		} else {
++			/*
++			 * Besides the general purpose registers, XMM registers may
++			 * be collected as well.
++			 */
++			if (event_has_extended_regs(event)) {
++				if (!(event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS))
++					return -EINVAL;
++				if (is_sampling_event(event) && !event->attr.precise_ip &&
++				    !this_cpu_has(X86_FEATURE_XSAVES))
++					return -EINVAL;
++			}
+ 		}
+ 	}
  
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	if (!mask || mask & REG_RESERVED)
- 		return -EINVAL;
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index 70e2f13f587f..71a3e0238de4 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -77,7 +77,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 
- #define REG_RESERVED (~((1ULL << PERF_REG_ARM64_MAX) - 1))
- 
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	u64 reserved_mask = REG_RESERVED;
- 
-diff --git a/arch/csky/kernel/perf_regs.c b/arch/csky/kernel/perf_regs.c
-index 94601f37b596..c932a96afc56 100644
---- a/arch/csky/kernel/perf_regs.c
-+++ b/arch/csky/kernel/perf_regs.c
-@@ -18,7 +18,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 
- #define REG_RESERVED (~((1ULL << PERF_REG_CSKY_MAX) - 1))
- 
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	if (!mask || mask & REG_RESERVED)
- 		return -EINVAL;
-diff --git a/arch/loongarch/kernel/perf_regs.c b/arch/loongarch/kernel/perf_regs.c
-index 8dd604f01745..164514f40ae0 100644
---- a/arch/loongarch/kernel/perf_regs.c
-+++ b/arch/loongarch/kernel/perf_regs.c
-@@ -25,7 +25,7 @@ u64 perf_reg_abi(struct task_struct *tsk)
- }
- #endif /* CONFIG_32BIT */
- 
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	if (!mask)
- 		return -EINVAL;
-diff --git a/arch/mips/kernel/perf_regs.c b/arch/mips/kernel/perf_regs.c
-index 7736d3c5ebd2..00a5201dbd5d 100644
---- a/arch/mips/kernel/perf_regs.c
-+++ b/arch/mips/kernel/perf_regs.c
-@@ -28,7 +28,7 @@ u64 perf_reg_abi(struct task_struct *tsk)
- }
- #endif /* CONFIG_32BIT */
- 
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	if (!mask)
- 		return -EINVAL;
-diff --git a/arch/parisc/kernel/perf_regs.c b/arch/parisc/kernel/perf_regs.c
-index b9fe1f2fcb9b..4f21aab5405c 100644
---- a/arch/parisc/kernel/perf_regs.c
-+++ b/arch/parisc/kernel/perf_regs.c
-@@ -34,7 +34,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 
- #define REG_RESERVED (~((1ULL << PERF_REG_PARISC_MAX) - 1))
- 
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	if (!mask || mask & REG_RESERVED)
- 		return -EINVAL;
-diff --git a/arch/powerpc/perf/perf_regs.c b/arch/powerpc/perf/perf_regs.c
-index 350dccb0143c..a01d8a903640 100644
---- a/arch/powerpc/perf/perf_regs.c
-+++ b/arch/powerpc/perf/perf_regs.c
-@@ -125,7 +125,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 	return regs_get_register(regs, pt_regs_offset[idx]);
+@@ -1792,6 +1802,7 @@ void x86_pmu_clear_perf_regs(struct pt_regs *regs)
+ 	perf_regs->zmmh_regs = NULL;
+ 	perf_regs->h16zmm_regs = NULL;
+ 	perf_regs->opmask_regs = NULL;
++	perf_regs->egpr_regs = NULL;
  }
  
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
+ static void update_perf_regs(struct x86_perf_regs *perf_regs,
+@@ -1815,6 +1826,8 @@ static void update_perf_regs(struct x86_perf_regs *perf_regs,
+ 		perf_regs->h16zmm = get_xsave_addr(xsave, XFEATURE_Hi16_ZMM);
+ 	if (mask & XFEATURE_MASK_OPMASK)
+ 		perf_regs->opmask = get_xsave_addr(xsave, XFEATURE_OPMASK);
++	if (mask & XFEATURE_MASK_APX)
++		perf_regs->egpr = get_xsave_addr(xsave, XFEATURE_APX);
+ }
+ 
+ /*
+@@ -1999,6 +2012,8 @@ static void x86_pmu_sample_xregs(struct perf_event *event,
+ 		mask |= XFEATURE_MASK_Hi16_ZMM;
+ 	if (event_needs_opmask(event))
+ 		mask |= XFEATURE_MASK_OPMASK;
++	if (event_needs_egprs(event))
++		mask |= XFEATURE_MASK_APX;
+ 
+ 	mask &= x86_pmu.ext_regs_mask;
+ 	if (sample_type & PERF_SAMPLE_REGS_USER) {
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 6c06558c416f..a2473f962681 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4698,7 +4698,9 @@ static void intel_pebs_aliases_skl(struct perf_event *event)
+ static unsigned long intel_pmu_large_pebs_flags(struct perf_event *event)
  {
- 	if (!mask || mask & REG_RESERVED)
- 		return -EINVAL;
-diff --git a/arch/riscv/kernel/perf_regs.c b/arch/riscv/kernel/perf_regs.c
-index 3bba8deababb..1ecc8760b88b 100644
---- a/arch/riscv/kernel/perf_regs.c
-+++ b/arch/riscv/kernel/perf_regs.c
-@@ -18,7 +18,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ 	unsigned long flags = x86_pmu.large_pebs_flags;
+-	u64 gprs_mask = PEBS_GP_REGS | PERF_REG_EXTENDED_MASK;
++	u64 gprs_mask = event->attr.sample_simd_regs_enabled ?
++			PEBS_GP_REGS :
++			PEBS_GP_REGS | PERF_REG_EXTENDED_MASK;
  
- #define REG_RESERVED (~((1ULL << PERF_REG_RISCV_MAX) - 1))
+ 	if (event->attr.use_clockid)
+ 		flags &= ~PERF_SAMPLE_TIME;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 22b846999cfa..4cc490aa04fc 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -197,6 +197,16 @@ static inline bool event_needs_opmask(struct perf_event *event)
+ 	return false;
+ }
  
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	if (!mask || mask & REG_RESERVED)
- 		return -EINVAL;
-diff --git a/arch/s390/kernel/perf_regs.c b/arch/s390/kernel/perf_regs.c
-index 7b305f1456f8..6496fd23c540 100644
---- a/arch/s390/kernel/perf_regs.c
-+++ b/arch/s390/kernel/perf_regs.c
-@@ -34,7 +34,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 
- #define REG_RESERVED (~((1UL << PERF_REG_S390_MAX) - 1))
- 
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	if (!mask || mask & REG_RESERVED)
- 		return -EINVAL;
-diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-index 21b282be8ab9..79803b3b6d6b 100644
---- a/arch/x86/kernel/perf_regs.c
-+++ b/arch/x86/kernel/perf_regs.c
-@@ -192,7 +192,7 @@ int perf_simd_reg_validate(u16 simd_enabled, u16 vec_qwords,
- 		       (1ULL << PERF_REG_X86_R14) | \
- 		       (1ULL << PERF_REG_X86_R15))
- 
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	/* The mask could be 0 if only the SIMD registers are interested */
- 	if (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED))
-@@ -212,7 +212,7 @@ u64 perf_reg_abi(struct task_struct *task)
- 		       (1ULL << PERF_REG_X86_FS) | \
- 		       (1ULL << PERF_REG_X86_GS))
- 
--int perf_reg_validate(u64 mask)
-+int perf_reg_validate(u64 mask, bool simd_enabled)
- {
- 	/* The mask could be 0 if only the SIMD registers are interested */
- 	if (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED))
-diff --git a/include/linux/perf_regs.h b/include/linux/perf_regs.h
-index 8fa3eeb14953..496080e12141 100644
---- a/include/linux/perf_regs.h
-+++ b/include/linux/perf_regs.h
-@@ -10,7 +10,7 @@ struct perf_regs {
++static inline bool event_needs_egprs(struct perf_event *event)
++{
++	if (event->attr.sample_simd_regs_enabled &&
++	    (event->attr.sample_regs_user & PERF_X86_EGPRS_MASK ||
++	     event->attr.sample_regs_intr & PERF_X86_EGPRS_MASK))
++		return true;
++
++	return false;
++}
++
+ struct amd_nb {
+ 	int nb_id;  /* NorthBridge id */
+ 	int refcnt; /* reference count */
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 7e8b60bddd5a..a54ea8fa6a04 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -747,6 +747,10 @@ struct x86_perf_regs {
+ 		u64	*opmask_regs;
+ 		struct avx_512_opmask_state *opmask;
+ 	};
++	union {
++		u64	*egpr_regs;
++		struct apx_state *egpr;
++	};
  };
  
- u64 perf_reg_value(struct pt_regs *regs, int idx);
--int perf_reg_validate(u64 mask);
-+int perf_reg_validate(u64 mask, bool simd_enabled);
- u64 perf_reg_abi(struct task_struct *task);
- void perf_get_regs_user(struct perf_regs *regs_user,
- 			struct pt_regs *regs);
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index afd5b1408231..bf88d9a61f0b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7774,7 +7774,7 @@ u64 __weak perf_reg_value(struct pt_regs *regs, int idx)
+ extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
+diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
+index 24c981ba8bae..8774a1290fbe 100644
+--- a/arch/x86/include/uapi/asm/perf_regs.h
++++ b/arch/x86/include/uapi/asm/perf_regs.h
+@@ -27,9 +27,34 @@ enum perf_event_x86_regs {
+ 	PERF_REG_X86_R13,
+ 	PERF_REG_X86_R14,
+ 	PERF_REG_X86_R15,
++	/*
++	 * The eGPRs and XMM have overlaps. Only one can be used
++	 * at a time. The ABI PERF_SAMPLE_REGS_ABI_SIMD is used to
++	 * distinguish which one is used. If PERF_SAMPLE_REGS_ABI_SIMD
++	 * is set, then eGPRs is used, otherwise, XMM is used.
++	 *
++	 * Extended GPRs (eGPRs)
++	 */
++	PERF_REG_X86_R16,
++	PERF_REG_X86_R17,
++	PERF_REG_X86_R18,
++	PERF_REG_X86_R19,
++	PERF_REG_X86_R20,
++	PERF_REG_X86_R21,
++	PERF_REG_X86_R22,
++	PERF_REG_X86_R23,
++	PERF_REG_X86_R24,
++	PERF_REG_X86_R25,
++	PERF_REG_X86_R26,
++	PERF_REG_X86_R27,
++	PERF_REG_X86_R28,
++	PERF_REG_X86_R29,
++	PERF_REG_X86_R30,
++	PERF_REG_X86_R31,
+ 	/* These are the limits for the GPRs. */
+ 	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+ 	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
++	PERF_REG_MISC_MAX = PERF_REG_X86_R31 + 1,
+ 
+ 	/* These all need two bits set because they are 128bit */
+ 	PERF_REG_X86_XMM0  = 32,
+@@ -54,6 +79,7 @@ enum perf_event_x86_regs {
+ };
+ 
+ #define PERF_REG_EXTENDED_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
++#define PERF_X86_EGPRS_MASK	__GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16)
+ 
+ enum {
+ 	PERF_X86_SIMD_XMM_REGS      = 16,
+diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+index 79803b3b6d6b..006883ad443d 100644
+--- a/arch/x86/kernel/perf_regs.c
++++ b/arch/x86/kernel/perf_regs.c
+@@ -61,14 +61,24 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ {
+ 	struct x86_perf_regs *perf_regs;
+ 
+-	if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_XMM_MAX) {
++	if (idx > PERF_REG_X86_R15) {
+ 		perf_regs = container_of(regs, struct x86_perf_regs, regs);
+-		/* SIMD registers are moved to dedicated sample_simd_vec_reg */
+-		if (perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
++		if (perf_regs->abi == PERF_SAMPLE_REGS_ABI_NONE)
+ 			return 0;
+-		if (!perf_regs->xmm_regs)
+-			return 0;
+-		return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
++
++		if (perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD) {
++			if (idx <= PERF_REG_X86_R31) {
++				if (!perf_regs->egpr_regs)
++					return 0;
++				return perf_regs->egpr_regs[idx - PERF_REG_X86_R16];
++			}
++		} else {
++			if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_XMM_MAX) {
++				if (!perf_regs->xmm_regs)
++					return 0;
++				return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
++			}
++		}
+ 	}
+ 
+ 	if (WARN_ON_ONCE(idx >= ARRAY_SIZE(pt_regs_offset)))
+@@ -179,18 +189,12 @@ int perf_simd_reg_validate(u16 simd_enabled, u16 vec_qwords,
  	return 0;
  }
  
--int __weak perf_reg_validate(u64 mask)
-+int __weak perf_reg_validate(u64 mask, bool simd_enabled)
+-#define PERF_REG_X86_RESERVED	(((1ULL << PERF_REG_X86_XMM0) - 1) & \
+-				 ~((1ULL << PERF_REG_X86_MAX) - 1))
++#define PERF_REG_X86_RESERVED	(GENMASK_ULL(PERF_REG_X86_XMM0 - 1, PERF_REG_X86_AX) & \
++				 ~GENMASK_ULL(PERF_REG_X86_R15, PERF_REG_X86_AX))
++#define PERF_REG_X86_EXT_RESERVED	(~GENMASK_ULL(PERF_REG_MISC_MAX - 1, PERF_REG_X86_AX))
+ 
+ #ifdef CONFIG_X86_32
+-#define REG_NOSUPPORT ((1ULL << PERF_REG_X86_R8) | \
+-		       (1ULL << PERF_REG_X86_R9) | \
+-		       (1ULL << PERF_REG_X86_R10) | \
+-		       (1ULL << PERF_REG_X86_R11) | \
+-		       (1ULL << PERF_REG_X86_R12) | \
+-		       (1ULL << PERF_REG_X86_R13) | \
+-		       (1ULL << PERF_REG_X86_R14) | \
+-		       (1ULL << PERF_REG_X86_R15))
++#define REG_NOSUPPORT GENMASK_ULL(PERF_REG_X86_R15, PERF_REG_X86_R8)
+ 
+ int perf_reg_validate(u64 mask, bool simd_enabled)
  {
- 	return mask ? -ENOSYS : 0;
- }
-@@ -13743,7 +13743,8 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
- 	}
+@@ -214,8 +218,13 @@ u64 perf_reg_abi(struct task_struct *task)
  
- 	if (attr->sample_type & PERF_SAMPLE_REGS_USER) {
--		ret = perf_reg_validate(attr->sample_regs_user);
-+		ret = perf_reg_validate(attr->sample_regs_user,
-+					attr->sample_simd_regs_enabled);
- 		if (ret)
- 			return ret;
- 		ret = perf_simd_reg_validate(attr->sample_simd_regs_enabled,
-@@ -13776,7 +13777,8 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
- 		attr->sample_max_stack = sysctl_perf_event_max_stack;
+ int perf_reg_validate(u64 mask, bool simd_enabled)
+ {
++	if (!simd_enabled &&
++	    (!mask || (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED))))
++		return -EINVAL;
++
+ 	/* The mask could be 0 if only the SIMD registers are interested */
+-	if (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED))
++	if (simd_enabled &&
++	    (mask & (REG_NOSUPPORT | PERF_REG_X86_EXT_RESERVED)))
+ 		return -EINVAL;
  
- 	if (attr->sample_type & PERF_SAMPLE_REGS_INTR) {
--		ret = perf_reg_validate(attr->sample_regs_intr);
-+		ret = perf_reg_validate(attr->sample_regs_intr,
-+					attr->sample_simd_regs_enabled);
- 		if (ret)
- 			return ret;
- 		ret = perf_simd_reg_validate(attr->sample_simd_regs_enabled,
+ 	return 0;
 -- 
 2.34.1
 
