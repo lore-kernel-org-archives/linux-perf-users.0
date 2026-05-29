@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CD53ACF1E;
-	Fri, 29 May 2026 08:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220163AD507;
+	Fri, 29 May 2026 08:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780041809; cv=none; b=PBjFjiteZjRtMW9/ahh1vLJY4/jB/jsZYAg7hcPJuSVmwcKkzVJLhL4AVdbZZkbDb4AdD0+LpYBVFKvRVJdbXvn2HnpFXiRWQjxQ77YXabiKeIm2S2V2ArQSQfi+Gpgxs6rIgZ1P7f9jgjW8DiRFlzRxtczcoq+CFOjN+MKxhbA=
+	t=1780041812; cv=none; b=neKcdMoKKwdIJY7uiyVJSZF+zpmKLzAH26Bm614ljGr91cEDXv29YBUY5HzXN895u+/MxyNikQBcnrsLqEWUfe5kCzgNkKp76UOYkzGMrECgFzMPMgpkUZg1do9yCAsECXImZZGjOl0FQaTHANBUcMulAIYLnDXP6OoPrNJwKsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780041809; c=relaxed/simple;
-	bh=iwKXwAGrV1yvP2eoGd3UgKQ1x/hGBjKKhT57vhLMLRo=;
+	s=arc-20240116; t=1780041812; c=relaxed/simple;
+	bh=RCv/pZl8i9VQu4VE3AsBhUxG5YGrOk0qfxx6RmMXF/0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YRdI75xoqspKVLTuUozfr3YPMVY3r3eDdQAmhqVUp4+SLkdlx+eep1kbJXXJuTxnTLs6RkhsqVWLHOJH5jF1osxBau2WLLaIppm356Y2FdxhoMzIfht5a3f1s/lp6cI3wJEJkaV0O5rlcNUSJmXubF3IO0WlgHorgcV6AFVnW6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ByNX6/re; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=Eu2GAIoid/mMYvLWscky1/uANAFVobUL3Jj7kpbZ6CUSkdyGPoS2WMB2Oy6IZwLGJypt3nWPI5Cyde3BpTGV5Kuvk+FrpFyiu0GECAoiKJlPXwVxO3KXGdC/ceIhaBQNJ3QEyQ6fOWXcbQZuz11IeHhqSH3IPhGC1WE3HODSzpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nf6TtNa/; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ByNX6/re"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nf6TtNa/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780041808; x=1811577808;
+  t=1780041811; x=1811577811;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iwKXwAGrV1yvP2eoGd3UgKQ1x/hGBjKKhT57vhLMLRo=;
-  b=ByNX6/re9al9PuP0r1W40nBmgBCyURFfGmfsg2EOoFoTcT+NzzS2kIpA
-   7qGP6Omlcg2GKddlYRgndV5LVerxVQG6s+ptUeK/Uy2MasqNfvGtzvtQl
-   NTlOzWF4oZ3TJ/REBeoyUtPzHsRn6mDYEkzcjlt9mBWkCrpMp9H5Hvus7
-   wZY4Qoo+M641FOiFICdZfiQgeBbx9FDJ3+kQOKBhKJ1xCNhZkafWawjyK
-   bx9zJWoVtKvkffnJB+sFqK8ghrvT2xqe2gTA5HybI0xdr21N0F5JJ9g13
-   LX/2tTxVa2D9VnaAEUi2GyibeN/g9+PS2rrsns6gebgX3HvMJs1yA2v3f
+  bh=RCv/pZl8i9VQu4VE3AsBhUxG5YGrOk0qfxx6RmMXF/0=;
+  b=Nf6TtNa/adIc0G7gQ0BNRf+rw202wNelevjjUzlvRfqOLmxungHOHyOD
+   zqzqQq48n9QQOqLYOuMKbJxNc69sGKMNyzO+rrc9xBldejEWVC+1/FY7J
+   VDIXcoNcZAr6DyAAjY5rjnputAY6TM9myPqD8LcB5OZApdPENK22E8dNl
+   nEyuNpKeDkln3oyXxZaDFEbsjl2iuK97ykFVzwBMGwFWUSahM5MLKghe2
+   FBnFv6DRfoaM+lP/3+SEk7RL2jg+Vx2hoTBzG+eMhHxD8vtVMrlEK8++2
+   2mDeHWp24IsnRAarZcRzvmYJQhp/sdI0YcNsxGHC8OlNYcP73+Vyz4iNe
    g==;
-X-CSE-ConnectionGUID: +Hhop1LFTGmxH/pwpVWFjw==
-X-CSE-MsgGUID: CpElpEufTn2OrV880Qq/Ug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106341970"
+X-CSE-ConnectionGUID: 3NSUI2KYQ/uzaFPgUC2bIg==
+X-CSE-MsgGUID: 2l07Muo8Qeak8GolzUq54A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106341979"
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="106341970"
+   d="scan'208";a="106341979"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:03:27 -0700
-X-CSE-ConnectionGUID: i1JGtnOfRQ2QYWOoW9VQzA==
-X-CSE-MsgGUID: uSi5ZjqpR1KolpzmSKSe/A==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:03:31 -0700
+X-CSE-ConnectionGUID: hucRXOpwQ02kii4OG1TwjQ==
+X-CSE-MsgGUID: EJPbeZB0Td+4wmZpArolKA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="246802220"
+   d="scan'208";a="246802256"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa003.jf.intel.com with ESMTP; 29 May 2026 01:03:20 -0700
+  by orviesa003.jf.intel.com with ESMTP; 29 May 2026 01:03:26 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -67,9 +67,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: [Patch v8 10/23] perf/x86: Enable XMM Register Sampling for Non-PEBS Events
-Date: Fri, 29 May 2026 15:56:32 +0800
-Message-Id: <20260529075645.580362-11-dapeng1.mi@linux.intel.com>
+Subject: [Patch v8 11/23] perf/x86: Enable XMM register sampling for REGS_USER case
+Date: Fri, 29 May 2026 15:56:33 +0800
+Message-Id: <20260529075645.580362-12-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
 References: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
@@ -81,480 +81,299 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously, XMM register sampling was only available for PEBS events
-starting from Icelake. Currently the support is now extended to non-PEBS
-events by utilizing the xsaves instruction, thereby completing the
-feature set.
+This patch adds support for XMM register sampling in the REGS_USER case.
 
-To implement this, a 64-byte aligned buffer is required. A per-CPU
-ext_regs_buf is introduced to store SIMD and other registers, with an
-approximate size of 2K. The buffer is allocated using kzalloc_node(),
-ensuring natural and 64-byte alignment for all kmalloc() allocations
-with powers of 2.
+To handle simultaneous sampling of XMM registers for both REGS_INTR and
+REGS_USER cases, a per-CPU `x86_user_regs` is introduced to store
+REGS_USER-specific XMM registers. This prevents REGS_USER-specific XMM
+register data from being overwritten by REGS_INTR-specific data if they
+share the same `x86_perf_regs` structure.
 
-XMM sampling for non-PEBS events is supported in the REGS_INTR case.
-Support for REGS_USER will be added in a subsequent patch. For PEBS
-events, XMM register sampling data is directly retrieved from PEBS
-records.
+To sample user-space XMM registers, the `x86_pmu_update_user_xregs()`
+helper function is added. It checks if the `TIF_NEED_FPU_LOAD` flag is
+set. If so, the user-space XMM register data can be directly retrieved
+from the cached task FPU state, as the corresponding hardware registers
+have been cleared or switched to kernel-space data. Otherwise, the data
+must be read from the hardware registers using the `xsaves` instruction.
 
-Future support for additional vector registers (YMM/ZMM/OPMASK) is
-planned. An `ext_regs_mask` is added to track the supported vector
-register groups.
+For PEBS events, `x86_pmu_update_user_xregs()` checks if the PEBS-sampled
+XMM register data belongs to user-space. If so, no further action is
+needed. Otherwise, the user-space XMM register data needs to be
+re-sampled using the same method as for non-PEBS events.
 
 Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/core.c            | 181 ++++++++++++++++++++++++++++--
- arch/x86/events/intel/core.c      |  36 +++++-
- arch/x86/events/intel/ds.c        |  18 ++-
- arch/x86/events/perf_event.h      |  13 +++
- arch/x86/include/asm/fpu/xstate.h |   2 +
- arch/x86/include/asm/perf_event.h |   5 +-
- arch/x86/kernel/fpu/xstate.c      |   2 +-
- 7 files changed, 240 insertions(+), 17 deletions(-)
+ arch/x86/events/core.c       | 150 ++++++++++++++++++++++++++++++-----
+ arch/x86/events/intel/core.c |   6 +-
+ arch/x86/events/intel/ds.c   |   5 +-
+ 3 files changed, 138 insertions(+), 23 deletions(-)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 17c8f44ee43b..c219a563434d 100644
+index c219a563434d..f9e3f349b69a 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -410,6 +410,56 @@ set_ext_hw_attr(struct hw_perf_event *hwc, struct perf_event *event)
- 	return x86_pmu_extra_regs(val, event);
- }
+@@ -707,12 +707,12 @@ int x86_pmu_hw_config(struct perf_event *event)
+ 			return -EINVAL;
+ 	}
  
-+static DEFINE_PER_CPU(struct xregs_state *, ext_regs_buf);
-+
-+static void release_ext_regs_buffers(void)
-+{
-+	int cpu;
-+
-+	if (!x86_pmu.ext_regs_mask)
-+		return;
-+
-+	for_each_possible_cpu(cpu) {
-+		kfree(per_cpu(ext_regs_buf, cpu));
-+		per_cpu(ext_regs_buf, cpu) = NULL;
-+	}
-+}
-+
-+static void reserve_ext_regs_buffers(void)
-+{
-+	bool compacted = cpu_feature_enabled(X86_FEATURE_XCOMPACTED);
-+	unsigned int size;
-+	int cpu;
-+
-+	if (!x86_pmu.ext_regs_mask)
-+		return;
-+
-+	/* +64 bytes for the 64 bytes alignment request of xsave area. */
-+	size = xstate_calculate_size(x86_pmu.ext_regs_mask, compacted) + 64;
-+
-+	for_each_possible_cpu(cpu) {
-+		per_cpu(ext_regs_buf, cpu) = kzalloc_node(size, GFP_KERNEL,
-+							  cpu_to_node(cpu));
-+		if (WARN_ON_ONCE(!per_cpu(ext_regs_buf, cpu)))
-+			goto err;
-+	}
-+
-+	return;
-+
-+err:
-+	release_ext_regs_buffers();
-+}
-+
-+static inline struct xregs_state *get_ext_regs_buf(int cpu)
-+{
-+	void *buf = per_cpu(ext_regs_buf, cpu);
-+	struct xregs_state *xsave;
-+
-+	xsave = buf ? PTR_ALIGN(buf, 64) : NULL;
-+
-+	return xsave;
-+}
-+
- int x86_reserve_hardware(void)
- {
- 	int err = 0;
-@@ -422,6 +472,7 @@ int x86_reserve_hardware(void)
- 			} else {
- 				reserve_ds_buffers();
- 				reserve_lbr_buffers();
-+				reserve_ext_regs_buffers();
- 			}
+-	if (event->attr.sample_type & PERF_SAMPLE_REGS_INTR) {
++	if (event->attr.sample_type & (PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER)) {
+ 		/*
+ 		 * Besides the general purpose registers, XMM registers may
+ 		 * be collected as well.
+ 		 */
+-		if (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK) {
++		if (event_has_extended_regs(event)) {
+ 			if (!(event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS))
+ 				return -EINVAL;
+ 			if (is_sampling_event(event) && !event->attr.precise_ip &&
+@@ -721,15 +721,6 @@ int x86_pmu_hw_config(struct perf_event *event)
  		}
- 		if (!err)
-@@ -438,6 +489,7 @@ void x86_release_hardware(void)
- 		release_pmc_hardware();
- 		release_ds_buffers();
- 		release_lbr_buffers();
-+		release_ext_regs_buffers();
- 		mutex_unlock(&pmc_reserve_mutex);
- 	}
- }
-@@ -655,18 +707,26 @@ int x86_pmu_hw_config(struct perf_event *event)
- 			return -EINVAL;
  	}
  
--	/* sample_regs_user never support XMM registers */
--	if (unlikely(event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK))
--		return -EINVAL;
--	/*
--	 * Besides the general purpose registers, XMM registers may
--	 * be collected in PEBS on some platforms, e.g. Icelake
--	 */
--	if (unlikely(event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK)) {
--		if (!(event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS))
+-	if (event->attr.sample_type & PERF_SAMPLE_REGS_USER) {
+-		/*
+-		 * Currently XMM registers sampling for REGS_USER is not
+-		 * supported yet.
+-		 */
+-		if (event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK)
 -			return -EINVAL;
-+	if (event->attr.sample_type & PERF_SAMPLE_REGS_INTR) {
-+		/*
-+		 * Besides the general purpose registers, XMM registers may
-+		 * be collected as well.
-+		 */
-+		if (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK) {
-+			if (!(event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS))
-+				return -EINVAL;
-+			if (is_sampling_event(event) && !event->attr.precise_ip &&
-+			    !this_cpu_has(X86_FEATURE_XSAVES))
-+				return -EINVAL;
-+		}
-+	}
- 
--		if (!event->attr.precise_ip)
-+	if (event->attr.sample_type & PERF_SAMPLE_REGS_USER) {
-+		/*
-+		 * Currently XMM registers sampling for REGS_USER is not
-+		 * supported yet.
-+		 */
-+		if (event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK)
- 			return -EINVAL;
- 	}
- 
-@@ -1705,6 +1765,105 @@ static void x86_pmu_del(struct perf_event *event, int flags)
- 	static_call_cond(x86_pmu_del)(event);
+-	}
+-
+ 	return x86_setup_perfctr(event);
  }
  
-+void x86_pmu_clear_perf_regs(struct pt_regs *regs)
+@@ -1812,33 +1803,155 @@ static void x86_pmu_update_regs_intr(struct perf_event *event,
+ 	data->sample_flags |= PERF_SAMPLE_REGS_INTR;
+ }
+ 
++/*
++ * When both PERF_SAMPLE_REGS_INTR and PERF_SAMPLE_REGS_USER are set,
++ * an additional x86_perf_regs is required to save user-space registers.
++ * Without this, user-space register data may be overwritten by kernel-space
++ * registers.
++ */
++static DEFINE_PER_CPU(struct x86_perf_regs, x86_user_regs);
++static void x86_pmu_get_regs_user(struct perf_sample_data *data,
++				  struct pt_regs *regs)
 +{
-+	struct x86_perf_regs *perf_regs = container_of(regs, struct x86_perf_regs, regs);
++	struct x86_perf_regs *x86_regs_user = this_cpu_ptr(&x86_user_regs);
++	struct perf_regs regs_user;
 +
-+	perf_regs->xmm_regs = NULL;
-+}
++	x86_pmu_clear_perf_regs(&x86_regs_user->regs);
 +
-+static void update_perf_regs(struct x86_perf_regs *perf_regs,
-+			     struct xregs_state *xsave, u64 bitmap)
-+{
-+	u64 mask;
-+
-+	if (!xsave)
-+		return;
-+
-+	/* Filtered by what XSAVE really gives */
-+	mask = bitmap & xsave->header.xfeatures;
-+
-+	if (mask & XFEATURE_MASK_SSE)
-+		perf_regs->xmm_space = xsave->i387.xmm_space;
++	perf_get_regs_user(&regs_user, regs);
++	data->regs_user.abi = regs_user.abi;
++	if (regs_user.regs) {
++		x86_regs_user->regs = *regs_user.regs;
++		data->regs_user.regs = &x86_regs_user->regs;
++	} else
++		data->regs_user.regs = NULL;
 +}
 +
 +/*
-+ * The x86 specific variant of perf_sample_regs_intr().
-+ * It would be extended to add more SIMD registers sampling support
-+ * in later patches.
++ * The x86 specific variant of perf_sample_regs_user().
++ * Update data->regs_user fields for extended registers (e.g., SIMD).
 + */
-+static void x86_pmu_update_regs_intr(struct perf_event *event,
++static void x86_pmu_update_regs_user(struct perf_event *event,
 +				     struct perf_sample_data *data,
 +				     struct pt_regs *regs)
 +{
-+	data->regs_intr.regs = regs;
-+	data->regs_intr.abi  = perf_reg_abi(current);
++	struct perf_event_attr *attr = &event->attr;
++
++	if (user_mode(regs)) {
++		data->regs_user.abi = perf_reg_abi(current);
++		data->regs_user.regs = regs;
++	} else if (is_user_task(current)) {
++		/*
++		 * It cannot guarantee that the kernel will never
++		 * touch the registers outside of the pt_regs,
++		 * especially when more and more registers
++		 * (e.g., SIMD, eGPR) are added. The live data
++		 * cannot be used.
++		 */
++		x86_pmu_get_regs_user(data, regs);
++	} else {
++		data->regs_user.abi = PERF_SAMPLE_REGS_ABI_NONE;
++		data->regs_user.regs = NULL;
++	}
 +
 +	data->dyn_size += sizeof(u64);
-+	if (data->regs_intr.regs) {
-+		data->dyn_size += hweight64(event->attr.sample_regs_intr) *
-+				  sizeof(u64);
-+	}
++	if (data->regs_user.regs)
++		data->dyn_size += hweight64(attr->sample_regs_user) * sizeof(u64);
 +
 +	/*
-+	 * Set PERF_SAMPLE_REGS_INTR to bypass perf_sample_regs_intr() call
++	 * Set PERF_SAMPLE_REGS_USER to bypass perf_sample_regs_user() call
 +	 * in perf_prepare_sample() function.
 +	 */
-+	data->sample_flags |= PERF_SAMPLE_REGS_INTR;
++	data->sample_flags |= PERF_SAMPLE_REGS_USER;
 +}
 +
-+static void x86_pmu_sample_xregs(struct perf_event *event,
-+				 struct perf_sample_data *data,
-+				 u64 ignore_mask)
++/*
++ * This function retrieves cached user-space fpu registers (XMM/YMM/ZMM).
++ * If TIF_NEED_FPU_LOAD is set, it indicates that the user-space FPU state
++ * is cached. Otherwise, the data should be read directly from the hardware
++ * registers.
++ */
++static inline u64 x86_pmu_update_user_xregs(struct perf_sample_data *data,
++					    struct pt_regs *regs,
++					    u64 mask, u64 ignore_mask)
 +{
-+	struct xregs_state *xsave = get_ext_regs_buf(smp_processor_id());
-+	u64 sample_type = event->attr.sample_type;
 +	struct x86_perf_regs *perf_regs;
-+	u64 intr_mask = 0;
-+	u64 mask = 0;
++	struct xregs_state *xsave;
++	struct fpu *fpu;
++	struct fpstate *fps;
++	u64 user_mask = mask;
 +
-+	if (WARN_ON_ONCE(!xsave) || !in_nmi())
-+		return;
-+
-+	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
-+	    (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK))
-+		mask |= XFEATURE_MASK_SSE;
-+
-+	mask &= x86_pmu.ext_regs_mask;
-+
-+	if (sample_type & PERF_SAMPLE_REGS_INTR)
-+		intr_mask = mask & ~ignore_mask;
-+
-+	if (intr_mask) {
-+		perf_regs = container_of(data->regs_intr.regs,
-+					 struct x86_perf_regs, regs);
-+		xsave->header.xfeatures = 0;
-+		xsaves_nmi(xsave, mask);
-+		update_perf_regs(perf_regs, xsave, intr_mask);
-+	}
-+}
-+
-+void x86_pmu_update_perf_regs(struct perf_event *event,
-+			      struct perf_sample_data *data,
-+			      struct pt_regs *regs,
-+			      u64 ignore_mask)
-+{
-+	u64 sample_type = event->attr.sample_type;
-+
-+	if (!((sample_type & PERF_SAMPLE_REGS_INTR) &&
-+	      (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK)))
-+		return;
-+
-+	if (sample_type & PERF_SAMPLE_REGS_INTR)
-+		x86_pmu_update_regs_intr(event, data, regs);
++	if (data->regs_user.abi == PERF_SAMPLE_REGS_ABI_NONE)
++		return 0;
 +
 +	/*
-+	 * ignore_mask indicates the PEBS sampled extended regs
-+	 * which are unnecessary to sample again.
++	 * If PEBS hits kernel space, need to re-sample extended
++	 * registers for user space.
 +	 */
-+	x86_pmu_sample_xregs(event, data, ignore_mask);
++	if (user_mode(regs))
++		user_mask &= ~ignore_mask;
++
++	if (user_mask && test_thread_flag(TIF_NEED_FPU_LOAD)) {
++		perf_regs = container_of(data->regs_user.regs,
++				 struct x86_perf_regs, regs);
++		fpu = x86_task_fpu(current);
++		/*
++		 * If __task_fpstate is set, it holds the right pointer,
++		 * otherwise fpstate will.
++		 */
++		fps = READ_ONCE(fpu->__task_fpstate);
++		if (!fps)
++			fps = fpu->fpstate;
++		xsave = &fps->regs.xsave;
++
++		update_perf_regs(perf_regs, xsave, user_mask);
++		return 0;
++	}
++
++	return user_mask;
 +}
 +
- int x86_pmu_handle_irq(struct pt_regs *regs)
+ static void x86_pmu_sample_xregs(struct perf_event *event,
+ 				 struct perf_sample_data *data,
++				 struct pt_regs *regs,
+ 				 u64 ignore_mask)
  {
- 	struct perf_sample_data data;
+ 	struct xregs_state *xsave = get_ext_regs_buf(smp_processor_id());
+ 	u64 sample_type = event->attr.sample_type;
+ 	struct x86_perf_regs *perf_regs;
++	u64 user_mask = 0;
+ 	u64 intr_mask = 0;
+ 	u64 mask = 0;
+ 
+ 	if (WARN_ON_ONCE(!xsave) || !in_nmi())
+ 		return;
+ 
+-	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
+-	    (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK))
++	if (event_has_extended_regs(event))
+ 		mask |= XFEATURE_MASK_SSE;
+ 
+ 	mask &= x86_pmu.ext_regs_mask;
++	if (sample_type & PERF_SAMPLE_REGS_USER) {
++		user_mask = x86_pmu_update_user_xregs(data, regs,
++						      mask, ignore_mask);
++	}
+ 
+ 	if (sample_type & PERF_SAMPLE_REGS_INTR)
+ 		intr_mask = mask & ~ignore_mask;
+ 
++	if (user_mask | intr_mask) {
++		xsave->header.xfeatures = 0;
++		xsaves_nmi(xsave, user_mask | intr_mask);
++	}
++
++	if (user_mask) {
++		perf_regs = container_of(data->regs_user.regs,
++					 struct x86_perf_regs, regs);
++		update_perf_regs(perf_regs, xsave, user_mask);
++	}
++
+ 	if (intr_mask) {
+ 		perf_regs = container_of(data->regs_intr.regs,
+ 					 struct x86_perf_regs, regs);
+-		xsave->header.xfeatures = 0;
+-		xsaves_nmi(xsave, mask);
+ 		update_perf_regs(perf_regs, xsave, intr_mask);
+ 	}
+ }
+@@ -1850,18 +1963,19 @@ void x86_pmu_update_perf_regs(struct perf_event *event,
+ {
+ 	u64 sample_type = event->attr.sample_type;
+ 
+-	if (!((sample_type & PERF_SAMPLE_REGS_INTR) &&
+-	      (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK)))
++	if (!event_has_extended_regs(event))
+ 		return;
+ 
+ 	if (sample_type & PERF_SAMPLE_REGS_INTR)
+ 		x86_pmu_update_regs_intr(event, data, regs);
++	if (sample_type & PERF_SAMPLE_REGS_USER)
++		x86_pmu_update_regs_user(event, data, regs);
+ 
+ 	/*
+ 	 * ignore_mask indicates the PEBS sampled extended regs
+ 	 * which are unnecessary to sample again.
+ 	 */
+-	x86_pmu_sample_xregs(event, data, ignore_mask);
++	x86_pmu_sample_xregs(event, data, regs, ignore_mask);
+ }
+ 
+ int x86_pmu_handle_irq(struct pt_regs *regs)
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 92cb9a716e83..f5d458e3ba3f 100644
+index f5d458e3ba3f..6c06558c416f 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3928,6 +3928,9 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 		if (has_branch_stack(event))
- 			intel_pmu_lbr_save_brstack(&data, cpuc, event);
- 
-+		x86_pmu_clear_perf_regs(regs);
-+		x86_pmu_update_perf_regs(event, &data, regs, 0);
-+
- 		perf_event_overflow(event, &data, regs);
- 	}
- 
-@@ -6176,8 +6179,37 @@ static inline void __intel_update_large_pebs_flags(struct pmu *pmu)
- 	}
- }
- 
--#define counter_mask(_gp, _fixed) ((_gp) | ((u64)(_fixed) << INTEL_PMC_IDX_FIXED))
-+static void intel_extended_regs_init(struct pmu *pmu)
-+{
-+	struct pmu *dest_pmu = pmu ? pmu : x86_get_pmu(smp_processor_id());
-+
-+	/*
-+	 * Extend the vector registers support to non-PEBS.
-+	 * The feature is limited to newer Intel machines with
-+	 * PEBS V4+ or archPerfmonExt (0x23) enabled for now.
-+	 * In theory, the vector registers can be retrieved as
-+	 * long as the CPU supports. The support for the old
-+	 * generations may be added later if there is a
-+	 * requirement.
-+	 * Only support the extension when XSAVES is available.
-+	 */
-+	if (!boot_cpu_has(X86_FEATURE_XSAVES))
-+		return;
- 
-+	if (!boot_cpu_has(X86_FEATURE_XMM) ||
-+	    !cpu_has_xfeatures(XFEATURE_MASK_SSE, NULL))
-+		return;
-+
-+	/*
-+	 * On current hybrid platforms, P-cores and E-cores expose the same
-+	 * XSAVE feature set. Therefore, using the global x86_pmu.ext_regs_mask
-+	 * is sufficient to represent the hardware-supported XSAVE features.
-+	 */
-+	x86_pmu.ext_regs_mask |= XFEATURE_MASK_SSE;
-+	dest_pmu->capabilities |= PERF_PMU_CAP_EXTENDED_REGS;
-+}
-+
-+#define counter_mask(_gp, _fixed) ((_gp) | ((u64)(_fixed) << INTEL_PMC_IDX_FIXED))
- static void update_pmu_cap(struct pmu *pmu)
+@@ -4698,15 +4698,15 @@ static void intel_pebs_aliases_skl(struct perf_event *event)
+ static unsigned long intel_pmu_large_pebs_flags(struct perf_event *event)
  {
- 	unsigned int eax, ebx, ecx, edx;
-@@ -6241,6 +6273,8 @@ static void update_pmu_cap(struct pmu *pmu)
- 		/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
- 		rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
- 	}
-+
-+	intel_extended_regs_init(pmu);
- }
+ 	unsigned long flags = x86_pmu.large_pebs_flags;
++	u64 gprs_mask = PEBS_GP_REGS | PERF_REG_EXTENDED_MASK;
  
- static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
+ 	if (event->attr.use_clockid)
+ 		flags &= ~PERF_SAMPLE_TIME;
+ 	if (!event->attr.exclude_kernel)
+ 		flags &= ~PERF_SAMPLE_REGS_USER;
+-	if (event->attr.sample_regs_user & ~PEBS_GP_REGS)
++	if (event->attr.sample_regs_user & ~gprs_mask)
+ 		flags &= ~PERF_SAMPLE_REGS_USER;
+-	if (event->attr.sample_regs_intr &
+-	    ~(PEBS_GP_REGS | PERF_REG_EXTENDED_MASK))
++	if (event->attr.sample_regs_intr & ~gprs_mask)
+ 		flags &= ~PERF_SAMPLE_REGS_INTR;
+ 	return flags;
+ }
 diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index a31648d2adb1..4f72ce6a9585 100644
+index 4f72ce6a9585..bd43bf26e6bf 100644
 --- a/arch/x86/events/intel/ds.c
 +++ b/arch/x86/events/intel/ds.c
-@@ -2524,6 +2524,7 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 	struct pebs_meminfo *meminfo = NULL;
- 	struct pebs_gprs *gprs = NULL;
- 	struct x86_perf_regs *perf_regs;
-+	u64 ignore_mask = 0;
- 	u64 format_group;
- 	u16 retire;
+@@ -1749,8 +1749,7 @@ static u64 pebs_update_adaptive_cfg(struct perf_event *event)
+ 	if (gprs || (attr->precise_ip < 2) || tsx_weight)
+ 		pebs_data_cfg |= PEBS_DATACFG_GP;
  
-@@ -2531,7 +2532,7 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 		return;
+-	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
+-	    (attr->sample_regs_intr & PERF_REG_EXTENDED_MASK))
++	if (event_has_extended_regs(event))
+ 		pebs_data_cfg |= PEBS_DATACFG_XMMS;
  
- 	perf_regs = container_of(regs, struct x86_perf_regs, regs);
--	perf_regs->xmm_regs = NULL;
+ 	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+@@ -2957,6 +2956,8 @@ __intel_pmu_pebs_events(struct perf_event *event,
+ 	void *at = get_next_pebs_record_by_bit(base, top, bit);
+ 	int cnt = count;
+ 
 +	x86_pmu_clear_perf_regs(regs);
- 
- 	format_group = basic->format_group;
- 
-@@ -2578,6 +2579,7 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 	if (format_group & PEBS_DATACFG_XMMS) {
- 		struct pebs_xmm *xmm = next_record;
- 
-+		ignore_mask |= XFEATURE_MASK_SSE;
- 		next_record = xmm + 1;
- 		perf_regs->xmm_regs = xmm->xmm;
- 	}
-@@ -2616,6 +2618,8 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 		next_record += nr * sizeof(u64);
- 	}
- 
-+	x86_pmu_update_perf_regs(event, data, regs, ignore_mask);
 +
- 	WARN_ONCE(next_record != __pebs + basic->format_size,
- 			"PEBS record size %u, expected %llu, config %llx\n",
- 			basic->format_size,
-@@ -2641,6 +2645,7 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
- 	struct arch_pebs_aux *meminfo = NULL;
- 	struct arch_pebs_gprs *gprs = NULL;
- 	struct x86_perf_regs *perf_regs;
-+	u64 ignore_mask = 0;
- 	void *next_record;
- 	void *at = __pebs;
+ 	if (!iregs)
+ 		iregs = &dummy_iregs;
  
-@@ -2648,7 +2653,7 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
- 		return;
- 
- 	perf_regs = container_of(regs, struct x86_perf_regs, regs);
--	perf_regs->xmm_regs = NULL;
-+	x86_pmu_clear_perf_regs(regs);
- 
- 	__setup_perf_sample_data(event, iregs, data);
- 
-@@ -2703,6 +2708,7 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
- 
- 		next_record += sizeof(struct arch_pebs_xer_header);
- 
-+		ignore_mask |= XFEATURE_MASK_SSE;
- 		xmm = next_record;
- 		perf_regs->xmm_regs = xmm->xmm;
- 		next_record = xmm + 1;
-@@ -2750,6 +2756,8 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
- 		at = at + header->size;
- 		goto again;
- 	}
-+
-+	x86_pmu_update_perf_regs(event, data, regs, ignore_mask);
- }
- 
- static inline void *
-@@ -3412,7 +3420,11 @@ static void __init intel_ds_pebs_init(void)
- 				x86_pmu.flags |= PMU_FL_PEBS_ALL;
- 				x86_pmu.pebs_capable = ~0ULL;
- 				pebs_qual = "-baseline";
--				x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_EXTENDED_REGS;
-+				if (boot_cpu_has(X86_FEATURE_XSAVES)) {
-+					x86_pmu.ext_regs_mask |= XFEATURE_MASK_SSE;
-+					x86_get_pmu(smp_processor_id())->capabilities |=
-+							PERF_PMU_CAP_EXTENDED_REGS;
-+				}
- 			} else {
- 				/* Only basic record supported */
- 				x86_pmu.large_pebs_flags &=
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index eae24bb35dc1..cff5fbac000b 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1028,6 +1028,12 @@ struct x86_pmu {
- 	struct extra_reg *extra_regs;
- 	unsigned int flags;
- 
-+	/*
-+	 * Extended regs, e.g., vector registers
-+	 * Utilize the same format as the XFEATURE_MASK_*
-+	 */
-+	u64		ext_regs_mask;
-+
- 	/*
- 	 * Intel host/guest support (KVM)
- 	 */
-@@ -1314,6 +1320,13 @@ void x86_pmu_enable_event(struct perf_event *event);
- 
- int x86_pmu_handle_irq(struct pt_regs *regs);
- 
-+void x86_pmu_clear_perf_regs(struct pt_regs *regs);
-+
-+void x86_pmu_update_perf_regs(struct perf_event *event,
-+			      struct perf_sample_data *data,
-+			      struct pt_regs *regs,
-+			      u64 ignore_mask);
-+
- void x86_pmu_show_pmu_cap(struct pmu *pmu);
- 
- static inline int x86_pmu_num_counters(struct pmu *pmu)
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index 38fa8ff26559..19dec5f0b1c7 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -112,6 +112,8 @@ void xsaves(struct xregs_state *xsave, u64 mask);
- void xrstors(struct xregs_state *xsave, u64 mask);
- void xsaves_nmi(struct xregs_state *xsave, u64 mask);
- 
-+unsigned int xstate_calculate_size(u64 xfeatures, bool compacted);
-+
- int xfd_enable_feature(u64 xfd_err);
- 
- #ifdef CONFIG_X86_64
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 752cb319d5ea..e47a963a7cf0 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -726,7 +726,10 @@ extern void perf_events_lapic_init(void);
- struct pt_regs;
- struct x86_perf_regs {
- 	struct pt_regs	regs;
--	u64		*xmm_regs;
-+	union {
-+		u64	*xmm_regs;
-+		u32	*xmm_space;	/* for xsaves */
-+	};
- };
- 
- extern unsigned long perf_arch_instruction_pointer(struct pt_regs *regs);
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 4394091c4791..4cef802c2e02 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -587,7 +587,7 @@ static bool __init check_xstate_against_struct(int nr)
- 	return true;
- }
- 
--static unsigned int xstate_calculate_size(u64 xfeatures, bool compacted)
-+unsigned int xstate_calculate_size(u64 xfeatures, bool compacted)
- {
- 	unsigned int topmost = fls64(xfeatures) -  1;
- 	unsigned int offset, i;
 -- 
 2.34.1
 
