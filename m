@@ -1,134 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B523BED37
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 11:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5A63D75C7;
+	Fri, 29 May 2026 11:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780053813; cv=none; b=jl6p5u2MQHm3DihPCW+ChzOcHqyAs704ZRmZ56OlYeTx6fL56bJemYpqS7QksgUMakRODaYuvtSWfK8Pht+hahz/80BcVWqO9qQcw0cPpuJsvKccdma33rFVOPpBByvBHAxaQRFAIeaLEuSTvUIeCteIC7arzVmX5E2Os+lCesI=
+	t=1780054350; cv=none; b=M5fUam8jfwD8acHDArFOOUOi6nCrhWvvODOTBAj3360Jin2/ZWDgg4hJj8JOLf3XUhZUfCPIky1zNHisc0wehqvVlKIykmdiZoB+hu4hSRcVdgV5Q1tqTApV+CF+1OJcRlsoA/igHw3QE184FJdDSGXfpS1tqcTXM9HbLAye7cI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780053813; c=relaxed/simple;
-	bh=+DVi+EbxIjergh8989W+aZpInstE8bUW0Bwkh8275u8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gLOGKKAphx+DxQlYcHfWTgKBwr8Yr4xsVXatdmxdEUtzh0UkdGVbv3wafCUbQoMBYkssHNYJCPBx8/wChfBkxPkwd1lR058rCn1srijzkVAo96jdNhfxtTuFgd0oSrb+eII7HqAd9c7AfwwGSNfAJWhH3xLjIh0mcOPFZGUH/p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWsFhSpJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780054350; c=relaxed/simple;
+	bh=nr7rhdeyG3LJD9e7/h1FV5+6v3pPDE5HjPSHeOZG2Vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oEfqCfEfHL3wWX0j3Ris1HfHhZ2QjHbV4xI60BEgTmZNm+rCeNJrRiu2+4WTnvwgvdgTZ7hcC/NtBv8LEuN5PGx0h+1yHCGop0Okj3H1i6Wyu7HsWs7n8rAP08j9lvNNPcYdelc0yfaR/LKEAWK9H0UE5dF81EcWphz3H5aFPac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=f8aDqoN1; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWsFhSpJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 140E61F00893;
-	Fri, 29 May 2026 11:23:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780053812;
-	bh=Bll7yPBJ1EPfFsPPODrcU85p+1lYLjECAZTr+JEAXy0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IWsFhSpJAcnNoTto76lam51TsYGkA0qE6yatAWteqaQikMLCCaOmMcOhFmjImXzys
-	 BEcz4WZFC6OsW1hyWV7vD/auUTYH1/9ZLta+RDiaheeFcVBY43Mmz1rNarwVY1s8L7
-	 G9iGANlWfI3yrFXUmUCff7cwV3iWfkhuiTtdH3txuRD/YIN4VpMSisiYM+JM0TcSid
-	 LB1AC6D19POEDetlWwr8b+RjwPeiOLwjTx9ZIHooga+Q9Z5ZsOoM2/duZz26dWgwMO
-	 jzfekT6wvixvXtX5BoBP2C67lEuKZW1Oq4+MzwbNQpqlu6gMgNbOgiELMWcImL0mLz
-	 bSag5rMgeb9Sg==
-From: sashiko-bot@kernel.org
-Subject: Re: [Patch v8 4/5] perf regs: Enable dumping of SIMD registers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260529082451.591783-5-dapeng1.mi@linux.intel.com>
-References: <20260529082451.591783-5-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 May 2026 11:23:31 +0000
-Message-Id: <20260529112332.140E61F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f8aDqoN1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=kxTIYV2ChupEytU4zCZURN+O2Mt+fI5Q/J7ZDzICX+k=; b=f8aDqoN1HjkC5EnLN7Fh3tLI4j
+	2oqJQ4tPL9RoTVadMv7MyOblPseRZy1YTv9PA5ufiAgI60DLYE8neVOCLax1p+boCqhfFsGkS8eGi
+	ENHue4GNK74oZD+14y3NYhPo3YEiFQ+NNwrGcoFK7PgLaOD7JPuBdAdEm3g3xP22RAiHUsbJyb7TN
+	pDVfQNu2UE/S/S6bz6qJ4HfsptpLRDTgmVH5yWyzupjb1Y5Iot8S+oJerjZOcocueF7NnJZtH/S9g
+	80rNKC8OIL+qLoZnudypnGABfdV6TWFzfFY8AZAc+/LzjXKz0sA9BdZ5MTKIzKG5Nt06WjoWBWq06
+	BpArsb7Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wSvRq-00000001Apx-3tl7;
+	Fri, 29 May 2026 11:32:19 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C7DB130036F; Fri, 29 May 2026 13:32:18 +0200 (CEST)
+Date: Fri, 29 May 2026 13:32:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: Re: [Patch v8 07/23] x86/fpu/xstate: Add xsaves_nmi() helper
+Message-ID: <20260529113218.GJ3493090@noisy.programming.kicks-ass.net>
+References: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
+ <20260529075645.580362-8-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260529075645.580362-8-dapeng1.mi@linux.intel.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+On Fri, May 29, 2026 at 03:56:29PM +0800, Dapeng Mi wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Add xsaves_nmi() to save supported xsave states in NMI handler.
+> 
+> This function is similar to xsaves(), but should only be called within
+> a NMI handler. This function returns the actual register contents at
+> the moment the NMI occurs.
+> 
+> Currently the perf subsystem is the sole user of this helper. It uses
+> this function to snapshot SIMD (XMM/YMM/ZMM) and APX eGPRs registers
+> which would be added in subsequent patches.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/include/asm/fpu/xstate.h |  1 +
+>  arch/x86/kernel/fpu/xstate.c      | 23 +++++++++++++++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+> index 7a7dc9d56027..38fa8ff26559 100644
+> --- a/arch/x86/include/asm/fpu/xstate.h
+> +++ b/arch/x86/include/asm/fpu/xstate.h
+> @@ -110,6 +110,7 @@ int xfeature_size(int xfeature_nr);
+>  
+>  void xsaves(struct xregs_state *xsave, u64 mask);
+>  void xrstors(struct xregs_state *xsave, u64 mask);
+> +void xsaves_nmi(struct xregs_state *xsave, u64 mask);
+>  
+>  int xfd_enable_feature(u64 xfd_err);
+>  
+> diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+> index a7b6524a9dea..4394091c4791 100644
+> --- a/arch/x86/kernel/fpu/xstate.c
+> +++ b/arch/x86/kernel/fpu/xstate.c
+> @@ -1474,6 +1474,29 @@ void xrstors(struct xregs_state *xstate, u64 mask)
+>  	WARN_ON_ONCE(err);
+>  }
+>  
+> +/**
+> + * xsaves_nmi - Save selected components to a kernel xstate buffer in NMI
+> + * @xstate:	Pointer to the buffer
+> + * @mask:	Feature mask to select the components to save
+> + *
+> + * This function is similar to xsaves(), but should only be called within
+> + * a NMI handler. This function returns the actual register contents at
+> + * the moment the NMI occurs.
+> + *
+> + * Currently, the perf subsystem is the sole user of this helper. It uses
+> + * the function to snapshot SIMD (XMM/YMM/ZMM) and APX eGPRs registers.
+> + */
+> +void xsaves_nmi(struct xregs_state *xstate, u64 mask)
+> +{
+> +	int err;
+> +
+> +	if (!in_nmi())
+> +		return;
+> +
+> +	XSTATE_OP(XSAVES, xstate, (u32)mask, (u32)(mask >> 32), err);
+> +	WARN_ON_ONCE(err);
+> +}
 
-New issues:
-- [Low] Misleading post-increment of `idx` in `simd_regs_dump__printf` inne=
-r loop.
+Sashiko raises a fun point vs skid; if an exclude_kernel=1 event trips
+inside the kernel this can potentially leak a whole pile of kernel regs.
 
-Pre-existing issues:
-- [High] Integer underflow in manual `sample_size` calculation in `perf_eve=
-nt__convert_sample_callchain` corrupts the event stream if registers are mi=
-ssing.
---
+But of course the same thing is true for the existing setup. So perhaps
+that doesn't need to concern us now.
 
-commit 7e4b22be95dca28326d1271ce91f25c99e231f74
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+There used to be discussions about this case, and I think we had generic
+code to sanitize such boundary events, but I can't seem to find that in
+the current tree.
 
-perf regs: Enable dumping of SIMD registers
-
-This patch adds support for dumping SIMD registers using the new
-PERF_SAMPLE_REGS_ABI_SIMD ABI.
-
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -457,8 +457,13 @@ static int perf_event__convert_sample_callchain(cons=
-t struct perf_tool *tool,
->  	/* adjust sample size for stack and regs */
->  	sample_size -=3D sample->user_stack.size;
->  	sample_size -=3D (hweight64(evsel->core.attr.sample_regs_user) + 1) * s=
-izeof(u64);
-
-[Severity: High]
-This is a pre-existing issue, but does unconditionally subtracting the full
-expected size of the register mask cause an integer underflow if the perf
-sample didn't capture user registers?
-
-If the sample didn't capture user registers (e.g., when sampling a kernel
-thread), the ABI is PERF_SAMPLE_REGS_ABI_NONE (0). It seems subtracting the
-full mask size would underflow sample_size (a u32), resulting in a massive
-size being written to event_copy->header.size.
-
-Could this corrupt the event stream or cause out-of-bounds reads when
-perf_event__repipe_synth writes to the pipe?
-
-> -	if (sample->user_regs && sample->user_regs->abi & PERF_SAMPLE_REGS_ABI_=
-SIMD)
-> -		sample_size -=3D 4 * sizeof(u64);	/* Reduce SIMD regs header size */
-> +	if (sample->user_regs && sample->user_regs->abi & PERF_SAMPLE_REGS_ABI_=
-SIMD) {
-> +		sample_size -=3D 4 * sizeof(u64);
-> +		sample_size -=3D (sample->user_regs->nr_vectors *
-> +				sample->user_regs->vector_qwords +
-> +				sample->user_regs->nr_pred *
-> +				sample->user_regs->pred_qwords) * sizeof(u64);
-> +	}
->  	sample_size +=3D (sample->callchain->nr + 1) * sizeof(u64);
-
-[ ... ]
-
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-
-[ ... ]
-
-> +	for (i =3D 0; i < regs->nr_vectors; i++) {
-> +		for (j =3D 0; j < regs->vector_qwords; j++) {
-> +			idx =3D i * regs->vector_qwords + j;
-> +			if (regs->vector_qwords > 1) {
-> +				printf(".... %3s[%d][%d] 0x%016" PRIx64 "\n",
-> +				       name, i, j, regs->simd_data[idx++]);
-
-[Severity: Low]
-Is the post-increment of idx necessary here?
-
-Since idx is re-initialized at the start of each inner loop iteration
-(idx =3D i * regs->vector_qwords + j), the incremented value seems to be
-discarded on the next iteration.
-
-> +			} else {
-> +				printf(".... %3s[%d] 0x%016" PRIx64 "\n",
-> +				       name, i, regs->simd_data[idx++]);
-> +			}
-> +		}
-> +	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260529082451.5917=
-83-1-dapeng1.mi@linux.intel.com?part=3D4
+Mark, ISTR you were involved at some point, any idea what happened?
