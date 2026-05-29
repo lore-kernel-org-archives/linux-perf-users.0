@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CFD3BADBC
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 08:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C6F34F474
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 08:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780044577; cv=none; b=NaVn5LMDKmCdeb7350Zs5/iOi7aMEmWWBi3UYUq4bs1qNq5Lw5w81NaVvpqrBX2sxsl/yL4GskzFFw/padYw9ei/+24PZf1FMxA7rObxjYDnuOq5Ga/eblmm0yU2uUdDxhmnp6reY7sGq3Aft0GANzVNYy2QMoPZPZW8RCkBoYI=
+	t=1780044678; cv=none; b=b/AxTdWaCrGn1hhHKtRFdmur4DUZMR6XBrfXMwW3kjpHmvbrgW/IfomomfbxQhgYHFkvPnqeadtsdelk2SuupjyKqee6vZuSCv9NgFyS3/F3xL6aN3vcbCsiImJ7QT/PvHWDpJvzRpwRy+mnZ7X8lAYUmJHUxgDZgm/lrgXMvxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780044577; c=relaxed/simple;
-	bh=nBadDP8XRwvngRIIJJnll9bqqn9p5BblwPxiL68QvTU=;
+	s=arc-20240116; t=1780044678; c=relaxed/simple;
+	bh=NxS/44ldv1XOMrG5vJscVcE02pS8sTDxeKVO8s+usVk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rVP2njen7nkWPllFkvfME6uP8RYY/VuqHnVgEMmXISxQyheubvx2tda8H7tqkrm8cVHHDXqUNz94VAy3XU2Zic7Ei8fHZX+EX/+5Bc4F4LhulLPdDY2+g6jD1tcgmbGctAcG4/sSUZUgD47cRjFeUpWEC5Sy7X7/CY4vBQi52/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLLaPKPp; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=FJ9UYO7TONa8HpYXZnReU1z88pEOm9Zh8ix0UG9gcHeiN3Q6PYmQnf6UQMNxv3zMuLBqfenaAEFKrHcc5TcFKk2md4VKjUSE4B25ZL2ZwiqJhw8MlpD4DI3ae+fes/Lw4L4Q8jJPwmcE0hOFMWo3Crt9ekiFoyGfAHKfeBaSxG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h70nyZmx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLLaPKPp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73AE1F00893;
-	Fri, 29 May 2026 08:49:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h70nyZmx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A92351F0089D;
+	Fri, 29 May 2026 08:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780044576;
-	bh=3KfibRGY2fJyCZA0lC0pyhWcFEXNRT0gKe42YqkdddM=;
+	s=k20260515; t=1780044676;
+	bh=zpdG2gUYbuyUSQ4yeG/XWT/E2Utz4IRdC3pt66mSHIg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aLLaPKPpz3Qi8Q5Ofqlg8KZD8dKix/UF/L0ZgDX6HKg1mbENJqDm7bTcvPOIqEWSo
-	 YI3UVqmkc7S+tcKdT+7CC7GQk/Sjp8V9WHjXmrVi0QpU12HdhuroEiPMuUxU2MTWU4
-	 Zlv274gbqouzrBDfKecKWyeTblc9i5mIlMFLpvGOggjAgh0uFSIj7y27LmptvEiQgr
-	 98mKU3o060+exvMy1Fwt66IfRWFzecPZBS43oxLlRKTZHDa5K4ldbwX+VekqyiUptE
-	 kiDg5SG3R6bH23bzfjbrlIglap9E18lD7f5B/TcHG+yOC8nIcJdAGPQQ90gPrbdCta
-	 gdNnAXtRQ42YQ==
+	b=h70nyZmxSuud9kZgcScNYeJkdVycTTyIM3QutCcNBciUm/70btX/nsOejv9N4DMva
+	 JC+kBWCrDD96H5fNai+DX5dyIKv9WsQtztkqZCS4xgPv/3niLaIm/eZqpvRFsX0xPP
+	 GJtDpsGZb1CYrRW1QlabTZWXz2YIoqZPquMaSXaHLTkh3XLH11U698sS6kMdXCQhYR
+	 VN3zDlBi0Tv0NyRwwQh6d8f1cyGDzTjVfh5/MQPSokv1A3XlpPFY7IYIJEaDvfh6wT
+	 hRP8qGhjajKb+tFQZVV18LJP65uljAmn4NREgz+a/gWPbFQcr803AaPbvLOo6+z3Io
+	 3cJ316xXcyCwg==
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v8 13/23] perf/x86: Support XMM sampling using
- sample_simd_vec_reg_* fields
+Subject: Re: [Patch v8 02/23] perf/x86: Move hybrid PMU initialization
+ before x86_pmu_starting_cpu()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260529075645.580362-14-dapeng1.mi@linux.intel.com>
-References: <20260529075645.580362-14-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260529075645.580362-3-dapeng1.mi@linux.intel.com>
+References: <20260529075645.580362-3-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 May 2026 08:49:35 +0000
-Message-Id: <20260529084935.C73AE1F00893@smtp.kernel.org>
+Date: Fri, 29 May 2026 08:51:15 +0000
+Message-Id: <20260529085116.A92351F0089D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,89 +46,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Critical] The validation logic in `perf_simd_reg_validate()` strictly ch=
-ecks unused, flag-gated syscall parameters outside of their respective flag=
- scopes, breaking ABI compatibility.
+
+Pre-existing issues:
+- [High] Use-after-free in `intel_pmu_cpu_dead()` triggered during error ro=
+llback if `perf_pmu_register()` fails.
 --
 
-commit aeb4cf15401ade404bfd333c1c769dd23251abf8
+commit a6b6c338247bf2e5f630f8fc0cce5709a4fbe801
 Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-perf/x86: Support XMM sampling using sample_simd_vec_reg_* fields
+perf/x86: Move hybrid PMU initialization before x86_pmu_starting_cpu()
 
-This patch adds support for sampling XMM registers using the new
-sample_simd_vec_reg_* fields. It introduces ABI tracking for perf_regs
-on x86 and implements validation logic for SIMD registers.
+This patch moves the default hybrid PMU structure initialization before
+calling x86_pmu_starting_cpu(). This change prevents key fields like
+capabilities from being inadvertently overwritten during initialization.
 
-> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-> index 81204cb7f7239..7b9b38c189de2 100644
-> --- a/arch/x86/kernel/perf_regs.c
-> +++ b/arch/x86/kernel/perf_regs.c
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 4b9e105309c6a..17e122e27e0b7 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
 [ ... ]
-> @@ -74,6 +77,71 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
-[ ... ]
-> +int perf_simd_reg_validate(u16 simd_enabled, u16 vec_qwords,
-> +			   u64 vec_mask_intr, u64 vec_mask_user,
-> +			   u16 pred_qwords, u32 pred_mask_intr,
-> +			   u32 pred_mask_user)
-> +{
-> +	u64 size;
-> +
-> +	if (!simd_enabled) {
-> +		if (vec_qwords || vec_mask_intr || vec_mask_user ||
-> +		    pred_qwords || pred_mask_intr || pred_mask_user)
-> +			return -EINVAL;
-
-[Severity: Critical]
-Are we unconditionally validating syscall parameters outside their flag sco=
-pes
-here?
-
-If userspace sets PERF_SAMPLE_REGS_USER but does not set
-PERF_SAMPLE_REGS_INTR, the vec_mask_intr and pred_mask_intr parameters
-could contain uninitialized stack garbage. Because userspace is not required
-to zero-fill unused arguments, returning -EINVAL for garbage in these unused
-masks could break ABI compatibility for programs recompiled against newer
-kernel headers.
-
-> +		return 0;
-> +	}
-> +
-> +	if (!vec_qwords) {
-> +		if (vec_mask_intr || vec_mask_user)
-> +			return -EINVAL;
+> @@ -2195,8 +2195,20 @@ static int __init init_hw_perf_events(void)
+> =20
+>  	pmu.attr_update =3D x86_pmu.attr_update;
+> =20
+> -	if (!is_hybrid())
+> +	if (!is_hybrid()) {
+>  		x86_pmu_show_pmu_cap(NULL);
 > +	} else {
-> +		if (vec_qwords !=3D PERF_X86_XMM_QWORDS)
-> +			return -EINVAL;
-> +		if ((!vec_mask_intr && !vec_mask_user) ||
-> +		    (vec_mask_intr & ~PERF_X86_SIMD_VEC_MASK) ||
-> +		    (vec_mask_user & ~PERF_X86_SIMD_VEC_MASK))
-> +			return -EINVAL;
+> +		int i;
+> +
+> +		/*
+> +		 * Init default ops.
+> +		 * Must be called before registering x86_pmu_starting_cpu(),
+> +		 * otherwise some key PMU fields, e.g., capabilities
+> +		 * initialized in x86_pmu_starting_cpu(), would be overwritten.
+> +		 */
+> +		for (i =3D 0; i < x86_pmu.num_hybrid_pmus; i++)
+> +			x86_pmu.hybrid_pmu[i].pmu =3D pmu;
 
-[Severity: Critical]
-Similarly, could checking these masks cause false -EINVAL errors
-if only one of the sampling flags (INTR or USER) is enabled?
+[Severity: High]
+This is a pre-existing issue, but I noticed a potential use-after-free
+during error rollback.
 
-If PERF_SAMPLE_REGS_USER is enabled but PERF_SAMPLE_REGS_INTR is disabled,
-vec_mask_intr might contain random bits that fail the PERF_X86_SIMD_VEC_MASK
-check. Should these validation checks be gated behind the presence of their
-respective flags in the sample_type to prevent regressions?
+During init_hw_perf_events(), the CPU hotplug states are set up and
+x86_pmu_starting_cpu() sets cpuc->pmu to point to elements within the
+dynamically allocated x86_pmu.hybrid_pmu array.
+
+If the subsequent perf_pmu_register() loop fails, the error path frees the
+x86_pmu.hybrid_pmu array via kfree() and jumps to out2 to unregister the
+CPU hotplug states:
+
+    if (i < x86_pmu.num_hybrid_pmus) {
+        ...
+        kfree(x86_pmu.hybrid_pmu);
+        ...
+        goto out2;
+    }
+    ...
+    out:
+        cpuhp_remove_state(CPUHP_PERF_X86_PREPARE);
+
+Tearing down the CPUHP_PERF_X86_PREPARE state triggers x86_pmu_dead_cpu(),
+which eventually calls intel_pmu_cpu_dead().
+
+Could tearing down CPUHP_PERF_X86_PREPARE evaluate the dangling cpuc->pmu
+pointer in intel_pmu_cpu_dead(), causing cpumask_clear_cpu() to write to
+the array that was just freed?
 
 > +	}
-> +
-> +	if (pred_qwords || pred_mask_intr || pred_mask_user)
-> +		return -EINVAL;
-> +
-> +	size =3D ((vec_qwords * hweight64(vec_mask_intr)) +
-> +		(vec_qwords * hweight64(vec_mask_user)) +
-> +		(pred_qwords * hweight32(pred_mask_intr)) +
-> +		(pred_qwords * hweight32(pred_mask_user))) * sizeof(u64);
-> +	if (size > U16_MAX)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
+> =20
+>  	if (!x86_pmu.read)
+>  		x86_pmu.read =3D _x86_pmu_read;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260529075645.5803=
-62-1-dapeng1.mi@linux.intel.com?part=3D13
+62-1-dapeng1.mi@linux.intel.com?part=3D2
