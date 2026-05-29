@@ -1,263 +1,166 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB4D3AB47B
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 06:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E68935E1C1
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 06:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780037433; cv=none; b=iysq9JJfdUmE5JrLBnAODDhheU/d22i7WZmRA6WOnSoF9J0XvIjpUvyMo2PSEzeKknWZy/XCRXUxyK3Z82XR45mgb5ujqb5/kkG4GpkRV4H/gfUn5LAz0rlV4WNUOiXl2KFbzB+oxqnvb8vx7FBvCgExDzW8gpqBa01pjUvG2qg=
+	t=1780037446; cv=none; b=aw9cxrILb+TQiAS1dmItVJbH+vaIpTWh/OphePhM8/bcaxqgSJGeM8HzI576MlJbAPfNQdSXCwy/BXSpYSqDonK6vPbtkzJMIymK7bNStQLE7Xw3LC/UG+2J1iNBJuXArxWEbnI0M9ynqFA6GnOk1ytNZz07Z4pdu3Z3wYhYRhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780037433; c=relaxed/simple;
-	bh=Tku9P8eqLmHh9JLkHpXSR1LrG93knR6H+ckCcKNpQi0=;
+	s=arc-20240116; t=1780037446; c=relaxed/simple;
+	bh=ZzSyHONJflj3efN3iccXa2QiAHCxlRP6KBZP3LlVxtg=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TcYiqfjMp+NZz90uN+H3OrJ1dwdOFondm9OBIevoLNI8xG/gSgOxEbXnWboqaNJURvQtt+KxZvBzZ69M4On8RoC3g9dE1Hkmyd4OoN5l2jk1YfEJRqRsnKASfkrCrKfx/bInu2C2/YN1OCYOVulZCymLxp8N55KLSrOh5MLmlJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJvmvjtc; arc=none smtp.client-ip=209.85.216.41
+	 Content-Type:MIME-Version; b=m7vFTw6628YxF2BdbbgCNUz+JfDhmyQGpR0JQoGpkb0ngju5r1//wzgytwBomTWFXAdgWckrhqKMVlUXvA4Vi0hX5yL4t/exGQx1X3OHmcN2m60+7ejdjNcmSI1xMYPI3Pi4w8mCkLkqGdPJEqOq4EFb6YbdvZ+P4vYDDNtXry8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jwnZkM6Y; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJvmvjtc"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-36ad15213fbso3143445a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 23:50:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwnZkM6Y"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-36b9d265355so705290a91.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 23:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780037432; x=1780642232; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:cc:to:from
-         :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=AuInCdR1LF34daPdYAnVt51MB+bFgCkH2SN8cZ5MttE=;
-        b=QJvmvjtc66D3LPsqXFHUpBN7ukvO5Itn9/4TBUkHpdBJKOqEoKVhzLAgaqqZhIpcqs
-         WmnRjrubsTy7Pl+zvApFLEaasilE8kJaJBnfdP3OKH0FWvCiGwFG2utuqVm+uSkWlG9u
-         woP31LQzhkol0Mijy/Eb8urAh6O6bnJH7KR/W6icekDtoIHUJpWyFbXzbIKf41vKPnBz
-         3oNxM5G3K5KoLSGv2HfSQCjMyGw6PN1ZAG0F2qas5UlyJb4zCyKIPw/3Hgd4H4MuI/Cu
-         4Q8BgC2M7rTfO6ma9dr5GFt0fnWy9CHrYPFrYexe6wNh1RIOceeiD1+IyITcz30hpv6g
-         /ZUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780037432; x=1780642232;
-        h=mime-version:references:in-reply-to:message-id:date:cc:to:from
-         :subject:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1780037444; x=1780642244; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:references:in-reply-to
+         :message-id:date:cc:to:from:subject:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AuInCdR1LF34daPdYAnVt51MB+bFgCkH2SN8cZ5MttE=;
-        b=DZ7rbco05kjPbSimxlOyEi7a1Uo9JzRwl8iYW13IH18wJ7HrUGWLkrHGKwegRNDIzF
-         yxHkDvjOK3/FSxEYIH8nB0q6mcunqDcMhj8g9Sr6BVEA0jRTiBwsTMNacFVGb5hM81Mz
-         e3un4tExY2s4qGPOJphJcJdvQPM9HqbsSDDdFIZV2gzlLKFxT02mD8uKocQ/WxQv7ilW
-         iJrYVIx4jR9SqgmR87mRJ476HpHeZm4Tg/HkK9ml8EWx5Ri1WPN1ch4md/cRQGfJxiR9
-         c0jKPdlcIohEy9Grr+3KNaCCUP/YYpshqVcttwcbbOkBU/UUGUk5+UjZ9Rgx1GH3qtM9
-         tqHw==
-X-Forwarded-Encrypted: i=1; AFNElJ86irOeiNmAds00nz6xCXKF6bRaRx5Kda3IaZtn5CFVzU4lAvNi2NYCIYssiJuwAGT/ZDmd87mvdcibHXN8xsbL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxaWgWa8135OKzdl0VPTIjS+861IZLxgFtMNuOWaO3ZPbeL+pT
-	IdARoovXjjHL/iWv118iDMu7qIJtdTM+LblV7NGwuwGKFxsuJSvolE8z
-X-Gm-Gg: Acq92OG9RmCfYeS7HwpHv/9TqGnT54DqEx/lvWPn1iGfRzXwGnlj/J4sUYt3ycyfjin
-	TqTWCC3ErnJEDtjjaIBMiMSEh38jQuFCd74YIs4uAGJPtE6y/Vsp4P1Dm6dyoUJTHTIqA5osrDK
-	140WZhGL1TPeCaARAdUTbNP3vxv0V8Q0jwMSEIq9Wei2ycQzcmFis0HyIheqtUoi1koXvQiu/AU
-	vrJkFqK+nxh1qmnhCQJoSUNR72NVY1lRUTrNRPWyQYp4Y48AO8WCgO9y01brMoFvACHsaWOs0so
-	TvgiY3D0ixHK3lKZsWSnqc03xV6mZT9Zlsea3c7ya0yJJJoJ9u0jiTj73PrNcWiVL3NErAKnUph
-	mG0n4xvTYDPWAVliMpyFSET58/5ByS1rBS/t37GPT8LTErYepsQykhyWDdI+kNt0O8NfRhvh/qJ
-	Tt0av/mZ7FDBOEAYuWtyzbjqN/kG0kEERFi3RqZw==
-X-Received: by 2002:a17:90b:1dd1:b0:36b:9e24:c692 with SMTP id 98e67ed59e1d1-36bbcfe6f4fmr1941131a91.20.1780037431532;
-        Thu, 28 May 2026 23:50:31 -0700 (PDT)
+        bh=Is2yEBAROvB5EB2jldyJiLF6pd7FhjvHXATJbOB/v9E=;
+        b=jwnZkM6YCBuStLIW0P5cUej/lV5mS802mnMk0/CaFhAyzcgtMOMcK1L/j5vRv2dUOu
+         lSFGOdm78iptUP0b7nPoWa8Y2QgO4OioF/olw0DVSPbRZssEtQlVvFaqULX4C5+HTLcM
+         oUdPUbZKtG9MsRMJczHayTMWrqJiyQGG6qys7F9AT/UpaLD2KrJi1eucq1tU7A2isFgX
+         vFPxOYln3hdebiQ9bGvJm6f1B9EuJYrA6dxooDI0+cNRXdGSYnFJOOnlAkaMXlhrS9F9
+         +XtTCIwr54Gn3c8aIzp1YDOh1lEi5LcyaOK6vZIiiFKn2SXlXAPlcn4p+kHoQKdJnAcg
+         DAgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780037444; x=1780642244;
+        h=mime-version:content-transfer-encoding:references:in-reply-to
+         :message-id:date:cc:to:from:subject:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Is2yEBAROvB5EB2jldyJiLF6pd7FhjvHXATJbOB/v9E=;
+        b=Nbt25c87EyFudD0E1L5wXUfcW3x4JIPbh6/28aO5qmRK8l0tPmUx/JLFgQCTviw6Ei
+         gPFCqu1ICeejGrnl4Q2QlZIbOUVFLzWBNMPbtmH30VJ/68OsODyvZ6YeDtsHf0Bf5IQW
+         jMwxWScQ2RzjA+ODwaUgBqIw426kphkwx1655S5HIC6KkA/SEsvZmOOEjJwAnlimUJxz
+         QORcCqz1yKBSyZkWAd9fzY2IGNjLna3/acBd6veGROt5cJH/16jz6TTThHIv0EVV3cNS
+         xmogZnnWfhTDkK6cn+dPH4Cd5H1zHqYwvRz8HTv9+9hwR1J9Ov0BTpdez0ixDYp4teoM
+         r7DA==
+X-Forwarded-Encrypted: i=1; AFNElJ96tyQ2MoTlsfu6O1k2saeygRH1OgMBXnhYJvke9vGxWLrwZrk4UfHDOO9NFiw4RuOFDbuEL4lCRIvaxQdgXQOB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtTe0us+1HZ9/rJhd/76596qmP44eR9ijm6TzjehM4SH0oDcee
+	tiEoN2cVCZRRYxq8p3DmmWqrJUJhmzQ8TY7+h2EZUCG045xRVgzoEosu
+X-Gm-Gg: Acq92OFbSLGMlvM9n/o+RlcQ+yJHiBwdQkq95Cii4qQQ3CFxve5+Z4llDzttKZVOWA7
+	Ap19puFpMcd5X/UctvVG3l48+8d0cDGfJ1yJDJZWXsYKYuTHfN3i4NF/ygbbIM4aAbOg17ugDvT
+	97Nn1IBVL1sGhIxYd7IE3OmOeRh65BCtn4wEbNjqLZ46Tj8CEbhA13SOLt664cypNtzoVTKot/N
+	riaUq/Zq/gJgfV5hmHgAkApxbjlDW25NoMTloPEIfEpnMIRJqSzVYH6wL+nPUTP+l8Jd1jEmW1J
+	50Pu0QOFi+YMbCQouBc8PKJD9yWHHZSioeb3tCM6PwC3flyEyS07m8Z9lzZQ8f7n6DNTe5xCfmx
+	ynw42IJmF8axtZ7dPdlDcwK1E2oKaULdIsfW8/mSVa5X6Y+fwue9wS6HLBIdWv2OmFhu2zSo5TJ
+	u7YRe6/E6ZFTQOw2R1/PESAUKi2oILYnw5F4OdBQ==
+X-Received: by 2002:a17:90b:562d:b0:36a:cd8c:ad3d with SMTP id 98e67ed59e1d1-36bbceb34bbmr1987360a91.22.1780037444277;
+        Thu, 28 May 2026 23:50:44 -0700 (PDT)
 Received: from [127.0.1.1] ([104.28.157.202])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36bc0c1ab21sm952626a91.14.2026.05.28.23.50.22
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36bc0c1ab21sm952626a91.14.2026.05.28.23.50.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 23:50:31 -0700 (PDT)
-Subject: [PATCH 4/6] perf/header: add bounds check for domain index in
- process_cpu_domain_info
+        Thu, 28 May 2026 23:50:44 -0700 (PDT)
+Subject: [PATCH 5/6] perf/sched: replace list_first_entry with
+ list_first_entry_or_null
 From: Wang Haoran <haoranwangsec@gmail.com>
 To: acme@kernel.org
 Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
  mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  haoranwangsec@gmail.com
-Date: Fri, 29 May 2026 14:50:22 +0800
-Message-ID: <178003742265.62097.6645230837884864368@gmail.com>
+Date: Fri, 29 May 2026 14:50:32 +0800
+Message-ID: <178003743298.62097.12296428897032273088@gmail.com>
 In-Reply-To: <178003738371.62097.10360938456907564684@gmail.com>
 References: <178003738371.62097.10360938456907564684@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8701719228398729701=="
 
---===============8701719228398729701==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
->From 6558dce0d11d81872d73655bc8290cfb1dc499b2 Mon Sep 17 00:00:00 2001
+>From f66a328ea7a6832689b8d19f4643f31b8caf1e28 Mon Sep 17 00:00:00 2001
 From: Wang Haoran <haoranwangsec@gmail.com>
-Date: Thu, 28 May 2026 15:17:21 +0800
-Subject: [PATCH 4/6] perf/header: add bounds check for domain index in
- process_cpu_domain_info
+Date: Thu, 28 May 2026 15:18:07 +0800
+Subject: [PATCH 5/6] perf/sched: replace list_first_entry with
+ list_first_entry_or_null
 
-process_cpu_domain_info() reads a domain index from the file and uses
-it directly as an array index into cd_map[cpu]->domains[], which has
-max_sched_domains entries.  A crafted file can supply a domain value
->=3D max_sched_domains, causing an out-of-bounds write.
+list_first_entry() is unsafe when called on a potentially empty list:
+it computes container_of() on the list head itself and returns a
+garbage pointer rather than NULL, so any NULL check on the result is
+dead code.
 
-Add a bounds check that rejects domain values outside the valid range.
-Free the just-allocated d_info before returning to avoid a memory leak.
+get_all_cpu_stats() and show_schedstat_data() call list_first_entry()
+on lists that are populated from user-controlled perf.data content,
+making them reachable via crafted input.  Replace every such call with
+list_first_entry_or_null() and add the corresponding NULL guards.
 
-Fixes: <process_cpu_domain_info>
+Fixes: <get_all_cpu_stats / show_schedstat_data>
 Signed-off-by: Wang Haoran <haoranwangsec@gmail.com>
 ---
- tools/perf/util/header.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/builtin-sched.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index f1a1831cf..6281e97ee 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3670,6 +3670,11 @@ static int process_cpu_domain_info(struct feat_fd *ff,=
- void *data __maybe_unused
- 			if (!d_info)
- 				return -1;
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index ab4c9ffa4..55391f0b1 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -4170,7 +4170,7 @@ static void summarize_schedstat_domain(struct schedstat=
+_domain *summary_domain,
+  */
+ static int get_all_cpu_stats(struct list_head *head)
+ {
+-	struct schedstat_cpu *cptr =3D list_first_entry(head, struct schedstat_cpu,=
+ cpu_list);
++	struct schedstat_cpu *cptr =3D list_first_entry_or_null(head, struct scheds=
+tat_cpu, cpu_list);
+ 	struct schedstat_cpu *summary_head =3D NULL;
+ 	struct perf_record_schedstat_domain *ds;
+ 	struct perf_record_schedstat_cpu *cs;
+@@ -4212,8 +4212,11 @@ static int get_all_cpu_stats(struct list_head *head)
 =20
-+			if (domain >=3D max_sched_domains) {
-+				free(d_info);
-+				return -1;
-+			}
-+
- 			assert(cd_map[cpu]->domains[domain] =3D=3D NULL);
- 			cd_map[cpu]->domains[domain] =3D d_info;
- 			d_info->domain =3D domain;
+ 		cnt++;
+ 		summarize_schedstat_cpu(summary_head, cptr, cnt, is_last);
+-		tdptr =3D list_first_entry(&summary_head->domain_head, struct schedstat_do=
+main,
+-					 domain_list);
++		tdptr =3D list_first_entry_or_null(&summary_head->domain_head,
++						 struct schedstat_domain,
++						 domain_list);
++		if (!tdptr)
++			break;
+=20
+ 		list_for_each_entry(dptr, &cptr->domain_head, domain_list) {
+ 			summarize_schedstat_domain(tdptr, dptr, cnt, is_last);
+@@ -4229,7 +4232,8 @@ static int show_schedstat_data(struct list_head *head1,=
+ struct cpu_domain_map **
+ 			       struct list_head *head2, struct cpu_domain_map **cd_map2,
+ 			       bool summary_only)
+ {
+-	struct schedstat_cpu *cptr1 =3D list_first_entry(head1, struct schedstat_cp=
+u, cpu_list);
++	struct schedstat_cpu *cptr1 =3D
++		list_first_entry_or_null(head1, struct schedstat_cpu, cpu_list);
+ 	struct perf_record_schedstat_domain *ds1 =3D NULL, *ds2 =3D NULL;
+ 	struct perf_record_schedstat_cpu *cs1 =3D NULL, *cs2 =3D NULL;
+ 	struct schedstat_domain *dptr1 =3D NULL, *dptr2 =3D NULL;
+@@ -4250,10 +4254,14 @@ static int show_schedstat_data(struct list_head *head=
+1, struct cpu_domain_map **
+ 	printf("\n");
+=20
+ 	printf("%-65s: ", "Time elapsed (in jiffies)");
++	if (!cptr1)
++		return -EINVAL;
+ 	jiffies1 =3D cptr1->cpu_data->timestamp;
+ 	printf("%11llu", jiffies1);
+ 	if (head2) {
+-		cptr2 =3D list_first_entry(head2, struct schedstat_cpu, cpu_list);
++		cptr2 =3D list_first_entry_or_null(head2, struct schedstat_cpu, cpu_list);
++		if (!cptr2)
++			return -EINVAL;
+ 		jiffies2 =3D cptr2->cpu_data->timestamp;
+ 		printf(",%11llu", jiffies2);
+ 	}
 --=20
 2.53.0
 
-
-
----
-ASan output on perf 7.0.6 (unpatched) with the attached PoC:
-
-AddressSanitizer:DEADLYSIGNAL
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=3D=3D55941=3D=3DERROR: AddressSanitizer: SEGV on unknown address 0x729c3fbe0=
-790 (pc 0x5e98934d9c97 bp 0x7ffd2f046790 sp 0x7ffd2f046650 T0)
-=3D=3D55941=3D=3DThe signal is caused by a WRITE memory access.
-    #0 0x5e98934d9c97 in process_cpu_domain_info (perf+0x610c97) (BuildId: 25=
-d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #1 0x5e98934c6698 in perf_file_section__process (perf+0x5fd698) (BuildId:=
- 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #2 0x5e98934e5992 in perf_header__process_sections (perf+0x61c992) (Build=
-Id: 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #3 0x5e98934e7437 in perf_session__read_header (perf+0x61e437) (BuildId: =
-25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #4 0x5e9893521e67 in __perf_session__new (perf+0x658e67) (BuildId: 25d667=
-fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #5 0x5e989320dedd in cmd_sched (perf+0x344edd) (BuildId: 25d667fa7a727404=
-6cb5bcb3375c4b1074f3f6db)
-    #6 0x5e989324c87f in handle_internal_command (perf+0x38387f) (BuildId: 25=
-d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #7 0x5e98930bf836 in main (perf+0x1f6836) (BuildId: 25d667fa7a7274046cb5b=
-cb3375c4b1074f3f6db)
-    #8 0x7669c0a2a600 in __libc_start_call_main ../sysdeps/nptl/libc_start_ca=
-ll_main.h:59
-    #9 0x7669c0a2a717 in __libc_start_main_impl ../csu/libc-start.c:360
-    #10 0x5e98930c7754 in _start (perf+0x1fe754) (BuildId: 25d667fa7a7274046c=
-b5bcb3375c4b1074f3f6db)
-
-=3D=3D55941=3D=3DRegister values:
-rax =3D 0x0000000050000000  rbx =3D 0x00007269be7f0a50  rcx =3D 0x00007289bfb=
-e0970  rdx =3D 0x0000000000000020 =20
-rdi =3D 0x0000729c3fbe0790  rsi =3D 0x00007299bfbe07c0  rbp =3D 0x00007ffd2f0=
-46790  rsp =3D 0x00007ffd2f046650 =20
- r8 =3D 0x00000e5137f7c137   r9 =3D 0x0000000000000000  r10 =3D 0x00000000000=
-000dc  r11 =3D 0x00007669c24acfec =20
-r12 =3D 0x00007269be7f0aa0  r13 =3D 0x0000000000000000  r14 =3D 0x00007299bfb=
-e07c0  r15 =3D 0x00007269be7f09b0 =20
-AddressSanitizer can not provide additional info.
-SUMMARY: AddressSanitizer: SEGV (perf+0x610c97) (BuildId: 25d667fa7a7274046cb=
-5bcb3375c4b1074f3f6db) in process_cpu_domain_info
-=3D=3D55941=3D=3DABORTING
-
---===============8701719228398729701==
-Content-Type: application/octet-stream
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="crash_sig11_iter2.data"
-MIME-Version: 1.0
-
-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
-Y0FNRCwyNSw4MCwwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADI
-YTQAAAAAAAEAAABAAAAAL2hvbWUvcGhyaXNtL0Rlc2t0b3AvbGludXgvdG9vbHMvcGVyZi9wZXJm
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAABAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAxAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAAAAw
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAQAAAADEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAEAAAAAwAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADEAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAgAAAAEAAAAAAAAAyGE0AAAAAADMRhEAAAAAAEAAAAAwLTEAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAABAAAA
-QAAAAEAAAAAIAAAAQAAAAERhdGEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMzJLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAEAAAABAAAAA
-CAAAAEAAAABJbnN0cnVjdGlvbgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAQAAAADMySwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAABAAAAAQAAAAAgAAABAAAAA
-RGF0YQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAEAAAAAzMksAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAQAAAADEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAQAAAAEAAAAAIAAAAQAAAAEluc3RydWN0
-aW9uAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA
-AAAAMzJLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAEAAAAAxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAAAAABAAACAAAAEAAAABVbmlmaWVkAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADUxMksA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AABAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAIAAABAAAAAAAQAAAgAAABAAAAAVW5pZmllZAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA1MTJLAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADEA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAADAAAAQAAAAABAAAAQAAAAQAAAAFVuaWZpZWQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMTYzODRLAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAA
-AEAAAAAAQAAAEAAAAEAAAABVbmlmaWVkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADE2Mzg0SwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMQAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA
-CAAAAAABAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAP///wD/AAAAEQAAAAEAAAAAAAAA
-AQAAAAAAAABAAAAAUEtHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAw
-MwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADAtMQAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAFBLRwAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AABAAAAAMDAwMDAwMDAsMDAwMDAwMDAsMDAwMDAwMDAsMDAwMDAwMDMAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAEAAAAAwLTEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
---===============8701719228398729701==--
