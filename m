@@ -1,162 +1,135 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A06F3D1718;
-	Fri, 29 May 2026 12:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB92E3E022B;
+	Fri, 29 May 2026 12:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780057468; cv=none; b=qRDTCfSynMZkg4NdHOiqSfG1XEHtDx8GpVwvauPqMnDVHky1gHHEbHzaoEIMaZst3hYBR9xq0RIVt2LVHocWEZWUfy1htgxX3+6/WPRouVH+cr7N08DXtYtzNBZUvvZVUyAHx3Ymxgtgvkyxfp+F76U+F04BrPJ8Bq/Mq8TK0m4=
+	t=1780057506; cv=none; b=kOiyF7YcVb8nDFQbOA6sqZyC6xCu7iybfFETLHGTzmn+f2xOpUciBBELxdmrqjoHXcew2W+rAS7KDieLB8xSnTxQammVYmOeL7rtFFdWQR5nB6TbhWqqlq9Cp2Qobj9dsnWkkwQ0zi/AT8jtM1NtyB8lAEbBAIHwZUUXlBngb7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780057468; c=relaxed/simple;
-	bh=fjbO4t8XdyU8NOb41mG4ChhG+m/bzPP3BywWNtdYqoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=btjAgdJXyV/tFlF5kTRjcBnxVl8x2i0VKcfxQZncA2vlEIfD5E53s4OM9OZNzuATqLSHgY9RahokqelZKunFJL8YabHf+a2gW9dmCvoYttxsJAt4FmZtE1w+LLiy4DrY8OCTn4ghCLSwjB0hnO3fuAvZptwOp+kvWzK18bw3CFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=aPrsjUKC; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1780057506; c=relaxed/simple;
+	bh=N2PakYI96VQg8KYhYYVU1+Th7zmL4F2SwO1LRfnOR1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DCDwsg59nvRb7DgG71QGL82X6OaZ00J226bOVG8pdwi0Z/f4UESGcgppf3FDO8iT9FKbfcrt6MA/vQhT6uxCW/OE80C4JxgBORxlweiB/X4ULAQPAS33mcrUtlYMethkzmXDQqsU3Q2/+KfEFd1Wakudm5lspXs+Ivji5erHW0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGN+bjr/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="aPrsjUKC"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45FEC204C;
-	Fri, 29 May 2026 05:24:20 -0700 (PDT)
-Received: from [10.57.37.50] (unknown [10.57.37.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16BE13F632;
-	Fri, 29 May 2026 05:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780057465; bh=fjbO4t8XdyU8NOb41mG4ChhG+m/bzPP3BywWNtdYqoA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aPrsjUKCk50s149VeWZk4F2Llmjdo90qP4DWtdM9ATKguxbUU6gRebVq07f2uJFK0
-	 YVnIN2oOqMRDRFm11YWBgDWM/xTptKipB8Q9REDRnovKPHG2ooZaALp7Zti/C2KUQ+
-	 b4qPfWs6v4eF/TgyfabaRYMbwAxOu8OUsO69761s=
-Message-ID: <3a4e22fe-b8ce-4e62-9139-113e0cd4f16b@arm.com>
-Date: Fri, 29 May 2026 13:24:02 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGN+bjr/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E4F1F00893;
+	Fri, 29 May 2026 12:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780057504;
+	bh=m9mUR3le714/u85AzSSz58yESU35XgeJg3ZdaUmZzHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RGN+bjr/xi+tEF3u/E8jfeaAu6RX9plSn26pB7KNarSOqmHCKo4XAsmb42PzEk5xd
+	 eEy8sWCkSA1B/a8iqO9ryA1m6xfZ0TwVQ+aCkmvT/FInXahdbpDJYqxxWwMgwFNPBZ
+	 gTKBqTy23dMsOIR3VqS4VQVa2lnAFM7ZlCRKHh9aTFJEnupUXyvz+fo70drbM8BqQj
+	 ne2rQUATZlQSfQn1gLlZJh9zOsAfHHsWD7N5y8EmlffLhd6OfmX2/i93olI3hIe/d3
+	 TD8f6RlugzGIA8PdM1fg0U2GJS96RwbqkPXYNSmb+PoXc01ammyehnCdbSOcVv9J9Y
+	 DwYsyavjTAOdw==
+Date: Fri, 29 May 2026 09:25:01 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf test: Make leafloop workload immune to compiler
+ options
+Message-ID: <ahmFnY9zT5hRGbAs@x1>
+References: <20260511-james-perf-leafloop-stack-v2-1-79f7383f545e@linaro.org>
+ <CAP-5=fXtzHw2c_Er0WPpfFo1cfng46VXKvShb+kbdnSoxL1rmw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/16] psci: simplify hotplug_tests()
-To: Yury Norov <ynorov@nvidia.com>, Andrew Morton
- <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>,
- Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham
- <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
- Heiko Stuebner <heiko@sntech.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
- Moritz Fischer <mdf@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jic23@kernel.org>,
- Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Dan Williams <djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
- Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Shuai Xue <xueshuai@linux.alibaba.com>,
- Will Deacon <will@kernel.org>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Jing Zhang <renyu.zj@linux.alibaba.com>, Xu Yang <xu.yang_2@nxp.com>,
- Linu Cherian <lcherian@marvell.com>,
- Gowthami Thiagarajan <gthiagarajan@marvell.com>,
- Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
- Khuong Dinh <khuong@os.amperecomputing.com>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Yury Norov <yury.norov@gmail.com>,
- Kees Cook <kees@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>,
- "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
- Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
- Chengwen Feng <fengchengwen@huawei.com>,
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-perf-users@vger.kernel.org, linux-acpi@vger.kernel.org,
- driver-core@lists.linux.dev, linux-pm@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org,
- linux-rdma@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
- linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20260528183625.870813-1-ynorov@nvidia.com>
- <20260528183625.870813-2-ynorov@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260528183625.870813-2-ynorov@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXtzHw2c_Er0WPpfFo1cfng46VXKvShb+kbdnSoxL1rmw@mail.gmail.com>
 
-On 2026-05-28 7:36 pm, Yury Norov wrote:
-> Switch to pr_info("... %pbl"), and drop the temporary buffer allocation.
-
-I would say this is simply an improvement in its own right, regardless 
-of whether cpumap_print_to_pagebuf() deserves to be removed or not. For 
-the change itself, FWIW,
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> This prepares for removing cpumap_print_to_pagebuf().
+On Mon, May 11, 2026 at 08:38:48AM -0700, Ian Rogers wrote:
+> On Mon, May 11, 2026 at 2:19 AM James Clark <james.clark@linaro.org> wrote:
+> >
+> > Since the leafloop test program was moved into the main Perf binary as a
+> > workload, it inherited the same compiler options as Perf. In this case
+> > the -fstack-protector option broke the assumption that simple leaf
+> > frames don't have a stack frame on Arm. This causes
+> > test_arm_callgraph_fp.sh to pass even if the stack isn't augmented with
+> > the link register, making the test useless.
+> >
+> > Fix it by rewriting the leaf function in assembly seeing as it's so
+> > simple. Adding -fno-stack-protector would also work, but wouldn't be
+> > robust against other future compiler option additions.
+> >
+> > The local variables and 'a' variable were never needed so remove them to
+> > simplify.
+> >
+> > Assisted-by: GitHub-Copilot:GPT-5.5
+> > Signed-off-by: James Clark <james.clark@linaro.org>
+> > ---
+> > Changes in v2:
+> > - Push and pop asm sections - (Sashiko)
+> > - Add .size directive - (Sashiko)
+> > - Add asm label for done and test with LTO enabled - (Sashiko)
+> > - Link to v1: https://lore.kernel.org/r/20260508-james-perf-leafloop-stack-v1-1-637c260b2da8@linaro.org
+> > ---
+> >  tools/perf/tests/workloads/leafloop.c | 40 +++++++++++++++++++++++++++--------
+> >  1 file changed, 31 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
+> > index f7561767e32c..c20c75f7ba49 100644
+> > --- a/tools/perf/tests/workloads/leafloop.c
+> > +++ b/tools/perf/tests/workloads/leafloop.c
+> > @@ -6,26 +6,48 @@
+> >  #include "../tests.h"
+> >
+> >  /* We want to check these symbols in perf script */
+> > -noinline void leaf(volatile int b);
+> > -noinline void parent(volatile int b);
+> > +noinline void leaf(void);
+> > +noinline void parent(void);
+> >
+> > -static volatile int a;
+> > -static volatile sig_atomic_t done;
+> > +static volatile sig_atomic_t done asm("leafloop_done");
+> >
+> >  static void sighandler(int sig __maybe_unused)
+> >  {
+> >         done = 1;
+> >  }
+> >
+> > -noinline void leaf(volatile int b)
+> > +#if defined(__aarch64__)
+> > +/*
+> > + * Write leaf() in assembly so it stays as a minimal leaf function with no
+> > + * stack frame and won't get silently broken in the future by any Perf wide
+> > + * compilation options like -fstack-protector-all.
+> > + */
+> > +asm(
+> > +       ".pushsection .text,\"ax\",%progbits\n"
+> > +       ".global leaf\n"
+> > +       ".type leaf, %function\n"
+> > +       "leaf:\n"
+> > +       "       adrp    x1, leafloop_done\n"
+> > +       "       ldr     w2, [x1, #:lo12:leafloop_done]\n"
+> > +       "       cbz     w2, leaf\n"
+> > +       "       ret\n"
+> > +       ".size leaf, .-leaf\n"
+> > +       ".popsection\n"
+> > +);
 > 
-> Signed-off-by: Yury Norov <ynorov@nvidia.com>
-> ---
->   drivers/firmware/psci/psci_checker.c | 14 ++------------
->   1 file changed, 2 insertions(+), 12 deletions(-)
+> On reading this I thought, why can't we just use an asm block in a
+> function, but I get it, you want specific function entry/exit to test
+> the leaf unwinding feature.
 > 
-> diff --git a/drivers/firmware/psci/psci_checker.c b/drivers/firmware/psci/psci_checker.c
-> index e67ba9891082..ecd745bb90bf 100644
-> --- a/drivers/firmware/psci/psci_checker.c
-> +++ b/drivers/firmware/psci/psci_checker.c
-> @@ -186,7 +186,6 @@ static int hotplug_tests(void)
->   {
->   	int i, nb_cpu_group, err = -ENOMEM;
->   	cpumask_var_t offlined_cpus, *cpu_groups;
-> -	char *page_buf;
->   
->   	if (!alloc_cpumask_var(&offlined_cpus, GFP_KERNEL))
->   		return err;
-> @@ -194,10 +193,6 @@ static int hotplug_tests(void)
->   	nb_cpu_group = alloc_init_cpu_groups(&cpu_groups);
->   	if (nb_cpu_group < 0)
->   		goto out_free_cpus;
-> -	page_buf = (char *)__get_free_page(GFP_KERNEL);
-> -	if (!page_buf)
-> -		goto out_free_cpu_groups;
-> -
->   	/*
->   	 * Of course the last CPU cannot be powered down and cpu_down() should
->   	 * refuse doing that.
-> @@ -210,16 +205,11 @@ static int hotplug_tests(void)
->   	 * off, the cpu group itself should shut down.
->   	 */
->   	for (i = 0; i < nb_cpu_group; ++i) {
-> -		ssize_t len = cpumap_print_to_pagebuf(true, page_buf,
-> -						      cpu_groups[i]);
-> -		/* Remove trailing newline. */
-> -		page_buf[len - 1] = '\0';
-> -		pr_info("Trying to turn off and on again group %d (CPUs %s)\n",
-> -			i, page_buf);
-> +		pr_info("Trying to turn off and on again group %d (CPUs %*pbl)\n",
-> +			i, cpumask_pr_args(cpu_groups[i]));
->   		err += down_and_up_cpus(cpu_groups[i], offlined_cpus);
->   	}
->   
-> -	free_page((unsigned long)page_buf);
->   out_free_cpu_groups:
->   	free_cpu_groups(nb_cpu_group, &cpu_groups);
->   out_free_cpus:
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
+Thanks, applied to perf-tools-next, for v7.2.
+
+- Arnaldo
