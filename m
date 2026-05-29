@@ -1,71 +1,72 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5A3AB5B2
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 06:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB4D3AB47B
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 06:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780037426; cv=none; b=nErpOBhmxR1w+RnqJrCu0MQJ0cpwRb4xWyc9mtqlIt0MoVPnbM5CEkLiI/P+/Yf+wDo00m8d+4g1xq+ywCYBiDTaCYvlhdkM1yIfBLk8ql57Of8RgrA3UGm0J+mK6dLvLNvzajJkhMPLg9Rswy+IU481bkgukYjtl9dfz7XyBxk=
+	t=1780037433; cv=none; b=iysq9JJfdUmE5JrLBnAODDhheU/d22i7WZmRA6WOnSoF9J0XvIjpUvyMo2PSEzeKknWZy/XCRXUxyK3Z82XR45mgb5ujqb5/kkG4GpkRV4H/gfUn5LAz0rlV4WNUOiXl2KFbzB+oxqnvb8vx7FBvCgExDzW8gpqBa01pjUvG2qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780037426; c=relaxed/simple;
-	bh=wKoADwIx3XBQeFkwJasifejVKolS7XjXeFd/igZgkkY=;
+	s=arc-20240116; t=1780037433; c=relaxed/simple;
+	bh=Tku9P8eqLmHh9JLkHpXSR1LrG93knR6H+ckCcKNpQi0=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n/A30wxuAgQYVF4blvL/wwvhqRXpEg3/3RgB7wXBU5TQSl7HH+hIpXoiB7nF+bA4MWdlzrkBdQvTVmbmx1fXZ+pEwCwFkrIWaSYu6ZbR0/71L8V4hlWvwmKgZgelw8o6A9xtJciAkQs2JF6Sw3RT6WkTeEQsuR9NxA+m1xzyNZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jIvMt11h; arc=none smtp.client-ip=209.85.216.43
+	 MIME-Version:Content-Type; b=TcYiqfjMp+NZz90uN+H3OrJ1dwdOFondm9OBIevoLNI8xG/gSgOxEbXnWboqaNJURvQtt+KxZvBzZ69M4On8RoC3g9dE1Hkmyd4OoN5l2jk1YfEJRqRsnKASfkrCrKfx/bInu2C2/YN1OCYOVulZCymLxp8N55KLSrOh5MLmlJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJvmvjtc; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIvMt11h"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-36bcbd7821fso91976a91.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 23:50:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJvmvjtc"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-36ad15213fbso3143445a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 23:50:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780037421; x=1780642221; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780037432; x=1780642232; darn=vger.kernel.org;
         h=mime-version:references:in-reply-to:message-id:date:cc:to:from
          :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=+OBzLI/XrsBIlLjY2T9FRHc7sS3cebW3Ke1v2nfS0Ww=;
-        b=jIvMt11h95Ox2deCXboX/UDRp4wjEDi51M5JIDOXpgg8lwoWM2YBs4dPcBROWDWpxQ
-         3x6aoQ62zLfkslS72zzrrPMjjUS/lpeSvMYkuIeahYupf9XkChS5WJe5N81pXBgEaWjc
-         6hdZkhnj36E/tMQAnxcrfGSkaa1tyARZ9QSCL0yb+dRid1gt7PJlq3BbAlBoP2f/i1Vt
-         5AernnH1bTM0y4rnCTRCgH+ncCOJ5m2mdTy9T0cWvZQddS0U/WNuL27wJxjhYQekLp1s
-         VHXOpOpL/UaEs4q786Lz4CpHTZDFtwLUvL9IFVUz6asNpxCl74LGDLVCHuLS9h5hSPth
-         BFOg==
+        bh=AuInCdR1LF34daPdYAnVt51MB+bFgCkH2SN8cZ5MttE=;
+        b=QJvmvjtc66D3LPsqXFHUpBN7ukvO5Itn9/4TBUkHpdBJKOqEoKVhzLAgaqqZhIpcqs
+         WmnRjrubsTy7Pl+zvApFLEaasilE8kJaJBnfdP3OKH0FWvCiGwFG2utuqVm+uSkWlG9u
+         woP31LQzhkol0Mijy/Eb8urAh6O6bnJH7KR/W6icekDtoIHUJpWyFbXzbIKf41vKPnBz
+         3oNxM5G3K5KoLSGv2HfSQCjMyGw6PN1ZAG0F2qas5UlyJb4zCyKIPw/3Hgd4H4MuI/Cu
+         4Q8BgC2M7rTfO6ma9dr5GFt0fnWy9CHrYPFrYexe6wNh1RIOceeiD1+IyITcz30hpv6g
+         /ZUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780037421; x=1780642221;
+        d=1e100.net; s=20251104; t=1780037432; x=1780642232;
         h=mime-version:references:in-reply-to:message-id:date:cc:to:from
          :subject:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+OBzLI/XrsBIlLjY2T9FRHc7sS3cebW3Ke1v2nfS0Ww=;
-        b=blADANYQAM276dQKV6tJ3tKklXsD1fNnYx2txnOvrbzUo8M2hGWSMSHjxUdCfFj64x
-         3RypSzEI8ROcQob08RQdQzRS9IyKhD+9jDxxlo4wzeSpGACskShA58ewcwL0Csf0j7+y
-         rDCNXo25Rety9XjTvqzMbJqlcybuyBRAu6+UsrSJzRkxlWHYC7mJjX1L+I38xxkdD9ra
-         xtpYza+8SR93Rr7fBt1K3bLo9IpCFNrUj8mxfIWzlc68OyKFWst5TPg9YJXg/Y74rKUv
-         Caxq7fi6F2PYplk77N2oxnM9xuntcauor0V9HE9ez/Ho45D2FmUNEXwNv9MJt1QgV3NL
-         oxWQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+tkBSBJIpHY+b9T7KbV5tb4Jhufad+5Wvg2bbsEID0gHtFbVpMOmIvEfVuawfhdmAVK4SQL2U2hKP+Sjwr/E2E@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI/fQOCGlmWqOM+/ini2wb9TYj9mZPs7J4cTDFgHDkmCzwtuiI
-	V08JkASNcyiKzefLFWL1o9JEBkYCKLFs9eqtt6/o/2yvS5+OJqgw/iNuxBVMpSjntTs3tg==
-X-Gm-Gg: Acq92OHMYkuS5yAMOiXqn4wz0qZCM/S5drdhaivcMtvP0GOU2dW4jjW8rvhNVqtsnC7
-	7/6ykmbK3YzTNTdPIQja+uHA4ZRd+WjcMR0zR7ST4OM2I5lnNubuz79KALjY+jFq1DtXouyixV9
-	QQAotE/BpI83N/0A8xeZPli5bdwkAIfTb753SVea6aF1kVboUtW0VoTDt8adZJ/cmGLXDHvfv3k
-	omJbFRKAqvIjl+cKudwxpGe93ORvA29pNEHIbX3NVVMaMX9bgiAXs8tHRkgOkcaCSYnNeqOEY4p
-	1RJx0PTyqwo6zgfqXyUSbHjJdNjJhWH5aTlOw+5SkTV192NlI0Mrm2cvAXoxiPwOJ/keMeDBlnG
-	jif3l3Leo8RLXsOk69UTjrurUG2+c5Ni5x8O/ybo3GrxszprUe1NTnQRNgPL65FhfHUoAZvycE2
-	+6ETh05zX2558D54cbuW7zLZVjENO9dIiTDoHpcw==
-X-Received: by 2002:a17:90a:d00b:b0:368:3854:3a2e with SMTP id 98e67ed59e1d1-36bbceb5f81mr1987769a91.26.1780037421065;
-        Thu, 28 May 2026 23:50:21 -0700 (PDT)
+        bh=AuInCdR1LF34daPdYAnVt51MB+bFgCkH2SN8cZ5MttE=;
+        b=DZ7rbco05kjPbSimxlOyEi7a1Uo9JzRwl8iYW13IH18wJ7HrUGWLkrHGKwegRNDIzF
+         yxHkDvjOK3/FSxEYIH8nB0q6mcunqDcMhj8g9Sr6BVEA0jRTiBwsTMNacFVGb5hM81Mz
+         e3un4tExY2s4qGPOJphJcJdvQPM9HqbsSDDdFIZV2gzlLKFxT02mD8uKocQ/WxQv7ilW
+         iJrYVIx4jR9SqgmR87mRJ476HpHeZm4Tg/HkK9ml8EWx5Ri1WPN1ch4md/cRQGfJxiR9
+         c0jKPdlcIohEy9Grr+3KNaCCUP/YYpshqVcttwcbbOkBU/UUGUk5+UjZ9Rgx1GH3qtM9
+         tqHw==
+X-Forwarded-Encrypted: i=1; AFNElJ86irOeiNmAds00nz6xCXKF6bRaRx5Kda3IaZtn5CFVzU4lAvNi2NYCIYssiJuwAGT/ZDmd87mvdcibHXN8xsbL@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxaWgWa8135OKzdl0VPTIjS+861IZLxgFtMNuOWaO3ZPbeL+pT
+	IdARoovXjjHL/iWv118iDMu7qIJtdTM+LblV7NGwuwGKFxsuJSvolE8z
+X-Gm-Gg: Acq92OG9RmCfYeS7HwpHv/9TqGnT54DqEx/lvWPn1iGfRzXwGnlj/J4sUYt3ycyfjin
+	TqTWCC3ErnJEDtjjaIBMiMSEh38jQuFCd74YIs4uAGJPtE6y/Vsp4P1Dm6dyoUJTHTIqA5osrDK
+	140WZhGL1TPeCaARAdUTbNP3vxv0V8Q0jwMSEIq9Wei2ycQzcmFis0HyIheqtUoi1koXvQiu/AU
+	vrJkFqK+nxh1qmnhCQJoSUNR72NVY1lRUTrNRPWyQYp4Y48AO8WCgO9y01brMoFvACHsaWOs0so
+	TvgiY3D0ixHK3lKZsWSnqc03xV6mZT9Zlsea3c7ya0yJJJoJ9u0jiTj73PrNcWiVL3NErAKnUph
+	mG0n4xvTYDPWAVliMpyFSET58/5ByS1rBS/t37GPT8LTErYepsQykhyWDdI+kNt0O8NfRhvh/qJ
+	Tt0av/mZ7FDBOEAYuWtyzbjqN/kG0kEERFi3RqZw==
+X-Received: by 2002:a17:90b:1dd1:b0:36b:9e24:c692 with SMTP id 98e67ed59e1d1-36bbcfe6f4fmr1941131a91.20.1780037431532;
+        Thu, 28 May 2026 23:50:31 -0700 (PDT)
 Received: from [127.0.1.1] ([104.28.157.202])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36bc0c1ab21sm952626a91.14.2026.05.28.23.50.14
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36bc0c1ab21sm952626a91.14.2026.05.28.23.50.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 23:50:20 -0700 (PDT)
-Subject: [PATCH 3/6] perf/header: reject data offset beyond file size
+        Thu, 28 May 2026 23:50:31 -0700 (PDT)
+Subject: [PATCH 4/6] perf/header: add bounds check for domain index in
+ process_cpu_domain_info
 From: Wang Haoran <haoranwangsec@gmail.com>
 To: acme@kernel.org
 Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
  mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  haoranwangsec@gmail.com
-Date: Fri, 29 May 2026 14:50:13 +0800
-Message-ID: <178003741374.62097.136470109571301341@gmail.com>
+Date: Fri, 29 May 2026 14:50:22 +0800
+Message-ID: <178003742265.62097.6645230837884864368@gmail.com>
 In-Reply-To: <178003738371.62097.10360938456907564684@gmail.com>
 References: <178003738371.62097.10360938456907564684@gmail.com>
 Precedence: bulk
@@ -74,52 +75,49 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5064275133724409396=="
+Content-Type: multipart/mixed; boundary="===============8701719228398729701=="
 
---===============5064275133724409396==
+--===============8701719228398729701==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
->From cc2ff328f62f766f74de038347d88ee2dc75f78d Mon Sep 17 00:00:00 2001
+>From 6558dce0d11d81872d73655bc8290cfb1dc499b2 Mon Sep 17 00:00:00 2001
 From: Wang Haoran <haoranwangsec@gmail.com>
-Date: Thu, 28 May 2026 15:17:07 +0800
-Subject: [PATCH 3/6] perf/header: reject data offset beyond file size
+Date: Thu, 28 May 2026 15:17:21 +0800
+Subject: [PATCH 4/6] perf/header: add bounds check for domain index in
+ process_cpu_domain_info
 
-A crafted perf.data file can set data.offset to a value larger than
-the actual file size.  perf then calls mmap() with that file offset,
-which succeeds but maps a region entirely past the end of the file.
-Any subsequent access to the mapped memory triggers SIGBUS.
+process_cpu_domain_info() reads a domain index from the file and uses
+it directly as an array index into cd_map[cpu]->domains[], which has
+max_sched_domains entries.  A crafted file can supply a domain value
+>=3D max_sched_domains, causing an out-of-bounds write.
 
-Add a fstat() check in perf_file_header__read() that rejects files
-whose claimed data.offset exceeds the real file size.
+Add a bounds check that rejects domain values outside the valid range.
+Free the just-allocated d_info before returning to avoid a memory leak.
 
-Fixes: <perf_file_header__read>
+Fixes: <process_cpu_domain_info>
 Signed-off-by: Wang Haoran <haoranwangsec@gmail.com>
 ---
- tools/perf/util/header.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/util/header.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e000eb9c1..f1a1831cf 100644
+index f1a1831cf..6281e97ee 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -4335,6 +4335,15 @@ int perf_file_header__read(struct perf_file_header *he=
-ader,
- 		return -1;
- 	}
+@@ -3670,6 +3670,11 @@ static int process_cpu_domain_info(struct feat_fd *ff,=
+ void *data __maybe_unused
+ 			if (!d_info)
+ 				return -1;
 =20
-+	{
-+		struct stat st;
++			if (domain >=3D max_sched_domains) {
++				free(d_info);
++				return -1;
++			}
 +
-+		if (fstat(fd, &st) =3D=3D 0 && header->data.offset > (u64)st.st_size) {
-+			pr_err("Perf file header corrupt: data offset beyond file size\n");
-+			return -1;
-+		}
-+	}
-+
- 	if (header->size !=3D sizeof(*header)) {
- 		/* Support the previous format */
- 		if (header->size =3D=3D offsetof(typeof(*header), adds_features))
+ 			assert(cd_map[cpu]->domains[domain] =3D=3D NULL);
+ 			cd_map[cpu]->domains[domain] =3D d_info;
+ 			d_info->domain =3D domain;
 --=20
 2.53.0
 
@@ -132,49 +130,52 @@ AddressSanitizer:DEADLYSIGNAL
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=3D=3D55933=3D=3DERROR: AddressSanitizer: BUS on unknown address (pc 0x5d3506=
-9296b4 bp 0x7fffd2df9100 sp 0x7fffd2df90a0 T0)
-=3D=3D55933=3D=3DThe signal is caused by a READ memory access.
-=3D=3D55933=3D=3DHint: this fault was caused by a dereference of a high value=
- address (see register values below).  Disassemble the provided pc to learn w=
-hich register was used.
-    #0 0x5d35069296b4 in reader__read_event (perf+0x65e6b4) (BuildId: 25d667f=
-a7a7274046cb5bcb3375c4b1074f3f6db)
-    #1 0x5d350692a21d in perf_session__process_events (perf+0x65f21d) (BuildI=
-d: 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #2 0x5d350660ff97 in cmd_sched (perf+0x344f97) (BuildId: 25d667fa7a727404=
-6cb5bcb3375c4b1074f3f6db)
-    #3 0x5d350664e87f in handle_internal_command (perf+0x38387f) (BuildId: 25=
+=3D=3D55941=3D=3DERROR: AddressSanitizer: SEGV on unknown address 0x729c3fbe0=
+790 (pc 0x5e98934d9c97 bp 0x7ffd2f046790 sp 0x7ffd2f046650 T0)
+=3D=3D55941=3D=3DThe signal is caused by a WRITE memory access.
+    #0 0x5e98934d9c97 in process_cpu_domain_info (perf+0x610c97) (BuildId: 25=
 d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #4 0x5d35064c1836 in main (perf+0x1f6836) (BuildId: 25d667fa7a7274046cb5b=
+    #1 0x5e98934c6698 in perf_file_section__process (perf+0x5fd698) (BuildId:=
+ 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
+    #2 0x5e98934e5992 in perf_header__process_sections (perf+0x61c992) (Build=
+Id: 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
+    #3 0x5e98934e7437 in perf_session__read_header (perf+0x61e437) (BuildId: =
+25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
+    #4 0x5e9893521e67 in __perf_session__new (perf+0x658e67) (BuildId: 25d667=
+fa7a7274046cb5bcb3375c4b1074f3f6db)
+    #5 0x5e989320dedd in cmd_sched (perf+0x344edd) (BuildId: 25d667fa7a727404=
+6cb5bcb3375c4b1074f3f6db)
+    #6 0x5e989324c87f in handle_internal_command (perf+0x38387f) (BuildId: 25=
+d667fa7a7274046cb5bcb3375c4b1074f3f6db)
+    #7 0x5e98930bf836 in main (perf+0x1f6836) (BuildId: 25d667fa7a7274046cb5b=
 cb3375c4b1074f3f6db)
-    #5 0x7f111f42a600 in __libc_start_call_main ../sysdeps/nptl/libc_start_ca=
+    #8 0x7669c0a2a600 in __libc_start_call_main ../sysdeps/nptl/libc_start_ca=
 ll_main.h:59
-    #6 0x7f111f42a717 in __libc_start_main_impl ../csu/libc-start.c:360
-    #7 0x5d35064c9754 in _start (perf+0x1fe754) (BuildId: 25d667fa7a7274046cb=
-5bcb3375c4b1074f3f6db)
+    #9 0x7669c0a2a717 in __libc_start_main_impl ../csu/libc-start.c:360
+    #10 0x5e98930c7754 in _start (perf+0x1fe754) (BuildId: 25d667fa7a7274046c=
+b5bcb3375c4b1074f3f6db)
 
-=3D=3D55933=3D=3DRegister values:
-rax =3D 0x0000000000000007  rbx =3D 0x00007b111d54bd90  rcx =3D 0x00000000000=
-00001  rdx =3D 0x0000000000000000 =20
-rdi =3D 0x00007b111d54bdd8  rsi =3D 0x00007ce11e5e0080  rbp =3D 0x00007fffd2d=
-f9100  rsp =3D 0x00007fffd2df90a0 =20
- r8 =3D 0x0000000000000f68   r9 =3D 0x0000000000000000  r10 =3D 0x00007ce11e5=
-e0080  r11 =3D 0x0000000000000246 =20
-r12 =3D 0x00007f111ebb7f68  r13 =3D 0x00000000000103c8  r14 =3D 0x00007f111eb=
-b7f6e  r15 =3D 0x00007ce11e5e0080 =20
+=3D=3D55941=3D=3DRegister values:
+rax =3D 0x0000000050000000  rbx =3D 0x00007269be7f0a50  rcx =3D 0x00007289bfb=
+e0970  rdx =3D 0x0000000000000020 =20
+rdi =3D 0x0000729c3fbe0790  rsi =3D 0x00007299bfbe07c0  rbp =3D 0x00007ffd2f0=
+46790  rsp =3D 0x00007ffd2f046650 =20
+ r8 =3D 0x00000e5137f7c137   r9 =3D 0x0000000000000000  r10 =3D 0x00000000000=
+000dc  r11 =3D 0x00007669c24acfec =20
+r12 =3D 0x00007269be7f0aa0  r13 =3D 0x0000000000000000  r14 =3D 0x00007299bfb=
+e07c0  r15 =3D 0x00007269be7f09b0 =20
 AddressSanitizer can not provide additional info.
-SUMMARY: AddressSanitizer: BUS (perf+0x65e6b4) (BuildId: 25d667fa7a7274046cb5=
-bcb3375c4b1074f3f6db) in reader__read_event
-=3D=3D55933=3D=3DABORTING
+SUMMARY: AddressSanitizer: SEGV (perf+0x610c97) (BuildId: 25d667fa7a7274046cb=
+5bcb3375c4b1074f3f6db) in process_cpu_domain_info
+=3D=3D55941=3D=3DABORTING
 
---===============5064275133724409396==
+--===============8701719228398729701==
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="crash_sig7_iter210.data"
+Content-Disposition: attachment; filename="crash_sig11_iter2.data"
 MIME-Version: 1.0
 
-UEVSRklMRTJoAAAAAAAAAKAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAAGj/AAAAAAAAYAQAAAAAAAAA
+UEVSRklMRTJoAAAAAAAAAKAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAAGgAAAAAAAAAYAQAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAA+G9QAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVAAAAAABIAPR5
 ZAABAAAAAAAAABEAAACbGAAAAAAAABgpDQDjGAQA2I0GAJAkBQCRZKWOlQAAAIZL/v5FAAAAerYk
 AAAAAABWAAAAAADQAPR5ZAABAAAAAAAAABEAAAB+DgAA1g0AAFsAAADyLAMA3TwAAAAAAAAAAAAA
@@ -253,10 +254,10 @@ CAAAAAABAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAP///wD/AAAAEQAAAAEAAAAAAAAA
 AQAAAAAAAABAAAAAUEtHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAw
 MwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADAtMQAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAABAAAAA
-UEtHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAEAAAAAwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMwAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAQAAAADAtMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAFBLRwAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AABAAAAAMDAwMDAwMDAsMDAwMDAwMDAsMDAwMDAwMDAsMDAwMDAwMDMAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAEAAAAAwLTEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
---===============5064275133724409396==--
+--===============8701719228398729701==--
