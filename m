@@ -1,48 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662B03BD64C;
-	Fri, 29 May 2026 08:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1D03B635A;
+	Fri, 29 May 2026 08:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780041876; cv=none; b=ljJxCWAsWmNMwDsnp5wGL/Y/zzc76gLIkeHS/Ix80mu4g5azQC7pSw9babASHrguUCKengW459MDdJd2oFF9F9hZWYxvC6x9iO8+tHaYPj5gmhjRvd6pr41e+kOhFA9qKCGNEhMBNC2pA4GQXbkXzaw48oAkm99MP0bF5zNLiMA=
+	t=1780043419; cv=none; b=HHum699xLDu9OmN3PuTpEcfdmTeaqNTukcwq5DV4WGfmlQcMLja11lA2sg1RJZRwF9KkH9z0H8QZrINaDM30WRpUFfHm2/UGjQWgH0QTul4j2BWV5C7o8hYCwL+He6e3woFfkPHDn9QTNfGtTy51AAJ+WU867ZpJ6ZMZqfw+iXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780041876; c=relaxed/simple;
-	bh=ejHAjMXmlgnoWHSKQWwwp11JhfD8ttmuEBIljZim/xc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=djTMAsNJ59zz0pABejE679hRhZTVH4zOMfZPUjGEQ6C4zz20mMfP/5Wd9tiwh+gOfrnxjN7ymZzlyHn3wtWOZNf08BZlAMJ9ocMTPfbNy+hfGlu3eysXeIf9GJ13H68yN7jGT+yIcM+AFP1qKbjN6tZXMWJhinL5PTQ00BuiiOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jC+/PK5W; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1780043419; c=relaxed/simple;
+	bh=ds7PgcE/5xf54LWyKZi47Zso7X5MaKGnDbPU3TZ4H4s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gGaJ2voFPrQchpPIY0Dd0Zibnr/pQwShIujgdhcCN8XD15DS23nyEwEjox5+LtUoZgRad8dLDZM/jI4OKYyCMmp78vzboARO425CjOHkYsoov8TF7m+q8fQjBbU8doicJwqLqVDphKWHTlw0Nt2VaQVVDd6CtEMLyl2llcltrxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5wpRgA5; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jC+/PK5W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5wpRgA5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780041874; x=1811577874;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ejHAjMXmlgnoWHSKQWwwp11JhfD8ttmuEBIljZim/xc=;
-  b=jC+/PK5WRgISHkFJzHPP6UDAFdZrkmsDhi77OOjJGnEglyuRMtI6IyeF
-   GFT1M/oKI26DUDu8wXRikAG+1FQvdNxMRXF7b7Czuqw4BNOwhEsZ0JUZy
-   Ix+1C7Vg7Z07uJHZTNvZgWBkj5S4i5H7ic7It8P6jBfAVxcGNO39q5f3A
-   QPuNl6CVEPOPIh3LmNaD4L/6TVDCjtVC3gAwvc6C2U61DEiLbCYS5TmnR
-   e0LKxfdKkPAdyYKgneW8zZov7zZmxW4meI8Gda1ZF/JvaIVezFmJTZYfU
-   lZbKQJ9UNHuO/mE0ZFJ/UD3qcWXFONZacj9CeeWNhidr7W805y86Q4dIv
-   A==;
-X-CSE-ConnectionGUID: aA96FwAoQdaf74Ha4LEfvQ==
-X-CSE-MsgGUID: 1zfv8Gq3QdmiVvCKg52XlA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106342271"
+  t=1780043415; x=1811579415;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ds7PgcE/5xf54LWyKZi47Zso7X5MaKGnDbPU3TZ4H4s=;
+  b=k5wpRgA5hOCDI7LPhJHK8px66z1po1dGaa+jAVmmN1TxR2xNh0TbPfeJ
+   XKbC20JBUgcTaoNWvUK5GguZv8+H6ZbsPQavsUx4axpxFF/lwdWv4eIw2
+   bV47wwei/88t0SEbE66tYQKf53HY1xJmY69SVkASK0RCqnIkXeI9ZEZye
+   Bcd0dsyxqcyx0/280SSUtpu6OlJiWshIwQOJt0Pc5ExEsOyPNybZeCar0
+   bnMaqh42q7dUqWiRHYvx1xaFzocCzIzx/T5lJUGjlualKUA0qPYuhGytu
+   NVYutMEozrOsBKMaw+/ERjMceNRpTrNcnxKTDv5gvKOoPyi4ZdraDzMEl
+   g==;
+X-CSE-ConnectionGUID: QfNTvxTyTr+735KbK08YOg==
+X-CSE-MsgGUID: FSNUhCMmQ2G/KRD6z8EY9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="81076310"
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="106342271"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:04:34 -0700
-X-CSE-ConnectionGUID: hjHTdM+eTf6PL95phwVvpg==
-X-CSE-MsgGUID: CFjwm1agQeawR70ntITtdA==
+   d="scan'208";a="81076310"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:30:14 -0700
+X-CSE-ConnectionGUID: h4dMMB5FQBukQlr04EkuSw==
+X-CSE-MsgGUID: PIjsa0uRQ96pvjm/YTSsiw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="246802627"
+   d="scan'208";a="247734773"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa003.jf.intel.com with ESMTP; 29 May 2026 01:04:29 -0700
+  by orviesa005.jf.intel.com with ESMTP; 29 May 2026 01:30:09 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -66,12 +65,10 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v8 23/23] perf/x86/intel: Add sanity check for PEBS fragment size
-Date: Fri, 29 May 2026 15:56:45 +0800
-Message-Id: <20260529075645.580362-24-dapeng1.mi@linux.intel.com>
+Subject: [Patch v8 0/5] Perf tools: Support eGPRs/SSP/SIMD registers sampling
+Date: Fri, 29 May 2026 16:24:46 +0800
+Message-Id: <20260529082451.591783-1-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
-References: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,198 +77,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Prevent potential infinite loops by adding a sanity check for the
-corrupted PEBS fragment sizes which could happen in theory.
+Changes since v7:
+- Address Sashiko's comments including,
+  * documents are not update availably; SIMD registers bitmask may be
+    overwritten by shorter mask; u16 type in sample meta-data break the
+    cross-endian conversion, etc.
+- Add SIMD/eGPRs/SSP support in dwarf-regs (Ian).
+- Misc enhancements.
 
-If a corrupted PEBS fragment is detected, the entire PEBS record
-including the corrupted fragment and all subsequent records will be
-dropped and a NULL PEBS record is reported to user space. This ensures
-the integrity of PEBS data and prevents infinite loops in
-setup_arch_pebs_sample_data() again.
+Changes since v6:
+- Address Ian's comments including,
+  * Add more comments for newly added register indexes (patch 1/4).
+  * Several minor enhancements in patch 4/4.
+- Limit dwarf minimal regs to legacy GPRs (excluding APX eGPRs)
+  (patch 2/4).
 
-Please note software has no way to figure out which events are impacted
-from the corrupted record, so the last record of each event would be
-discarded for all events if corrupted record is detected even though
-it may be a well-formed record for some events.
+Changes since v5:
+- Split the sampling support for eGPRs/SSP registers and SIMD registers
+  into 2 patches.
+- Address Ian's comments including,
+  * Convert the architecture dependent functions into regular
+    architectural independent functions, like whatperf_reg_name() does.
+  * Refine the functions name to represent what the functions really do.
+  * Add comments for some key functions arguments.
+  * Misc enhancements.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/intel/ds.c | 68 +++++++++++++++++++++++++++-----------
- 1 file changed, 49 insertions(+), 19 deletions(-)
+This patch-set adds sampling support for x86 eGPRs/SSP/SIMD registers in
+perf tools base on the corresponding sampling support for eGPRs/SSP/SIMD
+registers in kernel[1]. In versions before v6, these perf-tools patches
+are integrated as a whole patch-set with the kernel patches, but it's
+split and posted to an independent perf-tools patch-set for convenient
+review.
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index e0d307627702..3e100cb206a8 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2675,6 +2675,9 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
- 
- again:
- 	header = at;
-+	if (!header->size)
-+		return;
-+
- 	next_record = at + sizeof(struct arch_pebs_header);
- 	if (header->basic) {
- 		struct arch_pebs_basic *basic = next_record;
-@@ -2827,7 +2830,7 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
- 	}
- 
- 	/* Parse followed fragments if there are. */
--	if (arch_pebs_record_continued(header)) {
-+	if (arch_pebs_record_continued(header) && header->size) {
- 		at = at + header->size;
- 		goto again;
- 	}
-@@ -2956,13 +2959,21 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
- 			    struct pt_regs *iregs,
- 			    struct pt_regs *regs,
- 			    struct perf_sample_data *data,
--			    void *at,
--			    int count,
-+			    void *at, int count, bool corrupted,
- 			    setup_fn setup_sample)
- {
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	setup_sample(event, iregs, at, data, regs);
-+	/* Skip parsing corrupted PEBS record. */
-+	if (corrupted) {
-+		/* Clear stale register states in previous records. */
-+		memset(regs, 0, sizeof(*regs));
-+		x86_pmu_clear_perf_regs(regs);
-+		perf_sample_data_init(data, 0, event->hw.last_period);
-+	} else {
-+		setup_sample(event, iregs, at, data, regs);
-+	}
-+
- 	if (iregs == &dummy_iregs) {
- 		/*
- 		 * The PEBS records may be drained in the non-overflow context,
-@@ -2980,12 +2991,16 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
- 	}
- 
- 	if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD) {
--		if ((is_pebs_counter_event_group(event))) {
--			/*
--			 * The value of each sample has been updated when setup
--			 * the corresponding sample data.
--			 */
--			perf_event_update_userpage(event);
-+		if (is_pebs_counter_event_group(event)) {
-+			if (corrupted) {
-+				intel_pmu_save_and_restart_reload(event, 1);
-+			} else {
-+				/*
-+				 * The value of each sample has been updated
-+				 * when setup the corresponding sample data.
-+				 */
-+				perf_event_update_userpage(event);
-+			}
- 		} else {
- 			/*
- 			 * Now, auto-reload is only enabled in fixed period mode.
-@@ -3009,7 +3024,7 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
- 		 * counters-snapshotting record, only needs to set the new
- 		 * period for the counter.
- 		 */
--		if (is_pebs_counter_event_group(event))
-+		if (is_pebs_counter_event_group(event) && !corrupted)
- 			static_call(x86_pmu_set_period)(event);
- 		else
- 			intel_pmu_save_and_restart(event);
-@@ -3038,13 +3053,15 @@ __intel_pmu_pebs_events(struct perf_event *event,
- 		iregs = &dummy_iregs;
- 
- 	while (cnt > 1) {
--		__intel_pmu_pebs_event(event, iregs, regs, data, at, setup_sample);
-+		__intel_pmu_pebs_event(event, iregs, regs, data,
-+				       at, setup_sample);
- 		at += cpuc->pebs_record_size;
- 		at = get_next_pebs_record_by_bit(at, top, bit);
- 		cnt--;
- 	}
- 
--	__intel_pmu_pebs_last_event(event, iregs, regs, data, at, count, setup_sample);
-+	__intel_pmu_pebs_last_event(event, iregs, regs, data, at,
-+				    count, false, setup_sample);
- }
- 
- static int intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_data *data)
-@@ -3259,7 +3276,8 @@ static __always_inline void
- __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
- 				    struct pt_regs *regs,
- 				    struct perf_sample_data *data,
--				    u64 mask, short *counts, void **last,
-+				    u64 mask, short *counts,
-+				    void **last, bool corrupted,
- 				    setup_fn setup_sample)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -3273,7 +3291,7 @@ __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
- 		event = cpuc->events[bit];
- 
- 		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
--					    counts[bit], setup_sample);
-+					    counts[bit], corrupted, setup_sample);
- 	}
- 
- }
-@@ -3327,7 +3345,7 @@ static int intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_da
- 	}
- 
- 	__intel_pmu_handle_last_pebs_record(iregs, regs, data, mask, counts, last,
--					    setup_pebs_adaptive_sample_data);
-+					    false, setup_pebs_adaptive_sample_data);
- 
- 	return hweight64(events_bitmap);
- }
-@@ -3343,6 +3361,7 @@ static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
- 	struct pt_regs *regs = &perf_regs->regs;
- 	void *base, *at, *top;
- 	u64 events_bitmap = 0;
-+	bool corrupted = false;
- 	u64 mask;
- 
- 	rdmsrq(MSR_IA32_PEBS_INDEX, index.whole);
-@@ -3377,8 +3396,10 @@ static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
- 
- 		header = at;
- 
--		if (WARN_ON_ONCE(!header->size))
--			break;
-+		if (WARN_ON_ONCE(!header->size)) {
-+			corrupted = true;
-+			goto done;
-+		}
- 
- 		/* 1st fragment or single record must have basic group */
- 		if (!header->basic) {
-@@ -3398,15 +3419,24 @@ static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
- 			if (!header->size)
- 				break;
- 			at += header->size;
-+			if (WARN_ON_ONCE(at >= top)) {
-+				corrupted = true;
-+				goto done;
-+			}
- 			header = at;
- 		}
- 
- 		/* Skip last fragment or the single record */
- 		at += header->size;
-+		if (WARN_ON_ONCE(at > top)) {
-+			corrupted = true;
-+			goto done;
-+		}
- 	}
- 
-+done:
- 	__intel_pmu_handle_last_pebs_record(iregs, regs, data, mask,
--					    counts, last,
-+					    counts, last, corrupted,
- 					    setup_arch_pebs_sample_data);
- 
- 	return hweight64(events_bitmap);
+History:
+v7: https://lore.kernel.org/all/20260324005706.3778057-1-dapeng1.mi@linux.intel.com/
+v6: https://lore.kernel.org/all/20260209083514.2225115-1-dapeng1.mi@linux.intel.com/
+v5: https://lore.kernel.org/all/20251203065500.2597594-1-dapeng1.mi@linux.intel.com/
+v4: https://lore.kernel.org/all/20250925061213.178796-1-dapeng1.mi@linux.intel.com/
+v3: https://lore.kernel.org/lkml/20250815213435.1702022-1-kan.liang@linux.intel.com/
+v2: https://lore.kernel.org/lkml/20250626195610.405379-1-kan.liang@linux.intel.com/
+v1: https://lore.kernel.org/lkml/20250613134943.3186517-1-kan.liang@linux.intel.com/
+
+Ref:
+[1] Kernel patches of supporting eGPRs/SSP/SIMD registers sampling:
+https://lore.kernel.org/all/20260529075645.580362-1-dapeng1.mi@linux.intel.com/
+
+
+Dapeng Mi (5):
+  perf headers: Sync perf_event.h/perf_regs.h with the kernel headers
+  perf regs: Support x86 eGPRs/SSP sampling
+  perf regs: Support x86 SIMD registers sampling
+  perf regs: Enable dumping of SIMD registers
+  perf dwarf-regs: Add SIMD/eGPRs support for x86 DWARF registers
+
+ tools/arch/x86/include/uapi/asm/perf_regs.h   |  51 +++
+ tools/include/uapi/linux/perf_event.h         |  49 ++-
+ tools/perf/Documentation/perf-record.txt      |  10 +-
+ tools/perf/builtin-inject.c                   |   7 +
+ tools/perf/builtin-script.c                   |   2 +-
+ .../util/dwarf-regs-arch/dwarf-regs-x86.c     | 138 +++++-
+ tools/perf/util/dwarf-regs.c                  |   7 +-
+ tools/perf/util/evsel.c                       | 104 ++++-
+ tools/perf/util/header.c                      |   3 +-
+ tools/perf/util/include/dwarf-regs.h          |   7 +-
+ tools/perf/util/intel-pt.c                    |   1 +
+ tools/perf/util/parse-regs-options.c          | 184 +++++++-
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  | 416 +++++++++++++++++-
+ tools/perf/util/perf_event_attr_fprintf.c     |   6 +
+ tools/perf/util/perf_regs.c                   |  84 +++-
+ tools/perf/util/perf_regs.h                   |  21 +-
+ tools/perf/util/record.h                      |   7 +
+ tools/perf/util/sample.h                      |   5 +
+ .../scripting-engines/trace-event-python.c    |   2 +-
+ tools/perf/util/session.c                     |  91 +++-
+ tools/perf/util/synthetic-events.c            |  28 ++
+ tools/perf/util/unwind-libdw.c                |   6 +-
+ 22 files changed, 1143 insertions(+), 86 deletions(-)
+
 -- 
 2.34.1
 
