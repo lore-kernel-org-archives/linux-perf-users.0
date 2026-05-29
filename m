@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016FA3D34A0
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 18:30:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08C7409631
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 18:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780079457; cv=none; b=aPNZMbvm+JiUDlb/NaUiUHR9aXDTJZqoeiPE1cj8J1EAx/07k9yvoPxSglAJfeK0Hv++0v6cajaw2PpO/emTWdmvwBs4a0Zoml/so7U8ddv6xtRFw3wXFaoQPlm32+NDIy7Rusl+/HvM7MeoS7xLODHH6MuuMynHwH1kltYd6EQ=
+	t=1780079489; cv=none; b=Q5Psp9JO7zzrqiG2V6QnR1pIe/djkFISc+mEZ8N1+bpLRsHgzy3Zn76AURtQT+v6JPMcSp2TWiBcColH4B6wS6Kux4V2uX+Vg3Ud8nJP3zhmgSMdyRv3EUNbXRf0i7Wy1ljvA4XP99XfINp7nhZUEqNCbwNzI5lmciXqoudDEqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780079457; c=relaxed/simple;
-	bh=F7wl61SLgGH999UP0m+xGqFou03WQyUn6JnQ3wN7dU4=;
+	s=arc-20240116; t=1780079489; c=relaxed/simple;
+	bh=aOpV+WHwjbYXZcQYmtA5ng/AE6qGHgqNNihA1wvQi9o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BcjN8I7tIdmX+93mv6m+kErvz1e66wsLGmLJVnWgaC5Nw1JygF5+a2h7EVFw0IjwXtNMHuiL7l8XfiJhPqKnj3s/S3cuUYTeQhYdeF3rmo56xULS+Tu04hL2wRLit8kquc1trkTzvtyKPoZHN4+zcybUKEKxuVYs9Yd/kZCfYP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Si2UYPCN; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:Content-Type; b=Z8fd+zHvKgQAHYugoRoAgja3p4kRIvG8Z3D+jRV2VzLZvk+XA+/epGybtt+TY3RMTUGen6jXq8+XnehUDH6Y/FqPteDzc28x4eba5zq0M0pbLlQdluBruNgzeoPLyk4DhPrJSzb013Se0NWKO8rie97OAUrBBJmf7oa7hAZ/d3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DS0Nwaov; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Si2UYPCN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DS0Nwaov"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780079454; x=1811615454;
+  t=1780079489; x=1811615489;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=F7wl61SLgGH999UP0m+xGqFou03WQyUn6JnQ3wN7dU4=;
-  b=Si2UYPCNKnRkGsXO/SS42h0kOJF6ch551le/LiWDLlnNDTHw4kXlRDU5
-   IHR5agPd8KeSSf32qkrbL8kNVrtbgbLeUhbSjmPJjhy31PCR5prCsnk54
-   jdUdKw8W+qn3wfN2ZpVS6wi/1bfoxXa7EGn+mlfRejC4sYF0U5toT1YZG
-   Xwy9kh9Ag49SuGLNzIYHPRHA6VrSDZesyXbRiPMSWY52IZEGR9YTMchRB
-   aE1CXWWJB3G/sr8ZSD9gc88dHYqugRqLMr7hjVbqqDvu/3SvQOTZrIFOw
-   jPGeNs6uYn2VtCUMDwzs40HgYAqAnyegE1/SOhNW9h2Zy5K7Zeisri0I2
-   w==;
-X-CSE-ConnectionGUID: 7vBwTdV9Smu46YbtV4SvOg==
-X-CSE-MsgGUID: cek+8p9dQTS2/lNk3y89mw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="92053369"
+  bh=aOpV+WHwjbYXZcQYmtA5ng/AE6qGHgqNNihA1wvQi9o=;
+  b=DS0NwaovGmHZoPCbXpFHDPCXA8nLngQTbllxuXEkmiEL66Pdl7hLyvBg
+   YhaZ6N7ybEkTjsH6n4UQ6AjMbYIXNFFD9sMsbLzdRK/Eycl1WhCYNFQaV
+   mdL8rv7X+x/Y/cytzAxnJGu7W/m/WdhB4uQPgSGsToFGsiJX+xXM588dk
+   lOd7PgiuoPeRp6zzVRddp8xStO/xeBtW5gSRPaNRO5FiHxmcvugTWwfVU
+   B8K7CwVrdNFnxpuAe++bfMAqOyU5C/F3NgErfdO6gejAzbP9ULGDK0Ixv
+   Ea00cMs4cg6Ch0cB4FSjyGdA+112WKycgEBSZ9pp2gGpxGiFeaZrhnW2Q
+   Q==;
+X-CSE-ConnectionGUID: VkTJLj1mS9qWMw4DL5uoyA==
+X-CSE-MsgGUID: J4c+7dGpSQCaoN2kgnLaFw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="92053417"
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="92053369"
+   d="scan'208";a="92053417"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 11:30:53 -0700
-X-CSE-ConnectionGUID: YshiFJziRemZABF4WkpxoA==
-X-CSE-MsgGUID: ekH2xvH1TuaMyT3C8JjIXQ==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 11:31:28 -0700
+X-CSE-ConnectionGUID: 58ahwfUDSIanbpVAPatT6Q==
+X-CSE-MsgGUID: v9/0BumMS82ZMTmjbz0wPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="239917796"
+   d="scan'208";a="239917954"
 Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 11:30:53 -0700
-Message-ID: <fa098c82-4ce9-4f4d-890c-31b68ed4eca7@intel.com>
-Date: Fri, 29 May 2026 13:30:52 -0500
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 11:31:28 -0700
+Message-ID: <08c10ac8-1d24-4659-afd7-dd55f6dd3ec8@intel.com>
+Date: Fri, 29 May 2026 13:31:27 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,91 +52,51 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/7] perf/x86/intel/uncore: Guard against invalid box
- control address
+Subject: Re: [PATCH V2 1/7] perf/x86/intel/uncore: Fix discovery unit lookup
+ for multi-die systems
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-References: <20260527151154.130505-2-zide.chen@intel.com>
- <20260527172840.399211F000E9@smtp.kernel.org>
+References: <20260527151154.130505-1-zide.chen@intel.com>
+ <20260527154508.329CA1F000E9@smtp.kernel.org>
 Content-Language: en-US
 From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20260527172840.399211F000E9@smtp.kernel.org>
+In-Reply-To: <20260527154508.329CA1F000E9@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/27/2026 12:28 PM, sashiko-bot@kernel.org wrote:
+On 5/27/2026 10:45 AM, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> 
-> Pre-existing issues:
-> - [High] The patch guards box-level operations against invalid (0) control addresses when a discovery unit is missing, but it critically misses event-level operations. This omission allows an unprivileged or privileged user running `perf` to trigger a #GP fault (kernel panic) or PCI configuration space corruption.
+> - [Critical] Unhandled return value of 0 from `intel_generic_uncore_box_ctl()` causes fatal writes to MSR 0 or PCI offset 0.
 > --
 > 
-> commit 65ddbcdd36196085490e8783cb658d7e20c2e9c5
+> Note: The format of this report has been altered to provide a free-form summary without directly quoting the original patch code, due to automated recitation restrictions.
+> 
+> commit e9069bffe8688f6e4044b8f15ff7ac27dcdbb094
 > Author: Zide Chen <zide.chen@intel.com>
+> Subject: perf/x86/intel/uncore: Fix discovery unit lookup for multi-die systems
 > 
-> perf/x86/intel/uncore: Guard against invalid box control address
+> This commit fixes a unit lookup issue on multi-die systems by using the box's
+> die ID instead of a hardcoded -1. It also removes a warning when a discovery
+> unit is not found, as offline CPU dies will now rightfully return a NULL unit.
 > 
-> This commit guards against a NULL return value from
-> intel_uncore_find_discovery_unit() before accessing hardware box control
-> addresses. It prevents potential faults when a CPU die is offline during
-> uncore enumeration.
-> 
->> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
->> index 60e1200c4691d..af2217b44a814 100644
->> --- a/arch/x86/events/intel/uncore_discovery.c
->> +++ b/arch/x86/events/intel/uncore_discovery.c
-> 
-> [ ... ]
-> 
->> @@ -549,6 +560,10 @@ bool intel_generic_uncore_assign_hw_event(struct perf_event *event,
->>  
->>  	if (box->pci_dev) {
->>  		box_ctl = UNCORE_DISCOVERY_PCI_BOX_CTRL(box_ctl);
->> +
->> +		if (!box_ctl)
->> +			return false;
->> +
-> 
-> [Severity: High]
-> This is a pre-existing issue, but does returning false here when box_ctl is
-> invalid still leave us vulnerable to hardware access faults during event
-> execution?
-> 
-> When intel_generic_uncore_assign_hw_event() returns false, the caller
-> uncore_assign_hw_event() unconditionally falls back to legacy offset
-> calculations using uncore_event_ctl(). For discovery PMUs, this results in
-> hwc->config_base being set to a small relative offset like 0x0.
-> 
-> Later, when a user schedules a perf event on this box, the event startup
-> routines execute blindly using this base:
-> 
-> intel_generic_uncore_msr_enable_event()
->     wrmsrq(hwc->config_base, hwc->config);
-> 
-> Could this result in a fatal #GP fault by executing wrmsrq(0, ...), or
-> corrupt PCI configuration space by overwriting the Vendor or Device ID at
-> offset 0x0?
-> 
-> While this patch successfully prevents faults during boot or hotplug box
-> initialization, could it leave the crash accessible through user-controlled
-> perf execution?
+> [Severity: Critical]
+> In the updated intel_generic_uncore_box_ctl(), returning 0 when the unit is
+> not found (such as for offline dies) appears to introduce a regression in
+> its callers.
 
-https://lore.kernel.org/lkml/20260512233048.9577-1-zide.chen@intel.com/
-
-With this patch series, if a box fails at init_box(), the associated PMU
-is flagged as BROKEN and will not be assigned to any perf event, so the
-crash path is not user-accessible.
-
-The box_ctl check in intel_generic_uncore_box_ctl() is a defensive
-guard for completeness. In practice it won't be hit, because any box
-that reaches hw_event assignment must have successfully completed
-init_box() first.
-
+This is fixed in patch 2/7. It's better to move this patch after 2/7.
+> Looking at callers like intel_generic_uncore_msr_init_box() and
+> intel_generic_uncore_pci_init_box(), they seem to use the returned control
+> address blindly. If 0 is returned, MSR-based uncores would attempt to write
+> to MSR 0x0 (IA32_P5_MC_ADDR), which triggers a general protection fault and
+> panics the kernel on modern CPUs. For PCI uncores, writing to offset 0
+> targets the read-only vendor and device ID, which could trigger AER NMIs.
 > 
->>  		hwc->config_base = box_ctl + uncore_pci_event_ctl(box, hwc->idx);
->>  		hwc->event_base  = box_ctl + uncore_pci_perf_ctr(box, hwc->idx);
->>  		return true;
+> Is it safe to return 0 here without adding validation to the callers? I
+> note that this is fixed later in the patch series by a commit named
+> "perf/x86/intel/uncore: Guard against invalid box control address", but
+> does leaving it unhandled in this commit break git bisectability?
 > 
 
