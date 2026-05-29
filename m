@@ -1,262 +1,262 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013028.outbound.protection.outlook.com [40.93.196.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1446435E1C1
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 06:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780037461; cv=none; b=peNhC58bfmxlv9n+bpr3xWFo0vnIPvTxxGINdO6hpG2T/WYk9TKFtM8hzkuAoi85jYK6v4wbzc0CMyS+IGYnJwC0CI18vnumnRc1dLIWPHzfBQ4s5mAyY9EfwJZi+kq/IKZSqu5BM1957RzWPBdMH5cnyKBq8U0Z65Z7PlCe7mk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780037461; c=relaxed/simple;
-	bh=Fi4YYxgeVqRXXsJ6FdlB399l8Vxp5q59ohGMCLZ1sO0=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CRv7C98q7pPyGon8BrCehucRn9oq4vuxYPDMx5zFA4i8VwPkRLv8C+fbu6nkqOo54HTVAdqzfvSiYoYe0PEeDblcT+kf17VZ10xUmZt8q5fQ7Jo8e93ohSuDy/cmdT1wTUof6zdo1ur7Nj5eFa5WRV4QfObSPb9rGn1Gb2QSBh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LOhK4JJx; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26207329E79;
+	Fri, 29 May 2026 06:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780037911; cv=fail; b=R6tEWyhpzo/Mm+t/r5xIiSlOk0akafLMRXVeBLKOV64N6fBkJz8J91DMemCvy1VYnkrILJObsJoilGiG3NSatsZdF8WpYeh+Ufoz63YHitBBEimN9nyU1E53/vfeb9FBwLswhq38lcbYOXMt2f1+JjtSGUHPJwbg5ITziMT9QxY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780037911; c=relaxed/simple;
+	bh=9b1mhTJaeQJ/c/3KiAhjJvUw4gzxqQO1StwsfSJ64N8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Tnthv0qxIBA7hvKti8/jNejoi8yOccIukYWc6qQ9N2WXgW8hDCvpUHiTT2Xfl0kyCRuDQEHMnLiUQ8xLeEczTUkMt3br+NFyo6FH9lifHEAsuHNgpQruBDV2B2nlo/Y/F8Fj/v1OQAujKBdVV2zlwX1SclCbTmHqMUb60/LWgi8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uOzVxmkv; arc=fail smtp.client-ip=40.93.196.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LOhK4JJx"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3697c35eab7so8157150a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 23:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780037459; x=1780642259; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:cc:to:from
-         :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=PoT2VtJk4v8nD6Pndx2Yw79/yA5m24hfWDbTI8RDQjc=;
-        b=LOhK4JJxKkv+VREt0HLP3B0iEeXVNBatlErawpoQKFvfwpgnowODCFqObdQSKRhMOK
-         H5+1eLi94rLdW9g4c9HrwouJBm0N1TZ/x4u3dl1HmGw4iDMxxJ0149+vui64l4K2zxTN
-         L2/QKEGez4bcK6zB2t46xL46SgYSSEDK1GtS7mhdOpwtbVu0dX7/KWGTASAys4pxRc5X
-         r6/qcx5w0xmcuD2rw9A0iS+2M5xDAjXlfNMlnQz1WqczjHIsh7e5Dp28Z+e8ucSzKkrD
-         4jprzbz57YZtGTVPIjkif7zFOiq0npZHB9yBAg6cXhhDs+NgLbaGXC0Cu3o1bTMELlvE
-         lg1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780037459; x=1780642259;
-        h=mime-version:references:in-reply-to:message-id:date:cc:to:from
-         :subject:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PoT2VtJk4v8nD6Pndx2Yw79/yA5m24hfWDbTI8RDQjc=;
-        b=d2JCCGWMKgn8GWAi0on7N+a2nmRX0ux67mUwW/p80yIPX/eXyjkm5hSchKsQo3DLKK
-         dL2NRM8PlDoF9iDqrwi9wg7TBb/s3xfbloFwqsDxFvasTy+6I0wPYvzjJnWD0VFOo+gj
-         CI/1cHpqbX3KakqtgHgsS2iuIFxKEFT9DaLclDGPTI80GuZ+TlyZ0SqdGcRg2UUh8+a6
-         3zo14Afpm6hGsGnW38ic0zJBV7jYZxJJWaIpfLncxhDj/52VOxFE+tzqP3YxqiZ+9uB4
-         EgVXxl/Y/qxtQ5Ahtl8aL9asr4OpprqDFhgsxvHlETjj6N6szlbiboJHO4o8OUenFo0B
-         PVsw==
-X-Forwarded-Encrypted: i=1; AFNElJ9LnZcMukqPRjo2k+QnnAgWeXPGslyI2ydxdYDROdvLXmEvxv9KAdiaGs59oZGEmkYy1AX2Wpvm4Bn8xKpT5hoa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9AveI3SCuS/wPtNDvyMv84pTdP9No5hEcMyKiydre0PEOS1rF
-	2IFCEBEMObrG9R1l5xIJHi7ebl8P8nBF4tjye+K0yddxffoorTqcU/Y9
-X-Gm-Gg: Acq92OFXdhCwYY++mQIcOrEfRg4b0BQS/XhzGu7tJDwNbFLxbQ3Suo5wc5kpOIhezgm
-	YlX76rDTsmyucHpQDJKD8ZPgtHn6qQXyu1wKx9QOgOmi+kszbeZagbeG8olQjjuMxA5VGTmfHIT
-	+7+OVeK9+NrKpQW7n4rItyIVE44ZWS5jTdR9WADfCo5si9PeIIgLucTS/GaIMJvN4S6g/7Pg15s
-	bDBPjI9+pC0u9usaDhmq6c1lETjrT40lk8T7/n+uFkMADS89P6iLgfhAwLQuA0wNSfpsJL1GGc/
-	ryIfczia1EvkhXLXjOpx2/PMs/4O+jYQrnv7xdLqxhbZrZ8ndTPHvsuxnlEti7ZIX8He8BYbQCG
-	puC8M3ktPj6GF2d+V/vl22wavuko06eDPc0hahRvdDTV+fh3dYJXzOk7Hn4SLTW6XqSUW/CMFFX
-	GSAQZYl7gA1yMcjVHsv580cUCv0l6Mky2rUbNv1g==
-X-Received: by 2002:a17:90b:2d4d:b0:35d:9c32:6219 with SMTP id 98e67ed59e1d1-36bbcd40bc9mr2445082a91.9.1780037459054;
-        Thu, 28 May 2026 23:50:59 -0700 (PDT)
-Received: from [127.0.1.1] ([104.28.157.202])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36bc0c1ab21sm952626a91.14.2026.05.28.23.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 23:50:58 -0700 (PDT)
-Subject: [PATCH 6/6] subcmd: fix memory leak in parse_options_subcommand
-From: Wang Haoran <haoranwangsec@gmail.com>
-To: acme@kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- haoranwangsec@gmail.com
-Date: Fri, 29 May 2026 14:50:45 +0800
-Message-ID: <178003744574.62097.15841011812312422288@gmail.com>
-In-Reply-To: <178003738371.62097.10360938456907564684@gmail.com>
-References: <178003738371.62097.10360938456907564684@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uOzVxmkv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yHR6eBmljza3TOkJ9VbSAsbw171bu6TRRxmfkbvScem7OMUsEZbaZYb+Goxxanm2GmtENfBkhWHLR0hLam0+hycojKCztGi/STKooYVTXCT67tuDtxE3TMZ5LbsGIhDZyukOpKQetu/+VjXblF/OzGDKJs+EQ9zQDXaybiopuZpluSEyJ0Om/SqNIJnqzI9u4YlM2qyRoAPb8OhDYIncY3XNnDxxWOxWAoX4P6iuGSCUR9NNfHYeqvHzuJtzY85DyJbSx39PtyDygBuh06vm848FvnKunT7aYaiVru5LkHgPeviwuIazBhA6x0KAPTsGZv6XAojHZvbVYU/mfQH5Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6hceykVTF24S+tp4LnQ802kCg/ubOWtfLAhTLuHGhw4=;
+ b=GX8SRUTKnL4Ks1PuTpHb+oDLtaArAG+30a1K53taVbnKBrLq/kHJTOa7e+YvkUqqSuxE6o8M54ndhJj9CQO/fa+DyZ/JdyQj0IwewFUiFPCABoJ9rhTSWo0gHGkz8XM0phZlxg67FBAGd3RAD+nW7ZRukDMb1Ifd8nNs1LFW0HqleiCHeMNs2xuAJYXlAgNUjX8Ngr1Q3AqMdwruSxAGaGPkF+INq0SL8j3hpHdYEsFwDREY14Gdl3TMbxUDZ0szTtdzaBVrt9bIo4/AKp3mCtRaBy1MZNY1FXYnknClYTP0sRKSsD71+eg2wZnbEx9FcZ53cOH/pYG7mF8apw4Nsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6hceykVTF24S+tp4LnQ802kCg/ubOWtfLAhTLuHGhw4=;
+ b=uOzVxmkvWa/EPD1Nee4pqSqY8F8suKoBEy4pejMuE9c7FnleofEy0RDcQ32zvNaks+4Kx46k0gqf8KVjJEACR+7k933GK8qW3tV/fY/1hz4/bnE9u1mi94qU1VaehnRziOaFe9drTPJwyHZwEeB9yFZ6ZCIiHQpnwPGk2wfDmL8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by CH3PR12MB8260.namprd12.prod.outlook.com (2603:10b6:610:12a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.15; Fri, 29 May
+ 2026 06:58:22 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0071.014; Fri, 29 May 2026
+ 06:58:22 +0000
+Message-ID: <09786a38-54e3-4b08-9210-7c7c6bc80f9c@amd.com>
+Date: Fri, 29 May 2026 12:28:10 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/events/amd/iommu: Fix cpumask of IOMMU events
+To: Vasant Hegde <vasant.hegde@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org
+Cc: x86@kernel.org, dave.hansen@linux.intel.com, tglx@kernel.org,
+ bp@alien8.de, hpa@zytor.com, iommu@lists.linux.dev, joro@8bytes.org,
+ suravee.suthikulpanit@amd.com
+References: <20260517114026.6817-1-vasant.hegde@amd.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <20260517114026.6817-1-vasant.hegde@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5P287CA0003.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:176::12) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7114621159298678336=="
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|CH3PR12MB8260:EE_
+X-MS-Office365-Filtering-Correlation-Id: 716fd37c-acbf-4268-f6aa-08debd4fab9d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|18002099003|921020|22082099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	sgHqJOOOZMwGeOg9QzyQvzbjkQ+ip50ZU6mJDbrBlLxJVhP3LRCCCiDHPVp/keZa7QxdZaYtkRLQNomnf2LOBUN5GJQcQI+81OXwCO/lxyseRKPWYliZYK50xnYIDzTHzdsSwwDgfMWRucRR3IFh6+PR79W8k/My0Ai51SfIUdkHTMNTupiJQns7exSSFeq/uNw7Vv1GrTZ8ryge6njo0u4a7JjkxToz5VfefpkVmm7/RYhqjaIq3s/xxWdMWTQrQIk0nHomO8RxvYuv5bf45046dR88MqtNkf4JjIl8AKljzV6iAOo7MeG0a2dtmPHpzg+1QrYvOvL0JV6ouPqZ5AgwF2cpeJU2RLDQULPyGuy/xbdRu8/tX0kq1UeZFs9Z3veuknBbPDYaIXFPlYAg0ItNUdzE7AE1hUSvhXvE8yH9KDfRwJY7WffGa3Yny1KSgY2TMnj1NAPvy8FLTDK4Ex8W8kGVr/0Fyfshvckd8lsY/G0mmJWix1p1Eq5E7ykb5lvQc2wj7tbC7xzvUvBM3bZIQkZ8+YwuaO765bPJ3woKAWf4gw7XHjXS1DTRImVod1QAEFDvQQeyEa/hdbXiNB84cXjPyQJUcTr3hoKe++BZODykN1RiaaIaz+NS9t7MogUX0czFbHenLuipBBNEw1AvpFrs2pSF5QSchVnScaYnNiKdCfj4YZ8bk3N8kEDebkAG3lUbsFD0m6HTNws0AFXXVTbsNeHCMZ8t+BfZD9tlred/gqiW3H6ZVzb8By91
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(18002099003)(921020)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZnM1TjRNRDkvQ015T3Q0QUdtc0hTRnJYQ3JpUEFsZC8xL2ZiQ0tVWjcxZDBh?=
+ =?utf-8?B?dWl1WW9RNTRpWEx5ZVRKd3Mxc1ZFYW9MUHg3OTZIQkQxcndueHYzby9UcEIr?=
+ =?utf-8?B?NjdpNHJlUmtmUloxcnRiMkNKNzQyK3RjUVBkZ1FKRmlCdWFiWG05Vk1UMU95?=
+ =?utf-8?B?QTMyU0NWRWZjTFpKYUZ2VWM5VHExY2tPdXRKaVZUUUVUK1lESlRodUxjSExC?=
+ =?utf-8?B?TEhEVWR2K0hrTmhqQVdWVkRYQ015R1pkaDRFRjlqQmlvVmo0azlTZGpMNU00?=
+ =?utf-8?B?T0xvL3ZYNUtXNGlyYzNOMFdyMjU4RjN1UHZnOURqSmFJTjdoL2JTVEhVdG1m?=
+ =?utf-8?B?SG1PZE0xUVZDNzNXSWF0Rm5QZlgzdmJQdmFGOWFyQ1RIcW5DNjZrZzdkNnZE?=
+ =?utf-8?B?YnErS0cwYU1DUnhCNUN0bTkwTTluU1BYWEplV2VQVWV5WGp2bmc4QTNZU1Uy?=
+ =?utf-8?B?ZFdudHdCZnNMRnFkdVIrSzhVeEpnVlZVek9wMUJmc3JtTjFOdmlOZ2x1NmRk?=
+ =?utf-8?B?VjE4VitSeUdQV3E3SlVrMHBjZkdIRHpxWENhOWdiZTRlK2ZFTmZNZjB2aGZV?=
+ =?utf-8?B?VTVHZTVibFpQS3ljalRQaWE5TnlPUDNnbUxUK3BzWlRmUEJNQklnZGI5RENi?=
+ =?utf-8?B?U0pJMlk3KzZVNUpIMCtNNi80T25Fb003Y25yQlRXc1N5dGJzQVEwdTRnMGVz?=
+ =?utf-8?B?UE4xKzUvb0hRc21aTW9LK2tFL2RDb3FjRWc1cmRXOEZqcDdvSjJ4aGR6LzZ5?=
+ =?utf-8?B?bnBHb3YxRmZPbTUxelVaaC92RVFZbmVmU3lyK3BuQVRDb0hFTXBsUzdwWEx0?=
+ =?utf-8?B?R3kxNWNSOXlLcDkrQWQ5L1VkTTNhT1F0VFNDZDlrQ0pGcHJlSVM5UW1aaFBz?=
+ =?utf-8?B?U2xwUTlNdUp3T2dIMGVpZHEzcDd0bFVZVHMweDVpL2tka3lvZE1jYnZLNHUv?=
+ =?utf-8?B?c0s1ZTgzK3QxRVk3QU8wVC9IVksrY2piL0xJLzNmVld2dmJtdTBHa0M0TnF2?=
+ =?utf-8?B?Y3pGcklYb0M4MzAyMStlaXJsM3NnL3FkVytiWnY3NlBpRFEraGdWTW9LM09l?=
+ =?utf-8?B?MldFNlJudnFBRmN5dWVvbVY2TDE0OGlyNUtQUGpHekRvcmFrRUxpcldPL25t?=
+ =?utf-8?B?WnQyUk9Ebk8zOXM2N05nb1BKYUxJYTJwdnB2bTloNE95NjdvWTJFVk94dTBo?=
+ =?utf-8?B?UnZBT1o0Qk1WMERsdTV0TUhDNFd2blZUUTJocDI5SC9hUW1GWVRMalU4angv?=
+ =?utf-8?B?S0ExeDdVc0JYYTJNQm81dG9VQmlJL01GcUtGUEkzb2VTL1pNZ0FyeGNlb1lT?=
+ =?utf-8?B?MThXb2oyS0k1NzJpaHhNN0k5R3VLQ0tGYi9KVUFOMWdJQWl4Z2tpcWJyVm4y?=
+ =?utf-8?B?d3Bpa2RUbG45QlI1Z1dwRWVsSU5wYjNNY2FmWDRUeUc4dTIrWGcwOFZIbm95?=
+ =?utf-8?B?dkJwa1ovTVh1Umt5WGZFOXNKVXVlR1d1cGdMR0hkV2gxVkxlZzlYc0JERk5J?=
+ =?utf-8?B?TFlObmI1ckpkdXlUM1EvTHExUWcxU2VKRzQvUWVTZzRjZXhuN1ovd2Q4UFNt?=
+ =?utf-8?B?OWFXMEEramM2MEFEUUhucm0yOEoxbExiR3RLcDAwVjlZbUVxSktiSW1vT01k?=
+ =?utf-8?B?MXM5MUVmS1NGaGVZN3UybU1DNDNLbnY3UEt0TWJzc204eHRxNHFyRVg1ZUNv?=
+ =?utf-8?B?ckdTUlBBeVZzZmFyQzRNRE5lNXVFa3BSd0dsUWZTNGpiWlMzUEFhRXJhWDRD?=
+ =?utf-8?B?dFN1dmdxQ1NhVVFIS1MyMmdnU1haL05ZWG9sTXlucW1ocjlmMkZ4VDFzZjNx?=
+ =?utf-8?B?RElWaTRuUlIrdklNdG1wWDhIYTk3Z0JHWitqaEpyMk1wOVQxNlJXYUZTdE50?=
+ =?utf-8?B?RFJlcUgybmNEdFF1NWtETzRZa2Q2bXZTRmNtTFpaeEwxcGtpZkozVGRoNHlW?=
+ =?utf-8?B?UE1hY2FSVWpDSWN6UkJ6QTEwUnJ5bTZ0QlJIRXJiNjV5MFNEOTBBT0lPSjdw?=
+ =?utf-8?B?TElYcUl4TnV0TmFjbUJ5OWJpRnVSVHprUG5qcU9wWWkwVE1aVUd0KytoZkxj?=
+ =?utf-8?B?aSsvTERDdXd3ZmxlQmtJbWRlcjN4alBFUG15cjJhckVZd3VSbGdwZEwvcC8w?=
+ =?utf-8?B?cnYvNmdhOVFBSldDcE0wdC95VU55SUlWK3djd0JPcEZxclBLK3d3QUVmRHYx?=
+ =?utf-8?B?REgrMTVIanlKRVg4Rm9WbWNrZERTdFllMDh5SXMydzRRUm8yNEducFNnbGZs?=
+ =?utf-8?B?TFJWSHcvSzFhTVZMN1p1RFROUkcwcmN6V0VlOXNFU0RiK2ttOXR5RDJXVCsy?=
+ =?utf-8?B?cUxaZFRaRnVTb0praVNiWloyMFl3QzdZeWRGMG5yU0d6Q2FNZDdMUT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 716fd37c-acbf-4268-f6aa-08debd4fab9d
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2026 06:58:21.8676
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Frw1KQFcinwcgDQuvUd7SQ1zp8ShIC+MFgS2IShXXQjgoyvbL93wdGs6zWdnUrVirDTJzLdqh3q++gF7xpU6bA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8260
 
---===============7114621159298678336==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+On 17-05-2026 17:10, Vasant Hegde wrote:
+> IOMMU performance counters are accessed via MMIO space. Currently IOMMU
+> PMUs uses a single global cpumask (iommu_cpumask) shared across all AMD
+> IOMMU PMU instances. This prevents collecting per-socket numbers
+> (ex: perf stat --per-socket).
+> 
+> Fix this by adjusting cpumask based on IOMMUs NUMA node.
+> 
+> Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
 
->From 9e71ffe9400fd54c4fc958b16229e5628271e4ad Mon Sep 17 00:00:00 2001
-From: Wang Haoran <haoranwangsec@gmail.com>
-Date: Thu, 28 May 2026 15:18:33 +0800
-Subject: [PATCH 6/6] subcmd: fix memory leak in parse_options_subcommand
+Reviewed-by: Sandipan Das <sandipan.das@amd.com>
 
-When subcommands are present and no usage string has been provided,
-parse_options_subcommand() builds a usage string via astrcat() and
-stores it in usagestr[0], but never frees it.  The allocation leaks
-on every normal return path.
+> ---
+>  arch/x86/events/amd/iommu.c | 29 +++++++++++++++++++++++------
+>  drivers/iommu/amd/init.c    |  7 +++++++
+>  include/linux/amd-iommu.h   |  1 +
+>  3 files changed, 31 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/iommu.c b/arch/x86/events/amd/iommu.c
+> index 07b110e8418a..b1848300028d 100644
+> --- a/arch/x86/events/amd/iommu.c
+> +++ b/arch/x86/events/amd/iommu.c
+> @@ -10,6 +10,7 @@
+>  
+>  #define pr_fmt(fmt)	"perf/amd_iommu: " fmt
+>  
+> +#include <linux/device.h>
+>  #include <linux/perf_event.h>
+>  #include <linux/init.h>
+>  #include <linux/cpumask.h>
+> @@ -43,6 +44,7 @@ struct perf_amd_iommu {
+>  	u8 max_counters;
+>  	u64 cntr_assign_mask;
+>  	raw_spinlock_t lock;
+> +	cpumask_t cpumask;
+>  };
+>  
+>  static LIST_HEAD(perf_amd_iommu_list);
+> @@ -131,13 +133,15 @@ static struct amd_iommu_event_desc amd_iommu_v2_event_descs[] = {
+>  /*---------------------------------------------
+>   * sysfs cpumask attributes
+>   *---------------------------------------------*/
+> -static cpumask_t iommu_cpumask;
+> -
+>  static ssize_t _iommu_cpumask_show(struct device *dev,
+>  				   struct device_attribute *attr,
+>  				   char *buf)
+>  {
+> -	return cpumap_print_to_pagebuf(true, buf, &iommu_cpumask);
+> +	struct pmu *pmu = dev_get_drvdata(dev);
+> +	struct perf_amd_iommu *perf_iommu =
+> +			container_of(pmu, struct perf_amd_iommu, pmu);
+> +
+> +	return cpumap_print_to_pagebuf(true, buf, &perf_iommu->cpumask);
+>  }
+>  static DEVICE_ATTR(cpumask, S_IRUGO, _iommu_cpumask_show, NULL);
+>  
+> @@ -420,7 +424,8 @@ static const struct pmu iommu_pmu __initconst = {
+>  static __init int init_one_iommu(unsigned int idx)
+>  {
+>  	struct perf_amd_iommu *perf_iommu;
+> -	int ret;
+> +	struct device *dev;
+> +	int node, cpu, ret;
+>  
+>  	perf_iommu = kzalloc_obj(struct perf_amd_iommu);
+>  	if (!perf_iommu)
+> @@ -440,6 +445,20 @@ static __init int init_one_iommu(unsigned int idx)
+>  		return -EINVAL;
+>  	}
+>  
+> +	dev = amd_iommu_idx_to_dev(idx);
+> +	node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+> +	if (node != NUMA_NO_NODE)
+> +		cpu = cpumask_any_and(cpumask_of_node(node), cpu_online_mask);
+> +	else
+> +		cpu = cpumask_any(cpu_online_mask);
+> +
+> +	if (cpu >= nr_cpu_ids) {
+> +		pr_warn("Failed to find online CPU for IOMMU %d.\n", idx);
+> +		kfree(perf_iommu);
+> +		return -ENODEV;
+> +	}
+> +	cpumask_set_cpu(cpu, &perf_iommu->cpumask);
+> +
+>  	snprintf(perf_iommu->name, IOMMU_NAME_SIZE, "amd_iommu_%u", idx);
+>  
+>  	ret = perf_pmu_register(&perf_iommu->pmu, perf_iommu->name, -1);
+> @@ -483,8 +502,6 @@ static __init int amd_iommu_pc_init(void)
+>  		return -ENODEV;
+>  	}
+>  
+> -	/* Init cpumask attributes to only core 0 */
+> -	cpumask_set_cpu(0, &iommu_cpumask);
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+> index 3bdb380d23e9..2c35d171b5ae 100644
+> --- a/drivers/iommu/amd/init.c
+> +++ b/drivers/iommu/amd/init.c
+> @@ -3939,6 +3939,13 @@ struct amd_iommu *get_amd_iommu(unsigned int idx)
+>  	return NULL;
+>  }
+>  
+> +struct device *amd_iommu_idx_to_dev(unsigned int idx)
+> +{
+> +	struct amd_iommu *iommu = get_amd_iommu(idx);
+> +
+> +	return iommu ? &iommu->dev->dev : NULL;
+> +}
+> +
+>  /****************************************************************************
+>   *
+>   * IOMMU EFR Performance Counter support functionality. This code allows
+> diff --git a/include/linux/amd-iommu.h b/include/linux/amd-iommu.h
+> index edcee9f5335a..6b8d6b53b4e9 100644
+> --- a/include/linux/amd-iommu.h
+> +++ b/include/linux/amd-iommu.h
+> @@ -67,6 +67,7 @@ int amd_iommu_pc_set_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn,
+>  int amd_iommu_pc_get_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn,
+>  		u64 *value);
+>  struct amd_iommu *get_amd_iommu(unsigned int idx);
+> +struct device *amd_iommu_idx_to_dev(unsigned int idx);
+>  
+>  #ifdef CONFIG_KVM_AMD_SEV
+>  int amd_iommu_snp_disable(void);
 
-Move the buf pointer to function scope and free it before returning.
-
-Fixes: <parse_options_subcommand>
-Signed-off-by: Wang Haoran <haoranwangsec@gmail.com>
----
- tools/lib/subcmd/parse-options.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-option=
-s.c
-index 555d617c1..1eb8053e8 100644
---- a/tools/lib/subcmd/parse-options.c
-+++ b/tools/lib/subcmd/parse-options.c
-@@ -633,10 +633,10 @@ int parse_options_subcommand(int argc, const char **arg=
-v, const struct option *o
- 			const char *const subcommands[], const char *usagestr[], int flags)
- {
- 	struct parse_opt_ctx_t ctx;
-+	char *buf =3D NULL;
-=20
- 	/* build usage string if it's not provided */
- 	if (subcommands && !usagestr[0]) {
--		char *buf =3D NULL;
-=20
- 		astrcatf(&buf, "%s %s [<options>] {", subcmd_config.exec_name, argv[0]);
-=20
-@@ -680,6 +680,7 @@ int parse_options_subcommand(int argc, const char **argv,=
- const struct option *o
- 		usage_with_options(usagestr, options);
- 	}
-=20
-+	free(buf);
- 	return parse_options_end(&ctx);
- }
-=20
---=20
-2.53.0
-
-
-
----
-ASan output on perf 7.0.6 (unpatched) with the attached PoC:
-
-Perf file header corrupt: header overlaps attrs
-incompatible file format (rerun with -v to learn more)
-Perf session creation failed.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=3D=3D55949=3D=3DERROR: LeakSanitizer: detected memory leaks
-
-Direct leak of 73 byte(s) in 1 object(s) allocated from:
-    #0 0x77ab3032b60f in malloc ../../../../src/libsanitizer/asan/asan_malloc=
-_linux.cpp:67
-    #1 0x77ab2ee96e6e in __vasprintf_internal libio/vasprintf.c:116
-    #2 0x77ab2ef43172 in ___asprintf_chk debug/asprintf_chk.c:34
-    #3 0x568d03932ee3 in asprintf /usr/include/x86_64-linux-gnu/bits/stdio2.h=
-:206
-    #4 0x568d03932ee3 in astrcat=20
-    #5 0x568d03932ee3 in parse_options_subcommand=20
-    #6 0x568d038cdef0 in cmd_sched (perf+0x33eef0) (BuildId: 25d667fa7a727404=
-6cb5bcb3375c4b1074f3f6db)
-    #7 0x568d0391287f in handle_internal_command (perf+0x38387f) (BuildId: 25=
-d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #8 0x568d03785836 in main (perf+0x1f6836) (BuildId: 25d667fa7a7274046cb5b=
-cb3375c4b1074f3f6db)
-    #9 0x77ab2ee2a600 in __libc_start_call_main ../sysdeps/nptl/libc_start_ca=
-ll_main.h:59
-    #10 0x77ab2ee2a717 in __libc_start_main_impl ../csu/libc-start.c:360
-    #11 0x568d0378d754 in _start (perf+0x1fe754) (BuildId: 25d667fa7a7274046c=
-b5bcb3375c4b1074f3f6db)
-
-Objects leaked above:
-0x741b2e1e0800 (73 bytes)
-
-SUMMARY: AddressSanitizer: 73 byte(s) leaked in 1 allocation(s).
-
---===============7114621159298678336==
-Content-Type: application/octet-stream
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="crash_err255_iter46.data"
-MIME-Version: 1.0
-
-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
-Y0FNRCwyNSw4MCwwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADI
-YTQAAAAAAAEAAABAAAAAL2hvbWUvcGhyaXNtL0Rlc2t0b3AvbGludXgvdG9vbHMvcGVyZi9wZXJm
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAABAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAxAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAAAAw
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAQAAAADEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAEAAAAAwAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADEAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAgAAAAEAAAAAAAAAyGE0AAAAAADMRhEAAAAAAEAAAAAwLTEAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAABAAAA
-QAAAAEAAAAAIAAAAQAAAAERhdGEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMzJLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAEAAAABAAAAA
-CAAAAEAAAABJbnN0cnVjdGlvbgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAQAAAADMySwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAABAAAAAQAAAAAgAAABAAAAA
-RGF0YQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAEAAAAAzMksAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAQAAAADEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAQAAAAEAAAAAIAAAAQAAAAEluc3RydWN0
-aW9uAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA
-AAAAMzJLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAEAAAAAxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAAAAABAAACAAAAEAAAABVbmlmaWVkAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADUxMksA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AABAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAIAAABAAAAAAAQAAAgAAABAAAAAVW5pZmllZAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA1MTJLAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADEA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAADAAAAQAAAAABAAAAQAAAAQAAAAFVuaWZpZWQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMTYzODRLAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAA
-AEAAAAAAQAAAEAAAAEAAAABVbmlmaWVkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADE2Mzg0SwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMQAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA
-CAAAAAABAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAP///wD/AAAAEQAAAAEAAAAAAAAA
-AQAAAAAAAABAAAAAUEtHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAw
-MwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADAtMQAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAABAAAAA
-UEtHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAEAAAAAwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMwAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAQAAAADAtMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-
---===============7114621159298678336==--
