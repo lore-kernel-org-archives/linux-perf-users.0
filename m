@@ -1,116 +1,104 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225932D5C83;
-	Fri, 29 May 2026 13:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3502E14ABE;
+	Fri, 29 May 2026 14:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780063179; cv=none; b=Dp5lHu8aW/IXqdMD37O87er8Kk4zoCdqbwxChTzicGl/WjDkcPb1APOYB7MZTse+0gqrJ9+XXo4kezh/p8IwRCLz3XG/9aaczqeqc3eTA3ncmRQO8afCTATqXHQKe53s6Gbv54/8/gZVORE4W1iaHfqKFeo4qZoe8E1zl6L0RrY=
+	t=1780065238; cv=none; b=tXu1VE4lsin6SMqZF9OO/5Bsf//4ojVOGD/HlLbdsUa8nNtQiycUA/By8BHhUo3WGwCTjccn07B14JZp3KHrb/ZHRtEdFwImyE+Pap9qbGue/d3Wl9FPMR5S8hfP99ufl/ImLCQRy8+8RAJ8VOAU0bIyWSL3OXAq5qWIO+Ew8Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780063179; c=relaxed/simple;
-	bh=OIfcxw6L7juAJ+MhhKySY0equp2hvB1yaaAjhl0zNjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7fmsVGQS0clIL3BOeuMcyYebiiwKpeJOgZdYaukSWiHRmZhT9eElVPmy7C8swlwpUKJY1MEQ9T9v/wUiRyB18/h0rAuv1xa035qC4xabVjZbBDDgNW1FataNgSmtmhvdH1fwG+TZ22r9msSEDGPsOL+rYUJBHK0SycPxETb0pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=t4lUbtZl; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1780065238; c=relaxed/simple;
+	bh=DxQIY9aVNXnbe+nacPZDzEqdF/6n6FZ2z0Z159xjSJk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P65Z42UXS4iJANJAuuTmBjW/o84sVXBBEA1UmPbvEUFmI4bop3mHkplTkdLS1wbLGFFqdjlLCo2G8VmnEupdCdPy2NAwR/csunkRrxZy8tHB5xUZcsNWIYsIRK70gcTVImVACEDJH5HDp7LqdLMpTHGR/eShP7Z5D7qTo73p3u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=frmzm4Bw; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t4lUbtZl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=krC21NLD30nrg01fSvUce7Fe+FnXVEhQr9QoYVMHRHI=; b=t4lUbtZlab0axYF0lmbW0CYbZ3
-	/JMaNPB4pXiSA68du4121/lvny2qQTj6r0QLLa3lvEiRGZzzI6ujKm+v/rgLwKfJXpGVb92BYVDp5
-	1+LI2tB7gw/1/qjbqSRu/o7jBzPpGIHStF7XhGfgk7wgr6mWl1Iy7z6ClDLlVrqU/fciiDY5cB+Dl
-	ov41tGJ1yiWyQKSwoA8Vxgobs13MaHEc3/wDb3MBrW8ouEjIj0p+kEAFHPvp17HszODSNJoclwbos
-	/LHuaQP/5EWbw3fTftd57ASuqWeQfloci3OE6ljXro3cxHW3c8F9WmYxDjA/J56FG/IhARBULEi+o
-	zutNVb1g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wSxk9-00000007TtN-0ATY;
-	Fri, 29 May 2026 13:59:21 +0000
-Date: Fri, 29 May 2026 06:59:21 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Christoph Hellwig <hch@infradead.org>, demiobenour@gmail.com,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
-	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
-	linux-api@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 1/3] net: Remove support for AIO on sockets
-Message-ID: <ahmbucsrd-W4BVhz@infradead.org>
-References: <20260523-af-alg-harden-v1-0-c76755c3a5c5@gmail.com>
- <20260523-af-alg-harden-v1-1-c76755c3a5c5@gmail.com>
- <ahQCZQNoyO8GQt3H@infradead.org>
- <92db3ff0-8f0b-4b61-a167-5004ffcf9025@kernel.dk>
- <ahanjVfIDlCmeCUE@infradead.org>
- <2cfd6455-7b5b-4974-b8a1-4a0abca69768@kernel.dk>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="frmzm4Bw"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F4BF1FC7;
+	Fri, 29 May 2026 07:33:50 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.85])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AF6B03F905;
+	Fri, 29 May 2026 07:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780065235; bh=DxQIY9aVNXnbe+nacPZDzEqdF/6n6FZ2z0Z159xjSJk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=frmzm4Bw0NKUCKg7cScfgm4wYmILy10DV6QqLlMXsaJp5zwedFU4kHAze4ZyreWSn
+	 7qevaKhEkRLfLeEvA/Pu5o224lb3z/IdD12EyF9fX8reA+k+NVfOoML+tzwW645ugf
+	 Kr+A0g++p6Yy/rHfK1clZfFRGv67X8sEJWu2VDjc=
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	stable@vger.kernel.org
+Subject: [PATCH] perf/arm-cmn: Fix DVM node events
+Date: Fri, 29 May 2026 15:33:45 +0100
+Message-ID: <1af20ba3fb35cc507e0d74408675b50340feca39.1780065225.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.54.0.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2cfd6455-7b5b-4974-b8a1-4a0abca69768@kernel.dk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 28, 2026 at 10:56:06AM -0600, Jens Axboe wrote:
-> > Where?  And how do make that available to in-kernel users like
-> > storage protocols and network file system, which really suffer from
-> > the current MSG_SPLICE_PAGES semantics.
-> 
-> For zero copy, on both the receive and send side. Since we have a proper
-> notification channel, that's what we use rather than the hack that is
-> the error queue.
+The new DVM node events added in CMN-700 also apply to CMN S3; fix
+the model encoding so that we can expose the aliases and handle
+occupancy filtering on newer CMNs too.
 
-Can you point me to that notification channel? 
+Cc: <stable@vger.kernel.org>
+Fixes: 0dc2f4963f7e ("perf/arm-cmn: Support CMN S3")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm-cmn.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-> >> , and without needing msg_kiocb or the
-> > 
-> > What do you think is the downside of using a kiocb here like for
-> > everything else with async notifications?
-> 
-> Where would the notifications go?
-
-For userspace: io_uring or the error queue for the synchronous calls.
-For in-kernel APIs whatever the callers wants to do by doing it from
-ki_complete.
-
-> You'd end up inventing something new
-> to propagate them to userspace then.
-
-The main aim here is to have a way to get these completions from
-kernelspace to get rid of the current horrors around MSG_SPLICE_PAGES.
-
-> The io_uring side does not rely on
-> using msg_kiocb, and iirc that part was only ever used for the crypto
-> stuff and largely broken. Which is why I do agree with just yanking it
-> out.
-
-I'm not arguing for how msg_kiocb as that is a mess.  But having an
-explicit kiocb API like all the other async file operations would
-make things a lot simpler.
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index f5305c8fdca4..6e5cc4086a9e 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -197,13 +197,14 @@
+ enum cmn_model {
+ 	CMN600 = 1,
+ 	CMN650 = 2,
+-	CMN700 = 4,
+-	CI700 = 8,
++	CI700 = 4,
++	CMN700 = 8,
+ 	CMNS3 = 16,
+ 	/* ...and then we can use bitmap tricks for commonality */
+ 	CMN_ANY = -1,
+ 	NOT_CMN600 = -2,
+-	CMN_650ON = CMN650 | CMN700 | CMNS3,
++	CMN_700ON = ~(CMN700 - 1),
++	CMN_650ON = CMN_700ON | CMN650,
+ };
+ 
+ /* Actual part numbers and revision IDs defined by the hardware */
+@@ -919,14 +920,14 @@ static struct attribute *arm_cmn_event_attrs[] = {
+ 	CMN_EVENT_DVM(NOT_CMN600, txsnp_stall,		0x0a),
+ 	CMN_EVENT_DVM(NOT_CMN600, trkfull,		0x0b),
+ 	CMN_EVENT_DVM_OCC(NOT_CMN600, trk_occupancy,	0x0c),
+-	CMN_EVENT_DVM_OCC(CMN700, trk_occupancy_cxha,	0x0d),
+-	CMN_EVENT_DVM_OCC(CMN700, trk_occupancy_pdn,	0x0e),
+-	CMN_EVENT_DVM(CMN700, trk_alloc,		0x0f),
+-	CMN_EVENT_DVM(CMN700, trk_cxha_alloc,		0x10),
+-	CMN_EVENT_DVM(CMN700, trk_pdn_alloc,		0x11),
+-	CMN_EVENT_DVM(CMN700, txsnp_stall_limit,	0x12),
+-	CMN_EVENT_DVM(CMN700, rxsnp_stall_starv,	0x13),
+-	CMN_EVENT_DVM(CMN700, txsnp_sync_stall_op,	0x14),
++	CMN_EVENT_DVM_OCC(CMN_700ON, trk_occupancy_cxha, 0x0d),
++	CMN_EVENT_DVM_OCC(CMN_700ON, trk_occupancy_pdn,	0x0e),
++	CMN_EVENT_DVM(CMN_700ON, trk_alloc,		0x0f),
++	CMN_EVENT_DVM(CMN_700ON, trk_cxha_alloc,	0x10),
++	CMN_EVENT_DVM(CMN_700ON, trk_pdn_alloc,		0x11),
++	CMN_EVENT_DVM(CMN_700ON, txsnp_stall_limit,	0x12),
++	CMN_EVENT_DVM(CMN_700ON, rxsnp_stall_starv,	0x13),
++	CMN_EVENT_DVM(CMN_700ON, txsnp_sync_stall_op,	0x14),
+ 
+ 	CMN_EVENT_HNF(CMN_ANY, cache_miss,		0x01),
+ 	CMN_EVENT_HNF(CMN_ANY, slc_sf_cache_access,	0x02),
+-- 
+2.54.0.dirty
 
