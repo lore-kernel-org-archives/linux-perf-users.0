@@ -1,262 +1,443 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013028.outbound.protection.outlook.com [40.93.196.28])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26207329E79;
-	Fri, 29 May 2026 06:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780037911; cv=fail; b=R6tEWyhpzo/Mm+t/r5xIiSlOk0akafLMRXVeBLKOV64N6fBkJz8J91DMemCvy1VYnkrILJObsJoilGiG3NSatsZdF8WpYeh+Ufoz63YHitBBEimN9nyU1E53/vfeb9FBwLswhq38lcbYOXMt2f1+JjtSGUHPJwbg5ITziMT9QxY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780037911; c=relaxed/simple;
-	bh=9b1mhTJaeQJ/c/3KiAhjJvUw4gzxqQO1StwsfSJ64N8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Tnthv0qxIBA7hvKti8/jNejoi8yOccIukYWc6qQ9N2WXgW8hDCvpUHiTT2Xfl0kyCRuDQEHMnLiUQ8xLeEczTUkMt3br+NFyo6FH9lifHEAsuHNgpQruBDV2B2nlo/Y/F8Fj/v1OQAujKBdVV2zlwX1SclCbTmHqMUb60/LWgi8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=uOzVxmkv; arc=fail smtp.client-ip=40.93.196.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B058B3B3C1B;
+	Fri, 29 May 2026 08:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780041759; cv=none; b=ekbP53Q6PeiZeGRcXMg3WtDAbViRFZTmr8JsK8ksGBvTC7KdXph1sT8U0gAyc1SgZSU+2/IzLWmeOHuTYVZao7MMBC18rgXvJVFVo9TxOAxj81jyQa6nhse5z/BRBATIdpp4hTmcgjOCbEYoxSyayFlx6u+c4d2fxDjPqRnOZQw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780041759; c=relaxed/simple;
+	bh=buTKHFLGlo7i03bq9hIxgxZadK69416yHDm2zRbLUKI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RsY7IQWoo9bs7olO3JUpyQkwqoQA5/lbogGBJ4hSne/Iw6mPLJ38Aj+X1TpTtfpgZ/p6J/+vrNzcVodVuEc5/WT8DN3ntPK4XQrlBg6c7hEhAI9TLszA6uBYD/4cCcPuiZLmYXvDj08MHT+JTTysBzI1NlbzQD26nU7YRouVSfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbLS7TBB; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="uOzVxmkv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yHR6eBmljza3TOkJ9VbSAsbw171bu6TRRxmfkbvScem7OMUsEZbaZYb+Goxxanm2GmtENfBkhWHLR0hLam0+hycojKCztGi/STKooYVTXCT67tuDtxE3TMZ5LbsGIhDZyukOpKQetu/+VjXblF/OzGDKJs+EQ9zQDXaybiopuZpluSEyJ0Om/SqNIJnqzI9u4YlM2qyRoAPb8OhDYIncY3XNnDxxWOxWAoX4P6iuGSCUR9NNfHYeqvHzuJtzY85DyJbSx39PtyDygBuh06vm848FvnKunT7aYaiVru5LkHgPeviwuIazBhA6x0KAPTsGZv6XAojHZvbVYU/mfQH5Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6hceykVTF24S+tp4LnQ802kCg/ubOWtfLAhTLuHGhw4=;
- b=GX8SRUTKnL4Ks1PuTpHb+oDLtaArAG+30a1K53taVbnKBrLq/kHJTOa7e+YvkUqqSuxE6o8M54ndhJj9CQO/fa+DyZ/JdyQj0IwewFUiFPCABoJ9rhTSWo0gHGkz8XM0phZlxg67FBAGd3RAD+nW7ZRukDMb1Ifd8nNs1LFW0HqleiCHeMNs2xuAJYXlAgNUjX8Ngr1Q3AqMdwruSxAGaGPkF+INq0SL8j3hpHdYEsFwDREY14Gdl3TMbxUDZ0szTtdzaBVrt9bIo4/AKp3mCtRaBy1MZNY1FXYnknClYTP0sRKSsD71+eg2wZnbEx9FcZ53cOH/pYG7mF8apw4Nsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6hceykVTF24S+tp4LnQ802kCg/ubOWtfLAhTLuHGhw4=;
- b=uOzVxmkvWa/EPD1Nee4pqSqY8F8suKoBEy4pejMuE9c7FnleofEy0RDcQ32zvNaks+4Kx46k0gqf8KVjJEACR+7k933GK8qW3tV/fY/1hz4/bnE9u1mi94qU1VaehnRziOaFe9drTPJwyHZwEeB9yFZ6ZCIiHQpnwPGk2wfDmL8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by CH3PR12MB8260.namprd12.prod.outlook.com (2603:10b6:610:12a::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.15; Fri, 29 May
- 2026 06:58:22 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0071.014; Fri, 29 May 2026
- 06:58:22 +0000
-Message-ID: <09786a38-54e3-4b08-9210-7c7c6bc80f9c@amd.com>
-Date: Fri, 29 May 2026 12:28:10 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/events/amd/iommu: Fix cpumask of IOMMU events
-To: Vasant Hegde <vasant.hegde@amd.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, james.clark@linaro.org
-Cc: x86@kernel.org, dave.hansen@linux.intel.com, tglx@kernel.org,
- bp@alien8.de, hpa@zytor.com, iommu@lists.linux.dev, joro@8bytes.org,
- suravee.suthikulpanit@amd.com
-References: <20260517114026.6817-1-vasant.hegde@amd.com>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <20260517114026.6817-1-vasant.hegde@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5P287CA0003.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:176::12) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbLS7TBB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780041757; x=1811577757;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=buTKHFLGlo7i03bq9hIxgxZadK69416yHDm2zRbLUKI=;
+  b=nbLS7TBB8kNZ7xKRebwSnQAswXqmWij0/kCC+Rcm/7xvQNRgE1qKn+5a
+   jEo+wdgTlzL/aLkF03KCbet+0v8ba+oz2SA/Oc+p3p/AGK098RDkdMLAH
+   Yay10fWBmgoa//wMtX4/kYqnhTX6fJeuELSlydXcmFQ1txEmvvfquYMd5
+   UBxcogJdTHwX8kH44kZBkxKrFxrNvD2tjvIqwyw9lZtzFF3p6D3+YdXDU
+   d5i8ige9a+phMStywSW8Rf2tvXeV7oWw7+FiTAWmwKzYKtA5QNyfgpY4I
+   6F80zLlBtAV9nkMsFfuRBN+IYhvUnqt0Gsr6tvIwsEeGS+TiNvGmcKJLA
+   Q==;
+X-CSE-ConnectionGUID: Cbk3e1EqSVytmCCbpEilng==
+X-CSE-MsgGUID: ZhjhndlIS+2t21t9MSSPsA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106341832"
+X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
+   d="scan'208";a="106341832"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:02:35 -0700
+X-CSE-ConnectionGUID: MylKwWB8QFiEmPagqPX5qA==
+X-CSE-MsgGUID: f9Yi72LASI65Ighzkzl5Qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
+   d="scan'208";a="246801921"
+Received: from spr.sh.intel.com ([10.112.230.239])
+  by orviesa003.jf.intel.com with ESMTP; 29 May 2026 01:02:30 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	broonie@kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v8 00/23] Support SIMD/eGPRs/SSP registers sampling for perf
+Date: Fri, 29 May 2026 15:56:22 +0800
+Message-Id: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|CH3PR12MB8260:EE_
-X-MS-Office365-Filtering-Correlation-Id: 716fd37c-acbf-4268-f6aa-08debd4fab9d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|18002099003|921020|22082099003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	sgHqJOOOZMwGeOg9QzyQvzbjkQ+ip50ZU6mJDbrBlLxJVhP3LRCCCiDHPVp/keZa7QxdZaYtkRLQNomnf2LOBUN5GJQcQI+81OXwCO/lxyseRKPWYliZYK50xnYIDzTHzdsSwwDgfMWRucRR3IFh6+PR79W8k/My0Ai51SfIUdkHTMNTupiJQns7exSSFeq/uNw7Vv1GrTZ8ryge6njo0u4a7JjkxToz5VfefpkVmm7/RYhqjaIq3s/xxWdMWTQrQIk0nHomO8RxvYuv5bf45046dR88MqtNkf4JjIl8AKljzV6iAOo7MeG0a2dtmPHpzg+1QrYvOvL0JV6ouPqZ5AgwF2cpeJU2RLDQULPyGuy/xbdRu8/tX0kq1UeZFs9Z3veuknBbPDYaIXFPlYAg0ItNUdzE7AE1hUSvhXvE8yH9KDfRwJY7WffGa3Yny1KSgY2TMnj1NAPvy8FLTDK4Ex8W8kGVr/0Fyfshvckd8lsY/G0mmJWix1p1Eq5E7ykb5lvQc2wj7tbC7xzvUvBM3bZIQkZ8+YwuaO765bPJ3woKAWf4gw7XHjXS1DTRImVod1QAEFDvQQeyEa/hdbXiNB84cXjPyQJUcTr3hoKe++BZODykN1RiaaIaz+NS9t7MogUX0czFbHenLuipBBNEw1AvpFrs2pSF5QSchVnScaYnNiKdCfj4YZ8bk3N8kEDebkAG3lUbsFD0m6HTNws0AFXXVTbsNeHCMZ8t+BfZD9tlred/gqiW3H6ZVzb8By91
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(18002099003)(921020)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZnM1TjRNRDkvQ015T3Q0QUdtc0hTRnJYQ3JpUEFsZC8xL2ZiQ0tVWjcxZDBh?=
- =?utf-8?B?dWl1WW9RNTRpWEx5ZVRKd3Mxc1ZFYW9MUHg3OTZIQkQxcndueHYzby9UcEIr?=
- =?utf-8?B?NjdpNHJlUmtmUloxcnRiMkNKNzQyK3RjUVBkZ1FKRmlCdWFiWG05Vk1UMU95?=
- =?utf-8?B?QTMyU0NWRWZjTFpKYUZ2VWM5VHExY2tPdXRKaVZUUUVUK1lESlRodUxjSExC?=
- =?utf-8?B?TEhEVWR2K0hrTmhqQVdWVkRYQ015R1pkaDRFRjlqQmlvVmo0azlTZGpMNU00?=
- =?utf-8?B?T0xvL3ZYNUtXNGlyYzNOMFdyMjU4RjN1UHZnOURqSmFJTjdoL2JTVEhVdG1m?=
- =?utf-8?B?SG1PZE0xUVZDNzNXSWF0Rm5QZlgzdmJQdmFGOWFyQ1RIcW5DNjZrZzdkNnZE?=
- =?utf-8?B?YnErS0cwYU1DUnhCNUN0bTkwTTluU1BYWEplV2VQVWV5WGp2bmc4QTNZU1Uy?=
- =?utf-8?B?ZFdudHdCZnNMRnFkdVIrSzhVeEpnVlZVek9wMUJmc3JtTjFOdmlOZ2x1NmRk?=
- =?utf-8?B?VjE4VitSeUdQV3E3SlVrMHBjZkdIRHpxWENhOWdiZTRlK2ZFTmZNZjB2aGZV?=
- =?utf-8?B?VTVHZTVibFpQS3ljalRQaWE5TnlPUDNnbUxUK3BzWlRmUEJNQklnZGI5RENi?=
- =?utf-8?B?U0pJMlk3KzZVNUpIMCtNNi80T25Fb003Y25yQlRXc1N5dGJzQVEwdTRnMGVz?=
- =?utf-8?B?UE4xKzUvb0hRc21aTW9LK2tFL2RDb3FjRWc1cmRXOEZqcDdvSjJ4aGR6LzZ5?=
- =?utf-8?B?bnBHb3YxRmZPbTUxelVaaC92RVFZbmVmU3lyK3BuQVRDb0hFTXBsUzdwWEx0?=
- =?utf-8?B?R3kxNWNSOXlLcDkrQWQ5L1VkTTNhT1F0VFNDZDlrQ0pGcHJlSVM5UW1aaFBz?=
- =?utf-8?B?U2xwUTlNdUp3T2dIMGVpZHEzcDd0bFVZVHMweDVpL2tka3lvZE1jYnZLNHUv?=
- =?utf-8?B?c0s1ZTgzK3QxRVk3QU8wVC9IVksrY2piL0xJLzNmVld2dmJtdTBHa0M0TnF2?=
- =?utf-8?B?Y3pGcklYb0M4MzAyMStlaXJsM3NnL3FkVytiWnY3NlBpRFEraGdWTW9LM09l?=
- =?utf-8?B?MldFNlJudnFBRmN5dWVvbVY2TDE0OGlyNUtQUGpHekRvcmFrRUxpcldPL25t?=
- =?utf-8?B?WnQyUk9Ebk8zOXM2N05nb1BKYUxJYTJwdnB2bTloNE95NjdvWTJFVk94dTBo?=
- =?utf-8?B?UnZBT1o0Qk1WMERsdTV0TUhDNFd2blZUUTJocDI5SC9hUW1GWVRMalU4angv?=
- =?utf-8?B?S0ExeDdVc0JYYTJNQm81dG9VQmlJL01GcUtGUEkzb2VTL1pNZ0FyeGNlb1lT?=
- =?utf-8?B?MThXb2oyS0k1NzJpaHhNN0k5R3VLQ0tGYi9KVUFOMWdJQWl4Z2tpcWJyVm4y?=
- =?utf-8?B?d3Bpa2RUbG45QlI1Z1dwRWVsSU5wYjNNY2FmWDRUeUc4dTIrWGcwOFZIbm95?=
- =?utf-8?B?dkJwa1ovTVh1Umt5WGZFOXNKVXVlR1d1cGdMR0hkV2gxVkxlZzlYc0JERk5J?=
- =?utf-8?B?TFlObmI1ckpkdXlUM1EvTHExUWcxU2VKRzQvUWVTZzRjZXhuN1ovd2Q4UFNt?=
- =?utf-8?B?OWFXMEEramM2MEFEUUhucm0yOEoxbExiR3RLcDAwVjlZbUVxSktiSW1vT01k?=
- =?utf-8?B?MXM5MUVmS1NGaGVZN3UybU1DNDNLbnY3UEt0TWJzc204eHRxNHFyRVg1ZUNv?=
- =?utf-8?B?ckdTUlBBeVZzZmFyQzRNRE5lNXVFa3BSd0dsUWZTNGpiWlMzUEFhRXJhWDRD?=
- =?utf-8?B?dFN1dmdxQ1NhVVFIS1MyMmdnU1haL05ZWG9sTXlucW1ocjlmMkZ4VDFzZjNx?=
- =?utf-8?B?RElWaTRuUlIrdklNdG1wWDhIYTk3Z0JHWitqaEpyMk1wOVQxNlJXYUZTdE50?=
- =?utf-8?B?RFJlcUgybmNEdFF1NWtETzRZa2Q2bXZTRmNtTFpaeEwxcGtpZkozVGRoNHlW?=
- =?utf-8?B?UE1hY2FSVWpDSWN6UkJ6QTEwUnJ5bTZ0QlJIRXJiNjV5MFNEOTBBT0lPSjdw?=
- =?utf-8?B?TElYcUl4TnV0TmFjbUJ5OWJpRnVSVHprUG5qcU9wWWkwVE1aVUd0KytoZkxj?=
- =?utf-8?B?aSsvTERDdXd3ZmxlQmtJbWRlcjN4alBFUG15cjJhckVZd3VSbGdwZEwvcC8w?=
- =?utf-8?B?cnYvNmdhOVFBSldDcE0wdC95VU55SUlWK3djd0JPcEZxclBLK3d3QUVmRHYx?=
- =?utf-8?B?REgrMTVIanlKRVg4Rm9WbWNrZERTdFllMDh5SXMydzRRUm8yNEducFNnbGZs?=
- =?utf-8?B?TFJWSHcvSzFhTVZMN1p1RFROUkcwcmN6V0VlOXNFU0RiK2ttOXR5RDJXVCsy?=
- =?utf-8?B?cUxaZFRaRnVTb0praVNiWloyMFl3QzdZeWRGMG5yU0d6Q2FNZDdMUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 716fd37c-acbf-4268-f6aa-08debd4fab9d
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2026 06:58:21.8676
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Frw1KQFcinwcgDQuvUd7SQ1zp8ShIC+MFgS2IShXXQjgoyvbL93wdGs6zWdnUrVirDTJzLdqh3q++gF7xpU6bA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8260
+Content-Transfer-Encoding: 8bit
 
-On 17-05-2026 17:10, Vasant Hegde wrote:
-> IOMMU performance counters are accessed via MMIO space. Currently IOMMU
-> PMUs uses a single global cpumask (iommu_cpumask) shared across all AMD
-> IOMMU PMU instances. This prevents collecting per-socket numbers
-> (ex: perf stat --per-socket).
-> 
-> Fix this by adjusting cpumask based on IOMMUs NUMA node.
-> 
-> Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
+Patch layout:
+- Patches 1-6: Bug fixes and cleanup needed before enabling XSAVES-based
+  sampling in NMI context
+- Patches 7-9: FPU-related preparation, including xsaves_nmi() and
+  related cleanup/optimization
+- Patches 10-11: PMI-based XMM sampling support through the existing
+  sample_regs_intr/sample_regs_user interfaces for both
+  PERF_SAMPLE_REGS_INTR and PERF_SAMPLE_REGS_USER
+- Patches 12-19: New SIMD register interface and support for
+  XMM/YMM/ZMM/OPMASK, APX eGPRs, and SSP through that interface
+- Patch 20: Extend arch PEBS to support YMM/ZMM/OPMASK, APX eGPRs, and
+  SSP with the new interface
+- Patch 21: Enable new interface-based sampling
+- Patches 22-23: arch PEBS bug fix and sanity check
 
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+Changes since V7:
+- Validate the return value of intel_pmu_init_hybrid() (Patch 01/23).
+- Replace pt_regs with x86_perf_regs in xen_pmu_irq_handler()
+  (Patch 06/23).
+- Improve event_has_extended_regs() (Patch 09/23).
+- Explicitly ensure the allocated XSAVE area is 64-byte aligned
+  (Patch 10/23, Sashiko).
+- Clear the SIMD register pointers in x86_user_regs to avoid exposing
+  stale register data to user space (Patch 11/23, Sashiko).
+- Refine the SIMD register interface and sample data layout, and add the
+  missing SIMD data reservation in perf_prepare_sample() for non-x86
+  architectures (Patch 12/23, Sashiko).
+- Improve perf_simd_reg_validate() for x86 (Patch 13/23, Sashiko).
+- Refine SSP sampling and ensure the GPR sub-group flag is set for PEBS
+  (Patch 19/23, Sashiko).
+- Fix the incorrect large-PEBS check for XMM (Patch 20/23, Sashiko).
+- Fix missing handling in x86_pmu_handle_guest_pebs() for back-to-back
+  PMI detection (Patch 22/23, Sashiko).
+- Strengthen the PEBS record header sanity checks to prevent invalid
+  memory access (Patch 23/23, Sashiko).
 
-> ---
->  arch/x86/events/amd/iommu.c | 29 +++++++++++++++++++++++------
->  drivers/iommu/amd/init.c    |  7 +++++++
->  include/linux/amd-iommu.h   |  1 +
->  3 files changed, 31 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/iommu.c b/arch/x86/events/amd/iommu.c
-> index 07b110e8418a..b1848300028d 100644
-> --- a/arch/x86/events/amd/iommu.c
-> +++ b/arch/x86/events/amd/iommu.c
-> @@ -10,6 +10,7 @@
->  
->  #define pr_fmt(fmt)	"perf/amd_iommu: " fmt
->  
-> +#include <linux/device.h>
->  #include <linux/perf_event.h>
->  #include <linux/init.h>
->  #include <linux/cpumask.h>
-> @@ -43,6 +44,7 @@ struct perf_amd_iommu {
->  	u8 max_counters;
->  	u64 cntr_assign_mask;
->  	raw_spinlock_t lock;
-> +	cpumask_t cpumask;
->  };
->  
->  static LIST_HEAD(perf_amd_iommu_list);
-> @@ -131,13 +133,15 @@ static struct amd_iommu_event_desc amd_iommu_v2_event_descs[] = {
->  /*---------------------------------------------
->   * sysfs cpumask attributes
->   *---------------------------------------------*/
-> -static cpumask_t iommu_cpumask;
-> -
->  static ssize_t _iommu_cpumask_show(struct device *dev,
->  				   struct device_attribute *attr,
->  				   char *buf)
->  {
-> -	return cpumap_print_to_pagebuf(true, buf, &iommu_cpumask);
-> +	struct pmu *pmu = dev_get_drvdata(dev);
-> +	struct perf_amd_iommu *perf_iommu =
-> +			container_of(pmu, struct perf_amd_iommu, pmu);
-> +
-> +	return cpumap_print_to_pagebuf(true, buf, &perf_iommu->cpumask);
->  }
->  static DEVICE_ATTR(cpumask, S_IRUGO, _iommu_cpumask_show, NULL);
->  
-> @@ -420,7 +424,8 @@ static const struct pmu iommu_pmu __initconst = {
->  static __init int init_one_iommu(unsigned int idx)
->  {
->  	struct perf_amd_iommu *perf_iommu;
-> -	int ret;
-> +	struct device *dev;
-> +	int node, cpu, ret;
->  
->  	perf_iommu = kzalloc_obj(struct perf_amd_iommu);
->  	if (!perf_iommu)
-> @@ -440,6 +445,20 @@ static __init int init_one_iommu(unsigned int idx)
->  		return -EINVAL;
->  	}
->  
-> +	dev = amd_iommu_idx_to_dev(idx);
-> +	node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
-> +	if (node != NUMA_NO_NODE)
-> +		cpu = cpumask_any_and(cpumask_of_node(node), cpu_online_mask);
-> +	else
-> +		cpu = cpumask_any(cpu_online_mask);
-> +
-> +	if (cpu >= nr_cpu_ids) {
-> +		pr_warn("Failed to find online CPU for IOMMU %d.\n", idx);
-> +		kfree(perf_iommu);
-> +		return -ENODEV;
-> +	}
-> +	cpumask_set_cpu(cpu, &perf_iommu->cpumask);
-> +
->  	snprintf(perf_iommu->name, IOMMU_NAME_SIZE, "amd_iommu_%u", idx);
->  
->  	ret = perf_pmu_register(&perf_iommu->pmu, perf_iommu->name, -1);
-> @@ -483,8 +502,6 @@ static __init int amd_iommu_pc_init(void)
->  		return -ENODEV;
->  	}
->  
-> -	/* Init cpumask attributes to only core 0 */
-> -	cpumask_set_cpu(0, &iommu_cpumask);
->  	return 0;
->  }
->  
-> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-> index 3bdb380d23e9..2c35d171b5ae 100644
-> --- a/drivers/iommu/amd/init.c
-> +++ b/drivers/iommu/amd/init.c
-> @@ -3939,6 +3939,13 @@ struct amd_iommu *get_amd_iommu(unsigned int idx)
->  	return NULL;
->  }
->  
-> +struct device *amd_iommu_idx_to_dev(unsigned int idx)
-> +{
-> +	struct amd_iommu *iommu = get_amd_iommu(idx);
-> +
-> +	return iommu ? &iommu->dev->dev : NULL;
-> +}
-> +
->  /****************************************************************************
->   *
->   * IOMMU EFR Performance Counter support functionality. This code allows
-> diff --git a/include/linux/amd-iommu.h b/include/linux/amd-iommu.h
-> index edcee9f5335a..6b8d6b53b4e9 100644
-> --- a/include/linux/amd-iommu.h
-> +++ b/include/linux/amd-iommu.h
-> @@ -67,6 +67,7 @@ int amd_iommu_pc_set_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn,
->  int amd_iommu_pc_get_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn,
->  		u64 *value);
->  struct amd_iommu *get_amd_iommu(unsigned int idx);
-> +struct device *amd_iommu_idx_to_dev(unsigned int idx);
->  
->  #ifdef CONFIG_KVM_AMD_SEV
->  int amd_iommu_snp_disable(void);
+Changes since V6:
+- Fix potential overwritten issue in hybrid PMU structure (patch 01/24)
+- Restrict PEBS events work on GP counters if no PEBS baseline suggested
+  (patch 02/24)
+- Use per-cpu x86_intr_regs for perf_event_nmi_handler() instead of
+  temporary variable (patch 06/24)
+- Add helper update_fpu_state_and_flag() to ensure TIF_NEED_FPU_LOAD is
+  set after save_fpregs_to_fpstate() call (patch 09/24)
+- Optimize and simplify x86_pmu_sample_xregs(), etc. (patch 11/24)
+- Add macro word_for_each_set_bit() to simplify u64 set-bit iteration
+  (patch 13/24)
+- Add sanity check for PEBS fragment size (patch 24/24)
+
+Changes since V5:
+- Introduce 3 commits to fix newly found PEBS issues (Patch 01~03/19)
+- Address Peter comments, including,
+  * Fully support user-regs sampling of the SIMD/eGPRs/SSP registers
+  * Adjust newly added fields in perf_event_attr to avoid holes
+  * Fix the endian issue introduced by for_each_set_bit() in
+    event/core.c
+  * Remove some unnecessary macros from UAPI header perf_regs.h
+  * Enhance b2b NMI detection for all PEBS handlers to ensure identical
+    behaviors of all PEBS handlers
+- Split perf-tools patches which would be posted in a separate patchset
+  later
+
+Changes since V4:
+- Rewrite some functions comments and commit messages (Dave)
+- Add arch-PEBS based SIMD/eGPRs/SSP sampling support (Patch 15/19)
+- Fix "suspecious NMI" warnning observed on PTL/NVL P-core and DMR by
+  activating back-to-back NMI detection mechanism (Patch 16/19)
+- Fix some minor issues on perf-tool patches (Patch 18/19)
+
+Changes since V3:
+- Drop the SIMD registers if an NMI hits kernel mode for REGS_USER.
+- Only dump the available regs, rather than zero and dump the
+  unavailable regs. It's possible that the dumped registers are a subset
+  of the requested registers.
+- Some minor updates to address Dapeng's comments in V3.
+
+Changes since V2:
+- Use the FPU format for the x86_pmu.ext_regs_mask as well
+- Add a check before invoking xsaves_nmi()
+- Add perf_simd_reg_check() to retrieve the number of available
+  registers. If the kernel fails to get the requested registers, e.g.,
+  XSAVES fails, nothing dumps to the userspace (the V2 dumps all 0s).
+- Add POC perf tool patches
+
+Changes since V1:
+- Apply the new interfaces to configure and dump the SIMD registers
+- Utilize the existing FPU functions, e.g., xstate_calculate_size,
+  get_xsave_addr().
+
+
+This series adds support on x86 for sampling SIMD registers, APX eGPRs,
+and SSP with both PMI-based and PEBS-based sampling.
+
+Starting with Intel Ice Lake, PEBS can sample XMM registers, but PMI-based
+XMM sampling is still not available. On newer Intel platforms with
+architectural PEBS support, such as Clearwater Forest and Diamond Rapids,
+the hardware also gains support for sampling additional SIMD state
+(XMM/YMM/ZMM/OPMASK), APX extended GPRs, and SSP.
+
+To support these registers consistently across both PMI and PEBS, this
+series makes the following changes:
+
+1. Adds a new perf_event_attr interface for SIMD register selection.
+   The existing sample_regs_user/sample_regs_intr bitmaps do not have
+   enough space to represent the full SIMD register set, so this series
+   introduces dedicated fields for SIMD and predicate register masks and
+   element widths.
+
+2. Introduces a new sample data layout for SIMD register data.
+   SIMD register payload is appended after the GPR payload, and a new ABI
+   flag, PERF_SAMPLE_REGS_ABI_SIMD, indicates its presence.
+
+3. Adds xsaves_nmi() to allow SIMD/eGPR/SSP sampling from PMI handlers in
+   NMI context.
+
+4. Extends the arch PEBS path to support YMM/ZMM/OPMASK, APX eGPRs, and
+   SSP sampling.
+
+
+New perf_event_attr fields
+--------------------------
+
+This series adds the following fields to perf_event_attr:
+
+    /*
+     * Defines the sampling SIMD/PRED(predicate) register bitmaps and
+     * qword (8-byte) lengths.
+     *
+     * sample_simd_regs_enabled != 0 indicates SIMD/PRED registers are
+     * requested. The register bitmaps and element sizes are described by:
+     *
+     *   sample_simd_{vec,pred}_reg_{intr,user}
+     *   sample_simd_{vec,pred}_reg_qwords
+     *
+     * sample_simd_regs_enabled == 0 indicates no SIMD/PRED registers are
+     * requested.
+     */
+    __u16 sample_simd_regs_enabled;
+    __u16 sample_simd_pred_reg_qwords;
+    __u16 sample_simd_vec_reg_qwords;
+    __u16 __reserved_4;
+
+    __u32 sample_simd_pred_reg_intr;
+    __u32 sample_simd_pred_reg_user;
+    __u64 sample_simd_vec_reg_intr;
+    __u64 sample_simd_vec_reg_user;
+
+Field semantics:
+- sample_simd_vec_reg_qwords: qword count for regular SIMD registers
+- sample_simd_pred_reg_qwords: qword count for predicate registers
+- sample_simd_vec_reg_{intr,user}: SIMD register masks for
+  PERF_SAMPLE_REGS_INTR and PERF_SAMPLE_REGS_USER
+- sample_simd_pred_reg_{intr,user}: predicate register masks for
+  PERF_SAMPLE_REGS_INTR and PERF_SAMPLE_REGS_USER
+- sample_simd_regs_enabled: indicates whether the new SIMD fields are in use
+
+Examples:
+
+To sample ZMM registers for PERF_SAMPLE_REGS_INTR:
+
+    sample_simd_regs_enabled = 1
+    sample_simd_vec_reg_qwords = 8          // 512 bits = 8 qwords
+    sample_simd_vec_reg_intr = 0xffffffff   // zmm0-zmm31
+
+To sample OPMASK registers for PERF_SAMPLE_REGS_USER:
+
+    sample_simd_regs_enabled = 1
+    sample_simd_pred_reg_qwords = 1         // 64 bits = 1 qword
+    sample_simd_pred_reg_user = 0xff        // opmask0-opmask7
+
+After introducing these fields, bits [63:32] in sample_regs_user and
+sample_regs_intr are reclaimed for APX eGPRs and SSP instead of the
+previous XMM0-XMM15 encoding.
+
+Discussion of the new SIMD register interface is available at:
+https://lore.kernel.org/lkml/20250617081458.GI1613376@noisy.programming.kicks-ass.net/
+
+Sample data layout
+------------------
+
+SIMD register data is appended after the GPR data.
+
+For PERF_SAMPLE_REGS_USER:
+
+    { u64 abi;                      // enum perf_sample_regs_abi
+      u64 regs[weight(mask)];
+      struct {
+            u64 nr_vectors;         // 0 ... weight(sample_simd_vec_reg_user)
+            u64 vector_qwords;      // 0 ... sample_simd_vec_reg_qwords
+            u64 nr_pred;            // 0 ... weight(sample_simd_pred_reg_user)
+            u64 pred_qwords;        // 0 ... sample_simd_pred_reg_qwords
+            u64 data[nr_vectors * vector_qwords +
+                     nr_pred * pred_qwords];
+      } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+    }
+
+For PERF_SAMPLE_REGS_INTR:
+
+    { u64 abi;                      // enum perf_sample_regs_abi
+      u64 regs[weight(mask)];
+      struct {
+            u64 nr_vectors;         // 0 ... weight(sample_simd_vec_reg_intr)
+            u64 vector_qwords;      // 0 ... sample_simd_vec_reg_qwords
+            u64 nr_pred;            // 0 ... weight(sample_simd_pred_reg_intr)
+            u64 pred_qwords;        // 0 ... sample_simd_pred_reg_qwords
+            u64 data[nr_vectors * vector_qwords +
+                     nr_pred * pred_qwords];
+      } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+    }
+
+PERF_SAMPLE_REGS_ABI_SIMD indicates that SIMD register data is present.
+
+The metadata fields are encoded as u64 to keep perf tool parsing and
+cross-endian support straightforward.
+
+Example
+-------
+
+  $ perf record -I?
+  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27
+  R28 R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
+
+  $ perf record --user-regs=?
+  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+  R11 R12 R13 R14 R15 R16 R17 R18 R19 R20 R21 R22 R23 R24 R25 R26 R27
+  R28 R29 R30 R31 SSP XMM0-15 YMM0-15 ZMM0-31 OPMASK0-7
+
+  $ perf record -e branches:p \
+        -Iax,bx,r8,r16,r31,ssp,xmm,ymm,zmm,opmask \
+        -c 100000 ./test
+  $ perf report -D
+
+  ...
+  14027761992115 0xcf30 [0x8a8]: PERF_RECORD_SAMPLE(IP, 0x1): 29964/29964:
+  0xffffffff9f085e24 period: 100000 addr: 0
+  ... intr regs: mask 0x18001010003 ABI 64-bit
+  .... AX    0xdffffc0000000000
+  .... BX    0xffff8882297685e8
+  .... R8    0x0000000000000000
+  .... R16   0x0000000000000000
+  .... R31   0x0000000000000000
+  .... SSP   0x0000000000000000
+  ... SIMD ABI nr_vectors 32 vector_qwords 8 nr_pred 8 pred_qwords 1
+  .... ZMM[0][0] 0x616c2f656d6f682f
+  .... ZMM[0][1] 0x696c2f7265737562
+  ...
+  .... ZMM[31][7] 0x0000000000000000
+  .... OPMASK[0] 0x00000000fffffe00
+  ....
+  .... OPMASK[7] 0x0000000000000000
+  ...
+
+Testing
+-------
+
+The following intr-regs, user-regs, and combined sampling tests were run
+on DMR and NVL. The sampled register data was reported correctly and no
+issues were observed.
+
+  $ ./perf record -e branches:p \
+        -Iax,bx,r8,r16,r31,ssp,xmm,ymm,zmm,opmask -b -c 10000 sleep 1
+
+  $ ./perf record -e branches \
+        -Iax,bx,r8,r16,r31,ssp,xmm,ymm,zmm,opmask -b -c 10000 sleep 1
+
+  $ ./perf record -e branches:p \
+        --user-regs=ax,bx,r8,r16,r31,ssp,xmm,ymm,zmm,opmask \
+        -b -c 10000 sleep 1
+
+  $ ./perf record -e branches \
+        --user-regs=ax,bx,r8,r16,r31,ssp,xmm,ymm,zmm,opmask \
+        -b -c 10000 sleep 1
+
+  $ ./perf record -e branches:p \
+        -Ixmm,ymm,zmm,opmask \
+        --user-regs=ax,bx,r8,r16,r31,ssp \
+        -b -c 10000 sleep 1
+
+  $ ./perf record -e branches:p \
+        --user-regs=xmm,ymm,zmm,opmask \
+        -Iax,bx,r8,r16,r31,ssp \
+        -b -c 10000 sleep 1
+
+  $ ./perf record -e branches:p \
+        -Iax,bx,r9,r17,r30,ssp \
+        --user-regs=ax,bx,r8,r16,r31,ssp \
+        -b -c 10000 sleep 1
+
+  $ ./perf record -e branches:p \
+        -Ixmm,opmask --user-regs=zmm \
+        -b -c 10000 taskset -c 0 sleep 1
+
+
+History:
+  v7: https://lore.kernel.org/all/20260324004118.3772171-1-dapeng1.mi@linux.intel.com/
+  v6: https://lore.kernel.org/all/20260209072047.2180332-1-dapeng1.mi@linux.intel.com/
+  v5: https://lore.kernel.org/all/20251203065500.2597594-1-dapeng1.mi@linux.intel.com/
+  v4: https://lore.kernel.org/all/20250925061213.178796-1-dapeng1.mi@linux.intel.com/
+  v3: https://lore.kernel.org/lkml/20250815213435.1702022-1-kan.liang@linux.intel.com/
+  v2: https://lore.kernel.org/lkml/20250626195610.405379-1-kan.liang@linux.intel.com/
+  v1: https://lore.kernel.org/lkml/20250613134943.3186517-1-kan.liang@linux.intel.com/
+
+Dapeng Mi (19):
+  perf/x86/intel: Validate return value of intel_pmu_init_hybrid()
+  perf/x86: Move hybrid PMU initialization before x86_pmu_starting_cpu()
+  perf/x86/intel: Enable large PEBS sampling for XMMs
+  perf/x86/intel: Convert x86_perf_regs to per-cpu variables
+  perf: Eliminate duplicate arch-specific functions definations
+  perf/x86: Use x86_perf_regs in the x86 nmi handlers
+  x86/fpu: Ensure TIF_NEED_FPU_LOAD is set after saving FPU state
+  perf/x86: Enable XMM Register Sampling for Non-PEBS Events
+  perf/x86: Enable XMM register sampling for REGS_USER case
+  perf/x86: Support XMM sampling using sample_simd_vec_reg_* fields
+  perf/x86: Support YMM sampling using sample_simd_vec_reg_* fields
+  perf/x86: Support ZMM sampling using sample_simd_vec_reg_* fields
+  perf/x86: Support OPMASK sampling using sample_simd_pred_reg_* fields
+  perf: Enhance perf_reg_validate() with simd_enabled argument
+  perf/x86: Support eGPRs sampling using sample_regs_* fields
+  perf/x86: Support SSP sampling using sample_regs_* fields
+  perf/x86/intel: Support arch-PEBS based SIMD/eGPRs/SSP sampling
+  perf/x86: Activate back-to-back NMI detection for arch-PEBS induced
+    NMIs
+  perf/x86/intel: Add sanity check for PEBS fragment size
+
+Kan Liang (4):
+  x86/fpu/xstate: Add xsaves_nmi() helper
+  perf: Move and enhance has_extended_regs() for arch-specific use
+  perf: Add sampling support for SIMD registers
+  perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS capability
+
+ arch/arm/kernel/perf_regs.c           |   8 +-
+ arch/arm64/kernel/perf_regs.c         |   8 +-
+ arch/csky/kernel/perf_regs.c          |   8 +-
+ arch/loongarch/kernel/perf_regs.c     |   8 +-
+ arch/mips/kernel/perf_regs.c          |   8 +-
+ arch/parisc/kernel/perf_regs.c        |   8 +-
+ arch/powerpc/perf/perf_regs.c         |   2 +-
+ arch/riscv/kernel/perf_regs.c         |   8 +-
+ arch/s390/kernel/perf_regs.c          |   2 +-
+ arch/x86/events/core.c                | 415 +++++++++++++++++++++++++-
+ arch/x86/events/intel/core.c          | 232 ++++++++++++--
+ arch/x86/events/intel/ds.c            | 235 +++++++++++----
+ arch/x86/events/perf_event.h          |  85 +++++-
+ arch/x86/include/asm/fpu/sched.h      |   5 +-
+ arch/x86/include/asm/fpu/xstate.h     |   3 +
+ arch/x86/include/asm/msr-index.h      |   7 +
+ arch/x86/include/asm/perf_event.h     |  35 ++-
+ arch/x86/include/uapi/asm/perf_regs.h |  51 ++++
+ arch/x86/kernel/fpu/core.c            |  27 +-
+ arch/x86/kernel/fpu/xstate.c          |  25 +-
+ arch/x86/kernel/perf_regs.c           | 163 ++++++++--
+ arch/x86/xen/pmu.c                    |   5 +-
+ include/linux/perf_event.h            |  19 ++
+ include/linux/perf_regs.h             |  38 +--
+ include/uapi/linux/perf_event.h       |  49 ++-
+ kernel/events/core.c                  | 189 ++++++++++--
+ 26 files changed, 1418 insertions(+), 225 deletions(-)
+
+
+base-commit: 66cc29745f2f5815482587bb9fbc1e8a3e6fcf00
+-- 
+2.34.1
 
