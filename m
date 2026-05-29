@@ -1,296 +1,241 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EBC3A5422
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 16:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35E6382F2F
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 17:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780073964; cv=pass; b=g7F2msijpPRmHFHHvQbiCy0/lKGdYzzeTGhT3nOPbk2C+/BsDNNlQPKnPuI7Bm1de/1g3I86CfgG3UoOHFW4i8Bpy3pchAC6txYDEA0Pq90PjHJGSD6EZaHiGsGCoWmFg9SLpW7W4aOOZmHI74oc7xaxME1ZMIPYYjjkYczgcdI=
+	t=1780075807; cv=pass; b=XCirKzgPEOh4AYUodZ72sgHkkcdbnvdmJnVkgLSb1WsP4gjh85MUZhVLzB0n1++5T+YqDxybVDYxE2Umk8Y4LxjRX7nhTu1wIfghZWIiSxT3Qo7rnMylTQ/1lVfK6/9+vP2fjP7Pi9WL9PT/CoWJajXrgKHhlRyKDeKfi5XTACU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780073964; c=relaxed/simple;
-	bh=BttwHBod1U7v0MCbP0ZdYcBpvNSKipgwGk4dt8MTCoI=;
+	s=arc-20240116; t=1780075807; c=relaxed/simple;
+	bh=U3TKF46npXHkSeVH6EBKSxYeR1JNqlMjswcdOmSypXk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s6BZyYH8h/wDrZct40tjSDy9mbZ2ymJdS7Rd7irRtVewYLXcCFiigg/04io4pFipbOU5zXMIJqvkJu9yHwXsRSDOYY2gQeSoGmI9UxpvfgbxpKAQ3B1SzlUAvfzCEVmSySjQdd6kRXmABdfVlGdCbcOkbyrgVXdS00dhT+aaYx4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YgBOSzwP; arc=pass smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=c1toTuS+ZMvUKiHkttDDEh4wEAacXruM07bC9kyPor3LmRy3dtPDNfXURxHYCw2xYlj+S6Wk5xSeRSqsMrCQfccjdvqQAqkA0ndKx3ZYZpyFCIEWoXUe3osEg2ijje5rMrXdAA5Cdyv2XqDVkrawD5v9bmQKYSlhnocj7DfiTUE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OQ8+N1gP; arc=pass smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YgBOSzwP"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2bf2911f93cso4615ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 09:59:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780073963; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OQ8+N1gP"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2bf2911f93cso2305ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 10:30:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780075805; cv=none;
         d=google.com; s=arc-20240605;
-        b=gQBNLbIeizFhUzymbpS9xeaQ/cOMYCotTvJXNIuJwcT4h7O3ODjKOQFK3fGUSxdo/j
-         amhfQ61TG0otAjRZ+Cq3K8vO5iGTX/QwRaWZ/44yqPGwvbRPBijydo1xG5mjuGTrOFXX
-         dA1kU37RROTwB6CKvM4OiB7qgvdn/fCcIVWdZ1xlmFKQPTn8Z3iP7jncQlfTy+zGclR5
-         J/HjrGa+lRvdKI87NaDE5+eV4DI5qC5mXM8JqH4+bkcC0twXB/8ZkLDu6T13ZRm91A6z
-         KSRuQbQCJU5uOC709O7T0fy8jFYNwX5j2Pp+79Yf9D67zMkbWQ9u128/dLUJjJoCsx/E
-         auow==
+        b=LdryvVzbJg6C85euZ66JbwPX58YebkaOLjkaE+W0AE7KJ0SDf5MVuC/mxfgCtHiof9
+         N5hDIP4bB5nlDk9JdWgciYSEoUy3jz2YxUyKPX3PTFBoPxiWfZ1d5cyqOHno1nHqC0JA
+         iaKTmP3yHWhxo1eUxuaxM/AqbGc9hJP97mNeWsigVkkize/CMuu4AU+5pj6LZKp45Wwd
+         9uKWudaGKmqHcss5oqYUqujFVOLUFGxdedTHCeVP5oVb6uAcrlZrlEZXasj7cO4uH6ZQ
+         YW8bipes1pwZ0rczoUX3xWuMLa/LGIAIHePS+62AZnE2FmtDwXj8ahoMMoeVNfqsaxca
+         N5JQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=SqsMn7n+xAII9BeoKlqui4JQb7AF2XY+Hg917pHy898=;
-        fh=Eh31AUyOPdAJkILdhNUI8WRXc4RlpHC+r9RrgqQiRQo=;
-        b=AI8sS+NaWRY4Y6aklq/yMm3NsKeuV8le1RCg4PWtwA1LBqlkEBWWl/GGJ6ZSEfGYOg
-         wrERU0QtM1AFX9H1uvvUn6hldzDh8Lm05tpe5+qZyYY5cHkQW2+P5hPd0SfSfjHt9o74
-         9Ac5OqfB4IUSPLRrq/ICiMjj3qXCSRmz5GpxMl5Ukqz5mh17ssk0YLXp0dkJhl+j9Smr
-         TtdQCDRjVviXhTPZ7pOWbgCi0G9O6l8GDiytsHF89dsnRHB2dC2HSPuOo80spb1OHCod
-         cvJht/7NFj4qGbKVbKESFjdpWW+Ddg5qrOdCRSc95udhGWObCXs4dpyFFFzxiacHytXy
-         T0Tg==;
+        bh=5DAwrgkL2Q4aBfDxY7n0TkOckExbLoECFQkW/ulFneU=;
+        fh=RmPlWc1nR67jT5S5XQMIxquCum/c5V9GCcNH4D3coQw=;
+        b=dR7dhoc1LsELP4Fs47TPds2Q/HrEE0n/5kPMZX8yh/bk2V7tuChwMTXwNuaXw+x9UH
+         UPwxzZP+q5i8v4EIjcvurpYdnd9HwDR1paMBLkVcZVlHI2grizLZPElkDWSJ17lPeDf5
+         ZBsVs1boDxnRbF3bm4+2sQ7CzbMH3bkbgldh1yDad5R9OhYzauaMvkoME1t0ceGB2+6r
+         h6gSwObohj/RO6HGc6ZQw+mxtDpFICiGq40snKg1SCaF3VOlnPzq7nkBDtTUFPNqSRGu
+         3bu0f5d1O1zALJPbnGnGZsp9ZQXv2VLwsXSGncp59xFVHzVYQ7U3+vLpFxpDQVlV5UfF
+         Rs9w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780073963; x=1780678763; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780075805; x=1780680605; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SqsMn7n+xAII9BeoKlqui4JQb7AF2XY+Hg917pHy898=;
-        b=YgBOSzwP3v+/l2sRAaWzTURXslv1GinyfryJReMdxZop3V8GZj+BSTsCWyfaxk+/Cm
-         VWTPcoso8eNPoSJvOSDCw/rjF+A1avAvj5Qht13f/vd7Y7y1CkcmMpAP+4/Z6Ny5jMWP
-         XD+KyA3nqnaX7XCVV35YT8iWB+gbr01hkiYj4p4Yk2Q52rmUw570KWCvXsN+27281Lhd
-         OSlL788HRq058ShtY3z6rIiq8cE1ptxkI0cRKvSfOVzT9e7+pUQxgideyjRcXOveJ0yO
-         2el+mevm/t3NkcsPEx0qBo52ep/nj0/KIuRyFByR+654oLnPkHUAQWMs31nBxqnT3g/4
-         Vaqg==
+        bh=5DAwrgkL2Q4aBfDxY7n0TkOckExbLoECFQkW/ulFneU=;
+        b=OQ8+N1gP/UGc4TvEgDZ5bY0Viub+BjsTc/OxWkYEk+e/iHSxw9fXOGVYbnwVeuKa0s
+         5HxH+PEl9wjqRZzHMov2lCkIYrG7ZVz/senTwK1/7KjWVZ1yO59lq+nThXQc71UDqPhx
+         qRJQiuccypbiruA1RbuOPCqyCWHDMJLNfbKU0cblU6xgXFWJOvMys5OSiRxWucJ8vYw7
+         kjDf6VO2KDSIK61Wb32wPhrDyADIxVB5YEnrROT8gwHndxqjS4N+Bg6QSNQR0Dfwmi25
+         0WgkhGFkNymVc4e1VDy7WMCKjWkCEBOaVbv8nZkhhPqMpvYX+hfXGPvcMYW3qL/VPwI7
+         WBiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780073963; x=1780678763;
+        d=1e100.net; s=20251104; t=1780075805; x=1780680605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=SqsMn7n+xAII9BeoKlqui4JQb7AF2XY+Hg917pHy898=;
-        b=Os/6zYIZPBY7AhkGxOKzh3ogWqdgkd4mgfQ7+iVxhKehgsk2iQ0JGjwgweKQWqp4Bc
-         6oXruTzNBB8Z9QRzA9w+IrLn6egQ6DsX+ouw6r0Cy6FDHRa6MJzVvYDiOa2OPdFM9S7G
-         auHHUfZ2jk/eYL7F71DATn7Ta8AlOfwaapSj+WPWr5xN178cKiQBwHqoeGGLJwLGcNwX
-         uLpBu4vN4MwNVBF32uDYrJpcJIbe2oqwL1BH8oLm6u+0CouGzFsIeCmCT3WSn/aq7jP1
-         Lf/cD99c0jgy7VRwXuchyUDTsxcPxM+n6flFmvmidIP5wNSGjlbCflalseou46I6XLyd
-         rz/g==
-X-Forwarded-Encrypted: i=1; AFNElJ/jqdrg0EGgT0anhjMjC24aAqR6Kzde2TenBcfWEsm+bwWqxFo2CoMR5rcZFaAJQIZsRBO6Q/XjeyuMapmgam3g@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaKIlE/sZ+dr4kfyZLx/EAh+DW3/B4dSD0iHri5Lw6AUnOqcO/
-	A0HJzhnStPy22GBNeHsOhCgoVtVcp3JqDScFPUdzMVUDC9020q2ldLXSPe5ff9KTeB0O4BivxmX
-	bY1pefz051Nb0lvTSIWQC8Vco+vRB1U05oGueUQmE
-X-Gm-Gg: Acq92OHNCDKXdWvVYop5bN7ZhApyPSFskN2AfCoVQszXnWXFgRZCzNoDiw/C/XkPu8m
-	ZBd662PZomCzO8FCughjJEqC+6og9X1xCRWxWUfugddKXahT1KsiGvXJrItiC/9B//qaUFMeARn
-	EoaJ1I6p9FXY0j8tFkeY96MkIJxC6HMVq+RInhTqNAwAyQ6Mq0d3NWTvEQJKymIGHq1Fymjz7sy
-	zP5WhwTf/o3EczRwFUTyXnuvZ38Ks2/Wz18Oj0aMRlhcoMm1q8IuUEC2rhOZ78Zl5wM4Z24yapz
-	hwKamE+Q4V+MTsYe805fELhDKxvjJcaYi92k80JCj4QFymHf
-X-Received: by 2002:a17:902:cf04:b0:2bd:6727:d689 with SMTP id
- d9443c01a7336-2bf9751ea32mr14315ad.12.1780073962073; Fri, 29 May 2026
- 09:59:22 -0700 (PDT)
+        bh=5DAwrgkL2Q4aBfDxY7n0TkOckExbLoECFQkW/ulFneU=;
+        b=Qwj6un/r5cOr/kl1YK9F7czF5Upm9D4gnhxZf5hREY+0BSwhGGWk2SWDU1X70MpkIM
+         fR7Jr5JJdDP+6EO6eIVTeAGTTMyig0S2HHzb1R2CmQhRkoKNs2ihO2KNXT36pCFhKClN
+         i42PXN+0ntRPuzDNg51hc0wxVYwzelc4bkYPiYAlsg6N1q4lwBl6mmmTSWtUxfuPIdFe
+         efASRz2yd7VHCanFg8ZOEzYtnkJhppqIV4tpr0x70on/jxk5QyuxDZ2v1ifM0RbQ2+vt
+         Grj5qVQkPqSxnUHNXk5HHz7MTaQXnpvmnBniTOCgLW33QRbdd0z6FTkqAeLMYcKK1z9t
+         rxbA==
+X-Forwarded-Encrypted: i=1; AFNElJ9rJDW+IyFJJkBzpwnlxxwqwWXjbjIdV4dPbedv/vIPIMGA96UHim9R2tksCTsCpWWpNYXMVFIS8DaT0Wg3aZ+A@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsfRAQRZJaKZANUSUfcQP0iFmp9Jv0XJCPZofyMYssdFKFjozD
+	hP6P8TZwo/q+hXmrVCgJC81YBDCtK209FcyInL55R4Vexo1nHJQ8GS33l61QCcX8OU27UeNI8Qh
+	0m2RBcvExjcOWrSYR3p8O4ExxPkUoQxQngJJRYfNyNGpp3An4Nw5JEfSJ8WV4PQ==
+X-Gm-Gg: Acq92OEF8vy5ADB7CgPmqgDIlzIQPp6Xjc5ErMM11nAUds3LN+9PK3CYq4i8EbsziN3
+	rvdC+P0joeCBde0kSBzXQZRxcU00QvczovEeXtcBXI53DboBnVcazRDWLGJqNdHnHiLjFW2VwkI
+	nCXKGisFLlB10rxgf/etgxH5cWfPqma5LRvzvWabilAwF7NfwaU/ScHkof5hCzfti3Lq+THVk+r
+	JYhMo9Al+4T/B5/mw3aNz7JNXEhumWjKs6E/+0eCB2w8CdtDuhxQNXh9LlhbwwQuFHbiknp/x61
+	f110bNvdVTrWvnWDMV5E6uTm8CAJaIRt9PuXtUxZYHyBP8kl
+X-Received: by 2002:a17:902:e5d1:b0:2ba:6518:e4d8 with SMTP id
+ d9443c01a7336-2bf975ac47cmr86445ad.20.1780075804266; Fri, 29 May 2026
+ 10:30:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260529082451.591783-2-dapeng1.mi@linux.intel.com> <20260529092345.A3A8F1F00893@smtp.kernel.org>
-In-Reply-To: <20260529092345.A3A8F1F00893@smtp.kernel.org>
+References: <20260529082451.591783-3-dapeng1.mi@linux.intel.com> <20260529100610.5E84C1F00898@smtp.kernel.org>
+In-Reply-To: <20260529100610.5E84C1F00898@smtp.kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 29 May 2026 09:59:09 -0700
-X-Gm-Features: AVHnY4LItgym0hVuCS6qRGdb7CLvqESoJjtzR1pi-kCMUBHbvLWFd2_KGmbcE1g
-Message-ID: <CAP-5=fWHFnmR+gX1+-iE5aT6GBCkRrRGahC92_nhbzy4tNA+dQ@mail.gmail.com>
-Subject: Re: [Patch v8 1/5] perf headers: Sync perf_event.h/perf_regs.h with
- the kernel headers
+Date: Fri, 29 May 2026 10:29:53 -0700
+X-Gm-Features: AVHnY4IihBiN3kG5MNqTYVr73D5__qRxnrg4oSYV7Q3LYy6rgz_F7XAuZuJVdn0
+Message-ID: <CAP-5=fWugapi9c-HWx9acm=MzyE=hb0muYwj3w86774iOBnvWw@mail.gmail.com>
+Subject: Re: [Patch v8 2/5] perf regs: Support x86 eGPRs/SSP sampling
 To: sashiko-reviews@lists.linux.dev
 Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 29, 2026 at 2:26=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
+On Fri, May 29, 2026 at 3:08=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
 >
-> Thank you for your contribution! Sashiko AI review found 4 potential issu=
+> Thank you for your contribution! Sashiko AI review found 2 potential issu=
 e(s) to consider:
->
-> New issues:
-> - [High] The newly introduced variable-length SIMD payload in `PERF_SAMPL=
-E_REGS_USER` and `PERF_SAMPLE_REGS_INTR` breaks sample parsing, leading to =
-severe data corruption for subsequent fields.
-> - [High] The newly added SIMD configuration and reserved fields in `struc=
-t perf_event_attr` are not byte-swapped in `perf_event__attr_swap()`.
->
-> Pre-existing issues:
-> - [Critical] An integer underflow in `read_attr` when processing the `siz=
-e` field of a `perf_event_attr` structure leads to a massive stack-based bu=
-ffer overflow.
-> - [Critical] In `read_event_desc`, a lack of minimum size validation on t=
-he `sz` variable leads to out-of-bounds heap memory corruption during byte-=
-swapping.
+> - [Medium] Intel PT PEBS register synthesis is silently disabled on SIMD-=
+capable machines.
+> - [Medium] Requesting legacy XMM registers (e.g., `-I XMM0`) fails with a=
+n 'Unknown register' error on modern CPUs, breaking backwards compatibility=
+.
 > --
 >
-> commit 40d194b08491e7774620de12bd78192095f031fd
+> commit a0d7b85bb399d047c94284c24c34805466f84209
 > Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Subject: perf regs: Support x86 eGPRs/SSP sampling
 >
-> perf headers: Sync perf_event.h/perf_regs.h with the kernel headers
->
-> This patch syncs the UAPI header changes to support SIMD, eGPRs, and SSP
-> sampling into the corresponding perf tool UAPI headers. It also adds a
-> sanity check for the newly introduced __reserved_4 field in
-> perf_attr_check().
->
-> > diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi=
-/linux/perf_event.h
-> > index fd10aa8d697f2..c49fc76292f79 100644
-> > --- a/tools/include/uapi/linux/perf_event.h
-> > +++ b/tools/include/uapi/linux/perf_event.h
-> [ ... ]
-> > @@ -547,6 +549,29 @@ struct perf_event_attr {
+> This commit adds support for sampling x86 extended GP registers (R16-R31)=
+ and
+> the shadow stack pointer (SSP) register. It reclaims the original XMM reg=
+isters
+> space in sample_regs_user/sample_regs_intr to represent the eGPRs and SSP=
+ when
+> SIMD sampling is supported, using a new abi argument to distinguish layou=
+ts.
+
+Thanks Dapeng! I think stylistically this is exactly what I was hoping for!
+
+When I try to apply the patch on perf-tools-next it is failing, on
+this patch with a conflict on:
+```
+--- tools/perf/builtin-inject.c
++++ tools/perf/builtin-inject.c
+@@ -457,6 +457,8 @@ static int
+perf_event__convert_sample_callchain(const struct perf_tool *tool,
+  /* adjust sample size for stack and regs */
+  sample_size -=3D sample->user_stack.size;
+  sample_size -=3D (hweight64(evsel->core.attr.sample_regs_user) + 1) *
+sizeof(u64);
++ if (sample->user_regs && sample->user_regs->abi & PERF_SAMPLE_REGS_ABI_SI=
+MD)
++ sample_size -=3D 4 * sizeof(u64); /* Reduce SIMD regs header size */
+  sample_size +=3D (sample->callchain->nr + 1) * sizeof(u64);
+  event_copy->header.size =3D sample_size;
+```
+This is happening because commit daac18e7c42c ("perf inject: Fix
+itrace branch stack synthesis") switched the size logic to use
+perf_event__sample_event_size, which I believe accurately accounts for
+the new layout and so it is safe to drop this part of the change.
+
+> > diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> > index fc9eec8b54b82..2729ad8c6d263 100644
+> > --- a/tools/perf/util/intel-pt.c
+> > +++ b/tools/perf/util/intel-pt.c
+> > @@ -2470,6 +2470,7 @@ static int intel_pt_do_synth_pebs_sample(struct i=
+ntel_pt_queue *ptq, struct evse
+> >       }
 > >
-> >       __u64   config3; /* extension of config2 */
-> >       __u64   config4; /* extension of config3 */
-> > +
-> > +     /*
-> > +      * Defines the sampling SIMD/PRED(predicate) registers bitmap and
-> > +      * qwords (8 bytes) length.
-> > +      *
-> > +      * sample_simd_regs_enabled !=3D 0 indicates there are SIMD/PRED
-> > +      * registers to be sampled, the SIMD/PRED registers bitmap and
-> > +      * qwords length are represented in
-> > +      * sample_simd_{vec|pred}_reg_{intr|user} and
-> > +      * sample_simd_{vec|pred}_reg_qwords fields separately.
-> > +      *
-> > +      * sample_simd_regs_enabled =3D=3D 0 indicates no SIMD/PRED regis=
-ters
-> > +      * are sampled.
-> > +      */
-> > +     __u16   sample_simd_regs_enabled;
-> > +     __u16   sample_simd_pred_reg_qwords;
-> > +     __u16   sample_simd_vec_reg_qwords;
-> > +     __u16   __reserved_4;
-> > +
-> > +     __u32   sample_simd_pred_reg_intr;
-> > +     __u32   sample_simd_pred_reg_user;
-> > +     __u64   sample_simd_vec_reg_intr;
-> > +     __u64   sample_simd_vec_reg_user;
-> >  };
+> >       if (sample_type & PERF_SAMPLE_REGS_INTR &&
+> > +         !evsel->core.attr.sample_simd_regs_enabled &&
+> >           (items->mask[INTEL_PT_GP_REGS_POS] ||
+> >            items->mask[INTEL_PT_XMM_POS])) {
+> >               u64 regs_mask =3D evsel->core.attr.sample_regs_intr;
 >
-> [Severity: High]
-> Are these newly added fields missing byte-swapping logic in
-> perf_event__attr_swap()?
+> [Severity: Medium]
+> Does this completely disable PEBS register synthesis on SIMD-capable mach=
+ines?
 >
-> When perf reads a cross-endian perf.data file, if these fields are not ad=
-ded
-> to perf_event__attr_swap() in tools/perf/util/session.c, they will remain=
- in
-> their original byte order.
+> Since PERF_SAMPLE_REGS_ABI_SIMD is set by default on supported platforms =
+in
+> __perf_reg_mask_x86(), opts->sample_simd_regs_enabled will be set to 1 fo=
+r
+> any register request (like -I ax).
 >
-> Later, when evsel__parse_sample() relies on fields like attr_nr_vectors a=
-nd
-> attr_vec_qwords to validate SIMD data bounds, could incorrect values bypa=
-ss
-> validation or cause out-of-bounds read faults?
+> Could this cause basic GPR synthesis to be silently skipped here, resulti=
+ng in
+> a functional regression for userspace tooling?
 
-This is a correct bug catch by Sashiko. We need to byte swap the
-perf_event_attr fields when reading them from a perf.data file on,
-say, an s390. Could you add this to perf_event_attr_swap?
+I don't think functionality is lost and presumably the driver is
+ensuring PEBS sampled registers are preferred over say pt_regs from
+the interrupt.
 
 > [ ... ]
-> > @@ -1020,7 +1045,15 @@ enum perf_event_type {
-> >        *      } && PERF_SAMPLE_BRANCH_STACK
-> >        *
-> >        *      { u64                   abi; # enum perf_sample_regs_abi
-> > -      *        u64                   regs[weight(mask)]; } && PERF_SAM=
-PLE_REGS_USER
-> > +      *        u64                   regs[weight(mask)];
-> > +      *        struct {
-> > +      *              u64 nr_vectors;         # 0 ... weight(sample_sim=
-d_vec_reg_user)
-> > +      *              u64 vector_qwords;      # 0 ... sample_simd_vec_r=
-eg_qwords
-> > +      *              u64 nr_pred;            # 0 ... weight(sample_sim=
-d_pred_reg_user)
-> > +      *              u64 pred_qwords;        # 0 ... sample_simd_pred_=
-reg_qwords
-> > +      *              u64 data[nr_vectors * vector_qwords + nr_pred * p=
-red_qwords];
-> > +      *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> > +      *      } && PERF_SAMPLE_REGS_USER
 >
-> [Severity: High]
-> Does appending this dynamic-length SIMD structure to PERF_SAMPLE_REGS_USE=
-R
-> break sample parsing for older perf tools?
->
-> Older parsers do not know about the PERF_SAMPLE_REGS_ABI_SIMD bit. When
-> parsing the sample payload, they will only advance the array pointer by
-> hweight64(attr.sample_regs_user) * sizeof(u64) bytes, failing to skip the=
- new
-> SIMD header and data.
->
-> Could this cause subsequent fields like PERF_SAMPLE_STACK_USER to read th=
-e
-> SIMD data as their own, resulting in parsing desynchronization and data
-> corruption?
->
-> Should a new bit be added to enum perf_event_sample_format instead?
-
-No, PERF_SAMPLE_REGS_ABI_SIMD can only occur if
-sample_simd_regs_enabled is present in the perf_event_attr and this is
-essentially the same.
-
+> > diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/per=
+f/util/perf-regs-arch/perf_regs_x86.c
+> > index b6d20522b4e8f..ae26d991cdc9f 100644
+> > --- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+> > +++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+> > @@ -276,13 +276,38 @@ uint64_t __perf_reg_mask_x86(bool intr)
 > [ ... ]
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index f30e48eb3fc32..e8e4e00d6b4d0 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
+> > +uint64_t __perf_reg_mask_x86(bool intr, int *abi)
+> > +{
+> [ ... ]
+> > +     if (mask !=3D PERF_REGS_MASK) {
+> > +             *abi |=3D PERF_SAMPLE_REGS_ABI_SIMD;
+> > +     } else {
+> > +             mask |=3D __arch__reg_mask(sample_type, PERF_REG_EXTENDED=
+_MASK,
+> > +                                      false);
+> >       }
+> >
+> > -     return PERF_REGS_MASK;
+> > +     return mask;
+> >  }
+> [ ... ]
+> > +const char *__perf_reg_name_x86(int id, int abi)
+> > +{
+> > +     const char *name;
+> > +
+> > +     name =3D __arch_reg_gpr_name(id);
+> > +     if (name)
+> > +             return name;
+> > +
+> > +     if (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+> > +             name =3D __arch_reg_egpr_name(id);
+> > +     else
+> > +             name =3D __arch_reg_xmm_name(id);
+> > +
+> > +     return name;
+> > +}
 >
-> [Severity: Critical]
-> This isn't a bug introduced by this patch, but is there an integer underf=
-low
-> in read_attr() when processing the size field of the perf_event_attr stru=
-cture?
+> [Severity: Medium]
+> Does this break backwards compatibility for legacy XMM register requests?
 >
-> The function reads the first 64 bytes and extracts attr->size into sz. It
-> checks if sz =3D=3D 0 or sz > our_sz, but fails to verify if sz < PERF_AT=
-TR_SIZE_VER0.
-> If a perf.data file supplies a size between 1 and 63, could the calculati=
-on
-> left =3D sz - PERF_ATTR_SIZE_VER0 underflow the unsigned size_t variable =
-left,
-> producing a huge positive value?
+> When the CPU supports eGPRs/SSP, PERF_SAMPLE_REGS_ABI_SIMD is set and the
+> legacy XMM registers (PERF_REG_EXTENDED_MASK) are excluded from the retur=
+ned
+> mask because they share the same bit space.
 >
-> The subsequent readn(fd, ptr, left) attempts to read this massive amount =
-of
-> data into f_attr, which is allocated on the stack in
-> perf_session__read_header(), potentially resulting in a stack buffer over=
-flow.
+> If __perf_reg_name_x86() maps these overlapping IDs exclusively to eGPR n=
+ames
+> (for instance, mapping ID 32 to R16), will name_to_perf_reg_mask() fail t=
+o
+> resolve legacy requests like -I XMM0 and throw an unknown register error?
 
-Thankfully, I believe Arnaldo is looking into these pre-existing
-validation issues. See:
-https://lore.kernel.org/linux-perf-users/20260526211806.1193848-1-acme@kern=
-el.org/
+So with PERF_SAMPLE_REGS_ABI_SIMD XMM0 is no longer part of the
+register mask and thus name_to_perf_reg_mask shouldn't set a bit for
+it. The next patch adjusts __parse_regs to encode vector registers in
+the new space within perf_event_attr.
 
 Thanks,
 Ian
 
-> [Severity: Critical]
-> This is a pre-existing issue, but does read_event_desc() lack minimum siz=
-e
-> validation on the sz variable before byte-swapping?
->
-> The function reads a 32-bit sz from the file, allocates a heap buffer, an=
-d
-> calls perf_event__attr_swap(buf). Inside this function, the code
-> unconditionally reads and byte-swaps the first 8 bytes.
->
-> If sz is between 1 and 7, attr->size reads out-of-bounds heap memory. Bec=
-ause
-> bswap_safe() uses this uncontrolled attr->size to determine which subsequ=
-ent
-> fields to swap, could it proceed to byte-swap up to 176 bytes of heap mem=
-ory
-> past the small allocation, leading to heap memory corruption?
->
-> > @@ -2091,7 +2091,8 @@ static void free_event_desc(struct evsel *events)
-> >
-> >  static bool perf_attr_check(struct perf_event_attr *attr)
-> >  {
-> > -     if (attr->__reserved_1 || attr->__reserved_2 || attr->__reserved_=
-3) {
-> > +     if (attr->__reserved_1 || attr->__reserved_2 ||
-> > +         attr->__reserved_3 || attr->__reserved_4) {
-> >               pr_warning("Reserved bits are set unexpectedly. "
-> >                          "Please update perf tool.\n");
-> >               return false;
->
 > --
 > Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260529082451.59=
-1783-1-dapeng1.mi@linux.intel.com?part=3D1
+1783-1-dapeng1.mi@linux.intel.com?part=3D2
 >
