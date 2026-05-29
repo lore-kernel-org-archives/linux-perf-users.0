@@ -1,135 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB92E3E022B;
-	Fri, 29 May 2026 12:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225932D5C83;
+	Fri, 29 May 2026 13:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780057506; cv=none; b=kOiyF7YcVb8nDFQbOA6sqZyC6xCu7iybfFETLHGTzmn+f2xOpUciBBELxdmrqjoHXcew2W+rAS7KDieLB8xSnTxQammVYmOeL7rtFFdWQR5nB6TbhWqqlq9Cp2Qobj9dsnWkkwQ0zi/AT8jtM1NtyB8lAEbBAIHwZUUXlBngb7I=
+	t=1780063179; cv=none; b=Dp5lHu8aW/IXqdMD37O87er8Kk4zoCdqbwxChTzicGl/WjDkcPb1APOYB7MZTse+0gqrJ9+XXo4kezh/p8IwRCLz3XG/9aaczqeqc3eTA3ncmRQO8afCTATqXHQKe53s6Gbv54/8/gZVORE4W1iaHfqKFeo4qZoe8E1zl6L0RrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780057506; c=relaxed/simple;
-	bh=N2PakYI96VQg8KYhYYVU1+Th7zmL4F2SwO1LRfnOR1A=;
+	s=arc-20240116; t=1780063179; c=relaxed/simple;
+	bh=OIfcxw6L7juAJ+MhhKySY0equp2hvB1yaaAjhl0zNjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DCDwsg59nvRb7DgG71QGL82X6OaZ00J226bOVG8pdwi0Z/f4UESGcgppf3FDO8iT9FKbfcrt6MA/vQhT6uxCW/OE80C4JxgBORxlweiB/X4ULAQPAS33mcrUtlYMethkzmXDQqsU3Q2/+KfEFd1Wakudm5lspXs+Ivji5erHW0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGN+bjr/; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7fmsVGQS0clIL3BOeuMcyYebiiwKpeJOgZdYaukSWiHRmZhT9eElVPmy7C8swlwpUKJY1MEQ9T9v/wUiRyB18/h0rAuv1xa035qC4xabVjZbBDDgNW1FataNgSmtmhvdH1fwG+TZ22r9msSEDGPsOL+rYUJBHK0SycPxETb0pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=t4lUbtZl; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGN+bjr/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E4F1F00893;
-	Fri, 29 May 2026 12:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780057504;
-	bh=m9mUR3le714/u85AzSSz58yESU35XgeJg3ZdaUmZzHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RGN+bjr/xi+tEF3u/E8jfeaAu6RX9plSn26pB7KNarSOqmHCKo4XAsmb42PzEk5xd
-	 eEy8sWCkSA1B/a8iqO9ryA1m6xfZ0TwVQ+aCkmvT/FInXahdbpDJYqxxWwMgwFNPBZ
-	 gTKBqTy23dMsOIR3VqS4VQVa2lnAFM7ZlCRKHh9aTFJEnupUXyvz+fo70drbM8BqQj
-	 ne2rQUATZlQSfQn1gLlZJh9zOsAfHHsWD7N5y8EmlffLhd6OfmX2/i93olI3hIe/d3
-	 TD8f6RlugzGIA8PdM1fg0U2GJS96RwbqkPXYNSmb+PoXc01ammyehnCdbSOcVv9J9Y
-	 DwYsyavjTAOdw==
-Date: Fri, 29 May 2026 09:25:01 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t4lUbtZl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=krC21NLD30nrg01fSvUce7Fe+FnXVEhQr9QoYVMHRHI=; b=t4lUbtZlab0axYF0lmbW0CYbZ3
+	/JMaNPB4pXiSA68du4121/lvny2qQTj6r0QLLa3lvEiRGZzzI6ujKm+v/rgLwKfJXpGVb92BYVDp5
+	1+LI2tB7gw/1/qjbqSRu/o7jBzPpGIHStF7XhGfgk7wgr6mWl1Iy7z6ClDLlVrqU/fciiDY5cB+Dl
+	ov41tGJ1yiWyQKSwoA8Vxgobs13MaHEc3/wDb3MBrW8ouEjIj0p+kEAFHPvp17HszODSNJoclwbos
+	/LHuaQP/5EWbw3fTftd57ASuqWeQfloci3OE6ljXro3cxHW3c8F9WmYxDjA/J56FG/IhARBULEi+o
+	zutNVb1g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wSxk9-00000007TtN-0ATY;
+	Fri, 29 May 2026 13:59:21 +0000
+Date: Fri, 29 May 2026 06:59:21 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@infradead.org>, demiobenour@gmail.com,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf test: Make leafloop workload immune to compiler
- options
-Message-ID: <ahmFnY9zT5hRGbAs@x1>
-References: <20260511-james-perf-leafloop-stack-v2-1-79f7383f545e@linaro.org>
- <CAP-5=fXtzHw2c_Er0WPpfFo1cfng46VXKvShb+kbdnSoxL1rmw@mail.gmail.com>
+	James Clark <james.clark@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+	netdev@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@toke.dk>,
+	linux-api@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/3] net: Remove support for AIO on sockets
+Message-ID: <ahmbucsrd-W4BVhz@infradead.org>
+References: <20260523-af-alg-harden-v1-0-c76755c3a5c5@gmail.com>
+ <20260523-af-alg-harden-v1-1-c76755c3a5c5@gmail.com>
+ <ahQCZQNoyO8GQt3H@infradead.org>
+ <92db3ff0-8f0b-4b61-a167-5004ffcf9025@kernel.dk>
+ <ahanjVfIDlCmeCUE@infradead.org>
+ <2cfd6455-7b5b-4974-b8a1-4a0abca69768@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXtzHw2c_Er0WPpfFo1cfng46VXKvShb+kbdnSoxL1rmw@mail.gmail.com>
+In-Reply-To: <2cfd6455-7b5b-4974-b8a1-4a0abca69768@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, May 11, 2026 at 08:38:48AM -0700, Ian Rogers wrote:
-> On Mon, May 11, 2026 at 2:19 AM James Clark <james.clark@linaro.org> wrote:
-> >
-> > Since the leafloop test program was moved into the main Perf binary as a
-> > workload, it inherited the same compiler options as Perf. In this case
-> > the -fstack-protector option broke the assumption that simple leaf
-> > frames don't have a stack frame on Arm. This causes
-> > test_arm_callgraph_fp.sh to pass even if the stack isn't augmented with
-> > the link register, making the test useless.
-> >
-> > Fix it by rewriting the leaf function in assembly seeing as it's so
-> > simple. Adding -fno-stack-protector would also work, but wouldn't be
-> > robust against other future compiler option additions.
-> >
-> > The local variables and 'a' variable were never needed so remove them to
-> > simplify.
-> >
-> > Assisted-by: GitHub-Copilot:GPT-5.5
-> > Signed-off-by: James Clark <james.clark@linaro.org>
-> > ---
-> > Changes in v2:
-> > - Push and pop asm sections - (Sashiko)
-> > - Add .size directive - (Sashiko)
-> > - Add asm label for done and test with LTO enabled - (Sashiko)
-> > - Link to v1: https://lore.kernel.org/r/20260508-james-perf-leafloop-stack-v1-1-637c260b2da8@linaro.org
-> > ---
-> >  tools/perf/tests/workloads/leafloop.c | 40 +++++++++++++++++++++++++++--------
-> >  1 file changed, 31 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
-> > index f7561767e32c..c20c75f7ba49 100644
-> > --- a/tools/perf/tests/workloads/leafloop.c
-> > +++ b/tools/perf/tests/workloads/leafloop.c
-> > @@ -6,26 +6,48 @@
-> >  #include "../tests.h"
-> >
-> >  /* We want to check these symbols in perf script */
-> > -noinline void leaf(volatile int b);
-> > -noinline void parent(volatile int b);
-> > +noinline void leaf(void);
-> > +noinline void parent(void);
-> >
-> > -static volatile int a;
-> > -static volatile sig_atomic_t done;
-> > +static volatile sig_atomic_t done asm("leafloop_done");
-> >
-> >  static void sighandler(int sig __maybe_unused)
-> >  {
-> >         done = 1;
-> >  }
-> >
-> > -noinline void leaf(volatile int b)
-> > +#if defined(__aarch64__)
-> > +/*
-> > + * Write leaf() in assembly so it stays as a minimal leaf function with no
-> > + * stack frame and won't get silently broken in the future by any Perf wide
-> > + * compilation options like -fstack-protector-all.
-> > + */
-> > +asm(
-> > +       ".pushsection .text,\"ax\",%progbits\n"
-> > +       ".global leaf\n"
-> > +       ".type leaf, %function\n"
-> > +       "leaf:\n"
-> > +       "       adrp    x1, leafloop_done\n"
-> > +       "       ldr     w2, [x1, #:lo12:leafloop_done]\n"
-> > +       "       cbz     w2, leaf\n"
-> > +       "       ret\n"
-> > +       ".size leaf, .-leaf\n"
-> > +       ".popsection\n"
-> > +);
+On Thu, May 28, 2026 at 10:56:06AM -0600, Jens Axboe wrote:
+> > Where?  And how do make that available to in-kernel users like
+> > storage protocols and network file system, which really suffer from
+> > the current MSG_SPLICE_PAGES semantics.
 > 
-> On reading this I thought, why can't we just use an asm block in a
-> function, but I get it, you want specific function entry/exit to test
-> the leaf unwinding feature.
+> For zero copy, on both the receive and send side. Since we have a proper
+> notification channel, that's what we use rather than the hack that is
+> the error queue.
+
+Can you point me to that notification channel? 
+
+> >> , and without needing msg_kiocb or the
+> > 
+> > What do you think is the downside of using a kiocb here like for
+> > everything else with async notifications?
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Where would the notifications go?
 
-Thanks, applied to perf-tools-next, for v7.2.
+For userspace: io_uring or the error queue for the synchronous calls.
+For in-kernel APIs whatever the callers wants to do by doing it from
+ki_complete.
 
-- Arnaldo
+> You'd end up inventing something new
+> to propagate them to userspace then.
+
+The main aim here is to have a way to get these completions from
+kernelspace to get rid of the current horrors around MSG_SPLICE_PAGES.
+
+> The io_uring side does not rely on
+> using msg_kiocb, and iirc that part was only ever used for the crypto
+> stuff and largely broken. Which is why I do agree with just yanking it
+> out.
+
+I'm not arguing for how msg_kiocb as that is a mess.  But having an
+explicit kiocb API like all the other async file operations would
+make things a lot simpler.
+
