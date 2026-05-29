@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1D03B635A;
-	Fri, 29 May 2026 08:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533483AD516;
+	Fri, 29 May 2026 08:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780043419; cv=none; b=HHum699xLDu9OmN3PuTpEcfdmTeaqNTukcwq5DV4WGfmlQcMLja11lA2sg1RJZRwF9KkH9z0H8QZrINaDM30WRpUFfHm2/UGjQWgH0QTul4j2BWV5C7o8hYCwL+He6e3woFfkPHDn9QTNfGtTy51AAJ+WU867ZpJ6ZMZqfw+iXk=
+	t=1780043428; cv=none; b=uR+9bHmYgLFiBMH37B8/Z3ayogRtqVu12HK19PvrSySIrgUcmSFKNhmbljawFdzt831iNGt4QZFDCEhS7g7fePxhtsxMGZGvZXRluJrCQQoZ7nKC9j4q8ebMHS/FoCZjea4HdMjPLD67P8XFDQOMOJGZwTP/LiOlGsNpzUDoDT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780043419; c=relaxed/simple;
-	bh=ds7PgcE/5xf54LWyKZi47Zso7X5MaKGnDbPU3TZ4H4s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gGaJ2voFPrQchpPIY0Dd0Zibnr/pQwShIujgdhcCN8XD15DS23nyEwEjox5+LtUoZgRad8dLDZM/jI4OKYyCMmp78vzboARO425CjOHkYsoov8TF7m+q8fQjBbU8doicJwqLqVDphKWHTlw0Nt2VaQVVDd6CtEMLyl2llcltrxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5wpRgA5; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1780043428; c=relaxed/simple;
+	bh=38L3rd0hOOlo0hcqqneUunyvxNS0mhukeEl5gKe4FIQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MKdTkPKjWtEYhvAnvpRG/amgJY7sa64AH0xye+z0/Zgv3n0QYrA+feB/EigVc9ZXn6zCc3/X1PRFysIeA85/oG1ZDGvEnDW99oa4Pmoe17hLjGLDhAwz+xEKBXtq5CpqDwLLNr28Z/50RgI+WkilQGxvlLjQ/98dqNZ9IIXm1z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f4DEQ34Y; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5wpRgA5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4DEQ34Y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780043415; x=1811579415;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ds7PgcE/5xf54LWyKZi47Zso7X5MaKGnDbPU3TZ4H4s=;
-  b=k5wpRgA5hOCDI7LPhJHK8px66z1po1dGaa+jAVmmN1TxR2xNh0TbPfeJ
-   XKbC20JBUgcTaoNWvUK5GguZv8+H6ZbsPQavsUx4axpxFF/lwdWv4eIw2
-   bV47wwei/88t0SEbE66tYQKf53HY1xJmY69SVkASK0RCqnIkXeI9ZEZye
-   Bcd0dsyxqcyx0/280SSUtpu6OlJiWshIwQOJt0Pc5ExEsOyPNybZeCar0
-   bnMaqh42q7dUqWiRHYvx1xaFzocCzIzx/T5lJUGjlualKUA0qPYuhGytu
-   NVYutMEozrOsBKMaw+/ERjMceNRpTrNcnxKTDv5gvKOoPyi4ZdraDzMEl
-   g==;
-X-CSE-ConnectionGUID: QfNTvxTyTr+735KbK08YOg==
-X-CSE-MsgGUID: FSNUhCMmQ2G/KRD6z8EY9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="81076310"
+  t=1780043426; x=1811579426;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=38L3rd0hOOlo0hcqqneUunyvxNS0mhukeEl5gKe4FIQ=;
+  b=f4DEQ34YNYEbhVXio6Ec2ANz1grFhffu+Hv26MDrhKADPWv/C2p5nOfX
+   uZrFdoE0y7JlYgKgzgYqXuZONSBczuiIhuWMYyV/SX7xeEISlYN6n0NG6
+   iQrpRIEE1cwco6RohXoMZSMEjvnT+naPLHQfDrUxt1AnArxJmZmeTmUEp
+   MI/8OxiDCwMkicqffV+tQv4Gt+YR81yOO3pTU74F4So4b4dPmlVGhQkMf
+   p3KmSr7/nwW51qcFUyW4G0Q7Chcc8RCx9ReRCMCH0FjFFu1wBIb8Cpie/
+   34rDgX1E0UtI38D9kGrQMlAiT8jqY2660htngNUuGlPltEwZ6dANC4FDA
+   Q==;
+X-CSE-ConnectionGUID: 5Z0SRFUrSuKMhxuaRf0S0w==
+X-CSE-MsgGUID: VOjq58aXRzqQurByqnQSMA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="81076350"
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="81076310"
+   d="scan'208";a="81076350"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:30:14 -0700
-X-CSE-ConnectionGUID: h4dMMB5FQBukQlr04EkuSw==
-X-CSE-MsgGUID: PIjsa0uRQ96pvjm/YTSsiw==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:30:25 -0700
+X-CSE-ConnectionGUID: EcD2E8d4RrG5QiwZYoEA6g==
+X-CSE-MsgGUID: KO+SSG+tR5+DheNeJE4GAA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="247734773"
+   d="scan'208";a="247734826"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa005.jf.intel.com with ESMTP; 29 May 2026 01:30:09 -0700
+  by orviesa005.jf.intel.com with ESMTP; 29 May 2026 01:30:20 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -65,10 +66,12 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v8 0/5] Perf tools: Support eGPRs/SSP/SIMD registers sampling
-Date: Fri, 29 May 2026 16:24:46 +0800
-Message-Id: <20260529082451.591783-1-dapeng1.mi@linux.intel.com>
+Subject: [Patch v8 2/5] perf regs: Support x86 eGPRs/SSP sampling
+Date: Fri, 29 May 2026 16:24:48 +0800
+Message-Id: <20260529082451.591783-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260529082451.591783-1-dapeng1.mi@linux.intel.com>
+References: <20260529082451.591783-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -77,83 +80,640 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes since v7:
-- Address Sashiko's comments including,
-  * documents are not update availably; SIMD registers bitmask may be
-    overwritten by shorter mask; u16 type in sample meta-data break the
-    cross-endian conversion, etc.
-- Add SIMD/eGPRs/SSP support in dwarf-regs (Ian).
-- Misc enhancements.
+This patch adds support for sampling x86 extended GP registers (R16-R31)
+and the shadow stack pointer (SSP) register.
 
-Changes since v6:
-- Address Ian's comments including,
-  * Add more comments for newly added register indexes (patch 1/4).
-  * Several minor enhancements in patch 4/4.
-- Limit dwarf minimal regs to legacy GPRs (excluding APX eGPRs)
-  (patch 2/4).
+The original XMM registers space in sample_regs_user/sample_regs_intr is
+reclaimed to represent the eGPRs and SSP when SIMD registers sampling is
+supported with the new SIMD sampling fields in the perf_event_attr
+structure. This necessitates a way to distinguish which register layout
+is used for the sample_regs_user/sample_regs_intr bitmap.
 
-Changes since v5:
-- Split the sampling support for eGPRs/SSP registers and SIMD registers
-  into 2 patches.
-- Address Ian's comments including,
-  * Convert the architecture dependent functions into regular
-    architectural independent functions, like whatperf_reg_name() does.
-  * Refine the functions name to represent what the functions really do.
-  * Add comments for some key functions arguments.
-  * Misc enhancements.
+To address this, a new "abi" argument is added to the helpers
+perf_intr_reg_mask(), perf_user_reg_mask(), and perf_reg_name(). When
+"abi & PERF_SAMPLE_REGS_ABI_SIMD" is true, it indicates the eGPRs and SSP
+layout is represented; otherwise, the legacy XMM registers are
+represented.
 
-This patch-set adds sampling support for x86 eGPRs/SSP/SIMD registers in
-perf tools base on the corresponding sampling support for eGPRs/SSP/SIMD
-registers in kernel[1]. In versions before v6, these perf-tools patches
-are integrated as a whole patch-set with the kernel patches, but it's
-split and posted to an independent perf-tools patch-set for convenient
-review.
+Please note that PERF_SAMPLE_REGS_ABI_SIMD is set by default on platforms
+that support SIMD register sampling, even when no eGPR or SSP register is
+requested (for example, -Iax). As a result, sample_regs_intr and
+sample_regs_usr always use the new GPR layout on platforms with SIMD
+register sampling support.
 
-History:
-v7: https://lore.kernel.org/all/20260324005706.3778057-1-dapeng1.mi@linux.intel.com/
-v6: https://lore.kernel.org/all/20260209083514.2225115-1-dapeng1.mi@linux.intel.com/
-v5: https://lore.kernel.org/all/20251203065500.2597594-1-dapeng1.mi@linux.intel.com/
-v4: https://lore.kernel.org/all/20250925061213.178796-1-dapeng1.mi@linux.intel.com/
-v3: https://lore.kernel.org/lkml/20250815213435.1702022-1-kan.liang@linux.intel.com/
-v2: https://lore.kernel.org/lkml/20250626195610.405379-1-kan.liang@linux.intel.com/
-v1: https://lore.kernel.org/lkml/20250613134943.3186517-1-kan.liang@linux.intel.com/
+The patch only supports eGPRs and SSP sampling, the complete SIMD
+registers sampling would be supported in the next patch.
 
-Ref:
-[1] Kernel patches of supporting eGPRs/SSP/SIMD registers sampling:
-https://lore.kernel.org/all/20260529075645.580362-1-dapeng1.mi@linux.intel.com/
-
-
-Dapeng Mi (5):
-  perf headers: Sync perf_event.h/perf_regs.h with the kernel headers
-  perf regs: Support x86 eGPRs/SSP sampling
-  perf regs: Support x86 SIMD registers sampling
-  perf regs: Enable dumping of SIMD registers
-  perf dwarf-regs: Add SIMD/eGPRs support for x86 DWARF registers
-
- tools/arch/x86/include/uapi/asm/perf_regs.h   |  51 +++
- tools/include/uapi/linux/perf_event.h         |  49 ++-
- tools/perf/Documentation/perf-record.txt      |  10 +-
- tools/perf/builtin-inject.c                   |   7 +
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ tools/perf/builtin-inject.c                   |   2 +
  tools/perf/builtin-script.c                   |   2 +-
- .../util/dwarf-regs-arch/dwarf-regs-x86.c     | 138 +++++-
- tools/perf/util/dwarf-regs.c                  |   7 +-
- tools/perf/util/evsel.c                       | 104 ++++-
- tools/perf/util/header.c                      |   3 +-
- tools/perf/util/include/dwarf-regs.h          |   7 +-
+ tools/perf/util/evsel.c                       |  23 +++-
  tools/perf/util/intel-pt.c                    |   1 +
- tools/perf/util/parse-regs-options.c          | 184 +++++++-
- .../perf/util/perf-regs-arch/perf_regs_x86.c  | 416 +++++++++++++++++-
- tools/perf/util/perf_event_attr_fprintf.c     |   6 +
- tools/perf/util/perf_regs.c                   |  84 +++-
- tools/perf/util/perf_regs.h                   |  21 +-
+ tools/perf/util/parse-regs-options.c          |  35 +++--
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  | 124 +++++++++++++++---
+ tools/perf/util/perf_regs.c                   |  12 +-
+ tools/perf/util/perf_regs.h                   |  10 +-
  tools/perf/util/record.h                      |   7 +
- tools/perf/util/sample.h                      |   5 +
  .../scripting-engines/trace-event-python.c    |   2 +-
- tools/perf/util/session.c                     |  91 +++-
- tools/perf/util/synthetic-events.c            |  28 ++
- tools/perf/util/unwind-libdw.c                |   6 +-
- 22 files changed, 1143 insertions(+), 86 deletions(-)
+ tools/perf/util/session.c                     |  13 +-
+ tools/perf/util/synthetic-events.c            |   8 ++
+ 12 files changed, 194 insertions(+), 45 deletions(-)
 
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index f174bc69cec4..f6611d7e85eb 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -457,6 +457,8 @@ static int perf_event__convert_sample_callchain(const struct perf_tool *tool,
+ 	/* adjust sample size for stack and regs */
+ 	sample_size -= sample->user_stack.size;
+ 	sample_size -= (hweight64(evsel->core.attr.sample_regs_user) + 1) * sizeof(u64);
++	if (sample->user_regs && sample->user_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
++		sample_size -= 4 * sizeof(u64);	/* Reduce SIMD regs header size */
+ 	sample_size += (sample->callchain->nr + 1) * sizeof(u64);
+ 	event_copy->header.size = sample_size;
+ 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c8ac9f01a36b..8ec791e22778 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -730,7 +730,7 @@ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask,
+ 	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
+ 		u64 val = regs->regs[i++];
+ 		printed += fprintf(fp, "%5s:0x%"PRIx64" ",
+-				   perf_reg_name(r, e_machine, e_flags),
++				   perf_reg_name(r, e_machine, e_flags, regs->abi),
+ 				   val);
+ 	}
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 2ee87fd84d3e..1c856a2ecc6e 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1055,19 +1055,22 @@ static void __evsel__config_callchain(struct evsel *evsel, const struct record_o
+ 	}
+ 
+ 	if (param->record_mode == CALLCHAIN_DWARF) {
++		int abi = -1; /* -1 indicates only basic GPRs are needed. */
++
+ 		if (!function) {
+ 			uint16_t e_machine = evsel__e_machine(evsel, /*e_flags=*/NULL);
+ 
+ 			evsel__set_sample_bit(evsel, REGS_USER);
+ 			evsel__set_sample_bit(evsel, STACK_USER);
+ 			if (opts->sample_user_regs &&
+-			    DWARF_MINIMAL_REGS(e_machine) != perf_user_reg_mask(EM_HOST)) {
++			    DWARF_MINIMAL_REGS(e_machine) != perf_user_reg_mask(EM_HOST, &abi)) {
+ 				attr->sample_regs_user |= DWARF_MINIMAL_REGS(e_machine);
+ 				pr_warning("WARNING: The use of --call-graph=dwarf may require all the user registers, "
+ 					   "specifying a subset with --user-regs may render DWARF unwinding unreliable, "
+ 					   "so the minimal registers set (IP, SP) is explicitly forced.\n");
+ 			} else {
+-				attr->sample_regs_user |= perf_user_reg_mask(EM_HOST);
++				abi = -1;
++				attr->sample_regs_user |= perf_user_reg_mask(EM_HOST, &abi);
+ 			}
+ 			attr->sample_stack_user = param->dump_size;
+ 			attr->exclude_callchain_user = 1;
+@@ -1587,12 +1590,14 @@ void evsel__config(struct evsel *evsel, const struct record_opts *opts,
+ 	if (opts->sample_intr_regs && !evsel->no_aux_samples &&
+ 	    !evsel__is_dummy_event(evsel)) {
+ 		attr->sample_regs_intr = opts->sample_intr_regs;
++		attr->sample_simd_regs_enabled = !!opts->sample_simd_regs_enabled;
+ 		evsel__set_sample_bit(evsel, REGS_INTR);
+ 	}
+ 
+ 	if (opts->sample_user_regs && !evsel->no_aux_samples &&
+ 	    !evsel__is_dummy_event(evsel)) {
+ 		attr->sample_regs_user |= opts->sample_user_regs;
++		attr->sample_simd_regs_enabled = !!opts->sample_simd_regs_enabled;
+ 		evsel__set_sample_bit(evsel, REGS_USER);
+ 	}
+ 
+@@ -3495,6 +3500,13 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 			regs->mask = mask;
+ 			regs->regs = (u64 *)array;
+ 			array = (void *)array + sz;
++
++			if (regs->abi & PERF_SAMPLE_REGS_ABI_SIMD) {
++				/* Skip SIMD-regs header. */
++				sz = 4 * sizeof(u64);
++				OVERFLOW_CHECK(array, sz, max_size);
++				array = (void *)array + sz;
++			}
+ 		}
+ 	}
+ 
+@@ -3552,6 +3564,13 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 			regs->mask = mask;
+ 			regs->regs = (u64 *)array;
+ 			array = (void *)array + sz;
++
++			if (regs->abi & PERF_SAMPLE_REGS_ABI_SIMD) {
++				/* Skip SIMD-regs header. */
++				sz = 4 * sizeof(u64);
++				OVERFLOW_CHECK(array, sz, max_size);
++				array = (void *)array + sz;
++			}
+ 		}
+ 	}
+ 
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index fc9eec8b54b8..2729ad8c6d26 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -2470,6 +2470,7 @@ static int intel_pt_do_synth_pebs_sample(struct intel_pt_queue *ptq, struct evse
+ 	}
+ 
+ 	if (sample_type & PERF_SAMPLE_REGS_INTR &&
++	    !evsel->core.attr.sample_simd_regs_enabled &&
+ 	    (items->mask[INTEL_PT_GP_REGS_POS] ||
+ 	     items->mask[INTEL_PT_XMM_POS])) {
+ 		u64 regs_mask = evsel->core.attr.sample_regs_intr;
+diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+index c93c2f0c8105..70a1cc90b2c1 100644
+--- a/tools/perf/util/parse-regs-options.c
++++ b/tools/perf/util/parse-regs-options.c
+@@ -6,11 +6,14 @@
+ #include <stdio.h>
+ #include "util/debug.h"
+ #include <dwarf-regs.h>
++#include <sys/param.h>
+ #include <subcmd/parse-options.h>
+ #include "util/perf_regs.h"
+ #include "util/parse-regs-options.h"
++#include "record.h"
+ 
+-static void list_perf_regs(FILE *fp, uint64_t mask)
++static void
++list_perf_regs(FILE *fp, uint64_t mask, int abi)
+ {
+ 	const char *last_name = NULL;
+ 
+@@ -21,7 +24,7 @@ static void list_perf_regs(FILE *fp, uint64_t mask)
+ 		if (((1ULL << reg) & mask) == 0)
+ 			continue;
+ 
+-		name = perf_reg_name(reg, EM_HOST, EF_HOST);
++		name = perf_reg_name(reg, EM_HOST, EF_HOST, abi);
+ 		if (name && (!last_name || strcmp(last_name, name)))
+ 			fprintf(fp, "%s%s", reg > 0 ? " " : "", name);
+ 		last_name = name;
+@@ -29,7 +32,8 @@ static void list_perf_regs(FILE *fp, uint64_t mask)
+ 	fputc('\n', fp);
+ }
+ 
+-static uint64_t name_to_perf_reg_mask(const char *to_match, uint64_t mask)
++static uint64_t
++name_to_perf_reg_mask(const char *to_match, uint64_t mask, int abi)
+ {
+ 	uint64_t reg_mask = 0;
+ 
+@@ -39,7 +43,7 @@ static uint64_t name_to_perf_reg_mask(const char *to_match, uint64_t mask)
+ 		if (((1ULL << reg) & mask) == 0)
+ 			continue;
+ 
+-		name = perf_reg_name(reg, EM_HOST, EF_HOST);
++		name = perf_reg_name(reg, EM_HOST, EF_HOST, abi);
+ 		if (!name)
+ 			continue;
+ 
+@@ -53,9 +57,12 @@ static int
+ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ {
+ 	uint64_t *mode = (uint64_t *)opt->value;
++	struct record_opts *opts;
+ 	char *s, *os = NULL, *p;
++	const char *warn;
+ 	int ret = -1;
+ 	uint64_t mask;
++	int abi = 0;
+ 
+ 	if (unset)
+ 		return 0;
+@@ -66,11 +73,16 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ 	if (*mode)
+ 		return -1;
+ 
+-	mask = intr ? perf_intr_reg_mask(EM_HOST) : perf_user_reg_mask(EM_HOST);
++	mask = intr ? perf_intr_reg_mask(EM_HOST, &abi) :
++		      perf_user_reg_mask(EM_HOST, &abi);
++	opts = intr ? container_of(opt->value, struct record_opts, sample_intr_regs) :
++		      container_of(opt->value, struct record_opts, sample_user_regs);
+ 
+ 	/* str may be NULL in case no arg is passed to -I */
+ 	if (!str) {
+ 		*mode = mask;
++		if (abi & PERF_SAMPLE_REGS_ABI_SIMD)
++			opts->sample_simd_regs_enabled = 1;
+ 		return 0;
+ 	}
+ 
+@@ -79,6 +91,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ 	if (!s)
+ 		return -1;
+ 
++	warn = "Unknown register \"%s\", check man page or run \"perf record %s?\"\n";
+ 	for (;;) {
+ 		uint64_t reg_mask;
+ 
+@@ -87,14 +100,16 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ 			*p = '\0';
+ 
+ 		if (!strcmp(s, "?")) {
+-			list_perf_regs(stderr, mask);
++			list_perf_regs(stderr, mask, abi);
+ 			goto error;
+ 		}
+ 
+-		reg_mask = name_to_perf_reg_mask(s, mask);
+-		if (reg_mask == 0) {
+-			ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
+-				s, intr ? "-I" : "--user-regs=");
++		reg_mask = name_to_perf_reg_mask(s, mask, abi);
++		if (reg_mask) {
++			if (abi & PERF_SAMPLE_REGS_ABI_SIMD)
++				opts->sample_simd_regs_enabled = 1;
++		} else {
++			ui__warning(warn, s, intr ? "-I" : "--user-regs=");
+ 			goto error;
+ 		}
+ 		*mode |= reg_mask;
+diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+index b6d20522b4e8..ae26d991cdc9 100644
+--- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
++++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+@@ -235,26 +235,26 @@ int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op)
+ 	return SDT_ARG_VALID;
+ }
+ 
+-uint64_t __perf_reg_mask_x86(bool intr)
++static uint64_t __arch__reg_mask(u64 sample_type, u64 mask, bool has_simd_regs)
+ {
+ 	struct perf_event_attr attr = {
+-		.type			= PERF_TYPE_HARDWARE,
+-		.config			= PERF_COUNT_HW_CPU_CYCLES,
+-		.sample_type		= PERF_SAMPLE_REGS_INTR,
+-		.sample_regs_intr	= PERF_REG_EXTENDED_MASK,
+-		.precise_ip		= 1,
+-		.disabled		= 1,
+-		.exclude_kernel		= 1,
++		.type				= PERF_TYPE_HARDWARE,
++		.config				= PERF_COUNT_HW_CPU_CYCLES,
++		.sample_type			= sample_type,
++		.precise_ip			= 1,
++		.disabled			= 1,
++		.exclude_kernel			= 1,
++		.sample_simd_regs_enabled	= has_simd_regs,
+ 	};
+ 	int fd;
+-
+-	if (!intr)
+-		return PERF_REGS_MASK;
+-
+ 	/*
+ 	 * In an unnamed union, init it here to build on older gcc versions
+ 	 */
+ 	attr.sample_period = 1;
++	if (sample_type == PERF_SAMPLE_REGS_INTR)
++		attr.sample_regs_intr = mask;
++	else
++		attr.sample_regs_user = mask;
+ 
+ 	if (perf_pmus__num_core_pmus() > 1) {
+ 		struct perf_pmu *pmu = NULL;
+@@ -276,13 +276,38 @@ uint64_t __perf_reg_mask_x86(bool intr)
+ 				 /*group_fd=*/-1, /*flags=*/0);
+ 	if (fd != -1) {
+ 		close(fd);
+-		return (PERF_REG_EXTENDED_MASK | PERF_REGS_MASK);
++		return mask;
++	}
++
++	return 0;
++}
++
++uint64_t __perf_reg_mask_x86(bool intr, int *abi)
++{
++	u64 sample_type = intr ? PERF_SAMPLE_REGS_INTR : PERF_SAMPLE_REGS_USER;
++	uint64_t mask = PERF_REGS_MASK;
++
++	/* -1 indicates only basic GPRs are needed. */
++	if (*abi < 0)
++		return PERF_REGS_MASK;
++
++	*abi = 0;
++	mask |= __arch__reg_mask(sample_type,
++				 GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16),
++				 true);
++	mask |= __arch__reg_mask(sample_type, BIT_ULL(PERF_REG_X86_SSP), true);
++
++	if (mask != PERF_REGS_MASK) {
++		*abi |= PERF_SAMPLE_REGS_ABI_SIMD;
++	} else {
++		mask |= __arch__reg_mask(sample_type, PERF_REG_EXTENDED_MASK,
++					 false);
+ 	}
+ 
+-	return PERF_REGS_MASK;
++	return mask;
+ }
+ 
+-const char *__perf_reg_name_x86(int id)
++static const char *__arch_reg_gpr_name(int id)
+ {
+ 	switch (id) {
+ 	case PERF_REG_X86_AX:
+@@ -333,7 +358,60 @@ const char *__perf_reg_name_x86(int id)
+ 		return "R14";
+ 	case PERF_REG_X86_R15:
+ 		return "R15";
++	default:
++		return NULL;
++	}
++
++	return NULL;
++}
+ 
++static const char *__arch_reg_egpr_name(int id)
++{
++	switch (id) {
++	case PERF_REG_X86_R16:
++		return "R16";
++	case PERF_REG_X86_R17:
++		return "R17";
++	case PERF_REG_X86_R18:
++		return "R18";
++	case PERF_REG_X86_R19:
++		return "R19";
++	case PERF_REG_X86_R20:
++		return "R20";
++	case PERF_REG_X86_R21:
++		return "R21";
++	case PERF_REG_X86_R22:
++		return "R22";
++	case PERF_REG_X86_R23:
++		return "R23";
++	case PERF_REG_X86_R24:
++		return "R24";
++	case PERF_REG_X86_R25:
++		return "R25";
++	case PERF_REG_X86_R26:
++		return "R26";
++	case PERF_REG_X86_R27:
++		return "R27";
++	case PERF_REG_X86_R28:
++		return "R28";
++	case PERF_REG_X86_R29:
++		return "R29";
++	case PERF_REG_X86_R30:
++		return "R30";
++	case PERF_REG_X86_R31:
++		return "R31";
++	case PERF_REG_X86_SSP:
++		return "SSP";
++	default:
++		return NULL;
++	}
++
++	return NULL;
++}
++
++static const char *__arch_reg_xmm_name(int id)
++{
++	switch (id) {
+ #define XMM(x) \
+ 	case PERF_REG_X86_XMM ## x:	\
+ 	case PERF_REG_X86_XMM ## x + 1:	\
+@@ -362,6 +440,22 @@ const char *__perf_reg_name_x86(int id)
+ 	return NULL;
+ }
+ 
++const char *__perf_reg_name_x86(int id, int abi)
++{
++	const char *name;
++
++	name = __arch_reg_gpr_name(id);
++	if (name)
++		return name;
++
++	if (abi & PERF_SAMPLE_REGS_ABI_SIMD)
++		name = __arch_reg_egpr_name(id);
++	else
++		name = __arch_reg_xmm_name(id);
++
++	return name;
++}
++
+ uint64_t __perf_reg_ip_x86(void)
+ {
+ 	return PERF_REG_X86_IP;
+diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+index f52b0e1f7fc7..18eed85cf220 100644
+--- a/tools/perf/util/perf_regs.c
++++ b/tools/perf/util/perf_regs.c
+@@ -35,7 +35,7 @@ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_op)
+ 	return ret;
+ }
+ 
+-uint64_t perf_intr_reg_mask(uint16_t e_machine)
++uint64_t perf_intr_reg_mask(uint16_t e_machine, int *abi /*inout*/)
+ {
+ 	uint64_t mask = 0;
+ 
+@@ -67,7 +67,7 @@ uint64_t perf_intr_reg_mask(uint16_t e_machine)
+ 		break;
+ 	case EM_386:
+ 	case EM_X86_64:
+-		mask = __perf_reg_mask_x86(/*intr=*/true);
++		mask = __perf_reg_mask_x86(/*intr=*/true, abi);
+ 		break;
+ 	default:
+ 		pr_debug("Unknown ELF machine %d, interrupt sampling register mask will be empty.\n",
+@@ -78,7 +78,7 @@ uint64_t perf_intr_reg_mask(uint16_t e_machine)
+ 	return mask;
+ }
+ 
+-uint64_t perf_user_reg_mask(uint16_t e_machine)
++uint64_t perf_user_reg_mask(uint16_t e_machine, int *abi /*inout*/)
+ {
+ 	uint64_t mask = 0;
+ 
+@@ -110,7 +110,7 @@ uint64_t perf_user_reg_mask(uint16_t e_machine)
+ 		break;
+ 	case EM_386:
+ 	case EM_X86_64:
+-		mask = __perf_reg_mask_x86(/*intr=*/false);
++		mask = __perf_reg_mask_x86(/*intr=*/false, abi);
+ 		break;
+ 	default:
+ 		pr_debug("Unknown ELF machine %d, user sampling register mask will be empty.\n",
+@@ -121,7 +121,7 @@ uint64_t perf_user_reg_mask(uint16_t e_machine)
+ 	return mask;
+ }
+ 
+-const char *perf_reg_name(int id, uint16_t e_machine, uint32_t e_flags)
++const char *perf_reg_name(int id, uint16_t e_machine, uint32_t e_flags, int abi)
+ {
+ 	const char *reg_name = NULL;
+ 
+@@ -153,7 +153,7 @@ const char *perf_reg_name(int id, uint16_t e_machine, uint32_t e_flags)
+ 		break;
+ 	case EM_386:
+ 	case EM_X86_64:
+-		reg_name = __perf_reg_name_x86(id);
++		reg_name = __perf_reg_name_x86(id, abi);
+ 		break;
+ 	default:
+ 		break;
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index 573f0d1dfe04..3086d2f2a974 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -13,10 +13,10 @@ enum {
+ };
+ 
+ int perf_sdt_arg_parse_op(uint16_t e_machine, char *old_op, char **new_op);
+-uint64_t perf_intr_reg_mask(uint16_t e_machine);
+-uint64_t perf_user_reg_mask(uint16_t e_machine);
++uint64_t perf_intr_reg_mask(uint16_t e_machine, int *abi /*inout*/);
++uint64_t perf_user_reg_mask(uint16_t e_machine, int *abi /*inout*/);
+ 
+-const char *perf_reg_name(int id, uint16_t e_machine, uint32_t e_flags);
++const char *perf_reg_name(int id, uint16_t e_machine, uint32_t e_flags, int abi);
+ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+ uint64_t perf_arch_reg_ip(uint16_t e_machine);
+ uint64_t perf_arch_reg_sp(uint16_t e_machine);
+@@ -65,8 +65,8 @@ uint64_t __perf_reg_sp_s390(void);
+ int __perf_sdt_arg_parse_op_s390(char *old_op, char **new_op);
+ 
+ int __perf_sdt_arg_parse_op_x86(char *old_op, char **new_op);
+-uint64_t __perf_reg_mask_x86(bool intr);
+-const char *__perf_reg_name_x86(int id);
++uint64_t __perf_reg_mask_x86(bool intr, int *abi);
++const char *__perf_reg_name_x86(int id, int abi);
+ uint64_t __perf_reg_ip_x86(void);
+ uint64_t __perf_reg_sp_x86(void);
+ 
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 93627c9a7338..411bb7276ad7 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -62,6 +62,13 @@ struct record_opts {
+ 	u64	      branch_stack;
+ 	u64	      sample_intr_regs;
+ 	u64	      sample_user_regs;
++	u16	      sample_simd_regs_enabled;
++	u16	      sample_vec_reg_qwords;
++	u16	      sample_pred_reg_qwords;
++	u32	      sample_intr_pred_regs;
++	u32	      sample_user_pred_regs;
++	u64	      sample_intr_vec_regs;
++	u64	      sample_user_vec_regs;
+ 	u64	      default_interval;
+ 	u64	      user_interval;
+ 	size_t	      auxtrace_snapshot_size;
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 5a30caaec73e..a9ad7d712196 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -733,7 +733,7 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, uint16_t e_machine,
+ 
+ 		printed += scnprintf(bf + printed, size - printed,
+ 				     "%5s:0x%" PRIx64 " ",
+-				     perf_reg_name(r, e_machine, e_flags), val);
++				     perf_reg_name(r, e_machine, e_flags, regs->abi), val);
+ 	}
+ }
+ 
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index fe0de2a0277f..9e36c834a8f4 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -966,15 +966,16 @@ static void branch_stack__printf(struct perf_sample *sample,
+ 	}
+ }
+ 
+-static void regs_dump__printf(u64 mask, u64 *regs, uint16_t e_machine, uint32_t e_flags)
++static void regs_dump__printf(u64 mask, struct regs_dump *regs,
++			      uint16_t e_machine, uint32_t e_flags)
+ {
+ 	unsigned rid, i = 0;
+ 
+ 	for_each_set_bit(rid, (unsigned long *) &mask, sizeof(mask) * 8) {
+-		u64 val = regs[i++];
++		u64 val = regs->regs[i++];
+ 
+ 		printf(".... %-5s 0x%016" PRIx64 "\n",
+-		       perf_reg_name(rid, e_machine, e_flags), val);
++		       perf_reg_name(rid, e_machine, e_flags, regs->abi), val);
+ 	}
+ }
+ 
+@@ -982,11 +983,13 @@ static const char *regs_abi[] = {
+ 	[PERF_SAMPLE_REGS_ABI_NONE] = "none",
+ 	[PERF_SAMPLE_REGS_ABI_32] = "32-bit",
+ 	[PERF_SAMPLE_REGS_ABI_64] = "64-bit",
++	[PERF_SAMPLE_REGS_ABI_SIMD | PERF_SAMPLE_REGS_ABI_32] = "32-bit SIMD",
++	[PERF_SAMPLE_REGS_ABI_SIMD | PERF_SAMPLE_REGS_ABI_64] = "64-bit SIMD",
+ };
+ 
+ static inline const char *regs_dump_abi(struct regs_dump *d)
+ {
+-	if (d->abi > PERF_SAMPLE_REGS_ABI_64)
++	if (d->abi >= ARRAY_SIZE(regs_abi) || !regs_abi[d->abi])
+ 		return "unknown";
+ 
+ 	return regs_abi[d->abi];
+@@ -1002,7 +1005,7 @@ static void regs__printf(const char *type, struct regs_dump *regs,
+ 	       mask,
+ 	       regs_dump_abi(regs));
+ 
+-	regs_dump__printf(mask, regs->regs, e_machine, e_flags);
++	regs_dump__printf(mask, regs, e_machine, e_flags);
+ }
+ 
+ static void regs_user__printf(struct perf_sample *sample, uint16_t e_machine, uint32_t e_flags)
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 85bee747f4cd..ce61734cd5d2 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -1524,6 +1524,8 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 		if (sample->user_regs && sample->user_regs->abi) {
+ 			result += sizeof(u64);
+ 			sz = hweight64(sample->user_regs->mask) * sizeof(u64);
++			if (sample->user_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
++				sz += 4 * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -1552,6 +1554,8 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 		if (sample->intr_regs && sample->intr_regs->abi) {
+ 			result += sizeof(u64);
+ 			sz = hweight64(sample->intr_regs->mask) * sizeof(u64);
++			if (sample->intr_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
++				sz += 4 * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -1729,6 +1733,8 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
+ 		if (sample->user_regs && sample->user_regs->abi) {
+ 			*array++ = sample->user_regs->abi;
+ 			sz = hweight64(sample->user_regs->mask) * sizeof(u64);
++			if (sample->user_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
++				sz += 4 * sizeof(u64);
+ 			memcpy(array, sample->user_regs->regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
+@@ -1765,6 +1771,8 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
+ 		if (sample->intr_regs && sample->intr_regs->abi) {
+ 			*array++ = sample->intr_regs->abi;
+ 			sz = hweight64(sample->intr_regs->mask) * sizeof(u64);
++			if (sample->intr_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
++				sz += 4 * sizeof(u64);
+ 			memcpy(array, sample->intr_regs->regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
 -- 
 2.34.1
 
