@@ -1,119 +1,250 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C513A9DA1
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 08:56:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67416224D6
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 09:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780044975; cv=none; b=sZ36cO48eOuWAKvIXcYahVjUcM8NLPcA27Rd9KqKRELtWPSdb9y7Dl7g7r17zobONyUm6xY09lMEB9l5nDY04TJqc3C/BfZuqQqooG6ISUBCTdnTPfOSrpfgDjeP+vrZ7UHenMLUPCxnXXNzav0eglnSaBoY8d2x+zZ86ASVBVw=
+	t=1780045377; cv=none; b=B3Figvqxh8Z5XK1zDsdLTX2tvszPoAacToOP8xklw4iFapE+53CyTdpcRru1DdDW2uu0Bbh5gdnHGfHEQhZTnwVpSQZFdtFFMWCy3iuHi7N6STzDWtCWeF6YvpTmhSkuZKSf1uXzDEBZ/pYPSyShPlCZwnBu6EeG8xv0xYC+feE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780044975; c=relaxed/simple;
-	bh=DaM2+AMUhuo3/OK+9Nph7Bnu3pIgrrcIjixOmi7AT2E=;
+	s=arc-20240116; t=1780045377; c=relaxed/simple;
+	bh=3taSqyxC6QcKOZYs0oii4nFtNtNRR87oWxhBkVf0UhU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sIg57+gitCSpToCihrtVpKvcYch6Cja2hr88a/VAGbWw8HAj55oW+D1eTJP+UvoG7VDdpCGN60GHE67T4BNvoSAYUsf+Z+re/WA6IAyrqoLuQy5wZ2ZIKoZHoxlXjUOZOYd7uupfkjbQw9xmu8nTTq1w2ensSvCQ/kO9qd0LpIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pp8yWK69; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=WIbnkMUAp0oz0br/U+LBIMBvn7z7nalkf6Bm1+AZ1A+UgPaS4Sj523nY12v9++dt2lwSzXNfQtupWlPClFLUk+Jmg4ydATW/UlDgzLHQxUNuOc47uyKC3bHcS1En3N/xLOsy9YGEBrVpqO/DV9N3g5nZLsnRnR56RDD6dY7YMq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZcbyhCr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pp8yWK69"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCAFB1F00893;
-	Fri, 29 May 2026 08:56:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZcbyhCr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E801F00893;
+	Fri, 29 May 2026 09:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780044974;
-	bh=sxQOwJ0+fhI8KMGcpoIBKQoJTcC9gDzhA6rKmXNIic0=;
+	s=k20260515; t=1780045376;
+	bh=6BTC79uvRjULKoTSPnIwJ2gY8O0GUTMRA6T/3459xUk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Pp8yWK69Z4JB12gE4eLSL+yyuw5GabfyIVMqsIJ0QMIr3yXf246H10c/wwjIEQfps
-	 LKoO62aUwgT/jVdaHsVMSa7082hDUDVGSIeYMVoAwUw9FqYSuXUVIydQKyZB6u0B9g
-	 Z9HD5Nv/KltRT8+oy2RZEvn6CBql9jFA5yojYh8JMnsEuZTTwZ5B3exsFo+XttOcM5
-	 921S1Tmv4opuFgU6xOUn7D2HBwJqZ9195hr+b39IQQfYMw3Q5p/gzOxIBvrP4dJCOQ
-	 HioXxySEBUt5ecPJQ59q/PSrJWuc+d43NIOpwDwNbT9qZzil5V1yAKPU/WAZ0bNH5A
-	 ZqB8JHZT6GCeQ==
+	b=QZcbyhCrijYMXh5Dhh+QtvF8ktuvs81LzHdn7jY65b5YZUz6WmWC+ZYilLDwlK+/0
+	 PE15Xcz1uEqdWqXjxmfahezpcGCoZS56c5BPrDnO0H4y0OlWEXSIiQzZV3ov6VFqIZ
+	 mAUAGw2TO1A0tzs7KCdB1K81SzypEwb+aGr5GblR7U0cL89q1dI1x4Uhb4myVmo5cu
+	 cMBgC8Lz7m4b+jRr7K2Wn4EY+x7QQKd96yKmfM1a9nAAgrt5D35eI5VDbD8mmctzWF
+	 i3xrGLhP3S0D5ofOhpiLFnsfG9HV1ZBWPMIAqSCFD2eWO6NjBH+f/kyfF+vHKyH79a
+	 acrikntYxDKIA==
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v8 07/23] x86/fpu/xstate: Add xsaves_nmi() helper
+Subject: Re: [Patch v8 10/23] perf/x86: Enable XMM Register Sampling for
+ Non-PEBS Events
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260529075645.580362-8-dapeng1.mi@linux.intel.com>
-References: <20260529075645.580362-8-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260529075645.580362-11-dapeng1.mi@linux.intel.com>
+References: <20260529075645.580362-11-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 May 2026 08:56:13 +0000
-Message-Id: <20260529085613.CCAFB1F00893@smtp.kernel.org>
+Date: Fri, 29 May 2026 09:02:55 +0000
+Message-Id: <20260529090255.E5E801F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Executing XSAVES blindly from an NMI context captures in-flight ke=
-rnel FPU state, leading to a severe information leak via perf REGS_INTR.
+
+New issues:
+- [High] reserve_ext_regs_buffers() fails to propagate memory allocation er=
+rors, leading to a predictable WARN_ON_ONCE in NMI context.
+- [High] PEBS events on older platforms (e.g., Skylake) improperly accept `=
+PERF_REG_EXTENDED_MASK`, bypassing capability checks.
+
+Pre-existing issues:
+- [High] Software PMU events (or hardware events requesting `PERF_SAMPLE_RE=
+GS_USER`) can request XMM registers, causing `perf_reg_value()` to perform =
+an out-of-bounds read on the kernel stack.
 --
 
-commit d34a5f4e0fb88fb36d75fc06f907af1f26922ffe
-Author: Kan Liang <kan.liang@linux.intel.com>
+commit cee33ccbb52239e18206f79aef67c4e7ac96ca59
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-x86/fpu/xstate: Add xsaves_nmi() helper
+perf/x86: Enable XMM Register Sampling for Non-PEBS Events
 
-This commit introduces the xsaves_nmi() function to allow saving supported
-xsave states directly from an NMI handler. It is currently intended for use
-by the perf subsystem to snapshot SIMD and APX eGPRs registers.
+This commit extends XMM register sampling to non-PEBS events by utilizing t=
+he
+xsaves instruction. It introduces a per-CPU 64-byte aligned buffer to store
+SIMD and other registers, allocating it during hardware reservation. The XMM
+data is then retrieved during the REGS_INTR case.
 
-> diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-> index a7b6524a9dea2..4394091c47910 100644
-> --- a/arch/x86/kernel/fpu/xstate.c
-> +++ b/arch/x86/kernel/fpu/xstate.c
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 17c8f44ee43b3..c219a563434d4 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
 
 [ ... ]
 
-> @@ -1474,6 +1474,29 @@ void xrstors(struct xregs_state *xstate, u64 mask)
->  	WARN_ON_ONCE(err);
->  }
-> =20
-> +/**
-> + * xsaves_nmi - Save selected components to a kernel xstate buffer in NMI
-> + * @xstate:	Pointer to the buffer
-> + * @mask:	Feature mask to select the components to save
-> + *
-> + * This function is similar to xsaves(), but should only be called within
-> + * a NMI handler. This function returns the actual register contents at
-> + * the moment the NMI occurs.
-> + *
-> + * Currently, the perf subsystem is the sole user of this helper. It uses
-> + * the function to snapshot SIMD (XMM/YMM/ZMM) and APX eGPRs registers.
-> + */
-> +void xsaves_nmi(struct xregs_state *xstate, u64 mask)
+> @@ -410,6 +410,56 @@ set_ext_hw_attr(struct hw_perf_event *hwc, struct pe=
+rf_event *event)
+
+[ ... ]
+
+> +static void reserve_ext_regs_buffers(void)
 > +{
-> +	int err;
+> +	bool compacted =3D cpu_feature_enabled(X86_FEATURE_XCOMPACTED);
+> +	unsigned int size;
+> +	int cpu;
 > +
-> +	if (!in_nmi())
+> +	if (!x86_pmu.ext_regs_mask)
 > +		return;
 > +
-> +	XSTATE_OP(XSAVES, xstate, (u32)mask, (u32)(mask >> 32), err);
+> +	/* +64 bytes for the 64 bytes alignment request of xsave area. */
+> +	size =3D xstate_calculate_size(x86_pmu.ext_regs_mask, compacted) + 64;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		per_cpu(ext_regs_buf, cpu) =3D kzalloc_node(size, GFP_KERNEL,
+> +							  cpu_to_node(cpu));
+> +		if (WARN_ON_ONCE(!per_cpu(ext_regs_buf, cpu)))
+> +			goto err;
+> +	}
+> +
+> +	return;
+> +
+> +err:
+> +	release_ext_regs_buffers();
+> +}
 
 [Severity: High]
-Could executing XSAVES directly from an NMI context capture in-flight kernel
-FPU state and lead to an information leak via perf REGS_INTR?
+Does reserve_ext_regs_buffers() need to propagate the allocation failure ba=
+ck
+to the caller?
 
-If an unprivileged user creates a hardware perf event with exclude_kernel=
-=3D1
-and requests PERF_SAMPLE_REGS_INTR, they bypass the perf_allow_kernel()
-privilege check. Due to hardware skid, a PMI might be delivered after the C=
-PU
-has already transitioned into kernel space.
+When kzalloc_node() fails, this function frees any previously allocated buf=
+fers
+and returns void. The caller, x86_reserve_hardware(), then assumes success
+and allows the perf_event_open syscall to succeed. Later, when an event
+requiring extended registers triggers a PMI, x86_pmu_sample_xregs() retriev=
+es
+a NULL buffer and triggers a WARN_ON_ONCE in NMI context.
 
-If the interrupted kernel context is actively using the FPU (for example,
-inside kernel_fpu_begin() for cryptographic operations), the hardware FPU
-registers would contain kernel data.
+Could this allow a local user to deliberately exhaust memory and repeatedly
+open a perf event to trigger the warning? If the system has panic_on_warn
+enabled, this could escalate to a kernel panic.
 
-Since this helper captures the hardware FPU state unconditionally, and the
-perf subsystem does not discard or filter REGS_INTR samples based on
-privilege when a skid into kernel mode occurs, will this export sensitive
-kernel SIMD registers to the unprivileged user's ring buffer?
+[ ... ]
 
-> +	WARN_ON_ONCE(err);
-> +}
+> @@ -655,18 +707,26 @@ int x86_pmu_hw_config(struct perf_event *event)
+
+[ ... ]
+
+> +	if (event->attr.sample_type & PERF_SAMPLE_REGS_INTR) {
+> +		/*
+> +		 * Besides the general purpose registers, XMM registers may
+> +		 * be collected as well.
+> +		 */
+> +		if (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK) {
+> +			if (!(event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS))
+> +				return -EINVAL;
+> +			if (is_sampling_event(event) && !event->attr.precise_ip &&
+> +			    !this_cpu_has(X86_FEATURE_XSAVES))
+> +				return -EINVAL;
+> +		}
+> +	}
+> =20
+> -		if (!event->attr.precise_ip)
+> +	if (event->attr.sample_type & PERF_SAMPLE_REGS_USER) {
+> +		/*
+> +		 * Currently XMM registers sampling for REGS_USER is not
+> +		 * supported yet.
+> +		 */
+> +		if (event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK)
+>  			return -EINVAL;
+>  	}
+
+[Severity: High]
+This isn't a bug introduced by this patch, but can software PMU events requ=
+est
+XMM registers and cause an out-of-bounds read on the kernel stack?
+
+While x86_pmu_hw_config() correctly blocks PERF_REG_EXTENDED_MASK for
+unsupported scenarios here, software events bypass x86_pmu_hw_config()
+completely. The function perf_reg_validate() checks requested registers aga=
+inst
+PERF_REG_X86_RESERVED, which fails to exclude bits 32-63 (XMM registers).
+
+If a software event requests XMM registers via PERF_SAMPLE_REGS_USER, and t=
+he
+event overflows, a standard pt_regs pointing to the top of the kernel stack
+is passed to perf_reg_value().
+
+When it uses container_of(regs, struct x86_perf_regs, regs) and reads
+perf_regs->xmm_regs, does it read past the end of the pt_regs on the stack,
+potentially leaking kernel memory or triggering a page fault?
+
+I note this is addressed later in the patch series by commit "perf/x86: Ena=
+ble
+XMM register sampling for REGS_USER case", but wanted to mention it here.
+
+[ ... ]
+
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 92cb9a716e83d..f5d458e3ba3f6 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+
+[ ... ]
+
+> @@ -6176,8 +6179,37 @@ static inline void __intel_update_large_pebs_flags=
+(struct pmu *pmu)
+
+[ ... ]
+
+> +static void intel_extended_regs_init(struct pmu *pmu)
+> +{
+> +	struct pmu *dest_pmu =3D pmu ? pmu : x86_get_pmu(smp_processor_id());
 > +
+> +	/*
+> +	 * Extend the vector registers support to non-PEBS.
+> +	 * The feature is limited to newer Intel machines with
+> +	 * PEBS V4+ or archPerfmonExt (0x23) enabled for now.
+> +	 * In theory, the vector registers can be retrieved as
+> +	 * long as the CPU supports. The support for the old
+> +	 * generations may be added later if there is a
+> +	 * requirement.
+> +	 * Only support the extension when XSAVES is available.
+> +	 */
+> +	if (!boot_cpu_has(X86_FEATURE_XSAVES))
+> +		return;
+> =20
+> +	if (!boot_cpu_has(X86_FEATURE_XMM) ||
+> +	    !cpu_has_xfeatures(XFEATURE_MASK_SSE, NULL))
+> +		return;
+> +
+> +	/*
+> +	 * On current hybrid platforms, P-cores and E-cores expose the same
+> +	 * XSAVE feature set. Therefore, using the global x86_pmu.ext_regs_mask
+> +	 * is sufficient to represent the hardware-supported XSAVE features.
+> +	 */
+> +	x86_pmu.ext_regs_mask |=3D XFEATURE_MASK_SSE;
+> +	dest_pmu->capabilities |=3D PERF_PMU_CAP_EXTENDED_REGS;
+> +}
+
+[Severity: High]
+Will this allow PEBS events on older platforms like Skylake to bypass capab=
+ility
+checks?
+
+Before this change, PERF_PMU_CAP_EXTENDED_REGS was only set for CPUs with P=
+EBS
+format >=3D 4 (Icelake+). By introducing intel_extended_regs_init(), the
+capability is now set globally for any CPU supporting XSAVES, including
+Skylake.
+
+Looking back at x86_pmu_hw_config(), if an event is a PEBS event
+(precise_ip > 0), it passes the capability check because the PMU now advert=
+ises
+it.
+
+Since Skylake's PEBS v3 hardware cannot sample XMM registers, does this res=
+ult
+in a silent ABI regression where the kernel returns zeroes in the sample
+payload instead of returning -EINVAL at event creation? Should
+x86_pmu_hw_config() enforce that PEBS XMM requests specifically require PEBS
+v4+ support?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260529075645.5803=
-62-1-dapeng1.mi@linux.intel.com?part=3D7
+62-1-dapeng1.mi@linux.intel.com?part=3D10
