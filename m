@@ -1,72 +1,71 @@
 Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525F43AB288
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 06:50:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5A3AB5B2
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 06:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780037414; cv=none; b=OpuJqKVw/cXFGpQ/cwYudb10vuzqV6MDkd5b5TuJYG0IPg5O9HTAng+rgaO5E618t7jW/9PHpih98K3IeNCSv11dwTjz83/G/Oc7YCrJ09iVpk6Hs4FOJXVdC38hD1HbhKmQMdg64d6cGWXfMVXjHPWikzCmO3iz35ArSoM0CHI=
+	t=1780037426; cv=none; b=nErpOBhmxR1w+RnqJrCu0MQJ0cpwRb4xWyc9mtqlIt0MoVPnbM5CEkLiI/P+/Yf+wDo00m8d+4g1xq+ywCYBiDTaCYvlhdkM1yIfBLk8ql57Of8RgrA3UGm0J+mK6dLvLNvzajJkhMPLg9Rswy+IU481bkgukYjtl9dfz7XyBxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780037414; c=relaxed/simple;
-	bh=l8VpUZffFor8YAf6zWGIP/ivE4EeTvVtWjyBJ4SlUhc=;
+	s=arc-20240116; t=1780037426; c=relaxed/simple;
+	bh=wKoADwIx3XBQeFkwJasifejVKolS7XjXeFd/igZgkkY=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kup7dw9Ljlcv0DGdkMN7Yr7bWUar49FCodNs3AB9ZcBKL3v06qAVuRqfChzW7+a+NTFG2BxkkP1JQ4/p6ENIpohEtOU8DFroi7XhEb1jywCHeIpnXTROpEGbtBjWydEJrTiOLjR6Jrimjf36LwIAwfDJ6IzxUjECoqNmhgpeHLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KeXwiGU+; arc=none smtp.client-ip=209.85.216.43
+	 MIME-Version:Content-Type; b=n/A30wxuAgQYVF4blvL/wwvhqRXpEg3/3RgB7wXBU5TQSl7HH+hIpXoiB7nF+bA4MWdlzrkBdQvTVmbmx1fXZ+pEwCwFkrIWaSYu6ZbR0/71L8V4hlWvwmKgZgelw8o6A9xtJciAkQs2JF6Sw3RT6WkTeEQsuR9NxA+m1xzyNZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jIvMt11h; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KeXwiGU+"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-36ba285e98bso1129317a91.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 23:50:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIvMt11h"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-36bcbd7821fso91976a91.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 May 2026 23:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780037412; x=1780642212; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780037421; x=1780642221; darn=vger.kernel.org;
         h=mime-version:references:in-reply-to:message-id:date:cc:to:from
          :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=vNZm916N27EU8apC4Pozmi2oKsvzQQeqDijK7mw9pNM=;
-        b=KeXwiGU+QC4MzZMjK4NAHaDucVBCdHHQ1W08U2KkxYk7BHcSDdlFSnpjX0H+1ET37s
-         Hsy9CplJIZB+WF0Qf2BA0JI0vxR4VI84HMdkAwim3I/ccdjzQApTisd32HDBRJ5V50IR
-         ASWc/HKWHfT8kcPNjD3RXEtsDWbS4nrAHHg4tPBXC9meMrHAw0j5UDDcx4HZgmygXqSH
-         LMmJXq5gReHxRiNId6WOO/e62wbdJ09jTLoDGOPaaE72ZhcqdVqjRMC4EKJCKNylNxBh
-         +VpJk+oqOu9kAqgWq5PBIKRhcl1nRrF0el7SMLZPUO4ZNxmeHMSTVL4NxFCn2hQo9+F8
-         mzwg==
+        bh=+OBzLI/XrsBIlLjY2T9FRHc7sS3cebW3Ke1v2nfS0Ww=;
+        b=jIvMt11h95Ox2deCXboX/UDRp4wjEDi51M5JIDOXpgg8lwoWM2YBs4dPcBROWDWpxQ
+         3x6aoQ62zLfkslS72zzrrPMjjUS/lpeSvMYkuIeahYupf9XkChS5WJe5N81pXBgEaWjc
+         6hdZkhnj36E/tMQAnxcrfGSkaa1tyARZ9QSCL0yb+dRid1gt7PJlq3BbAlBoP2f/i1Vt
+         5AernnH1bTM0y4rnCTRCgH+ncCOJ5m2mdTy9T0cWvZQddS0U/WNuL27wJxjhYQekLp1s
+         VHXOpOpL/UaEs4q786Lz4CpHTZDFtwLUvL9IFVUz6asNpxCl74LGDLVCHuLS9h5hSPth
+         BFOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780037412; x=1780642212;
+        d=1e100.net; s=20251104; t=1780037421; x=1780642221;
         h=mime-version:references:in-reply-to:message-id:date:cc:to:from
          :subject:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vNZm916N27EU8apC4Pozmi2oKsvzQQeqDijK7mw9pNM=;
-        b=BqjhS+sH3Cl6Q06HZosRd0hSkpqwt8bAE/UuwgZV7BC9akuFc92CChvUcEehblTlHa
-         GIoG/4W3o6Bq1rU2Ypw0ujo8uEpJW5sVmRdNsUCr7ISKeS5b5Qa7N/M4bOGLGPSJQfjZ
-         BIE25JMeXLjllNTyTlfQ+WZqr7tlfRL370eSR794oyEHeijgS1nJ4XZs3aahivjaJIB9
-         MpFfIJ46p/QgWv81j5J7uiJdZOUF9cmmdd3Fy4JKH6lVVcY6ECbZme1ut8st7kTSvm6M
-         bSx/huTkZ+iKqQdUXME+5FqK0mfBEZTMVvN4Jw7b86GSYcw0HWG+lxOE+gKb6TkRlrG3
-         OyRQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/ve52HDfY3+jiMss++9aFHYILNaQfRX3q+otVjvo3MjQ62qJiCHjHjdU95qSxhz2tr6Fff05mYWC4kyndScSh4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3c8oWb6ZjzZOn0mTJuMhF+lCmmGQkNizdplVcAQeCmSw4DH0E
-	nONdtsr4HSkBDchp6W1Lt81wD1FMgav7w3JU2iaemV758YlyXLK5FMsD
-X-Gm-Gg: Acq92OEW2JwnZgb0yoAIRPqyCzVtvYBEZBybYushr3fkVP7Vy+NdWW/Pa604HxO/KcW
-	Qb7rYxi3/GvVjGCO6XDgv5/a4AShixOpXiM+OUY+r+U5VzCyvC3Typn4hVafF1qQIWhmZuIW8k8
-	l0ctA0mIbXNt6Vf5GFIpOrohUlB+CIgT5WCy5yjmqSbUK6TLA0h3+VKnTuqREdhWRMjsBgNdIfC
-	89lJ9Q3dan5Nb7CpJNuVnZjM5w/dI+at+++mi2o5TGpGYVicYodMffcsv74XVnumPK99UR4ux3k
-	tsMbftWhjL0nYIcVysKBeLn7TTNThBm+rWwyZRpVHVhGyrOlUb1ZoN0BrSxv6vvCEwH3uC/ZYfJ
-	qfSGrVVHRy8YovGW4GRcn0HZHokwv7dtAaOP8d41pMWY5PD6a2fN70qlNqpaRFjdpXXfL5wAiaW
-	85+I5Vywd0aJoqG6I/k05vvJExIyifJnflzP0QOw==
-X-Received: by 2002:a17:90b:5628:b0:366:5c38:fd61 with SMTP id 98e67ed59e1d1-36bbcd407bcmr1989741a91.12.1780037412294;
-        Thu, 28 May 2026 23:50:12 -0700 (PDT)
+        bh=+OBzLI/XrsBIlLjY2T9FRHc7sS3cebW3Ke1v2nfS0Ww=;
+        b=blADANYQAM276dQKV6tJ3tKklXsD1fNnYx2txnOvrbzUo8M2hGWSMSHjxUdCfFj64x
+         3RypSzEI8ROcQob08RQdQzRS9IyKhD+9jDxxlo4wzeSpGACskShA58ewcwL0Csf0j7+y
+         rDCNXo25Rety9XjTvqzMbJqlcybuyBRAu6+UsrSJzRkxlWHYC7mJjX1L+I38xxkdD9ra
+         xtpYza+8SR93Rr7fBt1K3bLo9IpCFNrUj8mxfIWzlc68OyKFWst5TPg9YJXg/Y74rKUv
+         Caxq7fi6F2PYplk77N2oxnM9xuntcauor0V9HE9ez/Ho45D2FmUNEXwNv9MJt1QgV3NL
+         oxWQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+tkBSBJIpHY+b9T7KbV5tb4Jhufad+5Wvg2bbsEID0gHtFbVpMOmIvEfVuawfhdmAVK4SQL2U2hKP+Sjwr/E2E@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI/fQOCGlmWqOM+/ini2wb9TYj9mZPs7J4cTDFgHDkmCzwtuiI
+	V08JkASNcyiKzefLFWL1o9JEBkYCKLFs9eqtt6/o/2yvS5+OJqgw/iNuxBVMpSjntTs3tg==
+X-Gm-Gg: Acq92OHMYkuS5yAMOiXqn4wz0qZCM/S5drdhaivcMtvP0GOU2dW4jjW8rvhNVqtsnC7
+	7/6ykmbK3YzTNTdPIQja+uHA4ZRd+WjcMR0zR7ST4OM2I5lnNubuz79KALjY+jFq1DtXouyixV9
+	QQAotE/BpI83N/0A8xeZPli5bdwkAIfTb753SVea6aF1kVboUtW0VoTDt8adZJ/cmGLXDHvfv3k
+	omJbFRKAqvIjl+cKudwxpGe93ORvA29pNEHIbX3NVVMaMX9bgiAXs8tHRkgOkcaCSYnNeqOEY4p
+	1RJx0PTyqwo6zgfqXyUSbHjJdNjJhWH5aTlOw+5SkTV192NlI0Mrm2cvAXoxiPwOJ/keMeDBlnG
+	jif3l3Leo8RLXsOk69UTjrurUG2+c5Ni5x8O/ybo3GrxszprUe1NTnQRNgPL65FhfHUoAZvycE2
+	+6ETh05zX2558D54cbuW7zLZVjENO9dIiTDoHpcw==
+X-Received: by 2002:a17:90a:d00b:b0:368:3854:3a2e with SMTP id 98e67ed59e1d1-36bbceb5f81mr1987769a91.26.1780037421065;
+        Thu, 28 May 2026 23:50:21 -0700 (PDT)
 Received: from [127.0.1.1] ([104.28.157.202])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36bc0c1ab21sm952626a91.14.2026.05.28.23.50.00
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36bc0c1ab21sm952626a91.14.2026.05.28.23.50.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 23:50:11 -0700 (PDT)
-Subject: [PATCH 2/6] perf/header: validate bitmap size before allocation in
- do_read_bitmap
+        Thu, 28 May 2026 23:50:20 -0700 (PDT)
+Subject: [PATCH 3/6] perf/header: reject data offset beyond file size
 From: Wang Haoran <haoranwangsec@gmail.com>
 To: acme@kernel.org
 Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
  mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  haoranwangsec@gmail.com
-Date: Fri, 29 May 2026 14:50:00 +0800
-Message-ID: <178003740032.62097.2831253079063258263@gmail.com>
+Date: Fri, 29 May 2026 14:50:13 +0800
+Message-ID: <178003741374.62097.136470109571301341@gmail.com>
 In-Reply-To: <178003738371.62097.10360938456907564684@gmail.com>
 References: <178003738371.62097.10360938456907564684@gmail.com>
 Precedence: bulk
@@ -75,48 +74,52 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4800812148004390372=="
+Content-Type: multipart/mixed; boundary="===============5064275133724409396=="
 
---===============4800812148004390372==
+--===============5064275133724409396==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
->From 3514ed156b02bdbbc9b37bf7a4b8cb8ee5e7e402 Mon Sep 17 00:00:00 2001
+>From cc2ff328f62f766f74de038347d88ee2dc75f78d Mon Sep 17 00:00:00 2001
 From: Wang Haoran <haoranwangsec@gmail.com>
-Date: Thu, 28 May 2026 15:16:53 +0800
-Subject: [PATCH 2/6] perf/header: validate bitmap size before allocation in
- do_read_bitmap
+Date: Thu, 28 May 2026 15:17:07 +0800
+Subject: [PATCH 3/6] perf/header: reject data offset beyond file size
 
-do_read_bitmap() reads a u64 size from the file and passes it directly
-to bitmap_zalloc(), which takes an int.  If size exceeds INT_MAX the
-truncated int value produces a tiny allocation while the subsequent
-loop reads BITS_TO_U64(size) u64 values using the original u64,
-writing far beyond the allocated buffer and causing a heap overflow.
+A crafted perf.data file can set data.offset to a value larger than
+the actual file size.  perf then calls mmap() with that file offset,
+which succeeds but maps a region entirely past the end of the file.
+Any subsequent access to the mapped memory triggers SIGBUS.
 
-Add a bounds check that rejects any size that does not fit in an int
-before the allocation.
+Add a fstat() check in perf_file_header__read() that rejects files
+whose claimed data.offset exceeds the real file size.
 
-Fixes: <do_read_bitmap>
+Fixes: <perf_file_header__read>
 Signed-off-by: Wang Haoran <haoranwangsec@gmail.com>
 ---
- tools/perf/util/header.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/header.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 9142a8ba4..e000eb9c1 100644
+index e000eb9c1..f1a1831cf 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -287,6 +287,9 @@ static int do_read_bitmap(struct feat_fd *ff, unsigned lo=
-ng **pset, u64 *psize)
- 	if (ret)
- 		return ret;
+@@ -4335,6 +4335,15 @@ int perf_file_header__read(struct perf_file_header *he=
+ader,
+ 		return -1;
+ 	}
 =20
-+	if (size > INT_MAX)
-+		return -EINVAL;
++	{
++		struct stat st;
 +
- 	set =3D bitmap_zalloc(size);
- 	if (!set)
- 		return -ENOMEM;
++		if (fstat(fd, &st) =3D=3D 0 && header->data.offset > (u64)st.st_size) {
++			pr_err("Perf file header corrupt: data offset beyond file size\n");
++			return -1;
++		}
++	}
++
+ 	if (header->size !=3D sizeof(*header)) {
+ 		/* Support the previous format */
+ 		if (header->size =3D=3D offsetof(typeof(*header), adds_features))
 --=20
 2.53.0
 
@@ -125,142 +128,53 @@ ng **pset, u64 *psize)
 ---
 ASan output on perf 7.0.6 (unpatched) with the attached PoC:
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=3D=3D55925=3D=3DERROR: AddressSanitizer: heap-buffer-overflow on address 0x6=
-e688dfe0950 at pc 0x724890083d4c bp 0x7ffddd8621b0 sp 0x7ffddd861978
-WRITE of size 8 at 0x6e688dfe0950 thread T0
-    #0 0x724890083d4b in read ../../../../src/libsanitizer/sanitizer_common/s=
-anitizer_common_interceptors.inc:1017
-    #1 0x6111c68ee74f in read /usr/include/x86_64-linux-gnu/bits/unistd.h:32
-    #2 0x6111c68ee74f in ion=20
-    #3 0x6111c68ee74f in readn=20
-    #4 0x6111c6b57dcb in process_mem_topology (perf+0x603dcb) (BuildId: 25d66=
-7fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #5 0x6111c6b51698 in perf_file_section__process (perf+0x5fd698) (BuildId:=
- 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #6 0x6111c6b70992 in perf_header__process_sections (perf+0x61c992) (Build=
-Id: 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #7 0x6111c6b72437 in perf_session__read_header (perf+0x61e437) (BuildId: =
-25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #8 0x6111c6bace67 in __perf_session__new (perf+0x658e67) (BuildId: 25d667=
-fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #9 0x6111c6898edd in cmd_sched (perf+0x344edd) (BuildId: 25d667fa7a727404=
-6cb5bcb3375c4b1074f3f6db)
-    #10 0x6111c68d787f in handle_internal_command (perf+0x38387f) (BuildId: 2=
-5d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #11 0x6111c674a836 in main (perf+0x1f6836) (BuildId: 25d667fa7a7274046cb5=
-bcb3375c4b1074f3f6db)
-    #12 0x72488ec2a600 in __libc_start_call_main ../sysdeps/nptl/libc_start_c=
-all_main.h:59
-    #13 0x72488ec2a717 in __libc_start_main_impl ../csu/libc-start.c:360
-    #14 0x6111c6752754 in _start (perf+0x1fe754) (BuildId: 25d667fa7a7274046c=
-b5bcb3375c4b1074f3f6db)
-
-0x6e688dfe0951 is located 0 bytes after 1-byte region [0x6e688dfe0950,0x6e688=
-dfe0951)
-allocated by thread T0 here:
-    #0 0x72489012b40f in calloc ../../../../src/libsanitizer/asan/asan_malloc=
-_linux.cpp:74
-    #1 0x6111c6b5779d in process_mem_topology (perf+0x60379d) (BuildId: 25d66=
-7fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #2 0x6111c6b51698 in perf_file_section__process (perf+0x5fd698) (BuildId:=
- 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #3 0x6111c6b70992 in perf_header__process_sections (perf+0x61c992) (Build=
-Id: 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #4 0x6111c6b72437 in perf_session__read_header (perf+0x61e437) (BuildId: =
-25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #5 0x6111c6bace67 in __perf_session__new (perf+0x658e67) (BuildId: 25d667=
-fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #6 0x6111c6898edd in cmd_sched (perf+0x344edd) (BuildId: 25d667fa7a727404=
-6cb5bcb3375c4b1074f3f6db)
-    #7 0x6111c68d787f in handle_internal_command (perf+0x38387f) (BuildId: 25=
-d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #8 0x6111c674a836 in main (perf+0x1f6836) (BuildId: 25d667fa7a7274046cb5b=
-cb3375c4b1074f3f6db)
-    #9 0x72488ec2a600 in __libc_start_call_main ../sysdeps/nptl/libc_start_ca=
-ll_main.h:59
-    #10 0x72488ec2a717 in __libc_start_main_impl ../csu/libc-start.c:360
-    #11 0x6111c6752754 in _start (perf+0x1fe754) (BuildId: 25d667fa7a7274046c=
-b5bcb3375c4b1074f3f6db)
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow /usr/include/x86_64-linux-gnu=
-/bits/unistd.h:32 in read
-Shadow bytes around the buggy address:
-  0x6e688dfe0680: fa fa 00 00 fa fa 00 fa fa fa 00 00 fa fa 00 fa
-  0x6e688dfe0700: fa fa fa fa fa fa 00 00 fa fa 00 fa fa fa 00 00
-  0x6e688dfe0780: fa fa 00 fa fa fa 00 fa fa fa 00 00 fa fa 00 fa
-  0x6e688dfe0800: fa fa 00 00 fa fa 00 fa fa fa 00 fa fa fa 00 00
-  0x6e688dfe0880: fa fa 00 00 fa fa 00 fa fa fa 01 fa fa fa 00 00
-=3D>0x6e688dfe0900: fa fa 00 04 fa fa 00 fa fa fa[fa]fa fa fa fa fa
-  0x6e688dfe0980: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x6e688dfe0a00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x6e688dfe0a80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x6e688dfe0b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x6e688dfe0b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07=20
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
 AddressSanitizer:DEADLYSIGNAL
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=3D=3D55925=3D=3DERROR: AddressSanitizer: SEGV on unknown address 0x000000000=
-000 (pc 0x6111c687a20c bp 0x7ffddd8628e0 sp 0x7ffddd862810 T0)
-=3D=3D55925=3D=3DThe signal is caused by a READ memory access.
-=3D=3D55925=3D=3DHint: address points to the zero page.
-    #0 0x6111c687a20c in show_schedstat_data (perf+0x32620c) (BuildId: 25d667=
-fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #1 0x6111c6899d09 in cmd_sched (perf+0x345d09) (BuildId: 25d667fa7a727404=
+=3D=3D55933=3D=3DERROR: AddressSanitizer: BUS on unknown address (pc 0x5d3506=
+9296b4 bp 0x7fffd2df9100 sp 0x7fffd2df90a0 T0)
+=3D=3D55933=3D=3DThe signal is caused by a READ memory access.
+=3D=3D55933=3D=3DHint: this fault was caused by a dereference of a high value=
+ address (see register values below).  Disassemble the provided pc to learn w=
+hich register was used.
+    #0 0x5d35069296b4 in reader__read_event (perf+0x65e6b4) (BuildId: 25d667f=
+a7a7274046cb5bcb3375c4b1074f3f6db)
+    #1 0x5d350692a21d in perf_session__process_events (perf+0x65f21d) (BuildI=
+d: 25d667fa7a7274046cb5bcb3375c4b1074f3f6db)
+    #2 0x5d350660ff97 in cmd_sched (perf+0x344f97) (BuildId: 25d667fa7a727404=
 6cb5bcb3375c4b1074f3f6db)
-    #2 0x6111c68d787f in handle_internal_command (perf+0x38387f) (BuildId: 25=
+    #3 0x5d350664e87f in handle_internal_command (perf+0x38387f) (BuildId: 25=
 d667fa7a7274046cb5bcb3375c4b1074f3f6db)
-    #3 0x6111c674a836 in main (perf+0x1f6836) (BuildId: 25d667fa7a7274046cb5b=
+    #4 0x5d35064c1836 in main (perf+0x1f6836) (BuildId: 25d667fa7a7274046cb5b=
 cb3375c4b1074f3f6db)
-    #4 0x72488ec2a600 in __libc_start_call_main ../sysdeps/nptl/libc_start_ca=
+    #5 0x7f111f42a600 in __libc_start_call_main ../sysdeps/nptl/libc_start_ca=
 ll_main.h:59
-    #5 0x72488ec2a717 in __libc_start_main_impl ../csu/libc-start.c:360
-    #6 0x6111c6752754 in _start (perf+0x1fe754) (BuildId: 25d667fa7a7274046cb=
+    #6 0x7f111f42a717 in __libc_start_main_impl ../csu/libc-start.c:360
+    #7 0x5d35064c9754 in _start (perf+0x1fe754) (BuildId: 25d667fa7a7274046cb=
 5bcb3375c4b1074f3f6db)
 
-=3D=3D55925=3D=3DRegister values:
-rax =3D 0x0000000000000000  rbx =3D 0x00006eb88dfe2710  rcx =3D 0x00000000000=
-00000  rdx =3D 0x0000000000000000 =20
-rdi =3D 0x0000000000000000  rsi =3D 0x0000000000000000  rbp =3D 0x00007ffddd8=
-628e0  rsp =3D 0x00007ffddd862810 =20
- r8 =3D 0x0000000000000000   r9 =3D 0x0000000000000000  r10 =3D 0x00000000000=
-00002  r11 =3D 0x0000000000000000 =20
-r12 =3D 0x0000000000000000  r13 =3D 0x0000000000000000  r14 =3D 0x00000000000=
-00000  r15 =3D 0x000070188dfe0080 =20
+=3D=3D55933=3D=3DRegister values:
+rax =3D 0x0000000000000007  rbx =3D 0x00007b111d54bd90  rcx =3D 0x00000000000=
+00001  rdx =3D 0x0000000000000000 =20
+rdi =3D 0x00007b111d54bdd8  rsi =3D 0x00007ce11e5e0080  rbp =3D 0x00007fffd2d=
+f9100  rsp =3D 0x00007fffd2df90a0 =20
+ r8 =3D 0x0000000000000f68   r9 =3D 0x0000000000000000  r10 =3D 0x00007ce11e5=
+e0080  r11 =3D 0x0000000000000246 =20
+r12 =3D 0x00007f111ebb7f68  r13 =3D 0x00000000000103c8  r14 =3D 0x00007f111eb=
+b7f6e  r15 =3D 0x00007ce11e5e0080 =20
 AddressSanitizer can not provide additional info.
-SUMMARY: AddressSanitizer: SEGV (perf+0x32620c) (BuildId: 25d667fa7a7274046cb=
-5bcb3375c4b1074f3f6db) in show_schedstat_data
-=3D=3D55925=3D=3DABORTING
+SUMMARY: AddressSanitizer: BUS (perf+0x65e6b4) (BuildId: 25d667fa7a7274046cb5=
+bcb3375c4b1074f3f6db) in reader__read_event
+=3D=3D55933=3D=3DABORTING
 
---===============4800812148004390372==
+--===============5064275133724409396==
 Content-Type: application/octet-stream
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="crash_sig6_iter840.data"
+Content-Disposition: attachment; filename="crash_sig7_iter210.data"
 MIME-Version: 1.0
 
-UEVSRklMRTJoAAAAAAAAAKAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAAGgAAAAAAAAAYAQAAAAAAAAA
+UEVSRklMRTJoAAAAAAAAAKAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAAGj/AAAAAAAAYAQAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAA+G9QAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABVAAAAAABIAPR5
 ZAABAAAAAAAAABEAAACbGAAAAAAAABgpDQDjGAQA2I0GAJAkBQCRZKWOlQAAAIZL/v5FAAAAerYk
 AAAAAABWAAAAAADQAPR5ZAABAAAAAAAAABEAAAB+DgAA1g0AAFsAAADyLAMA3TwAAAAAAAAAAAAA
@@ -335,14 +249,14 @@ AEAAAAAAQAAAEAAAAEAAAABVbmlmaWVkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADE2Mzg0SwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAMQAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA
-CAAAAAABAAAAAAAAAAAAAAAAACgAAAAAAAAAKAAAAAAAAAD///8A/wAAABEAAAABAAAAAAAAAAEA
-AAAAAAAAQAAAAFBLRwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAABAAAAAMDAwMDAwMDAsMDAwMDAwMDAsMDAwMDAwMDAsMDAwMDAwMDMA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwLTEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAAAQAAAAFBL
-RwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAABAAAAAMDAwMDAwMDAsMDAwMDAwMDAsMDAwMDAwMDAsMDAwMDAwMDMAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAEAAAAAwLTEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+CAAAAAABAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAoAAAAAAAAAP///wD/AAAAEQAAAAEAAAAAAAAA
+AQAAAAAAAABAAAAAUEtHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAw
+MwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAADAtMQAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAABAAAAA
+UEtHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAEAAAAAwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMCwwMDAwMDAwMwAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAQAAAADAtMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 
---===============4800812148004390372==--
+--===============5064275133724409396==--
