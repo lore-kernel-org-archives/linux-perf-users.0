@@ -1,146 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABD63EBF01;
-	Fri, 29 May 2026 14:46:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C332A2E8B67;
+	Fri, 29 May 2026 14:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780066000; cv=none; b=dukkAP7dA92B4q27gXFhkPlxdoOYIO110+1eF1kOeLVnS2hcJRIS0WP3q6NaHshTu9RHBVtrxEs0x7cZwCCR/Z8j44xBSBVuDfaDA6hgqSDKw1HGQA1ztbyFrPImKzam+hhoTWjpzDrHtmOONf/gZQRWVx5IuN8tJ4UrRCA/CC8=
+	t=1780066444; cv=none; b=bu6/KN1bRDuiVBoDMPPaWBfGXZFPZBib6oD6y+tBmaC08ipzqY/0SPW4X1nc6k9yDZOxSiuHrLQo9VQw/G8NDCuO29zFkyCwKhubUtC87A9mCh+ayj99Ogtyg+X3wCdWRBLELODkKu40972IqC/ltKDZyhxQIa7jiUo/zs5S46U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780066000; c=relaxed/simple;
-	bh=/DLCbtf2TC9ZlP7I3+tf0KSwfr7oJsPRRLfo8+/jKqU=;
+	s=arc-20240116; t=1780066444; c=relaxed/simple;
+	bh=gZdh1w8vRYOuFtaxDYEbXNNnQrE9nz4aFDDjcyod/yg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y+5szHo8ZisSf7B8vYqZ6U0/KPZhPm/oukBORTSniIUJTxAYlCVJYqf57cnukPkuEZyGsvTugxhFaBihX6jMegvbTK0Qdq6ZBN9eTKKCGid3F5gIpOtbQpqt/+mnaBO/30qv9YUcajz8D0nD4uKIGV7mKapM3J2EmbZgyL4Czsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpO1P2uN; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZCOIrJVpeQr6sd1Nh548UbEWtf3a5ndOwGMJRYBSzJBaK1KeDXNmSK13/HADyukov68PH2hDuiOWnRdPVFD6cxQwG9SWvDxIJO88f7eK1jqqGgl+VXaqraKw2/L9j+p3OmvRdPZahrUmxJ0moslUJR7xZJ0mrOwRKRsomwUv3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btigZHr6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpO1P2uN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B75131F00893;
-	Fri, 29 May 2026 14:46:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btigZHr6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BADDF1F00893;
+	Fri, 29 May 2026 14:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780065998;
-	bh=roAzcEGv6xFUTJTFM2grQEedUJi1wGSxnvk96g1idbM=;
+	s=k20260515; t=1780066443;
+	bh=aeelb+SxVvWZH/Lny1Z/xaobYN8qV++QCgA8BW3g8rM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=dpO1P2uNlRdlGGX7aP0Wb7RThYWpVQYyjQaTJDvLqOB8W/B7O31nT23FP0x0nNwqi
-	 9aEXWHPqqLHppcUtsGMnIGCaMzJ7q231hJT10wFZeue0yE+AOJaz75MOwMJ7CRiYtm
-	 7hH1WpRuuN7AnGNC3ciIg734W8YPbRVe95a+OYfeDAMRY2BtnAV3SC75mTXB7RRdnk
-	 hz3vi6d1nA+Q5yKn8Ewb5oGclBv7u4b/v5CT4Vc9Ab86V/ksCDBMyHi//pd5+JGHEL
-	 XfMp/fcAfe4D0ugnDztopSB7eH8Nl1lxQE4Z+Hb/AEjS2dEmuwF8D2qe2C/eWB7U2J
-	 bM/ByiBIVax/Q==
-Date: Fri, 29 May 2026 11:46:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCHES v4 00/29] perf: Harden perf.data parsing against
- crafted/corrupted files
-Message-ID: <ahmmymEemjF6Dnbi@x1>
-References: <20260526211806.1193848-1-acme@kernel.org>
- <ahZDggzXoHvbnhog@x1>
- <CAP-5=fU=rrU3qP6Uzvhs90DRMtDNGzXk-dkYqvpX8J_sPRc1-g@mail.gmail.com>
+	b=btigZHr6ceEB8i2nQXFz9UnBi4GN5ysMJzsAvsBa/b8RDtQe4dDZu2SKAjg9tz1IH
+	 kA3njYoCJ6YwvL/NHLD2Rq+cmPoL38pP7srU5dchpJcOQBejoaHYMP6pPwnQCUgmtY
+	 nQR2ttvfFZjmqth/a+pjwrwQoerMiJJnVyLKBhvtveBX5TbCbhFLw6e0Fb/umydsoE
+	 BkKS82gPL3L318UY6HxFF7SMew1C7iD8IwTCmyHldFJ/cDGbmqDgooA/IAJ8a5BPJ/
+	 SvARwc84o/1tB2WocLKPsjXC2DmLpsUBCqrBNFPHWresKz67G1OQjotOBQoYiM795v
+	 fdJpKGY4WiX9w==
+Date: Fri, 29 May 2026 15:53:58 +0100
+From: Will Deacon <will@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Pratyush Anand <panand@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	clm@meta.com, leo.bras@arm.com, kernel-team@meta.com
+Subject: Re: [PATCH] arm64/hw_breakpoint: reject unaligned watchpoints that
+ would truncate BAS
+Message-ID: <ahmohv6vQGxY-asL@willie-the-truck>
+References: <20260430-arm64_bas-v1-1-c6ab2b15aec0@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU=rrU3qP6Uzvhs90DRMtDNGzXk-dkYqvpX8J_sPRc1-g@mail.gmail.com>
+In-Reply-To: <20260430-arm64_bas-v1-1-c6ab2b15aec0@debian.org>
 
-On Thu, May 28, 2026 at 03:07:13PM -0700, Ian Rogers wrote:
-> On Tue, May 26, 2026 at 6:06 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Tue, May 26, 2026 at 06:17:36PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > perf.data validation and hardening (29 patches)
-> > >
-> > > A crafted or corrupted perf.data file can cause out-of-bounds
-> > > reads/writes, infinite loops, heap overflows, and segfaults in perf
-> > > report, perf script, perf inject, perf timechart, and perf kwork.
-> > > This series adds defense-in-depth validation for file parsing:
-> >
-> > The analysis about Sashiko's remaining comments is below, unless someone
-> > has something not related by Sashiko, I'll merge this tomorrow and
-> > continue processing the other outstanding patches.
-> >
-> > ● Here's the v4 sashiko.dev review triage — 13 of 29 patches got reviews:
-> >
-> >   Patches with findings:
-> >
-> >   Patch: 02 (peek_event bounds)
-> >   Findings: 1 High: mmap_size - page_offset underflow
-> >   Verdict: Pre-existing — reader__init() validates data_size, page_offset can't exceed mmap_size
-> >   ────────────────────────────────────────
-> >   Patch: 04 (zstd compress)
-> >   Findings: 1 Critical + 3 High: multi-record header overflow, AIO data_size, flush return, decompress pos
-> >   Verdict: All pre-existing — the Critical is about process_header() aggregate size, and the decompress issue is fixed later in patch 05
-> >   ────────────────────────────────────────
-> >   Patch: 05 (zstd decompress)
-> >   Findings: 1 High: O_NONBLOCK missing on file opens
-> >   Verdict: Pre-existing — not introduced by this patch, unrelated to zstd
-> >
-> > This one IIRC Ian sent a patch for review-prompts, merged recently that
-> > will make its way to Sashiko and will stop being flagged as a problem:
-> >
-> >   "kernel/subsystem/perf.md: Remove section describing non-blocking IO"
-> >   https://github.com/masoncl/review-prompts/commit/261d73261dbb11f38ff9c653da3608b162741e03
-> >
-> >   ────────────────────────────────────────
-> >   Patch: 08 (swap infra)
-> >   Findings: 2 High: mmap2 prot/flags not swapped, event_update union not swapped
-> >   Verdict: Both pre-existing — correct observations for follow-up series
-> >   ────────────────────────────────────────
-> >   Patch: 10 (HEADER_ATTR)
-> >   Findings: same as v3 — already triaged
-> >   Verdict:
-> >   ────────────────────────────────────────
-> >   Patch: 11 (nr validation)
-> >   Findings: 1 Medium: native path aborts vs swap path skips on bad THREAD_MAP
-> >   Verdict: Valid observation — but intentional: native path returns -EINVAL to catch corruption, swap path skips to keep session alive.
-> >   ────────────────────────────────────────
-> >   Patch: 12 (build_id_swap)
-> >   Findings: same as v3 — already fixed in v4
-> >   Verdict:
-> >   ────────────────────────────────────────
-> >   Patch: 15 (BPF_METADATA)
-> >   Findings: 1 High new: double-fetch of header.size in swap path; 2 High pre-existing: TOCTOU on native path
-> >   Verdict: The double-fetch is valid for swap but swap runs on MAP_PRIVATE (writable copy), so no concurrent modification possible.
-> >   ────────────────────────────────────────
-> >   Patch: 24 (compressed hardening)
-> >   Findings: 1 Medium: double-fetch of event->header.size in tool.c
-> >   Verdict: Same TOCTOU pattern
-> >   ────────────────────────────────────────
-> >   Patch: 26 (CPU bounds)
-> >   Findings: 1 High: global clamp corrupts data for >4096 CPUs
-> >   Verdict: Known limitation — memory [[MAX_NR_CPUS dynamic allocation]] TODO
-> >   ────────────────────────────────────────
-> >   Patch: 28 (READ_ONCE snapshot)
-> >   Findings: 4 High: incomplete TOCTOU fix, type confusion, array count re-reads
-> >   Verdict: All pre-existing MAP_SHARED TOCTOU. The full fix would be MAP_PRIVATE, noted as follow-up
-> >   ────────────────────────────────────────
-> >   Patch: 29 (shell test)
-> >
-> >   Fixed and sent the diff in response to Sashiko's review e-mail.
-> >
-> >   Summary: 1 new actionable issue in v4. All the other findings are
-> >   either pre-existing (documented in the cover letter), already fixed in
-> >   this version, or intentional design decisions. The mmap2 prot/flags
-> >   and event_update union swap gaps (patch 08) are valid pre-existing
-> >   bugs for a follow-up series.
-> >
-> > -------------------------------------------------------------------------
+Hi Breno,
+
+Thanks for sending this out.
+
+On Thu, Apr 30, 2026 at 02:40:10AM -0700, Breno Leitao wrote:
+> hw_breakpoint_arch_parse() positions the BAS bit pattern in
+> hw->ctrl.len with
 > 
-> I'm more than happy with this merge, good not being the enemy of
-> perfect and things like that.
+> 	offset = hw->address & alignment_mask;	/* 0..7 */
+> 	hw->ctrl.len <<= offset;
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> ctrl.len is an 8-bit bitfield (struct arch_hw_breakpoint_ctrl::len is
+> u32 :8), so the shift silently drops any bits past bit 7.  For
+> non-compat AArch64 watchpoints the offset is unbounded relative to
+> ctrl.len: a perf_event_open(PERF_TYPE_BREAKPOINT) caller asking for
+> HW_BREAKPOINT_W with bp_addr=page+1 and bp_len=HW_BREAKPOINT_LEN_8
+> ends up with 0xff << 1 = 0x1fe, stored as 0xfe.  The kernel programs
+> WCR.BAS=0xfe and the hardware watches bytes [1..7] instead of the
+> requested [1..8] -- the eighth byte is silently dropped.  The
+> syscall still returns success, leaving userspace to discover the
+> gap by empirical probing.
+> 
+> The same class affects HW_BREAKPOINT_LEN_{2,4} when offset pushes the
+> high BAS bit past bit 7 (e.g. LEN_4 with offset=5 yields 0xe0
+> instead of 0x1e0).  No memory-safety impact -- the value is masked
+> into 8 bits before encoding -- but debuggers and perf users observe
+> missed events on bytes they thought they were watching.
+> 
+> The AArch32 branch immediately above already rejects unrepresentable
+> (offset, len) combinations via an explicit switch.  Mirror that for
+> the non-compat branch by checking that the shifted pattern fits in
+> the BAS field, returning -EINVAL when it does not.
+> 
+> Reproducer:
+> 
+>   struct perf_event_attr a = {
+>       .type = PERF_TYPE_BREAKPOINT, .size = sizeof(a),
+>       .bp_type = HW_BREAKPOINT_W,
+>       .bp_addr = (uintptr_t)(buf + 1),
+>       .bp_len = HW_BREAKPOINT_LEN_8,
+>       .exclude_kernel = 1, .exclude_hv = 1,
+>   };
+>   int fd = perf_event_open(&a, 0, -1, -1, 0);
+>   /* before this fix: succeeds, watches 7 bytes (buf+1..buf+7)   */
+>   /* after  this fix: fails with EINVAL                          */
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Fixes: b08fb180bb88 ("arm64: Allow hw watchpoint at varied offset from base address")
 
-Thanks, added to the csets, now to go on those other pre-existing
-bugs...
+Oh man, this has been broken for nearly a decade :/
 
-- Arnaldo
+I think we probably should've stuck with the old behaviour of rejecting
+unaligned base addresses, but it's too late now. Damn.
+
+>  arch/arm64/kernel/hw_breakpoint.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+> index ab76b36dce820..b8a1402119f3a 100644
+> --- a/arch/arm64/kernel/hw_breakpoint.c
+> +++ b/arch/arm64/kernel/hw_breakpoint.c
+> @@ -559,6 +559,15 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+>  		else
+>  			alignment_mask = 0x7;
+>  		offset = hw->address & alignment_mask;
+> +
+> +		/*
+> +		 * BAS is an 8-bit field in WCR/BCR; the shift below would
+> +		 * silently drop the high bits of ctrl.len when offset + len
+> +		 * exceeds 8, programming hardware to watch fewer bytes than
+> +		 * the user requested.
+> +		 */
+> +		if (((u32)hw->ctrl.len << offset) > 0xff)
+
+nit: Use ARM_BREAKPOINT_LEN_8 instead of 0xff
+
+> +			return -EINVAL;
+>  	}
+
+I must confess, I'm very nervous about breaking userspace here. If GDB
+is triggering this path, then this patch will change an unreliable
+watchpoint into a hard error (which probably means GDB exits). Have you
+looked to see what GDB and/or any other debuggers do?
+
+I had a quick peek and found the bugzilla entry which motivated the
+buggy change in the first place:
+
+https://sourceware.org/bugzilla/show_bug.cgi?id=20207
+
+and it looks like the aarch64_align_watchpoint() function does try to
+spill into multiple watchpoints, so perhaps your patch is ok. I'd
+appreciate your opinion, though.
+
+Will
