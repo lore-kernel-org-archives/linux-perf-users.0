@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A284B3B27FC;
-	Fri, 29 May 2026 08:02:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6953C3B2FCC;
+	Fri, 29 May 2026 08:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780041762; cv=none; b=si9xWh+nBCLi4SRBRL7rrFl9QJyGmQPCFweHmAVdRNbykcN19bEsol+pHljWcw8e1xKChe08g6haaTXGCBV1C05dPKcghZHGHMJGWiwOomBeQflzXqjEeF6LBzvbIRlY1HFmMav+nBF4ylSYgwzm6+EnW2Au1y17wo3JCRUBTIA=
+	t=1780041766; cv=none; b=o2RAdDJo3Z78beoFNYRsqmgQMqnbtEa6tSCqM1FFNjjpaN0ukK221I3fy0ADdh25noqNBmAeGyZuZxVItN7Sgn1AXplLxVldA+K0kIu5wapgaaB17EPHIyUK9mL61xdACHywQd2Klk47ch4zho0WMMayqcB9VxjxRhB1lEaws2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780041762; c=relaxed/simple;
-	bh=qUPDEfNcCt2GNEn5iL1z6nRKeA66n8BleMMrGIHFy1E=;
+	s=arc-20240116; t=1780041766; c=relaxed/simple;
+	bh=TIF/tDrphO4XesqSFb2wFeEBW6WzJ61eKEnZ1mB2XCM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sKbw2QSp58nndkx4qQIi1PWSpqDF5LL/TBANE7QYG1zryomlyyJQepa77/1ZUKe76ddoZTZTmd/BzikMU0G6xB43R/pq1duDWhCINWaveauVOrPbyrhe1RpfYYfv+Hy12SkQiSJPXEuRsHfFFVJRkfQOd5mO4oFbFv25/GHUfD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G/vADQhh; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=ie2faJ99TFQY0KMU4R5MeeVCxpzYENoYFfNF5GN7f5GdUTlUyv4AnuYzInWINt/z27gExITmkBOVXT3Ys/IFGOxkVDSHuHz8Fjx1zHHrSKD3m5XRzo4J3134lPoSvxCtnnPDkrvanhKz8etm1rGqgP2Xk831xFc12QBEhAzMd34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EeVeRgoT; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G/vADQhh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EeVeRgoT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780041761; x=1811577761;
+  t=1780041765; x=1811577765;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qUPDEfNcCt2GNEn5iL1z6nRKeA66n8BleMMrGIHFy1E=;
-  b=G/vADQhhUBqwE6u66uFvepN8X60jgGMbufJVON4CSAkbtOPop6IIw3GX
-   hC1V02et5Mh7Y/3rg+jlhqbbs8OpeWssMQHLysAlxGaT0Z62YHJ9guJi7
-   OXqhLElSHgUDB77bynn5hwppuyoc7Szk2PNWiGj/ngcU5NqHu7KXkdG6+
-   a1UPZFzRJwRP0phRVjo+t22RA2m8bXnYunGwkO+u2GFDoxqrc4jZoOOe7
-   Q96QPBo3LjNNVMcTdfFIY9yoLdlBJtORBMSY6kMkcAcpmBNEMKo22Uwk8
-   eZG1sJiCK1d7zNYyrC5uciW5IzFJHEiXtCLVpOuVuh+e3hLEY6pPqj+YD
-   g==;
-X-CSE-ConnectionGUID: GSkrwPsXTXyHngkYv16giA==
-X-CSE-MsgGUID: g2+JXHpOTBqUuoAy+cKKww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106341843"
+  bh=TIF/tDrphO4XesqSFb2wFeEBW6WzJ61eKEnZ1mB2XCM=;
+  b=EeVeRgoTyM1CZuhU+ZnTSPvExExAuQSoGQ3+DjvH4sw4HqAkO01iblEn
+   cwRSpLyQFkzOO4AcW7PKeLW585rovwHODGiHJik9lkbop52eGeddIa8Ed
+   A/0W6LPYyfJFtvYEw31QCnBXEl0nwQ+SLMZsK7eipXZdesTnJodxSwgax
+   CSiZlB94n7sJYssslBu2Gukvl99mgYJYGHepL63Z0bSGAdNv4BLPqvaFu
+   NOtqXcqBLzherW+YWcy+j1ie/85bM3vvQQdk+cUuEigpVAShals+6P24O
+   RgAj09W1k7S5C2/YKWZ6DAVhdyJgGgWc2rfI7vAfQwg8kzvYgS4BFvM1P
+   w==;
+X-CSE-ConnectionGUID: 74wx8onWRVGWiQL2sc13NA==
+X-CSE-MsgGUID: ZdIJXXmtTrmvMgaCgYxpkA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106341854"
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="106341843"
+   d="scan'208";a="106341854"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:02:40 -0700
-X-CSE-ConnectionGUID: sTNTr5/gQ0O1BrJbzqeCYg==
-X-CSE-MsgGUID: sLGQfdjFS1y6pTfB2sMFag==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 01:02:45 -0700
+X-CSE-ConnectionGUID: XfJvjuLnT4ubnud0IOl41g==
+X-CSE-MsgGUID: jazoUWIfSsmTBtYY9DBteg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="246801936"
+   d="scan'208";a="246801953"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa003.jf.intel.com with ESMTP; 29 May 2026 01:02:35 -0700
+  by orviesa003.jf.intel.com with ESMTP; 29 May 2026 01:02:40 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -66,9 +66,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v8 01/23] perf/x86/intel: Validate return value of intel_pmu_init_hybrid()
-Date: Fri, 29 May 2026 15:56:23 +0800
-Message-Id: <20260529075645.580362-2-dapeng1.mi@linux.intel.com>
+Subject: [Patch v8 02/23] perf/x86: Move hybrid PMU initialization before x86_pmu_starting_cpu()
+Date: Fri, 29 May 2026 15:56:24 +0800
+Message-Id: <20260529075645.580362-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
 References: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
@@ -80,115 +80,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The memory allocation for the x86_pmu.hybrid_pmu[] array in
-intel_pmu_init_hybrid() can theoretically fail due to memory shortages.
-If this occurs, the initialization of the x86 hybrid PMU would fail.
+The current approach initializes hybrid PMU structures immediately before
+registering them. This is risky as it can lead to key fields, such as
+'capabilities', being inadvertently overwritten.
 
-Currently, the code does not check the return value of the
-intel_pmu_init_hybrid() function, which could lead to attempts to access
-the uninitialized x86_pmu.hybrid_pmu[] array, potentially causing a
-system panic.
+Although no issues have arisen so far, this method is not ideal. It makes
+the PMU structure fields susceptible to being overwritten, especially with
+future changes that might initialize fields like 'capabilities' within
+init_hybrid_pmu() called by x86_pmu_starting_cpu().
 
-So, adds a check for the return value of intel_pmu_init_hybrid() to
-prevent invalid memory access in such scenarios.
+To mitigate this potential problem, move the default hybrid structure
+initialization before calling x86_pmu_starting_cpu().
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
+ arch/x86/events/core.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-V8: New patch.
-
- arch/x86/events/intel/core.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 0217e701aeeb..85c329bd52be 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -7870,6 +7870,7 @@ __init int intel_pmu_init(void)
- 	int version, i;
- 	char *name;
- 	struct x86_hybrid_pmu *pmu;
-+	int ret;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 4b9e105309c6..17e122e27e0b 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2195,8 +2195,20 @@ static int __init init_hw_perf_events(void)
  
- 	/* Architectural Perfmon was introduced starting with Core "Yonah" */
- 	if (!cpu_has(&boot_cpu_data, X86_FEATURE_ARCH_PERFMON)) {
-@@ -8545,7 +8546,9 @@ __init int intel_pmu_init(void)
- 		 *
- 		 * Initialize the common PerfMon capabilities here.
- 		 */
--		intel_pmu_init_hybrid(hybrid_big_small);
-+		ret = intel_pmu_init_hybrid(hybrid_big_small);
-+		if (ret < 0)
-+			return ret;
+ 	pmu.attr_update = x86_pmu.attr_update;
  
- 		x86_pmu.pebs_latency_data = grt_latency_data;
- 		x86_pmu.get_event_constraints = adl_get_event_constraints;
-@@ -8603,7 +8606,9 @@ __init int intel_pmu_init(void)
- 	case INTEL_METEORLAKE:
- 	case INTEL_METEORLAKE_L:
- 	case INTEL_ARROWLAKE_U:
--		intel_pmu_init_hybrid(hybrid_big_small);
-+		ret = intel_pmu_init_hybrid(hybrid_big_small);
-+		if (ret < 0)
-+			return ret;
+-	if (!is_hybrid())
++	if (!is_hybrid()) {
+ 		x86_pmu_show_pmu_cap(NULL);
++	} else {
++		int i;
++
++		/*
++		 * Init default ops.
++		 * Must be called before registering x86_pmu_starting_cpu(),
++		 * otherwise some key PMU fields, e.g., capabilities
++		 * initialized in x86_pmu_starting_cpu(), would be overwritten.
++		 */
++		for (i = 0; i < x86_pmu.num_hybrid_pmus; i++)
++			x86_pmu.hybrid_pmu[i].pmu = pmu;
++	}
  
- 		x86_pmu.pebs_latency_data = cmt_latency_data;
- 		x86_pmu.get_event_constraints = mtl_get_event_constraints;
-@@ -8634,7 +8639,9 @@ __init int intel_pmu_init(void)
- 		pr_cont("Pantherlake Hybrid events, ");
- 		name = "pantherlake_hybrid";
+ 	if (!x86_pmu.read)
+ 		x86_pmu.read = _x86_pmu_read;
+@@ -2243,7 +2255,6 @@ static int __init init_hw_perf_events(void)
+ 		for (i = 0; i < x86_pmu.num_hybrid_pmus; i++) {
+ 			hybrid_pmu = &x86_pmu.hybrid_pmu[i];
  
--		intel_pmu_init_hybrid(hybrid_big_small);
-+		ret = intel_pmu_init_hybrid(hybrid_big_small);
-+		if (ret < 0)
-+			return ret;
- 
- 		/* Initialize big core specific PerfMon capabilities.*/
- 		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
-@@ -8649,7 +8656,9 @@ __init int intel_pmu_init(void)
- 		pr_cont("Arrowlake Hybrid events, ");
- 		name = "arrowlake_hybrid";
- 
--		intel_pmu_init_hybrid(hybrid_big_small);
-+		ret = intel_pmu_init_hybrid(hybrid_big_small);
-+		if (ret < 0)
-+			return ret;
- 
- 		/* Initialize big core specific PerfMon capabilities.*/
- 		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
-@@ -8666,7 +8675,9 @@ __init int intel_pmu_init(void)
- 		pr_cont("Lunarlake Hybrid events, ");
- 		name = "lunarlake_hybrid";
- 
--		intel_pmu_init_hybrid(hybrid_big_small);
-+		ret = intel_pmu_init_hybrid(hybrid_big_small);
-+		if (ret < 0)
-+			return ret;
- 
- 		/* Initialize big core specific PerfMon capabilities.*/
- 		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
-@@ -8691,7 +8702,9 @@ __init int intel_pmu_init(void)
- 		break;
- 
- 	case INTEL_ARROWLAKE_H:
--		intel_pmu_init_hybrid(hybrid_big_small_tiny);
-+		ret = intel_pmu_init_hybrid(hybrid_big_small_tiny);
-+		if (ret < 0)
-+			return ret;
- 
- 		x86_pmu.pebs_latency_data = arl_h_latency_data;
- 		x86_pmu.get_event_constraints = arl_h_get_event_constraints;
-@@ -8726,7 +8739,9 @@ __init int intel_pmu_init(void)
- 	case INTEL_NOVALAKE_L:
- 		pr_cont("Novalake Hybrid events, ");
- 		name = "novalake_hybrid";
--		intel_pmu_init_hybrid(hybrid_big_small);
-+		ret = intel_pmu_init_hybrid(hybrid_big_small);
-+		if (ret < 0)
-+			return ret;
- 
- 		x86_pmu.pebs_latency_data = nvl_latency_data;
- 		x86_pmu.get_event_constraints = mtl_get_event_constraints;
+-			hybrid_pmu->pmu = pmu;
+ 			hybrid_pmu->pmu.type = -1;
+ 			hybrid_pmu->pmu.attr_update = x86_pmu.attr_update;
+ 			hybrid_pmu->pmu.capabilities |= PERF_PMU_CAP_EXTENDED_HW_TYPE;
 -- 
 2.34.1
 
