@@ -1,226 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E993C342D
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 09:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621913BAD94
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 09:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780047090; cv=none; b=AVwBaWoiwWOu5V701c1Oo7YROSg6QVcQbvZW1bT9eZr+2GLWYcv8kqZP+W7E/9A6wvh2Db41LnEzQp46K6mgoojh0qf7xkI6xMT8hIH+9YKSPTZsGdD6mss2uFpZh+90M2cpKeFmSuXPlsDaLoiXM4ZYAYA5tk1VTU6x6RxvmOM=
+	t=1780047115; cv=none; b=OD6BlkDf0bkpESs+aSICKKHq72HHfe9LcAo1BlATSoNqJaLKdCDPlgC5iAJpLm+4G88NCSgIWIX6DyrTOqFN9ZbXwETdbFcqTh3NAVyrk8Z/Wzswv6rIzpP74gJ0wTaFavrrg5hED390ps806ZDWKiYcWtr02FJ7M1gn9P6Dep8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780047090; c=relaxed/simple;
-	bh=7zl+mf9AGkxGDEq2an2YqMHcESYFhw7+rLYVMNqUf1k=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GR8u/NAgPe1C4L5j+a5nWwexh/pW9ULRpEJTe1QI1MfXiPzRDAcaHJWdi34Hz9pJj9FrJOjwlm6FZrZFrEbrAhi93J+dbAp8nA+yQxhQcZJc+czBXMjIixoJi6ih4mCmE68qeeojLp/qwG0N+YMKUvwM250mqu2dQ4CTqyVz+Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTGbttze; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780047115; c=relaxed/simple;
+	bh=X31hwU/W1+w6coSj7aO7Nv8kRxibj0glKaqW0VcC39w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ud4MWxuJP1cxQZtM+ZsEKw4uWmzIQC3uPScEcuQkDdoOUk7uSlk2lEClEjmt/IskJqb2VYeuXqHkiVjQjAay8yjnCY9URcTAxL4nwvDV1LQTzgZGkv2iPqJUCXXpdInrrj8hjv+RM0V6eWCld1l5OQj4r+T70xJ/Ozssqc6/EhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L3v2gBiV; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTGbttze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2681F00893;
-	Fri, 29 May 2026 09:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780047088;
-	bh=re99MbBoqhxqCAV1AwtjxDL5EMu7vsjzXbKXXuPVK0k=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aTGbttzeH3D5EHN9ZZUhHqyqMNvZvLiM40aIojdF4fxNfI40LxybGc0gwy9zWgwHO
-	 7tHsqjDgwjiBpiZVVceaNsUZkdiLK69T+PhM10zjFRg7CNrP/jyehipIjAaGSsk6gz
-	 tzeqb0neR+UrP5gV+vfS3gEvlarWoDfHxKuSqWfV0lBRD0RYk9tMPLPcoGL2d+zde+
-	 lYn7l32L/NZYMjI6tt4U0avnQltyyzoa6hmv4BOUPM+bbOZNc2/E+E9615RFqSp/ny
-	 j1BlNyGVHfWu+Xn7YA8H9aera/f4Ig/soipN8DRtPG7I98gS9IotV9ki83cDwqTToh
-	 YL/AW/VawDE7w==
-From: sashiko-bot@kernel.org
-Subject: Re: [Patch v8 18/23] perf/x86: Support eGPRs sampling using
- sample_regs_* fields
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260529075645.580362-19-dapeng1.mi@linux.intel.com>
-References: <20260529075645.580362-19-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 May 2026 09:31:27 +0000
-Message-Id: <20260529093128.5E2681F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L3v2gBiV"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4905e190c71so63361895e9.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 May 2026 02:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1780047113; x=1780651913; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=J3QH1JdOLE0AFKliWzrTEO0D9n2KH8w2Vf/pq2j5CMc=;
+        b=L3v2gBiVYdgVZX4TMOdrogYVzlFc/75rKTQjpwGfnUhhjMUSz+j1/ZjNdSl5x/LAGB
+         OPpFe65Bc/FLitJrXB3JkuuDlYoQWHZDjbUKOFiYNAhx2L7v+XGuyUbf0GVss6FlxcPn
+         0cRYFDK2o7/UHY5TCASAdYyBE24/B9b8OAUwkw0lH9Xb6pCmiFAS47FPkZvcUF/d0pVE
+         o2eMkp45v6BPkpVjBmBbTYfpvtGiT68tgszxZl44ijvYpSLN8L4nqRl636ZMohmqqmKE
+         4beelargo9ibWZIWw30v2rOy6FoZXPThDu87bf9P/sPE+tLRAQTZITUkC+nm2WB/ya27
+         YmdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780047113; x=1780651913;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J3QH1JdOLE0AFKliWzrTEO0D9n2KH8w2Vf/pq2j5CMc=;
+        b=QROfdnS9wt/2o9eRiZpWuTssHXJ1snLG2YMK49pqQswzkThcRsyoVlYrkdZRfUjO9C
+         Et+g7OwfEmQVLADlraxisPADya7t01fDRrkpFAtlwm2W/Qv7pc6U9fFeli/K2ZJvTBWX
+         Oswk7IR+0JmAQmeIiTQy2ic567n+NTTvrabxm+4tnxfNKy/nzzXEwmUT3GzgpeqGDAue
+         gSc4FkMn9WT9+v29C1WJpHF/WiWNUv7uZalARkMznMk4oguHMXT9zslNkEVSkpPOG1So
+         rzFp525IdbmzRBxmXo8Ap/kXc9xDJov/Parit5rIpD5TBRgiOYOpwWsj45bKQ6VCdEaE
+         DpRA==
+X-Forwarded-Encrypted: i=1; AFNElJ8V1ZkFFKR93g5p+ceHD66T48deAIu9Wvv/1JJU8jqKZhmC5d9zFePH+FtbDKUTMKxvKIjPRK9WyIA6+60+xmH3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT6/8LHr4b1oLt6R2Z5LaHDpsdw4BJRKBZ5pEpIGUzYAAxXj+U
+	tjyfrwLjng9QKzqntBTyam0Ubma4jDJf5vkWSdT2vBYaUGJwoAPKVu2RGgHoqVe/RBc=
+X-Gm-Gg: Acq92OFQ4p0l0FJCb2AGBD2t3yRgtRv8BlJy38NCAaquz2v/7i/pkawGdEDG8lfB383
+	JxaZZVH2VQ/wztc+QgxdWPbhRyFwunH2zdUbOlSZpS9VRaNcFWsDgwHjcR57m47z7Z1tJBYPZSQ
+	+BC9BUXRdYSfRCQLrGamGqFDPrPg2s0DSNyArUHIf36WgVRsVbYoBQPWTl4vrB/x0RNBdOnieku
+	231IbMag38R8S4Ys7O8ABB+xnfoikgTpX9JPTvHq3EXP4WJecgTp2oA0u00mmCHncez7sJ0ogWR
+	bKYX58D8Dd+ueLt9iPqWTD6e6nXVuId+bBsFuQ6n5psUWF4Fs2lwfYgRCu0v+L6Pvt7AjwuInh+
+	q2hFrSSskJ+326p/ZoltnBcwE3H8Qu4/LdlQelNyMSvtO60CwaBSLG9CYrc1twOqa0zZD+4adC2
+	auQAsrBCTL5QDCyu/8EtUPDz5wnNz43+X54zcdET/in3d1V7Matg==
+X-Received: by 2002:a05:600c:a08c:b0:490:9d1b:2033 with SMTP id 5b1f17b1804b1-4909d1b228fmr36218915e9.9.1780047112792;
+        Fri, 29 May 2026 02:31:52 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef3559645sm2294640f8f.26.2026.05.29.02.31.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 May 2026 02:31:52 -0700 (PDT)
+Message-ID: <1749d7b0-c3ed-47b7-b14c-6acbcc763aa0@linaro.org>
+Date: Fri, 29 May 2026 10:31:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf annotate: Fix crashes on empty annotate windows
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260420-james-perf-annotate-assert-v1-1-ddf04d640569@linaro.org>
+ <aegvUXJTQT9qRoDs@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <aegvUXJTQT9qRoDs@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
 
-New issues:
-- [Critical] The patch unconditionally rejects a mask of 0 when simd_enable=
-d is false, breaking userspace ABI.
-- [High] The patch evaluates sample_regs_user and sample_regs_intr without =
-verifying their respective flag gates are set.
-- [High] The 32-bit implementation of perf_reg_validate() is not updated to=
- handle extended register masks, allowing a DoS via WARN_ON_ONCE.
 
-Pre-existing issues:
-- [Critical] perf_reg_value() blindly casts the raw pt_regs pointer to stru=
-ct x86_perf_regs, leading to an out-of-bounds read for software events.
-- [Critical] perf_reg_validate() fails to mask out bits >=3D 32 when simd_e=
-nabled is false, allowing out-of-bounds register indices.
---
+On 22/04/2026 3:15 am, Namhyung Kim wrote:
+> On Mon, Apr 20, 2026 at 12:52:17PM +0100, James Clark wrote:
+>> Annotate can open with an empty window if the disassembly tool fails.
+>> After the linked change, the TUI started assuming there was a current
+>> annotation line and could assert or segfault in the seek, refresh, and
+>> source-toggle paths.
+>>
+>> Handle empty annotate windows explicitly: set the asm entry count before
+>> resetting the browser, return early when refreshing an empty list, and
+>> ignore source line toggle when there is no current annotation line.
+>>
+>> Fixes the following when opening an annotation:
+>>
+>>    perf: ui/browser.c:125: ui_browser__list_head_seek: Assertion `pos != NULL' failed.
+>>    Aborted
+>>
+>> Fixes: e201757f7a0a ("perf annotate: Fix source code annotate with objdump")
+>> Assisted-by: GitHub Copilot:GPT-5.4
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Thanks,
+> Namhyung
+> 
 
-commit bffe5fdaa4de39f9a6532b899d96502d48077d9a
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Ping, I think this one might have been missed.
 
-perf/x86: Support eGPRs sampling using sample_regs_* fields
+Thanks
+James
 
-This patch adds support for sampling APX eGPRs (R16 ~ R31) by reclaiming
-spare space in the sample_regs_* fields when sample_simd_regs_enabled is se=
-t.
-It updates perf_reg_value() and perf_reg_validate() to handle the new eGPRs
-bitmap alongside legacy XMM registers.
+>> ---
+>>   tools/perf/ui/browser.c           | 3 +++
+>>   tools/perf/ui/browsers/annotate.c | 5 ++++-
+>>   2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+>> index dc88427b4ae5..321187b204d3 100644
+>> --- a/tools/perf/ui/browser.c
+>> +++ b/tools/perf/ui/browser.c
+>> @@ -513,6 +513,9 @@ unsigned int ui_browser__list_head_refresh(struct ui_browser *browser)
+>>   	struct list_head *head = browser->entries;
+>>   	int row = 0;
+>>   
+>> +	if (browser->nr_entries == 0)
+>> +		return 0;
+>> +
+>>   	if (browser->top == NULL || browser->top == browser->entries)
+>>                   browser->top = ui_browser__list_head_filter_entries(browser, head->next);
+>>   
+>> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+>> index ea17e6d29a7e..0261cd922183 100644
+>> --- a/tools/perf/ui/browsers/annotate.c
+>> +++ b/tools/perf/ui/browsers/annotate.c
+>> @@ -449,6 +449,9 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser,
+>>   	struct annotation_line *al;
+>>   	off_t offset = browser->b.index - browser->b.top_idx;
+>>   
+>> +	if (browser->b.nr_entries == 0)
+>> +		return false;
+>> +
+>>   	browser->b.seek(&browser->b, offset, SEEK_CUR);
+>>   	al = list_entry(browser->b.top, struct annotation_line, node);
+>>   
+>> @@ -542,8 +545,8 @@ static void annotate_browser__show_full_location(struct ui_browser *browser)
+>>   static void ui_browser__init_asm_mode(struct ui_browser *browser)
+>>   {
+>>   	struct annotation *notes = browser__annotation(browser);
+>> -	ui_browser__reset_index(browser);
+>>   	browser->nr_entries = notes->src->nr_asm_entries;
+>> +	ui_browser__reset_index(browser);
+>>   }
+>>   
+>>   static int sym_title(struct symbol *sym, struct map *map, char *title,
+>>
+>> ---
+>> base-commit: 841dbf4871c57ce2da18c4ea7ffac5487d0eda16
+>> change-id: 20260417-james-perf-annotate-assert-20f520eeb35b
+>>
+>> Best regards,
+>> -- 
+>> James Clark <james.clark@linaro.org>
+>>
 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-[ ... ]
-> @@ -708,26 +708,24 @@ int x86_pmu_hw_config(struct perf_event *event)
-[ ... ]
->  		if (event_has_simd_regs(event)) {
-> +			u64 reserved =3D ~GENMASK_ULL(PERF_REG_MISC_MAX - 1, 0);
-> +
->  			if (!(event->pmu->capabilities & PERF_PMU_CAP_SIMD_REGS))
->  				return -EINVAL;
->  			if (is_sampling_event(event) && !event->attr.precise_ip &&
->  			    !this_cpu_has(X86_FEATURE_XSAVES))
->  				return -EINVAL;
-> +			/*
-> +			 * The XMM space in the perf_event_x86_regs is reclaimed
-> +			 * for eGPRs and other general registers.
-> +			 */
-> +			if ((event->attr.sample_regs_user & reserved) ||
-> +			    (event->attr.sample_regs_intr & reserved))
-> +				return -EINVAL;
-
-[Severity: High]
-Is it safe to evaluate both sample_regs_user and sample_regs_intr here with=
-out
-first verifying their respective flag gates are set?
-
-If a user only sets one of the flags (e.g., PERF_SAMPLE_REGS_USER), does the
-other field contain uninitialized garbage from userspace? If that garbage
-happens to overlap with the reserved mask, it seems this could trigger
-validation failures and cause valid syscalls to randomly fail.
-
-[ ... ]
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -197,6 +197,16 @@ static inline bool event_needs_opmask(struct perf_ev=
-ent *event)
->  	return false;
->  }
-> =20
-> +static inline bool event_needs_egprs(struct perf_event *event)
-> +{
-> +	if (event->attr.sample_simd_regs_enabled &&
-> +	    (event->attr.sample_regs_user & PERF_X86_EGPRS_MASK ||
-> +	     event->attr.sample_regs_intr & PERF_X86_EGPRS_MASK))
-> +		return true;
-> +
-> +	return false;
-> +}
-
-[Severity: High]
-Similarly to x86_pmu_hw_config(), does this evaluate sample_regs_user and
-sample_regs_intr without verifying their respective flag gates are set?
-
-Could uninitialized data from userspace falsely trigger this condition?
-
-[ ... ]
-> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-> --- a/arch/x86/kernel/perf_regs.c
-> +++ b/arch/x86/kernel/perf_regs.c
-> @@ -61,14 +61,24 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
->  {
->  	struct x86_perf_regs *perf_regs;
-> =20
-> -	if (idx >=3D PERF_REG_X86_XMM0 && idx < PERF_REG_X86_XMM_MAX) {
-> +	if (idx > PERF_REG_X86_R15) {
->  		perf_regs =3D container_of(regs, struct x86_perf_regs, regs);
-> -		/* SIMD registers are moved to dedicated sample_simd_vec_reg */
-> -		if (perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
->  			return 0;
-> -		if (!perf_regs->xmm_regs)
-> -			return 0;
-> -		return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
-> +
-> +		if (perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD) {
-
-[Severity: Critical]
-This is a pre-existing issue, but does casting the raw pt_regs pointer to
-struct x86_perf_regs lead to an out-of-bounds read for software events?
-
-For software events, the generic perf code passes a standard pt_regs pointe=
-r.
-Because the x86_perf_regs wrapper is not allocated for software events, usi=
-ng
-container_of() and reading perf_regs->abi appears to access memory past the
-end of the pt_regs struct.
-
-[ ... ]
->  #ifdef CONFIG_X86_32
-> -#define REG_NOSUPPORT ((1ULL << PERF_REG_X86_R8) | \
-> -		       (1ULL << PERF_REG_X86_R9) | \
-> -		       (1ULL << PERF_REG_X86_R10) | \
-> -		       (1ULL << PERF_REG_X86_R11) | \
-> -		       (1ULL << PERF_REG_X86_R12) | \
-> -		       (1ULL << PERF_REG_X86_R13) | \
-> -		       (1ULL << PERF_REG_X86_R14) | \
-> -		       (1ULL << PERF_REG_X86_R15))
-> +#define REG_NOSUPPORT GENMASK_ULL(PERF_REG_X86_R15, PERF_REG_X86_R8)
-> =20
->  int perf_reg_validate(u64 mask, bool simd_enabled)
-
-[Severity: High]
-Does the 32-bit implementation of perf_reg_validate() need to be updated to
-handle extended register masks?
-
-It looks like the 64-bit version was updated to reject bits 32-63 when
-simd_enabled is true, but the CONFIG_X86_32 block was missed. If a 32-bit
-user sets sample_simd_regs_enabled and requests bit 32, could this fall
-through to the WARN_ON_ONCE() in perf_reg_value() and allow a denial of
-service?
-
-[ ... ]
-> @@ -214,8 +218,13 @@ u64 perf_reg_abi(struct task_struct *task)
-> =20
->  int perf_reg_validate(u64 mask, bool simd_enabled)
->  {
-> +	if (!simd_enabled &&
-> +	    (!mask || (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED))))
-> +		return -EINVAL;
-
-[Severity: Critical]
-Does rejecting a mask of 0 when simd_enabled is false break the userspace A=
-BI?
-
-Profiling tools sometimes set sample_regs_user =3D 0 to obtain the abi indi=
-cator
-field in the perf ring buffer without dumping any specific registers.
-
-[Severity: Critical]
-This is a pre-existing issue, but does this check fail to mask out bits >=
-=3D 32
-when simd_enabled is false?
-
-PERF_REG_X86_RESERVED only covers bits 16-31. It appears to ignore bits 32-=
-63.
-Could an unprivileged user request bit 63 for a software event, bypassing
-validation, and eventually hitting the WARN_ON_ONCE() and reading out of
-bounds in perf_reg_value()?
-
->  	/* The mask could be 0 if only the SIMD registers are interested */
-> -	if (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED))
-> +	if (simd_enabled &&
-> +	    (mask & (REG_NOSUPPORT | PERF_REG_X86_EXT_RESERVED)))
->  		return -EINVAL;
-> =20
->  	return 0;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260529075645.5803=
-62-1-dapeng1.mi@linux.intel.com?part=3D18
