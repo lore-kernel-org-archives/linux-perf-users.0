@@ -1,169 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3C28C1F
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 05:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC042FD1DA
+	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 05:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780205992; cv=none; b=cLYdiDaTJliXVQLldxSTpp2auLKDDYHEhxxj0y7dKDhxp7pUGnl7UkQ8/RlMuX5NiIFbWoHfzoj4xcwpu/k46olDHtWZdThf6pq6TBG1uDGmLonxlqZcZCmC2Xfk1mhllEYpVVeJ5vRtZYHUZ9fiDwp21kT/5OgXFPvsnfGVv2w=
+	t=1780206209; cv=none; b=SofmlLbIJq/Hygv1VR5WuU+Vy9zgqCLWOtdzXAxzVdZRGLkcACys5PzquY1mOnUh0VRO7s/9+paGFXiTno4wzlwkn/8rulYeOCG6PgqpnFgnI1r+kPWtDWgD45DMCd9RIC0VtRIBIhEtfBjFa6ujvpJuOsu0hTz+PBdJNCr4LGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780205992; c=relaxed/simple;
-	bh=3vDl9DXmfRNUnQjkd3/G92QNxnvwMqnbgGmDDsielCY=;
+	s=arc-20240116; t=1780206209; c=relaxed/simple;
+	bh=I7vJKyq1vTp6ZEX8ibXhxbc40OgNh0P/Q6ebN42/T8s=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hTkWyjOyRdkj+13vZefB846918sYSOKtCGVeypPiffncuoX3pzTntmR8IM6vEIEoz5u0ptJg3KoAHMofnalV5JqW41pXcWCVO30fZqv5z/6b7kjumCzeZ953WJwn0nzkEnjekeIfCM0mRwHFmYrh6z+CuH1CfTLXRN/KUArDgpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cuy1XU51; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=nU4TfLaHMannPQYD3MRZIfl6IATM258HdYiIxjNCT4A08Wvzq9NGzHsv7AWLbx+qOY/eBNTUIdrp6FQdDCevIYnhtUahMR+6yyo2DtNZkNzujYLzbIrx+9HsTBioIJQk1STVylQz1ecidxNAmgPo2kw9ZE5sgigbOrDRD4vqVMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjerEHwi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cuy1XU51"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2EE11F00893;
-	Sun, 31 May 2026 05:39:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjerEHwi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 072E41F00893;
+	Sun, 31 May 2026 05:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780205991;
-	bh=YsU5RzO0EkdG7kGvFizrDGzl/2tMaRkcbfibm8ca6Q8=;
+	s=k20260515; t=1780206208;
+	bh=SWsKUiZxzL5VV7dyeQehj0MzE0WkknJKFC3ZzYF1MyM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cuy1XU510uPwoc/PUXt9L6v5PdUX6po1xhqvnUYlLzP+Mby/WR5BA3JjE3rauxwNB
-	 nFyaKVL2js4uAUrCaMpNOAo0LX1RPEFCwmZ6QgEYDzjwRQ5Nxs+0+Lj/zRJf6f/8Gb
-	 V4IaQa7fW4fIYcHgCOcduIFCA2KC11qHWGwaS0d3eyniMKPjO2stzppuEYRKvRlVO0
-	 SFBiYxDQv6jX6wpoYvznOh03fPdLWDZIob4wy4bHu6FyUGeZBddX3RaacNkfzVBjqv
-	 /SUhOJoDn62nl+vpoieuMbHbOYQ+FsedaKU0RMdjcl365REq4G7h3NNFXa9Wd9bR03
-	 IZGCIKE5vBPHw==
+	b=GjerEHwiqtWbnIkA1l18Qz+u2PhrW86ZoBOOuicP3donKOXctIEwD8q85GKSpumzH
+	 J1sEF6YQLIQ0Hw4CEVclkZu5GSFYfkHQcFqfU/uqEsJqh9ashzQflcmAy72cgUqX37
+	 c/AJMf9T93SHWSX7p8rckpf0xJw9YadPdBu0/sqWVQjIJp/RZ+JcA72PJRoonDl9ji
+	 m/+qnu2hQLoTvkJyqWIhv+cVKUd7uHvabyupWpLFt105uf5hH5LufrTpJut/IdBQFQ
+	 EU1L6YL20dLDtIh6CNJae23aqdXxc+jh1W8v6cm2R1gzHbd0+1rPvZWUz2dCeYp/lO
+	 A0pu3HIzxgvYw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 06/14] perf test: Refactor parallel poll loop to
- drain all pipes simultaneously
+Subject: Re: [PATCH v2 12/14] perf test: Add -j/--junit option for JUnit XML
+ test reports
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260531052740.796087-7-irogers@google.com>
-References: <20260531052740.796087-7-irogers@google.com>
+In-Reply-To: <20260531052740.796087-13-irogers@google.com>
+References: <20260531052740.796087-13-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 31 May 2026 05:39:50 +0000
-Message-Id: <20260531053950.A2EE11F00893@smtp.kernel.org>
+Date: Sun, 31 May 2026 05:43:27 +0000
+Message-Id: <20260531054328.072E41F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Fallback check `kill(pid, 0)` returns 0 for zombie processes, pote=
-ntially causing an infinite hang.
-- [Medium] Memory leak of strbuf and loss of buffered stderr logs during si=
-gnal-triggered error cleanup.
-- [Medium] Memory leak of `pfds` and `pfd_indices` arrays when parallel tes=
-ts are interrupted by a signal.
+- [Medium] Tests failing with arbitrary error codes or signals are logged a=
+s PASSED in the generated JUnit XML report.
+- [Medium] `xml_escape` silently drops UTF-8 and extended ASCII characters =
+on architectures where `char` is signed.
 --
 
-commit fccb0af730a7fbaeb380e0ecba12b05cbeda0d6f
+commit 85c89b056c0810130f9d5935a708601da2cc88ff
 Author: Ian Rogers <irogers@google.com>
 
-perf test: Refactor parallel poll loop to drain all pipes simultaneously
+perf test: Add -j/--junit option for JUnit XML test reports
 
-This patch implements finish_tests_parallel() to poll and drain output pipes
-from all running children simultaneously. Reaping occurs out of order as
-children finish, while final result printing remains strictly in order, spe=
-eding
-up parallel test execution.
-
-> diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-comman=
-d.c
-> index b7510f83209a0..4f8ec001b9486 100644
-> --- a/tools/lib/subcmd/run-command.c
-> +++ b/tools/lib/subcmd/run-command.c
-> @@ -241,8 +241,18 @@ int check_if_command_finished(struct child_process *=
-cmd)
->  	sprintf(filename, "/proc/%u/status", cmd->pid);
->  	status_file =3D fopen(filename, "r");
->  	if (status_file =3D=3D NULL) {
-> -		/* Open failed assume finish_command was called. */
-> -		return true;
-> +		/*
-> +		 * fopen() can fail with ENOENT if the process has been reaped.
-> +		 * It can also fail with EMFILE/ENFILE if RLIMIT_NOFILE is reached,
-> +		 * or with EINTR/ENOMEM. Use kill(pid, 0) as a robust fallback
-> +		 * to distinguish between active processes and dead ones without
-> +		 * consuming file descriptors.
-> +		 */
-> +		if (errno =3D=3D ENOENT)
-> +			return 1;
-> +		if (kill(cmd->pid, 0) =3D=3D -1 && errno =3D=3D ESRCH)
-> +			return 1;
-> +		return 0;
-
-[Severity: High]
-Can this cause an infinite hang if a process becomes a zombie?
-
-If fopen("/proc/<pid>/status", "r") fails persistently (e.g. due to EACCES),
-this fallback uses kill(cmd->pid, 0). However, kill() returns 0 for zombie
-processes since they still exist in the process table.=20
-
-If this happens, check_if_command_finished() incorrectly returns 0. Over in
-finish_tests_parallel(), the parent loop will see POLLHUP, close the child's
-pipe, but because check_if_command_finished() still returns 0, finish_comma=
-nd()
-is never called to reap the zombie.
-
-With num_pfds at 0 and running_count > 0, does the parent enter an infinite
-usleep(10 * 1000) loop?
-
->  	}
->  	while (fgets(status_line, sizeof(status_line), status_file) !=3D NULL) {
->  		char *p;
-
-[ ... ]
+Add a -j/--junit command line option to generate standard JUnit XML format
+test reports. The XML report captures individual test suite and subtest
+execution latency alongside XML-escaped failure logs and skip reasons.
 
 > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
 est.c
-> index 2ccb52a776ccb..87c6a67beb10e 100644
+> index fb4dffacf4068..38697243f33ad 100644
 > --- a/tools/perf/tests/builtin-test.c
 > +++ b/tools/perf/tests/builtin-test.c
+
 [ ... ]
-> @@ -509,6 +512,192 @@ static void finish_test(struct child_test **child_t=
-ests, int running_test, int c
->  	zfree(&child_tests[running_test]);
 
-[Severity: Medium]
-Does this legacy cleanup path leak the newly added strbuf?
-
-If a signal interrupts the test, siglongjmp() transfers control to the err_=
-out
-label in __cmd_test(), which calls finish_test() to clean up. finish_test()
-uses zfree(&child_tests[running_test]) but doesn't call strbuf_release() on
-child->err_output.
-
-Since child->err_output is dynamically allocated in finish_tests_parallel(),
-does this leak the internal buffer and lose any buffered stderr logs during
-signal-triggered cleanup?
-
->  }
+> @@ -367,8 +373,34 @@ static unsigned int summary_tests_skipped;
+>  static unsigned int summary_tests_failed;
+>  static struct strbuf summary_failed_tests_buf =3D STRBUF_INIT;
 > =20
-> +static void drain_child_process_err(struct child_test *child)
+> +static char *xml_escape(const char *str)
 > +{
-[ ... ]
-> +static int finish_tests_parallel(struct child_test **child_tests, size_t=
- num_tests, int width)
-> +{
-> +	size_t next_to_print =3D 0;
-> +	struct pollfd *pfds;
-> +	size_t *pfd_indices;
-> +	size_t num_pfds =3D 0;
-> +	int last_running =3D -1;
-> +	size_t i;
-> +	int last_suite_printed =3D -1;
+> +	struct strbuf buf =3D STRBUF_INIT;
+> +	const char *p;
+> +	char *res;
 > +
-> +	pfds =3D calloc(num_tests, sizeof(*pfds));
-> +	pfd_indices =3D calloc(num_tests, sizeof(*pfd_indices));
+> +	if (!str)
+> +		return strdup("");
+> +
+> +	for (p =3D str; *p; p++) {
+> +		if (*p =3D=3D '&')
+> +			strbuf_addstr(&buf, "&amp;");
+> +		else if (*p =3D=3D '<')
+> +			strbuf_addstr(&buf, "&lt;");
+> +		else if (*p =3D=3D '>')
+> +			strbuf_addstr(&buf, "&gt;");
+> +		else if (*p =3D=3D '"')
+> +			strbuf_addstr(&buf, "&quot;");
+> +		else if (*p >=3D 32 || *p =3D=3D '\n' || *p =3D=3D '\t')
 
 [Severity: Medium]
-Will these allocations leak if a signal is received?
+Since char is signed on architectures like x86, will characters with the
+high bit set (such as UTF-8 sequences) evaluate as negative values?=20
 
-If a signal like SIGINT is received during the polling loop,
-cmd_test_sig_handler() invokes siglongjmp() to jump back to __cmd_test().
-This abruptly unwinds the stack, completely bypassing the free(pfds) and
-free(pfd_indices) calls at the end of this function.
+It looks like they would fail the *p >=3D 32 check and be silently dropped =
+from
+the XML output. Could *p be cast to an unsigned char for this comparison?
+
+> +			strbuf_addch(&buf, *p);
+> +	}
+> +	res =3D strbuf_detach(&buf, NULL);
+> +	return res ? res : strdup("");
+> +}
 
 [ ... ]
+
+> @@ -416,6 +448,34 @@ static int print_test_result(struct test_suite *t, i=
+nt curr_suite, int curr_test
+>  		break;
+>  	}
+> =20
+> +	if (junit_filename && result !=3D TEST_RUNNING) {
+> +		const char *classname =3D t->desc;
+> +		const char *testname =3D test_description(t, curr_test_case);
+> +		char *escaped_err =3D xml_escape(err_output);
+> +		char *escaped_class =3D xml_escape(classname);
+> +		char *escaped_test =3D xml_escape(testname);
+> +
+> +		strbuf_addf(&junit_xml_buf,
+> +			    "    <testcase classname=3D\"%s\" name=3D\"%s\" time=3D\"%.2f\">\=
+n",
+> +			    escaped_class, escaped_test, elapsed);
+> +		if (result =3D=3D TEST_FAIL) {
+
+[Severity: Medium]
+Will this strict check for TEST_FAIL miss tests that fail with other negati=
+ve
+POSIX error codes like -ENOMEM?=20
+
+The switch statement above this code falls through to default: for any
+unrecognized error code, treating them as failures for the terminal output.
+However, if a test returns a different error code, the <failure> element
+would be omitted here, potentially causing CI systems and JUnit parsers to
+report a broken test as passed.
+
+> +			strbuf_addf(&junit_xml_buf,
+> +				    "      <failure message=3D\"FAILED\">\n%s\n      </failure>\n",
+> +				    escaped_err);
+> +		} else if (result =3D=3D TEST_SKIP) {
+> +			const char *reason =3D skip_reason(t, curr_test_case);
+> +			char *escaped_reason =3D xml_escape(reason ? reason : "Skip");
+> +
+> +			strbuf_addf(&junit_xml_buf, "      <skipped message=3D\"%s\"/>\n",
+> +				    escaped_reason);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260531052740.7960=
-87-1-irogers@google.com?part=3D6
+87-1-irogers@google.com?part=3D12
