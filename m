@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2153815D1
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 08:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BC6381AE0
+	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 08:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780215794; cv=none; b=FG3IS9a/uqowxJasRpwSFvYNYxxN4RXD8X2ts3h13/3htBppy3BFn1w4X5jjYXzDz2lLQJjF8nrYYHNS42RQ7pJdvL7oeO2zVIyzy7SpF8rFGJtRzolezgifNZB8Ubdx6uBpDRZVZRawZ3XRGIRXQKcNrk5WrLSA5ZONmzLCLj4=
+	t=1780215794; cv=none; b=RmVEYmP/A+9j5ymqDKbBk7ROLTv+voYr8NxWAm0qXpTyqsETkPZSGxdamdjhTdeSNlTF5BSzzAXaWhFjWrYoiuS9AspndQPkFQj78D4r6fO0bx6zPPXWQPex72zYIwsctuzoQl71vU0iyG4VDeF48GYyz9OTFM9ydugOvOmi0tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780215794; c=relaxed/simple;
-	bh=kwIpUas8CmAyFq9rUING30MN44XBQkAG67T0YWFq4oc=;
+	bh=GHY8UOEZQgFkQZkPtks2Wzv0O5wAfEaNJkDa2zil9OM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=L44IjpZbMnm4yyj+rB4GfG8ARNTYWrP2W5CtgN81oeIpdpbVPr1mgg2+E/WJz4KGepfO0M7S8EU7AZWYZSAUOwdrtx/Z4AWzwKqk2xtd+l7/jijXFJoMoTJyGf4O3QdaH7ljpkTlkTiD6A3O9gk5DfAQAW0FHbo03j5PlsAPG1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hG+v0xWz; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=UYzGwhhkr2jvdhGOXd7jSE/vhP1bKlacXsrvHm1Orejy0vmkmisLZvYDnDzqXFKFY7vw6hVcoKq/2Dto148acih18Qs4gdfSmYui4eyXGctu8ezJb3Hdohewi8xUXzrgyzHfhKqZ1xFWxMJRZP7PRnsHlxWuAoHBpnDlEVYcyYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T9ErKFvZ; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hG+v0xWz"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137dbe27199so2464945c88.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 01:23:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T9ErKFvZ"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304f1820babso2544639eec.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 01:23:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780215791; x=1780820591; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780215789; x=1780820589; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IOal3hqFXb7r1up/rx+u30ZeQHjxIhWl995ZJvn/b8=;
-        b=hG+v0xWzCidgpaKEmiSgjV0LcOTAypT2lvqMYlhpNFyQVF/TVMcamqZVhthdccFUck
-         9yN2un4XZFeZv8Yib7kFaU+nf3qSiwxxxUCJa7Hn0u6X5/oLcn3Miiof7mSBEBBOja4O
-         0/779qmY2MKBfJLSdo7gfBl3utGgRShmxCZXn/30GVpe/bgKHymxJOYSON3ckRDGMmZ0
-         J15OUKSYm0+J+cGOupgkUxdrXoSIfNCkjVikSZdmVMMiQcYURCvXjaUywhON3GaPjZa/
-         MPGc2kfL3ChvFNN0vWwcBJWkEnm7NxNdkyD/paxkc9yAC0nTkvM4zQe01QK1ADDMfSjG
-         jdGg==
+        bh=LgI7Gk169yArBVuMXS9CrXCl+U2LTyt0u+P/s791rwk=;
+        b=T9ErKFvZVL5TFv7zC3g2LHvSgy++Bp/soaOph0VkyJp6QrGbvoxOyi9ksiF6Wq7E+Y
+         eYW+SF/Xwgf6QnbN5FlIpTDWl/J8imaDwdJLiQ1c1ihj2fineYVJkn41YVecg0ARmcSW
+         6cud/kEarDSwFwGydbauoG+f6HYeyNONm4xgR3/Zj1kf48GEGT0DtK7VuEVZLLDx6nPc
+         1d6eTYQZTSTVS+hqNQDcR33wazNu2VYirWMugeEn6hFPW/HHvBSIbj0piiL6q29ZvpVj
+         A36L8EeVZm+/6HAwoartUaFh1l8zn82dcCfyv6jYfVdDw9W+ePJilKNgrVcHSytyQ6Gc
+         fmoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780215791; x=1780820591;
+        d=1e100.net; s=20251104; t=1780215789; x=1780820589;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IOal3hqFXb7r1up/rx+u30ZeQHjxIhWl995ZJvn/b8=;
-        b=pVibZ5s+BY44oztpoE60WNzkYkxMIw9FRnYy4kpaOoP02gZmhqbZ/ZDX87masuuxYA
-         9IPyYkfa4NkhG7mQkn34OsKSA7gk2I27Z43Lr9ihOCoYIo/cJ2e+9YUHC2Fu0BsPmaRE
-         LOgeRNfJaZdOerONcMRSRN1uJWR9QtnFIRJrl5ox2W4ISFijEB54GKBdpzwqMszHW5Vi
-         EWSK+nxVLbm7y0vDkL0grYRAHTatbQ97Zwb776WQT02ar6Ezk4UVZ664sW73LNR94lKu
-         hAqwMMw46AMCEE0crGbCDa80Ry4tmPFDZOtFC4KaSMDv77je0gaFCrALMNrcR2nTqcEC
-         VWVg==
-X-Forwarded-Encrypted: i=1; AFNElJ/IoIrQngvcNRuxS9oBg3kuMD9UXFsskdTdsEakQy0GvBwkAdtL6JwcAfhBF0BQGuajgcTh/bUbGCzsQbvsrY9E@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKy7+xsGtZOSiHbLNFAKdFdDpPCpJvLWNyoRVSYZGb78MK0mCr
-	RUjmuzcUYYFZqadndNVxkYEUWtic6XBEda5MBv9BAZlA/hbUMw1hq+3mX1WFScskiR54Ocf4mjG
-	1liezKR7W3A==
-X-Received: from dled8-n1.prod.google.com ([2002:a05:701b:42c8:10b0:12d:bbdf:edcb])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:78c:b0:134:c6ab:a512
- with SMTP id a92af1059eb24-137d42a7879mr2309057c88.36.1780215790738; Sun, 31
- May 2026 01:23:10 -0700 (PDT)
-Date: Sun, 31 May 2026 01:22:32 -0700
+        bh=LgI7Gk169yArBVuMXS9CrXCl+U2LTyt0u+P/s791rwk=;
+        b=Tpc40Jj4pn0xfbTAiehGU14aUboUkWJJ/Jk/36TWinwHziaoajmFCMy+lhieMwlD4O
+         3oVhL0z+6xw7A/cukpcvUrIysmnYjUi6TTgAd/mTNxpKEsrkqsZq6/OtkL33g3gS5Pst
+         xkeQ6P38rA4qDFuXBiTUFh4abeeMs4+erJsLBtjhbSDHd7w3Z/2x/L38wInveWvwA1rG
+         0UQO8abwlWUXrvwlCMwrnXk+qO6gvrvKjMd44pH657u+qw0EY7suQam/6ldBrW+ZQzkx
+         gPqIrvkaRsHRXZsUd3GYjDg5ZXAYaGxCNg20fg7uEe3iMSydAht3EGh1U0k/lxfQ2UMU
+         WVkw==
+X-Forwarded-Encrypted: i=1; AFNElJ9HrIPx1OFH+nvetlQKv3UnsOfa/I9cGL3woUI0t1kOs6qJ2/Xls2o3b6cVqTu6OoefTUsw+eSBNWymaW3c1YSm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV/S1/ucFT5TiD5vFm+EUSZeF/9dw2bEesdE4dPL2csfomTMdH
+	UDLq3r8DfYvz+3itLRbfIvx1hI0PQ0PzX07EFNPbPgMY8OJdbuCfHPPTnLVGNPxVB01I+B14fE/
+	Bv7YxOdcfjw==
+X-Received: from dybts9.prod.google.com ([2002:a05:7300:f589:b0:303:9bd4:479a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:3b05:b0:304:df0e:9dba
+ with SMTP id 5a478bee46e88-304fa6a755cmr3052765eec.31.1780215788559; Sun, 31
+ May 2026 01:23:08 -0700 (PDT)
+Date: Sun, 31 May 2026 01:22:31 -0700
 In-Reply-To: <20260531082235.940833-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260531063736.871777-1-irogers@google.com> <20260531082235.940833-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260531082235.940833-13-irogers@google.com>
-Subject: [PATCH v4 12/15] perf test: Split monolithic 'util' test suite into sub-tests
+Message-ID: <20260531082235.940833-12-irogers@google.com>
+Subject: [PATCH v4 11/15] perf test: Skip shebang and SPDX comments in shell
+ test descriptions
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	namhyung@kernel.org
@@ -68,54 +69,149 @@ Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Refactor the monolithic 'util' test suite into distinct 'String
-replacement' and 'BLAKE2s hash' sub-tests using the struct test_case
-framework. This improves test reporting granularity and is used in a
-subsequent perf test for JUnit XML test result reporting.
+When extracting shell test descriptions in tests-scripts.c, the parser
+skipped the first line assuming it was the shebang (#!/bin/sh) and then read
+the first comment line on line 2 as the test description.
+
+However, checkpatch.pl expects shell scripts to declare their SPDX license
+identifier on line 2 (# SPDX-License-Identifier: ...). This caused the test
+harness to extract the SPDX license string as the test description.
+
+Refactor shell_test__description to use io__getline, skipping both shebang
+and SPDX comment lines. This allows shell tests to include standard SPDX
+headers without breaking test suite description extraction.
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/util.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ tools/perf/tests/tests-scripts.c | 81 ++++++++++++++++++--------------
+ 1 file changed, 46 insertions(+), 35 deletions(-)
 
-diff --git a/tools/perf/tests/util.c b/tools/perf/tests/util.c
-index bf2c5b133884..f9abd9911e6c 100644
---- a/tools/perf/tests/util.c
-+++ b/tools/perf/tests/util.c
-@@ -86,7 +86,12 @@ static int test_blake2s(void)
- 	return 0;
- }
- 
--static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
-+static int test__blake2s_case(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
-+{
-+	return test_blake2s();
-+}
-+
-+static int test__strreplace(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
+diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+index f18c4cd337c8..7466c1e8d920 100644
+--- a/tools/perf/tests/tests-scripts.c
++++ b/tools/perf/tests/tests-scripts.c
+@@ -31,6 +31,7 @@ static int shell_tests__dir_fd(void)
  {
- 	TEST_ASSERT_VAL("empty string", test_strreplace(' ', "", "123", ""));
- 	TEST_ASSERT_VAL("no match", test_strreplace('5', "123", "4", "123"));
-@@ -95,7 +100,16 @@ static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_u
- 	TEST_ASSERT_VAL("replace long", test_strreplace('a', "abcabc", "longlong",
- 							"longlongbclonglongbc"));
+ 	struct stat st;
+ 	char path[PATH_MAX], path2[PATH_MAX], *exec_path;
++	ssize_t len;
+ 	static const char * const devel_dirs[] = {
+ 		"./tools/perf/tests/shell",
+ 		"./tests/shell",
+@@ -47,13 +48,17 @@ static int shell_tests__dir_fd(void)
+ 	}
  
--	return test_blake2s();
-+	return 0;
+ 	/* Use directory of executable */
+-	if (readlink("/proc/self/exe", path2, sizeof path2) < 0)
++	len = readlink("/proc/self/exe", path2, sizeof(path2) - 1);
++	if (len < 0)
+ 		return -1;
++	path2[len] = '\0';
+ 	/* Follow another level of symlink if there */
+ 	if (lstat(path2, &st) == 0 && (st.st_mode & S_IFMT) == S_IFLNK) {
+-		scnprintf(path, sizeof(path), path2);
+-		if (readlink(path, path2, sizeof path2) < 0)
++		scnprintf(path, sizeof(path), "%s", path2);
++		len = readlink(path, path2, sizeof(path2) - 1);
++		if (len < 0)
+ 			return -1;
++		path2[len] = '\0';
+ 	}
+ 	/* Get directory */
+ 	p = strrchr(path2, '/');
+@@ -78,43 +83,49 @@ static int shell_tests__dir_fd(void)
+ static char *shell_test__description(int dir_fd, const char *name)
+ {
+ 	struct io io;
+-	char buf[128], desc[256];
+-	int ch, pos = 0;
++	char buf[128], *line = NULL;
++	size_t line_len = 0;
++	ssize_t len;
++	char *desc = NULL;
+ 
+ 	io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf));
+ 	if (io.fd < 0)
+ 		return NULL;
+ 
+-	/* Skip first line - should be #!/bin/bash Shebang */
+-	if (io__get_char(&io) != '#')
+-		goto err_out;
+-	if (io__get_char(&io) != '!')
+-		goto err_out;
+-	do {
+-		ch = io__get_char(&io);
+-		if (ch < 0)
+-			goto err_out;
+-	} while (ch != '\n');
+-
+-	do {
+-		ch = io__get_char(&io);
+-		if (ch < 0)
+-			goto err_out;
+-	} while (ch == '#' || isspace(ch));
+-	while (ch > 0 && ch != '\n') {
+-		desc[pos++] = ch;
+-		if (pos >= (int)sizeof(desc) - 1)
++	while ((len = io__getline(&io, &line, &line_len)) > 0) {
++		char *p = line;
++
++		/* Skip leading whitespace */
++		while (*p && isspace(*p))
++			p++;
++
++		/* Must be a comment */
++		if (*p != '#')
++			continue;
++		p++;
++
++		/* Skip shebang or SPDX lines */
++		if (*p == '!' || strstr(p, "SPDX-License-Identifier:"))
++			continue;
++
++		/* Skip whitespace after # */
++		while (*p && isspace(*p))
++			p++;
++
++		/* If we found non-empty text, this is the description! */
++		if (*p && *p != '\n') {
++			char *end = p + strlen(p);
++
++			while (end > p && isspace(end[-1]))
++				end--;
++			*end = '\0';
++			desc = strdup(p);
+ 			break;
+-		ch = io__get_char(&io);
++		}
+ 	}
+-	while (pos > 0 && isspace(desc[--pos]))
+-		;
+-	desc[++pos] = '\0';
+-	close(io.fd);
+-	return strdup(desc);
+-err_out:
++	free(line);
+ 	close(io.fd);
+-	return NULL;
++	return desc;
  }
  
--DEFINE_SUITE("util", util);
-+static struct test_case tests__util[] = {
-+	TEST_CASE("String replacement", strreplace),
-+	TEST_CASE("BLAKE2s hash", blake2s_case),
-+	{ .name = NULL, }
-+};
-+
-+struct test_suite suite__util = {
-+	.desc = "util",
-+	.test_cases = tests__util,
-+};
+ /* Is this full file path a shell script */
+@@ -178,9 +189,9 @@ static void append_script(int dir_fd, const char *name, char *desc,
+ 	char *exclusive;
+ 
+ 	snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
+-	len = readlink(link, filename, sizeof(filename));
+-	if (len < 0) {
+-		pr_err("Failed to readlink %s", link);
++	len = readlink(link, filename, sizeof(filename) - 1);
++	if (len < 0 || (size_t)len >= sizeof(filename) - strlen(name) - 2) {
++		pr_err("Failed to readlink %s or path too long", link);
+ 		return;
+ 	}
+ 	filename[len++] = '/';
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
