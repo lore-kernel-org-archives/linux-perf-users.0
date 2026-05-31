@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310153264EF
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 06:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B674134678E
+	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 06:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780209487; cv=none; b=hUoF2JTRQzbONfm14yHHJ/5l43XhXc6eTh20+2SpQXiF4grJaW7pc3mOE3P/eKu3M6qzfD2u89pVyft99RmHB+7kpavX8TgegzWz0vrtLL6kESOyKHxCCcy5+ZlOSp+3gq7xQJMoYmZrrsJ4Wo9D+YC05xaXfhePj/AvfWymZNw=
+	t=1780209494; cv=none; b=OOGc5t74qIYCOShu4eWobv+xduszypOkKhTHd047Lii0xPAH8luEoF6ZgbYVvdZDoYHdhPhEVRhBnhOyoSGS3QhkYOeJ7bYTmUkIin0hUIgBRj4yCRLlydbsNRGf1Jii14N+V1JKUUHUlMoQKPetsh7lrxURueTNt4vNQ6B1GQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780209487; c=relaxed/simple;
-	bh=6wpV6ZG8xbGHmI641wtTAb3MvWrwDIn52g91rdhwLpw=;
+	s=arc-20240116; t=1780209494; c=relaxed/simple;
+	bh=uLld3+uwOCg40ZO/4xygF3vwIqly1oKARTE8eN08oMI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OD7KxY3sRtFUxPbAlArA9jiBjDe5dL1t61969fSVbeUMIZ2KbQwNB0tNRsnfps2lfxj5FPBDbEBv4UJjykHWvD+ME2rr1TxfWyXOoF0c2YobYP71EXdIC2l5WvL/hr5fLow6Z1K37TMGtKmlxQA2outk4N50G8k5+2XdicWkGFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pl3b4MEa; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=ZhOwe/nkv3nwi7mMmryGIt83cXxRraWKIt1JmsuXh5WynTevAWhYFZb+BFFffPeQtVdqKCj+XgSPXbnA9zaJ9jihrqyayS8umM3Q4qIJbhV1L8rjJaNfa7X9HvsIaU1ULv2EFM/aCd154daPAv3OEwMqVtzHnlyemBL5PdqcLcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rsOfa/8g; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pl3b4MEa"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137d4309062so5734038c88.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 30 May 2026 23:38:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rsOfa/8g"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-3041ab826ddso16191958eec.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 30 May 2026 23:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780209485; x=1780814285; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780209489; x=1780814289; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qTMya3cuRItiQI3FPtqv8gzI+D7T6xotJzqfQ95rr9o=;
-        b=pl3b4MEa70JQ07vbj0DrNqRPKl+YaagVs3BcqEQL9v5bgA5CpntTgaHurmV2RYA771
-         IZpEjJHFKLgdULVxBSfP9ee7DYT1iKTPl2a76Bb+IDufr66l+NOo/u1pvTabKvJLtbcG
-         rSIMqZtzRd4OpQiI6+c9+hQKunjFRQ3ciOML3JO7hGoemUda6/NlEvL6YJywInChizCc
-         XZKXHGNQLwqAJHa0n95fXALPatnHII6PsqN3SIZ3O3uaLOBTI/LX8XCTK5bRieV/1meV
-         j/KsW2lp656gIJAmQGEmEWZjSpYSNpDd1+VRAy3CefdyulSB0PrWYEvjo6r67qPckNcw
-         6xGw==
+        bh=MXre2okYx3MjQdUqAJ2nIZgNcGxZc3YS3uUa9O3ZGec=;
+        b=rsOfa/8gXTTdM/GRlri1nXmp0HS/c6igQ6eg5RSGux3mtQ23LFrxk46Lpw7uQywhQ6
+         RCVFYqCpFdiB6h8hdGMr4++m2d0++z+AWJmxutybAv2+a40z5aRpsvGCZuEhmpgtr3V8
+         1caNAzJFmFsUMWTeHv02K0juyuFTQN0nEi0fuUcej1HnQ8SYtzEn+8jvChdPJRhoxKf3
+         gKgiyZ3RYe8eu+ZSgY26GTCcIZ2PV2B/fuB0zaZhIUSXxkh3itbO59bE9Fg7Gi56u520
+         Kwv0MYQiIb7YPPQM4YOiEsWmGa1V0m6vcD/vlJwLuGENwaHLYMMliKhKeEgpt+1rC4jd
+         g9gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780209485; x=1780814285;
+        d=1e100.net; s=20251104; t=1780209489; x=1780814289;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qTMya3cuRItiQI3FPtqv8gzI+D7T6xotJzqfQ95rr9o=;
-        b=hiVQUz2oARl4oLg1hBwQv5pAAoe/bo49bll591OYZqjxWA7CupQo5G1Z9NcNgLAetD
-         kMw3VmyEIR4upssiUlJx8R+mrEIW+JRwDUlV3o4PS5LUrk6EemvKLK4/K2AqZURZ46u4
-         zwEZZ+k0AymWfE52zQo5q7Uf8F0aIaDiY/DkSb1s0ee6Hsbwd2pnkNnkONl2Tycppe1w
-         jeDd26tlbI6oSHBxfYwlAk2Wdl7gDa7nYY9K8naPkC9EtKffm0/OcCbUkSxu7Gecm91e
-         J6zHLnv16nYbVHF2gYesn78zuQBrgOw6QHGGk2l8umnnnOEd6G4wSCiyxMYvTJLSeNZe
-         xEDQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9rVCTLysgP/PD8m7jatCVy750hiqpJiRb99qo+K0dkSGXSieWdype2rwdVPhsx0AqYwxA0klp9yT4sc6Fqc/Li@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA2xCriPZZGV2Y7XpBwso4MtCkgfP9rQvb7OI4750ZtbVpXYAg
-	Hve3LaxWtklK1W2xdffvPd/Mso7MXlQ1ICDSwwARwpwQ/9Ooizk6Vp7d1ANG26UFFiKDWhDSqGU
-	0A07dWy10eA==
-X-Received: from dlbrl28.prod.google.com ([2002:a05:7022:f51c:b0:133:3081:bb33])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2601:b0:130:9b78:b18d
- with SMTP id a92af1059eb24-137d42839dfmr2751117c88.34.1780209484969; Sat, 30
- May 2026 23:38:04 -0700 (PDT)
-Date: Sat, 30 May 2026 23:37:30 -0700
+        bh=MXre2okYx3MjQdUqAJ2nIZgNcGxZc3YS3uUa9O3ZGec=;
+        b=ftrwZ48Nrvb2sqVTCpPhAwOm+Kwwp+5dGNSlBHI89sqQMk/16zv+gkfwdKAY+q1sG6
+         b3bzzMdFvEpagbCN4871NnTo9bxY1TEfrXoYajNkI7kdi1nZmw6tdPkYrbAkBLH64GPK
+         M9iFkGrY2AsEIn4IawLLvY1yCVsTJWD72CN4CgK1fOMw/a13LaC+zXSjD2kgi+YriSvb
+         mUZrhLZOp58ogpXPhS76lfWQSbA/6AleDBQurtau5n0Xr5B5tT/iIySJ39GcAiFltDra
+         rIM3TwssUF7utp9+1S4tG+YHDgTZie5/9tjz+VUzveCjcgJ4s2+AY0cFLvS5+LXIaVs4
+         s+Lw==
+X-Forwarded-Encrypted: i=1; AFNElJ9gr2UihNH2A9CTwOr+f3pCWwoTD37yphAhj59IzWTP9ZpKlvtolkMQ8ngbpe9Qjy/oCpHrUQhnrZ7gUU+T1fuW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww1VRm8pF3antlO3ORaOR5dlLZLhlq/gluPzfZ1KOtFanqj/vm
+	Cbn993PrhPoAsZlQ+Dw4BzIphizZRN/8fIFUR4WezyO6CzZRXX1Wvd/C5edmnlsRBO9b2asra9c
+	JZnxGt8izoA==
+X-Received: from dlbrl23.prod.google.com ([2002:a05:7022:f517:b0:136:e690:f3e9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:72c5:b0:2f2:6dde:df66
+ with SMTP id 5a478bee46e88-304fa628f82mr3023492eec.22.1780209488641; Sat, 30
+ May 2026 23:38:08 -0700 (PDT)
+Date: Sat, 30 May 2026 23:37:32 -0700
 In-Reply-To: <20260531063736.871777-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260531052740.796087-1-irogers@google.com> <20260531063736.871777-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260531063736.871777-9-irogers@google.com>
-Subject: [PATCH v3 08/14] perf test: Add summary reporting
+Message-ID: <20260531063736.871777-11-irogers@google.com>
+Subject: [PATCH v3 10/14] perf test: Skip shebang and SPDX comments in shell
+ test descriptions
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	namhyung@kernel.org
@@ -68,152 +69,116 @@ Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Currently, when running test suites (perf test), users must scroll through
-hundreds of lines of console output to manually tally the number of passed,
-skipped, or failed test cases.
+When extracting shell test descriptions in tests-scripts.c, the parser
+skipped the first line assuming it was the shebang (#!/bin/sh) and then read
+the first comment line on line 2 as the test description.
 
-Introduce an automated, global execution summary printed at the absolute
-tail of the test run:
-1. Track counts mid-flight inside the print_test_result() accumulator,
-   clearly separating pass counts into standalone main tests vs. individual
-   subtests (where num_test_cases > 1).
-2. Accumulate the precise descriptions of all failed test cases directly
-   into a global string buffer, formatted with their suite indices (e.g.,
-     3.1: Parse event definition strings) for effortless cross-referencing.
-3. Define a summary printer function print_tests_summary() that emits a
-   colored outline of the final pass, skip, and fail totals, followed by
-   the explicit list of failed tests.
-4. Invoke the summary printer right before freeing the test array at the
-   absolute tail of __cmd_test(), guaranteeing that the summary is
-   successfully printed even if an internal emergency signal cleanup occurs
-   or if the user interrupts the run early.
+However, checkpatch.pl expects shell scripts to declare their SPDX license
+identifier on line 2 (# SPDX-License-Identifier: ...). This caused the test
+harness to extract the SPDX license string as the test description.
 
-Example output:
-```
-$ sudo perf test -v
-  1: vmlinux symtab matches kallsyms                                 : Skip
-  2: Detect openat syscall event                                     : Ok
-  3: Detect openat syscall event on all cpus                         : Ok
-...
-163: perf trace summary                                              : Ok
-
-=== Test Summary ===
-Passed main tests : 123
-Passed subtests   : 145
-Skipped tests     : 22
-Failed tests      : 6
-List of failed tests:
-   92: perf kvm tests
-   95: kernel lock contention analysis test
-  120: perf metrics value validation
-  124: Check branch stack sampling
-  143: perftool-testsuite_probe
-  158: test Intel TPEBS counting mode
-```
+Refactor shell_test__description to use io__getline, skipping both shebang
+and SPDX comment lines. This allows shell tests to include standard SPDX
+headers without breaking test suite description extraction.
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 46 ++++++++++++++++++++++++++++++---
- 1 file changed, 43 insertions(+), 3 deletions(-)
+ tools/perf/tests/tests-scripts.c | 66 +++++++++++++++++---------------
+ 1 file changed, 36 insertions(+), 30 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index a29925656865..bd356249c70b 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -363,6 +363,11 @@ static int run_test_child(struct child_process *process)
- 
- static struct pollfd *global_pfds;
- static size_t *global_pfd_indices;
-+static unsigned int summary_tests_passed;
-+static unsigned int summary_subtests_passed;
-+static unsigned int summary_tests_skipped;
-+static unsigned int summary_tests_failed;
-+static struct strbuf summary_failed_tests_buf = STRBUF_INIT;
- 
- static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
- 			     int result, int width, int running)
-@@ -380,11 +385,16 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
- 		color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d active)\n", running);
- 		break;
- 	case TEST_OK:
-+		if (test_suite__num_test_cases(t) > 1)
-+			summary_subtests_passed++;
-+		else
-+			summary_tests_passed++;
- 		pr_info(" Ok\n");
- 		break;
- 	case TEST_SKIP: {
- 		const char *reason = skip_reason(t, curr_test_case);
- 
-+		summary_tests_skipped++;
- 		if (reason)
- 			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (%s)\n", reason);
- 		else
-@@ -393,6 +403,15 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
- 		break;
- 	case TEST_FAIL:
- 	default:
-+		summary_tests_failed++;
-+		if (test_suite__num_test_cases(t) > 1)
-+			strbuf_addf(&summary_failed_tests_buf, "  %3d.%1d: %s\n",
-+				    curr_suite + 1, curr_test_case + 1,
-+				    test_description(t, curr_test_case));
-+		else
-+			strbuf_addf(&summary_failed_tests_buf, "  %3d: %s\n",
-+				    curr_suite + 1,
-+				    test_description(t, curr_test_case));
- 		color_fprintf(stderr, PERF_COLOR_RED, " FAILED!\n");
- 		break;
+diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+index f18c4cd337c8..11ad1263ef85 100644
+--- a/tools/perf/tests/tests-scripts.c
++++ b/tools/perf/tests/tests-scripts.c
+@@ -51,7 +51,7 @@ static int shell_tests__dir_fd(void)
+ 		return -1;
+ 	/* Follow another level of symlink if there */
+ 	if (lstat(path2, &st) == 0 && (st.st_mode & S_IFMT) == S_IFLNK) {
+-		scnprintf(path, sizeof(path), path2);
++		scnprintf(path, sizeof(path), "%s", path2);
+ 		if (readlink(path, path2, sizeof path2) < 0)
+ 			return -1;
  	}
-@@ -975,6 +994,23 @@ static void cmd_test_sig_handler(int sig)
- 	siglongjmp(cmd_test_jmp_buf, sig);
+@@ -78,43 +78,49 @@ static int shell_tests__dir_fd(void)
+ static char *shell_test__description(int dir_fd, const char *name)
+ {
+ 	struct io io;
+-	char buf[128], desc[256];
+-	int ch, pos = 0;
++	char buf[128], *line = NULL;
++	size_t line_len = 0;
++	ssize_t len;
++	char *desc = NULL;
+ 
+ 	io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf));
+ 	if (io.fd < 0)
+ 		return NULL;
+ 
+-	/* Skip first line - should be #!/bin/bash Shebang */
+-	if (io__get_char(&io) != '#')
+-		goto err_out;
+-	if (io__get_char(&io) != '!')
+-		goto err_out;
+-	do {
+-		ch = io__get_char(&io);
+-		if (ch < 0)
+-			goto err_out;
+-	} while (ch != '\n');
+-
+-	do {
+-		ch = io__get_char(&io);
+-		if (ch < 0)
+-			goto err_out;
+-	} while (ch == '#' || isspace(ch));
+-	while (ch > 0 && ch != '\n') {
+-		desc[pos++] = ch;
+-		if (pos >= (int)sizeof(desc) - 1)
++	while ((len = io__getline(&io, &line, &line_len)) > 0) {
++		char *p = line;
++
++		/* Skip leading whitespace */
++		while (*p && isspace(*p))
++			p++;
++
++		/* Must be a comment */
++		if (*p != '#')
++			continue;
++		p++;
++
++		/* Skip shebang or SPDX lines */
++		if (*p == '!' || strstr(p, "SPDX-License-Identifier:"))
++			continue;
++
++		/* Skip whitespace after # */
++		while (*p && isspace(*p))
++			p++;
++
++		/* If we found non-empty text, this is the description! */
++		if (*p && *p != '\n') {
++			char *end = p + strlen(p);
++
++			while (end > p && isspace(end[-1]))
++				end--;
++			*end = '\0';
++			desc = strdup(p);
+ 			break;
+-		ch = io__get_char(&io);
++		}
+ 	}
+-	while (pos > 0 && isspace(desc[--pos]))
+-		;
+-	desc[++pos] = '\0';
+-	close(io.fd);
+-	return strdup(desc);
+-err_out:
++	free(line);
+ 	close(io.fd);
+-	return NULL;
++	return desc;
  }
  
-+static void print_tests_summary(void)
-+{
-+	pr_info("\n=== Test Summary ===\n");
-+	pr_info("Passed main tests : %u\n", summary_tests_passed);
-+	pr_info("Passed subtests   : %u\n", summary_subtests_passed);
-+	pr_info("Skipped tests     : %u\n", summary_tests_skipped);
-+	if (summary_tests_failed > 0) {
-+		color_fprintf(stderr, PERF_COLOR_RED, "Failed tests      : %u\n",
-+			      summary_tests_failed);
-+		pr_info("List of failed tests:\n");
-+		pr_info("%s", summary_failed_tests_buf.buf);
-+	} else {
-+		color_fprintf(stderr, PERF_COLOR_GREEN, "Failed tests      : 0\n");
-+	}
-+	strbuf_release(&summary_failed_tests_buf);
-+}
-+
- static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 		      struct intlist *skiplist)
- {
-@@ -1052,9 +1088,12 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 			}
- 
- 			if (intlist__find(skiplist, curr_suite + 1)) {
--				pr_info("%3d: %-*s:", curr_suite + 1, width,
--					test_description(*t, -1));
--				color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
-+				if (pass == 1) {
-+					pr_info("%3d: %-*s:", curr_suite + 1, width,
-+						test_description(*t, -1));
-+					color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
-+					summary_tests_skipped++;
-+				}
- 				continue;
- 			}
- 
-@@ -1087,6 +1126,7 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 		for (size_t x = 0; x < num_tests; x++)
- 			finish_test(child_tests, x, num_tests, width);
- 	}
-+	print_tests_summary();
- 	free(global_pfds);
- 	free(global_pfd_indices);
- 	global_pfds = NULL;
+ /* Is this full file path a shell script */
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
