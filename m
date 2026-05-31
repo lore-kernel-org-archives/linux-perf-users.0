@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47A634676F
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 06:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DD62DC357
+	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 06:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780209483; cv=none; b=qVUfw9MUVo4LmKZpJfa1ZaqOqvvQdNqNc7ZqYNpHFzdl2fU0/Dy0TYId3O7u0V1LLLWimCpJAJZtTHV+4xoAYIFtIG0cqVt3OBQr47dGKrRG6aTvuUafziq3+GKZfG1MHYBNrNl1f+bxiwyW96Kg2LhvSW58hgvCkX8Hjx8Ps+Y=
+	t=1780209486; cv=none; b=hwLIea5qQWzyOI2teyk69wIKwIbo4ifftgUQub/bAfYEGYMc1EG6C5LeBc+tQihLpDYqwxRv+ay7o9cBGegf5/D8IoNs4fBdGU/UQPhjkQ+Ig4ayykP/CiY+BDxBSeFrgS0BR3hyeTOdVaggcMUGBHfT0BmP3/HfTZ2JJo2IYBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780209483; c=relaxed/simple;
-	bh=eIgwWDC25w+Uii+JpLNoUy+3whtuxhp0Za1cSTKXNuE=;
+	s=arc-20240116; t=1780209486; c=relaxed/simple;
+	bh=CC82ltQciLVo25ptSGpbRLom8XPXdsuFtD8GfgNEbDc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AqVJgFhoPIGKseFBemOEV6pSuXWDcfI+UJ2Jl2xXcSxsWYobFcaRmhlnNrxPeP5qJWHZQcjX3y7+PkLxSSTWt+oi3lhNZLZCYCJi2+qFYaxWEH1/VdHHAJk8KpBFrCDfcz5t7xDmpVAqCB0CsqWiAGnsTaTbgvzHW/gKWSFNOK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ImLIAwcA; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=abnvfQqvfRziFJcrS7M7uEfYZLyLR3FcBNYdyIdNoOjTJdLGQJdBBzygP6yJV1sNgbgEhdA7oARgoS0BWLda+5d64TgblrDSOp0Bxda2tCuvantDNMNkG0usuoml2lmYauno6oct2Ety7noYeU5uGCG0GEfWDz7GzBQ29at10/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qODHH7N0; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ImLIAwcA"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304e3e3fba5so10448347eec.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 30 May 2026 23:38:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qODHH7N0"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137dd3a60e8so325753c88.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 30 May 2026 23:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780209481; x=1780814281; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780209483; x=1780814283; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cnSVwt7OGO6nDSab0gASgCcyvKSTSYoLNL/UchLUrpU=;
-        b=ImLIAwcAZL0uLyNvCoZgnRu067KStLbiRSbdHTiPx7o6ZspnVVmMI9SfgUlZkBFLah
-         yDX1OFOaJH6bJ2XbyKMOUJQJdgm+kkNOw07aNHVUnH88bRbNwbe8FM7FL4UGFWQi7Fyz
-         QQb1f8Nq2n13gEjWU6JSuxesWhmRNSxLsNaNrZW5WufDXRa2C3TmWAMMCEpbhhxKyz9u
-         3E9ngaxRelV6FlQeSoWkff7NWI+4aRD3CEykAJKvrWfkfAhQPxB3WCcXwMSyksp5P0sy
-         +0NeptDlpI841NPjN9/IzEqKUKOdFvDcK2pbiDqTNsaJcaHQg7KMyuaJUMyAHktbQhxM
-         PWXQ==
+        bh=oikd+Dv854l2lyT14pKoyiMtVPklKlZKoUfMYUyLmLg=;
+        b=qODHH7N0hwrH2fBwpHELqaioKYbQgTsobWullLGGMT2KfFwr0UsVKjd5mKpwjcZJ5j
+         RbtovliYQNNGFevaY1ExDIyyQyYHw9m1gRFQDE1lsoIWxiMwF7qCVt3Lrrhv3cG3F7ux
+         xSYcDjP4AcJpPY0pfgssgq3lWle21xrwQz3k7Ppuv+S7KUe3EXAg1zm8Z7Lfa1F6y/fM
+         UXhDH+CcnWoQ+KKh329zzK3w2IAWSHJI8t5Wf1hrkhovjb+ZhKinoH5ovK8D78bXK5bx
+         XyFb58xKNR8zvwMRVCDvZt7GT4iJNeiWort3LV/l+G/Jw/NefqMD8OfanSc7laRUNpwK
+         044A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780209481; x=1780814281;
+        d=1e100.net; s=20251104; t=1780209483; x=1780814283;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cnSVwt7OGO6nDSab0gASgCcyvKSTSYoLNL/UchLUrpU=;
-        b=YWWYFm5IR38k7YwJlbR1pAk66jb8zvjOpe7qPjo8G9fSZEhR+vH+kfK0U+VnhwikO8
-         EJIif9VfN5O5Pq8NCPoU3vp1ryp6IpzF8HdC5FIpl54/l/pXvRBDgFffE3nHIcHvmFRy
-         ymQSk39kQkVMnSMDhMJj02PlskuL3hGavefVEpC0gFImV2Cpc3XMUdqF/joIS8+4yCNG
-         XSyXS+gaGtc7ZWtmqecPLkNl+NNbr69HrAlwAK3V8zagWztJMqsrorfv3bEGWHPTIxWm
-         mmsHMBZgahM0C8hL0TwASAniXzedExvkkwD045R2C1swbBwDuvUv1T14ugMlgBHcPHMd
-         Me+A==
-X-Forwarded-Encrypted: i=1; AFNElJ9esTcO53eE1/B/CTnvw2pjPkEgZE2Wv1HRwBv2Llsw1Een46ORbjuILOcInJW/UQBkcj+8dAgN7utMrUGUD5/d@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlfkfIHGD8IYRGJkjDvxaYFYTYCUCx7Au5BHyMK4jPd2TTxjAB
-	G3tszleVXM7Y/6r8cKG+UhdnGyYei7peUgNEufqxqTmX9L/Go0l9yJNmXz+gVyN25uI5Ze75oEF
-	p+Q31q+2Clw==
-X-Received: from dlan16-n1.prod.google.com ([2002:a05:7022:eb50:10b0:137:c9b:c045])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:7e05:b0:137:dbc6:cb1d
- with SMTP id a92af1059eb24-137dbc6cc4dmr986596c88.24.1780209480939; Sat, 30
- May 2026 23:38:00 -0700 (PDT)
-Date: Sat, 30 May 2026 23:37:28 -0700
+        bh=oikd+Dv854l2lyT14pKoyiMtVPklKlZKoUfMYUyLmLg=;
+        b=CUWicKUhzLwVtZQbLSwmt63KoFCh4IRLC13eRQN/tSa2xVWjAJu5bl34hdCOs1JZGG
+         FSyGnvRW+jESHNNpiR+WVq86L+rpNjpuBnu1RVMKOaQ6ZOjipYXLa8Dg6WK805Upvxg5
+         I563d8FD/dfEMS6NkPh7799d+AEuwPGoCuOHDBPI+QLBv6G4Sh45KFgxNaEtjpR36Z/t
+         1HeClNPIgu0bITYDEDvLwMb/uqwDGcrjEdpAHxSnciagClf2H3yPSNcQCX3diHRFqMd4
+         b5lnN41dR/Pb2YQ76fTX/nIw7BPgtV6GdChaPRtrmYth5raHZqkiBepkVOoDhBISDbqd
+         EmUA==
+X-Forwarded-Encrypted: i=1; AFNElJ9V2M86R7eMkQhuNoRxdr1XVa76TC8kVkARfhh0gSET6oe8uFFadyLl02n9AKi9NHUfAmFFXfrySsocZoo9+vIk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw806aAeDRpZJWlJCQfve5zB3LmNWMcVqjVZXqmhvLgVSfqXx2V
+	CvwkTGxQkNRajGO59QoX8SO7kA2VlYPUJDsZY1wuor6B4j70JSpcfSzXFhhfh37qOp9i+yIqJXe
+	l1KfK5EW8Tw==
+X-Received: from dlbsi7.prod.google.com ([2002:a05:7022:b887:b0:135:cc8b:4336])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:41a4:b0:12d:d972:b969
+ with SMTP id a92af1059eb24-137d425f97dmr2270150c88.24.1780209482877; Sat, 30
+ May 2026 23:38:02 -0700 (PDT)
+Date: Sat, 30 May 2026 23:37:29 -0700
 In-Reply-To: <20260531063736.871777-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260531052740.796087-1-irogers@google.com> <20260531063736.871777-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260531063736.871777-7-irogers@google.com>
-Subject: [PATCH v3 06/14] perf test: Refactor parallel poll loop to drain all
- pipes simultaneously
+Message-ID: <20260531063736.871777-8-irogers@google.com>
+Subject: [PATCH v3 07/14] perf test: Show snippet failure output for verbose=1
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	namhyung@kernel.org
@@ -69,354 +68,323 @@ Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-When running tests in parallel with verbose output (-v), child processes
-write to pipes. If a test produces significant output (e.g. Granite Rapids
-metric parsing printing hundreds of lines), it fills the 64KB pipe buffer
-and blocks.
-Previously, the parent harness (finish_test) only polled the pipe of the
-"current" test waiting to be printed. Other children blocked indefinitely
-until the parent reached them, severely sequentializing execution.
+Currently, when running tests in verbose mode (-v), if a test case fails,
+the entire raw standard error buffer is dumped to stderr via
+fprintf(stderr, "%s", child->err_output.buf). For tests that generate
+massive amounts of debugging or logging output before dying, this results
+in multi-page terminal dumps where highly critical diagnostic keywords
+(error, fail, segv) are easily lost.
 
-Address this by implementing finish_tests_parallel() to poll and drain
-output pipes from all running children simultaneously into per-child buffers.
-Reaping occurs out of order as children finish, while final result printing
-remains strictly in order.
+Implement a smart, bounded snippet string processor to improve failure
+triaging:
+1. Introduce a configurable quota limit static unsigned int
+   failure_snippet_lines = 10; accessible via a new command-line option
+   --failure-snippet-lines <N>.
+2. Parse the raw error buffer dynamically into lines and run a three-pass
+   extraction algorithm:
+   - Pass 0: Prioritize retaining outline marker lines containing dashes
+     (====) to beautifully frame the start and end execution boundaries.
+   - Pass 1: Scan forward from the top of the log to pick up to N lines
+     that contain case-insensitive failure keywords (error, fail, segv,
+     abort) to isolate the root cause. Automatically pull in the immediate
+     subsequent line as highly-prioritized context. Allow adjacent matching
+     lines to overlap without dropping context by evaluating keywords for all
+     lines (e.g. when "Failed to report" is followed by "Error:").
+   - Pass 2: If quota remains, scan backward from the absolute tail of
+     the log to capture trailing crash or abort context.
+3. Output the selected lines in their original chronological order,
+   inserting a clear ... separator between non-contiguous line jumps.
+4. Wrap matched failure keywords dynamically in bold red (PERF_COLOR_RED)
+   to immediately draw the eye to failures.
+5. Invoke the smart processor purely when verbose == 1 && ret == TEST_FAIL
+   in both finish_test and finish_tests_parallel, leaving raw full-output
+   dumping completely untouched when running highly verbose (-vv).
 
-This drops parallel verbose execution time for the PMU events suite from
-~35 seconds down to ~5.9 seconds.
+Example output:
+```
+==== start ====
+...
+-- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
+...
+-- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
+Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+...
+-- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing variable (output regexp parsing)
+-- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: add
+...
+-- [ SKIP ] -- perf_probe :: test_basic :: help message :: testcase skipped
+...
+==== end(-1) ====
+143: perftool-testsuite_probe                                        : FAILED!
+```
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/subcmd/run-command.c  |  47 +++++++-
- tools/perf/tests/builtin-test.c | 208 +++++++++++++++++++++++++++++++-
- 2 files changed, 251 insertions(+), 4 deletions(-)
+ tools/perf/tests/builtin-test.c | 212 +++++++++++++++++++++++++++++++-
+ 1 file changed, 209 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
-index b7510f83209a..e1341080dbae 100644
---- a/tools/lib/subcmd/run-command.c
-+++ b/tools/lib/subcmd/run-command.c
-@@ -146,6 +146,10 @@ int start_command(struct child_process *cmd)
- 			close(cmd->out);
- 		if (need_err)
- 			close_pair(fderr);
-+		cmd->pid = -1;
-+		cmd->in = -1;
-+		cmd->out = -1;
-+		cmd->err = -1;
- 		return err == ENOENT ?
- 			-ERR_RUN_COMMAND_EXEC :
- 			-ERR_RUN_COMMAND_FORK;
-@@ -233,6 +237,8 @@ int check_if_command_finished(struct child_process *cmd)
- 	char filename[6 + MAX_STRLEN_TYPE(typeof(cmd->pid)) + 7 + 1];
- 	char status_line[256];
- 	FILE *status_file;
-+	int status;
-+	pid_t waiting;
- 
- 	/*
- 	 * Check by reading /proc/<pid>/status as calling waitpid causes
-@@ -241,8 +247,45 @@ int check_if_command_finished(struct child_process *cmd)
- 	sprintf(filename, "/proc/%u/status", cmd->pid);
- 	status_file = fopen(filename, "r");
- 	if (status_file == NULL) {
--		/* Open failed assume finish_command was called. */
--		return true;
-+		/*
-+		 * fopen() can fail with ENOENT if the process has been reaped.
-+		 * It can also fail with EMFILE/ENFILE if RLIMIT_NOFILE is reached,
-+		 * or with EINTR/ENOMEM. Use kill(pid, 0) as a robust fallback
-+		 * to distinguish between active processes and dead ones without
-+		 * consuming file descriptors.
-+		 */
-+		if (errno == ENOENT)
-+			return 1;
-+		waiting = waitpid(cmd->pid, &status, WNOHANG);
-+		if (waiting == cmd->pid) {
-+			int result;
-+			int code;
-+
-+			cmd->finished = 1;
-+			if (WIFSIGNALED(status)) {
-+				result = -ERR_RUN_COMMAND_WAITPID_SIGNAL;
-+			} else if (!WIFEXITED(status)) {
-+				result = -ERR_RUN_COMMAND_WAITPID_NOEXIT;
-+			} else {
-+				code = WEXITSTATUS(status);
-+				switch (code) {
-+				case 127:
-+					result = -ERR_RUN_COMMAND_EXEC;
-+					break;
-+				case 0:
-+					result = 0;
-+					break;
-+				default:
-+					result = -code;
-+					break;
-+				}
-+			}
-+			cmd->finish_result = result;
-+			return 1;
-+		}
-+		if (waiting < 0 && errno == ECHILD)
-+			return 1;
-+		return 0;
- 	}
- 	while (fgets(status_line, sizeof(status_line), status_file) != NULL) {
- 		char *p;
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 2ccb52a776cc..9f71f11928c6 100644
+index 9f71f11928c6..a29925656865 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -302,6 +302,9 @@ struct child_test {
- 	struct test_suite *test;
- 	int suite_num;
- 	int test_case_num;
-+	struct strbuf err_output;
-+	int result;
-+	bool done;
- };
+@@ -48,6 +48,8 @@ static bool dont_fork;
+ static bool sequential;
+ /* Number of times each test is run. */
+ static unsigned int runs_per_test = 1;
++/* Number of lines to include in failure snippet. */
++static unsigned int failure_snippet_lines = 10;
+ const char *dso_to_test;
+ const char *test_objdump_path = "objdump";
  
- static jmp_buf run_test_jmp_buf;
-@@ -356,6 +359,9 @@ static int run_test_child(struct child_process *process)
+@@ -344,7 +346,7 @@ static int run_test_child(struct child_process *process)
+ 	for (size_t i = 0; i < ARRAY_SIZE(signals); i++)
+ 		signal(signals[i], child_test_sig_handler);
  
- #define TEST_RUNNING -3
+-	pr_debug("--- start ---\n");
++	pr_debug("---- start ----\n");
+ 	pr_debug("test child forked, pid %d\n", getpid());
+ 	err = test_function(child->test, child->test_case_num)(child->test, child->test_case_num);
+ 	pr_debug("---- end(%d) ----\n", err);
+@@ -398,6 +400,204 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
+ 	return 0;
+ }
  
-+static struct pollfd *global_pfds;
-+static size_t *global_pfd_indices;
++static const char * const fail_keywords[] = {
++	"error", "fail", "segv", "abort",
++	"signal", "fatal", "panic", "corrupt", NULL
++};
 +
- static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
- 			     int result, int width, int running)
++static const char *find_next_keyword(const char *str, size_t max_len, size_t *kw_len)
++{
++	const char *best = NULL;
++	size_t best_len = 0;
++	int k;
++
++	for (k = 0; fail_keywords[k]; k++) {
++		const char *s = str;
++		size_t len = strlen(fail_keywords[k]);
++
++		while ((size_t)(s - str) + len <= max_len) {
++			size_t i;
++
++			for (i = 0; i < len; i++) {
++				if (tolower(s[i]) != fail_keywords[k][i])
++					break;
++			}
++			if (i == len) {
++				if (!best || s < best) {
++					best = s;
++					best_len = len;
++				}
++				break;
++			}
++			s++;
++		}
++	}
++	if (best) {
++		*kw_len = best_len;
++		return best;
++	}
++	return NULL;
++}
++
++static void print_line_highlighted(FILE *fp, const char *line, size_t len)
++{
++	const char *s = line;
++
++	while (len > 0) {
++		size_t kw_len = 0;
++		const char *match = find_next_keyword(s, len, &kw_len);
++
++		if (!match) {
++			fwrite(s, 1, len, fp);
++			break;
++		}
++		if (match > s)
++			fwrite(s, 1, match - s, fp);
++		if (perf_use_color_default)
++			fprintf(fp, "%s", PERF_COLOR_RED);
++		fwrite(match, 1, kw_len, fp);
++		if (perf_use_color_default)
++			fprintf(fp, "%s", PERF_COLOR_RESET);
++
++		len -= (match + kw_len) - s;
++		s = match + kw_len;
++	}
++}
++
++static bool line_contains(const char *line, size_t len, const char *tok)
++{
++	size_t tok_len = strlen(tok);
++	const char *s = line;
++
++	while ((size_t)(s - line) + tok_len <= len) {
++		if (memcmp(s, tok, tok_len) == 0)
++			return true;
++		s++;
++	}
++	return false;
++}
++
++static void print_test_failure_snippet(FILE *fp, const char *buf)
++{
++	size_t num_lines = 0;
++	size_t max_lines = 128;
++	const char **lines = calloc(max_lines, sizeof(const char *));
++	size_t *line_lens = calloc(max_lines, sizeof(size_t));
++	const char *s = buf;
++	size_t i;
++	unsigned int picked_count = 0;
++	bool *pick;
++	int last_printed = -1;
++
++	if (!lines || !line_lens) {
++		free(lines); free(line_lens);
++		fprintf(fp, "%s", buf);
++		return;
++	}
++
++	while (*s) {
++		const char *eol = strchr(s, '\n');
++		size_t len;
++
++		if (eol)
++			len = eol - s + 1;
++		else
++			len = strlen(s);
++
++		if (num_lines == max_lines) {
++			const char **new_lines;
++			size_t *new_lens;
++
++			max_lines *= 2;
++			new_lines = realloc(lines, max_lines * sizeof(const char *));
++			if (!new_lines) {
++				free(lines); free(line_lens);
++				fprintf(fp, "%s", buf);
++				return;
++			}
++			lines = new_lines;
++
++			new_lens = realloc(line_lens, max_lines * sizeof(size_t));
++			if (!new_lens) {
++				free(lines); free(line_lens);
++				fprintf(fp, "%s", buf);
++				return;
++			}
++			line_lens = new_lens;
++		}
++		lines[num_lines] = s;
++		line_lens[num_lines] = len;
++		num_lines++;
++		s += len;
++	}
++
++	if (num_lines <= failure_snippet_lines) {
++		for (i = 0; i < num_lines; i++)
++			print_line_highlighted(fp, lines[i], line_lens[i]);
++		free(lines); free(line_lens);
++		return;
++	}
++
++	pick = calloc(num_lines, sizeof(bool));
++	if (!pick) {
++		for (i = 0; i < num_lines; i++)
++			print_line_highlighted(fp, lines[i], line_lens[i]);
++		free(lines); free(line_lens);
++		return;
++	}
++
++	/* Pass 0: Always pick the very first line */
++	if (num_lines > 0 && picked_count < failure_snippet_lines) {
++		pick[0] = true;
++		picked_count++;
++	}
++
++	/* Pass 1: Pick lines with failure keywords from start (Highest Priority) */
++	for (i = 0; i < num_lines && picked_count < failure_snippet_lines; i++) {
++		size_t dummy;
++
++		if (find_next_keyword(lines[i], line_lens[i], &dummy)) {
++			if (!pick[i]) {
++				pick[i] = true;
++				picked_count++;
++			}
++			/* Prioritize getting the immediate next line for context */
++			if (i + 1 < num_lines && !pick[i + 1] &&
++			    picked_count < failure_snippet_lines) {
++				pick[i + 1] = true;
++				picked_count++;
++			}
++		}
++	}
++
++	/* Pass 2: Fill remaining quota from the end backwards */
++	i = num_lines;
++	while (i > 0 && picked_count < failure_snippet_lines) {
++		i--;
++		if (!pick[i]) {
++			pick[i] = true;
++			picked_count++;
++		}
++	}
++
++	for (i = 0; i < num_lines; i++) {
++		if (!pick[i])
++			continue;
++		if (last_printed != -1 && (int)i > last_printed + 1) {
++			if (perf_use_color_default)
++				fprintf(fp, "%s...%s\n", PERF_COLOR_BLUE, PERF_COLOR_RESET);
++			else
++				fprintf(fp, "...\n");
++		}
++		print_line_highlighted(fp, lines[i], line_lens[i]);
++		last_printed = i;
++	}
++
++	free(pick);
++	free(lines);
++	free(line_lens);
++}
++
+ static void finish_test(struct child_test **child_tests, int running_test, int child_test_num,
+ 		int width)
  {
-@@ -503,12 +509,205 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
+@@ -505,8 +705,10 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
+ 	}
+ 	/* Clean up child process. */
+ 	ret = finish_command(&child_test->process);
+-	if (verbose > 1 || (verbose == 1 && ret == TEST_FAIL))
++	if (verbose > 1)
  		fprintf(stderr, "%s", err_output.buf);
++	else if (verbose == 1 && ret == TEST_FAIL)
++		print_test_failure_snippet(stderr, err_output.buf);
  
  	strbuf_release(&err_output);
-+	strbuf_release(&child_test->err_output);
- 	print_test_result(t, curr_suite, curr_test_case, ret, width, /*running=*/0);
- 	if (err > 0)
- 		close(err);
- 	zfree(&child_tests[running_test]);
- }
+ 	strbuf_release(&child_test->err_output);
+@@ -689,8 +891,10 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
+ 				}
+ 			}
  
-+static void drain_child_process_err(struct child_test *child)
-+{
-+	char buf[512];
-+	ssize_t len;
-+
-+	while ((len = read(child->process.err, buf, sizeof(buf) - 1)) > 0) {
-+		buf[len] = '\0';
-+		strbuf_addstr(&child->err_output, buf);
-+	}
-+}
-+
-+static int finish_tests_parallel(struct child_test **child_tests, size_t num_tests, int width)
-+{
-+	size_t next_to_print = 0;
-+	struct pollfd *pfds;
-+	size_t *pfd_indices;
-+	size_t num_pfds = 0;
-+	int last_running = -1;
-+	size_t i;
-+	int last_suite_printed = -1;
-+
-+	global_pfds = calloc(num_tests, sizeof(*pfds));
-+	global_pfd_indices = calloc(num_tests, sizeof(*pfd_indices));
-+	pfds = global_pfds;
-+	pfd_indices = global_pfd_indices;
-+	if (!pfds || !pfd_indices) {
-+		free(pfds);
-+		free(pfd_indices);
-+		global_pfds = NULL;
-+		global_pfd_indices = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < num_tests; i++) {
-+		struct child_test *child = child_tests[i];
-+
-+		if (!child)
-+			continue;
-+		strbuf_init(&child->err_output, 0);
-+		if (child->process.err > 0)
-+			fcntl(child->process.err, F_SETFL, O_NONBLOCK);
-+	}
-+
-+	while (next_to_print < num_tests) {
-+		size_t running_count = 0;
-+		size_t p;
-+
-+		while (next_to_print < num_tests &&
-+		       (!child_tests[next_to_print] || child_tests[next_to_print]->done))
-+			next_to_print++;
-+
-+		if (next_to_print >= num_tests)
-+			break;
-+
-+		num_pfds = 0;
-+
-+		for (i = next_to_print; i < num_tests; i++) {
-+			struct child_test *child = child_tests[i];
-+
-+			if (!child || child->done)
-+				continue;
-+
-+			if (!check_if_command_finished(&child->process))
-+				running_count++;
-+
-+			if (child->process.err > 0) {
-+				pfds[num_pfds].fd = child->process.err;
-+				pfds[num_pfds].events = POLLIN | POLLERR | POLLHUP | POLLNVAL;
-+				pfd_indices[num_pfds] = i;
-+				num_pfds++;
-+			}
-+		}
-+
-+		if (perf_use_color_default && running_count != (size_t)last_running) {
-+			struct child_test *next_child = child_tests[next_to_print];
-+
-+			if (last_running != -1)
-+				fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
-+
-+			if (next_child) {
-+				if (test_suite__num_test_cases(next_child->test) > 1 &&
-+				    last_suite_printed != next_child->suite_num) {
-+					pr_info("%3d: %-*s:\n", next_child->suite_num + 1, width,
-+						test_description(next_child->test, -1));
-+					last_suite_printed = next_child->suite_num;
-+				}
-+				print_test_result(next_child->test, next_child->suite_num,
-+						  next_child->test_case_num, TEST_RUNNING, width,
-+						  running_count);
-+			}
-+			last_running = running_count;
-+		}
-+
-+		if (num_pfds == 0) {
-+			if (running_count > 0)
-+				usleep(10 * 1000);
-+		} else {
-+			int pret = poll(pfds, num_pfds, 100);
-+
-+			if (pret > 0) {
-+				for (p = 0; p < num_pfds; p++) {
-+					if (pfds[p].revents) {
-+						size_t idx = pfd_indices[p];
-+						struct child_test *child = child_tests[idx];
-+
-+						drain_child_process_err(child);
-+						/*
-+						 * If the child closed its end of the pipe (EOF) or encountered
-+						 * an error, close the file descriptor immediately and set it
-+						 * to -1. This removes it from the pfds array for subsequent
-+						 * iterations, preventing a tight CPU busy-loop while waiting
-+						 * for the process itself to exit.
-+						 */
-+						if (pfds[p].revents & (POLLHUP | POLLERR | POLLNVAL)) {
-+							close(child->process.err);
-+							child->process.err = -1;
-+						}
-+					}
-+				}
-+			}
-+		}
-+
-+		for (i = next_to_print; i < num_tests; i++) {
-+			struct child_test *child = child_tests[i];
-+
-+			if (!child || child->done)
-+				continue;
-+
-+			if (check_if_command_finished(&child->process)) {
-+				if (child->process.err > 0) {
-+					drain_child_process_err(child);
-+					close(child->process.err);
-+					child->process.err = -1;
-+				}
-+				child->result = finish_command(&child->process);
-+				child->done = true;
-+			}
-+		}
-+
-+		while (next_to_print < num_tests) {
-+			struct child_test *child = child_tests[next_to_print];
-+
-+			if (!child) {
-+				next_to_print++;
-+				continue;
-+			}
-+			if (!child->done)
-+				break;
-+
-+			if (perf_use_color_default && last_running != -1) {
-+				fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
-+				last_running = -1;
-+			}
-+
-+			if (test_suite__num_test_cases(child->test) > 1 &&
-+			    last_suite_printed != child->suite_num) {
-+				pr_info("%3d: %-*s:\n", child->suite_num + 1, width,
-+					test_description(child->test, -1));
-+				last_suite_printed = child->suite_num;
-+			}
-+
-+			if (verbose > 1) {
-+				if (test_suite__num_test_cases(child->test) > 1) {
-+					pr_info("%3d.%1d: %s:\n", child->suite_num + 1,
-+						child->test_case_num + 1,
-+						test_description(child->test,
-+								 child->test_case_num));
-+				} else {
-+					pr_info("%3d: %s:\n", child->suite_num + 1,
-+						test_description(child->test, -1));
-+				}
-+			}
-+
-+			if (verbose > 1 || (verbose == 1 && child->result == TEST_FAIL))
-+				fprintf(stderr, "%s", child->err_output.buf);
-+
-+			print_test_result(child->test, child->suite_num, child->test_case_num,
-+					  child->result, width, 0);
-+			strbuf_release(&child->err_output);
-+			child_tests[next_to_print] = NULL;
-+			zfree(&child);
-+			next_to_print++;
-+		}
-+	}
-+
-+	free(global_pfds);
-+	free(global_pfd_indices);
-+	global_pfds = NULL;
-+	global_pfd_indices = NULL;
-+	return 0;
-+}
-+
- static int start_test(struct test_suite *test, int curr_suite, int curr_test_case,
- 		struct child_test **child, int width, int pass)
- {
-@@ -671,8 +870,9 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 		}
- 		if (!sequential) {
- 			/* Parallel mode starts tests but doesn't finish them. Do that now. */
--			for (size_t x = 0; x < num_tests; x++)
--				finish_test(child_tests, x, num_tests, width);
-+			err = finish_tests_parallel(child_tests, num_tests, width);
-+			if (err)
-+				goto err_out;
- 		}
- 	}
- err_out:
-@@ -683,6 +883,10 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 		for (size_t x = 0; x < num_tests; x++)
- 			finish_test(child_tests, x, num_tests, width);
- 	}
-+	free(global_pfds);
-+	free(global_pfd_indices);
-+	global_pfds = NULL;
-+	global_pfd_indices = NULL;
- 	free(child_tests);
- 	return err;
- }
+-			if (verbose > 1 || (verbose == 1 && child->result == TEST_FAIL))
++			if (verbose > 1)
+ 				fprintf(stderr, "%s", child->err_output.buf);
++			else if (verbose == 1 && child->result == TEST_FAIL)
++				print_test_failure_snippet(stderr, child->err_output.buf);
+ 
+ 			print_test_result(child->test, child->suite_num, child->test_case_num,
+ 					  child->result, width, 0);
+@@ -1026,6 +1230,8 @@ int cmd_test(int argc, const char **argv)
+ 	OPT_STRING(0, "dso", &dso_to_test, "dso", "dso to test"),
+ 	OPT_STRING(0, "objdump", &test_objdump_path, "path",
+ 		   "objdump binary to use for disassembly and annotations"),
++	OPT_UINTEGER(0, "failure-snippet-lines", &failure_snippet_lines,
++		     "Number of lines to include in failure snippet, default 10"),
+ 	OPT_END()
+ 	};
+ 	const char * const test_subcommands[] = { "list", NULL };
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
