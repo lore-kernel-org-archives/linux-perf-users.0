@@ -1,153 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F5C3191C8
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 08:33:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D074C30DEBE
+	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 08:34:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780216418; cv=none; b=EKwGaR60lDB1BJiocN409tZimZ3L4vZ2LWvTc9/vpLGcGrI/S4dE/kiVMVSEJQoCx7gzJsYuqi36x4oW1LLdu4lPDKbbbF3vIcqUlZ1kXC+HzcfAnQrwaqUW2+Lwti+J7tvzAnpMKZ++6QNqbNblaQqqPGb8P+XALoaTt0D9JTw=
+	t=1780216450; cv=none; b=k4MhhUuo3i366kai6R1dGB4zZogxKiXrbXZ1vPJfKVT22C554NLQcp3WHjT/+8GYodQ7USSqunG/2EMJXXNwquUxo7j+2YXdcZKfqQmJabF/KXYDZYni4zPF09309bmt071h6x5CRIFu33zpa0v39MbzdrjWWZz4uGR2eV1A+rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780216418; c=relaxed/simple;
-	bh=3F8LqtRrnSxFt+CJV2xvf0dpTxd/b1iAsH+PGc9Hky0=;
+	s=arc-20240116; t=1780216450; c=relaxed/simple;
+	bh=g9efSNDQuH6nkSEV38tFpcWnk1JC618bo/ooIAEI9rE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NvWc4zKT/pg7QdBw83TIzthhcBICzEt2fTebftZpeN/ov5j7uSxfjYJFwtgUehmxcQDNe9BY6k1HaZFPB0D20wS2gExZ2PsRd8FE5nVVBuxd6pO0u5P7ok/CISbWMdRa8K5aq8LjVGOARqAnhlfY182xrkaokEid33mhDMiiaus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Br2j8sek; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=i3R6opOB3pWninwCGrkQuKbXBngwtQcFJL+rghzjX9n/xBcVeG7tysJY8e3LJ7caDTlK6uBO/aVWaWQct6TK/5fUIHA5D90TA9E7LTtvUHLZvpj1S8h0+4j+38dUsDmvFeZTbqZaFcoP1aMQ5KF6Gle3twaxQjXqMUJ9gq5Ha0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tj2IKtMS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Br2j8sek"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 728551F00893;
-	Sun, 31 May 2026 08:33:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tj2IKtMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C92F1F00893;
+	Sun, 31 May 2026 08:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780216417;
-	bh=mR1vNhGOOBlN7ubi/qYrxqCYhHIpcTY6oEoJTgky/Gw=;
+	s=k20260515; t=1780216449;
+	bh=t3colaUx9DMTR/b66hzjP3pqk6S7akhyRop5+2BEOGM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Br2j8sekB2XImZ6nzPVPaCl4BBOI8UO8ZtXGvZrb+qKeud6d5QOEbWY50NkLDdzIe
-	 FAcddeGB2sCBDRltRDMfKfzMnnjjkhQGa45xK3/BjqMYM+L4a81WGW7IQmxK8wQ1F4
-	 Nh4oTW+GVkaBM7oxhn3ukofrbqwG32eplS7xAAPKpbWcg9cqj/R4HRL/Mpd355nOBS
-	 ro/ga6SudWfHmM6+CbM4HlY8mOfow3gKvFyTNGVgXV20EGtoHUWW0Uuo2d0PIAfc1T
-	 IiNoMYZ4SKYsqcVaa/9SALcawabYjNYJN7Rmy0efedQCpp82pOYaoYLXqTObqsb9j0
-	 FGqSYP2+oDfhg==
+	b=Tj2IKtMSwgVeSJdPHZWYvs75HJtF15mfewKDsR0OPmIPROqQ/qSyoEM2IoFbBz4Jj
+	 lSuAmgt/LWwm/UhlYCbQKW57u8SViS7JTTG+2ETHM1DE2KRf5/W8vDsjkBRUCepaiB
+	 CK+bCAyqKbesQZ4G1SclqNnQ1zrpG3J1PQCs6GQIkv4EvwDa/K5/NhONT6dWXbjVpC
+	 PETn3TY6aoVZ6w9U+ldstzCvK1E2LYGEd+4aeGlTez8ILM6fA3DqtzkajSwH6CP9Cd
+	 nn2bINEccVGZtKqG57x+292wHMjqg9VLDbfoXa6XffsPpZfZp1lbnWlqigqE3uGEHf
+	 BaSWrP/RydHwA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 09/15] perf test: Add summary reporting
+Subject: Re: [PATCH v4 07/15] perf test: Refactor parallel poll loop to
+ drain all pipes simultaneously
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260531082235.940833-10-irogers@google.com>
-References: <20260531082235.940833-10-irogers@google.com>
+In-Reply-To: <20260531082235.940833-8-irogers@google.com>
+References: <20260531082235.940833-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 31 May 2026 08:33:37 +0000
-Message-Id: <20260531083337.728551F00893@smtp.kernel.org>
+Date: Sun, 31 May 2026 08:34:08 +0000
+Message-Id: <20260531083409.6C92F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Deadlock and Use-After-Free due to async-signal-unsafe operation=
-s in signal-handling exit path.
+- [Medium] A double-free vulnerability exists on `global_pfds` and `global_=
+pfd_indices` if an asynchronous signal (e.g., SIGINT) interrupts the execut=
+ion of `finish_tests_parallel()`.
+- [Medium] If the test harness is interrupted by a signal, any stderr outpu=
+t already accumulated for running tests is silently dropped and never print=
+ed.
 --
 
-commit 1fcb991e36afddc8078cf7b1052220591400728e
+commit 9b2b54f1cd46342d54f3ddb09c0ae143f4fd7d36
 Author: Ian Rogers <irogers@google.com>
 
-perf test: Add summary reporting
+perf test: Refactor parallel poll loop to drain all pipes simultaneously
 
-This commit introduces an automated global execution summary printed at the
-end of the perf test run. It tracks passed, skipped, and failed test cases
-using a global strbuf to accumulate the descriptions of failed tests.
+When running tests in parallel with verbose output, child processes fill up
+pipe buffers and block. This patch implements finish_tests_parallel() to
+poll and drain all pipes simultaneously, avoiding the block and drastically
+speeding up parallel testing.
 
 > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
 est.c
+> index 2ccb52a776ccb..9f71f11928c60 100644
 > --- a/tools/perf/tests/builtin-test.c
 > +++ b/tools/perf/tests/builtin-test.c
-> @@ -393,6 +403,15 @@ static int print_test_result(struct test_suite *t, i=
-nt curr_suite, int curr_test
->  		break;
->  	case TEST_FAIL:
->  	default:
-> +		summary_tests_failed++;
-> +		if (test_suite__num_test_cases(t) > 1)
-> +			strbuf_addf(&summary_failed_tests_buf, "  %3d.%1d: %s\n",
-> +				    curr_suite + 1, curr_test_case + 1,
-> +				    test_description(t, curr_test_case));
-> +		else
-> +			strbuf_addf(&summary_failed_tests_buf, "  %3d: %s\n",
-> +				    curr_suite + 1,
-> +				    test_description(t, curr_test_case));
+[ ... ]
+> @@ -503,12 +509,205 @@ static void finish_test(struct child_test **child_=
+tests, int running_test, int c
+>  		fprintf(stderr, "%s", err_output.buf);
+> =20
+>  	strbuf_release(&err_output);
+> +	strbuf_release(&child_test->err_output);
 
 [Severity: Medium]
-Is it safe to use strbuf_addf() here, considering the signal handling in th=
-is
-test harness?
+If a signal arrives during finish_tests_parallel() and triggers the signal
+handler's siglongjmp to err_out, finish_test() is called to clean up.
 
-Since strbuf_addf() can dynamically allocate memory, it is not
-async-signal-safe. If a SIGINT or SIGTERM arrives while the allocator lock =
-is
-held, the signal handler cmd_test_sig_handler() will siglongjmp() out,
-leaving the lock permanently held.
+At this point, finish_tests_parallel() may have already drained some of the
+child's stderr into child_test->err_output. Because finish_test() drains
+any remaining output into its local err_output buffer and prints that, will
+the previously accumulated data in child_test->err_output be silently
+released and lost here?
 
->  		color_fprintf(stderr, PERF_COLOR_RED, " FAILED!\n");
->  		break;
->  	}
-
-[ ... ]
-
-> @@ -963,6 +982,23 @@ static void cmd_test_sig_handler(int sig)
->  	siglongjmp(cmd_test_jmp_buf, sig);
+>  	print_test_result(t, curr_suite, curr_test_case, ret, width, /*running=
+=3D*/0);
+>  	if (err > 0)
+>  		close(err);
+>  	zfree(&child_tests[running_test]);
 >  }
-> =20
-> +static void print_tests_summary(void)
+[ ... ]
+> +static int finish_tests_parallel(struct child_test **child_tests, size_t=
+ num_tests, int width)
 > +{
-> +	pr_info("\n=3D=3D=3D Test Summary =3D=3D=3D\n");
-
 [ ... ]
-
-> +	if (summary_tests_failed > 0) {
-> +		color_fprintf(stderr, PERF_COLOR_RED, "Failed tests      : %u\n",
-> +			      summary_tests_failed);
-> +		pr_info("List of failed tests:\n");
-> +		pr_info("%s", summary_failed_tests_buf.buf);
-> +	} else {
-> +		color_fprintf(stderr, PERF_COLOR_GREEN, "Failed tests      : 0\n");
+> +		for (i =3D next_to_print; i < num_tests; i++) {
+> +			struct child_test *child =3D child_tests[i];
+[ ... ]
+> +			print_test_result(child->test, child->suite_num, child->test_case_num,
+> +					  child->result, width, 0);
+> +			strbuf_release(&child->err_output);
+> +			child_tests[next_to_print] =3D NULL;
+> +			zfree(&child);
+> +			next_to_print++;
+> +		}
 > +	}
-> +	strbuf_release(&summary_failed_tests_buf);
+> +
+> +	free(global_pfds);
+> +	free(global_pfd_indices);
+> +	global_pfds =3D NULL;
+> +	global_pfd_indices =3D NULL;
+
+[Severity: Medium]
+Can this sequence trigger a double free if a signal interrupts execution?
+
+If a signal (like SIGINT) is caught immediately after free(global_pfds)
+but before global_pfds =3D NULL, the signal handler invokes siglongjmp
+and jumps to err_out in __cmd_test().
+
+The err_out cleanup block unconditionally calls free(global_pfds) again,
+which would lead to a double-free since the pointer hasn't been set to
+NULL yet.
+
+> +	return 0;
 > +}
-
 [ ... ]
-
-> @@ -1075,6 +1114,7 @@ static int __cmd_test(struct test_suite **suites, i=
-nt argc, const char *argv[],
+> @@ -683,6 +883,10 @@ static int __cmd_test(struct test_suite **suites, in=
+t argc, const char *argv[],
 >  		for (size_t x =3D 0; x < num_tests; x++)
 >  			finish_test(child_tests, x, num_tests, width);
 >  	}
-> +	print_tests_summary();
->  	free(global_pfds);
->  	free(global_pfd_indices);
->  	global_pfds =3D NULL;
-
-[Severity: Medium]
-Could this cause a deadlock or a use-after-free if triggered by a signal?
-
-If a signal interrupts strbuf_addf() during an allocation:
-
-tools/perf/tests/builtin-test.c:print_test_result()
-    strbuf_addf(&summary_failed_tests_buf, ...)
-    /* interrupted during memory allocation */
-    cmd_test_sig_handler()
-    siglongjmp(cmd_test_jmp_buf, sig);
-
-Execution resumes at the sigsetjmp() site, branches to the err_out label,
-and then calls print_tests_summary().
-
-Calling strbuf_release() from print_tests_summary() could attempt to acquire
-the same memory allocator lock, causing a deadlock.
-
-Additionally, if the interrupted allocation had just freed the old memory
-block but not yet updated the buffer pointer, accessing it here would result
-in reading and double-freeing freed memory.
+> +	free(global_pfds);
+> +	free(global_pfd_indices);
+> +	global_pfds =3D NULL;
+> +	global_pfd_indices =3D NULL;
+>  	free(child_tests);
+>  	return err;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260531082235.9408=
-33-1-irogers@google.com?part=3D9
+33-1-irogers@google.com?part=3D7
