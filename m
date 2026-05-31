@@ -1,66 +1,66 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB465548EE
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 06:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144192F6596
+	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 06:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780209471; cv=none; b=IMtjOm9wpNTXQn1+96NTa2FTE8g1xUy7S1tDNk9mid6jqRIZ0x9b+r4i12QaWSaqdnWcb4f2gMLuA/jteQlAAbBVetqceT+CziqUH1qiw+2ryrYuXziUAoE9Q215kDI1KNCBa7EA1XyGsUwfte0DxLV9NMhoNi7cG70KSKHp57o=
+	t=1780209475; cv=none; b=FY4TNd8LEijcbtHRs2JGZrgbtwyvu9WNen/h6Kp0o7a7uL3naqgBKqG5JIu09BZjDgMMtNoVA5ypad0LFxSP32AQEWHlaWh8BIPasG3aYGoQvn3mC9lj/KpjH6WSrYd2UQIkJlcTz7XBtoe6iOlTIl2H6zkUGSn9TVQB9hJb6vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780209471; c=relaxed/simple;
-	bh=UOfcgNU1zyAR7ezao6eX0vyLNnjz+jtEUHHpyKIIcSM=;
+	s=arc-20240116; t=1780209475; c=relaxed/simple;
+	bh=ohrq1CNpVRmopsfWpSv9Hj5Bh5Yp5Tr8slz6plEjO0w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qNkKxGF+lsTxxDYvo2xkj6mkpwfGqoqshDXD65ExIB3sgLLfJ5fbfE2xsAuRvlN5GxXHsXiJmAWOm3JIF4Pwp+t/8eQQEH6PlRSoSmndWxdop02hxgeAkd9VmeW/JIH3yskoCM3iAMCL3O7LJGpx/Gl0Mx9TOkXPOAAo+t4/35Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QZ5LhEQw; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=SCJqzRKitwI4etnCfDaQcScNLmQB1I4PP/d7Y/C1InieFC9JbXIcGmcKY0qx8Wscl5nDrAUQvd4Dbl3B5yx5Shd2thkCSW245+i6e0XqMoy61f6Y2Mg0z4wATlHrYvR79KoqE5IqI6gKcItItv0gJMzexh61ixIi47ZkilORn1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QmeJQDXe; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QZ5LhEQw"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-84235f9b91fso399669b3a.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 30 May 2026 23:37:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QmeJQDXe"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304e4636205so6024709eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 30 May 2026 23:37:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780209469; x=1780814269; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780209473; x=1780814273; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=As7AfS6LTMYBHS643X2nvZmXmKoX2vXgIl6kKlp8hd8=;
-        b=QZ5LhEQwW+W4H27n3MPF/A16gJno+Kiotu7OMiTW8TwQLTbV9nZEqwvcZw1exykGSC
-         04JlpO5dOXZeuEnpSaMjRr86TaODj1DbrUdNDhPcrBWuU/mCC63uodePXUsAJeVDqUkl
-         Koeyrth3qCctFB+aTQdSX/VEaVwoZkhgvIdlZ+z9esb2YFaKZ/5rB11O4fwh5ONg1hJL
-         QftOihC0Af659Ds3JosBXl4SktZqu9Meff/rvdCIgLPQrHr8hugjpC5Zp6yVm5/RdXv1
-         r89mW9DDZSc2EOuYmaAFMEvEtz+fAbwu3KWe148sNbEnQOAZfhsZ+p+0e/AhaElVyjym
-         BQ0A==
+        bh=QaY/4cr24NdSxoSftl6vfA+eIwzfPnX9jZSLTs4kqqE=;
+        b=QmeJQDXezL+49ri5h5tz+P72Xe4IEzx1mfw0vJBO7I0z5Z34yxjDtZtYcxhhXworpM
+         exsR+timiJG1IT95gQi+uf1FFJdWvgzYstG91NV0AAMqpFzSz2JynaNdXXVMdgPK+Yok
+         hFvYajmwCruhsQmtU7hylGd36NR7UCOizZejIzI/nvu4PgIGveiCnGOM3F+1tDa+T68c
+         PKDUrlFHyOKeZKUIqztF8UiiFKKspbzS/sWGlZsTgoxXhG7jS9Xn6C21uknM3bKrEAx9
+         EPMyiNXRvCr0RGfsDOr26fviuex/nAOQvfDQs/rCNbyAAUgpqfgAZqy347qOzt4JtKK1
+         IG9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780209469; x=1780814269;
+        d=1e100.net; s=20251104; t=1780209473; x=1780814273;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=As7AfS6LTMYBHS643X2nvZmXmKoX2vXgIl6kKlp8hd8=;
-        b=IzpydP7oYkzOGKk4piel/495i6ByR6xSEGIdMJLLOnj7CFFmrwXsngEQTh1AqH6ovn
-         te0hVTJOooT/b9i3WSRtC0fnEEhUcsYBmlNDy16AuSAg9T0zVOMcg3eM1IZOfNRbMRGN
-         ikMHUbB6xvxO74rA9S3MXkWSAZVE1YwOr/29WPhIWw6g8ys6Mkvo1QLjU4jkzVGhcoOM
-         qahtMb7+GAMMLcyGrmYCEbAHmbceEATAxyK28LLnyY26eDwD0ko8yHJa2H6FwxjuoOu5
-         maudW2EoCWOpMTQKDXOYB6ryrSanxKs+K2RpQQBJf0jDH2zg67RaADvwpxuOEWtVjKhQ
-         em6w==
-X-Forwarded-Encrypted: i=1; AFNElJ8LEuekr1Wd7YNjO6rGPlslAeb63yvM4rQdAlGatGdu+KLj13HJ5NL9rV1vSfwStilp99DRZ8H4tC87Glou//yU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd64YKMO/H2v4ijcVldjA0oIAnQCmSwHvbf7Ehw9Hy5I47FQrB
-	u7HiMLamRrBZ1XwYwN0+AE4SZCwidTyvEs1r1PGDqo7EvSU7VG6GOljG1Pwnogx9vJ9JA1c8upx
-	Ys5LOhghULg==
-X-Received: from pfbgd9.prod.google.com ([2002:a05:6a00:8309:b0:82f:b296:c01b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3903:b0:842:2382:a0ea
- with SMTP id d2e1a72fcca58-8422535fc9bmr5455360b3a.14.1780209468820; Sat, 30
- May 2026 23:37:48 -0700 (PDT)
-Date: Sat, 30 May 2026 23:37:22 -0700
-In-Reply-To: <20260531052740.796087-1-irogers@google.com>
+        bh=QaY/4cr24NdSxoSftl6vfA+eIwzfPnX9jZSLTs4kqqE=;
+        b=pe28q3xnKNt9fUgzWowmwHiF2c05iE3jL1adSDaAhKQ+ZU2uEGpOdHJ4uKSfrPGrTp
+         TVszyEZofnTSv0YLj79i8t0tK07bPAqHxXylpLtDyxjlsj+GPss02EE2ilzA5BFfT1Yu
+         vgVPDQOLVpaCPiSb40OwZYO43kZVdyVV7hmqsv+AoUf/M1ZiBO0TV+isDawRfmSkiTQ+
+         J2Ka3kLRqtsPqQB2I6COQRT8ccySrdixKFJLOajMauy1kVJ13Gh5ljR1TjHQptxbPxx7
+         sJ+lmR5GdKBMcVZPjtA5WfBNmxSNmVXubcKGAs8uKm3IMpE+eFWQmSoEu3s5FlzoBhII
+         ptuw==
+X-Forwarded-Encrypted: i=1; AFNElJ8Rl2lmPNAC5WV6fHJWK3ocnpKnt5JrYxr7mguVmZLa8CqdVF5g+qE6uf5a74vq9PhjChQm7tqP2n2Or7euPhW0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2HMMXDPX/5DjDn41iah0aIxhxpgYONnT1MhBpZLuFMHAXXKOE
+	u87b00ttwljfoj7E36nSr2J4VoxX/00HozTuC0ODKnJxw9cec9Q1aVdb+XT4nVAjdU0U6Jo54in
+	gCynWJeDfeA==
+X-Received: from dybml34.prod.google.com ([2002:a05:7301:1522:b0:303:9ed8:4d8a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:2d15:b0:304:2176:a871
+ with SMTP id 5a478bee46e88-304fa30151emr3205425eec.0.1780209472830; Sat, 30
+ May 2026 23:37:52 -0700 (PDT)
+Date: Sat, 30 May 2026 23:37:24 -0700
+In-Reply-To: <20260531063736.871777-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260531052740.796087-1-irogers@google.com>
+References: <20260531052740.796087-1-irogers@google.com> <20260531063736.871777-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260531063736.871777-1-irogers@google.com>
-Subject: [PATCH v3 00/14] perf test: Accelerate parallel test harness and add
- JUnit XML reporting
+Message-ID: <20260531063736.871777-3-irogers@google.com>
+Subject: [PATCH v3 02/14] perf pmu-events: Add API to get metric table name
+ and iterate tables
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	namhyung@kernel.org
@@ -69,144 +69,270 @@ Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Motivation & Key Enhancements
+Add name field to struct pmu_metrics_table and populate it in
+generated tables.
+Add pmu_metrics_table__name() to retrieve the name.
+Add pmu_metrics_table__for_each_table() to iterate over all known
+metric tables.
 
-1. **Test Harness Acceleration & Parallel Polling**
+This will be used to break apart slow metric tests per table.
 
-   Previously, when running tests in parallel mode (`perf test -v`),
-   child processes writing massive amounts of logging output to pipes
-   (such as Granite Rapids PMU metric parsing) would saturate the 64KB
-   pipe buffer and block indefinitely. The parent harness only polled
-   the pipe of the "current" sequential test waiting to be printed,
-   causing severe execution bottlenecks.
+Assisted-by: Gemini-CLI:Google Gemini 3
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/empty-pmu-events.c | 48 +++++++++++++++++++-
+ tools/perf/pmu-events/jevents.py         | 58 +++++++++++++++++++++++-
+ tools/perf/pmu-events/pmu-events.h       |  4 ++
+ 3 files changed, 106 insertions(+), 4 deletions(-)
 
-   - Refactored the parallel poll loop to drain output pipes from all
-     active children simultaneously into dynamic per-child buffers
-     (`struct strbuf`). Reaping occurs asynchronously out of order,
-     while final console printing remains strictly sequential.
-
-   - Added explicit pipe draining after child process termination to
-     prevent losing trailing log data.
-
-   - **Benchmark**: This drops parallel verbose execution time for the
-       PMU events suite from ~35 seconds down to ~5.9 seconds (an ~83%
-       reduction in latency).
-
-2. **Dynamic Test Suites & Granular PMU Subtests**
-
-   Monolithic test cases (like "Parsing of PMU event table metrics")
-   previously evaluated hundreds of tables in a single sequential run,
-   making failures difficult to isolate.
-
-   - Added `setup` callbacks and private data pointers (`void *priv`)
-     to `struct test_suite` and `struct test_case`, enabling dynamic
-     runtime testcase generation.
-
-   - Split the PMU events metric parsing test into individual subtests
-     (one pair of real/fake PMU tests per metric table), allowing them
-     to execute concurrently and report granular results.
-
-3. **Advanced Triaging & Automated Summary Reporting**
-
-   Triaging failures in highly verbose automated runs previously
-   required scrolling through thousands of lines of console output.
-
-   - Introduced a smart, configurable failure snippet processor
-     (`--failure-snippet-lines`) that dynamically extracts root-cause
-     context lines matching failure keywords (`error`, `fail`, `segv`,
-     `abort`) while preserving outline markers.
-
-   - Implemented an automated global execution summary printed at the
-     absolute tail of the test run, presenting clear pass/skip/fail
-     totals alongside an explicit list of failed test cases for
-     effortless cross-referencing.
-
-   - Fixed subtest status column alignment (`: Ok`) for multi-digit
-     test indexes.
-
-   - Updated shell script SPDX header parsing to prevent license
-     strings from being incorrectly extracted as test descriptions.
-
-4. **JUnit XML Reporting & CI Integration**
-
-   Added a `-j`/`--junit` command-line option to generate standard
-   JUnit XML test reports (`test.xml`).
-
-   - Captures individual test suite and subtest execution latency
-     alongside XML-escaped failure logs and skip reasons.
-
-   - Guarantees absolute timing precision and immunity to wall-clock
-     jumps by measuring durations using
-     `clock_gettime(CLOCK_MONOTONIC)` and harvesting `end_time`
-     exactly when child processes exit to insulate latencies from
-     out-of-order sequential UI printing delays.
-
-   - Added a standalone shell test script to validate generated JUnit
-     XML syntax using Python's `ElementTree` parser.
-
-5. **Elimination of External C Compiler Dependencies**
-
-   The Intel PT shell test (`test_intel_pt.sh`) previously compiled
-   external C workloads at runtime using `/usr/bin/cc`, which
-   frequently breaks in hermetic or minimal CI environments.
-
-   - Created a built-in self-modifying JIT workload (`perf test -w
-     jitdump`) and switched the script to use built-in workloads.
-
-   - To guarantee robust multi-architecture compatibility without
-     external C compiler dependencies, the JIT workload immediate
-     instruction arrays dynamically encode `CHK_BYTE` into opcodes
-     across x86, ARM32, ARM64, RISC-V, PowerPC, MIPS, LoongArch, and
-     s390x, with clean `#else` fallbacks for unsupported
-     architectures.
-
-Changes from v2 to v3:
-  - Unified generated C code `/* clang-format off */` and `/* clang-format on */`
-    pragmas within `jevents.py` and `empty-pmu-events.c`.
-  - Patched format string vulnerability warnings in `scnprintf` within `tests-scripts.c`.
-  - Prevented signal re-entrancy memory leaks and deadlocks during aborted test runs by
-    tracking parallel poll arrays within static global variables.
-  - Corrected tail-context log picking order and bounds within `print_test_failure_snippet`.
-  - Upgraded `xml_escape` and `write_jitdump` pointer and size argument casts to satisfy
-    `unsigned char` environment constraints.
-  - Implemented deduplication support for metric tables in `jevents.py` output.
-
-Ian Rogers (14):
-  perf jevents.py: Make generated C code more kernel style
-  perf pmu-events: Add API to get metric table name and iterate tables
-  perf test: Drain pipe after child finishes to avoid losing output
-  perf test: Support dynamic test suites with setup callback and private
-    data
-  perf test pmu-events: A sub-test per metric table
-  perf test: Refactor parallel poll loop to drain all pipes
-    simultaneously
-  perf test: Show snippet failure output for verbose=1
-  perf test: Add summary reporting
-  perf test: Fix subtest status alignment for multi-digit indexes
-  perf test: Skip shebang and SPDX comments in shell test descriptions
-  perf test: Split monolithic 'util' test suite into sub-tests
-  perf test: Add -j/--junit option for JUnit XML test reports
-  perf test: Add shell test to validate JUnit XML reporting output
-  perf test: Remove /usr/bin/cc dependency from Intel PT shell test
-
- tools/lib/subcmd/run-command.c                |   47 +-
- tools/perf/pmu-events/empty-pmu-events.c      | 8823 +++++++++++------
- tools/perf/pmu-events/jevents.py              |  849 +-
- tools/perf/pmu-events/pmu-events.h            |    4 +
- tools/perf/tests/builtin-test.c               |  633 +-
- tools/perf/tests/pmu-events.c                 |  156 +-
- tools/perf/tests/shell/test_intel_pt.sh       |  169 +-
- .../tests/shell/test_test_junit_output.sh     |   63 +
- tools/perf/tests/tests-scripts.c              |   66 +-
- tools/perf/tests/tests.h                      |    3 +
- tools/perf/tests/util.c                       |   20 +-
- tools/perf/tests/workloads/Build              |    1 +
- tools/perf/tests/workloads/jitdump.c          |  188 +
- tools/perf/util/jitdump.h                     |    3 +-
- 14 files changed, 7323 insertions(+), 3702 deletions(-)
- create mode 100755 tools/perf/tests/shell/test_test_junit_output.sh
- create mode 100644 tools/perf/tests/workloads/jitdump.c
-
+diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+index ad5ade37adb0..b90a75892f0f 100644
+--- a/tools/perf/pmu-events/empty-pmu-events.c
++++ b/tools/perf/pmu-events/empty-pmu-events.c
+@@ -5403,6 +5403,7 @@ struct pmu_events_table {
+ 
+ /* Struct used to make the PMU metric table implementation opaque to callers. */
+ struct pmu_metrics_table {
++	const char *name;
+ 	const struct pmu_table_entry *pmus;
+ 	uint32_t num_pmus;
+ };
+@@ -5435,6 +5436,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ 		.num_pmus = ARRAY_SIZE(pmu_events__common),
+ 	},
+ 	.metric_table = {
++		.name = "common",
+ 		.pmus = pmu_metrics__common,
+ 		.num_pmus = ARRAY_SIZE(pmu_metrics__common),
+ 	},
+@@ -5447,6 +5449,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ 		.num_pmus = ARRAY_SIZE(pmu_events__test_soc_cpu),
+ 	},
+ 	.metric_table = {
++		.name = "test_soc_cpu",
+ 		.pmus = pmu_metrics__test_soc_cpu,
+ 		.num_pmus = ARRAY_SIZE(pmu_metrics__test_soc_cpu),
+ 	}
+@@ -5455,7 +5458,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ 	.arch = 0,
+ 	.cpuid = 0,
+ 	.event_table = { 0, 0 },
+-	.metric_table = { 0, 0 },
++	.metric_table = { 0 },
+ }
+ };
+ 
+@@ -5475,7 +5478,7 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
+ 	},
+ 	{
+ 		.event_table = { 0, 0 },
+-		.metric_table = { 0, 0 },
++		.metric_table = { 0 },
+ 	},
+ };
+ 
+@@ -5990,6 +5993,47 @@ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn, void *data)
+ }
+ /* clang-format on */
+ 
++const char *pmu_metrics_table__name(const struct pmu_metrics_table *table)
++{
++	return table ? table->name : NULL;
++}
++
++int pmu_metrics_table__for_each_table(
++	int (*fn)(const struct pmu_metrics_table *table, void *data),
++	void *data)
++{
++	size_t i;
++	int ret;
++
++	for (i = 0; pmu_events_map[i].cpuid; i++) {
++		size_t j;
++		bool found = false;
++
++		if (!pmu_events_map[i].metric_table.pmus)
++			continue;
++		for (j = 0; j < i; j++) {
++			if (pmu_events_map[j].metric_table.pmus ==
++			    pmu_events_map[i].metric_table.pmus) {
++				found = true;
++				break;
++			}
++		}
++		if (found)
++			continue;
++		ret = fn(&pmu_events_map[i].metric_table, data);
++		if (ret)
++			return ret;
++	}
++	for (i = 0; pmu_sys_event_tables[i].name; i++) {
++		if (!pmu_sys_event_tables[i].metric_table.pmus)
++			continue;
++		ret = fn(&pmu_sys_event_tables[i].metric_table, data);
++		if (ret)
++			return ret;
++	}
++	return 0;
++}
++
+ static const int metricgroups[][2] = {
+ 
+ };
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 6f80f937f9f9..751387ec1ae8 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -712,6 +712,7 @@ struct pmu_events_table {
+ 
+ /* Struct used to make the PMU metric table implementation opaque to callers. */
+ struct pmu_metrics_table {
++\tconst char *name;
+ \tconst struct pmu_table_entry *pmus;
+ \tuint32_t num_pmus;
+ };
+@@ -747,6 +748,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ \t\t.num_pmus = ARRAY_SIZE(pmu_events__test_soc_cpu),
+ \t},
+ \t.metric_table = {
++\t\t.name = "test_soc_cpu",
+ \t\t.pmus = pmu_metrics__test_soc_cpu,
+ \t\t.num_pmus = ARRAY_SIZE(pmu_metrics__test_soc_cpu),
+ \t}
+@@ -761,6 +763,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ \t\t.num_pmus = ARRAY_SIZE(pmu_events__common),
+ \t},
+ \t.metric_table = {
++\t\t.name = "common",
+ \t\t.pmus = pmu_metrics__common,
+ \t\t.num_pmus = ARRAY_SIZE(pmu_metrics__common),
+ \t},
+@@ -781,8 +784,10 @@ static const struct pmu_events_map pmu_events_map[] = {
+               event_size = '0'
+             metric_tblname = file_name_to_table_name('pmu_metrics_', [], row[2].replace('/', '_'))
+             if metric_tblname in _metric_tables:
++              metric_name = f'"{metric_tblname.replace("pmu_metrics__", "")}"'
+               metric_size = f'ARRAY_SIZE({metric_tblname})'
+             else:
++              metric_name = 'NULL'
+               metric_tblname = 'NULL'
+               metric_size = '0'
+             if event_size == '0' and metric_size == '0':
+@@ -796,6 +801,7 @@ static const struct pmu_events_map pmu_events_map[] = {
+ \t\t.num_pmus = {event_size}
+ \t}},
+ \t.metric_table = {{
++\t\t.name = {metric_name},
+ \t\t.pmus = {metric_tblname},
+ \t\t.num_pmus = {metric_size}
+ \t}}
+@@ -807,12 +813,57 @@ static const struct pmu_events_map pmu_events_map[] = {
+ \t.arch = 0,
+ \t.cpuid = 0,
+ \t.event_table = { 0, 0 },
+-\t.metric_table = { 0, 0 },
++\t.metric_table = { 0 },
+ }
+ };
+ """)
+ 
+ 
++def print_metric_table_functions() -> None:
++  _args.output_file.write("""
++const char *pmu_metrics_table__name(const struct pmu_metrics_table *table)
++{
++\treturn table ? table->name : NULL;
++}
++
++int pmu_metrics_table__for_each_table(
++\tint (*fn)(const struct pmu_metrics_table *table, void *data),
++\tvoid *data)
++{
++\tsize_t i;
++\tint ret;
++
++\tfor (i = 0; pmu_events_map[i].cpuid; i++) {
++\t\tsize_t j;
++\t\tbool found = false;
++
++\t\tif (!pmu_events_map[i].metric_table.pmus)
++\t\t\tcontinue;
++\t\tfor (j = 0; j < i; j++) {
++\t\t\tif (pmu_events_map[j].metric_table.pmus ==
++\t\t\t    pmu_events_map[i].metric_table.pmus) {
++\t\t\t\tfound = true;
++\t\t\t\tbreak;
++\t\t\t}
++\t\t}
++\t\tif (found)
++\t\t\tcontinue;
++\t\tret = fn(&pmu_events_map[i].metric_table, data);
++\t\tif (ret)
++\t\t\treturn ret;
++\t}
++\tfor (i = 0; pmu_sys_event_tables[i].name; i++) {
++\t\tif (!pmu_sys_event_tables[i].metric_table.pmus)
++\t\t\tcontinue;
++\t\tret = fn(&pmu_sys_event_tables[i].metric_table, data);
++\t\tif (ret)
++\t\t\treturn ret;
++\t}
++\treturn 0;
++}
++""")
++
++
+ def print_system_mapping_table() -> None:
+   """C struct mapping table array for tables from /sys directories."""
+   _args.output_file.write("""
+@@ -835,6 +886,7 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
+     if metric_tblname in _sys_metric_tables:
+       _args.output_file.write(f"""
+ \t\t.metric_table = {{
++\t\t\t.name = "{metric_tblname.replace('pmu_metrics__', '')}",
+ \t\t\t.pmus = {metric_tblname},
+ \t\t\t.num_pmus = ARRAY_SIZE({metric_tblname})
+ \t\t}},""")
+@@ -848,6 +900,7 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
+       continue
+     _args.output_file.write(f"""\t{{
+ \t\t.metric_table = {{
++\t\t\t.name = "{tblname.replace('pmu_metrics__', '')}",
+ \t\t\t.pmus = {tblname},
+ \t\t\t.num_pmus = ARRAY_SIZE({tblname})
+ \t\t}},
+@@ -856,7 +909,7 @@ static const struct pmu_sys_events pmu_sys_event_tables[] = {
+ """)
+   _args.output_file.write("""\t{
+ \t\t.event_table = { 0, 0 },
+-\t\t.metric_table = { 0, 0 },
++\t\t.metric_table = { 0 },
+ \t},
+ };
+ 
+@@ -1486,6 +1539,7 @@ struct pmu_table_entry {
+   print_mapping_table(archs)
+   print_system_mapping_table()
+   _args.output_file.write('/* clang-format on */\n')
++  print_metric_table_functions()
+   print_metricgroups()
+   _args.output_file.close()
+   if _args.output_string_file:
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index d3b24014c6ff..9cac617c9702 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -112,6 +112,10 @@ size_t pmu_events_table__num_events(const struct pmu_events_table *table,
+ 
+ int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
+ 				     void *data);
++const char *pmu_metrics_table__name(const struct pmu_metrics_table *table);
++int pmu_metrics_table__for_each_table(
++	int (*fn)(const struct pmu_metrics_table *table, void *data),
++	void *data);
+ /*
+  * Search for a table and entry matching with pmu__name_wildcard_match or any
+  * tables if pmu is NULL. Each matching metric has fn called on it. 0 implies to
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
