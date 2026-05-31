@@ -1,183 +1,195 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82222175A9C
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 06:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE290223DC6
+	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 06:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780210346; cv=none; b=QXib7OqEwgIqc4AlbfTbQAx0Sr8FKCP9wOwA4ohj30PuWUPWYyPtuZnPJaof2/mHLdsiF/kR2uju5KrJTTgB1jWv9XaoA13SIanmoUY3A1KXSUQtgFIKZNK7N/q/me8VdD06RhAg1823tuzarjsMOqPCXjt8fsr4HEAXjXlDzcw=
+	t=1780210502; cv=none; b=kAO0Sm7ry69PgSUDcZ/GyU/cDMJM43bWOANvU4/v8hYU86p2YVRMck5eABrT0aT3aclu1tFcQxvlkbsdAxcZ6oMOjvXTJAEdCZX0WAQF/WGK96YT3tZ8dkVxzSwD0pYS9ojoHHrcnHLrceS8lQtzsokS24c64QcVvAYdj7hSL68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780210346; c=relaxed/simple;
-	bh=C/RsvT8gUHEK3HBNHNDa+Dl79i3IDVkl7wwpKKbb5B4=;
+	s=arc-20240116; t=1780210502; c=relaxed/simple;
+	bh=wXa7rIG0cvVYnJMXJ07sQussFyr1xLlEUjw8UjYf1xg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=a228ve6hDOnmd3zlB5avo4MqOxfBZx6kmZLw9XSwjvY2adAbDC7Wyd+VWEWG2XjzBZzkVcQZt8OG6v4c2j1iLUC/rUpsb8pAJCiqRVBkTE7me5tnHiFbgD3DXNxS8JlrpeSwaj7HdqxUF2PoJrlVd53EYIkBfs7pOp9mc79b0oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9HNIwO4; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JMlKVErQhnVgh8clFtTTXbQ+S6jKZAAdpuaRcRsrPMaAbHk1NFE13EYZjcbGrLfAGaiXa+Co1rMi8yvphkOJab8hQAYOzKVF7iyKgG8WF+T9duEE8F6BLiFuPMNPFUEf+G5BIW8NfuJlWUoVUHf9xMoZZ5JbtTLP7oVtALRZOjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJYOWcsU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9HNIwO4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6F21F00893;
-	Sun, 31 May 2026 06:52:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJYOWcsU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7741F00893;
+	Sun, 31 May 2026 06:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780210345;
-	bh=521rSp6GU8v525IW/1LifePsthp84GdG16Ztg4yco5o=;
+	s=k20260515; t=1780210501;
+	bh=vivpZKk8uUYrYV+yNcJJ+sshNFk7uxGkUgcfq7cEmFI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=D9HNIwO4Z7irgPyrwVuEGvlo9FSSdJwSMep3O2AYZgBPXzocaWbXE9P0cWZP2vhGr
-	 xNuGjvBhFvcEl5HRnYOOqI2M2UkLG+1H7ca3aEr+M9d9OBTOiHPEEiGdA470cZvoCJ
-	 szY0n47gY4pBTkUU49WmDX9Mr2aZXjc8HCH1FR+QM/qgVdOIIe/xRj01pQ/1wbGOOl
-	 fIyPqGNOJeFhQlYoZiy7VtChgCrPATEtEhSKwQ9T6Xat1LJhFet5wb0Te4pAd2wbF4
-	 L/RnPFsmiS/PYbNpBObLgD0tBUMRsB5Y1o35+LnjmZi3zT4dWcjyVdyaMTIZe3w/qD
-	 Q7Z+OSQWD7fUQ==
+	b=YJYOWcsUlZmF8610GkN0VUGPjlkFDV3gmXfxZrWX4uxVsrVn7xqaOv6P3JLVP+XOs
+	 YO7CbTno00HK1v7GZ5Vm3YhKxk+vMaX+rrvwaVlLvW50Zyopt13wx0Ia/cSlTljjeH
+	 ttdoVRmey7upHW1Lcci2omm37xPKwLbEVX/fpnDnTIQ0GruOQaKPIG55kByGebw/e1
+	 LIadhP6iVBGYfwPKP7gbZWnaJvTtq0SA4RL44RXnLwFET0hMawyOQMLgYT1Nar6QKm
+	 Lyf2pKqQ+JCOqi9ooYEzM5ID8cFCQa9LWKwA1xd2gZKwMuSk8nMKjLypKVC1FjW7tC
+	 c37ZA57G8GTZg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 10/14] perf test: Skip shebang and SPDX comments in
- shell test descriptions
+Subject: Re: [PATCH v3 06/14] perf test: Refactor parallel poll loop to
+ drain all pipes simultaneously
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260531063736.871777-11-irogers@google.com>
-References: <20260531063736.871777-11-irogers@google.com>
+In-Reply-To: <20260531063736.871777-7-irogers@google.com>
+References: <20260531063736.871777-7-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 31 May 2026 06:52:24 +0000
-Message-Id: <20260531065224.EF6F21F00893@smtp.kernel.org>
+Date: Sun, 31 May 2026 06:55:00 +0000
+Message-Id: <20260531065501.3E7741F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
 
+New issues:
+- [High] Race Condition / Infinite Wait from PID Reuse
+- [Medium] Comment/Code Mismatch and Incorrect Fallback Logic
+
 Pre-existing issues:
-- [High] Uninitialized stack memory access due to `readlink()` not null-ter=
-minating its output string.
-- [High] Stack buffer overflow when constructing the script filename due to=
- an unchecked `readlink()` return value.
-- [High] `io__get_char()` implicitly sign-extends non-ASCII characters, cau=
-sing premature EOF on architectures with signed chars.
+- [High] Unintended Process Reaping via waitpid(-1)
+- [High] Use-After-Free in Signal Handler during Test Teardown
 --
 
-commit 37c9e7577c4c35ff9a02375d4ed22021ca8bd62d
+commit 85338a93349cbaff2c4d5fe37f997271e81388e1
 Author: Ian Rogers <irogers@google.com>
 
-perf test: Skip shebang and SPDX comments in shell test descriptions
+perf test: Refactor parallel poll loop to drain all pipes simultaneously
 
-When extracting shell test descriptions in tests-scripts.c, the parser
-skipped the first line assuming it was the shebang (#!/bin/sh) and then read
-the first comment line on line 2 as the test description.
+When running tests in parallel with verbose output (-v), child processes
+write to pipes. If a test produces significant output, it fills the pipe
+buffer and blocks. This commit introduces finish_tests_parallel() to
+poll and drain output pipes from all running children simultaneously.
 
-However, checkpatch.pl expects shell scripts to declare their SPDX license
-identifier on line 2 (# SPDX-License-Identifier: ...). This caused the test
-harness to extract the SPDX license string as the test description.
-
-Refactor shell_test__description to use io__getline, skipping both shebang
-and SPDX comment lines. This allows shell tests to include standard SPDX
-headers without breaking test suite description extraction.
-
-> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
-ripts.c
-> index f18c4cd337c8f..11ad1263ef85c 100644
-> --- a/tools/perf/tests/tests-scripts.c
-> +++ b/tools/perf/tests/tests-scripts.c
-> @@ -51,7 +51,7 @@ static int shell_tests__dir_fd(void)
->  		return -1;
->  	/* Follow another level of symlink if there */
->  	if (lstat(path2, &st) =3D=3D 0 && (st.st_mode & S_IFMT) =3D=3D S_IFLNK)=
- {
-> -		scnprintf(path, sizeof(path), path2);
-> +		scnprintf(path, sizeof(path), "%s", path2);
+> diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-comman=
+d.c
+> index b7510f83209a0..e1341080dbae7 100644
+> --- a/tools/lib/subcmd/run-command.c
+> +++ b/tools/lib/subcmd/run-command.c
+> @@ -146,6 +146,10 @@ int start_command(struct child_process *cmd)
+>  			close(cmd->out);
+>  		if (need_err)
+>  			close_pair(fderr);
+> +		cmd->pid =3D -1;
+> +		cmd->in =3D -1;
+> +		cmd->out =3D -1;
+> +		cmd->err =3D -1;
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does this code read
-uninitialized stack memory?
+This isn't a bug introduced by this patch, but does assigning -1 to the PID
+on error create an unintended process reaping hazard?
 
-Looking at the preceding readlink() call:
+If start_command() encounters an error, it explicitly sets cmd->pid to -1.
+The error propagates up to __cmd_test(), jumping to the err_out block where
+it unconditionally loops over the child_tests array to clean up.
 
-	if (readlink("/proc/self/exe", path2, sizeof path2) < 0)
-		return -1;
+Because finish_test() does not verify if child_test->process.pid > 0 before
+proceeding to check_if_command_finished() and finish_command(), this cleanup
+flow ultimately executes a waitpid() call:
 
-Since readlink() populates path2 but does not append a null terminator, pat=
-h2
-remains an uninitialized stack array. When lstat() and scnprintf() expect a
-null-terminated string, won't this cause reads past the valid resolved path
-until a random null byte is found?
+waitpid(cmd->pid, &status, block ? 0 : WNOHANG);
+
+Calling waitpid() with -1 forces the kernel to wait for any child process,
+which can inadvertently reap an unrelated concurrent test process and disca=
+rd
+its exit status.
+
+>  		return err =3D=3D ENOENT ?
+>  			-ERR_RUN_COMMAND_EXEC :
+>  			-ERR_RUN_COMMAND_FORK;
 
 [ ... ]
-> @@ -78,43 +78,49 @@ static int shell_tests__dir_fd(void)
->  static char *shell_test__description(int dir_fd, const char *name)
->  {
->  	struct io io;
-> -	char buf[128], desc[256];
-> -	int ch, pos =3D 0;
-> +	char buf[128], *line =3D NULL;
-> +	size_t line_len =3D 0;
-> +	ssize_t len;
-> +	char *desc =3D NULL;
+
+> @@ -241,8 +247,45 @@ int check_if_command_finished(struct child_process *=
+cmd)
+>  	sprintf(filename, "/proc/%u/status", cmd->pid);
+>  	status_file =3D fopen(filename, "r");
+>  	if (status_file =3D=3D NULL) {
+> -		/* Open failed assume finish_command was called. */
+> -		return true;
+> +		/*
+> +		 * fopen() can fail with ENOENT if the process has been reaped.
+> +		 * It can also fail with EMFILE/ENFILE if RLIMIT_NOFILE is reached,
+> +		 * or with EINTR/ENOMEM. Use kill(pid, 0) as a robust fallback
+> +		 * to distinguish between active processes and dead ones without
+> +		 * consuming file descriptors.
+> +		 */
+
+[Severity: Medium]
+Does the implementation contradict the documented intent here?
+
+The comment explicitly states that the logic uses kill(pid, 0) as a robust
+fallback. However, the subsequent code calls waitpid() instead. Using waitp=
+id
+actively reaps the process, whereas kill(pid, 0) would safely let the proce=
+ss
+remain a zombie until explicitly reaped by finish_command().
+
+> +		if (errno =3D=3D ENOENT)
+> +			return 1;
+> +		waiting =3D waitpid(cmd->pid, &status, WNOHANG);
+
+[Severity: High]
+Could this waitpid() fallback introduce an infinite loop due to PID reuse?
+
+Since check_if_command_finished() is polled repeatedly in
+finish_tests_parallel(), and it does not verify if cmd->finished is already
+true before querying the procfs status file, there is a risk that a previous
+waitpid() call already reaped the child.
+
+Once reaped, the OS can reuse the PID. If an unrelated system daemon is
+assigned this PID before the next loop iteration, fopen() on the procfs
+status file will succeed and report the active state of that unrelated
+process. The test harness would then loop indefinitely waiting for the
+unrelated daemon to exit.
+
+> +		if (waiting =3D=3D cmd->pid) {
+> +			int result;
+
+[ ... ]
+
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 2ccb52a776ccb..9f71f11928c60 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+
+[ ... ]
+
+> @@ -503,12 +509,205 @@ static void finish_test(struct child_test **child_=
+tests, int running_test, int c
+>  		fprintf(stderr, "%s", err_output.buf);
 > =20
->  	io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf));
->  	if (io.fd < 0)
->  		return NULL;
-> =20
-> -	/* Skip first line - should be #!/bin/bash Shebang */
-> -	if (io__get_char(&io) !=3D '#')
-> -		goto err_out;
-[ ... ]
-> +	while ((len =3D io__getline(&io, &line, &line_len)) > 0) {
+>  	strbuf_release(&err_output);
+> +	strbuf_release(&child_test->err_output);
+>  	print_test_result(t, curr_suite, curr_test_case, ret, width, /*running=
+=3D*/0);
+>  	if (err > 0)
+>  		close(err);
+>  	zfree(&child_tests[running_test]);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does io__get_char() implicit=
-ly
-sign-extend non-ASCII characters?
+This is a pre-existing issue, but is there a use-after-free risk during
+signal teardown when using zfree() here?
 
-io__getline() uses io__get_char() under the hood:
+The zfree() macro generally expands to a free() operation followed by
+setting the pointer to NULL. If a signal like SIGINT arrives exactly
+between the memory being freed and the pointer being nulled, the signal
+handler preempts the thread.
 
-tools/lib/api/io.h:io__get_char() {
-	...
-	if (io->data =3D=3D io->end) {
-		int ret =3D io__fill_buffer(io);
+The cmd_test_sig_handler handler uses siglongjmp() to return to err_out in
+__cmd_test(), which iterates over child_tests to terminate active children.
+The loop will see a non-NULL pointer, dereference the freed memory to read
+child_test->process.pid, and issue a kill() signal to whatever garbage
+value was read. This could potentially terminate critical system processes.
 
-		if (ret)
-			return ret;
-	}
-	return *io->data++;
-}
-
-Since io__get_char() returns *io->data++ directly as an int, on architectur=
-es
-where char is signed (like x86), wouldn't characters >=3D 0x80 (such as UTF=
--8
-multibyte sequences) be sign-extended into negative integers?
-
-Callers (such as io__getdelim()) use if (ch < 0) to check for EOF or errors.
-Could any non-ASCII character in the parsed text incorrectly trigger an EOF
-condition and truncate the read operation?
-
-[ ... ]
-
-While reviewing this file, I noticed another pre-existing issue in
-append_script() in tools/perf/tests/tests-scripts.c:
-
-tools/perf/tests/tests-scripts.c:append_script() {
-	...
-	len =3D readlink(link, filename, sizeof(filename));
-	if (len < 0) {
-		pr_err("Failed to readlink %s", link);
-		return;
-	}
-	filename[len++] =3D '/';
-	strcpy(&filename[len], name);
-	...
-}
-
-[Severity: High]
-This is a pre-existing issue, but is there a risk of a stack buffer overflow
-when constructing the script filename here?
-
-readlink() returns the number of bytes written to filename. If the resolved
-path length is exactly PATH_MAX, len will equal sizeof(filename). Wouldn't
-filename[len++] =3D '/' then write a byte past the end of the filename arra=
-y on
-the stack, with strcpy() continuing to write out-of-bounds?
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260531063736.8717=
-77-1-irogers@google.com?part=3D10
+77-1-irogers@google.com?part=3D6
