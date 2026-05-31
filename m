@@ -1,54 +1,54 @@
 Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580013815DE
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 08:23:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D3D381AEB
+	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 08:23:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780215783; cv=none; b=UM/Y+ch+Bl3nPntUZwflAPFFu/eupYvE59t0CA2oALoarvK8MeGGPCpQAEJN6km2NoOx1gIXK3A+um2hZ5xLSDcR579TfdQ3/+EkpiU3CxUenA2/n2D54cQJwzl+zBP+86VED9qGqJ4IqdJVXOJKhAq4eBK9vVd5uhK7OOR6v0M=
+	t=1780215787; cv=none; b=N5C2rOIwGxClgpC7Csc7Lwqn13qsoH58JIgyTNvwBg0nyHSNsWm/lTxoyaiWlutOC6omSE/uXvY7bMMhkLn3hfGkMH55Lgrc/HotzcfDGUayXdnL0uNuExxBjc438NorMyNzKG97CqmTX440Tm3a5dTk2MxqoU/JGA06vhntIxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780215783; c=relaxed/simple;
-	bh=2itQhvl3Mh8fh4HhTyTuffKngfm1WnmLT1c98hoSWfo=;
+	s=arc-20240116; t=1780215787; c=relaxed/simple;
+	bh=o/QzDt9R+QNB3udbAk50xHc07p0mZUY7YmtlZDmcqoY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hWRG4bHu2M9XOLPVUXdjzxEWZYp8tQ1wVs5SLrsrjAOxaH8I3rnxM5RZRuVR+zoUAleTHvxH+OVZO6dY3rJQfQgktwcQB0PyEjY40DsrlMhs7JOZtPZfJ7LTaha1W0X54d+spX0g4gEcU9I0tS65k5lWHorB+2Dd0kpHP9YesKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jgjc4oe2; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=rAVbxiZToMGHJk/g7320oS5KefmlQR0XQbqekMFnc7Ss6QUV4eWVEbZFFMNQmNyLoSqo11uLTgTpm/CR/Yw6KgEuB+HXJUIebISikfi1kFytT0/uNhEJfLSz0wi4Pr4ZTdZogZIoRdhR6acsEtlSYa7AVrmZS3ejGZC4Ph81S5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HTeB3m1A; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jgjc4oe2"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-137dd5171feso492671c88.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 01:23:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HTeB3m1A"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-13537722193so9711841c88.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 01:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780215781; x=1780820581; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780215785; x=1780820585; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K8DNYmp3uFzR/H/LijUzHmTZB09FJqRr+eRhzsaPwcs=;
-        b=jgjc4oe2XRvCn+J72bU26mIiCNbgj/B6wjexoIrGFZSKlE7odudadNUqKdL8Pw9nUO
-         BobWwkSqEEPAp3VLY3Y343TPzupJZ7sieIL7cBkXv8bvDgj3KRDDGa2AgnVHB+P7a1u+
-         NnBkBn0ooZaxVKmKSF6Exsqmd5JX4kGlyO3AWor4rss3xG1LnfpbQ9znSc0gBn/Phzl9
-         1JEtSNS9iQIBZucs/IarN6CTE1es6GNzyzy4ke5VvlR9G7K7I45DOp9L9zkSJYs3c5R0
-         zCxxAttkBncOKtbfi18sN/+uBDSZ5uXzTdt6mfzPUM8iNEVRnMu/cAlWAsQwAtZyRvF8
-         aU+w==
+        bh=LtvPfep1fr0M+gY7fqvZAxaowS8R7DQW+O7p9BY2dgI=;
+        b=HTeB3m1AU7oCq7MZXTDOwXRQ5wKOxh28g5qgNCNobXKZDMoBveo4ktaZLHgaHuMbpS
+         51AdwQQwU0sFGOtw9ljC6U+TVznmhEP060g89d6d1Lr9mI9TgjxtBoz3vjdS0b3nQuse
+         H7i3R9hb1ANRPDopYwsbw59V4CaV1F/O6FYR0qHSXdre02IvCuXkoE08fdNyrlcztd3A
+         AsZX17cptI6wsFNJDctL+pXVMpdRmsj6Xz+LMW4T5mrlSBOo1/nCgg10KOkUEcBAALyF
+         Jf8OQbUHwy4QQ061m2iUVKh9jo1kalyDkjONFy63mcf4JJAbEEM+n49kwtuTr13l5po4
+         209Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780215781; x=1780820581;
+        d=1e100.net; s=20251104; t=1780215785; x=1780820585;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K8DNYmp3uFzR/H/LijUzHmTZB09FJqRr+eRhzsaPwcs=;
-        b=oisA0V8vvz6rEX4RENH65IpMt2L7gdNGJg4NaPZwJlEQIQyKyqFqwR7jW9BDP/tvwz
-         rwg+HcULBhraJXr2OeG+QCi+2GHDC1xikIgFxnLWSfeDMXIieTxuHHsYuQcIXiePQEvZ
-         WwZ04kVAFc8Zrk6fb9J2Mrvel4U3U6g+WmxwIZvw5uDTgozo8UHj9RKFGHHywIdlB41h
-         SohS3+d+f9RffZ1EGCBTZDUNe2/b48JNxfouXnPGbperkah0IPnOLCL39GQNw+ukeoiP
-         2Wun+tnQHA+hnvdHxIRpEsCSSg4nPJhksNEd/eXpob5mHWGG60mIXWmGxB675K56GA7Y
-         +ifw==
-X-Forwarded-Encrypted: i=1; AFNElJ93Ak5UZVhbRsAAPkP4GjLdsBuN4UbpFWXxNxNpek+eQBEEd/y1lXLCRtq9LFVETn9TdN+/f+cTtzi9doubB03k@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOcO+P9xMb4Bzu60HQwfB58kK8u6W7tMdnaNvKH6JIyrTybmLA
-	Qvyo1Tgvc6EZcoM2XPetXSUco1u1mE32uGcam3ldAj8iMIjqZ9OigfExbv8c2DV6TwL/5ZXOMnw
-	KgBHJ8QiaPQ==
-X-Received: from dlea10-n2.prod.google.com ([2002:a05:701b:420a:20b0:12c:8ccc:748c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b89:b0:12b:f8d6:d4bc
- with SMTP id a92af1059eb24-137d429c8cemr2939787c88.34.1780215781395; Sun, 31
- May 2026 01:23:01 -0700 (PDT)
-Date: Sun, 31 May 2026 01:22:27 -0700
+        bh=LtvPfep1fr0M+gY7fqvZAxaowS8R7DQW+O7p9BY2dgI=;
+        b=jHPmeJTCAd7Td+Qr+sWbWQMwTRytIfNjXZr7gJ5VkzIYP7OyYNm3Kb4sWYAiMRcRXV
+         VFjjFtVDG8CgldUGsMYUIEq69oC0zHZ5BpyFSmHSHdrTFjUd5gvzOIjahOzz6QkgkAJI
+         2ghI6AxmuEDA3sGQBuiYo/dVIzeApbmWtAYvy8jK68vE8L9ZUx7he8epYsg3SL/E2/5L
+         BRIrVL/0y8dId/Wn7/2j7zBgIuMNixaERo7LDDKYlMW/YpCDT3VmU52YOP8NeQQDS5Y3
+         /600JARy4eNjRVid1yNv7irylpDDdKnvsdc9OvJVpUpE3wh/Yn7/eJBTq2FVkG4Niaoe
+         sOeA==
+X-Forwarded-Encrypted: i=1; AFNElJ/MffpwO0Dfv4BzxNKi37boaTCDV5CLu0j4uKY/ynOk5ZmMZkZuzUHJ5zlC5B/MUqUjYLxUhJcylpK7ned4J4So@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+ZLdfpojc2USmTTb9mprrwBZpSnXx4WCgEVyGaoPGn5PtnJ6o
+	wNVBMrfzjzkkLywdkvZMGw1y2OJiWzjhRHvikOWsIH9I4tNpjKflDZiieVJ7HRH3XU7saXjDcOk
+	zes0uEAm9Yw==
+X-Received: from dldnz9.prod.google.com ([2002:a05:701a:ca09:b0:136:420:2090])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:238c:b0:12b:ebb9:1c18
+ with SMTP id a92af1059eb24-137d4243a4cmr2894633c88.31.1780215784651; Sun, 31
+ May 2026 01:23:04 -0700 (PDT)
+Date: Sun, 31 May 2026 01:22:29 -0700
 In-Reply-To: <20260531082235.940833-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260531063736.871777-1-irogers@google.com> <20260531082235.940833-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260531082235.940833-8-irogers@google.com>
-Subject: [PATCH v4 07/15] perf test: Refactor parallel poll loop to drain all
- pipes simultaneously
+Message-ID: <20260531082235.940833-10-irogers@google.com>
+Subject: [PATCH v4 09/15] perf test: Add summary reporting
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	namhyung@kernel.org
@@ -69,281 +68,152 @@ Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-When running tests in parallel with verbose output (-v), child processes
-write to pipes. If a test produces significant output (e.G. Granite Rapids
-metric parsing printing hundreds of lines), it fills the 64KB pipe buffer
-and blocks.
-Previously, the parent harness (finish_test) only polled the pipe of the
-current test waiting to be printed. Other children blocked indefinitely
-until the parent reached them, severely sequentializing execution.
+Currently, when running test suites (perf test), users must scroll through
+hundreds of lines of console output to manually tally the number of passed,
+skipped, or failed test cases.
 
-Address this by implementing finish_tests_parallel() to poll and drain
-output pipes from all running children simultaneously into per-child buffers.
-Reaping occurs out of order as children finish, while final result printing
-remains strictly in order.
+Introduce an automated, global execution summary printed at the absolute
+tail of the test run:
+1. Track counts mid-flight inside the print_test_result() accumulator,
+   clearly separating pass counts into standalone main tests vs. individual
+   subtests (where num_test_cases > 1).
+2. Accumulate the precise descriptions of all failed test cases directly
+   into a global string buffer, formatted with their suite indices (e.g.,
+     3.1: Parse event definition strings) for effortless cross-referencing.
+3. Define a summary printer function print_tests_summary() that emits a
+   colored outline of the final pass, skip, and fail totals, followed by
+   the explicit list of failed tests.
+4. Invoke the summary printer right before freeing the test array at the
+   absolute tail of __cmd_test(), guaranteeing that the summary is
+   successfully printed even if an internal emergency signal cleanup occurs
+   or if the user interrupts the run early.
 
-This drops parallel verbose execution time for the PMU events suite from
-~35 seconds down to ~5.9 seconds.
+Example output:
+```
+$ sudo perf test -v
+  1: vmlinux symtab matches kallsyms                                 : Skip
+  2: Detect openat syscall event                                     : Ok
+  3: Detect openat syscall event on all cpus                         : Ok
+...
+163: perf trace summary                                              : Ok
+
+=== Test Summary ===
+Passed main tests : 123
+Passed subtests   : 145
+Skipped tests     : 22
+Failed tests      : 6
+List of failed tests:
+   92: perf kvm tests
+   95: kernel lock contention analysis test
+  120: perf metrics value validation
+  124: Check branch stack sampling
+  143: perftool-testsuite_probe
+  158: test Intel TPEBS counting mode
+```
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 208 +++++++++++++++++++++++++++++++-
- 1 file changed, 206 insertions(+), 2 deletions(-)
+ tools/perf/tests/builtin-test.c | 46 ++++++++++++++++++++++++++++++---
+ 1 file changed, 43 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 2ccb52a776cc..9f71f11928c6 100644
+index e00b0bffa67c..336d24105c9f 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -302,6 +302,9 @@ struct child_test {
- 	struct test_suite *test;
- 	int suite_num;
- 	int test_case_num;
-+	struct strbuf err_output;
-+	int result;
-+	bool done;
- };
+@@ -363,6 +363,11 @@ static int run_test_child(struct child_process *process)
  
- static jmp_buf run_test_jmp_buf;
-@@ -356,6 +359,9 @@ static int run_test_child(struct child_process *process)
+ static struct pollfd *global_pfds;
+ static size_t *global_pfd_indices;
++static unsigned int summary_tests_passed;
++static unsigned int summary_subtests_passed;
++static unsigned int summary_tests_skipped;
++static unsigned int summary_tests_failed;
++static struct strbuf summary_failed_tests_buf = STRBUF_INIT;
  
- #define TEST_RUNNING -3
- 
-+static struct pollfd *global_pfds;
-+static size_t *global_pfd_indices;
-+
  static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
  			     int result, int width, int running)
- {
-@@ -503,12 +509,205 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
- 		fprintf(stderr, "%s", err_output.buf);
+@@ -380,11 +385,16 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
+ 		color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d active)\n", running);
+ 		break;
+ 	case TEST_OK:
++		if (test_suite__num_test_cases(t) > 1)
++			summary_subtests_passed++;
++		else
++			summary_tests_passed++;
+ 		pr_info(" Ok\n");
+ 		break;
+ 	case TEST_SKIP: {
+ 		const char *reason = skip_reason(t, curr_test_case);
  
- 	strbuf_release(&err_output);
-+	strbuf_release(&child_test->err_output);
- 	print_test_result(t, curr_suite, curr_test_case, ret, width, /*running=*/0);
- 	if (err > 0)
- 		close(err);
- 	zfree(&child_tests[running_test]);
++		summary_tests_skipped++;
+ 		if (reason)
+ 			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (%s)\n", reason);
+ 		else
+@@ -393,6 +403,15 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
+ 		break;
+ 	case TEST_FAIL:
+ 	default:
++		summary_tests_failed++;
++		if (test_suite__num_test_cases(t) > 1)
++			strbuf_addf(&summary_failed_tests_buf, "  %3d.%1d: %s\n",
++				    curr_suite + 1, curr_test_case + 1,
++				    test_description(t, curr_test_case));
++		else
++			strbuf_addf(&summary_failed_tests_buf, "  %3d: %s\n",
++				    curr_suite + 1,
++				    test_description(t, curr_test_case));
+ 		color_fprintf(stderr, PERF_COLOR_RED, " FAILED!\n");
+ 		break;
+ 	}
+@@ -963,6 +982,23 @@ static void cmd_test_sig_handler(int sig)
+ 	siglongjmp(cmd_test_jmp_buf, sig);
  }
  
-+static void drain_child_process_err(struct child_test *child)
++static void print_tests_summary(void)
 +{
-+	char buf[512];
-+	ssize_t len;
-+
-+	while ((len = read(child->process.err, buf, sizeof(buf) - 1)) > 0) {
-+		buf[len] = '\0';
-+		strbuf_addstr(&child->err_output, buf);
++	pr_info("\n=== Test Summary ===\n");
++	pr_info("Passed main tests : %u\n", summary_tests_passed);
++	pr_info("Passed subtests   : %u\n", summary_subtests_passed);
++	pr_info("Skipped tests     : %u\n", summary_tests_skipped);
++	if (summary_tests_failed > 0) {
++		color_fprintf(stderr, PERF_COLOR_RED, "Failed tests      : %u\n",
++			      summary_tests_failed);
++		pr_info("List of failed tests:\n");
++		pr_info("%s", summary_failed_tests_buf.buf);
++	} else {
++		color_fprintf(stderr, PERF_COLOR_GREEN, "Failed tests      : 0\n");
 +	}
++	strbuf_release(&summary_failed_tests_buf);
 +}
 +
-+static int finish_tests_parallel(struct child_test **child_tests, size_t num_tests, int width)
-+{
-+	size_t next_to_print = 0;
-+	struct pollfd *pfds;
-+	size_t *pfd_indices;
-+	size_t num_pfds = 0;
-+	int last_running = -1;
-+	size_t i;
-+	int last_suite_printed = -1;
-+
-+	global_pfds = calloc(num_tests, sizeof(*pfds));
-+	global_pfd_indices = calloc(num_tests, sizeof(*pfd_indices));
-+	pfds = global_pfds;
-+	pfd_indices = global_pfd_indices;
-+	if (!pfds || !pfd_indices) {
-+		free(pfds);
-+		free(pfd_indices);
-+		global_pfds = NULL;
-+		global_pfd_indices = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < num_tests; i++) {
-+		struct child_test *child = child_tests[i];
-+
-+		if (!child)
-+			continue;
-+		strbuf_init(&child->err_output, 0);
-+		if (child->process.err > 0)
-+			fcntl(child->process.err, F_SETFL, O_NONBLOCK);
-+	}
-+
-+	while (next_to_print < num_tests) {
-+		size_t running_count = 0;
-+		size_t p;
-+
-+		while (next_to_print < num_tests &&
-+		       (!child_tests[next_to_print] || child_tests[next_to_print]->done))
-+			next_to_print++;
-+
-+		if (next_to_print >= num_tests)
-+			break;
-+
-+		num_pfds = 0;
-+
-+		for (i = next_to_print; i < num_tests; i++) {
-+			struct child_test *child = child_tests[i];
-+
-+			if (!child || child->done)
-+				continue;
-+
-+			if (!check_if_command_finished(&child->process))
-+				running_count++;
-+
-+			if (child->process.err > 0) {
-+				pfds[num_pfds].fd = child->process.err;
-+				pfds[num_pfds].events = POLLIN | POLLERR | POLLHUP | POLLNVAL;
-+				pfd_indices[num_pfds] = i;
-+				num_pfds++;
-+			}
-+		}
-+
-+		if (perf_use_color_default && running_count != (size_t)last_running) {
-+			struct child_test *next_child = child_tests[next_to_print];
-+
-+			if (last_running != -1)
-+				fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
-+
-+			if (next_child) {
-+				if (test_suite__num_test_cases(next_child->test) > 1 &&
-+				    last_suite_printed != next_child->suite_num) {
-+					pr_info("%3d: %-*s:\n", next_child->suite_num + 1, width,
-+						test_description(next_child->test, -1));
-+					last_suite_printed = next_child->suite_num;
-+				}
-+				print_test_result(next_child->test, next_child->suite_num,
-+						  next_child->test_case_num, TEST_RUNNING, width,
-+						  running_count);
-+			}
-+			last_running = running_count;
-+		}
-+
-+		if (num_pfds == 0) {
-+			if (running_count > 0)
-+				usleep(10 * 1000);
-+		} else {
-+			int pret = poll(pfds, num_pfds, 100);
-+
-+			if (pret > 0) {
-+				for (p = 0; p < num_pfds; p++) {
-+					if (pfds[p].revents) {
-+						size_t idx = pfd_indices[p];
-+						struct child_test *child = child_tests[idx];
-+
-+						drain_child_process_err(child);
-+						/*
-+						 * If the child closed its end of the pipe (EOF) or encountered
-+						 * an error, close the file descriptor immediately and set it
-+						 * to -1. This removes it from the pfds array for subsequent
-+						 * iterations, preventing a tight CPU busy-loop while waiting
-+						 * for the process itself to exit.
-+						 */
-+						if (pfds[p].revents & (POLLHUP | POLLERR | POLLNVAL)) {
-+							close(child->process.err);
-+							child->process.err = -1;
-+						}
-+					}
-+				}
-+			}
-+		}
-+
-+		for (i = next_to_print; i < num_tests; i++) {
-+			struct child_test *child = child_tests[i];
-+
-+			if (!child || child->done)
-+				continue;
-+
-+			if (check_if_command_finished(&child->process)) {
-+				if (child->process.err > 0) {
-+					drain_child_process_err(child);
-+					close(child->process.err);
-+					child->process.err = -1;
-+				}
-+				child->result = finish_command(&child->process);
-+				child->done = true;
-+			}
-+		}
-+
-+		while (next_to_print < num_tests) {
-+			struct child_test *child = child_tests[next_to_print];
-+
-+			if (!child) {
-+				next_to_print++;
-+				continue;
-+			}
-+			if (!child->done)
-+				break;
-+
-+			if (perf_use_color_default && last_running != -1) {
-+				fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
-+				last_running = -1;
-+			}
-+
-+			if (test_suite__num_test_cases(child->test) > 1 &&
-+			    last_suite_printed != child->suite_num) {
-+				pr_info("%3d: %-*s:\n", child->suite_num + 1, width,
-+					test_description(child->test, -1));
-+				last_suite_printed = child->suite_num;
-+			}
-+
-+			if (verbose > 1) {
-+				if (test_suite__num_test_cases(child->test) > 1) {
-+					pr_info("%3d.%1d: %s:\n", child->suite_num + 1,
-+						child->test_case_num + 1,
-+						test_description(child->test,
-+								 child->test_case_num));
-+				} else {
-+					pr_info("%3d: %s:\n", child->suite_num + 1,
-+						test_description(child->test, -1));
-+				}
-+			}
-+
-+			if (verbose > 1 || (verbose == 1 && child->result == TEST_FAIL))
-+				fprintf(stderr, "%s", child->err_output.buf);
-+
-+			print_test_result(child->test, child->suite_num, child->test_case_num,
-+					  child->result, width, 0);
-+			strbuf_release(&child->err_output);
-+			child_tests[next_to_print] = NULL;
-+			zfree(&child);
-+			next_to_print++;
-+		}
-+	}
-+
-+	free(global_pfds);
-+	free(global_pfd_indices);
-+	global_pfds = NULL;
-+	global_pfd_indices = NULL;
-+	return 0;
-+}
-+
- static int start_test(struct test_suite *test, int curr_suite, int curr_test_case,
- 		struct child_test **child, int width, int pass)
+ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 		      struct intlist *skiplist)
  {
-@@ -671,8 +870,9 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
- 		}
- 		if (!sequential) {
- 			/* Parallel mode starts tests but doesn't finish them. Do that now. */
--			for (size_t x = 0; x < num_tests; x++)
--				finish_test(child_tests, x, num_tests, width);
-+			err = finish_tests_parallel(child_tests, num_tests, width);
-+			if (err)
-+				goto err_out;
- 		}
- 	}
- err_out:
-@@ -683,6 +883,10 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+@@ -1040,9 +1076,12 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 			}
+ 
+ 			if (intlist__find(skiplist, curr_suite + 1)) {
+-				pr_info("%3d: %-*s:", curr_suite + 1, width,
+-					test_description(*t, -1));
+-				color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
++				if (pass == 1) {
++					pr_info("%3d: %-*s:", curr_suite + 1, width,
++						test_description(*t, -1));
++					color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
++					summary_tests_skipped++;
++				}
+ 				continue;
+ 			}
+ 
+@@ -1075,6 +1114,7 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
  		for (size_t x = 0; x < num_tests; x++)
  			finish_test(child_tests, x, num_tests, width);
  	}
-+	free(global_pfds);
-+	free(global_pfd_indices);
-+	global_pfds = NULL;
-+	global_pfd_indices = NULL;
- 	free(child_tests);
- 	return err;
- }
++	print_tests_summary();
+ 	free(global_pfds);
+ 	free(global_pfd_indices);
+ 	global_pfds = NULL;
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
