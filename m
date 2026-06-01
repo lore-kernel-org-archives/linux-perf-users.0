@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F294E357CE0
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 06:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA5F35AC3E
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 06:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780294510; cv=none; b=SOJMhqJdnFb9jwP5FVwfrg5v0QEXkWZPj6UDA97F8xiP5BXZMHSPyKPoWYVQs6cz7xv80+v+gX5hyQPqsBqdvQvqW0e5U7JxEwJi8pkxreIy/4qWoWmuLr9OQ7GU+CfC/DUfutOdZveAQn11rSNRIrBmAMGVjLC2m6+O4P6xff4=
+	t=1780294514; cv=none; b=pNW49mA/tE8o/8dHSWOfzzeVmBnQUks7dXUZ3cg1zYfcU401zd9HlPa4RDGot/nJyaFAUNRRXM4oI6cQ6qyiIIZZqA9ze2UJ05eGnxl9bGlM4EkpD+tCSC8zdRyvIW4VGR1Bv6fC+5KnZ+m8RCitb1iSYXE9XZAMzbMasw7nVAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780294510; c=relaxed/simple;
-	bh=8waMYaO+HJEdf4Jsh7fOhLGsToyK3/iv8rrPaQu7dUY=;
+	s=arc-20240116; t=1780294514; c=relaxed/simple;
+	bh=GHY8UOEZQgFkQZkPtks2Wzv0O5wAfEaNJkDa2zil9OM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lwXF+BVmj5DJXRODw1ltT0VhOiuS6b15+zqIC94oUtyyjbj8ovVSP0ro3RKOex9LPZoWI2awPG4t0aC582XK4KzHhIWcFGzuN2jGon8S5tbqdZ7P4JPfeeEwBUYr4x9GjUrbEdJRqhKQsYE9e3tBgqWAmIKU034N+l3ZhvRoKtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cFZtXcUq; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=eLQfG6mIoy2UyrqttjTTQCupJUz7jskKNGKfdgnPTLBtmZiiNjZ0KE+F0U0C5x6VvP/7+qRJAVYNhm+6rJySZNuMfUDGN7avTiKg0fl/dAUrOPIxhwNzId0OPXEmA4wctWAFBVcBU7CbaruUNa9LzDiDfSxK3b6c2t5f7I2mo94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iPdslOVr; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cFZtXcUq"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304e7fc90b1so2938611eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 23:15:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPdslOVr"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1361d52b3a0so16808641c88.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 23:15:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780294508; x=1780899308; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780294511; x=1780899311; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QLEPpLWQzQYXyEDs9j46jC0xi/4l49hyU3bhvVE8/NU=;
-        b=cFZtXcUqG5GfNTzQegSEKi9T/pVNlpWY26WIe4JL4X8uixqI33hxJ0GLHOk38PDDto
-         f3eEhjaj7y6DsbPwcMbsqCe3nyyO/iTO4NvEyabjkVtoOvADbzyrDmxp5A01y/Xsli8o
-         xbuBLetn+kA/gH71eaCD7JrtgyroVgGJ6wA1Y6AnfPdv2cx6nh9eiC2qwiheyqKvGxz1
-         gq6h1yTBqGJmQ67OC5rm6UzpgB4ZagDmzARAX2Re4RFZDwMb5aPKia8FbIoQDffdOd25
-         KHu7GsWN6OzVxbZGndWE7SMoNGfawBx6oJ6JMnZjhME+jl75So72Q8uDss86skVIVlBQ
-         wk3g==
+        bh=LgI7Gk169yArBVuMXS9CrXCl+U2LTyt0u+P/s791rwk=;
+        b=iPdslOVriEMFCnOdMJ/h2H0jyEZ1Kxk8wRhPwwAX/tkwenl1NnxB12AbgpvXwHVvpk
+         dn4Dje0eplImPFA62un5PT6VmVOZfDG2CCClbH/aI6kEdlUYfXPA3l610EeRefp23+0g
+         rwDNmYsiyxexzNgDJqHAZkdbcyADhePX50M4c8PUB66iu//YJ/lXsfQYtKMxKKngp3Hz
+         uVph2fa4KgTuU59hxT13A/RwbDAzfcp+QcjX05al343Zw+2Z/pRxacpd0S3DGr2LHGAr
+         Jvqm0iXankBNKmn5DQjEkHx3DBXLOTdXJVfZpK03U1PRv+dgkVPzUbulVAdsUTtXm7r2
+         5jLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780294508; x=1780899308;
+        d=1e100.net; s=20251104; t=1780294511; x=1780899311;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QLEPpLWQzQYXyEDs9j46jC0xi/4l49hyU3bhvVE8/NU=;
-        b=Xao/AMPQql7lLZ8ltnlMrAqaipLBKnU6pGTLof+CnwTMslZkRQx9DUn6On7obQgoQi
-         TTdoVxm+ILc22stAm0J7mX/vsCxAKmLVnN9E2DEBcjOD23nOVasK2hWMPbChnIFIdOzj
-         a/iouQTUWWdfjwsJOyK9l64brlxveyW85kn4yRYAHACmTXQu61Vlosr4yJltocseuZxo
-         moYy1k9EIvNSv7E8ddaOn4fsZcPXY4SUEpDnnnbaZK/ruZ4aEyairyOYWkSZKpkcg1f7
-         +//qpNHePBYe4cF6Z64mC+iXkEf2UCRcFdbeZhMe5PlQkqlfjPDXNquQ7GhH9N0+f3Sv
-         49IA==
-X-Forwarded-Encrypted: i=1; AFNElJ+i7dSqlU4fmnRI5RssZ0qWlskYo63PZ/wu8sjhBizdG/6q6mdcAR9Iw8Q3WfyT0Kyvt7jpTusQ/HQ+fqlh81L/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpaPYHT2clfs0LQf+isr9Rd94QYkVvrD3YPTDvKWzuPMg/ylXm
-	y6XSjMvwzB3w3WMH70oovkC8Xz1NxrSpaFMadQmMMzCSSz1/8GudaZNOGaW9es/1CHQNb0+A4bW
-	qTIJwRZukdw==
-X-Received: from dyay11.prod.google.com ([2002:a05:693c:62cb:b0:304:eefd:96c6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7495:b0:304:dd1c:737e
- with SMTP id 5a478bee46e88-304fa5a84aamr4700818eec.16.1780294507717; Sun, 31
- May 2026 23:15:07 -0700 (PDT)
-Date: Sun, 31 May 2026 23:13:56 -0700
+        bh=LgI7Gk169yArBVuMXS9CrXCl+U2LTyt0u+P/s791rwk=;
+        b=L+8bXw3PADchT50UDd7NXv/heY+GJRPwfm7xPmpAL+a06z5hcQl0TmETiuq50SDtmX
+         3qMb8JjnC/JVD5ZjwDMfsknwmsPWLdcntGLgorsX9MDrVV6v+C/G4cpdoeMCOJsqv7Ev
+         WjYuRksGqeAp2oh6u3Tte4PFfaSnW24PkogHNa6abscPpu7QlFSnxsaFgewptKY7lFl4
+         yi2JcWGecqFio45MPiq/8b4Imwe+diORTJHhoeFeFgW60p7oGNG6Q6c2xRSKJXIvuisS
+         oG1PWVq+AKkFtq/BhFYu7M6o/CCFIC/4qobv+C3NaZOS/gV2MTxFZSTNtlXtKITSVsTU
+         kibw==
+X-Forwarded-Encrypted: i=1; AFNElJ+S6oGFZ2fN0Wi89mviZyQ8shIC+7wL/8tIAtro101Fa4J8TCOBwxCIcITFN7RUZ+kVo2cKJ61pK6/HyhyZHKSY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhHfdtmQ35yZDt1IRWvv5OcQ2cGPNYt4YfDf5+paJg4+hOwyR5
+	ggFGH65qvUqmIygsMTc+0yVfLahB9fyC+YXlzCI8Lhsyhl7o9OK1Xh7z8ISo30H9K9iJZKSqXTr
+	kNwQ1OjPeVg==
+X-Received: from dldoa11.prod.google.com ([2002:a05:701a:ca8b:b0:135:ebea:dc20])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f99:b0:132:f16:a574
+ with SMTP id a92af1059eb24-137d3d09cf1mr4177384c88.7.1780294510508; Sun, 31
+ May 2026 23:15:10 -0700 (PDT)
+Date: Sun, 31 May 2026 23:13:57 -0700
 In-Reply-To: <20260601061401.1541457-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260601000548.1195604-1-irogers@google.com> <20260601061401.1541457-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260601061401.1541457-11-irogers@google.com>
-Subject: [PATCH 10/15] perf test: Fix subtest status alignment for multi-digit indexes
+Message-ID: <20260601061401.1541457-12-irogers@google.com>
+Subject: [PATCH 11/15] perf test: Skip shebang and SPDX comments in shell test descriptions
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	namhyung@kernel.org
@@ -68,43 +68,149 @@ Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-When running perf test, the status column (: Ok) became misaligned when
-subtest indexes reached 2 or 3 digits (e.g. 9.100 vs 9.9 vs 10.1). This
-occurred because the subtest description field width (subw) was statically
-fixed to width - 2, assuming all subtest index prefixes were exactly 7
-characters wide.
+When extracting shell test descriptions in tests-scripts.c, the parser
+skipped the first line assuming it was the shebang (#!/bin/sh) and then read
+the first comment line on line 2 as the test description.
 
-Dynamically calculate subw based on the exact character length of the test
-suite and subtest index prefix. This ensures the status column is perfectly
-aligned vertically across all test outputs regardless of subtest index digit
-count.
+However, checkpatch.pl expects shell scripts to declare their SPDX license
+identifier on line 2 (# SPDX-License-Identifier: ...). This caused the test
+harness to extract the SPDX license string as the test description.
+
+Refactor shell_test__description to use io__getline, skipping both shebang
+and SPDX comment lines. This allows shell tests to include standard SPDX
+headers without breaking test suite description extraction.
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/tests/tests-scripts.c | 81 ++++++++++++++++++--------------
+ 1 file changed, 46 insertions(+), 35 deletions(-)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 5d319b9da762..e4998a4472ec 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -376,10 +376,12 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
- 			     int result, int width, int running)
+diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+index f18c4cd337c8..7466c1e8d920 100644
+--- a/tools/perf/tests/tests-scripts.c
++++ b/tools/perf/tests/tests-scripts.c
+@@ -31,6 +31,7 @@ static int shell_tests__dir_fd(void)
  {
- 	if (test_suite__num_test_cases(t) > 1) {
--		int subw = width > 2 ? width - 2 : width;
-+		char prefix[32];
-+		int len = snprintf(prefix, sizeof(prefix), "%3d.%1d:",
-+				   curr_suite + 1, curr_test_case + 1);
-+		int subw = len >= 4 ? width + 4 - len : width;
+ 	struct stat st;
+ 	char path[PATH_MAX], path2[PATH_MAX], *exec_path;
++	ssize_t len;
+ 	static const char * const devel_dirs[] = {
+ 		"./tools/perf/tests/shell",
+ 		"./tests/shell",
+@@ -47,13 +48,17 @@ static int shell_tests__dir_fd(void)
+ 	}
  
--		pr_info("%3d.%1d: %-*s:", curr_suite + 1, curr_test_case + 1, subw,
--			test_description(t, curr_test_case));
-+		pr_info("%s %-*s:", prefix, subw, test_description(t, curr_test_case));
- 	} else
- 		pr_info("%3d: %-*s:", curr_suite + 1, width, test_description(t, curr_test_case));
+ 	/* Use directory of executable */
+-	if (readlink("/proc/self/exe", path2, sizeof path2) < 0)
++	len = readlink("/proc/self/exe", path2, sizeof(path2) - 1);
++	if (len < 0)
+ 		return -1;
++	path2[len] = '\0';
+ 	/* Follow another level of symlink if there */
+ 	if (lstat(path2, &st) == 0 && (st.st_mode & S_IFMT) == S_IFLNK) {
+-		scnprintf(path, sizeof(path), path2);
+-		if (readlink(path, path2, sizeof path2) < 0)
++		scnprintf(path, sizeof(path), "%s", path2);
++		len = readlink(path, path2, sizeof(path2) - 1);
++		if (len < 0)
+ 			return -1;
++		path2[len] = '\0';
+ 	}
+ 	/* Get directory */
+ 	p = strrchr(path2, '/');
+@@ -78,43 +83,49 @@ static int shell_tests__dir_fd(void)
+ static char *shell_test__description(int dir_fd, const char *name)
+ {
+ 	struct io io;
+-	char buf[128], desc[256];
+-	int ch, pos = 0;
++	char buf[128], *line = NULL;
++	size_t line_len = 0;
++	ssize_t len;
++	char *desc = NULL;
  
+ 	io__init(&io, openat(dir_fd, name, O_RDONLY), buf, sizeof(buf));
+ 	if (io.fd < 0)
+ 		return NULL;
+ 
+-	/* Skip first line - should be #!/bin/bash Shebang */
+-	if (io__get_char(&io) != '#')
+-		goto err_out;
+-	if (io__get_char(&io) != '!')
+-		goto err_out;
+-	do {
+-		ch = io__get_char(&io);
+-		if (ch < 0)
+-			goto err_out;
+-	} while (ch != '\n');
+-
+-	do {
+-		ch = io__get_char(&io);
+-		if (ch < 0)
+-			goto err_out;
+-	} while (ch == '#' || isspace(ch));
+-	while (ch > 0 && ch != '\n') {
+-		desc[pos++] = ch;
+-		if (pos >= (int)sizeof(desc) - 1)
++	while ((len = io__getline(&io, &line, &line_len)) > 0) {
++		char *p = line;
++
++		/* Skip leading whitespace */
++		while (*p && isspace(*p))
++			p++;
++
++		/* Must be a comment */
++		if (*p != '#')
++			continue;
++		p++;
++
++		/* Skip shebang or SPDX lines */
++		if (*p == '!' || strstr(p, "SPDX-License-Identifier:"))
++			continue;
++
++		/* Skip whitespace after # */
++		while (*p && isspace(*p))
++			p++;
++
++		/* If we found non-empty text, this is the description! */
++		if (*p && *p != '\n') {
++			char *end = p + strlen(p);
++
++			while (end > p && isspace(end[-1]))
++				end--;
++			*end = '\0';
++			desc = strdup(p);
+ 			break;
+-		ch = io__get_char(&io);
++		}
+ 	}
+-	while (pos > 0 && isspace(desc[--pos]))
+-		;
+-	desc[++pos] = '\0';
+-	close(io.fd);
+-	return strdup(desc);
+-err_out:
++	free(line);
+ 	close(io.fd);
+-	return NULL;
++	return desc;
+ }
+ 
+ /* Is this full file path a shell script */
+@@ -178,9 +189,9 @@ static void append_script(int dir_fd, const char *name, char *desc,
+ 	char *exclusive;
+ 
+ 	snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
+-	len = readlink(link, filename, sizeof(filename));
+-	if (len < 0) {
+-		pr_err("Failed to readlink %s", link);
++	len = readlink(link, filename, sizeof(filename) - 1);
++	if (len < 0 || (size_t)len >= sizeof(filename) - strlen(name) - 2) {
++		pr_err("Failed to readlink %s or path too long", link);
+ 		return;
+ 	}
+ 	filename[len++] = '/';
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
