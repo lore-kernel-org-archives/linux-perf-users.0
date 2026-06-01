@@ -1,125 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F7B29D26E
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 06:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3401376BC2
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 06:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780295630; cv=none; b=pW2v2YntHGo/utOJWTkL2/iDe7I+7NpWMgcHMCgy7exSycSx97fb6B9xD7d3dTCKvgysCAZ8cZ+Ci+QiyD75A60Ygjzyhi1cyWzn2vBsrr7ucJOhJzsrZfOMRPerhqw8fK16j9YkBnbpqp+mK/PVFeUIl9e9gUsDZREADd7jvrQ=
+	t=1780295833; cv=none; b=MrZcTKVklLyBmmmbsOILiJfoqlcs88UTICMGZQiKsnHDuM2w7VhkAmAQfQ/qTcniw9UXi168Iv4BjwO2b4EGB58Ge+R/KCVxoPRUxySsQxWAFVXTQPsJhPVciCa5rPA55j3Y0xTWmwV51J0vsHXpc4iZdbLaHfi9zZNWyQhM/BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780295630; c=relaxed/simple;
-	bh=4iypRvHuOHEjgLgh8MLGVY7g2REhQ5GBRmInKfOdHyw=;
+	s=arc-20240116; t=1780295833; c=relaxed/simple;
+	bh=m0n+0WkgbBf9w1AHqPbuq662JTBE4c7aj3taefbH0as=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qzl8h72jMADhAVer4sd2IbTmcamAVNHastyvYyeiQf6MPa/cUJmzIpM5/SbAox8CyF953qtMr7Ig3BjKiXHmN1BW4NVL3H8yDghvE5ucscB7ztfU3HkxsSsFzKwm02Q3cD+pEGBrNKb2oA3cN5C2UhzmTgJ1t5BSlC7DOf2//OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ElH+uhzu; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=cb5gCWlHLoe1cagbrdUebiuWvKe9DsTtNhl/Amfg/hmlI5UUUjCQetzhJ6FwMgNbwkJ7F3irg4YWeCV6Z1xsn2kNF5f81P4RiK5CP8EsXAroyvhjNnpM8mAeabaWo7NVkvOoBRAplZ3Gki27l1jnkuD+HOSLXoJOouaB+4wusm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLD/1S0p; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ElH+uhzu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 568B01F00893;
-	Mon,  1 Jun 2026 06:33:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLD/1S0p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F9F1F00893;
+	Mon,  1 Jun 2026 06:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780295629;
-	bh=zMO1myzGFazJI6dGIABrGYxF6rWrkIpuC0/cir+ndvc=;
+	s=k20260515; t=1780295827;
+	bh=TaQzyBkAY1wxi48WDGQJRiMpjYNkjOivkVFYLUE6VnM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ElH+uhzuWKXXmff5nlX+rMJq7E+Ng55dyR5pCAx4oiXKfeqJ0cpOVeWh4npvfxzYp
-	 4q+uAC7BjlIlJh51iWKOKfkey5B0L7h0nTXtIfRIHk84dvYjmwVWHfp5WahOEXZOoK
-	 l/fnmhKmgJOYNgbtF5BaCNaaYIa+QZQgO0mdDADgezY7cym8RrqqxMc66jhMR9d0qy
-	 t/jZ00DqyYP1ymMDC6qxUHwnvW/7aWRemZIxZ39Alw43e1c5lv5Z+3MQlEWJgz9lQt
-	 pKToUh2dioOuwRBc3R+El5PqjrfIpNfDNIs6hVcwk7huDu5wQzjzk4aD/3Zb1egW8A
-	 FP4+5WYkI89Kw==
+	b=WLD/1S0puR4D0zr2Kesc8jjB4sXww0e0hQ+53nCFAlLnZ4JVH6kMEpuoPktKR/4vy
+	 X9Xktie1lwYrEirkLG2t0/qG64uxC6Ne+pRL/cfOssr6MfbGv+ixhD7e1+W7nGI92Y
+	 fvR2xqSOdURnT5Ed+OW7HjV6n8+sTbrPtZlGzt3ir+70Zn/Yn/GckY/QQmsTbdx9YB
+	 tY+pGLUTMkFchTnSYDnu/nhFbLGTvUYr3w8oqqlXqrjHpYSZT08UjkKIGzDV7WQB2H
+	 C1OQSNLBWShH8vcgTkyD3CbEM0ObCKQXFJRa/ALrhQuawhWq+3Xg/RmpUlJvbjLaWR
+	 0UkFfitWmtwjw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 13/15] perf test: Add -j/--junit option for JUnit XML
- test reports
+Subject: Re: [PATCH 15/15] perf test: Remove /usr/bin/cc dependency from
+ Intel PT shell test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260601061401.1541457-14-irogers@google.com>
-References: <20260601061401.1541457-14-irogers@google.com>
+In-Reply-To: <20260601061401.1541457-16-irogers@google.com>
+References: <20260601061401.1541457-16-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 01 Jun 2026 06:33:48 +0000
-Message-Id: <20260601063349.568B01F00893@smtp.kernel.org>
+Date: Mon, 01 Jun 2026 06:37:07 +0000
+Message-Id: <20260601063707.89F9F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] JUnit XML incorrectly reports failed tests as passed if they retur=
-n negative error codes other than TEST_FAIL (-1) or crash.
+- [Medium] Malformed JIT_CODE_LOAD record omits the mandatory null-terminat=
+ed symbol name, causing an out-of-bounds read in `perf inject --jit`.
+- [Low] Implicit function declaration of `gettid()` causes build failures o=
+n systems with older glibc.
+- [Low] Missing file unlink on the mmap failure path in `open_jitdump` leav=
+es a stale zero-byte file on disk.
 --
 
-commit 0cfa01c83fa8f407962850a84df883fa8c3c4967
+commit 194465fc2be17e9ffc37efc2f97d81ed4142188b
 Author: Ian Rogers <irogers@google.com>
 
-perf test: Add -j/--junit option for JUnit XML test reports
+perf test: Remove /usr/bin/cc dependency from Intel PT shell test
 
-This commit adds a -j/--junit command-line option to generate standard
-JUnit XML format test reports. The report captures test execution latency,
-XML-escaped failure logs, and skip reasons while preserving the concurrency
-of parallel test execution.
+This commit converts the external C program workloads in the Intel PT shell
+test into built-in workloads. It creates a built-in 'jitdump' workload and
+adds multi-architecture compatibility to remove the external C compiler
+dependency.
 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
+> diff --git a/tools/perf/tests/workloads/jitdump.c b/tools/perf/tests/work=
+loads/jitdump.c
+> new file mode 100644
+> index 0000000000000..225d3f3dc6e3b
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/jitdump.c
 
 [ ... ]
 
-> @@ -421,6 +453,34 @@ static int print_test_result(struct test_suite *t, i=
-nt curr_suite, int curr_test
->  		break;
->  	}
-> =20
-> +	if (junit_filename && result !=3D TEST_RUNNING) {
-> +		const char *classname =3D t->desc;
-> +		const char *testname =3D test_description(t, curr_test_case);
-> +		char *escaped_err =3D xml_escape(err_output);
-> +		char *escaped_class =3D xml_escape(classname);
-> +		char *escaped_test =3D xml_escape(testname);
-> +
-> +		strbuf_addf(&junit_xml_buf,
-> +			    "    <testcase classname=3D\"%s\" name=3D\"%s\" time=3D\"%.2f\">\=
-n",
-> +			    escaped_class, escaped_test, elapsed);
-> +		if (result =3D=3D TEST_FAIL) {
+> +static FILE *open_jitdump(void)
+> +{
 
-[Severity: High]
-Does this incorrectly report tests as passed if they return negative error
-codes other than TEST_FAIL (-1) or crash?
+[ ... ]
 
-In print_test_result(), any result that is not TEST_RUNNING, TEST_OK, or
-TEST_SKIP correctly falls through to the default case in the earlier switch
-statement and increments summary_tests_failed.
+> +	/* Create an MMAP event for the jitdump file. That is how perf tool fin=
+ds it. */
+> +	m =3D mmap(0, getpagesize(), PROT_READ | PROT_EXEC, MAP_PRIVATE, fileno=
+(f), 0);
+> +	if (m =3D=3D MAP_FAILED) {
+> +		pr_err("mmap failed: %s\n", strerror(errno));
+> +		fclose(f);
 
-However, this XML generation block explicitly checks if result =3D=3D TEST_=
-FAIL.
-If a test crashes (returning a signal status) or returns another negative
-error code like -ENOMEM, will the <testcase> element be closed without a
-<failure> tag, causing CI systems to silently treat the failed test as
-passed?
+[Severity: Low]
+Does this leave a stale zero-byte file on disk if mmap fails?
 
-> +			strbuf_addf(&junit_xml_buf,
-> +				    "      <failure message=3D\"FAILED\">\n%s\n      </failure>\n",
-> +				    escaped_err);
-> +		} else if (result =3D=3D TEST_SKIP) {
-> +			const char *reason =3D skip_reason(t, curr_test_case);
-> +			char *escaped_reason =3D xml_escape(reason ? reason : "Skip");
-> +
-> +			strbuf_addf(&junit_xml_buf, "      <skipped message=3D\"%s\"/>\n",
-> +				    escaped_reason);
-> +			free(escaped_reason);
-> +		}
-> +		strbuf_addstr(&junit_xml_buf, "    </testcase>\n");
-> +		free(escaped_err);
-> +		free(escaped_class);
-> +		free(escaped_test);
+The other error paths in open_jitdump() call unlink(filename) before
+returning, but it seems to be omitted here.
+
+> +		return NULL;
 > +	}
+> +	munmap(m, getpagesize());
+
+[ ... ]
+
+> +static int write_jitdump(FILE *f, void *addr, const void *dat, size_t sz=
+, uint64_t *idx)
+> +{
+> +	struct jr_code_load rec =3D {
+> +		.p.id =3D JIT_CODE_LOAD,
+> +		.p.total_size =3D sizeof(rec) + sz,
+> +		.p.timestamp =3D get_timestamp(),
+> +		.pid =3D getpid(),
+> +		.tid =3D gettid(),
+
+[Severity: Low]
+Is there a missing feature guard or fallback for gettid() here?
+
+On older systems with glibc < 2.30, gettid() is not natively declared in
+<unistd.h>. Because the perf tool typically compiles with -Werror, this
+implicit declaration can cause a build failure. The perf subsystem usually
+provides syscall(__NR_gettid) as a fallback or uses a feature test.
+
+> +		.vma =3D (unsigned long)addr,
+> +		.code_addr =3D (unsigned long)addr,
+> +		.code_size =3D sz,
+> +		.code_index =3D ++*idx,
+> +	};
 > +
->  	return 0;
->  }
+> +	if (fwrite(&rec, sizeof(rec), 1, f) !=3D 1 || fwrite(dat, sz, 1, f) !=
+=3D 1)
+
+[Severity: Medium]
+Can this cause an out-of-bounds read in perf inject --jit?
+
+It looks like write_jitdump() writes the record header and directly follows=
+ it
+with the raw instruction bytes, omitting the required null-terminated string
+for the symbol name.
+
+While the original shell script also omitted this, the original x86 payload
+happened to contain null bytes that safely terminated strlen(). The newly
+added non-x86 payloads (e.g., ARM64, RISC-V) contain no null bytes.
+
+When perf inject calculates the symbol name pointer in jit_repipe_code_load=
+()
+and calls strlen(sym) in jit_write_elf(), could it read out of bounds into
+subsequent records or unmapped memory?
+
+> +		return -1;
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260601061401.1541=
-457-1-irogers@google.com?part=3D13
+457-1-irogers@google.com?part=3D15
