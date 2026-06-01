@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EF8347BC4
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 06:25:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218FE347BC6
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 06:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780295122; cv=none; b=HdvmLvxgAd+z4oZCIe2atn5z/7OpP3stuoMXDaGTH0LaJvnkON7rSeQAo+BEo6yA/giocX9qWIhYw8RoHkvBSLitG0nIw9knvmcn1yJ3AnzIQGLUQA9FR7vbRZcWahMvCDu8CQA5v01IUMMPRBZOOpapDSAyyd3MMJoUAXuO8Eo=
+	t=1780295158; cv=none; b=jr+EDfC97qZ6miR/rdsawd3VcqMkosOvcQRJuID4faguwDockaO/lajTxoJAaKrgFsSM68Pp2iJjssDKlhWUwQXS2PTGzeHql2UHgGyqAViT9gHglmWGx0ZHrP8rCdFdbWjM83lmnhPNUC10f5kjZThL5PzItM+yYgnFpPoKm6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780295122; c=relaxed/simple;
-	bh=qBtSTDlGXVudhQUScdKCXuwZiBRoM2vj5BybkF1xUvk=;
+	s=arc-20240116; t=1780295158; c=relaxed/simple;
+	bh=NJocm4FazRwxDZtd69w7KkNDxLrn0Z74VnjBNQ4/wKI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bgkKvHWzoK/jmTPUNSJmqpN5Em7VJ1fftzyAkRx/fe7Lsh20fP15RsBcSnHKHZNLSuA/w9L0WWkN9P67lCA7HN+QD5EYz5Ef3xhtnGCROLjiWXTTBqrz5GbcpPwqvYLtjEF+DmzRzQUWNZtZNEbhhu6s2TyGJ1gtlvs8fqLZpeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtDfPm4f; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=WxtJckPgMDpF9QgPMPh3iO9Wxlk9c0efKRHdhch2TPdJFL3P77dqL4gqzB8pYkf+0zf505avtbvjUQW+VrxhadvScbc1gl5Epb0vYARZK/h24Co0FnOGXj4hqPHVobkC6CSEv0QSlr1lfK/Cbr4ZzbC9MU9Hd8GeGU/UzCbcVb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYdEOzdG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtDfPm4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F30771F00893;
-	Mon,  1 Jun 2026 06:25:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYdEOzdG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B7961F00893;
+	Mon,  1 Jun 2026 06:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780295121;
-	bh=iPeulQKK2pHirhBvhNVPhaEx7Xd4G0EMdytRG0sGInw=;
+	s=k20260515; t=1780295156;
+	bh=oX7wAsazo1vp94xlyn4V264CsDZ7i3eDqqtSr6QoIZw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jtDfPm4f7n070GPTgb2tfFKfuO+IeIu6Vo/D0WGr14FOBN3F8VCUFD/qOMqudX1dA
-	 6JScqnqJV2V+DQ2qDiYx6OYERrLnaFON//BtDApeclbi9i8502kwh1H/Bh7E9p8ARd
-	 tTUbZxX0MnSOmQ1BHNelsC7N+rf0W5y3m3UDJxkJ56ZyJqzS8x2qWUbuQEDUuWh6Wg
-	 rI3gQAGeU9k5mZ//BITHVO44wwf2W7fgRG+Y9/WAyQYRcjSh2jl/16HoQEMDtuJPB5
-	 TK/riTdDxy1v+J/12n0tsmwA7YXYW2rAjpTG7pC0dHiNTx7y3DPAsEogU8DJx1WX12
-	 TcmJzmgcVppwQ==
+	b=AYdEOzdGfdWwHgNQpEyTFUc+ZjrOzncM8YD1lLH4Lq5KcLbG39Tlw+OSrIvqtkbT6
+	 OEtSaEpslOZcg6vyQMiEq19LOQBiRDvnbo+m2XacTDTZ68iR3SIeNm4CEF3lx1H5KB
+	 hwxFxu1MDZjVsGpo1dzSaWcnIZ1Dt6SEBfM/7NvyciyXkqJy44AzhOGuVDDPR0YPnJ
+	 sq7lWsOe1OpY4tsR7RGwBUbZEhJAR1YBOC+8vERFzVWHqonRFpMFxloM/usXSsKddl
+	 JWrf9xvBnLid5C62JPbtFwWTkgtrIDxGSycYPhkCMhXZNTkUC5FLjBhHlL6qGPvSEM
+	 /L3O+L/JOE7Jw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/15] perf jevents.py: Make generated C code more
- kernel style
+Subject: Re: [PATCH 08/15] perf test: Show snippet failure output for
+ verbose=1
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260601061401.1541457-2-irogers@google.com>
-References: <20260601061401.1541457-2-irogers@google.com>
+In-Reply-To: <20260601061401.1541457-9-irogers@google.com>
+References: <20260601061401.1541457-9-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 01 Jun 2026 06:25:20 +0000
-Message-Id: <20260601062520.F30771F00893@smtp.kernel.org>
+Date: Mon, 01 Jun 2026 06:25:56 +0000
+Message-Id: <20260601062556.9B7961F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,59 +46,96 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Unmatched `/* clang-format on */` in the generated C file and fa=
-ilure to bypass formatting for large tables when `output_string_file` is us=
-ed.
+- [Medium] O(N^2) time complexity in `find_next_keyword` when processing lo=
+ng lines.
 --
 
-commit f1ba6b889b8b196461d3bfaa989b79ca18161739
+commit 2095066ea9915f694a9267e1143ad972e358c87f
 Author: Ian Rogers <irogers@google.com>
 
-perf jevents.py: Make generated C code more kernel style
+perf test: Show snippet failure output for verbose=3D1
 
-Make jevents.py generate C code that complies with formatting tools.
-This adds clang-format off and on pragmas to bypass large generated tables,
-making the rest of the code easier to check.
+This patch introduces a smart failure snippet processor for perf tests runn=
+ing
+in verbose mode. It dynamically parses the raw error buffer to extract up t=
+o a
+configurable number of lines containing failure keywords, highlighting them=
+ in
+red. This prevents massive log dumps from hiding important diagnostic keywo=
+rds.
 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+
 [ ... ]
-> @@ -1466,6 +1463,7 @@ struct pmu_table_entry {
+
+> @@ -400,6 +402,192 @@ static int print_test_result(struct test_suite *t, =
+int curr_suite, int curr_test
+>  	return 0;
+>  }
 > =20
->    _bcs.compute()
->    if not _args.output_string_file:
-> +    _args.output_file.write('/* clang-format off */\n')
+> +static const char * const fail_keywords[] =3D {
+> +	"error", "fail", "segv", "abort",
+> +	"signal", "fatal", "panic", "corrupt", NULL
+> +};
+> +
+> +static const char *find_next_keyword(const char *str, size_t max_len, si=
+ze_t *kw_len)
+> +{
+> +	const char *best =3D NULL;
+> +	size_t best_len =3D 0;
+> +	int k;
+> +
+> +	for (k =3D 0; fail_keywords[k]; k++) {
+> +		const char *s =3D str;
+> +		size_t len =3D strlen(fail_keywords[k]);
+> +
+> +		while ((size_t)(s - str) + len <=3D max_len) {
 
 [Severity: Medium]
-Will this cause the opening clang-format off pragma to be omitted during a
-standard perf build? When jevents.py is invoked with the output_string_file
-argument, this pragma is skipped, leaving the massive tables unprotected
-from formatting tools.
+The find_next_keyword function searches for multiple keywords independently.
+If an earlier keyword match (best) has already been found, this loop contin=
+ues
+scanning the remainder of the string for the other keywords up to max_len.
 
->      _args.output_file.write('static const char *const big_c_string =3D\n=
-')
->      for s in _bcs.big_string:
->        _args.output_file.write(s)
+Could this loop be optimized to stop when the search pointer passes the best
+match so far?
+
+> +			size_t i;
+> +
+> +			for (i =3D 0; i < len; i++) {
+> +				if (tolower(s[i]) !=3D fail_keywords[k][i])
+> +					break;
+> +			}
+
 [ ... ]
-> @@ -1487,6 +1485,7 @@ struct pmu_table_entry {
-> =20
->    print_mapping_table(archs)
->    print_system_mapping_table()
-> +  _args.output_file.write('/* clang-format on */\n')
+
+> +static void print_line_highlighted(FILE *fp, const char *line, size_t le=
+n)
+> +{
+> +	const char *s =3D line;
+> +
+> +	while (len > 0) {
+> +		size_t kw_len =3D 0;
+> +		const char *match =3D find_next_keyword(s, len, &kw_len);
 
 [Severity: Medium]
-Does this result in an unmatched clang-format on pragma when
-output_string_file is specified? Since this closing pragma is written
-unconditionally, it seems it will produce unbalanced formatting directives
-when the opening pragma is skipped above, ultimately defeating the purpose
-of bypassing the large tables.
+Since print_line_highlighted repeatedly invokes find_next_keyword after each
+match, and find_next_keyword scans the entire remaining max_len for every
+missing keyword, a line with many occurrences of one keyword (e.g., error)
+but lacking others could cause repeated full-length scans.
 
->    print_metricgroups()
->    _args.output_file.close()
->    if _args.output_string_file:
+Can this lead to excessive processing time and quadratic behavior for very
+long lines?
+
+> +
+> +		if (!match) {
+> +			fwrite(s, 1, len, fp);
+> +			break;
+> +		}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260601061401.1541=
-457-1-irogers@google.com?part=3D1
+457-1-irogers@google.com?part=3D8
