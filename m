@@ -1,227 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F817335066
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 05:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD9A3446CE
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 06:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780293463; cv=none; b=kZqus1fqwolygP/K5XFV/ylnJAQo8sUX+VbiJMZ5AuIZ6Wjz9o3C+jAaQezvMJOHuh9nSY0rSN+VQsLXYSs0Qqp3W5ToMRf9jPRqX3jlr7Dr1T2FDXOCtCwLMZmYbqI6vTNwQIeWhdGfwwSYq36I6psL8YH7GF8Sq7/HCYCc9GU=
+	t=1780294491; cv=none; b=k2EOmXWCgXQtMhcJ9TqAf0vRCFbBA4Dukw/HA894PxccGWwEHCTvepFq3mHt2vLC2iXnY98aoNyWq0MldJ8t6BeepO7i9/1k3JhRXWEAvXOV39iyZfcWB5OsYzL2p4nDeOzRpXVKte6FLXcDCHFk4yEPnrDBzMijb43v5fOkDvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780293463; c=relaxed/simple;
-	bh=HB4LbUt2Ni/I5OgdL6OsLAXATb6FCK+C85Z/A/fdgd0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SECWlVA1pOKBlV2ixSqh8bP20Ibk8JtyyFgOOU/yAt01fvqBz9qcmT1K+gyIFSkZCASz8k8g5t1XIOTmQiEnfut9GwYg8V6fuzmBaGFPMreug2hnrNuQvZ0JtMxy/39M9skIWIgIO9jTOiTz9jINvh7aE/kzgbXgdFyseDJn/8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YUXDd6Bq; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780294491; c=relaxed/simple;
+	bh=xOhy3Zwy9VJeVCgnVoG4a/FKf8Spl/+v2eUdyFndX3c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MAYvZWKXonFLD5V/pylxw7vHWpmFxst435LOGfUEOSTmL8F1H3U7XvYPFygDy/yKMi9laQEZNJebZ30lGPJWoadsootlJu9xCwToh9wb23JEUUxG+yepb9hB8ZYMMgDsbpmRKRQAsf95hVG+nsZ7JgkxvV/zyngffwAVDuYK2so=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gC2N9WP2; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YUXDd6Bq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780293462; x=1811829462;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HB4LbUt2Ni/I5OgdL6OsLAXATb6FCK+C85Z/A/fdgd0=;
-  b=YUXDd6Bq3Ra/LDyedUoyTHbzvx0E0GVQ3YAOflHngX7v+q5gA0IVHu9m
-   bqZDalwzShBaN1pVMlbwzP4UzwW/3+Z+5ld98V/K/NylM6a1dQjpSvT8p
-   3ONdZ+gdgah2GG5mbVA5P2QsFOLNwpECnv8vBN2qvYK9zE+MbG+Q6vrNz
-   foY5RumNBvGxCS8MD6zziKaGvMDPu91N8fGKBWDDkYpxjdakrnZX6HdQ0
-   XYhhtq5yJnl03v85XVKcSzJSzkc9BCA9VS6QRS6EqX0EY3zh9a4Ov//R2
-   hfqq2qIV3NgyORWa19ktpPTh6u62UqKjtUKwqhHnZs3VdX5vVDXLLNXI0
-   g==;
-X-CSE-ConnectionGUID: g3X9r4EMRbWwcBQGiLm5xw==
-X-CSE-MsgGUID: Xh1iQjodQ6SVmIyDWDHFDA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="80939977"
-X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
-   d="scan'208";a="80939977"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 22:57:41 -0700
-X-CSE-ConnectionGUID: AUAcn4fyQoabukHewLYi9w==
-X-CSE-MsgGUID: eXl5ZS/2Ri69vM8cUVnONQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
-   d="scan'208";a="240961831"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 22:57:40 -0700
-Message-ID: <3a08b9f4-186e-411c-a17b-4eeb4b413e38@linux.intel.com>
-Date: Mon, 1 Jun 2026 13:57:37 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gC2N9WP2"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137dd5171feso1539156c88.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 23:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780294489; x=1780899289; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=36LSgHAsJdVYAIyq8Y6vVCV7P9YqtI6Wtf8w7yvchMg=;
+        b=gC2N9WP2LWJrd60NIjyrZSuhIim+PY43rxE4apYVSkTl8mX1QLPlmfftyvDyThSEXR
+         h7Tv44rWd9zet1znXNem599y8DZaSlcvhQKT3snHnZCHJ+Aw5JMy72z4GXJy7Hm206sm
+         7rx5/TOu3sACjCkIJ4olcAvOI4FBMXvcIlFZ7vJ30y07aeV+Saw+j9mQLT7xaMhSNxHf
+         riHriUTXz98nleRuw2dVqFIYepqHBIgFGCbBxtUwfHba6PjQb0+S1PLOO8ne/I5N5Cq+
+         UaChDuVmCZu2UpVGQeBFaKrUaZq6b2Cf3egXY1x4UYqxBBVINvBI3+D44nSRxwlp77+f
+         rJ3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780294489; x=1780899289;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=36LSgHAsJdVYAIyq8Y6vVCV7P9YqtI6Wtf8w7yvchMg=;
+        b=fEp08Ng0ZxpRCiACJTTCLlU3SEexrvF06uJonOezNPp3Zbh1mL94jBdjbK277WZXd2
+         k+AQn/TwBoRZ3VG3QHJlNv2fCd9CS9PbSATIl+AfmHcmMQ6gFc8BaGg0xP9KAkhnE4BM
+         Jfb5oVfezhcHSc2VWRU6tv9BG3JlvytKtxjYvh9hTa/O8TSCPfVzfszTvfzhY1gJjXv5
+         NCqdWGnLgwa0AsJPMXMOQqUn1MNu1ry11u/SmZwID/v95xX7P/Z299uKyKRv3F75GefZ
+         JtQzwyiSwWZu/Ib3PS+llpI7J3FtVqcG5I4ruGTFQu3LXdB0OF/Oe+3DQtUaevIxUkJR
+         8HtQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8hNfWgfIfuGdtCjY6MltgOuJpAQYAi8lTq2WUX93+psUNGFiiQE/55E5lx1yN1qh6P5sTLlm1820r8EOiJm0Ru@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwygRpamBmnG33LLPB5Vk2k21awxejGHGR75O0eRHPOQXay6Ck
+	5pPvO5gr4hbZlaifViaM8WkD8/kOITlxl7D2YONF+T78vvkeAhYKRGPFAJEvC4FfsyNn36p11Dc
+	kXpE4DlZEOA==
+X-Received: from dlaf6.prod.google.com ([2002:a05:701b:2406:b0:136:88ed:65ed])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:fa0b:b0:11a:342e:8a98
+ with SMTP id a92af1059eb24-137d39c9db0mr3224282c88.0.1780294488511; Sun, 31
+ May 2026 23:14:48 -0700 (PDT)
+Date: Sun, 31 May 2026 23:13:46 -0700
+In-Reply-To: <20260601000548.1195604-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v8 11/23] perf/x86: Enable XMM register sampling for
- REGS_USER case
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260529075645.580362-12-dapeng1.mi@linux.intel.com>
- <20260529092423.F2DD81F00893@smtp.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260529092423.F2DD81F00893@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20260601000548.1195604-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
+Message-ID: <20260601061401.1541457-1-irogers@google.com>
+Subject: [PATCH v6 00/15] perf test: Accelerate parallel test harness and add
+ JUnit XML reporting
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
+	namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org, 
+	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
+Motivation & Key Enhancements
 
-On 5/29/2026 5:24 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [High] Calling `xsaves_nmi()` for PEBS events on CPUs lacking `X86_FEATURE_XSAVES` causes an invalid opcode exception (`#UD`), triggering warning loops and overhead.
-> - [High] Guest XMM registers are incorrectly sampled as host REGS_USER XMM registers when a PMU interrupt occurs during KVM guest execution.
-> --
->
-> commit feabaffcb00c51c951e3f0889a9ad615fe731d5e
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> perf/x86: Enable XMM register sampling for REGS_USER case
->
-> This patch adds support for XMM register sampling in the REGS_USER case.
-> To handle simultaneous sampling of XMM registers, a per-CPU x86_user_regs
-> is introduced to store REGS_USER-specific XMM registers. The
-> x86_pmu_update_user_xregs helper function is added to retrieve user-space
-> XMM registers.
->
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -707,12 +707,12 @@ int x86_pmu_hw_config(struct perf_event *event)
->>  			return -EINVAL;
->>  	}
->>  
->> -	if (event->attr.sample_type & PERF_SAMPLE_REGS_INTR) {
->> +	if (event->attr.sample_type & (PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER)) {
->>  		/*
->>  		 * Besides the general purpose registers, XMM registers may
->>  		 * be collected as well.
->>  		 */
->> -		if (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK) {
->> +		if (event_has_extended_regs(event)) {
->>  			if (!(event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS))
->>  				return -EINVAL;
->>  			if (is_sampling_event(event) && !event->attr.precise_ip &&
->>  			    !this_cpu_has(X86_FEATURE_XSAVES))
->>  				return -EINVAL;
->>  		}
->>  	}
-> [ ... ]
->> @@ -1812,33 +1803,155 @@ static void x86_pmu_update_regs_intr(struct perf_event *event,
-> [ ... ]
->> +static inline u64 x86_pmu_update_user_xregs(struct perf_sample_data *data,
->> +					    struct pt_regs *regs,
->> +					    u64 mask, u64 ignore_mask)
->> +{
->> +	struct x86_perf_regs *perf_regs;
->> +	struct xregs_state *xsave;
->> +	struct fpu *fpu;
->> +	struct fpstate *fps;
->> +	u64 user_mask = mask;
->> +
->> +	if (data->regs_user.abi == PERF_SAMPLE_REGS_ABI_NONE)
->> +		return 0;
->> +
->> +	/*
->> +	 * If PEBS hits kernel space, need to re-sample extended
->> +	 * registers for user space.
->> +	 */
->> +	if (user_mode(regs))
->> +		user_mask &= ~ignore_mask;
->> +
->> +	if (user_mask && test_thread_flag(TIF_NEED_FPU_LOAD)) {
-> [Severity: High]
-> When KVM loads a guest's FPU state, fpu_swap_kvm_fpstate() caches the host's
-> state in fpu->__task_fpstate and explicitly clears the TIF_NEED_FPU_LOAD flag
-> via fpregs_mark_activate().
->
-> If a perf NMI interrupts the guest, this check for TIF_NEED_FPU_LOAD will
-> evaluate to false, causing x86_pmu_update_user_xregs() to return the mask
-> instead of reading the cached host state from __task_fpstate.
->
-> Does this cause xsaves_nmi() to sample the hardware registers directly, which
-> currently hold the KVM guest's XMM registers, and expose them to the host's
-> user-space perf record, leading to cross-VM data leaks?
+1. **Test Harness Acceleration & Parallel Polling**
 
-This is the intended behavior. Users may want to sample guest's register
-data from host. As long as the privilege is correctly set, there would be
-no data leak.
+   Previously, when running tests in parallel mode (`perf test -v`),
+   child processes writing massive amounts of logging output to pipes
+   (such as Granite Rapids PMU metric parsing) would saturate the 64KB
+   pipe buffer and block indefinitely. The parent harness only polled
+   the pipe of the "current" sequential test waiting to be printed,
+   causing severe execution bottlenecks.
 
+   - Refactored the parallel poll loop to drain output pipes from all
+     active children simultaneously into dynamic per-child buffers
+     (`struct strbuf`). Reaping occurs asynchronously out of order,
+     while final console printing remains strictly sequential.
 
->
->> +		perf_regs = container_of(data->regs_user.regs,
->> +				 struct x86_perf_regs, regs);
->> +		fpu = x86_task_fpu(current);
->> +		/*
->> +		 * If __task_fpstate is set, it holds the right pointer,
->> +		 * otherwise fpstate will.
->> +		 */
->> +		fps = READ_ONCE(fpu->__task_fpstate);
->> +		if (!fps)
->> +			fps = fpu->fpstate;
->> +		xsave = &fps->regs.xsave;
->> +
->> +		update_perf_regs(perf_regs, xsave, user_mask);
->> +		return 0;
->> +	}
->> +
->> +	return user_mask;
->> +}
-> [ ... ]
->>  static void x86_pmu_sample_xregs(struct perf_event *event,
->>  				 struct perf_sample_data *data,
->> +				 struct pt_regs *regs,
->>  				 u64 ignore_mask)
->>  {
->>  	struct xregs_state *xsave = get_ext_regs_buf(smp_processor_id());
->>  	u64 sample_type = event->attr.sample_type;
->>  	struct x86_perf_regs *perf_regs;
->> +	u64 user_mask = 0;
->>  	u64 intr_mask = 0;
->>  	u64 mask = 0;
->>  
->>  	if (WARN_ON_ONCE(!xsave) || !in_nmi())
->>  		return;
->>  
->> -	if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
->> -	    (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK))
->> +	if (event_has_extended_regs(event))
->>  		mask |= XFEATURE_MASK_SSE;
->>  
->>  	mask &= x86_pmu.ext_regs_mask;
->> +	if (sample_type & PERF_SAMPLE_REGS_USER) {
->> +		user_mask = x86_pmu_update_user_xregs(data, regs,
->> +						      mask, ignore_mask);
->> +	}
->>  
->>  	if (sample_type & PERF_SAMPLE_REGS_INTR)
->>  		intr_mask = mask & ~ignore_mask;
->>  
->> +	if (user_mask | intr_mask) {
->> +		xsave->header.xfeatures = 0;
->> +		xsaves_nmi(xsave, user_mask | intr_mask);
->> +	}
-> [Severity: High]
-> For PEBS events with PERF_SAMPLE_REGS_USER, the X86_FEATURE_XSAVES check in
-> x86_pmu_hw_config() is bypassed due to event->attr.precise_ip being set.
->
-> If this event triggers in kernel space on a CPU lacking XSAVES (for example,
-> booted with noxsaves or masked in a VM), user_mode(regs) is false, so
-> user_mask retains the extended bits from x86_pmu_update_user_xregs().
->
-> Since xsaves_nmi() unconditionally emits the xsaves instruction, will this
-> trigger an Invalid Opcode exception on CPUs without XSAVES support and add
-> overhead to every PEBS interrupt in kernel space?
+   - Added explicit pipe draining after child process termination to
+     prevent losing trailing log data.
 
-Yes, it's a defect. As previous comment said, would enhance the check and
-only set the PERF_PMU_CAP_EXTENDED_REGS capability when both PEBS and xsave
-support XMM sampling.
+   - **Benchmark**: This drops parallel verbose execution time for the
+     PMU events suite from ~35 seconds down to ~5.9 seconds (an ~83%
+     reduction in latency).
 
-Thanks.
+2. **Dynamic Test Suites & Granular PMU Subtests**
 
+   Monolithic test cases (like "Parsing of PMU event table metrics")
+   previously evaluated hundreds of tables in a single sequential run,
+   making failures difficult to isolate.
 
->
->> +
->> +	if (user_mask) {
->> +		perf_regs = container_of(data->regs_user.regs,
->> +					 struct x86_perf_regs, regs);
->> +		update_perf_regs(perf_regs, xsave, user_mask);
->> +	}
+   - Added `setup` callbacks and private data pointers (`void *priv`)
+     to `struct test_suite` and `struct test_case`, enabling dynamic
+     runtime testcase generation.
+
+   - Split the PMU events metric parsing test into individual subtests
+     (one pair of real/fake PMU tests per metric table), allowing them
+     to execute concurrently and report granular results.
+
+3. **Advanced Triaging & Automated Summary Reporting**
+
+   Triaging failures in highly verbose automated runs previously
+   required scrolling through thousands of lines of console output.
+
+   - Introduced a smart, configurable failure snippet processor
+     (`--failure-snippet-lines`) that dynamically extracts root-cause
+     context lines matching failure keywords (`error`, `fail`, `segv`,
+     `abort`) while preserving outline markers.
+
+   - Implemented an automated global execution summary printed at the
+     absolute tail of the test run, presenting clear pass/skip/fail
+     totals alongside an explicit list of failed test cases for
+     effortless cross-referencing.
+
+   - Fixed subtest status column alignment (`: Ok`) for multi-digit
+     test indexes.
+
+   - Updated shell script SPDX header parsing to prevent license
+     strings from being incorrectly extracted as test descriptions.
+
+4. **JUnit XML Reporting & CI Integration**
+
+   Added a `-j`/`--junit` command-line option to generate standard
+   JUnit XML test reports (`test.xml`).
+
+   - Captures individual test suite and subtest execution latency
+     alongside XML-escaped failure logs and skip reasons.
+
+   - Guarantees absolute timing precision and immunity to wall-clock
+     jumps by measuring durations using
+     `clock_gettime(CLOCK_MONOTONIC)` and harvesting `end_time`
+     exactly when child processes exit to insulate latencies from
+     out-of-order sequential UI printing delays.
+
+   - Added a standalone shell test script to validate generated JUnit
+     XML syntax using Python's `ElementTree` parser.
+
+5. **Elimination of External C Compiler Dependencies**
+
+   The Intel PT shell test (`test_intel_pt.sh`) previously compiled
+   external C workloads at runtime using `/usr/bin/cc`, which
+   frequently breaks in hermetic or minimal CI environments.
+
+   - Created a built-in self-modifying JIT workload (`perf test -w
+     jitdump`) and switched the script to use built-in workloads.
+
+   - To guarantee robust multi-architecture compatibility without
+     external C compiler dependencies, the JIT workload immediate
+     instruction arrays dynamically encode `CHK_BYTE` into opcodes
+     across x86, ARM32, ARM64, RISC-V, PowerPC, MIPS, LoongArch, and
+     s390x, with clean `#else` fallbacks for unsupported
+     architectures.
+
+Changes from v5 to v6:
+  - Addressed advanced signal-safety, race condition, and memory
+    allocation edge-cases flagged during LKML review:
+    - Guaranteed zero output loss upon signal interruption by securely
+      merging and draining all accrued per-child stderr data inside
+      the reap recovery block.
+    - Switched the test harness from `sigsetjmp`/`siglongjmp` unwind
+      operations to a robust, mask-free `volatile sig_atomic_t` and
+      `O_NONBLOCK` loop-bail architecture, eliminating all risks of
+      process-wide `SIGINT`/`SIGTERM` signal mask leaks.
+    - Hardened testsuite shutdown to immediately `kill(SIGTERM)` and
+      `waitpid()` reap all active children, eliminating multi-minute
+      hanging stalls and double-free hazards.
+
+Ian Rogers (15):
+  perf jevents.py: Make generated C code more kernel style
+  perf pmu-events: Add API to get metric table name and iterate tables
+  perf test: Drain pipe after child finishes to avoid losing output
+  perf test: Support dynamic test suites with setup callback and private
+    data
+  perf test pmu-events: A sub-test per metric table
+  tools subcmd: Robust fallback and existence checks for process reaping
+  perf test: Refactor parallel poll loop to drain all pipes
+    simultaneously
+  perf test: Show snippet failure output for verbose=1
+  perf test: Add summary reporting
+  perf test: Fix subtest status alignment for multi-digit indexes
+  perf test: Skip shebang and SPDX comments in shell test descriptions
+  perf test: Split monolithic 'util' test suite into sub-tests
+  perf test: Add -j/--junit option for JUnit XML test reports
+  perf test: Add shell test to validate JUnit XML reporting output
+  perf test: Remove /usr/bin/cc dependency from Intel PT shell test
+
+ tools/lib/subcmd/run-command.c                |   51 +-
+ tools/perf/pmu-events/empty-pmu-events.c      | 8823 +++++++++++------
+ tools/perf/pmu-events/jevents.py              |  849 +-
+ tools/perf/pmu-events/pmu-events.h            |    4 +
+ tools/perf/tests/builtin-test.c               |  685 +-
+ tools/perf/tests/pmu-events.c                 |  156 +-
+ tools/perf/tests/shell/test_intel_pt.sh       |  169 +-
+ .../tests/shell/test_test_junit_output.sh     |   63 +
+ tools/perf/tests/tests-scripts.c              |   81 +-
+ tools/perf/tests/tests.h                      |    3 +
+ tools/perf/tests/util.c                       |   20 +-
+ tools/perf/tests/workloads/Build              |    1 +
+ tools/perf/tests/workloads/jitdump.c          |  188 +
+ tools/perf/util/jitdump.h                     |    3 +-
+ 14 files changed, 7389 insertions(+), 3707 deletions(-)
+ create mode 100755 tools/perf/tests/shell/test_test_junit_output.sh
+ create mode 100644 tools/perf/tests/workloads/jitdump.c
+
+-- 
+2.54.0.823.g6e5bcc1fc9-goog
+
