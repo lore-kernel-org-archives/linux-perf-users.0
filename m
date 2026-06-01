@@ -1,109 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A292DCF6C
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 16:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588503DC87B;
+	Mon,  1 Jun 2026 17:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780330888; cv=none; b=Vt+OqK1iI2vs1QMGN+5eGvnQOUg6HrZATdmNW7WFliI/aBfmvHXRvy4LgstZWxjG4m8QzolWXqDtaZIHh+6RdjPvXNplnPAI6BEiZbH36i0SbX/yiSwitXJquFGLlik4s1leK5FJuYQz9T8Sf7UVWSTR9I6OnCdNGYAa+viYOMI=
+	t=1780333807; cv=none; b=bD/ZNDSK8JEQym4uaVvYaTrQmRmYLQRHq6mqzVCGvPixHA/ir65OLE1TxqFVUn2yqriEky7f2zz4WEmdI1NQqW5yBIKD9CwxrXb2gk+cgvIaPklHHm0zsRfA+8JN1dQF7NJT7MSNAcabwOgc70PYd9rdan063g+4n+5p7troMOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780330888; c=relaxed/simple;
-	bh=k7ySbyvD0GdGlyn0qsxM3SOfdu/I3kZH64zLCoeIHlw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bLQoQxVX4SUmlc5A4K+KG0drHYbAETXen++zjBMFhq2x4oDcyOlTjGQpcPym5groe7/8TXQyYD2D38/YhoM6DEwfeAX3vZnO8TcWYLhERmIlsgYKARg5V6iMEM6EN6hi6I/KobYXr6vjuwgGa4k7nwzsOPuQJ5ifkRIwmIw6xNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVkHsapG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780333807; c=relaxed/simple;
+	bh=CWL1rtq9pVwepFgxU82PQCZiZFBXKjMZtNBPVpXoa2A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CjaUvHNR/vv4tPRoaWM7M6X7Ks8C3iMXdTJSxGVwVqGqM0AR1DxX/yILAnK7ANk4id38av0WVTmT+d4SwtDRPR59QN/ZwNFPPuAg3XkzjNj4g7rDFy4Q2sk2pTsUkqzhmowE3bm53RPsKUIIFs6wc+/This7X3W5SpcphRy21B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TGB1eFUz; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVkHsapG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5BE91F00893;
-	Mon,  1 Jun 2026 16:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780330887;
-	bh=DAnkqnhw02xqIlImT7HHuv2sZn79opikAIAgCo0S6F4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BVkHsapGyJXI0lKdlcR9NWjM11y8pWv9Ndry3Cj/Ob2/MhQozRDVKphh/3R8XTd8+
-	 YybWwdg/ab/qB0eznjWKtwmq0MALz6lryvDFx959EfHrQe3eiIXWbTxsfpAW7f6l2Q
-	 2nwQJ53tpB4yRon4XOfQn1N/ZpBxdlidKizbHWlJAJ4GChRhwmWnBX+AgIr0WnKuz8
-	 wO905C7c+AFtfm+stwhcSBs4lCzKHG+/4Y/nsC6YiYcpMIRY69IrqDDRdhYzK0jglZ
-	 7TEsdu8m2fuoZZ30XgLssLAinLjTGVBmA2dMDf0zLGukLgF5qTQrhxE81BQahbKXpx
-	 VuVzhfVDM8eJA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/2] perf vendor events amd: Update Zen 5 core events
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sandipan Das" <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <f16d1391366762dee0d49f00697f5e6ea913e2c1.1780330378.git.sandipan.das@amd.com>
-References: <f16d1391366762dee0d49f00697f5e6ea913e2c1.1780330378.git.sandipan.das@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 01 Jun 2026 16:21:26 +0000
-Message-Id: <20260601162126.D5BE91F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TGB1eFUz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780333807; x=1811869807;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CWL1rtq9pVwepFgxU82PQCZiZFBXKjMZtNBPVpXoa2A=;
+  b=TGB1eFUz+LQGE1dOFci5qu5yDBYIID/ZyWkYb9SqPE5WOvmK0bQy2Ebs
+   T9eqwpnlj7ki+n71kPXUINkVrzJEUIusHEirJ4RiC0jYVgGwUG1fj/Ngk
+   thfw2yMd4LKeQuTezVDPkXGIN6ZPpcYcV1YJlLsmFvq4ZarriKExG3PGd
+   C7C5Q4r8HRQibXlSwM5MqhhZGK8KtOQeI+E9BRottO8wBmYpOIqOdAG4s
+   mmCZiIgNr9VKnCEQzDUD/ZkLh3Ah2rcu4kSdiPUYa0GrCI5/3XGJ4CpIz
+   ARlOAHX9r4vU0sN1oHnTkwOQUho97dNuzUUmCu27kxtOymfGZglODjF9f
+   A==;
+X-CSE-ConnectionGUID: tHHzCuQcQEi9iWyRqNq8Ww==
+X-CSE-MsgGUID: 2S4Oft8rRdWdWN2xKpR9uQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="98516968"
+X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
+   d="scan'208";a="98516968"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 10:10:06 -0700
+X-CSE-ConnectionGUID: c5aaYsOWRCGKca10yQyaSQ==
+X-CSE-MsgGUID: a1xSJbemS0+QM5oikBrPaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
+   d="scan'208";a="242584993"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 10:10:05 -0700
+From: Zide Chen <zide.chen@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH v2 0/8] perf/x86/intel/uncore: PMU setup robustness fixes
+Date: Mon,  1 Jun 2026 10:01:06 -0700
+Message-ID: <20260601170114.173359-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] Incorrect description for the newly added `fp_ops_retired_by_type.s=
-calar_logical` PMU event.
---
+This series fixes correctness issues in Intel uncore PMU setup:
 
-commit ec579a038d59c44007350888149b4dd94c5079db
-Author: Sandipan Das <sandipan.das@amd.com>
+- If all init_box() on a PMU fails, the PMU sysfs node may still exist,
+  while perf events read zeros and silently report wrong data.
+- If init_box() fails on only some dies, perf may return partial
+  non-zero counts, which is harder to diagnose.
+- CPU hotplug ref/unref ordering bugs can skip init_box() when the first
+  CPU in a die comes online, and can call box_exit() prematurely when
+  the second-to-last CPU goes offline.
+- PCI PMU cleanup on setup failure has activeboxes leaks and potential
+  NULL pointer dereference in error paths.
 
-perf vendor events amd: Update Zen 5 core events
+To address this, the series introduces a PMU broken state to track setup
+failures and switches MSR/MMIO PMUs to lazy registration, matching
+existing PCI behavior.
 
-This commit updates the definitions for Zen 5 core events by adding missing
-unit masks and fixing descriptions for several PMCx events.
+To avoid merge conflicts, this series should be applied after:
+https://lore.kernel.org/lkml/20260527151154.130505-1-zide.chen@intel.com/
+(textual conflict, no logical dependency)
 
-> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json b=
-/tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json
-> index 9204bfb1d69e0..39bd720f95414 100644
-> --- a/tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json
-[ ... ]
-> @@ -179,6 +179,30 @@
->      "BriefDescription": "Retired scalar floating-point blend ops.",
->      "UMask": "0x09"
->    },
-> +  {
-> +    "EventName": "fp_ops_retired_by_type.scalar_mov",
-> +    "EventCode": "0x0a",
-> +    "BriefDescription": "Retired scalar floating-point MOV ops.",
-> +    "UMask": "0x0a"
-> +  },
-> +  {
-> +    "EventName": "fp_ops_retired_by_type.scalar_shuffle",
-> +    "EventCode": "0x0a",
-> +    "BriefDescription": "Retired scalar floating-point shuffle ops (may =
-include instructions not necessarily thought of as including shuffles e.g. =
-horizontal add, dot product, and certain MOV instructions).",
-> +    "UMask": "0x0b"
-> +  },
-> +  {
-> +    "EventName": "fp_ops_retired_by_type.scalar_bfloat",
-> +    "EventCode": "0x0a",
-> +    "BriefDescription": "Retired scalar floating-point bfloat ops.",
-> +    "UMask": "0x0c"
-> +  },
-> +  {
-> +    "EventName": "fp_ops_retired_by_type.scalar_logical",
-> +    "EventCode": "0x0a",
-> +    "BriefDescription": "Retired scalar floating-point move ops.",
+V2 changes:
+- Add new patch 1 to fix PCI PMU cleanup issues (Sashiko)
+- Keep pmu->activeboxes naming and semantics to avoid potential refcnt
+  leaks in the uncore_pci_remove() path. To accomplish this, make the
+  PMU broken flag sticky and decrement pmu->activeboxes on active box
+  only.
+- Update commit messages and changelogs according.
 
-[Severity: Low]
-This isn't a bug, but there is a typo in the description for the
-scalar_logical event. It currently reads "move ops", duplicating the
-description from the scalar_mov event. Should this be "logical ops"?
+V1: https://lore.kernel.org/lkml/20260512233048.9577-1-zide.chen@intel.com/
+Sashiko's review: https://sashiko.dev/#/patchset/20260512233048.9577-1-zide.chen@intel.com
 
-A subsequent patch in the series (commit "perf vendor events amd: Update Zen
-6 core events") fixes this identical typo for Zen 6 architectures, but it
-appears to remain unaddressed here for Zen 5.
+Zide Chen (8):
+  perf/x86/intel/uncore: Fix PCI PMU cleanup on setup failure
+  perf/x86/intel/uncore: Fix refcnt and other cleanups
+  perf/x86/intel/uncore: Let init_box() callback report failures
+  perf/x86/intel/uncore: Keep PCI PMUs working when MMIO/MSR setup fails
+  perf/x86/intel/uncore: Factor out box setup code
+  perf/x86/intel/uncore: Introduce PMU flags and broken state
+  perf/x86/intel/uncore: Fix uncore_box ref/unref ordering on CPU
+    hotplug
+  perf/x86/intel/uncore: Implement lazy setup for MSR/MMIO PMU
 
-> +    "UMask": "0x0d"
-> +  },
+ arch/x86/events/intel/uncore.c           | 222 +++++++++++------------
+ arch/x86/events/intel/uncore.h           |  39 +++-
+ arch/x86/events/intel/uncore_discovery.c |  21 ++-
+ arch/x86/events/intel/uncore_discovery.h |   6 +-
+ arch/x86/events/intel/uncore_nhmex.c     |   3 +-
+ arch/x86/events/intel/uncore_snb.c       |  82 ++++++---
+ arch/x86/events/intel/uncore_snbep.c     |  77 +++++---
+ 7 files changed, 254 insertions(+), 196 deletions(-)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/f16d1391366762dee0d=
-49f00697f5e6ea913e2c1.1780330378.git.sandipan.das@amd.com?part=3D1
+-- 
+2.54.0
+
