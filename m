@@ -1,219 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F5C3E0234;
-	Mon,  1 Jun 2026 17:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05CD3E1209
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780333816; cv=none; b=DcUVfj0AWhGO5o0T7+U2r2FchkdDkhKx6nfOOeffBgVMFiq/ciTsp5L0NBtzcd7L2AYAOWYyYf2KlL5KqIBJTDG2js3FWWUT4uC8mBXXialng/8SuPfCiifdd2lrvc3NFuAuCfExnu98bpJtzLMI5JvjPXT/DInMcnZvHd1AGtY=
+	t=1780335916; cv=none; b=lEek+j2nmHt73hwZ12MYU4dr2CVHgt1IHIY8oj9mnY2OlmFUCf+YylEUhxiwivyiWvT/ruR0I81YsKrpH55DqZphGiXEciWZxFophpX2Bb1rTUkx9nd+ulXGirQ99xsPM89Cxkgw9eVkb2WIUNmAt3Kt4/5mtcUw1O9KIisWOP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780333816; c=relaxed/simple;
-	bh=I/BUfPUkHjGblVOmS74aFkShR8jlGuIoRVH4geV3Wwk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GMHUr6cnmNvN5ZZK/QTHZMktB0oow1vOHkIrgYIP3lThR1c8o099mstFKGFQLxnAVT0PLCybO89dTNzCP9r1jEGSZ1iv5UFC6ScMb20yPO/EvYCrzschl0NB97zijkjaUD6tAWKmqDkubeGdRMWowv/gIswcGF8KxUEwY5QEQY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SoI70BFw; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1780335916; c=relaxed/simple;
+	bh=EUaevAzgtzlvUB5/tuC/JSEZdio1mHCw6ZYwf4PCo8o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r4lPkoHmO+f05FTEg3M3NnyNwS48xLvixEUvIMHSNTgvSRCxPcIZga2ow++hU+WLhImICJ+S9ylOsHQ7WBUuomPoJ4/CizZlcOs84a75S9CxzJpSCdBLCpsPz0Na6dVT4Tg4Gp85pXG3dvbSt/x+4nfkfaSKY5UVqnvf/xJDqcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEfNe5Pt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SoI70BFw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780333813; x=1811869813;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=I/BUfPUkHjGblVOmS74aFkShR8jlGuIoRVH4geV3Wwk=;
-  b=SoI70BFwg2wT4sxxevINX5OaiEcu15qdU7F3R9Y4bOf6UY4ffDtXiVzf
-   nLo+0C9RiaErn361jcNklJK2lxzy2yLqhCKZl1FahkDGjNkH8/bTiSCpO
-   1W908Vu50tN1X99AcB1CsXNc5gaoBwmJuUeyd0Jqzfr7dXW3CfbsRyTQ3
-   kY4ThvA70/JMi90lVSVdUzsbNgLsmGrxwgWbIxXpCvyoG1MDg4Xlmw1Wk
-   G2n+ZyoAWCrBGhYNp4KDwlfGzePlldjx0s9rEbS7Go8CqLzUTCaBwtViI
-   FjHpW15kOL6YHsyxjr1gQrpFvaMgcaM63c7yY7kRLR3CqyZHL0I0V2S6e
-   Q==;
-X-CSE-ConnectionGUID: QbaJovO+T4CykkvyQ3oycw==
-X-CSE-MsgGUID: bCFm3mN8S6OG4TJjxBpxWQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="98517009"
-X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
-   d="scan'208";a="98517009"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 10:10:07 -0700
-X-CSE-ConnectionGUID: T/sL32kLSsiSWaGmhcPehQ==
-X-CSE-MsgGUID: AVEEGvB+RqObJ9JXKax7Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
-   d="scan'208";a="242585015"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 10:10:05 -0700
-From: Zide Chen <zide.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Zide Chen <zide.chen@intel.com>
-Subject: [PATCH V2 7/8] perf/x86/intel/uncore: Fix uncore_box ref/unref ordering on CPU hotplug
-Date: Mon,  1 Jun 2026 10:01:13 -0700
-Message-ID: <20260601170114.173359-8-zide.chen@intel.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260601170114.173359-1-zide.chen@intel.com>
-References: <20260601170114.173359-1-zide.chen@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEfNe5Pt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B8E1F008A0
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780335915;
+	bh=NQXET+HIwUHzkASejrWXITD/EhCJ1l5nthigBOUX5B4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=oEfNe5Pth2hdrzxmWdaSbNtuXmcjlg8gKIUg223dP+4ZwdGCXMPQ33PsBKQQIajO0
+	 +AmomxAsFo0OH7Cm9NVqZdKVAj2VPqmGM1B76rNnW+f979D/0veSKY8drBAH+nfGNc
+	 iwtxjto4v9iCqHQz09tMd7gQ6idoNceMM5Om1KMkm0MooI9YWggQuGJ3sx852rMKAf
+	 ykVuZ4ic3qP0RDUVaPvxl1uMg34mvKS3QR2OjIRjvU/pc/YHl7ZAPGJ+16pMm5xxo/
+	 jtM5xKa1OGdj8riB12cmSmbmoc7xp6GteeVjPnL4ENRX/FlIHrQCtAH6t+eJhHXx16
+	 RCC5q7A+dxBFA==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5aa68dbd44fso1378141e87.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jun 2026 10:45:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8IREfoplc0Z9N9pQrlb6ikl4Og+xnctdA50sXL2QS8ol8PABs0dkNKu87d1RWBJ6rHqtdt+GuWVMqs+t67CtTW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygh5WONKTe7l7EzOWhKKiFV1PMNqzM6ATA9RYOlR1pm7CxgkNO
+	TY02498qE0bazAiHnVfRabWPSfkcJVnd74dwCxXPsBOjg94ORP5PEST8qraQIjWolRBq0hPFJXa
+	H/F4bXaHrL+ie+TRuTAOXZiNLztDoQ40=
+X-Received: by 2002:a05:6512:3b97:b0:5aa:6e86:55c8 with SMTP id
+ 2adb3069b0e04-5aa6e8657c0mr1302970e87.12.1780335912894; Mon, 01 Jun 2026
+ 10:45:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260528183625.870813-1-ynorov@nvidia.com> <20260528183625.870813-6-ynorov@nvidia.com>
+In-Reply-To: <20260528183625.870813-6-ynorov@nvidia.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 1 Jun 2026 19:45:01 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gPZL7Cmi7Sm5pVN01AG7rb8NiwWkUJ9X6gwim67EUZPQ@mail.gmail.com>
+X-Gm-Features: AVHnY4L1KYHIevdOf61kuP7a6ocAZfa6dkfv0T6IORvr_Om4IsQ3giCPU7iBHEE
+Message-ID: <CAJZ5v0gPZL7Cmi7Sm5pVN01AG7rb8NiwWkUJ9X6gwim67EUZPQ@mail.gmail.com>
+Subject: Re: [PATCH 05/16] ACPI: pad: Use sysfs_emit() for idlecpus show
+To: Yury Norov <ynorov@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
+	Moritz Fischer <mdf@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jic23@kernel.org>, 
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Dan Williams <djbw@kernel.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Shuai Xue <xueshuai@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
+	Jiucheng Xu <jiucheng.xu@amlogic.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	Linu Cherian <lcherian@marvell.com>, Gowthami Thiagarajan <gthiagarajan@marvell.com>, 
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, Khuong Dinh <khuong@os.amperecomputing.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Aboorva Devarajan <aboorvad@linux.ibm.com>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Besar Wicaksono <bwicaksono@nvidia.com>, 
+	Ma Ke <make24@iscas.ac.cn>, Chengwen Feng <fengchengwen@huawei.com>, 
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-perf-users@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-pm@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, nvdimm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-cxl@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In uncore_event_cpu_online(), uncore_box_ref() was called before
-uncore_change_context().  uncore_box_ref() gates on box->cpu >= 0,
-but box->cpu is still -1 at that point because uncore_change_context()
-has not run yet.  As a result, the box is never initialized on the
-first CPU to come online in a die, leaving it permanently
-uninitialized in the single-CPU-per-die case.
+On Thu, May 28, 2026 at 8:36=E2=80=AFPM Yury Norov <ynorov@nvidia.com> wrot=
+e:
+>
+> idlecpus_show() is a sysfs show callback. Use sysfs_emit() and
+> cpumask_pr_args() to emit the mask.
+>
+> This prepares for removing cpumap_print_to_pagebuf().
+>
+> Signed-off-by: Yury Norov <ynorov@nvidia.com>
+> ---
+>  drivers/acpi/acpi_pad.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
+> index ec94b09bb747..04d61a6cc95f 100644
+> --- a/drivers/acpi/acpi_pad.c
+> +++ b/drivers/acpi/acpi_pad.c
+> @@ -334,8 +334,8 @@ static ssize_t idlecpus_store(struct device *dev,
+>  static ssize_t idlecpus_show(struct device *dev,
+>         struct device_attribute *attr, char *buf)
+>  {
+> -       return cpumap_print_to_pagebuf(false, buf,
+> -                                      to_cpumask(pad_busy_cpus_bits));
+> +       return sysfs_emit(buf, "%*pb\n",
+> +                         cpumask_pr_args(to_cpumask(pad_busy_cpus_bits))=
+);
+>  }
+>
+>  static DEVICE_ATTR_RW(idlecpus);
+> --
 
-Thus, box->refcnt is one count below the true value, and in the CPU
-offline path, the box will be torn down on the second-to-last CPU.
-
-In uncore_event_cpu_offline(), uncore_box_unref() was called after
-uncore_change_context(), so box->cpu is already -1 when the collector
-CPU goes offline, which prevents it from tearing down the box.
-
-Fix by swapping the call order in both paths so that
-uncore_box_{ref,unref}() runs at the point where box->cpu reflects
-the correct context.
-
-Fixes: c74443d92f68 ("perf/x86/uncore: Support per PMU cpumask")
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Zide Chen <zide.chen@intel.com>
----
- arch/x86/events/intel/uncore.c | 50 ++++++++++++++++------------------
- 1 file changed, 23 insertions(+), 27 deletions(-)
-
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index f2cb3fde2dda..6d710aef52ac 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1577,9 +1577,15 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- {
- 	int die, target;
- 
-+	/* Clear the references */
-+	die = topology_logical_die_id(cpu);
-+	uncore_box_unref(uncore_msr_uncores, die);
-+	uncore_box_unref(uncore_mmio_uncores, die);
-+
- 	/* Check if exiting cpu is used for collecting uncore events */
- 	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
--		goto unref;
-+		return 0;
-+
- 	/* Find a new cpu to collect uncore events */
- 	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
- 
-@@ -1592,16 +1598,10 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- 	uncore_change_context(uncore_msr_uncores, cpu, target);
- 	uncore_change_context(uncore_mmio_uncores, cpu, target);
- 	uncore_change_context(uncore_pci_uncores, cpu, target);
--
--unref:
--	/* Clear the references */
--	die = topology_logical_die_id(cpu);
--	uncore_box_unref(uncore_msr_uncores, die);
--	uncore_box_unref(uncore_mmio_uncores, die);
- 	return 0;
- }
- 
--static int allocate_boxes(struct intel_uncore_type **types,
-+static void allocate_boxes(struct intel_uncore_type **types,
- 			 unsigned int die, unsigned int cpu)
- {
- 	struct intel_uncore_box *box, *tmp;
-@@ -1618,8 +1618,10 @@ static int allocate_boxes(struct intel_uncore_type **types,
- 			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
- 				continue;
- 			box = uncore_alloc_box(type, cpu_to_node(cpu));
--			if (!box)
-+			if (!box) {
-+				uncore_pmu_set_broken(pmu);
- 				goto cleanup;
-+			}
- 			box->pmu = pmu;
- 			box->dieid = die;
- 			list_add(&box->active_list, &allocated);
-@@ -1630,14 +1632,13 @@ static int allocate_boxes(struct intel_uncore_type **types,
- 		list_del_init(&box->active_list);
- 		box->pmu->boxes[die] = box;
- 	}
--	return 0;
-+	return;
- 
- cleanup:
- 	list_for_each_entry_safe(box, tmp, &allocated, active_list) {
- 		list_del_init(&box->active_list);
- 		kfree(box);
- 	}
--	return -ENOMEM;
- }
- 
- static int uncore_box_ref(struct intel_uncore_type **types,
-@@ -1646,11 +1647,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
- 	struct intel_uncore_type *type;
- 	struct intel_uncore_pmu *pmu;
- 	struct intel_uncore_box *box;
--	int i, ret;
--
--	ret = allocate_boxes(types, die, cpu);
--	if (ret)
--		return ret;
-+	int i;
- 
- 	for (; *types; types++) {
- 		type = *types;
-@@ -1666,27 +1663,26 @@ static int uncore_box_ref(struct intel_uncore_type **types,
- 
- static int uncore_event_cpu_online(unsigned int cpu)
- {
--	int die, target, msr_ret, mmio_ret;
-+	int die, target;
- 
- 	die = topology_logical_die_id(cpu);
--	msr_ret = uncore_box_ref(uncore_msr_uncores, die, cpu);
--	mmio_ret = uncore_box_ref(uncore_mmio_uncores, die, cpu);
-+	allocate_boxes(uncore_msr_uncores, die, cpu);
-+	allocate_boxes(uncore_mmio_uncores, die, cpu);
- 
- 	/*
- 	 * Check if there is an online cpu in the package
- 	 * which collects uncore events already.
- 	 */
- 	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
--	if (target < nr_cpu_ids)
--		return 0;
--
--	cpumask_set_cpu(cpu, &uncore_cpu_mask);
--
--	if (!msr_ret)
-+	if (target >= nr_cpu_ids) {
-+		cpumask_set_cpu(cpu, &uncore_cpu_mask);
- 		uncore_change_context(uncore_msr_uncores, -1, cpu);
--	if (!mmio_ret)
- 		uncore_change_context(uncore_mmio_uncores, -1, cpu);
--	uncore_change_context(uncore_pci_uncores, -1, cpu);
-+		uncore_change_context(uncore_pci_uncores, -1, cpu);
-+	}
-+
-+	uncore_box_ref(uncore_msr_uncores, die, cpu);
-+	uncore_box_ref(uncore_mmio_uncores, die, cpu);
- 	return 0;
- }
- 
--- 
-2.54.0
-
+Applied (with a tweaked subject) as 7.2 material, thanks!
