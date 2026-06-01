@@ -1,131 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05CD3E1209
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B01D3E121E
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780335916; cv=none; b=lEek+j2nmHt73hwZ12MYU4dr2CVHgt1IHIY8oj9mnY2OlmFUCf+YylEUhxiwivyiWvT/ruR0I81YsKrpH55DqZphGiXEciWZxFophpX2Bb1rTUkx9nd+ulXGirQ99xsPM89Cxkgw9eVkb2WIUNmAt3Kt4/5mtcUw1O9KIisWOP8=
+	t=1780335926; cv=none; b=FIpouDzq1tw0bFvVHYZuHwt7e2JY2WNMRzIfVLFLG9NCtuxcgSCteRbJAZ76bfJJQIJfuylJMXlOG6w1A+w4RR2nQK3RNjqYnThP1o9FE7I/9KSPdRplXNd6I+CBud5uYykD87SopT36dS1kS7RIzZdmi5OKH8pim9X2O8IWnt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780335916; c=relaxed/simple;
-	bh=EUaevAzgtzlvUB5/tuC/JSEZdio1mHCw6ZYwf4PCo8o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r4lPkoHmO+f05FTEg3M3NnyNwS48xLvixEUvIMHSNTgvSRCxPcIZga2ow++hU+WLhImICJ+S9ylOsHQ7WBUuomPoJ4/CizZlcOs84a75S9CxzJpSCdBLCpsPz0Na6dVT4Tg4Gp85pXG3dvbSt/x+4nfkfaSKY5UVqnvf/xJDqcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEfNe5Pt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780335926; c=relaxed/simple;
+	bh=obYPMTqCpdo/P+LHqGirODUwR9JZ1tIrVLU26guOo8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uq2hrGODIDHO7+clPBF/B+pqhaWSlF3AJevvwvr7BTQe1fS3dYuB0dBw1RnYM8LVEdXxbEexM/c4gO7+YyrXl+aIz//YyTh9WRmjvwvHLIEuLqngML7lqN79dIx5qUe3b8oEXG2dXricWl+vEGJPD4AQgjGlio/79KSnT54J1pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KCmIEnUF; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEfNe5Pt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B8E1F008A0
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780335915;
-	bh=NQXET+HIwUHzkASejrWXITD/EhCJ1l5nthigBOUX5B4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=oEfNe5Pth2hdrzxmWdaSbNtuXmcjlg8gKIUg223dP+4ZwdGCXMPQ33PsBKQQIajO0
-	 +AmomxAsFo0OH7Cm9NVqZdKVAj2VPqmGM1B76rNnW+f979D/0veSKY8drBAH+nfGNc
-	 iwtxjto4v9iCqHQz09tMd7gQ6idoNceMM5Om1KMkm0MooI9YWggQuGJ3sx852rMKAf
-	 ykVuZ4ic3qP0RDUVaPvxl1uMg34mvKS3QR2OjIRjvU/pc/YHl7ZAPGJ+16pMm5xxo/
-	 jtM5xKa1OGdj8riB12cmSmbmoc7xp6GteeVjPnL4ENRX/FlIHrQCtAH6t+eJhHXx16
-	 RCC5q7A+dxBFA==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5aa68dbd44fso1378141e87.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jun 2026 10:45:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8IREfoplc0Z9N9pQrlb6ikl4Og+xnctdA50sXL2QS8ol8PABs0dkNKu87d1RWBJ6rHqtdt+GuWVMqs+t67CtTW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygh5WONKTe7l7EzOWhKKiFV1PMNqzM6ATA9RYOlR1pm7CxgkNO
-	TY02498qE0bazAiHnVfRabWPSfkcJVnd74dwCxXPsBOjg94ORP5PEST8qraQIjWolRBq0hPFJXa
-	H/F4bXaHrL+ie+TRuTAOXZiNLztDoQ40=
-X-Received: by 2002:a05:6512:3b97:b0:5aa:6e86:55c8 with SMTP id
- 2adb3069b0e04-5aa6e8657c0mr1302970e87.12.1780335912894; Mon, 01 Jun 2026
- 10:45:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KCmIEnUF"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D1CC1BA8;
+	Mon,  1 Jun 2026 10:45:18 -0700 (PDT)
+Received: from [10.57.36.65] (unknown [10.57.36.65])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D15F83F7D8;
+	Mon,  1 Jun 2026 10:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780335923; bh=obYPMTqCpdo/P+LHqGirODUwR9JZ1tIrVLU26guOo8k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KCmIEnUFWAUQXcvMZMdCzSlKsbbtQkS6c1Abuonbl/C0OjFv/SBoltrTJPjgVk8gW
+	 4ilL2RIbAj+bKkRKE5MdIozqB8fqgGvx7986/zvZ37TQG9nfnIdWn7E5r8aH13o1/L
+	 M7Tm0m7zw3+f/EaNW0eM4rKClvodJI5Bc/9/4w+A=
+Message-ID: <59893923-0faa-4cfd-b062-16df596637c2@arm.com>
+Date: Mon, 1 Jun 2026 18:45:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260528183625.870813-1-ynorov@nvidia.com> <20260528183625.870813-6-ynorov@nvidia.com>
-In-Reply-To: <20260528183625.870813-6-ynorov@nvidia.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 1 Jun 2026 19:45:01 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gPZL7Cmi7Sm5pVN01AG7rb8NiwWkUJ9X6gwim67EUZPQ@mail.gmail.com>
-X-Gm-Features: AVHnY4L1KYHIevdOf61kuP7a6ocAZfa6dkfv0T6IORvr_Om4IsQ3giCPU7iBHEE
-Message-ID: <CAJZ5v0gPZL7Cmi7Sm5pVN01AG7rb8NiwWkUJ9X6gwim67EUZPQ@mail.gmail.com>
-Subject: Re: [PATCH 05/16] ACPI: pad: Use sysfs_emit() for idlecpus show
-To: Yury Norov <ynorov@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
-	Moritz Fischer <mdf@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jic23@kernel.org>, 
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
-	Jiucheng Xu <jiucheng.xu@amlogic.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Linu Cherian <lcherian@marvell.com>, Gowthami Thiagarajan <gthiagarajan@marvell.com>, 
-	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, Khuong Dinh <khuong@os.amperecomputing.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Aboorva Devarajan <aboorvad@linux.ibm.com>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Besar Wicaksono <bwicaksono@nvidia.com>, 
-	Ma Ke <make24@iscas.ac.cn>, Chengwen Feng <fengchengwen@huawei.com>, 
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-perf-users@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, nvdimm@lists.linux.dev, linux-pci@vger.kernel.org, 
-	linux-amlogic@lists.infradead.org, linux-cxl@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on
+ Graviton5
+To: sashiko-reviews@lists.linux.dev, Aviv Bakal <avivb@amazon.com>
+Cc: linux-perf-users@vger.kernel.org
+References: <20260531110447.10095-3-avivb@amazon.com>
+ <20260531113259.5B0F71F00893@smtp.kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260531113259.5B0F71F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 28, 2026 at 8:36=E2=80=AFPM Yury Norov <ynorov@nvidia.com> wrot=
-e:
->
-> idlecpus_show() is a sysfs show callback. Use sysfs_emit() and
-> cpumask_pr_args() to emit the mask.
->
-> This prepares for removing cpumap_print_to_pagebuf().
->
-> Signed-off-by: Yury Norov <ynorov@nvidia.com>
-> ---
->  drivers/acpi/acpi_pad.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
-> index ec94b09bb747..04d61a6cc95f 100644
-> --- a/drivers/acpi/acpi_pad.c
-> +++ b/drivers/acpi/acpi_pad.c
-> @@ -334,8 +334,8 @@ static ssize_t idlecpus_store(struct device *dev,
->  static ssize_t idlecpus_show(struct device *dev,
->         struct device_attribute *attr, char *buf)
->  {
-> -       return cpumap_print_to_pagebuf(false, buf,
-> -                                      to_cpumask(pad_busy_cpus_bits));
-> +       return sysfs_emit(buf, "%*pb\n",
-> +                         cpumask_pr_args(to_cpumask(pad_busy_cpus_bits))=
-);
->  }
->
->  static DEVICE_ATTR_RW(idlecpus);
+For the benefit of any humans...
+
+On 2026-05-31 12:32 pm, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> 
+> New issues:
+> - [High] Setting the DTC node's logical ID to the parent XP's logical ID causes DTC nodes to be sorted out of domain order, breaking PMU event routing.
+> - [High] The hardcoded bit-shifts in arm_cmn_graviton5_dtc_domain() can produce DTC domains >= 4, leading to out-of-bounds writes in arm_cmn_event_init().
+> 
+> Pre-existing issues:
+> - [High] Memory allocated for `hw->dtm_idx` and `hw->wp_idx` is leaked if `arm_cmn_event_init` fails.
 > --
+> 
+> commit c34c59523c8b94745143d1d1114415bb33c12d3e
+> Author: Aviv Bakal <avivb@amazon.com>
+> 
+> perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
+> 
+> Graviton5 uses a customised CMN-S3 implementation where certain discovery
+> registers report zeroed fields. This patch adds workarounds to identify the
+> variant, derive the DTC domain from the XP node ID, and set the DTC logical
+> ID from the XP's logical ID.
+> 
+>> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+>> index f1978a53d1c19..3fb71d9a57eb5 100644
+>> --- a/drivers/perf/arm-cmn.c
+>> +++ b/drivers/perf/arm-cmn.c
+>> @@ -2250,6 +2253,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_cmn *cmn, void __iomem *xp_reg
+>>   	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region + offset));
+>>   }
+>>   
+>> +static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
+>> +{
+>> +	unsigned int x = (xp_id >> 7) & 0xf;
+>> +	unsigned int y = (xp_id >> 3) & 0xf;
+>> +
+>> +	/*
+>> +	 * The unit info register reads as zero; derive the DTC domain from
+>> +	 * the XP's mesh coordinates over the 10x14 mesh.
+>> +	 */
+>> +	return (x / 5) + (y / 7) * 2;
+>> +}
+> 
+> [Severity: High]
+> Can the hardcoded bit-shifts extract overlapping bits if the mesh dimensions
+> are smaller than 10x14?
 
-Applied (with a tweaked subject) as 7.2 material, thanks!
+No, because this code path is specific to things which firmware claims 
+to be the Graviton5 CMN, and as such it hard-codes the known topology of 
+the Graviton5 CMN. We have to assume we can trust what firmware tells us 
+about the platform, or we wouldn't even be able to boot.
+
+> If the system describes a smaller mesh (e.g., 8x8), arm_cmn_xyidbits
+> evaluates to 3. This would cause the hardcoded shifts (xp_id >> 7) and
+> (xp_id >> 3) to extract overlapping bits that inflate y (e.g., y = 15),
+> yielding a domain of 5.
+> 
+> If a 14x10 mesh is used, the x coordinate can natively reach 13, yielding
+> a domain index of 4 ((13 / 5) + (9 / 7) * 2).
+> 
+> When an unvalidated domain index >= 4 is assigned to dn->dtc, does it
+> cause an out-of-bounds write in arm_cmn_event_init()?
+
+No, because there is no such thing. The maximum possible number of DTC 
+domains is 4. Even when correctly generated, the ID field in the 
+register is only 2 bits:
+
+https://developer.arm.com/documentation/107858/0205/Programmers-model/Register-summary/MXP-register-summary/por-dtm-unit-info?lang=en
+
+> drivers/perf/arm-cmn.c:arm_cmn_event_init() {
+>      ...
+>      hw->dtc_idx[dn->dtc] = 0;
+>      ...
+> }
+> 
+> Since hw->dtc_idx is a fixed 4-byte array (s8 dtc_idx[CMN_MAX_DTCS]), an
+> index >= 4 would write past its bounds and corrupt adjacent fields like
+> hw->num_dns.
+> 
+> [ ... ]
+> 
+>> @@ -2472,6 +2497,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+>>   
+>>   			switch (dn->type) {
+>>   			case CMN_TYPE_DTC:
+>> +				if (graviton5_workaround) {
+>> +					/* Node info logical ID is zeroed; use the XP's */
+>> +					dn->logid = xp->logid;
+>> +				}
+> 
+> [Severity: High]
+> Does overriding the DTC logical ID with the parent XP's logical ID cause
+> DTC nodes to be sorted out of domain order?
+> 
+> In arm_cmn_init_dtcs(), CMN_TYPE_DTC nodes are sorted by their logical ID
+> (dn->logid), which determines their index in the dynamically allocated
+> cmn->dtc array. Standard CMN parts have their logid read from hardware as
+> the exact domain index (0-3).
+
+No, the DTC logical ID is read from the logical_id field in 
+por_dt_node_info, and while the main HN-D DTC always has an ID of 0, 
+additional HN-T sub-DTCs should normally inherit the logical ID of their 
+parent XP.
+
+> Because the domain index here is a 2D block distribution, the physical XP IDs
+> do not monotonically increase with the domain index. For example, an XP at
+> x=7, y=0 belongs to domain 1 but has a smaller logid than an XP at
+> x=2, y=3 which belongs to domain 0.
+
+That is true, but since neither of those XPs has a DTC in this 
+configuration, it is also entirely irrelevant.
+
+> If cmn->dtc[0] points to the hardware base of domain 1 instead of domain 0,
+> will events programmed for domain 0 be routed to domain 1's hardware, breaking
+> PMU event counting?
+> 
+> Would it be better to explicitly set this as:
+> 
+>      dn->logid = arm_cmn_graviton5_dtc_domain(xp->id);
+
+No, because that would then be inconsistent with how the driver works 
+normally on non-Graviton5 systems, and as Aviv already confirmed, it 
+doesn't change the outcome in this case anyway.
+
+> [Severity: High]
+> This is a pre-existing issue, but does arm_cmn_event_init() leak memory
+> if initialization fails?
+> 
+> drivers/perf/arm-cmn.c:arm_cmn_event_init() {
+>      ...
+>      if (arm_cmn_is_watchpoint(event))
+>          if (eventid != CMN_WP_UP && eventid != CMN_WP_DOWN)
+>              return -EINVAL;
+>      ...
+>      return arm_cmn_validate_group(cmn, event);
+> }
+> 
+> The driver dynamically allocates memory using arm_cmn_alloc_dtm_idx() and
+> arm_cmn_alloc_wp_idx(). If the initialization subsequently encounters an
+> error, such as an invalid eventid for a watchpoint or a failure in
+> arm_cmn_validate_group(), it returns an error code without freeing the
+> allocated memory.
+> 
+> The core perf code perf_try_init_event() does not call the driver's
+> event->destroy() callback if pmu->event_init() fails, expecting the driver
+> to clean up its own resources. Could this allow memory leaks if invalid events
+> are repeatedly created?
+
+No, __free_event() invokes event->destroy(), and if perf_alloc_event() 
+could fail without freeing the event then that would be a much greater 
+memory leak anyway.
+
+Robin.
