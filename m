@@ -1,183 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF570274B2A
-	for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 11:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ACF4C92
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 00:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780227180; cv=none; b=ZF3TxJOqtouFepUDovRc91PGkjQJYEXdxXwDEaqg0rB3Ui6xYPkyj6Pf/GIEd/lEue9E0cFzDw98syJY3fW2dQu12TULoyTYPjW/CiIyauL4HodEg9KvWYp/Io3w5ZHfh7l7Euxb5peZDpRetA0gA4N2TKuauEZK1Ca1lBxne5Q=
+	t=1780272359; cv=none; b=FsF5/PKzKl/uO1vdEN6TKHNL08PGZ04DD6ui0Eq4W+sE3IqQgpnJ4+BeiuELujU0W81xZDuiz174MEw523J2/wASTkQ0oY6FnqaVqaRSTKTAXN+NFg+UefuS6q42kTg458ffW6Q6wGQVERtYa4hYq86FZgeQE7u9IZ3SHmSJE+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780227180; c=relaxed/simple;
-	bh=hqSLUxUYu8GkmUYMecnJz1rdNoQLtM+KNsshNj6oXmw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OHdqmXTrAHzdwQU25lJGtAuYy/jV/ZCal6XSfkpHML4zn7bS0n/U15WSKU/iarW3+FlUIf+lmX/IKaCoHbZctuKxjkAjhTDZOHrcFxj1T9IJTyzTadxsdELP9V6J/dF345H0nalIjhseSlJc/SuLch/HIr2q66lul08FwWQfQR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V3hqrUaD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780272359; c=relaxed/simple;
+	bh=ngJ/Mj8Bcywxu572XnE53uO9hdP/FNucStr177ix1No=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=QY3wMmh7v74HBqpv+w9cj25zidDrxKO2M9QGuk+vRBoTB/PLSul3kzEUmEuV4Y7BC+fPRFwKqx04mN9xn/u5hj4sD5lcpXN0YGqqXOkN41k39f2X26xu6+RmC0yqsOYp45GoKJyNFH8sHfC7p7Vo3CP3UNUo0++AidoJXHSbCIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u86RToKg; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3hqrUaD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B0F71F00893;
-	Sun, 31 May 2026 11:32:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780227179;
-	bh=5ODlMmNcvXtU4y8qcawCpdcLjrAgTIBPyOtBbd6uVF4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=V3hqrUaDFTCHNfqYKBEnX8ahFTGe+929wDqQCKdktmMtXpGip1Bj1FefUIKxOLcc3
-	 50llqdCC1M+3/Yyu9eNEJkeuaThxtFWZlQodOtQUKWBJ/BQ0cLSH5Qs6Su92YIRkWX
-	 y6gIeqvQ8t8KIddJCsaTqqDte9A1a8NL0Oo248Po5RVGRiHgARzHQIHuTeEfoYVYFK
-	 lBT2bXqZw0G8MypGOLLJ667Do6jN3gK5R/eugr3t/PpO6owYpfK/J/KslILpmyOSIK
-	 5wGR9+ygL9GszIM4anGbazJwBZo/HEVE5J0OpirLQYlMn9v5Cvh63gUIVB2066p+/H
-	 fvrq0FgOlJ3hQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on
- Graviton5
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Aviv Bakal" <avivb@amazon.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260531110447.10095-3-avivb@amazon.com>
-References: <20260531110447.10095-3-avivb@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 31 May 2026 11:32:58 +0000
-Message-Id: <20260531113259.5B0F71F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u86RToKg"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304e3e3fba5so12806536eec.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 17:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780272356; x=1780877156; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2jWw8vXsDRW3SEZeKoJSMalSZ2Ddsgdbn7LnqKkFxZ0=;
+        b=u86RToKgDUdsUP/9dwUuSRf5RmYsmCO0luaoIrvSwzVvJdJbaYDVa4jp07wfZT1aeP
+         I4B1L2lFveeMsNL2G00Cmrk3uckRk1tvUAgVHNrNGQOd6QUpBxu+/ecHT0MI7xl9Pw6W
+         FTIxfWJu3m//CoOyvir43wALShfKhHXpccNwSoW8IHggUF84yx+wqUrVjyYh9IgkWXjD
+         ZE+RFpQwSIMO/Uf0Btin4DrJwQH7ROg65M1Joav1Bx9ezCm4/lQqzPiuk33SvlRcZsxX
+         slJipoCkD9r6lFnsLGe1qLSBSQ7vjE73LSvXqdlHnt2ZQdblalWw4MxsGYxGe035E2Gh
+         f1Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780272356; x=1780877156;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2jWw8vXsDRW3SEZeKoJSMalSZ2Ddsgdbn7LnqKkFxZ0=;
+        b=Hhi2tzhzxYhW2WjywA7poR8oDI9deAwNhteKsjg608bL9PiCBDg3x4qhn8EEQDVaBE
+         +pHbW1O9HUSaRGfXJZh72x5zCfC3OaOHik0i/vq+GlzvV9HLt3kllrsazNQxYOEjiEki
+         CIjr0w0BIM1y5ztzQDHJzg3hlQbUYU5kXRXFTeq0Ipnm4e3JzF0jS+qzmgiBV6dLSp0n
+         lQeIn5BaaNfGVuyvJSTr0TfpClXwykCg1ohtElY52UkS7WOe7TjlkcSkjRGpJbjSX2QQ
+         3aJvaddTyJxOr8zbc127gJ74H7lBECuzNJyTlbXw07LWLTdZLYHSpWof1z4RfhWmDtIq
+         97sQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+IZtZ91xzF6N6+z8zx2XQ/apI25b9ZmbnZ2R8ju8IQwAQmV9E7UcXwkNZOmSlh8tEPhsX8aZoFByXqx+hxHybC@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuL3H2ySZE5Thss2m1qLssfNd65p0T22AK1vJ3KDiEK8WPtR24
+	Ak02+KX+nOLN0EevszQ8DWnJRwmiWaFN06vlr//KxrJfiG5lemN9TaDhYM0rdb9pTtrHd33DVdh
+	u9zYFuI+3yA==
+X-Received: from dyek28.prod.google.com ([2002:a05:7300:641c:b0:2e6:52c7:6f4f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e58b:b0:2d9:6373:ad10
+ with SMTP id 5a478bee46e88-304fa522c2dmr4307064eec.7.1780272355560; Sun, 31
+ May 2026 17:05:55 -0700 (PDT)
+Date: Sun, 31 May 2026 17:05:33 -0700
+In-Reply-To: <20260531082235.940833-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260531082235.940833-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
+Message-ID: <20260601000548.1195604-1-irogers@google.com>
+Subject: [PATCH v5 00/15] perf test: Accelerate parallel test harness and add
+ JUnit XML reporting
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
+	namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org, 
+	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+Motivation & Key Enhancements
 
-New issues:
-- [High] Setting the DTC node's logical ID to the parent XP's logical ID ca=
-uses DTC nodes to be sorted out of domain order, breaking PMU event routing.
-- [High] The hardcoded bit-shifts in arm_cmn_graviton5_dtc_domain() can pro=
-duce DTC domains >=3D 4, leading to out-of-bounds writes in arm_cmn_event_i=
-nit().
+1. **Test Harness Acceleration & Parallel Polling**
 
-Pre-existing issues:
-- [High] Memory allocated for `hw->dtm_idx` and `hw->wp_idx` is leaked if `=
-arm_cmn_event_init` fails.
---
+   Previously, when running tests in parallel mode (`perf test -v`),
+   child processes writing massive amounts of logging output to pipes
+   (such as Granite Rapids PMU metric parsing) would saturate the 64KB
+   pipe buffer and block indefinitely. The parent harness only polled
+   the pipe of the "current" sequential test waiting to be printed,
+   causing severe execution bottlenecks.
 
-commit c34c59523c8b94745143d1d1114415bb33c12d3e
-Author: Aviv Bakal <avivb@amazon.com>
+   - Refactored the parallel poll loop to drain output pipes from all
+     active children simultaneously into dynamic per-child buffers
+     (`struct strbuf`). Reaping occurs asynchronously out of order,
+     while final console printing remains strictly sequential.
 
-perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
+   - Added explicit pipe draining after child process termination to
+     prevent losing trailing log data.
 
-Graviton5 uses a customised CMN-S3 implementation where certain discovery
-registers report zeroed fields. This patch adds workarounds to identify the
-variant, derive the DTC domain from the XP node ID, and set the DTC logical
-ID from the XP's logical ID.
+   - **Benchmark**: This drops parallel verbose execution time for the
+     PMU events suite from ~35 seconds down to ~5.9 seconds (an ~83%
+     reduction in latency).
 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index f1978a53d1c19..3fb71d9a57eb5 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -2250,6 +2253,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_=
-cmn *cmn, void __iomem *xp_reg
->  	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region =
-+ offset));
->  }
-> =20
-> +static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
-> +{
-> +	unsigned int x =3D (xp_id >> 7) & 0xf;
-> +	unsigned int y =3D (xp_id >> 3) & 0xf;
-> +
-> +	/*
-> +	 * The unit info register reads as zero; derive the DTC domain from
-> +	 * the XP's mesh coordinates over the 10x14 mesh.
-> +	 */
-> +	return (x / 5) + (y / 7) * 2;
-> +}
+2. **Dynamic Test Suites & Granular PMU Subtests**
 
-[Severity: High]
-Can the hardcoded bit-shifts extract overlapping bits if the mesh dimensions
-are smaller than 10x14?
+   Monolithic test cases (like "Parsing of PMU event table metrics")
+   previously evaluated hundreds of tables in a single sequential run,
+   making failures difficult to isolate.
 
-If the system describes a smaller mesh (e.g., 8x8), arm_cmn_xyidbits
-evaluates to 3. This would cause the hardcoded shifts (xp_id >> 7) and
-(xp_id >> 3) to extract overlapping bits that inflate y (e.g., y =3D 15),
-yielding a domain of 5.
+   - Added `setup` callbacks and private data pointers (`void *priv`)
+     to `struct test_suite` and `struct test_case`, enabling dynamic
+     runtime testcase generation.
 
-If a 14x10 mesh is used, the x coordinate can natively reach 13, yielding
-a domain index of 4 ((13 / 5) + (9 / 7) * 2).
+   - Split the PMU events metric parsing test into individual subtests
+     (one pair of real/fake PMU tests per metric table), allowing them
+     to execute concurrently and report granular results.
 
-When an unvalidated domain index >=3D 4 is assigned to dn->dtc, does it
-cause an out-of-bounds write in arm_cmn_event_init()?
+3. **Advanced Triaging & Automated Summary Reporting**
 
-drivers/perf/arm-cmn.c:arm_cmn_event_init() {
-    ...
-    hw->dtc_idx[dn->dtc] =3D 0;
-    ...
-}
+   Triaging failures in highly verbose automated runs previously
+   required scrolling through thousands of lines of console output.
 
-Since hw->dtc_idx is a fixed 4-byte array (s8 dtc_idx[CMN_MAX_DTCS]), an
-index >=3D 4 would write past its bounds and corrupt adjacent fields like
-hw->num_dns.
+   - Introduced a smart, configurable failure snippet processor
+     (`--failure-snippet-lines`) that dynamically extracts root-cause
+     context lines matching failure keywords (`error`, `fail`, `segv`,
+     `abort`) while preserving outline markers.
 
-[ ... ]
+   - Implemented an automated global execution summary printed at the
+     absolute tail of the test run, presenting clear pass/skip/fail
+     totals alongside an explicit list of failed test cases for
+     effortless cross-referencing.
 
-> @@ -2472,6 +2497,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, u=
-nsigned int rgn_offset)
-> =20
->  			switch (dn->type) {
->  			case CMN_TYPE_DTC:
-> +				if (graviton5_workaround) {
-> +					/* Node info logical ID is zeroed; use the XP's */
-> +					dn->logid =3D xp->logid;
-> +				}
+   - Fixed subtest status column alignment (`: Ok`) for multi-digit
+     test indexes.
 
-[Severity: High]
-Does overriding the DTC logical ID with the parent XP's logical ID cause
-DTC nodes to be sorted out of domain order?
+   - Updated shell script SPDX header parsing to prevent license
+     strings from being incorrectly extracted as test descriptions.
 
-In arm_cmn_init_dtcs(), CMN_TYPE_DTC nodes are sorted by their logical ID
-(dn->logid), which determines their index in the dynamically allocated
-cmn->dtc array. Standard CMN parts have their logid read from hardware as
-the exact domain index (0-3).
+4. **JUnit XML Reporting & CI Integration**
 
-Because the domain index here is a 2D block distribution, the physical XP I=
-Ds
-do not monotonically increase with the domain index. For example, an XP at
-x=3D7, y=3D0 belongs to domain 1 but has a smaller logid than an XP at
-x=3D2, y=3D3 which belongs to domain 0.
+   Added a `-j`/`--junit` command-line option to generate standard
+   JUnit XML test reports (`test.xml`).
 
-If cmn->dtc[0] points to the hardware base of domain 1 instead of domain 0,
-will events programmed for domain 0 be routed to domain 1's hardware, break=
-ing
-PMU event counting?
+   - Captures individual test suite and subtest execution latency
+     alongside XML-escaped failure logs and skip reasons.
 
-Would it be better to explicitly set this as:
+   - Guarantees absolute timing precision and immunity to wall-clock
+     jumps by measuring durations using
+     `clock_gettime(CLOCK_MONOTONIC)` and harvesting `end_time`
+     exactly when child processes exit to insulate latencies from
+     out-of-order sequential UI printing delays.
 
-    dn->logid =3D arm_cmn_graviton5_dtc_domain(xp->id);
+   - Added a standalone shell test script to validate generated JUnit
+     XML syntax using Python's `ElementTree` parser.
+
+5. **Elimination of External C Compiler Dependencies**
+
+   The Intel PT shell test (`test_intel_pt.sh`) previously compiled
+   external C workloads at runtime using `/usr/bin/cc`, which
+   frequently breaks in hermetic or minimal CI environments.
+
+   - Created a built-in self-modifying JIT workload (`perf test -w
+     jitdump`) and switched the script to use built-in workloads.
+
+   - To guarantee robust multi-architecture compatibility without
+     external C compiler dependencies, the JIT workload immediate
+     instruction arrays dynamically encode `CHK_BYTE` into opcodes
+     across x86, ARM32, ARM64, RISC-V, PowerPC, MIPS, LoongArch, and
+     s390x, with clean `#else` fallbacks for unsupported
+     architectures.
+
+Changes from v4 to v5:
+  - Incorporated LKML maintainer feedback for robust process checks, signal safety, leaks, and mixed declarations:
+    - Added ISO C90 platform guards and robust waitpid fallbacks for `/proc/<pid>/status` queries during active process checks.
+    - Switched parallel poll pipe draining and error strbuf merging to rely on robust memory releases and `strbuf_addstr`.
+    - Corrected multi-digit test status output index padding arithmetic.
+    - Updated JUnit XML summary conditionals to precisely catch execution result failures.
+    - Eliminated ISO mixed declaration warnings in `builtin-test.c` to fully comply with `-Wdeclaration-after-statement`.
 
 
-[Severity: High]
-This is a pre-existing issue, but does arm_cmn_event_init() leak memory
-if initialization fails?
+Ian Rogers (15):
+  perf jevents.py: Make generated C code more kernel style
+  perf pmu-events: Add API to get metric table name and iterate tables
+  perf test: Drain pipe after child finishes to avoid losing output
+  perf test: Support dynamic test suites with setup callback and private
+    data
+  perf test pmu-events: A sub-test per metric table
+  tools subcmd: Robust fallback and existence checks for process reaping
+  perf test: Refactor parallel poll loop to drain all pipes
+    simultaneously
+  perf test: Show snippet failure output for verbose=1
+  perf test: Add summary reporting
+  perf test: Fix subtest status alignment for multi-digit indexes
+  perf test: Skip shebang and SPDX comments in shell test descriptions
+  perf test: Split monolithic 'util' test suite into sub-tests
+  perf test: Add -j/--junit option for JUnit XML test reports
+  perf test: Add shell test to validate JUnit XML reporting output
+  perf test: Remove /usr/bin/cc dependency from Intel PT shell test
 
-drivers/perf/arm-cmn.c:arm_cmn_event_init() {
-    ...
-    if (arm_cmn_is_watchpoint(event))
-        if (eventid !=3D CMN_WP_UP && eventid !=3D CMN_WP_DOWN)
-            return -EINVAL;
-    ...
-    return arm_cmn_validate_group(cmn, event);
-}
+ tools/lib/subcmd/run-command.c                |   51 +-
+ tools/perf/pmu-events/empty-pmu-events.c      | 8823 +++++++++++------
+ tools/perf/pmu-events/jevents.py              |  849 +-
+ tools/perf/pmu-events/pmu-events.h            |    4 +
+ tools/perf/tests/builtin-test.c               |  649 +-
+ tools/perf/tests/pmu-events.c                 |  156 +-
+ tools/perf/tests/shell/test_intel_pt.sh       |  169 +-
+ .../tests/shell/test_test_junit_output.sh     |   63 +
+ tools/perf/tests/tests-scripts.c              |   81 +-
+ tools/perf/tests/tests.h                      |    3 +
+ tools/perf/tests/util.c                       |   20 +-
+ tools/perf/tests/workloads/Build              |    1 +
+ tools/perf/tests/workloads/jitdump.c          |  188 +
+ tools/perf/util/jitdump.h                     |    3 +-
+ 14 files changed, 7353 insertions(+), 3707 deletions(-)
+ create mode 100755 tools/perf/tests/shell/test_test_junit_output.sh
+ create mode 100644 tools/perf/tests/workloads/jitdump.c
 
-The driver dynamically allocates memory using arm_cmn_alloc_dtm_idx() and
-arm_cmn_alloc_wp_idx(). If the initialization subsequently encounters an
-error, such as an invalid eventid for a watchpoint or a failure in
-arm_cmn_validate_group(), it returns an error code without freeing the
-allocated memory.
+-- 
+2.54.0.823.g6e5bcc1fc9-goog
 
-The core perf code perf_try_init_event() does not call the driver's
-event->destroy() callback if pmu->event_init() fails, expecting the driver
-to clean up its own resources. Could this allow memory leaks if invalid eve=
-nts
-are repeatedly created?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260531110447.1009=
-5-1-avivb@amazon.com?part=3D2
