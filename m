@@ -1,129 +1,309 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660553E171F
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39F030C34A;
+	Mon,  1 Jun 2026 18:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780336641; cv=none; b=dSyXV3n8BOmApuTzObPuidWEsHhmhaNMgM+roic4kp80Cl/1e6ORH09+wO7owf2semuDtqNJ+WqObwxROOZONiP1hjgS0kSKczUL0zxNbG46y+kSVBHcUEU4lqOnY8dm9Efwey+Uy9N1IbAoCkESr/8UcGmEyE/O5jLh5fc3oS8=
+	t=1780338242; cv=none; b=oZZTo+AntvrdnC+JOWSIpvoX8wGxcc/PWr8WdafC9S+FmBY9dTej3W33plZ8+TVspl2fAIbDkQiXDtVyF4o5b13iwz43OXgJ/1Y2EDUKHbBnF+7yV+Kj4ROlvw4DK375MWAs04GVO25jYvUz1QGwAAaof88mBqczzJwvMlPSczs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780336641; c=relaxed/simple;
-	bh=a8NNwl3gj28TdelJ2QDDl+HZA18Xikw2b26A8/RV0gM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ch8YMw2wgBmepPMhfWCOXjTqRodCH9c1YPSlxDI1STwBUb0KRQTF680jR76hr79AxiWhE8DiJdeeSdaQLkTcfQIrMjrJ39nYFvbhqxgfFmwfmI3N3HYwfrcf7YiKxAgTaoFlH6iPXxG2M0KHparCssuq7H7tGD3AShZmOYDV1b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YBEcWjLV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780338242; c=relaxed/simple;
+	bh=1F7fg/tEvp/FvUfG5iI5KCJsJYyIJR+YYPZox5LYG2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b3eB6O/LiWxrvjhWE97Ei5pUMRWODWv7cn5ykc2pXwuxXjlojjBcrgbHTg4Ownz6CEVUIQRbH3ro9kS8OdORkJfDIVjK+W4jnE5FCd8Ubxqs3oGldP+/odsb2a+aYrBQZIBIv8MybpXOC0PkeKFftGqE3LjLZGxC1Xb+dOWHvYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=GbcxeAij; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YBEcWjLV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351141F00A00
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780336639;
-	bh=Fs6zIa+oKHWvRltzPvd2mFdEu12rLJwaXHbNCVd0THk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=YBEcWjLVnMFNyhTH2clkn3SS4OxRe1EiT16jl+iPdqtWZ6g6WzL01QnGkF+WWRam7
-	 w/ZcqoOJqRowf8oOS8Q6viCgpRJsyJiBa+d4C5wmKbJH7tJiJhiDb93cwLqYUlDKml
-	 mHXcxS57F1wvpuoDi3TBhJTiWc6lIXFRC6DLn8uGUOMYBw6GaJOyoK2kyMIyoxNc7p
-	 m4+++rUeb0vl0IzyXPwELbWx2Wf/A7WH/4TyR/wup0oelEBZRQeugazaRmmGov4zso
-	 HRlSs7aOsYQJ+0QyGGCrz2ZQ3fQKmzgNOCSA6CE/MEXudplG9ukTFIS7NytFwxsJHx
-	 +0+P15plzbwXw==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5aa6863327fso1325304e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jun 2026 10:57:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8TbHHrELlGlK3ZGHj6DE2osfyd1V30kEOX7G3rbeV+kWNU7v41uOuoJ4XRsJtKZKIDGv+W+mu0+d6VRh1rEN+P@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4QC8ws8fK7CELqJ3fUePAHJrm8PBKMbkMSgeux7xgTltnAB2q
-	ipf9PfBnDn7UVv8G3w9yLZyfN2ufDihI+U7gjt9mRy/5C0XOiUMTkgTZxzd+GQnc/eyxrr/EA5B
-	NA7pS2Oh9lOTE5S45MSmIscqzUcWfOqM=
-X-Received: by 2002:a05:6512:8007:20b0:5aa:6395:f9c5 with SMTP id
- 2adb3069b0e04-5aa73ee8720mr300250e87.27.1780336637107; Mon, 01 Jun 2026
- 10:57:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="GbcxeAij"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CD3B1BA8;
+	Mon,  1 Jun 2026 11:23:55 -0700 (PDT)
+Received: from [10.57.36.65] (unknown [10.57.36.65])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6FDB3F632;
+	Mon,  1 Jun 2026 11:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780338240; bh=1F7fg/tEvp/FvUfG5iI5KCJsJYyIJR+YYPZox5LYG2Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GbcxeAijqdZzVNCpLR680yLf2eIORskdf2ZWNmSznuwe2cL4sHhHTSwhNZujK0+Tf
+	 LlOTv0A4LCBDYfnxgOqK3q3M0iT7a815YxMCqQlVzf8Fk/ZpumH5oUiHVvwprigKi3
+	 j4Z8Emw1016utYplgyLgfP++/S2TsYfurtHZIxyU=
+Message-ID: <3dd451b2-6d80-4636-a832-35b24411df2b@arm.com>
+Date: Mon, 1 Jun 2026 19:23:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260528183625.870813-1-ynorov@nvidia.com> <20260528183625.870813-15-ynorov@nvidia.com>
-In-Reply-To: <20260528183625.870813-15-ynorov@nvidia.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 1 Jun 2026 19:57:04 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g4G9aJ1fjQxXmk1YHXh+xBojpFz207j_jz7HiLH1Lz1Q@mail.gmail.com>
-X-Gm-Features: AVHnY4INVXbw7SKAZHG4Jnm8fXAHVwo_FKl3cnkJN8dTeVudl-a8v97e8VxcFA4
-Message-ID: <CAJZ5v0g4G9aJ1fjQxXmk1YHXh+xBojpFz207j_jz7HiLH1Lz1Q@mail.gmail.com>
-Subject: Re: [PATCH 14/16] powercap: intel_rapl: Use sysfs_emit() for cpumask show
-To: Yury Norov <ynorov@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
-	Moritz Fischer <mdf@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jic23@kernel.org>, 
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
-	Jiucheng Xu <jiucheng.xu@amlogic.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Linu Cherian <lcherian@marvell.com>, Gowthami Thiagarajan <gthiagarajan@marvell.com>, 
-	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, Khuong Dinh <khuong@os.amperecomputing.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Aboorva Devarajan <aboorvad@linux.ibm.com>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Besar Wicaksono <bwicaksono@nvidia.com>, 
-	Ma Ke <make24@iscas.ac.cn>, Chengwen Feng <fengchengwen@huawei.com>, 
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-perf-users@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	driver-core@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, nvdimm@lists.linux.dev, linux-pci@vger.kernel.org, 
-	linux-amlogic@lists.infradead.org, linux-cxl@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] perf/arm-cmn: Move DTM index data out of
+ hw_perf_event
+To: Aviv Bakal <avivb@amazon.com>, will@kernel.org, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, zeev@amazon.com, blakgeof@amazon.com,
+ ilkka@os.amperecomputing.com
+References: <20260524153848.16334-1-avivb@amazon.com>
+ <20260531110447.10095-1-avivb@amazon.com>
+ <20260531110447.10095-2-avivb@amazon.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260531110447.10095-2-avivb@amazon.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 28, 2026 at 8:37=E2=80=AFPM Yury Norov <ynorov@nvidia.com> wrot=
-e:
->
-> cpumask_show() is a sysfs show callback. Use sysfs_emit() and
-> cpumask_pr_args() to emit the mask.
->
-> This prepares for removing cpumap_print_to_pagebuf().
->
-> Signed-off-by: Yury Norov <ynorov@nvidia.com>
+On 2026-05-31 12:04 pm, Aviv Bakal wrote:
+> The amount of data we need to store all the per-DTM counter and
+> watchpoint allocations is already testing the limits of hw_perf_event,
+> and future CMNs are only likely to keep growing larger, so move these
+> arrays out to separate memory allocations. As part of that we can use
+> an explicit union for allocating cycle counters to dtc_cycles events,
+> which is arguably nicer anyway.
+
+Nit: not that I'm particularly precious about it, but this has lost my 
+original authorship - I really should leave the technically-redundant 
+"From:" line in when I post inline patches, as frankly even I prefer to 
+just copy-paste the patch part rather than export the whole mail with 
+its original headers for `git am --scissors`...
+
+Thanks,
+Robin.
+
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Aviv Bakal <avivb@amazon.com>
 > ---
->  drivers/powercap/intel_rapl_common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/inte=
-l_rapl_common.c
-> index a8dd02dff0a0..b38d4a7799a8 100644
-> --- a/drivers/powercap/intel_rapl_common.c
-> +++ b/drivers/powercap/intel_rapl_common.c
-> @@ -1441,7 +1441,7 @@ static ssize_t cpumask_show(struct device *dev,
->         }
->         cpus_read_unlock();
->
-> -       ret =3D cpumap_print_to_pagebuf(true, buf, cpu_mask);
-> +       ret =3D sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpu_mask));
->
->         free_cpumask_var(cpu_mask);
->
-> --
+>   drivers/perf/arm-cmn.c | 89 ++++++++++++++++++++++++++++--------------
+>   1 file changed, 59 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index f5305c8fdca4..f1978a53d1c1 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -597,17 +597,14 @@ static void arm_cmn_debugfs_init(struct arm_cmn *cmn, int id) {}
+>   
+>   struct arm_cmn_hw_event {
+>   	struct arm_cmn_node *dn;
+> -	u64 dtm_idx[DIV_ROUND_UP(CMN_MAX_NODES_PER_EVENT * 2, 64)];
+> +	union {
+> +		u64 *dtm_idx;
+> +		int cc_idx;
+> +	};
+> +	unsigned long *wp_idx;
+>   	s8 dtc_idx[CMN_MAX_DTCS];
+>   	u8 num_dns;
+>   	u8 dtm_offset;
+> -
+> -	/*
+> -	 * WP config registers are divided to UP and DOWN events. We need to
+> -	 * keep to track only one of them.
+> -	 */
+> -	DECLARE_BITMAP(wp_idx, CMN_MAX_XPS);
+> -
+>   	bool wide_sel;
+>   	enum cmn_filter_select filter_sel;
+>   };
+> @@ -625,25 +622,42 @@ static struct arm_cmn_hw_event *to_cmn_hw(struct perf_event *event)
+>   	return (struct arm_cmn_hw_event *)&event->hw;
+>   }
+>   
+> -static void arm_cmn_set_index(u64 x[], unsigned int pos, unsigned int val)
+> +static void arm_cmn_set_dtm_idx(struct arm_cmn_hw_event *hw, unsigned int pos, unsigned int val)
+>   {
+> -	x[pos / 32] |= (u64)val << ((pos % 32) * 2);
+> +	hw->dtm_idx[pos / 32] |= (u64)val << ((pos % 32) * 2);
+>   }
+>   
+> -static unsigned int arm_cmn_get_index(u64 x[], unsigned int pos)
+> +static unsigned int arm_cmn_get_dtm_idx(struct arm_cmn_hw_event *hw, unsigned int pos)
+>   {
+> -	return (x[pos / 32] >> ((pos % 32) * 2)) & 3;
+> +	return (hw->dtm_idx[pos / 32] >> ((pos % 32) * 2)) & 3;
+>   }
+>   
+> -static void arm_cmn_set_wp_idx(unsigned long *wp_idx, unsigned int pos, bool val)
+> +static u64 *arm_cmn_alloc_dtm_idx(void)
+> +{
+> +	return kzalloc(DIV_ROUND_UP(CMN_MAX_NODES_PER_EVENT * 2, 64) * sizeof(u64), GFP_KERNEL);
+> +}
+> +
+> +static void arm_cmn_set_wp_idx(struct arm_cmn_hw_event *hw, unsigned int pos, bool val)
+>   {
+>   	if (val)
+> -		set_bit(pos, wp_idx);
+> +		set_bit(pos, hw->wp_idx);
+> +}
+> +
+> +static unsigned int arm_cmn_get_wp_idx(struct arm_cmn_hw_event *hw, unsigned int pos)
+> +{
+> +	return test_bit(pos, hw->wp_idx);
+> +}
+> +
+> +static unsigned long *arm_cmn_alloc_wp_idx(void)
+> +{
+> +	return bitmap_zalloc(CMN_MAX_XPS, GFP_KERNEL);
+>   }
+>   
+> -static unsigned int arm_cmn_get_wp_idx(unsigned long *wp_idx, unsigned int pos)
+> +static void arm_cmn_clear_idx(struct arm_cmn_hw_event *hw)
+>   {
+> -	return test_bit(pos, wp_idx);
+> +	memset(hw->dtm_idx, 0, DIV_ROUND_UP(CMN_MAX_NODES_PER_EVENT * 2, 64) * sizeof(u64));
+> +	if (hw->wp_idx)
+> +		bitmap_zero(hw->wp_idx, CMN_MAX_XPS);
+>   }
+>   
+>   struct arm_cmn_event_attr {
+> @@ -1376,7 +1390,7 @@ static int arm_cmn_get_assigned_wp_idx(struct perf_event *event,
+>   				       struct arm_cmn_hw_event *hw,
+>   				       unsigned int pos)
+>   {
+> -	return CMN_EVENT_EVENTID(event) + arm_cmn_get_wp_idx(hw->wp_idx, pos);
+> +	return CMN_EVENT_EVENTID(event) + arm_cmn_get_wp_idx(hw, pos);
+>   }
+>   
+>   static void arm_cmn_claim_wp_idx(struct arm_cmn_dtm *dtm,
+> @@ -1387,7 +1401,7 @@ static void arm_cmn_claim_wp_idx(struct arm_cmn_dtm *dtm,
+>   	struct arm_cmn_hw_event *hw = to_cmn_hw(event);
+>   
+>   	dtm->wp_event[wp_idx] = hw->dtc_idx[dtc];
+> -	arm_cmn_set_wp_idx(hw->wp_idx, pos, wp_idx - CMN_EVENT_EVENTID(event));
+> +	arm_cmn_set_wp_idx(hw, pos, wp_idx - CMN_EVENT_EVENTID(event));
+>   }
+>   
+>   static u32 arm_cmn_wp_config(struct perf_event *event, int wp_idx)
+> @@ -1458,7 +1472,7 @@ static u64 arm_cmn_read_dtm(struct arm_cmn *cmn, struct arm_cmn_hw_event *hw,
+>   			dtm = &cmn->dtms[dn->dtm] + hw->dtm_offset;
+>   			reg = readq_relaxed(dtm->base + offset);
+>   		}
+> -		dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
+> +		dtm_idx = arm_cmn_get_dtm_idx(hw, i);
+>   		count += (u16)(reg >> (dtm_idx * 16));
+>   	}
+>   	return count;
+> @@ -1505,7 +1519,7 @@ static void arm_cmn_event_read(struct perf_event *event)
+>   	unsigned long flags;
+>   
+>   	if (CMN_EVENT_TYPE(event) == CMN_TYPE_DTC) {
+> -		delta = arm_cmn_read_cc(cmn->dtc + hw->dtc_idx[0]);
+> +		delta = arm_cmn_read_cc(cmn->dtc + hw->cc_idx);
+>   		local64_add(delta, &event->count);
+>   		return;
+>   	}
+> @@ -1572,7 +1586,7 @@ static void arm_cmn_event_start(struct perf_event *event, int flags)
+>   	int i;
+>   
+>   	if (type == CMN_TYPE_DTC) {
+> -		struct arm_cmn_dtc *dtc = cmn->dtc + hw->dtc_idx[0];
+> +		struct arm_cmn_dtc *dtc = cmn->dtc + hw->cc_idx;
+>   
+>   		writel_relaxed(CMN_DT_DTC_CTL_DT_EN | CMN_DT_DTC_CTL_CG_DISABLE,
+>   			       dtc->base + CMN_DT_DTC_CTL);
+> @@ -1590,7 +1604,7 @@ static void arm_cmn_event_start(struct perf_event *event, int flags)
+>   			writeq_relaxed(mask, base + CMN_DTM_WPn_MASK(wp_idx));
+>   		}
+>   	} else for_each_hw_dn(hw, dn, i) {
+> -		int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
+> +		int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
+>   
+>   		arm_cmn_set_event_sel_lo(dn, dtm_idx, CMN_EVENT_EVENTID(event),
+>   					 hw->wide_sel);
+> @@ -1606,7 +1620,7 @@ static void arm_cmn_event_stop(struct perf_event *event, int flags)
+>   	int i;
+>   
+>   	if (type == CMN_TYPE_DTC) {
+> -		struct arm_cmn_dtc *dtc = cmn->dtc + hw->dtc_idx[0];
+> +		struct arm_cmn_dtc *dtc = cmn->dtc + hw->cc_idx;
+>   
+>   		dtc->cc_active = false;
+>   		writel_relaxed(CMN_DT_DTC_CTL_DT_EN, dtc->base + CMN_DT_DTC_CTL);
+> @@ -1619,7 +1633,7 @@ static void arm_cmn_event_stop(struct perf_event *event, int flags)
+>   			writeq_relaxed(~0ULL, base + CMN_DTM_WPn_VAL(wp_idx));
+>   		}
+>   	} else for_each_hw_dn(hw, dn, i) {
+> -		int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
+> +		int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
+>   
+>   		arm_cmn_set_event_sel_lo(dn, dtm_idx, 0, hw->wide_sel);
+>   	}
+> @@ -1763,6 +1777,14 @@ static enum cmn_filter_select arm_cmn_filter_sel(const struct arm_cmn *cmn,
+>   }
+>   
+>   
+> +static void arm_cmn_event_destroy(struct perf_event *event)
+> +{
+> +	struct arm_cmn_hw_event *hw = to_cmn_hw(event);
+> +
+> +	kfree(hw->dtm_idx);
+> +	bitmap_free(hw->wp_idx);
+> +}
+> +
+>   static int arm_cmn_event_init(struct perf_event *event)
+>   {
+>   	struct arm_cmn *cmn = to_cmn(event->pmu);
+> @@ -1787,6 +1809,11 @@ static int arm_cmn_event_init(struct perf_event *event)
+>   	if (type == CMN_TYPE_DTC)
+>   		return arm_cmn_validate_group(cmn, event);
+>   
+> +	event->destroy = arm_cmn_event_destroy;
+> +	hw->dtm_idx = arm_cmn_alloc_dtm_idx();
+> +	if (!hw->dtm_idx)
+> +		return -ENOMEM;
+> +
+>   	eventid = CMN_EVENT_EVENTID(event);
+>   	/* For watchpoints we need the actual XP node here */
+>   	if (type == CMN_TYPE_WP) {
+> @@ -1797,6 +1824,9 @@ static int arm_cmn_event_init(struct perf_event *event)
+>   		/* ...but the DTM may depend on which port we're watching */
+>   		if (cmn->multi_dtm)
+>   			hw->dtm_offset = CMN_EVENT_WP_DEV_SEL(event) / 2;
+> +		hw->wp_idx = arm_cmn_alloc_wp_idx();
+> +		if (!hw->wp_idx)
+> +			return -ENOMEM;
+>   	} else if (type == CMN_TYPE_XP &&
+>   		   (cmn->part == PART_CMN700 || cmn->part == PART_CMN_S3)) {
+>   		hw->wide_sel = true;
+> @@ -1847,7 +1877,7 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
+>   
+>   	while (i--) {
+>   		struct arm_cmn_dtm *dtm = &cmn->dtms[hw->dn[i].dtm] + hw->dtm_offset;
+> -		unsigned int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
+> +		unsigned int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
+>   
+>   		if (type == CMN_TYPE_WP) {
+>   			int wp_idx = arm_cmn_get_assigned_wp_idx(event, hw, i);
+> @@ -1861,8 +1891,7 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
+>   		dtm->pmu_config_low &= ~CMN__PMEVCNT_PAIRED(dtm_idx);
+>   		writel_relaxed(dtm->pmu_config_low, dtm->base + CMN_DTM_PMU_CONFIG);
+>   	}
+> -	memset(hw->dtm_idx, 0, sizeof(hw->dtm_idx));
+> -	memset(hw->wp_idx, 0, sizeof(hw->wp_idx));
+> +	arm_cmn_clear_idx(hw);
+>   
+>   	for_each_hw_dtc_idx(hw, j, idx)
+>   		cmn->dtc[j].counters[idx] = NULL;
+> @@ -1882,7 +1911,7 @@ static int arm_cmn_event_add(struct perf_event *event, int flags)
+>   				return -ENOSPC;
+>   
+>   		cmn->dtc[i].cycles = event;
+> -		hw->dtc_idx[0] = i;
+> +		hw->cc_idx = i;
+>   
+>   		if (flags & PERF_EF_START)
+>   			arm_cmn_event_start(event, 0);
+> @@ -1947,7 +1976,7 @@ static int arm_cmn_event_add(struct perf_event *event, int flags)
+>   				goto free_dtms;
+>   		}
+>   
+> -		arm_cmn_set_index(hw->dtm_idx, i, dtm_idx);
+> +		arm_cmn_set_dtm_idx(hw, i, dtm_idx);
+>   
+>   		dtm->input_sel[dtm_idx] = input_sel;
+>   		shift = CMN__PMEVCNTn_GLOBAL_NUM_SHIFT(dtm_idx);
+> @@ -1980,7 +2009,7 @@ static void arm_cmn_event_del(struct perf_event *event, int flags)
+>   	arm_cmn_event_stop(event, PERF_EF_UPDATE);
+>   
+>   	if (type == CMN_TYPE_DTC)
+> -		cmn->dtc[hw->dtc_idx[0]].cycles = NULL;
+> +		cmn->dtc[hw->cc_idx].cycles = NULL;
+>   	else
+>   		arm_cmn_event_clear(cmn, event, hw->num_dns);
+>   }
 
-Applied (with adjusted subject and changelog) as 7.2 material, thanks!
