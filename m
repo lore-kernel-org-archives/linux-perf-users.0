@@ -1,110 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C6078F4A
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 00:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757D317BA6;
+	Mon,  1 Jun 2026 01:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780273406; cv=none; b=bzbJs0Rr6+P6zBMNhGZDnjqz4CAaZ4SsqDPHJ/0h7eYL3RP9hN+k0QJHTQrIitb/GuLUa3Nqbym/L0QKRmE4ShIi5dWAF22CaDwzF3JdYxSEAfE8XPnPsXHgOExrAEd+GxLivcvrnP7vobtLjzsfliRZnuqRBlymhEJtQSkCBv0=
+	t=1780275770; cv=none; b=CKfMuvttRHlD3LeyLGjt7s4VYf5jA4QI16HAPRPVpHOYO2mv3awc8AlXY0wdi6yudDQ6j1TPIEUk8MxKo2pofOM9FgR6ZFQ/W9SK1U0seCHA9AcAMTiyaqoVllEpGRsNfyweLITJUbmzXJwVYydH3j+c7PGb3bYS+wr/adxGynE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780273406; c=relaxed/simple;
-	bh=bcB28QWrP2xGluI9bFfv4xKvvP7YyVClv8SX2BPVUFo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=aoIVDN32h+s/v1Iy5bwPF6UB5/NZFp54RJ2kX24YoEDHyQpEmDhe48+5aA14CPl4+2nrdDAmnCegFM1+JsOqowC7a+5OlJLyw0CkACloJhzGadFHH4WgHFKvDJoVrgZ0AAap2tsC5AkGoQ6f4Dttnn6BzRPUSydTqvm3Xo0zD/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JjLlNi8N; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780275770; c=relaxed/simple;
+	bh=W6F6sE68JnMsJaaX8e/GD/BnoKb24fhn7Hh3V0IYdQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S+o7yvP6RELYPDj3DtLbSrhWAy9g8mQkc6xcePoFPA2gSei0XJR86HdOOz40ZVqjn3bs6uA3lPlmm47pr0hYr/ceXetzHwWdhjyhTvf1pQ9NeE9YaGrL8BiUhnNxwFu7RTXO4o3o88p5+O9n3924ve6nv4zBV0KyIkcAM69+vRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIkZQwbB; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JjLlNi8N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595C51F00893;
-	Mon,  1 Jun 2026 00:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780273400;
-	bh=7iBgiWrjrupNBHBRrkAzofoAnDFtUy683yq+KUjgaYY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JjLlNi8NeJAZvv/JWpf/YzedXXmR6eyNoRDPpOKd4ppRi5XnWTvvBPewp4Yle4SE6
-	 PMCr2cxFq/YZLyC2C35xJePhqV8A6x1zqa0ANEa2F/FuZQDArGq7NwWzOIzCVWfdhF
-	 RqViCKRAuUYRS8v58sJfBv2dVWkaZn/jgXEgTsj+tfnZHXMkp1mIkkh0G4lLXxtKIj
-	 Qhzze9qXIwKtZrjtFp3B3euiDImicmvUFBcYNTxj3Y2Pe5YFSzs+jvqBSunJTvXMa/
-	 blVLdmFRExBsKzsPfYlx+D51kegdmIlWZmtuT71lKQs+/gUj25pTgZQYkPXwrcNv8I
-	 cppztyZDB4HYw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 15/15] perf test: Remove /usr/bin/cc dependency from
- Intel PT shell test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260601000548.1195604-16-irogers@google.com>
-References: <20260601000548.1195604-16-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 01 Jun 2026 00:23:20 +0000
-Message-Id: <20260601002320.595C51F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIkZQwbB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780275767; x=1811811767;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=W6F6sE68JnMsJaaX8e/GD/BnoKb24fhn7Hh3V0IYdQw=;
+  b=NIkZQwbB6cI73zEYGjq+yGpBvpPEaFr9s7Xcf4NEfLm+GI20G8iDUtuK
+   J8aJxY62YLK0mBtBjqfi4SfL2sD6CsHjEigXH9/bYjpLOOKNwZ5tHueu5
+   ETsTP2mmYktBBm0qBglaeLzLK04lBakeWqUiy61npOelcCYbJCsPk4DpU
+   SxIRg2uMpXKAfFEmOcTPoMgwY7W8d0GAXDyGYGR8rLX3izcWMG/aNmWjc
+   wd0npJ0uD9+vhGzvOJ8UceRFAyYzJQjerFNZC1wRsEu+c52b1rj7zVxPd
+   ZuGPVAGRiK6sy56zwNT6AaADneQI/vCzpbaAWg7cijwR5B82TOQlVKRPF
+   A==;
+X-CSE-ConnectionGUID: O5KkppCyQninsDX5zAKdXA==
+X-CSE-MsgGUID: 6DmAPTgRSYaMBuzXN2S2mQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="106478664"
+X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
+   d="scan'208";a="106478664"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 18:02:47 -0700
+X-CSE-ConnectionGUID: 2BQUelDJSfSrvEMs2da4gw==
+X-CSE-MsgGUID: fZv7GCywQkO4M8L/SxeVhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
+   d="scan'208";a="267297539"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 18:02:42 -0700
+Message-ID: <5fccdf7d-f9a0-408e-8615-85eacc0c160e@linux.intel.com>
+Date: Mon, 1 Jun 2026 09:02:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v8 01/23] perf/x86/intel: Validate return value of
+ intel_pmu_init_hybrid()
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260529075645.580362-1-dapeng1.mi@linux.intel.com>
+ <20260529075645.580362-2-dapeng1.mi@linux.intel.com>
+ <20260529111147.GI3493090@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260529111147.GI3493090@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] Use of `gettid()` without a fallback wrapper breaks the build on gl=
-ibc versions older than 2.30.
---
 
-commit 98762182c49447a0cdf85565efe77bfa5da71cf6
-Author: Ian Rogers <irogers@google.com>
+On 5/29/2026 7:11 PM, Peter Zijlstra wrote:
+> On Fri, May 29, 2026 at 03:56:23PM +0800, Dapeng Mi wrote:
+>> The memory allocation for the x86_pmu.hybrid_pmu[] array in
+>> intel_pmu_init_hybrid() can theoretically fail due to memory shortages.
+>> If this occurs, the initialization of the x86 hybrid PMU would fail.
+>>
+>> Currently, the code does not check the return value of the
+>> intel_pmu_init_hybrid() function, which could lead to attempts to access
+>> the uninitialized x86_pmu.hybrid_pmu[] array, potentially causing a
+>> system panic.
+>>
+>> So, adds a check for the return value of intel_pmu_init_hybrid() to
+>> prevent invalid memory access in such scenarios.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>
+>> V8: New patch.
+>>
+>>  arch/x86/events/intel/core.c | 29 ++++++++++++++++++++++-------
+>>  1 file changed, 22 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 0217e701aeeb..85c329bd52be 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -7870,6 +7870,7 @@ __init int intel_pmu_init(void)
+>>  	int version, i;
+>>  	char *name;
+>>  	struct x86_hybrid_pmu *pmu;
+>> +	int ret;
+>>  
+>>  	/* Architectural Perfmon was introduced starting with Core "Yonah" */
+>>  	if (!cpu_has(&boot_cpu_data, X86_FEATURE_ARCH_PERFMON)) {
+>> @@ -8545,7 +8546,9 @@ __init int intel_pmu_init(void)
+>>  		 *
+>>  		 * Initialize the common PerfMon capabilities here.
+>>  		 */
+>> -		intel_pmu_init_hybrid(hybrid_big_small);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+>> +		if (ret < 0)
+>> +			return ret;
+> Sashiko notes this will leak the intel_pmu_arch_lbt_init() kmemcache.
+>
+> I'm not entirely sure we care much about that, but its not really nice.
 
-perf test: Remove /usr/bin/cc dependency from Intel PT shell test
+Sashiko did a good job!
 
-This commit replaces runtime C compilation in the test_intel_pt.sh shell te=
-st
-with built-in workloads (thloop and jitdump) to prevent CI failures due to
-missing external C compilers. It also adds multi-architecture compatibility
-for the self-modifying code workload.
+Yes, it's a bug and would be fixed in next version. Thanks.
 
-> diff --git a/tools/perf/tests/workloads/jitdump.c b/tools/perf/tests/work=
-loads/jitdump.c
-> new file mode 100644
-> index 0000000000000..225d3f3dc6e3b
-> --- /dev/null
-> +++ b/tools/perf/tests/workloads/jitdump.c
 
-[ ... ]
-
-> +static int write_jitdump(FILE *f, void *addr, const void *dat, size_t sz=
-, uint64_t *idx)
-> +{
-> +	struct jr_code_load rec =3D {
-> +		.p.id =3D JIT_CODE_LOAD,
-> +		.p.total_size =3D sizeof(rec) + sz,
-> +		.p.timestamp =3D get_timestamp(),
-> +		.pid =3D getpid(),
-> +		.tid =3D gettid(),
-
-[Severity: Low]
-Does this direct call to gettid() break the build on older glibc versions?
-
-Because gettid() was only introduced in glibc 2.30, using it without a
-fallback wrapper causes an implicit function declaration error on systems
-with older glibc versions. Since the perf tool is compiled with -Werror,
-this can result in a hard build failure.
-
-Could this use syscall(__NR_gettid) or provide a local fallback wrapper
-similar to how other code in tools/perf/ handles this?
-
-> +		.vma =3D (unsigned long)addr,
-> +		.code_addr =3D (unsigned long)addr,
-> +		.code_size =3D sz,
-> +		.code_index =3D ++*idx,
-> +	};
-> +
-> +	if (fwrite(&rec, sizeof(rec), 1, f) !=3D 1 || fwrite(dat, sz, 1, f) !=
-=3D 1)
-> +		return -1;
-> +	return 0;
-> +}
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260601000548.1195=
-604-1-irogers@google.com?part=3D15
