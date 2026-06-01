@@ -1,162 +1,129 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76580348C5C;
-	Mon,  1 Jun 2026 17:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660553E171F
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780336126; cv=none; b=hjIZ4ObH06B65yJFeGjJYvY1CH8iWJavZIMNZa4XhnAngJNGSs8chotBV2EBtBetsPUGv5+pLS3Qr69pjlx0xhkCDIpe+jMtvRRktwh7A7n66gBM4W9FEEpTASCtmxD2lRX0uUHcYhAgThVO5mJiayAiqVPIoOM1qe8hCg5HcEo=
+	t=1780336641; cv=none; b=dSyXV3n8BOmApuTzObPuidWEsHhmhaNMgM+roic4kp80Cl/1e6ORH09+wO7owf2semuDtqNJ+WqObwxROOZONiP1hjgS0kSKczUL0zxNbG46y+kSVBHcUEU4lqOnY8dm9Efwey+Uy9N1IbAoCkESr/8UcGmEyE/O5jLh5fc3oS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780336126; c=relaxed/simple;
-	bh=OpzHICScFogskndyr2+DyN1dxiPGmzVPdDXVPfFt2kE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qjBUv8o9cViz+z6Kt62himgPVnSbCvRDDZzO1VMzCXtiUXGn3Sl1rZclaE52v7wFOxUVbU3ipV+CkGs05JI1eMRrMN5ItAGdUsU/BDe6Yui+k60XPHqvNyDD9IoFbYhzhxuvWANb6EPhoodtEPwB21isoWTfja+B9CwOJ9mvbng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=mpZWNuiq; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1780336641; c=relaxed/simple;
+	bh=a8NNwl3gj28TdelJ2QDDl+HZA18Xikw2b26A8/RV0gM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ch8YMw2wgBmepPMhfWCOXjTqRodCH9c1YPSlxDI1STwBUb0KRQTF680jR76hr79AxiWhE8DiJdeeSdaQLkTcfQIrMjrJ39nYFvbhqxgfFmwfmI3N3HYwfrcf7YiKxAgTaoFlH6iPXxG2M0KHparCssuq7H7tGD3AShZmOYDV1b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YBEcWjLV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="mpZWNuiq"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7032175D;
-	Mon,  1 Jun 2026 10:48:38 -0700 (PDT)
-Received: from [10.57.36.65] (unknown [10.57.36.65])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FC213F7D8;
-	Mon,  1 Jun 2026 10:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780336123; bh=OpzHICScFogskndyr2+DyN1dxiPGmzVPdDXVPfFt2kE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mpZWNuiqI2HXeRxY/CAO7WyiRRhaHAFJJivZEEl2i1t7Z44zAfp2IRFVsfNX0+5Jv
-	 A33U8QuTySQuK3bbL8vp+tCFLhLbsKPGAiz/327mpls++d+PpMMXRajFcFvmF1txEv
-	 qewt3Jwdyv01/x2IPtkPZOGBIkJntPja3uFtC32Y=
-Message-ID: <2eccafbc-f215-4021-8491-31e5835de49e@arm.com>
-Date: Mon, 1 Jun 2026 18:48:41 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YBEcWjLV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351141F00A00
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 17:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780336639;
+	bh=Fs6zIa+oKHWvRltzPvd2mFdEu12rLJwaXHbNCVd0THk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=YBEcWjLVnMFNyhTH2clkn3SS4OxRe1EiT16jl+iPdqtWZ6g6WzL01QnGkF+WWRam7
+	 w/ZcqoOJqRowf8oOS8Q6viCgpRJsyJiBa+d4C5wmKbJH7tJiJhiDb93cwLqYUlDKml
+	 mHXcxS57F1wvpuoDi3TBhJTiWc6lIXFRC6DLn8uGUOMYBw6GaJOyoK2kyMIyoxNc7p
+	 m4+++rUeb0vl0IzyXPwELbWx2Wf/A7WH/4TyR/wup0oelEBZRQeugazaRmmGov4zso
+	 HRlSs7aOsYQJ+0QyGGCrz2ZQ3fQKmzgNOCSA6CE/MEXudplG9ukTFIS7NytFwxsJHx
+	 +0+P15plzbwXw==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5aa6863327fso1325304e87.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jun 2026 10:57:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8TbHHrELlGlK3ZGHj6DE2osfyd1V30kEOX7G3rbeV+kWNU7v41uOuoJ4XRsJtKZKIDGv+W+mu0+d6VRh1rEN+P@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4QC8ws8fK7CELqJ3fUePAHJrm8PBKMbkMSgeux7xgTltnAB2q
+	ipf9PfBnDn7UVv8G3w9yLZyfN2ufDihI+U7gjt9mRy/5C0XOiUMTkgTZxzd+GQnc/eyxrr/EA5B
+	NA7pS2Oh9lOTE5S45MSmIscqzUcWfOqM=
+X-Received: by 2002:a05:6512:8007:20b0:5aa:6395:f9c5 with SMTP id
+ 2adb3069b0e04-5aa73ee8720mr300250e87.27.1780336637107; Mon, 01 Jun 2026
+ 10:57:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on
- Graviton5
-To: Aviv Bakal <avivb@amazon.com>, will@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zeev@amazon.com, blakgeof@amazon.com,
- ilkka@os.amperecomputing.com
-References: <20260524153848.16334-1-avivb@amazon.com>
- <20260531110447.10095-1-avivb@amazon.com>
- <20260531110447.10095-3-avivb@amazon.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260531110447.10095-3-avivb@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260528183625.870813-1-ynorov@nvidia.com> <20260528183625.870813-15-ynorov@nvidia.com>
+In-Reply-To: <20260528183625.870813-15-ynorov@nvidia.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 1 Jun 2026 19:57:04 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g4G9aJ1fjQxXmk1YHXh+xBojpFz207j_jz7HiLH1Lz1Q@mail.gmail.com>
+X-Gm-Features: AVHnY4INVXbw7SKAZHG4Jnm8fXAHVwo_FKl3cnkJN8dTeVudl-a8v97e8VxcFA4
+Message-ID: <CAJZ5v0g4G9aJ1fjQxXmk1YHXh+xBojpFz207j_jz7HiLH1Lz1Q@mail.gmail.com>
+Subject: Re: [PATCH 14/16] powercap: intel_rapl: Use sysfs_emit() for cpumask show
+To: Yury Norov <ynorov@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
+	Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
+	Moritz Fischer <mdf@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jic23@kernel.org>, 
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Dan Williams <djbw@kernel.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Shuai Xue <xueshuai@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
+	Jiucheng Xu <jiucheng.xu@amlogic.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	Linu Cherian <lcherian@marvell.com>, Gowthami Thiagarajan <gthiagarajan@marvell.com>, 
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>, Khuong Dinh <khuong@os.amperecomputing.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Aboorva Devarajan <aboorvad@linux.ibm.com>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Besar Wicaksono <bwicaksono@nvidia.com>, 
+	Ma Ke <make24@iscas.ac.cn>, Chengwen Feng <fengchengwen@huawei.com>, 
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-perf-users@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	driver-core@lists.linux.dev, linux-pm@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, nvdimm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-cxl@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026-05-31 12:04 pm, Aviv Bakal wrote:
-> Graviton5 uses a customised CMN-S3 implementation where certain
-> discovery registers report zeroed fields. Add the following workarounds:
-> 
->   - Introduce a dedicated ACPI HID to identify the Graviton5 CMN variant.
->   - Derive the DTC domain from the XP node ID, since the unit info
->     register reports it as zero.
->   - Set the DTC logical ID from the XP's logical ID, since the node info
->     register's logical ID field is also zeroed.
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> Signed-off-by: Aviv Bakal <avivb@amazon.com>
+On Thu, May 28, 2026 at 8:37=E2=80=AFPM Yury Norov <ynorov@nvidia.com> wrot=
+e:
+>
+> cpumask_show() is a sysfs show callback. Use sysfs_emit() and
+> cpumask_pr_args() to emit the mask.
+>
+> This prepares for removing cpumap_print_to_pagebuf().
+>
+> Signed-off-by: Yury Norov <ynorov@nvidia.com>
 > ---
->   drivers/perf/arm-cmn.c | 32 +++++++++++++++++++++++++++++++-
->   1 file changed, 31 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index f1978a53d1c1..3fb71d9a57eb 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -31,7 +31,8 @@
->   #define CMN_CHILD_NODE_ADDR		GENMASK(29, 0)
->   #define CMN_CHILD_NODE_EXTERNAL		BIT(31)
->   
-> -#define CMN_MAX_DIMENSION		12
-> +/* Some implementations use a mesh larger than the architectural max of 12 */
-> +#define CMN_MAX_DIMENSION		14
->   #define CMN_MAX_XPS			(CMN_MAX_DIMENSION * CMN_MAX_DIMENSION)
->   #define CMN_MAX_DTMS			(CMN_MAX_XPS + (CMN_MAX_DIMENSION - 1) * 4)
->   
-> @@ -214,6 +215,8 @@ enum cmn_part {
->   	PART_CMN700 = 0x43c,
->   	PART_CI700 = 0x43a,
->   	PART_CMN_S3 = 0x43e,
-> +	/* Synthetic part number, overridden to PART_CMN_S3 during discovery */
-> +	PART_GRAVITON5 = 0xa5,
->   };
->   
->   /* CMN-600 r0px shouldn't exist in silicon, thankfully */
-> @@ -2250,6 +2253,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_cmn *cmn, void __iomem *xp_reg
->   	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region + offset));
->   }
->   
-> +static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
-> +{
-> +	unsigned int x = (xp_id >> 7) & 0xf;
-> +	unsigned int y = (xp_id >> 3) & 0xf;
-> +
-> +	/*
-> +	 * The unit info register reads as zero; derive the DTC domain from
-> +	 * the XP's mesh coordinates over the 10x14 mesh.
-> +	 */
-> +	return (x / 5) + (y / 7) * 2;
-> +}
-> +
->   static void arm_cmn_init_node_info(struct arm_cmn *cmn, u32 offset, struct arm_cmn_node *node)
->   {
->   	int level;
-> @@ -2295,6 +2310,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->   	u64 reg;
->   	int i, j;
->   	size_t sz;
-> +	bool graviton5_workaround = false;
->   
->   	arm_cmn_init_node_info(cmn, rgn_offset, &cfg);
->   	if (cfg.type != CMN_TYPE_CFG)
-> @@ -2305,6 +2321,13 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->   	reg = readq_relaxed(cfg_region + CMN_CFGM_PERIPH_ID_01);
->   	part = FIELD_GET(CMN_CFGM_PID0_PART_0, reg);
->   	part |= FIELD_GET(CMN_CFGM_PID1_PART_1, reg) << 8;
-> +
-> +	/* Graviton5 has a customised CMN-S3 which needs some fixups */
-> +	if (cmn->part == PART_GRAVITON5) {
-> +		cmn->part = PART_CMN_S3;
-> +		graviton5_workaround = true;
-> +	}
-> +
->   	/* 600AE is close enough that it's not really worth more complexity */
->   	if (part == PART_CMN600AE)
->   		part = PART_CMN600;
-> @@ -2394,6 +2417,8 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->   
->   		if (cmn->part == PART_CMN600)
->   			xp->dtc = -1;
-> +		else if (graviton5_workaround)
-> +			xp->dtc = arm_cmn_graviton5_dtc_domain(xp->id);
->   		else
->   			xp->dtc = arm_cmn_dtc_domain(cmn, xp_region);
->   
-> @@ -2472,6 +2497,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->   
->   			switch (dn->type) {
->   			case CMN_TYPE_DTC:
-> +				if (graviton5_workaround) {
-> +					/* Node info logical ID is zeroed; use the XP's */
-> +					dn->logid = xp->logid;
-> +				}
->   				cmn->num_dtcs++;
->   				dn++;
->   				break;
-> @@ -2687,6 +2716,7 @@ static const struct acpi_device_id arm_cmn_acpi_match[] = {
->   	{ "ARMHC650" },
->   	{ "ARMHC700" },
->   	{ "ARMHC003" },
-> +	{ "AMZN0070", PART_GRAVITON5 },
->   	{}
->   };
->   MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
+>  drivers/powercap/intel_rapl_common.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/inte=
+l_rapl_common.c
+> index a8dd02dff0a0..b38d4a7799a8 100644
+> --- a/drivers/powercap/intel_rapl_common.c
+> +++ b/drivers/powercap/intel_rapl_common.c
+> @@ -1441,7 +1441,7 @@ static ssize_t cpumask_show(struct device *dev,
+>         }
+>         cpus_read_unlock();
+>
+> -       ret =3D cpumap_print_to_pagebuf(true, buf, cpu_mask);
+> +       ret =3D sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpu_mask));
+>
+>         free_cpumask_var(cpu_mask);
+>
+> --
 
+Applied (with adjusted subject and changelog) as 7.2 material, thanks!
