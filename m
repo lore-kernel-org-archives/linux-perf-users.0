@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967425B1EB
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 00:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7775E3B7A8
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 00:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780272388; cv=none; b=b5zTCfmS/R8M7FsuTVUU9IcWHne8CQdoZ9QDuO7vSgK/pDIGDSRB5+1vClPhPvEMPCADgPWmgwBBjOOgCq4FifalJ4CJlkaNQE/Mi4nNGT3VjFG+XGi5Xgm0quvOo+HNzGomYPRhsDtv2BaWog+lPZ7mQDXLj5ImrQDC1/LBIok=
+	t=1780272388; cv=none; b=jp0bmV0mUvmA5X8FujaxqF//V/Hx1mlGAdjf5bojK6fNIy1wZQVA6ofPEsi7g1NdgQ8wmflww0zB8UKvKvBFU03LheunNEiYFmhMxf7aEe/nzr9qG9o8x1TbdwaQTJXZTEfSQx908NOzTRz0tkOKQH0IHGrToPSYNoi2yz9UyOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780272388; c=relaxed/simple;
-	bh=kwIpUas8CmAyFq9rUING30MN44XBQkAG67T0YWFq4oc=;
+	bh=o/QzDt9R+QNB3udbAk50xHc07p0mZUY7YmtlZDmcqoY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gzvX3zsLs+xBSj5t3MjeuiCIXNDysLe6zuhaUaLlHq8YlbYWB+a5c4Yzw9XUV6a8Is5I1QUQQ1575crxDD3Lfd3WdKnnFa+ENiuHh6vztBTmTIOQz2aVssApOLPMYWAWxOENojxtMA89N8eLUhCwotInCs4/De0CYfUy4uhz4/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LrShGWuf; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=b6UfwT44+mwbKAJyG5EcU19ars5aM5yWfFpuZZZioPEuyYJQ+f/IduNK36wL3Ssq9tvWOEs865Rq9mha+/crUD2hyG2uBEqcnaTDSRvbyulMCrte+TA7gnY+j9qP/FojCpTa6un/FH//SUjEEFgd/qgbudADvC7KLtknDmjrjvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GpERBFtw; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LrShGWuf"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-305fe3b697cso556321eec.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 17:06:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GpERBFtw"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-137276019cfso7545943c88.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 31 May 2026 17:06:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780272381; x=1780877181; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780272375; x=1780877175; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IOal3hqFXb7r1up/rx+u30ZeQHjxIhWl995ZJvn/b8=;
-        b=LrShGWufFkoltPpLN0bvLAwgSrkdvp4YyvXBEVaXPyaEOK5AzSFYTOprmQvZ0xyc00
-         BcJZ8th4eK5q131NJuvYc50idF/BkNz03DD6DoTTWIxdp/hKr8os1nRn1ZetLFDnyH1Q
-         8/oFfv/CnNbHEuekllRKzR9WmNpI2ZNrbB1DeDhaL2ePdGaHNL6021g+2gP9otKtT1HI
-         gqvk5trnOXCk02tVujVIBdFP2jo+HnAu8jFmNiXOpWGotEYyGZESJl0MUzpDwZT/floB
-         u6+75+bBA8dlOfVX6fj4Pol1igAE/cYq+c2867gVO90G5fEs8I2Spb/k/lYxpozLrYWv
-         vSWA==
+        bh=LtvPfep1fr0M+gY7fqvZAxaowS8R7DQW+O7p9BY2dgI=;
+        b=GpERBFtwbSw40Ezxsn7+hMJhl5c7pKNmtGZn7qcGKSmTwcjYgIX7MFTwCATy5KWJXM
+         S9F3aecy7u2dVvGwfu7u2lD7cLyHrsJhpDM/UUV905utBMPkg6f7buTedNVIpCRz07Ys
+         tLzqwGtcppZtpXRp9WeX1q1UnKM98vSUgJOE5S4MW2G+2uAJyGADSp28rnt+rFRrMaF9
+         wkUp6m87a+yf1CjrQHZMkn7wjynfs8UKbQdlcAAB00P+mQp5DqbECpk/7QDAANXlgk/d
+         jm/xGHXBY6gDxyqMbOwwtaYtz06cMp95W0Xg++gAqgKk+dI2RFt998FnBGJTsiw89/BF
+         38aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780272381; x=1780877181;
+        d=1e100.net; s=20251104; t=1780272375; x=1780877175;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IOal3hqFXb7r1up/rx+u30ZeQHjxIhWl995ZJvn/b8=;
-        b=gAjZJ4DnGvILoTbE8tCF6NAe7EaKzwSnKIh1U7E/QB/zeCFCSXFi7Gh1MwqWt57iVw
-         M8WWl7IVHXglKFw3YfU8Lieh3XByyAhtikgP5ouNNzz+pM5rP/3N3NIQu4cedJvdrdke
-         yIjSsS+MjGq4OCyI/yeQPpifl4+ErN49mWI+DGtf/AzhF7/dgXYscCjW2NU79ziS+sVx
-         6tYZ+xu62Ahrd9mLp0BxMym2ee/PX4rAoV/eBdyHlK4WGMbpxil2ME2y4iGeOpY+k9EN
-         phLKleztV/h2qlwVvE6BE2TWanQSBCjvdJjoTWG43wFk8L7OrYNZFS98+l413mtIJiqX
-         /7LA==
-X-Forwarded-Encrypted: i=1; AFNElJ/25H+yUbcA/fxrUOL2lnpSautREZ5N8d1SSEuav0OO+cOuWziOaUach4TPJpfEieDiIvEFxyUeKNQEacwypS8A@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQpfY5mgyqzSUVfBUya8SP2KKAkVy2f0p6hLwiOlO6jftscO+z
-	m7onwmOxUlZJ+BjfW8qQG2K7AhMz4Ym4gNQw1WEz4fOJBsfpndke6fmtcHPUgUTzQkxVTTrkY8j
-	mdNAAVH/x6Q==
-X-Received: from dlee6.prod.google.com ([2002:a05:7022:6286:b0:135:7fdc:4c00])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f96:b0:136:5c88:d928
- with SMTP id a92af1059eb24-137d426d0e5mr3126630c88.19.1780272380346; Sun, 31
- May 2026 17:06:20 -0700 (PDT)
-Date: Sun, 31 May 2026 17:05:45 -0700
+        bh=LtvPfep1fr0M+gY7fqvZAxaowS8R7DQW+O7p9BY2dgI=;
+        b=KRfvf/sLKofNHf0gC3RK2cNtHYZxL5we5n3bI4eEHySEjFgEDx6APfDYXw3+D50xCr
+         +g8ZDODxkVzZ3W7nCOrEK4NSnunvkkh9FlOsmkqASPjxhzQ3uFFAs+vHczQZoJP7vn0j
+         gGwnfB0I+LMyfSH/V8Yfcm5l0kdHMEpyYlCnPV82nHSsMFW/4YzAD0q79ABZ8rT0jd1m
+         d6M4v1C7iRk5aU1V1+ph8/Vlw5sfnix6nVulHW8RPRG1QwLG6DzP9sdLsYyHezaQIGNa
+         LtXel4sKqJ3hM4jmwjVozZqj3G20zp3yNqvryjLA6Gwk0SeRJbEhPVUiTH/KTAX0JDW6
+         JXyw==
+X-Forwarded-Encrypted: i=1; AFNElJ/63b14bxBBsA+sSvJHa18JPC5LyUEIrZ/eWYV0OVOyu+DrROBGbMdPD4lY+WjNmdww+wz8n4xzhaWxrXgoGrY+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz+vqKHOtGMxyVmY/Ws+wY6taNy2Epa3AKmQA5OGeliDvPwsXB
+	vYVE9/MsUNBnW6Kr6G29XWE3FkpWutwL+LlRSlymQ7zwRzSifxFXB4BhZcoXlCObgQoqeX1lpan
+	NE3roRK+5iA==
+X-Received: from dlbsj5.prod.google.com ([2002:a05:7022:f905:b0:134:b02e:a831])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:38e:b0:136:6883:c4bf
+ with SMTP id a92af1059eb24-137d3f0f5c6mr3701217c88.15.1780272374326; Sun, 31
+ May 2026 17:06:14 -0700 (PDT)
+Date: Sun, 31 May 2026 17:05:42 -0700
 In-Reply-To: <20260601000548.1195604-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260531082235.940833-1-irogers@google.com> <20260601000548.1195604-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.823.g6e5bcc1fc9-goog
-Message-ID: <20260601000548.1195604-13-irogers@google.com>
-Subject: [PATCH 12/15] perf test: Split monolithic 'util' test suite into sub-tests
+Message-ID: <20260601000548.1195604-10-irogers@google.com>
+Subject: [PATCH 09/15] perf test: Add summary reporting
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
 	namhyung@kernel.org
@@ -68,54 +68,152 @@ Cc: alexander.shishkin@linux.intel.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Refactor the monolithic 'util' test suite into distinct 'String
-replacement' and 'BLAKE2s hash' sub-tests using the struct test_case
-framework. This improves test reporting granularity and is used in a
-subsequent perf test for JUnit XML test result reporting.
+Currently, when running test suites (perf test), users must scroll through
+hundreds of lines of console output to manually tally the number of passed,
+skipped, or failed test cases.
+
+Introduce an automated, global execution summary printed at the absolute
+tail of the test run:
+1. Track counts mid-flight inside the print_test_result() accumulator,
+   clearly separating pass counts into standalone main tests vs. individual
+   subtests (where num_test_cases > 1).
+2. Accumulate the precise descriptions of all failed test cases directly
+   into a global string buffer, formatted with their suite indices (e.g.,
+     3.1: Parse event definition strings) for effortless cross-referencing.
+3. Define a summary printer function print_tests_summary() that emits a
+   colored outline of the final pass, skip, and fail totals, followed by
+   the explicit list of failed tests.
+4. Invoke the summary printer right before freeing the test array at the
+   absolute tail of __cmd_test(), guaranteeing that the summary is
+   successfully printed even if an internal emergency signal cleanup occurs
+   or if the user interrupts the run early.
+
+Example output:
+```
+$ sudo perf test -v
+  1: vmlinux symtab matches kallsyms                                 : Skip
+  2: Detect openat syscall event                                     : Ok
+  3: Detect openat syscall event on all cpus                         : Ok
+...
+163: perf trace summary                                              : Ok
+
+=== Test Summary ===
+Passed main tests : 123
+Passed subtests   : 145
+Skipped tests     : 22
+Failed tests      : 6
+List of failed tests:
+   92: perf kvm tests
+   95: kernel lock contention analysis test
+  120: perf metrics value validation
+  124: Check branch stack sampling
+  143: perftool-testsuite_probe
+  158: test Intel TPEBS counting mode
+```
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/util.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ tools/perf/tests/builtin-test.c | 46 ++++++++++++++++++++++++++++++---
+ 1 file changed, 43 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/util.c b/tools/perf/tests/util.c
-index bf2c5b133884..f9abd9911e6c 100644
---- a/tools/perf/tests/util.c
-+++ b/tools/perf/tests/util.c
-@@ -86,7 +86,12 @@ static int test_blake2s(void)
- 	return 0;
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index e00b0bffa67c..336d24105c9f 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -363,6 +363,11 @@ static int run_test_child(struct child_process *process)
+ 
+ static struct pollfd *global_pfds;
+ static size_t *global_pfd_indices;
++static unsigned int summary_tests_passed;
++static unsigned int summary_subtests_passed;
++static unsigned int summary_tests_skipped;
++static unsigned int summary_tests_failed;
++static struct strbuf summary_failed_tests_buf = STRBUF_INIT;
+ 
+ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
+ 			     int result, int width, int running)
+@@ -380,11 +385,16 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
+ 		color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d active)\n", running);
+ 		break;
+ 	case TEST_OK:
++		if (test_suite__num_test_cases(t) > 1)
++			summary_subtests_passed++;
++		else
++			summary_tests_passed++;
+ 		pr_info(" Ok\n");
+ 		break;
+ 	case TEST_SKIP: {
+ 		const char *reason = skip_reason(t, curr_test_case);
+ 
++		summary_tests_skipped++;
+ 		if (reason)
+ 			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (%s)\n", reason);
+ 		else
+@@ -393,6 +403,15 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
+ 		break;
+ 	case TEST_FAIL:
+ 	default:
++		summary_tests_failed++;
++		if (test_suite__num_test_cases(t) > 1)
++			strbuf_addf(&summary_failed_tests_buf, "  %3d.%1d: %s\n",
++				    curr_suite + 1, curr_test_case + 1,
++				    test_description(t, curr_test_case));
++		else
++			strbuf_addf(&summary_failed_tests_buf, "  %3d: %s\n",
++				    curr_suite + 1,
++				    test_description(t, curr_test_case));
+ 		color_fprintf(stderr, PERF_COLOR_RED, " FAILED!\n");
+ 		break;
+ 	}
+@@ -963,6 +982,23 @@ static void cmd_test_sig_handler(int sig)
+ 	siglongjmp(cmd_test_jmp_buf, sig);
  }
  
--static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
-+static int test__blake2s_case(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
++static void print_tests_summary(void)
 +{
-+	return test_blake2s();
++	pr_info("\n=== Test Summary ===\n");
++	pr_info("Passed main tests : %u\n", summary_tests_passed);
++	pr_info("Passed subtests   : %u\n", summary_subtests_passed);
++	pr_info("Skipped tests     : %u\n", summary_tests_skipped);
++	if (summary_tests_failed > 0) {
++		color_fprintf(stderr, PERF_COLOR_RED, "Failed tests      : %u\n",
++			      summary_tests_failed);
++		pr_info("List of failed tests:\n");
++		pr_info("%s", summary_failed_tests_buf.buf);
++	} else {
++		color_fprintf(stderr, PERF_COLOR_GREEN, "Failed tests      : 0\n");
++	}
++	strbuf_release(&summary_failed_tests_buf);
 +}
 +
-+static int test__strreplace(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
+ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 		      struct intlist *skiplist)
  {
- 	TEST_ASSERT_VAL("empty string", test_strreplace(' ', "", "123", ""));
- 	TEST_ASSERT_VAL("no match", test_strreplace('5', "123", "4", "123"));
-@@ -95,7 +100,16 @@ static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_u
- 	TEST_ASSERT_VAL("replace long", test_strreplace('a', "abcabc", "longlong",
- 							"longlongbclonglongbc"));
+@@ -1040,9 +1076,12 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 			}
  
--	return test_blake2s();
-+	return 0;
- }
+ 			if (intlist__find(skiplist, curr_suite + 1)) {
+-				pr_info("%3d: %-*s:", curr_suite + 1, width,
+-					test_description(*t, -1));
+-				color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
++				if (pass == 1) {
++					pr_info("%3d: %-*s:", curr_suite + 1, width,
++						test_description(*t, -1));
++					color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (user override)\n");
++					summary_tests_skipped++;
++				}
+ 				continue;
+ 			}
  
--DEFINE_SUITE("util", util);
-+static struct test_case tests__util[] = {
-+	TEST_CASE("String replacement", strreplace),
-+	TEST_CASE("BLAKE2s hash", blake2s_case),
-+	{ .name = NULL, }
-+};
-+
-+struct test_suite suite__util = {
-+	.desc = "util",
-+	.test_cases = tests__util,
-+};
+@@ -1075,6 +1114,7 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 		for (size_t x = 0; x < num_tests; x++)
+ 			finish_test(child_tests, x, num_tests, width);
+ 	}
++	print_tests_summary();
+ 	free(global_pfds);
+ 	free(global_pfd_indices);
+ 	global_pfds = NULL;
 -- 
 2.54.0.823.g6e5bcc1fc9-goog
 
