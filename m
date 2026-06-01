@@ -1,48 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB80389116
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 08:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102D438D3EC
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 09:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780304086; cv=none; b=QK/laVaTOF42U10drCyTOfEue6sGiQLc2Vxfx3X8aGhp/xOCD/R0vKym2bztvp8I2py8ZfmPNSG0CKK0iQgN7QcTGUs6cjT5MZEIsb2r4ydsura6FQ1TgYqo8gUXI9opuvOJC9WhRUUtWv9kFYvysmefbbLhOKKJd8fJ8hUhKng=
+	t=1780304921; cv=none; b=MJbbEbR3/4fjWmtJF+fnPqnvWRFTThqD8ezcaO0tXK9sHSznSGl85g/Sje5wz/z2EOAsj3GQclNPK//ltfEK+cg8+iYtT2kiwrnI1cG1Yslh7ctn2fTC/4puwvN9/C1NfDO9erYeBQ8dVFOZp/hmGwLnFaptrqKilksKCMWFIgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780304086; c=relaxed/simple;
-	bh=7lnsp/NZyjnAjYITSlr3Q/RUfenxNeMkRnQQwfUCCIM=;
+	s=arc-20240116; t=1780304921; c=relaxed/simple;
+	bh=TdW5yechDMCn6D+5IR3Ax4hPX4SbKRAR7SncK2dGYzY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UCdSmJ3jiKwS8eKvqxG89w97tE2qEaFKfMbIZjItiB72FjGpZnGf3XuZ21yTgJ6sIhXzy9b5gEiI7S9DM5S7TCYJcCgrMV5vSpcEjD4VStU61Arou4cUI9ZylMCag4eYGsQENFXKL52dDAeZ00u+nIt5BByI1FncoNFndMd2w9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H558aI9g; arc=none smtp.client-ip=198.175.65.15
+	 In-Reply-To:Content-Type; b=KjDqk+8m80TB7zGL5C/oJmZBGtXm0HtsILVbsx/XSfgWrSuFHhhFyydzWi1lNmlJHiq1Mt2S0pj2WsE1P9Xr25l/htAqOzKUK8khgsfxwyCUcBaixSxhTkEQf2uvFe6yfs5EdBvZSaHsuEGk/LIVejxgwNGmU0TsYpdOXFHNGx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cyb4MuTQ; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H558aI9g"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cyb4MuTQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780304085; x=1811840085;
+  t=1780304919; x=1811840919;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=7lnsp/NZyjnAjYITSlr3Q/RUfenxNeMkRnQQwfUCCIM=;
-  b=H558aI9gwhpzS5Sch7c4qoT/JEohaWxadD6Ci/gzF3SgvLcQXGG9uFYf
-   YV8kUP+xoFqY5RT8C+tMcxuBQGmba1xPCMm+O95sEKUX9NvtvGegKq6gZ
-   AnFAhDiB0/JXvIeDrneM1M20UMWbljgRokGcD9XD3jv7ZUH0snxeMVP9o
-   ZhW1BVFdpXY/4+XOBiRXH9wOF0a+/64vOdmID5ByrXVPN1AdMrnQRXbr5
-   VlcKnhderUquLd5czOhUqup15QHEBL99AwSXH8Ejz8/0v+hdDqHdMa/cz
-   0pYng9ly5Qh3ooN8idAcE3+E2pPkl0zhc+8UMV4wkNIQPwKQz8lI4s/BG
-   A==;
-X-CSE-ConnectionGUID: cUER6ucPQ1WynCaDdCzgkg==
-X-CSE-MsgGUID: uYk7r6zsSHCC0qDZ21PfEQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="84685094"
-X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
-   d="scan'208";a="84685094"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 01:54:45 -0700
-X-CSE-ConnectionGUID: C+5ROiGtQKysZf3bFN8LbQ==
-X-CSE-MsgGUID: gZJdOeQ/TOKg1jbG//7iDQ==
+  bh=TdW5yechDMCn6D+5IR3Ax4hPX4SbKRAR7SncK2dGYzY=;
+  b=cyb4MuTQLfhtMAM8g/671UXgfgBCQHf09FelA2LTECLrGsrHN4FhhEFM
+   7pPrG7YeYSBYhKlm0XrixmyP7oX4b4oywtH0zYP5BOxzJ18ssQZyR97ik
+   BoQQ+5sC27U7D6wQQeYyk+jioAurS+NY9fx4cOXY/7W2JrtQi+VmOZ7Gf
+   gLdNd/q1oQBGK0FPQDb1nzfG4Op97UtZSVfVcLhGharJVp2yIRvOFX+tU
+   au6CNwl9CxZAcB0nAD3cnP18eIwH5Co/MCY2/SeKN4/fZLZa+upCUNsMM
+   y/+onaqkXsDLG0OKrsZ1EGu76HiC/I15YK7ViLQBd1FFuVD+Zhn1CVfPy
+   g==;
+X-CSE-ConnectionGUID: XJenuupMRC+rjuOTejobyQ==
+X-CSE-MsgGUID: wrIRmGfJQZ2x1JcpWFwawg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="103729984"
+X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
+   d="scan'208";a="103729984"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 02:08:38 -0700
+X-CSE-ConnectionGUID: udRkzdS4SpiRQlebN6Hy6w==
+X-CSE-MsgGUID: P20tDGZCRnyp7zBghfFgEQ==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
+   d="scan'208";a="239338036"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 01:54:43 -0700
-Message-ID: <e1edc2a6-c6ac-44ce-8eeb-fee275c19d19@linux.intel.com>
-Date: Mon, 1 Jun 2026 16:54:40 +0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 02:08:37 -0700
+Message-ID: <822ca505-9dd9-48f9-9461-75da241bde28@linux.intel.com>
+Date: Mon, 1 Jun 2026 17:08:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,76 +52,112 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v8 19/23] perf/x86: Support SSP sampling using
- sample_regs_* fields
+Subject: Re: [Patch v8 20/23] perf/x86/intel: Support arch-PEBS based
+ SIMD/eGPRs/SSP sampling
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-References: <20260529075645.580362-20-dapeng1.mi@linux.intel.com>
- <20260529100314.8AB601F00893@smtp.kernel.org>
+References: <20260529075645.580362-21-dapeng1.mi@linux.intel.com>
+ <20260529094559.5337D1F00893@smtp.kernel.org>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260529100314.8AB601F00893@smtp.kernel.org>
+In-Reply-To: <20260529094559.5337D1F00893@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
-On 5/29/2026 6:03 PM, sashiko-bot@kernel.org wrote:
+On 5/29/2026 5:45 PM, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] The uAPI header addition for PERF_REG_X86_SSP is not synchronized with the perf tool's copy, and the perf tool lacks support for formatting or synthesizing the new register.
+> - [High] Requesting the SSP (Shadow Stack Pointer) register improperly allows large PEBS to be enabled on legacy PEBS hardware, resulting in stale and identical SSP values across all samples in the buffer.
 > --
 >
-> commit b3c69baea8c8d8c919d96ea56a7caf694d17f469
+> commit 2a27d3f31fac15c7d594a6588f8dacfa2939bc9f
 > Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >
-> perf/x86: Support SSP sampling using sample_regs_* fields
+> perf/x86/intel: Support arch-PEBS based SIMD/eGPRs/SSP sampling
 >
-> This patch supports sampling of the CET SSP register via the sample_regs_*
-> fields by using spare space reclaimed from the XMM space. It updates the
-> register extraction logic and enables arch-PEBS-based SSP sampling on
-> x86_64.
+> This commit adds support for sampling SIMD, eGPRs, and SSP registers using
+> arch-PEBS. It defines the layout for these extended registers and manages
+> their sampling via MSRs and the XSTATE_BV bitmap.
 >
->> diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
->> index 8774a1290fbef..31a025cb9dbaf 100644
->> --- a/arch/x86/include/uapi/asm/perf_regs.h
->> +++ b/arch/x86/include/uapi/asm/perf_regs.h
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
 > [ ... ]
 >
->> @@ -51,10 +51,11 @@ enum perf_event_x86_regs {
->>  	PERF_REG_X86_R29,
->>  	PERF_REG_X86_R30,
->>  	PERF_REG_X86_R31,
->> +	PERF_REG_X86_SSP,
-> [Severity: Medium]
-> Should the corresponding UAPI header for the perf tool in
-> tools/arch/x86/include/uapi/asm/perf_regs.h be updated in sync with this
-> change?
+>> @@ -4695,21 +4710,113 @@ static void intel_pebs_aliases_skl(struct perf_event *event)
+> [ ... ]
 >
-> Also, does the perf tool require additional updates to support this new
-> register? Without adding a string representation mapping for SSP, the
-> tool might not be able to parse '--user-regs=ssp' or print the register
-> name.
+>> +static bool __regs_support_large_pebs(struct perf_event *event, bool intr)
+>> +{
+>> +	u64 regs = intr ? event->attr.sample_regs_intr :
+>> +			  event->attr.sample_regs_user;
+>> +	u64 vec_regs = intr ? event->attr.sample_simd_vec_reg_intr :
+>> +			      event->attr.sample_simd_vec_reg_user;
+>> +	u64 pred_regs = intr ? event->attr.sample_simd_pred_reg_intr :
+>> +			       event->attr.sample_simd_pred_reg_user;
+>> +	u64 xregs_mask = PEBS_GP_REGS | PERF_X86_EGPRS_MASK |
+>> +			 BIT_ULL(PERF_REG_X86_SSP);
+>> +
+>> +	if (regs & ~xregs_mask)
+>> +		return false;
+>> +
+>> +	if ((regs & (PEBS_GP_REGS | BIT_ULL(PERF_REG_X86_SSP))) &&
+>> +	    !intel_pebs_support_regs(event, PEBS_DATACFG_GP))
+>> +		return false;
+> [Severity: High]
+> Does this logic unintentionally allow large PEBS to be enabled on legacy PEBS
+> hardware when the SSP register is requested?
+>
+> Looking at intel_pebs_support_regs(), it returns true for PEBS_DATACFG_GP
+> unconditionally on legacy PEBS hardware. If a user requests SSP on legacy
+> PEBS, __regs_support_large_pebs() will return true and allow large PEBS.
+>
+> Since legacy PEBS hardware records do not contain the SSP, the perf core
+> fetches it from the thread's XSAVE buffer during the PMU interrupt via
+> x86_pmu_update_perf_regs(). 
+>
+> Because large PEBS batches multiple samples and delays the interrupt, won't
+> every sample in the batch end up with the exact same stale SSP value from
+> the time of the interrupt?
+>
+> Should large PEBS be explicitly disabled on legacy PEBS when SSP is
+> requested, perhaps similarly to how eGPRs are handled?
 
-The corresponding tools support is introduced in later commit '1c10c9dfab27
-("perf headers: Sync perf_event.h/perf_regs.h with the kernel headers"'.
+Yes, this is a bug, need to check if arch-PEBS is supported for SSP, like this,
+
+```
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 4546b20429ba..b37ee3e481bb 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4764,7 +4764,7 @@ static bool __regs_support_large_pebs(struct
+perf_event *event, bool intr)
+        if (regs & ~xregs_mask)
+                return false;
+
+-       if ((regs & (PEBS_GP_REGS | BIT_ULL(PERF_REG_X86_SSP))) &&
++       if ((regs & PEBS_GP_REGS) &&
+            !intel_pebs_support_regs(event, PEBS_DATACFG_GP))
+                return false;
+
+@@ -4772,6 +4772,11 @@ static bool __regs_support_large_pebs(struct
+perf_event *event, bool intr)
+            !intel_pebs_support_regs(event, PEBS_DATACFG_EGPRS))
+                return false;
+
++       if ((regs & BIT_ULL(PERF_REG_X86_SSP)) &&
++           (!x86_pmu.arch_pebs ||
++            !intel_pebs_support_regs(event, PEBS_DATACFG_GP)))
++               return false;
++
+        if (event_needs_opmask(event) && pred_regs &&
+            !intel_pebs_support_regs(event, PEBS_DATACFG_OPMASKS))
+                return false;
+
+```
 
 
 >
-> Furthermore, tools/perf/util/intel-pt.c relies on PERF_REG_X86_64_MAX
-> and a hardcoded pebs_gp_regs array that does not currently include SSP.
-> Will this cause the SSP register to be silently dropped from synthesized
-> PT PEBS samples?
-
-Yeah, PT support would be added independently.
-
-Thanks.
-
-
+> [ ... ]
 >
->>  	/* These are the limits for the GPRs. */
->>  	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
->>  	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
->> -	PERF_REG_MISC_MAX = PERF_REG_X86_R31 + 1,
->> +	PERF_REG_MISC_MAX = PERF_REG_X86_SSP + 1,
->>  
->>  	/* These all need two bits set because they are 128bit */
->>  	PERF_REG_X86_XMM0  = 32,
