@@ -1,173 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B83382F31
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 07:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38A33314B9
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jun 2026 07:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780297721; cv=none; b=A+sEijDp64S79sXg8+b4MONnW9Ps1jggS4g+u20m+GBqaXvawDY6QXDy52KVQkS4g7XfABxB4HgkyHMNSqsmNUfapS5wtXYiBeKV7P0t+sprdETBAJwL+4I0HX4YUwPLfdJ2E9R++qBZuQ5JJcDVKRbIdNPpxjdPSmU3+aJqDn8=
+	t=1780298077; cv=none; b=rtJIZd0uIqO386PyDeBHr196KxGYWvlEBJhP/oiiXdnCQgzkFMmgv/w3Z5iCJQ+1M8tWi99Af2zKsf1ruAQfEcLAa1t2v3uPkQgD1xtK00cQ0Kex68hwoJlxA+QxnQjHCsXslmklTarOvMtTaFf8EU0OtKpo+cYsbc672qofXSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780297721; c=relaxed/simple;
-	bh=v10R07C0bWrM7llFnF7YQhOFuhodI4jL4kURqtPWDWE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=C10+tRr4X+1ysYt5ExAOwg5X15DomjciUUybyQkQ9oKT+GycQUQRwS7Bkx0u2drzob51oauWk0fpwCHnysiv7e0r4+VoWCDG5U8mTs9fBORf+YQV75AtLxx1+uYq2bRgXPG6AouPCTC3Tt+81iO4nuFjAiBOsTrQNdKFgZi8Tkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ha5yPf/0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780298077; c=relaxed/simple;
+	bh=RXNHJqsRLxRjxYiSLZQML7BAh8g4+PfRZhrk7wzvgoE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZugmG2pg1pynw1Doay7MqWkb50cnS58jnX1e4eoYwqQN4eBkAJJU5Lr+lFeq4JKGBtBFkz0ItcHrn+RqPMj16nVwXBLhrx8DZjqPgXZq+8kl7VXSmmcyEslZTE8vW2hJ7foiVfetjHri+oNo15uHy6Py0rgsvNMBie8sdXCyARM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JbE5pCk2; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ha5yPf/0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 170721F00893;
-	Mon,  1 Jun 2026 07:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780297720;
-	bh=ZHWqcO6ysfEjPaLEfgjkVgtQQyGPZ/SuNKRbTgkuas0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ha5yPf/0pY0g7sdgBuoyOiboDwpPZOQnslmUSSnhTQ0pZYuhYGcp05xbhp1qpf8cI
-	 DoKeIox+DQ7U7RuIJKVtDkyhbEAZ0vSo7uemDm9p3cMtChMeQokuJAKXkbURY4LbVY
-	 wQhE3JwFIFxkIEFh6XqjlaONakiOz6P8gwjScFyr/lsI26pjm4No+iwOqx1CRWqrIp
-	 Fi1DwzuIJwWPHr5UV2LFDQfMnod8igA9YiDxhxVCCh28w3MW7eZDdBbc5exRohqC0a
-	 mUbuaYbtA1DCfsaltYZ/I4UhHL2X0uq4BTlDA9Q1KDggnI0xezlX/8s4xfR9DH914b
-	 BmfL3vtJYWRxA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 01/18] perf env: Add perf_env__e_machine helper and
- use in perf_env__arch
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260601065407.1597927-2-irogers@google.com>
-References: <20260601065407.1597927-2-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 01 Jun 2026 07:08:39 +0000
-Message-Id: <20260601070840.170721F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JbE5pCk2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780298076; x=1811834076;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RXNHJqsRLxRjxYiSLZQML7BAh8g4+PfRZhrk7wzvgoE=;
+  b=JbE5pCk2Gf7YKLL9J2KQgCCAdO2frd+qtcSm9AWAdG7UB+hCqVY3jXUS
+   SzGj8+K//dYrAY6t8HHecqSakpYG5Le5dolxtjsEWKxQCkOFicjjrooUr
+   +x8l9CFDIwIpON5QTZb0Dw542PntnwWeW9XC0/HOqhJrqqwBTQxGgeHOk
+   zo1B12fhqYE/KumD92wjkdUs1XRJyHl22I++x+EsPe06jwYC7L7gbCreh
+   dwCfrOxSgxuFoQPcnX46fmnVqoLnydRzKuMsKFvzH0nOY4UiNlBxKNSXV
+   Gk8/TgjndnBwHoUvcm4RhBeKZsBBwjKNASzDp2n5HUinTGis/U2amnoNE
+   w==;
+X-CSE-ConnectionGUID: ohtajoLmRTaxtAOT19JmeA==
+X-CSE-MsgGUID: NSSmCFgbSuu6eqj9PWTM3Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="80187824"
+X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
+   d="scan'208";a="80187824"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 00:14:35 -0700
+X-CSE-ConnectionGUID: FgSuiE2OTz24NqTSd5FLpw==
+X-CSE-MsgGUID: Cl/ECFuwRUmLX+xHpdtPew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,180,1774335600"; 
+   d="scan'208";a="248409220"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 00:14:34 -0700
+Message-ID: <ed9aca04-2ce2-40d8-b286-524c145f6612@linux.intel.com>
+Date: Mon, 1 Jun 2026 15:14:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v8 14/23] perf/x86: Support YMM sampling using
+ sample_simd_vec_reg_* fields
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260529075645.580362-15-dapeng1.mi@linux.intel.com>
+ <20260529084759.A4F051F00893@smtp.kernel.org>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260529084759.A4F051F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [Critical] x86_64 is severely misclassified as 32-bit locally and in newl=
-y recorded `perf.data` files due to normalization overwriting the architect=
-ure string.
-- [High] Removing `normalize_arch` breaks the parsing of older `perf.data` =
-files by returning unnormalized architecture strings.
-- [High] Kernel 64-bit detection fails for architectures with endianness or=
- variant suffixes due to a strict `str_ends_with` check.
-- [High] Unsynchronized lazy initialization of `perf_env` fields (`arch`, `=
-e_machine`, `e_flags`) causes data races and memory leaks.
---
 
-commit a1c7d037273069adc911ec02be28b6159d9a6b8e
-Author: Ian Rogers <irogers@google.com>
+On 5/29/2026 4:47 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+>
+> New issues:
+> - [Medium] The `event_needs_ymm()` function evaluates flag-gated syscall parameters outside their corresponding flag gate (`PERF_SAMPLE_REGS_USER` / `PERF_SAMPLE_REGS_INTR`).
+>
+> Pre-existing issues:
+> - [High] The function `perf_simd_reg_validate` improperly returns an error when unused, flag-gated parameters are not zero-filled, breaking ABI compatibility.
+> --
+>
+> commit f738764532819a2044a1239c400d83c8404d4843
+> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>
+> perf/x86: Support YMM sampling using sample_simd_vec_reg_* fields
+>
+> This patch introduces support for sampling YMM registers via the
+> sample_simd_vec_reg_* fields. It updates the perf_simd_reg_value function
+> to assemble the XMM and YMMH halves into a complete YMM register and
+> sets the sample_simd_vec_reg_qwords to 4 for YMM sampling.
+>
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+> [ ... ]
+>> @@ -1967,6 +1973,8 @@ static void x86_pmu_sample_xregs(struct perf_event *event,
+>>  
+>>  	if (event_needs_xmm(event))
+>>  		mask |= XFEATURE_MASK_SSE;
+>> +	if (event_needs_ymm(event))
+>> +		mask |= XFEATURE_MASK_YMM;
+>>  
+>>  	mask &= x86_pmu.ext_regs_mask;
+>>  	if (sample_type & PERF_SAMPLE_REGS_USER) {
+> [Severity: Medium]
+> Does this evaluate flag-gated syscall parameters outside their flag gate?
+>
+> According to the syscall parameter trust boundaries, userspace is not
+> required to zero-fill unused fields, so they may contain arbitrary garbage
+> when their flag is absent.
+>
+> The event_needs_ymm() helper checks event->attr.sample_simd_regs_enabled
+> and event->attr.sample_simd_vec_reg_qwords.
+>
+> However, in x86_pmu_sample_xregs(), this check happens before we verify if
+> the sample type actually includes PERF_SAMPLE_REGS_USER or
+> PERF_SAMPLE_REGS_INTR.
+>
+> Could this cause the kernel to read uninitialized userspace values when
+> those sample_type flags are not set?
 
-perf env: Add perf_env__e_machine helper and use in perf_env__arch
+Ok, would check if PERF_SAMPLE_REGS_INTR or PERF_SAMPLE_REGS_USER is set
+before calling x86_pmu_sample_xregs(), like this,
 
-Add a helper that lazily computes the e_machine and falls back to EM_HOST.
-Use the perf_env's arch to compute the e_machine if available, using a
-binary search for efficiency while handling duplicate rules.
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index f990256fb2ff..cf621ab2cd46 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2060,6 +2060,10 @@ void x86_pmu_update_perf_regs(struct perf_event *event,
+ {
+        u64 sample_type = event->attr.sample_type;
 
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 20953ef7b9d8f..23dcd7a108a10 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-[ ... ]
-> @@ -309,15 +311,27 @@ void perf_env__init(struct perf_env *env)
-> =20
->  static void perf_env__init_kernel_mode(struct perf_env *env)
->  {
-> -	const char *arch =3D perf_env__raw_arch(env);
-> +	const char *arch =3D env->arch;
-[ ... ]
-> +	if (arch) {
-> +		if (str_ends_with(arch, "64") || !strncmp(arch, "s390x", 5))
++       if (!(sample_type &
++             (PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER)))
++               return;
++
+        if (!event_needs_xmm(event) &&
+            !event_has_simd_regs(event))
+                return;
 
-[Severity: High]
-Does this strict str_ends_with(arch, "64") check reject valid 64-bit
-architectures that possess trailing variant suffixes?
+>
+>> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+>> --- a/arch/x86/kernel/perf_regs.c
+>> +++ b/arch/x86/kernel/perf_regs.c
+> [ ... ]
+>> @@ -121,7 +128,8 @@ int perf_simd_reg_validate(u16 simd_enabled, u16 vec_qwords,
+>>  		if (vec_mask_intr || vec_mask_user)
+>>  			return -EINVAL;
+>>  	} else {
+>> -		if (vec_qwords != PERF_X86_XMM_QWORDS)
+>> +		if (vec_qwords != PERF_X86_XMM_QWORDS &&
+>> +		    vec_qwords != PERF_X86_YMM_QWORDS)
+>>  			return -EINVAL;
+> [Severity: High]
+> This isn't a bug introduced by this patch, but does the surrounding
+> validation code in perf_simd_reg_validate() inappropriately reject legal
+> syscalls?
+>
+> When simd_enabled is 0, the function checks if vec_qwords, vec_mask_intr,
+> and other parameters are zero, returning -EINVAL if they are not.
+>
+> Since userspace isn't required to zero-fill unused arguments outside their
+> flag gate, these parameters could contain garbage.
+>
+> Is it possible that enforcing zero-fill on these unused arguments
+> functionally breaks ABI compatibility by failing requests that should be
+> valid under the trust boundary rules?
 
-For example, architectures like "aarch64_be", "mips64el", or "riscv64gc" do
-not end exactly in "64". Will they fail this check and be incorrectly class=
-ified
-as 32-bit (env->kernel_is_64_bit =3D 0), which could break unwinding and BPF
-parsing on those platforms?
+As previous comments said, would introduce an extra argument "sample_type"
+for perf_simd_reg_validate() and then do corresponding validate more
+accurately.
 
-[Severity: Critical]
-Additionally, could this str_ends_with() check cause standard x86_64 system=
-s to
-be misclassified as 32-bit locally and in newly recorded perf.data files?
+Thanks.
 
-When recording a new perf.data file on x86_64, perf_env__arch() maps the ho=
-st
-machine to the normalized string "x86" and caches it in env->arch. Later, w=
-hen
-perf_env__init_kernel_mode() evaluates the cached "x86" string here,
-str_ends_with("x86", "64") will evaluate to false, erroneously setting
-env->kernel_is_64_bit to 0.
 
-> +			env->kernel_is_64_bit =3D 1;
-> +		else
-> +			env->kernel_is_64_bit =3D 0;
-> +		return;
-> +	}
-[ ... ]
-> @@ -588,51 +602,249 @@ void cpu_cache_level__free(struct cpu_cache_level =
-*cache)
-[ ... ]
->  const char *perf_env__arch(struct perf_env *env)
->  {
-> -	char *arch_name;
-> +	uint16_t e_machine;
-> +	const char *arch;
-> =20
-> -	if (!env || !env->arch) { /* Assume local operation */
-> +	if (!env) {
-[ ... ]
-> +	if (env->arch)
-> +		return env->arch;
-
-[Severity: High]
-By returning env->arch directly and removing the normalize_arch() call, does
-this break the parsing of older perf.data files?
-
-When reading from older files, env->arch contains the raw unnormalized stri=
-ng
-(e.g., "x86_64") from the HEADER_ARCH section. Returning this unnormalized
-string directly bypasses standard perf architecture aliases, which could br=
-eak
-callers expecting canonical names, such as arch_syscalls__strerrno_function=
-().
-
-> =20
-> -	return normalize_arch(arch_name);
-[ ... ]
-> +	/*
-> +	 * Only cache the normalized arch string in env->arch if the
-> +	 * e_machine was successfully resolved (i.e. not the unpopulated
-> +	 * fallback to EM_HOST), allowing threads to dynamically indicate
-> +	 * a better ELF machine type later.
-> +	 */
-> +	if (env && env->e_machine !=3D EM_NONE)
-> +		env->arch =3D strdup(arch);
-
-[Severity: High]
-Since perf_env can be shared across multiple threads during concurrent event
-processing (e.g., in perf report), could this unsynchronized lazy caching of
-env->arch via strdup() lead to data races and memory leaks?
-
-Multiple threads observing env->arch as NULL could concurrently allocate and
-overwrite the same pointer. Additionally, without memory barriers, concurre=
-nt
-readers might observe a non-NULL env->arch pointer but read uninitialized
-memory. Similar unsynchronized lazy writes seem to happen for env->e_machine
-and env->e_flags in perf_env__e_machine().
-
-> +	/*
-> +	 * Avoid potential crashes on the arch string if memory allocation in
-> +	 * strdup fails and NULL were to be returned.
-> +	 */
-> +	return env->arch ?: arch;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260601065407.1597=
-927-1-irogers@google.com?part=3D1
+>
