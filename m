@@ -1,128 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B193D5648
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4425368291
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780413730; cv=none; b=nLvJID7oFAZ5HbE397AORDIFAai2PjbBjN4aLvd3B+TsXH5b5jkIlR+RNUW7HImqBlljtzvo9INYPZNRgtAVrBZ0fDl+gsH7+lp+TZ8NCkwZbmQCjM95q1rH849El8OLmeIcsJKJino+OPMhcFv9dgepdMTpulxMyYuGP7Rn6/g=
+	t=1780413926; cv=none; b=J3g8F05T44tiRKNs2tuC0RWZXrJPIQO2e4H/DgNGGaHbl6azy705E6zW/rG6+IdEuTVL7ipYOLqsye0GxSBffzDk7iGv7eWwHKeoIlCOVm9yrIA26F2YeHfJ7bHL7lTfNF34MAP4YlnjoS1j7s8ArfyeCRpXlF3ThWDONSX7l8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780413730; c=relaxed/simple;
-	bh=G2R2RmT35/fscGbTOG/xia8X0Z7ETkULUDlcoKinXOU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kiKKTyVdhFxjNdVDhgIr8Aq0El+foSSu9M3FnM1nBuzQAf6VKAb6Wl7aj5LmanSQ3tcIp+9R1a2TXe9jqBHTDDWRA1CoAYFbk8eExjgkk0NDJAwTD4OYDjgkBieRBRd/S0QuWRC6kj+VPWPtiH6nfszYNjGs5JZbLUWik2+7DHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWaWug8f; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780413926; c=relaxed/simple;
+	bh=Tex6wSJ1ttT77SS74L03/2HwidCzgsEaoOXl0lQWIHc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lzMEO4bSU8Nm3QiClB6+S+q5yGQIBbaMohfAtCo2vV08+gN5N2J3pcOX+o+y9J7J7Mm6UN3ousO1Z2YreuH6Zn6BDgjLwCYXErUNEYnL64KKM+or8rTXhWKkZOyQ1+I429Bzdp9/gmwW782B/9CAjZNqQCO6RzPZs/I8F1LFy9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JhZ6qfVo; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWaWug8f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 967361F00893;
-	Tue,  2 Jun 2026 15:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780413728;
-	bh=uZQMorfirS1FVgpi3Ku7gadmA+jPENSt9UrSqgIN6w4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dWaWug8fexSty0MEbNO+Byn2aZ1IvAZ+2QDThbQUecZm4RKm0OAweWfGNNhoQ687k
-	 QaK4XkGdeVSjx9h5KgeEz1e0wJNhfjWOvqfHuHHR9uTg5QExnY9GrRka2pZd5xft0Q
-	 BFFvrhrCPYuZkMh/j/f/mNmSjroSvGYCOIemeYSAGXMl5zW5mEvw/NuLo7ZrUb3CDx
-	 Hilfxsf9VhLI/ATHk2zQ7oKEVieQ3V/W4LJJZfW7mYFqZ+gHNMmvMs7oq2dKx4ToN/
-	 YWB7SHQysX0sLIdHSBa8E+8FGljdYHji1km9gRKEBkz8FNg1I5s29SL5+1tjq4Ach9
-	 iASq6avKVf32w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V3 1/7] perf/x86/intel/uncore: Fix discovery unit lookup
- for multi-die systems
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zide Chen" <zide.chen@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602144908.263680-2-zide.chen@intel.com>
-References: <20260602144908.263680-2-zide.chen@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 15:22:08 +0000
-Message-Id: <20260602152208.967361F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JhZ6qfVo"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304e3e3fba5so20932532eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 08:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780413924; x=1781018724; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zn6oBFiuaPluJCiGweFSRrSqGXwZ42XjhKUDVMlkfYw=;
+        b=JhZ6qfVoosVf7W34UjqcfWTvDvTg0w4C0rarzVj5Ng1dKlsrPEedB7dSicJJ0Xr7ZG
+         uA6VEivXQWVxPjpLe7o2n//sYtHXtYG8QDaOS+yyCyiqUjfMg21RNjADfayBJWVeCeC8
+         lAOxtU/S9frkTfra9WBQc6qlVUTSsc8HfyysTaRyDhsq2ju7X1MVzO2SuWSItX4DltER
+         Uu2CyFWEMv2n9sl/E1P8VHRpMSulWsK5j8e5rCor00AjQd1yVCjVCEvrMnnQHhkMQRDM
+         LMawMN6HVx9SA0yn1SJ4DxGiOAE7blzqqzItcg1w+f0DEFs6NsjblKmii/bk2CKCKoW5
+         sH+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780413924; x=1781018724;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zn6oBFiuaPluJCiGweFSRrSqGXwZ42XjhKUDVMlkfYw=;
+        b=EneGagVDyAmn40+7oqxH5Y/3fM5qxLCRLtAOGXb0FqXLmY9ywlrkTJIgNoWLyNdXJv
+         dSIsc2vETpOnzZokyEy5Ce9u3iZ8/JRHZ6Looq2tfVaqaA2ki+kE2K0/+a8bqELJ4yGA
+         8/JNPKyGeT9T5jvnB14smL3iZAms0r6IrLvsncd21Pe7ljgKOHjKpzPT5rnBFnYetCRr
+         ZZqkVQU8xMT4foCouxplwFkErqJIQW9x6Q88GT/rPAI9ynRJC44R0yIk9zX7DJlhlNK1
+         QcdkDaZPumqFAES2E8tSzQJByIhht3aO8mylzkehwnqggMMn3Wj2W3hpvEWdjGXHPjuP
+         uD0Q==
+X-Forwarded-Encrypted: i=1; AFNElJ+hUaCSRSc2z/ES3nacf6yfHyahfFVZrmqmJ/71SVHLxUoPC5W6s+W7DWMcisPlXKenYO4tn3bV3QUqYMqfXUdE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxvn/7jRfauPFKK273DerYqwP7l5iiG6teTUJgSChgE6ORDRFoB
+	c+8kJ/Qb7huy9S16zqlbrTfNR4fWXhkPmv0m195KUkjejsdCx8XPG+saFLmTSnYMkPT09Ney91m
+	J8UVMamnMDw==
+X-Received: from dyce13.prod.google.com ([2002:a05:7300:724d:b0:2d7:e13b:ef99])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1284:b0:2c5:50fe:c795
+ with SMTP id 5a478bee46e88-304fa722d9fmr7665240eec.29.1780413923763; Tue, 02
+ Jun 2026 08:25:23 -0700 (PDT)
+Date: Tue,  2 Jun 2026 08:24:57 -0700
+In-Reply-To: <20260602062452.2583619-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260602062452.2583619-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.929.g9b7fa37559-goog
+Message-ID: <20260602152516.2831152-1-irogers@google.com>
+Subject: [PATCH v12 00/19] perf: Use e_machine and lazily compute symbols
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
+	jameshongleiwang@126.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
+	sumanthk@linux.ibm.com, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The commit message inaccurately claims that a NULL unit can be e=
-xpected when a CPU die is offline, justifying the removal of a valid WARN_O=
-N_ONCE assertion, but the code path is structurally unreachable for missing=
- units.
---
+Add a helper to perf_env to compute the e_machine if it is EM_NONE.
+Derive the value from the arch string if available. Similarly derive
+the arch string from the ELF machine if available, for consistency.
+This means perf's arch (machine type) is no longer determined by uname
+but set to match that of the perf ELF executable.
 
-commit ddb51b3d3e54081e6dbacecec75a18fa773ae364
-Author: Zide Chen <zide.chen@intel.com>
+Migrate code away from strcmp on env->arch to using the e_machine
+comparisons that are more accurate and not prone to uname and other
+naming differences. While cleaning this up, also clean up the
+capstone initialization code to cover more architectures and to set
+the big endian flag based on ELF header information.
 
-perf/x86/intel/uncore: Fix discovery unit lookup for multi-die systems
+Refactor perf_env__arch_strerrno to take an e_machine instead of an
+architecture string, removing the HAVE_LIBTRACEEVENT dependency
+entirely and making it unconditionally available. The generated errno
+table includes fallback definitions for newer ELF machine constants to
+ensure compatibility with older host glibc versions.
 
-This commit fixes an issue where PMON units with the same unit ID may
-retrieve the wrong node on multi-die systems by using box->dieid. It
-also removes a WARN_ON_ONCE() under the assumption that a NULL unit
-can be expected during CPU die offline/online scenarios.
+Introduce a mutex in perf_env to safely protect lazy metadata setup,
+such as os_release or e_machine resolution, preventing concurrent
+initialization data races and memory leaks during multi-threaded
+profiling or symbol loading. Properly initialize stack-allocated
+perf_env instances to ensure safe mutex destruction.
 
-> Remove WARN_ON_ONCE() because with the above change a NULL unit can be
-> expected, e.g. when a CPU die is offline during uncore enumeration and
-> the unit is not added to the RB-tree. In this case,
-> intel_uncore_find_discovery_unit() returns NULL once the die becomes
-> online, and it is expected that the PMU box is not functional for that
-> die.
+Switch the idle computation to the point of use and lazily compute it,
+rather than computing it for every symbol. The current only user is
+`perf top`. At the point of use the perf_env is available and this can
+be used to make sure the idle function computation correctly accounts
+for architecture-specific and kernel-version-specific patterns.
+To prevent concurrent updates to shared symbol bitfield flags, migrate
+bitfield variables in struct symbol to C11 atomic flags.
 
-> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/i=
-ntel/uncore_discovery.c
-> index 583cbd06b9b88..60e1200c4691d 100644
-> --- a/arch/x86/events/intel/uncore_discovery.c
-> +++ b/arch/x86/events/intel/uncore_discovery.c
-> @@ -481,8 +481,8 @@ static u64 intel_generic_uncore_box_ctl(struct intel_=
-uncore_box *box)
->  	struct intel_uncore_discovery_unit *unit;
-> =20
->  	unit =3D intel_uncore_find_discovery_unit(box->pmu->type->boxes,
-> -						-1, box->pmu->pmu_idx);
-> -	if (WARN_ON_ONCE(!unit))
-> +						box->dieid, box->pmu->pmu_idx);
-> +	if (!unit)
->  		return 0;
+Ian Rogers (19):
+  perf env: Add perf_env__e_machine helper and use in perf_env__arch
+  perf tests topology: Switch env->arch use to env->e_machine
+  perf env, dso, thread: Add _endian variants for e_machine helpers
+  perf capstone: Determine architecture from e_machine
+  perf print_insn: Use e_machine for fallback IP length check
+  perf symbol: Avoid use of machine__is
+  perf machine: Use perf_env e_machine rather than arch
+  perf sample-raw: Use perf_env e_machine rather than arch
+  perf sort: Use perf_env e_machine rather than arch
+  perf arch common: Use perf_env e_machine rather than arch
+  perf header: In print_pmu_caps use perf_env e_machine
+  perf c2c: Use perf_env e_machine rather than arch
+  perf lock-contention: Use perf_env e_machine rather than arch
+  perf env: Refactor perf_env__arch_strerrno
+  perf env: Remove unused perf_env__raw_arch
+  perf env: Add mutex to protect lazy environment initialization
+  perf env: Add helper to lazily compute the os_release
+  perf symbol: Add setters for bitfields sharing a byte to avoid
+    concurrent update issues
+  perf symbol: Lazily compute idle
 
-[Severity: Medium]
-Is the scenario described in the commit message actually possible in the
-current codebase?
+ tools/perf/arch/common.c                      |  92 +++--
+ tools/perf/builtin-c2c.c                      |  40 +-
+ tools/perf/builtin-inject.c                   |  10 +-
+ tools/perf/builtin-kwork.c                    |   2 +-
+ tools/perf/builtin-report.c                   |   2 +-
+ tools/perf/builtin-sched.c                    |   4 +-
+ tools/perf/builtin-top.c                      |   7 +-
+ tools/perf/builtin-trace.c                    |   7 +-
+ tools/perf/tests/symbols.c                    |   2 +-
+ tools/perf/tests/topology.c                   |   8 +-
+ tools/perf/tests/vmlinux-kallsyms.c           |   2 +-
+ tools/perf/trace/beauty/Build                 |   1 +
+ tools/perf/trace/beauty/arch_errno_names.sh   |  53 ++-
+ tools/perf/ui/browsers/annotate.c             |   2 +-
+ tools/perf/ui/browsers/map.c                  |   4 +-
+ tools/perf/util/annotate.c                    |   5 +-
+ tools/perf/util/auxtrace.c                    |   6 +-
+ tools/perf/util/callchain.c                   |   4 +-
+ tools/perf/util/capstone.c                    | 132 ++++--
+ tools/perf/util/data-convert-bt.c             |   2 +-
+ tools/perf/util/data-convert-json.c           |   6 +-
+ tools/perf/util/dlfilter.c                    |   2 +-
+ tools/perf/util/dso.c                         |  19 +-
+ tools/perf/util/dso.h                         |  14 +-
+ tools/perf/util/env.c                         | 376 ++++++++++++++----
+ tools/perf/util/env.h                         |  14 +-
+ tools/perf/util/evsel_fprintf.c               |   6 +-
+ tools/perf/util/header.c                      |  55 ++-
+ tools/perf/util/intel-pt.c                    |   2 +-
+ tools/perf/util/libdw.c                       |   2 +-
+ tools/perf/util/lock-contention.c             |   6 +-
+ tools/perf/util/machine.c                     |  37 +-
+ tools/perf/util/machine.h                     |   2 -
+ tools/perf/util/print_insn.c                  |  23 +-
+ tools/perf/util/print_insn.h                  |   2 +
+ tools/perf/util/probe-event.c                 |   4 +-
+ tools/perf/util/sample-raw.c                  |  21 +-
+ tools/perf/util/sample-raw.h                  |   6 +-
+ .../util/scripting-engines/trace-event-perl.c |   2 +-
+ .../scripting-engines/trace-event-python.c    |   4 +-
+ tools/perf/util/session.c                     |  26 +-
+ tools/perf/util/sort.c                        |  66 +--
+ tools/perf/util/srcline.c                     |  10 +-
+ tools/perf/util/symbol-elf.c                  |   5 +-
+ tools/perf/util/symbol.c                      | 238 ++++++++---
+ tools/perf/util/symbol.h                      |  80 +++-
+ tools/perf/util/symbol_fprintf.c              |   4 +-
+ tools/perf/util/thread.c                      |  58 ++-
+ tools/perf/util/thread.h                      |  23 +-
+ 49 files changed, 1078 insertions(+), 420 deletions(-)
 
-When a CPU die comes online, uncore_event_cpu_online() invokes
-uncore_change_type_ctx(), which relies on uncore_die_has_box() to check
-for the unit. If the unit is missing from the RB-tree, uncore_die_has_box()
-returns false, and the box cpu assignment is skipped:
+-- 
+2.54.0.929.g9b7fa37559-goog
 
-arch/x86/events/intel/uncore.c:uncore_change_type_ctx() {
-    ...
-    if (uncore_die_has_box(type, die, pmu->pmu_idx)) {
-        box->cpu =3D new_cpu;
-        cpumask_set_cpu(new_cpu, &pmu->cpu_mask);
-    }
-    ...
-}
-
-Because box->cpu remains -1, uncore_box_ref() bypasses initialization:
-
-arch/x86/events/intel/uncore.c:uncore_box_ref() {
-    ...
-    if (box && box->cpu >=3D 0 && atomic_inc_return(&box->refcnt) =3D=3D 1)
-        uncore_box_init(box);
-    ...
-}
-
-Furthermore, uncore_pmu_event_init() rejects event creations if box->cpu
-is negative. Because of this, it appears the PMU operations (init, enable,
-disable) are never executed for this box, making the call to
-intel_generic_uncore_box_ctl() unreachable.
-
-Does this mean the removed WARN_ON_ONCE(!unit) was actually a valid
-assertion, and the !unit check is effectively dead code?
-
-> =20
->  	return unit->addr;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602144908.2636=
-80-1-zide.chen@intel.com?part=3D1
