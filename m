@@ -1,126 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613D33403F8;
-	Tue,  2 Jun 2026 07:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C094F2DA76C
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 07:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780385058; cv=none; b=dwL7N9RO0eu1j3EtI2AZBlPPn2DzlL5cpaIWcLO7tBQ2oV24/13D/bz2GesRP6rgO9of08cdfgivgdlPjd46TEFuJbFgZFlXN9uM98yq9hDBcJ4PKAbAgGLUtNWufLAdlVLeVptSwHRx5C8hQDbjjpKyjt6TLqs7P/tao6vp+B8=
+	t=1780385504; cv=none; b=Nck0Ys4bmx4d7DLxzvH3ib5inbk7UAKjtX8K+b3pYIVaggFl3Tis7ie4CG5LqLXNYLqg2qxX0f+QzG37QQZIxJZFoY9AmmjyEF0c6dAJU5OALAZQt1C7OgJRvreiRIQQ117ZAQQ80CWF40ovvoPXdGrVYM5jqNhWfuLHd7+Y/Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780385058; c=relaxed/simple;
-	bh=A9ROvAc9OIM8BZ0wlpQUy69G5fyRhWBkgwMVc8pzOmw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ff4SkZTL6/1be2PGIZxNZEsNuSGJuqfLylkI1SWmybDq+Yo+Bn5U+fQP+eOXzBnzdYoDtcWZjZsWvpwLtfnFbmDYg7JNYg+rZJVOfHfj2IbBMNmgTgB75cQ1WE2Tan2hlwQq29RGfwbXSzNgfZt5vxLXGmFC7FdoYvyEEuQVLU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k1OEghbd; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780385504; c=relaxed/simple;
+	bh=IWOg3/r5HH/nHVezZY8s/UQg/HMZImK5fAKTwC3rPas=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=E/6SrirGZEV11sN5vx26PxIEfngSmB3yVi65NuH2Vz8h65Yn/nnk8b75KTmUMpL8p/152ohPnm7Hx5Kofy8t1P0VLeFdxZuwQKlkR21p1xBZR3Ij80Csd44+tlcxmr3kqt/cZ+UGpPHbAE6LmEdE1F/JC1h4UeYeY/dA/PHYq+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Owqhx97x; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k1OEghbd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780385056; x=1811921056;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=A9ROvAc9OIM8BZ0wlpQUy69G5fyRhWBkgwMVc8pzOmw=;
-  b=k1OEghbdrdhvxj2V14JvkQEAvvP4NDsxKF1/RbiiVIfzN3oiQUQnHeOE
-   N90KV2oACD9Na8Pw/nNB6BS85beOUxB4Z8SGgzpOftun+Lm/kmSnKJ0de
-   s9vyfIMhesPDBDvrDKHnBn2V59c9oWCwE49MZtxKe49W6/FRqeVmuB38D
-   ci9Ywj+R8HLOfj1gwsNvrxF1/iygLNDgxln7xv93Phc4egPnzl7Whoq40
-   h9C8oNITnAzRbfW0dSYEtrUSKBphSxv4ZmGJ3PZ/eBzeGdF9G4F3U/HsQ
-   cAKcnrBJZ8j8vh4KPvRIxG3RH14o2G16S8Mm5YBcaESnZOmNgWib9S/Oq
-   A==;
-X-CSE-ConnectionGUID: MBbfimuFTQan6m1Up62Z0Q==
-X-CSE-MsgGUID: 6veBaOHRSyegQiMonmMJ4w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="98581795"
-X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
-   d="scan'208";a="98581795"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 00:24:15 -0700
-X-CSE-ConnectionGUID: eM1kcx//TiOmCU22uB37fA==
-X-CSE-MsgGUID: rnEh7ATLRQeXNBzJJhvVQA==
-X-ExtLoop1: 1
-Received: from unknown (HELO [10.238.1.64]) ([10.238.1.64])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 00:24:12 -0700
-Message-ID: <ddf43295-e637-4a65-97e2-0926624776bd@linux.intel.com>
-Date: Tue, 2 Jun 2026 15:24:10 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Owqhx97x"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137dd5100c7so3689346c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 00:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780385501; x=1780990301; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ww4Ls3lfLjoC/rNY6qfkoB5Qxh88DLI22GdrDMFE67k=;
+        b=Owqhx97xM51sJNqoK7x8aiKnB7mUGhtwPoSs0xrnbDFhD74M3Lj2Wb0kCn3KjtBwgH
+         S0GxIxjtPYjDnkzHcQyg3cDmQvpubtR/oFFqIqwSFuZtLww7v6OQJh7FOmvDdvxdVeVc
+         glKuiUmuyK52ok6k/lLGDQ7TkERiaJDLOai8zHOgLy3uNdodmjTvScXtVu/H4g6u8Fy6
+         Z7M6OeA2wTgu4V/p5hslpSFGkDcyC+MgihwAvWPS1innWDPf/8Ovz7xOEvbv+hnGc2U1
+         MTjdb0EB0hF2uURDctNXyAZv5Y+iZMFcn2a0CCiuJMQK0PrVkfkmMF+A8YiohOk3DBxm
+         9s8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780385501; x=1780990301;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ww4Ls3lfLjoC/rNY6qfkoB5Qxh88DLI22GdrDMFE67k=;
+        b=O/biAJsFAOXcqCHAnZJbp7qdtleegYSoFr34XI0VUxigrw2LdR8cp7GdwkMV5e23UY
+         NP6tYtKbLaXk5XJY17G6CMqGN7+d9cthuQG7RRH/En5y6UhQFvfHxnZfj3lY6MZPUl1K
+         mJH9bdrSYiGPPCi6k1jha/c5QMbiW8oJ/Q/tUDT957rFFKn4xodj+YgBnYR+u9odF2Fz
+         51GT8VOJgPmdjQtf1B3zXgkJUXey1kwY/i51LqynTnUL/RSLy6muCvbzZjjxmikoceNh
+         FDA5WOZ9lUM5iePUyHlwOYd5bTFhZS+JYfCwz/fAo0PQAIaDrvYJEoo3i8TTSfeOvo8w
+         oioA==
+X-Forwarded-Encrypted: i=1; AFNElJ+EQIz9DJK/w9vMQSQJcV0XJx0gkbaLFC2fZFSBAVvs0GTgAI4jTb+Tfiu9DcY0v9OQ+iHVDt+GeqNkrl95dz3P@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqXcAsYsFI8zprAn+59+r7yHH12ZuV8FVda6ViCjTlnsgFILnj
+	oRF1r4eKMI8q/csGkif9FxXmv3x4cDkk4EGEYX54Tn3oVLAIoiVLxpH/SKZxeTFLVe7PzDPkRvm
+	m3+iQhlaDJw==
+X-Received: from dlbqq10.prod.google.com ([2002:a05:7022:ed0a:b0:135:db69:f5db])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec0c:b0:132:5d42:55ba
+ with SMTP id a92af1059eb24-137d3d09ebfmr5987771c88.16.1780385500481; Tue, 02
+ Jun 2026 00:31:40 -0700 (PDT)
+Date: Tue,  2 Jun 2026 00:31:16 -0700
+In-Reply-To: <20260602073132.2653307-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/8] perf/x86/intel/uncore: Fix PCI PMU cleanup on
- setup failure
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260601170114.173359-1-zide.chen@intel.com>
- <20260601170114.173359-2-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260601170114.173359-2-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20260601061401.1541457-1-irogers@google.com> <20260602073132.2653307-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.929.g9b7fa37559-goog
+Message-ID: <20260602073132.2653307-2-irogers@google.com>
+Subject: [PATCH v7] perf tpebs: Fix concurrent stop races and PID reuse
+ hazards in tpebs_stop
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
+Parallel verbose test execution can trigger a race condition in tpebs_stop
+if called concurrently or when PID reuse occurs, causing finish_command()
+to block or reap the wrong process.
 
-On 6/2/2026 1:01 AM, Zide Chen wrote:
-> When uncore_pci_pmu_register() fails, pmu->boxes[die] is set to NULL
-> before returning.  In the uncore_pci_remove() path, this causes
-> uncore_pci_pmu_unregister() to be skipped entirely, leaking
-> pmu->activeboxes.  In the uncore_bus_notify() path,
-> uncore_pci_pmu_unregister() may still be called and must exit early
-> when pmu->boxes[die] is NULL to avoid a NULL pointer dereference, and
-> to ensure activeboxes is only decremented for a previously active box.
->
-> Additionally, since pci_get_drvdata() returns NULL on registration
-> failure, uncore_pci_remove() can no longer treat NULL drvdata as an
-> indicator of an auxiliary PCI device.  Remove the associated
-> WARN_ON_ONCE().
->
-> Link: https://sashiko.dev/#/patchset/20260512233048.9577-1-zide.chen@intel.com?part=1
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
-> ---
-> V2: new patch.
-> ---
->  arch/x86/events/intel/uncore.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 7857959c6e82..b69b6a21d46b 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -1183,6 +1183,7 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
->  	/* First active box registers the pmu */
->  	ret = uncore_pmu_register(pmu);
->  	if (ret) {
-> +		atomic_dec(&pmu->activeboxes);
->  		pmu->boxes[die] = NULL;
->  		uncore_box_exit(box);
->  		kfree(box);
-> @@ -1248,6 +1249,9 @@ static void uncore_pci_pmu_unregister(struct intel_uncore_pmu *pmu, int die)
->  {
->  	struct intel_uncore_box *box = pmu->boxes[die];
->  
-> +	if (!box)
-> +		return;
-> +
->  	pmu->boxes[die] = NULL;
->  	if (atomic_dec_return(&pmu->activeboxes) == 0)
->  		uncore_pmu_unregister(pmu);
-> @@ -1272,7 +1276,6 @@ static void uncore_pci_remove(struct pci_dev *pdev)
->  				break;
->  			}
->  		}
-> -		WARN_ON_ONCE(i >= UNCORE_EXTRA_PCI_DEV_MAX);
->  		return;
->  	}
->  
+Introduce a `tpebs_stopping` flag inside intel-tpebs.c to prevent
+redundant stop execution paths, and safely restore the `cmd.pid`
+temporarily only during `finish_command()` to ensure it is properly reaped,
+while preventing other threads from referencing it.
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/intel-tpebs.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index ed8cfe2ba2fa..ddb0579a451e 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -37,6 +37,7 @@ static pthread_t tpebs_reader_thread;
+ static struct child_process tpebs_cmd;
+ static int control_fd[2], ack_fd[2];
+ static struct mutex tpebs_mtx;
++static bool tpebs_stopping;
+ 
+ struct tpebs_retire_lat {
+ 	struct list_head nd;
+@@ -320,8 +321,14 @@ static int tpebs_stop(void) EXCLUSIVE_LOCKS_REQUIRED(tpebs_mtx_get())
+ {
+ 	int ret = 0;
+ 
++	if (tpebs_stopping)
++		return 0;
++
+ 	/* Like tpebs_start, we should only run tpebs_end once. */
+ 	if (tpebs_cmd.pid != 0) {
++		pid_t actual_pid = tpebs_cmd.pid;
++
++		tpebs_stopping = true;
+ 		tpebs_send_record_cmd(EVLIST_CTL_CMD_STOP_TAG);
+ 		tpebs_cmd.pid = 0;
+ 		mutex_unlock(tpebs_mtx_get());
+@@ -332,8 +339,10 @@ static int tpebs_stop(void) EXCLUSIVE_LOCKS_REQUIRED(tpebs_mtx_get())
+ 		close(ack_fd[0]);
+ 		close(ack_fd[1]);
+ 		close(tpebs_cmd.out);
++		tpebs_cmd.pid = actual_pid;
+ 		ret = finish_command(&tpebs_cmd);
+ 		tpebs_cmd.pid = 0;
++		tpebs_stopping = false;
+ 		if (ret == -ERR_RUN_COMMAND_WAITPID_SIGNAL)
+ 			ret = 0;
+ 	}
+-- 
+2.54.0.929.g9b7fa37559-goog
 
