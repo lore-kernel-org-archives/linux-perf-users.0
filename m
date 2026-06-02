@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927B83F9A11
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 17:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F79E3438BA
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 17:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780422121; cv=none; b=g8jmMj603Xh1XPqdrn1SVy0rbmbgpXWn8Kb2ceDMivC43zzff8v6PSTHKyCNxoXQPFLK+/cRlqOYJy/IGTAxfnvl6PBncgY9CS9nEOUfyj8kvuQ2MpDKUuqUniY/Q1lbb3FB+hmYzNcsnL+VDKkyR7awBnO6TXOLwiVqv/VPftQ=
+	t=1780422124; cv=none; b=hzI3zLjAQyw9YLbqQPzydMnhJ8JTNSoMIfJzOo3WQBX15OSPpBdDINOtLb9tHJbiYiVupj1n1Z9OEBCb3b+uVYuD6dXpLsyLgXqS2IIJEPsPmmCycmTAVZFpPg0C9bfpxjctzrJFqdgvIP2lfItnclOI35bwA8pmlPGqI+Y3yM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780422121; c=relaxed/simple;
-	bh=YP41rRWBxcMPt9dpJWX0z7zCQAidn0VH7dcgB/q9htM=;
+	s=arc-20240116; t=1780422124; c=relaxed/simple;
+	bh=RlTs4+CvmQBcuzjPaawGE+Su+7rLHOBZtuvgu4cIVl4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gLDGXmKsZsHjXUze2+jj+KXrLrjwOWAtWE6UACj1xu68dhb1Jya6ENuwgXROQ3UyH6Rm3Ls8RU9DRwXJ+cTsJIRC2qjWBKRqv0qif9mRWNOdfrgT29AU0jbROHU2xWc4UidrbiDY6ir+DVVUToKzEiS0FPjag7rHZp+FmIO5YE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ee2kCLK+; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=cHSp5duapjguy/e0YpqhQMntRhV6oHHKV+SjoFndv+97B6pWOoBnOY6H1VuTklwWFI1FHKCNoD+GacyqnqML6JtkA/kPZ0dRyHMdV3QoULQUjv8628/3WdwSBqlNSuwmfk0UD1eyNZZA6f4J5ZHHDVPQgCNrh/QFtfTIPUhsMGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KufFmmHx; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ee2kCLK+"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137d4309062so10245336c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 10:41:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KufFmmHx"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-8422b544a4bso2179214b3a.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 10:42:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780422119; x=1781026919; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780422122; x=1781026922; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yno3mcqbs/U9dsawrfUUOxSAo6SRkxZ4iFQsq1dS1Q0=;
-        b=Ee2kCLK+xgstbcPySU+ontzuwrmh0y7WfDpv7377iVwqgsuaOkSlLSTF9S+2tmziYd
-         gT50HioWAe2pfRQ18tUaQJkq3xJTXf59zI70ZKBrU7f/8RnJfPIyBUXo/6AW9ngPNIab
-         8gJKKXgdIsBCQ1kaqxGDAp7wp0M+Ke46jWweir6640fiead3EjYROAT82jgrpwqMhX46
-         ZgKpji/GTV4nGXKx+hkTzMRbfYjopPy6wZEl+iopCqx32YETRP87AcsNArzEAMir34eg
-         zLK+elxir25beMTyZYk6Jz7ar3rwslb1t0a+4Zb6IKrfrUmAKopHsToXnrPMS6V3cS7N
-         qZEA==
+        bh=iotGOx3jMR4tDVWp1JTzlSSm5z5uHBCJINbc/HPb57Q=;
+        b=KufFmmHx9vvp8BQGBwqg7SApea5i36sUXQxWVbsyxl9WDnCTQmLZddznAfk03+n7a7
+         GvZf48sbW59jy4HwRVhlGKPjjWip3MBIfIiJ6JvOD6OxpJX/OqdZUyu8kJiEtQunloYs
+         1JF3YTPRDNnp+vN1/rJob5H6ttyznk17ir0NDduZTLasf47NXesJyBsYaKV2sE3CwjJc
+         bSzEHZw87969dCrh7AWdc1b+AToaP9hynxLz5ZCKvcB3WXGckTDldYgCSrXBibMkhFXi
+         016/JmOjmYgZjr3FJ6Srl3Dgdy6W0i+9T5L44RwBY4yW6XKfj8q2uAhJC6Kbw7FwNugA
+         kDaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780422119; x=1781026919;
+        d=1e100.net; s=20251104; t=1780422122; x=1781026922;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yno3mcqbs/U9dsawrfUUOxSAo6SRkxZ4iFQsq1dS1Q0=;
-        b=MtpViUiNtQPpb838EZinzPTfJF372S+NUZVXPSpI7gs8ip63zixED4lBVpErs42IfH
-         WiDCIFdrjr1/Qf0wE+tuWXCPLYqd9Hv0FI9T2CaV7p8jut0L/5EICJM/Wo+Uh0XQFNZL
-         eoheNsOSirLRNrAjimne6ivGolmWpKTohmXCLWicvLB1B+H2uhASIQaPBHxmR6WdY/UZ
-         IxZEOOjJTn4oBmwXqN2BLjeXRjgKnbKnWFiQQ8P0vSCuEoRnAGRSzJAla2qRzn4B9lQG
-         agH4W9xPPbg+BcJgZroYtRfFz8m+3NvUNuSZLNSJEYgvSnl8Yxm8w59jlNBoAVSKH+zU
-         MXUQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+I4VLCefqJCoeMhSVF+nK9Z3DTeBxEuygUNj0JIkyejDfOKmaQhZIrVrp23FuLbAQRmwIjKo0Do5vq3PeijNne@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1c4mt8FWNLrrMDgybjjoswAo3+XmrPytNEmBNIXWX+AuztMug
-	F551EBihFKqogS5eGljKOuKzn4zyKmYkOP9NZRJbBWkU1gzJ1/hEUIETjyU5vKqCNs+ay+dOTKi
-	1ZEYhXY3FeA==
-X-Received: from dlbqq4.prod.google.com ([2002:a05:7022:ed04:b0:137:ea37:a378])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f98:b0:12a:7165:7405
- with SMTP id a92af1059eb24-137d3f197b8mr8359463c88.8.1780422118486; Tue, 02
- Jun 2026 10:41:58 -0700 (PDT)
-Date: Tue,  2 Jun 2026 10:41:17 -0700
+        bh=iotGOx3jMR4tDVWp1JTzlSSm5z5uHBCJINbc/HPb57Q=;
+        b=SAOcVlnbmYdH0bVKBZgWvB8hUQMW8Spr20PeQDtH/U1e2407KWqVz5UnTkfDf7Z7uS
+         RoTFyh8qQITl5S89dHJTwhymN6DpaTBnsdnsZkkV0KhcMP6ZwYqGlPylIZNw4Yl5jfAI
+         UjanAE/u0gZqymUWzXhwMitCxvxl3iAjnXYzAySXSuCbhQdMxh1+l1G6+qmKfOMAGy9v
+         hphJm3M8uuZLjskci1F50YEKYIW8TJGEMmu2RwMGP9lifUKLgbFZs4LvTqmwxTVYtNha
+         PpOOEqtiWRXTzE7dnJMWts9qLn+SHcTFSxglkgapJ6FKBoLELHUVz1d8e6sHVipG1D3/
+         i1dA==
+X-Forwarded-Encrypted: i=1; AFNElJ8uPIRvc7fPavcqbXpq7s7pKZGGEmdNBPmxC7JPnREeqoV/rZ/rtDWIRXuy1SjjNrdxN8RR7JluclQ/eARvDezj@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKNhrEZk1W9wJ5NcBD+l0crCMc2alFKkZ6QT3+KTt/s0F4+VQu
+	bndqgsJEytD741UoAJuydzK7x8kLBixDA1H5Wy1CUlPXtyxTvzNivhD0d6jS81ZTZt5T+x5q/9t
+	h3BGMAXP1Gg==
+X-Received: from pfes4.prod.google.com ([2002:aa7:8d44:0:b0:82f:6a26:5f78])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2d01:b0:842:6e1f:c8fc
+ with SMTP id d2e1a72fcca58-8428310ebf1mr459416b3a.32.1780422122197; Tue, 02
+ Jun 2026 10:42:02 -0700 (PDT)
+Date: Tue,  2 Jun 2026 10:41:18 -0700
 In-Reply-To: <20260602174129.3192312-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260602073132.2653307-1-irogers@google.com> <20260602174129.3192312-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1013.g208068f2d8-goog
-Message-ID: <20260602174129.3192312-7-irogers@google.com>
-Subject: [PATCH v8 06/18] perf test pmu-events: A sub-test per metric table
+Message-ID: <20260602174129.3192312-8-irogers@google.com>
+Subject: [PATCH v8 07/18] tools subcmd: Robust fallback and existence checks
+ for process reaping
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
@@ -67,224 +68,117 @@ Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Break apart the slow "Parsing of PMU event table metrics" tests into one
-pair of tests (real and fake PMU) per metric table found, storing the
-specific table pointer in priv data. Implement setup_pmu_events_suite()
-to dynamically allocate and populate these test cases. Split static
-parser tests out into a separate test__parsing_fake_static() test case.
-Update test__parsing() and test__parsing_fake() to retrieve the specific
-table from priv data and test only that table, maintaining fallback
-compatibility if priv is NULL.
+Update check_if_command_finished() and wait_or_whine() to handle invalid
+PIDs gracefully (<= 0) by setting cmd->finished = 1 and returning early.
+This avoids executing waitpid(-1, ...) or waitpid(0, ...) downstream,
+which can block or reap parallel tests' exit status causing state
+corruption.
 
-Running these individual tests in parallel significantly reduces overall
-test execution time.
+Introduce a fallback mechanism in check_if_command_finished() using
+waitpid(..., WNOHANG) when /proc/<pid>/status is inaccessible (e.g. due
+to EMFILE/ENFILE) to safely check and reap finished children.
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu-events.c | 156 ++++++++++++++++++++++++++++++++--
- 1 file changed, 148 insertions(+), 8 deletions(-)
+ tools/lib/subcmd/run-command.c | 69 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 65 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index b1609a7e1d8c..fd5630f0a13c 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -923,13 +923,20 @@ static int test__parsing_callback(const struct pmu_metric *pm,
- 	return err;
- }
+diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+index b7510f83209a..bd21b8bfd58b 100644
+--- a/tools/lib/subcmd/run-command.c
++++ b/tools/lib/subcmd/run-command.c
+@@ -169,8 +169,18 @@ int start_command(struct child_process *cmd)
  
--static int test__parsing(struct test_suite *test __maybe_unused,
--			 int subtest __maybe_unused)
-+static int test__parsing(struct test_suite *test, int subtest)
+ static int wait_or_whine(struct child_process *cmd, bool block)
  {
- 	int failures = 0;
-+	const struct pmu_metrics_table *table = NULL;
- 
--	pmu_for_each_core_metric(test__parsing_callback, &failures);
--	pmu_for_each_sys_metric(test__parsing_callback, &failures);
-+	if (test->test_cases)
-+		table = test->test_cases[subtest].priv;
+-	bool finished = cmd->finished;
+-	int result = cmd->finish_result;
++	bool finished;
++	int result;
 +
-+	if (table) {
-+		pmu_metrics_table__for_each_metric(table, test__parsing_callback, &failures);
-+	} else {
-+		pmu_for_each_core_metric(test__parsing_callback, &failures);
-+		pmu_for_each_sys_metric(test__parsing_callback, &failures);
-+	}
- 
- 	return failures == 0 ? TEST_OK : TEST_FAIL;
- }
-@@ -1020,8 +1027,8 @@ static int test__parsing_fake_callback(const struct pmu_metric *pm,
-  * Parse all the metrics for current architecture, or all defined cpus via the
-  * 'fake_pmu' in parse_events.
-  */
--static int test__parsing_fake(struct test_suite *test __maybe_unused,
--			      int subtest __maybe_unused)
-+static int test__parsing_fake_static(struct test_suite *test __maybe_unused,
-+				     int subtest __maybe_unused)
- {
- 	int err = 0;
- 
-@@ -1031,6 +1038,26 @@ static int test__parsing_fake(struct test_suite *test __maybe_unused,
- 			return err;
- 	}
- 
-+	return 0;
-+}
-+
-+static int test__parsing_fake(struct test_suite *test, int subtest)
-+{
-+	int err = 0;
-+	const struct pmu_metrics_table *table = NULL;
-+
-+	if (test->test_cases)
-+		table = test->test_cases[subtest].priv;
-+
-+	if (table)
-+		return pmu_metrics_table__for_each_metric(table, test__parsing_fake_callback, NULL);
-+
-+	for (size_t i = 0; i < ARRAY_SIZE(metrics); i++) {
-+		err = metric_parse_fake("", metrics[i].str);
-+		if (err)
-+			return err;
++	if (cmd->pid <= 0) {
++		cmd->finished = 1;
++		if (cmd->pid < 0 && cmd->finish_result == 0)
++			cmd->finish_result = -ERR_RUN_COMMAND_FORK;
++		return cmd->finish_result;
 +	}
 +
- 	err = pmu_for_each_core_metric(test__parsing_fake_callback, NULL);
- 	if (err)
- 		return err;
-@@ -1059,17 +1086,130 @@ static int test__parsing_threshold(struct test_suite *test __maybe_unused,
- 	return pmu_for_each_sys_metric(test__parsing_threshold_callback, NULL);
- }
++	finished = cmd->finished;
++	result = cmd->finish_result;
  
-+struct populate_cb_data {
-+	struct test_case *test_cases;
-+	size_t curr;
-+};
-+
-+static int count_metrics_tables_cb(const struct pmu_metrics_table *table __maybe_unused, void *data)
-+{
-+	size_t *count = data;
-+	(*count)++;
-+	return 0;
-+}
-+
-+static int populate_metrics_tables_cb(const struct pmu_metrics_table *table, void *data)
-+{
-+	struct populate_cb_data *cb_data = data;
-+	const char *table_name = pmu_metrics_table__name(table);
-+	char *desc_real, *desc_fake;
-+
-+	if (!table_name)
-+		table_name = "unknown";
-+
-+	if (asprintf(&desc_real, "PMU metric parsing: %s", table_name) < 0)
-+		return -ENOMEM;
-+	if (asprintf(&desc_fake, "PMU metric parsing with fake PMU: %s", table_name) < 0) {
-+		free(desc_real);
-+		return -ENOMEM;
+ 	while (!finished) {
+ 		int status, code;
+@@ -233,7 +243,18 @@ int check_if_command_finished(struct child_process *cmd)
+ 	char filename[6 + MAX_STRLEN_TYPE(typeof(cmd->pid)) + 7 + 1];
+ 	char status_line[256];
+ 	FILE *status_file;
++#endif
+ 
++	if (cmd->finished)
++		return 1;
++	if (cmd->pid <= 0) {
++		cmd->finished = 1;
++		if (cmd->pid < 0 && cmd->finish_result == 0)
++			cmd->finish_result = -ERR_RUN_COMMAND_FORK;
++		return 1;
 +	}
 +
-+	cb_data->test_cases[cb_data->curr++] = (struct test_case){
-+		.name = "parsing",
-+		.desc = desc_real,
-+		.run_case = test__parsing,
-+		.priv = (void *)table,
-+		.skip_reason = "some metrics failed",
-+	};
++#ifdef __linux__
+ 	/*
+ 	 * Check by reading /proc/<pid>/status as calling waitpid causes
+ 	 * stdout/stderr to be closed and data lost.
+@@ -241,8 +262,48 @@ int check_if_command_finished(struct child_process *cmd)
+ 	sprintf(filename, "/proc/%u/status", cmd->pid);
+ 	status_file = fopen(filename, "r");
+ 	if (status_file == NULL) {
+-		/* Open failed assume finish_command was called. */
+-		return true;
++		int status;
++		pid_t waiting;
 +
-+	cb_data->test_cases[cb_data->curr++] = (struct test_case){
-+		.name = "parsing_fake",
-+		.desc = desc_fake,
-+		.run_case = test__parsing_fake,
-+		.priv = (void *)table,
-+	};
++		/*
++		 * fopen() can fail with ENOENT if the process has been reaped.
++		 * It can also fail with EMFILE/ENFILE if RLIMIT_NOFILE is reached.
++		 * In those cases, use waitpid(..., WNOHANG) to robustly check
++		 * and reap the process if it has exited.
++		 */
++		if (errno == ENOENT)
++			return 1;
 +
-+	return 0;
-+}
++		waiting = waitpid(cmd->pid, &status, WNOHANG);
++		if (waiting == cmd->pid) {
++			int result;
++			int code;
 +
-+static struct test_case pmu_events_tests[];
-+
-+static int setup_pmu_events_suite(struct test_suite *suite)
-+{
-+	size_t num_tables = 0;
-+	size_t num_fixed_tests = 4;
-+	size_t tests_per_table = 2;
-+	size_t total_tests;
-+	struct test_case *test_cases;
-+	size_t curr = 0;
-+	struct populate_cb_data cb_data;
-+	int ret;
-+
-+	if (suite->test_cases != pmu_events_tests)
++			cmd->finished = 1;
++			if (WIFSIGNALED(status)) {
++				result = -ERR_RUN_COMMAND_WAITPID_SIGNAL;
++			} else if (!WIFEXITED(status)) {
++				result = -ERR_RUN_COMMAND_WAITPID_NOEXIT;
++			} else {
++				code = WEXITSTATUS(status);
++				switch (code) {
++				case 127:
++					result = -ERR_RUN_COMMAND_EXEC;
++					break;
++				case 0:
++					result = 0;
++					break;
++				default:
++					result = -code;
++					break;
++				}
++			}
++			cmd->finish_result = result;
++			return 1;
++		}
++		if (waiting < 0 && (errno == ECHILD || errno == ESRCH))
++			return 1;
 +		return 0;
-+
-+	ret = pmu_metrics_table__iterate_tables(count_metrics_tables_cb, &num_tables);
-+	if (ret)
-+		return ret;
-+
-+	total_tests = num_fixed_tests + (num_tables * tests_per_table) + 1;
-+
-+	test_cases = calloc(total_tests, sizeof(*test_cases));
-+	if (!test_cases)
-+		return -ENOMEM;
-+
-+	test_cases[curr++] = (struct test_case){
-+		.name = "pmu_event_table",
-+		.desc = "PMU event table sanity",
-+		.run_case = test__pmu_event_table,
-+	};
-+	test_cases[curr++] = (struct test_case){
-+		.name = "aliases",
-+		.desc = "PMU event map aliases",
-+		.run_case = test__aliases,
-+	};
-+	test_cases[curr++] = (struct test_case){
-+		.name = "parsing_fake_static",
-+		.desc = "Parsing of static metrics with fake PMU",
-+		.run_case = test__parsing_fake_static,
-+	};
-+	test_cases[curr++] = (struct test_case){
-+		.name = "parsing_threshold",
-+		.desc = "Parsing of metric thresholds with fake PMU",
-+		.run_case = test__parsing_threshold,
-+	};
-+
-+	cb_data = (struct populate_cb_data){
-+		.test_cases = test_cases,
-+		.curr = curr,
-+	};
-+
-+	ret = pmu_metrics_table__iterate_tables(populate_metrics_tables_cb, &cb_data);
-+	if (ret) {
-+		size_t i;
-+
-+		for (i = num_fixed_tests; i < cb_data.curr; i++)
-+			free((char *)test_cases[i].desc);
-+		free(test_cases);
-+		return ret;
-+	}
-+
-+	suite->test_cases = test_cases;
-+	return 0;
-+}
-+
- static struct test_case pmu_events_tests[] = {
- 	TEST_CASE("PMU event table sanity", pmu_event_table),
- 	TEST_CASE("PMU event map aliases", aliases),
- 	TEST_CASE_REASON("Parsing of PMU event table metrics", parsing,
- 			 "some metrics failed"),
--	TEST_CASE("Parsing of PMU event table metrics with fake PMUs", parsing_fake),
--	TEST_CASE("Parsing of metric thresholds with fake PMUs", parsing_threshold),
-+	TEST_CASE("Parsing of PMU event table metrics with fake PMU", parsing_fake),
-+	TEST_CASE("Parsing of metric thresholds with fake PMU", parsing_threshold),
- 	{ .name = NULL, }
- };
- 
- struct test_suite suite__pmu_events = {
- 	.desc = "PMU JSON event tests",
- 	.test_cases = pmu_events_tests,
-+	.setup = setup_pmu_events_suite,
- };
+ 	}
+ 	while (fgets(status_line, sizeof(status_line), status_file) != NULL) {
+ 		char *p;
 -- 
 2.54.0.1013.g208068f2d8-goog
 
