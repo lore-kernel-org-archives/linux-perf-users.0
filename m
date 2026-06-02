@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D35773E2ABF;
-	Tue,  2 Jun 2026 14:41:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C30D340D9A;
+	Tue,  2 Jun 2026 14:42:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780411319; cv=none; b=f/6JeWCoyzM/wfVgfBfFkvk4tAz8opHz1pHJIHj7q/ccy01fxb1LmKKQL4V1br0lviyK/JLk/JtxcBToOaflazXDNiAn26UGo6N2jw3ltBTAkPvjwypRgiNbSss4r0Ik9rIy1inqABHwGG29YjEdMcJcfFOnHJd9G1ToTEN7kMA=
+	t=1780411328; cv=none; b=rCFvopGupgAfX1zniSfe9wtQ9Hz7TwFodCYFfsYQZZtUHgmOZAGebexgrZK/c2XAlbnalk1ImwAUU/i7hdv2tesKmsXSaVoHbVVD1FbO7z3mYp79h/ufpqXEEoOkaN6qCIYWE3kd/CYfjfWEsqdG9omhX/nvJ8T/TiL1TuTcs9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780411319; c=relaxed/simple;
-	bh=spQuIH0Wg3vYRrqn2E5IS9/I7WyL8Gy/SZwlLjj3Qho=;
+	s=arc-20240116; t=1780411328; c=relaxed/simple;
+	bh=htZbWwa5Gdk7tv9jGCiKr3dJMcl5OIZKDDrOhcVl33k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eSKSCFZyHR9roRA97uWfk41BFApcGNba55wUBs+L5PLgKw5p0ghDICsqcEjUeThU/WoJhA39NfWCd4oqTpjQ+4Dy8bOdncHJW8mICW5jsVzQCi6QQdNgivSiVQWZUNWjdflPlK/lcp3SVyQfldkdGgRCGBW0YuLAPQN7qA3UuNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=EG+c/uB1; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=FQXc1jiHERunX3Y3dinEUCrmYMfH0ByLroVW9vt+ycEhIv7dzz7RHdywQ3fzpBsqh+V/5sRvBXDhitlu9HnU2Ku0Fx20N7kcz8qAqf7dFDzGJQWXI5loHR5oLpFubHnMr0QNtEQTDQ6KoU0ImAyDkIZZGDQPeo4zRxsMu7btOLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Wo1bxRSJ; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="EG+c/uB1"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Wo1bxRSJ"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53F683574;
-	Tue,  2 Jun 2026 07:41:52 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A56E3574;
+	Tue,  2 Jun 2026 07:42:01 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68A033F632;
-	Tue,  2 Jun 2026 07:41:48 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D48C3F632;
+	Tue,  2 Jun 2026 07:41:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780411317; bh=spQuIH0Wg3vYRrqn2E5IS9/I7WyL8Gy/SZwlLjj3Qho=;
+	t=1780411326; bh=htZbWwa5Gdk7tv9jGCiKr3dJMcl5OIZKDDrOhcVl33k=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=EG+c/uB17oI42wQ37lTnsy7jKJS1HE/7d7of7rlOS6PW00GO+NwrYZgPWE2NpdIw7
-	 4LJekpJoO3RElVk9xkCfC86l88zGa8eeERylwjQx/aAr3KPmFIhtSEJJZ2tM9L/+8f
-	 W0e8stFqYdx+ub7gOqiPjwLA4MFRMAFceAjr61pI=
+	b=Wo1bxRSJ8A1ZTr3nZgklb9IdyE0N2hVdaXzxUtV+5sxKRxQhkVMxHL/nEusJy5811
+	 hadgTDlnWr0jnm+GVJKHkX5U/THcs3P7glyVuvOn1oE/aMfV5pNTlbK+CgvB14cuDU
+	 ojasDevFtC/MaNw2HKQJcOLSmER8QOck0oYANsTE=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 02 Jun 2026 15:40:41 +0100
-Subject: [PATCH v7 07/23] perf build: Append extra host flags
+Date: Tue, 02 Jun 2026 15:40:42 +0100
+Subject: [PATCH v7 08/23] tools build: Append extra host CFLAGS for fixdep
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-tools_build_fix_zero_init-v7-7-631baf679fe7@arm.com>
+Message-Id: <20260602-tools_build_fix_zero_init-v7-8-631baf679fe7@arm.com>
 References: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 In-Reply-To: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -82,36 +82,54 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=1086;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=1426;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=spQuIH0Wg3vYRrqn2E5IS9/I7WyL8Gy/SZwlLjj3Qho=;
- b=E9TwDuYmeRGHq94LEKv8p51n2VSXgKnue8u1p6OhU7mWHrYDncKGMa2VHUloM/S4uhrUKa+V6
- iZUfJNJTbbOCo7y0YsXjQp790wd/Cv34GrJWYawLtneBUezAS/ituEI
+ bh=htZbWwa5Gdk7tv9jGCiKr3dJMcl5OIZKDDrOhcVl33k=;
+ b=+SWSpV9Rwitfnqj+GmuN+VKrOJrZAfwEWYCitXYiw3Ni+mA9aBPD87WK9S42cT6GcW36bEccJ
+ QlXK15fFrVEA3qiCR0a/b8kB0NPhQYylqYanzeTJ/ewZpuodn6pLBLt
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Append HOST_EXTRACFLAGS to HOST_CFLAGS so that additional flags can be
-applied to the host compiler.
+tools/scripts/Makefile.include can add host compiler options through
+HOST_EXTRACFLAGS. Make sure the tools build uses those flags when building
+fixdep.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Create a local HOST_CFLAGS variable from KBUILD_HOSTCFLAGS and
+HOST_EXTRACFLAGS, and pass it to the fixdep build.
+
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/build/Makefile | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 333ddd0e4bd814e9b935e9f706e640baccf49b7e..17c27b876551922a537dc0e1000d396c43ff9e12 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -17,7 +17,7 @@ detected     = $(shell echo "$(1)=y"       >> $(OUTPUT).config-detected)
- detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
+diff --git a/tools/build/Makefile b/tools/build/Makefile
+index 3a5a3808ab2a1dedd40f35ea322913e8a0788130..2761f80df7611c4731ef1d4529cae7dfe279bad0 100644
+--- a/tools/build/Makefile
++++ b/tools/build/Makefile
+@@ -40,18 +40,20 @@ endif
+ FIXDEP		:= $(OUTPUT)fixdep
+ FIXDEP_IN	:= $(OUTPUT)fixdep-in.o
  
- CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
--HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-+HOSTCFLAGS := $(HOST_EXTRACFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
++HOST_CFLAGS	:= $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS)
++
+ # To track fixdep's dependencies properly, fixdep needs to run on itself.
+ # Build it twice the first time.
+ $(FIXDEP_IN): FORCE
+ 	$(Q)if [ ! -f $(FIXDEP) ]; then						\
+-		$(MAKE) $(build)=fixdep HOSTCFLAGS="$(KBUILD_HOSTCFLAGS)";	\
++		$(MAKE) $(build)=fixdep HOSTCFLAGS="$(HOST_CFLAGS)";		\
+ 		rm -f $(FIXDEP).o;						\
+ 	fi
+-	$(Q)$(MAKE) $(build)=fixdep HOSTCFLAGS="$(KBUILD_HOSTCFLAGS)"
++	$(Q)$(MAKE) $(build)=fixdep HOSTCFLAGS="$(HOST_CFLAGS)"
  
- # This is required because the kernel is built with this and some of the code
- # borrowed from kernel headers depends on it, e.g. put_unaligned_*().
+ 
+ $(FIXDEP): $(FIXDEP_IN)
+-	$(QUIET_LINK)$(HOSTCC) $(FIXDEP_IN) $(KBUILD_HOSTLDFLAGS) -o $@
++	$(QUIET_LINK)$(HOSTCC) $(FIXDEP_IN) $(HOST_CFLAGS) -o $@
+ 
+ FORCE:
+ 
 
 -- 
 2.34.1
