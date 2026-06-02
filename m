@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3891230100E
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB64E2EAD1B
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:42:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780382498; cv=none; b=N+fS5tsLe0XUyxHY3rZjHVVr3s9SjAD4n/N3kMYhso3Ffjq9x6QaOsJRBeEgeolwM0X2fwWm+s0RvV0KAMWMBojSur9ijh7ZLgtz5iBfNJL5dQcVXEr5s8p0aYkNMeFpn0KZQHRiIDdDLxYsoAy/IjXzKgrKYiHwmpuRRLg/EgU=
+	t=1780382523; cv=none; b=EQ2bmwfhMtkDXYBexT5a2K/4g75T4pP8GM4WzWAeg3dM6LZ8CwejLOMVx9EV9JZM2yNBVvHS2alXMWevskKn60yQfQ/eI/A+K0qvzNHpLNx8Fz5G5fI5vv10a3YAq1DgnAtx6S2WTdSPKQq31H9dkeWrAIk4Mm418VT8nvGAOnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780382498; c=relaxed/simple;
-	bh=waDchXoDnNPg9b/wVZyBhj16FVcqfl3gbk5mD2i100o=;
+	s=arc-20240116; t=1780382523; c=relaxed/simple;
+	bh=KhULMNitX3rNVglGHUl5fUJz08Qa4+tAGzgBCaEzH7I=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hlx0PZW3eSdgXYR1U7xxJsyZK+Lv5FI5LB6X117oq5WittH1U2sBc2SbbH0W7ZAm2uNjRF3LInXtPgLOuFbIuhAi5bCNxiZ2tPgiybUvTIIyXsHbHUhvUuE2DJAyZa1EVhho+L/KPThxMkCsxRlnj+rGOffevU3A32FBgjL1jZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5Kc9Faq; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=rStpc8oPd4v/W5JF5mV4/1jGbKM7EKDnWyNauAQk9FshPqKwgBoeU9N27wE1sEZpE+p5j0XGtClqPK/6sdZi+Pp/am2MG5eIeYh2/A0EMm/jz3/DfsJwtQDCdDINdVWPy9aKkwOpZHJ2FsE3JAAVnIUFIGwaw5oVLq5dU+yGSoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JganR64i; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5Kc9Faq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B47541F00893;
-	Tue,  2 Jun 2026 06:41:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JganR64i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612AE1F00893;
+	Tue,  2 Jun 2026 06:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780382496;
-	bh=EmmNjBZkovGSciGihiBdeeYzO6+zV1boNEoUQ2wdlNM=;
+	s=k20260515; t=1780382522;
+	bh=0zR3yTmk5LMuRait2GXENVnV2H9wpiKrrLYi2i2Rs7k=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=H5Kc9FaqjkPWeUGgjz16bNNwhbpyMZpXRGzXIjkuQuMKlJ0ndVagDhbWGSoacuTrq
-	 WPP2Cf8/IV1icLgDEAR2FsUxiAMH+RVlSnQklw+8DBly4gRaYl4fG8896KyzWOBUxC
-	 8Wm07O3CsghN3uDwkLo3mg9y+v2SOUD3+EpkVRzp1j0mKGuPBt4MC5NQxRfs+rPMnF
-	 JdZOrhrPO6GhnN7WUn4oSPXYAkU47KRp2Bvc4/g4iLGJWfIBTdM4qN7aj3uF8F90lT
-	 ftW/NBiSsnnjpAB87iWUaT1UQ3iX4VeCG9sQRHUXMqPIQRPLsIPCZUDJIREsdsze9L
-	 pXuVY7qzjG+MA==
+	b=JganR64ibd9m0zPBpg0XV9N0P3ND+HUCcvWEsmIpGtO6jOysL1ae9bhphM2V+Oubn
+	 20ifLpm+cJCBrZqmCa/tvZS2vrz2LCCB5PVVu7PNSlPKFYpaFIzy14uxnwW4zdjQDa
+	 T4TKxOk/H8oUEYcoAhJ4YbyYxj/xEuEs99MhRV+GbtxSxkEm786OvjHO3oPuR2Tlq0
+	 RlvFcW5cQK8q5bU0PWYy5njdAIJWvzJzsj6aTBZkrpwgc2k27SQd4MLbvpnIygqRCn
+	 4MfZ58++L8RhtkHeDMEUsuS3R5o6MEXYpuZ4tZsZEMf9hxUOQMC2bVALz+hPf4pZ/+
+	 TZT08hCpctTaQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 06/19] perf symbol: Avoid use of machine__is
+Subject: Re: [PATCH v11 13/19] perf lock-contention: Use perf_env e_machine
+ rather than arch
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602062452.2583619-7-irogers@google.com>
-References: <20260602062452.2583619-7-irogers@google.com>
+In-Reply-To: <20260602062452.2583619-14-irogers@google.com>
+References: <20260602062452.2583619-14-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 06:41:36 +0000
-Message-Id: <20260602064136.B47541F00893@smtp.kernel.org>
+Date: Tue, 02 Jun 2026 06:42:01 +0000
+Message-Id: <20260602064202.612AE1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,123 +46,69 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Cross-platform analysis regression due to machine_or_dso_e_machine=
- falling back to the host architecture when perf_env is missing.
+
+Pre-existing issues:
+- [High] Missing `.feature` callback in perf_tool initialization for pipe m=
+ode cross-platform analysis
 --
 
-commit 06f9fc725d46994e8315f16f6c305b978381b444
+commit 6123af68f287b03d324e8ede7eac36aa4cd98913
 Author: Ian Rogers <irogers@google.com>
 
-perf symbol: Avoid use of machine__is
+perf lock-contention: Use perf_env e_machine rather than arch
 
-This commit switches from string comparisons against the perf_env arch
-to using the ELF machine value from the dso or running machine.
+Use the e_machine rather than arch string matching for powerpc.
 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 714b6e6048fa2..2ce512f08a1d6 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-
-[ ... ]
-
-> @@ -851,6 +851,23 @@ static int maps__split_kallsyms_for_kcore(struct map=
-s *kmaps, struct dso *dso)
->  	return count;
->  }
-> =20
-> +static uint16_t machine_or_dso_e_machine(struct machine *machine, struct=
- dso *dso)
-> +{
-> +	uint16_t e_machine =3D EM_NONE;
-> +	/* DSO should be most accurate */
-> +	if (dso)
-> +		e_machine =3D dso__e_machine(dso, machine, /*e_flags=3D*/NULL);
-> +
-> +	if (e_machine !=3D EM_NONE)
-> +		return e_machine;
-> +
-> +	/* Check the global environment next. */
-> +	if (machine && machine->env && machine->env->e_machine !=3D EM_NONE)
-> +		return machine->env->e_machine;
-> +
-> +	return perf_env__e_machine(machine ? machine->env : NULL, /*e_flags=3D*=
-/NULL);
+> diff --git a/tools/perf/util/lock-contention.c b/tools/perf/util/lock-con=
+tention.c
+> index 92e7b7b572a22..119a7206f3cd2 100644
+> --- a/tools/perf/util/lock-contention.c
+> +++ b/tools/perf/util/lock-contention.c
+> @@ -104,7 +104,8 @@ bool match_callstack_filter(struct machine *machine, =
+u64 *callstack, int max_sta
+>  	struct map *kmap;
+>  	struct symbol *sym;
+>  	u64 ip;
+> -	const char *arch =3D perf_env__arch(machine->env);
+> +	uint16_t e_machine =3D perf_env__e_machine(machine->env, /*e_flags=3D*/=
+NULL);
 
 [Severity: High]
-When machine->env is NULL (such as in pipe mode before perf_env is fully
-initialized), perf_env__e_machine() falls back to evaluating the host
-architecture via uname().
+This isn't a bug introduced by this patch, but won't this cross-platform=20
+analysis fail when running in pipe mode?
 
-If we are on an x86_64 host analyzing a non-x86_64 perf.data file without
-an environment, will this silently return EM_X86_64 and break cross-platform
-analysis?
+Looking at tools/perf/builtin-lock.c, the perf_tool initialization in both=
+=20
+__cmd_contention() and __cmd_report() omits the feature callback:
 
-Previously, machine__is() safely returned false if the environment was NULL.
+	perf_tool__init(&eops, /*ordered_events=3D*/true);
+	eops.attr		 =3D perf_event__process_attr;
+	eops.event_update	 =3D process_event_update;
+	eops.sample		 =3D process_sample_event;
+	eops.comm		 =3D perf_event__process_comm;
+	eops.mmap		 =3D perf_event__process_mmap;
+	eops.mmap2		 =3D perf_event__process_mmap2;
+	eops.tracing_data	 =3D perf_event__process_tracing_data;
+	/* missing eops.feature =3D perf_event__process_feature; */
 
-> +}
-> +
->  /*
->   * Split the symbols into maps, making sure there are no overlaps, i.e. =
-the
->   * kernel range is broken in several maps, named [kernel].N, as we don't=
- have
+When reading a perf.data stream from a pipe, dropping the feature callback=
+=20
+causes feature events (like HEADER_ARCH) to be silently dropped. This=20
+prevents machine->env from being properly populated.=20
+
+Could this cause perf_env__e_machine() to incorrectly fall back to querying=
+=20
+the host architecture via uname(), breaking cross-platform analysis=20
+entirely during pipe mode?
+
+> +	bool is_powerpc =3D e_machine =3D=3D EM_PPC64 || e_machine =3D=3D EM_PP=
+C;
+> =20
+>  	if (list_empty(&callstack_filters))
+>  		return true;
 
 [ ... ]
-
-> @@ -925,7 +941,7 @@ static int maps__split_kallsyms(struct maps *kmaps, s=
-truct dso *dso, u64 delta,
->  			 */
->  			pos->start =3D map__map_ip(curr_map, pos->start);
->  			pos->end   =3D map__map_ip(curr_map, pos->end);
-> -		} else if (x86_64 && is_entry_trampoline(pos->name)) {
-> +		} else if (e_machine =3D=3D EM_X86_64 && is_entry_trampoline(pos->name=
-)) {
-
-[Severity: High]
-Could this erroneously discard symbols resembling entry trampolines on
-foreign architecture data when parsed on an x86_64 host, due to the
-host fallback behavior in machine_or_dso_e_machine() described above?
-
->  			/*
->  			 * These symbols are not needed anymore since the
->  			 * trampoline maps refer to the text section and it's
-
-[ ... ]
-
-> @@ -1428,7 +1444,7 @@ static int dso__load_kcore(struct dso *dso, struct =
-map *map,
->  		free(new_node);
->  	}
-> =20
-> -	if (machine__is(machine, "x86_64")) {
-> +	if (machine_or_dso_e_machine(machine, dso) =3D=3D EM_X86_64) {
-
-[Severity: High]
-Does this similarly risk executing x86_64-specific trampoline logic on
-non-x86_64 data if run on an x86_64 host without a perf_env?
-
->  		u64 addr;
-> =20
->  		/*
-
-[ ... ]
-
-> @@ -1716,7 +1732,7 @@ int dso__load(struct dso *dso, struct map *map)
->  			ret =3D dso__load_guest_kernel_sym(dso, map);
-> =20
->  		machine =3D maps__machine(map__kmaps(map));
-> -		if (machine__is(machine, "x86_64"))
-> +		if (machine && machine_or_dso_e_machine(machine, dso) =3D=3D EM_X86_64)
-
-[Severity: High]
-Does this incorrectly map x86_64 entry trampolines for foreign architecture
-data if the machine environment is missing and we fall back to the host arc=
-h?
-
->  			machine__map_x86_64_entry_trampolines(machine, dso);
->  		goto out;
->  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602062452.2583=
-619-1-irogers@google.com?part=3D6
+619-1-irogers@google.com?part=3D13
