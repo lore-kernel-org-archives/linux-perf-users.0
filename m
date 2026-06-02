@@ -1,176 +1,149 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41C153E2ABF;
-	Tue,  2 Jun 2026 14:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999663EF647
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 14:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780411465; cv=none; b=sKzsJckyPOKB0ORcoAN8ACRm0YpyEFDIEjpUPm61BK43iRdXpZjcqxWTjBKeB+N5v/0ApytfxjGlGx4N2RVh/wjeNFz95JSfjBKSCgDn0OqVBj/RppjhT1wKFHH4CxIuOurQo5uLmAPHdLZxqCm4ofNpdcTR+tnh5AcOCMnoPG8=
+	t=1780411771; cv=none; b=Hsupsh69EhmPHxkk4Y0As1YXo4bXBFsTd++Rs4bMLTCH30E8pDaTDO8skMiSP29nDO6ssifJJdffKS+dT922ucmzmakzV/yKtO2CpnhemfZHLceKuieAS9Khzb/Zm0AuG6D1D1GAqAjviuIX8iRBZK/PT400uuZyN2hc8HWvihs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780411465; c=relaxed/simple;
-	bh=RJCrBBCoyZk9ItWKXFzBfBNj6qLZCgM5gXRLbvh4BLQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=goAOVpdXZyjkMIqxOFUWViOGoMy+RVRsVPHXEUSkD6Q6isG1AxTQDm0WbKSJ3MpR+OicFRxzSPXvQIt9oGep/3/h0//ZGmEdISsfjoCgABRqHvqKMjbMCs2hPzc3sufowh8bsKOgVEA38+2fXSQqF3WbnfaRZ9gc2eraDERgQUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=R0QATQHb; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1780411771; c=relaxed/simple;
+	bh=Hx3UOBQhY5P5Jq9tRx11mnnJ7aiXVBe3n4no2Pq+oyo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=JOa0Rz78A4/qu6rTZLNQAC2YGI9l/eVcjf+IwoCQ9InvcuEJlHoL/KZSWCRFU2vuiBRPtykFsnspP/oxvamUrzBavYlwJmrVdsmKePRnxTL8gIx7kgDi8b1vTJN6k7qtJY/YleVx2tcG/F3l5kF7zcdIlQHcJZ70H22XD9g//1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCDErtG+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="R0QATQHb"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1C2F3583;
-	Tue,  2 Jun 2026 07:44:18 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4A423F632;
-	Tue,  2 Jun 2026 07:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780411463; bh=RJCrBBCoyZk9ItWKXFzBfBNj6qLZCgM5gXRLbvh4BLQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=R0QATQHblGPPiy3kp6Q5tAPadpnFPjNlqMVkCAsG9P8rbyOuQlPa/ms/x3W0sTP4h
-	 ZZn87mnp5fV5NvOjR+PRkan/Zp8sr2vNZDO1CCaWZLTbsJCvzbxpsAd95HzUb6gpun
-	 O5UtzDblPfwyv6O6mrUy/clfu6Mu/N7GMjn1mayg=
-From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 02 Jun 2026 15:40:57 +0100
-Subject: [PATCH v7 23/23] selftests: Include tools Makefile.include
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCDErtG+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEDC61F00893;
+	Tue,  2 Jun 2026 14:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780411770;
+	bh=ZFJK/DNlCM19Zf43VSe1hVvCC+kiPKIc+QitUbv47o0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=iCDErtG+GQwlJULGmAg0ZYcoFc+3u+fYhP/rXCzPgGUd667tPZgzBP2XsdIOMuim8
+	 hJT4NqgPbnrJsCv/4kriRy8Lid5nyJCEYs40PrUk6ekY/8fbLwJvmeBteg4Rxz0vVk
+	 OFC+ICdKq7sCJ0q9JPL5z2PLEFnRloBIYLBuKM7PNPL1DlKYQIzjL5serCGQhVJbnK
+	 MYLFqQ8D/qfC+06yiFsWD0cpYGT7KWbNsh4rP3MfQnR0n72S8+xBU4wbRs0d64vkfl
+	 qAOzGjcjCcQXlGijRn8mkCRR7ws/HMsljBqMxR/5BMJz1cDSdx+7hNlySxpo7BeKcQ
+	 cH/9lODDvoU5A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 05/18] perf test: Add deterministic workload
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260602-james-cs-context-tracking-fix-v2-5-85b5ce6f55c6@linaro.org>
+References: <20260602-james-cs-context-tracking-fix-v2-5-85b5ce6f55c6@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 02 Jun 2026 14:49:29 +0000
+Message-Id: <20260602144929.DEDC61F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-tools_build_fix_zero_init-v7-23-631baf679fe7@arm.com>
-References: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
-In-Reply-To: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
- James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>, 
- Quentin Monnet <qmo@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
- Nicolas Schier <nsc@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- William Breathitt Gray <wbg@kernel.org>, Barry Song <baohua@kernel.org>, 
- Qinxin Xia <xiaqinxin@huawei.com>, Bartosz Golaszewski <brgl@kernel.org>, 
- Kent Gibson <warthog618@gmail.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
- Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- Josh Poimboeuf <jpoimboe@kernel.org>, Robert Moore <robert.moore@intel.com>, 
- Len Brown <lenb@kernel.org>, 
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
- Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, 
- Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
- Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411244; l=2967;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=RJCrBBCoyZk9ItWKXFzBfBNj6qLZCgM5gXRLbvh4BLQ=;
- b=ZBsHnWtddM9EPK4vOZCFQnT2BRRbzqV/l20fZeNv0SKuhTgIRrjaYsk3WPUneNKIEsPClA2aE
- 15d0fESm4uqAHtOd1IzTrYVI4Ump+K+IIyR9y+jji9gi0a1p8YBIIMb
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-selftests/lib.mk has its own compiler setup instead of using the common
-tools build helpers. This duplicates part of the LLVM handling prepared
-by tools/scripts/Makefile.include.
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+- [Medium] Signed integer overflow in dt_work causes Undefined Behavior
+- [Medium] Workload state leakage breaks data determinism on consecutive ru=
+ns
+- [Low] Build failure due to missing `-U_FORTIFY_SOURCE` with `-O0`
+- [Low] Global namespace pollution from non-static `dt_work`
+--
 
-Include tools/scripts/Makefile.include from selftests/lib.mk so
-selftests reuse the LLVM prefix/suffix validation and the provided
-CLANG_CROSS_FLAGS. This improves Clang cross builds, especially when
-CROSS_COMPILE is set it can derive --prefix, --sysroot and
---gcc-toolchain flags from the GCC cross toolchain.
+commit cdb1ed35f7dbaf322c0b18289b38a7da8d21039e
+Author: James Clark <james.clark@linaro.org>
 
-Keep the $(CLANG_TARGET_FLAGS_$(ARCH)) target flag as a fallback when
-CLANG_CROSS_FLAGS is empty, and append EXTRA_CFLAGS to the selftest.
+perf test: Add deterministic workload
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/testing/selftests/lib.mk | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+This commit adds a new workload for testing CPU trace decoding. It introduc=
+es
+a deterministic sequence of multiplications and function calls that can be=
+=20
+used to verify expected behavior across test runs.
 
-diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-index f02cc8a2e4ae322d65a031178013270922611c42..e2e2d8aa57280ffd37bced18ecd43e7a5566abae 100644
---- a/tools/testing/selftests/lib.mk
-+++ b/tools/testing/selftests/lib.mk
-@@ -1,11 +1,17 @@
- # This mimics the top-level Makefile. We do it explicitly here so that this
- # Makefile can operate with or without the kbuild infrastructure.
--ifneq ($(LLVM),)
--ifneq ($(filter %/,$(LLVM)),)
--LLVM_PREFIX := $(LLVM)
--else ifneq ($(filter -%,$(LLVM)),)
--LLVM_SUFFIX := $(LLVM)
-+ifeq (0,$(MAKELEVEL))
-+    ifeq ($(OUTPUT),)
-+	OUTPUT := $(shell pwd)
-+	DEFAULT_INSTALL_HDR_PATH := 1
-+    endif
- endif
-+selfdir = $(realpath $(dir $(filter %/lib.mk,$(MAKEFILE_LIST))))
-+top_srcdir = $(selfdir)/../../..
-+
-+include $(top_srcdir)/tools/scripts/Makefile.include
-+
-+ifneq ($(LLVM),)
- 
- CLANG := $(LLVM_PREFIX)clang$(LLVM_SUFFIX)
- 
-@@ -35,7 +41,8 @@ else
- CLANG_FLAGS     += --target=$(CLANG_TARGET_FLAGS)
- endif # CLANG_TARGET_FLAGS
- else
--CLANG_FLAGS     += --target=$(notdir $(CROSS_COMPILE:%-=%))
-+# CLANG_CROSS_FLAGS comes from Makefile.include
-+CLANG_FLAGS     += $(CLANG_CROSS_FLAGS)
- endif # CROSS_COMPILE
- 
- # gcc defaults to silence (off) for the following warnings, but clang defaults
-@@ -51,15 +58,6 @@ else
- CC := $(CROSS_COMPILE)gcc
- endif # LLVM
- 
--ifeq (0,$(MAKELEVEL))
--    ifeq ($(OUTPUT),)
--	OUTPUT := $(shell pwd)
--	DEFAULT_INSTALL_HDR_PATH := 1
--    endif
--endif
--selfdir = $(realpath $(dir $(filter %/lib.mk,$(MAKEFILE_LIST))))
--top_srcdir = $(selfdir)/../../..
--
- # msg: emit succinct information message describing current building step
- # $1 - generic step name (e.g., CC, LINK, etc);
- # $2 - optional "flavor" specifier; if provided, will be emitted as [flavor];
-@@ -202,6 +200,8 @@ CFLAGS += -D_GNU_SOURCE=
- # Additional include paths needed by kselftest.h and local headers
- CFLAGS += -I${top_srcdir}/tools/testing/selftests
- 
-+CFLAGS += $(EXTRA_CFLAGS)
-+
- # Enables to extend CFLAGS and LDFLAGS from command line, e.g.
- # make USERCFLAGS=-Werror USERLDFLAGS=-static
- CFLAGS += $(USERCFLAGS)
+[ ... ]
 
--- 
-2.34.1
+> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workload=
+s/Build
+> index 3bda6da04a350..599a37c87878f 100644
+> --- a/tools/perf/tests/workloads/Build
+> +++ b/tools/perf/tests/workloads/Build
 
+[ ... ]
+
+> @@ -22,3 +23,4 @@ CFLAGS_brstack.o          =3D -g -O0 -fno-inline -U_FOR=
+TIFY_SOURCE
+>  CFLAGS_datasym.o          =3D -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>  CFLAGS_traploop.o         =3D -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>  CFLAGS_inlineloop.o       =3D -g -O2
+> +CFLAGS_deterministic.o    =3D -g -O0
+
+[Severity: Low]
+Does this code introduce a build regression on systems with glibc?
+
+Since the perf build system globally defines _FORTIFY_SOURCE=3D2 and enables
+-Werror by default, compiling with -O0 without also passing -U_FORTIFY_SOUR=
+CE
+can trigger a warning from <features.h> ("_FORTIFY_SOURCE requires compiling
+with optimization (-O)"), which is then escalated to an error.
+
+> diff --git a/tools/perf/tests/workloads/deterministic.c b/tools/perf/test=
+s/workloads/deterministic.c
+> new file mode 100644
+> index 0000000000000..3caea8564043c
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/deterministic.c
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/compiler.h>
+> +#include "../tests.h"
+> +
+> +int dt_work =3D 1234;
+
+[Severity: Low]
+Should dt_work be declared static?
+
+It is currently declared at global scope without a unique prefix, which exp=
+oses
+it to the entire perf tool binary.
+
+[Severity: Medium]
+Will dt_work experience undefined behavior due to signed integer overflow?
+
+The variable is initialized to 1234 and is unconditionally multiplied by 7
+twelve times during the execution of deterministic(). The 8th multiplication
+results in 7,113,764,434, which exceeds the maximum value of a 32-bit signed
+integer.
+
+Could this cause crashes if the perf tool is built with undefined behavior
+sanitizer? Perhaps dt_work could be unsigned int or unsigned long long
+instead.
+
+> +
+> +static noinline void function1(void)
+> +{
+> +	dt_work *=3D 7;
+
+[ ... ]
+
+> +static int deterministic(int argc __maybe_unused,
+> +			 const char **argv __maybe_unused)
+> +{
+
+[Severity: Medium]
+Does this code break data determinism on consecutive test runs?
+
+If the workload is executed multiple times within the same process (for exa=
+mple,
+using perf test -w deterministic -r N), dt_work will start from the final
+overflowed value of the previous run rather than being reset to 1234.
+
+> +	dt_work *=3D 7;
+> +	dt_work *=3D 7;
+> +	dt_work *=3D 7;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602-james-cs-c=
+ontext-tracking-fix-v2-0-85b5ce6f55c6@linaro.org?part=3D5
