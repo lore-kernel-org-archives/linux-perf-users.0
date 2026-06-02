@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5100F33B6E3
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 02:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16992DA74C
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 05:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780367464; cv=none; b=BKX8Z+K9rfv/QV4gP+k7joET2bM7NUIaQptF3z1zX7MTZwNElTX3rjZplI0wrpLDnEe6yzrpBo4Qo+UMf+ClL2APLsPkcsjNUTZZie/0GtTYc3CE3kCWviuH+GikjBvPmU72Mb+aO/A0q34bX7wm1vmFfdPq1ax0D3WR1z9CwlU=
+	t=1780377176; cv=none; b=FzTljUoAsA2Ua3GxfQ+O/uGwGsG8HtkjW94un33LggPjcxkYlQrNa0LXtpodZ8XYcTz29iKky9VWhq6HstkrSg70beg+cKYsuqLg0m7USx+QLsiSxJ2btdR0NwJN4GCcv0wmzDl77F4JeL29RVJqP0pp8y/mA8K28sTqPypA5/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780367464; c=relaxed/simple;
-	bh=HozBJwZkc8Vb1OoxAsY/vIO/p61xnEU3DCV7jyVBGGk=;
+	s=arc-20240116; t=1780377176; c=relaxed/simple;
+	bh=gqpQge/JlKKAHXFNohM0NnwXrPrUroOFAz3dUacjbSU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KG1Sd4kMr79sC/QEwibXyJTURaaghCNMbuPBJviIsltuR+dK88DqOrkdZ43qp07rEZsjjXEJuM36f8c3KMlCCS1w3QmgyMO1AnPzWrxgLnbqVHCgGjOENNRPC5uiHsLh9zELZI0o5x8s+6f7wrkGWYGHBnmwu0RY98B3lek1I/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOnQ7Nv9; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:Content-Type; b=YHnmT81HqTmGTYwvkV99qmDreS1vL3oYnAzypydJwsxNbrt/RdazfM76dG0+CAFuPyOF40wka5OUO5rfrOSOmfZBFqF/gm0X5Rt1LTVCyyJvFMfpwhtFf0F73au5KC/d+iBdBmeqROghmTYdtzie0EOJevoLcblO0bBY0bHcTis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jdrFJ45l; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOnQ7Nv9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jdrFJ45l"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780367462; x=1811903462;
+  t=1780377174; x=1811913174;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=HozBJwZkc8Vb1OoxAsY/vIO/p61xnEU3DCV7jyVBGGk=;
-  b=ZOnQ7Nv9XYav2FnoQMVdFSE52QkcYwBOYJCx8aitCAcB7iDNFvlvSgHu
-   BiroY1cIsLY092G0DCzECI7M4B6vS9C13/vFRLmt4AxoA+UNUOvVw1aYV
-   KXvC2tViPX9kx73n/vJoor9zntb4f/KNDwV2iUzkKmVFsHAGIM6wMFMFf
-   TqbltNv9/r0PcB5cNrMSTQa6D1m4JHkhYk9rbgnk9yemiV3LB+DLBmM1h
-   FXOSJObFtqH0GjMg1l6gEo/SiLqc4nhnn6Wu0upvlt6P21zZP3yjmAZMG
-   tWUZjcTUavCSwxBXGttX25XQ4Uto7dvBHcOeY7LyidY0Dkgs7IHLCqNX3
+  bh=gqpQge/JlKKAHXFNohM0NnwXrPrUroOFAz3dUacjbSU=;
+  b=jdrFJ45lYsfzVej9TgRoXNhR1VNNIKSprJc/CYY8n2hfBw6hagzwoM1F
+   SKSkNlRHxaQ651nlvVZjCN34ae6FOYWsoCyrkSyFmea2SUvdI0MBSgOLv
+   PdPsxqx2e2nK3spPkeh3z0Siip61P7FpEeBK753ma+rMRzmJ+d5bT2rgc
+   iCVvrcNN8z4UEEO5ysKez9OKE0qiJSOxKZPVbMLzBlmTQt1m25SXqr8MZ
+   mT8ZY2PyiDMDKeWvn7Tc322MWDs8eZpCXvIENwurxmNknJWyOP5Aumids
+   FwRXBYnMVp7kB7Jfq7GEhSStI8srbk5tIew/DPjjckk9S620qGfGoY/sR
    Q==;
-X-CSE-ConnectionGUID: gG30ArnWR8GOyTKsxMp8Wg==
-X-CSE-MsgGUID: vbRNIV/XQ/is6W6PsP1T/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="81036262"
+X-CSE-ConnectionGUID: v1lLeGGMRVqFj0tAEsl2ZQ==
+X-CSE-MsgGUID: uRDBF+P3SyeXygcywIBAqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="91839469"
 X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
-   d="scan'208";a="81036262"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 19:31:02 -0700
-X-CSE-ConnectionGUID: rDj0cvM2SbqixuxqqOllDQ==
-X-CSE-MsgGUID: itq8/B/XS9KdrrheLnvOtQ==
+   d="scan'208";a="91839469"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 22:12:53 -0700
+X-CSE-ConnectionGUID: dLN37qnlRPSvqkYfpgKFCQ==
+X-CSE-MsgGUID: yTU5Xd8qRxi2uVFi9n2cZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
-   d="scan'208";a="242717873"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 19:31:01 -0700
-Message-ID: <4da67df6-fdd0-4508-a7e1-01c9556fc781@linux.intel.com>
-Date: Tue, 2 Jun 2026 10:30:58 +0800
+   d="scan'208";a="239630114"
+Received: from unknown (HELO [10.238.1.64]) ([10.238.1.64])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 22:12:52 -0700
+Message-ID: <bcc73423-2a00-4b2c-afec-83c70e28f023@linux.intel.com>
+Date: Tue, 2 Jun 2026 13:12:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,180 +52,152 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v8 1/5] perf headers: Sync perf_event.h/perf_regs.h with
- the kernel headers
+Subject: Re: [Patch v8 2/5] perf regs: Support x86 eGPRs/SSP sampling
 To: Ian Rogers <irogers@google.com>, sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-References: <20260529082451.591783-2-dapeng1.mi@linux.intel.com>
- <20260529092345.A3A8F1F00893@smtp.kernel.org>
- <CAP-5=fWHFnmR+gX1+-iE5aT6GBCkRrRGahC92_nhbzy4tNA+dQ@mail.gmail.com>
+References: <20260529082451.591783-3-dapeng1.mi@linux.intel.com>
+ <20260529100610.5E84C1F00898@smtp.kernel.org>
+ <CAP-5=fWugapi9c-HWx9acm=MzyE=hb0muYwj3w86774iOBnvWw@mail.gmail.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fWHFnmR+gX1+-iE5aT6GBCkRrRGahC92_nhbzy4tNA+dQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWugapi9c-HWx9acm=MzyE=hb0muYwj3w86774iOBnvWw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 5/30/2026 12:59 AM, Ian Rogers wrote:
-> On Fri, May 29, 2026 at 2:26 AM <sashiko-bot@kernel.org> wrote:
->> Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
->>
->> New issues:
->> - [High] The newly introduced variable-length SIMD payload in `PERF_SAMPLE_REGS_USER` and `PERF_SAMPLE_REGS_INTR` breaks sample parsing, leading to severe data corruption for subsequent fields.
->> - [High] The newly added SIMD configuration and reserved fields in `struct perf_event_attr` are not byte-swapped in `perf_event__attr_swap()`.
->>
->> Pre-existing issues:
->> - [Critical] An integer underflow in `read_attr` when processing the `size` field of a `perf_event_attr` structure leads to a massive stack-based buffer overflow.
->> - [Critical] In `read_event_desc`, a lack of minimum size validation on the `sz` variable leads to out-of-bounds heap memory corruption during byte-swapping.
+On 5/30/2026 1:29 AM, Ian Rogers wrote:
+> On Fri, May 29, 2026 at 3:08 AM <sashiko-bot@kernel.org> wrote:
+>> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+>> - [Medium] Intel PT PEBS register synthesis is silently disabled on SIMD-capable machines.
+>> - [Medium] Requesting legacy XMM registers (e.g., `-I XMM0`) fails with an 'Unknown register' error on modern CPUs, breaking backwards compatibility.
 >> --
 >>
->> commit 40d194b08491e7774620de12bd78192095f031fd
+>> commit a0d7b85bb399d047c94284c24c34805466f84209
 >> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Subject: perf regs: Support x86 eGPRs/SSP sampling
 >>
->> perf headers: Sync perf_event.h/perf_regs.h with the kernel headers
->>
->> This patch syncs the UAPI header changes to support SIMD, eGPRs, and SSP
->> sampling into the corresponding perf tool UAPI headers. It also adds a
->> sanity check for the newly introduced __reserved_4 field in
->> perf_attr_check().
->>
->>> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
->>> index fd10aa8d697f2..c49fc76292f79 100644
->>> --- a/tools/include/uapi/linux/perf_event.h
->>> +++ b/tools/include/uapi/linux/perf_event.h
->> [ ... ]
->>> @@ -547,6 +549,29 @@ struct perf_event_attr {
+>> This commit adds support for sampling x86 extended GP registers (R16-R31) and
+>> the shadow stack pointer (SSP) register. It reclaims the original XMM registers
+>> space in sample_regs_user/sample_regs_intr to represent the eGPRs and SSP when
+>> SIMD sampling is supported, using a new abi argument to distinguish layouts.
+> Thanks Dapeng! I think stylistically this is exactly what I was hoping for!
+>
+> When I try to apply the patch on perf-tools-next it is failing, on
+> this patch with a conflict on:
+> ```
+> --- tools/perf/builtin-inject.c
+> +++ tools/perf/builtin-inject.c
+> @@ -457,6 +457,8 @@ static int
+> perf_event__convert_sample_callchain(const struct perf_tool *tool,
+>   /* adjust sample size for stack and regs */
+>   sample_size -= sample->user_stack.size;
+>   sample_size -= (hweight64(evsel->core.attr.sample_regs_user) + 1) *
+> sizeof(u64);
+> + if (sample->user_regs && sample->user_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
+> + sample_size -= 4 * sizeof(u64); /* Reduce SIMD regs header size */
+>   sample_size += (sample->callchain->nr + 1) * sizeof(u64);
+>   event_copy->header.size = sample_size;
+> ```
+> This is happening because commit daac18e7c42c ("perf inject: Fix
+> itrace branch stack synthesis") switched the size logic to use
+> perf_event__sample_event_size, which I believe accurately accounts for
+> the new layout and so it is safe to drop this part of the change.
+
+Sure. I would drop it in next version. This pachset is based on top of
+Peter's perf/core tree and I forgot to rebase it on the perf-tools-next
+tree. :(
+
+
+
+>
+>>> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+>>> index fc9eec8b54b82..2729ad8c6d263 100644
+>>> --- a/tools/perf/util/intel-pt.c
+>>> +++ b/tools/perf/util/intel-pt.c
+>>> @@ -2470,6 +2470,7 @@ static int intel_pt_do_synth_pebs_sample(struct intel_pt_queue *ptq, struct evse
+>>>       }
 >>>
->>>       __u64   config3; /* extension of config2 */
->>>       __u64   config4; /* extension of config3 */
->>> +
->>> +     /*
->>> +      * Defines the sampling SIMD/PRED(predicate) registers bitmap and
->>> +      * qwords (8 bytes) length.
->>> +      *
->>> +      * sample_simd_regs_enabled != 0 indicates there are SIMD/PRED
->>> +      * registers to be sampled, the SIMD/PRED registers bitmap and
->>> +      * qwords length are represented in
->>> +      * sample_simd_{vec|pred}_reg_{intr|user} and
->>> +      * sample_simd_{vec|pred}_reg_qwords fields separately.
->>> +      *
->>> +      * sample_simd_regs_enabled == 0 indicates no SIMD/PRED registers
->>> +      * are sampled.
->>> +      */
->>> +     __u16   sample_simd_regs_enabled;
->>> +     __u16   sample_simd_pred_reg_qwords;
->>> +     __u16   sample_simd_vec_reg_qwords;
->>> +     __u16   __reserved_4;
->>> +
->>> +     __u32   sample_simd_pred_reg_intr;
->>> +     __u32   sample_simd_pred_reg_user;
->>> +     __u64   sample_simd_vec_reg_intr;
->>> +     __u64   sample_simd_vec_reg_user;
->>>  };
->> [Severity: High]
->> Are these newly added fields missing byte-swapping logic in
->> perf_event__attr_swap()?
+>>>       if (sample_type & PERF_SAMPLE_REGS_INTR &&
+>>> +         !evsel->core.attr.sample_simd_regs_enabled &&
+>>>           (items->mask[INTEL_PT_GP_REGS_POS] ||
+>>>            items->mask[INTEL_PT_XMM_POS])) {
+>>>               u64 regs_mask = evsel->core.attr.sample_regs_intr;
+>> [Severity: Medium]
+>> Does this completely disable PEBS register synthesis on SIMD-capable machines?
 >>
->> When perf reads a cross-endian perf.data file, if these fields are not added
->> to perf_event__attr_swap() in tools/perf/util/session.c, they will remain in
->> their original byte order.
+>> Since PERF_SAMPLE_REGS_ABI_SIMD is set by default on supported platforms in
+>> __perf_reg_mask_x86(), opts->sample_simd_regs_enabled will be set to 1 for
+>> any register request (like -I ax).
 >>
->> Later, when evsel__parse_sample() relies on fields like attr_nr_vectors and
->> attr_vec_qwords to validate SIMD data bounds, could incorrect values bypass
->> validation or cause out-of-bounds read faults?
-> This is a correct bug catch by Sashiko. We need to byte swap the
-> perf_event_attr fields when reading them from a perf.data file on,
-> say, an s390. Could you add this to perf_event_attr_swap?
+>> Could this cause basic GPR synthesis to be silently skipped here, resulting in
+>> a functional regression for userspace tooling?
+> I don't think functionality is lost and presumably the driver is
+> ensuring PEBS sampled registers are preferred over say pt_regs from
+> the interrupt.
 
-Sure. Would fix it in next version.
+Strictly speaking, PEBS_VIA_PT feature is only enabled for legacy PEBS now,
+so sample_simd_regs_enabled won't be enabled on such kind of supporting
+legacy PEBS platforms and then there is no any functionality lost.
+
+Thanks.
 
 
 >
 >> [ ... ]
->>> @@ -1020,7 +1045,15 @@ enum perf_event_type {
->>>        *      } && PERF_SAMPLE_BRANCH_STACK
->>>        *
->>>        *      { u64                   abi; # enum perf_sample_regs_abi
->>> -      *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
->>> +      *        u64                   regs[weight(mask)];
->>> +      *        struct {
->>> +      *              u64 nr_vectors;         # 0 ... weight(sample_simd_vec_reg_user)
->>> +      *              u64 vector_qwords;      # 0 ... sample_simd_vec_reg_qwords
->>> +      *              u64 nr_pred;            # 0 ... weight(sample_simd_pred_reg_user)
->>> +      *              u64 pred_qwords;        # 0 ... sample_simd_pred_reg_qwords
->>> +      *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
->>> +      *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
->>> +      *      } && PERF_SAMPLE_REGS_USER
->> [Severity: High]
->> Does appending this dynamic-length SIMD structure to PERF_SAMPLE_REGS_USER
->> break sample parsing for older perf tools?
 >>
->> Older parsers do not know about the PERF_SAMPLE_REGS_ABI_SIMD bit. When
->> parsing the sample payload, they will only advance the array pointer by
->> hweight64(attr.sample_regs_user) * sizeof(u64) bytes, failing to skip the new
->> SIMD header and data.
->>
->> Could this cause subsequent fields like PERF_SAMPLE_STACK_USER to read the
->> SIMD data as their own, resulting in parsing desynchronization and data
->> corruption?
->>
->> Should a new bit be added to enum perf_event_sample_format instead?
-> No, PERF_SAMPLE_REGS_ABI_SIMD can only occur if
-> sample_simd_regs_enabled is present in the perf_event_attr and this is
-> essentially the same.
->
+>>> diff --git a/tools/perf/util/perf-regs-arch/perf_regs_x86.c b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+>>> index b6d20522b4e8f..ae26d991cdc9f 100644
+>>> --- a/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+>>> +++ b/tools/perf/util/perf-regs-arch/perf_regs_x86.c
+>>> @@ -276,13 +276,38 @@ uint64_t __perf_reg_mask_x86(bool intr)
 >> [ ... ]
->>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
->>> index f30e48eb3fc32..e8e4e00d6b4d0 100644
->>> --- a/tools/perf/util/header.c
->>> +++ b/tools/perf/util/header.c
->> [Severity: Critical]
->> This isn't a bug introduced by this patch, but is there an integer underflow
->> in read_attr() when processing the size field of the perf_event_attr structure?
+>>> +uint64_t __perf_reg_mask_x86(bool intr, int *abi)
+>>> +{
+>> [ ... ]
+>>> +     if (mask != PERF_REGS_MASK) {
+>>> +             *abi |= PERF_SAMPLE_REGS_ABI_SIMD;
+>>> +     } else {
+>>> +             mask |= __arch__reg_mask(sample_type, PERF_REG_EXTENDED_MASK,
+>>> +                                      false);
+>>>       }
+>>>
+>>> -     return PERF_REGS_MASK;
+>>> +     return mask;
+>>>  }
+>> [ ... ]
+>>> +const char *__perf_reg_name_x86(int id, int abi)
+>>> +{
+>>> +     const char *name;
+>>> +
+>>> +     name = __arch_reg_gpr_name(id);
+>>> +     if (name)
+>>> +             return name;
+>>> +
+>>> +     if (abi & PERF_SAMPLE_REGS_ABI_SIMD)
+>>> +             name = __arch_reg_egpr_name(id);
+>>> +     else
+>>> +             name = __arch_reg_xmm_name(id);
+>>> +
+>>> +     return name;
+>>> +}
+>> [Severity: Medium]
+>> Does this break backwards compatibility for legacy XMM register requests?
 >>
->> The function reads the first 64 bytes and extracts attr->size into sz. It
->> checks if sz == 0 or sz > our_sz, but fails to verify if sz < PERF_ATTR_SIZE_VER0.
->> If a perf.data file supplies a size between 1 and 63, could the calculation
->> left = sz - PERF_ATTR_SIZE_VER0 underflow the unsigned size_t variable left,
->> producing a huge positive value?
+>> When the CPU supports eGPRs/SSP, PERF_SAMPLE_REGS_ABI_SIMD is set and the
+>> legacy XMM registers (PERF_REG_EXTENDED_MASK) are excluded from the returned
+>> mask because they share the same bit space.
 >>
->> The subsequent readn(fd, ptr, left) attempts to read this massive amount of
->> data into f_attr, which is allocated on the stack in
->> perf_session__read_header(), potentially resulting in a stack buffer overflow.
-> Thankfully, I believe Arnaldo is looking into these pre-existing
-> validation issues. See:
-> https://lore.kernel.org/linux-perf-users/20260526211806.1193848-1-acme@kernel.org/
-
-Got it. Thanks.
-
-
+>> If __perf_reg_name_x86() maps these overlapping IDs exclusively to eGPR names
+>> (for instance, mapping ID 32 to R16), will name_to_perf_reg_mask() fail to
+>> resolve legacy requests like -I XMM0 and throw an unknown register error?
+> So with PERF_SAMPLE_REGS_ABI_SIMD XMM0 is no longer part of the
+> register mask and thus name_to_perf_reg_mask shouldn't set a bit for
+> it. The next patch adjusts __parse_regs to encode vector registers in
+> the new space within perf_event_attr.
 >
 > Thanks,
 > Ian
 >
->> [Severity: Critical]
->> This is a pre-existing issue, but does read_event_desc() lack minimum size
->> validation on the sz variable before byte-swapping?
->>
->> The function reads a 32-bit sz from the file, allocates a heap buffer, and
->> calls perf_event__attr_swap(buf). Inside this function, the code
->> unconditionally reads and byte-swaps the first 8 bytes.
->>
->> If sz is between 1 and 7, attr->size reads out-of-bounds heap memory. Because
->> bswap_safe() uses this uncontrolled attr->size to determine which subsequent
->> fields to swap, could it proceed to byte-swap up to 176 bytes of heap memory
->> past the small allocation, leading to heap memory corruption?
->>
->>> @@ -2091,7 +2091,8 @@ static void free_event_desc(struct evsel *events)
->>>
->>>  static bool perf_attr_check(struct perf_event_attr *attr)
->>>  {
->>> -     if (attr->__reserved_1 || attr->__reserved_2 || attr->__reserved_3) {
->>> +     if (attr->__reserved_1 || attr->__reserved_2 ||
->>> +         attr->__reserved_3 || attr->__reserved_4) {
->>>               pr_warning("Reserved bits are set unexpectedly. "
->>>                          "Please update perf tool.\n");
->>>               return false;
 >> --
->> Sashiko AI review · https://sashiko.dev/#/patchset/20260529082451.591783-1-dapeng1.mi@linux.intel.com?part=1
+>> Sashiko AI review · https://sashiko.dev/#/patchset/20260529082451.591783-1-dapeng1.mi@linux.intel.com?part=2
 >>
