@@ -1,363 +1,205 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD593B19B0
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C782045AD
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780381550; cv=none; b=EcDxbHh1JU1+SW9ue7/RTGCU6CRbiGaf25eoxbTgt2DNLwcJPK3HkgwD1gzKlpbnpCI7bZyPqFoLuQliw100W/ef61YZn92diRzLv1cf4u7aXwS7uU8GfOYsgCjc/wUisSw3aJl23D0ZrvVJuxAnVqdrYsOjHlOcLoaHC/3KuAY=
+	t=1780382150; cv=none; b=Evlrwu5AHeeoUOLAJRrjDjUJjs8wrUzn7YiTdQCdR+88WkCYO3vXUofxJJk0XhuNb1TM8hLvQVPh7sfAUJsGHDFUYtdQq/0A3tAoVd+cM+lVWf8hiB57lsbrKyy43BUo+02pfvhw4u6/+InhZfNrIpoIb42hqSttKY5GQLz/f8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780381550; c=relaxed/simple;
-	bh=gthxRtD5VEATbV+0nsoc/5x3IeZxemKQBzZozOhGM4M=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Jo3BQTuEzCuHRlb2cHtTSLEsY9kc4pC294BRkaRsHGv0liYglUsk9RE/UA/h0lvAwTuRNM/tbSHke+8+w5FOI/q33CBdqnVbHaxAvV++cGQZw/iyuIMxI4l5o11WfZGwJUpToED5IFc6mQxSO8pzcsT55mwnuRWknwCgV3o1/t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DAknzgqW; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1780382150; c=relaxed/simple;
+	bh=rtUOi9QaAiQi5Ip5GtJ7Ng73F+mPgtw6b5QgB5Eyhy4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ISXcTGCQb618umJetBrMxzH7g8kI2RrSXCpf0UewvftZZXIX+yYBml6T9lx00BvAQCdfmHkvH5P7U7i40bnHh5WruTSDlganVc+NbuLyCS6oBYu1JecOxwRz+ccVKG1tZW0Iy8ZUxqm+t0imoxy5HIJg+0s2c9XtspEj1oecI6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G8y1/06P; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DAknzgqW"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304f1820babso4815753eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jun 2026 23:25:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780381548; x=1780986348; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AyqcFhrF9yKP3hkIxQRO9vNVLIIWlwktE1+hfye7zWw=;
-        b=DAknzgqWSc93/tz/eYHFOh8QL7OWqQCTh4LOagDl14HBGEzojVg2xhGhZl2KzoZY+8
-         9002L6FXMYL0dA+/0T5DdMM/uy3GoVGAhFSxiQ+gkqo0xb37ibjQrhW5mdOhVufGs79i
-         n3rwjrQeTPFyT3BHZZ853UWT+0FreUmU3yEZ8WpyYcUeT2UBrFLiyAMgO4QL9CHQG7dV
-         +3Aza3s1opK/O4iCA215AWSVNnn75aCNdHqS2ulQ3VZLjCS7wN6jjYDpfJ/4FsQSFaKR
-         VN+uWyIOk9qxm3Q1zYpIQsYF5EFLG5irGOInwtWXxJun14RE/OOpoMHe7fbVrC3yz6MP
-         49BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780381548; x=1780986348;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AyqcFhrF9yKP3hkIxQRO9vNVLIIWlwktE1+hfye7zWw=;
-        b=NYGOlcH4iZbWmbESpZVo/XyH6w/mBsfjlvpRcL5GuVOjDhaiYH+HQ27F3P4M9y4meM
-         JSXP8ZkGC7pg4K8b8CfWzXTF+MuXQH/frDANkwWYW+stWDxzegzrDuG6MsRQX8o2TmRc
-         4R1bswb4dDdF1NSKP+fzlHC5djsRnFCjkxYfNc5xxVnOwzCBQ4Yt6EkQaUFnfW+AFyYo
-         fi/yGCGP2PryAstv3pFRh945xJVL7BrgGdhy6VM5qnHcHj1+Ze3CvnmqkOYy30xEXf2c
-         0fT2N1fkjcSVyb24xblGRtwm6d621C079c+eFfsWlBy3OARA4GJq2caQ6mz1qpyODupV
-         UJew==
-X-Forwarded-Encrypted: i=1; AFNElJ85/ymNtPkoQLa9Tk1cl+kdJGbF3J5hPwMxl0xSYjlaqbenIXHUjoRXNYOm6YKrLdhEwJ3t7ueZthEh3KgnWfK9@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNDyIB31SHiDK2AhzHtnThAGE56SjToPWIvsIEOz0CnNVo4YHV
-	e/Qe7JZz6JLsCtqcJHTv34OjjYCqU7rNEhOY81CKu2S5J6q9zQyVYOQ5xrQy9i0r0ts2LHt2wzG
-	zmyKVvENszw==
-X-Received: from dyclw21.prod.google.com ([2002:a05:693c:2115:b0:304:3262:502a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:6da3:b0:304:997c:d47a
- with SMTP id 5a478bee46e88-304fa4eded0mr6081789eec.10.1780381547885; Mon, 01
- Jun 2026 23:25:47 -0700 (PDT)
-Date: Mon,  1 Jun 2026 23:24:51 -0700
-In-Reply-To: <20260602062452.2583619-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G8y1/06P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780382149; x=1811918149;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=rtUOi9QaAiQi5Ip5GtJ7Ng73F+mPgtw6b5QgB5Eyhy4=;
+  b=G8y1/06PnIPrEYPBmvWcmxYuxsbHv3f8ptKrkAi0n6OL//uIOJwwrJAM
+   DcKm5+PcoXvEzTy0eQIlmTSPw0utflgRXVbg6Wh2YDiC86jB5+ZiHdl4e
+   eh8U2tSzLIR0v+5FP/MpqLnmfSqkHwupOETBZBYH2VNPnBNY+LObBtUm6
+   jwwlNiwVP5h8thEZfNQknQtqvrD1QASyWVk9yTxrzmSwAMpnPbmUblSxJ
+   eub7G+46c/uKIpNphFOBKPVmHR4ESzBaaFsYcKJ47KiUXjyj8q9WsTIZS
+   8eMaPB7huLvjMwtjdJVjCshyds5gdJQknxaUnUvAyLWPDNv8aAEoW6UB2
+   g==;
+X-CSE-ConnectionGUID: N2HUDYWsQaSaPDLfQxnOYQ==
+X-CSE-MsgGUID: fwtWJ/0+QUStW2vxRNRJCw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="68703684"
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="68703684"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 23:35:48 -0700
+X-CSE-ConnectionGUID: Kk6AkzEmSgavayIBR3bKRw==
+X-CSE-MsgGUID: SMnZZeH7T0mmamW9fmhplQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="248742806"
+Received: from unknown (HELO [10.238.1.64]) ([10.238.1.64])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 23:35:47 -0700
+Message-ID: <10afdb91-d72f-450a-87c3-c78ae52d966f@linux.intel.com>
+Date: Tue, 2 Jun 2026 14:35:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260601065407.1597927-1-irogers@google.com> <20260602062452.2583619-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.929.g9b7fa37559-goog
-Message-ID: <20260602062452.2583619-20-irogers@google.com>
-Subject: [PATCH v11 19/19] perf symbol: Lazily compute idle
-From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
-	jameshongleiwang@126.com, japo@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, 
-	sumanthk@linux.ibm.com, tmricht@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v8 3/5] perf regs: Support x86 SIMD registers sampling
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+To: Ian Rogers <irogers@google.com>, sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260529082451.591783-4-dapeng1.mi@linux.intel.com>
+ <20260529104532.CE9D11F00893@smtp.kernel.org>
+ <CAP-5=fV0wY_B22Zma06JjWaMSWnChwFwk28c1uMfEGBBWA5-Xg@mail.gmail.com>
+ <41b14d9b-3db9-4b73-a56c-9e06753257f7@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <41b14d9b-3db9-4b73-a56c-9e06753257f7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Switch from an idle boolean to a helper symbol__is_idle function. In
-the function lazily compute whether a symbol is an idle function
-taking into consideration the kernel version and architecture of the
-machine. As symbols__insert no longer needs to know if a symbol is for
-the kernel, remove the argument.
 
-To protect against drop-filtering of legitimate setup, online, or hotplug
-management functions (such as intel_idle_init), x86 matches are strictly
-constrained to exact known run-loops (intel_idle, intel_idle_irq,
-mwait_idle, mwait_idle_with_hints).
+On 6/2/2026 1:38 PM, Mi, Dapeng wrote:
+> On 5/30/2026 1:41 AM, Ian Rogers wrote:
+>> On Fri, May 29, 2026 at 3:51 AM <sashiko-bot@kernel.org> wrote:
+>>> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+>>> - [Medium] Parsing of `--intr-regs` and `--user-regs` with multiple options is order-dependent, preventing intended combination of General Purpose (GP) and SIMD registers.
+>>> - [Medium] Specifying only SIMD registers (e.g., `--intr-regs=xmm` without GP registers) leaves the general-purpose register mask as 0, causing the kernel to reject the event configuration with `-EINVAL`.
+>>> - [Low] The `sample_simd_regs_enabled` field is omitted from `perf_event_attr__fprintf()`.
+>>> --
+>>>
+>>> commit 03a81994cf381ee1d67a41deb452833fc73a023e
+>>> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>>
+>>> perf regs: Support x86 SIMD registers sampling
+>>>
+>>> This patch adds support for the newly introduced SIMD register sampling
+>>> format by adding functions to support parsing and sampling x86 SIMD/PRED
+>>> registers.
+>>>
+>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>>>> index 1c856a2ecc6ec..cd62af14a4f54 100644
+>>>> --- a/tools/perf/util/evsel.c
+>>>> +++ b/tools/perf/util/evsel.c
+>>> [ ... ]
+>>>
+>>>> @@ -1594,6 +1595,16 @@ void evsel__config(struct evsel *evsel, const struct record_opts *opts,
+>>>>               evsel__set_sample_bit(evsel, REGS_INTR);
+>>>>       }
+>>>>
+>>>> +     if ((opts->sample_intr_vec_regs || opts->sample_intr_pred_regs) &&
+>>>> +         !evsel->no_aux_samples && !evsel__is_dummy_event(evsel)) {
+>>>> +             attr->sample_simd_regs_enabled = !!opts->sample_simd_regs_enabled;
+>>>> +             attr->sample_simd_vec_reg_intr = opts->sample_intr_vec_regs;
+>>>> +             attr->sample_simd_vec_reg_qwords = opts->sample_vec_reg_qwords;
+>>>> +             attr->sample_simd_pred_reg_intr = opts->sample_intr_pred_regs;
+>>>> +             attr->sample_simd_pred_reg_qwords = opts->sample_pred_reg_qwords;
+>>>> +             evsel__set_sample_bit(evsel, REGS_INTR);
+>>>> +     }
+>>> [Severity: Medium]
+>>> Will specifying only SIMD registers (e.g., perf record --intr-regs=xmm)
+>>> leave the general-purpose register mask as 0?
+>>>
+>>> If opts->sample_intr_regs is 0, attr->sample_regs_intr remains 0. However,
+>>> setting the REGS_INTR bit here causes the kernel validation function
+>>> (perf_reg_validate()) to unconditionally return -EINVAL because the sample
+>>> type bit is set but the corresponding GP register mask is 0.
+>> It is an interesting corner case, we could extend this test to cover it:
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/record.sh?h=perf-tools-next#n106
+> No, this is not a real issue. The perf_reg_validate() has been leased to
+> allow 0 mask bit if simd_enabled is true. So no -EINVAL would be returned,
+> like below,
+>
+> $ sudo ./perf record -e cycles:p -Ixmm -c 10000 sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.111 MB perf.data (262 samples) ]
+>
+>
+>>>> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+>>>> index 70a1cc90b2c13..26d560a486c85 100644
+>>>> --- a/tools/perf/util/parse-regs-options.c
+>>>> +++ b/tools/perf/util/parse-regs-options.c
+>>> [ ... ]
+>>>
+>>>> @@ -53,22 +106,96 @@ name_to_perf_reg_mask(const char *to_match, uint64_t mask, int abi)
+>>> [ ... ]
+>>>
+>>>>       /*
+>>>> -      * cannot set it twice
+>>>> +      * Non-SIMD registers cannot be set twice.
+>>>> +      * SIMD registers can be set multiple times, but only the register
+>>>> +      * class with largest length (qwords) is sampled.
+>>>>        */
+>>>>       if (*mode)
+>>>>               return -1;
+>>> [Severity: Medium]
+>>> Does the order of options affect whether they are parsed successfully?
+>>>
+>>> If SIMD registers are parsed first (e.g., -I xmm), *mode is left as 0,
+>>> which allows a subsequent GP register option like -I ax to be parsed
+>>> successfully.
+>>>
+>>> However, if GP registers are parsed first (e.g., -I ax), *mode is set to
+>>> a non-zero value, which triggers this failure check when -I xmm is
+>>> evaluated. Does this prevent intended combinations of GP and SIMD registers
+>>> from working consistently?
+>> It's probably worth adding coverage for this too. In this case having
+>> a C unit test may make most sense.
+> Ok, It's indeed a corner issue. The simplest way may be remove this check.
+> Would fix it in next version.
+>
+> Sure. Would extend current perf record test to cover the SIMD registers
+> sampling.
+>
+>
+>>>> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+>>>> index 741c3d657a8b6..c6b8e53e06fd1 100644
+>>>> --- a/tools/perf/util/perf_event_attr_fprintf.c
+>>>> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+>>>> @@ -362,6 +362,12 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+>>>>       PRINT_ATTRf(aux_start_paused, p_unsigned);
+>>>>       PRINT_ATTRf(aux_pause, p_unsigned);
+>>>>       PRINT_ATTRf(aux_resume, p_unsigned);
+>>>> +     PRINT_ATTRf(sample_simd_pred_reg_qwords, p_unsigned);
+>>>> +     PRINT_ATTRf(sample_simd_pred_reg_intr, p_hex);
+>>>> +     PRINT_ATTRf(sample_simd_pred_reg_user, p_hex);
+>>>> +     PRINT_ATTRf(sample_simd_vec_reg_qwords, p_unsigned);
+>>>> +     PRINT_ATTRf(sample_simd_vec_reg_intr, p_hex);
+>>>> +     PRINT_ATTRf(sample_simd_vec_reg_user, p_hex);
+>>>>
+>>>>       return ret;
+>>>>  }
+>>> [Severity: Low]
+>>> Does this also need to print the sample_simd_regs_enabled field?
+>>>
+>>> This patch adds several new SIMD-related fields to struct perf_event_attr,
+>>> but sample_simd_regs_enabled is missing here. Could this prevent developers
+>>> from verifying whether the tool correctly enabled SIMD sampling when inspecting
+>>> configurations via debug commands like perf record -vvv?
+>> It looks like this uncovers some technical debt. I don't see config3
+>> or config4 being printed either :-( Could you help to address, if not
+>> remind me :-)
+> It looks like sig_data, config3 and config4 are missed to print here. I
+> would add a patch to print them before printing these new SIMD fields.
 
-If the target environment OS release is unresolvable (such as on guest
-traces), default to treating psw_idle as idle to prevent false
-negatives and match legacy trace behavior safely.
+Just correct above words, sig_data has been printed and doesn't need to
+print again. Thanks.
 
-This change is inspired by mailing list discussion, particularly from
-Thomas Richter <tmricht@linux.ibm.com> and Heiko Carstens
-<hca@linux.ibm.com>:
-https://lore.kernel.org/lkml/20260219113850.354271-1-tmricht@linux.ibm.com/
 
-Assisted-by: Gemini:gemini-3.1-pro-preview
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/symbol-elf.c |   2 +-
- tools/perf/util/symbol.c     | 146 +++++++++++++++++++++++------------
- tools/perf/util/symbol.h     |   4 +-
- 3 files changed, 100 insertions(+), 52 deletions(-)
-
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index c5ed5e051976..186e6d92ac3d 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1734,7 +1734,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 
- 		arch__sym_update(f, &sym);
- 
--		__symbols__insert(dso__symbols(curr_dso), f, dso__kernel(dso));
-+		__symbols__insert(dso__symbols(curr_dso), f);
- 		nr++;
- 	}
- 	dso__put(curr_dso);
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index ddd3106b03b1..0c46b24ee098 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -50,7 +50,6 @@
- 
- static int dso__load_kernel_sym(struct dso *dso, struct map *map);
- static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
--static bool symbol__compute_is_idle(const char *name);
- 
- int vmlinux_path__nr_entries;
- char **vmlinux_path;
-@@ -379,7 +378,7 @@ void symbol__set_ifunc_alias(struct symbol *sym, bool ifunc_alias)
- 
- static void symbol__set_idle(struct symbol *sym, bool idle)
- {
--	uint16_t old_flags = atomic_load(&sym->flags);
-+	uint16_t old_flags = atomic_load_explicit(&sym->flags, memory_order_relaxed);
- 	uint16_t new_flags;
- 	uint16_t idle_val = idle ? SYMBOL_IDLE__IDLE : SYMBOL_IDLE__NOT_IDLE;
- 
-@@ -401,8 +400,7 @@ void symbols__delete(struct rb_root_cached *symbols)
- 	}
- }
- 
--void __symbols__insert(struct rb_root_cached *symbols,
--		       struct symbol *sym, bool kernel)
-+void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym)
- {
- 	struct rb_node **p = &symbols->rb_root.rb_node;
- 	struct rb_node *parent = NULL;
-@@ -410,17 +408,6 @@ void __symbols__insert(struct rb_root_cached *symbols,
- 	struct symbol *s;
- 	bool leftmost = true;
- 
--	if (kernel) {
--		const char *name = sym->name;
--		/*
--		 * ppc64 uses function descriptors and appends a '.' to the
--		 * start of every instruction address. Remove it.
--		 */
--		if (name[0] == '.')
--			name++;
--		symbol__set_idle(sym, symbol__compute_is_idle(name));
--	}
--
- 	while (*p != NULL) {
- 		parent = *p;
- 		s = rb_entry(parent, struct symbol, rb_node);
-@@ -437,7 +424,7 @@ void __symbols__insert(struct rb_root_cached *symbols,
- 
- void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym)
- {
--	__symbols__insert(symbols, sym, false);
-+	__symbols__insert(symbols, sym);
- }
- 
- static struct symbol *symbols__find(struct rb_root_cached *symbols, u64 ip)
-@@ -598,7 +585,7 @@ void dso__reset_find_symbol_cache(struct dso *dso)
- 
- void dso__insert_symbol(struct dso *dso, struct symbol *sym)
- {
--	__symbols__insert(dso__symbols(dso), sym, dso__kernel(dso));
-+	__symbols__insert(dso__symbols(dso), sym);
- 
- 	/* update the symbol cache if necessary */
- 	if (dso__last_find_result_addr(dso) >= sym->start &&
-@@ -760,57 +747,120 @@ int modules__parse(const char *filename, void *arg,
- 	return err;
- }
- 
--bool symbol__is_idle(struct symbol *sym,
--		     const struct dso *dso __maybe_unused,
--		     struct perf_env *env __maybe_unused)
--{
--	uint16_t flags = atomic_load_explicit(&sym->flags, memory_order_relaxed);
--	uint16_t idle_val = (flags & SYMBOL_FLAG_IDLE_MASK) >> SYMBOL_FLAG_IDLE_SHIFT;
--
--	return idle_val == SYMBOL_IDLE__IDLE;
--}
- 
- /*
-  * These are symbols in the kernel image, so make sure that
-  * sym is from a kernel DSO.
-  */
--static bool symbol__compute_is_idle(const char *name)
-+static int sym_name_cmp(const void *a, const void *b)
-+{
-+	const char *name = a;
-+	const char *const *sym = b;
-+
-+	return strcmp(name, *sym);
-+}
-+
-+static bool match_x86_idle_routine(const char *name, const char *base)
- {
--	const char * const idle_symbols[] = {
-+	if (strstarts(name, base)) {
-+		size_t len = strlen(base);
-+
-+		if (name[len] == '\0' || name[len] == '.')
-+			return true;
-+	}
-+	return false;
-+}
-+
-+bool symbol__is_idle(struct symbol *sym, const struct dso *dso, struct perf_env *env)
-+{
-+	static const char * const idle_symbols[] = {
- 		"acpi_idle_do_entry",
- 		"acpi_processor_ffh_cstate_enter",
- 		"arch_cpu_idle",
- 		"cpu_idle",
- 		"cpu_startup_entry",
--		"idle_cpu",
--		"intel_idle",
--		"intel_idle_ibrs",
- 		"default_idle",
--		"native_safe_halt",
- 		"enter_idle",
- 		"exit_idle",
--		"mwait_idle",
--		"mwait_idle_with_hints",
--		"mwait_idle_with_hints.constprop.0",
-+		"idle_cpu",
-+		"native_safe_halt",
- 		"poll_idle",
--		"ppc64_runlatch_off",
- 		"pseries_dedicated_idle_sleep",
--		"psw_idle",
--		"psw_idle_exit",
--		NULL
- 	};
--	int i;
--	static struct strlist *idle_symbols_list;
-+	const char *name = sym->name;
-+	uint16_t e_machine;
- 
--	if (idle_symbols_list)
--		return strlist__has_entry(idle_symbols_list, name);
-+	{
-+		uint16_t flags = atomic_load_explicit(&sym->flags, memory_order_relaxed);
-+		uint16_t idle_val = (flags & SYMBOL_FLAG_IDLE_MASK) >> SYMBOL_FLAG_IDLE_SHIFT;
- 
--	idle_symbols_list = strlist__new(NULL, NULL);
-+		if (idle_val != SYMBOL_IDLE__UNKNOWN)
-+			return idle_val == SYMBOL_IDLE__IDLE;
-+	}
- 
--	for (i = 0; idle_symbols[i]; i++)
--		strlist__add(idle_symbols_list, idle_symbols[i]);
-+	if (!dso || dso__kernel(dso) == DSO_SPACE__USER) {
-+		symbol__set_idle(sym, /*idle=*/false);
-+		return false;
-+	}
-+
-+	/*
-+	 * ppc64 uses function descriptors and appends a '.' to the
-+	 * start of every instruction address. Remove it.
-+	 */
-+	if (name[0] == '.')
-+		name++;
-+
-+	if (bsearch(name, idle_symbols, ARRAY_SIZE(idle_symbols),
-+		    sizeof(idle_symbols[0]), sym_name_cmp)) {
-+		symbol__set_idle(sym, /*idle=*/true);
-+		return true;
-+	}
-+
-+	e_machine = (env && env->arch) ? perf_env__e_machine(env, NULL) : EM_NONE;
-+	if (e_machine == EM_NONE && dso)
-+		e_machine = dso__e_machine((struct dso *)dso, NULL, NULL);
-+	if (e_machine == EM_NONE && env)
-+		e_machine = perf_env__e_machine(env, NULL);
-+
-+	if (e_machine == EM_386 || e_machine == EM_X86_64) {
-+		if (match_x86_idle_routine(name, "intel_idle") ||
-+		    match_x86_idle_routine(name, "intel_idle_irq") ||
-+		    match_x86_idle_routine(name, "intel_idle_ibrs") ||
-+		    match_x86_idle_routine(name, "mwait_idle") ||
-+		    match_x86_idle_routine(name, "mwait_idle_with_hints")) {
-+			symbol__set_idle(sym, /*idle=*/true);
-+			return true;
-+		}
-+	}
-+
-+	if (e_machine == EM_PPC64 && !strcmp(name, "ppc64_runlatch_off")) {
-+		symbol__set_idle(sym, /*idle=*/true);
-+		return true;
-+	}
-+
-+	if (e_machine == EM_S390 && strstarts(name, "psw_idle")) {
-+		int major = 0, minor = 0;
-+		const char *release = env ? perf_env__os_release(env) : NULL;
- 
--	return strlist__has_entry(idle_symbols_list, name);
-+		/*
-+		 * If we can't determine the release (e.g. unpopulated guest traces),
-+		 * default to idle.
-+		 */
-+		if (!release) {
-+			symbol__set_idle(sym, /*idle=*/true);
-+			return true;
-+		}
-+
-+		/* Before v6.10, s390 used psw_idle. */
-+		if (sscanf(release, "%d.%d", &major, &minor) == 2 &&
-+		    (major < 6 || (major == 6 && minor < 10))) {
-+			symbol__set_idle(sym, /*idle=*/true);
-+			return true;
-+		}
-+	}
-+
-+	symbol__set_idle(sym, /*idle=*/false);
-+	return false;
- }
- 
- static int map__process_kallsym_symbol(void *arg, const char *name,
-@@ -839,7 +889,7 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
- 	 * We will pass the symbols to the filter later, in
- 	 * map__split_kallsyms, when we have split the maps per module
- 	 */
--	__symbols__insert(root, sym, !strchr(name, '['));
-+	__symbols__insert(root, sym);
- 
- 	return 0;
- }
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 16a27074a474..a71525335703 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -76,7 +76,6 @@ enum symbol_idle_kind {
- #define SYMBOL_FLAG_INLINED         (1 << 11)
- #define SYMBOL_FLAG_ANNOTATE2       (1 << 12)
- #define SYMBOL_FLAG_IFUNC_ALIAS     (1 << 13)
--
- /**
-  * A symtab entry. When allocated this may be preceded by an annotation (see
-  * symbol__annotation) and/or a browser_index (see symbol__browser_index).
-@@ -257,8 +256,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
- 
- char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
- 
--void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym,
--		       bool kernel);
-+void __symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
- void symbols__insert(struct rb_root_cached *symbols, struct symbol *sym);
- void symbols__fixup_duplicate(struct rb_root_cached *symbols);
- void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms);
--- 
-2.54.0.929.g9b7fa37559-goog
-
+>
+> Thanks.
+>
+>
+>> Thanks,
+>> Ian
+>>
+>>> --
+>>> Sashiko AI review · https://sashiko.dev/#/patchset/20260529082451.591783-1-dapeng1.mi@linux.intel.com?part=3
+>>>
