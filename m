@@ -1,133 +1,141 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B449423158
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 14:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BC33BAD82
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 14:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780410462; cv=none; b=OmGXsPjIyOYuqtZ9MnHkq85advg6yTgclvde0Erc51hKt85TNFXL+vCMBQyiVozqW4xRjLj36KVzyJ1dHj6WcEyCzoBQKQYYBBon9OR+VWReCx/BmpeLiu2W/ZU38AQGDzB4RUN/usgFJoYHBQowwObgJchstUOTZ0GtEbwOvmI=
+	t=1780411122; cv=none; b=REdQmUo1xSVpkEJiY5B0JNrh2uuGwl+OPXsyB5zSIam+mG7VI3WZvo2uCKYA1KAQjdmBQ02rmqCStRsvfRZ9rVzgv6w/O8MuF1qHFtSQOqcl/AwRtI8kTBrvpcykoynIlolT1QLzBhuuQZz4/70Qff0zlC2w3ml6HthrWPxYRL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780410462; c=relaxed/simple;
-	bh=UqUTcZlsYRMZ7HrUOPVdOIyjHND7lnBLRlj9pGTngF8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fOIKdi1SX/xCl3NCAxsohOuOsHvQnLAFPRX8GwBt8zmiPcbUkdeo4MSo0E5nENU7UpPcMz8DXVYnEBjW7/lE7hUK05kolexMOp89W9lIIUbtS0abN9fZbGhIB2CTP4u28XVyBV4DPq0bB3cCxyfA0047OAmzYF2D+UKVIEArm8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TWTTARr0; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1780411122; c=relaxed/simple;
+	bh=T8n4xrhfJ9AGXMKegFKmS3+fPTveCktqpmTJOBHHxoE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=OkdsXD5WHwcWG9OWUiIgt33yhN70ynFR21s92blE2FWjAENGI3rgoPvdWBf5aPibf+/sdem4tBU+jPZ+MRwdoDO/N3fOfvzZpDZJ0eeQLCC9KN+CIjWs4MMDlGr9A8xgbbXtp+xDXC1JHT7z+D+HTYhz+0aEGnMML9YpFflbjIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqd/T7Pt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TWTTARr0"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490b3e03939so4508355e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 07:27:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780410459; x=1781015259; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eCyit+MYNey9T5qQgf6spNYkow7XxVLTYJAiVVbCmNE=;
-        b=TWTTARr0hyfXJFttBluqwf4CfuBhqj559ARL/D/LHTuf1PKJfmtL58sJaQ7/Pegpep
-         gNbovz6Yjxzs50/PtGa+CbBUv9CElKnN1w0EKGVXwusA6GM5mSYy8LNZvNYFKI57VB+H
-         MXYs8ox+a0MbPfS2skPwSDfNNrhSbNC3MsJ8tmyeWY17Wu9Fx0HwmO6DynVmeBHyd3fL
-         rkcdowRJMjY3D4IF3oT97b1Isdadkjew7kjWhyJUEJO6q6bZcss+D3puSyoi6G2+LZjN
-         2B7scg/EGPdhkOAUCCTST6yyDLjCYfgHNulzAV0GsQRDSmBqxbA9qhDq3AEx+JOIybnx
-         thHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780410459; x=1781015259;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eCyit+MYNey9T5qQgf6spNYkow7XxVLTYJAiVVbCmNE=;
-        b=oKOL8/Qivr3oCyzc+5NgkukU+yxiN7nD8YxF7sbOi7vAZv4DM6kEC+k4w4M9fG/qrL
-         X6/lzGw6snMZBBIP5IVNZUrZl0qF5utuFGbMCWt4yob9UGHWEOrOsT1jHn6nfNyQXsdZ
-         U5jY6ZVFBIoH52CoQJpiW5X64N9pCZDRtw4aCP0B9/h5bleZ2VK6XmyYQbPzXRyhKRSd
-         d1faxH5tZg7taot+rCqyzAY0435gTdmoWPLizbvavKUeQdEFCSPK0hSE/JcyCPdZrSqc
-         t6qVoSZnXExkKDtIGHh936/6dsFH+K21NzlJer5ftObox6IIq3lSEyR6EFvaQvEp5n2b
-         /KDQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9Y96OPoaDT9eqpaFCOkZJqOMEtsil+APocTsyvxNefM1L4zWY95EWg2XkKxlDSBSoTiHmsOI8e5QuZedkcXl0G@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuI+6CV22pnzaL65rSbe/x6GdEC3Xc3RP481rszQ+Qs02+nVBf
-	vX2PZKh90ALo8sQDWXarpOvUh4rpuBlQMWqlNBx0eSNRkT0tTyULUjZDekF6b1hUgPc=
-X-Gm-Gg: Acq92OFPeXD+7DGbYWpjp/ILGrMTOMVjXNFZ9pk6l71YWvmR2LFzOx8LjKdpZJ4M97V
-	MKI401Gagd10C6gRD1hD8NIu+TW2TjbtnKBqBCLu5+quIEZ4QiecTG3p5NTGKrOL58PX52pxV5H
-	wrVpXXWpcFWw2b2oW1r8KGha7uR64ILZOL13kBKTwsdWCF5CTgY6Q9WpqGBG6TAzcIUdOZKEa/u
-	936B4aueUPZUt5iaCIWMkv38x605b5p0cAg/RQ2EA6ZexM5MoygTdTDRbgxrqrLSQgGeV4Tcaky
-	dDmBkNf5BWBQyPNAdk4M0zMiE7VVkvizOPRiu+zJfyyPc2b8HW84suG5aUb1A/XNUF55p1Ul9pi
-	LLOcqoaGuYlY7BGXKMalkU484HuQmlA0vefw9R3BHsfLlCd6djZDd2+ocPioyDqGMSdMpsaomcV
-	l5XngZ1Qkl/3D1Rv+ab7s6QRThKt22yxTtxRPRqC/xjw8=
-X-Received: by 2002:a05:600d:6447:10b0:490:5000:917 with SMTP id 5b1f17b1804b1-490b0e373acmr50037565e9.1.1780410458901;
-        Tue, 02 Jun 2026 07:27:38 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b0e18e1csm66771965e9.4.2026.06.02.07.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 07:27:38 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Tue, 02 Jun 2026 15:27:00 +0100
-Subject: [PATCH v2 18/18] perf test cs-etm: Move existing tests to
- coresight folder
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqd/T7Pt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAEB1F00893;
+	Tue,  2 Jun 2026 14:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780411121;
+	bh=hmF8SxQa5l5iqrYi3uXgYNf5zUrSjlA8zO0eaujnlEs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=jqd/T7PtGpl9xvc+Ty2eY4NBJraKq0i+7BYWd/v+VNp4zh4wtwTa4jR6DEuPczxyC
+	 IRWBbRKgweiLbL4ilCSfy+pGm0A6jUEH4RbqDFO6PntnIxNYKUluHYRbFj/wZOpdMw
+	 FxOawECrjNizBfzD6EIlnbJL9Yb9t96/BbcKuk02lcUJu6eT1tKMm4Nk4lQvxQMKWt
+	 NmlUlkXutOJMTdx3DHp+vDH7EC2cfI6Du0T0rrdKxmnKlBaga74xPciyejpM8JYbV3
+	 0geJqAHbicDFmrTGIDbU9LuXoaOi2xDGeUqlHKWJlNjbeNchF0z1p5idZ4DZoUVQ+H
+	 b4olrRBiW5WhQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 03/18] perf test: Add a workload that forces context
+ switches
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260602-james-cs-context-tracking-fix-v2-3-85b5ce6f55c6@linaro.org>
+References: <20260602-james-cs-context-tracking-fix-v2-3-85b5ce6f55c6@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 02 Jun 2026 14:38:40 +0000
+Message-Id: <20260602143841.1AAEB1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-james-cs-context-tracking-fix-v2-18-85b5ce6f55c6@linaro.org>
-References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
-In-Reply-To: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Paschalis Mpeis <Paschalis.Mpeis@arm.com>
-Cc: coresight@lists.linaro.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
- linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
 
-There is a subfolder for Coresight tests so might as well keep them all
-in here.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Parent process fails to close unused pipe ends, causing a deadlo=
+ck if the child exits prematurely, and leaks file descriptors on all paths.
+--
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- MAINTAINERS                                                         | 1 -
- tools/perf/tests/shell/{ => coresight}/test_arm_coresight.sh        | 0
- tools/perf/tests/shell/{ => coresight}/test_arm_coresight_disasm.sh | 2 +-
- 3 files changed, 1 insertion(+), 2 deletions(-)
+commit 4b7337e6446674341b89bdd15dec4b286776529f
+Author: James Clark <james.clark@linaro.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7efb893edcbb..ff8935b459ea 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2749,7 +2749,6 @@ F:	tools/perf/arch/arm/util/auxtrace.c
- F:	tools/perf/arch/arm/util/cs-etm.c
- F:	tools/perf/arch/arm/util/cs-etm.h
- F:	tools/perf/arch/arm/util/pmu.c
--F:	tools/perf/tests/shell/*coresight*
- F:	tools/perf/tests/shell/coresight/*
- F:	tools/perf/util/cs-etm-decoder/*
- F:	tools/perf/util/cs-etm.*
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/coresight/test_arm_coresight.sh
-similarity index 100%
-rename from tools/perf/tests/shell/test_arm_coresight.sh
-rename to tools/perf/tests/shell/coresight/test_arm_coresight.sh
-diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-similarity index 96%
-rename from tools/perf/tests/shell/test_arm_coresight_disasm.sh
-rename to tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-index 2a400fd38a36..b196aab709f8 100755
---- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-+++ b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-@@ -24,7 +24,7 @@ perfdata_dir=$(mktemp -d /tmp/__perf_test.perf.data.XXXXX)
- perfdata=${perfdata_dir}/perf.data
- file=$(mktemp /tmp/temporary_file.XXXXX)
- # Relative path works whether it's installed or running from repo
--script_path=$(dirname "$0")/../../scripts/python/arm-cs-trace-disasm.py
-+script_path=$(dirname "$0")/../../../scripts/python/arm-cs-trace-disasm.py
- 
- cleanup_files()
- {
+perf test: Add a workload that forces context switches
 
--- 
-2.34.1
+This commit adds a new test workload that forces context switches by launch=
+ing
+two processes that block when reading and writing to each other.
 
+> diff --git a/tools/perf/tests/workloads/context_switch_loop.c b/tools/per=
+f/tests/workloads/context_switch_loop.c
+> new file mode 100644
+> index 0000000000000..73bfcaeff5b09
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/context_switch_loop.c
+
+[ ... ]
+
+> +static int context_switch_loop(int argc, const char **argv)
+> +{
+> +	int a_to_b[2], b_to_a[2];
+> +	pid_t proc1_pid;
+> +	int status;
+
+[ ... ]
+
+> +	if (pipe(a_to_b) || pipe(b_to_a)) {
+
+[Severity: Medium]
+If pipe(b_to_a) fails, does this return 1 and leak the file descriptors
+successfully allocated by pipe(a_to_b)?
+
+> +		perror("Pipe error");
+> +		return 1;
+> +	}
+> +
+> +	proc1_pid =3D fork();
+> +	if (proc1_pid < 0) {
+> +		perror("Fork error");
+> +		return 1;
+
+[Severity: Medium]
+Similarly, does this error path leak all 4 file descriptors allocated by the
+pipes?
+
+> +	}
+> +
+> +	if (!proc1_pid) {
+> +		close(a_to_b[0]);
+> +		close(b_to_a[1]);
+> +		prctl(PR_SET_NAME, "proc1", 0, 0, 0);
+> +		context_switch_loop_proc1(b_to_a[0], a_to_b[1]);
+> +		exit(0);
+> +	}
+> +
+> +	prctl(PR_SET_NAME, "proc2", 0, 0, 0);
+> +	context_switch_loop_proc2(a_to_b[0], b_to_a[1]);
+
+[Severity: Medium]
+Does the parent process (proc2) need to close its unused pipe ends (a_to_b[=
+1]
+and b_to_a[0]) before executing its workload loop?
+
+If the child process (proc1) terminates unexpectedly or calls exit(1) (e.g.,
+due to a read/write error), it closes its file descriptors. However, the pa=
+rent
+waiting in read(a_to_b[0]) will not receive an EOF (0) because it still hol=
+ds
+the write end a_to_b[1] open itself. This could cause the parent to block
+indefinitely and hang the test suite.
+
+> +
+> +	if (waitpid(proc1_pid, &status, 0) !=3D proc1_pid || !WIFEXITED(status)=
+ ||
+> +	    WEXITSTATUS(status))
+> +		return 1;
+> +
+> +	return 0;
+
+[Severity: Medium]
+Do the waitpid error path and successful return path both exit without clos=
+ing
+the remaining pipe file descriptors?
+
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602-james-cs-c=
+ontext-tracking-fix-v2-0-85b5ce6f55c6@linaro.org?part=3D3
