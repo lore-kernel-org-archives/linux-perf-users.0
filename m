@@ -1,67 +1,66 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507323FF893
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 14:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620053ED3A9
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 14:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780410447; cv=none; b=BajgcYZfa0wllPf32AMGp8kQdy99LThPbpsQwNi9D/bNwwoQmJJLtOr2WUsudMuoo/a+NDXiMnYFBMM4v2kmbBQLm3DuCOo4x4kOqhHzmNbRwmKVCiqlBDetz8O3dyEKWV07fAQwA6muuH9sY7leufnFvSKrECP71NhrkEGOF2Q=
+	t=1780410448; cv=none; b=KpysqcmL3ssIWSdPOIwlm96fmMmzFFMBI+DV+Fa0sfHOgiar2VlDnkV4RRVe/XI4a2LWBQtqNM2VHHHXv+fIqOPbYMi2FdnMw/wnyazIElbxo2B0AmzJ45yIsE84qIpFYq5jildh0LktcgJmEJgXl7D/BfwYFfphTASdIUTCp3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780410447; c=relaxed/simple;
-	bh=nhbvUtvVfJ4XCxkw1g44IbixuAqwQ8Swfcda4PtYylk=;
+	s=arc-20240116; t=1780410448; c=relaxed/simple;
+	bh=iQVBxA25lW6A4uA0ACC2OMef9MHB9JOIgp6xmgt6rqE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SW4/oS7+X2XdjEeVmNHl8tvC4JXEXUzv9OFaIOFQ/l7Sa5/kjyhK1J7FtL+4eZj+60LnFMg87sUIqgbJf0yMTlMZ8n3jKy4z7abn42GhRIdNjnPMTx7lTM1/2N0WHm7BwdXMs5Vgo9tX/UYjQ0JzAwsJrMBg9xKT4/If3i3nPck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dJ2UfuQI; arc=none smtp.client-ip=209.85.128.52
+	 In-Reply-To:To:Cc; b=EPH/qrPTnIGCTZc1XA+Nuy4kaP5Kpizyn5HY8H5XTiuFgZJeVx6TgC+AUhQv1EiqvK8XGS295ke3DrcvFGcB52wcZhTC1Vps3h9/alLpdhs3veQ0+fhpT1fAfENB6fi38KbQdBOg29+mYoZKPoxby7GV/HBJcK8lvMofG8eoOZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RsODVOfK; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJ2UfuQI"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490a7629380so26087445e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 07:27:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RsODVOfK"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-490b2b037d2so6018325e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 07:27:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780410444; x=1781015244; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1780410445; x=1781015245; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2AzHCCZdh7j2BBDmmO5WAtLEfltvQL21ELilOv+mRsY=;
-        b=dJ2UfuQI2FggK7kFLlp1OrCDE2KPorv1zZiHEuIZHc0bZHAls0sZPrb8iRVkEkM0BR
-         I28TlQ1tUc0FRZSpp4VZtjokmPL8gab5ynRs+9q+b2zGBevkgHXxo3FQ0RWsbj7BMOK5
-         5xI38d+RS4TcL7jNkJBZf8jswSg4G2bajA+TmQiQ2EqwyeFlIdrVEATimXO/v+jmvfEJ
-         1BCazO1DRd8B+NTvaKJ6fRWiSVnhcm1ZnFidZl/aBUxtA4/xEcZGyKfN/bW0nRigfCgh
-         AaUeJoIOW2/liGJaJZc9u+s9mnyrFMla3WV0smh93ipOm5G/2Itw/rxnikQgmQ6gqa00
-         GvCg==
+        bh=EO8/K9YxgiEJpvhD7v23MJuqc72Imxv7cQ7m/8nhtl0=;
+        b=RsODVOfK7+urt0xrwfplJ6JRMaAK5fT2cft5LMm5P5iBYv3lBdzHp+hbwoet+/sBFk
+         IgBMiKpc6/Eh6BlL/HPjoYIBMsd9WbomeqyNiYPFGaiEFEQHKwEtg7R0QENCjHJV4t4c
+         0zqa45vYMZBPz5rTZAxcQBGIzaJOM/9AEuyVfD1q/Zk2qt1ZzgH3EwR8ONe+yfDLk/87
+         HlqD//9XBhVqXV9df4UBYLKil4ujWanLPxPkgRfepylLCiZr3qBeyZIO4viuH7L3pAlg
+         mj6EM0anjbmENuZ5QtH9BHLCxbgwK/yCNMOjWTGpU5VQ6g14f50akZd9izEiGpkGRaZH
+         GGBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780410444; x=1781015244;
+        d=1e100.net; s=20251104; t=1780410445; x=1781015245;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=2AzHCCZdh7j2BBDmmO5WAtLEfltvQL21ELilOv+mRsY=;
-        b=RHLeJzeO95nqOC/9WBQDij5PN7CYCly6pTAcdLeHEpcCEmbtbhVSzBIFQvscEO0sqt
-         PKxtNJIAWe4EDAblJLOhP4XW7cRM2zNZR/Cd6CpDnjOrnlp32U241LsAL4wiha3Wd56c
-         l1oBZTicaHopQfw2cOPkCm0q496f+kSQBkxQXOR/AAPl1PhO7UEqxrkWEuA74D2Cq8k0
-         PciVrxeeir+wMaafuaeVA6Sf95dCZxmuYl/BurLEFxKJoEgoB7EY2qECxMZpwbuLlJYI
-         ugA1yPoOlvdK1zmtNmNpATRELDq/dsfmsBWutU6K9Ut3hf3KNkmTLGQaRROA9cUkXL+l
-         EYog==
-X-Forwarded-Encrypted: i=1; AFNElJ/eX/xwaxXI+B1QU4/plO1qUb5J0hN1EdHIW384o+vsAgZN+bzzLTCVwnSMehfYjXgSBo8dosmq/jWcCqjKeAAC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnytK6Nmokld+5foEPT2iv2u3vEFFosDVZ7QzSda9B+MQC3y1r
-	WmQt8b/lJB5b6QGHqe57ktJU+LDK87aMXdiIjyLP5aXVasCAVzPasn5HnBhDuVx0IsE=
-X-Gm-Gg: Acq92OHAC/fJraJr6YlqLySTXoDD0Bat0Zau7lPEnIGLQa73M9q4NlC6KivwDsIUWVK
-	Q82tIbDbdHzsrQVCuwe7gK87RTdA4MD5svR1IrJXDKKxQXATvK6yN2bae+JIqxvyLqjNFYl0KZg
-	233wE7eDiNlwC9yDQlZfdp0PPWDvCq26nSAxb3ao6G8zsZYwlPyZ9qzL7aNaj0xY420TZX1Dz9s
-	rgFjRf2N7GDd4sbuUDbM4gpzUqNYGPBOFFvsX5azUdMO6qPREaOLM9/jOtieIYOfW/CKsnRT88c
-	LnXaw35YBa1d+0x8SmT7AxJ/1YiGTcegoYWQ0NwnWOIEJxukvnbQ/pxu+lPC85YCeMfZDNEd8Ur
-	uXQRedV2lgOsLjdNWbhfaJe2JcyQ/3xdaeDbdjR5G1/yWxovZyEol1lUh3QnhTRM3v18IGJcXxW
-	tW1qnVBK09gI8u9ltcsxGTs/aT0XvCytpOEdisAt7soPA=
-X-Received: by 2002:a05:600c:8b57:b0:490:3c15:7146 with SMTP id 5b1f17b1804b1-490a5013670mr251592175e9.19.1780410443909;
-        Tue, 02 Jun 2026 07:27:23 -0700 (PDT)
+        bh=EO8/K9YxgiEJpvhD7v23MJuqc72Imxv7cQ7m/8nhtl0=;
+        b=jaNvdrQwn4xtmu4V7/BHSl6VzoDVfIfaFO5e9lvSfzM/V+nAf59BrQdF1ADxzsC7QN
+         VBQoZzIBOi/z0Hl1IkXE2emZK877Wysh7sXAHm5EEOR0c9CyX6gWUEDrclsFTsmrMXWm
+         SqmLT4Yhs8Ois5vkYS4/HGK9LRL4/E7NUQFnTN3lqPyzGcl3/GigkFEdaj1V5ZLNlX5/
+         ayMzau4Ed6gSnZwXPce69ZF8DIVBXUSLoobSB84VKtpg5YK61yNa+Kb6iDifbXor1+nt
+         si2s81pZZOgaaxLWmmO8Jbg5eib1qArzrqieyVmWBBOy6j+qEHc8N9fLS8dCMBmCtKN1
+         t+CQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8Emis+sphq7DeRBmnIdcsMb4bIGtTWRmRVPRiO+1Zru9VB6R1J4P1WjAE2gXKR0BVbQkidX2x/gTZ3mTKxZTMp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf0GX7F5b+hXoLVTKRm7WvtWh4xKOf6kavkyD+mcvKaQQWYWh4
+	7HAVdrr3AdhZEIAnBTs0lqJGXZtryiC90w8xp6PaMjLk1dj2Q767O/oiowmqDnEh7kE=
+X-Gm-Gg: Acq92OEO8kXb8mh42PloZfBF56s+PeqlrEkYPbw13x8FoUYGBeB0Xq3L0nmkGTKD1tg
+	JeWRCMs3EEa/V4SSF6f3yhcUrIWQEuxKafn5XGDl40wErnlJWr6fj/24qZ6iB5g3ZVxMoU+MUsV
+	bnXGpBXBDcekkdnzuwlY+GqFSwKpqkjmJbru30LqckIdYm+Dc4ReCuAczuox93/UwkJpqVL+qdn
+	ItmBdsTWjsPn3Uk5Z2NN8LQ82GF+GZ6KhQZRlRjN7TneJzF+/iffLBE0n9nIXvB0pFsJXl6amzE
+	WM0OHby4EpAtP47eHh8/zRZ38/G7KeUKbkfolKyE3lBbaHM1ZtdH25BgY6jEe2F3Xui5nJAQ32G
+	4ygjb3EWK6CoRXyG+16CVssZJv5O5IFFKLnnX12puQ91yf/BT/+oJ2kEC4Y1jUPUHiHHpk6gGgk
+	bV/6AD3/OMlv01CZXVX/8e86WY0zxazX7r5kng1X1nCn0=
+X-Received: by 2002:a05:600c:4755:b0:490:3cb4:f1b3 with SMTP id 5b1f17b1804b1-490a293322dmr279955285e9.16.1780410444873;
+        Tue, 02 Jun 2026 07:27:24 -0700 (PDT)
 Received: from ho-tower-lan.lan ([185.48.77.170])
         by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b0e18e1csm66771965e9.4.2026.06.02.07.27.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2026 07:27:23 -0700 (PDT)
+        Tue, 02 Jun 2026 07:27:24 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Tue, 02 Jun 2026 15:26:45 +0100
-Subject: [PATCH v2 03/18] perf test: Add a workload that forces context
- switches
+Date: Tue, 02 Jun 2026 15:26:46 +0100
+Subject: [PATCH v2 04/18] perf test cs-etm: Test process attribution
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-james-cs-context-tracking-fix-v2-3-85b5ce6f55c6@linaro.org>
+Message-Id: <20260602-james-cs-context-tracking-fix-v2-4-85b5ce6f55c6@linaro.org>
 References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
 In-Reply-To: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -85,180 +84,90 @@ Cc: coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
  linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-This workload launches two processes that block when reading and writing
-to each other forcing the other process to be scheduled for each
-read/write pair.
+Run the context switch workload on one CPU and trace it to test that
+symbols are attributed to the correct process and that the attribution
+changes at the exact point that the context switch happened.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/Documentation/perf-test.txt           |  7 +-
- tools/perf/tests/builtin-test.c                  |  1 +
- tools/perf/tests/tests.h                         |  1 +
- tools/perf/tests/workloads/Build                 |  1 +
- tools/perf/tests/workloads/context_switch_loop.c | 95 ++++++++++++++++++++++++
- 5 files changed, 102 insertions(+), 3 deletions(-)
+ .../tests/shell/coresight/context_switch_thread.sh | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
-index 1faf30d4a7be..9c0d7ac2bc64 100644
---- a/tools/perf/Documentation/perf-test.txt
-+++ b/tools/perf/Documentation/perf-test.txt
-@@ -55,15 +55,16 @@ OPTIONS
- 
- -w::
- --workload=::
--	Run a built-in workload, to list them use '--list-workloads', current ones include:
--	noploop, thloop, leafloop, sqrtloop, brstack, datasym and landlock.
-+	Run a built-in workload, to list them use '--list-workloads', current
-+	ones include: noploop, thloop, leafloop, sqrtloop, brstack, datasym,
-+	context_switch_loop and landlock.
- 
- 	Used with the shell script regression tests.
- 
- 	Some accept an extra parameter:
- 
- 		seconds: leafloop, noploop, sqrtloop, thloop
--		nrloops: brstack
-+		nrloops: brstack, context_switch_loop
- 
- 	The datasym and landlock workloads don't accept any.
- 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index d5df3efdce3b..1057ee836c30 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -156,6 +156,7 @@ static struct test_workload *workloads[] = {
- 	&workload__landlock,
- 	&workload__traploop,
- 	&workload__inlineloop,
-+	&workload__context_switch_loop,
- 
- #ifdef HAVE_RUST_SUPPORT
- 	&workload__code_with_type,
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index ee00518bf36f..79f50bacfc94 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -242,6 +242,7 @@ DECLARE_WORKLOAD(datasym);
- DECLARE_WORKLOAD(landlock);
- DECLARE_WORKLOAD(traploop);
- DECLARE_WORKLOAD(inlineloop);
-+DECLARE_WORKLOAD(context_switch_loop);
- 
- #ifdef HAVE_RUST_SUPPORT
- DECLARE_WORKLOAD(code_with_type);
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 2ef97f7affce..3bda6da04a35 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -9,6 +9,7 @@ perf-test-y += datasym.o
- perf-test-y += landlock.o
- perf-test-y += traploop.o
- perf-test-y += inlineloop.o
-+perf-test-y += context_switch_loop.o
- 
- ifeq ($(CONFIG_RUST_SUPPORT),y)
-     perf-test-y += code_with_type.o
-diff --git a/tools/perf/tests/workloads/context_switch_loop.c b/tools/perf/tests/workloads/context_switch_loop.c
-new file mode 100644
-index 000000000000..73bfcaeff5b0
+diff --git a/tools/perf/tests/shell/coresight/context_switch_thread.sh b/tools/perf/tests/shell/coresight/context_switch_thread.sh
+new file mode 100755
+index 000000000000..0992c35a329d
 --- /dev/null
-+++ b/tools/perf/tests/workloads/context_switch_loop.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/tools/perf/tests/shell/coresight/context_switch_thread.sh
+@@ -0,0 +1,69 @@
++#!/bin/bash -e
++# Coresight context switch thread attribution (exclusive)
 +
-+#include <linux/compiler.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/prctl.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
++# SPDX-License-Identifier: GPL-2.0
 +
-+#include "../tests.h"
++# If Coresight is not available, skip the test
++perf list pmu | grep -q cs_etm || exit 2
 +
-+static int loops = 100;
-+static char buf;
-+int context_switch_loop_work = 1234;
++if [ "$(id -u)" != 0 ]; then
++	# Requires root for "-C 0" in record command
++	echo "[Skip] No root permission"
++	exit 2
++fi
 +
-+#define write_block(fd) \
-+	do { \
-+		if (write(fd, &buf, 1) <= 0) \
-+			exit(1); \
-+	} while (0)
++tmpdir=$(mktemp -d /tmp/__perf_test.coresight_context_switch.XXXXX)
 +
-+#define read_block(fd) \
-+	do { \
-+		if (read(fd, &buf, 1) <= 0) \
-+			exit(1); \
-+	} while (0)
-+
-+/* Not static to avoid LTO clobbering the function name */
-+void context_switch_loop_proc1(int in_fd, int out_fd);
-+noinline void context_switch_loop_proc1(int in_fd, int out_fd)
-+{
-+	for (int i = 0; i < loops; i++) {
-+		read_block(in_fd);
-+		context_switch_loop_work += i * 3;
-+		write_block(out_fd);
-+	}
++cleanup() {
++	rm -rf "${tmpdir}"
++	trap - EXIT TERM INT
 +}
 +
-+void context_switch_loop_proc2(int in_fd, int out_fd);
-+noinline void context_switch_loop_proc2(int in_fd, int out_fd)
-+{
-+	for (int i = 0; i < loops; i++) {
-+		write_block(out_fd);
-+		context_switch_loop_work += i * 7;
-+		read_block(in_fd);
-+	}
++trap_cleanup() {
++	cleanup
++	exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++check_samples() {
++	owner_samples=$(grep -c "proc1.*context_switch_loop_proc1" "$tmpdir/script" || true)
++	next_samples=$(grep -c "proc2.*context_switch_loop_proc2" "$tmpdir/script" || true)
++
++	if [ "$owner_samples" -eq 0 ] || [ "$next_samples" -eq 0 ]; then
++		echo "No samples found"
++		cleanup
++		exit 1
++	fi
++
++	if grep "proc2.*context_switch_loop_proc1" "$tmpdir/script"; then
++		echo "Thread1 symbol was attributed to proc2"
++		cleanup
++		exit 1
++	fi
++
++	if grep "proc1.*context_switch_loop_proc2" "$tmpdir/script"; then
++		echo "Thread2 symbol was attributed to proc1"
++		cleanup
++		exit 1
++	fi
 +}
 +
-+/*
-+ * Launches two processes that take turns to execute a multiplication N times
-+ */
-+static int context_switch_loop(int argc, const char **argv)
-+{
-+	int a_to_b[2], b_to_a[2];
-+	pid_t proc1_pid;
-+	int status;
++cf="$tmpdir/ctl"
++af="$tmpdir/ack"
++mkfifo "$cf" "$af"
 +
-+	if (argc > 0) {
-+		loops = atoi(argv[0]);
-+		if (loops < 0) {
-+			fprintf(stderr, "Invalid number of loops: %s\n", argv[0]);
-+			return 1;
-+		}
-+	}
++# Pin to one CPU so the two threads alternate running but record into the same
++# trace buffer. Start disabled and use the control FIFO to only record the
++# workload and not startup.
++perf record -o "$tmpdir/data" -e cs_etm/timestamp=0/u -C 0 -D -1 --control fifo:"$cf","$af" -- \
++	taskset --cpu-list 0 perf test --workload-ctl fifo:"$cf","$af" \
++	-w context_switch_loop > /dev/null 2>&1
 +
-+	if (pipe(a_to_b) || pipe(b_to_a)) {
-+		perror("Pipe error");
-+		return 1;
-+	}
++# Test both instruction and branch sample generation modes.
++perf script -i "$tmpdir/data" --itrace=i4 -F comm,pid,tid,ip,sym > "$tmpdir/script" 2>/dev/null
++check_samples
++perf script -i "$tmpdir/data" --itrace=b -F comm,pid,tid,ip,sym > "$tmpdir/script" 2>/dev/null
++check_samples
 +
-+	proc1_pid = fork();
-+	if (proc1_pid < 0) {
-+		perror("Fork error");
-+		return 1;
-+	}
-+
-+	if (!proc1_pid) {
-+		close(a_to_b[0]);
-+		close(b_to_a[1]);
-+		prctl(PR_SET_NAME, "proc1", 0, 0, 0);
-+		context_switch_loop_proc1(b_to_a[0], a_to_b[1]);
-+		exit(0);
-+	}
-+
-+	prctl(PR_SET_NAME, "proc2", 0, 0, 0);
-+	context_switch_loop_proc2(a_to_b[0], b_to_a[1]);
-+
-+	if (waitpid(proc1_pid, &status, 0) != proc1_pid || !WIFEXITED(status) ||
-+	    WEXITSTATUS(status))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(context_switch_loop);
++cleanup
++exit 0
 
 -- 
 2.34.1
