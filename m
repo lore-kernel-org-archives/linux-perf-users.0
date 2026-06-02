@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33283B38BE;
-	Tue,  2 Jun 2026 23:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9247B3B38BE;
+	Tue,  2 Jun 2026 23:57:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780444660; cv=none; b=Ih+k+hUCLPmGsiknFIVMazWtLdpSPZBqum4NKrehJBOXkSf69jfkkjTwrQSELDQqxXvXVJcqISFFw3AGvqOR0lLcexpvu6VaYIqnsYX/YcDvcC5dZ9JKAUmLuSlO9eK6XDoSEOY5eo8DFgYgmuhg8ASZreyROps9DqPEPYXEJzE=
+	t=1780444665; cv=none; b=KAKOGFN3R027OqN7CJt0+cU7UUEa4lCfAhg3/5+SdLv0eqgtHDjbOZSB8mLr4THeLQJTZy41rpvAfMYa7+K6JUQMy8xnld1DbmO7+a1gcWeQEstI9K6DKw04kLJgysSAomjbw+5VogRlevU4RhC3RrUvxGjDTI6f1Q/nZxwWNN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780444660; c=relaxed/simple;
-	bh=7DHsLM7XidbkkjIOsgAiF7oDdpCGOyzhpG3B7CYMD4c=;
+	s=arc-20240116; t=1780444665; c=relaxed/simple;
+	bh=uzetH1C5DDfYWzo0efCsn0CQiTXNOSNURdVjptgmA78=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F93NNnFGS2rsBakpucICiQ75cqZCqs5Xx/tzgn/U8qHtYbhXbzAXS/b7DXk8qL4jDoWtCMFFplrN0Y4DO5WuS+wp3T1ExGVf6CEv09aVNQqtxCLSuX0paUA4uHdV/Or6Tw6USg1LdDyPJ4gGLIy9UClyK3zwrKhbVcM/zf/TGJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b34wN5qb; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=UtouS8o6H8NC9M08Mcy6QrQ4cMzlMMLwojd6zwQtAkfZnElHmKC2OBsz5YcliJWPyd2dxWtUcmQyPQjGuJMEYhDRNyAXInQbWyfBqbFf5CUCnP13KsBNeFynq6zNtXjwyhz8Y0a6m9g/tUHevRaJWR9/GmywohVgWoEcN0R7R/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfnEwQ6W; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b34wN5qb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF761F00893;
-	Tue,  2 Jun 2026 23:57:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfnEwQ6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 201EC1F00898;
+	Tue,  2 Jun 2026 23:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780444659;
-	bh=GKDHO0PxxBqgohG98+Cq1neCIrILOrnO2K6UBft8lAI=;
+	s=k20260515; t=1780444664;
+	bh=F3OKixCrqV9hoH2+zZgSn9a6/Zjkz4ow6yk629oAjNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=b34wN5qbzUyAk4EhABnL6BUY9ZI5LuMR0LtzdxiL+fgrlv2na847VbzIR58u6lj19
-	 DYeVit7Ago1elHx7rRYQQ7myLva2Q3lXISX+vOaAI6TM2qQm0vJnGtJ8qQk6lTDHbH
-	 mZHMn6Eavvr8FQM/TbQENOzA1tXLHZNMDDq81jf6rMHKJAr0WbDIw0zxI5yKMRVyIX
-	 4EfOZdxj5A0mCEktYaYmyB8iptOP5UbTNjQXW4im4RQjEuBvukzUJJx2QcgDoVccpI
-	 nwrVxvLq0anlFX63XZLCZguh3WOPipH5ZzZ/BX4heP4+qSrbjHWKhMSv+KUc78MZYg
-	 qqQj1mWYLfFIg==
+	b=jfnEwQ6WEidrTTU+w9d/RunFBbi9cnkN7Kt/9LWByUpHGQPee54bzBaB+TeUUmjOD
+	 GyCrhj9resbB6qj0EPwe6L/g6t9zzyC7rwglXoxC0nPzScwTqFnjT7KWDLGdOq1JlO
+	 CL96G5BaKomQxyQHDT1wko+IkHbekzZxrK2oGBUFoHEWD1/oxzKZrPFO5qBSfdN0bP
+	 QFI5q+KZrZWAURont3AeEMptISon4HFVAXUKLR/C5njjSf4lILuJMHTxyX1iwuB1CJ
+	 4OHt5gm5OvGtcH/9pxdgt5pp6NDYUVH0FMDTdYTl+UkqWXXkvtwhPdrx5kDUBjChrW
+	 lwclx1BMCAHDg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 4/8] perf timechart: Include file offset in CPU bounds check messages
-Date: Tue,  2 Jun 2026 20:57:03 -0300
-Message-ID: <20260602235709.1541603-5-acme@kernel.org>
+Subject: [PATCH 5/8] perf tools: Include file offset and event type name in skip messages
+Date: Tue,  2 Jun 2026 20:57:04 -0300
+Message-ID: <20260602235709.1541603-6-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260602235709.1541603-1-acme@kernel.org>
 References: <20260602235709.1541603-1-acme@kernel.org>
@@ -51,97 +51,279 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add the perf.data file offset to the out-of-bounds CPU debug messages
-in process_sample_cpu_idle(), process_sample_cpu_frequency(),
-process_sample_sched_wakeup(), and process_sample_sched_switch().
+Add the perf.data file offset and use perf_event__name() instead of raw
+event type integers in the 'problem processing event, skipping it'
+messages emitted by process_sample_event() callbacks across annotate,
+c2c, diff, kmem, kvm, kwork, lock, report, script, and build-id.
+
+This lets users cross-reference skipped events with 'perf report -D'
+output.  Also add explicit #include "util/event.h" and <inttypes.h>
+where needed to avoid depending on transitive includes.
 
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-timechart.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ tools/perf/builtin-annotate.c |  5 +++--
+ tools/perf/builtin-c2c.c      |  5 +++--
+ tools/perf/builtin-diff.c     |  8 +++++---
+ tools/perf/builtin-kmem.c     |  6 ++++--
+ tools/perf/builtin-kvm.c      |  9 ++++++---
+ tools/perf/builtin-kwork.c    |  4 +++-
+ tools/perf/builtin-lock.c     |  6 ++++--
+ tools/perf/builtin-report.c   |  9 ++++++---
+ tools/perf/builtin-script.c   | 10 ++++++----
+ tools/perf/util/build-id.c    |  5 +++--
+ 10 files changed, 43 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 630756bebe3242dc..071987241a528ba4 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -605,8 +605,10 @@ process_sample_cpu_idle(struct timechart *tchart __maybe_unused,
- 	u32 state  = perf_sample__intval(sample, "state");
- 	u32 cpu_id = perf_sample__intval(sample, "cpu_id");
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 5f450c8093c09210..b918f9eed5fd2441 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -288,8 +288,9 @@ static int process_sample_event(const struct perf_tool *tool,
  
-+	/* perf.data is untrusted input — cpu_id may be corrupted */
- 	if (cpu_id >= MAX_CPUS) {
--		pr_debug("Out-of-bounds cpu_id %u\n", cpu_id);
-+		pr_debug("at offset %#" PRIx64 ": out-of-bounds cpu_id %u\n",
-+			 sample->file_offset, cpu_id);
+ 	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+-		pr_warning("problem processing %d event, skipping it.\n",
+-			   event->header.type);
++		pr_warning("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++			   perf_event__name(event->header.type), event->header.type,
++			   sample->file_offset);
+ 		ret = -1;
+ 		goto out_put;
+ 	}
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 36f38694992386ad..d3503be9350c03bb 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -328,8 +328,9 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 
+ 	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+-		pr_debug("problem processing %d event, skipping it.\n",
+-			 event->header.type);
++		pr_debug("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++			 perf_event__name(event->header.type), event->header.type,
++			 sample->file_offset);
+ 		ret = -1;
+ 		goto out;
+ 	}
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index b4ff863b304ca046..9592f44b6545bab6 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -409,8 +409,9 @@ static int diff__process_sample_event(const struct perf_tool *tool,
+ 
+ 	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+-		pr_warning("problem processing %d event, skipping it.\n",
+-			   event->header.type);
++		pr_warning("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++			   perf_event__name(event->header.type), event->header.type,
++			   sample->file_offset);
+ 		ret = -1;
+ 		goto out;
+ 	}
+@@ -436,7 +437,8 @@ static int diff__process_sample_event(const struct perf_tool *tool,
+ 	case COMPUTE_STREAM:
+ 		if (hist_entry_iter__add(&iter, &al, PERF_MAX_STACK_DEPTH,
+ 					 NULL)) {
+-			pr_debug("problem adding hist entry, skipping event\n");
++			pr_debug("problem adding hist entry at offset %#" PRIx64 ", skipping event\n",
++				 sample->file_offset);
+ 			goto out;
+ 		}
+ 		break;
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 33585e353efe56cc..e1b2f5bc1ba8d887 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -22,6 +22,7 @@
+ #include "util/cpumap.h"
+ 
+ #include "util/debug.h"
++#include "util/event.h"
+ #include "util/string2.h"
+ #include "util/util.h"
+ 
+@@ -987,8 +988,9 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 							sample->tid);
+ 
+ 	if (thread == NULL) {
+-		pr_debug("problem processing %d event, skipping it.\n",
+-			 event->header.type);
++		pr_debug("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++			 perf_event__name(event->header.type), event->header.type,
++			 sample->file_offset);
  		return -1;
  	}
- 	if (state == (u32)PWR_EVENT_EXIT)
-@@ -624,8 +626,10 @@ process_sample_cpu_frequency(struct timechart *tchart,
- 	u32 state  = perf_sample__intval(sample, "state");
- 	u32 cpu_id = perf_sample__intval(sample, "cpu_id");
  
-+	/* perf.data is untrusted input — cpu_id may be corrupted */
- 	if (cpu_id >= MAX_CPUS) {
--		pr_debug("Out-of-bounds cpu_id %u\n", cpu_id);
-+		pr_debug("at offset %#" PRIx64 ": out-of-bounds cpu_id %u\n",
-+			 sample->file_offset, cpu_id);
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index dd2ed21596aa59f9..394302ebdb161077 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -22,6 +22,7 @@
+ #include "util/synthetic-events.h"
+ #include "util/top.h"
+ #include "util/data.h"
++#include "util/event.h"
+ #include "util/ordered-events.h"
+ #include "util/kvm-stat.h"
+ #include "util/util.h"
+@@ -1141,14 +1142,16 @@ static int process_sample_event(const struct perf_tool *tool,
+ 		return 0;
+ 
+ 	if (machine__resolve(machine, &kvm->al, sample) < 0) {
+-		pr_warning("Fail to resolve address location, skip sample.\n");
++		pr_warning("WARNING: at offset %#" PRIx64 ": fail to resolve address location, skipping sample\n",
++			   sample->file_offset);
+ 		return 0;
+ 	}
+ 
+ 	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
+ 	if (thread == NULL) {
+-		pr_debug("problem processing %d event, skipping it.\n",
+-			event->header.type);
++		pr_debug("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++			 perf_event__name(event->header.type), event->header.type,
++			 sample->file_offset);
  		return -1;
  	}
- 	p_state_change(tchart, cpu_id, sample->time, state);
-@@ -641,8 +645,10 @@ process_sample_sched_wakeup(struct timechart *tchart,
- 	int waker = perf_sample__intval(sample, "common_pid");
- 	int wakee = perf_sample__intval(sample, "pid");
  
-+	/* perf.data is untrusted input — CPU may be absent or corrupted */
- 	if (sample->cpu >= MAX_CPUS) {
--		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
-+		pr_debug("at offset %#" PRIx64 ": out-of-bounds cpu %u\n",
-+			 sample->file_offset, sample->cpu);
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 99dc293a0744726e..110de3507d48160c 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -9,6 +9,7 @@
+ #include "perf.h"
+ 
+ #include "util/data.h"
++#include "util/event.h"
+ #include "util/evlist.h"
+ #include "util/evsel.h"
+ #include "util/header.h"
+@@ -897,7 +898,8 @@ static int timehist_exit_event(struct perf_kwork *kwork,
+ 
+ 	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+-		pr_debug("Problem processing event, skipping it\n");
++		pr_debug("problem processing event at offset %#" PRIx64 ", skipping it\n",
++			 sample->file_offset);
+ 		ret = -1;
+ 		goto out;
+ 	}
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 94a8c35abb0bc991..5841d43be9718414 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -21,6 +21,7 @@
+ #include "util/tracepoint.h"
+ 
+ #include "util/debug.h"
++#include "util/event.h"
+ #include "util/session.h"
+ #include "util/tool.h"
+ #include "util/data.h"
+@@ -1433,8 +1434,9 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 							sample->tid);
+ 
+ 	if (thread == NULL) {
+-		pr_debug("problem processing %d event, skipping it.\n",
+-			event->header.type);
++		pr_debug("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++			 perf_event__name(event->header.type), event->header.type,
++			 sample->file_offset);
  		return -1;
  	}
- 	sched_wakeup(tchart, sample->cpu, sample->time, waker, wakee, flags, backtrace);
-@@ -658,8 +664,10 @@ process_sample_sched_switch(struct timechart *tchart,
- 	int next_pid   = perf_sample__intval(sample, "next_pid");
- 	u64 prev_state = perf_sample__intval(sample, "prev_state");
  
-+	/* perf.data is untrusted input — CPU may be absent or corrupted */
- 	if (sample->cpu >= MAX_CPUS) {
--		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
-+		pr_debug("at offset %#" PRIx64 ": out-of-bounds cpu %u\n",
-+			 sample->file_offset, sample->cpu);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 973d97af85019e6e..cd052aa78132b65f 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -27,6 +27,7 @@
+ 
+ #include "perf.h"
+ #include "util/debug.h"
++#include "util/event.h"
+ #include "util/evlist.h"
+ #include "util/evsel.h"
+ #include "util/evswitch.h"
+@@ -284,8 +285,9 @@ static int process_sample_event(const struct perf_tool *tool,
+ 
+ 	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+-		pr_debug("problem processing %d event, skipping it.\n",
+-			 event->header.type);
++		pr_debug("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++			 perf_event__name(event->header.type), event->header.type,
++			 sample->file_offset);
+ 		ret = -1;
+ 		goto out_put;
+ 	}
+@@ -332,7 +334,8 @@ static int process_sample_event(const struct perf_tool *tool,
+ 
+ 	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
+ 	if (ret < 0)
+-		pr_debug("problem adding hist entry, skipping event\n");
++		pr_debug("problem adding hist entry at offset %#" PRIx64 ", skipping event\n",
++			 sample->file_offset);
+ out_put:
+ 	addr_location__exit(&al);
+ 	return ret;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 5124edf2b7a692b2..f4aa255fc3297f90 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2693,8 +2693,9 @@ static int process_sample_event(const struct perf_tool *tool,
+ 		goto out_put;
+ 
+ 	if (!al.thread && machine__resolve(machine, &al, sample) < 0) {
+-		pr_err("problem processing %d event, skipping it.\n",
+-		       event->header.type);
++		pr_err("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++		       perf_event__name(event->header.type), event->header.type,
++		       sample->file_offset);
+ 		ret = -1;
+ 		goto out_put;
+ 	}
+@@ -2775,8 +2776,9 @@ static int process_deferred_sample_event(const struct perf_tool *tool,
+ 		goto out_put;
+ 
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+-		pr_err("problem processing %d event, skipping it.\n",
+-		       event->header.type);
++		pr_err("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
++		       perf_event__name(event->header.type), event->header.type,
++		       sample->file_offset);
+ 		ret = -1;
+ 		goto out_put;
+ 	}
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index af4d874f13810ffe..8c0a9ae932aa5798 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -10,6 +10,7 @@
+ #include "util.h" // lsdir(), mkdir_p(), rm_rf()
+ #include <dirent.h>
+ #include <errno.h>
++#include <inttypes.h>
+ #include <stdio.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+@@ -62,8 +63,8 @@ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
+ 							sample->tid);
+ 
+ 	if (thread == NULL) {
+-		pr_err("problem processing %d event, skipping it.\n",
+-			event->header.type);
++		pr_err("problem processing %s event at offset %#" PRIx64 ", skipping it.\n",
++		       perf_event__name(event->header.type), sample->file_offset);
  		return -1;
  	}
- 	sched_switch(tchart, sample->cpu, sample->time, prev_pid, next_pid,
-@@ -676,6 +684,7 @@ process_sample_power_start(struct timechart *tchart __maybe_unused,
- 	u64 cpu_id = perf_sample__intval(sample, "cpu_id");
- 	u64 value  = perf_sample__intval(sample, "value");
  
-+	/* perf.data is untrusted input — cpu_id may be corrupted */
- 	if (cpu_id >= MAX_CPUS) {
- 		pr_debug("Out-of-bounds cpu_id %llu\n", (unsigned long long)cpu_id);
- 		return -1;
-@@ -689,6 +698,7 @@ process_sample_power_end(struct timechart *tchart,
- 			 struct perf_sample *sample,
- 			 const char *backtrace __maybe_unused)
- {
-+	/* perf.data is untrusted input — CPU may be absent or corrupted */
- 	if (sample->cpu >= MAX_CPUS) {
- 		pr_debug("Out-of-bounds cpu %u\n", sample->cpu);
- 		return -1;
-@@ -705,6 +715,7 @@ process_sample_power_frequency(struct timechart *tchart,
- 	u64 cpu_id = perf_sample__intval(sample, "cpu_id");
- 	u64 value  = perf_sample__intval(sample, "value");
- 
-+	/* perf.data is untrusted input — cpu_id may be corrupted */
- 	if (cpu_id >= MAX_CPUS) {
- 		pr_debug("Out-of-bounds cpu_id %llu\n", (unsigned long long)cpu_id);
- 		return -1;
 -- 
 2.54.0
 
