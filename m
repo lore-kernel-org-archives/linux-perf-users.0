@@ -1,35 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56A3F3E8C6F;
-	Tue,  2 Jun 2026 14:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3CC83D8916;
+	Tue,  2 Jun 2026 14:41:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780411300; cv=none; b=EB5jV6KyCXo2PgCtoyOSOmkHmJXN5zFWWY2mSKcIpf68OP9hBFUF4hnmu5afjGokij4J2WAjlJkusxdmdvrHymeTCP2cMVrhCt3KJrY1eKvw1tyo6FU6zXEA+XLeL6hW4MsiHiEwqYItqPS3PnYBxRPaz2/huJbDYWBBP/q7sls=
+	t=1780411310; cv=none; b=iq8/QuLWLvZ915NUDBOBRKv/L5xpmjTj0QHhG/5Cn+9vVD5v51YWW1va3rXzNph6SGURI4h9GGDHv9rfFGPTcEJULaxjhLJ4pkHk5EOeCvIAG/2GLfuXGJRpgybUJXS6t+8l30Uv9+djc7EDP43INr1GNIL2G4JJ/eI3aURWlC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780411300; c=relaxed/simple;
-	bh=m4kJKzvaPDAO9fJFcqnRUG2SiPoHRPidnsJMAsbS3kg=;
+	s=arc-20240116; t=1780411310; c=relaxed/simple;
+	bh=Zfjmx54wmhTOTfKHgSUz3oiIARFJkpv7bwoefkoudgY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l4dBaLYEsGkcMlGZ37owFqrMVC1WdTnHpAojjLctTZ8qFC+ur60Anv99h+vSvvipd8zgX7xRzhKotqq4uVizw/hFYIpGKBFgy18jYlSt9fYfOZ0qgd6TUdq4fxX9GQahFBZYHJ+mQKHaMjeDYlObhIv70aqrpW6OM/qwxElzAh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=b8viuyep; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=m9rfPl9GvbVaBF4ax0KZg8WSIE0x0o0vcdAh7REtIY7eHSx1TRsZYUXI4K2QO79Eo0TJcQmJEct+zcrFJgv9ZdU8sWxT+R99jaX4UCHvYaDEdwok7UD7qjvR/If0r1Lt4nYxIytv1pxfoGzTjx70bZTuf8etqmZlVmMBTmPTMw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ECaascSU; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="b8viuyep"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ECaascSU"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E95F8357C;
-	Tue,  2 Jun 2026 07:41:33 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A0F63572;
+	Tue,  2 Jun 2026 07:41:43 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 024F63F632;
-	Tue,  2 Jun 2026 07:41:29 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FAA93F632;
+	Tue,  2 Jun 2026 07:41:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780411298; bh=m4kJKzvaPDAO9fJFcqnRUG2SiPoHRPidnsJMAsbS3kg=;
+	t=1780411308; bh=Zfjmx54wmhTOTfKHgSUz3oiIARFJkpv7bwoefkoudgY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=b8viuyep91HbSLzl2aYLgzeWooZouO2Az0IT9yAJEZWDx1+y+xxPZ7ejjfYnISnp/
-	 M5V9cTKkfB3yVP1CARs2WHJbWB4/PGH07vpzX/fAifc5H97b8nwqTPLE6EhvSAOFF0
-	 H/mJs02700noUWirlb/76i/BTN7V+k1ir9/YMCYk=
+	b=ECaascSUTini9Uvtuu9RP9YsoABhc96n69zxXjfsNAyHEoeEn72dZ4Zme3sWq+uHH
+	 25lZyKZsiiO3uevYUver77T69sYbNgxKBj42N0E1PRHPZWdL3k6C8NbCHjdFvLDqJT
+	 3LMsAH4zKeuhdK3J//nYXu5hBI8mHECXbt/tl3Ic=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 02 Jun 2026 15:40:39 +0100
-Subject: [PATCH v7 05/23] selftests/nolibc: Use a dedicated cross cc-option
- helper
+Date: Tue, 02 Jun 2026 15:40:40 +0100
+Subject: [PATCH v7 06/23] tools build: Append -fzero-init-padding-bits=all
+ to extra cflags
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-tools_build_fix_zero_init-v7-5-631baf679fe7@arm.com>
+Message-Id: <20260602-tools_build_fix_zero_init-v7-6-631baf679fe7@arm.com>
 References: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 In-Reply-To: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -83,72 +83,86 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=2684;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=2805;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=m4kJKzvaPDAO9fJFcqnRUG2SiPoHRPidnsJMAsbS3kg=;
- b=ibk/8HXq1ZUzks3LTe1UOTFfd1yOC7Itai8hvwEGAt68NGwEseUNk8Ld2QThJVZmBsbZU7h2i
- 7Upy6TbRu0wBl2JdMRwJ8rcIHegvdxZwQOEtf6QZmFCvsYPZzmAlY8P
+ bh=Zfjmx54wmhTOTfKHgSUz3oiIARFJkpv7bwoefkoudgY=;
+ b=mIIWHhIvYgqIFU/Qm0rMvVHra6to4RUl7AgB1uOmIhhVFFBhaLOR1nnsnk/BEYOtQdzp0jpI0
+ FrsNtQDKg4YB2DhLLGonT0hs9Hj05gGpw+wlvHkIu6Zj3dTTYACL49O
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Makefile.nolibc uses cc-option for architecture-specific flag probes
-such as -m32, -mmultiple and -mabi=elfv2. These probes need to include
-CLANG_CROSS_FLAGS so that Clang tests the option for the selected target
-instead of the host.
+GCC-15 release claims [1]:
 
-The file also includes tools/scripts/Makefile.include. In a sequential
-change, Makefile.include will define its own cc-option helper.
+  {0} initializer in C or C++ for unions no longer guarantees clearing
+  of the whole union (except for static storage duration initialization),
+  it just initializes the first union member to zero. If initialization
+  of the whole union including padding bits is desirable, use {} (valid
+  in C23 or C++) or use -fzero-init-padding-bits=unions option to
+  restore old GCC behavior.
 
-Rename the nolibc helper to cross-cc-option and use it for the
-architecture-specific probes that require CLANG_CROSS_FLAGS. This keeps
-the cross-build checks explicit and avoids clashing with the common
-tools cc-option helper.
+As a result, this new behaviour might cause unexpected data when we
+initialize a union with using the '{ 0 }' initializer.
 
+Since commit dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=all"),
+the kernel has enabled -fzero-init-padding-bits=all to zero padding bits
+in unions and structures.  This commit applies the same option for tools
+building.
+
+The option is not supported by any version older than GCC 15, nor is it
+supported by LLVM.  This patch adds the cc-option and host-cc-option
+functions to dynamically detect compiler option and append it to the
+EXTRA_CFLAGS and HOST_EXTRACFLAGS respectively.
+
+[1] https://gcc.gnu.org/gcc-15/changes.html
+
+Acked-by: Quentin Monnet <qmo@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/testing/selftests/nolibc/Makefile.nolibc | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/scripts/Makefile.include | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/tools/testing/selftests/nolibc/Makefile.nolibc b/tools/testing/selftests/nolibc/Makefile.nolibc
-index f30bc68470cceec2b61805af0a4a9f2fb2de7c57..e88b1c15445f3c64dd78cc7edef5c9670a389b50 100644
---- a/tools/testing/selftests/nolibc/Makefile.nolibc
-+++ b/tools/testing/selftests/nolibc/Makefile.nolibc
-@@ -23,7 +23,7 @@ include $(srctree)/scripts/subarch.include
- ARCH = $(SUBARCH)
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index 41971a68972dda218714d6b95b1d9d92349285c3..17d24cf84051ae99eb5b4c4bdfda43cd187891f6 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -139,6 +139,36 @@ else
+ EXTRA_WARNINGS += -Wshadow
  endif
  
--cc-option = $(call __cc-option, $(CC),$(CLANG_CROSS_FLAGS),$(1),$(2))
-+cross-cc-option = $(call __cc-option, $(CC),$(CLANG_CROSS_FLAGS),$(1),$(2))
- 
- # XARCH extends the kernel's ARCH with a few variants of the same
- # architecture that only differ by the configuration, the toolchain
-@@ -211,13 +211,13 @@ else
- Q=@
- endif
- 
--CFLAGS_i386 = $(call cc-option,-m32)
-+CFLAGS_i386 = $(call cross-cc-option,-m32)
- CFLAGS_x32 = -mx32
- CFLAGS_arm = -marm
- CFLAGS_armthumb = -mthumb -march=armv6t2
--CFLAGS_ppc = -m32 -mbig-endian -mno-vsx $(call cc-option,-mmultiple)
--CFLAGS_ppc64 = -m64 -mbig-endian -mno-vsx $(call cc-option,-mmultiple)
--CFLAGS_ppc64le = -m64 -mlittle-endian -mno-vsx $(call cc-option,-mabi=elfv2)
-+CFLAGS_ppc = -m32 -mbig-endian -mno-vsx $(call cross-cc-option,-mmultiple)
-+CFLAGS_ppc64 = -m64 -mbig-endian -mno-vsx $(call cross-cc-option,-mmultiple)
-+CFLAGS_ppc64le = -m64 -mlittle-endian -mno-vsx $(call cross-cc-option,-mabi=elfv2)
- CFLAGS_s390x = -m64
- CFLAGS_mips32le = -EL -mabi=32 -fPIC
- CFLAGS_mips32be = -EB -mabi=32
-@@ -226,7 +226,7 @@ CFLAGS_mipsn32be = -EB -mabi=n32 -march=mips64r6
- CFLAGS_mips64le = -EL -mabi=64 -march=mips64r6
- CFLAGS_mips64be = -EB -mabi=64 -march=mips64r2
- CFLAGS_loongarch = $(if $(LLVM),-fuse-ld=lld)
--CFLAGS_sparc32 = $(call cc-option,-m32) -mcpu=v8
-+CFLAGS_sparc32 = $(call cross-cc-option,-m32) -mcpu=v8
- CFLAGS_sh4 = -ml -m4
- ifeq ($(origin XARCH),command line)
- CFLAGS_XARCH = $(CFLAGS_$(XARCH))
++# output directory for tests below
++TMPOUT = .tmp_$$$$
++
++# try-run
++# Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
++# Exit code chooses option. "$$TMP" serves as a temporary file and is
++# automatically cleaned up.
++try-run = $(shell set -e;		\
++	TMP=$(TMPOUT)/tmp;		\
++	trap "rm -rf $(TMPOUT)" EXIT;	\
++	mkdir -p $(TMPOUT);		\
++	if ($(1)) >/dev/null 2>&1;	\
++	then echo "$(2)";		\
++	else echo "$(3)";		\
++	fi)
++
++# cc-option
++# Usage: CFLAGS += $(call cc-option,-march=winchip-c6,-march=i586)
++cc-option = $(call try-run, \
++	$(CC) -Werror $(1) -c -x c /dev/null -o "$$TMP",$(1),$(2))
++
++host-cc-option = $(call try-run, \
++	$(HOSTCC) -Werror $(1) -c -x c /dev/null -o "$$TMP",$(1),$(2))
++
++# Explicitly clear padding bits with the initializer '{ 0 }'
++FLAG_ZERO_INIT := $(call cc-option,-fzero-init-padding-bits=all)
++override EXTRA_CFLAGS += $(FLAG_ZERO_INIT)
++HOST_FLAG_ZERO_INIT := $(call host-cc-option,-fzero-init-padding-bits=all)
++override HOST_EXTRACFLAGS += $(HOST_FLAG_ZERO_INIT)
++
+ ifneq ($(findstring $(MAKEFLAGS), w),w)
+ PRINT_DIR = --no-print-directory
+ else
 
 -- 
 2.34.1
