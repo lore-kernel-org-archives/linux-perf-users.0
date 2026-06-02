@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1C13CAE93;
-	Tue,  2 Jun 2026 23:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E812D3CAE93;
+	Tue,  2 Jun 2026 23:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780444676; cv=none; b=Wz+0+xD8i7zDoOjd16Zh9f+IhA+WVOFKJXtnZDdxVUORXcshi6ExhB0qjeX3hdB3U8U7jWSokIlgwX4iNmPDJuEKqo3HPLSnZrGsxS9pBOa5W5f1F/OsZp65Yw+v/c4khQl/94fuSpYCrns1zmZzz+w6d0XMZcHZt+Kpyv43AJA=
+	t=1780444681; cv=none; b=Z4a/TZdr8clJgUuMK+ztGZoj9KjR9NkFuWxqS82cQK5LkGFHQB1M9CizPbSAH8IkLGnh13m4oM5hTJUXqNG2fivoRvNi/UYB+PwxDlvEsKUNjZlX/Y4PHz2vHDdVQLdxlMH0seiUXPOTFbWRasIujCdJQRpKbxhjBihAPPOpGQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780444676; c=relaxed/simple;
-	bh=3W+M9g0IM0OKXb/XsOgrm7hbrT6yi1m+2Bb9CW8vooc=;
+	s=arc-20240116; t=1780444681; c=relaxed/simple;
+	bh=QtXAGfzdOo6wDZhvcxzLc7g+4g07Cn858eyEp2pWTyE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V5gc4u89lTTutsdUUaDC97SuOhUytPAuBxlmCVrjy1RSxNknhk88N8NOJSblA02nYiF8BxDQJQRFyz/NU2BNCSmL0NJUm0rhLkxlcbDibDPB6syV7p5f7Ez9QoLK3S1mareIwSLj4CJX8qFnoB++03pTSdwXMS5dK+o7YcgauiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0TXo37p; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=KVFqhf+eTa7NXgqo+AODgnibw9qUAeJekYC+tN8vGZQzyk9g9Tx2nuNT7ogxNiqdToaTJgbHy+3OZgBUROxRE7045dlg4QlCrOVy7e4shN94lu51/9vbefr/ddDDAcKd8y926IFun2NnBv9gPAmdudA9LW3Q9x6zcwatd7qlwFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7QGOr0m; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0TXo37p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED2BD1F00898;
-	Tue,  2 Jun 2026 23:57:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7QGOr0m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 620071F00893;
+	Tue,  2 Jun 2026 23:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780444674;
-	bh=PlgokHVzlvqNn7AcOeXGgDaNmWunftIleGMUmqpUrIw=;
+	s=k20260515; t=1780444679;
+	bh=eXg4kIoAYKSbZy+VQ+kEWyv7CpcOjI0CHDdUrVD0IXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=C0TXo37pooi5t5BHR7D0doJhRFAKzmAE7EF5RzA0+kLvKmvh5e+bZHEJap801jvYO
-	 0gLGjvwT6MKlOB5UlaQP1L0OGYYyKfBtojdK/Lw9LH0ePHse5KhN3xYQngnh6OQBUD
-	 yPN7XaoqiL837nUJU6CeNR9D7FgdwXdqINFz8iSaXjswBg2nOiDlh6UWQi8a+c0Ct4
-	 m7QGVtYP0Omp384G0yo+jfC2772QwmetlP0DKiztYZvDyoGK0la0gS4fEKsibxAXG2
-	 V+0tzD123Ol95//4HgGetiHVUomS72EdIa47TGJSw/qvEhXmeFvFVZJnu3WPe/R+Cr
-	 62sW+SIVFt9DQ==
+	b=L7QGOr0mA03g2z/lqU/LEVc3UNmBzxefEJXhVbaR1lYI2XIWBs6QZlSkFq0Yi4QWt
+	 ZMayOiOiWku378heYSqquJVlIeTDzmcppbiPqDWVOfG3w+PrBryZ1Gc3ZLwZGtuwUR
+	 2XAnlAs96bfg2FfeBiEnyYmzjEG7hwYr1m2dERqiSU3fOOOOkcVUHRnPNcp71VD7y/
+	 tjYRIvSzPofcdmJh03WSJJfkEDePeHuDSuQPQ0ackx/+tR8pm1MCpSlYEHG5nKRXhf
+	 2GeuGCGs3zrFsSg4xLNsnIjVc82O4H5kAuirqsAfx8YC6fGnDTL5fvmmCD9y6NEzAz
+	 P5UJMKQ4bi9fA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,11 +38,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot@kernel.org,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 7/8] perf sched: Replace BUG_ON on invalid CPU with graceful skip
-Date: Tue,  2 Jun 2026 20:57:06 -0300
-Message-ID: <20260602235709.1541603-8-acme@kernel.org>
+Subject: [PATCH 8/8] perf test: Add file offset diagnostic test for corrupted perf.data
+Date: Tue,  2 Jun 2026 20:57:07 -0300
+Message-ID: <20260602235709.1541603-9-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260602235709.1541603-1-acme@kernel.org>
 References: <20260602235709.1541603-1-acme@kernel.org>
@@ -57,75 +56,113 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-latency_switch_event(), latency_runtime_event(), and map_switch_event()
-use BUG_ON(cpu >= MAX_CPUS || cpu < 0) to validate the sample CPU.
-When PERF_SAMPLE_CPU is absent from the sample type,
-evsel__parse_sample() initializes sample->cpu to (u32)-1.  Casting
-this to int yields -1, which triggers the BUG_ON and aborts perf sched.
+Add a shell test that verifies the file_offset diagnostic messages
+work correctly when perf encounters corrupted events.
 
-The central CPU validation in perf_session__deliver_event() intentionally
-preserves the (u32)-1 sentinel for downstream tools like perf script
-and perf inject, so leaf callbacks must handle it themselves.
+The test corrupts a MMAP2 event's size field in a recorded perf.data
+file, then checks that perf report produces warning messages that
+include both the file offset (e.g. "at offset 0x2738:") and the
+event type name with numeric id (e.g. "MMAP2 (10)").
 
-Replace the three BUG_ON calls with graceful skips using pr_warning(),
-matching the existing pattern in process_sched_switch_event() and
-process_sched_runtime_event() earlier in the same file.  Include the
-file offset for cross-referencing with perf report -D.
+This exercises the diagnostic improvements from the file_offset
+series, which retrofitted all skip/stop/error messages to include
+the position and type of the problematic event.
 
-Reported-by: sashiko-bot@kernel.org # Running on a local machine
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-sched.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ .../shell/data_file_offset_diagnostics.sh     | 82 +++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100755 tools/perf/tests/shell/data_file_offset_diagnostics.sh
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 9ec8e049e19b0038..81833d169470582b 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1145,7 +1145,12 @@ static int latency_switch_event(struct perf_sched *sched,
- 	int cpu = sample->cpu, err = -1;
- 	s64 delta;
- 
--	BUG_ON(cpu >= MAX_CPUS || cpu < 0);
-+	/* perf.data is untrusted input — CPU may be absent or corrupted */
-+	if (cpu >= MAX_CPUS || cpu < 0) {
-+		pr_warning("WARNING: at offset %#" PRIx64 ": out-of-bound sample CPU %d, skipping sample\n",
-+			   sample->file_offset, cpu);
-+		return 0;
-+	}
- 
- 	timestamp0 = sched->cpu_last_switched[cpu];
- 	sched->cpu_last_switched[cpu] = timestamp;
-@@ -1215,7 +1220,13 @@ static int latency_runtime_event(struct perf_sched *sched,
- 	if (thread == NULL)
- 		return -1;
- 
--	BUG_ON(cpu >= MAX_CPUS || cpu < 0);
-+	/* perf.data is untrusted input — CPU may be absent or corrupted */
-+	if (cpu >= MAX_CPUS || cpu < 0) {
-+		pr_warning("WARNING: at offset %#" PRIx64 ": out-of-bound sample CPU %d, skipping sample\n",
-+			   sample->file_offset, cpu);
-+		err = 0;
-+		goto out_put;
-+	}
- 	if (!atoms) {
- 		if (thread_atoms_insert(sched, thread))
- 			goto out_put;
-@@ -1640,7 +1651,12 @@ static int map_switch_event(struct perf_sched *sched,  struct perf_sample *sampl
- 	const char *str;
- 	int ret = -1;
- 
--	BUG_ON(this_cpu.cpu >= MAX_CPUS || this_cpu.cpu < 0);
-+	/* perf.data is untrusted input — CPU may be absent or corrupted */
-+	if (this_cpu.cpu >= MAX_CPUS || this_cpu.cpu < 0) {
-+		pr_warning("WARNING: at offset %#" PRIx64 ": out-of-bound sample CPU %d, skipping sample\n",
-+			   sample->file_offset, this_cpu.cpu);
-+		return 0;
-+	}
- 
- 	if (this_cpu.cpu > sched->max_cpu.cpu)
- 		sched->max_cpu = this_cpu;
+diff --git a/tools/perf/tests/shell/data_file_offset_diagnostics.sh b/tools/perf/tests/shell/data_file_offset_diagnostics.sh
+new file mode 100755
+index 0000000000000000..031f49480d999d8c
+--- /dev/null
++++ b/tools/perf/tests/shell/data_file_offset_diagnostics.sh
+@@ -0,0 +1,82 @@
++#!/bin/bash
++# Test that perf report includes file offsets and event type names in diagnostic messages.
++# SPDX-License-Identifier: GPL-2.0
++#
++# The file_offset diagnostic series adds "at offset 0x...: TYPE (N)"
++# to all skip/stop/error messages.  This test corrupts an event's size
++# field in a perf.data file, then verifies the resulting warning
++# includes the file offset and event type.
++
++err=0
++
++cleanup() {
++	[ -n "${perfdata}" ] && rm -f "${perfdata}" "${perfdata}.old"
++	rm -f "${corrupted}" "${stderrfile}"
++	trap - EXIT TERM INT
++}
++trap 'cleanup; exit 1' TERM INT
++trap cleanup EXIT
++
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
++corrupted=$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
++stderrfile=$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
++
++if ! perf record -o "${perfdata}" -- perf test -w noploop 2>/dev/null; then
++	echo "Skip: perf record failed"
++	cleanup
++	exit 2
++fi
++
++# Find the file offset of the first MMAP2 event via perf report -D.
++# Format: "timestamp 0xOFFSET [0xSIZE]: PERF_RECORD_MMAP2 ..."
++mmap2_line=$(perf report -D -i "${perfdata}" 2>/dev/null | grep "PERF_RECORD_MMAP2" | head -1)
++if [ -z "${mmap2_line}" ]; then
++	echo "Skip: no MMAP2 events found in perf.data"
++	cleanup
++	exit 2
++fi
++
++mmap2_offset=$(echo "${mmap2_line}" | awk '{print $2}')
++mmap2_offset_dec=$((mmap2_offset))
++
++# Copy the file and corrupt the MMAP2 event's size field.
++# perf_event_header layout: type(u32) misc(u16) size(u16)
++# Set size to 16 (0x10 0x00 little-endian) — below the MMAP2
++# minimum, which triggers the "event size too small" warning.
++cp "${perfdata}" "${corrupted}"
++printf '\x10\x00' | dd of="${corrupted}" bs=1 seek=$((mmap2_offset_dec + 6)) conv=notrunc 2>/dev/null
++
++perf report -i "${corrupted}" --stdio > /dev/null 2> "${stderrfile}"
++
++# Check that warnings include "at offset 0x..."
++if grep -q "at offset 0x" "${stderrfile}"; then
++	echo "File offset in diagnostics [Success]"
++else
++	echo "File offset in diagnostics [Failed: no 'at offset 0x...' found]"
++	echo "  stderr was:"
++	head -5 "${stderrfile}"
++	err=1
++fi
++
++# Check that the event type name and numeric id appear: "MMAP2 (10)"
++if grep -q "MMAP2 (10)" "${stderrfile}"; then
++	echo "Event type name in diagnostics [Success]"
++else
++	echo "Event type name in diagnostics [Failed: no 'MMAP2 (10)' found]"
++	echo "  stderr was:"
++	head -5 "${stderrfile}"
++	err=1
++fi
++
++# Check that the reported offset matches the actual corruption point
++if grep -q "at offset ${mmap2_offset}:" "${stderrfile}"; then
++	echo "Correct offset reported [Success]"
++else
++	echo "Correct offset reported [Failed: expected offset ${mmap2_offset}]"
++	echo "  stderr was:"
++	head -5 "${stderrfile}"
++	err=1
++fi
++
++cleanup
++exit ${err}
 -- 
 2.54.0
 
