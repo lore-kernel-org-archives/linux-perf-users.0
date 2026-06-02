@@ -1,107 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20412364043
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 14:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7B426FA7A;
+	Tue,  2 Jun 2026 14:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780412198; cv=none; b=b7UEy6FgWHB9yB4B9vXKOdaGs4wxviNFHM8MQfo0eI6h4zghJIxEtn3m59ZyzNHKkT5UpC9Z5Il304NTMC9KBAjg0a1XO4SRQCqI9HO0slpvb2QXIU8p0KNL3tgwSJaMMQbVzeO2EZ+Y9GToYfk/wj8OxWcRf6RT8FEjzKBn2dY=
+	t=1780412276; cv=none; b=CXoeLjNvCpDTubu4FUSlZ8AOF/l4NBVj14NocOQH1JG9saoU1PYlK50EDIi2luL9iYx6LJ/fHidiQwzn/1L20vZOnPINY4+ZvNTyc7TGqcfdYgvuQUBMe9u1kNFsqCEaTM1WRHOqsV/L2X0lC0q50DGSzzYmJcABKjDqS1jdr9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780412198; c=relaxed/simple;
-	bh=DuJ3l8qz/BKMZ0X1U4bGFZwaB15B/HOKDrGeWjXxe9M=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GAIYK5eW6Hd6yraZ/Hx/lLp/B/GsWn7O05ViuqBg0STbYyCBpZGRApusHGSzn05oeqDwG6oDDZ9T+sgd/BrXxvcX+odidxI34ae+Ktg9eziZUsKNQKXFDhyzezsTN8dV8SrhVvOXhYT4c4gz+7oLUL0kDyAIdLcvq6Oo2k3KUpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3haXcON; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780412276; c=relaxed/simple;
+	bh=MiBW7CCsmRDVEIZUm0Q0llsZt3H87JfEvXiTJ/Ab1MY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GacSBcv6A9UDY3KulZu62wh7vO3y3AKA+0X4qJ5uMhmNSgH7QlagPAcW5cleE6oj+HxYlURYbr0meG3zVHE0Q4i7PDaW+uTv8Brs4ktYYB3a8ku96RfgWzyABqyGlrE/FG1D9AApN6G1hGxynQKETb79PbFLBLLsR32LnoQT3k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z19bFmEv; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3haXcON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 497781F00893;
-	Tue,  2 Jun 2026 14:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780412195;
-	bh=GdJwKEJ9HlVfoRQkTlkS5k6mGtoeQy0dN7JSGqY9e2M=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=J3haXcONknuAvjtoXu3xSI7QMC/7/maQeIMP3pQIUwtOyY5V6A57XZahB9bZbGjV2
-	 0DOEJ9poyzQciJM9yo7TwN9ViPQ2SJqAgtBYNjmkZeKZnWVDhda/UK56a4x+HFpVlu
-	 qC6vndO1zYlA+XiZwiG0Fil5oxRQWp5xXDhs5+N/XCSSG0tmaAceruKmQqw2NmeVPx
-	 buS59GwE5HtEDoAsOrtWLaS5grrZXCurSsRUpFgihZ+gqrMQ5CoX02xgdLIArmNTMP
-	 iaaukicX+jc0/InHHEUNtsBMmwLJFuKXKPSnKHG8PHFYU7tSSoKU3h9TW5IsCu3Kbu
-	 7zL610EW8jrSg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 03/23] tools: lib: thermal: Initialize CFLAGS before
- including Makefile.include
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leo Yan" <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602-tools_build_fix_zero_init-v7-3-631baf679fe7@arm.com>
-References: <20260602-tools_build_fix_zero_init-v7-3-631baf679fe7@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 14:56:34 +0000
-Message-Id: <20260602145635.497781F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z19bFmEv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780412275; x=1811948275;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MiBW7CCsmRDVEIZUm0Q0llsZt3H87JfEvXiTJ/Ab1MY=;
+  b=Z19bFmEvg8UfSXipELHmQmf//B3IlzOCwmA8qadXIrX9kq7sndRZwgja
+   EM/MnAJM989BT+lbFwgjpLTESXxoYRvEJcki890Izk9vn2arl1pYi+t1I
+   gVQMwqbTI65/FcPLBLHgVx0uy3UMZKps3Rsm93D9b19BDSE7ZDbHeglOC
+   vRx2IxCRy+nxjb4H2/AfOmrypqHTSvXSceSBCrbsHOf5T6Zh2v8IRaHuc
+   /1YYXu0RV7dFqsQDpL0t3eQquSqKQfHut/HyWqW9wo+ZExNxZZ2BoYqgk
+   lCQt/W1gppVtT1JrwKxbCen6Z/suZD4Er890T8mkUTp+wwFvfPfOdhjk2
+   w==;
+X-CSE-ConnectionGUID: 4J1YAaC5TACVLQ11d/MG+g==
+X-CSE-MsgGUID: v+MQ0dBHTmqfl9mrH3C3xg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="103859975"
+X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
+   d="scan'208";a="103859975"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 07:57:54 -0700
+X-CSE-ConnectionGUID: M6zRH6FJSxqFtjFfNwuiPw==
+X-CSE-MsgGUID: fGR3lDQ6S8Sb4xv16NW4DQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
+   d="scan'208";a="243095616"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 07:57:54 -0700
+From: Zide Chen <zide.chen@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH V3 0/7] perf/x86/intel/uncore: Bug fixes and cleanups
+Date: Tue,  2 Jun 2026 07:49:01 -0700
+Message-ID: <20260602144908.263680-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+This series includes bug fixes and cleanups for the Intel uncore PMU
+driver.
 
-Pre-existing issues:
-- [High] This problem wasn't introduced by this patch, but the fix for the =
-CFLAGS initialization order completely missed `tools/lib/bpf/Makefile`. Thi=
-s leaves it vulnerable to the `EXTRA_CFLAGS` expansion introduced later in =
-the series.
---
+- Patch 1 fixes a theoretical bug in discovery unit lookup on multi-die
+  systems.
+- Patch 2 guards against an invalid box control address.
+- Patch 3 fixes a PCI device refcount leak in UPI topology discovery.
+- Patch 4 works around a hardware issue on Raptor Cove CPUs.
+- Patches 5-7 implement a global MSR init callback for GNR/GRR/SRF/CWF
+  uncore.
 
-commit d569bb22d825610f92ca0c5003854cd0736f3058
-Author: Leo Yan <leo.yan@arm.com>
+Changes in v3:
+- Protect uncore_discovery_pci() with cpus_read_lock(). (Sashiko)
+- Add Fixes tag for patch 4/7 and 7/7. 
+- Add the missing '---' in patch 5.
 
-tools: lib: thermal: Initialize CFLAGS before including Makefile.include
+Changes in v2:
+- Add patch 2 to guard against invalid box control address (Sashiko)
+- Remove WARN_ON_ONCE() from patch 1
+- Move cpus_read_{lock,unlock}() out of uncore_die_to_cpu() (Sashiko)
 
-This commit prepares the thermal lib Makefile for future changes to
-tools/scripts/Makefile.include that may expand EXTRA_CFLAGS. It moves
-the CFLAGS initialization before the include to ensure default compiler
-options like -g and -Wall are not silently dropped.
+Zide Chen (7):
+  perf/x86/intel/uncore: Fix discovery unit lookup for multi-die systems
+  perf/x86/intel/uncore: Guard against invalid box control address
+  perf/x86/intel/uncore: Fix PCI device refcount leak in UPI discovery
+  perf/x86/intel/uncore: Defer ADL global PMON enable to enable_box()
+  perf/x86/intel/uncore: Move die_to_cpu() to uncore.c
+  perf/x86/intel/uncore: Fix uncore_die_to_cpu() for offline dies
+  perf/x86/intel/uncore: Implement global init callback for GNR uncore
 
-> diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
-> index 09d8f4ba6a0ab..b55fa42cefa47 100644
-> --- a/tools/lib/thermal/Makefile
-> +++ b/tools/lib/thermal/Makefile
-> @@ -23,6 +23,14 @@ INSTALL =3D install
->  DESTDIR ?=3D
->  DESTDIR_SQ =3D '$(subst ','\'',$(DESTDIR))'
-> =20
-> +# Defer assigning EXTRA_CFLAGS to CFLAGS until after including
-> +# tools/scripts/Makefile.include, as it may add flags to EXTRA_CFLAGS.
-> +ifdef EXTRA_CFLAGS
-> +  CFLAGS :=3D
-> +else
-> +  CFLAGS :=3D -g -Wall
-> +endif
+ arch/x86/events/intel/uncore.c           | 32 ++++++++++++++++-
+ arch/x86/events/intel/uncore.h           |  3 +-
+ arch/x86/events/intel/uncore_discovery.c | 46 ++++++++++++++++--------
+ arch/x86/events/intel/uncore_snb.c       |  7 ----
+ arch/x86/events/intel/uncore_snbep.c     | 36 +++++++------------
+ 5 files changed, 76 insertions(+), 48 deletions(-)
 
-[Severity: High]
-This is a pre-existing issue, but it looks like this same vulnerable CFLAGS=
-=20
-initialization order exists in tools/lib/bpf/Makefile.
+-- 
+2.54.0
 
-Since a later patch in this series unconditionally populates EXTRA_CFLAGS=20
-via Makefile.include, does this mean libbpf will skip its default=20
-initialization and build without optimizations?
-
-tools/lib/bpf/Makefile:
-    ...
-    include $(srctree)/tools/scripts/Makefile.include
-    ...
-    ifdef EXTRA_CFLAGS
-      CFLAGS :=3D $(EXTRA_CFLAGS)
-    else
-      CFLAGS :=3D -g -O2
-    endif
-
-Should tools/lib/bpf/Makefile also be updated in this series to prevent=20
-a performance regression in libbpf?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602-tools_buil=
-d_fix_zero_init-v7-0-631baf679fe7@arm.com?part=3D3
