@@ -1,50 +1,32 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790E2367286;
-	Tue,  2 Jun 2026 09:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2ACB3939AF;
+	Tue,  2 Jun 2026 11:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780394282; cv=none; b=Vel0uuUIRKD1EgQuO8q0HO6KizlTi46YygNsivcKBfg96gM4inEP2NGLgy2dJDTEXOX/0tEIVJgHv0FvGj57St8rrWSt+zKXEvROyvV92uHrcY+sP3DBvjMVEsQ6ikKvVsUU+a1uKWzG6FAu/pYXeeZWsol6Y280Jiu/H4IQ4Uk=
+	t=1780399114; cv=none; b=s4wUwPEqsOaXukbbBF6LiLKkivSiGcuyQcAyCtfMxnmsMfYbW5Ih1BBcXz4nKPoCVhstEk3u7drA0ltBqZGy0pQgu0NCwaKLeDMD3vgDGraKlDi4dE/ggkwBiRWjFz0XHyLeccOIvTv6UYvIVmuZxNTR292Mmuewh8cG7Vt2LfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780394282; c=relaxed/simple;
-	bh=6M5gVnYg+HPDYvc5TsisrgMEyGUEfkg7IeSCjerdpA8=;
+	s=arc-20240116; t=1780399114; c=relaxed/simple;
+	bh=ilFK4yQPZYLFYk0uM3eLL1YO5hEB0Sk0/m5Gv9HEqE4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J8eDXaiJbnGEvzGhHmiBaAo//L/RUxuQONo51rCerMKISzWNUwMUDWzzX8K4AStZAtcKhC8bKomDQjMYI4dbbsZoS6T5umP5ssiGxKHSvJZgJ1Cr1TAutzS/maJf7yqIlXAn3QHmskdnyBpmNZEGVzxVAAgbZUFqnpWdU5CVOjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NNUvCtoJ; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=AGcIn7/WR/Pqhz+EEzctNc79LIr6gOufOuZBHwlCD4cWnsgKHnOyASgw0pziCUd03vBGXUdO7/y1eDB1vmpyG3J9Cc6jLexmQ6AmNEofmZTMf/uj9iF8uCnhPyDoh3LFM8SkfqezQzU2wdCLLiIpMrIdcb8CqmuMNgjc2UP3NAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YenA2L1N; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNUvCtoJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780394281; x=1811930281;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6M5gVnYg+HPDYvc5TsisrgMEyGUEfkg7IeSCjerdpA8=;
-  b=NNUvCtoJ+7TQYPMPPXMEHEvMn2veX7B50W5nFRzRuQ9fUtPnMCTGxrBZ
-   +0uNDPNkw4d0ZEO5NWfcKQNoqfgEoXM9jmIpNAnUyEWz5r4Cz22b5KLuD
-   SsHjT6VDlyPe2p+Dzoa28tsFTn/8exeR98x50/PVSIFQoQrX6Ibde5wkT
-   9IXPLpamG/38Qq026aq4MWlQb/3y1hQ4f+Rht8AfqjktI/vwXVpmlyL78
-   9EMPD0sOMTZTeHjgCMBF1vHqHm3UO0k8wWWZCMSjRak/b+o9OlV56PF9g
-   Z56+M3zaoIvvTP/EMCnjdG+YegYZjuz/uYxlVb/AM7xT5E5Mww6C7Qg0K
-   A==;
-X-CSE-ConnectionGUID: /diwLDFbREq9J/VTzj7JYw==
-X-CSE-MsgGUID: tOXar+jGTLaM1lY70uvqpQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="80319730"
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="80319730"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 02:57:59 -0700
-X-CSE-ConnectionGUID: AW7eIecHSdy/vj+PANGVSw==
-X-CSE-MsgGUID: PEvQijJBQ4eswS7QsiAFRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="248787840"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 02:57:56 -0700
-Message-ID: <c9cbc6bf-cfd9-4ea8-9119-e5dcdd2a017d@linux.intel.com>
-Date: Tue, 2 Jun 2026 17:57:53 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YenA2L1N"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1780399102; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ws7qGhlw3CmmKGFGVKopwlLd0gA4vT4eK0El0Pe0xPg=;
+	b=YenA2L1NYn6iogApH/qarp7611ei7TRNWwJJJLiVXm/u5hm71iCKs6bT5/eQtSmJ3mMj0NHu/8NLp0SIa7pbRHqh0GJASQLChG+3f/axk+go0hUaDnmEFf/RV1gsL9ZDFO5PQ6EGGr0e/entKYkc2vLez745iW2JT7pm/3wpTQA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X44Nt1W_1780399098;
+Received: from 30.100.154.88(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X44Nt1W_1780399098 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 02 Jun 2026 19:18:20 +0800
+Message-ID: <425ce2d4-bf35-4bff-8dc8-93093b8aaba2@linux.alibaba.com>
+Date: Tue, 2 Jun 2026 19:18:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,699 +34,416 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 3/8] perf/x86/intel/uncore: Let init_box() callback
- report failures
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260601170114.173359-1-zide.chen@intel.com>
- <20260601170114.173359-4-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260601170114.173359-4-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 2/8] riscv: stacktrace: Add frame record metadata
+To: Wang Han <wanghan@linux.alibaba.com>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Alexandre Ghiti <alex@ghiti.fr>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Chen Pei <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+ Deepak Gupta <debug@rivosinc.com>, Puranjay Mohan <puranjay@kernel.org>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+ Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
+ Joe Lawrence <joe.lawrence@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260527123530.2593918-1-wanghan@linux.alibaba.com>
+ <20260528082310.1994388-3-wanghan@linux.alibaba.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260528082310.1994388-3-wanghan@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-On 6/2/2026 1:01 AM, Zide Chen wrote:
-> The init_box() callback currently returns void, so initialization
-> failures are silently ignored and the box is still marked initialized.
->
-> Change the callback to return int so platform code can report errors
-> back to the common uncore layer.
->
-> Update uncore_box_init() to set the initialized flag only when
-> init_box() succeeds.  Because box->refcnt guarantees that at most
-> one CPU calls uncore_box_init() for a given box at a time, plain
-> __set_bit() is safe for the initialized flag without atomic overhead.
->
-> Convert all init_box() implementations to return 0 on success or a
-> negative error code on failure.  This is a prerequisite for propagating
-> initialization errors to the caller so they can be handled properly.
->
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
+
+On 5/28/26 4:23 PM, Wang Han wrote:
+> Reliable frame-pointer unwinding needs an explicit way to identify
+> exception boundaries and the final entry frame. The existing unwinder
+> infers those boundaries from return addresses, which is too loose for a
+> future reliable unwinder.
+> 
+> Add a small metadata frame record to pt_regs and initialize it on
+> exception entry, kernel thread fork, user fork, and early idle task
+> setup. The record uses a zero {fp, ra} sentinel plus a type field so a
+> later unwinder can distinguish a final user-to-kernel boundary from a
+> nested kernel pt_regs boundary.
+> 
+> This follows the arm64 metadata frame-record model, adapted to the
+> RISC-V {fp, ra} frame record convention.
+> 
+> The metadata is established at the RISC-V entry boundaries that need an
+> explicit unwind marker:
+> 
+>    * exception entry clears the metadata {fp, ra} pair and uses SPP
+>      (or MPP in M-mode) to record whether the pt_regs frame is the final
+>      user-to-kernel boundary or a nested kernel boundary;
+>    * _start_kernel builds the init task's final metadata record, while
+>      the secondary CPU path sets up s0 before smp_callin() so idle-task
+>      unwinding does not inherit an undefined caller frame;
+>    * copy_thread creates matching final metadata records for new kernel
+>      and user tasks, and keeps s0 available for the frame-pointer chain;
+>    * call_on_irq_stack still reserves an aligned stack slot, but links the
+>      saved {fp, ra} with the raw frame-record size so s0 points at the
+>      RISC-V frame record rather than past the alignment padding.
+> 
+> These changes keep s0 reserved for the frame-pointer chain at task and
+> stack-switch boundaries.
+> 
+> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
 > ---
->  arch/x86/events/intel/uncore.h           | 16 +++--
->  arch/x86/events/intel/uncore_discovery.c | 21 ++++---
->  arch/x86/events/intel/uncore_discovery.h |  6 +-
->  arch/x86/events/intel/uncore_nhmex.c     |  3 +-
->  arch/x86/events/intel/uncore_snb.c       | 80 +++++++++++++++---------
->  arch/x86/events/intel/uncore_snbep.c     | 77 ++++++++++++++---------
->  6 files changed, 126 insertions(+), 77 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-> index bad5d8dec8e0..d732b87be0a9 100644
-> --- a/arch/x86/events/intel/uncore.h
-> +++ b/arch/x86/events/intel/uncore.h
-> @@ -129,7 +129,7 @@ struct intel_uncore_type {
->  #define events_group attr_groups[2]
->  
->  struct intel_uncore_ops {
-> -	void (*init_box)(struct intel_uncore_box *);
-> +	int (*init_box)(struct intel_uncore_box *);
->  	void (*exit_box)(struct intel_uncore_box *);
->  	void (*disable_box)(struct intel_uncore_box *);
->  	void (*enable_box)(struct intel_uncore_box *);
-> @@ -557,12 +557,18 @@ static inline u64 uncore_read_counter(struct intel_uncore_box *box,
->  	return box->pmu->type->ops->read_counter(box, event);
->  }
->  
-> -static inline void uncore_box_init(struct intel_uncore_box *box)
-> +static inline int uncore_box_init(struct intel_uncore_box *box)
->  {
-> -	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
-> -		if (box->pmu->type->ops->init_box)
-> -			box->pmu->type->ops->init_box(box);
-> +	int ret = 0;
+>   arch/riscv/include/asm/ptrace.h           |  9 ++++
+>   arch/riscv/include/asm/stacktrace/frame.h | 53 +++++++++++++++++++++++
+>   arch/riscv/kernel/asm-offsets.c           |  4 ++
+>   arch/riscv/kernel/entry.S                 | 30 +++++++++++--
+>   arch/riscv/kernel/head.S                  | 23 ++++++++++
+>   arch/riscv/kernel/process.c               | 31 ++++++++++++-
+>   6 files changed, 144 insertions(+), 6 deletions(-)
+>   create mode 100644 arch/riscv/include/asm/stacktrace/frame.h
+> 
+> diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
+> index addc8188152f..4b9b0f279214 100644
+> --- a/arch/riscv/include/asm/ptrace.h
+> +++ b/arch/riscv/include/asm/ptrace.h
+> @@ -8,6 +8,7 @@
+>   
+>   #include <uapi/asm/ptrace.h>
+>   #include <asm/csr.h>
+> +#include <asm/stacktrace/frame.h>
+>   #include <linux/compiler.h>
+>   
+>   #ifndef __ASSEMBLER__
+> @@ -53,6 +54,14 @@ struct pt_regs {
+>   	unsigned long cause;
+>   	/* a0 value before the syscall */
+>   	unsigned long orig_a0;
 > +
-> +	if (!test_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags) &&
-> +	    box->pmu->type->ops->init_box) {
-> +		ret = box->pmu->type->ops->init_box(box);
-> +		if (!ret)
-> +			__set_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags);
->  	}
+> +	/*
+> +	 * This frame record is entirely zeroed on exception entry, allowing the
+> +	 * unwinder to identify exception boundaries. The type field encodes
+> +	 * whether the exception was taken from user (FINAL) or kernel (PT_REGS)
+> +	 * mode.
+> +	 */
+> +	struct frame_record_meta stackframe;
+>   };
+>   
+>   #define PTRACE_SYSEMU			0x1f
+> diff --git a/arch/riscv/include/asm/stacktrace/frame.h b/arch/riscv/include/asm/stacktrace/frame.h
+> new file mode 100644
+> index 000000000000..5720a6c65fe8
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/stacktrace/frame.h
+> @@ -0,0 +1,53 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ASM_RISCV_STACKTRACE_FRAME_H
+> +#define __ASM_RISCV_STACKTRACE_FRAME_H
 > +
-> +	return ret;
->  }
->  
->  static inline void uncore_box_exit(struct intel_uncore_box *box)
-> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-> index e50776222256..0a22edf4d509 100644
-> --- a/arch/x86/events/intel/uncore_discovery.c
-> +++ b/arch/x86/events/intel/uncore_discovery.c
-> @@ -489,14 +489,15 @@ static u64 intel_generic_uncore_box_ctl(struct intel_uncore_box *box)
->  	return unit->addr;
->  }
->  
-> -void intel_generic_uncore_msr_init_box(struct intel_uncore_box *box)
-> +int intel_generic_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	u64 box_ctl = intel_generic_uncore_box_ctl(box);
->  
->  	if (!box_ctl)
-> -		return;
-> +		return -ENODEV;
->  
->  	wrmsrq(box_ctl, GENERIC_PMON_BOX_CTL_INT);
-> +	return 0;
->  }
->  
->  void intel_generic_uncore_msr_disable_box(struct intel_uncore_box *box)
-> @@ -578,15 +579,16 @@ static inline int intel_pci_uncore_box_ctl(struct intel_uncore_box *box)
->  	return UNCORE_DISCOVERY_PCI_BOX_CTRL(intel_generic_uncore_box_ctl(box));
->  }
->  
-> -void intel_generic_uncore_pci_init_box(struct intel_uncore_box *box)
-> +int intel_generic_uncore_pci_init_box(struct intel_uncore_box *box)
->  {
->  	int box_ctl = intel_pci_uncore_box_ctl(box);
->  
->  	if (!box_ctl)
-> -		return;
-> +		return -ENODEV;
->  
->  	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
-> -	pci_write_config_dword(box->pci_dev, box_ctl, GENERIC_PMON_BOX_CTL_INT);
-> +	return pci_write_config_dword(box->pci_dev, box_ctl,
-> +				      GENERIC_PMON_BOX_CTL_INT);
->  }
->  
->  void intel_generic_uncore_pci_disable_box(struct intel_uncore_box *box)
-> @@ -648,7 +650,7 @@ static struct intel_uncore_ops generic_uncore_pci_ops = {
->  
->  #define UNCORE_GENERIC_MMIO_SIZE		0x4000
->  
-> -void intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box)
-> +int intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box)
->  {
->  	static struct intel_uncore_discovery_unit *unit;
->  	struct intel_uncore_type *type = box->pmu->type;
-> @@ -658,13 +660,13 @@ void intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box)
->  	if (!unit) {
->  		pr_warn("Uncore type %d id %d: Cannot find box control address.\n",
->  			type->type_id, box->pmu->pmu_idx);
-> -		return;
-> +		return -ENODEV;
->  	}
->  
->  	if (!unit->addr) {
->  		pr_warn("Uncore type %d box %d: Invalid box control address.\n",
->  			type->type_id, unit->id);
-> -		return;
-> +		return -ENODEV;
->  	}
->  
->  	addr = unit->addr;
-> @@ -672,10 +674,11 @@ void intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box)
->  	if (!box->io_addr) {
->  		pr_warn("Uncore type %d box %d: ioremap error for 0x%llx.\n",
->  			type->type_id, unit->id, (unsigned long long)addr);
-> -		return;
-> +		return -ENOMEM;
->  	}
->  
->  	writel(GENERIC_PMON_BOX_CTL_INT, box->io_addr);
-> +	return 0;
->  }
->  
->  void intel_generic_uncore_mmio_disable_box(struct intel_uncore_box *box)
-> diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-> index e1330342b92e..142e1b56cfc2 100644
-> --- a/arch/x86/events/intel/uncore_discovery.h
-> +++ b/arch/x86/events/intel/uncore_discovery.h
-> @@ -148,11 +148,11 @@ void intel_uncore_generic_uncore_cpu_init(void);
->  int intel_uncore_generic_uncore_pci_init(void);
->  void intel_uncore_generic_uncore_mmio_init(void);
->  
-> -void intel_generic_uncore_msr_init_box(struct intel_uncore_box *box);
-> +int intel_generic_uncore_msr_init_box(struct intel_uncore_box *box);
->  void intel_generic_uncore_msr_disable_box(struct intel_uncore_box *box);
->  void intel_generic_uncore_msr_enable_box(struct intel_uncore_box *box);
->  
-> -void intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box);
-> +int intel_generic_uncore_mmio_init_box(struct intel_uncore_box *box);
->  void intel_generic_uncore_mmio_disable_box(struct intel_uncore_box *box);
->  void intel_generic_uncore_mmio_enable_box(struct intel_uncore_box *box);
->  void intel_generic_uncore_mmio_disable_event(struct intel_uncore_box *box,
-> @@ -160,7 +160,7 @@ void intel_generic_uncore_mmio_disable_event(struct intel_uncore_box *box,
->  void intel_generic_uncore_mmio_enable_event(struct intel_uncore_box *box,
->  					    struct perf_event *event);
->  
-> -void intel_generic_uncore_pci_init_box(struct intel_uncore_box *box);
-> +int intel_generic_uncore_pci_init_box(struct intel_uncore_box *box);
->  void intel_generic_uncore_pci_disable_box(struct intel_uncore_box *box);
->  void intel_generic_uncore_pci_enable_box(struct intel_uncore_box *box);
->  void intel_generic_uncore_pci_disable_event(struct intel_uncore_box *box,
-> diff --git a/arch/x86/events/intel/uncore_nhmex.c b/arch/x86/events/intel/uncore_nhmex.c
-> index 8962e7cb21e3..7a6855281102 100644
-> --- a/arch/x86/events/intel/uncore_nhmex.c
-> +++ b/arch/x86/events/intel/uncore_nhmex.c
-> @@ -199,9 +199,10 @@ DEFINE_UNCORE_FORMAT_ATTR(counter, counter, "config:6-7");
->  DEFINE_UNCORE_FORMAT_ATTR(match, match, "config1:0-63");
->  DEFINE_UNCORE_FORMAT_ATTR(mask, mask, "config2:0-63");
->  
-> -static void nhmex_uncore_msr_init_box(struct intel_uncore_box *box)
-> +static int nhmex_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	wrmsrq(NHMEX_U_MSR_PMON_GLOBAL_CTL, NHMEX_U_PMON_GLOBAL_EN_ALL);
-> +	return 0;
->  }
->  
->  static void nhmex_uncore_msr_exit_box(struct intel_uncore_box *box)
-> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-> index edddd4f9ab5f..c5347920541c 100644
-> --- a/arch/x86/events/intel/uncore_snb.c
-> +++ b/arch/x86/events/intel/uncore_snb.c
-> @@ -295,12 +295,14 @@ static void snb_uncore_msr_disable_event(struct intel_uncore_box *box, struct pe
->  	wrmsrq(event->hw.config_base, 0);
->  }
->  
-> -static void snb_uncore_msr_init_box(struct intel_uncore_box *box)
-> +static int snb_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	if (box->pmu->pmu_idx == 0) {
->  		wrmsrq(SNB_UNC_PERF_GLOBAL_CTL,
->  			SNB_UNC_GLOBAL_CTL_EN | SNB_UNC_GLOBAL_CTL_CORE_ALL);
->  	}
+> +/*
+> + * See: arch/arm64/include/asm/stacktrace/frame.h for the reference
+> + * implementation.
+> + */
 > +
-> +	return 0;
->  }
->  
->  static void snb_uncore_msr_enable_box(struct intel_uncore_box *box)
-> @@ -394,7 +396,7 @@ void snb_uncore_cpu_init(void)
->  		snb_uncore_cbox.num_boxes = topology_num_cores_per_package();
->  }
->  
-> -static void skl_uncore_msr_init_box(struct intel_uncore_box *box)
-> +static int skl_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	if (box->pmu->pmu_idx == 0) {
->  		wrmsrq(SKL_UNC_PERF_GLOBAL_CTL,
-> @@ -404,6 +406,8 @@ static void skl_uncore_msr_init_box(struct intel_uncore_box *box)
->  	/* The 8th CBOX has different MSR space */
->  	if (box->pmu->pmu_idx == 7)
->  		__set_bit(UNCORE_BOX_FLAG_CFL8_CBOX_MSR_OFFS, &box->flags);
+> +/*
+> + * - FRAME_META_TYPE_NONE
+> + *
+> + *   This value is reserved.
+> + *
+> + * - FRAME_META_TYPE_FINAL
+> + *
+> + *   The record is the last entry on the stack.
+> + *   Unwinding should terminate successfully.
+> + *
+> + * - FRAME_META_TYPE_PT_REGS
+> + *
+> + *   The record is embedded within a struct pt_regs, recording the registers at
+> + *   an arbitrary point in time.
+> + *   Unwinding should consume pt_regs::epc, followed by pt_regs::ra.
+> + *
+> + * Note: all other values are reserved and should result in unwinding
+> + * terminating with an error.
+> + */
+> +#define FRAME_META_TYPE_NONE		0
+> +#define FRAME_META_TYPE_FINAL		1
+> +#define FRAME_META_TYPE_PT_REGS		2
 > +
-> +	return 0;
->  }
->  
->  static void skl_uncore_msr_enable_box(struct intel_uncore_box *box)
-> @@ -547,10 +551,12 @@ static struct intel_uncore_type *tgl_msr_uncores[] = {
->  	NULL,
->  };
->  
-> -static void rkl_uncore_msr_init_box(struct intel_uncore_box *box)
-> +static int rkl_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	if (box->pmu->pmu_idx == 0)
->  		wrmsrq(SKL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
+> +#ifndef __ASSEMBLER__
+> +/*
+> + * A standard RISC-V frame record.
+> + */
+> +struct frame_record {
+> +	unsigned long fp;
+> +	unsigned long ra;
+> +};
 > +
-> +	return 0;
->  }
->  
->  void tgl_uncore_cpu_init(void)
-> @@ -707,9 +713,10 @@ static struct intel_uncore_type mtl_uncore_hac_cbox = {
->  	.format_group	= &adl_uncore_format_group,
->  };
->  
-> -static void mtl_uncore_msr_init_box(struct intel_uncore_box *box)
-> +static int mtl_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	wrmsrq(uncore_msr_box_ctl(box), SNB_UNC_GLOBAL_CTL_EN);
-> +	return 0;
->  }
->  
->  static struct intel_uncore_ops mtl_uncore_msr_ops = {
-> @@ -773,10 +780,12 @@ static struct intel_uncore_type *lnl_msr_uncores[] = {
->  
->  #define LNL_UNC_MSR_GLOBAL_CTL			0x240e
->  
-> -static void lnl_uncore_msr_init_box(struct intel_uncore_box *box)
-> +static int lnl_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	if (box->pmu->pmu_idx == 0)
->  		wrmsrq(LNL_UNC_MSR_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
+> +/*
+> + * A metadata frame record indicating a special unwind.
+> + * The record::{fp,ra} fields must be zero to indicate the presence of
+> + * metadata.
+> + */
+> +struct frame_record_meta {
+> +	struct frame_record record;
+> +	unsigned long type;
+> +};
+> +#endif /* __ASSEMBLER__ */
 > +
-> +	return 0;
->  }
->  
->  static struct intel_uncore_ops lnl_uncore_msr_ops = {
-> @@ -874,7 +883,7 @@ static const struct attribute_group snb_uncore_imc_format_group = {
->  	.attrs = snb_uncore_imc_formats_attr,
->  };
->  
-> -static void snb_uncore_imc_init_box(struct intel_uncore_box *box)
-> +static int snb_uncore_imc_init_box(struct intel_uncore_box *box)
->  {
->  	struct intel_uncore_type *type = box->pmu->type;
->  	struct pci_dev *pdev = box->pci_dev;
-> @@ -893,10 +902,13 @@ static void snb_uncore_imc_init_box(struct intel_uncore_box *box)
->  	addr &= ~(PAGE_SIZE - 1);
->  
->  	box->io_addr = ioremap(addr, type->mmio_map_size);
-> -	if (!box->io_addr)
-> +	if (!box->io_addr) {
->  		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
-> +		return -ENOMEM;
-> +	}
->  
->  	box->hrtimer_duration = UNCORE_SNB_IMC_HRTIMER_INTERVAL;
-> +	return 0;
->  }
->  
->  static void snb_uncore_imc_enable_box(struct intel_uncore_box *box)
-> @@ -1532,7 +1544,7 @@ static struct pci_dev *tgl_uncore_get_mc_dev(void)
->  #define TGL_UNCORE_MMIO_IMC_MEM_OFFSET		0x10000
->  #define TGL_UNCORE_PCI_IMC_MAP_SIZE		0xe000
->  
-> -static void
-> +static int
->  uncore_get_box_mmio_addr(struct intel_uncore_box *box,
->  			 unsigned int base_offset,
->  			 int bar_offset, int step)
-> @@ -1541,19 +1553,20 @@ uncore_get_box_mmio_addr(struct intel_uncore_box *box,
->  	struct intel_uncore_pmu *pmu = box->pmu;
->  	struct intel_uncore_type *type = pmu->type;
->  	resource_size_t addr;
-> +	int ret = 0;
->  	u32 bar;
->  
->  	if (!pdev) {
->  		pr_warn("perf uncore: Cannot find matched IMC device.\n");
-> -		return;
-> +		return -ENODEV;
->  	}
->  
->  	pci_read_config_dword(pdev, bar_offset, &bar);
->  	if (!(bar & BIT(0))) {
->  		pr_warn("perf uncore: BAR 0x%x is disabled. Failed to map %s counters.\n",
->  			bar_offset, type->name);
-> -		pci_dev_put(pdev);
-> -		return;
-> +		ret = -ENODEV;
-> +		goto out;
->  	}
->  	bar &= ~BIT(0);
->  	addr = (resource_size_t)(bar + step * pmu->pmu_idx);
-> @@ -1565,23 +1578,26 @@ uncore_get_box_mmio_addr(struct intel_uncore_box *box,
->  
->  	addr += base_offset;
->  	box->io_addr = ioremap(addr, type->mmio_map_size);
-> -	if (!box->io_addr)
-> +	if (!box->io_addr) {
-> +		ret = -ENOMEM;
->  		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
-> -
-> +	}
-> +out:
->  	pci_dev_put(pdev);
-> +	return ret;
->  }
->  
-> -static void __uncore_imc_init_box(struct intel_uncore_box *box,
-> +static int __uncore_imc_init_box(struct intel_uncore_box *box,
->  				  unsigned int base_offset)
->  {
-> -	uncore_get_box_mmio_addr(box, base_offset,
-> +	return uncore_get_box_mmio_addr(box, base_offset,
->  				 SNB_UNCORE_PCI_IMC_BAR_OFFSET,
->  				 TGL_UNCORE_MMIO_IMC_MEM_OFFSET);
->  }
->  
-> -static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
-> +static int tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
->  {
-> -	__uncore_imc_init_box(box, 0);
-> +	return __uncore_imc_init_box(box, 0);
->  }
->  
->  static struct intel_uncore_ops tgl_uncore_imc_freerunning_ops = {
-> @@ -1648,13 +1664,15 @@ void tgl_uncore_mmio_init(void)
->  #define ADL_UNCORE_IMC_CTL_INT			(ADL_UNCORE_IMC_CTL_RST_CTRL | \
->  						ADL_UNCORE_IMC_CTL_RST_CTRS)
->  
-> -static void adl_uncore_imc_init_box(struct intel_uncore_box *box)
-> +static int adl_uncore_imc_init_box(struct intel_uncore_box *box)
->  {
-> -	__uncore_imc_init_box(box, ADL_UNCORE_IMC_BASE);
-> +	int ret = __uncore_imc_init_box(box, ADL_UNCORE_IMC_BASE);
->  
->  	/* The global control in MC1 can control both MCs. */
-> -	if (box->io_addr && (box->pmu->pmu_idx == 1))
-> +	if (!ret && (box->pmu->pmu_idx == 1))
->  		writel(ADL_UNCORE_IMC_CTL_INT, box->io_addr + ADL_UNCORE_IMC_GLOBAL_CTL);
+> +#endif /* __ASM_RISCV_STACKTRACE_FRAME_H */
+> diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+> index af827448a609..8dfcb5a44bb8 100644
+> --- a/arch/riscv/kernel/asm-offsets.c
+> +++ b/arch/riscv/kernel/asm-offsets.c
+> @@ -131,6 +131,9 @@ void asm_offsets(void)
+>   	OFFSET(PT_BADADDR, pt_regs, badaddr);
+>   	OFFSET(PT_CAUSE, pt_regs, cause);
+>   
+> +	DEFINE(S_STACKFRAME,		offsetof(struct pt_regs, stackframe));
+> +	DEFINE(S_STACKFRAME_TYPE,	offsetof(struct pt_regs, stackframe.type));
 > +
-> +	return ret;
->  }
->  
->  static void adl_uncore_mmio_disable_box(struct intel_uncore_box *box)
-> @@ -1731,9 +1749,9 @@ static struct freerunning_counters adl_uncore_imc_freerunning[] = {
->  	[ADL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0xA0, 0x0, 0x0, 1, 64 },
->  };
->  
-> -static void adl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
-> +static int adl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
->  {
-> -	__uncore_imc_init_box(box, ADL_UNCORE_IMC_FREERUNNING_BASE);
-> +	return __uncore_imc_init_box(box, ADL_UNCORE_IMC_FREERUNNING_BASE);
->  }
->  
->  static struct intel_uncore_ops adl_uncore_imc_freerunning_ops = {
-> @@ -1803,9 +1821,9 @@ static const struct attribute_group lnl_uncore_format_group = {
->  	.attrs		= lnl_uncore_formats_attr,
->  };
->  
-> -static void lnl_uncore_hbo_init_box(struct intel_uncore_box *box)
-> +static int lnl_uncore_hbo_init_box(struct intel_uncore_box *box)
->  {
-> -	uncore_get_box_mmio_addr(box, LNL_UNCORE_HBO_BASE,
-> +	return uncore_get_box_mmio_addr(box, LNL_UNCORE_HBO_BASE,
->  				 LNL_UNCORE_PCI_SAFBAR_OFFSET,
->  				 LNL_UNCORE_HBO_OFFSET);
->  }
-> @@ -1829,14 +1847,16 @@ static struct intel_uncore_type lnl_uncore_hbo = {
->  	.format_group	= &lnl_uncore_format_group,
->  };
->  
-> -static void lnl_uncore_sncu_init_box(struct intel_uncore_box *box)
-> +static int lnl_uncore_sncu_init_box(struct intel_uncore_box *box)
->  {
-> -	uncore_get_box_mmio_addr(box, LNL_UNCORE_SNCU_BASE,
-> +	int ret = uncore_get_box_mmio_addr(box, LNL_UNCORE_SNCU_BASE,
->  				 LNL_UNCORE_PCI_SAFBAR_OFFSET,
->  				 0);
->  
-> -	if (box->io_addr)
-> +	if (!ret)
->  		writel(ADL_UNCORE_IMC_CTL_INT, box->io_addr + LNL_UNCORE_GLOBAL_CTL);
+>   	OFFSET(SUSPEND_CONTEXT_REGS, suspend_context, regs);
+>   
+>   	OFFSET(HIBERN_PBE_ADDR, pbe, address);
+> @@ -501,6 +504,7 @@ void asm_offsets(void)
+>   	OFFSET(SBI_HART_BOOT_STACK_PTR_OFFSET, sbi_hart_boot_data, stack_ptr);
+>   
+>   	DEFINE(STACKFRAME_SIZE_ON_STACK, ALIGN(sizeof(struct stackframe), STACK_ALIGN));
+> +	DEFINE(STACKFRAME_RECORD_SIZE, sizeof(struct stackframe));
+>   	OFFSET(STACKFRAME_FP, stackframe, fp);
+>   	OFFSET(STACKFRAME_RA, stackframe, ra);
+>   #ifdef CONFIG_FUNCTION_TRACER
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index d011fb51c59a..9cae0e1eba1c 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -11,6 +11,7 @@
+>   #include <asm/asm.h>
+>   #include <asm/csr.h>
+>   #include <asm/scs.h>
+> +#include <asm/stacktrace/frame.h>
+>   #include <asm/unistd.h>
+>   #include <asm/page.h>
+>   #include <asm/thread_info.h>
+> @@ -193,6 +194,27 @@ SYM_CODE_START(handle_exception)
+>   	REG_S s4, PT_CAUSE(sp)
+>   	REG_S s5, PT_TP(sp)
+>   
+> +	/*
+> +	 * Create a metadata frame record. The unwinder will use this to
+> +	 * identify and unwind exception boundaries.
+> +	 */
+> +	REG_S zero, (S_STACKFRAME + STACKFRAME_FP)(sp) /* stackframe.record.fp = 0 */
+> +	REG_S zero, (S_STACKFRAME + STACKFRAME_RA)(sp) /* stackframe.record.ra = 0 */
+> +#ifdef CONFIG_RISCV_M_MODE
+> +	li t0, SR_MPP
+> +	and t0, s1, t0
+> +#else
+> +	andi t0, s1, SR_SPP
+> +#endif
+> +	bnez t0, 1f
+> +	li t0, FRAME_META_TYPE_FINAL
+> +	j 2f
+> +1:
+> +	li t0, FRAME_META_TYPE_PT_REGS
+> +2:
+> +	REG_S t0, S_STACKFRAME_TYPE(sp)
+> +	addi s0, sp, S_STACKFRAME + STACKFRAME_RECORD_SIZE
 > +
-> +	return ret;
->  }
->  
->  static struct intel_uncore_ops lnl_uncore_sncu_ops = {
-> @@ -1887,13 +1907,15 @@ static struct intel_uncore_type ptl_uncore_imc = {
->  	.mmio_map_size		= 0xf00,
->  };
->  
-> -static void ptl_uncore_sncu_init_box(struct intel_uncore_box *box)
-> +static int ptl_uncore_sncu_init_box(struct intel_uncore_box *box)
->  {
-> -	intel_generic_uncore_mmio_init_box(box);
-> +	int ret = intel_generic_uncore_mmio_init_box(box);
->  
->  	/* Clear the global freeze bit */
->  	if (box->io_addr)
->  		writel(0, box->io_addr + PTL_UNCORE_GLOBAL_CTL_OFFSET);
+
+One spot for symmetry (non-blocking, robustness only):
+
+handle_kernel_stack_overflow in entry.S allocates a full
+PT_SIZE_ON_STACK frame (including the new stackframe metadata fields)
+but, unlike .Lsave_context, never initialises stackframe.{record,type}
+nor repoints s0 at the metadata. Those three words are therefore left
+as whatever was on the overflow_stack.
+
+In practice this is currently harmless: handle_bad_stack() only calls
+__show_regs() (register dump, no unwind) followed by panic(), so the
+reliable unwinder never actually consumes that metadata today. So this
+is not an active bug — purely a robustness / symmetry gap.
+
+It would still be worth initialising it, because the moment someone
+adds a dump_stack() here, or another CPU NMI-backtraces this task, or a
+kdump image is walked offline via the frame-record chain, the garbage
+type byte would mislead the unwinder. Since the overflow path is by
+definition entered from kernel context, FRAME_META_TYPE_PT_REGS is the
+right type, and it has the nice property that the unwinder will resume
+from frame_pointer(regs)==regs->s0 (the pre-overflow s0 is already
+saved into PT_S0 by save_from_x6_to_x31), giving the pre-overflow call
+chain instead of a hard stop.
+
+
+>   	/*
+>   	 * Set the scratch register to 0, so that if a recursive exception
+>   	 * occurs, the exception vector knows it came from the kernel
+> @@ -357,8 +379,8 @@ ASM_NOKPROBE(handle_kernel_stack_overflow)
+>   
+>   SYM_CODE_START(ret_from_fork_kernel_asm)
+>   	call schedule_tail
+> -	move a0, s1 /* fn_arg */
+> -	move a1, s0 /* fn */
+> +	move a0, s3 /* fn_arg */
+> +	move a1, s2 /* fn */
+>   	move a2, sp /* pt_regs */
+>   	call ret_from_fork_kernel
+>   	j ret_from_exception
+> @@ -383,7 +405,7 @@ SYM_FUNC_START(call_on_irq_stack)
+>   	addi	sp, sp, -STACKFRAME_SIZE_ON_STACK
+>   	REG_S	ra, STACKFRAME_RA(sp)
+>   	REG_S	s0, STACKFRAME_FP(sp)
+> -	addi	s0, sp, STACKFRAME_SIZE_ON_STACK
+> +	addi	s0, sp, STACKFRAME_RECORD_SIZE
+>   
+>   	/* Switch to the per-CPU shadow call stack */
+>   	scs_save_current
+> @@ -399,7 +421,7 @@ SYM_FUNC_START(call_on_irq_stack)
+>   	scs_load_current
+>   
+>   	/* Switch back to the thread stack and restore ra and s0 */
+> -	addi	sp, s0, -STACKFRAME_SIZE_ON_STACK
+> +	addi	sp, s0, -STACKFRAME_RECORD_SIZE
+
+Worth calling out explicitly that this is more than a cosmetic refactor:
+on RV32 the previous code is actually wrong, and this hunk fixes it.
+
+   STACKFRAME_SIZE_ON_STACK = ALIGN(sizeof(struct stackframe), STACK_ALIGN)
+   STACKFRAME_RECORD_SIZE   = sizeof(struct stackframe)
+
+   RV64: sizeof(stackframe) == STACK_ALIGN == 16, so the two are equal
+         and the old code happened to work.
+   RV32: sizeof(stackframe) == 8 but STACK_ALIGN == 16, so the old
+         "addi s0, sp, STACKFRAME_SIZE_ON_STACK" left s0 pointing 8 bytes
+         past the saved {fp, ra} pair, into the alignment padding. An FP
+         unwinder that derives the frame record from s0 (e.g. via
+         "(struct stackframe *)s0 - 1" or fixed -8/-16(s0) loads) would
+         then read garbage instead of the saved fp/ra at the IRQ-stack
+
+After the change s0 lands exactly at the end of the {fp, ra} record on
+both RV32 and RV64, while the aligned slot is still reserved by the
+unchanged "addi sp, sp, -STACKFRAME_SIZE_ON_STACK" / matching restore.
+
+Could you mention this in the v3 commit message? It's load-bearing
+context for anyone bisecting an RV32 unwind regression later, and it
+also justifies why the change is correct to apply ahead of the reliable
+unwinder rather than folded into it.
+
+>   	REG_L	ra, STACKFRAME_RA(sp)
+>   	REG_L	s0, STACKFRAME_FP(sp)
+>   	addi	sp, sp, STACKFRAME_SIZE_ON_STACK
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index f6a8ca49e627..00e16a24f149 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -14,6 +14,7 @@
+>   #include <asm/hwcap.h>
+>   #include <asm/image.h>
+>   #include <asm/scs.h>
+> +#include <asm/stacktrace/frame.h>
+>   #include <asm/usercfi.h>
+>   #include "efi-header.S"
+>   
+> @@ -177,6 +178,14 @@ secondary_start_sbi:
+>   	REG_S a0, (a1)
+>   1:
+>   #endif
 > +
-> +	return ret;
->  }
->  
->  static struct intel_uncore_ops ptl_uncore_sncu_ops = {
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index 334dc384b5b9..a97cd029db36 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -627,12 +627,12 @@ static u64 snbep_uncore_pci_read_counter(struct intel_uncore_box *box, struct pe
->  	return count;
->  }
->  
-> -static void snbep_uncore_pci_init_box(struct intel_uncore_box *box)
-> +static int snbep_uncore_pci_init_box(struct intel_uncore_box *box)
->  {
->  	struct pci_dev *pdev = box->pci_dev;
->  	int box_ctl = uncore_pci_box_ctl(box);
->  
-> -	pci_write_config_dword(pdev, box_ctl, SNBEP_PMON_BOX_CTL_INT);
-> +	return pci_write_config_dword(pdev, box_ctl, SNBEP_PMON_BOX_CTL_INT);
->  }
->  
->  static void snbep_uncore_msr_disable_box(struct intel_uncore_box *box)
-> @@ -680,12 +680,14 @@ static void snbep_uncore_msr_disable_event(struct intel_uncore_box *box,
->  	wrmsrq(hwc->config_base, hwc->config);
->  }
->  
-> -static void snbep_uncore_msr_init_box(struct intel_uncore_box *box)
-> +static int snbep_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	unsigned msr = uncore_msr_box_ctl(box);
->  
->  	if (msr)
->  		wrmsrq(msr, SNBEP_PMON_BOX_CTL_INT);
+> +	/*
+> +	 * Set up the frame pointer for the secondary idle task so reliable
+> +	 * stack unwinding terminates at the metadata frame in task_pt_regs().
+> +	 * Without this, the first frame records can inherit an undefined caller
+> +	 * fp and unwind past smp_callin() into .Lsecondary_park.
+> +	 */
+> +	addi s0, sp, S_STACKFRAME + STACKFRAME_RECORD_SIZE
+>   	scs_load_current
+>   	call smp_callin
+>   #endif /* CONFIG_SMP */
+> @@ -305,6 +314,20 @@ SYM_CODE_START(_start_kernel)
+>   	la tp, init_task
+>   	la sp, init_thread_union + THREAD_SIZE
+>   	addi sp, sp, -PT_SIZE_ON_STACK
 > +
-> +	return 0;
->  }
->  
->  static struct attribute *snbep_uncore_formats_attr[] = {
-> @@ -1507,18 +1509,21 @@ int snbep_uncore_pci_init(void)
->  /* end of Sandy Bridge-EP uncore support */
->  
->  /* IvyTown uncore support */
-> -static void ivbep_uncore_msr_init_box(struct intel_uncore_box *box)
-> +static int ivbep_uncore_msr_init_box(struct intel_uncore_box *box)
->  {
->  	unsigned msr = uncore_msr_box_ctl(box);
->  	if (msr)
->  		wrmsrq(msr, IVBEP_PMON_BOX_CTL_INT);
+> +	/*
+> +	 * Set up a metadata frame record for the init task so that
+> +	 * the unwinder can identify the outermost frame by its
+> +	 * {fp, ra} = {0, 0} sentinel at the bottom of pt_regs.
+> +	 * fp/s0 points above the metadata record (RISC-V
+> +	 * convention).
+> +	 */
+> +	REG_S zero, (S_STACKFRAME + STACKFRAME_FP)(sp)
+> +	REG_S zero, (S_STACKFRAME + STACKFRAME_RA)(sp)
+> +	li t0, FRAME_META_TYPE_FINAL
+> +	REG_S t0, S_STACKFRAME_TYPE(sp)
+> +	addi s0, sp, S_STACKFRAME + STACKFRAME_RECORD_SIZE
 > +
-> +	return 0;
->  }
->  
-> -static void ivbep_uncore_pci_init_box(struct intel_uncore_box *box)
-> +static int ivbep_uncore_pci_init_box(struct intel_uncore_box *box)
->  {
->  	struct pci_dev *pdev = box->pci_dev;
->  
-> -	pci_write_config_dword(pdev, SNBEP_PCI_PMON_BOX_CTL, IVBEP_PMON_BOX_CTL_INT);
-> +	return pci_write_config_dword(pdev, SNBEP_PCI_PMON_BOX_CTL,
-> +				      IVBEP_PMON_BOX_CTL_INT);
->  }
->  
->  #define IVBEP_UNCORE_MSR_OPS_COMMON_INIT()			\
-> @@ -2784,7 +2789,7 @@ static struct intel_uncore_type hswep_uncore_cbox = {
->  /*
->   * Write SBOX Initialization register bit by bit to avoid spurious #GPs
->   */
-> -static void hswep_uncore_sbox_msr_init_box(struct intel_uncore_box *box)
-> +static int hswep_uncore_sbox_msr_init_box(struct intel_uncore_box *box)
->  {
->  	unsigned msr = uncore_msr_box_ctl(box);
->  
-> @@ -2798,6 +2803,8 @@ static void hswep_uncore_sbox_msr_init_box(struct intel_uncore_box *box)
->  			wrmsrq(msr, flags);
->  		}
->  	}
+>   #if defined(CONFIG_RISCV_SBI) && defined(CONFIG_RISCV_USER_CFI)
+>   	li a7, SBI_EXT_FWFT
+>   	li a6, SBI_EXT_FWFT_SET
+> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+> index b2df7f72241a..5212926b926b 100644
+> --- a/arch/riscv/kernel/process.c
+> +++ b/arch/riscv/kernel/process.c
+> @@ -258,8 +258,23 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>   		/* Supervisor/Machine, irqs on: */
+>   		childregs->status = SR_PP | SR_PIE;
+>   
+> -		p->thread.s[0] = (unsigned long)args->fn;
+> -		p->thread.s[1] = (unsigned long)args->fn_arg;
+> +		/*
+> +		 * Set up a metadata frame record at the bottom of the
+> +		 * stack for the unwinder. Use FRAME_META_TYPE_FINAL
+> +		 * since this is the outermost kernel entry for the new
+> +		 * task. The frame_record::{fp,ra} are already zero from
+> +		 * memset().
+> +		 *
+> +		 * fp/s0 points above the metadata record (RISC-V
+> +		 * convention). fn and fn_arg are passed via s2/s3,
+> +		 * keeping s0 available for the frame pointer chain.
+> +		 */
+> +		childregs->stackframe.type = FRAME_META_TYPE_FINAL;
 > +
-> +	return 0;
->  }
->  
->  static struct intel_uncore_ops hswep_uncore_sbox_msr_ops = {
-> @@ -4162,12 +4169,13 @@ static const struct attribute_group skx_upi_uncore_format_group = {
->  	.attrs = skx_upi_uncore_formats_attr,
->  };
->  
-> -static void skx_upi_uncore_pci_init_box(struct intel_uncore_box *box)
-> +static int skx_upi_uncore_pci_init_box(struct intel_uncore_box *box)
->  {
->  	struct pci_dev *pdev = box->pci_dev;
->  
->  	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
-> -	pci_write_config_dword(pdev, SKX_UPI_PCI_PMON_BOX_CTL, IVBEP_PMON_BOX_CTL_INT);
-> +	return pci_write_config_dword(pdev, SKX_UPI_PCI_PMON_BOX_CTL,
-> +				      IVBEP_PMON_BOX_CTL_INT);
->  }
->  
->  static struct intel_uncore_ops skx_upi_uncore_pci_ops = {
-> @@ -4323,12 +4331,13 @@ static struct intel_uncore_type skx_uncore_upi = {
->  	.cleanup_mapping = skx_upi_cleanup_mapping,
->  };
->  
-> -static void skx_m2m_uncore_pci_init_box(struct intel_uncore_box *box)
-> +static int skx_m2m_uncore_pci_init_box(struct intel_uncore_box *box)
->  {
->  	struct pci_dev *pdev = box->pci_dev;
->  
->  	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
-> -	pci_write_config_dword(pdev, SKX_M2M_PCI_PMON_BOX_CTL, IVBEP_PMON_BOX_CTL_INT);
-> +	return pci_write_config_dword(pdev, SKX_M2M_PCI_PMON_BOX_CTL,
-> +				      IVBEP_PMON_BOX_CTL_INT);
->  }
->  
->  static struct intel_uncore_ops skx_m2m_uncore_pci_ops = {
-> @@ -4831,13 +4840,13 @@ void snr_uncore_cpu_init(void)
->  	uncore_msr_uncores = snr_msr_uncores;
->  }
->  
-> -static void snr_m2m_uncore_pci_init_box(struct intel_uncore_box *box)
-> +static int snr_m2m_uncore_pci_init_box(struct intel_uncore_box *box)
->  {
->  	struct pci_dev *pdev = box->pci_dev;
->  	int box_ctl = uncore_pci_box_ctl(box);
->  
->  	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
-> -	pci_write_config_dword(pdev, box_ctl, IVBEP_PMON_BOX_CTL_INT);
-> +	return pci_write_config_dword(pdev, box_ctl, IVBEP_PMON_BOX_CTL_INT);
->  }
->  
->  static struct intel_uncore_ops snr_m2m_uncore_pci_ops = {
-> @@ -5010,17 +5019,22 @@ static int snr_uncore_mmio_map(struct intel_uncore_box *box,
->  	return 0;
->  }
->  
-> -static void __snr_uncore_mmio_init_box(struct intel_uncore_box *box,
-> +static int __snr_uncore_mmio_init_box(struct intel_uncore_box *box,
->  				       unsigned int box_ctl, int mem_offset,
->  				       unsigned int device)
->  {
-> -	if (!snr_uncore_mmio_map(box, box_ctl, mem_offset, device))
-> +	int ret;
+> +		p->thread.s[0] = (unsigned long)(&childregs->stackframe)
+> +				+ sizeof(struct frame_record);
+> +		p->thread.s[2] = (unsigned long)args->fn;
+> +		p->thread.s[3] = (unsigned long)args->fn_arg;
+>   		p->thread.ra = (unsigned long)ret_from_fork_kernel_asm;
+>   	} else {
+>   		/* allocate new shadow stack if needed. In case of CLONE_VM we have to */
+> @@ -278,6 +293,18 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>   		if (clone_flags & CLONE_SETTLS)
+>   			childregs->tp = tls;
+>   		childregs->a0 = 0; /* Return value of fork() */
 > +
-> +	ret = snr_uncore_mmio_map(box, box_ctl, mem_offset, device);
-> +	if (!ret)
->  		writel(IVBEP_PMON_BOX_CTL_INT, box->io_addr);
-> +
-> +	return ret;
->  }
->  
-> -static void snr_uncore_mmio_init_box(struct intel_uncore_box *box)
-> +static int snr_uncore_mmio_init_box(struct intel_uncore_box *box)
->  {
-> -	__snr_uncore_mmio_init_box(box, uncore_mmio_box_ctl(box),
-> +	return __snr_uncore_mmio_init_box(box, uncore_mmio_box_ctl(box),
->  				   SNR_IMC_MMIO_MEM0_OFFSET,
->  				   SNR_MC_DEVICE_ID);
->  }
-> @@ -5637,14 +5651,14 @@ int icx_uncore_pci_init(void)
->  	return 0;
->  }
->  
-> -static void icx_uncore_imc_init_box(struct intel_uncore_box *box)
-> +static int icx_uncore_imc_init_box(struct intel_uncore_box *box)
->  {
->  	unsigned int box_ctl = box->pmu->type->box_ctl +
->  			       box->pmu->type->mmio_offset * (box->pmu->pmu_idx % ICX_NUMBER_IMC_CHN);
->  	int mem_offset = (box->pmu->pmu_idx / ICX_NUMBER_IMC_CHN) * ICX_IMC_MEM_STRIDE +
->  			 SNR_IMC_MMIO_MEM0_OFFSET;
->  
-> -	__snr_uncore_mmio_init_box(box, box_ctl, mem_offset,
-> +	return __snr_uncore_mmio_init_box(box, box_ctl, mem_offset,
->  				   SNR_MC_DEVICE_ID);
->  }
->  
-> @@ -5701,12 +5715,12 @@ static struct uncore_event_desc icx_uncore_imc_freerunning_events[] = {
->  	{ /* end: all zeroes */ },
->  };
->  
-> -static void icx_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
-> +static int icx_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
->  {
->  	int mem_offset = box->pmu->pmu_idx * ICX_IMC_MEM_STRIDE +
->  			 SNR_IMC_MMIO_MEM0_OFFSET;
->  
-> -	snr_uncore_mmio_map(box, uncore_mmio_box_ctl(box),
-> +	return snr_uncore_mmio_map(box, uncore_mmio_box_ctl(box),
->  			    mem_offset, SNR_MC_DEVICE_ID);
->  }
->  
-> @@ -6003,10 +6017,10 @@ static struct intel_uncore_type spr_uncore_mdf = {
->  	.name			= "mdf",
->  };
->  
-> -static void spr_uncore_mmio_offs8_init_box(struct intel_uncore_box *box)
-> +static int spr_uncore_mmio_offs8_init_box(struct intel_uncore_box *box)
->  {
->  	__set_bit(UNCORE_BOX_FLAG_CTL_OFFS8, &box->flags);
-> -	intel_generic_uncore_mmio_init_box(box);
-> +	return intel_generic_uncore_mmio_init_box(box);
->  }
->  
->  static struct intel_uncore_ops spr_uncore_mmio_offs8_ops = {
-> @@ -6187,12 +6201,11 @@ static struct uncore_event_desc spr_uncore_imc_freerunning_events[] = {
->  
->  #define SPR_MC_DEVICE_ID	0x3251
->  
-> -static void spr_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
-> +static int spr_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
->  {
->  	int mem_offset = box->pmu->pmu_idx * ICX_IMC_MEM_STRIDE + SNR_IMC_MMIO_MEM0_OFFSET;
-> -
-> -	snr_uncore_mmio_map(box, uncore_mmio_box_ctl(box),
-> -			    mem_offset, SPR_MC_DEVICE_ID);
-> +	return snr_uncore_mmio_map(box, uncore_mmio_box_ctl(box),
-> +				   mem_offset, SPR_MC_DEVICE_ID);
->  }
->  
->  static struct intel_uncore_ops spr_uncore_imc_freerunning_ops = {
-> @@ -6881,20 +6894,24 @@ static unsigned int dmr_iio_freerunning_box_offsets[] = {
->  	0x0, 0x8000, 0x18000, 0x20000
->  };
->  
-> -static void dmr_uncore_freerunning_init_box(struct intel_uncore_box *box)
-> +static int dmr_uncore_freerunning_init_box(struct intel_uncore_box *box)
->  {
->  	struct intel_uncore_type *type = box->pmu->type;
->  	u64 mmio_base;
->  
->  	if (box->pmu->pmu_idx >= type->num_boxes)
-> -		return;
-> +		return -ENODEV;
->  
->  	mmio_base = DMR_IMH1_HIOP_MMIO_BASE;
->  	mmio_base += dmr_iio_freerunning_box_offsets[box->pmu->pmu_idx];
->  
->  	box->io_addr = ioremap(mmio_base, type->mmio_map_size);
-> -	if (!box->io_addr)
-> +	if (!box->io_addr) {
->  		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
->  }
->  
->  static struct intel_uncore_ops dmr_uncore_freerunning_ops = {
+> +		/*
+> +		 * Set up the unwind boundary: ensure the metadata
+> +		 * frame record has its {fp,ra} sentinel zeroed and
+> +		 * point fp/s0 above the metadata record. The type
+> +		 * field is inherited from the parent's pt_regs.
+> +		 */
+> +		childregs->stackframe.record.fp = 0;
+> +		childregs->stackframe.record.ra = 0;
+
+This relies on the parent always entering kernel via handle_exception
+on a user->kernel boundary (which writes FRAME_META_TYPE_FINAL).
+That is true for fork()/clone() today, but:
+
+   - The kernel-thread path right above explicitly assigns type =
+     FINAL, so the user-thread path looks asymmetric and like a
+     possible omission to anyone reading it cold.
+   - A future caller invoking kernel_clone() from a nested-kernel
+     context (parent pt_regs.type == PT_REGS) would silently produce
+     a broken unwind boundary on the new task.
+
+Recommend explicitly setting it here too:
+
+       childregs->stackframe.type = FRAME_META_TYPE_FINAL;
+
+Even if currently redundant, it is one assignment, costs nothing, is
+self-documenting, and fails closed instead of open.
+
+
+Thanks.
+Shuai
