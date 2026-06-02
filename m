@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2C93FF8BC
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 17:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F913FE664
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 17:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780422152; cv=none; b=tA4AZJIAvZauX8qaKfbhl37rdNWD/NNX2mRQJKfJB0822z2+tzDC6SQyzD10071/KPJvxl1Rqaa4o5+UqnsckyLnOe/30fi4D5QJkK+SK852kUVMbDs2ql91E5moNHq33DfSItu1X9fU/mkeKoCojzGDyPXHNwRfmZBqIFAF3u4=
+	t=1780422157; cv=none; b=Br9B+vyp8IucGPcq7sAwyrtDGtU58Yr9e6bT3CJpGe4F+s4O9CWp/fsgicRtYxlD83AKnP+pLOChadgtUxXlBC2UcKWTuSBP5Wv1nx71dBUvoFTlAONDNt9xJyviDY0bVeAlXwbI8stKzBkKael16kX1fa7orEg8NDSIBTYzRlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780422152; c=relaxed/simple;
-	bh=RDPpztvQRM3RZ+daGhsg3EoXAZWHqihVYgUsRCU+FAA=;
+	s=arc-20240116; t=1780422157; c=relaxed/simple;
+	bh=7zoS/DQb8LxZ/5FWG5oM7DskQu3ov3TTh9IX1qRXvmI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BdSK9L0Oy7v1OEcGBgmTpscGJ9MTShTRB6xJlyBUNequCkJfqHobOAUtBgdv7IGryncTHsRu1FSVHuhacRv/vs2uIqCL/van7tRT7CnAacdeabxjEJ1D4Atj8FTC65+S5WrgK6HgmTu9w3J1SNix14/FPVNYIg+K4vMB+8+dnAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uH1dLNHA; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=WUQoYo6MRWnKAlcIKa7Wm+kUnHVXoX2BLtAc1yjM+Z5nyqq8ndHz4FRNXAr8TIj0bmWBveOsrdrbvTahrJhyeL/rKrwmcwW+TIkT4mD+dN0C1iyj5HUHny9Mvblt6Zk75vHvX/DyLJ2YwFwsMKK/iBrof7aZclHlhdA38j2r55k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QBA3urfI; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uH1dLNHA"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304f1820babso5567165eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 10:42:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QBA3urfI"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304d0d0b28eso5749838eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 10:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780422150; x=1781026950; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780422155; x=1781026955; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XUbX/B067uq070YwFDLx4Fbydp30JsyYtkHKJ5q3D4M=;
-        b=uH1dLNHAC/A5W3HRqdnNxh2PPPOZLQC45nSZZJ4B/TIALb64jxNfE3rXj9al32IIYn
-         P7kg2GMaFpWfo6bUugWehbWUTEbvFI0ySAgWrzS1VoJV66EcG2UZasgh/UOeo223/A3t
-         n0Dz90oDptkNKjATbAmfP3llEcnNL1T/14XPzYyZPch70Tyhl9epw8O5dyLC9GewldkZ
-         Xz+fuRSj5iFyYqC1n34cMREwtsYrdT9PZ6hb+pxaNo0VbstoJynj9L4xTVVoxbO0+GK4
-         iItfS8JSyY+QAEhuI+OmELmcEPrcgk3nxcz6zEqCcTEWGZWZtfYDEL5qBcIkcCBgVnqX
-         Wavw==
+        bh=nQ36aqrIxJrk3Qf1tlYot1bO4SWFhpa59dUQaFvnNiY=;
+        b=QBA3urfIK4+OnXQT3oGXM03Mu1EZohm9qtKMRy6Woapt0fZxnYJYosB6JbkPHXD6JE
+         lsEtSLkM8iV1pcMylrFSBj7sXL0VNl8r8qL5pw31hnwCMxP1oaZiWYEDBXM28V3mmKtW
+         4Pw3ajYDt+EVqT+0wa5vNnOgptrcALi8md+rHZ7Na59NEO8WMtlQPLRAG+ZXNxyv0bMl
+         ONlUwfkLwRTuY53kkDp1KLwZWmGp50FKfhknDxyMEkLJwWUhSMmAx9sOyAY+r2jLFi0N
+         9cmPqUWW6i9GrZawWczUIfiGfDSsgQ245oEAM6gKaJyKz6OEcN9gPGHHGofTU4s4Oaj1
+         +IYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780422150; x=1781026950;
+        d=1e100.net; s=20251104; t=1780422155; x=1781026955;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XUbX/B067uq070YwFDLx4Fbydp30JsyYtkHKJ5q3D4M=;
-        b=kr3mP9EhxG9X1SzbiU3EzOpl0fj6nF3u9k1Yagu9dTAC73y2KCchIqfPO2sFgEverr
-         4Hed1n5EEzoRhQOhsTZTKHolk+B+AcXYAOY2kLyfcPVtwlqyCAyqM6XFUmpOQiQ9UVCs
-         H6BU3y/IaZZ+MSiFIlfFkquDymasA98TYlY8RTJ15xuyUg1Xtb0d/X9LtnES0A7nrYxg
-         giy32v+886Yr3+/UYmdq87IEusCGgtsRvb/yAM3ZxKuIedscEUS30346Txz59RyQQlMl
-         S+mNyMnK94auaU7QRue/dWexJqmGC5cEy9QK2SfIf6u7+g9aNo9D95gyYbpwz8yFZF7b
-         iugA==
-X-Forwarded-Encrypted: i=1; AFNElJ/BtkMtKbZQsH51L/sptxfn7yll4pmZleb/EvGQ2NItKzS5s8j6HBGdfe9eempsydbyEhGwjzDQarykmMxIOfH9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuMiEoMgSnW7yOBKIwniBaA6LbqZQxyt3F8BB1cQK76VvS9BzC
-	kBdcwFGZJJvL+a04ZmMTn5IVe3p1hvcP4DdmI/gcPClvsnLd+RUcz4i5RKNeurhQcFq+46nsCZ0
-	fNdqAzatpJA==
-X-Received: from dlbbz12.prod.google.com ([2002:a05:7022:238c:b0:137:f11d:50db])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e24:b0:135:dd7c:7
- with SMTP id a92af1059eb24-137d4294ec9mr7395080c88.38.1780422149796; Tue, 02
- Jun 2026 10:42:29 -0700 (PDT)
-Date: Tue,  2 Jun 2026 10:41:26 -0700
+        bh=nQ36aqrIxJrk3Qf1tlYot1bO4SWFhpa59dUQaFvnNiY=;
+        b=TQb9it2I3MiQ80P2YLv+uFldjJS0YMHvbN7eDFYHfaHUur12/uLrCpQSh7VKvCS/0s
+         KYbADRLoeZBpz3VsD3sAgmr+VYS+TUiIpCSLddVUBczYK/iRAdCgSO/uyDjvAL20NgzV
+         FR5y58z+RIYxP94gofswErvc9upw5PICdcKBTC6EwCE8BtuYDi6WA69BgTglJS28UYJk
+         24wSiqt4Z9aLqUqymeTu/GSKDwunYe2yX3M/7wJjhmV6z7yCeN5pgqlcnnL2P0hUUv0/
+         EDtEHAKCR4MbbdNsae3gcBl34XZutwAzLT70dgrxhodwQ7WTD6bF/CAdjKxfc4HPIZIz
+         q2nA==
+X-Forwarded-Encrypted: i=1; AFNElJ+vhMPVA8VVbnmCKGEBu/vrjJ6Q2YdFm8FxAdsRTBheJUwKolN5eUC8J9NyCfy0loG5EdGv6ZsTfy7AX2vOsgg2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxbr4IGeuuuBH7iqqi1eqJNczsRsX/IAXw0/Pnzm1YBIaIpUIJU
+	u7pEc4MfZKd1kelodP2wPWRvWaJhk+Ske/whZ28eZGriFOEkHPfYcf+MfdhdD/ZQN0DVM9dI2Xo
+	5pTdcBvTp5w==
+X-Received: from dybml15.prod.google.com ([2002:a05:7301:150f:b0:2f2:fc0:8869])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:80c6:b0:304:ab8:f899
+ with SMTP id 5a478bee46e88-304fa4c9603mr8523416eec.8.1780422154783; Tue, 02
+ Jun 2026 10:42:34 -0700 (PDT)
+Date: Tue,  2 Jun 2026 10:41:28 -0700
 In-Reply-To: <20260602174129.3192312-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260602073132.2653307-1-irogers@google.com> <20260602174129.3192312-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1013.g208068f2d8-goog
-Message-ID: <20260602174129.3192312-16-irogers@google.com>
-Subject: [PATCH v8 15/18] perf test: Add shell test to validate JUnit XML
- reporting output
+Message-ID: <20260602174129.3192312-18-irogers@google.com>
+Subject: [PATCH v8 17/18] perf pmu: Recognize 'default_core' as a core PMU and
+ document matching
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
@@ -68,87 +68,57 @@ Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add a shell test script (test_test_junit_output.sh) to execute perf test
-with the -j/--junit option and validate that the generated test report
-complies perfectly with standard XML formatting using Python's
-ElementTree XML parser.
+The is_pmu_core function checks if a PMU name corresponds to a core
+CPU PMU. However, it currently fails to recognize "default_core" as
+a core PMU.
+
+When "default_core" is used, the PMU scanning fallback in pmus.c
+scans the "other_pmus" list. This scan is slow and always misses because
+"default_core" is a core PMU, leading to unnecessary overhead.
+
+Update is_pmu_core to recognize "default_core" directly. Additionally,
+document the different matching approaches (exact name for x86/s390,
+sysfs-based cpus file check for ARM/hybrid) to clarify how core PMUs are
+classified.
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../tests/shell/test_test_junit_output.sh     | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_test_junit_output.sh
+ tools/perf/util/pmu.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/test_test_junit_output.sh b/tools/perf/tests/shell/test_test_junit_output.sh
-new file mode 100755
-index 000000000000..5104ac1e1e6d
---- /dev/null
-+++ b/tools/perf/tests/shell/test_test_junit_output.sh
-@@ -0,0 +1,63 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# perf test junit XML output validation
-+
-+set -e
-+
-+err=0
-+
-+shelldir=$(dirname "$0")
-+# shellcheck source=lib/setup_python.sh
-+. "${shelldir}"/lib/setup_python.sh
-+
-+result=$(mktemp /tmp/__perf_test.output.xml.XXXXX)
-+
-+cleanup()
-+{
-+	rm -f "${result}"
-+	trap - exit term int
-+}
-+
-+trap_cleanup()
-+{
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup exit term int
-+
-+test_junit_output()
-+{
-+	echo "Testing perf test JUnit XML output command"
-+	perf test -v -j"$result" util || true
-+	if [ -s "$result" ] ; then
-+		echo "perf test JUnit XML output command [SUCCESS]"
-+	else
-+		echo "perf test JUnit XML output command [FAILED]"
-+		err=1
-+	fi
-+}
-+
-+validate_xml_format()
-+{
-+	echo "Validating perf test converted JUnit XML file"
-+	if [ -f "$result" ] ; then
-+		if $PYTHON -c \
-+		    "import xml.etree.ElementTree as ET; ET.parse('$result')" \
-+		    >/dev/null 2>&1 ; then
-+			echo "The file contains valid XML format [SUCCESS]"
-+		else
-+			echo "The file does not contain valid XML format [FAILED]"
-+			err=1
-+		fi
-+	else
-+		echo "File not found [FAILED]"
-+		err=1
-+	fi
-+}
-+
-+test_junit_output
-+validate_xml_format
-+
-+cleanup
-+exit ${err}
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 23337d2fa281..9994709ef12b 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -2029,9 +2029,26 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
+ 	return 0;
+ }
+ 
++/**
++ * is_pmu_core() - Check if the given PMU name corresponds to a core CPU PMU.
++ * @name: The PMU name to check.
++ *
++ * Core PMUs can be identified by:
++ * 1. Exact name match:
++ *    - "cpu": Typically used on x86 architectures.
++ *    - "cpum_cf": Typically used on s390 architectures (CPU Measurement Counter Facility).
++ *    - "default_core": A generic name used to refer to the default core PMU.
++ * 2. Sysfs file existence check (is_sysfs_pmu_core):
++ *    - Typically used on ARM systems or Intel hybrid architectures (e.g., "cpu_atom",
++ *      "cpu_core"). This approach checks if the sysfs directory for the PMU
++ *      contains a "cpus" file.
++ */
+ bool is_pmu_core(const char *name)
+ {
+-	return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sysfs_pmu_core(name);
++	return !strcmp(name, "cpu") ||
++	       !strcmp(name, "cpum_cf") ||
++	       !strcmp(name, "default_core") ||
++	       is_sysfs_pmu_core(name);
+ }
+ 
+ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
 -- 
 2.54.0.1013.g208068f2d8-goog
 
