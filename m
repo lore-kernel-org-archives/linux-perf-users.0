@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39603ED3AF
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B273E51FD
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:55:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780415033; cv=none; b=BLRQJCpcqk4GuIccfTCjW7aXg9zLosss8/BZWujDSKvlzPy3fXFkfyhzfEytraJ4LaRmOLb9guMPTUXSm4m769/VZSiNBQebpitism94GNwywao+JplyceoN2Bes2aquzZVngswJrt6O5b68NR5aboN6vsfhsOFIEk6HrsJ5FJY=
+	t=1780415731; cv=none; b=A9ghW760zLDlxIoN6CsA8up1/aXljxJs0BaHzbT29SCj2rQqmc0InhtkwnmE58wg9n3NkaBTdBK6ywxi7E+RWHsI5Z1Fu8qjhEBqAOiPTpx6Iu+e73RWksMXhhHg9By5NMQ9FUj86RnfyRFwDSLZKp0cZ9doBDI8FoUhVNWweDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780415033; c=relaxed/simple;
-	bh=Bs9RF74V6MWBO/rgd/ieGJXhhL8NLbqsX0LCqN1mLto=;
+	s=arc-20240116; t=1780415731; c=relaxed/simple;
+	bh=WhlyVm835evop7XOMvOPGHkTLWBfXEWwdt/VEldDhaA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hLzmnEVmvnn2wItBlQNgVoCEMSupWIY+kZgHwaQSOREp1aaqNlXGCTTixTH3Fn1ALMxE27iBod1zjibMnX5VsqozJdNMCeKxSeY2Ojn18lTtYT83PL+yoV7HrdkQmNBYjX+Qb7T0YfQedgAy4w+YeAxIBvCoQ9rjIRjT6Et9Lxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVfdBKlk; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=lMF1CUAv6fFrqD4fS3mSzGoVHky5iSPC1YIVYcpomQVsJ7Io5EkWp6cLwti85KvZ6vg/e3HGbi1FLV/ChZPQOdPSeiDlf3KhvB5RlbDjvl5X+3ZA19xSUgrsG7cYPMcI3UjqD3zBKKzXTieYeFIeFmS6+ftHWEOYwhW4FCsgLdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CeCB3fm7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVfdBKlk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E1461F00898;
-	Tue,  2 Jun 2026 15:43:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CeCB3fm7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AD4A1F00893;
+	Tue,  2 Jun 2026 15:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780415032;
-	bh=GTTBHZxpcSrfkLwlB/A36S707A+Z9VmMm+4VtykuZYU=;
+	s=k20260515; t=1780415730;
+	bh=j0ji1Rm9OfbY3ID0Ts/IsZ20lHfTaJLXIpTqsadMhjE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eVfdBKlk5LSzHepb770In7TFGptSXQAlmNBkzZztiI32aFKGzXVnpHvoTx/RRQXQ8
-	 n/0FOv0Gr4+lCGtVu7oglRIJ9DlrE8sNqkXIJy/E0sRnowXT4f2Cr6mwVBRF7nVamV
-	 49cV0Ogst9aaJyD7Qsf2DZYKoargo+bBbRA4dVYaWl8IWnqQDC/HuWXInZHKbPKhQj
-	 yT21rc8QwhBpCJ0Z0VeHkRmjadY+tYIBgU4jLtgpg1gz+tYmNApk2BJBxv2TI5dCDm
-	 h75qHlTvbXO8KCwb0j8Y9oLN5NdxQgRLvzYBef/e5+LSAwC4tvYka/481JRdTMmc0+
-	 RO9uwoS2cHVXg==
+	b=CeCB3fm79cy2IaU3/HgWB9xut82AHZWGsFLiAyya34QDx9D1fDqNMZAjcGmif+Zxd
+	 hEhZZPZocZwwYEZMT4BUA6sk8xjOygVpOWx/UKa90wnCR7MQ4R6wjKCE6hHjROFtyi
+	 75zDQI+NQM71Q7X3lxbGAB1u71Y4fatu/GR63r/Gqgx2q/iFA5dKqa1gUlrw5w90Qw
+	 wOcu9Ky5GJnGqFo1e7mAg/uz+xs9UiApYxsJIvBzAo0eo+h2MGkH6Itbk/Z1dqEKs/
+	 /A3XvJBe7j0nkojvtGLTe2bPt5dYwS/IH3s5K7klfkQWWQrjNkLOnIErXf26Gl57va
+	 +rbGrChC6xyUQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 06/19] perf symbol: Avoid use of machine__is
+Subject: Re: [PATCH v12 17/19] perf env: Add helper to lazily compute the
+ os_release
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602152516.2831152-7-irogers@google.com>
-References: <20260602152516.2831152-7-irogers@google.com>
+In-Reply-To: <20260602152516.2831152-18-irogers@google.com>
+References: <20260602152516.2831152-18-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 15:43:51 +0000
-Message-Id: <20260602154352.5E1461F00898@smtp.kernel.org>
+Date: Tue, 02 Jun 2026 15:55:30 +0000
+Message-Id: <20260602155530.7AD4A1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,84 +46,84 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Cross-platform analysis regression due to host architecture fallba=
-ck for guest kernels
+- [High] Premature lazy initialization in pipe mode poisons `perf_env` with=
+ the host's `os_release`, corrupting JSON/CTF exports and offline symbol re=
+solution.
 --
 
-commit 5ffd66d0549571c3b1c8d4a0baf650be921efbdd
+commit 1b9df6eca5b172acf3ec3492723767468d3b5ec6
 Author: Ian Rogers <irogers@google.com>
 
-perf symbol: Avoid use of machine__is
+perf env: Add helper to lazily compute the os_release
 
-This commit switches from using machine__is() to dynamically checking the
-ELF machine type via the DSO or running machine environment. This avoids
-imprecise string comparisons and reliance on the perf_env arch string.
+This commit introduces a helper to lazily initialize the os_release
+string in the perf environment, falling back to the host's release via
+uname when the environment indicates live mode.
 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 714b6e6048fa2..2ce512f08a1d6 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -851,6 +851,23 @@ static int maps__split_kallsyms_for_kcore(struct map=
-s *kmaps, struct dso *dso)
->  	return count;
->  }
-> =20
-> +static uint16_t machine_or_dso_e_machine(struct machine *machine, struct=
- dso *dso)
-> +{
-> +	uint16_t e_machine =3D EM_NONE;
-> +	/* DSO should be most accurate */
-> +	if (dso)
-> +		e_machine =3D dso__e_machine(dso, machine, /*e_flags=3D*/NULL);
-> +
-> +	if (e_machine !=3D EM_NONE)
-> +		return e_machine;
-> +
-> +	/* Check the global environment next. */
-> +	if (machine && machine->env && machine->env->e_machine !=3D EM_NONE)
-> +		return machine->env->e_machine;
-> +
-> +	return perf_env__e_machine(machine ? machine->env : NULL, /*e_flags=3D*=
-/NULL);
-
-[Severity: High]
-Does this fallback logic inadvertently break cross-platform analysis for
-guest kernels?
-
-When analyzing guest kernels, machine->env is NULL. If dso__e_machine()
-returns EM_NONE (e.g. for kernel pseudo-files, where open() fails), this
-falls through to call perf_env__e_machine() with a NULL environment.
-
-A NULL environment passed to perf_env__e_machine() delegates to
-perf_env__e_machine_nocache(), which invokes uname() to unconditionally
-substitute the host's architecture. The previous code using machine__is()
-safely returned "unknown" for guests without falling back to the host.
-
-> +}
-> +
-
+> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-c=
+onvert-json.c
+> --- a/tools/perf/util/data-convert-json.c
+> +++ b/tools/perf/util/data-convert-json.c
 [ ... ]
-
-> @@ -1716,7 +1732,7 @@ int dso__load(struct dso *dso, struct map *map)
->  			ret =3D dso__load_guest_kernel_sym(dso, map);
+> @@ -296,7 +297,8 @@ static void output_headers(struct perf_session *sessi=
+on, struct convert_json *c)
+>  	output_json_key_format(out, true, 2, "feat-offset", "%" PRIu64, header-=
+>feat_offset);
 > =20
->  		machine =3D maps__machine(map__kmaps(map));
-> -		if (machine__is(machine, "x86_64"))
-> +		if (machine && machine_or_dso_e_machine(machine, dso) =3D=3D EM_X86_64)
+>  	output_json_key_string(out, true, 2, "hostname", env->hostname);
+> -	output_json_key_string(out, true, 2, "os-release", env->os_release);
+> +	output_json_key_string(out, true, 2, "os-release",
+> +			       perf_env__os_release(env));
 
 [Severity: High]
-If an x86_64 host analyzes a cross-platform non-x86 guest kernel, will the
-host fallback cause EM_X86_64 to match here?
+In pipe mode, feature headers are received as interleaved events in the data
+stream, so the environment is not fully populated until
+perf_session__process_events() runs.=20
 
-Due to the host fallback described above, this appears like it would
-mistakenly trigger machine__map_x86_64_entry_trampolines() for the non-x86
-guest, potentially injecting bogus memory maps and corrupting the guest's
-layout analysis.
+Because output_headers() is called before the stream events are processed,
+will calling perf_env__os_release() here trigger the uname fallback and
+cause a regression that permanently writes the host's release string to
+the json output instead of the guest's?
 
->  			machine__map_x86_64_entry_trampolines(machine, dso);
->  		goto out;
->  	}
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+[ ... ]
+> @@ -361,6 +361,44 @@ bool perf_arch_is_big_endian(const char *arch)
+[ ... ]
+> +const char *perf_env__os_release(struct perf_env *env)
+> +{
+[ ... ]
+> +	/*
+> +	 * If env->arch is set, this is an offline target environment.
+> +	 * If the os_release is not populated in the file, we do not want
+> +	 * to poison it with the host's release which would break guest checks.
+> +	 */
+> +	if (env->arch) {
+> +		release =3D NULL;
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * The os_release is being accessed but wasn't initialized from a data
+> +	 * file, assume this is 'live' mode and use the release from uname. If
+> +	 * uname or strdup fails then use the current perf tool version.
+> +	 */
+> +	ret =3D uname(&uts);
+> +	env->os_release =3D strdup(ret < 0 ? perf_version_string : uts.release);
+
+[Severity: High]
+Does this caching behavior cause a regression in offline symbol resolution
+for unparsed pipe streams?
+
+If the architecture string is not yet set because the pipe stream hasn't
+been parsed yet, this helper assumes live mode and caches the host's release
+in the environment structure.=20
+
+Could this cause early callers, such as vmlinux_path__init() during symbol
+initialization, to search for the host's kernel symbols instead of the
+target's?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602152516.2831=
-152-1-irogers@google.com?part=3D6
+152-1-irogers@google.com?part=3D17
