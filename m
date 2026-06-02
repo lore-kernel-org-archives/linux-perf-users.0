@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF5E31E845
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 07:31:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FBD381AE7
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 07:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780385511; cv=none; b=K8LFQrM+TkDieezU/XDiKpdKBXDSpmW3weETWaSKwh6sF3aPsZJKaZ75F0k+CtOCR5X+Y57L12zltXf0h+3qbUx/s4CQ60srLCD5VUpajVK4rG9ggMbXhBHfj5bu6dw4Lo7X+em93iUrUWPER7rwSEU9GH4vmmw0be0z5pRIRTM=
+	t=1780385514; cv=none; b=UXr4Rum4B5hirpv+UdvqZkI9E+n5RO80jaDJ/5v+EHmahF1GiVedVtFagPmECCHagC3UplD0fv6fT5p3AM4XxCp5HAQrRpGIFWSc/a9VzU9mGkdKN0WtzwaQtRnnbWdNPhKSCaXcGLm/h53nVA2Frgeu+gPUV0+li5i5Ip3zYgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780385511; c=relaxed/simple;
-	bh=64S2aayJ99hXOemnhzucwrwM0vOILIeQ2ZILfYR6sJU=;
+	s=arc-20240116; t=1780385514; c=relaxed/simple;
+	bh=mEHerDP1++opy8FyGsbuBHUJm+qBAzla9yXOjxT+n1Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DbSF/1vSXU52aX+BVSgMHPk3PI6rVP9rWywbLJ0hqp2V/tLGt5NgFRSJDPwHDldHp8t5ed6Cf31vhcicICjJ6wYdXyMP5LJ3AIUg3vsawZDco3tZNcZSWTF4SseNnHLZ93u6zafYZduM3fOjtBKPUUrTIX6r2R1SvRM2fjG/tCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mhEvFuE9; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=V+3k/E8z4nzCmadmfbxPvIi+MJejLsUynSddQelJ2GJtDvxVo8CpARmggQzpKYAFoB+F3LOwAoHD69OQVxomXxAVQ698wua9IObNlWJ/CO3bGHuMqZwu++y8ekr42i9mvaSEBySpd/WLzBNEMvo1g35FkX757l6/4fxA0H75/wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mmj6E8OQ; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mhEvFuE9"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304b8d0ee63so9008000eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 00:31:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mmj6E8OQ"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304ea1eea05so11863871eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 00:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780385507; x=1780990307; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780385509; x=1780990309; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=inYIMUya0beoL7FJV5FWOzzAQLvU+uxd6nfrd81kpuo=;
-        b=mhEvFuE9lPk2mznxqC3TwPVJUr6G0xA7wvrCSkc9bz0WBPAkyDrfKzVuJf55jc96+A
-         5MNws5exXAQvtP5Co8dF33G1ymbf0OSO06zdv0qG1CxB91F5uUm55ZLv5+xAVdyIj9Wd
-         MT+W2J7CC0kDqtTpbcawYZwpZHtkHD6bgKVfXzpU9eXZ55T/0zIas0iTgwItYQvb8T5W
-         7IJL42iIKWI3nJWr8r5sHXya2QGU/JmThj+R4//fwSC9NYfOLtZRagBo643wkoyIegPa
-         m9RDP2ZtyIvwsrptu4+unZYvaPTqOUPA6taGGQ1y0A4VbttKMsERCyPEbgdPfFFOnHRt
-         7auw==
+        bh=dMAmpupralEEXdLFpGMCVqRubuVkIMhVdyqS5bCiVVQ=;
+        b=Mmj6E8OQmi4wBX+S9M4UDlIFaEtvmPAg0t87hgCu0FLK/zxpfh1YcWt9pGfaRJnVq6
+         c17GG7hppJit+ktsfd9Ew7MVbYcBYthpv0IHR/U2nnGMxinAlDFaDzwBsquL26BP6H+c
+         RqqMc4oi8B5M5ajg2uxV+6RWfc0FiMUR35Tg+lsKrqg7nthDUaYBnues3oZJwGWP9zDz
+         2eHyzlbUBXyqRD7yZqAMmckGQSXwRw5dg+o/k+oc4pCzHk8p+Y2pGvD35M/Fu49uGO8G
+         HDg2j0coejcqgA9Z2flqNzZY9DUWlEpw4H2IsT2WWKkBAuwuFpiLNqaNAvGtQi2mIe+X
+         37rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780385507; x=1780990307;
+        d=1e100.net; s=20251104; t=1780385509; x=1780990309;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=inYIMUya0beoL7FJV5FWOzzAQLvU+uxd6nfrd81kpuo=;
-        b=VZnZhepfPyfozMQ+xzZWnyWVpdmozEirpg6EzKxIC3YBEVIuRC82SKfSnTinHyDKTA
-         ZfK/tv/3gWryUSWTE5wJGxSKDizolqNOe+dQV2zpqHR9UnfcUrdjmmOStcx1NsWfO4f3
-         JNm8wQ/rXyHQZWfRKyObR+T4V0NvbbnIxoJXb2FE+faCsORkS/92VuXOrqp6z6TJza+O
-         jmmFA2VVsedn215le52SikkzCIU4AKF4tUvF+3l5wsQMhIQIe2GTfIwlFRBL00Z6QRxt
-         2N0S5InLgxsnZkUAH1U0eTpNSSzyqSGdEQv38Aa8agQ5TiYQyH6gaY7mR7VfB173B8Pr
-         atPw==
-X-Forwarded-Encrypted: i=1; AFNElJ+rsfqwRzo/G9cRnE4ZwIgPQb4bm75jiTnPWL4l0FJ1D8VTCiIFfJy5qJOV+KNJzZn2kX5wz5kYpnT2rbV0w8le@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkpZR+lCAzDAWIjlReeGgLhMH2Y1FSxRJl32CYHoCL7bBvcQAa
-	Kiq6YWWXf3olIV/mu5YZoZ7/9TXyuT9xUktE18TVoZxMfxg6N8BvFDnygjIjeXity1S+2AhAcD3
-	+h41EjEwkhQ==
-X-Received: from dybtx1.prod.google.com ([2002:a05:7300:f281:b0:304:dc92:9a62])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:a44c:b0:2da:a813:a5fd
- with SMTP id 5a478bee46e88-304fa5a7ac4mr6717364eec.22.1780385506875; Tue, 02
- Jun 2026 00:31:46 -0700 (PDT)
-Date: Tue,  2 Jun 2026 00:31:19 -0700
+        bh=dMAmpupralEEXdLFpGMCVqRubuVkIMhVdyqS5bCiVVQ=;
+        b=R8SdgqkOedoWJSQjoHQiW5KgFJ5u9sTp8b4zHN+GehbBwuxB0ObJlPf+OzWw+vHQ7M
+         ljSw/9Qktb3bQj7pzB3jwbCcc2ysTG1YL2zz5kkCz7R75Z1Fwbrc6hjMJA3FA20xnMyi
+         z9PDanAJ3GLzma10pDOJcF+gJzuaINJ6wpn24e9ERGtIqCwV6/9BW/dJz3Bbes7pblid
+         QWH0Mf/MMWc2i7zIlDAn0MxlyQoda0Kgco57N9qGQIB5rldrHTZoZYpnfjQB8mAlEAoe
+         /iGQrC+ur7Zs6P4ZrBPaj1sxyeRFtDdXLCIUeCnzirVpr+4zp4CtpoNaU4igEHNPfeaJ
+         1A9A==
+X-Forwarded-Encrypted: i=1; AFNElJ98HC3t2ATQDGC17qhnR2/PMtXLrmpvldclGdi/LtGmm5cEgHBe7ofbyQybZXNTv5vQg5AyqolUjF7ZEr1r2tob@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgQp1Pn0h1rf9Onp9SWqKb6b1PSy7xoYAGAGT/QfZZgPcXoWmJ
+	3TRkGxCiSKbQIdH0b/AENZ8b8iLoVWskaKjmriEPBF+VCO9033LfZdfKKanNsccCX0JfKDwfsEH
+	6lgCjVfgJhA==
+X-Received: from dycna11.prod.google.com ([2002:a05:7300:ea8b:b0:2f6:cacc:a338])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1698:b0:304:e865:f7d1
+ with SMTP id 5a478bee46e88-304fa74349amr7066793eec.25.1780385509303; Tue, 02
+ Jun 2026 00:31:49 -0700 (PDT)
+Date: Tue,  2 Jun 2026 00:31:20 -0700
 In-Reply-To: <20260602073132.2653307-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260601061401.1541457-1-irogers@google.com> <20260602073132.2653307-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.929.g9b7fa37559-goog
-Message-ID: <20260602073132.2653307-5-irogers@google.com>
-Subject: [PATCH v7] perf test: Drain pipe after child finishes to avoid losing output
+Message-ID: <20260602073132.2653307-6-irogers@google.com>
+Subject: [PATCH v7] perf test: Support dynamic test suites with setup callback
+ and private data
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
@@ -67,40 +68,81 @@ Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-When running tests in parallel, the parent process reads output from the
-child's pipe. However, it might exit the loop as soon as the child is
-detected as finished, potentially missing data that arrived in the pipe
-just after the last poll or before the loop terminated.
-
-Address this by draining the pipe after the main loop in finish_test.
+Add void *priv to struct test_case to allow passing per-test context.
+Add int (*setup)(struct test_suite *) to struct test_suite to allow
+dynamic generation of test cases. Update build_suites() to invoke the
+setup callback for each suite if present, ensuring dynamic cases are
+available before listing or running.
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/perf/tests/builtin-test.c | 15 ++++++++++++++-
+ tools/perf/tests/tests.h        |  2 ++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index f2c135891477..7946878195b7 100644
+index 7946878195b7..2ccb52a776cc 100644
 --- a/tools/perf/tests/builtin-test.c
 +++ b/tools/perf/tests/builtin-test.c
-@@ -483,6 +483,16 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
- 		if (err_done)
- 			err_done = check_if_command_finished(&child_test->process);
- 	}
-+	/* Drain any remaining data from the pipe. */
-+	if (err > 0) {
-+		char buf[512];
-+		ssize_t len;
+@@ -765,10 +765,19 @@ static struct test_suite **build_suites(void)
+ 	for (size_t i = 0, j = 0; i < ARRAY_SIZE(suites); i++, j = 0)	\
+ 		while ((suite = suites[i][j++]) != NULL)
+ 
+-	for_each_suite(t)
++	for_each_suite(t) {
++		if (t->setup) {
++			int ret = t->setup(t);
 +
-+		while ((len = read(err, buf, sizeof(buf) - 1)) > 0) {
-+			buf[len] = '\0';
-+			strbuf_addstr(&err_output, buf);
++			if (ret < 0)
++				return NULL;
 +		}
+ 		num_suites++;
 +	}
- 	if (perf_use_color_default && last_running != -1) {
- 		/* Erase "Running (.. active)" line printed before poll/sleep. */
- 		fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
+ 
+ 	result = calloc(num_suites + 1, sizeof(struct test_suite *));
++	if (!result)
++		return NULL;
+ 
+ 	for (int pass = 1; pass <= 2; pass++) {
+ 		for_each_suite(t) {
+@@ -831,6 +840,8 @@ int cmd_test(int argc, const char **argv)
+ 	argc = parse_options_subcommand(argc, argv, test_options, test_subcommands, test_usage, 0);
+ 	if (argc >= 1 && !strcmp(argv[0], "list")) {
+ 		suites = build_suites();
++		if (!suites)
++			return -ENOMEM;
+ 		ret = perf_test__list(stdout, suites, argc - 1, argv + 1);
+ 		free(suites);
+ 		return ret;
+@@ -863,6 +874,8 @@ int cmd_test(int argc, const char **argv)
+ 	rlimit__bump_memlock();
+ 
+ 	suites = build_suites();
++	if (!suites)
++		return -ENOMEM;
+ 	ret = __cmd_test(suites, argc, argv, skiplist);
+ 	free(suites);
+ 	return ret;
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index ee00518bf36f..9bcf1dbb0663 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -38,12 +38,14 @@ struct test_case {
+ 	const char *skip_reason;
+ 	test_fnptr run_case;
+ 	bool exclusive;
++	void *priv;
+ };
+ 
+ struct test_suite {
+ 	const char *desc;
+ 	struct test_case *test_cases;
+ 	void *priv;
++	int (*setup)(struct test_suite *suite);
+ };
+ 
+ #define DECLARE_SUITE(name) \
 -- 
 2.54.0.929.g9b7fa37559-goog
 
