@@ -1,108 +1,165 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BAE39989D
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3B33A8723
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:50:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780382797; cv=none; b=tspTjZuHeme3OVew05Hkc735hSMYz/VT2YhuiTCj8ij6C2/xow+4YmAtJeQ/FI6LTrNsYWoWUQgnCWsn+ts3Gke9cTRIqQQc2LTvfy2itoQaqY8HYTBMHSJUMv0LnO/yaASlLZO2iFHwvp539BN6oCWQdC9MIc9ypFHyhGqV1hQ=
+	t=1780383030; cv=none; b=mdZhNIyD1luNtXE87ZktswAs9b1l7QEumiGx9qKsk+Wvjoz8oKP7u4CfZEsR8VwheVWKlA5c5s9VuyBZgL1dvU6PMBofHLExv6FqIf2iwM2ew4eM1HfxuOvu94rocrZjwB/bVcCSX9SzLbhJCeTO9wRuxToXr51f1SJDYOb5La8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780382797; c=relaxed/simple;
-	bh=akSS/mUboGOO/dICr4er5JQqHBXmOhki4Az4Ty3a4bs=;
+	s=arc-20240116; t=1780383030; c=relaxed/simple;
+	bh=8cZyZJeFK27Lio4PB44oDyt/EoSdjMsd13C0TcwsdPs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dzhLxhXVDRvxHtWguOx2acsgvl5iHPgCf69wQiwXb/aVudr6EkGVBojTknIDcltrYC8Z0hg734mZWO6bGMUi2JMvYvkH5ASr7HJsDREiiqkXT+tmCbycTasP1JeMZhedLbDJl9pcb5ttrxZRnXuY9Zji0x+clAyMtGsR8t33oFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWGl4w4O; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=nCVzZLYCk8BKH3zrD6tGpYS8HADoATocrxWfOJfFmn91UPekME8aRFg54J7TffBKOcWvGVtUxYMheflr/ATnOnmBJKBkUYrv4DZTkaEHRZFSWFKU4HI3d6g5HO420AdXZk6tM7hz/5wh+DazgJQKMII99oIPnKAenusqGVBR/i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdF1oMs6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWGl4w4O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C160C1F00893;
-	Tue,  2 Jun 2026 06:46:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdF1oMs6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D79BE1F00893;
+	Tue,  2 Jun 2026 06:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780382795;
-	bh=jkyrrCzzEXoUup6AZ7/jUm6zXfX6P38mRZXHjLaFrj0=;
+	s=k20260515; t=1780383029;
+	bh=DdYEyxbfAjgS7uuyGf3oxT2WJIM4Te+oko2pS8UscF4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fWGl4w4OU1re4SorGRwfs5AKgwzOPVsBfcC8kwcYunme8Mt2KpFouyl/sskokhJ5L
-	 A02DXPdwHdDLfKBpiRA/KooifKcu34u5z323bg5Q09TffDCMF7ZqggFgyoIiJ8+i1E
-	 uroV00wBsls/Ob+vhAd6db8fUekDIXDGnuFvlw7V9FdV0235v3V+97K8SEPYhZUbX0
-	 vA6z0wGYnb9OTUtUZps4ip5MmVLKtQEAFaBD0YAPriIbmb/xL6oLfmUPTWowwl9aML
-	 DNkk0V3n2Kc8E6unM1AIAsmyf+r3KE0gwX9pR1Xal4nxDSRuX09TtEobgzsK09/7f6
-	 ATUkSM2j5gGsQ==
+	b=DdF1oMs63Xa2svFqlH5uAAwD7XLT0Uqxz/5S4xnJL2vEjoMiTguJqWUg5RivlyeYS
+	 PMsRdh1jIh7DBrWV+V8lvwxifBnkydbzWPkyS2BBJJ3d61xDpzdn58oW8VRxkRMnMd
+	 v5wqQc7cHgoH3R4SjIDPmm6thwSSXGVkxtcnPoDlSFAlijVIxEFEspIqEwx6gpZLW3
+	 bRyoGH9VkN98eY4Q7hQkG3G7WQeY7Rmbkz7SJlFl4Ibs6kPTaM7ZPKC+4b3aohAKIB
+	 77D/gRJNHU9CIqlUJ58PeuNZx97y4w+0oOuzLrPWqVHDDgTA/KjP4G0dSgpLQd2C0f
+	 KGVz/YosoJMfg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 05/19] perf print_insn: Use e_machine for fallback
- IP length check
+Subject: Re: [PATCH v11 17/19] perf env: Add helper to lazily compute the
+ os_release
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602062452.2583619-6-irogers@google.com>
-References: <20260602062452.2583619-6-irogers@google.com>
+In-Reply-To: <20260602062452.2583619-18-irogers@google.com>
+References: <20260602062452.2583619-18-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 06:46:35 +0000
-Message-Id: <20260602064635.C160C1F00893@smtp.kernel.org>
+Date: Tue, 02 Jun 2026 06:50:28 +0000
+Message-Id: <20260602065028.D79BE1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] is64bitip() incorrectly falls back to the host architecture via =
-uname() for guest machines, breaking instruction decoding bitness for 32-bi=
-t guest analysis on x86_64 hosts.
+
+New issues:
+- [High] The `perf_env__os_release` helper incorrectly identifies pipe mode=
+ as live mode due to uninitialized `env->arch`, prematurely poisoning the e=
+nvironment with the host's OS release.
+
+Pre-existing issues:
+- [High] Passing a NULL pointer to `snprintf` with a `%s` format specifier =
+causes Undefined Behavior and crashes.
+- [High] Destroying and locking uninitialized synchronization primitives (m=
+utex and rwlock).
 --
 
-commit 57b90f6c4edae48460ac4aff9f63c175178b0004
+commit 18f3f0f76a0f321e841ef41fc691a35a33c63e31
 Author: Ian Rogers <irogers@google.com>
 
-perf print_insn: Use e_machine for fallback IP length check
+perf env: Add helper to lazily compute the os_release
 
-This patch avoids string comparisons with perf_env arch, switching to
-using the more precise ELF machine. It also sorts header files and fixes
-missing definitions.
-
-> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
-> index 02e6fbb8ca04e..4068436f26ea4 100644
-> --- a/tools/perf/util/print_insn.c
-> +++ b/tools/perf/util/print_insn.c
+In live mode the os_release isn't being initialized, make a lazy
+initialization helper that assumes when the os_release isn't
+initialized this is live mode.
 
 [ ... ]
 
-> @@ -33,13 +38,13 @@ size_t sample__fprintf_insn_raw(struct perf_sample *s=
-ample, FILE *fp)
->  static bool is64bitip(struct machine *machine, struct addr_location *al)
->  {
->  	const struct dso *dso =3D al->map ? map__dso(al->map) : NULL;
-> +	uint16_t e_machine;
-> =20
->  	if (dso)
->  		return dso__is_64_bit(dso);
-> =20
-> -	return machine__is(machine, "x86_64") ||
-> -		machine__normalized_is(machine, "arm64") ||
-> -		machine__normalized_is(machine, "s390");
-> +	e_machine =3D perf_env__e_machine(machine->env, /*e_flags=3D*/NULL);
-> +	return e_machine =3D=3D EM_X86_64 || e_machine =3D=3D EM_AARCH64 || e_m=
-achine =3D=3D EM_S390;
-
-[Severity: Medium]
-Does this change break instruction decoding bitness for guest machines?
-
-For guest machines, machine->env is often NULL. The previous code
-handled this gracefully because machine__is() checks perf_env__raw_arch(),
-which returns "unknown" when the environment is NULL, safely returning
-false for the 64-bit check on x86_64 hosts.
-
-With the new logic, passing a NULL env to perf_env__e_machine() delegates
-to perf_env__e_machine_nocache(), which calls uname() to retrieve the
-local host architecture.
-
-If analyzing a 32-bit guest trace on a 64-bit x86_64 host without a valid
-DSO present, this fallback would return EM_X86_64. Could this cause
-is64bitip() to return true, improperly decoding the 32-bit guest
-instructions with 64-bit bitness?
-
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index 4de07cc7ef5da..61b30f08493ae 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+[ ... ]
+> @@ -361,6 +361,44 @@ bool perf_arch_is_big_endian(const char *arch)
+>  	return false;
 >  }
+> =20
+> +const char *perf_env__os_release(struct perf_env *env)
+> +{
+> +	struct utsname uts;
+> +	int ret;
+> +	const char *release;
+> +
+> +	if (!env)
+> +		return perf_version_string;
+> +
+> +	mutex_lock(&env->lock);
+> +	if (env->os_release) {
+> +		release =3D env->os_release;
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * If env->arch is set, this is an offline target environment.
+> +	 * If the os_release is not populated in the file, we do not want
+> +	 * to poison it with the host's release which would break guest checks.
+> +	 */
+> +	if (env->arch) {
+> +		release =3D NULL;
+> +		goto out;
+> +	}
+
+[Severity: High]
+Does this correctly handle pipe mode?
+
+In pipe mode, feature events are synthesized and embedded in the event
+stream, so they are not parsed during perf_session__new(). When tools like
+perf report invoke symbol__init() and vmlinux_path__init() before
+processing the event stream, env->arch is strictly NULL.
+
+This causes the helper to erroneously assume live mode and permanently
+populate env->os_release with the host's release, which can break guest
+checks and cross-platform symbol resolution.
+
+[Severity: High]
+This is a pre-existing issue, but looking at perf_env__exit() in
+tools/perf/util/env.c, is it safe to destroy and lock uninitialized
+synchronization primitives?
+
+In functions like x86__is_amd_cpu(), a stack-allocated struct perf_env is
+zero-initialized and never properly set up. When perf_env__exit(&env) is
+called later, it blindly calls mutex_destroy(&env->lock) and invokes
+perf_env__purge_bpf(env), which performs down_write(&env->bpf_progs.lock).
+
+Operating on completely zero-filled mutexes and rwlocks can lead to
+undefined behavior and immediate aborts on strict libc implementations.
+
+[ ... ]
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 2ce512f08a1d6..077d19af52408 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+[ ... ]
+> @@ -2242,7 +2242,7 @@ static int vmlinux_path__init(struct perf_env *env)
+>  		return 0;
+> =20
+>  	if (env) {
+> -		kernel_version =3D env->os_release;
+> +		kernel_version =3D perf_env__os_release(env);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but if
+perf_env__os_release(env) returns NULL (which happens intentionally for
+offline targets lacking the HEADER_OSRELEASE feature), kernel_version
+becomes NULL.
+
+Shortly after this assignment, kernel_version is unconditionally passed
+into snprintf via the %s format specifier:
+
+    snprintf(bf, sizeof(bf), vmlinux_paths_upd[i], kernel_version);
+
+Could passing a NULL pointer to %s cause undefined behavior and potential
+crashes in hardened builds or on strict libc implementations?
+
+>  	} else {
+>  		if (uname(&uts) < 0)
+>  			goto out_fail;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602062452.2583=
-619-1-irogers@google.com?part=3D5
+619-1-irogers@google.com?part=3D17
