@@ -1,248 +1,390 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022090.outbound.protection.outlook.com [52.101.43.90])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331F5395AC7;
-	Tue,  2 Jun 2026 05:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.90
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780379741; cv=fail; b=g9yRbvO5prVO7d2QJ4HRaTw6K9ysmiZWZxuAx9vBQISH/YfPE4KZIY7Di8xmD/bT7mOGzwZKcrKlUCoCcQe3FsCuEWimOSn7WisL2L8Hm/9BQd7k7fCCO/XunLiewG+Qrj8+vyCibouGbeF8mnMWqbop+lvcZC4liJwaMO2d/4M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780379741; c=relaxed/simple;
-	bh=aBmN48ptCvCbXye7Oe05neV9cJA2mM+mxtopc7s7heU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 Content-Type:MIME-Version; b=ny7XArjJKkeSfgIJw+n6DTPp/ImdoEvyjflTUxtmrzqm2dhSd6Ki8ih7O/Qs/furiPNXMMCF/INYSGJMQ3z1NNtlm3tpfGxEXm8OaLE1AKGDkQZiAlgPeLaun8dKNq7Q3xzdWwWtM0j2GoNQ8GWohIfVQy0b9u2k+ZJ602vFabM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=B14XrWWI; arc=fail smtp.client-ip=52.101.43.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB543A1689;
+	Tue,  2 Jun 2026 06:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780380305; cv=none; b=rgN/fJJHTxA0irRD6Eu2kCf+9e9xxc3w3Fd3Hb1rrS5gFT3VXto15pjTifeFE3zVUR9gWuIqXbbrZ2H68xGIKUMkoGaxZDsZ84c4W0ZGNelssJpPlO6u+6DHiiNObvVeeY9kWdgGbYOYpbgl94MyeABqFsJHjLflwzKCwFECamk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780380305; c=relaxed/simple;
+	bh=AvxzFZj5ncu3xU78lwjWWMHiwn8nBo5S2HXoVANH42c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B/2EPDH5xo5SFKNKweALSb8zE4/m5VR4ld3UV1a+BQm/pFcil+2EIhWLbC68hp7lSaA5qdK/mNvhmyGV4mib/8j1czsA1NrodsnxK2HdsGGDWK+nYGXy9hiBQxI+so4DLLaNdoLtMpK2gHcWtCYvDIrVqDoQoCp9GVW+kma4Cpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dLRFONAl; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="B14XrWWI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yRVK3hVtXinvrVhGZGII6vNJ91MYEJznHu5/vWgsUtogYLclaCum8ou/3I5+Se0ZLz4nxiogLkRSNU1Balwd5NRZA9le2zDKq0tHY1yfuVHqR8GPa4Lgzf1kETutNMhiIHPrEPHdgLZUhTESfBDviWHLXs3rEsIzwLOcNMx07IYy3gL7rFWr3ZvztUWMexgsIIpJFKWstB1fPGipQcWQxJoT9jy7F7xpbYnLn4QgBQXTTHGjtX5UYxXhvFtTPr8BCovEXIFB6KxdCgdO2yege6jmgRFMyU7mf6SGiUtmyLKY3MFvTMTxPJpWpYHztRuKsSGg431eTYGhTAMt16nYXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n6VSep1YUCuXuIOJNXcuCRVuoqjA+tN4XsBP0L6L9TU=;
- b=JgIy0zMUsCAfxDFSWLQIAjkxqPVvfGXjB/Ckq+DVhm4qu85m0++hmzLC3GNn0m+HzPADNIOjly4n79fQQXv43ygWz3jDZhFrj3Fu0FSU8VnzS4Yawl/bpDja4Ti84XSsc3x7XFrF+BysjqRA1kvmb8PMywwc5AckDgcMVwScG92tcH04ce+QMoLMHg7DSapEIzpxAhCJ+tdnhK2AdsD5makUxp4mVi6y69K/yKCjrVLGBl6jw6jksgpeRXjukw/5rayTEL0cSIx6fF39cfhAMUqekfUkyBIKgYZBGtgA1+5MMy/u4MFmJX2rdcD8Ai/i5GyNayJTaYRXqkSs/AFS6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n6VSep1YUCuXuIOJNXcuCRVuoqjA+tN4XsBP0L6L9TU=;
- b=B14XrWWIAkEoKNKd+Hp0j0eBHzjJJhLObLrDq0PHsEITx44LFmpmcvRZv7V2lxZ7yoNgfGruldXb+nyx3OeJdyxoCc3m2RH8HCZuQKh5IGEm1ZDYl1Yt5DRuTNWe5+g1wgIVlc2fpSD/1WdBNNPLtyRK1AE9TJ1hs7OBQLftK5Y=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from MN2PR01MB5615.prod.exchangelabs.com (2603:10b6:208:11c::29) by
- SJ2PR01MB8404.prod.exchangelabs.com (2603:10b6:a03:542::12) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.71.15; Tue, 2 Jun 2026 05:55:35 +0000
-Received: from MN2PR01MB5615.prod.exchangelabs.com
- ([fe80::996f:e4f2:dbd8:120e]) by MN2PR01MB5615.prod.exchangelabs.com
- ([fe80::996f:e4f2:dbd8:120e%4]) with mapi id 15.21.0071.015; Tue, 2 Jun 2026
- 05:55:34 +0000
-Date: Mon, 1 Jun 2026 22:55:30 -0700 (PDT)
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: Aviv Bakal <avivb@amazon.com>
-cc: robin.murphy@arm.com, will@kernel.org, mark.rutland@arm.com, 
-    linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, zeev@amazon.com, blakgeof@amazon.com, 
-    ilkka@os.amperecomputing.com
-Subject: Re: [PATCH v4 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on
- Graviton5
-In-Reply-To: <20260531110447.10095-3-avivb@amazon.com>
-Message-ID: <bc40f7e8-0576-de20-c5ed-59ed10beb012@os.amperecomputing.com>
-References: <20260524153848.16334-1-avivb@amazon.com> <20260531110447.10095-1-avivb@amazon.com> <20260531110447.10095-3-avivb@amazon.com>
-Content-Type: text/plain; format=flowed; charset=US-ASCII
-X-ClientProxiedBy: MW4PR04CA0160.namprd04.prod.outlook.com
- (2603:10b6:303:85::15) To MN2PR01MB5615.prod.exchangelabs.com
- (2603:10b6:208:11c::29)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dLRFONAl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780380303; x=1811916303;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AvxzFZj5ncu3xU78lwjWWMHiwn8nBo5S2HXoVANH42c=;
+  b=dLRFONAl12sZiXR+3nXJWa2T3JiKmn3q4uLesHY5ZNiz9MJIJlPRzv9p
+   MKvi/dU4ci21W3jj5mowigxLu3MFKLmjRY/P1aurviGyid6knaWP/rrYT
+   5eHS5DHVkmyfZ9ZiNa5xGp2nH1pJgDynloJU2f22ocBp2vL9ygmgbP36z
+   frE4wYxMnGpnFeMLYwu/Oqt/MSYVn5fQuPumomBq7ZjK/hSTpDMYpHRbO
+   B2JFf/xUPIHZzolyultomlbbQjDYy2FiiuwEk+/AONAZ0CkUhCEwXwb4O
+   MtmZOhXsgV1aBCFqhmmvT0geouw5DDMABqfBExNbTxQ5uncDs2gI1yG2I
+   A==;
+X-CSE-ConnectionGUID: vCjh8L0aRBekzABS6pPOHw==
+X-CSE-MsgGUID: OXrad6pjTPSkPLmh1UZ7vA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="98576697"
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="98576697"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 23:05:03 -0700
+X-CSE-ConnectionGUID: v79+MryJRja2aaxgE/SCGg==
+X-CSE-MsgGUID: 7NGRsKDLQrqtYHhGSZV4pA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="239373155"
+Received: from unknown (HELO [10.238.1.64]) ([10.238.1.64])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 23:04:57 -0700
+Message-ID: <da435515-cd74-4c58-9cf0-4635a0d81b96@linux.intel.com>
+Date: Tue, 2 Jun 2026 14:04:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR01MB5615:EE_|SJ2PR01MB8404:EE_
-X-MS-Office365-Filtering-Correlation-Id: b7bb9fe1-9ad8-44e0-ab1a-08dec06b9018
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|56012099006|4143699003|11063799006|3023799007|22082099003|18002099003|55112099003;
-X-Microsoft-Antispam-Message-Info:
-	eyExJBzfBNHbLzbtENUJ0fKGylei9DymfORYDT7S8epsnoxNlW4GW8ysVLv0KtnaTHI31kidWm0T4o5Nc3SzSJ5T61lbaNWMhyxOLjjR0JCwQjfUbJXgPUBDiwR82gLZNVBBswbO3u4vsdM2feponTfWlWt32aJFad37SYLoyALdg8SloyudEwqG8hne641x700rrvCQ4BQhktzFQhPFEULie5vI8UmiMA6REQcqhGU9Mov6BsQ3n9W7wU6lVyP0TAUziVWCacvNcILK+7fUMOCLZWnE5q2heAqjsX4F331hxUVacNzj4qV8LlVAVrWJdbzDp86+8B0A1Kjqgpm8sujLzYsJkUgr3fBbX1ABfLcUEOvNGKRaj/dOQCcjniVwkKr6a/TqMTbhIylVSaVkRtmHZEUDTggZVs8297V2XqYup0sP4TAfuOdicszWBANWLzaG+fvsExvPCTXFCraT+4AKznhuO8kqS8oo/sj1yLFKHv3DFxN5hScEAB1v//hdzw6zBohev4puANj7TGUNG86tY3bQ0nDK/t/5OExeCfoWq68glK+9jVbDc4zynGlm78EnVvjODlFjxhjqHGz+Jl7o3PpFP9IdAPAFbuTWlwMtwJcJUXwhjpnnw8tMZZ0QVpMBxwCPBn9rN3ElitcKBVia3o45WPGGBLDHE4cxK0Y+hvvwBLbnRGT0fqU0T+5M
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR01MB5615.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099006)(4143699003)(11063799006)(3023799007)(22082099003)(18002099003)(55112099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SIplRIZaUHvbIF6bXXiLZJCOgL9mins5RO3Dj4kPcXJy3w6sU45L4O6giod1?=
- =?us-ascii?Q?jqh50hxHq+0rNOusAgalqfmpzDmKaf/s7Y1o262HTP7lK4wKHvUfN9RM5/vS?=
- =?us-ascii?Q?BsBRKGfd/ys1yyrq8zkuwRzyQpqkOqDUQOo5ei4nTxHx/SZ8Y1M5Noglzkoe?=
- =?us-ascii?Q?G3DaKWWVqiFqUgtEeTEPOYmCQIcVRGzgrfiHBtk0JDAioIRrsWA40dkig3KU?=
- =?us-ascii?Q?9ufSr9ecgXp6jL3mn1dm7DAFBU4hSh3MKtwfzxoGQqGFTbiCc8KJrMkRqBmq?=
- =?us-ascii?Q?gwfcLhRuJ4zzgIy/egMcje42+lDPOx+6prNPxehAz9wJHzGS/9q240SDUAmR?=
- =?us-ascii?Q?ojsZTBO2GvMIJUxON3egc/N3c/irDPE7Mem2a0PC5wrs6ScfLWD2L+lsanqR?=
- =?us-ascii?Q?CM/ILFej3Yz5FsvN5yXpV4e+gXy2qmuDv6v2SKUbrg994wn8Dy+fQUEmYDG1?=
- =?us-ascii?Q?73J9G82LZahrdYYUt2nfl9rmyibSy5b8E6lnZgAFUnh7TRRw8MJibwChgLnU?=
- =?us-ascii?Q?nb8kdEdgZz9BMt1oGlQ0XnHOcxjLS/gjIeYB7ojyFOn1/cWmTCz/NK0dbmr0?=
- =?us-ascii?Q?mgURdiqSSvikeyIMRvWo+zjoWyanyOYYp0o2NHrIXujTXtqXrZNWQQH7ZPyI?=
- =?us-ascii?Q?TFzQZJhfMpxc7UlyPieSK+XvqK7H1akwg+D901Z55oabsY9YOGcCcNrSG6VX?=
- =?us-ascii?Q?Gfto8e5JKBx4dFd9CaLWTPUlm9vWibv0bvS//3jeOW2HFwX3xYg6ufym/rrD?=
- =?us-ascii?Q?GMrZB0MoEFJB23zlQv6FBEhpVZYPqszLG9IuMGo4PdDQH3tdViADdTLsiEXl?=
- =?us-ascii?Q?tDeasB43rYmCD7XNfFZPwVLc/9gPzK4fNIMU4zbMnUf43HcWtqY678ALOr/1?=
- =?us-ascii?Q?3zwS3Wn9NMtkL6jdV3pTOH0WqqRoTCwdSTCUR8lzl+t7aIJlWwNMdjoVDzaI?=
- =?us-ascii?Q?gP/1vHb55XVNxbtwB3BmpYfbEhgpymJ4OxBZ0LrrMYuYqPXVE09J3VEd9Fwi?=
- =?us-ascii?Q?bcnp2lEgBro5KWv/oqgzz2qbhxnl8YCwRQ62FoBwECeblwzpa3K4a5XnHHyf?=
- =?us-ascii?Q?veo+/aPsgW3CPKWITDneoEzR321xEgP/YnPB5Tce8Gwr0F3ZDzdNHYLpoSPg?=
- =?us-ascii?Q?n5tXshH26A1ZdNkn8p9FSFJnbK20qftWY+PLfBawnpcz1N7eDKaKniFR5T4i?=
- =?us-ascii?Q?rPDwZAeJWI0WLoxQtO28uUup2DEfIjnILCnDEEtwHFYx87+BlecuZOqru/B5?=
- =?us-ascii?Q?L1Q8f5lpA+YSZvd12+G7Q6wzAMHJ85RnsPdcmWZpfEAGhaNwW1/Nvhatz6a3?=
- =?us-ascii?Q?6McNNsmA3DXQ7KDEV91/K8IGrguDJ8Wibfea5dJw7DzKXnFT8z0nDq2SfkAB?=
- =?us-ascii?Q?KxcNKaIlcSjT4VqCJFQI4OYr3KOtazPpF47hdzIhK5Iw8jyO6RiuAH2NYeEv?=
- =?us-ascii?Q?6+hke3XBMlqrYlavO8f6BJjBbG5rJW7fl5Y+z2NA14FlWcEGNOlZxnyTW+gC?=
- =?us-ascii?Q?CBJBSAKwTx88q8Et/JimCS56O9j80Z+RPzl1LQYGeln8rCItesNjCtV3xCaH?=
- =?us-ascii?Q?dyJHkx4AI7XIq3zleKFgUlCj9j0NwCjlsDU61rTVixA0FB38e0cTGTnfuTIK?=
- =?us-ascii?Q?Ks3e4bFdLmsPTgcDO9l32I2rdFyPH5eoK8RoLhW4j+O7Cv3lAnnFtjZP6er3?=
- =?us-ascii?Q?Y34FnzrgOj+tQ+XKqcQuIhZ2por2h05tGi74UTthYHlzY5PNuADDLJfql/f/?=
- =?us-ascii?Q?fcCcPcEgF3Enr2IrNfXaDhHkfeeXSC4=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7bb9fe1-9ad8-44e0-ab1a-08dec06b9018
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR01MB5615.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 05:55:34.7109
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A5MLcrKNEnNPVr0TYP0kmMGR0TmIFpVFoehJG+PilMIFgdC8Z6xcz0fGFRXkMnarXZdPcI9QuAUBWBOmAefq4yWIKUTiR5SW1V+T5LJ77Yd+IqqMhCj84Oep/1sFNYmi
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR01MB8404
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v8 5/5] perf dwarf-regs: Add SIMD/eGPRs support for x86
+ DWARF registers
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260529082451.591783-1-dapeng1.mi@linux.intel.com>
+ <20260529082451.591783-6-dapeng1.mi@linux.intel.com>
+ <CAP-5=fUkAa9kE-xGRBH80ikqyV7L=x-06UaeDd=TSExy-jsjjA@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fUkAa9kE-xGRBH80ikqyV7L=x-06UaeDd=TSExy-jsjjA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
+On 5/30/2026 1:56 AM, Ian Rogers wrote:
+> On Fri, May 29, 2026 at 1:30 AM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>> Enhance the x86-specific DWARF register handling by adding support for
+>> SIMD and eGPRs registers.
+>>
+>> This update is based on the "DWARF Register Number Mapping" table from
+>> the "System V Application Binary Interface AMD64 Architecture Processor
+>> Supplement" (version 1.0).
+>>
+>> Modifications include:
+>> - Updating the x86_64_regidx_table[] array to incorporate SIMD and eGPRs
+>>   registers.
+>> - Enhancing the __get_dwarf_regnum_for_perf_regnum_x86_64() function to
+>>   retrieve the DWARF register index for eGPRs.
+>> - Enlarge the x86_64 supported register number to 146 to cover eGPRs and
+>>   SIMD registers (get_libdw_frame_nregs()).
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  .../util/dwarf-regs-arch/dwarf-regs-x86.c     | 138 +++++++++++++++---
+>>  tools/perf/util/dwarf-regs.c                  |   7 +-
+>>  tools/perf/util/include/dwarf-regs.h          |   7 +-
+>>  tools/perf/util/unwind-libdw.c                |   6 +-
+>>  4 files changed, 129 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
+>> index cadef120aeb4..b014a36d21b5 100644
+>> --- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
+>> +++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
+>> @@ -90,22 +90,22 @@ static const struct dwarf_regs_idx x86_64_regidx_table[] = {
+>>         { "r14", 14 }, { "r14d", 14 }, { "r14w", 14 }, { "r14b", 14 },
+>>         { "r15", 15 }, { "r15d", 15 }, { "r15w", 15 }, { "r15b", 15 },
+>>         // 16 - Return Address RA
+>> -       { "xmm0", 17},
+>> -       { "xmm1", 18},
+>> -       { "xmm2", 19},
+>> -       { "xmm3", 20},
+>> -       { "xmm4", 21},
+>> -       { "xmm5", 22},
+>> -       { "xmm6", 23},
+>> -       { "xmm7", 24},
+>> -       { "xmm8", 25},
+>> -       { "xmm9", 26},
+>> -       { "xmm10", 27},
+>> -       { "xmm11", 28},
+>> -       { "xmm12", 29},
+>> -       { "xmm13", 30},
+>> -       { "xmm14", 31},
+>> -       { "xmm15", 32},
+>> +       { "zmm0", 17 }, { "ymm0", 17 }, { "xmm0", 17 },
+>> +       { "zmm1", 18 }, { "ymm1", 18 }, { "xmm1", 18 },
+>> +       { "zmm2", 19 }, { "ymm2", 19 }, { "xmm2", 19 },
+>> +       { "zmm3", 20 }, { "ymm3", 20 }, { "xmm3", 20 },
+>> +       { "zmm4", 21 }, { "ymm4", 21 }, { "xmm4", 21 },
+>> +       { "zmm5", 22 }, { "ymm5", 22 }, { "xmm5", 22 },
+>> +       { "zmm6", 23 }, { "ymm6", 23 }, { "xmm6", 23 },
+>> +       { "zmm7", 24 }, { "ymm7", 24 }, { "xmm7", 24 },
+>> +       { "zmm8", 25 }, { "ymm8", 25 }, { "xmm8", 25 },
+>> +       { "zmm9", 26 }, { "ymm9", 26 }, { "xmm9", 26 },
+>> +       { "zmm10", 27 }, { "ymm10", 27 }, { "xmm10", 27 },
+>> +       { "zmm11", 28 }, { "ymm11", 28 }, { "xmm11", 28 },
+>> +       { "zmm12", 29 }, { "ymm12", 29 }, { "xmm12", 29 },
+>> +       { "zmm13", 30 }, { "ymm13", 30 }, { "xmm13", 30 },
+>> +       { "zmm14", 31 }, { "ymm14", 31 }, { "xmm14", 31 },
+>> +       { "zmm15", 32 }, { "ymm15", 32 }, { "xmm15", 32 },
+>>         { "st0", 33},
+>>         { "st1", 34},
+>>         { "st2", 35},
+>> @@ -129,7 +129,7 @@ static const struct dwarf_regs_idx x86_64_regidx_table[] = {
+>>         { "ds", 53},
+>>         { "fs", 54},
+>>         { "gs", 55},
+>> -       // 56-47 - reserved
+>> +       // 56-57 - reserved
+>>         { "fs.base", 58},
+>>         { "gs.base", 59},
+>>         // 60-61 - reserved
+>> @@ -138,6 +138,49 @@ static const struct dwarf_regs_idx x86_64_regidx_table[] = {
+>>         { "mxcsr", 64}, // 128-bit Media Control and Status
+>>         { "fcw", 65}, // x87 Control Word
+>>         { "fsw", 66}, // x87 Status Word
+>> +       // 67-82 - Upper Vector Registers 16–31
+>> +       { "zmm16", 67 }, { "ymm16", 67 }, { "xmm16", 67 },
+>> +       { "zmm17", 68 }, { "ymm17", 68 }, { "xmm17", 68 },
+>> +       { "zmm18", 69 }, { "ymm18", 69 }, { "xmm18", 69 },
+>> +       { "zmm19", 70 }, { "ymm19", 70 }, { "xmm19", 70 },
+>> +       { "zmm20", 71 }, { "ymm20", 71 }, { "xmm20", 71 },
+>> +       { "zmm21", 72 }, { "ymm21", 72 }, { "xmm21", 72 },
+>> +       { "zmm22", 73 }, { "ymm22", 73 }, { "xmm22", 73 },
+>> +       { "zmm23", 74 }, { "ymm23", 74 }, { "xmm23", 74 },
+>> +       { "zmm24", 75 }, { "ymm24", 75 }, { "xmm24", 75 },
+>> +       { "zmm25", 76 }, { "ymm25", 76 }, { "xmm25", 76 },
+>> +       { "zmm26", 77 }, { "ymm26", 77 }, { "xmm26", 77 },
+>> +       { "zmm27", 78 }, { "ymm27", 78 }, { "xmm27", 78 },
+>> +       { "zmm28", 79 }, { "ymm28", 79 }, { "xmm28", 79 },
+>> +       { "zmm29", 80 }, { "ymm29", 80 }, { "xmm29", 80 },
+>> +       { "zmm30", 81 }, { "ymm30", 81 }, { "xmm30", 81 },
+>> +       { "zmm31", 82 }, { "ymm31", 82 }, { "xmm31", 82 },
+>> +       // 118-125 - Vector Mask Registers 0–7
+>> +       { "k0", 118 },
+>> +       { "k1", 119 },
+>> +       { "k2", 120 },
+>> +       { "k3", 121 },
+>> +       { "k4", 122 },
+>> +       { "k5", 123 },
+>> +       { "k6", 124 },
+>> +       { "k7", 125 },
+>> +       // 130-145 - APX Integer Registers 16-31
+>> +       { "r16", 130 }, { "r16d", 130 }, { "r16w", 130 }, { "r16b", 130 },
+>> +       { "r17", 131 }, { "r17d", 131 }, { "r17w", 131 }, { "r17b", 131 },
+>> +       { "r18", 132 }, { "r18d", 132 }, { "r18w", 132 }, { "r18b", 132 },
+>> +       { "r19", 133 }, { "r19d", 133 }, { "r19w", 133 }, { "r19b", 133 },
+>> +       { "r20", 134 }, { "r20d", 134 }, { "r20w", 134 }, { "r20b", 134 },
+>> +       { "r21", 135 }, { "r21d", 135 }, { "r21w", 135 }, { "r21b", 135 },
+>> +       { "r22", 136 }, { "r22d", 136 }, { "r22w", 136 }, { "r22b", 136 },
+>> +       { "r23", 137 }, { "r23d", 137 }, { "r23w", 137 }, { "r23b", 137 },
+>> +       { "r24", 138 }, { "r24d", 138 }, { "r24w", 138 }, { "r24b", 138 },
+>> +       { "r25", 139 }, { "r25d", 139 }, { "r25w", 139 }, { "r25b", 139 },
+>> +       { "r26", 140 }, { "r26d", 140 }, { "r26w", 140 }, { "r26b", 140 },
+>> +       { "r27", 141 }, { "r27d", 141 }, { "r27w", 141 }, { "r27b", 141 },
+>> +       { "r28", 142 }, { "r28d", 142 }, { "r28w", 142 }, { "r28b", 142 },
+>> +       { "r29", 143 }, { "r29d", 143 }, { "r29w", 143 }, { "r29b", 143 },
+>> +       { "r30", 144 }, { "r30d", 144 }, { "r30w", 144 }, { "r30b", 144 },
+>> +       { "r31", 145 }, { "r31d", 145 }, { "r31w", 145 }, { "r31b", 145 },
+>>         // End of regular dwarf registers.
+>>         { "rip", DWARF_REG_PC }, { "eip", DWARF_REG_PC }, { "ip", DWARF_REG_PC },
+>>  };
+>> @@ -204,7 +247,7 @@ int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum)
+>>         return dwarf_i386_regnums[perf_regnum];
+>>  }
+>>
+>> -int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum)
+>> +int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum, int abi)
+>>  {
+>>         static const int dwarf_x86_64_regnums[] = {
+>>                 [PERF_REG_X86_AX] = 0,
+>> @@ -248,13 +291,66 @@ int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum)
+>>                 [PERF_REG_X86_XMM14] = 31,
+>>                 [PERF_REG_X86_XMM15] = 32,
+>>         };
+>> +       static const int dwarf_x86_64_regnums_apx[] = {
+>> +               [PERF_REG_X86_AX] = 0,
+>> +               [PERF_REG_X86_BX] = 3,
+>> +               [PERF_REG_X86_CX] = 2,
+>> +               [PERF_REG_X86_DX] = 1,
+>> +               [PERF_REG_X86_SI] = 4,
+>> +               [PERF_REG_X86_DI] = 5,
+>> +               [PERF_REG_X86_BP] = 6,
+>> +               [PERF_REG_X86_SP] = 7,
+>> +               [PERF_REG_X86_IP] = 16,
+>> +               [PERF_REG_X86_FLAGS] = 49,
+>> +               [PERF_REG_X86_CS] = 51,
+>> +               [PERF_REG_X86_SS] = 52,
+>> +               [PERF_REG_X86_DS] = 53,
+>> +               [PERF_REG_X86_ES] = 50,
+>> +               [PERF_REG_X86_FS] = 54,
+>> +               [PERF_REG_X86_GS] = 55,
+>> +               [PERF_REG_X86_R8] = 8,
+>> +               [PERF_REG_X86_R9] = 9,
+>> +               [PERF_REG_X86_R10] = 10,
+>> +               [PERF_REG_X86_R11] = 11,
+>> +               [PERF_REG_X86_R12] = 12,
+>> +               [PERF_REG_X86_R13] = 13,
+>> +               [PERF_REG_X86_R14] = 14,
+>> +               [PERF_REG_X86_R15] = 15,
+>> +               [PERF_REG_X86_R16] = 130,
+>> +               [PERF_REG_X86_R17] = 131,
+>> +               [PERF_REG_X86_R18] = 132,
+>> +               [PERF_REG_X86_R19] = 133,
+>> +               [PERF_REG_X86_R20] = 134,
+>> +               [PERF_REG_X86_R21] = 135,
+>> +               [PERF_REG_X86_R22] = 136,
+>> +               [PERF_REG_X86_R23] = 137,
+>> +               [PERF_REG_X86_R24] = 138,
+>> +               [PERF_REG_X86_R25] = 139,
+>> +               [PERF_REG_X86_R26] = 140,
+>> +               [PERF_REG_X86_R27] = 141,
+>> +               [PERF_REG_X86_R28] = 142,
+>> +               [PERF_REG_X86_R29] = 143,
+>> +               [PERF_REG_X86_R30] = 144,
+>> +               [PERF_REG_X86_R31] = 145,
+>> +       };
+>>
+>>         if (perf_regnum == 0)
+>>                 return 0;
+>>
+>> -       if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_x86_64_regnums) ||
+>> -           dwarf_x86_64_regnums[perf_regnum] == 0)
+>> +       if (perf_regnum < 0)
+>> +               return -ENOENT;
+>> +
+>> +       if (!(abi & PERF_SAMPLE_REGS_ABI_SIMD) &&
+>> +           (perf_regnum >= (int)ARRAY_SIZE(dwarf_x86_64_regnums) ||
+>> +            dwarf_x86_64_regnums[perf_regnum] == 0))
+>> +               return -ENOENT;
+>> +
+>> +       if ((abi & PERF_SAMPLE_REGS_ABI_SIMD) &&
+>> +           (perf_regnum >= (int)ARRAY_SIZE(dwarf_x86_64_regnums_apx) ||
+>> +            dwarf_x86_64_regnums_apx[perf_regnum] == 0))
+>>                 return -ENOENT;
+>>
+>> -       return dwarf_x86_64_regnums[perf_regnum];
+>> +       return abi & PERF_SAMPLE_REGS_ABI_SIMD ?
+>> +                       dwarf_x86_64_regnums_apx[perf_regnum] :
+>> +                       dwarf_x86_64_regnums[perf_regnum];
+>>  }
+>> diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
+>> index 797f455eba0d..9e2a0c93ecc9 100644
+>> --- a/tools/perf/util/dwarf-regs.c
+>> +++ b/tools/perf/util/dwarf-regs.c
+>> @@ -158,7 +158,7 @@ static int get_libdw_frame_nregs(unsigned int machine, unsigned int flags __mayb
+>>  {
+>>         switch (machine) {
+>>         case EM_X86_64:
+>> -               return 17;
+>> +               return 146;     /* Support APX eGPRs. */
+> So the 17 comes from libdw as I believe there are places in the libdw
+> stack walking code where additional registers cause libdw to fail. The
+> key is `libdw_set_initial_registers`, which passes the flag
+> `/*only_libdw_supported=*/true`. This is where capping the registers
+> at 17 will have an effect. Presumably increasing this value requires
+> some degree of libdw support? We could add a feature test for this,
+> but it may be safer to leave it as 17 as it is unlikely we're using
+> vector registers when walking the stack. A comment capturing this
+> would be good, as clearly the intent in the code hadn't been clear
+> enough.
 
-On Sun, 31 May 2026, Aviv Bakal wrote:
+As my previous comments said, currently it looks libdw still doesn't
+support SIMD and eGPRs registers yet, so I suppose it's fine to still keep
+17 here. But I would add a WARN_ONCE() here if the reg idx is larger than
+17. It can remind us to increase the reg_num.
 
-> Graviton5 uses a customised CMN-S3 implementation where certain
-> discovery registers report zeroed fields. Add the following workarounds:
->
-> - Introduce a dedicated ACPI HID to identify the Graviton5 CMN variant.
-> - Derive the DTC domain from the XP node ID, since the unit info
->   register reports it as zero.
-> - Set the DTC logical ID from the XP's logical ID, since the node info
->   register's logical ID field is also zeroed.
->
-> Signed-off-by: Aviv Bakal <avivb@amazon.com>
-
-Thanks for the patch. It seems surprisingly clean approach. And thanks to
-Robin for answering to Sashiko bot!
+Thanks.
 
 
-The patch looks good to me,
-
- 	Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-
-
-Cheers, Ilkka
-
-> ---
-> drivers/perf/arm-cmn.c | 32 +++++++++++++++++++++++++++++++-
-> 1 file changed, 31 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index f1978a53d1c1..3fb71d9a57eb 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -31,7 +31,8 @@
-> #define CMN_CHILD_NODE_ADDR		GENMASK(29, 0)
-> #define CMN_CHILD_NODE_EXTERNAL		BIT(31)
+> Thanks,
+> Ian
 >
-> -#define CMN_MAX_DIMENSION		12
-> +/* Some implementations use a mesh larger than the architectural max of 12 */
-> +#define CMN_MAX_DIMENSION		14
-> #define CMN_MAX_XPS			(CMN_MAX_DIMENSION * CMN_MAX_DIMENSION)
-> #define CMN_MAX_DTMS			(CMN_MAX_XPS + (CMN_MAX_DIMENSION - 1) * 4)
->
-> @@ -214,6 +215,8 @@ enum cmn_part {
-> 	PART_CMN700 = 0x43c,
-> 	PART_CI700 = 0x43a,
-> 	PART_CMN_S3 = 0x43e,
-> +	/* Synthetic part number, overridden to PART_CMN_S3 during discovery */
-> +	PART_GRAVITON5 = 0xa5,
-> };
->
-> /* CMN-600 r0px shouldn't exist in silicon, thankfully */
-> @@ -2250,6 +2253,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_cmn *cmn, void __iomem *xp_reg
-> 	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region + offset));
-> }
->
-> +static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
-> +{
-> +	unsigned int x = (xp_id >> 7) & 0xf;
-> +	unsigned int y = (xp_id >> 3) & 0xf;
-> +
-> +	/*
-> +	 * The unit info register reads as zero; derive the DTC domain from
-> +	 * the XP's mesh coordinates over the 10x14 mesh.
-> +	 */
-> +	return (x / 5) + (y / 7) * 2;
-> +}
-> +
-> static void arm_cmn_init_node_info(struct arm_cmn *cmn, u32 offset, struct arm_cmn_node *node)
-> {
-> 	int level;
-> @@ -2295,6 +2310,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
-> 	u64 reg;
-> 	int i, j;
-> 	size_t sz;
-> +	bool graviton5_workaround = false;
->
-> 	arm_cmn_init_node_info(cmn, rgn_offset, &cfg);
-> 	if (cfg.type != CMN_TYPE_CFG)
-> @@ -2305,6 +2321,13 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
-> 	reg = readq_relaxed(cfg_region + CMN_CFGM_PERIPH_ID_01);
-> 	part = FIELD_GET(CMN_CFGM_PID0_PART_0, reg);
-> 	part |= FIELD_GET(CMN_CFGM_PID1_PART_1, reg) << 8;
-> +
-> +	/* Graviton5 has a customised CMN-S3 which needs some fixups */
-> +	if (cmn->part == PART_GRAVITON5) {
-> +		cmn->part = PART_CMN_S3;
-> +		graviton5_workaround = true;
-> +	}
-> +
-> 	/* 600AE is close enough that it's not really worth more complexity */
-> 	if (part == PART_CMN600AE)
-> 		part = PART_CMN600;
-> @@ -2394,6 +2417,8 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->
-> 		if (cmn->part == PART_CMN600)
-> 			xp->dtc = -1;
-> +		else if (graviton5_workaround)
-> +			xp->dtc = arm_cmn_graviton5_dtc_domain(xp->id);
-> 		else
-> 			xp->dtc = arm_cmn_dtc_domain(cmn, xp_region);
->
-> @@ -2472,6 +2497,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
->
-> 			switch (dn->type) {
-> 			case CMN_TYPE_DTC:
-> +				if (graviton5_workaround) {
-> +					/* Node info logical ID is zeroed; use the XP's */
-> +					dn->logid = xp->logid;
-> +				}
-> 				cmn->num_dtcs++;
-> 				dn++;
-> 				break;
-> @@ -2687,6 +2716,7 @@ static const struct acpi_device_id arm_cmn_acpi_match[] = {
-> 	{ "ARMHC650" },
-> 	{ "ARMHC700" },
-> 	{ "ARMHC003" },
-> +	{ "AMZN0070", PART_GRAVITON5 },
-> 	{}
-> };
-> MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
-> -- 
-> 2.47.3
->
->
+>>         case EM_386:
+>>                 return 9;
+>>         case EM_ARM:
+>> @@ -187,13 +187,14 @@ static int get_libdw_frame_nregs(unsigned int machine, unsigned int flags __mayb
+>>  }
+>>
+>>  int get_dwarf_regnum_for_perf_regnum(int perf_regnum, unsigned int machine,
+>> -                                    unsigned int flags, bool only_libdw_supported)
+>> +                                    unsigned int flags,
+>> +                                    bool only_libdw_supported, int abi)
+>>  {
+>>         int reg;
+>>
+>>         switch (machine) {
+>>         case EM_X86_64:
+>> -               reg = __get_dwarf_regnum_for_perf_regnum_x86_64(perf_regnum);
+>> +               reg = __get_dwarf_regnum_for_perf_regnum_x86_64(perf_regnum, abi);
+>>                 break;
+>>         case EM_386:
+>>                 reg = __get_dwarf_regnum_for_perf_regnum_i386(perf_regnum);
+>> diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
+>> index 46a764cf322f..92cf0af93e9e 100644
+>> --- a/tools/perf/util/include/dwarf-regs.h
+>> +++ b/tools/perf/util/include/dwarf-regs.h
+>> @@ -103,7 +103,7 @@ int __get_csky_regnum(const char *name, unsigned int flags);
+>>  int __get_dwarf_regnum_i386(const char *name);
+>>  int __get_dwarf_regnum_x86_64(const char *name);
+>>  int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum);
+>> -int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum);
+>> +int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum, int abi);
+>>
+>>  int __get_dwarf_regnum_for_perf_regnum_arm(int perf_regnum);
+>>  int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum);
+>> @@ -125,8 +125,9 @@ int get_dwarf_regnum(const char *name, unsigned int machine, unsigned int flags)
+>>  /*
+>>   * get_dwarf_regnum - Returns DWARF regnum from perf register number.
+>>   */
+>> -int get_dwarf_regnum_for_perf_regnum(int perf_regnum, unsigned int machine, unsigned int flags,
+>> -                                    bool only_libdw_supported);
+>> +int get_dwarf_regnum_for_perf_regnum(int perf_regnum, unsigned int machine,
+>> +                                    unsigned int flags,
+>> +                                    bool only_libdw_supported, int abi);
+>>
+>>  void get_powerpc_regs(u32 raw_insn, int is_source, struct annotated_op_loc *op_loc);
+>>
+>> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+>> index 05e8e68bd49c..678db5a65ada 100644
+>> --- a/tools/perf/util/unwind-libdw.c
+>> +++ b/tools/perf/util/unwind-libdw.c
+>> @@ -273,7 +273,8 @@ static bool libdw_set_initial_registers(Dwfl_Thread *thread, void *arg)
+>>                         int dwarf_reg =
+>>                                 get_dwarf_regnum_for_perf_regnum(perf_reg, e_machine,
+>>                                                                  e_flags,
+>> -                                                                /*only_libdw_supported=*/true);
+>> +                                                                /*only_libdw_supported=*/true,
+>> +                                                                user_regs->abi);
+>>                         if (dwarf_reg > max_dwarf_reg)
+>>                                 max_dwarf_reg = dwarf_reg;
+>>                 }
+>> @@ -288,7 +289,8 @@ static bool libdw_set_initial_registers(Dwfl_Thread *thread, void *arg)
+>>                         int dwarf_reg =
+>>                                 get_dwarf_regnum_for_perf_regnum(perf_reg, e_machine,
+>>                                                                  e_flags,
+>> -                                                                /*only_libdw_supported=*/true);
+>> +                                                                /*only_libdw_supported=*/true,
+>> +                                                                user_regs->abi);
+>>                         if (dwarf_reg >= 0) {
+>>                                 val = 0;
+>>                                 if (perf_reg_value(&val, user_regs, perf_reg) == 0)
+>> --
+>> 2.34.1
+>>
