@@ -1,137 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B1624BBEB
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D3632BF52
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780382481; cv=none; b=SPlwINIkuPA7Un17JWBtLIaN49AGpYSKx5XOv4vSrEZM6hf9xQjZgB1XfFfF36Qd5XTakVV97e3TAguDeVwK1EmEKtC2q1abTjbF6EOcMObiMCpb9BcUBxlLGEe9lkn5PHF6vZA7WdPz24IdtOVr49Q/CRGW2mtx05CJK9QUtN0=
+	t=1780382482; cv=none; b=sZ/hjg88iBmd2xAu72Yu0rdjTsAdZW/O9iGVVrfTcJHC77zfhjBTNlksBzb+OlSnDgcOS6t0k/rUdiioW2wSWN+CLxcwPGeSefP6Si644zSOjN6LjiSG8kjZrkM7MWDePUvIra8UBC0dnBOgUpA4f8iq7xaNtssGFhdqLLkuDXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780382481; c=relaxed/simple;
-	bh=UnWjEw7kIT2Q8Vkhkj5BjADlbyqvpfjeuoF7OVfaaMM=;
+	s=arc-20240116; t=1780382482; c=relaxed/simple;
+	bh=OLBr0biYmcajQvpIpCi04FKr0JzRA0VxHzIm70ruQJU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SlNPx3reFCq4/fTt6TMWkJWfYrHUubIawM+SzpKpxU8KkFODNnAu15sNwe68g248pF4JRyuaC5mucYdb5XWTayTAfGyb4gfHw77nuc4H1n4R2JGI+9RACI03NMvoH29F2+CEsUrW6HtruF93VPy+aQ3Ysa8C29VRcVbKbNLggk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNuHfglm; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=M3dnIcBI/mKBgrqT3AEJXcyw0ODkAux7G0siPRG0LLi23Ups55m2jkWySfCI160Fyak7lOOn0Hy0dKz3kpQQHQd2UjjWcytEmaOHmQIYvA7KfcTuSaFjgU3XM04Q9bb5eQ1QbfHM/KZAib/emwLwW+xaoDrnJSFs7GSHVfUmeMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBr9HDOH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNuHfglm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6929D1F00893;
-	Tue,  2 Jun 2026 06:41:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBr9HDOH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 151531F00898;
+	Tue,  2 Jun 2026 06:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780382480;
-	bh=zLWPQ2m8Sn5F/Jk18NSey6N/1KPk360DXsLtMyxNkoY=;
+	s=k20260515; t=1780382481;
+	bh=tqRmOiGrtg2A5c+v+Vme1W2EfoB5yRqzFfhwzYSC8Oc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gNuHfglm3T4g9kOXPdl8CufUecY95+NfA/k8jyXVfFckoglpJWJmeut2w4JmovheV
-	 GhgBVXVI6ie0w/02VHmOpNwk3HgEHiyQloFsguPngCoAL3ooBJ/bD/t64fuJbXhITG
-	 Y9Crk3OvZLIjcW8EMMr63/Rb9IRDgHWbuiVZj/Sfn9+VBv1YFSsEw+O47J5yDgfEEC
-	 Xo/dTzUzA3HzHQEPidysDqMJ4lFI3M5sAi0iNXBjWQLgMecfGDFsoHvID80cIDE6wD
-	 bogq+pOvnZhi2OKLTQ1uZPtQ+WzKSUqqfn7YAH+ntSKzUeelGMhxSDJEgXHMA4987B
-	 btbfiIb0F/CAg==
+	b=kBr9HDOHmLAsZ2DwPQJ3ahTRtup0mdYGBbf3HpWz8BeNYTp8ycZlpeE0WNpG3EWIj
+	 XiOjD5pJ8PMlikc7M3+/6eVrkdVMU204wNi8KLQiDyU26AssBRDtgh4qwo8yaBWedt
+	 Yr1b2CQGZ8As7/IoVI5X1INzOz1yOAaq3J8senfbxEEfytHHXGjL2+B4BvsR6CZUW8
+	 aL2tyGsmo88/AhtpaBdZkNWXDfKwwa5skQ2NJZ31BzSgJJLXUx8mRYriIxsmDl0poM
+	 cjPME7oh3aTfYHdg25T/iTv1nsit/S4+ZwbQQvzyOoT1Bdt9F7RVi8RmDLPk/0qplj
+	 uw8CuekKmokYA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 10/19] perf arch common: Use perf_env e_machine
- rather than arch
+Subject: Re: [PATCH v11 03/19] perf env, dso, thread: Add _endian variants
+ for e_machine helpers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602062452.2583619-11-irogers@google.com>
-References: <20260602062452.2583619-11-irogers@google.com>
+In-Reply-To: <20260602062452.2583619-4-irogers@google.com>
+References: <20260602062452.2583619-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Tue, 02 Jun 2026 06:41:20 +0000
-Message-Id: <20260602064120.6929D1F00893@smtp.kernel.org>
+Message-Id: <20260602064121.151531F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] is_native_compatible() incorrectly skips bitness checks for arch=
-itectures that share the same e_machine (e.g., MIPS, PARISC, S390), causing=
- 32-bit hosts to erroneously attempt native disassembly of 64-bit targets.
-- [Medium] Native SPARC64 profiling fails to resolve the system objdump pat=
-h due to a flawed architecture matching condition.
+- [Medium] Lockless double-checked initialization of `thread->e_is_big_endi=
+an` lacks necessary memory barriers.
 --
 
-commit 0ccc4649e16f322564aa71d657e01e2dc842077f
+commit 0695e7d47980d268e68f0873d5d1c5a0e48b59c7
 Author: Ian Rogers <irogers@google.com>
 
-perf arch common: Use perf_env e_machine rather than arch
+perf env, dso, thread: Add _endian variants for e_machine helpers
 
-This commit changes the binutils path lookup to use the e_machine ELF const=
-ant
-rather than architecture string matching. It introduces is_native_compatible
-to determine if the host can natively disassemble the target.
+This commit adds endian-aware variants of the e_machine helpers, including
+dso__read_e_machine_endian and thread__e_machine_endian. It allows querying
+the absolute endianness of a DSO or thread to support cross-architecture
+analysis in tools like Capstone.
 
-> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-> --- a/tools/perf/arch/common.c
-> +++ b/tools/perf/arch/common.c
-
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index aac9cb75dcf44..ba33c0dfc18fe 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
 [ ... ]
-
-> @@ -141,11 +146,40 @@ static int lookup_triplets(const char *const *tripl=
-ets, const char *name)
->  	return -1;
->  }
+> @@ -458,24 +461,38 @@ static int thread__e_machine_callback(struct map *m=
+ap, void *_args)
+[ ... ]
+> -uint16_t thread__e_machine(struct thread *thread, struct machine *machin=
+e, uint32_t *e_flags)
+> +uint16_t thread__e_machine_endian(struct thread *thread, struct machine =
+*machine, uint32_t *e_flags,
+> +				  bool *is_big_endian)
+>  {
+>  	pid_t tid, pid;
+> -	uint16_t e_machine =3D RC_CHK_ACCESS(thread)->e_machine;
+> +	uint16_t e_machine;
+[ ... ]
+> +	e_machine =3D RC_CHK_ACCESS(thread)->e_machine;
+> +	args.machine =3D machine;
+> +	args.e_flags =3D 0;
+> +	args.e_machine =3D EM_NONE;
+> +	args.is_big_endian =3D false;
 > =20
-> +static bool is_native_compatible(struct perf_env *env, uint16_t target, =
-uint16_t host)
-> +{
-> +	if (target !=3D host) {
-> +		/* A 64-bit host can natively disassemble its 32-bit compat architectu=
-re */
-> +		if (host =3D=3D EM_X86_64 && target =3D=3D EM_386)
-> +			return true;
-> +		if (host =3D=3D EM_AARCH64 && target =3D=3D EM_ARM)
-> +			return true;
-> +		if (host =3D=3D EM_PPC64 && target =3D=3D EM_PPC)
-> +			return true;
-> +		if (host =3D=3D EM_SPARCV9 && target =3D=3D EM_SPARC)
-> +			return true;
+>  	if (e_machine !=3D EM_NONE) {
+>  		if (e_flags)
+>  			*e_flags =3D thread__e_flags(thread);
+> +		if (is_big_endian)
+> +			*is_big_endian =3D thread__e_is_big_endian(thread);
 
 [Severity: Medium]
-Is this architecture matching condition reversed for SPARC?
+Since e_machine acts as an initialization guard here in
+thread__e_machine_endian(), could a concurrent reader observe
+e_machine !=3D EM_NONE but still read an uninitialized value for
+e_is_big_endian?
 
-When perf is built natively on a 64-bit SPARC system, EM_HOST is defined as
-EM_SPARC, not EM_SPARCV9. When reading a native 64-bit SPARC perf.data file,
-the target yields EM_SPARCV9.
+Because this lockless check lacks an acquire barrier like
+smp_load_acquire(), it might be possible to read stale data if the CPU
+or compiler reorders the initialization stores.
 
-Since host evaluates to EM_SPARC and target to EM_SPARCV9, this branch
-appears unreachable.
-
-Will this cause native SPARC64 profiling to incorrectly evaluate as a
-cross-compilation environment and fail to resolve the system objdump?
-
-> +		return false;
-> +	}
-> +
-> +	/* target =3D=3D host case */
-> +	if (target =3D=3D EM_RISCV) {
-> +		bool target_is_64 =3D perf_env__kernel_is_64_bit(env);
-> +		bool host_is_64 =3D (sizeof(void *) =3D=3D 8);
-> +
-> +		/* 32-bit host cannot natively disassemble 64-bit target */
-> +		if (!host_is_64 && target_is_64)
-> +			return false;
-> +	}
+>  		return e_machine;
+>  	}
+> =20
+[ ... ]
+> @@ -515,16 +534,27 @@ uint16_t thread__e_machine(struct thread *thread, s=
+truct machine *machine, uint3
+[ ... ]
+>  out:
+>  	if (e_machine !=3D EM_NONE) {
+> -		thread__set_e_machine(thread, e_machine);
+>  		thread__set_e_flags(thread, local_e_flags);
+> +		thread__set_e_is_big_endian(thread, args.is_big_endian);
+> +		thread__set_e_machine(thread, e_machine);
 
 [Severity: Medium]
-Does this bitness check need to apply to other architectures?
+Could we be missing a release barrier here to ensure e_is_big_endian is
+visible before e_machine is marked as initialized?
 
-Architectures like MIPS, PARISC, and S390 also share the same e_machine val=
-ue
-across 32-bit and 64-bit binaries.
+If the compiler or CPU reorders these stores, the read side of
+thread__e_machine_endian() might see e_machine !=3D EM_NONE before the
+e_is_big_endian update is fully published to memory.
 
-By restricting this check strictly to EM_RISCV, could a 32-bit host for the=
-se
-other architectures erroneously attempt native disassembly of a 64-bit targ=
-et
-and fail to use the proper cross-compiler triplets?
-
-> +
-> +	return true;
-> +}
+> +		if (is_big_endian)
+> +			*is_big_endian =3D args.is_big_endian;
+>  	} else {
+>  		e_machine =3D EM_HOST;
+>  		local_e_flags =3D EF_HOST;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602062452.2583=
-619-1-irogers@google.com?part=3D10
+619-1-irogers@google.com?part=3D3
