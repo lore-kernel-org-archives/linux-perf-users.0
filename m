@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC81E3F4DCC;
-	Tue,  2 Jun 2026 14:41:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DFAB3ED5CC;
+	Tue,  2 Jun 2026 14:41:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780411264; cv=none; b=egPwy5V6NoYz6jaUggK7XgF473v0FLF6K8lfrgoM/ArKiLGTkfrhj/wzvfJQzUwt7Es7K9rYCz3UgkQgIdM3zRGmfPLa1EYDC482vcxGiOZPejjxKFUj1X/sk6ZkQ0Xp2Cm13sY07zc8G7LwPK07fnjCBVJC0nDBZsOOlgoSB8g=
+	t=1780411274; cv=none; b=eTP2pHZjjKFQpWOWkJcsK8FnurHbdwgYH3Y5PdzKiRWs2pWO5DbVzpBR8I9hVb65mYLFHQZlVFYkYvZbsQ/IppsS6QD7DoZlzYYgGiZjTG5C+GVZkvGdt/XuKZ/m+dNlPx6c13fa46nOtZGO8G+GItrMM7RZIgbp+tTIsb6Vs6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780411264; c=relaxed/simple;
-	bh=QlxqPfGlmp00Gm1LThv7H+jhWuYECXWFEH8vLVpP9r0=;
+	s=arc-20240116; t=1780411274; c=relaxed/simple;
+	bh=+9++KEwNlOxG/SfjKjCjUr8ot7BiZ+JJm87pV/Atazc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fojkfxODxrggQcopZsoJkjBSU2oJASgiLAb6icSZuOPuliY3Z/zccw9k83Yxwolmd8NHV43gyxq0O4ELovstW7yVrEEFF3woC4qYnKdKVmQcrPIiv0RMifRDxfN3nh/MoHbmQBorHutaQrYw/1rJtKqeP5q/WjnDwgo7rjYPXDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ayxsf905; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=YRlm/uQewRlJbrpWvBMFCNQnOZzlbu2jjdiWThNXZZTAbpveuek/I15TLQBHHdI3C/XjjZ2vSlQnNuAbzyCUQUoodvt1vP20DtKPvRevdJacCzwEIA32awlG1N0IyjseXoTzeGgbxXmcRSCPBN5Q8Pi5ixbHWiy6rnTrnjwAIIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=LCYq91/0; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ayxsf905"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="LCYq91/0"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FF59356D;
-	Tue,  2 Jun 2026 07:40:57 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EA0E3576;
+	Tue,  2 Jun 2026 07:41:06 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AF933F632;
-	Tue,  2 Jun 2026 07:40:53 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C5EB3F632;
+	Tue,  2 Jun 2026 07:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780411262; bh=QlxqPfGlmp00Gm1LThv7H+jhWuYECXWFEH8vLVpP9r0=;
+	t=1780411271; bh=+9++KEwNlOxG/SfjKjCjUr8ot7BiZ+JJm87pV/Atazc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ayxsf9051bKATXLWYciickz5xV/NmjX61PswUBYMo5P2frP8ceQ9KcsydHG+AWI6n
-	 XwwgnDqDfsC528+wz9WBO5v0WI509x4t4DrR4/8cLG5UjFNDqDYJmW1FceIO1lFIH/
-	 gWu1c7dk02u+UmCAL0C+8VhsZfApUJxVgHaTjI4U=
+	b=LCYq91/0B5oFJ1IAkNfhTX6E8y2UgbRqkKpAGbFRnK1uNg+Ig3y9rpX42k4ssJHRo
+	 htCE3hgQXh/byGIZIM1lAlJ2huqgViUpK3mhKXnziOCSzeWcLdzdtpOo2/CK6dB0g8
+	 H9f+3yy8n92JfUKxFOslLMrm9ShBrJJp6gG75J3Q=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 02 Jun 2026 15:40:35 +0100
-Subject: [PATCH v7 01/23] tools: lib: thermal: Fix typo
+Date: Tue, 02 Jun 2026 15:40:36 +0100
+Subject: [PATCH v7 02/23] tools/thermal: Fix typo
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-tools_build_fix_zero_init-v7-1-631baf679fe7@arm.com>
+Message-Id: <20260602-tools_build_fix_zero_init-v7-2-631baf679fe7@arm.com>
 References: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 In-Reply-To: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -82,31 +82,31 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=820;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=809;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=QlxqPfGlmp00Gm1LThv7H+jhWuYECXWFEH8vLVpP9r0=;
- b=G+PRaGOtfPbxiDUvLvogPwmjgJCFI6th309XZDnnNoOQurDBKvjan//iwesAZRnpGFXAlRbOa
- LEAIYgta0W6DkI2laGOTbvphSQ13xX1PXiZkpt4/JYOoYLEUEWrSW6c
+ bh=+9++KEwNlOxG/SfjKjCjUr8ot7BiZ+JJm87pV/Atazc=;
+ b=YZucx+D5fcyi7lvIx/6uoz4FSOGGJ/ywVabUnjBbIMG7BYx2UNIiTr61sLfVfXHpWcXnqgLSH
+ MQQNPmqAqkkDUY+/qH3Msub/AYefXDqXWlLvrhTVWi7wxU881vkLO7N
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
 s/CFGLAS/CFLAGS
 
-Fixes: 47c4b0de080a ("tools/lib/thermal: Add a thermal library")
+Fixes: 3b7c5e8adf9c ("tools/thermal: Add util library")
 Acked-by: Daniel Lezcano <daniel.lezcano@kernel.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/lib/thermal/Makefile | 4 ++--
+ tools/thermal/lib/Makefile | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
-index 41aa7a324ff4d76351b89d7d7cf382df3fc14052..09d8f4ba6a0ab7ab9c99ac7f64d52d0268bee340 100644
---- a/tools/lib/thermal/Makefile
-+++ b/tools/lib/thermal/Makefile
-@@ -66,8 +66,8 @@ override CFLAGS += -fPIC
- override CFLAGS += $(NL3_CFLAGS)
+diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
+index 056d212f25cf51cd8c02260fbe2ef28dda5e4acb..8c9a37f999b826855dad11c0d9574b41d5b24244 100644
+--- a/tools/thermal/lib/Makefile
++++ b/tools/thermal/lib/Makefile
+@@ -60,8 +60,8 @@ override CFLAGS += $(EXTRA_WARNINGS)
+ override CFLAGS += -Werror -Wall
+ override CFLAGS += -fPIC
  override CFLAGS += $(INCLUDES)
- override CFLAGS += -fvisibility=hidden
 -override CFGLAS += -Wl,-L.
 -override CFGLAS += -Wl,-lthermal
 +override CFLAGS += -Wl,-L.
