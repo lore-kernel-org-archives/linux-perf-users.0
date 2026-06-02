@@ -1,117 +1,251 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FD03C345D;
-	Tue,  2 Jun 2026 08:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780388063; cv=none; b=e/wM3PllYHjLKjcw9w2QmyQfFZdQ8txtC+fUX2qqE+Y6CCOQs0Qx0gTWQy2YT1s8518qzkXMf37Y7kXoSudXlj71I4AANvLdpFzdghDKRRK0nNMZdZpppmw0RM0mKqmzTpoCfeRU3qsDtaoylz7D/F+h1WvSHUVp8dA07QbhWIM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780388063; c=relaxed/simple;
-	bh=QdbX22xd+haeiusHEINSiP8KFo9O8JZSuw3FqevaJ3U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LMzbPwTtpBAG55kpRlzRLrdUBE5AA+GLR39DBHBRdnuAqS6WzBae7U5twKI6NTp3A1FmjeItjnpToADCBAAozqB9YXGTkash1uAACRbd7J3YppubK8utBmKsXDT3B3ShX8a5URLi5H67uTP9TLNLqwLw0HGj2paNlDYcYNvejH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 0ba655105e5b11f1aa26b74ffac11d73-20260602
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:385cf79b-e49a-412f-bcc1-7330d5b28554,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:e7bac3a,CLOUDID:c2bd1ce71ba216685f154bf36bc00dd7,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102|850|865|898,TC:nil,Content:0|15|50,E
-	DM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA
-	:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 0ba655105e5b11f1aa26b74ffac11d73-20260602
-Received: from localhost [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <pengyu@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 832459926; Tue, 02 Jun 2026 16:14:15 +0800
-From: Yu Peng <pengyu@kylinos.cn>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Leo Yan <leo.yan@arm.com>,
-	Qinxin Xia <xiaqinxin@huawei.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yu Peng <pengyu@kylinos.cn>
-Subject: perf metricgroup: Fix metric expression copy leaks
-Date: Tue,  2 Jun 2026 16:11:04 +0800
-Message-Id: <20260602081104.271325-1-pengyu@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DB23612F5
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 08:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780390630; cv=pass; b=I4pMGc+g8sMyQW3kUY/0Co5jBwRept5DwHzhH/fsWAUBRWg7MKZw1p4NZ8h5p8cyBjjVxiVqybPMF2xCJRTr1sB8tcc5egOD1/qUh/zPJaU9OFicWgTLi5jp7p1bffn8S5PR50jd+yd0RhgCUjZDzr4+Z1O+YKHCfLV4DOw8mPk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780390630; c=relaxed/simple;
+	bh=Y+5f81K7DHNtXPtB/F7Xz+mM4DRnLSK/j3ypDuLllII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LXKuTZCNPJAiTSYniLnm9T/5sCWqnQjpLlv3+FBJHgKgl+HLWgaBm69OCilPH06qdTREIvMxG1e/FGkeJTpiHOtzI2VPMEZdsYnddAweokLX5I3q4GgMMivN8JSTJstgebMUt9oHj+ML5wO8ldfCBcbL3vr3gaaDXLFLYZZV7Zc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EPdYYAU9; arc=pass smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPdYYAU9"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-bef1e6423e7so73703266b.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 01:57:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780390627; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UN73KE/jpJSL/yxNJjhRB6I9e31zblUqZcngsatcrPHQSFuuB8ljKUKaI6xW1ur0B4
+         PgJJRr3bfx9EHleZjGo1wxBxvptIHc/o3dBlB+i9lKM7ySZJ//VOQvURsy4sVuLrgw6D
+         rxoRsPEJqW6l3wosJhi5m5S/b3TGWF1LMfpq+qd5/WKKAc/GPswq3qkz5d8ffH3lVtLf
+         ivNArQWte8qMpTrv2G8HRKQz5dYlPf/6maQCv3GerhzqZdk45LcJCcKeKgnB2a0E7TPr
+         1mQzaGsq1eHL4235zcsvowxGPgDTBNjFinTNmO62dZXAQkws13ddEAYUD1MKwcA6X3ao
+         A3Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=sZg0g8kfpnyHG9bcYNNs04NW71/x368Tj2iB4Wk0/04=;
+        fh=6kWUO23jvpruyV0F2mN4DGuijMp8uyY16aSVcNz2v1U=;
+        b=bE9jrZO6QPbIz+uhRHjHhnhLd3wiRgjB+a0/QYNDKWcNoNMHo38PaHLhf+pIm7o80P
+         qpTYEDOl5P9ZL/RK7+1tI8VucSoBr0o0sTgy5O731i67DQo4Gy55fmxHEIcCbzm8YZwo
+         2n2m0QJSSZKlIyOZvlgUbMDhjwzVFFF/cWO7rq/+6nimiNBY6C2Y6+QFJICeD7xq5KPj
+         v30j1kJbvgtiHXzgblf4zVXR6M1A8SMv8pytDk7aXhWIPwrCLeErvK/4YBZgx8JkZ17k
+         q6NADOoT2mAVoUNM3wou+vv0qPZgVPjAqKYtWi1+MlyaQfPWjdPZFcBtMNPmK0k7saUL
+         G5EQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780390627; x=1780995427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sZg0g8kfpnyHG9bcYNNs04NW71/x368Tj2iB4Wk0/04=;
+        b=EPdYYAU9Ky+TqgXVSVc8lWMcSufieuHahRV5BeUYoXlJdskStBJVxF6JIyDaPmvTA7
+         FXYbZonMDBdt6JyRCdnZWXvz0TmTjuStrIZIrgg1G+P0ZiuPHqVfKjTaKowN88/Rm1mX
+         7e2sl/I6+OJw4qg5pHjIJSRXGHbls17jzGDf0aNL+nAWOnAxUKhemKeWXzKtMV0y8qbH
+         bBiJHnie/xWSELspKfk9+iPs9b6Gi/s67oiqMOqc13fJKPnaiFzjvkf1IQ2euteN1CgK
+         Y7fJ2x5UBFi7SQ6gkD0TBdXk5gcalgUHgmtrhZ8oX5TmtbkR91oKqMdhN5jGX4g52vM/
+         CGhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780390627; x=1780995427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=sZg0g8kfpnyHG9bcYNNs04NW71/x368Tj2iB4Wk0/04=;
+        b=cYdSqXSFnXU1ybYu7tbAiACU8sHVW1a5ykp7fbsCjeB3Q1cuyorP96oER0XpavSRJL
+         7TtmLW4zgPueLamubWnN/zb2ZtucXE86aj/Sv2X8fTlkuDVXDqsVfAgmRw75kys2bO/n
+         6BwkyEe1m29wxF4v+u+JDj8vv725joFvnF6519j6o82DZIq69PUqAnFYm710Awf+pGvy
+         36JYSPIV2KAxhHEVJTefX50yetgTKPSgDrQjD27AYDqtQsL3EPUlgApKzHpn3EHr1hRu
+         gN1W6tAl2l3NsLxWsAz+V9MZKZZsKo5wHilrBGCpqXwFEXeHyQaLBgx8g+hQ5WNfkkTA
+         CkmQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8/H/E9JhtNLEhTy39pwfnOmPjQR1PXzIP4MO++HYvNra5bgQkz+j20zaBZjNAMHZ2aUnqFi+VJou5m4mF7LXt/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yylmk1ShDOjgWbXFAIIUBhAGueOAUxQw62r0viweojE2NepcDoI
+	/wYjdqcZsfkTcDKtRjybMEBYwJjLniwp5xHGFKC2UuHDCG+4hkrgAAf/NnRqlD5M6dF7uoTmr8C
+	Us/hyd9wRYTJ74IrGLnn8fr5NAAArlaI=
+X-Gm-Gg: Acq92OG4XYZiW1LF+qjTkcz+lfYystzAXLN1mkQwqfSC7LK8g3rK1WzGQPwGe8s21HW
+	Y2stgfUmXvtYQFezA7qp3N44Uhs0QN/PNzrLkmEeHgs4n5lBfrritsgJUAdqOMuiG4BL1a8NnGr
+	xt4FjWYBcq8FctZUPiUaVie0NV2afLZiVXjBAsabDDU22Jday5rX5/sW0spnjzCeUS5AanEvC9l
+	pVpgGXVib9v5AqIKwRaZeZUpLZkahHQLju7uXHOGlsUhnQgh34EmIFapEslbQeDr8Mjoiec0TOE
+	OoSSFuEeGYtfqA4evFx9TN5fTeAjooAYmA==
+X-Received: by 2002:a17:907:7705:b0:bee:a25:b977 with SMTP id
+ a640c23a62f3a-bee0a25d320mr331236166b.45.1780390626557; Tue, 02 Jun 2026
+ 01:57:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260527121207.2312181-4-puranjay@kernel.org> <20260527140948.3D61C1F000E9@smtp.kernel.org>
+In-Reply-To: <20260527140948.3D61C1F000E9@smtp.kernel.org>
+From: Puranjay Mohan <puranjay12@gmail.com>
+Date: Tue, 2 Jun 2026 09:56:51 +0100
+X-Gm-Features: AVHnY4KJgazUFImKAaO7E45UDwpfkanii3pt25-o-KKfnSa6wozbSJrvqWPTL3g
+Message-ID: <CANk7y0jT_xi45gKdu=s2Gsoew1fde8cx0bcKQFiiHUtWcWW9Cg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+To: sashiko-reviews@lists.linux.dev
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-metricgroup__copy_metric_events() allocates a new metric expression and
-duplicates metric_name before linking the expression into the destination
-metric event.
+On Wed, May 27, 2026 at 3:09=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
+>
+> Thank you for your contribution! Sashiko AI review found 3 potential issu=
+e(s) to consider:
+> - [High] TOCTOU race in `arm_brbe_snapshot_branch_stack` leads to hardwar=
+e state corruption.
+> - [High] Unconditional calls to `brbe_invalidate()` destructively clear h=
+ardware branch records, breaking concurrent perf events.
+> - [High] `bpf_get_branch_snapshot()` unconditionally fails when invoked f=
+rom a PMU NMI handler.
+> --
+>
+> commit 4683208c7439e46b2ca26814f22b69f16e4ad0c2
+> Author: Puranjay Mohan <puranjay@kernel.org>
+>
+> perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+>
+> This commit enables bpf_get_branch_snapshot() on ARM64 by implementing th=
+e
+> perf_snapshot_branch_stack static call for BRBE. It pauses BRBE, reads th=
+e
+> records into a buffer, invalidates the buffer, and unpauses BRBE.
+>
+> > diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+> > index ba554e0c846c4..aede95e277842 100644
+> > --- a/drivers/perf/arm_brbe.c
+> > +++ b/drivers/perf/arm_brbe.c
+> [ ... ]
+> > @@ -774,32 +795,96 @@ void brbe_read_filtered_entries(struct perf_branc=
+h_stack *branch_stack,
+> [ ... ]
+> > +/*
+> > + * Best-effort BRBE snapshot for BPF tracing. Pause BRBE to avoid
+> > + * self-recording and return 0 if the snapshot state appears disturbed=
+.
+> > + */
+> > +int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries, =
+unsigned int cnt)
+> > +{
+> > +     unsigned long flags;
+> > +     int nr_hw, nr_copied =3D 0;
+> > +     u64 brbfcr, brbcr;
+> > +
+> > +     if (!cnt)
+> > +             return 0;
+> > +
+> > +     /* Guard against running on a CPU without BRBE (e.g. big.LITTLE).=
+ */
+> > +     if (!cpu_has_brbe())
+> > +             return 0;
+> > +
+> > +     /*
+> > +      * Pause BRBE first to avoid recording our own branches. The
+> > +      * sysreg read/write and ISB are branchless, so pausing before
+> > +      * checking BRBCR avoids polluting the buffer with our own
+> > +      * conditional branches.
+> > +      */
+> > +     brbfcr =3D read_sysreg_s(SYS_BRBFCR_EL1);
+> > +     brbcr =3D read_sysreg_s(SYS_BRBCR_EL1);
+> > +     write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> > +     isb();
+> > +
+> > +     /* Bail out if BRBE is not enabled (BRBCR_EL1 =3D=3D 0). */
+> > +     if (!brbcr) {
+> > +             write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
+> > +             return 0;
+> > +     }
+>
+> [Severity: High]
+> Is this check incompatible with PMU NMI handlers?
+>
+> If a BPF program attaches to a perf event overflow, armv8pmu_handle_irq()
+> calls armv8pmu_stop() before processing overflows, which calls brbe_disab=
+le()
+> and sets SYS_BRBCR_EL1 to 0.
+>
+> Would this cause bpf_get_branch_snapshot() to unconditionally fail and re=
+turn
+> 0 when triggered from these PMU events?
 
-Free new_expr when strdup() fails, and free the duplicated metric_name on
-the later error paths.
+That is acceptable.
 
-Fixes: b85a4d61d302 ("perf metric: Allow modifiers on metrics")
-Signed-off-by: Yu Peng <pengyu@kylinos.cn>
----
- tools/perf/util/metricgroup.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> > +
+> > +     /* Block local exception delivery while reading the buffer. */
+> > +     flags =3D local_daif_save();
+>
+> [Severity: High]
+> Is there a TOCTOU race window here that could corrupt hardware state?
+>
+> The function reads and caches SYS_BRBFCR_EL1 and SYS_BRBCR_EL1 before
+> disabling local exceptions via local_daif_save().
+>
+> If an interrupt or NMI arrives in this window (such as a perf_event_disab=
+le
+> IPI) and modifies the BRBE hardware configuration, the function later wri=
+tes
+> back the stale cached brbcr and brbfcr values at the end of the function,
+> overwriting the PMU subsystem's intentional changes.
+>
+> Does the mitigation check below catch this?
+>
+>         if (!(read_sysreg_s(SYS_BRBFCR_EL1) & BRBFCR_EL1_PAUSED)) {
+>
+> It looks like it might fail to catch this because brbe_disable() leaves t=
+he
+> PAUSED bit set, leading to the function silently re-enabling BRBE and
+> corrupting the hardware state when restoring the cached registers.
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 4db9578efd811..1ed66773c6f0f 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1687,8 +1687,10 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
- 			new_expr->metric_expr = old_expr->metric_expr;
- 			new_expr->metric_threshold = old_expr->metric_threshold;
- 			new_expr->metric_name = strdup(old_expr->metric_name);
--			if (!new_expr->metric_name)
-+			if (!new_expr->metric_name) {
-+				free(new_expr);
- 				return -ENOMEM;
-+			}
- 
- 			new_expr->metric_unit = old_expr->metric_unit;
- 			new_expr->runtime = old_expr->runtime;
-@@ -1701,6 +1703,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
- 				alloc_size = sizeof(*new_expr->metric_refs);
- 				new_expr->metric_refs = calloc(nr + 1, alloc_size);
- 				if (!new_expr->metric_refs) {
-+					zfree(&new_expr->metric_name);
- 					free(new_expr);
- 					return -ENOMEM;
- 				}
-@@ -1717,6 +1720,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
- 			alloc_size = sizeof(*new_expr->metric_events);
- 			new_expr->metric_events = calloc(nr + 1, alloc_size);
- 			if (!new_expr->metric_events) {
-+				zfree(&new_expr->metric_name);
- 				zfree(&new_expr->metric_refs);
- 				free(new_expr);
- 				return -ENOMEM;
-@@ -1727,6 +1731,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
- 				evsel = old_expr->metric_events[idx];
- 				evsel = evlist__find_evsel(evlist, evsel->core.idx);
- 				if (evsel == NULL) {
-+					zfree(&new_expr->metric_name);
- 					zfree(&new_expr->metric_events);
- 					zfree(&new_expr->metric_refs);
- 					free(new_expr);
--- 
-2.43.0
+The NMI handler always leaves the registers in same state to what we
+cached. This is not a real issue.
+
+> > +
+> > +     /*
+> > +      * A PMU overflow before local_daif_save() could have re-enabled
+> > +      * BRBE, clearing the PAUSED bit. The overflow handler already
+> > +      * restored BRBE to its correct state, so just bail out.
+> > +      */
+> > +     if (!(read_sysreg_s(SYS_BRBFCR_EL1) & BRBFCR_EL1_PAUSED)) {
+> > +             local_daif_restore(flags);
+> > +             return 0;
+> > +     }
+> > +
+> > +     nr_hw =3D FIELD_GET(BRBIDR0_EL1_NUMREC_MASK,
+> > +                       read_sysreg_s(SYS_BRBIDR0_EL1));
+> > +
+> > +     for_each_brbe_entry(i, nr_hw) {
+> > +             if (nr_copied >=3D cnt)
+> > +                     break;
+> > +
+> > +             if (!perf_entry_from_brbe_regset(i, &entries[nr_copied], =
+NULL))
+> > +                     break;
+> > +
+> > +             nr_copied++;
+> > +     }
+> > +
+> > +     brbe_invalidate();
+>
+> [Severity: High]
+> Does unconditionally clearing hardware branch records here break concurre=
+nt
+> perf events?
+>
+> Since bpf_get_branch_snapshot() can be invoked asynchronously at any time
+> (e.g., from a BPF kprobe or tracepoint program), if another perf event is
+> actively profiling, would this snapshot silently wipe the hardware BRBE
+> buffer?
+>
+> When the active perf event later overflows, it would read an empty or sev=
+erely
+> truncated branch stack, potentially corrupting the profiling data. Should
+> snapshots be read-only?
+
+No, this is expected behaviour, if we read the branch stack we have to
+clear it. perf event later will read empty buffer which is correct, if
+we don't clear the stack it will read corrupted data
