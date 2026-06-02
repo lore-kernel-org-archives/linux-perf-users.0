@@ -1,34 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DFAB3ED5CC;
-	Tue,  2 Jun 2026 14:41:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B783DA7DC;
+	Tue,  2 Jun 2026 14:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780411274; cv=none; b=eTP2pHZjjKFQpWOWkJcsK8FnurHbdwgYH3Y5PdzKiRWs2pWO5DbVzpBR8I9hVb65mYLFHQZlVFYkYvZbsQ/IppsS6QD7DoZlzYYgGiZjTG5C+GVZkvGdt/XuKZ/m+dNlPx6c13fa46nOtZGO8G+GItrMM7RZIgbp+tTIsb6Vs6Y=
+	t=1780411282; cv=none; b=Szqk19RKOqzEbwFlBpkxwpFZ+rLDUMBQYlfLXY+0RjHuUssEb115pZxQx5OYwGORw3MzGThDpE3E2CEjX+zQIGyzFQ+sDie1rfedRGft2UT7tnSIxHwd+xH8qfc0SQfT9gRl6qAA++whLgeSbeiztziE5KeZBMqurWZWPrk1sP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780411274; c=relaxed/simple;
-	bh=+9++KEwNlOxG/SfjKjCjUr8ot7BiZ+JJm87pV/Atazc=;
+	s=arc-20240116; t=1780411282; c=relaxed/simple;
+	bh=HHiufcx01zjsi7OxV3Txr2WMedIY5n8R+m3Nlsc8pBA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YRlm/uQewRlJbrpWvBMFCNQnOZzlbu2jjdiWThNXZZTAbpveuek/I15TLQBHHdI3C/XjjZ2vSlQnNuAbzyCUQUoodvt1vP20DtKPvRevdJacCzwEIA32awlG1N0IyjseXoTzeGgbxXmcRSCPBN5Q8Pi5ixbHWiy6rnTrnjwAIIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=LCYq91/0; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=FS1eXbDSeq4c71TkLNNGSSR+8mbQtE4cTXZzCoVi3TqInh0fiFwFul5bfdWnzhbK7Ar3uA2Wlc1Cw2Ef4HW9uPPDyumwI25VnQc80M/1cX6p1TDVk+y6EsBwErhelMWrsrYMQdaeaa7994ICINJ8Wn564k0QGECcTXGokFBPgjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KwcwbtNT; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="LCYq91/0"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KwcwbtNT"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EA0E3576;
-	Tue,  2 Jun 2026 07:41:06 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 927E3356E;
+	Tue,  2 Jun 2026 07:41:15 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C5EB3F632;
-	Tue,  2 Jun 2026 07:41:02 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B805D3F632;
+	Tue,  2 Jun 2026 07:41:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780411271; bh=+9++KEwNlOxG/SfjKjCjUr8ot7BiZ+JJm87pV/Atazc=;
+	t=1780411280; bh=HHiufcx01zjsi7OxV3Txr2WMedIY5n8R+m3Nlsc8pBA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LCYq91/0B5oFJ1IAkNfhTX6E8y2UgbRqkKpAGbFRnK1uNg+Ig3y9rpX42k4ssJHRo
-	 htCE3hgQXh/byGIZIM1lAlJ2huqgViUpK3mhKXnziOCSzeWcLdzdtpOo2/CK6dB0g8
-	 H9f+3yy8n92JfUKxFOslLMrm9ShBrJJp6gG75J3Q=
+	b=KwcwbtNT8aixczaOegLDaEhlkEtxPlDvciSfVrmMvbqRJuqSE0RhSvqyjEPB5oA/p
+	 NXtEf4iCL1zuYqKPmX9mVHAbR/8cCWTHjMRVwGRJK728hk/suoekbD5vRiu6dYAn18
+	 KQz0HbhXNng0HRU/jkVr7Gv1tPOHSd+h+cqBfDxU=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 02 Jun 2026 15:40:36 +0100
-Subject: [PATCH v7 02/23] tools/thermal: Fix typo
+Date: Tue, 02 Jun 2026 15:40:37 +0100
+Subject: [PATCH v7 03/23] tools: lib: thermal: Initialize CFLAGS before
+ including Makefile.include
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-tools_build_fix_zero_init-v7-2-631baf679fe7@arm.com>
+Message-Id: <20260602-tools_build_fix_zero_init-v7-3-631baf679fe7@arm.com>
 References: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 In-Reply-To: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -82,35 +83,71 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=809;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=2051;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=+9++KEwNlOxG/SfjKjCjUr8ot7BiZ+JJm87pV/Atazc=;
- b=YZucx+D5fcyi7lvIx/6uoz4FSOGGJ/ywVabUnjBbIMG7BYx2UNIiTr61sLfVfXHpWcXnqgLSH
- MQQNPmqAqkkDUY+/qH3Msub/AYefXDqXWlLvrhTVWi7wxU881vkLO7N
+ bh=HHiufcx01zjsi7OxV3Txr2WMedIY5n8R+m3Nlsc8pBA=;
+ b=ncA0k8UPBw1yVdeOZX6+s4cEVEcDklxCjWVacInOEP575mT+TNq4r6yTa5cAUdwj5G5ovxSbU
+ YpWhXLumAzvDNCYN2doqtMsaMUXi5DdAnz6ATK7v28guOl8E6U89jF8
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-s/CFGLAS/CFLAGS
+tools/scripts/Makefile.include may expand EXTRA_CFLAGS in a future
+change.  This could alter the initialization of CFLAGS in the thermal
+Makefile, as the default options "-g -Wall" would never be set once
+EXTRA_CFLAGS is expanded.
 
-Fixes: 3b7c5e8adf9c ("tools/thermal: Add util library")
+Prepare for this by moving the CFLAGS initialization before including
+tools/scripts/Makefile.include, so it is not affected by the extended
+EXTRA_CFLAGS.
+
+Append EXTRA_CFLAGS to CFLAGS only after including Makefile.include and
+place it last so that the extra flags propagate properly and can
+override the default options.
+
 Acked-by: Daniel Lezcano <daniel.lezcano@kernel.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/thermal/lib/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/lib/thermal/Makefile | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
-index 056d212f25cf51cd8c02260fbe2ef28dda5e4acb..8c9a37f999b826855dad11c0d9574b41d5b24244 100644
---- a/tools/thermal/lib/Makefile
-+++ b/tools/thermal/lib/Makefile
-@@ -60,8 +60,8 @@ override CFLAGS += $(EXTRA_WARNINGS)
- override CFLAGS += -Werror -Wall
- override CFLAGS += -fPIC
- override CFLAGS += $(INCLUDES)
--override CFGLAS += -Wl,-L.
--override CFGLAS += -Wl,-lthermal
-+override CFLAGS += -Wl,-L.
-+override CFLAGS += -Wl,-lthermal
+diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
+index 09d8f4ba6a0ab7ab9c99ac7f64d52d0268bee340..b55fa42cefa47628b7f2fac32fc08fcd82580a0e 100644
+--- a/tools/lib/thermal/Makefile
++++ b/tools/lib/thermal/Makefile
+@@ -23,6 +23,14 @@ INSTALL = install
+ DESTDIR ?=
+ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
+ 
++# Defer assigning EXTRA_CFLAGS to CFLAGS until after including
++# tools/scripts/Makefile.include, as it may add flags to EXTRA_CFLAGS.
++ifdef EXTRA_CFLAGS
++  CFLAGS :=
++else
++  CFLAGS := -g -Wall
++endif
++
+ include $(srctree)/tools/scripts/Makefile.include
+ include $(srctree)/tools/scripts/Makefile.arch
+ 
+@@ -39,13 +47,6 @@ libdir = $(prefix)/$(libdir_relative)
+ libdir_SQ = $(subst ','\'',$(libdir))
+ libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
+ 
+-# Set compile option CFLAGS
+-ifdef EXTRA_CFLAGS
+-  CFLAGS := $(EXTRA_CFLAGS)
+-else
+-  CFLAGS := -g -Wall
+-endif
+-
+ NL3_CFLAGS = $(shell pkg-config --cflags libnl-3.0 2>/dev/null)
+ ifeq ($(NL3_CFLAGS),)
+ NL3_CFLAGS = -I/usr/include/libnl3
+@@ -68,6 +69,7 @@ override CFLAGS += $(INCLUDES)
+ override CFLAGS += -fvisibility=hidden
+ override CFLAGS += -Wl,-L.
+ override CFLAGS += -Wl,-lthermal
++override CFLAGS += $(EXTRA_CFLAGS)
  
  all:
  
