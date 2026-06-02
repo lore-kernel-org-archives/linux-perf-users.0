@@ -1,159 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3266D3FCC
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 07:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613D33403F8;
+	Tue,  2 Jun 2026 07:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780383631; cv=none; b=jXVKWHrrEBDJyf8ZrV5PSJkBfs801OwLSY8bxpAuPh7fJQd64MNzqtVVztgkCDDVDhGg/Fklz643VlPA5AgUM7N6FVUCGpiT7ckPTK7OiUQjAuUTZm62OETUmk2tqpyU7Trpn+7syHBcqHOTWY/7IU1Ga+mjZ73whK+rJvUTabQ=
+	t=1780385058; cv=none; b=dwL7N9RO0eu1j3EtI2AZBlPPn2DzlL5cpaIWcLO7tBQ2oV24/13D/bz2GesRP6rgO9of08cdfgivgdlPjd46TEFuJbFgZFlXN9uM98yq9hDBcJ4PKAbAgGLUtNWufLAdlVLeVptSwHRx5C8hQDbjjpKyjt6TLqs7P/tao6vp+B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780383631; c=relaxed/simple;
-	bh=tBl8t5/6YZEDhi5tb5P315nJp5RkSvoIoyLaEcGtyH4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=V7SvcNbIe4DlCMyIsLEHW7C84qSO5DzpVsBhghRv+ORLMv1TdcI+QXkZCFKnUZlIFLV+OEKH7SQSzlK9UHah9hJg4WxaKiPAw45QVwNAdCobRXYpvYH0ibKImWkSAD64H09sA1Ie55H4UvwcLNOuRSvggOIg9VBnrGKi07LxJ3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b6GFC48x; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780385058; c=relaxed/simple;
+	bh=A9ROvAc9OIM8BZ0wlpQUy69G5fyRhWBkgwMVc8pzOmw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ff4SkZTL6/1be2PGIZxNZEsNuSGJuqfLylkI1SWmybDq+Yo+Bn5U+fQP+eOXzBnzdYoDtcWZjZsWvpwLtfnFbmDYg7JNYg+rZJVOfHfj2IbBMNmgTgB75cQ1WE2Tan2hlwQq29RGfwbXSzNgfZt5vxLXGmFC7FdoYvyEEuQVLU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k1OEghbd; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6GFC48x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA2931F00893;
-	Tue,  2 Jun 2026 07:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780383630;
-	bh=byxs6DPGTQExw0JSFreEhFJ9ws+ZywE8+AH7Nsh57AU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=b6GFC48xRdUv786r0EQhDFsnSC5Vpu4jcYHEplS/u1knx/BklreyzykhZwmNAVzco
-	 cJp9q4/c3PDDxXXjZdm5wpXylOJt8aQoFXCORBc2Q+STf4ynk6ST1raiJpTiudRKgS
-	 1r7Bu2Rwf5tfLgZKr+LRB5sMeE3C4jnwEPP91XaSj1oqtbKu07pE8kunao6i9+U6Cf
-	 0xSv7t+UMJ+v/swqjqqgiW15g66bWzl7I0n8G6Whl6cPsl9TZLt3y7QqHL22GKZXL7
-	 0Qurgcy2i8YrS5gWuHMwyp1Tmr1MXfAVZg8RPxT2Gaxi+GZAZX5VJij2Icda5hmWqh
-	 EcZWDyMes1Q2w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 14/19] perf env: Refactor perf_env__arch_strerrno
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602062452.2583619-15-irogers@google.com>
-References: <20260602062452.2583619-15-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 07:00:29 +0000
-Message-Id: <20260602070029.DA2931F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k1OEghbd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780385056; x=1811921056;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=A9ROvAc9OIM8BZ0wlpQUy69G5fyRhWBkgwMVc8pzOmw=;
+  b=k1OEghbdrdhvxj2V14JvkQEAvvP4NDsxKF1/RbiiVIfzN3oiQUQnHeOE
+   N90KV2oACD9Na8Pw/nNB6BS85beOUxB4Z8SGgzpOftun+Lm/kmSnKJ0de
+   s9vyfIMhesPDBDvrDKHnBn2V59c9oWCwE49MZtxKe49W6/FRqeVmuB38D
+   ci9Ywj+R8HLOfj1gwsNvrxF1/iygLNDgxln7xv93Phc4egPnzl7Whoq40
+   h9C8oNITnAzRbfW0dSYEtrUSKBphSxv4ZmGJ3PZ/eBzeGdF9G4F3U/HsQ
+   cAKcnrBJZ8j8vh4KPvRIxG3RH14o2G16S8Mm5YBcaESnZOmNgWib9S/Oq
+   A==;
+X-CSE-ConnectionGUID: MBbfimuFTQan6m1Up62Z0Q==
+X-CSE-MsgGUID: 6veBaOHRSyegQiMonmMJ4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="98581795"
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="98581795"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 00:24:15 -0700
+X-CSE-ConnectionGUID: eM1kcx//TiOmCU22uB37fA==
+X-CSE-MsgGUID: rnEh7ATLRQeXNBzJJhvVQA==
+X-ExtLoop1: 1
+Received: from unknown (HELO [10.238.1.64]) ([10.238.1.64])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 00:24:12 -0700
+Message-ID: <ddf43295-e637-4a65-97e2-0926624776bd@linux.intel.com>
+Date: Tue, 2 Jun 2026 15:24:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 1/8] perf/x86/intel/uncore: Fix PCI PMU cleanup on
+ setup failure
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260601170114.173359-1-zide.chen@intel.com>
+ <20260601170114.173359-2-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260601170114.173359-2-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] The commit message claims to hide the declaration if libtraceeve=
-nt is not present, but the code removes the conditional compilation, exposi=
-ng it unconditionally.
-- [Low] Generated C code uses newer ELF machine constants (e.g., EM_LOONGAR=
-CH, EM_CSKY) without fallback definitions, breaking the build on systems wi=
-th older glibc.
---
 
-commit 39cf4406b4f1694948ce536342e5558e9e7d0701
-Author: Ian Rogers <irogers@google.com>
+On 6/2/2026 1:01 AM, Zide Chen wrote:
+> When uncore_pci_pmu_register() fails, pmu->boxes[die] is set to NULL
+> before returning.  In the uncore_pci_remove() path, this causes
+> uncore_pci_pmu_unregister() to be skipped entirely, leaking
+> pmu->activeboxes.  In the uncore_bus_notify() path,
+> uncore_pci_pmu_unregister() may still be called and must exit early
+> when pmu->boxes[die] is NULL to avoid a NULL pointer dereference, and
+> to ensure activeboxes is only decremented for a previously active box.
+>
+> Additionally, since pci_get_drvdata() returns NULL on registration
+> failure, uncore_pci_remove() can no longer treat NULL drvdata as an
+> indicator of an auxiliary PCI device.  Remove the associated
+> WARN_ON_ONCE().
+>
+> Link: https://sashiko.dev/#/patchset/20260512233048.9577-1-zide.chen@intel.com?part=1
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+> V2: new patch.
+> ---
+>  arch/x86/events/intel/uncore.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index 7857959c6e82..b69b6a21d46b 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1183,6 +1183,7 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
+>  	/* First active box registers the pmu */
+>  	ret = uncore_pmu_register(pmu);
+>  	if (ret) {
+> +		atomic_dec(&pmu->activeboxes);
+>  		pmu->boxes[die] = NULL;
+>  		uncore_box_exit(box);
+>  		kfree(box);
+> @@ -1248,6 +1249,9 @@ static void uncore_pci_pmu_unregister(struct intel_uncore_pmu *pmu, int die)
+>  {
+>  	struct intel_uncore_box *box = pmu->boxes[die];
+>  
+> +	if (!box)
+> +		return;
+> +
+>  	pmu->boxes[die] = NULL;
+>  	if (atomic_dec_return(&pmu->activeboxes) == 0)
+>  		uncore_pmu_unregister(pmu);
+> @@ -1272,7 +1276,6 @@ static void uncore_pci_remove(struct pci_dev *pdev)
+>  				break;
+>  			}
+>  		}
+> -		WARN_ON_ONCE(i >= UNCORE_EXTRA_PCI_DEV_MAX);
+>  		return;
+>  	}
+>  
 
-perf env: Refactor perf_env__arch_strerrno
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-This commit refactors perf_env__arch_strerrno to take an e_machine and an
-errno value instead of an architecture string. It updates arch_errno_names.=
-sh
-to generate an e_machine to function mapping and alters the call sites
-in builtin-trace.c to use the newly available e_machine.
 
-> perf_env__arch_strerrno is only available with libtraceevent so hide
-> the declaration if no libtraceevent.
-
-[Severity: Medium]
-The commit message mentions hiding the declaration when libtraceevent is
-missing, but the patch actually removes the HAVE_LIBTRACEEVENT guards. Could
-the commit message be more precise about the intent?
-
-> diff --git a/tools/perf/trace/beauty/arch_errno_names.sh b/tools/perf/tra=
-ce/beauty/arch_errno_names.sh
-> index d48d8561a7bb4..aae3d92a7893a 100755
-> --- a/tools/perf/trace/beauty/arch_errno_names.sh
-> +++ b/tools/perf/trace/beauty/arch_errno_names.sh
-
-[ ... ]
-
-> @@ -52,21 +52,50 @@ process_arch()
->  		|IFS=3D, create_errno_lookup_func "$arch"
->  }
-> =20
-> +arch_to_e_machine()
-> +{
-> +	case "$1" in
-> +	alpha)      printf '\tcase EM_ALPHA:\n' ;;
-> +	arc)        printf '\tcase EM_ARC:\n' ;;
-> +	arm)        printf '\tcase EM_ARM:\n' ;;
-> +	arm64)      printf '\tcase EM_AARCH64:\n' ;;
-> +	csky)       printf '\tcase EM_CSKY:\n' ;;
-> +	hexagon)    printf '\tcase EM_HEXAGON:\n' ;;
-> +	loongarch)  printf '\tcase EM_LOONGARCH:\n' ;;
-
-[ ... ]
-
-> @@ -74,6 +103,8 @@ cat <<EoHEADER
->  /* SPDX-License-Identifier: GPL-2.0 */
-> =20
->  #include <string.h>
-> +#include <stdint.h>
-> +#include <elf.h>
-> =20
->  EoHEADER
-
-[Severity: Low]
-Can this cause a build failure on systems with older glibc versions?
-
-The script unconditionally outputs cases for newer ELF machine constants
-like EM_CSKY and EM_LOONGARCH into the generated C code, relying solely
-on the system elf.h.
-
-If a host has an older glibc where these constants are not yet defined,
-it would result in undeclared identifier errors. Is a fallback definition
-or internal header needed here?
-
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index fae70b07ba8de..b41562fb06c63 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-
-[ ... ]
-
-> @@ -851,16 +851,11 @@ const char *perf_env__arch(struct perf_env *env)
->  	return arch;
->  }
-> =20
-> -const char *perf_env__arch_strerrno(struct perf_env *env __maybe_unused,=
- int err __maybe_unused)
-> -{
-> -#if defined(HAVE_LIBTRACEEVENT)
-> -	if (env->arch_strerrno =3D=3D NULL)
-> -		env->arch_strerrno =3D arch_syscalls__strerrno_function(perf_env__arch=
-(env));
-> +const char *arch_syscalls__strerrno(uint16_t e_machine, int err);
-> =20
-> -	return env->arch_strerrno ? env->arch_strerrno(err) : "no arch specific=
- strerrno function";
-> -#else
-> -	return "!HAVE_LIBTRACEEVENT";
-> -#endif
-> +const char *perf_env__arch_strerrno(uint16_t e_machine, int err)
-> +{
-> +	return arch_syscalls__strerrno(e_machine, err);
->  }
-
-[Severity: Medium]
-Does this unintentionally expose perf_env__arch_strerrno unconditionally?
-
-The commit message states the intent is to hide the declaration if there
-is no libtraceevent, but this code removes the HAVE_LIBTRACEEVENT guards
-entirely.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602062452.2583=
-619-1-irogers@google.com?part=3D14
