@@ -1,122 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E5D3E8324;
-	Tue,  2 Jun 2026 14:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B6C34DCC8
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780412281; cv=none; b=X0OX9Hg4LHrRHiQLYqJ1USk0tAHkeAc6IRNcBWLQbopTOgdzd8MHb2CoBgbO8M6DPBoBLttSqyghChiDYA7CG6UBM+95TJ9CVa6y4DRofqEH96z8mMBzAuu0h9qCRXy6Qntxv0SDRmIwxvPKQSIsx4zLIm1wAPNksDXgEd+RSoc=
+	t=1780412434; cv=none; b=keFeeXiemyohNyDebVbFNhvj/FZZVj9M9SPBe7BI1v8RX573IzYqTy22eZU7xMGdcAcwo5AZkTubRIneGtHwMDFRQ65AqELKud8Cvb+I/o7lsYlpM0ylVy+AlHK+KQpre+1RG28ei+Apq+hws26teResAiIxjUpWnwqqd33Rd+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780412281; c=relaxed/simple;
-	bh=vNq45d1mDRlq9GGhmU4BKWAv1tSbLrh6BxZtzTADikg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q6j/RJkDnjP6qjn4G7yZSIgRCghrnkks/zMOYTmfS5B/QccxNCy7BgYOHbwKUu9+W2/T842dLtQc1U2ZBzN5ddfOFOqymjViZDsf6quypvH43pMJ9kVS7mNHCkkXM/sZwMUcC+pfRHgROE8SlZDjh9k30SpZ71WMqrsnY3GRKy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JPNHhWha; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1780412434; c=relaxed/simple;
+	bh=xKunNtFp6ZUv29I+0HpaAHRo5IWkT1fUDxhcXataI0U=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=RPwJXfrNUHzGLATWUrUIKCq7boNmSJPD/R/+W2Zm7LrbiuuxVw+H4lRgP2XF1n5wZcKJwlwmVoJFXV1s16d2+M63yKxpQXVJlL5g30OYiOTPKOI0HpTu9dZu7vu2cEG6d+0ig1yujFxdZiXkZOZ8U8okuO9eBfQ2eEdimeFge0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTEoBVI3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JPNHhWha"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780412280; x=1811948280;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vNq45d1mDRlq9GGhmU4BKWAv1tSbLrh6BxZtzTADikg=;
-  b=JPNHhWhaQovZs+JPK0O1TBAVQGAgbcus8uC7CIRTPpl1vz1OpNi611QQ
-   BnHN+DmNXZ7xs5ZiImSnKiBJg9rd1RLvqAC719pTfdDm0eWprmlmRztDa
-   YyqGWm05h1bwb9h1cOUK4enDNJv7j+eZcV2F2w0NHUXhtWeF3tp6hbHPi
-   1fqLwNQd+ICwf2vD0BCEt9ZIDtgYsRdL4GZLXYbOox/UY+5EP6KvV10yM
-   KrgNY1knsmFKJnnIFQvtVXwBKN6LTA7bVbZcvUGCwB45FUpvUfm1v2J8D
-   L9k1csPDkLgCyar0xWv/ssjSuOmaAArtiLkiGOfayp/3i1VrODv5x9x+B
-   A==;
-X-CSE-ConnectionGUID: nx5bixW1QD6huXVpKwItzA==
-X-CSE-MsgGUID: vq7HzWL1QbSB0X8cjtVMAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="103859996"
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="103859996"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 07:57:55 -0700
-X-CSE-ConnectionGUID: JYOz9VHrSrqdfu0w+Gv+YQ==
-X-CSE-MsgGUID: zqwUxP+STFuStepAZAu9ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="243095628"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 07:57:54 -0700
-From: Zide Chen <zide.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH V3 4/7] perf/x86/intel/uncore: Defer ADL global PMON enable to enable_box()
-Date: Tue,  2 Jun 2026 07:49:05 -0700
-Message-ID: <20260602144908.263680-5-zide.chen@intel.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260602144908.263680-1-zide.chen@intel.com>
-References: <20260602144908.263680-1-zide.chen@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTEoBVI3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9E61F00893;
+	Tue,  2 Jun 2026 15:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780412433;
+	bh=gmO+kQAYjluw7X+f2eOwBMPxrAX9SZQeyYxf9LBWHDc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=UTEoBVI3rml9nYCNwzJ4oD2cTbhg+Y0620VTx3jaby7Z1YOOgFHuZ7rfhGijdJlJz
+	 UgJa5HgxUKrG2EjiDnlCeLp/+2NCjO8VKx8uOTw0BUhvQ/nhfZl6B4GL9zkERZvB7t
+	 UDyiE9/7AtVmyXNBTR+2HnCX0/0tw/zuyMe8wyBL2n1WfpPo3T73U6QldOFn2csVCb
+	 rEvElZ8Dq5tLn1O+NHJZ+LEGqPTaSavZI4Amv9TfyO0o9Tq37xkgj6Ru3gys7/UYDY
+	 RDHL4kTTjEwdnS3Ve9Wj7p9mhZ6qISG9yDZSVpR1eUGqsR/o//7O/llEypIgXXEsMf
+	 3DlhC6neaZImg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 08/23] tools build: Append extra host CFLAGS for
+ fixdep
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260602-tools_build_fix_zero_init-v7-8-631baf679fe7@arm.com>
+References: <20260602-tools_build_fix_zero_init-v7-8-631baf679fe7@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 02 Jun 2026 15:00:32 +0000
+Message-Id: <20260602150032.CE9E61F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On some Raptor Cove CPUs, enabling uncore PMON globally at driver init
-may increase power consumption even when no perf events are in use.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] The link step for `fixdep` replaces `KBUILD_HOSTLDFLAGS` with `HOST=
+_CFLAGS`, unintentionally dropping all host linker flags.
+--
 
-Drop adl_uncore_msr_init_box() and defer programming the global control
-register to enable_box(), so it is only set when a box is actually used.
+commit fdc8f23a99f210f1577aab161879510c7af15c47
+Author: Leo Yan <leo.yan@arm.com>
 
-IMC and IMC freerunning counters use a separate control path and are
-unaffected.
+tools build: Append extra host CFLAGS for fixdep
 
-Cc: stable@vger.kernel.org
-Fixes: 772ed05f3c5c ("perf/x86/intel/uncore: Add Alder Lake support")
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Zide Chen <zide.chen@intel.com>
----
-V3:
-- Add Fixes tag. (Dapeng)
----
- arch/x86/events/intel/uncore_snb.c | 7 -------
- 1 file changed, 7 deletions(-)
+This commit introduces a local HOST_CFLAGS variable that combines
+KBUILD_HOSTCFLAGS and HOST_EXTRACFLAGS, and passes it to the fixdep build
+process to ensure host compiler options are included.
 
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 3dbc6bacbd9d..edddd4f9ab5f 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -563,12 +563,6 @@ void tgl_uncore_cpu_init(void)
- 	skl_uncore_msr_ops.init_box = rkl_uncore_msr_init_box;
- }
- 
--static void adl_uncore_msr_init_box(struct intel_uncore_box *box)
--{
--	if (box->pmu->pmu_idx == 0)
--		wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
--}
--
- static void adl_uncore_msr_enable_box(struct intel_uncore_box *box)
- {
- 	wrmsrq(ADL_UNC_PERF_GLOBAL_CTL, SNB_UNC_GLOBAL_CTL_EN);
-@@ -587,7 +581,6 @@ static void adl_uncore_msr_exit_box(struct intel_uncore_box *box)
- }
- 
- static struct intel_uncore_ops adl_uncore_msr_ops = {
--	.init_box	= adl_uncore_msr_init_box,
- 	.enable_box	= adl_uncore_msr_enable_box,
- 	.disable_box	= adl_uncore_msr_disable_box,
- 	.exit_box	= adl_uncore_msr_exit_box,
--- 
-2.54.0
+> diff --git a/tools/build/Makefile b/tools/build/Makefile
+> index 3a5a3808ab2a1..2761f80df7611 100644
+> --- a/tools/build/Makefile
+> +++ b/tools/build/Makefile
 
+[ ... ]
+
+>  $(FIXDEP): $(FIXDEP_IN)
+> -	$(QUIET_LINK)$(HOSTCC) $(FIXDEP_IN) $(KBUILD_HOSTLDFLAGS) -o $@
+> +	$(QUIET_LINK)$(HOSTCC) $(FIXDEP_IN) $(HOST_CFLAGS) -o $@
+
+[Severity: Low]
+Does this unintentionally drop the host linker flags?=20
+
+By replacing KBUILD_HOSTLDFLAGS with HOST_CFLAGS during the link step for
+the fixdep executable, we might be missing required linker flags like LFS
+options or custom library paths.=20
+
+Should this step retain KBUILD_HOSTLDFLAGS instead of or in addition to
+HOST_CFLAGS when generating the binary?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602-tools_buil=
+d_fix_zero_init-v7-0-631baf679fe7@arm.com?part=3D8
