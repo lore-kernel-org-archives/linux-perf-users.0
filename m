@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B507F3E3170;
-	Tue,  2 Jun 2026 14:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C359D3F0A81;
+	Tue,  2 Jun 2026 14:42:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780411355; cv=none; b=QgEGnKOC8GlHFFjPtduClk1mW1v9tXruz3FZBoAGnLsS0EhmV3CNIdx2u0pcJ6chV3aKxuecko/aCy/KRDiYFoir4Zz4E/KQ1ivfb53O/+Si28VbhLO7skEu/rHwyt/DDkG67v6yMcbVdVgcQzPESHkSsN2ShmHvL5OkMaQhGfY=
+	t=1780411365; cv=none; b=S1Z3AJKd+6qa/vBpBYUEVQLeFkcwia8MI1f5v3bwB89gBdT0ZGWibe1F4ajI7obexouOhwKPyIyAMne+Z8cefbivp6ALFlOnIffdJtuV0ZqkZwBLdYkR0qO1V4zOttbFiQYhw7tBe+yJPn7w6gxw4mc/pfSRAk1kgg94e3C9P/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780411355; c=relaxed/simple;
-	bh=u0baSWrAsWfZfQ+02tVwtELldH7JfFDkqdw4XEPinVI=;
+	s=arc-20240116; t=1780411365; c=relaxed/simple;
+	bh=J24uTRo5JzVWWMRzOuokKmYRbu145MN2/Re9B/pDvrA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XI3W1jEKPontg4+ZI/9q3A0DGQwWKyowqhu1HkRpT+xYqCJVOLl0LmNhu5QRbV9+vlzL2rTNN2zGTx/sbLQWMZGb85Jnnwx9IRPtFVGZ17XdzLPxoRwyWsCDaix/xAZcO5Y2r4mPlO+MMY1tPk20EU5u8+MJlpwt/lJQfG99Vdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=dh0uR5QC; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=ZvjBB3dKypoTaEBTWQHUkPAB24G0HxVlvrQRMp7ICW5F4Tsj2xLUdr3cnMqIDx8DFBLgpHyAXRCRXYr7QWhoXwu3zabjv3iRDvCPGrAKk3SG4DEoEaEBGb55x7GDPTslBPWQ2KaZ6KuDb22sOwO4LbeusVabYBzWrRArwWUNqqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=BpQoVMpF; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="dh0uR5QC"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="BpQoVMpF"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14FDE176C;
-	Tue,  2 Jun 2026 07:42:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62AD0356E;
+	Tue,  2 Jun 2026 07:42:38 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D2263F632;
-	Tue,  2 Jun 2026 07:42:25 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53F313F632;
+	Tue,  2 Jun 2026 07:42:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780411354; bh=u0baSWrAsWfZfQ+02tVwtELldH7JfFDkqdw4XEPinVI=;
+	t=1780411363; bh=J24uTRo5JzVWWMRzOuokKmYRbu145MN2/Re9B/pDvrA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dh0uR5QCDGdz6B8xnPKOxdicDt4MpLnhvUDn/+AJcfQq+9vFmFgZe0hAQxSibUr1V
-	 6jUauYDMd0ll3+cYqydun/QJ8TROt9cpZsoZLKTHX0q/cISfazCXfQGdoF1oeSXUvN
-	 D9SaUJe9UiXgh90lBWiVLreN76FMbpKxDq4x1qTU=
+	b=BpQoVMpFQc9lqsUkjriBrYDnS1TSILhDp8trvmT+aAlUiqJ/kCkK9bxiKUmdRW3uJ
+	 mLd42KlY/Yk/T0xSraBsrRo5w0qTPIi9JZIFAi+GdtEHDX+9cEzSP8f2+0hwDutkSQ
+	 br1wlVIaUwwTgju5yyP3gFbWXASETAdCsA1TsllI=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 02 Jun 2026 15:40:45 +0100
-Subject: [PATCH v7 11/23] tools: dma: Append extra cflags
+Date: Tue, 02 Jun 2026 15:40:46 +0100
+Subject: [PATCH v7 12/23] tools: gpio: Append extra cflags
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260602-tools_build_fix_zero_init-v7-11-631baf679fe7@arm.com>
+Message-Id: <20260602-tools_build_fix_zero_init-v7-12-631baf679fe7@arm.com>
 References: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 In-Reply-To: <20260602-tools_build_fix_zero_init-v7-0-631baf679fe7@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -80,36 +80,37 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
  Gabriele Monaco <gmonaco@redhat.com>, Shuah Khan <shuah@kernel.org>, 
  Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
 Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>, 
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=709;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780411243; l=766;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=u0baSWrAsWfZfQ+02tVwtELldH7JfFDkqdw4XEPinVI=;
- b=NzhMLei/ZM/qazZqptobl044++vMRWArZKjQWmoQeckjfDJv1lf/+h1htduQxFC3gYPD8fOC/
- YdFh9XGYTOACgcsnzAOO5eHdNDO+eeX5hgkCZVEIAKPmJtIDmX8PlOL
+ bh=J24uTRo5JzVWWMRzOuokKmYRbu145MN2/Re9B/pDvrA=;
+ b=M6ovBVc5/c8FB9ulT2KpYvTRWFg4P/bdGVCsYP2/kH1Cz8HEQAPBNbP9bHoI1kiPTDcOEwQwb
+ a2tbXL/s1wfDl2xFnQ9dA+8bxTZqK7jenhxO5XwmY7a0efgK7xDHJYM
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
 Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
 the compiler.
 
-Acked-by: Qinxin Xia <xiaqinxin@huawei.com>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/dma/Makefile | 1 +
+ tools/gpio/Makefile | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/dma/Makefile b/tools/dma/Makefile
-index e4abf37bf020ca613b6dca340299198cb887126a..86d3d2e361110b664b885c0e9423660a2d5e8221 100644
---- a/tools/dma/Makefile
-+++ b/tools/dma/Makefile
+diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+index 342e056c8c665ac075041ff7c7ca7ba94c691187..05a0057ec361626f41ca87e5295691364f03d2cb 100644
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
 @@ -17,6 +17,7 @@ endif
  MAKEFLAGS += -r
  
  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
 +override CFLAGS += $(EXTRA_CFLAGS)
  
- ALL_TARGETS := dma_map_benchmark
+ ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
  ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
 
 -- 
