@@ -1,250 +1,149 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C08435200A
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 18:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A61635F8D2;
+	Tue,  2 Jun 2026 18:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780424036; cv=none; b=ROxdEtrKtYRNlGI1TiQx09O+4KN7I48BEt7v4i2AbsKkzD4P0ABVYoHUbA3oMxdB3Cc7Fu+izN6uq0CTxe7L90DJkE8vamF8dNevldS1UpsdKDiW7/JNp3nUuOItr7TDdz9F19XFnLlb5l+gy/vGvz4rTE9Uj+6PSFdd3rCaTUc=
+	t=1780426399; cv=none; b=ZovgBBGXhvWR9KzbMHr72rduEGwcTAONd7Zlgwzxt8Ppj17QBuuj4pXHg3JiwpjXOHI/i8MVegqGHUJti8IlRTTZ9beBi3DJ3Mvhrz9hUGBR14zHR1BYXV52Rw+NHybQyHj/si7QtSxQnrHWWjzJP90hmEA0/WIk/C7eMCpYDqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780424036; c=relaxed/simple;
-	bh=OWGigG9V2kGeVr7vN2xiPub948058F9bxugkK2AZkdw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=F1wLEDRFsXcadA6U6gQwyBQSjhEjmL88alc2GVui32/8zaPhJl2Zn7KqYth6qBVN3IdQneuqp3yqo1aO8vvoaGLLg6jhqgZu/mqE2OxVlqaeVkcovEknWo6xZnc+EibWcWF/WjUDyEEiWeCiRnWS7gJsw/6mNRAvujUBF+ydkQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TbnSCaV4; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1780426399; c=relaxed/simple;
+	bh=bsBaAFW5KFDPCS7BWhRLnXMd0ijq7QTvh6ovcADRCtg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kCdY8Gjm0v+I4nfLLiFB1EW2QW5GicOyqy34ogSjNGZAjaaTYmt8gP1nlX7ZakX2949GcKtwYqyR1OtnR+FZG0bpJEpaqGxT8aP+wi791e0UJ67FrCLa6OGrLq/9L47xyKQ4lgr+uVB1dnnV+jARn9V0VzLQzhOmqYWvZ7PL0oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oYAZiV28; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TbnSCaV4"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-8423efdbe6fso498181b3a.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 11:13:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780424033; x=1781028833; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NiAef6XtehDHMACdTszwMTuC9UasYLCkWZEW5SY0y0w=;
-        b=TbnSCaV4IxobhJD52K+VEprJy/LUFgaVuA7IMMczno8aNiwfrkxoU1H3zeUS8j4RFc
-         akNTDae/b/izAE9r8CHau0A0YAWCMgBNk5Njkn8HJEIhaO1OHxOwg3InuatP0Uwkq9fM
-         B8m9jppKkAzxUXeUre/gTpwNuSTGkXdGPxnh2a7U2AZk/0OLCaO3qmZ2w7+Ca7qdWogz
-         D9bGi4IlaLobBSftS/b/qy3xMLamwRdVVwQ53tg7IlbzjldwBWfjgUhHxqxsXL8KocAe
-         XMl+NYqxqMj6KKlIApT4x2TlL6pNsRv770bAn23I77JNJwn3nQV9z/cXe+lLIEIWok6d
-         WirQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780424033; x=1781028833;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NiAef6XtehDHMACdTszwMTuC9UasYLCkWZEW5SY0y0w=;
-        b=bMaCutyIsGdgOC3KQOZ/tI6YObgt3cjQONW9s2T/T8B01MGazcnrOaPIy/JAaaiNyk
-         Krqrp5KMzkSWeo0jgGgYZIMSW5ixFOIxMfE8pvelsclRqAkZtry3DiwiqTgpRvtUukiU
-         dUi+/iYqLMML+k9eQZmwbwJRDP4mJ2/RFs+DczRnxkFDNfbQaaKjfIbWyoht0C9Ojilm
-         1nnzt1QeJE33QlvHMGeVFP+FEPsPLO2Uh/ALFZ9qTjenKW6+x2zU6t2CpUETI4pGjc33
-         GVqvkVSmxI91u/x5Yv7DDFTIkoKjZmIHwwV4ZHdr0TzYcyrjMmsw5eJERPosDyLN3iaP
-         FfwQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9VT15rsWztkvXKNm5czgJJBuhbNxyYP0BiPzJeZVawhwbTkZqnsHnbS/lxq/ku9oBVYVEyrs1FQDDgX6gMyImt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya6mHcRoHCDHdH1xklUlrMfUfZi1fe2GzHz9xCRKYK8bulCvmt
-	wizU6Jg3GS2BsFw0yxGIZfv9t9vdvsL1t109G0mDVM95YJTOGo77mr0oILb4hwT0umUfR/CYHAP
-	wYaLgpQ==
-X-Received: from pfh39.prod.google.com ([2002:a05:6a00:12e7:b0:82f:b53f:40d7])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b85:b0:835:405a:7e72
- with SMTP id d2e1a72fcca58-84284df9099mr54960b3a.11.1780424033017; Tue, 02
- Jun 2026 11:13:53 -0700 (PDT)
-Date: Tue,  2 Jun 2026 11:13:49 -0700
-In-Reply-To: <20260602181349.3969429-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oYAZiV28"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 652G60XL867987;
+	Tue, 2 Jun 2026 18:52:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=Q46lrmNrTGJ+dKM/VnbaqCfJEGKxV3
+	4VeTHbA8t5EDY=; b=oYAZiV28vSX68GTi0zVQ9iRNfWLIRNa5Wt1zH03PLJ+JiP
+	PGbYWhRBiZdbdibh6AlWXNH9n1bHkjgLR42h/mn/aBJBd1pytnCLYXgParOdKyfh
+	oW0Cv2HRbqFyhOdUTn533CZE0050b/4b402z6hFBeoL6VRO6bHEWz2ObU1aeShyb
+	kon1J4rB3wWyPzeTerpoHmTw8KAhAFZCf8FET6DWpu0hOkOUBNwmy/VWI/CoK4od
+	KWH8LVl3psdF5f5Rttj5OY8qpUiXjsoaoQQhCI9rA43D4XVUWMgRM6Ggj0QiABzo
+	sOR6SXps1w0V7WZAmQpterDBZhc+wFQK3RZxadJw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqjq7g3g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jun 2026 18:52:56 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 652Id70M030955;
+	Tue, 2 Jun 2026 18:52:55 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egb7k4qyc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jun 2026 18:52:55 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 652IqpB219988824
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Jun 2026 18:52:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1C2DD20043;
+	Tue,  2 Jun 2026 18:52:51 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DCEFB20040;
+	Tue,  2 Jun 2026 18:52:47 +0000 (GMT)
+Received: from mac.bl1-in.ibm.com (unknown [9.124.222.72])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  2 Jun 2026 18:52:47 +0000 (GMT)
+Date: Wed, 3 Jun 2026 00:22:46 +0530
+From: Amit Machhiwal <amachhiw@linux.ibm.com>
+To: Gautam Menghani <gautam@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+        atrajeev@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf kvm stat: Add missing mappings for PPC kvm exit
+ reasons
+Message-ID: <20260603001958.2cef17b3-18-amachhiw@linux.ibm.com>
+Mail-Followup-To: Gautam Menghani <gautam@linux.ibm.com>, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
+	atrajeev@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+References: <20260518125041.39286-1-gautam@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260602181349.3969429-1-ctshao@google.com>
-X-Mailer: git-send-email 2.54.0.1013.g208068f2d8-goog
-Message-ID: <20260602181349.3969429-2-ctshao@google.com>
-Subject: [PATCH v8 2/2] perf evsel: Find process with busy PMUs for EBUSY
-From: Chun-Tse Shao <ctshao@google.com>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260518125041.39286-1-gautam@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: a_F3W8FoECoIlI5XTk3mlvMAzxA1vhC5
+X-Proofpoint-GUID: -4fVPeTZ0_KzV_xhVEBMouu9mGijdmyQ
+X-Authority-Analysis: v=2.4 cv=bcVbluPB c=1 sm=1 tr=0 ts=6a1f2688 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=HR90um4bXCwT2XOkuecA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAyMDE4MCBTYWx0ZWRfX5KxSReVvoaTw
+ 7Xtyy4YuAbh5W8PRv0TlPCi71hGbsEOPvq1s18SIMYy7WCfs4zFTfcE7VQ2AuJTVXr+/50P4L55
+ HqRIOoUrmiQS6kmMtyomHGrTxDoMLeNwem/aXFx+y02LC5+o1iDQlESugbXWbQnw65pqLAYWIQB
+ tvKe/H4naVtYcSPEw9YvhIgILDASYk1c8fnZLAl7Zza2tHCweQxn0xH6xOkx6mlf1SmVtyCaGUT
+ oNyGM0QormQTxRZfTme+AOZBBW+6pqGx2S+OyMHufjxhZ5v0OrjCdomoCRhgmbQ4O6JyFnyV9qz
+ 2kvZ1IL70gKmp6iOLA33pNlsrVYbOfx9NL6dA0G/uBKfteZlM2RPH1EZxgNZr+cdwxruk2xU/49
+ x2l90UE5yI8U5eJGz8rYipqlP7IB09GHGA/C9xqxCEXFZs/WqEi7/EV+AAHXazZj8/oJ7/FzIbR
+ wNZ0QQ8Pf9M3f0M4wJg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-02_03,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1011 adultscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606020180
 
-It parses fdinfo with PMU type, comparing with the event which failed to
-open, and report the processes causing EBUSY error.
+On 2026/05/18 06:20 PM, Gautam Menghani wrote:
+> The macro kvm_trace_symbol_exit is used for providing the mappings
+> for the exit trap vectors and their names. Add mappings for H_FAC_UNAVAIL
+> and H_VIRT so that exit reasons are displayed as string instead of
+> vector numbers when using perf kvm stat.
 
-Testing cycles and intel_pt//
+Do we want to make a copy of the existing header in perf to keep things in sync
+with check-headers.sh as suggested by Ian earlier?
 
-  $ ./perf stat -e cycles &
-  [1] 55569
-  $ ./perf stat -e intel_pt// &
-  [2] 55683
-  $ ./perf stat -e intel_pt//
-  Error:
-  The PMU intel_pt counters are busy and in use by another process.
-  Possible processes:
-  55683 ./perf stat -e intel_pt//
+Thanks,
+Amit
 
-Only perf with intel_pt was reported.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-Assisted-by: Gemini:gemini-3.1-pro-preview
----
-v8:
-  - Fix a boundary mismatch bug in strncmp when matching anon_inode
-    symlinks.
-  - Switch to thread-safe strtok_r to prevent use-after-free or static
-    state corruption.
-  - Expand the stack-allocated fdinfo parsing buffer from 256 bytes to
-    1024 bytes to completely prevent truncation before the PMU type is
-    parsed.
-  - Open proc files (fdinfo and cmdline) with O_NONBLOCK to prevent
-    malicious or slow mounts from hanging the perf session indefinitely.
-  - Match EBUSY conflicting processes using the physical PMU type
-    (pmu_type) instead of the requested event type, ensuring legacy/raw
-    events are correctly resolved.
----
- tools/perf/util/evsel.c | 99 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 77 insertions(+), 22 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 34c03f47a913..a6b1005db5e8 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -4104,8 +4104,11 @@ static bool find_process(const char *name)
- 	return ret ? false : true;
- }
-
--static int dump_perf_event_processes(char *msg, size_t size)
-+static int dump_perf_event_processes(const struct evsel *evsel,
-+				     char *msg, size_t size)
- {
-+	const struct perf_event_attr *failed_attr = &evsel->core.attr;
-+	u32 target_pmu_type = evsel->pmu ? evsel->pmu->type : UINT32_MAX;
- 	DIR *proc_dir;
- 	struct dirent *proc_entry;
- 	int printed = 0;
-@@ -4136,6 +4139,8 @@ static int dump_perf_event_processes(char *msg, size_t size)
- 			continue;
- 		}
- 		while ((fd_entry = readdir(fd_dir)) != NULL) {
-+			const char *target_lnk = "anon_inode:[perf_event]";
-+			size_t target_lnk_len = sizeof("anon_inode:[perf_event]") - 1;
- 			ssize_t link_size;
-
- 			if (fd_entry->d_type != DT_LNK)
-@@ -4144,30 +4149,78 @@ static int dump_perf_event_processes(char *msg, size_t size)
- 			if (link_size < 0)
- 				continue;
- 			/* Take care as readlink doesn't null terminate the string. */
--			if (!strncmp(buf, "anon_inode:[perf_event]", link_size)) {
--				int cmdline_fd;
--				ssize_t cmdline_size;
--
--				scnprintf(buf, sizeof(buf), "%s/cmdline", proc_entry->d_name);
--				cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
--				if (cmdline_fd == -1)
-+			if (link_size == (ssize_t)target_lnk_len &&
-+			    !strncmp(buf, target_lnk, target_lnk_len)) {
-+				char fdinfo_buf[1024];
-+				int fdinfo_fd;
-+				ssize_t fdinfo_size;
-+				char *line;
-+				char *saveptr;
-+				u32 perf_event_type = UINT32_MAX;
-+				u32 pmu_type = UINT32_MAX;
-+
-+				/* Let's check the PMU type reserved by this process */
-+				scnprintf(buf, sizeof(buf), "%s/fdinfo/%s",
-+					  proc_entry->d_name, fd_entry->d_name);
-+				fdinfo_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-+				if (fdinfo_fd == -1)
- 					continue;
--				cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
--				close(cmdline_fd);
--				if (cmdline_size < 0)
-+				fdinfo_size = read(fdinfo_fd, fdinfo_buf, sizeof(fdinfo_buf) - 1);
-+				close(fdinfo_fd);
-+				if (fdinfo_size < 0)
- 					continue;
--				buf[cmdline_size] = '\0';
--				for (ssize_t i = 0; i < cmdline_size; i++) {
--					if (buf[i] == '\0')
--						buf[i] = ' ';
-+				fdinfo_buf[fdinfo_size] = '\0';
-+
-+				line = strtok_r(fdinfo_buf, "\n", &saveptr);
-+				while (line) {
-+					if (sscanf(line,
-+						   "perf_event_attr.type:\t%u",
-+						   &perf_event_type) == 1) {
-+						/* continue parsing */
-+					} else if (sscanf(line,
-+							  "pmu_type:\t%u",
-+							  &pmu_type) == 1) {
-+						/* continue parsing */
-+					}
-+					line = strtok_r(NULL, "\n", &saveptr);
- 				}
-
--				if (printed == 0)
--					printed += scnprintf(msg, size, "Possible processes:\n");
--
--				printed += scnprintf(msg + printed, size - printed,
--						"%s %s\n", proc_entry->d_name, buf);
--				break;
-+				/* Report the process which reserves the conflicted PMU. */
-+				/* If fdinfo does not contain PMU type, report it too. */
-+				if (perf_event_type == failed_attr->type ||
-+				    pmu_type == failed_attr->type ||
-+				    (target_pmu_type != UINT32_MAX &&
-+				     pmu_type == target_pmu_type) ||
-+				    (perf_event_type == UINT32_MAX &&
-+				     pmu_type == UINT32_MAX)) {
-+					int cmdline_fd;
-+					ssize_t cmdline_size;
-+
-+					scnprintf(buf, sizeof(buf),
-+						  "%s/cmdline",
-+						  proc_entry->d_name);
-+					cmdline_fd = openat(dirfd(proc_dir), buf, O_RDONLY);
-+					if (cmdline_fd == -1)
-+						continue;
-+					cmdline_size = read(cmdline_fd, buf, sizeof(buf) - 1);
-+					close(cmdline_fd);
-+					if (cmdline_size < 0)
-+						continue;
-+					buf[cmdline_size] = '\0';
-+					for (ssize_t i = 0; i < cmdline_size; i++) {
-+						if (buf[i] == '\0')
-+							buf[i] = ' ';
-+						else if (!isprint((unsigned char)buf[i]))
-+							buf[i] = '.';
-+					}
-+					if (printed == 0)
-+						printed += scnprintf(msg, size,
-+								     "Possible processes:\n");
-+
-+					printed += scnprintf(msg + printed, size - printed,
-+							"%s %s\n", proc_entry->d_name, buf);
-+					break;
-+				}
- 			}
- 		}
- 		closedir(fd_dir);
-@@ -4285,7 +4338,9 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 			msg, size,
- 			"The PMU %s counters are busy and in use by another process.\n",
- 			evsel->pmu ? evsel->pmu->name : "");
--		return printed + dump_perf_event_processes(msg + printed, size - printed);
-+		return printed + dump_perf_event_processes(evsel,
-+							   msg + printed,
-+							   size - printed);
- 		break;
- 	case EINVAL:
- 		if (evsel->core.attr.sample_type & PERF_SAMPLE_CODE_PAGE_SIZE && perf_missing_features.code_page_size)
---
-2.54.0.1013.g208068f2d8-goog
-
+> 
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+> v1 -> v2:
+> 1. Update the patch title and description to remove dependency on
+> another file trace_book3s.h
+> 
+>  tools/perf/util/kvm-stat-arch/book3s_hv_exits.h | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/kvm-stat-arch/book3s_hv_exits.h b/tools/perf/util/kvm-stat-arch/book3s_hv_exits.h
+> index 2011376c7ab5..2688ca7d0399 100644
+> --- a/tools/perf/util/kvm-stat-arch/book3s_hv_exits.h
+> +++ b/tools/perf/util/kvm-stat-arch/book3s_hv_exits.h
+> @@ -26,8 +26,10 @@
+>  	{0xe00, "H_DATA_STORAGE"}, \
+>  	{0xe20, "H_INST_STORAGE"}, \
+>  	{0xe40, "H_EMUL_ASSIST"}, \
+> +	{0xea0, "H_VIRT"}, \
+>  	{0xf00, "PERFMON"}, \
+>  	{0xf20, "ALTIVEC"}, \
+> -	{0xf40, "VSX"}
+> +	{0xf40, "VSX"}, \
+> +	{0xf80, "H_FAC_UNAVAIL"}
+>  
+>  #endif
+> -- 
+> 2.53.0
+> 
