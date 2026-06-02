@@ -1,309 +1,213 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39F030C34A;
-	Mon,  1 Jun 2026 18:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780338242; cv=none; b=oZZTo+AntvrdnC+JOWSIpvoX8wGxcc/PWr8WdafC9S+FmBY9dTej3W33plZ8+TVspl2fAIbDkQiXDtVyF4o5b13iwz43OXgJ/1Y2EDUKHbBnF+7yV+Kj4ROlvw4DK375MWAs04GVO25jYvUz1QGwAAaof88mBqczzJwvMlPSczs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780338242; c=relaxed/simple;
-	bh=1F7fg/tEvp/FvUfG5iI5KCJsJYyIJR+YYPZox5LYG2Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b3eB6O/LiWxrvjhWE97Ei5pUMRWODWv7cn5ykc2pXwuxXjlojjBcrgbHTg4Ownz6CEVUIQRbH3ro9kS8OdORkJfDIVjK+W4jnE5FCd8Ubxqs3oGldP+/odsb2a+aYrBQZIBIv8MybpXOC0PkeKFftGqE3LjLZGxC1Xb+dOWHvYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=GbcxeAij; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AECF2C21C7;
+	Tue,  2 Jun 2026 00:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780360704; cv=fail; b=sq72g+yi+/U+hwGnCJAhhrPZeZkql+/mRP/iXU2c3dNYqanc/kaAg99vdXRztIajEAy0NgPrnljxwBVKD5Z/N8ODz1P/lGaBY7AO/M2x85fAHc/2ZBr4RPGFcnqWRuPsBnRVi4VBZ+YRRpLNJirsKmpLfSXNs93Qi4OT/pU+Wzo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780360704; c=relaxed/simple;
+	bh=fTiljwVBeiW401mW5FRnm4xud64LmHWyaejPXVWFYbU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PHZpx83S6fq5sociGDvXPIjWaZY09TEpWnZWAmdE+UXN1zdvme5jacrb8tEHXG1gwLSS/eS37KF4FrSlicqjCh0kyg9tDVctAb+IymNLgkyMVT8LI7xSt8AO/Zp7wpF4V5znF5fSuWJhPJlgDryGovr+w9moW2wzgBg7DoarbPc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IYQpzaft; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="GbcxeAij"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CD3B1BA8;
-	Mon,  1 Jun 2026 11:23:55 -0700 (PDT)
-Received: from [10.57.36.65] (unknown [10.57.36.65])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6FDB3F632;
-	Mon,  1 Jun 2026 11:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780338240; bh=1F7fg/tEvp/FvUfG5iI5KCJsJYyIJR+YYPZox5LYG2Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GbcxeAijqdZzVNCpLR680yLf2eIORskdf2ZWNmSznuwe2cL4sHhHTSwhNZujK0+Tf
-	 LlOTv0A4LCBDYfnxgOqK3q3M0iT7a815YxMCqQlVzf8Fk/ZpumH5oUiHVvwprigKi3
-	 j4Z8Emw1016utYplgyLgfP++/S2TsYfurtHZIxyU=
-Message-ID: <3dd451b2-6d80-4636-a832-35b24411df2b@arm.com>
-Date: Mon, 1 Jun 2026 19:23:57 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IYQpzaft"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780360702; x=1811896702;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=fTiljwVBeiW401mW5FRnm4xud64LmHWyaejPXVWFYbU=;
+  b=IYQpzafthBwbtkkFo9hdxwn/Lf/lfoxpx8NVHQ2eToSjLz+HZafghHEC
+   y7YyY/HzbgTYvKL2CMecLezqowuIN4ORf9g85ztATw0H8JchwynwGYPwf
+   nlDJDzht9xud91aMMXTtbBfrQE5lXiWgZ7rA37vIo3QR+Ordmb4ZKmH75
+   CXhqn5uPftkji/uXYlDvzTaaGeRT1SWOUVrNGB29cAZRj5fAbOokaDm2S
+   TtrWBKaKLBBQWiH6JsycY0s57DqWmvtjhCKh68pnvN2kx53lO44uK1mN2
+   TfxJQWNVlFkl3tetA7V37c9GQriv0G2Ce3g3ItSWE5MNsmlB1JqzACmkz
+   g==;
+X-CSE-ConnectionGUID: N6uNzlRBTqSV170KZz2+Bg==
+X-CSE-MsgGUID: Jm2vsdB5Qju1sdYTOExJDA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="103795407"
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="103795407"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 17:38:21 -0700
+X-CSE-ConnectionGUID: zDwOpp9QSuiHpzPfkbQNTg==
+X-CSE-MsgGUID: 4/IkjBTAQ/693SG5UXLUfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="243846351"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 17:38:20 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Mon, 1 Jun 2026 17:38:19 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Mon, 1 Jun 2026 17:38:19 -0700
+Received: from DM5PR21CU001.outbound.protection.outlook.com (52.101.62.30) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Mon, 1 Jun 2026 17:38:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PpmFNdyk5m0XmYSAGg+yABCnbiXQd9Y7pMdllN6x7LliMQBSKhz2caRNbetpnOHZA6yAJEvaABasURd2gHbmi3ixEbZuMlOQ8ZfsXeA+4rRL49Lr4ddfbLGTehBVedNHuPpUNgY5wORe7g7qKkbFhPhRboFVrqj01MZITZp0WQ2WyFketsmKLdS/aAiRV03Az0SDFCD43ccjvQdNolYtVFZ1CQP9X/tFhUGtSz2kfu+UNgxO4+XnoB/AE+nt/oqBl0UKT5Ll8oZzJyOKatTkJpKaW9mJ8HIs6jEY+my5S1AZ5uQSPgmgortCKAMT0TMkf6Z1PdX4WK1QyZSdil063w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k1rhSdylRq+E8YdSKTGKi2/0N9HFUm1HSf04Oh5K+N0=;
+ b=RbxdY/3Puejr0i2guVfXI2K3lz3bnhR1VoUyHGiQSXirR3cGZaVq8+RTUNEqtz8WCSAm4Vj05bJoFFF+xy5ru1urUTzWrCG/eOu0vgU9bbKglb4mP3vxKXtcwVNV/Ll8pKaMWv06Cv/2dPS26Q0YDMs9MMsouy7PLb8gnSNWNya5ZdyIl01NhkMODIcyQvPCi6cCouERn6XGVLphyFaACA+/eZV2QWsykiH8Pb9TmG5RhpMaxB92iMz0LzeQPPjDM3IHOkmILq+A+yagV6Er+lrE49/MPYgRLIm503HhcqS7xjedtuqB3tc8pd7b1Rsl0bq46Op5jPADCfHuwqYuyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by DSVPR11MB9891.namprd11.prod.outlook.com (2603:10b6:8:45a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.16; Tue, 2 Jun 2026
+ 00:38:13 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0071.010; Tue, 2 Jun 2026
+ 00:38:13 +0000
+Date: Mon, 1 Jun 2026 17:38:03 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Yury Norov <ynorov@nvidia.com>
+CC: Andrew Morton <akpm@linux-foundation.org>, Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>, Frank Li
+	<Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Pengutronix
+ Kernel Team" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"Madhavan Srinivasan" <maddy@linux.ibm.com>, Michael Ellerman
+	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy
+ (CS GROUP)" <chleroy@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
+ Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	"Alexander Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Thomas
+ Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, Chanwoo
+ Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>,
+	"Lorenzo Pieralisi" <lpieralisi@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>, Yicong Yang
+	<yangyicong@hisilicon.com>, Jonathan Cameron <jic23@kernel.org>, "Dennis
+ Dalessandro" <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Dan Williams
+	<djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, Bjorn Helgaas
+	<bhelgaas@google.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Will Deacon
+	<will@kernel.org>, Jiucheng Xu <jiucheng.xu@amlogic.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, "Jerome
+ Brunet" <jbrunet@baylibre.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>, Robin Murphy <robin.murphy@arm.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Xu Yang <xu.yang_2@nxp.com>, "Linu
+ Cherian" <lcherian@marvell.com>, Gowthami Thiagarajan
+	<gthiagarajan@marvell.com>, Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Daniel Lezcano
+	<daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
+	<lukasz.luba@arm.com>, Yury Norov <yury.norov@gmail.com>, Kees Cook
+	<kees@kernel.org>, Thomas =?iso-8859-1?Q?Wei=DFschuh?=
+	<thomas.weissschuh@linutronix.de>, Aboorva Devarajan
+	<aboorvad@linux.ibm.com>, "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Besar Wicaksono
+	<bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>, Chengwen Feng
+	<fengchengwen@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+	<imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <driver-core@lists.linux.dev>,
+	<linux-pm@vger.kernel.org>, <linux-rockchip@lists.infradead.org>,
+	<linux-fpga@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-pci@vger.kernel.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-cxl@vger.kernel.org>,
+	<linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH 11/16] nvdimm: Use sysfs_emit() for cpumask show callback
+Message-ID: <ah4l6xM-ATjSvvSk@aschofie-mobl2.lan>
+References: <20260528183625.870813-1-ynorov@nvidia.com>
+ <20260528183625.870813-12-ynorov@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260528183625.870813-12-ynorov@nvidia.com>
+X-ClientProxiedBy: BY5PR03CA0008.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::18) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] perf/arm-cmn: Move DTM index data out of
- hw_perf_event
-To: Aviv Bakal <avivb@amazon.com>, will@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zeev@amazon.com, blakgeof@amazon.com,
- ilkka@os.amperecomputing.com
-References: <20260524153848.16334-1-avivb@amazon.com>
- <20260531110447.10095-1-avivb@amazon.com>
- <20260531110447.10095-2-avivb@amazon.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260531110447.10095-2-avivb@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DSVPR11MB9891:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5bcbcbd1-28df-45f1-52c6-08dec03f3aca
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|22082099003|18002099003|11063799006|6133799003|4143699003|56012099006;
+X-Microsoft-Antispam-Message-Info: KQ1+VpDYIF0Pi4fpUb2nBtQrMaaVmAHYB7Lyt+oazOF157DPzLEVpXjTY6HLM7AvOFfTyYNL7kGp2q08iNkoMm8HX4tcdaOgKW94y+OyvwccHrlH8FkXIEVcM6rJnp/lp8Y5bK5h9mTSl1PGrtvHFJ2h6EG9P3Pt+TH4j5Hnjn3vuwPXKUGefROnTRoKoRaxRrlho/vIB9HjLpCQTktt+zTlySW4M0tsb/B9MoGrB1oIxyE8zzIRDQQ93hQK0o3NZLZ3EwJHcdVWwI1lFgFEiYhTc19yt5NY6zCFv33NX+6nPKfFKulz/IX+VV9yPbW7o5YpsXuw6jL65yJS1iBNPTF3UbtlhrwS8h7qhzs26mMR23GZIocefFD1e4SbQ/nSMXhnwFhaky36x9gpQjQRZPvmjTZbz2hmpmIFacuShAiUIesVzmrwXLKw4MVFNzRiZ0CBdUikblmi4EcE9kBu+X3CHhePgjKm2SrtP8jWY7pWz+b6w5oOEaEppbo0XWRlmoTGtM6qxBsM6+IlHQXUBkvX8m55b+7m6YmwDx/XvUuvjJm4qkVqs0ci6vs+yxmFl8e10UurK3vzlGjTN+cQQ/+ZhDloXm2sDVygixiuWUgZsIulInZF1wUxCBqqWrfwY6ccLFS3orklmEFNtDw03UbKqhaYjusdHtlXcbUTQwfEJ7bOdMylYxPPkH/4VkiFcJcZkv9zoTQ3L1PqQq/4qQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(22082099003)(18002099003)(11063799006)(6133799003)(4143699003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?78/8YDM/olopjE5JW0ZbbD/spagF4djFMJjCrlh7xDnlEmir0VAyFVPHAefZ?=
+ =?us-ascii?Q?sbHWAm+W3UCvnpSSsR9qGJgjS1yEAZiPyDMH6ZHtvTkScRqceoHQrs9DRDnj?=
+ =?us-ascii?Q?4NTEixO2/uF1C6gLKsmt1sy+IZHnNTrEOUdy26ttvtc4zR02vgOljt+DFeqG?=
+ =?us-ascii?Q?zxKQsd4gi5BStOcs+yjsf36xctgU+r6Z9gr2T+B0iFY+Da8Vw2chVx5sd0aX?=
+ =?us-ascii?Q?lDTRJMO2XyiUHPm1UIOxm2JEjqhaRICY+UUZixbDX7svM0aNLimmuS3MvFy6?=
+ =?us-ascii?Q?h4mpKSTm33+l/CIj1m+D+WKdpSyofGkg4nADcFMyZB0MetHvYo49uRDap2oD?=
+ =?us-ascii?Q?zbpfZHrpvtTFm+W6ZEuhgiAVhJCI4GrtVzTvQI6ZRTBEMRMTUoBWBljvmL4X?=
+ =?us-ascii?Q?lmAVhXUIl6uw+kPq94D+N7HNATVnwUdGccPExpyP1Y+xZisYl4StZanWfLf3?=
+ =?us-ascii?Q?3YN0x947xVhMI7G3pP7ZTC1+91+sCrcMMOVw+1qorgE2aA+mYAjt0h5kchz9?=
+ =?us-ascii?Q?RMPHc/SGTiT/GFUK5LA/AXxRpZM8yudZ7Jx61UdWkBd9JX6Zr9bcXe8UjOET?=
+ =?us-ascii?Q?EVk7nR5ziF5dKVIpU+O+uiuqdr6KczrMP8Qvs7xqyFMwN3O4g5PFScZVJunZ?=
+ =?us-ascii?Q?LgQs9RFDst9OCwN8DMOop2kzRCxWoxNoIOzD1VezVrjJqXCwUMOMFPMWgf9E?=
+ =?us-ascii?Q?NtdriXqhGUU/3Y1szHudq+21PpTmpVsTrMN0BEx/xjfdqb5DBZuxr/5V0yHJ?=
+ =?us-ascii?Q?QZ/I0LKegG9DSIi+vhqpqN4uHUHahhPtY/LqdVm/kWRLhjM3/d/2GDTEh+WR?=
+ =?us-ascii?Q?ua4WFPbG7OpIixuH471PEOKUNaK55uU6eehaodLfkN996OMNIWFjvPY7f3zu?=
+ =?us-ascii?Q?OJ7Mv8SUTx+7G84l4HUbQfAb9ZVCrRovbpODXHSIWtPhzFuqMMqsT9i8/IRj?=
+ =?us-ascii?Q?i5FIWoulYtxnm+tJO4dTxRTUUYAwwVTNbbcJMoYjfxuZao4SSG01gf84AUhw?=
+ =?us-ascii?Q?cioniR2h/HdROv+ypF0BTbPTvW8MXgx23nbjOTqFInR+VzL12YcP1CqeuShH?=
+ =?us-ascii?Q?VThFtWRta3FY2rC1MfxPZ4XzEXDNMfDhtrsHBV0FIDDsJADbY+FcsypWCzVS?=
+ =?us-ascii?Q?zHQd0guDyfoENV3tuCt4TeXhMBICJfADyWKsnMT/L+/GV1oXoUu6wXrv5tc1?=
+ =?us-ascii?Q?L3lGtsVfJF10cGfsbb2GKcoi98I85Crvs7FZmuwMeORVCdvrlbst6kwVfiAO?=
+ =?us-ascii?Q?CqBVs3P5F7s7r53KI0SOdmz+mvqp1obOfWwlGaKEnei05nlorVuaiemV40KT?=
+ =?us-ascii?Q?yIo5K57AtX3QaEDbBpV53msEl54wXR5DCQI3oBTfSZ7BpWYgkuUnh25VL5Un?=
+ =?us-ascii?Q?bzqWa/1QFiPb432ol+InH8WpFxvXrtJFH9KynvKajt30YUIqOEGF4OJuCkzF?=
+ =?us-ascii?Q?II7/VJ14HTGvslRseKXajEOQ0FjcrsVEIaWW4KMHS/7bad7lUBw/xFG/rMo5?=
+ =?us-ascii?Q?lwQAE1PQi8N0SIahLaPEkurdVUHwY1oZR+jZqtK/fk0Nn1xQgqY5isRIsjS4?=
+ =?us-ascii?Q?pibWBIBhDR+3pGGT17coAG/XLALtXUNkHPT9oTMyozaIlj+lPh3vMZnw2ft4?=
+ =?us-ascii?Q?R0AYqFfYuAhRrQ/YR9wXgep6snFgz04WiSi9Ne1WmJ16uGCWUu8ZKrXsQIH0?=
+ =?us-ascii?Q?GPCaO180QGAlqZhKdvQNuZombOs41syCq0pB4zXw95ajQgxj8bvXB8zkDNTz?=
+ =?us-ascii?Q?ermt8BKuoAD9aR8vErgiWcYU7LsrsRE=3D?=
+X-Exchange-RoutingPolicyChecked: QfXcgt7n0dg7Wa+uSvxH/FIVVFU0oDOzEJr2Fv5cXJXZbatlt5aklCi3VHZtgz3VHEOfEBCWO9IHIUwl5H1ezh5u9rczWbnL9VYPj0e3ADB3aLaj1caEIwD/oa8Z6kE9IevE83ExC98IblAp089AwuJNTe2dvVc3p3uJ+7ypHYrJVs09xBE+4RYM9ejy0CbmZlH4rgDmF755zMN+mzDhiCv2dGdNrvkFb9496HTOODFRNrMBZdg/sauBpfza/OQkXEohleluEkoBqRXjTepY3FDySiFl8/mO3mHUeeMF7oLMTQe8oHS7VBEgqIIYP44i6RvP7CgytpuU2Kg8tqXx2Q==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bcbcbd1-28df-45f1-52c6-08dec03f3aca
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 00:38:13.6604
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fRXYnvuxmK+/atYvcEzPg401c1ZA1/Dy2f1rWbx4VBBI00TCLfXH8Arew6BPh1ay/JhoUZEsARgh8l7OYElBtUXW6AKPngBimXTnGIJt0xc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DSVPR11MB9891
+X-OriginatorOrg: intel.com
 
-On 2026-05-31 12:04 pm, Aviv Bakal wrote:
-> The amount of data we need to store all the per-DTM counter and
-> watchpoint allocations is already testing the limits of hw_perf_event,
-> and future CMNs are only likely to keep growing larger, so move these
-> arrays out to separate memory allocations. As part of that we can use
-> an explicit union for allocating cycle counters to dtc_cycles events,
-> which is arguably nicer anyway.
-
-Nit: not that I'm particularly precious about it, but this has lost my 
-original authorship - I really should leave the technically-redundant 
-"From:" line in when I post inline patches, as frankly even I prefer to 
-just copy-paste the patch part rather than export the whole mail with 
-its original headers for `git am --scissors`...
-
-Thanks,
-Robin.
-
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Aviv Bakal <avivb@amazon.com>
-> ---
->   drivers/perf/arm-cmn.c | 89 ++++++++++++++++++++++++++++--------------
->   1 file changed, 59 insertions(+), 30 deletions(-)
+On Thu, May 28, 2026 at 02:36:18PM -0400, Yury Norov wrote:
+> nvdimm_pmu_cpumask_show() is a sysfs show callback. Use sysfs_emit() and
+> cpumask_pr_args() to emit the mask.
 > 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index f5305c8fdca4..f1978a53d1c1 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -597,17 +597,14 @@ static void arm_cmn_debugfs_init(struct arm_cmn *cmn, int id) {}
->   
->   struct arm_cmn_hw_event {
->   	struct arm_cmn_node *dn;
-> -	u64 dtm_idx[DIV_ROUND_UP(CMN_MAX_NODES_PER_EVENT * 2, 64)];
-> +	union {
-> +		u64 *dtm_idx;
-> +		int cc_idx;
-> +	};
-> +	unsigned long *wp_idx;
->   	s8 dtc_idx[CMN_MAX_DTCS];
->   	u8 num_dns;
->   	u8 dtm_offset;
-> -
-> -	/*
-> -	 * WP config registers are divided to UP and DOWN events. We need to
-> -	 * keep to track only one of them.
-> -	 */
-> -	DECLARE_BITMAP(wp_idx, CMN_MAX_XPS);
-> -
->   	bool wide_sel;
->   	enum cmn_filter_select filter_sel;
->   };
-> @@ -625,25 +622,42 @@ static struct arm_cmn_hw_event *to_cmn_hw(struct perf_event *event)
->   	return (struct arm_cmn_hw_event *)&event->hw;
->   }
->   
-> -static void arm_cmn_set_index(u64 x[], unsigned int pos, unsigned int val)
-> +static void arm_cmn_set_dtm_idx(struct arm_cmn_hw_event *hw, unsigned int pos, unsigned int val)
->   {
-> -	x[pos / 32] |= (u64)val << ((pos % 32) * 2);
-> +	hw->dtm_idx[pos / 32] |= (u64)val << ((pos % 32) * 2);
->   }
->   
-> -static unsigned int arm_cmn_get_index(u64 x[], unsigned int pos)
-> +static unsigned int arm_cmn_get_dtm_idx(struct arm_cmn_hw_event *hw, unsigned int pos)
->   {
-> -	return (x[pos / 32] >> ((pos % 32) * 2)) & 3;
-> +	return (hw->dtm_idx[pos / 32] >> ((pos % 32) * 2)) & 3;
->   }
->   
-> -static void arm_cmn_set_wp_idx(unsigned long *wp_idx, unsigned int pos, bool val)
-> +static u64 *arm_cmn_alloc_dtm_idx(void)
-> +{
-> +	return kzalloc(DIV_ROUND_UP(CMN_MAX_NODES_PER_EVENT * 2, 64) * sizeof(u64), GFP_KERNEL);
-> +}
-> +
-> +static void arm_cmn_set_wp_idx(struct arm_cmn_hw_event *hw, unsigned int pos, bool val)
->   {
->   	if (val)
-> -		set_bit(pos, wp_idx);
-> +		set_bit(pos, hw->wp_idx);
-> +}
-> +
-> +static unsigned int arm_cmn_get_wp_idx(struct arm_cmn_hw_event *hw, unsigned int pos)
-> +{
-> +	return test_bit(pos, hw->wp_idx);
-> +}
-> +
-> +static unsigned long *arm_cmn_alloc_wp_idx(void)
-> +{
-> +	return bitmap_zalloc(CMN_MAX_XPS, GFP_KERNEL);
->   }
->   
-> -static unsigned int arm_cmn_get_wp_idx(unsigned long *wp_idx, unsigned int pos)
-> +static void arm_cmn_clear_idx(struct arm_cmn_hw_event *hw)
->   {
-> -	return test_bit(pos, wp_idx);
-> +	memset(hw->dtm_idx, 0, DIV_ROUND_UP(CMN_MAX_NODES_PER_EVENT * 2, 64) * sizeof(u64));
-> +	if (hw->wp_idx)
-> +		bitmap_zero(hw->wp_idx, CMN_MAX_XPS);
->   }
->   
->   struct arm_cmn_event_attr {
-> @@ -1376,7 +1390,7 @@ static int arm_cmn_get_assigned_wp_idx(struct perf_event *event,
->   				       struct arm_cmn_hw_event *hw,
->   				       unsigned int pos)
->   {
-> -	return CMN_EVENT_EVENTID(event) + arm_cmn_get_wp_idx(hw->wp_idx, pos);
-> +	return CMN_EVENT_EVENTID(event) + arm_cmn_get_wp_idx(hw, pos);
->   }
->   
->   static void arm_cmn_claim_wp_idx(struct arm_cmn_dtm *dtm,
-> @@ -1387,7 +1401,7 @@ static void arm_cmn_claim_wp_idx(struct arm_cmn_dtm *dtm,
->   	struct arm_cmn_hw_event *hw = to_cmn_hw(event);
->   
->   	dtm->wp_event[wp_idx] = hw->dtc_idx[dtc];
-> -	arm_cmn_set_wp_idx(hw->wp_idx, pos, wp_idx - CMN_EVENT_EVENTID(event));
-> +	arm_cmn_set_wp_idx(hw, pos, wp_idx - CMN_EVENT_EVENTID(event));
->   }
->   
->   static u32 arm_cmn_wp_config(struct perf_event *event, int wp_idx)
-> @@ -1458,7 +1472,7 @@ static u64 arm_cmn_read_dtm(struct arm_cmn *cmn, struct arm_cmn_hw_event *hw,
->   			dtm = &cmn->dtms[dn->dtm] + hw->dtm_offset;
->   			reg = readq_relaxed(dtm->base + offset);
->   		}
-> -		dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
-> +		dtm_idx = arm_cmn_get_dtm_idx(hw, i);
->   		count += (u16)(reg >> (dtm_idx * 16));
->   	}
->   	return count;
-> @@ -1505,7 +1519,7 @@ static void arm_cmn_event_read(struct perf_event *event)
->   	unsigned long flags;
->   
->   	if (CMN_EVENT_TYPE(event) == CMN_TYPE_DTC) {
-> -		delta = arm_cmn_read_cc(cmn->dtc + hw->dtc_idx[0]);
-> +		delta = arm_cmn_read_cc(cmn->dtc + hw->cc_idx);
->   		local64_add(delta, &event->count);
->   		return;
->   	}
-> @@ -1572,7 +1586,7 @@ static void arm_cmn_event_start(struct perf_event *event, int flags)
->   	int i;
->   
->   	if (type == CMN_TYPE_DTC) {
-> -		struct arm_cmn_dtc *dtc = cmn->dtc + hw->dtc_idx[0];
-> +		struct arm_cmn_dtc *dtc = cmn->dtc + hw->cc_idx;
->   
->   		writel_relaxed(CMN_DT_DTC_CTL_DT_EN | CMN_DT_DTC_CTL_CG_DISABLE,
->   			       dtc->base + CMN_DT_DTC_CTL);
-> @@ -1590,7 +1604,7 @@ static void arm_cmn_event_start(struct perf_event *event, int flags)
->   			writeq_relaxed(mask, base + CMN_DTM_WPn_MASK(wp_idx));
->   		}
->   	} else for_each_hw_dn(hw, dn, i) {
-> -		int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
-> +		int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
->   
->   		arm_cmn_set_event_sel_lo(dn, dtm_idx, CMN_EVENT_EVENTID(event),
->   					 hw->wide_sel);
-> @@ -1606,7 +1620,7 @@ static void arm_cmn_event_stop(struct perf_event *event, int flags)
->   	int i;
->   
->   	if (type == CMN_TYPE_DTC) {
-> -		struct arm_cmn_dtc *dtc = cmn->dtc + hw->dtc_idx[0];
-> +		struct arm_cmn_dtc *dtc = cmn->dtc + hw->cc_idx;
->   
->   		dtc->cc_active = false;
->   		writel_relaxed(CMN_DT_DTC_CTL_DT_EN, dtc->base + CMN_DT_DTC_CTL);
-> @@ -1619,7 +1633,7 @@ static void arm_cmn_event_stop(struct perf_event *event, int flags)
->   			writeq_relaxed(~0ULL, base + CMN_DTM_WPn_VAL(wp_idx));
->   		}
->   	} else for_each_hw_dn(hw, dn, i) {
-> -		int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
-> +		int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
->   
->   		arm_cmn_set_event_sel_lo(dn, dtm_idx, 0, hw->wide_sel);
->   	}
-> @@ -1763,6 +1777,14 @@ static enum cmn_filter_select arm_cmn_filter_sel(const struct arm_cmn *cmn,
->   }
->   
->   
-> +static void arm_cmn_event_destroy(struct perf_event *event)
-> +{
-> +	struct arm_cmn_hw_event *hw = to_cmn_hw(event);
-> +
-> +	kfree(hw->dtm_idx);
-> +	bitmap_free(hw->wp_idx);
-> +}
-> +
->   static int arm_cmn_event_init(struct perf_event *event)
->   {
->   	struct arm_cmn *cmn = to_cmn(event->pmu);
-> @@ -1787,6 +1809,11 @@ static int arm_cmn_event_init(struct perf_event *event)
->   	if (type == CMN_TYPE_DTC)
->   		return arm_cmn_validate_group(cmn, event);
->   
-> +	event->destroy = arm_cmn_event_destroy;
-> +	hw->dtm_idx = arm_cmn_alloc_dtm_idx();
-> +	if (!hw->dtm_idx)
-> +		return -ENOMEM;
-> +
->   	eventid = CMN_EVENT_EVENTID(event);
->   	/* For watchpoints we need the actual XP node here */
->   	if (type == CMN_TYPE_WP) {
-> @@ -1797,6 +1824,9 @@ static int arm_cmn_event_init(struct perf_event *event)
->   		/* ...but the DTM may depend on which port we're watching */
->   		if (cmn->multi_dtm)
->   			hw->dtm_offset = CMN_EVENT_WP_DEV_SEL(event) / 2;
-> +		hw->wp_idx = arm_cmn_alloc_wp_idx();
-> +		if (!hw->wp_idx)
-> +			return -ENOMEM;
->   	} else if (type == CMN_TYPE_XP &&
->   		   (cmn->part == PART_CMN700 || cmn->part == PART_CMN_S3)) {
->   		hw->wide_sel = true;
-> @@ -1847,7 +1877,7 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
->   
->   	while (i--) {
->   		struct arm_cmn_dtm *dtm = &cmn->dtms[hw->dn[i].dtm] + hw->dtm_offset;
-> -		unsigned int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
-> +		unsigned int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
->   
->   		if (type == CMN_TYPE_WP) {
->   			int wp_idx = arm_cmn_get_assigned_wp_idx(event, hw, i);
-> @@ -1861,8 +1891,7 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
->   		dtm->pmu_config_low &= ~CMN__PMEVCNT_PAIRED(dtm_idx);
->   		writel_relaxed(dtm->pmu_config_low, dtm->base + CMN_DTM_PMU_CONFIG);
->   	}
-> -	memset(hw->dtm_idx, 0, sizeof(hw->dtm_idx));
-> -	memset(hw->wp_idx, 0, sizeof(hw->wp_idx));
-> +	arm_cmn_clear_idx(hw);
->   
->   	for_each_hw_dtc_idx(hw, j, idx)
->   		cmn->dtc[j].counters[idx] = NULL;
-> @@ -1882,7 +1911,7 @@ static int arm_cmn_event_add(struct perf_event *event, int flags)
->   				return -ENOSPC;
->   
->   		cmn->dtc[i].cycles = event;
-> -		hw->dtc_idx[0] = i;
-> +		hw->cc_idx = i;
->   
->   		if (flags & PERF_EF_START)
->   			arm_cmn_event_start(event, 0);
-> @@ -1947,7 +1976,7 @@ static int arm_cmn_event_add(struct perf_event *event, int flags)
->   				goto free_dtms;
->   		}
->   
-> -		arm_cmn_set_index(hw->dtm_idx, i, dtm_idx);
-> +		arm_cmn_set_dtm_idx(hw, i, dtm_idx);
->   
->   		dtm->input_sel[dtm_idx] = input_sel;
->   		shift = CMN__PMEVCNTn_GLOBAL_NUM_SHIFT(dtm_idx);
-> @@ -1980,7 +2009,7 @@ static void arm_cmn_event_del(struct perf_event *event, int flags)
->   	arm_cmn_event_stop(event, PERF_EF_UPDATE);
->   
->   	if (type == CMN_TYPE_DTC)
-> -		cmn->dtc[hw->dtc_idx[0]].cycles = NULL;
-> +		cmn->dtc[hw->cc_idx].cycles = NULL;
->   	else
->   		arm_cmn_event_clear(cmn, event, hw->num_dns);
->   }
+> This prepares for removing cpumap_print_to_pagebuf().
+> 
+> Signed-off-by: Yury Norov <ynorov@nvidia.com>
 
+Thanks! Reviewed and applied to nvdimm/nvdimm.git (libnvdimm-for-next)
+https://git.kernel.org/nvdimm/nvdimm/c/1e7afc906f2f
+
+
+> 
