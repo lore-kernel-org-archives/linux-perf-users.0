@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E022E3B38AC
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 07:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C473B5F7E
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 07:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780385533; cv=none; b=dXhPS7gIjNxP+hFWutq5aAyuTpE2TXyFALJINfgQEKSZJ9Y1BguDm79bxsvjWEhRqgo1yFmS11o70zbYGqNZe3rbLf62tJmn8DBSQAp0hsHzaGMSduJDZSjMKH3Z2b+BaZw9kxdYAENATwTdGDEjUd2hgqHlfyjf8/Mr4SXH2gk=
+	t=1780385536; cv=none; b=oMFxMS0I5uThMAR+02SXswOhc6PNCVrVgBXy1xPjCZx9oor48Gtoh+pJoD3WUTZPAx33zikVztYXS/vR5oN8ropvG0whH5G9bneBjMFXKtddzNXp5mHVK9yNWUTAstQaBfRY8NthlL+MzyozEvCN0GpS+8rI5+9yx0fwLL9po84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780385533; c=relaxed/simple;
-	bh=DgJy33f3qaFp+PUFLJjCzac2PYOqX/26bXyhRtGVTFg=;
+	s=arc-20240116; t=1780385536; c=relaxed/simple;
+	bh=hS27iNrAnq8kOwOklEU4uPP0EYrhwwZRTFiHsUrV8ag=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sQxMto4fgo5F631hpvspI+0ymfOJplgjDL00ztZ+S+L7zdGxL+QbZUztK85YP7lULh5o+TOHKJGaUuiIMR1OFM4xRBANuDkq0EV3SXPZp6QCeXYaDYiXWjh0p1labBnVEFb8pBSthT5ZFa/T3NZYUASEourLhwiIzAtnpRElZ1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nsR76+wY; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=B+meNlR20GBov1DpXwydMSvHu8+fN+uvCDr+eghM5TbEw9S5hKlRsWKRYccIyhptpfV8LTaj0t1fkt744UTOqU8ItGtTybp0zG2Tu6gy8/UJmEpDSrrrDBCXmHsUUqLdaZrxgyM6A3NO4Jg16dyPvMGGYTqYrQynn+bun4klGAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T2cnhwzF; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nsR76+wY"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-13537722193so17824337c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 00:32:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T2cnhwzF"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137dd516985so3761019c88.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 00:32:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780385527; x=1780990327; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780385529; x=1780990329; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Va+s/EEbKn/51zgYeOxmoieRWOD/n3cBCji4k/GXkQs=;
-        b=nsR76+wY8PoEmaRoLnAPWNnod3hAFoqbJLT3MOo1Y8wFN6XybhIsTWkb3MFUXN7FHC
-         +Mpr8mbNOZFWFBqFEKZwvQI3OgziGRI7zbKK0cnhO56I7t3xgag/sDS+TfRiMT55Vgus
-         oJVmTsYksTCLuEtR6yjXYtqj6tZ7nlocOdqJvKRcIH+appr/o8avIHZlCyqL7a0mSUAz
-         /BCIjAzcArfGPoWBYktmlx7Fqbn0+gCFK2tynm9A09Z3IXq6Z+R7LcLRP+aVOfIG/+6L
-         1M4JHn4ZH6jkjzFDxZ1poSFDttLyfObwOTnFAOusGd5cKFwoxpYg8L9MfzNfsUfira3E
-         5Hfg==
+        bh=CfSPcJEKzW3wWuMYsIN3KAD+VhUJvMgxEDPRBvQxMwE=;
+        b=T2cnhwzFPDQN9JdNXDzMues75Lb4+RHSSK7t6FdRlkshZOsvYLZe6jNd3cl/PaxPST
+         mQoBHz4zlOBkG6sXp6qFOAO+A5mhSyxlWmJK7U5m8EMXxQh2TtALAdNGoBOBkCH5vIfL
+         JG4R75V/P4VDrw1mbQOXR0sy45J9/dASynZvARDeD5kn76K7FxP2Ot98/tVR/R3CppkP
+         YFVWbT9yVCvkPYn2XxUX5ektu0CrDr+tWbXxwABCML0aVHY6Cb39gfNFGhV0Q8LJl93p
+         8h2Mg2WLkMfIPBiOJB8xZ+Vr4o4pXRdspumnhx6ZJ5P/CLzFbX1xi+OrkV1dvi5gv7Dn
+         roNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780385527; x=1780990327;
+        d=1e100.net; s=20251104; t=1780385529; x=1780990329;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Va+s/EEbKn/51zgYeOxmoieRWOD/n3cBCji4k/GXkQs=;
-        b=mAH5iJz4SMkqMYEYQ4ZQX1U3cDNd0uAqHltYCkwNFrpiC0t9EMzXZV/Z7fJd5pnSb5
-         jSOOCByw8CrOPkVMTpR2vORihbr61bmZdSDmIbtNAkBvcbZecDOehRRYc1QlUmhwpPut
-         16g/AiksFT4m4wB95D5DWsmjZjO/LsrbBLcHb5m2VoIfPfvK0Vv0tIeuH3jpuq9vMx3k
-         lQ/51x/3OrOubfk4vpYIZDM2wa+IHs81zeZCbwYWEF8Kti8eJPdmyotwG7rjwCbZ15d0
-         vq2C32pvJ8M66Fho4GsH9UWjGduOJ7O7STRQ7UBd88ZOPSkuGCrnVpX0UCkWsp8eViFk
-         3fCQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9XiCT4GCWg8pOi/DrsBnHJ4a5UBgfMR4uJ7OuHRc7fexob27TFZOYtcqlVf75UYzAt5hAt+VxWXqDHlFCeRKd7@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTZzpoz4+w+D9jjY0Zlv7FDeayWqoLQxvXphC2WYNIrMaIBQyD
-	3NXK39Pg6je6fEMK6dTzYOAi1nM9hvNDuqXObEY1X2eeoIKRQxd8W/+NjlW+iQRu0kc74rWwZff
-	Mw06yA8w7qA==
-X-Received: from dlbbo37.prod.google.com ([2002:a05:7022:43a5:b0:135:d0cf:93de])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:981:b0:135:52d3:d9de
- with SMTP id a92af1059eb24-137d3f0cd3emr7093132c88.15.1780385526646; Tue, 02
- Jun 2026 00:32:06 -0700 (PDT)
-Date: Tue,  2 Jun 2026 00:31:28 -0700
+        bh=CfSPcJEKzW3wWuMYsIN3KAD+VhUJvMgxEDPRBvQxMwE=;
+        b=M+G+gGTwqV07DByVVWmdwo7zAgrq+ye6KyCVdf76zGsuuMfOWudb/PEZ0ioMb16aSX
+         AQp5ImrTpISWoyd2yBIqu3nIWmm/kE3nLJZZvKj5AlYkij1wgmcuHZsyO37PPq1iQ5oB
+         jRjUoshv5hobJCs/mudbZfLxANgYxody3LHyhCgJEnXro7AWhxSGqIAg0jB/eo0HBSGq
+         X/IooU5i1oBuuUkHF/hgConmj7GEgnEqJNClGNSI7QVw/2kp+x5jWaiTKTOf9nbfFryx
+         d7AnjOvK53A+FLdGBWsZsXVDvVSQGAoqyoqTzJ6eDD7wnwCQ3xZ4i/yEHjCMfkrAYQwx
+         w8PQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8wWHnA8Y0jrIGiObQl7T8qOMKpy1iPL7WxXJT1pt5gs3pW/VJy/Ze41c+AJHlwMOeikuWUlrdK/Hiwqvyd3N9L@vger.kernel.org
+X-Gm-Message-State: AOJu0YywvKvtf65BzHUwz5/65eQCbw+d37Glevkwakl+A9FbBK03wKq6
+	3f3EuX3tFeqAoMCh6WaqzzWWljHuu0IDlyaTOaoNHzVh8VQLwm1zkAOcDjQ5jL5iFtNGO+w5pp3
+	gc0w/y97b3A==
+X-Received: from dlbpt1.prod.google.com ([2002:a05:7022:e801:b0:12a:c4ed:5eeb])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e03:b0:12d:c4cf:cd7
+ with SMTP id a92af1059eb24-137d3bf60acmr6672812c88.8.1780385528607; Tue, 02
+ Jun 2026 00:32:08 -0700 (PDT)
+Date: Tue,  2 Jun 2026 00:31:29 -0700
 In-Reply-To: <20260602073132.2653307-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260601061401.1541457-1-irogers@google.com> <20260602073132.2653307-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.929.g9b7fa37559-goog
-Message-ID: <20260602073132.2653307-14-irogers@google.com>
-Subject: [PATCH v7] perf test: Split monolithic 'util' test suite into sub-tests
+Message-ID: <20260602073132.2653307-15-irogers@google.com>
+Subject: [PATCH v7] perf test: Add -j/--junit option for JUnit XML test reports
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
@@ -67,54 +67,301 @@ Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Refactor the monolithic 'util' test suite into distinct 'String
-replacement' and 'BLAKE2s hash' sub-tests using the struct test_case
-framework. This improves test reporting granularity and is used in a
-subsequent perf test for JUnit XML test result reporting.
+Add a -j/--junit command line option to generate standard JUnit XML
+format test reports. The generated file defaults to 'test.xml' if no
+filename is specified, but allows users to override the path (e.g.
+-jmytest.xml).
+
+The XML report captures individual test suite and subtest execution
+latency, alongside XML-escaped failure logs and skip reasons, while
+preserving the full multi-process concurrency speed of parallel test
+execution.
 
 Assisted-by: Gemini-CLI:Google Gemini 3
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/util.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ tools/perf/tests/builtin-test.c | 149 ++++++++++++++++++++++++++++++--
+ 1 file changed, 143 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/tests/util.c b/tools/perf/tests/util.c
-index bf2c5b133884..f9abd9911e6c 100644
---- a/tools/perf/tests/util.c
-+++ b/tools/perf/tests/util.c
-@@ -86,7 +86,12 @@ static int test_blake2s(void)
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 486f563ec04f..6a2bce394325 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -19,6 +19,7 @@
+ #include <dirent.h>
+ #include <sys/wait.h>
+ #include <sys/stat.h>
++#include <sys/time.h>
+ #include "builtin.h"
+ #include "config.h"
+ #include "hist.h"
+@@ -39,6 +40,9 @@
+ 
+ #include "tests-scripts.h"
+ 
++static const char *junit_filename;
++static struct strbuf junit_xml_buf = STRBUF_INIT;
++
+ /*
+  * Command line option to not fork the test running in the same process and
+  * making them easier to debug.
+@@ -307,6 +311,8 @@ struct child_test {
+ 	struct strbuf err_output;
+ 	int result;
+ 	bool done;
++	struct timespec start_time;
++	struct timespec end_time;
+ };
+ 
+ static jmp_buf run_test_jmp_buf;
+@@ -372,8 +378,34 @@ static struct strbuf summary_failed_tests_buf = STRBUF_INIT;
+ static int strbuf_addstr_safe(struct strbuf *sb, const char *s);
+ static int __printf(2, 3) strbuf_addf_safe(struct strbuf *sb, const char *fmt, ...);
+ 
++static char *xml_escape(const char *str)
++{
++	struct strbuf buf = STRBUF_INIT;
++	const char *p;
++	char *res;
++
++	if (!str)
++		return strdup("");
++
++	for (p = str; *p; p++) {
++		if (*p == '&')
++			strbuf_addstr(&buf, "&amp;");
++		else if (*p == '<')
++			strbuf_addstr(&buf, "&lt;");
++		else if (*p == '>')
++			strbuf_addstr(&buf, "&gt;");
++		else if (*p == '"')
++			strbuf_addstr(&buf, "&quot;");
++		else if ((unsigned char)*p >= 32 || *p == '\n' || *p == '\t')
++			strbuf_addch(&buf, *p);
++	}
++	res = strbuf_detach(&buf, NULL);
++	return res ? res : strdup("");
++}
++
+ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
+-			     int result, int width, int running)
++			     int result, int width, int running,
++			     const char *err_output, double elapsed)
+ {
+ 	if (test_suite__num_test_cases(t) > 1) {
+ 		char prefix[32];
+@@ -421,6 +453,34 @@ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test
+ 		break;
+ 	}
+ 
++	if (junit_filename && result != TEST_RUNNING) {
++		const char *classname = t->desc;
++		const char *testname = test_description(t, curr_test_case);
++		char *escaped_err = xml_escape(err_output);
++		char *escaped_class = xml_escape(classname);
++		char *escaped_test = xml_escape(testname);
++
++		strbuf_addf(&junit_xml_buf,
++			    "    <testcase classname=\"%s\" name=\"%s\" time=\"%.2f\">\n",
++			    escaped_class, escaped_test, elapsed);
++		if (result != TEST_OK && result != TEST_SKIP) {
++			strbuf_addf(&junit_xml_buf,
++				    "      <failure message=\"FAILED\">\n%s\n      </failure>\n",
++				    escaped_err);
++		} else if (result == TEST_SKIP) {
++			const char *reason = skip_reason(t, curr_test_case);
++			char *escaped_reason = xml_escape(reason ? reason : "Skip");
++
++			strbuf_addf(&junit_xml_buf, "      <skipped message=\"%s\"/>\n",
++				    escaped_reason);
++			free(escaped_reason);
++		}
++		strbuf_addstr(&junit_xml_buf, "    </testcase>\n");
++		free(escaped_err);
++		free(escaped_class);
++		free(escaped_test);
++	}
++
  	return 0;
  }
  
--static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
-+static int test__blake2s_case(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
-+{
-+	return test_blake2s();
-+}
-+
-+static int test__strreplace(struct test_suite *t __maybe_unused, int subtest __maybe_unused)
- {
- 	TEST_ASSERT_VAL("empty string", test_strreplace(' ', "", "123", ""));
- 	TEST_ASSERT_VAL("no match", test_strreplace('5', "123", "4", "123"));
-@@ -95,7 +100,16 @@ static int test__util(struct test_suite *t __maybe_unused, int subtest __maybe_u
- 	TEST_ASSERT_VAL("replace long", test_strreplace('a', "abcabc", "longlong",
- 							"longlongbclonglongbc"));
+@@ -623,6 +683,8 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
+ 	struct strbuf err_output = STRBUF_INIT;
+ 	int last_running = -1;
+ 	int ret;
++	struct timespec end_time;
++	double elapsed;
  
--	return test_blake2s();
-+	return 0;
+ 	if (child_test == NULL) {
+ 		/* Test wasn't started. */
+@@ -676,7 +738,7 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
+ 					fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
+ 				}
+ 				print_test_result(t, curr_suite, curr_test_case, TEST_RUNNING,
+-						  width, running);
++						  width, running, NULL, 0.0);
+ 				last_running = running;
+ 			}
+ 		}
+@@ -736,9 +798,14 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
+ 	else if (verbose == 1 && ret == TEST_FAIL)
+ 		print_test_failure_snippet(stderr, err_output.buf);
+ 
++	clock_gettime(CLOCK_MONOTONIC, &end_time);
++	elapsed = (end_time.tv_sec - child_test->start_time.tv_sec) +
++		  (end_time.tv_nsec - child_test->start_time.tv_nsec) / 1000000000.0;
++
++	print_test_result(t, curr_suite, curr_test_case, ret, width, /*running=*/0,
++			  err_output.buf, elapsed);
+ 	strbuf_release(&err_output);
+ 	strbuf_release(&child_test->err_output);
+-	print_test_result(t, curr_suite, curr_test_case, ret, width, /*running=*/0);
+ 	if (err > 0)
+ 		close(err);
+ 	zfree(&child_tests[running_test]);
+@@ -906,7 +973,7 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
+ 				}
+ 				print_test_result(next_child->test, next_child->suite_num,
+ 						  next_child->test_case_num, TEST_RUNNING, width,
+-						  running_count);
++						  running_count, NULL, 0.0);
+ 			}
+ 			last_running = running_count;
+ 		}
+@@ -941,12 +1008,14 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
+ 				}
+ 				child->result = finish_command(&child->process);
+ 				child->process.pid = 0;
++				clock_gettime(CLOCK_MONOTONIC, &child->end_time);
+ 				child->done = true;
+ 			}
+ 		}
+ 
+ 		while (next_to_print < num_tests) {
+ 			struct child_test *child = child_tests[next_to_print];
++			double elapsed;
+ 
+ 			if (!child) {
+ 				next_to_print++;
+@@ -984,8 +1053,12 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
+ 			else if (verbose == 1 && child->result == TEST_FAIL)
+ 				print_test_failure_snippet(stderr, child->err_output.buf);
+ 
++			elapsed = (child->end_time.tv_sec - child->start_time.tv_sec) +
++				  (child->end_time.tv_nsec -
++				   child->start_time.tv_nsec) / 1000000000.0;
++
+ 			print_test_result(child->test, child->suite_num, child->test_case_num,
+-					  child->result, width, 0);
++					  child->result, width, 0, child->err_output.buf, elapsed);
+ 			strbuf_release(&child->err_output);
+ 			child_tests[next_to_print] = NULL;
+ 			zfree(&child);
+@@ -1008,11 +1081,18 @@ static int start_test(struct test_suite *test, int curr_suite, int curr_test_cas
+ 	*child = NULL;
+ 	if (dont_fork) {
+ 		if (pass == 1) {
++			struct timespec start_time, end_time;
++			double elapsed;
++
++			clock_gettime(CLOCK_MONOTONIC, &start_time);
+ 			pr_debug("--- start ---\n");
+ 			err = test_function(test, curr_test_case)(test, curr_test_case);
+ 			pr_debug("---- end ----\n");
++			clock_gettime(CLOCK_MONOTONIC, &end_time);
++			elapsed = (end_time.tv_sec - start_time.tv_sec) +
++				  (end_time.tv_nsec - start_time.tv_nsec) / 1000000000.0;
+ 			print_test_result(test, curr_suite, curr_test_case, err, width,
+-					  /*running=*/0);
++					  /*running=*/0, NULL, elapsed);
+ 		}
+ 		return 0;
+ 	}
+@@ -1042,6 +1122,7 @@ static int start_test(struct test_suite *test, int curr_suite, int curr_test_cas
+ 		(*child)->process.err = -1;
+ 	}
+ 	(*child)->process.no_exec_cmd = run_test_child;
++	clock_gettime(CLOCK_MONOTONIC, &(*child)->start_time);
+ 	if (sequential || pass == 2) {
+ 		err = start_command(&(*child)->process);
+ 		if (err)
+@@ -1077,6 +1158,41 @@ static void print_tests_summary(void)
+ 	} else {
+ 		color_fprintf(stderr, PERF_COLOR_GREEN, "Failed tests      : 0\n");
+ 	}
++
++	if (junit_filename) {
++		int fd;
++		FILE *fp;
++
++		fd = open(junit_filename, O_CREAT | O_TRUNC | O_WRONLY | O_NOFOLLOW, 0644);
++		if (fd >= 0) {
++			fp = fdopen(fd, "w");
++			if (fp) {
++				unsigned int total = summary_tests_passed +
++						     summary_subtests_passed +
++						     summary_tests_skipped +
++						     summary_tests_failed;
++				fprintf(fp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
++				fprintf(fp, "<testsuites>\n");
++				fprintf(fp,
++					"  <testsuite name=\"perf-tests\" tests=\"%u\" failures=\"%u\" skipped=\"%u\">\n",
++					total, summary_tests_failed,
++					summary_tests_skipped);
++				fprintf(fp, "%s", junit_xml_buf.buf);
++				fprintf(fp, "  </testsuite>\n");
++				fprintf(fp, "</testsuites>\n");
++				fclose(fp);
++				pr_info("Wrote junit XML output to %s\n", junit_filename);
++			} else {
++				close(fd);
++				pr_err("Failed to associate stream with fd for %s: %s\n",
++				       junit_filename, strerror(errno));
++			}
++		} else {
++			pr_err("Failed to open %s for writing junit XML output: %s\n",
++			       junit_filename, strerror(errno));
++		}
++	}
++	strbuf_release(&junit_xml_buf);
+ 	strbuf_release(&summary_failed_tests_buf);
  }
  
--DEFINE_SUITE("util", util);
-+static struct test_case tests__util[] = {
-+	TEST_CASE("String replacement", strreplace),
-+	TEST_CASE("BLAKE2s hash", blake2s_case),
-+	{ .name = NULL, }
-+};
+@@ -1163,6 +1279,25 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 					color_fprintf(stderr, PERF_COLOR_YELLOW,
+ 						      " Skip (user override)\n");
+ 					summary_tests_skipped++;
++					if (junit_filename) {
++						char *escaped_class =
++							xml_escape((const char *)
++								   test_description(*t, -1));
++						char *escaped_test = xml_escape("override");
++						char *escaped_reason =
++							xml_escape("user override");
 +
-+struct test_suite suite__util = {
-+	.desc = "util",
-+	.test_cases = tests__util,
-+};
++						strbuf_addf(&junit_xml_buf,
++							"    <testcase classname=\"%s\" name=\"%s\" time=\"0.000\">\n",
++							escaped_class, escaped_test);
++						strbuf_addf(&junit_xml_buf,
++							"      <skipped message=\"%s\"/>\n",
++							escaped_reason);
++						strbuf_addstr(&junit_xml_buf, "    </testcase>\n");
++						free(escaped_reason);
++						free(escaped_test);
++						free(escaped_class);
++					}
+ 				}
+ 				continue;
+ 			}
+@@ -1342,6 +1477,8 @@ int cmd_test(int argc, const char **argv)
+ 		   "objdump binary to use for disassembly and annotations"),
+ 	OPT_UINTEGER(0, "failure-snippet-lines", &failure_snippet_lines,
+ 		     "Number of lines to include in failure snippet, default 10"),
++	OPT_STRING_OPTARG('j', "junit", &junit_filename, "file",
++			  "Generate junit XML output, default test.xml", "test.xml"),
+ 	OPT_END()
+ 	};
+ 	const char * const test_subcommands[] = { "list", NULL };
 -- 
 2.54.0.929.g9b7fa37559-goog
 
