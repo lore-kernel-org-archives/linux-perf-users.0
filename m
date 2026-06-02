@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B273E51FD
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6751E9B37
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:57:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780415731; cv=none; b=A9ghW760zLDlxIoN6CsA8up1/aXljxJs0BaHzbT29SCj2rQqmc0InhtkwnmE58wg9n3NkaBTdBK6ywxi7E+RWHsI5Z1Fu8qjhEBqAOiPTpx6Iu+e73RWksMXhhHg9By5NMQ9FUj86RnfyRFwDSLZKp0cZ9doBDI8FoUhVNWweDE=
+	t=1780415874; cv=none; b=mPTTLKIHPXtsX0m+aHauQaboSCgYw1V8v+5JMa90L5x9MLf8dGkiJmBiEv4gEXHxu643H1/PfhttqOSdKNM7QdmmVBvPes2pveFNAFRGI116Py4TDMjIo8OofPiZTY7K2S7be3pcsj0Ln2pBw/W57wd+Gfm8hccVoituDs96/yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780415731; c=relaxed/simple;
-	bh=WhlyVm835evop7XOMvOPGHkTLWBfXEWwdt/VEldDhaA=;
+	s=arc-20240116; t=1780415874; c=relaxed/simple;
+	bh=MzKhabOQN9D9LhNytwpXvHXM2jhqz25JqUct6U/Z/YA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lMF1CUAv6fFrqD4fS3mSzGoVHky5iSPC1YIVYcpomQVsJ7Io5EkWp6cLwti85KvZ6vg/e3HGbi1FLV/ChZPQOdPSeiDlf3KhvB5RlbDjvl5X+3ZA19xSUgrsG7cYPMcI3UjqD3zBKKzXTieYeFIeFmS6+ftHWEOYwhW4FCsgLdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CeCB3fm7; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=pqvMDhFNSeCMG6j3ti02CcLMrBxqMc1zyNFE+/KKUlwmMvVij4cIp/NMiSWgkN0FmVnci3sqw4hXauXYvG+1yiF6WvZ4EHq+jCYXxOvh93N5W69Gpj5sS1GsDrToZt576pmbUH8VwvxA/f3bMiL8qyhgFF6CN5FoXwZFjOEFeHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FgRl7qtI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CeCB3fm7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AD4A1F00893;
-	Tue,  2 Jun 2026 15:55:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FgRl7qtI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538051F00893;
+	Tue,  2 Jun 2026 15:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780415730;
-	bh=j0ji1Rm9OfbY3ID0Ts/IsZ20lHfTaJLXIpTqsadMhjE=;
+	s=k20260515; t=1780415873;
+	bh=Y+xFIvtEU/3HjAr56iFg/2cgMU4aFFLFE8Nviq4OK1w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CeCB3fm79cy2IaU3/HgWB9xut82AHZWGsFLiAyya34QDx9D1fDqNMZAjcGmif+Zxd
-	 hEhZZPZocZwwYEZMT4BUA6sk8xjOygVpOWx/UKa90wnCR7MQ4R6wjKCE6hHjROFtyi
-	 75zDQI+NQM71Q7X3lxbGAB1u71Y4fatu/GR63r/Gqgx2q/iFA5dKqa1gUlrw5w90Qw
-	 wOcu9Ky5GJnGqFo1e7mAg/uz+xs9UiApYxsJIvBzAo0eo+h2MGkH6Itbk/Z1dqEKs/
-	 /A3XvJBe7j0nkojvtGLTe2bPt5dYwS/IH3s5K7klfkQWWQrjNkLOnIErXf26Gl57va
-	 +rbGrChC6xyUQ==
+	b=FgRl7qtIWZCeq/LEskchhS70YUYCMc/vapMpSVRy7U+/Rcs/4JVdhkFCy2W47L0da
+	 FigHHyrMjPVgXqvl78UWJfFEPaOKMgLRysTEioBkcrwGw9y05KQ4iRmtku87rFgIXN
+	 Tn/qsGfj2XXPn6rYblBLLvFLPjCsge/6AG4Twjkls4xzvJCuAQDLB+VRArQkvWu96q
+	 m44g+/WBK3h1/Eh45+VPxyCVegGG3O38fS5KyodNcSTNDmBADKCtYenFWSYeszAORh
+	 mGG7G1Q2i81GhG/JwiPh1PdDQxSYvckSFnRsTaiKqIadB6aymq9fuKkGg0ZZQK0IAj
+	 dpjDhaAAjaOMw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 17/19] perf env: Add helper to lazily compute the
- os_release
+Subject: Re: [PATCH v12 16/19] perf env: Add mutex to protect lazy
+ environment initialization
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602152516.2831152-18-irogers@google.com>
-References: <20260602152516.2831152-18-irogers@google.com>
+In-Reply-To: <20260602152516.2831152-17-irogers@google.com>
+References: <20260602152516.2831152-17-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 15:55:30 +0000
-Message-Id: <20260602155530.7AD4A1F00893@smtp.kernel.org>
+Date: Tue, 02 Jun 2026 15:57:52 +0000
+Message-Id: <20260602155753.538051F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,84 +46,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Premature lazy initialization in pipe mode poisons `perf_env` with=
- the host's `os_release`, corrupting JSON/CTF exports and offline symbol re=
-solution.
+- [Medium] The introduced `env->lock` is not used to protect `perf_env__e_m=
+achine()`, leaving a data race on `e_machine` and `e_flags` initialization =
+despite the commit message's explicit claims.
 --
 
-commit 1b9df6eca5b172acf3ec3492723767468d3b5ec6
+commit 2c2484a173309974342a90986d80903317702365
 Author: Ian Rogers <irogers@google.com>
 
-perf env: Add helper to lazily compute the os_release
+perf env: Add mutex to protect lazy environment initialization
 
-This commit introduces a helper to lazily initialize the os_release
-string in the perf environment, falling back to the host's release via
-uname when the environment indicates live mode.
+This commit adds a mutex to struct perf_env to protect lazy metadata
+initialization from concurrent data races. It includes the addition of the
+lock field and the mutex_init() and mutex_destroy() lifecycle calls.
 
-> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-c=
-onvert-json.c
-> --- a/tools/perf/util/data-convert-json.c
-> +++ b/tools/perf/util/data-convert-json.c
+> Introduce a mutex to 'struct perf_env' to safely protect lazy
+> metadata setup, such as os_release or e_machine resolution,
+> preventing concurrent initialization data races and memory leaks
+> during multi-threaded profiling or symbol loading.
+
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 83e74328798f1..6aaf80c640bd0 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
 [ ... ]
-> @@ -296,7 +297,8 @@ static void output_headers(struct perf_session *sessi=
-on, struct convert_json *c)
->  	output_json_key_format(out, true, 2, "feat-offset", "%" PRIu64, header-=
->feat_offset);
-> =20
->  	output_json_key_string(out, true, 2, "hostname", env->hostname);
-> -	output_json_key_string(out, true, 2, "os-release", env->os_release);
-> +	output_json_key_string(out, true, 2, "os-release",
-> +			       perf_env__os_release(env));
+> @@ -156,6 +157,8 @@ struct perf_env {
+>  		 */
+>  		bool	enabled;
+>  	} clock;
+> +	/* Protects lazy environment initialization (e.g. os_release, e_machine=
+). */
+> +	struct mutex		lock;
+>  };
 
-[Severity: High]
-In pipe mode, feature headers are received as interleaved events in the data
-stream, so the environment is not fully populated until
-perf_session__process_events() runs.=20
+[Severity: Medium]
+The commit message and comment state that the new mutex safely protects lazy
+e_machine resolution, but is the lock actually utilized for this?
 
-Because output_headers() is called before the stream events are processed,
-will calling perf_env__os_release() here trigger the uname fallback and
-cause a regression that permanently writes the host's release string to
-the json output instead of the guest's?
+Looking at tools/perf/util/env.c:perf_env__e_machine(), the caching
+mechanism writes to env->e_machine and env->e_flags sequentially without
+acquiring env->lock:
 
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-[ ... ]
-> @@ -361,6 +361,44 @@ bool perf_arch_is_big_endian(const char *arch)
-[ ... ]
-> +const char *perf_env__os_release(struct perf_env *env)
-> +{
-[ ... ]
-> +	/*
-> +	 * If env->arch is set, this is an offline target environment.
-> +	 * If the os_release is not populated in the file, we do not want
-> +	 * to poison it with the host's release which would break guest checks.
-> +	 */
-> +	if (env->arch) {
-> +		release =3D NULL;
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * The os_release is being accessed but wasn't initialized from a data
-> +	 * file, assume this is 'live' mode and use the release from uname. If
-> +	 * uname or strdup fails then use the current perf tool version.
-> +	 */
-> +	ret =3D uname(&uts);
-> +	env->os_release =3D strdup(ret < 0 ? perf_version_string : uts.release);
+	if (env && env->arch) {
+		env->e_machine =3D e_machine;
+		env->e_flags =3D local_e_flags;
+	}
 
-[Severity: High]
-Does this caching behavior cause a regression in offline symbol resolution
-for unparsed pipe streams?
-
-If the architecture string is not yet set because the pipe stream hasn't
-been parsed yet, this helper assumes live mode and caches the host's release
-in the environment structure.=20
-
-Could this cause early callers, such as vmlinux_path__init() during symbol
-initialization, to search for the host's kernel symbols instead of the
-target's?
+Could a data race still occur here if Thread A sets env->e_machine and
+context switches before setting env->e_flags, allowing Thread B to observe
+env->e_machine !=3D EM_NONE and read the uninitialized env->e_flags? Should
+perf_env__e_machine() be updated to use the new lock?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602152516.2831=
-152-1-irogers@google.com?part=3D17
+152-1-irogers@google.com?part=3D16
