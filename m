@@ -1,207 +1,173 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83059400DE9
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 17:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3B033D4EC
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 18:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780422160; cv=none; b=Poega4rcqsauaUe3VCQ7OpgO5jFHy2/IuDR79QaVV8K9Cg6dKizQzUz46roOoWIe82EoYqI29xUwS1lXcvK6LMJL/aHg9aZLamDQru1NKEEBYqNHfIuIZkpVMc6w8QPAn9D4gd/ywMssN0J+J0sppvMwCVB8yu/czr1644Notd4=
+	t=1780424034; cv=none; b=WAfQEgZ6I8d7NZrwPypqGeNcbY74njKOEARtv59PVjQUlTZsinSW6jyfePGwFoVBuQYNRiksfw9NWb4WWKvxnlb/zwIG8RMpX3u00/Tm2x9zw1ZDqOKQ1D5AUB/nYYU/6orSO8Ok2qdzutpnhHguHSsVikZOxauMmsaXWqu15SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780422160; c=relaxed/simple;
-	bh=1He7DS91ONaMRC7Yv1RYg8Ljem3Mgk0ads6jjPvHjPM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=c6a+ETeC1pBlEarlNdTJ3j39W/QmnyXhYKahGvDZAjhuvjQKJOYDZCqW8Z0y4KXnk9gKzmNUkoKTRJKvBzoE2Ljdg1gT7UqXMzDkKoyAQxHKgjV9yDHYyBK0XLCxUevxoOgSNHnzhP6UljPs/7rBe8BChvrJkflzUXecMJ9NgFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hM4hei9v; arc=none smtp.client-ip=74.125.82.201
+	s=arc-20240116; t=1780424034; c=relaxed/simple;
+	bh=MGtENHvYjDHS2OfesGf9JR5T5DyBUR+xupm8U+3/Bpw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=cbSEjSGT+EwKJ/5ERc5efVprwJ7bwZBeAQJFHG+xnjZawOyBSBvC7olytKyPwqrrDaHXx46TifTvj8OguzqOwYHjslzDoA/LjmSFnRvZrem4Awg2JyWiTZHdMpHJRLeZgytVdzd8SXVv0DUQG/OlifDxGrNC1WjERremkFiUoVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X4vtsi/L; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hM4hei9v"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304e4636205so13196175eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 10:42:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X4vtsi/L"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c85807671b1so2181030a12.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Jun 2026 11:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780422157; x=1781026957; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L9UJVtMJu7kuLm59PY+ldFUr8Ibis/stoVc4HwoiZPE=;
-        b=hM4hei9vEnio4JxSgfG/DrHtLruJ+Ctazlo8kX+gMuQ2VvHL93pm5VYSue/7VqGvKp
-         qUwgyWI3P/Tar+qEWMGjM+0S8uoaglukNeGBzatHS8JhWgKOtV7fNRH/OSpbMdrbb2IE
-         DI9PvAJHY9azCpueUYLTuBR46OLJIDMCzYKmTQbJs1Owq+J6LAFLL66Nr11KdwKYZhHE
-         GaayxMf87Ny0zCxybbBVzWFSU7E62COS9HGeBcO2F+81syMaGhNiJtSxjoJyEGflbK+v
-         k1GbG0NnRaM7lrwC7bZ8RnVyurJZHAcmLyvvBGLbmTJQpHLmI/CH4mL68hbxNR5ShkDo
-         gS+g==
+        d=google.com; s=20251104; t=1780424032; x=1781028832; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=A4+rXw2EMERb7vlJqmotQkCHdAxC1iDpIiIY2u6cd94=;
+        b=X4vtsi/L9yTMafkqaZqiO/WINpCBDzku1/xn0tHwKN9e4ob8/7y8x8YaoCddEGmp/s
+         GH5kcCIDy06iUPPM6SmZoi2oc01z+Ev89UGDUZGrp/Dm479BdiwPZM3BbStPO2sY10Hr
+         s9EBD/jzubJBiUaPDFR3KBm8DFxSxwI87QCG5Fh+lYtdLdq5VvtU31BSfuPK6RXmUeYu
+         Aezulzr5+28p94QFqbkgOM2W+Pg/H00LgUJ9QJ7s0JANw6vkeFbYP+LcLXi8LVxD+bVh
+         8qLqr+qCYE5//S9AxHMufpNfWE+sCu34uy4febPbxV354vXow36y7zkcP4ZruSBVnNaE
+         5V9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780422157; x=1781026957;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L9UJVtMJu7kuLm59PY+ldFUr8Ibis/stoVc4HwoiZPE=;
-        b=kXAwr7pl07Rn1t3aPUoer4Js9OgU5USmSbYpa1dx5oOio32yBmphGIuNEEPrqMv7M8
-         LiOlyqKxybl1tIDCh8djkraIxc3PIPsC6ixp6uZ10Tosfux6AqaB/wgAaYeMPMSbHxlz
-         a5HhbKR3DhXhb/yT2K4DSwplZyFsM8XJYOGUZdyPuqbhlYsMrPaLyMoJqDH6mKL9XjnF
-         4hPgmE/I2TfMgrKmQ02tfazmzoXtRggft44NTw0krDxWYzarDUncdzBi1o4V3nvi21A8
-         7KUXxX09Z8tKAWfqb1C5lk95Zk72231Op44thKwv6eph018CTK49+lg1plIB0TkGPoiJ
-         sXqg==
-X-Forwarded-Encrypted: i=1; AFNElJ/UqR9/Y0xh5dF9KK5tW4bmGCWh8juGP8R6zwy8nE3rTqSWvp32mJyOGI1+LAzhdiaukY7qLnfKNbIO1YNmcD5e@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxIqMBXJeJJLB9Y6yOB1ShOHkTYmKR9ovJxoAuFSNRHtyDTeCw
-	StF+ya8EO6LicaXHGbIevOU5TBPEGlrEyZz5dQFbS9kgu/NUx46sSb+mYJZgcQLEfc8EmLMhRTs
-	zmnnWgwwCrA==
-X-Received: from dycqa11.prod.google.com ([2002:a05:7300:fe4b:b0:304:df46:263a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1698:b0:304:e865:f7d1
- with SMTP id 5a478bee46e88-304fa74349amr8251927eec.25.1780422156509; Tue, 02
- Jun 2026 10:42:36 -0700 (PDT)
-Date: Tue,  2 Jun 2026 10:41:29 -0700
-In-Reply-To: <20260602174129.3192312-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1780424032; x=1781028832;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A4+rXw2EMERb7vlJqmotQkCHdAxC1iDpIiIY2u6cd94=;
+        b=BKBaD9/NFRsYb1LLubcNuvyUFS5EKYdRVU8SlXGzggyod3Wfg4ph49s3V9Qoa/nbPq
+         v16hnUPrcE1YAYTYVQ7QvvitusCuBb+WOcdGJeaxeHaLYy19VhyNne6bR9SWvE50xoK/
+         rID5GAkRxesVQXnQHW2Tmpk40BOsCIEx6pYM0/0XliTaVSt1AQiftLcCipWsnbh3emYv
+         ReLDDMEwGdKqKv68gzf8eiZxVuBDwE9PnDzq1vgJTI5QdDxcrGgNX3ffkR8naGiFTNfK
+         C6OEMEKCJdpQCSLLek/G2GpCqX1j5LBqQeeeoPD6Fye0wwWHeQVCaJqxkv6b32uRr9SO
+         QbxA==
+X-Forwarded-Encrypted: i=1; AFNElJ9zfZk4h+v7vxR98Y2H4jXTm/QKf7Fm1ezfa2JsGc0KS3zyMZB581A/p0oXbOxdCy71tWBXoQ3/raXq6opL7J+q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7B0AaqZL+2PpbOlEbEKRwtB+glHM1WpOkVylK6pgQTBh7Zc/q
+	/AmrHAFWLNLKQ3H53833bz7WLkKhwjQkJAaeOidBOZr2o2jLcQPo1itBukbOqNvnxFbLvNg+JIl
+	QODyn1Q==
+X-Received: from pfbgr7.prod.google.com ([2002:a05:6a00:4d07:b0:83f:2ce7:48ce])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:a247:b0:838:af72:fb44
+ with SMTP id d2e1a72fcca58-84284dc57d6mr58163b3a.2.1780424031894; Tue, 02 Jun
+ 2026 11:13:51 -0700 (PDT)
+Date: Tue,  2 Jun 2026 11:13:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260602073132.2653307-1-irogers@google.com> <20260602174129.3192312-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1013.g208068f2d8-goog
-Message-ID: <20260602174129.3192312-19-irogers@google.com>
-Subject: [PATCH v8 18/18] perf test: Truncate printed test descriptions
- dynamically to avoid terminal wrapping
-From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
-	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Message-ID: <20260602181349.3969429-1-ctshao@google.com>
+Subject: [PATCH v8 1/2] perf: Reveal PMU type in fdinfo
+From: Chun-Tse Shao <ctshao@google.com>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When test descriptions are extremely long (e.g., the truncated perf.data
-graceful handling test is 103 characters long), they wrap across terminal
-boundaries.
+It gives useful info on knowing which PMUs are reserved by this process.
+Also add config which would be useful.
+Testing cycles:
 
-Because the ANSI escape code to delete the line (PERF_COLOR_DELETE_LINE)
-only clears a single terminal line, visual wrapping leaves orphan
-wrapped lines on the screen, which results in the test description being
-printed multiple times.
+  $ ./perf stat -e cycles &
+  $ cat /proc/`pidof perf`/fdinfo/3
+  pos:    0
+  flags:  02000002
+  mnt_id: 16
+  ino:    3081
+  perf_event_attr.type:   0
+  perf_event_attr.config: 0x0
+  perf_event_attr.config1:        0x0
+  perf_event_attr.config2:        0x0
+  perf_event_attr.config3:        0x0
+  perf_event_attr.config4:        0x0
 
-Resolve this by checking the terminal width (get_term_dimensions) and
-dynamically truncating the printed test description to fit within the
-available columns, leaving safety space for the prefix index and status
-suffix.
+Testing L1-dcache-load-misses:
 
-JUnit XML output and the failure summary report still print the full,
-untruncated test descriptions.
+  $ ./perf stat -e L1-dcache-load-misses &
+  $ cat /proc/`pidof perf`/fdinfo/3
+  pos:    0
+  flags:  02000002
+  mnt_id: 16
+  ino:    1072
+  perf_event_attr.type:   3
+  perf_event_attr.config: 0x10000
+  perf_event_attr.config1:        0x0
+  perf_event_attr.config2:        0x0
+  perf_event_attr.config3:        0x0
+  perf_event_attr.config4:        0x0
 
-Assisted-by: Gemini-CLI:Google Gemini 3
-Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Assisted-by: Gemini:gemini-3.1-pro-preview
 ---
- tools/perf/tests/builtin-test.c | 63 +++++++++++++++++++++++++++++----
- 1 file changed, 56 insertions(+), 7 deletions(-)
+v8:
+  - Fix a race condition on 32-bit architectures by acquiring parent or
+    child child_mutex inside perf_show_fdinfo() to prevent concurrent
+    mutations via perf_event_modify_breakpoint() from causing torn reads
+    of breakpoint fields (which alias config1 and config2).
+  - Expose missing config4 field in the fdinfo output.
+---
+ kernel/events/core.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index b64fc2204f22..edb4eaa695f1 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -20,6 +20,8 @@
- #include <sys/wait.h>
- #include <sys/stat.h>
- #include <sys/time.h>
-+#include <sys/ioctl.h>
-+#include "util/term.h"
- #include "builtin.h"
- #include "config.h"
- #include "hist.h"
-@@ -404,19 +406,66 @@ static char *xml_escape(const char *str)
- 	return res ? res : strdup("");
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7935d5663944..95d806bba654 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -58,6 +58,7 @@
+ #include <linux/percpu-rwsem.h>
+ #include <linux/unwind_deferred.h>
+ #include <linux/kvm_types.h>
++#include <linux/seq_file.h>
+
+ #include "internal.h"
+
+@@ -7546,6 +7547,33 @@ static int perf_fasync(int fd, struct file *filp, int on)
+ 	return 0;
  }
- 
-+static const char *format_test_description(const char *desc, int width, int max_desc_width,
-+					  char *buf, size_t buf_sz)
+
++static void perf_show_fdinfo(struct seq_file *m, struct file *f)
 +{
-+	int len = strlen(desc);
++	struct perf_event *event = f->private_data;
++	struct perf_event_context *ctx;
++	struct mutex *child_mutex;
 +
-+	if (width > max_desc_width)
-+		width = max_desc_width;
++	ctx = perf_event_ctx_lock(event);
++	child_mutex = event->parent ? &event->parent->child_mutex : &event->child_mutex;
++	mutex_lock(child_mutex);
 +
-+	if (len > max_desc_width) {
-+		snprintf(buf, buf_sz, "%.*s...", max_desc_width - 3, desc);
-+	} else {
-+		snprintf(buf, buf_sz, "%-*s", width, desc);
-+	}
-+	return buf;
++	seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
++	if (event->pmu)
++		seq_printf(m, "pmu_type:\t%u\n", event->pmu->type);
++	seq_printf(m, "perf_event_attr.config:\t0x%llx\n", (unsigned long long)event->attr.config);
++	seq_printf(m, "perf_event_attr.config1:\t0x%llx\n",
++		   (unsigned long long)event->attr.config1);
++	seq_printf(m, "perf_event_attr.config2:\t0x%llx\n",
++		   (unsigned long long)event->attr.config2);
++	seq_printf(m, "perf_event_attr.config3:\t0x%llx\n",
++		   (unsigned long long)event->attr.config3);
++	seq_printf(m, "perf_event_attr.config4:\t0x%llx\n",
++		   (unsigned long long)event->attr.config4);
++
++	mutex_unlock(child_mutex);
++	perf_event_ctx_unlock(event, ctx);
 +}
 +
- static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
- 			     int result, int width, int running,
- 			     const char *err_output, double elapsed)
- {
-+	char desc_buf[256];
-+	const char *desc = test_description(t, curr_test_case);
-+	struct winsize ws;
-+	int max_desc_area_width;
-+	int target_desc_area_width;
-+	int desc_padding;
-+
-+	get_term_dimensions(&ws);
-+	/*
-+	 * Total terminal columns minus space for status e.g. " Running (12 active)"
-+	 * which is 20 chars, plus a margin of 3 chars = 23 chars.
-+	 */
-+	max_desc_area_width = ws.ws_col - 23;
-+	if (max_desc_area_width < 40)
-+		max_desc_area_width = 40;
-+
-+	/* Standard test has prefix "%3d: " which is 5 chars */
-+	target_desc_area_width = width + 5;
-+	if (target_desc_area_width > max_desc_area_width)
-+		target_desc_area_width = max_desc_area_width;
-+
- 	if (test_suite__num_test_cases(t) > 1) {
- 		char prefix[32];
- 		int len = snprintf(prefix, sizeof(prefix), "%3d.%1d:",
- 				   curr_suite + 1, curr_test_case + 1);
--		int subw = len >= 4 ? width + 4 - len : width;
- 
--		pr_info("%s %-*s:", prefix, subw, test_description(t, curr_test_case));
--	} else
--		pr_info("%3d: %-*s:", curr_suite + 1, width, test_description(t, curr_test_case));
-+		desc_padding = target_desc_area_width - (len + 1);
-+		if (desc_padding < 20)
-+			desc_padding = 20;
-+
-+		format_test_description(desc, desc_padding, desc_padding, desc_buf, sizeof(desc_buf));
-+		pr_info("%s %s:", prefix, desc_buf);
-+	} else {
-+		desc_padding = target_desc_area_width - 5;
-+		if (desc_padding < 20)
-+			desc_padding = 20;
-+
-+		format_test_description(desc, desc_padding, desc_padding, desc_buf, sizeof(desc_buf));
-+		pr_info("%3d: %s:", curr_suite + 1, desc_buf);
-+	}
- 
- 	switch (result) {
- 	case TEST_RUNNING:
-@@ -700,7 +749,7 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
- 	 * sub test names.
- 	 */
- 	if (test_suite__num_test_cases(t) > 1 && curr_test_case == 0)
--		pr_info("%3d: %-*s:\n", curr_suite + 1, width, test_description(t, -1));
-+		pr_info("%3d: %s:\n", curr_suite + 1, test_description(t, -1));
- 
- 	/*
- 	 * Busy loop reading from the child's stdout/stderr that are set to be
-@@ -976,7 +1025,7 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
- 			if (next_child) {
- 				if (test_suite__num_test_cases(next_child->test) > 1 &&
- 				    last_suite_printed != next_child->suite_num) {
--					pr_info("%3d: %-*s:\n", next_child->suite_num + 1, width,
-+					pr_info("%3d: %s:\n", next_child->suite_num + 1,
- 						test_description(next_child->test, -1));
- 					last_suite_printed = next_child->suite_num;
- 				}
-@@ -1040,7 +1089,7 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
- 
- 			if (test_suite__num_test_cases(child->test) > 1 &&
- 			    last_suite_printed != child->suite_num) {
--				pr_info("%3d: %-*s:\n", child->suite_num + 1, width,
-+				pr_info("%3d: %s:\n", child->suite_num + 1,
- 					test_description(child->test, -1));
- 				last_suite_printed = child->suite_num;
- 			}
--- 
+ static const struct file_operations perf_fops = {
+ 	.release		= perf_release,
+ 	.read			= perf_read,
+@@ -7554,6 +7582,7 @@ static const struct file_operations perf_fops = {
+ 	.compat_ioctl		= perf_compat_ioctl,
+ 	.mmap			= perf_mmap,
+ 	.fasync			= perf_fasync,
++	.show_fdinfo		= perf_show_fdinfo,
+ };
+
+ /*
+--
 2.54.0.1013.g208068f2d8-goog
 
