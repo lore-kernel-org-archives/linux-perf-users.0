@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082623CF04F
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1353A360EC6
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 15:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780412845; cv=none; b=I2dDHi6iS/usmAZdezosXXtY+fxZQw2TVGs16EKLBYnaBKNY3mWd/LXUJhmRqSNJyhE41HFw3nNwJYfgr0Ks4XcyTId8PPLoX5vMjeZMSwebJf6OrBfG8C7uHg5UUOtRdyqmYR/MTuirR/rf6OHaFMOXPWWpIt+LyhQD/x+RblU=
+	t=1780413338; cv=none; b=TgYDVJZknrXDaHDncCIfdO/NVelDZmeEhifS3CcoI5Zl50rsMxm82xAxWcRKf5IWyAJBkfAy03/nYk75yMfF2/HyGHo688SgI2PxXzldJEdHVdl3wjqFCSGKgJW2v+RRCidup2H+iu78Bh1e7CwMNoGGXKFCBRYO+vWhFSK75I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780412845; c=relaxed/simple;
-	bh=6b4yZQ7hSvEAc/0fJ9Ni8Ts8oUeSwzB0NF8K4F8f0vs=;
+	s=arc-20240116; t=1780413338; c=relaxed/simple;
+	bh=33iz1PtJFuuUYzv4x1b4Ls8poJZ3eqM3BZXUVJRD/XM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=a/UEkgcDGbeMqYdRfo6uyD0ddAxNH7jCxGXG1LR8T/DLuLUi0KFoOfL4p4slzpbUHt5DgLitYGdZL74cl4TZA1IaBN4O/4q1RzHgFBguNkulzXg03sUlLRegHJEEVG6OOLWjzjo15TzsKP7KUDTooBJSPV/7yGWKyqQyeFwdkGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLNCstsy; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=oysDptjX0JD2b1GE3yPJOWKrCEUnqKT5ZzuHurf+mpS5hNaTvvx94u4/+Z8nNvhjo7f2cujXh9ZlEqMVrbKHw92bHSh7ibR43fVLuotd6swX1Kr4mtROevbN5Bq+dBnDJOduAAfOMHUWXIJMQHXypk4Z8SNcpdtJwUOBi5hDrE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GknEHOqJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLNCstsy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A17C1F00893;
-	Tue,  2 Jun 2026 15:07:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GknEHOqJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6001F00893;
+	Tue,  2 Jun 2026 15:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780412844;
-	bh=1B+GboDnVpgWStI/f7ZV+4IBahYxZMexHbokbPMR3eE=;
+	s=k20260515; t=1780413336;
+	bh=33iz1PtJFuuUYzv4x1b4Ls8poJZ3eqM3BZXUVJRD/XM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DLNCstsy3JTWfEY6T/MuHVYIs2pplQNN05tEqw640OR3MyPIb/0hbwxBncdMlX3y5
-	 qBmZgJvbVdKv5m9UH21AWVM/wGGCExWE5q9Ni9/TWdik+gZ0RLQU9Cow1EhTDULkCZ
-	 0R06p4n+vyGykrt4Js+HXJBnLKaa5ymsL+mHcffUzBTZ4dEoqCzGA9aL/cbKrVTfdT
-	 tSm3WE6y6q0Op9asgFJWjrBtuWWM8oChq63daMrkeuddun3HWTn15Ra7uzRmdhhJZK
-	 MxFjOfZuF6O2H7TaZv15XPYCpy4MjX5qswKIIZftfcxEyNyq4QwuHYIOdB6rY6hXCt
-	 MbyoN2HUjZZDQ==
+	b=GknEHOqJmxya6W+RNWaOEk5Z7n3licWSDw6Pni60fV4WilYGOQOpSSzqSx3yuzvZR
+	 m/kjDv6AOOVbmuUDXONA29t8+Fujs66JocD1qaBcvS9Cdkrrr+cOuVLZyZjSqjDZH6
+	 HKFGrzpoqpu5CFFFBz9LczA5hY6OBNluRWx1e8d9sPsq5i08BE1x6Wv9RjdNcRJBsg
+	 jP5iFYfCRIoYEXetwsELuD88XUuDevNM4YqEKI5GGDd/VMW9yHtjTzMnAsZ4sL+7Iy
+	 KzdQJBsGVlt9xJzk7rrfDC0WxZfr1K2/dEoq+8zKNm6gyj2zsm0XmVoHrdck1oZ0Mp
+	 tvggJE3IByS5w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 17/23] tools: power: acpi: Append extra cflags
+Subject: Re: [PATCH v7 23/23] selftests: Include tools Makefile.include
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260602-tools_build_fix_zero_init-v7-17-631baf679fe7@arm.com>
-References: <20260602-tools_build_fix_zero_init-v7-17-631baf679fe7@arm.com>
+In-Reply-To: <20260602-tools_build_fix_zero_init-v7-23-631baf679fe7@arm.com>
+References: <20260602-tools_build_fix_zero_init-v7-23-631baf679fe7@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 15:07:24 +0000
-Message-Id: <20260602150724.8A17C1F00893@smtp.kernel.org>
+Date: Tue, 02 Jun 2026 15:15:36 +0000
+Message-Id: <20260602151536.9C6001F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,49 +45,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] EXTRA_CFLAGS cannot override optimization and debug flags.
+- [Medium] Including `tools/scripts/Makefile.include` inside `tools/testing=
+/selftests/lib.mk` breaks normal assignments to `EXTRA_CFLAGS` in selftest =
+Makefiles, causing silent loss of compiler flags and test coverage.
 --
 
-commit bdc57550350069918185456205e82edb378bafaf
+commit 969534670ab7ca5eb2e61c1ef0a49417bd7e304d
 Author: Leo Yan <leo.yan@arm.com>
 
-tools: power: acpi: Append extra cflags
+selftests: Include tools Makefile.include
 
-Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
-the compiler.
+This commit includes tools/scripts/Makefile.include from selftests/lib.mk
+to reuse LLVM cross-build validation and flags. It aims to improve Clang
+cross builds by deriving cross-compile options directly from the GCC
+cross toolchain.
 
-> diff --git a/tools/power/acpi/Makefile.config b/tools/power/acpi/Makefile=
-.config
-> --- a/tools/power/acpi/Makefile.config
-> +++ b/tools/power/acpi/Makefile.config
-> @@ -69,6 +69,7 @@ KERNEL_INCLUDE :=3D $(OUTPUT)include
->  ACPICA_INCLUDE :=3D $(srctree)/../../../drivers/acpi/acpica
->  CFLAGS +=3D -D_LINUX -I$(KERNEL_INCLUDE) -I$(ACPICA_INCLUDE)
->  CFLAGS +=3D $(WARNINGS)
-> +CFLAGS +=3D $(EXTRA_CFLAGS)
+> diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib=
+.mk
+> index f02cc8a2e4ae3..e2e2d8aa57280 100644
+> --- a/tools/testing/selftests/lib.mk
+> +++ b/tools/testing/selftests/lib.mk
+> @@ -1,11 +1,17 @@
+[ ... ]
+> +selfdir =3D $(realpath $(dir $(filter %/lib.mk,$(MAKEFILE_LIST))))
+> +top_srcdir =3D $(selfdir)/../../..
+> +
+> +include $(top_srcdir)/tools/scripts/Makefile.include
 
-[Severity: Low]
-Will appending EXTRA_CFLAGS here prevent it from overriding the default
-optimization and debug flags?
+[Severity: Medium]
+Does including Makefile.include here break EXTRA_CFLAGS assignments in
+individual selftest makefiles?
 
-Because CFLAGS are evaluated sequentially by the compiler, any flags added
-later in the file will override earlier ones. Further down in=20
-tools/power/acpi/Makefile.config, the optimization flags are appended:
+tools/scripts/Makefile.include modifies EXTRA_CFLAGS using the override
+directive:
 
-# if DEBUG is enabled, then we do not strip or optimize
-ifeq ($(strip $(DEBUG)),true)
-	CFLAGS +=3D -O1 -g -DDEBUG
-	STRIPCMD =3D /bin/true -Since_we_are_debugging
-else
-	CFLAGS +=3D $(OPTIMIZATION) -fomit-frame-pointer
-	STRIPCMD =3D $(STRIP) -s --remove-section=3D.note --remove-section=3D.comm=
-ent
-endif
+override EXTRA_CFLAGS +=3D $(FLAG_ZERO_INIT)
 
-It appears that user-provided optimization overrides (such as passing -O0
-in EXTRA_CFLAGS) will be silently overridden by these defaults. Should
-EXTRA_CFLAGS be appended after the debug and optimization flags instead?
+According to GNU Make semantics, once a variable has been appended using
+override, any subsequent normal assignments without override are ignored.
+
+For example, tools/testing/selftests/x86/Makefile attempts to append
+flags later:
+
+EXTRA_CFLAGS +=3D -DCAN_BUILD_32
+
+Because of the earlier override, this normal assignment is silently dropped.
+Consequently, tests like single_step_syscall.c evaluate #ifdef CAN_BUILD_32
+as false in main(), silently skipping 32-bit specific test coverage.
+
+Could this be resolved by either removing the override in Makefile.include
+or updating selftest makefiles to also use override for EXTRA_CFLAGS?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602-tools_buil=
-d_fix_zero_init-v7-0-631baf679fe7@arm.com?part=3D17
+d_fix_zero_init-v7-0-631baf679fe7@arm.com?part=3D23
