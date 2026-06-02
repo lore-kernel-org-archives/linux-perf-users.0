@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC2D3A6EF1
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662A53A784F
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jun 2026 06:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780381536; cv=none; b=Zw++fIvwRXTBhJ0OrqoyNn6QyHw9uKe3it4NNTjIuvyZNkd67/y6mqFkpwM/oE0SbrsG7uX7xdlEOzJb+wncr0swXn23IHOQc4uDQQClGp6L6X+w5GaWRd0fmjiXxLjkOUMgoG3hekhOQx7yqXWIPp6+pM1GjRnib7xTeB/57cc=
+	t=1780381536; cv=none; b=QLLExJZitecLFOMzT890mZYSseVuoTpNp3wRYHgPiFDA6oypeYnN2gtDxx3kOpB8kGeU3nCLtK2Qg1naInoO9NkinoKs2zxS6UXlET8k/s/D2A+nItDe8Y9lypyU005td9b9lwezAPgU1roGBlYyaKDmf42j9q7FnaJ+cdWOVjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780381536; c=relaxed/simple;
-	bh=1TN4Off0WzSGb6E8PmC/hd8tjykbHBLDgI/eo85jqRM=;
+	bh=1vKpGyCR08D55Ms8rIa5echQivY8IcjS5P3lKw+8Tnw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o//pgdizDUoMMthBnuE5xv5lJM0Pp6qpd6iIwcXIDX0a1HRoXjzVqQqUZed5DI9KqVQp9XfJ/CHDGMZHqGdBWAZi9O4PcvqOP/ja2xADdySMZJeiBMbuAjhVmG0lQses0NSoU2ukqsJyVeMAnsxFffk/Vmx4Wt4PyCsrOKNQcw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DRBSAwTT; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=lYAwg9xrIUQ0UhtxXKsOKE6v9Cu9LjRxXECauY6NT+6xEzqZxKu7ZBH7ztac+ymI5zI13vlmI7CXtDM66hXQxB/5mPrdU5XIRcOpBWmz/8UJkZSr1VoDCBxFgd0lXvp5bRw4/qqLwY32GyhDNw+6WsayoPy6yGAPnX1/I3WcEWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=en9U/efh; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DRBSAwTT"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-305fe3b697cso1788360eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jun 2026 23:25:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="en9U/efh"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137f2083280so51564c88.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jun 2026 23:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780381531; x=1780986331; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780381533; x=1780986333; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gjedQh85bqRmyx/dzkbLSjIKr+my71zFRmku8NoRk3U=;
-        b=DRBSAwTTSSzgnOM8NUQtStnr6+h5zNk760t1JLHAwrb7JkEkce94lmCc6PMZdtMN8d
-         P3k7pRcOM9/eymuW6pqTb6epZ4eOzY5zkB8iEzDsFdIPDDQQHC+CrR1XtbSAp6UnvJh/
-         wzI60k2MUkQaYD5r6Cch8mSyO5sZniL3YQVR8rM5V1w+IRNoWI5FESYkgbBxqUf75GVq
-         shyZ8nepWacXb/YyxuYTrQ/gkJZbgjEdqQegzKT6Vp+jpLbAOHXbQ46RXFpkc0qXO2LI
-         EnjmOElBr3SXPheYauK69zMXDyAIyUETG7YFDGqFKOs8JoQOyfl1VLfUAGQUGZj1JZ1p
-         WRAg==
+        bh=r4kzHtgoNcTXiq9f50i9J7MtKzWtq9qgg2LJuweT+II=;
+        b=en9U/efh9TZRuMMp9aSK8V7Xyxsu0tFIfrEPl5LH2kvUHZ3H8SPLPWzl+ljAemfkPz
+         z/Hgc4EO5Jn+1rc1lFZqGOPVPTinkZ08fwo93zpxvDCx6NS0xs7xfrZq2YbYnR+LecjH
+         1zKwfOc0oWQldTqWdQvwNEO569PeiHC7ygkwvJtZTd1E9aRz0uAfyefRGhqkZklGvV9e
+         MaAbsyTUEwD7mi6cvhppxsq0HWXf4GbZiBMc2uIRvF+wgNj23Zj/4CM2bjPovsEKaMD6
+         aQMuj41a10aZu1fdLVpUKyuj57Gt8kgKihisXM6MpejyQ096kgACYP0I67IZm1PH3qVz
+         1uMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780381531; x=1780986331;
+        d=1e100.net; s=20251104; t=1780381533; x=1780986333;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gjedQh85bqRmyx/dzkbLSjIKr+my71zFRmku8NoRk3U=;
-        b=VYskTnsYx/oB3yb1Ib90rHrWL/wIfd9maFSYgx4z9K67PwKW5GKfNziLuvCoCr1Psz
-         Tro4lyBp9WOWA9pJHQK9rq5AILY80xx30H+rcB/8lIt1+Zg0Yo2pPI66K27bfEqYA+PN
-         77c6ZP25vmnEblUazqVLU9J3YTZCM03hCq0rhN0wYygw0mWq7c0PRZ/Z6jFOfcKUDKJe
-         L4kUsfq2XjV7JEeYk+gBbD6AiAq6I4uNCT2eFAtZJAEgJ2bZK7A+jIEeoyO1y666bOy7
-         ow5nwJ+4lmZRXDMrbENdnTbHHQ50Q6u/LAsB5YyEokUCenZJnzAc7CNPTvVwPEoXppnG
-         wJkg==
-X-Forwarded-Encrypted: i=1; AFNElJ9uMT8vTSHujrGz7ZtUFkc88Wl1m01Xy59TQt+ymz3gSxAcZr2qa1jtoMwis+9XVkydNXSeMVLOQzR7qwEB4Y8k@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz59zwO6BgS2ifZyGUfeLFmz7ugK2CeWB36sxH4VzExGjgsvbX
-	pSnpHt4vdEl7whKvEgYVI1/XUMW6bA6lC0IUG7UHjaNVpeVb/TZ6A8hDRjOOJBqMCXi0ZZoJO0M
-	CYRRJWeWv8w==
-X-Received: from dlbsj13.prod.google.com ([2002:a05:7022:f90d:b0:137:e5ae:4179])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:382:b0:137:1ae1:bc2e
- with SMTP id a92af1059eb24-137d412f9camr6070348c88.11.1780381530903; Mon, 01
- Jun 2026 23:25:30 -0700 (PDT)
-Date: Mon,  1 Jun 2026 23:24:42 -0700
+        bh=r4kzHtgoNcTXiq9f50i9J7MtKzWtq9qgg2LJuweT+II=;
+        b=SK0XLOZv3xr+cK3Z0OlD1n+2yOeF6DCrYRWdiXR3P7SxpBkNpxV4VObQNHc/DV9YcS
+         kyKKDGOdr0Gg1/a8m3MYMIXFaNiL2WIqPKPiUJFLyA/T1/Z2wTlbobeWY3lAjPEvNNmF
+         Jt5EHwvaw0gZ39yN6Qpw07gxnLmuJwugXaw2YSemtEI7VcZbCFRh6tsneNYYre94Zfto
+         EXcoo3K3FGbfjEw5KoRGtK6IKdCPufzAGakMucoJ/wDT2Y0IvLtyb9T+r1lqSrrG9Mpe
+         +hcaKTTXXnW3fVTbUxxKeUF77CBf4p8VoQxJsZ4v1h6dg8YdEM1oYnsSc7I9nCARZOE/
+         CGlg==
+X-Forwarded-Encrypted: i=1; AFNElJ+2aBwpTQrsKOSAbXGldXdfuiYW+MPcfWaws7qea33VjVoFfJpURCOq2u5esBZc2jkY+VRBiPtrX/vg0NxrkdaF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz94mDbf5xryMTyBUlJp+TYYGPpF5uUpXpl8sIhO0X+Eom84w3E
+	xMPzwx0aoWvbj+1Q1nq4CD86jmFMJ1+UZtMVPUx9dxz4V1hcQB0OZaATPKYVmblflbdy3jPktgo
+	TMEX8FlIDgA==
+X-Received: from dlbsj5.prod.google.com ([2002:a05:7022:f905:b0:134:b02e:a831])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:503:b0:136:58eb:a486
+ with SMTP id a92af1059eb24-137d3d09851mr5747955c88.1.1780381532714; Mon, 01
+ Jun 2026 23:25:32 -0700 (PDT)
+Date: Mon,  1 Jun 2026 23:24:43 -0700
 In-Reply-To: <20260602062452.2583619-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260601065407.1597927-1-irogers@google.com> <20260602062452.2583619-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.929.g9b7fa37559-goog
-Message-ID: <20260602062452.2583619-11-irogers@google.com>
-Subject: [PATCH v11 10/19] perf arch common: Use perf_env e_machine rather
- than arch
+Message-ID: <20260602062452.2583619-12-irogers@google.com>
+Subject: [PATCH v11 11/19] perf header: In print_pmu_caps use perf_env e_machine
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com, 
@@ -69,167 +68,37 @@ Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
 	sumanthk@linux.ibm.com, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Use the e_machine rather than arch string matching.
+Switch from arch to e_machine in print_pmu_caps.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/common.c | 92 ++++++++++++++++++++++++++++++----------
- 1 file changed, 69 insertions(+), 23 deletions(-)
+ tools/perf/util/header.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-index ad0cab830a4d..5ad50e331c55 100644
---- a/tools/perf/arch/common.c
-+++ b/tools/perf/arch/common.c
-@@ -1,13 +1,18 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "common.h"
-+
- #include <limits.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+
-+#include <linux/zalloc.h>
- #include <unistd.h>
--#include "common.h"
--#include "../util/env.h"
-+
-+#include <dwarf-regs.h>
-+
- #include "../util/debug.h"
--#include <linux/zalloc.h>
-+#include "../util/env.h"
- 
- static const char *const arc_triplets[] = {
- 	"arc-linux-",
-@@ -141,11 +146,40 @@ static int lookup_triplets(const char *const *triplets, const char *name)
- 	return -1;
- }
- 
-+static bool is_native_compatible(struct perf_env *env, uint16_t target, uint16_t host)
-+{
-+	if (target != host) {
-+		/* A 64-bit host can natively disassemble its 32-bit compat architecture */
-+		if (host == EM_X86_64 && target == EM_386)
-+			return true;
-+		if (host == EM_AARCH64 && target == EM_ARM)
-+			return true;
-+		if (host == EM_PPC64 && target == EM_PPC)
-+			return true;
-+		if (host == EM_SPARCV9 && target == EM_SPARC)
-+			return true;
-+		return false;
-+	}
-+
-+	/* target == host case */
-+	if (target == EM_RISCV) {
-+		bool target_is_64 = perf_env__kernel_is_64_bit(env);
-+		bool host_is_64 = (sizeof(void *) == 8);
-+
-+		/* 32-bit host cannot natively disassemble 64-bit target */
-+		if (!host_is_64 && target_is_64)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- static int perf_env__lookup_binutils_path(struct perf_env *env,
- 					  const char *name, char **path)
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 220e7720fbdb..ecdac427d9c4 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2461,15 +2461,16 @@ static void print_cpu_pmu_caps(struct feat_fd *ff, FILE *fp)
+ static void print_pmu_caps(struct feat_fd *ff, FILE *fp)
  {
- 	int idx;
--	const char *arch = perf_env__arch(env), *cross_env;
-+	uint16_t e_machine = perf_env__e_machine(env, /*e_flags=*/NULL);
-+	const char *cross_env;
- 	const char *const *path_list;
- 	char *buf = NULL;
- 
-@@ -153,7 +187,7 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
- 	 * We don't need to try to find objdump path for native system.
- 	 * Just use default binutils path (e.g.: "objdump").
- 	 */
--	if (!strcmp(perf_env__arch(NULL), arch))
-+	if (is_native_compatible(env, e_machine, EM_HOST))
- 		goto out;
- 
- 	cross_env = getenv("CROSS_COMPILE");
-@@ -170,30 +204,42 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
- 		zfree(&buf);
- 	}
- 
--	if (!strcmp(arch, "arc"))
-+	switch (e_machine) {
-+	case EM_ARC:
- 		path_list = arc_triplets;
--	else if (!strcmp(arch, "arm"))
-+		break;
-+	case EM_ARM:
- 		path_list = arm_triplets;
--	else if (!strcmp(arch, "arm64"))
-+		break;
-+	case EM_AARCH64:
- 		path_list = arm64_triplets;
--	else if (!strcmp(arch, "powerpc"))
-+		break;
-+	case EM_PPC:
-+	case EM_PPC64:
- 		path_list = powerpc_triplets;
--	else if (!strcmp(arch, "riscv32"))
--		path_list = riscv32_triplets;
--	else if (!strcmp(arch, "riscv64"))
--		path_list = riscv64_triplets;
--	else if (!strcmp(arch, "sh"))
-+		break;
-+	case EM_RISCV:
-+		path_list = perf_env__kernel_is_64_bit(env) ? riscv64_triplets : riscv32_triplets;
-+		break;
-+	case EM_SH:
- 		path_list = sh_triplets;
--	else if (!strcmp(arch, "s390"))
-+		break;
-+	case EM_S390:
- 		path_list = s390_triplets;
--	else if (!strcmp(arch, "sparc"))
-+		break;
-+	case EM_SPARC:
-+	case EM_SPARCV9:
- 		path_list = sparc_triplets;
--	else if (!strcmp(arch, "x86"))
-+		break;
-+	case EM_X86_64:
-+	case EM_386:
- 		path_list = x86_triplets;
--	else if (!strcmp(arch, "mips"))
-+		break;
-+	case EM_MIPS:
- 		path_list = mips_triplets;
--	else {
--		ui__error("binutils for %s not supported.\n", arch);
-+		break;
-+	default:
-+		ui__error("binutils for %s not supported.\n", perf_env__arch(env));
- 		goto out_error;
- 	}
- 
-@@ -202,7 +248,7 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
- 		ui__error("Please install %s for %s.\n"
- 			  "You can add it to PATH, set CROSS_COMPILE or "
- 			  "override the default using --%s.\n",
--			  name, arch, name);
-+			  name, perf_env__arch(env), name);
- 		goto out_error;
- 	}
- 
-@@ -237,7 +283,7 @@ int perf_env__lookup_objdump(struct perf_env *env, char **path)
-  */
- bool perf_env__single_address_space(struct perf_env *env)
- {
--	const char *arch = perf_env__arch(env);
+ 	struct perf_env *env = &ff->ph->env;
+-	struct pmu_caps *pmu_caps;
 +	uint16_t e_machine = perf_env__e_machine(env, /*e_flags=*/NULL);
  
--	return strcmp(arch, "s390") && strcmp(arch, "sparc");
-+	return e_machine != EM_SPARC && e_machine != EM_SPARCV9 && e_machine != EM_S390;
- }
+ 	for (int i = 0; i < env->nr_pmus_with_caps; i++) {
+-		pmu_caps = &env->pmu_caps[i];
++		struct pmu_caps *pmu_caps = &env->pmu_caps[i];
++
+ 		__print_pmu_caps(fp, pmu_caps->nr_caps, pmu_caps->caps,
+ 				 pmu_caps->pmu_name);
+ 	}
+ 
+-	if (strcmp(perf_env__arch(env), "x86") == 0 &&
++	if ((e_machine == EM_X86_64 || e_machine == EM_386) &&
+ 	    perf_env__has_pmu_mapping(env, "ibs_op")) {
+ 		char *max_precise = perf_env__find_pmu_cap(env, "cpu", "max_precise");
+ 
 -- 
 2.54.0.929.g9b7fa37559-goog
 
