@@ -1,238 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351BD3EBF36;
-	Wed,  3 Jun 2026 16:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFCF93E1CF0;
+	Wed,  3 Jun 2026 17:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780504854; cv=none; b=qleAPP+/i6uUoG0pxbft9T6qEkFS4QUii98fW3CIA+zEcHxRbzxEbE7IzFNlJWyNh2OO1UH32MXKPV00c+6uIGt3yVMWaBzipTbvBiyikMe0iD9IdL0xbWPC/vw73DFTBv7ROt7FtS4SRKjtnQK/vn6TK+ExMf2ci8O0UMM5LbE=
+	t=1780506508; cv=none; b=Ky9zGxubIemsiKwoMXIFfHZ9sScQlWantjRk3rPA52pMmeDtOPDv2ZiBcSMj0x5qwen/6w1PnGkEOA/z4JpyfAph8eTfZwYI6lGqK24MbVOoZPdPmSunEny8VUXDvA6Lil2rAfM3OHuYWkwEPQk7Isx2K9piL+6WE3xZ7gau7dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780504854; c=relaxed/simple;
-	bh=zGa+XPZ4moq1jHHI/ws/k3zHMGluBYek8AtcNPTxIsI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VjBZyGLUGbZMLHD1XLWK65/WurBroeKIK4FqJhDEc2yqewXA+ii+gttA01Oauj56+jP+XbiCDvhHm/oRlCclugSVuAONyPR/pcNQSZL5Re4YYf9GAHjrwT+RESMXDb+kk6DL4z4KLbSTYx+C0rAMOTuNaBGR919V1wk2YifCEF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9Cq4XZi; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1780506508; c=relaxed/simple;
+	bh=coDF+fPSybGXWIT0PI4La9M9bBJpTiUeLEadqpd9b6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KWDwgXVhuqlHGHiUhYkMmdyiRmp50Tcr9HFlTz7JaOWM0T8h/aEnYi17e5mrWEtpA0MwfPwf6/aFaV9goLbo47zto1LX0BsxJajd4vCUcrk4O4awBlwQIs/aIClCb2TnSz+xGw/dhgcVhG53ZIZ8ezrWJsCeurWfLZdaV897Li0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=hDQrq35u; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9Cq4XZi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780504852; x=1812040852;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zGa+XPZ4moq1jHHI/ws/k3zHMGluBYek8AtcNPTxIsI=;
-  b=m9Cq4XZi4ecLe0ysnMonqeUp4jejKLUKFH0tyJjwifzHR6s2zOAT2j6J
-   z9kfPwJ7VcgnKbX8aPJ+MFugfo42UgUI5FvNt0lkK9qFm2g73GsnG24HV
-   z3aOSzJhlWK91UwQkzwDCh1AP/gJmvMNBLLkcTJxc1GuooVYSehT08SNf
-   ytF0wnxUXTfLjN9f5G9JvVWbzc3iynCqxdWMCxjsYgvCO6UGkSYQKWYUR
-   +/yAYOKqqOoHe3sfw6gsGeQQ9MFPFFKrM5cCaWf0GfhpSXVcGqYhwDkhG
-   lxu+JBqj7A9cfXpQeA6AG67rxA1ceJpnL2VnwjQ7BAV5GVh2/HcHVbDmB
-   g==;
-X-CSE-ConnectionGUID: Q2YkYLtWSlqaXx9w3nyNLA==
-X-CSE-MsgGUID: tlXz3/D6TRCEfv1ZIRVuJg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="98894822"
-X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
-   d="scan'208";a="98894822"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 09:40:52 -0700
-X-CSE-ConnectionGUID: ogl5GxtYRS24Vx+XUQsfZQ==
-X-CSE-MsgGUID: zvEmeS4PSTO7JpygEwuUCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
-   d="scan'208";a="268193312"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 09:40:49 -0700
-Message-ID: <254ffa5b-58b7-4eb4-b944-a59c0bc67f2a@intel.com>
-Date: Wed, 3 Jun 2026 11:40:48 -0500
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="hDQrq35u"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EDED307A;
+	Wed,  3 Jun 2026 10:08:21 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC1203F632;
+	Wed,  3 Jun 2026 10:08:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780506506; bh=coDF+fPSybGXWIT0PI4La9M9bBJpTiUeLEadqpd9b6M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hDQrq35uqqxbId+KX0z9VeYR9TLqfT7Rd3YOedOki1/uGb3zXnGNmUzR/Nbg4dXmk
+	 X10KT1FydA589o0IhbDBfMWVm90xE6/GvHuMlpEDNZLPbANQySa4y3GEYKcZ0l7Ugm
+	 FMNmsOlkraV3tKyqFVnkFiJ8HKA6ptE8o8zIcfKM=
+Date: Wed, 3 Jun 2026 18:08:23 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Paschalis Mpeis <Paschalis.Mpeis@arm.com>,
+	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 06/18] perf test cs-etm: Replace unroll loop thread
+ with deterministic decode test
+Message-ID: <20260603170823.GA101133@e132581.arm.com>
+References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
+ <20260602-james-cs-context-tracking-fix-v2-6-85b5ce6f55c6@linaro.org>
+ <20260603140803.GV101133@e132581.arm.com>
+ <2f1db2b3-93e8-4c32-b207-304e3a43ce77@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 7/8] perf/x86/intel/uncore: Fix uncore_box ref/unref
- ordering on CPU hotplug
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260601170114.173359-1-zide.chen@intel.com>
- <20260601170114.173359-8-zide.chen@intel.com>
- <74ab79eb-57c8-4a63-b401-b56b0483a5a5@linux.intel.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <74ab79eb-57c8-4a63-b401-b56b0483a5a5@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f1db2b3-93e8-4c32-b207-304e3a43ce77@linaro.org>
 
+On Wed, Jun 03, 2026 at 05:01:02PM +0100, James Clark wrote:
 
+[...]
 
-On 6/2/2026 9:32 PM, Mi, Dapeng wrote:
+> > > +# Remove open brace lines as they may not be hit depending on the compiler
+> > > +sed -i \
+> > > +  -e '/deterministic.c:8$/d' \
+> > > +  -e '/deterministic.c:15$/d' \
+> > > +  -e '/deterministic.c:23$/d' \
+> > > +  "$tmpdir/script"
+> > 
+> > Is this related to the function definition?
+> > 
+> > I can see the brace lines with change below. It might be more reliable
+> > if adding unused function argument, which can give chance for hit
+> > function entry.
+> > 
+> >    static int function1(void)
+> >    {
+> >        ...
+> > 
+> >        return 0;
+> >    }
 > 
-> On 6/2/2026 1:01 AM, Zide Chen wrote:
->> In uncore_event_cpu_online(), uncore_box_ref() was called before
->> uncore_change_context().  uncore_box_ref() gates on box->cpu >= 0,
->> but box->cpu is still -1 at that point because uncore_change_context()
->> has not run yet.  As a result, the box is never initialized on the
->> first CPU to come online in a die, leaving it permanently
->> uninitialized in the single-CPU-per-die case.
->>
->> Thus, box->refcnt is one count below the true value, and in the CPU
->> offline path, the box will be torn down on the second-to-last CPU.
->>
->> In uncore_event_cpu_offline(), uncore_box_unref() was called after
->> uncore_change_context(), so box->cpu is already -1 when the collector
->> CPU goes offline, which prevents it from tearing down the box.
->>
->> Fix by swapping the call order in both paths so that
->> uncore_box_{ref,unref}() runs at the point where box->cpu reflects
->> the correct context.
->>
->> Fixes: c74443d92f68 ("perf/x86/uncore: Support per PMU cpumask")
->> Reviewed-by: Ian Rogers <irogers@google.com>
->> Signed-off-by: Zide Chen <zide.chen@intel.com>
->> ---
->>  arch/x86/events/intel/uncore.c | 50 ++++++++++++++++------------------
->>  1 file changed, 23 insertions(+), 27 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->> index f2cb3fde2dda..6d710aef52ac 100644
->> --- a/arch/x86/events/intel/uncore.c
->> +++ b/arch/x86/events/intel/uncore.c
->> @@ -1577,9 +1577,15 @@ static int uncore_event_cpu_offline(unsigned int cpu)
->>  {
->>  	int die, target;
->>  
->> +	/* Clear the references */
->> +	die = topology_logical_die_id(cpu);
->> +	uncore_box_unref(uncore_msr_uncores, die);
->> +	uncore_box_unref(uncore_mmio_uncores, die);
->> +
->>  	/* Check if exiting cpu is used for collecting uncore events */
->>  	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
->> -		goto unref;
->> +		return 0;
->> +
->>  	/* Find a new cpu to collect uncore events */
->>  	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
->>  
->> @@ -1592,16 +1598,10 @@ static int uncore_event_cpu_offline(unsigned int cpu)
->>  	uncore_change_context(uncore_msr_uncores, cpu, target);
->>  	uncore_change_context(uncore_mmio_uncores, cpu, target);
->>  	uncore_change_context(uncore_pci_uncores, cpu, target);
->> -
->> -unref:
->> -	/* Clear the references */
->> -	die = topology_logical_die_id(cpu);
->> -	uncore_box_unref(uncore_msr_uncores, die);
->> -	uncore_box_unref(uncore_mmio_uncores, die);
->>  	return 0;
->>  }
->>  
->> -static int allocate_boxes(struct intel_uncore_type **types,
->> +static void allocate_boxes(struct intel_uncore_type **types,
->>  			 unsigned int die, unsigned int cpu)
->>  {
->>  	struct intel_uncore_box *box, *tmp;
->> @@ -1618,8 +1618,10 @@ static int allocate_boxes(struct intel_uncore_type **types,
->>  			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
->>  				continue;
->>  			box = uncore_alloc_box(type, cpu_to_node(cpu));
->> -			if (!box)
->> +			if (!box) {
->> +				uncore_pmu_set_broken(pmu);
->>  				goto cleanup;
->> +			}
->>  			box->pmu = pmu;
->>  			box->dieid = die;
->>  			list_add(&box->active_list, &allocated);
->> @@ -1630,14 +1632,13 @@ static int allocate_boxes(struct intel_uncore_type **types,
->>  		list_del_init(&box->active_list);
->>  		box->pmu->boxes[die] = box;
->>  	}
->> -	return 0;
->> +	return;
->>  
->>  cleanup:
->>  	list_for_each_entry_safe(box, tmp, &allocated, active_list) {
->>  		list_del_init(&box->active_list);
->>  		kfree(box);
->>  	}
->> -	return -ENOMEM;
->>  }
->>  
->>  static int uncore_box_ref(struct intel_uncore_type **types,
->> @@ -1646,11 +1647,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
->>  	struct intel_uncore_type *type;
->>  	struct intel_uncore_pmu *pmu;
->>  	struct intel_uncore_box *box;
->> -	int i, ret;
->> -
->> -	ret = allocate_boxes(types, die, cpu);
->> -	if (ret)
->> -		return ret;
->> +	int i;
->>  
->>  	for (; *types; types++) {
->>  		type = *types;
->> @@ -1666,27 +1663,26 @@ static int uncore_box_ref(struct intel_uncore_type **types,
->>  
->>  static int uncore_event_cpu_online(unsigned int cpu)
->>  {
->> -	int die, target, msr_ret, mmio_ret;
->> +	int die, target;
->>  
->>  	die = topology_logical_die_id(cpu);
->> -	msr_ret = uncore_box_ref(uncore_msr_uncores, die, cpu);
->> -	mmio_ret = uncore_box_ref(uncore_mmio_uncores, die, cpu);
->> +	allocate_boxes(uncore_msr_uncores, die, cpu);
->> +	allocate_boxes(uncore_mmio_uncores, die, cpu);
-> 
-> allocate_boxes() are moved to uncore_event_cpu_online() from
-> uncore_box_ref(). It's a significant and good change since PCI uncore PMUs
-> doesn't call allocate_boxes(), but the commit message doesn't mention this.
-> We'd better extract this change to a separate patch which would make the
-> changes clearer. Thanks.
+> Originally I included the brace lines in the test and it was working even
+> without function arguments, but Sashiko mentioned that they may not always
+> be hit.
 
-All the functions involved in this patch are not called in PCI PMUs, and
-the call graph is not complicated with only one or two callers for each
-of them.
+I tried Clang to build the program and can see the brace lines are
+missed for function1() / function2().
 
-Splitting it into two patches may be overkill; additionally, it may lose
-the big picture and make it harder to understand the overall flow.
-> Others look good to me.
-> 
-> 
->>  
->>  	/*
->>  	 * Check if there is an online cpu in the package
->>  	 * which collects uncore events already.
->>  	 */
->>  	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
->> -	if (target < nr_cpu_ids)
->> -		return 0;
->> -
->> -	cpumask_set_cpu(cpu, &uncore_cpu_mask);
->> -
->> -	if (!msr_ret)
->> +	if (target >= nr_cpu_ids) {
->> +		cpumask_set_cpu(cpu, &uncore_cpu_mask);
->>  		uncore_change_context(uncore_msr_uncores, -1, cpu);
->> -	if (!mmio_ret)
->>  		uncore_change_context(uncore_mmio_uncores, -1, cpu);
->> -	uncore_change_context(uncore_pci_uncores, -1, cpu);
->> +		uncore_change_context(uncore_pci_uncores, -1, cpu);
->> +	}
->> +
->> +	uncore_box_ref(uncore_msr_uncores, die, cpu);
->> +	uncore_box_ref(uncore_mmio_uncores, die, cpu);
->>  	return 0;
->>  }
->>  
+Does Sashiko mention any reasons causing the issue?
 
+> I think its point was that there is no hard rule about debug symbols for
+> open braces and the behavior might change from one version of the compiler
+> to the next, or whether there is a function prologue or inlining or not etc.
+> 
+> I don't think it's important to the test at all though? So to err on the
+> side of caution it makes sense to not test for them. Unless there's a reason
+> you think testing for open braces is important? Surely just testing for
+> actual lines of code appearing in a certain order is enough.
+
+As the test program is named as "deterministic", wouldn't we expect the
+test to hit every code line run in the program?
+
+It is fine for me to skip some checks _if_ we know the reason. I dumped
+the disassembly, it shows function entry is a distinguished position
+from the first calculation sentence (same for both GCC and Clang). And
+there have no difference for a function entry after I tweaked the
+function return type from "void" to "int". I still have no clue why
+brace lines are misses.
+
+Thanks,
+Leo
