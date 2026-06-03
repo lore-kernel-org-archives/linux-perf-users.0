@@ -1,168 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E812D3CAE93;
-	Tue,  2 Jun 2026 23:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE9323C4FA
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 00:36:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780444681; cv=none; b=Z4a/TZdr8clJgUuMK+ztGZoj9KjR9NkFuWxqS82cQK5LkGFHQB1M9CizPbSAH8IkLGnh13m4oM5hTJUXqNG2fivoRvNi/UYB+PwxDlvEsKUNjZlX/Y4PHz2vHDdVQLdxlMH0seiUXPOTFbWRasIujCdJQRpKbxhjBihAPPOpGQI=
+	t=1780446978; cv=none; b=e87b33pILdMsuGj8mwh+wx9VUfD08vWxblFYYe7KmcLhRof2eSwW9QWRb+/NHt+KXwnzUM2hCdzFTzObhD7eT8ylCdVhwgOPVzxahUEjPNuYf7q/y7wcUUaUhHJMp4h0FO5JCnHBVRuS3WuPO2IcrKzboN8PR/6BbUxN6fbEd1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780444681; c=relaxed/simple;
-	bh=QtXAGfzdOo6wDZhvcxzLc7g+4g07Cn858eyEp2pWTyE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KVFqhf+eTa7NXgqo+AODgnibw9qUAeJekYC+tN8vGZQzyk9g9Tx2nuNT7ogxNiqdToaTJgbHy+3OZgBUROxRE7045dlg4QlCrOVy7e4shN94lu51/9vbefr/ddDDAcKd8y926IFun2NnBv9gPAmdudA9LW3Q9x6zcwatd7qlwFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7QGOr0m; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780446978; c=relaxed/simple;
+	bh=I+P3MzWdITCc3n30az/3C4FCKcBrIibyCTkZ+rikrGk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=S0t1ybiqJ/a5e1d6fEehZ2r0UPuqb5TpidhZn8rKVvJfBmSGqw0bNdGcPVUCItOhZkyq+ftzfZIPXey/XxWQPOG6EMOA7iOSNRO2nKkFS1INvw4XJM5v39J/57pU+fTj2d0neIJFFY3/tLColhMFZ7BUVljXV/nVHM15L92JCbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iCQjveUC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7QGOr0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 620071F00893;
-	Tue,  2 Jun 2026 23:57:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iCQjveUC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D81B1F00893;
+	Wed,  3 Jun 2026 00:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780444679;
-	bh=eXg4kIoAYKSbZy+VQ+kEWyv7CpcOjI0CHDdUrVD0IXc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=L7QGOr0mA03g2z/lqU/LEVc3UNmBzxefEJXhVbaR1lYI2XIWBs6QZlSkFq0Yi4QWt
-	 ZMayOiOiWku378heYSqquJVlIeTDzmcppbiPqDWVOfG3w+PrBryZ1Gc3ZLwZGtuwUR
-	 2XAnlAs96bfg2FfeBiEnyYmzjEG7hwYr1m2dERqiSU3fOOOOkcVUHRnPNcp71VD7y/
-	 tjYRIvSzPofcdmJh03WSJJfkEDePeHuDSuQPQ0ackx/+tR8pm1MCpSlYEHG5nKRXhf
-	 2GeuGCGs3zrFsSg4xLNsnIjVc82O4H5kAuirqsAfx8YC6fGnDTL5fvmmCD9y6NEzAz
-	 P5UJMKQ4bi9fA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 8/8] perf test: Add file offset diagnostic test for corrupted perf.data
-Date: Tue,  2 Jun 2026 20:57:07 -0300
-Message-ID: <20260602235709.1541603-9-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260602235709.1541603-1-acme@kernel.org>
-References: <20260602235709.1541603-1-acme@kernel.org>
+	s=k20260515; t=1780446976;
+	bh=aiYAou1xMBnNPZgf860w9Wo6xJJwTz1VNLHkzQ5zQfQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=iCQjveUCwy+jMqgk26YHlVg2ajLWOUPCE1RThzbqJlogbsOntBzsqlrQTW73Ck6LQ
+	 6Nr5qQUBIr93pnN9vOs2KOoDVxbdbrdh6sbPoX0eugfc0/92o02voKupKcMbEk7odN
+	 kWMjDgR0HNcHxpakMHJ7VH0xPe0mBX6AmkoDzEoTVsg0OMNsnxRJXbQ3HRd2S1G6rb
+	 2P8GN3cwPMiEQY790sgMmFcIQBnTBbk105/ycnKBRo6xPeQmzpArWwbUqs9vnG410N
+	 fFN9oMvPTTCcCoAb8XwzJ+cbFHX+8LXS/IlO83MWYR+0uBV1U8RHCsD7bQ3uJ8nBXr
+	 RKn5aHfHjBKGA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 4/8] perf timechart: Include file offset in CPU bounds
+ check messages
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260602235709.1541603-5-acme@kernel.org>
+References: <20260602235709.1541603-5-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 03 Jun 2026 00:36:16 +0000
+Message-Id: <20260603003616.8D81B1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Add a shell test that verifies the file_offset diagnostic messages
-work correctly when perf encounters corrupted events.
+Pre-existing issues:
+- [High] Out-of-bounds read vulnerability in cpu2y() when using --topology,=
+ leading to heap information leak or crash.
+--
 
-The test corrupts a MMAP2 event's size field in a recorded perf.data
-file, then checks that perf report produces warning messages that
-include both the file offset (e.g. "at offset 0x2738:") and the
-event type name with numeric id (e.g. "MMAP2 (10)").
+commit df9ed5394176bf63cfdd83249ffcb6787efbba52
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+perf timechart: Include file offset in CPU bounds check messages
 
-This exercises the diagnostic improvements from the file_offset
-series, which retrofitted all skip/stop/error messages to include
-the position and type of the problematic event.
+This patch adds the perf.data file offset to the out-of-bounds CPU debug
+messages in various timechart sample processing functions.
 
-Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- .../shell/data_file_offset_diagnostics.sh     | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100755 tools/perf/tests/shell/data_file_offset_diagnostics.sh
+> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechar=
+t.c
+> index 630756bebe324..071987241a528 100644
+> --- a/tools/perf/builtin-timechart.c
+> +++ b/tools/perf/builtin-timechart.c
+> @@ -605,8 +605,10 @@ process_sample_cpu_idle(struct timechart *tchart __m=
+aybe_unused,
+>  	u32 state  =3D perf_sample__intval(sample, "state");
+>  	u32 cpu_id =3D perf_sample__intval(sample, "cpu_id");
+> =20
+> +	/* perf.data is untrusted input =E2=80=94 cpu_id may be corrupted */
+>  	if (cpu_id >=3D MAX_CPUS) {
+> -		pr_debug("Out-of-bounds cpu_id %u\n", cpu_id);
+> +		pr_debug("at offset %#" PRIx64 ": out-of-bounds cpu_id %u\n",
+> +			 sample->file_offset, cpu_id);
 
-diff --git a/tools/perf/tests/shell/data_file_offset_diagnostics.sh b/tools/perf/tests/shell/data_file_offset_diagnostics.sh
-new file mode 100755
-index 0000000000000000..031f49480d999d8c
---- /dev/null
-+++ b/tools/perf/tests/shell/data_file_offset_diagnostics.sh
-@@ -0,0 +1,82 @@
-+#!/bin/bash
-+# Test that perf report includes file offsets and event type names in diagnostic messages.
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# The file_offset diagnostic series adds "at offset 0x...: TYPE (N)"
-+# to all skip/stop/error messages.  This test corrupts an event's size
-+# field in a perf.data file, then verifies the resulting warning
-+# includes the file offset and event type.
-+
-+err=0
-+
-+cleanup() {
-+	[ -n "${perfdata}" ] && rm -f "${perfdata}" "${perfdata}.old"
-+	rm -f "${corrupted}" "${stderrfile}"
-+	trap - EXIT TERM INT
-+}
-+trap 'cleanup; exit 1' TERM INT
-+trap cleanup EXIT
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
-+corrupted=$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
-+stderrfile=$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
-+
-+if ! perf record -o "${perfdata}" -- perf test -w noploop 2>/dev/null; then
-+	echo "Skip: perf record failed"
-+	cleanup
-+	exit 2
-+fi
-+
-+# Find the file offset of the first MMAP2 event via perf report -D.
-+# Format: "timestamp 0xOFFSET [0xSIZE]: PERF_RECORD_MMAP2 ..."
-+mmap2_line=$(perf report -D -i "${perfdata}" 2>/dev/null | grep "PERF_RECORD_MMAP2" | head -1)
-+if [ -z "${mmap2_line}" ]; then
-+	echo "Skip: no MMAP2 events found in perf.data"
-+	cleanup
-+	exit 2
-+fi
-+
-+mmap2_offset=$(echo "${mmap2_line}" | awk '{print $2}')
-+mmap2_offset_dec=$((mmap2_offset))
-+
-+# Copy the file and corrupt the MMAP2 event's size field.
-+# perf_event_header layout: type(u32) misc(u16) size(u16)
-+# Set size to 16 (0x10 0x00 little-endian) — below the MMAP2
-+# minimum, which triggers the "event size too small" warning.
-+cp "${perfdata}" "${corrupted}"
-+printf '\x10\x00' | dd of="${corrupted}" bs=1 seek=$((mmap2_offset_dec + 6)) conv=notrunc 2>/dev/null
-+
-+perf report -i "${corrupted}" --stdio > /dev/null 2> "${stderrfile}"
-+
-+# Check that warnings include "at offset 0x..."
-+if grep -q "at offset 0x" "${stderrfile}"; then
-+	echo "File offset in diagnostics [Success]"
-+else
-+	echo "File offset in diagnostics [Failed: no 'at offset 0x...' found]"
-+	echo "  stderr was:"
-+	head -5 "${stderrfile}"
-+	err=1
-+fi
-+
-+# Check that the event type name and numeric id appear: "MMAP2 (10)"
-+if grep -q "MMAP2 (10)" "${stderrfile}"; then
-+	echo "Event type name in diagnostics [Success]"
-+else
-+	echo "Event type name in diagnostics [Failed: no 'MMAP2 (10)' found]"
-+	echo "  stderr was:"
-+	head -5 "${stderrfile}"
-+	err=1
-+fi
-+
-+# Check that the reported offset matches the actual corruption point
-+if grep -q "at offset ${mmap2_offset}:" "${stderrfile}"; then
-+	echo "Correct offset reported [Success]"
-+else
-+	echo "Correct offset reported [Failed: expected offset ${mmap2_offset}]"
-+	echo "  stderr was:"
-+	head -5 "${stderrfile}"
-+	err=1
-+fi
-+
-+cleanup
-+exit ${err}
--- 
-2.54.0
+[Severity: High]
+This is a pre-existing issue, but since the bounds check logic is being
+modified here, does checking against MAX_CPUS adequately protect
+topology_map when using --topology?
 
+The topology_map is dynamically allocated using the number of CPUs:
+
+tools/perf/util/svghelper.c:svg_build_topology_map() {
+    ...
+    topology_map =3D malloc(sizeof(int) * nr_cpus);
+    ...
+}
+
+However, the untrusted CPU ID in the perf.data sample is only checked again=
+st
+MAX_CPUS (4096) here. Later, cpu2y() accesses this array using the CPU ID:
+
+tools/perf/util/svghelper.c:cpu2y() {
+    ...
+    return cpu2slot(topology_map[cpu]) * SLOT_MULT;
+}
+
+If nr_cpus is smaller than MAX_CPUS, could a crafted perf.data with a CPU ID
+between nr_cpus and 4095 cause an out-of-bounds heap read, potentially lead=
+ing
+to a crash or an information leak into the SVG output?
+
+>  		return -1;
+>  	}
+>  	if (state =3D=3D (u32)PWR_EVENT_EXIT)
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260602235709.1541=
+603-1-acme@kernel.org?part=3D4
