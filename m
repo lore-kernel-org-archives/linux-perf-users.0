@@ -1,120 +1,172 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349503806DB
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 10:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FED22ACFA
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 10:32:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780482622; cv=none; b=b/5nn2nxM1nbmYnpJQ25lzXPF5bIdleewV2FzIRbjbHodzcx/NShhCjh/vSzsAE5OC6fm5SOt+SCP0phA0uVJUXtCLs8puZJ6Hb0u+/VhiudnMJVxuEBY0nW6lF7IWECH4cTQhW7T4eNlofMPXPTL69Y3aHkGKnz47tMQRlBOwA=
+	t=1780482741; cv=none; b=ODvOpLRafAwhhVrzLiZmyyZbn1S7Z7O2oEJw1tWbAdeJeKoVy6OJ6HracrKumNZWSgrL9ar0JXpmsUOd1D0YOZ0109u5kABng11WpHQulnRR3THSKk2oY4hjyKTYpJxBfs/adrzdygQuD/HsH5ZT5oBJiH1+EnjkH2o4Oo8S6Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780482622; c=relaxed/simple;
-	bh=mCf5ZDixv2R4Q2BCUKpU66xzkB5KSbcGy7eBvBYDqeA=;
+	s=arc-20240116; t=1780482741; c=relaxed/simple;
+	bh=T8/dcI5V9+LVACQRaGJJ016lBXv6WQ7HPvZoEUNSxxc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IDyWvr+3GN2YyIm5DIyC+6UOl6sNM/FE0WaAUrZe6p62K/znVUHHFfZ12YFDPDXQkIhecb2I7gugkFd8b/DGmyjLYnwLxxVirEduPuvNlvzFBPhC+EJnMmre08g3wbbSu5x56p6lalQjaoPeWSS6oWWO8B31Sz7H1gi1wTWdxjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fkp0biOr; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=cT+52h53PO+hu1VnxU4uj6JKpWtbFwJyJ73mY+spoKjKkF3g5U2pFKJreN3k411Lwe3Vdd8DI/6oHF16urk9JmMramnTwErYj6nU0uPkmsYziGfGe6oBKg1kidP5CE/OfFAFYzMyp6H+eD4jZGjT+Nj0ELpkHf9O0YxFhbVxoy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=METGR8cW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fkp0biOr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B731F00893;
-	Wed,  3 Jun 2026 10:30:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="METGR8cW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 633D61F00893;
+	Wed,  3 Jun 2026 10:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780482620;
-	bh=P/ylKxaQRlNRjym2xQgow2FrrTZNKMtPxyj/8C5rflI=;
+	s=k20260515; t=1780482739;
+	bh=avpR8HPfluqMaoXK4kJFlGMgUe6zS39pd6f3nm8Cf2w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fkp0biOrnHE3nWQZ0vpIF5+vVQebhPc3NkY9NSQ72nOLra6OOT9bGA8Mocq/lMQUY
-	 Zv28DW3fv1Bk12F1aTDtmPR5icYWpDNFr7pvNOuAf8lCHj/uG7O5M6mLe6IBFq3Cjc
-	 +gQh9zeIomN5IgM6p9xFs3eDaLMg4JtvIh9/zdAuIgwLWtOZFkcGxpVfutcQiTayVv
-	 +IMwBdqi9AFg5bYWXaSCZl4kIo0SIGJoqpic5zhUb2NtMZCoKbtGZ/XmD8n70G0Sze
-	 7A/IL7O5xLvOL1dJhtY87yZgtWtuhKiL9DSURnQpoY9MW2cqbjRw4DFnrWZIPMl1iu
-	 mUM/YK+tMR++Q==
+	b=METGR8cWWrU2jxOhPudQk4llFphO1HBTbzJ05qIyheHuxupDQT13k9BX3URTS2J8c
+	 u4OohNtM1inuhEGtAx5sabDzMVS9rODYnMzdVzz4Tbb4sFRW/kWc4L8DShLS5wIQtq
+	 Maz3MhCgzXLFZWOCOxxKp5qAoe5Y8yVsMN5uCguvxlZC2sYf4CG+ki6smyAsVjcUUr
+	 Vvje3jhIBYHXVVbcouUgaRToBGC6Ccmj529GjZ7GMTD9odFNLTKTYHSGFHO6kAGXm3
+	 UPbaxV+jOMpjO4rl2YHnxPlsVJVSmqEBUj4nDWQAu4rOqKtq8JtOGDQKRvWHIwd3a9
+	 +ytaR7G8PT9Ag==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 06/19] perf test cs-etm: Replace unroll loop thread
- with deterministic decode test
+Subject: Re: [PATCH v3 01/19] perf cs-etm: Queue context packets for
+ frontend
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260603-james-cs-context-tracking-fix-v3-6-c392945d9ed5@linaro.org>
-References: <20260603-james-cs-context-tracking-fix-v3-6-c392945d9ed5@linaro.org>
+In-Reply-To: <20260603-james-cs-context-tracking-fix-v3-1-c392945d9ed5@linaro.org>
+References: <20260603-james-cs-context-tracking-fix-v3-1-c392945d9ed5@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 03 Jun 2026 10:30:20 +0000
-Message-Id: <20260603103020.A5B731F00893@smtp.kernel.org>
+Date: Wed, 03 Jun 2026 10:32:19 +0000
+Message-Id: <20260603103219.633D61F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Signed integer overflow in `deterministic` workload causes Undef=
-ined Behavior.
+- [Medium] Removing `prev_packet_thread` breaks branch sample cross-context=
+ instruction decoding when transitions cross machine boundaries (e.g., hype=
+rvisor to guest).
+- [Medium] `cs_etm__synth_instruction_sample()` ignores its new `packet` ar=
+gument and hardcodes `tidq->packet`, causing instruction copying to fail du=
+ring trace flush.
 --
 
-commit 4589a67d2fd8e0ec516cb0f0c6ed8dd3e2079b76
+commit 588f2ae34f926c74679fbf78b98515da3192e351
 Author: James Clark <james.clark@linaro.org>
 
-perf test cs-etm: Replace unroll loop thread with deterministic decode test
+perf cs-etm: Queue context packets for frontend
 
-This commit replaces the unroll loop thread test with a new deterministic
-decode test. It introduces a shell script that records and validates the
-deterministic workload to ensure decoding always yields the same result for
-a given code sequence.
+This commit adds a CS_ETM_CONTEXT packet carrying the TID and exception
+level to the frontend, keeping context changes ordered with the packet stre=
+am.
+It separates the memory access functions for the frontend and decoder backe=
+nd,
+and removes tracking for the previous packet's thread.
 
-> diff --git a/tools/perf/tests/shell/coresight/deterministic.sh b/tools/pe=
-rf/tests/shell/coresight/deterministic.sh
-> new file mode 100755
-> index 0000000000000..52e033fd6b82a
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/coresight/deterministic.sh
-> @@ -0,0 +1,71 @@
-> +#!/bin/bash -e
+Link: https://lore.kernel.org/linux-perf-users/20260515021135.1729028-1-aau=
+pov@meta.com/
+
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 40c6ddfa8c8d9..ce570913669c1 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
 
 [ ... ]
 
-> +cf=3D"$tmpdir/ctl"
-> +af=3D"$tmpdir/ack"
-> +mkfifo "$cf" "$af"
-> +
-> +# Start disabled and use the control FIFO to only record the workload an=
-d not
-> +# startup.
-> +perf record -o "$tmpdir/data" -e cs_etm//u -D -1 --control fifo:"$cf","$=
-af" -- \
-> +	perf test --workload-ctl fifo:"$cf","$af" -w deterministic > /dev/null =
-2>&1
+> @@ -1158,6 +1151,30 @@ static u32 cs_etm__mem_access(struct cs_etm_queue =
+*etmq, u8 trace_chan_id,
+>  	return ret;
+>  }
+> =20
+> +static u32 cs_etm__frontend_mem_access(struct cs_etm_queue *etmq,
+> +				       struct cs_etm_traceid_queue *tidq,
+> +				       struct cs_etm_packet *packet,
+> +				       u64 address, size_t size, u8 *buffer)
+> +{
+> +	return __cs_etm__mem_access(etmq, address, size, buffer, 0, packet->el,
+> +				    tidq->frontend_thread);
+> +}
 
 [Severity: Medium]
-Does executing the deterministic workload here cause a regression by
-triggering undefined behavior?
+Will this mix the previous packet's exception level with the newly updated
+frontend thread?
 
-Looking at the workload in tools/perf/tests/workloads/deterministic.c,
-dt_work is initialized to 1234 and then multiplied by 7 twelve times
-across deterministic(), function1(), and function2():
+When tracing virtualized environments, an exception return from a hypervisor
+to a guest causes a machine context change. The decoder emits a context
+packet which updates the frontend thread to the guest thread before
+generating the branch sample for the hypervisor's execution range.
 
-tools/perf/tests/workloads/deterministic.c:deterministic() {
-	dt_work *=3D 7;
-	dt_work *=3D 7;
-	dt_work *=3D 7;
-
-	function1();
-
-	dt_work *=3D 7;
-	dt_work *=3D 7;
-...
-
-On the 8th execution (the second multiplication after returning from
-function1() to deterministic()), the value reaches 7,113,764,434, which
-exceeds the maximum value for a 32-bit signed integer.
-
-This causes a signed integer overflow regression. When the perf tool is
-compiled with the undefined behavior sanitizer enabled, this workload will
-trap or crash, breaking the test's strict deterministic execution behavior
-and resulting in test failures.
-
-Could dt_work be modified to an unsigned int to avoid this overflow?
+By passing the newly updated frontend thread to the memory access function
+while using the previous packet's exception level, the map lookup could
+look up the host kernel address in the guest's map group, causing the
+lookup to fail and result in missing instruction bytes.
 
 [ ... ]
+
+> @@ -1579,6 +1614,7 @@ static inline u64 cs_etm__resolve_sample_time(struc=
+t cs_etm_queue *etmq,
+> =20
+>  static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+>  					    struct cs_etm_traceid_queue *tidq,
+> +					    struct cs_etm_packet *packet,
+>  					    u64 addr, u64 period)
+>  {
+>  	int ret =3D 0;
+
+[ ... ]
+
+> @@ -1604,7 +1640,7 @@ static int cs_etm__synth_instruction_sample(struct =
+cs_etm_queue *etmq,
+>  	sample.cpu =3D tidq->packet->cpu;
+>  	sample.flags =3D tidq->prev_packet->flags;
+>  	sample.cpumode =3D event->sample.header.misc;
+> =20
+> -	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
+> +	cs_etm__copy_insn(etmq, tidq, tidq->packet, &sample);
+
+[Severity: Medium]
+Does this ignore the newly added packet argument?
+
+The function signature was updated to accept a packet argument so it can
+process the previous packet during a flush. However, the function body
+still hardcodes tidq->packet for sample.cpu and in the call to
+cs_etm__copy_insn().
+
+When called from a flush, tidq->packet is typically a discontinuity or
+empty packet. This could cause cs_etm__copy_insn() to bail out early and
+silently drop the instruction bytes for the flushed sample.
+
+[ ... ]
+
+> @@ -1649,15 +1685,15 @@ static int cs_etm__synth_branch_sample(struct cs_=
+etm_queue *etmq,
+> =20
+>  	event->sample.header.type =3D PERF_RECORD_SAMPLE;
+>  	event->sample.header.misc =3D cs_etm__cpu_mode(etmq, ip,
+> -						     tidq->prev_packet_el);
+> +						     tidq->prev_packet->el);
+>  	event->sample.header.size =3D sizeof(struct perf_event_header);
+> =20
+>  	/* Set time field based on etm auxtrace config. */
+>  	sample.time =3D cs_etm__resolve_sample_time(etmq, tidq);
+> =20
+>  	sample.ip =3D ip;
+> -	sample.pid =3D thread__pid(tidq->prev_packet_thread);
+> -	sample.tid =3D thread__tid(tidq->prev_packet_thread);
+> +	sample.pid =3D thread__pid(tidq->frontend_thread);
+> +	sample.tid =3D thread__tid(tidq->frontend_thread);
+
+[Severity: Medium]
+Does the removal of the previous packet thread tracking break cross-context
+branch samples?
+
+By using the newly updated frontend thread instead of the previous packet
+thread here, it appears a branch sample from the previous context could be
+misattributed to the new thread when transitions cross machine boundaries.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260603-james-cs-c=
-ontext-tracking-fix-v3-0-c392945d9ed5@linaro.org?part=3D6
+ontext-tracking-fix-v3-0-c392945d9ed5@linaro.org?part=3D1
