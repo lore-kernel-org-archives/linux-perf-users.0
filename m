@@ -1,66 +1,66 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9053D3CE2
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 11:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17DA3C81BF
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 11:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780485436; cv=none; b=DrJhUVd5EPR6ZkuhZu2uN0OzOfNSVpO5XnS0cagB3rf5LbR2K5wQYGWpX21DHOVmscr/X5NMMGoUUhj5PKUDFksJf32NScjKOnON5dTYMdkMtlbgab+4ZRALgRCovgfPfhlW2hbCrL78yD9WD+Fca15/0muCsKwcRPURL+uuUu0=
+	t=1780485657; cv=none; b=cwAfQdvgpdnmOdPFPs5ZIpe2FEx8/APC4JbrpKi25UXr0mYXP7BFK0uE0D0YuGFUseObFS61vqDy6E4R2as3IExFVkFVdFyljnkto6wAd/8XQ1kL7k+mWtAhpQ/0iwEOmBrSBdJLts0OoI/jnYBs0esj3C47Yv0Q/ayyd2dgHF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780485436; c=relaxed/simple;
-	bh=YH1yDlcQ1Btc01IgTRsUEjs4GCr14HE188gaQM2nQnk=;
+	s=arc-20240116; t=1780485657; c=relaxed/simple;
+	bh=OzFVEqgwCuNxD8i7OS1J8fnss8t7CNHqvfWTQ+y6B3o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DisKWWuQHWoOEZx3mFULg54Ni6l/orbpm3r+Dif4W+aQpgShh02XsAwnj6Y+rD0ngVAPVvCvAH8B3kF9HyrqBujtxjD3vimcw1D+V2ebJUOJsOFaL3Y3HuncYuhjRihhiViZbt0t84Jk1hiqpyNQkdajnWgIjgQN/ja9evoORkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xyWN6bgA; arc=none smtp.client-ip=209.85.128.41
+	 In-Reply-To:Content-Type; b=ACENocCxPxhPH3kT91vv+cDGFVYw3imRF8a7UVVVEZY7XBOEKlcgWPlYswXFUtJmYodzlCqWfGZep1kWaGunkboi7MNdGkH6xEahh1V4ala0fPOXv/WePR+psEvmV/ZUMKwOACDwpoQae/iRySppug61vTsSDa9VDeNDpL/7K2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QV9v9pp7; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xyWN6bgA"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-490b3637b90so15383145e9.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 04:17:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QV9v9pp7"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490b43e2b95so9347285e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 04:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780485432; x=1781090232; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1780485655; x=1781090455; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=T+KyrkqrXHlGePKgaipm3bkHOjJ6TJi29svJlMHw/IA=;
-        b=xyWN6bgAa4Ta8P3t/fTKYccMvqp+hFJRnJjzysXxF9frrIoNjXv74Iqg3xPB0pOpzX
-         Xpx6MYQTZFYrifX+4DLkfnF7R3rj5RCdLheFzRuOWvNvzmj+Hlre0tOfXI6S6GeJDwy5
-         tyAGA3oDG5jLAYYv4k2lyCtHlH1im9wYIcpgldaqySc9T/dEFzX5kEmxwhkQ/Dh6WbKJ
-         cZSyStjwhWZNQHNHRZiJaC0BPvoh8un2twBRyUDcZ2gtrsh3Kp390IShz1wUgYDu/21R
-         gJXysm03VAmwu28uST/qa0wecP+dkeTktfNOgbA1NXvT8cxwLQTk4dFNZjts4yLjPdwy
-         ZobQ==
+        bh=NRFu66k1KJeXKuYTZNicRKot0uoKyyMMCt8VU3OBoJc=;
+        b=QV9v9pp7ISAn6FWyYPEr/3XWBvFUYI/ePGOCZSEZGxjdfNNaHxOcHlikxSbNRSwvpz
+         ls33sWfQ241FnTfK8em0ubfMoHTja/S4G4sHlJFBbiVqOKZXLddJ7hYVd9Z25xxj2/Aw
+         5GgubxwIKWTRXaMleb+rSW67gQ3enMnqugXB2+dF/GN3EUZ4qBuBuBx81HXP3MCBRMsU
+         o/AflMddJVP/pKwg62buVmNW7sUAa1i/B1ehLt8TDXxcfuBe4ofU37q4clHE0f0nAe6Z
+         Nnn2+W9pZ0SEPaB5Im5ueePJK0PeHmydLozOtlVeTBuZT7EBSt5eBl9zQDjhwLu64Xek
+         JGMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780485432; x=1781090232;
+        d=1e100.net; s=20251104; t=1780485655; x=1781090455;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=T+KyrkqrXHlGePKgaipm3bkHOjJ6TJi29svJlMHw/IA=;
-        b=qWvL7yyo7+Da1ZrPz06umXcKC0xv7vDwqtgsE0HdXhGH4L3JRmUo99lW9DZXkS/3Mu
-         g0RuXIJ/aRTrt+WUY9FqRQReak4TvEc6nUOK/4GxNBQYGrUbbGx6eGEDxpCCYzm9GyuU
-         YmCA9W9mZv/vf6Yx/4/ZtJtaWMmdeJBqVeeAPfxt5x3Xe1gIFtdue4VCPVMwzxQxSs0Z
-         1nYxceyWpfX38RiuFjhkkb7Yo7gpv7fmcdxZzvi+plEeEFLmXMfJQn7BcuIwAn//NAee
-         SgGJJ1P5hGLRWUyrC4L50f7d5sk0dyIYYPCuSO4SuYbGBir+ojx/RluxA49YHdu/ONmE
-         CX8A==
-X-Forwarded-Encrypted: i=1; AFNElJ95hqasj0aE5BhZQID8CgfRKiCcMGOo8FE7TZlFxRAZyt2u/hF0zArqLioCZPAgo1YMiBfU1NhgTHqghTVk3uCj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpKSEd92+MyxT50y+7PzRu9C9x/F7wHHGC8XnmvKdCInE09j1A
-	YTq4z2k/SAOJN8Jf6And3Qp7+L4zF5VEOOa87pGaASS+4CEHL8l7eXn99uCrWK2+S+o=
-X-Gm-Gg: Acq92OFYtln1NEnWPvxBkUG8oHtSWO4gYnBbZGc9ZNXJOJYNrvJqZrqFcQBDEcCwRL6
-	wR/c1KRM5ph8Xfr910ntZNdbWjYvkC5EqB/xk0rhHTjFCNo35GTxuRPx2irf3WwVypbzQEQ+O6I
-	xnqa2ZEsd26l1y8MWGoRWIbSp5X6SaFYHnaDkenYWbDe4w1+atbDEhKOb/i7/SSRBOLroSGLwNx
-	YAbkzpkw1sETj5ec9koNmnmttctCBsX/nNQl4jYXm903jJAqgeCaUBdKIoCYx3deOcEmKk6G5gy
-	QWDAzwCwZSdpy1tkXRjsBHgObk1amSLcgdV3I+1tBswgW0wU6gWyI9qCTDzMo596doN3zcmf9Wd
-	Auzi55AHyLVh62NCTxeKbqKlw1JGmQoUPBa75wvYkWzHlx2LiibLTXToRbJ0i0SLxgWtF3vNafT
-	QjEUH/UKz83TCkR8p6l66K+uG8DQ69woo/cywiy30=
-X-Received: by 2002:a05:600c:c092:b0:490:b724:5085 with SMTP id 5b1f17b1804b1-490b724521cmr29027425e9.33.1780485432205;
-        Wed, 03 Jun 2026 04:17:12 -0700 (PDT)
+        bh=NRFu66k1KJeXKuYTZNicRKot0uoKyyMMCt8VU3OBoJc=;
+        b=EZR8NBE+0/EtBdHIB1KCgqmZlaI6XFhAti51xcW+YguM+MJQgXPgBUC5LBXtNaWsOW
+         yCnZXOs3JDEMcQzBt7PIqDm1w4GdUk8MTWjk2jw4FjyX4Mxkxml2/BIeVBPSoN9djycb
+         YywLKDTYeE+C+Z8kL6VWLQCUl0tyosj1pcomBAOtBzSBx03bZAhXsuUIcuT3Jj1OEruQ
+         1XsVCvLT6ush8hMRJ+wEf7/Vz9oir3g5sZtIEyT7pQkhfzRlmAtpx1zUOQdU1DR84ezP
+         043Vm8REnXKMsZue85Xi8lEIXoDho0wxdYNhZFec5K2zozrhyaIzGlSAb8adL7STPtCM
+         tUVw==
+X-Forwarded-Encrypted: i=1; AFNElJ8rCJULuKIbjP5Tc5SlHiBr4fUERyYYCrF7zGvSiwtK49bIbn8GVft3+wydGtXolDWtWhuyyyNgyeXOCYNruC9q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzw7s5INcKchgoUYbdggYE5u30ecG2HbFFT5g/hNNceeDMUF2l
+	l3GPY/BgCGJTpK2cJj7PxSQoVUtWMgIEW/8NFvS/5W3E2/aANPIs1u2uh56/fNSPNKs=
+X-Gm-Gg: Acq92OHei9VqM5Xd3uBihgv0LS25U5vDzHqYi0ls3McGO8QC6VR+VDhENg0XclI6gPz
+	nUPJsjd/jflsb3Fglwb7wA9M2WjbvIeCH/wPcJ9nEsvJTKszoiYcuXEtZaReZsJ1/HNQzYf5DUV
+	gxiv/b7RSH7p6ih3uYGX0AN8rpQKNJd0hp57Wdhp4thuroCz9AClU4WogO4rCmRbSda2aHJp1c5
+	lZg3CDIspVdbmyf+JXJA9U0GXllnRCtHftVpuUEIuJuRCY4rSp5rP1s1mUPGm0ixg/GnfRZ8Dzl
+	2a9h/l2h0fj5j36PBe/remHWQBP0Hp9HyTuAod2F0yyw3hzx2T+RiwaSOr5flbhEUPKGjkfhIVY
+	lQbfdch70HwPW3JCIi2H+08n41ePpnb8g7ztFOYXKnaul+2MTQxgJGMGiD9x4GxuWVC/yNziKec
+	pzmALOIpNZtZi/vtdpQVAyPquPzlnHmxVkATaRNbk=
+X-Received: by 2002:a05:600c:a307:b0:490:b7e6:bd1d with SMTP id 5b1f17b1804b1-490b7e6bfa0mr28113465e9.16.1780485655211;
+        Wed, 03 Jun 2026 04:20:55 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b7e6c6a4sm20016975e9.2.2026.06.03.04.17.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b79d64e8sm46791355e9.0.2026.06.03.04.20.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2026 04:17:11 -0700 (PDT)
-Message-ID: <34b3b085-cb13-47d2-aad4-fac8c7812bd3@linaro.org>
-Date: Wed, 3 Jun 2026 12:17:10 +0100
+        Wed, 03 Jun 2026 04:20:54 -0700 (PDT)
+Message-ID: <c8959843-2358-4305-bbe4-3ad69da949f5@linaro.org>
+Date: Wed, 3 Jun 2026 12:20:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,8 +68,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/18] perf test: Add a workload that forces context
- switches
+Subject: Re: [PATCH v2 04/18] perf test cs-etm: Test process attribution
 To: Leo Yan <leo.yan@arm.com>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
  <mike.leach@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -80,50 +79,59 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org
 References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
- <20260602-james-cs-context-tracking-fix-v2-3-85b5ce6f55c6@linaro.org>
- <20260603110621.GR101133@e132581.arm.com>
+ <20260602-james-cs-context-tracking-fix-v2-4-85b5ce6f55c6@linaro.org>
+ <20260603111018.GS101133@e132581.arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260603110621.GR101133@e132581.arm.com>
+In-Reply-To: <20260603111018.GS101133@e132581.arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 03/06/2026 12:06 pm, Leo Yan wrote:
-> On Tue, Jun 02, 2026 at 03:26:45PM +0100, James Clark wrote:
+On 03/06/2026 12:10 pm, Leo Yan wrote:
+> On Tue, Jun 02, 2026 at 03:26:46PM +0100, James Clark wrote:
 > 
 > [...]
 > 
->> +/* Not static to avoid LTO clobbering the function name */
->> +void context_switch_loop_proc1(int in_fd, int out_fd);
->> +noinline void context_switch_loop_proc1(int in_fd, int out_fd)
->> +{
->> +	for (int i = 0; i < loops; i++) {
->> +		read_block(in_fd);
->> +		context_switch_loop_work += i * 3;
->> +		write_block(out_fd);
->> +	}
->> +}
+>> +check_samples() {
+>> +	owner_samples=$(grep -c "proc1.*context_switch_loop_proc1" "$tmpdir/script" || true)
+>> +	next_samples=$(grep -c "proc2.*context_switch_loop_proc2" "$tmpdir/script" || true)
+>> +
+>> +	if [ "$owner_samples" -eq 0 ] || [ "$next_samples" -eq 0 ]; then
+>> +		echo "No samples found"
+>> +		cleanup
 > 
-> Rather than struggling with unexpected options, and "noinline" might
-> not work as it is not a standard compiler option (it is defined in
-> kernel header as AI reminded me), wouldn't it is reliable to use a
-> dedicated CFLAG rule same as other programs?
+> We don't need cleanup explictly here, as trap covers exit case?
 > 
-> Thanks,
-> Leo
 
-noinline seems to be used as standard across the tools codebase, so if 
-it doesn't work there are bigger problems. Perf also only really seems 
-to support GCC and Clang and they both work for this test.
+We need it whenever we call exit because it removes the trap which would 
+trap and return with its own (potentially different) exit value.
 
-And I don't actually think it matters if this is inlined or not as long 
-as the debug info reports those lines as being in this function. That's 
-what what having it as a global symbol is supposed to achieve, but 
-that's about renaming rather than inlining. Maybe inline is over the 
-top, but its a pattern copied from other similar workloads and tests.
+The alternative is a global $err which you set and then call exit 
+without a value and let cleanup() do exit $err. But from searching the 
+existing shell tests calling cleanup before exit seemed to be more 
+common so I did it that way.
 
-Probably makes sense to wait for an actual failure to appear and then we 
-can decide what to do with it then.
+>> +		exit 1
+>> +	fi
+>> +
+>> +	if grep "proc2.*context_switch_loop_proc1" "$tmpdir/script"; then
+>> +		echo "Thread1 symbol was attributed to proc2"
+>> +		cleanup
+> 
+> Ditto.
+> 
+>> +		exit 1
+>> +	fi
+>> +
+>> +	if grep "proc1.*context_switch_loop_proc2" "$tmpdir/script"; then
+>> +		echo "Thread2 symbol was attributed to proc1"
+>> +		cleanup
+> 
+> Ditto.
+> 
+> Otherwise:
+> 
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
 
