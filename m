@@ -1,99 +1,308 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADFE39A4DF
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 15:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780501016; cv=pass; b=LZdgVLCeIYnT1+CIHg2u2bwO5WiLXolEFcRacmIOct7TV+CbR2onrY5XmnWCiScegukVDPG+sQHczhUNI7JJckpFpmoW56OoJZpfpJy8guUe1uQdbAfka45oGHcAn6NWqW7XehpN/yHO+vP0m2SpbUtGx+wlT8+exR4h2Ce9TLY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780501016; c=relaxed/simple;
-	bh=7iFh1edn45JTkSJyVUqTC9ywPBFt3B6QYQOEvY3M5Do=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=AoKvfFwOgyT5hooVrrtIayk7Svg8Llr6nO6dvDtqY1Dnh5zOPHTYpvpq3hYfNHACwQyQ/4FbAk8H6IjsuUl4QBYM/wydRnRRnNlTIrIoSc+9xRkbYpfey/SxIhpC8foswMavtJ0vtFMve/sD+YGfzI+yizNhjvHyGQ+NU9sY8U8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EATQCfIu; arc=pass smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BF03D5668;
+	Wed,  3 Jun 2026 15:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780501605; cv=none; b=j94gcv8fdDJQZy4QLbqXafcX4SWgLby7A+9WOg4tuvFanHl6Icem1k+SLv7ddCtPhgcMgkf1OtWey9ClyN8fxsnKKGKwuHkDsTTqExrVmmtgBGtfjTC9ByREBxs/OzGkxqNG6MRcb37O9iw4SW2rtMz4bU3zCdfOxPlx8SkozOM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780501605; c=relaxed/simple;
+	bh=qKUvVpmZ9+2F1zLPw5W6Dmsk3oelJZ0kl7yspxUEqSs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qSF72B5C2ICVPqauwcLPwa7hqVI/Glqw3Je6ddV5WDQbjacrVx8vNlQBj29k3tqwp5zOuhSE25Yy7FIuiBqN6Ig6kOxftAh5BMUvHrZRBavPlcPExjuvCatGXHLtrJ80v42AjB4tzobJ8K+Yj4NIunM9z/FV40hx0xNV1nmsmHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jZr+t/+3; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EATQCfIu"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2bf2d865383so81815ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 08:36:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780501015; cv=none;
-        d=google.com; s=arc-20240605;
-        b=guM8ImNM5aTk/SG1WsHvAMQPLIvMoGkBbJZXU7X6x003jQIBNVQKVyEqv5d0RCq6fW
-         WqMmeczaye700qBJAEkgHUHAqzzz63UvUS+KRoK2aNI5drl/yvNNAvhHdb89udvLh8Co
-         G7CpOzfoOwBLnq7ykdVPCAWm63atTYVd2/V+wylvhUOPluC7miUhgsNFvgYVhv07ooe0
-         M77bPVyO0iRB8cqKQg0ieKqpZbpXB3aYdR7Uu4GjDlzigp/T5Q6a8E4OhX/H0jIf9vrC
-         kshw/XZMkppWjIW1QfEfHm53Zb5ZG5nFXwN3qMEXlXntmsxApQGdMbtZznbmT+0QOpdD
-         AcCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=7iFh1edn45JTkSJyVUqTC9ywPBFt3B6QYQOEvY3M5Do=;
-        fh=5nDXrkfolhvHp3itH7yNJbk5u/IkIknPHd2NwYwSegg=;
-        b=ido760157GOHf4cF5Tn9qurpaOceSED93ooUgXwLRSDqAkqRHTEe2UcQ8RwTnqVRei
-         zVRq0lmE3PivOMy0i3OMuSraQZxId/Vp4pKyLx1T0a0fzjznAdiWJ8PGgKTRoX6Uu2vy
-         7ZXabeH25Cuo5SP+AnYayCGDf4Kqo1mRRwDjsDLLOzFfd4El2Crf0WWWcJ+P3HoX0V0O
-         H9UjBbEJB7j+iox8ddGOFO6CNS03H9AtgpbvK46Zra0TriPY7kiDPtyWCoMfSDOgEt6N
-         VVdSMg7mZw+ll8AUCYHHOh96D9n9RZEc5Z5mpz3pwJwWHcA5OxAvdAGaanKIV5CW4IJS
-         O5Fw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780501015; x=1781105815; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7iFh1edn45JTkSJyVUqTC9ywPBFt3B6QYQOEvY3M5Do=;
-        b=EATQCfIuN/hxOyHjXZUTRmYjAj17BRvV7fVPeSkNCl/63AClTJNMDa9kZ6QbOHXPnM
-         LFmXWDOt1q18IQRLRH2VGgaCGHDSuaeTag+OoDk2Xu0zEBRAT1O5O+VeQYyVuTlRRv0P
-         fZfzAo0w7Jr6PPvElY+dfwzykRfjKKWE3mpmmMTNPbmX1qTjt0u6llMgahMMfu7ldlt3
-         dxpij8l6aWDql/Q+ubjSyB5kkjfJwP+17ly0QCmomLLNht9rJSTt456DdLnFQHils0mG
-         VXLjUvrwNt3t7oBb3VMpmb+YpAvMHSheyWkWH7C5RoPiNRxTVo/NQwcZWMHP5Ewwcezz
-         12RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780501015; x=1781105815;
-        h=to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7iFh1edn45JTkSJyVUqTC9ywPBFt3B6QYQOEvY3M5Do=;
-        b=PRWeXXeULH6LubnAwGf5+KzfivJsfwEoO08ecd5n9yxJDPFvy+Nfj5QwIG1Istlawu
-         93P0/TOZ/5aU4WOaToe9B6JGtuIfVYqF9T0ul0hh8QSzEspnQd1/Cr6Ppz79CWI+7CQx
-         dH8z/BZG9G/vOnAeJHhNP3pCO1WDkT3KI5phrPmAu5H30hOGcmups1tZCoHvBosOo/wm
-         r2ZnWVNICDGniT+p9wfITTQh9Plt03ZhaccXunWKudFgjeqnV15PIDOmkXMfSLdMHNde
-         TCaU58/k/pLMKYZdobZHLcdUJ/iOIaeLDSsAjUs+VUyIWgSNpstxa7trtcJ+eQNxndm8
-         MORA==
-X-Gm-Message-State: AOJu0Ywssza6t5PpbkjEZaY8X4uvAPnlmyax7DThiAPrMhBioeg9BKkO
-	6p4QjErh+6QpBnrFVOyRCg+MQdUVqC5kbBxCFsWj8eoGOFPuJ6iAYHBHnnecminOJDRM70/fcS/
-	KXRvnjuRp1dC2L5XRXbBE03IplAUVWfAxSED4VYxb74s9dtEl/NkBlBpiWTA=
-X-Gm-Gg: Acq92OEBYcHXqje5TEOqSwxhs9jmDulwhIgHGmaHkmEYNo7wrTBDB7Y0AMmRpanRWdg
-	iRcixczMyKWIKzq6JRZybA+Vwbp0ShfJb8xtY4JOQdxfmpi7u2h5m5qQUPKsIAVf/gs4EsOsW6a
-	0c8JJ9OssSaMbqDfqOUNuc/7/0Th0l3C4woLy0HCllDQe6789Le52sUG4dQ2s1kJN8WW2X0YURU
-	1/NKBJNylkCjESGKzRQ+n3cA1+OMDIVka1DrpkLlpQx3DaQY98qhwlmXqmUKr/FfQVRA6bYII7I
-	OOUFZexVx/c32BLA39nvKtzcu9lsEMt9Bu1XD1CD3GI41P3D
-X-Received: by 2002:a17:902:c405:b0:2bd:5fc9:27b9 with SMTP id
- d9443c01a7336-2c16fa720bamr1735185ad.3.1780501014163; Wed, 03 Jun 2026
- 08:36:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jZr+t/+3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780501600; x=1812037600;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qKUvVpmZ9+2F1zLPw5W6Dmsk3oelJZ0kl7yspxUEqSs=;
+  b=jZr+t/+3IwjZB5sOewSsyjgMbyp6wEIdj+RjavmK6+bOk944e1daUByl
+   trZeH63/gkk4A2ohWnnbsrersEy+EHddx6G/7FdbGZodbZbwDkCSxclxt
+   aqT6n6FClCHVZiSEEPxpLX3aXL18JuqckkXTYr+oamf0ERAyhAVN6ILDs
+   /2inUsvN9WrVo153QscRkD2CoOs6B84sFAL/BHRkO32o6FqltTEuCtLBA
+   plKHH8E8bzgYcX/8+GzuF1SOTTdnmJ/hjzMyJtETtxoMZoK+G3jmoKe6I
+   NqovzZ+vRDb+zNsMmUHDUkKPRiFBOm61LwUxSiaIC+kJTgOZWUNErjXJr
+   w==;
+X-CSE-ConnectionGUID: 8X1JAENvR6eYrMdkeZcp0w==
+X-CSE-MsgGUID: B1+6Vp3WSU+MFl62mLwmWA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="91890309"
+X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
+   d="scan'208";a="91890309"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 08:46:39 -0700
+X-CSE-ConnectionGUID: EL4AfA1RTJCm+BpfxBNCfA==
+X-CSE-MsgGUID: wY2b4CaxR8mHQSCY5F9zfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
+   d="scan'208";a="267940020"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 08:46:38 -0700
+Message-ID: <194d0173-dd05-4392-9dfa-26175bc71fb4@intel.com>
+Date: Wed, 3 Jun 2026 10:46:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Jun 2026 08:36:43 -0700
-X-Gm-Features: AVHnY4LqaMAyOyFMzYTFxGwsk-MFELZCu3EvLQswcE8Nck1sDj2qE_lbC7lG7tc
-Message-ID: <CAP-5=fWRS46ripc2dMyZfYE_1m6wLnThaVAi3kT5aMFd1ARBiA@mail.gmail.com>
-Subject: Musl and ERR_PTR review prompts
-To: linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 6/8] perf/x86/intel/uncore: Introduce PMU flags and
+ broken state
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260601170114.173359-1-zide.chen@intel.com>
+ <20260601170114.173359-7-zide.chen@intel.com>
+ <368ffaea-51d4-4e08-86a4-9b7d5dbc736c@linux.intel.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <368ffaea-51d4-4e08-86a4-9b7d5dbc736c@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-Just wanted to give a heads up that I sent a PR to improve reviewing
-for these two issues with the Chris Mason prompts (which get
-incorporated into Sashiko):
-https://github.com/masoncl/review-prompts/pull/72
 
-The ERR_PTR guidance follows receiving reviews from Sashiko that
-encouraged the use of ERR_PTR.
+On 6/2/2026 9:13 PM, Mi, Dapeng wrote:
+> 
+> On 6/2/2026 1:01 AM, Zide Chen wrote:
+>> Replace the boolean 'registered' field in intel_uncore_pmu with an
+>> unsigned long 'flags' field, and add a PMU_BROKEN flag to track box
+>> setup failures. Broken flag is sticky, means it won't be cleared
+>> unless module reload or system reboot.
+>>
+>> Broken PMUs are skipped in the CPU hotplug and box allocation paths.
+>>
+>> When any box fails to initialize, the PMU is marked broken.  Broken
+>> PMUs reject new event assignments and skip future box setup attempts.
+>> If the PMU was already registered, it remains so to avoid disrupting
+>> in-flight events on other boxes.
+>>
+>> Signed-off-by: Zide Chen <zide.chen@intel.com>
+>> ---
+>> v2:
+>> - Make the broken flag sticky by clear_bit() in uncore_pmu_unregister()
+>> other than zeroing out pmu->flag.
+>> - In uncore_change_type_ctx(), don't stop CPU migration on broken PMU
+>>   for in-flight events.  (Sashiko).
+>> - Use box->cpu == -1 to identify inactive boxes that don't need
+>>   migration, no need to check uncore_die_has_box(), which is incomplete.
+>> ---
+>>  arch/x86/events/intel/uncore.c     | 44 ++++++++++++++++++++++--------
+>>  arch/x86/events/intel/uncore.h     | 13 ++++++++-
+>>  arch/x86/events/intel/uncore_snb.c |  2 +-
+>>  3 files changed, 46 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+>> index 283e41933ba7..f2cb3fde2dda 100644
+>> --- a/arch/x86/events/intel/uncore.c
+>> +++ b/arch/x86/events/intel/uncore.c
+>> @@ -757,7 +757,7 @@ static int uncore_pmu_event_init(struct perf_event *event)
+>>  
+>>  	pmu = uncore_event_to_pmu(event);
+>>  	/* no device found for this pmu */
+>> -	if (!pmu->registered)
+>> +	if (!uncore_pmu_available(pmu))
+>>  		return -ENOENT;
+>>  
+>>  	/* Sampling not supported yet */
+>> @@ -953,16 +953,18 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
+>>  
+>>  	ret = perf_pmu_register(&pmu->pmu, pmu->name, -1);
+>>  	if (!ret)
+>> -		pmu->registered = true;
+>> +		uncore_pmu_set_registered(pmu);
+>>  	return ret;
+>>  }
+>>  
+>>  static void uncore_pmu_unregister(struct intel_uncore_pmu *pmu)
+>>  {
+>> -	if (!pmu->registered)
+>> +	if (!uncore_pmu_registered(pmu))
+>>  		return;
+>>  	perf_pmu_unregister(&pmu->pmu);
+>> -	pmu->registered = false;
+>> +
+>> +	/* Keep PMU_BROKEN_BIT stick. */
+>> +	uncore_pmu_clear_registered(pmu);
+> 
+> Why to set PMU_BROKEN_BIT to a stick bit and doesn't clear it when
+> unregistering the PMU? Per my understanding, there is no active boxes when
+> uncore_pmu_unregister() is called, seem all flags can be cleared. When the
+> new CPU or PCI device are hot plug-in again, it may be a new device or the
+> old issue which leads to the PMU can't be initialized has been fixed, the
+> uncore PMU can work correctly, the PMU_BROKEN_BIT should be set any more.
 
-Thanks,
-Ian
+Woops, a typo here: stick->sticky.
+
+Let's examine a theoretical flow for a particular PMU:
+
+PCI dev on die0 online: activeboxes=1, PMU registered
+PCI dev on die1 online: init_box failed, pmu->activeboxes=1, set broken
+PCI dev on die0 offline: activeboxes=0, PMU unregistered
+
+If the broken bit is cleared in uncore_pmu_unregister():
+PCI dev on die0 or die2 online: activeboxes=1, PMU registered
+
+This is wrong, because the box for die1 is not working.
+
+In reality, box_allocate() or init_box() failures may not happen at all,
+and when they do, the system may be experiencing severe out-of-memory or
+other catastrophic conditions. Keeping the broken flag sticky should be
+fine.
+
+One alternative to avoid making it sticky is to use pmu->activeboxes as
+pmu->die_refcnt to track online dies, not necessarily active boxes, as
+v1 does.
+
+The problem with this approach is that it could cause a pmu->die_refcnt
+leak in the uncore_pci_remove() path: if init_box() fails but
+pmu->die_refcnt has already been incremented, there is no chance to call
+uncore_pci_pmu_unregister() because pci_get_drvdata() returns NULL.
+
+>>  }
+>>  
+>>  static void uncore_free_boxes(struct intel_uncore_pmu *pmu)
+>> @@ -1153,7 +1155,12 @@ static int uncore_box_setup(struct intel_uncore_pmu *pmu,
+>>  {
+>>  	int ret;
+>>  
+>> -	uncore_box_init(box);
+>> +	if (uncore_pmu_broken(pmu))
+>> +		return -ENODEV;
+>> +
+>> +	ret = uncore_box_init(box);
+>> +	if (ret)
+>> +		goto err;
+>>  
+>>  	/* First active box registers the pmu. */
+>>  	if (atomic_inc_return(&pmu->activeboxes) > 1)
+>> @@ -1167,6 +1174,16 @@ static int uncore_box_setup(struct intel_uncore_pmu *pmu,
+>>  
+>>  	return 0;
+>>  err:
+>> +	/*
+>> +	 * On failure on any box, mark the per-package PMU as broken regardless
+>> +	 * of whether it was registered or not.
+>> +	 *
+>> +	 * Don't decrement refcnt to avoid other in-die CPUs from trying to set
+>> +	 * up the PMU box again.
+>> +	 *
+>> +	 * Don't kfree box; MSR and MMIO boxes are freed at module exit only.
+>> +	 */
+>> +	uncore_pmu_set_broken(pmu);
+>>  	uncore_box_exit(box);
+>>  	return ret;
+>>  }
+>> @@ -1190,8 +1207,10 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
+>>  		return -EINVAL;
+>>  
+>>  	box = uncore_alloc_box(type, NUMA_NO_NODE);
+>> -	if (!box)
+>> +	if (!box) {
+>> +		uncore_pmu_set_broken(pmu);
+>>  		return -ENOMEM;
+>> +	}
+>>  
+>>  	box->dieid = die;
+>>  	box->pci_dev = pdev;
+>> @@ -1504,7 +1523,8 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
+>>  
+>>  		if (old_cpu < 0) {
+>>  			WARN_ON_ONCE(box->cpu != -1);
+>> -			if (uncore_die_has_box(type, die, pmu->pmu_idx)) {
+>> +			if (uncore_die_has_box(type, die, pmu->pmu_idx) &&
+>> +			    !uncore_pmu_broken(pmu)) {
+>>  				box->cpu = new_cpu;
+>>  				cpumask_set_cpu(new_cpu, &pmu->cpu_mask);
+>>  			}
+>> @@ -1512,12 +1532,14 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
+>>  		}
+>>  
+>>  		WARN_ON_ONCE(box->cpu != -1 && box->cpu != old_cpu);
+>> -		box->cpu = -1;
+>>  		cpumask_clear_cpu(old_cpu, &pmu->cpu_mask);
+>> -		if (new_cpu < 0)
+>> +		if (new_cpu < 0) {
+>> +			box->cpu = -1;
+>>  			continue;
+>> +		}
+>>  
+>> -		if (!uncore_die_has_box(type, die, pmu->pmu_idx))
+>> +		/* non-active box doesn't need migration. */
+>> +		if (box->cpu == -1)
+>>  			continue;
+>>  		uncore_pmu_cancel_hrtimer(box);
+>>  		perf_pmu_migrate_context(&pmu->pmu, old_cpu, new_cpu);
+>> @@ -1593,7 +1615,7 @@ static int allocate_boxes(struct intel_uncore_type **types,
+>>  		type = *types;
+>>  		pmu = type->pmus;
+>>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
+> 
+> IIUC, the "type->num_boxes" actually indicates the number of PMU  or the
+> number of box classes. Since currently there could be multiple boxes for
+> each kind of PMUs on the multiple dies device, the name "num_boxes" become
+> inaccurate and much misleading. could we change it to a more accurate name,
+> like "num_pmus" or "num_box_classes"?
+
+Yes, agree. Will do more clean up in the future.
+> 
+>> -			if (pmu->boxes[die])
+>> +			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
+>>  				continue;
+>>  			box = uncore_alloc_box(type, cpu_to_node(cpu));
+>>  			if (!box)
+>> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+>> index d732b87be0a9..0adb477d9708 100644
+>> --- a/arch/x86/events/intel/uncore.h
+>> +++ b/arch/x86/events/intel/uncore.h
+>> @@ -146,13 +146,24 @@ struct intel_uncore_pmu {
+>>  	struct pmu			pmu;
+>>  	char				name[UNCORE_PMU_NAME_LEN];
+>>  	int				pmu_idx;
+>> -	bool				registered;
+>> +	unsigned long			flags;
+>>  	atomic_t			activeboxes;
+>>  	cpumask_t			cpu_mask;
+>>  	struct intel_uncore_type	*type;
+>>  	struct intel_uncore_box		**boxes;
+>>  };
+>>  
+>> +#define PMU_REGISTERED_BIT	0
+>> +#define PMU_BROKEN_BIT		1
+>> +
+>> +#define uncore_pmu_registered(pmu)	test_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
+>> +#define uncore_pmu_broken(pmu)		test_bit(PMU_BROKEN_BIT, &(pmu)->flags)
+>> +#define uncore_pmu_available(pmu)	(uncore_pmu_registered(pmu) &&  \
+>> +					 !uncore_pmu_broken(pmu))
+>> +#define uncore_pmu_set_registered(pmu)	set_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
+>> +#define uncore_pmu_set_broken(pmu)	set_bit(PMU_BROKEN_BIT, &(pmu)->flags)
+>> +#define uncore_pmu_clear_registered(pmu) clear_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
+>> +
+>>  struct intel_uncore_extra_reg {
+>>  	raw_spinlock_t lock;
+>>  	u64 config, config1, config2;
+>> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+>> index c5347920541c..055131c508ff 100644
+>> --- a/arch/x86/events/intel/uncore_snb.c
+>> +++ b/arch/x86/events/intel/uncore_snb.c
+>> @@ -940,7 +940,7 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
+>>  
+>>  	pmu = uncore_event_to_pmu(event);
+>>  	/* no device found for this pmu */
+>> -	if (!pmu->registered)
+>> +	if (!uncore_pmu_available(pmu))
+>>  		return -ENOENT;
+>>  
+>>  	/* Sampling not supported yet */
+
