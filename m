@@ -1,136 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4062D2882DE
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 10:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E70243603C9;
+	Wed,  3 Jun 2026 10:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780482972; cv=none; b=JQ9NNjUiqsyB7dxwGgmf4MpGLqIVEjxozGiQs5wW8ZdcHzQePoj/PVWD/LZSiZxwhjVBnag3gmI1GgnliTtnVsh6ECPyznMi8EVruWyAT6PctDczGLpfqpag6RJXyS9ydwMVxHDBnFlTRuHndQQcXfaVOenXt3BeY1U0cBOG5LE=
+	t=1780483206; cv=none; b=aO/10gZ32oASHcql0c2EkhfXnpuBYLyFFuvpmGFoGErBW96u7OIaHrjXtmzMCfStGqCk1zf44fg7B9+k6x+O26hgAYFkGjqEpwPHHs/g3bgGHxQBatDl6OWOPtEOv62VBsRiYQpXc36Nf16Nt3hJrqhP+ty8XGrOv1Kjy3gtTy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780482972; c=relaxed/simple;
-	bh=8mzVM7/WPaBWQqj0YJfIV5edDYMaCV7mpUo965FOumM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WUSs2fp/WkIb7d0FdJ26Nchtmr8YSW7YtKFW0iU+QmkE2riEGrebH4M0ZYPpjq6nlvJo1tHwPZDoOvouhzB05tHU1Z695SghCiJri8StSySgRbyrhfV9jfSFqWXbxbwXd+ukJFLJtP7e+/sD9hUdKcZT3jb/wiM9pDWvRfgpmKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5v2dedN; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780483206; c=relaxed/simple;
+	bh=SihwoOqvLN2dVrxDnZW1V1LhzIclRCGS0N10tzHH5zQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AKeNY0NjXIJv7EzsMVlK7mNqbYMjOqatjL/qlMgXWV4U6gT6xT4ukgiCo0f9ZSAC24Ep9fWtFe1UBSxIbzwIs/xjI1afKosh/3nKE94y7dxCiOTnZOxmAm+18yvbSleng2TKk2t6FjOjZOONRlIF1XTGPttLBrvpIO7ciJcKqAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Jc/ZgyWf; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5v2dedN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E1221F00893;
-	Wed,  3 Jun 2026 10:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780482971;
-	bh=FO9MUcqi4YqBUDuD+zAwN5DHhxEqU6YLLLTm3gqucbQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Z5v2dedNl/8RE7B4seQD7UxM5t3dKW4DCUIbFhOSQ2vrfkwpw9CfuoekMy+bAy5O3
-	 2TYb4aEAGiFMPHn/qfm+3q63N9Q36DoHVcKGGaNvSeOjSgK0vojFjaCN8ntgZDEDdS
-	 9fQ8kvhGfOLEEqPcL7qvv3KNuDA5GcOm6RqPC0DGgu/rMJrTPQJQiZOE0RJr2GqwGX
-	 c4lyscQ1HOBR6lqs5Ukwkr96v8Egkqd4jRDmM52W4pa8jXLqmxQNs7N19Mg6bB8Hz9
-	 Frul/gl8I2uzy4tM0fXZ5WPYw2Ok2BiQgME9ODX8J56QgcbMCGQiUK8yjV0RePp7q/
-	 1u2YumUDk9SJA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 16/19] perf test cs-etm: Make disassembly test use
- kcore
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260603-james-cs-context-tracking-fix-v3-16-c392945d9ed5@linaro.org>
-References: <20260603-james-cs-context-tracking-fix-v3-16-c392945d9ed5@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 03 Jun 2026 10:36:09 +0000
-Message-Id: <20260603103610.2E1221F00893@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Jc/ZgyWf"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A97749DB;
+	Wed,  3 Jun 2026 03:39:59 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A63DF3F632;
+	Wed,  3 Jun 2026 03:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780483204; bh=SihwoOqvLN2dVrxDnZW1V1LhzIclRCGS0N10tzHH5zQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jc/ZgyWfolNqDI2XS9Gn1c2rmXZo5tXB+CFB82fdYviaZ2httz4yRLRHq3NwUGJGG
+	 zAxaldhaf0IPYhz3/8cqGLynBYVMCuxLV6n0AvQw0Ag4SyExrfBx3PO7doXlz4tl6d
+	 ABdVyvChPTlgyXgwNWeLjsencnjgTPNipq3MA1Ig=
+Date: Wed, 3 Jun 2026 11:40:01 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Paschalis Mpeis <Paschalis.Mpeis@arm.com>,
+	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 02/18] perf test: Add workload-ctl option
+Message-ID: <20260603104001.GP101133@e132581.arm.com>
+References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
+ <20260602-james-cs-context-tracking-fix-v2-2-85b5ce6f55c6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260602-james-cs-context-tracking-fix-v2-2-85b5ce6f55c6@linaro.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The arm-cs-trace-disasm.py script fails to use the explicitly pr=
-ovided kcore file for dynamically loaded kernel modules, silently falling b=
-ack to the unpatched build-id ELF.
---
+On Tue, Jun 02, 2026 at 03:26:44PM +0100, James Clark wrote:
 
-commit fb1d5bc3ba8d47081f18c5b9c0c07af6646b6389
-Author: James Clark <james.clark@linaro.org>
+[...]
 
-perf test cs-etm: Make disassembly test use kcore
+> --- a/tools/perf/Documentation/perf-test.txt
+> +++ b/tools/perf/Documentation/perf-test.txt
+> @@ -69,3 +69,9 @@ OPTIONS
+>  
+>  --list-workloads::
+>  	List the available workloads to use with -w/--workload.
+> +
+> +--workload-ctl=fifo:ctl-fifo[,ack-fifo]::
+> +	Write 'enable' to ctl-fifo before running the workload and 'disable'
+> +	before returning. If ack-fifo is provided, the workload runner waits for
+> +	an 'ack' response after each command. This scopes the recording to only
+> +	the workload if used with 'perf record -D 1 --control ...'.
 
-Hits in modules return empty disassembly with vmlinux as an input to objdum=
-p.
-Make the disassembly test more reliable by always using kcore. And update t=
-he
-comments to say that this is supported by the script.
+This new option doesn't work on its own. I would spell out in explicit
+words that it needs to communicate with perf record session:
 
-> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/per=
-f/scripts/python/arm-cs-trace-disasm.py
-> index ba208c90d6311..8f6fa4a007b42 100755
-> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> @@ -18,29 +18,29 @@ from perf_trace_context import perf_sample_srccode, p=
-erf_config_get
-> =20
->  # Below are some example commands for using this script.
->  # Note a --kcore recording is required for accurate decode
-> -# due to the alternatives patching mechanism. However this
-> -# script only supports reading vmlinux for disassembly dump,
-> -# meaning that any patched instructions will appear
-> -# as unpatched, but the instruction ranges themselves will
-> -# be correct. In addition to this, source line info comes
-> -# from Perf, and when using kcore there is no debug info. The
-> -# following lists the supported features in each mode:
-> +# due to the alternatives patching mechanism. In addition to this,
-> +# source line info comes from Perf, and when using kcore there is
-> +# no debug info. The following lists the supported features in each mode:
->  #
->  # +-----------+-----------------+------------------+------------------+
->  # | Recording | Accurate decode | Source line dump | Disassembly dump |
->  # +-----------+-----------------+------------------+------------------+
->  # | --kcore   | yes             | no               | yes              |
-> -# | normal    | no              | yes              | yes              |
-> +# | normal    | no              | yes (inaccurate) | yes (inaccurate) |
->  # +-----------+-----------------+------------------+------------------+
+  "This option is used to communicate with a perf record session in
+  order to control the recording scope. When specifying this option,
+  the same FIFO path must be specified in the record session via:
 
-[Severity: Medium]
-While this commit advertises kcore support, does arm-cs-trace-disasm.py
-actually use the kcore file for dynamically loaded kernel modules?
+    perf record -D 1 --control=fifo:ctl-fifo[,ack-fifo] ...
 
-Looking at get_dso_file_path() in
-tools/perf/scripts/python/arm-cs-trace-disasm.py, if a module (e.g., [ext4])
-is encountered, it bypasses options.vmlinux completely and attempts to use
-the unpatched ELF from the build-id directory:
+  The perf test sends 'enable' and 'disable' commands through ctl-fifo to
+  control event recording. If 'ack-fifo' is provided, the workload runner
+  waits for an 'ack' response after each command."
 
-	if (dso_name =3D=3D "[kernel.kallsyms]" or dso_name =3D=3D "vmlinux"):
-		if (options.vmlinux):
-			return options.vmlinux;
-		else:
-			return find_vmlinux() if find_vmlinux() else dso_name
+BTW, I'd say the naming "--record-ctl" might be more close to the
+purpose.
 
-	if (dso_name =3D=3D "[vdso]") :
-		append =3D "/vdso"
-	else:
-		append =3D "/elf"
-
-	dso_path =3D os.environ['PERF_BUILDID_DIR'] + "/" + dso_name + "/" + dso_b=
-uild_id + append;
-
-Additionally, if get_dso_file_path() were changed to return the kcore file
-for modules, would process_event() still fail?
-
-process_event() sets dso_vm_start to the module's map start address:
-
-		if (dso =3D=3D "[kernel.kallsyms]" or dso_start =3D=3D 0x400000):
-			dso_vm_start =3D 0
-			map_pgoff =3D 0
-		else:
-			dso_vm_start =3D int(dso_start)
-
-The subsequent read_disam() call then subtracts this from the sample address
-to pass relative file offsets to objdump. This works for module ELFs but
-breaks kcore, which requires absolute virtual addresses.
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260603-james-cs-c=
-ontext-tracking-fix-v3-0-c392945d9ed5@linaro.org?part=3D16
+Thanks,
+Leo
