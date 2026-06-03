@@ -1,156 +1,206 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B5E395DB9
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 09:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA5632B115
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 10:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780479478; cv=none; b=TPD3WGiXtUz6UGJFv68dy7UNkI6OySr5YPqaB9j4WyOFs2/2zTxJHdN8C00siD78P9Z5hUKoMJTASTUZ8mXTng1nDOm+SLZRzpm0YgrTCsld+kK7qQnl79/sshyzhcFcE8/f/mL0riaF49iG+vl0tPakmGxRq8EaJsVHv7WoduQ=
+	t=1780481845; cv=none; b=BdAqWaYqnoHZfqV8U78jcQcMurwbPhrQsJJbzPTJb3dnrDoIQiGMLX1CCoL3QJLroDT/mXDkTHtPdF9Wei9f2rp16a1qf4NnhtC/dgKYvZ9noI8N0ktmg/NeII2OVizRmdpYe+sIScOCFdJY2dn0lFmL0uoU6DomXpKs2ID4pMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780479478; c=relaxed/simple;
-	bh=Np8CcBZEhxg2O4ydf7MKMA0wb/gJykr9B13bJRf7pck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZaniUZh1nzzTZTsZZ8W0Tw89z9misVckCgQNOtvRzvc6ObgPoGwUrtg0IKEyOJQ0QieHygNBPWxfAo0Hmm0ejiYCyp2c03CXafK19YWwx3OW7PYoUPn6NGL7IipjsoMHqKOZMbK4ZAXY5/HkWZC2r9Zw9NdeqVVR1VtVqw5SnGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j7J5miMA; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1780481845; c=relaxed/simple;
+	bh=zsB6b2mSax8ijZe6CEgFqKmviDOUVPzm4axnSMhYsEQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iVRaYDx7fwwwDbAL0OTgTLVWAcrFR1jNJMkK6+ptC/5ewSuOaqZ34q2/UuhrPDahuxLxtjQTId1bfZPoJf4to3vuyRTI089lwZbFpP6YqKBHrxcfY1izIFJ81lxXBZVpzEe0T85VFp5jG7K19Lw7RHTnwiAoAJUjrT+mUo7/CIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=THk3eZJd; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j7J5miMA"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-49041fb8c23so93941265e9.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 02:37:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="THk3eZJd"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49041e84237so4721285e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 03:17:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780479476; x=1781084276; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OPpoGYNnw0et0ze4rIG/H+2lI0/pnXo68Q/0mJto/k4=;
-        b=j7J5miMAuD+FTItruOd5alWPwRwp6YWje97qJT3635lowrA1P+f/npT+t9v9PeZeWA
-         2hOfa9OuX8kgpH5xkdUVRGG4Uqh12Rbu629BGOECwmlZWVArnzkSL78w0kXg8c4kl+J3
-         LrLxU+AuYAzsG0ibGKGyjjCa7PX6S+yePS7mSthjqXk1p9kin3poQF6HmPVnAGvK2snr
-         fkkfb4+P04Bklg/PWFJq32vpS1sqSaFkY7+1Dmd4ueDDKU0UyMZV8RxkyjuSzgvNuBs/
-         u43u5CbuQfdhMlh5UfILLgQwSYh5PBT0Wph4Q7tV/VwrNtXQ6LkUx7+MWCI5riz9S9MM
-         lKjA==
+        d=linaro.org; s=google; t=1780481842; x=1781086642; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y7B6wlqSPvHP4/6Eu04K7r/NtlTz65B+jmw25he2xI0=;
+        b=THk3eZJdWo5qRIXNqAra4V3rLfUC5FA3stNJoe0/oULgaYqUEgVocsgsxae3SbJmM9
+         Y/Fbgqr9QbMB3zQzSdhewnvexi3Aux6iPgaASmdTIunBD716eHl0CgBnWqWFFKVsX5+V
+         cJa6vndrU/ECOwQ6hbaj63P7P7GLrxMWBpssi0s1R8wYPW1y7bBDGQBNhHgv9JscmXcp
+         aCygPYzTrxHsEyHJIaUqfzRfqSoz29Xh/33g/Mk/E98Zm3skaOp2efVVOcaf9Mq5dyr9
+         d9Nv+yckNVpSl/HL79j636PmBCyw+RikzozXPA9KzkfzAKQg4Vb3cFC58LkAZskicjJQ
+         BRXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780479476; x=1781084276;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OPpoGYNnw0et0ze4rIG/H+2lI0/pnXo68Q/0mJto/k4=;
-        b=pxUsNL+sT0Ov16xd0hoxARZYrs84HOdhmNPo8WCg6TY8eDGplQe0nnbzfJHbGFoFUB
-         y/tzPm+u+7ldCiDER2IKg7kAtg1l6k1PX1FKVfclo1409PCNblI6kpJxDdElNlYQJeqA
-         BnRcU7by+dBF+xDQp9xYBfky1FLeNAsfVJylKqhTkBY5TLoaj3f38jf6H1aJ1VZlipGg
-         tan9z1ukXMdUWUPrc2N3ShpgeXmY6s+eKw92bRLqDZOgDXQhVYMFayOXcVPHcxiuoix0
-         qFsaerfE620Lk2RYvMBV7PtF41UgacZLd8o5tL1FgS8ZNJomjHkOjHSbVF6fs776xm6w
-         c0RA==
-X-Gm-Message-State: AOJu0YzwnH7pN+jvBzPDRQhF0Sb1l+52hk3x20Gt33DCFYC3NC1GMvsJ
-	tOTaHEdv97Khn2cgC0uNzdQclPMQ/Y1E/ODdJPQod91p3vNEqJjH+QG+CLYE1Zmzj38=
-X-Gm-Gg: Acq92OFr2eDU1DI3gghcMtAAHSeTNfmKZyuw9rnZ2CWV/pNGDv9J3bKQr/HKGtYsq4g
-	UnecQ9sYBNKCiaHklvjap0Fn8Z0n3IzhosGChl0JCCvw48BgGsBit1NCI+pkrB+vKt8y20Nbesr
-	aWnp54xz6yMPV2d7MZ2zU1TNGCste4AP3jKxaurMHFN4YPO84/7ln8fBu72qH98GY4RFsgVqldG
-	eTWFSMIWWtY5xUPWRqTkONyIVKMTm8Tb8grWDgsWAg7DM+PEeYPwZjJzCjyJDl3uCpYuwhHrhPF
-	qGmRHN/2pxXAf6FK+/sdHpF4C2ZnP9lDoiMafQuvBOAOdwhSwuk+AbYnSipqSrJ6rO76aP1LUUm
-	0K+YDDtfKdWMA+/Eoh9srrmIZGATqcEte5aIS+conIpBNnkbnjBxc86NspnLIUuj0Nhp2qEiwNm
-	AffIxs91FDdjUUsvBVY/uC6yIdJKZzdYKAJxgm5e8=
-X-Received: by 2002:a05:600c:c4b8:b0:490:b189:212d with SMTP id 5b1f17b1804b1-490b60e41dbmr40643465e9.33.1780479475988;
-        Wed, 03 Jun 2026 02:37:55 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b6150bfcsm87868605e9.3.2026.06.03.02.37.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2026 02:37:55 -0700 (PDT)
-Message-ID: <d0f5c130-91a3-4785-8509-81aa54b6ca87@linaro.org>
-Date: Wed, 3 Jun 2026 10:37:54 +0100
+        d=1e100.net; s=20251104; t=1780481842; x=1781086642;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y7B6wlqSPvHP4/6Eu04K7r/NtlTz65B+jmw25he2xI0=;
+        b=HhTn8cRqJhYIKQuYEbSKED3CAbzojsAVb4lrRwzcsrM7z4YyjVFx469exBskNLzGi8
+         spcm+4JqWzWf/L5LjcSSRmTw32t65pfDK7vh+LkcMx3Fsp01/ohK9djjgqoYOXiQo0zK
+         2QDdJiXmC9AUU2bTBVu6XrFFHn5eJVplg3twm/LNo8iyTOvAGRda8EyjaEbAZTp1XDFY
+         aw5HrGWTS0rbjyvIttR785/q9JywEloNcfFop4tkpKb0OpSiOymIgA0P2++Fj3dCgNCW
+         eCESKjOEMgfVB5jusIHtlnEKpkVaJzhRe1F9MLozS+jq4M/G3mCjQ8MaUqjN9ZI4AmWe
+         iA8g==
+X-Forwarded-Encrypted: i=1; AFNElJ8ok9/urEc/AXy36raNRgZnvKcjwJy6+tvfy5gITHd8JdMTW5LbzZ2nAq1YwKSKFC6jkPcP1ov9s0WU5gw+/G9z@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcR5HHSy3z07a1ZSW3beD4GA7GsrsvlLcEK2LnjxHrjg3pbGjB
+	MpJc2Qeqq+JSgEgYnRd+Sp52lJ+pIIlvUNbthU96MAvxNrVaRGxOgfvB9J/1ki7z+d6c+mVOFEw
+	44HoaE1Y=
+X-Gm-Gg: Acq92OGgiB25P6zB3BZppIF09Mw/9RhAa0mrY17fsIMtSErVB7Cfu3fHnXmKjk3iRUE
+	MI4/CrmYziLTbi5uGZrGyKL8DYCbyO9g/F0Ereplb23f3bZbevTXe3uQQ/Rf4HrPVuISfUp86lx
+	W2AHpJdeNtbag6noZQT2RhJNDgFNikHZKZvFRLF6VxQnUlk5rR83cBSU+xvntBH4NAhMyp3aFSI
+	PSeVKBhriam+2AteTfG/OKpg8F3v8YffjzJisjA5POso/oKNORPSXpI+UOf8dsKCQe/zBLc16SF
+	wAH5zDsGrAJFS2HDjD+KQ2511ONNJu6srIlgb4+09kA2M5GU86JKKLu7OmlmPF6bSbs4Wo3GMWc
+	Z0TTNyEh1FeAkj1qkRrhZfFbgW6i99WsdrxlcnCJDmn/vAKyupnFQ8zGKA+VZsEWkGegSrVhD3I
+	2OFmH/q5Ggnrwzx6NONVzCHFNsObYEr5sBB/PeCM4ssj8=
+X-Received: by 2002:a05:600c:8b2a:b0:490:3cf0:8d81 with SMTP id 5b1f17b1804b1-490b614df8dmr33957045e9.13.1780481841724;
+        Wed, 03 Jun 2026 03:17:21 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b63d8205sm38681875e9.11.2026.06.03.03.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2026 03:17:21 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v3 00/19] perf cs-etm: Queue context packets for frontend
+Date: Wed, 03 Jun 2026 11:17:04 +0100
+Message-Id: <20260603-james-cs-context-tracking-fix-v3-0-c392945d9ed5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/18] perf cs-etm: Queue context packets for frontend
-To: Leo Yan <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org, sashiko-reviews@lists.linux.dev
-References: <20260602-james-cs-context-tracking-fix-v2-1-85b5ce6f55c6@linaro.org>
- <20260602144329.A5DFA1F00898@smtp.kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260602144329.A5DFA1F00898@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACD/H2oC/4XNTQrDIBAF4KsE152ithrTVe9RujBmktgfLRokJ
+ eTuNaFQugrM5j0e30wkYrAYyamYSMBko/Uuh8OuIKbXrkOwTc6EUy6pYAJu+okRTD7vBhwHGII
+ 2d+s6aO0IpThWlao1ltiQbLwC5nr1L9ecexsHH97ru8SW9itzuSEnBhSwbiTlyBRX5flhnQ5+7
+ 0NHFjrxH5dHWxzPnBK1MChbIYz84+Z5/gBQaP5BGgEAAA==
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Paschalis Mpeis <Paschalis.Mpeis@arm.com>
+Cc: coresight@lists.linaro.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
+Fix thread tracking when decoding Coresight trace and add a new test for
+it.
 
+The new test is added as a Perf test workload instead of a custom binary
+with its own build system, but this requires a new feature in Perf test
+to pass in control pipes which can enable and disable events. This
+scopes the recording to just the workload and helps to reduce the amount
+of data recorded in tracing tests.
 
-On 02/06/2026 3:43 pm, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Incorrect CPU mode attribution in `cs_etm__synth_instruction_sample()` during flush due to relying on `tidq->packet->el` instead of the exception level belonging to the instructions being sampled.
-> --
-> 
-> commit b9c32b9ed06ee8adb88b0b63943c694b4108e629
-> Author: James Clark <james.clark@linaro.org>
-> 
-> perf cs-etm: Queue context packets for frontend
-> 
-> This commit adds a CS_ETM_CONTEXT packet to carry thread ID and exception
-> level to the frontend. It separates memory access functions between frontend
-> and decoder, and removes prev_packet_thread tracking.
-> 
-> Closes: https://lore.kernel.org/linux-perf-users/20260515021135.1729028-1-aaupov@meta.com/
-> 
->> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
->> index 40c6ddfa8c8d9..524e2a6feba8e 100644
->> --- a/tools/perf/util/cs-etm.c
->> +++ b/tools/perf/util/cs-etm.c
-> 
-> [ ... ]
-> 
->> @@ -1588,15 +1632,15 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->>   
->>   	perf_sample__init(&sample, /*all=*/true);
->>   	event->sample.header.type = PERF_RECORD_SAMPLE;
->> -	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr, tidq->el);
->> +	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr, tidq->packet->el);
-> 
-> [Severity: Medium]
-> Does this misattribute guest traces to the host when synthesizing samples
-> during a flush?
-> 
-> When cs_etm__flush() or cs_etm__end_block() calls
-> cs_etm__synth_instruction_sample(), it generates samples for the execution
-> range of tidq->prev_packet. In these scenarios, tidq->packet holds a
-> CS_ETM_DISCONTINUITY packet (or a stale packet) where the exception level
-> is ocsd_EL_unknown.
-> 
-> Passing this unknown EL into cs_etm__cpu_mode() causes guest trace execution
-> from before the discontinuity to be misattributed to the host machine
-> (PERF_RECORD_MISC_KERNEL or PERF_RECORD_MISC_USER) in the profile statistics.
-> 
+With this new feature we can re-write all of the Coresight tests to make
+use of it and remove the remaining binaries which fixes the following
+issues:
 
-Will add a packet argument to cs_etm__synth_instruction_sample() as it's 
-used with both previous and current packets. Similar to the memory 
-access callback.
+ * They didn't work in out of source builds
+ * A lot of the tests unnecessarily required root and didn't skip
+   without it
+ * They were mainly qualitative tests which didn't look for specific
+   behavior
 
-The only strange thing this leaves is flags always uses the previous packet:
+Most importantly, the long build and runtime has been reduced. On a
+Radxa Orion O6, unroll_loop_thread.c took 37s to compile which is longer
+than the entire Perf build. Now the build time is negligible and the
+before and after test runtimes for all the Coresight tests are:
 
-   sample.flags = tidq->prev_packet->flags;
+          |   N1SDP   |   Orion O6
+  -----------------------------------
+  Before  |   4m  0s  |    14m 49s
+  After   |      26s  |        56s
+  -----------------------------------
 
-This makes sense for cs_etm__synth_branch_sample() but maybe not for 
-cs_etm__synth_instruction_sample() but it's a bit hard to tell.
-cs_etm__set_sample_flags() seems to assign to both prev and current for 
-different reasons and it's impossible to understand.
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+Changes in v3:
+- Minor sashiko comments
+  - Close some more pipes
+  - Fix warning messages
+  - Error handling improvements
+- Pass packet into cs_etm__synth_instruction_sample()
+- Fixup stale comment (Leo)
+- Link to v2: https://lore.kernel.org/r/20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org
 
-This isn't a new issue introduced by these changes, so I'll leave it for 
-the full re-write to fix or clarify.
+Changes in v2:
+- Add --workload-ctl option to Perf test
+- Re-write all the Coresight tests and speed them up
+- Pass packet to memory access function so frontend can use either the
+  previous or current packet's EL
+- Link to v1: https://lore.kernel.org/r/20260526-james-cs-context-tracking-fix-v1-0-ebd602e18287@linaro.org
 
+---
+James Clark (19):
+      perf cs-etm: Queue context packets for frontend
+      perf test: Add workload-ctl option
+      perf test: Add a workload that forces context switches
+      perf test cs-etm: Test process attribution
+      perf test: Add deterministic workload
+      perf test cs-etm: Replace unroll loop thread with deterministic decode test
+      perf test cs-etm: Remove asm_pure_loop test
+      perf test cs-etm: Replace memcpy test with raw dump stress test
+      perf test: Add named_threads workload
+      perf test cs-etm: Test decoding for concurrent threads test
+      perf test cs-etm: Remove duplicate branch tests
+      perf test cs-etm: Skip if not root
+      perf test cs-etm: Reduce snapshot size
+      perf test cs-etm: Speed up basic test
+      perf test cs-etm: Remove unused Coresight workloads
+      perf test cs-etm: Make disassembly test use kcore
+      perf test cs-etm: Add all branch instructions to test
+      perf test cs-etm: Speed up disassembly test
+      perf test cs-etm: Move existing tests to coresight folder
 
->>   	event->sample.header.size = sizeof(struct perf_event_header);
->>   
->>   	/* Set time field based on etm auxtrace config. */
->>   	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
->>   
->>   	sample.ip = addr;
->> -	sample.pid = thread__pid(tidq->thread);
->> -	sample.tid = thread__tid(tidq->thread);
-> 
-> [ ... ]
-> 
+ Documentation/trace/coresight/coresight-perf.rst   |  78 +------
+ MAINTAINERS                                        |   2 -
+ tools/perf/Documentation/perf-test.txt             |  18 +-
+ tools/perf/Makefile.perf                           |  14 +-
+ tools/perf/scripts/python/arm-cs-trace-disasm.py   |  20 +-
+ tools/perf/tests/builtin-test.c                    | 187 +++++++++++++++-
+ tools/perf/tests/shell/coresight/Makefile          |  29 ---
+ .../perf/tests/shell/coresight/Makefile.miniconfig |  14 --
+ tools/perf/tests/shell/coresight/asm_pure_loop.sh  |  22 --
+ .../tests/shell/coresight/asm_pure_loop/.gitignore |   1 -
+ .../tests/shell/coresight/asm_pure_loop/Makefile   |  34 ---
+ .../shell/coresight/asm_pure_loop/asm_pure_loop.S  |  30 ---
+ .../tests/shell/coresight/concurrent_threads.sh    |  45 ++++
+ .../tests/shell/coresight/context_switch_thread.sh |  69 ++++++
+ tools/perf/tests/shell/coresight/deterministic.sh  |  71 +++++++
+ .../tests/shell/coresight/memcpy_thread/.gitignore |   1 -
+ .../tests/shell/coresight/memcpy_thread/Makefile   |  33 ---
+ .../shell/coresight/memcpy_thread/memcpy_thread.c  |  80 -------
+ .../tests/shell/coresight/memcpy_thread_16k_10.sh  |  22 --
+ .../perf/tests/shell/coresight/raw_dump_stress.sh  |  48 +++++
+ .../shell/{ => coresight}/test_arm_coresight.sh    |  43 ++--
+ .../{ => coresight}/test_arm_coresight_disasm.sh   |  17 +-
+ .../tests/shell/coresight/thread_loop/.gitignore   |   1 -
+ .../tests/shell/coresight/thread_loop/Makefile     |  33 ---
+ .../shell/coresight/thread_loop/thread_loop.c      |  85 --------
+ .../shell/coresight/thread_loop_check_tid_10.sh    |  23 --
+ .../shell/coresight/thread_loop_check_tid_2.sh     |  23 --
+ .../shell/coresight/unroll_loop_thread/.gitignore  |   1 -
+ .../shell/coresight/unroll_loop_thread/Makefile    |  33 ---
+ .../unroll_loop_thread/unroll_loop_thread.c        |  75 -------
+ .../tests/shell/coresight/unroll_loop_thread_10.sh |  22 --
+ tools/perf/tests/shell/lib/coresight.sh            | 134 ------------
+ tools/perf/tests/tests.h                           |   3 +
+ tools/perf/tests/workloads/Build                   |   4 +
+ tools/perf/tests/workloads/context_switch_loop.c   | 101 +++++++++
+ tools/perf/tests/workloads/deterministic.c         |  39 ++++
+ tools/perf/tests/workloads/named_threads.c         | 109 ++++++++++
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  21 +-
+ tools/perf/util/cs-etm.c                           | 234 ++++++++++++---------
+ tools/perf/util/cs-etm.h                           |   8 +-
+ 40 files changed, 889 insertions(+), 938 deletions(-)
+---
+base-commit: 5f0ca6b80b12bab1ce06839cdffb6148bb650ff4
+change-id: 20260515-james-cs-context-tracking-fix-754998bae7ed
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
