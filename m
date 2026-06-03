@@ -1,66 +1,50 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738882BD030
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 16:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351BD3EBF36;
+	Wed,  3 Jun 2026 16:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780503183; cv=none; b=lgZZE5X6YDkczuKjlWS4GXv3NcrWHz5DC2gT1TtHtMKWJBBubMN1+v0tmL1dYSdcc6qsQDM94PHW8GsAER0qDQyj5Vv+xvYsPVQ3IyLFxJ+0/ljq3igP2xfrOVpWypJpltoknOh82azHsxNN9ADxeK4+CXTT+5JPRkoV+Vmrkp4=
+	t=1780504854; cv=none; b=qleAPP+/i6uUoG0pxbft9T6qEkFS4QUii98fW3CIA+zEcHxRbzxEbE7IzFNlJWyNh2OO1UH32MXKPV00c+6uIGt3yVMWaBzipTbvBiyikMe0iD9IdL0xbWPC/vw73DFTBv7ROt7FtS4SRKjtnQK/vn6TK+ExMf2ci8O0UMM5LbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780503183; c=relaxed/simple;
-	bh=+GWdI5GaapuuPFkF+1pWn80E7RwfKlyV8xsbbbZwENQ=;
+	s=arc-20240116; t=1780504854; c=relaxed/simple;
+	bh=zGa+XPZ4moq1jHHI/ws/k3zHMGluBYek8AtcNPTxIsI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jqWq9Ii5GTKlRt04A5bsMkIFkK3wbmxA9p/EdJeMMj9znKt3vBBH8lB2SvFsmOG2dWyi39kxiC7f406cCzPIQ2Eff4cDhIgDL4w3lpzqMTqoVAUHAbkohfihLlNm2VeasGTd420pP2i5+eVlYocI50wpqXr0YJGNvqw+yNkvOhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=riatndP2; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=VjBZyGLUGbZMLHD1XLWK65/WurBroeKIK4FqJhDEc2yqewXA+ii+gttA01Oauj56+jP+XbiCDvhHm/oRlCclugSVuAONyPR/pcNQSZL5Re4YYf9GAHjrwT+RESMXDb+kk6DL4z4KLbSTYx+C0rAMOTuNaBGR919V1wk2YifCEF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9Cq4XZi; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="riatndP2"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-490b3e03939so8586735e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 09:13:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780503181; x=1781107981; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UKULipB408ValDz8ua2CahzCEdZz52u0U+4kqUbz4QE=;
-        b=riatndP2zNdhheLMEwL7VGYbzX2Iy7YfvM/aw7VA5Bofg20hjX1FxB5C0BfjvAtQb+
-         VghOksLuXAq6U5KKp6YTDoTGrV3rY9QdtU/fyefANqSNBbuGk2Sz3Y6mNOpfyTY3B3rW
-         7VNppayma/4m8Q5dLSH8KvFAbRZgs+a9P+DyIm4LTiyOuGUShFyVcCBgaUZ6Aewy6RZu
-         aSAI8z3iVVp0YERQvmUtf7N6EJu6mPe5apBzB9RplthQJEtIUyay+uirxjr3p2PC72zF
-         e/vO+dWtZXa9DAk8d9wcHTcKK6O3vMZYDLy05oaVG6L7KmA388uvEPQcRNVuP1leW8+o
-         8N7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780503181; x=1781107981;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UKULipB408ValDz8ua2CahzCEdZz52u0U+4kqUbz4QE=;
-        b=lL4AcVDmW2suGcCdp1PcNgm7C8WnDynT5YYPgyL12je7ZPanPCMnh69enHHciGXjXW
-         NK8Oqv/ZZsDhQhhuPV8hP0+m0MImPTQMf2i1vPrATEsNuWsgAUFk0ge24uGm39IrANId
-         boFT+6tP86LHP7JgzLHM9lyHHbLixZmzTALrNlZlxqByh2oH8A+NOaru+j9KtT7KEfFq
-         yTMM6PfvMBIqTTj5Ic4XPAs456zG5LzlyS6pxVrhc4VVPPQTx8IGnAtvo5kbeh0O9MK1
-         oBLhBHJUmNgxLtCw/k9SFwJIcNiecJ4/JDIhg5v9Unnh7qkH6EcXCz90lW0efFhSyWer
-         8+Yw==
-X-Forwarded-Encrypted: i=1; AFNElJ+dbrMoZa0e/JdqV71kfSzrDnRshFujdWM6A6jm5j0FoiWVrfW9i7ZRzsuFPVKzV2h2nisNsOQF2PwzEXQU6cc+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYOjKAeu+n6JBHD2CBrkv/6tW8oZOmCDP9WqRiDRRdiXUEKGuI
-	kNN9sd2hBHEJNQuypAi0l78tHZNoIisCYKOSsCu7K+6GwzjuiCrlx7meCAH+ShjUfCw=
-X-Gm-Gg: Acq92OGGIR0xviiFtWk0d70MFvucL4bdoshlhzJyGewsn84R72XoMnlBua8Rt/OIV+N
-	pYt4UAi2Tf1E+nuqwx8NbS/L5dCdaUqbvf7Eyt2h6ws0aqFPTdm2FCaoZS8+oEmjrgM9XWM2g80
-	AUVUXTgp3p6ve0d4M/toWJm3jg4yyJtyRwQ+yCg3XrEKqrNpcO4rGYuJc4adugj904Sp8unNrxG
-	7xdw3rOjSvlTosuJJBpyxIGR3y+5E2bzU7agE196PDlqElCXChxAwbd3FjZ3hufpdXPhMZKQKW2
-	wqKVFRbvsyaVUXg/xw4rdTegBUH/Ju8f4Au86MS0yjGqBRtErbOokohSCQTdT0vPDvP5HWrkqc6
-	1i/N85ZUDsC12bq8rFr5ap+AoIuMfm3ZVwchdEYsI0bUmthxaaHjyLgcZnDG4j68xS1jazvvqYa
-	5HNs8Ke0eji41yegLL5gu1qPuGMMRj091JoJxSPbY=
-X-Received: by 2002:a05:600c:810b:b0:490:8b0b:d3b1 with SMTP id 5b1f17b1804b1-490bc4f9846mr622895e9.12.1780503180885;
-        Wed, 03 Jun 2026 09:13:00 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b7a7cb85sm70950515e9.1.2026.06.03.09.12.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2026 09:13:00 -0700 (PDT)
-Message-ID: <5e29907a-2533-4540-833f-977c5f0fb90b@linaro.org>
-Date: Wed, 3 Jun 2026 17:12:59 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9Cq4XZi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780504852; x=1812040852;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zGa+XPZ4moq1jHHI/ws/k3zHMGluBYek8AtcNPTxIsI=;
+  b=m9Cq4XZi4ecLe0ysnMonqeUp4jejKLUKFH0tyJjwifzHR6s2zOAT2j6J
+   z9kfPwJ7VcgnKbX8aPJ+MFugfo42UgUI5FvNt0lkK9qFm2g73GsnG24HV
+   z3aOSzJhlWK91UwQkzwDCh1AP/gJmvMNBLLkcTJxc1GuooVYSehT08SNf
+   ytF0wnxUXTfLjN9f5G9JvVWbzc3iynCqxdWMCxjsYgvCO6UGkSYQKWYUR
+   +/yAYOKqqOoHe3sfw6gsGeQQ9MFPFFKrM5cCaWf0GfhpSXVcGqYhwDkhG
+   lxu+JBqj7A9cfXpQeA6AG67rxA1ceJpnL2VnwjQ7BAV5GVh2/HcHVbDmB
+   g==;
+X-CSE-ConnectionGUID: Q2YkYLtWSlqaXx9w3nyNLA==
+X-CSE-MsgGUID: tlXz3/D6TRCEfv1ZIRVuJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="98894822"
+X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
+   d="scan'208";a="98894822"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 09:40:52 -0700
+X-CSE-ConnectionGUID: ogl5GxtYRS24Vx+XUQsfZQ==
+X-CSE-MsgGUID: zvEmeS4PSTO7JpygEwuUCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
+   d="scan'208";a="268193312"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 09:40:49 -0700
+Message-ID: <254ffa5b-58b7-4eb4-b944-a59c0bc67f2a@intel.com>
+Date: Wed, 3 Jun 2026 11:40:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,86 +52,187 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/18] perf test: Add named_threads workload
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Paschalis Mpeis <Paschalis.Mpeis@arm.com>, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org
-References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
- <20260602-james-cs-context-tracking-fix-v2-9-85b5ce6f55c6@linaro.org>
- <20260603145415.GY101133@e132581.arm.com>
+Subject: Re: [PATCH V2 7/8] perf/x86/intel/uncore: Fix uncore_box ref/unref
+ ordering on CPU hotplug
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260601170114.173359-1-zide.chen@intel.com>
+ <20260601170114.173359-8-zide.chen@intel.com>
+ <74ab79eb-57c8-4a63-b401-b56b0483a5a5@linux.intel.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260603145415.GY101133@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <74ab79eb-57c8-4a63-b401-b56b0483a5a5@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 03/06/2026 3:54 pm, Leo Yan wrote:
-> On Tue, Jun 02, 2026 at 03:26:51PM +0100, James Clark wrote:
+On 6/2/2026 9:32 PM, Mi, Dapeng wrote:
 > 
->> +#define DEFINE_THREAD(n)						\
->> +noinline void *named_threads_thread##n(void *arg __maybe_unused)	\
->> +{									\
->> +	pthread_setname_np(pthread_self(), "thread" #n);		\
->> +	for (int i = 0; i < iterations; i++)				\
->> +		named_threads_work *= 3;				\
->> +									\
->> +	return NULL;							\
->> +}
+> On 6/2/2026 1:01 AM, Zide Chen wrote:
+>> In uncore_event_cpu_online(), uncore_box_ref() was called before
+>> uncore_change_context().  uncore_box_ref() gates on box->cpu >= 0,
+>> but box->cpu is still -1 at that point because uncore_change_context()
+>> has not run yet.  As a result, the box is never initialized on the
+>> first CPU to come online in a die, leaving it permanently
+>> uninitialized in the single-CPU-per-die case.
+>>
+>> Thus, box->refcnt is one count below the true value, and in the CPU
+>> offline path, the box will be torn down on the second-to-last CPU.
+>>
+>> In uncore_event_cpu_offline(), uncore_box_unref() was called after
+>> uncore_change_context(), so box->cpu is already -1 when the collector
+>> CPU goes offline, which prevents it from tearing down the box.
+>>
+>> Fix by swapping the call order in both paths so that
+>> uncore_box_{ref,unref}() runs at the point where box->cpu reflects
+>> the correct context.
+>>
+>> Fixes: c74443d92f68 ("perf/x86/uncore: Support per PMU cpumask")
+>> Reviewed-by: Ian Rogers <irogers@google.com>
+>> Signed-off-by: Zide Chen <zide.chen@intel.com>
+>> ---
+>>  arch/x86/events/intel/uncore.c | 50 ++++++++++++++++------------------
+>>  1 file changed, 23 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+>> index f2cb3fde2dda..6d710aef52ac 100644
+>> --- a/arch/x86/events/intel/uncore.c
+>> +++ b/arch/x86/events/intel/uncore.c
+>> @@ -1577,9 +1577,15 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+>>  {
+>>  	int die, target;
+>>  
+>> +	/* Clear the references */
+>> +	die = topology_logical_die_id(cpu);
+>> +	uncore_box_unref(uncore_msr_uncores, die);
+>> +	uncore_box_unref(uncore_mmio_uncores, die);
+>> +
+>>  	/* Check if exiting cpu is used for collecting uncore events */
+>>  	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
+>> -		goto unref;
+>> +		return 0;
+>> +
+>>  	/* Find a new cpu to collect uncore events */
+>>  	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
+>>  
+>> @@ -1592,16 +1598,10 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+>>  	uncore_change_context(uncore_msr_uncores, cpu, target);
+>>  	uncore_change_context(uncore_mmio_uncores, cpu, target);
+>>  	uncore_change_context(uncore_pci_uncores, cpu, target);
+>> -
+>> -unref:
+>> -	/* Clear the references */
+>> -	die = topology_logical_die_id(cpu);
+>> -	uncore_box_unref(uncore_msr_uncores, die);
+>> -	uncore_box_unref(uncore_mmio_uncores, die);
+>>  	return 0;
+>>  }
+>>  
+>> -static int allocate_boxes(struct intel_uncore_type **types,
+>> +static void allocate_boxes(struct intel_uncore_type **types,
+>>  			 unsigned int die, unsigned int cpu)
+>>  {
+>>  	struct intel_uncore_box *box, *tmp;
+>> @@ -1618,8 +1618,10 @@ static int allocate_boxes(struct intel_uncore_type **types,
+>>  			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
+>>  				continue;
+>>  			box = uncore_alloc_box(type, cpu_to_node(cpu));
+>> -			if (!box)
+>> +			if (!box) {
+>> +				uncore_pmu_set_broken(pmu);
+>>  				goto cleanup;
+>> +			}
+>>  			box->pmu = pmu;
+>>  			box->dieid = die;
+>>  			list_add(&box->active_list, &allocated);
+>> @@ -1630,14 +1632,13 @@ static int allocate_boxes(struct intel_uncore_type **types,
+>>  		list_del_init(&box->active_list);
+>>  		box->pmu->boxes[die] = box;
+>>  	}
+>> -	return 0;
+>> +	return;
+>>  
+>>  cleanup:
+>>  	list_for_each_entry_safe(box, tmp, &allocated, active_list) {
+>>  		list_del_init(&box->active_list);
+>>  		kfree(box);
+>>  	}
+>> -	return -ENOMEM;
+>>  }
+>>  
+>>  static int uncore_box_ref(struct intel_uncore_type **types,
+>> @@ -1646,11 +1647,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
+>>  	struct intel_uncore_type *type;
+>>  	struct intel_uncore_pmu *pmu;
+>>  	struct intel_uncore_box *box;
+>> -	int i, ret;
+>> -
+>> -	ret = allocate_boxes(types, die, cpu);
+>> -	if (ret)
+>> -		return ret;
+>> +	int i;
+>>  
+>>  	for (; *types; types++) {
+>>  		type = *types;
+>> @@ -1666,27 +1663,26 @@ static int uncore_box_ref(struct intel_uncore_type **types,
+>>  
+>>  static int uncore_event_cpu_online(unsigned int cpu)
+>>  {
+>> -	int die, target, msr_ret, mmio_ret;
+>> +	int die, target;
+>>  
+>>  	die = topology_logical_die_id(cpu);
+>> -	msr_ret = uncore_box_ref(uncore_msr_uncores, die, cpu);
+>> -	mmio_ret = uncore_box_ref(uncore_mmio_uncores, die, cpu);
+>> +	allocate_boxes(uncore_msr_uncores, die, cpu);
+>> +	allocate_boxes(uncore_mmio_uncores, die, cpu);
 > 
->> +static int named_threads(int argc, const char **argv)
->> +{
->> +	pthread_t threads[MAX_THREADS];
->> +	int nr_threads = 1;
->> +	int err = 0;
->> +
->> +	if (argc > 0)
->> +		nr_threads = atoi(argv[0]);
->> +
->> +	if (nr_threads <= 0 || nr_threads > MAX_THREADS) {
->> +		fprintf(stderr, "Error: num threads must be 1 - %d\n", MAX_THREADS);
->> +		return 1;
+> allocate_boxes() are moved to uncore_event_cpu_online() from
+> uncore_box_ref(). It's a significant and good change since PCI uncore PMUs
+> doesn't call allocate_boxes(), but the commit message doesn't mention this.
+> We'd better extract this change to a separate patch which would make the
+> changes clearer. Thanks.
+
+All the functions involved in this patch are not called in PCI PMUs, and
+the call graph is not complicated with only one or two callers for each
+of them.
+
+Splitting it into two patches may be overkill; additionally, it may lose
+the big picture and make it harder to understand the overall flow.
+> Others look good to me.
+> 
+> 
+>>  
+>>  	/*
+>>  	 * Check if there is an online cpu in the package
+>>  	 * which collects uncore events already.
+>>  	 */
+>>  	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
+>> -	if (target < nr_cpu_ids)
+>> -		return 0;
+>> -
+>> -	cpumask_set_cpu(cpu, &uncore_cpu_mask);
+>> -
+>> -	if (!msr_ret)
+>> +	if (target >= nr_cpu_ids) {
+>> +		cpumask_set_cpu(cpu, &uncore_cpu_mask);
+>>  		uncore_change_context(uncore_msr_uncores, -1, cpu);
+>> -	if (!mmio_ret)
+>>  		uncore_change_context(uncore_mmio_uncores, -1, cpu);
+>> -	uncore_change_context(uncore_pci_uncores, -1, cpu);
+>> +		uncore_change_context(uncore_pci_uncores, -1, cpu);
 >> +	}
 >> +
->> +	if (argc > 1)
->> +		iterations = atoi(argv[1]);
->> +
->> +	if (iterations < 0) {
->> +		fprintf(stderr, "Error: iterations must be non-negative\n");
->> +		return 1;
->> +	}
->> +
->> +	for (int i = 0; i < nr_threads; i++) {
->> +		int ret;
->> +
->> +		ret = pthread_create(&threads[i], NULL, thread_fns[i], NULL);
-> 
-> Just curious this can be simplified to a thread function, like:
-> 
->    noinline void *named_thread(void *arg)
->    {
->          char name[16];
-> 
->          snprintf(name, sizeof(name), "thread%d", int(arg));
-> 
->    	pthread_setname_np(pthread_self(), name);
->          ...
->    	return NULL;
->    }
-> 
-> Thanks,
-> Leo
-
-Only if you don't want to check for symbols as well. I thought if we 
-were going to spawn a load of threads and look for thread names we might 
-as well check that the symbols match at the same time.
-
-If all of the threads run the same function you can't do that.
+>> +	uncore_box_ref(uncore_msr_uncores, die, cpu);
+>> +	uncore_box_ref(uncore_mmio_uncores, die, cpu);
+>>  	return 0;
+>>  }
+>>  
 
