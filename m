@@ -1,308 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BF03D5668;
-	Wed,  3 Jun 2026 15:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3DE3D75B4
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 15:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780501605; cv=none; b=j94gcv8fdDJQZy4QLbqXafcX4SWgLby7A+9WOg4tuvFanHl6Icem1k+SLv7ddCtPhgcMgkf1OtWey9ClyN8fxsnKKGKwuHkDsTTqExrVmmtgBGtfjTC9ByREBxs/OzGkxqNG6MRcb37O9iw4SW2rtMz4bU3zCdfOxPlx8SkozOM=
+	t=1780502019; cv=none; b=ANInNkeZBoD2G9/nWZBdWpeJH2EyCiT5u31BVsJ3IxH6fpNVvOdLRAFiNMQh9rOD1Aj+Ok3Q4WI70ewlOVPmsWrucvwEyAII+wRBDQS+5c08lhDBOD3bmYhztNs9ZAmFl1AA/6Gt64hAmWWdY0o1jGzW6GgQ7hA6aGJfEUmU0cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780501605; c=relaxed/simple;
-	bh=qKUvVpmZ9+2F1zLPw5W6Dmsk3oelJZ0kl7yspxUEqSs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qSF72B5C2ICVPqauwcLPwa7hqVI/Glqw3Je6ddV5WDQbjacrVx8vNlQBj29k3tqwp5zOuhSE25Yy7FIuiBqN6Ig6kOxftAh5BMUvHrZRBavPlcPExjuvCatGXHLtrJ80v42AjB4tzobJ8K+Yj4NIunM9z/FV40hx0xNV1nmsmHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jZr+t/+3; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1780502019; c=relaxed/simple;
+	bh=aqM/ZK1m7bst4Gaeu3ZCgMlwUZBT1/ddqO119vvNsa8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=SvT2Lm8d9GYWcbY9+c4UmF76q5Rq8Hfgnp9RA2STuwzJ/qRWVQ2X1HtLUxgFknAK6OpgfG0ZhlGVkHG/GnFhCa98nJ4WwVa77N7Zpc4g+7Ijbh7P0UXhnhO3ts3bR6CboiUpqfl6V504SNSV6lOFlx0KOBumQgqfcC/q10fFvls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjAvoxg2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jZr+t/+3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780501600; x=1812037600;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qKUvVpmZ9+2F1zLPw5W6Dmsk3oelJZ0kl7yspxUEqSs=;
-  b=jZr+t/+3IwjZB5sOewSsyjgMbyp6wEIdj+RjavmK6+bOk944e1daUByl
-   trZeH63/gkk4A2ohWnnbsrersEy+EHddx6G/7FdbGZodbZbwDkCSxclxt
-   aqT6n6FClCHVZiSEEPxpLX3aXL18JuqckkXTYr+oamf0ERAyhAVN6ILDs
-   /2inUsvN9WrVo153QscRkD2CoOs6B84sFAL/BHRkO32o6FqltTEuCtLBA
-   plKHH8E8bzgYcX/8+GzuF1SOTTdnmJ/hjzMyJtETtxoMZoK+G3jmoKe6I
-   NqovzZ+vRDb+zNsMmUHDUkKPRiFBOm61LwUxSiaIC+kJTgOZWUNErjXJr
-   w==;
-X-CSE-ConnectionGUID: 8X1JAENvR6eYrMdkeZcp0w==
-X-CSE-MsgGUID: B1+6Vp3WSU+MFl62mLwmWA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="91890309"
-X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
-   d="scan'208";a="91890309"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 08:46:39 -0700
-X-CSE-ConnectionGUID: EL4AfA1RTJCm+BpfxBNCfA==
-X-CSE-MsgGUID: wY2b4CaxR8mHQSCY5F9zfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
-   d="scan'208";a="267940020"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 08:46:38 -0700
-Message-ID: <194d0173-dd05-4392-9dfa-26175bc71fb4@intel.com>
-Date: Wed, 3 Jun 2026 10:46:37 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjAvoxg2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235291F00898;
+	Wed,  3 Jun 2026 15:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780502018;
+	bh=KrS6H8i7CjNoIIiKOXn+MXVFgIC9N0CKmTlkwUocQxA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SjAvoxg2akaK7tnRCVCUS/FCTgdZa6+/cAeNVUxJ+7o1+60/zAyJjZonmgx8+4t6Z
+	 OSgZz6VgHFRrvEICiBWDZQzKoElTL9SXjZs3nM1zAuIlXYzhlYu+xbAVCGhB3vk0T1
+	 KndDOfKN/h/9x2Mkv4+VN8f2veysoPl80YhBXz/ILTU57eCrO2UDmaMeQ9tLDjMohW
+	 VouXDYZ2HEbYzkCahvt07G1QnKtiBF0NYH3P/kkAIyuWpMY1YsuAXWJnLdT8OKubnu
+	 rZ9Bd6f59eZ5LUh5jvc3UNKaW7ynJNxHFtUs7DVo9QA0NcKFMg/Q5pYPwa9taHGHTp
+	 TCipcJrsMz3tw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on
+ Graviton5
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aviv Bakal" <avivb@amazon.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260603150025.30980-3-avivb@amazon.com>
+References: <20260603150025.30980-3-avivb@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 03 Jun 2026 15:53:35 +0000
+Message-Id: <20260603155337.235291F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 6/8] perf/x86/intel/uncore: Introduce PMU flags and
- broken state
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260601170114.173359-1-zide.chen@intel.com>
- <20260601170114.173359-7-zide.chen@intel.com>
- <368ffaea-51d4-4e08-86a4-9b7d5dbc736c@linux.intel.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <368ffaea-51d4-4e08-86a4-9b7d5dbc736c@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
+New issues:
+- [High] The `arm_cmn_graviton5_dtc_domain` function computes a DTC domain =
+index without upper bounds, which can exceed the `CMN_MAX_DTCS` limit and c=
+ause memory corruption.
+- [High] The Graviton5 workaround assigns the XP's logical ID to the DTC no=
+de's logical ID, breaking the domain-based sorting order and causing DTC re=
+sources to be assigned incorrectly.
 
-On 6/2/2026 9:13 PM, Mi, Dapeng wrote:
-> 
-> On 6/2/2026 1:01 AM, Zide Chen wrote:
->> Replace the boolean 'registered' field in intel_uncore_pmu with an
->> unsigned long 'flags' field, and add a PMU_BROKEN flag to track box
->> setup failures. Broken flag is sticky, means it won't be cleared
->> unless module reload or system reboot.
->>
->> Broken PMUs are skipped in the CPU hotplug and box allocation paths.
->>
->> When any box fails to initialize, the PMU is marked broken.  Broken
->> PMUs reject new event assignments and skip future box setup attempts.
->> If the PMU was already registered, it remains so to avoid disrupting
->> in-flight events on other boxes.
->>
->> Signed-off-by: Zide Chen <zide.chen@intel.com>
->> ---
->> v2:
->> - Make the broken flag sticky by clear_bit() in uncore_pmu_unregister()
->> other than zeroing out pmu->flag.
->> - In uncore_change_type_ctx(), don't stop CPU migration on broken PMU
->>   for in-flight events.  (Sashiko).
->> - Use box->cpu == -1 to identify inactive boxes that don't need
->>   migration, no need to check uncore_die_has_box(), which is incomplete.
->> ---
->>  arch/x86/events/intel/uncore.c     | 44 ++++++++++++++++++++++--------
->>  arch/x86/events/intel/uncore.h     | 13 ++++++++-
->>  arch/x86/events/intel/uncore_snb.c |  2 +-
->>  3 files changed, 46 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->> index 283e41933ba7..f2cb3fde2dda 100644
->> --- a/arch/x86/events/intel/uncore.c
->> +++ b/arch/x86/events/intel/uncore.c
->> @@ -757,7 +757,7 @@ static int uncore_pmu_event_init(struct perf_event *event)
->>  
->>  	pmu = uncore_event_to_pmu(event);
->>  	/* no device found for this pmu */
->> -	if (!pmu->registered)
->> +	if (!uncore_pmu_available(pmu))
->>  		return -ENOENT;
->>  
->>  	/* Sampling not supported yet */
->> @@ -953,16 +953,18 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
->>  
->>  	ret = perf_pmu_register(&pmu->pmu, pmu->name, -1);
->>  	if (!ret)
->> -		pmu->registered = true;
->> +		uncore_pmu_set_registered(pmu);
->>  	return ret;
->>  }
->>  
->>  static void uncore_pmu_unregister(struct intel_uncore_pmu *pmu)
->>  {
->> -	if (!pmu->registered)
->> +	if (!uncore_pmu_registered(pmu))
->>  		return;
->>  	perf_pmu_unregister(&pmu->pmu);
->> -	pmu->registered = false;
->> +
->> +	/* Keep PMU_BROKEN_BIT stick. */
->> +	uncore_pmu_clear_registered(pmu);
-> 
-> Why to set PMU_BROKEN_BIT to a stick bit and doesn't clear it when
-> unregistering the PMU? Per my understanding, there is no active boxes when
-> uncore_pmu_unregister() is called, seem all flags can be cleared. When the
-> new CPU or PCI device are hot plug-in again, it may be a new device or the
-> old issue which leads to the PMU can't be initialized has been fixed, the
-> uncore PMU can work correctly, the PMU_BROKEN_BIT should be set any more.
+Pre-existing issues:
+- [High] Lack of bounds checking on `cmn->num_dtcs` allows a `memset()` cal=
+l to overflow the `dtc_idx` array.
+--
 
-Woops, a typo here: stick->sticky.
+commit fd0610a07c973430036fe29d5eab5bfbb5c0eb4c
+Author: Aviv Bakal <avivb@amazon.com>
 
-Let's examine a theoretical flow for a particular PMU:
+perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
 
-PCI dev on die0 online: activeboxes=1, PMU registered
-PCI dev on die1 online: init_box failed, pmu->activeboxes=1, set broken
-PCI dev on die0 offline: activeboxes=0, PMU unregistered
+Graviton5 uses a customised CMN-S3 implementation where certain
+discovery registers report zeroed fields. This patch introduces a
+dedicated ACPI HID, derives the DTC domain from the XP node ID, and
+sets the DTC logical ID from the XP's logical ID.
 
-If the broken bit is cleared in uncore_pmu_unregister():
-PCI dev on die0 or die2 online: activeboxes=1, PMU registered
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index f1978a53d1c19..3fb71d9a57eb5 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
 
-This is wrong, because the box for die1 is not working.
+[ ... ]
 
-In reality, box_allocate() or init_box() failures may not happen at all,
-and when they do, the system may be experiencing severe out-of-memory or
-other catastrophic conditions. Keeping the broken flag sticky should be
-fine.
+> @@ -2250,6 +2253,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_=
+cmn *cmn, void __iomem *xp_reg
+>  	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region =
++ offset));
+>  }
+> =20
+> +static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
+> +{
+> +	unsigned int x =3D (xp_id >> 7) & 0xf;
+> +	unsigned int y =3D (xp_id >> 3) & 0xf;
+> +
+> +	/*
+> +	 * The unit info register reads as zero; derive the DTC domain from
+> +	 * the XP's mesh coordinates over the 10x14 mesh.
+> +	 */
+> +	return (x / 5) + (y / 7) * 2;
+> +}
 
-One alternative to avoid making it sticky is to use pmu->activeboxes as
-pmu->die_refcnt to track online dies, not necessarily active boxes, as
-v1 does.
+[Severity: High]
+Can this calculation exceed the CMN_MAX_DTCS limit?
 
-The problem with this approach is that it could cause a pmu->die_refcnt
-leak in the uncore_pci_remove() path: if init_box() fails but
-pmu->die_refcnt has already been incremented, there is no chance to call
-uncore_pci_pmu_unregister() because pci_get_drvdata() returns NULL.
+If a compromised or malformed firmware reports an XP node ID with
+coordinate components up to 15 (e.g., x=3D15, y=3D15), this calculation
+yields a domain index of 7.
 
->>  }
->>  
->>  static void uncore_free_boxes(struct intel_uncore_pmu *pmu)
->> @@ -1153,7 +1155,12 @@ static int uncore_box_setup(struct intel_uncore_pmu *pmu,
->>  {
->>  	int ret;
->>  
->> -	uncore_box_init(box);
->> +	if (uncore_pmu_broken(pmu))
->> +		return -ENODEV;
->> +
->> +	ret = uncore_box_init(box);
->> +	if (ret)
->> +		goto err;
->>  
->>  	/* First active box registers the pmu. */
->>  	if (atomic_inc_return(&pmu->activeboxes) > 1)
->> @@ -1167,6 +1174,16 @@ static int uncore_box_setup(struct intel_uncore_pmu *pmu,
->>  
->>  	return 0;
->>  err:
->> +	/*
->> +	 * On failure on any box, mark the per-package PMU as broken regardless
->> +	 * of whether it was registered or not.
->> +	 *
->> +	 * Don't decrement refcnt to avoid other in-die CPUs from trying to set
->> +	 * up the PMU box again.
->> +	 *
->> +	 * Don't kfree box; MSR and MMIO boxes are freed at module exit only.
->> +	 */
->> +	uncore_pmu_set_broken(pmu);
->>  	uncore_box_exit(box);
->>  	return ret;
->>  }
->> @@ -1190,8 +1207,10 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
->>  		return -EINVAL;
->>  
->>  	box = uncore_alloc_box(type, NUMA_NO_NODE);
->> -	if (!box)
->> +	if (!box) {
->> +		uncore_pmu_set_broken(pmu);
->>  		return -ENOMEM;
->> +	}
->>  
->>  	box->dieid = die;
->>  	box->pci_dev = pdev;
->> @@ -1504,7 +1523,8 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
->>  
->>  		if (old_cpu < 0) {
->>  			WARN_ON_ONCE(box->cpu != -1);
->> -			if (uncore_die_has_box(type, die, pmu->pmu_idx)) {
->> +			if (uncore_die_has_box(type, die, pmu->pmu_idx) &&
->> +			    !uncore_pmu_broken(pmu)) {
->>  				box->cpu = new_cpu;
->>  				cpumask_set_cpu(new_cpu, &pmu->cpu_mask);
->>  			}
->> @@ -1512,12 +1532,14 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
->>  		}
->>  
->>  		WARN_ON_ONCE(box->cpu != -1 && box->cpu != old_cpu);
->> -		box->cpu = -1;
->>  		cpumask_clear_cpu(old_cpu, &pmu->cpu_mask);
->> -		if (new_cpu < 0)
->> +		if (new_cpu < 0) {
->> +			box->cpu = -1;
->>  			continue;
->> +		}
->>  
->> -		if (!uncore_die_has_box(type, die, pmu->pmu_idx))
->> +		/* non-active box doesn't need migration. */
->> +		if (box->cpu == -1)
->>  			continue;
->>  		uncore_pmu_cancel_hrtimer(box);
->>  		perf_pmu_migrate_context(&pmu->pmu, old_cpu, new_cpu);
->> @@ -1593,7 +1615,7 @@ static int allocate_boxes(struct intel_uncore_type **types,
->>  		type = *types;
->>  		pmu = type->pmus;
->>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
-> 
-> IIUC, the "type->num_boxes" actually indicates the number of PMU  or the
-> number of box classes. Since currently there could be multiple boxes for
-> each kind of PMUs on the multiple dies device, the name "num_boxes" become
-> inaccurate and much misleading. could we change it to a more accurate name,
-> like "num_pmus" or "num_box_classes"?
+The domain index is later inherited by the DTC node (dn->dtc) and used
+directly as an array index in arm_cmn_event_init():
 
-Yes, agree. Will do more clean up in the future.
-> 
->> -			if (pmu->boxes[die])
->> +			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
->>  				continue;
->>  			box = uncore_alloc_box(type, cpu_to_node(cpu));
->>  			if (!box)
->> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
->> index d732b87be0a9..0adb477d9708 100644
->> --- a/arch/x86/events/intel/uncore.h
->> +++ b/arch/x86/events/intel/uncore.h
->> @@ -146,13 +146,24 @@ struct intel_uncore_pmu {
->>  	struct pmu			pmu;
->>  	char				name[UNCORE_PMU_NAME_LEN];
->>  	int				pmu_idx;
->> -	bool				registered;
->> +	unsigned long			flags;
->>  	atomic_t			activeboxes;
->>  	cpumask_t			cpu_mask;
->>  	struct intel_uncore_type	*type;
->>  	struct intel_uncore_box		**boxes;
->>  };
->>  
->> +#define PMU_REGISTERED_BIT	0
->> +#define PMU_BROKEN_BIT		1
->> +
->> +#define uncore_pmu_registered(pmu)	test_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
->> +#define uncore_pmu_broken(pmu)		test_bit(PMU_BROKEN_BIT, &(pmu)->flags)
->> +#define uncore_pmu_available(pmu)	(uncore_pmu_registered(pmu) &&  \
->> +					 !uncore_pmu_broken(pmu))
->> +#define uncore_pmu_set_registered(pmu)	set_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
->> +#define uncore_pmu_set_broken(pmu)	set_bit(PMU_BROKEN_BIT, &(pmu)->flags)
->> +#define uncore_pmu_clear_registered(pmu) clear_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
->> +
->>  struct intel_uncore_extra_reg {
->>  	raw_spinlock_t lock;
->>  	u64 config, config1, config2;
->> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
->> index c5347920541c..055131c508ff 100644
->> --- a/arch/x86/events/intel/uncore_snb.c
->> +++ b/arch/x86/events/intel/uncore_snb.c
->> @@ -940,7 +940,7 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
->>  
->>  	pmu = uncore_event_to_pmu(event);
->>  	/* no device found for this pmu */
->> -	if (!pmu->registered)
->> +	if (!uncore_pmu_available(pmu))
->>  		return -ENOENT;
->>  
->>  	/* Sampling not supported yet */
+    hw->dtc_idx[dn->dtc] =3D 0;
 
+Since the hw->dtc_idx array has a fixed size of CMN_MAX_DTCS (4), an
+index of 4 or higher would overwrite adjacent struct fields like num_dns,
+leading to memory corruption.
+
+[ ... ]
+
+> @@ -2472,6 +2497,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, u=
+nsigned int rgn_offset)
+> =20
+>  			switch (dn->type) {
+>  			case CMN_TYPE_DTC:
+> +				if (graviton5_workaround) {
+> +					/* Node info logical ID is zeroed; use the XP's */
+> +					dn->logid =3D xp->logid;
+> +				}
+
+[Severity: High]
+Does setting dn->logid to xp->logid break the domain-based sorting
+order for DTC resources?
+
+The CMN driver sequentially populates the cmn->dtc array based on the
+sorted order of DTC nodes:
+
+drivers/perf/arm-cmn.c:arm_cmn_init_dtcs() {
+    ...
+    int err =3D arm_cmn_init_dtc(cmn, dn, dtc_idx++);
+    ...
+}
+
+Standard hardware sets a DTC node's logid to its domain ID (0..3),
+ensuring the array is populated in domain order. However, XP logical
+IDs do not monotonically increase with domain IDs (e.g., an XP in Domain 1
+at X=3D5, Y=3D0 has a lower logid than an XP in Domain 0 at X=3D0, Y=3D1).
+
+Will this cause the DTC nodes to sort out of order, misaligning the
+cmn->dtc array and causing PMU events to be programmed into the wrong
+hardware domain counters? Would it be safer to use dn->logid =3D xp->dtc?
+
+>  				cmn->num_dtcs++;
+
+[Severity: High]
+This is a pre-existing issue, but does cmn->num_dtcs lack bounds checking?
+
+During hardware discovery, the driver increments cmn->num_dtcs for every
+CMN_TYPE_DTC node reported by the firmware, without capping it at
+CMN_MAX_DTCS (4).
+
+Later in arm_cmn_event_init(), the driver uses this unbounded value:
+
+    memset(hw->dtc_idx, 0, cmn->num_dtcs);
+
+Since hw->dtc_idx is a 4-byte array, if the firmware provides more than
+4 DTC nodes, will the memset overflow the array and corrupt the
+arm_cmn_hw_event struct?
+
+>  				dn++;
+>  				break;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260603150025.3098=
+0-1-avivb@amazon.com?part=3D2
