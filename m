@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6917637268A
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 10:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349503806DB
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 10:30:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780482499; cv=none; b=NGnkrrLf93EZGGrZvWq39PWACnYw/Xw5THgKWT6H+Q+jsjM0AyF+PsnR9q8HuWtugbTjeYvr6u5OA0nR4AbgLpuTqQkt/V+j5mHRjB5Kz9PHxGUcpV8rJiHZlQBj4XJAjVTaRZHrcHjnLXhvAXFymSv7rqYdL+89LUJOgUilI/c=
+	t=1780482622; cv=none; b=b/5nn2nxM1nbmYnpJQ25lzXPF5bIdleewV2FzIRbjbHodzcx/NShhCjh/vSzsAE5OC6fm5SOt+SCP0phA0uVJUXtCLs8puZJ6Hb0u+/VhiudnMJVxuEBY0nW6lF7IWECH4cTQhW7T4eNlofMPXPTL69Y3aHkGKnz47tMQRlBOwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780482499; c=relaxed/simple;
-	bh=w9WbsApml8rRYZvjYgE9ocJWAF8xOw3WwV3vn7JejOE=;
+	s=arc-20240116; t=1780482622; c=relaxed/simple;
+	bh=mCf5ZDixv2R4Q2BCUKpU66xzkB5KSbcGy7eBvBYDqeA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=MknX6gcBhckXikz31XH4rQuU264lnvn8hKdplysEqOcIRuzNj4+XJ6lWI8eflq/KhxwKJ0kDJWwlIH21LfAFTxcgLbDmQboRcenf5AHasEeuXMLdGdGaFVBnD6GzL9PZpssxcCt9Icyn+0JDBjQMCJREm1iOLUI96cI2iflZxuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUabJM6F; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IDyWvr+3GN2YyIm5DIyC+6UOl6sNM/FE0WaAUrZe6p62K/znVUHHFfZ12YFDPDXQkIhecb2I7gugkFd8b/DGmyjLYnwLxxVirEduPuvNlvzFBPhC+EJnMmre08g3wbbSu5x56p6lalQjaoPeWSS6oWWO8B31Sz7H1gi1wTWdxjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fkp0biOr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUabJM6F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB021F00893;
-	Wed,  3 Jun 2026 10:28:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fkp0biOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B731F00893;
+	Wed,  3 Jun 2026 10:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780482498;
-	bh=qJPrP1zD0h0sKQnXQbTq1DgQTbYepF8Q1HYCtCJ0L5I=;
+	s=k20260515; t=1780482620;
+	bh=P/ylKxaQRlNRjym2xQgow2FrrTZNKMtPxyj/8C5rflI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SUabJM6F7yIpHtjodyELvQ/dSI+Heg+RJZ1YRVlKyp8g0pwF+3m/KUSxTg7yhhhbX
-	 tF26zZo7k6jYaY9w5v3+j1CM1UIeZS79nwIkyPMIZcyfmu8UZg9fVAs1SYmN+aJsHf
-	 WT+jqWf3GhgkoLuO7A6IrXVuXxE3d7gxWiJxdIslPxwGnXhO61+svPB4GuFuniIWf4
-	 RcM5TiMFajnysMq2tdMLHlVE3PqgCCOi14hkSgl+TlFJiktfPmYDSmK7yswPjgGadA
-	 xAtLBRps2HciFNJR+bxPGuB36KFXb632V013AEMjudiyJrYOEdiYFzIIhQJk306KFg
-	 7f4xS1FXFGetA==
+	b=Fkp0biOrnHE3nWQZ0vpIF5+vVQebhPc3NkY9NSQ72nOLra6OOT9bGA8Mocq/lMQUY
+	 Zv28DW3fv1Bk12F1aTDtmPR5icYWpDNFr7pvNOuAf8lCHj/uG7O5M6mLe6IBFq3Cjc
+	 +gQh9zeIomN5IgM6p9xFs3eDaLMg4JtvIh9/zdAuIgwLWtOZFkcGxpVfutcQiTayVv
+	 +IMwBdqi9AFg5bYWXaSCZl4kIo0SIGJoqpic5zhUb2NtMZCoKbtGZ/XmD8n70G0Sze
+	 7A/IL7O5xLvOL1dJhtY87yZgtWtuhKiL9DSURnQpoY9MW2cqbjRw4DFnrWZIPMl1iu
+	 mUM/YK+tMR++Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 03/19] perf test: Add a workload that forces context
- switches
+Subject: Re: [PATCH v3 06/19] perf test cs-etm: Replace unroll loop thread
+ with deterministic decode test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260603-james-cs-context-tracking-fix-v3-3-c392945d9ed5@linaro.org>
-References: <20260603-james-cs-context-tracking-fix-v3-3-c392945d9ed5@linaro.org>
+In-Reply-To: <20260603-james-cs-context-tracking-fix-v3-6-c392945d9ed5@linaro.org>
+References: <20260603-james-cs-context-tracking-fix-v3-6-c392945d9ed5@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 03 Jun 2026 10:28:17 +0000
-Message-Id: <20260603102817.EFB021F00893@smtp.kernel.org>
+Date: Wed, 03 Jun 2026 10:30:20 +0000
+Message-Id: <20260603103020.A5B731F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,83 +46,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Calling exit(1) on I/O failure in the parent process abruptly te=
-rminates the test wrapper and bypasses workload control cleanup.
+- [Medium] Signed integer overflow in `deterministic` workload causes Undef=
+ined Behavior.
 --
 
-commit 4bc96eb1d44f39f8252cd4bbe7f402600bc7ca26
+commit 4589a67d2fd8e0ec516cb0f0c6ed8dd3e2079b76
 Author: James Clark <james.clark@linaro.org>
 
-perf test: Add a workload that forces context switches
+perf test cs-etm: Replace unroll loop thread with deterministic decode test
 
-This workload launches two processes that block when reading and writing
-to each other forcing the other process to be scheduled for each
-read/write pair.
+This commit replaces the unroll loop thread test with a new deterministic
+decode test. It introduces a shell script that records and validates the
+deterministic workload to ensure decoding always yields the same result for
+a given code sequence.
 
-> diff --git a/tools/perf/tests/workloads/context_switch_loop.c b/tools/per=
-f/tests/workloads/context_switch_loop.c
-> new file mode 100644
-> index 0000000000000..173d770ae6192
+> diff --git a/tools/perf/tests/shell/coresight/deterministic.sh b/tools/pe=
+rf/tests/shell/coresight/deterministic.sh
+> new file mode 100755
+> index 0000000000000..52e033fd6b82a
 > --- /dev/null
-> +++ b/tools/perf/tests/workloads/context_switch_loop.c
-> @@ -0,0 +1,101 @@
+> +++ b/tools/perf/tests/shell/coresight/deterministic.sh
+> @@ -0,0 +1,71 @@
+> +#!/bin/bash -e
 
 [ ... ]
 
-> +#define write_block(fd) \
-> +	do { \
-> +		if (write(fd, &buf, 1) <=3D 0) \
-> +			exit(1); \
-> +	} while (0)
+> +cf=3D"$tmpdir/ctl"
+> +af=3D"$tmpdir/ack"
+> +mkfifo "$cf" "$af"
 > +
-> +#define read_block(fd) \
-> +	do { \
-> +		if (read(fd, &buf, 1) <=3D 0) \
-> +			exit(1); \
-> +	} while (0)
-
-[ ... ]
-
-> +	if (!proc1_pid) {
-> +		close(a_to_b[0]);
-> +		close(b_to_a[1]);
-> +		prctl(PR_SET_NAME, "proc1", 0, 0, 0);
-> +		context_switch_loop_proc1(b_to_a[0], a_to_b[1]);
-> +		close(a_to_b[1]);
-> +		close(b_to_a[0]);
-> +		exit(0);
-> +	}
-> +
-> +	close(a_to_b[1]);
-> +	close(b_to_a[0]);
-> +	prctl(PR_SET_NAME, "proc2", 0, 0, 0);
-> +	context_switch_loop_proc2(a_to_b[0], b_to_a[1]);
+> +# Start disabled and use the control FIFO to only record the workload an=
+d not
+> +# startup.
+> +perf record -o "$tmpdir/data" -e cs_etm//u -D -1 --control fifo:"$cf","$=
+af" -- \
+> +	perf test --workload-ctl fifo:"$cf","$af" -w deterministic > /dev/null =
+2>&1
 
 [Severity: Medium]
-Since context_switch_loop_proc2() runs in the parent process, does calling
-exit(1) on I/O failures abruptly terminate the entire perf test wrapper?
+Does executing the deterministic workload here cause a regression by
+triggering undefined behavior?
 
-If write_block() or read_block() encounter an error like EINTR, they call
-exit(1) directly. Because context_switch_loop_proc2() is executed in the ma=
-in
-process rather than a forked child, this bypasses the workload control clea=
-nup
-in run_workload().
+Looking at the workload in tools/perf/tests/workloads/deterministic.c,
+dt_work is initialized to 1234 and then multiplied by 7 twelve times
+across deterministic(), function1(), and function2():
 
-Should the parent process return an error code instead of calling exit(1) so
-perf test can clean up gracefully?
+tools/perf/tests/workloads/deterministic.c:deterministic() {
+	dt_work *=3D 7;
+	dt_work *=3D 7;
+	dt_work *=3D 7;
 
-> +	close(a_to_b[0]);
-> +	close(b_to_a[1]);
-> +
-> +	if (waitpid(proc1_pid, &status, 0) !=3D proc1_pid || !WIFEXITED(status)=
- ||
-> +	    WEXITSTATUS(status))
-> +		return 1;
-> +
-> +	return 0;
-> +}
+	function1();
+
+	dt_work *=3D 7;
+	dt_work *=3D 7;
+...
+
+On the 8th execution (the second multiplication after returning from
+function1() to deterministic()), the value reaches 7,113,764,434, which
+exceeds the maximum value for a 32-bit signed integer.
+
+This causes a signed integer overflow regression. When the perf tool is
+compiled with the undefined behavior sanitizer enabled, this workload will
+trap or crash, breaking the test's strict deterministic execution behavior
+and resulting in test failures.
+
+Could dt_work be modified to an unsigned int to avoid this overflow?
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260603-james-cs-c=
-ontext-tracking-fix-v3-0-c392945d9ed5@linaro.org?part=3D3
+ontext-tracking-fix-v3-0-c392945d9ed5@linaro.org?part=3D6
