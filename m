@@ -1,170 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3DE3D75B4
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 15:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4D43DC4DD
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 15:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780502019; cv=none; b=ANInNkeZBoD2G9/nWZBdWpeJH2EyCiT5u31BVsJ3IxH6fpNVvOdLRAFiNMQh9rOD1Aj+Ok3Q4WI70ewlOVPmsWrucvwEyAII+wRBDQS+5c08lhDBOD3bmYhztNs9ZAmFl1AA/6Gt64hAmWWdY0o1jGzW6GgQ7hA6aGJfEUmU0cQ=
+	t=1780502038; cv=none; b=RsPVEvPbnTbg+7YxaYvGl2bwWlkX4ICD5L4axkS0ud3DuPq3jaEVmv75ntjWrK2eufgw/t4HSCYBlGDZ1/gyrFf7F9RkXqTZSPWVGxoa552/gamRiB/MPdcO98yIzvJR5f0IBJ/fqKJme/1BueJknQk52GyA7VvVDX02WUJ0gBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780502019; c=relaxed/simple;
-	bh=aqM/ZK1m7bst4Gaeu3ZCgMlwUZBT1/ddqO119vvNsa8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SvT2Lm8d9GYWcbY9+c4UmF76q5Rq8Hfgnp9RA2STuwzJ/qRWVQ2X1HtLUxgFknAK6OpgfG0ZhlGVkHG/GnFhCa98nJ4WwVa77N7Zpc4g+7Ijbh7P0UXhnhO3ts3bR6CboiUpqfl6V504SNSV6lOFlx0KOBumQgqfcC/q10fFvls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjAvoxg2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780502038; c=relaxed/simple;
+	bh=YyHIKl0YFnOrf4b3X6aHRwQh3XkLsdrmrGiOM+ixt8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KuOUFdNo0LLsMYFsP+FeqFNJDSQ1r458KmPS4SdQDGIfo4MGyiECxsBzGYF8VM8u+aFW1e2G2ONtT2tbPWrp29VesxD6RpwB9pj9rtS5kB+Iw4HZYGd4vJ+wUDJcDss9w/mXjdM4mnMQV6tMw3ta9xOOMeLlyuTRcYCNoTUPjt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H2gylKza; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjAvoxg2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235291F00898;
-	Wed,  3 Jun 2026 15:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780502018;
-	bh=KrS6H8i7CjNoIIiKOXn+MXVFgIC9N0CKmTlkwUocQxA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SjAvoxg2akaK7tnRCVCUS/FCTgdZa6+/cAeNVUxJ+7o1+60/zAyJjZonmgx8+4t6Z
-	 OSgZz6VgHFRrvEICiBWDZQzKoElTL9SXjZs3nM1zAuIlXYzhlYu+xbAVCGhB3vk0T1
-	 KndDOfKN/h/9x2Mkv4+VN8f2veysoPl80YhBXz/ILTU57eCrO2UDmaMeQ9tLDjMohW
-	 VouXDYZ2HEbYzkCahvt07G1QnKtiBF0NYH3P/kkAIyuWpMY1YsuAXWJnLdT8OKubnu
-	 rZ9Bd6f59eZ5LUh5jvc3UNKaW7ynJNxHFtUs7DVo9QA0NcKFMg/Q5pYPwa9taHGHTp
-	 TCipcJrsMz3tw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on
- Graviton5
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Aviv Bakal" <avivb@amazon.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260603150025.30980-3-avivb@amazon.com>
-References: <20260603150025.30980-3-avivb@amazon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 03 Jun 2026 15:53:35 +0000
-Message-Id: <20260603155337.235291F00898@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H2gylKza"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-45eeea039ebso3087878f8f.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 08:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1780502035; x=1781106835; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WeNxgthX7RDeq1y4GZbJjfxu5vLqCNfeHjKxVMHovlQ=;
+        b=H2gylKzanBFzLlh0QwLhFCoTA9kmMu3xckPfj00m/AgWY08AMjxKyC1tbGP6AclfHK
+         f6TqEp9VWlEqppmCKNjh1j54ERThV1uT3XwIr1S0UZqxrf8dJJKvNcHMWpTDcomNdDQT
+         1ugep2Umk0xBkrTavpX9EezveY2qnMdLmfvob/JzOcWCpNhaVgJnTCClBZYpREYU0J4W
+         QP4QxYz0US7umplCbTx/sxwVHNmdJ7SxmFYTzRGf4odh2x/OXtv9GSeKpBUmKODYnMMd
+         8tNawXfMv87ZsCsx89KD1c2PnM4fPWp5r+plId3uuSdVa7ykpV3QOT+Ct0pL9Ep2VF+H
+         Ttsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780502035; x=1781106835;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WeNxgthX7RDeq1y4GZbJjfxu5vLqCNfeHjKxVMHovlQ=;
+        b=dj0/WDvnCZHOwUxPlJvlcPTApoLSqaouzPUcmN744ccV5yPKQLnVZav3IZpoEG0LHf
+         ARWYb7FkwNNvFFhPE67aBFS6PK3zcp57S1u+RCHXGiuG+RM7FbTqsjbSiEyuyohtGgIo
+         V8whVSYwqC6T68DOJn4pTMOln8i4a5utLkFPONspKfmbJtUUXGAktUztBkB2COR7XAGu
+         FwuDkATV+8XkacUPWkLVtRpQ6QajDAE6dPMSTufi9nPCM2qklYcnCU10EzKEiU13QA3k
+         kpY57xIKHOqGr5tW82T7VoyLAdqpyMESfSoteb7lrW0C+EsLx0/plbr4Gs1Si8UxDXdG
+         1sgg==
+X-Forwarded-Encrypted: i=1; AFNElJ8RHmSWQElrEpTOUBHlXpeqjTYajs0LV2Z7DJIf72iqCBWkr8zDtkE3WqQFanxqps+kCLDku9AkUq4uYSoV8TxT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz16WoAn/iq19xCTgvwPhhP/5aTQF/BWMKaZG8lL8RsspnJ7IIA
+	EmOMFSnQG/wFtdGQ69N7R2vR2ykEf2R4l76lNeqakcJL2tEs15joWBJGfLOzxBLSATE=
+X-Gm-Gg: Acq92OFLIoIF5l8Qcwk9uHoBb4xhyRTKoqMrfGIRf6Hn4e+zlb0izD7ewYHZVlMIj5e
+	hVbBfNg20cNiFVd4obIP79kxzUDjjiF8m8359eXKDqyoY+uBJnXltDX/KFoPAYKLERHT6I0Pq1J
+	2PERQHpR5gRXB6pD6v+cRRqeJT3cq9lBietanLdgUGPmWO39aYKhRGuI+pUlBP6xwJDbd0muAxh
+	nQpWOHDk4ttiw9ptCIR608sRvSrsE2tlnn9gU/e0fwkd13uN4TdJdPXBKQhi1tR8Q54gJ9xMvIV
+	Y9iR+eeHnm5dNAk0TWvYS3yzjEBrBJlHSa3Mi5vh2y9vCaJJOBLVqBbBmEKiDs/tEuP+g6br9Jf
+	hqvw3Ql5mx0CcBzajGeXOhH+DFewNPehaFNfB5RrM1qkQTNYhnkQ/6SDz+QL7Jdok0i0DYzK2xm
+	8DxGC/rQyUPGDCTOgOxwgoVfnsiH2ZQSMMUWgD8/U=
+X-Received: by 2002:a05:6000:2990:20b0:460:25f3:b25a with SMTP id ffacd0b85a97d-46025f3b73emr1462864f8f.34.1780502035457;
+        Wed, 03 Jun 2026 08:53:55 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f344148sm8692402f8f.19.2026.06.03.08.53.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2026 08:53:54 -0700 (PDT)
+Message-ID: <9b149f11-3e05-4871-92a0-d0fe1ec49357@linaro.org>
+Date: Wed, 3 Jun 2026 16:53:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/18] perf test: Add deterministic workload
+To: Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Paschalis Mpeis <Paschalis.Mpeis@arm.com>, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org
+References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
+ <20260602-james-cs-context-tracking-fix-v2-5-85b5ce6f55c6@linaro.org>
+ <20260603112742.GT101133@e132581.arm.com>
+ <b4836fe9-49cf-44c3-96a9-548e890cee29@linaro.org>
+ <20260603134339.GU101133@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260603134339.GU101133@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
 
-New issues:
-- [High] The `arm_cmn_graviton5_dtc_domain` function computes a DTC domain =
-index without upper bounds, which can exceed the `CMN_MAX_DTCS` limit and c=
-ause memory corruption.
-- [High] The Graviton5 workaround assigns the XP's logical ID to the DTC no=
-de's logical ID, breaking the domain-based sorting order and causing DTC re=
-sources to be assigned incorrectly.
 
-Pre-existing issues:
-- [High] Lack of bounds checking on `cmn->num_dtcs` allows a `memset()` cal=
-l to overflow the `dtc_idx` array.
---
+On 03/06/2026 2:43 pm, Leo Yan wrote:
+> On Wed, Jun 03, 2026 at 02:10:37PM +0100, James Clark wrote:
+>>
+>>
+>> On 03/06/2026 12:27 pm, Leo Yan wrote:
+>>> On Tue, Jun 02, 2026 at 03:26:47PM +0100, James Clark wrote:
+>>>
+>>> [...]
+>>>
+>>>> @@ -22,3 +23,4 @@ CFLAGS_brstack.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>>>>    CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>>>>    CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>>>>    CFLAGS_inlineloop.o       = -g -O2
+>>>> +CFLAGS_deterministic.o    = -g -O0
+>>>
+>>> I have no strong opinion for using 'noinline' in source or using the
+>>> global option '-fno-inline', just thought this is not easy to follow
+>>> up if anyone (likely myself) will write a new workload for disabling
+>>> inline. Could we have consistent style for this?
+>>>
+>>> For the patch itself:
+>>>
+>>> Reviewed-by: Leo Yan <leo.yan@arm.com>
+>>
+>> Actually it's a fair question why some have -fno-inline and others do it in
+>> the code, it could just be copied from when these were built by their shell
+>> script tests. From a quick look I would say we can easily drop the
+>> -fno-inline and do it in the code, and it's better to only noinline what's
+>> needed rather than everything. But that's probably a change for another
+>> time.
+> 
+> Seems to me, `-fno-inline` is more reliable.
+> 
+> I.e., in this patch deterministic() has no 'noinline' annotation, my
+> understanding is the test expects it is not inlined. With `-fno-inline`
+> flag, we don't need to worry anything is missed.
+> 
+> Thanks,
+> Leo
 
-commit fd0610a07c973430036fe29d5eab5bfbb5c0eb4c
-Author: Aviv Bakal <avivb@amazon.com>
+Ok I can replace the noinlines with -fno-inline then.
 
-perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
-
-Graviton5 uses a customised CMN-S3 implementation where certain
-discovery registers report zeroed fields. This patch introduces a
-dedicated ACPI HID, derives the DTC domain from the XP node ID, and
-sets the DTC logical ID from the XP's logical ID.
-
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index f1978a53d1c19..3fb71d9a57eb5 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-
-[ ... ]
-
-> @@ -2250,6 +2253,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_=
-cmn *cmn, void __iomem *xp_reg
->  	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region =
-+ offset));
->  }
-> =20
-> +static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
-> +{
-> +	unsigned int x =3D (xp_id >> 7) & 0xf;
-> +	unsigned int y =3D (xp_id >> 3) & 0xf;
-> +
-> +	/*
-> +	 * The unit info register reads as zero; derive the DTC domain from
-> +	 * the XP's mesh coordinates over the 10x14 mesh.
-> +	 */
-> +	return (x / 5) + (y / 7) * 2;
-> +}
-
-[Severity: High]
-Can this calculation exceed the CMN_MAX_DTCS limit?
-
-If a compromised or malformed firmware reports an XP node ID with
-coordinate components up to 15 (e.g., x=3D15, y=3D15), this calculation
-yields a domain index of 7.
-
-The domain index is later inherited by the DTC node (dn->dtc) and used
-directly as an array index in arm_cmn_event_init():
-
-    hw->dtc_idx[dn->dtc] =3D 0;
-
-Since the hw->dtc_idx array has a fixed size of CMN_MAX_DTCS (4), an
-index of 4 or higher would overwrite adjacent struct fields like num_dns,
-leading to memory corruption.
-
-[ ... ]
-
-> @@ -2472,6 +2497,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, u=
-nsigned int rgn_offset)
-> =20
->  			switch (dn->type) {
->  			case CMN_TYPE_DTC:
-> +				if (graviton5_workaround) {
-> +					/* Node info logical ID is zeroed; use the XP's */
-> +					dn->logid =3D xp->logid;
-> +				}
-
-[Severity: High]
-Does setting dn->logid to xp->logid break the domain-based sorting
-order for DTC resources?
-
-The CMN driver sequentially populates the cmn->dtc array based on the
-sorted order of DTC nodes:
-
-drivers/perf/arm-cmn.c:arm_cmn_init_dtcs() {
-    ...
-    int err =3D arm_cmn_init_dtc(cmn, dn, dtc_idx++);
-    ...
-}
-
-Standard hardware sets a DTC node's logid to its domain ID (0..3),
-ensuring the array is populated in domain order. However, XP logical
-IDs do not monotonically increase with domain IDs (e.g., an XP in Domain 1
-at X=3D5, Y=3D0 has a lower logid than an XP in Domain 0 at X=3D0, Y=3D1).
-
-Will this cause the DTC nodes to sort out of order, misaligning the
-cmn->dtc array and causing PMU events to be programmed into the wrong
-hardware domain counters? Would it be safer to use dn->logid =3D xp->dtc?
-
->  				cmn->num_dtcs++;
-
-[Severity: High]
-This is a pre-existing issue, but does cmn->num_dtcs lack bounds checking?
-
-During hardware discovery, the driver increments cmn->num_dtcs for every
-CMN_TYPE_DTC node reported by the firmware, without capping it at
-CMN_MAX_DTCS (4).
-
-Later in arm_cmn_event_init(), the driver uses this unbounded value:
-
-    memset(hw->dtc_idx, 0, cmn->num_dtcs);
-
-Since hw->dtc_idx is a 4-byte array, if the firmware provides more than
-4 DTC nodes, will the memset overflow the array and corrupt the
-arm_cmn_hw_event struct?
-
->  				dn++;
->  				break;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260603150025.3098=
-0-1-avivb@amazon.com?part=3D2
