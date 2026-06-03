@@ -1,231 +1,121 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4620A4963BA
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 15:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780499963; cv=pass; b=bnMg7BW+pQnYn0DU62IXqKio41iYrvza1DEu+/7MRyk94gLfK7uXZjtCnX1XesPaz+dTOrXwxk+x38zE+jfZLycK+CUfb06Y7GprALg+4TBUENc3u8zflP31qGU8gFO2JBcwWa2fq4NHuRpTVsXj/CT4Nn27F/nW35LFm/SGQXA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780499963; c=relaxed/simple;
-	bh=dYcGfqYfr1vZ9LkR0r2zi70tyUkuGJmFUl5d0gpt6pQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YKALaNHI4YYxPvnPlj6lfhICOBILGjfpLEpZudm8+jvEVO5lvpUIw0q1BEH71Sj0r8Qp3FQhJsIlPRsUDnFTlGNasAUrnhdq09wcLXyP69q9jh6K0jZYCy738nebj+EJ9M8bmMxSXb5AQcGZRxWtnXUKV7fY7K+l2Mt6+Q0m2kw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UxlyLiC7; arc=pass smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBAF39B94D
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 15:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780500108; cv=none; b=jAdyKLKhhuFgMnVbe8KToT7r/yqu3veNWX7LBCB5htddCirwwNZWITyz2F1qWpvfXWVN2rSkIIjjdw9aPDW2Ac8/M/CVI5CT6POC9DYB+unlDKGWlm1xxln2r+a1rTp9kYgXjp/4G9EpaEjDxC1A05m+GT3VAnYjbAcpUcb1nRA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780500108; c=relaxed/simple;
+	bh=M/lqkBFAUH1YROmNIhIaEE3M1oFHgguIw1ESqeJRujU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=RKaieCJjEm/Mt9qPWFWBKkPE7hTNPrGuSQDIEzSvgCQPMSSEeM/5qtCjKKzYGs++/bvttY0GS0coD/iRzHpzEfwIfHgeLiGpsioXIs4ZL88NIHRi2GGuAjinL/bpB9ulU/J7CmN63laP8zYKgNcO5kjCn3hCNIqJaBd9Ft5PFcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2TZCbrz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UxlyLiC7"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2bf2911f93cso70045ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 08:19:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780499960; cv=none;
-        d=google.com; s=arc-20240605;
-        b=DQKQ7FUflSk89506uXp0AUunstbiBTW1//TFsSwZaMYvXfH9s6L8xICe4XgcILkBVl
-         NN3hCnSp4E6ke/de04EfccX+2GsOHXHU2L/3DusWoFUx8AZS80dAv5ObIZWN1VtJP0Xw
-         t+T9iyaCr9KjHjg2DthG8RvkxPLftGU39SkTSe2YTqYFLhqU8BUgaPNWeQyN1VhuO/1A
-         hAFxEKmHRx9C8GLYEgf48R6C06fVhltd0OpBq6M1gM/NneXctcyHY7VAzlO6v37gFkn1
-         +eLbePpdG4sMkJNDvyhDcudBzBfvGrzUVC68/tiTiTPalspaK23nVsP8pF7+//mkxhc2
-         Mhzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=RBv39v9B7TeMOI10362p++zoGC00hzGeAK2V+OJssRA=;
-        fh=4YSCyodne9SYBHCggk24vYDbqP86nF/ZUkwTtqR8bd8=;
-        b=a6UIZjZ1jdx15exbg37kpBBl1cqJL+VXNtpshmzKAww2MtingjhPBW51LWKmRB90wD
-         i3IPR6FkuE5bk0JG8Ndjx1jydXlwfocjhSLiOfcNncWQ5iupQTmQ1egBhDM3bU2TJrt9
-         yEsBt4j9EynSMyJZj6Z2b/2AioLW+MNN9Uwuikd6o/DmMqmDZ5MEErtqfxAtjHrYjOq7
-         ohS7VgsH3fLCTqm3hO/LXYVIWXh0vEpjWhEbDEbcTfsc+HRewsWLJ/FHju/vD3nkNQGA
-         9mvLGBFVuN3ImuVLSbRp4hwd2HtE9XVujTpZwzhmGkupTNQ5xISqM+WfcRdlA+4Cg98a
-         ZFEQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780499960; x=1781104760; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RBv39v9B7TeMOI10362p++zoGC00hzGeAK2V+OJssRA=;
-        b=UxlyLiC7zMjb7DEthaD4NbQ7RheD4mv/1PL7mZNd8hR99zdZlZgafoOxoGhJIc38dD
-         nN3/ZgDvIwP5v/nLBIhrWKnB/dxv9Kmip+FNrdrKftywbcOeQDQNOQJ+jfZgeqfw4X3b
-         wYvJEGpvgVEf5i4QPL4XWEr1XSUuzMaWePhZRhPxOQPeugzmP1LY3YTRpWedIMG9nOSn
-         x5I6X0ur1cxOZDRl/fHx4NZAFZToxOWUDWmL0E34kVZTAc5GjxoNDcuZp7ePhdPODiEe
-         8AJhD0H9LdWkujn9k7R5UE8nFKrJuWu4JXuz/M1OJCFizXLj63i++YdRBNfdCAZADbGE
-         T/ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780499960; x=1781104760;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RBv39v9B7TeMOI10362p++zoGC00hzGeAK2V+OJssRA=;
-        b=iVzi6/zizWDrgxsQ1yzJVshaL2WwquW565dJn6xLgjnYGbgTtZQLhYEwxkCqJDNOwz
-         rUPHABhFI2qsrmHNY3+sO70B382r67ZExoET8y39Pgo1IsWv3cMfkbk2phY+OjtumVTW
-         SzhPGz6NwHP3IP8eSiJ2EpcM4j9V6EdAEr35dcyP8j3e3YZEBKv/R7X03E/bIkwBp8RU
-         +b2qv2NsX4Msms9RArO4ey0nJ4G6naHZCQey4m++2nFKkPjD6aAR7y5J+ulG5WUzbDpn
-         tBmX0gKcV8c0pKZNmrKGKU0f5OuHIx1Lp2NmAXLBqrcwjBYBhtg66Ey4OmaZrznJIZl8
-         aq2g==
-X-Forwarded-Encrypted: i=1; AFNElJ8QP8BJyHl0kV0iyW8xh3cVdQ0TiCwWQMNy3Dm4aEwg+Y5IhFBjMpuwYwYcQoy0MoqyFUN91wI/LuKlwv4rWAUF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9Bx50vbvDitb4Tq8WLjXw8K0LVHbLzunZeBL4AvDP2G2g9LEP
-	Ta4jxCnfYNimMqI5p6cZ1t3jXMmjMG6GyYn5Y2jufSeBOHTDz3rs8iUDxlSWtj+hrl5TsYLlrbf
-	9TMzof05GJ9077dWzi6/uFavM9mQdUF/Ce5ENLukP
-X-Gm-Gg: Acq92OFH8W6mopQCtSbKhCicKo/z2sYxDD7wa0iZZhRCAX9+hVMREpJ461qUdURJVgR
-	8lrxpkqGH35BeRNCq3cBLoS8Z5W7CMi1iCNe78Ctfhiw354Bb0hsrSKbuTsxqZeFBtxVFvxqL5K
-	HTM5tYuIC2TR1BCBrEVfosoEbityxAjpUPjCm5eJ6gy4/bdTkfeBpVJSqMmli5zXDk6Wxtuv/EU
-	Ux+sMQoZmQ4of7JX1FqZO0j2qgqsZpbS3Ruqkc6/NrDFJ1t8nePZFTdji5IyUksjWEvXCMr9xML
-	Puc6jSlkglOj4omxsfqgXhugkqfJT6etBMNpnxdzQcffzHtQ
-X-Received: by 2002:a17:902:ef43:b0:2bd:6dad:3df9 with SMTP id
- d9443c01a7336-2c16fb58110mr1976755ad.23.1780499959933; Wed, 03 Jun 2026
- 08:19:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2TZCbrz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92EA61F00893;
+	Wed,  3 Jun 2026 15:21:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780500106;
+	bh=wup70YDV8lzYyBpA4ML1EF2lbVT7TRiU/lj1LR6Qnt4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=A2TZCbrzgr6f+LYOSDrsF+3i/E+MqmFkyeJw/ZHgFtDfwNQITzJLCzITf8nLoZBo4
+	 MLPPgJNa85zJXX00S32rtQTCb3oMluBwvou5eLJJsuepWrEcQ7vgBegIebFVCfuaMC
+	 iEnLNNkNJff6wVXTOBw1C61eggHi0jnkcTtWKOj8mFSLO8znKcCM2zZzd4Sl7TPEPz
+	 FBVHrjoy1BYoYyVtlt0e+VzMVtN6nTVbRUPR0L1ZZ8AsPxQQbNVJCN7w7sxzRThjtP
+	 ZsMN0MmlSYo2jCZtFbX9JKNWniuwiV8hAp/kCX93s6iH2hmrkdC+J70KYEHtvh3IOV
+	 Qkhhiol3qKEaw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 1/2] perf/arm-cmn: Move DTM index data out of
+ hw_perf_event
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aviv Bakal" <avivb@amazon.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260603150025.30980-2-avivb@amazon.com>
+References: <20260603150025.30980-2-avivb@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 03 Jun 2026 15:21:46 +0000
+Message-Id: <20260603152146.92EA61F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260602235709.1541603-1-acme@kernel.org> <20260602235709.1541603-9-acme@kernel.org>
-In-Reply-To: <20260602235709.1541603-9-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Jun 2026 08:19:08 -0700
-X-Gm-Features: AVHnY4Ln7NqA50-ySXf_O4j2x71HR23d6ZJ5m6B7ia_jgTUmuJ-smXN4dpHkkjQ
-Message-ID: <CAP-5=fU3UYq6XyhbnkpEcf4EtJ=42OcBDqr2GU2i-Ur4sLF7Sg@mail.gmail.com>
-Subject: Re: [PATCH 8/8] perf test: Add file offset diagnostic test for
- corrupted perf.data
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 2, 2026 at 4:58=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> Add a shell test that verifies the file_offset diagnostic messages
-> work correctly when perf encounters corrupted events.
->
-> The test corrupts a MMAP2 event's size field in a recorded perf.data
-> file, then checks that perf report produces warning messages that
-> include both the file offset (e.g. "at offset 0x2738:") and the
-> event type name with numeric id (e.g. "MMAP2 (10)").
->
-> This exercises the diagnostic improvements from the file_offset
-> series, which retrofitted all skip/stop/error messages to include
-> the position and type of the problematic event.
->
-> Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Pre-existing issues:
+- [Critical] Type confusion in `arm_cmn_validate_group` allows arbitrary ke=
+rnel memory read and out-of-bounds heap write via mixed PMU event groups.
+--
 
-Thanks,
-Ian
+commit 5cf0bca45fce2ef5c66d58f875b8d4b3f7c015e0
+Author: Robin Murphy <robin.murphy@arm.com>
 
-> ---
->  .../shell/data_file_offset_diagnostics.sh     | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100755 tools/perf/tests/shell/data_file_offset_diagnostics.s=
-h
->
-> diff --git a/tools/perf/tests/shell/data_file_offset_diagnostics.sh b/too=
-ls/perf/tests/shell/data_file_offset_diagnostics.sh
-> new file mode 100755
-> index 0000000000000000..031f49480d999d8c
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/data_file_offset_diagnostics.sh
-> @@ -0,0 +1,82 @@
-> +#!/bin/bash
-> +# Test that perf report includes file offsets and event type names in di=
-agnostic messages.
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# The file_offset diagnostic series adds "at offset 0x...: TYPE (N)"
-> +# to all skip/stop/error messages.  This test corrupts an event's size
-> +# field in a perf.data file, then verifies the resulting warning
-> +# includes the file offset and event type.
+perf/arm-cmn: Move DTM index data out of hw_perf_event
+
+This commit moves the DTM index arrays and watchpoint tracking out of
+hw_perf_event into separate dynamically allocated memory structures. This
+change is intended to accommodate growing CMN configurations without exceed=
+ing
+the limits of hw_perf_event.
+
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index f5305c8fdca43..f1978a53d1c19 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+
+[ ... ]
+
+> @@ -1787,6 +1809,11 @@ static int arm_cmn_event_init(struct perf_event *e=
+vent)
+>  	if (type =3D=3D CMN_TYPE_DTC)
+>  		return arm_cmn_validate_group(cmn, event);
+> =20
+
+[Severity: Critical]
+This isn't a bug introduced by this patch, but could this lead to a type
+confusion and out-of-bounds write when validating groups with mixed PMU eve=
+nts?
+
+When arm_cmn_validate_group() iterates over the group's siblings, it doesn't
+verify that sibling->pmu =3D=3D event->pmu. If a sibling is a hardware even=
+t from
+a different PMU, it passes it to arm_cmn_val_add_event():
+
+drivers/perf/arm-cmn.c:arm_cmn_validate_group() {
+...
+    for_each_sibling_event(sibling, leader)
+        arm_cmn_val_add_event(cmn, val, sibling);
+...
+}
+
+Inside arm_cmn_val_add_event(), it casts the sibling's hw_perf_event to an
+arm_cmn_hw_event. Since userspace controls attr.config, it can overlap with
+the hw->dn pointer, allowing arbitrary kernel memory reads:
+
+drivers/perf/arm-cmn.c:arm_cmn_val_add_event() {
+...
+    for_each_hw_dn(hw, dn, i) {
+        int wp_idx, dtm =3D dn->dtm, sel =3D hw->filter_sel;
+
+        val->dtm_count[dtm]++;
+...
+}
+
+Because the read byte dtm can be up to 255 and the array bounds are
+CMN_MAX_DTMS (188), does this enable a controllable out-of-bounds write on
+the kernel heap?
+
+> +	event->destroy =3D arm_cmn_event_destroy;
+> +	hw->dtm_idx =3D arm_cmn_alloc_dtm_idx();
+> +	if (!hw->dtm_idx)
+> +		return -ENOMEM;
 > +
-> +err=3D0
-> +
-> +cleanup() {
-> +       [ -n "${perfdata}" ] && rm -f "${perfdata}" "${perfdata}.old"
-> +       rm -f "${corrupted}" "${stderrfile}"
-> +       trap - EXIT TERM INT
-> +}
-> +trap 'cleanup; exit 1' TERM INT
-> +trap cleanup EXIT
-> +
-> +perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
-> +corrupted=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
-> +stderrfile=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX) || exit 2
-> +
-> +if ! perf record -o "${perfdata}" -- perf test -w noploop 2>/dev/null; t=
-hen
-> +       echo "Skip: perf record failed"
-> +       cleanup
-> +       exit 2
-> +fi
-> +
-> +# Find the file offset of the first MMAP2 event via perf report -D.
-> +# Format: "timestamp 0xOFFSET [0xSIZE]: PERF_RECORD_MMAP2 ..."
-> +mmap2_line=3D$(perf report -D -i "${perfdata}" 2>/dev/null | grep "PERF_=
-RECORD_MMAP2" | head -1)
-> +if [ -z "${mmap2_line}" ]; then
-> +       echo "Skip: no MMAP2 events found in perf.data"
-> +       cleanup
-> +       exit 2
-> +fi
-> +
-> +mmap2_offset=3D$(echo "${mmap2_line}" | awk '{print $2}')
-> +mmap2_offset_dec=3D$((mmap2_offset))
-> +
-> +# Copy the file and corrupt the MMAP2 event's size field.
-> +# perf_event_header layout: type(u32) misc(u16) size(u16)
-> +# Set size to 16 (0x10 0x00 little-endian) =E2=80=94 below the MMAP2
-> +# minimum, which triggers the "event size too small" warning.
-> +cp "${perfdata}" "${corrupted}"
-> +printf '\x10\x00' | dd of=3D"${corrupted}" bs=3D1 seek=3D$((mmap2_offset=
-_dec + 6)) conv=3Dnotrunc 2>/dev/null
-> +
-> +perf report -i "${corrupted}" --stdio > /dev/null 2> "${stderrfile}"
-> +
-> +# Check that warnings include "at offset 0x..."
-> +if grep -q "at offset 0x" "${stderrfile}"; then
-> +       echo "File offset in diagnostics [Success]"
-> +else
-> +       echo "File offset in diagnostics [Failed: no 'at offset 0x...' fo=
-und]"
-> +       echo "  stderr was:"
-> +       head -5 "${stderrfile}"
-> +       err=3D1
-> +fi
-> +
-> +# Check that the event type name and numeric id appear: "MMAP2 (10)"
-> +if grep -q "MMAP2 (10)" "${stderrfile}"; then
-> +       echo "Event type name in diagnostics [Success]"
-> +else
-> +       echo "Event type name in diagnostics [Failed: no 'MMAP2 (10)' fou=
-nd]"
-> +       echo "  stderr was:"
-> +       head -5 "${stderrfile}"
-> +       err=3D1
-> +fi
-> +
-> +# Check that the reported offset matches the actual corruption point
-> +if grep -q "at offset ${mmap2_offset}:" "${stderrfile}"; then
-> +       echo "Correct offset reported [Success]"
-> +else
-> +       echo "Correct offset reported [Failed: expected offset ${mmap2_of=
-fset}]"
-> +       echo "  stderr was:"
-> +       head -5 "${stderrfile}"
-> +       err=3D1
-> +fi
-> +
-> +cleanup
-> +exit ${err}
-> --
-> 2.54.0
->
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260603150025.3098=
+0-1-avivb@amazon.com?part=3D1
