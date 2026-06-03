@@ -1,32 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B6813A4508;
-	Wed,  3 Jun 2026 14:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76CB947DD55;
+	Wed,  3 Jun 2026 14:11:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780495688; cv=none; b=j8DGM6PfytIaHQ+TQIbhQzDV+gU9liZ1XSoImdH172athUdLHHoP0DqUjB3StefdvR0AwVl/RNCgq4YSW1DGHV3x2JqfP6KjjryR0TLmB331BSmeKrvR2/ol/ok7cKdOtYkOnBc0qa0ZX8ymLIyv2sRVIT9DImd1gNkIRmGgApw=
+	t=1780495862; cv=none; b=pyXn07+ohGT2LpfCMlaQ+djwFks4SSchYB78wxyPNZ70QNvWRlgYZ2EAsGn9ugeqR1HtBSvJ+Nwf+/3E40L8GD0Aw6mKMh7/2izKYV9Hbv6+zc/6w56qwV6VRJPgv2xepbxvNfRcN/FPn1qcrvPD+M/ZUi97kttsIXLOuSVpMUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780495688; c=relaxed/simple;
-	bh=J4lf7anc8bhIqqTujEh0dhSjQuwaw0eZ2Ppem51hTno=;
+	s=arc-20240116; t=1780495862; c=relaxed/simple;
+	bh=HFtynj+BbYl9EaWNCP8jiRd+6Ij4Y8cJoB9KXD8A8jI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UlTViEKQtWhOsT8lIU2C6d2xx5g3Z30bmFmto5V75Yg3dbVlKTMBtCST15bvy1LA5HDkP/UYCvrE5HVs0n+bUbhCkG+jDhUD9zJkS6BaV59gDVvJZMHaTvm3LeRYiNAoRd7ZJlG+snlFHBniiSjolSBbM/q3uTI1XhAD4UdkPpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=cZYXsPz7; arc=none smtp.client-ip=217.140.110.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=s90PSgIm4KzedCqphWgfYOqhLweQ/wjGcxiDIdZC5iNFspXt8V/zyawjtdQ1uYHDS0f0rQR8fTPdTdUOSuZcXfgCIAriZG/33PEuO/l1jQ4tOVvYfZR2j1rWx6ZLQkL0TrF+g0lWii7LR+zF5LdksPBzxdbeid7pS3axAEn3jsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=cmFdbF2w; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="cZYXsPz7"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="cmFdbF2w"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B0BA1477;
-	Wed,  3 Jun 2026 07:08:01 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68B881477;
+	Wed,  3 Jun 2026 07:10:54 -0700 (PDT)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A54B63F632;
-	Wed,  3 Jun 2026 07:08:05 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4F983F632;
+	Wed,  3 Jun 2026 07:10:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780495686; bh=J4lf7anc8bhIqqTujEh0dhSjQuwaw0eZ2Ppem51hTno=;
+	t=1780495859; bh=HFtynj+BbYl9EaWNCP8jiRd+6Ij4Y8cJoB9KXD8A8jI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cZYXsPz7FqjxG8z0ST2KB10rXymP2b7jskj5ADyemTNYnrYytuu+892eQtA4MAk0U
-	 DKAxA0SY/rhdlwxTc2NASHw8kQ9vpBhsjefAXtWuGYEbMDzHF4j/doDNnC3wi8+bST
-	 EfHEkEP85TqWB3b7kmduuQ9TcQo/oosRiZ9oGbx8=
-Date: Wed, 3 Jun 2026 15:08:03 +0100
+	b=cmFdbF2woqL+6KIgmrbRN9g/gumoD2awg5aZFzy4iLEBE7Sh3DraP4CAqOlPAffvu
+	 nL//cEUHjdJFh+QpzTZM+1AvfRYGWzH/7glD8B35/69QFKI5Tjt571U/oys2F1pVtw
+	 VeKcU8KSOIIaEu+1ZU7E7TJqVvqqGPP8bo0pnuTE=
+Date: Wed, 3 Jun 2026 15:10:56 +0100
 From: Leo Yan <leo.yan@arm.com>
 To: James Clark <james.clark@linaro.org>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
@@ -41,11 +41,10 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
 	linux-kernel@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 06/18] perf test cs-etm: Replace unroll loop thread
- with deterministic decode test
-Message-ID: <20260603140803.GV101133@e132581.arm.com>
+Subject: Re: [PATCH v2 07/18] perf test cs-etm: Remove asm_pure_loop test
+Message-ID: <20260603141056.GW101133@e132581.arm.com>
 References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
- <20260602-james-cs-context-tracking-fix-v2-6-85b5ce6f55c6@linaro.org>
+ <20260602-james-cs-context-tracking-fix-v2-7-85b5ce6f55c6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,31 +53,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260602-james-cs-context-tracking-fix-v2-6-85b5ce6f55c6@linaro.org>
+In-Reply-To: <20260602-james-cs-context-tracking-fix-v2-7-85b5ce6f55c6@linaro.org>
 
-On Tue, Jun 02, 2026 at 03:26:48PM +0100, James Clark wrote:
+On Tue, Jun 02, 2026 at 03:26:49PM +0100, James Clark wrote:
+> It's not obvious what this test is for so remove it. It's not a stress
+> test because it doesn't output lots of data and it's not a functional
+> test because it only looks for raw trace output. It seems to imply that
+> a program written in assembly influences whether trace would be
+> generated by the CPU or not, but the CPU doesn't know what language the
+> program is written in.
+> 
+> We already have lots of Coresight tests that test the full pipeline
+> including decoding, and in many more modes of operation than this one,
+> so if no trace was collected they will already fail leaving this one
+> redundant.
+> 
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-[...]
-
-> +# Remove open brace lines as they may not be hit depending on the compiler
-> +sed -i \
-> +  -e '/deterministic.c:8$/d' \
-> +  -e '/deterministic.c:15$/d' \
-> +  -e '/deterministic.c:23$/d' \
-> +  "$tmpdir/script"
-
-Is this related to the function definition?
-
-I can see the brace lines with change below. It might be more reliable
-if adding unused function argument, which can give chance for hit
-function entry.
-
-  static int function1(void)
-  {
-      ...
-
-      return 0;
-  }
-
-Thanks,
-Leo
+Reviewed-by: Leo Yan <leo.yan@arm.com>
