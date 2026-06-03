@@ -1,66 +1,66 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4D43DC4DD
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 15:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528C83DEFF6
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jun 2026 16:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780502038; cv=none; b=RsPVEvPbnTbg+7YxaYvGl2bwWlkX4ICD5L4axkS0ud3DuPq3jaEVmv75ntjWrK2eufgw/t4HSCYBlGDZ1/gyrFf7F9RkXqTZSPWVGxoa552/gamRiB/MPdcO98yIzvJR5f0IBJ/fqKJme/1BueJknQk52GyA7VvVDX02WUJ0gBg=
+	t=1780502467; cv=none; b=ev0L2q4phWqhU2DdUaRx1IHsqbybmNQIvhedO8/C0FIUtvNqJHjDTczSx8TIthzi5UqjfbPTlkdRY/e1S55LwXwJhc+nfBarUA2tXx6kwEDLsNlvxbmkQYOyjdlxSqRntxHo4rnAnivdY5sBaqR+9FQ45KEcyV6kOn7YrueavAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780502038; c=relaxed/simple;
-	bh=YyHIKl0YFnOrf4b3X6aHRwQh3XkLsdrmrGiOM+ixt8g=;
+	s=arc-20240116; t=1780502467; c=relaxed/simple;
+	bh=pQQwDZC2/IQqd6kh9fxl4SaPTFvh6wkfm8PxFI9p/bM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KuOUFdNo0LLsMYFsP+FeqFNJDSQ1r458KmPS4SdQDGIfo4MGyiECxsBzGYF8VM8u+aFW1e2G2ONtT2tbPWrp29VesxD6RpwB9pj9rtS5kB+Iw4HZYGd4vJ+wUDJcDss9w/mXjdM4mnMQV6tMw3ta9xOOMeLlyuTRcYCNoTUPjt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H2gylKza; arc=none smtp.client-ip=209.85.221.47
+	 In-Reply-To:Content-Type; b=gqAxhTPCYUybs8WOU9W7a6I050Os37P1LY/gOYCPvGF//77ebQnSj2ucQZ5JD2BNgocfT/C2WQa8RG8XtZ/NXPPpP1hhoU3IKeTvnwPKU1xszpF5IeMu56G6ZxgevXl4fa0WHsWZDzM1+VJCKD4oa7PFtShWvJE1nygphuQpf1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=onoEwvma; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H2gylKza"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-45eeea039ebso3087878f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 08:53:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="onoEwvma"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-68b482888c3so1345604a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jun 2026 09:01:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780502035; x=1781106835; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1780502465; x=1781107265; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=WeNxgthX7RDeq1y4GZbJjfxu5vLqCNfeHjKxVMHovlQ=;
-        b=H2gylKzanBFzLlh0QwLhFCoTA9kmMu3xckPfj00m/AgWY08AMjxKyC1tbGP6AclfHK
-         f6TqEp9VWlEqppmCKNjh1j54ERThV1uT3XwIr1S0UZqxrf8dJJKvNcHMWpTDcomNdDQT
-         1ugep2Umk0xBkrTavpX9EezveY2qnMdLmfvob/JzOcWCpNhaVgJnTCClBZYpREYU0J4W
-         QP4QxYz0US7umplCbTx/sxwVHNmdJ7SxmFYTzRGf4odh2x/OXtv9GSeKpBUmKODYnMMd
-         8tNawXfMv87ZsCsx89KD1c2PnM4fPWp5r+plId3uuSdVa7ykpV3QOT+Ct0pL9Ep2VF+H
-         Ttsg==
+        bh=zYMOxXQEP3+1sbvX2qlt0z2iruVG6MdGHtsqLO+rEWo=;
+        b=onoEwvmafC3fqMZFsGZrjri79fAUmjyHrE7fjSxm3x5onnEGQJCuYnkK5qkmP3tppJ
+         3fsQtvpF/QkO6S8NO44jKtYwysawNZByeW+JC/WS9Bbymu4EXAgyVQnk2E301sLWWbxz
+         SW4qVdTPID498eIkAbbZYvLTHSBTtB3NS7nD358irmTPaX8AbFDKfwzv6tWIafp5I1zE
+         rU3IO7ksxhxNpc/J6hDjmzvN5yia1k4VRIgu6JbuKYkPN05QdsqGW6th5XnmAsBWTo7B
+         azZWk6oiw7VkuBPwMyMnP7qITrzj27oFV7XozJ3ZmaVcEWbLCwhWN2H5THlhHefIK0zh
+         eXKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780502035; x=1781106835;
+        d=1e100.net; s=20251104; t=1780502465; x=1781107265;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WeNxgthX7RDeq1y4GZbJjfxu5vLqCNfeHjKxVMHovlQ=;
-        b=dj0/WDvnCZHOwUxPlJvlcPTApoLSqaouzPUcmN744ccV5yPKQLnVZav3IZpoEG0LHf
-         ARWYb7FkwNNvFFhPE67aBFS6PK3zcp57S1u+RCHXGiuG+RM7FbTqsjbSiEyuyohtGgIo
-         V8whVSYwqC6T68DOJn4pTMOln8i4a5utLkFPONspKfmbJtUUXGAktUztBkB2COR7XAGu
-         FwuDkATV+8XkacUPWkLVtRpQ6QajDAE6dPMSTufi9nPCM2qklYcnCU10EzKEiU13QA3k
-         kpY57xIKHOqGr5tW82T7VoyLAdqpyMESfSoteb7lrW0C+EsLx0/plbr4Gs1Si8UxDXdG
-         1sgg==
-X-Forwarded-Encrypted: i=1; AFNElJ8RHmSWQElrEpTOUBHlXpeqjTYajs0LV2Z7DJIf72iqCBWkr8zDtkE3WqQFanxqps+kCLDku9AkUq4uYSoV8TxT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz16WoAn/iq19xCTgvwPhhP/5aTQF/BWMKaZG8lL8RsspnJ7IIA
-	EmOMFSnQG/wFtdGQ69N7R2vR2ykEf2R4l76lNeqakcJL2tEs15joWBJGfLOzxBLSATE=
-X-Gm-Gg: Acq92OFLIoIF5l8Qcwk9uHoBb4xhyRTKoqMrfGIRf6Hn4e+zlb0izD7ewYHZVlMIj5e
-	hVbBfNg20cNiFVd4obIP79kxzUDjjiF8m8359eXKDqyoY+uBJnXltDX/KFoPAYKLERHT6I0Pq1J
-	2PERQHpR5gRXB6pD6v+cRRqeJT3cq9lBietanLdgUGPmWO39aYKhRGuI+pUlBP6xwJDbd0muAxh
-	nQpWOHDk4ttiw9ptCIR608sRvSrsE2tlnn9gU/e0fwkd13uN4TdJdPXBKQhi1tR8Q54gJ9xMvIV
-	Y9iR+eeHnm5dNAk0TWvYS3yzjEBrBJlHSa3Mi5vh2y9vCaJJOBLVqBbBmEKiDs/tEuP+g6br9Jf
-	hqvw3Ql5mx0CcBzajGeXOhH+DFewNPehaFNfB5RrM1qkQTNYhnkQ/6SDz+QL7Jdok0i0DYzK2xm
-	8DxGC/rQyUPGDCTOgOxwgoVfnsiH2ZQSMMUWgD8/U=
-X-Received: by 2002:a05:6000:2990:20b0:460:25f3:b25a with SMTP id ffacd0b85a97d-46025f3b73emr1462864f8f.34.1780502035457;
-        Wed, 03 Jun 2026 08:53:55 -0700 (PDT)
+        bh=zYMOxXQEP3+1sbvX2qlt0z2iruVG6MdGHtsqLO+rEWo=;
+        b=BBbMFcbVOi5kdJyqoL4Q4xNO2Hgq+Rb4FHkZTH9jM/Ojmgnx2MyW6NeCu5RyjvSsRx
+         K+iydTmfS/bGl9QqreYE8oubMOvoVbOBQhtzkzqBmm9WwL2Iemewi/mjUEPAyWS/Pqs9
+         pmmWeHqLcWaRBAlB5faCs+9rHxHSWv21hG/RD1QMbssyRVTb4ZYIyf8GqHV4lNe6dH1n
+         PYXoGejsFWc35pZTV6b5YVjNdT9TuJ9j92rrUDsXuBs108mMshkXyF/0r0ovbOIX6y06
+         gmVl/OH720/bxmm17AmQlluNAjXaKYMbRf/oIhfhjA+DVFjIveNmCfqrrXb1tsUUImki
+         rBfA==
+X-Forwarded-Encrypted: i=1; AFNElJ/iYWzD1k0JELnlB3QiKZyFjA92zmus6y47MXWA/q4ixKzr6yHLzaVoLOZldMUP0JTuhp2kFKbs/uU6kHkQExPE@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaT2wc7T5RAgkrSyeWAD9NE98+WilROJ1WOIprSy4wQspetGS+
+	B9zcKzvnkNFqZdHKLdM11VZl0nejpvPkzQXhchREB9mU8r2bs7UCMtA+ra3SJedGVDA=
+X-Gm-Gg: Acq92OF4s/YQ6jVIdd7Kjfn26e27MeBsGkBHEi1w4kpbLY8jxo4oh3jFfdzahzq3Am2
+	LJxuebeseQf+KX28dhyE8qxK2/o+0MbJi8FLQhtzb8DUTS13XAXLno0Hh90Y1iVpVGBjceY8oAu
+	HDedix1yESQPaI/fK/keWfbbZJD5cKBnb+9duMiXlZylXhhFtHicsJeL20h1OUEqjDoLJqrg4Uw
+	z1Ta2h6cujRLnirlaQVK5lFs85cr6PFduFrpUWkTdZL/wZflwHV6qcaUfvE/ZspuHwEOmoVj37r
+	9p6Zui3AJ0xqEY37lSTuS3hYUf/Qu3vK1HW4L3RizCLF4tTDAECmanrhHjf3EcoapY0M+Ykb9zj
+	4c9iYDxjNb+QzqjN0piCsowMPq9ugTbrqaa0/CiCnjOFlKVJTw8jE8Kx5lvHsvg2uOBTvV+aZGo
+	qFhaybzzf4zTNsL1zq8xKln351WXEJUcYCzXTchJM=
+X-Received: by 2002:a17:907:180d:b0:bd5:1605:e1c3 with SMTP id a640c23a62f3a-bf1d159be66mr2503066b.1.1780502464474;
+        Wed, 03 Jun 2026 09:01:04 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f344148sm8692402f8f.19.2026.06.03.08.53.53
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf05228a16csm180101066b.28.2026.06.03.09.01.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2026 08:53:54 -0700 (PDT)
-Message-ID: <9b149f11-3e05-4871-92a0-d0fe1ec49357@linaro.org>
-Date: Wed, 3 Jun 2026 16:53:52 +0100
+        Wed, 03 Jun 2026 09:01:03 -0700 (PDT)
+Message-ID: <2f1db2b3-93e8-4c32-b207-304e3a43ce77@linaro.org>
+Date: Wed, 3 Jun 2026 17:01:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,7 +68,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/18] perf test: Add deterministic workload
+Subject: Re: [PATCH v2 06/18] perf test cs-etm: Replace unroll loop thread
+ with deterministic decode test
 To: Leo Yan <leo.yan@arm.com>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
  <mike.leach@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -79,57 +80,55 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org
 References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
- <20260602-james-cs-context-tracking-fix-v2-5-85b5ce6f55c6@linaro.org>
- <20260603112742.GT101133@e132581.arm.com>
- <b4836fe9-49cf-44c3-96a9-548e890cee29@linaro.org>
- <20260603134339.GU101133@e132581.arm.com>
+ <20260602-james-cs-context-tracking-fix-v2-6-85b5ce6f55c6@linaro.org>
+ <20260603140803.GV101133@e132581.arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260603134339.GU101133@e132581.arm.com>
+In-Reply-To: <20260603140803.GV101133@e132581.arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 03/06/2026 2:43 pm, Leo Yan wrote:
-> On Wed, Jun 03, 2026 at 02:10:37PM +0100, James Clark wrote:
->>
->>
->> On 03/06/2026 12:27 pm, Leo Yan wrote:
->>> On Tue, Jun 02, 2026 at 03:26:47PM +0100, James Clark wrote:
->>>
->>> [...]
->>>
->>>> @@ -22,3 +23,4 @@ CFLAGS_brstack.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->>>>    CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->>>>    CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->>>>    CFLAGS_inlineloop.o       = -g -O2
->>>> +CFLAGS_deterministic.o    = -g -O0
->>>
->>> I have no strong opinion for using 'noinline' in source or using the
->>> global option '-fno-inline', just thought this is not easy to follow
->>> up if anyone (likely myself) will write a new workload for disabling
->>> inline. Could we have consistent style for this?
->>>
->>> For the patch itself:
->>>
->>> Reviewed-by: Leo Yan <leo.yan@arm.com>
->>
->> Actually it's a fair question why some have -fno-inline and others do it in
->> the code, it could just be copied from when these were built by their shell
->> script tests. From a quick look I would say we can easily drop the
->> -fno-inline and do it in the code, and it's better to only noinline what's
->> needed rather than everything. But that's probably a change for another
->> time.
+On 03/06/2026 3:08 pm, Leo Yan wrote:
+> On Tue, Jun 02, 2026 at 03:26:48PM +0100, James Clark wrote:
 > 
-> Seems to me, `-fno-inline` is more reliable.
+> [...]
 > 
-> I.e., in this patch deterministic() has no 'noinline' annotation, my
-> understanding is the test expects it is not inlined. With `-fno-inline`
-> flag, we don't need to worry anything is missed.
+>> +# Remove open brace lines as they may not be hit depending on the compiler
+>> +sed -i \
+>> +  -e '/deterministic.c:8$/d' \
+>> +  -e '/deterministic.c:15$/d' \
+>> +  -e '/deterministic.c:23$/d' \
+>> +  "$tmpdir/script"
+> 
+> Is this related to the function definition?
+> 
+> I can see the brace lines with change below. It might be more reliable
+> if adding unused function argument, which can give chance for hit
+> function entry.
+> 
+>    static int function1(void)
+>    {
+>        ...
+> 
+>        return 0;
+>    }
 > 
 > Thanks,
 > Leo
 
-Ok I can replace the noinlines with -fno-inline then.
+Originally I included the brace lines in the test and it was working 
+even without function arguments, but Sashiko mentioned that they may not 
+always be hit.
+
+I think its point was that there is no hard rule about debug symbols for 
+open braces and the behavior might change from one version of the 
+compiler to the next, or whether there is a function prologue or 
+inlining or not etc.
+
+I don't think it's important to the test at all though? So to err on the 
+side of caution it makes sense to not test for them. Unless there's a 
+reason you think testing for open braces is important? Surely just 
+testing for actual lines of code appearing in a certain order is enough.
 
