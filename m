@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9DF329E6C;
-	Thu,  4 Jun 2026 21:49:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54269377563;
+	Thu,  4 Jun 2026 21:49:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780609774; cv=none; b=EHhud9q1CmWFNKlutNtesw96XssSAJjYGQ+Nr/nFD3daQ5qo1fXQZXzVOkVdFSpWnUfOaIw8hEWzqV5kHEgCcSjZLpX8e6W9eBJn7dkypl/B4HPH+umXFLaBez/59fCHGFsrGtxBO935GL7+vPiLvlAQ0uy7vDkaEca06Uxwze8=
+	t=1780609774; cv=none; b=m2gXT7uC/PcAC/UgdpPysfT779KBiiNZYWCAE8/mOODWA8mS4516FrJQ2NiRilrBskzOmgzY274m9PqmmoxlV0uyjKSJY5LXTU/8W3S9norEpcPblr29ddhp/H6fDoMzBu7Xwb8yxdqebIfSUu2QV0Fp8FVxuxMCctDto6NQURs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780609774; c=relaxed/simple;
-	bh=s9T70sQxiQJvjGYD/9kQcsxcsPLn/NwTDO7wW7XLcLo=;
+	bh=MmD10+K+SOetY9s8vYbxiW2ds80rp9fUZttdunNkuZM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e+KbCn56aTm7CRNJ26se/AWIQtQWLW64zNHA1ak36p9sPkbmkC8ne8v5Ou1iN/WUOxVLIgxyw8yCZhDr71aaCuHhf4uuLzFJmf3zMX3hHSTZqRRRh4jS0UfsdBrMPhCgZXTJw+GE40+jY7zulE+HdH/YujcG5YfGI0Fsg3Dtm5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPI2RBfp; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=oRD5BSQ1n1QpJPZ5bmy2HyKVlxzrhUywyMBvrlXv/NVI5+YNyGs3aWN9sEYx+DbLqy+kArKQLCOntplQaoVjQIf5AN8p1iYbfQPX8tw8xH28wJPPhAzDjqDZLkL1yWVKw16o1Yniojkna7sNCDCovuEj2+6u/UQPFrPfApvZe0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itB/hEqx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPI2RBfp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F5361F00898;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itB/hEqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F11311F00899;
 	Thu,  4 Jun 2026 21:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780609772;
-	bh=X7r0P5w2HbxKFj1JMinted+quLZ0T7Kak6r1aDsmJWU=;
+	s=k20260515; t=1780609773;
+	bh=XGd7nZPU7g+n5UU8EOXjz8Hg+yquzcf4PxcMBg6MSCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KPI2RBfpXISn6d3ycTjkmMCEmyS6abmqRurYMVtU8sFLxgpDMwAH5+7jcglLulMIi
-	 UIfn1RYZind/ZvkP4Y5cBtQGdvWlLpEwxeDu/HuFsvQOsQHcLZ6jZTQ508pAfl+W0/
-	 EXFftecI8XNyIk2/tvT60vJJblbocdryfVF8Kmv+1rpE7ZjNDpW/YLb2H9xLhSSeu0
-	 m8ETYXiPgD+ipve4gxDQIHjKR2plOPGGqoS1a6jbgnkedyfSMoP+XvhB1ohYEjTjZF
-	 jBMHPXfzLZqrZZkBzXKaIE3dQ9ObLvaHOezVS5e8l5pMZlTWv4/MCeBWvADjQhR2sv
-	 PzQMh5hDWnL4Q==
+	b=itB/hEqxXNPoWVBoFxSJNVvUm10LvHD1utYzxNPeCpmoBzvOrT9wq9+YSSJeOuzaT
+	 MywJXoTo5fDr8hzxKfzJd2gK0ykYs68RbPxCVkuHE4VN2ZFFugrE6baiba6jfuqhNs
+	 RpqLKtCQbKDopyM3VqhdlFd9T4N3IGiXzvhaLQuf9LF7UjZBqbUvF2tyaVYol5iZ5y
+	 kJxsr17XiC6K5kDE0+7vl02alqr4BVLKQ+7qSFK7bixdaqWyTsXVdVW0dVmsWOIkZT
+	 tW6XqF/ET/BnQwPsil7vaLK806EPe+/yK9MAWWWoPg6F+7HPY1FVd/juv1N2gffD1x
+	 xQTXJXgYP9aVQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 1/4] perf timechart: Don't pass @event to cat_backtrace()
-Date: Thu,  4 Jun 2026 14:49:27 -0700
-Message-ID: <20260604214931.2202322-2-namhyung@kernel.org>
+Subject: [PATCH v2 2/4] perf timechart: Generate backtrace only if needed
+Date: Thu,  4 Jun 2026 14:49:28 -0700
+Message-ID: <20260604214931.2202322-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
 In-Reply-To: <20260604214931.2202322-1-namhyung@kernel.org>
 References: <20260604214931.2202322-1-namhyung@kernel.org>
@@ -50,59 +50,85 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The cat_backtrace() is only called from process_sample_event() which
-means the event type is always PERF_RECORD_SAMPLE.  We don't need to
-pass the event just because to print already known info.
+The backtrace was used by sched-switch and sched-wakeup only.  No need
+to call cat_backtrace() in the process_sample_event().  Let's pass NULL
+backtrace and generate it from the sched events.
+
+As it needs a pointer to the 'machine', let's save the session in the
+timechart struct and use the host machine of the session instead of
+passing the pointer to all handlers.  It should be fine to assume the
+host machine as timechart command doesn't deal with guest machines and
+there's no way to get tracepoints from the guest events.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-timechart.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ tools/perf/builtin-timechart.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 85a9ad0455aecccd..dafd361ecf9d8cd7 100644
+index dafd361ecf9d8cd7..337ae547d008ea0b 100644
 --- a/tools/perf/builtin-timechart.c
 +++ b/tools/perf/builtin-timechart.c
-@@ -493,8 +493,7 @@ static void sched_switch(struct timechart *tchart, int cpu, u64 timestamp,
-  * Returns a malloc'd backtrace string built via open_memstream, or NULL
-  * on error.  Caller must free() the returned pointer.
-  */
--static char *cat_backtrace(union perf_event *event,
--			   struct perf_sample *sample,
-+static char *cat_backtrace(struct perf_sample *sample,
- 			   struct machine *machine)
- {
- 	struct addr_location al;
-@@ -516,9 +515,8 @@ static char *cat_backtrace(union perf_event *event,
- 		goto exit;
- 
- 	if (machine__resolve(machine, &al, sample) < 0) {
--		pr_err("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
--		       perf_event__name(event->header.type), event->header.type,
--		       sample->file_offset);
-+		pr_err("problem processing SAMPLE (%u) event at offset %#" PRIx64 ", skipping it.\n",
-+		       PERF_RECORD_SAMPLE, sample->file_offset);
- 		goto exit;
- 	}
- 
-@@ -578,7 +576,7 @@ typedef int (*tracepoint_handler)(struct timechart *tchart,
- 				  const char *backtrace);
- 
+@@ -56,6 +56,7 @@ struct timechart {
+ 	struct per_pid		*all_data;
+ 	struct power_event	*power_events;
+ 	struct wake_event	*wake_events;
++	struct perf_session	*session;
+ 	int			proc_num;
+ 	unsigned int		numcpus;
+ 	u64			min_freq,	/* Lowest CPU frequency seen */
+@@ -578,7 +579,7 @@ typedef int (*tracepoint_handler)(struct timechart *tchart,
  static int process_sample_event(const struct perf_tool *tool,
--				union perf_event *event,
-+				union perf_event *event __maybe_unused,
+ 				union perf_event *event __maybe_unused,
  				struct perf_sample *sample,
- 				struct machine *machine)
+-				struct machine *machine)
++				struct machine *machine __maybe_unused)
  {
-@@ -595,7 +593,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 	struct timechart *tchart = container_of(tool, struct timechart, tool);
+ 	struct evsel *evsel = sample->evsel;
+@@ -593,10 +594,8 @@ static int process_sample_event(const struct perf_tool *tool,
  
  	if (evsel->handler != NULL) {
  		tracepoint_handler f = evsel->handler;
--		char *backtrace = cat_backtrace(event, sample, machine);
-+		char *backtrace = cat_backtrace(sample, machine);
+-		char *backtrace = cat_backtrace(sample, machine);
  
- 		ret = f(tchart, sample, backtrace);
- 		free(backtrace);
+-		ret = f(tchart, sample, backtrace);
+-		free(backtrace);
++		ret = f(tchart, sample, NULL);
+ 	}
+ 
+ 	return ret;
+@@ -656,7 +655,10 @@ process_sample_sched_wakeup(struct timechart *tchart,
+ 			 sample->file_offset, sample->cpu);
+ 		return -1;
+ 	}
++
++	backtrace = cat_backtrace(sample, &tchart->session->machines.host);
+ 	sched_wakeup(tchart, sample->cpu, sample->time, waker, wakee, flags, backtrace);
++	free((char *)backtrace);
+ 	return 0;
+ }
+ 
+@@ -675,8 +677,11 @@ process_sample_sched_switch(struct timechart *tchart,
+ 			 sample->file_offset, sample->cpu);
+ 		return -1;
+ 	}
++
++	backtrace = cat_backtrace(sample, &tchart->session->machines.host);
+ 	sched_switch(tchart, sample->cpu, sample->time, prev_pid, next_pid,
+ 		     prev_state, backtrace);
++	free((char *)backtrace);
+ 	return 0;
+ }
+ 
+@@ -1661,6 +1666,7 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
++	tchart->session = session;
+ 	symbol__init(perf_session__env(session));
+ 
+ 	(void)perf_header__process_sections(&session->header,
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
