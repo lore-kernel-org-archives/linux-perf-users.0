@@ -1,49 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B767290DBB;
-	Thu,  4 Jun 2026 13:38:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA22225403;
+	Thu,  4 Jun 2026 13:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780580325; cv=none; b=PYhLHdcBIQZpnJ1iQRp4+0nn+B4jy4fnAzopUnhVpSCeF8JuLhZbLJuECC89b/PwSln+2cXe2hpylpAd+UiwMGMm0eT1SdFD+8oesKKBfUxsIwWqORc1DiEHDNS/GwcXFyGLmauMxME+hpZuauu5r4Edu3KlM5wYSYvKCAIiNH8=
+	t=1780580946; cv=none; b=DZ6H4Me5IoBo95iyKkinNq9t2/DcF5fUsj+M2uCILEmxtu4yESwKvewc1YEkMLpb15NPjikB8JNjqk5KNMClHUm85BJk9kP/OcnDN6yucZsaniKrSxTz5AaUOH+EIpfWYdn08t4Bhm0lT2c4p1JhxDoVNsRJ75KGGbTT3A6JS9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780580325; c=relaxed/simple;
-	bh=NdwV69ZBouzPJAoi5E7IaT3INyfqv0o/qd5OhUX6cGU=;
+	s=arc-20240116; t=1780580946; c=relaxed/simple;
+	bh=zvZ5o33Va276sQFe7QVX8cWnqDo/EBXJ1azrTCF0gUE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4nFW7UiadL0sUtHIpic6hJI6/KB8CWe9L9RF0FJmrF8NsekRxbqG57Kxkd4+B+nrAn8KOxNkZz9lSqle2A25DJA5a3WcPCdRtqGAY8gGVhkysdvNEj6v1sse+Pw/AmdOuxgYSbSG4rB1oBiTy950gmB/0hw2xUjKlqaqug1St0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=haR5alLB; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=mL/p8M64MmdNmfeOTpuviuUzIrbE/MvV6ZuhYEGo147oI7HT4dFSJ8OzHiRtEl8Vj/TBhWd4VVdE33QbK7+dqZDGS4G1LJAp0vka0XnDojlPiX9hnWRPyIK+bCuPLbEEnkq7f0m3Sbpy1r7RtdmeXhn9Q418fpwxxNShA57qq40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QlVMAnfb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="haR5alLB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D3A1F00893;
-	Thu,  4 Jun 2026 13:38:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QlVMAnfb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8631F00893;
+	Thu,  4 Jun 2026 13:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780580324;
-	bh=vWWMdHRC0jnfTkV2PUnJXfwlavK0YCbEJDUS1HSqoxQ=;
+	s=k20260515; t=1780580945;
+	bh=IbHJB9X04kdwmBvK0j1bE3YssO2Qn0uRP/tuiYOAjsk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=haR5alLB01i106wHg4D3ErIgAnXgvle+Z2Gc4tY3PTlNu3EWq+6Px/0qoNT1FG3uB
-	 sgI+TY1WWtrtRJW8jhxilaDDhJWxuEpNeCSsxN9sakKoHtzqAzSg8n38YVx6/Ii/wS
-	 P1QufIFMfR6Geuk/DKRrwbBQraEqi8fCHgUgCSD5TApC8nBJCZTWo9SsH5EbetCtoP
-	 trCO6LobhzLYUZsrVstusUz9/O3xNnyOfEhhKo4SELkYTC0Topwjtqpk0AMiO4AhOR
-	 ynX66bppBB/QByT0wUX5U1+R8jwQE3aIMhAatJdHtNSSURM8RCmLwQKfSS38nnfXX7
-	 co5FcG/w33/kw==
-Date: Thu, 4 Jun 2026 10:38:41 -0300
+	b=QlVMAnfbVRz6kMP70clDdJBUebWPWEbcHITXaUl0lzIICiK87j5CtKgkKS0wvqP8l
+	 2G+6PSt9f2vQTISjVNB5aSQNOcUk4Efv3lVkClcbojJxFilRFVBH+E6bnfeMky10GY
+	 1hx5iiGQ+p/UTXgSvGN22BpU/qfIduUNYYNAxVHsBiva7UF2Dp4m7f0C6DKfC+Kb/x
+	 jUBXkcNtsGKGwAHkipA+qW4RjPBCrIxETcQ2WHrz6eyrOCbkDsfYlo5IDBepBOF5dz
+	 fjixuwUURBPUt1QOAwP4SIyTusrn+vlE0jz6WO9WlZw9aaYlJdgOEV7j5OXjoHKDf3
+	 LG12YGlYgpUvw==
+Date: Thu, 4 Jun 2026 10:49:01 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Yuzhuo Jing <yuzhuo@google.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, llvm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1] tools build: Fix feature checks to touch target files
- on success
-Message-ID: <aiF_4cz_8oLPnKXa@x1>
-References: <20260531010924.525824-1-irogers@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+	sandipan.das@amd.com, leo.yan@arm.com, thomas.falcon@intel.com,
+	yang.lee@linux.alibaba.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] perf stat: Fix uncore metric scaling across
+ aggregation modes
+Message-ID: <aiGCTTH1BKTdmlsG@x1>
+References: <20260521201505.124690-1-ctshao@google.com>
+ <ahiU5Te_KR7KRI9Z@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,79 +49,65 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260531010924.525824-1-irogers@google.com>
+In-Reply-To: <ahiU5Te_KR7KRI9Z@google.com>
 
-On Sat, May 30, 2026 at 06:09:24PM -0700, Ian Rogers wrote:
-> In tools/build/feature/Makefile, test-clang-bpf-co-re.bin and
-> test-bpftool-skeletons.bin redirected grep output but never touched or
-> created the $@ target file upon success.
+On Thu, May 28, 2026 at 12:17:57PM -0700, Namhyung Kim wrote:
+> On Thu, May 21, 2026 at 01:15:03PM -0700, Chun-Tse Shao wrote:
+> > This series fixes a scaling issue for metrics (like lpm_miss_lat) across
+> > different runtime aggregation modes.
+> > 
+> > Uncore metrics currently use `source_count` to scale events. However,
+> > `source_count` returns the total uncore unit count regardless of the
+> > selected aggregation mode. When evaluating metrics in different
+> > aggregation mode other than `--per-socket`, this incorrectly divides
+> > aggregated uncore events against the total uncore count rather than the
+> > uncores belonging to the aggregation, leading to wrong metric results.
+> > 
+> > To fix this, we:
+> > 1. Introduce the aggr_nr() keyword to the metric parser, which
+> > dynamically resolves to the active units in the current aggregation
+> > group (`gr->nr`).
+> > 
+> > 2. Update the python metrics to use `aggr_nr` instead of `source_count`,
+> > ensuring correct scaling across all runtime aggregation boundaries.
+> > 
+> > Before the fix (incorrect low latency in global mode):
+> >   $ perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
+> >   {"ns  lpm_miss_lat_rem" : "122.8", "ns  lpm_miss_lat_loc" : "114.5"}
+> >   $ perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
+> >   {"socket" : "S0", "ns  lpm_miss_lat_rem" : "232.1", "ns  lpm_miss_lat_loc" : "278.2"}
+> >   {"socket" : "S1", "ns  lpm_miss_lat_rem" : "233.9", "ns  lpm_miss_lat_loc" : "257.5"}
+> > 
+> > After the fix (correct scaled latency in all aggregation modes):
+> >   $ perf stat -M lpm_miss_lat --metric-only -a -j -- sleep 1
+> >   {"ns  lpm_miss_lat_rem" : "231.7", "ns  lpm_miss_lat_loc" : "245.0"}
+> >   $ perf stat -M lpm_miss_lat --per-socket --metric-only -a -j -- sleep 1
+> >   {"socket" : "S0", "ns  lpm_miss_lat_rem" : "238.3", "ns  lpm_miss_lat_loc" : "249.4"}
+> >   {"socket" : "S1", "ns  lpm_miss_lat_rem" : "259.1", "ns  lpm_miss_lat_loc" : "253.1"}
+> > 
+> > v3:
+> >   Fixed based on Sashiko review:
+> >   - Removed the unnecessary, copied `redefined-builtin` pylint-disable
+> >     comment from `aggr_nr` definition inside `metric.py`.
+> > 
+> > v2: lore.kernel.org/20260521035941.3860145-1-ctshao@google.com
+> >   Fixed based on Sashiko review:
+> >   - Fixed `aggr_nr` setting when an uncore event fails to run
+> >     (counts.run == 0) to explicitly set it to 0 instead of defaulting to
+> >     1.
+> >   - Accumulated `aggr_nr` when multiple unmerged PMU events are
+> >     associated with the same metric ID to prevent incorrect scaling
+> >     across active sockets.
+> >   - Removed unused `List` import from `typing` in `intel_metrics.py`.
+> > 
+> > v1: lore.kernel.org/20260520180032.3045144-1-ctshao@google.com
+> > 
+> > Chun-Tse Shao (2):
+> >   perf stat: Add aggr_nr metric parser support
+> >   perf stat: Use aggr_nr scaling for Intel uncore miss latency metrics
 > 
-> Because the target file was never created on disk, Kbuild could never cache
-> the result of the check. Consequently, Make treated the prerequisite as
-> missing and continuously re-executed the Clang BPF backend and bpftool
-> feature checks on every single sub-make evaluation during build startup, or
-> on every incremental build.
-> 
-> Refactor both feature check recipes to touch $@ on success. For
-> test-clang-bpf-co-re.bin, group the shell pipeline within curly braces
-> and redirect both stdout and stderr to .make.output to allow errors to
-> be inspected and not appear in build output. List
-> test-clang-bpf-co-re.bin's input C file as a dependency so
-> modification triggers a rebuild. For test-bpftool-skeletons.bin, add
-> it to the FILES list so that it will be cleaned.
-> 
-> Tested-by: James Clark <james.clark@linaro.org>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks, applied to perf-tools-next, for v7.2.
 
 - Arnaldo
-
-> Assisted-by: Gemini:gemini-3.1-pro-preview
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> This patch originally appeared in the now merged perf patch series:
-> https://lore.kernel.org/linux-perf-users/20260518154638.2798789-1-irogers@google.com/
-> ---
->  tools/build/feature/Makefile | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 704c687ed3ad..5b4a984973c4 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -75,7 +75,8 @@ FILES=                                          \
->           test-file-handle.bin			\
->           test-libpfm4.bin			\
->           test-rust.bin				\
-> -         test-libopenssl.bin
-> +         test-libopenssl.bin			\
-> +         test-bpftool-skeletons.bin
->  
->  FILES := $(addprefix $(OUTPUT),$(FILES))
->  
-> @@ -383,9 +384,9 @@ $(OUTPUT)test-libaio.bin:
->  $(OUTPUT)test-libzstd.bin:
->  	$(BUILD) -lzstd
->  
-> -$(OUTPUT)test-clang-bpf-co-re.bin:
-> -	$(CLANG) -S -g --target=bpf -o - $(patsubst %.bin,%.c,$(@F)) |	\
-> -		grep BTF_KIND_VAR
-> +$(OUTPUT)test-clang-bpf-co-re.bin: test-clang-bpf-co-re.c
-> +	{ $(CLANG) -S -g --target=bpf -o - $< |	\
-> +		grep BTF_KIND_VAR; } > $(@:.bin=.make.output) 2>&1 && touch $@
->  
->  $(OUTPUT)test-file-handle.bin:
->  	$(BUILD)
-> @@ -397,8 +398,8 @@ $(OUTPUT)test-libopenssl.bin:
->  	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags openssl 2>/dev/null)
->  
->  $(OUTPUT)test-bpftool-skeletons.bin:
-> -	$(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons' \
-> -		> $(@:.bin=.make.output) 2>&1
-> +	{ $(SYSTEM_BPFTOOL) version | grep '^features:.*skeletons'; } \
-> +		> $(@:.bin=.make.output) 2>&1 && touch $@
->  
->  # Testing Rust is special: we don't compile anything, it's enough to check the
->  # compiler presence. Compiling a test code for this purposes is problematic,
-> -- 
-> 2.54.0.823.g6e5bcc1fc9-goog
