@@ -1,60 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7BA2EEE7A;
-	Thu,  4 Jun 2026 21:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8597A33F8A1;
+	Thu,  4 Jun 2026 21:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780609539; cv=none; b=EcjYrbjpBSJjmD+ONlmntGqVAxPWTY9BToAcCrzYHbTgRnbTYBzfZijVBFPgr7r26ZzOHe28+x4AaJQFF8FhK3nGO/K0qX4oqZe/9Z9U46dDCbSmKTv9P3BYP0rH4ZqLj0TTGgZ0XrHuD7mc3PptFEyJLpHX/w+MT5KVwzI1JoE=
+	t=1780609773; cv=none; b=PW3+4lsxpxRF3BrQnHQJwTD8SXzAOVR09sneMXj9h/UkAzNoasbjFtdOi4BsdAGuRbsOZfuOGPgxyTnDAz4v8alkEaarlbseV8CQDSdgl0omkiv8xMEj4m5ci0PUfeJ2tKms5ggPJStf+dypguov5ldUIiCK/0uREmQ2NEteUfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780609539; c=relaxed/simple;
-	bh=eGlTq58OPuaKU98Sw1Dy4HI/GbZ3deybTOS4jSYPFNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qjrMBVXsetSEYIgrfx8oBHItujValcLAHI+qdf0dPcE3dYw6N6bfN7eE/ZUwyxUW3vtHz0LZhfXsXwDOr7SgIYo2vxs/k3yAdorMkldPym2npZooVxJ9Wdy9OsymQ6MSSip00bxlJJ0oCFsDEA1HVgXAhGhmKjwNUdCkfBKV1gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxYilrHq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780609773; c=relaxed/simple;
+	bh=sFcNX4wzNfQIligz+Bj9mKw0+HVTQx9uBEqxL+Ycsdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L4FkIuaCFG1XBN40Z9QwKpLoNyGAUGDSrZkDhbZ49VhgbuizpzlG/Gu3kShybeIQS6D29MgIDFBRIgxdvvNdzrjpiWeHqbJQmoS6/knJaDROKX9t00WshAiT1TxngSXIl3TeP5FFdTVToPCjgM7M4k7C3tV7GOJBMuVSXkLcdfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeNrLJq8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxYilrHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 533F41F00893;
-	Thu,  4 Jun 2026 21:45:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeNrLJq8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 213891F00893;
+	Thu,  4 Jun 2026 21:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780609538;
-	bh=D198WoNPL0fOturA9ZR1xYcBW/1qBSSMoaqkKcghODw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=JxYilrHqnnWLoTwvovOz9tEAUf+NEKoMqo59T1zN9PwN+HTUJEGASY02GttELRIdq
-	 k9Xhnh24HKnx4dOtdw08maj0vX4yUU73KPuVeBvkJwBRCiavK9YYins+7UH8twERxH
-	 1qJa0VbC6xORR/ZvnS8yjHTkTvoT/vL04MaIwmepmkCDhz7ZHosOuutbBWxemNle1g
-	 AP+XSILl+Hs6piDnpcg5x6XpZ88HtihDtfGhDXjWhbMFbXBY8PT5cuiic3OyTGFFw5
-	 A/da7oyAk+C/FHyrq7z5E0VdVS6dGxZwS3Zm2RstrIcbAhUXFzP94iWEXtwQ8sev/M
-	 jTNnikNXEgYiw==
-Date: Thu, 4 Jun 2026 14:45:37 -0700
+	s=k20260515; t=1780609772;
+	bh=uuI0EPIlpwFgjFIkqr01k2NHIDzpzpZfixXgCqozEIs=;
+	h=From:To:Cc:Subject:Date;
+	b=AeNrLJq8Xy7RvNAlEvqGajzwbmoTwCa4JUe2sHkZu30FrI0jM5HsvfVxdZv9Yn44h
+	 THU3KmMrxESLu4ydDq4PpOJVFGPTeFYaIcgqnq+9iR4zxWYdhy/RHv0aJcF5tDwDLw
+	 qN94FQJ5O70PgEN+xqR2HsXrVR07EMYifLFc3vTgSYcIRNQTL7xooZOAbuyXi0RZYm
+	 llCjiNNYmrSmMvJPhlevznO4p3zig3JNsVBe45vak30lJdgp53Fd0f4n0N8H+38Z+u
+	 S/fvXSQbQSpRwxk2LAeXA+PtrfvwK1uJfMmUpJgizVpwjRICCVMiGvw4UuVSoKXHxc
+	 EXPtv8JmP8NIw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/4] perf timechart: Remove unnecessary copy of backtrace
-Message-ID: <aiHyAeODQHSxccCy@google.com>
-References: <20260604190812.2168118-5-namhyung@kernel.org>
- <20260604191818.352171F00893@smtp.kernel.org>
- <aiHcxl4rHnvkcUkK@x1>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 0/4] perf timechart: Small optimization for backtrace
+Date: Thu,  4 Jun 2026 14:49:26 -0700
+Message-ID: <20260604214931.2202322-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aiHcxl4rHnvkcUkK@x1>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 04, 2026 at 05:15:02PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Jun 04, 2026 at 07:18:17PM +0000, sashiko-bot@kernel.org wrote:
-> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> > - [Medium] Removing `free(backtrace)` causes severe memory leaks when the backtrace string is not consumed by the sample tracking logic.
-> > --
-> 
-> From a quick look the suggestions seems legit, will wait for v2 then.
+Hello,
 
-Yep, will send out soon.
+I found an issue int timechart backtrace handling during the last review.
+The goal is to reduce unnecessary work in generating backtrace string.
+
+v2 changes)
+ * fix memory leaks when backtrace is not used
+ * copy backtrace when it's used twice
 
 Thanks,
 Namhyung
+
+
+Namhyung Kim (4):
+  perf timechart: Don't pass @event to cat_backtrace()
+  perf timechart: Generate backtrace only if needed
+  perf timechart: Remove unused backtrace in trace_handler
+  perf timechart: Remove unnecessary copy of backtrace
+
+ tools/perf/builtin-timechart.c | 107 ++++++++++++++++-----------------
+ 1 file changed, 52 insertions(+), 55 deletions(-)
+
+-- 
+2.54.0.1032.g2f8565e1d1-goog
 
