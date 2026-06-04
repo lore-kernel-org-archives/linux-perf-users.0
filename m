@@ -1,134 +1,109 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6243839B9
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 06:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749C53DD868
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 07:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780556170; cv=none; b=m7HGt1c0pBXNNg+yG7eMOKIXoA3oBeZCr+JtYlRsfxo7HDABY4UWoLQnAA3tV8NwjH2Gp8w1dWJqZSRFFlEWiZcdbd2bCsksBDJSGB44AAtcK/IxeywtiBrpi3d4Fz8hX4AYWbKk6r2GA3KwwUFoZ6Hvz6b1nQVyvQLUOccK/lI=
+	t=1780556779; cv=none; b=rhmNTI2y8KlTNFgvP2pQEf7AML3O7CQRS8RBXce4OKV3Oig1wd9tu/sYQGli+K7NHtDbiz47k7X4+UbALoIbCMycfSMOYpWdgh/wa5T8ZnO+vxh8R8Cjoq2t8Im/oDf6Xom/KJXqsmRWT68NMAOkBAIFOk5gF85AkZ2o/7DstB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780556170; c=relaxed/simple;
-	bh=kYPaGIx43/mOrP53YWWvVytYurUuy3fmv8V6ye2y07g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xw0xhtPXZ1B+rlvjL1ik3DseHIzJnA0czmGpNZa4NCxRiUlNqvtdrssAKVezudhbDJCfCUpZNrCgImN2zcQuqz4Xnxs7ezmcRkOG6FTr1BA7XyBesL5na0o50sLeWfG1oxqLIy1h5YjN1doGbOtToBNbTuVqUMVa/GIDLjHOuJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nAy0wTlP; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1780556779; c=relaxed/simple;
+	bh=sBJUi5yqQIVmIlNQllU98uZFUccZ1FQX4M9sLGhnd0Q=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=umH9+Oho2TLeBb1ROhDe9DPtp9axoCHw41f81YMLSmeM8WGOUa7mlSbaQ+ZSZObM0mEviw2bJdr59+D5IIFUaey8EdcgKvnB7lkGdohGa7Iv/7uH/I31jsHoA1z9L26MKCJs7ylDN2hQ8TqKXxYH2hRbgAYQWuy4RewXOmJhC8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iSxt4MiS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nAy0wTlP"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 653LeEhp2223981;
-	Thu, 4 Jun 2026 06:55:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=v7q8lGE5veN+Zy2Yq8Lm666Ruc/DM2nucqA19GrYg
-	QU=; b=nAy0wTlPB7epWS3ciKMbEyLbBRU401ZBQOGfjqGXrK7/R30sphV47zZmJ
-	DNe5+1mpjrR4x8LQCbEUqIBr6xV+rtlnkSVOeAeZFKmYV3al8TRMFXBk7+iRkCpj
-	HEXbkuDTk5X6DnAEAo3lp1ZAsS3mrvAtdcXxDu0wiLhpIToSt2zdsVq2MmxQlcFx
-	0E6mXpFORTKmA3gRw4uDDdk3DbpQv48zwUx2aw8sM8uStVeqkMWVVsvtP/0kHByk
-	klYAc0uLjhSPFhhE/tyZMBjU6RfQ0zDOxmPd5TCuf0gQjd367ZTuRJYaui0dD7Tm
-	8ewJ79Uq8kjloLK5UMh49kclvShfQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqd4ep7y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jun 2026 06:55:56 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6546sB70028157;
-	Thu, 4 Jun 2026 06:55:55 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egbqhktxd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jun 2026 06:55:55 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6546toTf23331152
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 4 Jun 2026 06:55:51 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DAB8920043;
-	Thu,  4 Jun 2026 06:55:50 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A3A0220040;
-	Thu,  4 Jun 2026 06:55:45 +0000 (GMT)
-Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.124.210.20])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  4 Jun 2026 06:55:45 +0000 (GMT)
-From: Tanushree Shah <tshah@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
-        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
-        Tanushree Shah <tshah@linux.ibm.com>
-Subject: [PATCH] perf data convert json: Fix trace_seq memory leak in process_sample_event()
-Date: Thu,  4 Jun 2026 12:25:19 +0530
-Message-ID: <20260604065519.112101-1-tshah@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSxt4MiS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0050E1F00893;
+	Thu,  4 Jun 2026 07:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780556777;
+	bh=dfiop4K+LBhcPglFXhEVPlJPXcVhF+t9atZg32R4vcM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=iSxt4MiSN2+pUu+lNq7PccXzeNZjJyeLoo7H5cm6MmxXqDQly2EvYJGoU6knYe7wN
+	 bBrLgTlsMVQM41rbXMwsDqzgqcbVdun6y72leiy84Ithy94dk/3PL1b9rVz0vbmpS4
+	 7pfEHiaqYhT8+vFGgNZcQW9j4jRcgoFJAk4LVwUoHlCuypJ/7wCUPUwX865TksYKEK
+	 J2peSBoq6VXBCtFXuVVaihKkGJW/nT/Z0DE4luMSfySkin+2TqOa5rHEhs1BZmHSj/
+	 EdU4Cu2XOwK582VQQf7aVNtHgeXMSHO7hYpqxI3CuG8GCtRB7NRXA5R3u+bYuoeqO6
+	 uMiGJn/BS5ybg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf data convert json: Fix trace_seq memory leak in
+ process_sample_event()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Tanushree Shah" <tshah@linux.ibm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260604065519.112101-1-tshah@linux.ibm.com>
+References: <20260604065519.112101-1-tshah@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 04 Jun 2026 07:06:16 +0000
+Message-Id: <20260604070617.0050E1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA0MDA2MiBTYWx0ZWRfX/oCjBzRrb5No
- uayxiaNhgf5UYzf71bybru8TfKUwpBdfwU7CntxGEY85AbONISN8Yt9VajNncyA00lzjeIBRVLV
- vzMlswQvL6P0JxhJBQaXp/rT3/TmxAH9Wx6RvAxhvcstmfnrSvEVl64QACR4n8IQK0HQI+R+fjR
- ySvsgS1VCo+VDhbqPWF82oLKvIFFRt4dcLIuVRJ6tfPXLCWcQyAJjqopzsH9Q16YpMgNg1cHmVM
- geSj93lFhs3zKfgelJiIWlyVrUbjKo6M4bYr1a6dzUd4JKvSyKRM1R3WyHWDUYk7N6lHULeQtod
- bNvsGIenbIpTRzdaLcnKzSm/3HErkXseA99cjIfbJKyLGIT9FkBSkd98Ccz02qeBRmRyIeuyX6x
- dyT9pV0GaLDtoaQ4nnbCpAExxvJ7nd+V3/ZHSlcQTQB5zSv3GKNXg85e9jA5S7Xwb/yK1Z7xTrg
- 4O/8MGofM6rK3OoLzBQ==
-X-Proofpoint-GUID: zt4s_CatP7Ff5t38XY6C0Dc18WjjcIEQ
-X-Proofpoint-ORIG-GUID: 3AT3m9-D5EmDiNatLrnIoKrIPfXmyOXF
-X-Authority-Analysis: v=2.4 cv=DZknbPtW c=1 sm=1 tr=0 ts=6a21217d cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=Nc15H_VyoKEvSVhrjhoA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-04_02,2026-05-28_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1011 suspectscore=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606040062
 
-Unlike the in-kernel trace_seq which uses a statically allocated buffer,
-the userspace traceevent library's trace_seq uses a dynamically allocated
-one. Therefore, every trace_seq_init() call must be paired with a
-trace_seq_destroy(), otherwise it produces a memory leak.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-In process_sample_event(), a trace_seq is initialized for each field when
-formatting tracepoint raw_data, but the matching trace_seq_destroy() is
-never called, leaking memory for every field of every sample processed.
+Pre-existing issues:
+- [High] The `process_sample_event()` function leaks reference counts and m=
+emory associated with `struct addr_location` when a sample is skipped due t=
+o time filtering.
+--
 
-Add the missing trace_seq_destroy() after using the trace_seq buffer to
-properly free the allocated memory.
+commit de6e4710063f2942dd58ebe436d7d992872132b3
+Author: Tanushree Shah <tshah@linux.ibm.com>
 
-Detected with Valgrind on a perf.data file with 2,729 tracepoint samples:
-  Before: definitely lost: 55,537,664 bytes in 13,559 blocks
-  After:  definitely lost: 0 bytes in 0 blocks
+perf data convert json: Fix trace_seq memory leak in process_sample_event()
 
-Fixes: 9d895e468429 ("perf data: Add tracepoint fields when converting to JSON")
-Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
----
- tools/perf/util/data-convert-json.c | 1 +
- 1 file changed, 1 insertion(+)
+This commit fixes a memory leak by ensuring trace_seq_destroy() is called
+to pair with trace_seq_init() when formatting tracepoint raw data.
 
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index d526c91312ed..6dd9349ab10f 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -257,6 +257,7 @@ static int process_sample_event(const struct perf_tool *tool,
- 				trace_seq_init(&s);
- 				tep_print_field(&s, sample->raw_data, fields[i]);
- 				output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
-+				trace_seq_destroy(&s);
- 
- 				i++;
- 			}
--- 
-2.47.3
+> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-c=
+onvert-json.c
+> index d526c91312ed8..6dd9349ab10f1 100644
+> --- a/tools/perf/util/data-convert-json.c
+> +++ b/tools/perf/util/data-convert-json.c
+> @@ -257,6 +257,7 @@ static int process_sample_event(const struct perf_too=
+l *tool,
+>  				trace_seq_init(&s);
+>  				tep_print_field(&s, sample->raw_data, fields[i]);
+>  				output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
+> +				trace_seq_destroy(&s);
+> =20
+>  				i++;
+>  			}
 
+[Severity: High]
+This is a pre-existing issue, but does the early return path for skipped
+samples higher up in process_sample_event() leak the addr_location
+reference handles?
+
+tools/perf/util/data-convert-json.c:process_sample_event() {
+        addr_location__init(&al);
+        if (machine__resolve(machine, &al, sample) < 0) {
+                pr_err("Sample resolution failed!\n");
+                addr_location__exit(&al);
+                return -1;
+        }
+
+        if (perf_time__ranges_skip_sample(c->ptime_range, c->range_num, sam=
+ple->time)) {
+                ++c->skipped;
+                return 0;
+        }
+        ...
+}
+
+When machine__resolve() populates the addr_location structure, it acquires
+reference handles for objects like thread and map. The early return for time
+filtering bypasses the addr_location__exit() cleanup.
+
+Could this cause reference counts and memory to leak when dropping skipped
+samples?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260604065519.1121=
+01-1-tshah@linux.ibm.com?part=3D1
