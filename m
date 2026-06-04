@@ -1,135 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B5530C17A
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 19:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CEF3C0634;
+	Thu,  4 Jun 2026 20:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780600699; cv=none; b=T5HC8l559TuacXfkwJ8rC7/3YkiX9+mqBFC9LEjetoE+VQbTWsVg8iSrH6rGjqlQMYzNkE85rj7v7xms25qpPyba1tUl866C5ZzTHomaYvNM+TL3XKSqGQG7j2eCkIix4am9lyvFdff+U2Fl0537YA49XmVapqUGcfLBtN2QbCs=
+	t=1780603894; cv=none; b=BJg/GhUuc05IR+jk3isS0PiYT9ViGBAtb4WZ8RmmI29lhsa+Awdfka5cOe5B4qxxklTftysLoTvZu+z5Cj8H41jMoO7WruVyEQEi64zPZKFxIJBa042IJok2mHZpdviV09OYvcEOiP68spYG6qKb7SamnZh5JCjjplcYP2pPgKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780600699; c=relaxed/simple;
-	bh=pZzLNJMTt0W+Z5M3PH26hfnqHD7oNPqgB/vIzL+IpVk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=j/j7S4OZsG8dueJZBtGG6B3N4bfAbQY+IlQeKSri/SbELZYkT7JJkpq/BGhFF0ikgM9yUfpRPQiAUAfiVdKDkjn1tTBKu6ue/n6PK0+8T6Im/MoVWBifeToFmmuMC99XUDxe/e4dVR1d0ZvuyuLuEkQkEatmScd3POjoN3FoWfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAJ1rfyV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780603894; c=relaxed/simple;
+	bh=efSK97NbQzv3dhedEowCEupWxCU5ZVP4Jh6EjUK5oLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ACM/Z4e4GBonq4Yc59ErdyvxtNqsubLfdZmCUGmHlNxKpw1aA7eu8zsfoZiZB74uRTbKmcJOMKKKFpmobzwfmel7+fZVDMGuWe/C/hisZTbDBr7Gz4tvq+nW4ee5aw4udJ6kagmiAPRBoArYia1WBEDg6RpjGEAaSPpoMRmEbQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwOhhuad; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAJ1rfyV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 352171F00893;
-	Thu,  4 Jun 2026 19:18:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwOhhuad"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE09F1F00893;
+	Thu,  4 Jun 2026 20:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780600698;
-	bh=Zxyz1y6/XGnIG59vFC4jLdV7jQLBjbb+MEtOzTn6vTw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EAJ1rfyV6mWoB8fL/sxRElMlXggFymd9soUCpVGT/ENYv5uzSgiMAtJcax3dBSEXy
-	 WVW355xTJ45VcNrRiPkX2lCBNY+w645uu+M5ZZyxZ8tQYkWI5X0vR0TjH3OwF3IF+r
-	 CIvSwIZZIXHeW91k8IgZUDNtmyiHcyhxyOEFJSKMRHZeKPa/sDeOQ0Fx8AH081AnqF
-	 gj+XEddflVp5Rev2dF64AY0Anu2o8IPlrpS1SBf0OMDWsGa7tUvxiYx4U5hvgiC08s
-	 +dDBTep4whQlz7jdlpgGYHABkZ4+lcS8YQObpC9wVJ6Jq7R93x2Zf5UX05W3qvlbMG
-	 LUtHkz3GFUmEg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/4] perf timechart: Remove unnecessary copy of
- backtrace
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260604190812.2168118-5-namhyung@kernel.org>
-References: <20260604190812.2168118-5-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 04 Jun 2026 19:18:17 +0000
-Message-Id: <20260604191818.352171F00893@smtp.kernel.org>
+	s=k20260515; t=1780603890;
+	bh=SbSyMZXT1+F/GE62Y2glcEyjNvpgM+9BDPpFvUhMIxQ=;
+	h=From:To:Cc:Subject:Date;
+	b=kwOhhuadee2/7jHvCgp8vZoRD9MtY2xvaPXzy4rqGsr6vSyDGqNObTerIGpy+C8Hs
+	 q3Ym+HQfs2O6UBER+csh4M13qvg0vvo2lHo2EGNpZEQK8BQ7bRRUzs0236VRdO638A
+	 /KMxSZiY9e/8MlTw1i40f+T6aZy9Gz1GNxurmHKkX2ZbDtbWspgwmBRR/fwKqhrXVB
+	 TKjXTgm+/4mU0vn9pdzaAXvFDPYIw7lswa1AozHlUKN5iSydUyIxBXvgclKJldQgho
+	 NW1xbU8kRxVc/h2OU6FvaPNwFQogYo9FPlyXBZoRyr83C3q1DYvDX4CQ4InSkM6c1z
+	 xOAAOzE1XC++w==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v1 0/4] perf tools: Fix OOB reads, NULL deref, and resource leaks
+Date: Thu,  4 Jun 2026 17:11:12 -0300
+Message-ID: <20260604201119.1702338-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Removing `free(backtrace)` causes severe memory leaks when the b=
-acktrace string is not consumed by the sample tracking logic.
---
+Hi,
 
-commit 8d24fd58d3a0d2702142c45fce31ca640b59f748
-Author: Namhyung Kim <namhyung@kernel.org>
+Four pre-existing bugs found by sashiko-bot during AI-assisted review
+of the perf-data-validation hardening series.  All are independent of
+that series -- they are latent bugs in surrounding code exposed during
+review.
 
-perf timechart: Remove unnecessary copy of backtrace
+  1. test_bit(sample->cpu, cpu_bitmap) reads out of bounds when
+     PERF_SAMPLE_CPU is absent (sample->cpu == (u32)-1) in annotate,
+     diff, report, and sched timehist.
 
-This commit updates timechart to use the backtrace string directly instead
-of duplicating it with strdup(). It updates pid_put_sample() and
-sched_wakeup() to store the original pointer and removes the free()
-calls in the process_sample routines.
+  2. Thread reference leak in perf sched latency_switch_event() -- one
+     error path does 'return -1' instead of 'goto out_put'.
 
-> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechar=
-t.c
-> index 4efac73a714c5..2fd24d3aaa837 100644
-> --- a/tools/perf/builtin-timechart.c
-> +++ b/tools/perf/builtin-timechart.c
+  3. NULL pointer dereference in perf sched latency_runtime_event() --
+     thread_atoms_search() called before the NULL check on the thread
+     returned by machine__findnew_thread().
 
-[ ... ]
+  4. Heap buffer overflow in perf sched map --compact mode --
+     comp_cpus allocated based on host CPU count but indexed using a
+     MAX_CPUS-sized bitmap, overflowing when analyzing recordings from
+     machines with more CPUs than the host.  Also removes the now-dead
+     sysconf(_SC_NPROCESSORS_CONF) initialization whose sole consumer
+     was the replaced allocation, since max_cpu is dynamically updated
+     from the recording's events during processing.
 
-> @@ -434,7 +434,7 @@ static void sched_wakeup(struct timechart *tchart, in=
-t cpu, u64 timestamp,
-> =20
->  	we->time =3D timestamp;
->  	we->waker =3D waker;
-> -	we->backtrace =3D backtrace ? strdup(backtrace) : NULL;
-> +	we->backtrace =3D backtrace;
+All four require crafted or unusual perf.data inputs to trigger.
+Verified with gcc and clang builds, checkpatch, and perf test.
 
-[Severity: Medium]
-Does this leak the dynamically allocated backtrace string from
-cat_backtrace() if the wake_event allocation fails?
+Arnaldo Carvalho de Melo (4):
+  perf tools: Guard test_bit from out-of-bounds sample CPU
+  perf sched: Fix thread reference leak in latency_switch_event
+  perf sched: Fix NULL dereference in latency_runtime_event
+  perf sched: Fix comp_cpus heap overflow with cross-machine recordings
 
-tools/perf/builtin-timechart.c:sched_wakeup() {
-	struct wake_event *we =3D zalloc(sizeof(*we));
+ tools/perf/builtin-annotate.c |  3 ++-
+ tools/perf/builtin-diff.c     |  3 ++-
+ tools/perf/builtin-report.c   |  3 ++-
+ tools/perf/builtin-sched.c    | 16 +++++++++-------
+ 4 files changed, 15 insertions(+), 10 deletions(-)
 
-	if (!we)
-		return;
-    ...
-}
+Developed with AI assistance (Claude/sashiko), tagged in commits.
 
-Because the unconditional free() was removed from
-process_sample_sched_wakeup(), the backtrace pointer is dropped and
-leaked if zalloc() fails.
+Thanks a lot,
 
-> =20
->  	if ((flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ))
->  		we->waker =3D -1;
-
-[ ... ]
-
-> @@ -678,7 +677,6 @@ process_sample_sched_switch(struct timechart *tchart,
->  	backtrace =3D cat_backtrace(sample, &tchart->session->machines.host);
->  	sched_switch(tchart, sample->cpu, sample->time, prev_pid, next_pid,
->  		     prev_state, backtrace);
-> -	free((char *)backtrace);
-
-[Severity: Medium]
-Will this leak the backtrace string if sched_switch() does not consume it?
-
-tools/perf/builtin-timechart.c:sched_switch() {
-	if (prev_p->current && prev_p->current->state !=3D TYPE_NONE)
-		pid_put_sample(tchart, prev_pid, TYPE_RUNNING, cpu,
-			       prev_p->current->state_since, timestamp,
-			       backtrace);
-
-	if (p && p->current) {
-		if (p->current->state !=3D TYPE_NONE)
-			pid_put_sample(tchart, next_pid, p->current->state, cpu,
-				       p->current->state_since, timestamp,
-				       backtrace);
-	}
-    ...
-}
-
-If both TYPE_NONE conditions evaluate to true, pid_put_sample() is not
-called. The backtrace string goes unreferenced and is permanently lost
-now that the unconditional free() has been removed.
-
->  	return 0;
->  }
->
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260604190812.2168=
-118-1-namhyung@kernel.org?part=3D4
+- Arnaldo
