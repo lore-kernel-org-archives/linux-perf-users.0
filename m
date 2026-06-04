@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E5B4CA264
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 17:45:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D62F30C15C
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 17:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780595119; cv=none; b=aBv8d0Q9Mp5BK0B9SnElQ8JsMpS6+L/DeCbvs4rKisWObD1hGWwr+ema046aARpFOg4xtjBIVFDmasqIHyqmEb5r1c/6yiaLYlGSYuOla1IMlvEwODRlMuv8Q5PEVE/+mOW5npcWjb9CytY0Q8d7XPC9yscMmADG5rf0/JUPzl8=
+	t=1780595150; cv=none; b=FrsUYLeMIxm3hL3Zpo9hfpGW/F1MEYizO99+TEEEdDcee/JIO12oO+8WYgn+fbzDh+hHrzkavfhr4pRMx1vzIopGLmHCnu7A3bJy8u15y/ORXA5z35rxU4o4OZDW1AAXprHndWF2dhDrR+WocGyX5PLewMBqTtTgrfXWhckAHD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780595119; c=relaxed/simple;
-	bh=TlqKFcW55jcj9K67RLDm/TRPMmjMc/GT71S538q3uvA=;
+	s=arc-20240116; t=1780595150; c=relaxed/simple;
+	bh=ALDDQroqqA0PPfb2nqvKO5/LJlz2DEkI2YP/5YSZrLg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iRbAb+NBoOkaoImFaVkTJ/VNQ+nMfb6LhIa9+vzEu29cEZ8Ke+WPkQt/NZNX9yw3Px75a+lgtM/iz4GUariZEI9y0TTkkzVr5nocqFmTWFNIlMAqXYQLT9Fcpe+y9hNxls7VOO/HO/wyDXfI+gBsuIGKYvE/RIGJ1d0Td/7MgPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIe8dp4a; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=d8YroM/HSUsVufmwdIFI16MPJ3hp4E9iCmdarjv4Xmt9QCLtVIMbbRSqqH8ZuBvdrgkUNmt8mVHKLGbIgwCE0iDAYv+FWwd+FO7nj++P9Nsa7HTsKRgokTt64nrrsVp1/iYOntp4PfFVwkzbd7t/EN/sLvUv8YBrLaGt2TdbpJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDehG3Kv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIe8dp4a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1B51F00893;
-	Thu,  4 Jun 2026 17:45:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDehG3Kv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF3C1F00893;
+	Thu,  4 Jun 2026 17:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780595118;
-	bh=0nCVCJPqZVtXe9YooQs47XBGWIOHzxJ4+uQ3SUNvuwc=;
+	s=k20260515; t=1780595148;
+	bh=TeBLTFLGiw0KUfehHh2vKh9/hVLx+P54A+MCa3nVdIw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KIe8dp4aURepaAavzTZeozMMgruyniRFfGPehXP1Pp009W2CUaBrp4ApF5DbogvqH
-	 zFv0OyHVk9yEcp5qUgsJUH9jJItCTwvCTzV8YSipAvaKWvADdtMaNc+tFWXu0SyEhb
-	 HGQrGFgI+jb1PYVGwNBeBusa7bdaKqb9Cvx/9Xm7U/RV3alJYpD1T1QgXg5W8+l7DR
-	 yiCdoHK2fE6bx8RD3GB+fSpQi/HXE5vyMNmX/Z8jy11XKIY4X8Iz9iT7+S6ZuYi3hc
-	 RJeL+dNOARob8GzXpINvl7HWwjzNxI5UNjgnQK14+1R7RZcsz6xQv/J6aOL7ngg5yL
-	 GP0woe55dwEpQ==
+	b=FDehG3KvDLk89gWbVvjQTO5B3SM+6d9tEV9tmWRMWld6Kr5/8WRlmpf5pUfsYq7zb
+	 KLHwigpYiF6p60Iaftk0WWxlp8XAoqo/FEzPpxU0yPpL8Qq2btecNIcrL4sCy597pz
+	 BWUKyFrWGNPL3asowStjpDIZntIbawx0qWWOib+Aq44yBqhmyv2O0HIKsIkAoIXjq4
+	 31QtuBjFlc/DAJP2A/b8YdgB9tJtg3QL5utAvmFtu5dVSBc1QI38dIZtXpSjwez63a
+	 5ZPrSQW6kSVNVTrJUvaDNf1Yi641V1yw2ciHofPEsqttAQ6VZlrO8AhOL60VS4Xufz
+	 qjt4Se32NlKCQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 5/5] perf aslr: Strip sample registers
+Subject: Re: [PATCH v9 3/5] perf inject/aslr: Implement sample address
+ remapping
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260604172850.683329-6-irogers@google.com>
-References: <20260604172850.683329-6-irogers@google.com>
+In-Reply-To: <20260604172850.683329-4-irogers@google.com>
+References: <20260604172850.683329-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 04 Jun 2026 17:45:18 +0000
-Message-Id: <20260604174518.7E1B51F00893@smtp.kernel.org>
+Date: Thu, 04 Jun 2026 17:45:48 +0000
+Message-Id: <20260604174548.CAF3C1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,81 +46,115 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Critical] Allocating `stripped_event` using unvalidated `event->header.s=
-ize` and unconditionally writing to `sample_regs_user` and `sample_regs_int=
-r` causes a severe heap buffer overflow.
-- [High] Missing register stripping in the `itrace`-enabled path of `perf_e=
-vent__repipe_attr` corrupts the trace output.
+- [High] Direct access to fields of the reference-counted `struct thread` b=
+reaks the build when `REFCNT_CHECKING` is enabled.
+- [High] Double-swapping of `PERF_SAMPLE_BRANCH_STACK` flags corrupts branc=
+h data when analyzing cross-endian perf.data files.
 --
 
-commit 5f1dabd94a15919e76927871536447a8782dba24
+commit 22641fe8dc789606c2c20387f60f64010f88923f
 Author: Ian Rogers <irogers@google.com>
 
-perf aslr: Strip sample registers
+perf inject/aslr: Implement sample address remapping
 
-Refactor the ASLR tool to strip out only the register dump payload
-by masking out the relevant perf_event_attr fields when the delegated
-tool is handling the data. struct aslr_evsel_priv maintains the
-original perf_event_attr values and is looked up via the evsel_orig_attrs
-hashmap.
+This commit adds the sample address remapping logic to the ASLR tool. It
+parses sample events and remaps IPs, ADDRs, callchains, and branch stacks
+using the mappings collected from metadata events.
 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index a9f0a3901e7bc..e0f59ef8b97b2 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -253,6 +253,8 @@ static int perf_event__repipe_attr(const struct perf_=
-tool *tool,
->  				return -ENOMEM;
->  			memcpy(stripped_event, event, event->header.size);
->  			stripped_event->attr.attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
-> +			stripped_event->attr.attr.sample_regs_user =3D 0;
-> +			stripped_event->attr.attr.sample_regs_intr =3D 0;
-
-[Severity: Critical]
-Can this write out of bounds and corrupt the heap?
-
-In perf_event__repipe_attr(), stripped_event is allocated using
-event->header.size. For older perf.data formats (like PERF_ATTR_SIZE_VER0),
-the size can be as small as 72 bytes.
-
-However, sample_regs_user and sample_regs_intr are at offsets 88 and 104 in
-the perf_event_attr structure. Writing to these fields unconditionally on a
-72-byte allocation will corrupt the heap when processing older traces.
+> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
+> index be7280f884308..fc619b9f1f40a 100644
+> --- a/tools/perf/util/aslr.c
+> +++ b/tools/perf/util/aslr.c
+> @@ -109,6 +109,60 @@ static u64 round_up_to_page_size(u64 addr)
+>  	return (addr + page_size - 1) & ~((u64)page_size - 1);
+>  }
+> =20
+> +static u64 aslr_tool__remap_address(struct aslr_tool *aslr,
+> +				    struct thread *aslr_thread,
+> +				    u8 cpumode,
+> +				    u64 addr)
+> +{
+[ ... ]
+> +		if (!thread__find_map(aslr_thread, effective_cpumode, addr, &al)) {
+> +			addr_location__exit(&al);
+> +			return 0; /* No mmap. */
+> +		}
+> +	}
+> +
+> +	key.machine =3D maps__machine(aslr_thread->maps);
+> +	key.dso =3D map__dso(al.map);
+> +	key.invariant =3D map__start(al.map) - map__pgoff(al.map);
+> +	key.pid =3D (effective_cpumode =3D=3D PERF_RECORD_MISC_KERNEL ||
+> +		   effective_cpumode =3D=3D PERF_RECORD_MISC_GUEST_KERNEL) ?
+> +		  kernel_pid : aslr_thread->pid_;
 
 [Severity: High]
-Also in perf_event__repipe_attr(), when itrace_synth_opts.set is true,
-should the register bits and masks be cleared from the synthesized attr?
+Will this direct field access break the build when REFCNT_CHECKING is enabl=
+ed?
 
-When --itrace and --aslr are used together in pipe mode, the code branches =
-to
-the itrace_synth_opts.set path in perf_event__repipe_attr():
+When perf is built with REFCNT_CHECKING=3D1 for ASAN or LSAN builds, the th=
+read
+struct is wrapped in an opaque pointer, hiding the actual fields. Direct ac=
+cess
+to maps and pid_ usually causes compilation failures under these builds.=20
+Should this use the proper thread__maps() and thread__pid() accessors inste=
+ad?
 
-perf_event__repipe_attr() {
-    ...
-    if (!inject->itrace_synth_opts.set) {
-        /* registers are stripped in this branch */
-    }
-    ...
-    attr.sample_type &=3D ~PERF_SAMPLE_AUX;
-    if (inject->aslr)
-        attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
-    /* register clearing is missing here */
-    ...
-    perf_event__synthesize_attr(...)
-}
-
-This patch strips the repiped samples of their register payloads via
-aslr_tool__process_sample(), but the itrace path above leaves the register
-flags in the attr event.
-
-This mismatch between the attr event and the payload can corrupt the output
-pipe trace and cause parsers to fail.
-
->  			if (stripped_event->attr.attr.type =3D=3D PERF_TYPE_BREAKPOINT)
->  				stripped_event->attr.attr.bp_addr =3D 0;
-
+> @@ -554,13 +608,399 @@ static int aslr_tool__process_sample(const struct =
+perf_tool *tool,
+>  				     struct perf_sample *sample,
+>  				     struct machine *machine)
+>  {
 [ ... ]
+> +	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+> +		u64 nr;
+[ ... ]
+> +		for (u64 cntr =3D 0; cntr < nr; cntr++) {
+> +			out_array[j++] =3D aslr_tool__remap_address(aslr, thread,
+> +								  sample->cpumode,
+> +								  in_array[i++]); /* from */
+> +			out_array[j++] =3D aslr_tool__remap_address(aslr, thread,
+> +								  sample->cpumode,
+> +								  in_array[i++]); /* to */
+> +			out_array[j++] =3D in_array[i++]; /* flags */
+> +		}
+[ ... ]
+> +	new_event->sample.header.size =3D sizeof(struct perf_event_header) + j =
+* sizeof(u64);
+> +
+> +	perf_sample__init(&new_sample, /*all=3D*/ true);
+> +	ret =3D evsel__parse_sample(evsel, new_event, &new_sample);
+
+[Severity: High]
+Does this second call to evsel__parse_sample() corrupt branch stack flags
+when analyzing cross-endian perf.data files?
+
+The initial event processing loop calls evsel__parse_sample() on the origin=
+al
+event, which mutates the event array in place by swapping the branch stack
+flags.=20
+
+When the already-mutated, native-endian payload is copied into new_event he=
+re,
+calling evsel__parse_sample() a second time will bitfield-swap the flags
+again. Does this inadvertently restore the original foreign-endian layout a=
+nd
+feed corrupted branch flags to the downstream delegate tool?
+
+> +	if (ret) {
+> +		perf_sample__exit(&new_sample);
+> +		goto out_put;
+> +	}
+> +
+> +	new_sample.evsel =3D evsel;
+> +	ret =3D delegate->sample(delegate, new_event, &new_sample, machine);
+> +	perf_sample__exit(&new_sample);
+> +
+> +out_put:
+> +	thread__put(thread);
+> +	return ret;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260604172850.6833=
-29-1-irogers@google.com?part=3D5
+29-1-irogers@google.com?part=3D3
