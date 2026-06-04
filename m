@@ -1,270 +1,255 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0ED31E83E
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 15:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BF62F8E81
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 15:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780585634; cv=none; b=pzsLQ83KSDbLE0cwr4pojMvGwuYSa+7ReYVoDKk046kBcznbbBcI/7di/sSK8tCXo/Zt+oeLceIDoLEbqBr2iYNe9bAOigH5prdfHI25QLrVVgYGA5xHUzMx6ZSRp7nVB1JWfwPjcOtILl3w0FAaQuYhxCBrbCGiCtm/qliSZ84=
+	t=1780585757; cv=none; b=hHYWEB6tUPZbM5Nasp75tUJ2twQ1+UD5qiUm7gfzL2L/Loq5xR+oBfR1VFrAmBgYCfyp5Gz2EerJubqv7vj7F0EksEFsE2vGE4Yw6kNXB8atfoRyMMAzVoOMjk258z5j+0wWs/YwP2+kqRY8fjHKJFbWw8MdF8vU1SXLymdnuyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780585634; c=relaxed/simple;
-	bh=b1fL+m+Q/nw6Yf3Fs2YOyL3tvgUf/fTIuqUtoxSl7Q4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MMBjafJeY3FwFLpVUyIzNejgwphiPJ8ARyKCqZlcvVSxSFkzAhfvfgMShFMMbl1G9oKPYFm3ViFvzQED3xsWJMzJixKaOnQnl9sboStmGT/zVISdctUjFG8IGETJezkL2JgTQBx8Z74JlGKCXBOS+8frghtW7A6mfDb4f4JjsZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u2OjjvHl; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1780585757; c=relaxed/simple;
+	bh=ecl3aPSMscByo//7dpRCDnPMPX/DpNWtfiaf9VSZ0yc=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=l27ppSyFnmgOJN4XPxsmzeUDLS/XTCu98i+Zq/vDslByVq7BYEoWLYLdalMyPvLGsvBVTJFhIjrlhC8rYw0YPUk63wxLvOMzvVLbqLi9/7NXnzia+BCGstBaXSxw6ZW5GuwYeW+w00RNZtEtVoiJrXfyxzmh3zwOtjN6Qu+BV5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Zs03Dpbg; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u2OjjvHl"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-45ee5cdbd28so1322190f8f.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 08:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780585629; x=1781190429; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EzCx8oZtOKJy0MwZJ9vxD1WducBZjFeqqellDoQ+O60=;
-        b=u2OjjvHlnnVn5EOW0TVvtuRpz9pg/z6ZiYZoqfyNDnMm0orxt3ckbvsEAXukKXcQN+
-         RMd2fCo/PAVavETYnLIHZbqQ+4SaYv/LgBSZHwz8DXd3XVHIpGruxreBOOCFdhsPGKhD
-         CT0y/oYMST3nmEGzrOLQxkn5abJUCSZ8YFCSrDIzCqjRcAX5uTkhOuKFQDITeh7x++Wj
-         EjzkLQ7jEuXbRtTpwQsPRSgOOY5XWGx5Jfxw7Ei4pKkrhYknZZbt7uf6oxoj9L2whpri
-         RxjCLo+W+/sqKxLgeyUwhAaT/Pailg/b4uejtIAPfgHjdfUjpDcc+qau4Dn39uW2rZ36
-         gRTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780585629; x=1781190429;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EzCx8oZtOKJy0MwZJ9vxD1WducBZjFeqqellDoQ+O60=;
-        b=g6fzzidEy0Fxvu1ulcr5s5ZthOW0GDDFezVAqaSI1kGFst++GWpblOIMGi0v4a8mqz
-         ZBLZUSoXZL4/tVm6hSnHVEMahXjkJvSb11PlcdDf1GBiZTh/TKx0sHlddB2LvGFgEnQM
-         CVimPGxlDOMtW9Z5O7/5+Y6WiATKvFBVqeCiF/9aYf19LVMuPS4YxJgwpMece2GdsevH
-         mB4zovTPpqQp7jWSF3BPXF9YlJMyksqi/t7pODB3iKxWYiy3TRePPIgfjK+uEXYavD7g
-         2F/PwvEpAsHOJq3QFZOv2f24TH5aQN8i6VxahAW/WpdyHfMVIGM3lBTUVNPK8rklPQZk
-         Mtaw==
-X-Forwarded-Encrypted: i=1; AFNElJ9rH4/QQGOQazr8/WlIAjOtVLg5z+XUe+tlaaQNzToDYwZcwTey1YVdO8BaAw0cqKfhPRmv09J7iLbBqWVAbbt4@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhExYzckQYR/OrMDl5/dOH8P36Ffg2SboKE+siTTa5y0EQUAON
-	JRB/ZpRowA7COkYPn/xV+I1RkAnFGXKA0PHxxie6+6BD6CNv2bPILBLKG+YVDLj63As=
-X-Gm-Gg: Acq92OFxYYYXYNLp5IiCuEtvyMkfychMPIyzt+wmpSNgaqYpQx9+kSrGZFbWTwCtVms
-	qYVkOatMNgTNiD0uIJNId1ULKE7DqsoE5M3p0y2Gn8885YpBAmFUUovlq8UK8isPAAwnAOM0ein
-	tioAGW/++7jy+Dx12jHG6Zgcie2qu5hCyrhbMDY8hS+Bs3sV3uzlmU5R4QiV9gn/BmbCSNJ2G2y
-	Z4HDH4y5UM5TZx/yocWXb69IIEJRo72jonZMg9k/NAAH3tnkkrYDPekSyhEVuRioNLkbWP/ZEnZ
-	0JBQke14rBNojLHRHDCzFgc+XFXmthBQMbykXNvuaTAZ0I3xflwaa07EhjcC8jfQ/ky7AkToFGi
-	8SNNJHoCmnmnBhqrukzyrjs5ulyTY6Xap0MkD1XKce/QVGGRaOpHccJ3i2Qsv6LXZhf5mHZJaB3
-	ZIHyL0DuxzdYihOb0ovjOkcPuv7msuyZ/1iusLC30=
-X-Received: by 2002:adf:f1ce:0:b0:45e:f7ae:d599 with SMTP id ffacd0b85a97d-460276257eamr4375838f8f.25.1780585629481;
-        Thu, 04 Jun 2026 08:07:09 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3529e0sm16840516f8f.28.2026.06.04.08.07.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2026 08:07:09 -0700 (PDT)
-Message-ID: <ba6008d5-930e-466a-ade8-7a3fe9f4e306@linaro.org>
-Date: Thu, 4 Jun 2026 16:07:07 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Zs03Dpbg"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 654Ax2VQ2292050;
+	Thu, 4 Jun 2026 15:09:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=80v4uH
+	qSQWjs1QUxSMf7ZHQ3G4mekbXDDvyja00+SQQ=; b=Zs03DpbgKMPWjgcFHncOZz
+	ly1DZK29DsL3ykX7o8zNpzyMiYAe3Ikmq4zf8c5Va9z/VK9IVczFKbxMuznttor0
+	vJKBeK5VMJrVvGWpk4yk3g5iNRPgarsxBqsmPlVqYE+Jdr1UCKbV4SKwqqmeUQRB
+	+7qCt0IugkxI4zc32X/3sXcelq5pEVlTEZnTsWaty7JRk1N7FmF57jmqXZll5nbn
+	IlwSykSw4Ixve8Vkihbw+M1WIiEY3u8S6xQGJ1QcZHgBfj3rTm1jJQMRBFrXAqto
+	PkO9uQhRa2nOqL1xbQrsFaXkifiwjMNNmc3fEqmjeoulwKFN4uSK/q3cAXVrNJrg
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqjqgcvt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jun 2026 15:09:08 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 654F97OH030200;
+	Thu, 4 Jun 2026 15:09:07 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egb7kdm6n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jun 2026 15:09:07 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 654F935357278786
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Jun 2026 15:09:03 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2A3B220043;
+	Thu,  4 Jun 2026 15:09:03 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B4F9F20040;
+	Thu,  4 Jun 2026 15:08:59 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.39.24.150])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  4 Jun 2026 15:08:59 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 7/8] perf cs-etm: Synthesize callchains for instruction
- samples
-To: Leo Yan <leo.yan@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linux.dev>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>,
- Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
-References: <20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com>
- <20260526-b4-arm_cs_callchain_support_v1-v6-7-f9f49f53c9dd@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260526-b4-arm_cs_callchain_support_v1-v6-7-f9f49f53c9dd@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH] tools/perf/sched: Update process names of processes in
+ zombie state for both -s and -S options
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <aiGI--j2nJ_kas60@x1>
+Date: Thu, 4 Jun 2026 20:38:46 +0530
+Cc: Anubhav Shelat <ashelat@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, jolsa@kernel.org,
+        adrian.hunter@intel.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5ECBB4A2-57DE-48A0-BCFE-1B99DC4AABEE@linux.ibm.com>
+References: <20260426093930.47809-1-atrajeev@linux.ibm.com>
+ <ae76k1BvfgcYI18K@google.com>
+ <230801A2-5F9C-42A6-9390-B44786309E30@linux.ibm.com> <ag8UFqPmRu8v4g_9@x1>
+ <aiGI--j2nJ_kas60@x1>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: AZngkdncW9jMhErMkJXV6V-Ku-RzAFVb
+X-Proofpoint-GUID: bXRfT7jvrwITSiD1bXE-5NQKXGBv6zdA
+X-Authority-Analysis: v=2.4 cv=bcVbluPB c=1 sm=1 tr=0 ts=6a219515 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=x5QCPqNzQhPJdF4W:21 a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22
+ a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=E_gX7XLpPc_Ef3h5YmsA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA0MDE0NyBTYWx0ZWRfXyT+HBWZQL77H
+ o3p3ki/AVl2IRZxnnCafyEpjqTWmlwahiDL25DjoP30vdxR1WAqPLZM5d/nhBB3SbuL56ITTj16
+ 2cQ7vf3L7IQHaHVpaApb4/IHtuZI7iKuvFBplaQTX+fcyyQJ0BN63m4hGs3dAGXK8SJKsiq1boe
+ 2KNrOyM+gjpTtkkPzthFoou79V6B3w+eVYO0a9Wtji93b3lSWIQjhOJscHIDU+eBWYdPl1ynnuM
+ 5zP1Ql9fAOLPBXMNpGZrtVIwV68KPgzj3FFxd+P995+lTxNGyoHXNj9LfgxyA4ppjaMueX2c55T
+ vyqTBtFOPqJNrDpAcwcuJEATM9aSgQI1PlxbZ2x6wORjK9GzaXAxAG27Wn2307MMynbJbe1Db7I
+ psKib+PlPH6mtxGHNVC5VupQy24F8o4LUFuJ0uC62wWt2CNdNm++sJ1oq02QKnMH5GgVGCTnDXh
+ OVkp3vXXnE9MHNuTZ8g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-04_04,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 clxscore=1011 adultscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606040147
 
 
 
-On 26/05/2026 5:59 pm, Leo Yan wrote:
-> From: Leo Yan <leo.yan@linaro.org>
-> 
-> CS ETM already records branches into the thread stack, but instruction
-> samples do not carry synthesized callchains. It misses to support the
-> callchain and no output with the itrace option 'g'.
-> 
-> Allocate a callchain buffer per queue and use thread_stack__sample()
-> when synthesizing instruction samples. Advertise PERF_SAMPLE_CALLCHAIN
-> on the synthetic instruction event.
-> 
-> Allocate the callchain stack with one more entry than requested, as the
-> first entry is reserved for storing context information.
-> 
-> After:
-> 
->    perf script --itrace=g16l64i100
-> 
->    callchain_test    9187 [002] 599611.826599:          1 instructions:
->                aaaae3ed0774 do_svc+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaae3ed0798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaae3ed07b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaae3ed07c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                ffff8331225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
->                ffff8331233c call_init+0x9c (inlined)
->                ffff8331233c __libc_start_main_impl+0x9c (inlined)
->                aaaae3ed0670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   tools/perf/util/cs-etm.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 48 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 8d98e772ecb307381b5ed1b4bbc4056e8779b261..90e0beb910156093d8bd0f320bb0210aca95dd26 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -17,6 +17,7 @@
->   #include <stdlib.h>
->   
->   #include "auxtrace.h"
-> +#include "callchain.h"
->   #include "color.h"
->   #include "cs-etm.h"
->   #include "cs-etm-decoder/cs-etm-decoder.h"
-> @@ -85,6 +86,7 @@ struct cs_etm_auxtrace {
->   struct cs_etm_traceid_queue {
->   	u8 trace_chan_id;
->   	u64 period_instructions;
-> +	u64 kernel_start;
->   	union perf_event *event_buf;
->   	struct thread *thread;
->   	struct thread *prev_packet_thread;
-> @@ -92,6 +94,7 @@ struct cs_etm_traceid_queue {
->   	ocsd_ex_level el;
->   	unsigned int br_stack_sz;
->   	struct branch_stack *last_branch;
-> +	struct ip_callchain *callchain;
->   	struct cs_etm_packet *prev_packet;
->   	struct cs_etm_packet *packet;
->   	struct cs_etm_packet_queue packet_queue;
-> @@ -640,6 +643,16 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->   		tidq->br_stack_sz = etm->synth_opts.last_branch_sz;
->   	}
->   
-> +	if (etm->synth_opts.callchain) {
-> +		size_t sz = sizeof(struct ip_callchain);
-> +
-> +		/* Add 1 to callchain_sz for callchain context */
-> +		sz += (etm->synth_opts.callchain_sz + 1) * sizeof(u64);
-> +		tidq->callchain = zalloc(sz);
+> On 4 Jun 2026, at 7:47=E2=80=AFPM, Arnaldo Carvalho de Melo =
+<acme@kernel.org> wrote:
+>=20
+> On Thu, May 21, 2026 at 11:17:58AM -0300, Arnaldo Carvalho de Melo =
+wrote:
+>> On Thu, May 21, 2026 at 02:02:53PM +0530, Athira Rajeev wrote:
+>>>> On 27 Apr 2026, at 11:26=E2=80=AFAM, Namhyung Kim =
+<namhyung@kernel.org> wrote:
+>>>> On Sun, Apr 26, 2026 at 03:09:30PM +0530, Athira Rajeev wrote:
+>>>>> In redhat perftool testsuite, observed fail for this test:
+>>>>>   -- [ FAIL ] -- perf_sched :: test_timehist :: --with-summary =
+(output regexp parsing)
+>>>>>=20
+>>>>> This led to analysis of "perf sched timehist" summary options.
+>>>>>=20
+>>>>> # perf sched record -a -o ./perf.data -- sleep 0.1
+>>>>>  This will record using perf sched record
+>>>>>=20
+>>>>> perf sched timeliest has two options "-s" and "-S"
+>>>>> # perf sched -i ./perf.data timehist -S
+>>>>> -S : Captures summary also at the end
+>>>>>=20
+>>>>> # perf sched -i ./perf.data timehist -s
+>>>>> -s : Captures only summary
+>>>>>=20
+>>>>> The test saves -s result which has only summary and compares with
+>>>>> summary which comes at the end from -S . Since there is a =
+difference
+>>>>> in these two, test fails.
+>>>>>=20
+>>>>> Checking the behaviour change in -S and -s results, difference is:
+>>>>>=20
+>>>>>                 rcu_sched[16]       2          4        0.013      =
+0.001       0.003       0.006   33.23       0
+>>>>>              migration/11[73]       2          1        0.006      =
+0.006       0.006       0.006    0.00       0
+>>>>>               migration/3[33]       2          1        0.006      =
+0.006       0.006       0.006    0.00       0
+>>>>> -               :216753[216753]      -1          1        0.041    =
+  0.041       0.041       0.041    0.00       0
+>>>>> +                 sleep[216753]      -1          1        0.041    =
+  0.041       0.041       0.041    0.00       0
+>>>>>               migration/8[58]       2          1        0.005      =
+0.005       0.005       0.005    0.00       0
+>>>>>           NetworkManager[811]       1          2        0.089      =
+0.028       0.044       0.060   36.06       0
+>>>>>              migration/13[83]       2          1        0.005      =
+0.005       0.005       0.005    0.00       0
+>>>>>=20
+>>>>> Here 216753 is pid for sleep which is a zombie process. This is
+>>>>> happening in latest kernel due to an update in "-S" result.
+>>>>> In -S, the process name appears in the results "sleep[216753]",
+>>>>> where as in the -s, only pid is present in the summary result
+>>>>> ":216753[216753]".
+>>>>>=20
+>>>>> After commit 39f473f6d0b2 ("perf sched timehist: decode process =
+names
+>>>>> of processes in zombie state")
+>>>>> for -S option, if process name is using pid, it uses different way =
+to
+>>>>> set it. So that we get the process name and not just Pid.
+>>>>>=20
+>>>>> This change went in only for timehist_print_sample() function.
+>>>>> Add this improvement in generic place so that even -s option =
+(which
+>>>>> captures summary) also will have meaningful information.
+>>>>>=20
+>>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>>>>=20
+>>>> Acked-by: Namhyung Kim <namhyung@kernel.org>
+>>>>=20
+>>>> Thanks,
+>>>> Namhyung
+>>> Hi,
+>>>=20
+>>> Can we please have this pulled in, if the patch looks fine ?
+>>=20
+>> Can you please check applying it on top of current perf-tools-next?
+>=20
+> So, this seems to be also addressed by:
+>=20
+> commit 39f473f6d0b24cf375893f2110b1cc9d8a079a42
+> Author: Anubhav Shelat <ashelat@redhat.com>
+> Date:   Wed Jul 16 16:39:15 2025 -0400
+>=20
+>    perf sched timehist: decode process names of processes in zombie =
+state
+>=20
+>    Previously when running perf trace timehist --state, when recording
+>    processes in the zombie state the process name would not be decoded
+>    properly and appears with just the PID:
+>=20
+>    1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956    =
+  0.019      0.041      S
+>    1140057.412222 [0012]  :1248612[1248612]                   0.000    =
+  0.000      0.332      Z
+>    1140057.412275 [0004]  <idle>                              0.052    =
+  0.052      0.953      I
+>    1140057.412284 [0008]  <idle>                              0.070    =
+  0.070      0.932      I
+>    1140057.412333 [0004]  KMS thread[3126/3104]               0.953    =
+  0.112      0.058      S
+>=20
+>    Now some extra processing has been added to decode the process =
+name:
+>=20
+>    1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956    =
+  0.019      0.041      S
+>    1140057.412222 [0012]  sleep[1248612]                      0.000    =
+  0.000      0.332      Z
+>    1140057.412275 [0004]  <idle>                              0.052    =
+  0.052      0.953      I
+>    1140057.412284 [0008]  <idle>                              0.070    =
+  0.070      0.932      I
+>    1140057.412333 [0004]  KMS thread[3126/3104]               0.953    =
+  0.112      0.058      S
+>=20
+>    Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+>    Link: =
+https://lore.kernel.org/r/20250716203914.45772-2-ashelat@redhat.com
+>    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>=20
+>=20
+> No? It is not applying to perf-tools-next, a quick look found the =
+patch
+> above.
 
-You can use struct_size() to get the size for a flexible array struct:
+Hi Arnaldo
 
-   zalloc(struct_size(tidq->callchain, ips,
-                      etm->synth_opts.callchain_sz + 1));
+commit 39f473f6d0b2 ("perf sched timehist: decode process names
+of processes in zombie state=E2=80=9D)
+added change for -S option. The patch I submitted is to add change in =
+process name for =E2=80=9C-s=E2=80=9D option as well
 
-> +		if (!tidq->callchain)
-> +			goto out_free;
-> +	}
-> +
->   	tidq->event_buf = malloc(PERF_SAMPLE_MAX_SIZE);
->   	if (!tidq->event_buf)
->   		goto out_free;
-> @@ -647,6 +660,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->   	return 0;
->   
->   out_free:
-> +	zfree(&tidq->callchain);
->   	zfree(&tidq->last_branch);
->   	zfree(&tidq->prev_packet);
->   	zfree(&tidq->packet);
-> @@ -939,6 +953,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
->   		thread__zput(tidq->thread);
->   		thread__zput(tidq->prev_packet_thread);
->   		zfree(&tidq->event_buf);
-> +		zfree(&tidq->callchain);
->   		zfree(&tidq->last_branch);
->   		zfree(&tidq->prev_packet);
->   		zfree(&tidq->packet);
-> @@ -1431,6 +1446,7 @@ static void cs_etm__set_thread(struct cs_etm_queue *etmq,
->   		tidq->thread = machine__idle_thread(machine);
->   
->   	tidq->el = el;
-> +	tidq->kernel_start = machine__kernel_start(machine);
->   }
->   
->   int cs_etm__etmq_set_tid_el(struct cs_etm_queue *etmq, pid_t tid,
-> @@ -1561,6 +1577,25 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->   		sample.branch_stack = tidq->last_branch;
->   	}
->   
-> +	if (etm->synth_opts.callchain) {
-> +		if (tidq->kernel_start)
-> +			thread_stack__sample(tidq->thread, tidq->packet->cpu,
-> +					     tidq->callchain,
-> +					     etm->synth_opts.callchain_sz + 1,
-> +					     sample.ip, tidq->kernel_start);
-> +		else
-> +			/*
-> +			 * Clear the callchain when the kernel start address is
-> +			 * not available yet. The empty callchain can then be
-> +			 * consumed by cs_etm__inject_event().
-> +			 */
-> +			memset(tidq->callchain, 0,
-> +			       sizeof(struct ip_callchain) +
-> +			       (etm->synth_opts.callchain_sz + 1) * sizeof(u64));
+I will check applying this on top of current perf-tools-next
 
-Ditto, but the rest looks good:
+Thanks
+Athira
 
-Reviewed-by: James Clark <james.clark@linaro.org>
 
-> +
-> +		sample.callchain = tidq->callchain;
-> +	}
-> +
->   	if (etm->synth_opts.inject) {
->   		ret = cs_etm__inject_event(etm, event, &sample,
->   					   etm->instructions_sample_type);
-> @@ -1724,6 +1759,9 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
->   		attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
->   	}
->   
-> +	if (etm->synth_opts.callchain)
-> +		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
-> +
->   	if (etm->synth_opts.instructions) {
->   		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
->   		attr.sample_period = etm->synth_opts.period;
-> @@ -3457,6 +3495,14 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->   					PERF_IP_FLAG_TRACE_BEGIN |
->   					PERF_IP_FLAG_TRACE_END;
->   
-> +	if (etm->synth_opts.callchain && !symbol_conf.use_callchain) {
-> +		symbol_conf.use_callchain = true;
-> +		if (callchain_register_param(&callchain_param) < 0) {
-> +			symbol_conf.use_callchain = false;
-> +			etm->synth_opts.callchain = false;
-> +		}
-> +	}
-> +
->   	etm->session = session;
->   
->   	etm->num_cpu = num_cpu;
-> @@ -3508,7 +3554,8 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->   	}
->   
->   	etm->use_thread_stack = etm->synth_opts.thread_stack ||
-> -				etm->synth_opts.last_branch;
-> +				etm->synth_opts.last_branch ||
-> +				etm->synth_opts.callchain;
->   
->   	err = cs_etm__synth_events(etm, session);
->   	if (err)
-> 
+>=20
+> - Arnaldo
+
 
