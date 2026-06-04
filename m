@@ -1,54 +1,53 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BC7B3DF018;
-	Thu,  4 Jun 2026 08:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0995364934;
+	Thu,  4 Jun 2026 09:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780561255; cv=none; b=Q4Ykkk1xyLeIWopnWgIt5OIRiqiEGiFjWYLbzgiMWTRXXzPUEuFVlmgQihQmzFrH9Fva/5bNnhU0wbaMuAtITBFv4MixRR7vr3qv0cyFo7dxVE4k+ZJVxAv1AFOmJxFdNNyd2OF2KP6YwHqFVwWypm1XSv+zAwaYnJ9dF3eRcws=
+	t=1780564909; cv=none; b=QRCDBYAr7ji5LJimRNXFOwOQEphYQd6B4MzmEOsD5ZCu+jfv6/t0YE8KbQN7vTipBx+GcHYreWQFnAGBg3K0PWwR3nOHnNCozxX7hdy4DxwyJ4qdFf5i2N218eJRqmDvANidmeITTTBY/lUoA6dVQcKmbjwLD4DUNq/ncTu+0bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780561255; c=relaxed/simple;
-	bh=xx4q8zA0SDvN+Zn0mJt/nZF2yaNi8H3ZSogpxfNtLDY=;
+	s=arc-20240116; t=1780564909; c=relaxed/simple;
+	bh=00iyJ6VkOVP/q1njnA2gA3zh/0HSFrHb8WMHa38FfbA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxmrrBWyt13HEk2ybD/bqePQ/X8JGkUnUiZoJOrxyGt+gTdF1L8WYexop23KXSK3IAL81cAhHhIlx1fVHWJrDBoWDM4n1z4c2cJqsFZSmtPsEhlMKW98WHI8I/AkS1L5JlbEbytW6aAjPIA/KSnH9VcVJmGtHP63RAhrz4QpU8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=HBXd5CG+; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z8NE/30nNy7Ls57S7bu3rq8uX236EMKyk867+7xW2x0wIrIWF83+2wHdK5d/sVWRfJdO22jg8QAt5LCwDGCsEYkM/6Z1QCmZQL+Z0AojoUNAIUkpmRa28/mmYtqPgJV7oN7bFjy1G9Nm6Mzwidrl/xJa3KFE8VsdHobPoHDtWh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OYCSWeQB; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="HBXd5CG+"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3D013297;
-	Thu,  4 Jun 2026 01:20:45 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE7FD3F7D8;
-	Thu,  4 Jun 2026 01:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780561250; bh=xx4q8zA0SDvN+Zn0mJt/nZF2yaNi8H3ZSogpxfNtLDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HBXd5CG+Kw6LL3Z4p7LfEbspjPtluKqFtPwlqSvB7gMo+FkOMRXEUzIzw8YIkodTH
-	 5cfr6vGu5hfm2waGS4loALDrp8AsIwkxiZPthmIUwEjoK01BV2uy+NuQT4FHx7Zp2C
-	 2NcAeygFzCwWLdxy4tNOTyHo+5qDb5CzLEAqoEHA=
-Date: Thu, 4 Jun 2026 09:20:47 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Amir Ayupov <aaupov@meta.com>
-Cc: James Clark <james.clark@linaro.org>, stable@vger.kernel.org,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OYCSWeQB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7Oo1Wm4RQBhoT1TAASWUxZM6ts2NaXeKKtIOrDa/nEQ=; b=OYCSWeQBU75X7CExwAyKZmLiiF
+	2L8FccmqKYQcNVeGSYZ3iDg3dxBuIyUya5V/4EIFKxrtaU5R7CTapKxHuRr2jwf4/FyhP/BtNzaXY
+	d5rbI7r3VXPLQsequTgbc3Gkvp13zZcwpU3rCeVl473/Io94wJJGjkUQ/ijjMUTgbiqV8usdfFn9f
+	7Be55RaJG9Fkdciue1fyBdEiuQdaYnDh9zSzk/v7z3fTBWO8vFGTn/TSN7pzCA3ptguIjTPWMhyeY
+	jp1pdo/hXTWx/bDH/vRZQZh3on9V9AyaM290ZMhrqu7VhA1sw8APTG3WuIjuR2n4cUYNXSQe3rU3D
+	RulIjIGQ==;
+Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wV4Gj-0000000E85E-3nvB;
+	Thu, 04 Jun 2026 09:21:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7779A3001FD; Thu, 04 Jun 2026 11:21:40 +0200 (CEST)
+Date: Thu, 4 Jun 2026 11:21:40 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf cs-etm: stamp pid/tid/EL on each buffered packet to
- fix cross-pid attribution
-Message-ID: <20260604082047.GL101133@e132581.arm.com>
-References: <20260515021135.1729028-1-aaupov@meta.com>
- <f767dc3b-9796-4b12-a776-1de6a9ff3f99@linaro.org>
- <CAMOD+7+_HE3E+FFg6GPfG31GzVBzF1qhcQ=i-eiEgiGcn3WRvw@mail.gmail.com>
+	James Clark <james.clark@linaro.org>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] perf: Reveal PMU type in fdinfo
+Message-ID: <20260604092140.GE3126523@noisy.programming.kicks-ass.net>
+References: <20260602181349.3969429-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,31 +56,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMOD+7+_HE3E+FFg6GPfG31GzVBzF1qhcQ=i-eiEgiGcn3WRvw@mail.gmail.com>
+In-Reply-To: <20260602181349.3969429-1-ctshao@google.com>
 
-Hi Amir,
-
-On Wed, Jun 03, 2026 at 01:10:17PM -0700, Amir Ayupov wrote:
-> Hi James,
+On Tue, Jun 02, 2026 at 11:13:48AM -0700, Chun-Tse Shao wrote:
+> It gives useful info on knowing which PMUs are reserved by this process.
+> Also add config which would be useful.
+> Testing cycles:
 > 
-> Thank you for picking it up.
+>   $ ./perf stat -e cycles &
+>   $ cat /proc/`pidof perf`/fdinfo/3
+>   pos:    0
+>   flags:  02000002
+>   mnt_id: 16
+>   ino:    3081
+>   perf_event_attr.type:   0
+>   perf_event_attr.config: 0x0
+>   perf_event_attr.config1:        0x0
+>   perf_event_attr.config2:        0x0
+>   perf_event_attr.config3:        0x0
+>   perf_event_attr.config4:        0x0
 > 
-> I tested the v2 patch series and it looks good. There was a minor
-> difference in 2/39 tested perf data files: the number of brstack samples
-> differs by one, however, there was no loss of binary profile. The resulting
-> BOLT profile converted from the perf script output was identical, so I'm OK
-> with v2 patch as-is.
+> Testing L1-dcache-load-misses:
+> 
+>   $ ./perf stat -e L1-dcache-load-misses &
+>   $ cat /proc/`pidof perf`/fdinfo/3
+>   pos:    0
+>   flags:  02000002
+>   mnt_id: 16
+>   ino:    1072
+>   perf_event_attr.type:   3
+>   perf_event_attr.config: 0x10000
+>   perf_event_attr.config1:        0x0
+>   perf_event_attr.config2:        0x0
+>   perf_event_attr.config3:        0x0
+>   perf_event_attr.config4:        0x0
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> Assisted-by: Gemini:gemini-3.1-pro-preview
+> ---
 
-Sorry jumping in as brstack is mentioned.
+Yeah, I suppose I'll take this. But I'm not sure about the wording here.
+PMUs aren't really reserved as such.
 
-Now branch stack is maintained per-CPU wise, it mixes up branch stack
-cross threads. The patch 03 in the series [1] refactors branch stack
-per-thread by using common code.
 
-Hope this can benefit a bit the profiling data quality and in case
-you are interested in.
-
-Thanks,
-Leo
-
-[1] https://lore.kernel.org/linux-perf-users/20260526-b4-arm_cs_callchain_support_v1-v6-3-f9f49f53c9dd@arm.com/
