@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D62F30C15C
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 17:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAF12F7EF4
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 17:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780595150; cv=none; b=FrsUYLeMIxm3hL3Zpo9hfpGW/F1MEYizO99+TEEEdDcee/JIO12oO+8WYgn+fbzDh+hHrzkavfhr4pRMx1vzIopGLmHCnu7A3bJy8u15y/ORXA5z35rxU4o4OZDW1AAXprHndWF2dhDrR+WocGyX5PLewMBqTtTgrfXWhckAHD4=
+	t=1780595155; cv=none; b=uV5M7I7jTOzvhHsbuwkzZ2T/FWvEuJwLvzKzSrFiM3maDvKshEpKflawdxNqndYkpJHW+asC/9UuK8ZERbdhWJkBWk8+VGOjD/DEcd/s+pNQSsqBrXr3g74cOQGFfIQWG6OmPWHLaERK5blWZ2fXM0VGFPw9EbxRuBgzDRNf8Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780595150; c=relaxed/simple;
-	bh=ALDDQroqqA0PPfb2nqvKO5/LJlz2DEkI2YP/5YSZrLg=;
+	s=arc-20240116; t=1780595155; c=relaxed/simple;
+	bh=4/eklowOAWh0twVdCI/FZxvgr3gyEfqVEyfG+RJX/8Q=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=d8YroM/HSUsVufmwdIFI16MPJ3hp4E9iCmdarjv4Xmt9QCLtVIMbbRSqqH8ZuBvdrgkUNmt8mVHKLGbIgwCE0iDAYv+FWwd+FO7nj++P9Nsa7HTsKRgokTt64nrrsVp1/iYOntp4PfFVwkzbd7t/EN/sLvUv8YBrLaGt2TdbpJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDehG3Kv; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ItUkzKU92MgF4cI9Kzf7+V5nahWRf6rTeGvHmJlsvvpdCQ4u0KUMxvZyUKMwVFBXn7wOHaerYsB7XOSAYT8HHUqHq5b9EWZ6d0eCkJQ6H/z/NHq/j3IlHsXZuC9sSrMR0LiEUtFewkozniUXnOByvSaKmEIWXT4LLqJHdfdLRaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSmZMNkC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDehG3Kv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF3C1F00893;
-	Thu,  4 Jun 2026 17:45:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSmZMNkC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC5D1F00893;
+	Thu,  4 Jun 2026 17:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780595148;
-	bh=TeBLTFLGiw0KUfehHh2vKh9/hVLx+P54A+MCa3nVdIw=;
+	s=k20260515; t=1780595154;
+	bh=OKL3R2kMY6/wQSLViinbqoHDnatqbvcsk0czIIEzjJk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FDehG3KvDLk89gWbVvjQTO5B3SM+6d9tEV9tmWRMWld6Kr5/8WRlmpf5pUfsYq7zb
-	 KLHwigpYiF6p60Iaftk0WWxlp8XAoqo/FEzPpxU0yPpL8Qq2btecNIcrL4sCy597pz
-	 BWUKyFrWGNPL3asowStjpDIZntIbawx0qWWOib+Aq44yBqhmyv2O0HIKsIkAoIXjq4
-	 31QtuBjFlc/DAJP2A/b8YdgB9tJtg3QL5utAvmFtu5dVSBc1QI38dIZtXpSjwez63a
-	 5ZPrSQW6kSVNVTrJUvaDNf1Yi641V1yw2ciHofPEsqttAQ6VZlrO8AhOL60VS4Xufz
-	 qjt4Se32NlKCQ==
+	b=TSmZMNkCrY3Jhu38D7mYCrHwPSdRDlRwWI8zcThvAWoM559T/owNAgY8gGowJbZOD
+	 MOoO2yUZKZhXo/WtGJj+D8azXq9p0bpNLyLLuSkdMR/W26vS14BT3gRjbgzpz44qP2
+	 uyLnYkiibSM7OP5SXiwgvc7PDabyQVI0OGvTW8vjcnhivTBNUXdHaKfpW5dBXEak9i
+	 B0yqUBCopWSDPoUwGaGHL5mbrwFA+/Od5mvwJ78sd6OLQt5qlBr0/qshtg3yeDaL6f
+	 UY86Rz80J2cJ/U+JvTac7YpOtDtLtcs3MVRycUoEoUvRLps9mjA4PMM0zX4ynWpUNV
+	 0+Qif2gB64iSA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 3/5] perf inject/aslr: Implement sample address
- remapping
+Subject: Re: [PATCH v9 2/5] perf inject/aslr: Add ASLR tool infrastructure
+ and MMAP tracking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260604172850.683329-4-irogers@google.com>
-References: <20260604172850.683329-4-irogers@google.com>
+In-Reply-To: <20260604172850.683329-3-irogers@google.com>
+References: <20260604172850.683329-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 04 Jun 2026 17:45:48 +0000
-Message-Id: <20260604174548.CAF3C1F00893@smtp.kernel.org>
+Date: Thu, 04 Jun 2026 17:45:54 +0000
+Message-Id: <20260604174554.7CC5D1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,115 +46,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Direct access to fields of the reference-counted `struct thread` b=
-reaks the build when `REFCNT_CHECKING` is enabled.
-- [High] Double-swapping of `PERF_SAMPLE_BRANCH_STACK` flags corrupts branc=
-h data when analyzing cross-endian perf.data files.
+- [High] Breakpoint addresses and register masks leak when `--itrace` is co=
+mbined with `--aslr` in pipe mode due to missing attribute zeroing.
+- [High] Auxiliary trace events (`auxtrace`, `auxtrace_info`, `auxtrace_err=
+or`) are silently dropped when `--aslr` is used, breaking `--itrace` decodi=
+ng.
 --
 
-commit 22641fe8dc789606c2c20387f60f64010f88923f
+commit 54e7ffb94c135676309f30095bfd44c906c79590
 Author: Ian Rogers <irogers@google.com>
 
-perf inject/aslr: Implement sample address remapping
+perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
+   =20
+If perf.data files are taken from one machine to another they may
+leak virtual addresses and so weaken ASLR on the machine they are
+coming from. Add an aslr option for perf inject that remaps all
+virtual addresses, or drops data/events, so that the virtual address
+information isn't leaked.
 
-This commit adds the sample address remapping logic to the ASLR tool. It
-parses sample events and remaps IPs, ADDRs, callchains, and branch stacks
-using the mappings collected from metadata events.
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index d8cb1f562f690..a9f0a3901e7bc 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+
+[ ... ]
+
+> @@ -276,6 +295,8 @@ static int perf_event__repipe_attr(const struct perf_=
+tool *tool,
+> =20
+>  	attr.size =3D sizeof(struct perf_event_attr);
+>  	attr.sample_type &=3D ~PERF_SAMPLE_AUX;
+> +	if (inject->aslr)
+> +		attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
+
+[Severity: High]
+Does this alternative synthesis path for itrace also need to clear bp_addr,
+sample_regs_user, and sample_regs_intr?
+
+When perf inject is run in pipe mode with both the aslr and itrace options,
+perf_event__repipe_attr takes this path. The non-itrace path correctly clea=
+rs=20
+the breakpoint addresses and register masks for ASLR sanitization, but this=
+=20
+path only masks the sample type.
+
+Could this leak sensitive kernel virtual addresses encoded in breakpoint=20
+attributes into the output stream, bypassing the ASLR protections?
+
+> =20
+>  	if (inject->itrace_synth_opts.add_last_branch) {
+>  		attr.sample_type |=3D PERF_SAMPLE_BRANCH_STACK;
+
+[ ... ]
 
 > diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> index be7280f884308..fc619b9f1f40a 100644
-> --- a/tools/perf/util/aslr.c
+> new file mode 100644
+> index 0000000000000..be7280f884308
+> --- /dev/null
 > +++ b/tools/perf/util/aslr.c
-> @@ -109,6 +109,60 @@ static u64 round_up_to_page_size(u64 addr)
->  	return (addr + page_size - 1) & ~((u64)page_size - 1);
->  }
-> =20
-> +static u64 aslr_tool__remap_address(struct aslr_tool *aslr,
-> +				    struct thread *aslr_thread,
-> +				    u8 cpumode,
-> +				    u64 addr)
+
+[ ... ]
+
+> +static s64 aslr_tool__process_auxtrace(const struct perf_tool *tool __ma=
+ybe_unused,
+> +				       struct perf_session *session,
+> +				       union perf_event *event)
 > +{
-[ ... ]
-> +		if (!thread__find_map(aslr_thread, effective_cpumode, addr, &al)) {
-> +			addr_location__exit(&al);
-> +			return 0; /* No mmap. */
-> +		}
-> +	}
+> +	if (perf_data__is_pipe(session->data)) {
+> +		/* Copy behavior of the stub by reading all pipe data. */
+> +		int err =3D skipn(perf_data__fd(session->data), event->auxtrace.size);
 > +
-> +	key.machine =3D maps__machine(aslr_thread->maps);
-> +	key.dso =3D map__dso(al.map);
-> +	key.invariant =3D map__start(al.map) - map__pgoff(al.map);
-> +	key.pid =3D (effective_cpumode =3D=3D PERF_RECORD_MISC_KERNEL ||
-> +		   effective_cpumode =3D=3D PERF_RECORD_MISC_GUEST_KERNEL) ?
-> +		  kernel_pid : aslr_thread->pid_;
+> +		if (err < 0)
+> +			return err;
+> +	}
+> +	return event->auxtrace.size;
+> +}
+
+[ ... ]
+
+> +static void aslr_tool__init(struct aslr_tool *aslr, struct perf_tool *de=
+legate)
+> +{
+> +	delegate_tool__init(&aslr->tool, delegate);
+> +	aslr->tool.tool.ordered_events =3D true;
+
+[ ... ]
+
+> +	/*
+> +	 * event_update, tracing_data, finished_round, build_id, id_index,
+> +	 * auxtrace_info, auxtrace_error, time_conv, thread_map, cpu_map,
+> +	 * stat_config, stat, feature, finished_init, bpf_metadata, compressed,
+> +	 * auxtrace - no virtual addresses.
+> +	 */
+> +	aslr->tool.tool.auxtrace =3D aslr_tool__process_auxtrace;
+> +	aslr->tool.tool.auxtrace_info =3D aslr_tool__process_auxtrace_info;
+> +	aslr->tool.tool.auxtrace_error =3D aslr_tool__process_auxtrace_error;
+> +}
 
 [Severity: High]
-Will this direct field access break the build when REFCNT_CHECKING is enabl=
-ed?
+Will overwriting the auxtrace delegate callbacks cause silent data loss?
 
-When perf is built with REFCNT_CHECKING=3D1 for ASAN or LSAN builds, the th=
-read
-struct is wrapped in an opaque pointer, hiding the actual fields. Direct ac=
-cess
-to maps and pid_ usually causes compilation failures under these builds.=20
-Should this use the proper thread__maps() and thread__pid() accessors inste=
-ad?
+The auxtrace, auxtrace_info, and auxtrace_error callbacks are overridden he=
+re=20
+with internal stubs. As seen in aslr_tool__process_auxtrace above, the stub=
+=20
+consumes the pipe data but returns without forwarding the event to the=20
+delegate tool.
 
-> @@ -554,13 +608,399 @@ static int aslr_tool__process_sample(const struct =
-perf_tool *tool,
->  				     struct perf_sample *sample,
->  				     struct machine *machine)
->  {
-[ ... ]
-> +	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
-> +		u64 nr;
-[ ... ]
-> +		for (u64 cntr =3D 0; cntr < nr; cntr++) {
-> +			out_array[j++] =3D aslr_tool__remap_address(aslr, thread,
-> +								  sample->cpumode,
-> +								  in_array[i++]); /* from */
-> +			out_array[j++] =3D aslr_tool__remap_address(aslr, thread,
-> +								  sample->cpumode,
-> +								  in_array[i++]); /* to */
-> +			out_array[j++] =3D in_array[i++]; /* flags */
-> +		}
-[ ... ]
-> +	new_event->sample.header.size =3D sizeof(struct perf_event_header) + j =
-* sizeof(u64);
-> +
-> +	perf_sample__init(&new_sample, /*all=3D*/ true);
-> +	ret =3D evsel__parse_sample(evsel, new_event, &new_sample);
-
-[Severity: High]
-Does this second call to evsel__parse_sample() corrupt branch stack flags
-when analyzing cross-endian perf.data files?
-
-The initial event processing loop calls evsel__parse_sample() on the origin=
-al
-event, which mutates the event array in place by swapping the branch stack
-flags.=20
-
-When the already-mutated, native-endian payload is copied into new_event he=
-re,
-calling evsel__parse_sample() a second time will bitfield-swap the flags
-again. Does this inadvertently restore the original foreign-endian layout a=
-nd
-feed corrupted branch flags to the downstream delegate tool?
-
-> +	if (ret) {
-> +		perf_sample__exit(&new_sample);
-> +		goto out_put;
-> +	}
-> +
-> +	new_sample.evsel =3D evsel;
-> +	ret =3D delegate->sample(delegate, new_event, &new_sample, machine);
-> +	perf_sample__exit(&new_sample);
-> +
-> +out_put:
-> +	thread__put(thread);
-> +	return ret;
->  }
+Does this mean raw hardware traces like Intel PT are silently dropped,=20
+preventing them from reaching perf_event__process_auxtrace to generate=20
+synthetic samples? This looks like it would break itrace decoding.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260604172850.6833=
-29-1-irogers@google.com?part=3D3
+29-1-irogers@google.com?part=3D2
