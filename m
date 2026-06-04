@@ -1,92 +1,201 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED5B3290AD;
-	Thu,  4 Jun 2026 15:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A2332E729
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 15:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780585959; cv=none; b=twuSWR4gS2BklTTrrjENV8F93fFNFm4wryxSsz9eLnrgM4AaUPvzx7HfdRC8vZLW86pC42v2TPjh0tpcj6kCTofUCIAMs48nd85RX+LqMY8p35FCBafrnsCJVKo7+C1swrPWmewuivkTTXkBEqs1LBNe1BzShBrAOSyDPbcAlF8=
+	t=1780585970; cv=none; b=QRSyJYWzOc2BAHnc6I0NRSU/A7ahJfrRTb3YPyvRbu5KkCbFDFuHwAXp+lZ6ztcZVMXv4yOVLVXap8rhHz2QYsyRtTwyqVdo1xbqR2CzqdsW9RzV6fbXWEIKkJMEdZzHzp4R126Ynx2qgQmnsLxBYZAIquA50mhCJkDtzyqLomE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780585959; c=relaxed/simple;
-	bh=nccuy9mVDfyv10B4G5A/259ZokotX2ZzMjHSFWP/8Es=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qD+BCiHmaU7FCC8OYIrBMvl9qxrA/QBS//WNv2Pnkw1dCJ/2b5kXBymNGPDPpYdPBZsWAbAZ0i+LVKkd2b9BdYlW11dQ6iS0w3pktzcfxpMjYWSLODaMREw39UmgkVI9g3dNZK6GaiGxoF338TozApdpj0QPuTCmQRL7OtTnpMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=MuXd8UBi; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1780585970; c=relaxed/simple;
+	bh=vXh2rkHnO67ufIH4A+bSTf2fip1lpij95Ul79JOsIuY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=D0m9XViRQ4Sw4Za7CWkQiItnvpIFqMTXIBQ0qmr6C5ELRbREDRIRJy6Jr9SmL6hf7+ChYLdQR2GNTk4OZAlB2Z39X3/s9VtrLV4nUDbgDEN6QdWyqWhLyEoxjyjZF8b9HXs8/IRx86uGAFTqnNlSo/La+l/Q/+xRCfOkb94Qw/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N0/cy8+I; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="MuXd8UBi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OJEsWaJMkmXwcrfhWHy1DALdoIQEZ7S/5/cBQ7zsCj8=; b=MuXd8UBiOUtgHEzGZ2nB8sBrEI
-	ccwjgWhciTwKGqVZGUdAPRuawCOxB8mijdbRNT0TGv4ocO/zvwRTXc6kMG6XfNvxxHzfwf6UuXls7
-	RAKc9GU6btp8w+dvwHSxq248nzEvu0XYmqnmVq2m619Y4vBMKo4M4zvZ0VxIs078/on6ktRG1+1Zx
-	y1OPT+RDiTY5i4b41zhy+ieHRsuQZhnungn5vllPy1oK3kv5uIeXtkh1lU13PqX/Hcn0ykDCwcJxu
-	HN+uvu59ErN6qYt2JT08UERlzvvNV+rUMG4vYVie7PFJ1cPAWu2JyQOyJFCgKuIztAFjfzgR5mFZX
-	/jnhCwQg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wV9k3-004bMk-06;
-	Thu, 04 Jun 2026 15:12:19 +0000
-Date: Thu, 4 Jun 2026 08:12:13 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v4] perf bench: add --write-size option to sched pipe
-Message-ID: <aiGVuVHCiA96IKqF@gmail.com>
-References: <20260603-perf_bench_pipe-v4-1-f48c0ba6d6cb@debian.org>
- <aiC6DA3o4L7mx0S7@google.com>
- <aiF7vEJNyxJcluC2@x1>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N0/cy8+I"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 654BsDeS1445229;
+	Thu, 4 Jun 2026 15:12:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ujALd+
+	bemsEF7GB7Nhbc95tI6DY8IYQNKN5kKSeEqR8=; b=N0/cy8+IMoCcIwmMUD0GhQ
+	XMFkv7hXYLk3Ff96NSwglnB3WFEMFyVgDh2ai6uRF5XfL6d0VjG+ZDbxPOCXb0x6
+	q/qyucWE05NFisdmy4wIBjSu8h9DPer/wA6fhf/wh9HRvTkGQiu/RhxkUmOhq43i
+	mD/IPlx0GUBqfce+9SvFaSshHndcFqSdUa3kamBt4hmjstAE3yhROshcrHw1SWkD
+	9x5ywY25XgMIYqOEH2Zg4GPHw/K1fawvL05T/ZbTAzqHHLbemluuneKcbLI/2ZQM
+	oj28u8vj10CXEY3uR+kVPmZD77S6yKYr+vMmC3CXtd1t/o6YxBNzBzL0/Ss/36yw
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqhtfs5p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jun 2026 15:12:40 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 654F96Lp030877;
+	Thu, 4 Jun 2026 15:12:39 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egakw5ps6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jun 2026 15:12:39 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 654FCZYv41615826
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Jun 2026 15:12:35 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C1F6D20043;
+	Thu,  4 Jun 2026 15:12:35 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 649F220040;
+	Thu,  4 Jun 2026 15:12:32 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.39.24.150])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  4 Jun 2026 15:12:32 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aiF7vEJNyxJcluC2@x1>
-X-Debian-User: leitao
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH V4 1/2] tools/perf: Fix the check for parameterized field
+ in event term
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <4D09EA54-8065-48C2-B1DF-95D2AA15C6B6@linux.ibm.com>
+Date: Thu, 4 Jun 2026 20:42:20 +0530
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, shivani@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>, mpetlan@redhat.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <96BC6514-0D0E-4806-A0C5-DFE2CA09392E@linux.ibm.com>
+References: <20260504154205.21394-1-atrajeev@linux.ibm.com>
+ <4D09EA54-8065-48C2-B1DF-95D2AA15C6B6@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: tMWHI-skVlgbx-5oR0axEwB-V9tVcvCQ
+X-Authority-Analysis: v=2.4 cv=fv/sol4f c=1 sm=1 tr=0 ts=6a2195e8 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=KlCRr-_lrQmZq1rU:21 a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22
+ a=VnNF1IyMAAAA:8 a=Cg9LiEkykyIr4wkDzIQA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA0MDE0NyBTYWx0ZWRfX40s4g6nEXhNs
+ AKRDpuHnQKoszozJlkTrysYmHZTX/9Y+qksMgpGu979YwOJYrgopPNymLOEZ3xGKnKCd8diGi0c
+ Pnt16sNcdhrXBRef74XAwPRGOYKT5FqRTIvFqqOhWHgKO7iCjTNsEgOrNs04rchgLdlN91QTQRz
+ ypoyJnmvCU+Fof2mei766i5jJXkXA4XsqeSqjgwmqWciUSmRPjvgF93SfJ/gffWcTiq89c4Ud3e
+ O+hHHOulPNt6VDDKyckYThWAjCi2vgPCX4yKbUIzsHAgX5OwYxjymUn3wZrOEYMcHpAp7gYiWSh
+ 3nOGjaBdFDK625HnNbVkPI4865vz4kYFUo4Dex4NBWTvoBrENxj/jvUYV3j2oNxNjm6E0IAbOPi
+ G/vwx+d/eyv5WwQ459weGOSQp8yhme3+ufDMqPbxqWH+0NCL5U4TpH5Z2HfVLBqSpeZlARMCv3N
+ vm2zgOTh+1Eo0AWB7Tg==
+X-Proofpoint-ORIG-GUID: RChJIf19xSHBEKC5wZlJX8WYM-QZyg5M
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-04_04,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015
+ impostorscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606040147
 
-On Thu, Jun 04, 2026 at 10:21:00AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Jun 03, 2026 at 04:34:36PM -0700, Namhyung Kim wrote:
-> > On Wed, Jun 03, 2026 at 03:35:07AM -0700, Breno Leitao wrote:
-> > > The default ping-pong uses sizeof(int) (4 bytes) per iteration, which
-> > > exercises only the pipe-buffer merge path and keeps allocation entirely
-> > > out of the picture. That makes the bench a useful scheduler / context-
-> > > switch latency probe but unable to surface anything from the pipe
-> > > page-allocation hot path.
-> 
-> > > Add a -s/--write-size option that sets the bytes written and read per
-> > > ping-pong iteration. The buffer is allocated for each side via
-> > > struct thread_data and replaces the on-stack int previously used. The
-> > > default remains sizeof(int) so existing invocations are unchanged.
-> 
-> > > With --write-size set above PAGE_SIZE the bench drives anon_pipe_write()
-> > > through alloc_page() (or the bulk pre-alloc, if the relevant patch is
-> > > applied), which is what we want when measuring pipe locking and page
-> > > allocation work.
-> 
-> > > The bench is a ping-pong: both sides call write() before read(), so a
-> > > single write_size payload must fit entirely in the pipe buffer or both
-> > > sides deadlock waiting for the other to drain. Resize the pipe via
-> > > F_SETPIPE_SZ to match write_size (skipped at the sizeof(int) default),
-> > > and error out cleanly when the request exceeds
-> > > /proc/sys/fs/pipe-max-size.
-> 
-> > > Signed-off-by: Breno Leitao <leitao@debian.org>
-> 
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Thanks, tested and applied:
 
-Awesome. Thanks Arnaldo.
+
+> On 21 May 2026, at 12:07=E2=80=AFPM, Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>=20
+>=20
+>=20
+>> On 4 May 2026, at 9:12=E2=80=AFPM, Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>>=20
+>> The format_alias() function in util/pmu.c has a check to
+>> detect whether the event has parameterized field ( =3D? ).
+>> The string alias->terms contains the event and if the event
+>> has user configurable parameter, there will be presence of
+>> sub string "=3D?" in the alias->terms.
+>>=20
+>> Snippet of code:
+>>=20
+>> /* Paramemterized events have the parameters shown. */
+>>      if (strstr(alias->terms, "=3D?")) {
+>>              /* No parameters. */
+>>              snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, =
+pmu->name, alias->name);
+>>=20
+>> if "strstr" contains the substring, it returns a pointer
+>> and hence enters the above check which is not the expected
+>> check. And hence "perf list" doesn't have the parameterized
+>> fields in the result.
+>>=20
+>> Fix this check to use:
+>>=20
+>> if (!strstr(alias->terms, "=3D?")) {
+>>=20
+>> With this change, perf list shows the events correctly with
+>> the strings showing parameters.
+>>=20
+>> Before the fix:
+>>=20
+>> # ./perf list|grep -w PM_PAU_CYC
+>> hv_24x7/PM_PAU_CYC/                                [Kernel PMU event]
+>>=20
+>> With this fix:
+>>=20
+>> # ./perf list|grep -w PM_PAU_CYC
+>> hv_24x7/PM_PAU_CYC,chip=3D?/                         [Kernel PMU =
+event]
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>=20
+> Hi,
+>=20
+> Can we please have this pulled in, if the changes looks fine.
+>=20
+> Thanks
+> Athira
+
+Hi,
+
+Looking for any further review comments on this patchset. Please suggest =
+if any changes needs to be addressed.
+
+Thanks
+Athira
+
+>> ---
+>> Changelog:
+>> v3 -> v4:
+>> Updated commit message to show real example
+>> addressing review comment from Namhyung.
+>>=20
+>> v2 -> v3:
+>> Split the strstr correction in a single patch
+>>=20
+>> tools/perf/util/pmu.c | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 23337d2fa281..0b8d58543f17 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -2117,7 +2117,7 @@ static char *format_alias(char *buf, int len, =
+const struct perf_pmu *pmu,
+>>  skip_duplicate_pmus);
+>>=20
+>> /* Paramemterized events have the parameters shown. */
+>> - if (strstr(alias->terms, "=3D?")) {
+>> + if (!strstr(alias->terms, "=3D?")) {
+>> /* No parameters. */
+>> snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, =
+alias->name);
+>> return buf;
+>> --=20
+>> 2.47.3
+
+
