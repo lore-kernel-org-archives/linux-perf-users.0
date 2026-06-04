@@ -1,161 +1,103 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC5F1917FB
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 13:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302F743637C;
+	Thu,  4 Jun 2026 13:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780579310; cv=none; b=hgLpdLz1pBPwQ8zDcIsCLzQgs9Hxz+wk27+RyB4tE2XREvW6HQaM4GE15YD/jePAJaN8GUEZn1Dr9ti3SPX/L5bggZYFFqAmkCWvGfhR8fGz+vw/VDBrCspHiQ+zQPkShjp6uC5u0G1E4E6StH0/dr03nxc74vsaZzhPE0KSKGg=
+	t=1780579777; cv=none; b=jHbt4k3/uA5OT7u3d2Inrpl/7k281fivXSl8IkjJ8A3JHI7GgSJ4ia6o97FESdHAvf0AnGrzurwaWWcfO3WbqVO6PpGsdSD/LgQpktrlS1/J60aWb+Zve9+BNIuPDWHp/Xc22iBrRq7NycsGZs63CDsoka5+KPjQzR3kdia3Fsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780579310; c=relaxed/simple;
-	bh=R4Qd1UZS19xLGwI+6b1+VkqpzA2WHtPOvF+YQJ5gNJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bv0q4IJiASSNbdu7BLaldCy+PB/i2r0B4P1pV02q5gjHzOMJ8D/hh4fkHHHRflcZX6NC7k7EiRVxsuGUceIX6iP6lYZElUh7I5SZonS2rld+06na9tojP5qCHhiW2XdSiB6R9DioaAQW3ym5IVo7DRz5OQQUHWAJrOKvytaBANg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zgdatk9A; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1780579777; c=relaxed/simple;
+	bh=hajUNbFJmxe/Xdycv4h9tI8DFIpE+ZM7GQXb7k+Tgr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BMXf2pQfeovysNXtloB6iqCoCZit9l/D13JC7yD2vJSrk8kND5Av1U9zLkuxHVbBM6BGcp8orfPXUjkosxJmKZQJD9Bml7CwU/F2/LCrqh4UHCu+4t9EhWN0gB95QlUW1hJNcN1eYH7qIseTkFbK4eBuG66SelB+MidXWzNXz+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aG2mDa5V; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zgdatk9A"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490b64c8311so8743225e9.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 06:21:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780579307; x=1781184107; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nAM+rRAaT8WOAGvky0RLKEaSXTjKAfYZq1zaY/oNR/s=;
-        b=zgdatk9A3+oqtGDlof2gqUaumIx3TxVlLl8puY4sp+C/Ochf3ibjtlo/W7l7F7RWFg
-         p8uEOUytpU9BDswUnxP/aj4vj/wjsIBW0ldeL4wVBdMVgf6wbg4w5lJw6tRyuoCxY8ak
-         nGCi8EhRaw85AezttRakyArgGArfjKw9LvQuWkJFPRdFKhLlHeGXLnxEieOM88VdygVh
-         OGEe1EYOAeWxOC3kl0fPbSygiybBRYmvRHaomYzuSEAPgpdrgQPhRQDhqKheGEE6q0i5
-         t0JphQu/b2RRowWrJBX6U0TNsIJW107kObdns8aaONWV4QHE2+PeiW00Yk14SuuTvRRS
-         lgTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780579307; x=1781184107;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nAM+rRAaT8WOAGvky0RLKEaSXTjKAfYZq1zaY/oNR/s=;
-        b=O20lah+iiw5RI7a3RQXw/j1Z3rCyTac+6EzJkNXYugMQsGourEVqZYIWiE81SUsyHl
-         Yzx5G+wRKESAQPmIMdhf5LNhukNbhMonkkb6uevLXQdj3IBneVdEx7l2FrHWaBHnn2yJ
-         2kgO47vaevFSMgkv3g0/Dxfzx93syacE8HGRmO0J8B+YK0iFC30FIYFHuo/OBb8vDj5y
-         sjyF1Pv/KTsXq/qQqn2EUrHLLj9cwShm2hFMlb3Q4znt9lnBTHF36N/eT8WonzMP3Hss
-         WVcyhf7xKNUhBYlMyf+9eHKA4y6AZRgbLtJtdtOCQRImT2QKlzQ/cnR4NnRRzzL6B/kE
-         YlBQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9wlAc5NUQOs/OxmutZkQpgLMw/JM1lqxNgVQWhO042ENRwPka52HY4LMou+nGcOqKRKP0Yl3FkSdnKA9f+mBsM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7iCI7IhvqKTPTymfOGlHt435qnQLfE2yUEQn18xuvETbGG49j
-	s2i5ALx+5ETQ2cMUVSxcduzR6FB4qCAohfe2uHzuzo0H+aXqjA0OIehksv6vSV1o9Zk=
-X-Gm-Gg: Acq92OF1Vg1HntKNBVrtcyy2AgQXIB31HWrNBimDOz5oAMRIfamKLjzyHpKK+H/JWYT
-	g47NS5L3L3gUVG5wlPSX4zuawrHUjVomHwEXmeMq3GTwxePZ+ErfgdqnKIrNQ6ps7+CecdghfNY
-	KgK3VUm3TpKIx1VIsJwuTx7vwXomicMEHc5t8F7u/WxRUNpVV/gLj5elBV8V5DLPvCXUS0bpMFh
-	1KhM9w1i4IwmIB/hJl/TPjLUAUYfa2tPl04pHEIYeO2eiq4az2TwwwOoB01ZdFBkOpOVoQwMZlm
-	d04Sux/8MU2eQfSXIK8yq2C9ClH0SQka2wAbBbnt0yEnApj0DtS/9mjCPsvzylqto18OAATeE7f
-	v32q2M0QLPnLMOFW23Wt/r8EahdTiPFCzRNRp8YGPEYMxZyES+5j3AwTeRn90GbBtRrwBwlnE2o
-	4FosVeiYAFNy1aySZ3Kfx4aN5RrIznR2kfdnO+oK8=
-X-Received: by 2002:a05:600c:a088:b0:48f:f64c:c2fe with SMTP id 5b1f17b1804b1-490b5ee1983mr137859005e9.22.1780579307027;
-        Thu, 04 Jun 2026 06:21:47 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc391aaasm83198855e9.1.2026.06.04.06.21.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2026 06:21:46 -0700 (PDT)
-Message-ID: <f0758b1d-9b04-4e81-aece-ea021cabb95e@linaro.org>
-Date: Thu, 4 Jun 2026 14:21:45 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aG2mDa5V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A831F00893;
+	Thu,  4 Jun 2026 13:29:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780579775;
+	bh=jLgdCh9W8Dljw1IXeH19HMGnPypOsY0VJmzvYmVfswE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=aG2mDa5VP5hIdxPgCnDRfsZvmDSalAmL2to6nq1QIpo7xtdGjnjQ09j8mxW7sR/Yn
+	 zs9rcflR4ZKGy7LLJzkr5Qr1/QJEHq6nnztcTxoFlCTvlLxZP6KUPPbgTDmh/jmz0o
+	 pClRS1ufYD8JBys70BF5x7d+AjQ7o47QEUZLbS8lZ9wxYYGg5O7FQtq40VgGOA5pCH
+	 ILpPYXbq+xBrklewjJKYWFUsgGQz1EHkuZIsqAh931EYyxf7PvglK8W2V1g2DRiRe7
+	 HXpVHPK6fqrl7U4dTlkpivoYJ9VL9W7ltjvTo03m4BL1HuW7HFM3e7TZOu5RjGkt81
+	 0yRroYugEYIpw==
+Date: Thu, 4 Jun 2026 10:29:32 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Michael Jeanson <mjeanson@efficios.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Derek Foreman <derek.foreman@collabora.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3] perf data ctf: replace libbabeltrace with
+ babeltrace2-ctf-writer
+Message-ID: <aiF9vEuU2A3m0gUq@x1>
+References: <20260512194710.162215-1-mjeanson@efficios.com>
+ <20260520191452.218717-1-mjeanson@efficios.com>
+ <CAP-5=fUehWvDZB+u1wYGMRa1WD8SUQMqzPqyQB4O78KBa43kOg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/18] perf test cs-etm: Replace unroll loop thread
- with deterministic decode test
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Paschalis Mpeis <Paschalis.Mpeis@arm.com>, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org
-References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
- <20260602-james-cs-context-tracking-fix-v2-6-85b5ce6f55c6@linaro.org>
- <20260603140803.GV101133@e132581.arm.com>
- <2f1db2b3-93e8-4c32-b207-304e3a43ce77@linaro.org>
- <20260603170823.GA101133@e132581.arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260603170823.GA101133@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUehWvDZB+u1wYGMRa1WD8SUQMqzPqyQB4O78KBa43kOg@mail.gmail.com>
 
+On Wed, May 20, 2026 at 12:26:13PM -0700, Ian Rogers wrote:
+> On Wed, May 20, 2026 at 12:15 PM Michael Jeanson <mjeanson@efficios.com> wrote:
+> >
+> > The 1.x branch of Babeltrace has been superseded by 2.x in 2020 and has
+> > been unmaintained since 2022, efforts have started to remove it from
+> > popular distributions.
+> >
+> > Babeltrace 2.x offers a very similar 'ctf-writer' library that can be used
+> > with minimal changes for the '--to-ctf' feature and has been packaged
+> > since Debian 11 and Fedora 32.
+> >
+> > This patch replaces the 'libbabeltrace' build feature with
+> > 'babeltrace2-ctf-writer' using pkgconfig detection, adjusts the naming of
+> > the public headers and applies minor API cleanups.
+> >
+> > There is no changes to the output ctf traces, the ctf-writer API still
+> > implements version 1.8 of the CTF specification that can be read by
+> > either Babeltrace 1 / 2 or any CTF compliant reader.
+> >
+> > Also remove some ifdefs in the cli option parsing to allow printing the
+> > helpful error message with '--to-ctf' when built without babeltrace2.
+> >
+> > Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Cc: Derek Foreman <derek.foreman@collabora.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: James Clark <james.clark@linaro.org>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
+Its not applying to perf-tools-next, Michael, can you please take a
+look?
 
-On 03/06/2026 6:08 pm, Leo Yan wrote:
-> On Wed, Jun 03, 2026 at 05:01:02PM +0100, James Clark wrote:
-> 
-> [...]
-> 
->>>> +# Remove open brace lines as they may not be hit depending on the compiler
->>>> +sed -i \
->>>> +  -e '/deterministic.c:8$/d' \
->>>> +  -e '/deterministic.c:15$/d' \
->>>> +  -e '/deterministic.c:23$/d' \
->>>> +  "$tmpdir/script"
->>>
->>> Is this related to the function definition?
->>>
->>> I can see the brace lines with change below. It might be more reliable
->>> if adding unused function argument, which can give chance for hit
->>> function entry.
->>>
->>>     static int function1(void)
->>>     {
->>>         ...
->>>
->>>         return 0;
->>>     }
->>
->> Originally I included the brace lines in the test and it was working even
->> without function arguments, but Sashiko mentioned that they may not always
->> be hit.
-> 
-> I tried Clang to build the program and can see the brace lines are
-> missed for function1() / function2().
-> 
-> Does Sashiko mention any reasons causing the issue?
-> 
->> I think its point was that there is no hard rule about debug symbols for
->> open braces and the behavior might change from one version of the compiler
->> to the next, or whether there is a function prologue or inlining or not etc.
->>
->> I don't think it's important to the test at all though? So to err on the
->> side of caution it makes sense to not test for them. Unless there's a reason
->> you think testing for open braces is important? Surely just testing for
->> actual lines of code appearing in a certain order is enough.
-> 
-> As the test program is named as "deterministic", wouldn't we expect the
-> test to hit every code line run in the program?
-> 
-> It is fine for me to skip some checks _if_ we know the reason. I dumped
-> the disassembly, it shows function entry is a distinguished position
-> from the first calculation sentence (same for both GCC and Clang). And
-> there have no difference for a function entry after I tweaked the
-> function return type from "void" to "int". I still have no clue why
-> brace lines are misses.
-> 
-> Thanks,
-> Leo
+Thanks,
 
-Seems like the compiler is free to emit a prologue or not for a static 
-function. Adding an argument might force it to for one version, but I 
-don't see that being reliable for every future version. And I don't 
-think we gain anything by testing the braces.
-
-Testing clang did reveal that it returns back to the call site where GCC 
-didn't though. So I'll also filter out the call site and only test the 
-"dt_work += 7;" lines. That's enough to check that the decode has done 
-everything in the right order and shouldn't be fragile to anything that 
-isn't a real bug.
-
+- Arnaldo
