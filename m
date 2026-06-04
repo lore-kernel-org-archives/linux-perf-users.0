@@ -1,98 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6BC37BE8B;
-	Thu,  4 Jun 2026 08:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BC7B3DF018;
+	Thu,  4 Jun 2026 08:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780560237; cv=none; b=hVKFE/iQr8u660A/K/Jzyxd/8W0ZjXlbqVtk4QQSXeouedXOvL7rcKlK2AKASzQvL5Sopv/zPpAou00PIl8Z0BiuP5tvZVBvxTrr8myB5P7XKJmApzn/A9yKfgWXoE/nRgZ2aDogDC1Fcx0i+trfgxgI7C8MMMd3VoroDf4ZFLI=
+	t=1780561255; cv=none; b=Q4Ykkk1xyLeIWopnWgIt5OIRiqiEGiFjWYLbzgiMWTRXXzPUEuFVlmgQihQmzFrH9Fva/5bNnhU0wbaMuAtITBFv4MixRR7vr3qv0cyFo7dxVE4k+ZJVxAv1AFOmJxFdNNyd2OF2KP6YwHqFVwWypm1XSv+zAwaYnJ9dF3eRcws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780560237; c=relaxed/simple;
-	bh=D7HTTk6F6kBE+dCzvfd3asAiSzEpKJS6qnd+RL1mXPo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=P4qFaBgGyu2e28yNKNmPkqP76FuWqGjp3Wgg6SLB1RE6ahlkBFd94AdHOVIFJFqvQAHHBZdgp/Km3OCkE8OoFSuJ4m9CYW+JfcT5Wns2COB7HnARY8/veWDbcbyOhfgvxPOA8dQ86G9n2INsENE71z7iDmRSf7ZRD6pgcjgxP7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2+9JOP7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780561255; c=relaxed/simple;
+	bh=xx4q8zA0SDvN+Zn0mJt/nZF2yaNi8H3ZSogpxfNtLDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cxmrrBWyt13HEk2ybD/bqePQ/X8JGkUnUiZoJOrxyGt+gTdF1L8WYexop23KXSK3IAL81cAhHhIlx1fVHWJrDBoWDM4n1z4c2cJqsFZSmtPsEhlMKW98WHI8I/AkS1L5JlbEbytW6aAjPIA/KSnH9VcVJmGtHP63RAhrz4QpU8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=HBXd5CG+; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2+9JOP7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F8761F00893;
-	Thu,  4 Jun 2026 08:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780560236;
-	bh=MtDmzDNoUeuII4Y1W1yDaUaqhRVWW66Rsr/G5zE1ZG4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Q2+9JOP7lv6i53s6FKbxTJfEopPopId4ixGCTfU80xD0uaXnNxCA3ITr2E5IOy3Qo
-	 qbdggcSghizgYF+wkFp1EedckwPXbESgdZbBxbLkf8LjyB+PHj4jCPiizO2jE2CUai
-	 gySfDdEe5X8KJnG5OuXy8Vn6UqZY+EPMYqe4KMLcrB4uxI4c59DIheAYSewCBcYfWP
-	 J/MxHY1Pef/0KfjxBZ6fPG9ZlfYe/YYPedPEoWOMzn99fk5oBxrur1HZDHl++w0KES
-	 Xbx6uA9Q7A7G0k/avpq3DlauW2w5EzP8rNJNbHxvWTh3qtr5aueGKLl2hHqiCvu6JD
-	 sLoIMEi6Muj8A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 10/10] perf hisi-ptt: Add decoder version compatibility
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sizhe Liu" <liusizhe5@huawei.com>
-Cc: linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260604075005.2219785-11-liusizhe5@huawei.com>
-References: <20260604075005.2219785-11-liusizhe5@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 04 Jun 2026 08:03:56 +0000
-Message-Id: <20260604080356.9F8761F00893@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="HBXd5CG+"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3D013297;
+	Thu,  4 Jun 2026 01:20:45 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE7FD3F7D8;
+	Thu,  4 Jun 2026 01:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780561250; bh=xx4q8zA0SDvN+Zn0mJt/nZF2yaNi8H3ZSogpxfNtLDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HBXd5CG+Kw6LL3Z4p7LfEbspjPtluKqFtPwlqSvB7gMo+FkOMRXEUzIzw8YIkodTH
+	 5cfr6vGu5hfm2waGS4loALDrp8AsIwkxiZPthmIUwEjoK01BV2uy+NuQT4FHx7Zp2C
+	 2NcAeygFzCwWLdxy4tNOTyHo+5qDb5CzLEAqoEHA=
+Date: Thu, 4 Jun 2026 09:20:47 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Amir Ayupov <aaupov@meta.com>
+Cc: James Clark <james.clark@linaro.org>, stable@vger.kernel.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf cs-etm: stamp pid/tid/EL on each buffered packet to
+ fix cross-pid attribution
+Message-ID: <20260604082047.GL101133@e132581.arm.com>
+References: <20260515021135.1729028-1-aaupov@meta.com>
+ <f767dc3b-9796-4b12-a776-1de6a9ff3f99@linaro.org>
+ <CAMOD+7+_HE3E+FFg6GPfG31GzVBzF1qhcQ=i-eiEgiGcn3WRvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMOD+7+_HE3E+FFg6GPfG31GzVBzF1qhcQ=i-eiEgiGcn3WRvw@mail.gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The code silently accepts unknown future decoder versions withou=
-t warning the user, contradicting the commit message.
---
+Hi Amir,
 
-commit 81956f61abf20a5e88b7e9d82765dace1fbc899f
-Author: Sizhe Liu <liusizhe5@huawei.com>
+On Wed, Jun 03, 2026 at 01:10:17PM -0700, Amir Ayupov wrote:
+> Hi James,
+> 
+> Thank you for picking it up.
+> 
+> I tested the v2 patch series and it looks good. There was a minor
+> difference in 2/39 tested perf data files: the number of brstack samples
+> differs by one, however, there was no loss of binary profile. The resulting
+> BOLT profile converted from the perf script output was identical, so I'm OK
+> with v2 patch as-is.
 
-perf hisi-ptt: Add decoder version compatibility
+Sorry jumping in as brstack is mentioned.
 
-This commit introduces a version field to the hisi_ptt auxtrace info record
-to distinguish between legacy and detailed packet parsing formats. It updat=
-es
-the recording and decoding logic to process the data accurately based on the
-detected version.
+Now branch stack is maintained per-CPU wise, it mixes up branch stack
+cross threads. The patch 03 in the series [1] refactors branch stack
+per-thread by using common code.
 
-> diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
-> index e321f393601b8..4f52cfb4e1903 100644
-> --- a/tools/perf/util/hisi-ptt.c
-> +++ b/tools/perf/util/hisi-ptt.c
-[ ... ]
-> @@ -159,10 +166,13 @@ int hisi_ptt_process_auxtrace_info(union perf_event=
- *event,
->  {
-[ ... ]
->  	ptt->machine =3D &session->machines.host; /* No kvm support */
->  	ptt->auxtrace_type =3D auxtrace_info->type;
->  	ptt->pmu_type =3D auxtrace_info->priv[0];
-> -
-> +	ptt->version =3D priv_size >=3D HISI_PTT_AUXTRACE_PRIV_SIZE_V2 ?
-> +		       (u32)auxtrace_info->priv[1] : HISI_PTT_DECODER_V1;
+Hope this can benefit a bit the profiling data quality and in case
+you are interested in.
 
-[Severity: Medium]
-The commit message explicitly states: "If version is unknown (future), warn
-and decode auxtrace as v2."
+Thanks,
+Leo
 
-Does hisi_ptt_process_auxtrace_info() implement this promised warning?=20
-
-It appears to silently assign the future version directly from
-auxtrace_info->priv[1] without bounds checking or notifying the user. Could=
- a
-warning be added here to match the stated design intent and prevent potenti=
-al
-compatibility issues from being masked?
-
->  	ptt->auxtrace.process_event =3D hisi_ptt_process_event;
->  	ptt->auxtrace.process_auxtrace_event =3D hisi_ptt_process_auxtrace_even=
-t;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260604075005.2219=
-785-1-liusizhe5@huawei.com?part=3D10
+[1] https://lore.kernel.org/linux-perf-users/20260526-b4-arm_cs_callchain_support_v1-v6-3-f9f49f53c9dd@arm.com/
