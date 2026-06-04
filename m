@@ -1,50 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AD8356765;
-	Thu,  4 Jun 2026 15:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5124B3E024B;
+	Thu,  4 Jun 2026 16:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780587684; cv=none; b=g5nCJ/lKFNWmBQN4h/qzEy/OIRuygKyzlhkU1DbAHiKQfDNEUhP4kDjdGGuZo8+/TDrV1ANn02Or8sC46v5GET6oyOz1X1j3VZZ7E8sC/DUpBJ8h90UZwoERP0lQN44w+bV62PciTqMWHm6Nf6597kJGyQzOYrOFIdJszEV0qQU=
+	t=1780589436; cv=none; b=l0RQynu2WLBhpYd15HIriEXPjC/4ytTOm4WcM9Z7QgHWpF38Na3D0OcGpE6MJN48eX3fKenBJI5Ju84PfHcyzvQfXzMSknaZkZHUQRzHWIVbsnAyJryDPX+j6XqFBQJiELN0jsU27nuEN9qwiq4Gz5/eIFOGPEDmUTymxro3A64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780587684; c=relaxed/simple;
-	bh=vjpx6iif2SN+mz6q2FhkS6oWteDl5dJVjvY4e1faHAQ=;
+	s=arc-20240116; t=1780589436; c=relaxed/simple;
+	bh=TUqRFn5UPGPEfnUHQUX3oPGvQnVixdaGssAULGSCR70=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q1IteySVN8xZNCXrY8U7ref7QEDUdrij+G294rnJUCZhyubOP3thMSHz9L6JPW3c8OPFUEam88TSVolsSiUQ3Z+LPrdTr+u6UM2hn8CKEGJKTP79LHFs4R21QYy040K8dZBJnWSLVnGa5eK37RgDK/Sq6DrJYO2C0AomX2dHHiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WnYgxtXd; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=P7QGVnYjY7/sr//y6hhpN4Z94vJMoyPjJePjC9WRGJpPNPXRKFG8l+ipDfnDPwfTJg0U+Z1AZpsxm6JMMOxD5lhH6jIsKbycHYx0bSIqnUzJ/s/q+v4n2m9L8/2tDE/Wy7vlO808aaG8qev1Hm/tPV39rqTt9anL0JJiRXMXiCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aqZ98haz; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WnYgxtXd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780587683; x=1812123683;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vjpx6iif2SN+mz6q2FhkS6oWteDl5dJVjvY4e1faHAQ=;
-  b=WnYgxtXdUco32flxELYmBOm9rpmVNAwnCbhwK25Dom0K+eJk9v6nIhec
-   PgGRjG+fChaYT6SMjnajIpa0yZVIP9LuzQowvEWbd35R1REu06mIdLiNK
-   Jz7UodLbkHOF/3j3aUxyFki4dhQlMN6CqZnSXU8AM3EWVPlMjflHrCtbo
-   QHH8lRdnq/31iy6gt+xzQxA788scDk+myAPxKpC2GS5sTuAc5HWJ3KfJ9
-   XNFb4NfxVg/137IbvWOb3EFaACicaDJzPJF5RSI7hwPYq08Vrm3Qs8i5k
-   7rJ/PtpdS+e6S5AIU/Y+AsK7nMUwS2JnSViMHG5ClKNc7k2y+XA8ByDpg
-   A==;
-X-CSE-ConnectionGUID: IA6tvtAZS2244LMecdS7Zw==
-X-CSE-MsgGUID: QA6ZtPyOQgykR0+SkcJhrw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="91991880"
-X-IronPort-AV: E=Sophos;i="6.24,187,1774335600"; 
-   d="scan'208";a="91991880"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 08:41:21 -0700
-X-CSE-ConnectionGUID: uLqs7nwCQbux9eP2ezpSLQ==
-X-CSE-MsgGUID: NImUmZX9RPu9EqXgZrdKrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,187,1774335600"; 
-   d="scan'208";a="240392266"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 08:41:20 -0700
-Message-ID: <f4fd8bd6-bb61-401c-9e36-efaff86cf96c@intel.com>
-Date: Thu, 4 Jun 2026 10:41:19 -0500
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aqZ98haz"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6548EWlU2497718;
+	Thu, 4 Jun 2026 16:10:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=zkN0Kn
+	b7oNZUOF+D+DaNSoI5kwYaOUixImOB7tzfPeg=; b=aqZ98haz5gGg9A45SkJOiU
+	+QjGFIiWZrJuJMJGq09ymAC9zZ2xOCQdt6m3k+mLhCzks5JWTyYEiMg+JGw2aoSF
+	ce4EgdUU4k9rVUKeeuOg0HmYaaOlCJZYSh7tqlcWfQlyPe4Dlv7hsSTf0eISenSF
+	SPxpkBtSLZNfRWS+agzxNsTMG5Bcdp8f4W4HDdCCaZAqMaBnBgcS0EcncuJmKRUU
+	RJ9tSOeD0tVvSMHFGvPmHCauvuxoUg69YUkfa3xHmJMpWzMYHHAu6q1lDhmwNWJa
+	LfpcguCDKRzUs3SWRfwcpdl2RHvZkumozAQMTDrWGf6fYCZpu8/BJyrnEnS7xHvg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqm58m61-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jun 2026 16:10:34 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 654Fs5qh013227;
+	Thu, 4 Jun 2026 16:10:33 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egakw5wc4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jun 2026 16:10:33 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 654GAWnE23593478
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Jun 2026 16:10:32 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C0A2F58055;
+	Thu,  4 Jun 2026 16:10:32 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A071F5804B;
+	Thu,  4 Jun 2026 16:10:31 +0000 (GMT)
+Received: from [9.124.208.23] (unknown [9.124.208.23])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Jun 2026 16:10:31 +0000 (GMT)
+Message-ID: <69f07855-6e7d-4c8e-9557-13bc4d845878@linux.ibm.com>
+Date: Thu, 4 Jun 2026 21:40:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,208 +62,130 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/8] perf/x86/intel/uncore: Fix refcnt and other
- cleanups
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260601170114.173359-1-zide.chen@intel.com>
- <20260601170114.173359-3-zide.chen@intel.com>
- <1643127e-9a3f-421a-a690-9b363ccfa8e6@linux.intel.com>
- <1640889a-53ed-46ad-b78b-35982ff37b33@intel.com>
- <d71fbc71-aedd-4822-9ddc-1b8fadb07314@linux.intel.com>
- <d9402295-4f46-4630-a5dd-f66e6627793a@intel.com>
- <e1afadac-76d5-4b71-b5e4-ebae89bfc1b0@linux.intel.com>
+Subject: Re: [PATCH] perf data convert json: Fix trace_seq memory leak in
+ process_sample_event()
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260604065519.112101-1-tshah@linux.ibm.com>
+ <20260604070617.0050E1F00893@smtp.kernel.org>
 Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <e1afadac-76d5-4b71-b5e4-ebae89bfc1b0@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: Tanushree Shah <tshah@linux.ibm.com>
+In-Reply-To: <20260604070617.0050E1F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 6QH0fgRSNxdFek7-QJHUKCBLCtlmA3_J
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA0MDE1NyBTYWx0ZWRfX3BZxBZPaA3k1
+ OG0jZFFPtwfPj2fYQBQ42cH7HqeHVs1xO2SCTOV792bdDxcvznai2apXcH7Yvsyllm37QVyYr53
+ rxvrdXDcBT3/RytKlJi7PZIv+sL3+QLhxn84u2xT4nF7Tr4YmQkPSIiV80MOB0ggbKmiw0Rq2y2
+ JeX7i50dbXuOKJSkgls/4qGowdKe4dsKT34A3mM6luNg3LmeozrLPkzQDhVDlR0ZU45OlfNlxAH
+ EqB8LI0kexPOamT/+raEoOpRhv89njSukxJfeoVz+pDeAK/fjobap4SjmCAtwpDECmKsk/vsupa
+ Qc60yPhouzsfBslnd/guC/6eTviAq4p6CAR32xTbpJeWmkR/2g7sURWOzVUKzJ8vKXedN/tGmFO
+ jVVK9/hpTiaMJvL4TEczrirDoxBf7ioUneNIHlRv39LeURRlsH72SwQdHCU6xSTTw4cjbtcrpOf
+ QJ7h9M0xqndbOwjqZAg==
+X-Proofpoint-ORIG-GUID: 6QH0fgRSNxdFek7-QJHUKCBLCtlmA3_J
+X-Authority-Analysis: v=2.4 cv=Vf3H+lp9 c=1 sm=1 tr=0 ts=6a21a37a cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=c92rfblmAAAA:8
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=1-rSC9nhN4gWdckfc50A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-04_04,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1011 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606040157
+
+Hi Sashiko,
+
+Thank you for the review and for spotting this!
+
+Regarding the addr_location reference leak:
+
+yes its correct. The early return path for time-filtered samples does 
+leak addr_location references.
+
+When machine__resolve() succeeds, it calls thread__find_map(), which 
+acquires reference counts for thread, map, and maps objects and stores 
+them in the addr_location structure. The early return bypasses 
+addr_location__exit(), preventing these references from being released.
+
+Validation with Valgrind:
+
+I've validated the issue with Valgrind using a test case with 2,385 
+total samples (150 converted, 2,235 skipped by time filter):
+
+Without the fix:
+
+definitely lost:  8,336 bytes in 32 blocks
+indirectly lost:  1,539,361 bytes in 21,307 blocks
+possibly lost:    10,325,465 bytes in 146,283 blocks
+Total leaked:     ~11.9 MB
+
+With the fix:
+
+definitely lost:  0 bytes in 0 blocks
+indirectly lost:  0 bytes in 0 blocks
+possibly lost:    0 bytes in 0 blocks
+Total leaked:     0 bytes
 
 
+I will send a v2 patch series that addresses both memory leaks:
 
-On 6/3/2026 8:00 PM, Mi, Dapeng wrote:
+The trace_seq_destroy() fix (original issue)
+The addr_location__exit() fix for the early return path
+
+Thanks
+Tanushree Shah
+
+On 04/06/26 12:36, sashiko-bot@kernel.org wrote:
+> perf data convert json: Fix trace_seq memory leak in process_sample_event()
 > 
-> On 6/3/2026 11:09 PM, Chen, Zide wrote:
->>
->> On 6/2/2026 8:13 PM, Mi, Dapeng wrote:
->>> On 6/2/2026 10:16 PM, Chen, Zide wrote:
->>>> On 6/2/2026 4:52 AM, Mi, Dapeng wrote:
->>>>> On 6/2/2026 1:01 AM, Zide Chen wrote:
->>>>>> Fix typo UNCORE_BOX_FLAG_INITIATED to UNCORE_BOX_FLAG_INITIALIZED.
->>>>>>
->>>>>> Rename the 'id' parameter in uncore_box_{ref,unref}() to 'die' to
->>>>>> reflect its actual meaning and be consistent with other functions.
->>>>>>
->>>>>> Remove the incorrect atomic_inc(&box->refcnt) from
->>>>>> uncore_pci_pmu_register(): PCI boxes are not tracked by refcnt,
->>>>>> and this call incorrectly increments it on a per-die basis.
->>>>>>
->>>>>> Signed-off-by: Zide Chen <zide.chen@intel.com>
->>>>>> ---
->>>>>> v2:
->>>>>> - Don't rename pmu->activeboxes and keep its semantics because in
->>>>>>   uncore_pci_remove() path, uncore_pci_pmu_unregister() won't be
->>>>>>   called for non-active boxes.
->>>>>> - Since pmu->activeboxes keeps it's name, don't need to rename
->>>>>>   box->refcnt to box->cpu_refcnt.
->>>>>> ---
->>>>>>  arch/x86/events/intel/uncore.c | 11 +++++------
->>>>>>  arch/x86/events/intel/uncore.h |  6 +++---
->>>>>>  2 files changed, 8 insertions(+), 9 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->>>>>> index b69b6a21d46b..d759888476c3 100644
->>>>>> --- a/arch/x86/events/intel/uncore.c
->>>>>> +++ b/arch/x86/events/intel/uncore.c
->>>>>> @@ -1170,7 +1170,6 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
->>>>>>  	if (!box)
->>>>>>  		return -ENOMEM;
->>>>>>  
->>>>>> -	atomic_inc(&box->refcnt);
->>>>> I'm not sure if we should remove this. The
->>>>> uncore_box_ref()/uncore_box_unref() are only called for MSR or MMIO type
->>>>> uncore PMUs. For the uncore PMUs of PCI type, the box->refcnt is only
->>>>> increased here. All the 3 kinds of uncore PMUs should keep consistent
->>>>> behavior on the refcnt. 
->>>> box->refcnt tracks how many CPUs are active within this die. Here it is
->>>> incorrectly incremented on a per-die basis. Additionally, during the PCI
->>>> uncore enumeration or teardown process, there is no per-CPU context, so
->>>> box->refcnt is useless in PCI uncore.
->>>>
->>>> PCI uncore only needs pmu->activeboxes.
->>> Per my understanding, the main aim of refcnt is to prevent the box
->>> structure is freed unexpectedly, it doesn't directly couple with CPUs. It
->>> just records how many users are using the the box regardless the users are
->>> CPU or something else. For the uncore PMUs of MSR and MMIO type, CPUs can
->>> be seen as the users, while for the uncore PMUs of PCI, I suppose the dies
->>> (actually any cpu on the die) can be seen the users. 
->> No, box->refcnt is a refcnt for in-die CPUs, while pmu->activeboxes is a
->> per-die count. They are clear and distinct. That's also why I tried to
->> rename them to box->cpu_refcnt and pmu->die_refcnt in v1.
->>
->> If this line is not deleted, box->refcnt for PCI boxes is always <= 1,
->> which is confusing and useless.
->>
->>  > If we delete this refcnt reference, then the box structure is under no
->>> protection and the box structure could be freed by some accidents. 
->> box->refcnt is not checked on any PCI boxes; Because there is one
->> pmu->box[die] per die, it utilizes box->refcnt for MSR/MMIO boxes only:
->>
->> - box_ref(): first in-die CPU online — allocate and initialize the box.
->> - box_unref(): last in-die CPU offline — tear down the box.
->>
->> Uncore PCI PMU enumeration and hot plug/unplug do not involve any CPU
->> online/offline events, which is why box->refcnt is not used.
+> This commit fixes a memory leak by ensuring trace_seq_destroy() is called
+> to pair with trace_seq_init() when formatting tracepoint raw data.
 > 
-> No, the refcnt is still useful even for pci type's uncore PMUs, especially
-> from the software's perspective. refcnt is the essential way to prevent the
-> unexpected free of the referenced structure. Although currently there would
-> be only one user for pci type's uncore PMUs and refcnt would be 1 in most
-> time, we can't ensure the code would always right in any time and no code
-> accidentally free the box. We'd better keep this refcnt mechanism to avoid
-> this situation. Thanks.
-
-pmu->activeboxes is the refcnt used by PCI PMUs, whose online/offline
-events operate on a per-die basis.
-
-box->refcnt is the refcnt used by MSR/MMIO PMUs, where online/offline
-events are per-CPU based.
-
-In this particular case (uncore_pci_pmu_register(), prior to the
-upcoming refactor), incrementing box->refcnt also increments
-pmu->activeboxes. This makes box->refcnt completely redundant for PCI
-PMUs and effectively a misuse of the per-cpu field for a per-die operation.
-
-If I’m missing any scenarios where PCI PMU boxes still require
-additional protection from box->refcnt, please help point them out.
-
->>
->>>>> Could we keep this and just decrease the refcnt in
->>>>> uncore_pci_pmu_unregister()? Thanks.
->>>>>
->>>>>
->>>>>>  	box->dieid = die;
->>>>>>  	box->pci_dev = pdev;
->>>>>>  	box->pmu = pmu;
->>>>>> @@ -1518,7 +1517,7 @@ static void uncore_change_context(struct intel_uncore_type **uncores,
->>>>>>  		uncore_change_type_ctx(*uncores, old_cpu, new_cpu);
->>>>>>  }
->>>>>>  
->>>>>> -static void uncore_box_unref(struct intel_uncore_type **types, int id)
->>>>>> +static void uncore_box_unref(struct intel_uncore_type **types, int die)
->>>>>>  {
->>>>>>  	struct intel_uncore_type *type;
->>>>>>  	struct intel_uncore_pmu *pmu;
->>>>>> @@ -1529,7 +1528,7 @@ static void uncore_box_unref(struct intel_uncore_type **types, int id)
->>>>>>  		type = *types;
->>>>>>  		pmu = type->pmus;
->>>>>>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
->>>>>> -			box = pmu->boxes[id];
->>>>>> +			box = pmu->boxes[die];
->>>>>>  			if (box && box->cpu >= 0 && atomic_dec_return(&box->refcnt) == 0)
->>>>>>  				uncore_box_exit(box);
->>>>>>  		}
->>>>>> @@ -1604,14 +1603,14 @@ static int allocate_boxes(struct intel_uncore_type **types,
->>>>>>  }
->>>>>>  
->>>>>>  static int uncore_box_ref(struct intel_uncore_type **types,
->>>>>> -			  int id, unsigned int cpu)
->>>>>> +			  int die, unsigned int cpu)
->>>>>>  {
->>>>>>  	struct intel_uncore_type *type;
->>>>>>  	struct intel_uncore_pmu *pmu;
->>>>>>  	struct intel_uncore_box *box;
->>>>>>  	int i, ret;
->>>>>>  
->>>>>> -	ret = allocate_boxes(types, id, cpu);
->>>>>> +	ret = allocate_boxes(types, die, cpu);
->>>>>>  	if (ret)
->>>>>>  		return ret;
->>>>>>  
->>>>>> @@ -1619,7 +1618,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
->>>>>>  		type = *types;
->>>>>>  		pmu = type->pmus;
->>>>>>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
->>>>>> -			box = pmu->boxes[id];
->>>>>> +			box = pmu->boxes[die];
->>>>>>  			if (box && box->cpu >= 0 && atomic_inc_return(&box->refcnt) == 1)
->>>>>>  				uncore_box_init(box);
->>>>>>  		}
->>>>>> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
->>>>>> index c2e5ccb1d72c..bad5d8dec8e0 100644
->>>>>> --- a/arch/x86/events/intel/uncore.h
->>>>>> +++ b/arch/x86/events/intel/uncore.h
->>>>>> @@ -185,7 +185,7 @@ struct intel_uncore_box {
->>>>>>  #define CFL_UNC_CBO_7_PERFEVTSEL0		0xf70
->>>>>>  #define CFL_UNC_CBO_7_PER_CTR0			0xf76
->>>>>>  
->>>>>> -#define UNCORE_BOX_FLAG_INITIATED		0
->>>>>> +#define UNCORE_BOX_FLAG_INITIALIZED		0
->>>>>>  /* event config registers are 8-byte apart */
->>>>>>  #define UNCORE_BOX_FLAG_CTL_OFFS8		1
->>>>>>  /* CFL 8th CBOX has different MSR space */
->>>>>> @@ -559,7 +559,7 @@ static inline u64 uncore_read_counter(struct intel_uncore_box *box,
->>>>>>  
->>>>>>  static inline void uncore_box_init(struct intel_uncore_box *box)
->>>>>>  {
->>>>>> -	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
->>>>>> +	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
->>>>>>  		if (box->pmu->type->ops->init_box)
->>>>>>  			box->pmu->type->ops->init_box(box);
->>>>>>  	}
->>>>>> @@ -567,7 +567,7 @@ static inline void uncore_box_init(struct intel_uncore_box *box)
->>>>>>  
->>>>>>  static inline void uncore_box_exit(struct intel_uncore_box *box)
->>>>>>  {
->>>>>> -	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
->>>>>> +	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
->>>>>>  		if (box->pmu->type->ops->exit_box)
->>>>>>  			box->pmu->type->ops->exit_box(box);
->>>>>>  	}
+>> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+>> index d526c91312ed8..6dd9349ab10f1 100644
+>> --- a/tools/perf/util/data-convert-json.c
+>> +++ b/tools/perf/util/data-convert-json.c
+>> @@ -257,6 +257,7 @@ static int process_sample_event(const struct perf_tool *tool,
+>>   				trace_seq_init(&s);
+>>   				tep_print_field(&s, sample->raw_data, fields[i]);
+>>   				output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
+>> +				trace_seq_destroy(&s);
+>>   
+>>   				i++;
+>>   			}
+> [Severity: High]
+> This is a pre-existing issue, but does the early return path for skipped
+> samples higher up in process_sample_event() leak the addr_location
+> reference handles?
+> 
+> tools/perf/util/data-convert-json.c:process_sample_event() {
+>          addr_location__init(&al);
+>          if (machine__resolve(machine, &al, sample) < 0) {
+>                  pr_err("Sample resolution failed!\n");
+>                  addr_location__exit(&al);
+>                  return -1;
+>          }
+> 
+>          if (perf_time__ranges_skip_sample(c->ptime_range, c->range_num, sample->time)) {
+>                  ++c->skipped;
+>                  return 0;
+>          }
+>          ...
+> }
+> 
+> When machine__resolve() populates the addr_location structure, it acquires
+> reference handles for objects like thread and map. The early return for time
+> filtering bypasses the addr_location__exit() cleanup.
+> 
+> Could this cause reference counts and memory to leak when dropping skipped
+> samples?
+> 
+> -- Sashiko AI review · https://sashiko.dev/#/ 
+> patchset/20260604065519.112101-1-tshah@linux.ibm.com?part=1
 
