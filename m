@@ -1,66 +1,66 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCF5472772
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 14:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0CF48033F
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 14:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780582171; cv=none; b=fUy14/u5d3A5xtG2+FjqE6Ec6kTCkvZS2N2l0voutJQh65i4BUROXolV2kcEUP3Thb0AFq1GCmhb1iQj3CaqzCf605wJfgAhVSiahMjX8+TM03okotaeoxZpAPGmE0f7k31YW98e5BXqfy6tN/52GMcQsA9NxkHwg3q+5GP2Z/g=
+	t=1780582261; cv=none; b=R9P3b1teKMpYwR7Kwh8dfbEu4bHWWPrzeiJR8mYBNYqCIeisp2winqlzRMaxrgBCFmPKiggzRfRTZKBc0iZROO4WijHy+Dwtaq4cXSyYOFi150YjajiUdAxTCkR/wwT5sAWonyxZdHXjvTOWCjkfXKY4E1a0phEdpCw7dQmS5xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780582171; c=relaxed/simple;
-	bh=jce8qCy7PaTEi1g3Pg3p3RD4Uf43nSfsgmSFixccB+A=;
+	s=arc-20240116; t=1780582261; c=relaxed/simple;
+	bh=X49F+6nXaniS/EqXMyPY8dIqo4ZcncfjPzZFhgE6GPs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IxBtSVjYZmL8zt0O5cE8LSRP27Ug3ngrysO+n1Pow8z/7HXkwbUrbaSaCzKgtDSo3CMZo5xKuUkVva0GdOgzZ0GeR2WnQthpNpEFgAtKNB3CbjPV1rMEXBXA2D41GOGX/YIVbWAF2U2Yp8F7uhrzMw4ZDaVCsmhQUu/cd3QXwTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wL3QQwrs; arc=none smtp.client-ip=209.85.218.44
+	 In-Reply-To:Content-Type; b=ZnDg4qHj3YtPBmVmVs9yhgoZEv73AsjRfFziW/LRKwCDyuTETlupZ2YnBshBHSrrnM6rBUMVrWkZ+mdNQoqXvr9engxdVEs/8XIWeqWyKMDnKI3QFJJ5ft/NYXX3yrp4xNEfkhp+WMCPKlvJ19/nOk9uQaXc64Qd338nYfpvMZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yLpG+NAI; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wL3QQwrs"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-bec423a5265so117101766b.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 07:09:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yLpG+NAI"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-68ad1e513d3so1144566a12.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 07:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780582168; x=1781186968; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1780582256; x=1781187056; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7H62lkepc/bbz/eunS89UDg8NP+iYX29m8Vp+gdTFV8=;
-        b=wL3QQwrssj025OphND8RGUz52Km8VF1S0yC8ohOrc3twCsoA9WRRVA12Uc4lt6app8
-         tCvRBMkvQPq45/Vd3RgNdW20MnGu7nq5icT/fdMereNZ4UdVMMu93awrzy6/av4sDvSp
-         k6YeB8DfpQ+pplGcAxlHr7IWhQAPHOAe4eQGujLfA2WgDsZ5CaNjmUDdHGy3023miQXv
-         7sFsiwqdnoh/gHbn3Wr4YElXxIHuY8CYf/udHte9NrUZ9FHeufFXdjhwyRoRxIXVqzh+
-         neFuBUyHnpzesZ0ZFFtuQoSpuCkiZbQcVxL1z6Gzlale96UkNPthqo7zEl2jWqRnPAV4
-         hcCQ==
+        bh=cWGYhCQeY167Hr42YHFijyfh5XKD6HMAPsUmURHfd7s=;
+        b=yLpG+NAI5SJjvow/t2UYhF6bYmOZnfQEgDreLoJdyZQwFL5I0d54XSqA+m1uEOX38l
+         yQq1KJOWHbmJ6PCRmjBl8fNxMU9KFRpTEizF/8tIowDAJHX/oCY1GbE80+EDMyMxR8uK
+         zMRcQQ0WuMfkWT08FW4L8Yj7GLY84FfVkdKa8CbpPAS3PKD5w8PkLnfyDm+lyGkufFDk
+         N7EGsHCV3myjmBW4ZTa0Y2sDLF/WT8HIERMMiY6F2nx8m6Ez7CZhlP05+/Z8Nyti6J3F
+         a9YxmY5NDBbqfrR5JqruM3wF+iKI+CCrMXQzm0ArHtxq5x6loA1DePQ3zfjxQRgRbuiy
+         O41Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780582168; x=1781186968;
+        d=1e100.net; s=20251104; t=1780582256; x=1781187056;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7H62lkepc/bbz/eunS89UDg8NP+iYX29m8Vp+gdTFV8=;
-        b=i/HFq1S/e7wCUn1RHR/ZWxbHsieGZAe3UaXda6f0C6IwEqA+x/Vc5fSyQPH+ccT3GU
-         ltgEwqMFZtkrVvxbATNMCUadWsQdrkvqKzeJBVlwyGWbvD7Ds8vzoAt5zK1yCvZzBpEt
-         xZS5ZPFUlgIMJqnfIeHsWCnKxg/76b6pwnuuxHRD1+noyisok4drGfcBsMo0+fHDT+DN
-         +/LHusbuaNqA/m77WBO2g/5UysvfxelOd5QVlF/n/GsbOTKSRgUsdKlnWxtLVfNxNED5
-         GeW+DCx1KuEpyOqY7Hspt5qqzkLDdrCeauKC5V0FyzoEdl9xmdFgjNc14ieyF7jlObZP
-         kQtA==
-X-Forwarded-Encrypted: i=1; AFNElJ8FwrykIze2opwQVthUcvrPRVvzGrlP7Y2uSqmyj1hEC496hJuwBSc43t2Po8YYTdWTmGNVsJMmbz1Qa6DESmZs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd8VznBjM2pUwVz7MP55NzuWakQrpnwXpFaIITfCJVjsL21SGJ
-	2QSIsfNBbPXh1BEkXL/GFlBgSlYhVsJ9jpKYhG6SB1xJyMUZ2whjlDAzHj9fqmu7w3A=
-X-Gm-Gg: Acq92OGdmshurSflvi1YSaU7Fro+5B498sfFBnsdnqHRngO+5qjC2fZK9K/jbmfD5IN
-	C0bGWaYRpHcu8j33nxFmgA7QOAr/zOMwau+OD/B6APokQyLBXlTiZJz4c+q20L0kiRUuaM12pxq
-	7vdZ1rFku22MJ5gz9AcWSpEE8bWTzS0vprr3wU91U48+WO6R1bfL76Us875VSBcCRSeIuYro/MU
-	5ktabbe0a4EvDmLfi61zgtppKxGcs76n+LGhKUAn4+jfPKyLgdHXXIVJwMkOod3bOj3WRieZ/ER
-	No2MayBMnW2AXK7J7vp4WqU0A9F3+4B1LcRn6xRbqohFB8+OGAT5XzcyurNbv7PWdS5WcWUweo4
-	JwseZFlwEAit8IlzEhdSGC9GDjowJqLTXh3ci+R9uXnrwnb5DQZtMG3MmvTQvjmtaCgrbnmr5JZ
-	O0eHsEwrW3GyHtEhUWq2/VA4CckjIGtDL0zBjK4Gk=
-X-Received: by 2002:a17:906:c145:b0:beb:2de3:1ba1 with SMTP id a640c23a62f3a-bf0a8433d98mr476181266b.11.1780582168216;
-        Thu, 04 Jun 2026 07:09:28 -0700 (PDT)
+        bh=cWGYhCQeY167Hr42YHFijyfh5XKD6HMAPsUmURHfd7s=;
+        b=e+w9mF6XTLYcixe1Pcirfh2lIE68S18v6Fh8Hgxcrde/4ekP/BKZUGrOnsC3tIEYHC
+         8mvkUX/121Zc2E+wsIH0NCgPLWGTQgDiVDtZm2vmnmvdTfM2UFEdSj/FSLiVCgdUSs/4
+         vIPwlywHV3OjOzU2zj9IAKowUkP2evOj71mJpxB517N3aYTO0jfpENLVTAEZ/1BotpX2
+         4druLj+43Ipn8fDu1hrXC2Y3Mjnyg+oauXFaUbykO6HRpcBkS6XLSpS4mVFAJ4vQFbda
+         wRW2Z17JgYXA8qo4CnfcdxgfUwuZd2F8a7WBvwkcqd8d+QG5oVJENQ9PhTuB5VLdTi3u
+         NyQQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9/RLI9pnCVTWF+23FNHFU+5Erx2/MR6vux7+PfODS2mK+fVoFHSUxcoESNUAHGp+HHnaa1rpqe4q1Hdul2iFbL@vger.kernel.org
+X-Gm-Message-State: AOJu0YykZ6Un+o6QP/sOyzDlz2Y9wTzzfS+V+pWcJ5FqItNLzPc6hN00
+	Sf3ACrlwtYZZNRzB/X0PsVw9DwtybksPupUYfcdmXyXSlVvowYNFvZa4h2bQhZ3TykM=
+X-Gm-Gg: Acq92OEMk/ncdkOSfRx5Oo43002j9IH/I6bB1jbceDd6Bzw4fc6HkuaF21Q9UqnOeeo
+	DMS/qPF/ZulmKLsqupIz7ZNmP63ZOCqhbc4dVSSKZYJ5T2YttP/OP4Z2vUKUGCJRDguUMa5Bmix
+	AZYpXAZepWIDq4/nB/3OpeZdJIBNjPZctUPtRZxJLk7O4+2KMdLjCjBCUQKZ1xhdNPE8vHh42L0
+	SCaQA1BCpxBRtdPwEJDCuZMX+xtPHwW91Yw4yD+TH4DCpWcfejIQYbOqVGiF572IybNN3gY3bpq
+	NGomeQ7jH8pAY7kTrFRaZ9ZhZejGZ9kOtCxABoNdiYwlLNGi4g6ZJajyZXncFDrIzuU2iz55DSu
+	B0c0npGSdyde1399+xGTuEMXwChNmV/MohRaPbp52bfUFMmHBOQL6fiqL3LxhSmXFsfEIan3G20
+	jOUvksBz590Jsp9zCGlBOZwf5T1dSNyvRP1aPsSqug1hx9QsdZqQ==
+X-Received: by 2002:a05:6402:27ce:b0:67f:99d8:868 with SMTP id 4fb4d7f45d1cf-68e710eb7bfmr3728458a12.16.1780582256213;
+        Thu, 04 Jun 2026 07:10:56 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf0559fe77csm306402266b.63.2026.06.04.07.09.27
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68e64e2c810sm2540577a12.9.2026.06.04.07.10.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2026 07:09:27 -0700 (PDT)
-Message-ID: <9d1e0448-27d7-42d3-aaa3-2d09489f18d9@linaro.org>
-Date: Thu, 4 Jun 2026 15:09:26 +0100
+        Thu, 04 Jun 2026 07:10:54 -0700 (PDT)
+Message-ID: <047a6470-9afa-41f7-8942-9d9b6d15eff8@linaro.org>
+Date: Thu, 4 Jun 2026 15:10:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,8 +68,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] perf cs-etm: Use thread-stack for last branch
- entries
+Subject: Re: [PATCH v6 1/8] perf cs-etm: Decode ETE exception packets
 To: Leo Yan <leo.yan@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
  linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo
@@ -82,300 +81,59 @@ Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
  Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>,
  Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
 References: <20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com>
- <20260526-b4-arm_cs_callchain_support_v1-v6-3-f9f49f53c9dd@arm.com>
+ <20260526-b4-arm_cs_callchain_support_v1-v6-1-f9f49f53c9dd@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260526-b4-arm_cs_callchain_support_v1-v6-3-f9f49f53c9dd@arm.com>
+In-Reply-To: <20260526-b4-arm_cs_callchain_support_v1-v6-1-f9f49f53c9dd@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 26/05/2026 5:59 pm, Leo Yan wrote:
-> CS ETM maintains its own circular array for last branch entries, with
-> local helpers to update, copy and reset the branch stack. This duplicates
-> logic already provided by the common code.
+> ETE shares the same packet format as ETMv4, but exception decoding
+> handled ETMv4 packets only. As a result, ETE exception packets were
+> not classified.
 > 
-> Record branch with thread_stack__event() and synthesize branch stack
-> with thread_stack__br_sample(). This removes the local last_branch_rb
-> buffer and position tracking. Keep the buffer number updated via
-> thread_stack__set_trace_nr(), which is used when exporting samples to
-> Python scripts.
-> 
-> The output should remain same, except that be->flags.predicted is no
-> longer set. Since CoreSight trace does not provide branch prediction
-> information, clearing the flag avoids confusion.
+> Recognize the ETE magic for exception number decoding.
 > 
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->   tools/perf/util/cs-etm.c | 152 +++++++++++++----------------------------------
->   1 file changed, 41 insertions(+), 111 deletions(-)
+>   tools/perf/util/cs-etm.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 5bff8811d61e423463b7bd4e20d599d5b5307a1a..398ab3b7a429d402cc8e5f6cccb35c0b7c253732 100644
+> index 6ec48de29441012f3d827d50616349c6c0d1f037..ab79d08f5a6095448470e2c3ec85ff3db2fb5634 100644
 > --- a/tools/perf/util/cs-etm.c
 > +++ b/tools/perf/util/cs-etm.c
-> @@ -83,14 +83,13 @@ struct cs_etm_auxtrace {
->   struct cs_etm_traceid_queue {
->   	u8 trace_chan_id;
->   	u64 period_instructions;
-> -	size_t last_branch_pos;
->   	union perf_event *event_buf;
->   	struct thread *thread;
->   	struct thread *prev_packet_thread;
->   	ocsd_ex_level prev_packet_el;
->   	ocsd_ex_level el;
-> +	unsigned int br_stack_sz;
->   	struct branch_stack *last_branch;
-> -	struct branch_stack *last_branch_rb;
->   	struct cs_etm_packet *prev_packet;
->   	struct cs_etm_packet *packet;
->   	struct cs_etm_packet_queue packet_queue;
-> @@ -635,9 +634,8 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->   		tidq->last_branch = zalloc(sz);
->   		if (!tidq->last_branch)
->   			goto out_free;
-> -		tidq->last_branch_rb = zalloc(sz);
-> -		if (!tidq->last_branch_rb)
-> -			goto out_free;
-> +
-> +		tidq->br_stack_sz = etm->synth_opts.last_branch_sz;
->   	}
+> @@ -2138,7 +2138,7 @@ static bool cs_etm__is_syscall(struct cs_etm_queue *etmq,
+>   	 * HVC cases; need to check if it's SVC instruction based on
+>   	 * packet address.
+>   	 */
+> -	if (magic == __perf_cs_etmv4_magic) {
+> +	if (magic == __perf_cs_etmv4_magic || magic == __perf_cs_ete_magic) {
+>   		if (packet->exception_number == CS_ETMV4_EXC_CALL &&
+>   		    cs_etm__is_svc_instr(etmq, trace_chan_id, prev_packet,
+>   					 prev_packet->end_addr))
+> @@ -2161,7 +2161,7 @@ static bool cs_etm__is_async_exception(struct cs_etm_traceid_queue *tidq,
+>   		    packet->exception_number == CS_ETMV3_EXC_FIQ)
+>   			return true;
 >   
->   	tidq->event_buf = malloc(PERF_SAMPLE_MAX_SIZE);
-> @@ -647,7 +645,6 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->   	return 0;
+> -	if (magic == __perf_cs_etmv4_magic)
+> +	if (magic == __perf_cs_etmv4_magic || magic == __perf_cs_ete_magic)
+>   		if (packet->exception_number == CS_ETMV4_EXC_RESET ||
+>   		    packet->exception_number == CS_ETMV4_EXC_DEBUG_HALT ||
+>   		    packet->exception_number == CS_ETMV4_EXC_SYSTEM_ERROR ||
+> @@ -2192,7 +2192,7 @@ static bool cs_etm__is_sync_exception(struct cs_etm_queue *etmq,
+>   		    packet->exception_number == CS_ETMV3_EXC_GENERIC)
+>   			return true;
 >   
->   out_free:
-> -	zfree(&tidq->last_branch_rb);
->   	zfree(&tidq->last_branch);
->   	zfree(&tidq->prev_packet);
->   	zfree(&tidq->packet);
-> @@ -941,7 +938,6 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
->   		thread__zput(tidq->prev_packet_thread);
->   		zfree(&tidq->event_buf);
->   		zfree(&tidq->last_branch);
-> -		zfree(&tidq->last_branch_rb);
->   		zfree(&tidq->prev_packet);
->   		zfree(&tidq->packet);
->   		zfree(&tidq);
-> @@ -1281,57 +1277,6 @@ static int cs_etm__queue_first_cs_timestamp(struct cs_etm_auxtrace *etm,
->   	return ret;
->   }
->   
-> -static inline
-> -void cs_etm__copy_last_branch_rb(struct cs_etm_queue *etmq,
-> -				 struct cs_etm_traceid_queue *tidq)
-> -{
-> -	struct branch_stack *bs_src = tidq->last_branch_rb;
-> -	struct branch_stack *bs_dst = tidq->last_branch;
-> -	size_t nr = 0;
-> -
-> -	/*
-> -	 * Set the number of records before early exit: ->nr is used to
-> -	 * determine how many branches to copy from ->entries.
-> -	 */
-> -	bs_dst->nr = bs_src->nr;
-> -
-> -	/*
-> -	 * Early exit when there is nothing to copy.
-> -	 */
-> -	if (!bs_src->nr)
-> -		return;
-> -
-> -	/*
-> -	 * As bs_src->entries is a circular buffer, we need to copy from it in
-> -	 * two steps.  First, copy the branches from the most recently inserted
-> -	 * branch ->last_branch_pos until the end of bs_src->entries buffer.
-> -	 */
-> -	nr = etmq->etm->synth_opts.last_branch_sz - tidq->last_branch_pos;
-> -	memcpy(&bs_dst->entries[0],
-> -	       &bs_src->entries[tidq->last_branch_pos],
-> -	       sizeof(struct branch_entry) * nr);
-> -
-> -	/*
-> -	 * If we wrapped around at least once, the branches from the beginning
-> -	 * of the bs_src->entries buffer and until the ->last_branch_pos element
-> -	 * are older valid branches: copy them over.  The total number of
-> -	 * branches copied over will be equal to the number of branches asked by
-> -	 * the user in last_branch_sz.
-> -	 */
-> -	if (bs_src->nr >= etmq->etm->synth_opts.last_branch_sz) {
-> -		memcpy(&bs_dst->entries[nr],
-> -		       &bs_src->entries[0],
-> -		       sizeof(struct branch_entry) * tidq->last_branch_pos);
-> -	}
-> -}
-> -
-> -static inline
-> -void cs_etm__reset_last_branch_rb(struct cs_etm_traceid_queue *tidq)
-> -{
-> -	tidq->last_branch_pos = 0;
-> -	tidq->last_branch_rb->nr = 0;
-> -}
-> -
->   static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
->   					 u8 trace_chan_id, u64 addr)
->   {
-> @@ -1400,38 +1345,6 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
->   	return addr;
->   }
->   
-> -static void cs_etm__update_last_branch_rb(struct cs_etm_queue *etmq,
-> -					  struct cs_etm_traceid_queue *tidq)
-> -{
-> -	struct branch_stack *bs = tidq->last_branch_rb;
-> -	struct branch_entry *be;
-> -
-> -	/*
-> -	 * The branches are recorded in a circular buffer in reverse
-> -	 * chronological order: we start recording from the last element of the
-> -	 * buffer down.  After writing the first element of the stack, move the
-> -	 * insert position back to the end of the buffer.
-> -	 */
-> -	if (!tidq->last_branch_pos)
-> -		tidq->last_branch_pos = etmq->etm->synth_opts.last_branch_sz;
-> -
-> -	tidq->last_branch_pos -= 1;
-> -
-> -	be       = &bs->entries[tidq->last_branch_pos];
-> -	be->from = cs_etm__last_executed_instr(tidq->prev_packet);
-> -	be->to	 = cs_etm__first_executed_instr(tidq->packet);
-> -	/* No support for mispredict */
-> -	be->flags.mispred = 0;
-> -	be->flags.predicted = 1;
-> -
-> -	/*
-> -	 * Increment bs->nr until reaching the number of last branches asked by
-> -	 * the user on the command line.
-> -	 */
-> -	if (bs->nr < etmq->etm->synth_opts.last_branch_sz)
-> -		bs->nr += 1;
-> -}
-> -
->   static int cs_etm__inject_event(struct cs_etm_auxtrace *etm, union perf_event *event,
->   			       struct perf_sample *sample, u64 type)
->   {
-> @@ -1579,6 +1492,37 @@ static inline u64 cs_etm__resolve_sample_time(struct cs_etm_queue *etmq,
->   		return etm->latest_kernel_timestamp;
->   }
->   
-> +static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
-> +				    struct cs_etm_traceid_queue *tidq)
-> +{
-> +	u64 from, to;
-> +	int size;
-> +
-> +	if (!tidq->prev_packet->last_instr_taken_branch)
-> +		return;
-> +
-> +	if (tidq->prev_packet->sample_type != CS_ETM_RANGE ||
-> +	    tidq->packet->sample_type != CS_ETM_RANGE)
-> +		return;
-> +
-> +	if (etmq->etm->synth_opts.last_branch) {
-> +		from = cs_etm__last_executed_instr(tidq->prev_packet);
-> +		to = cs_etm__first_executed_instr(tidq->packet);
-> +
-> +		size = cs_etm__instr_size(etmq, tidq->trace_chan_id,
-> +					  tidq->prev_packet->isa, from);
-> +
-> +		/* Enable callchain so thread stack entry can be allocated */
-> +		thread_stack__event(tidq->thread, tidq->prev_packet->cpu,
-> +				    tidq->prev_packet->flags, from, to, size,
-> +				    etmq->buffer->buffer_nr + 1, true,
-> +				    tidq->br_stack_sz, 0);
-> +	} else {
-> +		thread_stack__set_trace_nr(tidq->thread, tidq->prev_packet->cpu,
-> +					   etmq->buffer->buffer_nr + 1);
-> +	}
-> +}
-> +
->   static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->   					    struct cs_etm_traceid_queue *tidq,
->   					    u64 addr, u64 period)
-> @@ -1608,8 +1552,12 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->   
->   	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
->   
-> -	if (etm->synth_opts.last_branch)
-> +	if (etm->synth_opts.last_branch) {
-> +		thread_stack__br_sample(tidq->thread, tidq->packet->cpu,
-> +					tidq->last_branch,
-> +					tidq->br_stack_sz);
->   		sample.branch_stack = tidq->last_branch;
-> +	}
->   
->   	if (etm->synth_opts.inject) {
->   		ret = cs_etm__inject_event(etm, event, &sample,
-> @@ -1798,14 +1746,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->   
->   	tidq->period_instructions += tidq->packet->instr_count;
->   
-> -	/*
-> -	 * Record a branch when the last instruction in
-> -	 * PREV_PACKET is a branch.
-> -	 */
-> -	if (etm->synth_opts.last_branch &&
-> -	    tidq->prev_packet->sample_type == CS_ETM_RANGE &&
-> -	    tidq->prev_packet->last_instr_taken_branch)
-> -		cs_etm__update_last_branch_rb(etmq, tidq);
-> +	cs_etm__add_stack_event(etmq, tidq);
-
-Would it be cleaner to call this whenever a branch sample is generated? 
-Seems like the conditions for calling thread_stack__event() and 
-cs_etm__synth_branch_sample() are slightly different (ignoring the fact 
-that branches are only generated when the user asks for them).
-
-Maybe the conditions should be different, but maybe a comment why or if 
-they're the same, a shared function for the conditions would help.
-
-For example, we don't push a branch to the stack for 
-CS_ETM_DISCONTINUITY, but we do generate a branch sample from 0.
-
->   
->   	if (etm->synth_opts.instructions &&
->   	    tidq->period_instructions >= etm->instructions_sample_period) {
-> @@ -1864,10 +1805,6 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->   		u64 offset = etm->instructions_sample_period - instrs_prev;
->   		u64 addr;
->   
-> -		/* Prepare last branches for instruction sample */
-> -		if (etm->synth_opts.last_branch)
-> -			cs_etm__copy_last_branch_rb(etmq, tidq);
-> -
->   		while (tidq->period_instructions >=
->   				etm->instructions_sample_period) {
->   			/*
-> @@ -1947,10 +1884,6 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->   	    etmq->etm->synth_opts.instructions &&
->   	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
->   		u64 addr;
-> -
-> -		/* Prepare last branches for instruction sample */
-> -		cs_etm__copy_last_branch_rb(etmq, tidq);
-> -
->   		/*
->   		 * Generate a last branch event for the branches left in the
->   		 * circular buffer at the end of the trace.
-> @@ -1982,7 +1915,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->   
->   	/* Reset last branches after flush the trace */
->   	if (etm->synth_opts.last_branch)
-> -		cs_etm__reset_last_branch_rb(tidq);
-> +		thread_stack__flush(tidq->thread);
->   
->   	return err;
->   }
-> @@ -2006,9 +1939,6 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
->   	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
->   		u64 addr;
->   
-> -		/* Prepare last branches for instruction sample */
-> -		cs_etm__copy_last_branch_rb(etmq, tidq);
-> -
->   		/*
->   		 * Use the address of the end of the last reported execution
->   		 * range.
+> -	if (magic == __perf_cs_etmv4_magic) {
+> +	if (magic == __perf_cs_etmv4_magic || magic == __perf_cs_ete_magic) {
+>   		if (packet->exception_number == CS_ETMV4_EXC_TRAP ||
+>   		    packet->exception_number == CS_ETMV4_EXC_ALIGNMENT ||
+>   		    packet->exception_number == CS_ETMV4_EXC_INST_FAULT ||
 > 
+
+Reviewed-by: James Clark <james.clark@linaro.org>
 
