@@ -1,139 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 194411EF39E;
-	Thu,  4 Jun 2026 20:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644F2366DB9;
+	Thu,  4 Jun 2026 20:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780605687; cv=none; b=aEaI87XCGt3qSwTWCLcgqR8Yj6OXbtO9Cx9PNtWXhiuB5/4ewjGfOkSGEM/RAGNFPi51fDQ6Gkopw6ycbChBguLa1mlNHeTIJxFFSSPnMCkY4mdtsyCO1ZgLra9G52e/EWJXxTfth5OoqImA127DB5euZgUpMFDJOltCpz1gOno=
+	t=1780605741; cv=none; b=r9VnKMUpQoWi98sSQAUH8jdslXKGLnmR3Ag+rvJ2/VS/2SEuCumb6ebKzNfYAlSMszABCdpoCMqTfD6oTMWZa2efodc2iR7sB18TYSxaMZ3N4onHgeh//UN49Tsp0A6AYLrKXLEl/Jf42nswlw4CB3FjgtAMcDuyuzvODqUEo/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780605687; c=relaxed/simple;
-	bh=qg8/KHZKpbMSyILm7vmo8nMSXcTMphI7fDe57QTCBtA=;
+	s=arc-20240116; t=1780605741; c=relaxed/simple;
+	bh=Z3fxOrbgiFCujm61gNgwZ5fCkgCxx+qtp67/u1z2ioU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gwyRV9w9pHybX38BsFvFBQEWLbDIo+A1OZV9+TrlkohddWFz97DstTLRNgiYXntPQ42eBqesa/rL2E/JfOuRi/L6BGjDRoMU2nk3Ob48V3QoEd+X+KUTQGxOdQ87k7c1L2MxT8SSd6l3qI8zMrtsh6zRcSYPnk4j4kGSDCWJH2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWTDJq2G; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=avfm9V/+fu+H3wM07VR3yY0J8PcnbZz2FYRBKHruDK8KxIQ5UmZ5H9+l0Zvdc2HatCc6UhZKI42AWBe4Uyij8QXLs3BG1dVs4fjbdTBY59lCD7cuNGlWEsdtApKFttl1TPjwxWqhTysq6XGOgGJJlAUWRkmaOUCSXlGZzXn7XHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sf8UGZEx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWTDJq2G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 081E31F00893;
-	Thu,  4 Jun 2026 20:41:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sf8UGZEx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FCAE1F00893;
+	Thu,  4 Jun 2026 20:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780605685;
-	bh=nEqvc7LBP5T2u81aQdijukvBCGhr4HrO2B1sHhdyD5E=;
+	s=k20260515; t=1780605740;
+	bh=txq3vHUfagQTEfXkHZ/xabBiG7M8uCFwxdCufHVEUxk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=oWTDJq2GOcuA7+OTlKD7bnXf9e1/JDmm6/jvsC82lpeXYfSt5o8QFEn3rK4QyobZl
-	 pUZcUs0z0TBdmftg3vdT/fEa/+Qv3KKar7WL6GMH75geBGb2tvi5ePgsXiZOARwlwU
-	 XJ5bjum4oyD3LdxM8U2Q2TpXXRjB/9guueC5E5Mcpi0LUqRKOFJzQ7DieQSTU9CrP4
-	 GLhe3AQ08dXTBYv0kIRM2hGX/N6ZSo2OwhQNeGAiAUnrMhsBTPqUzhma1lk6rr2a3+
-	 VnnroJi37qCMIm1RFTOkYkcicNbYBQsvuqWK6aFPr4CkT7/aSWe+TZnIapwQXMDBKH
-	 oF39ThtnqUSBg==
-Date: Thu, 4 Jun 2026 17:41:22 -0300
+	b=Sf8UGZExx5VsV4oE3wXe1TinXWW2SgtH/8LusiU1lJTbMJEtKXfITMYRkOwXDPkCn
+	 OP7Gbo80rAxygBUsPpdcKQB695s397RPdNNnqUAt4rJQdYjj0G4uEgcRRn/cGd12rT
+	 tPa4I0wqYuj1g0dCmldUIhgXcMBZxdusKHv1/xg8/BH4+RFxKJ/yX3YrJwfEddhgDV
+	 ZmB4H6KH5eQX5Vy/HuOKDkXQrRYtep4W6gkztGLBO1eavPkze7k2VUq1lXJaqWa0Fq
+	 SWZAJwWcD614Rbhtl0kB1UA2lksSP5Dkmu9OQ1l1jETARGfCMnfU3w10xzMxi/ndis
+	 qzaADYZtR7tSA==
+Date: Thu, 4 Jun 2026 17:42:17 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/4] perf sched: Fix NULL dereference in
- latency_runtime_event
-Message-ID: <aiHi8vAGShdk-46B@x1>
-References: <20260604201119.1702338-4-acme@kernel.org>
- <20260604203011.430A01F00893@smtp.kernel.org>
+Subject: Re: [PATCH 4/4] perf sched: Fix comp_cpus heap overflow with
+ cross-machine recordings
+Message-ID: <aiHjKUD8Ks1BJ_Hc@x1>
+References: <20260604201119.1702338-5-acme@kernel.org>
+ <20260604202605.99EFC1F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260604203011.430A01F00893@smtp.kernel.org>
+In-Reply-To: <20260604202605.99EFC1F00898@smtp.kernel.org>
 
-On Thu, Jun 04, 2026 at 08:30:10PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> 
-> Pre-existing issues:
-> - [Critical] Using strcpy() to copy untrusted string payloads into a fixed-size buffer leads to a heap buffer overflow.
-> - [Critical] Unbounded attacker-controlled PID values are used to calculate memory allocation sizes, leading to integer overflows and OOB writes.
+On Thu, Jun 04, 2026 at 08:26:05PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] Removing the `sched->max_cpu.cpu` initialization introduces a severe off-by-one error, causing `perf sched map` to truncate the highest CPU from its output and print nothing for single-CPU traces.
 > --
+> 
+> commit 4c1487bde6fa91cfb4bca7de01bfd611065c7c9a
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> perf sched: Fix comp_cpus heap overflow with cross-machine recordings
+> 
+> This commit fixes a heap buffer overflow by allocating comp_cpus with
+> MAX_CPUS and the correct element size. It also removes the initial assignment
+> of max_cpu from the host's CPU count.
+> 
+> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> > index 36da451447b5e..80e42536400a9 100644
+> > --- a/tools/perf/builtin-sched.c
+> > +++ b/tools/perf/builtin-sched.c
+> > @@ -3573,10 +3573,8 @@ static int perf_sched__lat(struct perf_sched *sched)
+> >  
+> >  static int setup_map_cpus(struct perf_sched *sched)
+> >  {
+> > -	sched->max_cpu.cpu  = sysconf(_SC_NPROCESSORS_CONF);
+> > -
+> 
+> [Severity: Medium]
+> Does removing this initialization cause an off-by-one error when rendering
+> the schedule map?
+> 
+> Without this initialization, sched->max_cpu.cpu tracks the maximum 0-based
+> CPU index seen in the trace. However, when compact mode is disabled,
+> map_switch_event() assigns this 0-based index directly to cpus_nr:
+> 
+> tools/perf/builtin-sched.c:map_switch_event() {
+>         ...
+>         } else
+>                 cpus_nr = sched->max_cpu.cpu;
+>         ...
+> }
+> 
+> Then print_sched_map() iterates strictly less than cpus_nr:
+> 
+> tools/perf/builtin-sched.c:print_sched_map() {
+>         ...
+>         for (int i = 0; i < cpus_nr; i++) {
+>         ...
+> }
+> 
+> Will this skip the highest CPU column entirely, and print nothing for 
+> single-CPU traces where cpus_nr becomes 0?
 
-Both pre-existing, added to TODO files for future series.
+Legit, v2 will have a fix for this, the sysconf() was just masking a
+pre-existing problem.
 
 - Arnaldo
  
-> commit ab6f421859203bf939f45ab57b4ced38c5193ef5
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> perf sched: Fix NULL dereference in latency_runtime_event
-> 
-> This commit fixes a NULL pointer dereference in latency_runtime_event().
-> It moves the assignment to atoms using thread_atoms_search() after the 
-> thread NULL check to match patterns used elsewhere in the file.
-> 
-> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > index 13b801496a012..36da451447b5e 100644
-> > --- a/tools/perf/builtin-sched.c
-> > +++ b/tools/perf/builtin-sched.c
-> > @@ -1213,13 +1213,15 @@ static int latency_runtime_event(struct perf_sched *sched,
-> >  	const u32 pid	   = perf_sample__intval(sample, "pid");
-> >  	const u64 runtime  = perf_sample__intval(sample, "runtime");
-> >  	struct thread *thread = machine__findnew_thread(machine, -1, pid);
-> > -	struct work_atoms *atoms = thread_atoms_search(&sched->atom_root, thread, &sched->cmp_pid);
-> > +	struct work_atoms *atoms;
-> >  	u64 timestamp = sample->time;
-> >  	int cpu = sample->cpu, err = -1;
-> >  
-> >  	if (thread == NULL)
-> >  		return -1;
-> >  
-> > +	atoms = thread_atoms_search(&sched->atom_root, thread, &sched->cmp_pid);
-> > +
-> >  	/* perf.data is untrusted input — CPU may be absent or corrupted */
-> >  	if (cpu >= MAX_CPUS || cpu < 0) {
-> >  		pr_warning("WARNING: at offset %#" PRIx64 ": out-of-bound sample CPU %d, skipping sample\n",
-> 
-> [ ... ]
-> 
-> While reviewing this file, I noticed a couple of pre-existing issues in
-> register_pid():
-> 
-> tools/perf/builtin-sched.c:register_pid() {
-> ...
-> 	if (pid >= (unsigned long)pid_max) {
-> 		BUG_ON((sched->pid_to_task = realloc(sched->pid_to_task, (pid + 1) *
-> 			sizeof(struct task_desc *))) == NULL);
-> 		while (pid >= (unsigned long)pid_max)
-> 			sched->pid_to_task[pid_max++] = NULL;
-> 	}
-> ...
-> 
-> [Severity: Critical]
-> This isn't a bug introduced by this patch, but could an attacker-controlled
-> pid from an untrusted perf.data file overflow the size calculation here?
-> 
-> If pid is set to 0xFFFFFFFF, the pid + 1 calculation wraps to 0 on 32-bit
-> systems, resulting in a 0-byte allocation.
-> 
-> The subsequent while loop would then write NULL pointers sequentially out
-> of bounds, which could corrupt heap memory.
-> 
-> 
-> Also in the same function:
-> 
-> tools/perf/builtin-sched.c:register_pid() {
-> ...
-> 	task = zalloc(sizeof(*task));
-> 	task->pid = pid;
-> 	task->nr = sched->nr_tasks;
-> 	strcpy(task->comm, comm);
-> ...
-> 
-> [Severity: Critical]
-> This is a pre-existing issue, but does this strcpy() allow a heap buffer
-> overflow?
-> 
-> The comm string extracted from the perf.data payload is copied into the
-> fixed 20-byte task->comm array.
-> 
-> If the untrusted string is longer than 19 characters, this could overflow
-> the struct task_desc heap allocation and overwrite adjacent fields.
+> >  	if (sched->map.comp) {
+> > -		sched->map.comp_cpus = calloc(sched->max_cpu.cpu, sizeof(int));
+> > +		sched->map.comp_cpus = calloc(MAX_CPUS, sizeof(*sched->map.comp_cpus));
+> >  		if (!sched->map.comp_cpus)
+> >  			return -1;
+> >  	}
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260604201119.1702338-1-acme@kernel.org?part=3
+> Sashiko AI review � https://sashiko.dev/#/patchset/20260604201119.1702338-1-acme@kernel.org?part=4
