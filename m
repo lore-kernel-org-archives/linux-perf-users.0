@@ -1,120 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC914280CC1;
-	Thu,  4 Jun 2026 02:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6243839B9
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 06:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780538590; cv=none; b=mfpozc9dLUqa10t9R95LjNt6ATcLTDvllq5nxySoLpRvcVxTGa+8n9C7UUeOGBwlW9xQjX9FDyS5MaE2ufTvKlJLhqBK/IzXwg3t0IVPQAOx/vrba1qnJZsH62Ahs23MCiNofavJD3jVCVTo3SDJeOTgLIUKe7nzWVamVhXa46I=
+	t=1780556170; cv=none; b=m7HGt1c0pBXNNg+yG7eMOKIXoA3oBeZCr+JtYlRsfxo7HDABY4UWoLQnAA3tV8NwjH2Gp8w1dWJqZSRFFlEWiZcdbd2bCsksBDJSGB44AAtcK/IxeywtiBrpi3d4Fz8hX4AYWbKk6r2GA3KwwUFoZ6Hvz6b1nQVyvQLUOccK/lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780538590; c=relaxed/simple;
-	bh=V1HC3NO0IVyYJqEZ4uh+kRJRgytJAdfdldak6/UcyYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lwf3Ci65HRTUzPMcIBye+CO9lBEiJe5qD6h2zrLGj8wZCZbng43slxGqjRJeujpRD0v6udGb87PtACWwgcyZrZOMzLCiXK45Xh1XxK+qI+wbp6+kaJQEGTz6mKbebxMPRvLVJy9wZ3rpI/F52iGyuDYo4NAkDSHz0t1XUuQUNrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwgGbogQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780556170; c=relaxed/simple;
+	bh=kYPaGIx43/mOrP53YWWvVytYurUuy3fmv8V6ye2y07g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xw0xhtPXZ1B+rlvjL1ik3DseHIzJnA0czmGpNZa4NCxRiUlNqvtdrssAKVezudhbDJCfCUpZNrCgImN2zcQuqz4Xnxs7ezmcRkOG6FTr1BA7XyBesL5na0o50sLeWfG1oxqLIy1h5YjN1doGbOtToBNbTuVqUMVa/GIDLjHOuJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nAy0wTlP; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwgGbogQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 208511F00893;
-	Thu,  4 Jun 2026 02:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780538589;
-	bh=5kapYDcSfKOdhK1XTAL6xdCTPTkQP9mzXkK+CmD6YJ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=iwgGbogQqUxTAtjvfPevfzYMzMC4MDd/zNjZcaPl/wJ4cueU0l2IzjYIrAryDD41f
-	 Xpxsz/PbOfyxf8WQbPE4lSksLdc/8Omj3jAAKCLcZ4fqbuC5+JfJdfdhz9eKYhrKmY
-	 LVwKavQoseWH0n9PuNQb8x2uSTIChk6RZ4+Icirt4z6ozdtDbEgYCcsX24lMmpwIrS
-	 VgUQmRCBlZJEvL2y3QCMXnTltMvZZmXlBYq/gYRe7SnkW7E8uZ6NAnZT20ymB0FAUO
-	 r7lf8ed8YZYKUW4FeDvx3dpBeY7mOh7arjNaANovAUDQpMYU5OnhLwemYS/Jfk5JrL
-	 /jau2MAgPOkJg==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Kees Cook <kees@kernel.org>,
-	Quentin Monnet <qmo@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nsc@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Barry Song <baohua@kernel.org>,
-	Qinxin Xia <xiaqinxin@huawei.com>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Willy Tarreau <w@1wt.eu>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	Len Brown <lenb@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>,
-	Mark Brown <broonie@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 10/23] tools: counter: Append extra cflags
-Date: Thu,  4 Jun 2026 11:02:35 +0900
-Message-ID: <20260604020236.889250-1-wbg@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260602-tools_build_fix_zero_init-v7-10-631baf679fe7@arm.com>
-References: <20260602-tools_build_fix_zero_init-v7-10-631baf679fe7@arm.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nAy0wTlP"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 653LeEhp2223981;
+	Thu, 4 Jun 2026 06:55:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=v7q8lGE5veN+Zy2Yq8Lm666Ruc/DM2nucqA19GrYg
+	QU=; b=nAy0wTlPB7epWS3ciKMbEyLbBRU401ZBQOGfjqGXrK7/R30sphV47zZmJ
+	DNe5+1mpjrR4x8LQCbEUqIBr6xV+rtlnkSVOeAeZFKmYV3al8TRMFXBk7+iRkCpj
+	HEXbkuDTk5X6DnAEAo3lp1ZAsS3mrvAtdcXxDu0wiLhpIToSt2zdsVq2MmxQlcFx
+	0E6mXpFORTKmA3gRw4uDDdk3DbpQv48zwUx2aw8sM8uStVeqkMWVVsvtP/0kHByk
+	klYAc0uLjhSPFhhE/tyZMBjU6RfQ0zDOxmPd5TCuf0gQjd367ZTuRJYaui0dD7Tm
+	8ewJ79Uq8kjloLK5UMh49kclvShfQ==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efqd4ep7y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jun 2026 06:55:56 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6546sB70028157;
+	Thu, 4 Jun 2026 06:55:55 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egbqhktxd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jun 2026 06:55:55 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6546toTf23331152
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Jun 2026 06:55:51 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DAB8920043;
+	Thu,  4 Jun 2026 06:55:50 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A3A0220040;
+	Thu,  4 Jun 2026 06:55:45 +0000 (GMT)
+Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.124.210.20])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Jun 2026 06:55:45 +0000 (GMT)
+From: Tanushree Shah <tshah@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
+        Tanushree Shah <tshah@linux.ibm.com>
+Subject: [PATCH] perf data convert json: Fix trace_seq memory leak in process_sample_event()
+Date: Thu,  4 Jun 2026 12:25:19 +0530
+Message-ID: <20260604065519.112101-1-tshah@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=252; i=wbg@kernel.org; h=from:subject; bh=V1HC3NO0IVyYJqEZ4uh+kRJRgytJAdfdldak6/UcyYM=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDFkKd1ZdzFFkUd1+W2XrdQa1Ynul4Mmz+b8eFrHJeXzun UlzvaZ3RykLgxgXg6yYIkuv+dm7Dy6pavx4MX8bzBxWJpAhDFycAjCRH9aMDF+0olJeL39l4K/7 rWQj3/zHOzRs3uwTjZDdMvVHjrfooheMDD1V2k/31C96WchfYSuWrn6LhVNEd9aONK87a48xLNG 25wYA
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA0MDA2MiBTYWx0ZWRfX/oCjBzRrb5No
+ uayxiaNhgf5UYzf71bybru8TfKUwpBdfwU7CntxGEY85AbONISN8Yt9VajNncyA00lzjeIBRVLV
+ vzMlswQvL6P0JxhJBQaXp/rT3/TmxAH9Wx6RvAxhvcstmfnrSvEVl64QACR4n8IQK0HQI+R+fjR
+ ySvsgS1VCo+VDhbqPWF82oLKvIFFRt4dcLIuVRJ6tfPXLCWcQyAJjqopzsH9Q16YpMgNg1cHmVM
+ geSj93lFhs3zKfgelJiIWlyVrUbjKo6M4bYr1a6dzUd4JKvSyKRM1R3WyHWDUYk7N6lHULeQtod
+ bNvsGIenbIpTRzdaLcnKzSm/3HErkXseA99cjIfbJKyLGIT9FkBSkd98Ccz02qeBRmRyIeuyX6x
+ dyT9pV0GaLDtoaQ4nnbCpAExxvJ7nd+V3/ZHSlcQTQB5zSv3GKNXg85e9jA5S7Xwb/yK1Z7xTrg
+ 4O/8MGofM6rK3OoLzBQ==
+X-Proofpoint-GUID: zt4s_CatP7Ff5t38XY6C0Dc18WjjcIEQ
+X-Proofpoint-ORIG-GUID: 3AT3m9-D5EmDiNatLrnIoKrIPfXmyOXF
+X-Authority-Analysis: v=2.4 cv=DZknbPtW c=1 sm=1 tr=0 ts=6a21217d cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=Nc15H_VyoKEvSVhrjhoA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-04_02,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1011 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606040062
 
-On Tue, Jun 02, 2026 at 03:40:44PM +0100, Leo Yan wrote:
-> Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
-> the compiler.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+Unlike the in-kernel trace_seq which uses a statically allocated buffer,
+the userspace traceevent library's trace_seq uses a dynamically allocated
+one. Therefore, every trace_seq_init() call must be paired with a
+trace_seq_destroy(), otherwise it produces a memory leak.
 
-Acked-by: William Breathitt Gray <wbg@kernel.org>
+In process_sample_event(), a trace_seq is initialized for each field when
+formatting tracepoint raw_data, but the matching trace_seq_destroy() is
+never called, leaking memory for every field of every sample processed.
+
+Add the missing trace_seq_destroy() after using the trace_seq buffer to
+properly free the allocated memory.
+
+Detected with Valgrind on a perf.data file with 2,729 tracepoint samples:
+  Before: definitely lost: 55,537,664 bytes in 13,559 blocks
+  After:  definitely lost: 0 bytes in 0 blocks
+
+Fixes: 9d895e468429 ("perf data: Add tracepoint fields when converting to JSON")
+Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+---
+ tools/perf/util/data-convert-json.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index d526c91312ed..6dd9349ab10f 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -257,6 +257,7 @@ static int process_sample_event(const struct perf_tool *tool,
+ 				trace_seq_init(&s);
+ 				tep_print_field(&s, sample->raw_data, fields[i]);
+ 				output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
++				trace_seq_destroy(&s);
+ 
+ 				i++;
+ 			}
+-- 
+2.47.3
+
