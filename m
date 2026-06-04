@@ -1,138 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC7A15A864;
-	Thu,  4 Jun 2026 13:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC5F1917FB
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 13:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780579266; cv=none; b=jOCblEI7MF54mcdcPFIpAND6MiOO7vz5K5idoJI6uxeG87psiAUET8XFdYqbExF3HY/SiT8l50c/Wzlo5tM9NRezIHT5uKs4+8D576rdsNfklOF22l7Xbf1YBsZN8qYXFm+/tY75zZl4gF+Us8B0HewuYaNxsakAuxD3BhhLIhw=
+	t=1780579310; cv=none; b=hgLpdLz1pBPwQ8zDcIsCLzQgs9Hxz+wk27+RyB4tE2XREvW6HQaM4GE15YD/jePAJaN8GUEZn1Dr9ti3SPX/L5bggZYFFqAmkCWvGfhR8fGz+vw/VDBrCspHiQ+zQPkShjp6uC5u0G1E4E6StH0/dr03nxc74vsaZzhPE0KSKGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780579266; c=relaxed/simple;
-	bh=L/46g8GHywuaVZ9yIHv6XGDKSGRu550Q6sP/k1hQdvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uyY0KX3NHlKiX/wwI3lyachpOb7gjU3fl/1V85W7UZlIEAmOrmei1aYXGMez06hZ6FRmC8/gMAJsLmAI8kQw0fzsWJgVmOXebNnXTk6O2kVAx0Qb+a7sAp1sND2eZSjPZfnGt9/d1j3CcyHf2nxf1TLvKrC7h+07EpmKEZYSue4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrzJn3Qg; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780579310; c=relaxed/simple;
+	bh=R4Qd1UZS19xLGwI+6b1+VkqpzA2WHtPOvF+YQJ5gNJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bv0q4IJiASSNbdu7BLaldCy+PB/i2r0B4P1pV02q5gjHzOMJ8D/hh4fkHHHRflcZX6NC7k7EiRVxsuGUceIX6iP6lYZElUh7I5SZonS2rld+06na9tojP5qCHhiW2XdSiB6R9DioaAQW3ym5IVo7DRz5OQQUHWAJrOKvytaBANg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zgdatk9A; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrzJn3Qg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 666851F00893;
-	Thu,  4 Jun 2026 13:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780579265;
-	bh=LHtlAw67LmoBkjlPK60ClPJkLav6FvjUMd5r03cVj/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=OrzJn3QggCdBVs3Kjl2TZO9gacwJ1SwheLAVkpw//OOAr+09dUWDUw7owW48cxEof
-	 jQirL5o9gw6oDX9oyX+JUmMobyvgGXrlAKqI+aJepEjVj4zxiBc5bMBkIF3eB/lVYf
-	 docxvXB/jGpEKGRZ9m/U68OA/NZ7T+ZS5UlI5qacR2/AOlr4bCTNExIK19u3PTVDeG
-	 jjtnIyCWuYwIZtj0q9/c++Jr7ZCEQ7XH2KgB7Nq3XjXpeFi6cPd1MJNTb9B+BG/+ZK
-	 iiJzaJGdmZzxRNEaYu8nfwigIl6uV5CO+QUZDgFfQctyIGvQ2kCriRzReiTqFSfbTs
-	 4HdqxnJnoZs6A==
-Date: Thu, 4 Jun 2026 10:21:00 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v4] perf bench: add --write-size option to sched pipe
-Message-ID: <aiF7vEJNyxJcluC2@x1>
-References: <20260603-perf_bench_pipe-v4-1-f48c0ba6d6cb@debian.org>
- <aiC6DA3o4L7mx0S7@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zgdatk9A"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490b64c8311so8743225e9.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 06:21:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1780579307; x=1781184107; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nAM+rRAaT8WOAGvky0RLKEaSXTjKAfYZq1zaY/oNR/s=;
+        b=zgdatk9A3+oqtGDlof2gqUaumIx3TxVlLl8puY4sp+C/Ochf3ibjtlo/W7l7F7RWFg
+         p8uEOUytpU9BDswUnxP/aj4vj/wjsIBW0ldeL4wVBdMVgf6wbg4w5lJw6tRyuoCxY8ak
+         nGCi8EhRaw85AezttRakyArgGArfjKw9LvQuWkJFPRdFKhLlHeGXLnxEieOM88VdygVh
+         OGEe1EYOAeWxOC3kl0fPbSygiybBRYmvRHaomYzuSEAPgpdrgQPhRQDhqKheGEE6q0i5
+         t0JphQu/b2RRowWrJBX6U0TNsIJW107kObdns8aaONWV4QHE2+PeiW00Yk14SuuTvRRS
+         lgTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780579307; x=1781184107;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nAM+rRAaT8WOAGvky0RLKEaSXTjKAfYZq1zaY/oNR/s=;
+        b=O20lah+iiw5RI7a3RQXw/j1Z3rCyTac+6EzJkNXYugMQsGourEVqZYIWiE81SUsyHl
+         Yzx5G+wRKESAQPmIMdhf5LNhukNbhMonkkb6uevLXQdj3IBneVdEx7l2FrHWaBHnn2yJ
+         2kgO47vaevFSMgkv3g0/Dxfzx93syacE8HGRmO0J8B+YK0iFC30FIYFHuo/OBb8vDj5y
+         sjyF1Pv/KTsXq/qQqn2EUrHLLj9cwShm2hFMlb3Q4znt9lnBTHF36N/eT8WonzMP3Hss
+         WVcyhf7xKNUhBYlMyf+9eHKA4y6AZRgbLtJtdtOCQRImT2QKlzQ/cnR4NnRRzzL6B/kE
+         YlBQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9wlAc5NUQOs/OxmutZkQpgLMw/JM1lqxNgVQWhO042ENRwPka52HY4LMou+nGcOqKRKP0Yl3FkSdnKA9f+mBsM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7iCI7IhvqKTPTymfOGlHt435qnQLfE2yUEQn18xuvETbGG49j
+	s2i5ALx+5ETQ2cMUVSxcduzR6FB4qCAohfe2uHzuzo0H+aXqjA0OIehksv6vSV1o9Zk=
+X-Gm-Gg: Acq92OF1Vg1HntKNBVrtcyy2AgQXIB31HWrNBimDOz5oAMRIfamKLjzyHpKK+H/JWYT
+	g47NS5L3L3gUVG5wlPSX4zuawrHUjVomHwEXmeMq3GTwxePZ+ErfgdqnKIrNQ6ps7+CecdghfNY
+	KgK3VUm3TpKIx1VIsJwuTx7vwXomicMEHc5t8F7u/WxRUNpVV/gLj5elBV8V5DLPvCXUS0bpMFh
+	1KhM9w1i4IwmIB/hJl/TPjLUAUYfa2tPl04pHEIYeO2eiq4az2TwwwOoB01ZdFBkOpOVoQwMZlm
+	d04Sux/8MU2eQfSXIK8yq2C9ClH0SQka2wAbBbnt0yEnApj0DtS/9mjCPsvzylqto18OAATeE7f
+	v32q2M0QLPnLMOFW23Wt/r8EahdTiPFCzRNRp8YGPEYMxZyES+5j3AwTeRn90GbBtRrwBwlnE2o
+	4FosVeiYAFNy1aySZ3Kfx4aN5RrIznR2kfdnO+oK8=
+X-Received: by 2002:a05:600c:a088:b0:48f:f64c:c2fe with SMTP id 5b1f17b1804b1-490b5ee1983mr137859005e9.22.1780579307027;
+        Thu, 04 Jun 2026 06:21:47 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc391aaasm83198855e9.1.2026.06.04.06.21.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jun 2026 06:21:46 -0700 (PDT)
+Message-ID: <f0758b1d-9b04-4e81-aece-ea021cabb95e@linaro.org>
+Date: Thu, 4 Jun 2026 14:21:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aiC6DA3o4L7mx0S7@google.com>
-
-On Wed, Jun 03, 2026 at 04:34:36PM -0700, Namhyung Kim wrote:
-> On Wed, Jun 03, 2026 at 03:35:07AM -0700, Breno Leitao wrote:
-> > The default ping-pong uses sizeof(int) (4 bytes) per iteration, which
-> > exercises only the pipe-buffer merge path and keeps allocation entirely
-> > out of the picture. That makes the bench a useful scheduler / context-
-> > switch latency probe but unable to surface anything from the pipe
-> > page-allocation hot path.
-
-> > Add a -s/--write-size option that sets the bytes written and read per
-> > ping-pong iteration. The buffer is allocated for each side via
-> > struct thread_data and replaces the on-stack int previously used. The
-> > default remains sizeof(int) so existing invocations are unchanged.
-
-> > With --write-size set above PAGE_SIZE the bench drives anon_pipe_write()
-> > through alloc_page() (or the bulk pre-alloc, if the relevant patch is
-> > applied), which is what we want when measuring pipe locking and page
-> > allocation work.
-
-> > The bench is a ping-pong: both sides call write() before read(), so a
-> > single write_size payload must fit entirely in the pipe buffer or both
-> > sides deadlock waiting for the other to drain. Resize the pipe via
-> > F_SETPIPE_SZ to match write_size (skipped at the sizeof(int) default),
-> > and error out cleanly when the request exceeds
-> > /proc/sys/fs/pipe-max-size.
-
-> > Signed-off-by: Breno Leitao <leitao@debian.org>
-
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks, tested and applied:
-
-    Committer testing:
-    
-      ⬢ [acme@toolbx perf-tools-next]$ perf bench sched pipe
-      # Running 'sched/pipe' benchmark:
-      # Executed 1000000 pipe operations between two processes
-    
-         Total time: 0.915 [sec]
-    
-           0.915493 usecs/op
-            1092307 ops/sec
-      ⬢ [acme@toolbx perf-tools-next]$ perf bench sched pipe --write-size 1024
-      # Running 'sched/pipe' benchmark:
-      # Executed 1000000 pipe operations between two processes
-    
-         Total time: 0.891 [sec]
-    
-           0.891915 usecs/op
-            1121183 ops/sec
-      ⬢ [acme@toolbx perf-tools-next]$ perf bench sched pipe --write-size 4096
-      # Running 'sched/pipe' benchmark:
-      # Executed 1000000 pipe operations between two processes
-    
-         Total time: 1.366 [sec]
-    
-           1.366073 usecs/op
-             732025 ops/sec
-      ⬢ [acme@toolbx perf-tools-next]$ strace -e fcntl perf bench sched pipe --write-size 4096
-      # Running 'sched/pipe' benchmark:
-      fcntl(4, F_SETPIPE_SZ, 4096)            = 4096
-      fcntl(6, F_SETPIPE_SZ, 4096)            = 4096
-      ^Cstrace: Process 17840 detached
-    
-      ⬢ [acme@toolbx perf-tools-next]$ strace -e fcntl perf bench sched pipe --write-size 1024
-      # Running 'sched/pipe' benchmark:
-      fcntl(4, F_SETPIPE_SZ, 1024)            = 4096
-      fcntl(6, F_SETPIPE_SZ, 1024)            = 4096
-      ^Cstrace: Process 17845 detached
-    
-      ⬢ [acme@toolbx perf-tools-next]$ strace -e fcntl perf bench sched pipe
-      # Running 'sched/pipe' benchmark:
-      ^Cstrace: Process 17851 detached
-    
-      ⬢ [acme@toolbx perf-tools-next]$
-      ⬢ [acme@toolbx perf-tools-next]$ perf bench sched pipe --write-size 1048577
-      # Running 'sched/pipe' benchmark:
-      --write-size 1048577 exceeds /proc/sys/fs/pipe-max-size
-      ⬢ [acme@toolbx perf-tools-next]$ cat /proc/sys/fs/pipe-max-size
-      1048576
-      ⬢ [acme@toolbx perf-tools-next]$
-      acme@number:~/git/perf-tools-next$
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/18] perf test cs-etm: Replace unroll loop thread
+ with deterministic decode test
+To: Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Paschalis Mpeis <Paschalis.Mpeis@arm.com>, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org
+References: <20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org>
+ <20260602-james-cs-context-tracking-fix-v2-6-85b5ce6f55c6@linaro.org>
+ <20260603140803.GV101133@e132581.arm.com>
+ <2f1db2b3-93e8-4c32-b207-304e3a43ce77@linaro.org>
+ <20260603170823.GA101133@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260603170823.GA101133@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-- Arnaldo
+
+On 03/06/2026 6:08 pm, Leo Yan wrote:
+> On Wed, Jun 03, 2026 at 05:01:02PM +0100, James Clark wrote:
+> 
+> [...]
+> 
+>>>> +# Remove open brace lines as they may not be hit depending on the compiler
+>>>> +sed -i \
+>>>> +  -e '/deterministic.c:8$/d' \
+>>>> +  -e '/deterministic.c:15$/d' \
+>>>> +  -e '/deterministic.c:23$/d' \
+>>>> +  "$tmpdir/script"
+>>>
+>>> Is this related to the function definition?
+>>>
+>>> I can see the brace lines with change below. It might be more reliable
+>>> if adding unused function argument, which can give chance for hit
+>>> function entry.
+>>>
+>>>     static int function1(void)
+>>>     {
+>>>         ...
+>>>
+>>>         return 0;
+>>>     }
+>>
+>> Originally I included the brace lines in the test and it was working even
+>> without function arguments, but Sashiko mentioned that they may not always
+>> be hit.
+> 
+> I tried Clang to build the program and can see the brace lines are
+> missed for function1() / function2().
+> 
+> Does Sashiko mention any reasons causing the issue?
+> 
+>> I think its point was that there is no hard rule about debug symbols for
+>> open braces and the behavior might change from one version of the compiler
+>> to the next, or whether there is a function prologue or inlining or not etc.
+>>
+>> I don't think it's important to the test at all though? So to err on the
+>> side of caution it makes sense to not test for them. Unless there's a reason
+>> you think testing for open braces is important? Surely just testing for
+>> actual lines of code appearing in a certain order is enough.
+> 
+> As the test program is named as "deterministic", wouldn't we expect the
+> test to hit every code line run in the program?
+> 
+> It is fine for me to skip some checks _if_ we know the reason. I dumped
+> the disassembly, it shows function entry is a distinguished position
+> from the first calculation sentence (same for both GCC and Clang). And
+> there have no difference for a function entry after I tweaked the
+> function return type from "void" to "int". I still have no clue why
+> brace lines are misses.
+> 
+> Thanks,
+> Leo
+
+Seems like the compiler is free to emit a prologue or not for a static 
+function. Adding an argument might force it to for one version, but I 
+don't see that being reliable for every future version. And I don't 
+think we gain anything by testing the braces.
+
+Testing clang did reveal that it returns back to the call site where GCC 
+didn't though. So I'll also filter out the call site and only test the 
+"dt_work += 7;" lines. That's enough to check that the decode has done 
+everything in the right order and shouldn't be fragile to anything that 
+isn't a real bug.
+
