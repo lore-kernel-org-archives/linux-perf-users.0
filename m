@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A723E2AC8;
-	Thu,  4 Jun 2026 21:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B7F3C3791
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 21:29:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780607706; cv=none; b=ddvJHh9NRS6742rlhBZVbqdWH6KTGsuQnhWiuH8K8LSoV2a30OmcPdjuru9SQ9BQVNilnCy+qr/DSX5kmW+JtY5Xj2LaeZLRejeJlsDjC31ANhCtoBh7BIo571hQ7/htqGkDch5iOzCI5nUF5/Zb/8Nhymk9x4opf4bDEl36U6U=
+	t=1780608549; cv=none; b=UcJfDA7es+YChOB5nai6F50bVLuXd2X534dBaZPA3Mynnmw76OMAz6jC29aUxigyuIYXrjapQl3Z1xCIDSzGOjODUY5ArNw02+mK0uF8dc/iKjlCavLxp6mZQjK/RXHSXNujmQM8tsQPCNuAGuByo69dFc6BCjeUpdTkR/Dpp7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780607706; c=relaxed/simple;
-	bh=WEPhgeZ5v7o05IhmsPQA+0VY2O4s/DcLdIM2+sKoqJk=;
+	s=arc-20240116; t=1780608549; c=relaxed/simple;
+	bh=UZ8kFPgqs+J2oHj24BN8tWLieBoiiPz7V/Wp8T5PipU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dbyT663N7CA8ESE/U8Hy/H13Ra6Y0eSXk08oWo9CexqqLemrk9AoSJy87LsCw9+aKmVSlhjMcr74mUQbRETMvLG2k3bCFHfm2wgOIL1KZ+eaR/kSptg97xDQD7sRwV9aRVIafGWebFebE0GcFnemy1hDixFJbkis8EB28gzC7g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0uHVBN+; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eb7giWTA1IDkwmkhRN4BTpLt9V5F6KRZbJQmHjC160SzAS+gJlbnzPCm03lFAJG1kD5kiBC6tuqAsbBG9003sc4w3Z4FtUvFxXZITQvYZHmSRLc+hhnjkFsuWJh9Zk0UCJgQRxF4mri7GwPT0ZUQH7N2vHGxbXVeTnQokPp4tc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gK5jpFJe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0uHVBN+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AA391F00893;
-	Thu,  4 Jun 2026 21:15:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gK5jpFJe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0483A1F00893;
+	Thu,  4 Jun 2026 21:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780607705;
-	bh=Ny/KVvtry5ETYhSHZ762wNa07hCQUVPHNbtvrPR+Llg=;
+	s=k20260515; t=1780608547;
+	bh=c6ckXz0jHSF7OlhU8goFIPNCoGt+kO4377K8w7qudg0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=j0uHVBN+P/r70HDMp3PXhJYqX1XMpNpMQdBRd+9gfnS/o9bJFtQxrfCM1y/0KO0dq
-	 T7fyn0iTTRa3kX2jIfrhjfz7WnR6Up0dImWmaXGJdshggL6l2ZW0DgTS+BhmFXa9Pr
-	 BFWtqLc3m4L4pte1sf5pVZWysawN3Ye2YsoGKnXiNyqAiJWLBaXbczUmBYrmiVW8Mu
-	 jUy+NS5J9mnYrv0/xaWR33XPIm8dx3Rg6UllkOVwZOTw8sdYbxzqoBow9x6KL5X3f7
-	 lTk2UcQQ5Mw756UmSag/qBCnxmULMVaLtnOU7/5WnbbO0Dpre4Ra+QTW4VNXOMvVFT
-	 k+2pmK1ZOj6Bw==
-Date: Thu, 4 Jun 2026 18:15:01 -0300
+	b=gK5jpFJer05CeHIirHxe9UPKOJ6T5GPCa3iSNqlkx7TksW9YKGzBHWezDJrSeEETS
+	 qwTI1ZR2jMJPv8Aza2SoSZnxJXb+hrpcnVb3Xxj0yvhFXieHoJNcYQcqIYMshrRTBh
+	 q2MxsFDH/17We1QV0FxywgE+OwFg3VLih228G5tRmJHdXy5fm8cvhbfWD3k13eihQO
+	 mr+AN4G8ef36B/B85WZe/oIIBW19HoVZKK+1z/ZjHFbtTnLOOJR23J9Ec8f56I0fvO
+	 o1P3JhzrMr8AnQPpqcu2ezRSlg4itkyQ5c9ICBq34a8oTHDDNMr23IXjTC14zRYhxu
+	 QU2do/HWbwvUw==
+Date: Thu, 4 Jun 2026 18:29:04 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf tools: Guard test_bit from out-of-bounds sample
- CPU
-Message-ID: <aiHq1ftD8tIVK_6q@x1>
-References: <20260604204921.1707333-2-acme@kernel.org>
- <20260604210904.468941F00893@smtp.kernel.org>
+To: Tanushree Shah <tshah@linux.ibm.com>
+Cc: jolsa@kernel.org, adrian.hunter@intel.com, vmolnaro@redhat.com,
+	mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+	irogers@google.com, namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	atrajeev@linux.ibm.com, hbathini@linux.ibm.com,
+	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com,
+	Shivani.Nittor@ibm.com
+Subject: Re: [PATCH] perf data convert json: Fix trace_seq memory leak in
+ process_sample_event()
+Message-ID: <aiHuIBAIgv3L6TI7@x1>
+References: <20260604065519.112101-1-tshah@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,52 +48,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260604210904.468941F00893@smtp.kernel.org>
+In-Reply-To: <20260604065519.112101-1-tshah@linux.ibm.com>
 
-On Thu, Jun 04, 2026 at 09:09:03PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+On Thu, Jun 04, 2026 at 12:25:19PM +0530, Tanushree Shah wrote:
+> Unlike the in-kernel trace_seq which uses a statically allocated buffer,
+> the userspace traceevent library's trace_seq uses a dynamically allocated
+> one. Therefore, every trace_seq_init() call must be paired with a
+> trace_seq_destroy(), otherwise it produces a memory leak.
 > 
-> Pre-existing issues:
-> - [High] The patch adds `MAX_NR_CPUS` bounds checks to several call sites of `test_bit()` to prevent out-of-bounds reads from corrupted `sample->cpu` values, but misses an identical vulnerability in `tools/perf/util/auxtrace.c`.
-> --
+> In process_sample_event(), a trace_seq is initialized for each field when
+> formatting tracepoint raw_data, but the matching trace_seq_destroy() is
+> never called, leaking memory for every field of every sample processed.
 > 
-> commit 086b55e55838d35a34eaf71d763ccfabb74ba9a3
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Add the missing trace_seq_destroy() after using the trace_seq buffer to
+> properly free the allocated memory.
 > 
-> perf tools: Guard test_bit from out-of-bounds sample CPU
-> 
-> This commit adds guards against MAX_NR_CPUS before test_bit() calls across
-> several built-in tools to prevent out-of-bounds reads on corrupted
-> sample->cpu values.
-> 
-> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> > index b918f9eed5fd2..8a0eb30eac24f 100644
-> > --- a/tools/perf/builtin-annotate.c
-> > +++ b/tools/perf/builtin-annotate.c
-> > @@ -295,7 +295,8 @@ static int process_sample_event(const struct perf_tool *tool,
-> >  		goto out_put;
-> >  	}
-> >  
-> > -	if (ann->cpu_list && !test_bit(sample->cpu, ann->cpu_bitmap))
-> > +	if (ann->cpu_list && (sample->cpu >= MAX_NR_CPUS ||
-> > +			     !test_bit(sample->cpu, ann->cpu_bitmap)))
-> >  		goto out_put;
-> 
-> [Severity: High]
-> This isn't a bug introduced by this patch, but does a similar out-of-bounds
-> read of cpu_bitmap exist in tools/perf/util/auxtrace.c?
-> 
-> Looking at filter_cpu() in tools/perf/util/auxtrace.c:
-> 
->         return cpu_bitmap && cpu.cpu != -1 && !test_bit(cpu.cpu, cpu_bitmap);
-> 
-> Since auxtrace events can bypass the upstream clamping logic in
-> perf_session__deliver_event(), could a corrupted cpu value from a
-> perf.data file exceed the bitmap size?
-> 
-> Should filter_cpu() also verify cpu.cpu < MAX_NR_CPUS before calling
-> test_bit() to prevent reading past the allocation?
+> Detected with Valgrind on a perf.data file with 2,729 tracepoint samples:
+>   Before: definitely lost: 55,537,664 bytes in 13,559 blocks
+>   After:  definitely lost: 0 bytes in 0 blocks
 
-We're addressing this in a followup series,
+Thanks, applied to perf-tools-next, for v7.2.
 
 - Arnaldo
+ 
+> Fixes: 9d895e468429 ("perf data: Add tracepoint fields when converting to JSON")
+> Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+> ---
+>  tools/perf/util/data-convert-json.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+> index d526c91312ed..6dd9349ab10f 100644
+> --- a/tools/perf/util/data-convert-json.c
+> +++ b/tools/perf/util/data-convert-json.c
+> @@ -257,6 +257,7 @@ static int process_sample_event(const struct perf_tool *tool,
+>  				trace_seq_init(&s);
+>  				tep_print_field(&s, sample->raw_data, fields[i]);
+>  				output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
+> +				trace_seq_destroy(&s);
+>  
+>  				i++;
+>  			}
+> -- 
+> 2.47.3
