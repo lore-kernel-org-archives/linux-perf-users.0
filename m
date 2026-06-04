@@ -1,198 +1,303 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FA9480953
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 14:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734DF22F74A;
+	Thu,  4 Jun 2026 14:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780584159; cv=none; b=X8NxbClQNrThCk0Nelbm4hFqaEGSTRSRSqm3RUdhW+am9zgHQ7HEWn11AuagNnynwuh0WULm4mO8v2QofRr+cwzZoc23S3P7XOHt71ic1Qph9jZ3CjeLFUVaZXTQatJCgT7uDils3A277Dt4A+fNl1I3/TnrKtblhRWEevLUIRY=
+	t=1780584335; cv=none; b=mtsY1eaWpB4W5y9vvf/wPIftcz4K+OH4Nrqb5WWzrnDCXQaX80e4zt1JtB7iijUsNM6XLDOFpG7dTFdyl9QUklp6/tbAqkR/RKGB7w2qaGtIODXT31q21chtle67umDtbjlAPAluv5x4lejJbJ7ZpBP4WyUEJPeWKHXjzK13W+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780584159; c=relaxed/simple;
-	bh=+sbXqzAOyLIu/zNID1vjMOzH7sY4vGw7+hGNuBsI2m4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gUv4iSuebYShLEVLd339GiVu0JpYvUAHqoQNVZTenLgH/WQMmdkmyutbxlzWcGThbO/Lu3sNQ6J26MIJEdHK1jynVPIl/o75AlnnLK94sB9QzpzuLjp3CaO+nVr0qjY0+cYL6FD4/5ny2ecxlGnUJljbBSHemtyFpgN5eXuvaJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eK/RRfg2; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1780584335; c=relaxed/simple;
+	bh=UfXo9yk/PUr5f3QnQDn4j2nSETYB/f0n5wBITzwvl+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PBcHP0GOG8tjw4V2n1Rl55AbxNOG4sQg2jNvFc+EkLtnQtDSS+Z4+pi7krD1AnXj80GAeJk8qmuk3eOwokJB4i3twyRTrbPcns9/GLhg5RTL/hgzTN1dbmMQy7s42FeMRdbmE3hE97sUnz2HBDRwzUl8p/b/1aErU4eBUwmYmZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nG6UEPcb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eK/RRfg2"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-bec449cf976so109443466b.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 07:42:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1780584156; x=1781188956; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wzy4dDaqdwgJy1YaxSLyN1whQK6qSsoGcP13HMyFB64=;
-        b=eK/RRfg2hK2kwK+IvIm+s6Xb/TYsKkLXlrb5lbchScyhL7+4dJ84xuHgUEaYRIzrJt
-         Q+JI3kl7yK1cF5AsjATepSB+nNIpkwAfzakQP11op4LKMI7Cp0Bx52nXOcKzZnN2ntop
-         RHqvz/ohv/lB1DpYdmLb25iv5oWmspP5wjP5Kvvu6oDlNzfcLj1KXTqPkmuRS2lPDaGS
-         TJFn+GY2WVGOxo3YIyyAoRcPUDE8y2AaksCUvuHs/tayl/EECn7VNjRgr83w67lAwg4W
-         O+22XktN1wUzFoj2gW/4ihXG6XakBA+Ja8K8oD7VCc4f5J/6kajaR/MV65ey2iP2XfsV
-         b4rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780584156; x=1781188956;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wzy4dDaqdwgJy1YaxSLyN1whQK6qSsoGcP13HMyFB64=;
-        b=fzVaPUzC4P6bk2AGI2psLR3oY2jZkTbUG498cZzN6nslTgXKgRpiBf/RF589gGTo1R
-         EhjZqGf5d1oiAC8EnsTEZiMIJflIaIpaTW0+Ge6X47U8DJU3lLmLRdLss3lHO5qM0QM0
-         QX01LPSpQwWdFsjgTcJbXtLxTARRiegFevWjkv1fDkWPWco5z6agEUl1y6fe+qxbrxHn
-         Y/UYhZLKeKjY9YzELWHE7i0jJxr2XlQIdzs/IQn1AnW9Fp1GQe9X+t+IEWC99J+5Pgmq
-         PnI26s1Rd2fhWX/H3mtbsTiYrvEoDM2nOAauwfaKb4ejDJOqckGLBlcfZKworkj/UKy3
-         eLDw==
-X-Forwarded-Encrypted: i=1; AFNElJ9GVXma0j6wCFfqkDL15qkj+JmJkxysyhhwFIl2icTie03pncOFEwqW9QL0zHFRa2vUNjNUhwS7YfNzMSiX5NYS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxfp0eny6GmbDZLQ2ul3LqTHufkYULrKAjBQiSn+/+ty5ev1F4g
-	Qr+S4gyHx4sYlDDKoOqlErFKf/2jh/22S+QtNmYuE2zUWgf7LZVVOryjprZiKxlUgw8=
-X-Gm-Gg: Acq92OHkNWRsLKKNlRJ0z91XBC+EntPOD+Xmn9lNgbAzCHpyO5CvWh9TE2wyHSkXg8/
-	RFGztKkPHU+A8lSqkjt36dRLsTWqjygVi+C/3pGfsZGBlEm4taPeynz7ztJOXwzn2AtiJx9bKxk
-	2vAzySfDBDAq05/soV+zrYvPt0Nd2llwoOZsYaHv9P80BO8nJn5avBvrBNxh+bppojWtD28Bt/y
-	n5SlWUpzOsBRDAk8d/RneRgkLgKIKMOtTUJo5oZsPV2IqumLTg5CyfJ6v9N333dt882mI2eZ9Mt
-	UuzkCAXY+TkthRK64gOjYaghdUj2jiYqSBpZXYXHlXCHcnEO9ewE3dL5q+0gludQ9mKYo6CO83W
-	uwgXS6k3jcBvhvskrSCMFq6/v+UNCu/RoyKe672PBQnl4/ZsKPEDtO9HJMlCe3L1OB00/6ZuO9s
-	y3RcpgpxvsbGTUezwinb+EdjxaVF32yr3e2Z5uZqg=
-X-Received: by 2002:a17:906:7950:b0:bee:c371:4f43 with SMTP id a640c23a62f3a-bf0aab1b743mr505787266b.26.1780584154501;
-        Thu, 04 Jun 2026 07:42:34 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf0517721c2sm306900366b.3.2026.06.04.07.42.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jun 2026 07:42:34 -0700 (PDT)
-Message-ID: <fbe0a097-ced7-44c6-ada1-01c3e9c1d7e7@linaro.org>
-Date: Thu, 4 Jun 2026 15:42:32 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nG6UEPcb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 891A81F00893;
+	Thu,  4 Jun 2026 14:45:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780584334;
+	bh=jNL1yofhcudFw/fYt4KHT5qcpp6OgGsaP0hLGMMt54g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nG6UEPcboKi+aZ1eyolDxZ9SwDM4ezDmJ+3dsF6nWBFmHdSZ/3gUeufVne05hOXeo
+	 5UyQrbI4mp+7zSusiMZ0zU1kSpyswi4YZLkUgX3YzTSpQkIXO/fz+NFM+pwr4ohgX9
+	 UbklPs+E+DBTFdraRuqE/p6/6HHZkOsYN/OYQO2fGyO44qLwdqz52svw+LeNjYKn3+
+	 qyKkq1lzob6EzfQU3LcngUiTEgZcw3lpjYlFsLskQ6fnf2cGRWi9x3bqdKOrbqXzsB
+	 L1NDwRBDOAeLErvrVlxvwMEy1NT7qN3G46Ue8A+6fEBVJTlRHjci2BdIxOirWiKJEI
+	 wIrJoZvzaptEQ==
+Date: Thu, 4 Jun 2026 11:45:30 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: namhyung@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, james.clark@linaro.org,
+	jolsa@kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mingo@redhat.com,
+	peterz@infradead.org
+Subject: Re: [PATCH v8 18/18] perf test: Truncate printed test descriptions
+ dynamically to avoid terminal wrapping
+Message-ID: <aiGPimuOAmUe4E0U@x1>
+References: <20260602073132.2653307-1-irogers@google.com>
+ <20260602174129.3192312-1-irogers@google.com>
+ <20260602174129.3192312-19-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 6/8] perf cs-etm: Filter synthesized branch samples
-To: Leo Yan <leo.yan@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linux.dev>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>,
- Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
-References: <20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com>
- <20260526-b4-arm_cs_callchain_support_v1-v6-6-f9f49f53c9dd@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260526-b4-arm_cs_callchain_support_v1-v6-6-f9f49f53c9dd@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260602174129.3192312-19-irogers@google.com>
+
+On Tue, Jun 02, 2026 at 10:41:29AM -0700, Ian Rogers wrote:
+> When test descriptions are extremely long (e.g., the truncated perf.data
+> graceful handling test is 103 characters long), they wrap across terminal
+> boundaries.
+>=20
+> Because the ANSI escape code to delete the line (PERF_COLOR_DELETE_LINE)
+> only clears a single terminal line, visual wrapping leaves orphan
+> wrapped lines on the screen, which results in the test description being
+> printed multiple times.
+>=20
+> Resolve this by checking the terminal width (get_term_dimensions) and
+> dynamically truncating the printed test description to fit within the
+> available columns, leaving safety space for the prefix index and status
+> suffix.
+>=20
+> JUnit XML output and the failure summary report still print the full,
+> untruncated test descriptions.
+>=20
+> Assisted-by: Gemini-CLI:Google Gemini 3
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+I processed the first 17 patches this one has this problem, please take
+a look:L
+
+  GENSKEL /tmp/build/perf-tools-next/util/bpf_skel/lock_contention.skel.h
+  CC      /tmp/build/perf-tools-next/util/bpf_lock_contention.o
+tests/builtin-test.c: In function =E2=80=98print_test_result.isra=E2=80=99:
+tests/builtin-test.c:420:40: error: =E2=80=98%-*s=E2=80=99 directive output=
+ may be truncated writing between 20 and 65505 bytes into a region of size =
+256 [-Werror=3Dformat-truncation=3D]
+  420 |                 snprintf(buf, buf_sz, "%-*s", width, desc);
+      |                                        ^~~~
+In file included from /usr/include/stdio.h:974,
+                 from /home/acme/git/perf-tools-next/tools/include/linux/pa=
+nic.h:6,
+                 from /home/acme/git/perf-tools-next/tools/include/linux/ke=
+rnel.h:11,
+                 from /home/acme/git/perf-tools-next/tools/include/linux/li=
+st.h:7,
+                 from /home/acme/git/perf-tools-next/tools/perf/util/config=
+=2Eh:6,
+                 from tests/builtin-test.c:26:
+In function =E2=80=98snprintf=E2=80=99,
+    inlined from =E2=80=98format_test_description=E2=80=99 at tests/builtin=
+-test.c:420:3,
+    inlined from =E2=80=98print_test_result.isra=E2=80=99 at tests/builtin-=
+test.c:459:3:
+/usr/include/bits/stdio2.h:68:10: note: =E2=80=98__builtin___snprintf_chk=
+=E2=80=99 output between 21 and 65506 bytes into a destination of size 256
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - =
+1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+tests/builtin-test.c: In function =E2=80=98print_test_result.isra=E2=80=99:
+tests/builtin-test.c:420:40: error: =E2=80=98%-*s=E2=80=99 directive output=
+ may be truncated writing between 20 and 65507 bytes into a region of size =
+256 [-Werror=3Dformat-truncation=3D]
+  420 |                 snprintf(buf, buf_sz, "%-*s", width, desc);
+      |                                        ^~~~
+In function =E2=80=98snprintf=E2=80=99,
+    inlined from =E2=80=98format_test_description=E2=80=99 at tests/builtin=
+-test.c:420:3,
+    inlined from =E2=80=98print_test_result.isra=E2=80=99 at tests/builtin-=
+test.c:466:3:
+/usr/include/bits/stdio2.h:68:10: note: =E2=80=98__builtin___snprintf_chk=
+=E2=80=99 output between 21 and 65508 bytes into a destination of size 256
+   68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - =
+1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~
+   69 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   70 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:95:=
+ /tmp/build/perf-tools-next/tests/builtin-test.o] Error 1
+make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:158=
+: tests] Error 2
+make[2]: *** [Makefile.perf:566: /tmp/build/perf-tools-next/perf-test-in.o]=
+ Error 2
+make[2]: *** Waiting for unfinished jobs....
+  LD      /tmp/build/perf-tools-next/util/perf-util-in.o
+  LD      /tmp/build/perf-tools-next/perf-util-in.o
+make[1]: *** [Makefile.perf:288: sub-make] Error 2
+make: *** [Makefile:122: install-bin] Error 2
+make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+=E2=AC=A2 [acme@toolbx perf-tools-next]$
+acme@number:~/git/perf-tools-next$
+
+acme@number:~/git/perf-tools-next$ gcc -v
+Using built-in specs.
+COLLECT_GCC=3Dgcc
+COLLECT_LTO_WRAPPER=3D/usr/libexec/gcc/x86_64-redhat-linux/16/lto-wrapper
+OFFLOAD_TARGET_NAMES=3Dnvptx-none:amdgcn-amdhsa
+OFFLOAD_TARGET_DEFAULT=3D1
+Target: x86_64-redhat-linux
+Configured with: ../configure --enable-bootstrap --enable-languages=3Dc,c++=
+,fortran,objc,obj-c++,ada,go,d,m2,cobol,algol68,lto --prefix=3D/usr --mandi=
+r=3D/usr/share/man --infodir=3D/usr/share/info --with-bugurl=3Dhttps://bugz=
+illa.redhat.com/ --enable-shared --enable-threads=3Dposix --enable-checking=
+=3Drelease --enable-multilib --with-system-zlib --enable-__cxa_atexit --dis=
+able-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-=
+id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstd=
+cxx-zoneinfo=3D/usr/share/zoneinfo --with-linker-hash-style=3Dgnu --enable-=
+plugin --enable-initfini-array --with-isl=3D/builddir/build/BUILD/gcc-16.1.=
+1-build/gcc-16.1.1-20260515/obj-x86_64-redhat-linux/isl-install --enable-of=
+fload-targets=3Dnvptx-none,amdgcn-amdhsa --enable-offload-defaulted --witho=
+ut-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=3Dge=
+neric --with-tls=3Dgnu2 --with-arch_32=3Di686 --build=3Dx86_64-redhat-linux=
+ --with-build-config=3Dbootstrap-lto --enable-link-serialization=3D1 --disa=
+ble-libssp
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 16.1.1 20260515 (Red Hat 16.1.1-2) (GCC)
+acme@number:~/git/perf-tools-next$
 
 
-
-On 26/05/2026 5:59 pm, Leo Yan wrote:
-> From: Leo Yan <leo.yan@linaro.org>
-> 
-> CS ETM currently emits branch samples for every decoded branch when
-> branch synthesis is enabled. This delivers redundant info when users
-> request only call or return branches.
-> 
-> Add a branch filter derived from the itrace "calls" and "returns" options.
-> When no filter is set, keep the existing behavior and emit all branch
-> samples. When call or return filtering is requested, only synthesize branch
-> samples whose flags match the selected branch types, including trace
-> begin and end markers.
-> 
-> Before:
-> 
->    perf script -F +callindent
-> 
->    callchain_test    9187 [002] 599611.826599:          1 branches:             main                                                     ffff83312258 __libc_start_call_main+0x78 (/usr/lib/aarch64-linux-gnu/libc.so.6)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                 foo                                                  aaaae3ed07c4 main+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                     print                                            aaaae3ed07ac foo+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                         do_svc                                       aaaae3ed0794 print+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                                                                      aaaae3ed077c do_svc+0x14 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                             vectors                                  aaaae3ed0780 do_svc+0x18 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                                                                  ffff800080010c00 vectors+0x400 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826600:          1 branches:                                                                  ffff800080010c24 vectors+0x424 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826600:          1 branches:                                                                  ffff8000800114dc el0t_64_sync+0xd4 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826600:          1 branches:                                                                  ffff8000800114f8 el0t_64_sync+0xf0 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826600:          1 branches:                                                                  ffff800080011528 el0t_64_sync+0x120 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826600:          1 branches:                                                                  ffff800080011538 el0t_64_sync+0x130 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826601:          1 branches:                                                                  ffff800080011568 el0t_64_sync+0x160 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826601:          1 branches:                                 el0t_64_sync_handler             ffff80008001159c el0t_64_sync+0x194 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826601:          1 branches:                                                                  ffff800081829110 el0t_64_sync_handler+0x18 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826601:          1 branches:                                     el0t_64_sync_handler         ffff800081829140 el0t_64_sync_handler+0x48 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826601:          1 branches:                                     el0_svc                      ffff800081829194 el0t_64_sync_handler+0x9c ([kernel.kallsyms])
-> 
-> After:
-> 
->    callchain_test    9187 [002] 599611.826599:          1 branches:             main                                                     ffff83312258 __libc_start_call_main+0x78 (/usr/lib/aarch64-linux-gnu/libc.so.6)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                 foo                                                  aaaae3ed07c4 main+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                     print                                            aaaae3ed07ac foo+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                         do_svc                                       aaaae3ed0794 print+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826599:          1 branches:                             vectors                                  aaaae3ed0780 do_svc+0x18 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->    callchain_test    9187 [002] 599611.826601:          1 branches:                                 el0t_64_sync_handler             ffff80008001159c el0t_64_sync+0x194 ([kernel.kallsyms])
->    callchain_test    9187 [002] 599611.826601:          1 branches:                                     el0_svc                      ffff800081829194 el0t_64_sync_handler+0x9c ([kernel.kallsyms])
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->   tools/perf/util/cs-etm.c | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index b31d0dd46a45dc365edd7c2f9e9b2eb077ca23db..8d98e772ecb307381b5ed1b4bbc4056e8779b261 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -71,6 +71,7 @@ struct cs_etm_auxtrace {
->   	int num_cpu;
->   	u64 latest_kernel_timestamp;
->   	u32 auxtrace_type;
-> +	u32 branches_filter;
->   	u64 branches_sample_type;
->   	u64 branches_id;
->   	u64 instructions_sample_type;
-> @@ -1596,6 +1597,10 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
->   	} dummy_bs;
->   	u64 ip;
->   
-> +	if (etm->branches_filter &&
-> +		!(etm->branches_filter & tidq->prev_packet->flags))
-> +		return 0;
+>  tools/perf/tests/builtin-test.c | 63 +++++++++++++++++++++++++++++----
+>  1 file changed, 56 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index b64fc2204f22..edb4eaa695f1 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -20,6 +20,8 @@
+>  #include <sys/wait.h>
+>  #include <sys/stat.h>
+>  #include <sys/time.h>
+> +#include <sys/ioctl.h>
+> +#include "util/term.h"
+>  #include "builtin.h"
+>  #include "config.h"
+>  #include "hist.h"
+> @@ -404,19 +406,66 @@ static char *xml_escape(const char *str)
+>  	return res ? res : strdup("");
+>  }
+> =20
+> +static const char *format_test_description(const char *desc, int width, =
+int max_desc_width,
+> +					  char *buf, size_t buf_sz)
+> +{
+> +	int len =3D strlen(desc);
 > +
->   	ip = cs_etm__last_executed_instr(tidq->prev_packet);
->   
->   	event->sample.header.type = PERF_RECORD_SAMPLE;
-> @@ -3442,6 +3447,16 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->   		etm->synth_opts.thread_stack = session->itrace_synth_opts->thread_stack;
->   	}
->   
-> +	if (etm->synth_opts.calls)
-> +		etm->branches_filter |= PERF_IP_FLAG_CALL |
-> +					PERF_IP_FLAG_TRACE_BEGIN |
-> +					PERF_IP_FLAG_TRACE_END;
+> +	if (width > max_desc_width)
+> +		width =3D max_desc_width;
 > +
-> +	if (etm->synth_opts.returns)
-> +		etm->branches_filter |= PERF_IP_FLAG_RETURN |
-> +					PERF_IP_FLAG_TRACE_BEGIN |
-> +					PERF_IP_FLAG_TRACE_END;
+> +	if (len > max_desc_width) {
+> +		snprintf(buf, buf_sz, "%.*s...", max_desc_width - 3, desc);
+> +	} else {
+> +		snprintf(buf, buf_sz, "%-*s", width, desc);
+> +	}
+> +	return buf;
+> +}
 > +
-
-This changes the default "perf script" output quite significantly and 
-will possibly break people's workflows. synth_opts.calls is true by 
-default but synth_opts.returns is false so we lose all the returns that 
-we used to have. Not sure if the new behavior is more consistent with 
-other tools so we can justify changing it? Personally I think including 
-returns by default made more sense, and it's a more literal 
-representation of the flow.
-
-itrace.txt says the default is "all events i.e. the same as 
---itrace=iybxwpe", but I thought the default was branches? At least for 
-Coresight it is, so I'm a bit confused.
-
->   	etm->session = session;
->   
->   	etm->num_cpu = num_cpu;
-> 
-
+>  static int print_test_result(struct test_suite *t, int curr_suite, int c=
+urr_test_case,
+>  			     int result, int width, int running,
+>  			     const char *err_output, double elapsed)
+>  {
+> +	char desc_buf[256];
+> +	const char *desc =3D test_description(t, curr_test_case);
+> +	struct winsize ws;
+> +	int max_desc_area_width;
+> +	int target_desc_area_width;
+> +	int desc_padding;
+> +
+> +	get_term_dimensions(&ws);
+> +	/*
+> +	 * Total terminal columns minus space for status e.g. " Running (12 act=
+ive)"
+> +	 * which is 20 chars, plus a margin of 3 chars =3D 23 chars.
+> +	 */
+> +	max_desc_area_width =3D ws.ws_col - 23;
+> +	if (max_desc_area_width < 40)
+> +		max_desc_area_width =3D 40;
+> +
+> +	/* Standard test has prefix "%3d: " which is 5 chars */
+> +	target_desc_area_width =3D width + 5;
+> +	if (target_desc_area_width > max_desc_area_width)
+> +		target_desc_area_width =3D max_desc_area_width;
+> +
+>  	if (test_suite__num_test_cases(t) > 1) {
+>  		char prefix[32];
+>  		int len =3D snprintf(prefix, sizeof(prefix), "%3d.%1d:",
+>  				   curr_suite + 1, curr_test_case + 1);
+> -		int subw =3D len >=3D 4 ? width + 4 - len : width;
+> =20
+> -		pr_info("%s %-*s:", prefix, subw, test_description(t, curr_test_case));
+> -	} else
+> -		pr_info("%3d: %-*s:", curr_suite + 1, width, test_description(t, curr_=
+test_case));
+> +		desc_padding =3D target_desc_area_width - (len + 1);
+> +		if (desc_padding < 20)
+> +			desc_padding =3D 20;
+> +
+> +		format_test_description(desc, desc_padding, desc_padding, desc_buf, si=
+zeof(desc_buf));
+> +		pr_info("%s %s:", prefix, desc_buf);
+> +	} else {
+> +		desc_padding =3D target_desc_area_width - 5;
+> +		if (desc_padding < 20)
+> +			desc_padding =3D 20;
+> +
+> +		format_test_description(desc, desc_padding, desc_padding, desc_buf, si=
+zeof(desc_buf));
+> +		pr_info("%3d: %s:", curr_suite + 1, desc_buf);
+> +	}
+> =20
+>  	switch (result) {
+>  	case TEST_RUNNING:
+> @@ -700,7 +749,7 @@ static void finish_test(struct child_test **child_tes=
+ts, int running_test, int c
+>  	 * sub test names.
+>  	 */
+>  	if (test_suite__num_test_cases(t) > 1 && curr_test_case =3D=3D 0)
+> -		pr_info("%3d: %-*s:\n", curr_suite + 1, width, test_description(t, -1)=
+);
+> +		pr_info("%3d: %s:\n", curr_suite + 1, test_description(t, -1));
+> =20
+>  	/*
+>  	 * Busy loop reading from the child's stdout/stderr that are set to be
+> @@ -976,7 +1025,7 @@ static int finish_tests_parallel(struct child_test *=
+*child_tests, size_t num_tes
+>  			if (next_child) {
+>  				if (test_suite__num_test_cases(next_child->test) > 1 &&
+>  				    last_suite_printed !=3D next_child->suite_num) {
+> -					pr_info("%3d: %-*s:\n", next_child->suite_num + 1, width,
+> +					pr_info("%3d: %s:\n", next_child->suite_num + 1,
+>  						test_description(next_child->test, -1));
+>  					last_suite_printed =3D next_child->suite_num;
+>  				}
+> @@ -1040,7 +1089,7 @@ static int finish_tests_parallel(struct child_test =
+**child_tests, size_t num_tes
+> =20
+>  			if (test_suite__num_test_cases(child->test) > 1 &&
+>  			    last_suite_printed !=3D child->suite_num) {
+> -				pr_info("%3d: %-*s:\n", child->suite_num + 1, width,
+> +				pr_info("%3d: %s:\n", child->suite_num + 1,
+>  					test_description(child->test, -1));
+>  				last_suite_printed =3D child->suite_num;
+>  			}
+> --=20
+> 2.54.0.1013.g208068f2d8-goog
