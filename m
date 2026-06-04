@@ -1,113 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644F2366DB9;
-	Thu,  4 Jun 2026 20:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780605741; cv=none; b=r9VnKMUpQoWi98sSQAUH8jdslXKGLnmR3Ag+rvJ2/VS/2SEuCumb6ebKzNfYAlSMszABCdpoCMqTfD6oTMWZa2efodc2iR7sB18TYSxaMZ3N4onHgeh//UN49Tsp0A6AYLrKXLEl/Jf42nswlw4CB3FjgtAMcDuyuzvODqUEo/M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780605741; c=relaxed/simple;
-	bh=Z3fxOrbgiFCujm61gNgwZ5fCkgCxx+qtp67/u1z2ioU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=avfm9V/+fu+H3wM07VR3yY0J8PcnbZz2FYRBKHruDK8KxIQ5UmZ5H9+l0Zvdc2HatCc6UhZKI42AWBe4Uyij8QXLs3BG1dVs4fjbdTBY59lCD7cuNGlWEsdtApKFttl1TPjwxWqhTysq6XGOgGJJlAUWRkmaOUCSXlGZzXn7XHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sf8UGZEx; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2443C3BEE
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 20:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780606081; cv=pass; b=Baf88uJuNvf93ndSpITwU5CMbrsc0Bol8ghqFncAPVA4HivgXxxAY11crbfkliqa2aNAP1wfMati9nZIQ2tO4eGeB3peJi+FJXmttEV+OLlA83OlKiVDj+rpwzsp5Axtkbm7t6WCbCNj1ZPzZg8gCnsJZ+9YF7uCntJgVjvL2gs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780606081; c=relaxed/simple;
+	bh=FXUJ39ArpIEdKOADEqs3qIS31ifM9DkxGZ29VaHn5Ns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GKItAhu1qeH8AMAntjOKPwi80CH1OwgUtcoWIUf7XocCVHXzEzXTkN6PL6xN+Ar9XQtrZ33H2o9rRtpbQpJ5UTYA5sANmlKScBudbEJyq+esYDg1SlLHHkDVJOBunmIpPGBilXqCN5secodZGUHD1ll2jttHmxSv+anoA1Nupkw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kujFNSa8; arc=pass smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sf8UGZEx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FCAE1F00893;
-	Thu,  4 Jun 2026 20:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780605740;
-	bh=txq3vHUfagQTEfXkHZ/xabBiG7M8uCFwxdCufHVEUxk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Sf8UGZExx5VsV4oE3wXe1TinXWW2SgtH/8LusiU1lJTbMJEtKXfITMYRkOwXDPkCn
-	 OP7Gbo80rAxygBUsPpdcKQB695s397RPdNNnqUAt4rJQdYjj0G4uEgcRRn/cGd12rT
-	 tPa4I0wqYuj1g0dCmldUIhgXcMBZxdusKHv1/xg8/BH4+RFxKJ/yX3YrJwfEddhgDV
-	 ZmB4H6KH5eQX5Vy/HuOKDkXQrRYtep4W6gkztGLBO1eavPkze7k2VUq1lXJaqWa0Fq
-	 SWZAJwWcD614Rbhtl0kB1UA2lksSP5Dkmu9OQ1l1jETARGfCMnfU3w10xzMxi/ndis
-	 qzaADYZtR7tSA==
-Date: Thu, 4 Jun 2026 17:42:17 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/4] perf sched: Fix comp_cpus heap overflow with
- cross-machine recordings
-Message-ID: <aiHjKUD8Ks1BJ_Hc@x1>
-References: <20260604201119.1702338-5-acme@kernel.org>
- <20260604202605.99EFC1F00898@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kujFNSa8"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2bf2911f93cso10715ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 13:48:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780606080; cv=none;
+        d=google.com; s=arc-20240605;
+        b=LkSjVZFXwHCbYOceQGmkv7KFlr+7GUY815Oo19g/Ls3y51UJl7oKslZEUvAIPtHe8m
+         ya1c+yo/J4eYuJzmgCku4ZnlPqMyKBeTRXqr8M+5Grv7559IKI/hJOm7d+bQ0OHf+pup
+         4KoP/MN0VjkTlhT3w5rU6DUV1aLUW0lKFBZH1bCc5cYLLdHs3hZuAE37cLr8mt2Pcs/j
+         Q9wE8cE7PBZVpCPBRhEmC9KdFWYXYRgTbNkSRTQ2n21tCTEU28VMFPr7QD2MIsy3Qmr/
+         rUxWEDh1Ie2EvvXmjG27C7lRkOQPCyKLwd8Q0CeEKtk+HlSq57ekI4ho7ElCodKuqqWm
+         IClQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=/kYbQP6lXXIzhEzx/6SmBVOwkh3SmfI0Cn2kMz3F0bE=;
+        fh=CFFPbkj43Up6+xST8qdM6mCV6NKZQfwZu4O3B6KU9HQ=;
+        b=P8NdFO6aW+NTduJLWKXUdMV0XU7XtdHcjfcJadsBpnMi4VplLS/uFfNtOPiJiuKmy3
+         xdNvOomvgHnwK85dP8dY68Jf5b8wS75hNBtDkg4uk7ZNws4lJuIbEoBoVPB+rQvTUvhK
+         6fyg8e97be/WyUZYVh/IU3+WCnkTOB1nVdxXYyKmB/g7ONZnVDze1EaaKkxuucNxEbC7
+         4DnAYMDAX3bf/NRPnN38ZiFwbkqgzbrX8MuwWBeOGpaQDV/OGTTX3oe4wqAVQhoY2xH5
+         hX9rAZxap8CNw4t6dOpdltEga2gH02ibdNNDNFezakWHNT7PG9fd9IJjDZjqtPLukfeu
+         fbsw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780606080; x=1781210880; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/kYbQP6lXXIzhEzx/6SmBVOwkh3SmfI0Cn2kMz3F0bE=;
+        b=kujFNSa8bEBhni2Vdz4vI+Km75hfDTIAscakJFvxAoKZplr1xpKIQudul5sjSm+ile
+         uUFh+KgWMJs0I+sTJAi8m4nbtnxhTwvXqfBhqT85q5aPWbJGK1l1syLn/DPR6jaPLVMR
+         HVWkdIN8HIaJ4dWAyyh1Gmw1deNw3avy6qSt8pGATWvuY3w2hM/omrDGMZqCTGLvaErS
+         E8Kf8caev7Dk3k/g8rQ6y8hP/i6McDPgQHyAmV45gWdQ92nRXIHs2AW7sfd4B3kKueEf
+         /sikI0x1ALTCPg4D9DvGt1dOWC7AZzAt88ELT4eUowoPlAUesaszx4duvRyVrAlhuR+N
+         I8pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780606080; x=1781210880;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/kYbQP6lXXIzhEzx/6SmBVOwkh3SmfI0Cn2kMz3F0bE=;
+        b=sdEmP71DJ+iXPuJVgsZkrBZLnjK2aU84w25C5O+9WoYA9EwRuRyz+0aRZd7PGcmkjQ
+         yQwhwUOD9AZcV8ozy9F14AdhhJmSm60ETbtVEqk3EhoIG8ir+ISlukhqnqss066knILi
+         OP0cKR5QSUCmc4rBGdcEH3HJq8c3pLYwL0smqSVkYtTVa8b3INcwwrF6wdiacOJW52xD
+         EkqDcQgAEryhbEm2v9qAzcOwq1hyOxkaSOSUENQ147w2GSom6YIoqcUj7z2nJ0c6vlIS
+         uUTVMhks92ys0Q5nN6Y+XnLkpMcM4rwWo14O7EAZRtVq4YTfEp7rnGA8lXdO3wFeKk6C
+         hJ3g==
+X-Forwarded-Encrypted: i=1; AFNElJ9190o0MgsIfpXDBMud2e8y3PIfWt0WUmNWvtcXBtmLTj5RRYlSGpwN6T88GOUhdifcZL0reaKVSdFgOAx9Q3q7@vger.kernel.org
+X-Gm-Message-State: AOJu0YywBlYdV82p/dmXKo84AURKt9zLcB9jzjJuKs1I1sdmBsaHdQxc
+	s42hdFDHQpVrGYRpfR5tl5XEsKXfS6XylUDYVC3u+oqBNlSbcdEDyteqmSjFVAtejZtKQ3NhhXK
+	sp5BV7M6q4WSK5z2KGii7catUJerjxwshTrS42uTf
+X-Gm-Gg: Acq92OGUMWf/zJ72ezv+YrOxffvmqEqXN4+m1qm1pSkK/b/u4TKoOu7FOu5A6grd0Sk
+	Bml+3fkHCBPZOCOfv+Ll4Hsv6kM+bb0FLfftcw5YcaImmE5f3BTKdAP922kr2N0LFdxJMldwmxk
+	cy/XLtDLPmug+bEHe5SiDdLhNe0kOXhBoNm1/uq3X+0G5P+J5L4VqbOt8qj0grxc+84ylAGWvHk
+	39J/58AUeVCm8h38u5Y09oJgZReEQbACVvXEs2qGssZ+DfgiSxvvtgQ4MOdBmedu2O5JIc193Uw
+	o54dyke/C7VWDhecGesXQWYOLm5YZuwEaBzPI5CnQ8rtxYw=
+X-Received: by 2002:a17:903:1a10:b0:2bd:6727:d689 with SMTP id
+ d9443c01a7336-2c1e8b49209mr112025ad.12.1780606079156; Thu, 04 Jun 2026
+ 13:47:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260604202605.99EFC1F00898@smtp.kernel.org>
+References: <20260602174129.3192312-1-irogers@google.com> <20260604163627.501078-1-irogers@google.com>
+ <20260604163627.501078-3-irogers@google.com> <aiHfhrRBrLojzOA8@x1>
+In-Reply-To: <aiHfhrRBrLojzOA8@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 4 Jun 2026 13:47:48 -0700
+X-Gm-Features: AVHnY4J9CgdB6Ap2CA_cjL09XJUVR3cuQ63H6qpT1uRCXogECBudZ8lL72_2mow
+Message-ID: <CAP-5=fWtK6tGzJaWRz4SZ8_sK=tz39+-5im64Yzt47B0e+X_PA@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] perf test: Truncate printed test descriptions
+ dynamically to avoid terminal wrapping
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 04, 2026 at 08:26:05PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Removing the `sched->max_cpu.cpu` initialization introduces a severe off-by-one error, causing `perf sched map` to truncate the highest CPU from its output and print nothing for single-CPU traces.
-> --
-> 
-> commit 4c1487bde6fa91cfb4bca7de01bfd611065c7c9a
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> perf sched: Fix comp_cpus heap overflow with cross-machine recordings
-> 
-> This commit fixes a heap buffer overflow by allocating comp_cpus with
-> MAX_CPUS and the correct element size. It also removes the initial assignment
-> of max_cpu from the host's CPU count.
-> 
-> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > index 36da451447b5e..80e42536400a9 100644
-> > --- a/tools/perf/builtin-sched.c
-> > +++ b/tools/perf/builtin-sched.c
-> > @@ -3573,10 +3573,8 @@ static int perf_sched__lat(struct perf_sched *sched)
-> >  
-> >  static int setup_map_cpus(struct perf_sched *sched)
-> >  {
-> > -	sched->max_cpu.cpu  = sysconf(_SC_NPROCESSORS_CONF);
-> > -
-> 
-> [Severity: Medium]
-> Does removing this initialization cause an off-by-one error when rendering
-> the schedule map?
-> 
-> Without this initialization, sched->max_cpu.cpu tracks the maximum 0-based
-> CPU index seen in the trace. However, when compact mode is disabled,
-> map_switch_event() assigns this 0-based index directly to cpus_nr:
-> 
-> tools/perf/builtin-sched.c:map_switch_event() {
->         ...
->         } else
->                 cpus_nr = sched->max_cpu.cpu;
->         ...
-> }
-> 
-> Then print_sched_map() iterates strictly less than cpus_nr:
-> 
-> tools/perf/builtin-sched.c:print_sched_map() {
->         ...
->         for (int i = 0; i < cpus_nr; i++) {
->         ...
-> }
-> 
-> Will this skip the highest CPU column entirely, and print nothing for 
-> single-CPU traces where cpus_nr becomes 0?
+On Thu, Jun 4, 2026 at 1:26=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Thu, Jun 04, 2026 at 09:36:27AM -0700, Ian Rogers wrote:
+> > When test descriptions are extremely long (e.g., the truncated perf.dat=
+a
+> > graceful handling test is 103 characters long), they wrap across termin=
+al
+> > boundaries.
+> >
+> > Because the ANSI escape code to delete the line (PERF_COLOR_DELETE_LINE=
+)
+> > only clears a single terminal line, visual wrapping leaves orphan
+> > wrapped lines on the screen, which results in the test description bein=
+g
+> > printed multiple times.
+>
+>   CC      /tmp/build/perf-tools-next/util/bpf_lock_contention.o
+> tests/builtin-test.c: In function =E2=80=98print_test_result.isra=E2=80=
+=99:
+> tests/builtin-test.c:427:40: error: =E2=80=98%-*s=E2=80=99 directive outp=
+ut may be truncated writing between 20 and 65507 bytes into a region of siz=
+e 256 [-Werror=3Dformat-truncation=3D]
+>   427 |                 snprintf(buf, buf_sz, "%-*s", width, desc);
+>       |                                        ^~~~
+> In file included from /usr/include/stdio.h:974,
+>                  from /home/acme/git/perf-tools-next/tools/include/linux/=
+panic.h:6,
+>                  from /home/acme/git/perf-tools-next/tools/include/linux/=
+kernel.h:11,
+>                  from /home/acme/git/perf-tools-next/tools/include/linux/=
+list.h:7,
+>                  from /home/acme/git/perf-tools-next/tools/perf/util/conf=
+ig.h:6,
+>                  from tests/builtin-test.c:26:
+> In function =E2=80=98snprintf=E2=80=99,
+>     inlined from =E2=80=98format_test_description=E2=80=99 at tests/built=
+in-test.c:427:3,
+>     inlined from =E2=80=98print_test_result.isra=E2=80=99 at tests/builti=
+n-test.c:473:3:
+> /usr/include/bits/stdio2.h:68:10: note: =E2=80=98__builtin___snprintf_chk=
+=E2=80=99 output between 21 and 65508 bytes into a destination of size 256
+>    68 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL =
+- 1,
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~
+>    69 |                                    __glibc_objsize (__s), __fmt,
+>       |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    70 |                                    __va_arg_pack ());
+>       |                                    ~~~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:9=
+5: /tmp/build/perf-tools-next/tests/builtin-test.o] Error 1
+> make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:1=
+58: tests] Error 2
+> make[2]: *** [Makefile.perf:566: /tmp/build/perf-tools-next/perf-test-in.=
+o] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+>   LD      /tmp/build/perf-tools-next/util/perf-util-in.o
+>   LD      /tmp/build/perf-tools-next/perf-util-in.o
+> make[1]: *** [Makefile.perf:288: sub-make] Error 2
+> make: *** [Makefile:122: install-bin] Error 2
+> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+>
+>
+> I thought you had fixed this one?
 
-Legit, v2 will have a fix for this, the sysconf() was just masking a
-pre-existing problem.
+I thought so too with the clipped local variable. Let me look again,
+sorry for the churn.
 
-- Arnaldo
- 
-> >  	if (sched->map.comp) {
-> > -		sched->map.comp_cpus = calloc(sched->max_cpu.cpu, sizeof(int));
-> > +		sched->map.comp_cpus = calloc(MAX_CPUS, sizeof(*sched->map.comp_cpus));
-> >  		if (!sched->map.comp_cpus)
-> >  			return -1;
-> >  	}
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260604201119.1702338-1-acme@kernel.org?part=4
+Thanks,
+Ian
+
+> The first patch is applied, testing with it now.
+>
+> - Arnaldo
