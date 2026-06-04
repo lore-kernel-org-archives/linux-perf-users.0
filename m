@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5855240961E
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 16:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259EB48B37B
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 16:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780590996; cv=none; b=sbTwvpQSfjhavOtpnADhZtB1zBmC/YjR9B5IrceDSD+BMoYugQCbCORcuhE4Ca4mWwho2dO0/jG8yeYNR/ywaOo4o08GT0ameV6/LGWFneiBl/uSugO4kAY3OCFgi0IqwowYB2S0YRZdrYdVQRJ4zRI//sutaPTTjhsCzvbFL1M=
+	t=1780590998; cv=none; b=pxqzX67GJv4OEaE9BJAkbzb4UlAyITKyee77wH1lqO9cVqMipUy4GseVIxS6KYVYevVc/WBBmgl6HtOd5+M4eRvX+rgd16nq47DmJYto+gerLOIFFdK21keerrCpcDiM59d7eFUk7zmID7WmSYf7oDVjdBulQyLbg8CKTlM46Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780590996; c=relaxed/simple;
-	bh=S//dvOBs/USieF1vXWpNPbPuhuIfEQr4R8jo7tO7zf4=;
+	s=arc-20240116; t=1780590998; c=relaxed/simple;
+	bh=KAYhkahAb+18m5LFcYwamkdiSsZ3QqvHTYW8D7Ouw/w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U7SikoumeI9IAa/GR054N+puoMGKexPbEYIFC9Yr3Bp7hQM2fWcEV3GT1Dm6D0re6LwTNSw61P3gqAQce8yNur0XF7Hw33Dc1kAF6cBeRA6nFDNp0X0jB6XVTMJujoJGodcrLLD/dw+Gll+98ieIA7mTq0x2Y9DZjy6IsijIYfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a6gPaQVH; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=JCQlYAVQDcTgwbJHRe0Q40r9WEASlHjIiBZh9clb+5IWK30RbG6mH4lJaDJ4RZf8SwxEAV8qpLmPanQhuqFGeZI754PZI/fXLfygzWpMAhv7LvJ6IxQ1fmfOsojOTW7UchoCNdIr/1VPvNvtB1TnwKQvHTa6BnkzQpKJjH1VvcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l8RW8hDO; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a6gPaQVH"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137f304f564so116397c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 09:36:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l8RW8hDO"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304f23c55b2so759922eec.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 09:36:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780590994; x=1781195794; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780590996; x=1781195796; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCZcSKYNKaSrihd7vUWodA5r8ht64vt3LOLPQyq/or8=;
-        b=a6gPaQVHjCeyo9/RLk3DGy+MujCzdCUkpQGtfpEJ7tMZN6zYl7t9Rkk9tADgW5ZNmn
-         BL/AsKhp1gh67wk45DGbWxfv8ld3sVsgBAT+h5a6QNJie4vB9eVR/viq4wMf4ykfQo2n
-         j+7m4PMhOzkH8t/SFTOSIqf4shidtl+OyzFM7K41djiHwPlrdBMAqUMeQj/jEunUY/Je
-         bH3iZQC+eK2Cy3yJU+8H3kKnANm2L7PDY6wtwEED6K5kIkkptOh14P0IIPYx+Ecd2cIx
-         uN7lAnW7r4HFKQ8slByFqxQpLFgjEmqCcYMB6nDLs7sTjwAY0WiV/UzmCYoaXYy6k4JH
-         HgIw==
+        bh=MJQYLG1uMFrbb0Ahpo+z3gzkQ0y5w5F6/NRuMiORe/g=;
+        b=l8RW8hDOaZaYXLLhds7fwhU8IzxZtFZPIXlkZpscgSLzuyehh5XAVHU1HMnl8JzAnC
+         eoPJwPWiZdidWsu3tLMGfK18qCL0q+K4cYA0jKBuxqCiMKOoq4pAmofNMK+vJk09mcHe
+         g5lDn98ynu+0AePB+JcXCKgVAWt4cfzaHWXRJ85AJTS1uaVUmIxOSXJgskO6X9kOlaLc
+         8ouApP7xkvgioIDHLc8trX72MxJINvyPaWyLCFwPWSD1QYdJNR4EUq66BdNwukAqolSK
+         2MixUdg5i6PeSOhyZC4H6eoKNo7i9GeL/yvyc0gDfUzBdhQ3Xb9bcvP87B4tK0jJnU4V
+         OhZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780590994; x=1781195794;
+        d=1e100.net; s=20251104; t=1780590996; x=1781195796;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCZcSKYNKaSrihd7vUWodA5r8ht64vt3LOLPQyq/or8=;
-        b=d2cNnwx4qENjydAItQL/NlAUsINb9mPombOmEbm8PTCHxD5Nt14PTO9aiAx+PTtgQn
-         XEYyNLQyBXY62peWyue0ioK82roFL6etyigvwfSFKexyqNVReOt8SMLuPQTp2iQLwMhK
-         dAoonrpJNHZbCvg/H0GrSZU2y767drZ+OYW813nKjA/4bsZNhbTEqpovO52b2AuF8y9i
-         F+/RvxFyqFGuLYQP4ELO3OBAnzG7hajd/W1aOETXKBkv9lfJgSrfh9e4RNd3fREBMr5t
-         P1i4duHCfWvKocDhyw1U1lqd/yKOnSXGqF76/nC5YxP6/Ei1wSSwxaP10Xp9ylBneotq
-         g61w==
-X-Forwarded-Encrypted: i=1; AFNElJ/QyTzzWkrSzkHgoVbkAU/MCzie76xT+f8jhOI8Y4uFMl1T3NXR5druHjTsHbe4vmDEXeuNkQuLBWTSjUTDVptV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3L2iazhp0vNSxV+8zvL3gKxiuASXhC9PZkDpULBdTC9GOZOEy
-	XXqRoFw5ijflSerPYcFiMsRghVihV4NjSxMpXvc2sjZ3lHxlTOJo9PQGCq/XzU/Km7TFr2NISCo
-	YTLAymwYFYQ==
-X-Received: from dlbep4.prod.google.com ([2002:a05:7022:1084:b0:132:d312:88dc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701a:c951:b0:137:fb3f:8b65
- with SMTP id a92af1059eb24-137fb3f8e2dmr3326779c88.10.1780590994051; Thu, 04
- Jun 2026 09:36:34 -0700 (PDT)
-Date: Thu,  4 Jun 2026 09:36:26 -0700
+        bh=MJQYLG1uMFrbb0Ahpo+z3gzkQ0y5w5F6/NRuMiORe/g=;
+        b=r8vI068Zeqk39HhMGxBrT2AaaOzM1zr13hWrBpJ2+TFbASlXh6LkTKiR9AQwZjF7rr
+         CPI8EgvPg0Ou4OoURtZ5ym8O10uB/SqM8PHKjON2PYh6oPWWopY5MYXZiUfDuh1mwAvA
+         Fwff9Xy+RBHEgEWMrxKQcZ22fnSYyEsBWLhtFkKmbkwcOsby7FVHpAQtdS5zCYaIsk6G
+         NnlckZRDNu3GVCiynuR7h9j2I/DzsmwAOCeSgCMsWNZYw9rTTjAGLRkc0uSvdFICunUV
+         1ZsOhbwWyhhsQLWgkzCm3ezXEq2Lp/hS9X84GDddyNCFC/8QAWzzxLmafhk9NkvYBcJ8
+         jaAQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+mqR3FRoJ/GYAy3ta6HiFut0rSD9iEQAiYPimcHFFB+ZE/0Nf0jko6wNyJeuSca+CcS+0PZhD4ErXDFpRyUsQ0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+2df1vXlJtPpXwQJuA0SvUn0+FTuuRU27LQPHLZ2a1kT/yhFJ
+	AQTMDesXsW5mog1mcjuLXi7gMmQjmj8SgHBOqQVT5uNEM7gtGv1LeqPJmM9M0iOklJd0KW25XAD
+	L3bIaI3wkPg==
+X-Received: from dyblz38.prod.google.com ([2002:a05:7301:1626:b0:304:1e27:a62f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:2284:b0:2e1:e3e6:2909
+ with SMTP id 5a478bee46e88-3074fa64a4bmr3849860eec.9.1780590995818; Thu, 04
+ Jun 2026 09:36:35 -0700 (PDT)
+Date: Thu,  4 Jun 2026 09:36:27 -0700
 In-Reply-To: <20260604163627.501078-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260602174129.3192312-1-irogers@google.com> <20260604163627.501078-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <20260604163627.501078-2-irogers@google.com>
-Subject: [PATCH v9 1/2] perf pmu: Recognize 'default_core' as a core PMU and
- document matching
+Message-ID: <20260604163627.501078-3-irogers@google.com>
+Subject: [PATCH v9 2/2] perf test: Truncate printed test descriptions
+ dynamically to avoid terminal wrapping
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com
 Cc: acme@kernel.org, adrian.hunter@intel.com, 
@@ -69,75 +69,155 @@ Cc: acme@kernel.org, adrian.hunter@intel.com,
 	mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-The is_pmu_core function checks if a PMU name corresponds to a core
-CPU PMU. However, it currently fails to recognize "default_core" as
-a core PMU.
+When test descriptions are extremely long (e.g., the truncated perf.data
+graceful handling test is 103 characters long), they wrap across terminal
+boundaries.
 
-When "default_core" is used, the PMU scanning fallback in pmus.c
-scans the "other_pmus" list. This scan is slow and always misses because
-"default_core" is a core PMU, leading to unnecessary overhead.
+Because the ANSI escape code to delete the line (PERF_COLOR_DELETE_LINE)
+only clears a single terminal line, visual wrapping leaves orphan
+wrapped lines on the screen, which results in the test description being
+printed multiple times.
 
-Update is_pmu_core to recognize "default_core" directly. Additionally,
-document the different matching approaches (exact name for x86/s390,
-sysfs-based cpus file check for ARM/hybrid) to clarify how core PMUs are
-classified.
+Resolve this by checking the terminal width (get_term_dimensions) and
+dynamically truncating the printed test description to fit within the
+available columns, leaving safety space for the prefix index and status
+suffix.
 
-Also, explicitly treat "default_core" as `all_pmus` in `setup_metric_events()`
-to preserve the original metric resolution behavior for this pseudo-PMU.
+Also, remove the width padding from the test suite headers which do not
+display inline status messages. This prevents their trailing colons from
+wrapping onto new lines on standard width terminals.
+
+Finally, explicitly clamp the dynamically calculated description width to
+the formatting buffer's size to satisfy GCC 16's bounds checking and
+prevent a -Wformat-truncation warning during compilation.
+
+JUnit XML output and the failure summary report still print the full,
+untruncated test descriptions.
 
 Assisted-by: Gemini-CLI:Google Gemini 3.1 Pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c |  3 ++-
- tools/perf/util/pmu.c         | 19 ++++++++++++++++++-
- 2 files changed, 20 insertions(+), 2 deletions(-)
+ tools/perf/tests/builtin-test.c | 70 +++++++++++++++++++++++++++++----
+ 1 file changed, 63 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 5a489e97c413..c2ce3e53aaee 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -295,7 +295,8 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 	const char *metric_id;
- 	struct evsel *ev;
- 	size_t ids_size, matched_events, i;
--	bool all_pmus = !strcmp(pmu, "all") || perf_pmus__num_core_pmus() == 1 || !is_pmu_core(pmu);
-+	bool all_pmus = !strcmp(pmu, "all") || !strcmp(pmu, "default_core") ||
-+			perf_pmus__num_core_pmus() == 1 || !is_pmu_core(pmu);
- 
- 	*out_metric_events = NULL;
- 	ids_size = hashmap__size(ids);
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 23337d2fa281..9994709ef12b 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -2029,9 +2029,26 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
- 	return 0;
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index b64fc2204f22..b7eebfcf7700 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -20,6 +20,8 @@
+ #include <sys/wait.h>
+ #include <sys/stat.h>
+ #include <sys/time.h>
++#include <sys/ioctl.h>
++#include "util/term.h"
+ #include "builtin.h"
+ #include "config.h"
+ #include "hist.h"
+@@ -404,19 +406,73 @@ static char *xml_escape(const char *str)
+ 	return res ? res : strdup("");
  }
  
-+/**
-+ * is_pmu_core() - Check if the given PMU name corresponds to a core CPU PMU.
-+ * @name: The PMU name to check.
-+ *
-+ * Core PMUs can be identified by:
-+ * 1. Exact name match:
-+ *    - "cpu": Typically used on x86 architectures.
-+ *    - "cpum_cf": Typically used on s390 architectures (CPU Measurement Counter Facility).
-+ *    - "default_core": A generic name used to refer to the default core PMU.
-+ * 2. Sysfs file existence check (is_sysfs_pmu_core):
-+ *    - Typically used on ARM systems or Intel hybrid architectures (e.g., "cpu_atom",
-+ *      "cpu_core"). This approach checks if the sysfs directory for the PMU
-+ *      contains a "cpus" file.
-+ */
- bool is_pmu_core(const char *name)
++static const char *format_test_description(const char *desc, int width, int max_desc_width,
++					  char *buf, size_t buf_sz)
++{
++	int len = strlen(desc);
++
++	/*
++	 * Clamp to buf_sz to prevent GCC format-truncation warnings
++	 * when terminal width is very large.
++	 */
++	if (max_desc_width >= (int)buf_sz)
++		max_desc_width = buf_sz - 1;
++
++	if (width > max_desc_width)
++		width = max_desc_width;
++
++	if (len > max_desc_width) {
++		snprintf(buf, buf_sz, "%.*s...", max_desc_width - 3, desc);
++	} else {
++		snprintf(buf, buf_sz, "%-*s", width, desc);
++	}
++	return buf;
++}
++
+ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
+ 			     int result, int width, int running,
+ 			     const char *err_output, double elapsed)
  {
--	return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sysfs_pmu_core(name);
-+	return !strcmp(name, "cpu") ||
-+	       !strcmp(name, "cpum_cf") ||
-+	       !strcmp(name, "default_core") ||
-+	       is_sysfs_pmu_core(name);
- }
++	char desc_buf[256];
++	const char *desc = test_description(t, curr_test_case);
++	struct winsize ws;
++	int max_desc_area_width;
++	int target_desc_area_width;
++	int desc_padding;
++
++	get_term_dimensions(&ws);
++	/*
++	 * Total terminal columns minus space for status e.g. " Running (12 active)"
++	 * which is 20 chars, plus a margin of 3 chars = 23 chars.
++	 */
++	max_desc_area_width = ws.ws_col - 23;
++	if (max_desc_area_width < 40)
++		max_desc_area_width = 40;
++
++	/* Standard test has prefix "%3d: " which is 5 chars */
++	target_desc_area_width = width + 5;
++	if (target_desc_area_width > max_desc_area_width)
++		target_desc_area_width = max_desc_area_width;
++
+ 	if (test_suite__num_test_cases(t) > 1) {
+ 		char prefix[32];
+ 		int len = snprintf(prefix, sizeof(prefix), "%3d.%1d:",
+ 				   curr_suite + 1, curr_test_case + 1);
+-		int subw = len >= 4 ? width + 4 - len : width;
  
- bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+-		pr_info("%s %-*s:", prefix, subw, test_description(t, curr_test_case));
+-	} else
+-		pr_info("%3d: %-*s:", curr_suite + 1, width, test_description(t, curr_test_case));
++		desc_padding = target_desc_area_width - (len + 1);
++		if (desc_padding < 20)
++			desc_padding = 20;
++
++		format_test_description(desc, desc_padding, desc_padding, desc_buf, sizeof(desc_buf));
++		pr_info("%s %s:", prefix, desc_buf);
++	} else {
++		desc_padding = target_desc_area_width - 5;
++		if (desc_padding < 20)
++			desc_padding = 20;
++
++		format_test_description(desc, desc_padding, desc_padding, desc_buf, sizeof(desc_buf));
++		pr_info("%3d: %s:", curr_suite + 1, desc_buf);
++	}
+ 
+ 	switch (result) {
+ 	case TEST_RUNNING:
+@@ -700,7 +756,7 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
+ 	 * sub test names.
+ 	 */
+ 	if (test_suite__num_test_cases(t) > 1 && curr_test_case == 0)
+-		pr_info("%3d: %-*s:\n", curr_suite + 1, width, test_description(t, -1));
++		pr_info("%3d: %s:\n", curr_suite + 1, test_description(t, -1));
+ 
+ 	/*
+ 	 * Busy loop reading from the child's stdout/stderr that are set to be
+@@ -976,7 +1032,7 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
+ 			if (next_child) {
+ 				if (test_suite__num_test_cases(next_child->test) > 1 &&
+ 				    last_suite_printed != next_child->suite_num) {
+-					pr_info("%3d: %-*s:\n", next_child->suite_num + 1, width,
++					pr_info("%3d: %s:\n", next_child->suite_num + 1,
+ 						test_description(next_child->test, -1));
+ 					last_suite_printed = next_child->suite_num;
+ 				}
+@@ -1040,7 +1096,7 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
+ 
+ 			if (test_suite__num_test_cases(child->test) > 1 &&
+ 			    last_suite_printed != child->suite_num) {
+-				pr_info("%3d: %-*s:\n", child->suite_num + 1, width,
++				pr_info("%3d: %s:\n", child->suite_num + 1,
+ 					test_description(child->test, -1));
+ 				last_suite_printed = child->suite_num;
+ 			}
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
