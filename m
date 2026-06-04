@@ -1,241 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1821CAA65;
-	Thu,  4 Jun 2026 01:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC914280CC1;
+	Thu,  4 Jun 2026 02:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780535820; cv=none; b=M/aX3YEUQ//7+blBNXbDRtKmce2ck1mlJ1Y5jpOxKfhrXur1niwRwBKFzD1LhXpKOGr7W6WDhrHYuG+qz9IPD7Ie2RfhdOyz29NGkPO3ETF+eSMVkANZGrpZuJw6WOsYnTnKgMy/PkjCv7Vne/6dDu6ZsknT7J4Y3tfLPzm5FD4=
+	t=1780538590; cv=none; b=mfpozc9dLUqa10t9R95LjNt6ATcLTDvllq5nxySoLpRvcVxTGa+8n9C7UUeOGBwlW9xQjX9FDyS5MaE2ufTvKlJLhqBK/IzXwg3t0IVPQAOx/vrba1qnJZsH62Ahs23MCiNofavJD3jVCVTo3SDJeOTgLIUKe7nzWVamVhXa46I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780535820; c=relaxed/simple;
-	bh=jhpLQHbjADtMpDWfymkbSPayOxzC9XshmSnh2S/O96s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DPXQStDWpeTJ7OqH2Yx5LQSrlgT4a31SqZFDyqPSH1o7y0gj4XMpylphm3gy093N8oFz156UouRttSpUsZlBXKy+lMSKIqLrw+EST5tq3gB1R2sTdC7gAJIDGLRFu1RVB7DDGjptSJPcDrF1davwSDZ+10MTabu6i4dlt516ZD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z1hUPAUq; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780538590; c=relaxed/simple;
+	bh=V1HC3NO0IVyYJqEZ4uh+kRJRgytJAdfdldak6/UcyYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lwf3Ci65HRTUzPMcIBye+CO9lBEiJe5qD6h2zrLGj8wZCZbng43slxGqjRJeujpRD0v6udGb87PtACWwgcyZrZOMzLCiXK45Xh1XxK+qI+wbp6+kaJQEGTz6mKbebxMPRvLVJy9wZ3rpI/F52iGyuDYo4NAkDSHz0t1XUuQUNrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwgGbogQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z1hUPAUq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780535819; x=1812071819;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jhpLQHbjADtMpDWfymkbSPayOxzC9XshmSnh2S/O96s=;
-  b=Z1hUPAUqszvMc7q58w8mfeL719VYYjbbLEhb2kh8LwY3Rgl8Ga2B5d1L
-   ikhgarnwS1ncUmrvRrUp04/Ic87sHmyHkTTkiOyRMzodTQ6L2fI0rmCqB
-   jsxIKiYZF8ZFrbmC/y7R0nkL0lRDevDutRBPN3JsfT/+JIqw5Gj8XGMWL
-   aKctw8M/vi2Nyl6GndmQaWdpVDaBIlMjAGg2tab6rkbMoKBpqnhLPo2r8
-   VfV3EpNu1tSRJrR12N094W5REEwwsOLqm9vJPUB2ylDvjgqOteFr65WIk
-   uCkv6kRAaMAcTkDQG7y6F/+M6lSTAKL5xgClfk2YRu3d9bYjs7caJDVAt
-   A==;
-X-CSE-ConnectionGUID: /SxoBD+0S+ynD85XIIiVNw==
-X-CSE-MsgGUID: YPhwATzARHCfCwbohYHdXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="92842238"
-X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
-   d="scan'208";a="92842238"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 18:16:59 -0700
-X-CSE-ConnectionGUID: K7Kndt/4SD6urXtr4XvPQQ==
-X-CSE-MsgGUID: PLUNycZrTReixpI5ybaYZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
-   d="scan'208";a="238063200"
-Received: from unknown (HELO [10.238.1.64]) ([10.238.1.64])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 18:16:56 -0700
-Message-ID: <d01e4434-7a6a-4e40-9118-39ede3288273@linux.intel.com>
-Date: Thu, 4 Jun 2026 09:16:54 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwgGbogQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 208511F00893;
+	Thu,  4 Jun 2026 02:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780538589;
+	bh=5kapYDcSfKOdhK1XTAL6xdCTPTkQP9mzXkK+CmD6YJ8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=iwgGbogQqUxTAtjvfPevfzYMzMC4MDd/zNjZcaPl/wJ4cueU0l2IzjYIrAryDD41f
+	 Xpxsz/PbOfyxf8WQbPE4lSksLdc/8Omj3jAAKCLcZ4fqbuC5+JfJdfdhz9eKYhrKmY
+	 LVwKavQoseWH0n9PuNQb8x2uSTIChk6RZ4+Icirt4z6ozdtDbEgYCcsX24lMmpwIrS
+	 VgUQmRCBlZJEvL2y3QCMXnTltMvZZmXlBYq/gYRe7SnkW7E8uZ6NAnZT20ymB0FAUO
+	 r7lf8ed8YZYKUW4FeDvx3dpBeY7mOh7arjNaANovAUDQpMYU5OnhLwemYS/Jfk5JrL
+	 /jau2MAgPOkJg==
+From: William Breathitt Gray <wbg@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: William Breathitt Gray <wbg@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	Quentin Monnet <qmo@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Barry Song <baohua@kernel.org>,
+	Qinxin Xia <xiaqinxin@huawei.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Willy Tarreau <w@1wt.eu>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	Len Brown <lenb@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Tejun Heo <tj@kernel.org>,
+	David Vernet <void@manifault.com>,
+	Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>,
+	Mark Brown <broonie@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v7 10/23] tools: counter: Append extra cflags
+Date: Thu,  4 Jun 2026 11:02:35 +0900
+Message-ID: <20260604020236.889250-1-wbg@kernel.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260602-tools_build_fix_zero_init-v7-10-631baf679fe7@arm.com>
+References: <20260602-tools_build_fix_zero_init-v7-10-631baf679fe7@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 7/8] perf/x86/intel/uncore: Fix uncore_box ref/unref
- ordering on CPU hotplug
-To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260601170114.173359-1-zide.chen@intel.com>
- <20260601170114.173359-8-zide.chen@intel.com>
- <74ab79eb-57c8-4a63-b401-b56b0483a5a5@linux.intel.com>
- <254ffa5b-58b7-4eb4-b944-a59c0bc67f2a@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <254ffa5b-58b7-4eb4-b944-a59c0bc67f2a@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=252; i=wbg@kernel.org; h=from:subject; bh=V1HC3NO0IVyYJqEZ4uh+kRJRgytJAdfdldak6/UcyYM=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDFkKd1ZdzFFkUd1+W2XrdQa1Ynul4Mmz+b8eFrHJeXzun UlzvaZ3RykLgxgXg6yYIkuv+dm7Dy6pavx4MX8bzBxWJpAhDFycAjCRH9aMDF+0olJeL39l4K/7 rWQj3/zHOzRs3uwTjZDdMvVHjrfooheMDD1V2k/31C96WchfYSuWrn6LhVNEd9aONK87a48xLNG 25wYA
+X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Transfer-Encoding: 8bit
 
+On Tue, Jun 02, 2026 at 03:40:44PM +0100, Leo Yan wrote:
+> Append EXTRA_CFLAGS to CFLAGS so that additional flags can be applied to
+> the compiler.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-On 6/4/2026 12:40 AM, Chen, Zide wrote:
->
-> On 6/2/2026 9:32 PM, Mi, Dapeng wrote:
->> On 6/2/2026 1:01 AM, Zide Chen wrote:
->>> In uncore_event_cpu_online(), uncore_box_ref() was called before
->>> uncore_change_context().  uncore_box_ref() gates on box->cpu >= 0,
->>> but box->cpu is still -1 at that point because uncore_change_context()
->>> has not run yet.  As a result, the box is never initialized on the
->>> first CPU to come online in a die, leaving it permanently
->>> uninitialized in the single-CPU-per-die case.
->>>
->>> Thus, box->refcnt is one count below the true value, and in the CPU
->>> offline path, the box will be torn down on the second-to-last CPU.
->>>
->>> In uncore_event_cpu_offline(), uncore_box_unref() was called after
->>> uncore_change_context(), so box->cpu is already -1 when the collector
->>> CPU goes offline, which prevents it from tearing down the box.
->>>
->>> Fix by swapping the call order in both paths so that
->>> uncore_box_{ref,unref}() runs at the point where box->cpu reflects
->>> the correct context.
->>>
->>> Fixes: c74443d92f68 ("perf/x86/uncore: Support per PMU cpumask")
->>> Reviewed-by: Ian Rogers <irogers@google.com>
->>> Signed-off-by: Zide Chen <zide.chen@intel.com>
->>> ---
->>>  arch/x86/events/intel/uncore.c | 50 ++++++++++++++++------------------
->>>  1 file changed, 23 insertions(+), 27 deletions(-)
->>>
->>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->>> index f2cb3fde2dda..6d710aef52ac 100644
->>> --- a/arch/x86/events/intel/uncore.c
->>> +++ b/arch/x86/events/intel/uncore.c
->>> @@ -1577,9 +1577,15 @@ static int uncore_event_cpu_offline(unsigned int cpu)
->>>  {
->>>  	int die, target;
->>>  
->>> +	/* Clear the references */
->>> +	die = topology_logical_die_id(cpu);
->>> +	uncore_box_unref(uncore_msr_uncores, die);
->>> +	uncore_box_unref(uncore_mmio_uncores, die);
->>> +
->>>  	/* Check if exiting cpu is used for collecting uncore events */
->>>  	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
->>> -		goto unref;
->>> +		return 0;
->>> +
->>>  	/* Find a new cpu to collect uncore events */
->>>  	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
->>>  
->>> @@ -1592,16 +1598,10 @@ static int uncore_event_cpu_offline(unsigned int cpu)
->>>  	uncore_change_context(uncore_msr_uncores, cpu, target);
->>>  	uncore_change_context(uncore_mmio_uncores, cpu, target);
->>>  	uncore_change_context(uncore_pci_uncores, cpu, target);
->>> -
->>> -unref:
->>> -	/* Clear the references */
->>> -	die = topology_logical_die_id(cpu);
->>> -	uncore_box_unref(uncore_msr_uncores, die);
->>> -	uncore_box_unref(uncore_mmio_uncores, die);
->>>  	return 0;
->>>  }
->>>  
->>> -static int allocate_boxes(struct intel_uncore_type **types,
->>> +static void allocate_boxes(struct intel_uncore_type **types,
->>>  			 unsigned int die, unsigned int cpu)
->>>  {
->>>  	struct intel_uncore_box *box, *tmp;
->>> @@ -1618,8 +1618,10 @@ static int allocate_boxes(struct intel_uncore_type **types,
->>>  			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
->>>  				continue;
->>>  			box = uncore_alloc_box(type, cpu_to_node(cpu));
->>> -			if (!box)
->>> +			if (!box) {
->>> +				uncore_pmu_set_broken(pmu);
->>>  				goto cleanup;
->>> +			}
->>>  			box->pmu = pmu;
->>>  			box->dieid = die;
->>>  			list_add(&box->active_list, &allocated);
->>> @@ -1630,14 +1632,13 @@ static int allocate_boxes(struct intel_uncore_type **types,
->>>  		list_del_init(&box->active_list);
->>>  		box->pmu->boxes[die] = box;
->>>  	}
->>> -	return 0;
->>> +	return;
->>>  
->>>  cleanup:
->>>  	list_for_each_entry_safe(box, tmp, &allocated, active_list) {
->>>  		list_del_init(&box->active_list);
->>>  		kfree(box);
->>>  	}
->>> -	return -ENOMEM;
->>>  }
->>>  
->>>  static int uncore_box_ref(struct intel_uncore_type **types,
->>> @@ -1646,11 +1647,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
->>>  	struct intel_uncore_type *type;
->>>  	struct intel_uncore_pmu *pmu;
->>>  	struct intel_uncore_box *box;
->>> -	int i, ret;
->>> -
->>> -	ret = allocate_boxes(types, die, cpu);
->>> -	if (ret)
->>> -		return ret;
->>> +	int i;
->>>  
->>>  	for (; *types; types++) {
->>>  		type = *types;
->>> @@ -1666,27 +1663,26 @@ static int uncore_box_ref(struct intel_uncore_type **types,
->>>  
->>>  static int uncore_event_cpu_online(unsigned int cpu)
->>>  {
->>> -	int die, target, msr_ret, mmio_ret;
->>> +	int die, target;
->>>  
->>>  	die = topology_logical_die_id(cpu);
->>> -	msr_ret = uncore_box_ref(uncore_msr_uncores, die, cpu);
->>> -	mmio_ret = uncore_box_ref(uncore_mmio_uncores, die, cpu);
->>> +	allocate_boxes(uncore_msr_uncores, die, cpu);
->>> +	allocate_boxes(uncore_mmio_uncores, die, cpu);
->> allocate_boxes() are moved to uncore_event_cpu_online() from
->> uncore_box_ref(). It's a significant and good change since PCI uncore PMUs
->> doesn't call allocate_boxes(), but the commit message doesn't mention this.
->> We'd better extract this change to a separate patch which would make the
->> changes clearer. Thanks.
-> All the functions involved in this patch are not called in PCI PMUs, and
-> the call graph is not complicated with only one or two callers for each
-> of them.
->
-> Splitting it into two patches may be overkill; additionally, it may lose
-> the big picture and make it harder to understand the overall flow.
-
-Ok, if we still prefer keep them in same patch, please mention the movement
-of allocate_boxes() in the change log. Thanks.
-
-
->> Others look good to me.
->>
->>
->>>  
->>>  	/*
->>>  	 * Check if there is an online cpu in the package
->>>  	 * which collects uncore events already.
->>>  	 */
->>>  	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
->>> -	if (target < nr_cpu_ids)
->>> -		return 0;
->>> -
->>> -	cpumask_set_cpu(cpu, &uncore_cpu_mask);
->>> -
->>> -	if (!msr_ret)
->>> +	if (target >= nr_cpu_ids) {
->>> +		cpumask_set_cpu(cpu, &uncore_cpu_mask);
->>>  		uncore_change_context(uncore_msr_uncores, -1, cpu);
->>> -	if (!mmio_ret)
->>>  		uncore_change_context(uncore_mmio_uncores, -1, cpu);
->>> -	uncore_change_context(uncore_pci_uncores, -1, cpu);
->>> +		uncore_change_context(uncore_pci_uncores, -1, cpu);
->>> +	}
->>> +
->>> +	uncore_box_ref(uncore_msr_uncores, die, cpu);
->>> +	uncore_box_ref(uncore_mmio_uncores, die, cpu);
->>>  	return 0;
->>>  }
->>>  
+Acked-by: William Breathitt Gray <wbg@kernel.org>
