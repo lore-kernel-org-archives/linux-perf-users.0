@@ -1,232 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C850A480348;
-	Thu,  4 Jun 2026 17:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA20492528
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jun 2026 17:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780594123; cv=none; b=ErCWW1or9Le/jer4ReZsrOzbEgS00kDJ4pFTiV9YILc+0PG4lNj3c9XapDxX7+YcLHqIxOgU6cVX/Ulkxuesb0spyCwC/hdKbexPZM+hDQZhN63fR9basQdL3BofyZzeH6+Gp/3Y2yZ3b0jXBTvU53yB16cz4+9jlXUFdXDzfkk=
+	t=1780594139; cv=none; b=neofAiA23c+ecsQkRVtq2mg7IVCRghxWe5W8NcdkWepKxxsacLJLzPJzISWBYnixio7QZSp/rmwV/8rFAPV0IKwACNhZCJ/Q5bUamKPXCrqNE/T3d35vOvjeWEkLcUBO5z9hKcTmkz8ze/H2Utu3ra0nuOHkYKCvcHJsY/gbDDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780594123; c=relaxed/simple;
-	bh=h13pJ95h/vTj9sdgkfIW7mHCkjUq4pkCzc+rKLVqBKs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JZgsS0/UpLf4GFEIjQ47aC1n4QuY9XzXILtcyoxvvYNLBZbkc9gwyznezJSEEkKmQMSy6wQrgel17atJaqSF69dFJpqlqIg+w1nt809OH4RVLXDpLA+gSBT0u63mBDC7TBpiXLVNfbSHg3jcytnNhs0SJcBnyi6a7wEXqPznifg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8QS2SnL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780594139; c=relaxed/simple;
+	bh=H++s7WLFe3DQ1BShKSqXE5ikoMf2nKAOEt0v4XNUQ4U=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Yw1KLjOAbrwtg8pPmJ/0btlK1jSVQ/cIVnS2IsTKTjfCPVt/7csO8CNIR45gBDHinnSOnnPkdVUopamPBbGnYbrOY78ZvpUVToZ6G95wgHW+mfSQVNPWSH38oKTMW/xCEHVFcnYot7SjKewvOCn7WFZM9/iJrOkBAxxdxoRrjbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qB2yPxCG; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8QS2SnL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD5F1F00893;
-	Thu,  4 Jun 2026 17:28:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780594122;
-	bh=YNGeCO1iNovw0LRtWxm4rus2VoZFl7O4eFoMihgGW8E=;
-	h=From:To:Cc:Subject:Date;
-	b=W8QS2SnLY1TXSEI0rXtpAVs8buo2Fm7dP3qTU9sXVfZd6XCmkQ606HHhVTFrh9lGz
-	 qEEjK4Ep9cR3A/7FGnSZxPp8EJcFf2L0JYhEyX8f6zEMxzc+f8FCVS/o332vIxAGEH
-	 484RdKFSeoD+0x6WVfg+wJZnP4nomrpY9y0qKW1RlETM5tQWqwUCvrtAV74YVyGZdZ
-	 yU/eABhq9DaaOGVBe9FG9zmZqNl9L9vnwUR52I9wtJnQHk3CNfDUgew5hCHv5QPeVf
-	 LyBjYTguW4Qfxnm2IAunTcuTyzTbrcOtT5NXQPELGxgySyOOwM8rStkkiDwyzDxHJ+
-	 1my0DbO6mZddw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Suchit Karunakaran <suchitkarunakaran@gmail.com>
-Subject: [PATCH v3] perf lock contention: Allow 'mmap_lock' in -L/--lock-filter
-Date: Thu,  4 Jun 2026 10:28:39 -0700
-Message-ID: <20260604172839.2105596-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qB2yPxCG"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137eff27f36so1158158c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 10:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780594137; x=1781198937; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Al06XNj3tj8u0HWjKM9JzhjoiNy4HbLAt6wKTFMpfPc=;
+        b=qB2yPxCGYnkjerUZYF++SuBH+nwIP4EfJbBDYztLUOnM+9wPEneHfjC8gSOcMrL3WD
+         O8fUZKkaVA/AzHtFI8ebm5qtskZqa2RXWsbza8vvYmBd2BIGn9OCPHbDix5IOv2VY63w
+         JP3zFIcCAtAou9KGv/ZGVVGRuYiN9lqQJAVsmWABX3CZX/9VKHQzlsS5mbRpy4o5VrMy
+         hhUWghVl1YGwdAjgp9b9wp18EU3VE0I09OM8lfoJEQuBVGqKDgSPJ166rqgpLaJuQCPk
+         zHz73fy1pP0VczwGsNyfbFRVbmV4SywXTRcjJrT40n7Yj8pLB3LI6ViBxXAfK7wgzEd3
+         S/3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780594137; x=1781198937;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Al06XNj3tj8u0HWjKM9JzhjoiNy4HbLAt6wKTFMpfPc=;
+        b=EAMOgZWtjsEkvP56A1OjMqNVBP6S6QUpJNnLM0JBypfQdOVXN5QGAJpY4EGynI/sc6
+         /dHnCH6/G1gK3p5ToNsKrSKuRXnZEpPry7gggPIkTX8crtqqk9sM65OmWtCCjz4oE7NJ
+         FfKgcNriwdVUwPrZoUsQV5uf+Ebq1sms687luecnpGq0YzIrGZh0j/srF9zOmnvKsFfP
+         GaQdw0Uve8pCSqxursHnD/s/hegHamZIVIxnRQE+GBR0UsBSCYRIqhrP9oLNWYKRfFma
+         FlyvVp8CeQmDouki+4U0GqUwLVG69jlznHPq8LPIp+LLS1ih5ukMD/fWp1PbNlnc59PC
+         3Mxw==
+X-Forwarded-Encrypted: i=1; AFNElJ80Nx1KW1nNffWYtjwifls7xes7Kfzlyx2W4idWWBJ0ftczLhtWWZsIVG7sCgd3W+aKrNjajH/5TgxII81Lfm2a@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRU3gyBu+G32w5GFwzeqlJ13USz/e10RN6QcBFGUh8xfCr2ryI
+	/pvnzlWn0vAqfMzUxOwPdqtH2qHu/F/LKsAC7m+0Ww1E/X0jbkRwbJm0Q9/jrroe3Y2HXahC5+u
+	3BdLYQvUOng==
+X-Received: from dlbep4.prod.google.com ([2002:a05:7022:1084:b0:132:d312:88dc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:271c:b0:134:ff2e:a71c
+ with SMTP id a92af1059eb24-13806684f0amr16635c88.9.1780594136401; Thu, 04 Jun
+ 2026 10:28:56 -0700 (PDT)
+Date: Thu,  4 Jun 2026 10:28:45 -0700
+In-Reply-To: <20260520063050.3917261-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260520063050.3917261-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
+Message-ID: <20260604172850.683329-1-irogers@google.com>
+Subject: [PATCH v9 0/5] perf tools: Add inject --aslr feature, early maps
+ loading, and decoupling fixes
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, gmx@google.com, james.clark@linaro.org, 
+	jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-The -L/--lock-filter option is to specify target locks by name or
-address.  It's basically for global locks where name or address is known
-and fixed.  But 'mmap_lock' is a per-process lock so it cannot be used
-for the -L option.
+This patch series introduces the new 'perf inject --aslr' feature to
+remap virtual memory addresses or drop physical memory event leaks
+when profile record data is shared between machines. Bundled with this
+feature is a bug fix inside the core map tracking tool that hardens
+perf session analysis against concurrent lookup data races.
 
-  $ sudo perf lock con -ab -L mmap_lock
-  ignore unknown symbol: mmap_lock
-  libbpf: map 'addr_filter': failed to create: -EINVAL
-  libbpf: failed to load BPF skeleton 'lock_contention_bpf': -EINVAL
-  Failed to load lock-contention BPF skeleton
-  lock contention BPF setup failed
+Detailed Mechanism of MMAP Mapping and ASLR virtual Address Allocation:
 
-However, it's still a common source of contention especially in a large
-process so we want to use it for the -L/--lock-filter option.  As there
-is check_lock_type() to check mmap_lock at runtime, let's used it to
-filter mmap_locks as a special case.
+The ASLR tool virtualizes the address space of the recorded processes by
+intercepting MMAP and MMAP2 events to build a consistent translation
+database, which is subsequently used to rewrite sample addresses.
 
-Of course, this only works with -b/--use-bpf option.
+It maintains two primary lookup databases using hash maps:
+1. 'remap_addresses': Maps an original mapping key to its new remapped
+   base address. The key uses a topological invariant coordinates:
+   (machine, dso, invariant). The invariant is computed as (start - pgoff)
+   for DSO-backed mappings. This invariant remains constant even when
+   perf's internal overlap-resolution splits a VMA into fragmented
+   pieces, ensuring split maps resolve consistently back to the same
+   remapped base.
+2. 'top_addresses': Tracks the allocation state per process (machine, pid).
+   It maintains 'remapped_max' (the highest allocated address in the
+   virtualized space) and 'orig_last_end' (the end address of the last
+   processed original mapping).
 
-  $ sudo perf lock con -b -L mmap_lock -- perf bench mem mmap -f demand -t 2
-  # Running 'mem/mmap' benchmark:
-  # function 'demand' (Demand loaded mmap())
-  # Copying 1MB bytes ...
+For each MMAP/MMAP2 event:
+- We look up the DSO and invariant key in 'remap_addresses'. If found, we
+  reuse the translation, preserving the offset within the mapping.
+- If not found, we allocate a new remapped address space:
+  - If the new mapping is contiguous to the previous one in the original
+    address space (start == orig_last_end), we place it contiguously in
+    the remapped space. This is critical to preserve the contiguity of
+    mappings for downstream merging (e.g. symbols split by HugeTLB, or
+    anonymous .bss segments adjacent to initialized data).
+  - If not contiguous, we insert a 1-page gap (using page_size) from the
+    previous maximum allocated address to prevent accidental merging of
+    unrelated VMAs.
+- The event's start address (and pgoff for kernel maps) is rewritten,
+  and the event is delegated to the output writer.
 
-         2.679184 GB/sec/thread	( +-   1.78% )
-   contended   total wait     max wait     avg wait         type   caller
+To remain strictly conservative and guarantee security, the tool
+scrubs breakpoint addresses (bp_addr) from all synthesized stream
+headers, completely drops PERF_RECORD_TEXT_POKE events to prevent
+absolute immediate pointer operands leaks, and drops unsupported
+complex payloads (such as user register stacks, raw tracepoints, and
+hardware AUX tracing frames).
 
-           1     15.22 us     15.22 us     15.22 us      rwsem:W   __vm_munmap+0x7e
-           1      7.72 us      7.72 us      7.72 us      rwsem:R   lock_mm_and_find_vma+0x97
+Verification is reinforced with shell test ('inject_aslr.sh').
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v3)
- * handl mmap_lock and slab properly  (Sashiko)
+Prerequisite Bug Fix (Patch 1). During development, a core map
+indexing issue was identified and resolved to prevent concurrent
+lookup data races during session analysis.
 
-v2)
- * handle a bad lock name for -L option  (Sashiko)
- * handle mmap_lock and other lock together  (Sashiko)
+Changes since v8:
 
- tools/perf/tests/shell/lock_contention.sh     | 11 ++++++++
- tools/perf/util/bpf_lock_contention.c         |  9 ++++++-
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 25 +++++++++++++++++--
- 3 files changed, 42 insertions(+), 3 deletions(-)
+- Split the large "Add aslr tool" commit into two patches:
+  - Patch 2: Add ASLR tool infrastructure and MMAP tracking
+  - Patch 3: Implement sample address remapping
+- Address Sashiko and internal feedback.
 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index 6dd90519f45cec1d..52e8b9db9fbd8844 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -208,6 +208,17 @@ test_lock_filter()
- 		err=1
- 		exit
- 	fi
-+
-+	perf lock con -b -L mmap_lock -q -- perf bench mem mmap -t 2 -l 10 > /dev/null 2> ${result}
-+
-+	# find out the type of mmap_lock
-+	test_lock_filter_type=$(head -1 "${result}" | awk '{ print $8 }' | sed -e 's/:.*//')
-+
-+	if [ "$(grep -c -v "${test_lock_filter_type}" "${result}")" != "0" ]; then
-+		echo "[Fail] BPF result should not have non-${test_lock_filter_type} locks:" "$(cat "${result}")"
-+		err=1
-+		exit
-+	fi
- }
- 
- test_stack_filter()
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index cbd7435579feaf8e..eb8e29b8064b7348 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -186,6 +186,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 	int ncpus = 1, ntasks = 1, ntypes = 1, naddrs = 1, ncgrps = 1, nslabs = 1;
- 	struct evlist *evlist = con->evlist;
- 	struct target *target = con->target;
-+	bool has_mmap_lock = false;
- 
- 	/* make sure it loads the kernel map before lookup */
- 	map__load(machine__kernel_map(con->machine));
-@@ -244,6 +245,11 @@ int lock_contention_prepare(struct lock_contention *con)
- 		unsigned long *addrs;
- 
- 		for (i = 0; i < con->filters->nr_syms; i++) {
-+			if (!strcmp(con->filters->syms[i], "mmap_lock")) {
-+				has_mmap_lock = true;
-+				continue;
-+			}
-+
- 			sym = machine__find_kernel_symbol_by_name(con->machine,
- 								  con->filters->syms[i],
- 								  &kmap);
-@@ -263,7 +269,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 			addrs[con->filters->nr_addrs++] = map__unmap_ip(kmap, sym->start);
- 			con->filters->addrs = addrs;
- 		}
--		naddrs = con->filters->nr_addrs;
-+		naddrs = con->filters->nr_addrs ?: has_mmap_lock;
- 		skel->rodata->has_addr = 1;
- 	}
- 
-@@ -298,6 +304,7 @@ int lock_contention_prepare(struct lock_contention *con)
- 	skel->rodata->aggr_mode = con->aggr_mode;
- 	skel->rodata->needs_callstack = con->save_callstack;
- 	skel->rodata->lock_owner = con->owner;
-+	skel->rodata->has_mmap_lock = has_mmap_lock;
- 
- 	if (con->aggr_mode == LOCK_AGGR_CGROUP || con->filters->nr_cgrps) {
- 		if (cgroup_is_v2("perf_event"))
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 5c8431be674acd94..d4186ae9f85c7f0b 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -191,6 +191,7 @@ const volatile int has_type;
- const volatile int has_addr;
- const volatile int has_cgroup;
- const volatile int has_slab;
-+const volatile int has_mmap_lock;
- const volatile int needs_callstack;
- const volatile int stack_skip;
- const volatile int lock_owner;
-@@ -221,6 +222,8 @@ int data_map_full;
- struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
- void bpf_task_release(struct task_struct *p) __ksym __weak;
- 
-+static inline __u32 check_lock_type(__u64 lock, __u32 flags);
-+
- static inline __u64 get_current_cgroup_id(void)
- {
- 	struct task_struct *task;
-@@ -246,6 +249,8 @@ static inline __u64 get_current_cgroup_id(void)
- 
- static inline int can_record(u64 *ctx)
- {
-+	bool is_addr_ok = false;
-+
- 	if (has_cpu) {
- 		__u32 cpu = bpf_get_smp_processor_id();
- 		__u8 *ok;
-@@ -278,8 +283,10 @@ static inline int can_record(u64 *ctx)
- 		__u64 addr = ctx[0];
- 
- 		ok = bpf_map_lookup_elem(&addr_filter, &addr);
--		if (!ok && !has_slab)
-+		if (!ok && !has_slab && !has_mmap_lock)
- 			return 0;
-+
-+		is_addr_ok = !!ok;
- 	}
- 
- 	if (has_cgroup) {
-@@ -291,6 +298,10 @@ static inline int can_record(u64 *ctx)
- 			return 0;
- 	}
- 
-+	if (is_addr_ok)
-+		return 1;
-+
-+	/* slab and mmap_lock are part of the addr_filter */
- 	if (has_slab && bpf_get_kmem_cache) {
- 		__u8 *ok;
- 		__u64 addr = ctx[0];
-@@ -298,7 +309,17 @@ static inline int can_record(u64 *ctx)
- 
- 		kmem_cache_addr = (long)bpf_get_kmem_cache(addr);
- 		ok = bpf_map_lookup_elem(&slab_filter, &kmem_cache_addr);
--		if (!ok)
-+		if (ok)
-+			return 1;
-+		else if (!has_mmap_lock)
-+			return 0;
-+	}
-+
-+	if (has_mmap_lock) {
-+		__u64 lock = ctx[0];
-+		__u32 flag = ctx[1];
-+
-+		if (check_lock_type(lock, flag) != LCD_F_MMAP_LOCK)
- 			return 0;
- 	}
- 
+
+Ian Rogers (5):
+  perf maps: Add maps__mutate_mapping
+  perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
+  perf inject/aslr: Implement sample address remapping
+  perf test: Add inject ASLR test
+  perf aslr: Strip sample registers
+
+ tools/perf/builtin-inject.c           |   70 +-
+ tools/perf/tests/shell/inject_aslr.sh |  517 ++++++++++
+ tools/perf/util/Build                 |    1 +
+ tools/perf/util/aslr.c                | 1263 +++++++++++++++++++++++++
+ tools/perf/util/aslr.h                |   41 +
+ tools/perf/util/machine.c             |   32 +-
+ tools/perf/util/maps.c                |   77 ++
+ tools/perf/util/maps.h                |    3 +
+ tools/perf/util/symbol-elf.c          |   41 +-
+ tools/perf/util/symbol.c              |   17 +-
+ 10 files changed, 2029 insertions(+), 33 deletions(-)
+ create mode 100755 tools/perf/tests/shell/inject_aslr.sh
+ create mode 100644 tools/perf/util/aslr.c
+ create mode 100644 tools/perf/util/aslr.h
+
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
