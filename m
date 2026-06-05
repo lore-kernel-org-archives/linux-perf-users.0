@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808FD2B9BA;
-	Fri,  5 Jun 2026 12:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E5C29C325;
+	Fri,  5 Jun 2026 12:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780661740; cv=none; b=YQx48WPTaOu6mT39cGD4vQ0VzFRUaK4Z5/amKG6qPVY5T3rz1q+cHfj5nxdpjIkUo1OqvXqIPoniJ9x67y0qW7BDOP86Gfi2QhV1qZHTGSCQ2JwNPM6P8X5rMBKwD3FFgcvXxelrh1ZHep1moewdPAo6NTMbfuto1FSFlyWIy8I=
+	t=1780661744; cv=none; b=gX6YxJm98k0WnN/iIio5SFM+XUH8rois30hTojQnk/Cn1hSN3SsWqDCiOwSMzLio99eJMU5WVoNmB97Kp9jsPgymLEQfN2mft/B1XXZs0wBZVtWcB6GgYxlUJWiiYFOg6NZnE/w2UnEThwXZkCWZDcRkaq/5zudLLFPDbD6M1i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780661740; c=relaxed/simple;
-	bh=ZMyhzIxdkE8Fx5Fs8l8voQf5Qk+0NmtxuAJ0555U4yM=;
+	s=arc-20240116; t=1780661744; c=relaxed/simple;
+	bh=HOKHGRfUJcS6pTTmAVNE9L8dC7jTySlVCO3W5BsVoRI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lp1tSddm0rPUMCxEuRByV1xbr12+yQDhryg03hbSr2+jl/IQBT7m8FvqtBstZ8CD68n6uySGNCCnXZddiepntHSZ/LePcbKedrJk0Gpf3KCGTcx9QUiNDpE0OkutRkvt5Oj4VdEMDsGadSYBH1ebuErnSHcTo5e2G1FW+18PlAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JfdyOUD+; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=oT26Rp9GJmzii58kw+9IK1h3b306IrouUtzzFktu4DMU3yBBpkLSq7uadkPjnQezF9IfdP0ulRRFVtBsdKkDl5GXhqgjToanCycrSIBML35jGoFLGa6pXhJCz4PvpGeCt8GZ/M1UeUNm9TdH+dZ5h5S5zN7H+r5Y8XVYy73Txxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U6lWm+vZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JfdyOUD+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF4B61F00898;
-	Fri,  5 Jun 2026 12:15:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6lWm+vZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A00841F00893;
+	Fri,  5 Jun 2026 12:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780661739;
-	bh=ktJQjLRBRQFD3+kFSnPKTRz844UlVkyictA+q1icveI=;
+	s=k20260515; t=1780661743;
+	bh=PBIeMlQer6SU09WeehCC4HX+Dlyd2D3hPoy/580i8ZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JfdyOUD+hLqkJGYuLTe7j+TgaMZJL7OaQrv+xh+1x5gDs7Ghz3fExhJ83e9zCxaek
-	 ByteM/FRkJxRusGQJkjE0Bnlha/UpDjKwy/IYbeim0VsnSd70SW9RMUnuLywvVSxGL
-	 ET5nO/2yoOzo/2X7F5NGbjpi+QYZZpZlnqY8xtoe7ZIGbC9o/6a8uW9OgkGpPdLeaT
-	 LUN6gZ35hEg5Zu4x9yCPvDo2smXLe+36HRCvHsKf141ubTiWLDN89GwFpH1CttZKFU
-	 n3Xs3+xnjxHun/i7OKxykbgdWtAgjucjCndXL8EwwrbdQfms+in4B3lZjRAmiTZVpn
-	 /QHK5GHB9sCkw==
+	b=U6lWm+vZtBJknMv292XXONF59EKLqwKIMk+F84VjwWMjXJgZyt5snTfTOXVIqr37I
+	 wJaRKIvB8+BjxrnlJXP7YDQu8fPbkz2HP7YDew2eFAd7o+Lt0GrHr6pb6lRB8RdphX
+	 nzyOaJOES5AleGCGTwRUbj+oWEAcoI2uPftPEFr4NneCH2v81HDMZZHr/mrdsXtFbe
+	 IloJrh7GxJVR3lMQt9LzmaX208JPz+Wwn4CFvNHE4GEDhz8Xb6w7bUkVv9fZMbkRn2
+	 Js99YzutqtSfDc4L5e85OCDVPVR/B9Li2N56yBJzddHCsGFTZgLTUvwB5vWVMdMg2L
+	 7HW0vuSLz7F5Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,10 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
+	David Ahern <dsahern@gmail.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 3/5] perf sched: Fix thread reference leaks in timehist_get_thread()
-Date: Fri,  5 Jun 2026 09:15:12 -0300
-Message-ID: <20260605121515.1725549-4-acme@kernel.org>
+Subject: [PATCH 4/5] perf sched: Cap max_cpu at MAX_CPUS in timehist sample processing
+Date: Fri,  5 Jun 2026 09:15:13 -0300
+Message-ID: <20260605121515.1725549-5-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260605121515.1725549-1-acme@kernel.org>
 References: <20260605121515.1725549-1-acme@kernel.org>
@@ -56,61 +57,54 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-timehist_get_thread() acquires a thread reference via
-machine__findnew_thread() and an idle thread reference via
-get_idle_thread() (which calls thread__get()).  Two error paths in
-the idle_hist block return NULL without releasing these references:
+perf_timehist__process_sample() updates sched->max_cpu from the
+sample CPU without bounds checking.  Later code uses max_cpu + 1 as
+an iteration count over arrays allocated with MAX_CPUS entries
+(curr_thread, cpu_last_switched).  A recording with CPU IDs >= MAX_CPUS
+causes out-of-bounds array accesses.
 
- - When get_idle_thread() fails, the thread reference leaks.
- - When thread__priv(idle) returns NULL, both idle and thread leak.
+Also cap the env->nr_cpus_online initialization of max_cpu in
+perf_sched__timehist(), which could exceed MAX_CPUS on very large
+systems.
 
-Additionally, the idle thread reference acquired on the success path
-is never released, leaking a reference on every sample when
---idle-hist is active.
+Add bounds checks before both max_cpu updates, matching the pattern
+already used in map_switch_event().
 
-Add thread__put() calls on both error paths and release the idle
-reference after use on the success path.
-
-Fixes: 5d8f17fb5822 ("perf sched timehist: Add -I/--idle-hist option")
+Fixes: 49394a2a24c7 ("perf sched timehist: Introduce timehist command")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: David Ahern <dsahern@gmail.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-sched.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/builtin-sched.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 4aa7833cae6e36b8..7bd61028327b39db 100644
+index 7bd61028327b39db..87a1f4cf8760e1e9 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -2546,12 +2546,16 @@ static struct thread *timehist_get_thread(struct perf_sched *sched,
- 			idle = get_idle_thread(sample->cpu);
- 			if (idle == NULL) {
- 				pr_err("Failed to get idle thread for cpu %d.\n", sample->cpu);
-+				thread__put(thread);
- 				return NULL;
- 			}
+@@ -3215,7 +3215,9 @@ static int perf_timehist__process_sample(const struct perf_tool *tool,
+ 		.cpu = sample->cpu,
+ 	};
  
- 			itr = thread__priv(idle);
--			if (itr == NULL)
-+			if (itr == NULL) {
-+				thread__put(idle);
-+				thread__put(thread);
- 				return NULL;
-+			}
+-	if (this_cpu.cpu > sched->max_cpu.cpu)
++	/* max_cpu indexes arrays allocated with MAX_CPUS entries */
++	if (this_cpu.cpu >= 0 && this_cpu.cpu < MAX_CPUS &&
++	    this_cpu.cpu > sched->max_cpu.cpu)
+ 		sched->max_cpu = this_cpu;
  
- 			thread__put(itr->last_thread);
- 			itr->last_thread = thread__get(thread);
-@@ -2559,6 +2563,8 @@ static struct thread *timehist_get_thread(struct perf_sched *sched,
- 			/* copy task callchain when entering to idle */
- 			if (perf_sample__intval(sample, "next_pid") == 0)
- 				save_idle_callchain(sched, itr, sample);
-+
-+			thread__put(idle);
- 		}
- 	}
+ 	if (evsel->handler != NULL) {
+@@ -3385,8 +3387,8 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 		perf_session__set_tracepoints_handlers(session, migrate_handlers))
+ 		goto out;
  
+-	/* pre-allocate struct for per-CPU idle stats */
+-	sched->max_cpu.cpu = env->nr_cpus_online;
++	/* pre-allocate struct for per-CPU idle stats; cap to array bounds */
++	sched->max_cpu.cpu = min(env->nr_cpus_online, MAX_CPUS);
+ 	if (sched->max_cpu.cpu == 0)
+ 		sched->max_cpu.cpu = 4;
+ 	if (init_idle_threads(sched->max_cpu.cpu))
 -- 
 2.54.0
 
