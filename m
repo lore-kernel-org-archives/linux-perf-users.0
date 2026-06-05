@@ -1,66 +1,66 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36413F0AA8
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 10:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F270F3F4DDA
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 10:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780653980; cv=none; b=tv2Bw82m897/66BfdwzJEidQeBketvsHGwiIRY1mQd+VQxr/ViduoSz8Z6cki3CTdq1WBpvrWWHDRYI89J9mO54Y4IOsw/jSZ6v2g7kJbpwk2/IBl3w5CK++FqA4RpSE0xqeCKmJzaV3/WSYbG4d9TE/2kTksnjUPLpZVTWB9/s=
+	t=1780653992; cv=none; b=L+F8Mbr++98lI989jyp2skFGsU9IOToj424j1dckPCis2i5Xqx0sXbn2YG4K3qO/SBy+5ZlSFPaLuAI742lfWZzcNhyc3puK54PqcDYBMT+jg5fCNxgwvo7QNGfvyMMh95+SeL4V4qmrBtAXtK2Uwy364664O/J8+u1b4eh1d6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780653980; c=relaxed/simple;
-	bh=qTiAQ6siT2nw2yuHuoMwBQYbTV0+f9txKpRw6bPdfKU=;
+	s=arc-20240116; t=1780653992; c=relaxed/simple;
+	bh=cRhepLsRkNAd6d/Dkyuf2TN0aczQ9ChDd+Shad/mEO0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MdYKL4znK2XLNWXQOAUiSwudbQTygRtRonsvbK6ouAOP27/kItU9m64Myqps4Aov4Zhu4HsMVyrYZ/hl2qJvRhYHQdhlR+cCOEiXTr7P0Q4nOLUOm6JQ95a4QKZG9/vytcpiKYcCBWLXnNbAWB/4nPi4BZMboQaRtOp/oN6BusY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fR6FE2Cf; arc=none smtp.client-ip=209.85.218.51
+	 In-Reply-To:Content-Type; b=r3LFwPbE+5TODK9XwX+SGI6TtNUTrnQSWe/gUbz2aa5EieWh2gFmfMH9QAa3MGZwIRbQ8g6rjpYi1kaE13hDrHbdfTTMNJuhoKq2PXgiaETXAjYQPduaDKFQVaSG5HFV0GfQ40aIcPrc6B+/QgP1lnkmqB6OsxOqEPTdGMpwpvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FblYBSmB; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fR6FE2Cf"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-bebbc325000so213940966b.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 03:06:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FblYBSmB"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-68852a4fc68so2952376a12.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 03:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1780653977; x=1781258777; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1780653989; x=1781258789; darn=vger.kernel.org;
         h=in-reply-to:autocrypt:from:content-language:references:cc:to
          :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=qTiAQ6siT2nw2yuHuoMwBQYbTV0+f9txKpRw6bPdfKU=;
-        b=fR6FE2Cfdixw/cW1NXvW8HMg313lwUBRirSPZhby2BTf/U70cR0eztLhxt2818tK5+
-         b+HOKSZmA9JRqKuiUShZ2O/fbEW8FcXAfgzKNO+jXNjav+ueskPN/RRu60v5YbfJ6Vc+
-         r8kWrT4TNbd/Ii2za/yrr3OGEGcLXxIhXfB3qEQTJAZGWBq1WYDha8RYjhZw7JHtQAY/
-         aB2AJOI5RWBkvX1Q9onAhuYRQNiPBd/y05fFGBwoumHs91cXWXHXSHtLLa/fRQ894iAI
-         NzCOZ8N+fqkFfydU83hQTZoo+zcJo2b208dgt0ITbt9yoHdzSZt74SKeTRPG0Rg8/D2S
-         VBew==
+        bh=cRhepLsRkNAd6d/Dkyuf2TN0aczQ9ChDd+Shad/mEO0=;
+        b=FblYBSmBPPbL0YMuGZO+e+b2Qz6L8M9PrgH58I0PQQLnCG7RNpU71qtKyflhLGZB+w
+         K+8rZwEgi/aCeEM0j0bX0IiFDMl4/kRHXpE1aLniLbmzTrWgOB4CEul7QLCTjBSeGC0C
+         MNBPaNszKOmQWGbn5z2b2nq2Y8iK2kPdla9OIflhMAgK+SAztPmwnNm8yyy0LbXNwUgc
+         iXorNJuOR2JZesYlnDbp+E7BrCce8oWiQwdNojHVHIJOaKX4ot4Lfc9Utm4bwuMlM/Ov
+         DSAzql8mkE1lZZdhOuyrlBwObg3w4UhV1JX0T58GlafQszPrZpQq/tbKNLJ+Mya3WR5/
+         pZXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780653977; x=1781258777;
+        d=1e100.net; s=20251104; t=1780653989; x=1781258789;
         h=in-reply-to:autocrypt:from:content-language:references:cc:to
          :subject:user-agent:mime-version:date:message-id:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qTiAQ6siT2nw2yuHuoMwBQYbTV0+f9txKpRw6bPdfKU=;
-        b=r/EFg0kAQ/YSJAokrYK6JXHZjoSICqQBf+vMCpS+o4drAdv+E7vWLTFqhd0bG46gsP
-         Huon5oWUTd/5j0POXTEt7nTBZjYPHmiDvPKzAnKTQ2rqGCBY4+3RquP+jJp3tbXa7xu1
-         g1D9VllGItR8v+jp42wfFHMxFG8MMuFgINfBm9Y4kYa4+BUk2X7p3wL7IJFYLDethZZj
-         4AuQpBJtw+R00PbKwx7NIvArmhwSBsEQqhhn848TsojCVz1zPiUUaPcSkqlCXD+495yh
-         O8ANEDCr0TBEGAxb8lM3UPLBIIx6+/Muuu5cFSp9UvqmdjA6z8S/XW0QZG2xb3nZufu6
-         IUeg==
-X-Forwarded-Encrypted: i=1; AFNElJ8jCgxJlaCVdstpxmvrAY3HRaZqQ/FL672VCrDgKCJgKNLqlGobuk9TPzsw5cyrUzvMOsafdCY2uLGX7FzPeOVL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEsBo0TRYl5tP5vEtoReVpsvwwyCtP8XFLOhacV7cGTd1gBssO
-	fq7K4prYwMGOkfs2TktMbhqd+gdUKsPVAFBRp7bRvD3iQ4m5leZhrYMxe0vwhzE1Yr4=
-X-Gm-Gg: Acq92OFdazyXby07mq1H2suNba6RaqSXLuXpsA540F7H0WXraSRqHFQ4YiIDrUaUEIT
-	01HXcu6Ivdb1QY6o/6LEDFLv1iv35J003g1d9xiWxgBA0COlC0MdtbmSomFwrC7a1iyKUsK52ng
-	G3Vj4QNlfYEtmNKmJZ1/Ft7MWSYOe3/OS1BG45g18BUqS2hOhSU/Cf0qhXoC3ZXQMIq6PRJxQL6
-	Gk5psQrI8kY4wW6GGOaxXWjxxtLyNDI06jJWzp40VY9P7JEEZWIDxavkXaM2mUE1JoIdaE8hwUu
-	NQK2rx7wcA/ZOxZotNCGjcBcEEQSKzDQYsgnxY40SpmSEw619uHQkKQS+0qoYj6+zk6DSnCIPKp
-	ovKpcDbdSe/koAhv9KEyiksPHLsbGZVwc4YpwhjxVXyv/mMybSqX0joYIJUp3xxLB+DQCBCqMER
-	cQT/5c09CHozvIuwnEGcDM7Mx72lgAFXFszO5nxHE/XhVI4ELeWs7lTXjdMHGxK7gf6jT05LHrL
-	r62+fbJpEe5HFGYjwakaR4Jcb3KNa9rVfjh/p2jIEVxzgKcYlgfwqur0uV+awIW
-X-Received: by 2002:a17:907:6b89:b0:bec:fa92:d36c with SMTP id a640c23a62f3a-bf3743e7469mr134908366b.38.1780653977104;
-        Fri, 05 Jun 2026 03:06:17 -0700 (PDT)
+        bh=cRhepLsRkNAd6d/Dkyuf2TN0aczQ9ChDd+Shad/mEO0=;
+        b=ckFYPRBxHvNxTMRo0ZdNAd5T4QA4CJ19PUq8EU8xMUDj0HrpJNUXyrThZYmJ2Y9A7L
+         4IrvdiGJbX2kF72AYBwrDK16C0r/sUokgosfu8wR4flb060hvBS0q4LpAkXfPl2FZmwn
+         mPJCrZOp+aMQc2Z9lBxDTEXw6Ng6ffCAlV9tZ0WJ3qZhobuZRV7jq7/kWsweMU/J+S8K
+         CtTb9OMIrnKiKvdnm829RK/dgSoShSj94N7etB4gphgWlyenmoxyv4yi7ODXvJ90IPQQ
+         dp4F3rbCRjLRIIDBhR7H0b/DfnQ8LwQyhsJmEa0khJr2jSEIvDMBDMPscH8BKsVIFah0
+         ipcA==
+X-Forwarded-Encrypted: i=1; AFNElJ+1mOMTveQR/T5Ov3SP6RK+suGBA//TlRdnZ5BxN+3Hk9l1KAvktjNayeAdXRK6QUEfG7glgtopupPD4NMFF7eJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwgCmHmsBqHUphn4fa3gK6AJNWjJa6jq0nAzrkz5Oq4I67OrJ7
+	9HD1M+OFddfoqCQHdILiK6qVUSjddZ97JemMQ73U4CtVS5WvPFlLpaiYziZ3SlN7HxU=
+X-Gm-Gg: Acq92OFQudkh4lM1lT7tAzOGJJGgt6yWn5p64e4MHcMATZujqmIAsh2g0N/sS5JQIzT
+	rF6EKduP33ek+DpGthQS7YD8b9WRQi9wwjBrXiIxdPL3BKQdCBGxwndcK1MZirbILNLd8ERzkzp
+	gRw1mARy1rlXP07lvuKSKirwd/92DbltIST94vQGQXDT6m/Bha3DvDcQol5vOAFcV7+gG8fdUjl
+	fFHArXbIQ6KZ7G2YJSAsoSnZFtSUF+s12VBF/oz8DQNk8F38Dbj6LEXALmcVAKsr3B2x8UKE9Ha
+	HfMcTwWC+Iny3O1j/gcSmrXSoNbAL1ppDAMGqgxGfrO4Rd5hhdMwnFlL7Yhxq6Ftm9nMOn6ZchT
+	Y3N/jvC2Ri1UA8yoZNkLbbrNRDBNjgIuXKVTM1EgWzu1fqJYHHozmY5X6e6uZINbm9zo26h2aF1
+	BmT3bX0rbp2CdyXSNcOeIOwLusVcL/3WtWSGwbmOw3CHtWpd4OOKFifhVo+FXpZzYzJnAaaQ8hU
+	b73P7o3NzkNvLIRV/4GFjobs0tBRthDRqYtUdrLAr3eGxmXnjK1BU20eA4iTMg9
+X-Received: by 2002:a05:6402:5201:b0:687:f18:c37f with SMTP id 4fb4d7f45d1cf-68fa514b053mr1541082a12.22.1780653989412;
+        Fri, 05 Jun 2026 03:06:29 -0700 (PDT)
 Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68e65b4d988sm3565186a12.25.2026.06.05.03.05.40
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68e65b4d988sm3565186a12.25.2026.06.05.03.06.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2026 03:05:56 -0700 (PDT)
-Message-ID: <e05f38fe-5036-4903-a300-46034667219a@suse.com>
-Date: Fri, 5 Jun 2026 12:05:36 +0200
+        Fri, 05 Jun 2026 03:06:19 -0700 (PDT)
+Message-ID: <6f989d86-bbb8-47fd-8367-b2c8a3c5f6f5@suse.com>
+Date: Fri, 5 Jun 2026 12:06:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -124,11 +124,11 @@ Autocrypt: addr=jgross@suse.com; keydata=
 In-Reply-To: <aiKdSPS-YT6KZV81@gmail.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="------------Qk8Lm3E1Hf8i8sdNNQF5rJW1"
+ boundary="------------TqpVRvHG9JxgX9GL0sRxBCyG"
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------Qk8Lm3E1Hf8i8sdNNQF5rJW1
-Content-Type: multipart/mixed; boundary="------------rzGgLeWTNEEF5YKShXVQ0nwJ";
+--------------TqpVRvHG9JxgX9GL0sRxBCyG
+Content-Type: multipart/mixed; boundary="------------Da1SKvb0yQ6c70iODbaa72pf";
  protected-headers="v1"
 From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
 To: Ingo Molnar <mingo@kernel.org>
@@ -153,7 +153,7 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-edac@vger.kernel.org,
  Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
  Len Brown <lenb@kernel.org>, Hans de Goede <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Message-ID: <e05f38fe-5036-4903-a300-46034667219a@suse.com>
+Message-ID: <6f989d86-bbb8-47fd-8367-b2c8a3c5f6f5@suse.com>
 Subject: Re: [PATCH 0/8] x86/msr: Drop 32-bit variants of *_on_cpu() MSR
  functions
 References: <20260605070826.2995913-1-jgross@suse.com>
@@ -162,10 +162,10 @@ References: <20260605070826.2995913-1-jgross@suse.com>
  <aiKcz6I8GO-TG8uq@gmail.com> <aiKdSPS-YT6KZV81@gmail.com>
 In-Reply-To: <aiKdSPS-YT6KZV81@gmail.com>
 
---------------rzGgLeWTNEEF5YKShXVQ0nwJ
-Content-Type: multipart/mixed; boundary="------------zDWtiRGxoRdRnXMWMA3xPdAU"
+--------------Da1SKvb0yQ6c70iODbaa72pf
+Content-Type: multipart/mixed; boundary="------------wGgS4ganA3WbEq7JPL9B9fB0"
 
---------------zDWtiRGxoRdRnXMWMA3xPdAU
+--------------wGgS4ganA3WbEq7JPL9B9fB0
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: base64
 
@@ -212,7 +212,7 @@ cmVnYXJkaW5nIHRoZSAicSIgc3VmZml4OiBJJ20gbm90IGluc2lzdGluZyB0byBkcm9wIGl0
 LCBJIGp1c3QgZmVsdCBpdCB3b3VsZA0Kbm8gbG9uZ2VyIGJlIG5lZWRlZCB3aGVuIHRoZSB2
 YXJpYW50cyB3aXRob3V0IHN1ZmZpeCBubyBsb25nZXIgZXhpc3QuIElmIHlvdQ0KbGlrZSB0
 byBrZWVwIGl0LCB0aGVuIGJlIGl0IHNvLg0KDQoNCkp1ZXJnZW4NCg==
---------------zDWtiRGxoRdRnXMWMA3xPdAU
+--------------wGgS4ganA3WbEq7JPL9B9fB0
 Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
 Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
 Content-Description: OpenPGP public key
@@ -279,24 +279,24 @@ kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
 =3DeeAB
 -----END PGP PUBLIC KEY BLOCK-----
 
---------------zDWtiRGxoRdRnXMWMA3xPdAU--
+--------------wGgS4ganA3WbEq7JPL9B9fB0--
 
---------------rzGgLeWTNEEF5YKShXVQ0nwJ--
+--------------Da1SKvb0yQ6c70iODbaa72pf--
 
---------------Qk8Lm3E1Hf8i8sdNNQF5rJW1
+--------------TqpVRvHG9JxgX9GL0sRxBCyG
 Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmoin3AFAwAAAAAACgkQsN6d1ii/Ey9v
-sAgAgwluRWpWjA5Tv+f+PONpRX5XXZADkjYSjij3QmojCWYeaWk0J4Ll9t7ewRnFzEWxMHpX0juI
-L5kW7CrJYhL444oA2CL15BgQ33DK0UVCKZdK8SwsYdEbfOyO+CJi/Nk6zAe0O1MNSZ9+9D6e0Yu6
-vskutCJIs84xZwt83UwbIzCijHSy4hBURrvuo/kFzXkUeSZFaStgdxZQE5S5GjEn5xFiSBIpUAFq
-M23Cnx1k3qEkEpnOHIEnu290glV7p0JdTT15Wg6MYa1RfySFASQaIhzcCChrPhyGLxFOBIYo3h6J
-HbgBmCIzppCeGj5/rFEAEZv9a/coqGSSBrefcm3Iew==
-=dtR0
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmoin5QFAwAAAAAACgkQsN6d1ii/Ey+B
+tQgAnalu6YDwl7RAxP1bHeyoU9ECkDR1tBNBsYxRi0JmwByzbS3zzWmmvqA4PCeVfGzSVvuIim2f
+ExvmQqBRKkssFdrolUukjdn8/bKTnGxf7uqzAsVaxkvBvioFPCUVSn7c1aZYQnXdbEHawXmxdR68
+zsBgnUFbsY6NW/IlHx2OyBFJtbgvDazWEweozfMFxlB4hjLnWlsvxjelQz7Yrjlw36KaCzZrdA1E
+3TT8GSe/HIAF9q+xZChDMoFOz1P5RPibCLkAKF5Xz29ffrwptZRoulmnaJcPWdgbRf6GU0/yTTJa
+bHrx+Rc/0cmS1RHN9zjZWco/831obneQ169TBKcYzw==
+=nXsn
 -----END PGP SIGNATURE-----
 
---------------Qk8Lm3E1Hf8i8sdNNQF5rJW1--
+--------------TqpVRvHG9JxgX9GL0sRxBCyG--
