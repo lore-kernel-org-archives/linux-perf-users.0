@@ -1,155 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F7B3D3D18;
-	Fri,  5 Jun 2026 23:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3D64071DD
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 23:54:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780703495; cv=none; b=IaspjOqofc0cSZfQPpWNoTICq9K8AlgS1DJ2I+5afFpbLl4l9BWohHLYDPkj3OECvDls2fbVIKPV/Vb9hzUgU4DEFBmjaW+XDGLdKw7ygSKvTgSNJK2Ymv+s/Yxyau1a6YLfyXr4pGGSgsqdvIfXv+Lzuo7wutJQxsdviEdaGLU=
+	t=1780703685; cv=none; b=SFOPubvfJsQ3usEJdyqbdsDWQnk+yJMxQ0HyJt/3NClpxg/zgYjcY0CPlngUiH+66ODig2zFcz8hiOyuWMjMpSjtI3IpY4qUsQUTwLlRn5VbXrlDmHwpCm6mIDP2ReKPxLXCECMpVwK6Ipw+EFAQ3TlBEA0oEbLYsc8W96v17jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780703495; c=relaxed/simple;
-	bh=z3w19A16NH7NdvirA4opVoS2O6lRMszvIMrx9KkbOWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UDu3I/HAfFrzAfYwWIGMRtEK1D15q/FlWfeqEkP7g/anGfa6GvL81u+VfxPY1XQ7U2V2B6OjQpRQr7flbdKyiogqNX8I1t02DbBq0yE1aSLDflzpmAhYugz+z/2LlalZlzhJLEmpjz45xT9mfE82QT0Gqq2RdV1pzkio1H8NhTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GN86kGCn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780703685; c=relaxed/simple;
+	bh=95UHLDopXIggIzscZjUzS7o4/SrFeO3gU00FCeqL0tE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=SxCN2nlnjQi73608lrRrwHnLLBADbUW2AQy1VeI61AxpYx9hTfskepbuwxG7oIfxjjddupH6s0KcABYvoNlLg93oeX2swvbq7eOcIF+aau1+siPLYMavxuZGrgo8GLNExB/EhpwS/usfIQE1ql/4zPzj2mFXAEkWeOnvz5IhqWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGxfb1jW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GN86kGCn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 890081F00893;
-	Fri,  5 Jun 2026 23:51:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGxfb1jW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852FC1F00893;
+	Fri,  5 Jun 2026 23:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780703493;
-	bh=/4otRSM6EtEjjXJGLXf1QzGjALVdbnQQ4hssMzx/+os=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=GN86kGCngdA1o6G5qvFsj7DCPeUOEFtkz4onntOHjIx4/WP6aTLvSjoDOKNQ/oAOy
-	 cQ9bglKqpTz1khokmmYyCKpNJV84qNCud5Qh7CZwvpl05yvHpL1FOduTO5lfsbWTAR
-	 d1uzC3VkvJZVBsnS/DAOM3ahPocl80wg6LbfYk3D1wqicSKiswJge1n/+jAtpfXGiy
-	 Lhn6Y7JZ3xAYdCjEHrs0Wcw/Zf7HTjKkBY3cPkLClJj1BekmgNlG1C+Chc5rDnhWix
-	 o/1R87GL996BiuMolWpwMffjtfK26znspW+q988/Datp1v+yFy2SlgMmXWNW6Zj7CJ
-	 sZLkkp68FCa8g==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 4/4] perf test: Update perf timechart test
-Date: Fri,  5 Jun 2026 16:51:31 -0700
-Message-ID: <20260605235131.2440270-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-In-Reply-To: <20260605235131.2440270-1-namhyung@kernel.org>
-References: <20260605235131.2440270-1-namhyung@kernel.org>
+	s=k20260515; t=1780703683;
+	bh=ajHxvhpjN7nIn7qRipGo8ZE73KXMwo42aAAWVv9vl9A=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=KGxfb1jW34qgKA706zkTw6GntXB3L6pARuXclPz+BGtnqLMHh2hffklfgmDzO0fqs
+	 lBCJS27ydbt/3yleSourWLLBJMXqHvivaECHK1m7L3uCYfJ5Slipl9+qmXky6FBvh2
+	 z23cGPinD0ZPFfTmdjwJcPF1QLzmOFgYz3ArmlIL1nV4DEDTxp1hhOGGJGIQljbipT
+	 4I301CdmZCN2x+R4K2n3mefucXdScvKLUvNTD4tw+Lvpe4HK2kRkmggs6C6dZcOB2y
+	 PYfFmnM5SO+T5mEwMMaFY7mEtahQYNXrZDk6ErzBxZq9wY4aGQNalavAA9hn4bV2Tv
+	 jnKNQMMGYzHHg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 3/9] perf c2c: Bounds-check CPU and node IDs before
+ bitmap and array access
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260605233837.1773732-4-acme@kernel.org>
+References: <20260605233837.1773732-4-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 05 Jun 2026 23:54:43 +0000
+Message-Id: <20260605235443.852FC1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-To include IO-only and backtrace modes to test different code paths.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-  $ sudo perf test -vv timechart
-  135: perf timechart tests                        : Running
-  135: perf timechart tests:
-  ---- start ----
-  test child forked, pid 2413665
-  perf timechart Basic test
-  perf timechart Basic test [Success]
-  perf timechart IO-only test
-  perf timechart IO-only test [Success]
-  perf timechart Backtrace test
-  perf timechart Backtrace test [Success]
-  ---- end(0) ----
-  135: perf timechart tests                        : Ok
+Pre-existing issues:
+- [High] Dangling pointer in the `he__get_c2c_hists()` error path leads to =
+a Use-After-Free and double-free during cleanup.
+--
 
-  === Test Summary ===
-  Passed main tests : 1
-  Passed subtests   : 0
-  Skipped tests     : 0
-  Failed tests      : 0
+commit 4a6b2b9d1bf179db3b813952c508e27db4f604e7
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/timechart.sh | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+perf c2c: Bounds-check CPU and node IDs before bitmap and array access
 
-diff --git a/tools/perf/tests/shell/timechart.sh b/tools/perf/tests/shell/timechart.sh
-index b14b3472c2846b32..40072b32171a9a1c 100755
---- a/tools/perf/tests/shell/timechart.sh
-+++ b/tools/perf/tests/shell/timechart.sh
-@@ -9,7 +9,7 @@ perfdata=$(mktemp /tmp/__perf_timechart_test.perf.data.XXXXX)
- output=$(mktemp /tmp/__perf_timechart_test.output.XXXXX.svg)
- 
- cleanup() {
--	rm -f "${perfdata}"
-+	rm -f "${perfdata}"*
- 	rm -f "${output}"
- 	trap - EXIT TERM INT
- }
-@@ -22,38 +22,41 @@ trap_cleanup() {
- trap trap_cleanup EXIT TERM INT
- 
- test_timechart() {
--	echo "Basic perf timechart test"
-+	NAME=$1
-+	OPTION=$2
-+
-+	echo "perf timechart ${NAME} test"
- 
- 	# Try to record timechart data.
- 	# perf timechart record uses system-wide recording and specific tracepoints.
- 	# If it fails (e.g. permissions, missing tracepoints), skip the test.
--	if ! perf timechart record -o "${perfdata}" true > /dev/null 2>&1; then
--		echo "Basic perf timechart test [Skipped: perf timechart record failed (permissions/events?)]"
-+	if ! perf timechart record -o "${perfdata}" ${OPTION} true > /dev/null 2>&1; then
-+		echo "perf timechart ${NAME} test [Skipped: perf timechart record failed (permissions/events?)]"
- 		return
- 	fi
- 
- 	# Generate the timechart
- 	if ! perf timechart -i "${perfdata}" -o "${output}" > /dev/null 2>&1; then
--		echo "Basic perf timechart test [Failed: perf timechart command failed]"
-+		echo "perf timechart ${NAME} test [Failed: perf timechart command failed]"
- 		err=1
- 		return
- 	fi
- 
- 	# Check if output file exists and is not empty
- 	if [ ! -s "${output}" ]; then
--		echo "Basic perf timechart test [Failed: output file is empty or missing]"
-+		echo "perf timechart ${NAME} test [Failed: output file is empty or missing]"
- 		err=1
- 		return
- 	fi
- 
- 	# Check if it looks like an SVG
- 	if ! grep -q "svg" "${output}"; then
--		echo "Basic perf timechart test [Failed: output doesn't look like SVG]"
-+		echo "perf timechart ${NAME} test [Failed: output doesn't look like SVG]"
- 		err=1
- 		return
- 	fi
- 
--	echo "Basic perf timechart test [Success]"
-+	echo "perf timechart ${NAME} test [Success]"
- }
- 
- if ! perf check feature -q libtraceevent ; then
-@@ -62,6 +65,9 @@ if ! perf check feature -q libtraceevent ; then
- 	exit 2
- fi
- 
--test_timechart
-+test_timechart "Basic" ""
-+test_timechart "IO-only" "-I"
-+test_timechart "Backtrace" "-g"
-+
- cleanup
- exit $err
--- 
-2.54.0.1032.g2f8565e1d1-goog
+This commit adds bounds checks for CPU and node IDs in c2c_he__set_cpu(),
+c2c_he__set_node(), and process_sample_event(). It aims to prevent
+out-of-bounds heap writes and array access when processing perf.data files
+with unusually large CPU or node values.
 
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 3dd45a550fdb7..f060dfbe11c28 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+
+[ ... ]
+
+> @@ -391,7 +399,12 @@ static int process_sample_event(const struct perf_to=
+ol *tool __maybe_unused,
+>  		 * Doing node stats only for single callchain data.
+>  		 */
+>  		int cpu =3D sample->cpu =3D=3D (unsigned int) -1 ? 0 : sample->cpu;
+> -		int node =3D c2c.cpu2node[cpu];
+> +		int node;
+> +
+> +		/* cpu2node[] has c2c.cpus_cnt entries; large u32 wraps signed negativ=
+e */
+> +		if (cpu < 0 || cpu >=3D c2c.cpus_cnt)
+> +			cpu =3D 0;
+> +		node =3D c2c.cpu2node[cpu];
+> =20
+>  		c2c_hists =3D he__get_c2c_hists(he, c2c.cl_sort, 2, machine->env);
+
+[Severity: High]
+This is a pre-existing issue, but can the error path in he__get_c2c_hists()
+lead to a use-after-free and double-free during cleanup?
+
+If c2c_hists__init() fails, the memory is freed but c2c_he->hists is not
+cleared:
+
+tools/perf/builtin-c2c.c:he__get_c2c_hists() {
+	...
+	hists =3D c2c_he->hists =3D zalloc(sizeof(*hists));
+	if (!hists)
+		return NULL;
+
+	ret =3D c2c_hists__init(hists, sort, nr_header_lines, env);
+	if (ret) {
+		free(hists);
+		return NULL;
+	}
+	...
+}
+
+Since the hist_entry is already added to the tree earlier in
+process_sample_event(), returning -ENOMEM from here triggers teardown via
+c2c_he_free(). Does this cause c2c_he_free() to dereference the dangling
+c2c_he->hists pointer?
+
+tools/perf/builtin-c2c.c:c2c_he_free() {
+	...
+	if (c2c_he->hists) {
+		hists__delete_entries(&c2c_he->hists->hists);
+		zfree(&c2c_he->hists);
+	}
+	...
+}
+
+>  		if (!c2c_hists) {
+> @@ -410,7 +423,9 @@ static int process_sample_event(const struct perf_too=
+l *tool __maybe_unused,
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605233837.1773=
+732-1-acme@kernel.org?part=3D3
