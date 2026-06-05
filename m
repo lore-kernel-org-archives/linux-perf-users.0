@@ -1,302 +1,140 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F270F3F4DDA
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 10:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4DE3F0ABF
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 10:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780653992; cv=none; b=L+F8Mbr++98lI989jyp2skFGsU9IOToj424j1dckPCis2i5Xqx0sXbn2YG4K3qO/SBy+5ZlSFPaLuAI742lfWZzcNhyc3puK54PqcDYBMT+jg5fCNxgwvo7QNGfvyMMh95+SeL4V4qmrBtAXtK2Uwy364664O/J8+u1b4eh1d6A=
+	t=1780654395; cv=none; b=LnsSGmRg1iFRg3eurfJOgS3b2FwpmSMFP+cSI7NHgcIUfA3Dv61K+CljgD8+5zV0/6vb57gEWF6sYmemEx3PEJLiA3LsN2pGcDMHfDZOkJm+8P8SGqIFq6YwgAIWHWpQYxQ4iXqJe18CRyhLCirlXmYH0Xpxr3eWE6RWM6ailyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780653992; c=relaxed/simple;
-	bh=cRhepLsRkNAd6d/Dkyuf2TN0aczQ9ChDd+Shad/mEO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r3LFwPbE+5TODK9XwX+SGI6TtNUTrnQSWe/gUbz2aa5EieWh2gFmfMH9QAa3MGZwIRbQ8g6rjpYi1kaE13hDrHbdfTTMNJuhoKq2PXgiaETXAjYQPduaDKFQVaSG5HFV0GfQ40aIcPrc6B+/QgP1lnkmqB6OsxOqEPTdGMpwpvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FblYBSmB; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1780654395; c=relaxed/simple;
+	bh=GuQaGEm9CYtnNwVeNpuq5lh3d7TrfNJSpkTqbYsoRCU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=QjtpUpi4hgH+QH9rHp+SVduiwV6K0Ke6mabt/sc1jgYMr06bYILal/i5StHJQy9taKApgCeEtWmW9hzfmEzqGSvLU0e5qkpqoVytQKBhT0r31/nn+MuAhjMiGGhpaNZi5ejgrusS/ICqyK7qy3VX2OtAi5NQBxMs2LEHafAedCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5osNRy4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FblYBSmB"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-68852a4fc68so2952376a12.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 03:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1780653989; x=1781258789; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cRhepLsRkNAd6d/Dkyuf2TN0aczQ9ChDd+Shad/mEO0=;
-        b=FblYBSmBPPbL0YMuGZO+e+b2Qz6L8M9PrgH58I0PQQLnCG7RNpU71qtKyflhLGZB+w
-         K+8rZwEgi/aCeEM0j0bX0IiFDMl4/kRHXpE1aLniLbmzTrWgOB4CEul7QLCTjBSeGC0C
-         MNBPaNszKOmQWGbn5z2b2nq2Y8iK2kPdla9OIflhMAgK+SAztPmwnNm8yyy0LbXNwUgc
-         iXorNJuOR2JZesYlnDbp+E7BrCce8oWiQwdNojHVHIJOaKX4ot4Lfc9Utm4bwuMlM/Ov
-         DSAzql8mkE1lZZdhOuyrlBwObg3w4UhV1JX0T58GlafQszPrZpQq/tbKNLJ+Mya3WR5/
-         pZXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780653989; x=1781258789;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cRhepLsRkNAd6d/Dkyuf2TN0aczQ9ChDd+Shad/mEO0=;
-        b=ckFYPRBxHvNxTMRo0ZdNAd5T4QA4CJ19PUq8EU8xMUDj0HrpJNUXyrThZYmJ2Y9A7L
-         4IrvdiGJbX2kF72AYBwrDK16C0r/sUokgosfu8wR4flb060hvBS0q4LpAkXfPl2FZmwn
-         mPJCrZOp+aMQc2Z9lBxDTEXw6Ng6ffCAlV9tZ0WJ3qZhobuZRV7jq7/kWsweMU/J+S8K
-         CtTb9OMIrnKiKvdnm829RK/dgSoShSj94N7etB4gphgWlyenmoxyv4yi7ODXvJ90IPQQ
-         dp4F3rbCRjLRIIDBhR7H0b/DfnQ8LwQyhsJmEa0khJr2jSEIvDMBDMPscH8BKsVIFah0
-         ipcA==
-X-Forwarded-Encrypted: i=1; AFNElJ+1mOMTveQR/T5Ov3SP6RK+suGBA//TlRdnZ5BxN+3Hk9l1KAvktjNayeAdXRK6QUEfG7glgtopupPD4NMFF7eJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwgCmHmsBqHUphn4fa3gK6AJNWjJa6jq0nAzrkz5Oq4I67OrJ7
-	9HD1M+OFddfoqCQHdILiK6qVUSjddZ97JemMQ73U4CtVS5WvPFlLpaiYziZ3SlN7HxU=
-X-Gm-Gg: Acq92OFQudkh4lM1lT7tAzOGJJGgt6yWn5p64e4MHcMATZujqmIAsh2g0N/sS5JQIzT
-	rF6EKduP33ek+DpGthQS7YD8b9WRQi9wwjBrXiIxdPL3BKQdCBGxwndcK1MZirbILNLd8ERzkzp
-	gRw1mARy1rlXP07lvuKSKirwd/92DbltIST94vQGQXDT6m/Bha3DvDcQol5vOAFcV7+gG8fdUjl
-	fFHArXbIQ6KZ7G2YJSAsoSnZFtSUF+s12VBF/oz8DQNk8F38Dbj6LEXALmcVAKsr3B2x8UKE9Ha
-	HfMcTwWC+Iny3O1j/gcSmrXSoNbAL1ppDAMGqgxGfrO4Rd5hhdMwnFlL7Yhxq6Ftm9nMOn6ZchT
-	Y3N/jvC2Ri1UA8yoZNkLbbrNRDBNjgIuXKVTM1EgWzu1fqJYHHozmY5X6e6uZINbm9zo26h2aF1
-	BmT3bX0rbp2CdyXSNcOeIOwLusVcL/3WtWSGwbmOw3CHtWpd4OOKFifhVo+FXpZzYzJnAaaQ8hU
-	b73P7o3NzkNvLIRV/4GFjobs0tBRthDRqYtUdrLAr3eGxmXnjK1BU20eA4iTMg9
-X-Received: by 2002:a05:6402:5201:b0:687:f18:c37f with SMTP id 4fb4d7f45d1cf-68fa514b053mr1541082a12.22.1780653989412;
-        Fri, 05 Jun 2026 03:06:29 -0700 (PDT)
-Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68e65b4d988sm3565186a12.25.2026.06.05.03.06.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2026 03:06:19 -0700 (PDT)
-Message-ID: <6f989d86-bbb8-47fd-8367-b2c8a3c5f6f5@suse.com>
-Date: Fri, 5 Jun 2026 12:06:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5osNRy4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4D41F00893;
+	Fri,  5 Jun 2026 10:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780654394;
+	bh=sCM0wChkz7qKMrVK82xgz2yeSOvWp3F53REI2QRaYGA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=U5osNRy4W3Ad9VWas+fjcEHyj8GBjNF7MD3+EX0pZWubWZTnMZ88s4TOz8dgTthuf
+	 x9rPU75Pq7e2rZlCgmJTRcXAtuIAnhQR6L0sa9yGJ0U3NRb9ZX/6xpRPZk58laRUbH
+	 FgOxvjG7fb1Nlm8Ba1nxqtbXs4nQrkGEPIZxgwWuyY4dSzdYM44jEAG5rRFTU/5Eo5
+	 rE65goE+ieISi8XdUy1fZQICXlTcSe+1edheO9Potb0Z2og8wSsrzWryOlS8z5E3Bh
+	 x5VM1CZ1r1wqAMyx+KqPg/5fmusBXVLPH1bqOp1yH43Drl1da4h4JvSluhTUbOvvRd
+	 9YkXIj6nRoDfQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v10 19/19] perf python: Add LiveSession helper
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260605074003.1730715-20-irogers@google.com>
+References: <20260605074003.1730715-20-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 05 Jun 2026 10:13:13 +0000
+Message-Id: <20260605101314.3E4D41F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] x86/msr: Drop 32-bit variants of *_on_cpu() MSR
- functions
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-edac@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-perf-users@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-acpi@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Guenter Roeck <linux@roeck-us.net>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Huang Rui <ray.huang@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Len Brown <lenb@kernel.org>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-References: <20260605070826.2995913-1-jgross@suse.com>
- <aiKRbRHyDCjmqvGB@gmail.com> <a477aefe-e1c8-4652-b263-86c4cce09eba@suse.com>
- <aiKUenaT9VD0DrpW@gmail.com> <b7e799a6-1f1a-49ef-8aac-0d5fd4a06dc7@suse.com>
- <aiKcz6I8GO-TG8uq@gmail.com> <aiKdSPS-YT6KZV81@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <aiKdSPS-YT6KZV81@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------TqpVRvHG9JxgX9GL0sRxBCyG"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------TqpVRvHG9JxgX9GL0sRxBCyG
-Content-Type: multipart/mixed; boundary="------------Da1SKvb0yQ6c70iODbaa72pf";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-edac@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-perf-users@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-acpi@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Guenter Roeck <linux@roeck-us.net>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Huang Rui <ray.huang@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Len Brown <lenb@kernel.org>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Message-ID: <6f989d86-bbb8-47fd-8367-b2c8a3c5f6f5@suse.com>
-Subject: Re: [PATCH 0/8] x86/msr: Drop 32-bit variants of *_on_cpu() MSR
- functions
-References: <20260605070826.2995913-1-jgross@suse.com>
- <aiKRbRHyDCjmqvGB@gmail.com> <a477aefe-e1c8-4652-b263-86c4cce09eba@suse.com>
- <aiKUenaT9VD0DrpW@gmail.com> <b7e799a6-1f1a-49ef-8aac-0d5fd4a06dc7@suse.com>
- <aiKcz6I8GO-TG8uq@gmail.com> <aiKdSPS-YT6KZV81@gmail.com>
-In-Reply-To: <aiKdSPS-YT6KZV81@gmail.com>
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] LiveSession crashes unconditionally on empty ring buffers due to r=
+e-raising -EAGAIN as OSError.
+- [Medium] LiveSession busy-loops and spams stderr on unmapped CPUs.
+- [Medium] Broad exception handler swallows user callback exceptions and mi=
+sreports them as parsing errors.
+--
 
---------------Da1SKvb0yQ6c70iODbaa72pf
-Content-Type: multipart/mixed; boundary="------------wGgS4ganA3WbEq7JPL9B9fB0"
+commit 4b0aea1c86d61d02f883cb514ba6d1082d3b2a72
+Author: Ian Rogers <irogers@google.com>
 
---------------wGgS4ganA3WbEq7JPL9B9fB0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+perf python: Add LiveSession helper
 
-T24gMDUuMDYuMjYgMTE6NTYsIEluZ28gTW9sbmFyIHdyb3RlOg0KPiANCj4gKiBJbmdvIE1v
-bG5hciA8bWluZ29Aa2VybmVsLm9yZz4gd3JvdGU6DQo+IA0KPj4NCj4+ICogSsO8cmdlbiBH
-cm/DnyA8amdyb3NzQHN1c2UuY29tPiB3cm90ZToNCj4+DQo+Pj4+IFdlbGwsIHdlIGhhZCBh
-IHNpbWlsYXIgZGlzY3Vzc2lvbiBiYWNrIHdoZW4gd2Ugc3RhbmRhcmRpemVkIG9uDQo+Pj4+
-IHJkbXNycSgpIGFuZCB3cm1zcnEoKSwgYW5kIHdlIHVzZSB0aGVtIGFzIG91ciBwcmltYXJ5
-IDY0LWJpdA0KPj4+PiBNU1IgaGFuZGxpbmcgQVBJcy4gV2h5IGhhdmUgYSBkaWZmZXJlbnQg
-cGF0dGVybiBpbiBhbnkgb2YgdGhlDQo+Pj4+IGRlcml2ZWQgQVBJcz8gSXQgc2hvdWxkIHJl
-YWxseSB1c2UgdGhlIHNhbWUgY29uY2VwdHVhbCBuYW1lc3BhY2UsDQo+Pj4+IG5vdCBzb21l
-IGNvbmZ1c2luZyBtaXh0dXJlIG9mIHR3byBuYW1pbmcgc2NoZW1lcy4NCj4+Pg0KPj4+IElu
-IHRoZSBsb25nIHJ1biBJJ2QgbGlrZSB0byBkbyB0aGUgc2FtZSBjb252ZXJzaW9uIGZvciB0
-aGUgcmRtc3IqKCkgYW5kDQo+Pj4gd3Jtc3IqKCkgaW50ZXJmYWNlcywgdG9vIChzbyBvbmx5
-IG9mZmVyaW5nIGFuZCB1c2luZyB0aGUgNjQtYml0IHZhcmlhbnRzKS4NCj4+DQo+PiBXaHk/
-IFdlIGhhZCB0aGlzIGRpc2N1c3Npb24gZm9yIHRoZSBvcmlnaW5hbCBNU1IgQVBJIG5hbWVz
-cGFjZQ0KPj4gY2xlYW51cCBhIHllYXIgYWdvLCBhbmQgZGVjaWRlZCB0byBzdGFuZGFyZGl6
-ZSBvbiB0aGUgcmRtc3JxKCkvd3Jtc3JxKCkNCj4+IG5hbWVzcGFjZToNCj4+DQo+PiAgICBj
-NDM1ZTYwOGNmNTkgeDg2L21zcjogUmVuYW1lICdyZG1zcmwoKScgdG8gJ3JkbXNycSgpJw0K
-Pj4gICAgNzgyNTVlYjIzOTczIHg4Ni9tc3I6IFJlbmFtZSAnd3Jtc3JsKCknIHRvICd3cm1z
-cnEoKScNCj4+ICAgIDZmZTIyYWJhY2Q0MCB4ODYvbXNyOiBSZW5hbWUgJ3JkbXNybF9zYWZl
-KCknIHRvICdyZG1zcnFfc2FmZSgpJw0KPj4gICAgNmZhMTdlZmU0NTQ0IHg4Ni9tc3I6IFJl
-bmFtZSAnd3Jtc3JsX3NhZmUoKScgdG8gJ3dybXNycV9zYWZlKCknDQo+PiAgICA1ZTQwNGNi
-N2FjNGMgeDg2L21zcjogUmVuYW1lICdyZG1zcmxfc2FmZV9vbl9jcHUoKScgdG8gJ3JkbXNy
-cV9zYWZlX29uX2NwdSgpJw0KPj4gICAgMjdhMjNhNTQ0YTU1IHg4Ni9tc3I6IFJlbmFtZSAn
-d3Jtc3JsX3NhZmVfb25fY3B1KCknIHRvICd3cm1zcnFfc2FmZV9vbl9jcHUoKScNCj4+ICAg
-IGQ3NDg0YmFiZDJjNCB4ODYvbXNyOiBSZW5hbWUgJ3JkbXNybF9vbl9jcHUoKScgdG8gJ3Jk
-bXNycV9vbl9jcHUoKScNCj4+ICAgIGM4OTVlY2RhYjJlNCB4ODYvbXNyOiBSZW5hbWUgJ3dy
-bXNybF9vbl9jcHUoKScgdG8gJ3dybXNycV9vbl9jcHUoKScNCj4+ICAgIGViZTI5MzA5YzRk
-MiB4ODYvbXNyOiBSZW5hbWUgJ21jZV9yZG1zcmwoKScgdG8gJ21jZV9yZG1zcnEoKScNCj4+
-ICAgIDhlNDRlODNmNTdjMyB4ODYvbXNyOiBSZW5hbWUgJ21jZV93cm1zcmwoKScgdG8gJ21j
-ZV93cm1zcnEoKScNCj4+ICAgIGUyYjhhZjBjNjkzOSB4ODYvbXNyOiBSZW5hbWUgJ3JkbXNy
-bF9hbWRfc2FmZSgpJyB0byAncmRtc3JxX2FtZF9zYWZlKCknDQo+PiAgICA2MDRkMTVkMTVl
-YmQgeDg2L21zcjogUmVuYW1lICd3cm1zcmxfYW1kX3NhZmUoKScgdG8gJ3dybXNycV9hbWRf
-c2FmZSgpJw0KPj4gICAgN2NiYzJiYTdjMTA3IHg4Ni9tc3I6IFJlbmFtZSAnbmF0aXZlX3dy
-bXNybCgpJyB0byAnbmF0aXZlX3dybXNycSgpJw0KPj4gICAgZWVmNDc2ZjE1YzgzIHg4Ni9t
-c3I6IFJlbmFtZSAnd3Jtc3JsX2NzdGFyKCknIHRvICd3cm1zcnFfY3N0YXIoKScNCj4+DQo+
-PiBUaGVyZSdzIHNldmVyYWwgZ29vZCByZWFzb25zIHRvIHVzZSB0aGUgJ3EnIHN1ZmZpeCBp
-biB0aGUgQVBJIG5hbWVzLA0KPj4gd2h5IHJlbGl0aWdhdGUgdGhpcz8gOi0pDQo+IA0KPiBB
-bmQganVzdCB0byBiZSBjbGVhcjogSSBoYXZlIG5vIG9iamVjdGlvbnMgd2hhdHNvZXZlciB0
-bw0KPiBwaGFzaW5nIG91dCBhbGwgdGhlIG9sZCAzMi1iaXQgQVBJcywgbGlrZSB5b3VyIHNl
-cmllcyBkb2VzLg0KDQpUaGFua3MgZm9yIHRoZSBjb25maXJtYXRpb24uIDotKQ0KDQpBbmQg
-cmVnYXJkaW5nIHRoZSAicSIgc3VmZml4OiBJJ20gbm90IGluc2lzdGluZyB0byBkcm9wIGl0
-LCBJIGp1c3QgZmVsdCBpdCB3b3VsZA0Kbm8gbG9uZ2VyIGJlIG5lZWRlZCB3aGVuIHRoZSB2
-YXJpYW50cyB3aXRob3V0IHN1ZmZpeCBubyBsb25nZXIgZXhpc3QuIElmIHlvdQ0KbGlrZSB0
-byBrZWVwIGl0LCB0aGVuIGJlIGl0IHNvLg0KDQoNCkp1ZXJnZW4NCg==
---------------wGgS4ganA3WbEq7JPL9B9fB0
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Add LiveSession class in tools/perf/python/perf_live.py to support
+live event collection using perf.evlist and perf.parse_events,
+avoiding the need to fork a separate perf record process.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+> diff --git a/tools/perf/python/perf_live.py b/tools/perf/python/perf_live=
+.py
+> new file mode 100755
+> index 0000000000000..46522964cb799
+> --- /dev/null
+> +++ b/tools/perf/python/perf_live.py
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+[ ... ]
 
---------------wGgS4ganA3WbEq7JPL9B9fB0--
+> +    def run(self):
+> +        """Run the live session."""
+> +        try:
+> +            self.evlist.open()
+> +            self.evlist.mmap()
+> +            self.evlist.enable()
+> +
+> +            while True:
+> +                # Poll for events with 100ms timeout
+> +                try:
+> +                    self.evlist.poll(100)
+> +                except InterruptedError:
+> +                    continue
+> +                for cpu in self.cpus:
+> +                    for _ in range(1000): # Limit to 1000 events per CPU=
+ per poll to prevent starvation
+> +                        try:
+> +                            event =3D self.evlist.read_on_cpu(cpu)
+> +                            if event is None:
+> +                                break
+> +                            if event.type =3D=3D perf.RECORD_SAMPLE:
+> +                                self.sample_callback(event)
 
---------------Da1SKvb0yQ6c70iODbaa72pf--
+[Severity: Medium]
+Will this broad exception handler swallow exceptions raised by the user's
+sample_callback?
 
---------------TqpVRvHG9JxgX9GL0sRxBCyG
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+If the user's callback raises a standard Python exception like ValueError or
+KeyError, it looks like it gets caught below and misreported as an event
+parsing error, obscuring bugs in the tracing logic.
 
------BEGIN PGP SIGNATURE-----
+> +                        except OSError as e:
+> +                            # OS/mmap errors are unrecoverable and will =
+cause busy-looping if ignored
+> +                            raise e
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmoin5QFAwAAAAAACgkQsN6d1ii/Ey+B
-tQgAnalu6YDwl7RAxP1bHeyoU9ECkDR1tBNBsYxRi0JmwByzbS3zzWmmvqA4PCeVfGzSVvuIim2f
-ExvmQqBRKkssFdrolUukjdn8/bKTnGxf7uqzAsVaxkvBvioFPCUVSn7c1aZYQnXdbEHawXmxdR68
-zsBgnUFbsY6NW/IlHx2OyBFJtbgvDazWEweozfMFxlB4hjLnWlsvxjelQz7Yrjlw36KaCzZrdA1E
-3TT8GSe/HIAF9q+xZChDMoFOz1P5RPibCLkAKF5Xz29ffrwptZRoulmnaJcPWdgbRf6GU0/yTTJa
-bHrx+Rc/0cmS1RHN9zjZWco/831obneQ169TBKcYzw==
-=nXsn
------END PGP SIGNATURE-----
+[Severity: High]
+Does this unconditionally crash the live session on an empty ring buffer?
 
---------------TqpVRvHG9JxgX9GL0sRxBCyG--
+When the CPU's ring buffer is empty, pyrf_evlist__read_on_cpu() calls
+perf_mmap__read_init(), which returns -EAGAIN (-11). This causes the C
+extension to throw an OSError.
+
+Since it's normal for some CPUs to have no events when poll() returns,
+re-raising the OSError here would terminate the session the first time it
+checks an empty buffer.
+
+> +                        except Exception as e:
+> +                            # Parsing or type errors are recoverable as =
+the event was consumed
+> +                            import sys
+> +                            print(f"Error parsing event on CPU {cpu}: {e=
+}", file=3Dsys.stderr)
+
+[Severity: Medium]
+Can this lead to a busy-loop that spams stderr on unmapped CPUs?
+
+If a CPU is not mapped by the event list (e.g., when tracing uncore PMU
+events), pyrf_evlist__read_on_cpu() returns NULL internally and throws a
+TypeError.
+
+Since the exception handler here catches the TypeError but doesn't break out
+of the 1000-iteration loop, it will repeatedly print this error 1000 times
+for each unmapped CPU on every single poll cycle.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605074003.1730=
+715-1-irogers@google.com?part=3D19
