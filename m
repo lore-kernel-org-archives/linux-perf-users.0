@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8263FE354
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 06:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EBD401486
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 06:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780639585; cv=none; b=YW+66mC22XPE/Sx4aaWMwNij91u7TCRCz551626RIF2fstYj/GtaQKLf1VhdzKscJyaGcGzihEjJU7hJ/8Mw9TzzLde7gOucRD8jgk9HRmeclOqyWqw+Ze9bz9aY5wSOe4y5QkgOLdnyVB+vRNItpTbLv8xYgA9Ou2sbYVnG1l8=
+	t=1780639588; cv=none; b=KRg0a4Zmhv+mzBPIqYu3mVOvwp7SnfazBwzG7XaZX9C+IfoheQSYtFCDG4W2i2z4p1H4M35rl/Rui6hr/Q4qH7rtNsx+QDyzsk+07GBBh1NfWlatbv8HlKpGpc49tP6TGkoIdJRj6x1Y/RcTBUDNqSGCN1/goLt414CnPirlqWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780639585; c=relaxed/simple;
-	bh=Ti7JhinxdfdF0VZlYRiP0WIYtIpfmPWtsX24g8DQCQA=;
+	s=arc-20240116; t=1780639588; c=relaxed/simple;
+	bh=UhjaEA3Ufe5/eUvOO1Z0+8h2wm7hcT/XKAB+757jnjI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bch26Upkby9IlXAnR13CC9esVBSf+Hpp3SFIlltdDG54cIfQWgocHEvrxtieD+Pl/F2rBkM4ut6vaTNz1Tp2ASi9zEzvdR9T8NOP9db84ujIs55/j0vaBIoF++wLVaWZQEvy4NvfjgBwmdmSdYG9FxFPD1J+H6+pTKqx8ccdMl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MN2E6pTW; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=XsA9oUMnmVC/RMlK2S94YWhiP1YOJElP9NWbPK/Hu/JAvx1tmiTTMGg8eWeDu+mLrXjsglGNNwUHjAN8IBzbOUQFjMfLwsZEFGvD+8knRoshwyUJQqX+LmLzz366fkMPyqrU66BpqfITjHTk0589SFkojs+EGXoWLdwRYa8e/+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G8Zq5SPZ; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MN2E6pTW"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-137ea73393cso1706716c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 23:06:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G8Zq5SPZ"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-307625ee07fso1431947eec.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Jun 2026 23:06:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780639583; x=1781244383; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780639585; x=1781244385; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0FFKVPcKu6oPvyvRC5MoZY7q7Y3IzL2ALcc/8kXtgMI=;
-        b=MN2E6pTWTS8sRdJ/YnAW1JDycqNRhwJldwIpleNipaT0o4Z+hpogtlslF+IHb/cSyi
-         p6YDKtgV9oZh8WgEmHJjWStIOc+Dxh/PbKyWcQGZX9J2hVDQMIM0iaIIoE4xF1WwVFyZ
-         uUOMYpKmrPHoFtq9Kocu3bGWzOglrtYs3c399gXgg/nm6ktj62AnDj8+Veu+/c/2qsUg
-         hOnCdQ8kYODGhHZ8FwQ9BbS2gKULl7OXYeHS4x8ur+8wjd2q3WHJdzlP/RbJFFbK/4xA
-         09zXoo8ccKTiV+RQ3k6MFaRjhKTNT7ZI36TEOnrNXnLxAUfWNE6+uoyr371sDIhI47Np
-         OcgQ==
+        bh=SiSvvoB71IN8Z6LGz6s6p4ThC8+c0KPH2E6VURvRvLM=;
+        b=G8Zq5SPZirlrPllgza5jZ4M12mi9FQqmkWPhbWnCc28A9c0KXZCadqbr0jPO07+c8y
+         X64XvIZmlZ9bTp6OQq3k39q4PzMiPqJGyy3KQps5mlM1TKikpuF2Tmk9ItaTfelzUzJt
+         pCxj341OcugHPufltZEiIJWtMvQaOura7x+ppfHJuRlCQeE2y6uTfmlKjVRpmwGttWtN
+         hvL+Mpo19HEh6eQ8On1SEmwe2JPEHcVnE0KiLfhO1vxdMvKS1zp3Ar/dL2sUJckIYrZE
+         TnNK/qUrI3NShUU6ySL6kzZzMckP6xROn9DD5KZyyKXMz+c5s91N0qbvCueDaiK8Hh2a
+         zZ8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780639583; x=1781244383;
+        d=1e100.net; s=20251104; t=1780639585; x=1781244385;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0FFKVPcKu6oPvyvRC5MoZY7q7Y3IzL2ALcc/8kXtgMI=;
-        b=Is5CrNO2g3vJ+UUn8iMmJh3xT8uZLQdlDVaQk81ccvDrb03XUXHj2WhqAUxnzZrBjb
-         BNEdcvbIE7T8IHJHBDxHNE9PQGGZJJ7eeJwz0/yW6M+ZP3PxGHsa73O/EVdVkWo031zm
-         QlPESkaK11oXialC7BHffPbXblaI/f0N/pHHzkATgZYtXBZaIZREZLOFaE/+/s3+au6T
-         QZQ+OXjvcG6E3vAiX7YOFnPiTbnzr8UP/KVtHvU0v8vSq+KMRmPLENt8YPrCEq25bV0L
-         NX8Oj25clrhzCe5joqqywCIWkAXKKxTRZqbRkftnVGVgOZtI1o0a0wJpL0Gm+JryWN5c
-         r5Ag==
-X-Forwarded-Encrypted: i=1; AFNElJ+e4EI+PRitg4I0MTW2cDp6aj8Zac6LSpmcy48J4pdjaW/KYwYzd0spanPRzWXK1/+jFYn3nuF96tqATlUW4SRh@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUx8+mCh/1h2RZGIESNgn6msRqzzeqV4qr8fnpLaMQEHQz1sCt
-	ES5xu8wnNlgRjq97t0GPOgXovlngu7uvmm3xuTdTmFWMFmqMIThNEZKP5EmlfyxeScAm18mGzRb
-	mmQ0XdGoHMQ==
-X-Received: from dyke36.prod.google.com ([2002:a05:7300:4724:b0:304:de31:a7b2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:caa:b0:2f2:6dde:df53
- with SMTP id 5a478bee46e88-3077b181258mr1032664eec.17.1780639582425; Thu, 04
- Jun 2026 23:06:22 -0700 (PDT)
-Date: Thu,  4 Jun 2026 23:06:08 -0700
+        bh=SiSvvoB71IN8Z6LGz6s6p4ThC8+c0KPH2E6VURvRvLM=;
+        b=Cmr/BNl6HxMsmZQ6xXCBCw0670s05ctwfPoPFjpuRID42AR8gtTt1PqD3vFcgdQLjh
+         FZKWFk9alo+/o5drtN8wb5VRjr9sbX6Zu1z5m9gpkGF7KpEfCZzrIzxckuzRlIeP8Lzt
+         +aMSoNyf33Msj9XxX7cHXTAoVOyqcFlOtOF0vRSDG0WGH2C6ypJhdDzEANjHON4/PDd3
+         mJidPALom024juULb4h+tNVjVKm3I+lW+pRFA3yCNO9ZbTsthU+uomEeKGI1AIwexWIa
+         jnHJZnRnnb2exuhIi61+elYAtpW72tdg70PRDkzAy0QGXr4SDKJQnXBtcUFkUWUr1DT4
+         Vv2w==
+X-Forwarded-Encrypted: i=1; AFNElJ8h6doKm+tIunzYccgV8k0Qi9bqcK2SxPJnfGAEYGc2n7VjFqKxKfogpux2YDWcxFt9/i1/2kW/TGsSK9WOTkO7@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkoE1QdC3wfY4gpvh8AzAnS4GzvmQeUTFmJjyWmKV6CoZdFam0
+	GLw888L2Lstb3c0kWOtIepCsYIMB3wL5kd2YMz2Kgf8xoD1e2f23J/8x3KYw1tA3jSzh9NRfHu3
+	HBtSGT/DrCQ==
+X-Received: from dycmb13-n1.prod.google.com ([2002:a05:693c:20cd:10b0:2ee:2c3a:8aaf])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2c01:b0:304:705f:e4e8
+ with SMTP id 5a478bee46e88-3077b33835bmr1071212eec.32.1780639584500; Thu, 04
+ Jun 2026 23:06:24 -0700 (PDT)
+Date: Thu,  4 Jun 2026 23:06:09 -0700
 In-Reply-To: <20260605060610.1529996-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260604172850.683329-1-irogers@google.com> <20260605060610.1529996-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <20260605060610.1529996-4-irogers@google.com>
-Subject: [PATCH v10 3/5] perf inject/aslr: Implement sample address remapping
+Message-ID: <20260605060610.1529996-5-irogers@google.com>
+Subject: [PATCH v10 4/5] perf test: Add inject ASLR test
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, gmx@google.com, james.clark@linaro.org, 
@@ -67,496 +67,501 @@ Cc: adrian.hunter@intel.com, gmx@google.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add the sample address remapping logic to the ASLR tool. This patch
-implements aslr_tool__process_sample, which parses sample events,
-remaps IPs, ADDRs, callchains, and branch stacks using the mappings
-collected from metadata events, and drops potentially leaking raw,
-register, stack, physical address, and aux samples.
+Add a new shell test  to verify the
+feature. The test covers:
+- Basic address remapping for user space samples.
+- Pipe mode coverage for  piped into .
+- Callchain address remapping.
+- Consistency of  output before and after injection.
+- Pipe mode report consistency.
+- Dropping of samples that leak ASLR info (physical addresses).
+- Kernel address remapping (utilizing a dedicated kernel-intensive VFS
+  dd workload
+  to guarantee continuous timer interrupts sampling flow inside kernel
+  privilege states).
+- Kernel report consistency with address normalization.
 
-Also adds the aslr_tool__remap_address helper function.
+The test suite is hardened with global 'set -o pipefail' assertions to
+catch pipeline failures, stream-consuming awk processors to handle
+SIGPIPE signals, and a dedicated pipe output scenario validating raw
+'perf inject -o -' stdout streams.
 
-Co-developed-by: Gabriel Marin <gmx@google.com>
-Signed-off-by: Gabriel Marin <gmx@google.com>
+Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/aslr.c | 454 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 450 insertions(+), 4 deletions(-)
+ tools/perf/tests/shell/inject_aslr.sh | 463 ++++++++++++++++++++++++++
+ 1 file changed, 463 insertions(+)
+ create mode 100755 tools/perf/tests/shell/inject_aslr.sh
 
-diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-index 375a0355f281..8cfefa23030d 100644
---- a/tools/perf/util/aslr.c
-+++ b/tools/perf/util/aslr.c
-@@ -109,6 +109,60 @@ static u64 round_up_to_page_size(u64 addr)
- 	return (addr + page_size - 1) & ~((u64)page_size - 1);
- }
- 
-+static u64 aslr_tool__remap_address(struct aslr_tool *aslr,
-+				    struct thread *aslr_thread,
-+				    u8 cpumode,
-+				    u64 addr)
-+{
-+	struct addr_location al;
-+	struct remap_addresses_key key;
-+	u64 *remapped_invariant_ptr = NULL;
-+	u64 remap_addr = 0;
-+	u8 effective_cpumode = cpumode;
+diff --git a/tools/perf/tests/shell/inject_aslr.sh b/tools/perf/tests/shell/inject_aslr.sh
+new file mode 100755
+index 000000000000..9dd0a4e5f903
+--- /dev/null
++++ b/tools/perf/tests/shell/inject_aslr.sh
+@@ -0,0 +1,463 @@
++#!/bin/bash
++# perf inject --aslr test
++# SPDX-License-Identifier: GPL-2.0
 +
-+	if (!aslr_thread)
-+		return 0; /* No thread. */
++set -e
++set -o pipefail
 +
-+	addr_location__init(&al);
-+	if (!thread__find_map(aslr_thread, cpumode, addr, &al)) {
-+		/*
-+		 * If lookup fails with specified cpumode, try fallback to the other space
-+		 * to be robust against bad cpumode in samples.
-+		 */
-+		if (cpumode == PERF_RECORD_MISC_KERNEL)
-+			effective_cpumode = PERF_RECORD_MISC_USER;
-+		else if (cpumode == PERF_RECORD_MISC_USER)
-+			effective_cpumode = PERF_RECORD_MISC_KERNEL;
-+		else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL)
-+			effective_cpumode = PERF_RECORD_MISC_GUEST_USER;
-+		else if (cpumode == PERF_RECORD_MISC_GUEST_USER)
-+			effective_cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
++shelldir=$(dirname "$0")
++# shellcheck source=lib/perf_has_symbol.sh
++. "${shelldir}"/lib/perf_has_symbol.sh
 +
-+		if (!thread__find_map(aslr_thread, effective_cpumode, addr, &al)) {
-+			addr_location__exit(&al);
-+			return 0; /* No mmap. */
-+		}
-+	}
++sym="noploop"
 +
-+	key.machine = maps__machine(thread__maps(aslr_thread));
-+	key.dso = map__dso(al.map);
-+	key.invariant = map__start(al.map) - map__pgoff(al.map);
-+	key.pid = (effective_cpumode == PERF_RECORD_MISC_KERNEL ||
-+		   effective_cpumode == PERF_RECORD_MISC_GUEST_KERNEL) ?
-+		  kernel_pid : thread__pid(aslr_thread);
++skip_test_missing_symbol ${sym}
 +
-+	if (hashmap__find(&aslr->remap_addresses, &key, &remapped_invariant_ptr)) {
-+		remap_addr = *remapped_invariant_ptr + map__pgoff(al.map) +
-+			     (addr - map__start(al.map));
-+	} else {
-+		pr_debug("Cannot find a remapped entry for address %lx in mapping %lx(%lx) for pid=%d\n",
-+			 addr, map__start(al.map), map__size(al.map), key.pid);
-+	}
++# Create global temp directory
++temp_dir=$(mktemp -d /tmp/perf-test-aslr.XXXXXXXXXX)
 +
-+	addr_location__exit(&al);
-+	return remap_addr;
++prog="perf test -w noploop"
++[ "$(uname -m)" = "s390x" ] && prog="$prog 3"
++err=0
++kprog="dd if=/dev/zero of=/dev/null bs=1M count=500"
++
++cleanup() {
++  trap - EXIT TERM INT
++  local exit_code=$?
++  if [ "${exit_code}" -ne 0 ] || [ "${err}" -ne 0 ]; then
++    echo "Test failed! Preserving temp directory: ${temp_dir}"
++    return
++  fi
++  # Check if temp_dir is set and looks sane before removing
++  if [[ "${temp_dir}" =~ ^/tmp/perf-test-aslr\. ]]; then
++    rm -rf "${temp_dir}"
++  fi
 +}
 +
- struct aslr_machine_priv {
- 	bool kernel_maps_loaded;
- };
-@@ -554,13 +608,405 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
- 				     struct perf_sample *sample,
- 				     struct machine *machine)
- {
--	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
--	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
--	struct perf_tool *delegate = aslr->tool.delegate;
-+	struct evsel *evsel = sample->evsel;
-+	struct delegate_tool *del_tool;
-+	struct aslr_tool *aslr;
-+	struct perf_tool *delegate;
-+	int ret;
-+	u64 sample_type;
-+	struct thread *thread;
-+	struct machine *aslr_machine;
-+	__u64 max_i;
-+	__u64 max_j;
-+	union perf_event *new_event;
-+	struct perf_sample new_sample;
-+	__u64 *in_array, *out_array;
-+	u8 cpumode;
-+	u64 addr;
-+	size_t i;
-+	size_t j;
-+	bool orig_needs_swap;
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
 +
-+	del_tool = container_of(tool, struct delegate_tool, tool);
-+	aslr = container_of(del_tool, struct aslr_tool, tool);
-+	delegate = aslr->tool.delegate;
++get_noploop_addr() {
++  local file=$1
++  perf script -i "$file" | awk '
++    BEGIN { found=0 }
++    {
++      for (i=1; i<=NF; i++) {
++        if ($i ~ /noploop\+/) {
++          if (!found) {
++            print $(i-1)
++            found=1
++          }
++        }
++      }
++    }'
++}
 +
-+	if (evsel__is_dummy_event(evsel))
-+		return delegate->sample(delegate, event, sample, machine);
++test_basic_aslr() {
++  echo "Test basic ASLR remapping"
++  local data
++  data=$(mktemp "${temp_dir}/perf.data.basic.XXXXXX")
++  local data2
++  data2=$(mktemp "${temp_dir}/perf.data2.basic.XXXXXX")
 +
-+	ret = -EFAULT;
-+	sample_type = evsel->core.attr.sample_type;
-+	max_i = (event->header.size - sizeof(struct perf_event_header)) / sizeof(__u64);
-+	max_j = (PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_event_header)) / sizeof(__u64);
-+	new_event = (union perf_event *)aslr->event_copy;
-+	cpumode = sample->cpumode;
-+	i = 0;
-+	j = 0;
++  perf record -e task-clock:u -o "${data}" ${prog}
++  perf inject -v --aslr -i "${data}" -o "${data2}"
 +
-+	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
-+	if (!aslr_machine)
-+		return -ENOMEM;
-+	if (aslr_tool__preload_kernel_maps(aslr_machine) < 0)
-+		return -ENOMEM;
++  orig_addr=$(get_noploop_addr "${data}")
++  new_addr=$(get_noploop_addr "${data2}")
 +
-+	thread = machine__findnew_thread(aslr_machine, sample->pid, sample->tid);
++  echo "Basic ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
 +
-+	if (!thread)
-+		return -ENOMEM;
++  if [ -z "$orig_addr" ]; then
++    echo "Basic ASLR test [Failed - no noploop samples in original file]"
++    err=1
++  elif [ -z "$new_addr" ]; then
++    echo "Basic ASLR test [Failed - could not find remapped address]"
++    err=1
++  elif [ "$orig_addr" = "$new_addr" ]; then
++    echo "Basic ASLR test [Failed - addresses are not remapped]"
++    err=1
++  else
++    echo "Basic ASLR test [Success]"
++  fi
++}
 +
-+	if (max_i > PERF_SAMPLE_MAX_SIZE / sizeof(u64))
-+		goto out_put;
++test_pipe_aslr() {
++  echo "Test pipe mode ASLR remapping"
++  local data
++  data=$(mktemp "${temp_dir}/perf.data.pipe.XXXXXX")
++  local data2
++  data2=$(mktemp "${temp_dir}/perf.data2.pipe.XXXXXX")
 +
-+	new_event->sample.header = event->sample.header;
++  # Use tee to save the original pipe data for comparison
++  perf record -e task-clock:u -o - ${prog} | tee "${data}" | perf inject --aslr -o "${data2}"
 +
-+	in_array = &event->sample.array[0];
-+	out_array = &new_event->sample.array[0];
++  orig_addr=$(get_noploop_addr "${data}")
++  new_addr=$(get_noploop_addr "${data2}")
 +
-+#define CHECK_BOUNDS(required_i, required_j) \
-+	(i + (required_i) > max_i || j + (required_j) > max_j)
++  echo "Pipe ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
 +
-+#define COPY_U64() \
-+	do { \
-+		if (CHECK_BOUNDS(1, 1)) { \
-+			ret = -EFAULT; \
-+			goto out_put; \
-+		} \
-+		out_array[j++] = in_array[i++]; \
-+	} while (0)
++  if [ -z "$orig_addr" ]; then
++    echo "Pipe ASLR test [Failed - no noploop samples in original file]"
++    err=1
++  elif [ -z "$new_addr" ]; then
++    echo "Pipe ASLR test [Failed - could not find remapped address]"
++    err=1
++  elif [ "$orig_addr" = "$new_addr" ]; then
++    echo "Pipe ASLR test [Failed - addresses are not remapped]"
++    err=1
++  else
++    echo "Pipe ASLR test [Success]"
++  fi
++}
 +
-+#define REMAP_U64(addr_field) \
-+	do { \
-+		if (CHECK_BOUNDS(1, 1)) { \
-+			ret = -EFAULT; \
-+			goto out_put; \
-+		} \
-+		out_array[j++] = aslr_tool__remap_address(aslr, thread, cpumode, addr_field); \
-+		i++; \
-+	} while (0)
++test_callchain_aslr() {
++  echo "Test Callchain ASLR remapping"
++  local data
++  data=$(mktemp "${temp_dir}/perf.data.callchain.XXXXXX")
++  local data2
++  data2=$(mktemp "${temp_dir}/perf.data2.callchain.XXXXXX")
 +
-+	if (sample_type & PERF_SAMPLE_IDENTIFIER)
-+		COPY_U64(); /* id */
-+	if (sample_type & PERF_SAMPLE_IP)
-+		REMAP_U64(sample->ip);
-+	if (sample_type & PERF_SAMPLE_TID)
-+		COPY_U64(); /* pid, tid */
-+	if (sample_type & PERF_SAMPLE_TIME)
-+		COPY_U64(); /* time */
-+	if (sample_type & PERF_SAMPLE_ADDR)
-+		REMAP_U64(sample->addr);
-+	if (sample_type & PERF_SAMPLE_ID)
-+		COPY_U64(); /* id */
-+	if (sample_type & PERF_SAMPLE_STREAM_ID)
-+		COPY_U64(); /* stream_id */
-+	if (sample_type & PERF_SAMPLE_CPU)
-+		COPY_U64(); /* cpu, res */
-+	if (sample_type & PERF_SAMPLE_PERIOD)
-+		COPY_U64(); /* period */
-+	if (sample_type & PERF_SAMPLE_READ) {
-+		if ((evsel->core.attr.read_format & PERF_FORMAT_GROUP) == 0) {
-+			COPY_U64(); /* value */
-+			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-+				COPY_U64(); /* time_enabled */
-+			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-+				COPY_U64(); /* time_running */
-+			if (evsel->core.attr.read_format & PERF_FORMAT_ID)
-+				COPY_U64(); /* id */
-+			if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
-+				COPY_U64(); /* lost */
-+		} else {
-+			u64 nr;
++  perf record -g -e task-clock:u -o "${data}" ${prog}
++  perf inject --aslr -i "${data}" -o "${data2}"
 +
-+			if (CHECK_BOUNDS(1, 1)) {
-+				ret = -EFAULT;
-+				goto out_put;
-+			}
-+			out_array[j] = in_array[i];
-+			nr = out_array[j++];
-+			i++;
-+			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-+				COPY_U64(); /* time_enabled */
-+			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-+				COPY_U64(); /* time_running */
-+			for (u64 cntr = 0; cntr < nr; cntr++) {
-+				COPY_U64(); /* value */
-+				if (evsel->core.attr.read_format & PERF_FORMAT_ID)
-+					COPY_U64(); /* id */
-+				if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
-+					COPY_U64(); /* lost */
-+			}
-+		}
-+	}
-+	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
-+		u64 nr;
++  orig_addr=$(get_noploop_addr "${data}")
++  new_addr=$(get_noploop_addr "${data2}")
 +
-+		if (CHECK_BOUNDS(1, 1)) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		out_array[j] = in_array[i];
-+		nr = out_array[j++];
-+		i++;
++  echo "Callchain ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
 +
-+		for (u64 cntr = 0; cntr < nr; cntr++) {
-+			if (CHECK_BOUNDS(1, 1)) {
-+				ret = -EFAULT;
-+				goto out_put;
-+			}
-+			addr = in_array[i++];
-+			if (addr >= PERF_CONTEXT_MAX) {
-+				out_array[j++] = addr;
-+				switch (addr) {
-+				case PERF_CONTEXT_HV:
-+					cpumode = PERF_RECORD_MISC_HYPERVISOR;
-+					break;
-+				case PERF_CONTEXT_KERNEL:
-+					cpumode = PERF_RECORD_MISC_KERNEL;
-+					break;
-+				case PERF_CONTEXT_USER:
-+					cpumode = PERF_RECORD_MISC_USER;
-+					break;
-+				case PERF_CONTEXT_GUEST:
-+					cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
-+					break;
-+				case PERF_CONTEXT_GUEST_KERNEL:
-+					cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
-+					break;
-+				case PERF_CONTEXT_GUEST_USER:
-+					cpumode = PERF_RECORD_MISC_GUEST_USER;
-+					break;
-+				case PERF_CONTEXT_USER_DEFERRED:
-+					if (cntr + 1 >= nr) {
-+						pr_debug("Truncated callchain deferred cookie context\n");
-+						ret = 0;
-+						goto out_put;
-+					}
-+					/*
-+					 * Immediately followed by a 64-bit
-+					 * stitching cookie. Skip/Copy it!
-+					 */
-+					if (CHECK_BOUNDS(1, 1)) {
-+						ret = -EFAULT;
-+						goto out_put;
-+					}
-+					out_array[j++] = in_array[i++];
-+					cntr++;
-+					cpumode = PERF_RECORD_MISC_USER;
-+					break;
-+				default:
-+					pr_debug("invalid callchain context: %"PRIx64"\n", addr);
-+					ret = 0;
-+					goto out_put;
-+				}
-+				continue;
-+			}
-+			out_array[j++] = aslr_tool__remap_address(aslr, thread, cpumode, addr);
-+		}
-+	}
-+	if (sample_type & PERF_SAMPLE_RAW) {
-+		size_t bytes = sizeof(u32) + sample->raw_size;
-+		size_t u64_words = (bytes + 7) / 8;
++  if [ -z "$orig_addr" ]; then
++    echo "Callchain ASLR test [Failed - no noploop samples in original file]"
++    err=1
++  elif [ -z "$new_addr" ]; then
++    echo "Callchain ASLR test [Failed - could not find remapped address]"
++    err=1
++  elif [ "$orig_addr" = "$new_addr" ]; then
++    echo "Callchain ASLR test [Failed - addresses are not remapped]"
++    err=1
++  else
++    # Extract callchain addresses (indented lines starting with hex addresses)
++    orig_callchain=$(perf script -i "${data}" | awk '/^[[:space:]]+[0-9a-f]+/ {print $1}')
++    new_callchain=$(perf script -i "${data2}" | awk '/^[[:space:]]+[0-9a-f]+/ {print $1}')
 +
-+		if (i + u64_words > max_i || j + u64_words > max_j) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		memcpy(&out_array[j], &in_array[i], bytes);
-+		i += u64_words;
-+		j += u64_words;
-+		/*
-+		 * TODO: certain raw samples can be remapped, such as
-+		 * tracepoints by examining their fields.
-+		 */
-+		pr_debug("Dropping raw samples as possible ASLR leak\n");
-+		ret = 0;
-+		goto out_put;
-+	}
-+	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
-+		u64 nr;
++    if [ -z "$orig_callchain" ]; then
++      echo "Callchain ASLR test [Failed - no callchain samples in original file]"
++      err=1
++    elif [ -z "$new_callchain" ]; then
++      echo "Callchain ASLR test [Failed - callchain data was dropped]"
++      err=1
++    elif [ "$orig_callchain" = "$new_callchain" ]; then
++      echo "Callchain ASLR test [Failed - callchain addresses were not remapped]"
++      err=1
++    else
++      echo "Callchain ASLR test [Success]"
++    fi
++  fi
++}
 +
-+		if (CHECK_BOUNDS(1, 1)) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		out_array[j] = in_array[i];
-+		nr = out_array[j++];
-+		i++;
++test_report_aslr() {
++  echo "Test perf report consistency"
++  local data
++  data=$(mktemp "${temp_dir}/perf.data.report.XXXXXX")
++  local data2
++  data2=$(mktemp "${temp_dir}/perf.data2.report.XXXXXX")
++  local data_clean
++  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
 +
-+		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX)
-+			COPY_U64(); /* hw_idx */
++  perf record -e task-clock:u -o "${data}" ${prog}
++  # Use -b to inject build-ids and force ordered events processing in both
++  perf inject -b -i "${data}" -o "${data_clean}"
++  perf inject -v -b --aslr -i "${data}" -o "${data2}"
 +
-+		if (nr > (ULLONG_MAX / 3)) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		if (nr * 3 > max_i - i || nr * 3 > max_j - j) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		for (u64 cntr = 0; cntr < nr; cntr++) {
-+			out_array[j++] = aslr_tool__remap_address(aslr, thread,
-+								  sample->cpumode,
-+								  in_array[i++]); /* from */
-+			out_array[j++] = aslr_tool__remap_address(aslr, thread,
-+								  sample->cpumode,
-+								  in_array[i++]); /* to */
-+			out_array[j++] = in_array[i++]; /* flags */
-+		}
-+		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) {
-+			if (nr > max_i - i || nr > max_j - j) {
-+				ret = -EFAULT;
-+				goto out_put;
-+			}
-+			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
-+			i += nr;
-+			j += nr;
-+			/* TODO: confirm branch counters don't leak ASLR information. */
-+			pr_debug("Dropping sample branch counters as possible ASLR leak\n");
-+			ret = 0;
-+			goto out_put;
-+		}
-+	}
-+	if (sample_type & PERF_SAMPLE_REGS_USER) {
-+		if (CHECK_BOUNDS(1, 0)) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		/* abi */
-+		COPY_U64();
-+		/* TODO: can this be less conservative? */
-+		pr_debug("Dropping regs user sample as possible ASLR leak\n");
-+		ret = 0;
-+		goto out_put;
-+	}
-+	if (sample_type & PERF_SAMPLE_STACK_USER) {
-+		u64 size;
++  local report1="${temp_dir}/report1"
++  local report2="${temp_dir}/report2"
++  local report1_clean="${temp_dir}/report1.clean"
++  local report2_clean="${temp_dir}/report2.clean"
++  local diff_file="${temp_dir}/diff"
 +
-+		if (CHECK_BOUNDS(1, 1)) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		out_array[j] = in_array[i];
-+		size = out_array[j++];
-+		i++;
-+		if (size > 0) {
-+			size_t u64_words = size / 8 + (size % 8 ? 1 : 0);
++  perf report -i "${data_clean}" --stdio > "${report1}"
++  perf report -i "${data2}" --stdio > "${report2}"
 +
-+			if (u64_words > max_i - i || u64_words > max_j - j) {
-+				ret = -EFAULT;
-+				goto out_put;
-+			}
-+			memcpy(&out_array[j], &in_array[i], size);
-+			if (size % 8) {
-+				size_t pad = 8 - (size % 8);
++  # Strip headers and compare lines with percentages
++  grep '%' "${report1}" | grep -v '^#' | sort > "${report1_clean}" || true
++  grep '%' "${report2}" | grep -v '^#' | sort > "${report2_clean}" || true
 +
-+				memset(((char *)&out_array[j]) + size, 0, pad);
-+			}
-+			i += u64_words;
-+			j += u64_words;
-+		}
-+		/* TODO: can this be less conservative? */
-+		pr_debug("Dropping stack user sample as possible ASLR leak\n");
-+		ret = 0;
-+		goto out_put;
-+	}
-+	if (sample_type & PERF_SAMPLE_WEIGHT_TYPE)
-+		COPY_U64(); /* perf_sample_weight */
-+	if (sample_type & PERF_SAMPLE_DATA_SRC)
-+		COPY_U64(); /* data_src */
-+	if (sample_type & PERF_SAMPLE_TRANSACTION)
-+		COPY_U64(); /* transaction */
-+	if (sample_type & PERF_SAMPLE_REGS_INTR) {
-+		if (CHECK_BOUNDS(1, 0)) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		/* abi */
-+		COPY_U64();
-+		/* TODO: can this be less conservative? */
-+		pr_debug("Dropping interrupt register sample as possible ASLR leak\n");
-+		ret = 0;
-+		goto out_put;
-+	}
-+	if (sample_type & PERF_SAMPLE_PHYS_ADDR) {
-+		COPY_U64(); /* phys_addr */
-+		/* TODO: can this be less conservative? */
-+		pr_debug("Dropping physical address sample as possible ASLR leak\n");
-+		ret = 0;
-+		goto out_put;
-+	}
-+	if (sample_type & PERF_SAMPLE_CGROUP)
-+		COPY_U64(); /* cgroup */
-+	if (sample_type & PERF_SAMPLE_DATA_PAGE_SIZE)
-+		COPY_U64(); /* data_page_size */
-+	if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE)
-+		COPY_U64(); /* code_page_size */
++  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
 +
-+	if (sample_type & PERF_SAMPLE_AUX) {
-+		u64 size;
++  if [ ! -s "${report1_clean}" ]; then
++    echo "Report ASLR test [Failed - no samples captured]"
++    err=1
++  elif [ -s "${diff_file}" ]; then
++    echo "Report ASLR test [Failed - reports differ]"
++    echo "Showing first 20 lines of diff:"
++    head -n 20 "${diff_file}"
++    err=1
++  else
++    echo "Report ASLR test [Success]"
++  fi
++}
 +
-+		if (CHECK_BOUNDS(1, 1)) {
-+			ret = -EFAULT;
-+			goto out_put;
-+		}
-+		out_array[j] = in_array[i];
-+		size = out_array[j++];
-+		i++;
-+		if (size > 0) {
-+			size_t u64_words = size / 8 + (size % 8 ? 1 : 0);
++test_pipe_report_aslr() {
++  echo "Test pipe mode perf report consistency"
++  local data
++  data=$(mktemp "${temp_dir}/perf.data.pipe_report.XXXXXX")
++  local data2
++  data2=$(mktemp "${temp_dir}/perf.data2.pipe_report.XXXXXX")
++  local data_clean
++  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
 +
-+			if (u64_words > max_i - i || u64_words > max_j - j) {
-+				ret = -EFAULT;
-+				goto out_put;
-+			}
-+			memcpy(&out_array[j], &in_array[i], size);
-+			if (size % 8) {
-+				size_t pad = 8 - (size % 8);
++  # Use tee to save the original pipe data, then process it with inject -b
++  perf record -e task-clock:u -o - ${prog} | \
++    tee "${data}" | \
++    perf inject -b --aslr -o "${data2}"
++  perf inject -b -i "${data}" -o "${data_clean}"
 +
-+				memset(((char *)&out_array[j]) + size, 0, pad);
-+			}
-+			i += u64_words;
-+			j += u64_words;
-+		}
-+		/* TODO: can this be less conservative? */
-+		pr_debug("Dropping aux sample as possible ASLR leak\n");
-+		ret = 0;
-+		goto out_put;
-+	}
++  local report1="${temp_dir}/report1"
++  local report2="${temp_dir}/report2"
++  local report1_clean="${temp_dir}/report1.clean"
++  local report2_clean="${temp_dir}/report2.clean"
++  local diff_file="${temp_dir}/diff"
 +
-+	if (evsel__is_offcpu_event(evsel)) {
-+		/* TODO: can this be less conservative? */
-+		pr_debug("Dropping off-CPU sample as possible ASLR leak\n");
-+		ret = 0;
-+		goto out_put;
-+	}
++  perf report -i "${data_clean}" --stdio > "${report1}"
++  perf report -i "${data2}" --stdio > "${report2}"
 +
-+	new_event->sample.header.size = sizeof(struct perf_event_header) + j * sizeof(u64);
++  # Strip headers and compare lines with percentages
++  grep '%' "${report1}" | grep -v '^#' | sort > "${report1_clean}" || true
++  grep '%' "${report2}" | grep -v '^#' | sort > "${report2_clean}" || true
 +
-+	orig_needs_swap = evsel->needs_swap;
- 
--	return delegate->sample(delegate, event, sample, machine);
-+	perf_sample__init(&new_sample, /*all=*/ true);
-+	evsel->needs_swap = false;
-+	ret = evsel__parse_sample(evsel, new_event, &new_sample);
-+	evsel->needs_swap = orig_needs_swap;
++  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
 +
-+	if (ret) {
-+		perf_sample__exit(&new_sample);
-+		goto out_put;
-+	}
++  if [ ! -s "${report1_clean}" ]; then
++    echo "Pipe Report ASLR test [Failed - no samples captured]"
++    err=1
++  elif [ -s "${diff_file}" ]; then
++    echo "Pipe Report ASLR test [Failed - reports differ]"
++    echo "Showing first 20 lines of diff:"
++    head -n 20 "${diff_file}"
++    err=1
++  else
++    echo "Pipe Report ASLR test [Success]"
++  fi
++}
 +
-+	new_sample.evsel = evsel;
-+	ret = delegate->sample(delegate, new_event, &new_sample, machine);
-+	perf_sample__exit(&new_sample);
++test_pipe_out_report_aslr() {
++  echo "Test pipe output mode perf report consistency"
++  local data
++  data=$(mktemp "${temp_dir}/perf.data.pipe_out_report.XXXXXX")
++  local data_clean
++  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
 +
-+out_put:
-+	thread__put(thread);
-+	return ret;
- }
- 
-+#undef CHECK_BOUNDS
-+#undef COPY_U64
-+#undef REMAP_U64
++  perf record -e task-clock:u -o "${data}" ${prog}
++  perf inject -b -i "${data}" -o "${data_clean}"
 +
- static int skipn(int fd, off_t n)
- {
- 	char buf[4096];
++  local report1="${temp_dir}/report1"
++  local report2="${temp_dir}/report2"
++  local report1_clean="${temp_dir}/report1.clean"
++  local report2_clean="${temp_dir}/report2.clean"
++  local diff_file="${temp_dir}/diff"
++
++  perf report -i "${data_clean}" --stdio > "${report1}"
++  perf inject -b --aslr -i "${data}" -o - | perf report -i - --stdio > "${report2}"
++
++  # Strip headers and compare lines with percentages
++  grep '%' "${report1}" | grep -v '^#' | sort > "${report1_clean}" || true
++  grep '%' "${report2}" | grep -v '^#' | sort > "${report2_clean}" || true
++
++  diff -u -w "${report1_clean}" "${report2_clean}" > "${diff_file}" || true
++
++  if [ ! -s "${report1_clean}" ]; then
++    echo "Pipe Output Report ASLR test [Failed - no samples captured]"
++    err=1
++  elif [ -s "${diff_file}" ]; then
++    echo "Pipe Output Report ASLR test [Failed - reports differ]"
++    echo "Showing first 20 lines of diff:"
++    head -n 20 "${diff_file}"
++    err=1
++  else
++    echo "Pipe Output Report ASLR test [Success]"
++  fi
++}
++
++test_dropped_samples() {
++  echo "Test dropped samples (phys-data)"
++  local data
++  data=$(mktemp "${temp_dir}/perf.data.dropped.XXXXXX")
++  local data2
++  data2=$(mktemp "${temp_dir}/perf.data2.dropped.XXXXXX")
++
++  # Check if --phys-data is supported by recording a short run
++  if ! perf record -e task-clock:u --phys-data -o "${data}" -- sleep 0.1 > /dev/null 2>&1; then
++    echo "Skipping dropped samples test as --phys-data is not supported"
++    return
++  fi
++
++  perf record -e task-clock:u --phys-data -o "${data}" ${prog}
++  perf inject --aslr -i "${data}" -o "${data2}"
++
++  # Verify that the original file actually contained samples!
++  orig_samples=$(perf script -i "${data}" | wc -l)
++  if [ "$orig_samples" -eq 0 ]; then
++    echo "Dropped samples test [Failed - no samples in original file]"
++    err=1
++  else
++    # Verify that samples are dropped.
++    samples_count=$(perf script -i "${data2}" | wc -l)
++
++    if [ "$samples_count" -gt 0 ]; then
++      echo "Dropped samples test [Failed - samples were not dropped]"
++      err=1
++    else
++      echo "Dropped samples test [Success]"
++    fi
++  fi
++}
++
++test_kernel_aslr() {
++  echo "Test kernel ASLR remapping"
++  local kdata
++  kdata=$(mktemp "${temp_dir}/perf.data.kernel.XXXXXX")
++  local kdata2
++  kdata2=$(mktemp "${temp_dir}/perf.data2.kernel.XXXXXX")
++  local log_file
++  log_file=$(mktemp "${temp_dir}/kernel_record.log.XXXXXX")
++
++  # Try to record kernel samples
++  if ! perf record -e task-clock:k -o "${kdata}" ${kprog} > "${log_file}" 2>&1; then
++    echo "Skipping kernel ASLR test as recording failed (maybe no permissions)"
++    return
++  fi
++
++  # Check for warning about kernel map restriction
++  if grep -q "Couldn't record kernel reference relocation symbol" "${log_file}"; then
++    echo "Skipping kernel ASLR test as kernel map could not be recorded (permissions restricted)"
++    return
++  fi
++
++  perf inject -v --aslr -i "${kdata}" -o "${kdata2}"
++
++  # Check if kernel addresses are remapped.
++  # Find the field that ends with :k: (the event name) and take the next field!
++  orig_addr=$(perf script -i "${kdata}" | awk '
++    BEGIN { found=0 }
++    {
++      for (i=1; i<NF; i++) {
++        if ($i ~ /:[k]+:?$/) {
++          if (!found) {
++            print $(i+1)
++            found=1
++          }
++        }
++      }
++    }')
++  new_addr=$(perf script -i "${kdata2}" | awk '
++    BEGIN { found=0 }
++    {
++      for (i=1; i<NF; i++) {
++        if ($i ~ /:[k]+:?$/) {
++          if (!found) {
++            print $(i+1)
++            found=1
++          }
++        }
++      }
++    }')
++
++  echo "Kernel ASLR: orig_addr=$orig_addr, new_addr=$new_addr"
++
++  if [ -z "$orig_addr" ]; then
++    echo "Kernel ASLR test [Failed - no kernel samples in original file]"
++    err=1
++  elif [ -z "$new_addr" ]; then
++    echo "Kernel ASLR test [Failed - could not find remapped address]"
++    err=1
++  elif [ "$orig_addr" = "$new_addr" ]; then
++    echo "Kernel ASLR test [Failed - addresses are not remapped]"
++    err=1
++  else
++    echo "Kernel ASLR test [Success]"
++  fi
++}
++
++test_kernel_report_aslr() {
++  echo "Test kernel perf report consistency"
++  local kdata
++  kdata=$(mktemp "${temp_dir}/perf.data.kernel_report.XXXXXX")
++  local kdata2
++  kdata2=$(mktemp "${temp_dir}/perf.data2.kernel_report.XXXXXX")
++  local data_clean
++  data_clean=$(mktemp "${temp_dir}/perf.data.clean.XXXXXX")
++  local log_file
++  log_file=$(mktemp "${temp_dir}/kernel_report_record.log.XXXXXX")
++
++  # Try to record kernel samples
++  if ! perf record -e task-clock:k -o "${kdata}" ${kprog} > "${log_file}" 2>&1; then
++    echo "Skipping kernel report test as recording failed (maybe no permissions)"
++    return
++  fi
++
++  # Check for warning about kernel map restriction
++  if grep -q "Couldn't record kernel reference relocation symbol" "${log_file}"; then
++    echo "Skipping kernel report test as kernel map could not be recorded (permissions restricted)"
++    return
++  fi
++
++  # Use -b to inject build-ids and force ordered events processing in both
++  perf inject -b -i "${kdata}" -o "${data_clean}"
++  perf inject -v -b --aslr -i "${kdata}" -o "${kdata2}"
++
++  local report1="${temp_dir}/report_kernel1"
++  local report2="${temp_dir}/report_kernel2"
++  local report1_clean="${temp_dir}/report_kernel1.clean"
++  local report2_clean="${temp_dir}/report_kernel2.clean"
++
++  perf report -i "${data_clean}" --stdio > "${report1}"
++  perf report -i "${kdata2}" --stdio > "${report2}"
++
++  # Strip headers and compare lines with percentages
++  grep '%' "${report1}" | grep -v '^#' > "${report1_clean}" || true
++  grep '%' "${report2}" | grep -v '^#' > "${report2_clean}" || true
++
++  # Normalize kernel DSOs and addresses in clean reports
++  # This allows kernel modules to be either a module or kernel.kallsyms
++  local report1_norm="${temp_dir}/report_kernel1.norm"
++  local report2_norm="${temp_dir}/report_kernel2.norm"
++  local diff_file="${temp_dir}/diff_kernel"
++
++  grep -v -E '0x[0-9a-f]{8,}|0000000000000000' "${report1_clean}" | \
++    awk '{gsub(/\[[a-zA-Z0-9_.-]{2,}\](\.[a-zA-Z0-9_]+)?/, "[kernel]", $0); print}' | \
++    sort > "${report1_norm}" || true
++  grep -v -E '0x[0-9a-f]{8,}|0000000000000000' "${report2_clean}" | \
++    awk '{gsub(/\[[a-zA-Z0-9_.-]{2,}\](\.[a-zA-Z0-9_]+)?/, "[kernel]", $0); print}' | \
++    sort > "${report2_norm}" || true
++
++  diff -u -w "${report1_norm}" "${report2_norm}" > "${diff_file}" || true
++
++  if [ ! -s "${report1_norm}" ]; then
++    echo "Kernel Report ASLR test [Failed - no samples captured]"
++    err=1
++  elif [ -s "${diff_file}" ]; then
++    echo "Kernel Report ASLR test [Failed - reports differ]"
++    echo "Showing first 20 lines of diff:"
++    head -n 20 "${diff_file}"
++    err=1
++  else
++    echo "Kernel Report ASLR test [Success]"
++  fi
++}
++
++test_basic_aslr
++test_pipe_aslr
++test_callchain_aslr
++test_report_aslr
++test_pipe_report_aslr
++test_pipe_out_report_aslr
++test_dropped_samples
++test_kernel_aslr
++test_kernel_report_aslr
++
++cleanup
++exit $err
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
