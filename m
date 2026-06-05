@@ -1,132 +1,311 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0563A413631;
-	Fri,  5 Jun 2026 09:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B9E3CC7E4
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 09:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780651142; cv=none; b=bx+gZTlzzArVlULboM6m3tOu0260dM5M2DgvARQikGTXOujE+vdgx966bTMOuKX8iv0lhAH10GWYzIKtUooIiwu0H9LZuMQi2p0YoWqFbPpxRvWoi/E8qPfi/HM2CuY9BUTbPfZukYa676UqsAqrDLLmL8es3sM6u/zFjeK3bLQ=
+	t=1780652416; cv=none; b=ZXCkbjrIal/0w5v4EHA8RI+kIOirPGwyk94IUB3IOfcgA1Na5k2jjri4AZjD4jtAYDZjUZoE5IqprZRyhIbk2WRLalB0X2y1NsrsxUxv/nBJxJCTVj6+zHbkt7ozySAod90+bzDqZ6TNN/Yk5J+1JHj5sZnREbF3Ypj/XFjZuO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780651142; c=relaxed/simple;
-	bh=9MTYUwEhMlMeKxKYqDQjmJjoP+yc3vdCAPSCyMoXEe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M20lttsEFS4Wd73iY1KVPj3wER001O3sq7MbddCOuRQjZozn8L5XEOutTIV1NY7DiaAljk6vzKCbOpW3VloZRo3pccNUwcBJU7ZGstdEtBqaUX3LkROHDTdd4iWVo1bV4FpfkzLuiq54tqNrQAKycfZ342XnFyuWdZNnLzU+vCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWHeFVne; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780652416; c=relaxed/simple;
+	bh=ItRwmOBbDzMYmI4NkgUNtmoVP0EsETxfLp36T5Slcck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bi2vzZZWOEukVn+PqQKYX0U4ozfO1PO24CibP/xm2jmMvogL2hTolU9OXUnO07fC/29XXULD5yogut/adIlRTZWVNJETocKlLMZFb4/GbLRfr02Lu8MSsGKeA4/yUd26tNiobcoZHkabRJ4I7D8btGJUvMNrx5cDYsKpvsCaFt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aUHbhYEc; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWHeFVne"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B650A1F00893;
-	Fri,  5 Jun 2026 09:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780651140;
-	bh=dBTHQIFlG9MUvtqZXQks2hh60dfS5WjSfNsBJh90OGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=XWHeFVneXA7rzW4sKycEYTkxgXWaWAG/2msrzRw8esPKurEZWt63sAfRaJyRz2pQ5
-	 gToa6tTxyyoJ8kaBCjUK0oEdGeYNo5BJkc+5BYApgF6WNmpbFOzaBUSrNMevFbs39w
-	 NHwpC2br/DR4TV1a5hksqVx717PLzNKxo4umbdRqiUEMruEz+2IRBBMIOYwKMPlH52
-	 CBxSMx31vsi2DBY/Gq6gojE5jV7xXg7kAC8lewZL/EqtUfqXR85AEY3QZ7RQ5T15IS
-	 oieh3Jg3W5F179W76p0WnoTHZrLbry/OxNi7zdDX/SINkaq/912u/v/GScfOzWV73y
-	 +IH8hMqJVMyfQ==
-Date: Fri, 5 Jun 2026 11:18:50 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Huang Rui <ray.huang@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Len Brown <lenb@kernel.org>, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 0/8] x86/msr: Drop 32-bit variants of *_on_cpu() MSR
- functions
-Message-ID: <aiKUenaT9VD0DrpW@gmail.com>
-References: <20260605070826.2995913-1-jgross@suse.com>
- <aiKRbRHyDCjmqvGB@gmail.com>
- <a477aefe-e1c8-4652-b263-86c4cce09eba@suse.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aUHbhYEc"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-bec3ffb95dbso275499166b.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 02:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1780652413; x=1781257213; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ItRwmOBbDzMYmI4NkgUNtmoVP0EsETxfLp36T5Slcck=;
+        b=aUHbhYEcXYPBeGXHrduE0gonDtR1fn/asDBmUZcnsbcKYGPDTRRZoQl8tEK8v1lFvH
+         n0yGmz2vOrFj9gDZRXe05HB9Uhw4PdOKASzvaehgiYXGpZmzeE/UuNXkY/2d5/lXANMu
+         S11cAFXr7D8j/gTpHwzjurqikJeJDzCTAu8QaFncaUYD8IqYJvojRwUuEB6TV6Ey2Cok
+         Zp3bbdv8TubKmqsUdaYTMlvaArGoRXBhW9CWfrjrX9Ih6lehIQC0jzdh9xZEX0wFB1eR
+         iiah1qb0Ls5oJs017NExUBb+uG1rU3e9R846zjlc4TH87KKQsyzBBXMw4ttgJV8BoUdc
+         wFyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780652413; x=1781257213;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ItRwmOBbDzMYmI4NkgUNtmoVP0EsETxfLp36T5Slcck=;
+        b=Fpa38+FN1JXPm2d0P9qhdNgqHw/AIBdOTURLvcyzPd24EB+e+tk11t4pFD+fG6KJ5F
+         ZE9csVidpEMOWZ5kKCrk9gbXqC5dp0LfPLENaJaABqBZ87AjjDt3DH/YHRcJ1dACH6d4
+         cRPB4iafI/f61k+hE0rQLBhxQ6NGvfA7v6D2G1ffnGjdRAQZu37SCifWNVpQS0PMh6kq
+         E59Qix7TPfXsxpVT7ZPO6/86qNsUTDhM0og+B229Ae2M91pAmfAZG77uaqSDhTPVX2Sq
+         4haCsFqASDV5ue7GhNpTKX9IJ2BevVaMgCVp7ABYp5QnrtaQANs3J/FjXw7U2e0df8yb
+         rdMA==
+X-Forwarded-Encrypted: i=1; AFNElJ+Wh36VyMOctfmzgoGOZzTP9QdulVZS2WzZJolRMpQFQYXjFFKmqYiMeggSJJTuh3DJVIGWzWzs520IG4b7xbik@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzCt1DtHmHsgXnVYz9G89WV4YcIS1pEIJfWKC+PYeEsiYE5FqO
+	mCwWCAT/9JExr/mZJL/8qcsuElQXDrtMmOS65rexfe97NjI0SjBHHPhFSbSQtYt/4RI=
+X-Gm-Gg: Acq92OEFSda++/B4JBOIBWBtD7tSS51mp/SNuZJB+3EteFmKCMr565cvXp/wnBWLIhL
+	CqQYcqBCa6jjHg1JRj5jxyz2qtN9jstbr9esHSMX2bnh5+voWCbl/8tzdtx+sGccWlS2D8mNiZ0
+	C/tKToVg+zyqbBGr1oeTW0aWSp9Ja5PfD+qU2ZC2dw+kyX133GCOaD6nNbL16IrwOSiYIVGvLWg
+	R2Q0V/RLbHDrZ9hTtR4oTDauyN0P6R7t2ur5qToc6DHmm1pcBLbiYIaUyAqPRLTUUdT/ioS89nQ
+	aGEDXNlgEBn2gElfWKMhNKTO93UEAXsDLcrrEeW8pEAKDwRsNp/xIkiKb7zjOY3sZ+fSRKg3F4b
+	UHpQyi+sRzG/b0o3Sm7YXnbtHtqZfLF4y4/nYQV9KVE59wLt2d9WA2E/XrJxxCSD98D7GHgE5iE
+	f+N+1j01cVB4QMMKBWH09wKI20xwNDedr4WhyPNJmC37QVLiqdEJ781KgcgTPUy7vqHl4PjoIGU
+	/URl0Lvpz46Kzj+dEmacDADIf2Qg69s06s9AjJVMEpKkZVbQ1rUjF4eP/HeNm5N
+X-Received: by 2002:a17:907:75c2:b0:beb:9be6:f249 with SMTP id a640c23a62f3a-bf3737ea2fdmr91884766b.47.1780652412676;
+        Fri, 05 Jun 2026 02:40:12 -0700 (PDT)
+Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf054e051a5sm435919266b.35.2026.06.05.02.40.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2026 02:40:12 -0700 (PDT)
+Message-ID: <b7e799a6-1f1a-49ef-8aac-0d5fd4a06dc7@suse.com>
+Date: Fri, 5 Jun 2026 11:40:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a477aefe-e1c8-4652-b263-86c4cce09eba@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] x86/msr: Drop 32-bit variants of *_on_cpu() MSR
+ functions
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-edac@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-acpi@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Guenter Roeck <linux@roeck-us.net>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Huang Rui <ray.huang@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Len Brown <lenb@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20260605070826.2995913-1-jgross@suse.com>
+ <aiKRbRHyDCjmqvGB@gmail.com> <a477aefe-e1c8-4652-b263-86c4cce09eba@suse.com>
+ <aiKUenaT9VD0DrpW@gmail.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <aiKUenaT9VD0DrpW@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------x6p6seQKjoqBU6SQR0OrjR4R"
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------x6p6seQKjoqBU6SQR0OrjR4R
+Content-Type: multipart/mixed; boundary="------------bYFZE3YlcnS98YrDup00fJv4";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-edac@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-acpi@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Guenter Roeck <linux@roeck-us.net>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Huang Rui <ray.huang@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Len Brown <lenb@kernel.org>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Message-ID: <b7e799a6-1f1a-49ef-8aac-0d5fd4a06dc7@suse.com>
+Subject: Re: [PATCH 0/8] x86/msr: Drop 32-bit variants of *_on_cpu() MSR
+ functions
+References: <20260605070826.2995913-1-jgross@suse.com>
+ <aiKRbRHyDCjmqvGB@gmail.com> <a477aefe-e1c8-4652-b263-86c4cce09eba@suse.com>
+ <aiKUenaT9VD0DrpW@gmail.com>
+In-Reply-To: <aiKUenaT9VD0DrpW@gmail.com>
 
-* Jürgen Groß <jgross@suse.com> wrote:
+--------------bYFZE3YlcnS98YrDup00fJv4
+Content-Type: multipart/mixed; boundary="------------NsR79dww0BmUQFjwgnbL7v4l"
 
-> On 05.06.26 11:05, Ingo Molnar wrote:
-> > 
-> > * Juergen Gross <jgross@suse.com> wrote:
-> > 
-> > > Drop the variants using 2 32-bit values instead of a single 64-bit one
-> > > of the *_on_cpu() MSR access functions.
-> > > 
-> > > Juergen Gross (8):
-> > >    x86/msr: Switch rdmsr_on_cpu() to return a 64-bit quantity
-> > >    x86/msr: Switch all callers of rdmsrq_on_cpu() to use rdmsr_on_cpu()
-> > >    x86/msr: Switch wrmsr_on_cpu() to use a 64-bit quantity
-> > >    x86/msr: Switch all callers of wrmsrq_on_cpu() to use wrmsr_on_cpu()
-> > >    x86/msr: Switch rdmsr_safe_on_cpu() to return a 64-bit quantity
-> > >    x86/msr: Switch all callers of rdmsrq_safe_on_cpu() to use rdmsr_safe_on_cpu()
-> > >    x86/msr: Switch wrmsr_safe_on_cpu() to use a 64-bit quantity
-> > >    x86/msr: Switch all callers of wrmsrq_safe_on_cpu() to use  wrmsr_safe_on_cpu()
-> > 
-> > To sum up my review feedback for the invididual patches, we want
-> > to do this instead:
-> > 
-> >    x86/msr: Convert rdmsrl_on_cpu() users to rdmsrq_on_cpu()
-> >    x86/msr: Drop the rdmsrl_on_cpu() alias to rdmsrq_on_cpu()
-> > 
-> >    x86/msr: Switch all callers of rdmsr_on_cpu() to use rdmsrq_on_cpu()
-> >    x86/msr: Remove the unused rdmsr_on_cpu() API
-> > 
-> >    x86/msr: Switch all callers of wrmsr_on_cpu() to use wrmsrq_on_cpu()
-> >    x86/msr: Remove unused wrmsr_on_cpu() API
-> > 
-> >    x86/msr: Switch all callers of rdmsr_safe_on_cpu() to use rdmsrq_safe_on_cpu()
-> >    x86/msr: Remove unused rdmsr_safe_on_cpu() API
-> > 
-> >    x86/msr: Switch all callers of wrmsr_safe_on_cpu() to use wrmsrq_safe_on_cpu()
-> >    x86/mrs: Remove unused wrmsrq_safe_on_cpu() API
-> > 
-> > Note how there's no "conversion" of the 32-bit API itself in this
-> > approach, we just do a straightforward migration of the users to
-> > the already existing 64-bit APIs, then remove any unused APIs.
-> 
-> Fine with me, but I just wanted to get rid of the "q" and "l" suffices
-> completely, as they serve no special purpose after dropping all other
-> variants.
-> 
-> OTOH if wanted such a switch could be done later easily.
+--------------NsR79dww0BmUQFjwgnbL7v4l
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Well, we had a similar discussion back when we standardized on
-rdmsrq() and wrmsrq(), and we use them as our primary 64-bit
-MSR handling APIs. Why have a different pattern in any of the
-derived APIs? It should really use the same conceptual namespace,
-not some confusing mixture of two naming schemes.
+T24gMDUuMDYuMjYgMTE6MTgsIEluZ28gTW9sbmFyIHdyb3RlOg0KPiANCj4gKiBKw7xyZ2Vu
+IEdyb8OfIDxqZ3Jvc3NAc3VzZS5jb20+IHdyb3RlOg0KPiANCj4+IE9uIDA1LjA2LjI2IDEx
+OjA1LCBJbmdvIE1vbG5hciB3cm90ZToNCj4+Pg0KPj4+ICogSnVlcmdlbiBHcm9zcyA8amdy
+b3NzQHN1c2UuY29tPiB3cm90ZToNCj4+Pg0KPj4+PiBEcm9wIHRoZSB2YXJpYW50cyB1c2lu
+ZyAyIDMyLWJpdCB2YWx1ZXMgaW5zdGVhZCBvZiBhIHNpbmdsZSA2NC1iaXQgb25lDQo+Pj4+
+IG9mIHRoZSAqX29uX2NwdSgpIE1TUiBhY2Nlc3MgZnVuY3Rpb25zLg0KPj4+Pg0KPj4+PiBK
+dWVyZ2VuIEdyb3NzICg4KToNCj4+Pj4gICAgIHg4Ni9tc3I6IFN3aXRjaCByZG1zcl9vbl9j
+cHUoKSB0byByZXR1cm4gYSA2NC1iaXQgcXVhbnRpdHkNCj4+Pj4gICAgIHg4Ni9tc3I6IFN3
+aXRjaCBhbGwgY2FsbGVycyBvZiByZG1zcnFfb25fY3B1KCkgdG8gdXNlIHJkbXNyX29uX2Nw
+dSgpDQo+Pj4+ICAgICB4ODYvbXNyOiBTd2l0Y2ggd3Jtc3Jfb25fY3B1KCkgdG8gdXNlIGEg
+NjQtYml0IHF1YW50aXR5DQo+Pj4+ICAgICB4ODYvbXNyOiBTd2l0Y2ggYWxsIGNhbGxlcnMg
+b2Ygd3Jtc3JxX29uX2NwdSgpIHRvIHVzZSB3cm1zcl9vbl9jcHUoKQ0KPj4+PiAgICAgeDg2
+L21zcjogU3dpdGNoIHJkbXNyX3NhZmVfb25fY3B1KCkgdG8gcmV0dXJuIGEgNjQtYml0IHF1
+YW50aXR5DQo+Pj4+ICAgICB4ODYvbXNyOiBTd2l0Y2ggYWxsIGNhbGxlcnMgb2YgcmRtc3Jx
+X3NhZmVfb25fY3B1KCkgdG8gdXNlIHJkbXNyX3NhZmVfb25fY3B1KCkNCj4+Pj4gICAgIHg4
+Ni9tc3I6IFN3aXRjaCB3cm1zcl9zYWZlX29uX2NwdSgpIHRvIHVzZSBhIDY0LWJpdCBxdWFu
+dGl0eQ0KPj4+PiAgICAgeDg2L21zcjogU3dpdGNoIGFsbCBjYWxsZXJzIG9mIHdybXNycV9z
+YWZlX29uX2NwdSgpIHRvIHVzZSAgd3Jtc3Jfc2FmZV9vbl9jcHUoKQ0KPj4+DQo+Pj4gVG8g
+c3VtIHVwIG15IHJldmlldyBmZWVkYmFjayBmb3IgdGhlIGludmlkaWR1YWwgcGF0Y2hlcywg
+d2Ugd2FudA0KPj4+IHRvIGRvIHRoaXMgaW5zdGVhZDoNCj4+Pg0KPj4+ICAgICB4ODYvbXNy
+OiBDb252ZXJ0IHJkbXNybF9vbl9jcHUoKSB1c2VycyB0byByZG1zcnFfb25fY3B1KCkNCj4+
+PiAgICAgeDg2L21zcjogRHJvcCB0aGUgcmRtc3JsX29uX2NwdSgpIGFsaWFzIHRvIHJkbXNy
+cV9vbl9jcHUoKQ0KPj4+DQo+Pj4gICAgIHg4Ni9tc3I6IFN3aXRjaCBhbGwgY2FsbGVycyBv
+ZiByZG1zcl9vbl9jcHUoKSB0byB1c2UgcmRtc3JxX29uX2NwdSgpDQo+Pj4gICAgIHg4Ni9t
+c3I6IFJlbW92ZSB0aGUgdW51c2VkIHJkbXNyX29uX2NwdSgpIEFQSQ0KPj4+DQo+Pj4gICAg
+IHg4Ni9tc3I6IFN3aXRjaCBhbGwgY2FsbGVycyBvZiB3cm1zcl9vbl9jcHUoKSB0byB1c2Ug
+d3Jtc3JxX29uX2NwdSgpDQo+Pj4gICAgIHg4Ni9tc3I6IFJlbW92ZSB1bnVzZWQgd3Jtc3Jf
+b25fY3B1KCkgQVBJDQo+Pj4NCj4+PiAgICAgeDg2L21zcjogU3dpdGNoIGFsbCBjYWxsZXJz
+IG9mIHJkbXNyX3NhZmVfb25fY3B1KCkgdG8gdXNlIHJkbXNycV9zYWZlX29uX2NwdSgpDQo+
+Pj4gICAgIHg4Ni9tc3I6IFJlbW92ZSB1bnVzZWQgcmRtc3Jfc2FmZV9vbl9jcHUoKSBBUEkN
+Cj4+Pg0KPj4+ICAgICB4ODYvbXNyOiBTd2l0Y2ggYWxsIGNhbGxlcnMgb2Ygd3Jtc3Jfc2Fm
+ZV9vbl9jcHUoKSB0byB1c2Ugd3Jtc3JxX3NhZmVfb25fY3B1KCkNCj4+PiAgICAgeDg2L21y
+czogUmVtb3ZlIHVudXNlZCB3cm1zcnFfc2FmZV9vbl9jcHUoKSBBUEkNCj4+Pg0KPj4+IE5v
+dGUgaG93IHRoZXJlJ3Mgbm8gImNvbnZlcnNpb24iIG9mIHRoZSAzMi1iaXQgQVBJIGl0c2Vs
+ZiBpbiB0aGlzDQo+Pj4gYXBwcm9hY2gsIHdlIGp1c3QgZG8gYSBzdHJhaWdodGZvcndhcmQg
+bWlncmF0aW9uIG9mIHRoZSB1c2VycyB0bw0KPj4+IHRoZSBhbHJlYWR5IGV4aXN0aW5nIDY0
+LWJpdCBBUElzLCB0aGVuIHJlbW92ZSBhbnkgdW51c2VkIEFQSXMuDQo+Pg0KPj4gRmluZSB3
+aXRoIG1lLCBidXQgSSBqdXN0IHdhbnRlZCB0byBnZXQgcmlkIG9mIHRoZSAicSIgYW5kICJs
+IiBzdWZmaWNlcw0KPj4gY29tcGxldGVseSwgYXMgdGhleSBzZXJ2ZSBubyBzcGVjaWFsIHB1
+cnBvc2UgYWZ0ZXIgZHJvcHBpbmcgYWxsIG90aGVyDQo+PiB2YXJpYW50cy4NCj4+DQo+PiBP
+VE9IIGlmIHdhbnRlZCBzdWNoIGEgc3dpdGNoIGNvdWxkIGJlIGRvbmUgbGF0ZXIgZWFzaWx5
+Lg0KPiANCj4gV2VsbCwgd2UgaGFkIGEgc2ltaWxhciBkaXNjdXNzaW9uIGJhY2sgd2hlbiB3
+ZSBzdGFuZGFyZGl6ZWQgb24NCj4gcmRtc3JxKCkgYW5kIHdybXNycSgpLCBhbmQgd2UgdXNl
+IHRoZW0gYXMgb3VyIHByaW1hcnkgNjQtYml0DQo+IE1TUiBoYW5kbGluZyBBUElzLiBXaHkg
+aGF2ZSBhIGRpZmZlcmVudCBwYXR0ZXJuIGluIGFueSBvZiB0aGUNCj4gZGVyaXZlZCBBUElz
+PyBJdCBzaG91bGQgcmVhbGx5IHVzZSB0aGUgc2FtZSBjb25jZXB0dWFsIG5hbWVzcGFjZSwN
+Cj4gbm90IHNvbWUgY29uZnVzaW5nIG1peHR1cmUgb2YgdHdvIG5hbWluZyBzY2hlbWVzLg0K
+DQpJbiB0aGUgbG9uZyBydW4gSSdkIGxpa2UgdG8gZG8gdGhlIHNhbWUgY29udmVyc2lvbiBm
+b3IgdGhlIHJkbXNyKigpIGFuZA0Kd3Jtc3IqKCkgaW50ZXJmYWNlcywgdG9vIChzbyBvbmx5
+IG9mZmVyaW5nIGFuZCB1c2luZyB0aGUgNjQtYml0IHZhcmlhbnRzKS4NCg0KSSB1bmRlcnN0
+YW5kIHRoYXQgdGhpcyBpcyBub3QgZ3VhcmFudGVlZCB0byBiZSBhY2NlcHRlZCBpbW1lZGlh
+dGVseSBhZnRlcg0KdGhpcyBzZXJpZXMsIHNvIEkgYWdyZWUgdGhhdCBpdCBpcyBiZXR0ZXIg
+dG8ga2VlcCB0aGUgInEiIHN1ZmZpeCBmb3Igbm93DQppbiBvcmRlciB0byBhdm9pZCBjb25m
+dXNpb24uDQoNCg0KSnVlcmdlbg0K
+--------------NsR79dww0BmUQFjwgnbL7v4l
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-	Ingo
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------NsR79dww0BmUQFjwgnbL7v4l--
+
+--------------bYFZE3YlcnS98YrDup00fJv4--
+
+--------------x6p6seQKjoqBU6SQR0OrjR4R
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmoimXsFAwAAAAAACgkQsN6d1ii/Ey8q
++Af/YUy+d34/AkCArj1a1s0qvo5bgUdP9PHx6B1UuRLTg3lvsrCujYmk9eAsEKiinBfFZDKFbAr2
+6VXRBDCZhzQ3Mv1hGx2oYC+KyF53UXV/Nd8GCqZPiF/o3u1LH3YmG8lTPU7ykrpYkI5H1tnj29AR
+exkWbY4IgGSmuBvD3IVKmq3DqzlsoB+fDDPFDrd3ZKcsrXIPdT0Z89SNsYeiiYsAFzG03NsAvBcN
+YvzPazP56H+4cTagb525vz2TWwDinDNGdG7CJuMDkv5XApnbWLIvbUlZLFYuoIt1/H6E1mRQy0yD
+czzOXtvoNOEtnhkYYBTXlXl/3ibEdUfub9yKycR2uA==
+=dWgo
+-----END PGP SIGNATURE-----
+
+--------------x6p6seQKjoqBU6SQR0OrjR4R--
