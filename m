@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04A5392C4F
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 12:35:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950452E975E
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 12:43:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780662910; cv=none; b=aQ6DcrVPqjVI8NIOhdl6fvjD5wXvog9kTJbdJjFUYlF5RxkRYtB5lIgoVamZjjQN6ZLcbXZPz31n4MFG3L4GPEgojlP1EUmRlndrgRGPvqhH8m8+hq5pqvazJfY7YCc5d9m4wuGE7b3tk4CYqKAXWkT6XrRT5Jw6Jn0ehyckKys=
+	t=1780663434; cv=none; b=LMBi4KOWenf7o3ue5aKgVppBEj+KX/LzmWMvlx2/xZUxqy+28CmXJLKNcNQTUTYdkXHqo0WmUWNJgJShL4lkUxYzbS16FLD+PezbhbDQ8W+yRYBrNc3omsMxN+HcuACrzdmH2M0KIbvmPrpLv7NQCZQtqjW1g5M5P3dF49jAWT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780662910; c=relaxed/simple;
-	bh=picODiYvBZFlawWkPzGYhK5ssQgb4mnQkxLzNipHEeI=;
+	s=arc-20240116; t=1780663434; c=relaxed/simple;
+	bh=HgX19Jzh/D4z2RxC0Yw3Kx+LdfLGFPIDo0qRiyZdn2E=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fXaaBkqyypans9pE4EZjDrzfgVgJ8pcGCRhpM+vf+HtBLIs/f9ZglGiJr+nUS4SLyaZym4knNZBqWgghQpWg6YLIf4+t9tTGMRBdZuLRStVwMhwi6i7q6P4lHQU7R4a5XWEWElnfO/OwsS8reFp5+9CBYPcF1IS3VxL5jQ1VpjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDM9NpaG; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=mti8gFmFUBdKKUU+AtyZEDmcSzVrgza8H4oAAWGyjFftC7r2NKfpwYlCtkkVaGKCjApdlew5M9u1ofVnuB/fP5BLzSDdOQJAMn1ctbg6teK0r1yBlq8rbQO5hT19tCLqBbNw4Dtr1Fhp8SuvV57ltx9w09iGiD9sbnbNCZXVPvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBMTogB1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDM9NpaG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66671F00893;
-	Fri,  5 Jun 2026 12:35:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBMTogB1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B9591F00893;
+	Fri,  5 Jun 2026 12:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780662906;
-	bh=MWT6B9WA5gbwzWg1Y4z7I04RZ1RDNGkmV7q9W0weg0g=;
+	s=k20260515; t=1780663433;
+	bh=+94h9uqwBa4o1SVHypE8p9uQQeLlp3VhIbX5rJ1YbzQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jDM9NpaG/VLO6QNK7PqPytuP5U1y+STERsJTvE2woJisTTzbZNqZuB8VDm9RZvpYq
-	 1df8Yxa52QhXlXWX/o/SoZwbAD7HMBfk24yKPOsumiO4mqRDXuKC3UGRIbmFEJjPZL
-	 uUcG9DsNDf6etL02qkow0RTN6aHWdQ74JI14a8bTOPNJXoozJ8IZS4Wy+bqV7PQ9XU
-	 TX4d78Mw+rtefdUxZIzVoLhmSRMqdiZ7AdcEFAL0WDcMGAGuV4gNU2ylmGJ6Cjgb6D
-	 wa4/fXUEjsuUxl9XWRBm5spNjvHW5dXDtGz92ZKHldCbMgtBQavhLVUKXYdw/7jSMw
-	 STEdCcHYZk77w==
+	b=fBMTogB12Qlmt9awwJc6ETECcLKImaB0A1kJRv0ZoxPZ4D1WcMOWkn8stfuw766gA
+	 rhm0zcSbFN5ogOLENd3lRn0TcpjXlku1tNXXQQIxA4D9aCW+YoyGUA6P6i5iFYfz35
+	 NY9bC5epNeUwDeNgjCBDEFU9VIvOSGq6d3EOc8anAjfMNm47Y8ehtA0UOwBpi5JQQA
+	 bQpOOZ+z47ftLwQEKsaHv6/+zX5g5ZZSzUURaSks6xOoSMFYJM/4Kyd0GsxMvQO08V
+	 qGy/2yV5wllQeHReCyoM/A9e9Idh+wObiBELFsnNg99U07u2JPq1Z5DOocM4UFlek9
+	 2jut5HrKdhycA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/5] perf sched: Fix thread reference leaks in
- timehist_get_thread()
+Subject: Re: [PATCH 4/5] perf sched: Cap max_cpu at MAX_CPUS in timehist
+ sample processing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605121515.1725549-4-acme@kernel.org>
-References: <20260605121515.1725549-4-acme@kernel.org>
+In-Reply-To: <20260605121515.1725549-5-acme@kernel.org>
+References: <20260605121515.1725549-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 12:35:05 +0000
-Message-Id: <20260605123505.D66671F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 12:43:52 +0000
+Message-Id: <20260605124353.1B9591F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,98 +48,84 @@ Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Unbounded reference leak of struct thread in timehist_sched_change=
-_event
-- [High] Missing .attr and .feature callbacks break perf sched in pipe mode
+- [High] perf_sched__timehist omits the .feature tool callback, breaking pe=
+rf_env population in pipe mode.
+- [High] Leaked callchain nodes and violation of reference counting rules d=
+uring idle threads teardown.
 --
 
-commit ff77c452c7d2cf0ab5fbb15792dac9ff2587a7cd
+commit fa7c274dda31324797cc9c2df04b0e7a2f0a40d2
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf sched: Fix thread reference leaks in timehist_get_thread()
+perf sched: Cap max_cpu at MAX_CPUS in timehist sample processing
 
-timehist_get_thread() acquires a thread reference via
-machine__findnew_thread() and an idle thread reference via
-get_idle_thread() (which calls thread__get()).  Two error paths in
-the idle_hist block return NULL without releasing these references.
+This commit adds bounds checking to sched->max_cpu updates from the
+sample CPU. It caps env->nr_cpus_online initialization of max_cpu to
+MAX_CPUS to prevent out-of-bounds array accesses on large systems or
+recordings with high CPU IDs.
 
 > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 4aa7833cae6e3..7bd61028327b3 100644
+> index 7bd61028327b3..87a1f4cf8760e 100644
 > --- a/tools/perf/builtin-sched.c
 > +++ b/tools/perf/builtin-sched.c
-> @@ -2546,12 +2546,16 @@ static struct thread *timehist_get_thread(struct =
-perf_sched *sched,
->  			idle =3D get_idle_thread(sample->cpu);
->  			if (idle =3D=3D NULL) {
->  				pr_err("Failed to get idle thread for cpu %d.\n", sample->cpu);
-> +				thread__put(thread);
->  				return NULL;
->  			}
+
+[ ... ]
+
+> @@ -3385,8 +3387,8 @@ static int perf_sched__timehist(struct perf_sched *=
+sched)
+>  		perf_session__set_tracepoints_handlers(session, migrate_handlers))
+>  		goto out;
 > =20
->  			itr =3D thread__priv(idle);
-> -			if (itr =3D=3D NULL)
-> +			if (itr =3D=3D NULL) {
-> +				thread__put(idle);
-> +				thread__put(thread);
->  				return NULL;
-> +			}
-> =20
->  			thread__put(itr->last_thread);
->  			itr->last_thread =3D thread__get(thread);
+> -	/* pre-allocate struct for per-CPU idle stats */
+> -	sched->max_cpu.cpu =3D env->nr_cpus_online;
+> +	/* pre-allocate struct for per-CPU idle stats; cap to array bounds */
+> +	sched->max_cpu.cpu =3D min(env->nr_cpus_online, MAX_CPUS);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but since itr->last_thread is now
-properly reference counted here, I noticed it is being cleared in
-timehist_sched_change_event() without a thread__put():
+This is a pre-existing issue, but does perf_sched__timehist() correctly
+populate perf_env in pipe mode?
 
-tools/perf/builtin-sched.c:timehist_sched_change_event() {
+Looking at perf_sched__timehist() in tools/perf/builtin-sched.c, the tool
+callbacks are initialized without a .feature callback:
+
+    sched->tool.sample       =3D perf_timehist__process_sample;
+    sched->tool.mmap         =3D perf_event__process_mmap;
     ...
-            if (itr->cursor.nr)
-                callchain_append(&itr->callchain, &itr->cursor, t - tprev);
+    sched->tool.build_id     =3D perf_event__process_build_id;
 
-            itr->last_thread =3D NULL;
-        }
+Without registering perf_event__process_feature, piped perf.data streams
+might silently drop non-seekable PERF_RECORD_HEADER_FEATURE events.
 
-        if (!sched->summary_only)
-            timehist_print_sample(sched, sample, &al, thread, t, state);
-    ...
-}
-
-Does this permanently leak the thread reference on every idle-to-busy
-transition when --idle-hist is active?
-
+Does this leave perf_env uninitialized and break environment metadata looku=
+ps
+like the env->nr_cpus_online field accessed here?
 
 [Severity: High]
-This is a pre-existing issue, but while reviewing the sched tool
-initialization, I noticed that the .feature callback is omitted for both
-perf_sched__timehist and cmd_sched, and .attr is additionally omitted for
-cmd_sched:
+This is another pre-existing issue, but is there a reference counting leak
+during teardown in free_idle_threads()?
 
-tools/perf/builtin-sched.c:cmd_sched() {
-    ...
-    perf_tool__init(&sched.tool, /*ordered_events=3D*/true);
-    sched.tool.sample    =3D perf_sched__process_tracepoint_sample;
-    sched.tool.comm      =3D perf_sched__process_comm;
-    sched.tool.namespaces =3D perf_event__process_namespaces;
-    sched.tool.lost      =3D perf_event__process_lost;
-    sched.tool.fork      =3D perf_sched__process_fork_event;
-    ...
-}
+When cleaning up the idle threads array created below by init_idle_threads(=
+),
+the cleanup code uses the internal destructor instead of the lifecycle help=
+er:
 
-tools/perf/builtin-sched.c:perf_sched__timehist() {
-    ...
-    sched->tool.sample   =3D perf_timehist__process_sample;
-    sched->tool.mmap     =3D perf_event__process_mmap;
-    sched->tool.mmap2    =3D perf_event__process_mmap2;
-    ...
-    sched->tool.attr     =3D perf_event__process_attr;
-    ...
-}
+    free_idle_threads() {
+        ...
+        thread__delete(idle);
+    }
 
-In pipe mode, does dropping .attr prevent the creation of evlists entirely,
-and does dropping .feature prevent proper initialization of perf_env,
-breaking the event processing pipeline?
+Since reference handles allocated via thread__new() must be strictly paired
+with thread__put(), does calling thread__delete() directly bypass the
+reference wrapper lifecycle and leak the pointer handle, triggering
+REFCNT_CHECKING traps?=20
+
+Also, does destroying the thread without proper cleanup leak the dynamically
+allocated nodes inside itr->callchain?
+
+>  	if (sched->max_cpu.cpu =3D=3D 0)
+>  		sched->max_cpu.cpu =3D 4;
+>  	if (init_idle_threads(sched->max_cpu.cpu))
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605121515.1725=
-549-1-acme@kernel.org?part=3D3
+549-1-acme@kernel.org?part=3D4
