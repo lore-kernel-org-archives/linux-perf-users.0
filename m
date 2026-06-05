@@ -1,206 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D362F25F5;
-	Thu,  4 Jun 2026 23:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E916B2836E;
+	Fri,  5 Jun 2026 00:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780616102; cv=none; b=IByvr2mybHe/ewO2NGRLBqZEhCgr5WoKUrRSM9SR2kL0zPB6YCZtBp6TzMd0gnlTifatAbPbGJzrRPJP50TeXa5LyKPSbXTbLbXcsCKjU30p+ZO1eBAaMcQCseQPFcgMU2ROUpxAoBhCIys5XWmo+hi3Uia0sqK82pAHFZuWTo4=
+	t=1780619462; cv=none; b=Y02Qa25bG2oWRCYHBf57eh2vImRSogeWQ9JVh/Qozl3kiHw5Ycg/+SSeKmKFGBjYoEIXr9JrVHTGgeYUEDaZ0+sT2DN3ZKQDjlYe38gKR6h7gGC5mf5cQag+HVQ/NcJ2+H+uyZcSfg1w/9xVeu1EsrA8NBMIjdszoER/yJ9NTko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780616102; c=relaxed/simple;
-	bh=c8K1j2bxDz2SlndVZF+ckIXMkG/PoZ8Pa/JeQdissXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AVaPeEBasRPIzzBlFyGoRZyAGv7GpS+y4rCuKrbme8pRMaCv+cobat8Vra9/mMjvh6YepHWqsusIkLxRvNwdHeQ3WUbXmgfF11tZooNXJA7G5t+ayCXN67Nd7L4wfa2YGqv6IhE9ktHzyYc747cVLccyr5tLLh4vGaGw5fiISsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V/RqA59/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780619462; c=relaxed/simple;
+	bh=11FKNCgx+l+oy9ugUVQXkNboc9K85tcIpsqhS5XsXeI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ghzAZecsl0Fl/eMwXUt7JzG5+zVKwZ11MN+RKD4PQYyZPVxf+dtoeqxmiAp209pYx6z2iXFuiaCjox5uSFsXIYTAhW5oI08E6TuuQ50eO2VvjCTpSCGLYeuqLyGBrmzfa3tvqZ5OyCrfgqWJCM4AgMQWwZct2OJr9SB+iqXewxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aLiElCmp; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V/RqA59/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B67D11F00893;
-	Thu,  4 Jun 2026 23:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780616101;
-	bh=eaIigWcgTpI+75JHWpiyotoeOYAV/YkNLtrxdK6qgiY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=V/RqA59/URvQghme5uFo5Y3YJmiuTr2qOxIaZPMrJ61V7jId7+8EboaENnS9hpsmK
-	 rJHtyo2meOMsFGMcmxni2u5k1lgjQn18Pi0oFc3R0bG9iTWbu4gvP78B9msHl4hrc4
-	 s/951RrmyAVwaXxEKSrZnuN7gpsRzqM5WbJ+ObHUGWJAER8rMWBecHRScFiMUl/FrQ
-	 tOu7cDsSSfVHs58ajRkF2dn8Nrc/e+dFZZd8FePja2kF76hczAK0Z+UBVMI35rW342
-	 +tpH+BcF8J1PtotFt9Kx18qVxIbgc65iqErYPPXlMjchdVbkx3B4d5atoDLFE8rK/B
-	 VbMHXc8/Jh07Q==
-Date: Thu, 4 Jun 2026 16:34:58 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] perf timechart: Small optimization for backtrace
-Message-ID: <aiILolfi8MA27v2L@google.com>
-References: <20260604214931.2202322-1-namhyung@kernel.org>
- <CAP-5=fU3JO3b+bPYzZd=TKoxDy4xYMgGXVtCZq6W3Lh3LNN8YA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aLiElCmp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780619460; x=1812155460;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=11FKNCgx+l+oy9ugUVQXkNboc9K85tcIpsqhS5XsXeI=;
+  b=aLiElCmp4jqrIhsQXraWwrHej1HH+DUX1I45oPov0atb1aetjud4HF9y
+   yahLWEW2Ru5LalY0XUNgaJ1xo1P26QOtRnAyd4a1bVh3w1I+65pDx3DUi
+   0nhvSGNBCnF4WI/uCUOBLDsu9MgfVIa2dl3CF//ZeFx7/x+TGejd8TpsF
+   rrDTMx70s9k8QrJWFZCvoyrlPyWdYsm5GZpiT0ZGLpaIxEHD6GytQ007K
+   QXb9NCs7/bdrzHss+s2ukfBI5vOT5fZD1M7aod7BHWQTEgIbH8bc+x8MS
+   mxT3kgn//ncA7KzmY3jmcL9Wf+5BUaM/a9TetwwUpxb6blsXpAJcmUDLq
+   Q==;
+X-CSE-ConnectionGUID: nYOB/NwfTgaEQ8nUYiOVAg==
+X-CSE-MsgGUID: 3jqG08cSRYCxIUSRKlTteA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="81453433"
+X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
+   d="scan'208";a="81453433"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 17:30:59 -0700
+X-CSE-ConnectionGUID: GybdquUxQde8m6v2jerRsQ==
+X-CSE-MsgGUID: JiozvLbSRGO3q6flQJCg/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
+   d="scan'208";a="240505087"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 17:30:56 -0700
+Message-ID: <92a8162d-4865-4435-acaa-75d99fe0f7b3@linux.intel.com>
+Date: Fri, 5 Jun 2026 08:30:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 2/8] perf/x86/intel/uncore: Fix refcnt and other
+ cleanups
+To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260601170114.173359-1-zide.chen@intel.com>
+ <20260601170114.173359-3-zide.chen@intel.com>
+ <1643127e-9a3f-421a-a690-9b363ccfa8e6@linux.intel.com>
+ <1640889a-53ed-46ad-b78b-35982ff37b33@intel.com>
+ <d71fbc71-aedd-4822-9ddc-1b8fadb07314@linux.intel.com>
+ <d9402295-4f46-4630-a5dd-f66e6627793a@intel.com>
+ <e1afadac-76d5-4b71-b5e4-ebae89bfc1b0@linux.intel.com>
+ <f4fd8bd6-bb61-401c-9e36-efaff86cf96c@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <f4fd8bd6-bb61-401c-9e36-efaff86cf96c@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU3JO3b+bPYzZd=TKoxDy4xYMgGXVtCZq6W3Lh3LNN8YA@mail.gmail.com>
 
-Hi Ian,
 
-On Thu, Jun 04, 2026 at 03:38:05PM -0700, Ian Rogers wrote:
-> On Thu, Jun 4, 2026 at 2:49 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > I found an issue int timechart backtrace handling during the last review.
-> > The goal is to reduce unnecessary work in generating backtrace string.
-> >
-> > v2 changes)
-> >  * fix memory leaks when backtrace is not used
-> >  * copy backtrace when it's used twice
-> 
-> Hi Namhyung,
-> 
-> thanks for cleaning this up and the fixes! Running a build of:
-> $ make -C tools/perf O=/tmp/perf DEBUG=1
-> EXTRA_CFLAGS="-fno-omit-frame-pointer -O0 -g -fsanitize=address" clean
-> all
-> 
-> I get an error but the test harness makes it look like the test is
-> passing (I added set -x to the test and removed the "> /dev/null
-> 2>&1"):
-> ```
-> $ sudo /tmp/perf/perf test -vv timechart
-> 136: perf timechart tests
-> 136: perf timechart tests:
-> ---- start ----
-> test child forked, pid 937043
-> + err=0
-> ++ mktemp /tmp/__perf_timechart_test.perf.data.XXXXX
-> + perfdata=/tmp/__perf_timechart_test.perf.data.cXMvK
-> ++ mktemp /tmp/__perf_timechart_test.output.XXXXX.svg
-> + output=/tmp/__perf_timechart_test.output.xZXfy.svg
-> + trap trap_cleanup EXIT TERM INT
-> + perf check feature -q libtraceevent
-> + test_timechart
-> + echo 'Basic perf timechart test'
-> Basic perf timechart test
-> + perf timechart record -o /tmp/__perf_timechart_test.perf.data.cXMvK true
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 4.135 MB
-> /tmp/__perf_timechart_test.perf.data.cXMvK (748 samples) ]
-> 
-> =================================================================
-> ==937049==ERROR: LeakSanitizer: detected memory leaks
-> 
-> Direct leak of 136 byte(s) in 1 object(s) allocated from:
->    #0 0x7fd211119a23 in calloc
-> ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:74
->    #1 0x555c44044416 in timechart__record ~/linux/tools/perf/builtin-timech
-> art.c:1895
->    #2 0x555c44046c19 in cmd_timechart ~/linux/tools/perf/builtin-timechart.
-> c:2073
->    #3 0x555c440828a4 in run_builtin ~/linux/tools/perf/perf.c:348
->    #4 0x555c44082d42 in handle_internal_command ~/linux/tools/perf/perf.c:3
-> 98
->    #5 0x555c44083110 in run_argv ~/linux/tools/perf/perf.c:442
->    #6 0x555c44083667 in main ~/linux/tools/perf/perf.c:549
->    #7 0x7fd206e29f76 in __libc_start_call_main
-> ../sysdeps/nptl/libc_start_call_main.h:58
->    #8 0x7fffcf8a352a  ([stack]+0x2052a)
-> 
-> Direct leak of 10 byte(s) in 2 object(s) allocated from:
->    #0 0x7fd211113e20 in strdup
-> ../../../../src/libsanitizer/asan/asan_interceptors.cpp:593
->    #1 0x555c440444a1 in timechart__record ~/linux/tools/perf/builtin-timech
-> art.c:1902
->    #2 0x555c44046c19 in cmd_timechart ~/linux/tools/perf/builtin-timechart.
-> c:2073
->    #3 0x555c440828a4 in run_builtin ~/linux/tools/perf/perf.c:348
->    #4 0x555c44082d42 in handle_internal_command ~/linux/tools/perf/perf.c:3
-> 98
->    #5 0x555c44083110 in run_argv ~/linux/tools/perf/perf.c:442
->    #6 0x555c44083667 in main ~/linux/tools/perf/perf.c:549
->    #7 0x7fd206e29f76 in __libc_start_call_main
-> ../sysdeps/nptl/libc_start_call_main.h:58
->    #8 0x7fffcf8a352a  ([stack]+0x2052a)
-> 
-> Indirect leak of 44 byte(s) in 4 object(s) allocated from:
->    #0 0x7fd211113e20 in strdup
-> ../../../../src/libsanitizer/asan/asan_interceptors.cpp:593
->    #1 0x555c440445ef in timechart__record ~/linux/tools/perf/builtin-timech
-> art.c:1908
->    #2 0x555c44046c19 in cmd_timechart ~/linux/tools/perf/builtin-timechart.
-> c:2073
->    #3 0x555c440828a4 in run_builtin ~/linux/tools/perf/perf.c:348
->    #4 0x555c44082d42 in handle_internal_command ~/linux/tools/perf/perf.c:3
-> 98
->    #5 0x555c44083110 in run_argv ~/linux/tools/perf/perf.c:442
->    #6 0x555c44083667 in main ~/linux/tools/perf/perf.c:549
->    #7 0x7fd206e29f76 in __libc_start_call_main
-> ../sysdeps/nptl/libc_start_call_main.h:58
->    #8 0x7fffcf8a352a  ([stack]+0x2052a)
-> 
-> Indirect leak of 41 byte(s) in 4 object(s) allocated from:
->    #0 0x7fd211113e20 in strdup
-> ../../../../src/libsanitizer/asan/asan_interceptors.cpp:593
->    #1 0x555c44044696 in timechart__record ~/linux/tools/perf/builtin-timech
-> art.c:1911
->    #2 0x555c44046c19 in cmd_timechart ~/linux/tools/perf/builtin-timechart.
-> c:2073
->    #3 0x555c440828a4 in run_builtin ~/linux/tools/perf/perf.c:348
->    #4 0x555c44082d42 in handle_internal_command ~/linux/tools/perf/perf.c:3
-> 98
->    #5 0x555c44083110 in run_argv ~/linux/tools/perf/perf.c:442
->    #6 0x555c44083667 in main ~/linux/tools/perf/perf.c:549
->    #7 0x7fd206e29f76 in __libc_start_call_main
-> ../sysdeps/nptl/libc_start_call_main.h:58
->    #8 0x7fffcf8a352a  ([stack]+0x2052a)
-> 
-> Indirect leak of 11 byte(s) in 4 object(s) allocated from:
->    #0 0x7fd211113e20 in strdup
-> ../../../../src/libsanitizer/asan/asan_interceptors.cpp:593
->    #1 0x555c440444a1 in timechart__record ~/linux/tools/perf/builtin-timech
-> art.c:1902
->    #2 0x555c44046c19 in cmd_timechart ~/linux/tools/perf/builtin-timechart.
-> c:2073
->    #3 0x555c440828a4 in run_builtin ~/linux/tools/perf/perf.c:348
->    #4 0x555c44082d42 in handle_internal_command ~/linux/tools/perf/perf.c:3
-> 98
->    #5 0x555c44083110 in run_argv ~/linux/tools/perf/perf.c:442
->    #6 0x555c44083667 in main ~/linux/tools/perf/perf.c:549
->    #7 0x7fd206e29f76 in __libc_start_call_main
-> ../sysdeps/nptl/libc_start_call_main.h:58
->    #8 0x7fffcf8a352a  ([stack]+0x2052a)
-> 
-> SUMMARY: AddressSanitizer: 242 byte(s) leaked in 15 allocation(s).
-> + echo 'Basic perf timechart test [Skipped: perf timechart record
-> failed (permissions/events?)]'
-> Basic perf timechart test [Skipped: perf timechart record failed
-> (permissions/events?)]
-> + return
-> + cleanup
-> + rm -f /tmp/__perf_timechart_test.perf.data.cXMvK
-> + rm -f /tmp/__perf_timechart_test.output.xZXfy.svg
-> + trap - EXIT TERM INT
-> + exit 0
-> ---- end(0) ----
-> 136: perf timechart tests
-> : Ok
-> ```
-> 
-> It was this test that I was trying to make leak sanitizer clean when
-> doing my fixes.
+On 6/4/2026 11:41 PM, Chen, Zide wrote:
+>
+> On 6/3/2026 8:00 PM, Mi, Dapeng wrote:
+>> On 6/3/2026 11:09 PM, Chen, Zide wrote:
+>>> On 6/2/2026 8:13 PM, Mi, Dapeng wrote:
+>>>> On 6/2/2026 10:16 PM, Chen, Zide wrote:
+>>>>> On 6/2/2026 4:52 AM, Mi, Dapeng wrote:
+>>>>>> On 6/2/2026 1:01 AM, Zide Chen wrote:
+>>>>>>> Fix typo UNCORE_BOX_FLAG_INITIATED to UNCORE_BOX_FLAG_INITIALIZED.
+>>>>>>>
+>>>>>>> Rename the 'id' parameter in uncore_box_{ref,unref}() to 'die' to
+>>>>>>> reflect its actual meaning and be consistent with other functions.
+>>>>>>>
+>>>>>>> Remove the incorrect atomic_inc(&box->refcnt) from
+>>>>>>> uncore_pci_pmu_register(): PCI boxes are not tracked by refcnt,
+>>>>>>> and this call incorrectly increments it on a per-die basis.
+>>>>>>>
+>>>>>>> Signed-off-by: Zide Chen <zide.chen@intel.com>
+>>>>>>> ---
+>>>>>>> v2:
+>>>>>>> - Don't rename pmu->activeboxes and keep its semantics because in
+>>>>>>>   uncore_pci_remove() path, uncore_pci_pmu_unregister() won't be
+>>>>>>>   called for non-active boxes.
+>>>>>>> - Since pmu->activeboxes keeps it's name, don't need to rename
+>>>>>>>   box->refcnt to box->cpu_refcnt.
+>>>>>>> ---
+>>>>>>>  arch/x86/events/intel/uncore.c | 11 +++++------
+>>>>>>>  arch/x86/events/intel/uncore.h |  6 +++---
+>>>>>>>  2 files changed, 8 insertions(+), 9 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+>>>>>>> index b69b6a21d46b..d759888476c3 100644
+>>>>>>> --- a/arch/x86/events/intel/uncore.c
+>>>>>>> +++ b/arch/x86/events/intel/uncore.c
+>>>>>>> @@ -1170,7 +1170,6 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
+>>>>>>>  	if (!box)
+>>>>>>>  		return -ENOMEM;
+>>>>>>>  
+>>>>>>> -	atomic_inc(&box->refcnt);
+>>>>>> I'm not sure if we should remove this. The
+>>>>>> uncore_box_ref()/uncore_box_unref() are only called for MSR or MMIO type
+>>>>>> uncore PMUs. For the uncore PMUs of PCI type, the box->refcnt is only
+>>>>>> increased here. All the 3 kinds of uncore PMUs should keep consistent
+>>>>>> behavior on the refcnt. 
+>>>>> box->refcnt tracks how many CPUs are active within this die. Here it is
+>>>>> incorrectly incremented on a per-die basis. Additionally, during the PCI
+>>>>> uncore enumeration or teardown process, there is no per-CPU context, so
+>>>>> box->refcnt is useless in PCI uncore.
+>>>>>
+>>>>> PCI uncore only needs pmu->activeboxes.
+>>>> Per my understanding, the main aim of refcnt is to prevent the box
+>>>> structure is freed unexpectedly, it doesn't directly couple with CPUs. It
+>>>> just records how many users are using the the box regardless the users are
+>>>> CPU or something else. For the uncore PMUs of MSR and MMIO type, CPUs can
+>>>> be seen as the users, while for the uncore PMUs of PCI, I suppose the dies
+>>>> (actually any cpu on the die) can be seen the users. 
+>>> No, box->refcnt is a refcnt for in-die CPUs, while pmu->activeboxes is a
+>>> per-die count. They are clear and distinct. That's also why I tried to
+>>> rename them to box->cpu_refcnt and pmu->die_refcnt in v1.
+>>>
+>>> If this line is not deleted, box->refcnt for PCI boxes is always <= 1,
+>>> which is confusing and useless.
+>>>
+>>>  > If we delete this refcnt reference, then the box structure is under no
+>>>> protection and the box structure could be freed by some accidents. 
+>>> box->refcnt is not checked on any PCI boxes; Because there is one
+>>> pmu->box[die] per die, it utilizes box->refcnt for MSR/MMIO boxes only:
+>>>
+>>> - box_ref(): first in-die CPU online — allocate and initialize the box.
+>>> - box_unref(): last in-die CPU offline — tear down the box.
+>>>
+>>> Uncore PCI PMU enumeration and hot plug/unplug do not involve any CPU
+>>> online/offline events, which is why box->refcnt is not used.
+>> No, the refcnt is still useful even for pci type's uncore PMUs, especially
+>> from the software's perspective. refcnt is the essential way to prevent the
+>> unexpected free of the referenced structure. Although currently there would
+>> be only one user for pci type's uncore PMUs and refcnt would be 1 in most
+>> time, we can't ensure the code would always right in any time and no code
+>> accidentally free the box. We'd better keep this refcnt mechanism to avoid
+>> this situation. Thanks.
+> pmu->activeboxes is the refcnt used by PCI PMUs, whose online/offline
+> events operate on a per-die basis.
+>
+> box->refcnt is the refcnt used by MSR/MMIO PMUs, where online/offline
+> events are per-CPU based.
+>
+> In this particular case (uncore_pci_pmu_register(), prior to the
+> upcoming refactor), incrementing box->refcnt also increments
+> pmu->activeboxes. This makes box->refcnt completely redundant for PCI
+> PMUs and effectively a misuse of the per-cpu field for a per-die operation.
+>
+> If I’m missing any scenarios where PCI PMU boxes still require
+> additional protection from box->refcnt, please help point them out.
 
-I think these leaks are pre-existing.  I don't see where it frees cpu
-samples and other events.  I'll take a look and send a fix separately.
+IMO, activeboxes looks more like the reference count of PMU structure
+instead of the box structure. Box->refcnt is actually the reference count
+of  box structure. I know the refcnt could not matter too much for PCI
+uncore PMUs since it has only one user right now, but we'd better keep the
+identical refcnt behavior on all the MSR/MMIO/PCI uncore PMUs, this makes
+the code clean and robust. 
 
-Thanks,
-Namhyung
+Thanks.
 
+>
+>>>>>> Could we keep this and just decrease the refcnt in
+>>>>>> uncore_pci_pmu_unregister()? Thanks.
+>>>>>>
+>>>>>>
+>>>>>>>  	box->dieid = die;
+>>>>>>>  	box->pci_dev = pdev;
+>>>>>>>  	box->pmu = pmu;
+>>>>>>> @@ -1518,7 +1517,7 @@ static void uncore_change_context(struct intel_uncore_type **uncores,
+>>>>>>>  		uncore_change_type_ctx(*uncores, old_cpu, new_cpu);
+>>>>>>>  }
+>>>>>>>  
+>>>>>>> -static void uncore_box_unref(struct intel_uncore_type **types, int id)
+>>>>>>> +static void uncore_box_unref(struct intel_uncore_type **types, int die)
+>>>>>>>  {
+>>>>>>>  	struct intel_uncore_type *type;
+>>>>>>>  	struct intel_uncore_pmu *pmu;
+>>>>>>> @@ -1529,7 +1528,7 @@ static void uncore_box_unref(struct intel_uncore_type **types, int id)
+>>>>>>>  		type = *types;
+>>>>>>>  		pmu = type->pmus;
+>>>>>>>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
+>>>>>>> -			box = pmu->boxes[id];
+>>>>>>> +			box = pmu->boxes[die];
+>>>>>>>  			if (box && box->cpu >= 0 && atomic_dec_return(&box->refcnt) == 0)
+>>>>>>>  				uncore_box_exit(box);
+>>>>>>>  		}
+>>>>>>> @@ -1604,14 +1603,14 @@ static int allocate_boxes(struct intel_uncore_type **types,
+>>>>>>>  }
+>>>>>>>  
+>>>>>>>  static int uncore_box_ref(struct intel_uncore_type **types,
+>>>>>>> -			  int id, unsigned int cpu)
+>>>>>>> +			  int die, unsigned int cpu)
+>>>>>>>  {
+>>>>>>>  	struct intel_uncore_type *type;
+>>>>>>>  	struct intel_uncore_pmu *pmu;
+>>>>>>>  	struct intel_uncore_box *box;
+>>>>>>>  	int i, ret;
+>>>>>>>  
+>>>>>>> -	ret = allocate_boxes(types, id, cpu);
+>>>>>>> +	ret = allocate_boxes(types, die, cpu);
+>>>>>>>  	if (ret)
+>>>>>>>  		return ret;
+>>>>>>>  
+>>>>>>> @@ -1619,7 +1618,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
+>>>>>>>  		type = *types;
+>>>>>>>  		pmu = type->pmus;
+>>>>>>>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
+>>>>>>> -			box = pmu->boxes[id];
+>>>>>>> +			box = pmu->boxes[die];
+>>>>>>>  			if (box && box->cpu >= 0 && atomic_inc_return(&box->refcnt) == 1)
+>>>>>>>  				uncore_box_init(box);
+>>>>>>>  		}
+>>>>>>> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+>>>>>>> index c2e5ccb1d72c..bad5d8dec8e0 100644
+>>>>>>> --- a/arch/x86/events/intel/uncore.h
+>>>>>>> +++ b/arch/x86/events/intel/uncore.h
+>>>>>>> @@ -185,7 +185,7 @@ struct intel_uncore_box {
+>>>>>>>  #define CFL_UNC_CBO_7_PERFEVTSEL0		0xf70
+>>>>>>>  #define CFL_UNC_CBO_7_PER_CTR0			0xf76
+>>>>>>>  
+>>>>>>> -#define UNCORE_BOX_FLAG_INITIATED		0
+>>>>>>> +#define UNCORE_BOX_FLAG_INITIALIZED		0
+>>>>>>>  /* event config registers are 8-byte apart */
+>>>>>>>  #define UNCORE_BOX_FLAG_CTL_OFFS8		1
+>>>>>>>  /* CFL 8th CBOX has different MSR space */
+>>>>>>> @@ -559,7 +559,7 @@ static inline u64 uncore_read_counter(struct intel_uncore_box *box,
+>>>>>>>  
+>>>>>>>  static inline void uncore_box_init(struct intel_uncore_box *box)
+>>>>>>>  {
+>>>>>>> -	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
+>>>>>>> +	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
+>>>>>>>  		if (box->pmu->type->ops->init_box)
+>>>>>>>  			box->pmu->type->ops->init_box(box);
+>>>>>>>  	}
+>>>>>>> @@ -567,7 +567,7 @@ static inline void uncore_box_init(struct intel_uncore_box *box)
+>>>>>>>  
+>>>>>>>  static inline void uncore_box_exit(struct intel_uncore_box *box)
+>>>>>>>  {
+>>>>>>> -	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
+>>>>>>> +	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
+>>>>>>>  		if (box->pmu->type->ops->exit_box)
+>>>>>>>  			box->pmu->type->ops->exit_box(box);
+>>>>>>>  	}
