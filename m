@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957732F7EE4
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 20:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6BE3914F8
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 20:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780689869; cv=none; b=tdPqAwwaq6fFzZcjSO6ZxMj+8nJ95uSD88sQ45OK8R8H+AqgP8d3lJ5codhjOodfMms0Le2EDWsoRt3T4Io22izq4mfSfQwdTI4ZjOFX4LxyXkNSlae7JNVmMfK8fIrw2zoTwyDDKxd2zGWLqk7w/0wJjF2l7dft+tLgmiraJ/o=
+	t=1780689988; cv=none; b=K0pDunmud4t/IsgSpW58qyLwBGL3804xA1HF9Rss8zEEwMqPt/6faiza5HsT6OvaBDnZxVFFTPoilHRkUAENom+VmrF4k8xd98oJxAY7Jxa+cuTjlT4D75ucYXHRPZWrZj+bZDO/sk1Z89MmXOF14VrfbkMa62pQh8n/cJ5cOcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780689869; c=relaxed/simple;
-	bh=C7zymAD9k6tBNDmzXSGOuLN+v/2Yod000wovUU0Bn7o=;
+	s=arc-20240116; t=1780689988; c=relaxed/simple;
+	bh=7MwvH+qKTpDcPI/6XZXKHWlw2ZBzW9V4LRcAsGRzpFg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=A+2mReKxvi4xEB5rdb8Dp2m+5ieBLFIJpd/Lmg567S8W1zgyKsdJJr5InyCyx5Q0G9N4CExgnChvW90D7pHM0fE5Xi771ewPG1Xsz5ock37RHMWAnLgxNI/aauvRUdVMuCB2GYQvPZWWKfQ3Gm2sRhRBA1N/06I2j9rjK7jTt10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6aFAR+w; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Bp5udZ6e5Sc2WjDaTklJU1iW8S0hZt46MAbqtrcNrfA5FC3q3ST1J8P9XxSDvTyc7ds51ccAA93HzhiduO570kMtMT1MEv/n4vYi0gvaomuAGLpzzjTKnRn7/r5eek+D/7cIgQl8Qw1hNfQ8FAD4hfnsYJ/D/6EAoQso7gb3mnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MS+xOazg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6aFAR+w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 015881F00898;
-	Fri,  5 Jun 2026 20:04:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MS+xOazg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4EA1F00893;
+	Fri,  5 Jun 2026 20:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780689868;
-	bh=45i5bM9Y9UdU2RSu98POvQCqtiC6WXTB5kGfqC+I6Rc=;
+	s=k20260515; t=1780689987;
+	bh=oHBT7/pelCcO5FEgTB8J5qDYB51FaBkETyuVgDoGzhk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=L6aFAR+w2x2QblIxD6HNStYKXgUO4I5JUMENcoTeeQEjBrAYGJyaASlqz5RJRFkvp
-	 RwSB7tp1i+lSRBAeyg/WfDfrcLBYHYroUM0owPBX4WSO2ZEAEb8TJdfpt44ZMnwurv
-	 Ria9Lj7CUHfyoIe9YfRk7iUZlYqVpB4WWI9q9u4K64yplD5kBYTTlTa1tQ5kGkeQeT
-	 tjYkMHkJuq0vLtTuMMbHvWBFieevzxwz3HD3xI8cAkynKUvrgDmns40r6v33gMVlrE
-	 HU9Ll0N3bHj2VOIR0ALupxywhNaFckY9bGUbgbdD+7aKboOuUZoXJoWQpOHvz/p3DD
-	 iTOv75vK88ogw==
+	b=MS+xOazgimuBr5qWP4k2WfigaIjhwa0OxoTwxgeV7hwLcg4hNzM4fQ7bJdt5/pIur
+	 ssUS8Hw/22FOEAdBQLL5nkUQGxQFELPbUlpolBdL+TfdokReG/gV4Dc0LrGGzPLcF7
+	 a+m2CWAPYkrkFLNfpWnBIY+33DwglAJMIz5cnWycPLqV4Py/BJ/SjU+SCvE4K4ZQK2
+	 VvlKXjirCCVSlHWJipy5TF6I7Z1OsU3ZFhVB1sNb1dV45MfgRNPpkJp0lYzQAB30V3
+	 mY+ecEufdDu1T78yBAVb+vGWp+zBQS7iK4tfsIel2ZNT3lHlcK7DE03qxyI0TaINHB
+	 RhlqSAJ6nAPeA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 5/5] perf aslr: Strip sample registers
+Subject: Re: [PATCH v13 2/5] perf inject/aslr: Add ASLR tool infrastructure
+ and MMAP tracking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605194851.2533568-6-irogers@google.com>
-References: <20260605194851.2533568-6-irogers@google.com>
+In-Reply-To: <20260605194851.2533568-3-irogers@google.com>
+References: <20260605194851.2533568-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 20:04:27 +0000
-Message-Id: <20260605200428.015881F00898@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 20:06:26 +0000
+Message-Id: <20260605200627.0F4EA1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,83 +46,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] Useless calls to `evsel__reset_sample_bit` due to prior bitwise AND=
-, masking a potential desynchronization hazard.
+- [Medium] Calling `perf_env__kernel_is_64_bit()` with a NULL `env` pointer=
+ in `aslr_tool__findnew_mapping()` causes an immediate crash when processin=
+g mmap events.
 --
 
-commit 407d38620d5d09a61109d6eb3da76fc9aad40847
+commit 8bfb4707677f93e242641f872dc50c16c412d50e
 Author: Ian Rogers <irogers@google.com>
 
-perf aslr: Strip sample registers
+perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
 
-Refactor the ASLR tool to strip out only the register dump payload
-by masking out the relevant perf_event_attr fields when the delegated
-tool is handling the data.
+This patch adds an --aslr option to perf inject to remap virtual addresses
+and drop data/events to prevent leaking ASLR information. It implements
+remapping and tracking for metadata events.
 
 > diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> index c62ae5bcc124f..19fca84a7405e 100644
-> --- a/tools/perf/util/aslr.c
+> new file mode 100644
+> index 0000000000000..5a002dcecb8f1
+> --- /dev/null
 > +++ b/tools/perf/util/aslr.c
 [ ... ]
-> @@ -1126,11 +1200,69 @@ void aslr_tool__delete(struct perf_tool *tool)
+> +static u64 aslr_tool__findnew_mapping(struct aslr_tool *aslr,
+> +				      struct thread *aslr_thread,
+> +				      u8 cpumode, u64 start,
+> +				      u64 len, u64 pgoff)
+> +{
 [ ... ]
-> +void aslr_tool__strip_evlist(const struct perf_tool *tool __maybe_unused=
-, struct evlist *evlist)
-> +{
-> +	struct evsel *evsel;
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		evsel->core.attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
-> +		evsel__reset_sample_bit(evsel, REGS_USER);
-> +		evsel__reset_sample_bit(evsel, REGS_INTR);
+> +	} else {
+> +		/* First address of the process, allocate key and first top address. */
+> +		struct top_addresses_key *tk;
+> +		struct process_top_address *top_val;
+> +		struct machine *machine =3D remap_key.machine;
+> +		struct perf_env *env =3D machine ? machine->env : NULL;
+> +		u64 kernel_start_addr =3D perf_env__kernel_is_64_bit(env) ?
+> +					kernel_space_start_64 : kernel_space_start_32;
 
-[Severity: Low]
-Are these evsel__reset_sample_bit() calls acting as no-ops?
+[Severity: Medium]
+Will this crash if env is NULL?
 
-Because sample_type is already bitwise ANDed with ASLR_SUPPORTED_SAMPLE_TYPE
-just above, the bits are cleared before the helper functions are called.
+If machine->env is NULL, env is assigned NULL. Passing it to
+perf_env__kernel_is_64_bit() will unconditionally dereference it:
 
-This leaves the internal sample_size state temporarily unsynchronized with
-the sample_type flags since evsel__reset_sample_bit() will see the bits
-are already cleared and return silently without decrementing sample_size.
+tools/perf/util/env.c:perf_env__kernel_is_64_bit() {
+	if (env->kernel_is_64_bit =3D=3D -1)
+		perf_env__init_kernel_mode(env);
+	...
+}
 
-> +		evsel->core.attr.sample_regs_user =3D 0;
-> +		evsel->core.attr.sample_regs_intr =3D 0;
-> +
-> +		if (evsel->core.attr.type =3D=3D PERF_TYPE_BREAKPOINT)
-> +			evsel->core.attr.bp_addr =3D 0;
-> +	}
-> +}
-> +
-> +void aslr_tool__restore_evlist(const struct perf_tool *tool, struct evli=
-st *evlist)
-> +{
-> +	const struct delegate_tool *del_tool =3D container_of(tool, const struc=
-t delegate_tool, tool);
-> +	const struct aslr_tool *aslr =3D container_of(del_tool, const struct as=
-lr_tool, tool);
-> +	struct evsel *evsel;
-> +	struct aslr_evsel_priv *priv;
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (hashmap__find(&aslr->evsel_orig_attrs, evsel, &priv)) {
-> +			evsel->core.attr.sample_type =3D priv->orig_sample_type;
-
-[Severity: Low]
-If sample_size had actually been modified by the reset helpers in
-aslr_tool__strip_evlist(), would it remain corrupted here?
-
-Only the sample_type and registers are restored. If evsel__reset_sample_bit=
-()
-had worked as expected and decremented sample_size, the sample_size would
-remain incorrect here when the sample_type flags are put back.
-
-> +			evsel->core.attr.sample_regs_user =3D priv->orig_sample_regs_user;
-> +			evsel->core.attr.sample_regs_intr =3D priv->orig_sample_regs_intr;
-> +		}
-> +	}
-> +}
+Because machines__init() leaves the host machine's env pointer as NULL,
+could this cause a segmentation fault when processing the first mapped even=
+t?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605194851.2533=
-568-1-irogers@google.com?part=3D5
+568-1-irogers@google.com?part=3D2
