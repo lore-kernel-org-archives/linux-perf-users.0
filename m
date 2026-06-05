@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3618B3D9DA9
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 08:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E5C48BD52
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 08:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780646639; cv=none; b=omF6bsRTJIhymXknUP8c9k5agVtHRTywOk2u71GlN48aGvDEttXbn3vFSvU2BfJhLl7cgpuh5oRxA+jHpBZv8EzhUCGAKXnJAco9LgEr6ApOnd1z8gsmKdvUEmFg3O7I3uMJycCZqMJSOh/T7NMxZvw+UKf7TBRL0RtP4tTRYeE=
+	t=1780646731; cv=none; b=IJZiZw8i3XpfTsToAbupafRSg5yqma45cIczKCmdPZLXqpG2nongBjNcLdL18bLf06yGjo9wrnzgLrCBnrpirGh2BrOdFiyyo5S8oiKNU+M6xejt42vEQTaaWyOG5Yk2fI+2OzHGBMh1BIMn0BceEPVF/CAgnHH4F555eME7Jjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780646639; c=relaxed/simple;
-	bh=DLMsJm/c8diTn+lNk/uNWBz4hukWEjlUNQHRZs92in8=;
+	s=arc-20240116; t=1780646731; c=relaxed/simple;
+	bh=610M2/28jfUhIBb6/5UvkOiRRzRA2PLayZH9PmxY9SU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VgNm2sTxVY9sUPCeDJjsmG28+AsHkYDl3iwbP7agLPS+0rSgjGCFGU1nb7ws5Z0z1R4UwIOlH+a5OxjuooPp8yBt/HrXu9gpBb4F3p7aGfNMm6i1BNdbnRp5mq4fsV4Qlu4upjG1trktgM+gaYBpwcrPHGr6ziiU8gKjnJg67S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HU3aw5iO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YUKHlWgFMvzUN9h3JZDX9UvDqcdQXwgqj3GyCn5iNT3w6KH2IKA6EVTeOJUKKrj5qLo22b0GV1NLjhZ32EBMNe6u69sQ4jEdVkME2jK/yBH4DFhcPcWUYykfDmimSmM2MGsyTQdumulgC1nP6jMkXp63HhlG2uxMyPAvcB78VBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wx+a63V5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HU3aw5iO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B18EF1F00893;
-	Fri,  5 Jun 2026 08:03:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wx+a63V5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0847F1F00893;
+	Fri,  5 Jun 2026 08:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780646637;
-	bh=9u6i3rcI9EXcSSG1reHGJXqZWA+0qsOq43fmIbTRghI=;
+	s=k20260515; t=1780646730;
+	bh=G2xtDHEARgYzqIbVqPgtYjFc0zWTs4NVlxuNtNGdTHE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HU3aw5iOcn5QcWyHPRlv4LI4RVNwUOBrb9a0csye+P5mErJ3HVnOy+MTwqGoGkzrP
-	 aMjvpmRgudquQFFbUnZgPbFJu1AyRTS/WH7Us6k3GCSApCz3Ok+ESpk3RpNk+cM6Oh
-	 ehNSEq9f3QnsBp0NSdJpDW3Smb/uSP+HDmnUEtC3RT81LOUt90dVGCuBpiTfIl87Pl
-	 zrwdwIm1zT5u93HEgxw2q6JJvg5tRU2a+jc0yBP6ukEaDI3mrs2B4jW/nLYzuV260x
-	 Doxiy8PAYWJRBBthjXyhXQZbxsrBt/TXCI3ESuRbipV5m77Wmw/DLl6KBnaHyml6Cz
-	 bcTPciEPz7PfA==
+	b=Wx+a63V5sntSjSQ4Rf1Ahg4iSBTIlNCezMQkAAc9o+aKtktY1UGKr0JsobQ4u+yYb
+	 3BhVh+xl2rprQGfFblLbSwMI2p2C+qWCz1nMzWi18RrEMmqgjYODvwcI0uybAd9sRf
+	 P8dXWqcRoqqbTMqi9TTzFq3t2JnXOj+Tk569wRmv/uYqKUdy2SsRVi7zub+EvJI/o0
+	 vaeKTvK7xnv220hR2k3n+kzdvHsuAnJt+7KFUj/BDeHp2m5bMYrou6fOSD/wxAzENh
+	 lIiAuwu+nByv8k/DLkwXgObwopKLXIlNvkuBHhmIi8Vr/ZYapjmpWe0GM+GKvzRArp
+	 2OJP5GurTp5jA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 05/19] perf evlist: Add reference count
+Subject: Re: [PATCH v10 14/19] perf python: Extend API for stat events in
+ python.c
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605074003.1730715-6-irogers@google.com>
-References: <20260605074003.1730715-6-irogers@google.com>
+In-Reply-To: <20260605074003.1730715-15-irogers@google.com>
+References: <20260605074003.1730715-15-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 08:03:57 +0000
-Message-Id: <20260605080357.B18EF1F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 08:05:29 +0000
+Message-Id: <20260605080530.0847F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,95 +46,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Missing type checks when parsing arguments in `pyrf__parse_events`=
- and `pyrf__parse_metrics` lead to memory corruption if arbitrary objects a=
-re passed.
+- [High] The Python `pyrf_session` wrapper fails to register `.attr` and `.=
+feature` callbacks for pipe mode, silently dropping `PERF_RECORD_HEADER_ATT=
+R` events and breaking `evsel` lookup.
 --
 
-commit cb6079407cc6561ad1c951d274d9edb326c3f418
+commit 9b2beeec32b11c94e99c583602b25a4f6100962e
 Author: Ian Rogers <irogers@google.com>
 
-perf evlist: Add reference count
+perf python: Extend API for stat events in python.c
 
-This commit adds a reference count to the evlist structure. The reference c=
-ount
-is initialized to 1 at allocation and helps manage the lifecycle of evlists,
-particularly avoiding asserts and issues when cloning evlists in Python cod=
-e.
+This commit adds stat information to the perf python session API. It
+provides new callbacks and Python objects to map stat events from the
+event stream.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
 [ ... ]
-> @@ -2088,14 +2088,17 @@ static PyObject *pyrf__parse_events(PyObject *sel=
-f, PyObject *args)
->  {
->  	const char *input;
-> -	struct evlist evlist =3D {};
-> +	struct evlist *evlist =3D evlist__new();
->  	struct parse_events_error err;
->  	PyObject *result;
->  	PyObject *pcpus =3D NULL, *pthreads =3D NULL;
->  	struct perf_cpu_map *cpus;
->  	struct perf_thread_map *threads;
+> @@ -3573,8 +3738,13 @@ static PyObject *pyrf_session__new(PyTypeObject *t=
+ype, PyObject *args, PyObject
+>  	} while (0)
 > =20
-> -	if (!PyArg_ParseTuple(args, "s|OO", &input, &pcpus, &pthreads))
-> +	if (!evlist)
-> +		return PyErr_NoMemory();
+>  	ADD_TOOL(sample);
+> +	ADD_TOOL(stat);
+>  	#undef ADD_TOOL
+> =20
+> +	if (stat)
+> +		psession->tool.stat_round =3D pyrf_session_tool__stat_round;
 > +
-> +	if (!PyArg_ParseTuple(args, "s|OO", &input, &pcpus, &pthreads)) {
-> +		evlist__put(evlist);
->  		return NULL;
-> +	}
-> =20
->  	threads =3D pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : =
-NULL;
->  	cpus =3D pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
+> +
+>  	psession->tool.comm		=3D perf_event__process_comm;
+>  	psession->tool.mmap		=3D perf_event__process_mmap;
+>  	psession->tool.mmap2            =3D perf_event__process_mmap2;
 
 [Severity: High]
-This is a pre-existing issue, but could this cause memory corruption if
-arbitrary types are passed from Python? The untyped Python objects (parsed
-with 'O') are blindly cast to pyrf_thread_map and pyrf_cpu_map structs with=
-out
-validation. Should this use 'O!' with the corresponding type objects to ens=
-ure
-the inputs are actually the expected map types?
+Will this configuration properly handle evsel population in pipe mode?
 
-[ ... ]
-> @@ -2114,14 +2114,18 @@ static PyObject *pyrf__parse_metrics(PyObject *se=
-lf, PyObject *args)
->  {
->  	const char *input, *pmu =3D NULL;
-> -	struct evlist evlist =3D {};
-> +	struct evlist *evlist =3D evlist__new();
->  	PyObject *result;
->  	PyObject *pcpus =3D NULL, *pthreads =3D NULL;
->  	struct perf_cpu_map *cpus;
->  	struct perf_thread_map *threads;
->  	int ret;
-> =20
-> -	if (!PyArg_ParseTuple(args, "s|sOO", &input, &pmu, &pcpus, &pthreads))
-> +	if (!evlist)
-> +		return PyErr_NoMemory();
-> +
-> +	if (!PyArg_ParseTuple(args, "s|sOO", &input, &pmu, &pcpus, &pthreads)) {
-> +		evlist__put(evlist);
->  		return NULL;
-> +	}
-> =20
->  	threads =3D pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : =
-NULL;
->  	cpus =3D pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
+Because psession->tool.attr and psession->tool.feature are not assigned
+handlers here, they appear to remain as stubs. Without processing
+PERF_RECORD_HEADER_ATTR and PERF_RECORD_HEADER_FEATURE events from the
+pipe stream, won't session->evlist remain unpopulated?
 
-[Severity: High]
-This is a pre-existing issue, but similarly to pyrf__parse_events() above,
-does this code blindly cast the untyped Python objects to pyrf_thread_map a=
-nd
-pyrf_cpu_map structs? Using 'O!' in PyArg_ParseTuple would allow the Python
-C API to validate the type before casting, avoiding potential crashes.
+If that happens, won't evlist__id2evsel() return NULL when processing
+the newly added PERF_RECORD_STAT events, resulting in an "unknown" name
+for the stat records?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605074003.1730=
-715-1-irogers@google.com?part=3D5
+715-1-irogers@google.com?part=3D14
