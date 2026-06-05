@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8769148AE03
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 07:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5A048B36D
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 07:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780645266; cv=none; b=toJ4AtrvuYQFwN/dsblLtsQc3IDLW+OhGiGxLN0ajfZN/ph0J8U7zaMDOh3LyGtkiDZysejl2R1CAHKI9XgYBb3xmSQAtNaM7lpeVfiPaf4dQCZ3vIXIykWwq1lY9IZUNiHsCj2Ygz84toiGcYgsMv2P0Jt3KBwFqiWH/tms62g=
+	t=1780645266; cv=none; b=Z6FUuSw2BqIKJiBQp+DiTcD1/Y/tWvs92PtrbJqPggWm7UEVuv4ZIkIt21/6HwakO93kJcHi/lusBqUYAXoL2F4VLpBR6pl0+xWejEiDAqpXINmB2rLU2OH1m0MPG7W+x1T8CuY+K2L0WAp+hWWmPCSkUKhSPRy4tAWj8vE30VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780645266; c=relaxed/simple;
-	bh=xh3IHkMcde6zuAqOHPK7BRA0GbARSVuODpAyNQneOc0=;
+	bh=RHRrkXXYcYNq62G+cS7Ng47p2C2OwfZEq52wF0NYtno=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OEyfnvG3U4cGL1tMwQCfpaiKs6rq1OqR6uq+PAaTDgVW+micuyN3u8X8WKls4BSe05X+wUpfGoZ0I5ER5RZo80uNv5Uoftv2/dhGLi4A/OOjkrqmCJC3/vlE6ra55wFVsW3EwrTvOQV28yiK5uqgHK4xy3+i4S8K4mZ+SsVl4Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=opZsnB/K; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=KlBP/7nHDM5FKCjR1qZPBFBJDOSwiZZiVyzTOsaZOJ+XKTRdukA8F3XeN0flw2Sf18xxFjRe6oiPNj9F/Jks5dzHYHdOn4CLN1YDgXngxe8A13l+2oingQoLwjjv7W1SOaij0NwQTvb8609lF1hPeBhyZOq+sL9HvA3yGcZ6PhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lpXYfX8K; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="opZsnB/K"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-30762d67a64so2209299eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 00:41:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lpXYfX8K"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304b8d0ee63so2033879eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 00:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780645262; x=1781250062; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780645264; x=1781250064; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=voLKjjU6OoMtJ62Uq8JeIHAZdLKiX0fx4p+oX06Fbac=;
-        b=opZsnB/K4vZDw9e8IUwrBoSgnjjT7YydN68VKxVqCunkSCQ1scGHy8VPvYq+hIFrk8
-         ljc75GzIMKG5tA5KIguX/U5DRlTuisfhUr12VX2siJdT7ppNZa/6ltIAf7JnegpqEF/O
-         IjFpGH6FmCYmy2za/3kX6hctf6hozOGlQ8+Q/4tggWHL4rDx3zOINfjJKJoT86QQSlxN
-         NN20mDjzazMlLE5qqKOkXCEGnfy3CL5FiCmdgjwxw/ckcryRtheRIXtipJTEYJinAjZF
-         PCxNM5eAdfK5MjM8+kNOkQpL11zd0WAzGstMqhhBrYYIcSoQwDllIkSCADSinuQqaNHu
-         wTjw==
+        bh=KF1KukU9Rk2Bs9+AAMOvCc6v+Vx5eW/rGfc2xWnqbwc=;
+        b=lpXYfX8KzlCtcU9salsi34HZN982qE+gKXbnaSvA2KSC4Iu8LvkHDSBB8YNRBJ/CaM
+         e02oW/keh8y2beXe84fubbb+vFZi0XaQBhLOGWUCd9oJxW0NrlNE0uDxvD8Qbgb4umeM
+         a4emuurfYg/D5MFGoZ4Qyz5hsD/xL9bAYFAVcSSfno2e9sFhkJk9pe0wonmdmKlbvTgD
+         C8s1x69JDgxXFD9eU1VgG3SYONa7+hfa+n3Um/jMnLv3BaelyXv5xV0j8E2hEPsOdpBv
+         4tBHxkolhb54V2Z4CdBOWWrKrUndsojD73t93FlryTvT8sy5ppw0ah1la0j2DDDsQmLs
+         zJ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780645262; x=1781250062;
+        d=1e100.net; s=20251104; t=1780645264; x=1781250064;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=voLKjjU6OoMtJ62Uq8JeIHAZdLKiX0fx4p+oX06Fbac=;
-        b=CzoHdoPZgyTq+avhycSPvTPBAprV5feV9THXY5ERaQ3BcLhJ/iK0rjld92IJpWBH+Z
-         YQjycQZLLOlV+HeCDqf9S61NTgSafb2nm6XtgXSDCaerAeFpDQTm6G83ZPY45VirZSS7
-         9C/H4GXEyS+mR7rw8/1O/p6pM6jHy2Y6Rgy8yzANiT6GJkDVi2eBBt3KRknDUi1TFFwp
-         A/uKjNJufHhb276g/gzH7z8YnAWJr6BpTlZaqf8bQxpaCVPrkEFc866hkXGUJkfGDrOa
-         VosZeNMxy3Iz5Y5Jbg18Og9l1POibmuWA3mWS/nckzAbNncsEY+6ULWUa4QSsN3Do6m/
-         cCsQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/Y7qha435EQTd9vAOoXJNijInf60KOgDPKMfDlAor5ZTmxYdN+3wLRWOeu3GH0r/NcDReoiBMtfsYg6k87vamt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhnYurOZXqOv/rsF/EGcts+1mmhOGQLwRpISS4kHnywY74P6ff
-	oISclfoeW3lWlOHc4uoGDhnuKAbU9MQBsf4A9iX4rCxKOaGj9SBYXZAl/GM9V7jjXgEBeAAxih8
-	V/kU5woahTw==
-X-Received: from dyvt1.prod.google.com ([2002:a05:7301:d801:b0:304:d771:74aa])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d70d:b0:304:5a9c:6479
- with SMTP id 5a478bee46e88-3077b2d14aemr1110704eec.9.1780645261499; Fri, 05
- Jun 2026 00:41:01 -0700 (PDT)
-Date: Fri,  5 Jun 2026 00:39:59 -0700
+        bh=KF1KukU9Rk2Bs9+AAMOvCc6v+Vx5eW/rGfc2xWnqbwc=;
+        b=XniLgYiNKHTU1WUfSyQtTjvBrvnPs/d7SMYhjeHUja5NaQtgFaQKWabMOv04qLPD/b
+         ZlDfl1mjSDvWLm2V/6aEjHn4RR5cxZ4YYjMCITczwfPGJ930LUmAFTncGBqzAd7ptLAA
+         NxdPdPuziI05KN+thtnHKO/UDftC5XbSN0gxAiV14UNF3IQJSjvWAnTFsdRny2PeAa8C
+         hWalnOHBtofRb1MuRdzXIj0vYDRxvrymvd0JUZA0yOafkB4X2IBCbQurHWsviuO2G2mb
+         /U1JqVC9zF3Yh2V3Ps4mPG2y+tCBxnlqr99qwD0tFKBsplda1ElHgHM8tMOqskKugMF7
+         1qqQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8lvf/v2T1KlJj0G421GE52NhXJ0EIH7/eU1wdpqDDwtv6xwDeykYdszSrNP5ASADVN+X4EbtRIDgQpJaVCLe86@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhpUmgvJhJPQLtiFSfrYGjlHZuNo0d1WawN9izbh7/t1uX9B1P
+	tfvQRfzhmLwdbNx05cg/kGMdh6+WQfQ/+44h0/TEuW4nDbfONQnCs1hePnn6sz8z4EwTqmk1Mav
+	79fdPxoSI1A==
+X-Received: from dyckg9.prod.google.com ([2002:a05:7301:d189:b0:304:e649:3ce4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:37c3:b0:304:de94:1c55
+ with SMTP id 5a478bee46e88-3077b38e7e4mr1190615eec.35.1780645263444; Fri, 05
+ Jun 2026 00:41:03 -0700 (PDT)
+Date: Fri,  5 Jun 2026 00:40:00 -0700
 In-Reply-To: <20260605074003.1730715-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260522220435.2378363-1-irogers@google.com> <20260605074003.1730715-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <20260605074003.1730715-16-irogers@google.com>
-Subject: [PATCH v10 15/19] perf python: Expose brstack in sample event
+Message-ID: <20260605074003.1730715-17-irogers@google.com>
+Subject: [PATCH v10 16/19] perf python: Add syscall name/id to convert syscall
+ number and name
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,303 +69,130 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Implement pyrf_branch_entry and pyrf_branch_stack for lazy
-iteration over branch stack entries.
+Use perf's syscalltbl support to convert syscall number to name
+assuming the number is for the host machine. This avoids python
+libaudit support as tools/perf/scripts/python/syscall-counts.py
+requires.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
 v2:
 
-1. Avoided Keyword Collision: Renamed the properties "from" and "to"
-   to "from_ip" and "to_ip" in pyrf_branch_entry__getset[] to prevent
-   syntax errors in Python.
+1. Guarded with HAVE_LIBTRACEEVENT : Wrapped the syscall functions and
+   their entries in perf__methods with #ifdef HAVE_LIBTRACEEVENT to
+   avoid potential linker errors if CONFIG_TRACE is disabled.
 
-2. Eager Branch Stack Resolution: Updated pyrf_session_tool__sample()
-   to allocate and copy the branch stack entries eagerly when the
-   event is processed, instead of deferring it to iteration time. This
-   avoids reading from potentially overwritten or unmapped mmap
-   buffers.
+2. Changed Exception Type: Updated pyrf__syscall_id to raise a
+   ValueError instead of a TypeError when a syscall is not found.
 
-3. Updated Iterators: Updated pyrf_branch_stack and
-   pyrf_branch_stack__next() to use the copied entries rather than
-   pointing directly to the sample's buffer.
-
-4. Avoided Reference Leak on Init Failure: Added proper error checking
-   for PyModule_AddObject() in the module initialization function,
-   decrementing references on failure.
+3. Fixed Typo: Corrected "name number" to "name" in the docstring for
+   syscall_id.
 
 v6:
-- Moved branch stack resolution from `session_tool__sample` to
-  `pyrf_event__new`.
----
- tools/perf/util/python.c | 197 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 197 insertions(+)
+- Added optional keyword-only `elf_machine` argument to `syscall_name`
+  and `syscall_id`.
 
+v7:
+- Made syscalltbl.o unconditional in Build to fix undefined symbol
+  when building without libtraceevent.
+---
+ tools/perf/util/Build    |  1 -
+ tools/perf/util/python.c | 48 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index b22cdc24082a..cb180dd77222 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -75,7 +75,6 @@ perf-util-y += sample.o
+ perf-util-y += sample-raw.o
+ perf-util-y += s390-sample-raw.o
+ perf-util-y += amd-sample-raw.o
+-
+ perf-util-y += ordered-events.o
+ perf-util-y += namespaces.o
+ perf-util-y += comm.o
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 2b9de9c10ee2..7265e2dcd60e 100644
+index 7265e2dcd60e..12a1379cdbed 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -22,6 +22,7 @@
+@@ -21,6 +21,7 @@
+ #include "data.h"
  #include "debug.h"
  #include "dso.h"
++#include "dwarf-regs.h"
  #include "event.h"
-+#include "branch.h"
+ #include "branch.h"
  #include "evlist.h"
- #include "evsel.h"
- #include "expr.h"
-@@ -87,6 +88,8 @@ struct pyrf_event {
- 	bool al_resolved;
- 	/** @callchain: Resolved callchain, eagerly computed if requested. */
- 	PyObject *callchain;
-+	/** @brstack: Resolved branch stack, eagerly computed if requested. */
-+	PyObject *brstack;
- 	/** @event: The underlying perf_event that may be in a file or ring buffer. */
- 	union perf_event event;
- };
-@@ -125,6 +128,7 @@ static void pyrf_event__delete(struct pyrf_event *pevent)
- 	if (pevent->al_resolved)
- 		addr_location__exit(&pevent->al);
- 	Py_XDECREF(pevent->callchain);
-+	Py_XDECREF(pevent->brstack);
- 	perf_sample__exit(&pevent->sample);
- 	Py_TYPE(pevent)->tp_free((PyObject *)pevent);
- }
-@@ -992,6 +996,153 @@ static PyObject *pyrf_sample_event__get_callchain(PyObject *self, void *closure
- 	return pevent->callchain;
+@@ -38,6 +39,7 @@
+ #include "srcline.h"
+ #include "strbuf.h"
+ #include "symbol.h"
++#include "trace/beauty/syscalltbl.h"
+ #include "thread.h"
+ #include "thread_map.h"
+ #include "tool.h"
+@@ -4041,6 +4043,40 @@ static int pyrf_session__setup_types(void)
+ 	return PyType_Ready(&pyrf_session__type);
  }
  
-+struct pyrf_branch_entry {
-+	PyObject_HEAD
-+	u64 from;
-+	u64 to;
-+	struct branch_flags flags;
-+};
-+
-+static void pyrf_branch_entry__delete(struct pyrf_branch_entry *pentry)
++static PyObject *pyrf__syscall_name(PyObject *self, PyObject *args, PyObject *kwargs)
 +{
-+	Py_TYPE(pentry)->tp_free((PyObject *)pentry);
++	const char *name;
++	int id;
++	int elf_machine = EM_HOST;
++	static char *kwlist[] = { "id", "elf_machine", NULL };
++
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|$i", kwlist, &id, &elf_machine))
++		return NULL;
++
++	name = syscalltbl__name(elf_machine, id);
++	if (!name)
++		Py_RETURN_NONE;
++	return PyUnicode_FromString(name);
 +}
 +
-+static PyObject *pyrf_branch_entry__get_from(struct pyrf_branch_entry *pentry,
-+					     void *closure __maybe_unused)
++static PyObject *pyrf__syscall_id(PyObject *self, PyObject *args, PyObject *kwargs)
 +{
-+	return PyLong_FromUnsignedLongLong(pentry->from);
-+}
++	const char *name;
++	int id;
++	int elf_machine = EM_HOST;
++	static char *kwlist[] = { "name", "elf_machine", NULL };
 +
-+static PyObject *pyrf_branch_entry__get_to(struct pyrf_branch_entry *pentry,
-+					   void *closure __maybe_unused)
-+{
-+	return PyLong_FromUnsignedLongLong(pentry->to);
-+}
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|$i", kwlist, &name, &elf_machine))
++		return NULL;
 +
-+static PyObject *pyrf_branch_entry__get_mispred(struct pyrf_branch_entry *pentry,
-+						void *closure __maybe_unused)
-+{
-+	return PyBool_FromLong(pentry->flags.mispred);
-+}
-+
-+static PyObject *pyrf_branch_entry__get_predicted(struct pyrf_branch_entry *pentry,
-+						  void *closure __maybe_unused)
-+{
-+	return PyBool_FromLong(pentry->flags.predicted);
-+}
-+
-+static PyObject *pyrf_branch_entry__get_in_tx(struct pyrf_branch_entry *pentry,
-+					      void *closure __maybe_unused)
-+{
-+	return PyBool_FromLong(pentry->flags.in_tx);
-+}
-+
-+static PyObject *pyrf_branch_entry__get_abort(struct pyrf_branch_entry *pentry,
-+					      void *closure __maybe_unused)
-+{
-+	return PyBool_FromLong(pentry->flags.abort);
-+}
-+
-+static PyObject *pyrf_branch_entry__get_cycles(struct pyrf_branch_entry *pentry,
-+					       void *closure __maybe_unused)
-+{
-+	return PyLong_FromUnsignedLongLong(pentry->flags.cycles);
-+}
-+
-+static PyObject *pyrf_branch_entry__get_type(struct pyrf_branch_entry *pentry,
-+					     void *closure __maybe_unused)
-+{
-+	return PyLong_FromLong(pentry->flags.type);
-+}
-+
-+static PyGetSetDef pyrf_branch_entry__getset[] = {
-+	{ .name = "from_ip",      .get = (getter)pyrf_branch_entry__get_from, },
-+	{ .name = "to_ip",        .get = (getter)pyrf_branch_entry__get_to, },
-+	{ .name = "mispred",   .get = (getter)pyrf_branch_entry__get_mispred, },
-+	{ .name = "predicted", .get = (getter)pyrf_branch_entry__get_predicted, },
-+	{ .name = "in_tx",     .get = (getter)pyrf_branch_entry__get_in_tx, },
-+	{ .name = "abort",     .get = (getter)pyrf_branch_entry__get_abort, },
-+	{ .name = "cycles",    .get = (getter)pyrf_branch_entry__get_cycles, },
-+	{ .name = "type",      .get = (getter)pyrf_branch_entry__get_type, },
-+	{ .name = NULL, },
-+};
-+
-+static PyTypeObject pyrf_branch_entry__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.branch_entry",
-+	.tp_basicsize	= sizeof(struct pyrf_branch_entry),
-+	.tp_dealloc	= (destructor)pyrf_branch_entry__delete,
-+	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= "perf branch entry object.",
-+	.tp_getset	= pyrf_branch_entry__getset,
-+};
-+
-+struct pyrf_branch_stack {
-+	PyObject_HEAD
-+	struct branch_entry *entries;
-+	u64 nr;
-+};
-+
-+static void pyrf_branch_stack__delete(struct pyrf_branch_stack *pstack)
-+{
-+	free(pstack->entries);
-+	Py_TYPE(pstack)->tp_free((PyObject *)pstack);
-+}
-+
-+static Py_ssize_t pyrf_branch_stack__length(PyObject *obj)
-+{
-+	struct pyrf_branch_stack *pstack = (void *)obj;
-+	return pstack->nr;
-+}
-+
-+static PyObject *pyrf_branch_stack__item(PyObject *obj, Py_ssize_t i)
-+{
-+	struct pyrf_branch_stack *pstack = (void *)obj;
-+	struct pyrf_branch_entry *pentry;
-+
-+	if (i < 0 || i >= (Py_ssize_t)pstack->nr) {
-+		PyErr_SetString(PyExc_IndexError, "Index out of range");
++	id = syscalltbl__id(elf_machine, name);
++	if (id < 0) {
++		PyErr_Format(PyExc_ValueError, "Failed to find syscall %s", name);
 +		return NULL;
 +	}
-+
-+	pentry = PyObject_New(struct pyrf_branch_entry, &pyrf_branch_entry__type);
-+	if (!pentry)
-+		return NULL;
-+
-+	pentry->from = pstack->entries[i].from;
-+	pentry->to = pstack->entries[i].to;
-+	pentry->flags = pstack->entries[i].flags;
-+
-+	return (PyObject *)pentry;
++	return PyLong_FromLong(id);
 +}
 +
-+static PySequenceMethods pyrf_branch_stack__sequence_methods = {
-+	.sq_length = pyrf_branch_stack__length,
-+	.sq_item   = pyrf_branch_stack__item,
-+};
-+
-+static PyTypeObject pyrf_branch_stack__type = {
-+	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.branch_stack",
-+	.tp_basicsize	= sizeof(struct pyrf_branch_stack),
-+	.tp_dealloc	= (destructor)pyrf_branch_stack__delete,
-+	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= "perf branch stack object.",
-+	.tp_as_sequence	= &pyrf_branch_stack__sequence_methods,
-+};
-+
-+static PyObject *pyrf_sample_event__get_brstack(PyObject *self, void *closure __maybe_unused)
-+{
-+	struct pyrf_event *pevent = (void *)self;
-+
-+	if (!pevent->brstack)
-+		Py_RETURN_NONE;
-+
-+	Py_INCREF(pevent->brstack);
-+	return pevent->brstack;
-+}
-+
- static PyObject*
- pyrf_sample_event__getattro(struct pyrf_event *pevent, PyObject *attr_name)
- {
-@@ -1012,6 +1163,12 @@ static PyGetSetDef pyrf_sample_event__getset[] = {
- 		.set = NULL,
- 		.doc = "event callchain.",
+ static PyMethodDef perf__methods[] = {
+ 	{
+ 		.ml_name  = "metrics",
+@@ -4074,6 +4110,18 @@ static PyMethodDef perf__methods[] = {
+ 		.ml_flags = METH_NOARGS,
+ 		.ml_doc	  = PyDoc_STR("Returns a sequence of pmus.")
  	},
 +	{
-+		.name = "brstack",
-+		.get = pyrf_sample_event__get_brstack,
-+		.set = NULL,
-+		.doc = "event branch stack.",
++		.ml_name  = "syscall_name",
++		.ml_meth  = (PyCFunction) pyrf__syscall_name,
++		.ml_flags = METH_VARARGS | METH_KEYWORDS,
++		.ml_doc	  = PyDoc_STR("Turns a syscall number to a string.")
 +	},
- 	{
- 		.name = "raw_buf",
- 		.get = (getter)pyrf_sample_event__get_raw_buf,
-@@ -1193,6 +1350,12 @@ static int pyrf_event__setup_types(void)
- 	err = PyType_Ready(&pyrf_callchain__type);
- 	if (err < 0)
- 		goto out;
-+	err = PyType_Ready(&pyrf_branch_entry__type);
-+	if (err < 0)
-+		goto out;
-+	err = PyType_Ready(&pyrf_branch_stack__type);
-+	if (err < 0)
-+		goto out;
- out:
- 	return err;
- }
-@@ -1379,6 +1542,7 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
++	{
++		.ml_name  = "syscall_id",
++		.ml_meth  = (PyCFunction) pyrf__syscall_id,
++		.ml_flags = METH_VARARGS | METH_KEYWORDS,
++		.ml_doc	  = PyDoc_STR("Turns a syscall name to a number.")
++	},
+ 	{ .ml_name = NULL, }
+ };
  
- 	perf_sample__init(&pevent->sample, /*all=*/true);
- 	pevent->callchain = NULL;
-+	pevent->brstack = NULL;
- 	pevent->al_resolved = false;
- 	addr_location__init(&pevent->al);
- 
-@@ -1436,6 +1600,27 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
- 			addr_location__exit(&al);
- 		}
- 	}
-+	if (sample->branch_stack) {
-+		struct branch_stack *bs = sample->branch_stack;
-+		struct branch_entry *entries = perf_sample__branch_entries(sample);
-+		struct pyrf_branch_stack *pstack;
-+
-+		pstack = PyObject_New(struct pyrf_branch_stack, &pyrf_branch_stack__type);
-+		if (!pstack) {
-+			Py_DECREF(pevent);
-+			return NULL;
-+		}
-+		pstack->nr = bs->nr;
-+		pstack->entries = calloc(bs->nr, sizeof(struct branch_entry));
-+		if (!pstack->entries) {
-+			Py_DECREF(pstack);
-+			Py_DECREF(pevent);
-+			return PyErr_NoMemory();
-+		}
-+		memcpy(pstack->entries, entries,
-+		       bs->nr * sizeof(struct branch_entry));
-+		pevent->brstack = (PyObject *)pstack;
-+	}
- 	return (PyObject *)pevent;
- }
- 
-@@ -3988,6 +4173,18 @@ PyMODINIT_FUNC PyInit_perf(void)
- 	Py_INCREF(&pyrf_session__type);
- 	PyModule_AddObject(module, "session", (PyObject *)&pyrf_session__type);
- 
-+	Py_INCREF(&pyrf_branch_entry__type);
-+	if (PyModule_AddObject(module, "branch_entry", (PyObject *)&pyrf_branch_entry__type) < 0) {
-+		Py_DECREF(&pyrf_branch_entry__type);
-+		goto error;
-+	}
-+
-+	Py_INCREF(&pyrf_branch_stack__type);
-+	if (PyModule_AddObject(module, "branch_stack", (PyObject *)&pyrf_branch_stack__type) < 0) {
-+		Py_DECREF(&pyrf_branch_stack__type);
-+		goto error;
-+	}
-+
- 	dict = PyModule_GetDict(module);
- 	if (dict == NULL)
- 		goto error;
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
