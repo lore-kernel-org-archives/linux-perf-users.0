@@ -1,80 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3943D413F;
-	Fri,  5 Jun 2026 23:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85283355F41;
+	Fri,  5 Jun 2026 23:51:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780702864; cv=none; b=IFlBg1Fmjb78sAHOOdfS/kDRt3F+Xizf56Rndy3+ErL8KJp2NjORFq0ntw85wDh1H0JRQVcXDys21GYAORY54l+voTW8SQpwUoqCyjKLd4tdwm1Aco1acnSD2Maaa4pS4glgwCil4GgmkHIgX30sWGf5piFcAoqq5CX5B85q0KA=
+	t=1780703493; cv=none; b=keEpzdQNPkpKOWQsBGsQ1c9cf+P3rFGVk+eiWkDMZhaesIg3uu4aKxSufK4hhS5Ydc72PnaqyoOJ4CY4PuGqPcp2znIv3BGB7iboRmc7jvBEnJgcAK9p6AMshm6wSre9SDV17YPfMdkVfNM9ZaFrY9kRL8PZ0qpG+YwsGNRjF+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780702864; c=relaxed/simple;
-	bh=mmXUwxcXKxpDGBjgR3VkEzMvhczrZGI4t4RU6cLrQ6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nFn72krYavziSCBwcZUDN/4qVcW6VyxEfG4ZKlTXWEhwOf9eyafdF4bfKS/CuXE1C6KfDPKrInkHpv+0OD8MJiiCBKFkW29ODsYf0hSPrCymbAcyNOPh8iDvAOV0hC7gg2c9DIsxKlOnFNR8g5sNzNG141yLyVIfIKZMmUKBTWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fY8SVya8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780703493; c=relaxed/simple;
+	bh=stNG02Xz90MbJxDFRcGqSCxkDT6VHn2rJNnAoC1gzG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KJnif/DFM/FOCyN52qgi+PubQui6GQAwzIR/cI1puqlM84YhmoyvsgQ9HWSJjKt5gUMy/5D4eEkYP6qqEmNql31Wt7oetHCy4LjKWh5/+B/l3GfY+i2B5Ke8O3LYTaEvkGxFACIVfFDyWKUz1ur1aWbSZR/8w5hrlW6oNP3+bpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXJ6Qls7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fY8SVya8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 397E81F00893;
-	Fri,  5 Jun 2026 23:41:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXJ6Qls7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55541F00893;
+	Fri,  5 Jun 2026 23:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780702863;
-	bh=zKUZswYyqb3fTkpmDGDuQHCpFg03P5/zTNonPJpsVCs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fY8SVya8jFYP77kMjtnf2W+vFhe19H9mesXGqOj15TxqbJeClzvJiWeYLv8AgLwL3
-	 SeYzNb4I/52KIjfOgjPPgaiCIW4O/qEI8ZXNcJ7LDIwkbOolhHJSiQVzf5JdHrwSsp
-	 U6NS8mUB8NLKKK9eoiSENM02IKKlienOYG+P+xFQkzlV3UZbfipykk3Pw2cuWwTK5M
-	 e5B8FRvm4bJMz8e+fsbhrGC8BPBDQYFXTB+BG2LzPCkOq/FTcCvyVlbIigLphHoy7H
-	 uYHu3TPDxWihVGc6R+NoeDYvDvJRMOv8t6yLzRrVm1gsgDAwfcuYsVpzEE/szA6uEf
-	 QeXck4pvuhn7A==
-Date: Fri, 5 Jun 2026 20:41:00 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	s=k20260515; t=1780703492;
+	bh=2U/UFgj5wRuNMYCsy4wU86gSUgfgNjrRCVPqtSajdsU=;
+	h=From:To:Cc:Subject:Date;
+	b=iXJ6Qls7O3aPkh6NhPOIUHNuNBH/DHBg0AcN1al65E2yLml0XlKiiHPCIG95KyaLK
+	 fIsNwr1U3vD0MB+7fy+acQ9xlEstdRl1UQrYfuKVC7oHPuktz4VEjFFmChu8J5iOcE
+	 SpyUAiKTni+PjR/89DiZaTmhsP4izUzxpVtvzZHbpJn0qZzDzK2fhTnqcstw5fObMW
+	 M+Wu/7BFulFOcquJjbO/4aF3sWKdmAGBKf35IqTj3JpJJ/x3ymPpezHtH2zwzry94Q
+	 gxAhb1QTspDcUMVSlkQ7nDgj8N2H68O2Jj6BWGxUlV2xhmlZvpmJxaLqwHiv8kOIJo
+	 iYrFn0wv35nTQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf timechart: Fix memory leaks
-Message-ID: <aiNejLm6HZf3iAC-@x1>
-References: <20260605231155.2415760-1-namhyung@kernel.org>
- <aiNZcZosyvKQnQk1@x1>
- <aiNbjYgW2FFltUa8@google.com>
+Subject: [PATCH v2 0/4] perf timechart: Fix memory leaks
+Date: Fri,  5 Jun 2026 16:51:27 -0700
+Message-ID: <20260605235131.2440270-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aiNbjYgW2FFltUa8@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 05, 2026 at 04:28:13PM -0700, Namhyung Kim wrote:
-> On Fri, Jun 05, 2026 at 08:19:13PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Jun 05, 2026 at 04:11:51PM -0700, Namhyung Kim wrote:
-> > > This patchset fixes memory leaks in the perf timechart code.
-> > > I've extended and verified the timechart test with ASAN.
+Hello,
 
-> > 	You submitted a series for timechart before, so I had to go on
-> > looking if this was a second version or a different series.
+This patchset fixes memory leaks in the perf timechart code.
+I've extended and verified the timechart test with ASAN.
+
+v2)
+ * use zfree() and explicit clear for potential misuse  (Arnaldo)
+ * fix a wrong condition in the draw_wakeups()  (Sashiko)
+ * move misplaced hunk in the second commit to the first
  
-> Right, this is a different series.  I believe they are independent.
-
-Thanks for clarifying.
- 
-> > 	I suggest you always have a version in the cover letter, i.e.:
-
-> > [PATCH v1 0/4] perf timechart: Fix memory leaks
-
-> > 	To avoid this brief distraction :-)
- 
-> Ok, I'll do that if that helps. :)
-
-It is a small detail, not having anything it may have been that the
-submitter forgot to add something or that it is the first entry, having
-v1 removes this ambiguity.
+While it doesn't depend on my other timechart patch series [1], fixing
+the memory leaks entirely requires some work there.  So I'd suggest
+applying this after the previous work.
 
 Thanks,
+Namhyung
 
-- Arnaldo
+[1] https://lore.kernel.org/r/20260604214931.2202322-1-namhyung@kernel.org
+
+
+Namhyung Kim (4):
+  perf timechart: Release event samples at the end
+  perf timechart: Fix memory leaks during record
+  perf timechart: Fix memory leaks in draw_wakeups()
+  perf test: Update perf timechart test
+
+ tools/perf/builtin-timechart.c      | 105 ++++++++++++++++++++++++----
+ tools/perf/tests/shell/timechart.sh |  24 ++++---
+ 2 files changed, 106 insertions(+), 23 deletions(-)
+
+-- 
+2.54.0.1032.g2f8565e1d1-goog
+
