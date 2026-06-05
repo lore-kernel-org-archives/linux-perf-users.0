@@ -1,170 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584941CEAC2
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 12:29:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095EB1CEAC2
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 12:31:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780662544; cv=none; b=MCSh4YgF4mfmqgTczpBIy8M2JVdJyN9+KYbF3yxn8Qb8jTR/hTKyw+/1J9kToTEwkfVpdiNIxq/W4SnAUomriIqya53hZLpktRR67LlUkxkvWmy8Z4o9kCL7GEooQvyldMlmep3AtqxnJ/B3Xm6FYXG9zg52s402I2PLGjoKoLM=
+	t=1780662691; cv=none; b=cBlfIuVwxHu1CMKo/g2rgPYpykvQnOXwdpg7cUcUP2L+n6CJdISgNuEsIT5hZGjieZk8Op+Iqd/PkW2ZhWbQ1COzOx9zcG49Iu38UDZ07gNODP/I+mDYnPupEUr6zPe8twK87zzAp/+n7optty/p6azCyBgfz1AsuDHXiHotY6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780662544; c=relaxed/simple;
-	bh=sLGwtSI4vlSUX+gl0N39+Iuq7yjw54USwemKBDljq+0=;
+	s=arc-20240116; t=1780662691; c=relaxed/simple;
+	bh=oLuLpVLT3g50+ooghjWtYkzDTbk8TBjpo0KJwBxOYIc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hgcZ1a9uGVqM3QPyNq8aZHjXy2e2rcHIDEUIeoT9EOFiKuXwvEvjmtlYE8u8xjT30WSV2u2w80AyZbhzk7/j0h9gNu2R+wwzcYWzoUbwY/Q+ZGThFoD+Hu3sXMk6x5hGSaPOqk4f2bcPfCXMrDuMeEUKZQW68YAcTk2FLB/tRC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8kTPbHU; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=p70EznYpvr6xBb8//Ir/PIE+YurJxdytw1dxpRFyL/q265AMEKeNMNSbKKP63lpWRkb/53+A/OuZ6Alz9Lf1nBoVnb/jcEj2p30Gguj+lXmFcFE9G5Ot6t7wOLtmKRMZiBaQFN47TyC1FyP+MgPSqBuDDdu6rPtr31R3k1FFmhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZwFJ6gG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8kTPbHU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D32F21F00893;
-	Fri,  5 Jun 2026 12:29:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZwFJ6gG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8135D1F00898;
+	Fri,  5 Jun 2026 12:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780662543;
-	bh=8kfKNnDWNQWWeVXMEn8V59MxHmJKmQH5eTGuvZPvlgQ=;
+	s=k20260515; t=1780662689;
+	bh=UiYsP+J50AH4fkfb6b91Ot0vXK8imrXVT11mEL6AocM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=j8kTPbHUjWDwBiLCC1capC/SCMzILcuLk5wH573tOZdGmltEHRZDpn598gqkcNjUq
-	 WL5gb+tZ0pUdDrSkM1LptCkOO13vqGyeV/Jrso03ZqSYZMVtWqCt+wVlKc2CbPQpQF
-	 wnRNCcuJTZMotWjYVeoPSkKVnHvuP5MMJd/n18pZb973k6Y8LAfXcJzCtY/L7E9WAA
-	 ys78Pe43XE89u8sQpJZTxyMOA4vp1e0ndUUDNQbkWEoLUOdMQYSCrJFraEQcbZOanQ
-	 LWsjd9IQ3qI9EcTH3GL2N/Ip+KZMn/lw6fZpYPwH+EK0uK4Yb2twUgi2KI24D4R/wG
-	 w6inVGL39HOTw==
+	b=bZwFJ6gGQzy0xuYys6wXBRvRyYmr/V1upJsgWW839/UHFD33PT0hhCYtE5WG7/Acm
+	 5WZVEeXcwEALHQmI1MUb0v2i+U1OFQfklpcQXpCZ3PbO4ZArq8SYz4F5jDsTe9j67l
+	 Oq03diItnrdHl2C6KCfYLsGfcDb9pSCRJw/EIcv4u89kWzIVg5kzBfcreWkYPVGtW8
+	 NjPE6YW6HX3SyTpFAhZyAff6Z9DpYh11BZl0/xoNkvMcrErcSiQ83BBZYBPEZ8VG93
+	 zxoc4JBcF5IG/Lo7x2qkypGkIv5dSKiymUHhD7dIe/f0N3v2SX+uQ5e1pFRhe5AUnH
+	 3rGYAPZ5yM2pQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 5/5] perf sched: Fix register_pid() overflow, strcpy,
- and BUG_ON
+Subject: Re: [PATCH 1/5] perf tools: Guard remaining test_bit calls from OOB
+ sample CPU
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605121515.1725549-6-acme@kernel.org>
-References: <20260605121515.1725549-6-acme@kernel.org>
+In-Reply-To: <20260605121515.1725549-2-acme@kernel.org>
+References: <20260605121515.1725549-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 12:29:02 +0000
-Message-Id: <20260605122902.D32F21F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 12:31:28 +0000
+Message-Id: <20260605123129.8135D1F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Incomplete error rollback in register_pid() leads to state corrupt=
-ion, memory leaks, and deadlocks during replay.
-
-Pre-existing issues:
-- [High] Unhandled memory allocation failures and reachable BUG_ON() in get=
-_new_event() and add_sched_event_wakeup() cause crashes on untrusted input.
+- [Medium] Logic error in CPU filtering bounds checks allows out-of-bounds =
+CPU IDs to bypass the filter.
 --
 
-commit ff8db8ecbe0e2e8aa902db3edce9b5b6e8db02f4
+commit c7a6257406af3fb4587a3e6f3454c67efbc1b249
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: perf sched: Fix register_pid() overflow, strcpy, and BUG_ON
 
-This commit aims to fix several issues in register_pid() when processing
-untrusted perf.data, including integer/heap overflows and BUG_ON calls on
-allocation failures. It caps the PID, uses safe string copying, and handles
-reallocation failures gracefully.
+perf tools: Guard remaining test_bit calls from OOB sample CPU
 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 87a1f4cf8760e..21fb820b625b4 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
+This commit adds bounds checking to filter_cpu in auxtrace.c and
+builtin-script.c to prevent out-of-bounds reads in test_bit when
+the CPU value is corrupt or absent.
 
-[ ... ]
-
-> @@ -469,9 +481,11 @@ static struct task_desc *register_pid(struct perf_sc=
-hed *sched,
->  		return task;
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index f4aa255fc3297..9ac29bdc3cd54 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2646,7 +2646,7 @@ static int cleanup_scripting(void)
 > =20
->  	task =3D zalloc(sizeof(*task));
-> +	if (task =3D=3D NULL)
-> +		return NULL;
->  	task->pid =3D pid;
-> -	task->nr =3D sched->nr_tasks;
-> -	strcpy(task->comm, comm);
-> +	if (comm)
-> +		strlcpy(task->comm, comm, sizeof(task->comm));
->  	/*
->  	 * every task starts in sleeping state - this gets ignored
->  	 * if there's no wakeup pointing to this sleep state:
->  	 */
->  	add_sched_event_sleep(sched, task, 0);
+>  static bool filter_cpu(struct perf_sample *sample)
+>  {
+> -	if (cpu_list && sample->cpu !=3D (u32)-1)
+> +	if (cpu_list && sample->cpu !=3D (u32)-1 && sample->cpu < MAX_NR_CPUS)
+>  		return !test_bit(sample->cpu, cpu_bitmap);
+>  	return false;
+>  }
 
-[Severity: High]
-This is a pre-existing issue, but since the patch aims to prevent crashes on
-memory exhaustion when parsing untrusted data, does this still leave a path
-to crash?
+[Severity: Medium]
+When sample->cpu is greater than or equal to MAX_NR_CPUS, the condition fai=
+ls
+and the function returns false. Does returning false here mean the out-of-b=
+ounds
+sample is kept rather than dropped?
 
-register_pid() unconditionally calls add_sched_event_sleep(), which calls
-get_new_event(). Inside get_new_event(), the result of zalloc() is used
-without a NULL check, leading to an immediate dereference:
-
-get_new_event()
-{
-        ...
-        struct sched_atom *event =3D zalloc(sizeof(*event));
-        ...
-        event->timestamp =3D timestamp;
-        ...
-        BUG_ON(!task->atoms);
-}
-
-There is also a remaining BUG_ON() upon realloc() failure.
-
-Similarly, add_sched_event_wakeup() allocates wait_sem and passes it
-unchecked to sem_init(), causing another crash if zalloc() fails:
-
-add_sched_event_wakeup()
-{
-        ...
-        wakee_event->wait_sem =3D zalloc(sizeof(*wakee_event->wait_sem));
-        sem_init(wakee_event->wait_sem, 0, 0);
-}
-
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 5f4aa1701aef6..4cd2caf540152 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -372,7 +372,8 @@ static bool filter_cpu(struct perf_session *session, =
+struct perf_cpu cpu)
+>  {
+>  	unsigned long *cpu_bitmap =3D session->itrace_synth_opts->cpu_bitmap;
 > =20
->  	sched->pid_to_task[pid] =3D task;
-> -	sched->nr_tasks++;
-> -	sched->tasks =3D realloc(sched->tasks, sched->nr_tasks * sizeof(struct =
-task_desc *));
-> -	BUG_ON(!sched->tasks);
-> -	sched->tasks[task->nr] =3D task;
-> +	tasks_p =3D realloc(sched->tasks, (sched->nr_tasks + 1) * sizeof(struct=
- task_desc *));
-> +	if (!tasks_p)
-> +		return NULL;
+> -	return cpu_bitmap && cpu.cpu !=3D -1 && !test_bit(cpu.cpu, cpu_bitmap);
+> +	return cpu_bitmap && cpu.cpu >=3D 0 && cpu.cpu < MAX_NR_CPUS &&
+> +	       !test_bit(cpu.cpu, cpu_bitmap);
+>  }
 
-[Severity: High]
-If realloc() fails here, does this leak the newly allocated task and leave
-a corrupted state?
+[Severity: Medium]
+Similarly in auxtrace.c, if cpu.cpu is greater than or equal to MAX_NR_CPUS,
+this boolean expression evaluates to false.
 
-The task has already been assigned to sched->pid_to_task[pid] above. If we
-return NULL, the caller gets an error, but the partially initialized task
-remains in the pid_to_task array and is never added to sched->tasks.
+In auxtrace_queues__add_buffer, if filter_cpu returns false, the buffer is =
+kept
+and queued:
 
-If a caller like replay_fork_event() ignores the NULL return value:
+	if (filter_cpu(session, buffer->cpu))
+		return 0;
 
-replay_fork_event()
-{
-        ...
-        register_pid(sched, thread__tid(parent), thread__comm_str(parent));
-        register_pid(sched, thread__tid(child), thread__comm_str(child));
-}
+	buffer =3D memdup(buffer, sizeof(*buffer));
 
-Subsequent events for the same PID will find the partially initialized task
-in pid_to_task and successfully add events to it. Because the task is not in
-sched->tasks, perf sched replay will fail to spawn a thread for it in
-create_tasks(). When other simulated threads expect to be awoken by this
-missing thread, they might wait indefinitely on a semaphore, deadlocking the
-tool.
-
-> +	sched->tasks =3D tasks_p;
-> +	sched->tasks[sched->nr_tasks] =3D task;
-> +	task->nr =3D sched->nr_tasks++;
-> =20
->  	if (verbose > 0)
->  		printf("registered task #%ld, PID %ld (%s)\n", sched->nr_tasks, pid, c=
-omm);
+Could this cause corrupted events to bypass the filter and be processed
+downstream?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605121515.1725=
-549-1-acme@kernel.org?part=3D5
+549-1-acme@kernel.org?part=3D1
