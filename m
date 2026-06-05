@@ -1,155 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A873940B36C;
-	Fri,  5 Jun 2026 23:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D741FF1C7
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 23:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780701119; cv=none; b=ZaPAajoVjxYyJKb1tVUsi+AYeSQY+dvAlpwSwFhEbMLxKTSLQAQL3dWO047Ngymz42uaGFa2nrkC78BceAHWz5XlMILa/kfVhjJtU1+02AENA7yJDf6tmyMP6E0t0Sf6V6QdSokIYRXivZhJZKWSvmYzr1cCE9/r5H7P+mZiU70=
+	t=1780701455; cv=none; b=UOPvzj2IwdM5bwdOhAbvWG/aNKnJVsqHU3ohPqSq4qIke5JN/ahZCSy/LNmzq6jhP1hjkvuC1wEtD2KZKa7eiQ7jgNvrryjp9MKEQIgaz2NAabbFsCzF+sudtbebNFsZD02dyGkcR9Z83J38otcRKpcCyL945G2Zgs1H3FKEoxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780701119; c=relaxed/simple;
-	bh=z3w19A16NH7NdvirA4opVoS2O6lRMszvIMrx9KkbOWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hQV8zFbyUMw0NWXmdsyfp/YCn6maVm7kINt2SwRXALo5zDuodM1+Rhk9jFIWFhjgjG2H3DpLIKxDQfitc9bS+BsbbUVLOiofLD9Xh+tirtjKooAFt0Lm2F5eKzxTbCvpreM0q6DsQzWshFhbz4uTZe2fjbUadYnO2wZ0EhzzfGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sd6sxBSO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780701455; c=relaxed/simple;
+	bh=lrfBM9ChRFrxQ+Tsaedahfa2iD5HjBVpEdqJPmXV4kE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=UKiP18qjg3MPMuulwexCbAYosN9h57p8Yf5lFl2YpbBuXG4H0rRmdfCMC2noGW22bzhv23JEicaFE9W4BYm8+hhf/xONac6cdi91c9ULDxB2GwX0K+3ql1n9xVNDeb34yVujy1Xs8sV/ytKjPu7O1mf788hWY0bFVtbs6J4xGk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFr7GEO6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sd6sxBSO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C221F00893;
-	Fri,  5 Jun 2026 23:11:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFr7GEO6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1241B1F00893;
+	Fri,  5 Jun 2026 23:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780701117;
-	bh=/4otRSM6EtEjjXJGLXf1QzGjALVdbnQQ4hssMzx/+os=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Sd6sxBSORFKKyuwdZPKu+0b9VYic9HQY/zMeFi2J9QYgQ1tQ/mn+aydIojywe+J3z
-	 KxT8jajpi3nZLSpOLedxUV3WKADJy5xFmyr3Hjmy/lRapvhrQTUbV9i4B9yTnle2Q8
-	 UEhPXhcbYgcr0J1+W9YYWHV52kMVygY5mj1ZjTW0j5EDDFHTq43Mi0EtcMy2M0e7mE
-	 pEedrr9HybXBoh1qsjXOi/ZJD5od52FS3ifN/40Pb4CWcGCg8l/vpE66JqCE7AW4qC
-	 gAXj6vkatbtEW6P7naM1gQrx4DGr0sOamWK35Lc3FKSZ9tGzJ+h1C9P+HSUDQCInvV
-	 LfR0W/XnQv9Aw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/4] perf test: Update perf timechart test
-Date: Fri,  5 Jun 2026 16:11:55 -0700
-Message-ID: <20260605231155.2415760-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-In-Reply-To: <20260605231155.2415760-1-namhyung@kernel.org>
-References: <20260605231155.2415760-1-namhyung@kernel.org>
+	s=k20260515; t=1780701454;
+	bh=+UlpggCtymIX860qKeUzOTLXvNBC7QbNVLQtayNeYy0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=MFr7GEO6Ra5YxJg/2xJUe+iB0GSWdu6j2EC+8S6fvkUhw2RqcWy9/JkMvx9KXbIgR
+	 wXOgYK3YhMbeUNtdNzZwXsS1laIyslfXW+WxeEZNYxy+rmS52hX1BmeToEkPdB5h+r
+	 5kOpRTY3MWmNKJP4cf1R0rDtbPIqpj//JoW++Wveik2fNm4/zhZE6DOMYmSEBA7W0c
+	 kflS/QUnjrSwkN6mCCg4c17xRQDUJ+AFW6x57Ri+2NXdNMDCiJ7fywTSM5Wuw1PC8m
+	 mI8bhOwlEW/pLoCxizZYD7U0YHkrbnUolCIo8sTevyooEfLTrzPHUsj8bS/BqKcmX3
+	 FL1ZTqUicxhIg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 3/4] perf timechart: Fix memory leaks in draw_wakeups()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260605231155.2415760-4-namhyung@kernel.org>
+References: <20260605231155.2415760-4-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 05 Jun 2026 23:17:33 +0000
+Message-Id: <20260605231734.1241B1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-To include IO-only and backtrace modes to test different code paths.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The modified fallback loop condition `while (c && !from && !to)`=
+ prematurely aborts the search for task coordinates if either `from` or `to=
+` has already been found.
+--
 
-  $ sudo perf test -vv timechart
-  135: perf timechart tests                        : Running
-  135: perf timechart tests:
-  ---- start ----
-  test child forked, pid 2413665
-  perf timechart Basic test
-  perf timechart Basic test [Success]
-  perf timechart IO-only test
-  perf timechart IO-only test [Success]
-  perf timechart Backtrace test
-  perf timechart Backtrace test [Success]
-  ---- end(0) ----
-  135: perf timechart tests                        : Ok
+commit 757fad46c9b9ecd50deaba0cc7cc1ec56200ab8e
+Author: Namhyung Kim <namhyung@kernel.org>
 
-  === Test Summary ===
-  Passed main tests : 1
-  Passed subtests   : 0
-  Skipped tests     : 0
-  Failed tests      : 0
+perf timechart: Fix memory leaks in draw_wakeups()
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/timechart.sh | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+This commit modifies the fallback coordinate search in draw_wakeups()
+to only run when it doesn't have from and to tasks, and ensures c->Y is
+set before copying the comm string to fix memory leaks.
 
-diff --git a/tools/perf/tests/shell/timechart.sh b/tools/perf/tests/shell/timechart.sh
-index b14b3472c2846b32..40072b32171a9a1c 100755
---- a/tools/perf/tests/shell/timechart.sh
-+++ b/tools/perf/tests/shell/timechart.sh
-@@ -9,7 +9,7 @@ perfdata=$(mktemp /tmp/__perf_timechart_test.perf.data.XXXXX)
- output=$(mktemp /tmp/__perf_timechart_test.output.XXXXX.svg)
- 
- cleanup() {
--	rm -f "${perfdata}"
-+	rm -f "${perfdata}"*
- 	rm -f "${output}"
- 	trap - EXIT TERM INT
- }
-@@ -22,38 +22,41 @@ trap_cleanup() {
- trap trap_cleanup EXIT TERM INT
- 
- test_timechart() {
--	echo "Basic perf timechart test"
-+	NAME=$1
-+	OPTION=$2
-+
-+	echo "perf timechart ${NAME} test"
- 
- 	# Try to record timechart data.
- 	# perf timechart record uses system-wide recording and specific tracepoints.
- 	# If it fails (e.g. permissions, missing tracepoints), skip the test.
--	if ! perf timechart record -o "${perfdata}" true > /dev/null 2>&1; then
--		echo "Basic perf timechart test [Skipped: perf timechart record failed (permissions/events?)]"
-+	if ! perf timechart record -o "${perfdata}" ${OPTION} true > /dev/null 2>&1; then
-+		echo "perf timechart ${NAME} test [Skipped: perf timechart record failed (permissions/events?)]"
- 		return
- 	fi
- 
- 	# Generate the timechart
- 	if ! perf timechart -i "${perfdata}" -o "${output}" > /dev/null 2>&1; then
--		echo "Basic perf timechart test [Failed: perf timechart command failed]"
-+		echo "perf timechart ${NAME} test [Failed: perf timechart command failed]"
- 		err=1
- 		return
- 	fi
- 
- 	# Check if output file exists and is not empty
- 	if [ ! -s "${output}" ]; then
--		echo "Basic perf timechart test [Failed: output file is empty or missing]"
-+		echo "perf timechart ${NAME} test [Failed: output file is empty or missing]"
- 		err=1
- 		return
- 	fi
- 
- 	# Check if it looks like an SVG
- 	if ! grep -q "svg" "${output}"; then
--		echo "Basic perf timechart test [Failed: output doesn't look like SVG]"
-+		echo "perf timechart ${NAME} test [Failed: output doesn't look like SVG]"
- 		err=1
- 		return
- 	fi
- 
--	echo "Basic perf timechart test [Success]"
-+	echo "perf timechart ${NAME} test [Success]"
- }
- 
- if ! perf check feature -q libtraceevent ; then
-@@ -62,6 +65,9 @@ if ! perf check feature -q libtraceevent ; then
- 	exit 2
- fi
- 
--test_timechart
-+test_timechart "Basic" ""
-+test_timechart "IO-only" "-I"
-+test_timechart "Backtrace" "-g"
-+
- cleanup
- exit $err
--- 
-2.54.0.1032.g2f8565e1d1-goog
+> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechar=
+t.c
+> index fded4be93de0d..9ac4662ef16e9 100644
+> --- a/tools/perf/builtin-timechart.c
+> +++ b/tools/perf/builtin-timechart.c
 
+[ ... ]
+
+> @@ -1071,12 +1071,12 @@ static void draw_wakeups(struct timechart *tchart)
+>  					c =3D c->next;
+>  				}
+>  				c =3D p->all;
+> -				while (c) {
+> -					if (p->pid =3D=3D we->waker && !from) {
+> +				while (c && !from && !to) {
+
+[Severity: Medium]
+Will this condition prematurely abort the search for the second task's
+coordinates?
+
+Because the waker and wakee are typically two different PIDs, they are
+processed in different iterations of the outer per_pid loop. When the first
+one is found, either from or to becomes non-zero.
+
+When the outer loop reaches the second PID, the condition !from && !to
+evaluates to false immediately, which skips the fallback coordinate search
+entirely for that second task.
+
+Should this condition instead be !from || !to so the loop continues as long
+as either coordinate is still missing?
+
+> +					if (c->Y && p->pid =3D=3D we->waker && !from) {
+>  						from =3D c->Y;
+>  						task_from =3D strdup(c->comm);
+>  					}
+> -					if (p->pid =3D=3D we->wakee && !to) {
+> +					if (c->Y && p->pid =3D=3D we->wakee && !to) {
+>  						to =3D c->Y;
+>  						task_to =3D strdup(c->comm);
+>  					}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605231155.2415=
+760-1-namhyung@kernel.org?part=3D3
