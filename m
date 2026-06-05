@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AD443E9C4
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 19:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE9D4071CA
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 19:38:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780688290; cv=none; b=tCOATQjUZsMtNrmsnNKNWzwKXDkLxtqji/Y59N4KAUuWdorjtGuQdqnusBeY9p+/B9Zds6EAZLIHycypMZw4D0lYludj0pKwa7jtY/IoiIK2gzpEn0aKpODE4WK/zvnLr/kBpa3qeZepwKAmFjW2bXbK1+NYEdGx2o248iptfVA=
+	t=1780688296; cv=none; b=g5SQXret+2ReNjTFIF2TgyBOn7zfH2Z35Y1NkAIhLNOZFQfgyosnAvSCb5dM16gkZPX5tZu4Mf2ITxsbKbI8mpzAjDnXmtkAG7mKY2VkqkGwCGh2RJ55geh5T8L/63gP8l5TlfxciEEOAi9p7k8MF76LyMpvnLVHDNWAWmWOf5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780688290; c=relaxed/simple;
-	bh=Stl3C0naiL8VQp4QHgb6217hz/Qx0eUeCDukZVjENpk=;
+	s=arc-20240116; t=1780688296; c=relaxed/simple;
+	bh=zfglWWugoUhcIqEQ+QAxI/PSck6O6RztyI4cGCmVcgw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YcnrBUGBDgaRx9TWxIcdlCfVtWA0XsJJP0HRye5FPzVkXNPQzKQdPfSWV3Udbdd/PkQXKM2Q5j+BnAAKxDTHNhHWJQ5Q6p7oHPrvGQhZIp4p6ccJ6Azzndt2L2h82DgF/E7rZQoLILTYT9uAvNDQYGGaYhrF9wyhuCeee2QRSDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jDEeOAlX; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Y7pfQvQAmH1RV0Jl0/SXESFUApgKb0PqKXPhlzzwm9Net2zq+0juhHG0HBZ3XJJxI9aCjuerZ3hd1ZfD0p5v8eYkgC6sUR+eY1zFK6RMjE0+Rq+/o7x9hspo0c80JsNW0AhLHG4PWhEj/SKkEaXawjaXC/R0AO0syWhhbmYYgEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRq7PjlZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jDEeOAlX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC1441F00893;
-	Fri,  5 Jun 2026 19:38:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRq7PjlZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86AC1F00893;
+	Fri,  5 Jun 2026 19:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780688288;
-	bh=dyq7/y9QsEVdeNynmTLXwJwcYhtJi5Gcu/1dVbalqbA=;
+	s=k20260515; t=1780688295;
+	bh=p1T3W4ZiRafxTFGsqgkjJYjQtRCiaUF6u5YM8dF+yPE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jDEeOAlXBbSv1pIU/euZwN49D0HQBZK7I9lgMiz+b/bAdIrBR9qbofuzgmXDWHvw3
-	 xRS/zc27rPWsU221H8MFqqacaftpqChO8YVjP05up/ntchnEZ58zsrOiEzcmkAMmWc
-	 NPwFjgj7oHGZYYtQaIklYHtcv4o/OtKSNnJiXWYgBNdh8+6SMNJjtfWezNTzPCNLu7
-	 bCjvSYtxGrs2XhU3mYrFKI2uYA8d0ttEBk+M2hSS5p1vu/uLcmKw2yoHzpsNfOtCuR
-	 k+wuPNMfuS7w6hs4D2W4d8/QFpCEL2lFkB+Q7up+y0NUVajNnCIqfavizHLFcb/KKB
-	 7wd8jaZyPVHxw==
+	b=oRq7PjlZbJm5Narme/tLUhcRhzfWGMj9wyUusy1jt25cJoWVVNr4d5Y7q0e1awISn
+	 1RHtHznF8JXJlf0talxq84RdGExPP+WWojJZWivxB//vi/r6fimVBBLfU1ZQ5nb4uY
+	 vPTvJAX6gjnuMlLRivFlc7sckkorXxXJw9ZV7ya67ZrKBBRqxr//kB0vBAuHB498Vi
+	 vIdEJgfhyOin9Il2xfqe+hrJb67yr+L96K5TBuV9WNcNGhBUk05qNQfHILmjNZoIS5
+	 soz09dMLXTSo9YpuOv7+HZgSmC/+FIvXcLrsuoy22WW4OzujOAjdmYa15hueDE7oh4
+	 ob3PmlCrzYRwA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 08/19] perf python: Use evsel in sample in
- pyrf_event
+Subject: Re: [PATCH v12 2/5] perf inject/aslr: Add ASLR tool infrastructure
+ and MMAP tracking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605191500.2477026-9-irogers@google.com>
-References: <20260605191500.2477026-9-irogers@google.com>
+In-Reply-To: <20260605192425.2523260-3-irogers@google.com>
+References: <20260605192425.2523260-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 19:38:08 +0000
-Message-Id: <20260605193808.AC1441F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 19:38:14 +0000
+Message-Id: <20260605193814.B86AC1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,72 +46,86 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Overwriting `sample.evsel` without dropping the existing reference=
- causes an `evsel` memory leak.
-- [High] Leaked `evsel` reference when `evsel__parse_sample` or `evlist__pa=
-rse_sample` fails on error paths that bypass cleanup.
+- [High] Dereferencing a NULL pointer in the hashmap hash function when bui=
+lt with REFCNT_CHECKING.
+- [Medium] Hardcoded 64-bit kernel address breaks cross-platform analysis f=
+or 32-bit architectures.
 --
 
-commit f3d12718541e9a7c485a3e3991c159212f6a7942
+commit 0eb1d131e7e278ed75ab636cb567e8964c56e531
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Use evsel in sample in pyrf_event
-   =20
-Avoid a duplicated evsel by using the one in sample. Add
-evsel__get/put to the evsel in perf_sample.
+perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ba88c29ebe5ce..d01c78da51e2b 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -3365,7 +3365,7 @@ int evsel__parse_sample(struct evsel *evsel, union =
-perf_event *event,
->  	union u64_swap u;
-> =20
->  	perf_sample__init(data, /*all=3D*/true);
-> -	data->evsel =3D evsel;
-> +	data->evsel =3D evsel__get(evsel);
+This patch introduces the core ASLR remapping tool infrastructure and
+implements remapping/tracking for metadata events.
 
-[Severity: High]
-Since data->evsel now holds a reference count acquired here, do existing
-callers that manually overwrite sample.evsel need to be updated?=20
-
-For example, in tools/perf/util/session.c:session__flush_deferred_samples():
-
-        sample.evsel =3D evlist__id2evsel(evlist, sample.id);
-        if (sample.evsel)
-                sample.evsel =3D evsel__get(sample.evsel);
-
-If evlist__parse_sample() already populated sample.evsel with an evsel__get=
-()
-reference, does this manual overwrite permanently leak the original referen=
-ce
-since perf_sample__exit() will only drop the new one?
+> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
+> new file mode 100644
+> index 0000000000000..ac24fda658a57
+> --- /dev/null
+> +++ b/tools/perf/util/aslr.c
+[ ... ]
+> +static size_t remap_addresses__hash(long _key, void *ctx __maybe_unused)
+> +{
+> +	struct remap_addresses_key *key =3D (struct remap_addresses_key *)_key;
+> +
+> +	return (size_t)key->machine ^ (size_t)RC_CHK_ACCESS(key->dso) ^ key->in=
+variant ^ key->pid;
 
 [Severity: High]
-If parsing fails later in evsel__parse_sample() (for example, by jumping
-to out_efault), the function returns an error, but data->evsel already
-holds the reference.
+Does this code crash when built with REFCNT_CHECKING?
 
-Since several callers abort on parsing failure without calling
-perf_sample__exit(), does this error path permanently leak the evsel refere=
-nce?
+In aslr_tool__findnew_mapping(), if thread__find_map() fails, the fallback
+code explicitly sets remap_key.dso to NULL:
 
-For example, in tools/perf/builtin-inject.c:guest_session__fetch():
+	} else {
+		remap_key.dso =3D NULL;
+		remap_key.invariant =3D start;
+	}
 
-        ret =3D evlist__parse_sample(gs->session->evlist, gs->ev.event,
-                                   &gs->ev.sample);
-        if (ret) {
-                pr_err("Parse failed fetching guest event");
-                return ret;
-        }
+When this key is passed to hashmap__find(), the hash function
+remap_addresses__hash() uses RC_CHK_ACCESS(key->dso).
 
->  	data->cpu =3D data->pid =3D data->tid =3D -1;
->  	data->stream_id =3D data->id =3D data->time =3D -1ULL;
->  	data->period =3D evsel->core.attr.sample_period;
+When perf is built with REFCNT_CHECKING (e.g., via Address Sanitizer),
+RC_CHK_ACCESS(object) expands strictly to object->orig. Since key->dso is
+NULL, this expands to NULL->orig, resulting in an unconditional segmentation
+fault when processing unmapped or anonymous memory events.
 
 [ ... ]
+> +static u64 aslr_tool__findnew_mapping(struct aslr_tool *aslr,
+> +				      struct thread *aslr_thread,
+> +				      u8 cpumode, u64 start,
+> +				      u64 len, u64 pgoff)
+> +{
+[ ... ]
+> +	} else {
+> +		/* First address of the process, allocate key and first top address. */
+> +		struct top_addresses_key *tk;
+> +		struct process_top_address *top_val;
+> +
+> +		remap_addr =3D (cpumode =3D=3D PERF_RECORD_MISC_KERNEL ||
+> +			      cpumode =3D=3D PERF_RECORD_MISC_GUEST_KERNEL) ?
+> +			     kernel_space_start : user_space_start;
+> +		remap_addr =3D round_up_to_page_size(remap_addr);
+
+[Severity: Medium]
+Will this hardcoded 64-bit kernel address break cross-platform analysis for
+32-bit architectures?
+
+The code hardcodes kernel_space_start to 0xffff800010000000 and
+unconditionally applies it to any mapping with a kernel cpumode.
+
+If perf inject --aslr is run on a perf.data file collected from a 32-bit
+machine, this will inject 64-bit virtual addresses into the output stream.
+
+Downstream analysis tools expecting 32-bit address spaces based on the ELF
+e_machine type might encounter out-of-bounds addresses and fail.
+
+Should the tool dynamically determine the architecture's address space boun=
+ds
+via struct perf_env instead?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605191500.2477=
-026-1-irogers@google.com?part=3D8
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605192425.2523=
+260-1-irogers@google.com?part=3D2
