@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1E1438FF2
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 19:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5058F36D513
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 19:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780687833; cv=none; b=nZ/YpVe6NK20Ggjjd2uFVB8Tnt2oRkE1ph4Va1tT9pUweBrq5TIuHmAQ8PrNBKS756gQfwimAv5sKV7r6tE6JyVGegxFsjHNtwnal+eBi/ZuyR0boCQh1vLN8j7Eg24/nial2S1cfH6w1u0homSoAQEEvZHYaisRcW7VHBak0p0=
+	t=1780687945; cv=none; b=DIQMSQ5DD4w2leVa1HqlhebIcCJWUa7QeuV62D9fEdBvJTL9IAJ7trjlq/HXUTHFsCOnw5zd3oWbPIAktis/AM1j0SOpm2Utb9AnmGkc7H39b11YZZcWftiMqnfOrVjEBfz1vYmoxM1hdK9XbSSytsqIBB4XWthxoTnl9/XWqow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780687833; c=relaxed/simple;
-	bh=Q33l82gvRt6eEQpZBkqJ7vujJZetV/Yjl/oslUITV40=;
+	s=arc-20240116; t=1780687945; c=relaxed/simple;
+	bh=LlGBTtEPysvRG9WKELXrtenQjCjqM1AUrE3kyW7kCe8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Z7clzrxLFOCzPcJvDav/6EL1JCsNQHDuzbYi+U66fBkZxvuE8oXztSwD4ttvYQreGUfpjYifyZvky8b1hIS3iDeYj7FvdH4tpr+1ZUyZIsuf/P7E4U3BxZnKdsqNPW/LlkUypA1TEGk+mwYAnlq4El7wONF+YjHkxQYAsY5waNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V1j3nZ7X; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=gi+vurBB0ER+TeDo4CnXepqNIGmnhdX1kYazbLje9DT7es13iqkKdJDN05XuN6izovmq2wgYrO9Qokh3ok1qoNnWtX5UMK9tVuTIp5pn7Qx59bvYUhR7Wezwa2vg8EEt7SUFzMVmbsLu2UokePJ0p9DHR0JVaNOXmT+g6//7C7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7FV+qHw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V1j3nZ7X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6671F00893;
-	Fri,  5 Jun 2026 19:30:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7FV+qHw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D56A91F00893;
+	Fri,  5 Jun 2026 19:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780687830;
-	bh=UOfHv0wz8DyHin7YQLHq3wuhchoqfKhbeP4AG4ERwkY=;
+	s=k20260515; t=1780687944;
+	bh=E7QTKgP2S2bQOrC/B/nzpIRR8zS1YFui/yTKfvIMFnw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=V1j3nZ7X+AZd0ZTyceeB2qZDj3KT/1KsCUXt/+hj/kalzL1vGvdyglOKoUYAO6XU9
-	 60WFTl6HlR0548+2ES1q5RYAYVvosDBd4sjRyDMAJ9E1bemsqQVhcEw9T5fVVZ7nKy
-	 uEosaDnwQTx2jaWfZPgWWV0zMWMURXwI5gNFNEhUCbuWCXW57nr9iOVTwGLT2klgai
-	 5/a2UYYbMuusU8J4mTQPVqB/RZaMYm0NBPUP/AMbf7DOVliZSbmdP5D7h0rOJhKuC5
-	 GFUf4X5lmrefsWnetvfMqLtcmoUs6BCRFAd0wTUjiHQNE6GrZCwrmPSAJuD6cvvN61
-	 nzjRzdOZ4qlHA==
+	b=Q7FV+qHwshYFJSI1fDsaNiKyclbjdUFuS7cAKeNjVFIZB7JGjo3uC+5b7Jk43byPS
+	 uIVpVRNhuCCxSX8Xx0IZd+YzFmnmgYQB02zg+4VOnOfzBLg3k37+RMPN0tZRGjYUKz
+	 4EMIoaxcX4MWSKvJV76c7AzmOUuSuaS3zUHmhjvht44wpBoV8FyIdloajN73yDvWXY
+	 3ZBxNUP9Ct4yhjhftN+LMx7pZ9ypvkbjXYAnqNMMjXVrLnumRUnzHgEhwo0DjTKx3B
+	 mtQ3+gMMQgZ2CiefpKFY++lLdaDHy2BrvFSBQeFbbPxh3FTX8ZUyTHGQtzVBn0Ggai
+	 Mis088E4SRBTg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 11/19] perf python: Refactor and add accessors to
- sample event
+Subject: Re: [PATCH v11 04/19] perf data: Add open flag
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605191500.2477026-12-irogers@google.com>
-References: <20260605191500.2477026-12-irogers@google.com>
+In-Reply-To: <20260605191500.2477026-5-irogers@google.com>
+References: <20260605191500.2477026-5-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 19:30:29 +0000
-Message-Id: <20260605193030.4A6671F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 19:32:23 +0000
+Message-Id: <20260605193223.D56A91F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,89 +45,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Truncating the event payload during copy while preserving the orig=
-inal large `header.size` leads to heap out-of-bounds reads and writes.
+
+Pre-existing issues:
+- [High] If `rename()` fails during log rotation in `perf_data__switch()`, =
+the original data file is truncated and its contents are lost.
 --
 
-commit 929f25f8c9aa5f28716697be8db6159cf17bcacf
+commit c62907f96616fda36f9afb612d87efd788da81f6
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Refactor and add accessors to sample event
+perf data: Add open flag
 
-This commit adds a common evsel field for events and moves sample specific
-fields. It adds accessors for sample events and changes memory allocation
-to only allocate enough memory for the copied event instead of the maximum
-event size.
+This commit adds an open flag to struct perf_data to avoid double opens
+and track the open state of the file or directory. This helps resolve
+python integration issues where the data file is opened before being
+passed to a session.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 6105ab183d7a0..acd280794f66f 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
+> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> index 94dc534a73866..33fd1b82019eb 100644
+> --- a/tools/perf/util/data.c
+> +++ b/tools/perf/util/data.c
+
 [ ... ]
-> @@ -511,33 +840,56 @@ static PyTypeObject *pyrf_event__type[] =3D {
->  	[PERF_RECORD_SWITCH_CPU_WIDE]  =3D &pyrf_context_switch_event__type,
->  };
+
+> @@ -457,6 +473,7 @@ int perf_data__switch(struct perf_data *data,
 > =20
-> -static PyObject *pyrf_event__new(const union perf_event *event)
-> +static PyObject *pyrf_event__new(const union perf_event *event, struct e=
-vsel *evsel)
->  {
-[ ... ]
-> +	size_t copy_size =3D event->header.size;
-> +
-> +	pevent =3D PyObject_New(struct pyrf_event, pyrf_event__type[event->head=
-er.type]);
-> +	if (pevent =3D=3D NULL)
-> +		return PyErr_NoMemory();
-> +
-> +	if (copy_size > sizeof(pevent->event))
-> +		copy_size =3D sizeof(pevent->event);
-> +
-> +	/* Copy the event for memory safety and initilaize variables. */
-> +	memcpy(&pevent->event, event, copy_size);
-> +
-> +	if (event->header.type =3D=3D PERF_RECORD_MMAP) {
-> +		/* Ensure '\0' string termination. */
-> +		size_t max_len =3D pevent->event.header.size -
-> +				 offsetof(struct perf_record_mmap, filename);
-> +
-> +		pevent->event.mmap.filename[max_len - 1] =3D '\0';
+>  	if (!at_exit) {
+>  		perf_data_file__close(&data->file);
+> +		data->open =3D false;
+>  		ret =3D perf_data__open(data);
 
 [Severity: High]
-In tools/perf/util/python.c:pyrf_event__new(), if event->header.size is
-greater than sizeof(pevent->event), the copy is clamped but
-pevent->event.header.size retains the original large value.
+This is a pre-existing issue, but does reopening the file here truncate
+the existing data if the preceding rename() fails?
 
-Could this cause an out-of-bounds heap write when calculating max_len
-for the NUL byte termination?
+In perf_data__switch(), if rename() fails during log rotation, a warning
+is printed and the code falls through with the intent to "continue fill
+original file":
 
-> +	}
-> +
-> +	perf_sample__init(&pevent->sample, /*all=3D*/true);
-> +	pevent->al_resolved =3D false;
-> +	addr_location__init(&pevent->al);
-> +
-> +	if (!evsel)
-> +		return (PyObject *)pevent;
-> +
-> +	/* Parse the sample again so that pointers are within the copied event.=
- */
-> +	err =3D evsel__parse_sample(evsel, &pevent->event, &pevent->sample);
+    if (rename(data->path, *new_filepath))
+            pr_warning("Failed to rename %s to %s\n", ...);
 
-[Severity: High]
-Also in tools/perf/util/python.c:pyrf_event__new(), could passing
-pevent->event to evsel__parse_sample() with the original large
-header.size cause it to read past the end of the truncated pevent
-allocation into adjacent Python heap memory?
+However, the file is then closed and reopened via perf_data__open().
+Because the file is opened for writing, the call chain is:
+perf_data__open() -> open_file_dup() -> open_file() -> open_file_write(),
+which unconditionally opens the file with the O_TRUNC flag.
 
-> +	if (err < 0) {
-> +		Py_DECREF(pevent);
-> +		return PyErr_Format(PyExc_OSError,
-> +				    "perf: can't parse sample, err=3D%d", err);
->  	}
->  	return (PyObject *)pevent;
->  }
+Since the original file was not successfully renamed and remains at
+data->path, doesn't reopening it with O_TRUNC completely wipe out all
+previously recorded profiling data instead of preserving it?
+
+>  		if (ret < 0)
+>  			goto out;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605191500.2477=
-026-1-irogers@google.com?part=3D11
+026-1-irogers@google.com?part=3D4
