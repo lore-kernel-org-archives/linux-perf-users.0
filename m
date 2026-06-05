@@ -1,108 +1,192 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678483D3301
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 07:58:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348F348B383
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 08:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780646312; cv=none; b=B6rU4uKeuHjZHDjkHOe303jXlpyduT0E93Qps8a289+C4h5hQB7+b6mjluQ3YipzGSGG48mWhlvxpPwpziiwm2151pke/LBeoii1L7yVYuwYH1KdxrSOPdkrAQiZ62XCSpYFD0/djKAdnORyPQlMutZMXAt7+VPVRgh6JLZIECo=
+	t=1780646581; cv=none; b=seXI3+/PNHhB+BR+QxLKiVWoL8UbuViCxFSsbIM9E850hW6K1oqhAPitDSezMn3JZX/fL4RZQScs8GO7xG84AB6P2ZFaJIyvGFjHH8/bXI1kRl0rVG3iX8tLvZxVK4V095St/c+Hc3AxsSlAldL4a1AH1hZZaLVeNmQqFuqZzyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780646312; c=relaxed/simple;
-	bh=ilFr+QSNOHPcvRXcB7ls8c14Zh7tChR5FY8CF38mP1k=;
+	s=arc-20240116; t=1780646581; c=relaxed/simple;
+	bh=t5PhGxm94rFJ4eCuxXGv67BUTWO3F/sRbCEjD7XKLkE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=i6XlErxqH9PtCY3GQCJsfzqd7luePi7TUntCKaiSFc7eGtii2/oTdmJUTFtj6Xj+i78gEroqmLCn4+qfCA/xakVg9QJoU9CBHbRsQWXWDxFB9+aH44LXByIJ6JWOAFJ12nfOC28Llj2CEluWdaHm27y+WtnZdqTWrfWKjiwjlO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bL5uZMsX; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=cVb5feDgfCd3Nmzx9cIdgL8+OoQV3FvdzkkY3b2AfB4tDoQVcXkHTLG11FRKLSk7rnlxzTJoQ3SL90YBv11TK7V0XV15ujysiPxmDseCHmYPZmcGxY5gENphUPxOvmlaJ+JcjQc8Gm6da1aMEJS/nCsAb3n1FNdQ49RqlmXBtkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3zH6vbk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bL5uZMsX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C0B1F00893;
-	Fri,  5 Jun 2026 07:58:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3zH6vbk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B11D11F00899;
+	Fri,  5 Jun 2026 08:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780646311;
-	bh=dg7GMOpA+Erweu2pbLe2dukza0KMI90nWOziha6x2Bs=;
+	s=k20260515; t=1780646579;
+	bh=Wuy4Dgi9/omQdPmdIX/HFgdQSDPog6LkQozuL6hKOak=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bL5uZMsXmH/txdHWelubBMBBDCfzlvQeI6YBDsac5teqrPklTk451EOS+Q8ppy0yQ
-	 OcvkFVbc6duOGdbFuEY4EpLMQ3cEoZcmQtNVNXowUeYtcVb1K7PnlpZbPiOf9fLIYf
-	 7YkU9hQgfOYS6dkZ3i0CJD6Jbg1fhYg3vs+7s+BOja4fPwbVLnkYA8kUcbBEvXK4ES
-	 RsKBjaxVym2j6cezF4V9MLH2HuFoeV9zDFimXJmNzNQADxlGC5VUUavMyRX/Y4LoCe
-	 7v5Ts3xDQv6rccaZvUsaFfkYT8uQeXI1GasJA7i69x0QCwhqsVzOWK4JyPEAd/2q0h
-	 OUcm2NhGcv/YA==
+	b=f3zH6vbknRYZ83LGqvLVmzmxoAOdNlIyiE935WRw5g4JQvmtfxBPQw35kzX4R8tMh
+	 4/1CmrsIhAJxtpYPf/rXwzwcjgcv5dPMdtGsKOnaEee9t1H95rflxUJMNkme8b2ICi
+	 Gp8Z6Nwwb1yNu92vcvKx05TV3ftLkZ9GgO329zBj/xojCodWuSA0GonaQijoAcEAvz
+	 ifJ8QZedjDtUNtVD9j8ScMn8mJeFrih0lUTAZqFeLOtB5PCwLSbPp/9pm55nQ7hN/z
+	 stpPxbVZmAy5FwIV7d8iVQn9E3/Otu1nFjx3mPS55XEj5J1I7PXac2i+Wg2bfFmupI
+	 ggbv0+2VOJb3A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 10/19] perf python: Add python session abstraction
- wrapping perf's session
+Subject: Re: [PATCH v10 11/19] perf python: Refactor and add accessors to
+ sample event
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605074003.1730715-11-irogers@google.com>
-References: <20260605074003.1730715-11-irogers@google.com>
+In-Reply-To: <20260605074003.1730715-12-irogers@google.com>
+References: <20260605074003.1730715-12-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 07:58:30 +0000
-Message-Id: <20260605075830.E3C0B1F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 08:02:59 +0000
+Message-Id: <20260605080259.B11D11F00899@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] The pyrf_session wrapper fails to register the `.attr` and `.featu=
-re` callbacks in `perf_tool`, silently dropping these events and breaking e=
-vent processing in pipe mode.
+- [High] Missing null termination enforcement for PERF_RECORD_COMM events c=
+ombined with tight dynamic memory allocation leads to an out-of-bounds heap=
+ read.
+- [High] Dynamic memory copy into statically-sized union member triggers _F=
+ORTIFY_SOURCE abort for large perf events.
 --
 
-commit fa89d52ee147ebcf23e53127275a3667c97e2358
+commit 988867a783dddfdaf9aaad9f7c6cf721f3891d95
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add python session abstraction wrapping perf's session
+perf python: Refactor and add accessors to sample event
 
-This commit adds a wrapper Python type for perf's session, incorporating the
-tool and allowing a sample callback to be passed when creating the session.
-When process_events is run, this callback will be executed for sample event=
-s.
+This commit refactors the Python perf event integration by adding common
+evsel fields for events and specific accessors for sample events. It also
+adjusts memory allocation to allocate just enough memory for the copied
+event, rather than always allocating the maximum event size.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 4c09a22d35217..b3454ae971c48 100644
+> index b3454ae971c48..f7ab6f6faaf72 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
 [ ... ]
-> @@ -2570,6 +2576,313 @@ static int pyrf_data__setup_types(void)
+>  struct pyrf_event {
+>  	PyObject_HEAD
+> +	/** @sample: The parsed sample from the event. */
+>  	struct perf_sample sample;
+> -	union perf_event   event;
+> +	/** @al: The address location from machine__resolve, lazily computed. */
+> +	struct addr_location al;
+> +	/** @al_resolved: True when machine__resolve been called. */
+> +	bool al_resolved;
+> +	/** @event: The underlying perf_event that may be in a file or ring buf=
+fer. */
+> +	union perf_event event;
+>  };
 [ ... ]
-> +static PyObject *pyrf_session__new(PyTypeObject *type, PyObject *args, P=
-yObject *kwargs)
-> +{
+> -static PyObject *pyrf_event__new(const union perf_event *event)
+> +static PyObject *pyrf_event__new(const union perf_event *event, struct e=
+vsel *evsel,
+> +				 struct perf_session *session __maybe_unused)
+>  {
+>  	struct pyrf_event *pevent;
+> -	PyTypeObject *ptype;
+> +	size_t size;
+> +	int err;
+> +	size_t min_size =3D sizeof(struct perf_event_header);
+> =20
+> -	if ((event->header.type < PERF_RECORD_MMAP ||
+> -	     event->header.type > PERF_RECORD_SAMPLE) &&
+> -	    !(event->header.type =3D=3D PERF_RECORD_SWITCH ||
+> -	      event->header.type =3D=3D PERF_RECORD_SWITCH_CPU_WIDE)) {
+> -		PyErr_Format(PyExc_TypeError, "Unexpected header type %u",
+> +	if (event->header.type >=3D ARRAY_SIZE(pyrf_event__type) ||
+> +	    pyrf_event__type[event->header.type] =3D=3D NULL) {
+> +		return PyErr_Format(PyExc_TypeError, "Unexpected header type %u",
+>  			     event->header.type);
+> -		return NULL;
+>  	}
+> =20
+> -	// FIXME this better be dynamic or we need to parse everything
+> -	// before calling perf_mmap__consume(), including tracepoint fields.
+> -	if (sizeof(pevent->event) < event->header.size) {
+> -		PyErr_Format(PyExc_TypeError, "Unexpected event size: %zd < %u",
+> -			     sizeof(pevent->event), event->header.size);
+> -		return NULL;
 [ ... ]
-> +	psession->tool.comm		=3D perf_event__process_comm;
-> +	psession->tool.mmap		=3D perf_event__process_mmap;
-> +	psession->tool.mmap2            =3D perf_event__process_mmap2;
-> +	psession->tool.namespaces       =3D perf_event__process_namespaces;
-> +	psession->tool.cgroup           =3D perf_event__process_cgroup;
-> +	psession->tool.exit             =3D perf_event__process_exit;
-> +	psession->tool.fork             =3D perf_event__process_fork;
-> +	psession->tool.ksymbol          =3D perf_event__process_ksymbol;
-> +	psession->tool.text_poke        =3D perf_event__process_text_poke;
-> +	psession->tool.build_id         =3D perf_event__process_build_id;
-> +	session =3D perf_session__new(&pdata->data, &psession->tool);
+> +	/* Allocate just enough memory for the size of event. */
+> +	size =3D offsetof(struct pyrf_event, event) + event->header.size;
+> +	pevent =3D (struct pyrf_event *)PyObject_Malloc(size);
+> +	if (pevent =3D=3D NULL)
+> +		return PyErr_NoMemory();
+> +
+> +	/* Copy the event for memory safety and initilaize variables. */
+> +	PyObject_Init((PyObject *)pevent, pyrf_event__type[event->header.type]);
+> +	memcpy(&pevent->event, event, event->header.size);
 
 [Severity: High]
-Are we missing callbacks for attribute and feature events here?
+Does copying dynamically sized events into a fixed-size union member trigge=
+r a
+_FORTIFY_SOURCE abort?
 
-If the .attr and .feature callbacks in struct perf_tool are not registered
-here, incoming events will be silently ignored. In pipe mode, dropping
-perf_event_header_attr events prevents the creation of evlists and evsels,
-which breaks event processing entirely.
+Since the previous upper bounds check (sizeof(pevent->event) < event->heade=
+r.size)
+was removed, event->header.size can now safely exceed the size of the union.
+However, because pevent->event remains strictly typed as a fixed-size
+union perf_event rather than a flexible array member, compilers building wi=
+th
+-D_FORTIFY_SOURCE=3D2 will evaluate the maximum allowed destination size as
+sizeof(union perf_event).
 
-Missing .feature callbacks would similarly prevent the population of perf_e=
-nv.
-Could we add the appropriate attr and feature callbacks here to properly
-support pipe mode streams?
+When memcpy executes for large events, will the fortified memcpy fail this
+bounds check and abort the process?
 
-> +	if (IS_ERR(session)) {
-> +		PyErr_Format(PyExc_IOError, "failed to create session: %ld", PTR_ERR(s=
-ession));
-> +		goto err_out;
-> +	}
+> +
+> +	if (event->header.type =3D=3D PERF_RECORD_MMAP) {
+> +		/* Ensure '\0' string termination. */
+> +		size_t max_len =3D pevent->event.header.size - offsetof(struct perf_re=
+cord_mmap, filename);
+> +
+> +		pevent->event.mmap.filename[max_len - 1] =3D '\0';
+>  	}
+
+[Severity: High]
+Is a similar string termination safeguard needed for PERF_RECORD_COMM event=
+s?
+
+The patch updates memory allocation to exactly fit the record's length, lea=
+ving
+no safety margin or uninitialized buffer space. For PERF_RECORD_COMM events,
+the comm field is exported to Python using T_STRING_INPLACE, which relies
+on strlen() to parse the string length.
+
+If a malicious or malformed perf.data file provides a comm string lacking a
+null terminator, will strlen() read past the end of the tight heap allocati=
+on,
+resulting in an out-of-bounds read?
+
+> =20
+> -	ptype =3D pyrf_event__type[event->header.type];
+> -	pevent =3D PyObject_New(struct pyrf_event, ptype);
+> -	if (pevent !=3D NULL) {
+> -		memcpy(&pevent->event, event, event->header.size);
+> -		perf_sample__init(&pevent->sample, /*all=3D*/false);
+> +	perf_sample__init(&pevent->sample, /*all=3D*/true);
+> +	pevent->al_resolved =3D false;
+> +	addr_location__init(&pevent->al);
+> +
+> +	if (!evsel)
+> +		return (PyObject *)pevent;
+> +
+> +	/* Parse the sample again so that pointers are within the copied event.=
+ */
+> +	err =3D evsel__parse_sample(evsel, &pevent->event, &pevent->sample);
+> +	if (err < 0) {
+> +		Py_DECREF(pevent);
+> +		return PyErr_Format(PyExc_OSError,
+> +				    "perf: can't parse sample, err=3D%d", err);
+>  	}
+>  	return (PyObject *)pevent;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605074003.1730=
-715-1-irogers@google.com?part=3D10
+715-1-irogers@google.com?part=3D11
