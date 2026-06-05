@@ -1,151 +1,315 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5132332470E;
-	Fri,  5 Jun 2026 23:21:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B31F37DE84;
+	Fri,  5 Jun 2026 23:22:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780701715; cv=none; b=tP2RDt6L4l8gqCVoWVxpM6Ck9+zz8bBeb4x2TzUF/0OfyniTT0it0EXwcuoS4SKrMQ39Nery1NQq6ikWDUpeLHFiVDD4E+mO66QhVK8P+Eu6uJOP82huI2dId/BNJVXApWWoSpWZk0j3XwXqMsDkkqHua6nCk64PkUWValxr0+I=
+	t=1780701743; cv=none; b=H8BbvZBuohjmaGq1N3TNSPWjdYYDuLLP+C7ZPBhTDzG66sy4/60HyHOyiO076CzILcvL5RC2hQIvwCiEqaNsZYU/Q+DsIa4ItBGTXclsUUL9MutTNg7BYYhl8ZwLG8kDVFcAMZITIKrQZlpTUyZ6PYFT/SYB06dBeVuCd/zMwvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780701715; c=relaxed/simple;
-	bh=eLmcdzM7BGYj/sumolcAo6QMjD85FV9rCVaIG8dbMcI=;
+	s=arc-20240116; t=1780701743; c=relaxed/simple;
+	bh=cL7oGNpHSaQoYe12JSJR8CfNlXbRCiOtU/3sdLnZHsw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dllfUDDUZJpPHvUZ+GOQlW6xJMGv93z6aFkQSULtp5egzCGNu3ef2kIDBdxtKgZS1cv75Q99TunjC4yljp7L65q6bLYHPidpMFfPyS/V4PB+h+H6EoFDyossXox0xVLdVToRuzopWn/QWkony/IfhVtVmkRzgOhLOF+RK32Tneg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjXiArxV; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=MJTebiNeYHzCUCnd3lx7IQAxzf39ZG1LowkBBxBfZZbTYr8jeXG5GXlOZms5mgmLs+kVGDjIR+CIs1Zlm4Ty/0axR3pQJ9nJedlf9owFbk87x9hda3mUjmntzjyAnoB7S3MyIx5+TSk4+QPuXoO2ZqdFYP61Q7ktSyUA++MWLl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwKyQC4A; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjXiArxV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 254A71F00893;
-	Fri,  5 Jun 2026 23:21:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwKyQC4A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 417271F00893;
+	Fri,  5 Jun 2026 23:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780701714;
-	bh=8Xh3O2kf0q7xAq8+1l9izMhTLnQMa/rxCE/oxzIRysU=;
+	s=k20260515; t=1780701741;
+	bh=iTvKGfUHfEwHAHby9sTb+8K0urlQPbYcbCT1uaTMREY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EjXiArxVBWE0Zu24+KdQLuX3OKF9pnilllMQzi0SElDz9acV+W61j5cGku/Ry8YxN
-	 g5tHJi9YlHcjNOg/kzZxPjhR4dhw+iVtahieSH1g5QYL+tKSKIIxnY3qOSLaj1xE87
-	 E9Xl/th3wa5k0tJIvbx9PPSlghNwubBHhiEq96ZUo5fCkyj/XebDycHD2zjEBcePmi
-	 gKgXgf8Rr4PTIGa16fVMPtqtbCk0tZwmtB05MGrdAosimBU4mwhTonG3uOf/wBru3L
-	 w68eZXxPmEI7aFQiCLdESmbaWkZfR0/VjL49PyTjqi2ECirmiECg5qGweH08pjdgps
-	 qtyThVri0UXNQ==
-Date: Fri, 5 Jun 2026 20:21:49 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf timechart: Release event samples at the end
-Message-ID: <aiNaDclowc8qm2Qs@x1>
-References: <20260605231155.2415760-1-namhyung@kernel.org>
- <20260605231155.2415760-2-namhyung@kernel.org>
+	b=dwKyQC4ALEp9ZQ4BR+GlBJwPhN+IAIPY7mlNOVFLOMo9xViUUpHasH0acor0R2sLJ
+	 rzUb5OSWQ88hn9hF2Wj/ipjzgjTw/a6H5xtYy4DBof07GZmL03EjCQLxR9f9M9ouMq
+	 P3icHRNbZ8Gk4uqkks/93wUrxxA10FeDeC+HasAP8C4c3eA17rgnh8jOie6tCMBdYd
+	 MnrCEN8/hJXFS/LWGtQh0x7qK/XoBBO+bUDKy+CIa3vGFx9oRc0iqAl4nxfMMejdOl
+	 gRIhlkuXxe/e2z+SVQWRfUbGm9HM2Zhn8H6TvByAJSOz38T5H4mxHWSFy5DZ4G1HER
+	 Kgo98O0+NKWsw==
+Date: Fri, 5 Jun 2026 16:22:20 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf jitdump: Fix a build error with ASAN
+Message-ID: <aiNaLKTyJWg9sEtb@google.com>
+References: <20260605064932.34316-1-namhyung@kernel.org>
+ <20260605070349.E27A41F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260605231155.2415760-2-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260605070349.E27A41F00893@smtp.kernel.org>
 
-On Fri, Jun 05, 2026 at 04:11:52PM -0700, Namhyung Kim wrote:
-> Add timechart__release() to free all data structures added during the
-> sample processing.
+On Fri, Jun 05, 2026 at 07:03:49AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 10 potential issue(s) to consider:
 > 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-timechart.c | 54 ++++++++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
+> Pre-existing issues:
+> - [High] Unlocking an unlocked stream on the error path causes undefined behavior.
+> - [High] Incorrect logic for skipping extended jitdump headers leads to parsing failure.
+> - [High] Ignoring the return value of `dirname()` breaks directory extraction and causes ENOTDIR failures.
+> - [High] If the generated JIT ELF path exceeds PATH_MAX, snprintf truncation causes size underflow resulting in a heap buffer overflow.
+> - [High] Cross-endian byte swapping of JIT_CODE_DEBUG_INFO records corrupts data by ignoring the flexible array member.
+> - [High] Lack of validation on `code_size` enables arbitrary out-of-bounds read and memory leakage.
+> - [Medium] Memory leak of `debug_data` and `unwinding_data` pointers.
+> - [Medium] Memory leak of `event` in `jit_repipe_code_move`.
+> - [Medium] Ineffective inter-process synchronization using `flockfile`.
+> - [Medium] Integer underflow leading to massive malloc in `jit_repipe_debug_info`.
+
+I don't plan to touch any of these issues, at least in the near future.
+
+Thanks,
+Namhyung
+
+> --
 > 
-> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-> index 04dbb944a42720b4..7c4ace51302e260c 100644
-> --- a/tools/perf/builtin-timechart.c
-> +++ b/tools/perf/builtin-timechart.c
-> @@ -1548,6 +1548,59 @@ static void write_svg_file(struct timechart *tchart, const char *filename)
->  	svg_close();
->  }
->  
-> +static void timechart__release(struct timechart *tchart)
-> +{
-> +	struct per_pid *p = tchart->all_data;
-> +	struct power_event *pwr = tchart->power_events;
-> +	struct wake_event *we = tchart->wake_events;
-> +
-> +	while (p) {
-> +		struct per_pid *next_pid = p->next;
-> +		struct per_pidcomm *c = p->all;
-> +
-> +		while (c) {
-> +			struct per_pidcomm *next_comm = c->next;
-> +			struct cpu_sample *cs = c->samples;
-> +			struct io_sample *ios = c->io_samples;
-> +
-> +			while (cs) {
-> +				struct cpu_sample *next = cs->next;
-> +
-> +				free((char *)cs->backtrace);
-
-				zfree()? This way if somebody has a
-				pointer to cs and tries to use
-				cs->backtrace after this free, it will
-				segfault instead of using garbage or
-				worse, setting some other unrelated
-				struct to some cpu_sample field supposed
-				value.
-
-> +				free(cs);
-> +				cs = next;
-> +			}
-> +
-> +			while (ios) {
-> +				struct io_sample *next = ios->next;
-> +
-> +				free(ios);
-
-				io->next = NULL;
-
-> +				ios = next;
-> +			}
-> +
-> +			free(c->comm);
-
-			zfree
-
-> +			free(c);
-> +			c = next_comm;
-> +		}
-> +		p = next_pid;
-> +	}
-> +
-> +	while (pwr) {
-> +		struct power_event *next = pwr->next;
-> +
-> +		free(pwr);
-		pwr->next = NULL;
-> +		pwr = next;
-> +	}
-> +
-> +	while (we) {
-> +		struct wake_event *next = we->next;
-> +
-> +		free((char *)we->backtrace);
-		zfree
-> +		free(we);
-> +		we = next;
-> +	}
-> +}
-> +
->  static int process_header(struct perf_file_section *section __maybe_unused,
->  			  struct perf_header *ph,
->  			  int feat,
-> @@ -2079,6 +2132,7 @@ int cmd_timechart(int argc, const char **argv)
->  
->  	ret = __cmd_timechart(&tchart, output_name);
->  out:
-> +	timechart__release(&tchart);
->  	zfree(&cpus_cstate_start_times);
->  	zfree(&cpus_cstate_state);
->  	zfree(&cpus_pstate_start_times);
+> commit f314399f4edf9366c3ee4d529f45cb2d7e7d454d
+> Author: Namhyung Kim <namhyung@kernel.org>
+> 
+> perf jitdump: Fix a build error with ASAN
+> 
+> This patch resolves a stringop-truncation build error when compiling perf
+> with ASAN on GCC 16. It reduces the strncpy bound by one byte to avoid
+> truncation warnings.
+> 
+> > diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> > index e0ce8b9047298..16390e7f9062d 100644
+> > --- a/tools/perf/util/jitdump.c
+> > +++ b/tools/perf/util/jitdump.c
+> > @@ -234,7 +234,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
+> >  	/*
+> >  	 * keep dirname for generating files and mmap records
+> >  	 */
+> > -	strncpy(jd->dir, name, PATH_MAX);
+> > +	strncpy(jd->dir, name, PATH_MAX - 1);
+> >  	jd->dir[PATH_MAX - 1] = '\0';
+> >  	dirname(jd->dir);
+> 
+> [Severity: High]
+> This isn't a bug introduced by this patch, but is it correct to ignore the
+> return value of dirname()?
+> 
+> If jd->dir contains no slashes, glibc dirname() returns a pointer to "." but
+> leaves the original string unmodified. Since the return value is discarded,
+> jd->dir retains the full filename instead of becoming ".". This could cause
+> later snprintf calls to use the target file as a directory component, leading
+> to ENOTDIR failures.
+> 
+> >  	free(buf);
+> 
+> [Severity: High]
+> This is a pre-existing issue, but does the error handling path incorrectly
+> unlock an unlocked stream?
+> 
+> If malloc() fails early in jit_open(), it jumps to the error label:
+> 
+> tools/perf/util/jitdump.c:jit_open() {
+>     ...
+> 	buf = malloc(bsz);
+> 	if (!buf)
+> 		goto error;
+> 
+> 	/*
+> 	 * protect from writer modifying the file while we are reading it
+> 	 */
+> 	flockfile(jd->in);
+>     ...
+> error:
+> 	free(buf);
+> 	funlockfile(jd->in);
+> 	fclose(jd->in);
+> 	return retval;
+> }
+> 
+> Since flockfile() is only called after malloc() succeeds, calling funlockfile()
+> here results in undefined behavior on an unlocked stream.
+> 
+> [Severity: High]
+> This is a pre-existing issue, but does this logic break extended header reads?
+> 
+> In jit_open(), when handling extended headers, bsz is updated to bs right
+> before calculating the read size:
+> 
+> tools/perf/util/jitdump.c:jit_open() {
+>     ...
+> 	if (bs > bsz) {
+> 		n = realloc(buf, bs);
+> 		if (!n)
+> 			goto error;
+> 		bsz = bs;
+> 		buf = n;
+> 		/* read extra we do not know about */
+> 		ret = fread(buf, bs - bsz, 1, jd->in);
+> 		if (ret != 1)
+> 			goto error;
+> 	}
+>     ...
+> }
+> 
+> Because bsz = bs, the read size bs - bsz is always 0. fread() will return 0,
+> causing the ret != 1 check to fail and unconditionally jump to the error path.
+> 
+> [Severity: High]
+> This is a pre-existing issue, but could snprintf() truncation cause an
+> out-of-bounds pointer calculation?
+> 
+> In jit_repipe_code_load(), snprintf() calculates a path:
+> 
+> tools/perf/util/jitdump.c:jit_repipe_code_load() {
+>     ...
+> 	filename = event->mmap2.filename;
+> 	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
+> 			jd->dir,
+> 			nspid,
+> 			count);
+> 
+> 	size++; /* for \0 */
+> 
+> 	size = PERF_ALIGN(size, sizeof(u64));
+>     ...
+> 	event->mmap2.header.size = (sizeof(event->mmap2) -
+> 			(sizeof(event->mmap2.filename) - size) + idr_size);
+>     ...
+> 	id = (void *)((unsigned long)event + event->mmap.header.size - idr_size);
+> 	if (jd->sample_type & PERF_SAMPLE_TID) {
+> 		id->pid  = pid;
+>     ...
+> }
+> 
+> If the string exceeds PATH_MAX, snprintf() returns the untruncated length. The
+> expression sizeof(event->mmap2.filename) - size will then underflow because size
+> is greater than PATH_MAX, resulting in a massively inflated header.size. The
+> pointer id will point outside the allocated bounds, leading to heap corruption
+> when id->pid is assigned.
+> 
+> [Severity: High]
+> This isn't a bug introduced by this patch, but does the byte-swapping logic
+> corrupt data by ignoring a flexible array member?
+> 
+> In jit_get_next_entry():
+> 
+> tools/perf/util/jitdump.c:jit_get_next_entry() {
+>     ...
+> 	case JIT_CODE_DEBUG_INFO:
+> 		if (jd->needs_bswap) {
+> 			uint64_t n;
+> 			jr->info.code_addr = bswap_64(jr->info.code_addr);
+> 			jr->info.nr_entry  = bswap_64(jr->info.nr_entry);
+> 			for (n = 0 ; n < jr->info.nr_entry; n++) {
+> 				jr->info.entries[n].addr    = bswap_64(jr->info.entries[n].addr);
+> 				jr->info.entries[n].lineno  = bswap_32(jr->info.entries[n].lineno);
+> 				jr->info.entries[n].discrim = bswap_32(jr->info.entries[n].discrim);
+> 			}
+> 		}
+> 		break;
+>     ...
+> }
+> 
+> struct debug_entry contains a flexible array member (const char name[]). Using
+> array indexing (jr->info.entries[n]) assumes fixed-size elements. This will
+> calculate incorrect offsets that land inside the variable-length strings of
+> earlier entries, overwriting them with byte-swapped data.
+> 
+> [Severity: Medium]
+> This is a pre-existing issue, but do jd->debug_data and jd->unwinding_data leak?
+> 
+> In jit_repipe_debug_info(), memory is allocated and assigned:
+> 
+> tools/perf/util/jitdump.c:jit_repipe_debug_info() {
+>     ...
+> 	data = malloc(sz);
+> 	if (!data)
+> 		return -1;
+> 
+> 	memcpy(data, &jr->info.entries, sz);
+> 
+> 	jd->debug_data       = data;
+>     ...
+> }
+> 
+> While these are freed during jit_repipe_code_load(), if a JIT dump terminates
+> early, lacks trailing load records, or contains consecutive debug records, the
+> previously allocated buffers are overwritten or never freed. Neither jit_close()
+> nor jit_process() cleans up jd->debug_data or jd->unwinding_data.
+> 
+> [Severity: Medium]
+> This isn't a bug introduced by this patch, but does jit_repipe_code_move() leak
+> its event allocation?
+> 
+> tools/perf/util/jitdump.c:jit_repipe_code_move() {
+>     ...
+> 	event = calloc(1, sizeof(*event) + 16);
+> 	if (!event)
+> 		return -1;
+>     ...
+> out:
+> 	perf_sample__exit(&sample);
+> 	return ret;
+> }
+> 
+> The event buffer is dynamically allocated but there is no free(event) in the
+> cleanup block, leaking the memory for every JIT_CODE_MOVE record processed.
+> 
+> [Severity: Medium]
+> This is a pre-existing issue, but is flockfile() being used incorrectly for
+> inter-process synchronization?
+> 
+> In jit_open():
+> 
+> tools/perf/util/jitdump.c:jit_open() {
+>     ...
+> 	/*
+> 	 * protect from writer modifying the file while we are reading it
+> 	 */
+> 	flockfile(jd->in);
+>     ...
+> }
+> 
+> flockfile() is a POSIX thread mutex that provides no OS-level file locking.
+> It cannot prevent an external process from modifying the file concurrently,
+> making this synchronization completely ineffective against external writers.
+> 
+> [Severity: Medium]
+> This isn't a bug introduced by this patch, but could this allocation size calculation
+> underflow?
+> 
+> In jit_repipe_debug_info():
+> 
+> tools/perf/util/jitdump.c:jit_repipe_debug_info() {
+>     ...
+> 	sz  = jr->prefix.total_size - sizeof(jr->info);
+> 	data = malloc(sz);
+>     ...
+> }
+> 
+> If total_size is smaller than sizeof(jr->info), the unsigned subtraction will
+> underflow to a massive value, leading to a guaranteed malloc() failure or
+> instability if memory is overcommitted.
+> 
+> [Severity: High]
+> This is a pre-existing issue, but does lack of validation on code_size allow
+> out-of-bounds reads?
+> 
+> In jit_repipe_code_load():
+> 
+> tools/perf/util/jitdump.c:jit_repipe_code_load() {
+>     ...
+> 	csize = jr->load.code_size;
+>     ...
+> 	code  = (unsigned long)jr + jr->load.p.total_size - csize;
+>     ...
+> 	ret = jit_emit_elf(jd, filename, sym, addr, (const void *)uaddr, csize, ...
+>     ...
+> }
+> 
+> If an artificially large csize is parsed from the file without being bounds
+> checked against total_size, the code pointer calculation will underflow and
+> point into earlier heap memory. jit_emit_elf() will then dump csize bytes
+> from this out-of-bounds memory into the ELF file.
+> 
 > -- 
-> 2.54.0.1032.g2f8565e1d1-goog
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260605064932.34316-1-namhyung@kernel.org?part=1
