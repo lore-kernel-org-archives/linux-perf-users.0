@@ -1,163 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7CB289340;
-	Fri,  5 Jun 2026 14:45:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76DD3FF1B8;
+	Fri,  5 Jun 2026 15:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780670758; cv=none; b=QQWgEJe5pYVxZTh9dWlVRmmpdXtMNgcr6epmLHHLWH6Bagzo72CHrjH3f/ypQpD5H9I48melRlaDWCp+tDbhhFTN3WUPSKkL0ahRdaI/hMIdxbF4fThW3XIKfdiMWuVL38Af/ZflVtKzqUhM8BVygoWI+fVZxZfjZWmp985I0qw=
+	t=1780671706; cv=none; b=qg7loSIV2ZLV8NRITEOEhmS8+tUjmOox2XrKcyes03N/heMdmwrRjbjS0Jq4cfRf2S3MqsxskkpFOoD/kcEMXkPmvlz9wxiB6UsZmVioyRgSiPDcycJw0DU22yIElVxnJ6BWUEEg3VucvEOdzvi2NApgoMYvBeqoyxuPJ0WU8hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780670758; c=relaxed/simple;
-	bh=bYnYHrZQLqezAAEClptwkiPB18M4FWj2nyOjvDldeA0=;
+	s=arc-20240116; t=1780671706; c=relaxed/simple;
+	bh=hXr+RTMBq7sISFgb780qWbHW1dLZ0rWczZsB78SjNxc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dU300ONrG0n/0qz2P/PK8ix+MWSOthGKii3axEADIbbX5wXQmaJIPI0p0ic4WPXHyXYqLm1mYyJtE898RJv0adzX+QrjFm98y0t1OV/Rb9DUVRE+t3jdOIvKp6vs4IickwkqBgIRFRUHNtroay2sqNZ1tASzFehrVpD0XRG5I9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF15EbQs; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=HAsoBZV7E3sBucgwT3zD2vytYKNoFIrgbRLSYWXFyqjlj/eQ8zC1kdn1VhNOxXj767cgXY9j7j5m09guPubgtm0+jNJYgJ4kyAciKr9MuXnxaPNt7iiy5lBlwZgL/4GhhjKP4Kw9FmH6r8h9cTFxTwWEdcejA/iPBsNjwc+H8xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3QpLzWq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF15EbQs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FFB01F00893;
-	Fri,  5 Jun 2026 14:45:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3QpLzWq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83541F00898;
+	Fri,  5 Jun 2026 15:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780670757;
-	bh=Ww/M3NWb2znT+uTU6Ci5K7Qcsa7wnGMgbYt6hVS76LE=;
+	s=k20260515; t=1780671705;
+	bh=ovLf2IAGdqjjMtUePwtyFQrfo7j8gfz553pH8Ntxc3Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=eF15EbQsWMjRR5kCkKXKH0EoQd76XAm2fo6dT9+ctlNlIcekDWujaHJGOrR9W52zt
-	 JiPGvIUecY6IkacxiGXE6thQnHzxELX9nDp2CnCZR25anMypd/e3s1HErSagJWLr+O
-	 3nCfAXWW/fsZkXBEp6vh9EoJc/iekU/QtcCewTY9xCD4DxzkiIvHD+rdk8kv2Pq/Gl
-	 gMtOfwI46ZU0vrKOcLVAbaJap8urId0tAuyDKpM+KQeCbRgP75wa52JYpkkZ5T3jHu
-	 JbgSJ2ltOp9bDAko/8VaBaam6sJ4DVCH3Zz+mYWRsMO8f+kU8DfXIZNq2VOZ6VW3o+
-	 ZikadOLoNJhyQ==
-Date: Fri, 5 Jun 2026 11:45:51 -0300
+	b=h3QpLzWqfSspG6PaTmDpTKIpiyfrAblEHixibrUMqHHWcFN0fOxlyUwhlL4UQoPJy
+	 ylhc9oeSg3KiKbyf+7dd97k3zZa4nvWm0/Zpcyn2SL5CAZbJFzSSGIAjUlX9LxLpFj
+	 hzcxzU58Qobq+gekRLgjzv+Tjkj6Pwxrg1Oc/i/sO0L+YisvGNZoO2ismh62y8Yeh3
+	 fBvU7z2IZfP6ZNQptTOaOVOTzvy/ihX7aqI7atYrYAEa58spjMIXvYLmjz0OAlq6T+
+	 yVXy0wMNMad8BJ5+KYouzdQ8lBzcZKB3dQZRg7dzbHc2UyM7W4xRUzv+EJVOf4G2W7
+	 b7vDn9SeScL1Q==
+Date: Fri, 5 Jun 2026 12:01:41 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/5] perf tools: Add bounds check to cpu__get_node()
-Message-ID: <aiLhH7NEScm55m3X@x1>
-References: <20260605121515.1725549-3-acme@kernel.org>
- <20260605143000.DE0CD1F00893@smtp.kernel.org>
+To: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot <sashiko-bot@kernel.org>,
+	"Claude Opus 4.6" <noreply@anthropic.com>
+Subject: Re: [PATCH 4/5] perf sched: Cap max_cpu at MAX_CPUS in timehist
+ sample processing
+Message-ID: <aiLk1euDqsFGbe0p@x1>
+References: <20260605121515.1725549-1-acme@kernel.org>
+ <20260605121515.1725549-5-acme@kernel.org>
+ <b30d8432-3512-4053-93d6-77f2be96a796@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260605143000.DE0CD1F00893@smtp.kernel.org>
+In-Reply-To: <b30d8432-3512-4053-93d6-77f2be96a796@gmail.com>
 
-On Fri, Jun 05, 2026 at 02:30:00PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> 
-> Pre-existing issues:
-> - [High] `builtin-kmem` omits the `.attr` callback in its `perf_tool`, which breaks processing of piped streams natively.
-> - [High] Integer truncation in `set_max_cpu_num()` combined with missing bounds checks in `cpu__setup_cpunode_map()` causes heap out-of-bounds writes on systems with large sparse CPU topologies.
-> - [High] `perf_mmap__aio_bind` triggers an out-of-bounds memory write and subsequent crash when a CPU's NUMA node is unknown or mapped to a dummy CPU.
-> --
+On Fri, Jun 05, 2026 at 08:34:53AM -0600, David Ahern wrote:
+> On 6/5/26 6:15 AM, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Add bounds checks before both max_cpu updates, matching the pattern
+> > already used in map_switch_event().
 
-Thanks, added all these pre-existing conditions for the following
-series,
+> > Fixes: 49394a2a24c7 ("perf sched timehist: Introduce timehist command")
+> > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+> > Cc: David Ahern <dsahern@gmail.com>
+> > Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/builtin-sched.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+
+> LGTM
+ 
+> Reviewed-by: David Ahern <dsahern@kernel.org>
+ 
+Thanks, added to the cset,
 
 - Arnaldo
- 
-> commit 84fade77fbbcea06a93ffe9275b1abcc29bbc6bc
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> perf tools: Add bounds check to cpu__get_node()
-> 
-> The patch adds a bounds check against max_cpu_num in cpu__get_node() to
-> protect against untrusted or out-of-bounds CPU index values before accessing
-> cpunode_map. This prevents out-of-bounds array indexing, particularly when
-> analyzing cross-machine perf recordings where the recorded CPU count may
-> exceed the host's CPU count.
-> 
-> > diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> > index b1e5c29c6e3ec..d3432622b2adc 100644
-> > --- a/tools/perf/util/cpumap.c
-> > +++ b/tools/perf/util/cpumap.c
-> > @@ -576,6 +576,10 @@ int cpu__get_node(struct perf_cpu cpu)
-> >  		return -1;
-> >  	}
-> >  
-> > +	/* cpunode_map allocated for max_cpu_num entries; input may be untrusted */
-> > +	if (cpu.cpu < 0 || cpu.cpu >= max_cpu_num.cpu)
-> 
-> [Severity: High]
-> This isn't a bug introduced by this patch, but parsing sysfs to determine
-> the maximum CPU number introduces a memory corruption vulnerability.
-> 
-> In tools/perf/util/cpumap.c:set_max_cpu_num(), the max possible CPU number
-> is parsed from sysfs into a local int max. This value is directly assigned to
-> max_cpu_num.cpu, which is an int16_t. If max exceeds 32,767 (as is possible on
-> large modern architectures or due to sparse APIC numbering), the assignment
-> truncates the value, resulting in a small or negative integer.
-> 
-> Later, init_cpunode_map() allocates cpunode_map based on this truncated size,
-> and cpu__setup_cpunode_map() writes to it without truncation:
-> 
-> tools/perf/util/cpumap.c:cpu__setup_cpunode_map() {
-> ...
-> 		while ((dent2 = readdir(dir2)) != NULL) {
-> 			if (dent2->d_type != DT_LNK || sscanf(dent2->d_name, "cpu%u", &cpu) < 1)
-> 				continue;
-> 			cpunode_map[cpu] = mem;
-> 		}
-> ...
-> 
-> Could this result in an out-of-bounds write on the heap?
-> 
-> > +		return -1;
-> 
-> [Severity: High]
-> This isn't a bug introduced by this patch, but returning -1 here causes a
-> crash in perf_mmap__aio_bind() when a CPU's NUMA node is unknown or mapped to
-> a dummy CPU.
-> 
-> tools/perf/util/mmap.c:perf_mmap__aio_bind() {
-> ...
-> 		node_index = cpu__get_node(cpu);
-> 		node_mask = bitmap_zalloc(node_index + 1);
-> 		if (!node_mask) {
-> 			pr_err("Failed to allocate node mask for mbind: error %m\n");
-> 			return -1;
-> 		}
-> 		__set_bit(node_index, node_mask);
-> ...
-> 
-> When cpu__get_node() returns -1, it is implicitly cast to unsigned long
-> node_index (ULONG_MAX). bitmap_zalloc(ULONG_MAX + 1) evaluates to
-> bitmap_zalloc(0) and allocates a minimal buffer.
-> 
-> Does the subsequent __set_bit(ULONG_MAX, node_mask) perform a wild memory
-> write vastly outside the allocated bitmap?
-> 
-> > +
-> >  	return cpunode_map[cpu.cpu];
-> >  }
-> 
-> [Severity: High]
-> This isn't a bug introduced by this patch, but while reviewing
-> builtin-kmem.c which is mentioned in the commit message as calling
-> cpu__get_node(), it appears the perf_tool initialization omits the
-> .attr callback:
-> 
-> tools/perf/builtin-kmem.c:cmd_kmem() {
-> ...
-> 	perf_tool__init(&perf_kmem, /*ordered_events=*/true);
-> 	perf_kmem.sample	= process_sample_event;
-> 	perf_kmem.comm		= perf_event__process_comm;
-> 	perf_kmem.mmap		= perf_event__process_mmap;
-> 	perf_kmem.mmap2		= perf_event__process_mmap2;
-> 	perf_kmem.namespaces	= perf_event__process_namespaces;
-> ...
-> 
-> In pipe mode (e.g., perf kmem record -o - | perf kmem stat -i -), perf.data
-> headers are missing and events must be processed sequentially. Omitting the
-> perf_event__process_attr callback causes perf_event_header_attr events to be
-> silently discarded by the default stub.
-> 
-> Does this prevent the creation of evsels and the initialization of the
-> perf_env, completely breaking the tool's ability to process piped data
-> streams natively?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260605121515.1725549-1-acme@kernel.org?part=2
