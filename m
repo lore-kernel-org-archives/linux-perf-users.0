@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961A5381C4;
-	Fri,  5 Jun 2026 12:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1432B9BA;
+	Fri,  5 Jun 2026 12:15:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780661728; cv=none; b=mJwtV9wJwazBX8KWXju2UtRZBB1jRzm3cmjYyuFv8rZTYjLmvDE9k5y4JJ1Y2s2yOKovSpsqmE/bLymQU2oDJsKw4Zv6bWnK9yrlSbMG7S9YYnewohDJ95WQZWV3ZVWChdtt514XXY8RJrtKb1XzQXZE5sQYqNsyEvqMwQOdb/4=
+	t=1780661732; cv=none; b=r5N+Uggb5D1o6v0W1vQ7loqaTZHHXZuQqhLey2WneAtH19jf4EX3HJszpbF2m+EnIPja6xIVfiri7YOrlAVUfe7B0mc+3VmfQbK+4N6k7tRa5Vz3uTkCALuoPkG0Kca74pOp+LX4FGef6wiz/y7Xfj+/ItS2RzjnnOQhH+tx+qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780661728; c=relaxed/simple;
-	bh=vEBD1jbELEqqSb/mgcIL+ZnJi7V72wUcSnfSoYUfITY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZDD19BT4YQB3vyolvaFUOZ2c4JsrhoZkQ4Y3PDcdigyEecFqFeAAR1XavbLad2TVjktc7g2phJSCEPBwXlVc6+a06LSnBewde5E7RdhJlKfl542XkaeCBjq3K1sokRPMFFwBr2c/l/gm3dColIdYTCVCuu619gUmlEC5gcR0C50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUFjY+F2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780661732; c=relaxed/simple;
+	bh=SF5ZF2BblWfErPptcvocSIo0q8Zm5fWA+7ob7hmIZMQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lZwYowxdGp+eUzixxi1ari0jrmrLujs7HA88o2KUSkl37CW40N8PVLp+bvJfA8sS4SU8KQFpM9Jie5PC4tu6XwCD0wKX2vsvAOLf9EbKkfQJzrMCoKRCPlgEDU4sEGapctVGywtS1MhQa6iRboq7Lnhs4xxABBpKMi3H3X6q44w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bxf+UBeD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUFjY+F2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9899C1F00898;
-	Fri,  5 Jun 2026 12:15:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bxf+UBeD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FE91F00899;
+	Fri,  5 Jun 2026 12:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780661727;
-	bh=ikACu+OjF6d5P4qqsGnHbJXISbP5rMCRHXN871BKNvk=;
-	h=From:To:Cc:Subject:Date;
-	b=SUFjY+F2K6mBIig/C0j9TxgkZdTZwa40fD1QRUJLFVKGpf7uUO+ugKt9vVPE5asfj
-	 /nQED9A8KEeioi7j5WYDIPX3mADOLSntuiSdSXADtDCHCqoYgYH1AK0fa1UXiV8SsR
-	 lC71eFple633Bl+RtLfkv5ojiekII7tCVAq18zeCFinNPKACo1Msm8MDZntjtwLWeW
-	 IpU/UhgouwFCSbvp55XYylwCQMyAXecbSDZQImkVg1X8cWd1qnpDjj2AmBiH6ZELZJ
-	 cf7tmlNroo9RmGjZkQSJMDkcGoRji+lvTKSFFf7RX8T4zc+ixtFt/Y5by/AbfGtV+f
-	 tPLtfTgID4Z4g==
+	s=k20260515; t=1780661731;
+	bh=cGgiqBqVSTzmH2qdKzPTMwaQ+0wTc4gAaPhVbB6NQtI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Bxf+UBeD+Mboa8EOqm29dt/U3lY+vJxEMrpVv1RMXPNT2Vv39rPhXUffNRZOeD7kX
+	 0cSNc465WNO+trW9D7H9/8Ks/5oEHsgTOX1Z9c1nIsGBo6AfSpwUSNkT2oWnYXHOp0
+	 48PfHXg3chng/B8f3jS0Qt8q8O0kzfgrPzi/Zc8XXO+CrU3tNdKzGSftiO7qJisx7N
+	 b5luLljBa0O2m/OVdVUrpCe99c9LP0bdbmeB+l+noley8/5JQ26sjhyWig6IQz8xiI
+	 BgHQLdF2Vlv4GiFg+o6KukTVoVYRhInq+fAu9JYsACcZY3Eq28+S0c2pqRFQFcYjRG
+	 YgXB5Y85PXEsg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,11 +37,16 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCHES v1 0/5] perf tools: Fix OOB reads, reference leaks, and overflow in sched/script/auxtrace
-Date: Fri,  5 Jun 2026 09:15:09 -0300
-Message-ID: <20260605121515.1725549-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot <sashiko-bot@kernel.org>,
+	Anton Blanchard <anton@samba.org>,
+	"Claude Opus 4.6" <noreply@anthropic.com>
+Subject: [PATCH 1/5] perf tools: Guard remaining test_bit calls from OOB sample CPU
+Date: Fri,  5 Jun 2026 09:15:10 -0300
+Message-ID: <20260605121515.1725549-2-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260605121515.1725549-1-acme@kernel.org>
+References: <20260605121515.1725549-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,56 +55,60 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Five more pre-existing bugs found by sashiko-bot during AI-assisted
-review of the perf-data-validation hardening series.  All are
-independent of that series -- they are latent bugs in surrounding code
-exposed during review.
+auxtrace.c:filter_cpu() and builtin-script.c:filter_cpu() call
+test_bit(cpu, cpu_bitmap) where cpu_bitmap is declared with
+MAX_NR_CPUS bits.  When the CPU value from a perf.data event is
+corrupt or absent (e.g. negative or >= MAX_NR_CPUS), test_bit reads
+out of bounds.
 
-  1. test_bit(cpu, cpu_bitmap) reads out of bounds in
-     auxtrace.c:filter_cpu() and builtin-script.c:filter_cpu() when
-     the CPU value is negative or >= MAX_NR_CPUS.  Same class of bug
-     fixed in the previous series for annotate, diff, report, and
-     sched.
+Add bounds checks before test_bit(): >= 0 for the int16_t cpu.cpu in
+auxtrace (which also covers the -1 sentinel), and < MAX_NR_CPUS for
+both sites.  Matches the pattern applied in the previous series for
+builtin-annotate.c, builtin-diff.c, builtin-report.c, and
+builtin-sched.c.
 
-  2. cpu__get_node() in cpumap.c indexes cpunode_map[] without bounds
-     checking against max_cpu_num.  Callers like builtin-kmem pass
-     untrusted sample->cpu from perf.data.
+Fixes: 644e0840ad46 ("perf auxtrace: Add CPU filter support")
+Fixes: 5d67be97f890 ("perf report/annotate/script: Add option to specify a CPU range")
+Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Anton Blanchard <anton@samba.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-script.c | 2 +-
+ tools/perf/util/auxtrace.c  | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-  3. Thread reference leaks in perf sched timehist_get_thread() --
-     two error paths and the success path in the idle_hist block
-     fail to release thread references acquired via
-     machine__findnew_thread() and get_idle_thread().
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index f4aa255fc3297f90..9ac29bdc3cd547e6 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2646,7 +2646,7 @@ static int cleanup_scripting(void)
+ 
+ static bool filter_cpu(struct perf_sample *sample)
+ {
+-	if (cpu_list && sample->cpu != (u32)-1)
++	if (cpu_list && sample->cpu != (u32)-1 && sample->cpu < MAX_NR_CPUS)
+ 		return !test_bit(sample->cpu, cpu_bitmap);
+ 	return false;
+ }
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 5f4aa1701aef649a..4cd2caf5401522ca 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -372,7 +372,8 @@ static bool filter_cpu(struct perf_session *session, struct perf_cpu cpu)
+ {
+ 	unsigned long *cpu_bitmap = session->itrace_synth_opts->cpu_bitmap;
+ 
+-	return cpu_bitmap && cpu.cpu != -1 && !test_bit(cpu.cpu, cpu_bitmap);
++	return cpu_bitmap && cpu.cpu >= 0 && cpu.cpu < MAX_NR_CPUS &&
++	       !test_bit(cpu.cpu, cpu_bitmap);
+ }
+ 
+ static int auxtrace_queues__add_buffer(struct auxtrace_queues *queues,
+-- 
+2.54.0
 
-  4. sched->max_cpu updated from sample->cpu without bounds checking
-     in perf_timehist__process_sample().  Later code uses max_cpu + 1
-     as iteration count over arrays allocated with MAX_CPUS entries.
-     Also caps the env->nr_cpus_online initialization.
-
-  5. register_pid() in perf sched replay has integer overflow on
-     32-bit (pid * sizeof wraps), strcpy into fixed 20-byte buffer
-     without length check, BUG_ON on allocation failure, and unsafe
-     realloc pattern that leaks on failure.
-
-All require crafted or unusual perf.data inputs to trigger.
-Verified with gcc and clang builds, checkpatch, and perf test.
-
-Arnaldo Carvalho de Melo (5):
-  perf tools: Guard remaining test_bit calls from OOB sample CPU
-  perf tools: Add bounds check to cpu__get_node()
-  perf sched: Fix thread reference leaks in timehist_get_thread()
-  perf sched: Cap max_cpu at MAX_CPUS in timehist sample processing
-  perf sched: Fix register_pid() overflow, strcpy, and BUG_ON
-
- tools/perf/builtin-sched.c  | 56 +++++++++++++++++++++++++++++++++------------
- tools/perf/builtin-script.c |  2 +-
- tools/perf/util/auxtrace.c  |  3 ++-
- tools/perf/util/cpumap.c    |  4 ++++
- 4 files changed, 49 insertions(+), 16 deletions(-)
-
-Developed with AI assistance (Claude/sashiko), tagged in commits.
-
-Thanks,
-
-- Arnaldo
