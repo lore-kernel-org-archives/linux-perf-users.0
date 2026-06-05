@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7794266A1
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 07:56:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678483D3301
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 07:58:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780646164; cv=none; b=NkcPTmk+/Th7wjz70D/5M6CmrHRMfYzlNcXmY58z8Z3wJQ/3Fp0znzh6sGdW0zENJyIopzdevDodC9L48RXOljMu8hO80TL3d/PTu/MXf1Thx0hIbH0iU5A+8MBHj8xza/FYiGkDo+JEbZuqRxZaNUAWT17CVi0z8cci1Db7cN8=
+	t=1780646312; cv=none; b=B6rU4uKeuHjZHDjkHOe303jXlpyduT0E93Qps8a289+C4h5hQB7+b6mjluQ3YipzGSGG48mWhlvxpPwpziiwm2151pke/LBeoii1L7yVYuwYH1KdxrSOPdkrAQiZ62XCSpYFD0/djKAdnORyPQlMutZMXAt7+VPVRgh6JLZIECo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780646164; c=relaxed/simple;
-	bh=0NUf56Rdvn0wai6mmW6CNCl8bP+6AQJ078jqvw50Puo=;
+	s=arc-20240116; t=1780646312; c=relaxed/simple;
+	bh=ilFr+QSNOHPcvRXcB7ls8c14Zh7tChR5FY8CF38mP1k=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=E8gbC/yiSoT78Smu+wu2MwZ34KOBOKDRp/7NhfMbfJuHi+aUUGVjGWjAjj8bzB+YEqaaIadPzO/sjQ5Ga5ogsU7ZyjjagOBXS2RoQRgnhVBRwBOMn/Q5KoVHdpItfQezMS7qP4lQVhIJP90xBvJ3fRaT3L7DSdQ7PA25wXETCkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bu9JuCcJ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=i6XlErxqH9PtCY3GQCJsfzqd7luePi7TUntCKaiSFc7eGtii2/oTdmJUTFtj6Xj+i78gEroqmLCn4+qfCA/xakVg9QJoU9CBHbRsQWXWDxFB9+aH44LXByIJ6JWOAFJ12nfOC28Llj2CEluWdaHm27y+WtnZdqTWrfWKjiwjlO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bL5uZMsX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bu9JuCcJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70E4C1F00893;
-	Fri,  5 Jun 2026 07:56:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bL5uZMsX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3C0B1F00893;
+	Fri,  5 Jun 2026 07:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780646163;
-	bh=9vYd7Qe9PiM6NYzF1Gx7yoFSfmerayvygTRGOflGOSk=;
+	s=k20260515; t=1780646311;
+	bh=dg7GMOpA+Erweu2pbLe2dukza0KMI90nWOziha6x2Bs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bu9JuCcJ1P2qD13/XOamaTkxcOvK1nFy2iATyzUF5w6rg8P/v3JN4lYPrHH/t4TIX
-	 OJ265CeX/kHc4LLQiFNFNJPB+FMSS//+O/kXXq9UWs1jfkv8BtkuKnxszRa1nR1pfz
-	 /CQnaNiMdRUDjGAbCYw9z5DM9093jQj0qwvmMdQ0MQ7Z85zOLdhyJ3NAP/m7ZxVYFh
-	 fE082oF4OVasbcTIMpgQ2/p8Geam8m5TyfrYmUgBXLh8aqGN0nxrAaUpJgqBd+xqOC
-	 OEhlXX83P8abbZ/RSFokF8pnzo39vmakMx0d2SuuDRNzM8Y9A5gqRl8fVALOYWhiA6
-	 yqcZ1m2T36OrQ==
+	b=bL5uZMsXmH/txdHWelubBMBBDCfzlvQeI6YBDsac5teqrPklTk451EOS+Q8ppy0yQ
+	 OcvkFVbc6duOGdbFuEY4EpLMQ3cEoZcmQtNVNXowUeYtcVb1K7PnlpZbPiOf9fLIYf
+	 7YkU9hQgfOYS6dkZ3i0CJD6Jbg1fhYg3vs+7s+BOja4fPwbVLnkYA8kUcbBEvXK4ES
+	 RsKBjaxVym2j6cezF4V9MLH2HuFoeV9zDFimXJmNzNQADxlGC5VUUavMyRX/Y4LoCe
+	 7v5Ts3xDQv6rccaZvUsaFfkYT8uQeXI1GasJA7i69x0QCwhqsVzOWK4JyPEAd/2q0h
+	 OUcm2NhGcv/YA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 04/19] perf data: Add open flag
+Subject: Re: [PATCH v10 10/19] perf python: Add python session abstraction
+ wrapping perf's session
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605074003.1730715-5-irogers@google.com>
-References: <20260605074003.1730715-5-irogers@google.com>
+In-Reply-To: <20260605074003.1730715-11-irogers@google.com>
+References: <20260605074003.1730715-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 07:56:02 +0000
-Message-Id: <20260605075603.70E4C1F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 07:58:30 +0000
+Message-Id: <20260605075830.E3C0B1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,77 +46,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] A time-of-check to time-of-use (TOCTOU) vulnerability exists when =
-opening the perf data file for writing, which can be exploited to truncate =
-arbitrary files.
+- [High] The pyrf_session wrapper fails to register the `.attr` and `.featu=
+re` callbacks in `perf_tool`, silently dropping these events and breaking e=
+vent processing in pipe mode.
 --
 
-commit 6ea2670fcd0afaed23b29eb27c1bda1c709e9986
+commit fa89d52ee147ebcf23e53127275a3667c97e2358
 Author: Ian Rogers <irogers@google.com>
 
-perf data: Add open flag
+perf python: Add python session abstraction wrapping perf's session
 
-Avoid double opens and ensure only open files are closed. This
-addresses some issues with python integration where the data file
-wants to be opened before being given to a session.
+This commit adds a wrapper Python type for perf's session, incorporating the
+tool and allowing a sample callback to be passed when creating the session.
+When process_events is run, this callback will be executed for sample event=
+s.
 
-> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-> index 94dc534a73866..33fd1b82019eb 100644
-> --- a/tools/perf/util/data.c
-> +++ b/tools/perf/util/data.c
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 4c09a22d35217..b3454ae971c48 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
 [ ... ]
-> @@ -375,16 +383,24 @@ int perf_data__open(struct perf_data *data)
->  	if (perf_data__is_read(data))
->  		data->is_dir =3D is_dir(data);
-> =20
-> -	return perf_data__is_dir(data) ?
-> -	       open_dir(data) : open_file_dup(data);
-> +	ret =3D perf_data__is_dir(data) ? open_dir(data) : open_file_dup(data);
+> @@ -2570,6 +2576,313 @@ static int pyrf_data__setup_types(void)
+[ ... ]
+> +static PyObject *pyrf_session__new(PyTypeObject *type, PyObject *args, P=
+yObject *kwargs)
+> +{
+[ ... ]
+> +	psession->tool.comm		=3D perf_event__process_comm;
+> +	psession->tool.mmap		=3D perf_event__process_mmap;
+> +	psession->tool.mmap2            =3D perf_event__process_mmap2;
+> +	psession->tool.namespaces       =3D perf_event__process_namespaces;
+> +	psession->tool.cgroup           =3D perf_event__process_cgroup;
+> +	psession->tool.exit             =3D perf_event__process_exit;
+> +	psession->tool.fork             =3D perf_event__process_fork;
+> +	psession->tool.ksymbol          =3D perf_event__process_ksymbol;
+> +	psession->tool.text_poke        =3D perf_event__process_text_poke;
+> +	psession->tool.build_id         =3D perf_event__process_build_id;
+> +	session =3D perf_session__new(&pdata->data, &psession->tool);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but is there a time-of-check to
-time-of-use (TOCTOU) vulnerability when opening the perf data file for writ=
-ing?
+Are we missing callbacks for attribute and feature events here?
 
-In perf_data__open(), check_backup() is called to verify if the target file
-already exists, renaming it to .old if so. However, there is a race conditi=
-on
-between this check and the subsequent file creation in open_file_write()
-called via open_file_dup():
+If the .attr and .feature callbacks in struct perf_tool are not registered
+here, incoming events will be silently ignored. In pipe mode, dropping
+perf_event_header_attr events prevents the creation of evlists and evsels,
+which breaks event processing entirely.
 
-tools/perf/util/data.c:check_backup() {
-    if (!stat(data->path, &st) && st.st_size) {
-        snprintf(oldname, sizeof(oldname), "%s.old", data->path);
-        ...
-}
+Missing .feature callbacks would similarly prevent the population of perf_e=
+nv.
+Could we add the appropriate attr and feature callbacks here to properly
+support pipe mode streams?
 
-An attacker with write access to the target directory could create a malici=
-ous
-symlink at the target path in the brief window after check_backup() but bef=
-ore
-open_file_write():
-
-tools/perf/util/data.c:open_file_write() {
-    int fd =3D open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC, S_IR=
-USR|S_IWUSR);
-    ...
-}
-
-Because open_file_write() opens the file without O_EXCL or O_NOFOLLOW, the
-open() call will follow the symlink and truncate the target file.
-
-Could this be exploited to truncate arbitrary files if perf is executed by a
-privileged user in a shared directory?
-
-> +
-> +	if (!ret)
-> +		data->open =3D true;
-> +
-> +	return ret;
->  }
+> +	if (IS_ERR(session)) {
+> +		PyErr_Format(PyExc_IOError, "failed to create session: %ld", PTR_ERR(s=
+ession));
+> +		goto err_out;
+> +	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605074003.1730=
-715-1-irogers@google.com?part=3D4
+715-1-irogers@google.com?part=3D10
