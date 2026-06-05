@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EAE30BB8A
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 03:21:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C9B2FFDD6
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 03:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780629665; cv=none; b=WLdDtvntF2mMqGVX6+hZ31blHcO2HXxMVGV2YajoIhRtnDGHOS8WCc0EkrRcy8th4YdjOP6Qo1UTCaPqG6YnxEOvMK4yH6wMP8InegzVe2MlCAMlN2hPCxU5lx5c/ZDocEVcXydq7Jqm8brALVN7eowrTQvuGAOv3i4iFfW5U6o=
+	t=1780630206; cv=none; b=d7B0+g9fWIs/SF3uTfCMJPOzlPdGUEMlP3/8q/2zeSGEpXDQQD80kB3L0SYy4PZ3bTi6HwSV+o0q7HpRnbsJhf67COxzfPKJ/tAKPF5EZIGUZhfi0SLwj08n194HPIYtnIxJnLY3/zb9Q92B9uVh1poEi9sjBNJCEm4rHoU8DmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780629665; c=relaxed/simple;
-	bh=YSKSLVvJIsk2simEXanDqXtjTSTpaaUrvdjBJn+1q+0=;
+	s=arc-20240116; t=1780630206; c=relaxed/simple;
+	bh=sw3Uej78Mii/oeKD0wJrHv0CVA6uHA/+8ensnDOLcJA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W660caEN9PvSAox0Y/k6YAlg1u0fRgw2Kz67eIa+5WLFbxiQZw6b7nvzGNXbL4P7IGywFNrPgPbEpadYjY1hRQuu9nLejuNWGjtsvijAhv/Ea+PGtoExXzLC7QZMtOVE25lsY5JeVJ2/ipgBYtT3bv0gYB2/DlNn4YR4qlbhNr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mS3mFkh9; arc=none smtp.client-ip=192.198.163.12
+	 In-Reply-To:Content-Type; b=Xaydh4fsU1b6Xt5Wo7D+DDTF97fqVPqgpglG0DTAo+kYIlQw+N5Fqy2+tm8V55XCuSmylDYmpsrH+Uqq3DnkdnsgLgxMczN1DwMvZCH4zG1CCZrxQ4aUuiC6b9jAWDd4jBjPusvl7w8JWr0UvmTOq45alz7OKii/+VTZhGOGJF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Juaw2qMa; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mS3mFkh9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Juaw2qMa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780629662; x=1812165662;
+  t=1780630202; x=1812166202;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=YSKSLVvJIsk2simEXanDqXtjTSTpaaUrvdjBJn+1q+0=;
-  b=mS3mFkh9+IVT0cwLyQaRl+65831PGpqxe/6v5I2NoPCMw69O0G85CVNL
-   6uSOc9/rU5BpMI8unNHgIz42AMkbzHer9RTWew2TErp8uHSnMgKizmaTG
-   kpIF3WKsP5MRRxn0wLnTMBFV/YPTwz7Hx3SRb/m/r5+RfOKtReo55S2mf
-   xG4hyuUa8q0S45ffFgg7P7agzMGEmjxmYbHXU6UtdHOAkNS/VJR4p10xP
-   9Y7DQKE1ZSWZw91TpQ3L47H0BQRfX9dHFn5rNEAfneJNK0rKtlVapOxnj
-   WALmboYW5K9FqLn2AsgGfAn3v77ncJ9DXxCr7FqY9hggXRVsq3YknJ4BS
-   Q==;
-X-CSE-ConnectionGUID: 5QKyRoXbSvawWjU1F6R64g==
-X-CSE-MsgGUID: dm8MwQD6SuaYMlOekyinSw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="85315585"
+  bh=sw3Uej78Mii/oeKD0wJrHv0CVA6uHA/+8ensnDOLcJA=;
+  b=Juaw2qMaP4iNGPQ4H7Hvg5tR44dfEifz1zj3Z23nEVRpLcxk8Yv18Vww
+   ezfIuMylm19PE8NWiEeOxLMJlbVcpofuhzRQFhdA9tOkGDVXTPSpcwgi/
+   5MaKIPiorxb2Kd3MIk8PXcW/aXCAnihwq1HrkTnRmOBG7UILA2U4CKEu1
+   qHUVwMUvneLcQ63vkPjGR02mq45ZU2giFjdDCG4W2JiToIIvknY4uZXSP
+   fRgRwldlKsRGy8vCfqHSeZrMdd3xPk1rTOAkIqeV5hg+jKCIwrD8csEp4
+   B8IonejLuSseqZvt5bP5bZ4HhQX7XH/cTK9xCQemQQ7eXqz5lT3BvweIM
+   w==;
+X-CSE-ConnectionGUID: kiuCdY25Q8qH+/YBXaTgCg==
+X-CSE-MsgGUID: 6dfYUkzJS46Nn/iA083iRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="85316024"
 X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
-   d="scan'208";a="85315585"
+   d="scan'208";a="85316024"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 20:21:01 -0700
-X-CSE-ConnectionGUID: 0qVBI0ppQVS2PHWo5U2sKg==
-X-CSE-MsgGUID: 5E9VT2P3Rhe0VBYDAH4aug==
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 20:30:02 -0700
+X-CSE-ConnectionGUID: Bo5EYTa3QgOTgf2NjctudA==
+X-CSE-MsgGUID: +l9dOC+YTiqbMgGHQbRVAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
-   d="scan'208";a="243641065"
+   d="scan'208";a="243642507"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 20:21:00 -0700
-Message-ID: <416aca8a-4d45-44ef-b730-ef699b2d3c83@linux.intel.com>
-Date: Fri, 5 Jun 2026 11:20:57 +0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 20:30:01 -0700
+Message-ID: <633befb1-d3ed-4cc3-b515-449fbc98a44b@linux.intel.com>
+Date: Fri, 5 Jun 2026 11:29:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,149 +52,86 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] perf/x86/intel: Fix kernel address leakages in LBR
- stack
+Subject: Re: [PATCH 6/8] perf/x86/intel: Validate return value of
+ intel_pmu_init_hybrid()
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-References: <20260605011136.2043393-6-dapeng1.mi@linux.intel.com>
- <20260605013328.86D661F00893@smtp.kernel.org>
+References: <20260605011136.2043393-7-dapeng1.mi@linux.intel.com>
+ <20260605013609.38A451F00893@smtp.kernel.org>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260605013328.86D661F00893@smtp.kernel.org>
+In-Reply-To: <20260605013609.38A451F00893@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 6/5/2026 9:33 AM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
->
-> Pre-existing issues:
-> - [High] The exact same kernel address leak (KASLR bypass) vulnerability exists in the AMD LBR software filter (`amd_pmu_lbr_filter`), but the patch only fixes the Intel implementation.
-> - [High] On Arch LBR CPUs that do not support hardware branch type decoding, the software filter incorrectly classifies all branches as conditional jumps (JCC).
-> - [Medium] The software filter fails to drop branches executing in user space (e.g., SYSCALL) when only kernel branches are requested, diverging from hardware filter behavior.
+On 6/5/2026 9:36 AM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Low] Unnecessary error handling and dead cleanup code for early boot memory allocation failure.
 > --
 >
-> commit e5f3b8c6179b0acb53df2e9f20348cf3b8f5a8be
+> commit e6fc94eb7f63fa466e8e1aeaed9a0d18231a88dc
 > Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >
-> perf/x86/intel: Fix kernel address leakages in LBR stack
+> perf/x86/intel: Validate return value of intel_pmu_init_hybrid()
 >
-> This commit fixes a kernel address leakage in the LBR stack on Intel
-> platforms prior to arch-LBR. It extends the software filtering in
-> intel_pmu_lbr_filter() to check the "from" address privilege level,
-> preventing kernel addresses from leaking to user space.
+> This commit validates the return value of intel_pmu_init_hybrid() to prevent
+> attempts to access the uninitialized x86_pmu.hybrid_pmu[] array due to
+> allocation failure. It adds error paths that destroy the task_ctx_cache when
+> an error occurs.
 >
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index 16977e4c6f8a5..deef81c16571a 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
->> @@ -1212,7 +1212,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->>  {
->>  	u64 from, to;
->>  	int br_sel = cpuc->br_sel;
->> -	int i, j, type, to_plm;
->> +	int i, j, type, to_plm, from_plm;
->>  	bool compress = false;
->>  
->>  	/* if sampling all branches, then nothing to filter */
-> [Severity: High]
-> This is a pre-existing issue, but does this function correctly handle Arch
-> LBR CPUs that do not support hardware branch type decoding?
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index ea3ab3050a3b1..efd9caa3502c5 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -8539,7 +8540,9 @@ __init int intel_pmu_init(void)
+>>  		 *
+>>  		 * Initialize the common PerfMon capabilities here.
+>>  		 */
+>> -		intel_pmu_init_hybrid(hybrid_big_small);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+>> +		if (ret < 0)
+>> +			goto err;
+> [Severity: Low]
+> Is this error handling necessary for an early boot function?
 >
-> If an Arch LBR CPU does not support hardware branch type decoding
-> (LBR_INFO.BR_TYPE), the x86_lbr_type static key remains false and
-> get_lbr_br_type() returns 0.
->
-> Earlier in intel_pmu_lbr_filter(), the code checks:
->
->     if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
->         type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
->
-> Since 0 <= 5 is always true, it maps arch_lbr_br_type_map[0] to X86_BR_JCC,
-> bypassing the software decoding fallback in branch_type().
->
-> Does this force all logged branches to be treated as conditional jumps on
-> these processors, destroying branch filtering accuracy?
+> Since intel_pmu_init() in arch/x86/events/intel/core.c is marked with __init,
+> it executes only during early boot. At this stage, if a physical memory
+> allocation fails, the system typically cannot boot anyway. Handling memory
+> allocation failures and returning -ENOMEM here is likely dead code.
 
-Yes, it's an issue. If arch-LBR can't support hardware branch type
-decoding, it should fallback to software branch type decoding, like this,
-
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index deef81c16571..fcdbb6feda73 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1232,6 +1232,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
-                 * OTHER_BRANCH branch type still rely on software decoding.
-                 */
-                if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
-+                   static_branch_likely(&x86_lbr_type) &&
-                    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
-                        to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
-                        type = arch_lbr_br_type_map[type] | to_plm;
+Even it's in early boot, it's better not to trigger an invalid memory
+access error which could cause misleading.
 
 
 >
 > [ ... ]
 >
->> @@ -1244,8 +1244,15 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->>  				type |= X86_BR_NO_TX;
->>  		}
+>> @@ -8885,6 +8900,10 @@ __init int intel_pmu_init(void)
+>>  	intel_aux_output_init();
 >>  
->> -		/* if type does not correspond, then discard */
->> -		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type) {
->> +		from_plm = kernel_ip(from) ? X86_BR_KERNEL : X86_BR_USER;
->> +		/*
->> +		 * If type does not correspond, then discard.
->> +		 * Especially filter out the entries whose from or to address
->> +		 * is a kernel address while only X86_BR_USER is set. This prevents
->> +		 * kernel address from being leaked into a user-space-only LBR stack.
->> +		 */
->> +		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type ||
->> +		    (!(br_sel & X86_BR_KERNEL) && (from_plm & X86_BR_KERNEL))) {
-> [Severity: Medium]
-> This is a pre-existing issue, but does this logic miss the symmetric check
-> for scrubbing user-to-kernel branches from kernel-only samples?
+>>  	return 0;
+>> +
+>> +err:
+>> +	kmem_cache_destroy(x86_get_pmu(smp_processor_id())->task_ctx_cache);
+> [Severity: Low]
+> Will this cleanup code in intel_pmu_init() actually free anything?
 >
-> If a user requests only kernel branches (X86_BR_USER is not set), a SYSCALL
-> (which goes from user to kernel) will be retained because the hardware
-> filters based on destination CPL (kernel) and the software filter sees a
-> valid to_plm.
+> If the allocation fails during intel_pmu_init_hybrid() and we jump to the err
+> label, task_ctx_cache has not been allocated yet. It is only allocated later
+> in the function via intel_pmu_lbr_init() or intel_pmu_arch_lbr_init().
 >
-> Should there be a check like:
->
->     (!(br_sel & X86_BR_USER) && (from_plm & X86_BR_USER))
->
-> to prevent user-space addresses from polluting kernel-only branch traces?
+> This guarantees task_ctx_cache is NULL when this error path is taken, meaning
+> this call to kmem_cache_destroy() acts as a no-op.
 
-Yes, this can be enhanced.
-
-
->
->
-> [Severity: High]
-> This isn't a bug introduced by this patch, but does the exact same KASLR
-> bypass vulnerability exist in the AMD LBR software filter?
->
-> AMD's software filter in arch/x86/events/amd/lbr.c:amd_pmu_lbr_filter()
-> uses branch_type_fused(), which only factors in the destination privilege
-> level.
->
-> When a user requests only user-space branches (PERF_SAMPLE_BRANCH_USER),
-> hardware can still record kernel-to-user branches (like SYSRET) because
-> the destination is in user space.
->
-> Since the AMD filter evaluates (br_sel & type) == type as true based only
-> on the destination, it keeps the branch, exposing the kernel "from" address
-> to unprivileged userspace.
->
-> Should a similar fix be applied to amd_pmu_lbr_filter()?
-
-AMD guys have known this issue, the AMD specific fix would posted separately.
+No, intel_pmu_arch_lbr_init() which is called before
+intel_pmu_init_hybrid() could create the LBR needed slab cache
+"task_ctx_cache". If intel_pmu_init_hybrid() returns error, the created
+slab cache needs to be destroyed.
 
 Thanks.
 
-
 >
->>  			cpuc->lbr_entries[i].from = 0;
->>  			compress = true;
->>  		}
+>> +	return ret;
+>>  }
+>>
