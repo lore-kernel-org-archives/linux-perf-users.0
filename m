@@ -1,140 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4DE3F0ABF
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 10:13:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961A5381C4;
+	Fri,  5 Jun 2026 12:15:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780654395; cv=none; b=LnsSGmRg1iFRg3eurfJOgS3b2FwpmSMFP+cSI7NHgcIUfA3Dv61K+CljgD8+5zV0/6vb57gEWF6sYmemEx3PEJLiA3LsN2pGcDMHfDZOkJm+8P8SGqIFq6YwgAIWHWpQYxQ4iXqJe18CRyhLCirlXmYH0Xpxr3eWE6RWM6ailyM=
+	t=1780661728; cv=none; b=mJwtV9wJwazBX8KWXju2UtRZBB1jRzm3cmjYyuFv8rZTYjLmvDE9k5y4JJ1Y2s2yOKovSpsqmE/bLymQU2oDJsKw4Zv6bWnK9yrlSbMG7S9YYnewohDJ95WQZWV3ZVWChdtt514XXY8RJrtKb1XzQXZE5sQYqNsyEvqMwQOdb/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780654395; c=relaxed/simple;
-	bh=GuQaGEm9CYtnNwVeNpuq5lh3d7TrfNJSpkTqbYsoRCU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QjtpUpi4hgH+QH9rHp+SVduiwV6K0Ke6mabt/sc1jgYMr06bYILal/i5StHJQy9taKApgCeEtWmW9hzfmEzqGSvLU0e5qkpqoVytQKBhT0r31/nn+MuAhjMiGGhpaNZi5ejgrusS/ICqyK7qy3VX2OtAi5NQBxMs2LEHafAedCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5osNRy4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780661728; c=relaxed/simple;
+	bh=vEBD1jbELEqqSb/mgcIL+ZnJi7V72wUcSnfSoYUfITY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZDD19BT4YQB3vyolvaFUOZ2c4JsrhoZkQ4Y3PDcdigyEecFqFeAAR1XavbLad2TVjktc7g2phJSCEPBwXlVc6+a06LSnBewde5E7RdhJlKfl542XkaeCBjq3K1sokRPMFFwBr2c/l/gm3dColIdYTCVCuu619gUmlEC5gcR0C50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUFjY+F2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5osNRy4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4D41F00893;
-	Fri,  5 Jun 2026 10:13:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUFjY+F2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9899C1F00898;
+	Fri,  5 Jun 2026 12:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780654394;
-	bh=sCM0wChkz7qKMrVK82xgz2yeSOvWp3F53REI2QRaYGA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=U5osNRy4W3Ad9VWas+fjcEHyj8GBjNF7MD3+EX0pZWubWZTnMZ88s4TOz8dgTthuf
-	 x9rPU75Pq7e2rZlCgmJTRcXAtuIAnhQR6L0sa9yGJ0U3NRb9ZX/6xpRPZk58laRUbH
-	 FgOxvjG7fb1Nlm8Ba1nxqtbXs4nQrkGEPIZxgwWuyY4dSzdYM44jEAG5rRFTU/5Eo5
-	 rE65goE+ieISi8XdUy1fZQICXlTcSe+1edheO9Potb0Z2og8wSsrzWryOlS8z5E3Bh
-	 x5VM1CZ1r1wqAMyx+KqPg/5fmusBXVLPH1bqOp1yH43Drl1da4h4JvSluhTUbOvvRd
-	 9YkXIj6nRoDfQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 19/19] perf python: Add LiveSession helper
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605074003.1730715-20-irogers@google.com>
-References: <20260605074003.1730715-20-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 10:13:13 +0000
-Message-Id: <20260605101314.3E4D41F00893@smtp.kernel.org>
+	s=k20260515; t=1780661727;
+	bh=ikACu+OjF6d5P4qqsGnHbJXISbP5rMCRHXN871BKNvk=;
+	h=From:To:Cc:Subject:Date;
+	b=SUFjY+F2K6mBIig/C0j9TxgkZdTZwa40fD1QRUJLFVKGpf7uUO+ugKt9vVPE5asfj
+	 /nQED9A8KEeioi7j5WYDIPX3mADOLSntuiSdSXADtDCHCqoYgYH1AK0fa1UXiV8SsR
+	 lC71eFple633Bl+RtLfkv5ojiekII7tCVAq18zeCFinNPKACo1Msm8MDZntjtwLWeW
+	 IpU/UhgouwFCSbvp55XYylwCQMyAXecbSDZQImkVg1X8cWd1qnpDjj2AmBiH6ZELZJ
+	 cf7tmlNroo9RmGjZkQSJMDkcGoRji+lvTKSFFf7RX8T4zc+ixtFt/Y5by/AbfGtV+f
+	 tPLtfTgID4Z4g==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v1 0/5] perf tools: Fix OOB reads, reference leaks, and overflow in sched/script/auxtrace
+Date: Fri,  5 Jun 2026 09:15:09 -0300
+Message-ID: <20260605121515.1725549-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] LiveSession crashes unconditionally on empty ring buffers due to r=
-e-raising -EAGAIN as OSError.
-- [Medium] LiveSession busy-loops and spams stderr on unmapped CPUs.
-- [Medium] Broad exception handler swallows user callback exceptions and mi=
-sreports them as parsing errors.
---
+Hi,
 
-commit 4b0aea1c86d61d02f883cb514ba6d1082d3b2a72
-Author: Ian Rogers <irogers@google.com>
+Five more pre-existing bugs found by sashiko-bot during AI-assisted
+review of the perf-data-validation hardening series.  All are
+independent of that series -- they are latent bugs in surrounding code
+exposed during review.
 
-perf python: Add LiveSession helper
+  1. test_bit(cpu, cpu_bitmap) reads out of bounds in
+     auxtrace.c:filter_cpu() and builtin-script.c:filter_cpu() when
+     the CPU value is negative or >= MAX_NR_CPUS.  Same class of bug
+     fixed in the previous series for annotate, diff, report, and
+     sched.
 
-Add LiveSession class in tools/perf/python/perf_live.py to support
-live event collection using perf.evlist and perf.parse_events,
-avoiding the need to fork a separate perf record process.
+  2. cpu__get_node() in cpumap.c indexes cpunode_map[] without bounds
+     checking against max_cpu_num.  Callers like builtin-kmem pass
+     untrusted sample->cpu from perf.data.
 
-> diff --git a/tools/perf/python/perf_live.py b/tools/perf/python/perf_live=
-.py
-> new file mode 100755
-> index 0000000000000..46522964cb799
-> --- /dev/null
-> +++ b/tools/perf/python/perf_live.py
+  3. Thread reference leaks in perf sched timehist_get_thread() --
+     two error paths and the success path in the idle_hist block
+     fail to release thread references acquired via
+     machine__findnew_thread() and get_idle_thread().
 
-[ ... ]
+  4. sched->max_cpu updated from sample->cpu without bounds checking
+     in perf_timehist__process_sample().  Later code uses max_cpu + 1
+     as iteration count over arrays allocated with MAX_CPUS entries.
+     Also caps the env->nr_cpus_online initialization.
 
-> +    def run(self):
-> +        """Run the live session."""
-> +        try:
-> +            self.evlist.open()
-> +            self.evlist.mmap()
-> +            self.evlist.enable()
-> +
-> +            while True:
-> +                # Poll for events with 100ms timeout
-> +                try:
-> +                    self.evlist.poll(100)
-> +                except InterruptedError:
-> +                    continue
-> +                for cpu in self.cpus:
-> +                    for _ in range(1000): # Limit to 1000 events per CPU=
- per poll to prevent starvation
-> +                        try:
-> +                            event =3D self.evlist.read_on_cpu(cpu)
-> +                            if event is None:
-> +                                break
-> +                            if event.type =3D=3D perf.RECORD_SAMPLE:
-> +                                self.sample_callback(event)
+  5. register_pid() in perf sched replay has integer overflow on
+     32-bit (pid * sizeof wraps), strcpy into fixed 20-byte buffer
+     without length check, BUG_ON on allocation failure, and unsafe
+     realloc pattern that leaks on failure.
 
-[Severity: Medium]
-Will this broad exception handler swallow exceptions raised by the user's
-sample_callback?
+All require crafted or unusual perf.data inputs to trigger.
+Verified with gcc and clang builds, checkpatch, and perf test.
 
-If the user's callback raises a standard Python exception like ValueError or
-KeyError, it looks like it gets caught below and misreported as an event
-parsing error, obscuring bugs in the tracing logic.
+Arnaldo Carvalho de Melo (5):
+  perf tools: Guard remaining test_bit calls from OOB sample CPU
+  perf tools: Add bounds check to cpu__get_node()
+  perf sched: Fix thread reference leaks in timehist_get_thread()
+  perf sched: Cap max_cpu at MAX_CPUS in timehist sample processing
+  perf sched: Fix register_pid() overflow, strcpy, and BUG_ON
 
-> +                        except OSError as e:
-> +                            # OS/mmap errors are unrecoverable and will =
-cause busy-looping if ignored
-> +                            raise e
+ tools/perf/builtin-sched.c  | 56 +++++++++++++++++++++++++++++++++------------
+ tools/perf/builtin-script.c |  2 +-
+ tools/perf/util/auxtrace.c  |  3 ++-
+ tools/perf/util/cpumap.c    |  4 ++++
+ 4 files changed, 49 insertions(+), 16 deletions(-)
 
-[Severity: High]
-Does this unconditionally crash the live session on an empty ring buffer?
+Developed with AI assistance (Claude/sashiko), tagged in commits.
 
-When the CPU's ring buffer is empty, pyrf_evlist__read_on_cpu() calls
-perf_mmap__read_init(), which returns -EAGAIN (-11). This causes the C
-extension to throw an OSError.
+Thanks,
 
-Since it's normal for some CPUs to have no events when poll() returns,
-re-raising the OSError here would terminate the session the first time it
-checks an empty buffer.
-
-> +                        except Exception as e:
-> +                            # Parsing or type errors are recoverable as =
-the event was consumed
-> +                            import sys
-> +                            print(f"Error parsing event on CPU {cpu}: {e=
-}", file=3Dsys.stderr)
-
-[Severity: Medium]
-Can this lead to a busy-loop that spams stderr on unmapped CPUs?
-
-If a CPU is not mapped by the event list (e.g., when tracing uncore PMU
-events), pyrf_evlist__read_on_cpu() returns NULL internally and throws a
-TypeError.
-
-Since the exception handler here catches the TypeError but doesn't break out
-of the 1000-iteration loop, it will repeatedly print this error 1000 times
-for each unmapped CPU on every single poll cycle.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605074003.1730=
-715-1-irogers@google.com?part=3D19
+- Arnaldo
