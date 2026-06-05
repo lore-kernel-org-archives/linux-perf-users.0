@@ -1,167 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229F13976BE
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 14:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E2E3B27CA
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 14:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780669803; cv=none; b=TiN2+6zI+wq2IMI4TNPrhLnHoSmoO+mH88BtknmpsOXxYUWkofVAtTas8jz+yRZMVyC+wPIR/1qsdJPsZAfdKQmijHwWyXWrnA1PXkDATybRzf83AmiqI3wu+afB6RvRz/w7VXobyKEQCVq2ZoSBtbUmk5mSFQmPzGQBFnTASE4=
+	t=1780670098; cv=none; b=HCLf/R0FU+VXzGN2ItGXDgkJrXUZm+SpzZt6gATT5ZWiwkRX6qGgmUOwjU2K+QH+DDal6Mv67oUbp/sLwCyxnQtBJzqcGoX6LJBfjzgaT1AyEok+mCg71KFtyz9oXXsz+3mbkFvmu/svQWvSnN80f3sLHX+j/HRxK3WMVPOIf1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780669803; c=relaxed/simple;
-	bh=hLcpOqM1RLFZus2+FE5lJglDqI3+NcgEAeiZM4L9/jc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bTPHqM01/U43JturYxmCxoUG8sDUUsIh14rEjL6ouIRAGHS7m+Mf7tjAF5BEcC6Ba92L00FBf5fvhZPT8KZifwur+C2dfCuYiAm9hVJEuPeTn7n0+k44SETPqn59nI7dyfROMRtyNdU3NdZ5izhMji8L2kr8MDeLFI8LdRhmbyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVcJrsdY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780670098; c=relaxed/simple;
+	bh=BBPXkhlCYUnSkpoUBur8i9YxzhRupV2fA4FOufbiOO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=plcF9AOKumswc+OKKOxpTrRAyb5d/vKk14BZa239XOPwhoXsOKp5r8W3bVyw4Z8ZYNogSV4u5o56ffU4epVCHRxx6jCDHlJgpd8/uF2aPAKLwQeQ7fGmX83fVY5l+tlnPYNwrHlf/tEYkRfs4UqiRCK2KGTllDoeGOCJlRuaaNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SzmlSzxN; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVcJrsdY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE0CD1F00893;
-	Fri,  5 Jun 2026 14:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780669801;
-	bh=pPEnJC0tXZeovDt6Q+dVBZ3fGhXz1c7QWLHJLlNkV90=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GVcJrsdYDAFuVWh8q/N0Z5krOFqictyQs3CRYToec2CUCWLEnh9k2f4GM3CYbX1LA
-	 3TdeBq0EjHPPTud/pod8jNNcF1d28B/IGnm64/shPRn40CLvL+lXj+yu0+BbSMqwz8
-	 I+Ggjdc4G5vrUnMZ71R3hn+MOw1wDT9cunMWi8oy1ITZ1B/tfFsO9Cu0PadVeIkgY3
-	 cuNyBc+pXvYWJcFAr+vBNmCxVGzNE67L+a7CptgLcXgSN6EgZBDCqhuIRF+jgqajdz
-	 4MwA4BPeWn311z1buudSQstyEVVLSZE/rpJ2PXkqlma2IQUPI5XMkCUrOHxLHF6/gw
-	 G1krr9St4tk1A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/5] perf tools: Add bounds check to cpu__get_node()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605121515.1725549-3-acme@kernel.org>
-References: <20260605121515.1725549-3-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 14:30:00 +0000
-Message-Id: <20260605143000.DE0CD1F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SzmlSzxN"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-69d7cdd3b8eso882789eaf.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 07:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780670096; x=1781274896; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yLdwiJHSU4Q+4eyeFL1u0Q7e2dgaSzumZAqy9rI3RQg=;
+        b=SzmlSzxNkxFprYPRq8Zjojp8oDsoLbJzNAA9sIHC+z8lYOmzIjSo6SFFw6PzugMSd9
+         VUKZXkGtw6Zlv8ctI8Q8BPJdXoQlZYhdaKY1C16aavBMbL0OO7l+s1f3L6gx830bIjo6
+         Z7Mu94TFq+IHPanM3W1FqujWuvfeUHKhPF8ot07WTLl4uonIta+TBFJtERUgB8aQDvx/
+         gz3E8aL+6+ThcnJy0vrJGcWqQII8HcvpuIxIxpKkOuqfT5Q1xlbxPr13GJ02bKP86jUW
+         /NlGmJ3ZXZPN7fFbZYzCAouKxW0N6Hwi6QBVN8DtxiId7pBJsAz/gqBIa2/S07cZ6laQ
+         Tcgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780670096; x=1781274896;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yLdwiJHSU4Q+4eyeFL1u0Q7e2dgaSzumZAqy9rI3RQg=;
+        b=mrZE64YWiwU9UlvT4Tm4HBXggjbHrBhzn8ShzS4o9cc14MDfJIv1LblDhobGTLtQ8r
+         /KOXYsCm8JvAIeFD1u5F/BTb0QMUi3vvuNiicogv0fDwEKKXuPV6svb1Vcxyqfnp6Dz5
+         YJT6qcEKtkRt2zH/gUna23RLKTv/41AaHMr1g2RlxsFPin2nh260H3OzxhmLQes1PS5j
+         oD8ogfLod4JtgFuSKPLfqOqiypKze1FqiUXNca5O174lEOMw3TEuavSdiybSuAR6zYNB
+         HYJIw+M4ovsmuY7OojOpMz6XMlckyLz6pkgMi7zowLDZE5BmHpNsHxY/rF5Qkoec2Fzt
+         wPcQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/ztcOKxb/P9wqvU2Sehxh0EBgP7WLlQr6W1A2fFbq02Wdbf9G8//tjEaA9kq84SQX+membilFzOe/VD7a4HAr6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3XDe+qZIfYNsy53qtYt00iagBtaXcfP/aSCPZLHBvKUbXXl1J
+	TDnDMX/b9PI+8E7I3imiuwKNGYNc2TkHl6+qITKBMOhIgHubCjqz4wmw
+X-Gm-Gg: Acq92OE8CaHqbhFVutFCv0qCJZKtyqq+LQh5jgDxOZKAu8+m8Gyrt2U1g0gvcuA7dKc
+	f5cncOhEVTUmp1xHbKQqeeQ7yE/Xi6zd6EMANQVz2GXQZj6YDgJZA/ACqyUNaD65ldwdnQSefVr
+	Wlb53FYi0jsYs5sWd2uaFt299kqyWyR3e9p9cpCVzobfvFOc7SvqYifb+CHvdLOkXFv/nKP9gdC
+	oWvoBsMs2whjXQVwcUkXlhoCmgf9zOaKdy2NEgIkKoPKv7v9FSu+BlT7ZD9c7cq62dFZG4Qud/A
+	9uvZDtUIk6EN9HlGvfGiTkiNh9O+5N22o1GcgtfoFO7aE29cc1M9W4tB55fj3w85O8JrV0NEYHO
+	xt0ujkGHKY1XLmOVO5gXz6P8styBUv1NX0cgsgd+zMAZuG/QSBimyyzoEDCG9F1CVb3LldW1BVc
+	gdrhnFLgzwHfsudBwqN8VwkhpMuswYdFhJDswriFaR9ocir7cJjqbMCs6IShah3dyw85vsWHXEM
+	Rl1ao/YJ2IUTUeJq7Y1zdQpf8nD
+X-Received: by 2002:a05:6820:4de8:b0:69d:fccf:90c4 with SMTP id 006d021491bc7-69e68b7d97fmr2028321eaf.23.1780670096499;
+        Fri, 05 Jun 2026 07:34:56 -0700 (PDT)
+Received: from ?IPV6:2601:282:1e02:1040:856a:da39:d9b3:fb8f? ([2601:282:1e02:1040:856a:da39:d9b3:fb8f])
+        by smtp.googlemail.com with ESMTPSA id 586e51a60fabf-440d9509e0esm7909565fac.14.2026.06.05.07.34.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2026 07:34:55 -0700 (PDT)
+Message-ID: <b30d8432-3512-4053-93d6-77f2be96a796@gmail.com>
+Date: Fri, 5 Jun 2026 08:34:53 -0600
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] perf sched: Cap max_cpu at MAX_CPUS in timehist
+ sample processing
+Content-Language: en-US
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo
+ <acme@redhat.com>, sashiko-bot <sashiko-bot@kernel.org>,
+ "Claude Opus 4.6" <noreply@anthropic.com>
+References: <20260605121515.1725549-1-acme@kernel.org>
+ <20260605121515.1725549-5-acme@kernel.org>
+From: David Ahern <dsahern@gmail.com>
+In-Reply-To: <20260605121515.1725549-5-acme@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+On 6/5/26 6:15 AM, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> perf_timehist__process_sample() updates sched->max_cpu from the
+> sample CPU without bounds checking.  Later code uses max_cpu + 1 as
+> an iteration count over arrays allocated with MAX_CPUS entries
+> (curr_thread, cpu_last_switched).  A recording with CPU IDs >= MAX_CPUS
+> causes out-of-bounds array accesses.
+> 
+> Also cap the env->nr_cpus_online initialization of max_cpu in
+> perf_sched__timehist(), which could exceed MAX_CPUS on very large
+> systems.
+> 
+> Add bounds checks before both max_cpu updates, matching the pattern
+> already used in map_switch_event().
+> 
+> Fixes: 49394a2a24c7 ("perf sched timehist: Introduce timehist command")
+> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+> Cc: David Ahern <dsahern@gmail.com>
+> Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/builtin-sched.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
 
-Pre-existing issues:
-- [High] `builtin-kmem` omits the `.attr` callback in its `perf_tool`, whic=
-h breaks processing of piped streams natively.
-- [High] Integer truncation in `set_max_cpu_num()` combined with missing bo=
-unds checks in `cpu__setup_cpunode_map()` causes heap out-of-bounds writes =
-on systems with large sparse CPU topologies.
-- [High] `perf_mmap__aio_bind` triggers an out-of-bounds memory write and s=
-ubsequent crash when a CPU's NUMA node is unknown or mapped to a dummy CPU.
---
+LGTM
 
-commit 84fade77fbbcea06a93ffe9275b1abcc29bbc6bc
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
-perf tools: Add bounds check to cpu__get_node()
 
-The patch adds a bounds check against max_cpu_num in cpu__get_node() to
-protect against untrusted or out-of-bounds CPU index values before accessing
-cpunode_map. This prevents out-of-bounds array indexing, particularly when
-analyzing cross-machine perf recordings where the recorded CPU count may
-exceed the host's CPU count.
-
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index b1e5c29c6e3ec..d3432622b2adc 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -576,6 +576,10 @@ int cpu__get_node(struct perf_cpu cpu)
->  		return -1;
->  	}
-> =20
-> +	/* cpunode_map allocated for max_cpu_num entries; input may be untruste=
-d */
-> +	if (cpu.cpu < 0 || cpu.cpu >=3D max_cpu_num.cpu)
-
-[Severity: High]
-This isn't a bug introduced by this patch, but parsing sysfs to determine
-the maximum CPU number introduces a memory corruption vulnerability.
-
-In tools/perf/util/cpumap.c:set_max_cpu_num(), the max possible CPU number
-is parsed from sysfs into a local int max. This value is directly assigned =
-to
-max_cpu_num.cpu, which is an int16_t. If max exceeds 32,767 (as is possible=
- on
-large modern architectures or due to sparse APIC numbering), the assignment
-truncates the value, resulting in a small or negative integer.
-
-Later, init_cpunode_map() allocates cpunode_map based on this truncated siz=
-e,
-and cpu__setup_cpunode_map() writes to it without truncation:
-
-tools/perf/util/cpumap.c:cpu__setup_cpunode_map() {
-...
-		while ((dent2 =3D readdir(dir2)) !=3D NULL) {
-			if (dent2->d_type !=3D DT_LNK || sscanf(dent2->d_name, "cpu%u", &cpu) < =
-1)
-				continue;
-			cpunode_map[cpu] =3D mem;
-		}
-...
-
-Could this result in an out-of-bounds write on the heap?
-
-> +		return -1;
-
-[Severity: High]
-This isn't a bug introduced by this patch, but returning -1 here causes a
-crash in perf_mmap__aio_bind() when a CPU's NUMA node is unknown or mapped =
-to
-a dummy CPU.
-
-tools/perf/util/mmap.c:perf_mmap__aio_bind() {
-...
-		node_index =3D cpu__get_node(cpu);
-		node_mask =3D bitmap_zalloc(node_index + 1);
-		if (!node_mask) {
-			pr_err("Failed to allocate node mask for mbind: error %m\n");
-			return -1;
-		}
-		__set_bit(node_index, node_mask);
-...
-
-When cpu__get_node() returns -1, it is implicitly cast to unsigned long
-node_index (ULONG_MAX). bitmap_zalloc(ULONG_MAX + 1) evaluates to
-bitmap_zalloc(0) and allocates a minimal buffer.
-
-Does the subsequent __set_bit(ULONG_MAX, node_mask) perform a wild memory
-write vastly outside the allocated bitmap?
-
-> +
->  	return cpunode_map[cpu.cpu];
->  }
-
-[Severity: High]
-This isn't a bug introduced by this patch, but while reviewing
-builtin-kmem.c which is mentioned in the commit message as calling
-cpu__get_node(), it appears the perf_tool initialization omits the
-.attr callback:
-
-tools/perf/builtin-kmem.c:cmd_kmem() {
-...
-	perf_tool__init(&perf_kmem, /*ordered_events=3D*/true);
-	perf_kmem.sample	=3D process_sample_event;
-	perf_kmem.comm		=3D perf_event__process_comm;
-	perf_kmem.mmap		=3D perf_event__process_mmap;
-	perf_kmem.mmap2		=3D perf_event__process_mmap2;
-	perf_kmem.namespaces	=3D perf_event__process_namespaces;
-...
-
-In pipe mode (e.g., perf kmem record -o - | perf kmem stat -i -), perf.data
-headers are missing and events must be processed sequentially. Omitting the
-perf_event__process_attr callback causes perf_event_header_attr events to be
-silently discarded by the default stub.
-
-Does this prevent the creation of evsels and the initialization of the
-perf_env, completely breaking the tool's ability to process piped data
-streams natively?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605121515.1725=
-549-1-acme@kernel.org?part=3D2
