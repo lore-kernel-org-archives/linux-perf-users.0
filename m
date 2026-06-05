@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65987404E;
-	Fri,  5 Jun 2026 20:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9973655E8;
+	Fri,  5 Jun 2026 20:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780691612; cv=none; b=BCUCHhvg9hSoh0tjBEw6LPzA0FO/paB4vcXRbU6q591gwClcsBZuejVAGEqI4f6vmjoVe0BjQPzeajYUi2RsejKf+v1F2lqEeoJbjcdh6XeB12MyCvnjj9aMHU7xEpZ8abkfGiTciffyRdR94VYASwV15JSVWgThp+CpeXvlPLo=
+	t=1780691617; cv=none; b=FiMpMjqzIVsnPqm4k95G/VGsAgwbZzmFfBBZXR51rS9Ri1XhPCJl9WgW2FsSQl8auaKmeneldSac2YfdPCgKPe2Dbz8Z3N9AWdzHgLpFcH7cVwWfGScgHoFG437J/dneqbjQBE1AicBrh5n5JpYCw8M9H+qdVRcLs6CBq8gRmrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780691612; c=relaxed/simple;
-	bh=FOd6JyZeWlr24mktVwuzD6FYgJzFTfIwVsNwD10nF5Q=;
+	s=arc-20240116; t=1780691617; c=relaxed/simple;
+	bh=XgZP7SK7uYiC4TjhX28Gv+Nl9bhv/cL0Krq5o7kQkmI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rx35YtTJGwlbTVn2aYX/g82Em/GAxJ+QDGzDj6cJoEY2nB7JRhbcUBK7E6ysbz6nD5OzgMW6fM1ZdS0flu13KfVh8UaNuz0WnjQYN8xj5Nb6HHbGgSxPYfeIDCaAtACTM+TE3zHNMIblmXwPTlD++EtY/2cyqDURBSRldcbmTQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCvYYVxm; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=XFU3DMGq2MjGjfDK167Iegm2b5pjv7RVDgWqow+I7oAz0nGn9scU5IkogjoeCRbCPmjfS+H3aRZnxrD4HWrb+CNFHERMDmOiyYQjnNX+5TPd/SNK94EEFKzJ9g5AxokN2+TIVtDic+6iDM+4GNiDMllSLTF+q7UZsZ1kC53WLZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fkt/AoCz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCvYYVxm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A35F1F00898;
-	Fri,  5 Jun 2026 20:33:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fkt/AoCz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 185021F00893;
+	Fri,  5 Jun 2026 20:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780691611;
-	bh=HuLCee+v//zB3kkmxSNkXDO1Qjnhp5eVfzOoWiMeB9s=;
+	s=k20260515; t=1780691616;
+	bh=jIuBMZzMYmjdLuIIX5AbWMSFgi1s/MOxyVVDk1VwGDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SCvYYVxm2N+fzHfeCFsPGJ/e4P71UDmZFI+CF0E9jP4crHBR+3VfLJvl5mRVMBsiy
-	 kjg1TuBiCqlBaV2jsHvR9zZ9bk4Gkl3jhMDZe4T/k9fTrKb3jaKczx6RhlCB0O24IF
-	 Xv/jLKvhyy8RB2vrtdAURIKC+XAtua6Qb6IB1lagIrlqhrnSzWoQzwOQ2DYNjR+8dg
-	 HxpB/SRUeY4l/fYQv1yKrwCXNbyMzWV5UcC/aghc76wQCLwMia+pklZNlPRnCm53Ln
-	 P135R11AWd7FoHjeddFkmiie10aHBtjz/2SO/tYUM4qrrPEe6IEQUFjyhMSVALPvwU
-	 yfDZW9g1yGF4Q==
+	b=fkt/AoCzzJWNe6xSO7WY3WBgaBX0AyIKM52927rMkaToeYCDj8eRWiBebLV5o0pzB
+	 i/KeYu/+Evvyi7Y6/CWE8klOmHTLjjDzN/G6xYnstpPt1pBOLQ+JO2MRU2duRE1TMO
+	 oyeU7Ze80Ga4PpKhd62uNsXMTNWkhKKOA4Lp9ObhDYCJ4lDIhEmsFYJRcVCYm6ss8/
+	 dNnYWsL+ftTaxXLp+LdSuYKNa6uXLoNs6wySqTHaBA7iWliX5yY4qSSpS1wHxI+Hfm
+	 nABCHIza1qEe8tPh8mNECNHe3lW5B379/FL8+okP6xYRhHGJyD59wldZfnbHkxcjhB
+	 8HT+vnNBQ9+pw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Alexey Budankov <alexey.budankov@linux.intel.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 1/8] perf mmap: Guard cpu__get_node() return in aio_bind()
-Date: Fri,  5 Jun 2026 17:33:09 -0300
-Message-ID: <20260605203316.1758661-2-acme@kernel.org>
+Subject: [PATCH 2/8] perf stat: Bounds-check CPU index in topology aggregation callbacks
+Date: Fri,  5 Jun 2026 17:33:10 -0300
+Message-ID: <20260605203316.1758661-3-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260605203316.1758661-1-acme@kernel.org>
 References: <20260605203316.1758661-1-acme@kernel.org>
@@ -57,50 +56,93 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf_mmap__aio_bind() passes the cpu__get_node() return value directly
-to an unsigned long variable (node_index).  When cpu__get_node() returns
--1 for an unknown CPU, the implicit int-to-unsigned-long conversion
-sign-extends it to ULONG_MAX.
+Six perf_env__get_*_aggr_by_cpu() functions access env->cpu[cpu.cpu]
+after only checking cpu.cpu != -1.  env->cpu[] is allocated with
+env->nr_cpus_avail entries, so a CPU index from an untrusted perf.data
+file that exceeds that count causes an out-of-bounds heap read.
 
-This causes bitmap_zalloc(ULONG_MAX + 1) which wraps to
-bitmap_zalloc(0), returning a zero-sized allocation.  The subsequent
-__set_bit(ULONG_MAX, node_mask) then writes massively out of bounds.
+Replace the != -1 guard with >= 0 && < env->nr_cpus_avail in all six
+functions.  The >= 0 check also catches -1 and any other negative values
+that could bypass the old check.
 
-Check the return value in a signed temporary before assigning to
-node_index, and skip the NUMA binding when the node is unknown.
+Affected functions:
+  - perf_env__get_socket_aggr_by_cpu()
+  - perf_env__get_die_aggr_by_cpu()
+  - perf_env__get_cache_aggr_by_cpu()
+  - perf_env__get_cluster_aggr_by_cpu()
+  - perf_env__get_core_aggr_by_cpu()
+  - perf_env__get_cpu_aggr_by_cpu()
 
-Fixes: c44a8b44ca9f ("perf record: Bind the AIO user space buffers to nodes")
+Fixes: 68d702f7a120 ("perf stat report: Add support to initialize aggr_map from file")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mmap.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/builtin-stat.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index b69f926d314b148b..4404a99eee45f9c3 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -104,9 +104,15 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, struct perf_cpu cpu, i
- 	int err = 0;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 99d7db372b480800..9a045811c4197ccd 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1638,7 +1638,8 @@ static struct aggr_cpu_id perf_env__get_socket_aggr_by_cpu(struct perf_cpu cpu,
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
  
- 	if (affinity != PERF_AFFINITY_SYS && cpu__max_node() > 1) {
-+		int node;
-+
- 		data = map->aio.data[idx];
- 		mmap_len = mmap__mmap_len(map);
--		node_index = cpu__get_node(cpu);
-+		node = cpu__get_node(cpu);
-+		/* -1 sign-extends to ULONG_MAX, wrapping bitmap_zalloc(0) and OOB __set_bit */
-+		if (node < 0)
-+			return 0;
-+		node_index = node;
- 		node_mask = bitmap_zalloc(node_index + 1);
- 		if (!node_mask) {
- 			pr_err("Failed to allocate node mask for mbind: error %m\n");
+-	if (cpu.cpu != -1)
++	/* env->cpu[] has env->nr_cpus_avail entries; reject untrusted indices */
++	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail)
+ 		id.socket = env->cpu[cpu.cpu].socket_id;
+ 
+ 	return id;
+@@ -1649,7 +1650,7 @@ static struct aggr_cpu_id perf_env__get_die_aggr_by_cpu(struct perf_cpu cpu, voi
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
+ 
+-	if (cpu.cpu != -1) {
++	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
+ 		/*
+ 		 * die_id is relative to socket, so start
+ 		 * with the socket ID and then add die to
+@@ -1705,7 +1706,7 @@ static struct aggr_cpu_id perf_env__get_cache_aggr_by_cpu(struct perf_cpu cpu,
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
+ 
+-	if (cpu.cpu != -1) {
++	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
+ 		u32 cache_level = (perf_stat.aggr_level) ?: stat_config.aggr_level;
+ 
+ 		id.socket = env->cpu[cpu.cpu].socket_id;
+@@ -1722,7 +1723,7 @@ static struct aggr_cpu_id perf_env__get_cluster_aggr_by_cpu(struct perf_cpu cpu,
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
+ 
+-	if (cpu.cpu != -1) {
++	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
+ 		id.socket = env->cpu[cpu.cpu].socket_id;
+ 		id.die = env->cpu[cpu.cpu].die_id;
+ 		id.cluster = env->cpu[cpu.cpu].cluster_id;
+@@ -1736,7 +1737,7 @@ static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(struct perf_cpu cpu, vo
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
+ 
+-	if (cpu.cpu != -1) {
++	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
+ 		/*
+ 		 * core_id is relative to socket, die and cluster, we need a
+ 		 * global id. So we set socket, die id, cluster id and core id.
+@@ -1755,7 +1756,7 @@ static struct aggr_cpu_id perf_env__get_cpu_aggr_by_cpu(struct perf_cpu cpu, voi
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
+ 
+-	if (cpu.cpu != -1) {
++	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
+ 		/*
+ 		 * core_id is relative to socket and die,
+ 		 * we need a global id. So we set
 -- 
 2.54.0
 
