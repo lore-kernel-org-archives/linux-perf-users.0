@@ -1,111 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF1513D539;
-	Fri,  5 Jun 2026 23:32:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DB337D135;
+	Fri,  5 Jun 2026 23:38:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780702379; cv=none; b=g6dFCb1a4Ot8o/Z24GoR9hSvRa5Oc+YqvyzYwNscEYHJzggF10tcRBzICydYqFD8CaZu8mqK/fg6P1p3tBtGtGhOa9LfvfZ3/fQVxAfJ0R/UVRIWJCaAI03NAt5af9hrdL8y2GDWUASQiMDyMJZLzk5Eeccs7QOf5CERv16J67M=
+	t=1780702726; cv=none; b=pbtdKYXeQUYsJxzz7ijwUXO8BGQw9FII9xfQ77Wk96NfZCY+ybTopJy7LoMcOEBiJkddtushck+ZgXznieOYXflS4q/VTs/1EYu1ZMi1bEnks/8OnMJbsxp14kOvXE0MsjnuhUum2cGLEem+MtSUfRBADbaGYZzrDwGng+Ra9D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780702379; c=relaxed/simple;
-	bh=1yNcfK7eyF7DBLwdIVKeYx193kANK6dyVC9KCznh3rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dhqn6mn/nEUgx/9C3ZkSUVeESFHZcavtDuB+DMlyhyqXV1DI9ZxWVjW8BEflIcyPWueGWcyOzUyw1JxXpssioyF0YDBRoC0HiMNLn39q6tRztG04U7QqLX56U4fkNdHlHy+br3juYVz+MMQAg5zr4ssGkDfF9THd2upVAB3OVHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHvo1NHt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780702726; c=relaxed/simple;
+	bh=oomnrPseVaWqlrCznV9anODPQh2KLZqvoAI5STGYdVk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a+YBmWtLhoHsxaqXFrGD+Fmu4LWy+mVJnsmtvylsjBpGUoGJqE53bfLFAiv5Yg31qKjaAjJg8l0nt8LGnXNl3Z99x8UiPoUatVuk7dQqJoFmDBKEaO5kKCTbiewfSGI+PDutYnXWJV7avuWDey8B9Un+UhPIXJ8ky1GL/cLpvGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHRGgPLK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHvo1NHt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E2DB1F00893;
-	Fri,  5 Jun 2026 23:32:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHRGgPLK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FABE1F00893;
+	Fri,  5 Jun 2026 23:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780702378;
-	bh=bfgZJpXhhPov5BEla8SQNZJSxOSY1OW2cCXZ8taqn9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UHvo1NHtNijnudJ1KexB6x5guYbNU1GMzvAKBjUZA9QZT9CmZlST10TdDrsIYwiAY
-	 5o0HeDh93E8wALWemHKpbPWbxqiE+8E5xtK4ytZKDjfIiIflTQm7Zxai4LYF2cuJr4
-	 0eJICSZY1mhtX7P/Uk4oM48WSxxlfn7EnNmDM978blxiU7b2oLW4+f3aV0NproT6XY
-	 e5DCAZGrRpjTxC3JrM0HKoaKVMI05rCPq3UTMbmWeycbmmkHW62AdR/1auJbuoveWG
-	 JXCODT4uSrigJ6hcqzvBjUfNeWJ7qHcep62LwZqIjv7u8f9lzNJ8r9vTGJJz1DBaT5
-	 SzeFzeF4dOY6Q==
-Date: Fri, 5 Jun 2026 16:32:57 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf timechart: Release event samples at the end
-Message-ID: <aiNcqfkyWo4zPsxC@google.com>
-References: <20260605231155.2415760-2-namhyung@kernel.org>
- <20260605232318.218551F00893@smtp.kernel.org>
+	s=k20260515; t=1780702725;
+	bh=2phxDc4dYAiH/i/I1uESmE1l6OWIYvs3a7LCNE9JFYs=;
+	h=From:To:Cc:Subject:Date;
+	b=FHRGgPLKujvqA1Y+VofJ4BTpqC4skg02Vc4t2I8LcNVs950x7dF9n3FyCgEj1RdhK
+	 rWHtaxAoVafCELRQwp1KJyG7/zrPtbs9xA65lBczZzNl7COx7DVVlu4DwDsP5gf4t5
+	 LaMx3W87W59d0257Hf+xCr0JHg+QQhnekVZEKwOyUPiwkfiqVSLcHSZb7JfhvMu+JQ
+	 RuyVG0tWm8mp+odR7aLHLZzhaO8RK2CbkMGfH2zLYHrKBGVEMBz0JkkPyE36JJKlyV
+	 JGxcF0S98AoP7vLoqdLUabA/hGk0FYe/EvOCuuDdKaA6HMzk4tzMQcpsZEChMTSOtU
+	 ik3z/fBPuJJuQ==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v2 0/9] perf tools: Fix OOB writes, refcount bugs, and BUG_ON in mmap/stat/c2c/sched
+Date: Fri,  5 Jun 2026 20:38:28 -0300
+Message-ID: <20260605233837.1773732-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260605232318.218551F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 05, 2026 at 11:23:17PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Double-free of the `backtrace` string in `timechart__release()` due to shared pointers across multiple `cpu_sample` objects.
-> --
-> 
-> commit 3e2b8bb6971b84cf83df8b57e574d558c36bdaf8
-> Author: Namhyung Kim <namhyung@kernel.org>
-> 
-> perf timechart: Release event samples at the end
-> 
-> This commit adds timechart__release() to clean up data structures created
-> during sample processing to prevent memory leaks when the perf tool exits.
-> 
-> > diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-> > index 28f33e39895d3..73a08236ac299 100644
-> > --- a/tools/perf/builtin-timechart.c
-> > +++ b/tools/perf/builtin-timechart.c
-> [ ... ]
-> > @@ -1509,6 +1509,59 @@ static void write_svg_file(struct timechart *tchart, const char *filename)
-> >  	svg_close();
-> >  }
-> >  
-> > +static void timechart__release(struct timechart *tchart)
-> > +{
-> > +	struct per_pid *p = tchart->all_data;
-> [ ... ]
-> > +		while (c) {
-> > +			struct per_pidcomm *next_comm = c->next;
-> > +			struct cpu_sample *cs = c->samples;
-> > +			struct io_sample *ios = c->io_samples;
-> > +
-> > +			while (cs) {
-> > +				struct cpu_sample *next = cs->next;
-> > +
-> > +				free((char *)cs->backtrace);
-> > +				free(cs);
-> > +				cs = next;
-> > +			}
-> 
-> [Severity: High]
-> Will this result in a double-free of the backtrace string?
-> 
-> Looking at sched_switch(), when a context switch occurs between two active
-> processes, it shares the exact same backtrace pointer across multiple
-> cpu_sample objects:
-> 
-> if (prev_p->current && prev_p->current->state != TYPE_NONE)
-> 	pid_put_sample(tchart, prev_pid, TYPE_RUNNING, cpu,
-> 		       prev_p->current->state_since, timestamp,
-> 		       backtrace);
-> if (p && p->current) {
-> 	if (p->current->state != TYPE_NONE)
-> 		pid_put_sample(tchart, next_pid, p->current->state, cpu,
-> 			       p->current->state_since, timestamp,
-> 			       backtrace);
-> 
-> Because timechart__release() iterates over all processes and unconditionally
-> calls free() on cs->backtrace, won't it attempt to free the same pointer 
-> multiple times when it cleans up these overlapping samples?
+Hi,
 
-Actually this is handled in another series.
+Nine more pre-existing bugs found by sashiko-bot during AI-assisted
+review of the perf-data-validation hardening series.  All are
+independent of that series -- they are latent bugs in surrounding code
+exposed during review.
+
+  1. perf_mmap__aio_bind() passes cpu__get_node() return value to an
+     unsigned long.  When -1 is returned, sign-extension to ULONG_MAX
+     causes bitmap_zalloc(0) and a massive OOB __set_bit.
+
+  2. Six perf_env__get_*_aggr_by_cpu() topology aggregation callbacks
+     in builtin-stat.c access env->cpu[cpu.cpu] after only checking
+     cpu.cpu != -1.  A CPU index from untrusted perf.data exceeding
+     env->nr_cpus_avail causes OOB heap reads.
+
+  3. perf c2c: __set_bit on cpuset/nodeset bitmaps without bounds
+     checking sample->cpu and node IDs against their allocation sizes.
+     Also, cpu2node[] array accessed without upper bound check.
+
+  4. perf c2c: setup_nodes() iterates CPU maps from perf.data topology
+     and uses cpu.cpu directly as index into cpu2node[] and __set_bit
+     without validating against nr_cpus_avail.
+
+  5. get_idle_thread() leaves a partially initialized thread in
+     idle_threads[] when init_idle_thread() fails, causing subsequent
+     calls to return a thread with no priv data -- later cast to a
+     larger struct causes OOB writes.
+
+  6. timehist_sched_change_event() uses thread__tid() == 0 to guard
+     a cast from thread_runtime to idle_thread_runtime.  A crafted
+     perf.data with common_pid=0 but prev_pid!=0 gets a machine
+     thread with thread_runtime priv -- the cast reads past the
+     allocation.
+
+  7. timehist_sched_change_event() sets itr->last_thread to NULL
+     without calling thread__put() first, leaking a thread reference
+     on every idle context switch with --idle-hist.
+
+  8. free_idle_threads() calls thread__delete() directly instead of
+     thread__put(), bypassing the refcount lifecycle.
+
+  9. get_new_event() dereferences unchecked zalloc() result and uses
+     BUG_ON on realloc failure.  add_sched_event_wakeup() passes
+     unchecked zalloc() to sem_init().  All crash on OOM with
+     untrusted input.
+
+All require crafted or unusual perf.data inputs to trigger.
+Verified with gcc and clang builds, checkpatch, and perf test.
+
+Arnaldo Carvalho de Melo (9):
+  perf mmap: Guard cpu__get_node() return in aio_bind()
+  perf stat: Bounds-check CPU index in topology aggregation callbacks
+  perf c2c: Bounds-check CPU and node IDs before bitmap and array access
+  perf c2c: Bounds-check CPU IDs in setup_nodes() topology loop
+  perf sched: Clean up idle_threads entry on init failure
+  perf sched: Use is_idle_sample() for idle thread runtime cast guard
+  perf sched: Fix thread reference leak in idle hist processing
+  perf sched: Use thread__put() in free_idle_threads()
+  perf sched: Replace BUG_ON and add NULL checks in replay event helpers
+
+ tools/perf/builtin-c2c.c   | 23 +++++++++++++++++++++--
+ tools/perf/builtin-sched.c | 45 ++++++++++++++++++++++++++++++++++++++-------
+ tools/perf/builtin-stat.c  | 13 +++++++------
+ tools/perf/util/mmap.c     |  8 +++++++-
+ 4 files changed, 73 insertions(+), 16 deletions(-)
+
+Developed with AI assistance (Claude/sashiko), tagged in commits.
+
+v2:
+  - New patch 6: use is_idle_sample() instead of thread__tid() == 0
+    to guard idle_thread_runtime cast, preventing OOB read/arbitrary
+    free with crafted common_pid=0/prev_pid!=0 events (sashiko Critical
+    on v1 patch 6)
+  - Patch 3: add cpu < 0 check to catch large u32 sample->cpu values
+    that wrap negative when assigned to signed int, bypassing the
+    >= cpus_cnt bounds check (sashiko High on v1 patch 3)
 
 Thanks,
-Namhyung
 
+- Arnaldo
