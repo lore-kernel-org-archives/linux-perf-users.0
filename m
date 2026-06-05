@@ -1,108 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0540212566
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 06:31:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B37421F0D;
+	Fri,  5 Jun 2026 06:49:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780641110; cv=none; b=Ah5roBBRAv6ZIV11UMfMTVvnfBrrWs6kiXFxFyVGhN4TjvK+dKbiK4uYpDTdIMbHP7M/+8L4v4jqAkAs8t6X1Hb45e/H3TNdyykqmPSG7ucyeZz21DVMgyxOgwFSBaR3YGcBhkYcrmnVYHOjGYIAe8smuC2P+cnhQuFVwFF/gjY=
+	t=1780642182; cv=none; b=Fz5VlBcph1XCEl1XXCgzzq/zqBjc7JcziUZUx9CTeG5zL+hoItYqmyyneaZoWE0mlXFVR59YFFRDjvULVGg1zQcjQUt2HPlCHrZq0+dI4cGJRqfy5nyc+db+bLISWdC0R6Izanp2iyuazzwiY99VOMnvBKNJZD/xRtDPvHamf2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780641110; c=relaxed/simple;
-	bh=lEbAlMMXOgxEtbBinXq5G0HDQaNwfyqjgugK/TtUj60=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Z16WvD53Mz2A7DO7b9V4QiYJddSze1CM+3SwGg9hM0MlLE0RwuVZFcszYvwN/IwrVzi5KqSN7ViOZ4+FNdNU77uiB4oOF69XHOIIfYtMuIk1KQkBpKhNxOq0kIqbYvQc6PzoCYdydc7GXZE/fGdooI3dPc1N4HgR/Lv+ksKhlRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtubK6dq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780642182; c=relaxed/simple;
+	bh=JbOjN+5s8vqL6zy3PUgHQ5CBh//ucUve2OmTRELYBII=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GqMX4RebcuDz4ePe6gtypggqGyfXfH3tC1Mf5vV05+RS4Gk8ALehcBbdwPRLcUK7DpcYupJlurcG7ewu+m8M9my8f3QomrgcWD9uz9EEcCb1AUsKpvPpTGOkmMzApmMJKzB7D9CyVhE8ezCwEkriwUQSUsDcJptuo90+LCrqywM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JzwvIEth; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtubK6dq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E2541F00893;
-	Fri,  5 Jun 2026 06:31:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JzwvIEth"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89ACB1F00893;
+	Fri,  5 Jun 2026 06:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780641109;
-	bh=jMaXzgQz54k8lOFT3F9AxcH/3ATKW31Th6CcaicqVzU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UtubK6dqPGp/zRfYqjI/9nb0ZxqJxISoUBUYsBMuCRgy7pcmasdQuuDG3LX/4FKSy
-	 sUogUIpcflBlJ0ltNG19qjzOkD0uTLsZvnDIpNw3o7WYna6i7h9tYN/ymJwgmaAZpC
-	 IOyOdZdFRnkf1dGeaAfFmXNGF5YwevWWytwb06q8wEopa5yYMazg86zhv7yzMNzTgm
-	 5Li6Gcow0OhYZaanZi6AVWieBNaHob79+sn7tohfCgQxcOihaaAA2kBYDn/mBRs2UF
-	 AFr++N0gppRLk/dSiY8CTQMVCvXCJg49I+QxpKf5scqSkuRnv3+KJQdvXa1JHkGI3e
-	 UgEl5BH3mI4wQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf scripts: Add configurable sorting option to
- powerpc-hcalls
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Shivani Nittor" <shivani@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605062717.24982-1-shivani@linux.ibm.com>
-References: <20260605062717.24982-1-shivani@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 06:31:49 +0000
-Message-Id: <20260605063149.6E2541F00893@smtp.kernel.org>
+	s=k20260515; t=1780642178;
+	bh=HB4QLHHnX0cD6nJm4H5FiXccxNqI9MICIMNcBtOoZQE=;
+	h=From:To:Cc:Subject:Date;
+	b=JzwvIEth00voi1zPhwgmXzn6GKyxyVOYtYQm+YbmU4j1yLkxX4KT6/CcuPdSPPQwq
+	 u7iDXeaSxTUab1Rn9coK8iVLFUjlPfFPZtuSVg6LMl+mg6OXKajnwaHu2DeGX3sz+6
+	 smbdW19D9q+Lta6HX7te+PX4eSreXxgQeYxvnsaP0V++2HEzGupmaEuVF8rE4eZZVa
+	 d+9rdNC8mt+bTXQnXaNSyjcP/ZznJHBTl0zBN885PanG7HpHBOTV5JyJAxR4/JpsL3
+	 Lhu7mAmEP0jgHVU1lt0Y+67AP9vCcOFzpx7UBXPn9i83sv5q4mxU5/8w6JogttX0/j
+	 DyAvEeZ78b6nw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf jitdump: Fix a build error with ASAN
+Date: Thu,  4 Jun 2026 23:49:32 -0700
+Message-ID: <20260605064932.34316-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The argument parsing loop in `trace_begin()` will crash with an =
-`IndexError` if `-s` or `--sort` is the last argument provided.
---
+I found this error when I pass EXTRA_CFLAGS=-fsanitize=address on Fedora
+44 with GCC 16.  Fix it by copying one less byte.
 
-commit e3cf27646cdda0e6126f0f6cde0a6fdbb2db8e8c
-Author: Shivani Nittor <shivani@linux.ibm.com>
+    CC      util/jitdump.o
+  util/jitdump.c: In function ‘jit_process’:
+  util/jitdump.c:237:9: error: ‘__builtin_strncpy’ specified bound 4096 equals destination size
+                               [-Werror=stringop-truncation]
+    237 |         strncpy(jd->dir, name, PATH_MAX);
+        |         ^
+  cc1: all warnings being treated as errors
+  make[4]: *** [tools/build/Makefile.build:95: util/jitdump.o] Error 1
+  make[4]: *** Waiting for unfinished jobs....
+  make[3]: *** [tools/build/Makefile.build:158: util] Error 2
+  make[2]: *** [Makefile.perf:578: perf-util-in.o] Error 2
+  make[1]: *** [Makefile.perf:288: sub-make] Error 2
+  make: *** [Makefile:76: all] Error 2
 
-perf scripts: Add configurable sorting option to powerpc-hcalls
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/jitdump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This commit adds a runtime-configurable sorting option to the powerpc-hcall=
-s.py
-script. It parses sys.argv to allow users to order hypercall statistics by
-count or various latency metrics.
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 18fd84a82153c2ab..83005b30b9bf3fd7 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -234,7 +234,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
+ 	/*
+ 	 * keep dirname for generating files and mmap records
+ 	 */
+-	strncpy(jd->dir, name, PATH_MAX);
++	strncpy(jd->dir, name, PATH_MAX - 1);
+ 	jd->dir[PATH_MAX - 1] = '\0';
+ 	dirname(jd->dir);
+ 	free(buf);
+-- 
+2.54.0
 
-> diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scr=
-ipts/python/powerpc-hcalls.py
-> index 8b78dc790adb1..df7b83ab0b6e0 100644
-> --- a/tools/perf/scripts/python/powerpc-hcalls.py
-> +++ b/tools/perf/scripts/python/powerpc-hcalls.py
-
-[ ... ]
-
-> @@ -158,10 +159,42 @@ def hcall_table_lookup(opcode):
-> =20
->  print_ptrn =3D '%-28s%10s%10s%10s%10s'
-> =20
-
-[ ... ]
-
-> +def trace_begin():
-> +    global sort_key
-> +
-> +    i =3D 1
-> +    while i < len(sys.argv):
-> +        arg =3D sys.argv[i]
-> +
-> +        if arg =3D=3D '-s' or arg =3D=3D '--sort':
-> +            sort_key =3D sys.argv[i + 1]
-
-[Severity: Medium]
-Does this code risk an IndexError if the script is invoked with -s or --sort
-as the very last argument?
-
-If a user fails to provide the actual sort key value at the end of the argu=
-ment
-list, accessing sys.argv[i + 1] will be out of bounds and crash the script.
-
-> +            i +=3D 2
-> +            continue
-> +
-> +        if arg.startswith('--sort=3D'):
-> +            sort_key =3D arg.split('=3D', 1)[1]
-> +
-> +        i +=3D 1
-> +
-> +    print("SORT KEY =3D", sort_key)
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605062717.2498=
-2-1-shivani@linux.ibm.com?part=3D1
