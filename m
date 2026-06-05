@@ -1,168 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A313C1F24;
-	Fri,  5 Jun 2026 23:39:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3943D413F;
+	Fri,  5 Jun 2026 23:41:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780702775; cv=none; b=nQRSeJ29HDhvbfnPgiilhjE2y3FcAurGuWeM7qFL1zPu95m5XjaVIMyeRnU4zm3ugihA7kKkNbqSeZCC1cenVXAVynACGTvhdWCCZ+7B2IpPf5gKb2tgpxoChZt9UBAo44giOEiAxio5FKQ8VZIdbPlYLFM0Km2+bKCv3/3+xII=
+	t=1780702864; cv=none; b=IFlBg1Fmjb78sAHOOdfS/kDRt3F+Xizf56Rndy3+ErL8KJp2NjORFq0ntw85wDh1H0JRQVcXDys21GYAORY54l+voTW8SQpwUoqCyjKLd4tdwm1Aco1acnSD2Maaa4pS4glgwCil4GgmkHIgX30sWGf5piFcAoqq5CX5B85q0KA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780702775; c=relaxed/simple;
-	bh=7E+u88YjhqSFrOC8EAI6iyi24IFEPnQ79oxxisFcQrc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iYmIV1GoQjyDVQcrSw1qReg7BMcPnRWr8+J01QqGDOHr4IWYZJf46aqajfePJzb8g1dE3K7QLPQTcAKZ5+VlRrsJy2P8YLrCJgkG+ekEnf2aO0aRRcxn8Yj/WwruVSbbsZzn4IiF3RIFjcQh7ij35rfhaxCXJWaMDjcb/wrxhIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EO+wPeSd; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780702864; c=relaxed/simple;
+	bh=mmXUwxcXKxpDGBjgR3VkEzMvhczrZGI4t4RU6cLrQ6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFn72krYavziSCBwcZUDN/4qVcW6VyxEfG4ZKlTXWEhwOf9eyafdF4bfKS/CuXE1C6KfDPKrInkHpv+0OD8MJiiCBKFkW29ODsYf0hSPrCymbAcyNOPh8iDvAOV0hC7gg2c9DIsxKlOnFNR8g5sNzNG141yLyVIfIKZMmUKBTWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fY8SVya8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EO+wPeSd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86BB51F00898;
-	Fri,  5 Jun 2026 23:39:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fY8SVya8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 397E81F00893;
+	Fri,  5 Jun 2026 23:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780702774;
-	bh=Mf/zzc3NHCDU7+/AiwA0r3A/M8he1jXO0lPdQVV+t+k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EO+wPeSdMZGPZ84N2SKJgIrpjvrXu2+KpWhVU/B8ssJ1vpH9GOHhWYjK6cZJpqUW5
-	 6r0+zDXip2lDy/mrGUneE256hieX3JCUKuDQeet971Sz77VfX3yxrDs473TL9zdzW3
-	 eUv9JK2XwSKrbYVgoQpUhh/0bLVMkgQfA8xtye1FdE/aPHFx4TxlaSAtBiqcsljLow
-	 iBegfAbC2KeVtUo+vwZnh24SB8QqXiQGhbamDkn7bhReHR+SzXfeLRtKWH7BnJFTn2
-	 d2nvLtCvG9f5lst5Lar1kINCUcCEIl0D32+jrrxtoDWVqZTpNsvf7n8Xq13DffBmr8
-	 VhgTP2bffwrXQ==
+	s=k20260515; t=1780702863;
+	bh=zKUZswYyqb3fTkpmDGDuQHCpFg03P5/zTNonPJpsVCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=fY8SVya8jFYP77kMjtnf2W+vFhe19H9mesXGqOj15TxqbJeClzvJiWeYLv8AgLwL3
+	 SeYzNb4I/52KIjfOgjPPgaiCIW4O/qEI8ZXNcJ7LDIwkbOolhHJSiQVzf5JdHrwSsp
+	 U6NS8mUB8NLKKK9eoiSENM02IKKlienOYG+P+xFQkzlV3UZbfipykk3Pw2cuWwTK5M
+	 e5B8FRvm4bJMz8e+fsbhrGC8BPBDQYFXTB+BG2LzPCkOq/FTcCvyVlbIigLphHoy7H
+	 uYHu3TPDxWihVGc6R+NoeDYvDvJRMOv8t6yLzRrVm1gsgDAwfcuYsVpzEE/szA6uEf
+	 QeXck4pvuhn7A==
+Date: Fri, 5 Jun 2026 20:41:00 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 9/9] perf sched: Replace BUG_ON and add NULL checks in replay event helpers
-Date: Fri,  5 Jun 2026 20:38:37 -0300
-Message-ID: <20260605233837.1773732-10-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260605233837.1773732-1-acme@kernel.org>
-References: <20260605233837.1773732-1-acme@kernel.org>
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf timechart: Fix memory leaks
+Message-ID: <aiNejLm6HZf3iAC-@x1>
+References: <20260605231155.2415760-1-namhyung@kernel.org>
+ <aiNZcZosyvKQnQk1@x1>
+ <aiNbjYgW2FFltUa8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aiNbjYgW2FFltUa8@google.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Fri, Jun 05, 2026 at 04:28:13PM -0700, Namhyung Kim wrote:
+> On Fri, Jun 05, 2026 at 08:19:13PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Fri, Jun 05, 2026 at 04:11:51PM -0700, Namhyung Kim wrote:
+> > > This patchset fixes memory leaks in the perf timechart code.
+> > > I've extended and verified the timechart test with ASAN.
 
-get_new_event() has three issues:
+> > 	You submitted a series for timechart before, so I had to go on
+> > looking if this was a second version or a different series.
+ 
+> Right, this is a different series.  I believe they are independent.
 
-1. The zalloc() result is dereferenced without a NULL check, crashing
-   on allocation failure.
+Thanks for clarifying.
+ 
+> > 	I suggest you always have a version in the cover letter, i.e.:
 
-2. BUG_ON(!task->atoms) kills the process when realloc() fails.
-   Since perf.data is untrusted input, this should be a graceful error.
+> > [PATCH v1 0/4] perf timechart: Fix memory leaks
 
-3. The realloc pattern assigns directly to task->atoms, losing the old
-   pointer on failure.  task->nr_events is also incremented before the
-   realloc, leaving corrupted state on failure.
+> > 	To avoid this brief distraction :-)
+ 
+> Ok, I'll do that if that helps. :)
 
-Fix get_new_event() to:
-  - Check the zalloc() result before dereferencing
-  - Use a temporary for realloc() to avoid losing the old pointer
-  - Increment nr_events only after successful realloc
-  - Return NULL instead of calling BUG_ON on failure
+It is a small detail, not having anything it may have been that the
+submitter forgot to add something or that it is the first entry, having
+v1 removes this ambiguity.
 
-Also fix add_sched_event_wakeup() where zalloc() for wait_sem is
-passed to sem_init() without a NULL check.
+Thanks,
 
-Update all callers (add_sched_event_run, add_sched_event_wakeup,
-add_sched_event_sleep) to handle NULL returns by returning early.
-The replay may produce incomplete output on OOM but will not crash.
-
-Fixes: ec156764d424 ("perf sched: Import schedbench.c")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-sched.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 732c65008a8a5240..b7ccdc6a985d1c7b 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -365,14 +365,25 @@ get_new_event(struct task_desc *task, u64 timestamp)
- 	struct sched_atom *event = zalloc(sizeof(*event));
- 	unsigned long idx = task->nr_events;
- 	size_t size;
-+	struct sched_atom **atoms_p;
-+
-+	if (event == NULL) {
-+		pr_err("ERROR: sched: failed to allocate event\n");
-+		return NULL;
-+	}
- 
- 	event->timestamp = timestamp;
- 	event->nr = idx;
- 
-+	size = sizeof(struct sched_atom *) * (task->nr_events + 1);
-+	atoms_p = realloc(task->atoms, size);
-+	if (!atoms_p) {
-+		pr_err("ERROR: sched: failed to grow atoms array\n");
-+		free(event);
-+		return NULL;
-+	}
-+	task->atoms = atoms_p;
- 	task->nr_events++;
--	size = sizeof(struct sched_atom *) * task->nr_events;
--	task->atoms = realloc(task->atoms, size);
--	BUG_ON(!task->atoms);
- 
- 	task->atoms[idx] = event;
- 
-@@ -403,6 +414,8 @@ static void add_sched_event_run(struct perf_sched *sched, struct task_desc *task
- 	}
- 
- 	event = get_new_event(task, timestamp);
-+	if (event == NULL)
-+		return;
- 
- 	event->type = SCHED_EVENT_RUN;
- 	event->duration = duration;
-@@ -416,6 +429,8 @@ static void add_sched_event_wakeup(struct perf_sched *sched, struct task_desc *t
- 	struct sched_atom *event, *wakee_event;
- 
- 	event = get_new_event(task, timestamp);
-+	if (event == NULL)
-+		return;
- 	event->type = SCHED_EVENT_WAKEUP;
- 	event->wakee = wakee;
- 
-@@ -430,6 +445,10 @@ static void add_sched_event_wakeup(struct perf_sched *sched, struct task_desc *t
- 	}
- 
- 	wakee_event->wait_sem = zalloc(sizeof(*wakee_event->wait_sem));
-+	if (!wakee_event->wait_sem) {
-+		pr_err("ERROR: sched: failed to allocate semaphore\n");
-+		return;
-+	}
- 	sem_init(wakee_event->wait_sem, 0, 0);
- 	event->wait_sem = wakee_event->wait_sem;
- 
-@@ -441,6 +460,9 @@ static void add_sched_event_sleep(struct perf_sched *sched, struct task_desc *ta
- {
- 	struct sched_atom *event = get_new_event(task, timestamp);
- 
-+	if (event == NULL)
-+		return;
-+
- 	event->type = SCHED_EVENT_SLEEP;
- 
- 	sched->nr_sleep_events++;
--- 
-2.54.0
-
+- Arnaldo
