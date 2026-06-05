@@ -1,167 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0445F3644CE
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 01:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EAE30BB8A
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 03:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780623535; cv=none; b=AsuPguglVVLdOxmmOMT+Rh9+FXaDlUVZ8ZnmTNXiRhYkcLuV/fdwt0xsfoky6349b6z/ImE5ICThsUKKLPG/asiONtvI8lovtt9ach+OSGOyxHTu3+yfJTluBkCp9dPkDDzeQu2TfwCsctk/gAeacogyUKGG9lMFy0T/dhln3t0=
+	t=1780629665; cv=none; b=WLdDtvntF2mMqGVX6+hZ31blHcO2HXxMVGV2YajoIhRtnDGHOS8WCc0EkrRcy8th4YdjOP6Qo1UTCaPqG6YnxEOvMK4yH6wMP8InegzVe2MlCAMlN2hPCxU5lx5c/ZDocEVcXydq7Jqm8brALVN7eowrTQvuGAOv3i4iFfW5U6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780623535; c=relaxed/simple;
-	bh=zyIHpRGz8USjDQlYN2XBZ8ZEE0MnqxT/pArQUO9z4Zw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=J0kL5tGpHm74tUVo3LE+mVCE2YWgDuvJ0K5wjqpsgomjbN9DsjoEJg/TXIhmuBad9N4fpK9PYY6Xly0C+4EPtRKGFMlLJFHXHEwvIp6a2jRrYKadlckLrnuo+1j1ssl8DVoqLau5A5Phq2Vh1gAPqyrl2q3c4hkmivI+nnd7MUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSpjfynT; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780629665; c=relaxed/simple;
+	bh=YSKSLVvJIsk2simEXanDqXtjTSTpaaUrvdjBJn+1q+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W660caEN9PvSAox0Y/k6YAlg1u0fRgw2Kz67eIa+5WLFbxiQZw6b7nvzGNXbL4P7IGywFNrPgPbEpadYjY1hRQuu9nLejuNWGjtsvijAhv/Ea+PGtoExXzLC7QZMtOVE25lsY5JeVJ2/ipgBYtT3bv0gYB2/DlNn4YR4qlbhNr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mS3mFkh9; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSpjfynT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 317911F00893;
-	Fri,  5 Jun 2026 01:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780623528;
-	bh=yNkeD4YctBklX7ewn0slR1wuzSCHTMpcUUW0omVx1PM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mSpjfynTS7+pJNfsLQpzFIwdW2/6lPHrP6IA4Cutb5ZKDCrzIvzkkx4ezUoaFHkY1
-	 eHmxpTTBN9hOiVFYWEeYiUt4N/gbOn/4+lpQJ4UbTxcxZRjQmoFNAgugvz2SI9xkLU
-	 dqUpevwgtIHlsAcNNfRP3LqfXFDv9qBfwzEo/bhb+r0CFijjHw8vYLSu6wqiIYBjE/
-	 5+Pf6rWet5DLfoHz8YmbDQ3v6gNo38ax1BJ0vuZGLgZMET23tg2845HTJMIgkecR43
-	 N3ej/4cfHmFLXhWWGjfsqZWQv/xqAYic18jJOMGI3o+KlKoE4zBUfazJwut3TUibo5
-	 IuIevS/hZQ0fg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 8/8] perf/core: Fix kernel register info leak via
- hardware skid
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605011136.2043393-9-dapeng1.mi@linux.intel.com>
-References: <20260605011136.2043393-9-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 01:38:47 +0000
-Message-Id: <20260605013848.317911F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mS3mFkh9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780629662; x=1812165662;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YSKSLVvJIsk2simEXanDqXtjTSTpaaUrvdjBJn+1q+0=;
+  b=mS3mFkh9+IVT0cwLyQaRl+65831PGpqxe/6v5I2NoPCMw69O0G85CVNL
+   6uSOc9/rU5BpMI8unNHgIz42AMkbzHer9RTWew2TErp8uHSnMgKizmaTG
+   kpIF3WKsP5MRRxn0wLnTMBFV/YPTwz7Hx3SRb/m/r5+RfOKtReo55S2mf
+   xG4hyuUa8q0S45ffFgg7P7agzMGEmjxmYbHXU6UtdHOAkNS/VJR4p10xP
+   9Y7DQKE1ZSWZw91TpQ3L47H0BQRfX9dHFn5rNEAfneJNK0rKtlVapOxnj
+   WALmboYW5K9FqLn2AsgGfAn3v77ncJ9DXxCr7FqY9hggXRVsq3YknJ4BS
+   Q==;
+X-CSE-ConnectionGUID: 5QKyRoXbSvawWjU1F6R64g==
+X-CSE-MsgGUID: dm8MwQD6SuaYMlOekyinSw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="85315585"
+X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
+   d="scan'208";a="85315585"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 20:21:01 -0700
+X-CSE-ConnectionGUID: 0qVBI0ppQVS2PHWo5U2sKg==
+X-CSE-MsgGUID: 5E9VT2P3Rhe0VBYDAH4aug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
+   d="scan'208";a="243641065"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 20:21:00 -0700
+Message-ID: <416aca8a-4d45-44ef-b730-ef699b2d3c83@linux.intel.com>
+Date: Fri, 5 Jun 2026 11:20:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] perf/x86/intel: Fix kernel address leakages in LBR
+ stack
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260605011136.2043393-6-dapeng1.mi@linux.intel.com>
+ <20260605013328.86D661F00893@smtp.kernel.org>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260605013328.86D661F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
 
-New issues:
-- [High] Valid hardware-captured user-space register samples from precise e=
-vents (e.g., Intel PEBS) are incorrectly dropped as sensitive kernel data w=
-hen the PMU interrupt (PMI) skids into kernel mode.
+On 6/5/2026 9:33 AM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+>
+> Pre-existing issues:
+> - [High] The exact same kernel address leak (KASLR bypass) vulnerability exists in the AMD LBR software filter (`amd_pmu_lbr_filter`), but the patch only fixes the Intel implementation.
+> - [High] On Arch LBR CPUs that do not support hardware branch type decoding, the software filter incorrectly classifies all branches as conditional jumps (JCC).
+> - [Medium] The software filter fails to drop branches executing in user space (e.g., SYSCALL) when only kernel branches are requested, diverging from hardware filter behavior.
+> --
+>
+> commit e5f3b8c6179b0acb53df2e9f20348cf3b8f5a8be
+> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>
+> perf/x86/intel: Fix kernel address leakages in LBR stack
+>
+> This commit fixes a kernel address leakage in the LBR stack on Intel
+> platforms prior to arch-LBR. It extends the software filtering in
+> intel_pmu_lbr_filter() to check the "from" address privilege level,
+> preventing kernel addresses from leaking to user space.
+>
+>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>> index 16977e4c6f8a5..deef81c16571a 100644
+>> --- a/arch/x86/events/intel/lbr.c
+>> +++ b/arch/x86/events/intel/lbr.c
+>> @@ -1212,7 +1212,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>>  {
+>>  	u64 from, to;
+>>  	int br_sel = cpuc->br_sel;
+>> -	int i, j, type, to_plm;
+>> +	int i, j, type, to_plm, from_plm;
+>>  	bool compress = false;
+>>  
+>>  	/* if sampling all branches, then nothing to filter */
+> [Severity: High]
+> This is a pre-existing issue, but does this function correctly handle Arch
+> LBR CPUs that do not support hardware branch type decoding?
+>
+> If an Arch LBR CPU does not support hardware branch type decoding
+> (LBR_INFO.BR_TYPE), the x86_lbr_type static key remains false and
+> get_lbr_br_type() returns 0.
+>
+> Earlier in intel_pmu_lbr_filter(), the code checks:
+>
+>     if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
+>         type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
+>
+> Since 0 <= 5 is always true, it maps arch_lbr_br_type_map[0] to X86_BR_JCC,
+> bypassing the software decoding fallback in branch_type().
+>
+> Does this force all logged branches to be treated as conditional jumps on
+> these processors, destroying branch filtering accuracy?
 
-Pre-existing issues:
-- [High] Hardware PMI skid still leaks kernel IPs and callchains to unprivi=
-leged users when exclude_kernel=3D1.
---
+Yes, it's an issue. If arch-LBR can't support hardware branch type
+decoding, it should fallback to software branch type decoding, like this,
 
-commit 8a7df272a8b8797c3525f28de5158f11f610df4d
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index deef81c16571..fcdbb6feda73 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1232,6 +1232,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+                 * OTHER_BRANCH branch type still rely on software decoding.
+                 */
+                if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
++                   static_branch_likely(&x86_lbr_type) &&
+                    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
+                        to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
+                        type = arch_lbr_br_type_map[type] | to_plm;
 
-perf/core: Fix kernel register info leak via hardware skid
-   =20
-This patch addresses a security vulnerability where hardware skid can
-cause a PMI to trigger in kernel space, leaking kernel register data
-to user space via PERF_SAMPLE_REGS_INTR. It fixes this by dropping
-sampled register data if the event has exclude_kernel set but the CPU
-is in kernel mode.
-   =20
-Link: https://lore.kernel.org/all/20260529085613.CCAFB1F00893@smtp.kernel.o=
-rg/
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7935d5663944e..b7326bc3acd00 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7800,10 +7800,21 @@ static void perf_sample_regs_user(struct perf_reg=
-s *regs_user,
->  }
-> =20
->  static void perf_sample_regs_intr(struct perf_regs *regs_intr,
-> -				  struct pt_regs *regs)
-> +				  struct pt_regs *regs,
-> +				  bool exclude_kernel)
->  {
-> -	regs_intr->regs =3D regs;
-> -	regs_intr->abi  =3D perf_reg_abi(current);
-> +	/*
-> +	 * Hardware skid can lead to PMI is delivered after
-> +	 * the CPU has already entered kernel mode. In that case,
-> +	 * user-space sampling must not expose kernel register state.
-> +	 */
-> +	if (exclude_kernel && !user_mode(regs)) {
+>
+> [ ... ]
+>
+>> @@ -1244,8 +1244,15 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>>  				type |= X86_BR_NO_TX;
+>>  		}
+>>  
+>> -		/* if type does not correspond, then discard */
+>> -		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type) {
+>> +		from_plm = kernel_ip(from) ? X86_BR_KERNEL : X86_BR_USER;
+>> +		/*
+>> +		 * If type does not correspond, then discard.
+>> +		 * Especially filter out the entries whose from or to address
+>> +		 * is a kernel address while only X86_BR_USER is set. This prevents
+>> +		 * kernel address from being leaked into a user-space-only LBR stack.
+>> +		 */
+>> +		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type ||
+>> +		    (!(br_sel & X86_BR_KERNEL) && (from_plm & X86_BR_KERNEL))) {
+> [Severity: Medium]
+> This is a pre-existing issue, but does this logic miss the symmetric check
+> for scrubbing user-to-kernel branches from kernel-only samples?
+>
+> If a user requests only kernel branches (X86_BR_USER is not set), a SYSCALL
+> (which goes from user to kernel) will be retained because the hardware
+> filters based on destination CPL (kernel) and the software filter sees a
+> valid to_plm.
+>
+> Should there be a check like:
+>
+>     (!(br_sel & X86_BR_USER) && (from_plm & X86_BR_USER))
+>
+> to prevent user-space addresses from polluting kernel-only branch traces?
 
-[Severity: High]
-Will this incorrectly drop valid hardware-captured user-space register
-samples from precise events like Intel PEBS?
+Yes, this can be enhanced.
 
-For precise events, the PMU driver populates a temporary pt_regs
-with exact user-space registers captured by the hardware. Because PEBS
-does not capture segment registers, the driver copies them from the
-delayed PMI interrupt context:
 
-arch/x86/events/intel/ds.c:setup_pebs_fixed_sample_data() {
-    *regs =3D *iregs;
-    ...
-}
+>
+>
+> [Severity: High]
+> This isn't a bug introduced by this patch, but does the exact same KASLR
+> bypass vulnerability exist in the AMD LBR software filter?
+>
+> AMD's software filter in arch/x86/events/amd/lbr.c:amd_pmu_lbr_filter()
+> uses branch_type_fused(), which only factors in the destination privilege
+> level.
+>
+> When a user requests only user-space branches (PERF_SAMPLE_BRANCH_USER),
+> hardware can still record kernel-to-user branches (like SYSRET) because
+> the destination is in user space.
+>
+> Since the AMD filter evaluates (br_sel & type) == type as true based only
+> on the destination, it keeps the branch, exposing the kernel "from" address
+> to unprivileged userspace.
+>
+> Should a similar fix be applied to amd_pmu_lbr_filter()?
 
-If the PMI skids and is delivered after the CPU enters kernel space,
-iregs->cs reflects kernel mode, causing user_mode(regs) to evaluate
-to false. This would result in these safe, hardware-captured user
-registers being zeroed out here, which seems like it might break
-unprivileged precise profiling.
+AMD guys have known this issue, the AMD specific fix would posted separately.
 
-> +		regs_intr->abi =3D PERF_SAMPLE_REGS_ABI_NONE;
-> +		regs_intr->regs =3D NULL;
-> +	} else {
-> +		regs_intr->regs =3D regs;
-> +		regs_intr->abi =3D perf_reg_abi(current);
-> +	}
->  }
+Thanks.
 
-[ ... ]
 
-> @@ -8694,7 +8705,8 @@ void perf_prepare_sample(struct perf_sample_data *d=
-ata,
->  		/* regs dump ABI info */
->  		int size =3D sizeof(u64);
-> =20
-> -		perf_sample_regs_intr(&data->regs_intr, regs);
-> +		perf_sample_regs_intr(&data->regs_intr, regs,
-> +				      event->attr.exclude_kernel);
-
-[Severity: High]
-This is a pre-existing issue, but does the hardware PMI skid still leak
-kernel IPs and callchains to unprivileged users when exclude_kernel=3D1?
-
-While this patch correctly zeroes out the register state to prevent
-leaking the full CPU register context, it appears the same privilege
-boundaries are not applied to PERF_SAMPLE_IP and PERF_SAMPLE_CALLCHAIN.
-
-In perf_prepare_sample(), the kernel IP is unconditionally extracted
-from regs if the PMI skid caught the CPU in kernel mode:
-
-kernel/events/core.c:perf_prepare_sample() {
-    if (filtered_sample_type & PERF_SAMPLE_IP) {
-        data->ip =3D perf_instruction_pointer(event, regs);
-        ...
-    }
-}
-
-Similarly, unprivileged users can set exclude_kernel=3D1 and leave
-exclude_callchain_kernel=3D0. On a skid, !user_mode(regs) evaluates to
-true, causing perf_callchain() to unwind and expose the kernel stack
-trace.
-
-Could this allow a deterministic KASLR bypass, and should it be
-addressed alongside the register clearing?
-
-> =20
->  		if (data->regs_intr.regs) {
->  			u64 mask =3D event->attr.sample_regs_intr;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605011136.2043=
-393-1-dapeng1.mi@linux.intel.com?part=3D8
+>
+>>  			cpuc->lbr_entries[i].from = 0;
+>>  			compress = true;
+>>  		}
