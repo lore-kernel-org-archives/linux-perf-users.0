@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D9E30BBB9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD1136F903;
 	Fri,  5 Jun 2026 23:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780703494; cv=none; b=toWW8TXl+nzG9akH1RRWS+gyeM9j2z6kRQhjlyxRs++s5zY48l9kVIuX6RGzP4WkaVOIhEsCF5LEQaIODzqwJCgSyqw+0HpMHyLNZ0rIZ2jj9jGzln0lSuO0nxDYX7qS4yIiiJU4N+GcIEhGmqdO/MNZhHLV6M9pp6szZxjJ6t0=
+	t=1780703494; cv=none; b=ghSCL5kWWFdNfDlELajEMSlIznn++UrnJ2AsqpkPj7oyX8tozEDhq3xH5NjoJSGxDpx8sLULH0SxqaRq/i99MbYm/95MvlXtSzy9XrO8RCb3NPihLLs8Ycx/XAhGDQb7CF2Trfg7VQt+T9ihmKEHNuIG/yG3sEZN1gstz4Jey4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780703494; c=relaxed/simple;
-	bh=a2UYEhuEvWJ/JEF/kW1P1dd0ZjwgDyUXGOvPckwwzN0=;
+	bh=pb/LBh5xXsHZVp2i+HG5TnZasum53aJ6yY1408iX7sM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P+5Ge4w8Tf9VF1x75R11gY2UR79QyuWRj/9PIa7Rb6K3tMq5MgqRIR9KBadYckR6vVwP5atXWpbM8Z9J1DICJSNMuagMHoD5m9fh0BZLorQoS6lBMzlye+9fpjHB5VH0cy4hcBpW+FJMqxYF3j+9eN63H/J9c6qr1qZVlKh8sFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSyyjuLr; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=hC/8lFrMUTy9ZEp4tFgdhDXpIwMgjRFdWhr6Le7D2KsmQ10YE3d6kqk5Y8XXWHUhxqWbc4J0BfAf4GZ+rZS+M15Fr8Jw4K+hIrmRcXD1N1pel1VeiwY0hYMcqylaSFvmS34HGEIXSD56ye5zmk+ziAh3XTk1nQGEwoFo/yYT2Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWGkb0pS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSyyjuLr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B730B1F0089A;
-	Fri,  5 Jun 2026 23:51:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWGkb0pS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271151F0089B;
+	Fri,  5 Jun 2026 23:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1780703493;
-	bh=FSIDH5ze8xd03i1gbY7CFmVriqWx9rWe6/9QW2Pwny0=;
+	bh=wZQaDS0K02xGerco7f1cxzy/n2Ou+5DVBEqgxI0HPeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=QSyyjuLr37mMAZHBvBuFiYxDb0oXSzas7HZkuWTydJa2ZnK7y/JWvo6tdREb3KnxS
-	 ZmXR8OhYyu8WuEFM35FjUfP801aFPgF1AZ4iulO4t2earV+8QXbKWN1R5uWR0K4aI8
-	 KyTbswnQ30UAb9ZYZIWaLYP0huCKQD2zSooStn5vrSwY4FBpjCi2bnx4b2h7mlxWP+
-	 2Z6gBoub7kbhX+Gggpdiet9umUuU8sSfJr5qIQTgNNtJbZ2TxWLyyR5OwhVlIjN2mw
-	 Me8pDYI+MvFm8jKuY39wvUSvzCBTvssdGfwpn9fgzpE/3teeMkkaofcrQVO1uYFzWY
-	 +pBhVRaOdgvUg==
+	b=jWGkb0pSCY7upgHxkvX8VbInLupjms3YNCgienIoBpaEo0e3VUPLCiq0U29+Azijp
+	 UlYdFnyNAHfIoIUMbPiFLtJjd7rYHu/3uFNeda6cG1ThFNpvjxGgfT2gY8kgc++X4/
+	 lc6cNun3SGevuHSGn09zuzdkhieBsWrfYls+cx5faS73KhrL89xhce5st0y/+i8VSt
+	 pEp5RfNYvdn7tC6tdaqkrTNpGNrFVftSZvIEAs+esZuhdyEQz+5Tg+ua15b2DTD5BP
+	 9Ol3Gs5357iaTjVHXnRjttoHT8lVvn61WZ8q/OildwGpcmPDzzLtnNNTx3nsZBbHye
+	 Mz/tBI/s5Y7Uw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/4] perf timechart: Fix memory leaks during record
-Date: Fri,  5 Jun 2026 16:51:29 -0700
-Message-ID: <20260605235131.2440270-3-namhyung@kernel.org>
+Subject: [PATCH v2 3/4] perf timechart: Fix memory leaks in draw_wakeups()
+Date: Fri,  5 Jun 2026 16:51:30 -0700
+Message-ID: <20260605235131.2440270-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
 In-Reply-To: <20260605235131.2440270-1-namhyung@kernel.org>
 References: <20260605235131.2440270-1-namhyung@kernel.org>
@@ -50,117 +50,35 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The command line options can be passed without copy as their lifetime is
-limited within the same function.
+The second loop for per_pidcommd is meaningful only when it doesn't have
+from and to tasks.  Also make sure c->Y is set before copying the comm
+string otherwise it will be overwritten by next one.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-timechart.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ tools/perf/builtin-timechart.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 27d17268395ed760..a73f0ab22fd64241 100644
+index a73f0ab22fd64241..3f9153d5ecfb79b0 100644
 --- a/tools/perf/builtin-timechart.c
 +++ b/tools/perf/builtin-timechart.c
-@@ -1834,6 +1834,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 		"syscalls:sys_exit_select",
- 	};
- 	unsigned int poll_events_nr = ARRAY_SIZE(poll_events);
-+	int ret;
- 
- 	rec_argc = common_args_nr +
- 		disk_events_nr * 4 +
-@@ -1852,7 +1853,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 
- 	p = rec_argv;
- 	for (i = 0; i < common_args_nr; i++)
--		*p++ = strdup(common_args[i]);
-+		*p++ = common_args[i];
- 
- 	for (i = 0; i < disk_events_nr; i++) {
- 		if (!is_valid_tracepoint(disk_events[i])) {
-@@ -1861,7 +1862,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 		}
- 
- 		*p++ = "-e";
--		*p++ = strdup(disk_events[i]);
-+		*p++ = disk_events[i];
- 		*p++ = "--filter";
- 		*p++ = filter;
- 	}
-@@ -1872,7 +1873,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 		}
- 
- 		*p++ = "-e";
--		*p++ = strdup(net_events[i]);
-+		*p++ = net_events[i];
- 		*p++ = "--filter";
- 		*p++ = filter;
- 	}
-@@ -1883,7 +1884,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 		}
- 
- 		*p++ = "-e";
--		*p++ = strdup(poll_events[i]);
-+		*p++ = poll_events[i];
- 		*p++ = "--filter";
- 		*p++ = filter;
- 	}
-@@ -1891,7 +1892,11 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 	for (i = 0; i < (unsigned int)argc; i++)
- 		*p++ = argv[i];
- 
--	return cmd_record(rec_argc, rec_argv);
-+	ret = cmd_record(rec_argc, rec_argv);
-+
-+	free(rec_argv);
-+	free(filter);
-+	return ret;
- }
- 
- 
-@@ -1902,6 +1907,7 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
- 	const char **rec_argv;
- 	const char **p;
- 	unsigned int record_elems;
-+	int ret;
- 
- 	const char * const common_args[] = {
- 		"record", "-a", "-R", "-c", "1", "-o", output_data,
-@@ -1966,24 +1972,27 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
- 
- 	p = rec_argv;
- 	for (i = 0; i < common_args_nr; i++)
--		*p++ = strdup(common_args[i]);
-+		*p++ = common_args[i];
- 
- 	for (i = 0; i < backtrace_args_no; i++)
--		*p++ = strdup(backtrace_args[i]);
-+		*p++ = backtrace_args[i];
- 
- 	for (i = 0; i < tasks_args_nr; i++)
--		*p++ = strdup(tasks_args[i]);
-+		*p++ = tasks_args[i];
- 
- 	for (i = 0; i < power_args_nr; i++)
--		*p++ = strdup(power_args[i]);
-+		*p++ = power_args[i];
- 
- 	for (i = 0; i < old_power_args_nr; i++)
--		*p++ = strdup(old_power_args[i]);
-+		*p++ = old_power_args[i];
- 
- 	for (j = 0; j < (unsigned int)argc; j++)
- 		*p++ = argv[j];
- 
--	return cmd_record(rec_argc, rec_argv);
-+	ret = cmd_record(rec_argc, rec_argv);
-+
-+	free(rec_argv);
-+	return ret;
- }
- 
- static int
+@@ -1110,12 +1110,12 @@ static void draw_wakeups(struct timechart *tchart)
+ 					c = c->next;
+ 				}
+ 				c = p->all;
+-				while (c) {
+-					if (p->pid == we->waker && !from) {
++				while (c && (!from || !to)) {
++					if (c->Y && p->pid == we->waker && !from) {
+ 						from = c->Y;
+ 						task_from = strdup(c->comm);
+ 					}
+-					if (p->pid == we->wakee && !to) {
++					if (c->Y && p->pid == we->wakee && !to) {
+ 						to = c->Y;
+ 						task_to = strdup(c->comm);
+ 					}
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
