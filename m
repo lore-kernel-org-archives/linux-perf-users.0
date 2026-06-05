@@ -1,111 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD9237DE84
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 23:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5262D5B21A;
+	Fri,  5 Jun 2026 23:28:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780701799; cv=none; b=hc8DmzLc627RGnzZiXupp8mRFLpIm6hZ7G99qWXIuWjIRIwiuZQLqoXjeJ9aFFwvwB+xnborAcQPVvvlUl8h80c9eNyiq27VMdJAjUIs1n4iSaAt3g1q0LfIhc4cddqPNd0PinZqpQhIWI73WTLgkF+Jttjxaav48th1N/tReUI=
+	t=1780702096; cv=none; b=ScJ+c2y7O2TZ/fOnKKfmsojwTk9uIPhYRs0P+ILkQD8cYQp8/AZpdhY7vNqGS5chA8i9g02RIoZ7913pMDaW0IiE+YpC900sCgmG50xisie34dAU3PukYFXBfz/s/+oAVSLny8znsoeOpJgi96QF66iChiP5NERKA0tLMHpR0Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780701799; c=relaxed/simple;
-	bh=2NkFYgVEoDnmpaozQD0bFxukuRc+GZUnxIZjZgCdjew=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ai4UVpt+Ul1dgrJh+TqSe6ABhqgRhVFT8/VTOtSrk46gu7xt1Oo/FE2L5Rj3McuR1qZ54sTdrcODxDSGcnyEpFYXiXvsR9NuxnnKU+Ifzhpi97i/+80oENLI4PTIaHKstk2UZ6Zfioz9AGLOHMZMgcNNYPTIJTEDtfO2W5Uwhl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqodOnFA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780702096; c=relaxed/simple;
+	bh=rWXUMxHNg0eiql+sQ7qli3PqRoS+5xd4oaVDfgHZhQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eJ0K/gcE0a2eZailiwYvXmWHO6uVBphqOaMXpWlVoOf9U5wDs6wW4WW/TJsNFClSV44zrMASynODpUKtvyYjvCpFLIXiWjpWmIIjit6d9aZ84DUyOOiPqQt1yaZKgkilxvZt4igkDQEzIEUyBed5QXatDzviSxtTIZDFhvUNOoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBw/14Lk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqodOnFA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218551F00893;
-	Fri,  5 Jun 2026 23:23:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBw/14Lk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC5D91F00893;
+	Fri,  5 Jun 2026 23:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780701798;
-	bh=bNrdahGsaWLYaSv5SCALoOobO0lijSXUr297Y+Q7qxk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mqodOnFAdE2lpaRuHKriYyj5eJngXkCRiq59z11+q7gI2xv5MCd/x3qCcuMhV2fL9
-	 FfcyblJ26x3QSX2nm7WUVTcg4urFfUQdchJTh/QFqQ/ZeR63jXQL5+9EjuaTdb+o9C
-	 D7TJkZ0P3y5ujArJoCtsJEvj75J4rZo1KHi3tNal6RfbxGaGZAFJw7+pX3Kck34rf3
-	 14yHpnTXwslGtJs2IVDGn3SOIpj5tziXbZn19lZxualTc71NXLKVGfoA3K4q4T7yst
-	 ezN4NALA7yss7DKZ8HsRbHgbhScZ+uAmIyXCs4DXw2tRSLeRKfeNjbJxDwJYEU1Yre
-	 UCtJ0G6bQ5IKA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/4] perf timechart: Release event samples at the end
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605231155.2415760-2-namhyung@kernel.org>
-References: <20260605231155.2415760-2-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 23:23:17 +0000
-Message-Id: <20260605232318.218551F00893@smtp.kernel.org>
+	s=k20260515; t=1780702094;
+	bh=VTSEhLpmkQWEl3+5sjeoku4x3rqbqaHEnjW37hIkbqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VBw/14Lk4O4FRFXZbE3IC/p3P/tmBsIUw9Vv6pDz/Iv+Zpo1RCR684MNwbgkwAJB5
+	 dnBG0FjsivJ/O64RdOqtt/AJ1xjkx/KjgitfKYixjF7EMInAwKPtAfGnKOGrO18mDx
+	 KHPx81I9qB5w5TQmNHxIDVguIucvyQq96ePflsIbsS3J52Ni4qdhdq0wdawcQojViA
+	 aXu4uqL4vOV3WMQpezp6At/7P8ne/lzPS6hjM5H18widZuX2exPOcsSA0cgY+5lHqt
+	 zOC13cmqj7WKG6CC3nn3so6omGh5XUxEpCq8tt1cb0RrCTeTvVdZqCFJqpFxXhOKCN
+	 wIAPVKPFLSHsA==
+Date: Fri, 5 Jun 2026 16:28:13 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf timechart: Fix memory leaks
+Message-ID: <aiNbjYgW2FFltUa8@google.com>
+References: <20260605231155.2415760-1-namhyung@kernel.org>
+ <aiNZcZosyvKQnQk1@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aiNZcZosyvKQnQk1@x1>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Double-free of the `backtrace` string in `timechart__release()` du=
-e to shared pointers across multiple `cpu_sample` objects.
---
+On Fri, Jun 05, 2026 at 08:19:13PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Jun 05, 2026 at 04:11:51PM -0700, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > This patchset fixes memory leaks in the perf timechart code.
+> > I've extended and verified the timechart test with ASAN.
+>  
+> Hi Namhyung,
+> 
+> 	You submitted a series for timechart before, so I had to go on
+> looking if this was a second version or a different series.
 
-commit 3e2b8bb6971b84cf83df8b57e574d558c36bdaf8
-Author: Namhyung Kim <namhyung@kernel.org>
+Right, this is a different series.  I believe they are independent.
 
-perf timechart: Release event samples at the end
+> 
+> 	I suggest you always have a version in the cover letter, i.e.:
+> 
+> [PATCH v1 0/4] perf timechart: Fix memory leaks
+> 
+> 	To avoid this brief distraction :-)
 
-This commit adds timechart__release() to clean up data structures created
-during sample processing to prevent memory leaks when the perf tool exits.
+Ok, I'll do that if that helps. :)
 
-> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechar=
-t.c
-> index 28f33e39895d3..73a08236ac299 100644
-> --- a/tools/perf/builtin-timechart.c
-> +++ b/tools/perf/builtin-timechart.c
-[ ... ]
-> @@ -1509,6 +1509,59 @@ static void write_svg_file(struct timechart *tchar=
-t, const char *filename)
->  	svg_close();
->  }
-> =20
-> +static void timechart__release(struct timechart *tchart)
-> +{
-> +	struct per_pid *p =3D tchart->all_data;
-[ ... ]
-> +		while (c) {
-> +			struct per_pidcomm *next_comm =3D c->next;
-> +			struct cpu_sample *cs =3D c->samples;
-> +			struct io_sample *ios =3D c->io_samples;
-> +
-> +			while (cs) {
-> +				struct cpu_sample *next =3D cs->next;
-> +
-> +				free((char *)cs->backtrace);
-> +				free(cs);
-> +				cs =3D next;
-> +			}
+Thanks,
+Namhyung
 
-[Severity: High]
-Will this result in a double-free of the backtrace string?
-
-Looking at sched_switch(), when a context switch occurs between two active
-processes, it shares the exact same backtrace pointer across multiple
-cpu_sample objects:
-
-if (prev_p->current && prev_p->current->state !=3D TYPE_NONE)
-	pid_put_sample(tchart, prev_pid, TYPE_RUNNING, cpu,
-		       prev_p->current->state_since, timestamp,
-		       backtrace);
-if (p && p->current) {
-	if (p->current->state !=3D TYPE_NONE)
-		pid_put_sample(tchart, next_pid, p->current->state, cpu,
-			       p->current->state_since, timestamp,
-			       backtrace);
-
-Because timechart__release() iterates over all processes and unconditionally
-calls free() on cs->backtrace, won't it attempt to free the same pointer=20
-multiple times when it cleans up these overlapping samples?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605231155.2415=
-760-1-namhyung@kernel.org?part=3D1
