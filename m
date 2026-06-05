@@ -1,113 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76FD3CFF55
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 01:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0445F3644CE
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 01:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780623375; cv=none; b=SSbSqJZumldMLnTfX/r4Q6hca3ESm03XKq1RNITGt2FkBG8e7QCQGvZbj0z89OAit4z74zg5NWVc9C26rORknDJ0woNecsfq24KlbyZ0Z8TjHRNy89aXuQeZWVCf7Hhn4QA5MW09puH31cpoRb78kiJelKOXqvn39wsxdscOBbA=
+	t=1780623535; cv=none; b=AsuPguglVVLdOxmmOMT+Rh9+FXaDlUVZ8ZnmTNXiRhYkcLuV/fdwt0xsfoky6349b6z/ImE5ICThsUKKLPG/asiONtvI8lovtt9ach+OSGOyxHTu3+yfJTluBkCp9dPkDDzeQu2TfwCsctk/gAeacogyUKGG9lMFy0T/dhln3t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780623375; c=relaxed/simple;
-	bh=4TddvqQj1yoJYvvKzgma1Dfl3o6WmztaTrNRp3WdnLY=;
+	s=arc-20240116; t=1780623535; c=relaxed/simple;
+	bh=zyIHpRGz8USjDQlYN2XBZ8ZEE0MnqxT/pArQUO9z4Zw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HyDtHur6odgskF3OOwY51RGVAoyXB4ckprf3lgdF/AjvrQwjfAoX4Cmwr8wkGwRfR/3H1QT4N5m041arNiTzQdBP7jOA6FjiVei/WEBaDqB1UUgW7xoG0dH4ub1BuEKmHFUq3AgnHyalToaOl+/xmBPssAh/p668aPG0ABD0PW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3X8L0RL; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=J0kL5tGpHm74tUVo3LE+mVCE2YWgDuvJ0K5wjqpsgomjbN9DsjoEJg/TXIhmuBad9N4fpK9PYY6Xly0C+4EPtRKGFMlLJFHXHEwvIp6a2jRrYKadlckLrnuo+1j1ssl8DVoqLau5A5Phq2Vh1gAPqyrl2q3c4hkmivI+nnd7MUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mSpjfynT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3X8L0RL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38A451F00893;
-	Fri,  5 Jun 2026 01:36:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mSpjfynT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 317911F00893;
+	Fri,  5 Jun 2026 01:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780623369;
-	bh=bqcz1pEh1Xc2p+Z0URtuTQP/3uzF0ELqpvSYhwTMAXE=;
+	s=k20260515; t=1780623528;
+	bh=yNkeD4YctBklX7ewn0slR1wuzSCHTMpcUUW0omVx1PM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=D3X8L0RLfiImREdaoLhig/OYBGzWkDtquLzXPdSF09C8NiuUMXOOgYOFDSB2uUTu/
-	 dhrwOJ1bQaPL0ZQO7tD4qUryKcktZbXmToQIPiGbceEfeMp+QAyTxLs6aAnVWSdkAm
-	 flfJuopx/wbkLhxuDoL04BHs8LExIgQ3YLghAaZHji+IC9RDGPFzt4nAfBjeQYeuc9
-	 UrZFfpj1WUj20t81tM5UT0a+EIoviNLm6lcdXwO9JZb1cc1b8wrDWhlT4f78/Mt9+k
-	 9YeezJraOFTF+LbZgzDyJHU4jRwDcm3Dk4LkL/uM1uVbFYGIFoZ0GSxohsnt6AGN3y
-	 dd4JBFeeXwoBQ==
+	b=mSpjfynTS7+pJNfsLQpzFIwdW2/6lPHrP6IA4Cutb5ZKDCrzIvzkkx4ezUoaFHkY1
+	 eHmxpTTBN9hOiVFYWEeYiUt4N/gbOn/4+lpQJ4UbTxcxZRjQmoFNAgugvz2SI9xkLU
+	 dqUpevwgtIHlsAcNNfRP3LqfXFDv9qBfwzEo/bhb+r0CFijjHw8vYLSu6wqiIYBjE/
+	 5+Pf6rWet5DLfoHz8YmbDQ3v6gNo38ax1BJ0vuZGLgZMET23tg2845HTJMIgkecR43
+	 N3ej/4cfHmFLXhWWGjfsqZWQv/xqAYic18jJOMGI3o+KlKoE4zBUfazJwut3TUibo5
+	 IuIevS/hZQ0fg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 6/8] perf/x86/intel: Validate return value of
- intel_pmu_init_hybrid()
+Subject: Re: [PATCH 8/8] perf/core: Fix kernel register info leak via
+ hardware skid
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605011136.2043393-7-dapeng1.mi@linux.intel.com>
-References: <20260605011136.2043393-7-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260605011136.2043393-9-dapeng1.mi@linux.intel.com>
+References: <20260605011136.2043393-9-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 01:36:08 +0000
-Message-Id: <20260605013609.38A451F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 01:38:47 +0000
+Message-Id: <20260605013848.317911F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] Unnecessary error handling and dead cleanup code for early boot mem=
-ory allocation failure.
+
+New issues:
+- [High] Valid hardware-captured user-space register samples from precise e=
+vents (e.g., Intel PEBS) are incorrectly dropped as sensitive kernel data w=
+hen the PMU interrupt (PMI) skids into kernel mode.
+
+Pre-existing issues:
+- [High] Hardware PMI skid still leaks kernel IPs and callchains to unprivi=
+leged users when exclude_kernel=3D1.
 --
 
-commit e6fc94eb7f63fa466e8e1aeaed9a0d18231a88dc
+commit 8a7df272a8b8797c3525f28de5158f11f610df4d
 Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-perf/x86/intel: Validate return value of intel_pmu_init_hybrid()
+perf/core: Fix kernel register info leak via hardware skid
+   =20
+This patch addresses a security vulnerability where hardware skid can
+cause a PMI to trigger in kernel space, leaking kernel register data
+to user space via PERF_SAMPLE_REGS_INTR. It fixes this by dropping
+sampled register data if the event has exclude_kernel set but the CPU
+is in kernel mode.
+   =20
+Link: https://lore.kernel.org/all/20260529085613.CCAFB1F00893@smtp.kernel.o=
+rg/
 
-This commit validates the return value of intel_pmu_init_hybrid() to prevent
-attempts to access the uninitialized x86_pmu.hybrid_pmu[] array due to
-allocation failure. It adds error paths that destroy the task_ctx_cache when
-an error occurs.
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7935d5663944e..b7326bc3acd00 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7800,10 +7800,21 @@ static void perf_sample_regs_user(struct perf_reg=
+s *regs_user,
+>  }
+> =20
+>  static void perf_sample_regs_intr(struct perf_regs *regs_intr,
+> -				  struct pt_regs *regs)
+> +				  struct pt_regs *regs,
+> +				  bool exclude_kernel)
+>  {
+> -	regs_intr->regs =3D regs;
+> -	regs_intr->abi  =3D perf_reg_abi(current);
+> +	/*
+> +	 * Hardware skid can lead to PMI is delivered after
+> +	 * the CPU has already entered kernel mode. In that case,
+> +	 * user-space sampling must not expose kernel register state.
+> +	 */
+> +	if (exclude_kernel && !user_mode(regs)) {
 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index ea3ab3050a3b1..efd9caa3502c5 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -8539,7 +8540,9 @@ __init int intel_pmu_init(void)
->  		 *
->  		 * Initialize the common PerfMon capabilities here.
->  		 */
-> -		intel_pmu_init_hybrid(hybrid_big_small);
-> +		ret =3D intel_pmu_init_hybrid(hybrid_big_small);
-> +		if (ret < 0)
-> +			goto err;
+[Severity: High]
+Will this incorrectly drop valid hardware-captured user-space register
+samples from precise events like Intel PEBS?
 
-[Severity: Low]
-Is this error handling necessary for an early boot function?
+For precise events, the PMU driver populates a temporary pt_regs
+with exact user-space registers captured by the hardware. Because PEBS
+does not capture segment registers, the driver copies them from the
+delayed PMI interrupt context:
 
-Since intel_pmu_init() in arch/x86/events/intel/core.c is marked with __ini=
-t,
-it executes only during early boot. At this stage, if a physical memory
-allocation fails, the system typically cannot boot anyway. Handling memory
-allocation failures and returning -ENOMEM here is likely dead code.
+arch/x86/events/intel/ds.c:setup_pebs_fixed_sample_data() {
+    *regs =3D *iregs;
+    ...
+}
+
+If the PMI skids and is delivered after the CPU enters kernel space,
+iregs->cs reflects kernel mode, causing user_mode(regs) to evaluate
+to false. This would result in these safe, hardware-captured user
+registers being zeroed out here, which seems like it might break
+unprivileged precise profiling.
+
+> +		regs_intr->abi =3D PERF_SAMPLE_REGS_ABI_NONE;
+> +		regs_intr->regs =3D NULL;
+> +	} else {
+> +		regs_intr->regs =3D regs;
+> +		regs_intr->abi =3D perf_reg_abi(current);
+> +	}
+>  }
 
 [ ... ]
 
-> @@ -8885,6 +8900,10 @@ __init int intel_pmu_init(void)
->  	intel_aux_output_init();
+> @@ -8694,7 +8705,8 @@ void perf_prepare_sample(struct perf_sample_data *d=
+ata,
+>  		/* regs dump ABI info */
+>  		int size =3D sizeof(u64);
 > =20
->  	return 0;
-> +
-> +err:
-> +	kmem_cache_destroy(x86_get_pmu(smp_processor_id())->task_ctx_cache);
+> -		perf_sample_regs_intr(&data->regs_intr, regs);
+> +		perf_sample_regs_intr(&data->regs_intr, regs,
+> +				      event->attr.exclude_kernel);
 
-[Severity: Low]
-Will this cleanup code in intel_pmu_init() actually free anything?
+[Severity: High]
+This is a pre-existing issue, but does the hardware PMI skid still leak
+kernel IPs and callchains to unprivileged users when exclude_kernel=3D1?
 
-If the allocation fails during intel_pmu_init_hybrid() and we jump to the e=
-rr
-label, task_ctx_cache has not been allocated yet. It is only allocated later
-in the function via intel_pmu_lbr_init() or intel_pmu_arch_lbr_init().
+While this patch correctly zeroes out the register state to prevent
+leaking the full CPU register context, it appears the same privilege
+boundaries are not applied to PERF_SAMPLE_IP and PERF_SAMPLE_CALLCHAIN.
 
-This guarantees task_ctx_cache is NULL when this error path is taken, meani=
-ng
-this call to kmem_cache_destroy() acts as a no-op.
+In perf_prepare_sample(), the kernel IP is unconditionally extracted
+from regs if the PMI skid caught the CPU in kernel mode:
 
-> +	return ret;
->  }
->
+kernel/events/core.c:perf_prepare_sample() {
+    if (filtered_sample_type & PERF_SAMPLE_IP) {
+        data->ip =3D perf_instruction_pointer(event, regs);
+        ...
+    }
+}
+
+Similarly, unprivileged users can set exclude_kernel=3D1 and leave
+exclude_callchain_kernel=3D0. On a skid, !user_mode(regs) evaluates to
+true, causing perf_callchain() to unwind and expose the kernel stack
+trace.
+
+Could this allow a deterministic KASLR bypass, and should it be
+addressed alongside the register clearing?
+
+> =20
+>  		if (data->regs_intr.regs) {
+>  			u64 mask =3D event->attr.sample_regs_intr;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605011136.2043=
-393-1-dapeng1.mi@linux.intel.com?part=3D6
+393-1-dapeng1.mi@linux.intel.com?part=3D8
