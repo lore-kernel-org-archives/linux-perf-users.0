@@ -1,145 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9500036D513
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 19:36:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C984443C05A
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 19:37:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780688182; cv=none; b=OPgabIqxs5mek09QLRUCXxqpgXByPSz1m1L4i0GoFpoQzYCiGxS+JNN6HJlbNhwZCMrqniOQ5xYMOIgNPP9JlOU65V8zH6OgR5w4gw0/v942jzLi+JI7xExtLXMApY34hFoLYmQpeDO/6MZDMnbtWeibKWRRGhYw49TBSdOhWzs=
+	t=1780688289; cv=none; b=NmvW/2/A3TB+uDVK5EkbXxJmmtHlzXxI3llxY+hKJF7jtVVS4sFGiJAirE7clS3pVB3zfgqXa81uf72SwiW6eowMFHj4Ms5cIdW4MlppbLBGzFXUQV+cMD4iFivlXZMI231BRuuA1KhW8PtM3NfLK+5DC3IpW0Ut6Ik0HWupKnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780688182; c=relaxed/simple;
-	bh=YZJBIhoMzPv6WSIK4u5XQcvFU3a1ZSf1OD6hoYLjblo=;
+	s=arc-20240116; t=1780688289; c=relaxed/simple;
+	bh=YZ5J+x54FKY3magMdVHNHJwA/8NUNhcffIXi5RrF+2w=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LxgpGwXrMBCuEoPwZeJhGIRcVxNS9k3i335Hzx1sxzOWw6cAMvog9Zyp0FKZ7Vre718tvUA2Lshneev6Go4TxfgmBDT0zcdOYCd64GAHtmrvx7XwLYfTgnReAF9qXNCFLxeF/UKPlBQypuztbOPLBaZUrcIZzCMQNszTA5Sp4C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SOX+S3oN; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=iF9vTIAIm+TkLrgdcWXTvU8m8+EIAy24OWAwjWaEk1ngDKkEaiB+izvyRQMN5bfaFb8PROxNjllD52WzGnvs2btOZvNShNYrC1Ve8zLjB47m4hA4W3L8Pd5jTEQDzORA8hjQRTjbFKeqR2R+fOS3wq1rCWMKbKn35MlSHMMiNFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfNPi8Cq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SOX+S3oN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CE7D1F00893;
-	Fri,  5 Jun 2026 19:36:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfNPi8Cq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A9561F00898;
+	Fri,  5 Jun 2026 19:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780688181;
-	bh=3J9v1Mh0ziMECfdM5sfc5qQznCp7Xvc+2DT9yvgWs8s=;
+	s=k20260515; t=1780688277;
+	bh=YpqrAdK3ojiCsmPkyboT8l+NiCI1RY0owws55TqARu4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SOX+S3oNOH9yMJJK4oKs9T2XkpS5jd1SMaQs3QAlz9qbD6azRP7kONK7S8+v44Ozb
-	 AwXhkrIwgkZHh0AB/XWNZNIaogZ2EpAi+AQ5pty7efF7l/pP/BkgxL4mvvDHFmkIvP
-	 BtAvxQzCXEEz5nquASFLu400PJhiag5+87PfVBV2IVKPaobDdMgVN9vcDWW9uW4VVj
-	 +xduUoC8EIauK1fW9DVXaLocMwKZyF4LEw/VCH0lV/FaBfzlG2ylqsgrN5I2vdOEm4
-	 PJjKg25Jfq8s79sv2hKzBtpmQlFY48Ja1P+uY3TnDQ/Dqbx9KC0x8TpKNNJT8LHoBl
-	 4101Du5eON3Mg==
+	b=LfNPi8CqL4BKYoNNtGGk9scrmmGoXQfLG/mwt6Q0Yg/lqEHIoeuVWx79SW1yrlvsR
+	 FX8daJPY0t7Jk4ypKO7ZIzUlwnaBsyfjE/ZXyfBkk99Ad2wp4F33NjgbRQFYfdUlwo
+	 iJS/9qdlPdFv+VJMtkm0EqVzYfI/1Xhp8g57gd9EBwJq4QmFKLsPb/vAEKKy/Fr5Jt
+	 hK4wXQ4tfhuhd6V2042RKEyMoLq56IEnuvhnP5/iEBztz59afqsUS/LbeC0dLlQId0
+	 qXJhy2i2WgXYL4mXSR2g9gEvnrva1m54P18YtVpb8Ep6kOp3SbVIZ/QWJ50Y25/OqM
+	 mQYW5mb6gc1Sw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 13/19] perf python: Add callchain support
+Subject: Re: [PATCH v11 06/19] perf evsel: Add reference count
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605191500.2477026-14-irogers@google.com>
-References: <20260605191500.2477026-14-irogers@google.com>
+In-Reply-To: <20260605191500.2477026-7-irogers@google.com>
+References: <20260605191500.2477026-7-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 19:36:20 +0000
-Message-Id: <20260605193621.2CE7D1F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 19:37:57 +0000
+Message-Id: <20260605193757.8A9561F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
 New issues:
-- [High] Hardcoding the host machine for callchain resolution breaks analys=
-is of guest VM events.
+- [Medium] API breakage: The `idx` keyword argument was removed from the `p=
+erf.evsel` Python constructor.
 
 Pre-existing issues:
-- [Critical] Truncating oversized `perf_event` structures leads to out-of-b=
-ounds heap reads and writes.
+- [High] Python `pevsel` objects are permanently leaked when added to a Pyt=
+hon `evlist` due to an obsolete `Py_INCREF`.
+- [High] Type confusion in multiple Python API functions due to unsafe obje=
+ct casting, leading to segmentation faults.
 --
 
-commit eb725c58d220336416770572b756cd5d942572bc
+commit 32152cc198f8b97a7c285972f68510722b3dec17
 Author: Ian Rogers <irogers@google.com>
+Subject: perf evsel: Add reference count
 
-perf python: Add callchain support
-
-Implement pyrf_callchain_node and pyrf_callchain types for lazy
-iteration over callchain frames. Add callchain property to
-sample_event.
+The commit adds a reference count to struct evsel to manage its lifecycle.
+This is particularly useful for Python bindings, where instead of cloning t=
+he
+event, the same event is reused and its reference count is incremented.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 074dc1d9f2259..d8296d4d17d86 100644
+> index 7483741c024a5..0778322311850 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
-[ ... ]
-> @@ -987,9 +1140,12 @@ static PyTypeObject *pyrf_event__type[] =3D {
->  	[PERF_RECORD_SWITCH_CPU_WIDE]  =3D &pyrf_context_switch_event__type,
->  };
+> @@ -1028,7 +1031,6 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevs=
+el,
+>  	    precise_ip =3D 0,
+>  	    mmap_data =3D 0,
+>  	    sample_id_all =3D 1;
+> -	int idx =3D 0;
 > =20
-> -static PyObject *pyrf_event__new(const union perf_event *event, struct e=
-vsel *evsel)
-> +static PyObject *pyrf_event__new(const union perf_event *event, struct e=
-vsel *evsel,
-> +				 struct perf_session *session)
+>  	if (!PyArg_ParseTupleAndKeywords(args, kwargs,
+>  					 "|iKiKKiiiiiiiiiiiiiiiiiiiiiiKK", kwlist,
+> @@ -1041,7 +1043,7 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevs=
+el,
+>  					 &enable_on_exec, &task, &watermark,
+>  					 &precise_ip, &mmap_data, &sample_id_all,
+>  					 &attr.wakeup_events, &attr.bp_type,
+> -					 &attr.bp_addr, &attr.bp_len, &idx))
+> +					 &attr.bp_addr, &attr.bp_len))
+>  		return -1;
+
+[Severity: Medium]
+Since the idx parameter was removed from PyArg_ParseTupleAndKeywords, won't
+existing Python scripts that pass idx (e.g., perf.evsel(..., idx=3D0)) now =
+crash
+with a TypeError for an invalid keyword argument?
+
+[ ... ]
+
+> @@ -1073,26 +1075,33 @@ static int pyrf_evsel__init(struct pyrf_evsel *pe=
+vsel,
+>  static PyObject *pyrf_evsel__open(struct pyrf_evsel *pevsel,
+>  				  PyObject *args, PyObject *kwargs)
 >  {
->  	struct pyrf_event *pevent;
-> +	struct perf_sample *sample;
-> +	struct machine *machine =3D session ? &session->machines.host : NULL;
+> -	struct evsel *evsel =3D &pevsel->evsel;
+> +	struct evsel *evsel =3D pevsel->evsel;
+>  	struct perf_cpu_map *cpus =3D NULL;
+>  	struct perf_thread_map *threads =3D NULL;
+>  	PyObject *pcpus =3D NULL, *pthreads =3D NULL;
+>  	int group =3D 0, inherit =3D 0;
+>  	static char *kwlist[] =3D { "cpus", "threads", "group", "inherit", NULL=
+ };
+> =20
+> +	CHECK_INITIALIZED(evsel, "evsel");
+> +
+>  	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|OOii", kwlist,
+>  					 &pcpus, &pthreads, &group, &inherit))
+>  		return NULL;
 
 [Severity: High]
-Does hardcoding the host machine here break the analysis of guest VM events?
+This is a pre-existing issue, but pyrf_evsel__open() uses "OO" format speci=
+fiers
+to parse the cpus and threads arguments, allowing arbitrary Python objects =
+to be
+passed in. Shortly after this code:
 
-Since this forces the host machine context into machine__resolve(), events
-originating from guest VMs might be erroneously resolved against the host
-kernel's maps and symbols, breaking callchain decoding.
+	if (pthreads !=3D NULL)
+		threads =3D ((struct pyrf_thread_map *)pthreads)->threads;
 
-[ ... ]
-> @@ -1035,6 +1191,7 @@ static PyObject *pyrf_event__new(const union perf_e=
-vent *event, struct evsel *ev
->  	}
-> =20
->  	perf_sample__init(&pevent->sample, /*all=3D*/true);
-> +	pevent->callchain =3D NULL;
->  	pevent->al_resolved =3D false;
->  	addr_location__init(&pevent->al);
-> =20
-> @@ -1048,6 +1205,50 @@ static PyObject *pyrf_event__new(const union perf_=
-event *event, struct evsel *ev
->  		return PyErr_Format(PyExc_OSError,
->  				    "perf: can't parse sample, err=3D%d", err);
->  	}
+	if (pcpus !=3D NULL)
+		cpus =3D ((struct pyrf_cpu_map *)pcpus)->cpus;
 
-[Severity: Critical]
-This is a pre-existing issue introduced earlier in this series, but when
-evsel__parse_sample() parses the sample here, can it read out of bounds?
-
-Because earlier in pyrf_event__new() the copy of the event is truncated:
-
-    memcpy(&pevent->event, event, copy_size);
-
-but pevent->event.header.size retains its original large size (which can
-reach up to 65535 bytes). Since evsel__parse_sample() relies on the
-untruncated header.size, it appears it can read trailing variable-length
-arrays out-of-bounds, leaking adjacent heap memory or causing crashes.
+Could this blindly cast arbitrary Python objects to struct pyrf_thread_map =
+and
+struct pyrf_cpu_map, leading to out-of-bounds reads or segmentation faults =
+if
+incorrect object types are passed? Should we use the "O!" format specifier =
+with
+the appropriate type objects instead?
 
 [ ... ]
-> @@ -3179,7 +3380,7 @@ static int pyrf_session_tool__sample(const struct p=
-erf_tool *tool,
->  				     struct machine *machine __maybe_unused)
->  {
->  	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
-n, tool);
-> -	PyObject *pyevent =3D pyrf_event__new(event, sample->evsel);
-> +	PyObject *pyevent =3D pyrf_event__new(event, sample->evsel, psession->s=
-ession);
+
+> @@ -1584,13 +1808,13 @@ static PyObject *pyrf_evlist__add(struct pyrf_evl=
+ist *pevlist,
+>  	PyObject *pevsel;
+>  	struct evsel *evsel;
+> =20
+> -	if (!PyArg_ParseTuple(args, "O", &pevsel))
+> +	if (!PyArg_ParseTuple(args, "O!", &pyrf_evsel__type, &pevsel))
+>  		return NULL;
+> =20
+>  	Py_INCREF(pevsel);
+> -	evsel =3D &((struct pyrf_evsel *)pevsel)->evsel;
+> +	evsel =3D ((struct pyrf_evsel *)pevsel)->evsel;
+>  	evsel->core.idx =3D evlist->core.nr_entries;
+> -	evlist__add(evlist, evsel);
+> +	evlist__add(evlist, evsel__get(evsel));
+> =20
+>  	return Py_BuildValue("i", evlist->core.nr_entries);
+>  }
 
 [Severity: High]
-Is it possible to pass the dynamically provided machine argument directly to
-pyrf_event__new() instead of ignoring it here?
+This isn't a bug introduced by this patch, but does keeping the explicit
+Py_INCREF(pevsel) here cause a memory leak of the Python wrapper object?
 
-By ignoring the machine argument and passing the overarching session instea=
-d,
-we sever the context needed for guest VM evaluation, leading to the hardcod=
-ed
-host machine fallback inside pyrf_event__new().
+Previously, this was needed because the C evlist held a raw pointer to the
+evsel struct embedded within the Python object. Now that evsel is dynamical=
+ly
+allocated and the C evlist correctly acquires its own reference to the C st=
+ruct
+via evsel__get(evsel), the Python wrapper object reference is never decreme=
+nted,
+which seems to result in a permanent leak.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605191500.2477=
-026-1-irogers@google.com?part=3D13
+026-1-irogers@google.com?part=3D6
