@@ -1,66 +1,50 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872A83BE62B
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 15:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32643B42F3;
+	Fri,  5 Jun 2026 16:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780672198; cv=none; b=VyPb2h3B6lfbHPHqWaXS0NLAyvvYbg8yMfPK7l1Ts/2w2l2yyWwGXfR6GzbHmD7FEEoMk5H0kCRiXQJvUQJKEOuRDnkztCdRL4yfY4m7UFiI3heFp1jRyRa4FVhE7jPCFQoj5N7DJsLfm3kEwOnMqZs3u3/7b0QJfGnaiKl6lBI=
+	t=1780676274; cv=none; b=kVHLBadjq0wNgKYaejL8ET4a+X/dn1iDxty18X2DRMnwDUf/6xWqN2Z3VHaiEbq5QaTK+WsV3nIW5f7CrgA0iuEPNfLlUDbjUXmO6auhg7px5TF6zFrGvD5M6mj2ssx0lu4XGt0DqkiYkxuV30GAN8/6rLqVjq3Ampe8PeGV1j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780672198; c=relaxed/simple;
-	bh=d/PRN/C2ZY+2mNKXnjEZyNJoguXeoxxhz4uGxSVVtIU=;
+	s=arc-20240116; t=1780676274; c=relaxed/simple;
+	bh=ZFF3LzL7GAx1OpUonDbdkuDrIwtGeyUdXwmuBI+QZSE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dCfjexGtT/KJQKp1iaakjkDRAz1/BlnjMhoQH88HTLIFUzeSU1LnRYWJb8C5s8uNrlUXrOz6eE8A7Vud/ENqgc24xy3N6dLs/wtjfzguBPzASEg0XpjtM13zEBtJsplWIXzPYeAMx5hTL6rLtq78/opYRYHxDsT6DIpl1u5ewvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LEoj5tmr; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=EuO/lwB72LT3PEvaUpggCKcyK2JoOVk4aOD6jQLrk1n8ng336M7TIYbcniGbLqhFy1uj+OD876/vOyQ8llduVSLQ8vpUSTfDCAxoL3nirk8pUxOhiik6olKaTzhRCE6/IrtdHAkMRK/9kwdV2WZal6tuqFxefZK5tMFAU68u2bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VLT4JvJ3; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LEoj5tmr"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-bebbc325000so252472666b.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 08:09:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1780672196; x=1781276996; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=d/PRN/C2ZY+2mNKXnjEZyNJoguXeoxxhz4uGxSVVtIU=;
-        b=LEoj5tmriDs9q0GR/+PBbJBKk8k0C+sboSdRdc5mGmPY80BAhvSpZbPPXFOe88zBMH
-         zic2HG1Etjbg/PzQ2JMAU2ukZqkoUEyGYqYm/+HPcXYIczG6YFuI3Q+EHoVxJl/2lVbv
-         GuscKYh6lbQoIT9cr+Wz07UTBMW4NMlj5AtEWCVL6Gj7SPE6R16LYuXRTBI00pxiAyuq
-         m/XUYkjguxH+XP7uNZMgA7BU6hW/iXR0f/Bn8eO/RuspRA4fvGYsS0mTYLvGfaXshlZ1
-         2m6KXXbQDL5Bkp/xVpDS4F1ApPDU3H5gLlfHnUtLS1shoMg2Hl9sEGB3Mha9/mrKiJGu
-         JKsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780672196; x=1781276996;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d/PRN/C2ZY+2mNKXnjEZyNJoguXeoxxhz4uGxSVVtIU=;
-        b=DuM8+86XNlsHdxmRTHSOiory/AuC34YaHaLObpreSQQEvoDa6mVolmkWQ8NVR6zCX8
-         eAnYKa+VnAyTto34r0frfDptiO599JUooJnEwbsDisA8UNUtEwSEmPbSLbzVCfHqmL/a
-         WRqw2mKHl3wPuzJiL5Z2fvsVEve0D7btIVUnXEKIRapts+CfEjgadLJBiHHIsjWkkHpl
-         H4rSoM5VrMFBQ5tDDOwvkmDfAWtzHroGkmeymSuUNEYnAysHRziNyivS7I8DSgtq+8Na
-         TaDnTO41m4ly8qaL1vUOxQ+CCo8fzRsU9aKScHlYracMWUsrrLjWQUHSGfUGOBzeDtBe
-         JN4Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9a9327kZfTobLQ4hVQsdFoKIP/KPBj3+1J05YuTWxC5Q9jX/8nEHEbC7Xk5qI1sDqgmLNOnwZkFxBl5FQPHriY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8+7sIG289YsdylVw1PlZYdhuHb98jJWPQbyxwU6nWoS7McmCA
-	F6lPA60oeWI4DS+4DbQLo81uUo5HBHzw5QVb5wyQ/kdtZjd5mA6QAYaEdyHXYJ46lDk=
-X-Gm-Gg: Acq92OFmId/U1cmnwgAN5zvBBlfk3qHNRa6mROv/C0puzslFq5jDwxC9Nqej4xEr6Qb
-	1Rn/5TPIZh4ZfwCFNiZFb6Adv7tHb+q/9L9nzjubPTW8JbCSAFO6SRfc2MCmAGB06Is2L7uNX1Z
-	RmoeD2CT5XtJNSqjc+zQCzhYZua4+EtfZADMtnr7AQJXBDAEDkaeJ/q8Vbr6Ns1rRULrX3UIJ70
-	9IXoYiDz1ShUJALGGKr0PmL3/ehyKzSKeRn5y6fc5BXW423WgOWNlWAZjRULF1Ep9/Qj4RNQ9qC
-	qCIOzut3W2hPPBqoowyBneLdsm3BwK2hl0tPyqU6jzHFxjlQkhBmMqtdOdP9xCS53hpPUEG/wyk
-	A/gjOvaMXCUaPrrFKwcAp3yryUJX7qDbiBo7/dtWcA8qlzwYFzpBdUbHY8yCfFcqQ6KDCJUW6jf
-	10ELgo50xq2FiVgWi4sGEwyBa77Is4TnL5UhzbKRFbgVhW48c5EbMD9y+T791oycxGsEwc1nmMw
-	60VEt58y6/TFFpYgwUJ+nLtxpBbHr9dsiQKtBGglvwmhzfV7BhL+CpCDz+4fqJR
-X-Received: by 2002:a17:907:608b:b0:bec:9f90:629d with SMTP id a640c23a62f3a-bf3743ea8d5mr257957366b.39.1780672195972;
-        Fri, 05 Jun 2026 08:09:55 -0700 (PDT)
-Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf0559f1f62sm480462366b.57.2026.06.05.08.09.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2026 08:09:55 -0700 (PDT)
-Message-ID: <152901f0-d1cf-4106-9b10-39d16c9a4f55@suse.com>
-Date: Fri, 5 Jun 2026 17:09:54 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VLT4JvJ3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780676273; x=1812212273;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZFF3LzL7GAx1OpUonDbdkuDrIwtGeyUdXwmuBI+QZSE=;
+  b=VLT4JvJ3ow3GpI9iarSbwl2SRrvZ60eXSKx1RvgHokKi8ViNVsg8SdsU
+   WmpLQCOF5ISkKNP6OhbniSRVtSaHlbfAQAQBMmTmEVunA2giKQKjRHg7/
+   3PbEnoqmSs6VHNfEH3UdxwN46RIWLTs7VqsilAMBTkSzC+22GFbvwaMP1
+   TiZyQA/3jrY3WV5D/EsDntPpKJuyhq7S69Ngrh6Y+9KFE1Mcle99/hxTY
+   9SzFFN5jy3nIdY6fR3vZtsY+onA+oVXYWMIUhGWwb4LSGk5W7p3l9w0vo
+   ZIWUNp5PpZOmPezosBv3OsVqcDp/Fyi3cTKdABbG2JbJ4/iy2WFD76B8F
+   A==;
+X-CSE-ConnectionGUID: 52O1ScrLSxq55t8hSMODSQ==
+X-CSE-MsgGUID: 4O/BPWEPQXCVRxwQ3OoOqw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11808"; a="81548043"
+X-IronPort-AV: E=Sophos;i="6.24,189,1774335600"; 
+   d="scan'208";a="81548043"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 09:17:52 -0700
+X-CSE-ConnectionGUID: DiiT6IQMTlqiwPHlvBJTAg==
+X-CSE-MsgGUID: Lhq1QOovQZuklFKiYPnyfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,189,1774335600"; 
+   d="scan'208";a="249214843"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 09:17:51 -0700
+Message-ID: <14b678b1-822a-46c2-8bb5-913622a77cac@intel.com>
+Date: Fri, 5 Jun 2026 11:17:49 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,206 +52,152 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/10] x86/msr: Drop 32-bit variants of *_on_cpu() MSR
- functions
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, x86@kernel.org, linux-edac@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Huang Rui <ray.huang@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Tony Luck <tony.luck@intel.com>, Guenter Roeck <linux@roeck-us.net>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+Subject: Re: [PATCH 6/8] perf/x86/intel: Validate return value of
+ intel_pmu_init_hybrid()
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-References: <20260605144314.3031049-1-jgross@suse.com>
- <633a8b8a-9dd8-410d-a9a5-a9cd2e87e63b@intel.com>
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
+References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
+ <20260605011136.2043393-7-dapeng1.mi@linux.intel.com>
 Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <633a8b8a-9dd8-410d-a9a5-a9cd2e87e63b@intel.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------CfFMPknLyQaN7sy2Q0kqkhmo"
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20260605011136.2043393-7-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------CfFMPknLyQaN7sy2Q0kqkhmo
-Content-Type: multipart/mixed; boundary="------------E4xAZx8nWliBbcWRKh5sEs0A";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, x86@kernel.org, linux-edac@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Huang Rui <ray.huang@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Tony Luck <tony.luck@intel.com>, Guenter Roeck <linux@roeck-us.net>,
- Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-Message-ID: <152901f0-d1cf-4106-9b10-39d16c9a4f55@suse.com>
-Subject: Re: [PATCH v2 00/10] x86/msr: Drop 32-bit variants of *_on_cpu() MSR
- functions
-References: <20260605144314.3031049-1-jgross@suse.com>
- <633a8b8a-9dd8-410d-a9a5-a9cd2e87e63b@intel.com>
-In-Reply-To: <633a8b8a-9dd8-410d-a9a5-a9cd2e87e63b@intel.com>
 
---------------E4xAZx8nWliBbcWRKh5sEs0A
-Content-Type: multipart/mixed; boundary="------------rsMyfZxZc8gld63N7FQonwvB"
 
---------------rsMyfZxZc8gld63N7FQonwvB
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+On 6/4/2026 8:11 PM, Dapeng Mi wrote:
+> The memory allocation for the x86_pmu.hybrid_pmu[] array in
+> intel_pmu_init_hybrid() can theoretically fail due to memory shortages.
+> If this occurs, the initialization of the x86 hybrid PMU would fail.
+> 
+> Currently, the code does not check the return value of the
+> intel_pmu_init_hybrid() function, which could lead to attempts to access
+> the uninitialized x86_pmu.hybrid_pmu[] array, potentially causing a
+> system panic.
+> 
+> So, adds a check for the return value of intel_pmu_init_hybrid() to
 
-T24gMDUuMDYuMjYgMTc6MDgsIERhdmUgSGFuc2VuIHdyb3RlOg0KPiBPbiA2LzUvMjYgMDc6
-NDMsIEp1ZXJnZW4gR3Jvc3Mgd3JvdGU6DQo+PiAgIGFyY2gveDg2L2V2ZW50cy9pbnRlbC9k
-cy5jICAgICAgICAgICAgICAgICAgIHwgMTEgKy0tDQo+PiAgIGFyY2gveDg2L2luY2x1ZGUv
-YXNtL21zci5oICAgICAgICAgICAgICAgICAgIHwgMjggKy0tLS0tDQo+PiAgIGFyY2gveDg2
-L2tlcm5lbC9jcHUvbWNlL2FtZC5jICAgICAgICAgICAgICAgIHwgIDYgKy0NCj4+ICAgYXJj
-aC94ODYva2VybmVsL2NwdS9tY2UvaW5qZWN0LmMgICAgICAgICAgICAgfCAgOCArLQ0KPj4g
-ICBhcmNoL3g4Ni9rZXJuZWwvbXNyLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICA4ICst
-DQo+PiAgIGFyY2gveDg2L2xpYi9tc3Itc21wLmMgICAgICAgICAgICAgICAgICAgICAgIHwg
-ODkgKysrLS0tLS0tLS0tLS0tLS0tLS0NCj4+ICAgZHJpdmVycy9jcHVmcmVxL2FtZC1wc3Rh
-dGUuYyAgICAgICAgICAgICAgICAgfCAgMiArLQ0KPj4gICBkcml2ZXJzL2NwdWZyZXEvYW1k
-X2ZyZXFfc2Vuc2l0aXZpdHkuYyAgICAgICB8ICA2ICstDQo+PiAgIGRyaXZlcnMvY3B1ZnJl
-cS9wNC1jbG9ja21vZC5jICAgICAgICAgICAgICAgIHwgMzIgKysrLS0tLQ0KPj4gICBkcml2
-ZXJzL2NwdWZyZXEvc3BlZWRzdGVwLWNlbnRyaW5vLmMgICAgICAgICB8IDI3ICsrKy0tLQ0K
-Pj4gICBkcml2ZXJzL2h3bW9uL2NvcmV0ZW1wLmMgICAgICAgICAgICAgICAgICAgICB8IDQ0
-ICsrKysrLS0tLS0NCj4+ICAgZHJpdmVycy9od21vbi92aWEtY3B1dGVtcC5jICAgICAgICAg
-ICAgICAgICAgfCAxNiArKy0tDQo+PiAgIGRyaXZlcnMvdGhlcm1hbC9pbnRlbC9pbnRlbF90
-Y2MuYyAgICAgICAgICAgIHwgNDMgKysrKystLS0tLQ0KPj4gICBkcml2ZXJzL3RoZXJtYWwv
-aW50ZWwveDg2X3BrZ190ZW1wX3RoZXJtYWwuYyB8IDI1ICsrKy0tLQ0KPj4gICAxNCBmaWxl
-cyBjaGFuZ2VkLCAxMjggaW5zZXJ0aW9ucygrKSwgMjE3IGRlbGV0aW9ucygtKQ0KPiANCj4g
-VGhpcyBpcyB3b25kZXJmdWwuIFRoYW5rIHlvdSBmb3IgZG9pbmcgdGhpcyENCj4gDQo+IE15
-IG9ubHkgcmVhbCBjb21wbGFpbnQgaXMgdGhlIGxhY2sgb2YgY2hhbmdlbG9nIGZvciAwNy8x
-MC4gT3RoZXJ3aXNlLCBpdA0KPiBsb29rcyBncmVhdCB0byBtZS4gSWRlYWxseSwgeW91J2Qg
-Y29sbGVjdCBhIGZldyBtb3JlIHJldmlld3MgYW5kIHBvc3QgYQ0KPiB2MyByZWJhc2VkIHJp
-Z2h0IGFmdGVyIHRoZSBuZXh0IC1yYzEuDQo+IA0KPiBSZXZpZXdlZC1ieTogRGF2ZSBIYW5z
-ZW4gPGRhdmUuaGFuc2VuQGxpbnV4LmludGVsLmNvbT4NCg0KVGhhbmtzLCB3aWxsIGRvIGFz
-IHlvdSBzdWdnZXN0Lg0KDQoNCkp1ZXJnZW4NCg==
---------------rsMyfZxZc8gld63N7FQonwvB
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+typo: adds -> add.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+> prevent invalid memory access in such scenarios. Besides, free the
+> created kmem cache when error occurs.
+> 
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+Reviewed-by: Zide Chen <zide.chen@intel.com>
 
---------------rsMyfZxZc8gld63N7FQonwvB--
 
---------------E4xAZx8nWliBbcWRKh5sEs0A--
+>  arch/x86/events/intel/core.c | 33 ++++++++++++++++++++++++++-------
+>  1 file changed, 26 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index ea3ab3050a3b..efd9caa3502c 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -7870,6 +7870,7 @@ __init int intel_pmu_init(void)
+>  	int version, i;
+>  	char *name;
+>  	struct x86_hybrid_pmu *pmu;
+> +	int ret;
+>  
+>  	/* Architectural Perfmon was introduced starting with Core "Yonah" */
+>  	if (!cpu_has(&boot_cpu_data, X86_FEATURE_ARCH_PERFMON)) {
+> @@ -8539,7 +8540,9 @@ __init int intel_pmu_init(void)
+>  		 *
+>  		 * Initialize the common PerfMon capabilities here.
+>  		 */
+> -		intel_pmu_init_hybrid(hybrid_big_small);
+> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+> +		if (ret < 0)
+> +			goto err;
+>  
+>  		x86_pmu.pebs_latency_data = grt_latency_data;
+>  		x86_pmu.get_event_constraints = adl_get_event_constraints;
+> @@ -8597,7 +8600,9 @@ __init int intel_pmu_init(void)
+>  	case INTEL_METEORLAKE:
+>  	case INTEL_METEORLAKE_L:
+>  	case INTEL_ARROWLAKE_U:
+> -		intel_pmu_init_hybrid(hybrid_big_small);
+> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+> +		if (ret < 0)
+> +			goto err;
+>  
+>  		x86_pmu.pebs_latency_data = cmt_latency_data;
+>  		x86_pmu.get_event_constraints = mtl_get_event_constraints;
+> @@ -8628,7 +8633,9 @@ __init int intel_pmu_init(void)
+>  		pr_cont("Pantherlake Hybrid events, ");
+>  		name = "pantherlake_hybrid";
+>  
+> -		intel_pmu_init_hybrid(hybrid_big_small);
+> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+> +		if (ret < 0)
+> +			goto err;
+>  
+>  		/* Initialize big core specific PerfMon capabilities.*/
+>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
+> @@ -8643,7 +8650,9 @@ __init int intel_pmu_init(void)
+>  		pr_cont("Arrowlake Hybrid events, ");
+>  		name = "arrowlake_hybrid";
+>  
+> -		intel_pmu_init_hybrid(hybrid_big_small);
+> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+> +		if (ret < 0)
+> +			goto err;
+>  
+>  		/* Initialize big core specific PerfMon capabilities.*/
+>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
+> @@ -8660,7 +8669,9 @@ __init int intel_pmu_init(void)
+>  		pr_cont("Lunarlake Hybrid events, ");
+>  		name = "lunarlake_hybrid";
+>  
+> -		intel_pmu_init_hybrid(hybrid_big_small);
+> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+> +		if (ret < 0)
+> +			goto err;
+>  
+>  		/* Initialize big core specific PerfMon capabilities.*/
+>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
+> @@ -8685,7 +8696,9 @@ __init int intel_pmu_init(void)
+>  		break;
+>  
+>  	case INTEL_ARROWLAKE_H:
+> -		intel_pmu_init_hybrid(hybrid_big_small_tiny);
+> +		ret = intel_pmu_init_hybrid(hybrid_big_small_tiny);
+> +		if (ret < 0)
+> +			goto err;
+>  
+>  		x86_pmu.pebs_latency_data = arl_h_latency_data;
+>  		x86_pmu.get_event_constraints = arl_h_get_event_constraints;
+> @@ -8720,7 +8733,9 @@ __init int intel_pmu_init(void)
+>  	case INTEL_NOVALAKE_L:
+>  		pr_cont("Novalake Hybrid events, ");
+>  		name = "novalake_hybrid";
+> -		intel_pmu_init_hybrid(hybrid_big_small);
+> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+> +		if (ret < 0)
+> +			goto err;
+>  
+>  		x86_pmu.pebs_latency_data = nvl_latency_data;
+>  		x86_pmu.get_event_constraints = mtl_get_event_constraints;
+> @@ -8885,6 +8900,10 @@ __init int intel_pmu_init(void)
+>  	intel_aux_output_init();
+>  
+>  	return 0;
+> +
+> +err:
+> +	kmem_cache_destroy(x86_get_pmu(smp_processor_id())->task_ctx_cache);
+> +	return ret;
+>  }
+>  
+>  /*
 
---------------CfFMPknLyQaN7sy2Q0kqkhmo
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmoi5sMFAwAAAAAACgkQsN6d1ii/Ey9v
-bQf+P+RkcVUYjR/aFpHi/+lABtHiJYBdl6uoMtnlzC/iXalXkTLimPnC9FEb41Vv6DUXDNaBGRwB
-WezmTxZektPwGCfiLLLGzbudSajp/h7b6QxHk1XNVBimKzcyYLyqhrWHRVgP05+iXVg7muGlWV9w
-owF9qGVTOK+LtqeGfZyXNFDfEVJDXtVqljU2x/er/Q+LnRz6WItXkPI3Q9s/CP79n6PYZUdF/q9+
-sI6/WhXuPR0mu6uYNzb4PlNEgEk6i6dycsaPFSkEk3t+HZo2LN52/DgeRnxEljVJHcktrrLK9CSQ
-mM3vW3YduyXDPM6JtOoTc/6tXu4qSDS4zCQXdmTkgw==
-=1HUx
------END PGP SIGNATURE-----
-
---------------CfFMPknLyQaN7sy2Q0kqkhmo--
