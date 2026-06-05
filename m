@@ -1,115 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DEB368299
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 23:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEC936F903
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 23:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780703763; cv=none; b=PrdZKg6TXo1xN4mQ+DvLKw2veR+y+xizD3DjFgNpgJUm+cHUgZuOURwEgcOWXPC2cDAPVQlEBZURL5ZsZZjWtxPk7QSI6qlIKH2AxJNO6TTNUJaZSWmdRciEQDvMCPHkSvZPrXD6RsaCDXpm09qf2GBE3UTATPErJv373v3rvuQ=
+	t=1780703788; cv=none; b=rEkVT/IQLDgKCEOPNaYC+Fh1m89ScUKW64hwdEec7Fj8uKKFrhosOovWcLgjiNkQbH+BNGpHka1+EhOdBIJ+yctCHjJAQVLSNMbfYIyapq5dNWuIvqvETgMH2Ll4HQUewf7rtXh69wJz45xd1ZSIR0kJ9jrxBvgYuWwI+GypR+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780703763; c=relaxed/simple;
-	bh=n1kpgbWWLcl3Tm1MQwZGwQRay91ouBHw6apSIdWOo2c=;
+	s=arc-20240116; t=1780703788; c=relaxed/simple;
+	bh=4BJMwDRQUyGGdqVSxXPWubsrIzQDkP+p00FiTa3uNrg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=p3jGT0VGo7V6PmQ+gj6rNzweF7XkhxjEjvHSELdDntCq9KhyiKrxkIwoYNeGiOVZrppfxmEJtqzJgHC1os63b11CRyBuLwjGQYqS5/nWGYqEyCjqx8RqIviTf4LQwPqwdVt8FL66bHIDoIWuJJthUhOUJDNrlG9P0TzexmAk56I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePANdH/r; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=r/vADuu3JiOHIVinFr28tN1rsOPnBgUmFEsMFHFBHxn3zyJ5fSzRGyiBSVuV+bXvRPs8mR0B0/ipBlGPnpGnPKDfbMbEY/icqeEO42qyQy24wIq6rwSiObBzRZt22r9b8BLzc9I9PsigH/OhsR9qYXQlMYhKKyoBU2V5WPSZN5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZns+tIF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePANdH/r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A4411F00898;
-	Fri,  5 Jun 2026 23:56:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZns+tIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD231F00893;
+	Fri,  5 Jun 2026 23:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780703762;
-	bh=wmAz6P0/f9SO2abhADHMc5QzuUu4VUyl0vUJJ7pFLCA=;
+	s=k20260515; t=1780703786;
+	bh=IubcKy8ld9h3EQJgEn6YATqQSGYgUEZl6Vwf5fdj/O4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ePANdH/rzonipnKGmogwtwNBCeM8XrBcEbH4Cfark5ceXufE1UjrA4sZt6la5mkoj
-	 LcJZB44lD2iLX+q3MfgCx/cL6P64p4thwdq04Vpt3Qa7UijKmJ9HXe6SToBsu7AAoD
-	 pL9bHPdG2VPRvMbEZFfycuRghVljVkhyllWTwy6gaN+seLBhl4V+Jonp6fMfhuiYGT
-	 NOtTp4Yc6iIFo4kJXP9kW/thZf3yOvcYYuZBiDyB9exu4YwdehavEh2Uq3XAYgF8OD
-	 CIQgJYU1yYH4P1C41enEG+8UrWg++c1WsAGHHtbA8klkQQTzLW5nh23r+zY0PlhYYN
-	 Vw0mqdaJj599Q==
+	b=CZns+tIFUAPJPhogsENMkKDoCo+PDO8Wc3AjoASWMtoDBidzsy8dwl2q7qQTV2kMp
+	 qOJIM94tac0OeRbwEVqF++MQOlchdBmOpKloxgmZWsRyBx6pj34MbTvAc9Vu3DwTtH
+	 IxvYUODGvcKeml99DAWkLtcbH6RtEcSuBi0M3hSCZtKAZcgAPCZTIP54BRbQY+DNNF
+	 7BN4aWoIGrwU1nHMVd30OWg/Z2Y80sHMU84AISYuWNXw9wQdqIEANPd2ZQgdMA0zeK
+	 8aB0bXUCmKpG/Db6yN5l8nKqTHQkjYr34JsKGgPhR6hgZrou2gJkGf93fRP/CtSBh1
+	 kY7EDv9zGBGFw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/9] perf sched: Fix thread reference leak in idle hist
- processing
+Subject: Re: [PATCH 1/9] perf mmap: Guard cpu__get_node() return in
+ aio_bind()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605233837.1773732-8-acme@kernel.org>
-References: <20260605233837.1773732-8-acme@kernel.org>
+In-Reply-To: <20260605233837.1773732-2-acme@kernel.org>
+References: <20260605233837.1773732-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 23:56:01 +0000
-Message-Id: <20260605235602.2A4411F00898@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 23:56:26 +0000
+Message-Id: <20260605235626.BAD231F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [Critical] Unchecked reallocarray failure leads to out-of-bounds array wr=
-ite.
+- [Medium] NULL pointer dereference in `perf_mmap__aio_free()` when memory =
+allocation fails in `perf_mmap__aio_mmap()`.
+- [Medium] Sign-extension out-of-bounds write vulnerability in `perf_mmap__=
+setup_affinity_mask`.
 --
 
-commit d067b628e210dabba51b3b303c2790b28507f63f
+commit 2a2adfec0327c3db4323154825d9029d39b512eb
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf sched: Fix thread reference leak in idle hist processing
+perf mmap: Guard cpu__get_node() return in aio_bind()
 
-This commit resolves a thread reference leak in timehist_sched_change_event=
-()
-by properly releasing the acquired thread reference using thread__zput() be=
-fore
-clearing the pointer during idle history processing.
+This commit fixes a sign-extension out-of-bounds write in perf_mmap__aio_bi=
+nd()
+by assigning the return of cpu__get_node() to a signed integer first.
+If the return value is less than zero, the function safely returns early
+instead of performing out-of-bounds operations.
 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 4600d70b48610..c0cd3cbb602aa 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -2940,7 +2940,7 @@ static int timehist_sched_change_event(const struct=
- perf_tool *tool,
->  			if (itr->cursor.nr)
->  				callchain_append(&itr->callchain, &itr->cursor, t - tprev);
+> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+> index b69f926d314b1..4404a99eee45f 100644
+> --- a/tools/perf/util/mmap.c
+> +++ b/tools/perf/util/mmap.c
+> @@ -104,9 +104,15 @@ static int perf_mmap__aio_bind(struct mmap *map, int=
+ idx, struct perf_cpu cpu, i
+>  	int err =3D 0;
 > =20
-> -			itr->last_thread =3D NULL;
-> +			thread__zput(itr->last_thread);
->  		}
-> =20
->  		if (!sched->summary_only)
+>  	if (affinity !=3D PERF_AFFINITY_SYS && cpu__max_node() > 1) {
+> +		int node;
+> +
+>  		data =3D map->aio.data[idx];
+>  		mmap_len =3D mmap__mmap_len(map);
+> -		node_index =3D cpu__get_node(cpu);
+> +		node =3D cpu__get_node(cpu);
+> +		/* -1 sign-extends to ULONG_MAX, wrapping bitmap_zalloc(0) and OOB __s=
+et_bit */
+> +		if (node < 0)
+> +			return 0;
+> +		node_index =3D node;
+>  		node_mask =3D bitmap_zalloc(node_index + 1);
+>  		if (!node_mask) {
+>  			pr_err("Failed to allocate node mask for mbind: error %m\n");
 
-[Severity: Critical]
-This isn't a bug introduced by this patch, but I noticed a potential
-regression in a different file:
-tools/perf/util/drm_pmu.c:for_each_drm_fdinfo_in_dir().
+[Severity: Medium]
+This is a pre-existing issue, but I noticed a similar sign-extension issue =
+in
+perf_mmap__setup_affinity_mask() that could cause an out-of-bounds write.
 
-When expanding the minor device array:
+If map->core.cpu.cpu is -1 (for example, for a dummy CPU map created by perf
+record -p <pid> --affinity cpu), wouldn't it be sign-extended to ULONG_MAX
+when passed to __set_bit()?
 
-		if (minors->minors_num =3D=3D minors->minors_len) {
-			unsigned int *tmp =3D reallocarray(minors->minors, minors->minors_len + =
-4,
-							 sizeof(unsigned int));
+tools/perf/util/mmap.c:perf_mmap__setup_affinity_mask() {
+    ...
+	if (mp->affinity =3D=3D PERF_AFFINITY_NODE && cpu__max_node() > 1)
+		build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask);
+	else if (mp->affinity =3D=3D PERF_AFFINITY_CPU)
+		__set_bit(map->core.cpu.cpu, map->affinity_mask.bits);
+    ...
+}
 
-			if (tmp) {
-				minors->minors =3D tmp;
-				minors->minors_len +=3D 4;
-			}
-		}
-		minors->minors[minors->minors_num++] =3D minor;
 
-If reallocarray() fails (e.g., due to memory exhaustion), it returns a null
-pointer and the array's capacity (minors_len) is not updated.
+[Severity: Medium]
+This is also a pre-existing issue, but while looking at the mmap code, I
+noticed a potential NULL pointer dereference during error cleanup.
 
-However, the code proceeds unconditionally to write the minor into
-minors->minors[minors->minors_num++].
+If memory allocation for map->aio.data fails in perf_mmap__aio_mmap(), the
+function returns -1 while map->aio.nr_cblocks is already set.
 
-Could this cause a null pointer dereference on the first allocation failure?
+During the cleanup sequence, perf_mmap__aio_munmap() unconditionally loops =
+up
+to map->aio.nr_cblocks:
 
-Furthermore, because minors_num is incremented without minors_len
-increasing, would subsequent loops bypass the minors_num =3D=3D minors_len
-check completely, leading to continuous and unbounded out-of-bounds heap
-writes for each new file descriptor?
+tools/perf/util/mmap.c:perf_mmap__aio_munmap() {
+    ...
+	for (i =3D 0; i < map->aio.nr_cblocks; ++i)
+		perf_mmap__aio_free(map, i);
+    ...
+}
+
+Inside perf_mmap__aio_free(), the pointer offset is calculated and passed to
+zfree():
+
+tools/perf/util/mmap.c:perf_mmap__aio_free() {
+	zfree(&(map->aio.data[idx]));
+}
+
+If map->aio.data is NULL, won't passing its evaluated offset to zfree()
+cause a segmentation fault when __zfree() tries to free the invalid pointer?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605233837.1773=
-732-1-acme@kernel.org?part=3D7
+732-1-acme@kernel.org?part=3D1
