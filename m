@@ -1,131 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3D64071DD
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 23:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75C235DA7F
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 23:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780703685; cv=none; b=SFOPubvfJsQ3usEJdyqbdsDWQnk+yJMxQ0HyJt/3NClpxg/zgYjcY0CPlngUiH+66ODig2zFcz8hiOyuWMjMpSjtI3IpY4qUsQUTwLlRn5VbXrlDmHwpCm6mIDP2ReKPxLXCECMpVwK6Ipw+EFAQ3TlBEA0oEbLYsc8W96v17jE=
+	t=1780703750; cv=none; b=oZjoRxKcpfVnMmKqqTilxfU/ztldG6Ukvo3B/PKI9GdXPfxXCgmAK3mJtaPZ1uDVJsxVD02N7VW2J6YVBOWwgDzJaL+IifarmygjzibgHCgPsTNJ9aUP4vzL8ZGsCvnqWOISFLS/HRI54iLHFHijkExWmdoshqASP8zy79FC/zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780703685; c=relaxed/simple;
-	bh=95UHLDopXIggIzscZjUzS7o4/SrFeO3gU00FCeqL0tE=;
+	s=arc-20240116; t=1780703750; c=relaxed/simple;
+	bh=NK18kB0fiB8udz8Rq4ylCrc64naX/62Lv+qOhMn4xTU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SxCN2nlnjQi73608lrRrwHnLLBADbUW2AQy1VeI61AxpYx9hTfskepbuwxG7oIfxjjddupH6s0KcABYvoNlLg93oeX2swvbq7eOcIF+aau1+siPLYMavxuZGrgo8GLNExB/EhpwS/usfIQE1ql/4zPzj2mFXAEkWeOnvz5IhqWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGxfb1jW; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=mDBZu0dcRNSRt0Amad0Z7lOH4woWyA4LptFf5WYawTnWJEshi3xdSkOnq1F+XEqhhKfGsS0R1Yx6ieIvVHrOeKHXr/sCxH0xP8JdwQlUq69I1hIDyiJd+TnYPYp7vIhJ4qz62I0wIfqRDMmmdfrWyUzVKz1WSKH2ipV7ryg5fDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdHjjhIC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGxfb1jW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852FC1F00893;
-	Fri,  5 Jun 2026 23:54:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdHjjhIC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7337F1F00893;
+	Fri,  5 Jun 2026 23:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780703683;
-	bh=ajHxvhpjN7nIn7qRipGo8ZE73KXMwo42aAAWVv9vl9A=;
+	s=k20260515; t=1780703749;
+	bh=vCAf3O4FoEi565xEyptgkaTX4+AMB+/DVXHaCANAMRY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KGxfb1jW34qgKA706zkTw6GntXB3L6pARuXclPz+BGtnqLMHh2hffklfgmDzO0fqs
-	 lBCJS27ydbt/3yleSourWLLBJMXqHvivaECHK1m7L3uCYfJ5Slipl9+qmXky6FBvh2
-	 z23cGPinD0ZPFfTmdjwJcPF1QLzmOFgYz3ArmlIL1nV4DEDTxp1hhOGGJGIQljbipT
-	 4I301CdmZCN2x+R4K2n3mefucXdScvKLUvNTD4tw+Lvpe4HK2kRkmggs6C6dZcOB2y
-	 PYfFmnM5SO+T5mEwMMaFY7mEtahQYNXrZDk6ErzBxZq9wY4aGQNalavAA9hn4bV2Tv
-	 jnKNQMMGYzHHg==
+	b=jdHjjhICD41gEdB597ZN1qR8HL7hmx1R1cFIc1Tq8ZUaSp8tXKZRZHdzg7BPua2bx
+	 7Y5HmSLLeRCYdOPXjgY12A+zFM1nQMEBSrzEMBPHHNNt7qfCEqhP4BP8hdZsc2so6G
+	 TzdHzq1WLsuDZk32CFWzH4Y0E1fm08H2fZURZLy0X2UW87Uk9Fcdln842wJ+m8Tp0u
+	 ZegOmWkwiK2dhuadR7Jv6kjD7ViWXGBwpqAObGXVm1yddEhY9MjjzMfuEucp2tqxLu
+	 cE6dka/Jjb+q5WPJQtF2IAppmqp17XX79lxy15xvK9Zd7zwZA7N8Up49N0hbQV7258
+	 pod/iwTj4uDgA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/9] perf c2c: Bounds-check CPU and node IDs before
- bitmap and array access
+Subject: Re: [PATCH 2/9] perf stat: Bounds-check CPU index in topology
+ aggregation callbacks
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605233837.1773732-4-acme@kernel.org>
-References: <20260605233837.1773732-4-acme@kernel.org>
+In-Reply-To: <20260605233837.1773732-3-acme@kernel.org>
+References: <20260605233837.1773732-3-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 23:54:43 +0000
-Message-Id: <20260605235443.852FC1F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 23:55:49 +0000
+Message-Id: <20260605235549.7337F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Dangling pointer in the `he__get_c2c_hists()` error path leads to =
-a Use-After-Free and double-free during cleanup.
+- [High] Incomplete bounds-check fix: Missing NULL pointer check before acc=
+essing `env->cpu` array in `perf_env__get_*_aggr_by_cpu` callbacks.
+- [High] Out-of-bounds heap read due to unvalidated `sample->cpu` index in =
+`perf_event__preprocess_sample()`.
 --
 
-commit 4a6b2b9d1bf179db3b813952c508e27db4f604e7
+commit ebd8bf34de713904cef201f9c6fa2181cf91d727
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf c2c: Bounds-check CPU and node IDs before bitmap and array access
+perf stat: Bounds-check CPU index in topology aggregation callbacks
 
-This commit adds bounds checks for CPU and node IDs in c2c_he__set_cpu(),
-c2c_he__set_node(), and process_sample_event(). It aims to prevent
-out-of-bounds heap writes and array access when processing perf.data files
-with unusually large CPU or node values.
+This commit updates six perf_env__get_*_aggr_by_cpu() functions to properly
+bounds-check the CPU index against env->nr_cpus_avail. This prevents
+out-of-bounds heap reads when processing untrusted perf.data files.
 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 3dd45a550fdb7..f060dfbe11c28 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-
-[ ... ]
-
-> @@ -391,7 +399,12 @@ static int process_sample_event(const struct perf_to=
-ol *tool __maybe_unused,
->  		 * Doing node stats only for single callchain data.
->  		 */
->  		int cpu =3D sample->cpu =3D=3D (unsigned int) -1 ? 0 : sample->cpu;
-> -		int node =3D c2c.cpu2node[cpu];
-> +		int node;
-> +
-> +		/* cpu2node[] has c2c.cpus_cnt entries; large u32 wraps signed negativ=
-e */
-> +		if (cpu < 0 || cpu >=3D c2c.cpus_cnt)
-> +			cpu =3D 0;
-> +		node =3D c2c.cpu2node[cpu];
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1638,7 +1638,8 @@ static struct aggr_cpu_id perf_env__get_socket_aggr=
+_by_cpu(struct perf_cpu cpu,
+>  	struct perf_env *env =3D data;
+>  	struct aggr_cpu_id id =3D aggr_cpu_id__empty();
 > =20
->  		c2c_hists =3D he__get_c2c_hists(he, c2c.cl_sort, 2, machine->env);
+> -	if (cpu.cpu !=3D -1)
+> +	/* env->cpu[] has env->nr_cpus_avail entries; reject untrusted indices =
+*/
+> +	if (cpu.cpu >=3D 0 && cpu.cpu < env->nr_cpus_avail)
+>  		id.socket =3D env->cpu[cpu.cpu].socket_id;
 
 [Severity: High]
-This is a pre-existing issue, but can the error path in he__get_c2c_hists()
-lead to a use-after-free and double-free during cleanup?
+This is a pre-existing issue, but is it possible for env->cpu to be NULL
+here while env->nr_cpus_avail is greater than zero?
 
-If c2c_hists__init() fails, the memory is freed but c2c_he->hists is not
-cleared:
+When parsing an older perf.data file, process_cpu_topology() can free
+env->cpu while leaving env->nr_cpus_avail populated.
 
-tools/perf/builtin-c2c.c:he__get_c2c_hists() {
-	...
-	hists =3D c2c_he->hists =3D zalloc(sizeof(*hists));
-	if (!hists)
-		return NULL;
-
-	ret =3D c2c_hists__init(hists, sort, nr_header_lines, env);
-	if (ret) {
-		free(hists);
-		return NULL;
-	}
-	...
-}
-
-Since the hist_entry is already added to the tree earlier in
-process_sample_event(), returning -ENOMEM from here triggers teardown via
-c2c_he_free(). Does this cause c2c_he_free() to dereference the dangling
-c2c_he->hists pointer?
-
-tools/perf/builtin-c2c.c:c2c_he_free() {
-	...
-	if (c2c_he->hists) {
-		hists__delete_entries(&c2c_he->hists->hists);
-		zfree(&c2c_he->hists);
-	}
-	...
-}
-
->  		if (!c2c_hists) {
-> @@ -410,7 +423,9 @@ static int process_sample_event(const struct perf_too=
-l *tool __maybe_unused,
+If this occurs, the bounds check cpu.cpu < env->nr_cpus_avail would pass,
+but accessing env->cpu[cpu.cpu] would result in a NULL pointer dereference.
+Does this code need an additional check to ensure env->cpu is not NULL?
 
 [ ... ]
+
+[Severity: High]
+This isn't a bug introduced by this patch, but while looking at CPU index
+bounds checking, is there a similar missing upper-bound check in
+perf_event__preprocess_sample()?
+
+In tools/perf/util/event.c:perf_event__preprocess_sample(), the untrusted
+sample->cpu value is checked for negative values, but does not appear to be
+checked against env->nr_cpus_avail before accessing the env->cpu array:
+
+    if (al->cpu >=3D 0)
+        al->socket =3D env->cpu[al->cpu].socket_id;
+
+Could a large positive value for al->cpu bypass this check and cause an
+out-of-bounds heap read from the env->cpu array?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605233837.1773=
-732-1-acme@kernel.org?part=3D3
+732-1-acme@kernel.org?part=3D2
