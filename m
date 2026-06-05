@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603F7380FFD;
-	Fri,  5 Jun 2026 20:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33383B7769;
+	Fri,  5 Jun 2026 20:33:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780691633; cv=none; b=SzDOMfnj09i/5Lle6nw7lG6VMgXsGDtARGIuCIGzHRTmmTxeLqBdT2NDXN7c6uN52flqYdJh5fCkMNC8RDfwKjrXqGbWU+BIg4w36woSqeoKoBqWauiA9IWVKHZQBQV3dMUx8MaFoNG9gg8r+7aROsaSY360ju1/i97iF0EyyCQ=
+	t=1780691638; cv=none; b=koN/ypajMyvTay34LkU2Z8YL5klV39ZBKEjgMTU4MOJNlsF6WAGqrV0uFi7xzp3evQYV/mh9S/K5SadaR2eZOFM/6YpiKWuXd877ZPdTP5ESO1TP9xrKqEXoczgXR/LGKm1oZVyYuj4CiUwzrj4pxjf3s9nBKVs4QHgXfJVuI3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780691633; c=relaxed/simple;
-	bh=uhxftI9WmsUrBDfnoqZy0tuVYE1n1UQaoDsc0yoOhJ0=;
+	s=arc-20240116; t=1780691638; c=relaxed/simple;
+	bh=Wmj909kKRpel5f3kMWhTPHtDbOoQDSXyGxEK4cvZGMQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=roHpgjfsCoM8S6FnhSIt1szHSmb7AkBa44OorHRq++Djte7i1FoCI5FFQVdltbTD4ywLPquMc2LnIYw6lEo4jKLF06txmokkEysP77DHqalhn8FOj+wghSCCrUOQWnghd/mLDRvEDKAMdLalNKOw3UWG/2LMfOG0pLCj5TS/rEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhGFp7Vq; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=V26nfMIwo2bmPLDR5tonmYShzfz2yT1Jl4gf4Nhw4WjyV5I/Ml8r7N1aQxEXb1AipPhkGrMrdL3jUovXsyX6UA9TWn5r+LWEHl26sG5bC+U5xNvO6j50So/F8kp9SZtRA/WGNSY5AoAcoRAUYHNdv1+dQxYB8cst6cd4WjFgRiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFhQ/Zjl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhGFp7Vq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 580B91F00898;
-	Fri,  5 Jun 2026 20:33:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFhQ/Zjl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DBA51F00893;
+	Fri,  5 Jun 2026 20:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780691631;
-	bh=IXy4NLgeuZa5Txig+iDrTM/ihMQrKWz9XknvMb5CkSI=;
+	s=k20260515; t=1780691637;
+	bh=AzHRciR+fZp4kINwoY3eSWSWvXjjxsj3wz+XPt8kJM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HhGFp7VqtfE4sbPNOjyVTB1b4vQCwFJynZzbew66+wAVSsDRRWTfzI0mMN0raHqsC
-	 Y/v0hDtMcRi9kAGbkXJHitPK8Dl1+ZYm1VKO10Kk1x0JyH15JFlUXqh8LUA8v4Sf/g
-	 AmX6oablinR/pUWCz/b1w7OIE3nMsf65ttOcI9VoRZSjCwpi6qXf7xFjIxGM1pim1o
-	 KXeC07bGYXofpvLPtDl5Z/LgXbX8HviG62XJDcQveSVqCnLIYIM4unR2dQHeq+slOA
-	 40+5OEZH1tkYZF1Vx/8EG1wrJvgNEtomQDySjNhpsdc0p+9/AwKhw1mA4yBlP+/P24
-	 6qQUcY63JLvqQ==
+	b=dFhQ/ZjlAK2mpc7EBjmReCsEhCSyPVdQM/KW/92DF9xsWGw7Sax8jeLKtTneEDybt
+	 1e82pQvauF90I1NnHBSKhvWQM2qfuYSvUpW8pHsJixjBAcYi/Z8+C0p7sX0uUyzxbT
+	 IB5zik7hVgdz7T+NmR2TlWmUHG05Xdh+oZ2hWct6hZMJNDd5kekO3E6blbMfPh7OC0
+	 O9F6Cqre69csJcz/KU9hz7/GX1dQe2ILAal5sptfBlXfePOFoIJ5i7VjytwsDZCdHo
+	 75pcMwy3Si1J2aPJfTqe0kMWYcT+PWRA9dCLrw/gBQki7XgMAJtkn9Y/tI3tqbdGqe
+	 Dk897aOKsPPmA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	sashiko-bot <sashiko-bot@kernel.org>,
 	David Ahern <dsahern@gmail.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 5/8] perf sched: Clean up idle_threads entry on init failure
-Date: Fri,  5 Jun 2026 17:33:13 -0300
-Message-ID: <20260605203316.1758661-6-acme@kernel.org>
+Subject: [PATCH 6/8] perf sched: Fix thread reference leak in idle hist processing
+Date: Fri,  5 Jun 2026 17:33:14 -0300
+Message-ID: <20260605203316.1758661-7-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260605203316.1758661-1-acme@kernel.org>
 References: <20260605203316.1758661-1-acme@kernel.org>
@@ -57,47 +57,38 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-get_idle_thread() allocates a thread via thread__new() and stores it in
-idle_threads[cpu], then calls init_idle_thread() to set up the private
-data.  If init_idle_thread() fails (e.g. OOM for the idle_thread_runtime
-struct), the function returns NULL but leaves the partially initialized
-thread in idle_threads[cpu].
+timehist_sched_change_event() sets itr->last_thread to NULL at the end
+of idle hist processing without calling thread__put() first.  The
+thread reference was acquired via thread__get() in timehist_get_thread()
+(line 2581), so every idle context switch leaks a thread reference when
+--idle-hist is active.
 
-On subsequent calls for the same CPU, get_idle_thread() finds a non-NULL
-idle_threads[cpu], skips allocation, and returns thread__get() on a
-thread that has no priv data.  Callers then get a thread whose
-thread__priv() returns NULL, leading to unexpected behavior.
+Use thread__zput() to properly release the reference before clearing
+the pointer.
 
-Release the thread and reset the slot to NULL on init failure so the
-entry doesn't persist in a corrupted state.
-
-Fixes: 49394a2a24c7 ("perf sched timehist: Introduce timehist command")
+Fixes: 5d8f17fb5822 ("perf sched timehist: Add -I/--idle-hist option")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-sched.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/builtin-sched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 21fb820b625b43e1..e4378cc9ab3ed48b 100644
+index e4378cc9ab3ed48b..af6322ffaaa6eb1d 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -2514,8 +2514,11 @@ static struct thread *get_idle_thread(int cpu)
- 		idle_threads[cpu] = thread__new(0, 0);
+@@ -2934,7 +2934,7 @@ static int timehist_sched_change_event(const struct perf_tool *tool,
+ 			if (itr->cursor.nr)
+ 				callchain_append(&itr->callchain, &itr->cursor, t - tprev);
  
- 		if (idle_threads[cpu]) {
--			if (init_idle_thread(idle_threads[cpu]) < 0)
-+			if (init_idle_thread(idle_threads[cpu]) < 0) {
-+				/* clean up so next call doesn't find a half-initialized thread */
-+				thread__zput(idle_threads[cpu]);
- 				return NULL;
-+			}
+-			itr->last_thread = NULL;
++			thread__zput(itr->last_thread);
  		}
- 	}
  
+ 		if (!sched->summary_only)
 -- 
 2.54.0
 
