@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22465191F98
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 20:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ECF3195F9
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 20:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780692376; cv=none; b=nOqxs/SHUDi9B5+iKSVMEWBizQtHsRJjYQrxPsKg8XJU33B4y1ZqAm+gDsSJlpBH/JO9e0m3HTxE1QOFs/HgmYrjtGg/c2PZucl+Mhzfv87NI642TaLwEGk5blhEWuuY0YrC7fX8xSwjZgpgoyBrym+aGyftQgvHGh1sSlTWvOA=
+	t=1780692412; cv=none; b=aTH1EIL/lvLQwm5DBnE5kocIiLfvSGrvIdpGohEjK+Xd+QyIDI7IhDvz02CQGe4NkqsksQkFLxe3xooLFx5Z8FdvRxNJshd6kg6L38WOt0egt8Ch7M6+FpeDt0MeYJC8Etpxc5Jrwlc06osJsMoM2SOUJRK3oRN9lc/WZp381yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780692376; c=relaxed/simple;
-	bh=JBhdftWugT3B651heR7j4M6J0Fu6JyhmOkOpnVMcEJY=;
+	s=arc-20240116; t=1780692412; c=relaxed/simple;
+	bh=Dk+N/1k2HXf90mhEonAB2ofaVRZRvJx48ogp30zo1Ys=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IvfdCuEz1BBdesQEd3Pt4nzNE0Um2u557MRwOYkqEFc3xpRz2GoF5lvB6yYs24kMHGYcvj5SM5/L6kvsRdG0rqEFeY9G5FA/6m0lNal/jEtzmmq9w95OSIbZRg4sZ2DYZuEsFoMqc3R+9DhWRx/sVTbVwFCLYU+Ne+gJncBjjnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxLsp9CM; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=MUIUBTwRzOprt1qgu3V7A5cz9AsvGo/3Vkau6mig7fWhrneRL2JH6EfjiLhahs00h9iUz0TmCG67nBo2rSiI/TQMY6ddXoOkiyXERbRaE04r/xoIkcGMsvY4H44PmAOetkFK44s2kDDgMWdzNcZZt7LJ7lw0m2QbYyg7z+cHWL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcfDW/My; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxLsp9CM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A02FA1F00893;
-	Fri,  5 Jun 2026 20:46:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcfDW/My"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD831F00893;
+	Fri,  5 Jun 2026 20:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780692374;
-	bh=1LHOOm6wd1JbqYsHGYl/fqt4r8JEj8OcJtEfcgbpBnA=;
+	s=k20260515; t=1780692411;
+	bh=0giBxELnA/jDAVNs+QkG/1SWD6pwa/0+RpKdmKeuUZo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PxLsp9CMBKRQdhYtyUvugz1JxD6JY0sI7koAlG8kVH9EqbHZGc+0UTG5i3luNMe8f
-	 XDVsS/SCDjKVHsvv8DOq0SsPpjGsXW02Qb/AdGBNIwyjc5fXWLmqjvuE7hO4NXGzwz
-	 uDDDt39PoIvnMy+YsmUYwFw5aLFydHIB8LgdiWRUGWhYZNusugo0XSse9ntUQjcPrG
-	 irgukUweKlqBCK75XMt9IjMjDXnhdsCkDZZGN9AZsRGoDN2l0XXru9D+lYmFH5dhqQ
-	 smh5JfGq00/aY/Hek/jtkLp1t0syCToDgddmuRGN+d3VWTGksO9g6JbLMCBIsrdX0F
-	 amjrBQO6GZW9A==
+	b=jcfDW/MyRQcQ/3vvFMYbMV1OAC/wQeXdGuKqddwwoZMfgVHbpY4s31dv9pQOeYk2n
+	 AtawFYZ0lY/UxPdQhjnEb9xGeBkfe82SDy+n4zUFkmhdJChw5xj9tDZcHK2O3icHB7
+	 6Z0x9l/X6hUC6PQ14FqRQXy99O126yy1euxftJN0zG3v1In85LbPW32HUefBDjJij4
+	 EokfbhGFp6h7xS+sTtp7iP78Rt7bkhBj/wJJ88aaL9F3RTHlx6x0e7IyY/7Xi5fKc6
+	 lZtKdXcvOomlSlBNkZr1k4hVFGt6ov5kBg/SQTm/KPz8mjHbEdxznbTxvybFXZEuYu
+	 AAOe1Wbzhm7Uw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/8] perf c2c: Bounds-check CPU and node IDs before
- bitmap and array access
+Subject: Re: [PATCH 6/8] perf sched: Fix thread reference leak in idle hist
+ processing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605203316.1758661-4-acme@kernel.org>
-References: <20260605203316.1758661-4-acme@kernel.org>
+In-Reply-To: <20260605203316.1758661-7-acme@kernel.org>
+References: <20260605203316.1758661-7-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 20:46:14 +0000
-Message-Id: <20260605204614.A02FA1F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 20:46:50 +0000
+Message-Id: <20260605204651.2CD831F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,77 +48,86 @@ Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] The bounds check for `cpu` uses signed comparison, allowing negati=
-ve indices to bypass the check and cause an out-of-bounds read on `c2c.cpu2=
-node`.
-- [High] Dangling pointer in `he__get_c2c_hists()` error path leads to Use-=
-After-Free and Double Free.
+- [High] `timehist_get_thread()` leaks thread references on both success an=
+d error paths when `--idle-hist` is active.
+- [High] The callchain root tree within `struct idle_thread_runtime` is not=
+ freed when idle threads are destroyed, leaking dynamically allocated callc=
+hain nodes.
 --
 
-commit e95c9ca109b5c13c67d968858ca1ace26fe8c4c9
+commit b5d8b3caa1d8b8f8fc2ff742e34d77adc37bf655
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf c2c: Bounds-check CPU and node IDs before bitmap and array access
+perf sched: Fix thread reference leak in idle hist processing
 
-This commit adds bounds checks for CPU and node IDs before accessing bitmaps
-and arrays in builtin-c2c.c. These checks help ensure that a crafted
-perf.data file with exceedingly large IDs cannot cause out-of-bounds heap
-writes.
+timehist_sched_change_event() sets itr->last_thread to NULL at the end
+of idle hist processing without calling thread__put() first.  The
+thread reference was acquired via thread__get() in timehist_get_thread()
+(line 2581), so every idle context switch leaks a thread reference when
+--idle-hist is active.
 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-[ ... ]
-> @@ -386,7 +394,12 @@ static int process_sample_event(const struct perf_to=
-ol *tool __maybe_unused,
->  		 * Doing node stats only for single callchain data.
->  		 */
->  		int cpu =3D sample->cpu =3D=3D (unsigned int) -1 ? 0 : sample->cpu;
-> -		int node =3D c2c.cpu2node[cpu];
-> +		int node;
-> +
-> +		/* cpu2node[] has c2c.cpus_cnt entries from env->nr_cpus_avail */
-> +		if (cpu >=3D c2c.cpus_cnt)
-> +			cpu =3D 0;
-> +		node =3D c2c.cpu2node[cpu];
+Use thread__zput() to properly release the reference before clearing
+the pointer.
 
-[Severity: High]
-This isn't a bug introduced by this patch, but does this bounds check
-allow negative indices to bypass it?
-
-Because cpu is declared as a signed int, if sample->cpu is a large value
-like 0xFFFFFFFE, it converts to a negative integer (e.g., -2). The bounds
-check uses signed comparison, so the negative value bypasses the check,
-resulting in an out-of-bounds read at c2c.cpu2node[-2].
-
->  		c2c_hists =3D he__get_c2c_hists(he, c2c.cl_sort, 2, machine->env);
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index e47db1c5c6020..e2df69a624765 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -2890,7 +2890,7 @@ static int timehist_sched_change_event(const struct=
+ perf_tool *tool,
+>  			if (itr->cursor.nr)
+>  				callchain_append(&itr->callchain, &itr->cursor, t - tprev);
+> =20
+> -			itr->last_thread =3D NULL;
+> +			thread__zput(itr->last_thread);
 
 [Severity: High]
-This is a pre-existing issue, but can he__get_c2c_hists() create a
-dangling pointer on its error path?
+This isn't a bug introduced by this patch, but while we are fixing leaks
+around idle thread handling, does timehist_get_thread() also leak thread
+references when --idle-hist is active?
 
-Inside he__get_c2c_hists():
+tools/perf/builtin-sched.c:timehist_get_thread() {
+    ...
+		if (sched->idle_hist) {
+			struct thread *idle;
+			struct idle_thread_runtime *itr;
 
-hists =3D c2c_he->hists =3D zalloc(sizeof(*hists));
-if (!hists)
-        return NULL;
-
-ret =3D c2c_hists__init(hists, sort, nr_header_lines, env);
-if (ret) {
-        free(hists);
-        return NULL;
+			idle =3D get_idle_thread(sample->cpu);
+			if (idle =3D=3D NULL) {
+				pr_err("Failed to get idle thread for cpu %d.\n", sample->cpu);
+				return NULL;
+			}
+    ...
 }
 
-If c2c_hists__init() fails, it frees hists but leaves the dangling pointer
-in c2c_he->hists. Because c2c_he outlives the function execution, later
-during shutdown, c2c_he_free() will access the dangling pointer and trigger
-a use-after-free and double free.
+It appears get_idle_thread() returns a new reference via thread__get(). On
+success, this local idle thread reference is never released. Also, on the
+error paths returning NULL, it seems to bypass the caller's cleanup code and
+permanently leak the task thread reference acquired earlier via
+machine__findnew_thread().
 
->  		if (!c2c_hists) {
->  			ret =3D -ENOMEM;
->  			goto out;
+
+[Severity: High]
+This is a pre-existing issue, but does free_idle_threads() leak dynamically
+allocated callchain nodes?
+
+tools/perf/builtin-sched.c:free_idle_threads() {
+    ...
+		thread__put(idle);
+    ...
+}
+
+The thread's private data destructor is set to free() via
+thread__set_priv_destructor(free). While free() successfully frees the stru=
+ct
+idle_thread_runtime container, it doesn't appear to recursively free the
+nodes embedded in the itr->callchain tree built by callchain_append(). Can
+this lead to unbounded memory growth proportional to the trace size?
+
 >  		}
+> =20
+>  		if (!sched->summary_only)
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605203316.1758=
-661-1-acme@kernel.org?part=3D3
+661-1-acme@kernel.org?part=3D6
