@@ -1,225 +1,298 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71F127A462;
-	Fri,  5 Jun 2026 17:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C135F3988F9
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 18:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780679755; cv=fail; b=CmlMZL+ZLzGr94aFbNv5XGXLl1+b/2jvb3XdxAQ5MY7+nH1Yt/KOhdfjHFRngdHLqXfDI+9AhhQXfTqprwjN/smNOb7+UsNhrhEKBQNRutpdU+aQAl+YY2t4tzCrDiYMWiGEUUuX6ZdmQjbrQ6Ma+We4FqOEAbgxJhC9qafzW4s=
+	t=1780682563; cv=pass; b=GDDsrz0zcK70u2nuoWiMto/KlAUd4MPAQcxWzhG9X62Kcx8TfoSnLivoPD7UJ0hVy1hf9DfnflYL5qN+20GtHvp/ihbbjR1oAJmzmP3cKY8aTYIcRJyExKenD/6GsZQAZ2o/Hc+1HXbm/coKe6YTr5HQjrVxD1e9LgtClTGPtzw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780679755; c=relaxed/simple;
-	bh=RGd1GyS4FpjO/GnZORH7YJ4gWtcGqeQLSGQ/MDvIIIM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=cELGWxk6GbWmHxNG3I4WKTVpztd5LFYI4kzGq/z1Ti13fxQJYrdmwAHd5knxboZn80y76LxY6yRBrWeaecxGpuNeKT4Y0mzg9sPCoolgewZ2LBH/w35i1h0JFy1IBOFnQcpADVzuTer6ZI8/TcqCEzbf+MKJR7wiNCUuwJNNzBo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lVL7tFL5; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1780682563; c=relaxed/simple;
+	bh=3Fh+7y06PFFz5rLB74Sdz/3hB7ECtiIEet17uBStb88=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I5ckNO+bXBeEnv6PRA14aOIKmRhZcHzocnNAvBS/zrDoOs9NGTaXnggIHMahjV0FXxMVA/fViLLyKJrAn10NYUSREJZ0yh92U3SyW2V1xJ3W1XXXcRHxww8gPqZIep9+3mQx5ocZ8Qzt/MuogNCbz798EePiYeGlmr5AxSWRE68=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m4v2R9c9; arc=pass smtp.client-ip=74.125.82.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lVL7tFL5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780679753; x=1812215753;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=RGd1GyS4FpjO/GnZORH7YJ4gWtcGqeQLSGQ/MDvIIIM=;
-  b=lVL7tFL5WUuTVi9mVdRTPv0QcOk2nU+X8o/lzPofblTq5ithbNSTiRJ/
-   dch7lPnK5KKoXGXpcmo7YqZSGpe6dkaeRw3+FD6XlaoelXDr5+YiUtTyf
-   UoMvAKXHGjczDSEr1oRstv82qU5Ux0PaB4VpHiA0+z5BVRBm398c6R1nc
-   +D56UqTIYEbIjk4+vOq6pEd8PDARNzDVmQqrK83fODpaCU4reK5xH/wOh
-   Rfc0oA8cPNmaxkISMPVMkQA4AJmPDW2Trt3izy2zQPRdCxUQ8u3Vo8khP
-   qe/kJfKm3mWnhvVsWPmwN2S20nUAypXIYfIvKazzP8KAP0hhoFI2UVzkf
-   Q==;
-X-CSE-ConnectionGUID: nEFyyo2cRI2CXGdr+a7LYQ==
-X-CSE-MsgGUID: ixv8I+iPT8KAwPdsjVKJHQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11808"; a="91829587"
-X-IronPort-AV: E=Sophos;i="6.24,189,1774335600"; 
-   d="scan'208";a="91829587"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 10:15:53 -0700
-X-CSE-ConnectionGUID: P6YoHIqNRsqalzJFaL2Z8g==
-X-CSE-MsgGUID: Y6b5yfjZSQGkyHEOsc5ZVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,189,1774335600"; 
-   d="scan'208";a="282975991"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 10:15:53 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Fri, 5 Jun 2026 10:15:52 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Fri, 5 Jun 2026 10:15:52 -0700
-Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.52) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Fri, 5 Jun 2026 10:15:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oIsidOaeNRFGtvXItirfYFh7ScyVsoUtJwIUzzHzcr2jX7fK5Qd9NqojdB3xKpog8L6aGojkr4ixlwlkCkGvfy6bAuwXJ1zaMRu6oQTSaGWXXNwP8P6LCW8YuvcUBLiMIn+KMiwrDFgODEIRQAIgdpVjRDrm72mZKcien++R0Qt9BMlG+HvYBbE12gwGdcng9dIc4lzV9cANzhx1oIXuVN7OQofKfXrfCdWGPtWEECNpHOrRkZK1plDoqxQf77hzEukpB2ZF/OHSXP0lBIC8X9YjDuL0J79dTYsT0xq9SmF2N18Kf4hnTs4a+q81rGyiLFgE0Sp01sgFn29G9427PQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RGd1GyS4FpjO/GnZORH7YJ4gWtcGqeQLSGQ/MDvIIIM=;
- b=O3r9WmNT1H3lT0LxhLj1Ehs7aqS0oCNmDSF+HB8OTU2HtodWXgZuFAVSyJZ4vgFeGRAGQGjHwOKaLZYyU31oCWfzuDQfjmGYpYMzL3FisbEpKzQzujQWJhynk0bQw2HD43oJ3HnV+9UlOh+J7NnAOB5jy35KOg+KotKGNu1Qo3UCID4xzUPWdBJ0F5ECdzmq+sgSJt83Wcm63evZmfzrGsffECeUN8lbfAUT1BHbwV2pGBgsZLrFO0vpwxkRlbtiYVP/DFe6KDVd01QicuCp37n8n+KHYEMpsXv29Xeh7xIDQtX7CN/xq2xX3kXOqKXHxpCI8G2z947KYMc7K6hrCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CH3PR11MB8383.namprd11.prod.outlook.com (2603:10b6:610:171::6)
- by DM4PR11MB7375.namprd11.prod.outlook.com (2603:10b6:8:101::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.9; Fri, 5 Jun 2026
- 17:15:46 +0000
-Received: from CH3PR11MB8383.namprd11.prod.outlook.com
- ([fe80::60b:dc79:1a0d:6913]) by CH3PR11MB8383.namprd11.prod.outlook.com
- ([fe80::60b:dc79:1a0d:6913%2]) with mapi id 15.21.0092.006; Fri, 5 Jun 2026
- 17:15:46 +0000
-From: "Falcon, Thomas" <thomas.falcon@intel.com>
-To: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"ak@linux.intel.com" <ak@linux.intel.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "acme@kernel.org" <acme@kernel.org>,
-	"dapeng1.mi@linux.intel.com" <dapeng1.mi@linux.intel.com>, "mingo@redhat.com"
-	<mingo@redhat.com>, "Hunter, Adrian" <adrian.hunter@intel.com>,
-	"namhyung@kernel.org" <namhyung@kernel.org>, "Rogers, Ian"
-	<irogers@google.com>, "Eranian, Stephane" <eranian@google.com>
-CC: "Chen, Zide" <zide.chen@intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "Mi, Dapeng1" <dapeng1.mi@intel.com>,
-	"Hao, Xudong" <xudong.hao@intel.com>
-Subject: Re: [PATCH 3/8] perf/x86: Update cap_user_rdpmc base on rdpmc user
- disable state
-Thread-Topic: [PATCH 3/8] perf/x86: Update cap_user_rdpmc base on rdpmc user
- disable state
-Thread-Index: AQHc9IkNR0F+SV9ZmEypnyeqfqpYK7YwNNAA
-Date: Fri, 5 Jun 2026 17:15:46 +0000
-Message-ID: <fdcb1f3211a493a538fe840f432b36ea073cf92b.camel@intel.com>
-References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
-	 <20260605011136.2043393-4-dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260605011136.2043393-4-dapeng1.mi@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH3PR11MB8383:EE_|DM4PR11MB7375:EE_
-x-ms-office365-filtering-correlation-id: 26d4ab19-269e-4df2-f9df-08dec3261510
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|10070799003|366016|376014|7416014|38070700021|921020|22082099003|18002099003|4143699003|11063799006|56012099006;
-x-microsoft-antispam-message-info: Pdqvklzb7/aiDYlYjXLqG6f/KvKaBKrEwoWCPTZlRGDpJMV+0RrrAPTbVHsuMWYLRrAcBzY1/ii3KwnVe4iuwD5efOBlA4zY988oxRX1h4AP9LsqZCMtUZVd3qSmrC90U9nXmYcq+kYrwUmmHNoCqsgZrHC804s8Tgg+Yv3X6wYO0VPqKit29bSMjNk2hYzOb+aOq4zn3IecxLNe+qK5iitvxOdONf9fx5Kk2S+HLiAV666QqJTUOVqdVkavj6vNWJirV1B7nTA8yf9E8h91a1IKPeaIG8uHBGxjF3o8wY/yc6+nhkLwI6UlU3u3Z3ZQoydz3lIQvJHl+KrcePmhppoKkpZDaVovraRsrUVVhsmeXVI2sYSKeOPK+yGhjgtQGDMojmw18B6Erhw4HmNEQp7D+Zbh47xT2kbJzz2Gqa4VMI+lTFQ4/Fylps2xMdJhZiL84AA7L3aeAT02EXYgpoFp8dZmaS9qV78xp+EmDDbTSY/R5U9o8frvfe4pVpgnqXOWGTiTvWIQyAaUSYrqnXWdXXl8kAeLpGCwQZnlGclCMOysCBQwTnAxw3KXKTIJNxzjj6TtsA7WPwSf7T2DZQ8+zrmzCD+6DyHOkKvp5mcmj3gbWCq5s3/ZA5XxTDHPan7QxWWqWdkOJ/QKZ5YeerITduZ31E5rubeGiuJmaiARDkuUaurZ8tE4e3fxpYUGfn1FCTHXc+rOniTl3c3Qawdx7MrwUqeEnzV+YsuCaJSDsF8ehPA1vDPevGQqWoQ98PFOJ4gYLIn3nEAO+8qdTg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8383.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(366016)(376014)(7416014)(38070700021)(921020)(22082099003)(18002099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 2
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cWlTQ1lHK2NPQmhkeVVJOHdpS1ZrNnpoWUt1Vm9pN0VCRjB3SzhBLytRR1g5?=
- =?utf-8?B?T0V3L1M5UEc5MUo2MlBDSWZnYzVhM3QxbGhBUmM2WFdYdUc5ZkE4ZUpIa3Ax?=
- =?utf-8?B?RTI0MzY1RFRFNnF6cVpZTjBweURJNFRXbDZvV0J5Y3V6NnJjY2tqTUxhLzFq?=
- =?utf-8?B?TWg3M09QUTE5YmxPOXAvN1hSN01BS0pJWDUxZEVFOUg1bDVRbXltZk96bktN?=
- =?utf-8?B?YldqNW5tUkp1ZDRuRElmUmNPcVlJWURvU0lGV3VCWnErazZ0djBqbXhGUGc1?=
- =?utf-8?B?c3NLMzVDSUNQMWxObVp4RTJ6dUZ3NnNIUEhsbjJqcU82UEdaUjVJZGVhWi9B?=
- =?utf-8?B?QVJ2UXN0UkFnN0t1K1NSekZ0aVRhTVJ3Y0NLeWxzOUpQR2Frd1NkTmZSbkZ3?=
- =?utf-8?B?Ky9FNldoRUlNSWNHd01ZZ3dGaHJXYTdibFdQMDlVUmFhWS93MkxraTFueUoz?=
- =?utf-8?B?anNVWDltekgrNU1UUTl3T1lRSG9ONTdRZjBuRFRDUk9kQWRycG1wWGlWK2lQ?=
- =?utf-8?B?Ly9tYlAybVk5a2FTSVltR2p5Zy9vcnhTR2VhS3NuZSt1VjVNRmZHckc0K21i?=
- =?utf-8?B?TW1JbDltUktTZ29WSG9GNFlYbDB0dFZtM05CREpZdCtGQ1p2ZFBkZ0VGd2VJ?=
- =?utf-8?B?cUlVVVF0RHJVZk9Hb0FYQ1QvZm9GUW9FZHNZcGZJV3kwUVcyZVJLOU9iV3No?=
- =?utf-8?B?SHNuNTFkQ053V3ZPRDZWSWRPSG5EN2Rta1dQdXZYblVUYWdibWZQNmo1UUVv?=
- =?utf-8?B?QWEya2t2K0tSaFMzTEdQRzQ3TTk4VXRnRy95NGl4Sy83SmR3amJlcE93L0x6?=
- =?utf-8?B?akVjNW5EU2tmaVhOK0dWam9hUXM3bDFVQWlNM3pVV3FONlJNS2xVOHcvRi8v?=
- =?utf-8?B?TTJ0Q0kwMTVkbTVMcGI4RUJ5Rm04aHVBaHR6OXhvYkx5MWVmMjB6dlU5dm1v?=
- =?utf-8?B?UEk2MzJlQXlvYnlVdG15RkpGQm5zN0plc1B1bld2VklqNnprZlQ2Um9HaFVQ?=
- =?utf-8?B?L21vanZwcG1JVGt3VWQrQWxSbGNKWEtFRGsrYmM1bHpiV01ZaVdQYnhrYmpn?=
- =?utf-8?B?NjNQTnlnNHZic3BpZ1BIbXV5N0x2aWxINFlXakl3WmliamNnY0VrZlNUTFQ3?=
- =?utf-8?B?QkRPTnYzaXNDc09rb2psclU2U0tnTDU0Y1V4S2VzK0J5U0pvMkRLQzdaZTZj?=
- =?utf-8?B?eWo3SElKdFFOM0hnVzBhb2pRbndaVS81OG5SdTZZVmIrYkhlQTU4VU5Namph?=
- =?utf-8?B?c3FBWmhqQ1pRMXJJQ2hTN0lITzRTUmZmVVo4K2pqM3pIeTVsTU5veHE4YlhI?=
- =?utf-8?B?K1JoaldxVCtYVjFKUi85VXBZK0dhMGZKMlpKUWZ6Y245aVE0SHVVRVE1cUVx?=
- =?utf-8?B?VlIyWE1SanFzazhRY0tPYjJYbk5HUGcrRzB3K21qK1JQM3RxWDcxVnowQnFM?=
- =?utf-8?B?aDMrZ094ZjVuaSswSFZsQU5uZjFtWVpJTjZxNllGVnRzeEtkZHdLb2NQdEJs?=
- =?utf-8?B?eHIyRzY0VityeC94RUxwWmtvM013YzQ3dHFkeDJHNEZyZnA4SzBwSXdiSk9n?=
- =?utf-8?B?eWYwK3hkUjhodFlnanNuSCtDbnk3RE5LVjZOdFQxM1gyWGpBanM0bHlrRkdu?=
- =?utf-8?B?MGYyeHhubjcwWWI4Z2Jac3ZubnU3ZWRCM3dhN2t2SDFqaDYrbUwvZEl5NUdr?=
- =?utf-8?B?U0RyZE44N3EraEhSSmd0ZnZaQkNVUnBYQjZ4MGxnb0VGdTN5Vm5aQ3dPZjhL?=
- =?utf-8?B?M1VMUmhKN21IaURzdTRYZllHOGJiR0Jkdm1CSG1hcFR1MFNIdEZHUG5hdEhj?=
- =?utf-8?B?QWNHYlJBVlBzakVlM0RLc25JWEhhYmFUcGpqem84NkgyMjFVa1hzVHhBUHB1?=
- =?utf-8?B?VjdLblUzZk83SXh4Z0JrL2ZMMCtYWEZiQTloa3U2aklWV1NBcWFCYmdsY29h?=
- =?utf-8?B?QlV0bmpiLzIrbHFoNFJNTDllNWVOeGsyZzVPUkluVG9VN1lXSFVKR21pZ3l5?=
- =?utf-8?B?cW9Bb0ZuOFprN2lnVjM5MVNJVTV1bzU5OFhtU2VBMFRBSHRxQzZJRUVhTGJv?=
- =?utf-8?B?TnVmQXBsZ0VJSHBZY3g5TllyUHNHSDhBelJRNVlTSjJqZTVtMFlBWENITnZh?=
- =?utf-8?B?b29aNTJkOWtjZUlNSXFVb1NzdGFlMmtoRWk1bVpVQ2g1Q3lZUmZFaWdHZUFB?=
- =?utf-8?B?Y1JhazlFQjJXYi9xOHJZdFR0Q1hiNDNMMU8yZGdFN2NtMmVIa0g5UGhMbDNn?=
- =?utf-8?B?M055VVlleURSei9naHhsSjhjRnV1U0R0Tzc2elFoRkMvZisvWlpFcDlyMExF?=
- =?utf-8?B?dHVPLy9aVEpySmo3MVhHM3lxQVdsSHNUa3FmYmxteXVMQVM1N09DN0pkOU5x?=
- =?utf-8?Q?tRBcN0fXDPRLaubMl9iWuEel1zRww29RnbYUDvgSA8ZuD?=
-x-ms-exchange-antispam-messagedata-1: jNYK9dAJm26Wdw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7E3D2AFAE80B9244B11370AB108180E7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m4v2R9c9"
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-137f27712fdso3815611c88.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Jun 2026 11:02:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780682560; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Bt+qz16wrwoZQmV0MmDVK6Wof+s5+fwmZsA4k1jImuq73yeG4F23voRFC+NbdzICES
+         6wmm1pXX7P8EY5kS4EjHePJk+c/h9gUEo2krnMRYdsOY2PYiSZDOev4ugVku/MV5RW3X
+         LgNL3G0eULGz6Pgywv7+NhDbe1UdO3acwHwS2/mOAMDbLJASKNAwn73F34v8YdV2r/Sk
+         U/7FAkAgtuu1i4osyQJzdDkCBS3kKEp8tX2+I+gZU//6uQV+mjsiL/QhVJ6lROr7lwzI
+         hG36Ud/lptiBHV+3kQJ9uGrAIaXjMEA9fr1soni0lMSWQXYpHG7sszWmtFik2ygPgQko
+         PIXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=M9L80N7evNnbEW53h8WC2HtJbkW1PMKagc9d07MoYMI=;
+        fh=B0HGBLZsa31Uc3UpKwhKiw3TkQZKAd//lX8dAuSeZew=;
+        b=UGYPthFTbwon4FId6sqM2YVTDp2STtHUh9TbRZQelTg4+zfjHmY3E8Kw3asdmCCWRF
+         s+BmhKsi2iq3ZrhQTZDznE+JtUoFhLOCSsDHMKxsQYGIgvrhl36CXvx+4TIznRfvfUnc
+         4LlyVcr9mS5EfCMHONwmg203bNyQec1WEOLZuNGUjZkcpCwKdPem6znAW+8MvZk+01Fg
+         ZN9WdGb/BB1ygRsT5KfPaeJ7CINjYXIHxCFE5adO8YxfDb3u4+nMhWylNcf7tSk9+Vca
+         W3co7JEN8C6uqWQngeSWlodaipiS+w677IXsH7zMeyMKLtv/UstZS6XnkC7M1BWgMNXV
+         HO2Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780682560; x=1781287360; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M9L80N7evNnbEW53h8WC2HtJbkW1PMKagc9d07MoYMI=;
+        b=m4v2R9c9Wpm0a4tecaE+L5ebkVkjPyNVp+ADb+6UZxmurdVy6OnVTDekJ0Dm9eEqLw
+         CHOvs2A582WPfqvIUKQt9N9pbWxOEGOIdWGRHinlAZcI+XPCB+AmI+Pk5NxWA2Xc4gy4
+         0JzJ9CoIXAUx37e7FW4T2zYAWIoAbmFSxgMdZrP06ETI9/NWrZDkbOjwtAnq6LNANWyK
+         0wmIJIss71zvNv/zsOREbOTs06ZaNuMvQcC+7+Vk3r+H4m3qQZFFSiKUAVVbPWw7wS9S
+         ucoFVOEj2vfKRIO3wjggHzDBB5Gd3S3ypjnXsBLugdCEsDq0daLvQgUSWMhGbrnPcmx0
+         DTIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780682560; x=1781287360;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=M9L80N7evNnbEW53h8WC2HtJbkW1PMKagc9d07MoYMI=;
+        b=YlUKkezM4NwgK/bjlrol7vHZQpSXhmtBBKwFCjHdJNG4IDAMa875ERJhstc/YcxkCj
+         VkcVPiNIuTbScoyg5n8lTvuEClLV4x4z+gSyx1Ltp/ag5GNATyvUL8vA8bWxzZNuJvgi
+         vuSWWmY3pu84RFdpSCRKrxGTWSLpVspQM2xg59n3WNPt5+AWo7JOfaenLtIUnQCfjjnl
+         DHZzxQc/6kMw5Uui19TPWF1ItQnov5vOSFTlX9a6uDDNZwf6J6ZNNjtM0zXH81/ugcFX
+         0+1nX6d9o4wtWzt1HhKw/uIivz2a8NSbFsPya2g2HEeQwF5qZuyuqTt0hNrNvYINFWFF
+         dXAA==
+X-Forwarded-Encrypted: i=1; AFNElJ/QCputnK+/f8hHYZ7eYipsMHBipm+JDTPIQsdHzYl4S9bhqjzPE5S7aUxhBmMGYpWdGLBzYb7PhZzUDeWLNFKh@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzzLEQCnqmFgXtYglFjJ50tJPebHOOhl73wQOjt4KzG5EAEnJn
+	0aPnsSk1m3FjbWOerOR0PCZuqVS9mdN1BJRjvlrKhQEz1bIPLB5nQOGFCHy8gTqVz9fxD7DQmuV
+	sakuk1BWa9FB+xyUBVLxKSdSrKH+PxBhoF/Z9f2WD
+X-Gm-Gg: Acq92OF/sYYMtNqcmkh1jj9zEyrGg4b2Lu0dhdMGRN64A1Ea0pYLqupJB4ooU4PR36X
+	F3GdjcvgLXvW6sCq1pJ2aGqtUalxQXE8xAQ7ADq9o9UVPFv3ypDbCFn9pM6Sd+Mvgl7P28Fm+vE
+	0Hp9L4v6I87pbVT0RNgF8T5LW9SSM3wh6EVWgJ2Gp0ahCMoqI51LtRZNKAOFvoWLTtMn8w4QW0k
+	RsnGB6Ydz951yggy36p6aUBdLA0J4aDkBKyU+hoC9yH5ihHiAa5qT0rj/Esy9tnojb1rLfWrZXA
+	lzGJV/io/wZv+EoA
+X-Received: by 2002:a05:7022:618f:b0:12b:ec67:3529 with SMTP id
+ a92af1059eb24-138066c0641mr2307092c88.14.1780682558807; Fri, 05 Jun 2026
+ 11:02:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked: Eg7aJMNhOtaFeg+sWjmcWzkEf72+lrJ2npKI5UJvUTHT5eS90fjpUctrxMyYyh0p0pvUUfwnwdoThGKlGgzwvwm3cuwY0ZA6CaoSqQp2oI5+mxVZPylcyq3AjzPQ/rvKSI1n1nnPnYZUxskHOWqtE8rwrE4kMNG4sLP1Al6mbn8YaUmM8MECTcBVL6LzqHGdf7DwRjpxg4cB1juM2aQjMDhGus1Wt2+AtdQ1BA4bEgHNEuaFsf0lDvga6U4z/919SloA2RpnpKDTuPLhfeKz9tbQdnGWnBA1VWXCFt/Wmg9YYsuzMigZptEmEXzYS9d3RmEStGQoPIvlwZ37WO3lYg==
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8383.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26d4ab19-269e-4df2-f9df-08dec3261510
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2026 17:15:46.2756
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kCHrJTd+XfDmmCgzAR5veuEcpAPIND72p0vA3SLGQHSL8VDFy64SEKIhD4804BmSQWFvHMmYUcc/7xjMXdgNkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7375
-X-OriginatorOrg: intel.com
+References: <20260522223342.2393553-1-irogers@google.com> <20260525231900.3527228-1-irogers@google.com>
+In-Reply-To: <20260525231900.3527228-1-irogers@google.com>
+From: Chun-Tse Shao <ctshao@google.com>
+Date: Fri, 5 Jun 2026 11:02:27 -0700
+X-Gm-Features: AVHnY4I93GQpHSoewWmIaz9LEzu5rCryGt5gHCscKe6fufXxRfmNqf0Q5uVyCs0
+Message-ID: <CAJpZYjW8c6fsK0rS3WqGv-p76MWJW34G_3k2PGKPArnO79qkpw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/14] perf stat: Decouple and modularize
+ metrics/events output printing API
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, namhyung@kernel.org, 
+	adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gRnJpLCAyMDI2LTA2LTA1IGF0IDA5OjExICswODAwLCBEYXBlbmcgTWkgd3JvdGU6DQo+IEFm
-dGVyIGludHJvZHVjaW5nIHRoZSBSRFBNQyB1c2VyIGRpc2FibGUgZmVhdHVyZSwgdXNlci1zcGFj
-ZSBSRFBNQw0KPiBtYXkNCj4gcmV0dXJuIDAgaW5zdGVhZCBvZiB0aGUgYWN0dWFsIGV2ZW50IGNv
-dW50LiBUaGlzIGNyZWF0ZXMgYW4NCj4gaW5jb25zaXN0ZW5jeQ0KPiB3aXRoIGNhcF91c2VyX3Jk
-cG1jLCB3aGVyZSBjYXBfdXNlcl9yZHBtYyBpcyBzZXQsIGJ1dCB1c2VyLXNwYWNlDQo+IFJEUE1D
-DQo+IG9ubHkgcmV0dXJucyAwLg0KPiANCj4gVG8gYWNjdXJhdGVseSByZXByZXNlbnQgdGhlIHVz
-ZXItc3BhY2UgUkRQTUMgY2FwYWJpbGl0eSwgdXBkYXRlDQo+IGNhcF91c2VyX3JkcG1jIGJhc2Vk
-IG9uIHRoZSBSRFBNQyB1c2VyIGRpc2FibGUgc3RhdGUuIElmIFJEUE1DIHVzZXINCj4gZGlzYWJs
-ZSBpcyBlbmFibGVkLCBjYXBfdXNlcl9yZHBtYyBpcyBzZXQgdG8gZmFsc2UsIGFsbG93aW5nIHVz
-ZXItDQo+IHNwYWNlDQo+IHByb2dyYW1zIHRvIGZhbGwgYmFjayB0byB0aGUgcmVhZCgpIHN5c2Nh
-bGwgdG8gb2J0YWluIHRoZSByZWFsIGV2ZW50DQo+IGNvdW50Lg0KPiANCj4gU2luY2UgYXJjaF9w
-ZXJmX3VwZGF0ZV91c2VycGFnZSgpIGNvdWxkIGJlIGNhbGxlZCBmb3Igc29mdHdhcmUNCj4gZXZl
-bnRzLA0KPiBlbmhhbmNlIHg4Nl9wbXVfaGFzX3JkcG1jX3VzZXJfZGlzYWJsZSgpIHRvIG9ubHkg
-Y2hlY2sgdGhlIHg4NiBQTVVzLg0KDQpMR1RNLg0KDQpSZXZpZXdlZC1ieTogVGhvbWFzIEZhbGNv
-biA8dGhvbWFzLmZhbGNvbkBpbnRlbC5jb20+DQoNClRoYW5rcywNClRvbQ0KDQo+IA0KPiBGaXhl
-czogNTlhZjk1ZTAyOGQ0ICgicGVyZi94ODYvaW50ZWw6IEFkZCBzdXBwb3J0IGZvciByZHBtYyB1
-c2VyDQo+IGRpc2FibGUgZmVhdHVyZSIpDQo+IFNpZ25lZC1vZmYtYnk6IERhcGVuZyBNaSA8ZGFw
-ZW5nMS5taUBsaW51eC5pbnRlbC5jb20+DQo+IFJldmlld2VkLWJ5OiBaaWRlIENoZW4gPHppZGUu
-Y2hlbkBpbnRlbC5jb20+DQo+IC0tLQ0KPiANCj4gT3JpZ2luYWwgcGF0Y2ggbGluazoNCj4gaHR0
-cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjYwMzE2MDUwODM4LjM2MjQwNTEtMi1kYXBlbmcx
-Lm1pQGxpbnV4LmludGVsLmNvbS8NCj4gDQo+IMKgYXJjaC94ODYvZXZlbnRzL2NvcmUuY8KgwqDC
-oMKgwqDCoCB8IDMgKysrDQo+IMKgYXJjaC94ODYvZXZlbnRzL3BlcmZfZXZlbnQuaCB8IDUgKysr
-LS0NCj4gwqAyIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9ldmVudHMvY29yZS5jIGIvYXJjaC94ODYvZXZl
-bnRzL2NvcmUuYw0KPiBpbmRleCAzYmQwNTIyYWZlNmQuLjZjZDk1YjhlMzFjYiAxMDA2NDQNCj4g
-LS0tIGEvYXJjaC94ODYvZXZlbnRzL2NvcmUuYw0KPiArKysgYi9hcmNoL3g4Ni9ldmVudHMvY29y
-ZS5jDQo+IEBAIC0yNzk3LDYgKzI3OTcsOSBAQCB2b2lkIGFyY2hfcGVyZl91cGRhdGVfdXNlcnBh
-Z2Uoc3RydWN0DQo+IHBlcmZfZXZlbnQgKmV2ZW50LA0KPiDCoAl1c2VycGctPmNhcF91c2VyX3Rp
-bWVfemVybyA9IDA7DQo+IMKgCXVzZXJwZy0+Y2FwX3VzZXJfcmRwbWMgPQ0KPiDCoAkJISEoZXZl
-bnQtPmh3LmZsYWdzICYgUEVSRl9FVkVOVF9GTEFHX1VTRVJfUkVBRF9DTlQpOw0KPiArCWlmICh4
-ODZfcG11X2hhc19yZHBtY191c2VyX2Rpc2FibGUoZXZlbnQtPnBtdSkgJiYNCj4gKwnCoMKgwqAg
-ZXZlbnQtPmh3LmNvbmZpZyAmDQo+IEFSQ0hfUEVSRk1PTl9FVkVOVFNFTF9SRFBNQ19VU0VSX0RJ
-U0FCTEUpDQo+ICsJCXVzZXJwZy0+Y2FwX3VzZXJfcmRwbWMgPSAwOw0KPiDCoAl1c2VycGctPnBt
-Y193aWR0aCA9IHg4Nl9wbXUuY250dmFsX2JpdHM7DQo+IMKgDQo+IMKgCWlmICghdXNpbmdfbmF0
-aXZlX3NjaGVkX2Nsb2NrKCkgfHwgIXNjaGVkX2Nsb2NrX3N0YWJsZSgpKQ0KPiBkaWZmIC0tZ2l0
-IGEvYXJjaC94ODYvZXZlbnRzL3BlcmZfZXZlbnQuaA0KPiBiL2FyY2gveDg2L2V2ZW50cy9wZXJm
-X2V2ZW50LmgNCj4gaW5kZXggZGJiNWM4ZThhOGVhLi40MDAzZTJlMGFhOWMgMTAwNjQ0DQo+IC0t
-LSBhL2FyY2gveDg2L2V2ZW50cy9wZXJmX2V2ZW50LmgNCj4gKysrIGIvYXJjaC94ODYvZXZlbnRz
-L3BlcmZfZXZlbnQuaA0KPiBAQCAtMTM1OSw4ICsxMzU5LDkgQEAgc3RhdGljIGlubGluZSB1NjQN
-Cj4geDg2X3BtdV9nZXRfZXZlbnRfY29uZmlnKHN0cnVjdCBwZXJmX2V2ZW50ICpldmVudCkNCj4g
-wqANCj4gwqBzdGF0aWMgaW5saW5lIGJvb2wgeDg2X3BtdV9oYXNfcmRwbWNfdXNlcl9kaXNhYmxl
-KHN0cnVjdCBwbXUgKnBtdSkNCj4gwqB7DQo+IC0JcmV0dXJuICEhKGh5YnJpZChwbXUsIGNvbmZp
-Z19tYXNrKSAmDQo+IC0JCSBBUkNIX1BFUkZNT05fRVZFTlRTRUxfUkRQTUNfVVNFUl9ESVNBQkxF
-KTsNCj4gKwlyZXR1cm4gaXNfeDg2X3BtdShwbXUpICYmDQo+ICsJwqDCoMKgwqDCoMKgIChoeWJy
-aWQocG11LCBjb25maWdfbWFzaykgJg0KPiArCQlBUkNIX1BFUkZNT05fRVZFTlRTRUxfUkRQTUNf
-VVNFUl9ESVNBQkxFKTsNCj4gwqB9DQo+IMKgDQo+IMKgZXh0ZXJuIHN0cnVjdCBldmVudF9jb25z
-dHJhaW50IGVtcHR5Y29uc3RyYWludDsNCg0K
+Hi Ian,
+
+On Mon, May 25, 2026 at 4:19=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> This RFC patch series introduces a complete architectural refactoring
+> to decouple and modularize the event and metric output printing
+> engine inside 'perf stat'.
+
+I really like this change. Historically, fixing printing format issues
+in perf stat has been painful due to the tight coupling of printing
+logic with aggregation and math in util/stat-display.c. Decoupling
+these logics makes the codebase much easier to maintain and simplifies
+future changes to the print format.
+
+Acked-by: Chun-Tse Shao <ctshao@google.com>
+
+>
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Background and Motivation
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Historically, 'perf stat' output printing was tightly coupled with
+> data collection, aggregation math, and shadow metrics calculation.
+> Formatting logic (Standard Console, CSV, and JSON) was scattered
+> across util/stat-display.c, featuring massive, complex switch-cases,
+> temporal adjacency assumptions, and duplicated layout logic. Adding
+> new metrics, uncore PMUs, or topology-aware CPU aggregation modes
+> frequently resulted in accidental layout regressions, broken field
+> counts in CSV linters, or parsing crashes.
+>
+> This patch series decouples the data-traversal and shadows-metric
+> calculations from the visual layout rendering, introducing a highly
+> optimized, modular, and type-safe callback-driven print
+> architecture.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Decoupled Printing Strategy
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 1. Format-Agnostic Traversal Driver (util/stat-print.c)
+>    The core display logic is abstracted into a generic traversal
+>    driver, perf_stat__print_cb(). This driver manages the complex
+>    CPU/thread/topology aggregation loops, resolves hybrid wildcard
+>    merges, filters default skipped uncore metrics, and calculates
+>    raw shadow metrics. Once the data points are prepared, the driver
+>    streams them cleanly to formatting callbacks.
+>    - Safety: The core `calculate_and_print_metric` traversal is
+>      fully protected with early-exit checks if formatting callbacks
+>      choose to leave `print_metric` unpopulated.
+>
+> 2. Type-Safe Callbacks Interface (struct perf_stat_print_callbacks)
+>    Output formats communicate with the driver using a clean
+>    streaming interface:
+>    - print_start(): Initializes format-private DOM states.
+>    - print_event(): Buffers or prints raw counter event details.
+>    - print_metric(): Buffers or prints calculated shadow metrics.
+>    - print_end(): Finalizes rendering and cleans up structures.
+>
+> 3. Format-Specific Rendering Engines:
+>    - Standard Console (util/stat-print-std.c):
+>      Buffers events and metrics into standard-private DOM lists.
+>      It resolves default metric-group skipped headers, prepends
+>      formatted interval timestamps, aligns rows dynamically using
+>      aggr_header_lens, and prints them cleanly in print_end().
+>      - Refinement: Cleanly resolves `aggr_idx =3D=3D -1` global indices
+>        by tracking bounds with a `-2` initialization indicator,
+>        protecting all lookups from out-of-bounds array reads.
+>        It safely resets the active event pointer if a zero counter
+>        is skipped locally, avoiding temporal violation false-positives.
+>    - CSV Printing (util/stat-print-csv.c):
+>      Buffers events and metrics into format-private queues,
+>      formatting rows separated by config->csv_sep. Corrects
+>      metrics continuation padding to print exactly 4 separators,
+>      ensuring column counts are strictly and visually valid.
+>      - Refinement: Decoupled CSV headers now output static
+>        structural labels (e.g. "cpu,", "die,") instead of live
+>        hardware IDs, and prevent redundant header rows in interval
+>        mode by persisting state tracking.
+>    - Streaming JSON Printing (util/stat-print-json.c):
+>      Implements a highly optimized, 100% streaming, zero-allocation
+>      print engine that bypasses dynamic queues and metrics buffering
+>      completely! JSON objects and interval keys are formatted and
+>      streamed directly onto the output file descriptor, maximizing
+>      speed and eliminating heap allocation overhead.
+>      - Refinement: Completely zero-allocation fast-path rendering
+>        inside `json_metric_only_print_metric` by streaming strings
+>        directly without dynamic `asprintf` or `strdup` overheads.
+>
+> 4. Centralized Aggregation Prefix Formatting
+>    Duplicates in CPU/thread aggregation prefix rendering are
+>    completely eliminated by exposing arrays globally and introducing
+>    shared generic helpers in stat-print.c:
+>    - perf_stat__get_aggr_key(): Resolves the JSON key name.
+>    - perf_stat__get_aggr_id_char(): Resolves the unified prefix.
+>    This mathematically guarantees absolute structural and visual
+>    consistency across all formats.
+>
+> 5. Temporal Coupling Sanity Checks
+>    A strict temporal coupling constraint (that the traversal driver
+>    always invokes print_metric() callbacks synchronously and
+>    consecutively for the same PMU/event node immediately after its
+>    print_event() callback) is formally protected by adding a
+>    runtime evsel matching check inside both STD and CSV engines:
+>    if (evsel !=3D ps->current_event->evsel) abort_print();
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Verification and Testing
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> All automated shell linters (stat+std_output.sh, stat+csv_output.sh,
+> stat+json_output.sh) have been extended to run their entire
+> aggregation suites a second time under the new printer flag
+> (--new), passing with 100% success. The PMU metrics value Python
+> validation script and stat_metrics_values.sh have also been
+> extended with --new flag testing, ensuring complete mathematical
+> correctness of calculated metric values.
+> - Test Quality: JSON linter checks define dynamic `api_label`
+>   indicators to generate highly distinguishable and descriptive
+>   output logs between legacy and `--new` passes.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Changes since v1:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> - calculate_and_print_metric: added safe print_metric NULL callback check=
+.
+> - should_skip_zero_counter: added safe aggr_idx bounds check to avoid
+>   out-of-bounds mapping array access when aggr_idx is negative.
+> - std_print_event: reset ps->current_event pointer on skipped zero counte=
+rs
+>   to avoid temporal coupling mismatch violations.
+> - std_metric_only_print_end: only print metric headers once in
+>   interval mode, and print dynamic spacing padding to perfectly
+>   align columns.
+> - csv_metric_only_print_end: only print CSV headers once in
+>   interval mode, print static aggregation labels instead of live
+>   hardware IDs, and fix column misalignment under AGGR_GLOBAL by
+>   initializing current_aggr to -2 sentinel.
+> - json_metric_only_print_metric: completely zero-allocation fast-path
+>   rendering by streaming combined keys directly without dynamic heap stri=
+ng
+>   allocations, and resolve AGGR_GLOBAL indices by initializing
+>   last_aggr_idx to -2.
+> - stat+json_output.sh: define dynamic api_label to generate highly
+>   distinguishable and descriptive output logs between legacy and
+>   --new passes.
+> - merged duplicate skip_test block structures inside linter shell scripts=
+.
+> - documented -2 sentinel choices as C comments inside standard, CSV,
+>   and JSON print engines.
+>
+> We would highly appreciate reviews, comments, and feedback on this
+> decoupled output printing strategy.
+>
+> Assisted-by: Antigravity:gemini-3.5-flash
+>
+> ***
+>
+> Ian Rogers (14):
+>   perf stat: Introduce core generic print traversal engine and header
+>     stubs
+>   perf stat: Implement standard console (STD) formatting callbacks
+>   perf stat: Extend STD output linter to test basic New API checks
+>   perf stat: Extend STD output linter to test core aggregation checks
+>   perf stat: Extend STD output linter to test advanced PMU checks
+>   perf stat: Extend STD output linter to test metric-only checks
+>   perf stat: Implement CSV formatting callbacks
+>   perf stat: Extend CSV output linter to test core aggregation checks
+>   perf stat: Extend CSV output linter to test advanced PMU and
+>     metric-only checks
+>   perf stat: Implement streaming JSON formatting callbacks
+>   perf stat: Extend JSON output linter to test core aggregation checks
+>   perf stat: Extend JSON output linter to test advanced PMU and
+>     metric-only checks
+>   perf stat: Add --new support to PMU metrics Python validator
+>   perf stat: Extend PMU metrics value linter to validate --new outputs
+>
+>  tools/perf/builtin-stat.c                     | 261 +++---
+>  .../tests/shell/lib/perf_metric_validation.py |  12 +-
+>  tools/perf/tests/shell/stat+csv_output.sh     |  19 +
+>  tools/perf/tests/shell/stat+json_output.sh    |  74 +-
+>  tools/perf/tests/shell/stat+std_output.sh     |  18 +
+>  tools/perf/tests/shell/stat_metrics_values.sh |  13 +-
+>  tools/perf/util/Build                         |   4 +
+>  tools/perf/util/stat-display.c                |  28 +-
+>  tools/perf/util/stat-print-csv.c              | 534 ++++++++++++
+>  tools/perf/util/stat-print-json.c             | 330 ++++++++
+>  tools/perf/util/stat-print-std.c              | 773 ++++++++++++++++++
+>  tools/perf/util/stat-print.c                  | 490 +++++++++++
+>  tools/perf/util/stat-print.h                  | 133 +++
+>  tools/perf/util/stat.h                        |   2 +
+>  14 files changed, 2519 insertions(+), 172 deletions(-)
+>  create mode 100644 tools/perf/util/stat-print-csv.c
+>  create mode 100644 tools/perf/util/stat-print-json.c
+>  create mode 100644 tools/perf/util/stat-print-std.c
+>  create mode 100644 tools/perf/util/stat-print.c
+>  create mode 100644 tools/perf/util/stat-print.h
+>
+> --
+> 2.54.0.794.g4f17f83d09-goog
+>
+>
