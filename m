@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE411246782;
-	Fri,  5 Jun 2026 23:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D9E30BBB9;
+	Fri,  5 Jun 2026 23:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780703493; cv=none; b=EBvKMysf5xgQZeeefRrQIiL61/jrJcrtkddewabGQTszMswUPKTEiV+bLHh4Big8AyB1Fz5QnrNQxEkrAkPka1G71dBe7KV4bWMNr7+T1a0t5o4uVe/IrmcVkFy4XE7cGgY7cg7GHcejHodXLq86F3XXiWcF1haaPxi+z4V+FEs=
+	t=1780703494; cv=none; b=toWW8TXl+nzG9akH1RRWS+gyeM9j2z6kRQhjlyxRs++s5zY48l9kVIuX6RGzP4WkaVOIhEsCF5LEQaIODzqwJCgSyqw+0HpMHyLNZ0rIZ2jj9jGzln0lSuO0nxDYX7qS4yIiiJU4N+GcIEhGmqdO/MNZhHLV6M9pp6szZxjJ6t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780703493; c=relaxed/simple;
-	bh=qa3ZWWBQ2o3s9ahDXB5YmZfH2t0BKM1dpi9Ny4l5HO4=;
+	s=arc-20240116; t=1780703494; c=relaxed/simple;
+	bh=a2UYEhuEvWJ/JEF/kW1P1dd0ZjwgDyUXGOvPckwwzN0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BZ34sGw6BhqpHCF5T9oR0tMwb8Wtp/pcbxvdPtWNRAU3TzI+KpnBuvhIbHC9DUTEjR6WgLL7XzM7bFW3FW91IPqi9mQPcCJOZTtlWbJA4Ir87xtL41JF8MdZ6EFcn2b9fFrR1hsvoq5usyV9uLSG8cIVcuHshWd+BTQsiJZJims=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQaHM8WR; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=P+5Ge4w8Tf9VF1x75R11gY2UR79QyuWRj/9PIa7Rb6K3tMq5MgqRIR9KBadYckR6vVwP5atXWpbM8Z9J1DICJSNMuagMHoD5m9fh0BZLorQoS6lBMzlye+9fpjHB5VH0cy4hcBpW+FJMqxYF3j+9eN63H/J9c6qr1qZVlKh8sFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSyyjuLr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQaHM8WR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53A501F00898;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSyyjuLr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B730B1F0089A;
 	Fri,  5 Jun 2026 23:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780703492;
-	bh=l4CVvZgRR1gb6eF3OEOwj8fb+3rz4r90kPcbC/vfZuE=;
+	s=k20260515; t=1780703493;
+	bh=FSIDH5ze8xd03i1gbY7CFmVriqWx9rWe6/9QW2Pwny0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OQaHM8WRg5xUh7FippfWT+U4vfk8IwMhnGwtTmeZG8Zowq3qgL+RcsU7qHls26JXM
-	 qWEf2DXDblLM5WQGZUhXSQSjKBv0ZGWdQMajkCwkAS8JUP9abOOdkhvUIHzyVxoPF2
-	 Fj5bDEzSPLn5m0wXsV5gseHCAKrxCZMZpKPulJaNLhkTwCEUTLNt0+rjZ0ngHc5QJI
-	 v/qUhmJDB9EhDY/XO0lIVknWM9j8c1QxQYaOZ+8iIeEh4KdyV1mmk9f1572ha/S+rx
-	 uCGIqhlyTCJPhi4HhvSnLw+zzYkgX/UIfj6yIsr/Mu49PClPQlhJje3ZYsNggG3gDU
-	 cnzgbqPS++2tQ==
+	b=QSyyjuLr37mMAZHBvBuFiYxDb0oXSzas7HZkuWTydJa2ZnK7y/JWvo6tdREb3KnxS
+	 ZmXR8OhYyu8WuEFM35FjUfP801aFPgF1AZ4iulO4t2earV+8QXbKWN1R5uWR0K4aI8
+	 KyTbswnQ30UAb9ZYZIWaLYP0huCKQD2zSooStn5vrSwY4FBpjCi2bnx4b2h7mlxWP+
+	 2Z6gBoub7kbhX+Gggpdiet9umUuU8sSfJr5qIQTgNNtJbZ2TxWLyyR5OwhVlIjN2mw
+	 Me8pDYI+MvFm8jKuY39wvUSvzCBTvssdGfwpn9fgzpE/3teeMkkaofcrQVO1uYFzWY
+	 +pBhVRaOdgvUg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 1/4] perf timechart: Release event samples at the end
-Date: Fri,  5 Jun 2026 16:51:28 -0700
-Message-ID: <20260605235131.2440270-2-namhyung@kernel.org>
+Subject: [PATCH v2 2/4] perf timechart: Fix memory leaks during record
+Date: Fri,  5 Jun 2026 16:51:29 -0700
+Message-ID: <20260605235131.2440270-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
 In-Reply-To: <20260605235131.2440270-1-namhyung@kernel.org>
 References: <20260605235131.2440270-1-namhyung@kernel.org>
@@ -50,100 +50,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add timechart__release() to free all data structures added during the
-sample processing.
+The command line options can be passed without copy as their lifetime is
+limited within the same function.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-timechart.c | 68 ++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ tools/perf/builtin-timechart.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 04dbb944a42720b4..27d17268395ed760 100644
+index 27d17268395ed760..a73f0ab22fd64241 100644
 --- a/tools/perf/builtin-timechart.c
 +++ b/tools/perf/builtin-timechart.c
-@@ -1548,6 +1548,73 @@ static void write_svg_file(struct timechart *tchart, const char *filename)
- 	svg_close();
+@@ -1834,6 +1834,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
+ 		"syscalls:sys_exit_select",
+ 	};
+ 	unsigned int poll_events_nr = ARRAY_SIZE(poll_events);
++	int ret;
+ 
+ 	rec_argc = common_args_nr +
+ 		disk_events_nr * 4 +
+@@ -1852,7 +1853,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
+ 
+ 	p = rec_argv;
+ 	for (i = 0; i < common_args_nr; i++)
+-		*p++ = strdup(common_args[i]);
++		*p++ = common_args[i];
+ 
+ 	for (i = 0; i < disk_events_nr; i++) {
+ 		if (!is_valid_tracepoint(disk_events[i])) {
+@@ -1861,7 +1862,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
+ 		}
+ 
+ 		*p++ = "-e";
+-		*p++ = strdup(disk_events[i]);
++		*p++ = disk_events[i];
+ 		*p++ = "--filter";
+ 		*p++ = filter;
+ 	}
+@@ -1872,7 +1873,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
+ 		}
+ 
+ 		*p++ = "-e";
+-		*p++ = strdup(net_events[i]);
++		*p++ = net_events[i];
+ 		*p++ = "--filter";
+ 		*p++ = filter;
+ 	}
+@@ -1883,7 +1884,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
+ 		}
+ 
+ 		*p++ = "-e";
+-		*p++ = strdup(poll_events[i]);
++		*p++ = poll_events[i];
+ 		*p++ = "--filter";
+ 		*p++ = filter;
+ 	}
+@@ -1891,7 +1892,11 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
+ 	for (i = 0; i < (unsigned int)argc; i++)
+ 		*p++ = argv[i];
+ 
+-	return cmd_record(rec_argc, rec_argv);
++	ret = cmd_record(rec_argc, rec_argv);
++
++	free(rec_argv);
++	free(filter);
++	return ret;
  }
  
-+static void timechart__release(struct timechart *tchart)
-+{
-+	struct per_pid *p = tchart->all_data;
-+	struct power_event *pwr = tchart->power_events;
-+	struct wake_event *we = tchart->wake_events;
-+
-+	while (p) {
-+		struct per_pid *next_pid = p->next;
-+		struct per_pidcomm *c = p->all;
-+
-+		while (c) {
-+			struct per_pidcomm *next_comm = c->next;
-+			struct cpu_sample *cs = c->samples;
-+			struct io_sample *ios = c->io_samples;
-+
-+			while (cs) {
-+				struct cpu_sample *next = cs->next;
-+
-+				zfree(&cs->backtrace);
-+				cs->next = NULL;
-+				free(cs);
-+
-+				cs = next;
-+			}
-+
-+			while (ios) {
-+				struct io_sample *next = ios->next;
-+
-+				ios->next = NULL;
-+				free(ios);
-+
-+				ios = next;
-+			}
-+
-+			zfree(&c->comm);
-+			c->next = NULL;
-+			free(c);
-+
-+			c = next_comm;
-+		}
-+
-+		p->next = NULL;
-+		free(p);
-+
-+		p = next_pid;
-+	}
-+
-+	while (pwr) {
-+		struct power_event *next = pwr->next;
-+
-+		pwr->next = NULL;
-+		free(pwr);
-+
-+		pwr = next;
-+	}
-+
-+	while (we) {
-+		struct wake_event *next = we->next;
-+
-+		zfree(&we->backtrace);
-+		we->next = NULL;
-+		free(we);
-+
-+		we = next;
-+	}
-+}
-+
- static int process_header(struct perf_file_section *section __maybe_unused,
- 			  struct perf_header *ph,
- 			  int feat,
-@@ -2079,6 +2146,7 @@ int cmd_timechart(int argc, const char **argv)
  
- 	ret = __cmd_timechart(&tchart, output_name);
- out:
-+	timechart__release(&tchart);
- 	zfree(&cpus_cstate_start_times);
- 	zfree(&cpus_cstate_state);
- 	zfree(&cpus_pstate_start_times);
+@@ -1902,6 +1907,7 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
+ 	const char **rec_argv;
+ 	const char **p;
+ 	unsigned int record_elems;
++	int ret;
+ 
+ 	const char * const common_args[] = {
+ 		"record", "-a", "-R", "-c", "1", "-o", output_data,
+@@ -1966,24 +1972,27 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
+ 
+ 	p = rec_argv;
+ 	for (i = 0; i < common_args_nr; i++)
+-		*p++ = strdup(common_args[i]);
++		*p++ = common_args[i];
+ 
+ 	for (i = 0; i < backtrace_args_no; i++)
+-		*p++ = strdup(backtrace_args[i]);
++		*p++ = backtrace_args[i];
+ 
+ 	for (i = 0; i < tasks_args_nr; i++)
+-		*p++ = strdup(tasks_args[i]);
++		*p++ = tasks_args[i];
+ 
+ 	for (i = 0; i < power_args_nr; i++)
+-		*p++ = strdup(power_args[i]);
++		*p++ = power_args[i];
+ 
+ 	for (i = 0; i < old_power_args_nr; i++)
+-		*p++ = strdup(old_power_args[i]);
++		*p++ = old_power_args[i];
+ 
+ 	for (j = 0; j < (unsigned int)argc; j++)
+ 		*p++ = argv[j];
+ 
+-	return cmd_record(rec_argc, rec_argv);
++	ret = cmd_record(rec_argc, rec_argv);
++
++	free(rec_argv);
++	return ret;
+ }
+ 
+ static int
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
