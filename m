@@ -1,332 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5FC4779A3
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 07:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B903EDE4B
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 07:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780643034; cv=none; b=A2gD96iq6W7MQIRjHJH/+k34zqD+708kKbovGpX3Gl8hFneHiewnWNRFqJw5bxlFv6uF3sDeZCBXfGWALNz+NhZn/qrhZt+s+TkqV0mjOOFdoLat1eILAohJHBZVhzpyynNB7/gpmw8siZhmoVk1uTELkVI4RXdjU4cneeWJevI=
+	t=1780643313; cv=none; b=FBjBHiV1D/F6MydCL3dHR7GU6lToJAtzOOVtSs/5tgy+gpj8fLu6k89UeAQE+MNn/HJTS04Iq5+z2Ae8Lyrua8LAXx3LMBH49kayjXSsEknYer34HnCMY5FQHk1hz1gQDnhnXx7N2UtkmIad8OJHIQgNfOSZgUQVh98aQygPgxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780643034; c=relaxed/simple;
-	bh=orTatLZFysVaUy6o+hUzN+zoJt9P7EJYOvzrKf5mqJM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Nwr0wmO9hfRpcwlCIBpfdYJARXyae6o4Wn7LFS6cGOEQjTjx1HowkZOpN5AoFiLbiovyA3FX0jitC9ORdNY3dBtYlqlztjISehipK8lnEIfjkiDVk777JolvrV/M/29CAojqR1m8HgGKCYUQHgqNpCWYlMSLysrGhiJN02bkJ7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gebCFJu1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780643313; c=relaxed/simple;
+	bh=4hvsRn9Kp2CzHPwth+eNDSeQOsWa/Ckcpaciuv5v3HU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rmuUGd0iCJjLuJXCrVtT/toPSxTvZQP2dCJF4Pp7Tm/8jkjsHFyc6yiAtMHSvIgdxPBves+sZ1+WWJO4Oa9RI2tIqlnjU2LbkJzjk7psp+dPO3JC0z7jE/jWJo6HiIh8toOYX2OTPgvQIQnBomNgj7kujhlS/2t4Y6l0fVJcyW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=iKjYggke; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=iKjYggke; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gebCFJu1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E27A41F00893;
-	Fri,  5 Jun 2026 07:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780643030;
-	bh=2ND8QX0fRJ2yTsN0l9fmVqaZuS9F5ZRVgZzkdMJiSqw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gebCFJu1wD84ensTcetX93nc63QaJAo68qDxg4RyvvA+J1frbRIfBiVhwuUFnBILo
-	 exvNsuzZuYoK+jmBQqweJKIZaSzdwhDs/y/5SSwkN/TPJRGccePh2h5cKIznChJhm3
-	 0tWXYXv9V8uPXoBI3fMHLtjVetYR8bJV44TL4I0EMRPTF+BbiedB4LxzJtCanA/+yo
-	 YYmgARNVtSaAFfR58JTLKX3UfEcxDt+U4oexSU7zGCorm54DTGItxTQojU8UkwlK1N
-	 BUQfSP4mJBoBzNW94z3/0EnF/ln4DXwp+KEDeQEFIDpM//Uz03sJcuZS5bEJCC9rIj
-	 j5F/0xTm3rkAg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf jitdump: Fix a build error with ASAN
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605064932.34316-1-namhyung@kernel.org>
-References: <20260605064932.34316-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 07:03:49 +0000
-Message-Id: <20260605070349.E27A41F00893@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="iKjYggke";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="iKjYggke"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D92917593A;
+	Fri,  5 Jun 2026 07:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1780643309; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=WN+1EqgKbEGm+Jlqz5BJMqJKAPMrZfGWpmYbaOaSum4=;
+	b=iKjYggkeyd0GZUzAqkFLB4pGtPXBaZx1IpDKUVmqabC2LXYHwd8cAz/lMSJhTNLRDz9g8g
+	WTjB7GUVsJ+bh6Z/izkQLAcxuwkp0XFoNejvkxa6k1y17q+fOyPepOPVR7+PK5t/W5JQy3
+	ZOdYdIo1fEJ6ZuGbWmbYAdHMt3mUxH8=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1780643309; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=WN+1EqgKbEGm+Jlqz5BJMqJKAPMrZfGWpmYbaOaSum4=;
+	b=iKjYggkeyd0GZUzAqkFLB4pGtPXBaZx1IpDKUVmqabC2LXYHwd8cAz/lMSJhTNLRDz9g8g
+	WTjB7GUVsJ+bh6Z/izkQLAcxuwkp0XFoNejvkxa6k1y17q+fOyPepOPVR7+PK5t/W5JQy3
+	ZOdYdIo1fEJ6ZuGbWmbYAdHMt3mUxH8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 142B2779A8;
+	Fri,  5 Jun 2026 07:08:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5/G9A+11ImqDHQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Fri, 05 Jun 2026 07:08:29 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Tony Luck <tony.luck@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Huang Rui <ray.huang@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Len Brown <lenb@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 0/8] x86/msr: Drop 32-bit variants of *_on_cpu() MSR functions
+Date: Fri,  5 Jun 2026 09:08:18 +0200
+Message-ID: <20260605070826.2995913-1-jgross@suse.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[38];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,imap1.dmz-prg2.suse.org:helo];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	R_RATELIMIT(0.00)[to_ip_from(RLfdszjqhz8kzzb9uwpzdm8png)];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-Thank you for your contribution! Sashiko AI review found 10 potential issue=
-(s) to consider:
+Drop the variants using 2 32-bit values instead of a single 64-bit one
+of the *_on_cpu() MSR access functions.
 
-Pre-existing issues:
-- [High] Unlocking an unlocked stream on the error path causes undefined be=
-havior.
-- [High] Incorrect logic for skipping extended jitdump headers leads to par=
-sing failure.
-- [High] Ignoring the return value of `dirname()` breaks directory extracti=
-on and causes ENOTDIR failures.
-- [High] If the generated JIT ELF path exceeds PATH_MAX, snprintf truncatio=
-n causes size underflow resulting in a heap buffer overflow.
-- [High] Cross-endian byte swapping of JIT_CODE_DEBUG_INFO records corrupts=
- data by ignoring the flexible array member.
-- [High] Lack of validation on `code_size` enables arbitrary out-of-bounds =
-read and memory leakage.
-- [Medium] Memory leak of `debug_data` and `unwinding_data` pointers.
-- [Medium] Memory leak of `event` in `jit_repipe_code_move`.
-- [Medium] Ineffective inter-process synchronization using `flockfile`.
-- [Medium] Integer underflow leading to massive malloc in `jit_repipe_debug=
-_info`.
---
+Juergen Gross (8):
+  x86/msr: Switch rdmsr_on_cpu() to return a 64-bit quantity
+  x86/msr: Switch all callers of rdmsrq_on_cpu() to use rdmsr_on_cpu()
+  x86/msr: Switch wrmsr_on_cpu() to use a 64-bit quantity
+  x86/msr: Switch all callers of wrmsrq_on_cpu() to use wrmsr_on_cpu()
+  x86/msr: Switch rdmsr_safe_on_cpu() to return a 64-bit quantity
+  x86/msr: Switch all callers of rdmsrq_safe_on_cpu() to use
+    rdmsr_safe_on_cpu()
+  x86/msr: Switch wrmsr_safe_on_cpu() to use a 64-bit quantity
+  x86/msr: Switch all callers of wrmsrq_safe_on_cpu() to use
+    wrmsr_safe_on_cpu()
 
-commit f314399f4edf9366c3ee4d529f45cb2d7e7d454d
-Author: Namhyung Kim <namhyung@kernel.org>
+ arch/x86/events/intel/ds.c                    | 11 +--
+ arch/x86/events/intel/pt.c                    |  2 +-
+ arch/x86/events/intel/uncore_discovery.c      |  2 +-
+ arch/x86/events/intel/uncore_snbep.c          |  2 +-
+ arch/x86/include/asm/msr.h                    | 44 +++--------
+ arch/x86/kernel/acpi/cppc.c                   |  8 +-
+ arch/x86/kernel/cpu/intel_epb.c               |  8 +-
+ arch/x86/kernel/cpu/mce/amd.c                 |  6 +-
+ arch/x86/kernel/cpu/mce/inject.c              | 12 +--
+ arch/x86/kernel/cpu/microcode/intel.c         |  2 +-
+ arch/x86/kernel/msr.c                         |  8 +-
+ arch/x86/lib/msr-smp.c                        | 79 ++-----------------
+ drivers/cpufreq/acpi-cpufreq.c                |  4 +-
+ drivers/cpufreq/amd-pstate-ut.c               |  2 +-
+ drivers/cpufreq/amd-pstate.c                  | 21 +++--
+ drivers/cpufreq/amd_freq_sensitivity.c        |  4 +-
+ drivers/cpufreq/intel_pstate.c                | 64 +++++++--------
+ drivers/cpufreq/p4-clockmod.c                 | 32 ++++----
+ drivers/cpufreq/speedstep-centrino.c          | 27 ++++---
+ drivers/hwmon/coretemp.c                      | 44 +++++------
+ drivers/hwmon/via-cputemp.c                   | 16 ++--
+ drivers/platform/x86/amd/hfi/hfi.c            |  4 +-
+ .../intel/speed_select_if/isst_if_common.c    | 13 ++-
+ .../intel/uncore-frequency/uncore-frequency.c | 12 +--
+ drivers/powercap/intel_rapl_msr.c             |  2 +-
+ drivers/thermal/intel/intel_tcc.c             | 43 +++++-----
+ drivers/thermal/intel/x86_pkg_temp_thermal.c  | 22 +++---
+ 27 files changed, 203 insertions(+), 291 deletions(-)
 
-perf jitdump: Fix a build error with ASAN
+-- 
+2.54.0
 
-This patch resolves a stringop-truncation build error when compiling perf
-with ASAN on GCC 16. It reduces the strncpy bound by one byte to avoid
-truncation warnings.
-
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index e0ce8b9047298..16390e7f9062d 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -234,7 +234,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
->  	/*
->  	 * keep dirname for generating files and mmap records
->  	 */
-> -	strncpy(jd->dir, name, PATH_MAX);
-> +	strncpy(jd->dir, name, PATH_MAX - 1);
->  	jd->dir[PATH_MAX - 1] =3D '\0';
->  	dirname(jd->dir);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but is it correct to ignore the
-return value of dirname()?
-
-If jd->dir contains no slashes, glibc dirname() returns a pointer to "." but
-leaves the original string unmodified. Since the return value is discarded,
-jd->dir retains the full filename instead of becoming ".". This could cause
-later snprintf calls to use the target file as a directory component, leadi=
-ng
-to ENOTDIR failures.
-
->  	free(buf);
-
-[Severity: High]
-This is a pre-existing issue, but does the error handling path incorrectly
-unlock an unlocked stream?
-
-If malloc() fails early in jit_open(), it jumps to the error label:
-
-tools/perf/util/jitdump.c:jit_open() {
-    ...
-	buf =3D malloc(bsz);
-	if (!buf)
-		goto error;
-
-	/*
-	 * protect from writer modifying the file while we are reading it
-	 */
-	flockfile(jd->in);
-    ...
-error:
-	free(buf);
-	funlockfile(jd->in);
-	fclose(jd->in);
-	return retval;
-}
-
-Since flockfile() is only called after malloc() succeeds, calling funlockfi=
-le()
-here results in undefined behavior on an unlocked stream.
-
-[Severity: High]
-This is a pre-existing issue, but does this logic break extended header rea=
-ds?
-
-In jit_open(), when handling extended headers, bsz is updated to bs right
-before calculating the read size:
-
-tools/perf/util/jitdump.c:jit_open() {
-    ...
-	if (bs > bsz) {
-		n =3D realloc(buf, bs);
-		if (!n)
-			goto error;
-		bsz =3D bs;
-		buf =3D n;
-		/* read extra we do not know about */
-		ret =3D fread(buf, bs - bsz, 1, jd->in);
-		if (ret !=3D 1)
-			goto error;
-	}
-    ...
-}
-
-Because bsz =3D bs, the read size bs - bsz is always 0. fread() will return=
- 0,
-causing the ret !=3D 1 check to fail and unconditionally jump to the error =
-path.
-
-[Severity: High]
-This is a pre-existing issue, but could snprintf() truncation cause an
-out-of-bounds pointer calculation?
-
-In jit_repipe_code_load(), snprintf() calculates a path:
-
-tools/perf/util/jitdump.c:jit_repipe_code_load() {
-    ...
-	filename =3D event->mmap2.filename;
-	size =3D snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
-			jd->dir,
-			nspid,
-			count);
-
-	size++; /* for \0 */
-
-	size =3D PERF_ALIGN(size, sizeof(u64));
-    ...
-	event->mmap2.header.size =3D (sizeof(event->mmap2) -
-			(sizeof(event->mmap2.filename) - size) + idr_size);
-    ...
-	id =3D (void *)((unsigned long)event + event->mmap.header.size - idr_size);
-	if (jd->sample_type & PERF_SAMPLE_TID) {
-		id->pid  =3D pid;
-    ...
-}
-
-If the string exceeds PATH_MAX, snprintf() returns the untruncated length. =
-The
-expression sizeof(event->mmap2.filename) - size will then underflow because=
- size
-is greater than PATH_MAX, resulting in a massively inflated header.size. The
-pointer id will point outside the allocated bounds, leading to heap corrupt=
-ion
-when id->pid is assigned.
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the byte-swapping logic
-corrupt data by ignoring a flexible array member?
-
-In jit_get_next_entry():
-
-tools/perf/util/jitdump.c:jit_get_next_entry() {
-    ...
-	case JIT_CODE_DEBUG_INFO:
-		if (jd->needs_bswap) {
-			uint64_t n;
-			jr->info.code_addr =3D bswap_64(jr->info.code_addr);
-			jr->info.nr_entry  =3D bswap_64(jr->info.nr_entry);
-			for (n =3D 0 ; n < jr->info.nr_entry; n++) {
-				jr->info.entries[n].addr    =3D bswap_64(jr->info.entries[n].addr);
-				jr->info.entries[n].lineno  =3D bswap_32(jr->info.entries[n].lineno);
-				jr->info.entries[n].discrim =3D bswap_32(jr->info.entries[n].discrim);
-			}
-		}
-		break;
-    ...
-}
-
-struct debug_entry contains a flexible array member (const char name[]). Us=
-ing
-array indexing (jr->info.entries[n]) assumes fixed-size elements. This will
-calculate incorrect offsets that land inside the variable-length strings of
-earlier entries, overwriting them with byte-swapped data.
-
-[Severity: Medium]
-This is a pre-existing issue, but do jd->debug_data and jd->unwinding_data =
-leak?
-
-In jit_repipe_debug_info(), memory is allocated and assigned:
-
-tools/perf/util/jitdump.c:jit_repipe_debug_info() {
-    ...
-	data =3D malloc(sz);
-	if (!data)
-		return -1;
-
-	memcpy(data, &jr->info.entries, sz);
-
-	jd->debug_data       =3D data;
-    ...
-}
-
-While these are freed during jit_repipe_code_load(), if a JIT dump terminat=
-es
-early, lacks trailing load records, or contains consecutive debug records, =
-the
-previously allocated buffers are overwritten or never freed. Neither jit_cl=
-ose()
-nor jit_process() cleans up jd->debug_data or jd->unwinding_data.
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but does jit_repipe_code_move() =
-leak
-its event allocation?
-
-tools/perf/util/jitdump.c:jit_repipe_code_move() {
-    ...
-	event =3D calloc(1, sizeof(*event) + 16);
-	if (!event)
-		return -1;
-    ...
-out:
-	perf_sample__exit(&sample);
-	return ret;
-}
-
-The event buffer is dynamically allocated but there is no free(event) in the
-cleanup block, leaking the memory for every JIT_CODE_MOVE record processed.
-
-[Severity: Medium]
-This is a pre-existing issue, but is flockfile() being used incorrectly for
-inter-process synchronization?
-
-In jit_open():
-
-tools/perf/util/jitdump.c:jit_open() {
-    ...
-	/*
-	 * protect from writer modifying the file while we are reading it
-	 */
-	flockfile(jd->in);
-    ...
-}
-
-flockfile() is a POSIX thread mutex that provides no OS-level file locking.
-It cannot prevent an external process from modifying the file concurrently,
-making this synchronization completely ineffective against external writers.
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but could this allocation size c=
-alculation
-underflow?
-
-In jit_repipe_debug_info():
-
-tools/perf/util/jitdump.c:jit_repipe_debug_info() {
-    ...
-	sz  =3D jr->prefix.total_size - sizeof(jr->info);
-	data =3D malloc(sz);
-    ...
-}
-
-If total_size is smaller than sizeof(jr->info), the unsigned subtraction wi=
-ll
-underflow to a massive value, leading to a guaranteed malloc() failure or
-instability if memory is overcommitted.
-
-[Severity: High]
-This is a pre-existing issue, but does lack of validation on code_size allow
-out-of-bounds reads?
-
-In jit_repipe_code_load():
-
-tools/perf/util/jitdump.c:jit_repipe_code_load() {
-    ...
-	csize =3D jr->load.code_size;
-    ...
-	code  =3D (unsigned long)jr + jr->load.p.total_size - csize;
-    ...
-	ret =3D jit_emit_elf(jd, filename, sym, addr, (const void *)uaddr, csize, =
-...
-    ...
-}
-
-If an artificially large csize is parsed from the file without being bounds
-checked against total_size, the code pointer calculation will underflow and
-point into earlier heap memory. jit_emit_elf() will then dump csize bytes
-from this out-of-bounds memory into the ELF file.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605064932.3431=
-6-1-namhyung@kernel.org?part=3D1
