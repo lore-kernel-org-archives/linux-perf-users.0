@@ -1,265 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E916B2836E;
-	Fri,  5 Jun 2026 00:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C754F376A04;
+	Fri,  5 Jun 2026 01:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780619462; cv=none; b=Y02Qa25bG2oWRCYHBf57eh2vImRSogeWQ9JVh/Qozl3kiHw5Ycg/+SSeKmKFGBjYoEIXr9JrVHTGgeYUEDaZ0+sT2DN3ZKQDjlYe38gKR6h7gGC5mf5cQag+HVQ/NcJ2+H+uyZcSfg1w/9xVeu1EsrA8NBMIjdszoER/yJ9NTko=
+	t=1780622213; cv=none; b=n4TkgDy+anxiomrNEpfWzV7pXgRPLKKsFHIr4/MUbTat7z8e4GTYaDpfdE4ifK8xlKKqgchYxC6g1sU4O4njKYfkRwD85nqvu2Ep2HIeLWKcu8zz0l2wR/7+mT77J4+272fUpDBjKVT6s4H3hVI6tsOvHq+9hjZ1OIFwj3ZCbbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780619462; c=relaxed/simple;
-	bh=11FKNCgx+l+oy9ugUVQXkNboc9K85tcIpsqhS5XsXeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ghzAZecsl0Fl/eMwXUt7JzG5+zVKwZ11MN+RKD4PQYyZPVxf+dtoeqxmiAp209pYx6z2iXFuiaCjox5uSFsXIYTAhW5oI08E6TuuQ50eO2VvjCTpSCGLYeuqLyGBrmzfa3tvqZ5OyCrfgqWJCM4AgMQWwZct2OJr9SB+iqXewxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aLiElCmp; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1780622213; c=relaxed/simple;
+	bh=0+r7LrysQDHz4PHCLCsBiSXlUYCC8JOmOxu8BwaQ3Y8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jk1IvLDB4gJ7qfaN2/8ASJpFx48g0q4jqK7qzxIdJIf2UvF3mM3n7Sdf4Mugeiv01iw6oSNFWN7aDof7ll6OvFc5A2IiazPUyQG/V2LY2Suush8bBn9Fs+QWMcKsu4luYDCMWIESgTrtJBqFUh7rCrq1XW1yntd3vG/OQDXmSVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZAmAPiHA; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aLiElCmp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZAmAPiHA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780619460; x=1812155460;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=11FKNCgx+l+oy9ugUVQXkNboc9K85tcIpsqhS5XsXeI=;
-  b=aLiElCmp4jqrIhsQXraWwrHej1HH+DUX1I45oPov0atb1aetjud4HF9y
-   yahLWEW2Ru5LalY0XUNgaJ1xo1P26QOtRnAyd4a1bVh3w1I+65pDx3DUi
-   0nhvSGNBCnF4WI/uCUOBLDsu9MgfVIa2dl3CF//ZeFx7/x+TGejd8TpsF
-   rrDTMx70s9k8QrJWFZCvoyrlPyWdYsm5GZpiT0ZGLpaIxEHD6GytQ007K
-   QXb9NCs7/bdrzHss+s2ukfBI5vOT5fZD1M7aod7BHWQTEgIbH8bc+x8MS
-   mxT3kgn//ncA7KzmY3jmcL9Wf+5BUaM/a9TetwwUpxb6blsXpAJcmUDLq
-   Q==;
-X-CSE-ConnectionGUID: nYOB/NwfTgaEQ8nUYiOVAg==
-X-CSE-MsgGUID: 3jqG08cSRYCxIUSRKlTteA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="81453433"
+  t=1780622208; x=1812158208;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0+r7LrysQDHz4PHCLCsBiSXlUYCC8JOmOxu8BwaQ3Y8=;
+  b=ZAmAPiHALtI8OtBNBolltoRuKVJ+NPbFPF2PODpcmrl6WVmOwHfv7RCo
+   CORKqWJ7As+WESww76SGx0/fjW8eGLnbvl0IOjffMad7w5hsoKylTuCc5
+   0f6YhPvGF4FKlImdwkI1542Gfv16CFuzQjoZ1pwyeFGyzE9UJNUNFODlI
+   b0GmixPnzNlmvNVqTl/UVnVmur3WM7Xn68wbxgmQKYNgbAnK+ZiPcJAyH
+   gb31SaBrS1cnkEKKc5Is8NqnknVpL76nF4OU/bcLHL2rAeedsT8WR02hz
+   fmkEQPgz9y77y0FEGMw//q3mBKLZiZFCTVUufW83TZXD7byaoPon1Dlhl
+   w==;
+X-CSE-ConnectionGUID: JZz+t+8CSQS6+u2mx98Vfg==
+X-CSE-MsgGUID: vFf5XoO1TjO2zFzmkoOV4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="91772170"
 X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
-   d="scan'208";a="81453433"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 17:30:59 -0700
-X-CSE-ConnectionGUID: GybdquUxQde8m6v2jerRsQ==
-X-CSE-MsgGUID: JiozvLbSRGO3q6flQJCg/Q==
+   d="scan'208";a="91772170"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 18:16:47 -0700
+X-CSE-ConnectionGUID: chE/qzbAS1qOOk4Zrtr+jw==
+X-CSE-MsgGUID: qY4SvTL3QACc0Gy1TyXgGw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
-   d="scan'208";a="240505087"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 17:30:56 -0700
-Message-ID: <92a8162d-4865-4435-acaa-75d99fe0f7b3@linux.intel.com>
-Date: Fri, 5 Jun 2026 08:30:53 +0800
+   d="scan'208";a="244817103"
+Received: from spr.sh.intel.com ([10.112.230.239])
+  by orviesa007.jf.intel.com with ESMTP; 04 Jun 2026 18:16:45 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH 0/8] perf/x86: Miscellaneous PMU bug fixes
+Date: Fri,  5 Jun 2026 09:11:28 +0800
+Message-Id: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/8] perf/x86/intel/uncore: Fix refcnt and other
- cleanups
-To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260601170114.173359-1-zide.chen@intel.com>
- <20260601170114.173359-3-zide.chen@intel.com>
- <1643127e-9a3f-421a-a690-9b363ccfa8e6@linux.intel.com>
- <1640889a-53ed-46ad-b78b-35982ff37b33@intel.com>
- <d71fbc71-aedd-4822-9ddc-1b8fadb07314@linux.intel.com>
- <d9402295-4f46-4630-a5dd-f66e6627793a@intel.com>
- <e1afadac-76d5-4b71-b5e4-ebae89bfc1b0@linux.intel.com>
- <f4fd8bd6-bb61-401c-9e36-efaff86cf96c@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <f4fd8bd6-bb61-401c-9e36-efaff86cf96c@intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+This series groups several independent PMU fixes to simplify review and
+backporting.
 
-On 6/4/2026 11:41 PM, Chen, Zide wrote:
->
-> On 6/3/2026 8:00 PM, Mi, Dapeng wrote:
->> On 6/3/2026 11:09 PM, Chen, Zide wrote:
->>> On 6/2/2026 8:13 PM, Mi, Dapeng wrote:
->>>> On 6/2/2026 10:16 PM, Chen, Zide wrote:
->>>>> On 6/2/2026 4:52 AM, Mi, Dapeng wrote:
->>>>>> On 6/2/2026 1:01 AM, Zide Chen wrote:
->>>>>>> Fix typo UNCORE_BOX_FLAG_INITIATED to UNCORE_BOX_FLAG_INITIALIZED.
->>>>>>>
->>>>>>> Rename the 'id' parameter in uncore_box_{ref,unref}() to 'die' to
->>>>>>> reflect its actual meaning and be consistent with other functions.
->>>>>>>
->>>>>>> Remove the incorrect atomic_inc(&box->refcnt) from
->>>>>>> uncore_pci_pmu_register(): PCI boxes are not tracked by refcnt,
->>>>>>> and this call incorrectly increments it on a per-die basis.
->>>>>>>
->>>>>>> Signed-off-by: Zide Chen <zide.chen@intel.com>
->>>>>>> ---
->>>>>>> v2:
->>>>>>> - Don't rename pmu->activeboxes and keep its semantics because in
->>>>>>>   uncore_pci_remove() path, uncore_pci_pmu_unregister() won't be
->>>>>>>   called for non-active boxes.
->>>>>>> - Since pmu->activeboxes keeps it's name, don't need to rename
->>>>>>>   box->refcnt to box->cpu_refcnt.
->>>>>>> ---
->>>>>>>  arch/x86/events/intel/uncore.c | 11 +++++------
->>>>>>>  arch/x86/events/intel/uncore.h |  6 +++---
->>>>>>>  2 files changed, 8 insertions(+), 9 deletions(-)
->>>>>>>
->>>>>>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->>>>>>> index b69b6a21d46b..d759888476c3 100644
->>>>>>> --- a/arch/x86/events/intel/uncore.c
->>>>>>> +++ b/arch/x86/events/intel/uncore.c
->>>>>>> @@ -1170,7 +1170,6 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
->>>>>>>  	if (!box)
->>>>>>>  		return -ENOMEM;
->>>>>>>  
->>>>>>> -	atomic_inc(&box->refcnt);
->>>>>> I'm not sure if we should remove this. The
->>>>>> uncore_box_ref()/uncore_box_unref() are only called for MSR or MMIO type
->>>>>> uncore PMUs. For the uncore PMUs of PCI type, the box->refcnt is only
->>>>>> increased here. All the 3 kinds of uncore PMUs should keep consistent
->>>>>> behavior on the refcnt. 
->>>>> box->refcnt tracks how many CPUs are active within this die. Here it is
->>>>> incorrectly incremented on a per-die basis. Additionally, during the PCI
->>>>> uncore enumeration or teardown process, there is no per-CPU context, so
->>>>> box->refcnt is useless in PCI uncore.
->>>>>
->>>>> PCI uncore only needs pmu->activeboxes.
->>>> Per my understanding, the main aim of refcnt is to prevent the box
->>>> structure is freed unexpectedly, it doesn't directly couple with CPUs. It
->>>> just records how many users are using the the box regardless the users are
->>>> CPU or something else. For the uncore PMUs of MSR and MMIO type, CPUs can
->>>> be seen as the users, while for the uncore PMUs of PCI, I suppose the dies
->>>> (actually any cpu on the die) can be seen the users. 
->>> No, box->refcnt is a refcnt for in-die CPUs, while pmu->activeboxes is a
->>> per-die count. They are clear and distinct. That's also why I tried to
->>> rename them to box->cpu_refcnt and pmu->die_refcnt in v1.
->>>
->>> If this line is not deleted, box->refcnt for PCI boxes is always <= 1,
->>> which is confusing and useless.
->>>
->>>  > If we delete this refcnt reference, then the box structure is under no
->>>> protection and the box structure could be freed by some accidents. 
->>> box->refcnt is not checked on any PCI boxes; Because there is one
->>> pmu->box[die] per die, it utilizes box->refcnt for MSR/MMIO boxes only:
->>>
->>> - box_ref(): first in-die CPU online — allocate and initialize the box.
->>> - box_unref(): last in-die CPU offline — tear down the box.
->>>
->>> Uncore PCI PMU enumeration and hot plug/unplug do not involve any CPU
->>> online/offline events, which is why box->refcnt is not used.
->> No, the refcnt is still useful even for pci type's uncore PMUs, especially
->> from the software's perspective. refcnt is the essential way to prevent the
->> unexpected free of the referenced structure. Although currently there would
->> be only one user for pci type's uncore PMUs and refcnt would be 1 in most
->> time, we can't ensure the code would always right in any time and no code
->> accidentally free the box. We'd better keep this refcnt mechanism to avoid
->> this situation. Thanks.
-> pmu->activeboxes is the refcnt used by PCI PMUs, whose online/offline
-> events operate on a per-die basis.
->
-> box->refcnt is the refcnt used by MSR/MMIO PMUs, where online/offline
-> events are per-CPU based.
->
-> In this particular case (uncore_pci_pmu_register(), prior to the
-> upcoming refactor), incrementing box->refcnt also increments
-> pmu->activeboxes. This makes box->refcnt completely redundant for PCI
-> PMUs and effectively a misuse of the per-cpu field for a per-die operation.
->
-> If I’m missing any scenarios where PCI PMU boxes still require
-> additional protection from box->refcnt, please help point them out.
+Patch layout:
+- Patch 1/8: Fix anythread_deprecated being overwritten issue. 
+- Patches 2-3/8: Fix the issue that cap_user_rdpmc is not updated
+  correctly.
+- Patches 4-5/8: Fix a kernel address leakage issue in LBR stack.
+- Patch 6/8: Fix the issue that the return value of
+  intel_pmu_init_hybrid() is not valiated correctly.
+- Patch 7/8: Fix a "unchecked MSR access error" on PEBS_ENABLE MSR.
+- Patch 8/8: Prevent a theoretical kernel register data leak in sampling.
 
-IMO, activeboxes looks more like the reference count of PMU structure
-instead of the box structure. Box->refcnt is actually the reference count
-of  box structure. I know the refcnt could not matter too much for PCI
-uncore PMUs since it has only one user right now, but we'd better keep the
-identical refcnt behavior on all the MSR/MMIO/PCI uncore PMUs, this makes
-the code clean and robust. 
 
-Thanks.
+Dapeng Mi (7):
+  perf/x86/intel: Remove anythread_deprecated bit from perf_capabilities
+  perf/x86: Update cap_user_rdpmc base on rdpmc user disable state
+  perf/x86/intel: Fix redundant branch type check in
+    intel_pmu_lbr_filter()
+  perf/x86/intel: Fix kernel address leakages in LBR stack
+  perf/x86/intel: Validate return value of intel_pmu_init_hybrid()
+  perf/x86/intel: Drop fixed-counter PEBS constraints for baseline PEBS
+  perf/core: Fix kernel register info leak via hardware skid
 
->
->>>>>> Could we keep this and just decrease the refcnt in
->>>>>> uncore_pci_pmu_unregister()? Thanks.
->>>>>>
->>>>>>
->>>>>>>  	box->dieid = die;
->>>>>>>  	box->pci_dev = pdev;
->>>>>>>  	box->pmu = pmu;
->>>>>>> @@ -1518,7 +1517,7 @@ static void uncore_change_context(struct intel_uncore_type **uncores,
->>>>>>>  		uncore_change_type_ctx(*uncores, old_cpu, new_cpu);
->>>>>>>  }
->>>>>>>  
->>>>>>> -static void uncore_box_unref(struct intel_uncore_type **types, int id)
->>>>>>> +static void uncore_box_unref(struct intel_uncore_type **types, int die)
->>>>>>>  {
->>>>>>>  	struct intel_uncore_type *type;
->>>>>>>  	struct intel_uncore_pmu *pmu;
->>>>>>> @@ -1529,7 +1528,7 @@ static void uncore_box_unref(struct intel_uncore_type **types, int id)
->>>>>>>  		type = *types;
->>>>>>>  		pmu = type->pmus;
->>>>>>>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
->>>>>>> -			box = pmu->boxes[id];
->>>>>>> +			box = pmu->boxes[die];
->>>>>>>  			if (box && box->cpu >= 0 && atomic_dec_return(&box->refcnt) == 0)
->>>>>>>  				uncore_box_exit(box);
->>>>>>>  		}
->>>>>>> @@ -1604,14 +1603,14 @@ static int allocate_boxes(struct intel_uncore_type **types,
->>>>>>>  }
->>>>>>>  
->>>>>>>  static int uncore_box_ref(struct intel_uncore_type **types,
->>>>>>> -			  int id, unsigned int cpu)
->>>>>>> +			  int die, unsigned int cpu)
->>>>>>>  {
->>>>>>>  	struct intel_uncore_type *type;
->>>>>>>  	struct intel_uncore_pmu *pmu;
->>>>>>>  	struct intel_uncore_box *box;
->>>>>>>  	int i, ret;
->>>>>>>  
->>>>>>> -	ret = allocate_boxes(types, id, cpu);
->>>>>>> +	ret = allocate_boxes(types, die, cpu);
->>>>>>>  	if (ret)
->>>>>>>  		return ret;
->>>>>>>  
->>>>>>> @@ -1619,7 +1618,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
->>>>>>>  		type = *types;
->>>>>>>  		pmu = type->pmus;
->>>>>>>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
->>>>>>> -			box = pmu->boxes[id];
->>>>>>> +			box = pmu->boxes[die];
->>>>>>>  			if (box && box->cpu >= 0 && atomic_inc_return(&box->refcnt) == 1)
->>>>>>>  				uncore_box_init(box);
->>>>>>>  		}
->>>>>>> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
->>>>>>> index c2e5ccb1d72c..bad5d8dec8e0 100644
->>>>>>> --- a/arch/x86/events/intel/uncore.h
->>>>>>> +++ b/arch/x86/events/intel/uncore.h
->>>>>>> @@ -185,7 +185,7 @@ struct intel_uncore_box {
->>>>>>>  #define CFL_UNC_CBO_7_PERFEVTSEL0		0xf70
->>>>>>>  #define CFL_UNC_CBO_7_PER_CTR0			0xf76
->>>>>>>  
->>>>>>> -#define UNCORE_BOX_FLAG_INITIATED		0
->>>>>>> +#define UNCORE_BOX_FLAG_INITIALIZED		0
->>>>>>>  /* event config registers are 8-byte apart */
->>>>>>>  #define UNCORE_BOX_FLAG_CTL_OFFS8		1
->>>>>>>  /* CFL 8th CBOX has different MSR space */
->>>>>>> @@ -559,7 +559,7 @@ static inline u64 uncore_read_counter(struct intel_uncore_box *box,
->>>>>>>  
->>>>>>>  static inline void uncore_box_init(struct intel_uncore_box *box)
->>>>>>>  {
->>>>>>> -	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
->>>>>>> +	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
->>>>>>>  		if (box->pmu->type->ops->init_box)
->>>>>>>  			box->pmu->type->ops->init_box(box);
->>>>>>>  	}
->>>>>>> @@ -567,7 +567,7 @@ static inline void uncore_box_init(struct intel_uncore_box *box)
->>>>>>>  
->>>>>>>  static inline void uncore_box_exit(struct intel_uncore_box *box)
->>>>>>>  {
->>>>>>> -	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
->>>>>>> +	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
->>>>>>>  		if (box->pmu->type->ops->exit_box)
->>>>>>>  			box->pmu->type->ops->exit_box(box);
->>>>>>>  	}
+Ian Rogers (1):
+  perf/x86: Introduce is_x86_pmu() helper
+
+ arch/x86/events/core.c       | 19 +++-------------
+ arch/x86/events/intel/core.c | 43 ++++++++++++++++++++++++------------
+ arch/x86/events/intel/ds.c   | 13 -----------
+ arch/x86/events/intel/lbr.c  | 13 ++++++++---
+ arch/x86/events/perf_event.h | 25 +++++++++++++++++----
+ kernel/events/core.c         | 20 +++++++++++++----
+ 6 files changed, 79 insertions(+), 54 deletions(-)
+
+
+base-commit: 66cc29745f2f5815482587bb9fbc1e8a3e6fcf00
+-- 
+2.34.1
+
