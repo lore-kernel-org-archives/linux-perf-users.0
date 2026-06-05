@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFA62EEE7D;
-	Fri,  5 Jun 2026 01:16:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51458378D8B;
+	Fri,  5 Jun 2026 01:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780622219; cv=none; b=LUJBaQxurjlKtvJuVI7qSL7SjI/+Sqcb3nLSmrLY91f5FBW6A+GPP0jhmxRxo/RN/cSbMTsgVpQ/c91TkMPkvPE4/zeWVso5eUV2kjSnr6ezxrAtKKufoI+GqPUMu3Q2VJDR17hkkeoIAh8LdZrBSMwP//bgVdBYnUsHWGe7m9w=
+	t=1780622223; cv=none; b=UdkW9ccMuNn830qmf4FvYTqk0zgurOEg+p3yfNGkkNBiG/rJvJuQqUgJvlnuu2A5923mOnGeoRxouWwLiL46RAaR2owWg1TrVGMJv6siEiFI5A4bRWHiuY4Y2SWCoxOtRe7758mixEWAul9WuEqW5AixvJtZK1inwUfRDgKuJL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780622219; c=relaxed/simple;
-	bh=DcBlyDR9rRPaOBESCLzdKkuax3RCUikTU/Z2mRglcNM=;
+	s=arc-20240116; t=1780622223; c=relaxed/simple;
+	bh=99LaCPX5v3Uxh5M6N+wcyfmWLe5NRtFKC2Yvy4+Lvjk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d+2Yn6uykkDQPG+EK/xvln96lyjnKvgoLfsn3Z7tZR26ZWdDrH9iwlt4jIPkEnvOU/S3/pf/PWYZ9uM9G8ACRwqxIGlISxnBDD6SaRqmQ4HRBFYVUIlUV2coLBK7m7vR32lovwk5r/cO93tmmjneHYTywbschuA8JiFd4nf297g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UTDGqpPT; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=dmNMDn3OoyCmbqN9VW5gVSsQFtG7r2GiTTZhYJ2Zgq+fu4+QD7mC9FQu+k/8yrLI0ovnBtAdM+RVgDCZjV2y0HNg5nLGM4eHLHj7YR0HK/n6NNzDQGAxVjtSfVhakY+6z7flOhUOBdSurO23AOok8GP6zOq9Hh8ioBa42LxDdoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gocR8Mhl; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UTDGqpPT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gocR8Mhl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780622212; x=1812158212;
+  t=1780622216; x=1812158216;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DcBlyDR9rRPaOBESCLzdKkuax3RCUikTU/Z2mRglcNM=;
-  b=UTDGqpPTuyCPX9qLq4un793eFDNH6XAz+UWb59L2oTRxR0akqgahlq4R
-   cMytIVdO1nPuxEM7dKQ+qxqHjjZMh0AgsKigBTZxswiquHsZValRBLiPD
-   G6D9zMGEeSkKEzcua1eq3i8RwwBfb+P7WxnRRpNrsMwa0M8rl2XVpZbJn
-   gA9Qmw0gZpL8CyWFvKKpoGT2WOHnKDekqyl96DlYZPQ1ELmFgG301Kmbc
-   tHidQKJ1sI8dp2WSQt/d5UCkn8K9c3vTUN/2o1rOC07X+P8xU9941iUL5
-   D8UclmNWIgJR91lxXqCVp3L4wSr7MtYlDL59Uo4Bwt8i9lH4DkfY3djgX
-   Q==;
-X-CSE-ConnectionGUID: Gnt29DQZQLC7LLHCaLIIig==
-X-CSE-MsgGUID: smQxAtHzTzCVXxRJOAp2mA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="91772174"
+  bh=99LaCPX5v3Uxh5M6N+wcyfmWLe5NRtFKC2Yvy4+Lvjk=;
+  b=gocR8Mhly9nTM0kF7oWyZ0FmjFoEIr3ZDadOZ1pDP1N0TYU1OH9Dpgji
+   I0Gk6vqi+igcHat0duPw4C5tOfuZ9jjlvatP2gozusmg46ITxBkPCBLsO
+   r03sEXFWdYsKVOG0gHPX+AXxnGUME10d2LGvQZfbiawl8iGB6cTJvwg++
+   ws1NxeyJKB0+4UQhvtf1yyaP9VOgczyNM0DN5hzEfgTqH6F+1/ZFzJoZH
+   mmHZj5iATPHAmnVrjbW7sFo3lrD+29q1YevyVB/GsqygK1zOCf5MvQEx8
+   flW/7Z8AFwJMZSsIcM04xXXJEm7dsxmfH/06o3OYTeJ7+GiR7Bs8p3WYj
+   w==;
+X-CSE-ConnectionGUID: 1xIpTgTiTf+RcHDOgxxHqg==
+X-CSE-MsgGUID: TdJwhkuAT+mgHz03OZ871w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="91772180"
 X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
-   d="scan'208";a="91772174"
+   d="scan'208";a="91772180"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 18:16:52 -0700
-X-CSE-ConnectionGUID: Mp66UqkiRkWguqJqPMCKsg==
-X-CSE-MsgGUID: 6lEzUOWUQkGFlTynMo6nQg==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 18:16:56 -0700
+X-CSE-ConnectionGUID: PDfKJrB7QlqKjQPJmhNRpQ==
+X-CSE-MsgGUID: mJsfoDSzQW+/gwiFuekubQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,188,1774335600"; 
-   d="scan'208";a="244817107"
+   d="scan'208";a="244817113"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa007.jf.intel.com with ESMTP; 04 Jun 2026 18:16:49 -0700
+  by orviesa007.jf.intel.com with ESMTP; 04 Jun 2026 18:16:53 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -59,11 +59,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/8] perf/x86/intel: Remove anythread_deprecated bit from perf_capabilities
-Date: Fri,  5 Jun 2026 09:11:29 +0800
-Message-Id: <20260605011136.2043393-2-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH 2/8] perf/x86: Introduce is_x86_pmu() helper
+Date: Fri,  5 Jun 2026 09:11:30 +0800
+Message-Id: <20260605011136.2043393-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
 References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
@@ -75,91 +74,82 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
-PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
-represent "anythread deprecation" in perf_capabilities. It leads to the
-anythread_deprecated bit could be overwritten by the real value of
-PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
+From: Ian Rogers <irogers@google.com>
 
-```
-if (!intel_pmu_broken_perf_cap()) {
-	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
-	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
-}
-```
+To facilitate the detection of x86 PMU structures in upcoming patches,
+the is_x86_pmu() helper is introduced. Additionally, the is_x86_event()
+helper has been refactored to utilize is_x86_pmu().
 
-It leads to the anythread_deprecated bit is cleared to 0 and the "any"
-attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
-these support Perfmon v6 platforms, like Clearwater Forest.
+No function changes intended.
 
-```
-$grep . /sys/devices/cpu/format/*
-/sys/devices/cpu/format/acr_mask:config2:0-63
-/sys/devices/cpu/format/any:config:21
-/sys/devices/cpu/format/cmask:config:24-31
-```
-
-So remove the anythread_deprecated bit from perf_capabilities structure
-and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
-deprecated.
-
-Cc: stable@vger.kernel.org
-Reported-by: Namhyung Kim <namhyung@kernel.org>
-Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support conditional")
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Reviewed-by: Zide Chen <zide.chen@intel.com>
 ---
 
 Original patch link:
-https://lore.kernel.org/all/20260423053306.3033331-1-dapeng1.mi@linux.intel.com/
+https://lore.kernel.org/all/20260316050838.3624051-1-dapeng1.mi@linux.intel.com/
 
- arch/x86/events/intel/core.c | 10 +++-------
- arch/x86/events/perf_event.h |  2 +-
- 2 files changed, 4 insertions(+), 8 deletions(-)
+ arch/x86/events/core.c       | 16 ----------------
+ arch/x86/events/perf_event.h | 18 +++++++++++++++++-
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 0217e701aeeb..ea3ab3050a3b 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -7946,12 +7946,6 @@ __init int intel_pmu_init(void)
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 4b9e105309c6..3bd0522afe6d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -774,22 +774,6 @@ void x86_pmu_enable_all(int added)
+ 	}
+ }
  
- 	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
- 
--	if (version >= 5) {
--		x86_pmu.intel_cap.anythread_deprecated = edx.split.anythread_deprecated;
--		if (x86_pmu.intel_cap.anythread_deprecated)
--			pr_cont(" AnyThread deprecated, ");
--	}
+-int is_x86_event(struct perf_event *event)
+-{
+-	/*
+-	 * For a non-hybrid platforms, the type of X86 pmu is
+-	 * always PERF_TYPE_RAW.
+-	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
+-	 * is a unique capability for the X86 PMU.
+-	 * Use them to detect a X86 event.
+-	 */
+-	if (event->pmu->type == PERF_TYPE_RAW ||
+-	    event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
+-		return true;
 -
- 	/* The perf side of core PMU is ready to support the mediated vPMU. */
- 	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
- 
-@@ -8828,8 +8822,10 @@ __init int intel_pmu_init(void)
- 				      &x86_pmu.intel_ctrl);
- 
- 	/* AnyThread may be deprecated on arch perfmon v5 or later */
--	if (x86_pmu.intel_cap.anythread_deprecated)
-+	if (version >= 5 && edx.split.anythread_deprecated) {
- 		x86_pmu.format_attrs = intel_arch_formats_attr;
-+		pr_cont("AnyThread deprecated, ");
-+	}
- 
- 	intel_pmu_check_event_constraints_all(NULL);
- 
+-	return false;
+-}
+-
+ struct pmu *x86_get_pmu(unsigned int cpu)
+ {
+ 	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index eae24bb35dc1..5902a297daa1 100644
+index 5902a297daa1..dbb5c8e8a8ea 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -668,7 +668,7 @@ union perf_capabilities {
- 		u64	perf_metrics:1;
- 		u64	pebs_output_pt_available:1;
- 		u64	pebs_timing_info:1;
--		u64	anythread_deprecated:1;
-+		u64	__reserved:1;
- 		u64	rdpmc_metrics_clear:1;
- 	};
- 	u64	capabilities;
+@@ -115,7 +115,23 @@ static inline bool is_topdown_event(struct perf_event *event)
+ 	return is_metric_event(event) || is_slots_event(event);
+ }
+ 
+-int is_x86_event(struct perf_event *event);
++static inline bool is_x86_pmu(struct pmu *pmu)
++{
++	/*
++	 * For a non-hybrid platforms, the type of X86 pmu is
++	 * always PERF_TYPE_RAW.
++	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
++	 * is a unique capability for the X86 PMU.
++	 * Use them to detect a X86 event.
++	 */
++	return pmu->type == PERF_TYPE_RAW ||
++	       pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE;
++}
++
++static inline bool is_x86_event(struct perf_event *event)
++{
++	return is_x86_pmu(event->pmu);
++}
+ 
+ static inline bool check_leader_group(struct perf_event *leader, int flags)
+ {
 -- 
 2.34.1
 
