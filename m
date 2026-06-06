@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D634237C913;
-	Sat,  6 Jun 2026 20:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C427155757;
+	Sat,  6 Jun 2026 20:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780776395; cv=none; b=VUJwNlBm+NucCbXKbCwuND3SGA8UL77z+TlE8Lag5YowBY+kzZGA2Xqz+74dJhJA7t+Qh5i0hKE2BsKicLKSxJGEK1zfr47cHSbUhHFMBlVzmo5sudadVMo7lL0qqs/RO6034Bnceic/Ow8LDhu3BO1WPaZHDD4wdETBwjhh+fc=
+	t=1780776401; cv=none; b=qwbkWFbV1jgzWUuYci2gNiF+YayCeb33F73qxjgoHwlWQVAErUzgHIxdkGxFKyXEG978GiflHJjGYuETOcdH8ORDegw0OMRAUF54cI/zH4WH5cFJjL57caL9dRDo6091gO2CIthDtRhuPblIaP8rC39vW2HIMOsVRntmS5H95G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780776395; c=relaxed/simple;
-	bh=P5hxQtzLLRCe9d9PCH2wSslvM0G7WmFGcbXq+aUnvoo=;
+	s=arc-20240116; t=1780776401; c=relaxed/simple;
+	bh=MgPFe1riTYxByXU+9o65XAXLNS6j6GrUt3UbKk1GOKM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IgyU3FcFSyuSrE41+8DJlgYVSvMdeMQVadwZY8Ly673pfauKsqPL4jRl/yIDnHIsOy8oJnpOZ+l41L6oSifadC2JwfQ6580YJ8IrjLpS/MOpwO2c9mFcy5Fx5GPE+dQcKaklmENGWEAVsiu8phCDwCN9rSM4jDN1+qlk3R8yrIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZVb1Wg3J; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Aw839leHWRtHBiUHcILurd3zbkiICShhDgRlTvV4pjARfms3143Ny0dtuoJCDOXPTgxFTTYUIQz1+U+4fZL3DVWlRt7K2CzkNRh7k2HhN0NhqKWI9CyfS3b/CzPeqouF8pEuls4kUP0g6lqQjCxj6EGr4nQp1SJ9S2l1m6hHuIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lL525oa5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZVb1Wg3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70B701F00893;
-	Sat,  6 Jun 2026 20:06:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lL525oa5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 301131F00898;
+	Sat,  6 Jun 2026 20:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780776394;
-	bh=n5Pt3mJ/skAzMgF/rZiFavZruhwhV9/q/P/HCw6wU2s=;
+	s=k20260515; t=1780776400;
+	bh=hbST67JSXpzQHfuHrk5vsTjP587tEd8zXcSCma4RepY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ZVb1Wg3JvnlgoYqwV57rs9lCs87vpoocp8znot4suapp8mCq4jZSt1OqJ8emFZ0hI
-	 Krn7AS9nsRe0NhXeFqO3pvBk0q0t8cnBtGW22Io/Nb7Mol6SnAE+pwzI6dUb4FggyF
-	 MXd1sjyJhAvUsDTJMFTa+GKSVQI4hqDuwqW/CJGXvTyCmBO8ZU5MOgbLOneDtD5aLv
-	 QUw29n1XjHRWeP7sOjyAJBwRq6zGpSEh99J+Aq6s4VAFyZmEpI0YQBG2F1byHqi+b7
-	 oeScrn07CKSJz7laUBBJYS/vrGc1B92jrwWNDmTCPB2oB6hmiCz8i9mUhcq7ae9kak
-	 FcxisEBjIfVmg==
+	b=lL525oa5/pC/BK2ihGymAgP76BE0R3vrApPgGBC9c9FQxZrGKNoqEpq7bQliPLdnZ
+	 qp9SX5ZIKfLFlxLVmRXJem138+erED6rvyW2dTukFvBHUoz+SDe5OxjyR4MkPtOkGp
+	 Kz69TV91h9FlZUGpQxSOTI6leFc5c29JEEYe1gAUZbTSDMHoGJpDfzXUXDZzrG8oYS
+	 BkmYGLVDHqEOcyvvrqJ3DUE38l9mt5JhngxENs974BLVvt/bFF3aFC2nsAMBXoa3D/
+	 E6/oJGk058zVX2UtpKdfciANQuwxuO4VExDU/el/UII70kzBD4aznYzdryHdCRto0m
+	 5znpJNmR+AfPg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Stanislav Fomichev <stfomichev@yandex-team.ru>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 4/7] perf timechart: Fix cpu2y() OOB read on untrusted CPU index
-Date: Sat,  6 Jun 2026 17:05:56 -0300
-Message-ID: <20260606200601.1861227-5-acme@kernel.org>
+Subject: [PATCH 5/7] perf tools: Fix int16_t truncation of max_cpu_num in set_max_cpu_num()
+Date: Sat,  6 Jun 2026 17:05:57 -0300
+Message-ID: <20260606200601.1861227-6-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260606200601.1861227-1-acme@kernel.org>
 References: <20260606200601.1861227-1-acme@kernel.org>
@@ -53,68 +52,78 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-cpu2y() indexes topology_map[cpu] without bounds checking.  The array
-is allocated with nr_cpus entries (from env->nr_cpus_online), but
-callers pass sample CPU values from perf.data which can exceed that
-size with cross-machine recordings.
+set_max_cpu_num() assigns the sysfs "possible" CPU count to
+max_cpu_num.cpu which is int16_t (struct perf_cpu).  On systems
+with >32767 possible CPUs the value silently truncates, potentially
+wrapping negative.  This causes cpunode_map to be underallocated
+and subsequent cpu__get_node() calls to read out of bounds.
 
-Track the topology_map allocation size and bounds-check the CPU
-argument in cpu2y() before indexing.  Out-of-bounds CPUs fall back
-to the identity mapping (cpu2slot(cpu)), which is the same behavior
-as when no topology is available.
+The matching check for max_present_cpu_num was added by commit
+c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
+but max_cpu_num was missed.  Add the same INT16_MAX guard.
 
-Fixes: c507999790438cde ("perf timechart: Add support for topology")
+Fixes: c760174401f605cf ("perf cpumap: Reduce cpu size from int to int16_t")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Stanislav Fomichev <stfomichev@yandex-team.ru>
+Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/svghelper.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ tools/perf/util/cpumap.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
-index e360e7736c7ba65b..826bd2577344b20f 100644
---- a/tools/perf/util/svghelper.c
-+++ b/tools/perf/util/svghelper.c
-@@ -47,13 +47,13 @@ static double cpu2slot(int cpu)
- }
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index d3432622b2adc994..21fa781b03cc7409 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -494,6 +494,16 @@ static void set_max_cpu_num(void)
+ 	if (ret)
+ 		goto out;
  
- static int *topology_map;
-+static int topology_map_size;
++	/*
++	 * struct perf_cpu.cpu is int16_t (libperf ABI) — clamp to avoid
++	 * truncation to negative.  See tools/lib/perf/TODO for the ABI
++	 * widening plan.
++	 */
++	if (max > INT16_MAX) {
++		pr_warning("WARNING: max possible cpus %d exceeds int16_t, clamping to %d\n",
++			   max, INT16_MAX);
++		max = INT16_MAX;
++	}
+ 	max_cpu_num.cpu = max;
  
- static double cpu2y(int cpu)
- {
--	if (topology_map)
-+	if (topology_map && cpu >= 0 && cpu < topology_map_size)
- 		return cpu2slot(topology_map[cpu]) * SLOT_MULT;
--	else
--		return cpu2slot(cpu) * SLOT_MULT;
-+	return cpu2slot(cpu) * SLOT_MULT;
- }
+ 	/* get the highest present cpu number for a sparse allocation */
+@@ -506,11 +516,12 @@ static void set_max_cpu_num(void)
+ 	ret = get_max_num(path, &max);
  
- static double time2pixels(u64 __time)
-@@ -736,7 +736,8 @@ static int str_to_bitmap(char *s, cpumask_t *b, int nr_cpus)
- 		return -1;
- 
- 	perf_cpu_map__for_each_cpu(cpu, idx, map) {
--		if (cpu.cpu >= nr_cpus) {
-+		/* perf_cpu_map__new("") returns cpu.cpu == -1 */
-+		if (cpu.cpu < 0 || cpu.cpu >= nr_cpus) {
- 			ret = -1;
- 			break;
- 		}
-@@ -794,6 +795,7 @@ int svg_build_topology_map(struct perf_env *env)
- 		fprintf(stderr, "topology: no memory\n");
- 		goto exit;
+ 	if (!ret && max > INT16_MAX) {
+-		pr_err("Read out of bounds max cpus of %d\n", max);
+-		ret = -1;
++		pr_warning("WARNING: max present cpus %d exceeds int16_t, clamping to %d\n",
++			   max, INT16_MAX);
++		max = INT16_MAX;
  	}
-+	topology_map_size = nr_cpus;
- 
- 	for (i = 0; i < nr_cpus; i++)
- 		topology_map[i] = -1;
+ 	if (!ret)
+-		max_present_cpu_num.cpu = (int16_t)max;
++		max_present_cpu_num.cpu = max;
+ out:
+ 	if (ret)
+ 		pr_err("Failed to read max cpus, using default of %d\n", max_cpu_num.cpu);
+@@ -647,7 +658,9 @@ int cpu__setup_cpunode_map(void)
+ 		while ((dent2 = readdir(dir2)) != NULL) {
+ 			if (dent2->d_type != DT_LNK || sscanf(dent2->d_name, "cpu%u", &cpu) < 1)
+ 				continue;
+-			cpunode_map[cpu] = mem;
++			/* cpunode_map allocated for max_cpu_num entries */
++			if (cpu < (unsigned int)max_cpu_num.cpu)
++				cpunode_map[cpu] = mem;
+ 		}
+ 		closedir(dir2);
+ 	}
 -- 
 2.54.0
 
