@@ -1,214 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C991D23394D
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 15:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571CD3AF668
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 15:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780760020; cv=none; b=Qi7GCHIKnoQXTp9BuntvkG5mBmJZkYMJxH0DfUPugCOFt1MpWJ3xo+1SlJylD2PC40I/nLd7O44n5v//Eemb+S+P9S9W8Dvpfm0chjvge5sDuhHatmmZt7L/kqOXncA9m/0R0yz3ZJjCr19dS/GkQZpJ9N6RzMwIXmI/2kJuU8Y=
+	t=1780760794; cv=none; b=OdzKrFlkkx3qIBM4RRb5/ZmtbYSmsmzCfRK9bZsPlj4eFZfaKp0xnyKQpkHxHpStM1kQjWAlD05wUNY6/9tvuYZzu9i79IYEAUFNYCO7TmPgzjzeCZ8I6tHcDd2mYMFMDM4X3GTIXPbLo2qMaTr6ULNqyGCQ2lApprj8yvr91Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780760020; c=relaxed/simple;
-	bh=2jobnH8Z82MCSatYuPywvf6hpz9yyGV4c+6R56xeVJE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Qv2x5OA5Xp9pKlxXa5pu+Nb1RiO3DzVyUAnB9j7teDUqFdMLjh7KLJUvWjK9OBsOnYQBAHX7o0+Uezb34X6twmhDHSoxC2UPGzZbpOZLRm2Z78bFHavsXGHvmdMOFVQgj8LG8is3N+taoiJTRkU5brRqmTlCQzbhaUzTaylyTmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EaSt8dQZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780760794; c=relaxed/simple;
+	bh=g4D62Y3YmQgZtXsPJzaVerVgiwnzGUHW1KYbSQ+6TVY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tSZONMvoi/87BOEbSOJSpTHTIL6iAblxWCZ38VPvuzTe8fxY/1wxDFThTDnhrM9gxVc6NKqDtCkWZSHgUVLy0bsJA0+N2ILynq8Vz/c0orc7Ic+r2NW7O3pMIF9gALVZHCa6jZIkqtWjO9y+Dng0+hpDKy1NRw/6JQwSOrgNkEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UQzaVOJO; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EaSt8dQZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752771F00893;
-	Sat,  6 Jun 2026 15:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780760019;
-	bh=ETw6zT85deqsyn3aocpOJ62y5mhWQ7xz521g2P4R0Js=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EaSt8dQZuluvKiVmHl+rOUVxYdjtWx5V94+aMTSkNUUwVKKIcsqPZ2ifwX1D09CPD
-	 hH9B70y4W51142qRr/MDhCJsU55loQcI+Zg/ZgvD97sHxbP+H6yT1A8t7fJdenrIae
-	 fO2JOtkBeQ24du6PlHgeCjhQZaEzO+k3h3fiTOcL0ZRqBQUOxKwSKip/LVYR74h8Of
-	 rzAmyLQv06Ivunfxd6OtvwHeVJFei5FdLDm0OhLyUaY9xbDwz5MOGYXLuZV9AhgQ8O
-	 G18+4DeJezYVHqanLgPVb8kzovAtev6Ch1WihCiLv8oqnmFFZNxnI9Xkc3Q1P323Ap
-	 mITI8Gk6z9KMA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v16 5/5] perf aslr: Strip sample registers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260606151451.2913860-6-irogers@google.com>
-References: <20260606151451.2913860-6-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 06 Jun 2026 15:33:38 +0000
-Message-Id: <20260606153339.752771F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQzaVOJO"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-43d3454f643so1176323fac.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jun 2026 08:46:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780760792; x=1781365592; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QyCKNs9ex2RvarMOfyRVYoKfxJfS5rsby9PSMWADADw=;
+        b=UQzaVOJO3CE4FZqomJVgz6opyvoEpMq1P1HAGkTUb1AgHQDxpVtthswlo6C2vkXCOc
+         k74PzqZ11f3QVNkV3/8dxaI+28GpIkuS6bZ15r+EM+sTvtatowE+d64lct9SHw/DNUhw
+         p4q+lbltMtQtmgvdqMsmR6yGL62GxPDtrNrW82YKrlIo2NerLAgn6otCtCfYy0THqMMV
+         cgpRtbrSgJe1bSYwA6LbxVnScrfggHhnttOSCt92ttrW8lkq+/sqKw8Osn0d8tG9HeB/
+         7joEXDQqcElXA58vp9tpMMMagRuzouMLMeOz199sfNkYZstGqTYOmAskQaT6aHddrTy9
+         ecOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780760792; x=1781365592;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QyCKNs9ex2RvarMOfyRVYoKfxJfS5rsby9PSMWADADw=;
+        b=U4Vvd1gKCSZq/nGvB6JASvxzXLzfUsutCWZC+/aM2LerBudlIuWVkx8JIYTWIERZfW
+         zI1k+8bh40PlXQrPZe2EPjH8d/+BCKSwEV67egCHzE5YqpOVgIEBzuuhhHzTG5zyz4LQ
+         HUE0JB+rbmdtyWHvg9N4H7AEEJZvKbRLxl7iiX0ybnspq2Xasqpp6Z6s8K7UYLKLvmXz
+         nqIAJVZw3JPOPrW4N7G64jFpE1QuLXd0G2iHCEWSiK5iq5nHsSvyD7b7ri1Bg2ggSVg/
+         TFkdlpRIeBeReEetZGGS5rEF5YwRXkSuqNkVz7h8FQC10Ok13Cg6jDwQQwYvC4BlG2Nd
+         huGQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+SsqEwMIvuL1nRL0DTEvvm5ophuKmiRialFgCXaIH88BT4+ADeYcc6OjS5V3D+dwP5gi6poUzCweGcTgfWtcZm@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFrLdEwi4/tmgLq7ZfUIpwLCcDJelCrZ/ZctsDjzseupoLxyKc
+	6VK1YPiRf2AoeeV1DmTcJ0uT3OVgDiH/FtJ6RmfhFE+F30KIGQPRD7x0
+X-Gm-Gg: Acq92OGYPDuI+CAnX0Xz929FI8jauV226z+TgG1Bh1l5st4aZpoWCNjf49aT1Aog6mt
+	9gcNOgGtVZou5f9HHt3WbrWmKtyHR3TypqMxHcQrIOtOZB0nlpDZUVpKbEvcnUFsNPNZwqIdLz1
+	dscoVOm4FCiURO2l0g6hAvtkEoALR1Ti3VGzb31fbJSXuAFWvLUqqCiTX1/iIZs5eW29+yNi34l
+	JGYY8bNgbK2zJ372EpOolJhTX9ZpTqR7SLSKDgUmiCt+qnX0LunW0pzM1ruX8pBIAbiV0c1nTDi
+	lvgj4pw9lrQ0yW3y4lkTRk9BFcm/vt0697Bkjbw9nOxm4Yhn4k2NyUW87U6sQBKH927+jsGE2gs
+	mRUAOX9S1FR4IyPqowsi1eySKbSn2P8JcMkHHwlEQS1DFjEzP+Y3gw0IOxf16imMBIWyABN2ZGn
+	SZzl2nrtjXHU2zdh8CxkbcRyT8fZ9TwYn/pFfQUpEYa3lfCJX3ZYCSS9jMa3iY/pimx3lOszb9W
+	2kavoqSyuVUHFVs9fam4J4Y0WCm
+X-Received: by 2002:a05:6870:6710:b0:439:ec11:8c9c with SMTP id 586e51a60fabf-4413d99a42cmr4732906fac.31.1780760792066;
+        Sat, 06 Jun 2026 08:46:32 -0700 (PDT)
+Received: from ?IPV6:2601:282:1e02:1040:856a:da39:d9b3:fb8f? ([2601:282:1e02:1040:856a:da39:d9b3:fb8f])
+        by smtp.googlemail.com with ESMTPSA id 586e51a60fabf-440d8297395sm10158925fac.11.2026.06.06.08.46.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 06 Jun 2026 08:46:31 -0700 (PDT)
+Message-ID: <dc8da8b6-fca4-4e6a-ba42-15a68cf7d64d@gmail.com>
+Date: Sat, 6 Jun 2026 09:46:29 -0600
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/9] perf sched: Clean up idle_threads entry on init
+ failure
+Content-Language: en-US
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo
+ <acme@redhat.com>, sashiko-bot <sashiko-bot@kernel.org>,
+ "Claude Opus 4.6" <noreply@anthropic.com>
+References: <20260605233837.1773732-1-acme@kernel.org>
+ <20260605233837.1773732-6-acme@kernel.org>
+From: David Ahern <dsahern@gmail.com>
+In-Reply-To: <20260605233837.1773732-6-acme@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+On 6/5/26 5:38 PM, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> get_idle_thread() allocates a thread via thread__new() and stores it in
+> idle_threads[cpu], then calls init_idle_thread() to set up the private
+> data.  If init_idle_thread() fails (e.g. OOM for the idle_thread_runtime
+> struct), the function returns NULL but leaves the partially initialized
+> thread in idle_threads[cpu].
+> 
+> On subsequent calls for the same CPU, get_idle_thread() finds a non-NULL
+> idle_threads[cpu], skips allocation, and returns thread__get() on a
+> thread that has no priv data.  Callers then get a thread whose
+> thread__priv() returns NULL, leading to unexpected behavior.
+> 
+> Release the thread and reset the slot to NULL on init failure so the
+> entry doesn't persist in a corrupted state.
+> 
+> Fixes: 49394a2a24c7 ("perf sched timehist: Introduce timehist command")
+> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+> Cc: David Ahern <dsahern@gmail.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/builtin-sched.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
 
-New issues:
-- [High] Incorrect size bounds check for config1 and config2 overwrites the=
- trailing id[] array in older (ABI0/VER0) events.
-- [High] Failure to mask unsupported sample_type bits leads to parsing fail=
-ures on newer perf.data formats.
+Reviewed-by: David Ahern <dsahern@kernel.org>
 
-Pre-existing issues:
-- [High] Cross-endian `perf.data` files are corrupted during ASLR injection=
- due to mixed endianness in the synthesized `new_event` payload.
---
 
-commit 7fad8822f4c998bf1af1ae27d27ca2449d9ecea7
-Author: Ian Rogers <irogers@google.com>
-
-perf aslr: Strip sample registers
-
-This patch refactors the ASLR tool to strip out only the register dump
-payload by masking out the relevant perf_event_attr fields when the
-delegated tool is handling the data. It maintains the original
-perf_event_attr values via an aslr_evsel_priv struct looked up in the
-evsel_orig_attrs hashmap.
-
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index 00a54d1c7e41f..c852ade3c4e37 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -254,6 +254,12 @@ static int perf_event__repipe_attr(const struct perf=
-_tool *tool,
->  				return -ENOMEM;
->  			memcpy(stripped_event, event, event->header.size);
->  			stripped_event->attr.attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
-> +			if (stripped_event->attr.attr.size >=3D
-> +			    (offsetof(struct perf_event_attr, sample_regs_user) + sizeof(u64)=
-))
-> +				stripped_event->attr.attr.sample_regs_user =3D 0;
-> +			if (stripped_event->attr.attr.size >=3D
-> +			    (offsetof(struct perf_event_attr, sample_regs_intr) + sizeof(u64)=
-))
-> +				stripped_event->attr.attr.sample_regs_intr =3D 0;
-> =20
->  			if (stripped_event->attr.attr.type =3D=3D PERF_TYPE_BREAKPOINT &&
->  			    event->header.size >=3D (offsetof(struct perf_record_header_attr,
-
-[Severity: High]
-Does this bounds check for config1 and config2 overwrite the trailing id[] =
-array
-in older (ABI0/VER0) events?
-
-In perf_event__repipe_attr(), when clearing config1 and config2 for
-kprobe/uprobe events, the size check validates against event->header.size r=
-ather
-than stripped_event->attr.attr.size.
-
-In older perf records, config2 is not part of the perf_event_attr payload, =
-and
-the id[] array begins exactly at offset 64. However, event->header.size inc=
-ludes
-the size of the appended id[] array.
-
-If an event has a 64-byte attr.size and an appended id[] array, the validat=
-ion
-will incorrectly pass and the code will write 0 to config2 (offset 72),
-overwriting id[0]. Can this corrupt the unique event ID and break event
-demuxing for downstream readers?
-
-[ ... ]
-> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> index 7afa5a0dac2f3..bac41bff1b2a3 100644
-> --- a/tools/perf/util/aslr.c
-> +++ b/tools/perf/util/aslr.c
-[ ... ]
-> @@ -668,6 +693,10 @@ static int aslr_tool__process_sample(const struct pe=
-rf_tool *tool,
->  	u64 addr;
->  	size_t i;
->  	size_t j;
-> +	struct aslr_evsel_priv *priv =3D NULL;
-> +	u64 orig_sample_type;
-> +	u64 orig_regs_user;
-> +	u64 orig_regs_intr;
->  	bool orig_needs_swap;
-> =20
->  	del_tool =3D container_of(tool, struct delegate_tool, tool);
-> @@ -678,7 +707,23 @@ static int aslr_tool__process_sample(const struct pe=
-rf_tool *tool,
->  		return delegate->sample(delegate, event, sample, machine);
-> =20
->  	ret =3D -EFAULT;
-> -	sample_type =3D evsel->core.attr.sample_type;
-> +
-> +	if (hashmap__find(&aslr->evsel_orig_attrs, evsel, &priv)) {
-> +		orig_sample_type =3D priv->orig_sample_type;
-> +		orig_regs_user =3D priv->orig_sample_regs_user;
-> +		orig_regs_intr =3D priv->orig_sample_regs_intr;
-> +	} else {
-> +		orig_sample_type =3D evsel->core.attr.sample_type;
-> +		orig_regs_user =3D evsel->core.attr.sample_regs_user;
-> +		orig_regs_intr =3D evsel->core.attr.sample_regs_intr;
-> +	}
-> +
-> +	orig_sample_size =3D evsel->sample_size;
-> +
-> +	sample_type =3D orig_sample_type;
-> +	sample_type &=3D ~PERF_SAMPLE_REGS_USER;
-> +	sample_type &=3D ~PERF_SAMPLE_REGS_INTR;
-> +
-
-[Severity: High]
-Does failing to mask out unsupported sample_type bits lead to parsing failu=
-res
-on newer perf.data formats?
-
-In aslr_tool__process_sample(), the sample_type used to synthesize the new
-event is derived from orig_sample_type by masking out only
-PERF_SAMPLE_REGS_USER and PERF_SAMPLE_REGS_INTR.
-
-Because this fails to mask out unsupported bits (unlike the pre-patch logic
-which used &=3D ASLR_SUPPORTED_SAMPLE_TYPE), and the extraction loop (COPY_=
-U64)
-lacks handlers for unknown/unsupported bits, they are dropped from the
-new_event payload.
-
-However, since evsel->core.attr.sample_type =3D sample_type advertises these
-bits as present, the subsequent call to evsel__parse_sample() will expect to
-find them in the array. Can this mismatch cause the parser to read misalign=
-ed or
-out-of-bounds data when processing traces from newer perf tools?
-
->  	max_i =3D (event->header.size - sizeof(struct perf_event_header)) / siz=
-eof(__u64);
->  	max_j =3D (PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_event_header)) / s=
-izeof(__u64);
->  	new_event =3D (union perf_event *)aslr->event_copy;
-> @@ -727,25 +772,25 @@ static int aslr_tool__process_sample(const struct p=
-erf_tool *tool,
->  		i++; \
->  	} while (0)
-> =20
-> -	if (sample_type & PERF_SAMPLE_IDENTIFIER)
-> +	if (orig_sample_type & PERF_SAMPLE_IDENTIFIER)
->  		COPY_U64(); /* id */
-
-[Severity: High]
-This isn't a bug introduced by this patch, but can cross-endian perf.data f=
-iles
-be corrupted during ASLR injection due to mixed endianness in the synthesiz=
-ed
-new_event payload?
-
-In aslr_tool__process_sample(), new_event is synthesized using a combination
-of COPY_U64() and REMAP_U64(). COPY_U64() copies directly from the original
-event->sample.array, which is in the original file's endianness (perf core
-does not swap sample payloads in-place).
-
-However, REMAP_U64() computes remapped addresses and writes them in host
-endianness. For cross-endian perf.data files, this results in a corrupted,
-mixed-endian payload.
-
-Furthermore, evsel->needs_swap =3D false forces the subsequent parser and t=
-he
-delegated tool to treat the entire payload as host-endian, which permanently
-corrupts fields like TID, TIME, and IDENTIFIER in the injected output file.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260606151451.2913=
-860-1-irogers@google.com?part=3D5
