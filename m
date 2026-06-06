@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CFD3793AA;
-	Sat,  6 Jun 2026 20:06:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AB43BA249;
+	Sat,  6 Jun 2026 20:06:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780776378; cv=none; b=MXBpt8CdH02e0MK5c9XabHM4rR7N/UCkyywSPbvU/BLAmXck0xUvNsKOWQ5+43CYwdq4f9kNtbj4ZnCfSe0PjLri36UnAuH+JwONgiJe1NkGlMTGVcXrQS1q96wu4Vz2UkKA7zX4eBcyFOuxKBx+fqIQgzL4RaQaJYu0uHjfN74=
+	t=1780776384; cv=none; b=JzcLxIgBIJVT1+cI1gNa4YlgQDmutaUCcG+E/KNm7Pi1eSl4mhK8Q+zWGSO6maPuNHb5ot5hCPlLPjqiOR7D/b0pgjev69H5eRWV1ZyovHAfxPqlpYQawT5gzjYyrmCnfJ+LJGT31YnkPeeSi9CYE1FvrFjQEuxGLGxRv+md+rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780776378; c=relaxed/simple;
-	bh=x/qyZQUq8mGXqgJoXciDpBAOG9Wt3kK2/xGqd69QYvM=;
+	s=arc-20240116; t=1780776384; c=relaxed/simple;
+	bh=4MweEw1Ex4UoFL/cN03InEtalcZOsuLoLYbhKDZvt9k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MkZt7JyhM/e9SQ9oe7ItmvYEegOiHV8+8HnpiyQGF+JMhs5Qf+BmBTsV86BenUKNDtAH6/MKdxwV0ZiB5W3WgX81gEKWStqNxh+eqfo1Gu5DE4u0ZrR4ghZRWpW1/wTjNgXCaMGtIgusIF5WELmH/EuJvBi0exhlwFUQ/CRw7b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDeOktvj; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=VXXiRSBNDax2sRTXIN1o54YS3dw/QoYIWHzjWgxQRlHLo/+D49fJ23hDt12WAi1Ez3KCOT6Y8LF4WlFnkeVkWsRUr2xIGb+cqOhrF8ZiyiuZCbXvnI5uuQA+dHwWfWXJg94Alnbllqyf4Mpm8b3OkxwKfLIwKfHRtm6TYQcAxyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqtWXhlk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDeOktvj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 713491F00898;
-	Sat,  6 Jun 2026 20:06:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqtWXhlk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322F21F00893;
+	Sat,  6 Jun 2026 20:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780776377;
-	bh=zFT7NR1V7cGZRAKQdOM3vBh2LFdUb7iUOlXifB7O/UM=;
+	s=k20260515; t=1780776382;
+	bh=qk3DLbX3tUmGMauFpT8erZ5UhtOZfYQSKysDwJfeVK0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UDeOktvjdaLAqj2n212uyUN18rs4T1SaWGkT3VRQnxX5Q4KbBOyF5cMkCUsKh7t+C
-	 ln8Gzm6A/DbLHfa1WcV8p5Q4ErevKiJ2Ox+QHZM/YPvRnISlx5DVF+GzWqkDJNX4Qh
-	 mSKJTrC1d/KVH4HhYnV10eAdCS5VgvbZrIz4Zz/V9lU+NEKh2K0Wa5u1ZQhQfbM/a6
-	 3f5lg03kOMK0sOYdSR8sNYMnmtaE1Ra13VLKuCM5MPMhIpsEe0jMY6rDWDbMPyqXRU
-	 eaQ0wd7ScNnE6Kq1R7ZcHAmAsWznVbx14lkarw9XMLQW+8mpNFydMppxhMB5P8cpIx
-	 r+Y+12xCSy31g==
+	b=jqtWXhlko7N2jbUajW9D7T/Q/5D6EzjfoOFX/iNvxI1ijeBmD2OQZa751qn+P8Jfe
+	 Z8dAaYwLTW3ocM+0+eZ1roYktAK76jsPtElv2Ri6+jqXJOMpr991QZ6mh09DbcEdrS
+	 wAgmGOldk7z6DPK9K7Wk0zJAXSH2bYQrGBOOCFasoUUATga4LCkj7sUB+lH3NEDORH
+	 BEEqZBBmEDUKt/TUHGVP5stFVv4CqLy0KpCt7UDjY48wG53paQnUechuuexwXpsP2M
+	 b0KYcS4x8xPIfXmvHfe8+i7CzKsbEvHsPGg1Q6nSdt200zerDqkQVQuvAP92LdRcuU
+	 AaWT+MBJAc5EA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Alexey Budankov <alexey.budankov@linux.intel.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 1/7] perf mmap: Fix NULL deref in aio cleanup on alloc failure
-Date: Sat,  6 Jun 2026 17:05:53 -0300
-Message-ID: <20260606200601.1861227-2-acme@kernel.org>
+Subject: [PATCH 2/7] perf stat: Introduce perf_env__get_cpu_topology() to guard NULL env->cpu
+Date: Sat,  6 Jun 2026 17:05:54 -0300
+Message-ID: <20260606200601.1861227-3-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260606200601.1861227-1-acme@kernel.org>
 References: <20260606200601.1861227-1-acme@kernel.org>
@@ -53,59 +52,177 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf_mmap__aio_mmap() sets map->aio.nr_cblocks before allocating the
-data array.  If calloc() for aiocb or cblocks fails before the data
-array is allocated, the return -1 path leads to perf_mmap__aio_munmap()
-which loops nr_cblocks times calling perf_mmap__aio_free().  Both
-versions of perf_mmap__aio_free() (NUMA and non-NUMA) dereference
-map->aio.data[idx] without checking if data is NULL, causing a NULL
-pointer dereference.
+process_cpu_topology() in header.c frees env->cpu on old-format
+perf.data files that predate topology information, but leaves
+nr_cpus_avail set.  The six perf_env__get_*_aggr_by_cpu() functions
+in builtin-stat.c pass the bounds check but dereference a NULL
+env->cpu pointer, crashing on old recordings.
 
-Add NULL checks for map->aio.data at the top of both
-perf_mmap__aio_free() variants so the cleanup path is safe when
-allocation fails partway through perf_mmap__aio_mmap().
+Introduce perf_env__get_cpu_topology() as a safe accessor that
+validates env->cpu, cpu.cpu >= 0, and cpu.cpu < nr_cpus_avail in
+one place, returning a struct cpu_topology_map pointer or NULL.
+Convert all six topology aggregation callbacks to use it.
 
-Fixes: d3d1af6f011a553a ("perf record: Enable asynchronous trace writing")
+Fixes: 88031a0de7d68d13 ("perf stat: Switch to cpu version of cpu_map__get()")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mmap.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ tools/perf/builtin-stat.c | 51 +++++++++++++++++++++------------------
+ tools/perf/util/env.h     | 14 +++++++++++
+ 2 files changed, 42 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 4404a99eee45f9c3..d64aec6c7c843e81 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -89,10 +89,10 @@ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
- 
- static void perf_mmap__aio_free(struct mmap *map, int idx)
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 9a045811c4197ccd..a04466ea3b0a0657 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1637,10 +1637,10 @@ static struct aggr_cpu_id perf_env__get_socket_aggr_by_cpu(struct perf_cpu cpu,
  {
--	if (map->aio.data[idx]) {
--		munmap(map->aio.data[idx], mmap__mmap_len(map));
--		map->aio.data[idx] = NULL;
--	}
-+	if (!map->aio.data || !map->aio.data[idx])
-+		return;
-+	munmap(map->aio.data[idx], mmap__mmap_len(map));
-+	map->aio.data[idx] = NULL;
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
++	struct cpu_topology_map *topo = perf_env__get_cpu_topology(env, cpu);
+ 
+-	/* env->cpu[] has env->nr_cpus_avail entries; reject untrusted indices */
+-	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail)
+-		id.socket = env->cpu[cpu.cpu].socket_id;
++	if (topo)
++		id.socket = topo->socket_id;
+ 
+ 	return id;
  }
- 
- static int perf_mmap__aio_bind(struct mmap *map, int idx, struct perf_cpu cpu, int affinity)
-@@ -141,6 +141,8 @@ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
- 
- static void perf_mmap__aio_free(struct mmap *map, int idx)
+@@ -1649,15 +1649,16 @@ static struct aggr_cpu_id perf_env__get_die_aggr_by_cpu(struct perf_cpu cpu, voi
  {
-+	if (!map->aio.data)
-+		return;
- 	zfree(&(map->aio.data[idx]));
- }
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
++	struct cpu_topology_map *topo = perf_env__get_cpu_topology(env, cpu);
  
+-	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
++	if (topo) {
+ 		/*
+ 		 * die_id is relative to socket, so start
+ 		 * with the socket ID and then add die to
+ 		 * make a unique ID.
+ 		 */
+-		id.socket = env->cpu[cpu.cpu].socket_id;
+-		id.die = env->cpu[cpu.cpu].die_id;
++		id.socket = topo->socket_id;
++		id.die = topo->die_id;
+ 	}
+ 
+ 	return id;
+@@ -1705,12 +1706,13 @@ static struct aggr_cpu_id perf_env__get_cache_aggr_by_cpu(struct perf_cpu cpu,
+ {
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
++	struct cpu_topology_map *topo = perf_env__get_cpu_topology(env, cpu);
+ 
+-	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
++	if (topo) {
+ 		u32 cache_level = (perf_stat.aggr_level) ?: stat_config.aggr_level;
+ 
+-		id.socket = env->cpu[cpu.cpu].socket_id;
+-		id.die = env->cpu[cpu.cpu].die_id;
++		id.socket = topo->socket_id;
++		id.die = topo->die_id;
+ 		perf_env__get_cache_id_for_cpu(cpu, env, cache_level, &id);
+ 	}
+ 
+@@ -1722,11 +1724,12 @@ static struct aggr_cpu_id perf_env__get_cluster_aggr_by_cpu(struct perf_cpu cpu,
+ {
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
++	struct cpu_topology_map *topo = perf_env__get_cpu_topology(env, cpu);
+ 
+-	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
+-		id.socket = env->cpu[cpu.cpu].socket_id;
+-		id.die = env->cpu[cpu.cpu].die_id;
+-		id.cluster = env->cpu[cpu.cpu].cluster_id;
++	if (topo) {
++		id.socket = topo->socket_id;
++		id.die = topo->die_id;
++		id.cluster = topo->cluster_id;
+ 	}
+ 
+ 	return id;
+@@ -1736,16 +1739,17 @@ static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(struct perf_cpu cpu, vo
+ {
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
++	struct cpu_topology_map *topo = perf_env__get_cpu_topology(env, cpu);
+ 
+-	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
++	if (topo) {
+ 		/*
+ 		 * core_id is relative to socket, die and cluster, we need a
+ 		 * global id. So we set socket, die id, cluster id and core id.
+ 		 */
+-		id.socket = env->cpu[cpu.cpu].socket_id;
+-		id.die = env->cpu[cpu.cpu].die_id;
+-		id.cluster = env->cpu[cpu.cpu].cluster_id;
+-		id.core = env->cpu[cpu.cpu].core_id;
++		id.socket = topo->socket_id;
++		id.die = topo->die_id;
++		id.cluster = topo->cluster_id;
++		id.core = topo->core_id;
+ 	}
+ 
+ 	return id;
+@@ -1755,18 +1759,19 @@ static struct aggr_cpu_id perf_env__get_cpu_aggr_by_cpu(struct perf_cpu cpu, voi
+ {
+ 	struct perf_env *env = data;
+ 	struct aggr_cpu_id id = aggr_cpu_id__empty();
++	struct cpu_topology_map *topo = perf_env__get_cpu_topology(env, cpu);
+ 
+-	if (cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail) {
++	if (topo) {
+ 		/*
+ 		 * core_id is relative to socket and die,
+ 		 * we need a global id. So we set
+ 		 * socket, die id and core id
+ 		 */
+-		id.socket = env->cpu[cpu.cpu].socket_id;
+-		id.die = env->cpu[cpu.cpu].die_id;
+-		id.core = env->cpu[cpu.cpu].core_id;
+-		id.cpu = cpu;
++		id.socket = topo->socket_id;
++		id.die = topo->die_id;
++		id.core = topo->core_id;
+ 	}
++	id.cpu = cpu;
+ 
+ 	return id;
+ }
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 7621d1f73b83a341..7acca39b42ff3531 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -187,6 +187,20 @@ const char *perf_env__pmu_mappings(struct perf_env *env);
+ 
+ int perf_env__read_cpu_topology_map(struct perf_env *env);
+ 
++/*
++ * Safe accessor for env->cpu[] topology array.  env->cpu can be NULL when
++ * reading old-format perf.data that predates topology information —
++ * process_cpu_topology() in header.c frees it while nr_cpus_avail remains
++ * set, so callers must not index env->cpu[] without this check.
++ */
++static inline struct cpu_topology_map *
++perf_env__get_cpu_topology(struct perf_env *env, struct perf_cpu cpu)
++{
++	if (env->cpu && cpu.cpu >= 0 && cpu.cpu < env->nr_cpus_avail)
++		return &env->cpu[cpu.cpu];
++	return NULL;
++}
++
+ void cpu_cache_level__free(struct cpu_cache_level *cache);
+ 
+ uint16_t perf_env__e_machine_nocache(struct perf_env *env, uint32_t *e_flags);
 -- 
 2.54.0
 
