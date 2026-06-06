@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0DE26ED3C;
-	Sat,  6 Jun 2026 20:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CFD3793AA;
+	Sat,  6 Jun 2026 20:06:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780776373; cv=none; b=nIt+exOIVhvm+T7sa+SKk8f1RPOExB286zQ+JMCQ4D5qeL0b/zlQAEGwam8Ss4bL016+a/VmjXsr/rND+tgt/wAJh1ky3xIW3zKJTOQPXOqrzOOEHv3lVMIU48F3Urzh/+LtV55q9xU0oDOCygFTRkOLWET9Z5ewhURRQ35Ub30=
+	t=1780776378; cv=none; b=MXBpt8CdH02e0MK5c9XabHM4rR7N/UCkyywSPbvU/BLAmXck0xUvNsKOWQ5+43CYwdq4f9kNtbj4ZnCfSe0PjLri36UnAuH+JwONgiJe1NkGlMTGVcXrQS1q96wu4Vz2UkKA7zX4eBcyFOuxKBx+fqIQgzL4RaQaJYu0uHjfN74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780776373; c=relaxed/simple;
-	bh=OmdhiBEwEo1dkL4RUj978SJdAcUM1gknecLUPT9FBxQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qLw+J2/OIHq2NRPkj3s1vP5g3GoGEbl0Y7p8TCunc+KbFYYCbKQhj3vo1OFDvagjV13GpUDJKnJgN177F7FEBwa/V1R417Leji1JI6UUMkqwR6hwgO5ewev0vVMl+Oc3amus3M/OhHiQnmm7ys8bRGSnxIBa1TGX9eljYPUNvjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNALxn9W; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780776378; c=relaxed/simple;
+	bh=x/qyZQUq8mGXqgJoXciDpBAOG9Wt3kK2/xGqd69QYvM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MkZt7JyhM/e9SQ9oe7ItmvYEegOiHV8+8HnpiyQGF+JMhs5Qf+BmBTsV86BenUKNDtAH6/MKdxwV0ZiB5W3WgX81gEKWStqNxh+eqfo1Gu5DE4u0ZrR4ghZRWpW1/wTjNgXCaMGtIgusIF5WELmH/EuJvBi0exhlwFUQ/CRw7b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDeOktvj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNALxn9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA9D51F00893;
-	Sat,  6 Jun 2026 20:06:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDeOktvj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 713491F00898;
+	Sat,  6 Jun 2026 20:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780776371;
-	bh=U8WmTto546ZT7Ha9LSLr6gI94UHOYcPt4o0uSfTpEfQ=;
-	h=From:To:Cc:Subject:Date;
-	b=XNALxn9WajQZKJ60AaXst73/igoYAwnJkmOdJysM0N/GSNG1QKGIMTimh2wok6+Ap
-	 L0LSCAB+V/GduMTmCXJyAIk5YlLpm8fTke/H4VoeDQ/Cs1UN8G4IRTo2qDYHHeI+n9
-	 kN3bDNrfsSSps4jzYHhZNFZCzcILlP4F4dAWmW1Ct0Lw+jnIQguvJMIZXm2nMySdUY
-	 TWuPwUApJ6c3H7SCvL/tM/a5iiixAypePkZ8D4/w/fSSoUpl7uGJKdF2YguoGNmjvp
-	 rJWglLBBHHHRSMpA+lc1Yo2r4W+rJtcjHERMPwAKoqDTgOWxma2GC5Kg7tnUVEN7Zc
-	 2j0jV9KSxkxgg==
+	s=k20260515; t=1780776377;
+	bh=zFT7NR1V7cGZRAKQdOM3vBh2LFdUb7iUOlXifB7O/UM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=UDeOktvjdaLAqj2n212uyUN18rs4T1SaWGkT3VRQnxX5Q4KbBOyF5cMkCUsKh7t+C
+	 ln8Gzm6A/DbLHfa1WcV8p5Q4ErevKiJ2Ox+QHZM/YPvRnISlx5DVF+GzWqkDJNX4Qh
+	 mSKJTrC1d/KVH4HhYnV10eAdCS5VgvbZrIz4Zz/V9lU+NEKh2K0Wa5u1ZQhQfbM/a6
+	 3f5lg03kOMK0sOYdSR8sNYMnmtaE1Ra13VLKuCM5MPMhIpsEe0jMY6rDWDbMPyqXRU
+	 eaQ0wd7ScNnE6Kq1R7ZcHAmAsWznVbx14lkarw9XMLQW+8mpNFydMppxhMB5P8cpIx
+	 r+Y+12xCSy31g==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,11 +37,16 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH v1 0/7] perf tools: Fix NULL derefs, OOB reads, use-after-free, and memory leaks
-Date: Sat,  6 Jun 2026 17:05:52 -0300
-Message-ID: <20260606200601.1861227-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot <sashiko-bot@kernel.org>,
+	Alexey Budankov <alexey.budankov@linux.intel.com>,
+	"Claude Opus 4.6" <noreply@anthropic.com>
+Subject: [PATCH 1/7] perf mmap: Fix NULL deref in aio cleanup on alloc failure
+Date: Sat,  6 Jun 2026 17:05:53 -0300
+Message-ID: <20260606200601.1861227-2-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260606200601.1861227-1-acme@kernel.org>
+References: <20260606200601.1861227-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,75 +55,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fifth batch of pre-existing bugs found by sashiko-bot during AI-assisted
-review of the perf-data-validation hardening series.  All are independent
-of that series -- they are latent bugs in surrounding code exposed during
-review.
+perf_mmap__aio_mmap() sets map->aio.nr_cblocks before allocating the
+data array.  If calloc() for aiocb or cblocks fails before the data
+array is allocated, the return -1 path leads to perf_mmap__aio_munmap()
+which loops nr_cblocks times calling perf_mmap__aio_free().  Both
+versions of perf_mmap__aio_free() (NUMA and non-NUMA) dereference
+map->aio.data[idx] without checking if data is NULL, causing a NULL
+pointer dereference.
 
-  1. perf_mmap__aio_mmap() sets nr_cblocks before allocating arrays.
-     If calloc() fails, cleanup dereferences NULL map->aio.data.
+Add NULL checks for map->aio.data at the top of both
+perf_mmap__aio_free() variants so the cleanup path is safe when
+allocation fails partway through perf_mmap__aio_mmap().
 
-  2. env->cpu can be NULL when reading old-format perf.data that
-     predates topology info (process_cpu_topology() frees it while
-     nr_cpus_avail remains set).  The six topology aggregation
-     callbacks in builtin-stat.c dereference NULL.  Introduces
-     perf_env__get_cpu_topology() accessor with the NULL/bounds guard.
+Fixes: d3d1af6f011a553a ("perf record: Enable asynchronous trace writing")
+Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/mmap.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-  3. he__get_c2c_hists() error path frees hists without clearing
-     c2c_he->hists.  Teardown finds the dangling pointer and calls
-     hists__delete_entries() on freed memory.
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index 4404a99eee45f9c3..d64aec6c7c843e81 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -89,10 +89,10 @@ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
+ 
+ static void perf_mmap__aio_free(struct mmap *map, int idx)
+ {
+-	if (map->aio.data[idx]) {
+-		munmap(map->aio.data[idx], mmap__mmap_len(map));
+-		map->aio.data[idx] = NULL;
+-	}
++	if (!map->aio.data || !map->aio.data[idx])
++		return;
++	munmap(map->aio.data[idx], mmap__mmap_len(map));
++	map->aio.data[idx] = NULL;
+ }
+ 
+ static int perf_mmap__aio_bind(struct mmap *map, int idx, struct perf_cpu cpu, int affinity)
+@@ -141,6 +141,8 @@ static int perf_mmap__aio_alloc(struct mmap *map, int idx)
+ 
+ static void perf_mmap__aio_free(struct mmap *map, int idx)
+ {
++	if (!map->aio.data)
++		return;
+ 	zfree(&(map->aio.data[idx]));
+ }
+ 
+-- 
+2.54.0
 
-  4. cpu2y() indexes topology_map[] without bounds check.  Also fixes
-     str_to_bitmap() where perf_cpu_map__new("") returns cpu.cpu == -1,
-     bypassing the signed >= nr_cpus check and calling __set_bit(-1, ...).
-
-  5. set_max_cpu_num() assigns sysfs CPU count to int16_t max_cpu_num
-     without clamping.  Systems with >32767 possible CPUs silently
-     truncate to negative, causing undersized allocations.  Also makes
-     max_present_cpu_num clamp consistently instead of erroring.
-
-  6. free_idle_threads() calls free() on the thread priv without
-     deep-freeing callchain cursor nodes or callchain root entries
-     allocated during --idle-hist processing.  Introduces
-     callchain_cursor_cleanup() for the cursor node linked list.
-
-  7. Documents the struct perf_cpu int16_t limitation as a libperf
-     ABI constraint, and creates tools/lib/perf/TODO to collect
-     items that require a future ABI bump.
-
-All require crafted or unusual perf.data inputs to trigger (except
-patch 6 which is a memory leak on normal --idle-hist runs, and patch 7
-which is documentation only).
-
-Verified with gcc and clang builds, checkpatch, and perf test.
-
-Arnaldo Carvalho de Melo (7):
-  perf mmap: Fix NULL deref in aio cleanup on alloc failure
-  perf stat: Introduce perf_env__get_cpu_topology() to guard NULL env->cpu
-  perf c2c: Fix use-after-free in he__get_c2c_hists() error path
-  perf timechart: Fix cpu2y() OOB read on untrusted CPU index
-  perf tools: Fix int16_t truncation of max_cpu_num in set_max_cpu_num()
-  perf sched: Free callchain nodes in idle thread cleanup
-  libperf: Document struct perf_cpu int16_t ABI limitation
-
- tools/lib/perf/TODO                  | 22 ++++++++++++++++
- tools/lib/perf/include/perf/cpumap.h |  8 +++++-
- tools/perf/builtin-c2c.c             |  1 +
- tools/perf/builtin-sched.c           |  5 +++-
- tools/perf/builtin-stat.c            | 51 ++++++++++++++++++++----------------
- tools/perf/util/callchain.c          | 15 +++++++++++
- tools/perf/util/callchain.h          |  1 +
- tools/perf/util/cpumap.c             | 21 ++++++++++++---
- tools/perf/util/env.h                | 14 ++++++++++
- tools/perf/util/mmap.c               | 10 ++++---
- tools/perf/util/svghelper.c          | 10 ++++---
- 11 files changed, 121 insertions(+), 37 deletions(-)
- create mode 100644 tools/lib/perf/TODO
-
-Developed with AI assistance (Claude/sashiko), tagged in commits.
-
-Thanks,
-
-- Arnaldo
