@@ -1,144 +1,214 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E780640855
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 15:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C991D23394D
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 15:33:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780759914; cv=none; b=t61K+prcEymdKc+tdNi4ZV+2Pop9dpU0uC0rLQDMYCiuJrBeGOiQPFUKlLH7FYIOLaez8tV1RC1pSn3pbICMw8a9YFKo8E1nlFphh89Iq2g1GpEf5ROGFazzWvP+GN9PDgSnfeEkrhEkLh3l+VHfQhWJumUhNiGPkOhylpYvUB4=
+	t=1780760020; cv=none; b=Qi7GCHIKnoQXTp9BuntvkG5mBmJZkYMJxH0DfUPugCOFt1MpWJ3xo+1SlJylD2PC40I/nLd7O44n5v//Eemb+S+P9S9W8Dvpfm0chjvge5sDuhHatmmZt7L/kqOXncA9m/0R0yz3ZJjCr19dS/GkQZpJ9N6RzMwIXmI/2kJuU8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780759914; c=relaxed/simple;
-	bh=iAR7MzWYVqsAXUiXYiSKbxLKffKSU/yredlEvtY639c=;
+	s=arc-20240116; t=1780760020; c=relaxed/simple;
+	bh=2jobnH8Z82MCSatYuPywvf6hpz9yyGV4c+6R56xeVJE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kCUNxbONLCbGZpLspYnUZLotC+a8UHGembtvP94DXvmoTXCD/uYQbvrSkxBmGmksTyKqhBJf7LvJAp97OBwvtPN3vh4/p2QTWUGfIs+M6gBgRc83fWOgPzGvbN92vkEN2KYCdVqr8VvXzAf65T5lXfOmFLVXDD2M97AA+tBiV6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYM0uALR; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Qv2x5OA5Xp9pKlxXa5pu+Nb1RiO3DzVyUAnB9j7teDUqFdMLjh7KLJUvWjK9OBsOnYQBAHX7o0+Uezb34X6twmhDHSoxC2UPGzZbpOZLRm2Z78bFHavsXGHvmdMOFVQgj8LG8is3N+taoiJTRkU5brRqmTlCQzbhaUzTaylyTmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EaSt8dQZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYM0uALR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AB5F1F00893;
-	Sat,  6 Jun 2026 15:31:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EaSt8dQZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752771F00893;
+	Sat,  6 Jun 2026 15:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780759913;
-	bh=0YqkkjgG6ttobYszA55yjyvGj5xErFMB2ipZSI2NP7Y=;
+	s=k20260515; t=1780760019;
+	bh=ETw6zT85deqsyn3aocpOJ62y5mhWQ7xz521g2P4R0Js=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RYM0uALRT4E47ysgoKgrcyngKLBYmR1Pv1XgZVnle2RNCB4OWRff+Kp1yd9oUbMqt
-	 9jQQWKj32DLOOsx4DXfM2JSbqEkKjcJxmmE6HhAXdP2PWEJHxMA0RuhAnawJ3pAYBf
-	 PjUoymyWuefThd7+fJv6MuUaV1MPmI/KlPqLeCNx8afu/pJFfUOBtl32oUGTR37y0S
-	 B+KLv/Thn8J4OLNFvmjCz3QdUjBv7cW7JHMYv8JYxAe3tLV/GXKLhZwe4e5ed25kjd
-	 hp8E4isfyfEnsZUhnzSfQlZiElMHl5G3F3RSl5x48Q3p5blUcIwLM9vPysZ9QplO+2
-	 V1xBg5dKO0MIw==
+	b=EaSt8dQZuluvKiVmHl+rOUVxYdjtWx5V94+aMTSkNUUwVKKIcsqPZ2ifwX1D09CPD
+	 hH9B70y4W51142qRr/MDhCJsU55loQcI+Zg/ZgvD97sHxbP+H6yT1A8t7fJdenrIae
+	 fO2JOtkBeQ24du6PlHgeCjhQZaEzO+k3h3fiTOcL0ZRqBQUOxKwSKip/LVYR74h8Of
+	 rzAmyLQv06Ivunfxd6OtvwHeVJFei5FdLDm0OhLyUaY9xbDwz5MOGYXLuZV9AhgQ8O
+	 G18+4DeJezYVHqanLgPVb8kzovAtev6Ch1WihCiLv8oqnmFFZNxnI9Xkc3Q1P323Ap
+	 mITI8Gk6z9KMA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v16 2/5] perf inject/aslr: Add ASLR tool infrastructure
- and MMAP tracking
+Subject: Re: [PATCH v16 5/5] perf aslr: Strip sample registers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260606151451.2913860-3-irogers@google.com>
-References: <20260606151451.2913860-3-irogers@google.com>
+In-Reply-To: <20260606151451.2913860-6-irogers@google.com>
+References: <20260606151451.2913860-6-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 06 Jun 2026 15:31:52 +0000
-Message-Id: <20260606153153.5AB5F1F00893@smtp.kernel.org>
+Date: Sat, 06 Jun 2026 15:33:38 +0000
+Message-Id: <20260606153339.752771F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] The attribute size check incorrectly uses `event->header.size` ins=
-tead of `attr.size`, potentially overwriting the `id` array.
-- [Medium] The ASLR tool's isolated `machines` collection lacks a `perf_env=
-` pointer, forcing kernel space mapping to silently fall back to the host's=
- compilation architecture bitness.
+
+New issues:
+- [High] Incorrect size bounds check for config1 and config2 overwrites the=
+ trailing id[] array in older (ABI0/VER0) events.
+- [High] Failure to mask unsupported sample_type bits leads to parsing fail=
+ures on newer perf.data formats.
+
+Pre-existing issues:
+- [High] Cross-endian `perf.data` files are corrupted during ASLR injection=
+ due to mixed endianness in the synthesized `new_event` payload.
 --
 
-commit 77ff517ae16085496a64df04678110167f79e9c4
+commit 7fad8822f4c998bf1af1ae27d27ca2449d9ecea7
 Author: Ian Rogers <irogers@google.com>
-Subject: perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
 
-This patch introduces the core ASLR remapping tool infrastructure and
-implements remapping/tracking for metadata events. It adds an aslr option
-for perf inject that remaps all virtual addresses to prevent virtual address
-information leakage when sharing perf.data files.
+perf aslr: Strip sample registers
+
+This patch refactors the ASLR tool to strip out only the register dump
+payload by masking out the relevant perf_event_attr fields when the
+delegated tool is handling the data. It maintains the original
+perf_event_attr values via an aslr_evsel_priv struct looked up in the
+evsel_orig_attrs hashmap.
 
 > diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 00a54d1c7e41f..c852ade3c4e37 100644
 > --- a/tools/perf/builtin-inject.c
 > +++ b/tools/perf/builtin-inject.c
-[ ... ]
-> @@ -242,8 +245,43 @@ static int perf_event__repipe_attr(const struct perf=
+> @@ -254,6 +254,12 @@ static int perf_event__repipe_attr(const struct perf=
 _tool *tool,
-[ ... ]
-> +			if (stripped_event->attr.attr.type =3D=3D PERF_TYPE_BREAKPOINT &&
-> +			    event->header.size >=3D (offsetof(struct perf_record_header_attr,
-> +							    attr.bp_addr) + sizeof(u64))) {
-> +				stripped_event->attr.attr.bp_addr =3D 0;
-> +			} else if (stripped_event->attr.attr.type >=3D PERF_TYPE_MAX) {
-> +				struct perf_pmu *pmu;
-> +
-> +				pmu =3D perf_pmus__find_by_type(stripped_event->attr.attr.type);
-> +				if (pmu && (!strcmp(pmu->name, "kprobe") ||
-> +					    !strcmp(pmu->name, "uprobe"))) {
-> +					if (event->header.size >=3D
-> +					    (offsetof(struct perf_record_header_attr,
-> +						      attr.config1) + sizeof(u64)))
-> +						stripped_event->attr.attr.config1 =3D 0;
-> +					if (event->header.size >=3D
-> +					    (offsetof(struct perf_record_header_attr,
-> +						      attr.config2) + sizeof(u64)))
-> +						stripped_event->attr.attr.config2 =3D 0;
-> +				}
-> +			}
+>  				return -ENOMEM;
+>  			memcpy(stripped_event, event, event->header.size);
+>  			stripped_event->attr.attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
+> +			if (stripped_event->attr.attr.size >=3D
+> +			    (offsetof(struct perf_event_attr, sample_regs_user) + sizeof(u64)=
+))
+> +				stripped_event->attr.attr.sample_regs_user =3D 0;
+> +			if (stripped_event->attr.attr.size >=3D
+> +			    (offsetof(struct perf_event_attr, sample_regs_intr) + sizeof(u64)=
+))
+> +				stripped_event->attr.attr.sample_regs_intr =3D 0;
+> =20
+>  			if (stripped_event->attr.attr.type =3D=3D PERF_TYPE_BREAKPOINT &&
+>  			    event->header.size >=3D (offsetof(struct perf_record_header_attr,
 
 [Severity: High]
-Does this incorrectly check event->header.size instead of the actual
-attr.size?
+Does this bounds check for config1 and config2 overwrite the trailing id[] =
+array
+in older (ABI0/VER0) events?
 
-If an older perf.data file is processed with a shorter ABI struct (such as =
-the
-64-byte PERF_ATTR_SIZE_VER0) and contains appended IDs, this boundary check
-would pass because the total event size exceeds the offset.
+In perf_event__repipe_attr(), when clearing config1 and config2 for
+kprobe/uprobe events, the size check validates against event->header.size r=
+ather
+than stripped_event->attr.attr.size.
 
-Could this cause the assignment to config1 or config2 to overwrite the lead=
-ing
-elements of the appended id[] array with zeroes, permanently corrupting the
-event ID stream?
+In older perf records, config2 is not part of the perf_event_attr payload, =
+and
+the id[] array begins exactly at offset 64. However, event->header.size inc=
+ludes
+the size of the appended id[] array.
 
+If an event has a 64-byte attr.size and an appended id[] array, the validat=
+ion
+will incorrectly pass and the code will write 0 to config2 (offset 72),
+overwriting id[0]. Can this corrupt the unique event ID and break event
+demuxing for downstream readers?
+
+[ ... ]
 > diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> --- /dev/null
+> index 7afa5a0dac2f3..bac41bff1b2a3 100644
+> --- a/tools/perf/util/aslr.c
 > +++ b/tools/perf/util/aslr.c
 [ ... ]
-> +static void aslr_tool__init(struct aslr_tool *aslr, struct perf_tool *de=
-legate)
-> +{
-> +	delegate_tool__init(&aslr->tool, delegate);
-> +	aslr->tool.tool.ordered_events =3D true;
+> @@ -668,6 +693,10 @@ static int aslr_tool__process_sample(const struct pe=
+rf_tool *tool,
+>  	u64 addr;
+>  	size_t i;
+>  	size_t j;
+> +	struct aslr_evsel_priv *priv =3D NULL;
+> +	u64 orig_sample_type;
+> +	u64 orig_regs_user;
+> +	u64 orig_regs_intr;
+>  	bool orig_needs_swap;
+> =20
+>  	del_tool =3D container_of(tool, struct delegate_tool, tool);
+> @@ -678,7 +707,23 @@ static int aslr_tool__process_sample(const struct pe=
+rf_tool *tool,
+>  		return delegate->sample(delegate, event, sample, machine);
+> =20
+>  	ret =3D -EFAULT;
+> -	sample_type =3D evsel->core.attr.sample_type;
 > +
-> +	machines__init(&aslr->machines);
-[ ... ]
-> +static u64 aslr_tool__findnew_mapping(struct aslr_tool *aslr,
-[ ... ]
+> +	if (hashmap__find(&aslr->evsel_orig_attrs, evsel, &priv)) {
+> +		orig_sample_type =3D priv->orig_sample_type;
+> +		orig_regs_user =3D priv->orig_sample_regs_user;
+> +		orig_regs_intr =3D priv->orig_sample_regs_intr;
 > +	} else {
-> +		/* First address of the process, allocate key and first top address. */
-> +		struct top_addresses_key *tk;
-> +		struct process_top_address *top_val;
-> +		struct machine *machine =3D remap_key.machine;
-> +		struct perf_env *env =3D machine ? machine->env : NULL;
-> +		bool is_64 =3D env ? perf_env__kernel_is_64_bit(env) : (sizeof(void *)=
- =3D=3D 8);
+> +		orig_sample_type =3D evsel->core.attr.sample_type;
+> +		orig_regs_user =3D evsel->core.attr.sample_regs_user;
+> +		orig_regs_intr =3D evsel->core.attr.sample_regs_intr;
+> +	}
+> +
+> +	orig_sample_size =3D evsel->sample_size;
+> +
+> +	sample_type =3D orig_sample_type;
+> +	sample_type &=3D ~PERF_SAMPLE_REGS_USER;
+> +	sample_type &=3D ~PERF_SAMPLE_REGS_INTR;
+> +
 
-[Severity: Medium]
-Because machines__init() creates an isolated collection of machines without
-linking its host environment to the primary session's environment, will env
-always resolve to NULL here?
+[Severity: High]
+Does failing to mask out unsupported sample_type bits lead to parsing failu=
+res
+on newer perf.data formats?
 
-If env is NULL, this falls back to the executing host's pointer size
-(sizeof(void *) =3D=3D 8) rather than the recorded target architecture.
+In aslr_tool__process_sample(), the sample_type used to synthesize the new
+event is derived from orig_sample_type by masking out only
+PERF_SAMPLE_REGS_USER and PERF_SAMPLE_REGS_INTR.
 
-Will this break cross-platform analysis when analyzing a 32-bit perf.data f=
-ile
-on a 64-bit host?
+Because this fails to mask out unsupported bits (unlike the pre-patch logic
+which used &=3D ASLR_SUPPORTED_SAMPLE_TYPE), and the extraction loop (COPY_=
+U64)
+lacks handlers for unknown/unsupported bits, they are dropped from the
+new_event payload.
+
+However, since evsel->core.attr.sample_type =3D sample_type advertises these
+bits as present, the subsequent call to evsel__parse_sample() will expect to
+find them in the array. Can this mismatch cause the parser to read misalign=
+ed or
+out-of-bounds data when processing traces from newer perf tools?
+
+>  	max_i =3D (event->header.size - sizeof(struct perf_event_header)) / siz=
+eof(__u64);
+>  	max_j =3D (PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_event_header)) / s=
+izeof(__u64);
+>  	new_event =3D (union perf_event *)aslr->event_copy;
+> @@ -727,25 +772,25 @@ static int aslr_tool__process_sample(const struct p=
+erf_tool *tool,
+>  		i++; \
+>  	} while (0)
+> =20
+> -	if (sample_type & PERF_SAMPLE_IDENTIFIER)
+> +	if (orig_sample_type & PERF_SAMPLE_IDENTIFIER)
+>  		COPY_U64(); /* id */
+
+[Severity: High]
+This isn't a bug introduced by this patch, but can cross-endian perf.data f=
+iles
+be corrupted during ASLR injection due to mixed endianness in the synthesiz=
+ed
+new_event payload?
+
+In aslr_tool__process_sample(), new_event is synthesized using a combination
+of COPY_U64() and REMAP_U64(). COPY_U64() copies directly from the original
+event->sample.array, which is in the original file's endianness (perf core
+does not swap sample payloads in-place).
+
+However, REMAP_U64() computes remapped addresses and writes them in host
+endianness. For cross-endian perf.data files, this results in a corrupted,
+mixed-endian payload.
+
+Furthermore, evsel->needs_swap =3D false forces the subsequent parser and t=
+he
+delegated tool to treat the entire payload as host-endian, which permanently
+corrupts fields like TID, TIME, and IDENTIFIER in the injected output file.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260606151451.2913=
-860-1-irogers@google.com?part=3D2
+860-1-irogers@google.com?part=3D5
