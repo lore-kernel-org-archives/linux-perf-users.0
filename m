@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEC936F903
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Jun 2026 23:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947372AEE1
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 00:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780703788; cv=none; b=rEkVT/IQLDgKCEOPNaYC+Fh1m89ScUKW64hwdEec7Fj8uKKFrhosOovWcLgjiNkQbH+BNGpHka1+EhOdBIJ+yctCHjJAQVLSNMbfYIyapq5dNWuIvqvETgMH2Ll4HQUewf7rtXh69wJz45xd1ZSIR0kJ9jrxBvgYuWwI+GypR+E=
+	t=1780704326; cv=none; b=mSGALzgx0ErAyeea4pNoQYK961n1KZsoZ+SovOC8uYSWQH/UjccB7ABXRuM7tXKZLOwA8LL6v4SSX8nNePpbT67Du/1LUWjjYD3GDDl+WSMiV07WPE+fs5aeE+xvbfIRQ6kU/mXeu5NjN8yyr7T/JTB/WHYJADtcYwSKFLOIfqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780703788; c=relaxed/simple;
-	bh=4BJMwDRQUyGGdqVSxXPWubsrIzQDkP+p00FiTa3uNrg=;
+	s=arc-20240116; t=1780704326; c=relaxed/simple;
+	bh=MtHeIXeNSJa658ItNv3mAUCc0rwr9F+hFl5vfimBdbI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=r/vADuu3JiOHIVinFr28tN1rsOPnBgUmFEsMFHFBHxn3zyJ5fSzRGyiBSVuV+bXvRPs8mR0B0/ipBlGPnpGnPKDfbMbEY/icqeEO42qyQy24wIq6rwSiObBzRZt22r9b8BLzc9I9PsigH/OhsR9qYXQlMYhKKyoBU2V5WPSZN5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZns+tIF; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=nAIUQC56rw3+hvP5JTgvtdKVGBUH5p18uQNKZ4tR12xJMuwQqt2gQMWI1ja7TeX3CKeL+gvIzLCP0biKxhOZdAYjt5hNwTXNfmKw1t0AzNNo8zF0M9ipzL2vJzBD8R6d4u0CxZlUeSRWpXblu1h4jglAnarvNvoIQFsc9EFuh9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QkRkKkIu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZns+tIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD231F00893;
-	Fri,  5 Jun 2026 23:56:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QkRkKkIu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C7B11F00893;
+	Sat,  6 Jun 2026 00:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780703786;
-	bh=IubcKy8ld9h3EQJgEn6YATqQSGYgUEZl6Vwf5fdj/O4=;
+	s=k20260515; t=1780704325;
+	bh=RVrQXoxDW+Va9h4PalXuoRjcc1aNOO73pPlJu6RRHRQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CZns+tIFUAPJPhogsENMkKDoCo+PDO8Wc3AjoASWMtoDBidzsy8dwl2q7qQTV2kMp
-	 qOJIM94tac0OeRbwEVqF++MQOlchdBmOpKloxgmZWsRyBx6pj34MbTvAc9Vu3DwTtH
-	 IxvYUODGvcKeml99DAWkLtcbH6RtEcSuBi0M3hSCZtKAZcgAPCZTIP54BRbQY+DNNF
-	 7BN4aWoIGrwU1nHMVd30OWg/Z2Y80sHMU84AISYuWNXw9wQdqIEANPd2ZQgdMA0zeK
-	 8aB0bXUCmKpG/Db6yN5l8nKqTHQkjYr34JsKGgPhR6hgZrou2gJkGf93fRP/CtSBh1
-	 kY7EDv9zGBGFw==
+	b=QkRkKkIuW38R+ZEi7DwSwaSpP4cKZn5A/b7qiFCz5Xmb9/3u6NO2OBMghJu6YdDq1
+	 sqUp7tZ4rwj2fy2hJuDIdLJ9+iPKCXeSGjyWAHuVHDmLi2mx0vdMqaC7byuxmxf+Td
+	 C0LRnG7FrCyxVw6lOJttilponkgK/CLk+m/zAk4r+4EgvLz1K4sm4oFaTlnkkekkIR
+	 IfZh/sNKz/0VtBFBr1gUhVV9Hqy3zQ1TKSYVdiT6HOAn5SqXNBAb5oE6W4OdH2Re7a
+	 zwHfMFIidfQq139r5EUzHveVRaP4sNS2BsCCF/mUDTBS6ZVic5tjVz+wi/+YxGdqYd
+	 aGW5xcK4d+66g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/9] perf mmap: Guard cpu__get_node() return in
- aio_bind()
+Subject: Re: [PATCH v2 1/4] perf timechart: Release event samples at the end
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260605233837.1773732-2-acme@kernel.org>
-References: <20260605233837.1773732-2-acme@kernel.org>
+In-Reply-To: <20260605235131.2440270-2-namhyung@kernel.org>
+References: <20260605235131.2440270-2-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 23:56:26 +0000
-Message-Id: <20260605235626.BAD231F00893@smtp.kernel.org>
+Date: Sat, 06 Jun 2026 00:05:24 +0000
+Message-Id: <20260606000525.1C7B11F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,95 +46,126 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [High] The newly added timechart__release() function introduces a double-=
+free vulnerability by unconditionally freeing cs->backtrace for all CPU sam=
+ples, even though sched_switch() shares the exact same backtrace string poi=
+nter between multiple samples.
+
 Pre-existing issues:
-- [Medium] NULL pointer dereference in `perf_mmap__aio_free()` when memory =
-allocation fails in `perf_mmap__aio_mmap()`.
-- [Medium] Sign-extension out-of-bounds write vulnerability in `perf_mmap__=
-setup_affinity_mask`.
+- [High] Use-after-free inside cat_backtrace() error path due to freeing th=
+e memstream buffer before closing the stream.
 --
 
-commit 2a2adfec0327c3db4323154825d9029d39b512eb
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+commit ee81a934b42b228370b97d5f0e7e208b04ba839a
+Author: Namhyung Kim <namhyung@kernel.org>
 
-perf mmap: Guard cpu__get_node() return in aio_bind()
+perf timechart: Release event samples at the end
+   =20
+Add timechart__release() to free all data structures added during the
+sample processing.
 
-This commit fixes a sign-extension out-of-bounds write in perf_mmap__aio_bi=
-nd()
-by assigning the return of cpu__get_node() to a signed integer first.
-If the return value is less than zero, the function safely returns early
-instead of performing out-of-bounds operations.
-
-> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-> index b69f926d314b1..4404a99eee45f 100644
-> --- a/tools/perf/util/mmap.c
-> +++ b/tools/perf/util/mmap.c
-> @@ -104,9 +104,15 @@ static int perf_mmap__aio_bind(struct mmap *map, int=
- idx, struct perf_cpu cpu, i
->  	int err =3D 0;
+> diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechar=
+t.c
+> index 28f33e39895d3..99f5102239963 100644
+> --- a/tools/perf/builtin-timechart.c
+> +++ b/tools/perf/builtin-timechart.c
+[ ... ]
+> @@ -1509,6 +1509,73 @@ static void write_svg_file(struct timechart *tchar=
+t, const char *filename)
+>  	svg_close();
+>  }
 > =20
->  	if (affinity !=3D PERF_AFFINITY_SYS && cpu__max_node() > 1) {
-> +		int node;
+> +static void timechart__release(struct timechart *tchart)
+> +{
+> +	struct per_pid *p =3D tchart->all_data;
+[ ... ]
+> +		while (c) {
+> +			struct per_pidcomm *next_comm =3D c->next;
+> +			struct cpu_sample *cs =3D c->samples;
+> +			struct io_sample *ios =3D c->io_samples;
 > +
->  		data =3D map->aio.data[idx];
->  		mmap_len =3D mmap__mmap_len(map);
-> -		node_index =3D cpu__get_node(cpu);
-> +		node =3D cpu__get_node(cpu);
-> +		/* -1 sign-extends to ULONG_MAX, wrapping bitmap_zalloc(0) and OOB __s=
-et_bit */
-> +		if (node < 0)
-> +			return 0;
-> +		node_index =3D node;
->  		node_mask =3D bitmap_zalloc(node_index + 1);
->  		if (!node_mask) {
->  			pr_err("Failed to allocate node mask for mbind: error %m\n");
+> +			while (cs) {
+> +				struct cpu_sample *next =3D cs->next;
+> +
+> +				zfree(&cs->backtrace);
 
-[Severity: Medium]
-This is a pre-existing issue, but I noticed a similar sign-extension issue =
-in
-perf_mmap__setup_affinity_mask() that could cause an out-of-bounds write.
+[Severity: High]
+Does unconditionally freeing cs->backtrace cause a double-free?
 
-If map->core.cpu.cpu is -1 (for example, for a dummy CPU map created by perf
-record -p <pid> --affinity cpu), wouldn't it be sign-extended to ULONG_MAX
-when passed to __set_bit()?
+Looking at sched_switch() in tools/perf/builtin-timechart.c, it passes the
+same dynamically allocated backtrace string pointer to pid_put_sample() for
+both prev_pid and next_pid:
 
-tools/perf/util/mmap.c:perf_mmap__setup_affinity_mask() {
+tools/perf/builtin-timechart.c:sched_switch() {
     ...
-	if (mp->affinity =3D=3D PERF_AFFINITY_NODE && cpu__max_node() > 1)
-		build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask);
-	else if (mp->affinity =3D=3D PERF_AFFINITY_CPU)
-		__set_bit(map->core.cpu.cpu, map->affinity_mask.bits);
+    pid_put_sample(tchart, prev_pid, TYPE_RUNNING, cpu,
+                   prev_p->current->state_since, timestamp,
+                   backtrace);
+    ...
+    pid_put_sample(tchart, next_pid, p->current->state, cpu,
+                   p->current->state_since, timestamp,
+                   backtrace);
     ...
 }
 
+Then pid_put_sample() stores this raw pointer into sample->backtrace without
+duplicating it:
 
-[Severity: Medium]
-This is also a pre-existing issue, but while looking at the mmap code, I
-noticed a potential NULL pointer dereference during error cleanup.
-
-If memory allocation for map->aio.data fails in perf_mmap__aio_mmap(), the
-function returns -1 while map->aio.nr_cblocks is already set.
-
-During the cleanup sequence, perf_mmap__aio_munmap() unconditionally loops =
-up
-to map->aio.nr_cblocks:
-
-tools/perf/util/mmap.c:perf_mmap__aio_munmap() {
+tools/perf/builtin-timechart.c:pid_put_sample() {
     ...
-	for (i =3D 0; i < map->aio.nr_cblocks; ++i)
-		perf_mmap__aio_free(map, i);
+    sample->backtrace =3D backtrace;
     ...
 }
 
-Inside perf_mmap__aio_free(), the pointer offset is calculated and passed to
-zfree():
+Because the pointer is shared among multiple CPU samples, freeing it
+unconditionally for every sample here could result in a double-free memory
+corruption.
 
-tools/perf/util/mmap.c:perf_mmap__aio_free() {
-	zfree(&(map->aio.data[idx]));
+> +				cs->next =3D NULL;
+> +				free(cs);
+> +
+> +				cs =3D next;
+> +			}
+[ ... ]
+> @@ -2037,6 +2104,7 @@ int cmd_timechart(int argc, const char **argv)
+> =20
+>  	ret =3D __cmd_timechart(&tchart, output_name);
+>  out:
+> +	timechart__release(&tchart);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but looking at cat_backtrace() in
+the same file, is there a use-after-free in its error path?
+
+When the callchain context is invalid, it attempts to discard the buffer by
+freeing p:
+
+tools/perf/builtin-timechart.c:cat_backtrace() {
+    ...
+    zfree(&p);
+    goto exit;
+    ...
+
+But the goto exit path closes the stream:
+
+    exit:
+        addr_location__exit(&al);
+        fclose(f);
+
+        return p;
 }
 
-If map->aio.data is NULL, won't passing its evaluated offset to zfree()
-cause a segmentation fault when __zfree() tries to free the invalid pointer?
+Because fclose(f) operates on the open stream, it accesses its internal
+buffer to append a null byte. If p was flushed and freed, wouldn't this
+cause a use-after-free?
+
+Additionally, fclose(f) overwrites p with the buffer address, which means
+the function might return a freed pointer to the caller.
+
+>  	zfree(&cpus_cstate_start_times);
+>  	zfree(&cpus_cstate_state);
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605233837.1773=
-732-1-acme@kernel.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605235131.2440=
+270-1-namhyung@kernel.org?part=3D1
