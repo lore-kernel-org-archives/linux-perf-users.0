@@ -1,126 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754763AA507;
-	Sat,  6 Jun 2026 20:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B759E4071E4
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 20:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780776411; cv=none; b=kpqllLyvUnQygLmVlU3CUt51be6In2NCyvtDNU/CXwuHZDLNmWPjWlkGkzLsFXZW6rImCmuVy/WG1USgNz3JJGXK7NbpfyWBUqSMZvrf/GyEBf6eL/jZLMJRr0y5D4+4muy2m2+5f7nIuqIOOKloPwEOjT+QG8dwR/TMXyp/P/c=
+	t=1780777157; cv=none; b=sIGNDQLlRdwh1TBiYxv0t8OfM3KL529M5wcgeXzcR+WDwAhuh/AhOvf/PGECSRiinmVmpf+FckD2PhcZp1SbS9kOcD7lcOTC3FG1jsZ81Rs7FDT/J8PX3JlnW+7Rytd0nvX8KtOzEBzqi8rVUpuPL193m6gAU4l0MsXhjzq98xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780776411; c=relaxed/simple;
-	bh=otMPZBy/m/mdkpzCRHNeN4v5A2g2PmUSDrzAHJGrzKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SF4pzp+TJdnLn6LX3/Yy/CpsNT1w57k/n8PDOhJ4VkRg4QqYiZ+EDR90RmcEIEit2VGhVP9+LdCn1dg8MzaZ3TkeTRhYexc4c0fZyt6KvAIyzUYFI0xzH/JPCaLb4xWk2gPuvmGIwPDgoK8iGXFPT7yG2OW55SdgS5MJfCHTZuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGGcDOc9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780777157; c=relaxed/simple;
+	bh=1/j2eUXTNmXDk2kDEhM5DoThCdzkWBVM+JhPdHEQzDM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=cvrJOBj9kgqok4W05xa1d1wOY5GrFTpsxytjNHLVJz6geOeXp84Yec2jhgNUjfP+REPpPUJkWp51fF0F9X9+VOzrp3f9zkqA0Mc7ElUiFJT4UGjkVj8GVFr8sJKFDpoxa378v6Chfnid859OV7/CZzlNt+XMTSYQS17t0BCjXfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hst0/IsY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGGcDOc9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B731F00898;
-	Sat,  6 Jun 2026 20:06:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hst0/IsY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 266321F00899;
+	Sat,  6 Jun 2026 20:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780776410;
-	bh=b2uD+J314xoZnLe/CqhsMboKQCzCjaM1jNC4mWctMNo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=YGGcDOc9KerUTTHKdC9aMpRzZLGBlsRdV6//dbtx+fuTh1VVArNsLWVprnU9nH6J0
-	 Tco0IChjiaS8kSqD+HweB8uPrkthZCcF9Lizi2hthD77XTFHo1BgfP6JVjYztiVfbk
-	 O76kwPQIDZXR/Xmkgw4E/WnspF+Hyu/7Zkv9TXAfseu15LEXvWOdcMtacdPIsu6ULV
-	 qxZeDDcMXrMd9QOPzTtANfBofHo+yfXXkoKNAyPfdsC9ZfIPtD2010bHc09Vb4HruX
-	 CNeS3iZgvvjtgt5GuLhhydGh8WDTBvVUL8Pq74rv6sNx1N/CzzTWaPym/gjADL8i+0
-	 Rv7n4lCXt3EGA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 7/7] libperf: Document struct perf_cpu int16_t ABI limitation
-Date: Sat,  6 Jun 2026 17:05:59 -0300
-Message-ID: <20260606200601.1861227-8-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260606200601.1861227-1-acme@kernel.org>
-References: <20260606200601.1861227-1-acme@kernel.org>
+	s=k20260515; t=1780777156;
+	bh=yjiLg6nOlS040XwtgiQenZjC11K7SELCRh7I3F3Ze6c=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hst0/IsYW4n5iX+o0Eln/YEDvYkl61eB+gvA1hOE2/MpadZLW9K9OSxEyRKznU03T
+	 0En07mXpSwEfbp3DgTUxODx8ARSm6RQryGEzcyP33QphHMVsBCWQGXJsDglpD+Inye
+	 Qs/hJmQqAEQd8FdOA0f0R5HDaH1IX+k7rPfmwTC1360jTEFrvJf6iGLszm5h2nTTB1
+	 //y0FH5vE359qPf8daXYxoqxOrOMGKTyNFdycWFq18lTlTHKqQ0//ky+lvKtSKqgpQ
+	 qx8aK/C5t9PCuZjj5KVfqsz0o4k/iNGanfsePuhJysWlS9ikbwSwBaE7rdc19icoAX
+	 fTLsEdIbd3BUA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 5/7] perf tools: Fix int16_t truncation of max_cpu_num
+ in set_max_cpu_num()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260606200601.1861227-6-acme@kernel.org>
+References: <20260606200601.1861227-6-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 06 Jun 2026 20:19:15 +0000
+Message-Id: <20260606201916.266321F00899@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-struct perf_cpu.cpu is int16_t, limiting perf to 32767 CPUs.  This is
-part of the libperf ABI (returned by value from perf_cpu_map__cpu() and
-friends), so widening it requires an ABI bump.
+Pre-existing issues:
+- [Critical] Stack buffer overflow in `cpu_map__snprint` due to unsafe accu=
+mulation of `snprintf` return values.
+- [Medium] Integer underflow in `get_max_num()` leads to out-of-bounds heap=
+ read when parsing an empty sysfs file.
+--
 
-Add a comment on the struct definition noting this, and create a TODO
-file to collect future ABI changes so they can be batched into a single
-version bump.
+commit 191c419f9d3237462ce91c226e3e3cccc5097d51
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Cc: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/lib/perf/TODO                  | 22 ++++++++++++++++++++++
- tools/lib/perf/include/perf/cpumap.h |  8 +++++++-
- 2 files changed, 29 insertions(+), 1 deletion(-)
- create mode 100644 tools/lib/perf/TODO
+perf tools: Fix int16_t truncation of max_cpu_num in set_max_cpu_num()
 
-diff --git a/tools/lib/perf/TODO b/tools/lib/perf/TODO
-new file mode 100644
-index 0000000000000000..486dd95dc57208a8
---- /dev/null
-+++ b/tools/lib/perf/TODO
-@@ -0,0 +1,22 @@
-+Future ABI changes
-+==================
-+
-+This file collects items that require a libperf ABI bump.  Each entry
-+should describe the current limitation, the desired end state, and the
-+scope of the change so that a future ABI revision can batch them
-+together.
-+
-+1. Widen struct perf_cpu.cpu from int16_t to int
-+   - Current limit: 32767 CPUs.  No architecture exceeds this today
-+     (x86_64 max is 8192, arm64 is 4096), but NR_CPUS limits keep
-+     growing.  perf clamps to INT16_MAX in set_max_cpu_num() as a
-+     safety net.
-+   - Scope: struct perf_cpu is embedded everywhere — perf_cpu_map__cpu(),
-+     perf_cpu_map__min(), perf_cpu_map__max(), perf_cpu_map__has(), the
-+     for_each_cpu macros, and all internal callers.  The perf_cpu_map
-+     internal array (RC_CHK_ACCESS(map)->map[]) stores struct perf_cpu
-+     directly.  Widening changes the struct layout and every function
-+     that returns or accepts struct perf_cpu by value.
-+   - Migration: bump LIBPERF version in libperf.map, audit all
-+     sizeof(struct perf_cpu) assumptions, update perf.data
-+     serialization if needed.
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index a1dd25db65b62f6b..e1a0b0d272109ecb 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -6,7 +6,13 @@
- #include <stdbool.h>
- #include <stdint.h>
- 
--/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
-+/**
-+ * struct perf_cpu - wrapper around a CPU number.
-+ * @cpu: CPU number, -1 for the "any CPU"/dummy value.
-+ *
-+ * int16_t limits this to 32767 CPUs.  Widening to int requires a libperf
-+ * ABI bump — see tools/lib/perf/TODO for the full scope.
-+ */
- struct perf_cpu {
- 	int16_t cpu;
- };
--- 
-2.54.0
+set_max_cpu_num() assigns the sysfs "possible" CPU count to
+max_cpu_num.cpu which is int16_t (struct perf_cpu).  On systems
+with >32767 possible CPUs the value silently truncates, potentially
+wrapping negative.  This causes cpunode_map to be underallocated
+and subsequent cpu__get_node() calls to read out of bounds.
 
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index d3432622b2adc..21fa781b03cc7 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -494,6 +494,16 @@ static void set_max_cpu_num(void)
+>  	if (ret)
+>  		goto out;
+> =20
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but while reviewing
+get_max_num() which is called just before this line, I noticed a
+pre-existing issue where an integer underflow can occur.
+
+If filename__read_str() reads an empty sysfs file (for example from a
+mocked sysfs directory or malformed kernel state), it returns 0 and sets
+num to 0.
+
+tools/perf/util/cpumap.c:get_max_num() {
+...
+    buf[num] =3D '\0';
+
+    /* start on the right, to find highest node num */
+    while (--num) {
+        if ((buf[num] =3D=3D ',') || (buf[num] =3D=3D '-')) {
+...
+}
+
+When num is 0, the pre-decrement --num on a size_t underflows to SIZE_MAX.
+This causes an immediate out-of-bounds memory read on the dynamically
+allocated buf array. Can we add a check to ensure num is greater than 0
+before entering the loop?
+
+> +	/*
+> +	 * struct perf_cpu.cpu is int16_t (libperf ABI) =E2=80=94 clamp to avoid
+> +	 * truncation to negative.  See tools/lib/perf/TODO for the ABI
+> +	 * widening plan.
+> +	 */
+
+[ ... ]
+
+While reviewing cpumap.c, I also noticed another pre-existing issue in
+cpu_map__snprint():
+
+tools/perf/util/cpumap.c:cpu_map__snprint() {
+...
+    if (start =3D=3D end) {
+        ret +=3D snprintf(buf + ret, size - ret,
+                        "%s%d", COMMA,
+                        perf_cpu_map__cpu(map, start).cpu);
+    } else {
+...
+}
+
+[Severity: Critical]
+This is a pre-existing issue, but does this loop unsafely accumulate
+snprintf return values?
+
+The standard snprintf function returns the number of characters that would
+have been written if the buffer was large enough, not the actual bytes
+written. If the constructed string length exceeds the provided buffer size
+(such as the 1024-byte stack buffer passed by cpu_map__fprintf()), ret
+will become strictly greater than size.
+
+On the next iteration, the unsigned arithmetic size - ret will underflow
+to a huge value, and buf + ret will point past the end of the stack buffer.
+
+Subsequent snprintf calls could write entirely out of bounds on the stack,
+leading to a stack buffer overflow.
+
+Could this happen when processing an untrusted perf.data file with a
+highly fragmented or large CPU map?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260606200601.1861=
+227-1-acme@kernel.org?part=3D5
