@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505AF3AA507;
-	Sat,  6 Jun 2026 20:06:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754763AA507;
+	Sat,  6 Jun 2026 20:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780776406; cv=none; b=bLs2XOUp+Fvy8y3ZS7Mm9n8E05BBRbPE8Z8EYzA88UzG+y4F9utkfBEonhByg9WMM5EkQysKUByPIgC2a9Pv2F8jPFCzWcb/3O6JGSyrZ9AqCEI3YYKE4G84P8vw2m97azPjTOstVaDNwRJpt8tgzKUowfVT2u70ft0UVokvgSo=
+	t=1780776411; cv=none; b=kpqllLyvUnQygLmVlU3CUt51be6In2NCyvtDNU/CXwuHZDLNmWPjWlkGkzLsFXZW6rImCmuVy/WG1USgNz3JJGXK7NbpfyWBUqSMZvrf/GyEBf6eL/jZLMJRr0y5D4+4muy2m2+5f7nIuqIOOKloPwEOjT+QG8dwR/TMXyp/P/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780776406; c=relaxed/simple;
-	bh=tpRn58mPXbibn/1mD53zsa5k6gm4YmIkOr3rpaeI80s=;
+	s=arc-20240116; t=1780776411; c=relaxed/simple;
+	bh=otMPZBy/m/mdkpzCRHNeN4v5A2g2PmUSDrzAHJGrzKA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u2U1NYUhD0Rctxdubww+kSi4/ak9jfgi53tnMHLwmKM0y80B+/XHsaAc9ADH70KG/XH3tx76k7IqinYHn24B1wk/QmCAVs4pT1VZrNe6JK/3wJ6f8m2JAMu1Td0HINM03M/xh2xA1oDOtoRTho92SBr4Wznwy0swhPhirY7vc2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hWjNa9yW; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=SF4pzp+TJdnLn6LX3/Yy/CpsNT1w57k/n8PDOhJ4VkRg4QqYiZ+EDR90RmcEIEit2VGhVP9+LdCn1dg8MzaZ3TkeTRhYexc4c0fZyt6KvAIyzUYFI0xzH/JPCaLb4xWk2gPuvmGIwPDgoK8iGXFPT7yG2OW55SdgS5MJfCHTZuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGGcDOc9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hWjNa9yW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770BB1F00893;
-	Sat,  6 Jun 2026 20:06:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGGcDOc9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B731F00898;
+	Sat,  6 Jun 2026 20:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780776405;
-	bh=1tjL0WkxtgQSVt50jRLm7IWs5CaKopZAj1RIXm99+yA=;
+	s=k20260515; t=1780776410;
+	bh=b2uD+J314xoZnLe/CqhsMboKQCzCjaM1jNC4mWctMNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hWjNa9yWYpkKJgT5e3ENYpNpeOTHQBZ1KVAhT9hXoi32K6s2BF2AuaBxHw/UKclmP
-	 ZerGxcxk/6MNjmDSCD845bkPRIQFScBD6LRNExJJQhkx3tLAipd5zEMeLf4J6vQzqU
-	 vZ5Ym8KfYU9ZA7hBJpL2WOHS3iTSTGK8fdHkQmlVmGL+w2hA/Q12u6LXsHgYRd503f
-	 zatHo65AAe4/D/dF5/l+IaffiZYxo8yKiosRF68oQbR7yVer7PsyQlIwjP10jDamnR
-	 YaUO87agaWCJ7KqSvMiQLuGP5Vx5NFRphB/AgFGIee3FazF7bPWkTz11RNE4Z/pJlQ
-	 fD4n7R7zAw7zw==
+	b=YGGcDOc9KerUTTHKdC9aMpRzZLGBlsRdV6//dbtx+fuTh1VVArNsLWVprnU9nH6J0
+	 Tco0IChjiaS8kSqD+HweB8uPrkthZCcF9Lizi2hthD77XTFHo1BgfP6JVjYztiVfbk
+	 O76kwPQIDZXR/Xmkgw4E/WnspF+Hyu/7Zkv9TXAfseu15LEXvWOdcMtacdPIsu6ULV
+	 qxZeDDcMXrMd9QOPzTtANfBofHo+yfXXkoKNAyPfdsC9ZfIPtD2010bHc09Vb4HruX
+	 CNeS3iZgvvjtgt5GuLhhydGh8WDTBvVUL8Pq74rv6sNx1N/CzzTWaPym/gjADL8i+0
+	 Rv7n4lCXt3EGA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,11 +38,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 6/7] perf sched: Free callchain nodes in idle thread cleanup
-Date: Sat,  6 Jun 2026 17:05:58 -0300
-Message-ID: <20260606200601.1861227-7-acme@kernel.org>
+Subject: [PATCH 7/7] libperf: Document struct perf_cpu int16_t ABI limitation
+Date: Sat,  6 Jun 2026 17:05:59 -0300
+Message-ID: <20260606200601.1861227-8-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260606200601.1861227-1-acme@kernel.org>
 References: <20260606200601.1861227-1-acme@kernel.org>
@@ -52,86 +51,76 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-free_idle_threads() relies on the thread priv destructor (free()) to
-clean up idle_thread_runtime structs.  But free() doesn't walk the
-callchain_cursor linked list or the callchain_root tree allocated
-by callchain_cursor__copy() and callchain_append() during --idle-hist
-processing.  Every idle thread with callchain data leaks these nodes.
+struct perf_cpu.cpu is int16_t, limiting perf to 32767 CPUs.  This is
+part of the libperf ABI (returned by value from perf_cpu_map__cpu() and
+friends), so widening it requires an ABI bump.
 
-Introduce callchain_cursor_cleanup() to free the cursor's linked list
-of callchain_cursor_node entries, and call it together with
-free_callchain() in free_idle_threads() before thread__put().
+Add a comment on the struct definition noting this, and create a TODO
+file to collect future ABI changes so they can be batched into a single
+version bump.
 
-Fixes: 225b24f569980ac9 ("perf sched timehist: Save callchain when entering idle")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-sched.c  |  5 ++++-
- tools/perf/util/callchain.c | 15 +++++++++++++++
- tools/perf/util/callchain.h |  1 +
- 3 files changed, 20 insertions(+), 1 deletion(-)
+ tools/lib/perf/TODO                  | 22 ++++++++++++++++++++++
+ tools/lib/perf/include/perf/cpumap.h |  8 +++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+ create mode 100644 tools/lib/perf/TODO
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index b7ccdc6a985d1c7b..1ff01f03d2ad1ad3 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2500,8 +2500,11 @@ static void free_idle_threads(void)
- 			struct idle_thread_runtime *itr;
- 
- 			itr = thread__priv(idle);
--			if (itr)
-+			if (itr) {
- 				thread__put(itr->last_thread);
-+				free_callchain(&itr->callchain);
-+				callchain_cursor_cleanup(&itr->cursor);
-+			}
- 
- 			thread__put(idle);
- 		}
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 8981ae879ebb887c..31c675cbab63187b 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1578,6 +1578,21 @@ void free_callchain(struct callchain_root *root)
- 	free_callchain_node(&root->node);
- }
- 
-+void callchain_cursor_cleanup(struct callchain_cursor *cursor)
-+{
-+	struct callchain_cursor_node *node, *next;
+diff --git a/tools/lib/perf/TODO b/tools/lib/perf/TODO
+new file mode 100644
+index 0000000000000000..486dd95dc57208a8
+--- /dev/null
++++ b/tools/lib/perf/TODO
+@@ -0,0 +1,22 @@
++Future ABI changes
++==================
 +
-+	callchain_cursor_reset(cursor);
++This file collects items that require a libperf ABI bump.  Each entry
++should describe the current limitation, the desired end state, and the
++scope of the change so that a future ABI revision can batch them
++together.
 +
-+	for (node = cursor->first; node; node = next) {
-+		next = node->next;
-+		free(node);
-+	}
-+	cursor->first = NULL;
-+	cursor->last = &cursor->first;
-+	cursor->curr = NULL;
-+}
-+
- static u64 decay_callchain_node(struct callchain_node *node)
- {
- 	struct callchain_node *child;
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 0eb5d7a1a41d81e1..8b1e405d1cdf4660 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -286,6 +286,7 @@ int callchain_list_counts__printf_value(struct callchain_list *clist,
- 					FILE *fp, char *bf, int bfsize);
++1. Widen struct perf_cpu.cpu from int16_t to int
++   - Current limit: 32767 CPUs.  No architecture exceeds this today
++     (x86_64 max is 8192, arm64 is 4096), but NR_CPUS limits keep
++     growing.  perf clamps to INT16_MAX in set_max_cpu_num() as a
++     safety net.
++   - Scope: struct perf_cpu is embedded everywhere — perf_cpu_map__cpu(),
++     perf_cpu_map__min(), perf_cpu_map__max(), perf_cpu_map__has(), the
++     for_each_cpu macros, and all internal callers.  The perf_cpu_map
++     internal array (RC_CHK_ACCESS(map)->map[]) stores struct perf_cpu
++     directly.  Widening changes the struct layout and every function
++     that returns or accepts struct perf_cpu by value.
++   - Migration: bump LIBPERF version in libperf.map, audit all
++     sizeof(struct perf_cpu) assumptions, update perf.data
++     serialization if needed.
+diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+index a1dd25db65b62f6b..e1a0b0d272109ecb 100644
+--- a/tools/lib/perf/include/perf/cpumap.h
++++ b/tools/lib/perf/include/perf/cpumap.h
+@@ -6,7 +6,13 @@
+ #include <stdbool.h>
+ #include <stdint.h>
  
- void free_callchain(struct callchain_root *root);
-+void callchain_cursor_cleanup(struct callchain_cursor *cursor);
- void decay_callchain(struct callchain_root *root);
- int callchain_node__make_parent_list(struct callchain_node *node);
- 
+-/** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
++/**
++ * struct perf_cpu - wrapper around a CPU number.
++ * @cpu: CPU number, -1 for the "any CPU"/dummy value.
++ *
++ * int16_t limits this to 32767 CPUs.  Widening to int requires a libperf
++ * ABI bump — see tools/lib/perf/TODO for the full scope.
++ */
+ struct perf_cpu {
+ 	int16_t cpu;
+ };
 -- 
 2.54.0
 
