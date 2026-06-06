@@ -1,121 +1,142 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571CD3AF668
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 15:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780760794; cv=none; b=OdzKrFlkkx3qIBM4RRb5/ZmtbYSmsmzCfRK9bZsPlj4eFZfaKp0xnyKQpkHxHpStM1kQjWAlD05wUNY6/9tvuYZzu9i79IYEAUFNYCO7TmPgzjzeCZ8I6tHcDd2mYMFMDM4X3GTIXPbLo2qMaTr6ULNqyGCQ2lApprj8yvr91Ow=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780760794; c=relaxed/simple;
-	bh=g4D62Y3YmQgZtXsPJzaVerVgiwnzGUHW1KYbSQ+6TVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tSZONMvoi/87BOEbSOJSpTHTIL6iAblxWCZ38VPvuzTe8fxY/1wxDFThTDnhrM9gxVc6NKqDtCkWZSHgUVLy0bsJA0+N2ILynq8Vz/c0orc7Ic+r2NW7O3pMIF9gALVZHCa6jZIkqtWjO9y+Dng0+hpDKy1NRw/6JQwSOrgNkEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UQzaVOJO; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71121155757
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 15:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780760871; cv=pass; b=OSIOW2Rss4yLFwmi9S2Urttyqzv5nZG6VyjerhhpSvcYAmPFP0ivM0Gfxozg4HAvcfLwZNEvPV5wbHC/h0yijd4jKqqHAYavXbMTBH35+F2JyB5pJQOw2L6IKsLSdDdYKMc3t4ttx+YF5J9AsQ2SHUfTrVGIH4Av1oTufG+uSsI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780760871; c=relaxed/simple;
+	bh=MW3WGw1hAZ4WHwSHFbq1gQsCf4IBu3shonuPv5aQqeY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rjR9mS38jEOb4nwR9a5ttM4wc3dp6KCSTo/Z2vGnQRoIWlB8MPhe+cebSl9G/YiRrlj9tBkPXH6po3Dmh17xrl5gfbCZ0dFaNejTIjsXxO7UvsXx6Y+vN0MI8d3hS6+OsaaHWvdbjbkj+AW5n/BAN/btUo6aoBX4FmSdsFxICyA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RTScJu61; arc=pass smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQzaVOJO"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-43d3454f643so1176323fac.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jun 2026 08:46:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RTScJu61"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2c0b1a48855so218475ad.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jun 2026 08:47:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780760870; cv=none;
+        d=google.com; s=arc-20240605;
+        b=eDrElVhv41kLWXN9+cgy01q0Dj4OyvJYD1vb+HyXq//jK0W09PPccOvWLuxZyrDUfq
+         1BPMBUK7NOVnl2S3DeAPkaxYyWR+J+Yio6NpyzyvC1ETXGtkTh4J8riOzSYFAmsbvOs8
+         /WEnG8pp+bkjAIvYO0PDmMvTWEkICngLvkI6bJZSdcIrq5YCyktCuCYWlZSMEdOFBA2z
+         mwHAnrs8VatQxXVKXyzNFZCwQF3rkq/srOW1VCLLpdlnW6ooJ9Uj51gtb4m71VhXJ77T
+         pVdyKEFQXF7cKeJ6pFoV+kWbjeAZLmrTvT/RqluyJS6IM/5/wFn8BD68oPe6Kddnr5mU
+         oQ6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5GJqqoNLqYQ4v0lJXutWeKyal4BUzmhJxcxqQU5UVJs=;
+        fh=FUwQ6CNTosQmPnSihgfJ9e3qzUbZE+/4cxyo6Kjg+l8=;
+        b=j0NJUwcAQu19VXtyWRdWiBsmT/1TaF5KDk/6jN4d9lo1YwgIgavSMkClY0lxZ929/J
+         mqQu2KXpWH9a0iKLtbQ5Y8W55pwrEuz1tBWRKsWHnUpeJ6+0ajN6zpDoKGn8LSqeyPv1
+         w4z9kgvGeo9No6bIuMtQP7++3uavhcg+rUfQt766k1b8Riom7kQpFQga9HKlvTrkqhOp
+         sVr+khiov8X4aQumF181R6mE2gzNbEm0ppq89XVBw7MKnoKVaHoKZ4yAfA9578PaZuIx
+         1EkoZ6XbUZT5mK41T1usVvU6Fqzqp42orWEEKCNlLha7VKWvIBaglXeB1zqjXy9SESvt
+         jznw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780760792; x=1781365592; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QyCKNs9ex2RvarMOfyRVYoKfxJfS5rsby9PSMWADADw=;
-        b=UQzaVOJO3CE4FZqomJVgz6opyvoEpMq1P1HAGkTUb1AgHQDxpVtthswlo6C2vkXCOc
-         k74PzqZ11f3QVNkV3/8dxaI+28GpIkuS6bZ15r+EM+sTvtatowE+d64lct9SHw/DNUhw
-         p4q+lbltMtQtmgvdqMsmR6yGL62GxPDtrNrW82YKrlIo2NerLAgn6otCtCfYy0THqMMV
-         cgpRtbrSgJe1bSYwA6LbxVnScrfggHhnttOSCt92ttrW8lkq+/sqKw8Osn0d8tG9HeB/
-         7joEXDQqcElXA58vp9tpMMMagRuzouMLMeOz199sfNkYZstGqTYOmAskQaT6aHddrTy9
-         ecOA==
+        d=google.com; s=20251104; t=1780760870; x=1781365670; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5GJqqoNLqYQ4v0lJXutWeKyal4BUzmhJxcxqQU5UVJs=;
+        b=RTScJu61s5Mk5KUCmPuw/6EHPzuSlfBIU66sPABtFMePAKJuiW4z7CbawUoz88x+v7
+         HaVfcCWSLm3KTFdQXZ1QSidlrJOMa67BAdiJadz30fZ8nNpqEAXXoi58lIXHjeVK8+vs
+         qSy0qjP13kTFoHmzS/SaCQJSHZphMt0hrxzOcrMVZAak8IiGpb6iAlGrrtRp2iHzUQ9i
+         wBRtaCwdNBxp0RfrU+UTaOcxw99AgZrDIsy+/e4IZ7Ma+gAuGB9Z/vp4LNnDjUz3N+0V
+         w5FSTQJA0kAwe0/JVuGxeCALxjLzmgzRlNIJ/GNa6BDScSR+5X/8XuaUnoItJ1S1dl4j
+         bWMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780760792; x=1781365592;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QyCKNs9ex2RvarMOfyRVYoKfxJfS5rsby9PSMWADADw=;
-        b=U4Vvd1gKCSZq/nGvB6JASvxzXLzfUsutCWZC+/aM2LerBudlIuWVkx8JIYTWIERZfW
-         zI1k+8bh40PlXQrPZe2EPjH8d/+BCKSwEV67egCHzE5YqpOVgIEBzuuhhHzTG5zyz4LQ
-         HUE0JB+rbmdtyWHvg9N4H7AEEJZvKbRLxl7iiX0ybnspq2Xasqpp6Z6s8K7UYLKLvmXz
-         nqIAJVZw3JPOPrW4N7G64jFpE1QuLXd0G2iHCEWSiK5iq5nHsSvyD7b7ri1Bg2ggSVg/
-         TFkdlpRIeBeReEetZGGS5rEF5YwRXkSuqNkVz7h8FQC10Ok13Cg6jDwQQwYvC4BlG2Nd
-         huGQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+SsqEwMIvuL1nRL0DTEvvm5ophuKmiRialFgCXaIH88BT4+ADeYcc6OjS5V3D+dwP5gi6poUzCweGcTgfWtcZm@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFrLdEwi4/tmgLq7ZfUIpwLCcDJelCrZ/ZctsDjzseupoLxyKc
-	6VK1YPiRf2AoeeV1DmTcJ0uT3OVgDiH/FtJ6RmfhFE+F30KIGQPRD7x0
-X-Gm-Gg: Acq92OGYPDuI+CAnX0Xz929FI8jauV226z+TgG1Bh1l5st4aZpoWCNjf49aT1Aog6mt
-	9gcNOgGtVZou5f9HHt3WbrWmKtyHR3TypqMxHcQrIOtOZB0nlpDZUVpKbEvcnUFsNPNZwqIdLz1
-	dscoVOm4FCiURO2l0g6hAvtkEoALR1Ti3VGzb31fbJSXuAFWvLUqqCiTX1/iIZs5eW29+yNi34l
-	JGYY8bNgbK2zJ372EpOolJhTX9ZpTqR7SLSKDgUmiCt+qnX0LunW0pzM1ruX8pBIAbiV0c1nTDi
-	lvgj4pw9lrQ0yW3y4lkTRk9BFcm/vt0697Bkjbw9nOxm4Yhn4k2NyUW87U6sQBKH927+jsGE2gs
-	mRUAOX9S1FR4IyPqowsi1eySKbSn2P8JcMkHHwlEQS1DFjEzP+Y3gw0IOxf16imMBIWyABN2ZGn
-	SZzl2nrtjXHU2zdh8CxkbcRyT8fZ9TwYn/pFfQUpEYa3lfCJX3ZYCSS9jMa3iY/pimx3lOszb9W
-	2kavoqSyuVUHFVs9fam4J4Y0WCm
-X-Received: by 2002:a05:6870:6710:b0:439:ec11:8c9c with SMTP id 586e51a60fabf-4413d99a42cmr4732906fac.31.1780760792066;
-        Sat, 06 Jun 2026 08:46:32 -0700 (PDT)
-Received: from ?IPV6:2601:282:1e02:1040:856a:da39:d9b3:fb8f? ([2601:282:1e02:1040:856a:da39:d9b3:fb8f])
-        by smtp.googlemail.com with ESMTPSA id 586e51a60fabf-440d8297395sm10158925fac.11.2026.06.06.08.46.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jun 2026 08:46:31 -0700 (PDT)
-Message-ID: <dc8da8b6-fca4-4e6a-ba42-15a68cf7d64d@gmail.com>
-Date: Sat, 6 Jun 2026 09:46:29 -0600
+        d=1e100.net; s=20251104; t=1780760870; x=1781365670;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5GJqqoNLqYQ4v0lJXutWeKyal4BUzmhJxcxqQU5UVJs=;
+        b=I3RWQOo2AlbMISY2Ay5ioTSCb5lKS+BhCVi8lNeLTO8PeKyfMmnfcemk/wNc0PHx+3
+         fdSTjNsHQcz6EYrQbHA53MCXOmTLtY82nvB4l40IosO3fgdZT8v3KBHAGSJBk5uwn8tZ
+         hqP8fPNEMAYl/p4ek0ARPXLgDGeYMxtlJIezoupVi6vimlJnZ53Q6AwSo/assYODOYWj
+         P+CHY1foeaq6LU1BbnpXYVumSsLBDJb1wtsAcGpnGLFAOxM9z0KbdSDSEQM+QcrDdR35
+         uvo4KnPDpQHZnEcUp3F4qUXjaXZmbBn48BQBT0rQ9d1H+vBp3V4fQufWzH0iTHTOaaQI
+         SZrw==
+X-Forwarded-Encrypted: i=1; AFNElJ850ViAl9kVag3Yd4Twv/Uf8BKGdi4U45uLp8Afh3xt0UG2SJnZTFGApP6Hwj0poNm06kvB34gcxuDDir28RN1s@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSpYICSfc8itbnK9+qIisCkEuNuNDJEXrLAklQxap4RdB86aVT
+	lMOieV9Q6v7wHxCPisHnrPb5w7ZhqrX+kZApxcqT2KqS/fwLp6MfNKAP0W97jTbNrIgNg19en3v
+	dVujrzI2FtptQra5tl8K4JzrusLAeuIL0kNnhluB+
+X-Gm-Gg: Acq92OF7O8QH6R0wso5G1jefg/6upnOvrPPtZuBeGiRoXyHgPnYeQKl9QQ90eMFmBG3
+	wO8qJYEFneWMinGh6G1IgAuUIXrLPu0o7u7jxSHNk16nUYuHATeGT800McjaBNyd9Y+nXmnUCGq
+	CKRDMRnkxSEqL7qBLrJARRELA0hanZKc0d01FjYde7VFGBytv6Fu4l9ZyUeP5VThSCix3L+n0fN
+	khKiGE/9/eHeWk8eFdFQ6oSXj4lwMOmU12mscZoRGJaf50QJSKHUQe8V0hxnCU2NoaZU3nJ1o1r
+	ctQE3+FGPeXrcZAK8fM=
+X-Received: by 2002:a17:902:f708:b0:2c1:ee6e:be23 with SMTP id
+ d9443c01a7336-2c1ee6ec5ebmr2669175ad.33.1780760869291; Sat, 06 Jun 2026
+ 08:47:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/9] perf sched: Clean up idle_threads entry on init
- failure
-Content-Language: en-US
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo
- <acme@redhat.com>, sashiko-bot <sashiko-bot@kernel.org>,
- "Claude Opus 4.6" <noreply@anthropic.com>
-References: <20260605233837.1773732-1-acme@kernel.org>
- <20260605233837.1773732-6-acme@kernel.org>
-From: David Ahern <dsahern@gmail.com>
-In-Reply-To: <20260605233837.1773732-6-acme@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260606121528.406919-2-tshah@linux.ibm.com>
+In-Reply-To: <20260606121528.406919-2-tshah@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 6 Jun 2026 08:47:37 -0700
+X-Gm-Features: AVVi8CerL-6KbYuo2zlnlU9te7dDWQC60u93ZneUxymer8R9JGeLarJSQShqAs0
+Message-ID: <CAP-5=fUOUtbfXXtGdSYrg1SfuTryNqFPknKWDc=4MxK==m6+VQ@mail.gmail.com>
+Subject: Re: [PATCH] perf data convert json: Fix addr_location leak on
+ time-filtered samples
+To: Tanushree Shah <tshah@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+	vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com, 
+	maddy@linux.ibm.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, atrajeev@linux.ibm.com, hbathini@linux.ibm.com, 
+	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/5/26 5:38 PM, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> get_idle_thread() allocates a thread via thread__new() and stores it in
-> idle_threads[cpu], then calls init_idle_thread() to set up the private
-> data.  If init_idle_thread() fails (e.g. OOM for the idle_thread_runtime
-> struct), the function returns NULL but leaves the partially initialized
-> thread in idle_threads[cpu].
-> 
-> On subsequent calls for the same CPU, get_idle_thread() finds a non-NULL
-> idle_threads[cpu], skips allocation, and returns thread__get() on a
-> thread that has no priv data.  Callers then get a thread whose
-> thread__priv() returns NULL, leading to unexpected behavior.
-> 
-> Release the thread and reset the slot to NULL on init failure so the
-> entry doesn't persist in a corrupted state.
-> 
-> Fixes: 49394a2a24c7 ("perf sched timehist: Introduce timehist command")
-> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Cc: David Ahern <dsahern@gmail.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Sat, Jun 6, 2026 at 5:20=E2=80=AFAM Tanushree Shah <tshah@linux.ibm.com>=
+ wrote:
+>
+> When samples are skipped due to time filtering in process_sample_event(),
+> the early return path bypasses addr_location__exit(), causing memory leak=
+s
+> of thread, map, and maps references acquired by machine__resolve().
+>
+> These references must be released through addr_location__exit() before
+> returning.
+>
+> Fixes: 8e746e95c3e4 ("perf data: Allow filtering conversion by time range=
+")
+> Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
 > ---
->  tools/perf/builtin-sched.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-
-Reviewed-by: David Ahern <dsahern@kernel.org>
-
-
+>  tools/perf/util/data-convert-json.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-c=
+onvert-json.c
+> index d526c91312ed..6a8d00c80394 100644
+> --- a/tools/perf/util/data-convert-json.c
+> +++ b/tools/perf/util/data-convert-json.c
+> @@ -177,6 +177,7 @@ static int process_sample_event(const struct perf_too=
+l *tool,
+>
+>         if (perf_time__ranges_skip_sample(c->ptime_range, c->range_num, s=
+ample->time)) {
+>                 ++c->skipped;
+> +               addr_location__exit(&al);
+>                 return 0;
+>         }
+>
+> --
+> 2.47.3
+>
