@@ -1,143 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B759E4071E4
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 20:19:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F5524A05D
+	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jun 2026 20:23:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780777157; cv=none; b=sIGNDQLlRdwh1TBiYxv0t8OfM3KL529M5wcgeXzcR+WDwAhuh/AhOvf/PGECSRiinmVmpf+FckD2PhcZp1SbS9kOcD7lcOTC3FG1jsZ81Rs7FDT/J8PX3JlnW+7Rytd0nvX8KtOzEBzqi8rVUpuPL193m6gAU4l0MsXhjzq98xM=
+	t=1780777417; cv=none; b=Vg2LvIdB8w2SbjhFUVXXHb1CMDC15WhXsizo0vC+SbKH6eL9j4xAd+nl37y/Az04ZT9wVWJZRhiLXOkN5NjWB4vkvYpUlN8zgeZP8/b6oXldbZxDDCkCijHENClJmAfo4d2BUioxMMlaUUefP9b5pcvxV7aqZuth/doHyzhB8YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780777157; c=relaxed/simple;
-	bh=1/j2eUXTNmXDk2kDEhM5DoThCdzkWBVM+JhPdHEQzDM=;
+	s=arc-20240116; t=1780777417; c=relaxed/simple;
+	bh=DBUhhY0IKpfeZtY56sNAqtEm0+l488OaY1WYem/B3mk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cvrJOBj9kgqok4W05xa1d1wOY5GrFTpsxytjNHLVJz6geOeXp84Yec2jhgNUjfP+REPpPUJkWp51fF0F9X9+VOzrp3f9zkqA0Mc7ElUiFJT4UGjkVj8GVFr8sJKFDpoxa378v6Chfnid859OV7/CZzlNt+XMTSYQS17t0BCjXfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hst0/IsY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=h4pEiOAAD7HX2bjXNXtE8KV6pJaI/aFh/SMSVqHEAeYm/nlgUSo+BLFcnKzH+80w3Hly2EWXmzE3pk5IxoNt0y5AI5qRNOGg81Wqb40scxs2fo+ciRAzmRJNVC28bd4dCUxBl7OGmYDp1hIfoPzFsJw3YlE6ocqQktx5c6RsitY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lf4PKHHL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hst0/IsY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 266321F00899;
-	Sat,  6 Jun 2026 20:19:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lf4PKHHL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9321F00893;
+	Sat,  6 Jun 2026 20:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780777156;
-	bh=yjiLg6nOlS040XwtgiQenZjC11K7SELCRh7I3F3Ze6c=;
+	s=k20260515; t=1780777416;
+	bh=cMguoVX1QKpLgzbNeAzpcyizYfmC4hAI6VtbFhCjDUo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hst0/IsYW4n5iX+o0Eln/YEDvYkl61eB+gvA1hOE2/MpadZLW9K9OSxEyRKznU03T
-	 0En07mXpSwEfbp3DgTUxODx8ARSm6RQryGEzcyP33QphHMVsBCWQGXJsDglpD+Inye
-	 Qs/hJmQqAEQd8FdOA0f0R5HDaH1IX+k7rPfmwTC1360jTEFrvJf6iGLszm5h2nTTB1
-	 //y0FH5vE359qPf8daXYxoqxOrOMGKTyNFdycWFq18lTlTHKqQ0//ky+lvKtSKqgpQ
-	 qx8aK/C5t9PCuZjj5KVfqsz0o4k/iNGanfsePuhJysWlS9ikbwSwBaE7rdc19icoAX
-	 fTLsEdIbd3BUA==
+	b=Lf4PKHHL12rw2YrnwS0dImUqbOvJiKosx5lUy40eIg3d+ORJ2vuhXP7JnMUbvDcxf
+	 rpFU0b37yIQJRAuFfuupjWDsxKvPPggjwO0k6hIulJZy7xtR6t20Uuas/3sCkbIJNP
+	 MfTliZNtThYwccFKCRVf5Yuj4A8P6d5gL21dnRyn16vC7pSgrPm6Hc1YSOILdBv7ki
+	 R/E8xTqtxWTvuwKF+opuVGd07jCqWGIve4oBwvSWwLXmNu9Hn2wwu4yLrNe1OB+E2K
+	 42dtPUYqZlySGVSWkfoslSfN2uuVq8uGFmz0XvxyXORDLBWh99p5Oers12HOya/mtm
+	 8AI9UeqF2sLCA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 5/7] perf tools: Fix int16_t truncation of max_cpu_num
- in set_max_cpu_num()
+Subject: Re: [PATCH 2/7] perf stat: Introduce perf_env__get_cpu_topology()
+ to guard NULL env->cpu
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260606200601.1861227-6-acme@kernel.org>
-References: <20260606200601.1861227-6-acme@kernel.org>
+In-Reply-To: <20260606200601.1861227-3-acme@kernel.org>
+References: <20260606200601.1861227-3-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 06 Jun 2026 20:19:15 +0000
-Message-Id: <20260606201916.266321F00899@smtp.kernel.org>
+Date: Sat, 06 Jun 2026 20:23:35 +0000
+Message-Id: <20260606202336.0F9321F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [Critical] Stack buffer overflow in `cpu_map__snprint` due to unsafe accu=
-mulation of `snprintf` return values.
-- [Medium] Integer underflow in `get_max_num()` leads to out-of-bounds heap=
- read when parsing an empty sysfs file.
+- [High] Missing bounds validation for the untrusted `sample->cpu` index wh=
+en accessing the dynamically allocated `env->cpu` array in `machine__resolv=
+e()`.
 --
 
-commit 191c419f9d3237462ce91c226e3e3cccc5097d51
+commit 50d04a9b8194c04adf66854548c5855bbd4c23f4
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf tools: Fix int16_t truncation of max_cpu_num in set_max_cpu_num()
+perf stat: Introduce perf_env__get_cpu_topology() to guard NULL env->cpu
 
-set_max_cpu_num() assigns the sysfs "possible" CPU count to
-max_cpu_num.cpu which is int16_t (struct perf_cpu).  On systems
-with >32767 possible CPUs the value silently truncates, potentially
-wrapping negative.  This causes cpunode_map to be underallocated
-and subsequent cpu__get_node() calls to read out of bounds.
+This commit introduces a safe accessor, perf_env__get_cpu_topology(), to
+prevent NULL pointer dereferences when accessing env->cpu on older
+perf.data files. It also updates several topology aggregation callbacks
+in builtin-stat.c to use this new accessor.
 
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index d3432622b2adc..21fa781b03cc7 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -494,6 +494,16 @@ static void set_max_cpu_num(void)
->  	if (ret)
->  		goto out;
-> =20
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but while reviewing
-get_max_num() which is called just before this line, I noticed a
-pre-existing issue where an integer underflow can occur.
-
-If filename__read_str() reads an empty sysfs file (for example from a
-mocked sysfs directory or malformed kernel state), it returns 0 and sets
-num to 0.
-
-tools/perf/util/cpumap.c:get_max_num() {
-...
-    buf[num] =3D '\0';
-
-    /* start on the right, to find highest node num */
-    while (--num) {
-        if ((buf[num] =3D=3D ',') || (buf[num] =3D=3D '-')) {
-...
-}
-
-When num is 0, the pre-decrement --num on a size_t underflows to SIZE_MAX.
-This causes an immediate out-of-bounds memory read on the dynamically
-allocated buf array. Can we add a check to ensure num is greater than 0
-before entering the loop?
-
-> +	/*
-> +	 * struct perf_cpu.cpu is int16_t (libperf ABI) =E2=80=94 clamp to avoid
-> +	 * truncation to negative.  See tools/lib/perf/TODO for the ABI
-> +	 * widening plan.
-> +	 */
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 7621d1f73b83a..7acca39b42ff3 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
 
 [ ... ]
 
-While reviewing cpumap.c, I also noticed another pre-existing issue in
-cpu_map__snprint():
+> @@ -187,6 +187,20 @@ const char *perf_env__pmu_mappings(struct perf_env *=
+env);
+> =20
+>  int perf_env__read_cpu_topology_map(struct perf_env *env);
+> =20
+> +/*
+> + * Safe accessor for env->cpu[] topology array.  env->cpu can be NULL wh=
+en
+> + * reading old-format perf.data that predates topology information =E2=
+=80=94
+> + * process_cpu_topology() in header.c frees it while nr_cpus_avail remai=
+ns
+> + * set, so callers must not index env->cpu[] without this check.
+> + */
+> +static inline struct cpu_topology_map *
+> +perf_env__get_cpu_topology(struct perf_env *env, struct perf_cpu cpu)
+> +{
+> +	if (env->cpu && cpu.cpu >=3D 0 && cpu.cpu < env->nr_cpus_avail)
+> +		return &env->cpu[cpu.cpu];
+> +	return NULL;
+> +}
 
-tools/perf/util/cpumap.c:cpu_map__snprint() {
-...
-    if (start =3D=3D end) {
-        ret +=3D snprintf(buf + ret, size - ret,
-                        "%s%d", COMMA,
-                        perf_cpu_map__cpu(map, start).cpu);
-    } else {
-...
-}
+[Severity: High]
+This is a pre-existing issue, but I noticed that tools/perf/util/event.c
+accesses the dynamically allocated env->cpu array without validation.
 
-[Severity: Critical]
-This is a pre-existing issue, but does this loop unsafely accumulate
-snprintf return values?
+In machine__resolve():
 
-The standard snprintf function returns the number of characters that would
-have been written if the buffer was large enough, not the actual bytes
-written. If the constructed string length exceeds the provided buffer size
-(such as the 1024-byte stack buffer passed by cpu_map__fprintf()), ret
-will become strictly greater than size.
+	if (al->cpu >=3D 0) {
+		struct perf_env *env =3D machine->env;
 
-On the next iteration, the unsigned arithmetic size - ret will underflow
-to a huge value, and buf + ret will point past the end of the stack buffer.
+		if (env && env->cpu)
+			al->socket =3D env->cpu[al->cpu].socket_id;
+	}
 
-Subsequent snprintf calls could write entirely out of bounds on the stack,
-leading to a stack buffer overflow.
+Since al->cpu is derived from the untrusted perf.data file payload,
+can this trigger an out-of-bounds heap read on env->cpu[] if the
+file provides an artificially large CPU index?
 
-Could this happen when processing an untrusted perf.data file with a
-highly fragmented or large CPU map?
+Would it make sense to update machine__resolve() to use this new
+perf_env__get_cpu_topology() helper to ensure proper validation against
+env->nr_cpus_avail?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260606200601.1861=
-227-1-acme@kernel.org?part=3D5
+227-1-acme@kernel.org?part=3D2
