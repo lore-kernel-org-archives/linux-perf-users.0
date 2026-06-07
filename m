@@ -1,185 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6213E1DFF0
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 23:47:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8461DFF0
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 23:49:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780876038; cv=none; b=c7hZRSifXmJ8HaCDJvzbSIE/y0O15Nv78W424G4apgB+gIoO3gdgKlkQIeHphCiHWvb+Ve82NLnK3Tm31P7F2lJkMU6AiCKh8DBD39Qk/VsW5HWDvpt2rXx9qwKsVYkl2Le6hWkYEpbc8RGqGrByiYpSW6Bz0VUdLPXMT4Ek8B8=
+	t=1780876144; cv=none; b=JJ+C5rlfVVAcdFf8PqnD9UdC22gvqw+m/SBWqn28fpm1yXpNza8fIt3G/0pppyeyFgmmuKb/f7GYzxmU4Jy1upYl0cBskSrWb/UrIC83HkyrnMxegpPK92RD97W30OJrpdDChvW4w42iFrODVrdzSyGOUkf1gnTMisAAKLMA6x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780876038; c=relaxed/simple;
-	bh=2WNYL6A/nnTIvWPcEHWN/qKKYEa34K4mjWF0nww9U4k=;
+	s=arc-20240116; t=1780876144; c=relaxed/simple;
+	bh=mIPBfmQkZCZpeu4Wp0hL53eQ1smdswxh9jy+n+oD5So=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=g7gBQJcVuf+gD3EEuoCpQUk7tt6jMTUUUO3s5DkAsmzE7JWAtaGZuqmcsca4IPuEdMwICb+BeoT56DUpyccdpVpW9l8LbRmh/bzyjHmMTbmzrczNub34fL/59bf13Q/rmlGkB/666M4fyAthbEfM8s4sXfGGBYwMKjgDzQYUpmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5fp6hJK; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=h60jyI0GmTELIAPsA0KJfWlK/UqRyKI2EMAIKhxZaztWefNzgnLxCq/GLGq0/dOUZy1iijZvuYYGoIValVeUg5tKJFJLRMbMekwB5yxzz0pa8EtMmk2Cd5STDUIm8xB1ajAtyt6X396/asFI3JEH/eHOqMsz+ndGyDTEWu1nboQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xr+uYnhg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5fp6hJK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC2E71F00893;
-	Sun,  7 Jun 2026 23:47:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xr+uYnhg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDDAB1F00893;
+	Sun,  7 Jun 2026 23:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780876037;
-	bh=t3IcSuHPF5mek/S/JqDZI3BsqCmIX5DEixjx14ugdNM=;
+	s=k20260515; t=1780876143;
+	bh=SoO77JZy0MMIA2o7r2nXvA0zEg58lXtU/mHSypkYoXQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k5fp6hJKzibi7vQILb0wCr5ZJkYdHDj0n5DrU2HFo+3u6zGjmCyukGXYL0qLVwzuL
-	 HXFwUnUSnT1OwtEH0ViU4yAL1jJb9JoIWvSdf8/VtJexdQcigPX7c+T341rmZtC/t9
-	 uMc2MOSRCUTya9f7hNlnvISvzjrq76u1jQC9vLyZGeQsL6Vlwsbx1+tFiTFWPJZX5J
-	 PZPCqwBPPlSzGIBsLoZM167FuxJ38jNQX01DUYzZFPoDuE8yFYe0JP8vwsvJU7klXk
-	 Yqu2EMMBKfibm6UtXZlzBtdookC0EqUHxfxkk8uTW/t+AR4iOb1g5dIiZBB61VTHgM
-	 Q/gVwghqZCOjg==
+	b=Xr+uYnhgKjxwtLNhrsUnnbm1BMOX+2OFVC663JcT2qgAyWVl4ouxs/ZzR+MKHlGWw
+	 WxEi+uONvwhIyjxIywVIJ6JJ18QfKToKokhy6JSYXej0pp9vUUpIqoXtcSK4CJ5X2O
+	 Ya+KGOErUpNbMPq49nHpOqPkPkrDXmImKb+Y/Ezkq/SNP3rq682JEmRhsSt322YWNP
+	 PK00SeJIArL1mUsVer43VkPIzAia2fiQ16nd1RlAWTQNUQm5/Lfz1R+ur21Rm7XPMT
+	 jeNTBWEGekz4DtS1ijecvP5k8wLRfx7JIcKTnrS6i9jsr9JwQ674FGqqU/X+mJGrmf
+	 MW5dwrQMbjjKA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 10/11] perf hists: Fix snprintf() in
- hists__scnprintf_title() UID filter path
+Subject: Re: [PATCH 11/11] perf tools: Use scnprintf() in
+ build_id__snprintf() and hwmon read_events()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260607232925.1935819-11-acme@kernel.org>
-References: <20260607232925.1935819-11-acme@kernel.org>
+In-Reply-To: <20260607232925.1935819-12-acme@kernel.org>
+References: <20260607232925.1935819-12-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 23:47:16 +0000
-Message-Id: <20260607234716.EC2E71F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 23:49:02 +0000
+Message-Id: <20260607234902.EDDAB1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Buffer overflow in config_show() via test_driver/test_fs sysfs att=
-ributes due to snprintf underflow.
-- [High] Buffer overflow in pm80xx_get_non_fatal_dump() when reading sysfs =
-attributes due to unbounded snprintf usage.
-- [Medium] Stack buffer overflow in hwmon_pmu__for_each_event() due to snpr=
-intf underflow.
-- [Medium] Stack buffer overflow in perf_pmu__for_each_event() when parsing=
- PMU aliases due to snprintf accumulation.
+- [High] Reading sysfs file contents into fixed-size stack buffers causes a=
+ 1-byte out-of-bounds write when appending a null terminator if the read fi=
+lls the buffer.
+- [High] User-controlled stack buffer overflow via misused `strlcpy` in `pa=
+rse_hwmon_filename()`.
 --
 
-commit 68f841f9ed7f1af9b87ee345589a137d67d74612
+commit 48628bf245e27619381dcbb4cf7723991e4f5a11
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf hists: Fix snprintf() in hists__scnprintf_title() UID filter path
+perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
 
-This commit replaces snprintf() with scnprintf() in the UID filter path
-of hists__scnprintf_title() to prevent buffer size underflow. It ensures
-consistent buffer length calculation, matching the rest of the function.
+build_id__snprintf() and hwmon_pmu__read_events() accumulate formatted
+output via snprintf(), which returns the would-have-been-written count
+on truncation.  In build_id__snprintf(), this inflates the return
+value beyond the buffer size.  In hwmon_pmu__read_events(), len
+overshoots out_buf_len and the next 'out_buf_len - len' underflows.
 
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index 811d68fa6770c..df978c996b6c2 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -2963,9 +2963,10 @@ int __hists__scnprintf_title(struct hists *hists, =
-char *bf, size_t size, bool sh
->  			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
+Switch both to scnprintf() which returns actual bytes written.
+
+Fixes: fccaaf6fbbc59910 ("perf build-id: Change sprintf functions to snprin=
+tf")
+Fixes: 53cc0b351ec99278 ("perf hwmon_pmu: Add a tool PMU exposing events fr=
+om hwmon in sysfs")
+Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+[ ... ]
+
+> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+> index fb3ffa8d32ad2..dbf6a71af47f9 100644
+> --- a/tools/perf/util/hwmon_pmu.c
+> +++ b/tools/perf/util/hwmon_pmu.c
+> @@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmo=
+n_pmu *hwm, char *out_buf, si
 > =20
-> =20
-> -	if (hists->uid_filter_str)
-> -		printed +=3D snprintf(bf + printed, size - printed,
-> -				    ", UID: %s", hists->uid_filter_str);
-> +	if (hists->uid_filter_str) {
-> +		printed +=3D scnprintf(bf + printed, size - printed,
-> +				     ", UID: %s", hists->uid_filter_str);
-> +	}
->  	if (thread) {
->  		if (hists__has(hists, thread)) {
->  			printed +=3D scnprintf(bf + printed, size - printed,
-
-While reviewing this fix, I noticed a few similar pre-existing issues in
-other areas of the codebase where snprintf() return values might cause buff=
-er
-overflows.
-
-lib/test_kmod.c:config_show() {
-    ...
-	if (config->test_driver)
-		len +=3D snprintf(buf+len, PAGE_SIZE - len,
-				"driver:\t%s\n",
-				config->test_driver);
-    ...
-}
+>  				buf[read_len] =3D '\0';
 
 [Severity: High]
-This is a pre-existing issue, but could this calculation underflow
-PAGE_SIZE - len?
+This isn't a bug introduced by this patch, but does this write out of bound=
+s?
 
-Since test_driver can be up to PAGE_SIZE bytes long, the accumulated length
-can exceed PAGE_SIZE. If snprintf() returns the would-have-written length,
-does the subtraction result in a large positive value that allows subsequent
-snprintf() calls to write out of bounds of the sysfs buffer?
+In hwmon_pmu__describe_items(), the code reads from sysfs directly into a
+stack buffer (buf) using sizeof(buf) as the maximum length. If the read
+fills the buffer exactly and lacks a trailing newline, read_len will
+equal sizeof(buf).
 
+Writing to buf[read_len] would then write one byte past the end of the
+array, corrupting an adjacent byte on the stack with a null byte. Should
+the read size be sizeof(buf) - 1 to safely null-terminate?
 
-drivers/scsi/pm8001/pm80xx_hwi.c:pm80xx_get_non_fatal_dump() {
-    ...
-	for (index =3D 0; index < output_length/4; index++)
-		buf_copy +=3D snprintf(buf_copy, PAGE_SIZE,
-				"%08x ", *(temp+index));
-    ...
-}
+This same pattern appears to exist in evsel__hwmon_pmu_read() and
+hwmon_pmu__read_events().
+
+>  				val =3D strtoll(buf, /*endptr=3D*/NULL, 10);
+> -				len +=3D snprintf(out_buf + len, out_buf_len - len, "%s%s%s=3D%g%s",
+> -						len =3D=3D 0 ? " " : ", ",
+> -						hwmon_item_strs[bit],
+> -						is_alarm ? "_alarm" : "",
+> -						(double)val / 1000.0,
+> -						hwmon_units[key.type]);
+> +				len +=3D scnprintf(out_buf + len, out_buf_len - len, "%s%s%s=3D%g%s",
+> +						 len =3D=3D 0 ? " " : ", ",
+> +						 hwmon_item_strs[bit],
+> +						 is_alarm ? "_alarm" : "",
+> +						 (double)val / 1000.0,
+> +						 hwmon_units[key.type]);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but might this loop write beyond
-the bounds of the sysfs buffer?
+This is a pre-existing issue, but I also noticed a potential stack buffer
+overflow in parse_hwmon_filename() in this same file.
 
-The pointer buf_copy advances with each write, but the size parameter passed
-to snprintf() is constantly PAGE_SIZE instead of the remaining buffer space.
-If the hardware provides a large output_length, would this continuously wri=
-te
-up to PAGE_SIZE bytes and cause a heap buffer overflow?
+When copying an event prefix into fn_type:
 
-
-tools/perf/util/hwmon_pmu.c:hwmon_pmu__for_each_event() {
+tools/perf/util/hwmon_pmu.c:parse_hwmon_filename() {
     ...
-		char desc_buf[256];
+	char fn_type[24];
     ...
-		len =3D snprintf(desc_buf, sizeof(desc_buf), "%s in unit %s named %s.",
-			hwmon_desc[key.type],
-			pmu->name + 6,
-			value->label ?: info.name);
-
-		len +=3D hwmon_pmu__describe_items(hwm, desc_buf + len, sizeof(desc_buf) =
-- len,
-						key, value->items, /*is_alarm=3D*/false);
+	*alarm =3D false;
+	fn_item_len =3D strlen(fn_item);
+	if (fn_item_len > 6 && !strcmp(&fn_item[fn_item_len - 6], "_alarm")) {
+		assert(strlen(LONGEST_HWMON_ITEM_STR) < sizeof(fn_type));
+		strlcpy(fn_type, fn_item, fn_item_len - 5);
+		fn_item =3D fn_type;
+		*alarm =3D true;
+	}
     ...
 }
 
-[Severity: Medium]
-This is a pre-existing issue, but is there a risk of a stack buffer overflow
-here?
+The third argument to strlcpy() is passed as fn_item_len - 5 instead of the
+destination buffer capacity (sizeof(fn_type)). Since fn_item originates from
+user-controlled event input, an arbitrarily long name ending in "_alarm"
+could cause strlcpy() to copy more than 24 characters into fn_type,
+overflowing the stack buffer.
 
-Since value->label can be up to 255 bytes, snprintf() might return a length
-greater than sizeof(desc_buf). Would passing sizeof(desc_buf) - len to
-hwmon_pmu__describe_items() then underflow to a massive size_t value,
-allowing scnprintf() to write out-of-bounds on the stack?
-
-
-tools/perf/util/pmu.c:perf_pmu__for_each_event() {
-    ...
-	char buf[1024];
-    ...
-			buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
-					"%G%s", event->scale, event->unit) + 1;
-		}
-		info.desc =3D event->desc;
-		info.long_desc =3D event->long_desc;
-		info.encoding_desc =3D buf + buf_used;
-		buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
-				"%.*s/%s/", (int)pmu_name_len, info.pmu_name, event->terms) + 1;
-    ...
-}
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but does accumulating the snprin=
-tf()
-return values into buf_used risk underflowing sizeof(buf) - buf_used?
-
-If an earlier snprintf() truncates, it returns the number of bytes it would
-have written. Could this cause buf_used to exceed sizeof(buf), making the
-size limit on the next snprintf() underflow and write beyond the end of the
-stack buffer?
+Could this be exploited for memory corruption if perf is run with elevated
+capabilities?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607232925.1935=
-819-1-acme@kernel.org?part=3D10
+819-1-acme@kernel.org?part=3D11
