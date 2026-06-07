@@ -1,191 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7109C2DF12F
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 08:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E6F318B96;
+	Sun,  7 Jun 2026 12:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780820856; cv=none; b=JgpHow7xczEv0csY0thqqlJCcyyy6QhXV1b3mFEyLgy5sQ7BFtEf3s+q36q2NeJwilAPCorUbvvdUHuoPmUHn/ETHQPMvhAJ4w/8vgvm7JytO6etr5bbC9VC/2Ch6OKzrgJMZAjZJId5bANIkzA46rrqwfgGggFEc3Xobqc6QAk=
+	t=1780836691; cv=none; b=AAG/mw44zrtBUHXw92SzsptYwT1pwWwPRw4f3qFvP6KiaQ3UnoTiM3cfp87YS2sfIgvLYYl/Iki2tm6SApTUAckiuVaAxsViErLDRpB6EklMVyD9EFS4RiQ69AKWT/P/8ewS8zdt3oxZLLCLC3BVifPRVlea4W1CqxU7/TQVFs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780820856; c=relaxed/simple;
-	bh=HSLaawaQgC+elrDEtYVg5OaBd9ThyBTLgNjIT/o/8mo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FJGVaZbZ6mXfYCUt7zpaa+6GSFj17JPxj2wY8k3g+S1X0rSl8pfZtH5TgrpPbjprW0Nm/i3PwAe37nILZXEVVx4fyrYY+qR3/pfvy55Et9x4k9SPUSIn7u4yozvxHkCmC0AiluFjJb7Lo1ERcepgsFKkRkpgAmKceFh46gO3iIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aVYtg4zG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780836691; c=relaxed/simple;
+	bh=y1mCNYbv4xmoA/8hPymwySCxvqNrhzdGKAkPdI9eXQU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tg8/bN70c1B+UBMqsVnfx4e+xCMF+kzr1e9mquYLeCO6QUUTnaDXDoRuQjqhocveSwTpjGcj4W6QnCUOt3bVEZMYJy6aU8+LBn9MueGfjTQGGbKngQajAgtZFFklVwRrmeRmsWFTzXhjSfbIh965Ova/jjJ5lHERL1ML8LT2cTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=PdEFP5tG; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aVYtg4zG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BE7A1F00893;
-	Sun,  7 Jun 2026 08:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780820854;
-	bh=TMiB+E5WEyjQak2jyIxTguTud/+39/BFo9nRL27BtIc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aVYtg4zGykU1M5mpHIi//AHevU3smnPbOfMOdA9XiTwTYSeKryMZ+0NF8Dv7CQd31
-	 2GxX/XZHMmh8fGX4ymnJP+GRTQpw6Qnv6eUzU73CnenwMVpWwkfcNi+T2wBl1gb4in
-	 Wqs5RG5JF2MaygiE5LEpCuSZ0ze//zxwTPljZqOFm9G6n3ivp01L5aNtjARMHfFey8
-	 ziCqZFxtFZjJsyB54o+6sC4P1SaYl0hwwa31XZZdP3zQUShKk7toiZijC6rWb/lrCv
-	 Kc8OGTpdb+Da0Vg4/9LYYVKBdQ6IrleRPgDTmeHdpW/gK8wYXwoXhV2hkoOYXpNZay
-	 9xQfsXF6ltkOg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v17 2/5] perf inject/aslr: Add ASLR tool infrastructure
- and MMAP tracking
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260607060933.3274263-3-irogers@google.com>
-References: <20260607060933.3274263-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 08:27:33 +0000
-Message-Id: <20260607082734.3BE7A1F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="PdEFP5tG"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 657BT63E3749526;
+	Sun, 7 Jun 2026 05:51:13 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=gzX90Dtqcl+cOEpVY5HErjumr
+	gVIscJmmnCnneyC1iA=; b=PdEFP5tG52IQR35Xtzufx+P+vg3XbrYosIsUJDnoK
+	xRe7xXrfUmf7wfA6e7oW16UXsRYJ/z5YriDu7T7G4fzb5JMqaRSt9FMfjjvZp9C8
+	uknHI13bJKhXTRxAe0a/DJgHOs6LmsHW6mkquNQ95YkrfcgbRUKfoPv0fbmrZeOq
+	o7FmE5CavqAKbkBQmg21A9G+aw7Zw4sf38eSt9Lk7A3VGkmq5xLSPExuugxb3wsX
+	N50fVmyv3Cn44GvkRwtKOzoQebwHP1FDLN6zwfmlUrmqGgP7Rj0/Uv/u1axt7gd3
+	LjKfyPriakSAkNPBwCpUELzzrZWtlqB3p3G7nykWM6/CA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 4en7t8r53e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 07 Jun 2026 05:51:12 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sun, 7 Jun 2026 05:51:12 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
+ Transport; Sun, 7 Jun 2026 05:51:12 -0700
+Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
+	by maili.marvell.com (Postfix) with ESMTP id 8AACA3F70BA;
+	Sun,  7 Jun 2026 05:51:09 -0700 (PDT)
+From: Geetha sowjanya <gakula@marvell.com>
+To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
+CC: <mark.rutland@arm.com>, <will@kernel.org>, <krzk+dt@kernel.org>,
+        <gakula@marvell.com>
+Subject: [PATCH 2/3] perf: marvell: Add CN20K LLC-TAD PMU support
+Date: Sun, 7 Jun 2026 18:21:00 +0530
+Message-ID: <20260607125101.17778-3-gakula@marvell.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260607125101.17778-1-gakula@marvell.com>
+References: <20260607125101.17778-1-gakula@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA3MDEyOCBTYWx0ZWRfX9JdUTYcp82bL
+ 04KFZ4at+fUzy9XdhIm6QpSporQPY3PtzMkZPHLN6awae6GiTFzoKMKgP+1r7Ad++Egke5qh761
+ MN2ydUVlkY0DLqDRaVKzCVc+QfnHcXBsik8iGqqIUYJ7l/EiX9nBjy67VWgrSDZVohMfTwvaCfh
+ XRQmHUj6tREwbfXqq5XS4/awV1jYukX/Q0w8mUDkVboTS48nsBgH+TIpaeUfOoiBkgju8Ll2gfI
+ 421vsU6qLqR3UdeRHrEaUh0GMnOz91jpLeF7Ux3/xvuOmsV6ewu5918uZ9EgVj8Xo6VpjCT+4J0
+ w3FdaNNpS8fGvcnsbr6ONCKb5ENsCYGz9LkIO42gtj/k+ulbt6ouU01PWldDu+7FE26t8T0dy3R
+ oFGBvBR4hE11xAJBNJz/32w/AAns+DwGs3BxPAJlnz2lulfxPVbQBra3gE2MFfEd9uKLErJWJhr
+ rIMkfSzHrqgJ7rVfSlQ==
+X-Authority-Analysis: v=2.4 cv=evLvCIpX c=1 sm=1 tr=0 ts=6a256940 cx=c_pps
+ a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=l0iWHRpgs5sLHlkKQ1IR:22
+ a=TtqV-g6YmW1Jfm2GSLaY:22 a=M5GUcnROAAAA:8 a=Ye5975JmM4DBnxqCyIMA:9
+ a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-ORIG-GUID: QybdIdM_cGL4jEs5nNVnnEq9doSuyz9m
+X-Proofpoint-GUID: QybdIdM_cGL4jEs5nNVnnEq9doSuyz9m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-07_03,2026-06-05_02,2025-10-01_01
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] Modifying memory-mapped read-only event buffers in place causes a =
-segmentation fault.
-- [High] Inconsistent handling of `(start - map__start(al.map))` for user s=
-pace mappings leads to corrupted virtual address calculations.
-- [High] KSYMBOL unregister events are emitted with an incorrect, newly all=
-ocated address instead of the original remapped address.
---
+CN20K LLC-TAD uses non-standard PFC/PRF page offsets relative to each
+TAD region base. Add a TAD_PMU_V3 profile with per-platform register bases,
+extend the CN10K event map for new counters, and match the block via OF and
+ACPI.
 
-commit c190853279a63eb364ce133684668cb85c64d5e1
-Author: Ian Rogers <irogers@google.com>
+Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+---
+ drivers/perf/marvell_cn10k_tad_pmu.c | 33 +++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
+diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_cn10k_tad_pmu.c
+index 7a3b659c999a..4daf109b89ee 100644
+--- a/drivers/perf/marvell_cn10k_tad_pmu.c
++++ b/drivers/perf/marvell_cn10k_tad_pmu.c
+@@ -17,6 +17,8 @@
+ 
+ #define TAD_PRF_OFFSET		0x900
+ #define TAD_PFC_OFFSET		0x800
++#define TAD_PRF_NS_OFFSET	0x30900
++#define TAD_PFC_NS_OFFSET	0x30800
+ #define TAD_PFC(base, counter)	((base) | ((u64)(counter) << 3))
+ #define TAD_PRF(base, counter)	((base) | ((u64)(counter) << 3))
+ #define TAD_PRF_CNTSEL_MASK	0xFF
+@@ -33,6 +35,7 @@ struct tad_region {
+ enum mrvl_tad_pmu_version {
+ 	TAD_PMU_V1 = 1,
+ 	TAD_PMU_V2,
++	TAD_PMU_V3,
+ };
+ 
+ struct tad_pmu_data {
+@@ -80,8 +83,14 @@ static void tad_pmu_start_counter(struct tad_pmu *pmu,
+ 	if (partid && event_idx > 0x19 && event_idx < 0x21) {
+ 		partid_filter = TAD_PRF_MATCH_PARTID | TAD_PRF_PARTID_NS |
+ 				((u64)partid << 11);
++
++		if (pdata->id == TAD_PMU_V3)
++			partid_filter = TAD_PRF_MATCH_PARTID | BIT_ULL(25) |
++				((u64)partid << 10);
+ 	}
+ 
++	if (pdata->id == TAD_PMU_V1 && event_idx > 0x24)
++		return;
+ 
+ 	for (i = 0; i < pmu->region_cnt; i++) {
+ 		reg_val = event_idx & 0xFF;
+@@ -261,6 +270,18 @@ static struct attribute *tad_pmu_event_attrs[] = {
+ 	TAD_PMU_EVENT_ATTR(tad_dat_rd_byp, 0x22),
+ 	TAD_PMU_EVENT_ATTR(tad_ifb_occ, 0x23),
+ 	TAD_PMU_EVENT_ATTR(tad_req_occ, 0x24),
++	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dtg_evict, 0x25),
++	TAD_PMU_EVENT_ATTR(tad_req_msh_out_ltg_evict, 0x26),
++	TAD_PMU_EVENT_ATTR(tad_rsp_msh_out_mpam, 0x28),
++	TAD_PMU_EVENT_ATTR(tad_replays, 0x29),
++	TAD_PMU_EVENT_ATTR(tad_req_byp0, 0x2a),
++	TAD_PMU_EVENT_ATTR(tad_req_byp1, 0x2b),
++	TAD_PMU_EVENT_ATTR(tad_txreq_byp, 0x2c),
++	TAD_PMU_EVENT_ATTR(tad_time_in_dslp, 0x2d),
++	TAD_PMU_EVENT_ATTR(tad_time_elapsed, 0x2e),
++	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dss_rd_128mrg, 0x2f),
++	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dss_wr_128mrg, 0x30),
++	TAD_PMU_EVENT_ATTR(tad_tot_cycle, 0xff),
+ 	NULL
+ };
+ 
+@@ -426,7 +447,6 @@ static int tad_pmu_probe(struct platform_device *pdev)
+ 	tad_pmu->region_cnt = tad_cnt;
+ 
+ 	tad_pmu->pmu = (struct pmu) {
+-
+ 		.module		= THIS_MODULE,
+ 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE |
+ 				  PERF_PMU_CAP_NO_INTERRUPT,
+@@ -440,7 +460,7 @@ static int tad_pmu_probe(struct platform_device *pdev)
+ 		.read		= tad_pmu_event_counter_read,
+ 	};
+ 
+-	if (version == TAD_PMU_V1) {
++	if (version == TAD_PMU_V1 || version == TAD_PMU_V3) {
+ 		tad_pmu->pmu.attr_groups = tad_pmu_attr_groups;
+ 		tad_pmu->ops		 = &tad_pmu_ops;
+ 	} else {
+@@ -482,6 +502,11 @@ static const struct tad_pmu_data tad_pmu_data = {
+ 	.tad_pfc_offset = TAD_PFC_OFFSET,
+ };
+ 
++static const struct tad_pmu_data tad_pmu_cn20k_data = {
++	.id   = TAD_PMU_V3,
++	.tad_prf_offset = TAD_PRF_NS_OFFSET,
++	.tad_pfc_offset = TAD_PFC_NS_OFFSET,
++};
+ #endif
+ 
+ #ifdef CONFIG_ACPI
+@@ -495,6 +520,7 @@ static const struct tad_pmu_data tad_pmu_v2_data = {
+ #ifdef CONFIG_OF
+ static const struct of_device_id tad_pmu_of_match[] = {
+ 	{ .compatible = "marvell,cn10k-tad-pmu", .data = &tad_pmu_data },
++	{ .compatible = "marvell,cn20k-tad-pmu", .data = &tad_pmu_cn20k_data },
+ 	{},
+ };
+ #endif
+@@ -503,6 +529,7 @@ static const struct of_device_id tad_pmu_of_match[] = {
+ static const struct acpi_device_id tad_pmu_acpi_match[] = {
+ 	{"MRVL000B", (kernel_ulong_t)&tad_pmu_data},
+ 	{"MRVL000D", (kernel_ulong_t)&tad_pmu_v2_data},
++	{"MRVL000F", (kernel_ulong_t)&tad_pmu_cn20k_data},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(acpi, tad_pmu_acpi_match);
+@@ -564,6 +591,6 @@ static void __exit tad_pmu_exit(void)
+ module_init(tad_pmu_init);
+ module_exit(tad_pmu_exit);
+ 
+-MODULE_DESCRIPTION("Marvell CN10K LLC-TAD Perf driver");
++MODULE_DESCRIPTION("Marvell CN10K/CN20K LLC-TAD Perf driver");
+ MODULE_AUTHOR("Bhaskara Budiredla <bbudiredla@marvell.com>");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.25.1
 
-If perf.data files are taken from one machine to another they may
-leak virtual addresses and so weaken ASLR on the machine they are
-coming from. Add an aslr option for perf inject that remaps all
-virtual addresses, or drops data/events, so that the virtual address
-information isn't leaked.
-
-> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> new file mode 100644
-> index 0000000000000..2c5fafbe5d846
-> --- /dev/null
-> +++ b/tools/perf/util/aslr.c
-
-[ ... ]
-
-> +static u64 aslr_tool__findnew_mapping(struct aslr_tool *aslr,
-> +				      struct machine *session_machine,
-> +				      struct thread *aslr_thread,
-> +				      u8 cpumode, u64 start,
-> +				      u64 len, u64 pgoff)
-> +{
-
-[ ... ]
-
-> +		if (cpumode =3D=3D PERF_RECORD_MISC_KERNEL ||
-> +		    cpumode =3D=3D PERF_RECORD_MISC_GUEST_KERNEL) {
-> +			if (al.map) {
-> +				*new_remap_val =3D remap_addr -
-> +						 (start - map__start(al.map)) -
-> +						 map__pgoff(al.map);
-> +			} else {
-> +				/*
-> +				 * Subtract pgoff from the base virtual address so that
-> +				 * when the lookup path adds pgoff back, it perfectly
-> +				 * cancels out and returns remap_addr.
-> +				 */
-> +				*new_remap_val =3D remap_addr - pgoff;
-> +			}
-> +		} else {
-> +			*new_remap_val =3D remap_addr - (al.map ? map__pgoff(al.map) : pgoff);
-
-[Severity: High]
-Is there a missing subtraction of (start - map__start(al.map)) for the user
-space mapping here?=20
-
-The kernel space path just above subtracts it. If perf merges adjacent VMAs=
-,=20
-start might not equal map__start(al.map), which could result in returning a=
-n=20
-address inflated by that difference on subsequent lookups and corrupting=20
-the virtual address calculations.
-
-> +		}
-> +		err =3D hashmap__add(&aslr->remap_addresses, new_remap_key, new_remap_=
-val);
-
-[ ... ]
-
-> +static int aslr_tool__process_ksymbol(const struct perf_tool *tool,
-> +				      union perf_event *event,
-> +				      struct perf_sample *sample,
-> +				      struct machine *machine)
-> +{
-
-[ ... ]
-
-> +	err =3D perf_event__process_ksymbol(tool, event, sample, aslr_machine);
-> +	if (err)
-> +		return err;
-> +
-> +	thread =3D machine__findnew_thread(aslr_machine, kernel_pid, 0);
-> +	if (!thread)
-> +		return -ENOMEM;
-> +	memcpy(&new_event->ksymbol, &event->ksymbol, event->ksymbol.header.size=
-);
-> +	/* Remaps the ksymbol.start */
-> +	new_event->ksymbol.addr =3D aslr_tool__findnew_mapping(aslr, machine, t=
-hread,
-
-[Severity: High]
-For KSYMBOL unregister events, does calling perf_event__process_ksymbol()=20
-earlier in this function delete the map from aslr_machine->kmaps before we =
-can
-look it up here?
-
-If the map is deleted beforehand, aslr_tool__findnew_mapping() might fail t=
-o=20
-find the original map, fall back to generating a new unmapped key, and emit=
-=20
-a mismatched remapped address instead of the original one.
-
-> +							     PERF_RECORD_MISC_KERNEL,
-> +							     event->ksymbol.addr,
-> +							     event->ksymbol.len,
-> +							     /*pgoff=3D*/0);
-
-[ ... ]
-
-> +void aslr_tool__strip_attr_event(union perf_event *event, struct evlist =
-**pevlist)
-> +{
-
-[ ... ]
-
-> +	if (event->header.size >=3D (offsetof(struct perf_record_header_attr,
-> +					    attr.sample_type) + sizeof(u64))) {
-> +		u64 st =3D event->attr.attr.sample_type;
-> +
-> +		if (needs_swap)
-> +			st =3D bswap_64(st);
-> +
-> +		st &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
-> +
-> +		if (needs_swap)
-> +			st =3D bswap_64(st);
-> +
-> +		event->attr.attr.sample_type =3D st;
-
-[Severity: High]
-Does this code modify the event payload in place?
-
-When processing a native-endian perf.data file, perf memory-maps the file's
-data section with PROT_READ. If a PERF_RECORD_HEADER_ATTR event is located
-in this read-only mapped data section, could writing directly to=20
-event->attr.attr.sample_type trigger a segmentation fault?
-
-> +	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607060933.3274=
-263-1-irogers@google.com?part=3D2
