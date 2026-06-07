@@ -1,66 +1,65 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157BC2571D7
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 06:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69CB2D738A
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 06:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780812581; cv=none; b=QOFGRsS2yHxs/CrmRXwxPNhOpB6e6zIdOmno29gKwsp+lE2rijgfAiKsFi5LuYrDYd8eIWIYflSqzKPrZHojHei4Bf6qopQiZ9P7x/rYxouAjUEBwq1xORGvV0HBJUPd5rFp+yvMKqJojueGVDD0zzYQHpIOB5GcvKnCYN5faEw=
+	t=1780812584; cv=none; b=U4dOXuC/1cDd951UkkKSCa7oYAgxX6ha6d964F0za6cvfImLaJ2jwOYZNmVZuz6tkl9ZKt8KQye3jEnOUNlS84oZQqMyIITDbecgJpSWVLAx/uz3HEJgvi9INQIsl6fe+zhhsGXZ4r/TMGHbzr9/xLZMX/1y5bvAezlNwM5Kwxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780812581; c=relaxed/simple;
-	bh=0Tio1+6XOTtLIuNjwcDmWCDwHilU35SUdSypSgbYvmc=;
+	s=arc-20240116; t=1780812584; c=relaxed/simple;
+	bh=2RVcWUqIVwoyVmYrdvYeK5CQMoxlCp+CKrq/aZKQ1+o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U5x+nQf5JO5q+Wb1Gt6Cp4DmG+5hixOzjYc/szs6+nvTQAelCFzRi2myJX9gAYpsPqKG3kbeM7x0yYSZrV+3yc8MWY4JLsK+Pms+9svw9SBiJ+gnQR1qdVVzvKUdWn9mO+iZYjSBKIaGORNX9qoK33kN3DkPyAwIejhhhBSLeOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RRuWlPuA; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=lsXkqhTkhMbC2exjjpl6hiWXfvw1kZ0HdJw4tqCf7jZ/QZsZmzdykXV2kTXYcQxXPnivvZSqmQxw/k8OvZeDtNaZaDMcvR0E0Jh8Fw37iFn3wDVHgCzp1rDZwT1JjIT9udlislT7nEEpJp4++qo3XJFy6NEJ0iWMkDIOrLG74iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PRdX4T+A; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RRuWlPuA"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30762d67a64so4691131eec.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jun 2026 23:09:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PRdX4T+A"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-137fc6f8e9fso3389099c88.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jun 2026 23:09:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780812579; x=1781417379; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780812582; x=1781417382; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PHHh2DJ9mAPyCaCj1zSYw1nXu59m0EGb3BKofyRGW1E=;
-        b=RRuWlPuAHKr/VnTW47Pe3jPbxUYM7JMmwKHP9JtcrnVJABdEknadneWkXpM6ixFsd0
-         HIuJB7AApz7WHNlCGpHUxTHNoukUVZCB0j2iy/lcGZJzNV3wMiLlseKdM6bZoK7hbJpO
-         vBPaBqfshcbAA7/r14XGZN1gvm/lJxggbvQuExIAq55t0lZ1V8nTwyVEcUQnorDhiBZ0
-         fK7Xl2grJjw/mhUuXaVbxqy55kdez8IHBVDDYx4Qhm4QK/OyNeDmVQyrShT0DvEsrg2k
-         DJ4N2znWy3lbu1KtsNPeoGk+eS14RrKbqtpHUlS/Xq/em/pvWZe1PNyrvYcgwVKrWJ9x
-         tcAg==
+        bh=5ggl5TjTDOp3j8NcRMD+U0EgWobSr6C/ivFQe7eIhH0=;
+        b=PRdX4T+AX9GSC9oxeEE02ffvM60OIaMALe84jDGKGPBDEyTMrpyLp1njHF6KwaQJrH
+         sXNMpdj9QVUZ7H2phP+JV2QtulKifSluAMlhZkesEY9v7qWdJCzIDsf13I23AgCWQliN
+         6hANKl4hup5XpGb1iyioPN/+moqb3YcE6q/ab7Y83mEIG28Vc5CRUjWrl1GYTInjtsJ5
+         b+gOlOTqO8MvKXnxgbk0+f5DRu2VDLlgE4LvgmjzOosYUPUzOwkq0NwHopJaRsdVRQAD
+         yoON2L4xqwwQcAPnlcGDnZFMrm6sasrJ28yuP1DyJlA/gp6lMyWobKgOWAOSBzqTYRm/
+         SXEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780812579; x=1781417379;
+        d=1e100.net; s=20251104; t=1780812582; x=1781417382;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PHHh2DJ9mAPyCaCj1zSYw1nXu59m0EGb3BKofyRGW1E=;
-        b=aUilZtHtGE26yfwR7UOsBqi1rDD2SE0DWALWmTBGQ5Y+cw/OenbzbtW14jtUl02MoE
-         JrYqFT7QZRm2kmq50z+lksT9SWed+wmlkYM11rqG6iPFRsJGmF3nFqvL33P2BgoADYrd
-         sSc6urDMj4ionwN5D5ZBGmLer+WCo1f3lb+FeN1ztHyD1EK5DC1CG5sNtEuDf9GfY/zt
-         c2JbJuBX/Oq1YSwAr2ZuxXioVtleZhIQWorkZ7xD1b50/aZiF+Hv/PrXG2Abw4BRUjzm
-         nGXIY6v/D/5yHw3OzLSVdaOS0GXAmY1PDKEQ0pWDrl7amqA6/yYZsSYor/5JOdiRqr81
-         g2pQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/064wSUcK2gI/Tm9FmgFCGZRU9zoQ4PeKkPGgGe7hrSgu/gPOoP3eurU7iNtskxyDvIcMiv3mdGa7i+6WaaOXZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNusZ+eNIxyRqqEjpKospT5zPty/1Kkv/jvfA0vNVPb41JizEf
-	V1oRqXFRqczNFsUTJ+wUgil3twREnBKd5WvGWiLPo2u9TN7tdJu1P5MiuQmOHkN3dqEDa2sjuQE
-	1lBiUPK0NeA==
-X-Received: from dlbcj30.prod.google.com ([2002:a05:7022:699e:b0:135:b432:37dc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:b9b:b0:137:f958:c072
- with SMTP id a92af1059eb24-138066dfd6emr5726996c88.20.1780812578859; Sat, 06
- Jun 2026 23:09:38 -0700 (PDT)
-Date: Sat,  6 Jun 2026 23:09:28 -0700
-In-Reply-To: <20260606151451.2913860-1-irogers@google.com>
+        bh=5ggl5TjTDOp3j8NcRMD+U0EgWobSr6C/ivFQe7eIhH0=;
+        b=MPd4xn6mHKGKpKCfziGPrUcC/Fnc1jfePR4Mg9Yfy/pXPHZXQdMe38yCmWwJHscGYL
+         vQ6im4aggiNmCKU5kVSn4L3QRl/Qu5WIV1pxC43YiKGfNKcfAIdCYhLCJPIwgTdWJepS
+         JQrAYWf/fhla51rcj0qvo05Z5DgxFKNccbjO1j1Vni0XkVBvrdP39Od08w5EppRANRM9
+         83SaTDR/QiWvW/eMJcy0Zf8f6oY7YLgdUncORHnbB3xIjZ/tBwhjYquoklsMZ1rI/YSV
+         Zph1eGBTL3xOu3wTHuuTPgO5NE8yb8jpl7ywPtRti8RhuobNmpBlH9JQJHeLR80Op7P3
+         rSFA==
+X-Forwarded-Encrypted: i=1; AFNElJ+HPASoWL01Q8govkVvwubOnJ8TpHHbmkKoYs+5tAgOuIDL+w0YLxcVtXh6xCAaBKs2mEZN1s/2CqS+QPDfAgV4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8NECyfWLOMgAjH/BNX90XhyKMRN1/NvvZD8jmr0cvpAukvwmA
+	uciU7YrtdSnJv7kLWJnxlWincs/nzFhdhY/g2AEl4cq0BzK/pBC2cY5Uah2SLEhQYK7H0U2Tl9y
+	N8qEIxBqjVg==
+X-Received: from dlec7-n1.prod.google.com ([2002:a05:701b:4287:10b0:138:15e3:14ab])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:111:b0:136:6230:5834
+ with SMTP id a92af1059eb24-138066fe7a4mr4798233c88.31.1780812581465; Sat, 06
+ Jun 2026 23:09:41 -0700 (PDT)
+Date: Sat,  6 Jun 2026 23:09:29 -0700
+In-Reply-To: <20260607060933.3274263-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260606151451.2913860-1-irogers@google.com>
+References: <20260606151451.2913860-1-irogers@google.com> <20260607060933.3274263-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1032.g2f8565e1d1-goog
-Message-ID: <20260607060933.3274263-1-irogers@google.com>
-Subject: [PATCH v17 0/5] perf tools: Add inject --aslr feature, early maps
- loading, and decoupling fixes
+Message-ID: <20260607060933.3274263-2-irogers@google.com>
+Subject: [PATCH v17 1/5] perf maps: Add maps__mutate_mapping
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, gmx@google.com, james.clark@linaro.org, 
@@ -68,195 +67,399 @@ Cc: adrian.hunter@intel.com, gmx@google.com, james.clark@linaro.org,
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-This patch series introduces the new 'perf inject --aslr' feature to
-remap virtual memory addresses or drop physical memory event leaks
-when profile record data is shared between machines. Bundled with this
-feature is a bug fix inside the core map tracking tool that hardens
-perf session analysis against concurrent lookup data races.
+During kernel ELF symbol parsing (dso__process_kernel_symbol), proc
+kallsyms image loading (dso__load_kernel_sym,
+dso__load_guest_kernel_sym), and dynamic kernel memory map alignment
+updates (machine__update_kernel_mmap), the loader directly modifies
+live virtual address boundary keys fields on map objects.  If these
+boundaries are mutated while the map pointer actively resides inside
+the parent maps cache array list (kmaps) outside of any lock closure,
+an unsafe concurrent window is exposed where parallel worker lookup
+threads (e.g., inside perf top) can mistakenly assume the cache
+remains sorted based on stale parameters, executing binary search
+queries (bsearch) across an unsorted range and triggering lookup
+failures.
 
-Detailed Mechanism of MMAP Mapping and ASLR virtual Address Allocation:
+Fix this by introducing maps__mutate_mapping() that explicitly
+acquires the parent maps write semaphore lock, executes an incoming
+mutation callback block to perform the field updates under lock
+protection, and invalidates the sorted tracking flags prior to
+releasing the write lock. This guarantees synchronization invariants,
+closing the concurrent lookup race window. The adjacent module
+alignment pass inside machine__create_kernel_maps() is safely
+preserved as a high-performance lockless pass, as its invocation
+lifecycle bounds remain strictly single-threaded by contract during
+session initialization construction.  To safely support this
+unconditional down_write write lock mutator without recursive
+read-to-write self-deadlock upgrades during lazy symbol loading, we
+introduce a public maps__load_maps() API. It copies map pointers under
+a brief read lock and force-loads all modules locklessly outside the
+lock. Callers (such as perf inject) must pre-load all kernel symbol
+maps up front at startup using maps__load_maps(), completely bypassing
+dynamic runtime mutations.
 
-The ASLR tool virtualizes the address space of the recorded processes by
-intercepting MMAP and MMAP2 events to build a consistent translation
-database, which is subsequently used to rewrite sample addresses.
+Fixes: 39b12f781271 ("perf tools: Make it possible to read object code from vmlinux")
 
-It maintains two primary lookup databases using hash maps:
-1. 'remap_addresses': Maps an original mapping key to its new remapped
-   base address. The key uses topological invariant coordinates:
-   (machine, dso, invariant). The invariant is computed as (start - pgoff)
-   for DSO-backed mappings. This invariant remains constant even when
-   perf's internal overlap-resolution splits a VMA into fragmented
-   pieces, ensuring split maps resolve consistently back to the same
-   remapped base.
-2. 'top_addresses': Tracks the allocation state per process (machine, pid).
-   It maintains 'remapped_max' (the highest allocated address in the
-   virtualized space).
+Signed-off-by: Ian Rogers <irogers@google.com>
+Assisted-by: Antigravity:gemini-3.1-pro
+---
+ tools/perf/util/machine.c    |  32 +++++---
+ tools/perf/util/maps.c       | 149 ++++++++++++++++++++++++++++-------
+ tools/perf/util/maps.h       |   3 +
+ tools/perf/util/symbol-elf.c |  41 ++++++----
+ tools/perf/util/symbol.c     |  17 +++-
+ 5 files changed, 184 insertions(+), 58 deletions(-)
 
-For each MMAP/MMAP2 event:
-- We look up the DSO and invariant key in 'remap_addresses'. If found, we
-  reuse the translation, preserving the offset within the mapping.
-- If not found, we allocate a new remapped address space:
-  - We use thread__find_map to look up the mapping immediately preceding
-    the new one in the original address space (at start - 1). If
-    the preceding
-    mapping was also remapped, we place the new mapping
-    contiguously after it in the remapped space. This preserves
-    contiguity of split mappings (e.g., symbols split by HugeTLB,
-    or anonymous .bss segments adjacent to initialized data).
-  - If no contiguous mapping is found, we insert a 1-page gap from
-    the highest allocated address (remapped_max) to prevent accidental
-    merging of unrelated VMAs.
-- The event's start address (and pgoff for kernel maps) is rewritten,
-  and the event is delegated to the output writer.
-
-To remain strictly conservative and guarantee security, the tool
-scrubs breakpoint addresses (bp_addr) from all synthesized stream
-headers, completely drops PERF_RECORD_TEXT_POKE events to prevent
-absolute immediate pointer operands leaks, and drops unsupported
-complex payloads (such as user register stacks, raw tracepoints, and
-hardware AUX tracing frames).
-
-Verification is reinforced with shell test ('inject_aslr.sh').
-
-Prerequisite Bug Fix (Patch 1). During development, a core map
-indexing issue was identified and resolved to prevent concurrent
-lookup data races during session analysis.
-
-Changes since v16:
-- Patch 2: Refactored inline ASLR stripping logic out of builtin-inject.c
-  and into dedicated helpers (aslr_tool__strip_attr_event and
-  aslr_tool__strip_evlist) in aslr.c to better separate concerns.
-- Patch 2: Fixed guest machine allocation memory leak in
-  aslr_tool__delete() where machines__exit() explicitly skipped freeing
-  the guest processes tree.
-- Patch 3: Fixed bounds-check violations during cross-endian parsing inside
-  aslr_tool__process_sample() by correctly applying bswap_64() to raw
-  offsets, iteration counts, sizes, and addresses prior to logical
-  evaluation when orig_needs_swap is active.
-- Patch 4: Fixed pipe mode parser misalignment bug by safely fetching
-  needs_swap from the initialized evsel rather than blindly intercepting
-  HEADER_ATTR events prior to session parsing.
-- Patch 4: Resolved checkpatch.pl line length warnings in the bswap_64
-  endianness swapping logic.
-- Patch Series: Reordered the final two patches. "perf aslr: Strip
-  sample registers" is now Patch 4, and "perf test: Add inject ASLR
-  test" is now Patch 5. This ensures the register stripping logic
-  is fully introduced before the comprehensive shell tests validate it,
-  preventing bisectability test failures and easing merge conflicts.
-- Patch 5: Fixed "User registers stripping test" starvation when run as
-  root by explicitly using '-e cycles:u' during recording, preventing
-  the ring buffer from overflowing with kernel samples.
-
-Changes since v15:
-- Patch 2: Added bounds checking for event->header.size before writing
-  to breakpoint fields to avoid heap buffer overflow on older ABI events.
-- Patch 2: Fixed asymmetric calculation bug in aslr_tool__findnew_mapping()
-  where pgoff for anonymous kernel memory was not properly subtracted upon
-  insertion, causing the lookup addition to overflow.
-- Patch 2: Added detailed comments documenting the symmetric lookup and
-  insertion math for unmapped and mapped memory blocks.
-- Patch 5: Add missing kprobe and uprobe scrubbing of config1 and
-  config2 during aslr_tool__strip_evlist() to strictly conform with
-  repipe constraints.
-
-Changes since v14:
-- Patch 2: Removed unnecessary vertical whitespace in builtin-inject.c.
-- Patch 2: Added comments explaining why pgoff is assigned for
-  anonymous memory maps to prevent ASLR leaks.
-- Patch 2: Removed orig_last_end tracking and refactored contiguous mapping
-  detection to use thread__find_map(..., start - 1, ...) based on Gabriel's
-  feedback.
-- Patch 2: Scrub kprobe/uprobe event config1 and config2 fields to prevent
-  address leaks.
-- Patch 2: Overwrite pgoff with the remapped start address for anonymous
-  mappings (detected via is_anon_memory and is_no_dso_memory).
-- Patch 3: Fix C90 mixed declaration error for orig_needs_swap.
-- Patch 3: Temporarily disable evsel->needs_swap during the secondary
-  evsel__parse_sample() call to prevent branch stack double-swapping bugs.
-
-Changes since v13:
-- Patch 2: Added a NULL check for env before calling
-  perf_env__kernel_is_64_bit(env) to prevent potential segfaults if the
-  recorded environment has no headers.
-- Patch 5: Fixed sample_size and id_pos going out of sync during
-  aslr_tool__strip_evlist() and aslr_tool__restore_evlist(). Instead of
-  using evsel__reset_sample_bit(), which was acting as a no-op due to
-  early bit clearing and corrupted sample_size, the tool now directly
-  updates sample_type and recomputes sample_size/id_pos dynamically.
-  Added orig_sample_size to aslr_evsel_priv to correctly restore the
-  state.
-
-Changes since v12:
-- Patch 2: Fixed potential NULL pointer dereference in
-  remap_addresses__hash() when handling unmapped memory events (key->dso
-  is NULL) under REFCNT_CHECKING.
-- Patch 2: Dynamically detect machine architecture bitness via
-  perf_env__kernel_is_64_bit() to select appropriate kernel_space_start
-  boundaries, avoiding 64-bit address injection on 32-bit platforms.
-
-Changes since v11:
-- Patch 1: Fixed struct dso name accessor in maps.c by using
-  dso__name() instead of ->name.
-- Patch 2: Fixed hash function in aslr.c to hash the underlying
-  dso pointer using RC_CHK_ACCESS to support reference count checking.
-
-Changes since v10:
-- Patch 1: Added explicit tracking array logic in maps__load_maps()
-  to correctly accumulate valid maps (skipping NULL entries after
-  failures) and safely return the exact populated count, resolving
-  out-of-bounds pointer iteration panics.
-- Patch 3: Fixed endianness bug during cross-endian sample parsing
-  by passing evsel->needs_swap instead of false to __evsel__parse_sample
-  in aslr.c, ensuring correct 32-bit field byte unswapping for packed
-  fields. Refactored evsel__parse_sample to take a needs_swap argument
-  via __evsel__parse_sample.
-- Patch 4: Fixed inject_aslr.sh exit code handling in trap functions
-  to capture and propagate the correct pipeline failure status code
-  instead of unconditionally returning success or failing the test.
-
-Changes since v9:
-- Patch 1: Added `-ENOMEM` error check inside
-  `maps__find_symbol_by_name()` and return `NULL` early. Added map
-  sorting state invalidation on early return in `maps__load_maps()`.
-- Patch 2: Fixed encapsulation by using `thread__maps()` and
-  `thread__pid()` accessors in `aslr_tool__findnew_mapping()`. Added
-  `pr_warning_once` warning when raw auxtrace data is dropped.
-- Patch 3: Fixed encapsulation by using `thread__maps()` and
-  `thread__pid()` accessors in `aslr_tool__remap_address()`. Wrapped
-  `evsel__parse_sample()` to temporarily disable `needs_swap` to avoid
-  branch stack endianness corruption on cross-endian files. Fixed ISO
-  C90 warning for declaration-after-statement for `orig_needs_swap`.
-- Patch 4: Fixed duplicate cleanup by explicitly removing trap
-  handlers (`trap - EXIT TERM INT`) inside the `cleanup()` function.
-- Patch 5: Fixed heap corruption by adding size bounds checking before
-  writing to `sample_regs_user` and `sample_regs_intr` fields. Added
-  missing register mask clearing logic for the `itrace` synthesis path
-  of `perf_event__repipe_attr()`.
-
-Ian Rogers (5):
-  perf maps: Add maps__mutate_mapping
-  perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
-  perf inject/aslr: Implement sample address remapping
-  perf aslr: Strip sample registers
-  perf test: Add inject ASLR test
-
- tools/perf/builtin-inject.c           |   50 +-
- tools/perf/tests/shell/inject_aslr.sh |  519 +++++++++
- tools/perf/util/Build                 |    1 +
- tools/perf/util/aslr.c                | 1394 +++++++++++++++++++++++++
- tools/perf/util/aslr.h                |   44 +
- tools/perf/util/evsel.c               |    6 +-
- tools/perf/util/evsel.h               |   10 +-
- tools/perf/util/machine.c             |   32 +-
- tools/perf/util/maps.c                |  149 ++-
- tools/perf/util/maps.h                |    3 +
- tools/perf/util/symbol-elf.c          |   41 +-
- tools/perf/util/symbol.c              |   17 +-
- 12 files changed, 2202 insertions(+), 64 deletions(-)
- create mode 100755 tools/perf/tests/shell/inject_aslr.sh
- create mode 100644 tools/perf/util/aslr.c
- create mode 100644 tools/perf/util/aslr.h
-
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index da1ad58758af..1ea06fde14e0 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1539,22 +1539,30 @@ static void machine__set_kernel_mmap(struct machine *machine,
+ 		map__set_end(machine->vmlinux_map, ~0ULL);
+ }
+ 
+-static int machine__update_kernel_mmap(struct machine *machine,
+-				     u64 start, u64 end)
++struct kernel_mmap_mutation_ctx {
++	u64 start;
++	u64 end;
++};
++
++static int kernel_mmap_mutate_cb(struct map *map, void *data)
+ {
+-	struct map *orig, *updated;
+-	int err;
++	struct kernel_mmap_mutation_ctx *ctx = data;
+ 
+-	orig = machine->vmlinux_map;
+-	updated = map__get(orig);
++	map__set_start(map, ctx->start);
++	map__set_end(map, ctx->end);
++	if (ctx->start == 0 && ctx->end == 0)
++		map__set_end(map, ~0ULL);
++	return 0;
++}
+ 
+-	machine->vmlinux_map = updated;
+-	maps__remove(machine__kernel_maps(machine), orig);
+-	machine__set_kernel_mmap(machine, start, end);
+-	err = maps__insert(machine__kernel_maps(machine), updated);
+-	map__put(orig);
++static int machine__update_kernel_mmap(struct machine *machine,
++				       u64 start, u64 end)
++{
++	struct kernel_mmap_mutation_ctx ctx = { .start = start, .end = end };
+ 
+-	return err;
++	return maps__mutate_mapping(machine__kernel_maps(machine),
++				     machine->vmlinux_map,
++				     kernel_mmap_mutate_cb, &ctx);
+ }
+ 
+ int machine__create_kernel_maps(struct machine *machine)
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 923935ee21b6..b1b8efe42149 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -576,6 +576,49 @@ void maps__remove(struct maps *maps, struct map *map)
+ #endif
+ }
+ 
++/**
++ * maps__mutate_mapping - Apply write-protected mutations to a map.
++ * @maps: The maps collection containing the map.
++ * @map: The map to mutate.
++ * @mutate_cb: Callback function that performs the actual mutations.
++ * @data: Private data passed to the callback.
++ *
++ * This acquires the write lock on the maps semaphore to safely protect
++ * concurrent readers from seeing partially mutated or unsorted map boundaries.
++ *
++ * WARNING: Acquiring down_write() here can trigger a recursive self-deadlock if
++ * the caller already holds the read lock (e.g., during maps__for_each_map() or
++ * maps__find() iteration paths that trigger lazy symbol loading). To completely
++ * avoid this deadlock, all kernel/module maps must be pre-loaded up-front (via
++ * maps__load_maps()) under a clean, single-threaded context before entering
++ * multi-threaded event processing loops.
++ */
++int maps__mutate_mapping(struct maps *maps, struct map *map,
++			 int (*mutate_cb)(struct map *map, void *data), void *data)
++{
++	int err = 0;
++
++	if (maps)
++		down_write(maps__lock(maps));
++
++	err = mutate_cb(map, data);
++
++	if (maps) {
++		RC_CHK_ACCESS(maps)->maps_by_address_sorted = false;
++		RC_CHK_ACCESS(maps)->maps_by_name_sorted = false;
++	}
++
++	if (maps)
++		up_write(maps__lock(maps));
++
++#ifdef HAVE_LIBDW_SUPPORT
++	if (maps)
++		libdw__invalidate_dwfl(maps, maps__libdw_addr_space_dwfl(maps));
++#endif
++
++	return err;
++}
++
+ bool maps__empty(struct maps *maps)
+ {
+ 	bool res;
+@@ -626,6 +669,41 @@ int maps__for_each_map(struct maps *maps, int (*cb)(struct map *map, void *data)
+ 	return ret;
+ }
+ 
++int maps__load_maps(struct maps *maps)
++{
++	struct map **maps_copy;
++	unsigned int nr_maps;
++	int err = 0;
++
++	if (!maps)
++		return 0;
++
++	down_read(maps__lock(maps));
++	nr_maps = maps__nr_maps(maps);
++	if (nr_maps == 0) {
++		up_read(maps__lock(maps));
++		return 0;
++	}
++	maps_copy = calloc(nr_maps, sizeof(*maps_copy));
++	if (!maps_copy) {
++		up_read(maps__lock(maps));
++		return -ENOMEM;
++	}
++	for (unsigned int i = 0; i < nr_maps; i++)
++		maps_copy[i] = map__get(maps__maps_by_address(maps)[i]);
++	up_read(maps__lock(maps));
++
++	for (unsigned int i = 0; i < nr_maps; i++) {
++		if (map__load(maps_copy[i]) < 0) {
++			pr_warning("Failed to load map %s\n", dso__name(map__dso(maps_copy[i])));
++			err = -1;
++		}
++		map__put(maps_copy[i]);
++	}
++	free(maps_copy);
++	return err;
++}
++
+ void maps__remove_maps(struct maps *maps, bool (*cb)(struct map *map, void *data), void *data)
+ {
+ 	struct map **maps_by_address;
+@@ -668,40 +746,57 @@ struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp)
+ 	return result;
+ }
+ 
+-struct maps__find_symbol_by_name_args {
+-	struct map **mapp;
+-	const char *name;
+-	struct symbol *sym;
+-};
+-
+-static int maps__find_symbol_by_name_cb(struct map *map, void *data)
++struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, struct map **mapp)
+ {
+-	struct maps__find_symbol_by_name_args *args = data;
++	struct map **maps_copy;
++	unsigned int nr_maps;
++	struct symbol *sym = NULL;
+ 
+-	args->sym = map__find_symbol_by_name(map, args->name);
+-	if (!args->sym)
+-		return 0;
++	if (!maps)
++		return NULL;
+ 
+-	if (!map__contains_symbol(map, args->sym)) {
+-		args->sym = NULL;
+-		return 0;
++	/*
++	 * First, ensure all maps are loaded. We pre-load them outside of any
++	 * read-to-write locks to avoid deadlocks. Even if some fail, we proceed.
++	 */
++	maps__load_maps(maps);
++
++	/*
++	 * Create a local snapshot of the maps while holding the read lock.
++	 * This prevents deadlocking if iteration triggers further map insertions.
++	 */
++	down_read(maps__lock(maps));
++	nr_maps = maps__nr_maps(maps);
++	maps_copy = calloc(nr_maps, sizeof(*maps_copy));
++	if (maps_copy) {
++		for (unsigned int i = 0; i < nr_maps; i++) {
++			struct map *map = maps__maps_by_address(maps)[i];
++
++			maps_copy[i] = map__get(map);
++		}
+ 	}
++	up_read(maps__lock(maps));
+ 
+-	if (args->mapp != NULL)
+-		*args->mapp = map__get(map);
+-	return 1;
+-}
++	if (!maps_copy)
++		return NULL;
+ 
+-struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, struct map **mapp)
+-{
+-	struct maps__find_symbol_by_name_args args = {
+-		.mapp = mapp,
+-		.name = name,
+-		.sym = NULL,
+-	};
++	for (unsigned int i = 0; i < nr_maps; i++) {
++		struct map *map = maps_copy[i];
++
++		sym = map__find_symbol_by_name(map, name);
++		if (sym && map__contains_symbol(map, sym)) {
++			if (mapp)
++				*mapp = map__get(map);
++			break;
++		}
++		sym = NULL;
++	}
++
++	for (unsigned int i = 0; i < nr_maps; i++)
++		map__put(maps_copy[i]);
+ 
+-	maps__for_each_map(maps, maps__find_symbol_by_name_cb, &args);
+-	return args.sym;
++	free(maps_copy);
++	return sym;
+ }
+ 
+ int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams)
+diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
+index 5b80b199685e..4ec9b7453a3b 100644
+--- a/tools/perf/util/maps.h
++++ b/tools/perf/util/maps.h
+@@ -59,8 +59,11 @@ void maps__set_libdw_addr_space_dwfl(struct maps *maps, void *dwfl);
+ 
+ size_t maps__fprintf(struct maps *maps, FILE *fp);
+ 
++int maps__load_maps(struct maps *maps);
+ int maps__insert(struct maps *maps, struct map *map);
+ void maps__remove(struct maps *maps, struct map *map);
++int maps__mutate_mapping(struct maps *maps, struct map *map,
++			 int (*mutate_cb)(struct map *map, void *data), void *data);
+ 
+ struct map *maps__find(struct maps *maps, u64 addr);
+ struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp);
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 186e6d92ac3d..d1e93c0556dd 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1342,6 +1342,24 @@ static u64 ref_reloc(struct kmap *kmap)
+ void __weak arch__sym_update(struct symbol *s __maybe_unused,
+ 		GElf_Sym *sym __maybe_unused) { }
+ 
++struct remap_kernel_ctx {
++	u64 sh_addr;
++	u64 sh_size;
++	u64 sh_offset;
++	struct kmap *kmap;
++};
++
++static int remap_kernel_cb(struct map *map, void *data)
++{
++	struct remap_kernel_ctx *ctx = data;
++
++	map__set_start(map, ctx->sh_addr + ref_reloc(ctx->kmap));
++	map__set_end(map, map__start(map) + ctx->sh_size);
++	map__set_pgoff(map, ctx->sh_offset);
++	map__set_mapping_type(map, MAPPING_TYPE__DSO);
++	return 0;
++}
++
+ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 				      GElf_Sym *sym, GElf_Shdr *shdr,
+ 				      struct maps *kmaps, struct kmap *kmap,
+@@ -1372,22 +1390,15 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		 * map to the kernel dso.
+ 		 */
+ 		if (*remap_kernel && dso__kernel(dso) && !kmodule) {
++			struct remap_kernel_ctx ctx = {
++				.sh_addr = shdr->sh_addr,
++				.sh_size = shdr->sh_size,
++				.sh_offset = shdr->sh_offset,
++				.kmap = kmap
++			};
++
+ 			*remap_kernel = false;
+-			map__set_start(map, shdr->sh_addr + ref_reloc(kmap));
+-			map__set_end(map, map__start(map) + shdr->sh_size);
+-			map__set_pgoff(map, shdr->sh_offset);
+-			map__set_mapping_type(map, MAPPING_TYPE__DSO);
+-			/* Ensure maps are correctly ordered */
+-			if (kmaps) {
+-				int err;
+-				struct map *tmp = map__get(map);
+-
+-				maps__remove(kmaps, map);
+-				err = maps__insert(kmaps, map);
+-				map__put(tmp);
+-				if (err)
+-					return err;
+-			}
++			maps__mutate_mapping(kmaps, map, remap_kernel_cb, &ctx);
+ 		}
+ 
+ 		/*
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 0c46b24ee098..2cc911af8c81 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -48,6 +48,13 @@
+ #include <symbol/kallsyms.h>
+ #include <sys/utsname.h>
+ 
++static int map_fixup_cb(struct map *map, void *data __maybe_unused)
++{
++	map__fixup_start(map);
++	map__fixup_end(map);
++	return 0;
++}
++
+ static int dso__load_kernel_sym(struct dso *dso, struct map *map);
+ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
+ 
+@@ -2240,10 +2247,11 @@ static int dso__load_kernel_sym(struct dso *dso, struct map *map)
+ 	free(kallsyms_allocated_filename);
+ 
+ 	if (err > 0 && !dso__is_kcore(dso)) {
++		struct maps *kmaps = map__kmaps(map);
++
+ 		dso__set_binary_type(dso, DSO_BINARY_TYPE__KALLSYMS);
+ 		dso__set_long_name(dso, DSO__NAME_KALLSYMS, false);
+-		map__fixup_start(map);
+-		map__fixup_end(map);
++		maps__mutate_mapping(kmaps, map, map_fixup_cb, NULL);
+ 	}
+ 
+ 	return err;
+@@ -2283,10 +2291,11 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map)
+ 	if (err > 0)
+ 		pr_debug("Using %s for symbols\n", kallsyms_filename);
+ 	if (err > 0 && !dso__is_kcore(dso)) {
++		struct maps *kmaps = map__kmaps(map);
++
+ 		dso__set_binary_type(dso, DSO_BINARY_TYPE__GUEST_KALLSYMS);
+ 		dso__set_long_name(dso, machine->mmap_name, false);
+-		map__fixup_start(map);
+-		map__fixup_end(map);
++		maps__mutate_mapping(kmaps, map, map_fixup_cb, NULL);
+ 	}
+ 
+ 	return err;
 -- 
 2.54.0.1032.g2f8565e1d1-goog
 
