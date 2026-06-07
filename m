@@ -1,207 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5804F2EEE7D;
-	Sun,  7 Jun 2026 13:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301CA1A6822;
+	Sun,  7 Jun 2026 13:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780837492; cv=none; b=u0BxpfyCt13mqsYo3yYzQmPl5WMZanZslW1V3VlT0yOhUqGiSuk6o/g+xwVdM9JDGaPePRZGduZbaD92rIphfg5GBZZVsVecvO5hQYW4S0zNM7I2EE009sL2xsbyYXyq+mnu8zqzukRf8+4ekjGl8lKRFppJwdgt9wfOcfA3ClQ=
+	t=1780837542; cv=none; b=jRv1cm5bkfeeBySZJORv2NvBParkUGf9CTEPVqVj62sYWRY7wmjKc07mnv01gjj08I3QWLV+1S0YgSUN7RZU9NOu/+yG6NdN49OdqjqhXdx947E+vfGV5CEhS3p99R+uM8wCkj+xdrDFu56vIkvomm7RO417AiKPoDzqAbBgknw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780837492; c=relaxed/simple;
-	bh=F1QyJjX1yFzlyg1M22MRH9BXgHyjN1RlYcMUrY74d9E=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dJsjmkPD0+/KX7AF5X5Muw2IhVZYj1fE+FYx2KVK/oGpzRvFk5poCAXvh4vtTACEv8P7fdFBM6TbtNaJtQNXr3ktDWu1UZhit96n3RDY6Gb/cUNvi5VLB8o/z6qU5C+W0YwXzesQ48OZW8BippsJyOQP4ovCETT1U1WS/2oNaro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpYLeGF1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780837542; c=relaxed/simple;
+	bh=PPDJAMg14oqT50Y0gJO+dAmrsAOhLH6wQ3dQ1Tfpv1Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bh0Hm97BML3bV5HU1tpMaaxBBIdClBKIp+ge6oHteaNllDRzIk05souUvWpNyk2bB5s3wRV6rpoASmis4nMekbHCeZiNErhtU+2eo8qSmdUtKfwlvb5Bczs2iskQjMGEXelMkLhiOyQr+mOjEMYlDdDIQXsCLrpDq2WJpFr4Xc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=eds3Ek3v; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpYLeGF1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8A561F00893;
-	Sun,  7 Jun 2026 13:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780837491;
-	bh=AWVTn/ddSiFqVnROl7IYlnKOGqz+FIezPvnF8nLm35M=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KpYLeGF1NWlirpxxDtdwVwk1p3YYF6q1iI7QoflU/8WP3jFmCgTgz1JVlXxBTr44x
-	 hDQL5N7vWGwpEYfGY4T2Iwj+BCmIuB0RpII2J85OYvmvul7i5eXQ3Af1QO3bRSYI8Z
-	 LJy0a77MebG0XXhLnt5Ey2NSqDQZT4FwTvOWki1ewXV+lMRVRcATaMbi7Gj1fL+hWc
-	 3+HerthI9qnRvmFQOj1HKi89S916fi4tg8GG3mpClhxL2fCNmeE1W3a0x9brIlhqiL
-	 yNlIls7X0SfFFTQrnCBdTOTA6i+EyrZrIUbYVMrmaEcdcC0m4J/wedIB8jXl244GIr
-	 UPD7yvjjUgN3A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/3] perf: marvell: Add CN20K LLC-TAD PMU support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Geetha sowjanya" <gakula@marvell.com>
-Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org, robh@kernel.org
-In-Reply-To: <20260607125101.17778-3-gakula@marvell.com>
-References: <20260607125101.17778-3-gakula@marvell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 13:04:50 +0000
-Message-Id: <20260607130450.B8A561F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="eds3Ek3v"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 657B1cqb3698744;
+	Sun, 7 Jun 2026 05:51:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=aWcYYpxWpHV0gRGBfsC2kHwRU
+	bnJJhhEUIpChyiUSAY=; b=eds3Ek3vxSQhI88b03EtftC7ngUl7P+H+3bHyH3j3
+	z/6irkzQ1ovrrh/aha/+whitXyNs5Jfp2ZXc6f1pTyKAN0LcXjsVZVIUqoQ1jfnJ
+	1nwnpjWKoH2aTM6tHJJ/BrI5HSsUF0ItKZOsPxsw60IL5lF+NbyNJp1iJ+L1HHDU
+	fJN6pPoaNWnRBpQPHF3ir/2mdf/3Oz+AEiTJVn1G+n4YX8LBJz04DOVs8+aqo7AB
+	bwOpjjx9kDyC5G/KlLHd7vWhTm+zdH464sXr9SyEDy5bG3pHSMOH2UeCCCfZuB7b
+	eX1aa7GU7c5FmxMgQfFtyg/Aqlqsv9UDvu/CQRaDBGCVg==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 4emk2ek3f7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 07 Jun 2026 05:51:16 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Sun, 7 Jun 2026 05:51:15 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
+ Transport; Sun, 7 Jun 2026 05:51:15 -0700
+Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
+	by maili.marvell.com (Postfix) with ESMTP id AEE213F70C5;
+	Sun,  7 Jun 2026 05:51:12 -0700 (PDT)
+From: Geetha sowjanya <gakula@marvell.com>
+To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
+CC: <mark.rutland@arm.com>, <will@kernel.org>, <krzk+dt@kernel.org>,
+        <gakula@marvell.com>
+Subject: [PATCH 3/3] dt-bindings: perf: marvell: Extend CN10K TAD PMU binding for CN20K
+Date: Sun, 7 Jun 2026 18:21:01 +0530
+Message-ID: <20260607125101.17778-4-gakula@marvell.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260607125101.17778-1-gakula@marvell.com>
+References: <20260607125101.17778-1-gakula@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA3MDEyOCBTYWx0ZWRfX7i5rzTf4t3Bz
+ k6XEnIA6TnTI+IBPSxZScs0dLR6I9MigGv8ogGoXd9SXOujlSmQpE4MnYBFBzhRbnLJ5N6rqKoc
+ cSL/V9GUlNnpZQ4Q348eJdpHsXWEK89Z0LuELtyMBX8uhSm3y7imjHnfuzH2RkwnLU2IyWNn/++
+ t6i0alma3eR7M8ym41ptMWlTXis6LICnw9MAB+nus453guVFDPVL/RMFzUgMTXc/VSHpU3zMEtQ
+ Wyi77hsRc9gMuypqmMMcq8YtDWY0sR/D7WucOZq12eY0gtqzMS0uzWQgyD83P5oPzUpG+kJWzoH
+ mgwSgMzZ9663HP3IoFW8TIbbiEyQXh4MfpU3HMXM5E6g7V/vZy1Logrc1ll4RYIB0Owl3vUAvuw
+ tMjoaPdjFU8rUI9j4rLaNh2qPTHm6SUKF7//DlOOg8pg+sjQHlMeU7J8HEtW8V+h88Zz/B4IRSI
+ aGgBcfWJelhxraapTVw==
+X-Proofpoint-GUID: Knqm4btXgidxs7KvtiAQGoPwpMAezOuj
+X-Authority-Analysis: v=2.4 cv=bJUm5v+Z c=1 sm=1 tr=0 ts=6a256944 cx=c_pps
+ a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=l0iWHRpgs5sLHlkKQ1IR:22
+ a=QXcCYyLzdtTjyudCfB6f:22 a=gEfo2CItAAAA:8 a=M5GUcnROAAAA:8
+ a=rc1d4UPXP1xlpl8uFC8A:9 a=sptkURWiP4Gy88Gu7hUp:22 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-ORIG-GUID: Knqm4btXgidxs7KvtiAQGoPwpMAezOuj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-07_03,2026-06-05_02,2025-10-01_01
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
+Allow marvell,cn20k-tad-pmu alongside marvell,cn10k-tad-pmu, document
+CN20K in the title and description, add a maintainer, and include a
+CN20K example node with the same required properties as CN10K.
 
-New issues:
-- [High] The shifted `partid` value overlaps with the hardcoded Non-Secure =
-(`NS`) flag on CN20K (V3), corrupting the filter configuration.
-- [Medium] The driver shares the PMU events attribute array between CN10K (=
-V1) and CN20K (V3) without visibility checks, exposing unsupported V3 event=
-s on V1 systems and breaking the pre-existing `tad_tot_cycle` (0xFF) event.
-- [Medium] The PMU driver prevents users from profiling MPAM PARTID 0, as i=
-t overloads `partid =3D=3D 0` to mean 'filtering disabled'.
+Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+---
+ .../bindings/perf/marvell-cn10k-tad.yaml      | 20 +++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-Pre-existing issues:
-- [High] Malformed ACPI/DT memory resources cause NULL pointer dereferences=
- if they are smaller than `tad_cnt`, as the driver unconditionally assigns =
-the expected count instead of the mapped count.
-- [High] The driver modifies the global platform_device resource bounds dur=
-ing probe, corrupting subsequent ioremap attempts and causing driver rebind=
-s to fail.
-- [High] Missing `hwc->prev_count` reset when starting counters leads to bo=
-gus perf event counts upon read.
---
+diff --git a/Documentation/devicetree/bindings/perf/marvell-cn10k-tad.yaml b/Documentation/devicetree/bindings/perf/marvell-cn10k-tad.yaml
+index 362142252667..1612052b59ae 100644
+--- a/Documentation/devicetree/bindings/perf/marvell-cn10k-tad.yaml
++++ b/Documentation/devicetree/bindings/perf/marvell-cn10k-tad.yaml
+@@ -4,23 +4,27 @@
+ $id: http://devicetree.org/schemas/perf/marvell-cn10k-tad.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: Marvell CN10K LLC-TAD performance monitor
++title: Marvell CN10K / CN20K LLC-TAD performance monitor
+ 
+ maintainers:
+   - Bhaskara Budiredla <bbudiredla@marvell.com>
++  - Geetha sowjanya <gakula@marvell.com>
+ 
+ description: |
+-  The Tag-and-Data units (TADs) maintain coherence and contain CN10K
+-  shared on-chip last level cache (LLC). The tad pmu measures the
+-  performance of last-level cache. Each tad pmu supports up to eight
+-  counters.
++  The Tag-and-Data units (TADs) maintain coherence and contain the
++  shared on-chip last level cache (LLC) on Marvell CN10K and CN20K SoCs.
++  The TAD PMU measures last-level cache performance. Each TAD PMU
++  supports up to eight counters.
+ 
+-  The DT setup comprises of number of tad blocks, the sizes of pmu
+-  regions, tad blocks and overall base address of the HW.
++  The DT setup describes the number of TAD blocks, the sizes of PMU
++  regions and TAD pages, and the overall MMIO base of the hardware.
+ 
+ properties:
+   compatible:
+-    const: marvell,cn10k-tad-pmu
++    items:
++      - enum:
++          - marvell,cn10k-tad-pmu
++          - marvell,cn20k-tad-pmu
+ 
+   reg:
+     maxItems: 1
+-- 
+2.25.1
 
-commit db735a497cd5d9c282e3c5a1fa6ad9ee8d6ea442
-Author: Geetha sowjanya <gakula@marvell.com>
-Subject: perf: marvell: Add CN20K LLC-TAD PMU support
-
-Adds support for the CN20K LLC-TAD PMU by defining a TAD_PMU_V3 profile
-with per-platform register bases. It extends the CN10K event map for new
-counters and matches the block via OF and ACPI.
-
-> diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_=
-cn10k_tad_pmu.c
-> index 7a3b659c999a2..4daf109b89eea 100644
-> --- a/drivers/perf/marvell_cn10k_tad_pmu.c
-> +++ b/drivers/perf/marvell_cn10k_tad_pmu.c
-[ ... ]
-> @@ -80,8 +83,14 @@ static void tad_pmu_start_counter(struct tad_pmu *pmu,
->  	if (partid && event_idx > 0x19 && event_idx < 0x21) {
-
-[Severity: High]
-This is a pre-existing issue, but does tad_pmu_event_counter_start() fail to
-reset the software prev_count when starting the counters?
-
-When the hardware counters are zeroed out earlier in tad_pmu_start_counter(=
-),
-local64_set(&hwc->prev_count, 0) is not called to match. When the counter is
-later stopped or read, computing new minus prev can underflow because prev
-still holds the value from the previous time the event was stopped.
-
-[Severity: Medium]
-Does checking if partid is non-zero prevent users from profiling MPAM PARTI=
-D 0?
-
-If a user explicitly specifies partid 0, which is a valid MPAM partition, it
-evaluates to false. This bypasses the hardware filter configuration entirel=
-y,
-causing the hardware to count events for all partitions instead of exclusiv=
-ely
-restricting to PARTID 0.
-
->  		partid_filter =3D TAD_PRF_MATCH_PARTID | TAD_PRF_PARTID_NS |
->  				((u64)partid << 11);
-> +
-> +		if (pdata->id =3D=3D TAD_PMU_V3)
-> +			partid_filter =3D TAD_PRF_MATCH_PARTID | BIT_ULL(25) |
-> +				((u64)partid << 10);
-
-[Severity: High]
-Does shifting a 16-bit partid by 10 cause a bit collision with the hardcoded
-Non-Secure flag at bit 25?
-
-Because BIT_ULL(25) occupies the exact same bit position as the most
-significant bit (bit 15) of the shifted 16-bit partid, any user-provided
-partid with bit 15 set might corrupt the hardware filter value.
-
->  	}
-> =20
-> +	if (pdata->id =3D=3D TAD_PMU_V1 && event_idx > 0x24)
-> +		return;
-
-[Severity: Medium]
-Does this early return prevent tad_tot_cycle (0xFF) from working on V1
-hardware?
-
-Because 0xFF is greater than 0x24, attempting to measure the total cycle
-event on V1 will be silently ignored, leaving the counter unprogrammed.
-
-> =20
->  	for (i =3D 0; i < pmu->region_cnt; i++) {
->  		reg_val =3D event_idx & 0xFF;
-[ ... ]
-> @@ -261,6 +270,18 @@ static struct attribute *tad_pmu_event_attrs[] =3D {
->  	TAD_PMU_EVENT_ATTR(tad_dat_rd_byp, 0x22),
->  	TAD_PMU_EVENT_ATTR(tad_ifb_occ, 0x23),
->  	TAD_PMU_EVENT_ATTR(tad_req_occ, 0x24),
-> +	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dtg_evict, 0x25),
-> +	TAD_PMU_EVENT_ATTR(tad_req_msh_out_ltg_evict, 0x26),
-> +	TAD_PMU_EVENT_ATTR(tad_rsp_msh_out_mpam, 0x28),
-> +	TAD_PMU_EVENT_ATTR(tad_replays, 0x29),
-> +	TAD_PMU_EVENT_ATTR(tad_req_byp0, 0x2a),
-> +	TAD_PMU_EVENT_ATTR(tad_req_byp1, 0x2b),
-> +	TAD_PMU_EVENT_ATTR(tad_txreq_byp, 0x2c),
-> +	TAD_PMU_EVENT_ATTR(tad_time_in_dslp, 0x2d),
-> +	TAD_PMU_EVENT_ATTR(tad_time_elapsed, 0x2e),
-> +	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dss_rd_128mrg, 0x2f),
-> +	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dss_wr_128mrg, 0x30),
-> +	TAD_PMU_EVENT_ATTR(tad_tot_cycle, 0xff),
->  	NULL
->  };
-
-[Severity: Medium]
-Since these V3-specific events are added to the shared attribute array
-without an is_visible callback, are they incorrectly advertised to
-userspace on V1 hardware?
-
-[ ... ]
-> @@ -440,7 +460,7 @@ static int tad_pmu_probe(struct platform_device *pdev)
->  		.read		=3D tad_pmu_event_counter_read,
->  	};
-> =20
-> -	if (version =3D=3D TAD_PMU_V1) {
-> +	if (version =3D=3D TAD_PMU_V1 || version =3D=3D TAD_PMU_V3) {
->  		tad_pmu->pmu.attr_groups =3D tad_pmu_attr_groups;
->  		tad_pmu->ops		 =3D &tad_pmu_ops;
->  	} else {
-
-[Severity: High]
-This is a pre-existing issue, but in the region initialization loop earlier
-in tad_pmu_probe():
-
-for (i =3D 0; i < tad_cnt && res->start < res->end; i++) {
-    ...
-}
-tad_pmu->region_cnt =3D tad_cnt;
-
-If the loop terminates early due to the resource size being smaller than
-expected, region_cnt is unconditionally assigned tad_cnt instead of the
-successfully mapped count (i). Does this lead to NULL pointer dereferences
-later when PMU operations iterate up to region_cnt and access the
-uninitialized base pointers?
-
-[Severity: High]
-This is another pre-existing issue, but in that same tad_pmu_probe()
-initialization loop:
-
-for (i =3D 0; i < tad_cnt && res->start < res->end; i++) {
-    ...
-    res->start +=3D tad_page_size;
-}
-
-Does modifying res->start directly corrupt the global platform_device
-resource bounds?
-
-Since platform_get_resource() returns a direct pointer to the device's
-resource descriptor, permanently altering it means subsequent ioremap
-attempts will start from the corrupted offset if the driver module is
-reloaded or if probe defers.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607125101.1777=
-8-1-gakula@marvell.com?part=3D2
