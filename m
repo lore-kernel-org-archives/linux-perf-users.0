@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30023321DC;
-	Sun,  7 Jun 2026 23:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09694322DB7;
+	Sun,  7 Jun 2026 23:30:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780875001; cv=none; b=epWX9XCFYasjIFNBQLlwWqaufWkAN6kfqjtU7RmVNLmSuwdtZUMcm09onBE1nvwYoTEih/22oBOcju97SpkQgzKe1sHQKJsq5qeSQ+MgRowyT+IalpQGhMd8KEpgrIA2rrZUA2bRlfnKfxx0IIrI7agfmIufjSZceeMN5MWmO6w=
+	t=1780875007; cv=none; b=nTDhvLhiTx4X25bk7GrNp9aMjT841UE6NDxuW/IZN9d/Pix/ekQp8T21knC+9xRyo15yONUXLqfw2ZyRDsBSP8dgf3bZBQjBnDwMxLrs/FEiiugNF64nhOxDdlqsd6zi1PXlFxZyIgVMQLDa8pSLZMCjmmmBbXISbIr5qLjOq34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780875001; c=relaxed/simple;
-	bh=fp5aNOc0QaAaB+df522Lom/3m5C8UWJLa1uYJNH8s5A=;
+	s=arc-20240116; t=1780875007; c=relaxed/simple;
+	bh=NS10eLvR1wIFhOrcyHm5S3Szt5dZ5EAeLNZsWzPIJB0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r//gq4OGQfEVldInOL8DgaerrUsBMj7rwyFh9VgJBnituE/olFUA8bwH93/27wnx2bZjGs5b1NMuH6mOpTUy0ZPE98rAXowfS74kCWfo1dhgagMdhvrJzx67Ir7OlK3/YLgliETKfDFFVneBDFbGgxvqwv9Sj/OG4IVakDo6Qag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X080zNja; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=EevVZnDlOZpuUF2KIAB0idxJFHygAd/P+aNoAS0jaWAoOkyJrEnZVsnEIQq0nakZTt/VtpnXZVxZ2GUPxblLoZphIulWKJGTguTHBDaa0Qv7u7BV3wzu9O1dscLCqB/Ez3dZMfRaVsstwA3J74Im0pKiZOKwaO+WNJf2ioNZMyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OFLtqNyM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X080zNja"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E429D1F00893;
-	Sun,  7 Jun 2026 23:29:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFLtqNyM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A5AE1F00898;
+	Sun,  7 Jun 2026 23:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780874999;
-	bh=DqRSKCvwdIVxBFjQ5Fuic688QpH8RP/c6GYvhZYObl4=;
+	s=k20260515; t=1780875005;
+	bh=OoWkGv7kFgVWTn6c6kHUxAclF8Ie+haXIj31Xrb+qPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=X080zNja/o6apH0wMlgjvdvDYsMKEZvLP+o7m8As7vwK8otsBuL6gt/BCsvIBgmMW
-	 OltCUMUTkOjJZXzGnxAlTRjTDxIgj+wruNv5gMDqnnUSIxrdEZfknUDJjbShT3QSST
-	 YjMV6nEFcoBKgkICrjLOXoKtdHYWxaRp0y1cggyBeYJoDVN7+MRXCgmBNSbOsg7wzW
-	 DkthTArxvYNjB6ktOdvS61V1P/+6ALl9Rovv+kHJSTtbq4YPvW58w7MCHEJSj4eoFk
-	 jmeFPhG+dgPBfHSfB6fWmLil0EQgTBpI0u6PYjkuwD3o4fcfjIc2zhDlatL84WEpDy
-	 G9UG2EIReiUcQ==
+	b=OFLtqNyMKd3/z8eS/vbm+/uSI+zJGs4BudgTm4ODlsaiFfP5DTkq+xSEQkt2RhjUd
+	 eP6r8j+MLxEV+6tjsE+CG74KuVcBH3iecmV6ALEuZkHgTLhI3Gok4djNGkXTV2vb8S
+	 COP2rlIy8TvD/CkTu9VnTL3ZNul02Wk4C0KsLjSv9znjCrQzZX8NwPgEonBSDALX81
+	 oZtBwpQPRcX1RVVKPInZ3SrFsKWemiCZPJPZOBzocxHE36KsN/uzO5AuvZM3x/RGHC
+	 WAPmybMENnRXvLFQ348oFZag14FIu1rcMbTEzy7fChlJYG+GyMSUY7sYkKxVbPES4n
+	 xVCwIZgFJAG3w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,10 +40,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
 	Alexey Budankov <alexey.budankov@linux.intel.com>,
+	Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 04/11] perf mmap: Fix mbind() maxnode vs bitmap allocation mismatch in aio_bind
-Date: Sun,  7 Jun 2026 20:29:17 -0300
-Message-ID: <20260607232925.1935819-5-acme@kernel.org>
+Subject: [PATCH 05/11] perf tools: NULL bitmap pointers after bitmap_free()
+Date: Sun,  7 Jun 2026 20:29:18 -0300
+Message-ID: <20260607232925.1935819-6-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260607232925.1935819-1-acme@kernel.org>
 References: <20260607232925.1935819-1-acme@kernel.org>
@@ -53,46 +54,74 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf_mmap__aio_bind() allocates a node mask bitmap with
-bitmap_zalloc(node_index + 1) bits, but passes node_index + 2 as the
-maxnode argument to mbind().  The mbind syscall interprets maxnode as
-the number of bits to read from the mask.
+Three call sites free bitmaps without NULLing the pointer, risking
+double-free if the structure is reused or cleanup is called twice:
 
-When node_index + 2 crosses a BITS_PER_LONG boundary (e.g.
-node_index = 63 on 64-bit), the bitmap occupies 8 bytes but mbind
-reads 16 — an out-of-bounds read of user heap memory into kernel
-space.
+ - mmap__munmap():                 map->affinity_mask.bits
+ - record__mmap_cpu_mask_free():   mask->bits
+ - memory_node__delete_nodes():    nodesp[i].set
 
-Allocate node_index + 2 bits to match what mbind will actually read.
+Set each pointer to NULL after bitmap_free().
 
-Fixes: 44d462acc0bf3eab ("perf record: Fix binding of AIO user space buffers to nodes")
+Fixes: 8384a2600c7ddfc8 ("perf record: Adapt affinity to machines with #CPUs > 1K")
+Fixes: f466e5ed6c356d1d ("perf record: Extend --threads command line option")
+Fixes: 36d8658618c2505f ("perf header: Validate bitmap size before allocating in do_read_bitmap()")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mmap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/builtin-record.c | 1 +
+ tools/perf/util/header.c    | 4 +++-
+ tools/perf/util/mmap.c      | 1 +
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index a33c78f030d91012..e915390556752b9e 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3084,6 +3084,7 @@ static int record__mmap_cpu_mask_alloc(struct mmap_cpu_mask *mask, int nr_bits)
+ static void record__mmap_cpu_mask_free(struct mmap_cpu_mask *mask)
+ {
+ 	bitmap_free(mask->bits);
++	mask->bits = NULL;
+ 	mask->nbits = 0;
+ }
+ 
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index d7f41db7322cbcb4..8d2ab440a1c8ee4a 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1481,8 +1481,10 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
+ 
+ static void memory_node__delete_nodes(struct memory_node *nodesp, u64 cnt)
+ {
+-	for (u64 i = 0; i < cnt; i++)
++	for (u64 i = 0; i < cnt; i++) {
+ 		bitmap_free(nodesp[i].set);
++		nodesp[i].set = NULL;
++	}
+ 
+ 	free(nodesp);
+ }
 diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index d64aec6c7c843e81..8012301d3cf2ac9a 100644
+index 8012301d3cf2ac9a..ee3ebdf53e15291e 100644
 --- a/tools/perf/util/mmap.c
 +++ b/tools/perf/util/mmap.c
-@@ -113,7 +113,8 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, struct perf_cpu cpu, i
- 		if (node < 0)
- 			return 0;
- 		node_index = node;
--		node_mask = bitmap_zalloc(node_index + 1);
-+		/* mbind's maxnode is node_index + 2 — allocate to match */
-+		node_mask = bitmap_zalloc(node_index + 2);
- 		if (!node_mask) {
- 			pr_err("Failed to allocate node mask for mbind: error %m\n");
- 			return -1;
+@@ -239,6 +239,7 @@ static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
+ void mmap__munmap(struct mmap *map)
+ {
+ 	bitmap_free(map->affinity_mask.bits);
++	map->affinity_mask.bits = NULL;
+ 
+ 	zstd_fini(&map->zstd_data);
+ 
 -- 
 2.54.0
 
