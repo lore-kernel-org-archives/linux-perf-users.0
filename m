@@ -1,204 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5E528002B
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 06:27:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7109C2DF12F
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 08:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780813679; cv=none; b=G12C8mkvqRl0gzTvocWGKk4A7G5ixSyX6o1B5mQ4xOwqJiSC4GgVpt3fxpdi7tFA6WkBT1hXXIMRg1HEMcrhAOFhTJpKueE2cloD0aDcenuZXZuoHsCnTcXF7MOSZU+wVlmSPQKEZgIJ4crU9nNzaQFqyzlYHeXrGOq1rZz4vPk=
+	t=1780820856; cv=none; b=JgpHow7xczEv0csY0thqqlJCcyyy6QhXV1b3mFEyLgy5sQ7BFtEf3s+q36q2NeJwilAPCorUbvvdUHuoPmUHn/ETHQPMvhAJ4w/8vgvm7JytO6etr5bbC9VC/2Ch6OKzrgJMZAjZJId5bANIkzA46rrqwfgGggFEc3Xobqc6QAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780813679; c=relaxed/simple;
-	bh=O5S706OsFKF8NnprAgpyDs6JDN/PcZMLZx09BGj/G5I=;
+	s=arc-20240116; t=1780820856; c=relaxed/simple;
+	bh=HSLaawaQgC+elrDEtYVg5OaBd9ThyBTLgNjIT/o/8mo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Leiytp8G8y4gyT8p5+0FnWlU7tjKOqsdKPYl0OyOF3ujA2QWswTEH+gpMXnbUAtgNGiqX8+ttY6Y43iK09LWqz7bmeDFbcXz4hsuFJV0E6xhbrcDjeuFOWcf/VslGnHcTYL9UfPMZdUDTsPSm8HeQRvPUHifkc74MA2zACWdwZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9eTdPH+; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=FJGVaZbZ6mXfYCUt7zpaa+6GSFj17JPxj2wY8k3g+S1X0rSl8pfZtH5TgrpPbjprW0Nm/i3PwAe37nILZXEVVx4fyrYY+qR3/pfvy55Et9x4k9SPUSIn7u4yozvxHkCmC0AiluFjJb7Lo1ERcepgsFKkRkpgAmKceFh46gO3iIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aVYtg4zG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9eTdPH+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6426E1F00893;
-	Sun,  7 Jun 2026 06:27:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aVYtg4zG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BE7A1F00893;
+	Sun,  7 Jun 2026 08:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780813677;
-	bh=qvNeLshDIKjVvVkGAVtzMxVMCIb8Ip+OovNNbc8aw1M=;
+	s=k20260515; t=1780820854;
+	bh=TMiB+E5WEyjQak2jyIxTguTud/+39/BFo9nRL27BtIc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=I9eTdPH+b0ujamE7xx3OluFUC6L/Cf1NFdSPqdF06aO0m8f/qI/uegQtbQwPaFUBY
-	 3BC88RDxNReUeKO623tXVt+H3+Q7KppsC4R4me0rcClgQLUPgT/EvnwiYqqetXiAV3
-	 6UbqSKAsGPHzWMbZ/cW7OefCiRoKJBXs2uYUUJd204Cjk8OFgDYb4nQt+sSE/uZ7mK
-	 gfLCMybTdnVMSXVDCd7xQQGoRmAyEE0cDLNHbPZyNcxK+zCNAmBPAJuYLCclQcza6a
-	 mHyd9YsjO5JyE2xoBr5RfGOQfLleS4nZH9u7WQu1yy8HkcMcT+pwy4KkV/cNXiqRxD
-	 IFt3yX2i65t4g==
+	b=aVYtg4zGykU1M5mpHIi//AHevU3smnPbOfMOdA9XiTwTYSeKryMZ+0NF8Dv7CQd31
+	 2GxX/XZHMmh8fGX4ymnJP+GRTQpw6Qnv6eUzU73CnenwMVpWwkfcNi+T2wBl1gb4in
+	 Wqs5RG5JF2MaygiE5LEpCuSZ0ze//zxwTPljZqOFm9G6n3ivp01L5aNtjARMHfFey8
+	 ziCqZFxtFZjJsyB54o+6sC4P1SaYl0hwwa31XZZdP3zQUShKk7toiZijC6rWb/lrCv
+	 Kc8OGTpdb+Da0Vg4/9LYYVKBdQ6IrleRPgDTmeHdpW/gK8wYXwoXhV2hkoOYXpNZay
+	 9xQfsXF6ltkOg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v17 3/5] perf inject/aslr: Implement sample address
- remapping
+Subject: Re: [PATCH v17 2/5] perf inject/aslr: Add ASLR tool infrastructure
+ and MMAP tracking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260607060933.3274263-4-irogers@google.com>
-References: <20260607060933.3274263-4-irogers@google.com>
+In-Reply-To: <20260607060933.3274263-3-irogers@google.com>
+References: <20260607060933.3274263-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 06:27:56 +0000
-Message-Id: <20260607062757.6426E1F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 08:27:33 +0000
+Message-Id: <20260607082734.3BE7A1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Incorrect double byte-swapping of already natively-swapped 64-bit =
-array fields corrupts cross-endian parsing and address remapping.
-- [High] The entire sample event is dropped if it includes branch stack cou=
-nters, silently breaking profiles collected with LBR counters.
+- [High] Modifying memory-mapped read-only event buffers in place causes a =
+segmentation fault.
+- [High] Inconsistent handling of `(start - map__start(al.map))` for user s=
+pace mappings leads to corrupted virtual address calculations.
+- [High] KSYMBOL unregister events are emitted with an incorrect, newly all=
+ocated address instead of the original remapped address.
 --
 
-commit 99425ccaa2ec1a33c2b9f564c32b12db661696fe
+commit c190853279a63eb364ce133684668cb85c64d5e1
 Author: Ian Rogers <irogers@google.com>
 
-perf inject/aslr: Implement sample address remapping
-   =20
-Add the sample address remapping logic to the ASLR tool. This patch
-implements aslr_tool__process_sample, which parses sample events,
-remaps IPs, ADDRs, callchains, and branch stacks using the mappings
-collected from metadata events.
+perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
+
+If perf.data files are taken from one machine to another they may
+leak virtual addresses and so weaken ASLR on the machine they are
+coming from. Add an aslr option for perf inject that remaps all
+virtual addresses, or drops data/events, so that the virtual address
+information isn't leaked.
 
 > diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> index 2c5fafbe5d846..8980599b0158f 100644
-> --- a/tools/perf/util/aslr.c
+> new file mode 100644
+> index 0000000000000..2c5fafbe5d846
+> --- /dev/null
 > +++ b/tools/perf/util/aslr.c
 
 [ ... ]
 
-> @@ -599,13 +654,428 @@ static int aslr_tool__process_sample(const struct =
-perf_tool *tool,
->  {
+> +static u64 aslr_tool__findnew_mapping(struct aslr_tool *aslr,
+> +				      struct machine *session_machine,
+> +				      struct thread *aslr_thread,
+> +				      u8 cpumode, u64 start,
+> +				      u64 len, u64 pgoff)
+> +{
 
 [ ... ]
 
-> +#define REMAP_U64(addr_field) \
-> +	do { \
-> +		u64 remapped; \
-> +		if (CHECK_BOUNDS(1, 1)) { \
-> +			ret =3D -EFAULT; \
-> +			goto out_put; \
-> +		} \
-> +		remapped =3D aslr_tool__remap_address(aslr, thread, cpumode, addr_fiel=
-d); \
-> +		if (orig_needs_swap) \
-> +			remapped =3D bswap_64(remapped); \
-
-[Severity: High]
-Does this code incorrectly double byte-swap the remapped addresses?
-
-The perf core framework, perf_event__all64_swap(), already byte-swaps the
-entire PERF_RECORD_SAMPLE array payload to host endianness before passing
-it to the tool callbacks.
-
-By calling bswap_64() again in aslr_tool__process_sample when orig_needs_sw=
-ap
-is true, won't this mix host and file endianness in the out_array, corrupti=
-ng
-the output perf.data layout and breaking cross-endian parsing downstream?
-
-> +		out_array[j++] =3D remapped; \
-> +		i++; \
-> +	} while (0)
-
-[ ... ]
-
-> +	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
-> +		u64 nr;
-> +
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret =3D -EFAULT;
-> +			goto out_put;
-> +		}
-> +		nr =3D in_array[i];
-> +		if (orig_needs_swap)
-> +			nr =3D bswap_64(nr);
-
-[Severity: High]
-Can this double-swapping of the nr counter cause parsing loops to fail?
-
-Since in_array[i] is already in host endianness, wouldn't swapping it back
-into file endianness produce a massive integer value for nr?
-
-> +		out_array[j++] =3D in_array[i++];
-
-[ ... ]
-
-> +	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
-> +		u64 nr;
-> +
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret =3D -EFAULT;
-> +			goto out_put;
-> +		}
-> +		nr =3D in_array[i];
-> +		if (orig_needs_swap)
-> +			nr =3D bswap_64(nr);
-
-[Severity: High]
-Similarly, could swapping nr here cause the branch stack iteration bounds
-checks to unconditionally return -EFAULT and drop the event?
-
-> +		out_array[j++] =3D in_array[i++];
-
-[ ... ]
-
-> +		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS)=
- {
-> +			if (nr > max_i - i || nr > max_j - j) {
-> +				ret =3D -EFAULT;
-> +				goto out_put;
+> +		if (cpumode =3D=3D PERF_RECORD_MISC_KERNEL ||
+> +		    cpumode =3D=3D PERF_RECORD_MISC_GUEST_KERNEL) {
+> +			if (al.map) {
+> +				*new_remap_val =3D remap_addr -
+> +						 (start - map__start(al.map)) -
+> +						 map__pgoff(al.map);
+> +			} else {
+> +				/*
+> +				 * Subtract pgoff from the base virtual address so that
+> +				 * when the lookup path adds pgoff back, it perfectly
+> +				 * cancels out and returns remap_addr.
+> +				 */
+> +				*new_remap_val =3D remap_addr - pgoff;
 > +			}
-> +			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
-> +			i +=3D nr;
-> +			j +=3D nr;
-> +			/* TODO: confirm branch counters don't leak ASLR information. */
-> +			pr_debug("Dropping sample branch counters as possible ASLR leak\n");
-> +			ret =3D 0;
-> +			goto out_put;
+> +		} else {
+> +			*new_remap_val =3D remap_addr - (al.map ? map__pgoff(al.map) : pgoff);
 
 [Severity: High]
-Does this logic silently discard the entire sample event when branch
-counters are present?
+Is there a missing subtraction of (start - map__start(al.map)) for the user
+space mapping here?=20
 
-By executing ret =3D 0 and jumping to out_put in aslr_tool__process_sample,
-the delegate->sample invocation is bypassed.
-
-Won't this break profiles collected with LBR counters (e.g. perf record -b)
-by completely dropping all branch stack counter samples instead of just
-omitting the specific fields?
+The kernel space path just above subtracts it. If perf merges adjacent VMAs=
+,=20
+start might not equal map__start(al.map), which could result in returning a=
+n=20
+address inflated by that difference on subsequent lookups and corrupting=20
+the virtual address calculations.
 
 > +		}
-> +	}
+> +		err =3D hashmap__add(&aslr->remap_addresses, new_remap_key, new_remap_=
+val);
 
 [ ... ]
 
-> +	if (sample_type & PERF_SAMPLE_STACK_USER) {
-> +		u64 size;
-> =20
-> -	return delegate->sample(delegate, event, sample, machine);
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret =3D -EFAULT;
-> +			goto out_put;
-> +		}
-> +		size =3D in_array[i];
-> +		if (orig_needs_swap)
-> +			size =3D bswap_64(size);
+> +static int aslr_tool__process_ksymbol(const struct perf_tool *tool,
+> +				      union perf_event *event,
+> +				      struct perf_sample *sample,
+> +				      struct machine *machine)
+> +{
+
+[ ... ]
+
+> +	err =3D perf_event__process_ksymbol(tool, event, sample, aslr_machine);
+> +	if (err)
+> +		return err;
+> +
+> +	thread =3D machine__findnew_thread(aslr_machine, kernel_pid, 0);
+> +	if (!thread)
+> +		return -ENOMEM;
+> +	memcpy(&new_event->ksymbol, &event->ksymbol, event->ksymbol.header.size=
+);
+> +	/* Remaps the ksymbol.start */
+> +	new_event->ksymbol.addr =3D aslr_tool__findnew_mapping(aslr, machine, t=
+hread,
 
 [Severity: High]
-Could double-swapping the PERF_SAMPLE_STACK_USER size corrupt the payload
-boundaries?
+For KSYMBOL unregister events, does calling perf_event__process_ksymbol()=20
+earlier in this function delete the map from aslr_machine->kmaps before we =
+can
+look it up here?
 
-Like the nr values above, swapping the already host-endian size might trigg=
-er
-a bounds failure in the subsequent u64_words bounds check.
+If the map is deleted beforehand, aslr_tool__findnew_mapping() might fail t=
+o=20
+find the original map, fall back to generating a new unmapped key, and emit=
+=20
+a mismatched remapped address instead of the original one.
 
-> +		out_array[j++] =3D in_array[i++];
-> +		if (size > 0) {
+> +							     PERF_RECORD_MISC_KERNEL,
+> +							     event->ksymbol.addr,
+> +							     event->ksymbol.len,
+> +							     /*pgoff=3D*/0);
+
+[ ... ]
+
+> +void aslr_tool__strip_attr_event(union perf_event *event, struct evlist =
+**pevlist)
+> +{
+
+[ ... ]
+
+> +	if (event->header.size >=3D (offsetof(struct perf_record_header_attr,
+> +					    attr.sample_type) + sizeof(u64))) {
+> +		u64 st =3D event->attr.attr.sample_type;
+> +
+> +		if (needs_swap)
+> +			st =3D bswap_64(st);
+> +
+> +		st &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
+> +
+> +		if (needs_swap)
+> +			st =3D bswap_64(st);
+> +
+> +		event->attr.attr.sample_type =3D st;
+
+[Severity: High]
+Does this code modify the event payload in place?
+
+When processing a native-endian perf.data file, perf memory-maps the file's
+data section with PROT_READ. If a PERF_RECORD_HEADER_ATTR event is located
+in this read-only mapped data section, could writing directly to=20
+event->attr.attr.sample_type trigger a segmentation fault?
+
+> +	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607060933.3274=
-263-1-irogers@google.com?part=3D3
+263-1-irogers@google.com?part=3D2
