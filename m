@@ -1,182 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01B132B13F
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 23:46:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6213E1DFF0
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 23:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780875987; cv=none; b=oO81fBfiV+F+/MPI8ssO6y8J1t82FVCgJ/lozehljmsfWtkpqJN3JkR5yn+vIzPXPZw+AqXoM561m9mRWwNPqInOihRQSGD1SlJ/RMyM1fPFTwLU/E9n/xWdi8HVeupk8WlW1x8bxbAbIT59fFlaCBJW9cBcc/OzNlRaS1wR2p8=
+	t=1780876038; cv=none; b=c7hZRSifXmJ8HaCDJvzbSIE/y0O15Nv78W424G4apgB+gIoO3gdgKlkQIeHphCiHWvb+Ve82NLnK3Tm31P7F2lJkMU6AiCKh8DBD39Qk/VsW5HWDvpt2rXx9qwKsVYkl2Le6hWkYEpbc8RGqGrByiYpSW6Bz0VUdLPXMT4Ek8B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780875987; c=relaxed/simple;
-	bh=9TtHuH8hF2zcuU4j7fE+dDaqayHMSQn8XDnvjMUYQJY=;
+	s=arc-20240116; t=1780876038; c=relaxed/simple;
+	bh=2WNYL6A/nnTIvWPcEHWN/qKKYEa34K4mjWF0nww9U4k=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kfIOIA+/S+HzNgBANQbGza+JkrKqywThOvh5oUhnvlsE5IM6fOpJoHqZ9dpJ/IAvOJk2j3rjvNCa1MnVxFGnJLSzrxKy3Yl9fhv9PrAaoog4cedDXLMYdqgLU6oB1nVk11769ZxKYjKI0lmvHNSB1SNAlzIkjy2oxuEjUstLL0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK8RFYQ+; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=g7gBQJcVuf+gD3EEuoCpQUk7tt6jMTUUUO3s5DkAsmzE7JWAtaGZuqmcsca4IPuEdMwICb+BeoT56DUpyccdpVpW9l8LbRmh/bzyjHmMTbmzrczNub34fL/59bf13Q/rmlGkB/666M4fyAthbEfM8s4sXfGGBYwMKjgDzQYUpmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5fp6hJK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK8RFYQ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 418F51F00893;
-	Sun,  7 Jun 2026 23:46:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5fp6hJK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC2E71F00893;
+	Sun,  7 Jun 2026 23:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780875986;
-	bh=gOz+3WQCQIDls78HXDtKN2blTSWxOtpst2gddDzbTDA=;
+	s=k20260515; t=1780876037;
+	bh=t3IcSuHPF5mek/S/JqDZI3BsqCmIX5DEixjx14ugdNM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FK8RFYQ+KhaFMVNW+aP9F8fWss4SVvwA4W+h8oimMqKeELaHzkGkVj2AB0/6hwvBm
-	 rIWCQNsOHZ6SHXmvlYmQXjCwRdTOvm472c1mgs8ZYkfAXgfvNOBCdg4Kmq6ca2+lKf
-	 D2GfKAASstBRbBG+J81uchl0hf086MxXh5eeUl1a7DBD8Z5hUGRNFWYcyFDNt8ZHeD
-	 6r7y9kX1u9Sxty0xLH/omlLjt5H96b7asLxS0Pr4pWzOGw8yaf46pkem1hdW6QBpHn
-	 Q73CtGYVXt1ntXTmN9LWGEZJ/f1N8fLsunaDmkXwkps5n9e3l+CEKGUuuAVPVms4ei
-	 56udIH9FB9biA==
+	b=k5fp6hJKzibi7vQILb0wCr5ZJkYdHDj0n5DrU2HFo+3u6zGjmCyukGXYL0qLVwzuL
+	 HXFwUnUSnT1OwtEH0ViU4yAL1jJb9JoIWvSdf8/VtJexdQcigPX7c+T341rmZtC/t9
+	 uMc2MOSRCUTya9f7hNlnvISvzjrq76u1jQC9vLyZGeQsL6Vlwsbx1+tFiTFWPJZX5J
+	 PZPCqwBPPlSzGIBsLoZM167FuxJ38jNQX01DUYzZFPoDuE8yFYe0JP8vwsvJU7klXk
+	 Yqu2EMMBKfibm6UtXZlzBtdookC0EqUHxfxkk8uTW/t+AR4iOb1g5dIiZBB61VTHgM
+	 Q/gVwghqZCOjg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 09/11] perf bpf: Use scnprintf() in snprintf_hex() and
- synthesize_bpf_prog_name()
+Subject: Re: [PATCH 10/11] perf hists: Fix snprintf() in
+ hists__scnprintf_title() UID filter path
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260607232925.1935819-10-acme@kernel.org>
-References: <20260607232925.1935819-10-acme@kernel.org>
+In-Reply-To: <20260607232925.1935819-11-acme@kernel.org>
+References: <20260607232925.1935819-11-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 23:46:25 +0000
-Message-Id: <20260607234626.418F51F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 23:47:16 +0000
+Message-Id: <20260607234716.EC2E71F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [Critical] Buffer overflow in `hwmon_pmu__for_each_event` due to unsafe `=
-snprintf` accumulation.
-- [Critical] Buffer overflow in `perf_pmu__for_each_event` due to unsafe `s=
-nprintf` accumulation.
-- [Medium] Missing validation for `btf__type_by_id()` return value in `synt=
-hesize_bpf_prog_name` leads to a NULL pointer dereference.
-- [Medium] Missing bounds checking when accessing BPF function info and pro=
-gram tags allows out-of-bounds memory reads.
-- [Medium] Leaked `map.btf` and `map.rodata` in `bpf_metadata_create()` on =
-error path.
-- [Medium] Leaked `info_node->metadata` when `perf_env__insert_bpf_prog_inf=
-o` fails in `perf_env__add_bpf_info()`.
+- [High] Buffer overflow in config_show() via test_driver/test_fs sysfs att=
+ributes due to snprintf underflow.
+- [High] Buffer overflow in pm80xx_get_non_fatal_dump() when reading sysfs =
+attributes due to unbounded snprintf usage.
+- [Medium] Stack buffer overflow in hwmon_pmu__for_each_event() due to snpr=
+intf underflow.
+- [Medium] Stack buffer overflow in perf_pmu__for_each_event() when parsing=
+ PMU aliases due to snprintf accumulation.
 --
 
-commit 36b9c4933bfd61cb63ed28852ac600bdb93eebb7
+commit 68f841f9ed7f1af9b87ee345589a137d67d74612
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
+perf hists: Fix snprintf() in hists__scnprintf_title() UID filter path
 
-This commit fixes buffer overflows by switching from snprintf() to scnprint=
-f()
-when accumulating formatted strings. This prevents writing past the end of
-the buffer if truncation previously occurred.
+This commit replaces snprintf() with scnprintf() in the UID filter path
+of hists__scnprintf_title() to prevent buffer size underflow. It ensures
+consistent buffer length calculation, matching the rest of the function.
 
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index a27945c279efb..2c09842469f1f 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-[ ... ]
-> @@ -140,7 +140,7 @@ static int synthesize_bpf_prog_name(char *buf, int si=
-ze,
->  	const struct btf_type *t;
->  	int name_len;
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 811d68fa6770c..df978c996b6c2 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -2963,9 +2963,10 @@ int __hists__scnprintf_title(struct hists *hists, =
+char *bf, size_t size, bool sh
+>  			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
 > =20
-> -	name_len =3D snprintf(buf, size, "bpf_prog_");
-> +	name_len =3D scnprintf(buf, size, "bpf_prog_");
->  	name_len +=3D snprintf_hex(buf + name_len, size - name_len,
->  				 prog_tags[sub_id], BPF_TAG_SIZE);
->  	if (btf) {
+> =20
+> -	if (hists->uid_filter_str)
+> -		printed +=3D snprintf(bf + printed, size - printed,
+> -				    ", UID: %s", hists->uid_filter_str);
+> +	if (hists->uid_filter_str) {
+> +		printed +=3D scnprintf(bf + printed, size - printed,
+> +				     ", UID: %s", hists->uid_filter_str);
+> +	}
+>  	if (thread) {
+>  		if (hists__has(hists, thread)) {
+>  			printed +=3D scnprintf(bf + printed, size - printed,
 
-While reviewing this function, I noticed a couple of pre-existing issues
-just below this diff hunk:
+While reviewing this fix, I noticed a few similar pre-existing issues in
+other areas of the codebase where snprintf() return values might cause buff=
+er
+overflows.
 
-tools/perf/util/bpf-event.c:synthesize_bpf_prog_name() {
-        if (btf) {
-                finfo =3D func_infos + sub_id * info->func_info_rec_size;
-                t =3D btf__type_by_id(btf, finfo->type_id);
-                short_name =3D btf__name_by_offset(btf, t->name_off);
-...
+lib/test_kmod.c:config_show() {
+    ...
+	if (config->test_driver)
+		len +=3D snprintf(buf+len, PAGE_SIZE - len,
+				"driver:\t%s\n",
+				config->test_driver);
+    ...
+}
 
-[Severity: Medium]
-This isn't a bug introduced by this patch, but does calculating the finfo
-pointer using the unvalidated info->func_info_rec_size from the untrusted
-perf.data file allow out-of-bounds memory reads?
+[Severity: High]
+This is a pre-existing issue, but could this calculation underflow
+PAGE_SIZE - len?
 
-[Severity: Medium]
-This is a pre-existing issue, but btf__type_by_id() can return NULL if
-finfo->type_id is invalid or out of bounds. Will accessing t->name_off
-immediately after cause a NULL pointer dereference here?
-
-
-Additionally, I noticed a few other pre-existing issues in the perf tools
-codebase during this review:
-
-tools/perf/util/bpf-event.c:bpf_metadata_create() {
-...
-        metadata =3D bpf_metadata_alloc(info->nr_prog_tags, map.num_vars);
-        if (!metadata)
-                continue;
-...
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but does this error path
-permanently leak the memory allocated for map.btf and map.rodata by
-skipping the bpf_metadata_free_map_data() cleanup?
+Since test_driver can be up to PAGE_SIZE bytes long, the accumulated length
+can exceed PAGE_SIZE. If snprintf() returns the would-have-written length,
+does the subtraction result in a large positive value that allows subsequent
+snprintf() calls to write out of bounds of the sysfs buffer?
 
 
-tools/perf/util/bpf-event.c:perf_env__add_bpf_info() {
-...
-        if (!perf_env__insert_bpf_prog_info(env, info_node)) {
-                pr_debug("%s: duplicate add bpf info request for id %u\n",
-                         __func__, btf_id);
-                free(info_linear);
-                free(info_node);
-                goto out;
-        }
-...
+drivers/scsi/pm8001/pm80xx_hwi.c:pm80xx_get_non_fatal_dump() {
+    ...
+	for (index =3D 0; index < output_length/4; index++)
+		buf_copy +=3D snprintf(buf_copy, PAGE_SIZE,
+				"%08x ", *(temp+index));
+    ...
+}
 
-[Severity: Medium]
-This is a pre-existing issue, but does freeing info_node here without freei=
-ng
-info_node->metadata leak the dynamically allocated metadata?
+[Severity: High]
+This isn't a bug introduced by this patch, but might this loop write beyond
+the bounds of the sysfs buffer?
+
+The pointer buf_copy advances with each write, but the size parameter passed
+to snprintf() is constantly PAGE_SIZE instead of the remaining buffer space.
+If the hardware provides a large output_length, would this continuously wri=
+te
+up to PAGE_SIZE bytes and cause a heap buffer overflow?
 
 
 tools/perf/util/hwmon_pmu.c:hwmon_pmu__for_each_event() {
-...
-        len +=3D hwmon_pmu__describe_items(hwm, desc_buf + len, sizeof(desc=
-_buf) - len,
-                                         key, value->items, /*is_alarm=3D*/=
-false);
-...
+    ...
+		char desc_buf[256];
+    ...
+		len =3D snprintf(desc_buf, sizeof(desc_buf), "%s in unit %s named %s.",
+			hwmon_desc[key.type],
+			pmu->name + 6,
+			value->label ?: info.name);
 
-[Severity: Critical]
-This isn't a bug introduced by this patch, but it is a similar issue to the
-ones being fixed.
+		len +=3D hwmon_pmu__describe_items(hwm, desc_buf + len, sizeof(desc_buf) =
+- len,
+						key, value->items, /*is_alarm=3D*/false);
+    ...
+}
 
-Does accumulating the length from snprintf() without checking for truncation
-cause sizeof(desc_buf) - len to wrap to a huge value, leading to a stack
-buffer overflow in subsequent calls?=20
+[Severity: Medium]
+This is a pre-existing issue, but is there a risk of a stack buffer overflow
+here?
 
-Note that this issue was not fixed by the later patches in the series.
+Since value->label can be up to 255 bytes, snprintf() might return a length
+greater than sizeof(desc_buf). Would passing sizeof(desc_buf) - len to
+hwmon_pmu__describe_items() then underflow to a massive size_t value,
+allowing scnprintf() to write out-of-bounds on the stack?
 
 
 tools/perf/util/pmu.c:perf_pmu__for_each_event() {
-...
-        buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
-                        "%.*s/%s/", (int)pmu_name_len, info.pmu_name, event=
-->terms) + 1;
-...
+    ...
+	char buf[1024];
+    ...
+			buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
+					"%G%s", event->scale, event->unit) + 1;
+		}
+		info.desc =3D event->desc;
+		info.long_desc =3D event->long_desc;
+		info.encoding_desc =3D buf + buf_used;
+		buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
+				"%.*s/%s/", (int)pmu_name_len, info.pmu_name, event->terms) + 1;
+    ...
+}
 
-[Severity: Critical]
-This is a pre-existing issue, but does accumulating the return value of
-snprintf() into buf_used risk truncation wrapping?=20
+[Severity: Medium]
+This isn't a bug introduced by this patch, but does accumulating the snprin=
+tf()
+return values into buf_used risk underflowing sizeof(buf) - buf_used?
 
-If buf_used exceeds sizeof(buf), sizeof(buf) - buf_used underflows, leading
-to a stack buffer overflow on the next write.=20
-
-Note that this issue was also not fixed by the later patches in the series.
+If an earlier snprintf() truncates, it returns the number of bytes it would
+have written. Could this cause buf_used to exceed sizeof(buf), making the
+size limit on the next snprintf() underflow and write beyond the end of the
+stack buffer?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607232925.1935=
-819-1-acme@kernel.org?part=3D9
+819-1-acme@kernel.org?part=3D10
