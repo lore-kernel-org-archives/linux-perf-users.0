@@ -1,208 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09043385B2
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 21:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3678F30FF36
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 21:52:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780869139; cv=none; b=Lt4cz/6cfHfWcx18w5T2/r7heAaQRn+A7ld9mDusPw8Gi47Y9aQhNzDTvsjAjNVbDoHuayEH0FCB2BrUGlABhkWOsfIzKdVgia+dGgKQBH31HxYT7uyY35TBNgxZ5smsC/SJPWRnIgrors1U8YxGkXew4VL+vXBKoXXvZ/wSVgA=
+	t=1780869159; cv=none; b=YBpPQrpoHU63GHz4itiofWi6XZf7OiQvEBzF0YXg2mVk3sNuaAp7MkscflTYQQypT38t1PHYSDJcpyDO9mX0dFbq5RuqvxUANfNMQ04KGbo+0jhyK3gyQnlBbJuG/CIh+K372rNLWQkWGSl+q81BoBQDXlcsRwYw1DoxpcysLsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780869139; c=relaxed/simple;
-	bh=VMCntcUVCvWrr0+uRoDPyrAihNwsTFoxDzs3+9RLdVo=;
+	s=arc-20240116; t=1780869159; c=relaxed/simple;
+	bh=7OViPi3t6N89GELy4aT3dHCLbhGoBmbEkiDsJc0uXOE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OFl0uRwDjmypee6HOV0h78pcCqnF0Tu1LFpUrDdJAwLEy6kaPsEar0oHsH1+Mh6jpPkdm0fUeHm1AgqzOwV61x2xfJPtL4aHFWZLqYweLAcTZapPbsBP7SU/AJrUG8lE5ebE+QSBM1STV+EonqvnCzx+SulyLUHYA11FSidzAXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kX4KCIYs; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=RXBWgJgdayFbld4jxCxPb5i3cx2cSaaP4t+t9Ngzj0mJFyTFuoLu3aWu2UMY4DQYxPowV8VT4S+HjVQeKPeYMUjG+xU2XWnZIsFTPWBlIq5Ct5d7VFhwRvDrHnLvNR3wU6srivbm5fEo2Mih4a0H0JQ5ttVgOTBSOWoaE/Vs+3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aoPFLH75; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kX4KCIYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 181981F00893;
-	Sun,  7 Jun 2026 21:52:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aoPFLH75"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B81E21F00893;
+	Sun,  7 Jun 2026 21:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780869137;
-	bh=44bAFxZ2YQZICVE1qzhKVZTxknk+fndNciW260FMUVY=;
+	s=k20260515; t=1780869157;
+	bh=0zjzmQTNq8MBeixKywao1JORthxc9Tima9MW7vlONDY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kX4KCIYsRNsrwCP5CwxJkPHKYCe6k+yxFBBwrhgDQRW9ES0mdVPPS8lG88Fjlmd3Y
-	 QvXFQml4Q9yovVnQtfjCE/IwGqueBOBXGz8OqHMnmCvaKq9ByLd0MSbgYp935ld6f6
-	 KMtZPBl8yplXwyKUn7Gd0sRaCtq06xqqKMcvk0ICpqg4GRC0HVYQybw9wnn6zLuvep
-	 5K2DHaxrzo4P64fSNzmEWY4TINAXS/IH8a5Xojjo9Pmt3CAf5RN16/cou+eabOnPAE
-	 5kxXoVh7C9hDykDq5AI4es+0GUfJsWzM+ZmfjSc1v6ZD+w2xRDWguHTLjieL0obOon
-	 C60F4RCkpU1pQ==
+	b=aoPFLH75Sd1aHP+UPN3Qqb4vs8xd/OzNc5yYP32LdwaBT8IPSDSxu5Jcttgaw8udS
+	 1H6PyguYwWHGhBytSRdlSopgAmFmqaN97lSWS/rm4lBtXZq6BJtUcjFMzA8wydA1iC
+	 4H5KMp/W3AdTyQm6pxa7WAnH7Yh/1QoD007c8DuPIyTUEAnMeXoltUf6SfPhKY2Uyq
+	 bEbZ55R9JAle5d/4MyOKOZbrYdM5XB/XJEeiNFwYnki/dJbJQNxG6fDLmHXhHaJRap
+	 PL05AgfhHMaq1nxRVADXNTwFQVTedzj5SoS5PdCelhFKaKCpPa3+5A/fugxK/jsHan
+	 CahRq5zqC/eBg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v18 2/5] perf inject/aslr: Add ASLR tool infrastructure
- and MMAP tracking
+Subject: Re: [PATCH v18 4/5] perf aslr: Strip sample registers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260607213700.3563842-3-irogers@google.com>
-References: <20260607213700.3563842-3-irogers@google.com>
+In-Reply-To: <20260607213700.3563842-5-irogers@google.com>
+References: <20260607213700.3563842-5-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 21:52:16 +0000
-Message-Id: <20260607215217.181981F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 21:52:37 +0000
+Message-Id: <20260607215237.B81E21F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Incorrect `pgoff` overwrite for kernel modules breaks symbol resol=
-ution.
-- [Medium] KSYMBOL REGISTER and UNREGISTER events receive mismatched remapp=
-ed addresses due to incorrect lookup ordering.
+- [High] aslr_tool__strip_attr_event corrupts the trailing ID array for eve=
+nts with smaller ABIs by improperly verifying bounds via event->header.size=
+ instead of event->attr.attr.size.
 --
 
-commit bea273ddc97f1917658141d7ddbe3f4f2db6086b
+commit e1654455a52059659d22e581a3b84d7f361f3820
 Author: Ian Rogers <irogers@google.com>
+Subject: perf aslr: Strip sample registers
 
-perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
-
-If perf.data files are taken from one machine to another they may
-leak virtual addresses and so weaken ASLR on the machine they are
-coming from. Add an aslr option for perf inject that remaps all
-virtual addresses, or drops data/events, so that the virtual address
-information isn't leaked.
+Extend the ASLR tool stripping helpers to drop register dump payloads
+by masking out the relevant perf_event_attr fields (sample_regs_user,
+sample_regs_intr) when the delegated tool is handling the data.
 
 > diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> new file mode 100644
-> index 0000000000000..e45f68c604937
-> --- /dev/null
+> index 03944677ddfcc..912efd111bb3f 100644
+> --- a/tools/perf/util/aslr.c
 > +++ b/tools/perf/util/aslr.c
-
 [ ... ]
-
-> +static int aslr_tool__process_mmap(const struct perf_tool *tool,
-> +				   union perf_event *event,
-> +				   struct perf_sample *sample,
-> +				   struct machine *machine)
-> +{
-
-[ ... ]
-
-> +	/* Remaps the mmap.start. */
-> +	new_event->mmap.start =3D aslr_tool__findnew_mapping(aslr, machine, thr=
-ead, cpumode,
-> +							   event->mmap.start,
-> +							   event->mmap.len,
-> +							   event->mmap.pgoff);
-> +	/*
-> +	 * For anonymous memory (and kernel maps), the kernel populates the
-> +	 * event's pgoff field with the original un-obfuscated virtual address
-> +	 * in bytes (i.e. (addr >> PAGE_SHIFT) << PAGE_SHIFT).
-> +	 * We must overwrite pgoff with the new remapped byte address to prevent
-> +	 * leaking the original ASLR layout.
-> +	 */
-> +	if (cpumode =3D=3D PERF_RECORD_MISC_KERNEL || cpumode =3D=3D PERF_RECOR=
-D_MISC_GUEST_KERNEL ||
-> +	    is_anon_memory(event->mmap.filename) || is_no_dso_memory(event->mma=
-p.filename))
-> +		new_event->mmap.pgoff =3D new_event->mmap.start;
+> @@ -1108,43 +1188,30 @@ static int aslr_tool__process_auxtrace_error(cons=
+t struct perf_tool *tool __mayb
+>  	return 0;
+>  }
+> =20
+> -
+> -void aslr_tool__strip_attr_event(union perf_event *event, struct evlist =
+**pevlist)
+> +void aslr_tool__strip_attr_event(union perf_event *event, struct evlist =
+*evlist)
+>  {
+> -	struct evsel *evsel;
+> -	bool needs_swap =3D false;
+> -
+> -	if (pevlist && *pevlist) {
+> -		evsel =3D evlist__last(*pevlist);
+> -		if (evsel)
+> -			needs_swap =3D evsel->needs_swap;
+> -	}
+> +	if (!evlist)
+> +		return;
+> =20
+>  	if (event->header.size >=3D (offsetof(struct perf_record_header_attr,
+>  					    attr.sample_type) + sizeof(u64))) {
+> -		u64 st =3D event->attr.attr.sample_type;
+> -
+> -		if (needs_swap)
+> -			st =3D bswap_64(st);
+> -
+> -		st &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
+> -
+> -		if (needs_swap)
+> -			st =3D bswap_64(st);
+> -
+> -		event->attr.attr.sample_type =3D st;
+> +		event->attr.attr.sample_type &=3D ASLR_SUPPORTED_SAMPLE_TYPE;
+> +
+> +		if (event->header.size >=3D
+> +		    (offsetof(struct perf_record_header_attr, attr.sample_regs_user) +=
+ sizeof(u64)))
+> +			event->attr.attr.sample_regs_user =3D 0;
+> +		if (event->header.size >=3D
+> +		    (offsetof(struct perf_record_header_attr, attr.sample_regs_intr) +=
+ sizeof(u64)))
+> +			event->attr.attr.sample_regs_intr =3D 0;
 
 [Severity: High]
-Will unconditionally overwriting pgoff with the remapped start address for
-kernel maps break symbol resolution for kernel modules?
+Can this corrupt the trailing ID array for events with smaller ABIs?
 
-For kernel modules synthesized by perf_event__synthesize_modules(), mmap
-events are emitted with pgoff =3D 0 or relative file offsets. By overwriting
-pgoff with the remapped start address here, the correct map offset is
-destroyed.
+Since event->header.size represents the total size of the record, it includ=
+es
+both the attr payload and the dynamically appended array of u64 IDs.
 
-When perf report calculates the map ip (ip - start + pgoff), would it
-yield the absolute remapped virtual address instead of the correct relative
-offset, causing symbol lookups in .ko files to fail?
+If an older perf.data file uses an ABI where attr.size is smaller than the
+offset of sample_regs_user (such as ABI 0) but contains multiple appended I=
+Ds,
+event->header.size will still easily exceed this offset check.
 
-> +	err =3D delegate->mmap(delegate, new_event, sample, machine);
-> +	thread__put(thread);
-> +	return err;
-> +}
-> +
-> +static int aslr_tool__process_mmap2(const struct perf_tool *tool,
-> +				    union perf_event *event,
-> +				    struct perf_sample *sample,
-> +				    struct machine *machine)
-> +{
+In this scenario, writing 0 to event->attr.attr.sample_regs_user would write
+past the end of the actual attr struct and silently overwrite the trailing
+ID array, causing downstream tools to fail to match events to their IDs.
 
-[ ... ]
+Should this bounds verification check against event->attr.attr.size (falling
+back to PERF_ATTR_SIZE_VER0 if zero) instead of event->header.size?
 
-> +	/* Remaps the mmap.start. */
-> +	new_event->mmap2.start =3D aslr_tool__findnew_mapping(aslr, machine, th=
-read, cpumode,
-> +							    event->mmap2.start,
-> +							    event->mmap2.len,
-> +							    event->mmap2.pgoff);
-> +	/*
-> +	 * For anonymous memory (and kernel maps), the kernel populates the
-> +	 * event's pgoff field with the original un-obfuscated virtual address
-> +	 * in bytes (i.e. (addr >> PAGE_SHIFT) << PAGE_SHIFT).
-> +	 * We must overwrite pgoff with the new remapped byte address to prevent
-> +	 * leaking the original ASLR layout.
-> +	 */
-> +	if (cpumode =3D=3D PERF_RECORD_MISC_KERNEL || cpumode =3D=3D PERF_RECOR=
-D_MISC_GUEST_KERNEL ||
-> +	    is_anon_memory(event->mmap2.filename) || is_no_dso_memory(event->mm=
-ap2.filename))
-> +		new_event->mmap2.pgoff =3D new_event->mmap2.start;
-
-[Severity: High]
-Like the issue in aslr_tool__process_mmap() above, does overwriting pgoff
-here similarly corrupt map offsets for mmap2 events from kernel modules?
-
-> +	err =3D delegate->mmap2(delegate, new_event, sample, machine);
-> +	thread__put(thread);
-> +	return err;
-> +}
-
-[ ... ]
-
-> +static int aslr_tool__process_ksymbol(const struct perf_tool *tool,
-> +				      union perf_event *event,
-> +				      struct perf_sample *sample,
-> +				      struct machine *machine)
-> +{
-
-[ ... ]
-
-> +	memcpy(&new_event->ksymbol, &event->ksymbol, event->ksymbol.header.size=
-);
-> +	/* Remaps the ksymbol.start before process_ksymbol potentially deletes =
-the map */
-> +	new_event->ksymbol.addr =3D aslr_tool__findnew_mapping(aslr, machine, t=
-hread,
-> +							     PERF_RECORD_MISC_KERNEL,
-> +							     event->ksymbol.addr,
-> +							     event->ksymbol.len,
-> +							     /*pgoff=3D*/0);
-> +
-> +	err =3D perf_event__process_ksymbol(tool, event, sample, aslr_machine);
-
-[Severity: Medium]
-Does calling aslr_tool__findnew_mapping() before perf_event__process_ksymbo=
-l()
-cause ksymbol unregister events to receive a mismatched remapped address?
-
-For a bpf register event, the map does not exist yet in aslr_machine, so
-aslr_tool__findnew_mapping() records the new remapping using a key with a
-NULL dso.
-
-When the corresponding unregister event arrives, aslr_tool__findnew_mapping=
-()
-executes before perf_event__process_ksymbol() removes the map. It finds the
-existing map, extracts its dso, and looks up the remapping using a key with
-a non-NULL dso.
-
-Since this lookup fails, could the unregister event get assigned a
-completely different remapped address and break bpf symbol tracking?
-
-> +	if (err) {
-> +		thread__put(thread);
-> +		return err;
-> +	}
-> +
-> +	err =3D delegate->ksymbol(delegate, new_event, sample, machine);
-> +	thread__put(thread);
-> +	return err;
-> +}
+>  	}
+> =20
+>  	if (event->header.size >=3D (offsetof(struct perf_record_header_attr,
+>  					    attr.type) + sizeof(u32))) {
+>  		u32 type =3D event->attr.attr.type;
+> =20
+> -		if (needs_swap)
+> -			type =3D bswap_32(type);
+> -
+>  		if (type =3D=3D PERF_TYPE_BREAKPOINT &&
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607213700.3563=
-842-1-irogers@google.com?part=3D2
+842-1-irogers@google.com?part=3D4
