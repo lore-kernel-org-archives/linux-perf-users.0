@@ -1,205 +1,207 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FD830C170;
-	Sun,  7 Jun 2026 13:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5804F2EEE7D;
+	Sun,  7 Jun 2026 13:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780837329; cv=none; b=KW+PJldgl5QZ9CMyZCpfUpZOr31zMg8oAvh3Z99eqGaCSU/jugC+vTekERiMUdO7FXX6QvcWzfDz84zg0zwN+bUBZT2MvrBMJyhkMnQkwWeKPPI3LEJEwtOW0dVD0bi+3goghMb2w/r4yiPvuXi8PuNI+sYzEQN9gBwnHT1Accw=
+	t=1780837492; cv=none; b=u0BxpfyCt13mqsYo3yYzQmPl5WMZanZslW1V3VlT0yOhUqGiSuk6o/g+xwVdM9JDGaPePRZGduZbaD92rIphfg5GBZZVsVecvO5hQYW4S0zNM7I2EE009sL2xsbyYXyq+mnu8zqzukRf8+4ekjGl8lKRFppJwdgt9wfOcfA3ClQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780837329; c=relaxed/simple;
-	bh=Wyks9TvSAL4hkSIV38sgxdRU8L4q3KW0E6wtAi3+KMc=;
+	s=arc-20240116; t=1780837492; c=relaxed/simple;
+	bh=F1QyJjX1yFzlyg1M22MRH9BXgHyjN1RlYcMUrY74d9E=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LiFKwsHmYRDTR4UZoAebLB2x6faAMibw94wkoESaUh0LoKi7g5jXUQyotHaq8M97rUgnX3rfL9eShVtwoMxmvcZjpslxgRB+fLjC8oRgsVAlNRfzv8B+/8N1BCLiBjH6aveKzlnZQBqX8FgkXkCUGXLU3op5WGRzVvUfHofJEpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2PQbMKR; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=dJsjmkPD0+/KX7AF5X5Muw2IhVZYj1fE+FYx2KVK/oGpzRvFk5poCAXvh4vtTACEv8P7fdFBM6TbtNaJtQNXr3ktDWu1UZhit96n3RDY6Gb/cUNvi5VLB8o/z6qU5C+W0YwXzesQ48OZW8BippsJyOQP4ovCETT1U1WS/2oNaro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpYLeGF1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2PQbMKR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82B931F00893;
-	Sun,  7 Jun 2026 13:02:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpYLeGF1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8A561F00893;
+	Sun,  7 Jun 2026 13:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780837327;
-	bh=stmqhoETigfH+8EpPioztGEeIEgoSqdDsZGsfvKotPk=;
+	s=k20260515; t=1780837491;
+	bh=AWVTn/ddSiFqVnROl7IYlnKOGqz+FIezPvnF8nLm35M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=B2PQbMKRWeWtmU3C8n64n2oGIssuMaKCHaSVY3HV8T8cTIVFWLNyPxL5ghJynhzN3
-	 lf9x9XxXLLHL3JrSi06nLH4YlHOPWbbGpSjyrID+bSOEaXRlLNXb/iooT9LZALMAy1
-	 Qnj1KqnxDmlBApLy4hIedg/TiMnf1JFnYrhTzspCMtV1OmXAs3meUeoEIQe+ZSY2hA
-	 ciH9nfBZCKsB03n7ZUs4EMI+RYnZhheGr+n60F5hr/vjX4FNO/zoyuEbV9x+lPHHGA
-	 kwb/NLhNw3uGv7yY1k5Au5jduknku4al9MMn1stOuqf91IhuWpbOqRkmTtn6hKaksp
-	 0rLkru0HRha7g==
+	b=KpYLeGF1NWlirpxxDtdwVwk1p3YYF6q1iI7QoflU/8WP3jFmCgTgz1JVlXxBTr44x
+	 hDQL5N7vWGwpEYfGY4T2Iwj+BCmIuB0RpII2J85OYvmvul7i5eXQ3Af1QO3bRSYI8Z
+	 LJy0a77MebG0XXhLnt5Ey2NSqDQZT4FwTvOWki1ewXV+lMRVRcATaMbi7Gj1fL+hWc
+	 3+HerthI9qnRvmFQOj1HKi89S916fi4tg8GG3mpClhxL2fCNmeE1W3a0x9brIlhqiL
+	 yNlIls7X0SfFFTQrnCBdTOTA6i+EyrZrIUbYVMrmaEcdcC0m4J/wedIB8jXl244GIr
+	 UPD7yvjjUgN3A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] perf: marvell: Add MPAM partid filtering to CN10K
- TAD PMU
+Subject: Re: [PATCH 2/3] perf: marvell: Add CN20K LLC-TAD PMU support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Geetha sowjanya" <gakula@marvell.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, robh@kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260607125101.17778-2-gakula@marvell.com>
-References: <20260607125101.17778-2-gakula@marvell.com>
+Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org, robh@kernel.org
+In-Reply-To: <20260607125101.17778-3-gakula@marvell.com>
+References: <20260607125101.17778-3-gakula@marvell.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 13:02:06 +0000
-Message-Id: <20260607130207.82B931F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 13:04:50 +0000
+Message-Id: <20260607130450.B8A561F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
 s) to consider:
 
 New issues:
-- [Medium] The MPAM partition ID filter incorrectly conflates `partid =3D=
-=3D 0` with 'filter disabled', making it impossible to specifically monitor=
- traffic for the default partition (Partition 0).
-- [Medium] The driver fails to validate `config1` during event initializati=
-on, silently ignoring unsupported filter requests instead of rejecting them.
+- [High] The shifted `partid` value overlaps with the hardcoded Non-Secure =
+(`NS`) flag on CN20K (V3), corrupting the filter configuration.
+- [Medium] The driver shares the PMU events attribute array between CN10K (=
+V1) and CN20K (V3) without visibility checks, exposing unsupported V3 event=
+s on V1 systems and breaking the pre-existing `tad_tot_cycle` (0xFF) event.
+- [Medium] The PMU driver prevents users from profiling MPAM PARTID 0, as i=
+t overloads `partid =3D=3D 0` to mean 'filtering disabled'.
 
 Pre-existing issues:
-- [High] The probe function permanently mutates the platform device's memor=
-y resource, corrupting it and causing subsequent PMU probes to fail.
-- [High] If the memory resource size is smaller than expected, an early loo=
-p termination leaves region pointers unmapped but sets `region_cnt` incorre=
-ctly, causing a kernel panic.
-- [High] Registering the CPU hotplug instance before the PMU creates a race=
- window where a concurrent CPU offline event triggers context migration on =
-an uninitialized PMU context.
+- [High] Malformed ACPI/DT memory resources cause NULL pointer dereferences=
+ if they are smaller than `tad_cnt`, as the driver unconditionally assigns =
+the expected count instead of the mapped count.
+- [High] The driver modifies the global platform_device resource bounds dur=
+ing probe, corrupting subsequent ioremap attempts and causing driver rebind=
+s to fail.
+- [High] Missing `hwc->prev_count` reset when starting counters leads to bo=
+gus perf event counts upon read.
 --
 
-commit f8a0b0ecde1dfeec7798c8aca48869ad592602c8
-Author: Tanmay Jagdale <tanmay@marvell.com>
+commit db735a497cd5d9c282e3c5a1fa6ad9ee8d6ea442
+Author: Geetha sowjanya <gakula@marvell.com>
+Subject: perf: marvell: Add CN20K LLC-TAD PMU support
 
-perf: marvell: Add MPAM partid filtering to CN10K TAD PMU
-
-The TAD PMU exposes counters that can be filtered by MPAM partition id
-for a subset of allocation and hit events.
-
-Add a 16-bit partid format attribute (config1) and route counter
-programming through variant-specific ops so CN10K keeps MPAM-capable
-programming while Odyssey keeps the reduced event set without
-advertising partid in sysfs.
+Adds support for the CN20K LLC-TAD PMU by defining a TAD_PMU_V3 profile
+with per-platform register bases. It extends the CN10K event map for new
+counters and matches the block via OF and ACPI.
 
 > diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_=
 cn10k_tad_pmu.c
-> index 51ccb0befa05d..7a3b659c999a2 100644
+> index 7a3b659c999a2..4daf109b89eea 100644
 > --- a/drivers/perf/marvell_cn10k_tad_pmu.c
 > +++ b/drivers/perf/marvell_cn10k_tad_pmu.c
 [ ... ]
-> @@ -27,30 +30,92 @@ struct tad_region {
->  	void __iomem	*base;
->  };
-> =20
-[ ... ]
-> +static void tad_pmu_start_counter(struct tad_pmu *pmu,
-> +				  struct perf_event *event)
-> +{
-> +	const struct tad_pmu_data *pdata =3D pmu->pdata;
-> +	struct hw_perf_event *hwc =3D &event->hw;
-> +	u32 event_idx =3D event->attr.config;
-> +	u32 counter_idx =3D hwc->idx;
-> +	u64 partid_filter =3D 0;
-> +	u64 reg_val;
-> +	u32 partid;
-> +	int i;
-> +
-> +	partid =3D (u32)(event->attr.config1 & GENMASK(15, 0));
-> +
-> +	for (i =3D 0; i < pmu->region_cnt; i++)
-> +		writeq_relaxed(0, pmu->regions[i].base +
-> +			       TAD_PFC(pdata->tad_pfc_offset, counter_idx));
-> +
-> +	if (partid && event_idx > 0x19 && event_idx < 0x21) {
+> @@ -80,8 +83,14 @@ static void tad_pmu_start_counter(struct tad_pmu *pmu,
+>  	if (partid && event_idx > 0x19 && event_idx < 0x21) {
+
+[Severity: High]
+This is a pre-existing issue, but does tad_pmu_event_counter_start() fail to
+reset the software prev_count when starting the counters?
+
+When the hardware counters are zeroed out earlier in tad_pmu_start_counter(=
+),
+local64_set(&hwc->prev_count, 0) is not called to match. When the counter is
+later stopped or read, computing new minus prev can underflow because prev
+still holds the value from the previous time the event was stopped.
 
 [Severity: Medium]
-Since an unconfigured perf_event_attr defaults to 0, using 0 as a sentinel
-for "no filter" means explicit requests for Partition 0 will bypass the fil=
-ter.
+Does checking if partid is non-zero prevent users from profiling MPAM PARTI=
+D 0?
 
-Can this be changed so that users can specifically monitor traffic for
-Partition 0?
+If a user explicitly specifies partid 0, which is a valid MPAM partition, it
+evaluates to false. This bypasses the hardware filter configuration entirel=
+y,
+causing the hardware to count events for all partitions instead of exclusiv=
+ely
+restricting to PARTID 0.
 
-> +		partid_filter =3D TAD_PRF_MATCH_PARTID | TAD_PRF_PARTID_NS |
-> +				((u64)partid << 11);
-> +	}
-[ ... ]
-> @@ -242,9 +288,11 @@ static const struct attribute_group ody_tad_pmu_even=
-ts_attr_group =3D {
->  };
+>  		partid_filter =3D TAD_PRF_MATCH_PARTID | TAD_PRF_PARTID_NS |
+>  				((u64)partid << 11);
+> +
+> +		if (pdata->id =3D=3D TAD_PMU_V3)
+> +			partid_filter =3D TAD_PRF_MATCH_PARTID | BIT_ULL(25) |
+> +				((u64)partid << 10);
+
+[Severity: High]
+Does shifting a 16-bit partid by 10 cause a bit collision with the hardcoded
+Non-Secure flag at bit 25?
+
+Because BIT_ULL(25) occupies the exact same bit position as the most
+significant bit (bit 15) of the shifted 16-bit partid, any user-provided
+partid with bit 15 set might corrupt the hardware filter value.
+
+>  	}
 > =20
->  PMU_FORMAT_ATTR(event, "config:0-7");
-> +PMU_FORMAT_ATTR(partid, "config1:0-15");
+> +	if (pdata->id =3D=3D TAD_PMU_V1 && event_idx > 0x24)
+> +		return;
 
 [Severity: Medium]
-Is there missing validation for config1 in tad_pmu_event_init()?
+Does this early return prevent tad_tot_cycle (0xFF) from working on V1
+hardware?
 
-Without it, the driver silently ignores unsupported filter requests instead=
- of
-rejecting them with -EINVAL, returning globally aggregated counts rather th=
-an
-the requested isolated counts.
+Because 0xFF is greater than 0x24, attempting to measure the total cycle
+event on V1 will be silently ignored, leaving the counter unprogrammed.
 
 > =20
->  static struct attribute *tad_pmu_format_attrs[] =3D {
->  	&format_attr_event.attr,
-> +	&format_attr_partid.attr,
+>  	for (i =3D 0; i < pmu->region_cnt; i++) {
+>  		reg_val =3D event_idx & 0xFF;
+[ ... ]
+> @@ -261,6 +270,18 @@ static struct attribute *tad_pmu_event_attrs[] =3D {
+>  	TAD_PMU_EVENT_ATTR(tad_dat_rd_byp, 0x22),
+>  	TAD_PMU_EVENT_ATTR(tad_ifb_occ, 0x23),
+>  	TAD_PMU_EVENT_ATTR(tad_req_occ, 0x24),
+> +	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dtg_evict, 0x25),
+> +	TAD_PMU_EVENT_ATTR(tad_req_msh_out_ltg_evict, 0x26),
+> +	TAD_PMU_EVENT_ATTR(tad_rsp_msh_out_mpam, 0x28),
+> +	TAD_PMU_EVENT_ATTR(tad_replays, 0x29),
+> +	TAD_PMU_EVENT_ATTR(tad_req_byp0, 0x2a),
+> +	TAD_PMU_EVENT_ATTR(tad_req_byp1, 0x2b),
+> +	TAD_PMU_EVENT_ATTR(tad_txreq_byp, 0x2c),
+> +	TAD_PMU_EVENT_ATTR(tad_time_in_dslp, 0x2d),
+> +	TAD_PMU_EVENT_ATTR(tad_time_elapsed, 0x2e),
+> +	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dss_rd_128mrg, 0x2f),
+> +	TAD_PMU_EVENT_ATTR(tad_req_msh_out_dss_wr_128mrg, 0x30),
+> +	TAD_PMU_EVENT_ATTR(tad_tot_cycle, 0xff),
 >  	NULL
 >  };
+
+[Severity: Medium]
+Since these V3-specific events are added to the shared attribute array
+without an is_visible callback, are they incorrectly advertised to
+userspace on V1 hardware?
+
 [ ... ]
-> @@ -344,7 +411,6 @@ static int tad_pmu_probe(struct platform_device *pdev)
->  	if (!regions)
->  		return -ENOMEM;
-> =20
-> -	/* ioremap the distributed TAD pmu regions */
->  	for (i =3D 0; i < tad_cnt && res->start < res->end; i++) {
->  		regions[i].base =3D devm_ioremap(&pdev->dev,
->  					       res->start,
-
-[Severity: High]
-This is a pre-existing issue, but the probe function mutates the platform
-device's memory resource (res->start +=3D tad_page_size inside the loop).
-
-If the driver is unbound and rebound, does this corrupted res->start cause
-the loop condition to fail, leaving regions[i].base unpopulated and causing
-a NULL pointer dereference later?
-
-[Severity: High]
-This is also a pre-existing issue, but if this loop terminates early because
-the memory resource size is smaller than expected, tad_pmu->region_cnt is
-later set to tad_cnt instead of the number of mapped regions (i).
-
-Could this result in out-of-bounds NULL pointer dereferences during PMU
-operations?
-
-> @@ -374,14 +440,16 @@ static int tad_pmu_probe(struct platform_device *pd=
-ev)
+> @@ -440,7 +460,7 @@ static int tad_pmu_probe(struct platform_device *pdev)
 >  		.read		=3D tad_pmu_event_counter_read,
 >  	};
 > =20
-> -	if (version =3D=3D TAD_PMU_V1)
-> +	if (version =3D=3D TAD_PMU_V1) {
+> -	if (version =3D=3D TAD_PMU_V1) {
+> +	if (version =3D=3D TAD_PMU_V1 || version =3D=3D TAD_PMU_V3) {
 >  		tad_pmu->pmu.attr_groups =3D tad_pmu_attr_groups;
-> -	else
-> +		tad_pmu->ops		 =3D &tad_pmu_ops;
-> +	} else {
->  		tad_pmu->pmu.attr_groups =3D ody_tad_pmu_attr_groups;
-> +		tad_pmu->ops		 =3D &tad_pmu_v2_ops;
-> +	}
-> =20
->  	tad_pmu->cpu =3D raw_smp_processor_id();
-> =20
-> -	/* Register pmu instance for cpu hotplug */
->  	ret =3D cpuhp_state_add_instance_nocalls(tad_pmu_cpuhp_state,
->  					       &tad_pmu->node);
+>  		tad_pmu->ops		 =3D &tad_pmu_ops;
+>  	} else {
 
 [Severity: High]
-This is a pre-existing issue, but does registering the CPU hotplug instance
-before the PMU is fully initialized create a race window?
+This is a pre-existing issue, but in the region initialization loop earlier
+in tad_pmu_probe():
 
-If a CPU offline event happens before perf_pmu_register() completes,
-could perf_pmu_migrate_context() dereference an unallocated
-pmu->cpu_pmu_context, leading to a kernel panic?
+for (i =3D 0; i < tad_cnt && res->start < res->end; i++) {
+    ...
+}
+tad_pmu->region_cnt =3D tad_cnt;
 
->  	if (ret) {
+If the loop terminates early due to the resource size being smaller than
+expected, region_cnt is unconditionally assigned tad_cnt instead of the
+successfully mapped count (i). Does this lead to NULL pointer dereferences
+later when PMU operations iterate up to region_cnt and access the
+uninitialized base pointers?
+
+[Severity: High]
+This is another pre-existing issue, but in that same tad_pmu_probe()
+initialization loop:
+
+for (i =3D 0; i < tad_cnt && res->start < res->end; i++) {
+    ...
+    res->start +=3D tad_page_size;
+}
+
+Does modifying res->start directly corrupt the global platform_device
+resource bounds?
+
+Since platform_get_resource() returns a direct pointer to the device's
+resource descriptor, permanently altering it means subsequent ioremap
+attempts will start from the corrupted offset if the driver module is
+reloaded or if probe defers.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607125101.1777=
-8-1-gakula@marvell.com?part=3D1
+8-1-gakula@marvell.com?part=3D2
