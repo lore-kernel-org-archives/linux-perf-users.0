@@ -1,166 +1,182 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201B032B13F
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 23:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01B132B13F
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jun 2026 23:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780875957; cv=none; b=ofKW0cbhaX2DgTZHiDaUVwPFCn+kyEkqtOFtB6S6UzfUchXgjyUspCpYrFADY9zPE1IrpTqbVxkvAB0bVL7cDD8XNufy6dAOXJsLoCMYzgT+aNsc8NSqUx/6LRszVC0nE+2+s+tTcLvphRpXPCCg9ixEynYIrKsLM1zQ3mdNuhY=
+	t=1780875987; cv=none; b=oO81fBfiV+F+/MPI8ssO6y8J1t82FVCgJ/lozehljmsfWtkpqJN3JkR5yn+vIzPXPZw+AqXoM561m9mRWwNPqInOihRQSGD1SlJ/RMyM1fPFTwLU/E9n/xWdi8HVeupk8WlW1x8bxbAbIT59fFlaCBJW9cBcc/OzNlRaS1wR2p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780875957; c=relaxed/simple;
-	bh=NmODanV2m9HArCDhvDViW/py2mXK8Q8rBTeV1VRNFQA=;
+	s=arc-20240116; t=1780875987; c=relaxed/simple;
+	bh=9TtHuH8hF2zcuU4j7fE+dDaqayHMSQn8XDnvjMUYQJY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=r99iE7IQQCWYzCde8d1GZUkqsfy37H+yc9LMHBDS+kbkR40Ar+5DXruEK6fBFNBGSqphBpnCN/R49coJ21aEonWbnh8Ew5Vy0N0UZiqelzQ0poSgoq8auRgtgQR2eQ7a/LGM0H1OwrrCq70wN3WC0K0cMlChEpKnZ82D6u+rojU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=guTNQ3QM; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=kfIOIA+/S+HzNgBANQbGza+JkrKqywThOvh5oUhnvlsE5IM6fOpJoHqZ9dpJ/IAvOJk2j3rjvNCa1MnVxFGnJLSzrxKy3Yl9fhv9PrAaoog4cedDXLMYdqgLU6oB1nVk11769ZxKYjKI0lmvHNSB1SNAlzIkjy2oxuEjUstLL0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FK8RFYQ+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="guTNQ3QM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF2E1F00893;
-	Sun,  7 Jun 2026 23:45:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FK8RFYQ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 418F51F00893;
+	Sun,  7 Jun 2026 23:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780875955;
-	bh=xObX9GSp+zRSsnItYuO24P5ZGb8gEDaLfnOZizf0NyY=;
+	s=k20260515; t=1780875986;
+	bh=gOz+3WQCQIDls78HXDtKN2blTSWxOtpst2gddDzbTDA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=guTNQ3QMMaHmcbJhton/4d0VES07xWgvdN2wMaj2shvYGR5N5yTw+nBkmU+RgguJf
-	 Cky5KKBl51c0BXgy9SITXlov3NWb6lqUuJMBGNzRqxORFUqKKoYEtGNIowGiY+CLdX
-	 m9bRfMQlRSPXt5Zo0x11kfEcO244eVJO7mtBcQgpNV4myTz3A5+IhnxOgppvHQIFBu
-	 cGKjU6cVddQIxS6/2Vczug25kfiBf/4M6+nzfit6k8LVNvQxoRA3PX2zB/jAKBpn4D
-	 5dvn+4MOj995ODwLorBLiHmESf2XSoNm/td/hEkCtwYjw/Wr4SG85KHOEtA7fGqRG2
-	 3ouyj/VUJJmhA==
+	b=FK8RFYQ+KhaFMVNW+aP9F8fWss4SVvwA4W+h8oimMqKeELaHzkGkVj2AB0/6hwvBm
+	 rIWCQNsOHZ6SHXmvlYmQXjCwRdTOvm472c1mgs8ZYkfAXgfvNOBCdg4Kmq6ca2+lKf
+	 D2GfKAASstBRbBG+J81uchl0hf086MxXh5eeUl1a7DBD8Z5hUGRNFWYcyFDNt8ZHeD
+	 6r7y9kX1u9Sxty0xLH/omlLjt5H96b7asLxS0Pr4pWzOGw8yaf46pkem1hdW6QBpHn
+	 Q73CtGYVXt1ntXTmN9LWGEZJ/f1N8fLsunaDmkXwkps5n9e3l+CEKGUuuAVPVms4ei
+	 56udIH9FB9biA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/11] perf tools: Fix get_max_num() size_t underflow on
- empty sysfs file
+Subject: Re: [PATCH 09/11] perf bpf: Use scnprintf() in snprintf_hex() and
+ synthesize_bpf_prog_name()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260607232925.1935819-2-acme@kernel.org>
-References: <20260607232925.1935819-2-acme@kernel.org>
+In-Reply-To: <20260607232925.1935819-10-acme@kernel.org>
+References: <20260607232925.1935819-10-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 23:45:55 +0000
-Message-Id: <20260607234555.9DF2E1F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 23:46:25 +0000
+Message-Id: <20260607234626.418F51F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Heap buffer underflow due to unsafe length manipulation after `fil=
-ename__read_str` on empty PMU identifier file.
-- [High] Heap buffer underflow due to unsafe length manipulation after `pro=
-cfs__read_str` on empty procfs file.
-- [High] Reading an empty PMU scale file leads to a stack buffer underflow.
-- [High] Reading an empty PMU unit file leads to an out-of-bounds array acc=
-ess inside the `perf_pmu_alias` struct.
+- [Critical] Buffer overflow in `hwmon_pmu__for_each_event` due to unsafe `=
+snprintf` accumulation.
+- [Critical] Buffer overflow in `perf_pmu__for_each_event` due to unsafe `s=
+nprintf` accumulation.
+- [Medium] Missing validation for `btf__type_by_id()` return value in `synt=
+hesize_bpf_prog_name` leads to a NULL pointer dereference.
+- [Medium] Missing bounds checking when accessing BPF function info and pro=
+gram tags allows out-of-bounds memory reads.
+- [Medium] Leaked `map.btf` and `map.rodata` in `bpf_metadata_create()` on =
+error path.
+- [Medium] Leaked `info_node->metadata` when `perf_env__insert_bpf_prog_inf=
+o` fails in `perf_env__add_bpf_info()`.
 --
 
-commit 3cacfb3c562f81ba051910331484d58d28297996
+commit 36b9c4933bfd61cb63ed28852ac600bdb93eebb7
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf tools: Fix get_max_num() size_t underflow on empty sysfs file
+perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
 
-This commit fixes a heap buffer underflow in get_max_num() by adding an
-early return when an empty sysfs file is read. This prevents the size_t
-variable from underflowing during a backward scan of the buffer.
+This commit fixes buffer overflows by switching from snprintf() to scnprint=
+f()
+when accumulating formatted strings. This prevents writing past the end of
+the buffer if truncation previously occurred.
 
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 21fa781b03cc7..1fab00ec4a59a 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -448,6 +448,12 @@ static int get_max_num(char *path, int *max)
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index a27945c279efb..2c09842469f1f 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+[ ... ]
+> @@ -140,7 +140,7 @@ static int synthesize_bpf_prog_name(char *buf, int si=
+ze,
+>  	const struct btf_type *t;
+>  	int name_len;
 > =20
->  	buf[num] =3D '\0';
-> =20
-> +	/* empty file =E2=80=94 nothing to parse */
-> +	if (num =3D=3D 0) {
-> +		err =3D -1;
-> +		goto out;
-> +	}
-> +
+> -	name_len =3D snprintf(buf, size, "bpf_prog_");
+> +	name_len =3D scnprintf(buf, size, "bpf_prog_");
+>  	name_len +=3D snprintf_hex(buf + name_len, size - name_len,
+>  				 prog_tags[sub_id], BPF_TAG_SIZE);
+>  	if (btf) {
 
-[Severity: High]
-This isn't a bug introduced by this patch, but I noticed a similar pattern =
-in
-tools/perf/util/pmu.c:pmu_id(). Since filename__read_str() returns success =
-(0)
-and sets len to 0 when reading an empty file, does the following code
-underflow the len variable?
+While reviewing this function, I noticed a couple of pre-existing issues
+just below this diff hunk:
 
-tools/perf/util/pmu.c:pmu_id() {
+tools/perf/util/bpf-event.c:synthesize_bpf_prog_name() {
+        if (btf) {
+                finfo =3D func_infos + sub_id * info->func_info_rec_size;
+                t =3D btf__type_by_id(btf, finfo->type_id);
+                short_name =3D btf__name_by_offset(btf, t->name_off);
 ...
-	if (filename__read_str(path, &str, &len) < 0)
-		return NULL;
 
-	str[len - 1] =3D 0; /* remove line feed */
+[Severity: Medium]
+This isn't a bug introduced by this patch, but does calculating the finfo
+pointer using the unvalidated info->func_info_rec_size from the untrusted
+perf.data file allow out-of-bounds memory reads?
+
+[Severity: Medium]
+This is a pre-existing issue, but btf__type_by_id() can return NULL if
+finfo->type_id is invalid or out of bounds. Will accessing t->name_off
+immediately after cause a NULL pointer dereference here?
+
+
+Additionally, I noticed a few other pre-existing issues in the perf tools
+codebase during this review:
+
+tools/perf/util/bpf-event.c:bpf_metadata_create() {
 ...
-}
-
-[Severity: High]
-This is a pre-existing issue, but another instance seems to exist in
-tools/perf/util/thread.c:thread__set_comm_from_proc(). If the procfs file is
-empty (e.g., due to a race), procfs__read_str() returns 0 and sets sz to 0.
-Could this lead to a heap buffer underflow when setting the NUL byte?
-
-tools/perf/util/thread.c:thread__set_comm_from_proc() {
+        metadata =3D bpf_metadata_alloc(info->nr_prog_tags, map.num_vars);
+        if (!metadata)
+                continue;
 ...
-	if (!(snprintf(path, sizeof(path), "%d/task/%d/comm",
-		       thread__pid(thread), thread__tid(thread)) >=3D (int)sizeof(path)) =
-&&
-	    procfs__read_str(path, &comm, &sz) =3D=3D 0) {
-		comm[sz - 1] =3D '\0';
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but does this error path
+permanently leak the memory allocated for map.btf and map.rodata by
+skipping the bpf_metadata_free_map_data() cleanup?
+
+
+tools/perf/util/bpf-event.c:perf_env__add_bpf_info() {
 ...
-}
-
-[Severity: High]
-This isn't a bug introduced by this patch, but reading an empty PMU scale
-file might cause a stack buffer underflow in
-tools/perf/util/pmu.c:perf_pmu__parse_scale().=20
-
-If the file is empty, read() returns 0, setting sret to 0. The error check
-passes, and we evaluate scale[-1]. Could this read uninitialized stack
-memory and potentially write a NUL byte out-of-bounds?
-
-tools/perf/util/pmu.c:perf_pmu__parse_scale() {
+        if (!perf_env__insert_bpf_prog_info(env, info_node)) {
+                pr_debug("%s: duplicate add bpf info request for id %u\n",
+                         __func__, btf_id);
+                free(info_linear);
+                free(info_node);
+                goto out;
+        }
 ...
-	sret =3D read(fd, scale, sizeof(scale)-1);
-	if (sret < 0)
-		goto error;
 
-	if (scale[sret - 1] =3D=3D '\n')
-		scale[sret - 1] =3D '\0';
+[Severity: Medium]
+This is a pre-existing issue, but does freeing info_node here without freei=
+ng
+info_node->metadata leak the dynamically allocated metadata?
+
+
+tools/perf/util/hwmon_pmu.c:hwmon_pmu__for_each_event() {
 ...
-}
-
-[Severity: High]
-This is a pre-existing issue, but there appears to be a similar out-of-boun=
-ds
-access in tools/perf/util/pmu.c:perf_pmu__parse_unit().=20
-
-If read() returns 0 for an empty file, sret is set to 0. The code then
-evaluates alias->unit[-1]. Since unit is part of the heap-allocated struct
-perf_pmu_alias, could this overwrite the adjacent pmu_name pointer field if
-the preceding byte happens to be a newline?
-
-tools/perf/util/pmu.c:perf_pmu__parse_unit() {
+        len +=3D hwmon_pmu__describe_items(hwm, desc_buf + len, sizeof(desc=
+_buf) - len,
+                                         key, value->items, /*is_alarm=3D*/=
+false);
 ...
-	sret =3D read(fd, alias->unit, UNIT_MAX_LEN);
-	if (sret < 0)
-		goto error;
 
-	close(fd);
+[Severity: Critical]
+This isn't a bug introduced by this patch, but it is a similar issue to the
+ones being fixed.
 
-	if (alias->unit[sret - 1] =3D=3D '\n')
-		alias->unit[sret - 1] =3D '\0';
+Does accumulating the length from snprintf() without checking for truncation
+cause sizeof(desc_buf) - len to wrap to a huge value, leading to a stack
+buffer overflow in subsequent calls?=20
+
+Note that this issue was not fixed by the later patches in the series.
+
+
+tools/perf/util/pmu.c:perf_pmu__for_each_event() {
 ...
-}
+        buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
+                        "%.*s/%s/", (int)pmu_name_len, info.pmu_name, event=
+->terms) + 1;
+...
 
->  	/* start on the right, to find highest node num */
->  	while (--num) {
->  		if ((buf[num] =3D=3D ',') || (buf[num] =3D=3D '-')) {
+[Severity: Critical]
+This is a pre-existing issue, but does accumulating the return value of
+snprintf() into buf_used risk truncation wrapping?=20
+
+If buf_used exceeds sizeof(buf), sizeof(buf) - buf_used underflows, leading
+to a stack buffer overflow on the next write.=20
+
+Note that this issue was also not fixed by the later patches in the series.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607232925.1935=
-819-1-acme@kernel.org?part=3D1
+819-1-acme@kernel.org?part=3D9
