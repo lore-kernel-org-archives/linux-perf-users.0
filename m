@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C482EEE95;
-	Mon,  8 Jun 2026 02:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F782EEE95;
+	Mon,  8 Jun 2026 02:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780886870; cv=none; b=BBwOnsM9DKqyqX33i+GesQv0BN7Dlj+WRKN/wElZr//h487wXbcWmr+v7zzsQ/3AgOEuG2cyMZdMvAxk38udcldwgiTVqQlnt+bX3sUJT1LkvuGr2dgI2YNPdL4vovKSnI6W5og/9qxC325WensSO/ATXLwkzm0Ddf5Z7BWTkas=
+	t=1780886903; cv=none; b=DVGhIs9Z5WCAXBUaIEyiwHFJKguiKff6RNmRixYR8FXWVbVD9XhE6OrBpQrOSOEYWr4SziVe6YHKeOl20kIwTnR4oPFXlrr5yNK9K51LRmyM2o24e3dYsAJQvq1LIGCXwaCSFBbIz1aLpL678sg4ItYm+/WyVmPUgzoQicSplno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780886870; c=relaxed/simple;
-	bh=kQ3CrknEcfErIPbAVXxw6X7j4yk11zINN/qnrgcOPzs=;
+	s=arc-20240116; t=1780886903; c=relaxed/simple;
+	bh=IqmV+9cbIijJV5OP0c+lMA5/3eE0HQdbhxXWAPNZd5Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QABxS3AAuhTRUnuZMFUtbXoQx/xSLrCpj/3lWyr64YgjPI44ocD+uc2ijwJfWemAVeanpKf/bkjWlzdEtvHyo5vjSA/GSkSSmRkD+YTMPI2hZAJt1bKLLB2VY5QVItKGjRkHvLUBWprf2Sx0z1rhVGyINryYMAKqjWgvddoE3HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q2dIAxT+; arc=none smtp.client-ip=192.198.163.17
+	 In-Reply-To:Content-Type; b=EzcPPHwz0LEhZIgRkx/oo2NU7hPRdoP1qqHgUSvhhGU4DF4rfqUBCK9wpVEivI7ZkR7SGz7VzprTN9AskrVBaBj5H+KHS5kwBlhVtYlDEguQ+w24vZRmcQzCP4vS0XruU1lBqIkaZkheEqz7atsl/+vw8ACjiqU2y/klF4px9Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UXdoZ3Eo; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q2dIAxT+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UXdoZ3Eo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780886869; x=1812422869;
+  t=1780886902; x=1812422902;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=kQ3CrknEcfErIPbAVXxw6X7j4yk11zINN/qnrgcOPzs=;
-  b=Q2dIAxT+lPlivdmKpijmQGtbaH8S1Qa3n91eZMTinM7Dqt81LCATdqw6
-   1LPye1NrQ6nMF3oK9znXE1k3Ltx7+pb2EDlZnsREnuhmasnb+s38GZHi7
-   HbpMK8i8dbncboNtpVET/d2MgCeoQTSej5E1zRS/5HhpXDJUFo/yUlHJc
-   7QziomxJz6G1sKj4jwC1TgxQ+ETdBXF0SootIO0RBPahlt7qfn8/cOXlB
-   S2dHdl5/OY+p14llAoC8sPSWiE3glducJeJDAq24rr8AlZCEreYEGLyWx
-   TIu7+C6qCAS3E4V8vlWbfX23fVIeWDB/YySKmkXOuFLDYbIFgtwodulAg
+  bh=IqmV+9cbIijJV5OP0c+lMA5/3eE0HQdbhxXWAPNZd5Q=;
+  b=UXdoZ3EoRG8HQhpoCX8vta0Ypa94Wkn2LguI2253d7LwKBOnHfALvmb9
+   YHJ/48XWVguKSIDTy8j88liL4o0Hw4Ds8nR7Ey7BKH1rP1GNlPZLpa9l5
+   IPGYVTOxAX18tMliCRh1UhET+XZx/PVO3AoThZZjEcoSIIvWzGE1tf9YD
+   AV6GOetjR/IjI6L/DoxBu6zBVYmjliNTIfc7I/xK1NEch5FGpx5ZYxgtz
+   frbTP3pPM2dsDf28ueuefUJazsGC6H57MiUeSp00kRyf0KVIzLKKHj7LF
+   uXrbdDiatd3QyIefuIAqVwG6pXhs2kwmCkttvJg8Qp4nwv/sosw/kt4PF
    Q==;
-X-CSE-ConnectionGUID: hcj1ZsF8QlCEqKrVQORKqw==
-X-CSE-MsgGUID: m1jkcYT0QMm42pnFJ3zr/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81472503"
+X-CSE-ConnectionGUID: iCO3DPHtQfWtWL0NKoEjpw==
+X-CSE-MsgGUID: PW4WkvsATrGYeARye1ck+Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81737733"
 X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
-   d="scan'208";a="81472503"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 19:47:48 -0700
-X-CSE-ConnectionGUID: tz2uf14HTyKfDq3L01+Cgw==
-X-CSE-MsgGUID: BeDtA30XQHWg60N/plM87A==
+   d="scan'208";a="81737733"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 19:48:21 -0700
+X-CSE-ConnectionGUID: pthRf32/QKiqq+APwipXrg==
+X-CSE-MsgGUID: 9NFeLclGT4G4pAn5wnQfVQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
-   d="scan'208";a="244300849"
+   d="scan'208";a="249338040"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 19:47:44 -0700
-Message-ID: <ec947a5f-3f97-474a-8dcc-8499cc952746@linux.intel.com>
-Date: Mon, 8 Jun 2026 10:47:41 +0800
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 19:48:18 -0700
+Message-ID: <e758f607-83e8-48a3-88b3-a5cae5b897bd@linux.intel.com>
+Date: Mon, 8 Jun 2026 10:48:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,114 +52,156 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/8] perf/core: Fix kernel register info leak via hardware
- skid
-To: "Falcon, Thomas" <thomas.falcon@intel.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "ak@linux.intel.com" <ak@linux.intel.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "namhyung@kernel.org" <namhyung@kernel.org>, "Rogers, Ian"
- <irogers@google.com>, "Eranian, Stephane" <eranian@google.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "Chen, Zide" <zide.chen@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "Mi, Dapeng1" <dapeng1.mi@intel.com>, "Hao, Xudong" <xudong.hao@intel.com>
+Subject: Re: [PATCH 6/8] perf/x86/intel: Validate return value of
+ intel_pmu_init_hybrid()
+To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>
 References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
- <20260605011136.2043393-9-dapeng1.mi@linux.intel.com>
- <6e3a013359d6d0691a9ed3294520accaa36592c6.camel@intel.com>
+ <20260605011136.2043393-7-dapeng1.mi@linux.intel.com>
+ <14b678b1-822a-46c2-8bb5-913622a77cac@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <6e3a013359d6d0691a9ed3294520accaa36592c6.camel@intel.com>
+In-Reply-To: <14b678b1-822a-46c2-8bb5-913622a77cac@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 6/6/2026 3:08 AM, Falcon, Thomas wrote:
-> On Fri, 2026-06-05 at 09:11 +0800, Dapeng Mi wrote:
->> An unprivileged hardware perf event using exclude_kernel=1 can leak
->> kernel
->> register data to user space via PERF_SAMPLE_REGS_INTR. Due to
->> hardware
->> skid, a PMI may trigger after the CPU has already entered kernel
->> space
->> (Ring 0), bypassing the perf_allow_kernel() privilege barrier.
+On 6/6/2026 12:17 AM, Chen, Zide wrote:
+>
+> On 6/4/2026 8:11 PM, Dapeng Mi wrote:
+>> The memory allocation for the x86_pmu.hybrid_pmu[] array in
+>> intel_pmu_init_hybrid() can theoretically fail due to memory shortages.
+>> If this occurs, the initialization of the x86 hybrid PMU would fail.
 >>
->> This security vulnerability is severely exacerbated by upcoming
->> support
->> for SIMD register sampling via XSAVES, which could expose sensitive
->> kernel
->> FPU states (such as active cryptographic keys).
+>> Currently, the code does not check the return value of the
+>> intel_pmu_init_hybrid() function, which could lead to attempts to access
+>> the uninitialized x86_pmu.hybrid_pmu[] array, potentially causing a
+>> system panic.
 >>
->> Fix this by ensuring that sampled register data is dropped if the
->> event's
->> exclude_kernel attribute is set but the PMI catches the CPU in kernel
->> mode.
->>
->> Link:
->> https://lore.kernel.org/all/20260529085613.CCAFB1F00893@smtp.kernel.org/
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  kernel/events/core.c | 20 ++++++++++++++++----
->>  1 file changed, 16 insertions(+), 4 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 7935d5663944..b7326bc3acd0 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -7800,10 +7800,21 @@ static void perf_sample_regs_user(struct
->> perf_regs *regs_user,
->>  }
->>  
->>  static void perf_sample_regs_intr(struct perf_regs *regs_intr,
->> -				  struct pt_regs *regs)
->> +				  struct pt_regs *regs,
->> +				  bool exclude_kernel)
->>  {
->> -	regs_intr->regs = regs;
->> -	regs_intr->abi  = perf_reg_abi(current);
->> +	/*
->> +	 * Hardware skid can lead to PMI is delivered after
->> +	 * the CPU has already entered kernel mode. In that case,
-> Sorry to nitpick but it might be better to say "Hardware skid can lead
-> to a scenario where a PMI is delivered..."
+>> So, adds a check for the return value of intel_pmu_init_hybrid() to
+> typo: adds -> add.
 
 Sure. Thanks.
 
 
 >
-> Other than that, LGTM.
+>> prevent invalid memory access in such scenarios. Besides, free the
+>> created kmem cache when error occurs.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+> Reviewed-by: Zide Chen <zide.chen@intel.com>
 >
-> Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
 >
-> Thanks,
-> Tom
+>>  arch/x86/events/intel/core.c | 33 ++++++++++++++++++++++++++-------
+>>  1 file changed, 26 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index ea3ab3050a3b..efd9caa3502c 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -7870,6 +7870,7 @@ __init int intel_pmu_init(void)
+>>  	int version, i;
+>>  	char *name;
+>>  	struct x86_hybrid_pmu *pmu;
+>> +	int ret;
+>>  
+>>  	/* Architectural Perfmon was introduced starting with Core "Yonah" */
+>>  	if (!cpu_has(&boot_cpu_data, X86_FEATURE_ARCH_PERFMON)) {
+>> @@ -8539,7 +8540,9 @@ __init int intel_pmu_init(void)
+>>  		 *
+>>  		 * Initialize the common PerfMon capabilities here.
+>>  		 */
+>> -		intel_pmu_init_hybrid(hybrid_big_small);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+>> +		if (ret < 0)
+>> +			goto err;
+>>  
+>>  		x86_pmu.pebs_latency_data = grt_latency_data;
+>>  		x86_pmu.get_event_constraints = adl_get_event_constraints;
+>> @@ -8597,7 +8600,9 @@ __init int intel_pmu_init(void)
+>>  	case INTEL_METEORLAKE:
+>>  	case INTEL_METEORLAKE_L:
+>>  	case INTEL_ARROWLAKE_U:
+>> -		intel_pmu_init_hybrid(hybrid_big_small);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+>> +		if (ret < 0)
+>> +			goto err;
+>>  
+>>  		x86_pmu.pebs_latency_data = cmt_latency_data;
+>>  		x86_pmu.get_event_constraints = mtl_get_event_constraints;
+>> @@ -8628,7 +8633,9 @@ __init int intel_pmu_init(void)
+>>  		pr_cont("Pantherlake Hybrid events, ");
+>>  		name = "pantherlake_hybrid";
+>>  
+>> -		intel_pmu_init_hybrid(hybrid_big_small);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+>> +		if (ret < 0)
+>> +			goto err;
+>>  
+>>  		/* Initialize big core specific PerfMon capabilities.*/
+>>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
+>> @@ -8643,7 +8650,9 @@ __init int intel_pmu_init(void)
+>>  		pr_cont("Arrowlake Hybrid events, ");
+>>  		name = "arrowlake_hybrid";
+>>  
+>> -		intel_pmu_init_hybrid(hybrid_big_small);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+>> +		if (ret < 0)
+>> +			goto err;
+>>  
+>>  		/* Initialize big core specific PerfMon capabilities.*/
+>>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
+>> @@ -8660,7 +8669,9 @@ __init int intel_pmu_init(void)
+>>  		pr_cont("Lunarlake Hybrid events, ");
+>>  		name = "lunarlake_hybrid";
+>>  
+>> -		intel_pmu_init_hybrid(hybrid_big_small);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+>> +		if (ret < 0)
+>> +			goto err;
+>>  
+>>  		/* Initialize big core specific PerfMon capabilities.*/
+>>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
+>> @@ -8685,7 +8696,9 @@ __init int intel_pmu_init(void)
+>>  		break;
+>>  
+>>  	case INTEL_ARROWLAKE_H:
+>> -		intel_pmu_init_hybrid(hybrid_big_small_tiny);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small_tiny);
+>> +		if (ret < 0)
+>> +			goto err;
+>>  
+>>  		x86_pmu.pebs_latency_data = arl_h_latency_data;
+>>  		x86_pmu.get_event_constraints = arl_h_get_event_constraints;
+>> @@ -8720,7 +8733,9 @@ __init int intel_pmu_init(void)
+>>  	case INTEL_NOVALAKE_L:
+>>  		pr_cont("Novalake Hybrid events, ");
+>>  		name = "novalake_hybrid";
+>> -		intel_pmu_init_hybrid(hybrid_big_small);
+>> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
+>> +		if (ret < 0)
+>> +			goto err;
+>>  
+>>  		x86_pmu.pebs_latency_data = nvl_latency_data;
+>>  		x86_pmu.get_event_constraints = mtl_get_event_constraints;
+>> @@ -8885,6 +8900,10 @@ __init int intel_pmu_init(void)
+>>  	intel_aux_output_init();
+>>  
+>>  	return 0;
+>> +
+>> +err:
+>> +	kmem_cache_destroy(x86_get_pmu(smp_processor_id())->task_ctx_cache);
+>> +	return ret;
+>>  }
+>>  
+>>  /*
 >
->> +	 * user-space sampling must not expose kernel register
->> state.
->> +	 */
->> +	if (exclude_kernel && !user_mode(regs)) {
->> +		regs_intr->abi = PERF_SAMPLE_REGS_ABI_NONE;
->> +		regs_intr->regs = NULL;
->> +	} else {
->> +		regs_intr->regs = regs;
->> +		regs_intr->abi = perf_reg_abi(current);
->> +	}
->>  }
->>  
->>  
->> @@ -8694,7 +8705,8 @@ void perf_prepare_sample(struct
->> perf_sample_data *data,
->>  		/* regs dump ABI info */
->>  		int size = sizeof(u64);
->>  
->> -		perf_sample_regs_intr(&data->regs_intr, regs);
->> +		perf_sample_regs_intr(&data->regs_intr, regs,
->> +				      event->attr.exclude_kernel);
->>  
->>  		if (data->regs_intr.regs) {
->>  			u64 mask = event->attr.sample_regs_intr;
