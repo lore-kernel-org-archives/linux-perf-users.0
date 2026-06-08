@@ -1,154 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3AB2EEE9C
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25CA2EEE9C;
+	Mon,  8 Jun 2026 01:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780883675; cv=none; b=cTOgomPdtHWlixjAQf6hHQ/ziG9r/YBfqSBSK0TTI6L9J+TfqYGyZQr4Ftk3T66BQ+twx6bj24J1EJkgAOzG/1I57QgiZl5Pm/h86+VQG4iRvUGFsvVEgkFNBvtNSnDIIgngPuZScwyNcjDE8ixj3LTTCog2FqOQk5EKvzol5yY=
+	t=1780883819; cv=none; b=eNfA7gsM7yh2V8Nv4T1/NkBhhZhLB8lWg/M4YwCihJ4Yn29/KlumZmdhjbLbWtRp9QLRD94wJyOarwoO4nfDv43TTzxT1uVY2qMbLKLwjB109x/vuAa9mRTjsKNZXrLs+58IKqAwmyHyh9SxmMMjOfj0E7P0urFfTFbYw0uH4aI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780883675; c=relaxed/simple;
-	bh=v/9YA3pQ8sCncjDHE4wO7wqvkFh8qI77S4kPEAl3S54=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TOYdBmArYD44JiyBbYBTjzF6rlATjddkmlLa+Ci9pyEkUwDUlEboWH3jtJRxiMgiFj4E9Ofa+F1eN3ExfoYGB0J/dsKi+sLzt1196LvxGueOiYurGlSs07lGW8nnMB6stBtuGjX1V9KSmznEOcm8oXF79ywEn087sXHO+jg8QWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYe1pt13; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780883819; c=relaxed/simple;
+	bh=AXbKzZmARMiJ9DZeCI0Mu9/VI4+YDbO3Pie7AOhUzEA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UetvP9UpyfeWGlShywtAR4V+dqMa3Fg61hQ8QSDlBIDBJuoD/FOqhh4KhsnywnuDZHCWMivcIdFyclTSvwHGHz3PY2XAgNH/aPBFPQLgc7+w3Ti+r++qij+BsgoXNNIolTz3trWfxfK5Vcu++D43aU/Wnck2nKTZKra97Ag6t4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4PITdgx; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYe1pt13"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F7E1F00893;
-	Mon,  8 Jun 2026 01:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780883674;
-	bh=J9+jqvuZc/OO71LqkCCdyzmzl0oWPWx7jGFDyFWVp40=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SYe1pt13wu1jKMhkLJRsbp6DU5CBV9MhJMzbXUhda1gYiyiDsIRd2pqMrwqjxmQ80
-	 Ww1C+AsbguTGr/UCNAjjoTHwU2ey2geSFsEPbs5kb8saRB14o590a89qBhSfxnse/P
-	 RAhVwFA+ktP3eVUCPCAQvzmosFEKWxeN35tlGRVul7hkwkSoyTnwmIG0rnuF+wwU69
-	 0Ejuiu7KfaSc7NbM7FTXRa2Iv4EUQRfm2+n5HE6LcVUPyH6M4uPJ1Ft+yt8RGEhTUz
-	 xp/cDwizkg0RoRqwkA9BicLcB88wdn1dO3Wzno1R5kh2mphIe1zudi/Eu3FlUPdvwX
-	 jTVlhD2xKhlTg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 11/11] perf tools: Use scnprintf() in
- build_id__snprintf() and hwmon read_events()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260608013057.1942953-12-acme@kernel.org>
-References: <20260608013057.1942953-12-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 01:54:33 +0000
-Message-Id: <20260608015434.37F7E1F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4PITdgx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780883817; x=1812419817;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AXbKzZmARMiJ9DZeCI0Mu9/VI4+YDbO3Pie7AOhUzEA=;
+  b=N4PITdgxgn3fyEcdDxUubNq46/YRw3ad1TC1pfuwxt2Z/XItbF71Yrc+
+   yYv5XLnnPPiZNmpWkf/SYqc0ndPlwh/TMZgcIjnL0E1hgHWSl4gOu+3gJ
+   iQvipDAB4rH3HclhRxSv4aT+xg54PvQAlzxhoGMZ+WSgtGHzOTm7WiecB
+   Apopb3uP/1+oR7p7bW+REfzoaJ6ntaT0SO15XruWS5WzPBlOb6hQ2P981
+   RL6WOQYglm2oymq2NSgOI+6tlf8Dw9uBS1jmGrssNLVadxW6fElBTO8eJ
+   cm3/N/Jglvpk4o78aMC0HP6uiGDrvzA3P41p35IdLICIAgz1Epyxg/x4d
+   w==;
+X-CSE-ConnectionGUID: OwhEGyyFS2el0bkmqzBEUw==
+X-CSE-MsgGUID: hSeI/ddWThC+Hrv+4w/v2A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81590989"
+X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
+   d="scan'208";a="81590989"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 18:56:57 -0700
+X-CSE-ConnectionGUID: GltD6Je4ShuHvuy+X9V6lQ==
+X-CSE-MsgGUID: B1zarMINQ9OlI2v91YuKaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
+   d="scan'208";a="244293130"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 18:56:51 -0700
+Message-ID: <5290112b-4ef1-46e8-936a-a71f9f3c0b03@linux.intel.com>
+Date: Mon, 8 Jun 2026 09:56:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-
-Pre-existing issues:
-- [High] Missing size adjustment in read() and pread() size arguments leads=
- to out-of-bounds null termination on stack buffers.
-- [High] If the `read()` system call returns `<=3D 0`, uninitialized stack =
-memory is evaluated and potentially duplicated, leading to an information l=
-eak or crash.
-- [Medium] A flawed check `if (fd > 0)` fails to process or close file desc=
-riptor 0, causing a resource leak if openat returns 0.
---
-
-commit 63dc76c4229ffb5cbb25da7f0bdc34b17ef66fae
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
-
-build_id__snprintf() and hwmon_pmu__read_events() accumulate formatted
-output via snprintf(), which returns the would-have-been-written count
-on truncation. In hwmon_pmu__read_events(), len overshoots out_buf_len
-and the next 'out_buf_len - len' underflows. Switch both to scnprintf()
-which returns actual bytes written.
-
-[ ... ]
-
-> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> index fb3ffa8d32ad2..dbf6a71af47f9 100644
-> --- a/tools/perf/util/hwmon_pmu.c
-> +++ b/tools/perf/util/hwmon_pmu.c
-> @@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmo=
-n_pmu *hwm, char *out_buf, si
-> =20
->  				buf[read_len] =3D '\0';
-                                ^^^^^^^^^^^^^^^^^^^^
-[Severity: High]
-This isn't a bug introduced by this patch, but doesn't this result in an
-out-of-bounds write?
-
-Since read() can return up to sizeof(buf), if the sysfs file contents
-completely fill the buffer (i.e. read_len =3D=3D sizeof(buf)), writing the =
-null
-terminator here will overwrite one byte past the end of the buf array on the
-stack.
-
-Could we pass sizeof(buf) - 1 to read() to avoid this?
-
-This same pre-existing issue seems to be present in hwmon_pmu__read_events()
-and evsel__hwmon_pmu_read() as well, where read() and pread() are called wi=
-th
-the full buffer size and similarly null-terminated.
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/8] perf/x86/intel: Fix redundant branch type check in
+ intel_pmu_lbr_filter()
+To: "Falcon, Thomas" <thomas.falcon@intel.com>,
+ "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+ "ak@linux.intel.com" <ak@linux.intel.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "namhyung@kernel.org" <namhyung@kernel.org>, "Rogers, Ian"
+ <irogers@google.com>, "Eranian, Stephane" <eranian@google.com>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "Chen, Zide" <zide.chen@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "Mi, Dapeng1" <dapeng1.mi@intel.com>, "Hao, Xudong" <xudong.hao@intel.com>
+References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
+ <20260605011136.2043393-5-dapeng1.mi@linux.intel.com>
+ <5f1cedec93b2ea87cb89f259b0eaeddba69093bf.camel@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <5f1cedec93b2ea87cb89f259b0eaeddba69093bf.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-[Severity: Medium]
-Also a pre-existing issue in hwmon_pmu__describe_items() just above this hu=
-nk,
-can this leak a file descriptor?
+On 6/6/2026 2:28 AM, Falcon, Thomas wrote:
+> On Fri, 2026-06-05 at 09:11 +0800, Dapeng Mi wrote:
+>> In intel_pmu_lbr_filter(), the 'type' variable is bitwise ORed with
+>> 'to_plm' (which contains X86_BR_USER and/or X86_BR_KERNEL bits). Because
+>> of this, 'type' can never equal X86_BR_NONE (0) after the assignment.
+>>
+>> As a result, the subsequent check 'if (type == X86_BR_NONE)' is dead code
+>> and the entries with X86_BR_NONE type would not be skipped eventually.
+>>
+>> Correct this by masking out the X86_BR_KERNEL and X86_BR_USER bits
+>> before performing the X86_BR_NONE comparison.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 47125db27e47 ("perf/x86/intel/lbr: Support Architectural LBR")
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>
+>> Original patch link:
+>> https://lore.kernel.org/all/20260414021440.928068-1-dapeng1.mi@linux.intel.com/
+>>
+>>  arch/x86/events/intel/lbr.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>> index 72f2adcda7c6..16977e4c6f8a 100644
+>> --- a/arch/x86/events/intel/lbr.c
+>> +++ b/arch/x86/events/intel/lbr.c
+>> @@ -1245,7 +1245,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>>  		}
+>>  
+>>  		/* if type does not correspond, then discard */
+>> -		if (type == X86_BR_NONE || (br_sel & type) != type) {
+>> +		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type) {
+> Looking at intel_pmu_lbr_filter...
+>
+> 	if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
+> 	    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
+> 		to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
+> 		type = arch_lbr_br_type_map[type] | to_plm;
+> 	} else
+> 		type = branch_type(from, to, cpuc->lbr_entries[i].abort);
+>
+> In the else case, it does look (branch_type -> get_branch_type) can return X86_BR_NONE without OR'ing it with X86_BR_KERNEL or X86_BR_USER, so the condition checking the type for X86_BR_NONE is not exactly "dead code."
+>
+> One example:
+>
+> static int get_branch_type(unsigned long from, unsigned long to, int abort,
+> 			   bool fused, int *offset)
+> {
+> ...
+> 	 * maybe zero if lbr did not fill up after a reset by the time
+> 	 * we get a PMU interrupt
+> 	 */
+> 	if (from == 0 || to == 0)
+> 		return X86_BR_NONE;
+> ...
+>
+> Though in those cases, it doesn't seem like this change would make a difference. I guess it isn't clear to me what issue this change is fixing.
 
-hwmon_pmu__describe_items() opens a sysfs file using openat(), and then che=
-cks:
-
-    fd =3D openat(dir, buf, O_RDONLY);
-    if (fd > 0) {
-
-If the tool runs in an environment where standard input has been closed,
-openat() can successfully return 0. The current logic treats 0 as an error,
-skips file processing, and fails to call close(fd), causing a resource leak.
-
-Should this check be if (fd >=3D 0) instead?
+Yes, the "dead code" is not accurate. For hardware decoding (the if case),
+the validation is some kind of dead code, but for the software decoding,
+it's not. I would adjust the wording in next version. Thanks.
 
 
-[Severity: High]
-Another pre-existing issue in hwmon_pmu__read_events(), can this leak
-uninitialized stack memory?
-
-If read() returns 0 or less (for example, on an error or empty file), read_=
-len
-will be 0 or less. The code skips null-terminating the buffer and proceeds
-to check:
-
-    if (buf[0] =3D=3D '\0') {
-        ...
-    value->label =3D strdup(buf);
-
-Since char buf[128] is uninitialized, wouldn't evaluating buf[0] and passing
-buf to strdup() result in reading and copying garbage stack memory until it
-hits a random null byte?
-
->  				val =3D strtoll(buf, /*endptr=3D*/NULL, 10);
-> -				len +=3D snprintf(out_buf + len, out_buf_len - len, "%s%s%s=3D%g%s",
-> -						len =3D=3D 0 ? " " : ", ",
-> -						hwmon_item_strs[bit],
-> -						is_alarm ? "_alarm" : "",
-> -						(double)val / 1000.0,
-> -						hwmon_units[key.type]);
-> +				len +=3D scnprintf(out_buf + len, out_buf_len - len, "%s%s%s=3D%g%s",
-> +						 len =3D=3D 0 ? " " : ", ",
-> +						 hwmon_item_strs[bit],
-> +						 is_alarm ? "_alarm" : "",
-> +						 (double)val / 1000.0,
-> +						 hwmon_units[key.type]);
->  			}
->  			close(fd);
->  		}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608013057.1942=
-953-1-acme@kernel.org?part=3D11
+>
+> Thanks,
+> Tom
+>
+>>  			cpuc->lbr_entries[i].from = 0;
+>>  			compress = true;
+>>  		}
