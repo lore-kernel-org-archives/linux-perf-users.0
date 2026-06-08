@@ -1,170 +1,157 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4D837702C;
-	Mon,  8 Jun 2026 12:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7969737F01B
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 12:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780920883; cv=none; b=FjLeKpV3JRPGL4aD8IehA/kYlAgvXqTZH5Avn2HMjoGnrdF93JvReb0ASEIuQ1+fU2rsqv9e3qTSTnUtCAUU6MLIjKvPoOB8sQLeZn4s++HRQtPS9dieg/sWFmUWMjJKRlcqwzzHJaihbUC/X3LZcL9Zw3w9J2NbKJfSs3Knpzk=
+	t=1780922132; cv=none; b=Zc5we/OzxyEyNvvcyfDJbJhrppNoh0PQrm8DZTyWyi0jXJv2Kl6YanZlxfXBzQj3ikL0VpQxS0l98b62A+QAKzIZ1gjuuJ81dkrUnioTLFpeGU8t122BLu5yrcn4SCffqPwtrJwjCWaaxmSPJ/s8UxVh+m42Nj4Wy5L5DYbYUZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780920883; c=relaxed/simple;
-	bh=O7PHJ9DnNiBhWpEwxp0beImo72lI0L6S4jWqTwtzDIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pyBxUYVvGYrsB7z0WnusYUhBw7RlAw8fgH4c9GvA8F3xcV24zOGt2YhYH7IGTxyRQVZXZNtUiKWYvMLoY9SG+Oh6XeCQ0Hrul/+mja8l9xLnqo6s3pOk8SLLw92dDEcmhw6DRJE6pe142sjqhZshzTx2B7bzLCKDSZcXLSt8Un4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=lmJgB2UL; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1780922132; c=relaxed/simple;
+	bh=BaQ2jXuMcGoJOce00H3TUeNdqWBLzzIkLMJPZg+dDrY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qrr+ng/v3NjwyrrOKzU6Hmnhx1j7Reo/fIXHhO/WdkcZ3ryFpE5oFY4PsyFTRfV1VXFWT7g0JE/wfDEfRsQNpnbFKArMI+ByYIkeDBHKIdHjc2nd5pp99rqsYONt5a/U9rNAHAs5oMsHWSLjsZkhedG9hPgFFa5n03z4Eo6UKM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JbHndoTO; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="lmJgB2UL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=arbkOLxe9TsPGb9HPmwkESSbqInm/MlNCMr1iWn69z4=; b=lmJgB2ULtm4V40ha4u6XI+IhrV
-	dmQcyNzSpJzo2oZAVn1Behho8kdF8bjIBymSFWxrc4kRhOWpifBhGXLESY6h9NmuItbklaKgtzJF7
-	hagERND4I+XQbyGCpyYw3nQUlt6meeO2Y1J6VAlqx5HD/DLSKBWCuu4PVYe3jFHtBe3G9wZkJMn7D
-	CZiTysk+/wm0llBa+3whCOLF6xy3C0kIxd48kBl0bkm5B7Y5+aaicrpb3br/nHSGwC7KaR2JcwLgo
-	xhI53kvhRQOXJlSZc4+V/P2DXkrIqcgPn+Fk4a43Ipa/QQqS0pQG+W2lksDFDMsOLm33CvDGEw+Fu
-	DCWohZxQ==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wWYs8-007cCR-0E;
-	Mon, 08 Jun 2026 12:14:28 +0000
-Date: Mon, 8 Jun 2026 05:14:22 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Pratyush Anand <panand@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	clm@meta.com, leo.bras@arm.com, kernel-team@meta.com
-Subject: Re: [PATCH] arm64/hw_breakpoint: reject unaligned watchpoints that
- would truncate BAS
-Message-ID: <aiaqbmQSksKB6dTZ@gmail.com>
-References: <20260430-arm64_bas-v1-1-c6ab2b15aec0@debian.org>
- <ahmohv6vQGxY-asL@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JbHndoTO"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-68e5f7c1131so8010869a12.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jun 2026 05:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1780922130; x=1781526930; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8oFATbLGkQWkwCipjQpmUUujF+3Rvcq+brYRvNSnEek=;
+        b=JbHndoTOxCwsGia3iO4kObCyjpNAJsmeqWClSsV347R3h/l/81gYTdgzpDqnZXheMr
+         ACMGyFl0DUQyZrwymGodz9cw9jHYwF2qRR8cF5iB9bYViT9lWViYQzwLOI+C8P8RCvOe
+         BtMUM8TWqGg4eYJr/BEmWcKJEhMXM8VOOiS6/tOoquK+x8LQH7ILMoURim6NoxVRhNay
+         iVZoriUsS7appwfljel6zvEtgh7KgiTZ04PXEmAh+JVvqkeMquaUvuUMKO42bFM+FISK
+         Hp3V0sWzW2WJLRhR8P4NPUsDjMp1lGjpH3EJmr4jjYZMN8XFlOddxA2H/OTEC0clAAOr
+         nJKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780922130; x=1781526930;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8oFATbLGkQWkwCipjQpmUUujF+3Rvcq+brYRvNSnEek=;
+        b=bx9wwjr9hTGUA83GJbEzEWBNv0vXxmqHOzoEqu8vuv24JkCQ2IHyuj1NFh4LGZhutJ
+         5BIKSuFb6yWPizkCOy2EhFYf7rkh62T9wrrbs06Y0OqbgFd/ypVjC9Hp9yd68JRG6+nS
+         Mb5ek2Ti8fRi+rCsdVy4RDqc+qc7ogaPGXfY7DjIIZeOYmAsnZpEEn0I/dIOX0MgiF9y
+         qeKK1qzpEy3ekbI9bX+YzFqSv0fZPKdq+FPGAfHvIbDmrFbjsPD0AEJZeVULs6KKCZLR
+         s/LrsioZp+Lgm9jZhSum71ndWuiyMH2X5mQbwjmRJwjPLBBBtmDKXugDyitu6oIC2fyu
+         jL3w==
+X-Forwarded-Encrypted: i=1; AFNElJ/aJdm/UPHXeZnvOnRiopZ5kkGuxYclx1GBmJQIND16bLbE2R95TwJPKUlquXags6WJKfmvvmqHhrAwCm1QmUTJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1u9knZuoelGJxXxTpiB64/WIk40i6rFaZfEFu0yoje2Tad2M0
+	+ug/vAFji9NtS77b0pgwDFuSQCNBsU1TABbVi3auZupsjA75I2TpfFoVU9LAHfKKOaM=
+X-Gm-Gg: Acq92OHwj7KWuT0or2yarV3xJ7Gy2WpZur5TJokhAuAHN/RD45mjJ9xXmEmBRrcDYlz
+	5yl8wFFTrrdt/YBI+AcUfYF19od4TWipvmdNlTndg3xUpBamagSNUtmJj/9zIKAckuJAMmSWcb9
+	20fX/d+g8RHgw2zO4/kpye28dwVQJi1lClZ7IvOa3fMEMaWX2yl1/+6s8ERW4AbSZgVRr697wPV
+	ljhUWh+VOUEhifp1DngVVg2OKC6hKXo54RlJ9naa2s54bhSm9il7gZOBoNwJAcqZrqUpUUho5iu
+	W/88jgYWD3p0JbpDOIUqNG0G6qdeLJevT/ax1RzjAn48B4/qIi3raVqhgFPb12QEQNiSJnIekz3
+	fKsJUegWTJ0WxCH8D9097L9oNTn8XhMBGh06260rKRbmfMbB+Td42Fg8lqDuC2KkPPcKclMUpyI
+	2Z5FAO17a2Cmg3rUaZWSf3qx6C0ZJncOlnaB7ITu0=
+X-Received: by 2002:a17:907:da3:b0:bed:afd6:9e07 with SMTP id a640c23a62f3a-bf370a64028mr736875166b.14.1780922129881;
+        Mon, 08 Jun 2026 05:35:29 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf054e04a89sm862864566b.41.2026.06.08.05.35.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2026 05:35:26 -0700 (PDT)
+Message-ID: <b122283d-f3a7-4174-8c13-2ae9f6d1e79b@linaro.org>
+Date: Mon, 8 Jun 2026 13:35:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ahmohv6vQGxY-asL@willie-the-truck>
-X-Debian-User: leitao
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 6/8] perf cs-etm: Filter synthesized branch samples
+To: Leo Yan <leo.yan@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linux.dev>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Mike Leach <mike.leach@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>,
+ Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
+References: <20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com>
+ <20260526-b4-arm_cs_callchain_support_v1-v6-6-f9f49f53c9dd@arm.com>
+ <fbe0a097-ced7-44c6-ada1-01c3e9c1d7e7@linaro.org>
+ <20260608112834.GM101133@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260608112834.GM101133@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 29, 2026 at 03:53:58PM +0100, Will Deacon wrote:
-> Hi Breno,
-> 
-> Thanks for sending this out.
-> 
-> On Thu, Apr 30, 2026 at 02:40:10AM -0700, Breno Leitao wrote:
-> > hw_breakpoint_arch_parse() positions the BAS bit pattern in
-> > hw->ctrl.len with
-> > 
-> > 	offset = hw->address & alignment_mask;	/* 0..7 */
-> > 	hw->ctrl.len <<= offset;
-> > 
-> > ctrl.len is an 8-bit bitfield (struct arch_hw_breakpoint_ctrl::len is
-> > u32 :8), so the shift silently drops any bits past bit 7.  For
-> > non-compat AArch64 watchpoints the offset is unbounded relative to
-> > ctrl.len: a perf_event_open(PERF_TYPE_BREAKPOINT) caller asking for
-> > HW_BREAKPOINT_W with bp_addr=page+1 and bp_len=HW_BREAKPOINT_LEN_8
-> > ends up with 0xff << 1 = 0x1fe, stored as 0xfe.  The kernel programs
-> > WCR.BAS=0xfe and the hardware watches bytes [1..7] instead of the
-> > requested [1..8] -- the eighth byte is silently dropped.  The
-> > syscall still returns success, leaving userspace to discover the
-> > gap by empirical probing.
-> > 
-> > The same class affects HW_BREAKPOINT_LEN_{2,4} when offset pushes the
-> > high BAS bit past bit 7 (e.g. LEN_4 with offset=5 yields 0xe0
-> > instead of 0x1e0).  No memory-safety impact -- the value is masked
-> > into 8 bits before encoding -- but debuggers and perf users observe
-> > missed events on bytes they thought they were watching.
-> > 
-> > The AArch32 branch immediately above already rejects unrepresentable
-> > (offset, len) combinations via an explicit switch.  Mirror that for
-> > the non-compat branch by checking that the shifted pattern fits in
-> > the BAS field, returning -EINVAL when it does not.
-> > 
-> > Reproducer:
-> > 
-> >   struct perf_event_attr a = {
-> >       .type = PERF_TYPE_BREAKPOINT, .size = sizeof(a),
-> >       .bp_type = HW_BREAKPOINT_W,
-> >       .bp_addr = (uintptr_t)(buf + 1),
-> >       .bp_len = HW_BREAKPOINT_LEN_8,
-> >       .exclude_kernel = 1, .exclude_hv = 1,
-> >   };
-> >   int fd = perf_event_open(&a, 0, -1, -1, 0);
-> >   /* before this fix: succeeds, watches 7 bytes (buf+1..buf+7)   */
-> >   /* after  this fix: fails with EINVAL                          */
-> > 
-> > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > Fixes: b08fb180bb88 ("arm64: Allow hw watchpoint at varied offset from base address")
-> 
-> Oh man, this has been broken for nearly a decade :/
-> 
-> I think we probably should've stuck with the old behaviour of rejecting
-> unaligned base addresses, but it's too late now. Damn.
-> 
-> >  arch/arm64/kernel/hw_breakpoint.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-> > index ab76b36dce820..b8a1402119f3a 100644
-> > --- a/arch/arm64/kernel/hw_breakpoint.c
-> > +++ b/arch/arm64/kernel/hw_breakpoint.c
-> > @@ -559,6 +559,15 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
-> >  		else
-> >  			alignment_mask = 0x7;
-> >  		offset = hw->address & alignment_mask;
-> > +
-> > +		/*
-> > +		 * BAS is an 8-bit field in WCR/BCR; the shift below would
-> > +		 * silently drop the high bits of ctrl.len when offset + len
-> > +		 * exceeds 8, programming hardware to watch fewer bytes than
-> > +		 * the user requested.
-> > +		 */
-> > +		if (((u32)hw->ctrl.len << offset) > 0xff)
-> 
-> nit: Use ARM_BREAKPOINT_LEN_8 instead of 0xff
-> 
-> > +			return -EINVAL;
-> >  	}
-> 
-> I must confess, I'm very nervous about breaking userspace here. If GDB
-> is triggering this path, then this patch will change an unreliable
-> watchpoint into a hard error (which probably means GDB exits). Have you
-> looked to see what GDB and/or any other debuggers do?
-> 
-> I had a quick peek and found the bugzilla entry which motivated the
-> buggy change in the first place:
-> 
-> https://sourceware.org/bugzilla/show_bug.cgi?id=20207
-> 
-> and it looks like the aarch64_align_watchpoint() function does try to
-> spill into multiple watchpoints, so perhaps your patch is ok. I'd
-> appreciate your opinion, though.
 
-It won't, for two independent reasons.
 
-The new -EINVAL is unreachable from GDB; only a raw perf_event_open() passing
-an unaligned base with an oversized bp_len hits it, which is the bug.
+On 08/06/2026 12:28 pm, Leo Yan wrote:
+> On Thu, Jun 04, 2026 at 03:42:32PM +0100, James Clark wrote:
+> 
+> [...]
+> 
+>>> @@ -3442,6 +3447,16 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>>>    		etm->synth_opts.thread_stack = session->itrace_synth_opts->thread_stack;
+>>>    	}
+>>> +	if (etm->synth_opts.calls)
+>>> +		etm->branches_filter |= PERF_IP_FLAG_CALL |
+>>> +					PERF_IP_FLAG_TRACE_BEGIN |
+>>> +					PERF_IP_FLAG_TRACE_END;
+>>> +
+>>> +	if (etm->synth_opts.returns)
+>>> +		etm->branches_filter |= PERF_IP_FLAG_RETURN |
+>>> +					PERF_IP_FLAG_TRACE_BEGIN |
+>>> +					PERF_IP_FLAG_TRACE_END;
+>>> +
+>>
+>> This changes the default "perf script" output quite significantly and will
+>> possibly break people's workflows. synth_opts.calls is true by default but
+>> synth_opts.returns is false so we lose all the returns that we used to have.
+>> Not sure if the new behavior is more consistent with other tools so we can
+>> justify changing it? Personally I think including returns by default made
+>> more sense, and it's a more literal representation of the flow.
+> 
+> Makes sense. I will add below chunk to enable return events for default
+> option:
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index ab3aa76dddb3..bd9eb794cc07 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -3541,6 +3541,14 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>                                  session->itrace_synth_opts->default_no_sample);
+>                  etm->synth_opts.callchain = false;
+>                  etm->synth_opts.thread_stack = session->itrace_synth_opts->thread_stack;
+> +
+> +               /*
+> +                * By default, only call events are enabled but no return
+> +                * events. Enable return events to better represent the
+> +                * execution flow.
+> +                */
+> +               if (etm->synth_opts.calls)
+> +                       etm->synth_opts.returns = true;
+>          }
+> 
+>>
+>> itrace.txt says the default is "all events i.e. the same as
+>> --itrace=iybxwpe", but I thought the default was branches? At least for
+>> Coresight it is, so I'm a bit confused.
+> 
+> "--itrace=iybxwpe" would be used for "perf report" command, the doc also
+> mentions "--itrace=ce" for "perf script" specific.
+> 
+> Thanks,
+> Leo
 
-Second, even if a debugger did hand the kernel such a request, GDB
-already treats EINVAL on NT_ARM_HW_WATCH as a downgrade signal, not a
-fatal error. aarch64_linux_set_debug_regs() catches it, clears
-kernel_supports_any_contiguous_range, calls aarch64_downgrade_regs()
-(which rounds the BAS up to a legacy 0x01/03/0f/ff mask and aligns the
-base down), and retries. That fallback is exactly the PR-20207 path.
+Ah I missed that. In that case maybe it makes sense to break it and 
+treat it as a bug fix. 'c' is quite clearly documented as calls only, 
+and the workaround you suggested above makes it impossible to get only 
+calls so it makes separate options for call and return a bit useless.
 
-Confirmed on a Grace box: with the patch applied (under virtme-ng), the
-reproducer's unaligned LEN_8 now returns -EINVAL while aligned LEN_8
-still succeeds, and GDB still inserts the watchpoint and it still fires
-on every write.
-
-GDB in fact downgrades on the current kernel independently of this patch, so
-behaviour is unchanged for it.
