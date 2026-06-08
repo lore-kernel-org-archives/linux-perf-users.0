@@ -1,108 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FFC39E6DE;
-	Mon,  8 Jun 2026 20:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F8538A701
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 20:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780950428; cv=none; b=Qzh+MwwL3h6Jnl4dg6mclcWCTOuv4WSPTA2YDEaWYtddlmzZbBIyLrsC9jKTwPisWOxMRhbjHgiZrNodD6vjRraxgLSgbNw071ZFmnsMMw9e38uhpC2Ua9IA/4hHRKTbAAPFzE2CCBSE+khOqrjuxEahuJ0px4ZoliDPRDhZR04=
+	t=1780950700; cv=none; b=ThgiaWah5c9Hk6gvgXXAhHEHY/f7U411REsLWeGD7rXMGYC1ZUhDeF4pkNKt1iq1ITmFAWK+6EmD3q0duvBNW++ZHLu9qFL3xPHI4fq2twerMEpUxjpHMjeCQIXX3p29YpmZxSgdZGiVx9fR9eN5u2ISKqVLcPC6TwJf5oMTni4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780950428; c=relaxed/simple;
-	bh=NPG6ivw6tDOFUvLfyMhrWEMnlkiweSuuHUvIVBuwX7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MuimFQtt84Rut2obJiKQcHklagqE1dkbHrL4ZBbaPsf+Rqzh3qIJLSIMG13m8vbh66WI1NsKzwGSPbcCaZkhmUKSy8IFg/aUh3jrTtbGiwn6jjtTgOMZ777t/WyKXxbR7oWd2LCAUz9Nw9p6aL6w2gs/SjovX4da+8yQLP24NLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWXCuzP0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780950700; c=relaxed/simple;
+	bh=6vlUqEES72apUWYH0hxxkxab4ffnHdukCnF6Ey6fe/g=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=osAhkdBl6XFTGAg7g8LKwjTp5Cne/U7eQTFTItQN5piataM8qELTt+c+y7UCSxNELwmpHDrUmgkOwqA6BEjOW5YUXoHtCVg+3lhD5JGRFMfpwsWguouOZw6ZN/g8mhNvmxEBffLuzHPOOKsdtraFx/q0rSVfZnzbBlw02wXZE9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkOsFonu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWXCuzP0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E7FB1F00893;
-	Mon,  8 Jun 2026 20:27:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkOsFonu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A241F00893;
+	Mon,  8 Jun 2026 20:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780950427;
-	bh=6kV0zlS9JGgrhr/gDWvJr7xCMqMAeKpiuhdZnhYO2M0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=oWXCuzP0AjEmKkYdFDwHyq6AbaaNyrpxenVFJg91Re+Lh/D+C6J2nfba9HfZIixS6
-	 ECX9V/632rnT0+2WeYJUv2gAUW2prmJG8M8QWtvZqPCOgpr0j+R3xoDU0P67TlMAJC
-	 WknYxWTo6y1KrFtQvzCEqHMeJUrCweEybeR4+h4xjkzEsFK1kAJDQ/yJKsMeD0q11W
-	 8+jD1g7oeZYQKMlo/Xy2mIfw/dKL2bkXAWmRT7mLID37wOP3Htx78RHXDSlPoQHNq1
-	 nKTr+IB8HDmrKxUVuVc+99Ng5DPIQ05crIG6s6BTmWvsp/fHc284K788LlEyPy0QEm
-	 7oKXWLzPFCR/g==
-Date: Mon, 8 Jun 2026 17:27:03 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Martin Kaiser <martin@kaiser.cx>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf riscv: fix register name strings
-Message-ID: <aicll3FawrGwTQ-1@x1>
-References: <20260608192731.708606-1-martin@kaiser.cx>
- <CAP-5=fV6tVQA1TO_j9TDzPXV+ik3ww-mxX-VaO_XCGkAWYffag@mail.gmail.com>
+	s=k20260515; t=1780950698;
+	bh=kTuQGrPrI0g+lr6HJbKI8VCt2X29FwuiQoFOFomN9u8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=dkOsFonuUPR5G8zPyWun3WlKflLwgOcvgP/XWduyDoCV6TPqbjDGRUFkg3l7BX+Y8
+	 EsnniSDlWOb0jTgTV68MRZ15ftdmnVOBgKC+Nptbwzo7mJ3NTccZzd2ZB8KRhCbrdC
+	 DuW1Lbphd6rhB+U10Lg0kKdjXBQh3cUeDciWBCKLo2PMbvRT+MglNa0rYWy2qAdZkc
+	 65X72t6ts2OXvdJcYOH2ahcec9xAML9545RS9ZKrAr2OUZHuseEdAvLcEU36mzRZRF
+	 ocSX4LqTgFMJnZ8j2O/BO1BdCMb3r05cBkJl4Z7SzpJhzPtHcWEgQrJ6gh3NbxyLmU
+	 KCQ4CHUBU95kA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 01/11] perf tools: Fix get_max_num() size_t underflow on
+ empty sysfs file
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260608201753.1979464-2-acme@kernel.org>
+References: <20260608201753.1979464-2-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 08 Jun 2026 20:31:38 +0000
+Message-Id: <20260608203138.A9A241F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fV6tVQA1TO_j9TDzPXV+ik3ww-mxX-VaO_XCGkAWYffag@mail.gmail.com>
 
-On Mon, Jun 08, 2026 at 01:08:28PM -0700, Ian Rogers wrote:
-> On Mon, Jun 8, 2026 at 12:27 PM Martin Kaiser <martin@kaiser.cx> wrote:
-> >
-> > On risc-v, pref probe generates an invalid syntax for a named register in
-> > a kprobe.
-> >
-> > $ perf probe --debug verbose --add "n_tty_write tty"
-> > ...
-> > Writing event: p:probe/n_tty_write _text+8922528 tty=%"%a0":x64
-> > Failed to write event: Invalid argument
-> >
-> > The problem is the combination of
-> >
-> >    #define REG_DWARFNUM_NAME(reg, idx) [idx] = "%" #reg
-> >
-> > and entries such as
-> >
-> >    REG_DWARFNUM_NAME("%a0", 10)
-> >
-> > where #reg will escape the quotes of the first macro parameter.
-> >
-> > Update the macro definition to produce the correct syntax for a named
-> > register in a kprobe, i.e. the unquoted register name with only one
-> > leading %.
-> >
-> > Fixes: a90c4519186d ("perf riscv: Remove dwarf-regs.c and add dwarf-regs-table.h")
-> > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> 
-> Thanks for catching this! Sashiko is also green for this change:
-> https://sashiko.dev/#/patchset/20260608192731.708606-1-martin%40kaiser.cx
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Strange,
+Pre-existing issues:
+- [High] Buffer underflow and out-of-bounds write when parsing empty PMU sy=
+sfs files
+- [High] Missing null termination in `filename__read_int` and `filename__re=
+ad_ull_base` leads to uninitialized stack memory read
+--
 
-  LD      /tmp/build/perf-tools-next/tests/perf-test-in.o
-  LD      /tmp/build/perf-tools-next/perf-test-in.o
-In file included from util/dwarf-regs.c:23:
-util/../arch/riscv/include/dwarf-regs-table.h:5:9: error: ‘REG_DWARFNUM_NAME’ redefined [-Werror]
-    5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = reg
-      |         ^~~~~~~~~~~~~~~~~
-In file included from util/dwarf-regs.c:22:
-util/../arch/powerpc/include/dwarf-regs-table.h:10:9: note: this is the location of the previous definition
-   10 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = "%" #reg
-      |         ^~~~~~~~~~~~~~~~~
-In file included from util/dwarf-regs.c:24:
-util/../arch/s390/include/dwarf-regs-table.h:5:9: error: ‘REG_DWARFNUM_NAME’ redefined [-Werror]
-    5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = "%" #reg
-      |         ^~~~~~~~~~~~~~~~~
-util/../arch/riscv/include/dwarf-regs-table.h:5:9: note: this is the location of the previous definition
-    5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = reg
-      |         ^~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:96: /tmp/build/perf-tools-next/util/dwarf-regs.o] Error 1
+commit 8d602fc039d9415d5215be33dc13b838d360d23b
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+perf tools: Fix get_max_num() size_t underflow on empty sysfs file
+
+get_max_num() reads a sysfs file (cpu/possible, cpu/present, or
+node/possible) and scans backward from the end to find the last
+number.  If the file is empty, filename__read_str() returns num =3D=3D 0.
+The loop `while (--num)` decrements the size_t from 0 to SIZE_MAX,
+reading backward across the heap until a comma or hyphen is found
+or unmapped memory is hit.
+
+Add an early return for empty files before the backward scan.
+
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 21fa781b03cc7..1fab00ec4a59a 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -448,6 +448,12 @@ static int get_max_num(char *path, int *max)
+> =20
+>  	buf[num] =3D '\0';
+> =20
+> +	/* empty file =E2=80=94 nothing to parse */
+> +	if (num =3D=3D 0) {
+> +		err =3D -1;
+> +		goto out;
+> +	}
+> +
+>  	/* start on the right, to find highest node num */
+>  	while (--num) {
+>  		if ((buf[num] =3D=3D ',') || (buf[num] =3D=3D '-')) {
+
+[Severity: High]
+This isn't a bug introduced by this patch, but do similar underflows occur =
+in
+other files when parsing empty PMU sysfs files?
+
+In tools/perf/util/pmu.c:pmu_id():
+	str[len - 1] =3D 0; /* remove line feed */
+
+If len is 0, this writes a null byte at str[-1].
+
+Also in tools/perf/util/pmu.c:perf_pmu__parse_scale():
+	if (scale[sret - 1] =3D=3D '\n')
+		scale[sret - 1] =3D '\0';
+	else
+		scale[sret] =3D '\0';
+
+When sret is 0, this reads and potentially writes to scale[-1].
+
+And in tools/perf/util/pmu.c:perf_pmu__parse_unit():
+	if (alias->unit[sret - 1] =3D=3D '\n')
+		alias->unit[sret - 1] =3D '\0';
+	else
+		alias->unit[sret] =3D '\0';
+
+When sret is 0, this accesses index -1 of the struct array field.
+
+Could this corrupt heap metadata or memory when perf runs against empty sys=
+fs
+files?
 
 
-Trying to figure out why Sashiko is green on it but it doesn't buind
-here...
+[Severity: High]
+This is a pre-existing issue, but I noticed another potential read issue.
+Does filename__read_int() read uninitialized memory?
 
-- Arnaldo
+tools/lib/api/fs/fs.c:filename__read_int() {
+	...
+	if (read(fd, line, sizeof(line)) > 0) {
+		*value =3D atoi(line);
+	...
+}
+
+Since read() doesn't append a null terminator, if the file doesn't end with
+a non-digit character or if the contents reach 64 bytes, could atoi() read
+past the valid data into uninitialized stack memory?
+
+Similarly, in tools/lib/api/fs/fs.c:filename__read_ull_base():
+	if (read(fd, line, sizeof(line)) > 0) {
+		*value =3D strtoull(line, NULL, base);
+
+Could strtoull() also read out of bounds here for the same reason?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608201753.1979=
+464-1-acme@kernel.org?part=3D1
