@@ -1,93 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A514D3B1013;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20423EEAD6;
 	Mon,  8 Jun 2026 20:18:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780949922; cv=none; b=tfvvDdFbBE9lrHimGzed4+pIQECo13HyJNqpnRQmHas/wkmUgaI8Ch18Xij6MqyX/CuYsEHYzEHkZuPE4w/aQIOoJlTqxFyyORqsMZ6WCiS/JOZhDz7uGlFW5NBt6zKXg4GlwkAs6mTUbX5GC6CBhRXQCpi8xScz/ZtOyClpcPU=
+	t=1780949922; cv=none; b=nIO5XHHaUU+u+km+nCRGxY8Y3pNkcnTrQqGds4y9xsRfuiq4zVHS9PuCMA8SQBBJCe7NwrstrkxfwC4xOGNGpZ2itJG3saUKIeFucRiZUlLuZkPdfBEed7JN9S5zCfNLpYPM2WNHBpGu2Uqgl6g3PV33C2deaHfxn+XoPt4oCyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780949922; c=relaxed/simple;
-	bh=Yxt2oGqbnRLOMT0IaI+YY3WRaZ1CguTk5gpMRDf8Kug=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZOElEyDDD6amCYZxXJ/KvwJeGeftryyeSLYLUfKci83WBDfrHxiKuwH+bhxzeoLpzwdQOt0elAyPEt+WTmvC3HxnOfiAGruXajkO9sh+QwikzI2I4J0MXCV5MxiBXABJ8AtsREHQWlH/ztjC96Xltn9gHz9nadcEfFwmgNyNSk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyXnSrUe; arc=none smtp.client-ip=100.103.45.18
+	bh=hN4oWFEvM5GzZHMIP8vMempnkxiQfo1DR2z/FgfcDFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnB0FSqNg1QQuyr4eQOT0bnFCPo+7WRnleXDB1pGh7oSDWRX+FRFPSQ+mVvd0B96p+MkWldmbRYNkk0pByZdhizSBbx/aBgGdcLeUprNQK8995hjEHyFiJa5B3OYfMAkQOB1O/FIVWuenp9wfMLnug9J39IfoDnK1T6v6za0P3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2KjRrt7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyXnSrUe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B40BE1F00893;
-	Mon,  8 Jun 2026 20:18:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2KjRrt7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0973E1F00899;
+	Mon,  8 Jun 2026 20:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1780949921;
-	bh=9W8x4UTgIbevM4uKCUF+8Jr1ycseFqIZcpnfDeqRiXc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gyXnSrUeEGWByGquW/CSpRDp1hUaMrwPW00qaLLjyCFXgQ9W9NscD7fLyuikTgmh4
-	 AusOxtSuEraP1KIhX59yy0HvrUWX2F1ZGCS/OnXy6NwERTK2C7ChGoXE3rokUC74RP
-	 8vr5RHyjfv230MwfJp0TtTOxhKwjjXNRQk4R8IDalCnm2knQR9rSCv6m5DtHf747y9
-	 yt3z0MNhy6eVEh1jFrAFZar+w3M05mQOgxfye0Pv/c1QyDP/xqJPn6uf+kypHSxDVy
-	 uyZYB2qTR/SFpPXrfe+wHBMlCv0uoD0XQ9OTcJhDhj6SFOq0VeSYMCr35rzaDEoSGa
-	 hyUISCMTuL4/Q==
+	bh=EuEE3kOkE1Z3oSkx3O2SZZKsZzuOi2qcYsWuh3xM0l0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=O2KjRrt7eo4j8TPv4j7gfiutL5RbXWO3L4ygfIKvymxIxD+JftUFoei0CoeQEMr/j
+	 0DLKXoyy4HTYv/j1rG7RP8joIW+9S52ERwCrrsjo4nE7G2Fft6QhQDOUJKUNR6nibK
+	 Rmb1DGJ3smhk4mDgh0ch31m+31hYvmzw/HVaUtLUcadJ/atGyPkN1F8VOUBAkJfmR0
+	 C2mzpzxPpPtaA2VGJFdseZ+L5f7AXrMnHce4JdBjYC5nE41zkG5MlCWcTq/ZGPHErB
+	 GvIgkSDw7oUOPPEB78zyz/JXtuiviCCkWAC4X3slpGw4Da8zb4msvTcXHF1sPUE1Qv
+	 V3ZlnUrOfjMZg==
+Date: Mon, 8 Jun 2026 17:18:38 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 11/11] libperf: Document code simplification case for widening struct perf_cpu
-Date: Mon,  8 Jun 2026 17:17:51 -0300
-Message-ID: <20260608201753.1979464-12-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260608201753.1979464-1-acme@kernel.org>
-References: <20260608201753.1979464-1-acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Martin Kaiser <martin@kaiser.cx>, Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf riscv: fix register name strings
+Message-ID: <aicjnnXo1blrTFgB@x1>
+References: <20260608192731.708606-1-martin@kaiser.cx>
+ <CAP-5=fV6tVQA1TO_j9TDzPXV+ik3ww-mxX-VaO_XCGkAWYffag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV6tVQA1TO_j9TDzPXV+ik3ww-mxX-VaO_XCGkAWYffag@mail.gmail.com>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Mon, Jun 08, 2026 at 01:08:28PM -0700, Ian Rogers wrote:
+> On Mon, Jun 8, 2026 at 12:27 PM Martin Kaiser <martin@kaiser.cx> wrote:
+> >
+> > On risc-v, pref probe generates an invalid syntax for a named register in
+> > a kprobe.
+> >
+> > $ perf probe --debug verbose --add "n_tty_write tty"
+> > ...
+> > Writing event: p:probe/n_tty_write _text+8922528 tty=%"%a0":x64
+> > Failed to write event: Invalid argument
+> >
+> > The problem is the combination of
+> >
+> >    #define REG_DWARFNUM_NAME(reg, idx) [idx] = "%" #reg
+> >
+> > and entries such as
+> >
+> >    REG_DWARFNUM_NAME("%a0", 10)
+> >
+> > where #reg will escape the quotes of the first macro parameter.
+> >
+> > Update the macro definition to produce the correct syntax for a named
+> > register in a kprobe, i.e. the unquoted register name with only one
+> > leading %.
+> >
+> > Fixes: a90c4519186d ("perf riscv: Remove dwarf-regs.c and add dwarf-regs-table.h")
+> > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> 
+> Thanks for catching this! Sashiko is also green for this change:
+> https://sashiko.dev/#/patchset/20260608192731.708606-1-martin%40kaiser.cx
 
-Add a bullet point to the libperf ABI TODO explaining the code
-simplification benefit of widening struct perf_cpu.cpu from int16_t
-to int: the narrow type forces defensive truncation checks at every
-boundary where wider CPU indices are narrowed, and values > 32767
-silently wrap past bounds validation without them.
+Thanks, applying.
 
-Cc: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/lib/perf/TODO | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/tools/lib/perf/TODO b/tools/lib/perf/TODO
-index 486dd95dc57208a8..1a3644aa1f38dde4 100644
---- a/tools/lib/perf/TODO
-+++ b/tools/lib/perf/TODO
-@@ -11,6 +11,13 @@ together.
-      (x86_64 max is 8192, arm64 is 4096), but NR_CPUS limits keep
-      growing.  perf clamps to INT16_MAX in set_max_cpu_num() as a
-      safety net.
-+   - Code simplification: the int16_t forces defensive truncation
-+     checks at every boundary where a wider CPU index (int from
-+     sample->cpu, al->cpu, etc.) is narrowed into struct perf_cpu.
-+     Without these checks, values > 32767 silently wrap to small
-+     positive numbers, bypassing bounds validation.  Widening to int
-+     eliminates this entire class of silent truncation bugs and
-+     removes the need for the INT16_MAX clamp in set_max_cpu_num().
-    - Scope: struct perf_cpu is embedded everywhere — perf_cpu_map__cpu(),
-      perf_cpu_map__min(), perf_cpu_map__max(), perf_cpu_map__has(), the
-      for_each_cpu macros, and all internal callers.  The perf_cpu_map
--- 
-2.54.0
-
+- Arnaldo
