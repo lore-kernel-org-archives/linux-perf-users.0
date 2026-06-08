@@ -1,100 +1,101 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAF03AFB0E
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 21:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C57E3AFB0E
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 21:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780955798; cv=pass; b=A8usrHGhrdXTbhYcubfX0kTXbA6xUL/Nxp8Xd7yR7f1HPLd5PRSVn95cx7UO1+vsrJnlPF0foiUaxUZNZSzU0zCYNAL49enIgWtLmkTBasnfCZYpKWujNhwmtQXx8WTl7kAEcY3UV/6PKjf+FtFuC9AU2rB9tAYn7DPw9MHLpm0=
+	t=1780955897; cv=pass; b=tTHbWz7AgjoTKOjXjNUO58chw/SAOKcC4OXCzNwiSl2rbm22J15tzL7BryETaITZNxfd9T7KP8A1gXomamj+1/6cNIN9dy1clMWLfVXqR9HdG6//mYCpKO5K0f6CR+S0bKXT1hOY1zjkhVbxJuro2bmo+4wFfvhAel+SkT1DJls=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780955798; c=relaxed/simple;
-	bh=4/TdIGiAUTVXwG9mxH9B50ueYagB1AAah/kq5n5r5gQ=;
+	s=arc-20240116; t=1780955897; c=relaxed/simple;
+	bh=8O6yKVx4GkcgZbWfHqe+8Mn60MtK/KAOZxjTORCZ0Sw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KQ+YoBwn4iV0d9X3oUN0jHwAZeladDMugYbGNNiH20kzwBE81zJmWp3HfuDIRQErZP6lzQID7x4AphRwyolpu/9eajFN5+uRByAYt+dbSa9wRB22ywkbLT21v19qLmZ5z6HAaPvMtnNZQ5y/OKSz7YDo6pDCybR5DLKM2FSfnOM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RzMGzOWv; arc=pass smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=g6rfoxd6WCq1dcVWiDjOMdgsRGQ7xMmG3agFW7TkT57VN/rr1zNKBqa4xamH2j06Tg4NZX4VyBVclMwdOCZcD8Vyh0RzvhJHPlPHY/cR+gnxYCOkhOJLnMtaoD0rvVF2i8l5siLc/ZXdqeDH5ZovVqmobSjZIIYlM9crpZqjGA0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f/MGtufZ; arc=pass smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RzMGzOWv"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2bf2d865383so370755ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jun 2026 14:56:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780955796; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f/MGtufZ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2bf22c18ad3so447375ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jun 2026 14:58:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780955895; cv=none;
         d=google.com; s=arc-20240605;
-        b=YriPylfcq4qcO2jVAhkNarQQMTi1OSwR+KG9tbQUnQpv7fpb/ZyYcFpRZ1b8MiLjaT
-         SbHDcLFaEP38A4KqvyORXt6iz1J5oC2CASzBaDjZiRS4dIyqNSq8l2+TCFi1rZ605kia
-         UQCPuIKjynOF3SEjQdxxwcF6DKAfPj2sV/BlSlrRAabOdp/1hbm6jbO6Kj9o3xKUKW4G
-         weavKHO4f6VO2fCStb1la/2VJMYxHrQMn91l6sb3Q646avFSCSSDU2dA68z1CYmbzsHA
-         B86qeiG+tCsKs+SvLGACTklrfRimnUvPu8En9LpaKKtVSK8tyr+uPU0Sqz6+ONuo3KbJ
-         PUbQ==
+        b=UGZTN5191ltkr5BbRjBmk08jg3fCzi6hid7tXWqzCURt5e7YwdKEbdShS1662B4rm1
+         KywvnEK8a8gguv0rhlMMo/ajo36IYtbtTaBtGxB/SCofXk13pVHuH6XIB7RRkp476SWF
+         yrhKABnn4j6Eg5JFWd/4fQkMea/eyM3KySOUtQITDjw0DiTTl3x1ULF0vxJOfTfREGRp
+         6Ems3uck8w7Z4GvH98GLOlE3ySCcuC81VUN9L8ouNmzMEaJDmcP2CXpc2oSj9mYnMKey
+         LwTgmG3ODc2dnWbLU5iGVL8izmoukoCmMybheYFcwlECgFZihhu/3JQt715fjvWB0XwY
+         r0mw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=p5pcHEptBrs1dI8SNZVZgCdEvBQ368v75cLdJIJ+m/E=;
-        fh=zvPhJdzicYiGkUlrPGBW1bcVrMhpn2uOIgcwJ/gLIz4=;
-        b=jNNj/iNq4uKjFfTzdN9OaxboQqUvpPKX/jIh5RYroyuMc6jlMYi+2QX0Z5wsehz0w7
-         0xHcVMhqj6rm2gRVa8KZBmzVbjaVNPgx6VLx3e6qT2cvxzmXlWS9HwwFzJRtJCwcIKsS
-         rPBm5TjbLUDK9kc9Hjd4lpOOJHobpsDR7arkzGcicjOSo4MGfISEsnIdOvZ9zkyLX7lP
-         ptLCRdBveEQrhFxp/o/LZ23HAgzPw+C6PjwJuw14vvguWU3QnIKdXzn9FpjfDBiXWvoC
-         WHwsPmQvd3ir1L0mCzPlY8lrhKmpNqnz+PSlY7Z4c9METwDxv1eReFskR1GGM+1PTXtH
-         EK0w==;
+        bh=FZYk3j1U9+VAA8nXIGXgT5apYvr2DYklRqyX4KJd4Z8=;
+        fh=EY/rBStiv8EQCzFym/87jMLAiH6bmvppRnu7HLZ/rjI=;
+        b=ikm1pFEaUS0QmAzSPNSKF3kwQQ1fZHHXWAwVo1VdU97btVubIsFCpTZVAEuAZi5Wen
+         nLDjmwJ3mZP8TFMy6FAS+oX5EUCvU6js+BhSPj1XVoPC7p/RbFFj3RFeQ5RPuUAvNHkF
+         4eCOzumJrZJmC/UIytEcLIQrjx7mhKW0eAPx0T9ARqXR/+a6eX3hfe1sFUvbE/YhZuqP
+         QK14nkzbmHrzehDKjns5T3p86eLg0h9xAVUM5Owp2Znl3J8Kg/wkhfMT2Nb36pyajw/1
+         Vm/lJzn+xFueOEWpUIV0r2v1hHghhGb+4AH2WOQubzFmFV2i8ohrl6u4KXJRm5LrGx1q
+         VhdQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780955796; x=1781560596; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780955895; x=1781560695; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p5pcHEptBrs1dI8SNZVZgCdEvBQ368v75cLdJIJ+m/E=;
-        b=RzMGzOWvHmAV2F7jXUgeSX5actoLNHZ5weDMN3YLaMQPvkW9VsP2HxDWgyJRiQYLZX
-         zFy/LBY/rNVYw5iU4mg6DgAzj7dVniAcINNyN1FJxtDKJ+yE8/Wue2UV8YbqRGrZBrbH
-         u2omsAEZTWOwT3T2HbicnJhQwCKHgru8zKUqc92X2N9aQ/1zd3pr6jL3iX6T5EjTc9/e
-         bs7muzm7BKPXpQ/2UnQmG3O078Iaa6YJviJcjUDETACgrDkyHo7E+HRCet5HJPFnEX5O
-         e8YFtTwXd0HoGGj849ILl3Xu1a+MtBUxOY5VARTd2v5MWgqVN0lLfjqHrqWA8EqjsrHY
-         WR1w==
+        bh=FZYk3j1U9+VAA8nXIGXgT5apYvr2DYklRqyX4KJd4Z8=;
+        b=f/MGtufZIpodF7ofr2LRzF8IWF+Ml8T/bgK/vbNVhW7Ng6k2S5+63tGS4k/4naqXWj
+         rgT10ibBY3v6NONMQkE9uy5iemrTAbleHKxfBRwMFtQDf4br30pg91iOfIHSbeyfyIOg
+         glYOJTa5bqdAdj6WAMCSmpPuPi22Vfh6crTwyCVyIH7iFuFmmi5TUGejr3314Ir+O2tk
+         sTFDNmzQpFrPmtMKo49kPn9irZvm8hTepNq3E837K5tXD+MxhpfztZuGr3ICYQeImbUu
+         KiJ43zL81arfrKTXf9a10DvonvUtsJIPpmR2Wjc1SlDiR9H3J4vg/tmkkaE86jjeYgCH
+         NyIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780955796; x=1781560596;
+        d=1e100.net; s=20251104; t=1780955895; x=1781560695;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=p5pcHEptBrs1dI8SNZVZgCdEvBQ368v75cLdJIJ+m/E=;
-        b=bOLjEF6c0tVvXNxDw/2dugLdqtqUVZeza/MdbWw8OdlFohflFl9uSa7sEJQ+xo5TXS
-         zo2UDDnsoADHtxMnRZyvaI7XxEmBIa/N6K1eEfQMxDJTr36OqcMUN1meRi6mz+RAjaLP
-         ZjXt2QA31/pvAFDVhw9VQYUJilrMO9eO4AHIC/MsrIcR6o3oYdOkAA7sJu/MVR6lTN/+
-         ji7mcuRoJXf0PwPxRzenJJrC9So3HCbuUxKLipzGwLyXDpcHG2nECctVv+x9zoSfPKah
-         AIUbnC7zzyH6k+Jd05pFMADgw0JcwLT3YW0Kqu5pFGe+9x+g/54SKtaZsBLRzUMtbt7h
-         By5Q==
-X-Forwarded-Encrypted: i=1; AFNElJ80ZP59eJ/ZHJOP77Xhgge5r0vqmV3FesS8BwCm0t98VzgiYnSucsv33ggs/PZJQt8X9Hm2v1O1crVyp8030mxw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuoJShom64OFjwmZBnrN2E2Fd6/uxwBP9zl9D84ZehGT8VBT9A
-	A9NY/NGN2OpvflvbUBPywmqSlr/0bMHVUZBeLAt5NO3zrObYUCH/fzRGfh15Rpv3L/PJVnZClNL
-	1X2Gl5HnHEkfSfF+iSNTBD/MbTIeAHfni4Lo1Ij1q
-X-Gm-Gg: Acq92OHVf3QxZtTabhnsriCxVhujDD5nYoyLmOYE02ZCvZ0AVUcasQLCLzo8eXpa7sa
-	he2RCmaVkBC/NDmBIqceOjiQN0owDm8faXcvBlt+Nd3H4oo3H774FO3ySGKGX9+AajjUfygb9N6
-	wmV57lm0SXS3x2r7cWmCv4Hzcst1gphlmS88GC5c89606QDQDBZyR94Iyo2YkTkdglIaaSroOXT
-	AZeMEJtWurHVijnR8SqMCXUAgH6opDEuiGkSe4SqnJqMPqC57HMpcWiZ1kLtbk8QjBaapZx+Bn+
-	T7XrBvDxXENQnoQ1WLc3t948HiTBgGytCNJPvU+52nQWNlSx
-X-Received: by 2002:a17:903:11c6:b0:2c1:4228:3321 with SMTP id
- d9443c01a7336-2c1ebb62205mr6772325ad.12.1780955795614; Mon, 08 Jun 2026
- 14:56:35 -0700 (PDT)
+        bh=FZYk3j1U9+VAA8nXIGXgT5apYvr2DYklRqyX4KJd4Z8=;
+        b=Dv/snzAFGifATYLG4qZSJdZJG+oStL1Wl9u+B8N3HLd6TCLsAmAagrYTMqRKyX0TaT
+         EhLPBzqc0IcuWccrktCj2YLZZZaqRh3jOBXH9TmcEEqUqSgL7woJiQ1BKVrDwA7hBttz
+         YBokpjfzzrEN3nHcXmnl1uPLucHYd82O/CuSr/fzL6gCDR4WThXQLNLSWtCTVa+i389o
+         z9TfQ7NdsV7NglSxryPVnU7PvC+/kAwJSS2quUUrpOdUqdRuL5XQuRo1J1OZABRq9Ymr
+         BZPH32mMC2ImOETB+Ojqb9a91hIXglRiw90Jo50ZIwlsdig4hCK3Z5AiQ5ms8aNDp11g
+         9TiA==
+X-Forwarded-Encrypted: i=1; AFNElJ/QpVgecfM59HzSQI2VgHsT8nd6qwLcergwNZwMWdoOfYirCBhjkJLou5DhPDPhIapMSTo2t8XIGOWOeC0FzlvT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPoZcl806S3p3AZb37vr//G0wlyt2yhTboJxFgPLn5JYipdbsA
+	Qqy3E1fsYy6pEVTM7kbw9mKUX8q9OdhpFjaEMQM6XBlW3dtLUGyk6SCIOmEqfH+BjANmyVlUzTQ
+	EQfgvuSVFh4UOl8Xw563jzWQ1lPXzYoUKUI2uMx+O
+X-Gm-Gg: Acq92OEJRD8CX7En2KBfeG1sSTgoMj+m0gg5H2wrRgc/5HlApA9A1fxFE2Lmgjiv5HR
+	akkjNiKzkR8CuF6Ut20byl2lCOBMakX8w44IkbhR0XXICXNcsJRHh+5+lYAcbAFOCK6FW/q8qY1
+	fqGcnObNOuKQd7LjJvcjAvTorOMPweHBGcQOsHouRPX1Q7+/Bi8tEe1AVSy38b75shcVGVllP2w
+	eqsFB1AUEjCCEvvQa+vmoR591p9aUtgeGKvVZcDXNHxIgGDQquBJndY7gsL65CI9EyOvY7itPkU
+	rffvHYsrhYFTbzpTpXlu1QlsZc+GVptf5BqMS5PAHidA35it
+X-Received: by 2002:a17:903:8c3:b0:2c0:c14c:bf37 with SMTP id
+ d9443c01a7336-2c1eb50a69bmr5840675ad.16.1780955895041; Mon, 08 Jun 2026
+ 14:58:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260608201753.1979464-1-acme@kernel.org> <20260608201753.1979464-4-acme@kernel.org>
-In-Reply-To: <20260608201753.1979464-4-acme@kernel.org>
+References: <20260608201753.1979464-1-acme@kernel.org> <20260608201753.1979464-5-acme@kernel.org>
+In-Reply-To: <20260608201753.1979464-5-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 8 Jun 2026 14:56:24 -0700
-X-Gm-Features: AVVi8CezuoXtsYQuClbptMaDVHoMVumf3hP_7T6trIPKaL2QYDMWuSijJMkz8PY
-Message-ID: <CAP-5=fUnohrU5_CzJ8Ua8D8tTyR=HDwCBUeteu39pV6cZvH4+g@mail.gmail.com>
-Subject: Re: [PATCH 03/11] perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
+Date: Mon, 8 Jun 2026 14:58:03 -0700
+X-Gm-Features: AVVi8CcmLQfIN6fpJBiGGt6cUi1hvn_7G0DmOG2wsHetv4INmLkkXseKReY3iME
+Message-ID: <CAP-5=fV-O+5ajOtCVBTS2fEvob=8n2+5iWs-+g6tdrVBe8x_1g@mail.gmail.com>
+Subject: Re: [PATCH 04/11] perf tools: NULL bitmap pointers after bitmap_free()
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	sashiko-bot <sashiko-bot@kernel.org>, Kan Liang <kan.liang@intel.com>, 
+	sashiko-bot <sashiko-bot@kernel.org>, Alexey Budankov <alexey.budankov@linux.intel.com>, 
+	Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>, 
 	"Claude Opus 4.6" <noreply@anthropic.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -104,74 +105,63 @@ l.org> wrote:
 >
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> machine__resolve() accesses env->cpu[al->cpu].socket_id after checking
-> al->cpu >=3D 0 and env->cpu !=3D NULL, but without validating al->cpu
-> against env->nr_cpus_avail.  Since al->cpu comes from the untrusted
-> perf.data sample, a crafted file with a large CPU index causes an
-> out-of-bounds heap read.
+> Two call sites free bitmaps without NULLing the pointer, risking
+> double-free if the structure is reused or cleanup is called twice:
 >
-> Use perf_env__get_cpu_topology() which validates both NULL and bounds.
+>  - mmap__munmap():                 map->affinity_mask.bits
+>  - record__mmap_cpu_mask_free():   mask->bits
 >
-> Fixes: 0c4c4debb0adda4c ("perf tools: Add processor socket info to hist_e=
-ntry and addr_location")
+> Set each pointer to NULL after bitmap_free().
+>
+> Fixes: 8384a2600c7ddfc8 ("perf record: Adapt affinity to machines with #C=
+PUs > 1K")
+> Fixes: f466e5ed6c356d1d ("perf record: Extend --threads command line opti=
+on")
 > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Cc: Kan Liang <kan.liang@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
+> Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Cc: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 > Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/event.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index 66f4843bb235df53..001db00be1073ad4 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -14,6 +14,7 @@
->  #include <linux/perf_event.h>
->  #include "cpumap.h"
->  #include "dso.h"
-> +#include "env.h"
->  #include "event.h"
->  #include "debug.h"
->  #include "hist.h"
-> @@ -836,8 +837,14 @@ int machine__resolve(struct machine *machine, struct=
- addr_location *al,
->         if (al->cpu >=3D 0) {
->                 struct perf_env *env =3D machine->env;
->
-> -               if (env && env->cpu)
-> -                       al->socket =3D env->cpu[al->cpu].socket_id;
-> +               /* bounds-check before truncating to struct perf_cpu (int=
-16_t) */
-> +               if (env && al->cpu < env->nr_cpus_avail) {
 
-Isn't this already covered by the test in perf_env__get_cpu_topology?
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/env.h?h=3Dperf-tools-next#n199
-```
-if (env->cpu && cpu.cpu >=3D 0 && cpu.cpu < env->nr_cpus_avail)
-  return &env->cpu[cpu.cpu];
-return NULL;
-```
+Perhaps there's a need for bitmap_zfree.
 
 Thanks,
 Ian
 
-
-
-
-> +                       struct cpu_topology_map *topo;
-> +
-> +                       topo =3D perf_env__get_cpu_topology(env, (struct =
-perf_cpu){ al->cpu });
-> +                       if (topo)
-> +                               al->socket =3D topo->socket_id;
-> +               }
->         }
+> ---
+>  tools/perf/builtin-record.c | 1 +
+>  tools/perf/util/mmap.c      | 1 +
+>  2 files changed, 2 insertions(+)
 >
->         /* Account for possible out-of-order switch events. */
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index a33c78f030d91012..e915390556752b9e 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -3084,6 +3084,7 @@ static int record__mmap_cpu_mask_alloc(struct mmap_=
+cpu_mask *mask, int nr_bits)
+>  static void record__mmap_cpu_mask_free(struct mmap_cpu_mask *mask)
+>  {
+>         bitmap_free(mask->bits);
+> +       mask->bits =3D NULL;
+>         mask->nbits =3D 0;
+>  }
+>
+> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+> index d64aec6c7c843e81..c6bd4c37d50ee57e 100644
+> --- a/tools/perf/util/mmap.c
+> +++ b/tools/perf/util/mmap.c
+> @@ -238,6 +238,7 @@ static void perf_mmap__aio_munmap(struct mmap *map __=
+maybe_unused)
+>  void mmap__munmap(struct mmap *map)
+>  {
+>         bitmap_free(map->affinity_mask.bits);
+> +       map->affinity_mask.bits =3D NULL;
+>
+>         zstd_fini(&map->zstd_data);
+>
 > --
 > 2.54.0
 >
