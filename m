@@ -1,359 +1,166 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C64B3382C9
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 13:12:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8651C370ACD
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 13:12:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780924347; cv=none; b=hEI/Es+MFvyiF2Pl1Gc/meqzunjKm8yNsEx47CCasR5X7+m7EkmZEpPFqNqF28WlzuNeI8+uwU3nRZ7fJusD+/yHcqzLGBbH1HKgQAw+zY+B57vJ17ex21o/lz+1KA/ZjrMi5ycSL5pourhkBO8sHVJK3NcCX35v2GGAv0B2cCo=
+	t=1780924366; cv=none; b=kcWToiya09RjOgl3aE8SsG55rVhtOI4aN78yd7MOSkrwEF+1xHIoORGs0PYhhLmHJfy5vZgIGUSGAV25ED12H3oocHMzWMBp1yzqAYS98UqOCgGHW30qToYHMevmiG6aySk39BasGo/gGWZlQtn1WWXBUKBTwCC3se+jCQmKfcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780924347; c=relaxed/simple;
-	bh=0iKeTGDqslZzeAqxDsY0HyNyFzJAgL+S9Enp0usVVok=;
+	s=arc-20240116; t=1780924366; c=relaxed/simple;
+	bh=W11GpjkALUPTPIeTknwEJ+0UXl7qzBqZWfZ4hHvBNZ8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=r1QWU2o0q/OUdxYpR9OCJ9HYhjGNItt3MLk6pIpvYqgOfIfBxgBumG9oLHBfMoRVq0UE8Khorx14BcxSNRfy093rDbcW+nWxB29rI3m/FFhEN8WQPxMMSBcQuFLDUGpU91u1XdReGgjToJI3t5p7d4YcBJWRswkRVMKn37YPBpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fw2tbh8E; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=mHI7qb3JB5IZ10acupmwEF8n1keo2O/mVmDba6hfr8uGMDLbZNmpO84sRzwEU0zPrbVjVjZuG7TI28htmy3SVN1N5FjHv6Ev+7irSFpBtIM7nbvDyQA5uN4cl0JF1XuuNcmnDiO6FR5aOt8UNlrFIW2XHeUuCIYbZFD2mTz+Dng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtzjw0Xb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fw2tbh8E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B448A1F00898;
-	Mon,  8 Jun 2026 13:12:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtzjw0Xb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C06BF1F00893;
+	Mon,  8 Jun 2026 13:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780924345;
-	bh=fxEBxRxOa5ErNXDVuiL20heV4GmbXjluwmbI44n9ICc=;
+	s=k20260515; t=1780924363;
+	bh=+WyrNnzJha8dwIVi8gSaeixwfwgM276eo6LBYbz250Y=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fw2tbh8E015z6N5STTBqnkopTAtvxBgXEWeYGzbdWvqrPGJYPQY+p9PTWhMBdPust
-	 t7eRZOJEgDRu4GeO77ZsmrVORR0uReQfoQrnG4lzMkr9s31QCTGaV/UJetT/V/cCyx
-	 6ZNE49WXsg7OE6zlG8/pI8jPBnPGGEIXPVf0Msn1eAEbwQXlNNCq+aCPqcs9eIfQBB
-	 TMbsS0ZAsFO5O8OiBNaz2RzCPglwc/ZfTNy0ALztcZsl/hbHXz5ftBmlBpHvCRgw8b
-	 MrwKZgDwCA/c25jyiXJYBPFs1vEbzyxQAxFywwyZdjplNZ43pNA6RvpVhfXYUBq6Nj
-	 d5iWqbSAjJ1vg==
+	b=jtzjw0Xbf09DH7+/cKe5Am9+9b2FpJPFCkWEF06T3s64bhiDuIxHtYlZNiyjJhcpN
+	 AjLRiFEFyVVWyx7Osi5zmw0vOFoBSdAt5qWwClHlO5ZNwnTA+aEdcVtbTgzV/4LpxM
+	 /MPhGxKdktxfyStvMFo/JYpajsZOtb4Sr4k3c0XNMDxZzJDjoJ7ZO2qPZUbmwJ2EJH
+	 898vBCL2EAVHa6/p1KCjFSlKYvGZkGEj1u86xGJiE68Qu/VW2MPqPwSWmOf6HwKe1R
+	 Cj9If+BKY/ZMg29aT6zbfb+dArz612NGB/O7VHFWhv5ZvfULNXXpG3qhQPKDMY8DiW
+	 4qEdgiAIsqQCA==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 2/4] perf/trace-event: Write trace.dat metadata
- sections during parsing
+Subject: Re: [RFC PATCH 4/4] perf data: Add --to-trace-dat option for
+ converting perf.data tracepoint events into trace.dat format
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260608125951.90425-4-tshah@linux.ibm.com>
-References: <20260608125951.90425-4-tshah@linux.ibm.com>
+In-Reply-To: <20260608125951.90425-6-tshah@linux.ibm.com>
+References: <20260608125951.90425-6-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 13:12:24 +0000
-Message-Id: <20260608131224.B448A1F00898@smtp.kernel.org>
+Date: Mon, 08 Jun 2026 13:12:43 +0000
+Message-Id: <20260608131243.C06BF1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Using `read()` directly instead of the subsystem's `do_read()` loo=
-p fails to handle short reads, causing stream desynchronization and uniniti=
-alized memory writes.
-- [High] Integer truncation in `do_read()` causes massive uninitialized hea=
-p memory dumps to the output file.
-- [Medium] Metadata fields and integers for the `trace.dat` file are writte=
-n in the host's native byte order, causing cross-platform incompatibility.
-- [Medium] Error paths in `fwrite` operations return directly without clean=
-ing up allocated resources, leading to memory and state leaks.
-- [Medium] Writing 2 bytes from a 1-byte `char` variable causes a stack out=
--of-bounds read and file corruption.
-
-Pre-existing issues:
-- [High] Unbounded string accumulation in `read_string()` causes a stack bu=
-ffer overflow.
+- [High] The `trace_convert__perf2dat` tool fails to register required `.at=
+tr`, `.feature`, and `.tracing_data` callbacks, breaking pipe mode.
+- [High] Accessing unverified `perf_env` field `nr_cpus_online` leads to de=
+terministic failure when CPU topology feature is missing.
+- [High] Failing `realloc()` in `trace_dat__collect_cpu_event()` leaks memo=
+ry and causes a NULL pointer dereference in the cleanup path.
+- [Low] Missing semicolon after `return -1` in the `#else` branch inside `c=
+md_data_convert`.
 --
 
-commit f1360b22eb92ea64822af70555a808fd9d67ae93
+commit 789bd3d29fe2134b1ed0b9a17d6c674bc7d7db23
 Author: Tanushree Shah <tshah@linux.ibm.com>
-Date:   Mon Jun 8 12:59:50 2026 +0000
 
-    perf/trace-event: Write trace.dat metadata sections during parsing
+perf data: Add --to-trace-dat option for converting perf.data tracepoint ev=
+ents into trace.dat format
    =20
-    Perf already captures the tracing metadata as a part of
-    data section in perf.data
-   =20
-    When trace_dat_fp is set, write trace.dat compatible metadata
-    sections using the perf provided raw buffers.
-   =20
-    Sections written:
-    - Initial format header (magic, version, endian, long_size,
-      page_size, compression, options_offset placeholder)
-    - Section 16: HEADER INFO (header_page + header_event)
-    - Section 17: FTRACE EVENT FORMATS
-    - Section 18: EVENT FORMATS (per system/event format files)
-    - Section 19: KALLSYMS
-    - Section 21: CMDLINES
-    - Section 15: STRINGS (written last after all sections)
-   =20
-    Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+Add new command-line option to perf data convert for generating
+trace.dat output files. Accepts output filename for trace.dat format,
+mutually exclusive with --to-ctf and --to-json, and calls
+trace_convert__perf2dat() to perform conversion.
 
-This commit updates the trace-event parsing in perf to write trace.dat
-compatible metadata sections when trace_dat_fp is set. It outputs sections
-such as initial format headers, FTRACE EVENT FORMATS, EVENT FORMATS,
-KALLSYMS, and CMDLINES using perf's raw buffers.
-
-> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-e=
-vent-read.c
-> index ecbbb93f01853..815577703c2e5 100644
-> --- a/tools/perf/util/trace-event-read.c
-> +++ b/tools/perf/util/trace-event-read.c
+> diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
+> index 4c08ccb8c06b7..96ccab77456a3 100644
+> --- a/tools/perf/builtin-data.c
+> +++ b/tools/perf/builtin-data.c
 
 [ ... ]
 
-> @@ -145,10 +146,9 @@ static char *read_string(void)
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does read_string() allow a
-stack buffer overflow when accumulating characters?
-
-In read_string():
-    buf[size++] =3D c;
-
-If the input file contains a string longer than BUFSIZ without a null
-terminator, will this increment the size index and write past the bounds
-of the fixed-size array buf?
-
->  static int read_proc_kallsyms(struct tep_handle *pevent)
->  {
->  	unsigned int size;
-> +	char *buf;
-> =20
->  	size =3D read4(pevent);
-> -	if (!size)
-> -		return 0;
-
+> @@ -65,16 +72,43 @@ static int cmd_data_convert(int argc, const char **ar=
+gv)
 [ ... ]
-
-> +	buf =3D malloc(size);
-> +	if (buf =3D=3D NULL)
-> +		return -1;
-> +	if (read(input_fd, buf, size) < 0) {
-> +		free(buf);
+>  #else
+> +	#ifdef HAVE_LIBTRACEEVENT
+> +	if (!to_json && !trace_dat_output) {
+> +		pr_err("You must specify --to-json or --to-trace-dat.\n");
 > +		return -1;
 > +	}
->  	trace_data_size +=3D size;
-> +	/* Write kallsyms section with data */
-> +	if (trace_dat_fp) {
-> +		unsigned short section_id =3D TRACE_DAT_SECTION_KALLSYMS;
-> +		unsigned int string_id =3D STRID_KALLSYMS;
-> +		unsigned long long section_size =3D sizeof(unsigned int) + size;
-> +		unsigned short flags =3D 0;
-> +
-> +		trace_dat_kallsyms_offset =3D ftell(trace_dat_fp);
-> +		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-> +		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-> +		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
-> +		    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp=
-) ||
-> +		    !fwrite(&size, sizeof(unsigned int), 1, trace_dat_fp) ||
-> +		    !fwrite(buf, 1, size, trace_dat_fp)) {
-
-[Severity: High]
-Could using read() instead of do_read() here cause uninitialized memory to
-be written to the output file?
-
-Unlike do_read(), read() can return a short read. If a short read occurs, t=
-he
-return value might still be greater than 0, bypassing the error check.
-
-Will this leave the remainder of buf uninitialized, failing to advance the
-input_fd offset by the expected amount, and then dump the partially
-uninitialized heap memory into trace_dat_fp during the fwrite() call?
-
-> +			free(buf);
-> +			return -EIO;
+> +	#else
+>  	if (!to_json) {
+>  		pr_err("You must specify --to-json.\n");
+> -	return -1;
+> -}
+> +		return -1
 > +		}
-> +	}
-> +	free(buf);
->  	return 0;
->  }
 
-[ ... ]
+[Severity: Low]
+Is there a missing semicolon here? It looks like this will break compilation
+for environments lacking both HAVE_LIBBABELTRACE_SUPPORT and
+HAVE_LIBTRACEEVENT.
 
-> @@ -209,6 +261,7 @@ static int read_header_files(struct tep_handle *peven=
-t)
-> =20
->  	size =3D read8(pevent);
-> =20
-> +	header_page_size =3D size;
->  	header_page =3D malloc(size);
->  	if (header_page =3D=3D NULL)
->  		return -1;
-> @@ -227,19 +280,59 @@ static int read_header_files(struct tep_handle *pev=
-ent)
->  		 */
->  		tep_set_long_size(pevent, tep_get_header_page_size(pevent));
->  	}
-> -	free(header_page);
-> =20
-> -	if (do_read(buf, 13) < 0)
-> +	if (do_read(buf, 13) < 0) {
-> +		free(header_page);
->  		return -1;
-> +	}
+> +	#endif
+> +#endif
+> +
+> +#ifdef HAVE_LIBTRACEEVENT
+> +	if (trace_dat_output)
+> +		return trace_convert__perf2dat(input_name ? input_name : "perf.data",
+> +					       trace_dat_output, &opts);
 
 [Severity: High]
-Can integer truncation in do_read() lead to massive uninitialized heap memo=
-ry
-dumps here?
+Does trace_convert__perf2dat() register the required callbacks for pipe mod=
+e?
 
-Functions like read_header_files() allocate memory using the 64-bit size re=
-ad
-from the file:
+Looking at the tool initialization in trace_convert__perf2dat():
 
-    size =3D read8(pevent);
-    header_page =3D malloc(size);
+	/* Initialize tool with all required callbacks */
+	perf_tool__init(&tc.tool, /*ordered_events=3D*/true);
+	tc.tool.sample =3D process_sample_event;
 
-They then call do_read(header_page, size). Because do_read() takes an int
-for the size argument, values over 4GB are truncated to their lower 32 bits.
-If size is 0x100000004, do_read() will only read 4 bytes.
+If .attr and .feature are not overridden, won't incoming
+perf_event_header_attr and feature events from a pipe be silently dropped,
+preventing the creation of evlists/evsels and breaking event processing?
 
-Later in the function, fwrite() is called with the full 64-bit size:
+[Severity: High]
+How does this code handle missing CPU topology features?
 
-    !fwrite(header_page, 1, header_page_size, trace_dat_fp)
+Looking at trace_convert__perf2dat():
 
-Will this result in dumping 4GB of uninitialized heap memory into the
-output file?
+		if (trace_dat__init_cpu_buffers(session->header.env.nr_cpus_online) < 0) {
 
-[ ... ]
+If the feature callback is not registered (like in pipe mode) or the CPU
+topology feature wasn't recorded, wouldn't session->header.env.nr_cpus_onli=
+ne
+remain 0?
 
-> @@ -298,8 +405,31 @@ static int read_ftrace_files(struct tep_handle *peve=
-nt)
->  	int count;
->  	int i;
->  	int ret;
-> +	long section_size_pos =3D 0;
-> +	long count_pos =3D 0;
-> +	unsigned long long section_size =3D 0;
-> +	long end_pos;
-> =20
->  	count =3D read4(pevent);
-> +	/* Write ftrace formats section to trace.dat output file */
-> +	if (trace_dat_fp) {
-> +		unsigned short section_id =3D TRACE_DAT_SECTION_FTRACE;
-> +		unsigned short flags =3D 0;
-> +		unsigned int string_id =3D STRID_FTRACE_FORMATS;
-> +
-> +		trace_dat_ftrace_format_offset =3D ftell(trace_dat_fp);
-> +
-> +		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-> +		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-> +		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp))
+If trace_dat__init_cpu_buffers(0) succeeds with 0 elements, won't
+trace_dat__collect_cpu_event() later check cpu >=3D trace_dat_nr_cpus (0 >=
+=3D 0)
+and return -EINVAL, causing process_sample_event to return -ENOMEM and abort
+the conversion?
 
-[Severity: Medium]
-Should these multi-byte integers be byte-swapped to match the output file's
-endianness?
+[Severity: High]
+Is it possible for a reallocation failure to cause a memory leak and
+subsequent NULL pointer dereference?
 
-The trace.dat file endianness is explicitly declared to match the original
-perf.data file (endian =3D file_bigendian).
+Looking at trace_dat__collect_cpu_event():
 
-However, variables like section_id, flags, and string_id are written using
-fwrite(), which writes them in the host's native byte order. If a
-little-endian host is processing a big-endian capture file, won't this corr=
-upt
-the section IDs and sizes in the resulting trace.dat file?
+		cpu_events->events   =3D realloc(cpu_events->events,
+				       cpu_events->capacity * sizeof(*cpu_events->events));
+		if (!cpu_events->events)
+			return -ENOMEM;
 
-> +			return -EIO;
-> +		section_size_pos =3D ftell(trace_dat_fp);
-> +		if (!fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp=
-))
-> +			return -EIO;
-> +		count_pos =3D ftell(trace_dat_fp);
-> +		if (!fwrite(&count, sizeof(unsigned int), 1, trace_dat_fp))
-> +			return -EIO;
-> +	}
+If realloc fails, doesn't it overwrite cpu_events->events with NULL, leaking
+the old array?
 
-[ ... ]
+Furthermore, if this returns -ENOMEM and cascades up to trigger the cleanup
+path in trace_dat__free_cpu_buffers():
 
-> @@ -363,6 +557,23 @@ static int read_saved_cmdline(struct tep_handle *pev=
-ent)
->  		pr_debug("error reading saved cmdlines\n");
->  		goto out;
->  	}
-> +	/* Write cmdlines section with data */
-> +	if (trace_dat_fp) {
-> +		unsigned short section_id =3D TRACE_DAT_SECTION_CMDLINE;
-> +		unsigned short flags =3D 0;
-> +		unsigned int string_id =3D STRID_CMDLINES;
-> +		unsigned long long section_size =3D sizeof(unsigned long long) + size;
-> +
-> +		trace_dat_cmdline_offset =3D ftell(trace_dat_fp);
-> +		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-> +		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-> +		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
-> +		    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp=
-) ||
-> +		    !fwrite(&size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-> +		    !fwrite(buf, 1, size, trace_dat_fp))
-> +			return -EIO;
+		for (i =3D 0; i < trace_cpu_data[cpu].count; i++)
+			free(trace_cpu_data[cpu].events[i].raw);
 
-[Severity: Medium]
-Does returning directly bypass the cleanup block?
+Since count was not reset, won't this loop access events[i] and dereference
+the NULL pointer?
 
-If fwrite() fails, this error path returns -EIO immediately instead of using
-the "goto out" pattern established in this function.
-
-Will this cause the allocated memory in buf to be leaked, since free(buf)
-is skipped?
-
-> +	}
-> +
->  	buf[ret] =3D '\0';
-> =20
->  	parse_saved_cmdline(pevent, buf, size);
-
-[ ... ]
-
-> @@ -440,6 +657,28 @@ ssize_t trace_report(int fd, struct trace_event *tev=
-ent, bool __repipe)
->  	tep_set_long_size(pevent, file_long_size);
->  	tep_set_page_size(pevent, file_page_size);
-> =20
-> +	/* Write initial file header to trace.dat */
-> +	if (trace_dat_fp) {
-> +		unsigned char endian =3D file_bigendian;
-> +		unsigned char long_size =3D file_long_size;
-> +		unsigned int page_size =3D file_page_size;
-> +		unsigned long long placeholder =3D 0;
-> +		char trace_dat_version =3D TRACE_DAT_VERSION;
-> +
-> +		if (!fwrite(magic_buf, 1, 10, trace_dat_fp) ||    /* magic + "tracing"=
- */
-> +		    !fwrite(&trace_dat_version, 1, 2, trace_dat_fp) ||
-
-[Severity: Medium]
-Can this write out-of-bounds stack memory to the output file?
-
-The variable trace_dat_version is declared as a 1-byte char:
-
-    char trace_dat_version =3D TRACE_DAT_VERSION;
-
-However, the fwrite call asks to write 2 bytes:
-
-    !fwrite(&trace_dat_version, 1, 2, trace_dat_fp)
-
-Will this read 1 byte past the trace_dat_version variable on the stack,
-leaking uninitialized stack memory into the output file and potentially
-failing to write the expected null terminator for the version string?
-
-> +		    !fwrite(&endian, 1, 1, trace_dat_fp) ||
-> +		    !fwrite(&long_size, 1, 1, trace_dat_fp) ||
-> +		    !fwrite(&page_size, sizeof(unsigned int), 1, trace_dat_fp) ||
-> +		    !fwrite("none", 1, 4, trace_dat_fp) ||
-> +		    !fwrite("\0", 1, 1, trace_dat_fp) ||
-> +		    !fwrite("\0", 1, 1, trace_dat_fp))
-> +			return -EIO;
-> +		trace_dat_options_offset =3D ftell(trace_dat_fp);
-> +		if (!fwrite(&placeholder, sizeof(unsigned long long), 1, trace_dat_fp))
-> +			return -EIO;
-> +	}
-> +
->  	err =3D read_header_files(pevent);
->  	if (err)
->  		goto out;
+> +#endif
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608125951.9042=
-5-2-tshah@linux.ibm.com?part=3D2
+5-2-tshah@linux.ibm.com?part=3D4
