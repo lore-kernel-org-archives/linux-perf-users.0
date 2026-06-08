@@ -1,194 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88634071CF;
-	Mon,  8 Jun 2026 01:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F89B3009F6
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780882672; cv=none; b=WVlJVsKPomUikaJaD1Uu4eyyjEcwNYQF5Qx7EFMH0CHxJ2qf5AktcoACyGVZyyl+0DZR1hg56TklDD0/XKDZ9rrzonBwySVZFxcyjfe6H3UfNGw1RA44ZyRetRf5ainTXD1DoNgEN6PXHFC7I8lKn1ORGago9F5kqbfAGwer6AU=
+	t=1780883074; cv=none; b=fyMiybGvJz8QCDEa6zn36opoQqUD7p18cV0/mWzq1KBLgkoL8HBmaZ4+98UqfIBEt0Awo5eRBYfOd/2kVLuz62/VOJITo7mslFbRvm40MwRZXxhzgC5uF/v4Qjli3KqX0WVi68jgH3b2XYB5HhUpCYXmAyZvUs19yj5rXN5tAm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780882672; c=relaxed/simple;
-	bh=fHlma5KECpLohBaWFsPmgwtR8FBoBLwy9+VgTW1777I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JF7KzbObnelTGntM9Bx4QZlQ5ePuZiQ8pEm3JazYVpjKgi0KPTbvHQDGy4SQaHYOq4VccU66vZxBo+2TcL2+PjOXDzEh1MzCoZEe8z6ENjZ7sZaAiELUctg2AQEnEJR87G4oIJMKD3KYL4qm+WdfdOixt5gnXgFjPnoX0eLrSvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIt7AGDR; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780883074; c=relaxed/simple;
+	bh=ZYJXn+gey3VVzjlVCFIBfVNxokXqZQEMHvhC4iO3NVU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=HnTZT97KXOR2AA2hrW4gX/CXBqPW82l7Ocx/X1HL3zdS4zMYXylcUpdGSskdtkLIAWZzV5XfMLNanr8bSQ22DIFA4kTU5YCEUmOlLHANY6iNR91YY7uvNwjXeiDz1A+MFWXR2PAN0P/Jpd8AK1uG0qavtOpX3jd62zi3SlyyO+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1robTKd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIt7AGDR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780882670; x=1812418670;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fHlma5KECpLohBaWFsPmgwtR8FBoBLwy9+VgTW1777I=;
-  b=kIt7AGDROnTkywIpUrzB/6aSTMw3TVwfgnMhcdHyh8LZTqWv55vjNDF3
-   7D6s9cqFGGVUPkOOrpk5ONARaNabNElpSestiHnkPIkVXP4sb8wVZidZE
-   qzKTz3bZ4ZgbR86uaPynAQKE1tQZGDFHvgxEvgpM2nbTs4cX5eo3F5hPx
-   NxUQzsj4C5YKkBzuhKWapcQf1lOierqiNWsi4u3ia8UKOO5o9cJ1JO+Qe
-   mOtU+/3WqDNrHwEJqfbNZQ5Ua/b2BiABHMFgtH2DovPI1Z5iKJo9SgyBJ
-   1pKVq6PcyVCo/qpU4G6dGrD/3lPVMbUndH/eLubdEEypOlE0eiynTUOap
-   Q==;
-X-CSE-ConnectionGUID: r+I7UjsSReGbKWFhcCIgLA==
-X-CSE-MsgGUID: uaRgNERmQySi1g8h3oztQQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81673773"
-X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
-   d="scan'208";a="81673773"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 18:37:49 -0700
-X-CSE-ConnectionGUID: Tg7nJ1DdSbSxi/i/x/m1XQ==
-X-CSE-MsgGUID: QUseja+xTHaAejQREFo8Pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
-   d="scan'208";a="240956870"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 18:37:45 -0700
-Message-ID: <4a2bdb92-11b5-46ab-83a4-9b58e71ca581@linux.intel.com>
-Date: Mon, 8 Jun 2026 09:37:43 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1robTKd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3CC51F00893;
+	Mon,  8 Jun 2026 01:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780883072;
+	bh=I5jtwlvYQ2srrqW8CDwhoHGLi+Fnh55AmuW/2BjG2CQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=k1robTKdCa1s60KA/0x3FbWbnUbE2tq0CuRQzo+OwZ0R1RCW+nbNU1IsvJiSEa/KG
+	 aIEKyozlQCqyVLQ5mwBmxL8YYUwkPBYQAx759MXQL37nnK3Y6HPqsTSsqQ48e/OknB
+	 T0jMlvR7al5Pe069orXaC/hpItvNGVeMLAY4n0nWeEA5/km3kpKXBACy19U+uRf8KG
+	 SdZsZXSqQO6wLzoA7jJ264elIWc1UU2oZf3WT6UCrwpUJc1vR7VSLUQTlMOsjkScV5
+	 kEY9D58a0ufgNkX8hhQBu8U2t3XaaOp9FhjTOe8Iq+yxkJpCz1aqcDn00+8dD4EFQQ
+	 FZlMrC4gTx91g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 08/11] perf tools: Add O_CLOEXEC to open() calls in DSO
+ and ELF code
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260608013057.1942953-9-acme@kernel.org>
+References: <20260608013057.1942953-9-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 08 Jun 2026 01:44:30 +0000
+Message-Id: <20260608014432.C3CC51F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] perf/x86/intel: Remove anythread_deprecated bit from
- perf_capabilities
-To: "Falcon, Thomas" <thomas.falcon@intel.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "ak@linux.intel.com" <ak@linux.intel.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "namhyung@kernel.org" <namhyung@kernel.org>, "Rogers, Ian"
- <irogers@google.com>, "Eranian, Stephane" <eranian@google.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "Chen, Zide" <zide.chen@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "Mi, Dapeng1" <dapeng1.mi@intel.com>, "Hao, Xudong" <xudong.hao@intel.com>
-References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
- <20260605011136.2043393-2-dapeng1.mi@linux.intel.com>
- <7fdb17e042719f77c382cbc47be2def2cda1bf51.camel@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <7fdb17e042719f77c382cbc47be2def2cda1bf51.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-On 6/6/2026 1:04 AM, Falcon, Thomas wrote:
-> On Fri, 2026-06-05 at 09:11 +0800, Dapeng Mi wrote:
->> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead
->> of
->> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
->> represent "anythread deprecation" in perf_capabilities. It leads to
->> the
->> anythread_deprecated bit could be overwritten by the real value of
->> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap()
->> does.
->>
->> ```
->> if (!intel_pmu_broken_perf_cap()) {
->> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid
->> enumeration */
->> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu,
->> intel_cap).capabilities);
->> }
->> ```
->>
->> It leads to the anythread_deprecated bit is cleared to 0 and the
->> "any"
->> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder
->> on
->> these support Perfmon v6 platforms, like Clearwater Forest.
->>
->> ```
->> $grep . /sys/devices/cpu/format/*
->> /sys/devices/cpu/format/acr_mask:config2:0-63
->> /sys/devices/cpu/format/any:config:21
->> /sys/devices/cpu/format/cmask:config:24-31
->> ```
->>
->> So remove the anythread_deprecated bit from perf_capabilities
->> structure
->> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
->> deprecated.
->>
->> Cc: stable@vger.kernel.org
->> Reported-by: Namhyung Kim <namhyung@kernel.org>
->> Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support
->> conditional")
->> Acked-by: Namhyung Kim <namhyung@kernel.org>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Reviewed-by: Zide Chen <zide.chen@intel.com>
->> ---
->>
->> Original patch link:
->> https://lore.kernel.org/all/20260423053306.3033331-1-dapeng1.mi@linux.intel.com/
->>
->>  arch/x86/events/intel/core.c | 10 +++-------
->>  arch/x86/events/perf_event.h |  2 +-
->>  2 files changed, 4 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/core.c
->> b/arch/x86/events/intel/core.c
->> index 0217e701aeeb..ea3ab3050a3b 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -7946,12 +7946,6 @@ __init int intel_pmu_init(void)
->>  
->>  	x86_add_quirk(intel_arch_events_quirk); /* Install first, so
->> it runs last */
->>  
->> -	if (version >= 5) {
->> -		x86_pmu.intel_cap.anythread_deprecated =
->> edx.split.anythread_deprecated;
->> -		if (x86_pmu.intel_cap.anythread_deprecated)
->> -			pr_cont(" AnyThread deprecated, ");
->> -	}
->> -
->>  	/* The perf side of core PMU is ready to support the
->> mediated vPMU. */
->>  	x86_get_pmu(smp_processor_id())->capabilities |=
->> PERF_PMU_CAP_MEDIATED_VPMU;
->>  
->> @@ -8828,8 +8822,10 @@ __init int intel_pmu_init(void)
->>  				      &x86_pmu.intel_ctrl);
->>  
->>  	/* AnyThread may be deprecated on arch perfmon v5 or later
->> */
->> -	if (x86_pmu.intel_cap.anythread_deprecated)
->> +	if (version >= 5 && edx.split.anythread_deprecated) {
->>  		x86_pmu.format_attrs = intel_arch_formats_attr;
->> +		pr_cont("AnyThread deprecated, ");
-> Is there a reason the leading space is missing here? Other than that,
-> LGTM.
+Pre-existing issues:
+- [High] The patch incompletely fixes the file descriptor leak because it m=
+isses multiple mkstemp() calls that do not set O_CLOEXEC.
+--
 
-It's removed intentionally. The leading space is unnecessary and seems to
-be long-term typo.
+commit 76a844002251898e2934fafe58f422e4df6f5517
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Thanks.
+perf tools: Add O_CLOEXEC to open() calls in DSO and ELF code
 
+This patch adds O_CLOEXEC to open() calls in dso.c and symbol-elf.c to
+prevent file descriptors from leaking to child processes spawned during
+symbol resolution. This aims to prevent fd exhaustion during long
+profiling sessions or when processing many DSOs.
 
->
-> Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
->
->> +	}
->>  
->>  	intel_pmu_check_event_constraints_all(NULL);
->>  
->> diff --git a/arch/x86/events/perf_event.h
->> b/arch/x86/events/perf_event.h
->> index eae24bb35dc1..5902a297daa1 100644
->> --- a/arch/x86/events/perf_event.h
->> +++ b/arch/x86/events/perf_event.h
->> @@ -668,7 +668,7 @@ union perf_capabilities {
->>  		u64	perf_metrics:1;
->>  		u64	pebs_output_pt_available:1;
->>  		u64	pebs_timing_info:1;
->> -		u64	anythread_deprecated:1;
->> +		u64	__reserved:1;
->>  		u64	rdpmc_metrics_clear:1;
->>  	};
->>  	u64	capabilities;
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 7dced896c64ea..fb2e78fe2aa8e 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -344,7 +344,7 @@ int filename__decompress(const char *name, char *path=
+name,
+>  	 * descriptor to the uncompressed file.
+>  	 */
+>  	if (!compressions[comp].is_compressed(name))
+> -		return open(name, O_RDONLY);
+> +		return open(name, O_RDONLY | O_CLOEXEC);
+> =20
+>  	fd =3D mkstemp(tmpbuf);
+
+[Severity: High]
+This is a pre-existing issue, but does mkstemp() also leak file descriptors
+to child processes?
+
+Since mkstemp() does not automatically set the O_CLOEXEC flag, the file
+descriptor created here for the decompressed kernel module might still rema=
+in
+open and leak to child processes (like addr2line) spawned during symbol
+resolution.
+
+Should a subsequent fcntl(fd, F_SETFD, FD_CLOEXEC) be added to fully resolve
+the file descriptor exhaustion issue this patch targets?
+
+>  	if (fd < 0) {
+
+[ ... ]
+
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 186e6d92ac3d7..c2bdfd0003df2 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+
+[ ... ]
+
+> @@ -1985,7 +1985,7 @@ static int kcore__init(struct kcore *kcore, char *f=
+ilename, int elfclass,
+>  	if (temp)
+>  		kcore->fd =3D mkstemp(filename);
+
+[Severity: High]
+This is a pre-existing issue, but this mkstemp() call also creates a
+temporary file for kcore without setting O_CLOEXEC.
+
+Additionally, looking at read_gnu_debugdata() in the same file, there is
+another call to mkstemp() used for extracted .gnu_debugdata:
+
+tools/perf/util/symbol-elf.c:read_gnu_debugdata() {
+    ...
+    temp_fd =3D mkstemp(temp_filename);
+    ...
+}
+
+Do these mkstemp() descriptors also need to have the FD_CLOEXEC flag set to
+prevent them from leaking to child processes?
+
+>  	else
+> -		kcore->fd =3D open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400);
+> +		kcore->fd =3D open(filename, O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, =
+0400);
+>  	if (kcore->fd =3D=3D -1)
+>  		return -1;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608013057.1942=
+953-1-acme@kernel.org?part=3D8
