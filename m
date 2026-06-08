@@ -1,121 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF6929C33F
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 06:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E966B2EAB72;
+	Mon,  8 Jun 2026 06:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780898432; cv=none; b=fUX9ZgjJvBIWuZl+dgXiZDb1JUu5oEAeGUhKk4/pDYcZBCnqI5IOTyxrBmMnpgGWnnCuzbWzOk6ucF3JUhoMCNzgUylSYygn+xh8NwtFhjESfqN6d3q0hCP1LrThZcrVJluAXnJliOFnYIferYwvPx4H8UgRX9MVnnRND07AqgY=
+	t=1780899363; cv=none; b=ekoBNwGh4Y0zgyBbs0bVXv6tFGwtTXjZx3+dsTaJ2eWxWU+TKXytnOUVRoHZNM/pyNxdWz9Zo4xs+wkxrh1H3XlPqtaGDFSGNI5g0I+7qJK2wrnYH46XVkbvKuSUNInD30yZXQeg2PBv7qUf+OVqRdh+KELJJeAShQ5xNzOfEUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780898432; c=relaxed/simple;
-	bh=FRhQocRIRqQbd+7vmW+kx+EQAnfALpxy9cPXSUP4kMA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=k8jMCKkZ4Thhck3FZLCzqc41lpeDvqa/IGHM9eZgQp2LnQedi3igdWJqtVpHSdsQV9qEITAAX/zvTmYK+GrQmjGWV1PsVJ4MYLVycevovmQPEkMGvdTmUo1BDxp215jb6WxSNdJThFgoqC6VPFFB2nhatxzI8dyHBdvJdoV7nXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bh9pvtOd; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780899363; c=relaxed/simple;
+	bh=eF9pR0+T7T9yRyf5b/r8kJeNv6FdrrJS8JXn7DWhgCs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=k4mSIR+fZc8Hd/SO7aBp5WzLpShD1P6ZGkzm33TX9zC9RPNk92Dz4ltsRwIH9gczJDRSP8qYl8JGm3vaAih7enrJmt/xopuyOUm6bOy44tJWZQo4atPoH2FJqTdJfwvD0lJzZDPE7nE5fOUFue5K5vC2gD/QVT5Q3CpzahBLwQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ghfrx187; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bh9pvtOd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610F31F00893;
-	Mon,  8 Jun 2026 06:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780898428;
-	bh=idfh1GcpYWoFw9xqgxOlJerVWJdXXWBvOvRVlbWJWRk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bh9pvtOdn2hMtrE0mV5lG/TUwdxrfSylE+G3v3hvHaXdla6VTAl3oq/nlQBterLn/
-	 GibcOcmYpYkgnJOCOgoWTeG4hxzdZo4Nzu2V15tTAx/mF4spMiSJvMVNxN1Xtkw03C
-	 ZixxqMhwM6AXLij04z+gwK4dHmObFmUAZQulOBTPfUcPdrQltjhE7IMRAd1MHdt97p
-	 el3usRd9Yd2AK7XqkSQznfrwB+bqYs+a1FN1+zLeLBQF8cOj9fnWW22noVhyX3u5cT
-	 ZEZmyJ8kygdZZqSWXM7+ixKY6iZgOzEm+UAieImkoWNGvcfTBGUgAB38aZ8Ar/3/YB
-	 2bPTp9IJmxvsw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v19 3/5] perf inject/aslr: Implement sample address
- remapping
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260608054841.3856224-4-irogers@google.com>
-References: <20260608054841.3856224-4-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 06:00:26 +0000
-Message-Id: <20260608060027.610F31F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ghfrx187"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780899362; x=1812435362;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=eF9pR0+T7T9yRyf5b/r8kJeNv6FdrrJS8JXn7DWhgCs=;
+  b=ghfrx187uqt8oi/WQvp+rOzImF+DiJgSlZxky3WkPKcOahF8i/7Q4OIQ
+   M5qVgccJdI6Gl6w4kiilj5+0jticGjqHtLOYKFJlSU9yCcriYaBGg0bg8
+   8Lv3J0mYrOr4kNrw6qB919j6LGispN25idKEcWs8ZDD+1cS0Iq1ZQgIfY
+   zopQ/WOfGx3d45Bi8twKhc5qJt/vf9H4irusu0CuRM/x5VeqVhkQMvCXe
+   TZcKlGdpXlO/Edd4wEI8NIjRzJLH2xFZUdqFA5+V8M0KbERNJvvCcim4K
+   FNloMqewWxDzA8dAvSGvX2WM7ppT1yVcbiNggBtjbmYG9EpOY9uwaZUjR
+   Q==;
+X-CSE-ConnectionGUID: vth3kNNWR7K020VUod21Xg==
+X-CSE-MsgGUID: COLckT5MTNqaApIKXVtDjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81810391"
+X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
+   d="scan'208";a="81810391"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 23:16:01 -0700
+X-CSE-ConnectionGUID: 4NxznnPJRhKrAPouIgu53g==
+X-CSE-MsgGUID: wCMdDE3ySeiohfhcURYw2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
+   d="scan'208";a="250560714"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 23:15:57 -0700
+Message-ID: <e39decf9-d455-4b61-a640-0c77b2549a88@linux.intel.com>
+Date: Mon, 8 Jun 2026 14:15:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/8] perf/x86/intel: Fix redundant branch type check in
+ intel_pmu_lbr_filter()
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+To: "Falcon, Thomas" <thomas.falcon@intel.com>,
+ "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+ "ak@linux.intel.com" <ak@linux.intel.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "namhyung@kernel.org" <namhyung@kernel.org>, "Rogers, Ian"
+ <irogers@google.com>, "Eranian, Stephane" <eranian@google.com>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "Chen, Zide" <zide.chen@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "Mi, Dapeng1" <dapeng1.mi@intel.com>, "Hao, Xudong" <xudong.hao@intel.com>
+References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
+ <20260605011136.2043393-5-dapeng1.mi@linux.intel.com>
+ <5f1cedec93b2ea87cb89f259b0eaeddba69093bf.camel@intel.com>
+ <5290112b-4ef1-46e8-936a-a71f9f3c0b03@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <5290112b-4ef1-46e8-936a-a71f9f3c0b03@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] `PERF_SAMPLE_CPU` payload is blindly copied with `COPY_U64()`, fai=
-ling to unpack and repack the 32-bit `cpu` and `res` fields, leading to dat=
-a corruption on cross-endian hosts.
---
 
-commit e3128f8fdbd9617d2687dd070d7cac54eeaa5333
-Author: Ian Rogers <irogers@google.com>
+On 6/8/2026 9:56 AM, Mi, Dapeng wrote:
+> On 6/6/2026 2:28 AM, Falcon, Thomas wrote:
+>> On Fri, 2026-06-05 at 09:11 +0800, Dapeng Mi wrote:
+>>> In intel_pmu_lbr_filter(), the 'type' variable is bitwise ORed with
+>>> 'to_plm' (which contains X86_BR_USER and/or X86_BR_KERNEL bits). Because
+>>> of this, 'type' can never equal X86_BR_NONE (0) after the assignment.
+>>>
+>>> As a result, the subsequent check 'if (type == X86_BR_NONE)' is dead code
+>>> and the entries with X86_BR_NONE type would not be skipped eventually.
+>>>
+>>> Correct this by masking out the X86_BR_KERNEL and X86_BR_USER bits
+>>> before performing the X86_BR_NONE comparison.
+>>>
+>>> Cc: stable@vger.kernel.org
+>>> Fixes: 47125db27e47 ("perf/x86/intel/lbr: Support Architectural LBR")
+>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>> ---
+>>>
+>>> Original patch link:
+>>> https://lore.kernel.org/all/20260414021440.928068-1-dapeng1.mi@linux.intel.com/
+>>>
+>>>  arch/x86/events/intel/lbr.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>>> index 72f2adcda7c6..16977e4c6f8a 100644
+>>> --- a/arch/x86/events/intel/lbr.c
+>>> +++ b/arch/x86/events/intel/lbr.c
+>>> @@ -1245,7 +1245,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>>>  		}
+>>>  
+>>>  		/* if type does not correspond, then discard */
+>>> -		if (type == X86_BR_NONE || (br_sel & type) != type) {
+>>> +		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type) {
+>> Looking at intel_pmu_lbr_filter...
+>>
+>> 	if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
+>> 	    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
+>> 		to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
+>> 		type = arch_lbr_br_type_map[type] | to_plm;
+>> 	} else
+>> 		type = branch_type(from, to, cpuc->lbr_entries[i].abort);
+>>
+>> In the else case, it does look (branch_type -> get_branch_type) can return X86_BR_NONE without OR'ing it with X86_BR_KERNEL or X86_BR_USER, so the condition checking the type for X86_BR_NONE is not exactly "dead code."
+>>
+>> One example:
+>>
+>> static int get_branch_type(unsigned long from, unsigned long to, int abort,
+>> 			   bool fused, int *offset)
+>> {
+>> ...
+>> 	 * maybe zero if lbr did not fill up after a reset by the time
+>> 	 * we get a PMU interrupt
+>> 	 */
+>> 	if (from == 0 || to == 0)
+>> 		return X86_BR_NONE;
+>> ...
+>>
+>> Though in those cases, it doesn't seem like this change would make a difference. I guess it isn't clear to me what issue this change is fixing.
+> Yes, the "dead code" is not accurate. For hardware decoding (the if case),
+> the validation is some kind of dead code, but for the software decoding,
+> it's not. I would adjust the wording in next version. Thanks.
 
-perf inject/aslr: Implement sample address remapping
+Just look at the code again, the hardware decoding case would never return
+X86_BR_NONE, so it looks this patch is unnecessary and would drop it in
+next version. Thanks.
 
-This commit adds sample address remapping logic to the ASLR tool. It handles
-parsing sample events, remapping IPs, ADDRs, callchains, and branch stacks.
-It also aims to preserve cross-endian compatibility by properly unpacking a=
-nd
-repacking the sequential 32-bit layouts into host endianness.
 
-> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> --- a/tools/perf/util/aslr.c
-> +++ b/tools/perf/util/aslr.c
-[ ... ]
-> @@ -616,13 +671,415 @@ static int aslr_tool__process_sample(const struct =
-perf_tool *tool,
-[ ... ]
-> +	if (sample_type & PERF_SAMPLE_TID) {
-> +		union {
-> +			u64 val64;
-> +			u32 val32[2];
-> +		} u;
-> +
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret =3D -EFAULT;
-> +			goto out_put;
-> +		}
-> +		u.val32[0] =3D sample->pid;
-> +		u.val32[1] =3D sample->tid;
-> +		out_array[j++] =3D u.val64;
-> +		i++;
-> +	}
-> +	if (sample_type & PERF_SAMPLE_TIME)
-> +		COPY_U64(); /* time */
-> +	if (sample_type & PERF_SAMPLE_ADDR)
-> +		REMAP_U64(sample->addr);
-> +	if (sample_type & PERF_SAMPLE_ID)
-> +		COPY_U64(); /* id */
-> +	if (sample_type & PERF_SAMPLE_STREAM_ID)
-> +		COPY_U64(); /* stream_id */
-> +	if (sample_type & PERF_SAMPLE_CPU)
-> +		COPY_U64(); /* cpu, res */
-
-[Severity: High]
-Will this corrupt the CPU ID on cross-endian hosts?
-
-When the perf core reads the input file, it byte-swaps all 64-bit payload
-fields into host endianness. For PERF_SAMPLE_CPU, which consists of two
-32-bit fields (cpu and res), this 64-bit byte-swap incorrectly reverses the
-two fields.
-
-The code correctly unpacks and repacks PERF_SAMPLE_TID using a union to
-safely recover its two 32-bit fields, but uses a blind COPY_U64() here for
-PERF_SAMPLE_CPU in aslr_tool__process_sample().
-
-When the injected output file is written natively in host endianness, this
-incorrectly-swapped 64-bit value is permanently saved. Later, when the new
-profile is parsed, it will read the originally empty res field into data->c=
-pu,
-corrupting the CPU ID.
-
-Should PERF_SAMPLE_CPU be unpacked and repacked similarly to PERF_SAMPLE_TI=
-D?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608054841.3856=
-224-1-irogers@google.com?part=3D3
+>
+>
+>> Thanks,
+>> Tom
+>>
+>>>  			cpuc->lbr_entries[i].from = 0;
+>>>  			compress = true;
+>>>  		}
