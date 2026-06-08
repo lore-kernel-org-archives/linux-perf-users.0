@@ -1,207 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F782EEE95;
-	Mon,  8 Jun 2026 02:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B5634DB72
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 05:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780886903; cv=none; b=DVGhIs9Z5WCAXBUaIEyiwHFJKguiKff6RNmRixYR8FXWVbVD9XhE6OrBpQrOSOEYWr4SziVe6YHKeOl20kIwTnR4oPFXlrr5yNK9K51LRmyM2o24e3dYsAJQvq1LIGCXwaCSFBbIz1aLpL678sg4ItYm+/WyVmPUgzoQicSplno=
+	t=1780895868; cv=none; b=FRWSEIXTzF+peYcAdkcn+Bpzrf85v7GZJ1uYL5tHaB/QMOxU8wu09C0tPZwdJLKvqBW5TZWj1u0b4NxU3ao2F1kyN/RQxQDUvx64kO9MmXo1i4qCNXQJWJYBe73X/eqLuiC8JNaTy9haDvMIRciudNgQWTy2zaLTluSM+l/Ws+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780886903; c=relaxed/simple;
-	bh=IqmV+9cbIijJV5OP0c+lMA5/3eE0HQdbhxXWAPNZd5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EzcPPHwz0LEhZIgRkx/oo2NU7hPRdoP1qqHgUSvhhGU4DF4rfqUBCK9wpVEivI7ZkR7SGz7VzprTN9AskrVBaBj5H+KHS5kwBlhVtYlDEguQ+w24vZRmcQzCP4vS0XruU1lBqIkaZkheEqz7atsl/+vw8ACjiqU2y/klF4px9Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UXdoZ3Eo; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780895868; c=relaxed/simple;
+	bh=vqTiocBonkBWL8ASCbljvA0u231zQ3DHaPsyfQbino0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pjQVVXF0gfARTYI3Dam37phUPHnzoJzqQeQqeVd9TQyYXlOlCx6jp4TtRu9915mJzrmbH7WF3BO6vCm4sA4E4wH4DhWyKGalaeJxQV7d5SVgSab4ppNsdxM0RV67gbddSr2mbeMh0Q82kL4AzAT4BF27TiE1p97c09HlDtEs0CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=vYMiHMwM; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Gt0EqDBj; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UXdoZ3Eo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780886902; x=1812422902;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IqmV+9cbIijJV5OP0c+lMA5/3eE0HQdbhxXWAPNZd5Q=;
-  b=UXdoZ3EoRG8HQhpoCX8vta0Ypa94Wkn2LguI2253d7LwKBOnHfALvmb9
-   YHJ/48XWVguKSIDTy8j88liL4o0Hw4Ds8nR7Ey7BKH1rP1GNlPZLpa9l5
-   IPGYVTOxAX18tMliCRh1UhET+XZx/PVO3AoThZZjEcoSIIvWzGE1tf9YD
-   AV6GOetjR/IjI6L/DoxBu6zBVYmjliNTIfc7I/xK1NEch5FGpx5ZYxgtz
-   frbTP3pPM2dsDf28ueuefUJazsGC6H57MiUeSp00kRyf0KVIzLKKHj7LF
-   uXrbdDiatd3QyIefuIAqVwG6pXhs2kwmCkttvJg8Qp4nwv/sosw/kt4PF
-   Q==;
-X-CSE-ConnectionGUID: iCO3DPHtQfWtWL0NKoEjpw==
-X-CSE-MsgGUID: PW4WkvsATrGYeARye1ck+Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81737733"
-X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
-   d="scan'208";a="81737733"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 19:48:21 -0700
-X-CSE-ConnectionGUID: pthRf32/QKiqq+APwipXrg==
-X-CSE-MsgGUID: 9NFeLclGT4G4pAn5wnQfVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
-   d="scan'208";a="249338040"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 19:48:18 -0700
-Message-ID: <e758f607-83e8-48a3-88b3-a5cae5b897bd@linux.intel.com>
-Date: Mon, 8 Jun 2026 10:48:15 +0800
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="vYMiHMwM";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Gt0EqDBj"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2D32C6B5C9;
+	Mon,  8 Jun 2026 05:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1780895865; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Uy+6faj0/F/X5rjzint+FLhrxLd8I//FthGmjDkjoew=;
+	b=vYMiHMwMTBXFb/sW49zCsJTPzSZk9fTDS+skHO2/1HtWnWRAVhQC8Kd4ZHMSuZzBxQpZvH
+	csKtqhPOMsKQaA6neMYLphcJt8PJk3vL4TRSX7r8cEpcVebZd3tsFokGbIf5B7+iCNJRRs
+	4Cv0b4bB+tgXr1v+tOz0a3xxYNUah3Y=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=Gt0EqDBj
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1780895864; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=Uy+6faj0/F/X5rjzint+FLhrxLd8I//FthGmjDkjoew=;
+	b=Gt0EqDBj6Sj/cT65f0e0sayMAb9RZXZIe0K+1Q9KM0FcR31gCd+YySNLtFKWPONryzvlia
+	xrQb8qETMP8oMDEUbsWHZwG7JsC/MQeze6zcfgTUJtslV7DQJZLtzamSSUB1M2o5Niypys
+	XyMQXLv3bN9z8nhYxoqi4ZjenPLkYV0=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7597D779A7;
+	Mon,  8 Jun 2026 05:17:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ljMeG3dQJmo6dQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Mon, 08 Jun 2026 05:17:43 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	x86@kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>
+Subject: [PATCH v3 00/11] x86/msr: Drop 32-bit variants of *_on_cpu() MSR functions
+Date: Mon,  8 Jun 2026 07:17:30 +0200
+Message-ID: <20260608051741.3207435-1-jgross@suse.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] perf/x86/intel: Validate return value of
- intel_pmu_init_hybrid()
-To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
-References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
- <20260605011136.2043393-7-dapeng1.mi@linux.intel.com>
- <14b678b1-822a-46c2-8bb5-913622a77cac@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <14b678b1-822a-46c2-8bb5-913622a77cac@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 2D32C6B5C9
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLkdkdrsxe9hqhhs5ask8616i6)];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
+Drop the variants using 2 32-bit values instead of a single 64-bit one
+of the *_on_cpu() MSR access functions.
 
-On 6/6/2026 12:17 AM, Chen, Zide wrote:
->
-> On 6/4/2026 8:11 PM, Dapeng Mi wrote:
->> The memory allocation for the x86_pmu.hybrid_pmu[] array in
->> intel_pmu_init_hybrid() can theoretically fail due to memory shortages.
->> If this occurs, the initialization of the x86 hybrid PMU would fail.
->>
->> Currently, the code does not check the return value of the
->> intel_pmu_init_hybrid() function, which could lead to attempts to access
->> the uninitialized x86_pmu.hybrid_pmu[] array, potentially causing a
->> system panic.
->>
->> So, adds a check for the return value of intel_pmu_init_hybrid() to
-> typo: adds -> add.
+Changes in V2:
+- patches 1+2 split out from other patch
+- keep the *q() variants instead of those without suffix
 
-Sure. Thanks.
+Changes in V3:
+- V3 patch 7 split out from V2 patch 7
 
+Juergen Gross (11):
+  x86/msr: Switch rdmsrl_on_cpu() users to rdmsrq_on_cpu()
+  x86/msr: Remove rdmsrl_on_cpu()
+  x86/msr: Switch rdmsr_on_cpu() users to rdmsrq_on_cpu()
+  x86/msr: Remove rdmsr_on_cpu()
+  x86/msr: Switch wrmsr_on_cpu() users to wrmsrq_on_cpu()
+  x86/msr: Remove wrmsr_on_cpu()
+  x86/msr: Don't use rdmsr_safe_on_cpu() in rdmsrq_safe_on_cpu()
+  x86/msr: Switch rdmsr_safe_on_cpu() users to rdmsrq_safe_on_cpu()
+  x86/msr: Remove rdmsr_safe_on_cpu()
+  x86/msr: Switch wrmsr_safe_on_cpu() users to wrmsrq_safe_on_cpu()
+  x86/msr: Remove wrmsr_safe_on_cpu()
 
->
->> prevent invalid memory access in such scenarios. Besides, free the
->> created kmem cache when error occurs.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
-> Reviewed-by: Zide Chen <zide.chen@intel.com>
->
->
->>  arch/x86/events/intel/core.c | 33 ++++++++++++++++++++++++++-------
->>  1 file changed, 26 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index ea3ab3050a3b..efd9caa3502c 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -7870,6 +7870,7 @@ __init int intel_pmu_init(void)
->>  	int version, i;
->>  	char *name;
->>  	struct x86_hybrid_pmu *pmu;
->> +	int ret;
->>  
->>  	/* Architectural Perfmon was introduced starting with Core "Yonah" */
->>  	if (!cpu_has(&boot_cpu_data, X86_FEATURE_ARCH_PERFMON)) {
->> @@ -8539,7 +8540,9 @@ __init int intel_pmu_init(void)
->>  		 *
->>  		 * Initialize the common PerfMon capabilities here.
->>  		 */
->> -		intel_pmu_init_hybrid(hybrid_big_small);
->> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
->> +		if (ret < 0)
->> +			goto err;
->>  
->>  		x86_pmu.pebs_latency_data = grt_latency_data;
->>  		x86_pmu.get_event_constraints = adl_get_event_constraints;
->> @@ -8597,7 +8600,9 @@ __init int intel_pmu_init(void)
->>  	case INTEL_METEORLAKE:
->>  	case INTEL_METEORLAKE_L:
->>  	case INTEL_ARROWLAKE_U:
->> -		intel_pmu_init_hybrid(hybrid_big_small);
->> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
->> +		if (ret < 0)
->> +			goto err;
->>  
->>  		x86_pmu.pebs_latency_data = cmt_latency_data;
->>  		x86_pmu.get_event_constraints = mtl_get_event_constraints;
->> @@ -8628,7 +8633,9 @@ __init int intel_pmu_init(void)
->>  		pr_cont("Pantherlake Hybrid events, ");
->>  		name = "pantherlake_hybrid";
->>  
->> -		intel_pmu_init_hybrid(hybrid_big_small);
->> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
->> +		if (ret < 0)
->> +			goto err;
->>  
->>  		/* Initialize big core specific PerfMon capabilities.*/
->>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
->> @@ -8643,7 +8650,9 @@ __init int intel_pmu_init(void)
->>  		pr_cont("Arrowlake Hybrid events, ");
->>  		name = "arrowlake_hybrid";
->>  
->> -		intel_pmu_init_hybrid(hybrid_big_small);
->> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
->> +		if (ret < 0)
->> +			goto err;
->>  
->>  		/* Initialize big core specific PerfMon capabilities.*/
->>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
->> @@ -8660,7 +8669,9 @@ __init int intel_pmu_init(void)
->>  		pr_cont("Lunarlake Hybrid events, ");
->>  		name = "lunarlake_hybrid";
->>  
->> -		intel_pmu_init_hybrid(hybrid_big_small);
->> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
->> +		if (ret < 0)
->> +			goto err;
->>  
->>  		/* Initialize big core specific PerfMon capabilities.*/
->>  		pmu = &x86_pmu.hybrid_pmu[X86_HYBRID_PMU_CORE_IDX];
->> @@ -8685,7 +8696,9 @@ __init int intel_pmu_init(void)
->>  		break;
->>  
->>  	case INTEL_ARROWLAKE_H:
->> -		intel_pmu_init_hybrid(hybrid_big_small_tiny);
->> +		ret = intel_pmu_init_hybrid(hybrid_big_small_tiny);
->> +		if (ret < 0)
->> +			goto err;
->>  
->>  		x86_pmu.pebs_latency_data = arl_h_latency_data;
->>  		x86_pmu.get_event_constraints = arl_h_get_event_constraints;
->> @@ -8720,7 +8733,9 @@ __init int intel_pmu_init(void)
->>  	case INTEL_NOVALAKE_L:
->>  		pr_cont("Novalake Hybrid events, ");
->>  		name = "novalake_hybrid";
->> -		intel_pmu_init_hybrid(hybrid_big_small);
->> +		ret = intel_pmu_init_hybrid(hybrid_big_small);
->> +		if (ret < 0)
->> +			goto err;
->>  
->>  		x86_pmu.pebs_latency_data = nvl_latency_data;
->>  		x86_pmu.get_event_constraints = mtl_get_event_constraints;
->> @@ -8885,6 +8900,10 @@ __init int intel_pmu_init(void)
->>  	intel_aux_output_init();
->>  
->>  	return 0;
->> +
->> +err:
->> +	kmem_cache_destroy(x86_get_pmu(smp_processor_id())->task_ctx_cache);
->> +	return ret;
->>  }
->>  
->>  /*
->
+ arch/x86/events/intel/ds.c                   | 11 +--
+ arch/x86/include/asm/msr.h                   | 28 +-----
+ arch/x86/kernel/cpu/mce/amd.c                |  6 +-
+ arch/x86/kernel/cpu/mce/inject.c             |  8 +-
+ arch/x86/kernel/msr.c                        |  8 +-
+ arch/x86/lib/msr-smp.c                       | 89 +++-----------------
+ drivers/cpufreq/amd-pstate.c                 |  2 +-
+ drivers/cpufreq/amd_freq_sensitivity.c       |  6 +-
+ drivers/cpufreq/p4-clockmod.c                | 32 +++----
+ drivers/cpufreq/speedstep-centrino.c         | 27 +++---
+ drivers/hwmon/coretemp.c                     | 44 +++++-----
+ drivers/hwmon/via-cputemp.c                  | 16 ++--
+ drivers/thermal/intel/intel_tcc.c            | 43 +++++-----
+ drivers/thermal/intel/x86_pkg_temp_thermal.c | 25 +++---
+ 14 files changed, 128 insertions(+), 217 deletions(-)
+
+-- 
+2.54.0
+
