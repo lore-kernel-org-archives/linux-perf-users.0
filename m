@@ -1,218 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0533AC0EC;
-	Mon,  8 Jun 2026 08:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873163AFAE8
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 08:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780907217; cv=none; b=cfNyA3FxsoVRe616HiaQTqmRdT1Yr+w2nRsQZlH1w5uW8p0hye2M8S4uRezNqjktmXOr06lILJrwXhv1RlwcUEl2lW2EVoJNdSDLl36scU+THquN7MR1lPBuvT59VEvjOLmmvJx6v2E/jxZ58O8I+zGK9N/NsyXMn+CtcFHzUsg=
+	t=1780907298; cv=none; b=bgUISgd7bPYZh4Rwd8OApCrAvDv0uKzG3SBMpHakl/KK8jrD0GSIgO3Src3X4faFMtUJCzAtj2tBfHewHksZQ6/w6/103YcMo0PJU8hoAFcjzo2GxnCsPsAcXQzRLQDL92fZbFv2GjvoLHjgVRmQ+huzw0Wc3xHYGlUrPWiJG44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780907217; c=relaxed/simple;
-	bh=CxRdnewMXxVE9RgVvzHfsVZaqLzBxph2JoapufR7how=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=otFqbuCBGG16O1ewJsZ7xTZ4ejV4HCEp5YGqf75Z3+UpQSh9eguAkTlsc4qgwylrF5Q6TUPUYo8vB7pKo6VeHFDbJUt1YqspEGmfGUNnUgxGtYSEngtPGg+2DUm9PP7MHKlTcJNtEYyPOcdyoe+k4fg6JDIoZTbRHu3E6EmPCgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ikv252V0; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780907298; c=relaxed/simple;
+	bh=3IWkNXs4VOtxIOyhly4DbSR9nbuTpzdMQfxLXBFTrIw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZhTcOGCUB8ZvI48M4oVnj5ykIb4E9bLvTO0BztQOVHsq7NFFPAbwoaykdyRZFM4sCVPi/EUVaHVSAECxPYuLC2g1zthfZGTs3MG3kTqpNTd55Ky7wNpe+7vBvpRg8dP6dH6LHwa/q9WlPtG+g6+8uJZkNd3rZ9BcD7wWqenQAIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bZEckIRP; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=bZEckIRP; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ikv252V0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780907216; x=1812443216;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=CxRdnewMXxVE9RgVvzHfsVZaqLzBxph2JoapufR7how=;
-  b=ikv252V0ZaeURUJw05jZMtD55rFAfI0n3EQ1MgJNRI31evXqejc5EMTR
-   l/uNkN9IZF5wMsEBphAKJY+JgNCHkUz84LJ9d4olCPoQn/neekHU7J5xo
-   2XozBO36fGpUn6tyinWh/ut7jrDzUKCMyHEdSepXqar5t3ejaOc623W0A
-   sP/PDnFtlvOF5KNmxX6hSJl6HoN3TFxJ4kk/Auisv8R8z+MNi9surQ+tn
-   poYvMtvp2wLSSnfn54YkIj7WAR1AEN99pVZ9QM7P8MTTeRWH1z5P0x1L0
-   QNVmcanU8tj4KvU3rqZn4Z+3xq6shlBl9Lrx8mrMnLWyZMr5Qgcu0AQjF
-   Q==;
-X-CSE-ConnectionGUID: SIEn75JqRhCOIFwIXWq0NA==
-X-CSE-MsgGUID: LHJ4bEX4T4qBUAJ3uC+5Cw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="85490700"
-X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
-   d="scan'208";a="85490700"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 01:26:55 -0700
-X-CSE-ConnectionGUID: o6jAKCgHTdC33cZA2eBVmQ==
-X-CSE-MsgGUID: X2wSWDMXRy+Mi9hxoVpcaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
-   d="scan'208";a="245581726"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 01:26:51 -0700
-Message-ID: <39474532-c6a3-4faf-8185-15dfd553bd87@linux.intel.com>
-Date: Mon, 8 Jun 2026 16:26:48 +0800
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bZEckIRP";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="bZEckIRP"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 65D097598F;
+	Mon,  8 Jun 2026 08:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1780907292; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=9nnT1byeKutvEwj88/yibfTfL4W6aDMf/O3dkcZbw78=;
+	b=bZEckIRPjGBoJDFYIvFnli5JebdXD6WQzuzrWgvgQXtlJBbC832jWYNw9o2a3vj0pjA8sX
+	Fe9GQChffXSpJ232XBhMfwgImbEv753I38ONuqerzCmv7xa32G2DX+L3DfTrd/suHRsaKx
+	K4J/dZJnsqnIC0scANI3GodcFHExNQA=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=bZEckIRP
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1780907292; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=9nnT1byeKutvEwj88/yibfTfL4W6aDMf/O3dkcZbw78=;
+	b=bZEckIRPjGBoJDFYIvFnli5JebdXD6WQzuzrWgvgQXtlJBbC832jWYNw9o2a3vj0pjA8sX
+	Fe9GQChffXSpJ232XBhMfwgImbEv753I38ONuqerzCmv7xa32G2DX+L3DfTrd/suHRsaKx
+	K4J/dZJnsqnIC0scANI3GodcFHExNQA=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8DB49779A7;
+	Mon,  8 Jun 2026 08:28:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7GWBIRt9JmojSAAAD6G6ig
+	(envelope-from <jgross@suse.com>); Mon, 08 Jun 2026 08:28:11 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-coco@lists.linux.dev
+Cc: Juergen Gross <jgross@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>,
+	Babu Moger <babu.moger@amd.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Long Li <longli@microsoft.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+	Artem Bityutskiy <dedekind1@gmail.com>,
+	Len Brown <lenb@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Kiryl Shutsemau <kas@kernel.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>
+Subject: [PATCH 0/4] x86/msr: Get rid of rdmsrl() and wrmsrl()
+Date: Mon,  8 Jun 2026 10:28:05 +0200
+Message-ID: <20260608082809.3492719-1-jgross@suse.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3] perf tests: Add auto counter reload (ACR) sampling
- test
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20260421045511.2401316-1-dapeng1.mi@linux.intel.com>
- <cc0a4682-20ca-4796-82b2-f7eb8eba3a7f@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <cc0a4682-20ca-4796-82b2-f7eb8eba3a7f@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 65D097598F
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[40];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_CC(0.00)[suse.com,infradead.org,redhat.com,kernel.org,arm.com,linux.intel.com,google.com,intel.com,linaro.org,alien8.de,zytor.com,amd.com,microsoft.com,gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.com:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLkdkdrsxe9hqhhs5ask8616i6)];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 
-Ping again ...
+rdsmrl() and wrmsrl() are deprecated aliases of rdmsrq() and wrmsrq().
 
-Thanks.
+Switch all users and remove the deprecated variants.
 
-On 5/21/2026 8:52 AM, Mi, Dapeng wrote:
-> Kindly ping. :)
->
-> Thanks.
->
->
-> On 4/21/2026 12:55 PM, Dapeng Mi wrote:
->> Add auto counter reload sampling test to verify that the intended event
->> records can be captured and the self-reloaded events won't generate any
->> records.
->>
->> Additionally, enhance ratio_to_prev test to verify ACR sampling as well
->> if ACR is supported.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>
->> V3: Move ratio-to-prev ACR sampling test into ratio_to_prev test.
->> V2: https://lore.kernel.org/all/20260420025501.2133495-1-dapeng1.mi@linux.intel.com/
->> v1: https://lore.kernel.org/all/20260413010920.546501-1-dapeng1.mi@linux.intel.com/
->>
->>  tools/perf/tests/shell/record.sh | 92 +++++++++++++++++++++++++++++++-
->>  1 file changed, 91 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index 7cb81cf3444a..091d8b0a998b 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
->> @@ -402,7 +402,52 @@ test_callgraph() {
->>    echo "Callgraph test [Success]"
->>  }
->>  
->> +test_acr_sampling() {
->> +  events="{instructions/period=40000,acr_mask=0x2/u,cycles/period=20000,acr_mask=0x3/u}"
->> +  pebs_events="{instructions/period=40000,acr_mask=0x2/pu,cycles/period=20000,acr_mask=0x3/u}"
->> +  echo "Auto counter reload (ACR) sampling test"
->> +  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
->> +  then
->> +    echo "Auto counter reload sampling [Skipped not supported]"
->> +    return
->> +  fi
->> +  if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
->> +  then
->> +    echo "Auto counter reload sampling [Failed missing instructions event]"
->> +    err=1
->> +    return
->> +  fi
->> +  if perf script -i "${perfdata}" -F event | grep -q "cycles"
->> +  then
->> +    echo "Auto counter reload sampling [Failed cycles event shouldn't be sampled]"
->> +    err=1
->> +    return
->> +  fi
->> +  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2> /dev/null
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Skipped not supported]"
->> +    echo "Auto counter reload sampling [Success]"
->> +    return
->> +  fi
->> +  if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Failed missing instructions event]"
->> +    err=1
->> +    return
->> +  fi
->> +  if perf script -i "${perfdata}" -F event | grep -q "cycles"
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Failed cycles event shouldn't be sampled]"
->> +    err=1
->> +    return
->> +  fi
->> +  echo "Auto counter reload sampling [Success]"
->> +}
->> +
->>  test_ratio_to_prev() {
->> +  ratio_events="{instructions:u,cycles/period=20000,ratio-to-prev=0.5/u}"
->> +  p_core_ratio_events="{cpu_core/instructions/u,cpu_core/cycles,period=20000,ratio-to-prev=0.5/u}"
->> +  e_core_ratio_events="{cpu_atom/instructions/u,cpu_atom/cycles,period=20000,ratio-to-prev=0.5/u}"
->>    echo "ratio-to-prev test"
->>    if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
->>       true 2> /dev/null
->> @@ -438,7 +483,51 @@ test_ratio_to_prev() {
->>      err=1
->>      return
->>    fi
->> -  echo "Basic ratio-to-prev record test [Success]"
->> +
->> +  ratio_err=0
->> +  do_ratio_to_prev_test() {
->> +    local events=$1
->> +    local cpu=$2
->> +    if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
->> +    then
->> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed sampling]"
->> +      ratio_err=1
->> +      return
->> +    fi
->> +    if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
->> +    then
->> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed missing instructions event]"
->> +      ratio_err=1
->> +      return
->> +    fi
->> +    if perf script -i "${perfdata}" -F event | grep -q "cycles"
->> +    then
->> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed cycles event shouldn't be sampled]"
->> +      ratio_err=1
->> +      return
->> +    fi
->> +  }
->> +
->> +  # ratio-to-prev sampling would fallback to normal sampling if ACR sampling
->> +  # is not supported, so acr_mask must be checked before testing ratio-to-prev sampling.
->> +  if [ -e /sys/bus/event_source/devices/cpu/format/acr_mask ]
->> +  then
->> +    do_ratio_to_prev_test "${ratio_events}" ""
->> +  fi
->> +  if [ -e /sys/bus/event_source/devices/cpu_core/format/acr_mask ]
->> +  then
->> +    do_ratio_to_prev_test "${p_core_ratio_events}" "P-core"
->> +  fi
->> +  if [ -e /sys/bus/event_source/devices/cpu_atom/format/acr_mask ]
->> +  then
->> +    do_ratio_to_prev_test "${e_core_ratio_events}" "E-core"
->> +  fi
->> +  if test "$ratio_err" -eq 0
->> +  then
->> +    echo "Basic ratio-to-prev record test [Success]"
->> +  else
->> +    err="${ratio_err}"
->> +  fi
->>  }
->>  
->>  # raise the limit of file descriptors to minimum
->> @@ -457,6 +546,7 @@ test_leader_sampling
->>  test_topdown_leader_sampling
->>  test_precise_max
->>  test_callgraph
->> +test_acr_sampling
->>  test_ratio_to_prev
->>  
->>  # restore the default value
+Juergen Gross (4):
+  x86/msr: Switch rdmsrl() users to rdmsrq()
+  x86/msr: Remove rdmsrl()
+  x86/msr: Switch wrmsrl() users to wrmsrq()
+  x86/msr: Remove wrmsrl()
+
+ arch/x86/events/amd/uncore.c          | 4 ++--
+ arch/x86/events/intel/core.c          | 4 ++--
+ arch/x86/include/asm/msr.h            | 5 -----
+ arch/x86/kernel/cpu/resctrl/monitor.c | 4 ++--
+ arch/x86/kernel/process_64.c          | 2 +-
+ arch/x86/kvm/pmu.c                    | 6 +++---
+ arch/x86/kvm/vmx/tdx.c                | 6 +++---
+ drivers/hv/mshv_vtl_main.c            | 4 ++--
+ drivers/idle/intel_idle.c             | 6 +++---
+ 9 files changed, 18 insertions(+), 23 deletions(-)
+
+-- 
+2.54.0
+
