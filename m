@@ -1,280 +1,222 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4609733E34B
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 13:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3BF2E762C
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 13:14:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780924434; cv=none; b=f5Rn8JRlsN57fG26nwhiuc6nvLo+/2+RXmOj7+ZTpyFzILCP7KC9Cvm0qp+G5SzNgwsDBy8TjcbSvqIfn/JPt3hnweH3rKKvWKRfJiVPBzxPgX5kEjwuG+4b5vqnMZmbLbpfy9aOdT3uFHriINluTWuRAlgTkA9lkjwWuQFdgvY=
+	t=1780924491; cv=none; b=gOLglNhrjJUYo3wFZA2gZsEmmP6/rG1iPfOiMTf4bxcwG1ITTZ8lljzG5csOGfyLP9SD26O6zLwCe4Qy6joi/LbQy18zoSNBCm1JKfB6NpyEw5d+qNjbl294fSBTizdN6IvpBSgIiCX1oxNevuJTiNYsek30Rc8K2O10ZrflD9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780924434; c=relaxed/simple;
-	bh=GftzvG4oGvK9Zt+cnd7p8s9F1SZ/00EFBgvHJcxnUyg=;
+	s=arc-20240116; t=1780924491; c=relaxed/simple;
+	bh=+RQfb7nlFluqFZudDUHqAH1tgo5rgkQhhHh1uwpukbY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lhsU8WwJ+tThGGlHDF9dMovl7ZsiqZtvyx1svo7ryuEf8oL2LJrg6mSz3FGpyZroX7LAhmqrwhMZAxWsvaKKFFXeTW7k5DF1VsgdmgibiyA5HA4mUaJft7p7pLsQzbahI/JD0ffBg2330BTgtciwYu4gWizaapMD4f6+SmlA/kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWfuxLAP; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=V0MOspFXPKecLRPIE3rFVzNx2zaY6xoDSdwjyRWV3mSwEBnOvfZXawFJhVyLEJDBr+WokZl9bF5ma8ekd2P7QBV6fDrc4BDxbczX/tPVFBGPhxGSMWljvbX+82AX65krKTTQU3LbU/AwGANzZGAUsEKXEcf2VAWeIVfjc0619U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MI21EA/z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWfuxLAP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA2831F00893;
-	Mon,  8 Jun 2026 13:13:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MI21EA/z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DBDA1F00893;
+	Mon,  8 Jun 2026 13:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780924432;
-	bh=vZgQ7b/rn30Hy2u0NFUzCFK0NV91THT7B0r8vL2GR70=;
+	s=k20260515; t=1780924489;
+	bh=5BUVPHkdtciOo82vt89uhotE1FQNkhJ3Q6PR6DEiOOY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YWfuxLAPhVFgbrei4FhYGC1s4LamWHMMGvmldCgt/RMjnXUoK9Wj4DE/wqYxuKfjz
-	 wX/pFAf0aW7z3sL4aRIxOYqsO4jo6McwEbmjv0hojor7x7Pyxmm05JS62VOko7SHWd
-	 jNeg9EU0ZdWZh2wFzYmZi4+nHSIjQ9z0JXn3LFw5AtuLHTfqVqcZphj9d1hUlPvXhV
-	 8xBtGn0v8pIQ/nk16aNioczoC8buu+CLZ5XY4FeKfGagfQB6YGVVIMA6wp5JuGVbLw
-	 W8+oIR2RmP6HGlEZ6riIKeUqm+okZzUOGx+fhHBfh7a/aQsGE23Vbz+8iIcylkj0/t
-	 BCLDCdqouY5kw==
+	b=MI21EA/zVktiDbSuAW2+JtjNx4UPnsA7b/hmddEJurmVeX9YtxCJ2KnIaOEtJ55jB
+	 4skNjjLavsKfXW8FeQdXf/QVbimm8+Wedo/n5PPwxvx5DWFZFX2FrakqfMRx2iJxF3
+	 t8xwdiwhD6hQtNXIZB0eSMPQPBTj5iFjs4RuIRUZyuDWcPcSVefvRtONcV83rXtAhB
+	 oV2b4tucWzcBGALRNWGE7tDyRtrfqla0eVyYwMSZNlkP/QFnaYEDO9CSBznml9vffC
+	 vYqVQKczaAA7O7E2/4PkCrNIGWNRd/0t7IKNq5vvTy0u1DwVS0yd+0Y9ECq5qqaYwf
+	 XkZxYWIBeMkGQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 1/4] perf/trace-dat: Add trace.dat export
- infrastructure
+Subject: Re: [RFC PATCH 3/4] perf data-convert: Add perf.data to trace.dat
+ conversion backend
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260608125951.90425-3-tshah@linux.ibm.com>
-References: <20260608125951.90425-3-tshah@linux.ibm.com>
+In-Reply-To: <20260608125951.90425-5-tshah@linux.ibm.com>
+References: <20260608125951.90425-5-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 13:13:52 +0000
-Message-Id: <20260608131352.BA2831F00893@smtp.kernel.org>
+Date: Mon, 08 Jun 2026 13:14:49 +0000
+Message-Id: <20260608131449.9DBDA1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 10 potential issue=
-(s) to consider:
-- [High] Sequential realloc failures cause a use-after-free, double-free, a=
-nd memory leak.
-- [High] Unchecked realloc overwrite leads to array leak and a later NULL p=
-ointer dereference.
-- [High] Unchecked calloc failure leads to NULL pointer dereference in fwri=
-te.
-- [High] Heap buffer overflow when processing abnormally large trace record=
-s.
-- [High] Unchecked get_tracing_file failure leads to NULL pointer dereferen=
-ce in fopen.
-- [High] Ftrace ring buffer format is incorrectly constructed for events >=
-=3D 28 words, causing data corruption.
-- [High] Timestamp deltas larger than 27 bits are silently truncated.
-- [Medium] Direct return on record allocation failure bypasses cleanup, lea=
-king accumulated memory.
-- [Medium] The section_size for the flyrecord section is incorrectly calcul=
-ated, violating the trace.dat format.
-- [Medium] The current event record is leaked if flushing the page or reall=
-ocating the batch array fails.
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+- [Critical] Out-of-bounds heap write when tracepoint event data size excee=
+ds the remaining space in a trace.dat page.
+- [Medium] The conversion tool fails to register required callbacks for pip=
+e mode (such as `.attr`, `.feature`, and `.tracing_data`), silently droppin=
+g events.
+- [Medium] The output file is overwritten unconditionally, ignoring the `op=
+ts->force` flag.
+- [Medium] A `realloc` failure in `trace_dat__collect_cpu_event` causes a m=
+emory leak and subsequent segmentation fault.
 --
 
-commit b7f763e536c02304fb52bceb9c78dd92220fa81a
+commit da74698d88efeca5fa33802144416838acb15d2a
 Author: Tanushree Shah <tshah@linux.ibm.com>
 
-perf/trace-dat: Add trace.dat export infrastructure
+perf data-convert: Add perf.data to trace.dat conversion backend
 
-Add new utility files util/trace-dat.c and util/trace-dat.h
-implementing the infrastructure for exporting perf.data tracepoints
-to trace.dat format compatible with trace-cmd and KernelShark.
+Add data-convert-trace.c implementing trace_convert__perf2dat() to
+convert perf.data tracepoint events to trace.dat format.
 
-> diff --git a/tools/perf/util/trace-dat.c b/tools/perf/util/trace-dat.c
-> index 0000000000000..aa34a7b89b7a3
+process_sample_event() is invoked for each PERF_TYPE_TRACEPOINT sample
+during perf_session__process_events(), storing raw event bytes per-cpu
+via trace_dat__collect_cpu_event().
+
+Once all samples are collected:
+- trace_dat__write_options_section1() writes the OPTIONS section with
+  CPUCOUNT, TRACECLOCK, HEADER_INFO, FTRACE_EVENTS, EVENT_FORMATS,
+  KALLSYMS, CMDLINES and DONE options.
+- trace_dat__write__options_section2() writes the OPTIONS section with
+  BUFFER option holding per-cpu data offset placeholders and the DONE
+  option.
+- trace_dat__write_flyrecord_section() builds ring buffer pages
+  per-cpu and patches BUFFER option with final offsets and sizes
+
+Per-cpu buffers are sized to tep_get_page_size() from the session
+tep handle and released on all exit paths.
+
+> diff --git a/tools/perf/util/data-convert-trace.c b/tools/perf/util/data-=
+convert-trace.c
+> new file mode 100644
+> index 0000000000000..e4f8b817be36d
 > --- /dev/null
-> +++ b/tools/perf/util/trace-dat.c
+> +++ b/tools/perf/util/data-convert-trace.c
 [ ... ]
-> +int trace_dat__collect_cpu_event(int cpu, unsigned long long ts,
-> +				 void *raw, unsigned int raw_size)
+> +/* Store raw tracepoint event data in per-cpu buffer for trace.dat flyre=
+cord */
+> +static int process_sample_event(const struct perf_tool *tool,
+> +				union perf_event *event __maybe_unused,
+> +				struct perf_sample *sample,
+> +				struct evsel *evsel,
+> +				struct machine *machine __maybe_unused)
 > +{
-[ ... ]
-> +	if (cpu_events->count >=3D cpu_events->capacity) {
-> +		cpu_events->capacity =3D cpu_events->capacity ?
-> +				       cpu_events->capacity * 2 : INITIAL_EVENT_CAPACITY;
-> +		cpu_events->events   =3D realloc(cpu_events->events,
-> +				       cpu_events->capacity * sizeof(*cpu_events->events));
-> +		if (!cpu_events->events)
+> +	struct trace_convert *tc =3D container_of(tool, struct trace_convert, t=
+ool);
+> +
+> +	/* Collect raw tracepoint data per-cpu */
+> +	if (trace_dat_fp && sample->raw_size > 0 &&
+> +	    evsel->core.attr.type =3D=3D PERF_TYPE_TRACEPOINT) {
+> +		if (trace_dat__collect_cpu_event(sample->cpu, sample->time,
+> +					sample->raw_data, sample->raw_size) < 0) {
+
+[Severity: Medium]
+Is it possible for a memory allocation failure here to cause a crash
+during cleanup?
+
+If trace_dat__collect_cpu_event() fails during a realloc(), it might return
+-ENOMEM while leaving the events array pointer as NULL but keeping the count
+intact.
+
+When trace_dat__free_cpu_buffers() is called on the error path, it could
+dereference that NULL pointer:
+
+tools/perf/util/trace-dat.c:trace_dat__free_cpu_buffers() {
+	...
+	for (i =3D 0; i < trace_cpu_data[cpu].count; i++)
+		free(trace_cpu_data[cpu].events[i].raw);
+	...
+}
+
+> +			pr_err("Failed to collect CPU event\n");
 > +			return -ENOMEM;
-
-[Severity: High]
-If realloc fails, it returns NULL and overwrites cpu_events->events, leaking
-the original memory block. Later, trace_dat__free_cpu_buffers() iterates ov=
-er
-the events and dereferences trace_cpu_data[cpu].events[i].raw. Can this cau=
-se
-a segmentation fault during cleanup since events is NULL?
-
-> +	}
-[ ... ]
-> +static int trace_dat__write_page(FILE *fp, unsigned long long base_ts,
-> +			char **records, int *rec_sizes, int nr_recs)
-> +{
-[ ... ]
-> +	page =3D calloc(1, trace_dat_page_size);
-> +	if (!page)
-> +		return -ENOMEM;
-> +
-> +	for (i =3D 0; i < nr_recs; i++) {
-> +		memcpy(page + offset, records[i], rec_sizes[i]);
-
-[Severity: High]
-When a trace event's size exceeds trace_dat_page_size - 16 bytes, the
-oversized event is queued into a new batch. Does this memcpy copy data past
-the end of the page allocation, causing a heap buffer overflow?
-
-> +		offset +=3D rec_sizes[i];
-> +		commit +=3D rec_sizes[i];
-> +	}
-[ ... ]
-> +static int trace_dat__write_cpu_dat(FILE *fp, int cpu, unsigned long lon=
-g *file_offset_out)
-> +{
-[ ... ]
-> +	for (i =3D 0; i < cpu_events->count; i++) {
-> +		struct cpu_event *event =3D &cpu_events->events[i];
-> +		unsigned long long time_delta =3D event->ts - base_ts;
-> +		unsigned int data_len =3D event->raw_size;
-> +		unsigned int words =3D (data_len + TRACE_DAT_WORD_ALIGN_MASK) / TRACE_=
-DAT_WORD_SIZE;
-> +		unsigned int type_len =3D words & TRACE_DAT_RECORD_TYPE_LEN_MASK;
-> +		unsigned int hdr_word =3D ((time_delta & TRACE_DAT_RECORD_TIME_MASK) <<
-> +					TRACE_DAT_RECORD_TIME_SHIFT) | type_len;
-
-[Severity: High]
-If the gap between events on a CPU exceeds 0x07FFFFFF, the ftrace
-specification requires emitting a TIME_EXTEND or TIME_STAMP record to advan=
-ce
-base_ts. Does masking off the upper bits via time_delta &
-TRACE_DAT_RECORD_TIME_MASK silently truncate the timestamp and corrupt the
-chronological ordering?
-
-[Severity: High]
-The ftrace ring buffer specification uses the 5-bit type_len field to encode
-lengths up to 27 words. For 28 words or more, type_len must be 0, and the
-actual length must be written as a 32-bit word immediately following the
-header. Does applying words & 0x1F map large events into special types (like
-PADDING for 29) or to type_len =3D 0 without appending the required 32-bit
-length word?
-
-> +		int rec_size;
-> +		char *rec;
-> +
-> +		rec_size =3D TRACE_DAT_WORD_SIZE + data_len;
-> +		if (rec_size % TRACE_DAT_WORD_SIZE)
-> +			rec_size +=3D TRACE_DAT_WORD_SIZE - (rec_size % TRACE_DAT_WORD_SIZE);
-> +
-> +		rec =3D calloc(1, rec_size);
-> +		if (!rec)
-> +			return -ENOMEM;
-
-[Severity: Medium]
-If calloc fails, this directly returns -ENOMEM. Does this bypass the out_fr=
-ee
-cleanup label entirely, leaking the page_records and page_rec_sizes tracking
-arrays and any previously allocated record strings?
-
-> +		memcpy(rec, &hdr_word, TRACE_DAT_WORD_SIZE);
-> +		memcpy(rec + TRACE_DAT_WORD_SIZE, event->raw, data_len);
-> +
-> +		if (page_size_used + rec_size > trace_dat_page_size -
-> +		    TRACE_DAT_RECORD_HEADER_SIZE) {
-> +			ret =3D trace_dat__write_page(fp, base_ts,
-> +			      page_records, page_rec_sizes, nr_page_recs);
-> +			for (j =3D 0; j < nr_page_recs; j++)
-> +				free(page_records[j]);
-> +			nr_page_recs =3D 0;
-> +			page_size_used =3D 0;
-> +			base_ts =3D event->ts;
-> +			if (ret < 0)
-> +				goto out_free;
-
-[Severity: Medium]
-If trace_dat__write_page fails and we jump to out_free, the newly allocated
-rec has not yet been appended to the page_records array. Is this memory
-permanently leaked since it is skipped by the cleanup loop?
-
 > +		}
-> +
-> +		if (nr_page_recs >=3D page_cap) {
-> +			char **tmp_records;
-> +			int *tmp_sizes;
-> +
-> +			page_cap =3D page_cap ? page_cap * 2 : INITIAL_PAGE_RECORD_CAPACITY;
-> +			tmp_records =3D realloc(page_records, page_cap * sizeof(char *));
-> +			tmp_sizes =3D realloc(page_rec_sizes, page_cap * sizeof(int));
-> +			if (!tmp_records || !tmp_sizes) {
-> +				ret =3D -ENOMEM;
-> +				goto out_free;
-
-[Severity: High]
-If realloc for tmp_sizes fails, the code jumps to out_free without updating
-page_records to point to the newly allocated block in tmp_records. Does the
-cleanup path then iterate over the potentially freed page_records pointer,
-dereference it (use-after-free), and then call free(page_records) again
-(double-free)?
-
-> +			}
-[ ... ]
-> +int trace_dat__write_options_section1(void)
-> +{
-[ ... ]
-> +	/* TRACECLOCK option */
-> +	opt_id =3D TRACE_DAT_OPTION_TRACECLOCK;
-> +
-> +	path =3D get_tracing_file("trace_clock");
-> +	clock_file =3D fopen(path, "r");
-
-[Severity: High]
-The get_tracing_file function internally uses asprintf and can return NULL =
-on
-memory allocation failure. Is it possible for fopen to receive a NULL path,
-leading to a segmentation fault?
-
-> +	put_tracing_file(path);
-[ ... ]
-> +int trace_dat__write_flyrecord_section(void)
-> +{
-[ ... ]
-> +	/* Align to page boundary */
-> +	after_header   =3D ftell(trace_dat_fp);
-> +	padding_needed =3D (trace_dat_page_size -
-> +			 (after_header % trace_dat_page_size)) % trace_dat_page_size;
-> +
-> +	if (padding_needed > 0) {
-> +		pad =3D calloc(1, padding_needed);
-> +
-> +		if (!fwrite(pad, 1, padding_needed, trace_dat_fp)) {
-
-[Severity: High]
-Is pad passed directly to fwrite without checking if calloc succeeded? Can
-this lead to a segmentation fault if the allocation fails and fwrite receiv=
-es
-a NULL buffer?
-
-> +			free(pad);
-> +			ret =3D -EIO;
-> +			goto cleanup;
-> +		}
-> +		free(pad);
+> +		tc->events_count++;
 > +	}
-[ ... ]
-> +	/* fill section size */
-> +	end_pos =3D ftell(trace_dat_fp);
 > +
-> +	section_size =3D end_pos - flyrecord_start;
+> +	return 0;
+> +}
+[ ... ]
+> +/* Convert perf.data tracepoint events to trace.dat format */
+> +int trace_convert__perf2dat(const char *input, const char *to_trace,
+> +			   struct perf_data_convert_opts *opts)
+> +{
+> +	struct perf_session *session;
+> +	struct trace_convert tc =3D {
+> +		.events_count =3D 0,
+> +	};
+> +	struct perf_data data =3D {
+> +		.path =3D input,
+> +		.mode =3D PERF_DATA_MODE_READ,
+> +		.force =3D opts->force,
+> +	};
+> +	int ret =3D -EINVAL;
+> +	bool cpu_buffers_initialized =3D false;
+> +
+> +	/* Initialize tool with all required callbacks */
+> +	perf_tool__init(&tc.tool, /*ordered_events=3D*/true);
+> +	tc.tool.sample =3D process_sample_event;
 
 [Severity: Medium]
-In the trace.dat specification, the section_size field must indicate the si=
-ze
-of the payload following the 16-byte section header. By capturing
-flyrecord_start before the header is written, does the final section_size
-erroneously include the 16 bytes of the header itself, causing parsing tools
-to miscalculate the boundary?
+Does this initialization omit the required callbacks for pipe mode?
 
-> +	if (fseek(trace_dat_fp, section_size_pos, SEEK_SET) < 0 ||
-> +	    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp)=
-) {
+By only overriding .sample, the .attr, .feature, and .tracing_data
+callbacks remain as default stubs from perf_tool__init().
+
+In pipe mode, without these callbacks, the tool might silently fail to
+populate trace metadata and generate an empty trace.dat file.
+
+> +
+> +	/* Open output trace.dat file */
+> +	trace_dat_fp =3D fopen(to_trace, "wb");
+> +	if (!trace_dat_fp) {
+
+[Severity: Medium]
+Can this unconditionally overwrite an existing file?
+
+The fopen() call uses the "wb" mode which truncates the file, but it
+doesn't appear to check the opts->force flag.
+
+This regression could lead to accidental data loss.
+
+> +		pr_err("Failed to open output file: %s\n", to_trace);
+> +		return -EINVAL;
+> +	}
+[ ... ]
+> +	/* Write trace.dat options and flyrecord sections */
+> +	if (trace_dat__write_options_section1() < 0) {
+> +		pr_err("Failed to write options section1\n");
 > +		ret =3D -EIO;
-> +		goto cleanup;
+> +		goto out_delete;
+> +	}
+> +	if (trace_dat__write_options_section2() < 0) {
+> +		pr_err("Failed to write options section2\n");
+> +		ret =3D -EIO;
+> +		goto out_delete;
+> +	}
+> +	if (trace_dat__write_flyrecord_section() < 0) {
+
+[Severity: Critical]
+Could an unusually large tracepoint event cause an out-of-bounds memory
+access when writing the flyrecord section?
+
+When trace_dat__write_cpu_dat() processes records, it queues them to a new
+page without checking if the rec_size fits within trace_dat_page_size.
+
+If an event size exceeds the page size, trace_dat__write_page() allocates a
+fixed-size buffer and copies the data into it:
+
+tools/perf/util/trace-dat.c:trace_dat__write_page() {
+	page =3D calloc(1, trace_dat_page_size);
+	...
+	for (i =3D 0; i < nr_recs; i++) {
+		memcpy(page + offset, records[i], rec_sizes[i]);
+	...
+}
+
+This regression could result in a heap buffer overflow.
+
+> +		pr_err("Failed to write flyrecord section\n");
+> +		ret =3D -EIO;
+> +		goto out_delete;
 > +	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608125951.9042=
-5-2-tshah@linux.ibm.com?part=3D1
+5-2-tshah@linux.ibm.com?part=3D3
