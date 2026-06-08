@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F89B3009F6
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEC21A0B15
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780883074; cv=none; b=fyMiybGvJz8QCDEa6zn36opoQqUD7p18cV0/mWzq1KBLgkoL8HBmaZ4+98UqfIBEt0Awo5eRBYfOd/2kVLuz62/VOJITo7mslFbRvm40MwRZXxhzgC5uF/v4Qjli3KqX0WVi68jgH3b2XYB5HhUpCYXmAyZvUs19yj5rXN5tAm0=
+	t=1780883140; cv=none; b=fInMIsBqFyPybJUUi0LHO6fLXZTJxVW1CaUJADa6wz2Fhm1ovdQAM9EWAgPN67Njzb8LBakl7DRLWYWiTQL57uxwH61nCACkG90ig8ARY80DtIT6m5dSN43HHL1k1vqQaubAqlTixKY1AjwNpC7YhpXfhdGJRqsqEz36cyb0HQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780883074; c=relaxed/simple;
-	bh=ZYJXn+gey3VVzjlVCFIBfVNxokXqZQEMHvhC4iO3NVU=;
+	s=arc-20240116; t=1780883140; c=relaxed/simple;
+	bh=Ir0hZWo/mRN6RSSeLv1jiUkAwO/T5FTJT2jBijHoXt8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HnTZT97KXOR2AA2hrW4gX/CXBqPW82l7Ocx/X1HL3zdS4zMYXylcUpdGSskdtkLIAWZzV5XfMLNanr8bSQ22DIFA4kTU5YCEUmOlLHANY6iNR91YY7uvNwjXeiDz1A+MFWXR2PAN0P/Jpd8AK1uG0qavtOpX3jd62zi3SlyyO+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1robTKd; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=LQkfCKvoeOLFYdQK51RlZ9rmdgMOOtjTc+RqBkDxaOJA4DAnH0TINVXAQxo8wZSEEGTn6zikzZhnT56Mffn795O5QPU4ccUtJi6bLB2O9ut6MJnOzscvrIwwgdsaiUVXOySZhjGJAOMHs+HsAgUPhTd+S471Rrhnn1wKZ9qjsVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCzlJD24; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1robTKd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3CC51F00893;
-	Mon,  8 Jun 2026 01:44:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCzlJD24"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F087B1F00893;
+	Mon,  8 Jun 2026 01:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780883072;
-	bh=I5jtwlvYQ2srrqW8CDwhoHGLi+Fnh55AmuW/2BjG2CQ=;
+	s=k20260515; t=1780883139;
+	bh=RJAIDTXk7uDyVyH+Y/NONi3FeZ517kYNnNQkzQH+Yso=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=k1robTKdCa1s60KA/0x3FbWbnUbE2tq0CuRQzo+OwZ0R1RCW+nbNU1IsvJiSEa/KG
-	 aIEKyozlQCqyVLQ5mwBmxL8YYUwkPBYQAx759MXQL37nnK3Y6HPqsTSsqQ48e/OknB
-	 T0jMlvR7al5Pe069orXaC/hpItvNGVeMLAY4n0nWeEA5/km3kpKXBACy19U+uRf8KG
-	 SdZsZXSqQO6wLzoA7jJ264elIWc1UU2oZf3WT6UCrwpUJc1vR7VSLUQTlMOsjkScV5
-	 kEY9D58a0ufgNkX8hhQBu8U2t3XaaOp9FhjTOe8Iq+yxkJpCz1aqcDn00+8dD4EFQQ
-	 FZlMrC4gTx91g==
+	b=jCzlJD240i4GmDGqJhnk1sxZPofl7wCNqd+sDxl0isTC4rzJA2WdMDuPFLBBOvYAP
+	 6rpWVe32m5cDk/CbSwr7VhuK15BFwbpztnxN9cG//PP5EMWPL4VKJKWnVbKpAy1oM9
+	 q07agFYIGBwy4GdKD8JQ8cnBi3swUI7DnebVA7QHeY64d/bxR3hQMz7jjeRcuVrFlT
+	 4zJ09tuKpWEM1k/SAajwKlG6+zQpIsuiGqnqb93OAhMIUIrIZFTIryeaUywiTIau96
+	 ECYEzjaMvojrWt5Guk2gKS0/U+JmHVI064a3XmfSYE007B12uVnifjLFrXv7DwTiqJ
+	 H8EpyjrVgC4Bw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 08/11] perf tools: Add O_CLOEXEC to open() calls in DSO
- and ELF code
+Subject: Re: [PATCH 01/11] perf tools: Fix get_max_num() size_t underflow on
+ empty sysfs file
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260608013057.1942953-9-acme@kernel.org>
-References: <20260608013057.1942953-9-acme@kernel.org>
+In-Reply-To: <20260608013057.1942953-2-acme@kernel.org>
+References: <20260608013057.1942953-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 01:44:30 +0000
-Message-Id: <20260608014432.C3CC51F00893@smtp.kernel.org>
+Date: Mon, 08 Jun 2026 01:45:38 +0000
+Message-Id: <20260608014538.F087B1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,86 +48,62 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] The patch incompletely fixes the file descriptor leak because it m=
-isses multiple mkstemp() calls that do not set O_CLOEXEC.
+- [High] Heap out-of-bounds write (poison null byte) due to size_t underflo=
+w when reading empty files
 --
 
-commit 76a844002251898e2934fafe58f422e4df6f5517
+commit 1a2f44329fa687f2b52540b18c56a66a0d4e9628
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf tools: Add O_CLOEXEC to open() calls in DSO and ELF code
+perf tools: Fix get_max_num() size_t underflow on empty sysfs file
 
-This patch adds O_CLOEXEC to open() calls in dso.c and symbol-elf.c to
-prevent file descriptors from leaking to child processes spawned during
-symbol resolution. This aims to prevent fd exhaustion during long
-profiling sessions or when processing many DSOs.
+This commit fixes a size_t underflow in get_max_num() by adding an early
+return when a sysfs file is empty. Previously, reading an empty file would
+result in num =3D=3D 0, causing a backward scan to underflow and read
+out-of-bounds memory.
 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 7dced896c64ea..fb2e78fe2aa8e 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -344,7 +344,7 @@ int filename__decompress(const char *name, char *path=
-name,
->  	 * descriptor to the uncompressed file.
->  	 */
->  	if (!compressions[comp].is_compressed(name))
-> -		return open(name, O_RDONLY);
-> +		return open(name, O_RDONLY | O_CLOEXEC);
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -448,6 +448,12 @@ static int get_max_num(char *path, int *max)
 > =20
->  	fd =3D mkstemp(tmpbuf);
+>  	buf[num] =3D '\0';
+> =20
+> +	/* empty file =E2=80=94 nothing to parse */
+> +	if (num =3D=3D 0) {
+> +		err =3D -1;
+> +		goto out;
+> +	}
+> +
 
 [Severity: High]
-This is a pre-existing issue, but does mkstemp() also leak file descriptors
-to child processes?
+This isn't a bug introduced by this patch, but while you are fixing
+empty file reads here, does this same size_t underflow pattern occur in
+other places that read strings?
 
-Since mkstemp() does not automatically set the O_CLOEXEC flag, the file
-descriptor created here for the decompressed kernel module might still rema=
-in
-open and leak to child processes (like addr2line) spawned during symbol
-resolution.
+For instance, in tools/perf/util/pmu.c:pmu_id():
 
-Should a subsequent fcntl(fd, F_SETFD, FD_CLOEXEC) be added to fully resolve
-the file descriptor exhaustion issue this patch targets?
+	if (filename__read_str(path, &str, &len) < 0)
+		return NULL;
 
->  	if (fd < 0) {
+	str[len - 1] =3D 0; /* remove line feed */
 
-[ ... ]
+If len is 0 because the identifier file is completely empty, len - 1
+underflows to SIZE_MAX. Since the string is heap-allocated and returned
+with a length of 0, writing to index SIZE_MAX effectively writes one byte
+before the string, which corrupts the malloc chunk size metadata.
 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 186e6d92ac3d7..c2bdfd0003df2 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
+A similar pattern seems to exist in
+tools/perf/util/thread.c:thread__set_comm_from_proc():
 
-[ ... ]
+	if (procfs__read_str(path, &comm, &sz) =3D=3D 0) {
+		comm[sz - 1] =3D '\0';
+		err =3D thread__set_comm(thread, comm, 0);
+	}
 
-> @@ -1985,7 +1985,7 @@ static int kcore__init(struct kcore *kcore, char *f=
-ilename, int elfclass,
->  	if (temp)
->  		kcore->fd =3D mkstemp(filename);
-
-[Severity: High]
-This is a pre-existing issue, but this mkstemp() call also creates a
-temporary file for kcore without setting O_CLOEXEC.
-
-Additionally, looking at read_gnu_debugdata() in the same file, there is
-another call to mkstemp() used for extracted .gnu_debugdata:
-
-tools/perf/util/symbol-elf.c:read_gnu_debugdata() {
-    ...
-    temp_fd =3D mkstemp(temp_filename);
-    ...
-}
-
-Do these mkstemp() descriptors also need to have the FD_CLOEXEC flag set to
-prevent them from leaking to child processes?
-
->  	else
-> -		kcore->fd =3D open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400);
-> +		kcore->fd =3D open(filename, O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, =
-0400);
->  	if (kcore->fd =3D=3D -1)
->  		return -1;
+Could these empty file underflows trigger similar heap corruption if the
+identifier or comm files happen to be empty?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608013057.1942=
-953-1-acme@kernel.org?part=3D8
+953-1-acme@kernel.org?part=3D1
