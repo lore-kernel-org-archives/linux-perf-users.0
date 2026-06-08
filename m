@@ -1,116 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BA52FF672;
-	Mon,  8 Jun 2026 01:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88634071CF;
+	Mon,  8 Jun 2026 01:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780882363; cv=none; b=gSvg2K7JcwXwc3M0KSRhe8odLQHpLq7y5MCH3RmVAhYDAnZEAdUKNycVs8DWKW1OCNAbMZNSk+g2PoIVqnPIP5e38WGzuhFYWT9Q25Da839oQHGY3F9bQrZEklThEpgT11mufbH6l+J4Y+KNXciUF8hEZd0G+p5qxQ1fLZd9wK0=
+	t=1780882672; cv=none; b=WVlJVsKPomUikaJaD1Uu4eyyjEcwNYQF5Qx7EFMH0CHxJ2qf5AktcoACyGVZyyl+0DZR1hg56TklDD0/XKDZ9rrzonBwySVZFxcyjfe6H3UfNGw1RA44ZyRetRf5ainTXD1DoNgEN6PXHFC7I8lKn1ORGago9F5kqbfAGwer6AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780882363; c=relaxed/simple;
-	bh=pztbD3iX3pd/KugXnN4XjAccZtUYB6eLIx5zr1pj1X4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aptjqoiZ1Ps/i5PqzHWcp4Hh9JpeVujv4uSXtlu46g3gW8ou1AhJUMGZrdwgWV83b+zJRM4vgAP55xOa5aTBLOajdgs4/1C0r6epFhrJ1U6S6gdGg3iWhpz3aUOO9Ik5C8cPxYcjOTnEHW1krR/Bp0QplysPlnHAVgw6b54cgT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PanchjKr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780882672; c=relaxed/simple;
+	bh=fHlma5KECpLohBaWFsPmgwtR8FBoBLwy9+VgTW1777I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JF7KzbObnelTGntM9Bx4QZlQ5ePuZiQ8pEm3JazYVpjKgi0KPTbvHQDGy4SQaHYOq4VccU66vZxBo+2TcL2+PjOXDzEh1MzCoZEe8z6ENjZ7sZaAiELUctg2AQEnEJR87G4oIJMKD3KYL4qm+WdfdOixt5gnXgFjPnoX0eLrSvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kIt7AGDR; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PanchjKr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 562CF1F00893;
-	Mon,  8 Jun 2026 01:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780882362;
-	bh=vJrjz18WP9YOQVzzuYUbzW7bbrjWzAs6Y8JS41ckrzw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=PanchjKrWbxEKsw3/+lBei8PMyInExfAPwQ0cLNJjXu68pB4k7+koAKTEYCOLMGOw
-	 8+KYJTcaYkT5EyVoPkN9FwofmhmEA5uEj4Ucq0qzLuZVoar9IGLYCmivT9ey9XFAmn
-	 yn9IA2KjbezSBAmeQmJwPWL79/NSLd5sl5CaLWBvdRJpCyNOC8KZY+b5FuLIzGr+VR
-	 jMa6T5STjKpO/ct2A/rN4WpMQNnUWOCk81TjrGA2Bx69QSUFRBXTNwSHFuQJpMcD2y
-	 KSRF3vDHTM3N1F6Ke7IbPvFKBRb01jDAz/m7szD2WiME9Cy+CO+j4F5QJiohNBunKw
-	 sBAyeIlT9+CTw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 11/11] perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
-Date: Sun,  7 Jun 2026 22:30:55 -0300
-Message-ID: <20260608013057.1942953-12-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260608013057.1942953-1-acme@kernel.org>
-References: <20260608013057.1942953-1-acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kIt7AGDR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780882670; x=1812418670;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fHlma5KECpLohBaWFsPmgwtR8FBoBLwy9+VgTW1777I=;
+  b=kIt7AGDROnTkywIpUrzB/6aSTMw3TVwfgnMhcdHyh8LZTqWv55vjNDF3
+   7D6s9cqFGGVUPkOOrpk5ONARaNabNElpSestiHnkPIkVXP4sb8wVZidZE
+   qzKTz3bZ4ZgbR86uaPynAQKE1tQZGDFHvgxEvgpM2nbTs4cX5eo3F5hPx
+   NxUQzsj4C5YKkBzuhKWapcQf1lOierqiNWsi4u3ia8UKOO5o9cJ1JO+Qe
+   mOtU+/3WqDNrHwEJqfbNZQ5Ua/b2BiABHMFgtH2DovPI1Z5iKJo9SgyBJ
+   1pKVq6PcyVCo/qpU4G6dGrD/3lPVMbUndH/eLubdEEypOlE0eiynTUOap
+   Q==;
+X-CSE-ConnectionGUID: r+I7UjsSReGbKWFhcCIgLA==
+X-CSE-MsgGUID: uaRgNERmQySi1g8h3oztQQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81673773"
+X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
+   d="scan'208";a="81673773"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 18:37:49 -0700
+X-CSE-ConnectionGUID: Tg7nJ1DdSbSxi/i/x/m1XQ==
+X-CSE-MsgGUID: QUseja+xTHaAejQREFo8Pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
+   d="scan'208";a="240956870"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 18:37:45 -0700
+Message-ID: <4a2bdb92-11b5-46ab-83a4-9b58e71ca581@linux.intel.com>
+Date: Mon, 8 Jun 2026 09:37:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] perf/x86/intel: Remove anythread_deprecated bit from
+ perf_capabilities
+To: "Falcon, Thomas" <thomas.falcon@intel.com>,
+ "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+ "ak@linux.intel.com" <ak@linux.intel.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "namhyung@kernel.org" <namhyung@kernel.org>, "Rogers, Ian"
+ <irogers@google.com>, "Eranian, Stephane" <eranian@google.com>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "Chen, Zide" <zide.chen@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "Mi, Dapeng1" <dapeng1.mi@intel.com>, "Hao, Xudong" <xudong.hao@intel.com>
+References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
+ <20260605011136.2043393-2-dapeng1.mi@linux.intel.com>
+ <7fdb17e042719f77c382cbc47be2def2cda1bf51.camel@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <7fdb17e042719f77c382cbc47be2def2cda1bf51.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-build_id__snprintf() and hwmon_pmu__read_events() accumulate formatted
-output via snprintf(), which returns the would-have-been-written count
-on truncation.  In build_id__snprintf(), this inflates the return
-value beyond the buffer size.  In hwmon_pmu__read_events(), len
-overshoots out_buf_len and the next 'out_buf_len - len' underflows.
+On 6/6/2026 1:04 AM, Falcon, Thomas wrote:
+> On Fri, 2026-06-05 at 09:11 +0800, Dapeng Mi wrote:
+>> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead
+>> of
+>> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+>> represent "anythread deprecation" in perf_capabilities. It leads to
+>> the
+>> anythread_deprecated bit could be overwritten by the real value of
+>> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap()
+>> does.
+>>
+>> ```
+>> if (!intel_pmu_broken_perf_cap()) {
+>> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid
+>> enumeration */
+>> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu,
+>> intel_cap).capabilities);
+>> }
+>> ```
+>>
+>> It leads to the anythread_deprecated bit is cleared to 0 and the
+>> "any"
+>> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder
+>> on
+>> these support Perfmon v6 platforms, like Clearwater Forest.
+>>
+>> ```
+>> $grep . /sys/devices/cpu/format/*
+>> /sys/devices/cpu/format/acr_mask:config2:0-63
+>> /sys/devices/cpu/format/any:config:21
+>> /sys/devices/cpu/format/cmask:config:24-31
+>> ```
+>>
+>> So remove the anythread_deprecated bit from perf_capabilities
+>> structure
+>> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+>> deprecated.
+>>
+>> Cc: stable@vger.kernel.org
+>> Reported-by: Namhyung Kim <namhyung@kernel.org>
+>> Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support
+>> conditional")
+>> Acked-by: Namhyung Kim <namhyung@kernel.org>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Reviewed-by: Zide Chen <zide.chen@intel.com>
+>> ---
+>>
+>> Original patch link:
+>> https://lore.kernel.org/all/20260423053306.3033331-1-dapeng1.mi@linux.intel.com/
+>>
+>>  arch/x86/events/intel/core.c | 10 +++-------
+>>  arch/x86/events/perf_event.h |  2 +-
+>>  2 files changed, 4 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c
+>> b/arch/x86/events/intel/core.c
+>> index 0217e701aeeb..ea3ab3050a3b 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -7946,12 +7946,6 @@ __init int intel_pmu_init(void)
+>>  
+>>  	x86_add_quirk(intel_arch_events_quirk); /* Install first, so
+>> it runs last */
+>>  
+>> -	if (version >= 5) {
+>> -		x86_pmu.intel_cap.anythread_deprecated =
+>> edx.split.anythread_deprecated;
+>> -		if (x86_pmu.intel_cap.anythread_deprecated)
+>> -			pr_cont(" AnyThread deprecated, ");
+>> -	}
+>> -
+>>  	/* The perf side of core PMU is ready to support the
+>> mediated vPMU. */
+>>  	x86_get_pmu(smp_processor_id())->capabilities |=
+>> PERF_PMU_CAP_MEDIATED_VPMU;
+>>  
+>> @@ -8828,8 +8822,10 @@ __init int intel_pmu_init(void)
+>>  				      &x86_pmu.intel_ctrl);
+>>  
+>>  	/* AnyThread may be deprecated on arch perfmon v5 or later
+>> */
+>> -	if (x86_pmu.intel_cap.anythread_deprecated)
+>> +	if (version >= 5 && edx.split.anythread_deprecated) {
+>>  		x86_pmu.format_attrs = intel_arch_formats_attr;
+>> +		pr_cont("AnyThread deprecated, ");
+> Is there a reason the leading space is missing here? Other than that,
+> LGTM.
 
-Switch both to scnprintf() which returns actual bytes written.
+It's removed intentionally. The leading space is unnecessary and seems to
+be long-term typo.
 
-Fixes: fccaaf6fbbc59910 ("perf build-id: Change sprintf functions to snprintf")
-Fixes: 53cc0b351ec99278 ("perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/build-id.c  |  2 +-
- tools/perf/util/hwmon_pmu.c | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+Thanks.
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 8c0a9ae932aa5798..a3b92108f96263c6 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -94,7 +94,7 @@ int build_id__snprintf(const struct build_id *build_id, char *bf, size_t bf_size
- 	}
- 
- 	for (size_t i = 0; i < build_id->size && offs < bf_size; ++i)
--		offs += snprintf(bf + offs, bf_size - offs, "%02x", build_id->data[i]);
-+		offs += scnprintf(bf + offs, bf_size - offs, "%02x", build_id->data[i]);
- 
- 	return offs;
- }
-diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-index fb3ffa8d32ad2a93..dbf6a71af47f9a42 100644
---- a/tools/perf/util/hwmon_pmu.c
-+++ b/tools/perf/util/hwmon_pmu.c
-@@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmon_pmu *hwm, char *out_buf, si
- 
- 				buf[read_len] = '\0';
- 				val = strtoll(buf, /*endptr=*/NULL, 10);
--				len += snprintf(out_buf + len, out_buf_len - len, "%s%s%s=%g%s",
--						len == 0 ? " " : ", ",
--						hwmon_item_strs[bit],
--						is_alarm ? "_alarm" : "",
--						(double)val / 1000.0,
--						hwmon_units[key.type]);
-+				len += scnprintf(out_buf + len, out_buf_len - len, "%s%s%s=%g%s",
-+						 len == 0 ? " " : ", ",
-+						 hwmon_item_strs[bit],
-+						 is_alarm ? "_alarm" : "",
-+						 (double)val / 1000.0,
-+						 hwmon_units[key.type]);
- 			}
- 			close(fd);
- 		}
--- 
-2.54.0
 
+>
+> Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
+>
+>> +	}
+>>  
+>>  	intel_pmu_check_event_constraints_all(NULL);
+>>  
+>> diff --git a/arch/x86/events/perf_event.h
+>> b/arch/x86/events/perf_event.h
+>> index eae24bb35dc1..5902a297daa1 100644
+>> --- a/arch/x86/events/perf_event.h
+>> +++ b/arch/x86/events/perf_event.h
+>> @@ -668,7 +668,7 @@ union perf_capabilities {
+>>  		u64	perf_metrics:1;
+>>  		u64	pebs_output_pt_available:1;
+>>  		u64	pebs_timing_info:1;
+>> -		u64	anythread_deprecated:1;
+>> +		u64	__reserved:1;
+>>  		u64	rdpmc_metrics_clear:1;
+>>  	};
+>>  	u64	capabilities;
