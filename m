@@ -1,78 +1,67 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B5634DB72
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 05:17:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9E2336881
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 05:18:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780895868; cv=none; b=FRWSEIXTzF+peYcAdkcn+Bpzrf85v7GZJ1uYL5tHaB/QMOxU8wu09C0tPZwdJLKvqBW5TZWj1u0b4NxU3ao2F1kyN/RQxQDUvx64kO9MmXo1i4qCNXQJWJYBe73X/eqLuiC8JNaTy9haDvMIRciudNgQWTy2zaLTluSM+l/Ws+4=
+	t=1780895895; cv=none; b=BPnGtTR7CS9oBdfpsT7z1MbE9JjFvlm1MqkQ/iZGUcfPfk4yH4qwWGM8YaDywb3pka+DDGVb2YY1rjw7m2JV+ew6eWWAdiQ955apN3DluEEuZF3jw/ArjAn5SZyxZ2UkcRusL8Mwlz6zK4BkH/wFHs4EFZe1XC8Q4hq/CPLd/kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780895868; c=relaxed/simple;
-	bh=vqTiocBonkBWL8ASCbljvA0u231zQ3DHaPsyfQbino0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pjQVVXF0gfARTYI3Dam37phUPHnzoJzqQeQqeVd9TQyYXlOlCx6jp4TtRu9915mJzrmbH7WF3BO6vCm4sA4E4wH4DhWyKGalaeJxQV7d5SVgSab4ppNsdxM0RV67gbddSr2mbeMh0Q82kL4AzAT4BF27TiE1p97c09HlDtEs0CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=vYMiHMwM; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Gt0EqDBj; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1780895895; c=relaxed/simple;
+	bh=5AzQ4eWk0aHjGe1A5Qx33rBm92yXa/gRpcRcPWAo40Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DNNleounlTwv+57Y81Bz3d/PHXimf6ZJ11RGyRY2qWSQBpqg3xusLSP4TpVPug328N07C6MfT/DAJK+ZsCF9gQTk1pcuINe+EELjvNbGbqxID19U3A6/oQCKLRHzFITnDzzK6r31/Ecqkok4sJiSPe4YXEHrBiYLpRAKbOeP00I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=XLoIVl6m; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=XLoIVl6m; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="vYMiHMwM";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Gt0EqDBj"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="XLoIVl6m";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="XLoIVl6m"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2D32C6B5C9;
-	Mon,  8 Jun 2026 05:17:44 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7CD5F6B5C9;
+	Mon,  8 Jun 2026 05:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1780895865; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Uy+6faj0/F/X5rjzint+FLhrxLd8I//FthGmjDkjoew=;
-	b=vYMiHMwMTBXFb/sW49zCsJTPzSZk9fTDS+skHO2/1HtWnWRAVhQC8Kd4ZHMSuZzBxQpZvH
-	csKtqhPOMsKQaA6neMYLphcJt8PJk3vL4TRSX7r8cEpcVebZd3tsFokGbIf5B7+iCNJRRs
-	4Cv0b4bB+tgXr1v+tOz0a3xxYNUah3Y=
+	t=1780895892; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dZBHy8j1luzfvf3a/CpZtyeM4oW8ccSHQP0iM1t3/co=;
+	b=XLoIVl6mLUi5IHZchzYZIbED8t7gCqJCLPHzRyGb52XfeXX2axZ+LTC1pJftWoutvCwfMl
+	L6whRBw2IgO4xaUP9pBWAnLQNOdD5QKd0w1xQb40NDoHHGYhwDDeilAWgkYB92g+UY/lLZ
+	BBwUptmZv/hUEVAnXOApDZIm8ed/Wls=
 Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=Gt0EqDBj
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1780895864; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Uy+6faj0/F/X5rjzint+FLhrxLd8I//FthGmjDkjoew=;
-	b=Gt0EqDBj6Sj/cT65f0e0sayMAb9RZXZIe0K+1Q9KM0FcR31gCd+YySNLtFKWPONryzvlia
-	xrQb8qETMP8oMDEUbsWHZwG7JsC/MQeze6zcfgTUJtslV7DQJZLtzamSSUB1M2o5Niypys
-	XyMQXLv3bN9z8nhYxoqi4ZjenPLkYV0=
+	t=1780895892; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dZBHy8j1luzfvf3a/CpZtyeM4oW8ccSHQP0iM1t3/co=;
+	b=XLoIVl6mLUi5IHZchzYZIbED8t7gCqJCLPHzRyGb52XfeXX2axZ+LTC1pJftWoutvCwfMl
+	L6whRBw2IgO4xaUP9pBWAnLQNOdD5QKd0w1xQb40NDoHHGYhwDDeilAWgkYB92g+UY/lLZ
+	BBwUptmZv/hUEVAnXOApDZIm8ed/Wls=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7597D779A7;
-	Mon,  8 Jun 2026 05:17:43 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB822779A7;
+	Mon,  8 Jun 2026 05:18:11 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ljMeG3dQJmo6dQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Mon, 08 Jun 2026 05:17:43 +0000
+	id gXxLOJNQJmpedQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Mon, 08 Jun 2026 05:18:11 +0000
 From: Juergen Gross <jgross@suse.com>
 To: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
 	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
 	linux-edac@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
+	linux-pm@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
 	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
@@ -80,11 +69,23 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>
-Subject: [PATCH v3 00/11] x86/msr: Drop 32-bit variants of *_on_cpu() MSR functions
-Date: Mon,  8 Jun 2026 07:17:30 +0200
-Message-ID: <20260608051741.3207435-1-jgross@suse.com>
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Tony Luck <tony.luck@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>
+Subject: [PATCH v3 05/11] x86/msr: Switch wrmsr_on_cpu() users to wrmsrq_on_cpu()
+Date: Mon,  8 Jun 2026 07:17:35 +0200
+Message-ID: <20260608051741.3207435-6-jgross@suse.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260608051741.3207435-1-jgross@suse.com>
+References: <20260608051741.3207435-1-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -92,78 +93,174 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 2D32C6B5C9
 X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
+X-Spamd-Result: default: False [-2.80 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
 	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_HAS_DN(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,intel.com:email,suse.com:email,suse.com:mid];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLkdkdrsxe9hqhhs5ask8616i6)];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+	R_RATELIMIT(0.00)[to_ip_from(RLfdszjqhz8kzzb9uwpzdm8png)];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-Drop the variants using 2 32-bit values instead of a single 64-bit one
-of the *_on_cpu() MSR access functions.
+In order to prepare retiring wrmsr_on_cpu() switch wrmsr_on_cpu() users
+to wrmsrq_on_cpu().
 
-Changes in V2:
-- patches 1+2 split out from other patch
-- keep the *q() variants instead of those without suffix
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+---
+V2:
+- instead of changing wrmsr_on_cpu(), use wrmsrq_on_cpu() (Ingo Molnar)
+---
+ arch/x86/events/intel/ds.c                   | 11 ++++-------
+ arch/x86/include/asm/msr.h                   |  2 +-
+ arch/x86/kernel/cpu/mce/inject.c             |  2 +-
+ drivers/cpufreq/p4-clockmod.c                |  4 ++--
+ drivers/cpufreq/speedstep-centrino.c         |  4 ++--
+ drivers/thermal/intel/x86_pkg_temp_thermal.c |  2 +-
+ 6 files changed, 11 insertions(+), 14 deletions(-)
 
-Changes in V3:
-- V3 patch 7 split out from V2 patch 7
-
-Juergen Gross (11):
-  x86/msr: Switch rdmsrl_on_cpu() users to rdmsrq_on_cpu()
-  x86/msr: Remove rdmsrl_on_cpu()
-  x86/msr: Switch rdmsr_on_cpu() users to rdmsrq_on_cpu()
-  x86/msr: Remove rdmsr_on_cpu()
-  x86/msr: Switch wrmsr_on_cpu() users to wrmsrq_on_cpu()
-  x86/msr: Remove wrmsr_on_cpu()
-  x86/msr: Don't use rdmsr_safe_on_cpu() in rdmsrq_safe_on_cpu()
-  x86/msr: Switch rdmsr_safe_on_cpu() users to rdmsrq_safe_on_cpu()
-  x86/msr: Remove rdmsr_safe_on_cpu()
-  x86/msr: Switch wrmsr_safe_on_cpu() users to wrmsrq_safe_on_cpu()
-  x86/msr: Remove wrmsr_safe_on_cpu()
-
- arch/x86/events/intel/ds.c                   | 11 +--
- arch/x86/include/asm/msr.h                   | 28 +-----
- arch/x86/kernel/cpu/mce/amd.c                |  6 +-
- arch/x86/kernel/cpu/mce/inject.c             |  8 +-
- arch/x86/kernel/msr.c                        |  8 +-
- arch/x86/lib/msr-smp.c                       | 89 +++-----------------
- drivers/cpufreq/amd-pstate.c                 |  2 +-
- drivers/cpufreq/amd_freq_sensitivity.c       |  6 +-
- drivers/cpufreq/p4-clockmod.c                | 32 +++----
- drivers/cpufreq/speedstep-centrino.c         | 27 +++---
- drivers/hwmon/coretemp.c                     | 44 +++++-----
- drivers/hwmon/via-cputemp.c                  | 16 ++--
- drivers/thermal/intel/intel_tcc.c            | 43 +++++-----
- drivers/thermal/intel/x86_pkg_temp_thermal.c | 25 +++---
- 14 files changed, 128 insertions(+), 217 deletions(-)
-
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 7f0d515c07c5..5b9c01383f49 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -780,9 +780,7 @@ void init_debug_store_on_cpu(int cpu)
+ 	if (!ds)
+ 		return;
+ 
+-	wrmsr_on_cpu(cpu, MSR_IA32_DS_AREA,
+-		     (u32)((u64)(unsigned long)ds),
+-		     (u32)((u64)(unsigned long)ds >> 32));
++	wrmsrq_on_cpu(cpu, MSR_IA32_DS_AREA, (u64)(unsigned long)ds);
+ }
+ 
+ void fini_debug_store_on_cpu(int cpu)
+@@ -790,7 +788,7 @@ void fini_debug_store_on_cpu(int cpu)
+ 	if (!per_cpu(cpu_hw_events, cpu).ds)
+ 		return;
+ 
+-	wrmsr_on_cpu(cpu, MSR_IA32_DS_AREA, 0, 0);
++	wrmsrq_on_cpu(cpu, MSR_IA32_DS_AREA, 0);
+ }
+ 
+ static DEFINE_PER_CPU(void *, insn_buffer);
+@@ -1095,8 +1093,7 @@ void init_arch_pebs_on_cpu(int cpu)
+ 	 * contiguous physical buffer (__alloc_pages_node() with order)
+ 	 */
+ 	arch_pebs_base = virt_to_phys(cpuc->pebs_vaddr) | PEBS_BUFFER_SHIFT;
+-	wrmsr_on_cpu(cpu, MSR_IA32_PEBS_BASE, (u32)arch_pebs_base,
+-		     (u32)(arch_pebs_base >> 32));
++	wrmsrq_on_cpu(cpu, MSR_IA32_PEBS_BASE, arch_pebs_base);
+ 	x86_pmu.pebs_active = 1;
+ }
+ 
+@@ -1105,7 +1102,7 @@ inline void fini_arch_pebs_on_cpu(int cpu)
+ 	if (!x86_pmu.arch_pebs)
+ 		return;
+ 
+-	wrmsr_on_cpu(cpu, MSR_IA32_PEBS_BASE, 0, 0);
++	wrmsrq_on_cpu(cpu, MSR_IA32_PEBS_BASE, 0);
+ }
+ 
+ /*
+diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
+index 22f914f7affe..6e0d7a6335ff 100644
+--- a/arch/x86/include/asm/msr.h
++++ b/arch/x86/include/asm/msr.h
+@@ -291,7 +291,7 @@ static inline void rdmsr_on_cpus(const struct cpumask *m, u32 msr_no,
+ static inline void wrmsr_on_cpus(const struct cpumask *m, u32 msr_no,
+ 				struct msr __percpu *msrs)
+ {
+-	wrmsr_on_cpu(0, msr_no, raw_cpu_read(msrs->l), raw_cpu_read(msrs->h));
++	wrmsrq_on_cpu(0, msr_no, raw_cpu_read(msrs->q));
+ }
+ static inline int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no,
+ 				    u32 *l, u32 *h)
+diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
+index bee9c35762b8..6d30e7720f31 100644
+--- a/arch/x86/kernel/cpu/mce/inject.c
++++ b/arch/x86/kernel/cpu/mce/inject.c
+@@ -327,7 +327,7 @@ static int toggle_hw_mce_inject(unsigned int cpu, bool enable)
+ 
+ 	enable ? (val.l |= BIT(18)) : (val.l &= ~BIT(18));
+ 
+-	err = wrmsr_on_cpu(cpu, MSR_K7_HWCR, val.l, val.h);
++	err = wrmsrq_on_cpu(cpu, MSR_K7_HWCR, val.q);
+ 	if (err)
+ 		pr_err("%s: error writing HWCR\n", __func__);
+ 
+diff --git a/drivers/cpufreq/p4-clockmod.c b/drivers/cpufreq/p4-clockmod.c
+index d96e8b665f39..c1690aa48193 100644
+--- a/drivers/cpufreq/p4-clockmod.c
++++ b/drivers/cpufreq/p4-clockmod.c
+@@ -68,7 +68,7 @@ static int cpufreq_p4_setdc(unsigned int cpu, unsigned int newstate)
+ 	rdmsrq_on_cpu(cpu, MSR_IA32_THERM_CONTROL, &val.q);
+ 	if (newstate == DC_DISABLE) {
+ 		pr_debug("CPU#%d disabling modulation\n", cpu);
+-		wrmsr_on_cpu(cpu, MSR_IA32_THERM_CONTROL, val.l & ~(1<<4), val.h);
++		wrmsrq_on_cpu(cpu, MSR_IA32_THERM_CONTROL, val.q & ~(1ULL << 4));
+ 	} else {
+ 		pr_debug("CPU#%d setting duty cycle to %d%%\n",
+ 			cpu, ((125 * newstate) / 10));
+@@ -79,7 +79,7 @@ static int cpufreq_p4_setdc(unsigned int cpu, unsigned int newstate)
+ 		 */
+ 		val.l = (val.l & ~14);
+ 		val.l = val.l | (1<<4) | ((newstate & 0x7)<<1);
+-		wrmsr_on_cpu(cpu, MSR_IA32_THERM_CONTROL, val.l, val.h);
++		wrmsrq_on_cpu(cpu, MSR_IA32_THERM_CONTROL, val.q);
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/cpufreq/speedstep-centrino.c b/drivers/cpufreq/speedstep-centrino.c
+index cefee19d1100..9237ed8f2b1f 100644
+--- a/drivers/cpufreq/speedstep-centrino.c
++++ b/drivers/cpufreq/speedstep-centrino.c
+@@ -475,7 +475,7 @@ static int centrino_target(struct cpufreq_policy *policy, unsigned int index)
+ 			oldmsr.l |= msr;
+ 		}
+ 
+-		wrmsr_on_cpu(good_cpu, MSR_IA32_PERF_CTL, oldmsr.l, oldmsr.h);
++		wrmsrq_on_cpu(good_cpu, MSR_IA32_PERF_CTL, oldmsr.q);
+ 		if (policy->shared_type == CPUFREQ_SHARED_TYPE_ANY)
+ 			break;
+ 
+@@ -491,7 +491,7 @@ static int centrino_target(struct cpufreq_policy *policy, unsigned int index)
+ 		 */
+ 
+ 		for_each_cpu(j, covered_cpus)
+-			wrmsr_on_cpu(j, MSR_IA32_PERF_CTL, oldmsr.l, oldmsr.h);
++			wrmsrq_on_cpu(j, MSR_IA32_PERF_CTL, oldmsr.q);
+ 	}
+ 	retval = 0;
+ 
+diff --git a/drivers/thermal/intel/x86_pkg_temp_thermal.c b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+index 2e7de8cf756d..144603c356a0 100644
+--- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
++++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
+@@ -167,7 +167,7 @@ sys_set_trip_temp(struct thermal_zone_device *tzd,
+ 		v.l |= intr;
+ 	}
+ 
+-	return wrmsr_on_cpu(zonedev->cpu, MSR_IA32_PACKAGE_THERM_INTERRUPT, v.l, v.h);
++	return wrmsrq_on_cpu(zonedev->cpu, MSR_IA32_PACKAGE_THERM_INTERRUPT, v.q);
+ }
+ 
+ /* Thermal zone callback registry */
 -- 
 2.54.0
 
