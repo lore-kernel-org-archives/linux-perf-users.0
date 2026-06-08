@@ -1,116 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A0833F5AB;
-	Mon,  8 Jun 2026 20:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C09C33A6F7
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 20:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780951333; cv=none; b=fFgBlshiHiDxAR1OrghQ2pVc9r2dHR/cMQ9kHmSIAdo04G9daYCAXwTsHU9OjXt4nfqIWxvNZqFSlxg5CoOsH/eUf8mDTnX8Xqi+y88NWa+Q+RHkBhGvndHTDSNPuoMScueALpP0A82GExqd9Rlp7rEKL5kJwBLps3VbujSuRyI=
+	t=1780951540; cv=none; b=nugLtQ9+/Kdc1Dx2mbCIW99lNep3mUTUFld5anH2FIrMaQ1BUwLjrMDrAO+m9zYcmMmd9zSMi3czHqyxWPos+8LoNlOveUGBMpZgXweq0Gu9r1HdfwFcsF6UWTHxYY5NLRyW5jB9brqXj0grirar8jCFZq7HWif2D52qLSmoeFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780951333; c=relaxed/simple;
-	bh=n/k7k7XpRLWHszvfJ6GMCTEb7nVbdyXTTnGX9Mz8iYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZT42kGKbUftrHCCkHfu94rSaF62dgQtiyV23sqrmXV0MYNWTkHB7VN1BAW9LVoiUMfM3n9L9gfEgDSt0dHEjs+33HXWnqGqt8i+pnYsWkNhUHwk9ndyqF/rpACimLwxnwFAxtL5WVrYGECjZmicVPEQsLp/mNsW1mnQLo0H43+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VNr99adO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780951540; c=relaxed/simple;
+	bh=xf5TeghNVoYRnnn8L4xvUgUHXOonIhAsDlyfbuSkPhI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=QUphSSDoXDaNrsH0eufE/f3hk6nRuMqkp9Z3Goas+RgL6X433NpCmcjAjtsNjJl7ReGxJDMMHEmzzhdqAJpmntow5shtdmE7UzysqGU1wG5vbSzl4PZddZ4yWup+JXGcRMmQ1WYmOkYwCkQhDdzRSs0hFWhpQtzuFtxd6Q++Euk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIJHrwFN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VNr99adO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F8B1F00893;
-	Mon,  8 Jun 2026 20:42:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIJHrwFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E0C91F00893;
+	Mon,  8 Jun 2026 20:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780951332;
-	bh=PR7pG8wAfrRCPKNdFjSjuvjMT0lgk6g+9kyjolRDVK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VNr99adO/XePoVd/WKtJ5y97g+zTLllkLqZAmEOf6Ts50ou/IHNiVXVvw8DpoAE86
-	 MvErgyJWYdkkHrnl1XeDdfmU68K1OiyxO2kXOXl24TcpFXBf1RYrOBrAX3FbF21AxG
-	 zqTbcEepTsz4lNXs+KfNEFAkvGJk5xuYYLAKAki85m3yXKqo7ez62jv+/fX37th9f6
-	 hlKYMc/0pGnuH6y3b2BBGQ/eDB+7ubHH8nYFPGuQe+OvXzmjIcki/s8GNhMf8XpfjG
-	 aQjYdHBi4A1qVxIVemBiB9Piepue+wBnVznd4DeTFXNSVFg+C3GRB3tZM3K4n+amAX
-	 SiBxvfMt9TzZg==
-Date: Mon, 8 Jun 2026 17:42:08 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Martin Kaiser <martin@kaiser.cx>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf riscv: fix register name strings
-Message-ID: <aicpIOkNGIn80TeN@x1>
-References: <20260608192731.708606-1-martin@kaiser.cx>
- <CAP-5=fV6tVQA1TO_j9TDzPXV+ik3ww-mxX-VaO_XCGkAWYffag@mail.gmail.com>
- <aicll3FawrGwTQ-1@x1>
+	s=k20260515; t=1780951539;
+	bh=AY2IgoYUnohJN2fNHEEgTzZWm1Fyfgkcpcu65bvDelI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HIJHrwFNLHDIrWvWxQTmEOLQzKEQrh2ofeTYFUhVt/JItBmKlOU9NPkmAZ3Gi7n9F
+	 3wUUxEkv+QQzYQOd8wqMnjXISoZx9U3vEvQbBPcMPbR/u8UkzUSyYOo24vXZc9mX7m
+	 oR71EiZSaGqzuXDEyv/tYOJJEXcrYWSyugYVlpGB6dc9DhH66Sxm8aLtCXeFb1DUz1
+	 ggR4ikgy61HHrJy2VC0tYxjzP/CKujGMZmnCBTV9StEfDID1FhbUIOg9Du0whItW7Z
+	 HlH5P+LYI75iViasw3f4wMl3e7nOyKAlHS4pZ0ZY6/zvC7ShghlOwt+h/PNOol0mLU
+	 ZGYxArfoecLxw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 11/11] libperf: Document code simplification case for
+ widening struct perf_cpu
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260608201753.1979464-12-acme@kernel.org>
+References: <20260608201753.1979464-12-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 08 Jun 2026 20:45:38 +0000
+Message-Id: <20260608204539.0E0C91F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aicll3FawrGwTQ-1@x1>
 
-On Mon, Jun 08, 2026 at 05:27:03PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Jun 08, 2026 at 01:08:28PM -0700, Ian Rogers wrote:
-> > On Mon, Jun 8, 2026 at 12:27 PM Martin Kaiser <martin@kaiser.cx> wrote:
-> > >
-> > > On risc-v, pref probe generates an invalid syntax for a named register in
-> > > a kprobe.
-> > >
-> > > $ perf probe --debug verbose --add "n_tty_write tty"
-> > > ...
-> > > Writing event: p:probe/n_tty_write _text+8922528 tty=%"%a0":x64
-> > > Failed to write event: Invalid argument
-> > >
-> > > The problem is the combination of
-> > >
-> > >    #define REG_DWARFNUM_NAME(reg, idx) [idx] = "%" #reg
-> > >
-> > > and entries such as
-> > >
-> > >    REG_DWARFNUM_NAME("%a0", 10)
-> > >
-> > > where #reg will escape the quotes of the first macro parameter.
-> > >
-> > > Update the macro definition to produce the correct syntax for a named
-> > > register in a kprobe, i.e. the unquoted register name with only one
-> > > leading %.
-> > >
-> > > Fixes: a90c4519186d ("perf riscv: Remove dwarf-regs.c and add dwarf-regs-table.h")
-> > > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> > 
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > 
-> > Thanks for catching this! Sashiko is also green for this change:
-> > https://sashiko.dev/#/patchset/20260608192731.708606-1-martin%40kaiser.cx
-> 
-> Strange,
-> 
->   LD      /tmp/build/perf-tools-next/tests/perf-test-in.o
->   LD      /tmp/build/perf-tools-next/perf-test-in.o
-> In file included from util/dwarf-regs.c:23:
-> util/../arch/riscv/include/dwarf-regs-table.h:5:9: error: ‘REG_DWARFNUM_NAME’ redefined [-Werror]
->     5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = reg
->       |         ^~~~~~~~~~~~~~~~~
-> In file included from util/dwarf-regs.c:22:
-> util/../arch/powerpc/include/dwarf-regs-table.h:10:9: note: this is the location of the previous definition
->    10 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = "%" #reg
->       |         ^~~~~~~~~~~~~~~~~
-> In file included from util/dwarf-regs.c:24:
-> util/../arch/s390/include/dwarf-regs-table.h:5:9: error: ‘REG_DWARFNUM_NAME’ redefined [-Werror]
->     5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = "%" #reg
->       |         ^~~~~~~~~~~~~~~~~
-> util/../arch/riscv/include/dwarf-regs-table.h:5:9: note: this is the location of the previous definition
->     5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = reg
->       |         ^~~~~~~~~~~~~~~~~
-> cc1: all warnings being treated as errors
-> make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:96: /tmp/build/perf-tools-next/util/dwarf-regs.o] Error 1
-> 
-> 
-> Trying to figure out why Sashiko is green on it but it doesn't build
-> here...
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] The documentation added to `tools/lib/perf/TODO` incorrectly states=
+ that narrowing values > 32767 to `int16_t` wraps them to 'small positive n=
+umbers'. In two's complement arithmetic, values from 32768 to 65535 wrap to=
+ negative numbers (-32768 to -1) when truncated to a signed 16-bit integer.
+--
 
-C preprocessor benign redefinition rule kicked in, this is a preexisting
-problem, the headers need to undef that REG_DWARFNUM_NAME that now is
-different in one of the headers, Risc-V's.
+commit e8f5b26d672396c3173a77e6aaeee613f6d309bd
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I'll cook up a patch to merge before this one.
+libperf: Document code simplification case for widening struct perf_cpu
 
-- Arnaldo
+Add a bullet point to the libperf ABI TODO explaining the code
+simplification benefit of widening struct perf_cpu.cpu from int16_t
+to int.
+
+> diff --git a/tools/lib/perf/TODO b/tools/lib/perf/TODO
+> index 486dd95dc5720..1a3644aa1f38d 100644
+> --- a/tools/lib/perf/TODO
+> +++ b/tools/lib/perf/TODO
+> @@ -11,6 +11,13 @@ together.
+>       (x86_64 max is 8192, arm64 is 4096), but NR_CPUS limits keep
+>       growing.  perf clamps to INT16_MAX in set_max_cpu_num() as a
+>       safety net.
+> +   - Code simplification: the int16_t forces defensive truncation
+> +     checks at every boundary where a wider CPU index (int from
+> +     sample->cpu, al->cpu, etc.) is narrowed into struct perf_cpu.
+> +     Without these checks, values > 32767 silently wrap to small
+> +     positive numbers, bypassing bounds validation.  Widening to int
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[Severity: Low]
+This isn't a bug, but is the arithmetic description accurate here?
+
+In two's complement arithmetic, truncating values between 32768 and 65535
+into a signed 16-bit integer (int16_t) wraps them to negative numbers
+(-32768 to -1), rather than small positive numbers.
+
+The overall conclusion remains correct since negative values trivially
+bypass bounds checks, but the description of the wrapping behavior appears
+mathematically inaccurate.
+
+> +     eliminates this entire class of silent truncation bugs and
+> +     removes the need for the INT16_MAX clamp in set_max_cpu_num().
+>     - Scope: struct perf_cpu is embedded everywhere =E2=80=94 perf_cpu_ma=
+p__cpu(),
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608201753.1979=
+464-1-acme@kernel.org?part=3D11
