@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414642ECD3A;
-	Mon,  8 Jun 2026 01:31:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB1412CDBE;
+	Mon,  8 Jun 2026 01:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780882282; cv=none; b=UVIC14UrIm2VnsUwSty4e6Egse9Tbo4uJ9TKgkoSlHZ+s03Whuj21BAUjUsuRC9ZSKbo1zf9o6ARkatcgMSxV7EH5en12uAe8MlQSYdYdWYt+UNiEIxKcTv+pthasyQwybcZnFXwkeinFhnlp5BAGY+T/EXpo0QVdf3sZ0zg/y4=
+	t=1780882289; cv=none; b=VhIrHrvGB5ZpK9ZP4r4P6EIMpjXoFSXasZQQfC9UdDe25IOKjn7zbhewLh+6D6IZTStsU/FLNAQeNLCuBf2KCIQ1MN2j3gEjVj9PDJ6o+wYpIlA1gov49YJ4sqPP6flG8LcOS1mfcGTcNOxaq9+H5+r4GgwTS4SzcNXAg6fAqUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780882282; c=relaxed/simple;
-	bh=8oP7hB9MDt6oG1Hv7KYLG/CmRoOreb6KJ/kW2XKBrzc=;
+	s=arc-20240116; t=1780882289; c=relaxed/simple;
+	bh=DV6MxLEhw7qAh6KRaDlNzT53c+Txl827/7e6KFEnOsI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JBgpHBpP3s4K5DGWKqf3Wm8ieeFpLyE0wHF71W1LKHwEAlQQAcLKWwgGatpDpySglG3TKxnd6H2ZpvtKWhIUAb7YdNl2ZmVZU6ODA97e8tF9dy51r8CvZ5pGhbS9jh3FyiSKFI+5oBJ/rk/mZJ0uYEKTx5VlrDVQWZorjtk923k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i6QK/oWT; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=mlkqdihZfMtc21nFYiiEinPUwNrNm7ecjkneCj69pxhDqJJzQuv31eXLnpgm0O7N/bchGNDB2ccq/IcrIpRUXyxQ0k4BUy0I4Mf4x8zGnDd3niMu64eyAXeRYXNQu2/bmwOG6F4sBaDGkhfoIL6gS9cELT9p72Hl3wBF8g1qFNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZSKobBKL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i6QK/oWT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 655FD1F00893;
-	Mon,  8 Jun 2026 01:31:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZSKobBKL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75D481F00898;
+	Mon,  8 Jun 2026 01:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780882280;
-	bh=WWjO4YE2PlQ4rvEgx3bcf86O7xkbmHwbGnNMXwpflTU=;
+	s=k20260515; t=1780882288;
+	bh=CAPPe/vMoyb4wKCuPz6EN/06t84Hid4mzXfCYax9ccU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=i6QK/oWT/36Baf/PRuaAYBO+h6fJHwZEFfLGibIPgWcdaWQWX0G9bA8QL/7V3ywHt
-	 lo15EIBQQlyvBgHL/d/HAgAdmj9YMjsOzuoExQxSwRcuwwctynW4GtPp8lP2KmQ4KN
-	 Lii5LDAlQ9vbNJhtwyDGvbuf88/9xNRaE/TNjaEcq5XplZsFnKlu6UW6Yyt+xunQa0
-	 FjNQDIEUd0Gc5aBTBqQejCFiSIuvFO8piSJMQGYgkPquXe1xxlY6PYEif9uvFqWpu+
-	 EByI9aP5MhqPoPHjNzVFA5p8eMV8QkG9h5bAUrPPh+rPrWvfCbouqi5Y83Ijh/ieYl
-	 nOM1rAIOi3y2A==
+	b=ZSKobBKLA/AR6FsNGXnybTIrCJd1X98i/Z2d0++Z2LAxVZ5rso0/Mx9++T0DW9E6u
+	 kDjFTQOxUy7cjUl8UhoeyZEnvPB9Mq3je+Ss0ZTQfUYcEApVJL4c5GNIHVfeTtF5xD
+	 QUHdwKPDyNglQQrxoYCjd+ZWMwBYbRKfqYt52Yg5DSS6TJ61FnIfJV/bDNxM3uAbHW
+	 lOAMQL/jDqZY2m8cwu43m0ykG2u8HTJUI1udVUdZaoDQaiGtvqk6UnttVvOEPF0jne
+	 IiCW1dj4khDVYV5Y7DMRvc3GNuYRjryTIGKGfvihfY8JOqNY9zviC5dkSkI8xeexAx
+	 KCNPCmgCwMZJQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,10 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
+	Kan Liang <kan.liang@intel.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 02/11] perf tools: Use scnprintf() in cpu_map__snprint() to prevent overflow
-Date: Sun,  7 Jun 2026 22:30:46 -0300
-Message-ID: <20260608013057.1942953-3-acme@kernel.org>
+Subject: [PATCH 03/11] perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
+Date: Sun,  7 Jun 2026 22:30:47 -0300
+Message-ID: <20260608013057.1942953-4-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260608013057.1942953-1-acme@kernel.org>
 References: <20260608013057.1942953-1-acme@kernel.org>
@@ -56,61 +57,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-cpu_map__snprint() accumulates snprintf() return values in ret.
-snprintf() returns the number of characters that *would have been
-written* on truncation, not the actual count.  When a fragmented CPU
-list exceeds the buffer, ret grows past size, causing `size - ret` to
-underflow (both are size_t), and subsequent snprintf() calls write
-past the end of the caller's stack buffer.
+machine__resolve() accesses env->cpu[al->cpu].socket_id after checking
+al->cpu >= 0 and env->cpu != NULL, but without validating al->cpu
+against env->nr_cpus_avail.  Since al->cpu comes from the untrusted
+perf.data sample, a crafted file with a large CPU index causes an
+out-of-bounds heap read.
 
-Switch to scnprintf() which returns the actual number of characters
-written, making ret accumulation safe by construction.
+Use perf_env__get_cpu_topology() which validates both NULL and bounds.
 
-Fixes: a24020e6b7cf6eb8 ("perf tools: Change cpu_map__fprintf output")
+Fixes: 0c4c4debb0adda4c ("perf tools: Add processor socket info to hist_entry and addr_location")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cpumap.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/util/event.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 1fab00ec4a59a0c7..23ebe9b97f8e58af 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -692,21 +692,21 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
- 		if (start == -1) {
- 			start = i;
- 			if (last) {
--				ret += snprintf(buf + ret, size - ret,
--						"%s%d", COMMA,
--						perf_cpu_map__cpu(map, i).cpu);
-+				ret += scnprintf(buf + ret, size - ret,
-+						 "%s%d", COMMA,
-+						 perf_cpu_map__cpu(map, i).cpu);
- 			}
- 		} else if (((i - start) != (cpu.cpu - perf_cpu_map__cpu(map, start).cpu)) || last) {
- 			int end = i - 1;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 66f4843bb235df53..66293fea64fde9fd 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -14,6 +14,7 @@
+ #include <linux/perf_event.h>
+ #include "cpumap.h"
+ #include "dso.h"
++#include "env.h"
+ #include "event.h"
+ #include "debug.h"
+ #include "hist.h"
+@@ -835,9 +836,13 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
  
- 			if (start == end) {
--				ret += snprintf(buf + ret, size - ret,
--						"%s%d", COMMA,
--						perf_cpu_map__cpu(map, start).cpu);
-+				ret += scnprintf(buf + ret, size - ret,
-+						 "%s%d", COMMA,
-+						 perf_cpu_map__cpu(map, start).cpu);
- 			} else {
--				ret += snprintf(buf + ret, size - ret,
--						"%s%d-%d", COMMA,
--						perf_cpu_map__cpu(map, start).cpu, perf_cpu_map__cpu(map, end).cpu);
-+				ret += scnprintf(buf + ret, size - ret,
-+						 "%s%d-%d", COMMA,
-+						 perf_cpu_map__cpu(map, start).cpu, perf_cpu_map__cpu(map, end).cpu);
- 			}
- 			first = false;
- 			start = i;
+ 	if (al->cpu >= 0) {
+ 		struct perf_env *env = machine->env;
++		struct cpu_topology_map *topo;
+ 
+-		if (env && env->cpu)
+-			al->socket = env->cpu[al->cpu].socket_id;
++		if (env) {
++			topo = perf_env__get_cpu_topology(env, (struct perf_cpu){ al->cpu });
++			if (topo)
++				al->socket = topo->socket_id;
++		}
+ 	}
+ 
+ 	/* Account for possible out-of-order switch events. */
 -- 
 2.54.0
 
