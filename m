@@ -1,106 +1,282 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB81348866
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 12:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7DA24DFF9;
+	Mon,  8 Jun 2026 13:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780922326; cv=none; b=r+cMWYvgChZ6vLqAzcdrHyJZ9U28XaS1YdPv7Lh4gMpNfT+m98Yd+qmVLJ/w9cVMo/JFXLWHw87UKzYQJ48cUNusDCWCqHnIC9uo9HGtCyWdNFiaOJuGFjSbKM9sV3VwBUyrvaTupq5v9pIUqbcCRqsWS9YvcXjsILE5lbVN0tE=
+	t=1780923652; cv=none; b=NNtq0jDXmFE/N/pSC6WGf/b3ADTHKTyY5k0bcre4KYWxiEc2nQnRZpYsxttWo7DNdXooWHS3+etT3XMw9lt3i1AKnRINC7wN6F9JGpPgdFRebUZ4Oystbb9I81W7cIBGCC0DpFSX8SxCvwI48LxSeOupjKPYHzz1NhG4znGPlDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780922326; c=relaxed/simple;
-	bh=6/wR7/qZ06/YbREpfOLKqB0ZjddthOSRFEKY1wxpGWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WS/aCMi6hQvJneM+RV4Jp5mQKc3CpWPRCWrfdTQofUrq+rxyPabV6QN2Ms5V3lKke2KsqW1SuM4Q0H/MT5QhP7Lb9ZwRnct5slCxPmjak8VXYTMIKhoaNsvs+ibcWQk9qwEhT9DeIltbVqBVJiFKarIVnhxCU6kRWXHC1zZHmkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fJ6qmE3z; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1780923652; c=relaxed/simple;
+	bh=QP8XdtSCLZwYVnmRxrsXKK9lguoyzZeNzQC26UsxZxs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CIHDm9Bye3S5FG5IQGEB/h+tMyxXpmc58Un0QfrGe+BkuQimht35sPJOidtGWNDUbxOnrde+JVVnKmvKtOaQ0ce59EWWYfxcPOUJlPoXht6Nh2+F3Sski+jI3fLbxhPmi4TaYmFQq64XDE7dtHbQcJxy/zpoSz1g3CH1CwpKMno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KivI6YnQ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fJ6qmE3z"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D06F32437;
-	Mon,  8 Jun 2026 05:38:37 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C5743F632;
-	Mon,  8 Jun 2026 05:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780922322; bh=6/wR7/qZ06/YbREpfOLKqB0ZjddthOSRFEKY1wxpGWk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fJ6qmE3zggln04xv+1TtzMMr/x6+hGwdVAxCtfAXpyA0Pvelixi7M421phEg9PJTc
-	 +ydeHqMeeLAoBaU3Qyw2DLZHMll3uAMLcuNNEFN/p4aU4/D1Xo1UjtT4aA7bIbzdSf
-	 1hE3zFtQcQZnZn7STHp1CiS2BIHqxWVu5Kf1Y4RY=
-Date: Mon, 8 Jun 2026 13:38:40 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Al Grant <al.grant@arm.com>,
-	Paschalis Mpeis <paschalis.mpeis@arm.com>,
-	Amir Ayupov <aaupov@fb.com>
-Subject: Re: [PATCH v6 3/8] perf cs-etm: Use thread-stack for last branch
- entries
-Message-ID: <20260608123840.GN101133@e132581.arm.com>
-References: <20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com>
- <20260526-b4-arm_cs_callchain_support_v1-v6-3-f9f49f53c9dd@arm.com>
- <9d1e0448-27d7-42d3-aaa3-2d09489f18d9@linaro.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KivI6YnQ"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6588xMlD3159944;
+	Mon, 8 Jun 2026 13:00:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=QyPsNonAALRjhEBZiBDa/4GSiJ+bpAAy2gRhnusk4
+	fg=; b=KivI6YnQCtmeh0ItQXk8UqGenkTQQex8/+wXzsccUHpAIiOF/mkgloCFY
+	i9yVl9+Eusv9bN91xz2RPFC/GpGaiZNwyeOce0b1SZerF/TYobCpDVKOHMtvgUEV
+	pBMo+vwSXxCL2fe9+dRHTAVtCxYgrfhaz8vfon/wlhyPtbNcSLjltZHLSLU8Kdbm
+	AGyzVKxjLkXj40j8+ikhz+Lx/y6dqvg7b768ab/5uGFX1kCYO458O6vBNeRA7awj
+	JYxakf+3IDZtDqqXnDrK49s/BPfVEBKbEeZn1HLhTgpFhj3X33UixPQ+QxSSQ8Hk
+	STwMjFIhEb9g5VysaKraDuUI7eFtw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4em9ydybpy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jun 2026 13:00:40 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 658CnkHc004231;
+	Mon, 8 Jun 2026 13:00:40 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emx8vwfjb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jun 2026 13:00:40 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 658D0aPl51380584
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 8 Jun 2026 13:00:36 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6177D20040;
+	Mon,  8 Jun 2026 13:00:36 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 047332004D;
+	Mon,  8 Jun 2026 13:00:31 +0000 (GMT)
+Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.124.212.67])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  8 Jun 2026 13:00:30 +0000 (GMT)
+From: Tanushree Shah <tshah@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
+        Tanushree Shah <tshah@linux.ibm.com>
+Subject: [RFC PATCH 0/4] perf: Add perf.data tracepoint events to trace.dat conversion
+Date: Mon,  8 Jun 2026 18:29:48 +0530
+Message-ID: <20260608125951.90425-2-tshah@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d1e0448-27d7-42d3-aaa3-2d09489f18d9@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDExOSBTYWx0ZWRfX9laoSyMNRZmt
+ aJhx+D8WFESH2ix86SlnM8E9t10lrafIko2aaIj7W0Y93Jo9I5cprxAI78c983mg71UVTa0L9Ow
+ m4N6s1fejiP26QJD0iRxcAuEkCMF5xDH/4IvtNO+YTan2I67sD+8kgLJeVJ0ZVIaP+WF9Bo9aaZ
+ gO8xwClXiS8vEWj8NW0n6+Ezuwcdhbp3saUi41QLWNSMA069n0hZ3Nxc1rpESfGdjmcqCYqklMC
+ RkDPoFM6D+U1d3tv34d6PQuZm5LrikOGqWZ85qdeC1SZHOKdrlLBKhRppYJ+2uDGIF6VWxJ0BhY
+ ipW5KYghU0I+qZOlZGI5/QonZkNnzTJnqJ3XtW5dchMm4rRrBnAr0I1Wn+Acf5eaxERzzK3nMgU
+ iHIlqohcCjYGBOUcOlR22BX7U8tc+eM5S96nZoS6N+7HVTqOXs0YmaH0PM5EisyKEmtBujaErgk
+ TErjMNsfbVz7aMg7l8g==
+X-Authority-Analysis: v=2.4 cv=QKhYgALL c=1 sm=1 tr=0 ts=6a26bcf9 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=uhnewQdbmIg8kqqWvIkA:9
+X-Proofpoint-GUID: XUOk1uY2T6LncLMlavxA1WpnM3500Bcf
+X-Proofpoint-ORIG-GUID: pqzb-BaCsNOXoh0PX-niHQuUjs__VoeQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-08_03,2026-06-05_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 suspectscore=0 spamscore=0 clxscore=1011
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606080119
 
-On Thu, Jun 04, 2026 at 03:09:26PM +0100, James Clark wrote:
+This RFC patch series introduces support for converting perf.data files
+containing tracepoint events into trace.dat format, enabling seamless
+visualization and analysis using KerneShark.
 
-[...]
+======================
+Background and Motivation
+======================
 
-> > @@ -1798,14 +1746,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
-> >   	tidq->period_instructions += tidq->packet->instr_count;
-> > -	/*
-> > -	 * Record a branch when the last instruction in
-> > -	 * PREV_PACKET is a branch.
-> > -	 */
-> > -	if (etm->synth_opts.last_branch &&
-> > -	    tidq->prev_packet->sample_type == CS_ETM_RANGE &&
-> > -	    tidq->prev_packet->last_instr_taken_branch)
-> > -		cs_etm__update_last_branch_rb(etmq, tidq);
-> > +	cs_etm__add_stack_event(etmq, tidq);
-> 
-> Would it be cleaner to call this whenever a branch sample is generated?
+Currently, perf and trace-cmd operate as separate tracing ecosystems with
+incompatible data formats. Users who collect tracepoint data with
+'perf record' cannot easily visualize it in KernelShark's graphical
+timeline view or leverage trace-cmd's analysis capabilities.
 
-We should not couple stack event and generating branch samples.
+This creates workflow friction when users need to:
 
-The reason is the stack event can be used separately by instruction
-samples, e.g., the option "--itrace=i100il64g16". And the branch stack
-and call chain must get ready before synthesing samples.
+- Visualize perf tracepoint data in KernelShark's interactive graphical
+  timeline
+- Share trace data between perf and trace-cmd workflows and toolchains
+- Perform architecture-independent conversion and analysis of traces
 
-> Seems like the conditions for calling thread_stack__event() and
-> cs_etm__synth_branch_sample() are slightly different (ignoring the fact that
-> branches are only generated when the user asks for them).
-> 
-> Maybe the conditions should be different, but maybe a comment why or if
-> they're the same, a shared function for the conditions would help.
+This conversion bridge eliminates these barriers by enabling seamless
+data exchange between perf and trace-cmd ecosystems, allowing users to
+choose the best tool for each analysis phase.
 
-I can add a helper to check if a packet is taken branch and it can be
-used by cs_etm__add_stack_event() and generating samples.
+======================
+Implementation Overview
+======================
 
-  bool cs_etm__packet_is_taken_branch(struct cs_etm_packet *packet)
-  {
-      if (packet->sample_type == CS_ETM_RANGE &&
-          packet->last_instr_taken_branch)
-          return true;
+The series implements the trace.dat file format specification (version 7)
+within perf's data conversion framework.
 
-      return false;
-  }
+**Patch 1/4: Core trace.dat Export Infrastructure**
+Introduces util/trace-dat.c and util/trace-dat.h implementing:
+- Per-CPU raw event buffer management (init, collect, free)
+- Ftrace ring buffer page construction
+- trace.dat section writers (strings, options, flyrecord sections)
 
-Thanks,
-Leo
+**Patch 2/4: Metadata Integration**
+Extends util/trace-event-read.c to write trace.dat metadata during
+perf.data
+parsing:
+- Initial format header (magic, version, endian, page size, compression)
+- Section 16: HEADER INFO (header_page + header_event)
+- Section 17: FTRACE EVENT FORMATS
+- Section 18: EVENT FORMATS (per system/event format files)
+- Section 19: KALLSYMS
+- Section 21: CMDLINES
+- Section 15: STRINGS (written last after all sections)
+
+**Patch 3/4: Conversion Backend**
+Implements util/data-convert-trace.c with trace_convert__perf2dat()
+function:
+- Processes PERF_TYPE_TRACEPOINT samples via process_sample_event()
+- Collects raw event data per-CPU using trace_dat__collect_cpu_event()
+- Writes OPTIONS sections (CPUCOUNT, TRACECLOCK, metadata offsets)
+- Writes FLYRECORD section with per-CPU ring buffer pages
+
+**Patch 4/4: User Interface**
+Extends tools/perf/builtin-data.c with --to-trace-dat option:
+- Adds command-line option for trace.dat output
+- Mutually exclusive with --to-ctf and --to-json
+- Calls trace_convert__perf2dat() to perform conversion
+
+======================
+Current Implementation Details
+======================
+
+**trace.dat Format Version:**
+The implementation currently targets trace.dat format version 7, which
+is the stable version supported by current trace-cmd releases (v3.x).
+This version is hardcoded to ensure compatibility with existing
+trace-cmd and KernelShark installations. Future enhancements could add
+version negotiation or support for newer format versions as they become
+standardized.
+
+**Compression Strategy:**
+Compression is explicitly disabled (set to NONE) in the generated
+trace.dat files.
+This design choice:
+- Simplifies the initial implementation and testing
+- Ensures maximum compatibility across trace-cmd versions
+- Avoids external compression library dependencies
+
+Future work could add support for various compression algorithms (zlib,
+zstd, lz4) with runtime selection via command-line options, significantly
+reducing file sizes for large traces.
+
+======================
+Usage Example
+======================
+
+```bash
+*Record tracepoint events with perf*
+perf record -e sched:sched_switch -e sched:sched_wakeup -a sleep 10
+
+*Convert to trace.dat format*
+perf data convert --to-trace-dat=output.dat
+
+*Verify trace.dat structure*
+trace-cmd dump --summary output.dat
+
+*Analyze with trace-cmd*
+trace-cmd report output.dat
+
+*Visualize in KernelShark*
+kernelshark output.dat
+```
+
+**Conversion Output:**
+```
+[ perf data convert: Converted 'perf.data' into trace.dat format
+'output.dat' ]
+[ perf data convert: Converted 2684 events ]
+```
+**trace-cmd dump --summary Output:**
+```
+ Tracing meta data in file output.dat:
+	[Initial format]
+		7	[Version]
+		0	[Little endian]
+		8	[Bytes in a long]
+		65536	[Page size, bytes]
+		none	[Compression algorithm]
+			[Compression version]
+	[buffer "", "local" clock, 65536 page size, 16 cpus, 1048576 bytes
+    flyrecord data]
+	[10 options]
+	[Saved command lines, 0 bytes]
+	[Kallsyms, 0 bytes]
+	[Ftrace format, 0 events]
+	[Header page, 206 bytes]
+	[Header event, 205 bytes]
+	[Events format, 1 systems]
+	[9 sections]
+```
+======================
+Testing and Verification
+======================
+
+The series has been extensively tested with:
+- Various tracepoint events (sched, irq, syscalls, block I/O)
+- Mixed recordings containing both tracepoint and non-tracepoint events
+  only tracepoints converted)
+- Verification with trace-cmd report and KernelShark visualization
+- Memory leak testing with Valgrind (0 bytes leaked)
+- Cross-architecture testing (x86_64, ppc64le)
+
+All generated trace.dat files successfully open in:
+- trace-cmd report (v3.1+)
+- KernelShark (v2.0+)
+
+======================
+Next Steps
+======================
+
+We would highly appreciate reviews, comments, and feedback on:
+- The overall architectural approach and integration points
+- Compatibility considerations with trace-cmd ecosystem
+- Performance characteristics for large-scale traces
+- Additional use cases or workflow scenarios
+- Future enhancement priorities
+
+Tanushree Shah (4):
+  perf/trace-dat: Add trace.dat export infrastructure
+  perf/trace-event: Write trace.dat metadata sections during parsing
+  perf data-convert: Add perf.data to trace.dat conversion backend
+  perf data: Add --to-trace-dat option for converting perf.data
+    tracepoint events into trace.dat format
+
+ tools/perf/builtin-data.c            |  38 +-
+ tools/perf/util/Build                |   2 +
+ tools/perf/util/data-convert-trace.c | 152 ++++++
+ tools/perf/util/data-convert.h       |   4 +
+ tools/perf/util/trace-dat.c          | 705 +++++++++++++++++++++++++++
+ tools/perf/util/trace-dat.h          |  79 +++
+ tools/perf/util/trace-event-read.c   | 259 +++++++++-
+ 7 files changed, 1230 insertions(+), 9 deletions(-)
+ create mode 100644 tools/perf/util/data-convert-trace.c
+ create mode 100644 tools/perf/util/trace-dat.c
+ create mode 100644 tools/perf/util/trace-dat.h
+
+-- 
+2.53.0
+
