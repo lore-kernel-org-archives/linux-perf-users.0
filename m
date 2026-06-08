@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1479213D53C
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DC715665C
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:51:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780883161; cv=none; b=kMuc5IvNOee1glsHlYUnKPP24acMt9QxdhFsWb5zwwM79YCgpOkaSe0aBPxkSZ6KPwhOcTqyG1lfASihAMdFPYStWhMtjCoxKetUVAThsqbrTkuQk3bwOU0M+hJwaJpYINaLdsSI11tYT5WVq7FOtxztFL6s3d4WW0/oXKeqESc=
+	t=1780883475; cv=none; b=XeIC71/AXGap9rgbAEJ/k4zXlADhwKbIzBn2zwMcviealKVT3HrtU+xAy+2xyW1Kjbz1mkiiuSWZSB1S7ITAz2zZ5X7yDG4TnvMLz7t5AlWZNdCx3g5t8QVwoCAfMYb8wpIReSjNL7BiGjsDqmWtGgJ5wiOgDPVIlTSefVFw8K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780883161; c=relaxed/simple;
-	bh=3K2Rl55AWO6vDSoZNYPKzfHXbI7dq7Tm9OPeloi0tkw=;
+	s=arc-20240116; t=1780883475; c=relaxed/simple;
+	bh=/pQPMuaJVEhbmipBaqsiJS6XjFxtaqd2WLFLF+g5VZA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=n7pLUNBee31HMAZK2f05BGyfBJH3D+3IdoYd929W+ZGpwTkjuZJiTh4UDjGR0Q5FkNqAvu6igDxZs5qyoj+2HajGztmDJwa5IGjLits5LbRUj9KwK8mClbvSXhhHeWxvHoLa027efCrhqRhysvxYn3eEDwRsmQ97wiowxJu2f1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxSE/U7A; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=LVxYgB+Twftar5gkVbCBbp08WYn6gO607drzZdcVSAy22hjJHPLBeA+X4K/SFlyVKk/ZLdyIVmaaU7YdxgejIx2Hp9HKaUO0LbEdU0kyKCy6TWFrOfeuJn9KZ3U/jmZcU18swqIECRpW1TG0xSaENou2PX/69kmhOJIYAPkaHwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FB7mjW3U; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxSE/U7A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ECA91F00893;
-	Mon,  8 Jun 2026 01:45:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FB7mjW3U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 033B31F00893;
+	Mon,  8 Jun 2026 01:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780883159;
-	bh=X8XNNyNWlC8PyFEK1YpGY4aepQyRRR+3E+zilShT4Ec=;
+	s=k20260515; t=1780883474;
+	bh=LWqrAhSSLJOiMtJFfCQGfBKsKxuQ//crcEke6HNr5E4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VxSE/U7AVkZpkAz+JlTGJYHGqDrBfsA4DvnLDb4RS3u0vNXBh4QYKN15FlhobRuzO
-	 BfIz/gi088AytBd1reLsz7YFEWPQxllqXLJpP+fKdZHQTBEHXFn7AsSp8HTYVgCikx
-	 ZAFcxXixRQAzqCCe2z/U1EmWyZ51xfy+bm/PB/y+ereL0hKpllQKwNlk1UytB4v7e1
-	 BT9f3z64VTXzCPieAvbcFBm5E55YBScMwvAcEDNOqFZaiCqhnAOtl6q1Am7Kbqon1D
-	 14eRQt+Ml7nHCQVDW0hRZ92rtTXHDUuVECZF6qR+1gFrpz8I/xpVZ3QDpSWslIk/n7
-	 PV20cGLlo0QLQ==
+	b=FB7mjW3UOumR9qEgfeVoJQKumJ3M+zAsSO0Jwjf9H8JUO6K1/Pf0PgKhQxW5b50Dp
+	 o8ZE9Ga5m6vetrxVbN0Oi37NFmFraWWGL+ekCCRU7JKlCBc/1HBO4Oj6Pzh7MN87yw
+	 9HB1cdgff2w6xzeunwZDw0PDD8nKExaOQmHtpTbzAVmpy9e6J/zw7RL4kZTgiRR+ka
+	 ph3MwwGHqloiyiZSbY8RdXzaMm9qSM8ql7koTH2lRaky1JQ/v5Wc3ELAyY/O1EFaSq
+	 WgSW5zdgGqVzk3WjjxN50rXx0hhvGNib9uHVfKDYpMEFFr64xtYTMVYDW3uvR5exAp
+	 +OjHtCQAbxR9Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 05/11] perf tools: NULL bitmap pointers after
- bitmap_free()
+Subject: Re: [PATCH 10/11] perf hists: Fix snprintf() in
+ hists__scnprintf_title() UID filter path
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260608013057.1942953-6-acme@kernel.org>
-References: <20260608013057.1942953-6-acme@kernel.org>
+In-Reply-To: <20260608013057.1942953-11-acme@kernel.org>
+References: <20260608013057.1942953-11-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 01:45:59 +0000
-Message-Id: <20260608014559.9ECA91F00893@smtp.kernel.org>
+Date: Mon, 08 Jun 2026 01:51:12 +0000
+Message-Id: <20260608015114.033B31F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,51 +46,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] Setting `nodesp[i].set =3D NULL` in `memory_node__delete_nodes` is =
-a dead store and fails to prevent double-frees because the parent `nodesp` =
-array is immediately freed.
+
+Pre-existing issues:
+- [High] Stack buffer overflow in perf_pmu__for_each_event due to unchecked=
+ snprintf accumulation.
 --
 
-commit 96984a1b2dbcef0f5989e5cb40505523a7726dd3
+commit 6971cf80165017520e4fc2dbee2d01c9c2ff4efb
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf tools: NULL bitmap pointers after bitmap_free()
+perf hists: Fix snprintf() in hists__scnprintf_title() UID filter path
 
-This commit modifies three call sites to set bitmap pointers to NULL after
-they are freed using bitmap_free(). The purpose is to avoid double-free
-scenarios if the structure is later reused or cleaned up multiple times.
+This patch fixes a potential buffer overflow by switching an unchecked
+snprintf call to scnprintf. The original code accumulated the return value
+of snprintf, which could underflow the remaining size on subsequent calls.
 
-[ ... ]
-
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index d7f41db7322cb..8d2ab440a1c8e 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -1481,8 +1481,10 @@ static int memory_node__read(struct memory_node *n=
-, unsigned long idx)
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 811d68fa6770c..df978c996b6c2 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -2963,9 +2963,10 @@ int __hists__scnprintf_title(struct hists *hists, =
+char *bf, size_t size, bool sh
+>  			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
 > =20
->  static void memory_node__delete_nodes(struct memory_node *nodesp, u64 cn=
-t)
->  {
-> -	for (u64 i =3D 0; i < cnt; i++)
-> +	for (u64 i =3D 0; i < cnt; i++) {
->  		bitmap_free(nodesp[i].set);
-> +		nodesp[i].set =3D NULL;
-
-[Severity: Low]
-Since the entire nodesp array is freed immediately after this loop, does
-nullifying this pointer provide any protection against double-frees?
-
-If a cleanup function were called twice on this structure, wouldn't it resu=
-lt
-in a use-after-free on the nodesp array itself before the set pointer could
-even be evaluated?
-
+> =20
+> -	if (hists->uid_filter_str)
+> -		printed +=3D snprintf(bf + printed, size - printed,
+> -				    ", UID: %s", hists->uid_filter_str);
+> +	if (hists->uid_filter_str) {
+> +		printed +=3D scnprintf(bf + printed, size - printed,
+> +				     ", UID: %s", hists->uid_filter_str);
 > +	}
-> =20
->  	free(nodesp);
->  }
+
+[Severity: High]
+This is a pre-existing issue, but while you are fixing this unchecked
+snprintf accumulation here, there appears to be another instance of the
+exact same pattern in tools/perf/util/pmu.c:perf_pmu__for_each_event().
+
+When accumulating buf_used across consecutive snprintf calls, if the first
+formatted string is large enough:
+
+tools/perf/util/pmu.c:perf_pmu__for_each_event() {
+	...
+	char buf[1024];
+	...
+	buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
+			     "%G%s", event->scale, event->unit) + 1;
+	...
+	buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
+			     "%.*s/%s/", (int)pmu_name_len, info.pmu_name,
+			     event->terms) + 1;
+	...
+}
+
+If the first snprintf returns a value causing buf_used to exceed
+sizeof(buf), the second snprintf will execute with an underflowed limit
+and an out-of-bounds destination pointer.
+
+Could this write past the stack buffer if a crafted PMU sysfs entry is
+encountered?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608013057.1942=
-953-1-acme@kernel.org?part=3D5
+953-1-acme@kernel.org?part=3D10
