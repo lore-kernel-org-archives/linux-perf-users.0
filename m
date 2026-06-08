@@ -1,154 +1,153 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAF94C81
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 20:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780949322; cv=pass; b=sxWoB+1PsAs9/NKW2HkrGdyuHSLHekp1UnI+IiKsKMB+2eIvbiadel163LruJvfLVjcEt9Ntif9lfYIRQxixjDn0yjXkPMn4Ju5tjQkdOc2DtgVkXmkLNv0JgSjhuue5jelKRl6CM6pEiKMqKK6LFvUzN8TudiCytw/4CiNBZM4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780949322; c=relaxed/simple;
-	bh=6GqqiuBEtgX+Iq32apaoxeaFBqaU+WcYX3pbSGs+8kA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CxDMs8Qyu6XnPFeqqjZzwDMcOXRquQaDNzaNv/8PMpsCkEZJATDFc4IpigUgX9ZDqy5I5rDC/HJwzlS9BJ7EZgP+jEbLPKyys+TmnLEBxNsVbH1e8b3IhodoWU4Yf4J6BxgcOqtQeH8VfOIbTBy3zktToXXwJUT8tisK0Vuu7ww=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JeK25HH+; arc=pass smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9DE36BCFB;
+	Mon,  8 Jun 2026 20:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780949881; cv=none; b=rdm91GndKBCBMTEK1ppNdc8A+aUeTg1U55vX367Vw8wdAzaVlMT2Kj94Am1AB1wOphSJUQWsRpQB+PF08c97yXBTUED/gOBEjHd+0WIrNm5ypQVGwKvmwSpabKQjGAuiNmdatG4nlhZNz1+X5xpEny2346sqUwPWPJZGnspSFeM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780949881; c=relaxed/simple;
+	bh=VyzGLONFxlf7PCQ6J+2A6EjFMbShzJpd175PyL9mrso=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kMBLvPltY20ZshM5Igu+2Ev3fNFLO9E1nalLBmoZQUXEqNTcokAz+cHlPe+ThDK/8UJ0kqQo5Mt1EkLklig9R9sf7d7uQaTVLkW+BBCa3iBRhC/bwn9XVA7g9wtygikR6fph09w+LlwAi2sUCQBZwicu1tSRc+ZsDTwI5quSU4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKP/vdmS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JeK25HH+"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2c0b1a48855so431905ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jun 2026 13:08:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780949321; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Uo9jGbZxrbfSXe7zxIg3VezS8ZcuzCHYUSXMMPd500IqeUJ+oadttROogm1xYzTO8s
-         KzTJre7pa4gHIFtywTiDihPFS+AOeinya2DMMunYr2LoZate9Ob4v4mmcIRXiS+L1976
-         cbZkSShjl1UDLyfakjycdsLkz1MT7TrTEEBoUEBu2yuS7P07qs8MwFtYZ8lQ9+mxduJV
-         eW0x/HRXwZG/iGvhLPaqJr6sKHOuzCfWtf9MmSRx2NBSV3F1QDyKlLETok7XX83VbL/s
-         BMRoYavWRzaTi1txArRvNQxKjL4Qqa/ZSsDONqphl6lx1vEsv9EuVQ8LhSRKYPxPxSoU
-         3fuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=JhGyqWzUSwBZkC9kfsvV+E1iIFlhf+/51y1w2Uq65IE=;
-        fh=ii4IksjN0q8zqOn8fb1Rg5BZlT0fulN2InTuH5cb2f8=;
-        b=GMSeMmwYLQjOKn7JnhJdAFzV1kA4oxHvsxWzwoUioJcd4nlNNIqHnVSnFXrKVVgqsU
-         2w5zN7SRBWCBNJI2rKyAPZHX+Tc0TMrDH7JsVVBljZdqSq1lZxqYqAjdko9dtpmtZF58
-         qXuGsom/YaQkofY1ET3aj5zzFJfJKIivAFAj/9NqXzP3SEujwRUuABuvlpw/HF/ckvNl
-         ATnQTUWumHZ+CPzV4podeRraiiq4lT/A4sv+n7y4X0LmxU6Q0BbR2y/MeArdfMJko4vO
-         KwtVKQHgep5V2oRmlBuRIZPWyJXbf64tUhs5gEwBRvGLDlS8iu9G1A5k+cyo9KMfbCgK
-         9fCg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780949321; x=1781554121; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JhGyqWzUSwBZkC9kfsvV+E1iIFlhf+/51y1w2Uq65IE=;
-        b=JeK25HH+gtwVqPu+qVxFhj+YglHY5pddAG1EbXlgUJagq8cvpfkg5IO8S67UrwfgCH
-         KgnG7YnAQ8MI0AOoCCD/QSzTfmLlwT5SAR9W0/F9jReiSRFB7lW2mV6B6FWuM7mUBkP9
-         7MAE5mvWv3xe99fOrQuLkX4InnBLCvwT7/ZSJOnVOBpv8r9xqvQMGSPudm53t8dW9rtb
-         uoP5ZGStCC3dneRsh6++1c26tMAhpi6efFzZAvE5Rl7ItVOJo2Dsi1/tMhksKrFXSVWQ
-         boOHNIzm41MwrgfUb8LN2e9L/Cyhx/cWXAGqh97pnREu31NMxuZT78xLCBGiR0JPBxuQ
-         HeZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780949321; x=1781554121;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JhGyqWzUSwBZkC9kfsvV+E1iIFlhf+/51y1w2Uq65IE=;
-        b=Jr2btNcn67hqRIjtl6jOtoAJakXX1FNdxFskwaLI9YuxO4FH9SrvO9QpTTZAmEi2xX
-         oxKvrgplIzqxHcTuN05PgRs4zw8YUIXquf51G6kvAieeqeo5l31AghUR9Lozb8PoEnRc
-         UfqwJ5xjYHZlve7Djh0S+ZeZzGc14sNmTHzcZDrSwD8Ja7hKjmsoKmNP9z7YumatbX3U
-         llrKq1IoJ1WHxOQuda5NLFA6ZBnVfayRQUWmKTknXh/7QwBmGGesjVte7YlYJy9XX2WZ
-         mtVtWTOoL0qFMfkPO3y2/WsakPZpZ64AzLEOOIfnrYBgdD1w/Esi0GxNQOGm5fkv5Nem
-         SrzA==
-X-Forwarded-Encrypted: i=1; AFNElJ+/TNZoe5xm8Lv1op0CA2pJEEtRhtN71GKc3RMvnEyDpDHRKiBjpNa1eKXev6pmKDZa76MVW//kstYNwSXNARs1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9lNPXytuARzOL7EgCAo9n6+wbXuRQe60Tj9preFW7QAbiB7SA
-	pxUcMtIx+OVgrzAJ0Q5gYGcr8UHmO6TzUHtkZxqfrM8DdzmX7HtF2wzHdMrrNrI/Hb4Q4neDWKc
-	EfE1qCPezdKMfM9dMh+BDgeKfghOQIZCW3jFRZJsM
-X-Gm-Gg: Acq92OHjD1GVuewD1UUiJ0UEaXT9ReIHo2bpRPm9SRaCaCrgffxl0j8TGhfccqXVwY/
-	Qm9Z8WJYBfeVLd9cgfD9KbX+3KyzI3LFtgS4RBp3k3o0RmzqM9rZCyLxPqpbiXVGwbbi1Nm1T2j
-	AszM4t0KRoJ/ohoqc9kvpSsJF0klVfPB+ZlDZM8PjF+ge6g86ElVBTf4D4jx62brQ/AxTxRqsFq
-	E96Cnuxir+bPwsvIrmNMeTqQdcUoUiib3qDUyIsoOA3m5ziIq0R9Ni/E/VFqVG6GTGjfnAr1t5v
-	EEBDKxpD0EO9apYDCmSyrIKaN6ScOB+9tYfupR5R7QIjVZjd
-X-Received: by 2002:a17:902:e748:b0:2c0:c3ac:fdf9 with SMTP id
- d9443c01a7336-2c1ebd8045amr6976935ad.14.1780949319619; Mon, 08 Jun 2026
- 13:08:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKP/vdmS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 788341F00898;
+	Mon,  8 Jun 2026 20:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780949880;
+	bh=2Qg3lKBfuXvn3GB1zVMvmbx3PwctQEgRWxO0JtjLyGY=;
+	h=From:To:Cc:Subject:Date;
+	b=DKP/vdmSie3udXsCABdvVNER2t0OiQnOXUuwtxt9ZqjJlOuxgftBYlfE8k5+qnVf9
+	 R8khOJACP9+3KsOlRwOcJjPMFlJB4mmyVcDztXWit5Vsi69USNMYX3y+gbuHVTcgLe
+	 i+tdIN1+MO1wMe5SoQqCKGAIi61l+Nru12PavYr8+eHOQJYkdn+Q5jlSv2tGL8N1Oc
+	 g9wE6PVUk4jRcZGn1cR3XWH5weox+I6HBm79iDcDR2165+Y4Mqlp8qP20ByJEE1GGl
+	 yw+u0z2mJNkQEMaBZtAmvJEQF/0ugOOVA/RJB4BZAfSkoT1NRa8yS9HAehbZo9ZJVj
+	 zgyveEXr9M9OQ==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCHES v3 00/11] perf tools: Assorted fixes
+Date: Mon,  8 Jun 2026 17:17:40 -0300
+Message-ID: <20260608201753.1979464-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260608192731.708606-1-martin@kaiser.cx>
-In-Reply-To: <20260608192731.708606-1-martin@kaiser.cx>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 8 Jun 2026 13:08:28 -0700
-X-Gm-Features: AVVi8Ccpv2VNR8IlTlAflu_TOc1h3kWP7AkWNbhV-B39Ex9xRA8e8I4MJrypezc
-Message-ID: <CAP-5=fV6tVQA1TO_j9TDzPXV+ik3ww-mxX-VaO_XCGkAWYffag@mail.gmail.com>
-Subject: Re: [PATCH] perf riscv: fix register name strings
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 8, 2026 at 12:27=E2=80=AFPM Martin Kaiser <martin@kaiser.cx> wr=
-ote:
->
-> On risc-v, pref probe generates an invalid syntax for a named register in
-> a kprobe.
->
-> $ perf probe --debug verbose --add "n_tty_write tty"
-> ...
-> Writing event: p:probe/n_tty_write _text+8922528 tty=3D%"%a0":x64
-> Failed to write event: Invalid argument
->
-> The problem is the combination of
->
->    #define REG_DWARFNUM_NAME(reg, idx) [idx] =3D "%" #reg
->
-> and entries such as
->
->    REG_DWARFNUM_NAME("%a0", 10)
->
-> where #reg will escape the quotes of the first macro parameter.
->
-> Update the macro definition to produce the correct syntax for a named
-> register in a kprobe, i.e. the unquoted register name with only one
-> leading %.
->
-> Fixes: a90c4519186d ("perf riscv: Remove dwarf-regs.c and add dwarf-regs-=
-table.h")
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Hi,
 
-Thanks for catching this! Sashiko is also green for this change:
-https://sashiko.dev/#/patchset/20260608192731.708606-1-martin%40kaiser.cx
+Sixth batch of pre-existing bug fixes found by sashiko-bot AI review
+during the perf-data-validation hardening series.  All bugs are latent
+in existing code — none were introduced by the hardening patches.
+
+Three broad categories:
+
+1. snprintf() accumulation overflows (patches 2, 8, 9, 10):
+
+   Several functions accumulate formatted output via ret += snprintf().
+   snprintf() returns the would-have-been-written count, so on truncation
+   ret overshoots the buffer size and the next 'size - ret' underflows
+   to a huge unsigned value, disabling bounds checking.  Switched to
+   scnprintf() which returns actual bytes written.
+
+   Affected: cpu_map__snprint(), snprintf_hex(),
+   synthesize_bpf_prog_name(), hists__scnprintf_title(),
+   build_id__snprintf(), hwmon_pmu__describe_items().
+
+2. Missing safety checks on untrusted data (patches 1, 3, 5, 6):
+
+   - get_max_num(): size_t underflow on empty sysfs file causes heap
+     over-read.
+   - machine__resolve(): unguarded env->cpu[] access with untrusted
+     CPU index — switched to perf_env__get_cpu_topology() accessor,
+     added bounds check before int16_t truncation.
+   - timehist: test_bit(prio, ...) without bounds check on untrusted
+     tracepoint priority.
+   - idle-hist: rb_first_cached() on a tree populated with plain
+     rb_insert_color() — rb_leftmost never set, callchains silently
+     dropped.
+
+3. Resource hygiene (patches 4, 7):
+
+   - bitmap_free() without NULLing the pointer (2 call sites).
+   - O_CLOEXEC missing from open() calls in DSO and ELF code
+     (12 call sites across 2 files).
+
+Also expanded the libperf ABI TODO (tools/lib/perf/TODO) to emphasize
+the code simplification argument for widening struct perf_cpu.cpu from
+int16_t to int — the narrow type forces defensive truncation checks at
+every boundary where wider CPU indices are narrowed.
+
+Arnaldo Carvalho de Melo (10):
+  perf tools: Fix get_max_num() size_t underflow on empty sysfs file
+  perf tools: Use scnprintf() in cpu_map__snprint() to prevent overflow
+  perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
+  perf tools: NULL bitmap pointers after bitmap_free()
+  perf sched: Bounds-check prio before test_bit() in timehist
+  perf sched: Fix idle-hist callchain display using wrong rb_first variant
+  perf tools: Add O_CLOEXEC to open() calls in DSO and ELF code
+  perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
+  perf hists: Fix snprintf() in hists__scnprintf_title() UID filter path
+  perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
+
+ tools/lib/perf/TODO          |  7 +++++++
+ tools/perf/builtin-record.c  |  1 +
+ tools/perf/builtin-sched.c   |  7 +++++--
+ tools/perf/util/bpf-event.c  | 11 ++++++-----
+ tools/perf/util/build-id.c   |  2 +-
+ tools/perf/util/cpumap.c     | 24 +++++++++++++++---------
+ tools/perf/util/dso.c        |  4 ++--
+ tools/perf/util/event.c      | 11 +++++++++--
+ tools/perf/util/hist.c       |  7 ++++---
+ tools/perf/util/hwmon_pmu.c  | 12 ++++++------
+ tools/perf/util/mmap.c       |  1 +
+ tools/perf/util/symbol-elf.c | 20 ++++++++++----------
+ 12 files changed, 67 insertions(+), 40 deletions(-)
+
+Changes since v2:
+  - Dropped mbind patch (was v2 patch 4): the original code was
+    correct — get_nodes() does --maxnode before computing
+    BITS_TO_LONGS, so bitmap_zalloc(node_index + 1) with
+    maxnode = node_index + 2 already match.  The commit message
+    misstated the kernel-side semantics.
+  - Patch 3 (machine__resolve): bounds-check al->cpu against
+    env->nr_cpus_avail before truncating to int16_t struct perf_cpu.
+    (Found by sashiko-bot lore review)
+  - Patch 4 (was v2 patch 5, bitmap_free): reworded from "Three
+    call sites" to "Two call sites" — removed dead store from
+    memory_node__delete_nodes() where NULLing a pointer right
+    before freeing the containing struct was useless.
+    (Found by sashiko-bot lore review)
+
+Changes since v1:
+  - Patch 5 (was v1 patch 6): fix prio bounds-check logic — the
+    v1 condition (prio < 0 || prio >= MAX_PRIO || !test_bit(...))
+    incorrectly skipped events with unknown priority (prio == -1).
+    Changed to (prio >= 0 && (prio >= MAX_PRIO || !test_bit(...)))
+    to preserve the original pass-through for events without
+    priority info.
+    (Found by sashiko-bot lore review)
+
+Developed with AI assistance (Claude/sashiko), tagged in commits.
 
 Thanks,
-Ian
 
-> ---
->  tools/perf/arch/riscv/include/dwarf-regs-table.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/arch/riscv/include/dwarf-regs-table.h b/tools/per=
-f/arch/riscv/include/dwarf-regs-table.h
-> index a45b63a6d5a8..c0a6e84e7a75 100644
-> --- a/tools/perf/arch/riscv/include/dwarf-regs-table.h
-> +++ b/tools/perf/arch/riscv/include/dwarf-regs-table.h
-> @@ -2,7 +2,7 @@
->  #ifdef DEFINE_DWARF_REGSTR_TABLE
->  /* This is included in perf/util/dwarf-regs.c */
->
-> -#define REG_DWARFNUM_NAME(reg, idx)    [idx] =3D "%" #reg
-> +#define REG_DWARFNUM_NAME(reg, idx)    [idx] =3D reg
->
->  static const char * const riscv_regstr_tbl[] =3D {
->         REG_DWARFNUM_NAME("%zero", 0),
-> --
-> 2.43.7
->
+- Arnaldo
