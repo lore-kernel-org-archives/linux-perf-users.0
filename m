@@ -1,104 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D324134CCF
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3AB2EEE9C
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780883522; cv=none; b=sLg7xqshD2JdAF9ei+ILRjMY3hj2OhXoqNiozQXBXKHyQEJG1Bop5Frf43HJas2buxydJYPRC51ozCYZChPhUeD/0IYr8EjTQy9e7JzSLy6pd9stvTe4BA2GANtyj8I0K1ArPrEr+/TBr3B/+aG1st3Xxvui5RzhQp+HjBm7lfY=
+	t=1780883675; cv=none; b=cTOgomPdtHWlixjAQf6hHQ/ziG9r/YBfqSBSK0TTI6L9J+TfqYGyZQr4Ftk3T66BQ+twx6bj24J1EJkgAOzG/1I57QgiZl5Pm/h86+VQG4iRvUGFsvVEgkFNBvtNSnDIIgngPuZScwyNcjDE8ixj3LTTCog2FqOQk5EKvzol5yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780883522; c=relaxed/simple;
-	bh=/1UviTwdY3nHnF33c6CRJt6CT0Vb1ujrzVTDCfEcaUI=;
+	s=arc-20240116; t=1780883675; c=relaxed/simple;
+	bh=v/9YA3pQ8sCncjDHE4wO7wqvkFh8qI77S4kPEAl3S54=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OW2ZattY9mfooXhtSTc5/Us9LRtBuqbsHtUHTGe7bBqDkK4xu4wFNruhW3JBg5i3+e3NcLbDVvQ+egU8wiEw98s+8fllmCERDJflX3HYu8fRT1sQcj0ZXXCyruIWiL7gxU4j3WTNGn7SfKnp/rEC2WF1NSzuPbBdEw0C3ChmkVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggTWBP6r; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=TOYdBmArYD44JiyBbYBTjzF6rlATjddkmlLa+Ci9pyEkUwDUlEboWH3jtJRxiMgiFj4E9Ofa+F1eN3ExfoYGB0J/dsKi+sLzt1196LvxGueOiYurGlSs07lGW8nnMB6stBtuGjX1V9KSmznEOcm8oXF79ywEn087sXHO+jg8QWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYe1pt13; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggTWBP6r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A331F00893;
-	Mon,  8 Jun 2026 01:52:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYe1pt13"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F7E1F00893;
+	Mon,  8 Jun 2026 01:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780883521;
-	bh=QxqmS0hJEptT12eBkRYS7clsFIiVl3wN7XMGcmIZGGM=;
+	s=k20260515; t=1780883674;
+	bh=J9+jqvuZc/OO71LqkCCdyzmzl0oWPWx7jGFDyFWVp40=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ggTWBP6r4LfDwusImKpb4lPIJqeJRVjVHr603viJ8uBIJ0fPNdv63flJj8wL0z9a8
-	 lyBsmB7ZULLFxnUuWa9rXPK6vSv4qpksc481z21KmfcRHEjkuF1zZDpjQERDZbp3aq
-	 NXCZ01VWJfdjCmM5Q8RfXd8+MUH1V7RyD6U1PiutzjdvEVSwnUeHn79KGuZOebTSyr
-	 yLeJ8SISj7UjeD2I6G6oTgHuFCVFbek1G6cejbeakAAFMgTNd7tDwAX/74WmdU/TgU
-	 p7KqkQn4xcY/uK4c/yr5Gg6qTwLXXkJm/e5uNU2YYLl7eBNwsovhWBY543rMEOFxwZ
-	 WNsXoc8+TfBXQ==
+	b=SYe1pt13wu1jKMhkLJRsbp6DU5CBV9MhJMzbXUhda1gYiyiDsIRd2pqMrwqjxmQ80
+	 Ww1C+AsbguTGr/UCNAjjoTHwU2ey2geSFsEPbs5kb8saRB14o590a89qBhSfxnse/P
+	 RAhVwFA+ktP3eVUCPCAQvzmosFEKWxeN35tlGRVul7hkwkSoyTnwmIG0rnuF+wwU69
+	 0Ejuiu7KfaSc7NbM7FTXRa2Iv4EUQRfm2+n5HE6LcVUPyH6M4uPJ1Ft+yt8RGEhTUz
+	 xp/cDwizkg0RoRqwkA9BicLcB88wdn1dO3Wzno1R5kh2mphIe1zudi/Eu3FlUPdvwX
+	 jTVlhD2xKhlTg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 03/11] perf tools: Use perf_env__get_cpu_topology() in
- machine__resolve()
+Subject: Re: [PATCH 11/11] perf tools: Use scnprintf() in
+ build_id__snprintf() and hwmon read_events()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260608013057.1942953-4-acme@kernel.org>
-References: <20260608013057.1942953-4-acme@kernel.org>
+In-Reply-To: <20260608013057.1942953-12-acme@kernel.org>
+References: <20260608013057.1942953-12-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 01:51:59 +0000
-Message-Id: <20260608015200.D4A331F00893@smtp.kernel.org>
+Date: Mon, 08 Jun 2026 01:54:33 +0000
+Message-Id: <20260608015434.37F7E1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] Silent truncation of a 32-bit CPU index (`al->cpu`) down to a 16=
--bit `struct perf_cpu` bypasses intended bounds validation for malformed in=
-puts.
+
+Pre-existing issues:
+- [High] Missing size adjustment in read() and pread() size arguments leads=
+ to out-of-bounds null termination on stack buffers.
+- [High] If the `read()` system call returns `<=3D 0`, uninitialized stack =
+memory is evaluated and potentially duplicated, leading to an information l=
+eak or crash.
+- [Medium] A flawed check `if (fd > 0)` fails to process or close file desc=
+riptor 0, causing a resource leak if openat returns 0.
 --
 
-commit 93fba7be75f567784ab8e6d8ce5f966760c09265
+commit 63dc76c4229ffb5cbb25da7f0bdc34b17ef66fae
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
+perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
 
-This commit updates machine__resolve() to use perf_env__get_cpu_topology(),
-replacing direct array access to prevent out-of-bounds heap reads from
-untrusted perf.data samples.
-
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
+build_id__snprintf() and hwmon_pmu__read_events() accumulate formatted
+output via snprintf(), which returns the would-have-been-written count
+on truncation. In hwmon_pmu__read_events(), len overshoots out_buf_len
+and the next 'out_buf_len - len' underflows. Switch both to scnprintf()
+which returns actual bytes written.
 
 [ ... ]
 
-> @@ -835,9 +836,13 @@ int machine__resolve(struct machine *machine, struct=
- addr_location *al,
+> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+> index fb3ffa8d32ad2..dbf6a71af47f9 100644
+> --- a/tools/perf/util/hwmon_pmu.c
+> +++ b/tools/perf/util/hwmon_pmu.c
+> @@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmo=
+n_pmu *hwm, char *out_buf, si
 > =20
->  	if (al->cpu >=3D 0) {
->  		struct perf_env *env =3D machine->env;
-> +		struct cpu_topology_map *topo;
-> =20
-> -		if (env && env->cpu)
-> -			al->socket =3D env->cpu[al->cpu].socket_id;
-> +		if (env) {
-> +			topo =3D perf_env__get_cpu_topology(env, (struct perf_cpu){ al->cpu }=
-);
+>  				buf[read_len] =3D '\0';
+                                ^^^^^^^^^^^^^^^^^^^^
+[Severity: High]
+This isn't a bug introduced by this patch, but doesn't this result in an
+out-of-bounds write?
+
+Since read() can return up to sizeof(buf), if the sysfs file contents
+completely fill the buffer (i.e. read_len =3D=3D sizeof(buf)), writing the =
+null
+terminator here will overwrite one byte past the end of the buf array on the
+stack.
+
+Could we pass sizeof(buf) - 1 to read() to avoid this?
+
+This same pre-existing issue seems to be present in hwmon_pmu__read_events()
+and evsel__hwmon_pmu_read() as well, where read() and pread() are called wi=
+th
+the full buffer size and similarly null-terminated.
+
 
 [Severity: Medium]
-Does this cast silently truncate the 32-bit al->cpu?
+Also a pre-existing issue in hwmon_pmu__describe_items() just above this hu=
+nk,
+can this leak a file descriptor?
 
-Since al->cpu is an s32 from the untrusted sample, and struct perf_cpu uses=
- a
-16-bit integer for the cpu index, an attacker providing an index like 65536
-would truncate it to 0. Wouldn't this bypass the downstream bounds validati=
-on
-and falsely associate the sample with CPU 0's topology?
+hwmon_pmu__describe_items() opens a sysfs file using openat(), and then che=
+cks:
 
-Also, for systems with more than 32,767 CPUs, wouldn't this wrap to a
-negative number and incorrectly fail the bounds check?
+    fd =3D openat(dir, buf, O_RDONLY);
+    if (fd > 0) {
 
-> +			if (topo)
-> +				al->socket =3D topo->socket_id;
-> +		}
->  	}
-> =20
->  	/* Account for possible out-of-order switch events. */
+If the tool runs in an environment where standard input has been closed,
+openat() can successfully return 0. The current logic treats 0 as an error,
+skips file processing, and fails to call close(fd), causing a resource leak.
+
+Should this check be if (fd >=3D 0) instead?
+
+
+[Severity: High]
+Another pre-existing issue in hwmon_pmu__read_events(), can this leak
+uninitialized stack memory?
+
+If read() returns 0 or less (for example, on an error or empty file), read_=
+len
+will be 0 or less. The code skips null-terminating the buffer and proceeds
+to check:
+
+    if (buf[0] =3D=3D '\0') {
+        ...
+    value->label =3D strdup(buf);
+
+Since char buf[128] is uninitialized, wouldn't evaluating buf[0] and passing
+buf to strdup() result in reading and copying garbage stack memory until it
+hits a random null byte?
+
+>  				val =3D strtoll(buf, /*endptr=3D*/NULL, 10);
+> -				len +=3D snprintf(out_buf + len, out_buf_len - len, "%s%s%s=3D%g%s",
+> -						len =3D=3D 0 ? " " : ", ",
+> -						hwmon_item_strs[bit],
+> -						is_alarm ? "_alarm" : "",
+> -						(double)val / 1000.0,
+> -						hwmon_units[key.type]);
+> +				len +=3D scnprintf(out_buf + len, out_buf_len - len, "%s%s%s=3D%g%s",
+> +						 len =3D=3D 0 ? " " : ", ",
+> +						 hwmon_item_strs[bit],
+> +						 is_alarm ? "_alarm" : "",
+> +						 (double)val / 1000.0,
+> +						 hwmon_units[key.type]);
+>  			}
+>  			close(fd);
+>  		}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608013057.1942=
-953-1-acme@kernel.org?part=3D3
+953-1-acme@kernel.org?part=3D11
