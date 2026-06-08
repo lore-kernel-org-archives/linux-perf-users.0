@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25CA2EEE9C;
-	Mon,  8 Jun 2026 01:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EA42ED846;
+	Mon,  8 Jun 2026 02:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780883819; cv=none; b=eNfA7gsM7yh2V8Nv4T1/NkBhhZhLB8lWg/M4YwCihJ4Yn29/KlumZmdhjbLbWtRp9QLRD94wJyOarwoO4nfDv43TTzxT1uVY2qMbLKLwjB109x/vuAa9mRTjsKNZXrLs+58IKqAwmyHyh9SxmMMjOfj0E7P0urFfTFbYw0uH4aI=
+	t=1780886780; cv=none; b=UvY5JbO07GknRmT48yLl57y5XuvKUdUOL2ZGp9vFY5oHG9rny2N3KlXssD+rAURc0wQUp0yVVwLmZzS9dSfeQo03OtMCktSsBlQoX7aykN929LiRu9mOlyLqL4gemSqIzozzPi4u5B/jmf2+Ul7zQQly48FjP8zU5awPEsgfjuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780883819; c=relaxed/simple;
-	bh=AXbKzZmARMiJ9DZeCI0Mu9/VI4+YDbO3Pie7AOhUzEA=;
+	s=arc-20240116; t=1780886780; c=relaxed/simple;
+	bh=2Lx2/MLzItPK8amRTwlCnpC96Esd4YLTuv+Rwl5T9wk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UetvP9UpyfeWGlShywtAR4V+dqMa3Fg61hQ8QSDlBIDBJuoD/FOqhh4KhsnywnuDZHCWMivcIdFyclTSvwHGHz3PY2XAgNH/aPBFPQLgc7+w3Ti+r++qij+BsgoXNNIolTz3trWfxfK5Vcu++D43aU/Wnck2nKTZKra97Ag6t4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4PITdgx; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=kT1FLpcfgfTFayB8HHOT52G+Hsvz6SoUlp0AWslk/dj2D34/DDBn0pIA8X8XmgYqZRiZ04PB8nMmcn82mOykI0KIeTTO6EZBUV7d6Q9AOV9RTakpPfcGUi9LCqzA60y24BhaCCyex3XFqMDPUpNbHEjkpQeAVCWoMhFmVFyWtX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NoUxfEtl; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4PITdgx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NoUxfEtl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780883817; x=1812419817;
+  t=1780886778; x=1812422778;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=AXbKzZmARMiJ9DZeCI0Mu9/VI4+YDbO3Pie7AOhUzEA=;
-  b=N4PITdgxgn3fyEcdDxUubNq46/YRw3ad1TC1pfuwxt2Z/XItbF71Yrc+
-   yYv5XLnnPPiZNmpWkf/SYqc0ndPlwh/TMZgcIjnL0E1hgHWSl4gOu+3gJ
-   iQvipDAB4rH3HclhRxSv4aT+xg54PvQAlzxhoGMZ+WSgtGHzOTm7WiecB
-   Apopb3uP/1+oR7p7bW+REfzoaJ6ntaT0SO15XruWS5WzPBlOb6hQ2P981
-   RL6WOQYglm2oymq2NSgOI+6tlf8Dw9uBS1jmGrssNLVadxW6fElBTO8eJ
-   cm3/N/Jglvpk4o78aMC0HP6uiGDrvzA3P41p35IdLICIAgz1Epyxg/x4d
-   w==;
-X-CSE-ConnectionGUID: OwhEGyyFS2el0bkmqzBEUw==
-X-CSE-MsgGUID: hSeI/ddWThC+Hrv+4w/v2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81590989"
+  bh=2Lx2/MLzItPK8amRTwlCnpC96Esd4YLTuv+Rwl5T9wk=;
+  b=NoUxfEtlMbgi7oH80W4ifNR86FViRurNuu0aqmKHlMG74qYqw3vODuzz
+   SpbILjA1JWIlQvIhjkijo40+tCMTi9qtdV0kBH8aAJE76o/0pA0ETkRpi
+   DpTIXLUrstx2YiJDS7t2HojteSzwwrokF2iad/0u11qBEhYzl8Uv00x5s
+   HM+Q41C0+WLtJNhpIP99LSDOtyVIIUvNKVq+MD3uCZZavUdPs+UQhwcnC
+   mXBAtGijhhK+VujwdIGVTypi9w1g/+0WmJTR87zhisdAH5+hooP8/W7XP
+   inVVF+2OY67aJxAbIVpddrkVjAH8Egk8HJ4p/+N+1m7RgSfbu0yneQK0y
+   g==;
+X-CSE-ConnectionGUID: qP4KH/s/ROiemoFJ38FUgw==
+X-CSE-MsgGUID: QqW/FeGaSpGFdjp2wQ8aDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81472458"
 X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
-   d="scan'208";a="81590989"
+   d="scan'208";a="81472458"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 18:56:57 -0700
-X-CSE-ConnectionGUID: GltD6Je4ShuHvuy+X9V6lQ==
-X-CSE-MsgGUID: B1zarMINQ9OlI2v91YuKaA==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 19:46:18 -0700
+X-CSE-ConnectionGUID: tjTovQNdRlqFzE5Mf9gVQg==
+X-CSE-MsgGUID: qVGVQ1GTSz+gtCOVwL9zUA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,193,1774335600"; 
-   d="scan'208";a="244293130"
+   d="scan'208";a="244300563"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 18:56:51 -0700
-Message-ID: <5290112b-4ef1-46e8-936a-a71f9f3c0b03@linux.intel.com>
-Date: Mon, 8 Jun 2026 09:56:48 +0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2026 19:46:14 -0700
+Message-ID: <64abd498-8ce2-45fa-b41e-c95aa0bc8b40@linux.intel.com>
+Date: Mon, 8 Jun 2026 10:46:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,99 +52,175 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] perf/x86/intel: Fix redundant branch type check in
- intel_pmu_lbr_filter()
-To: "Falcon, Thomas" <thomas.falcon@intel.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "ak@linux.intel.com" <ak@linux.intel.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "namhyung@kernel.org" <namhyung@kernel.org>, "Rogers, Ian"
- <irogers@google.com>, "Eranian, Stephane" <eranian@google.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "Chen, Zide" <zide.chen@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "Mi, Dapeng1" <dapeng1.mi@intel.com>, "Hao, Xudong" <xudong.hao@intel.com>
+Subject: Re: [PATCH 7/8] perf/x86/intel: Drop fixed-counter PEBS constraints
+ for baseline PEBS
+To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Xudong Hao <xudong.hao@intel.com>, Yi Lai <yi1.lai@intel.com>
 References: <20260605011136.2043393-1-dapeng1.mi@linux.intel.com>
- <20260605011136.2043393-5-dapeng1.mi@linux.intel.com>
- <5f1cedec93b2ea87cb89f259b0eaeddba69093bf.camel@intel.com>
+ <20260605011136.2043393-8-dapeng1.mi@linux.intel.com>
+ <350ebaf7-91b1-4550-be4d-a07a96c4a955@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <5f1cedec93b2ea87cb89f259b0eaeddba69093bf.camel@intel.com>
+In-Reply-To: <350ebaf7-91b1-4550-be4d-a07a96c4a955@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 6/6/2026 2:28 AM, Falcon, Thomas wrote:
-> On Fri, 2026-06-05 at 09:11 +0800, Dapeng Mi wrote:
->> In intel_pmu_lbr_filter(), the 'type' variable is bitwise ORed with
->> 'to_plm' (which contains X86_BR_USER and/or X86_BR_KERNEL bits). Because
->> of this, 'type' can never equal X86_BR_NONE (0) after the assignment.
+On 6/6/2026 4:32 AM, Chen, Zide wrote:
+>
+> On 6/4/2026 8:11 PM, Dapeng Mi wrote:
+>> On SPR guests where pebs_baseline is not advertised, running:
 >>
->> As a result, the subsequent check 'if (type == X86_BR_NONE)' is dead code
->> and the entries with X86_BR_NONE type would not be skipped eventually.
+>> $ ./perf record -e cpu/event=0x00,umask=0x01,i\
+>> 	 name=INST_RETIRED.PREC_DIST/p -c 10000 sleep 1
 >>
->> Correct this by masking out the X86_BR_KERNEL and X86_BR_USER bits
->> before performing the X86_BR_NONE comparison.
+>> can trigger:
 >>
->> Cc: stable@vger.kernel.org
->> Fixes: 47125db27e47 ("perf/x86/intel/lbr: Support Architectural LBR")
+>> unchecked MSR access error: WRMSR to 0x3f1 ... in\
+>> 	 intel_pmu_pebs_enable_all()
+>>
+>> Root cause:
+>> SPR-specific PEBS constraints allow fixed-counter scheduling,
+>> for example INST_RETIRED.PREC_DIST on fixed counter 0. In guests without
+>> pebs_baseline, KVM does not support PEBS sampling on fixed counters,
+>> so enabling such events reaches an invalid MSR programming path.
+>>
+>> Fix:
+>> Drop fixed-counter entries from the PEBS constraint table. Without
+>> pebs_baseline, those fixed-counter PEBS events now resolve to empty
+>> constraints and are not scheduled/enabled, avoiding the warning and the
+>> broken guest PEBS path.
+> Seems this exposes a more general issue: constraints derived from
+> host capabilities may not be applicable to a guest, since the guest may
+> only has a subset of the host capabilities.
+>
+> For example, an event could be constrained to GP counter 7, while that
+> counter is not exposed to the guest. Currently this is not gated and
+> failures may only surface later during event programming.
+
+Yes, but just for these pre-defined static constraints, it won't really
+cause issue. If an event is constrained to GP counter 7 but there is no
+such counter, then the event won't be really scheduled and enabled on the
+counter. 
+
+
+>
+> Instead of dropping the constraints, should we validate counter
+> availability in intel_pebs_constraints() or
+> intel_get_event_constraints(), etc., and in a more generic way?
+
+Yes, this is actually what the previous version did. In previous version,
+we would leverage the dynamic constraints to limit the events additionally,
+but just think twice, it's not best and simplest way to handle this issue.
+It needs to allocate extra memory to store the dynamic constraints.
+
+
+>
+>
+>> This is safe because, in pebs_baseline-capable cases, PEBS constraint
+>> lookup already falls back to non-PEBS constraints when needed, and
+>> fixed-counter constraints are effectively shared there.
+> Can it really be removed without any consequences?
+>
+> If it is architecturally required that INST_RETIRED.PREC_DIST must run
+> on fixed counter 0, then the constraint should be preserved. I think.
+
+"INST_RETIRED.PREC_DIST" would still be constrained to fixed counter 0 by
+the non-PEBS constraints, like the below constraints in corresponding
+intel_icl_event_constraints[].
+
+```
+
+static struct event_constraint intel_icl_event_constraints[] = {
+    FIXED_EVENT_CONSTRAINT(0x00c0, 0),    /* INST_RETIRED.ANY */
+    FIXED_EVENT_CONSTRAINT(0x01c0, 0),    /* old INST_RETIRED.PREC_DIST */
+    FIXED_EVENT_CONSTRAINT(0x0100, 0),    /* pseudo INST_RETIRED.ANY */
+
+   ......
+
+```
+
+Currently as long as the PMU support PMU_FL_PEBS_ALL flag (adaptive PEBS
+and arch-PEBS), if an event can't find the corresponding constraints for
+PEBS constraints table, then it would fallback to the non-PEBS constraints,
+like below code in intel_pebs_constraints() shows,
+
+```
+
+    /*
+     * Extended PEBS support
+     * Makes the PEBS code search the normal constraints.
+     */
+    if (x86_pmu.flags & PMU_FL_PEBS_ALL)
+        return NULL;
+
+```
+
+If PMU doesn't support PMU_FL_PEBS_ALL flag on adaptive PEBS or arch-PEBS
+hardware base, just like what currently KVM guest does, the PEBS
+functionality is actually broken, and PEBS events should not be enabled.
+
+Thanks.
+
+
+>
+>
+>> Reported-by: Yi Lai <yi1.lai@intel.com>
 >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >> ---
+>>  arch/x86/events/intel/ds.c | 13 -------------
+>>  1 file changed, 13 deletions(-)
 >>
->> Original patch link:
->> https://lore.kernel.org/all/20260414021440.928068-1-dapeng1.mi@linux.intel.com/
->>
->>  arch/x86/events/intel/lbr.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index 72f2adcda7c6..16977e4c6f8a 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
->> @@ -1245,7 +1245,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->>  		}
->>  
->>  		/* if type does not correspond, then discard */
->> -		if (type == X86_BR_NONE || (br_sel & type) != type) {
->> +		if ((type & ~X86_BR_PLM) == X86_BR_NONE || (br_sel & type) != type) {
-> Looking at intel_pmu_lbr_filter...
->
-> 	if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
-> 	    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
-> 		to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
-> 		type = arch_lbr_br_type_map[type] | to_plm;
-> 	} else
-> 		type = branch_type(from, to, cpuc->lbr_entries[i].abort);
->
-> In the else case, it does look (branch_type -> get_branch_type) can return X86_BR_NONE without OR'ing it with X86_BR_KERNEL or X86_BR_USER, so the condition checking the type for X86_BR_NONE is not exactly "dead code."
->
-> One example:
->
-> static int get_branch_type(unsigned long from, unsigned long to, int abort,
-> 			   bool fused, int *offset)
-> {
-> ...
-> 	 * maybe zero if lbr did not fill up after a reset by the time
-> 	 * we get a PMU interrupt
-> 	 */
-> 	if (from == 0 || to == 0)
-> 		return X86_BR_NONE;
-> ...
->
-> Though in those cases, it doesn't seem like this change would make a difference. I guess it isn't clear to me what issue this change is fixing.
-
-Yes, the "dead code" is not accurate. For hardware decoding (the if case),
-the validation is some kind of dead code, but for the software decoding,
-it's not. I would adjust the wording in next version. Thanks.
-
-
->
-> Thanks,
-> Tom
->
->>  			cpuc->lbr_entries[i].from = 0;
->>  			compress = true;
->>  		}
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index cb72af9b61ce..5db15a92017a 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -1447,10 +1447,6 @@ struct event_constraint intel_skl_pebs_event_constraints[] = {
+>>  };
+>>  
+>>  struct event_constraint intel_icl_pebs_event_constraints[] = {
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x100000000ULL),	/* old INST_RETIRED.PREC_DIST */
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),	/* SLOTS */
+>> -
+>>  	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
+>>  	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
+>>  	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_STORES */
+>> @@ -1473,9 +1469,6 @@ struct event_constraint intel_icl_pebs_event_constraints[] = {
+>>  };
+>>  
+>>  struct event_constraint intel_glc_pebs_event_constraints[] = {
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
+>> -
+>>  	INTEL_FLAGS_EVENT_CONSTRAINT(0xc0, 0xfe),
+>>  	INTEL_PLD_CONSTRAINT(0x1cd, 0xfe),
+>>  	INTEL_PSD_CONSTRAINT(0x2cd, 0x1),
+>> @@ -1500,9 +1493,6 @@ struct event_constraint intel_glc_pebs_event_constraints[] = {
+>>  };
+>>  
+>>  struct event_constraint intel_lnc_pebs_event_constraints[] = {
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
+>> -
+>>  	INTEL_FLAGS_UEVENT_CONSTRAINT(0x012a, 0x1),		/* OCR.* events */
+>>  	INTEL_FLAGS_UEVENT_CONSTRAINT(0x012b, 0x1),		/* OCR.* events */
+>>  
+>> @@ -1534,9 +1524,6 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
+>>  };
+>>  
+>>  struct event_constraint intel_pnc_pebs_event_constraints[] = {
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
+>> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
+>> -
+>>  	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0xfc),
+>>  	INTEL_HYBRID_STLAT_CONSTRAINT(0x2cd, 0x3),
+>>  	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
