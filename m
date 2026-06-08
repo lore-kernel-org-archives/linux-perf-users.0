@@ -1,57 +1,57 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBDB2DB7AE;
-	Mon,  8 Jun 2026 13:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A747D2DC76C;
+	Mon,  8 Jun 2026 13:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780923669; cv=none; b=IPeWyhibugS16G5jsKQCvwYHifME5xUq4MVvE/i5JKjsJZ5xeTA9nS+sqXhVS0U13m72JDArMcY/2TDFdzFrBkVgHKMoxyYV+CaryNlPJ2SgEFuDgRk82ydEBZm8gqYVVcR+3AJIdujr4JfgkvmAvU9kz3nlU4mmeNJ3dNlm2xo=
+	t=1780923704; cv=none; b=HEDnfLsDm6pGD2PxU4hz+JlCQIXrFPB+/9DqK8v04FtCVYLf1QW3Q4NCXsh7+f5kdpW7/br+bbFgmPqRadddoPaJazByVo6tGdH3CCqPLs83TF9Jv4Xdfn6cLAU1OgJPwOL2qtX/OZ3skiKuH7sKWZaX5SDHP7x003cMuoE9DeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780923669; c=relaxed/simple;
-	bh=qoRyz9k2PDp1191sYJePjuht6ShE1lJHCAQPy7S6zsg=;
+	s=arc-20240116; t=1780923704; c=relaxed/simple;
+	bh=5uFsXsLLqeNLq4ZoehU/wlhC1HppZJke7w81ld7cfhY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lnR48IJ8IXJK9zTiZo6gTnOGFJjd5rXRFgSPV8bjQ5gx9aN9epduTq+bSdqPvJtjDSTiHmzoHPWpat5uBfJqtZit0Qv1UjLr87DUVitiVCucok+8EJtawO/MBM38BywbMP/mrp+Yb1SbURuCoa/wD4Ck+25ADnD+p4HHgBxfCOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NmfN4eLn; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=e4CxP9ffkuR8SrpAil2+MKy/Q4GtT+nmancHzL5zdpR73uw6IxJvnIehCs0AmnT3S0Xxx4fx4GieuvvCoEe4BIaOT+/xZoBME7anaOyQ9WmfvH1SgG9XrSoM8JAeoMP7ytm5dX2oAE1rWHBfzmvRd44u6v6QY41UiPe90XCxieQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SDxo2VC8; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NmfN4eLn"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 657Ko2rm2849834;
-	Mon, 8 Jun 2026 13:01:00 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SDxo2VC8"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 657Mj2At4111481;
+	Mon, 8 Jun 2026 13:01:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=L3CF53njxJZa2B8Yw
-	Ul38ew/CKrs+rrrRqngvrvAk6U=; b=NmfN4eLndqbgROywIQCUEU2JL3lq4kQll
-	iKdWwtbSHXrzoexqWqyY3nTwF3NS1l5FWI4FNgzgeMnuuUPDLcso8rnn4Vta2n1S
-	fG1f569USRFnT8NPtxhlpDdSxkyrNkum4wP6yGMwxohoLqrbpyDBac7zGV0Y2wW4
-	XjarlCLOLBzwHA+7qWGTlZf2qF4phv6zMsYwqJtCG5Hl642uIVisinOzu/ottSlv
-	b8PDCik4pCACR6l0gIYBC0YLmduHQ4mhSCzGRelsSpryXiPLZ20wCL9OxN4jFqR+
-	azhkpEayykA0K6OB6brIEhaaQ2vezKIeIk1IktKqgrWaeZGXMaZ2Q==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb957b73-1
+	:mime-version:references:subject:to; s=pp1; bh=xe9qJdTzab1T3flao
+	izxpF4+0/A1MZ+cmknVaZxDQIk=; b=SDxo2VC8hxzK6jmLxM8vtkslKx/Av/6/n
+	qxL9DFJm7skHu1TRMMistJxggy4cBy0QxuSZb9+JtDN0tzcyUcgbD2VvK7bnfShs
+	bm7+XH9hKsdrv1CWny5m/ekNc/R7JMIes4tlNqgje8qaPXYjeaBktmnE1TDpFjPv
+	H9228TkczRofUIs66613ewFgTuCYh7P8X3FklJml+uqayRFmevs4gLJhh9DGi1zA
+	GnrPYNwK0w1EtvGgGuvJBoXOChiQfh25BMiwEXtSKzmwcUWqy4KEYY9JyTZNbrX/
+	NEF//EjS5bl/0LecFwnZdKiquL56j4755vyIh7cLqJHNa/hKaQVHA==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb23qckb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jun 2026 13:00:59 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 658CneGg004146;
-	Mon, 8 Jun 2026 13:00:58 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emx8vwfm6-1
+	Mon, 08 Jun 2026 13:01:35 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 658CndJm022017;
+	Mon, 8 Jun 2026 13:01:34 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emxvjncb9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jun 2026 13:00:57 +0000 (GMT)
+	Mon, 08 Jun 2026 13:01:33 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 658D0s8c30474692
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 658D1UCA49086962
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 8 Jun 2026 13:00:54 GMT
+	Mon, 8 Jun 2026 13:01:30 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A31620040;
-	Mon,  8 Jun 2026 13:00:54 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 20C832004D;
+	Mon,  8 Jun 2026 13:01:30 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D0B4F20049;
-	Mon,  8 Jun 2026 13:00:48 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 4D68120049;
+	Mon,  8 Jun 2026 13:01:24 +0000 (GMT)
 Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.124.212.67])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  8 Jun 2026 13:00:48 +0000 (GMT)
+	Mon,  8 Jun 2026 13:01:24 +0000 (GMT)
 From: Tanushree Shah <tshah@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
@@ -61,9 +61,9 @@ Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
         Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
         Tanushree Shah <tshah@linux.ibm.com>
-Subject: [RFC PATCH 2/4] perf/trace-event: Write trace.dat metadata sections during parsing
-Date: Mon,  8 Jun 2026 18:29:50 +0530
-Message-ID: <20260608125951.90425-4-tshah@linux.ibm.com>
+Subject: [RFC PATCH 3/4] perf data-convert: Add perf.data to trace.dat conversion backend
+Date: Mon,  8 Jun 2026 18:29:51 +0530
+Message-ID: <20260608125951.90425-5-tshah@linux.ibm.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260608125951.90425-2-tshah@linux.ibm.com>
 References: <20260608125951.90425-2-tshah@linux.ibm.com>
@@ -76,473 +76,239 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=N4UZ0W9B c=1 sm=1 tr=0 ts=6a26bd0b cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Authority-Analysis: v=2.4 cv=b4uCJNGx c=1 sm=1 tr=0 ts=6a26bd2f cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
  a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=pu8MBmnsNZc9XKMkDnAA:9
-X-Proofpoint-ORIG-GUID: LyBKJ6SXJnXlmaZMilDBluRpSUED59OC
-X-Proofpoint-GUID: OjcPYNAgwT-PL8PQsXpI6ukTBTquBeW4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDExOSBTYWx0ZWRfX58TKBPzAqOs9
- HSSOV3Xm7uZMWC/x7P465rDRTyxdVbs5LV/ALRQLFSxcfRPDq95rdemPigy6NAQhLIqAwbexvSY
- 2AfO9ALhbl/a2BYXLTxaBYwMT18q2zB8K267KYwitjwxld9oO+mjqqKAra86F/zFH50MfYsXkkg
- V2GUAoKlr/8uJI3EvWeMVzPo9Zcl+m+2WDspsCTWxwWMct7EqZHHmQ7n+K8tUqB+lYGbVUgbozX
- UFJZl+9d9VFDLEfvkg5THDmjzhHcf9u1sO72Qh+Z4DvCIvnIlNOno0qIHDxIZsI3jcsMi9D4206
- RP1TW01vE4AptseLoo3y8hmcOgz0aPBYDHKgEUlAMAs6lIzut5QVXRwhP6x43QRMlssRib7efPj
- hx4oK7vrcZYPWo5w7eIITk+z74MmVtn4PBdS/7DznHI7W3QXBhP9nU4ebsPOo4J8r/F1OzLPaaQ
- +PhqVyvmns2RQf0wK9A==
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=2DYhmZMCe2clY4UwxswA:9
+X-Proofpoint-ORIG-GUID: Af9wSSXs7gDlqbskP9GtBoljeMNZDFtH
+X-Proofpoint-GUID: PaRgCurP5YCkkSbeYASkWZYtuVEQPQJk
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDExOSBTYWx0ZWRfXxovZhaoNn+jF
+ AgRTesTCIoZ584NpdAxnMLfnoHe8bYqtj1qsitL5Lb1YPNTcTqz9OXYoUSYSuv4zz4m4tgCNdCG
+ 5hyzfYeMr23TJZD+67YJgR17Zu8kjwXddxuGMdNEMlMF296dRIgWcIyCFe2xAD2k0vqB4ooVJTm
+ HBWkSXFF6HLonVwP5+xFEfvicCk+n1Bqbo4S68ljxRiRPhCT6ktH8cLu5uW5k6/8wJ8szIpX8pk
+ 83sFW2xVKDSXlzb9EE2gFoXwgbNPg4gT5qwfficimcRX2433aT1A/DJLa1sbYvqynTB304iuCgD
+ GC1owlBd1WWtEG2sdVx6BB5J5AiiIDruRmTmjdS4ixkJoL7wG4alhK6SwnZGwc71qdeqnWkQPli
+ LoAF8ggH02uStTS6gvFDiCgEEaAlCA==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-06-08_03,2026-06-05_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 malwarescore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- phishscore=0 impostorscore=0 adultscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606080119
+ adultscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ phishscore=0 suspectscore=0 classifier=typeunknown authscore=0 authtc=
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.22.0-2605210000 definitions=main-2606080119
 
-Perf already captures the tracing metadata as a part of
-data section in perf.data
+Add data-convert-trace.c implementing trace_convert__perf2dat() to
+convert perf.data tracepoint events to trace.dat format.
 
-When trace_dat_fp is set, write trace.dat compatible metadata
-sections using the perf provided raw buffers.
+process_sample_event() is invoked for each PERF_TYPE_TRACEPOINT sample
+during perf_session__process_events(), storing raw event bytes per-cpu
+via trace_dat__collect_cpu_event().
 
-Sections written:
-- Initial format header (magic, version, endian, long_size,
-  page_size, compression, options_offset placeholder)
-- Section 16: HEADER INFO (header_page + header_event)
-- Section 17: FTRACE EVENT FORMATS
-- Section 18: EVENT FORMATS (per system/event format files)
-- Section 19: KALLSYMS
-- Section 21: CMDLINES
-- Section 15: STRINGS (written last after all sections)
+Once all samples are collected:
+- trace_dat__write_options_section1() writes the OPTIONS section with
+  CPUCOUNT, TRACECLOCK, HEADER_INFO, FTRACE_EVENTS, EVENT_FORMATS,
+  KALLSYMS, CMDLINES and DONE options.
+- trace_dat__write__options_section2() writes the OPTIONS section with
+  BUFFER option holding per-cpu data offset placeholders and the DONE
+  option.
+- trace_dat__write_flyrecord_section() builds ring buffer pages
+  per-cpu and patches BUFFER option with final offsets and sizes
+
+Per-cpu buffers are sized to tep_get_page_size() from the session
+tep handle and released on all exit paths.
 
 Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
 ---
- tools/perf/util/trace-event-read.c | 259 ++++++++++++++++++++++++++++-
- 1 file changed, 252 insertions(+), 7 deletions(-)
+ tools/perf/util/Build                |   1 +
+ tools/perf/util/data-convert-trace.c | 152 +++++++++++++++++++++++++++
+ tools/perf/util/data-convert.h       |   4 +
+ 3 files changed, 157 insertions(+)
+ create mode 100644 tools/perf/util/data-convert-trace.c
 
-diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
-index ecbbb93f0185..815577703c2e 100644
---- a/tools/perf/util/trace-event-read.c
-+++ b/tools/perf/util/trace-event-read.c
-@@ -19,6 +19,7 @@
- #include "trace-event.h"
- #include "debug.h"
- #include "util.h"
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index c000d8032d25..88022b24e170 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -236,6 +236,7 @@ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+ endif
+ 
+ perf-util-y += data-convert-json.o
++perf-util-$(CONFIG_LIBTRACEEVENT) += data-convert-trace.o
+ 
+ perf-util-y += scripting-engines/
+ 
+diff --git a/tools/perf/util/data-convert-trace.c b/tools/perf/util/data-convert-trace.c
+new file mode 100644
+index 000000000000..e4f8b817be36
+--- /dev/null
++++ b/tools/perf/util/data-convert-trace.c
+@@ -0,0 +1,152 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright 2026, IBM Corporation
++ * Author: Tanushree Shah <tshah@linux.ibm.com>
++ *
++ * data-convert-trace.c
++ *
++ * Implements perf.data to trace.dat format conversion for tracepoint events.
++ */
++
++#include <errno.h>
++#include <inttypes.h>
++#include <linux/compiler.h>
++#include <linux/err.h>
++
++#include "data-convert.h"
++#include "session.h"
++#include "evsel.h"
++#include "tool.h"
++#include "debug.h"
 +#include "trace-dat.h"
- 
- static int input_fd;
- 
-@@ -145,10 +146,9 @@ static char *read_string(void)
- static int read_proc_kallsyms(struct tep_handle *pevent)
- {
- 	unsigned int size;
-+	char *buf;
- 
- 	size = read4(pevent);
--	if (!size)
--		return 0;
- 	/*
- 	 * Just skip it, now that we configure libtraceevent to use the
- 	 * tools/perf/ symbol resolver.
-@@ -160,11 +160,56 @@ static int read_proc_kallsyms(struct tep_handle *pevent)
- 	 * payload", so that older tools can continue reading it and interpret
- 	 * it as "no kallsyms payload is present".
- 	 */
--	lseek(input_fd, size, SEEK_CUR);
-+	/* Write kallsyms section with empty payload if no data */
-+	if (!size) {
-+		if (trace_dat_fp) {
-+			unsigned short section_id = TRACE_DAT_SECTION_KALLSYMS;
-+			unsigned short flags = 0;
-+			unsigned long long section_size = sizeof(unsigned int);
-+			unsigned int kallsyms_data = 0;
-+			unsigned int string_id = STRID_KALLSYMS;
++#include "trace-event.h"
++#include "event.h"
++#include "sample.h"
++#include "evlist.h"
 +
-+			trace_dat_kallsyms_offset = ftell(trace_dat_fp);
-+			if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-+			    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-+			    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
-+			    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+			    !fwrite(&kallsyms_data, sizeof(unsigned int), 1, trace_dat_fp))
-+				return -EIO;
++struct trace_convert {
++	struct perf_tool tool;
++	u64 events_count;
++};
++
++/* Store raw tracepoint event data in per-cpu buffer for trace.dat flyrecord */
++static int process_sample_event(const struct perf_tool *tool,
++				union perf_event *event __maybe_unused,
++				struct perf_sample *sample,
++				struct evsel *evsel,
++				struct machine *machine __maybe_unused)
++{
++	struct trace_convert *tc = container_of(tool, struct trace_convert, tool);
++
++	/* Collect raw tracepoint data per-cpu */
++	if (trace_dat_fp && sample->raw_size > 0 &&
++	    evsel->core.attr.type == PERF_TYPE_TRACEPOINT) {
++		if (trace_dat__collect_cpu_event(sample->cpu, sample->time,
++					sample->raw_data, sample->raw_size) < 0) {
++			pr_err("Failed to collect CPU event\n");
++			return -ENOMEM;
 +		}
-+		return 0;
++		tc->events_count++;
 +	}
-+	buf = malloc(size);
-+	if (buf == NULL)
-+		return -1;
-+	if (read(input_fd, buf, size) < 0) {
-+		free(buf);
-+		return -1;
-+	}
- 	trace_data_size += size;
-+	/* Write kallsyms section with data */
-+	if (trace_dat_fp) {
-+		unsigned short section_id = TRACE_DAT_SECTION_KALLSYMS;
-+		unsigned int string_id = STRID_KALLSYMS;
-+		unsigned long long section_size = sizeof(unsigned int) + size;
-+		unsigned short flags = 0;
 +
-+		trace_dat_kallsyms_offset = ftell(trace_dat_fp);
-+		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
-+		    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+		    !fwrite(&size, sizeof(unsigned int), 1, trace_dat_fp) ||
-+		    !fwrite(buf, 1, size, trace_dat_fp)) {
-+			free(buf);
-+			return -EIO;
++	return 0;
++}
++
++/* Convert perf.data tracepoint events to trace.dat format */
++int trace_convert__perf2dat(const char *input, const char *to_trace,
++			   struct perf_data_convert_opts *opts)
++{
++	struct perf_session *session;
++	struct trace_convert tc = {
++		.events_count = 0,
++	};
++	struct perf_data data = {
++		.path = input,
++		.mode = PERF_DATA_MODE_READ,
++		.force = opts->force,
++	};
++	int ret = -EINVAL;
++	bool cpu_buffers_initialized = false;
++
++	/* Initialize tool with all required callbacks */
++	perf_tool__init(&tc.tool, /*ordered_events=*/true);
++	tc.tool.sample = process_sample_event;
++
++	/* Open output trace.dat file */
++	trace_dat_fp = fopen(to_trace, "wb");
++	if (!trace_dat_fp) {
++		pr_err("Failed to open output file: %s\n", to_trace);
++		return -EINVAL;
++	}
++
++	/* Open perf.data session - this writes trace.dat metadata sections */
++	session = perf_session__new(&data, &tc.tool);
++	if (IS_ERR(session)) {
++		pr_err("Failed to open perf.data file\n");
++		ret = PTR_ERR(session);
++		goto out_close;
++	}
++
++	/* Initialize per-CPU buffers for flyrecord data */
++	if (session->tevent.pevent) {
++		trace_dat_page_size = tep_get_page_size(session->tevent.pevent);
++		if (trace_dat__init_cpu_buffers(session->header.env.nr_cpus_online) < 0) {
++			pr_err("Failed to initialize CPU buffers\n");
++			ret = -ENOMEM;
++			goto out_delete;
 +		}
++		cpu_buffers_initialized = true;
 +	}
-+	free(buf);
- 	return 0;
- }
- 
 +
- static int read_ftrace_printk(struct tep_handle *pevent)
- {
- 	unsigned int size;
-@@ -195,6 +240,13 @@ static int read_ftrace_printk(struct tep_handle *pevent)
- static int read_header_files(struct tep_handle *pevent)
- {
- 	unsigned long long size;
-+	unsigned long long header_page_size;
-+	unsigned long long header_event_size;
-+	char *header_event;
-+	unsigned short section_id;
-+	unsigned short flags;
-+	unsigned int string_id;
-+	unsigned long long section_size;
- 	char *header_page;
- 	char buf[BUFSIZ];
- 	int ret = 0;
-@@ -209,6 +261,7 @@ static int read_header_files(struct tep_handle *pevent)
- 
- 	size = read8(pevent);
- 
-+	header_page_size = size;
- 	header_page = malloc(size);
- 	if (header_page == NULL)
- 		return -1;
-@@ -227,19 +280,59 @@ static int read_header_files(struct tep_handle *pevent)
- 		 */
- 		tep_set_long_size(pevent, tep_get_header_page_size(pevent));
- 	}
--	free(header_page);
- 
--	if (do_read(buf, 13) < 0)
-+	if (do_read(buf, 13) < 0) {
-+		free(header_page);
- 		return -1;
++	/* Process all events - collects raw data per-cpu */
++	ret = perf_session__process_events(session);
++	if (ret < 0) {
++		pr_err("Failed to process events\n");
++		goto out_delete;
 +	}
- 
- 	if (memcmp(buf, "header_event", 13) != 0) {
- 		pr_debug("did not read header event");
-+		free(header_page);
- 		return -1;
- 	}
- 
- 	size = read8(pevent);
--	skip(size);
++
++	/* Skip file creation if no tracepoint events found */
++	if (tc.events_count == 0) {
++		pr_warning("No tracepoint events found in '%s', skipping trace.dat creation\n",
++			input);
++		ret = -EINVAL;
++		goto out_delete;
++	}
++
++	/* Write trace.dat options and flyrecord sections */
++	if (trace_dat__write_options_section1() < 0) {
++		pr_err("Failed to write options section1\n");
++		ret = -EIO;
++		goto out_delete;
++	}
++	if (trace_dat__write_options_section2() < 0) {
++		pr_err("Failed to write options section2\n");
++		ret = -EIO;
++		goto out_delete;
++	}
++	if (trace_dat__write_flyrecord_section() < 0) {
++		pr_err("Failed to write flyrecord section\n");
++		ret = -EIO;
++		goto out_delete;
++	}
++
++	pr_info("[ perf data convert: Converted '%s' into trace.dat format '%s' ]\n",
++		input, to_trace);
++	pr_info("[ perf data convert: Converted %llu events ]\n",
++		(unsigned long long)tc.events_count);
++
++	ret = 0;
++
++out_delete:
++	if (cpu_buffers_initialized)
++		trace_dat__free_cpu_buffers();
++	perf_session__delete(session);
++out_close:
 +	if (trace_dat_fp) {
-+		header_event_size = size;
-+		header_event = malloc(size);
-+		if (header_event == NULL) {
-+			free(header_page);
-+			return -1;
-+		}
-+		if (do_read(header_event, size) < 0) {
-+			free(header_page);
-+			free(header_event);
-+			return -1;
-+		}
-+		/* Write header_page and header_event to trace.dat */
-+		section_id = TRACE_DAT_SECTION_HEADER;
-+		flags = 0;
-+		string_id = STRID_HEADERS;
-+		section_size = 12 + 8 + header_page_size + 13 + 8 +
-+				header_event_size;
-+
-+		trace_dat_header_info_offset = ftell(trace_dat_fp);
-+		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
-+		    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+		    !fwrite("header_page\0", 1, 12, trace_dat_fp) ||
-+		    !fwrite(&header_page_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+		    !fwrite(header_page, 1, header_page_size, trace_dat_fp) ||
-+		    !fwrite("header_event\0", 1, 13, trace_dat_fp) ||
-+		    !fwrite(&header_event_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+		    !fwrite(header_event, 1, header_event_size, trace_dat_fp)) {
-+			free(header_page);
-+			free(header_event);
-+			return -EIO;
-+		}
-+		free(header_event);
-+	} else {
-+		skip(size);
++		fclose(trace_dat_fp);
++		trace_dat_fp = NULL;
 +	}
++	if (ret != 0)
++		unlink(to_trace);
++	return ret;
++}
+diff --git a/tools/perf/util/data-convert.h b/tools/perf/util/data-convert.h
+index ee651fa680a1..d958e68367fe 100644
+--- a/tools/perf/util/data-convert.h
++++ b/tools/perf/util/data-convert.h
+@@ -19,4 +19,8 @@ int bt_convert__perf2ctf(const char *input_name, const char *to_ctf,
+ int bt_convert__perf2json(const char *input_name, const char *to_ctf,
+ 			 struct perf_data_convert_opts *opts);
  
-+	free(header_page);
- 	return ret;
- }
- 
-@@ -259,6 +352,13 @@ static int read_ftrace_file(struct tep_handle *pevent, unsigned long long size)
- 		pr_debug("error reading ftrace file.\n");
- 		goto out;
- 	}
-+	if (trace_dat_fp) {
-+		if (!fwrite(&size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+		    !fwrite(buf, 1, size, trace_dat_fp)) {
-+			free(buf);
-+			return -EIO;
-+		}
-+	}
- 
- 	ret = parse_ftrace_file(pevent, buf, size);
- 	if (ret < 0)
-@@ -283,6 +383,13 @@ static int read_event_file(struct tep_handle *pevent, char *sys,
- 	ret = do_read(buf, size);
- 	if (ret < 0)
- 		goto out;
-+	if (trace_dat_fp) {
-+		if (!fwrite(&size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+		    !fwrite(buf, 1, size, trace_dat_fp)) {
-+			free(buf);
-+			return -EIO;
-+		}
-+	}
- 
- 	ret = parse_event_file(pevent, buf, size, sys);
- 	if (ret < 0)
-@@ -298,8 +405,31 @@ static int read_ftrace_files(struct tep_handle *pevent)
- 	int count;
- 	int i;
- 	int ret;
-+	long section_size_pos = 0;
-+	long count_pos = 0;
-+	unsigned long long section_size = 0;
-+	long end_pos;
- 
- 	count = read4(pevent);
-+	/* Write ftrace formats section to trace.dat output file */
-+	if (trace_dat_fp) {
-+		unsigned short section_id = TRACE_DAT_SECTION_FTRACE;
-+		unsigned short flags = 0;
-+		unsigned int string_id = STRID_FTRACE_FORMATS;
-+
-+		trace_dat_ftrace_format_offset = ftell(trace_dat_fp);
-+
-+		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp))
-+			return -EIO;
-+		section_size_pos = ftell(trace_dat_fp);
-+		if (!fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp))
-+			return -EIO;
-+		count_pos = ftell(trace_dat_fp);
-+		if (!fwrite(&count, sizeof(unsigned int), 1, trace_dat_fp))
-+			return -EIO;
-+	}
- 
- 	for (i = 0; i < count; i++) {
- 		size = read8(pevent);
-@@ -307,6 +437,16 @@ static int read_ftrace_files(struct tep_handle *pevent)
- 		if (ret)
- 			return ret;
- 	}
-+	/* Fill in section size after writing all ftrace files */
-+	if (trace_dat_fp) {
-+		end_pos = ftell(trace_dat_fp);
-+		section_size = end_pos - count_pos;
-+		fseek(trace_dat_fp, section_size_pos, SEEK_SET);
-+		if (!fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp))
-+			return -EIO;
-+		fseek(trace_dat_fp, end_pos, SEEK_SET);
-+	}
-+
- 	return 0;
- }
- 
-@@ -318,8 +458,30 @@ static int read_event_files(struct tep_handle *pevent)
- 	int count;
- 	int i,x;
- 	int ret;
-+	long section_size_pos = 0;
-+	long sys_count_pos = 0;
-+	unsigned long long section_size = 0;
-+	long end_pos;
- 
- 	systems = read4(pevent);
-+	/* Write event formats section to trace.dat output file */
-+	if (trace_dat_fp) {
-+		unsigned short section_id = TRACE_DAT_SECTION_EVENTS;
-+		unsigned short flags = 0;
-+		unsigned int string_id = STRID_EVENT_FORMATS;
-+
-+		trace_dat_events_format_offset = ftell(trace_dat_fp);
-+		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp))
-+			return -EIO;
-+		section_size_pos = ftell(trace_dat_fp);
-+		if (!fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp))
-+			return -EIO;
-+		sys_count_pos = ftell(trace_dat_fp);
-+		if (!fwrite(&systems, sizeof(unsigned int), 1, trace_dat_fp))
-+			return -EIO;
-+	}
- 
- 	for (i = 0; i < systems; i++) {
- 		sys = read_string();
-@@ -327,6 +489,11 @@ static int read_event_files(struct tep_handle *pevent)
- 			return -1;
- 
- 		count = read4(pevent);
-+		if (trace_dat_fp) {
-+			if (!fwrite(sys, 1, strlen(sys) + 1, trace_dat_fp) ||
-+			   !fwrite(&count, sizeof(unsigned int), 1, trace_dat_fp))
-+				return -EIO;
-+		}
- 
- 		for (x=0; x < count; x++) {
- 			size = read8(pevent);
-@@ -338,6 +505,16 @@ static int read_event_files(struct tep_handle *pevent)
- 		}
- 		free(sys);
- 	}
-+	/* Fill in section size after writing all event files */
-+	if (trace_dat_fp) {
-+		end_pos = ftell(trace_dat_fp);
-+		section_size = end_pos - sys_count_pos;
-+		fseek(trace_dat_fp, section_size_pos, SEEK_SET);
-+		if (!fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp))
-+			return -EIO;
-+		fseek(trace_dat_fp, end_pos, SEEK_SET);
-+	}
-+
- 	return 0;
- }
- 
-@@ -349,8 +526,25 @@ static int read_saved_cmdline(struct tep_handle *pevent)
- 
- 	/* it can have 0 size */
- 	size = read8(pevent);
--	if (!size)
-+	/* Write cmdlines section with empty payload if no data */
-+	if (!size) {
-+		if (trace_dat_fp) {
-+			unsigned short section_id = TRACE_DAT_SECTION_CMDLINE;
-+			unsigned short flags = 0;
-+			unsigned int string_id = STRID_CMDLINES;
-+			unsigned long long section_size = sizeof(unsigned long long);
-+			unsigned long long section_data = 0;
-+
-+			trace_dat_cmdline_offset = ftell(trace_dat_fp);
-+			if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-+			    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-+			    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
-+			    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+			    !fwrite(&section_data, sizeof(unsigned long long), 1, trace_dat_fp))
-+				return -EIO;
-+		}
- 		return 0;
-+	}
- 
- 	buf = malloc(size + 1);
- 	if (buf == NULL) {
-@@ -363,6 +557,23 @@ static int read_saved_cmdline(struct tep_handle *pevent)
- 		pr_debug("error reading saved cmdlines\n");
- 		goto out;
- 	}
-+	/* Write cmdlines section with data */
-+	if (trace_dat_fp) {
-+		unsigned short section_id = TRACE_DAT_SECTION_CMDLINE;
-+		unsigned short flags = 0;
-+		unsigned int string_id = STRID_CMDLINES;
-+		unsigned long long section_size = sizeof(unsigned long long) + size;
-+
-+		trace_dat_cmdline_offset = ftell(trace_dat_fp);
-+		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
-+		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
-+		    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+		    !fwrite(&size, sizeof(unsigned long long), 1, trace_dat_fp) ||
-+		    !fwrite(buf, 1, size, trace_dat_fp))
-+			return -EIO;
-+	}
-+
- 	buf[ret] = '\0';
- 
- 	parse_saved_cmdline(pevent, buf, size);
-@@ -387,6 +598,7 @@ ssize_t trace_report(int fd, struct trace_event *tevent, bool __repipe)
- 	int file_page_size;
- 	struct tep_handle *pevent = NULL;
- 	int err;
-+	char magic_buf[10];
- 
- 	repipe = __repipe;
- 	input_fd = fd;
-@@ -398,12 +610,17 @@ ssize_t trace_report(int fd, struct trace_event *tevent, bool __repipe)
- 		return -1;
- 	}
- 
-+	if (trace_dat_fp)
-+		memcpy(magic_buf, buf, 3);
-+
- 	if (do_read(buf, 7) < 0)
- 		return -1;
- 	if (memcmp(buf, "tracing", 7) != 0) {
- 		pr_debug("not a trace file (missing 'tracing' tag)");
- 		return -1;
- 	}
-+	if (trace_dat_fp)
-+		memcpy(magic_buf + 3, buf, 7);
- 
- 	version = read_string();
- 	if (version == NULL)
-@@ -440,6 +657,28 @@ ssize_t trace_report(int fd, struct trace_event *tevent, bool __repipe)
- 	tep_set_long_size(pevent, file_long_size);
- 	tep_set_page_size(pevent, file_page_size);
- 
-+	/* Write initial file header to trace.dat */
-+	if (trace_dat_fp) {
-+		unsigned char endian = file_bigendian;
-+		unsigned char long_size = file_long_size;
-+		unsigned int page_size = file_page_size;
-+		unsigned long long placeholder = 0;
-+		char trace_dat_version = TRACE_DAT_VERSION;
-+
-+		if (!fwrite(magic_buf, 1, 10, trace_dat_fp) ||    /* magic + "tracing" */
-+		    !fwrite(&trace_dat_version, 1, 2, trace_dat_fp) ||
-+		    !fwrite(&endian, 1, 1, trace_dat_fp) ||
-+		    !fwrite(&long_size, 1, 1, trace_dat_fp) ||
-+		    !fwrite(&page_size, sizeof(unsigned int), 1, trace_dat_fp) ||
-+		    !fwrite("none", 1, 4, trace_dat_fp) ||
-+		    !fwrite("\0", 1, 1, trace_dat_fp) ||
-+		    !fwrite("\0", 1, 1, trace_dat_fp))
-+			return -EIO;
-+		trace_dat_options_offset = ftell(trace_dat_fp);
-+		if (!fwrite(&placeholder, sizeof(unsigned long long), 1, trace_dat_fp))
-+			return -EIO;
-+	}
-+
- 	err = read_header_files(pevent);
- 	if (err)
- 		goto out;
-@@ -460,6 +699,12 @@ ssize_t trace_report(int fd, struct trace_event *tevent, bool __repipe)
- 		if (err)
- 			goto out;
- 	}
-+	/* Write strings section to trace.dat output file */
-+	if (trace_dat_fp) {
-+		err = trace_dat__write_strings_section();
-+		if (err)
-+			goto out;
-+	}
- 
- 	size = trace_data_size;
- 	repipe = false;
++#ifdef HAVE_LIBTRACEEVENT
++int trace_convert__perf2dat(const char *input, const char *to_trace,
++			   struct perf_data_convert_opts *opts);
++#endif /* HAVE_LIBTRACEEVENT */
+ #endif /* __DATA_CONVERT_H */
 -- 
 2.53.0
 
