@@ -1,102 +1,101 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F42A39D6FD
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 21:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C5C3B0ACE
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 22:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.171
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780955996; cv=pass; b=kpAO8dX9CgipxDz7S1gzQlL3e75lF60Q/Jm2jcacLh34t98AhXd5zUUSj3KAzACP+i2I0+T+R5O10zWf8obhcxkSbOyxFs6T6FXD2KJb7AFDXVuT5Pgyc8iMfFuZAzyzzGeelLubiXdm7NHu3UQoVfNJkWQf57E4dG6RTlVDbRU=
+	t=1780956077; cv=pass; b=J3k5R1iB7qF5uLBcfP02foHLgcmCWX1Y0M9rrSdG148xYXmAhm2kahpqadD3FebUxb8SSmk/HsNV8LmUAo4XCgNGTpxUwiBTRSvHIrVHUqUvbqP+pjHVSl8J7wgNopOXYpASTowIztdW5elf1cbkKTeJIn071dD36dDrFkObLgk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780955996; c=relaxed/simple;
-	bh=39IillHuuUud5ciJ4bhNqpZoiCXzxriIs8Io3wb/xIw=;
+	s=arc-20240116; t=1780956077; c=relaxed/simple;
+	bh=WZcjqyrHT/gjl/VUsiW+RaCvs6ReOueNrbbxBURQo7E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AKEaMPsbwT8W+eAz5GuT/O/zvExcD0kz/T1wW4cMv3Qc1vc9mecMGUZbwVFeAxeEMT09Lz0SOqfeaMpotnu0VfE1uQObtIv7wQRACiu9yr48lu7O5hdmCCNZxbwbm+hSQBrHTqXWCq/NVvRWiXFUs6PNii1iQsIDu5krTpK5BzA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ckxf5PHZ; arc=pass smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=kUUvj9+NCwctcD5Dsr/IQ9OyBY1TvW7aZMKypeOy+QNlUUKHp4z8rjHToyJkTCK8LXhSGnl274FIVJ8VH+HQhxjLXa9dOj6CFUols7HIi8E1utncrfJnSNH5CSENEUPQnb3ReWbCn/xRIH5pHW8XYc7DzqowIdQeekFbMXdklTo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EbKz31Yx; arc=pass smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ckxf5PHZ"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2bf2d865383so371025ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jun 2026 14:59:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780955995; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EbKz31Yx"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2bf2911f93cso363425ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jun 2026 15:01:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780956076; cv=none;
         d=google.com; s=arc-20240605;
-        b=MrpQxfijJBRkXXi6rh5EriBmJO6xOPjgaf3BzlUq0grZVl4vY5arDrB+oSUIICLDi+
-         6dtuZXD5Kz+HEv4vxz8rhDOWSfnCqeWyhqLrvv5PhQHwVd6VxpfcHVwnqFTTyYj0YzgL
-         5dHJ7iAiKq5krocSBcE0mY/bJz5lIdBrMiiQAKmI7EB/Ee5z+M8iho3tgNp6/2/PG84f
-         Xj5Go2eyS/wo4Y6JI3weCXOrgRM2GijJNGJwphOSfX/l5heiH6EcxEBR117nWrDMpAtN
-         UJAeDnzMIcvWGpClxvASmK6ZueV5x22SDgH7RXr+YlCOr9chrCtnICSq0rb/tsXLeLof
-         FTOg==
+        b=lLSfOvHElsMlFcB0TIsJA2esd3jAmt0RuAVpaS94T1upDsY7su2RLmjvXBJ/tpMaxT
+         F2uGuAnI9b09Lplg63nq/pHjOkItowfSX/KVruzzagIUiIZ9PEpnF4is8aYPzD0ONuW+
+         DHirv3dXVjoOz1SULoai2c8DaQY5RETEiO2th9WQQ2BZG5TBcxfDYxLEyPrE9dYei7la
+         t5eOqqxCkzie20lJwWVI4px1L4v/CHrYCZjYZOmRoztZgz7rLdSnJeO9L6Dwn95OGaH8
+         tH2aLWmZYd1dtO1p4S9g+D6NCcaATa4e27pWDI9VKBYVN5rnKg6XkFcpYr16w0tJZjWH
+         PTzg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=wg/eM7jA9ClKRBiTabWiPAV6wD7lI+wkjLUQ4TT26c0=;
-        fh=vFoqEQqrBgzyHD9iRv+r+6meQ+HDXD5XPONPsnfuNuM=;
-        b=QfA6yKG5RjI0Es78QcyUqJNUyis8mIEzvmsxErCHkA/9dd082rTPRYK4Upp528LdVt
-         naayg1uZuTBRPtIr3+1OpCYygGNuIb6UWr+iMfLhJAsHrXB02P7ibDtMW4EjIQVAoZBG
-         cEq6PH3NgOGi53LSqknKucT67rv7aYrGoJpUfMX0R19vQGpWwoHgqvVuLOcn3tvn4wK9
-         /uCLX9hpAwClTzeaFyRHGseYVvNeNGHtlXi7Jv9Y4pywxs6BimgYTMYxtHBFR0Ns+rGV
-         dZlFhjO0AZDpWstnNV/k79ZaSuNxMVLXSbhvYD4XCNiU4Z6nldb05tkF+TCkdx55YM/W
-         3SEg==;
+        bh=Li1zqRjpweBVAZBfxC/jfb4KZuC+NlHala+uPHqm6ME=;
+        fh=2XmAg0OYLPhEUVIVAhB8p4JqnZeMrJCAholowpZsPnE=;
+        b=YpJpUuntkUNH8LrKVSpSsuMnA01aKKC7Uzn6tdczspt12tm4R4rYTOqFtaJHsttGAw
+         7d/UmupdFbW9lWUpGa6yPQO5j5xCEvHNtmovL3tprhQ/R7ZHIHOwnMjdSkfTle8HqkiC
+         R1xRw8JtRXVAT/MbEUiBFHquVricm+OPG0/gkPQ3q6jVuDfmuBmFcfoLhyhLFA9Iyjjw
+         7JqCedODqG4qsc9pXycinIKFtJQotSuGh+g2xYW59Cbfsz2XRNvF6iuDTn/NiWjmCZ7O
+         J0ur3fz8AqGmgv2mzsartReS6kXcCYiSrgYZnVwLbUyHrLqOhU7WINLq34Te0jT/a8ai
+         cO0g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1780955995; x=1781560795; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1780956076; x=1781560876; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wg/eM7jA9ClKRBiTabWiPAV6wD7lI+wkjLUQ4TT26c0=;
-        b=Ckxf5PHZipfY1pAtHpwk+JvX+TbKKxdFzLt5ZQTiaZHxjvUiuvq4HfJuFFwCwEdCZp
-         dPx/1rlMP37oplWEzVUajkfVINtBlcRl/KpBrgUFIDHi0eU5f8a3OKq9+ay1U7rXdXom
-         whRqkspxLtIGN54WRA+M1r5X/cBclSaabxXxvenp5MuSgAoXq+QqaAHWTzR/kw8Ytxtm
-         uRRXhgsK1bCoUkRDqwUSKnCl4peeE0C5OcwyeBkXnExCNyEORM/0r2GCWCzQdx8JEZhU
-         N3CuUwW0AwuMdN2GzxM8YQNcZsDcFjO3v2l3jxMvYuJ7BkOlYIdCsqyIHO+0AsEe5vLu
-         1qXA==
+        bh=Li1zqRjpweBVAZBfxC/jfb4KZuC+NlHala+uPHqm6ME=;
+        b=EbKz31Yx3IEMDtt+HWetivsXFOQ82nged17Hypk6pJM0H1u5CNxLcPZqmt+c3ls9rJ
+         /VEB9vt5zn7yD7fckqA3U1vrHBrphbL5byz56GX82iPz7qeJrNH5NJB0OgHVG9gvUmIm
+         bkH60/1go6ppzN2kRZaljoYH7FVQ5kF9ycNl/WyKdDIW6beiCje+sx+knYYW6xRgnjba
+         oLZ8OH5O3eO8ZU8kYxrGh+q/Ni4+mAV/tPlC5rTu7PgJbXo57EDmFTM8bfFX/s31IUoC
+         PhdKl0OGjzVJg0lrWTSEM+UKlgySDmsAF8GUHP9F6dMa2CMmvcfxYAGnZPy9pu9aHswo
+         HMpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780955995; x=1781560795;
+        d=1e100.net; s=20251104; t=1780956076; x=1781560876;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=wg/eM7jA9ClKRBiTabWiPAV6wD7lI+wkjLUQ4TT26c0=;
-        b=n/wAickUmxVJCdNQulGLAi/BztOwG+N2xv1JH7BTFp3OuSRKSs5pO7tVpJ53F0WC7R
-         BGhHt4W3YWWak1n2luvbY/mKY1KMYZaof79Su+PGIzJ1rKYXExJlf6lRC93s6fJJiQND
-         f3yIMAemjnB9v+b4RR1E9kkSECiiz3EId9uaAAXeMSBfHjv74ntx1QoaL5xf9KZX5c4t
-         1mqrjn2pFFw5ZqPTMK+B0z1w9j1m7oFIjczsvwIi4Du7bSSEGTZMjUWgpqEwRtXlUlCy
-         v68eSTtgxyOFHcs06No0hMu8z9BCRyY4qhqfNamYw2WTwFQdwSum6xv7h0mnFHikZcwR
-         hUIg==
-X-Forwarded-Encrypted: i=1; AFNElJ/Tzf2kL+NqBFJULEkk/aPITGWcHA/D/GyQe/ogHjR3uNl1ww5X8o8WcPEpbW/ojC8wt98gsI0ncBYXdxVVs5KH@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAzVPcFwXVmPRulr2swVAvew8ESh1c7J5vmEkn7zi51mBGUEz7
-	wvT/IN84yr5lkUy3bjp/OWVGm2yQNO9hk3SuLXxZFw2NUH4eUwMoxC5B0uUNV5euDq66T/i9EqS
-	/HNHae5uUXJoI99MX5+n7mjvu0In/eDFxg2ErJy2r
-X-Gm-Gg: Acq92OF+ap6ejdVIJ+IcxH+03sZCdi1yvyv02rFC2K1JHBjaZSUM0R1FqoHaJCakReT
-	cgV2DV02YKk4vSgjqf9TZuReYWfiGew6iv3TFhxLys4ypcGLMiL/mHOX3NiqRDMRZhpHNDogcSj
-	d9bsKLl1S/0AQ+CtcuPlagmXb5fMcwhQb96IygLYPfAEMWPXlTrAm9kwN/ATU69wg9Do7YjkyTu
-	g0eTns9kgtyLm39UBtPjheqOfo5aJJTbeolbANA6Ge0+Yc9ioJEB5RAyzvix0mrRl/YTXi4RuFh
-	hJ9kdWqimh2wt1xaMq1s75YlorGaBpq3KSdxECxmTlQ+ZelW
-X-Received: by 2002:a17:903:2309:b0:2c1:ee6e:be1d with SMTP id
- d9443c01a7336-2c1ee6ec5camr5324315ad.27.1780955994403; Mon, 08 Jun 2026
- 14:59:54 -0700 (PDT)
+        bh=Li1zqRjpweBVAZBfxC/jfb4KZuC+NlHala+uPHqm6ME=;
+        b=guNZay8dT8v79HSzYfm0Mz+ZnnC9FNuBHxn0gs2fFz8aOSLwb2prmByw1oESOSpbHb
+         Ek+XfpBCTn9ckueAVFT7pP8DlwNakBeMJzUDLE4NO6iBwXIOLq19wm0R3OseYyyjQtY7
+         ItWrJkhd5XAoP+wUf/7cPMuCHgfkCqfnPtNkjXKdEnAhW9aRYr3anfxsnPLL2jdhIkVs
+         8nEaZK72QYj1gifnn7c/nV+T2qoYaNRnVxkXbHploaWgPqbzvsIaml8whtGzp8uGuo/y
+         RXT8hr8gs9R+P+e/HaAnHtoY/PYVUqiD67cjEe4BkDzNN99PF8wxAYqXoviqktwK7EYw
+         XvQw==
+X-Forwarded-Encrypted: i=1; AFNElJ9gP5F8EU1NRwl7zTbiGVKN12qizztBAKziSp+XZCh9OiOk4PcPIO//662K9rsRn+GQIKwcP3w7lqHOnWsFvgnn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkVQ7C52gAvwJig3+nRlpbN0ophvYQdR70adFcUOsA2+xq5vga
+	Spm1VwTQ5BEzYJtv/rfnrwub/qFwNkUlbvI+z1yRS44C3Cjf17GYxAVMoQQ17rk65VFslXjZQCF
+	jijyqvVF/uMDnfVh7o4Ej4D/BiHs3ccyjIY23m7ae
+X-Gm-Gg: Acq92OGxB+P41p+zh0q73hXv6huyFkdJ0Payus474jFzjxuJnyU+lSDr0Yr2EFcDHkb
+	l8EeueZsYALJw4y5/tPURyC6HYZyy2jf+myLgoYf9bQAC/s0DxMVTgz9vVxU0VRXDegmmdAGfQX
+	j5dU/+VsXOYqLegOixMStz0lK9gxR0asjOEGmDwjXgvoKHku18Qalso1+5NhaCaaG9n7Dxo5e+o
+	hX53sR/Jo6JKAWs736fFVxCNHhn5nhqSjkPymElHzjb3ztJWVhNutlUt3WK+Fgz91SW5RuAZZUV
+	jjWmPHsbekStUYFwapIL/JC/JE0oXRpgj+EbUQfSuvwyqbZl
+X-Received: by 2002:a17:903:b85:b0:2bf:2e8c:db96 with SMTP id
+ d9443c01a7336-2c1eaeab081mr6683645ad.5.1780956075215; Mon, 08 Jun 2026
+ 15:01:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260608201753.1979464-1-acme@kernel.org> <20260608201753.1979464-7-acme@kernel.org>
-In-Reply-To: <20260608201753.1979464-7-acme@kernel.org>
+References: <20260608201753.1979464-1-acme@kernel.org> <20260608201753.1979464-8-acme@kernel.org>
+In-Reply-To: <20260608201753.1979464-8-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 8 Jun 2026 14:59:43 -0700
-X-Gm-Features: AVVi8CfgdslsnawBXI0Uyz-H0_rw_jqpccm3w3Gwdbxcvd8DHDtsnpYZhnVhPEo
-Message-ID: <CAP-5=fVv60k=uGJBiGN=pd0-aj3MWkehEAMep3V62E8EzeoG-Q@mail.gmail.com>
-Subject: Re: [PATCH 06/11] perf sched: Fix idle-hist callchain display using
- wrong rb_first variant
+Date: Mon, 8 Jun 2026 15:01:04 -0700
+X-Gm-Features: AVVi8Cc1ZLOLo21pQNFR6EkXolZttLJ7CVqjIwTsb5hzL-FuuV0sDzgGkSEuGYY
+Message-ID: <CAP-5=fWsxuvf1iaxLm=Z6+En_YpKrLcRXeMm7i-KUvRiyAqH1A@mail.gmail.com>
+Subject: Re: [PATCH 07/11] perf tools: Add O_CLOEXEC to open() calls in DSO
+ and ELF code
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	sashiko-bot <sashiko-bot@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, 
-	"Claude Opus 4.6" <noreply@anthropic.com>
+	sashiko-bot <sashiko-bot@kernel.org>, "Claude Opus 4.6" <noreply@anthropic.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -105,57 +104,158 @@ l.org> wrote:
 >
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> timehist_print_idlehist_callchain() calls rb_first_cached() on
-> sorted_root, but the sort function (callchain_param.sort) populates it
-> via rb_insert_color() on the plain rb_root member =E2=80=94 not the cache=
-d
-> variant.  This means rb_leftmost is never set, so rb_first_cached()
-> always returns NULL and the entire callchain summary is silently
-> dropped from --idle-hist output.
+> open() calls in dso.c and symbol-elf.c omit O_CLOEXEC, which leaks
+> file descriptors to child processes spawned during symbol resolution
+> (e.g., addr2line, objdump).  This can exhaust the fd limit during
+> long profiling sessions or when processing many DSOs.
 >
-> The original code in ba957ebb54893aca ("perf sched timehist: Show
-> callchains for idle stat") was correct =E2=80=94 it used struct rb_root a=
-nd
-> rb_first().  The bug was introduced when sorted_root was converted to
-> rb_root_cached without converting the sort insertion path to use
-> rb_insert_color_cached().
+> Add O_CLOEXEC to all open() calls in both files (12 call sites).
 >
-> Use rb_first(&root->rb_root) to match how the tree was populated.
->
-> Fixes: cb4c13a5137766c3 ("perf sched: Use cached rbtrees")
+> Fixes: cdd059d731eeb466 ("perf tools: Move dso_* related functions into d=
+so object")
+> Fixes: e5a1845fc0aeca85 ("perf symbols: Split out util/symbol-elf.c")
 > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jiri Olsa <jolsa@kernel.org>
 > Cc: Namhyung Kim <namhyung@kernel.org>
 > Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+and Sashiko is asking for more of this goodness.
 
 Thanks,
 Ian
 
 > ---
->  tools/perf/builtin-sched.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  tools/perf/util/dso.c        |  4 ++--
+>  tools/perf/util/symbol-elf.c | 20 ++++++++++----------
+>  2 files changed, 12 insertions(+), 12 deletions(-)
 >
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index ded511d8518803a0..85f11d388392d316 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -3130,7 +3130,8 @@ static size_t timehist_print_idlehist_callchain(str=
-uct rb_root_cached *root)
->         size_t ret =3D 0;
->         FILE *fp =3D stdout;
->         struct callchain_node *chain;
-> -       struct rb_node *rb_node =3D rb_first_cached(root);
-> +       /* sort() uses rb_insert_color() on rb_root, not rb_root_cached *=
-/
-> +       struct rb_node *rb_node =3D rb_first(&root->rb_root);
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 7dced896c64eafd7..fb2e78fe2aa8eb94 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -344,7 +344,7 @@ int filename__decompress(const char *name, char *path=
+name,
+>          * descriptor to the uncompressed file.
+>          */
+>         if (!compressions[comp].is_compressed(name))
+> -               return open(name, O_RDONLY);
+> +               return open(name, O_RDONLY | O_CLOEXEC);
 >
->         printf("  %16s  %8s  %s\n", "Idle time (msec)", "Count", "Callcha=
-ins");
->         printf("  %.16s  %.8s  %.50s\n", graph_dotted_line, graph_dotted_=
-line,
+>         fd =3D mkstemp(tmpbuf);
+>         if (fd < 0) {
+> @@ -1911,7 +1911,7 @@ static const u8 *__dso__read_symbol(struct dso *dso=
+, const char *symfs_filename,
+>         int saved_errno;
+>
+>         nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+> -       fd =3D open(symfs_filename, O_RDONLY);
+> +       fd =3D open(symfs_filename, O_RDONLY | O_CLOEXEC);
+>         saved_errno =3D errno;
+>         nsinfo__mountns_exit(&nsc);
+>         if (fd < 0) {
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 186e6d92ac3d7742..c2bdfd0003df2abe 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -217,7 +217,7 @@ bool filename__has_section(const char *filename, cons=
+t char *sec)
+>         GElf_Shdr shdr;
+>         bool found =3D false;
+>
+> -       fd =3D open(filename, O_RDONLY);
+> +       fd =3D open(filename, O_RDONLY | O_CLOEXEC);
+>         if (fd < 0)
+>                 return false;
+>
+> @@ -872,7 +872,7 @@ static int read_build_id(const char *filename, struct=
+ build_id *bid)
+>         if (size < BUILD_ID_SIZE)
+>                 goto out;
+>
+> -       fd =3D open(filename, O_RDONLY);
+> +       fd =3D open(filename, O_RDONLY | O_CLOEXEC);
+>         if (fd < 0)
+>                 goto out;
+>
+> @@ -935,7 +935,7 @@ int sysfs__read_build_id(const char *filename, struct=
+ build_id *bid)
+>         size_t size =3D sizeof(bid->data);
+>         int fd, err =3D -1;
+>
+> -       fd =3D open(filename, O_RDONLY);
+> +       fd =3D open(filename, O_RDONLY | O_CLOEXEC);
+>         if (fd < 0)
+>                 goto out;
+>
+> @@ -995,7 +995,7 @@ int filename__read_debuglink(const char *filename, ch=
+ar *debuglink,
+>         if (err >=3D 0)
+>                 goto out;
+>
+> -       fd =3D open(filename, O_RDONLY);
+> +       fd =3D open(filename, O_RDONLY | O_CLOEXEC);
+>         if (fd < 0)
+>                 goto out;
+>
+> @@ -1153,7 +1153,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso=
+, const char *name,
+>
+>                 type =3D dso__symtab_type(dso);
+>         } else {
+> -               fd =3D open(name, O_RDONLY);
+> +               fd =3D open(name, O_RDONLY | O_CLOEXEC);
+>                 if (fd < 0) {
+>                         *dso__load_errno(dso) =3D errno;
+>                         return -1;
+> @@ -1952,7 +1952,7 @@ static int kcore__open(struct kcore *kcore, const c=
+har *filename)
+>  {
+>         GElf_Ehdr *ehdr;
+>
+> -       kcore->fd =3D open(filename, O_RDONLY);
+> +       kcore->fd =3D open(filename, O_RDONLY | O_CLOEXEC);
+>         if (kcore->fd =3D=3D -1)
+>                 return -1;
+>
+> @@ -1985,7 +1985,7 @@ static int kcore__init(struct kcore *kcore, char *f=
+ilename, int elfclass,
+>         if (temp)
+>                 kcore->fd =3D mkstemp(filename);
+>         else
+> -               kcore->fd =3D open(filename, O_WRONLY | O_CREAT | O_EXCL,=
+ 0400);
+> +               kcore->fd =3D open(filename, O_WRONLY | O_CREAT | O_EXCL =
+| O_CLOEXEC, 0400);
+>         if (kcore->fd =3D=3D -1)
+>                 return -1;
+>
+> @@ -2461,11 +2461,11 @@ static int kcore_copy__compare_files(const char *=
+from_filename,
+>  {
+>         int from, to, err =3D -1;
+>
+> -       from =3D open(from_filename, O_RDONLY);
+> +       from =3D open(from_filename, O_RDONLY | O_CLOEXEC);
+>         if (from < 0)
+>                 return -1;
+>
+> -       to =3D open(to_filename, O_RDONLY);
+> +       to =3D open(to_filename, O_RDONLY | O_CLOEXEC);
+>         if (to < 0)
+>                 goto out_close_from;
+>
+> @@ -2883,7 +2883,7 @@ int get_sdt_note_list(struct list_head *head, const=
+ char *target)
+>         Elf *elf;
+>         int fd, ret;
+>
+> -       fd =3D open(target, O_RDONLY);
+> +       fd =3D open(target, O_RDONLY | O_CLOEXEC);
+>         if (fd < 0)
+>                 return -EBADF;
+>
 > --
 > 2.54.0
 >
