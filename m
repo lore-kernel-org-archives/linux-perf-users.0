@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEC21A0B15
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1479213D53C
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jun 2026 01:45:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780883140; cv=none; b=fInMIsBqFyPybJUUi0LHO6fLXZTJxVW1CaUJADa6wz2Fhm1ovdQAM9EWAgPN67Njzb8LBakl7DRLWYWiTQL57uxwH61nCACkG90ig8ARY80DtIT6m5dSN43HHL1k1vqQaubAqlTixKY1AjwNpC7YhpXfhdGJRqsqEz36cyb0HQg=
+	t=1780883161; cv=none; b=kMuc5IvNOee1glsHlYUnKPP24acMt9QxdhFsWb5zwwM79YCgpOkaSe0aBPxkSZ6KPwhOcTqyG1lfASihAMdFPYStWhMtjCoxKetUVAThsqbrTkuQk3bwOU0M+hJwaJpYINaLdsSI11tYT5WVq7FOtxztFL6s3d4WW0/oXKeqESc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780883140; c=relaxed/simple;
-	bh=Ir0hZWo/mRN6RSSeLv1jiUkAwO/T5FTJT2jBijHoXt8=;
+	s=arc-20240116; t=1780883161; c=relaxed/simple;
+	bh=3K2Rl55AWO6vDSoZNYPKzfHXbI7dq7Tm9OPeloi0tkw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LQkfCKvoeOLFYdQK51RlZ9rmdgMOOtjTc+RqBkDxaOJA4DAnH0TINVXAQxo8wZSEEGTn6zikzZhnT56Mffn795O5QPU4ccUtJi6bLB2O9ut6MJnOzscvrIwwgdsaiUVXOySZhjGJAOMHs+HsAgUPhTd+S471Rrhnn1wKZ9qjsVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCzlJD24; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=n7pLUNBee31HMAZK2f05BGyfBJH3D+3IdoYd929W+ZGpwTkjuZJiTh4UDjGR0Q5FkNqAvu6igDxZs5qyoj+2HajGztmDJwa5IGjLits5LbRUj9KwK8mClbvSXhhHeWxvHoLa027efCrhqRhysvxYn3eEDwRsmQ97wiowxJu2f1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxSE/U7A; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCzlJD24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F087B1F00893;
-	Mon,  8 Jun 2026 01:45:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxSE/U7A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ECA91F00893;
+	Mon,  8 Jun 2026 01:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780883139;
-	bh=RJAIDTXk7uDyVyH+Y/NONi3FeZ517kYNnNQkzQH+Yso=;
+	s=k20260515; t=1780883159;
+	bh=X8XNNyNWlC8PyFEK1YpGY4aepQyRRR+3E+zilShT4Ec=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jCzlJD240i4GmDGqJhnk1sxZPofl7wCNqd+sDxl0isTC4rzJA2WdMDuPFLBBOvYAP
-	 6rpWVe32m5cDk/CbSwr7VhuK15BFwbpztnxN9cG//PP5EMWPL4VKJKWnVbKpAy1oM9
-	 q07agFYIGBwy4GdKD8JQ8cnBi3swUI7DnebVA7QHeY64d/bxR3hQMz7jjeRcuVrFlT
-	 4zJ09tuKpWEM1k/SAajwKlG6+zQpIsuiGqnqb93OAhMIUIrIZFTIryeaUywiTIau96
-	 ECYEzjaMvojrWt5Guk2gKS0/U+JmHVI064a3XmfSYE007B12uVnifjLFrXv7DwTiqJ
-	 H8EpyjrVgC4Bw==
+	b=VxSE/U7AVkZpkAz+JlTGJYHGqDrBfsA4DvnLDb4RS3u0vNXBh4QYKN15FlhobRuzO
+	 BfIz/gi088AytBd1reLsz7YFEWPQxllqXLJpP+fKdZHQTBEHXFn7AsSp8HTYVgCikx
+	 ZAFcxXixRQAzqCCe2z/U1EmWyZ51xfy+bm/PB/y+ereL0hKpllQKwNlk1UytB4v7e1
+	 BT9f3z64VTXzCPieAvbcFBm5E55YBScMwvAcEDNOqFZaiCqhnAOtl6q1Am7Kbqon1D
+	 14eRQt+Ml7nHCQVDW0hRZ92rtTXHDUuVECZF6qR+1gFrpz8I/xpVZ3QDpSWslIk/n7
+	 PV20cGLlo0QLQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/11] perf tools: Fix get_max_num() size_t underflow on
- empty sysfs file
+Subject: Re: [PATCH 05/11] perf tools: NULL bitmap pointers after
+ bitmap_free()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260608013057.1942953-2-acme@kernel.org>
-References: <20260608013057.1942953-2-acme@kernel.org>
+In-Reply-To: <20260608013057.1942953-6-acme@kernel.org>
+References: <20260608013057.1942953-6-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 01:45:38 +0000
-Message-Id: <20260608014538.F087B1F00893@smtp.kernel.org>
+Date: Mon, 08 Jun 2026 01:45:59 +0000
+Message-Id: <20260608014559.9ECA91F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,64 +46,51 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Heap out-of-bounds write (poison null byte) due to size_t underflo=
-w when reading empty files
+- [Low] Setting `nodesp[i].set =3D NULL` in `memory_node__delete_nodes` is =
+a dead store and fails to prevent double-frees because the parent `nodesp` =
+array is immediately freed.
 --
 
-commit 1a2f44329fa687f2b52540b18c56a66a0d4e9628
+commit 96984a1b2dbcef0f5989e5cb40505523a7726dd3
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf tools: Fix get_max_num() size_t underflow on empty sysfs file
+perf tools: NULL bitmap pointers after bitmap_free()
 
-This commit fixes a size_t underflow in get_max_num() by adding an early
-return when a sysfs file is empty. Previously, reading an empty file would
-result in num =3D=3D 0, causing a backward scan to underflow and read
-out-of-bounds memory.
+This commit modifies three call sites to set bitmap pointers to NULL after
+they are freed using bitmap_free(). The purpose is to avoid double-free
+scenarios if the structure is later reused or cleaned up multiple times.
 
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -448,6 +448,12 @@ static int get_max_num(char *path, int *max)
+[ ... ]
+
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index d7f41db7322cb..8d2ab440a1c8e 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1481,8 +1481,10 @@ static int memory_node__read(struct memory_node *n=
+, unsigned long idx)
 > =20
->  	buf[num] =3D '\0';
-> =20
-> +	/* empty file =E2=80=94 nothing to parse */
-> +	if (num =3D=3D 0) {
-> +		err =3D -1;
-> +		goto out;
+>  static void memory_node__delete_nodes(struct memory_node *nodesp, u64 cn=
+t)
+>  {
+> -	for (u64 i =3D 0; i < cnt; i++)
+> +	for (u64 i =3D 0; i < cnt; i++) {
+>  		bitmap_free(nodesp[i].set);
+> +		nodesp[i].set =3D NULL;
+
+[Severity: Low]
+Since the entire nodesp array is freed immediately after this loop, does
+nullifying this pointer provide any protection against double-frees?
+
+If a cleanup function were called twice on this structure, wouldn't it resu=
+lt
+in a use-after-free on the nodesp array itself before the set pointer could
+even be evaluated?
+
 > +	}
-> +
-
-[Severity: High]
-This isn't a bug introduced by this patch, but while you are fixing
-empty file reads here, does this same size_t underflow pattern occur in
-other places that read strings?
-
-For instance, in tools/perf/util/pmu.c:pmu_id():
-
-	if (filename__read_str(path, &str, &len) < 0)
-		return NULL;
-
-	str[len - 1] =3D 0; /* remove line feed */
-
-If len is 0 because the identifier file is completely empty, len - 1
-underflows to SIZE_MAX. Since the string is heap-allocated and returned
-with a length of 0, writing to index SIZE_MAX effectively writes one byte
-before the string, which corrupts the malloc chunk size metadata.
-
-A similar pattern seems to exist in
-tools/perf/util/thread.c:thread__set_comm_from_proc():
-
-	if (procfs__read_str(path, &comm, &sz) =3D=3D 0) {
-		comm[sz - 1] =3D '\0';
-		err =3D thread__set_comm(thread, comm, 0);
-	}
-
-Could these empty file underflows trigger similar heap corruption if the
-identifier or comm files happen to be empty?
+> =20
+>  	free(nodesp);
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608013057.1942=
-953-1-acme@kernel.org?part=3D1
+953-1-acme@kernel.org?part=3D5
