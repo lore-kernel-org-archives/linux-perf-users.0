@@ -1,71 +1,130 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F35784ADDAC;
-	Tue,  9 Jun 2026 17:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB811A08A3
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 17:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781024683; cv=none; b=NgqIdWnDN3ohvoG1WCb9pRKcCotveC+mh1nWudtdWKw/dcLsS3/LGcH7PxnteM1/HpccoRZzoOZGSP4ilTxboHlSCACyqs4XaykIdXv9sKPYgNnpnxKARK3YrfjnaPBBFXwMS5bf4+vAOw2xyYZGqyexab16er0HSE9xxgi37N0=
+	t=1781024898; cv=none; b=s6UN3HKuhX26gHyR8zubCb54K+6SdXJb0obaZnFOkUEzwHOjfQgBXBr9yR0B1kLWzvTkSjV90SjZA2f7Sp434ZFRkPJA8mqPXZQ4y4mM6524LDBBzsUEgih5S2vDpWjGgcneT8+AkGZF11XIG7/p9hkPk5b1GOpuJrrJ/+RB5QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781024683; c=relaxed/simple;
-	bh=jnKL74vtEEl5TEsaGZturjU6Ty1Crwee9CNWBBSOBzw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AEf5HKkI0nwmK+Sn10Xq4Qq9ETekKdvI4CYxFgkZQ/rldL7UwHtBWREOVLIbVZGlBP2L+bTmBC1WE7DU17t2FVeKuMSQQoiQRuZ6GeF25iLOI7cuFRIlUMrJzVSCGw1rSYCdGqruE2EuPQnRAdjEXAgS7CZvoUqi6cZ7SVVUPlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=LOqyjgl3; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1781024898; c=relaxed/simple;
+	bh=p5RuJhuGPlcdo6SwobIIbxx56B558av2IjLSUbN+6Zc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=XiOhwBhh0izm6LO3+5/nOvKnR0hTLKpSVk7IwUsY8dHZgRgFrsiKNBHQJ8s5s6jX65Tnz/f2dAceanzR+F+kzma7IR0XspoauACaiZdj9dZog5Y0FgYiEMavUcK6C+GFCX/4lhoe4snGo2+ag/ne/Fld64rgVSYliF/CbRFFxvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/ll3gjC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="LOqyjgl3"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B2C83D48;
-	Tue,  9 Jun 2026 10:04:36 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CCFB3FD88;
-	Tue,  9 Jun 2026 10:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781024681; bh=jnKL74vtEEl5TEsaGZturjU6Ty1Crwee9CNWBBSOBzw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LOqyjgl3lbndJMFYmoAmPoNqTWBrYGQf/WeheT5JhGkhKD36cDcv4be9UUnCffRXt
-	 Vl+9xg+hPGiBCs6DWPSpi3vmNYKJElixy+MLkobaZEiTG9eF/YWNAWDl+tH3v37fLy
-	 q/1PLMGinPKw/fCMwcwcBxRNkMYaDLG7x4gHG8QA=
-Date: Tue, 9 Jun 2026 18:04:38 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Paschalis Mpeis <Paschalis.Mpeis@arm.com>,
-	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 06/19] perf test cs-etm: Replace unroll loop thread
- with deterministic decode test
-Message-ID: <20260609170438.GP101133@e132581.arm.com>
-References: <20260609-james-cs-context-tracking-fix-v5-0-d53a7d096a19@linaro.org>
- <20260609-james-cs-context-tracking-fix-v5-6-d53a7d096a19@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/ll3gjC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C503E1F00893;
+	Tue,  9 Jun 2026 17:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781024896;
+	bh=cuGbe6bSeG9xcVJmhZNmHtISjFxZeYcCofq/AX8gbqA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=W/ll3gjCGVJIOIYkBhsCA5t17JnaSMYYlgWvEaK5e1rCYNUGWTDfT5sNVsZrlDlsL
+	 yHvTvNn+J2zt3d2x17C53DLZa18Ei3g0sTd1rD0solV0HyBLpTNmgnSyz/A00/JcoD
+	 0idTUlksNLmZtdLVlb9mwCVrtkdJlexwFs7/rZIEw4CCP+usgMzw13INJ9P6Zbk7BF
+	 /PDnQEiBPL8b4cgeOQurcnK9VHdAY/lehxnp6xv6+7oEb+na8hZFnFJdLXWn5YphC5
+	 vSGIylm1dZLYh9q6HxS/rUdwLqoamPaGfg1InZ2c5Vyagi6gq52Luqsa/+v0sMEubY
+	 7yXzEyWtWFdGg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/3] perf build: Add libnvme feature detection
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260609165726.786694-2-irogers@google.com>
+References: <20260609165726.786694-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 17:08:16 +0000
+Message-Id: <20260609170816.C503E1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260609-james-cs-context-tracking-fix-v5-6-d53a7d096a19@linaro.org>
 
-On Tue, Jun 09, 2026 at 03:40:11PM +0100, James Clark wrote:
-> Testing a long sequence without branches seems like it would be better
-> as a decoder unit test, and this test doesn't test decoding either, so
-> it's not clear what bugs this is trying to catch.
-> 
-> The new deterministic workload has somewhat long sequences when built
-> unoptimized, and we can always increase them later if we want to. But
-> now we test that decoding always gives the same result for the same
-> sequence of code which we've never had before.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] The libnvme feature test hardcodes the `-lnvme` compiler flag, allo=
+wing the test to pass even if `pkg-config` is missing or fails to locate `l=
+ibnvme.pc` (provided the library is in a standard system path). However, `t=
+ools/perf/Makefile.config` strictly relies on the output of `pkg-config --l=
+ibs-only-l libnvme` to populate `EXTLIBS`. This mismatch causes the build s=
+ystem to enable NVMe PMU support based on the successful feature test, but =
+then fail during the final linking stage of the `perf` executable due to mi=
+ssing `-lnvme` flags, resulting in undefined references to libnvme function=
+s.
+--
 
-Tested-by: Leo Yan <leo.yan@arm.com>
+commit a99ed0c67b6c2d89a762f7be2b57899a90210460
+Author: Ian Rogers <irogers@google.com>
+
+perf build: Add libnvme feature detection
+
+Introduce a feature check for libnvme so that we can conditionally compile
+the NVMe PMU driver. This checks for the availability of the libnvme headers
+and library using pkg-config.
+
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 62909a9c799d3..fd00e0be60690 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+
+[ ... ]
+
+> @@ -147,6 +147,9 @@ $(OUTPUT)test-libcap.bin:
+>  $(OUTPUT)test-libelf.bin:
+>  	$(BUILD) -lelf
+> =20
+> +$(OUTPUT)test-libnvme.bin:
+> +	$(BUILD) -lnvme
+
+[Severity: Low]
+Does hardcoding the -lnvme flag here bypass the pkg-config requirement?
+
+If libnvme is installed in standard paths but its pkg-config file is missing
+or pkg-config is absent, this feature test will still pass.
+
+> +
+>  $(OUTPUT)test-eventfd.bin:
+>  	$(BUILD)
+
+[ ... ]
+
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 6e7b15fab2ecc..79c4ad10bc181 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+
+[ ... ]
+
+> @@ -1060,6 +1060,18 @@ ifndef NO_CAPSTONE
+>    endif
+>  endif
+> =20
+> +ifndef NO_LIBNVME
+> +  $(call feature_check,libnvme)
+> +  ifeq ($(feature-libnvme), 1)
+> +    CFLAGS +=3D -DHAVE_LIBNVME_SUPPORT $(shell $(PKG_CONFIG) --cflags li=
+bnvme)
+> +    LDFLAGS +=3D $(shell $(PKG_CONFIG) --libs-only-L libnvme)
+> +    EXTLIBS +=3D $(shell $(PKG_CONFIG) --libs-only-l libnvme)
+
+[Severity: Low]
+Since EXTLIBS relies strictly on pkg-config here, will the build fail during
+final linking if the feature test succeeded using the hardcoded -lnvme flag?
+
+If pkg-config doesn't return the required flags, the perf executable would
+encounter undefined references instead of gracefully falling back to a build
+without NVMe PMU support.
+
+> +    $(call detected,CONFIG_LIBNVME)
+> +  else
+> +    msg :=3D $(warning No libnvme found, disables NVMe PMU support, plea=
+se install libnvme-dev/libnvme-devel);
+> +  endif
+> +endif
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609165726.7866=
+94-1-irogers@google.com?part=3D1
