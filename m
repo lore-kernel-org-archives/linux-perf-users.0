@@ -1,66 +1,66 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3643AB27B
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5123EEAD6
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781015496; cv=none; b=ctWxb1UjFj+dlk1Wlw3AsdCM5Yxah5hf2NyvXE9wHh2Xsgw0pvZ9gN30dK0GFyXE0CT0ZU4oXugI5dKA88R4f1QpAZ3R65ULdhdncwCsz4R27S0RGHtD85lyRfBr1Ts4cmiLUoTqQaSvk6pwGm+D+jTNipa0ntRowQ92ohMS77k=
+	t=1781015497; cv=none; b=nRHKPJUbVn9TiIrmtN1HODc/HPCIjnKe2mCSWaGDZCuM9h0fbapvYlMWwjX7CCUrCnWBWrzCcW2INufFT4f4+H3NHxE+txT1Pabqa5knXY2E4kT/iWVJDcmWyqD/G6/kDPyEuD0zXkS6N+OelwxE2NwLKLWduyyD45/LQLug34s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781015496; c=relaxed/simple;
-	bh=zBP33YW94/R1hHZYuHZFRO5gh0N+cAj5cBmAyLWmp6U=;
+	s=arc-20240116; t=1781015497; c=relaxed/simple;
+	bh=mQidedvPEcBiOBRv8PmX5mxZNEPoVdc1Pz6VHmtCWcY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jjejDnJiTHCbe5euF4CCr/zFqNcx1x8LtWOW2wZGslGmGxYTda+g9xEBwMQpc3qUbpunPvoEgHUcVi7/Sy2DmjfhYednBTMrNhmc3BMlaXZ6kRAEdIbAcEJIujFEIw4yqKNYijsYoi071ZMn/CCVbV2QHdQlBa98GJEWdr77h7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lrKr2O7J; arc=none smtp.client-ip=209.85.221.41
+	 In-Reply-To:To:Cc; b=EOiIQ+htM8BMzDiWmY72GS5BHc2fNYMqsnzL/0VUZz6gYuhl7Loax45kZcVMh6ggZmW/LCmdNKwBNXTUFQxwaCXPPPxPEkq5Ik3PW+Ovyft/lov+0IxlVcvia/X480cqUzI4jIdwF816z8H0ZdCAHr2+oeM4kMJQjsJ1NJGSg+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vLY+HYmJ; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lrKr2O7J"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-45ef779c1c2so3816694f8f.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 07:31:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vLY+HYmJ"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-45fe59255beso2924209f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 07:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781015493; x=1781620293; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1781015494; x=1781620294; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2h78YxBKDueLh+9yt6/S9EMI77LVr/N7bEn44d3CK8g=;
-        b=lrKr2O7Jd0SgNdAnYOGSNDXrvB3MNlxwHmj+Vow0FZiLRmS9Q460/p1RsBDOUlG8/k
-         3G5ABPbuxVnakgv+dJeM5J5rd9GJSISQ9MqH4fwsKOCtlyP8zJl5lRYin0J/DOiQA6vi
-         vlKh5RGZwPFjC54PoJSp/D/aA3Kvs6MAx+YBGNxJHwq/7HYwTKcBSCc4riHGsnnQzSF4
-         LaTbsOTDuJxoubBcFpialSQ7+zjxC984XWcOmvoF3CKgnjubPTMPOy5x+JkP0qYQIbjM
-         Bq5YuXlzEjPcR68+/3unUE9AAXH/YFFLwldOtM7yGlzt07p/rm0SGPSFqPYsY0JNtzwE
-         PivA==
+        bh=0r3qOldyDbGy8/U7IZ1oQnEHZB4wfLaYDHPrqBV1zp0=;
+        b=vLY+HYmJlcGnm87H0fuCBJ3ha8WgkZ8pBkz9AyXsNyZr0qDUVtEmEyFhvG57VcKDAD
+         VUt8GaZ/o1X8RAD63SW3DUIjBoq3l8+UxbJgw/q+unQPv401OLbs2LnOu98FlYlDCMyP
+         VXLwgRAfTnxEev9dOyKSLGeZcfq3rX2EWbPAemtbMzMcQ1Yp/SArrreTlOKlDOjP2a9R
+         gADW7w+nHCFQ/egUlPMMtpYTPHFWXPquAeC87ljaQtEuEQxtpwjrG/phvn25ci9kkehV
+         U0VRUgctF3dqWAJls3Jz1pTVg6t5X07DZS5OcyVtH7XKh+f1GitroTH5fP2NX2ajT2Tt
+         lhGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781015493; x=1781620293;
+        d=1e100.net; s=20251104; t=1781015494; x=1781620294;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=2h78YxBKDueLh+9yt6/S9EMI77LVr/N7bEn44d3CK8g=;
-        b=nEhN2YvTxOKqFnoQg9khpnfM5H1qxCbraPIoDBZB/jtf9L91pStGXO/ave4i8jJ2EI
-         hkRehHVnySUmDjBm+9452uJx6RwD9WqLt1M2mGO+1TK0pMBsXgO67QOvVrsaWKUgvyE/
-         tbcegN7wNiskKC9YqGmF51TD0k7CjfQGc42+wlYgrx9eRsygwrIiEOtJOd/MgeWQNiXE
-         Js2VHy/Twgxjsco0wXOL2bkp5in5r+dwqKDk3wQ58seqsQeS51fsfuHxh1SRQW/Cyd4t
-         A8UjNlpbzjMA/d+qW+E/2s3QYR5cKytv/z2/y7EI0IYY8FdSIcoEYkEgzNxDrTI12rnH
-         PjGw==
-X-Forwarded-Encrypted: i=1; AFNElJ87lQ1hGAZRfwqMUqRGXGCoLVAoIjD1kh3dfBhpN7MxeR0wMDvx81H07oygW6e7xLB9UOdlCyHByfNUCJR5TR8R@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSgPyVRg0bZW6gm/hMHGHjASY3BtH4u3VXD+uJ5RH9dhBFJiw+
-	TklXE6QuIisOsxaylUEZDQOJhq2w7NNfMmaPwFd1d/fF4lnzU1LqJ81NhTf/Xz+KU/U=
-X-Gm-Gg: Acq92OED8eFdiDRcEA8T6+DSS1gNRhhCmwH4uZRfGA1kU57mpy1bhEt6yES44AemUlQ
-	wYqvN/zYH8FLN7xhI0eEXC1k1BaPLd62FyOvAxeyV7cvv/Hb/0MAjcUtOBu2iDudRwFfzmfzEWc
-	vhixEcoVIf4xHd79apJREUJY4Tj5AY27CNY8KcQC4wW9vt9awYTt8AF5tHRwdBBoZLZ1c8/Zwys
-	W8PCKXqsda2JrcdN1qwj7U5rN27KNT4kxOrh+PUpKJqxo4ImUbI4PhxV+awL8DGXE9l/3KmsBTp
-	VCRlz8r8iqANDU0QjMEv+q/b1CdO0B8vGZi/+JSaXoOSuYDJgQ+sZE/F+yImc1pi1mKBIf8rx2w
-	YC8siFoblMpwb+qi2dEmoqJNIZvJi/Pa5LU4wnrbFfLkPLDS5NsD4z+BHANczp88F4e42bvozZf
-	NsyzxJmWOt35xLdd6tiwvHAmBLMBtE9NjbgS7X0FdgrDd4vy3h65/uWg==
-X-Received: by 2002:a05:6000:46d6:b0:45e:ea46:ce13 with SMTP id ffacd0b85a97d-460304f9d74mr21292365f8f.10.1781015493072;
-        Tue, 09 Jun 2026 07:31:33 -0700 (PDT)
+        bh=0r3qOldyDbGy8/U7IZ1oQnEHZB4wfLaYDHPrqBV1zp0=;
+        b=ppEgSs6vrSZifd9UNaYz/bk5jzRGKBoW6avTpbPR3lGKpqrvU6cL1RZFPEOfcRkp2G
+         Nm6xyGK85vvLM17QfREzz+ee6k6VBfAyGV1mmBP83ZELorfYrJ+JUitODoI2GX0QAMK2
+         6iAYoUKQ3loaOvd448RKx3PO7q6igziYilAXvlbl8qAzRryR/nXUyVhvJZomgyhVYlRd
+         xN0jGBH6gFJC+nJZ09vQ981oJS1kIJL/mqLLS6uxxvG8rhMIEK/NJrkOdS8a69hCMjTd
+         hQMnJot/R5AHHv0WM8+92eBCA5dIyrOHQJbPy2UgWXd28RQHwJEjj01c6SHNe/AVfqDT
+         C4tA==
+X-Forwarded-Encrypted: i=1; AFNElJ9cay5ZiT6X65ON4rEZC6hn6nVUvyix72R1Bnc+UMF0Xvdh0jvvq/b1kdepvnirmXz+HwjpsnebmML3vNnVUL2y@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqwC7q/TMZYtNktuTqU1w4PBwCe7k/3ZmbINmGZ9WUUdUMx6ob
+	JNYbMzN9HPy1hmS3DKYVFrDdZglfkz6sfI/86K4uyJXqPhbi26uckPeky1TAbEd9Jhk=
+X-Gm-Gg: Acq92OEjsnYIRFPOUx/38gRzmIfpmips2B2dnVrjSgOKSqhb4T67qGvsVksNepzZ8dF
+	+txtu9b/rRIeYhqSPFUyHV7+lPL0jAewdW5yu0V0ZDYSAui3Ww7sTA5igZT3N5NOFwGslPq2tPf
+	bPR160AD9SoOl4RZMfj713puujlGzP68Ouit9iv8WI5P4ofY45+Y665sXSSOoeGXCHyb0MPNiHg
+	ulEBk0WOq/texjm/kYnmGesRuIT3UVVlb8R/3Cd9QUL+seuD4uOIMhK6Mq/FhnKU1rTPHbvfTv7
+	6uz0eQH6lF8P853NRiH/I/lWQ6a1NmrS+Zr2BtyLSMwQYB4gwtSdNuEtG9ijCO4B7jSpvKeGhgL
+	R0eH2qnft9aOqjyIcZv6PHhIBeyMmKOjg62aqY3b/OQBtZ59ibY8PDJpMDptE79dOP+IuylRDOM
+	nU6epHmB+ud++BoZwlbJmphnIiCNVkxZQY8COGVhndG8s=
+X-Received: by 2002:a05:6000:1284:b0:460:2d45:fe8c with SMTP id ffacd0b85a97d-4603063e7c4mr23189554f8f.38.1781015494464;
+        Tue, 09 Jun 2026 07:31:34 -0700 (PDT)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3444fesm62738388f8f.20.2026.06.09.07.31.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3444fesm62738388f8f.20.2026.06.09.07.31.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 07:31:32 -0700 (PDT)
+        Tue, 09 Jun 2026 07:31:33 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Tue, 09 Jun 2026 15:31:04 +0100
-Subject: [PATCH v4 11/19] perf test cs-etm: Remove duplicate branch tests
+Date: Tue, 09 Jun 2026 15:31:05 +0100
+Subject: [PATCH v4 12/19] perf test cs-etm: Skip if not root
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-james-cs-context-tracking-fix-v4-11-44f9fb9e5c42@linaro.org>
+Message-Id: <20260609-james-cs-context-tracking-fix-v4-12-44f9fb9e5c42@linaro.org>
 References: <20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org>
 In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -84,78 +84,56 @@ Cc: coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
  linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-We already test branch output in perf script mode, but then retest it in
-Perf report mode. This is more of a test of Perf itself than Coresight
-because Perf uses the same samples to generate both outputs. Also we're
-already testing instruction output in Perf report mode.
+Use the common idiom for skipping tests if not running as root, which is
+required for these tests.
 
-Remove this test for a speedup. On the systemwide test also remove the
-Perf report test because systemwide mode records a lot more data so
-running multiple tests on it has a big runtime impact.
-
-Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/tests/shell/test_arm_coresight.sh | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
+ tools/perf/tests/shell/test_arm_coresight.sh        | 6 ++++++
+ tools/perf/tests/shell/test_arm_coresight_disasm.sh | 6 +++---
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index bbf89e944e7b..39553702c1f3 100755
+index 39553702c1f3..8ed2c934c87d 100755
 --- a/tools/perf/tests/shell/test_arm_coresight.sh
 +++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -52,17 +52,6 @@ perf_script_branch_samples() {
- 		grep -E " +$1 +[0-9]+ .* +branches:(.*:)? +" > /dev/null 2>&1
- }
+@@ -20,6 +20,12 @@ skip_if_no_cs_etm_event() {
  
--perf_report_branch_samples() {
--	echo "Looking at perf.data file for reporting branch samples:"
--
--	# Below is an example of the branch samples reporting:
--	#   73.04%    73.04%  touch    libc-2.27.so      [.] _dl_addr
--	#    7.71%     7.71%  touch    libc-2.27.so      [.] getenv
--	#    2.59%     2.59%  touch    ld-2.27.so        [.] strcmp
--	perf report --stdio -i ${perfdata} 2>&1 | \
--		grep -E " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 " > /dev/null 2>&1
--}
--
- perf_report_instruction_samples() {
- 	echo "Looking at perf.data file for instruction samples:"
+ skip_if_no_cs_etm_event || exit 2
  
-@@ -123,7 +112,6 @@ arm_cs_iterate_devices() {
++if [ "$(id -u)" != 0 ]; then
++	# Requires root for -C and system wide tests
++	echo "[Skip] No root permission"
++	exit 2
++fi
++
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ file=$(mktemp /tmp/temporary_file.XXXXX)
  
- 			record_touch_file $device_name $2 &&
- 			perf_script_branch_samples touch &&
--			perf_report_branch_samples touch &&
- 			perf_report_instruction_samples touch
+diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+index 0dfb4fadf531..339ae4831868 100755
+--- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
++++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+@@ -42,7 +42,7 @@ sep="\s\|\s"
+ branch_search="\sbl${sep}b${sep}b.ne${sep}b.eq${sep}cbz\s"
  
- 			err=$?
-@@ -154,9 +142,7 @@ arm_cs_etm_system_wide_test() {
+ ## Test kernel ##
+-if [ -e /proc/kcore ]; then
++if [ "$(id -u)" == 0 ] && [ -e /proc/kcore ]; then
+ 	echo "Testing kernel disassembly"
+ 	perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file > /dev/null 2>&1
+ 	perf script -i ${perfdata} -s python:${script_path} -- \
+@@ -50,8 +50,8 @@ if [ -e /proc/kcore ]; then
+ 	grep -q -e ${branch_search} ${file}
+ 	echo "Found kernel branches"
+ else
+-	# kcore is required for correct kernel decode due to runtime code patching
+-	echo "No kcore, skipping kernel test"
++	# Root and kcore are required for correct kernel decode due to runtime code patching
++	echo "No root or kcore, skipping kernel test"
+ fi
  
- 	# System-wide mode should include perf samples so test for that
- 	# instead of ls
--	perf_script_branch_samples perf &&
--	perf_report_branch_samples perf &&
--	perf_report_instruction_samples perf
-+	perf_script_branch_samples perf
- 
- 	err=$?
- 	arm_cs_report "CoreSight system wide testing" $err
-@@ -179,7 +165,6 @@ arm_cs_etm_snapshot_test() {
- 	wait $PERFPID
- 
- 	perf_script_branch_samples dd &&
--	perf_report_branch_samples dd &&
- 	perf_report_instruction_samples dd
- 
- 	err=$?
-@@ -191,7 +176,6 @@ arm_cs_etm_basic_test() {
- 	perf record -o ${perfdata} "$@" -m,8M -- ls > /dev/null 2>&1
- 
- 	perf_script_branch_samples ls &&
--	perf_report_branch_samples ls &&
- 	perf_report_instruction_samples ls
- 
- 	err=$?
+ ## Test user ##
 
 -- 
 2.34.1
