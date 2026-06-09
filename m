@@ -1,138 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954C7359A65
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E02442B726;
+	Tue,  9 Jun 2026 14:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781016384; cv=none; b=dELhHed+LkbJW0TBlOp2EICnNdyP4hSddr177lO1NTPAlTjLF5gn17246+UHpoig6Z1/rRTGXaJ1NUorr78wF9jw03bLt/Np5zoE2HU6xCRZ7RDSuzsxA4e0O1vjhz1Pv/Z16Sb785jCgIJCCc5QY/LmE0k+MObG5RXdkKTVjuc=
+	t=1781016580; cv=none; b=qol1gKXtuSSizjYFSvy3jb5nQZp9ymVk6C7AnrM3HduE/r7mJs50Wdz860PqelUvsv07Sglpb6woRyKS2OTBLJ5WDgCUlxB8Wod2T6sd0SPRWGCo0lXOb5Oe9sZVrBX5Vnd026gWENABs71J8Yx07QCLnIJKxgg9pPFnqZk4i8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781016384; c=relaxed/simple;
-	bh=deBy3hMXqhBwwPR5pLwrpIAbN23736OASFvjBB0Z04c=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lddbQ9Oi/827AsywU4J3GB503LtjdaTjD86J04huAuMatfYZgRTd4DPR623cSYfCh5e4Re+WSiuqQFVqg5Q2eTheSJ7aCckk1q2TAB7lIeLsFyEB46TCg95FF6zdvcd2dBiFjbUSkZPNOy3jC/pb54Fn9/mNBxQmQQMsgmBXME4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEt857gj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781016580; c=relaxed/simple;
+	bh=2ewCUcI0flCYBaT4s4mcQNn2iJDvL75/thKr5TjX+AQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NHod9JYp8Nc49Ljir/FtnnzmtbKVH+BtntlEDZXqIwiF4Dr3yIBqFbwDDXRqXAKtvzdUBwL1VUC3DBSNsJqB1dvogwgxUvpMTKKoK9VmFQ7DbW3jZnH9SNRnYayHlqzQhCmKWOJMzbDKpCFQXy50c1ts5oCvhENvWb2QCWavE80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=omDM8BUS; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEt857gj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A3F1F00893;
-	Tue,  9 Jun 2026 14:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781016383;
-	bh=i4CTH0jZv+ji3AnEm5T4cVAOpVfu4XCTqq9oVJO6Zow=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aEt857gj2NU/kIvPZf1mXLySN32NBdB62By8SS3LoLa2bqjZwRNaYT5SEgF2Vwofm
-	 Y94XDtQEz74HtR/gopWPhs4Ycd+WpSEKAtBNvBxKLc1IJXNyC3ewdTLfQ6++ZZWJZa
-	 rBxH3SdDOxriA3OtbL8EXvub0nNBOQnv73Cnoeo4qeADEMRBWCP1GvBPG+1SvPX8KV
-	 YRpeZMMRvS3iKeGdP4zs+br5FALbuBYm1+RWm+MFm8Fu0SwsZDMCYDuV6ZMJ6ty/Hc
-	 U26OWF6ApMAMaWwz2b0V4jF3k/YwyrIJBW5WOATMC8lOEcHLQ5Dlf++ObskMhbXZdi
-	 nu638PGzQ4gWg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 01/19] perf cs-etm: Queue context packets for
- frontend
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-1-44f9fb9e5c42@linaro.org>
-References: <20260609-james-cs-context-tracking-fix-v4-1-44f9fb9e5c42@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 14:46:22 +0000
-Message-Id: <20260609144623.11A3F1F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="omDM8BUS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8azqwIzrz4burRhjLAjxRI5rm1Ojsv3uZVbseUdmtYk=; b=omDM8BUS44ngqbX1NeOHM3Ksya
+	J9m6tV6NhUVERSwxvBsNK+mE4vAoHlLnoP0RtMiQ1ECY9NrydfOVUY5kTtQ01lJ4PFqrRSfqzVkkz
+	cav2wgA881lKdnH94tQkzHKBvB/W83Q2xCUdcrN55+fyuy59YVZ90BJdXgepvgTP/A46XVj9HNjLT
+	S3vCbM4tjFDsP865OI83dUTIUvIp0899BEhUYANMLhGyTdYFP/WqpP5IL3MHq3OYtdlodxsD3oor+
+	kZ83T1Q5/S/rWXik9/a/kwdx7rfxxwAIDYVHwyj2U2hBz6Wbxvq9C5iedY3VJZaxnMZJVqKQXYg7s
+	0ojB4JPw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wWxlm-0000000Fslv-1Vj9;
+	Tue, 09 Jun 2026 14:49:34 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 552FA30025D; Tue, 09 Jun 2026 16:49:34 +0200 (CEST)
+Date: Tue, 9 Jun 2026 16:49:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>
+Subject: Re: [Patch v2 4/9] perf/x86/intel: Fallback to sw branch type
+ decoding if no hw decoding
+Message-ID: <20260609144934.GC49951@noisy.programming.kicks-ass.net>
+References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
+ <20260609050222.2458129-5-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260609050222.2458129-5-dapeng1.mi@linux.intel.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The dummy branch sample generated for CS_ETM_DISCONTINUITY packe=
-ts will now be misattributed to the host's user space (PERF_RECORD_MISC_USE=
-R) even when tracing a guest, because its `el` field is hardcoded to `ocsd_=
-EL_unknown`.
---
+On Tue, Jun 09, 2026 at 01:02:17PM +0800, Dapeng Mi wrote:
+> intel_pmu_lbr_filter() currently assumes Arch LBR provides hardware
+> branch-type decoding and skips software decoding on that path.
+> 
+> However, Arch LBR may not always expose branch-type information. In
+> that case, treating entries as hardware-decoded can misclassify sampled
+> branches (for example, defaulting to JCC), which breaks branch-type
+> filtering results.
+> 
+> Fix this by using software branch-type decoding when hardware
+> branch-type decoding is unavailable (that is, when x86_lbr_type is not
+> enabled). This keeps branch classification and filtering behavior
+> correct across Arch LBR configurations.
+> 
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/intel/lbr.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index 72f2adcda7c6..d4c0ed85e1fb 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
+> @@ -1232,6 +1232,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>  		 * OTHER_BRANCH branch type still rely on software decoding.
+>  		 */
+>  		if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
+> +		    static_branch_likely(&x86_lbr_type) &&
+>  		    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
+>  			to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
+>  			type = arch_lbr_br_type_map[type] | to_plm;
 
-commit fd2f91c5aeb50268fe7509b8158aa03f25f00def
-Author: James Clark <james.clark@linaro.org>
-
-perf cs-etm: Queue context packets for frontend
-
-This commit adds CS_ETM_CONTEXT packets to keep context changes ordered with
-the packet stream and avoid mismatches when synthesizing samples from
-cached packets. It separates frontend and backend memory access functions
-and relies on the packets' exception level and thread ID directly, rather
-than tracking them separately in the traceid_queue.
-
-Closes: https://lore.kernel.org/linux-perf-users/20260515021135.1729028-1-a=
-aupov@meta.com/
-
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf=
-/util/cs-etm-decoder/cs-etm-decoder.c
-> index dee3020ceaa91..26940f1f1b0bf 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> @@ -402,6 +402,8 @@ cs_etm_decoder__buffer_packet(struct cs_etm_queue *et=
-mq,
->  	packet_queue->packet_buffer[et].flags =3D 0;
->  	packet_queue->packet_buffer[et].exception_number =3D UINT32_MAX;
->  	packet_queue->packet_buffer[et].trace_chan_id =3D trace_chan_id;
-> +	packet_queue->packet_buffer[et].el =3D ocsd_EL_unknown;
-> +	packet_queue->packet_buffer[et].tid =3D -1;
-
-[ ... ]
-
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 40c6ddfa8c8d9..5e92359f51a7c 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-
-[ ... ]
-
-> @@ -1649,15 +1685,15 @@ static int cs_etm__synth_branch_sample(struct cs_=
-etm_queue *etmq,
-> =20
->  	event->sample.header.type =3D PERF_RECORD_SAMPLE;
->  	event->sample.header.misc =3D cs_etm__cpu_mode(etmq, ip,
-> -						     tidq->prev_packet_el);
-> +						     tidq->prev_packet->el);
-
-[Severity: Medium]
-Does this code misattribute dummy branch samples generated for
-CS_ETM_DISCONTINUITY packets?
-
-When cs_etm_decoder__buffer_packet() creates a new packet, it initializes
-packet_buffer[et].el to ocsd_EL_unknown. Because CS_ETM_DISCONTINUITY
-packets do not update this field, they retain ocsd_EL_unknown as their
-exception level.
-
-Previously, tidq->prev_packet_el tracked the exception level across these
-events. By removing tidq->prev_packet_el and relying directly on
-tidq->prev_packet->el, cs_etm__cpu_mode() will receive ocsd_EL_unknown
-when processing a discontinuity.
-
-Since cs_etm__last_executed_instr() returns an ip of 0 for discontinuities,
-cs_etm__cpu_mode() evaluates the combination of ocsd_EL_unknown and ip=3D0 =
-as
-PERF_RECORD_MISC_USER.=20
-
-Could this incorrectly attribute discontinuities occurring inside guest VMs
-to the host's user space, polluting the perf data with inaccurate statistic=
-s?
-
->  	event->sample.header.size =3D sizeof(struct perf_event_header);
-> =20
->  	/* Set time field based on etm auxtrace config. */
->  	sample.time =3D cs_etm__resolve_sample_time(etmq, tidq);
-> =20
->  	sample.ip =3D ip;
-> -	sample.pid =3D thread__pid(tidq->prev_packet_thread);
-> -	sample.tid =3D thread__tid(tidq->prev_packet_thread);
-> +	sample.pid =3D thread__pid(tidq->frontend_thread);
-> +	sample.tid =3D thread__tid(tidq->frontend_thread);
->  	sample.addr =3D cs_etm__first_executed_instr(tidq->packet);
->  	sample.id =3D etmq->etm->branches_id;
->  	sample.stream_id =3D etmq->etm->branches_id;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609-james-cs-c=
-ontext-tracking-fix-v4-0-44f9fb9e5c42@linaro.org?part=3D1
+Now you have two static branches in concert. Best to make sure
+x86_lbr_type covers both conditions, no?
