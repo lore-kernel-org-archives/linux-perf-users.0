@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C25403E85
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 12:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86B240F8F4
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 12:12:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781007017; cv=none; b=Ysa5odR+tznVT4ZyPWsnI31FGQqZtXYCcs0NFToRyJUEiNwBNI/ighz7ao/KAgyMqACxemUhl4JGc2K8qTi6JBLjxSQZHm+VQlEgN5ZqC1rizdEYot4MqerFNhJFU/ZkwpiyiQQ8GO+PVMQMJVFTuc7Uevla12e+/xuhTqYV8Ao=
+	t=1781007145; cv=none; b=aesKM1iUt89raghwDiGCsg/8TYQZQfh2FNowy5ZH2mo78W8Q+96p69V+ALnUcyOu4AhSmhDxWyjvXliOevq4h21teOJG4gqdJZWMi5gclPTa1vIRgZRchkQqtxK/e3Yi80ADbPul33yKF3yNf7l+KBNczXAK6XeWggRQecaqTVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781007017; c=relaxed/simple;
-	bh=h4aj1IilD23SRWn3mGaYFVykc4NVqydsOPXkEWM57y0=;
+	s=arc-20240116; t=1781007145; c=relaxed/simple;
+	bh=kQNeA9EENj1YAtM4fEP+zi0XeDBvMta3HDRVyq0W5AE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fxlz7/Ke6lsOZjVo/gqViahW279XFLSCoF2apB4gM3CnaiTtnrNxkQQJ7MmVDUx91WJ04LisG7FdLwursr0MkDT15d74FjxV2tqae8OJN66vlLE1Ns/leetqWBMKFl6lGsbmIG/rfTVBoWn4yXqsWdHTYPHZJaZ4p8k3U59ErKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b+gWN/sg; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=RMTAuiK65dJlGxxId0vV0m0oQypupgTfHWLdO+Pbi52ps5fZ5+cohd9ug9J9uQvJ5YP5WgVXPrYKigeCG0K+ZhyIpMoBn3zrN/2lt5lPyLn/tYp4PKs9F4+hqSewclgpiCr2dw1WomvB5doZ1U7RJnB3md0Rp3sNP0e5EN41Tpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NYWBYASu; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b+gWN/sg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NYWBYASu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1781007015;
+	s=mimecast20190719; t=1781007142;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2vIGKqT4NvdBhXm3fnB9ZjVqhF3ohtRz7d+loqyqUDY=;
-	b=b+gWN/sgd5jaQIl0fpoLM70lmH7afZoN20Qn57abKeysIyRTJ4ppFSe7PCfANoBxyjAPrI
-	cTq21WwOtSzJ/NN1vQd21efA/TFTqFrsQpfwJJQh9Kk1caO0qzlP8AVyt1TcNmx9JPYtr4
-	eDmvxosprvKwXIivQ3IgnR+bYDl3tNk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=ZamH9fWG/8PnwimSoG6hhrEwCuHOo2qBwn+wgNnhIxU=;
+	b=NYWBYASux9f28GHEgHDHKb07Tc71e7askaoGGkNUikdSJzEPtutOmeBjIPnZlFTiR4OnI5
+	p/3kZgz2/LFRW1ShOj0zOt07M7LDEcWToMjnn2i8qkXBjXu1tlFQ6HPtXxWFkQE5rclQPM
+	lhv1L38Bnl5LfMXAmkU1mjMAbrkrHk0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-347-VUb_FKhnOhiQTHwe49wU7g-1; Tue,
- 09 Jun 2026 08:10:12 -0400
-X-MC-Unique: VUb_FKhnOhiQTHwe49wU7g-1
-X-Mimecast-MFC-AGG-ID: VUb_FKhnOhiQTHwe49wU7g_1781007010
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-qi0xqxhvNq-hwvw_F1Vk7A-1; Tue,
+ 09 Jun 2026 08:12:19 -0400
+X-MC-Unique: qi0xqxhvNq-hwvw_F1Vk7A-1
+X-Mimecast-MFC-AGG-ID: qi0xqxhvNq-hwvw_F1Vk7A_1781007138
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74380195C26B;
-	Tue,  9 Jun 2026 12:10:10 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3F6E11801303;
+	Tue,  9 Jun 2026 12:12:18 +0000 (UTC)
 Received: from wcosta-defaultstring.rmtbr.csb (unknown [10.22.64.147])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 15CAC195419E;
-	Tue,  9 Jun 2026 12:10:05 +0000 (UTC)
-Date: Tue, 9 Jun 2026 09:10:04 -0300
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EA38C19560AB;
+	Tue,  9 Jun 2026 12:12:13 +0000 (UTC)
+Date: Tue, 9 Jun 2026 09:12:12 -0300
 From: Wander Lairson Costa <wander@redhat.com>
 To: Tomas Glozar <tglozar@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
@@ -50,10 +50,10 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>,
 	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
 	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] rtla: Migrate to libsubcmd for command line
+Subject: Re: [PATCH v3 0/6] rtla: Migrate to libsubcmd for command line
  option parsing
-Message-ID: <aigCf7GmPAomxxMN@wcosta-defaultstring.rmtbr.csb>
-References: <20260521141833.2353025-1-tglozar@redhat.com>
+Message-ID: <aigC7WP0J2935SV5@wcosta-defaultstring.rmtbr.csb>
+References: <20260528103254.2990068-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,10 +62,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260521141833.2353025-1-tglozar@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20260528103254.2990068-1-tglozar@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Thu, May 21, 2026 at 04:18:27PM +0200, Tomas Glozar wrote:
+On Thu, May 28, 2026 at 12:32:48PM +0200, Tomas Glozar wrote:
 > [ CC to linux-perf-users for the libsubcmd code changes ]
 > 
 > rtla currently uses its own implementation that uses getopt_long() to
@@ -110,45 +110,28 @@ On Thu, May 21, 2026 at 04:18:27PM +0200, Tomas Glozar wrote:
 > implementing support for unsetting options (which is currently only
 > supported for those that do not use a custom callback).
 > 
-> v2 changes:
-> - Two unit test suites are added to cover regressions, after several
-> options were broken by the v1. The test suites cover all parsing
-> issues reported in the v1 as well as those found during additional
-> testing.
-> - Return value of all paths that print help, including those that
-> are handled in RTLA, are set to libsubcmd's help exit code of 129.
-> Previously, only the tool help returned 129. While some other tools
-> (e.g. bpftool) do that, RTLA unifies those for consistency. The return
-> value is also added to the corresponding section in documentation.
-> - Incorrect parsing of --no-irq and --no-thread is fixed using a newly
-> added libsubcmd option flag.
-> - Incorrect parsing of -n and -u timerlat options (which erroneously
-> required an argument in v1) is fixed.
-> - A now stale declaration of removed function common_parse_options()
-> is removed from common.h.
-> - Segmentation fault on abbreviated --help (e.g. --he) is fixed.
-> - Incorrect formatting of OPT_END macro (spurious tab) is fixed.
-> - All opt_* callbacks now reject unimplemented unset (--no-) correctly.
-> - opt_trigger_cb() and opt_filter_cb() now take only the required events
-> field, not the whole params structure.
-> - Spurious opt_osnoise_threshold_cb() which is actually just a wrapper for
-> opt_llong_callback() is removed.
-> - Old off-by-one typo is fixed in --dma-latency and -E/--entries error
-> messages, to make it consistent with the newly added unit tests.
-> - Fix a bug in Makefile that defined LIBSUBCMD_INCLUDES as -I... and then
-> used it as a target name: define it as the path only, and then add -I$(...)
-> to CFLAGS, as this is the only include path that is generated during the build
-> itself.
+> Base commit:
+> - https://git.kernel.org/pub/scm/linux/kernel/git/tglozar/linux.git/commit/?h=rtla-for-next&id=f03a59f949176ce4312cb466245d1243aaf40389
 > 
-> v1: https://lore.kernel.org/linux-trace-kernel/20260320150651.51057-1-tglozar@redhat.com/T
+> Dependencies:
+> - https://lore.kernel.org/linux-trace-kernel/20260423130558.882022-1-tglozar@redhat.com/T/
+> - https://lore.kernel.org/linux-trace-kernel/20260424140244.958495-1-tglozar@redhat.com/
+> - https://lore.kernel.org/linux-trace-kernel/20260414185223.65353-1-costa.shul@redhat.com/
+> (apply in reverse order, alternatively, use base commit above)
 > 
-> Tomas Glozar (6):
->   rtla: Add libsubcmd dependency
->   tools subcmd: support optarg as separate argument
->   tools subcmd: allow parsing distinct --opt and --no-opt
->   rtla: Parse cmdline using libsubcmd
->   rtla/tests: Add unit tests for _parse_args() functions
->   rtla/tests: Add unit tests for CLI option callbacks
+> v3 changes (all in cover letter or first commit):
+> - Add FORCE to all targets that feature a make subcommand to ensure changes
+> in the dependency will trigger rebuild correctly.
+> - Convert all dependencies on directory targets LIBSUBCMD_OUTPUT and
+> LIB_OUTPUT into order-only prerequisites to prevent modifications of
+> the directory content triggering rebuild of targets inside it.
+> - Properly mention depedencies of the patchset in the cover letter, as well
+> as the base commit.
+> 
+> v2: https://lore.kernel.org/linux-trace-kernel/20260521141833.2353025-1-tglozar@redhat.com/T/
+> 
+
+Oops. I mistakenly added the reviewed-by tag to the v2 patch series.
 
 Reviewed-by: Wander Lairson Costa <wander@redhat.com>
 
