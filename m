@@ -1,88 +1,100 @@
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562DF3E63A8;
-	Tue,  9 Jun 2026 08:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A254B2D8796
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 08:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780992968; cv=none; b=qwGoj8WTDcsrIU4NF8NEBWx4GtWldggbe3KxkroTbrHErMMZ9o4WBtxoPNMO94WX5+BJ7pqbeGtI4wjaVZg0pMeTtU/teVqVUMWvbLKQ1OtUKqG4tsGoyo53xPb2pwvd3pxuLIWd5qYCdbLu0kymryYCTxLlz7BpmaLfyabVZzE=
+	t=1780994648; cv=none; b=mDShycjLIGDJ2AqnpbQTpZ6DMgjC8mcVMz2lZSEfh7jA7m383da2c73VlYZmYlHDk4rPsJ7ocWILoXHIh08pOLnKBBlJddekcGICh5JLmPRX2pIHn6hQaArEC4nEsVNi2Qbm3Lw8/qXG6oMgqLJk8Mmcx+FrcAn1hMnET4kD5WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780992968; c=relaxed/simple;
-	bh=d1R5UVWvvineQ2Ttu8qeCgiI9PEeXXg9+Z3YYcs6uJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ptvHCqZyvDRDTL3C90J+gUcI1LXLl4Zx7L2QAUShOZSZACRB0ApsB4j7VchTPebfIVrgz2yEYsoSh/N8ZqRhbJuZRwXV0iN/UpGEgQy9vY6QY1qYohZ56YFwwKuAuBSzPcc7elm5qRDb2ouddSaHnpYeoAhgMuO6e3YL1Ul2byM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-209-184-216.092.209.pools.vodafone-ip.de ([92.209.184.216] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1wWrcx-000000021Mp-1uAO;
-	Tue, 09 Jun 2026 10:16:03 +0200
-From: Martin Kaiser <martin@kaiser.cx>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2 2/2] perf riscv: fix register name strings
-Date: Tue,  9 Jun 2026 10:13:09 +0200
-Message-ID: <20260609081500.743861-3-martin@kaiser.cx>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260609081500.743861-1-martin@kaiser.cx>
-References: <20260609081500.743861-1-martin@kaiser.cx>
+	s=arc-20240116; t=1780994648; c=relaxed/simple;
+	bh=u0IDK3TyFMm4oeFKwxrkE6ieRW9bQkY4NtsRANzfnBw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=oCs7tq4meTHvtaCc+N80ROZmE8JZ2Dx57LwA96qbsI+LAdRu0jhxeWdn+UEeriO+IeQXxEUKa9PgQRMf5aL7+fuu/7oa593Kd2WDKgKRx8TkNQMymIOnZPsnoHzIq3rqKrqWOThoCxJSyYNH8p0xLYnsYaL0HyCrGS/K2/SEd9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n62cqRF0; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n62cqRF0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 185991F00898;
+	Tue,  9 Jun 2026 08:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780994647;
+	bh=UMdLExpqgam8Si8Ousi+m9LF7TOFVcHiD1cps7TscoA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=n62cqRF0u2kO+SxMHxJNVogCC/kKAzEcFnP8NteBRy/LfnfCuHpkjjYtO9hTlgs5R
+	 n8sCXZzh0nCEOmmDKb9sUy6FjK2lhWE6mYQ1gtkMcMyEOFhtKt7K9MrmjdEO9M5/n1
+	 9c+fSmfL4VDyMjxKNowaBwhnoRrDQgHbrCGyWO322P0JS79dlAW83uOUWw7hazD4dX
+	 NINIda4+9WOWf/39vHZlpDNsjTB3I7TKvcSl+DxcbuFgjjoZW8Ouxx4rl8xBAZphev
+	 BflbBetyaYURI3ond2mhyxTABJDBAsd8lMyxe2Xo8INjN51lYutyTRRaaX4MqkXusV
+	 NduX7LO+QmXKQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 6/8] riscv: stacktrace: switch to frame-pointer based
+ unwinder
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Wang Han" <wanghan@linux.alibaba.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260609063002.3943001-6-wanghan@linux.alibaba.com>
+References: <20260609063002.3943001-6-wanghan@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 08:44:06 +0000
+Message-Id: <20260609084407.185991F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On risc-v, pref probe generates an invalid syntax for a named register in
-a kprobe.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Comment inaccurately describes the memory location of the metadata =
+type field.
+--
 
-$ perf probe --debug verbose --add "n_tty_write tty"
-...
-Writing event: p:probe/n_tty_write _text+8922528 tty=%"%a0":x64
-Failed to write event: Invalid argument
+commit 0eadbda136e709b7b12de76094d4f29e825575fb
+Author: Wang Han <wanghan@linux.alibaba.com>
 
-The problem is the combination of
+riscv: stacktrace: switch to frame-pointer based unwinder
 
-   #define REG_DWARFNUM_NAME(reg, idx) [idx] = "%" #reg
+Replace the open-coded frame-pointer walker in arch_stack_walk() with a
+robust kunwind state machine. The new walker tracks stack bounds, consumes
+frame records monotonically, and integrates with function graph tracing and
+perf callchains.
 
-and entries such as
+> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrac=
+e.c
+> index 2692d3a06afa2..8fcf23b046d59 100644
+> --- a/arch/riscv/kernel/stacktrace.c
+> +++ b/arch/riscv/kernel/stacktrace.c
+[ ... ]
+> +/*
+> + * Unwind from one frame record to the next.
+> + *
+> + * On RISC-V, the frame record sits at fp - sizeof(struct frame_record),
+> + * immediately below the address pointed to by fp/s0. This applies to bo=
+th
+> + * normal frame records and metadata frame records (embedded in pt_regs).
+> + *
+> + * A metadata record is identified by both fp and ra being zero in the
+> + * frame_record portion, with a type value following at fp + 16.
+> + */
 
-   REG_DWARFNUM_NAME("%a0", 10)
+[Severity: Low]
+Is the comment describing the metadata type location accurate?
 
-where #reg will escape the quotes of the first macro parameter.
+It states "with a type value following at fp + 16". However, since fp points
+directly above the 16-byte frame_record, and the type field immediately
+follows the record in struct frame_record_meta, wouldn't the type field be
+located exactly at fp rather than fp + 16?
 
-Update the macro definition to produce the correct syntax for a named
-register in a kprobe, i.e. the unquoted register name with only one
-leading %.
+> +static __always_inline int
+> +kunwind_next_frame_record(struct kunwind_state *state)
+> +{
+> +	unsigned long fp =3D state->common.fp;
+> +	struct frame_record *record;
+> +	struct stack_info *info;
+> +	unsigned long new_fp, new_pc;
+> +	unsigned long record_base;
 
-Fixes: a90c4519186d ("perf riscv: Remove dwarf-regs.c and add dwarf-regs-table.h")
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- tools/perf/arch/riscv/include/dwarf-regs-table.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/arch/riscv/include/dwarf-regs-table.h b/tools/perf/arch/riscv/include/dwarf-regs-table.h
-index 009a4e3c51ab..8c42806d34f1 100644
---- a/tools/perf/arch/riscv/include/dwarf-regs-table.h
-+++ b/tools/perf/arch/riscv/include/dwarf-regs-table.h
-@@ -3,7 +3,7 @@
- /* This is included in perf/util/dwarf-regs.c */
- 
- #undef REG_DWARFNUM_NAME
--#define REG_DWARFNUM_NAME(reg, idx)	[idx] = "%" #reg
-+#define REG_DWARFNUM_NAME(reg, idx)	[idx] = reg
- 
- static const char * const riscv_regstr_tbl[] = {
- 	REG_DWARFNUM_NAME("%zero", 0),
--- 
-2.43.7
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.194d76e3a15b.=
+v3.riscv-livepatch.wanghan@linux.alibaba.com?part=3D6
