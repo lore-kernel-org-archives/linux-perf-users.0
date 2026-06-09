@@ -1,66 +1,66 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93275423177
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC9D42EEC5
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781015501; cv=none; b=HTW7jsj8MFSH9a+8t7J49d4ft94mVAp2NmXBqyo3G7QJh1t0BhQd5JseZSrZcWmC0XPGIQTrGiua53WELa4kL3iPJkKSYBEYpNGRJuT1VmtaaAido1ea8Ul8xqepCR+oSiCi4+kczmcZBChHzuGedGj8TUpJ47f1KSPQ12nsAZw=
+	t=1781015504; cv=none; b=OO8GjUPWKVr9gsaBqvAZ3pbSutRRPUzw0EQ9zczyInHMu6A0RYV8LhPuPfVdf3QZCf/4B+3ERiC8X863iXRgkxt2imVwAU6pw4I9PQSE4YZyIPcgqWhiGuWWuK/dffr4xv6kWCcorIR70CRK+fpq8/+shjkGy8HSjfUzwj0FU+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781015501; c=relaxed/simple;
-	bh=FSMtqVRVy7D3pvypIs3gLf7OFxrFfmQrY4e2IbRbIqU=;
+	s=arc-20240116; t=1781015504; c=relaxed/simple;
+	bh=ZLOVVoBWIvoSYAEUTNtbgZWHkQY4f1NrccmUuoSiPY4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T+c6+ZFMr06WWyLHECQqbFi+In8P6C3gfA3DfFLOOYXabP4ogS1yxurmPJm2n1gU8EqsSbq9PNGzd7Uy/1QYMR1lLsUYkXDdkRHkN/Hjft4dsmnf7G7w0E5sInkvV5beaa1NXqrzrGQUJ2P3F7E9dtEV7RBFWrCiwknRZRYIy5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YuIvH9q/; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:To:Cc; b=OXdXastJTpPM0JfoeSLxVTRFTuEfLuJcsiKJE+I9c29VA2etEkYrJYNOsarPCNsznFEw0EEgsNOorvNN4eyWftxgB65XZK2aV39caK4G41fQiaU18huOzfOgykPvCDENfqoAv7UCwCbzDalGhaTustsN8AzsaEYQv7A6ahcVEes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tJc4VoXK; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YuIvH9q/"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-490b1bbcf3aso46460755e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 07:31:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tJc4VoXK"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-45eeea039ebso2956890f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 07:31:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781015498; x=1781620298; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1781015501; x=1781620301; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ng7BXZAmfD6H6DnpoBma7BIsuVaWOeOAye3IPeJCbwg=;
-        b=YuIvH9q/a+Oz3zM2/6119F4NLMJbEpUTw+3PARabiwM/c3YAxuSGxDkwbJuCLtRbmR
-         7B+BSE8RzdTPTw95vnlqpvJ90/0V/EBvAZJ770QvkONS2Y4x2tPj4Ae9i2h3HjZe1Q3A
-         ErtgwBAHkbF6ERQpvlJPIR2In5oau6w11OW2GjHxUNW0BiUWGTFC/beYrRi6n4tUXElS
-         Mm6Ud8GyUD8XwaR/S5F6Hf7GPkBPDvc3w2xyHvBU14CK3yh9DR7qqBMcW2PlG1EerCjD
-         kNySwy3PUK3ARnq3MB1TrDYstIbHBByAkXnY1r4lj0p+obP8E4JcZIOH5Js/tc8qIQnG
-         iHGg==
+        bh=95NlgPR4KTlap0RZdRAD+2OgBeEJ40DU9UYZfVmgTrg=;
+        b=tJc4VoXKQoN/xSJOe/qI80YcSob57wuDRjVsqcXyKlYHzESwxKgfrj1AW8Vs4yhY7t
+         KQi/HfjJWrYGskt8QPsihL2AzPD8wLDEvOoTP+YeJsYCqVUvTX4hb7EUbRcVN9eU43kr
+         /9+DZdVJmyHKa7eq6Zc43TSzIhqxdrCIgT3HqdM48z9ZJ4Lw7OkuEZStkLV6VmIDvqMb
+         l2meEtc2+F0ccfo1gVppgIGQzUezNC9WUoUoQU0xjUJSW28oG3eoWYXpIcD7a6TyyvXw
+         E4eBqouOAr0s6pTNuycvhC7GuebLqoyirmKhdqsJNkem9LQ4XTr7+e2AnVyDQpnr/JTO
+         ES/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781015498; x=1781620298;
+        d=1e100.net; s=20251104; t=1781015501; x=1781620301;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Ng7BXZAmfD6H6DnpoBma7BIsuVaWOeOAye3IPeJCbwg=;
-        b=QWTp9QuGBdF0gak5ahA/BWrFq7HnYfabTUIVao3L6cg0NpvO62zuvoHAWGbUphQ01b
-         /ET88+jnvHuvayt1hNv92OWROqZFQ2Dvaeqx7fzLWiyAaV2q+S/6qeNhcyJ0is2sHuq/
-         Cm28kPFfRnJoobMY/Pz1QsgA1CbDyM+yUuaVhUF9CQPe4I/0qgoHO2qqpJaZz/qW/0g2
-         cQGIPccpEhJFEhZ9ToEz/15vAtJr977fxpMbVIbWAe7McwAWYGIkl+lyC6kOpxqWdMsz
-         EbPE+e7z5N0nbVZuq+7I56SsdH2Z9KBUQM4L2rlZhX/coj5i+difUKs6yErDVHvSf0GV
-         xtaA==
-X-Forwarded-Encrypted: i=1; AFNElJ8HC/AvaNUvzQSxNelBFlGSInheM27S5yl0B7v6mruRxfBi3Fk+qkFeSc4FS3lO3LWM8KGnFU6M8miRYMZUinsZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy92R5HjU3A+62yQJiVHl+lIVvhusTf49SUrIAVAzRvVsDS0d51
-	M4q7LnN17pr7jz2ecQbpiSWdZdevuEbgNN33C0fXAmKIHqNPVEg3gr8Sf+PAZDaMTtQ=
-X-Gm-Gg: Acq92OHQ6LQbbNEbkkxW1UmPYYuAvS3d/NmVtIjMVzkmuE6NJq+Jwt+ab375Z2uV3ML
-	MCIWl+1OcxkXvNx/KvE191rM13Y+C+plEv7Ud3Cy8Aqr62bDEZAYUNb1au/aMH6oje382Q+UtIY
-	9b0MqM+thzUwiG/9Sr6llEZy+ZvBJssOKVX6dGU5H3QvgMx2+cgby75ILrWK7yZPs9DU09GrtMa
-	ipVaGt3K83xtIEqIfjjb6cjkkCm0dGyQAqKbo8m7Qa5p21koP/2dDlBcFFW2DfOPsSUg7jNggpg
-	2TOArLu6YG4ihsN9gHM5j4DeU8D4yjEIr1s27IhqlZ1cMgBAZoe8K9hILBO/8xvpltNSAh3i+a/
-	pRnIYhNEzls2bmQ5jzCfo9MIqXwAiQHiuMI4r7zvJxxZEaOP87Cp3asogAb1uqmFQfj3bVBt4Fk
-	9NuouhDlR+7fEKGVjg5C/FuN2GsyXZOpdXr4DQcd8XlT0=
-X-Received: by 2002:a05:600c:8b88:b0:490:d354:bd00 with SMTP id 5b1f17b1804b1-490d722a2f4mr35057025e9.25.1781015497865;
-        Tue, 09 Jun 2026 07:31:37 -0700 (PDT)
+        bh=95NlgPR4KTlap0RZdRAD+2OgBeEJ40DU9UYZfVmgTrg=;
+        b=jqJNstkoIBmnE9av0ZW96AhXSsKLjfFQcaCccsiNEJKGvOwAUuyF1z55mb1NdkVMF1
+         2np3LAAqnTsszhpjXQ7u8LlWfaUAWsY8s6hN0+hX1eB/dxFSJSDuL+HiXA91MA2tat+/
+         zVzjxXb+WAj6VdluXyiEJINEEdRcpCWYhbFiJoA3hceOnX/SRyhD+zfc4/9sVFG/77So
+         lyLoG4pAE6j4ZjNrJ/MeruUvdtCek1C7FVU1kSHFrn3X783yNnua59NpbA6qV7bHTD0G
+         qGNx/uaCl7Sblh6IVYeJUnNxIXieJWIkI3to/yQaG/4Gfrolqz7rh4O+BlrSDpJqnNVa
+         7dHw==
+X-Forwarded-Encrypted: i=1; AFNElJ+nwcTVWzbKE7H0VnZiQAT2KuZvbMfp9oM3JYQoel5tgfV95cGEKxQevPVfCJMPZgupgLqP3ASHubl/c8gq8e6o@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfzSqxSMG5vUuqavOC1Vx9sJsoAJpyphXR5FxwO6hOJsxSmny/
+	cfdf42q29S6TMX90XSOFF2eqDLKueQDj2ody/6b2smMUP2oEOKfrhmxKmtFUzQgPVfI=
+X-Gm-Gg: Acq92OEvyQxqE0nBdllGT4keYq6ZzmwJQicVBDG+0Bx++RWmCkCYe9EDllR7yPdyHKg
+	V0usf5SeJw5ay2fW/dcBcCwedNyE6hQHab1Jxb7FxrRvpoqB/mVEqK8BexvPj6rlcc6NlS9x12d
+	x5rD/Tkg34gMXBNwEdVvM2C1jedh/uJewZagBp5EwPhTxFngIC5vqQNG/YMGgecFBmPSXLGp6Ip
+	3huN6h8QGl6U5Ew/cevi3oJSH/h9lQzsmWAyHOBHqq/ApXYaGc0MH1yZT6z+cXCb7vSZHn4drA6
+	04lPFvBCoHXUAZWgFtoO/SIXNvOHluVI8+ieztyN0s6vV8yRfm4qA4qwanp5h1Fa1gnfap6JKws
+	kG4tWe6sJzAZH1DIMtKrLXzRcS+5D/VXzQRbLNgnE46ZaSB90sKg8h85xiHh/QlH9iOaaamb83q
+	fnR+MzUAEVIB2RLxK8jG8qfNo62/ZLj8AKHkb9mQp/sTRfMwwJdYBCzQ==
+X-Received: by 2002:a5d:4e09:0:b0:45e:ea68:523e with SMTP id ffacd0b85a97d-460304fe066mr25677905f8f.21.1781015500976;
+        Tue, 09 Jun 2026 07:31:40 -0700 (PDT)
 Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3444fesm62738388f8f.20.2026.06.09.07.31.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3444fesm62738388f8f.20.2026.06.09.07.31.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 07:31:36 -0700 (PDT)
+        Tue, 09 Jun 2026 07:31:40 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Tue, 09 Jun 2026 15:31:07 +0100
-Subject: [PATCH v4 14/19] perf test cs-etm: Speed up basic test
+Date: Tue, 09 Jun 2026 15:31:09 +0100
+Subject: [PATCH v4 16/19] perf test cs-etm: Make disassembly test use kcore
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-james-cs-context-tracking-fix-v4-14-44f9fb9e5c42@linaro.org>
+Message-Id: <20260609-james-cs-context-tracking-fix-v4-16-44f9fb9e5c42@linaro.org>
 References: <20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org>
 In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -84,56 +84,81 @@ Cc: coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
  linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Like the name says, this should be the most basic test possible. Kernel
-recording is slow and already has coverage on the systemwide test. Perf
-report output also has coverage elsewhere. 'ls' also produces more trace
-than 'true'.
+Hits in modules return empty disassembly with vmlinux as an input to
+objdump. Make the disassembly test more reliable by always using kcore.
+And update the comments to say that this is supported by the script.
 
-We only want to test if the combination of recording options works at
-all, so fix all of these things to make it as fast as possible.
-
-Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/tests/shell/test_arm_coresight.sh | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ tools/perf/scripts/python/arm-cs-trace-disasm.py    | 20 ++++++++++----------
+ tools/perf/tests/shell/test_arm_coresight_disasm.sh |  2 +-
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index da2f599393e2..83295a8fe179 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -179,10 +179,9 @@ arm_cs_etm_snapshot_test() {
+diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+index ba208c90d631..8f6fa4a007b4 100755
+--- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
++++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+@@ -18,29 +18,29 @@ from perf_trace_context import perf_sample_srccode, perf_config_get
  
- arm_cs_etm_basic_test() {
- 	echo "Recording trace with '$*'"
--	perf record -o ${perfdata} "$@" -m,8M -- ls > /dev/null 2>&1
-+	perf record -o ${perfdata} "$@" -- true > /dev/null 2>&1
+ # Below are some example commands for using this script.
+ # Note a --kcore recording is required for accurate decode
+-# due to the alternatives patching mechanism. However this
+-# script only supports reading vmlinux for disassembly dump,
+-# meaning that any patched instructions will appear
+-# as unpatched, but the instruction ranges themselves will
+-# be correct. In addition to this, source line info comes
+-# from Perf, and when using kcore there is no debug info. The
+-# following lists the supported features in each mode:
++# due to the alternatives patching mechanism. In addition to this,
++# source line info comes from Perf, and when using kcore there is
++# no debug info. The following lists the supported features in each mode:
+ #
+ # +-----------+-----------------+------------------+------------------+
+ # | Recording | Accurate decode | Source line dump | Disassembly dump |
+ # +-----------+-----------------+------------------+------------------+
+ # | --kcore   | yes             | no               | yes              |
+-# | normal    | no              | yes              | yes              |
++# | normal    | no              | yes (inaccurate) | yes (inaccurate) |
+ # +-----------+-----------------+------------------+------------------+
+ #
+ # Output disassembly with objdump and auto detect vmlinux
+-# (when running on same machine.)
++# (when running on same machine.):
+ #  perf script -s scripts/python/arm-cs-trace-disasm.py -d
+ #
+ # Output disassembly with llvm-objdump:
+ #  perf script -s scripts/python/arm-cs-trace-disasm.py \
+ #		-- -d llvm-objdump-11 -k path/to/vmlinux
+ #
++# Output accurate disassembly by passing kcore to script:
++#  perf script -s scripts/python/arm-cs-trace-disasm.py \
++#		-- -d -k perf.data/kcore_dir/kcore
++#
+ # Output only source line and symbols:
+ #  perf script -s scripts/python/arm-cs-trace-disasm.py
  
--	perf_script_branch_samples ls &&
--	perf_report_instruction_samples ls
-+	perf_script_branch_samples true
+@@ -57,7 +57,7 @@ def int_arg(v):
  
- 	err=$?
- 	arm_cs_report "CoreSight basic testing with '$*'" $err
-@@ -246,12 +245,12 @@ arm_cs_etm_snapshot_test
- 
- # Test all combinations of per-thread, system-wide and normal mode with
- # and without timestamps
--arm_cs_etm_basic_test -e cs_etm/timestamp=0/ --per-thread
--arm_cs_etm_basic_test -e cs_etm/timestamp=1/ --per-thread
--arm_cs_etm_basic_test -e cs_etm/timestamp=0/ -a
--arm_cs_etm_basic_test -e cs_etm/timestamp=1/ -a
--arm_cs_etm_basic_test -e cs_etm/timestamp=0/
--arm_cs_etm_basic_test -e cs_etm/timestamp=1/
-+arm_cs_etm_basic_test -e cs_etm/timestamp=0/u --per-thread
-+arm_cs_etm_basic_test -e cs_etm/timestamp=1/u --per-thread
-+arm_cs_etm_basic_test -e cs_etm/timestamp=0/u -a
-+arm_cs_etm_basic_test -e cs_etm/timestamp=1/u -a
-+arm_cs_etm_basic_test -e cs_etm/timestamp=0/u
-+arm_cs_etm_basic_test -e cs_etm/timestamp=1/u
- 
- arm_cs_etm_sparse_cpus_test
- 
+ args = argparse.ArgumentParser()
+ args.add_argument("-k", "--vmlinux",
+-		  help="Set path to vmlinux file. Omit to autodetect if running on same machine")
++		  help="Set path to vmlinux or kcore file. Omit to autodetect if running on same machine")
+ args.add_argument("-d", "--objdump", nargs="?", const=default_objdump(),
+ 		  help="Show disassembly. Can also be used to change the objdump path"),
+ args.add_argument("-v", "--verbose", action="store_true", help="Enable debugging log")
+diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+index 339ae4831868..87797d239f76 100755
+--- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
++++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+@@ -46,7 +46,7 @@ if [ "$(id -u)" == 0 ] && [ -e /proc/kcore ]; then
+ 	echo "Testing kernel disassembly"
+ 	perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file > /dev/null 2>&1
+ 	perf script -i ${perfdata} -s python:${script_path} -- \
+-		-d --stop-sample=30 2> /dev/null > ${file}
++		-d --stop-sample=30 -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${file}
+ 	grep -q -e ${branch_search} ${file}
+ 	echo "Found kernel branches"
+ else
 
 -- 
 2.34.1
