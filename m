@@ -1,192 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78432343894;
-	Tue,  9 Jun 2026 18:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6643749E8
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 21:50:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781031153; cv=none; b=f/X6t1LtGHWnWnf8Ks/b3OLdPE5RYYiubgDIDveBEbTEswAykIE8yopEMAzpv47Fl5hjC4X+ZsvE4yDH+xj3dVBnoAvYDjwazyr1HP6fuoYazhT0ibf8uESU6kmvZVfa8xAyL4jZ+C3N+s+XlJ9H0arBjl2/Wqba1rwhEwxhYqs=
+	t=1781041850; cv=none; b=knEOn7BBT2a6/4oeHkIwhwblvSgGLP1M2i7dzDyZxtZ0e/Rczx1JgCs4KFy+rJt0ZKns7BipX1KrDQPczAyIcevgaBWSegR/K2Uh7rUdIR/YCoEzf8Ifqq/+xHrfvMWSd6ZjYRzZkmkcGMxbXepT8mcW/QqtUfvYZBXOwQQ9F/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781031153; c=relaxed/simple;
-	bh=Sg7G5ueKg2uWtkWHiLwg3tFfzBxrGal/KT4zEzHXIDg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NE6LaP3Sca2E9XQd0P1nsKUe3EAnxr2XU1ywxdmzBz9jbNNTAath9FZ86eHrobuIkF0L+UTqrqwnZI5jLRS/W+Zb0QNGNNjOPDbXuJlM7VAx1RYO1v/nzHPCr57xk2oq3pfbYccbo808H1jNji15rw2VGO2YDllUK73CXu+S+TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1Mfc9Sq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781041850; c=relaxed/simple;
+	bh=B2TA5wTbPRxBu+hfRMUE2akbkXfWsY3Zu9rqjtOzA40=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LusqbuTbSvIDzBIXMiFbQmhMGYfft851U9i/U4om32MWNKOflU/Hf9vVDwcVthP72Odc/DJe1g7a8oEFGqQAGl87NljKEkg7zbwYEzB/APg0FyjCYZnoP9ScSayQuOn6q6CdYkhjQGbhoT8yiVWP/XuKJ5f2ZZ/vTRFoBnnXZrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mXrAt+Uk; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1Mfc9Sq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C881F00893;
-	Tue,  9 Jun 2026 18:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781031152;
-	bh=/ynZVaxGAlmKq42AUjye1DWbDfAIQVD+qZ+gTHbiQWs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=U1Mfc9SqqfMq5Sk3C15dzYchVR/bQktceVyzmeUbUBRnsfiKgq0ftnnSjuXsYv9Um
-	 Xo+h/q52Lpyb1WPzKVqBPLTaZWpOS6x+yM9DHWvQF/cZpDPVT3F5G0ZmzJ7DVF7Lvk
-	 ooF/rsDallKYRllBsRnFDtgtQ5jrabWMTgVucKSR/vC3xe1ZazSjxct13DjvlzbHUE
-	 7JkZ4IpVAj49EXZqP4cU8/XhdJ1tBrbvPrPLDgAMSPlKgTDBSJJYYPCBU/T4h96S3H
-	 UXsG27RRM671XwPsE124oyqR975Tm+qyv3maL2sKNiqLv48CX0gkr3GcOCzH46I1v/
-	 VJPD2Fe/dDPDQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/7] perf annotate: Implement elfutils libasm
- disassembler backend
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260609182108.975586-4-irogers@google.com>
-References: <20260609182108.975586-4-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 18:52:31 +0000
-Message-Id: <20260609185232.00C881F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mXrAt+Uk"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2c0c36f4b76so67379545ad.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 14:50:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781041849; x=1781646649; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fgIXDhL1E/gQo+ziyEHNim/0IDxU/tyO2IBIKTb7Qrs=;
+        b=mXrAt+Uk4vM+FkU+vVtNUlQ9eRf6kBVMAf084pqGxeQx1cjqlbDpSksXC2keIkfNHC
+         1W1EcJLaQaB+XjR9MpbkFglKDnx9w7mdxJlOvHB6keIcQsthkuPqvU9KMyP0IBJzJFCp
+         CyAK9nZMvHeLPiA7gllQop/LA6UoYyuA+qnt81f0hWxr+25MKV8qFjsZDwM/wjd14vRJ
+         8cjzelBx9E0oNdsrU+fXVC7NFv0VJIlbobpZR4MweqYQIFezLsrhh57B5TBnOe338MSs
+         aL5R7ba5X8KkFDuO8xczPpg1z1zo2JUkAGHdDF8Ax8iCob14YvrE2bkuP5UPBjT11pDX
+         QFnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781041849; x=1781646649;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fgIXDhL1E/gQo+ziyEHNim/0IDxU/tyO2IBIKTb7Qrs=;
+        b=Th4DBLWEWhf4vdNQgSoxQy4XQql70nbJ9d9fvZ5mVYTCuBg7OBIjGJ1B3Dgi1dT2IG
+         a7FmCNlbpt46ZFLKVlIqkCHD/mn4lkikWuXYFlcMN7h+aL+8Vagq0FXrjuqiSeO2RYnZ
+         fibV07PojkKIxWdYQJV3Yo8+LWKo7vIVpEm7L3F3dtmLIjkvTpwEvDeQC8T/k1w5hGIm
+         uQ0cEZyMSkgGxN1yBDhJXxgEMhJ9X/+crBCfoX/4Yl1KPChagaHmIF6nDSzQZiXvVZ4z
+         cTyJc4PXbRI8DazwRGHmQjDOJDPdsb8PairteMsuKMdfZ//jKmC1x7jugIFSKG4by2op
+         qmEw==
+X-Forwarded-Encrypted: i=1; AFNElJ+eAfFKErebM3DKDis9J6WI5fXGYrtdnxhbvBAw8UvsELgW5zuXZC4mJlDPerLdm0ixic7mEdTCZZyL4ODYriWj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxspEO63WABYc491PhgYnhXWdl2ptrizI/+ggbss1ysnTAMhoy3
+	Q5paOxaT4puLGiBymkZJ9h+qORcIUSFf0c4n5KQqd4o/rVzQgxYcIbF8EmMu/7VJzcSq+iU4sJ4
+	bUZ/cQA==
+X-Received: from pghr13.prod.google.com ([2002:a63:e50d:0:b0:c86:93b:4970])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3cc2:b0:38d:fad1:cf2a
+ with SMTP id adf61e73a8af0-3b4ccd65aebmr24305665637.13.1781041848594; Tue, 09
+ Jun 2026 14:50:48 -0700 (PDT)
+Date: Tue,  9 Jun 2026 14:50:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
+Message-ID: <20260609215046.2391903-1-ctshao@google.com>
+Subject: [PATCH v1 0/6] perf vendor events intel: update
+From: Chun-Tse Shao <ctshao@google.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, james.clark@linaro.org, afaerber@suse.de, 
+	mani@kernel.org, dapeng1.mi@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-actions@lists.infradead.org, Chun-Tse Shao <ctshao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [High] Missing build system integration leaves the libasm backend as comp=
-letely dead code.
-- [High] The implementation incorrectly relies on internal, unexported elfu=
-tils functions (`ebl_openbackend` and `ebl_closebackend`), causing linkage =
-failures.
-- [High] Incorrect return value check for `disasm_cb` causes immediate loop=
- failure.
-- [High] Passing a callback with an incompatible pointer type to `disasm_cb=
-` causes a compilation error.
-- [Low] `annotation_options__add_disassemblers_str` is exposed in the API b=
-ut never hooked up to command line options.
---
+Sync with the latest perfmon events from:
+https://github.com/intel/perfmon
+by running the script:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+and copying the resulting json and mapfile.csv changes into the perf
+tree.
 
-commit 10af4235f6a3a3ed8b8874f806432a73221075b5
-Author: Ian Rogers <irogers@google.com>
+Chun-Tse Shao (6):
+  perf vendor events intel: Update arrowlake events from 1.17 to 1.19
+  perf vendor events intel: Update emeraldrapids events from 1.23 to
+    1.24
+  perf vendor events intel: Update graniterapids events from 1.18 to
+    1.19
+  perf vendor events intel: Update lunarlake events from 1.22 to 1.25
+  perf vendor events intel: Update pantherlake events from 1.05 to 1.06
+  perf vendor events intel: Update tigerlake events from 1.18 to 1.19
 
-perf annotate: Implement elfutils libasm disassembler backend
+ .../pmu-events/arch/x86/arrowlake/cache.json  |  30 ++-
+ .../arch/x86/arrowlake/floating-point.json    |  45 ++++
+ .../pmu-events/arch/x86/arrowlake/memory.json |  18 ++
+ .../arch/x86/arrowlake/pipeline.json          | 129 +++++++++-
+ .../arch/x86/emeraldrapids/cache.json         |   9 +
+ .../graniterapids/uncore-interconnect.json    |  10 +
+ .../arch/x86/graniterapids/uncore-memory.json |   2 +-
+ .../pmu-events/arch/x86/lunarlake/cache.json  |   2 +-
+ .../arch/x86/lunarlake/pipeline.json          |  27 ++-
+ .../arch/x86/lunarlake/uncore-memory.json     | 208 ++++++++++++++++-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  12 +-
+ .../arch/x86/pantherlake/counter.json         |   5 +
+ .../arch/x86/pantherlake/pipeline.json        |  29 ++-
+ .../x86/pantherlake/uncore-interconnect.json  |  10 +
+ .../arch/x86/pantherlake/uncore-memory.json   | 221 +++++++++++++++++-
+ 15 files changed, 728 insertions(+), 29 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/uncore-interconnect.json
 
-This commit implements a new core disassembler backend utilizing elfutils'
-libasm API. It hooks the backend into perf annotate routing, sets it as
-the default choice when available, and exposes a function to allow custom
-disassembler selection.
+-- 
+2.54.0.1099.g489fc7bff1-goog
 
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index b22cdc24082a5..f1d5ebb2edfa8 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -12,6 +12,7 @@ perf-util-y +=3D block-range.o
->  perf-util-y +=3D build-id.o
->  perf-util-y +=3D cacheline.o
->  perf-util-$(CONFIG_LIBCAPSTONE) +=3D capstone.o
-> +perf-util-$(CONFIG_LIBASM) +=3D libasm.o
-
-[Severity: High]
-Does this code require corresponding changes in the build system to actually
-enable CONFIG_LIBASM and HAVE_LIBASM_SUPPORT?
-
-Without feature detection in tools/build/feature/test-libasm.c and
-Makefile.config, it seems libasm.o won't be built and the fallback inline
-stub in libasm.h will be used permanently.
-
-[ ... ]
-
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 02505222d8c2d..2259ac2c2cd6c 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-[ ... ]
-> @@ -2254,8 +2255,8 @@ static void annotation_options__add_disassembler(st=
-ruct annotation_options *opti
->  	pr_err("Failed to add disassembler %d\n", dis);
->  }
-> =20
-> -static int annotation_options__add_disassemblers_str(struct annotation_o=
-ptions *options,
-> -						const char *str)
-> +int annotation_options__add_disassemblers_str(struct annotation_options =
-*options,
-> +					     const char *str)
->  {
->  	while (str && *str !=3D '\0') {
->  		const char *comma =3D strchr(str, ',');
-
-[Severity: Low]
-Is this function ever hooked up to command line options like in cmd_annotat=
-e()?
-
-The commit message mentions exposing it to allow custom disassembler select=
-ion,
-but without binding it to arguments, it appears to remain uncalled.
-
-[ ... ]
-
-> diff --git a/tools/perf/util/libasm.c b/tools/perf/util/libasm.c
-> new file mode 100644
-> index 0000000000000..2f0a657335223
-> --- /dev/null
-> +++ b/tools/perf/util/libasm.c
-> @@ -0,0 +1,184 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "libasm.h"
-[ ... ]
-> +#include "namespaces.h"
-> +#include "symbol.h"
-> +
-> +struct ebl;
-> +extern struct ebl *ebl_openbackend(Elf *elf);
-> +extern void ebl_closebackend(struct ebl *ebl);
-
-[Severity: High]
-Are these internal libebl functions guaranteed to be available for linking?
-
-They don't seem to be exposed in public elfutils headers like
-<elfutils/libasm.h>. Standard Linux distributions might not export these
-symbols in libdw.so or provide libebl.a, which could break compilation
-and linkage.
-
-> +
-> +struct disasm_output_arg {
-> +	char *buf;
-> +	size_t size;
-> +};
-> +
-> +static int disasm_output_cb(char *str, size_t len, void *arg)
-
-[Severity: High]
-Does the DisasmOutputCB_t signature expect the string argument to be
-const char *?
-
-Dropping the const qualifier here might cause a compilation failure since t=
-he
-perf tool builds with -Werror.
-
-> +{
-> +	struct disasm_output_arg *oa =3D arg;
-> +	size_t to_copy =3D len < oa->size - 1 ? len : oa->size - 1;
-[ ... ]
-> +	offset =3D 0;
-> +	while (pc < end) {
-> +		struct disasm_output_arg oa =3D {
-> +			.buf =3D disasm_buf,
-> +			.size =3D sizeof(disasm_buf),
-> +		};
-> +		const uint8_t *prev_pc =3D pc;
-> +
-> +		ret =3D disasm_cb(handle, &pc, end, addr, "%7m %.1o,%.2o,%.3o,%.4o,%.5=
-o",
-> +				    disasm_output_cb, &oa, NULL);
-> +		if (ret !=3D 1 || pc =3D=3D prev_pc) {
-> +			/* Disassembly failed or got stuck */
-> +			break;
-> +		}
-
-[Severity: High]
-Does disasm_cb() return 0 on success?
-
-If so, evaluating ret !=3D 1 here will evaluate to true on the very first
-successful instruction parsing, instantly breaking the loop. This would
-guarantee that offset !=3D buf_len, causing the code to discard all lines
-and unconditionally fall back to objdump.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609182108.9755=
-86-1-irogers@google.com?part=3D3
