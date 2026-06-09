@@ -1,524 +1,216 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726FB33D6F8
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8C5343892
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781015145; cv=none; b=KbnL3Y7Bw8XZBXyKO1E2tBz9IF5aD29L+n4M3/UILsUV1iH1uXj1508BXtVOBq3XYYyAg/S906IurIG3fU4HU9NnHvVZMpK7KMAgPcdmFAe5U7K/Bpbc7p89mwZ59IAcwQHBI5OKNtm1vxh3JPfGWwME1Aek33EGhRAlGo/ZNM8=
+	t=1781015479; cv=none; b=W3Yn1nqwHQaogk9JjxQexXNlCW9/DVKr9hOjFlB8B9gbHuKQ2a4WH0+Vc85BTSrWI/0rj3qb3LBUSUbwfzcNQfIcBbcxyWLdulKrLpJY9QVdF45u2ATknrXSyTeSlQUSSewVIBGZq+DVsjf4juIvsGmrF68W9G0MvdKVo/FbXqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781015145; c=relaxed/simple;
-	bh=P6NAKjwG7nNDMI6xJBb9WK0m8/o6Xg8YcUAbWrvpBF8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=oqPmjYTTFSkLNyyU3YzxhdAPaHeCoD3rKc/sEK33xj2i0gdIdIL3pwpe8qBAiBAuAQZcJ3AY4gHwb+aAD9uEdwQ1YEC/THtCqpaYjHbkq7LpNGQLeEjSBYlLVGVU1M1UDYtSIPcCdj+/KAEK2DxyLgGuFnCdGSkSoh/ZqMjjr5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=adkHCM8o; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1781015479; c=relaxed/simple;
+	bh=VLB3LNmx7V/VNIGVdREIpmVHrjpyTYSbQJO/EkCLJnE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jdx50wYn2id06mpYoPuG3Z/JHr5/zO3x/1Q7RGmEq3lda44xrHlXXDrGialMSMrzAKoBQm7wjKiMT+bj+x5ZwOLiH7E4X5lrDSeofRkkOKmWwtZpA4+PRC1BaAYsYfcyhDAXt03CqpJgPhlc5DgIAUxcEI38bJd0rQKEpLTjQjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BKSajG1v; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="adkHCM8o"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6592lKUL3020105;
-	Tue, 9 Jun 2026 14:25:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=1Pr1YA
-	uw5LJaL8/guMaHdHWIy5KFCgDctNJVZuwQcSQ=; b=adkHCM8ogNdShDCj/b5aVJ
-	gpl1jFG7h1SB40WQJ3QRPqjsQZz1wbr87cBVC/rEwFfuLW1I4eNqGK5MD2Vpp/cL
-	94wHCoMC4jcwJA9opSV7XhGb8v9/9yOv8t+2XPs4Y1h/88tz9LMyEQgjznpbS5CX
-	KM6H8JTOsac/wKtgXVNnQ6rlPYAtN71kpzi5YsONCdHiLnlJsxPglX25IKvhdiy4
-	PYWQQQ32S4bq6Xbd7m3aBB+1JxVaSYElvrIDmYag9me9JDRQJPdwyrS74leZ4szU
-	A5rarpL7c9VvIjwUcdjnZbW0iuhx7oQ25gUjEebqPPA7TVDDKpXm3RzCT56ZUg6Q
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb7qmk2g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jun 2026 14:25:34 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 659EJcXt031193;
-	Tue, 9 Jun 2026 14:25:33 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4en03g262n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jun 2026 14:25:33 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 659EPSGB52232518
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Jun 2026 14:25:28 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7794520043;
-	Tue,  9 Jun 2026 14:25:28 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E98D20040;
-	Tue,  9 Jun 2026 14:25:24 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.124.212.142])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  9 Jun 2026 14:25:24 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BKSajG1v"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-45fe59255beso2923963f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 07:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1781015476; x=1781620276; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k1AgYkBw0B8QdE09Wmm5dTf6CFmpMsD1GNAWvOPIXac=;
+        b=BKSajG1vbhnlAZ+KFCFhpL6E5d1Leong3fkp17MSwzvyHQrc0xOieyc5NylN2hYVYn
+         3F0hpEBEXKOUaafzck5y7dG2vHAb3r2VutCj2Dq7qitvZT4VXH/npvJ7IvHOuPvhHUCW
+         bZjuCad3d5oRcouMLjVt8q6863GZsGIPsaQS1fn7sZzik2fepld3ZmRv659kVISQ34RR
+         YiUIjZsCdqKLW0EFAxJD18fu1K81mB0Y01C5ELW8ceUwMNNYD79KzE7q8xcwGns6lpPk
+         Keg3qO8djxXkAKul7fRHU+uOkv2H5RcGvkCgBrCzOh9SVNlOs+waTj5SH69QmafvdENi
+         bzJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781015476; x=1781620276;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k1AgYkBw0B8QdE09Wmm5dTf6CFmpMsD1GNAWvOPIXac=;
+        b=WpAIWI/wbXRO3OikcVm2ec4KxPXPblLAri6aGBVyJJZ82LXE0OZWkahKmRAvHHZytU
+         yrbtWZhI2u4Bcb88y+FwQ54e9f3n0lRUEd40qxbbB6yTuuk1PIncXD4zGKsWNS32NUuW
+         fc5uDqy/S14AYI2C+7gNxGFIhg0HtZtnw0RsoJuFFXfHppAZONfvk75v1XKq4pk4wCV0
+         loIj3e5P6NTpZEkLHglj8u2ulX+L1L8NKg4pVdGs64AcKmOdObCQFfr6b+Nce1EhwBZ9
+         JSLPKZF8kCVYWZu7ipdvdEalmzchdFjvzE3bwS77BEZIfoBnUc6c957VxMgdOMoUfAuT
+         zjbw==
+X-Forwarded-Encrypted: i=1; AFNElJ+3B5w121ztWAtu2QTC/CZ7jwmvdkxD43OnHKi5a9AOyfLjIW8w547avl7ShalwNlcEBJQvt+KQljnF11GyAIAY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmEgta48BfjgOqrFQ09wx3H3d995Lh9CEZq4MHaRZppQgYECM4
+	arrwzOvfr46oIMz4NkWhVAiYsiMJAMyGHoUqrjlF+/GswooHLLD+HVFqIbDOz26lTM8=
+X-Gm-Gg: Acq92OGRsXy/70zXp7az7hSL3O+jiJY16yXBNxjdubvh6ioTiaUu5v071VOhP6wncRK
+	/tkBYFNrtkZnyEDvgw5fG3uUjucFtPyX+KM2cLjsXYw42EtV73+ilNL8CWbrUM3xrGrGkI30qeH
+	2DfwEz/WkKnLoF0qFH/M8NucUzi/Tq32h3pp1vkgdKqCwAgzFkw5VpcKEzISo3tSNF9kx9wrP6a
+	mR9awiCnlLI4Rti9YnF/LRawbtZimZ7VLZ6JcYjUm0w7+emlpkoWSuQyMIw5UtVYy6M7Lj4/GMa
+	/+KUOZF3wTWMump7Bql6moShAOE08VbNFcc5UaVAuTZENbQ5Fv1nz2vHtD1NGwTcBWcc6xpx7ZJ
+	6E/s4KGA25aW8q9Uwsvj/o7kfwFr/c/55a/eshgPaJ5ihRpNjZaF+vxRbEsu0Bm1uYf4bsN2jGw
+	NyN1GnSJoFf2N0qpHrAtH61t1gFCTGzBTfSspzxXwbXptuE/kaYTi2LQ==
+X-Received: by 2002:a05:6000:2993:20b0:460:138d:c9b0 with SMTP id ffacd0b85a97d-460302dc735mr24612953f8f.2.1781015475494;
+        Tue, 09 Jun 2026 07:31:15 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3444fesm62738388f8f.20.2026.06.09.07.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 07:31:14 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v4 00/19] perf cs-etm: Queue context packets for frontend
+Date: Tue, 09 Jun 2026 15:30:53 +0100
+Message-Id: <20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH V3] tools/perf/tests: Update test_adding_kernel.sh to
- handle proper debuginfo check
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <D7E4148E-DC3F-4FCC-8DD8-AA4A085DAF1D@linux.ibm.com>
-Date: Tue, 9 Jun 2026 19:55:12 +0530
-Cc: jolsa@kernel.org, adrian.hunter@intel.com, mpetlan@redhat.com,
-        tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
-        Venkat <venkat88@linux.ibm.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AF236500-C608-442F-BAA1-9645BEA55C67@linux.ibm.com>
-References: <20260424172435.91725-1-atrajeev@linux.ibm.com>
- <AEEE2C46-8D1E-442E-B5A9-7B53E681E69B@linux.ibm.com>
- <D7E4148E-DC3F-4FCC-8DD8-AA4A085DAF1D@linux.ibm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=HppG3UTS c=1 sm=1 tr=0 ts=6a28225e cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
- a=1XWaLZrsAAAA:8 a=0Y5MGcWj7qeGLCPHluAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: yZFOzfPORX9xjUJrc1mXzVF3vaSFn8ps
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDEzNCBTYWx0ZWRfXxv3HmCnUA3Oy
- qWTcmyEUmoBPyt8tcvdTUnz1ggYjotlGXB63Clv8EQL77npeixz8QilLIt5lKldsxHkcgLej/Dq
- PnwnLIjuAKOO4Ow0KV2Etia3zOXzuds7WATACVGzlgvipwsE9WCDk5jZtiY/Nfh3soTmrP5L58v
- /UD2FwtHcka6rfb2+CxmWAS2pdmyCH64RfeMcIa+X32JNGSWhAFC4iZb+v22WtaUYE6rWeN3I+c
- jUPStI8O324bIv0XgEWWKsvqjH6w2uODE6eRYojVdA3/JGvwmF6Y7GshGujkXQtkWuqWcflixj1
- gQYJMZ54QlAQhXs5k2v11ZRzhiCMweqL5BROplAp5yEjV0QJR0gDb1CZRZ7IrGI9N3+ix1/7lVP
- cD4txuQHKMZ8KLCDe4YuSf/hcv38NOBeUkPjpzOOJxrukZN+0NuRYtw+YJrprITEhG/k7+eMwuz
- tht0w6UIhLym7rrk6dA==
-X-Proofpoint-ORIG-GUID: lkf5VYxYOFjAX_HC0LizBUcoDox4qTM2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-09_03,2026-06-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 phishscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 spamscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606090134
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ0jKGoC/4XNTQrCMBAF4KtI1kbatJM2rryHuEiTscafRJJSK
+ qV3dyqCiovCbN7j8c3IEkaHiW1XI4vYu+SCp1CuV8yctG+RO0uZiUzIDHLgZ33DxA1d8B0OHe+
+ iNhfnW350A6+gVKpuNFZoGRn3iFS//P2B8smlLsTH612fz+1bFnJB7nOecWyszATmtair3dV5H
+ cMmxJbNdC8+HI2WOEFcDQ0YlEcAI/+44psrlriCOFMooUqwCi38cNM0PQFtI8J0aQEAAA==
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Paschalis Mpeis <Paschalis.Mpeis@arm.com>
+Cc: coresight@lists.linaro.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
+Fix thread tracking when decoding Coresight trace and add a new test for
+it.
 
+The new test is added as a Perf test workload instead of a custom binary
+with its own build system, but this requires a new feature in Perf test
+to pass in control pipes which can enable and disable events. This
+scopes the recording to just the workload and helps to reduce the amount
+of data recorded in tracing tests.
 
-> On 21 May 2026, at 2:01=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->=20
->=20
->=20
->> On 29 Apr 2026, at 7:01=E2=80=AFPM, Venkat <venkat88@linux.ibm.com> =
-wrote:
->>=20
->>=20
->>=20
->>> On 24 Apr 2026, at 10:54=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->>>=20
->>> Perf test perftool-testsuite_probe fails as below:
->>>=20
->>> Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
-inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
->>> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added =
-probe :: perf probe -l (output regexp parsing)
->>> -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple =
-probes
->>> Regexp not found: "probe:vfs_mknod"
->>> Regexp not found: "probe:vfs_create"
->>> Regexp not found: "probe:vfs_rmdir"
->>> Regexp not found: "probe:vfs_link"
->>> Regexp not found: "probe:vfs_write"
->>> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
-support (command exitcode + output regexp parsing)
->>> Regexp not found: =
-"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
->>> Regexp not found: "in this function|at this address"
->>> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing =
-variable (output regexp parsing)
->>> ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 =
-failures found
->>>=20
->>> Further analysing, the failed testcase is for "test_adding_kernel".
->>> If the kernel debuginfo is missing, perf probe fails as below:
->>>=20
->>> perf probe -nf --max-probes=3D512 -a 'vfs_* $params'
->>> Failed to find the path for the kernel: No such file or directory
->>> Error: Failed to add events.
->>>=20
->>> skip_if_no_debuginfo has check to handle whether debuginfo is =
-present
->>> and the testcase checks for debuginfo since this :
->>> commit 90d32e92011e ("tools/perf: Handle perftool-testsuite_probe
->>> testcases fail when kernel debuginfo is not present")
->>>=20
->>> Recently a change got added in =
-"tests/shell/lib/probe_vfs_getname.sh"
->>> via this another fix:
->>> commit 92b664dcefab ("perf test probe_vfs_getname: Skip if no =
-suitable
->>> line detected")
->>> Since this commit, first add_probe_vfs_getname is used to prevent =
-false
->>> failures. And based on return code of add_probe_vfs_getname, =
-skip_if_no_debuginfo
->>> is used to skip testcase if debuginfo is present. And this modified =
-other
->>> testcases to call add_probe_vfs_getname first and invoke
->>> skip_if_no_debuginfo based on return value.
->>>=20
->>> The tests in test_adding_kernel.sh which depends on presence of
->>> debuginfo are:
->>> 1. probe add for inode_permission
->>> 2. probe max-probes option using 'vfs_* $params'
->>> 3. non-existing variable probing
->>>=20
->>> For these tests, probe check for specific line is not required.
->>> So call skip_if_no_debuginfo with argument to say if line check is
->>> needed. This is to convey to skip_if_no_debuginfo() function
->>> that test only needs to check for debuginfo, and not specifically
->>> line number. Update skip_if_no_debuginfo to use simple "perf probe"
->>> check if test only needs to check for debuginfo. And for other
->>> tests which rely on line number, use add_probe_vfs_getname()
->>> Update other places which uses skip_if_no_debuginfo to use argument
->>> as zero.
->>>=20
->>> With the change, verified that only three which required debuginfo =
-only
->>> is skipped and others ran successfully. Also tested with debuginfo
->>> to make sure tests are not skipped.
->>>=20
->>> Reported-by: Tejas Manhas <Tejas.Manhas1@ibm.com>
->>> Reviewed-by: Ian Rogers <irogers@google.com>
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
->>> ---
->>=20
->> Tested this patch, by applying on top of mainline, and it fixes the =
-reported issue.
->>=20
->> Without this patch:
->>=20
->> # ./perf test -v perftool-testsuite_probe
->> --- start ---
->> test child forked, pid 15772
->> Probing start_text
->> -- [ PASS ] -- perf_probe :: test_adding_blacklisted :: adding =
-blacklisted function start_text
->> -- [ PASS ] -- perf_probe :: test_adding_blacklisted :: listing =
-blacklisted probe (should NOT be listed)
->> ## [ PASS ] ## perf_probe :: test_adding_blacklisted SUMMARY
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission ::
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission :: -a
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
-inode_permission :: --add
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added =
-probe :: perf list
->> Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
-inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
->> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added =
-probe :: perf probe -l (output regexp parsing)
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added =
-probe
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed =
-probe (should NOT be listed)
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding =
-probe
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
-probes :: first probe adding
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
-probes :: second probe adding (without force)
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
-probes :: second probe adding (with force)
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled =
-probe
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple =
-probes
->> Regexp not found: "probe:vfs_mknod"
->> Regexp not found: "probe:vfs_create"
->> Regexp not found: "probe:vfs_rmdir"
->> Regexp not found: "probe:vfs_link"
->> Regexp not found: "probe:vfs_write"
->> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
-support (command exitcode + output regexp parsing)
->> Regexp not found: "Failed to find"
->> Regexp not found: =
-"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
->> Regexp not found: "in this function|at this address"
->> Line did not match any pattern: "The =
-/lib/modules/7.1.0-rc1+/build/vmlinux file has no debug information."
->> Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy, =
-or install an appropriate debuginfo package."
->> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: non-existing =
-variable (output regexp parsing)
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with =
-retval :: add
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with =
-retval :: record
->> -- [ PASS ] -- perf_probe :: test_adding_kernel :: function argument =
-probing :: script
->> ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures =
-found
->> -- [ SKIP ] -- perf_probe :: test_basic :: help message :: testcase =
-skipped
->> -- [ PASS ] -- perf_probe :: test_basic :: usage message
->> -- [ PASS ] -- perf_probe :: test_basic :: quiet switch
->> ## [ PASS ] ## perf_probe :: test_basic SUMMARY
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
-for -a
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
-for -d
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
-for -L
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: missing argument =
-for -V
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: unnecessary =
-argument for -F
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: unnecessary =
-argument for -l
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -a xxx -d xxx
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -a xxx -L foo
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -a xxx -V foo
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -a xxx -l
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -a xxx -F
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -d xxx -L foo
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -d xxx -V foo
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -d xxx -l
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -d xxx -F
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -L foo -V bar
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -L foo -l
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -L foo -F
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -V foo -l
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -V foo -F
->> -- [ PASS ] -- perf_probe :: test_invalid_options :: mutually =
-exclusive options :: -l -F
->> ## [ PASS ] ## perf_probe :: test_invalid_options SUMMARY
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func:10
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func:0-10
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func:2+10
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func@source.c
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: func@source.c:1
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: source.c:1
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: source.c:1+1
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: acceptable =
-descriptions :: source.c:1-10
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
-descriptions :: func:foo
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
-descriptions :: func:1-foo
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
-descriptions :: func:1+foo
->> -- [ PASS ] -- perf_probe :: test_line_semantics :: unacceptable =
-descriptions :: func;lazy\*pattern
->> ## [ PASS ] ## perf_probe :: test_line_semantics SUMMARY
->> ---- end(-1) ----
->> 137: perftool-testsuite_probe                                        =
-: FAILED!
->>=20
->> With This patch:
->>=20
->> # ./perf test -v perftool-testsuite_probe
->> 137: perftool-testsuite_probe                                        =
-: Ok
->>=20
->> Please add below tag.
->>=20
->> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
->>=20
->> Regards,
->> Venkat.
->=20
-> Hi,
->=20
-> Can we please have this pulled in, if the patches looks fine ?
->=20
-> Thanks
-> Athira
+With this new feature we can re-write all of the Coresight tests to make
+use of it and remove the remaining binaries which fixes the following
+issues:
 
-Hi,
+ * They didn't work in out of source builds
+ * A lot of the tests unnecessarily required root and didn't skip
+   without it
+ * They were mainly qualitative tests which didn't look for specific
+   behavior
 
-Looking for any further review comments on this patch. Please suggest if =
-any changes needs to be addressed.
+Most importantly, the long build and runtime has been reduced. On a
+Radxa Orion O6, unroll_loop_thread.c took 37s to compile which is longer
+than the entire Perf build. Now the build time is negligible and the
+before and after test runtimes for all the Coresight tests are:
 
-Thanks
-Athira
+          |   N1SDP   |   Orion O6
+  -----------------------------------
+  Before  |   4m  0s  |    14m 49s
+  After   |      26s  |        56s
+  -----------------------------------
 
->>=20
->>> Changelog:
->>> v2 -> v3:
->>> - Update other callsites to use "skip_if_no_debuginfo 0"
->>> - Use "perf probe -vn --add inode_permission $params"
->>>=20
->>> v1 -> v2:
->>> - First version used "perf probe -v -L getname_flags" for debuginfo
->>> check. This will not catch fail string "Debuginfo-analysis is not
->>> supported" which is used in cases when perf is built without dwarf.
->>> So use "perf probe -vn add inode_permission" to capture cases when
->>> tools built with NO_LIBDWARF=3D1. This will capture debuginfo =
-missing as
->>> well as tool built without dwarf case.
->>>=20
->>> .../tests/shell/base_probe/test_adding_kernel.sh  | 15 =
-++++++++++++++-
->>> tools/perf/tests/shell/lib/probe_vfs_getname.sh   | 13 ++++++++++++-
->>> tools/perf/tests/shell/probe_vfs_getname.sh       |  7 ++++++-
->>> .../shell/record+script_probe_vfs_getname.sh      |  7 ++++++-
->>> tools/perf/tests/shell/trace+probe_vfs_getname.sh |  7 ++++++-
->>> 5 files changed, 44 insertions(+), 5 deletions(-)
->>>=20
->>> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh =
-b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->>> index 555a825d55f2..f3db125c8669 100755
->>> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->>> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
->>> @@ -23,10 +23,23 @@ TEST_RESULT=3D0
->>> . "$DIR_PATH/../lib/probe_vfs_getname.sh"
->>>=20
->>> TEST_PROBE=3D${TEST_PROBE:-"inode_permission"}
->>> +PROBE_NO_LINE_CHECK=3D1
->>>=20
->>> # set NO_DEBUGINFO to skip testcase if debuginfo is not present
->>> # skip_if_no_debuginfo returns 2 if debuginfo is not present
->>> -skip_if_no_debuginfo
->>> +#
->>> +# The perf probe checks which depends on presence of debuginfo and
->>> +# used in this testcase are:
->>> +# 1. probe add for inode_permission
->>> +# 2. probe max-probes option using 'vfs_* $params'
->>> +# 3. non-existing variable probing
->>> +#
->>> +# For these tests, probe check for specific line is not
->>> +# required ( add_probe_vfs_getname does that ). So call
->>> +# skip_if_no_debuginfo with argument as 1. This is to convey
->>> +# that test only needs to check for debuginfo, and not specifically
->>> +# line number
->>> +skip_if_no_debuginfo $PROBE_NO_LINE_CHECK
->>> if [ $? -eq 2 ]; then
->>> NO_DEBUGINFO=3D1
->>> fi
->>> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh =
-b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->>> index 88cd0e26d5f6..2c5252a38ea1 100644
->>> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->>> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->>> @@ -39,7 +39,18 @@ add_probe_vfs_getname() {
->>> }
->>>=20
->>> skip_if_no_debuginfo() {
->>> - add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the =
-path for the kernel|Debuginfo-analysis is not supported)|(file has no =
-debug information)" && return 2
->>> + no_line_check=3D$1
->>> + debug_str=3D"^(Failed to find the path for the =
-kernel|Debuginfo-analysis is not supported)|(file has no debug =
-information)"
->>> +
->>> + # search for debug_str using simple perf probe if the
->>> + # test only needs to check for debuginfo, and not specifically
->>> + # line number.
->>> + if [ $no_line_check -eq 1 ]; then
->>> + perf probe -vn --add 'inode_permission $params' 2>&1 | grep -E -q =
-"$debug_str" && return 2
->>> + else
->>> + add_probe_vfs_getname -v 2>&1 | grep -E -q "$debug_str" && return =
-2
->>> + fi
->>> +
->>> return 1
->>> }
->>>=20
->>> diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh =
-b/tools/perf/tests/shell/probe_vfs_getname.sh
->>> index 5fe5682c28ce..b0878f571449 100755
->>> --- a/tools/perf/tests/shell/probe_vfs_getname.sh
->>> +++ b/tools/perf/tests/shell/probe_vfs_getname.sh
->>> @@ -16,8 +16,13 @@ skip_if_no_perf_probe || exit 2
->>> add_probe_vfs_getname
->>> err=3D$?
->>>=20
->>> +# Invoke skip_if_no_debuginfo with argument as 0,
->>> +# since the test needs suitable line number for getname
->>> +# along with debuginfo check.
->>> +# Argument "1" is used when to convey that test only needs to
->>> +# check for debuginfo, and not specifically line number.
->>> if [ $err -eq 1 ] ; then
->>> - skip_if_no_debuginfo
->>> + skip_if_no_debuginfo 0
->>> err=3D$?
->>> fi
->>>=20
->>> diff --git =
-a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh =
-b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
->>> index 002f7037f182..48063fc2b221 100755
->>> --- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
->>> +++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
->>> @@ -38,8 +38,13 @@ perf_script_filenames() {
->>> add_probe_vfs_getname
->>> err=3D$?
->>>=20
->>> +# Invoke skip_if_no_debuginfo with argument as 0,
->>> +# since the test needs suitable line number for getname
->>> +# along with debuginfo check.
->>> +# Argument "1" is used when to convey that test only needs to
->>> +# check for debuginfo, and not specifically line number.
->>> if [ $err -eq 1 ] ; then
->>> -        skip_if_no_debuginfo
->>> +        skip_if_no_debuginfo 0
->>>       err=3D$?
->>> fi
->>>=20
->>> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh =
-b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
->>> index 7a0b1145d0cd..6833fba12086 100755
->>> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
->>> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
->>> @@ -28,8 +28,13 @@ trace_open_vfs_getname() {
->>> add_probe_vfs_getname
->>> err=3D$?
->>>=20
->>> +# Invoke skip_if_no_debuginfo with argument as 0,
->>> +# since the test needs suitable line number for getname
->>> +# along with debuginfo check.
->>> +# Argument "1" is used when to convey that test only needs to
->>> +# check for debuginfo, and not specifically line number.
->>> if [ $err -eq 1 ] ; then
->>> -        skip_if_no_debuginfo
->>> +        skip_if_no_debuginfo 0
->>>       err=3D$?
->>> fi
->>>=20
->>> --=20
->>> 2.47.3
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+Changes in v4:
+- Rename workload-ctl to record-ctl and improve docs (Leo)
+- Use new packet argument everywhere in
+  cs_etm__synth_instruction_sample() (Sashiko)
+- Test for actual length of expected raw dump (Leo)
+- Use -fno-inline instead of keyword (Leo)
+- Don't test any brace or call lines in deterministic test
+- Make sure context switch loop test does cleanup on failure (Sashiko)
+- Remove undef int overflows in workloads (Sashiko)
+- Link to v3: https://lore.kernel.org/r/20260603-james-cs-context-tracking-fix-v3-0-c392945d9ed5@linaro.org
 
+Changes in v3:
+- Minor sashiko comments
+  - Close some more pipes
+  - Fix warning messages
+  - Error handling improvements
+- Pass packet into cs_etm__synth_instruction_sample()
+- Fixup stale comment (Leo)
+- Link to v2: https://lore.kernel.org/r/20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org
+
+Changes in v2:
+- Add --workload-ctl option to Perf test
+- Re-write all the Coresight tests and speed them up
+- Pass packet to memory access function so frontend can use either the
+  previous or current packet's EL
+- Link to v1: https://lore.kernel.org/r/20260526-james-cs-context-tracking-fix-v1-0-ebd602e18287@linaro.org
+
+---
+James Clark (19):
+      perf cs-etm: Queue context packets for frontend
+      perf test: Add workload-ctl option
+      perf test: Add a workload that forces context switches
+      perf test cs-etm: Test process attribution
+      perf test: Add deterministic workload
+      perf test cs-etm: Replace unroll loop thread with deterministic decode test
+      perf test cs-etm: Remove asm_pure_loop test
+      perf test cs-etm: Replace memcpy test with raw dump stress test
+      perf test: Add named_threads workload
+      perf test cs-etm: Test decoding for concurrent threads test
+      perf test cs-etm: Remove duplicate branch tests
+      perf test cs-etm: Skip if not root
+      perf test cs-etm: Reduce snapshot size
+      perf test cs-etm: Speed up basic test
+      perf test cs-etm: Remove unused Coresight workloads
+      perf test cs-etm: Make disassembly test use kcore
+      perf test cs-etm: Add all branch instructions to test
+      perf test cs-etm: Speed up disassembly test
+      perf test cs-etm: Move existing tests to coresight folder
+
+ Documentation/trace/coresight/coresight-perf.rst   |  78 +------
+ MAINTAINERS                                        |   2 -
+ tools/perf/Documentation/perf-test.txt             |  24 ++-
+ tools/perf/Makefile.perf                           |  14 +-
+ tools/perf/scripts/python/arm-cs-trace-disasm.py   |  20 +-
+ tools/perf/tests/builtin-test.c                    | 187 +++++++++++++++-
+ tools/perf/tests/shell/coresight/Makefile          |  29 ---
+ .../perf/tests/shell/coresight/Makefile.miniconfig |  14 --
+ tools/perf/tests/shell/coresight/asm_pure_loop.sh  |  22 --
+ .../tests/shell/coresight/asm_pure_loop/.gitignore |   1 -
+ .../tests/shell/coresight/asm_pure_loop/Makefile   |  34 ---
+ .../shell/coresight/asm_pure_loop/asm_pure_loop.S  |  30 ---
+ .../tests/shell/coresight/concurrent_threads.sh    |  45 ++++
+ .../tests/shell/coresight/context_switch_thread.sh |  69 ++++++
+ tools/perf/tests/shell/coresight/deterministic.sh  |  72 +++++++
+ .../tests/shell/coresight/memcpy_thread/.gitignore |   1 -
+ .../tests/shell/coresight/memcpy_thread/Makefile   |  33 ---
+ .../shell/coresight/memcpy_thread/memcpy_thread.c  |  80 -------
+ .../tests/shell/coresight/memcpy_thread_16k_10.sh  |  22 --
+ .../perf/tests/shell/coresight/raw_dump_stress.sh  |  47 ++++
+ .../shell/{ => coresight}/test_arm_coresight.sh    |  43 ++--
+ .../{ => coresight}/test_arm_coresight_disasm.sh   |  23 +-
+ .../tests/shell/coresight/thread_loop/.gitignore   |   1 -
+ .../tests/shell/coresight/thread_loop/Makefile     |  33 ---
+ .../shell/coresight/thread_loop/thread_loop.c      |  85 --------
+ .../shell/coresight/thread_loop_check_tid_10.sh    |  23 --
+ .../shell/coresight/thread_loop_check_tid_2.sh     |  23 --
+ .../shell/coresight/unroll_loop_thread/.gitignore  |   1 -
+ .../shell/coresight/unroll_loop_thread/Makefile    |  33 ---
+ .../unroll_loop_thread/unroll_loop_thread.c        |  75 -------
+ .../tests/shell/coresight/unroll_loop_thread_10.sh |  22 --
+ tools/perf/tests/shell/lib/coresight.sh            | 134 ------------
+ tools/perf/tests/tests.h                           |   3 +
+ tools/perf/tests/workloads/Build                   |   4 +
+ tools/perf/tests/workloads/context_switch_loop.c   | 110 ++++++++++
+ tools/perf/tests/workloads/deterministic.c         |  39 ++++
+ tools/perf/tests/workloads/named_threads.c         | 109 ++++++++++
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  21 +-
+ tools/perf/util/cs-etm.c                           | 236 ++++++++++++---------
+ tools/perf/util/cs-etm.h                           |   8 +-
+ 40 files changed, 908 insertions(+), 942 deletions(-)
+---
+base-commit: 351a37f2fda4db668cff8ba12f2992d73dccdaea
+change-id: 20260515-james-cs-context-tracking-fix-754998bae7ed
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
