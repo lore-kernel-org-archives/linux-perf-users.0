@@ -1,113 +1,107 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4BB3D6CC4
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 06:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FD13C9892;
+	Tue,  9 Jun 2026 06:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780984996; cv=none; b=ulpTWUMQA1ty5l4gI0OoOp599HMN6bRwrniOBvACGUcBgdFMtMBG7QEWsBrrJ8+yb0TFPUF74GGGhVF2937TRDoSddNUmNB8hX+OWf7xkt6bvl3QjBkTWV0uu6MKHdnvpeHJF1qJLQvXUmY1XnXrmFYE3Qv3YpLLLIhA8t5iXpo=
+	t=1780985357; cv=none; b=adY0IGmLCbBMp2jVMKjxQo4fOEYhBiN8Nbp8gS3XoGKCnk0f9A412vQb7mZwCoBIHmFtFJ8+HIIrP8rfslYPIn+XAQwZwj6JCtydomePDu2ZuxhJFj0NszaWG4P7mLVBhnUtL6C8Gj0haTDgCKg4Zs2oStrSfC0Jl5IQ8i9lZ9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780984996; c=relaxed/simple;
-	bh=+0MhYWvDoVqixJolM+MtR3Uaco3QucCwRBMSFs+rT58=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AumNv7EcGC1G4cKQZbu7SiK6ObeaU31AhK5jiNi8ePfGVkcDBOuce/GRpQIXshNP5q9nh6DTkWpzPihDU5rAIXoZ6d/xBQxaNcA6rlX8JlOPQ1Y8JEmjlOzqIkEpomsFnAp3QkXcfuhHG9Ho/b/JE9bzC6JySTOSuWYI9QfD9II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vpM6FHFJ; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1780985357; c=relaxed/simple;
+	bh=0Ay88O+2kxHABmI6EvThN2jLEhnbjPME3y1qREbMckw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=aqSL4HinJQ4d3Ah/3mm8QGaMuI8Ye42tgde17GHYFXc9j9YKL0ivOAZdU7LYW1ZpAPjfR6JdsiaFQacgvwdAyxGZBiB8rbNnOfT/TM2h28Z9/mDfabTAw8lTjLXeX+kTKc8zsffI223tujM+HVa+1SUnsLSW/chMo2m4HyNFWSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGqy3Usb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vpM6FHFJ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780984993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+74FvUBZxlbST9+7oM0jYayJwnBAvv8czrcrU+bwgIY=;
-	b=vpM6FHFJf+/bhrb1nhFUxA9NhY0bKIHiu9hZC4M74ql0x/+s2OW8XYklNsJN2Wqjb+aDgm
-	TuW+Rb6lccksKUK79R+bswVAVlucisHM3wAIY53BkTvXnckQhJh6EMm1O8xxg/xFzGUadQ
-	pYOfEDg6bHiwaiIUlD7swclvmTkv7FQ=
-From: Atish Patra <atish.patra@linux.dev>
-Date: Mon, 08 Jun 2026 23:01:35 -0700
-Subject: [PATCH v6 21/21] TEST(do-not-upstream): fake qemu vendor JSON +
- mapfile entry for CounterIDMask path
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGqy3Usb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C7461F00893;
+	Tue,  9 Jun 2026 06:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780985355;
+	bh=ooDz4EIMEgbHpb/W6cEtkiQRNh0ExMmK5C88lKJxYvQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=TGqy3UsbeH2Gt6GN+I5zRatZNpna/tx/5psomwTL4rnZiXCkRyi+NE7RdlcOSadW7
+	 WhJbbCuVWExo4PD55iCMLxbfW5af+vXeu4Xqpd0RrI4+C0tq5C8/m58lVLGdZlfgQq
+	 zZl0Z1RBhJoVdIzaXo8ESewXXuGKwjjJqL3ofNFIFpYXce+kp1k+PbbC6urXmCDB6G
+	 /6AWkwHpYmOq+ST4b9aQdyVupBpJWoUdrIii+yqGXFvzDOpG54h349soMrPAOUDSai
+	 +Gv7hKxy5HpclGftbweIswiebMIKZdrRPiRMaCkmaZGtfKcCn+6lx6g9R0fVCq5Bys
+	 zJCMFPU+FCxAA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 06/21] dt-bindings: riscv: add Smcntrpmf ISA
+ extension description
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Atish Patra" <atish.patra@linux.dev>
+Cc: robh@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260608-counter_delegation-v6-6-285b72ed65a9@meta.com>
+References: <20260608-counter_delegation-v6-6-285b72ed65a9@meta.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 06:09:14 +0000
+Message-Id: <20260609060915.6C7461F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260608-counter_delegation-v6-21-285b72ed65a9@meta.com>
-References: <20260608-counter_delegation-v6-0-285b72ed65a9@meta.com>
-In-Reply-To: <20260608-counter_delegation-v6-0-285b72ed65a9@meta.com>
-To: James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>, 
- Atish Patra <atish.patra@linux.dev>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Anup Patel <anup@brainfault.org>, Namhyung Kim <namhyung@kernel.org>, 
- Paul Walmsley <pjw@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Ian Rogers <irogers@google.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, Conor Dooley <conor@kernel.org>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-Migadu-Flow: FLOW_OUT
 
-From: Atish Patra <atishp@meta.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Low] The `smcntrpmf` extension is inserted in the wrong alphabetical ord=
+er.
+- [Low] The description incorrectly refers to `Smcntrpmf` as a 'supervisor-=
+level' extension.
+--
 
-arch/riscv/qemu/virt/events.json: fake-json-{any,ctr3,ctr34,ctr6} with EventCode
-+ CounterIDMask; mapfile.csv: 0x0-0x0-0x0 -> qemu/virt. Exercises jevents
-CounterIDMask -> counterid_mask= -> config2 -> cdeleg counter allocation.
+commit 9fd028f70a33e1a78db2f635eed4200c33b6b90d
+Author: Atish Patra <atishp@rivosinc.com>
 
-Signed-off-by: Atish Patra <atishp@meta.com>
----
- tools/perf/pmu-events/arch/riscv/mapfile.csv       |  1 +
- .../pmu-events/arch/riscv/qemu/virt/events.json    | 26 ++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
+dt-bindings: riscv: add Smcntrpmf ISA extension description
 
-diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-index 87cfb0e0849f..3533a8c0253f 100644
---- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-@@ -24,3 +24,4 @@
- 0x602-0x3-0x0,v1,openhwgroup/cva6,core
- 0x67e-0x80000000db0000[89]0-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
- 0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
-+0x0-0x0-0x0,v1,qemu/virt,core
-diff --git a/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json b/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json
-new file mode 100644
-index 000000000000..294c4ed645f6
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json
-@@ -0,0 +1,26 @@
-+[
-+  {
-+    "EventName": "fake-json-any",
-+    "EventCode": "0xF10",
-+    "CounterIDMask": "0xFFFFFFF8",
-+    "BriefDescription": "FAKE json event (any hpmcounter 3-31) - QEMU does not model 0xF10"
-+  },
-+  {
-+    "EventName": "fake-json-ctr3",
-+    "EventCode": "0xF11",
-+    "CounterIDMask": "0x8",
-+    "BriefDescription": "FAKE json event constrained to hpmcounter3"
-+  },
-+  {
-+    "EventName": "fake-json-ctr34",
-+    "EventCode": "0xF12",
-+    "CounterIDMask": "0x18",
-+    "BriefDescription": "FAKE json event constrained to hpmcounter3,4"
-+  },
-+  {
-+    "EventName": "fake-json-ctr6",
-+    "EventCode": "0xF13",
-+    "CounterIDMask": "0x40",
-+    "BriefDescription": "FAKE json event constrained to hpmcounter6 (out of a small pmu-mask)"
-+  }
-+]
+Add the description for the Smcntrpmf ISA extension.
 
--- 
-2.53.0-Meta
+> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
+cumentation/devicetree/bindings/riscv/extensions.yaml
+> index 4be557dc215de..ece3edccee42c 100644
+> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> @@ -189,6 +189,12 @@ properties:
+>              mechanism in M-mode as ratified in the 20240326 version of t=
+he
+>              privileged ISA specification.
+> =20
+> +        - const: smcntrpmf
 
+[Severity: Low]
+Is this inserted in the correct alphabetical order?
+
+The multi-letter extensions list in this file explicitly requires entries t=
+o be
+sorted alphanumerically. Alphabetically, smcntrpmf ("c-n") should come befo=
+re
+the preceding extension (smcsrind, "c-s").
+
+> +          description: |
+> +            The standard Smcntrpmf supervisor-level extension for the ma=
+chine mode
+
+[Severity: Low]
+Is "supervisor-level" accurate here?
+
+In the RISC-V ISA naming convention, the "Sm" prefix denotes a standard
+machine-level extension, while "Ss" denotes a supervisor-level extension.
+
+Calling it a "supervisor-level extension for the machine mode" seems
+contradictory. Could this be a copy-paste error?
+
+> +            to enable privilege mode filtering for cycle and instret cou=
+nters as
+> +            ratified in the 20240326 version of the privileged ISA speci=
+fication.
+> +
+>          - const: smmpm
+>            description: |
+>              The standard Smmpm extension for M-mode pointer masking as
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608-counter_de=
+legation-v6-0-285b72ed65a9@meta.com?part=3D6
