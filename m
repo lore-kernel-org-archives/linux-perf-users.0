@@ -1,134 +1,96 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4DA43C05F
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862D83403F6
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781015508; cv=none; b=WYM7M+tnSWnUllVA2EBiJ9bAqPVxSHXE3DrrR8s9AsUfGZaiDFShKs9tBGTvR1Lm0f+BbGbcTarPRi0UvFIpOIzvG1b4Pz27g5P1WQeK2KbfctRnvi/zkELI5RdLRY0VYt25nHWuASf4n57+8LQCusr7ixf4gsiSQOlFTfo8tww=
+	t=1781016019; cv=none; b=MlVIp9w/cpa+VZustkv+/Qec57q5FkqbhgzKcZfkXfZyWA3GfziStujgqlDTeTUQYXQJLiH+Zc86dSdFSAGLWXAUGV2pyH6M9nXPt2JkqRqHQWfo9eLCrQ3Z4pr+Rioyr5Qq4g5Uy0XqBEtsrC5DyBu87MNktpAxo2iGgRkwaRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781015508; c=relaxed/simple;
-	bh=6om1sNi+g28w6gz9Rvlzv8I2HBpgV5uEGqJP16w3z5E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bhVMh9VHPKkOtfMO+ASNq0YZ4XXxl9fsknyCtPXfKJrmvRndR0Lhz9RJ96dCHF20MqK/m+cK/v4z2WwpGf3NfAC96ofsqMnvF26EBLj70d8ebURoa5OdQhy/YoZITleuPZCZzpcyWwgRpVIiJ+yeLT6uCoCjApWA5RBfEpJiX2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rPVsdbSl; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1781016019; c=relaxed/simple;
+	bh=5Aj+VDgNQh+U2LJDBJf2bkydcIHzPWGjVmFacd09OYI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=o+9N8tU76AM+beelFejQve/Q3wI/AtsIdDIFRm/XuVBikB7dJMf7pgk8qND++Xj2N0rOCO5uKwOVEhJesXGQBS64ZhdMbHBIWTUQcqvCljtSo8d36DuNhkxZITUe0nGinUWDaFtv7+SabieVNyaHvSI+f94wqtF4/nR6073tGeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlrCfFBf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rPVsdbSl"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-490b8ac62baso44466715e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 07:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781015505; x=1781620305; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gf9ynHBKvgH06k0u+j7iXyYQLRwSGMTUy1wnSW+2ToM=;
-        b=rPVsdbSlordoDzz4dJC0m/hS9iHu0YT1qIwqFNELm5et07sTg9ned4voIE+qWCwk35
-         33Rkj59Hl7RX95gWU617Ot6zgAl6M+sIUCurWKDG3uZgtDvgBDs4wJ70mrzsEv/wkC8L
-         tXUpXOwenRaNkUFoQClN8hC3krWACRlBAQMMg3K0yAMmA6EmL7waPMFlBxkC5fyEjst+
-         YHLcGcMnvZs1/gZpAuw53qGUfrL+g3xpEufPsd3/kYzk21RuRmqFNztIwDSBggGjUX5H
-         BpjouZRKtsvFYF15EG6Z5KwVV/vceT5DP+jqj+giWCFoAU/ThPcNBF5POZTW8PafV/9A
-         vjjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781015505; x=1781620305;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gf9ynHBKvgH06k0u+j7iXyYQLRwSGMTUy1wnSW+2ToM=;
-        b=i/cJWRWFWUwlnI6o2XcoVEdGqNWkMj3lbVfdPs8W3R62ssSLkRpP7Ls4s+QM+lxa24
-         1deaBK+MCFslwiJwjX4yv5OInWU9LYPltF4QTk7USBjqZRtLYw7cKd87yqXU/sy5Xtjz
-         6tBZFM+auTAkXc/R8MaubLlvJrFw1znU73kUt3e+Y0l4yjrjiCMDkg9D0cIzTCSU0jXs
-         wLTHMHylXQzkpJZX0+aNDcLG47atOfQe7E+uyl9MGQvDm9n3YRs5hLeA6Zw1qP9Bd4ud
-         nYHvuv1E2JqtMNK3oF52m339nFmyJmrqOFAWObCx9QtoY7bjIBI2xRguR0vvPnksbKl0
-         bLmQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8PwVsBWSYM8NjBTncyZmujYgJIqqXOtiA+Ru+gawEMNmJ0q0wNbRIbDm4r/BVb0+juTl7optc8M8HcZDVItAk4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7NQYfNF4m12QGhXfveDd3XAaDDeLG3nRBXGlMUiW3Z6zolbJL
-	npE8Bs33ahvurJ8cbkPAuY4zU8C2BUYeHSIcNCD5maKnrYHgnoMRMo4Gi8gm6hM1rSs=
-X-Gm-Gg: Acq92OF+5pyCS/L3kECSqGO2SZAE/kDXhYuq2T2m7tokhy33Fd2iWXD9m/W/u5/59oo
-	azkuhBKtNNUmQmqOCb/V6+vnoMaQyuafA7ChcVYFtNLmwrAC9n/3AL0Wxs8rpgggNkX6X4OXq+Z
-	feL5VmKaNlguehix33SMHRZY3nXV/m8ySlfC8tfJyLClsVTCAnfoMhGvfyzbVLmrvGCBE+6CLny
-	reAVEiQ1Q1ZHVbpns47OFDI1uNZm+o2FqIv8YTZxmX8kCkzyaZjk97wArmspOy/xbrd34ISaSoz
-	SXOzX0JntjhhlCxjJaRCH5/wwVvq0T+zb/MZLxD0Q8BEiAKbgswqcs4A47ZT3GMJgsO53vzZsN2
-	NOSr7bMey1hrjoA85l/w3bJVfuVmKZnNS9Wc53QWAmUXJLn9M0muo0A+rreqJIQJj6H9tAstVtl
-	AcbOIhzlJmssnryDTv7SQvOzoVuNZElJy5VHVtlsBEnOE=
-X-Received: by 2002:a05:600d:15a:20b0:490:b58f:4d65 with SMTP id 5b1f17b1804b1-490c2d1fbefmr199528435e9.15.1781015505479;
-        Tue, 09 Jun 2026 07:31:45 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3444fesm62738388f8f.20.2026.06.09.07.31.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 07:31:44 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Tue, 09 Jun 2026 15:31:12 +0100
-Subject: [PATCH v4 19/19] perf test cs-etm: Move existing tests to
- coresight folder
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlrCfFBf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D77E1F00893;
+	Tue,  9 Jun 2026 14:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781016018;
+	bh=T/E59KL//R2Cp4XgcdV5KscYt/X6qQ+FIH6dEDf2cNw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HlrCfFBf1hDPNr6tKKxVAeymO/YNWxEadZKWW39DKVPla5hjAYzp5Z4p6S8S8OUjq
+	 Qi5iekzkwcQFISYWihZ8gx0fLD7kbZyP/bHhA1lZz8V9wWrUv6I0AnviVnRV05G9lP
+	 EaezFUd/s1uLAGsqj1Cc3KlRJ+2ecVsdiMZotrj75sfoKJmPxi60U6ESARIZiXD90i
+	 dVe7YS/rDn45aFgjiCj49iD+s11oe9U3n7xWftdWGDJT1Eq75Kd7AeVPhYsDao0bZa
+	 XvBMKL3OLrZ120P7V7AMu2mwpBm3bGysvCC329nY3i1FLX9c+dCoFgDU4xc/RU2tH9
+	 EIsGTrz3RkNfg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 02/19] perf test: Add workload-ctl option
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-2-44f9fb9e5c42@linaro.org>
+References: <20260609-james-cs-context-tracking-fix-v4-2-44f9fb9e5c42@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 14:40:17 +0000
+Message-Id: <20260609144018.2D77E1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-james-cs-context-tracking-fix-v4-19-44f9fb9e5c42@linaro.org>
-References: <20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org>
-In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- Paschalis Mpeis <Paschalis.Mpeis@arm.com>
-Cc: coresight@lists.linaro.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
- linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
 
-There is a subfolder for Coresight tests so might as well keep them all
-in here.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The commit message claims to add a `--workload-ctl` option, but =
+the implementation actually adds a `--record-ctl` option.
+--
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- MAINTAINERS                                                         | 1 -
- tools/perf/tests/shell/{ => coresight}/test_arm_coresight.sh        | 0
- tools/perf/tests/shell/{ => coresight}/test_arm_coresight_disasm.sh | 2 +-
- 3 files changed, 1 insertion(+), 2 deletions(-)
+commit be5e10b3228f286fe50c54ca1ba231a4a933afc1
+Author: James Clark <james.clark@linaro.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7efb893edcbb..ff8935b459ea 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2749,7 +2749,6 @@ F:	tools/perf/arch/arm/util/auxtrace.c
- F:	tools/perf/arch/arm/util/cs-etm.c
- F:	tools/perf/arch/arm/util/cs-etm.h
- F:	tools/perf/arch/arm/util/pmu.c
--F:	tools/perf/tests/shell/*coresight*
- F:	tools/perf/tests/shell/coresight/*
- F:	tools/perf/util/cs-etm-decoder/*
- F:	tools/perf/util/cs-etm.*
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/coresight/test_arm_coresight.sh
-similarity index 100%
-rename from tools/perf/tests/shell/test_arm_coresight.sh
-rename to tools/perf/tests/shell/coresight/test_arm_coresight.sh
-diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-similarity index 96%
-rename from tools/perf/tests/shell/test_arm_coresight_disasm.sh
-rename to tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-index f2fb1aa92252..ccb90dda2475 100755
---- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-+++ b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
-@@ -24,7 +24,7 @@ perfdata_dir=$(mktemp -d /tmp/__perf_test.perf.data.XXXXX)
- perfdata=${perfdata_dir}/perf.data
- file=$(mktemp /tmp/temporary_file.XXXXX)
- # Relative path works whether it's installed or running from repo
--script_path=$(dirname "$0")/../../scripts/python/arm-cs-trace-disasm.py
-+script_path=$(dirname "$0")/../../../scripts/python/arm-cs-trace-disasm.py
- 
- cleanup_files()
- {
+perf test: Add workload-ctl option
 
--- 
-2.34.1
+This commit adds an option to 'perf test' to open a named FIFO and send
+enable and disable commands before and after invoking a builtin workload.
+This allows syncing with a 'perf record' session to limit the recording
+scope.
 
+> perf test: Add workload-ctl option
+>=20
+> Add a --workload-ctl=3Dfifo:ctl-fifo[,ack-fifo] option for 'perf test
+> -w'.
+
+[Severity: Medium]
+This isn't a bug in the code, but there is a mismatch between the commit
+message and the implemented option. The commit title and message specify
+'--workload-ctl', but the documentation and code implement '--record-ctl'.
+
+Could the commit message be updated to match the implementation, or should
+the option be renamed to '--workload-ctl' in the code?
+
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+[ ... ]
+> @@ -1486,6 +1664,8 @@ int cmd_test(int argc, const char **argv)
+>  	OPT_UINTEGER('r', "runs-per-test", &runs_per_test,
+>  		     "Run each test the given number of times, default 1"),
+>  	OPT_STRING('w', "workload", &workload, "work", "workload to run for tes=
+ting, use '--list-workloads' to list the available ones."),
+> +	OPT_STRING(0, "record-ctl", &workload_control, "fifo:ctl-fifo[,ack-fifo=
+]",
+> +		   "Write enable to the fifo just before running the workload and disa=
+ble after, with optional ack from ack-fifo"),
+
+[Severity: Medium]
+This is where the option is defined as "record-ctl" in cmd_test() instead
+of the promised "workload-ctl". Does this option name need to be updated?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609-james-cs-c=
+ontext-tracking-fix-v4-0-44f9fb9e5c42@linaro.org?part=3D2
