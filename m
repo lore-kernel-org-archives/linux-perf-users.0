@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970BD4963BF
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 16:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AE037B01F
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 16:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781020802; cv=none; b=ZdaiRI64X8dpYO/diohPpVwOGoTx7Q4r85WcDdC80+P2po8LSG6o+/RKD5rAx9CbCCXHyVByIlsMW/DzRTucOQkZuhZ12MahmBIbgYccpRZlkG+tnewY3NrnsXOQ7LeqnSjOW+gjUXA9QR+CLpxJY0eJ8+asu4cTvPbRLDIuHX8=
+	t=1781021636; cv=none; b=siFxVg6sscwHS58JFuyaBiOWPz6S10CrzftburTN6geji08FKMky0Xm27we8RAyulg0nTv2RBynv1c3rvBpaC0dSx0aBTrBgT66JlHDf8bIrgCrHIx6A8DBbqc8CWZtpvm2+tqpNicUsQkfmDrcBIxh9qimIRxO2QRiTwt7TWnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781020802; c=relaxed/simple;
-	bh=KEvVQzHCnu7e54qpgZyC/8yp666/iL/shR5KH76sUzE=;
+	s=arc-20240116; t=1781021636; c=relaxed/simple;
+	bh=usXrSPDSg95i4cn/BwWCLQczJxJU58ExGnLglwkzcxE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GWe8xh6wzZPzIR7jWR3aSJmRpScxRuisas6ihmKv1wiz8o93M6a1RvpgY4I0Wj56S4JNY3Oth7fK/S8AutvleBxm4U5x9BOjsoVsW9O0PvmdIhpsm+q0aWKVkh0VrY+gWp5RdfyjRxW9mQWM6+HERhliu5BjqPWed8Gav7khqkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jYZ2dDS1; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=dD8ozOLud/EM4XECGY9kowLDw/ADiB7NY9uceJhCPFwYafkKqXxx8enH2acaMurAXOn7aXLWiU139rqc2WMyWVwC7PRbMIB2vMRiHiu1oVvq54aPV+MrPDSny4X5vTwOLoD5vAY9i/elPGsM/PNTfVJ/uVPDnIoNl5PYIi1o1Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzAy3VT6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jYZ2dDS1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2739E1F00893;
-	Tue,  9 Jun 2026 16:00:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzAy3VT6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA1F1F00893;
+	Tue,  9 Jun 2026 16:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781020801;
-	bh=INiizFLKT7LRBkRGCR5vOTzYGpcUIRIvA2Uca0LAxCQ=;
+	s=k20260515; t=1781021635;
+	bh=G8+/zgdad/Qc3lR0mpwggrtVVg2vAE6e8dOfWQk6RAw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jYZ2dDS1lJTtpbao8ntzNpLX4VI61Ub1dd26CbKs0xhZ8grPmEenpZI2QRPL2yO1E
-	 2PHnips/hd2VEalBYX3pIlp12vmW/iBN7jbsS/D+qsb/WwUQO2cRtCvoLLzbmiXgDW
-	 eeKsZdFiYTRKWNtQJqsZtvCaTDzVk0lsHpWtFZaj189fS/no78uehuvuHKIzn2ELVr
-	 7PPQhIg7TJUFfPtArlWQmw9cAA78q7ZJSOwykknZ405MFVTehyh8eWMXD3noiAZqnc
-	 aaOGGOAuXshs8v3RkIjqkv5JeTkGNe9F/TYRCgJLi7W2DZFyQJSyc7tCfPRWPWg8n/
-	 HPreWor6tNthw==
+	b=YzAy3VT6cG5g9CqdWlfLTJ9RbDq19p+Ppl7+Pteu5Yee80sp4z7xZrCPlxDaVhjAW
+	 aMgTgakd3yH0kw5egMLSB19eJzUwXbFC3yw+kBGWG9O++/bH+4evQ44frP6BgSnNa1
+	 jOCDB1h9XMHnImWDbTWuNWIPSSKiwWLeZxHzjy+Bug2eju/z6sqoT5gr9XPJlhu9BJ
+	 gOaLy6q22OBviWhdzm/iMR9FRStdbdh3LPK3TAfkphdobB8U0XEormgvek1/Ir8fbd
+	 8E9n/qNeg4Alhgf9eOjuIDuwN80arBP5VdrOlLPuQph/xEH/12HTSF1cPgYHO8Vjzp
+	 UqMoNwVfYE32A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 09/19] perf test: Add named_threads workload
+Subject: Re: [PATCH v5 12/19] perf test cs-etm: Skip if not root
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260609-james-cs-context-tracking-fix-v5-9-d53a7d096a19@linaro.org>
-References: <20260609-james-cs-context-tracking-fix-v5-9-d53a7d096a19@linaro.org>
+In-Reply-To: <20260609-james-cs-context-tracking-fix-v5-12-d53a7d096a19@linaro.org>
+References: <20260609-james-cs-context-tracking-fix-v5-12-d53a7d096a19@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 16:00:00 +0000
-Message-Id: <20260609160001.2739E1F00893@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 16:13:54 +0000
+Message-Id: <20260609161354.DCA1F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,83 +45,76 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The test workload loop is optimized away by the compiler, contai=
-ns a C11 data race on a shared variable, and contradicts its commit message.
+
+Pre-existing issues:
+- [High] The script is vulnerable to a TOCTOU symlink attack that allows a =
+local attacker to overwrite arbitrary system files with root privileges.
 --
 
-commit dcd726ac63da1e487f029b2a3e5128fec278becd
+commit 31448575355dfbf022d3a5103f47303bea93bbf4
 Author: James Clark <james.clark@linaro.org>
 
-perf test: Add named_threads workload
+perf test cs-etm: Skip if not root
 
-This commit adds a new workload to perf tests that runs multiple threads,
-each executing a unique function that loops and sets its thread name. It
-is intended to test processor trace decoding for concurrent threads.
+Use the common idiom for skipping tests if not running as root, which is
+required for these tests.
 
-> perf test: Add named_threads workload
->=20
-> Add a workload that runs X threads that run a unique function named
-> "named_threads_thread[x]" which performs a multiplication in a loop for
-
-[Severity: Low]
-The commit message mentions performing a multiplication, but the
-implementation uses addition. Is this the intended behavior?
-
-> Y loops. Each thread sets its name to "thread[x]".
-
-[ ... ]
-
-> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workload=
-s/Build
-> index 90f2d8aa4941f..75b377934a0e6 100644
-> --- a/tools/perf/tests/workloads/Build
-> +++ b/tools/perf/tests/workloads/Build
-> @@ -2,6 +2,7 @@
+> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/te=
+sts/shell/test_arm_coresight.sh
+> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+> @@ -20,6 +20,12 @@ skip_if_no_cs_etm_event() {
 > =20
->  perf-test-y +=3D noploop.o
->  perf-test-y +=3D thloop.o
-> +perf-test-y +=3D named_threads.o
+>  skip_if_no_cs_etm_event || exit 2
+> =20
+> +if [ "$(id -u)" !=3D 0 ]; then
+> +	# Requires root for -C and system wide tests
+> +	echo "[Skip] No root permission"
+> +	exit 2
+> +fi
+> +
+>  perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+>  file=3D$(mktemp /tmp/temporary_file.XXXXX)
 
-[Severity: Medium]
-In tools/perf/tests/workloads/Build, unlike other loop workloads in this
-directory, there is no CFLAGS_named_threads.o =3D -O0 override.
+[Severity: High]
+This is a pre-existing issue, but does enforcing root execution expose these
+temporary files to a symlink attack?
 
-Without this, will the compiler optimize the loop away into a single
-arithmetic operation and remove the branch instructions this test relies on?
+While the temporary files are securely generated with mktemp in the
+world-writable /tmp/ directory, the script breaks these guarantees before
+writing to them.
 
->  perf-test-y +=3D leafloop.o
+Looking at record_touch_file() in tools/perf/tests/shell/test_arm_coresight=
+.sh:
 
-[ ... ]
+record_touch_file() {
+	echo "Recording trace (only user mode) with path: CPU$2 =3D> $1"
+	rm -f $file
+	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
+		-- taskset -c $2 touch $file > /dev/null 2>&1
+}
 
-> diff --git a/tools/perf/tests/workloads/named_threads.c b/tools/perf/test=
-s/workloads/named_threads.c
-> new file mode 100644
-> index 0000000000000..d051d41a3cfe4
-> --- /dev/null
-> +++ b/tools/perf/tests/workloads/named_threads.c
+This explicitly deletes the safe file and executes touch as root.
 
-[ ... ]
+Additionally, looking at arm_cs_etm_system_wide_test():
 
-> +#define DEFINE_THREAD(n)						\
-> +noinline void *named_threads_thread##n(void *arg __maybe_unused)	\
-> +{									\
-> +	pthread_setname_np(pthread_self(), "thread" #n);		\
-> +	for (int i =3D 0; i < iterations; i++)				\
-> +		named_threads_work +=3D 3;				\
+arm_cs_etm_system_wide_test() {
+	echo "Recording trace with system wide mode"
+	perf record -o ${perfdata} -e cs_etm// -a -- ls > /dev/null 2>&1
 
-[Severity: Medium]
-In DEFINE_THREAD() within tools/perf/tests/workloads/named_threads.c,
-named_threads_work is a shared global variable accessed concurrently by
-multiple threads.
+Successive perf record calls rename the existing ${perfdata} to .old, freei=
+ng
+the securely generated filename.
 
-Without atomic operations or locks, does this introduce a data race?
+In both cases, could a local attacker use inotify to detect the deletion or
+rename, and insert a symlink pointing to an arbitrary file (like /etc/shado=
+w)?
 
-This might trigger ThreadSanitizer test failures during execution.
-
-> +									\
-> +	return NULL;							\
-> +}
+Since this patch explicitly enforces the script to run as root, won't
+subsequent file operations by perf record (which internally uses open with
+O_CREAT | O_RDWR | O_TRUNC without O_NOFOLLOW) follow the symlink and
+overwrite system files with root privileges?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609-james-cs-c=
-ontext-tracking-fix-v5-0-d53a7d096a19@linaro.org?part=3D9
+ontext-tracking-fix-v5-0-d53a7d096a19@linaro.org?part=3D12
