@@ -1,97 +1,109 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E02442B726;
-	Tue,  9 Jun 2026 14:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F7C35AC31
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781016580; cv=none; b=qol1gKXtuSSizjYFSvy3jb5nQZp9ymVk6C7AnrM3HduE/r7mJs50Wdz860PqelUvsv07Sglpb6woRyKS2OTBLJ5WDgCUlxB8Wod2T6sd0SPRWGCo0lXOb5Oe9sZVrBX5Vnd026gWENABs71J8Yx07QCLnIJKxgg9pPFnqZk4i8Y=
+	t=1781016658; cv=none; b=lUNNkWRU8beij/ZpH+5KWyuAmuCG/1lzNClyw04OhDbYd15txVJB4aU9s6ImR1v2lVn4Egroth4PfyDK554xsyGeOGnxYS851gqODi+XW1rjYlDeKOBfafGTIdMbSG9vvPbCEnEcPWmEJaoUPXpey6rjLkyFb9qJtZj/kQ77jaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781016580; c=relaxed/simple;
-	bh=2ewCUcI0flCYBaT4s4mcQNn2iJDvL75/thKr5TjX+AQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NHod9JYp8Nc49Ljir/FtnnzmtbKVH+BtntlEDZXqIwiF4Dr3yIBqFbwDDXRqXAKtvzdUBwL1VUC3DBSNsJqB1dvogwgxUvpMTKKoK9VmFQ7DbW3jZnH9SNRnYayHlqzQhCmKWOJMzbDKpCFQXy50c1ts5oCvhENvWb2QCWavE80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=omDM8BUS; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1781016658; c=relaxed/simple;
+	bh=ZzWoPCBiF1fAukx6i/iqlrbu9WETfegH6TN7T3HfQVg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Kga3MwtYcDGjeaMZZOzkF4v7S3wAWPODsZG83FQKZZ3xcfNEvppWl7JoNkarHEYXJ2nCt9NGXjTg1sUsEUmJz8IPEe0TTkuM7rQgRrXTlnOaXziOWvkHSft/Zsue5zZHerJB7mZ+cfHYzlXotuO1hOg3Q8pMrsf+Iz5lxy1P4JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXrxE9Ez; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="omDM8BUS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8azqwIzrz4burRhjLAjxRI5rm1Ojsv3uZVbseUdmtYk=; b=omDM8BUS44ngqbX1NeOHM3Ksya
-	J9m6tV6NhUVERSwxvBsNK+mE4vAoHlLnoP0RtMiQ1ECY9NrydfOVUY5kTtQ01lJ4PFqrRSfqzVkkz
-	cav2wgA881lKdnH94tQkzHKBvB/W83Q2xCUdcrN55+fyuy59YVZ90BJdXgepvgTP/A46XVj9HNjLT
-	S3vCbM4tjFDsP865OI83dUTIUvIp0899BEhUYANMLhGyTdYFP/WqpP5IL3MHq3OYtdlodxsD3oor+
-	kZ83T1Q5/S/rWXik9/a/kwdx7rfxxwAIDYVHwyj2U2hBz6Wbxvq9C5iedY3VJZaxnMZJVqKQXYg7s
-	0ojB4JPw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wWxlm-0000000Fslv-1Vj9;
-	Tue, 09 Jun 2026 14:49:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 552FA30025D; Tue, 09 Jun 2026 16:49:34 +0200 (CEST)
-Date: Tue, 9 Jun 2026 16:49:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>
-Subject: Re: [Patch v2 4/9] perf/x86/intel: Fallback to sw branch type
- decoding if no hw decoding
-Message-ID: <20260609144934.GC49951@noisy.programming.kicks-ass.net>
-References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
- <20260609050222.2458129-5-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXrxE9Ez"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276961F00893;
+	Tue,  9 Jun 2026 14:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781016647;
+	bh=QZaTM4DDkeuAoh+arh+QkobKDqi0dCt3AiR+Nrh/BlE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=VXrxE9Ez0GzgnMQ6EGibyL4dIzZ/kmrgadAKBrCc1s6Fa9DKYGKhg4kuUL74DFyoa
+	 mipYeJd1U7o79rHjUhp4O9ugIWjImRIecXJ9FsyBYggREQH+B1x9MyKxVMbEevBo0V
+	 huncFgj04FSnwdMR7V/0aLa0MJ4vcgxeFlGF+23Psn1Fxk1jGpqrJDZRY2UcilCW7i
+	 pOteC1aJr1Y+nRULiIveICf8iF4RrPteJkgX/gHaPIfLYGnbiGnn5TeeHLlMaYoeCy
+	 qCidmDZ1GWjKh+bPPOlREW6mGCcrNSNRaVCFCH6pJ/MZqsWmYQiAxmHA1tQA95ukIt
+	 idRw3J12toUaw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 09/19] perf test: Add named_threads workload
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-9-44f9fb9e5c42@linaro.org>
+References: <20260609-james-cs-context-tracking-fix-v4-9-44f9fb9e5c42@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 14:50:46 +0000
+Message-Id: <20260609145047.276961F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260609050222.2458129-5-dapeng1.mi@linux.intel.com>
 
-On Tue, Jun 09, 2026 at 01:02:17PM +0800, Dapeng Mi wrote:
-> intel_pmu_lbr_filter() currently assumes Arch LBR provides hardware
-> branch-type decoding and skips software decoding on that path.
-> 
-> However, Arch LBR may not always expose branch-type information. In
-> that case, treating entries as hardware-decoded can misclassify sampled
-> branches (for example, defaulting to JCC), which breaks branch-type
-> filtering results.
-> 
-> Fix this by using software branch-type decoding when hardware
-> branch-type decoding is unavailable (that is, when x86_lbr_type is not
-> enabled). This keeps branch classification and filtering behavior
-> correct across Arch LBR configurations.
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  arch/x86/events/intel/lbr.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-> index 72f2adcda7c6..d4c0ed85e1fb 100644
-> --- a/arch/x86/events/intel/lbr.c
-> +++ b/arch/x86/events/intel/lbr.c
-> @@ -1232,6 +1232,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->  		 * OTHER_BRANCH branch type still rely on software decoding.
->  		 */
->  		if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
-> +		    static_branch_likely(&x86_lbr_type) &&
->  		    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
->  			to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
->  			type = arch_lbr_br_type_map[type] | to_plm;
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The thread work loop is completely optimized away by the compile=
+r, introduces a C11 data race on a shared global variable, and performs add=
+ition instead of the documented multiplication.
+--
 
-Now you have two static branches in concert. Best to make sure
-x86_lbr_type covers both conditions, no?
+commit af99f4d30611866956b89fbc6d9ae547214d6310
+Author: James Clark <james.clark@linaro.org>
+
+perf test: Add named_threads workload
+
+This commit adds a new named_threads test workload to perf, intended to spa=
+wn
+multiple concurrent threads to verify processor trace decoding handles them
+properly.
+
+>     Add a workload that runs X threads that run a unique function named
+>     "named_threads_thread[x]" which performs a multiplication in a loop f=
+or
+>     Y loops. Each thread sets its name to "thread[x]".
+
+[Severity: Medium]
+The commit message states the workload performs a multiplication in a loop,
+but the code performs an addition. Should the implementation be updated to
+match the description?
+
+> diff --git a/tools/perf/tests/workloads/named_threads.c b/tools/perf/test=
+s/workloads/named_threads.c
+> new file mode 100644
+> index 0000000000000..d051d41a3cfe4
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/named_threads.c
+[ ... ]
+> +static int iterations =3D 500;
+> +int named_threads_work =3D 1234;
+> +
+> +typedef void *(*thread_fn_t)(void *);
+> +
+> +#define DEFINE_THREAD(n)						\
+> +noinline void *named_threads_thread##n(void *arg __maybe_unused)	\
+> +{									\
+> +	pthread_setname_np(pthread_self(), "thread" #n);		\
+> +	for (int i =3D 0; i < iterations; i++)				\
+> +		named_threads_work +=3D 3;				\
+> +									\
+> +	return NULL;							\
+> +}
+
+[Severity: Medium]
+Does updating the shared global named_threads_work concurrently across
+multiple threads without atomics or locks cause an unintended data race?
+
+Additionally, because this loop lacks memory barriers or volatile qualifier=
+s,
+will the compiler optimize it away under -O3 compilation?=20
+
+If it gets optimized into a single operation, the threads might exit almost
+instantaneously, preventing the workload from generating the overlapping
+processor trace samples it was designed to test.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609-james-cs-c=
+ontext-tracking-fix-v4-0-44f9fb9e5c42@linaro.org?part=3D9
