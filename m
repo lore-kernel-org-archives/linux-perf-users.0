@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13335306B31;
-	Tue,  9 Jun 2026 01:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09E02F8EB8;
+	Tue,  9 Jun 2026 01:05:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780967147; cv=none; b=nhKFHiygV9kZ/M6LIdu2F3/q3dxvcxav2kkzYVV7oK6jFnj+KYdUX6PNJRU0olFEC/aIPpSuGzg7kUZLb4+WQQsaYv45bJXGbOKVXLwiHxY0jTfcmKFNAYiSCrHjqkfD64g8Ah3SGjk8x5+rESC2tDzMSM5vl+zUJpMslB529mM=
+	t=1780967149; cv=none; b=BS34ellj1hAR3t/Mj6CdB5y933iKrmptpxlbABQr8/1QoVYocZTuGLe3mv51IcjAb2GbNtdXAmrBVJWzYNmIIab7mIWR3sHZdMWdsSvyOUeZrU5SV1rkRtluipMWUJKcJJ8kVOSyVbfyQ7sPK0ZLjnuHZsHTiSGAjMOlYdbqpj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780967147; c=relaxed/simple;
-	bh=EXMhfvwLLw040xfsGolKK1QjRG2FMg6rWYFfl1PZy6E=;
+	s=arc-20240116; t=1780967149; c=relaxed/simple;
+	bh=9TieOOprA3pr2lqyOGdp8nr4IhsnNzh39oJ7l0byf9s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oP8n7v1ncT1xEWr84ogzZaHcNZ2oEkeJM78vkRPEyk4AlINRnCdJz8kQGSxq0TQNmTLhXJ3jLXJotsKP876lehaKisHYaAkMzyTP64FbyGdri1rY7arJdcW3H4eO59c0yO4ervuwngaHdUnd+McfzyVhpJcKH61/5kqIGdAcn9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPD4txZJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=PuYWUXYOv9UIP5mRpXNd+lypfBLcsWNpss71UIWmC7+AuVW0Kr/Kfdlxko15+245mbs1YawQ6XlyZ1e4xQV+6T+UdN/yB+nVdC0DVvYJQKt8rbZj0RYxktaZ7keMRl/7fK2MPJMb6y6y93r3/SeSYkhUwcb1MD6GTm3dAayOqik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FApIkCrq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPD4txZJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B4161F00898;
-	Tue,  9 Jun 2026 01:05:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FApIkCrq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19D271F00899;
+	Tue,  9 Jun 2026 01:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780967144;
-	bh=Z8LBu98PZHrCyXJxETKiHVxoJv+6W+cQ+c/mczfZabw=;
+	s=k20260515; t=1780967148;
+	bh=Uw4uWVRMf5QS3Z8FoMtWU6duDIpuVg5a57WXOsSf96o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KPD4txZJRCos09Z2ECWvTzx35I8ELHA8XC00OpOpTg6MXnzorej0e8j5xIeukyVlR
-	 XLTr9O5f2MfCE6S9dNqDpqUWcJW3dwGs+9ziOVMoU5CF1wd9aFxgh1hexzQnDL9lL7
-	 S7+KnUJebm11MA+lklcw+oBzfeshDhiyIc+2Ljz60+emU0h6GiWzXztZnhAudRuBBv
-	 DVQXj27NRszSg6LKtEXBdGJ9f6io+i2YTgZGf8RITHdA2Nn791R15liyw9y8FnagWa
-	 yfH6PAjVDzkoG8e86Lg7u/AnqIUoXMkXoui7LHWj64gDgklF5j0fdYbuapgkTXFM/Q
-	 VH7CyYvqxupLA==
+	b=FApIkCrqopCX28ZkhLFuIKTD9Xh/oyTlSqcuquJK5c6gE50wRmQfFZeEB1gxhRQdS
+	 NKy6bh51BCdD8qXyVxjIrgl6fKOsZsuuNKL8m0chM15GKQDJVD5UlK+fLxocJKzxnV
+	 nVNyR4jU2IfIiw+azWZ13JdpjCWnD1sDyxCDmDUof/N0/EFeK+1SOh+UObGUDRYdEW
+	 Tv1KCBKkJutjt6EmLzNSbFCElf4jGxAyZ8Of41NAzzFdlCPFdzfvNwBvh6wIX5318E
+	 gTV+nVkYl6Q+lWTFZ2MSCRQtr3yza/Edcoh43WC3NczQyn5axbxrP12k+a3nrUh0nZ
+	 enM1q99PQ1xFw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,12 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Kan Liang <kan.liang@intel.com>,
+	Alexey Budankov <alexey.budankov@linux.intel.com>,
+	Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 03/11] perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
-Date: Mon,  8 Jun 2026 22:05:17 -0300
-Message-ID: <20260609010526.1998472-4-acme@kernel.org>
+Subject: [PATCH 04/11] perf tools: NULL bitmap pointers after bitmap_free()
+Date: Mon,  8 Jun 2026 22:05:18 -0300
+Message-ID: <20260609010526.1998472-5-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260609010526.1998472-1-acme@kernel.org>
 References: <20260609010526.1998472-1-acme@kernel.org>
@@ -57,60 +58,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-machine__resolve() accesses env->cpu[al->cpu].socket_id after checking
-al->cpu >= 0 and env->cpu != NULL, but without validating al->cpu
-against env->nr_cpus_avail.  Since al->cpu comes from the untrusted
-perf.data sample, a crafted file with a large CPU index causes an
-out-of-bounds heap read.
+Two call sites free bitmaps without NULLing the pointer, risking
+double-free if the structure is reused or cleanup is called twice:
 
-Use perf_env__get_cpu_topology() which validates both NULL and bounds.
-Also bounds-check al->cpu before the cast to struct perf_cpu (int16_t):
-without this, values like 65536 silently truncate to 0, bypassing the
-accessor's internal check and returning CPU 0's topology.
+ - mmap__munmap():                 map->affinity_mask.bits
+ - record__mmap_cpu_mask_free():   mask->bits
 
-Fixes: 0c4c4debb0adda4c ("perf tools: Add processor socket info to hist_entry and addr_location")
+Set each pointer to NULL after bitmap_free().
+
+Fixes: 8384a2600c7ddfc8 ("perf record: Adapt affinity to machines with #CPUs > 1K")
+Fixes: f466e5ed6c356d1d ("perf record: Extend --threads command line option")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Ian Rogers <irogers@google.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/event.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ tools/perf/builtin-record.c | 1 +
+ tools/perf/util/mmap.c      | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 66f4843bb235df53..ea75816d126a14be 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -14,6 +14,7 @@
- #include <linux/perf_event.h>
- #include "cpumap.h"
- #include "dso.h"
-+#include "env.h"
- #include "event.h"
- #include "debug.h"
- #include "hist.h"
-@@ -836,8 +837,18 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
- 	if (al->cpu >= 0) {
- 		struct perf_env *env = machine->env;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index a33c78f030d91012..e915390556752b9e 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3084,6 +3084,7 @@ static int record__mmap_cpu_mask_alloc(struct mmap_cpu_mask *mask, int nr_bits)
+ static void record__mmap_cpu_mask_free(struct mmap_cpu_mask *mask)
+ {
+ 	bitmap_free(mask->bits);
++	mask->bits = NULL;
+ 	mask->nbits = 0;
+ }
  
--		if (env && env->cpu)
--			al->socket = env->cpu[al->cpu].socket_id;
-+		/*
-+		 * Bounds-check al->cpu (s32) before casting to struct perf_cpu
-+		 * (int16_t): without this, e.g. 65536 truncates to 0 and silently
-+		 * returns CPU 0's topology.  Can go once perf_cpu.cpu is widened.
-+		 */
-+		if (env && al->cpu < env->nr_cpus_avail) {
-+			struct cpu_topology_map *topo;
-+
-+			topo = perf_env__get_cpu_topology(env, (struct perf_cpu){ al->cpu });
-+			if (topo)
-+				al->socket = topo->socket_id;
-+		}
- 	}
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index d64aec6c7c843e81..c6bd4c37d50ee57e 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -238,6 +238,7 @@ static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
+ void mmap__munmap(struct mmap *map)
+ {
+ 	bitmap_free(map->affinity_mask.bits);
++	map->affinity_mask.bits = NULL;
  
- 	/* Account for possible out-of-order switch events. */
+ 	zstd_fini(&map->zstd_data);
+ 
 -- 
 2.54.0
 
