@@ -1,87 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA54748B38A;
-	Tue,  9 Jun 2026 17:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935F33624C3;
+	Tue,  9 Jun 2026 17:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781025648; cv=none; b=H9kKXd5dPvdE4ozR9dnhDNGyBgc4fyeMb8W1ymLnHr+MeX9lzxTrUgMAhTNXx1Yl/2cneE6sMmuk2XZABEbQRu+RuXB6MliHEvJSwYO9D8Y9hPmPrKqRJ/B3vCIKe4KllHLiVgzFpH1LdesNFbE+WQd8CxqoQ5otpyW55uTLbEY=
+	t=1781025749; cv=none; b=eoBt1Z5IwXCzQ9rweGA2uvcMbCGyR5RzaYVErU6wqOV6sRwbIqo04gf+JEgrBAxu6lyYr3iForQEqLrxwZW+2Q1buBJDdy+oqRXCCnLDMXBZcR7Z4ApWf0vPhM0eajOv082aEUf9RKEWaVMhvyvhYRHyO441QzPwxm1cd33dRLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781025648; c=relaxed/simple;
-	bh=ImVPaj0F4qTX/liHNYXOGJ0NqrIRrly9piARqYYgYm4=;
+	s=arc-20240116; t=1781025749; c=relaxed/simple;
+	bh=Hb9sh0XqrPvMs+wMFgaBttMD3J72cATuxpC19PaBECg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nzIlGLkj1gQ0Zsarm191S8yeenAReldR/URvQgLNMoRZwxaBCjlIs1wa3p/V0RTcCVsT7A9WSfzY6h393/FoQ057aYLkZk5VIVEjNAYeBapqEAigfP3NKomvX6UXmcrbcYWX309g7TtcqAJUtcxMkCSYHZVoKWupVdU884DUReo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQzEpveP; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=opv5FbK7TdveGeSVF2ZIRHpnOMhDcUmg/O50LwXOgofbby6riGd9uv9qk45uYei2m4xmg5FRHBprCyfIl55wRyCPVVPnGRahBzI6CRG2nuQ9FYBBlF2qyA3T/Na1UrH0HgPZJ07Cq9DIkop9lVY5W0uZBZr+pTIZLv1WMMzUGBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VP3XP5fK; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQzEpveP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89831F00898;
-	Tue,  9 Jun 2026 17:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781025646;
-	bh=Vf7rppeqg4XAWT3NFOVhieS+Y07eza3pnTrSE7q2dj4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bQzEpvePvF6HZV1fMU21YY2FpA2MGrgdB1au7SB8/2Azn33qjhYEJsVuL/xTAHBYv
-	 5SkJM6k4lzYnxt4Hiwqhj7YeqbsoY2dreVCBkDVYcEFm+avEL9SnCSAXfb2O0Ek9Ci
-	 JXrYks2xnf13h+q8FqkBPWzo7/lxHjquMxf/WJvBE7gD5jvsZqrSS1Xo+GC0DiRS8q
-	 lote1d2vr3U2sBEusHpUh16V5Be/AE0wU8HF2A9GmUOWtknrgd2M/q68luURl/NYJb
-	 p+TgQ+rwYo19uw6YoDfXgKvbkJPP8AqK0pBT/1UKNeWus9/wXQ2f91cs6JZzCERurK
-	 T2q1ofCbADVxg==
-Date: Tue, 9 Jun 2026 14:20:43 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Chun-Tse Shao <ctshao@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v8 2/2] perf evsel: Find process with busy PMUs for EBUSY
-Message-ID: <aihLa9ezNXXZm9mC@x1>
-References: <20260602181349.3969429-1-ctshao@google.com>
- <20260602181349.3969429-2-ctshao@google.com>
- <CAP-5=fVwLO29i5SoLjOBhPqqUMTiy-z52Wm1mbeBF_941Jbx9Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VP3XP5fK"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 266763D7A;
+	Tue,  9 Jun 2026 10:22:22 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DC143FD88;
+	Tue,  9 Jun 2026 10:22:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1781025746; bh=Hb9sh0XqrPvMs+wMFgaBttMD3J72cATuxpC19PaBECg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VP3XP5fKK3fja/qhvB1t3AAfjIidu+vWl6InvoHzF9PxDdOxrE2KtrHumDlDCf1jE
+	 aXwgGFxafMttsFq8WEG9bEUeqBXGpMPQTy2k1CpNbdEgsrvRWFOyQQFrqAYzonsWVx
+	 ttswgpfXHmpl9QubXEniFxCjySz3Uuv7EQynSYJU=
+Date: Tue, 9 Jun 2026 18:22:24 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Paschalis Mpeis <Paschalis.Mpeis@arm.com>,
+	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 15/19] perf test cs-etm: Remove unused Coresight
+ workloads
+Message-ID: <20260609172224.GS101133@e132581.arm.com>
+References: <20260609-james-cs-context-tracking-fix-v5-0-d53a7d096a19@linaro.org>
+ <20260609-james-cs-context-tracking-fix-v5-15-d53a7d096a19@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVwLO29i5SoLjOBhPqqUMTiy-z52Wm1mbeBF_941Jbx9Q@mail.gmail.com>
+In-Reply-To: <20260609-james-cs-context-tracking-fix-v5-15-d53a7d096a19@linaro.org>
 
-On Tue, Jun 09, 2026 at 08:58:03AM -0700, Ian Rogers wrote:
-> On Tue, Jun 2, 2026 at 11:13 AM Chun-Tse Shao <ctshao@google.com> wrote:
-> >
-> > It parses fdinfo with PMU type, comparing with the event which failed to
-> > open, and report the processes causing EBUSY error.
-> >
-> > Testing cycles and intel_pt//
-> >
-> >   $ ./perf stat -e cycles &
-> >   [1] 55569
-> >   $ ./perf stat -e intel_pt// &
-> >   [2] 55683
-> >   $ ./perf stat -e intel_pt//
-> >   Error:
-> >   The PMU intel_pt counters are busy and in use by another process.
-> >   Possible processes:
-> >   55683 ./perf stat -e intel_pt//
-> >
-> > Only perf with intel_pt was reported.
-> >
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > Assisted-by: Gemini:gemini-3.1-pro-preview
-> 
-> Arnaldo, as the kernel piece of this landed (thanks Peter!) could we
-> land the tool part too?
+On Tue, Jun 09, 2026 at 03:40:20PM +0100, James Clark wrote:
+> These are now unused and had various issues like not working with out of
+> source builds and being slow to compile. Delete them.
 
-Thanks for pointing this out to me, I'll do some housekeeping and
-process this.
+> +There are a set of Perf tests for CoreSight which can be run with::
+> +
+> +  sudo perf test coresight
 
-- Arnaldo
+Tested-by: Leo Yan <leo.yan@arm.com>
