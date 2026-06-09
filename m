@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70DD2F90E0;
-	Tue,  9 Jun 2026 01:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6D425B09D;
+	Tue,  9 Jun 2026 01:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780967140; cv=none; b=nhugF5ti00FYDXe2c2yqlVrYF9Y4mNZoE0uvXYglp1sFwZDV0WttrXcXCYEmVgpuFWddFijpPiR1mmbqVRtgK4XZS6+Esbi+CPEP00W+Y4/+vMnJWowt9HCoQV92JdVDPvucDkarjOf1zypz0TzyVayrQQtQ14osuJ4WPqnPSUA=
+	t=1780967141; cv=none; b=HxF23aETHgjU2MuZAjUCtjXp5NE3yvkpr2o8enPahl6jkvBJX5fhi22IpUfAY2AwwR+O4VuP8HnccH3Ff09zWV6IcxPdN8Qebvdtp7IHZuHbO9/LkeLA86IJEsxb9hHzfdQYSoN+q1Edqjm2YYYfHtBd/vvkDEtvfawwIukGRns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780967140; c=relaxed/simple;
-	bh=ZFmxeRF33aOVcAm6nSVaLFATExq9wDl2gMN4BS28DjU=;
+	s=arc-20240116; t=1780967141; c=relaxed/simple;
+	bh=fIY4tBDbxr/VoTRY10sITFLHoq4fpQQPfql7EhwWukE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WqudpLp41XOKx5+iBxsK9vr/wfaeK2x4U/4p5OI/gotfduSRvWSGCkhGblWuIPZrD6zURtb2iISm6yu3cZjTs+K+Gam1pE/LQNdWl2PGeQfOs9T6oGTPyH9a+RAxGe25NTW8TkeFUyajO4rlHNzYsDfWBv91pPwMLuhy8uHsURk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bhk0lAuZ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Knc4GPv41kJU/r6my/CDxFgBczFKwfPwmNh595SBpnoOLAJeOKNpqV5xscS/3izSf26xcT/NnQRHObaGcbuOrM6lXDqYdTkZJatzSoBoPvOFVHFZLMunjxwwa0fofey9OgmsOiZWc8MBErvAHOAZobc+ClC6cJ2gi22ycJ9o+jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDyHtF2q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bhk0lAuZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060D31F00898;
-	Tue,  9 Jun 2026 01:05:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDyHtF2q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C33331F00893;
+	Tue,  9 Jun 2026 01:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780967137;
-	bh=QPs98qVff/anFpPoGyuFck/93uaLBPSTCG1Ifpj0OGA=;
+	s=k20260515; t=1780967140;
+	bh=IDEpi7rzGjAKJsN5adCBWdAC/uJCOWbut3XQjREtJ80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bhk0lAuZicludYQduTAulmpkJTxCK+S9r1XNiYz7eEK1cUysSm4W0TFy+s3kI3QBH
-	 j0M2GpKSMrSmpKPqkC1g8RhjoJcK94A98AWRdOc6XszkHmzDjg8O4lQbbY2vmuk50D
-	 e0xe/zW1uuQUCTb7Oig4T/2JPppgqCH0FZkTZU7O4oKXGjFO70a/dygZW1LYO/mWEe
-	 hvuES98Nr/1YVFICKOzZZK6/FNulL7pGVVNdiQDnkoS+2E577VVmK9wUNtvIm/mT1b
-	 CJWZNHoASye9q37a9dV8ssu2isa1JZaBKcWHaK/U8a3vASq1ignM09jhFXFSOcKOLL
-	 ErzujcPk0g6AA==
+	b=WDyHtF2qH3JJqLvCRpE0G7UU02Ko3vhu01P5O/9525p3ZWahaWcC1KWpKhSwwWYMe
+	 5AKLmkoreSHNcNv9PId72SJjD3ylclDR+OstjZzPAFtJPzFbJUBZa5OPl+lTL9FYlw
+	 t+usOU1AunIxXiuswILrIdr4DjAllU9y4FdpMxsHLE5+rUNNJPSlJ0euxYHQtbArNp
+	 Ot1hny2Nml3q0xXuh96S/+m2CyPpFL3Ix4RJRJLSmiEen+gpt/Ygg4UlZzKDgA6gBs
+	 PwbrFq1pLOaMAOL1Q6VUpdYdnQ5Eyy3Ou90MeU9PBJr273pM+i+DyKswk5FDerpfq8
+	 UlrPFl2mYp06A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Don Zickus <dzickus@redhat.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 01/11] perf tools: Fix get_max_num() size_t underflow on empty sysfs file
-Date: Mon,  8 Jun 2026 22:05:15 -0300
-Message-ID: <20260609010526.1998472-2-acme@kernel.org>
+Subject: [PATCH 02/11] perf tools: Use scnprintf() in cpu_map__snprint() to prevent overflow
+Date: Mon,  8 Jun 2026 22:05:16 -0300
+Message-ID: <20260609010526.1998472-3-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260609010526.1998472-1-acme@kernel.org>
 References: <20260609010526.1998472-1-acme@kernel.org>
@@ -53,48 +52,66 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-get_max_num() reads a sysfs file (cpu/possible, cpu/present, or
-node/possible) and scans backward from the end to find the last
-number.  If the file is empty, filename__read_str() returns num == 0.
-The loop `while (--num)` decrements the size_t from 0 to SIZE_MAX,
-reading backward across the heap until a comma or hyphen is found
-or unmapped memory is hit.
+cpu_map__snprint() accumulates snprintf() return values in ret.
+snprintf() returns the number of characters that *would have been
+written* on truncation, not the actual count.  When a fragmented CPU
+list exceeds the buffer, ret grows past size, causing `size - ret` to
+underflow (both are size_t), and subsequent snprintf() calls write
+past the end of the caller's stack buffer.
 
-Add an early return for empty files before the backward scan.
+Switch to scnprintf() which returns the actual number of characters
+written, making ret accumulation safe by construction.
 
-Fixes: 7780c25bae59fd04 ("perf tools: Allow ability to map cpus to nodes easily")
+Fixes: a24020e6b7cf6eb8 ("perf tools: Change cpu_map__fprintf output")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Don Zickus <dzickus@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Ian Rogers <irogers@google.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cpumap.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/cpumap.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 21fa781b03cc7409..1fab00ec4a59a0c7 100644
+index 1fab00ec4a59a0c7..23ebe9b97f8e58af 100644
 --- a/tools/perf/util/cpumap.c
 +++ b/tools/perf/util/cpumap.c
-@@ -448,6 +448,12 @@ static int get_max_num(char *path, int *max)
+@@ -692,21 +692,21 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
+ 		if (start == -1) {
+ 			start = i;
+ 			if (last) {
+-				ret += snprintf(buf + ret, size - ret,
+-						"%s%d", COMMA,
+-						perf_cpu_map__cpu(map, i).cpu);
++				ret += scnprintf(buf + ret, size - ret,
++						 "%s%d", COMMA,
++						 perf_cpu_map__cpu(map, i).cpu);
+ 			}
+ 		} else if (((i - start) != (cpu.cpu - perf_cpu_map__cpu(map, start).cpu)) || last) {
+ 			int end = i - 1;
  
- 	buf[num] = '\0';
- 
-+	/* empty file — nothing to parse */
-+	if (num == 0) {
-+		err = -1;
-+		goto out;
-+	}
-+
- 	/* start on the right, to find highest node num */
- 	while (--num) {
- 		if ((buf[num] == ',') || (buf[num] == '-')) {
+ 			if (start == end) {
+-				ret += snprintf(buf + ret, size - ret,
+-						"%s%d", COMMA,
+-						perf_cpu_map__cpu(map, start).cpu);
++				ret += scnprintf(buf + ret, size - ret,
++						 "%s%d", COMMA,
++						 perf_cpu_map__cpu(map, start).cpu);
+ 			} else {
+-				ret += snprintf(buf + ret, size - ret,
+-						"%s%d-%d", COMMA,
+-						perf_cpu_map__cpu(map, start).cpu, perf_cpu_map__cpu(map, end).cpu);
++				ret += scnprintf(buf + ret, size - ret,
++						 "%s%d-%d", COMMA,
++						 perf_cpu_map__cpu(map, start).cpu, perf_cpu_map__cpu(map, end).cpu);
+ 			}
+ 			first = false;
+ 			start = i;
 -- 
 2.54.0
 
