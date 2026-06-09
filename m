@@ -1,65 +1,65 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8921A3BCD23
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 16:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C174A2E13
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 16:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781024254; cv=none; b=JwWUHRvvO1rCiFlaDIzmjga7VK7OO6AecJAZQmJedZT2qRtv7O5n+jq1YdlKgTr0pjQcHQkHsIfQIk4WjYQfmqTpFpowS9xsqn7TalQNSu8EN3NTLHtC1MJuXAWiI6JUik7z1yeIPW8T22efjdCIFXnApbIKk76e5dk1qrOlTGQ=
+	t=1781024256; cv=none; b=lryRAIXaGp5G7n6tIfYVOiSjx5gSRnTDiuHnlmKLOvtDsu4mI4yEQJLkYdtoKGZBsqnJzAxF+7yYUT8PpG/wyZy3xuyS3IPco+C7wDKcxnvmFK3i4PSS3q8/xLo46HWE7YT5Yx0XEx4qdugYewN4aZVs6Ih2XFlFBOovfg+yAUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781024254; c=relaxed/simple;
-	bh=j9rAu2ch3U0PopGp2J2OtpKMyKPvVhnNhyR4tZXXCII=;
+	s=arc-20240116; t=1781024256; c=relaxed/simple;
+	bh=OQF4F9a+rsmk+xc0G0FOtWI3YX3Mr7AvnAEUFnLylmQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cJia4zzGUo4ibc1WB5bZwd5qPFpFcLFYtYEDuE4EeWuBGaFsu7Yaas61JOOCELa1q5DgQvIZ1uvqRAek5iiP8pht7yXqXz2cIYrMm1GmjmLvCgnmjWuA2MK6rah0Y7m/ZUDxmZLSUnluy2wmn9j5CDtOWxOHeqYSp+LdMMsR/tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aXYNsfiq; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=HoD+bmqMghzC+4y+ZzLJ5FZub3pianlQb/yjW4jHeY8B90Is8bHgRj2Vn539glx+2/GDPGLC25E9GsJfvO1lHDrdXpFFhJFA39WEPC4Q28TP6WxqRd8gb3DXafTCnCLtO15F1+HIRsEIllimrcchv9GEzL7NmOQM9INRm0vYZV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CYDQ6aOM; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aXYNsfiq"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304d8613efbso5862049eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 09:57:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CYDQ6aOM"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304ea1eea05so725787eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 09:57:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781024253; x=1781629053; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781024255; x=1781629055; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2MaddhjZSLJjQwBreN2wO4fD/cwTQ9BQwJgEVkkOTsM=;
-        b=aXYNsfiqhrreXKHQ48e4kRTZXBQgQrHPsHrrk5bbC086gbaPMT41yRkSCpY+OzIp/U
-         Zz2NPyLIxvNUptLKnocAIAKcRumfiU29RUa6KT/6TnTkEyZnE7aHLeWt69/6oYCqw7PF
-         ODcScB9Rpc8Av7K1gLNt1WA7TxRUgyAWOlUbJ4jRXvTDJimD4BEbAjlUgQ8zrATCWsCe
-         TjXCo7jh3dmlWNEBcV00sRu80XTZnojSdh6lfIs+5EV2yt8G6RtG/EuYsMg1tTRVvYhY
-         NgaiJs+ctKrYQBOjdMLafwDTg9IZ2co8fwbe9qyeXVz+GMomVpGkMnlBoLJ0jYSbWD9h
-         q0HA==
+        bh=9LaWkWhrJUw9a/giq+cHZdt0Sg1l4kluVtd55JMhqgE=;
+        b=CYDQ6aOMBTnxBlg2K5r/6iaPx1zy4WqElGnsSoZ3kH5q9Zekf8fGWXaFhkbvmKYzad
+         mXytRCQMa0w+hdmAg4YwGzlhm/zMPYzf5CD7inVPrsSTmRW1N/UbQYbN5TDVA9HZ9sLw
+         lHBMm0NdGCkl598YrqJ+Q2/GXUfQJoglxgG9MmLdgBYVrEXt4CwR6Su5lW6fNBaIb3D6
+         WPDKskqQx5uWsR89rdGwvcYvy/LfHOZJMFdTXmYy0v0sSKI2I7LBLfrb56AS6p7QR6XY
+         APsJDZsHWeMuHThbSzS1muk3fyXx5nU54nW1vs2KrW/BAas/uT24sOPCwoSuiJFoaCz7
+         ml/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781024253; x=1781629053;
+        d=1e100.net; s=20251104; t=1781024255; x=1781629055;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2MaddhjZSLJjQwBreN2wO4fD/cwTQ9BQwJgEVkkOTsM=;
-        b=rt09p281vc/3ShuOmXjcLgOA82iz3cX+JGlWlSH1R5D6jl5vHUU7aICGiCanoYx1da
-         RzaqiPC8uWG9PMJ7+LZga+lPkfhb6q52Gn+duWQ4W5zo75BNL638nOWcC3d4df8eX5Ay
-         IBEJOBVsu1eAcJ6gBPfu8zyD0YQ5J6k3P6X2kBNNbmumP2xo9zdbWHutYAmdQkxgPlhS
-         LS1dmA8Ss+UhEpU6xZQSbtkhmUqLJoPge53bHbCBQZ6Cs3WxvnZphtd5Z4k2TLFv7Kvp
-         q3W3073HeE0GynT/lDF8/Y5qi2cnPs/lQqUASZ9anFItOl8ue+dibENnuNqZLiqOUr3A
-         sF/g==
-X-Forwarded-Encrypted: i=1; AFNElJ/TeYEfkfu9uIzKwJhUzo5drA0wrDOU9MTZ1QfD2aUkezBVsAyumWx1N7RxnaJxWLJ0DrNr1C0l+/6JuWH9YWKw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs5LQgYDFJzDq/Hn4ODHMOwaCczsplAziS/vZJ0S3qxlk4TSN2
-	AFLvyV8jv0qNt/qQsDTBcwRzqr5k/WKTxrZkOd+mg8hkyq+VcgBcer6C/tw7v+7UmvltH+42141
-	sKeVeUreRQQ==
-X-Received: from dybpk17.prod.google.com ([2002:a05:7301:4291:b0:303:c230:ac8f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:3b06:b0:2ed:e14:e954
- with SMTP id 5a478bee46e88-3077b8014d6mr11298822eec.30.1781024252274; Tue, 09
- Jun 2026 09:57:32 -0700 (PDT)
-Date: Tue,  9 Jun 2026 09:57:23 -0700
-In-Reply-To: <20260609070348.541964-1-irogers@google.com>
+        bh=9LaWkWhrJUw9a/giq+cHZdt0Sg1l4kluVtd55JMhqgE=;
+        b=UFADwIeyAYQYnVkAt8N9z6n/w5JuAS/V+Tq7AV5PqZpNOFU+nbNDv0NrdIDUL07OZ8
+         I6MQWBfA7nU40FULCdCKmiDBGdDPM00VuNgc2i+CP4mppAeC/pWsnqgVWDiTj85r6wNs
+         elYsehkKePW7sPi2YoOWfPp89XzK6QN89HQWXtdJe3ABZK622yJrmlxBxKe6/cPxNzul
+         KmjUU5V3JRGopvmPeVOcpXDziGpOn6KRjAwSJlgpEDobSMV10E89l5M++t15buBFfJsT
+         QYBk/byKsbewQze0/wGH6XvC/gfHiNQ2VCYJSnHqFzoi2AGTThIOXheoNErS3028UnTz
+         VdJA==
+X-Forwarded-Encrypted: i=1; AFNElJ/PiCn/ft3/K3O3hoBzQPuHJEHxuDh+xRma8q3xVmv9mpMQMU8pX6oudaDkPj5esIwQxg3M0+VGackzvoAAEgmf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCr1nOKWHflS3e+0dxQUp+2Bj5AS1aF/D8vCbTqMT9KzH+86H8
+	yRwI0KRwEKa/assTgJ8QJMfbl2rS9vOLhY9gwmXxowZQOo7C73IAteCzFqgH6WxjsW3JTjrq62+
+	5597XO3L0nw==
+X-Received: from dyeg12.prod.google.com ([2002:a05:7300:538c:b0:2da:2af9:bfe2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:72c9:b0:2ea:5057:a304
+ with SMTP id 5a478bee46e88-3077aeed2fbmr12622888eec.2.1781024254393; Tue, 09
+ Jun 2026 09:57:34 -0700 (PDT)
+Date: Tue,  9 Jun 2026 09:57:24 -0700
+In-Reply-To: <20260609165726.786694-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260609070348.541964-1-irogers@google.com>
+References: <20260609070348.541964-1-irogers@google.com> <20260609165726.786694-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
-Message-ID: <20260609165726.786694-1-irogers@google.com>
-Subject: [PATCH v2 0/3] perf pmu: Add tool-provided NVMe PMU
+Message-ID: <20260609165726.786694-2-irogers@google.com>
+Subject: [PATCH v2 1/3] perf build: Add libnvme feature detection
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, yuzhuo@google.com
 Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -70,59 +70,129 @@ Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com,
 	namhyung@kernel.org, peterz@infradead.org, tglozar@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 
-This patch series introduces a tool-provided PMU for NVMe devices to expose
-various hardware logs as perf events.
+Introduce a feature check for libnvme so that we can conditionally
+compile the NVMe PMU driver. This checks for the availability of the
+libnvme headers and library using pkg-config.
 
-Using libnvme, the new nvme_pmu extracts metrics from standard NVMe log pages
-including:
-- SMART / Health Information (e.g. data units read/written, power cycles,
-  temperature)
-- Endurance Group Information
-- FDP (Flexible Data Placement) Statistics
-- Error Information
-- Zoned Namespaces (ZNS) Changed Zones
-
-Changes in v2:
-- Fixed feature check: added test-libnvme.c to test-all.c to correctly
-  propagate fast-path discovery failures.
-- Makefile cleanup: added libnvme to FEATURE_PKG_CONFIG in Makefile.feature
-  to ensure correct pkg-config flags are used during feature testing.
-- Alignment safety: replaced strict-aliasing pointers with get_unaligned_le*
-  accessors inside nvme_pmu__read_val() to prevent crashes on strict-alignment
-  architectures.
-- Heap safety: refactored evsel delta snapshots to use a new 'nvme' union
-  member inside struct evsel instead of clashing with evsel->priv, preventing
-  memory leaks and heap corruption with active tools like perf script.
-
-Ian Rogers (3):
-  perf build: Add libnvme feature detection
-  perf pmu: Implement tool-provided NVMe PMU
-  perf tests: Add NVMe PMU event parsing test
-
- tools/build/Makefile.feature       |   5 +-
- tools/build/feature/Makefile       |   3 +
- tools/build/feature/test-all.c     |   5 +
- tools/build/feature/test-libnvme.c |  11 +
- tools/perf/Makefile.config         |  12 +
- tools/perf/tests/Build             |   1 +
- tools/perf/tests/builtin-test.c    |   1 +
- tools/perf/tests/nvme_pmu.c        | 176 ++++++++++
- tools/perf/tests/tests.h           |   1 +
- tools/perf/util/Build              |   1 +
- tools/perf/util/evsel.c            |  13 +-
- tools/perf/util/evsel.h            |   4 +
- tools/perf/util/nvme_pmu.c         | 537 +++++++++++++++++++++++++++++
- tools/perf/util/nvme_pmu.h         | 143 ++++++++
- tools/perf/util/pmu.c              |  15 +
- tools/perf/util/pmu.h              |   8 +-
- tools/perf/util/pmus.c             |  31 +-
- tools/perf/util/pmus.h             |   1 +
- 18 files changed, 960 insertions(+), 8 deletions(-)
+Signed-off-by: Ian Rogers <irogers@google.com>
+CONV=ca4c5d09-4ef8-405a-80bb-aa988020b436
+TAG=agy
+---
+ tools/build/Makefile.feature       |  5 ++++-
+ tools/build/feature/Makefile       |  3 +++
+ tools/build/feature/test-all.c     |  5 +++++
+ tools/build/feature/test-libnvme.c | 11 +++++++++++
+ tools/perf/Makefile.config         | 12 ++++++++++++
+ 5 files changed, 35 insertions(+), 1 deletion(-)
  create mode 100644 tools/build/feature/test-libnvme.c
- create mode 100644 tools/perf/tests/nvme_pmu.c
- create mode 100644 tools/perf/util/nvme_pmu.c
- create mode 100644 tools/perf/util/nvme_pmu.h
 
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index ed1374af31c1..3bc9a305256b 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -73,6 +73,7 @@ FEATURE_TESTS_BASIC :=                  \
+         libbfd                          \
+ 	libbfd-threadsafe		\
+         libelf                          \
++        libnvme                         \
+         libelf-getphdrnum               \
+         libelf-gelf_getnote             \
+         libelf-getshdrstrndx            \
+@@ -146,6 +147,7 @@ FEATURE_DISPLAY ?=              \
+          libdw                  \
+          glibc                  \
+          libelf                 \
++         libnvme                \
+          libnuma                \
+          numa_num_possible_cpus \
+          libpython              \
+@@ -171,7 +173,8 @@ FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
+ FEATURE_PKG_CONFIG ?=           \
+ 	 babeltrace2-ctf-writer \
+          libtraceevent          \
+-         libtracefs
++         libtracefs             \
++         libnvme
+ 
+ feature_pkg_config = $(eval $(feature_pkg_config_code))
+ define feature_pkg_config_code
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 62909a9c799d..fd00e0be6069 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -147,6 +147,9 @@ $(OUTPUT)test-libcap.bin:
+ $(OUTPUT)test-libelf.bin:
+ 	$(BUILD) -lelf
+ 
++$(OUTPUT)test-libnvme.bin:
++	$(BUILD) -lnvme
++
+ $(OUTPUT)test-eventfd.bin:
+ 	$(BUILD)
+ 
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index 544563d62950..875eb9185e23 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -146,6 +146,10 @@
+ # include "test-libopenssl.c"
+ #undef main
+ 
++#define main main_test_libnvme
++# include "test-libnvme.c"
++#undef main
++
+ int main(int argc, char *argv[])
+ {
+ 	main_test_libpython();
+@@ -178,6 +182,7 @@ int main(int argc, char *argv[])
+ 	main_test_libzstd();
+ 	main_test_libtraceevent();
+ 	main_test_libopenssl();
++	main_test_libnvme();
+ 
+ 	return 0;
+ }
+diff --git a/tools/build/feature/test-libnvme.c b/tools/build/feature/test-libnvme.c
+new file mode 100644
+index 000000000000..3fefad70a680
+--- /dev/null
++++ b/tools/build/feature/test-libnvme.c
+@@ -0,0 +1,11 @@
++// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++#include <libnvme.h>
++
++int main(void)
++{
++	nvme_root_t r = nvme_scan(NULL);
++
++	if (r)
++		nvme_free_tree(r);
++	return 0;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 6e7b15fab2ec..79c4ad10bc18 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1060,6 +1060,18 @@ ifndef NO_CAPSTONE
+   endif
+ endif
+ 
++ifndef NO_LIBNVME
++  $(call feature_check,libnvme)
++  ifeq ($(feature-libnvme), 1)
++    CFLAGS += -DHAVE_LIBNVME_SUPPORT $(shell $(PKG_CONFIG) --cflags libnvme)
++    LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libnvme)
++    EXTLIBS += $(shell $(PKG_CONFIG) --libs-only-l libnvme)
++    $(call detected,CONFIG_LIBNVME)
++  else
++    msg := $(warning No libnvme found, disables NVMe PMU support, please install libnvme-dev/libnvme-devel);
++  endif
++endif
++
+ ifdef EXTRA_TESTS
+     $(call detected,CONFIG_EXTRA_TESTS)
+     CFLAGS += -DHAVE_EXTRA_TESTS
 -- 
 2.54.0.1099.g489fc7bff1-goog
 
