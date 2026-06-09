@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6F6305665
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657C33FFAC1
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781016783; cv=none; b=oAkOKgRmHZeR1TNi8olkXMpEBwZuc8pitrVHqqSPbgQMOXnHJP7QEH7A486+EoKdDci3AW/UCwogb9FIUyWQ0kveBUrOUG44XSKpQr5gLvPDYu6cp3g1eyXIbUGQi9kOXzOi8kdyhmKlXglMQX77CijbLjEos128P8J/55CiZic=
+	t=1781016817; cv=none; b=XYkt+dYOWmJPhGouSdgwsq1/IDY2CdsZwtDiqlySBp4eXugsDrw+qJ6Iy/kPpTTccPsXzlyo7S3NmO24pMJLbbBpSbC3DFDBB5rmdkuYDZUVbW8yE3BdhaU8LPfTxKkQ0eLNm7UKdXVeZHChbQZ5vpIHQxZptFNN8xc49Fe2Uw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781016783; c=relaxed/simple;
-	bh=Ku2+3Vo5pKVfVZHaEFhlcphCSxUAfSt0t6l2RjQh0dM=;
+	s=arc-20240116; t=1781016817; c=relaxed/simple;
+	bh=y+/mYP3N8D0bGqyGJvHzJbSH9wcOWomXXshmplHAeC0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VwgryCzBcxZnCoKUEA0VdcHVNuiYWms+G10tV3vEvlY1aN18a/xn1p7v2WeYEE38h0xN4UlR6Iyyg0EwlY+ITYbl1qMdMog3DTppYw2mbqnFTbzV6HR53qsVDIb0d9wKyu72omYpB6K7XeNJYLIxU8ugJjoq3TJzb6oaVRlo3uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZN8vsX1u; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=UxptbeX6e7oyAvu9lGPiFxFQQkLivwEFcZkffjXZLzm9d/RbwGkQTC9vL3+uzNTOmap1Dg/BLObj1ubIUwPsvzpvtZSWGNV5tqC2ZFmtBEpIh3+aD8bYAh4jnFddrgsNPUFYqLlSaqJRqtLJcKD3gAu76WHj5st8ag1DWZBTLXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWiCWM0/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZN8vsX1u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E931F00893;
-	Tue,  9 Jun 2026 14:53:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWiCWM0/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5DB11F00893;
+	Tue,  9 Jun 2026 14:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781016782;
-	bh=YHhm/nSeCqjfYGT6YwtInLbzSuSh6mWws55hDkgf7GQ=;
+	s=k20260515; t=1781016816;
+	bh=tfZmMN0wuOGZW/0rKEwZoEgLjfvKtRVILEhmCG8t1i4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZN8vsX1ukaBVb8WX3yp90WHf9E7d19fbg+h1KXVV1sthxHs++mzIovTWFAyxah5pG
-	 TXUvNUxMpuICuUhGXoemWuI/zDvFcRe4jg8kOLTwV4svzaobJowSFXC/f/nDemGAVZ
-	 Kqqci3LfoXFZhJpmVjmFrGOCM7hxgTNsUqx5lGrvd2pBKaGggFb57W9SzIlDBUhw3Y
-	 7+4EmPjlFE3UQXoH5j7cT1zBZL79sFsuL2UfcplSj9EPXe03fRxiVK3MLmpZ1EImZv
-	 Amo64U1gutEn5CaK5X1JV6abS6ufiSEODGziuvoI/aB1gXbPI/ibb7KO9fIXwRMsJo
-	 D3TpXTVd2UGfw==
+	b=gWiCWM0/tEKckU0zrFEI7FJ3goGQ+ySjHLezGew8K6pn48sEybaNwOnXJztsppQxX
+	 E8swgT1iHBOSA153m4Y5vB2sbXxBm8xRPFXLeMO3eFDXiUv15B8OgS8c+PA7lxAifi
+	 G8GyMUB7eWFXHDWhJjufYSuXnUVPQ1LNfVzXTak5nMmdu4IWbJLq0+JvcNHglJ/B8H
+	 3WlB2l64NAPXmRPY1MEs3oo0kroPkSCrqSOMPgzgobv43LcFeRLTBZvCqF4q9f6ybU
+	 JoHHd8MWFfK5MvGgZp8AFahWrJnCPJgYP8vwHdx0zrckCotpFjvX0tfQ/PcncmAn/e
+	 Vbxp+anSyreIA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 12/19] perf test cs-etm: Skip if not root
+Subject: Re: [PATCH v4 07/19] perf test cs-etm: Remove asm_pure_loop test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-12-44f9fb9e5c42@linaro.org>
-References: <20260609-james-cs-context-tracking-fix-v4-12-44f9fb9e5c42@linaro.org>
+In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-7-44f9fb9e5c42@linaro.org>
+References: <20260609-james-cs-context-tracking-fix-v4-7-44f9fb9e5c42@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 14:53:01 +0000
-Message-Id: <20260609145301.D5E931F00893@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 14:53:34 +0000
+Message-Id: <20260609145335.A5DB11F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,67 +45,109 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [Medium] A Time-of-Check to Time-of-Use (TOCTOU) race condition exists du=
-e to an unsafe temporary file deletion and recreation pattern, allowing loc=
-al attackers to modify arbitrary file timestamps or create empty files as r=
-oot.
+- [Medium] Removing `tidq->prev_packet_thread` causes samples belonging to =
+`prev_packet` to be attributed to the wrong thread if a context packet was =
+processed in between.
 --
 
-commit a4b1e28698440010ef2bccdf78c5fee8d8a1850d
+commit fd2f91c5aeb50268fe7509b8158aa03f25f00def
 Author: James Clark <james.clark@linaro.org>
 
-perf test cs-etm: Skip if not root
+perf cs-etm: Queue context packets for frontend
 
-This commit adds a root privilege check to the Arm CoreSight trace tests.
-It ensures the tests are skipped gracefully with a clear message if the
-user running them is not root, as root access is required for certain
-testing modes.
+PE_CONTEXT elements update the context ID and exception level, but the
+decoder may still have prior packets cached for frontend processing.
+Updating the context immediately in the decoder backend can make those
+cached packets get consumed with the wrong thread or EL state. Add a
+CS_ETM_CONTEXT packet carrying the TID and EL to the frontend.
 
-> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/te=
-sts/shell/test_arm_coresight.sh
-> index 39553702c1f31..8ed2c934c87d0 100755
-> --- a/tools/perf/tests/shell/test_arm_coresight.sh
-> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
-> @@ -20,6 +20,12 @@ skip_if_no_cs_etm_event() {
+Closes: https://lore.kernel.org/linux-perf-users/20260515021135.1729028-1-a=
+aupov@meta.com/
+
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 40c6ddfa8c8d9..5e92359f51a7c 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+
+[ ... ]
+
+> @@ -1649,15 +1685,15 @@ static int cs_etm__synth_branch_sample(struct cs_=
+etm_queue *etmq,
 > =20
->  skip_if_no_cs_etm_event || exit 2
+>  	event->sample.header.type =3D PERF_RECORD_SAMPLE;
+>  	event->sample.header.misc =3D cs_etm__cpu_mode(etmq, ip,
+> -						     tidq->prev_packet_el);
+> +						     tidq->prev_packet->el);
+>  	event->sample.header.size =3D sizeof(struct perf_event_header);
 > =20
-> +if [ "$(id -u)" !=3D 0 ]; then
-> +	# Requires root for -C and system wide tests
-> +	echo "[Skip] No root permission"
-> +	exit 2
-> +fi
-> +
+>  	/* Set time field based on etm auxtrace config. */
+>  	sample.time =3D cs_etm__resolve_sample_time(etmq, tidq);
+> =20
+>  	sample.ip =3D ip;
+> -	sample.pid =3D thread__pid(tidq->prev_packet_thread);
+> -	sample.tid =3D thread__tid(tidq->prev_packet_thread);
+> +	sample.pid =3D thread__pid(tidq->frontend_thread);
+> +	sample.tid =3D thread__tid(tidq->frontend_thread);
 
 [Severity: Medium]
-This is a pre-existing issue, but by enforcing that this script must run
-as root, does this turn an existing race condition into a local privilege
-escalation or denial-of-service vector?
+If a context packet was processed just before this, frontend_thread has
+already been updated to the new thread. Does using frontend_thread here
+instead of tracking the thread that actually executed prev_packet cause the
+branch sample to be attributed to the wrong thread?
 
-Can we fix the temporary file handling here? Currently, the script securely
-creates a temporary file but later deletes and recreates it:
+>  	sample.addr =3D cs_etm__first_executed_instr(tidq->packet);
+>  	sample.id =3D etmq->etm->branches_id;
+>  	sample.stream_id =3D etmq->etm->branches_id;
 
-tools/perf/tests/shell/test_arm_coresight.sh:record_touch_file() {
-    ...
-	rm -f $file
-	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
-		-- taskset -c $2 touch $file > /dev/null 2>&1
-}
+[ ... ]
 
-Since the file is securely created in the world-writable /tmp directory via
-mktemp, the rm -f frees the predictable name. An attacker monitoring /tmp
-can race to create a symlink at this path after the deletion but before the
-root user executes touch.
+> @@ -1959,7 +1993,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>  		addr =3D cs_etm__last_executed_instr(tidq->prev_packet);
+> =20
+>  		err =3D cs_etm__synth_instruction_sample(
+> -			etmq, tidq, addr,
+> +			etmq, tidq, tidq->prev_packet, addr,
+>  			tidq->period_instructions);
 
-Would this allow an attacker to modify arbitrary file timestamps or create
-empty files as root?
+[Severity: Medium]
+When flushing the trace, an instruction sample is generated for prev_packet.
+However, cs_etm__synth_instruction_sample unconditionally uses
+frontend_thread. If a context packet was the last processed packet, could
+this lead to misattribution of the sample to the new thread?
 
->  perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->  file=3D$(mktemp /tmp/temporary_file.XXXXX)
->
+>  		if (err)
+>  			return err;
+
+[ ... ]
+
+> @@ -2469,6 +2501,19 @@ static int cs_etm__process_traceid_queue(struct cs=
+_etm_queue *etmq,
+>  			 */
+>  			cs_etm__sample(etmq, tidq);
+>  			break;
+> +		case CS_ETM_CONTEXT:
+> +			/*
+> +			 * Update context but don't swap packet. Keep the
+> +			 * previous one for branch source address info, if
+> +			 * tracing the kernel the context packet will be emitted
+> +			 * between two ranges.
+> +			 */
+> +			ret =3D cs_etm__etmq_update_thread(etmq, tidq->packet->el,
+> +							 tidq->packet->tid,
+> +							 &tidq->frontend_thread);
+
+[Severity: Medium]
+When CS_ETM_CONTEXT updates frontend_thread without swapping packets, won't
+prev_packet still contain the execution range of the old thread? Since the
+frontend_thread is updated immediately, could any subsequent samples
+generated for prev_packet be attributed to the wrong thread?
+
+> +			if (ret)
+> +				goto out;
+> +			break;
+>  		case CS_ETM_EXCEPTION:
+>  		case CS_ETM_EXCEPTION_RET:
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609-james-cs-c=
-ontext-tracking-fix-v4-0-44f9fb9e5c42@linaro.org?part=3D12
+ontext-tracking-fix-v4-0-44f9fb9e5c42@linaro.org?part=3D7
