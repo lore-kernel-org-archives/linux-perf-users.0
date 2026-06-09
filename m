@@ -1,113 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F877384CCA
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 06:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4972749CF
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 07:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780987553; cv=none; b=GbCeFht+s/hLvYEGcp3Agp1UmqeUp9LKJUa+w8gIV/vagEqqtgbnei1Q+WmBrrp9s0cv9COut21txelQG+Vf+/EN5nb/4di6RkcurH4FosWfmTVBlrFRfivSlwuqp44MMxsentdcWLQ5TL1IQr39Akn+2KIrkZr8NYzhwef1YW4=
+	t=1780988637; cv=none; b=K5Hjyl5lTZM6Kl76rKnxv3Keqi08cpPlb3v9FvNnz+w0kRFAnToPUNr1MZKBGmSCE4ghwa50n/O7qN2B9RtbZAGIwJjEsr78tdmqx3nP3rBtEawmIOMKu8eK9hKezy/LAOOmy/u1dWfTJJG9o9SxOYRlAtRoMHTrnVPKKc/3NHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780987553; c=relaxed/simple;
-	bh=HQwmncRdiv6AtGpVYfikN3+5KsHmheFOnPmApR/150U=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bSHX/Anc04IWfSpyFumJxgZMBi6U3k8KJrjWZjsGhMA1B2EWWQ4RFif0JHF5FjfIak+ScgBxXKX7EgAsyxsGELSd82nD3J93CP5mEEF4fjc4gwjxK9u1lLTQHt3VK90vG4Ns0i+zTQMP+Abf+4h0s4HctTexURpve+OfOGYxT1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToW9xyco; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780988637; c=relaxed/simple;
+	bh=ObQm8q+T2anbqJFG+T/iyqprTss7RwL4mruS3DRf95g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=NOoI9zbNRTFYr2elz3Z21c0sBplCn2tDwdJ7czOFy3zx1OI8w8kKMrW6H9IgbvAXCaZojgY50KbXvRXGMnyMgpWcClIMQ0hKyKC4AZ8qgl2PpqNX750oJ5Udp8cEe8UKElULSy7SB1DYcYbqrncQeLeayOGJYpOPjx550XYNa2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TDAKxCqy; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToW9xyco"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F6C1F00898;
-	Tue,  9 Jun 2026 06:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780987552;
-	bh=inK/46gKpdssexq5gCszlSU5AT8S2l6ZVa4cOSDn/rs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ToW9xycoxhJb8oBKGgIk+vj8E7szV9wBZVTeNZGJk5V2wSiUKzEpXrbxJ/Mkg2Y/p
-	 C1sfeVqwzfqptyWfnLsNY4kbgc59Tr5J9KS+d/LqTrbhGiOFwkGe3zkERsa+r//mtt
-	 0Dg5EivjPved2Bvkw3Rv6RtdW6y044KXwFmKk+HWigiOUmzRyFkBOva0MwJZU0oT4m
-	 8wQpHyFoKIRracuwwlTOj1N68DbhrOaq/lKYFweSPmTi3hyhYiQWigKpItCmSrvPLD
-	 bKzh67Wg2snr7UqwAGfe79C84vMAPzL9383FajdH6oPfSb8oVYy8E5h1723zPpC4CB
-	 eZxI+9DazHv6Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 8/8] selftests/livepatch: Add RISC-V syscall wrapper
- prefix
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Wang Han" <wanghan@linux.alibaba.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260609063002.3943001-8-wanghan@linux.alibaba.com>
-References: <20260609063002.3943001-8-wanghan@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 06:45:51 +0000
-Message-Id: <20260609064551.E2F6C1F00898@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TDAKxCqy"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-13815cb1507so6229081c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 00:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1780988635; x=1781593435; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JxPb+RxK32jFv/xJSoX/EYo4cdhBkfXrSsqEtmmG9wM=;
+        b=TDAKxCqy952NRq+Aqvi7WdpBqU/bDO/hXL4TFNiVfD2EOQV3rRUyS885d5AqJhu+/l
+         UID7dv+/VYAPzVG6fTASMuNrB6JCSyhrq2u2rmyDLCfr4bA/iSOB5FWPOGYUSwu0MwKU
+         uBHimOln99Ta2jnQxx846r049YR++o192jzEyT9YTOqO4BD6BhlM4vBAUQwest2lsieW
+         eUtts0owbhj25hTpRfKUYYpzymMDmKbGDezicTA7CvvPGV6Goe+IJ5qVqnZ2xlse1fFT
+         CrKspH6NCtx4TGFQAJ43wIMRKUi58dSfTnDMR6UWHCOgKsE0I/lgftQWaGq65zW7Whwu
+         n7Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780988635; x=1781593435;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JxPb+RxK32jFv/xJSoX/EYo4cdhBkfXrSsqEtmmG9wM=;
+        b=X4NmpcNyU8FGzrLV9081G5L7qSCkSWGB0m49hbHyK64rDqjpF/lpbuETobdJvYfTlt
+         sYEbBc08+JE3dC+/rZFp/ZsSBxEJ5xEEr1cbnnFXXhABTC6eDjEO2zIs76X9EgAhHozw
+         ftwRppE9qeVa2V9YML5exDO9ig7K7Vvpus8UAhWMXEfdJENMQaJZUjazIOJBOfDGC7Cp
+         H6bkfWObNJGnTlt2Jwi1rqHaQP69u2ft3qLHZQ++Zc4go8N7LhhKUwLcQqtcu18N5J1y
+         nrFi0a6RzTcmUISPwyp9lvJiNb7/SqK4qlCKPiJK7z6UXaoHaeCUsd/i7EBQBJ4YQnOe
+         hKpQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/PIniIpADBLHSYT2sv3cLEWYnz/sx0SrhXfV6zwu1/yS+1YHCtriPSrA+T5tryOww4Gs1yJD+2/GW4AftSXCUc@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEwF4ji8vxVXW1YrlA1V+OOnHGs0YR0fAxXsnT3R4EYlGIcKPG
+	ZQ+cghEWMfl/Ab5Qpv0zmdyDTkGSxvb3QMXAYsUrdtWdG1AUmgImOr/MaKMXMkeC/X0K0TZz+o6
+	qVVz04d3dsA==
+X-Received: from dlbrx14.prod.google.com ([2002:a05:7022:170e:b0:137:fb92:f7ee])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6613:b0:12c:8e70:c33b
+ with SMTP id a92af1059eb24-138066be665mr9925946c88.8.1780988635043; Tue, 09
+ Jun 2026 00:03:55 -0700 (PDT)
+Date: Tue,  9 Jun 2026 00:03:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.1064.gd145956f57-goog
+Message-ID: <20260609070348.541964-1-irogers@google.com>
+Subject: [PATCH v1 0/3] perf pmu: Add tool-provided NVMe PMU
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Tomas Glozar <tglozar@redhat.com>, 
+	Michael Jeanson <mjeanson@efficios.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
+	Alexandre Chartre <alexandre.chartre@oracle.com>, Yuzhuo Jing <yuzhuo@google.com>, 
+	Leo Yan <leo.yan@arm.com>, German Gomez <german.gomez@arm.com>, 
+	Anubhav Shelat <ashelat@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Cc: linux-nvme@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+This patch series introduces a tool-provided PMU for NVMe devices to expose
+various hardware logs as perf events.
 
-Pre-existing issues:
-- [High] The module initialization function `livepatch_init()` leaks `klp_k=
-obj` and its associated sysfs directory if `klp_enable_patch()` fails, lead=
-ing to a kernel use-after-free.
---
+Using libnvme, the new nvme_pmu extracts metrics from standard NVMe log pages
+including:
+- SMART / Health Information (e.g. data units read/written, power cycles,
+  temperature)
+- Endurance Group Information
+- FDP (Flexible Data Placement) Statistics
+- Error Information
+- Zoned Namespaces (ZNS) Changed Zones
 
-commit 35d6758515b1de6295d7ae1a97c70e768cac9dfc
-Author: Wang Han <wanghan@linux.alibaba.com>
+Key features:
+- Dynamic probing of supported log pages on /dev/nvmeX. Unsupported events
+  are marked as deprecated and hidden from `perf list` by default.
+- Generic configuration encoding where the log type, size, and offset are
+  encoded directly into the event configuration.
+- Correct interval delta tracking using baseline offset snapshots. This mimics
+  the behavior of the hwmon PMU, allowing gauges like Temperature to be
+  reported instantaneously in `perf stat -I`, while standard counters
+  correctly accumulate deltas.
+- Robust handling of cross-architecture endianness when reading 128-bit and
+  64-bit fields from the NVMe specification.
 
-selftests/livepatch: Add RISC-V syscall wrapper prefix
+The series is broken down into:
+1. Adding the libnvme feature detection via pkg-config in tools/build.
+2. The core implementation of the NVMe tool PMU.
+3. A unit test suite verifying the parsing and encoding of the NVMe PMU
+   events using a mocked device.
 
-The syscall livepatch selftest resolves and patches a syscall wrapper
-symbol. To use that test for RISC-V livepatch validation, add the
-RISC-V FN_PREFIX definition for ARCH_HAS_SYSCALL_WRAPPER.
+Ian Rogers (3):
+  perf build: Add libnvme feature detection
+  perf pmu: Implement tool-provided NVMe PMU
+  perf tests: Add NVMe PMU event parsing test
 
-> diff --git a/tools/testing/selftests/livepatch/test_modules/test_klp_sysc=
-all.c b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-> index dd802783ea849..275e4b10cf595 100644
-> --- a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-> +++ b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
-> @@ -18,6 +18,8 @@
->  #define FN_PREFIX __s390x_
->  #elif defined(__aarch64__)
->  #define FN_PREFIX __arm64_
-> +#elif defined(__riscv)
-> +#define FN_PREFIX __riscv_
->  #else
->  /* powerpc does not select ARCH_HAS_SYSCALL_WRAPPER */
->  #define FN_PREFIX
+ tools/build/Makefile.feature       |   2 +
+ tools/build/feature/Makefile       |   3 +
+ tools/build/feature/test-libnvme.c |  11 +
+ tools/perf/Makefile.config         |  12 +
+ tools/perf/tests/Build             |   1 +
+ tools/perf/tests/builtin-test.c    |   1 +
+ tools/perf/tests/nvme_pmu.c        | 176 ++++++++++
+ tools/perf/tests/tests.h           |   1 +
+ tools/perf/util/Build              |   1 +
+ tools/perf/util/evsel.c            |  11 +-
+ tools/perf/util/nvme_pmu.c         | 535 +++++++++++++++++++++++++++++
+ tools/perf/util/nvme_pmu.h         | 143 ++++++++
+ tools/perf/util/pmu.c              |  15 +
+ tools/perf/util/pmu.h              |   8 +-
+ tools/perf/util/pmus.c             |  31 +-
+ tools/perf/util/pmus.h             |   1 +
+ 16 files changed, 945 insertions(+), 7 deletions(-)
+ create mode 100644 tools/build/feature/test-libnvme.c
+ create mode 100644 tools/perf/tests/nvme_pmu.c
+ create mode 100644 tools/perf/util/nvme_pmu.c
+ create mode 100644 tools/perf/util/nvme_pmu.h
 
-[Severity: High]
-This isn't a bug introduced by this patch, but does livepatch_init() leak
-klp_kobj and its associated sysfs directory if klp_enable_patch() fails?
+-- 
+2.54.0.1064.gd145956f57-goog
 
-If klp_enable_patch() returns an error code, livepatch_init() returns this
-error directly without calling kobject_put(klp_kobj):
-
-tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c:livepatch=
-_init() {
-    ...
-	klp_kobj =3D kobject_create_and_add("test_klp_syscall", kernel_kobj);
-	if (!klp_kobj)
-		return -ENOMEM;
-
-	ret =3D sysfs_create_file(klp_kobj, &klp_attr.attr);
-	if (ret) {
-		kobject_put(klp_kobj);
-		return ret;
-	}
-    ...
-	return klp_enable_patch(&patch);
-}
-
-Because the initialization fails, the module loader frees the module memory,
-but the sysfs file /sys/kernel/test_klp_syscall/npids remains registered.
-
-A subsequent user-space access to this sysfs file could dereference a point=
-er
-to the now-freed module data (klp_attr) and execute a freed function pointer
-(npids_show), resulting in a use-after-free.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.194d76e3a15b.=
-v3.riscv-livepatch.wanghan@linux.alibaba.com?part=3D8
