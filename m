@@ -1,156 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DAD3563EB
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 10:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C25403E85
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 12:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780999505; cv=none; b=YJTZo3HZafS42CY5keQ89G+0rXfMvrg5Sky9jWDFb/Tqp9X8dsRnexbwi14mm3EFEc08uJ8jpRX6jgfWPUYo/u8clFuZkqRAhgRdOkMCgdIjjwY5BZdp7+t/rzjyh8XQ4Aa0zYD+MjfF8liRzEqdaYDql4UiuJgOR0KasNY7Ncs=
+	t=1781007017; cv=none; b=Ysa5odR+tznVT4ZyPWsnI31FGQqZtXYCcs0NFToRyJUEiNwBNI/ighz7ao/KAgyMqACxemUhl4JGc2K8qTi6JBLjxSQZHm+VQlEgN5ZqC1rizdEYot4MqerFNhJFU/ZkwpiyiQQ8GO+PVMQMJVFTuc7Uevla12e+/xuhTqYV8Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780999505; c=relaxed/simple;
-	bh=BkhIivdHeU4QY0h86fTfJnU/MLRtmhPNTqfkaqcTDh4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WMHPcZ/YStKEk42bWhYFUnFfmqHA7X2dtGwLOhBjrqJo1odoLDDM//BiuiSUVEc00Z06BnhPoVMVM/h7H8aigmljc/llg5f4JSS1UTnw3llMiPeyDfcmVjr0snbqTlV0VlLgxH+z4VSKokJrXSWXnFVcxtayBvNHhkX5e9Eai6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jar51Sr3; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781007017; c=relaxed/simple;
+	bh=h4aj1IilD23SRWn3mGaYFVykc4NVqydsOPXkEWM57y0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fxlz7/Ke6lsOZjVo/gqViahW279XFLSCoF2apB4gM3CnaiTtnrNxkQQJ7MmVDUx91WJ04LisG7FdLwursr0MkDT15d74FjxV2tqae8OJN66vlLE1Ns/leetqWBMKFl6lGsbmIG/rfTVBoWn4yXqsWdHTYPHZJaZ4p8k3U59ErKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b+gWN/sg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jar51Sr3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780999504; x=1812535504;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BkhIivdHeU4QY0h86fTfJnU/MLRtmhPNTqfkaqcTDh4=;
-  b=Jar51Sr3jFsRRK5Nw32FsVU8gg+0Wop96kAkbQoZNDd0xtsVFCbGcdO0
-   e4XnQchGIyKxbpolILnE8BuD00sKr89Z5/YUm//mBw4cljJVQ30pHTJyx
-   7JfQjUv50VXN1+L0q668cbep9dHVhBq6lgDASYZ28HYM8kiznhyvbkss2
-   7n9eDGgAaucfvLIqQZ/lcstkOeo27Tz2Bh+Vs89CL3ZqZTjEAYvMZieaN
-   Iq38vMqnqyuvbnOZuED2FOJFBbIvshglRroU1aVNNvJwLp9BbHqWjW0Nx
-   CBh0dLObYL1f+5oldcYFW2nlffH6Gugofg4myItZBcm70Fzf9AJhmblcO
-   g==;
-X-CSE-ConnectionGUID: dNm5A4foSdyZzA/XQ73/5g==
-X-CSE-MsgGUID: iQHXdVXrRea4fcdzT0XDuA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="81732850"
-X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="81732850"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 03:05:03 -0700
-X-CSE-ConnectionGUID: /pxEQJLbRge9OW/nPdNoEg==
-X-CSE-MsgGUID: voQOouT5R/iSneKBCKTbOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="245664382"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 03:05:02 -0700
-Message-ID: <22c9ceea-5bd3-4e50-8ee4-d7c668c52ec2@linux.intel.com>
-Date: Tue, 9 Jun 2026 18:04:59 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b+gWN/sg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781007015;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2vIGKqT4NvdBhXm3fnB9ZjVqhF3ohtRz7d+loqyqUDY=;
+	b=b+gWN/sgd5jaQIl0fpoLM70lmH7afZoN20Qn57abKeysIyRTJ4ppFSe7PCfANoBxyjAPrI
+	cTq21WwOtSzJ/NN1vQd21efA/TFTqFrsQpfwJJQh9Kk1caO0qzlP8AVyt1TcNmx9JPYtr4
+	eDmvxosprvKwXIivQ3IgnR+bYDl3tNk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-347-VUb_FKhnOhiQTHwe49wU7g-1; Tue,
+ 09 Jun 2026 08:10:12 -0400
+X-MC-Unique: VUb_FKhnOhiQTHwe49wU7g-1
+X-Mimecast-MFC-AGG-ID: VUb_FKhnOhiQTHwe49wU7g_1781007010
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74380195C26B;
+	Tue,  9 Jun 2026 12:10:10 +0000 (UTC)
+Received: from wcosta-defaultstring.rmtbr.csb (unknown [10.22.64.147])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 15CAC195419E;
+	Tue,  9 Jun 2026 12:10:05 +0000 (UTC)
+Date: Tue, 9 Jun 2026 09:10:04 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, John Kacur <jkacur@redhat.com>, 
+	Luis Goncalves <lgoncalv@redhat.com>, Crystal Wood <crwood@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] rtla: Migrate to libsubcmd for command line
+ option parsing
+Message-ID: <aigCf7GmPAomxxMN@wcosta-defaultstring.rmtbr.csb>
+References: <20260521141833.2353025-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 4/9] perf/x86/intel: Fallback to sw branch type
- decoding if no hw decoding
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260609050222.2458129-5-dapeng1.mi@linux.intel.com>
- <20260609052405.4A50C1F00898@smtp.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260609052405.4A50C1F00898@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260521141833.2353025-1-tglozar@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
+On Thu, May 21, 2026 at 04:18:27PM +0200, Tomas Glozar wrote:
+> [ CC to linux-perf-users for the libsubcmd code changes ]
+> 
+> rtla currently uses its own implementation that uses getopt_long() to
+> parse command-line arguments.
+> 
+> Migrate rtla to use libsubcmd for command line argument parsing,
+> similarly to what is already done by other tools like perf, bpftool,
+> and objtool. Among other benefits, this allows help messages to be
+> generated automatically rather than having to be typed out manually
+> for each tool.
+> 
+> libsubcmd is extended with a flag to parse optarg from separate
+> argument if a new flag is turned on. Without the flag, the old behavior
+> is preserved. That keeps the parsing working for tools that use
+> positional arguments, and allows RTLA to keep its flexible syntax for -C
+> and -t options and their long variants, --cgroup and --trace-output.
+> Another flag is added to disable automatic definition of --no-xy for
+> every option --xy and vice versa, which overlaps for RTLA's --irq and
+> --thread options.
+> 
+> The new implementation is moved into a separate file, cli.c, together
+> with a tiny header counterpart, cli.h. This helps separate the parsing
+> logic, which has little in common with the rest of RTLA, in a separate
+> module. Another new file, cli_p.h, is used as a private header to contain
+> macros and static function declarations that are also used by unit tests
+> next to cli.c, but should not be imported from elsewhere.
+> 
+> Macros to generate struct option array fields for libsubcmd's
+> parse_args() are used to preserve the consolidation of argument parsing
+> code across different RTLA tools. Kernel and user threads are, as
+> an exception, treated as common, although they are currently implemented
+> for timerlat only, in line with earlier consolidation changes.
+> 
+> The test suite is expanded to include two levels of unit tests, one testing
+> the already existing tool_parse_args() functions, one tests option callbacks,
+> which are a new level of the CLI parser added in this patchset. This helps
+> to verify that no regressions are caused by this refactoring.
+> 
+> I expect more improvements to the code being possible in the future,
+> like creating macros for option groups to further deduplicate the code,
+> reducing the amount of extra code in the _parse_args() functions, or
+> implementing support for unsetting options (which is currently only
+> supported for those that do not use a custom callback).
+> 
+> v2 changes:
+> - Two unit test suites are added to cover regressions, after several
+> options were broken by the v1. The test suites cover all parsing
+> issues reported in the v1 as well as those found during additional
+> testing.
+> - Return value of all paths that print help, including those that
+> are handled in RTLA, are set to libsubcmd's help exit code of 129.
+> Previously, only the tool help returned 129. While some other tools
+> (e.g. bpftool) do that, RTLA unifies those for consistency. The return
+> value is also added to the corresponding section in documentation.
+> - Incorrect parsing of --no-irq and --no-thread is fixed using a newly
+> added libsubcmd option flag.
+> - Incorrect parsing of -n and -u timerlat options (which erroneously
+> required an argument in v1) is fixed.
+> - A now stale declaration of removed function common_parse_options()
+> is removed from common.h.
+> - Segmentation fault on abbreviated --help (e.g. --he) is fixed.
+> - Incorrect formatting of OPT_END macro (spurious tab) is fixed.
+> - All opt_* callbacks now reject unimplemented unset (--no-) correctly.
+> - opt_trigger_cb() and opt_filter_cb() now take only the required events
+> field, not the whole params structure.
+> - Spurious opt_osnoise_threshold_cb() which is actually just a wrapper for
+> opt_llong_callback() is removed.
+> - Old off-by-one typo is fixed in --dma-latency and -E/--entries error
+> messages, to make it consistent with the newly added unit tests.
+> - Fix a bug in Makefile that defined LIBSUBCMD_INCLUDES as -I... and then
+> used it as a target name: define it as the path only, and then add -I$(...)
+> to CFLAGS, as this is the only include path that is generated during the build
+> itself.
+> 
+> v1: https://lore.kernel.org/linux-trace-kernel/20260320150651.51057-1-tglozar@redhat.com/T
+> 
+> Tomas Glozar (6):
+>   rtla: Add libsubcmd dependency
+>   tools subcmd: support optarg as separate argument
+>   tools subcmd: allow parsing distinct --opt and --no-opt
+>   rtla: Parse cmdline using libsubcmd
+>   rtla/tests: Add unit tests for _parse_args() functions
+>   rtla/tests: Add unit tests for CLI option callbacks
 
-On 6/9/2026 1:24 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
->
-> New issues:
-> - [High] The fallback to software branch decoding causes massive NMI overhead and drops valid LBR entries when user memory is paged out.
->
-> Pre-existing issues:
-> - [Critical] Page fault in NMI context due to an out-of-bounds direct memory read into unmapped guard pages during LBR software branch type decoding.
-> --
->
-> commit 11f8cb2dc702b7450f8fbb74de9eaa30a63a9248
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Subject: perf/x86/intel: Fallback to sw branch type decoding if no hw decoding
->
-> This commit updates intel_pmu_lbr_filter() to use software branch-type
-> decoding when hardware branch-type decoding is unavailable (i.e.
-> x86_lbr_type is not enabled). This aims to keep branch classification and
-> filtering behavior correct across Arch LBR configurations.
->
->> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
->> index cae2e02fe6cc4..171fdf1962ade 100644
->> --- a/arch/x86/events/intel/lbr.c
->> +++ b/arch/x86/events/intel/lbr.c
->> @@ -1233,6 +1233,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->>  		 * OTHER_BRANCH branch type still rely on software decoding.
->>  		 */
->>  		if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
->> +		    static_branch_likely(&x86_lbr_type) &&
-> [Severity: High]
-> When x86_lbr_type is not enabled, this falls back to software decoding via
-> branch_type(). Because intel_pmu_setup_hw_lbr_filter() unconditionally sets
-> X86_BR_TYPE_SAVE for Arch LBR CPUs:
->
-> arch/x86/events/intel/lbr.c:intel_pmu_setup_hw_lbr_filter() {
->     ...
->     if (static_cpu_has(X86_FEATURE_ARCH_LBR)) {
->         ...
->         reg->reg |= X86_BR_TYPE_SAVE;
->     ...
-> }
->
-> the early return fast-path in intel_pmu_lbr_filter() is bypassed. Does this
-> cause intel_pmu_lbr_filter() to iterate over all LBR entries and perform
-> high-overhead instruction decoding in NMI context even for generic branch
-> requests?
+Reviewed-by: Wander Lairson Costa <wander@redhat.com>
 
-Generally speaking, the x86_lbr_type should always be true for arch-LBR.
-Even it's not true in some corner cases (like guest environment), high
-overhead is better than wrong branch decoding.
-
-
->
-> Additionally, if user memory is paged out, copy_from_user_nmi() will fail,
-> causing branch_type() to return X86_BR_NONE. Does this result in valid LBR
-> entries being silently dropped?
-
-I doubt if the issue could really be seeb. Even it happens, it seems there
-is nothing to do except dropping them.
-
-Thanks.
-
-
->
-> [Severity: Critical]
-> This is a pre-existing issue, but falling back to software decoding exposes
-> a vulnerability in get_branch_type() when processing LBR entries in NMI context:
->
-> arch/x86/events/utils.c:get_branch_type() {
->     ...
->     if (kernel_text_address(from) && !in_gate_area_no_mm(from)) {
->         addr = (void *)from;
->         bytes_read = MAX_INSN_SIZE;
->     ...
->     insn_init(&insn, addr, bytes_read, is64);
->     ret = decode_branch_type(&insn);
->     ...
-> }
->
-> If the from address (which is controlled by the LBR hardware recording a
-> faulting RIP) points to the very last byte of a mapped page, bytes_read is
-> set to 15. The instruction decoder will blindly read past the page boundary
-> into an unmapped guard page without exception table handlers.
->
-> Can this trigger a kernel page fault (#PF) and Oops in NMI context when
-> processing the PMU interrupt?
->
->>  		    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
->>  			to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
->>  			type = arch_lbr_br_type_map[type] | to_plm;
