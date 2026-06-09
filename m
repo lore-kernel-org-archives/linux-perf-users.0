@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA954963DF
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 18:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28374B8DF1
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 18:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781029277; cv=none; b=JZi1PkHYRXtR80Sspo2vjt5wxdvSPnoqOLAfvsR5AP6IclZQ7jt2ec3GG0Ez2FvnHXN/9Iu/5f6hGzuY9UsOcabIq4pMXmSIqrzeBhKE45YQjOeV/zdn1yJNqRkRC8m8nWvwJgPevyj07dCbsCjF1d+mkk4Ym0oTBppXcamsvmE=
+	t=1781029278; cv=none; b=S0BDK2fMWasHfQU2aq/oHT8i6cUKU0J4XKXCmDRuc99S3SIua7xHVgN9EuLkm/3yzCTx5AGsUncq81tiiJBNEZ+MAw4QgXZPMRQnl/6wEMfBBoBdn89DEI0omZMpYthPJ9btrP0bt6MsEp2latu6TTwS0Inu7KIQo10yVcnKBeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781029277; c=relaxed/simple;
-	bh=yM6cFgNuAiFc6GRYkPgqXfyt8aAWVhdPppjzhcJdAw4=;
+	s=arc-20240116; t=1781029278; c=relaxed/simple;
+	bh=duayAPAiUhY5wJlcVJbdGPpOR2UABLvYB7ScWUb5/D8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cHDy3m0mTj9qkHspOl0uWdo1cxXbL8YFh6X38J3XWbaJFEXKTznD68PAkfu/rsUn9gkItitGkBUSqdM977D3y+ACTfumT+djBiKbhbxjqDjxF0ocZrwVgl41LUmAKvMgYlSC3QJLw+cGEW+Ga72sV2UhdSi71XEBiXpF6gJeqy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eCIhzKPi; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=DpDG+XyhibR8cbkriOE7lvim7Crdv2mPvVcR+BVmY2hUG6GHGvdnEwIj/fNb78yUxvThqV+wtA3DXliZZ2XRno+eYHskrIdMUZpXWgWbXYzeIzgUME/dslhXno+GLwMZ1NHzt6d3RkwW9+7nUEUf2GC/M65s+H+72bPVk/a7ZrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TZosQ18g; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eCIhzKPi"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304d8613efbso5973536eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 11:21:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TZosQ18g"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304d0d0b28eso6159691eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 11:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781029275; x=1781634075; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781029277; x=1781634077; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ly4JmNOM5N61T5QvPZcscuv73dRglZhIk4ju+WD5XhA=;
-        b=eCIhzKPiKtSkfgzGTnP8FGx3n7Ykc6qZe22Q2jjarkaY77rnIPN6jplmooWDQj5vlD
-         k2Tld7b1g7V+ddRyWyEs+Lox7DUF/xc68vh9t/XzqtqSqUU5X1MshpOhY25oRpVKq7Sa
-         dPZPm9Gizg++42xNDm3Co+EZfn95qkabzRpyf8WQpc3xkR7pzHAtKq/i6siLt3vF/tdJ
-         bg+mcJ/qZjsW7cFj9W/QFFdFNTwpo0l/XjI/Vz0PyKiog6177/pxD7xFBqY0sctb4/2V
-         2g5xXkSKue9MA23CWgoF3uiGK7pxaSphhjXg9TrWUuJ26Cy/rtArEsVsetVtx0gbYx8S
-         gv6A==
+        bh=LYf8eh1YnaPUoMuj/toNw06K91sdnAomPgCHRQ2cb/M=;
+        b=TZosQ18gcv50bjFLvI2QX3Q8eDP2Nofe6NbX5tmTLkw2of17jhGh3u8qjNCDEbugdV
+         ynyNDDLkAz8ZPUH8w9bKtQlP3XlQ6s07vSusqVqtgisyP9BzuoU6RrjTIuBEYeJVV2zR
+         HCRM+IpA20ZpmvGzYGVS/CaZfkL3OXFOGGLxwSfU11xgLWJWqqx2Q7TtNLtnW38cY2cr
+         0u7y8zxL6GTZnirey/jSKVwWxU5XGTLZnRY+rZUPPTWQikMXtBKcZvqk5bvEvIyN5kUi
+         yxRPbnpHj5iTrGAxqVhmTFcrSJhLHJszBaYVJDD3YiFaG8SqE+NusYsxtWwc8pr2+2sX
+         KXUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781029275; x=1781634075;
+        d=1e100.net; s=20251104; t=1781029277; x=1781634077;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ly4JmNOM5N61T5QvPZcscuv73dRglZhIk4ju+WD5XhA=;
-        b=Qon2Xgc0nJePl38Cin79BtGDrKpbjFFxevVCJUP7ypu3sdyaJaXw5smge2LpUCtQvH
-         BE7frgUWO0cW1zSEeFLfy9YS8lUrfeywTowMkHOUxJQL4h8N4mhrXLzM762Z4M6qm0Vc
-         YOmbMYGDMPLjMSJ8lCQuIRBx4Qc/eGzisJJQY8m3Sv3pz8VaNrR+eu6zo++c7rWBBXTM
-         vwDfX54tT55B5bTwS4gGnW3UNztzHCMgnHfqLDVH0PyjiYN0L2gs0yb527rdNCn7tTvu
-         pyo4pCOVQwW3VuSIN9gAxwMu4KU/ohcSmoAerwqjZTDdnfa88qYMxEVCgAjuh5PWxiBL
-         FoRQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+N1Hi7Yq3WNveCm/iufPlG7YnktXBweNMvbkhBtY8vuyFTY3kuejEihfzQ4WHhLP6Ndgu4nxIp6mThvMJlSyiw@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf9PSa6NEF7wcCIvj2VZJbpFdJkrPDlUg8cJZNdLWmLcuEcXdN
-	DmD6fGwGhgEU4vuuYKW5uWDkYCnQmfzLFWFJIjGsTx+gPzJ87yETYGVoCJaOMxkT+dGnet5SBpj
-	5LqDNI+dYgw==
-X-Received: from dlbsi3.prod.google.com ([2002:a05:7022:b883:b0:137:f3ad:9756])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec4:b0:12d:de3f:f3e5
- with SMTP id a92af1059eb24-138067571bbmr10124117c88.37.1781029274808; Tue, 09
- Jun 2026 11:21:14 -0700 (PDT)
-Date: Tue,  9 Jun 2026 11:21:02 -0700
+        bh=LYf8eh1YnaPUoMuj/toNw06K91sdnAomPgCHRQ2cb/M=;
+        b=PMnk0eORtHgB9Rvu/WubusiIBqFH7oeFk8smXYFVcnkWjM2yXW97ucbKp8nSEBBRjv
+         Dgq3t6RjeTKWiA3L3DhKzubJEWgl7BlmQcpKgbHF5ztyebrb//VdRIlCJ+DZQzA38NiC
+         f0fKZnFLVl2FY8sN09+kokzGyKqC6vPXe4fZumTUNU8oHBKW0lB9onis8Uqdfdefrrkd
+         uUicMckDfAQdkJogQhKPUfPI7qbMCO1fy87LOMhV+p1HtyLkdBFAsorRh890vtriAfQi
+         0BovXOWZdFt9ggkKefc7MS+PlJedKDwohoVT3bftMv6pemabtio1x0+sZEPgQtkYQPX8
+         2vTg==
+X-Forwarded-Encrypted: i=1; AFNElJ+5olFXpp01mqX6SP1OgpeG62d1PiNtwrRzjif0M7BZCtRZf65RN70i6gge5hU0gj+j0Nvux2kCUFHhpN/QJc6s@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm8iqTsL/pvupU9EdIFSDK4gzf3kGlg6OEW1m2U+Z+1DxpDPDF
+	9oX8Uv5iPFnpRRScrFn8l9s9yL19K6qNXPoQ1pAIurB5jugkUAGYvz5ZrjTTH/neHB+NfCRXd0V
+	4WpsG03lF4A==
+X-Received: from dyrv26.prod.google.com ([2002:a05:7300:8a9a:b0:304:dc2f:9939])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7304:b0:2be:2cfe:68b7
+ with SMTP id 5a478bee46e88-3077b3c7767mr15534916eec.11.1781029276633; Tue, 09
+ Jun 2026 11:21:16 -0700 (PDT)
+Date: Tue,  9 Jun 2026 11:21:03 -0700
 In-Reply-To: <20260609182108.975586-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260609070732.545416-1-irogers@google.com> <20260609182108.975586-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
-Message-ID: <20260609182108.975586-2-irogers@google.com>
-Subject: [PATCH v3 1/7] tools build: Add feature check for elfutils libasm
+Message-ID: <20260609182108.975586-3-irogers@google.com>
+Subject: [PATCH v3 2/7] perf build: Add build support and capability for
+ elfutils libasm
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com, 
@@ -72,104 +73,76 @@ Cc: 9erthalion6@gmail.com, adrian.hunter@intel.com,
 	tianyou.li@intel.com, yuzhuo@google.com, zecheng@google.com
 Content-Type: text/plain; charset="UTF-8"
 
-This commit introduces a build-time feature test for the elfutils libasm
-library in the shared tools/build system. It adds the test program and
-updates the Makefiles to attempt building it to detect support.
-
-Note on static linking: pkg-config for libdw/libelf on modern systems
-does not list -lebl as a dependency. Older versions of elfutils that
-require explicitly linking -lebl statically are unsupported by this
-feature check.
+Configure perf build system to utilize the libasm feature check
+(supporting both static and dynamic builds) and export the config flags.
+Add "libasm" capability detection to perf check.
 
 Assisted-by: Antigravity:Google Gemini 3.5-flash
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/build/Makefile.feature      |  2 ++
- tools/build/feature/Makefile      |  9 +++++++++
- tools/build/feature/test-libasm.c | 20 ++++++++++++++++++++
- 3 files changed, 31 insertions(+)
- create mode 100644 tools/build/feature/test-libasm.c
+ tools/perf/Makefile.config | 22 ++++++++++++++++++++++
+ tools/perf/builtin-check.c |  1 +
+ 2 files changed, 23 insertions(+)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index ed1374af31c1..422329dbc20a 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -118,6 +118,7 @@ FEATURE_TESTS_EXTRA :=                  \
-          hello                          \
-          babeltrace2-ctf-writer         \
-          libcapstone                    \
-+         libasm                         \
-          libcheck                       \
-          libbfd-liberty                 \
-          libbfd-liberty-z               \
-@@ -150,6 +151,7 @@ FEATURE_DISPLAY ?=              \
-          numa_num_possible_cpus \
-          libpython              \
-          libcapstone            \
-+         libasm                 \
-          llvm-perf              \
-          zlib                   \
-          lzma                   \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 62909a9c799d..f0f39a2ab203 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -47,6 +47,7 @@ FILES=                                          \
-          test-timerfd.bin                       \
-          test-babeltrace2-ctf-writer.bin        \
-          test-libcapstone.bin			\
-+         test-libasm.bin			\
-          test-libcheck.bin			\
-          test-compile-32.bin                    \
-          test-compile-x32.bin                   \
-@@ -184,6 +185,11 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
-   DWARFLIBS += -ldl
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 6e7b15fab2ec..632cb069c944 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -199,6 +199,13 @@ endif
+ FEATURE_CHECK_CFLAGS-libcapstone := $(LIBCAPSTONE_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libcapstone := $(LIBCAPSTONE_LDFLAGS) -lcapstone
+ 
++ifdef LIBASM_DIR
++  LIBASM_CFLAGS  := -I$(LIBASM_DIR)/include
++  LIBASM_LDFLAGS := -L$(LIBASM_DIR)/lib
++endif
++FEATURE_CHECK_CFLAGS-libasm := $(LIBASM_CFLAGS)
++FEATURE_CHECK_LDFLAGS-libasm := $(LIBASM_LDFLAGS) -lasm -ldw -lelf
++
+ ifdef LIBZSTD_DIR
+   LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
+   LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
+@@ -432,6 +439,7 @@ ifeq ($(feature-file-handle), 1)
  endif
  
-+ASMLIBS := -lasm -ldw -lelf
-+ifeq ($(findstring -static,${LDFLAGS}),-static)
-+  ASMLIBS += -lz -llzma -lbz2 -lzstd
+ ifdef NO_LIBELF
++  NO_LIBASM := 1
+   NO_LIBDW := 1
+   NO_LIBUNWIND := 1
+   NO_LIBBPF := 1
+@@ -1060,6 +1068,20 @@ ifndef NO_CAPSTONE
+   endif
+ endif
+ 
++ifdef NO_LIBDW
++  NO_LIBASM := 1
 +endif
 +
- $(OUTPUT)test-libdw.bin:
- 	$(BUILD) $(DWLIBS)
- 
-@@ -311,6 +317,9 @@ $(OUTPUT)test-babeltrace2-ctf-writer.bin:
- $(OUTPUT)test-libcapstone.bin:
- 	$(BUILD) # -lcapstone provided by $(FEATURE_CHECK_LDFLAGS-libcapstone)
- 
-+$(OUTPUT)test-libasm.bin:
-+	$(BUILD) $(ASMLIBS)
++ifndef NO_LIBASM
++  $(call feature_check,libasm)
++  ifeq ($(feature-libasm), 1)
++    CFLAGS += -DHAVE_LIBASM_SUPPORT $(LIBASM_CFLAGS)
++    LDFLAGS += $(LIBASM_LDFLAGS)
++    EXTLIBS += -lasm -ldw -lelf
++    $(call detected,CONFIG_LIBASM)
++  endif
++endif
 +
- $(OUTPUT)test-libcheck.bin:
- 	$(BUILD) # -lcheck is provided by $(FEATURE_CHECK_LDFLAGS-libcheck)
- 
-diff --git a/tools/build/feature/test-libasm.c b/tools/build/feature/test-libasm.c
-new file mode 100644
-index 000000000000..928fc46ecc75
---- /dev/null
-+++ b/tools/build/feature/test-libasm.c
-@@ -0,0 +1,20 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stddef.h>
-+#include <elfutils/libasm.h>
-+#include <gelf.h>
-+
-+struct ebl;
-+extern struct ebl *ebl_openbackend(Elf *elf);
-+extern void ebl_closebackend(struct ebl *ebl);
-+
-+int main(void)
-+{
-+	Elf *elf = elf_begin(0, ELF_C_READ, NULL);
-+	struct ebl *ebl = ebl_openbackend(elf);
-+	DisasmCtx_t *ctx = disasm_begin(ebl, elf, NULL);
-+
-+	disasm_end(ctx);
-+	ebl_closebackend(ebl);
-+	elf_end(elf);
-+	return 0;
-+}
+ ifdef EXTRA_TESTS
+     $(call detected,CONFIG_EXTRA_TESTS)
+     CFLAGS += -DHAVE_EXTRA_TESTS
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index 60437650c50f..d2ffea4d9b8b 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -46,6 +46,7 @@ struct feature_status supported_features[] = {
+ 	FEATURE_STATUS("babeltrace2-ctf-writer", HAVE_BABELTRACE2_CTF_WRITER_SUPPORT),
+ 	FEATURE_STATUS("libbpf-strings", HAVE_LIBBPF_STRINGS_SUPPORT),
+ 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
++	FEATURE_STATUS("libasm", HAVE_LIBASM_SUPPORT),
+ 	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
+ 	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
+ 	FEATURE_STATUS("libLLVM", HAVE_LIBLLVM_SUPPORT),
 -- 
 2.54.0.1099.g489fc7bff1-goog
 
