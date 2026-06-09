@@ -1,124 +1,111 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E6735A93C;
-	Tue,  9 Jun 2026 14:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6F6305665
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 14:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781016778; cv=none; b=tCHUxfPEhx3eATsb+16ZqGSuhM5bgZ2SsvHHXVcDdCIdR3gN1Rc3hyLswMeXHKfjOZoKqA4KHDC4UzgGMYP2g6w90zuEyp5S+xS9C1W70qh5cCoNlv4HWPoaIooJD/738E2IgBv1DaIg05IAtcchDEZdlSFkaO7STciMeRZJiXc=
+	t=1781016783; cv=none; b=oAkOKgRmHZeR1TNi8olkXMpEBwZuc8pitrVHqqSPbgQMOXnHJP7QEH7A486+EoKdDci3AW/UCwogb9FIUyWQ0kveBUrOUG44XSKpQr5gLvPDYu6cp3g1eyXIbUGQi9kOXzOi8kdyhmKlXglMQX77CijbLjEos128P8J/55CiZic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781016778; c=relaxed/simple;
-	bh=bC4btuelzMei4hLLrWdDC/hyQ6n1RGKvzOIi72zxWqM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iULhsxW5bNXieCm0U0xRUVSRqpR+EbPLqWz1LqQP1M1pUxfAsJFwhMFQTylENFtihFPgvcwXGtPvCAnPKAl8+R9uLzCkn2PwF8eZEbY+Q/+3qI0HnC9tVOCqEq9ige4Nr36LA0Cv2g7filp8rGyPNCFFmCtQX6Ds8KmvITTDbxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FH9KAw83; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1781016783; c=relaxed/simple;
+	bh=Ku2+3Vo5pKVfVZHaEFhlcphCSxUAfSt0t6l2RjQh0dM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=VwgryCzBcxZnCoKUEA0VdcHVNuiYWms+G10tV3vEvlY1aN18a/xn1p7v2WeYEE38h0xN4UlR6Iyyg0EwlY+ITYbl1qMdMog3DTppYw2mbqnFTbzV6HR53qsVDIb0d9wKyu72omYpB6K7XeNJYLIxU8ugJjoq3TJzb6oaVRlo3uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZN8vsX1u; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FH9KAw83"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Ma2XbH47OgCHmSnYRO01b2N3/ZgGpdGZ5hjI2OZ/1Ik=; b=FH9KAw83AZAGVh90QtebTL+7wr
-	D7rCXXQoZ+vmhtRu7uLj9tvScXO3u554WJdlVtWEiBHjX5EpP4NNC7JAmsescMX+xL/ZhrJsDOFSS
-	/3g7g0Ux+Z0H1IZI6RHEhlCcTGYqzSXlh30zu7Huoa3ArqMoXH/79wuz4bIqWZTXvo7aY7xmZdTmj
-	WVYz9tg8nn3cTu7PJkoyc+Jj4hc+C+GdojXfoManMdlIeX7AnFXoNhAVsUYMJqSXiffp8l88oI+9j
-	lWRC0P8/tdOIvnSUwpBz0fk2XvIjwDdBUdhu5Y99Wobhq90q5hVAl+zMBPDdmO/bNhhYeFSw+7DSf
-	9ppLGcoA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
-	id 1wWxox-00000002gS9-36HN;
-	Tue, 09 Jun 2026 14:52:51 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BA2B7302F12; Tue, 09 Jun 2026 16:52:50 +0200 (CEST)
-Date: Tue, 9 Jun 2026 16:52:50 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
-Subject: Re: [Patch v2 5/9] perf/x86/intel: Drop LBR entries whose privilege
- level mismatches br_sel
-Message-ID: <20260609145250.GD49951@noisy.programming.kicks-ass.net>
-References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
- <20260609050222.2458129-6-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZN8vsX1u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E931F00893;
+	Tue,  9 Jun 2026 14:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781016782;
+	bh=YHhm/nSeCqjfYGT6YwtInLbzSuSh6mWws55hDkgf7GQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ZN8vsX1ukaBVb8WX3yp90WHf9E7d19fbg+h1KXVV1sthxHs++mzIovTWFAyxah5pG
+	 TXUvNUxMpuICuUhGXoemWuI/zDvFcRe4jg8kOLTwV4svzaobJowSFXC/f/nDemGAVZ
+	 Kqqci3LfoXFZhJpmVjmFrGOCM7hxgTNsUqx5lGrvd2pBKaGggFb57W9SzIlDBUhw3Y
+	 7+4EmPjlFE3UQXoH5j7cT1zBZL79sFsuL2UfcplSj9EPXe03fRxiVK3MLmpZ1EImZv
+	 Amo64U1gutEn5CaK5X1JV6abS6ufiSEODGziuvoI/aB1gXbPI/ibb7KO9fIXwRMsJo
+	 D3TpXTVd2UGfw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 12/19] perf test cs-etm: Skip if not root
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "James Clark" <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260609-james-cs-context-tracking-fix-v4-12-44f9fb9e5c42@linaro.org>
+References: <20260609-james-cs-context-tracking-fix-v4-12-44f9fb9e5c42@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 14:53:01 +0000
+Message-Id: <20260609145301.D5E931F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260609050222.2458129-6-dapeng1.mi@linux.intel.com>
 
-On Tue, Jun 09, 2026 at 01:02:18PM +0800, Dapeng Mi wrote:
-> Before Arch LBR gained CPL filtering support, a user-only branch stack
-> could still contain kernel addresses. As a result, kernel branch records
-> may be exposed to user space even when PERF_SAMPLE_BRANCH_USER is
-> requested.
-> 
-> For example, on Intel Tiger Lake, the following command can still report
-> SYSRET/ERET entries with kernel-space from addresses:
-> 
-> ```
-> $./perf record -e cycles:p -o - --branch-filter any,save_type,u -- \
->  	./perf bench syscall basic --loop 1000 | \
-> 	./perf script -i - --fields brstack|tr ' ' '\n'| \
-> 	grep -E '0x[89a-f][0-9a-f]{15}'
-> 
->     Total time: 0.000 [sec]
-> 
->       0.219000 usecs/op
->      4,566,210 ops/sec
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.551 MB - ]
-> 0xffffffff93c001c8/0x7f12a2b1d647/P/-/-/16959/SYSRET/-
-> 0xffffffff93c001c8/0x7f12a2b1d5c2/P/-/-/17535/SYSRET/-
-> 0xffffffff93c01928/0x7f12a2861000/P/-/-/6719/ERET/-
-> 0xffffffff93c01928/0x7f12a297a000/P/-/-/8575/ERET/-
-> ```
-> 
-> The problem is that intel_pmu_lbr_filter() does not fully validate the
-> privilege level of sampled entries. It filters some mismatches based on
-> the branch type and the to address, but it does not reject entries whose
-> from address violates the requested branch privilege filter.
-> 
-> Fix this by extending software filtering to validate both from and to
-> addresses against br_sel. Any LBR entry whose privilege level does not
-> match the requested user/kernel filter is dropped. This prevents kernel
-> addresses from appearing in user-only branch stacks, and likewise drops
-> user entries from kernel-only stacks.
-> 
-> Cc: stable@vger.kernel.org
-> Reported-by: Ian Rogers <irogers@google.com>
-> Fixes: 47125db27e47 ("perf/x86/intel/lbr: Support Architectural LBR")
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  arch/x86/events/intel/lbr.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-> index d4c0ed85e1fb..807ce903c972 100644
-> --- a/arch/x86/events/intel/lbr.c
-> +++ b/arch/x86/events/intel/lbr.c
-> @@ -1212,7 +1212,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->  {
->  	u64 from, to;
->  	int br_sel = cpuc->br_sel;
-> -	int i, j, type, to_plm;
-> +	int i, j, type, to_plm, from_plm;
->  	bool compress = false;
->  
->  	/* if sampling all branches, then nothing to filter */
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-If there, might as well order those variables in reverse xmas.
+Pre-existing issues:
+- [Medium] A Time-of-Check to Time-of-Use (TOCTOU) race condition exists du=
+e to an unsafe temporary file deletion and recreation pattern, allowing loc=
+al attackers to modify arbitrary file timestamps or create empty files as r=
+oot.
+--
+
+commit a4b1e28698440010ef2bccdf78c5fee8d8a1850d
+Author: James Clark <james.clark@linaro.org>
+
+perf test cs-etm: Skip if not root
+
+This commit adds a root privilege check to the Arm CoreSight trace tests.
+It ensures the tests are skipped gracefully with a clear message if the
+user running them is not root, as root access is required for certain
+testing modes.
+
+> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/te=
+sts/shell/test_arm_coresight.sh
+> index 39553702c1f31..8ed2c934c87d0 100755
+> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+> @@ -20,6 +20,12 @@ skip_if_no_cs_etm_event() {
+> =20
+>  skip_if_no_cs_etm_event || exit 2
+> =20
+> +if [ "$(id -u)" !=3D 0 ]; then
+> +	# Requires root for -C and system wide tests
+> +	echo "[Skip] No root permission"
+> +	exit 2
+> +fi
+> +
+
+[Severity: Medium]
+This is a pre-existing issue, but by enforcing that this script must run
+as root, does this turn an existing race condition into a local privilege
+escalation or denial-of-service vector?
+
+Can we fix the temporary file handling here? Currently, the script securely
+creates a temporary file but later deletes and recreates it:
+
+tools/perf/tests/shell/test_arm_coresight.sh:record_touch_file() {
+    ...
+	rm -f $file
+	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
+		-- taskset -c $2 touch $file > /dev/null 2>&1
+}
+
+Since the file is securely created in the world-writable /tmp directory via
+mktemp, the rm -f frees the predictable name. An attacker monitoring /tmp
+can race to create a symlink at this path after the deletion but before the
+root user executes touch.
+
+Would this allow an attacker to modify arbitrary file timestamps or create
+empty files as root?
+
+>  perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+>  file=3D$(mktemp /tmp/temporary_file.XXXXX)
+>
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609-james-cs-c=
+ontext-tracking-fix-v4-0-44f9fb9e5c42@linaro.org?part=3D12
