@@ -1,168 +1,175 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAE61DE8BE;
-	Tue,  9 Jun 2026 13:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D4C421EE0
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 13:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781010974; cv=none; b=AcY4bS4XyeY+er1rAnbN5FVAVlOwtYeVKEwziXc/vLZfeY9OhHBdpPrKi+klDbexrJ6xjFBfjEIaZEirakyljtdtn+euKFwAWN3b2yuSmPDZdsAEHGXSHhVOfuKmgUWaQnheS6Fuewra6GHasbl2L9o8kwjKv4Sik89euHXsNs0=
+	t=1781011943; cv=none; b=dnT/BxigePZYd1bqi1wNtyYwt2xcod8Ul35+Lm9iRnKgIKGYDbnIzYL0QSpoRlpbPSbT9dLETQCWiQVAX6irECH+CzFVKl8mGc5KTypnc2CchbxLFWQgJv3/pfJz2aA50iBgU3AOh7hbqvnTvEtC/mvB65YmSQtoemybhPL0WXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781010974; c=relaxed/simple;
-	bh=60Hz5+3eEkrBAnUhEtk9VB5qfD8DLzTUtlgK14Fe8II=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SrCKC/YGRE7fBt5PUcKk0WS11JB6AZ2rNZWm6ufzakh+G7XE6ihA6nDrpehMS45B8bTBV40oDe8ib37XnPmOQFlP4IMERSfxn4Vy0VvvjDXvGViRo4BhgpbHs4qoYkTEjkwJoLBIGqn2iu1kXKeHGeVnDJ/p5GnRD8dTR9Q50+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=slKC5uQp; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1781011943; c=relaxed/simple;
+	bh=iOL4xBRTPVd4VefDrUVOe2DxJ7KfQyBDLwKNuN1+3IU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=YrIj06GNoiiEbWPgsGurkz0nf5qFY7gOfBZLhjZkgs75fDv2GQ/nxd7nY9G3uCs4ApbIr5mVoisbgss7PfVbeGxbqdNAxfU38Lc3N1UyWaLLll88PAZbUeiqD+Klf5EJWMau5BdDBT2QGeN3EckaTe+1SDO+vC54t2pR7QSweJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLQgeKDl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="slKC5uQp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
-	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
-	bh=Rg6Uwn3qcv35IqK5mO+5MuTecRwPgI2mpMh7ThDFKtQ=; b=slKC5uQp8RpItbg43LgsfFS66j
-	5+UEJ9NQCJD1uUsXJFPHIE+x3pxdM0TQkE+tUXg6/LrxVJyhk/LvlxuJ2KVjH9pGnHhXfW8k8VmDW
-	Va+dxcG/ZOeB/byAJII33oByLOwhMgNI2l7AGmE3f6C/yCN2xZB5fN797Hz9ftP0YvQ5uG8A/Npt0
-	JI1Ro6YkzsPmgdD/uRE0gquxryfW1vHWdW2XrROjTfgTjyMpjrbPeJTYbmUS3Z0Ph+4sZgULTHtJS
-	VDpPscY+wZ7V4MaE3oRZ3sNTJbTk+UuKpp7xQGierJRadUfGaHl1cBPl8OVVKOx9agDTXlR4wnTlC
-	k8sLrceg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wWwJK-008QXf-2e;
-	Tue, 09 Jun 2026 13:16:07 +0000
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 09 Jun 2026 06:15:53 -0700
-Subject: [PATCH v2] arm64/hw_breakpoint: reject unaligned watchpoints that
- would truncate BAS
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLQgeKDl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595021F00893;
+	Tue,  9 Jun 2026 13:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781011941;
+	bh=76uL6pA3+wZNTY6VTp6fnAlbldAi2FwWnB4oO/B+rr0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=QLQgeKDl0MwZk+OzjqLzZlKLsQjPWe6GWDLZF9q1pl2sdM3l3R12D94c6KsrNqATq
+	 cKNYD4kTu0kpiY7mTBNP4Xy+cN6yyRhJcTLO8AEY9/igBbednjulshA3UAu3h0uGbG
+	 aTzcv+mwIs5pDjxVuIQUSRC44I3KHM9iHOjZkM9lQA055tmxZjPK+/XXvb2bvl0u/y
+	 qFy5nYHQuFVze5t5HATXlJrUQqeJXBAoOflFzqiSSVrRhdPdhSa4d6j4fI4njr3rLc
+	 F26Z0VqPMwgjo70up7Tf3IEx+38dxJQtuJi5mC7z22OfOa9+TUgMUAtArGhRt6a7nG
+	 h2hiJ9xR6oQRw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] arm64/hw_breakpoint: reject unaligned watchpoints
+ that would truncate BAS
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Breno Leitao" <leitao@debian.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260609-arm64_bas-v2-1-9f34dbbded88@debian.org>
+References: <20260609-arm64_bas-v2-1-9f34dbbded88@debian.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 13:32:20 +0000
+Message-Id: <20260609133221.595021F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260609-arm64_bas-v2-1-9f34dbbded88@debian.org>
-X-B4-Tracking: v=1; b=H4sIAAgSKGoC/23NSwrCMBSF4a2EO24kSWsiGbkPKZLHtb2CiSS1K
- KV7l9apwwM/31mgYiGsYNkCBWeqlBNYphoGYXRpQE4RLAMllBZdK7grD91dvavcGGxNPLVCKQ0
- Ng2fBG71369L/dn35O4ZpA7ZipDrl8tnPZrl1/9xZcsmDdl55eXQYxDmiJ5cOuQzQr+v6BSOQI
- oy1AAAA
-X-Change-ID: 20260430-arm64_bas-77e37d830226
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Pratyush Anand <panand@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, clm@meta.com, leo.bras@arm.com, 
- kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3791; i=leitao@debian.org;
- h=from:subject:message-id; bh=60Hz5+3eEkrBAnUhEtk9VB5qfD8DLzTUtlgK14Fe8II=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqKBIS+Gi5xCr81tProuji531Z+NisZK4+78aq7
- +5uy5lUJJCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaigSEgAKCRA1o5Of/Hh3
- bcJ+D/4raj8CmXOiWXwdIcfpOWG1UBX+93rbwV1W3Bco7TxtN5Q19MtVB3OdrwFH6MD2cA4luDR
- hJzP9cvGuhPBLOLae7PVBohiA+w21izjHYsIvBFLZwD70pi2IJCgAdsQwI1egwRpmXU2bQQtO0Z
- dreS8LMBlQT3xNGc4fpVanTUWmRuEiQlyG/dGWL5FxcI+VdtUhf1s3jT/+EKubJsuFnCepAs8oD
- bAy1or+v1BZzRSwCxcdJcuPJblznVdGueec0sJ0O+ZPN1GTMJvplGUHt56uxtEZsP/dzW0LmHpK
- I+ZVulkkJJo2pQPh5WLIJllw2BBEzJVzIV5fpGBE9N+XtPgfCWEFXWImk2nBf9TdxXwzjQIJZ3a
- UintXDHWjpfvB6BLr2m+S4kZSFgG7GbQMPa23ItEJwXnZGUsFMgI7SGWpPRahRz8vWAN+vcKBEy
- sHYV5UjREU/1RTbqDd29rW5U2asIu28wkv2ZHKDmp0ZwbzmjUYzNVjbylANMzaOpZZ+OQGE55ri
- dsGinJGdgsqhpAeGc6Es8gS9YlK/QtrsFzCicfOxJhXpafajyQts4SZYdxMLIobKf3eN52gVCcI
- 6/6VRB7w2meF0FFuHj+/F0mMwXdS8sv2EWonHTgjWemPaX1hRQ/HuMlOE6Zu6j/oEBgClsMF1HK
- 8/TlgAGpZVv2uYg==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
-X-Debian-User: leitao
 
-hw_breakpoint_arch_parse() positions the BAS bit pattern in
-hw->ctrl.len with
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-	offset = hw->address & alignment_mask;	/* 0..7 */
-	hw->ctrl.len <<= offset;
+Pre-existing issues:
+- [High] User-space watchpoints with MTE-tagged addresses incorrectly fail =
+validation checks and exact-match detection because tag bits are not stripp=
+ed.
+- [High] System register writes to debug registers are not immediately sync=
+hronized, violating architectural context synchronization rules.
+- [High] Unaligned execution breakpoints bypass length validation and are p=
+rogrammed into hardware with invalid BAS constraints, corrupting RES0 bits.
+--
 
-ctrl.len is an 8-bit bitfield (struct arch_hw_breakpoint_ctrl::len is
-u32 :8), so the shift silently drops any bits past bit 7.  For
-non-compat AArch64 watchpoints the offset is unbounded relative to
-ctrl.len: a perf_event_open(PERF_TYPE_BREAKPOINT) caller asking for
-HW_BREAKPOINT_W with bp_addr=page+1 and bp_len=HW_BREAKPOINT_LEN_8
-ends up with 0xff << 1 = 0x1fe, stored as 0xfe.  The kernel programs
-WCR.BAS=0xfe and the hardware watches bytes [1..7] instead of the
-requested [1..8] -- the eighth byte is silently dropped.  The
-syscall still returns success, leaving userspace to discover the
-gap by empirical probing.
+commit 53ef92756387d64bcb01ab3be39ec7396912b68e
+Author: Breno Leitao <leitao@debian.org>
 
-The same class affects HW_BREAKPOINT_LEN_{2,4} when offset pushes the
-high BAS bit past bit 7 (e.g. LEN_4 with offset=5 yields 0xe0
-instead of 0x1e0).  No memory-safety impact -- the value is masked
-into 8 bits before encoding -- but debuggers and perf users observe
-missed events on bytes they thought they were watching.
+arm64/hw_breakpoint: reject unaligned watchpoints that would truncate BAS
 
-The AArch32 branch immediately above already rejects unrepresentable
-(offset, len) combinations via an explicit switch.  Mirror that for
-the non-compat branch by checking that the shifted pattern fits in
-the BAS field, returning -EINVAL when it does not.
+This patch addresses an issue where unaligned non-compat AArch64 watchpoints
+could silently truncate the BAS bit pattern when the offset shifted the len=
+gth
+past 8 bits. The kernel now correctly rejects these unrepresentable length
+and offset combinations with -EINVAL, preventing the hardware from watching
+fewer bytes than requested.
 
-GDB and similar debuggers are unaffected by the stricter check.
-aarch64_linux_set_debug_regs() already treats EINVAL on
-NT_ARM_HW_WATCH as a downgrade signal: it clears
-kernel_supports_any_contiguous_range, calls aarch64_downgrade_regs()
-to round the BAS up to a legacy 0x01/03/0f/ff mask with an aligned
-base, and retries -- the same fallback path that PR-20207 introduced.
-The new -EINVAL is therefore reachable only from a raw
-perf_event_open() that pairs an unaligned base with an oversized
-bp_len, which is precisely the bug.
+> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_bre=
+akpoint.c
+> index ab76b36dce820..73cce8ac83681 100644
+> --- a/arch/arm64/kernel/hw_breakpoint.c
+> +++ b/arch/arm64/kernel/hw_breakpoint.c
+> @@ -559,6 +559,15 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+>  		else
+>  			alignment_mask =3D 0x7;
+>  		offset =3D hw->address & alignment_mask;
 
-Reproducer:
+[Severity: High]
+This isn't a bug introduced by this patch, but I noticed that MTE-tagged
+addresses might not be handled correctly here.
 
-  struct perf_event_attr a = {
-      .type = PERF_TYPE_BREAKPOINT, .size = sizeof(a),
-      .bp_type = HW_BREAKPOINT_W,
-      .bp_addr = (uintptr_t)(buf + 1),
-      .bp_len = HW_BREAKPOINT_LEN_8,
-      .exclude_kernel = 1, .exclude_hv = 1,
-  };
-  int fd = perf_event_open(&a, 0, -1, -1, 0);
-  /* before this fix: succeeds, watches 7 bytes (buf+1..buf+7)   */
-  /* after  this fix: fails with EINVAL                          */
+When perf_event_open() is called with an MTE-tagged user-space address,
+arch_build_bp_info() saves the address into hw->address without untagging i=
+t.
 
-Fixes: b08fb180bb88 ("arm64: Allow hw watchpoint at varied offset from base address")
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changes in v2:
-- Use ARM_BREAKPOINT_LEN_8 instead of the 0xff magic number (Will).
-- Checked and Expand the commit log to explain why GDB and similar
-  debuggers are unaffected by the new -EINVAL
-- Link to v1: https://patch.msgid.link/20260430-arm64_bas-v1-1-c6ab2b15aec0@debian.org
----
- arch/arm64/kernel/hw_breakpoint.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Since hw->address retains the tag, could this cause the bounds check
+(va >=3D TASK_SIZE) in arch_check_bp_in_kernelspace() to evaluate to true d=
+ue
+to the high-order tag bits? This would erroneously classify the user
+watchpoint as a kernel watchpoint and reject it.
 
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index ab76b36dce82..73cce8ac8368 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -559,6 +559,15 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 		else
- 			alignment_mask = 0x7;
- 		offset = hw->address & alignment_mask;
-+
-+		/*
-+		 * BAS is an 8-bit field in WCR/BCR; the shift below would
-+		 * silently drop the high bits of ctrl.len when offset + len
-+		 * exceeds 8, programming hardware to watch fewer bytes than
-+		 * the user requested.
-+		 */
-+		if (((u32)hw->ctrl.len << offset) > ARM_BREAKPOINT_LEN_8)
-+			return -EINVAL;
- 	}
- 
- 	hw->address &= ~alignment_mask;
+Additionally, in get_distance_from_watchpoint(), the tagged address
+retrieved from the hardware register is used to calculate wp_low, which is
+then mathematically compared against the explicitly untagged fault address:
 
----
-base-commit: 0787c45ea08a13b5482e701fabc741877cf681f6
-change-id: 20260430-arm64_bas-77e37d830226
+arch/arm64/kernel/hw_breakpoint.c:get_distance_from_watchpoint() {
+    addr =3D untagged_addr(addr);
+    ...
+    wp_low =3D val + lens;
+    wp_high =3D val + lene;
+    if (addr < wp_low)
+    ...
+}
 
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
+Might this cause the distance calculation to silently fail the exact-match
+watchpoint heuristic?
 
+> +
+> +		/*
+> +		 * BAS is an 8-bit field in WCR/BCR; the shift below would
+> +		 * silently drop the high bits of ctrl.len when offset + len
+> +		 * exceeds 8, programming hardware to watch fewer bytes than
+> +		 * the user requested.
+> +		 */
+> +		if (((u32)hw->ctrl.len << offset) > ARM_BREAKPOINT_LEN_8)
+> +			return -EINVAL;
+
+[Severity: High]
+This is a pre-existing issue, but does this new check allow unaligned
+execution breakpoints to bypass length validation?
+
+For AArch64 execution breakpoints, hw->ctrl.len is fixed at 0xF (4 bits).
+If an unaligned address is provided (e.g., offset 1, 2, or 3), the shifted
+length becomes 0x1E, 0x3C, or 0x78. Since these are less than 0xFF
+(ARM_BREAKPOINT_LEN_8), they bypass this validation check.
+
+When encode_ctrl_reg() executes (ctrl.len << 5), wouldn't these invalid
+lengths overflow out of the 4-bit BAS field (bits [8:5] in DBGBCR_EL1)
+and overwrite the RES0 bits [11:9]?=20
+
+This would also fail to program the architecturally mandated BAS value of
+0b1111, leading to CONSTRAINED UNPREDICTABLE hardware behavior.
+
+>  	}
+> =20
+>  	hw->address &=3D ~alignment_mask;
+
+[Severity: High]
+This is a pre-existing issue, but I noticed a potential problem with system
+register synchronization in write_wb_reg():
+
+arch/arm64/kernel/hw_breakpoint.c:write_wb_reg() {
+...
+#define WRITE_WB_REG_CASE(OFF, N, REG, VAL) \
+	case (OFF + N): \
+		AARCH64_DBG_WRITE(N, REG, VAL); \
+		break
+...
+	switch (reg + n) {
+	GEN_WRITE_WB_REG_CASES(AARCH64_DBG_REG_BVR, AARCH64_DBG_REG_NAME_BVR, val);
+	...
+	}
+	isb();
+}
+
+According to ARM64 architectural rules, every write to a control-plane syst=
+em
+register must be followed by an isb() as the very next instruction.
+
+Will the break statement in WRITE_WB_REG_CASE introduce an intervening bran=
+ch
+between the system register write and the isb() at the end of the switch
+block?
+
+Executing an intervening branch before the Context Synchronization Event (C=
+SE)
+means the branch observes an architecturally undefined pipeline state.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609-arm64_bas-=
+v2-1-9f34dbbded88@debian.org?part=3D1
