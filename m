@@ -1,130 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76273383C95;
-	Tue,  9 Jun 2026 07:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308082D97BB;
+	Tue,  9 Jun 2026 07:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780989574; cv=none; b=Eu+8PLcwaK/2I7lmX0o/TKknkw0gdnUV3ya1soTRN+KQQX/H7ZwgMA2rUsOaALjVAedL78VqnXWxnqDTk5kWndhoJ3e27Ns0q5chPNFmeulJdiQr9E8O/xIrd5/0AXdDqAI3nsq7sxAn0qXEaKbXSL8xZqPDFxpEa3Fwebvh7vg=
+	t=1780989696; cv=none; b=fsRPkGi86tBdfkNDPa04eC/yg5QrRq8eyCQaMXjzyI1WaKttEWdUadoLQX7FekilWUsQF/7m+K6P+mBoj154HdabZ7i2alnkm57D68pmwChfYK1ejD7bMvtg3bK5+ntthlVQK3WWNdQB9ZCgQgvVEkoQHFEvYeY9Y8h71336pLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780989574; c=relaxed/simple;
-	bh=GKkIzghRUvawjjfOojGCcFf75QcxZQ7q1x6mKvROcuA=;
+	s=arc-20240116; t=1780989696; c=relaxed/simple;
+	bh=CezKHHhQEE8DvGrnYrNuiWiOWBwHKf5ANf+6Zq8CrQU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=c7EFpXIcFx1N7yCej3dIXN/640AUiRWK6zVecjhbRJx6qpoGCmkxx2nRwypyuCsqTQVfhse4Xnh80mfnvjkvuaFbq/h5ePQ7HYF2HpC5OgBAR1ZvgMmYgi8V5zVH4bOttA4qu4cqqbZpYvFRYvhzdEcDP68mmKdCWiXrPqyKVzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9cRZFLi; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=A0wSor7BVbhXLuGi31uwayH5W4Is0ImN02AuIAYjI5/W0ULnIkmVniNZgxd1o0kueimMScvuWMjqVKH2Rb8czrJnczNt0xzUbetWXKOKZcpQE90qtj7gP5sXWi+5eGF8N9yGqFH/OKZMmMPDtuvZHS8Gbb9lv4KGgrgetWIo1Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ann3tzZ3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9cRZFLi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F4B51F00893;
-	Tue,  9 Jun 2026 07:19:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ann3tzZ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986601F00893;
+	Tue,  9 Jun 2026 07:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780989573;
-	bh=NLfISVf0DomlokqTrNpIWP1QcMUzQTpfcFDPeJtYxmk=;
+	s=k20260515; t=1780989694;
+	bh=tkeFq894W5/H5feuxgF9iRed4hKzxalGDTZKcEh/qsA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m9cRZFLi7aHk/BN05Riu4IcqlxRYS6QqJUZ0C0AvFMjxsGHxjmqqCeBl1KUSZ8TeG
-	 TEBW6eAP8D5A7p1TGcXs+MhC1GAcXDDDKPp9GUzE500O88QYN+F1Hq8vPGZWy53Cob
-	 OLh9qLZxSJStEBiMkyQTdnOi6tr/pxDIgxOdyuhEAppA0Oh7BVFGBMyW/tievx4DjL
-	 OF3EJnQs59JrUY7zJuESvZxhe/+YrJjJxeQAoFhfb0babksImSZgOnV7IWqehrmvHi
-	 HUvXChP1eNVjfLS3jh61R03JoCAv+KPi7co9UEgbhm+8dAV0tBZhzKCAvlOsQJ/sUs
-	 QcEEjFWwwaCGQ==
+	b=Ann3tzZ3Leryo2b4Zd3miml91BBiEkIt9KkzN6hS8P4C7sZw64l6IHtJ8hzTZ3QAC
+	 6ZrfalH683sU09oVV2aA0PzStiGfd59BR5vpAu2Dt6XCTDqBb9BQgaYsJW70grMiBm
+	 hSem1x6WRLxhypXJ4S/xzYCOOA/Iz+qk05IGZZs/7OvSrJ9YtvDC9MQZJOoV31HVdU
+	 wHPf1sWD+pWY+lS2Sl34MpxaFl3bsrZyZrILYKNIhKi4tBN95UHdjfb3ls7DEhJNoE
+	 CL/gwFi5pxGNEbiBaUr2iYb5v218WAJhGKpbAsk4hvqhKTD5UGiy+CxY2X7u63wsrj
+	 +066KcxhpttXA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/7] perf build: Add build support and capability for
- elfutils libasm
+Subject: Re: [PATCH v2 1/7] tools build: Add feature check for elfutils
+ libasm
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260609070732.545416-3-irogers@google.com>
-References: <20260609070732.545416-3-irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <20260609070732.545416-2-irogers@google.com>
+References: <20260609070732.545416-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 07:19:32 +0000
-Message-Id: <20260609071933.1F4B51F00893@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 07:21:34 +0000
+Message-Id: <20260609072134.986601F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The LIBASM_DLOPEN build configuration is defined but completely =
-lacks the corresponding C code to dynamically load the library.
-- [Medium] Setting NO_LIBDW=3D1 fails to exclude libdw from the build, lead=
-ing to unintended linkage and static build failures.
+- [High] The libasm feature check test relies on internal elfutils symbols =
+(`ebl_openbackend`), guaranteeing linkage failure on all systems.
 --
 
-commit 2a3530a4ffc824890cb03d14fd777712b83cb02e
+commit cf97b2eea73923674f23b7d737c06550cb83a7a9
 Author: Ian Rogers <irogers@google.com>
 
-perf build: Add build support and capability for elfutils libasm
+tools build: Add feature check for elfutils libasm
 
-Configure perf build system to utilize the libasm feature check
-(supporting both static and dynamic builds) and export the config flags.
-Add "libasm" capability detection to perf check.
+This commit introduces a build-time feature test for the elfutils libasm
+library in the shared tools/build system. It adds the test program and
+updates the Makefiles to attempt building it to detect support.
 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 6e7b15fab2ecc..8527d20f498f8 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-
-[ ... ]
-
-> @@ -432,6 +439,7 @@ ifeq ($(feature-file-handle), 1)
->  endif
-> =20
->  ifdef NO_LIBELF
-> +  NO_LIBASM :=3D 1
->    NO_LIBDW :=3D 1
->    NO_LIBUNWIND :=3D 1
->    NO_LIBBPF :=3D 1
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 62909a9c799d3..f0f39a2ab2035 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
 
 [ ... ]
 
-> @@ -1060,6 +1068,20 @@ ifndef NO_CAPSTONE
->    endif
+> @@ -184,6 +185,11 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
+>    DWARFLIBS +=3D -ldl
 >  endif
 > =20
-> +ifndef NO_LIBASM
-> +  $(call feature_check,libasm)
-> +  ifeq ($(feature-libasm), 1)
-> +    CFLAGS +=3D -DHAVE_LIBASM_SUPPORT $(LIBASM_CFLAGS)
-> +    ifdef LIBASM_DLOPEN
-> +      CFLAGS +=3D -DLIBASM_DLOPEN
+> +ASMLIBS :=3D -lasm -ldw -lelf
 
-[Severity: Medium]
-Is there corresponding C code to handle the dlopen and dlsym wrappers for=20
-libasm?
+[Severity: High]
+On older systems where ebl_openbackend() was an exported symbol, it resided
+in libebl.so. Since ASMLIBS omits -lebl, won't this cause linkage failures
+during the test build due to missing dependencies?
 
-It looks like if LIBASM_DLOPEN is defined, the build skips linking libasm=20
-directly. However, without the runtime dynamic loading implementation, won'=
-t=20
-this result in unresolved symbol linker errors when trying to build with=20
-LIBASM_DLOPEN=3D1?
-
-> +    else
-> +      LDFLAGS +=3D $(LIBASM_LDFLAGS)
-> +      EXTLIBS +=3D -lasm -ldw -lelf
-
-[Severity: Medium]
-If a user configures the build with NO_LIBDW=3D1 to avoid linking libdw, wo=
-n't
-this unconditional addition of -ldw override their request?
-
-Setting NO_LIBDW=3D1 does not implicitly set NO_LIBASM=3D1. As a result, th=
-e=20
-libasm feature check still executes and forcibly appends -ldw to EXTLIBS.
-
-For static builds, will this cause linker errors since NO_LIBDW=3D1 skips a=
-dding
-DWARFLIBS (like -lz and -lzstd) that libdw.a requires?
-
-> +    endif
-> +    $(call detected,CONFIG_LIBASM)
-> +  endif
+> +ifeq ($(findstring -static,${LDFLAGS}),-static)
+> +  ASMLIBS +=3D -lz -llzma -lbz2 -lzstd
 > +endif
-> +
 
 [ ... ]
+
+> diff --git a/tools/build/feature/test-libasm.c b/tools/build/feature/test=
+-libasm.c
+> new file mode 100644
+> index 0000000000000..f3598ad1cc9e1
+> --- /dev/null
+> +++ b/tools/build/feature/test-libasm.c
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <stddef.h>
+> +#include <elfutils/libasm.h>
+> +#include <gelf.h>
+> +
+> +typedef struct ebl Ebl;
+> +extern Ebl *ebl_openbackend (Elf *elf);
+> +extern void ebl_closebackend (Ebl *ebl);
+> +
+> +int main(void)
+> +{
+> +	Elf *elf =3D elf_begin(0, ELF_C_READ, NULL);
+> +	Ebl *ebl =3D ebl_openbackend(elf);
+
+[Severity: High]
+Will this test program universally fail to link?
+
+In modern elfutils (>=3D 0.177), libebl was merged into libdw, and functions
+like ebl_openbackend() and ebl_closebackend() were made strictly internal
+with hidden visibility. They are not exported by libdw.so or libasm.so.
+
+Because of the missing -lebl flag on older systems and the hidden visibility
+on newer systems, it seems this feature check will always fail, making
+any libasm disassembler backend depending on it unreachable. Is there a
+different way to initialize the disassembler context without relying on
+internal symbols?
+
+> +	DisasmCtx_t *ctx =3D disasm_begin(ebl, elf, NULL);
+> +	disasm_end(ctx);
+> +	ebl_closebackend(ebl);
+> +	elf_end(elf);
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609070732.5454=
-16-1-irogers@google.com?part=3D2
+16-1-irogers@google.com?part=3D1
