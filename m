@@ -1,140 +1,83 @@
-Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3026936A030
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 15:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FFC48A2A1;
+	Tue,  9 Jun 2026 15:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781019466; cv=none; b=R1SgEWRkdCVbml1bZvh2UAxbS71uyP+g+dN57FFdd+KyoK9/2BBmL/jRZdMPhaxE7AjjfM3z5SLhfSHygyjgkc7/aa6EDqpvb/1p3j+TJJy5C+go8ly5XiI1YXkJf/S61QRgaAOgjmdNl5RBoHLNLisvxz92Youz/YgPzy5GWR8=
+	t=1781020115; cv=none; b=q2jF6ixRR38bEXbEtcNg8rdWDzqEovlvgVcdHAZAe7bjp3j58EQl/WY4+wGgSor5O1uQk9e+RByQbvK1VSKRe3IgIcMQMQLdgCLly5r0nKmOstC3piSEfEw2qv/55tsGqcIpMhvo7U7K0d0Wu0J9xlYc0nF3fLexdUDA6DOU5Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781019466; c=relaxed/simple;
-	bh=NKP3/2B1F6kVPLprL70LvEkW/5yNWBgLqHT1gvu0ZEY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EC33dg5fKJJ5yxOe2wsLxBLnWhbem4c+zXJU+OUcVr+efCozVbzDHhAhxZS8hp5VTsKOnpVdERbcrlnhWqQSw3t/jP/cmmAjqPiEtnyFGhBxMQi579R58o0sCa6G0Es4xvkquxyeCi2pWTeP16YZmIuvFG0Upq5/1WwxLDmPC7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cV5IwGZ7; arc=none smtp.client-ip=209.85.215.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781020115; c=relaxed/simple;
+	bh=ImnIoee5onDHjrcTFYmtQJvmJotODJPtHB+sKhkNym0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mBVLKXCPaX6VF3+byPVJDVcyXJCMZvA0kiXLVPCZEMWhGxG5A6aYn+A5wrRMMCTz8g2aC2/bLxRiQwDdtbaYg6IhzfqaN9+M0DDn5bQSB7sxbejDtQTeT8OWjjzYdLh2iZBSdfVrVbW/9TT6h5r1EV94jzNR1VwigQ4MOTgYHzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZbQwY9r9; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cV5IwGZ7"
-Received: by mail-pg1-f196.google.com with SMTP id 41be03b00d2f7-c86307c4e6bso861206a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 08:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781019463; x=1781624263; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ugNb2Z9vQfU1zjSBllu0erAwx0ETb1zliLM0vQU6x4M=;
-        b=cV5IwGZ7w7dDPu+UNT3NtCf+pD31KjAeUqXQHlaInnv5BG/1cpt3ASqT0FBmX+I1rv
-         l5R1EYYfu2hR0BvU/HWZEEctom4PDE1NNdJEd3zHB2Lfk2g7eLYO4AVyxeFoVgDl7OrJ
-         zRsxVrWmR9V1BYlFjf1Foo8bcm9fhx0BhdodOP5XxekziSA55gbGXFin2g87F3BvPnxg
-         LJJ9NHmCuSvZ8Ir3pqb/vqK+YDNdRkQnZK5rKYdaPM9hlsVp0njnApcA4EPuchSRuIzx
-         v6lkW3wCLUmai/Rxlw6vRPSsf4yxwHW7Sfnk0b2AG16Te3G6U73zWQCOn48oqW4Xk1vA
-         OqeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781019463; x=1781624263;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ugNb2Z9vQfU1zjSBllu0erAwx0ETb1zliLM0vQU6x4M=;
-        b=snnN0OI4SMQ//3pHWXVAdNElPzKtIv0HA59Thva1hNAnmoM/rLrC/VxcrbtBS+h0uQ
-         A8OneAPrykt8ZHSXjXHOPfjqRzw6tTisbRuMcudIjnO2PoD3auZVu2v6/ABPLvbdM/+e
-         ujWwsMrSRdxBZe74vELGRAr0s7FNDjm6b/7fmoOMIVPgU/FwZENKsT/0/i99cF4qbJU/
-         j/yKg+GEM39TJEKr5Ooy6Xu6qwcdCjOrgXSEC5i6OjI/iIZEub1QDUNe3z9iv+DcE7sY
-         liDwCLiGUaJkqaaQyv+ptKbuEx4xiP00WrQy/QvHSFg2e7jka0MSPZ7vbWbf8Kf4Qamv
-         R3Bw==
-X-Forwarded-Encrypted: i=1; AFNElJ+9Ugj9qZlA5dfuS0zZ4qU+vmMmDyRcnzYR1xD+F10F5Dpln0BOpROgndE0ScceDQWa1IN1rqV+erkGux0MZmD8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQd6T1966x0SOJHJwpy+uPicPOFZgpd5tGAnzpdmo1YadcHWnC
-	9OSRdHHa7dValmfRWIxpViNXRN64ckCLrYn6nICLXuK/ifW2xAPXiE8C
-X-Gm-Gg: Acq92OHoR5kOZtvU9A58bejNXXZaBsjKHbNeeVsAQE4ggZDGbG8D6nGki3YZHC2SF2S
-	JHuGqIWGDYIpdXNazrRl95C+3FkP/2QmF8fulH1LimNt7HaR1wUnucyKyvNVwXaBenQcp5BVg3c
-	szJTbGm2cajIYh4uTCcO7pD+u6C2mEYD8J9eqkOHDuzE/UYASF8kPXu7enquMoUCkvRfbAq89tz
-	P3SIsXI+LIeBoCYiO0bpAF0gBv2SsGBizZMFM8Dd5+KOWPlAi43r637ESxi1tlv/5NTdCbuOhcA
-	X5pMu08MybJWBtT08nPGWI1N9juyqyTYscsw6BSQEWcwP7hAYs/bXhP1EGbdzD1I5BYUJmtra21
-	QkrvwGL/yYA9ht3VBLChr42KFVnTzZBwSBAIzoEpEcek0Xw3MSZ50J8ZSA3dP76+Km7XwuMRbMs
-	sooxsMNU3fPl5ciew7K3tGo89+s3OZj9+j+wmFr/yYEEqITj4FAssWDpgmwaUaIwxQoFQ=
-X-Received: by 2002:a17:90b:3949:b0:366:3517:1a95 with SMTP id 98e67ed59e1d1-3751c4552b7mr4035862a91.0.1781019463425;
-        Tue, 09 Jun 2026 08:37:43 -0700 (PDT)
-Received: from LAPTOP-1HUHJV8R.localdomain ([2408:8642:893:d2da:8d02:522d:941f:95bb])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36f70a2892esm19771849a91.10.2026.06.09.08.37.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 08:37:42 -0700 (PDT)
-From: l1za0.sec@gmail.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sashiko-bot@kernel.org
-Subject: [PATCH v2] perf: avoid lockdep warning in self-monitoring perf_event_open
-Date: Tue,  9 Jun 2026 23:37:24 +0800
-Message-ID: <20260609153724.7878-1-l1za0.sec@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZbQwY9r9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=89kaOsICHrLAJhB1g6xne0LAEm5RZWANfXlE1A7ejgY=; b=ZbQwY9r9XhTTWb4wW3PAOMCTf7
+	mQNmO3+jZEuefsY7Op1XuSPVHgT8lfUDlNccfgZcoCPOtxxtJFeu2dy0eZ4sJz15WbYM9zILFV/EO
+	PRGnT4exa+Q9gf2jTDEmz3iLJUGT/IooUGjgPDND0RBKwbjuYwY/W7jZhCTZyvoSueZuAScloHByP
+	2asRINfQ7M21OHJAwTw1YkeJ9MgOz38tiTPOqpdy2zmj+Ei1/f3G1KuvJALQJqXBDRxeJM46P66UY
+	Jkjf/N3d49l8ZfGi4XvUUBR5Y8E376MPc8ODcX8iceQ9IuzM3VYyR5ojF2EBQSqK1SjIrqok5+yUD
+	k7aU6wUQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wWxkT-00000002g5N-3qko;
+	Tue, 09 Jun 2026 14:48:14 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 516E2302F12; Tue, 09 Jun 2026 16:48:12 +0200 (CEST)
+Date: Tue, 9 Jun 2026 16:48:12 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>
+Subject: Re: [Patch v2 3/9] perf/x86: Update cap_user_rdpmc base on rdpmc
+ user disable state
+Message-ID: <20260609144812.GB49951@noisy.programming.kicks-ass.net>
+References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
+ <20260609050222.2458129-4-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260609050222.2458129-4-dapeng1.mi@linux.intel.com>
 
-From: Haocheng Yu <3230100410@zju.edu.cn>
+On Tue, Jun 09, 2026 at 01:02:16PM +0800, Dapeng Mi wrote:
 
-A lockdep warning: possible deadlock in __perf_event_task_sched_out is
-reported by a modified Syzkaller-based kernel fuzzing tool we use.
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 3bd0522afe6d..6cd95b8e31cb 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2797,6 +2797,9 @@ void arch_perf_update_userpage(struct perf_event *event,
+>  	userpg->cap_user_time_zero = 0;
+>  	userpg->cap_user_rdpmc =
+>  		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
+> +	if (x86_pmu_has_rdpmc_user_disable(event->pmu) &&
+> +	    event->hw.config & ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE)
+> +		userpg->cap_user_rdpmc = 0;
+>  	userpg->pmc_width = x86_pmu.cntval_bits;
+>  
+>  	if (!using_native_sched_clock() || !sched_clock_stable())
 
-The warning is triggered on the self-monitoring perf_event_open() path.
-When perf_install_in_context() targets the current task, it goes through
-task_function_call() and the synchronous smp_call_function_single()
-self-call path. The reported lockdep chain contains:
-
-  rq->__lock -> ctx->lock
-
-and an existing reverse dependency from:
-
-  ctx->lock -> ... -> p->pi_lock -> rq->__lock
-
-The current fix adds a fast path for task == current in
-perf_install_in_context() and calls __perf_install_in_context()
-directly.
-
-This fix removes the self-call path for the reported self-monitoring
-case. It does not change the scheduler-side locking order in
-__perf_event_task_sched_out(), so it should be treated as a targeted
-mitigation for this trigger path.
-
-Signed-off-by: Haocheng Yu <3230100410@zju.edu.cn>
-Signed-off-by: Haocheng Yu <l1za0.sec@gmail.com>
----
- kernel/events/core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7935d5663944..97837242db32 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3199,6 +3199,15 @@ perf_install_in_context(struct perf_event_context *ctx,
- 	 */
- 	smp_mb();
- again:
-+	if (task == current) {
-+		unsigned long flags;
-+		preempt_disable();
-+		local_irq_save(flags);
-+		__perf_install_in_context(event);
-+		local_irq_restore(flags);
-+		preempt_enable();
-+		return;
-+	}
- 	if (!task_function_call(task, __perf_install_in_context, event))
- 		return;
- 
-
-base-commit: 33d8d8ec31b591952ded59d596c2f3db45004937
--- 
-2.51.0
-
+Remember, this is evaluated very very often. So it makes more sense to
+ensure the hw.flags state is correct such that this remains a simple
+expression.
