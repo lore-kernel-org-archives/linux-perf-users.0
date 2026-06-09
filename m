@@ -1,36 +1,36 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DD23CF1F8
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 06:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60FF3CF210
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 06:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780984967; cv=none; b=jgMxRsU31sZ9GZMiq8tQQ3dUcdzCScVdj+ywGk6sSUDwwv5YCGgbGxIj/vaoNNlO3627tABnvtx1tk69XyuzNW8fc3W1dLj6sQ8sAChgUPHJ4b7x/Vo87/027gawpNUr0nHFoPcoQPfkokekvBwPLnjTsnL59EcZ5hP54dx9FKc=
+	t=1780984972; cv=none; b=q32fAiOnmJzA60NGAWNJy22NVUiGPwjUktfuoq/3K5tDMt1WWyKb40aoOzou73iUfnBlDzxqb1NkCJ5rqHT4hOwz91WcRnPb4Yy9PwTYFhwRbY2Jgboyfd9G1rMLFDTcErhSHXKtb1LaBjTqF3c0XRhOlayFc5AodR2Ud9fbvPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780984967; c=relaxed/simple;
-	bh=6eZbdU9r01O5U5cRm3lfBtUDAYJFjIGr572PLFh0R2o=;
+	s=arc-20240116; t=1780984972; c=relaxed/simple;
+	bh=a2/nxaZY8U0qpxrtvqbdJ8quGuEwBrzaoRnQVPeEQZ0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LELbwO+1rG4dcFWdBq0spjVbhjEkXBt95gzMokyEyOs8rQUdXa5B8gVBFPCGuR77K2A50AIyHCvI385UvEEmymqPyishdjJvIlaNh9IVLN503WkugNB/sMqLdq6kkBFmXw0XVxoDj5WUkBO3pocXRxH03WqfiOh0cMoAumpTpP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jCjDz6SV; arc=none smtp.client-ip=91.218.175.181
+	 In-Reply-To:To:Cc; b=uHFoVl52k+G45JkOhGWM7uMkbobkegzcowf/qkS59M4RvFa6Pl5bY9R5KcBK1eCMlHze71mD52imJM04tnEP/FRQhplleuJPvM2p0qkPrhSzE48Kf6tLogs/LnOE+Yl7q1DuEiFaIrpIvtkvJ2yoqcaoBH87xYu//vEL5Zt1+R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qujoi4g+; arc=none smtp.client-ip=95.215.58.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jCjDz6SV"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qujoi4g+"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1780984963;
+	t=1780984967;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=O1z/SRTOq77wAaiCHEBuev51rOxTNht3QVh4Cw0HEOc=;
-	b=jCjDz6SVbqt1iFak016WIHhEhWUYY1Ntq9uNSAFshLgBB1QMxE46zOIGO1IDOlzq4ljGSV
-	RB6Zb8r9VIIei0ry7myIiFXQtsDMiiTihsUFcDaeDapkoaeH1xLKSXV2DfPl30CkKTw1q3
-	LWwjKbJhA1NqXMhcm8jentvBSk/tKXo=
+	bh=nYwOg3xzzJ1xkjPHiCCBV9Leo3HRwljOW68csu9Byzs=;
+	b=Qujoi4g+vT6bPokPwyYQmNVIIl8pnWS/KScH7W9dvSqvkSltJKq09HpK1gpdBXGlrbd2pr
+	NApCP2Pfk/HgQp0sCslatu48VMeiOIlksRxu6Q06uOn16Ml7Uti95EoDENPR/WYPNyumSz
+	AY1zPC47yN12tnR540knXSgNs5S16b4=
 From: Atish Patra <atish.patra@linux.dev>
-Date: Mon, 08 Jun 2026 23:01:28 -0700
-Subject: [PATCH v6 14/21] RISC-V: perf: Skip PMU SBI extension when not
- implemented
+Date: Mon, 08 Jun 2026 23:01:29 -0700
+Subject: [PATCH v6 15/21] RISC-V: perf: Use config2/vendor table for event
+ to counter mapping
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,7 +39,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260608-counter_delegation-v6-14-285b72ed65a9@meta.com>
+Message-Id: <20260608-counter_delegation-v6-15-285b72ed65a9@meta.com>
 References: <20260608-counter_delegation-v6-0-285b72ed65a9@meta.com>
 In-Reply-To: <20260608-counter_delegation-v6-0-285b72ed65a9@meta.com>
 To: James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -54,107 +54,179 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 X-Migadu-Flow: FLOW_OUT
 
-From: Charlie Jenkins <charlie@rivosinc.com>
+From: Atish Patra <atishp@rivosinc.com>
 
-When the PMU SBI extension is not implemented, sbi_v2_available should
-not be set to true. The SBI implementation for counter config matching
-and firmware counter read  should also be skipped when the SBI extension
-is not implemented.
+The counter restriction specified in the json file is passed to
+the drivers via config2 paarameter in perf attributes. This allows
+any platform vendor to define their custom mapping between event and
+hpmcounters without any rules defined in the ISA.
 
-Signed-off-by: Atish Patra <atishp@meta.com>
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+For legacy events, the platform vendor may define the mapping in
+the driver in the vendor event table.
+The fixed cycle and instruction counters are fixed (0 and 2
+respectively) by the ISA and maps to the legacy events. The platform
+vendor must specify this in the driver if intended to be used while
+profiling. Otherwise, they can just specify the alternate hpmcounters
+that may monitor and/or sample the cycle/instruction counts.
+
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- drivers/perf/riscv_pmu_sbi.c | 48 ++++++++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 20 deletions(-)
+ drivers/perf/riscv_pmu_sbi.c   | 90 ++++++++++++++++++++++++++++++++++--------
+ include/linux/perf/riscv_pmu.h |  2 +
+ 2 files changed, 76 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 1f16df9d0dd0..5bfcd3821f57 100644
+index 5bfcd3821f57..4b4f151a0744 100644
 --- a/drivers/perf/riscv_pmu_sbi.c
 +++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -479,27 +479,31 @@ static void rvpmu_sbi_check_event(struct sbi_pmu_event_data *edata)
- 	}
+@@ -76,6 +76,7 @@ static ssize_t __maybe_unused rvpmu_format_show(struct device *dev, struct devic
+ 	RVPMU_ATTR_ENTRY(_name, rvpmu_format_show, (char *)_config)
+ 
+ PMU_FORMAT_ATTR(firmware, "config:62-63");
++PMU_FORMAT_ATTR(counterid_mask, "config2:0-31");
+ 
+ static bool sbi_v2_available;
+ static bool sbi_v3_available;
+@@ -120,6 +121,7 @@ static const struct attribute_group *riscv_sbi_pmu_attr_groups[] = {
+ static struct attribute *riscv_cdeleg_pmu_formats_attr[] = {
+ 	RVPMU_FORMAT_ATTR_ENTRY(event, RVPMU_CDELEG_PMU_FORMAT_ATTR),
+ 	&format_attr_firmware.attr,
++	&format_attr_counterid_mask.attr,
+ 	NULL,
+ };
+ 
+@@ -1480,24 +1482,80 @@ static int rvpmu_deleg_find_ctrs(void)
+ 	return num_hw_ctr;
  }
  
--static void rvpmu_sbi_check_std_events(struct work_struct *work)
-+static void rvpmu_check_std_events(struct work_struct *work)
++/*
++ * The json file must correctly specify counter 0 or counter 2 is available
++ * in the counter lists for cycle/instret events. Otherwise, the drivers have
++ * no way to figure out if a fixed counter must be used and pick a programmable
++ * counter if available.
++ */
+ static int get_deleg_fixed_hw_idx(struct cpu_hw_events *cpuc, struct perf_event *event)
  {
- 	int ret;
- 
--	if (sbi_v3_available) {
--		ret = pmu_sbi_check_event_info();
--		if (ret)
--			pr_err("pmu_sbi_check_event_info failed with error %d\n", ret);
--		return;
--	}
-+	if (riscv_pmu_sbi_available()) {
-+		if (sbi_v3_available) {
-+			ret = pmu_sbi_check_event_info();
-+			if (ret)
-+				pr_err("pmu_sbi_check_event_info failed with error %d\n", ret);
-+			return;
-+		}
- 
--	for (int i = 0; i < ARRAY_SIZE(pmu_hw_event_sbi_map); i++)
--		rvpmu_sbi_check_event(&pmu_hw_event_sbi_map[i]);
-+		for (int i = 0; i < ARRAY_SIZE(pmu_hw_event_sbi_map); i++)
-+			rvpmu_sbi_check_event(&pmu_hw_event_sbi_map[i]);
- 
--	for (int i = 0; i < ARRAY_SIZE(pmu_cache_event_sbi_map); i++)
--		for (int j = 0; j < ARRAY_SIZE(pmu_cache_event_sbi_map[i]); j++)
--			for (int k = 0; k < ARRAY_SIZE(pmu_cache_event_sbi_map[i][j]); k++)
--				rvpmu_sbi_check_event(&pmu_cache_event_sbi_map[i][j][k]);
-+		for (int i = 0; i < ARRAY_SIZE(pmu_cache_event_sbi_map); i++)
-+			for (int j = 0; j < ARRAY_SIZE(pmu_cache_event_sbi_map[i]); j++)
-+				for (int k = 0; k < ARRAY_SIZE(pmu_cache_event_sbi_map[i][j]); k++)
-+					rvpmu_sbi_check_event(&pmu_cache_event_sbi_map[i][j][k]);
-+	} else {
-+		DO_ONCE_LITE_IF(1, pr_info, "Boot time config matching not required for smcdeleg\n");
+-	return -EINVAL;
++	struct hw_perf_event *hwc = &event->hw;
++	bool guest_events = event->attr.config1 & RISCV_PMU_CONFIG1_GUEST_EVENTS;
++
++	if (guest_events) {
++		if (hwc->event_base == SBI_PMU_HW_CPU_CYCLES)
++			return 0;
++		if (hwc->event_base == SBI_PMU_HW_INSTRUCTIONS)
++			return 2;
++		else
++			return -EINVAL;
 +	}
++
++	if (!event->attr.config2)
++		return -EINVAL;
++
++	if (event->attr.config2 & RISCV_PMU_CYCLE_FIXED_CTR_MASK)
++		return 0; /* CY counter */
++	else if (event->attr.config2 & RISCV_PMU_INSTRUCTION_FIXED_CTR_MASK)
++		return 2; /* IR counter */
++	else
++		return -EINVAL;
  }
  
--static DECLARE_WORK(check_std_events_work, rvpmu_sbi_check_std_events);
-+static DECLARE_WORK(check_std_events_work, rvpmu_check_std_events);
+ static int get_deleg_next_hpm_hw_idx(struct cpu_hw_events *cpuc, struct perf_event *event)
+ {
+-	unsigned long hw_ctr_mask = 0;
++	u32 hw_ctr_mask = 0, temp_mask = 0;
++	u32 type = event->attr.type;
++	u64 config = event->attr.config;
++	int ret;
  
- static ssize_t rvpmu_format_show(struct device *dev,
- 				 struct device_attribute *attr, char *buf)
-@@ -692,6 +696,9 @@ static int rvpmu_sbi_ctr_get_idx(struct perf_event *event)
- 
- 	cflags = rvpmu_sbi_get_filter_flags(event);
- 
-+	if (!riscv_pmu_sbi_available())
-+		return -ENOENT;
+-	/*
+-	 * TODO: Treat every hpmcounter can monitor every event for now.
+-	 * The event to counter mapping should come from the json file.
+-	 * The mapping should also tell if sampling is supported or not.
+-	 */
++	/* Select only available hpmcounters */
++	hw_ctr_mask = cmask & (~0x7) & ~(cpuc->used_hw_ctrs[0]);
 +
- 	/*
- 	 * In legacy mode, we have to force the fixed counters for those events
- 	 * but not in the user access mode as we want to use the other counters
-@@ -967,7 +974,7 @@ static u64 rvpmu_ctr_read(struct perf_event *event)
- 		return val;
- 	}
- 
--	if (pmu_sbi_is_fw_event(event)) {
-+	if (pmu_sbi_is_fw_event(event) && riscv_pmu_sbi_available()) {
- 		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_FW_READ,
- 				hwc->idx, 0, 0, 0, 0, 0);
- 		if (ret.error)
-@@ -2045,12 +2052,13 @@ static int __init rvpmu_devinit(void)
- 	int ret;
- 	struct platform_device *pdev;
- 
--	if (sbi_spec_version >= sbi_mk_version(0, 3) &&
--	    sbi_probe_extension(SBI_EXT_PMU))
--		static_branch_enable(&riscv_pmu_sbi_available);
-+	if (sbi_probe_extension(SBI_EXT_PMU)) {
-+		if (sbi_spec_version >= sbi_mk_version(0, 3))
-+			static_branch_enable(&riscv_pmu_sbi_available);
-+		if (sbi_spec_version >= sbi_mk_version(2, 0))
-+			sbi_v2_available = true;
++	switch (type) {
++	case PERF_TYPE_HARDWARE:
++		temp_mask = current_pmu_hw_event_map[config].counter_mask;
++		break;
++	case PERF_TYPE_HW_CACHE:
++		ret = cdeleg_pmu_event_find_cache(config, NULL, &temp_mask);
++		if (ret)
++			return ret;
++		break;
++	case PERF_TYPE_RAW:
++		/*
++		 * Mask off the counters that can't monitor this event (specified via json)
++		 * The counter mask for this event is set in config2 via the property 'Counter'
++		 * in the json file or manual configuration of config2. If the config2 is not set,
++		 * it is assumed all the available hpmcounters can monitor this event.
++		 * Note: This assumption may fail for virtualization use case where they hypervisor
++		 * (e.g. KVM) virtualizes the counter. Any event to counter mapping provided by the
++		 * guest is meaningless from a hypervisor perspective. Thus, the hypervisor doesn't
++		 * set config2 when creating kernel counter and relies default host mapping.
++		 */
++		if (event->attr.config2)
++			temp_mask = event->attr.config2;
++		break;
++	default:
++		break;
 +	}
++
++	if (temp_mask)
++		hw_ctr_mask &= temp_mask;
++
++	if (!hw_ctr_mask)
++		return -EINVAL;
  
--	if (sbi_spec_version >= sbi_mk_version(2, 0))
--		sbi_v2_available = true;
- 	/*
- 	 * We need all three extensions to be present to access the counters
- 	 * in S-mode via Supervisor Counter delegation.
+-	/* Select only hpmcounters */
+-	hw_ctr_mask = cmask & (~0x7);
+-	hw_ctr_mask &= ~(cpuc->used_hw_ctrs[0]);
+ 	return __ffs(hw_ctr_mask);
+ }
+ 
+@@ -1526,10 +1584,6 @@ static int rvpmu_deleg_ctr_get_idx(struct perf_event *event)
+ 	u64 priv_filter;
+ 	int idx;
+ 
+-	/*
+-	 * TODO: We should not rely on SBI Perf encoding to check if the event
+-	 * is a fixed one or not.
+-	 */
+ 	if (!is_sampling_event(event)) {
+ 		idx = get_deleg_fixed_hw_idx(cpuc, event);
+ 		if (idx == 0 || idx == 2) {
+@@ -1547,10 +1601,14 @@ static int rvpmu_deleg_ctr_get_idx(struct perf_event *event)
+ 		goto out_err;
+ found_idx:
+ 	priv_filter = get_deleg_priv_filter_bits(event);
++	if (test_and_set_bit(idx, cpuc->used_hw_ctrs))
++		goto out_err;
+ 	update_deleg_hpmevent(idx, hwc->config, priv_filter);
++	return idx;
+ skip_update:
+-	if (!test_and_set_bit(idx, cpuc->used_hw_ctrs))
+-		return idx;
++	if (test_and_set_bit(idx, cpuc->used_hw_ctrs))
++		goto out_err;
++	return idx;
+ out_err:
+ 	return -ENOENT;
+ }
+diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
+index f6a710c83a4c..06171e7aadfb 100644
+--- a/include/linux/perf/riscv_pmu.h
++++ b/include/linux/perf/riscv_pmu.h
+@@ -30,6 +30,8 @@
+ #define RISCV_PMU_CONFIG1_GUEST_EVENTS 0x1
+ 
+ #define RISCV_PMU_DELEG_RAW_EVENT_MASK GENMASK_ULL(55, 0)
++#define RISCV_PMU_CYCLE_FIXED_CTR_MASK 0x01
++#define RISCV_PMU_INSTRUCTION_FIXED_CTR_MASK 0x04
+ 
+ #define HW_OP_UNSUPPORTED		0xFFFF
+ #define CACHE_OP_UNSUPPORTED		0xFFFF
 
 -- 
 2.53.0-Meta
