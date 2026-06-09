@@ -1,162 +1,118 @@
 Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104453D3CEF;
-	Tue,  9 Jun 2026 07:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B605F3DBD7C;
+	Tue,  9 Jun 2026 07:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780990090; cv=none; b=LB7XbhpB/KL/dlL0YPvpfOO+wKZeecF9+rF3QKaTvkvyVrW2YfweET/6Wzhs+E0anDVvxXIjm+lNWl7fbO0C8Hxuo8jEqDfx46tXVR0APGaAOHLM+SSArgxk/HzQdeMr0AJVQoWCB1z4pAjmcHryx/VQgnGkJKLGpkPfpdVmu48=
+	t=1780990377; cv=none; b=U2jNH/mmzNq+0qX9qgZmXbTKPiw0xXnTH7dufqV5KzcCkWCcqio3OJPJwz5nQzKO2twQKu/G+X/7z2lQ4N4tzprXzXUPnbwwNt9nKpyrSRfV0rvQggj+FbuuDj36ML/4fil6m+ejrQWsUomDhGtghs6ENX0zJvTQ3hqUc8wY5WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780990090; c=relaxed/simple;
-	bh=1tjO6VMGzyVIS+TNlEBflb9MJnuAW7Hr0LU4DhXj+tI=;
+	s=arc-20240116; t=1780990377; c=relaxed/simple;
+	bh=TXPwTaqJf90GlD07J+Kv1JBU5ZJkhvOn//4lpMXqnvU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjAyRMDvFn/ydG3DIwJwvZk0GGtEv6KZCEBzUaMolb8xDTX66QX8rOjblYXVCNka4S9mBXGyAXEFrg8GPH8ag0k6K5fww35vMtjzfsoQHZMihLNdL6GvQaJr7PfUKqhRTitTHMLC1q/stOjyxury47WYrgHLSgJjHAWFTNBHyeE=
+	 Content-Type:Content-Disposition:In-Reply-To; b=C3PDiOsmvBbdOytZ0NUV7e+sGsCWZVQ8sUqXePiW9EPUBChb0x3iXq3OctV0wIr42X7TUovi+gN4OOkVHjzQxMk9OwRir9lcVZUWk7mw2Dv+Dxg4eIcqijkLZrWUHPR3+tOxfWzzYuM5WamnI4EA6xVSJT6CXwQ3+tor8STHKtg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kaiser.cx
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from ipservice-092-209-184-216.092.209.pools.vodafone-ip.de ([92.209.184.216] helo=nb282.user.codasip.com)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <martin@kaiser.cx>)
-	id 1wWqsJ-000000020yB-196a;
-	Tue, 09 Jun 2026 09:27:51 +0200
-Date: Tue, 9 Jun 2026 09:27:50 +0200
+Received: from martin by akranes.kaiser.cx with local (Exim 4.98.2)
+	(envelope-from <martin@akranes.kaiser.cx>)
+	id 1wWqx9-0000000210y-46QZ;
+	Tue, 09 Jun 2026 09:32:51 +0200
+Date: Tue, 9 Jun 2026 09:32:51 +0200
 From: Martin Kaiser <martin@kaiser.cx>
-To: Wang Han <wanghan@linux.alibaba.com>
-Cc: Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chen Pei <cp0613@linux.alibaba.com>, Andy Chiu <andybnac@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, oliver.yang@linux.alibaba.com,
-	xueshuai@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-	jkchen@linux.alibaba.com, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] scripts/sorttable: Handle RISC-V patchable ftrace
- entries
-Message-ID: <aifAdmxJtnVjshl2@nb282.user.codasip.com>
-References: <20260528082310.1994388-1-wanghan@linux.alibaba.com>
- <cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com>
- <20260609063002.3943001-1-wanghan@linux.alibaba.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf riscv: fix register name strings
+Message-ID: <aifBo1zkxfIacrXB@akranes.kaiser.cx>
+References: <20260608192731.708606-1-martin@kaiser.cx>
+ <CAP-5=fV6tVQA1TO_j9TDzPXV+ik3ww-mxX-VaO_XCGkAWYffag@mail.gmail.com>
+ <aicll3FawrGwTQ-1@x1>
+ <aicpIOkNGIn80TeN@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260609063002.3943001-1-wanghan@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aicpIOkNGIn80TeN@x1>
+Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
 
-Thus wrote Wang Han (wanghan@linux.alibaba.com):
+Thus wrote Arnaldo Carvalho de Melo (acme@kernel.org):
 
-> RISC-V uses -fpatchable-function-entry=8,4 when the compressed ISA is
-> enabled and -fpatchable-function-entry=4,2 otherwise. In both cases, the
-> patchable NOP area starts 8 bytes before the function symbol address.
-> The __mcount_loc entries therefore point at the patchable NOP area
-> associated with a function, while nm reports the function symbol at the
-> entry address used for the function range check.
+> On Mon, Jun 08, 2026 at 05:27:03PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Mon, Jun 08, 2026 at 01:08:28PM -0700, Ian Rogers wrote:
+> > > On Mon, Jun 8, 2026 at 12:27 PM Martin Kaiser <martin@kaiser.cx> wrote:
 
-> After RISC-V selected HAVE_BUILDTIME_MCOUNT_SORT, sorttable started
-> applying that range check at build time. Without allowing entries just
-> before the reported function address, the mcount sorter treats valid
-> RISC-V ftrace callsites as invalid weak-function entries and writes
-> them back as zero. The resulting kernel boots with no ftrace entries,
-> breaking dynamic ftrace and users such as livepatch.
+> > > > On risc-v, pref probe generates an invalid syntax for a named register in
+> > > > a kprobe.
 
-> The failure is silent during the final link because zeroing weak-function
-> entries is an expected sorttable operation. At boot, those zero entries
-> are skipped by ftrace_process_locs(), so the only obvious symptom is that
-> the vmlinux ftrace table has lost valid callsites and ftrace users cannot
-> attach to them.
+> > > > $ perf probe --debug verbose --add "n_tty_write tty"
+> > > > ...
+> > > > Writing event: p:probe/n_tty_write _text+8922528 tty=%"%a0":x64
+> > > > Failed to write event: Invalid argument
 
-> CONFIG_FTRACE_SORT_STARTUP_TEST also reports the table as sorted in this
-> state: it only checks that the __mcount_loc entries are in ascending
-> order, which a fully zeroed table trivially satisfies. The original
-> commit relied on this check and did not see the regression.
+> > > > The problem is the combination of
 
-> On an affected RISC-V QEMU boot with both CONFIG_FTRACE_SORT_STARTUP_TEST
-> and CONFIG_FTRACE_STARTUP_TEST enabled, the sort check still passes
-> while ftrace reports zero usable entries and the early selftests fail:
+> > > >    #define REG_DWARFNUM_NAME(reg, idx) [idx] = "%" #reg
 
->   [    0.000000] ftrace section at ffffffff8101da98 sorted properly
->   [    0.000000] ftrace: allocating 0 entries in 128 pages
->   [    0.054999] Testing tracer function: .. no entries found ..FAILED!
->   [    0.172407] tracer: function failed selftest, disabling
->   [    0.178186] Failed to init function_graph tracer, init returned -19
+> > > > and entries such as
 
-> Handle RISC-V like arm64 for the function-range check and allow
-> patchable entries up to 8 bytes before the function address.
+> > > >    REG_DWARFNUM_NAME("%a0", 10)
 
-> With this fix, a RISC-V QEMU smoke boot with ftrace startup tests shows
-> the vmlinux ftrace table is populated and dynamic ftrace still works:
+> > > > where #reg will escape the quotes of the first macro parameter.
 
->   [    0.000000] ftrace: allocating 46749 entries in 184 pages
->   [    0.051115] Testing tracer function: PASSED
->   [    1.283782] Testing dynamic ftrace: PASSED
->   [    6.275456] Testing tracer function_graph: PASSED
+> > > > Update the macro definition to produce the correct syntax for a named
+> > > > register in a kprobe, i.e. the unquoted register name with only one
+> > > > leading %.
 
-> Fixes: 0ca1724b56af ("riscv: ftrace: select HAVE_BUILDTIME_MCOUNT_SORT")
-> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
-> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Reviewed-by: Chen Pei <cp0613@linux.alibaba.com>
-> Link: https://lore.kernel.org/all/20260527113028.4b21a5de@fedora/
-> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
-> ---
->  scripts/sorttable.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+> > > > Fixes: a90c4519186d ("perf riscv: Remove dwarf-regs.c and add dwarf-regs-table.h")
+> > > > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 
-> diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-> index e8ed11c680c6..d8dc2a1b7c31 100644
-> --- a/scripts/sorttable.c
-> +++ b/scripts/sorttable.c
-> @@ -891,17 +891,22 @@ static int do_file(char const *const fname, void *addr)
->  	table_sort_t custom_sort = NULL;
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
 
->  	switch (elf_map_machine(ehdr)) {
-> -	case EM_AARCH64:
->  #ifdef MCOUNT_SORT_ENABLED
-> +	case EM_AARCH64:
-> +		/* arm64 also needs RELA-based weak-function fixups. */
->  		sort_reloc = true;
->  		rela_type = 0x403;
-> -		/* arm64 uses patchable function entry placing before function */
-> +		/* fallthrough */
-> +	case EM_RISCV:
-> +		/* arm64 and RISC-V place patchable entries before the function. */
->  		before_func = 8;
-> +#else
-> +	case EM_AARCH64:
-> +	case EM_RISCV:
->  #endif
->  		/* fallthrough */
->  	case EM_386:
->  	case EM_LOONGARCH:
-> -	case EM_RISCV:
->  	case EM_S390:
->  	case EM_X86_64:
->  		custom_sort = sort_relative_table_with_data;
-> -- 
-> 2.43.0
+> > > Thanks for catching this! Sashiko is also green for this change:
+> > > https://sashiko.dev/#/patchset/20260608192731.708606-1-martin%40kaiser.cx
 
-I ran into this problem and came up with pretty much the same fix.
+> > Strange,
 
-Reviewed-by: Martin Kaiser <martin@kaiser.cx>
+> >   LD      /tmp/build/perf-tools-next/tests/perf-test-in.o
+> >   LD      /tmp/build/perf-tools-next/perf-test-in.o
+> > In file included from util/dwarf-regs.c:23:
+> > util/../arch/riscv/include/dwarf-regs-table.h:5:9: error: ‘REG_DWARFNUM_NAME’ redefined [-Werror]
+> >     5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = reg
+> >       |         ^~~~~~~~~~~~~~~~~
+> > In file included from util/dwarf-regs.c:22:
+> > util/../arch/powerpc/include/dwarf-regs-table.h:10:9: note: this is the location of the previous definition
+> >    10 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = "%" #reg
+> >       |         ^~~~~~~~~~~~~~~~~
+> > In file included from util/dwarf-regs.c:24:
+> > util/../arch/s390/include/dwarf-regs-table.h:5:9: error: ‘REG_DWARFNUM_NAME’ redefined [-Werror]
+> >     5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = "%" #reg
+> >       |         ^~~~~~~~~~~~~~~~~
+> > util/../arch/riscv/include/dwarf-regs-table.h:5:9: note: this is the location of the previous definition
+> >     5 | #define REG_DWARFNUM_NAME(reg, idx)     [idx] = reg
+> >       |         ^~~~~~~~~~~~~~~~~
+> > cc1: all warnings being treated as errors
+> > make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:96: /tmp/build/perf-tools-next/util/dwarf-regs.o] Error 1
+
+
+> > Trying to figure out why Sashiko is green on it but it doesn't build
+> > here...
+
+> C preprocessor benign redefinition rule kicked in, this is a preexisting
+> problem, the headers need to undef that REG_DWARFNUM_NAME that now is
+> different in one of the headers, Risc-V's.
+
+> I'll cook up a patch to merge before this one.
+
+I see. We need an undef for risc-v, similar to mips.
+
+Let me send a v2 so we have all in one patch, that should be simpler to
+backport to stable.
+
+Thanks,
+Martin
