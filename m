@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026A4363C77;
-	Tue,  9 Jun 2026 05:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12706347520;
+	Tue,  9 Jun 2026 05:07:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780981670; cv=none; b=GXprN05+a3/CjT5Z71J/i5tbK3VwsVhorc6k2XsrDfqyCBx9LA+2eCNn7qjNyDfqz3zS5c0+pg+8hYVToah9g2bvuZZqfDsZaC/IS/2xlZBTel5UNLy+VSQ9I6HiF0cyIEzne+2L3umqGsG7/auRjDjYWLoqQCS1MY2bToObN2Y=
+	t=1780981674; cv=none; b=Kp/RCkXNS+xQntGH+KEz9XfQv+oWrGcTAKkUUzBCLyVymltWLijotHwJoXJxxJcoD4/ocnofS/Yeoj8O72MbuZpyFFXjXI0rft6w5azJAqHQpJGR2uNe4fSuZQ22O29qmC1LgvnB1lYviqCqJI16Mgx3/br4akjlHJkRqmIkGrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780981670; c=relaxed/simple;
-	bh=vYkX+548z3bRzygU30VXSH/d4JA5ME0AFOgehEsG3qI=;
+	s=arc-20240116; t=1780981674; c=relaxed/simple;
+	bh=kxiU0Am5/rbomr+M7ysYlX649RjyBNgXhSmJGoV+QKU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KLdfGMCennaSvKIWcK8GHIKRSjAejGJk27KJTz9jSOQxib0u3DjiD8X92yKbg7EoOdSsPLTA2Toer4E22b4yMlVZNi/CYQTEYP8qI06/5+ETAdSeNIEB6uY8iCUwQpK0ub9iWR4tQBEO65qqme5+7B6fDPp23VyxigNpuTVln5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NMKTRMd/; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=RPvITqtPahBI8+60+Twg86rbpIcCBZR1RcLmSddYjreFMlDMjx2lV2SfxJGqRqpjrRge5yQReJzCnzJM5FOJerVGHXOTSHx42tD/DuX7OUF0OCsCCxOLM1gTKsgjRZcKg3kAQDdIqlzDUb0M0E42PV5GPeEWgqrIVe8K72QwAyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bSy5aH2J; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NMKTRMd/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bSy5aH2J"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780981669; x=1812517669;
+  t=1780981673; x=1812517673;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vYkX+548z3bRzygU30VXSH/d4JA5ME0AFOgehEsG3qI=;
-  b=NMKTRMd/AXFfVip/2EFcrP+z9UjP+9RkZWVGnw6wjekQY+2fjLWzbrI0
-   MQzUud40WGB0x4EdSay+cVPGw0eAB3dh8U1ikfsf7cwGv72R0w+hnzDAI
-   a9WgE3KzAdcQEoZNXKpKfQwsoa8ApgJQYk6O23aWGiF4BAzzi8VGJ+OwP
-   HzfLvwzCBxbwbKozLAf7iSiXTczN1J5UM4/4vmVFlhec18wrIpIi5iI+s
-   dgUDCORiGN1BgkrVcf5MHb6NCbARll7qtrFaHkV0N3SBsC+/fxWZVbXF1
-   0vnEK6j2Bh1j62wXJ8HXg9bcamwvw9Nw9iyec9kusn91+pCNmS7mE3bRW
-   A==;
-X-CSE-ConnectionGUID: 1ork/1tvT12J8BSeQA3adg==
-X-CSE-MsgGUID: +ZwMxTjJSgaUmMND1aajoA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="81586157"
+  bh=kxiU0Am5/rbomr+M7ysYlX649RjyBNgXhSmJGoV+QKU=;
+  b=bSy5aH2J4wv7eW0NsduH4vxTRUIBj9X6+tsdz5fHB/6qgnIfAIHUDWnU
+   v9352RDQY2SqkmpTu/+vY4hjWTj/d/2Oqc6KxEvSs9YKZIgNupM6B0eX/
+   WCr2MMcHgYlQbH4eqfg6MTiUuJL+BRMNsqvgfCmBhkFcMbfDdv3AKb2nI
+   XkcLNa5TShf/3yiSgGoeua0tzG4805jM6pz/e+wDUeIFshGciQLhmI0xW
+   5gnGLLfwu6zPqZUGqUimXnPkbyjVhPb0rFryWxkX2IOPccYy+8AFREtcX
+   UgNWUQAGOlpv+6NC/UZ27MY9mDKUqhgDOzy4hRYYkJbwP0unjupyhqk9u
+   g==;
+X-CSE-ConnectionGUID: FYwOJjxSTFyCPI1f8Ua8Fg==
+X-CSE-MsgGUID: I2Ej6UtNTbabZ05VPHa3ww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="81586162"
 X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="81586157"
+   d="scan'208";a="81586162"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 22:07:49 -0700
-X-CSE-ConnectionGUID: lW7CvoTRTayTeDxqW/xBFw==
-X-CSE-MsgGUID: XV7/IyGDSJayHgZl8aVb/A==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 22:07:53 -0700
+X-CSE-ConnectionGUID: wCy4NXJqR9qvz2wBnSSwXQ==
+X-CSE-MsgGUID: jh9rv4AlSN6AeGEWSLzQkw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="283838903"
+   d="scan'208";a="283838907"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa001.jf.intel.com with ESMTP; 08 Jun 2026 22:07:45 -0700
+  by orviesa001.jf.intel.com with ESMTP; 08 Jun 2026 22:07:49 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 2/9] perf/x86: Introduce is_x86_pmu() helper
-Date: Tue,  9 Jun 2026 13:02:15 +0800
-Message-Id: <20260609050222.2458129-3-dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 3/9] perf/x86: Update cap_user_rdpmc base on rdpmc user disable state
+Date: Tue,  9 Jun 2026 13:02:16 +0800
+Message-Id: <20260609050222.2458129-4-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
 References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
@@ -74,79 +74,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+After introducing the RDPMC user disable feature, user-space RDPMC may
+return 0 instead of the actual event count. This creates an inconsistency
+with cap_user_rdpmc, where cap_user_rdpmc is set, but user-space RDPMC
+only returns 0.
 
-To facilitate the detection of x86 PMU structures in upcoming patches,
-the is_x86_pmu() helper is introduced. Additionally, the is_x86_event()
-helper has been refactored to utilize is_x86_pmu().
+To accurately represent the user-space RDPMC capability, update
+cap_user_rdpmc based on the RDPMC user disable state. If RDPMC user
+disable is enabled, cap_user_rdpmc is set to false, allowing user-space
+programs to fall back to the read() syscall to obtain the real event
+count.
 
-No function changes intended.
+Since arch_perf_update_userpage() could be called for software events,
+enhance x86_pmu_has_rdpmc_user_disable() to only check the x86 PMUs.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: 59af95e028d4 ("perf/x86/intel: Add support for rdpmc user disable feature")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Reviewed-by: Zide Chen <zide.chen@intel.com>
 Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
 ---
- arch/x86/events/core.c       | 16 ----------------
- arch/x86/events/perf_event.h | 18 +++++++++++++++++-
- 2 files changed, 17 insertions(+), 17 deletions(-)
+ arch/x86/events/core.c       | 3 +++
+ arch/x86/events/perf_event.h | 5 +++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 4b9e105309c6..3bd0522afe6d 100644
+index 3bd0522afe6d..6cd95b8e31cb 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -774,22 +774,6 @@ void x86_pmu_enable_all(int added)
- 	}
- }
+@@ -2797,6 +2797,9 @@ void arch_perf_update_userpage(struct perf_event *event,
+ 	userpg->cap_user_time_zero = 0;
+ 	userpg->cap_user_rdpmc =
+ 		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
++	if (x86_pmu_has_rdpmc_user_disable(event->pmu) &&
++	    event->hw.config & ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE)
++		userpg->cap_user_rdpmc = 0;
+ 	userpg->pmc_width = x86_pmu.cntval_bits;
  
--int is_x86_event(struct perf_event *event)
--{
--	/*
--	 * For a non-hybrid platforms, the type of X86 pmu is
--	 * always PERF_TYPE_RAW.
--	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
--	 * is a unique capability for the X86 PMU.
--	 * Use them to detect a X86 event.
--	 */
--	if (event->pmu->type == PERF_TYPE_RAW ||
--	    event->pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE)
--		return true;
--
--	return false;
--}
--
- struct pmu *x86_get_pmu(unsigned int cpu)
- {
- 	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 	if (!using_native_sched_clock() || !sched_clock_stable())
 diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 5902a297daa1..dbb5c8e8a8ea 100644
+index dbb5c8e8a8ea..4003e2e0aa9c 100644
 --- a/arch/x86/events/perf_event.h
 +++ b/arch/x86/events/perf_event.h
-@@ -115,7 +115,23 @@ static inline bool is_topdown_event(struct perf_event *event)
- 	return is_metric_event(event) || is_slots_event(event);
+@@ -1359,8 +1359,9 @@ static inline u64 x86_pmu_get_event_config(struct perf_event *event)
+ 
+ static inline bool x86_pmu_has_rdpmc_user_disable(struct pmu *pmu)
+ {
+-	return !!(hybrid(pmu, config_mask) &
+-		 ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE);
++	return is_x86_pmu(pmu) &&
++	       (hybrid(pmu, config_mask) &
++		ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE);
  }
  
--int is_x86_event(struct perf_event *event);
-+static inline bool is_x86_pmu(struct pmu *pmu)
-+{
-+	/*
-+	 * For a non-hybrid platforms, the type of X86 pmu is
-+	 * always PERF_TYPE_RAW.
-+	 * For a hybrid platform, the PERF_PMU_CAP_EXTENDED_HW_TYPE
-+	 * is a unique capability for the X86 PMU.
-+	 * Use them to detect a X86 event.
-+	 */
-+	return pmu->type == PERF_TYPE_RAW ||
-+	       pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE;
-+}
-+
-+static inline bool is_x86_event(struct perf_event *event)
-+{
-+	return is_x86_pmu(event->pmu);
-+}
- 
- static inline bool check_leader_group(struct perf_event *leader, int flags)
- {
+ extern struct event_constraint emptyconstraint;
 -- 
 2.34.1
 
