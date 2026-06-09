@@ -1,54 +1,54 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE1F4949F1
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 21:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5428C411681
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 21:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781041854; cv=none; b=no/JzOH5M5w8Sz5EjePlQawmQp+OR2qS6a7B9pGEfGNqLhjOCpHZNfpf4bUBgYvQVxc/BMrZTjXbxRpnLEOdR5vOIjuHl1f1H98auv5BEV9MGvwk15ohA57VElkKx5duKQihwIxAPC5+jCl4qFVaougPSbgXFZeWeJfhykrg8Vo=
+	t=1781041858; cv=none; b=unUNv8cHbQmk+L1V5IqC0ZZevgsERU1ce4vxhZ9QQtHkKmMIAbpeaNIMXdbt4tmedzwUN7fWuE9rrLFIv4S/8mtFcG+1U4zDaOV+AUGsLZiEM22O7wPZ418DFd5kkQnWtspk9a/5Q8wTa5Xtq97F1Sb5uVTVK+fDsO0u7IXSKD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781041854; c=relaxed/simple;
-	bh=5rl03LcIECCaTFJyLzi/CX4y8+jYxILqaa6AA+es0k8=;
+	s=arc-20240116; t=1781041858; c=relaxed/simple;
+	bh=7rjaisMtTiIAmR/4yF5YpDp1n1BrI85o2pa0Ragh074=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TbledW5T9/KpPEXCnRNJU9TP3W+pPX5LQkOKt30g87g5IaxuSvoc2ZVfZ3FM2wULAK/FDgpg21rZzzvdTQnkx/VzL7ASDCZ/Uo+WUMJ1CpCt0SFPGga0o+LCJfQdvg8YtNoJtsIUYQLuKLvw/Z6Am/zJzUeRRazAlYFS3BrDHik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YBbniq/5; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=Qs4b+3ioc30GWHadW5MRxeDFZyuDSTy5AP+33ScPlQa3I0rIcqOM7SGGBaL0B+t5r/Gz/QxXEJB82EANQE37vKXfODWtESo/vbEooPnYjLNv2Nwoxuu8jBdcRTBKhW5HGCAGi0qs85w5XUFUTztNqARRsZ7hqM2xcjNQTQC44ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i+rZ/bN3; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YBbniq/5"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c8584e3fc96so3008806a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 14:50:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i+rZ/bN3"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-36d98b54cf2so4373020a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 14:50:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781041852; x=1781646652; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781041857; x=1781646657; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=joR1akmty7bWKs2aos/a2r2cuYEn9MQeFTvwKeRRZg8=;
-        b=YBbniq/579NQxlqlut5QOWlABF48uFlO7l0g6+pr3nQpeoXOQLUh12hLKJ0chsOknq
-         d5wopjin11oV4cyjaEK/SfmUAhcbkjqKlk8Kn7hdyeW4FKUfPN91fbLU8JZNbRoFmbBM
-         7t5UzkLE/Mlta00b9vyQMPZGT/tBvgK4yy0yFs9txqFhe0gBOwqf00WKURM4isU3utt8
-         T1dV/xx/PnNAlxyzO1p5IOzEB8r/aA0WW/w8jGHideyR6UEB5pLTCoNnbYaTnGzCZGfT
-         q12SSPxJOS3frUQcXbIR4nFe1wIa7GvUZej+9zfSKzVFaFgejS+8gXs/Jg40+p9eD9cM
-         fAgg==
+        bh=bgVtMxeTabi2qa/uRjh4m4K8g73Uf+vTYDmsLtwzKZU=;
+        b=i+rZ/bN3iHPVc1NRAyQa+0biOdU18nJG/9HARnkXfjwi7r7bXdgmePOmAUzuQUkGco
+         xkZEOpE/HKhl9awP3YVAOBxZbW7TU8awcIhzaqPY3yhTzL6FQ67bdcibGd8FikL5NI/k
+         yUV+Z+MM28IbkSMDhGZovL/DRly+Yw0/lSCVTlyeU5NzpdQjzyV8Cb931Yk3PWNqXUza
+         K28AS13sBRfr1lgylOsU7pyy3VRQJoDJy6odTRpSjA0IRI4uSdr6gICwHcxHCHwugOxx
+         0LNVooyRBI6P7yJsn9EqWu4S8Ah75CphJryibsnh3NCgtMvkm1o1fSbLEBjndIKbiKyh
+         UxNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781041852; x=1781646652;
+        d=1e100.net; s=20251104; t=1781041857; x=1781646657;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=joR1akmty7bWKs2aos/a2r2cuYEn9MQeFTvwKeRRZg8=;
-        b=Hv4OPkk/9u8DOCy5Kfn9+GYB2qwuMoFQ0uFPXOjtdn+mr/SVHLF8pjV4KAxR1kG6f8
-         v+++kyLi3XRHYWg8KnFQLE1k+s25+y6uFPGTBWaDRKT67JJfxGb0EHAwtSbz7IAe2+Xe
-         XO8WA7mjyDc0fq0dMOIIjl3hiSVoryakUzSvxngMkXl07jif0tjXCLK9UI42AMVDp57f
-         WRAbjKhNmMjZeTfno7nkpIZgtia1c3C+pe76MWjn00G/DHGGaoH2MHXMTZiqOczud6Rs
-         HZXaM4T/JZaNzs9GYQDo8WHD3yUa8sumto2VtkjBJ7Z9INaZYAGzCqIzAUd5HJURmnmy
-         hxZg==
-X-Forwarded-Encrypted: i=1; AFNElJ9rhWfSeZULACC2fKj5GHzPYt3visYj5pFgRHKPToqqYTdgAfSOV+dU0HnYSOeV6MuAK6dt4qoAZUYuW8oB1DYr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx42n6TVO6AxCy1uJtKyzTcylsw0Hd9QUcGbEzmsqLB/lKxnInl
-	2W95r7nu9FNyFBH9iJTCAmcVevU0SOATTtSWgvuepA1LXfRWYxzU5o8y392GhCxuahhrqWJkFhu
-	EFKRZVA==
-X-Received: from pgam4.prod.google.com ([2002:a05:6a02:2b44:b0:c80:2987:4220])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:d80d:b0:398:7df5:2dae
- with SMTP id adf61e73a8af0-3b4ccd3a845mr27121760637.9.1781041851840; Tue, 09
- Jun 2026 14:50:51 -0700 (PDT)
-Date: Tue,  9 Jun 2026 14:50:42 -0700
+        bh=bgVtMxeTabi2qa/uRjh4m4K8g73Uf+vTYDmsLtwzKZU=;
+        b=nQaL3Ve8UVSAwxcW0LNJ7X+Ee5r+8rQ9NwQ4TYqo/lDM9ZA7HfmohKQEIbhA6a0JPN
+         0tDSco1CtN2moiIguSn/wTyT+YdUA1crL7NZnuJBR6QOqmIOhlz5SUsGzdm1lOMVtgqh
+         xPS4+cbOdhHFV1BrNSOthntlJsoPPS/9cAFaiIB1dcFJj2I8gX5B40vdQmPv15EZaunj
+         pkxtQt51dgGrrFj3pg2rHOT/FtNnIwTYfc3Im4wqrhhdSXuSMw01Pd9+5gVc89lO9N/q
+         T/Z1N5R2knmI0Epm9FlObDkUDIIgUH5G1ESfZTYyG+38iK/sj86iWI8gKi8SNTEQ01iq
+         tKVg==
+X-Forwarded-Encrypted: i=1; AFNElJ8UZx4gcErY6BnNzoPKBGrING7Tg4a+fs3z8IzG8boEWptxUIIziWhRfPo65jJaD1xJOTMiWSi9OQvfFsiO8jrK@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk82aRf1VYdIeMqyz0kCaSN4RGFw8olMek0i8rTWJthEpF7icP
+	Pkeid32IiS8GJ4oKYpSA6EIl+YvmGxdHOkT50bxtME+sqD37hecWkFCoKJXjhVvH4sngyOdR7oF
+	vdosQeA==
+X-Received: from pjbfu17.prod.google.com ([2002:a17:90a:d191:b0:369:1a1a:82d6])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1642:b0:369:7421:75cf
+ with SMTP id 98e67ed59e1d1-370f0284a7bmr20878362a91.16.1781041856338; Tue, 09
+ Jun 2026 14:50:56 -0700 (PDT)
+Date: Tue,  9 Jun 2026 14:50:45 -0700
 In-Reply-To: <20260609215046.2391903-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260609215046.2391903-1-ctshao@google.com>
 X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
-Message-ID: <20260609215046.2391903-4-ctshao@google.com>
-Subject: [PATCH v1 3/6] perf vendor events intel: Update graniterapids events
- from 1.18 to 1.19
+Message-ID: <20260609215046.2391903-7-ctshao@google.com>
+Subject: [PATCH v1 6/6] perf vendor events intel: Update tigerlake events from
+ 1.18 to 1.19
 From: Chun-Tse Shao <ctshao@google.com>
 To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
 	namhyung@kernel.org
@@ -72,62 +72,26 @@ Cc: alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
 Content-Type: text/plain; charset="UTF-8"
 
 The updated events were published in:
-https://github.com/intel/perfmon/commit/875354c88686ef50387d9601f52354a6da8f24cc
+https://github.com/intel/perfmon/commit/8353ffb63efcad6b6fac1a8c05d76e2d6317ae23
 
 Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 ---
- .../arch/x86/graniterapids/uncore-interconnect.json    | 10 ++++++++++
- .../arch/x86/graniterapids/uncore-memory.json          |  2 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv             |  2 +-
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ tools/perf/pmu-events/arch/x86/mapfile.csv | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnect.json
-index 5eb1145f204f..9f0c4c7198b0 100644
---- a/tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnect.json
-@@ -808,6 +808,16 @@
-         "PerPkg": "1",
-         "Unit": "IRP"
-     },
-+    {
-+        "BriefDescription": "Counts Timeouts - Set 0 : Cache Inserts of Write Transactions as Secondary",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x1E",
-+        "EventName": "UNC_I_MISC0.2ND_WR_INSERT",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x8",
-+        "Unit": "IRP"
-+    },
-     {
-         "BriefDescription": "Counts Timeouts - Set 0 : Fastpath Rejects",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/uncore-memory.json b/tools/perf/pmu-events/arch/x86/graniterapids/uncore-memory.json
-index f559e27e2815..9cd2905726fd 100644
---- a/tools/perf/pmu-events/arch/x86/graniterapids/uncore-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/uncore-memory.json
-@@ -539,7 +539,7 @@
-         "Unit": "IMC"
-     },
-     {
--        "BriefDescription": "DRAM Precharge commands. : Precharge due to (?) : Counts the number of DRAM Precharge commands sent on this channel.",
-+        "BriefDescription": "DRAM Precharge commands. : Precharge due to page table : Counts the number of DRAM Precharge commands sent on this channel.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0x03",
-         "EventName": "UNC_M_PRE_COUNT.PGT",
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 0f39073805ba..b8ea72b99c52 100644
+index 6af3cee12c8a..a7f870669827 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -13,7 +13,7 @@ GenuineIntel-6-CF,v1.24,emeraldrapids,core
- GenuineIntel-6-5[CF],v13,goldmont,core
- GenuineIntel-6-7A,v1.01,goldmontplus,core
- GenuineIntel-6-B6,v1.12,grandridge,core
--GenuineIntel-6-A[DE],v1.18,graniterapids,core
-+GenuineIntel-6-A[DE],v1.19,graniterapids,core
- GenuineIntel-6-(3C|45|46),v36,haswell,core
- GenuineIntel-6-3F,v29,haswellx,core
- GenuineIntel-6-7[DE],v1.24,icelake,core
+@@ -35,7 +35,7 @@ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v59,skylake,core
+ GenuineIntel-6-55-[01234],v1.37,skylakex,core
+ GenuineIntel-6-86,v1.23,snowridgex,core
+-GenuineIntel-6-8[CD],v1.18,tigerlake,core
++GenuineIntel-6-8[CD],v1.19,tigerlake,core
+ GenuineIntel-6-2C,v5,westmereep-dp,core
+ GenuineIntel-6-25,v4,westmereep-sp,core
+ GenuineIntel-6-2F,v4,westmereex,core
 -- 
 2.54.0.1099.g489fc7bff1-goog
 
