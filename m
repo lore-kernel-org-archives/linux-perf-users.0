@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C174A2E13
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 16:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0184A33FE
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 16:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781024256; cv=none; b=lryRAIXaGp5G7n6tIfYVOiSjx5gSRnTDiuHnlmKLOvtDsu4mI4yEQJLkYdtoKGZBsqnJzAxF+7yYUT8PpG/wyZy3xuyS3IPco+C7wDKcxnvmFK3i4PSS3q8/xLo46HWE7YT5Yx0XEx4qdugYewN4aZVs6Ih2XFlFBOovfg+yAUw=
+	t=1781024261; cv=none; b=MwEHF9skxaslrut54GoIFUcEphYp5gyOZWv4oMkz9Mfr244Q22jbm3QpSASIQIgAFczMfjwwsld9Y/4IUymCj1KmgQEfDj0IuSpaELby2TQDsq4q8gsiSrapAsvq+mh5tR7aZfGKWp0VnEwosDm2fnsuzy879Lk5DT6uktL/14Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781024256; c=relaxed/simple;
-	bh=OQF4F9a+rsmk+xc0G0FOtWI3YX3Mr7AvnAEUFnLylmQ=;
+	s=arc-20240116; t=1781024261; c=relaxed/simple;
+	bh=YgOV9IOHjqbJ6LtcvYhcQ/K/YDB/1wOfZnKy6IKXLxs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HoD+bmqMghzC+4y+ZzLJ5FZub3pianlQb/yjW4jHeY8B90Is8bHgRj2Vn539glx+2/GDPGLC25E9GsJfvO1lHDrdXpFFhJFA39WEPC4Q28TP6WxqRd8gb3DXafTCnCLtO15F1+HIRsEIllimrcchv9GEzL7NmOQM9INRm0vYZV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CYDQ6aOM; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=f+NoneRYLoZaFhjNM4uzvZqmC+U5lwHCtdGUQwQVM8yZxJpPuWAY8UiXO6VuoHXeK1eqJzXYrpnWNEKi4jJiLftmfn+N6eO/f9RadmyvVXn9eQQcveS/ukq8rnHV8LfuLGUu0RScUo7788qT5Co9iErLk/hXItEOer67Q/IRCi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uUI6rSX+; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CYDQ6aOM"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304ea1eea05so725787eec.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 09:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uUI6rSX+"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-30762d67a64so200561eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 09:57:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781024255; x=1781629055; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781024257; x=1781629057; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9LaWkWhrJUw9a/giq+cHZdt0Sg1l4kluVtd55JMhqgE=;
-        b=CYDQ6aOMBTnxBlg2K5r/6iaPx1zy4WqElGnsSoZ3kH5q9Zekf8fGWXaFhkbvmKYzad
-         mXytRCQMa0w+hdmAg4YwGzlhm/zMPYzf5CD7inVPrsSTmRW1N/UbQYbN5TDVA9HZ9sLw
-         lHBMm0NdGCkl598YrqJ+Q2/GXUfQJoglxgG9MmLdgBYVrEXt4CwR6Su5lW6fNBaIb3D6
-         WPDKskqQx5uWsR89rdGwvcYvy/LfHOZJMFdTXmYy0v0sSKI2I7LBLfrb56AS6p7QR6XY
-         APsJDZsHWeMuHThbSzS1muk3fyXx5nU54nW1vs2KrW/BAas/uT24sOPCwoSuiJFoaCz7
-         ml/w==
+        bh=5ytn1WWPrihAOoQGWIOrnsmenC+y6F/7E4AZqpUX1Mk=;
+        b=uUI6rSX+gamTks/m9+mAj1Aq03Trqe7FCX+VVjuUu0Mc+uUsSFPzT4b51TfyN20m8G
+         kOcaPuKB5CSXQEjHyM/XqZ0BryVQvX7+BKtJ+l4xHCnE1yFEAEEUDRsRMzJtfZGFXyV2
+         5Y7cd1HFs4dtjfWT3MQ3Xx2j+h4jua411EzDU6/ZrsVMriIEtF8TpBygw7Uztx+Cfgcf
+         LiFZoHPUs+bfkOWMFNGxPU3evhII5ysplyAWZdRPrCh9/4qXHRqD5/dePIIDBSE3H2zF
+         7fLAZIaxSxk82C14PvJj6PsKmDtyc74on2BBdxo5oFQTwFaSS1urNHutOgC80H0zJlPJ
+         vL8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781024255; x=1781629055;
+        d=1e100.net; s=20251104; t=1781024257; x=1781629057;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9LaWkWhrJUw9a/giq+cHZdt0Sg1l4kluVtd55JMhqgE=;
-        b=UFADwIeyAYQYnVkAt8N9z6n/w5JuAS/V+Tq7AV5PqZpNOFU+nbNDv0NrdIDUL07OZ8
-         I6MQWBfA7nU40FULCdCKmiDBGdDPM00VuNgc2i+CP4mppAeC/pWsnqgVWDiTj85r6wNs
-         elYsehkKePW7sPi2YoOWfPp89XzK6QN89HQWXtdJe3ABZK622yJrmlxBxKe6/cPxNzul
-         KmjUU5V3JRGopvmPeVOcpXDziGpOn6KRjAwSJlgpEDobSMV10E89l5M++t15buBFfJsT
-         QYBk/byKsbewQze0/wGH6XvC/gfHiNQ2VCYJSnHqFzoi2AGTThIOXheoNErS3028UnTz
-         VdJA==
-X-Forwarded-Encrypted: i=1; AFNElJ/PiCn/ft3/K3O3hoBzQPuHJEHxuDh+xRma8q3xVmv9mpMQMU8pX6oudaDkPj5esIwQxg3M0+VGackzvoAAEgmf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCr1nOKWHflS3e+0dxQUp+2Bj5AS1aF/D8vCbTqMT9KzH+86H8
-	yRwI0KRwEKa/assTgJ8QJMfbl2rS9vOLhY9gwmXxowZQOo7C73IAteCzFqgH6WxjsW3JTjrq62+
-	5597XO3L0nw==
-X-Received: from dyeg12.prod.google.com ([2002:a05:7300:538c:b0:2da:2af9:bfe2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:72c9:b0:2ea:5057:a304
- with SMTP id 5a478bee46e88-3077aeed2fbmr12622888eec.2.1781024254393; Tue, 09
- Jun 2026 09:57:34 -0700 (PDT)
-Date: Tue,  9 Jun 2026 09:57:24 -0700
+        bh=5ytn1WWPrihAOoQGWIOrnsmenC+y6F/7E4AZqpUX1Mk=;
+        b=q8wC6OgZlsxpU4bs2T81Hs3L0Tw4/MsugIDW8lKQmhWhG8wAx7akoVePjRvaJrZZxT
+         E+vR5T4z96wFi6tyvCFOH349oU7u1Nm5anukLreVr5xzxSff1DIt4Jf0i7iCzshSxzli
+         +fU5W4ljDN+vIQlv0EUuiiw7kNVI/Q8vgsTtDOLiqzSBxcS9JQAO2i9YFRJ0lzr0UQ6E
+         EZiTSlPtEtm7KEHUIaNkigd71e6E116cGHVkr3eIIW5uARbvxLC59C/HE8iMSyFB9fkl
+         GQDl2klMno2efhCY/DM4mVOHNynjcIjb9t/5KlhJU7A/CNwhnJpDa6f2gWmysL7xwEWG
+         7DZg==
+X-Forwarded-Encrypted: i=1; AFNElJ+pmKVPQ5+DlxfhLH+C2db1k/FxcbZFAPc6EOMFp7k9HJz3D7c5Wr3/XnOrA4r/sy6X+Ov3v3G94apvE0zNrWyA@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsf/bBGptV41VJk1mlGwXVq3mJ5omE7YK7g76cEVHOJlwqJb2v
+	NA8wgqLxOnI8xp88KXuO5UyvlogVzSHQSmYh6Dzrt0Hcebfeh7/Pl51wYeZcautwMTd6RbDdyG/
+	TPb2ddV9hXA==
+X-Received: from dycns11.prod.google.com ([2002:a05:7300:f78b:b0:2f6:ff42:df28])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:20c5:20b0:307:287f:9bbc
+ with SMTP id 5a478bee46e88-3077b7509d0mr6348279eec.25.1781024256499; Tue, 09
+ Jun 2026 09:57:36 -0700 (PDT)
+Date: Tue,  9 Jun 2026 09:57:25 -0700
 In-Reply-To: <20260609165726.786694-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260609070348.541964-1-irogers@google.com> <20260609165726.786694-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
-Message-ID: <20260609165726.786694-2-irogers@google.com>
-Subject: [PATCH v2 1/3] perf build: Add libnvme feature detection
+Message-ID: <20260609165726.786694-3-irogers@google.com>
+Subject: [PATCH v2 2/3] perf pmu: Implement tool-provided NVMe PMU
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, yuzhuo@google.com
 Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com, 
@@ -70,129 +70,990 @@ Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com,
 	namhyung@kernel.org, peterz@infradead.org, tglozar@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 
-Introduce a feature check for libnvme so that we can conditionally
-compile the NVMe PMU driver. This checks for the availability of the
-libnvme headers and library using pkg-config.
+Add a tool-provided PMU for NVMe devices using libnvme. This PMU
+exposes metrics from various NVMe logs (SMART, Endurance Group,
+FDP, Error Information, and Zoned Namespaces) as perf events under
+the 'nvme_nvmeX' PMUs.
+
+Features:
+- Generic configuration encoding (log type, size, and offset mapped
+  inside the event config).
+- Dynamic probing of supported log pages on /dev/nvmeX. Unsupported
+  events are marked deprecated and hidden from 'perf list' by
+  default.
+- Correct interval delta tracking using baseline offset snapshots on
+  evsel->priv.
+- Proper conversion and scaling of properties like temperature (K
+  to C).
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 CONV=ca4c5d09-4ef8-405a-80bb-aa988020b436
 TAG=agy
 ---
- tools/build/Makefile.feature       |  5 ++++-
- tools/build/feature/Makefile       |  3 +++
- tools/build/feature/test-all.c     |  5 +++++
- tools/build/feature/test-libnvme.c | 11 +++++++++++
- tools/perf/Makefile.config         | 12 ++++++++++++
- 5 files changed, 35 insertions(+), 1 deletion(-)
- create mode 100644 tools/build/feature/test-libnvme.c
+ tools/perf/util/Build      |   1 +
+ tools/perf/util/evsel.c    |  13 +-
+ tools/perf/util/evsel.h    |   4 +
+ tools/perf/util/nvme_pmu.c | 564 +++++++++++++++++++++++++++++++++++++
+ tools/perf/util/nvme_pmu.h | 112 ++++++++
+ tools/perf/util/pmu.c      |  15 +
+ tools/perf/util/pmu.h      |   8 +-
+ tools/perf/util/pmus.c     |  26 +-
+ 8 files changed, 736 insertions(+), 7 deletions(-)
+ create mode 100644 tools/perf/util/nvme_pmu.c
+ create mode 100644 tools/perf/util/nvme_pmu.h
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index ed1374af31c1..3bc9a305256b 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -73,6 +73,7 @@ FEATURE_TESTS_BASIC :=                  \
-         libbfd                          \
- 	libbfd-threadsafe		\
-         libelf                          \
-+        libnvme                         \
-         libelf-getphdrnum               \
-         libelf-gelf_getnote             \
-         libelf-getshdrstrndx            \
-@@ -146,6 +147,7 @@ FEATURE_DISPLAY ?=              \
-          libdw                  \
-          glibc                  \
-          libelf                 \
-+         libnvme                \
-          libnuma                \
-          numa_num_possible_cpus \
-          libpython              \
-@@ -171,7 +173,8 @@ FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
- FEATURE_PKG_CONFIG ?=           \
- 	 babeltrace2-ctf-writer \
-          libtraceevent          \
--         libtracefs
-+         libtracefs             \
-+         libnvme
- 
- feature_pkg_config = $(eval $(feature_pkg_config_code))
- define feature_pkg_config_code
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 62909a9c799d..fd00e0be6069 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -147,6 +147,9 @@ $(OUTPUT)test-libcap.bin:
- $(OUTPUT)test-libelf.bin:
- 	$(BUILD) -lelf
- 
-+$(OUTPUT)test-libnvme.bin:
-+	$(BUILD) -lnvme
-+
- $(OUTPUT)test-eventfd.bin:
- 	$(BUILD)
- 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 544563d62950..875eb9185e23 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -146,6 +146,10 @@
- # include "test-libopenssl.c"
- #undef main
- 
-+#define main main_test_libnvme
-+# include "test-libnvme.c"
-+#undef main
-+
- int main(int argc, char *argv[])
- {
- 	main_test_libpython();
-@@ -178,6 +182,7 @@ int main(int argc, char *argv[])
- 	main_test_libzstd();
- 	main_test_libtraceevent();
- 	main_test_libopenssl();
-+	main_test_libnvme();
- 
- 	return 0;
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index b22cdc24082a..e28e99634178 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -20,6 +20,7 @@ perf-util-y += disasm.o
+ perf-util-y += env.o
+ perf-util-y += event.o
+ perf-util-y += evlist.o
++perf-util-y += nvme_pmu.o
+ perf-util-y += sideband_evlist.o
+ perf-util-y += evsel.o
+ perf-util-y += evsel_fprintf.o
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 34c03f47a913..4148186384a6 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -57,6 +57,7 @@
+ #include "hashmap.h"
+ #include "hist.h"
+ #include "hwmon_pmu.h"
++#include "nvme_pmu.h"
+ #include "intel-tpebs.h"
+ #include "memswap.h"
+ #include "off_cpu.h"
+@@ -2006,6 +2007,8 @@ void evsel__exit(struct evsel *evsel)
+ 		xyarray__delete(evsel->process_time.start_times);
+ 		xyarray__delete(evsel->process_time.accumulated_times);
+ 	}
++	if (perf_pmu__is_nvme(evsel->pmu))
++		xyarray__delete(evsel->nvme.initial_values);
  }
-diff --git a/tools/build/feature/test-libnvme.c b/tools/build/feature/test-libnvme.c
+ 
+ void evsel__delete(struct evsel *evsel)
+@@ -2207,6 +2210,8 @@ int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread)
+ 
+ 	if (evsel__is_hwmon(evsel))
+ 		return evsel__hwmon_pmu_read(evsel, cpu_map_idx, thread);
++	if (evsel__is_nvme(evsel))
++		return evsel__nvme_pmu_read(evsel, cpu_map_idx, thread);
+ 
+ 	if (evsel__is_drm(evsel))
+ 		return evsel__drm_pmu_read(evsel, cpu_map_idx, thread);
+@@ -2947,8 +2952,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	}
+ 	if (evsel__is_hwmon(evsel)) {
+ 		err = evsel__hwmon_pmu_open(evsel, threads,
+-					    start_cpu_map_idx,
+-					    end_cpu_map_idx);
++					    start_cpu_map_idx, end_cpu_map_idx);
++		goto out;
++	}
++	if (evsel__is_nvme(evsel)) {
++		err = evsel__nvme_pmu_open(evsel, threads,
++					   start_cpu_map_idx, end_cpu_map_idx);
+ 		goto out;
+ 	}
+ 	if (evsel__is_drm(evsel)) {
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 8178858d168a..002e045e9015 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -202,6 +202,10 @@ struct evsel {
+ 			struct xyarray *start_times;
+ 			struct xyarray *accumulated_times;
+ 		} process_time;
++		/* For NVMe events */
++		struct {
++			struct xyarray *initial_values;
++		} nvme;
+ 	};
+ 	/* Is the tool's fd for /proc/pid/stat or /proc/stat. */
+ 	bool pid_stat;
+diff --git a/tools/perf/util/nvme_pmu.c b/tools/perf/util/nvme_pmu.c
 new file mode 100644
-index 000000000000..3fefad70a680
+index 000000000000..e2391726d76e
 --- /dev/null
-+++ b/tools/build/feature/test-libnvme.c
-@@ -0,0 +1,11 @@
++++ b/tools/perf/util/nvme_pmu.c
+@@ -0,0 +1,564 @@
 +// SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++#include "counts.h"
++#include "debug.h"
++#include "evsel.h"
++#include "hashmap.h"
++#include "nvme_pmu.h"
++#include "pmu.h"
++#include <internal/xyarray.h>
++#include <internal/threadmap.h>
++#include <perf/threadmap.h>
++#include <sys/types.h>
++#include <assert.h>
++#include <ctype.h>
++#include <fcntl.h>
++#include <stddef.h>
++#include <stdlib.h>
++#include <string.h>
++#include <api/fs/fs.h>
++#include <api/io.h>
++#include <api/io_dir.h>
++#include <linux/kernel.h>
++#include <linux/string.h>
++#include <linux/zalloc.h>
++#include <linux/unaligned.h>
++
++#ifdef HAVE_LIBNVME_SUPPORT
 +#include <libnvme.h>
 +
-+int main(void)
-+{
-+	nvme_root_t r = nvme_scan(NULL);
 +
-+	if (r)
-+		nvme_free_tree(r);
++#define NVME_CONFIG(log, size, offset) \
++	(((uint64_t)(log) << 24) | ((uint64_t)(size) << 16) | (offset))
++
++enum nvme_log_type {
++	NVME_LOG_SMART = 0,
++	NVME_LOG_ENDURANCE = 1,
++	NVME_LOG_FDP = 2,
++	NVME_LOG_ERROR = 3,
++	NVME_LOG_ZNS = 4,
++};
++
++#define NVME_SMART(size, field) \
++	NVME_CONFIG(NVME_LOG_SMART, size, offsetof(struct nvme_smart_log, field))
++
++#define NVME_ENDURANCE(size, field) \
++	NVME_CONFIG(NVME_LOG_ENDURANCE, size, offsetof(struct nvme_endurance_group_log, field))
++
++#define NVME_FDP(size, field) \
++	NVME_CONFIG(NVME_LOG_FDP, size, offsetof(struct nvme_fdp_stats_log, field))
++
++#define NVME_ERROR(size, field) \
++	NVME_CONFIG(NVME_LOG_ERROR, size, offsetof(struct nvme_error_log_page, field))
++
++#define NVME_ZNS(size, field) \
++	NVME_CONFIG(NVME_LOG_ZNS, size, offsetof(struct nvme_zns_changed_zone_log, field))
++
++struct nvme_event {
++	const char *name;
++	const char *desc;
++	const char *scale_unit;
++	uint64_t config;
++};
++
++static const struct nvme_event nvme_events[] = {
++	{ "smart_data_units_read",
++	  "Data units read (in 1000s of 512-byte units)",
++	  "512000B", NVME_SMART(16, data_units_read) },
++	{ "smart_data_units_written",
++	  "Data units written (in 1000s of 512-byte units)",
++	  "512000B", NVME_SMART(16, data_units_written) },
++	{ "smart_host_read_commands", "Host read commands", NULL, NVME_SMART(16, host_reads) },
++	{ "smart_host_write_commands", "Host write commands", NULL, NVME_SMART(16, host_writes) },
++	{ "smart_ctrl_busy_time", "Controller busy time", "60s", NVME_SMART(16, ctrl_busy_time) },
++	{ "smart_power_cycles", "Power cycles", NULL, NVME_SMART(16, power_cycles) },
++	{ "smart_power_on_hours", "Power on hours", "1h", NVME_SMART(16, power_on_hours) },
++	{ "smart_unsafe_shutdowns", "Unsafe shutdowns", NULL, NVME_SMART(16, unsafe_shutdowns) },
++	{ "smart_media_errors", "Media errors", NULL, NVME_SMART(16, media_errors) },
++	{ "smart_num_err_log_entries",
++	  "Number of error log entries",
++	  NULL, NVME_SMART(16, num_err_log_entries) },
++	{ "smart_warning_temp_time",
++	  "Warning temperature time",
++	  "60s", NVME_SMART(4, warning_temp_time) },
++	{ "smart_crit_comp_time",
++	  "Critical composite temperature time",
++	  "60s", NVME_SMART(4, critical_comp_time) },
++	{ "smart_temperature", "Temperature", "0.001'C", NVME_SMART(2, temperature) },
++
++	{ "endurance_percent_used",
++	  "Endurance group percentage used",
++	  NULL, NVME_ENDURANCE(1, percent_used) },
++	{ "endurance_data_units_read",
++	  "Endurance group data units read",
++	  "512000B", NVME_ENDURANCE(16, data_units_read) },
++	{ "endurance_data_units_written",
++	  "Endurance group data units written",
++	  "512000B", NVME_ENDURANCE(16, data_units_written) },
++	{ "endurance_media_units_written",
++	  "Endurance group media units written",
++	  "512000B", NVME_ENDURANCE(16, media_units_written) },
++	{ "endurance_host_read_cmds",
++	  "Endurance group host read commands",
++	  NULL, NVME_ENDURANCE(16, host_read_cmds) },
++	{ "endurance_host_write_cmds",
++	  "Endurance group host write commands",
++	  NULL, NVME_ENDURANCE(16, host_write_cmds) },
++	{ "endurance_num_err_info_log_entries",
++	  "Endurance group number of error information log entries",
++	  NULL, NVME_ENDURANCE(16, num_err_info_log_entries) },
++
++	{ "fdp_hbmw", "FDP host bytes with metadata written", "1B", NVME_FDP(16, hbmw) },
++	{ "fdp_mbmw", "FDP media bytes with metadata written", "1B", NVME_FDP(16, mbmw) },
++	{ "fdp_mbe", "FDP media bytes erased", "1B", NVME_FDP(16, mbe) },
++
++	{ "error_count", "Error info log error count", NULL, NVME_ERROR(8, error_count) },
++
++	{ "zns_nrzid", "ZNS changed zone nrzid", NULL, NVME_ZNS(2, nrzid) },
++};
++
++
++struct nvme_pmu {
++	struct perf_pmu pmu;
++	char *dev_name;
++	bool support_checked;
++	bool log_supported[256];
++};
++
++
++bool perf_pmu__is_nvme(const struct perf_pmu *pmu)
++{
++	return pmu && pmu->type >= PERF_PMU_TYPE_NVME_START &&
++		pmu->type <= PERF_PMU_TYPE_NVME_END;
++}
++
++bool evsel__is_nvme(const struct evsel *evsel)
++{
++	return perf_pmu__is_nvme(evsel->pmu);
++}
++
++struct perf_pmu *nvme_pmu__new(struct list_head *pmus, const char *sysfs_name, const char *name)
++{
++	struct nvme_pmu *nvm;
++	char buf[64];
++	__u32 type;
++
++	/*
++	 * Usually sysfs_name is something like "nvme0".
++	 * We try to extract the number. If parsing fails, we use 0.
++	 */
++	type = PERF_PMU_TYPE_NVME_START + strtoul(sysfs_name + 4, NULL, 10);
++
++	if (type > PERF_PMU_TYPE_NVME_END) {
++		pr_err("Unable to encode NVMe type from %s in valid PMU type\n", sysfs_name);
++		return NULL;
++	}
++
++	snprintf(buf, sizeof(buf), "nvme_%s", name);
++
++	nvm = zalloc(sizeof(*nvm));
++	if (!nvm)
++		return NULL;
++
++	if (perf_pmu__init(&nvm->pmu, type, buf) != 0) {
++		free(nvm);
++		return NULL;
++	}
++
++	nvm->dev_name = strdup(sysfs_name);
++	if (!nvm->dev_name) {
++		perf_pmu__delete(&nvm->pmu);
++		return NULL;
++	}
++	nvm->pmu.alias_name = strdup(sysfs_name);
++	if (!nvm->pmu.alias_name) {
++		perf_pmu__delete(&nvm->pmu);
++		return NULL;
++	}
++	nvm->pmu.cpus = perf_cpu_map__new_int(0);
++	if (!nvm->pmu.cpus) {
++		perf_pmu__delete(&nvm->pmu);
++		return NULL;
++	}
++	INIT_LIST_HEAD(&nvm->pmu.format);
++	INIT_LIST_HEAD(&nvm->pmu.caps);
++
++	list_add_tail(&nvm->pmu.list, pmus);
++	return &nvm->pmu;
++}
++
++void nvme_pmu__exit(struct perf_pmu *pmu)
++{
++	struct nvme_pmu *nvm = container_of(pmu, struct nvme_pmu, pmu);
++
++	zfree(&nvm->dev_name);
++}
++
++
++
++static void nvme_pmu__check_support(struct nvme_pmu *nvm)
++{
++	int fd;
++	char path[PATH_MAX];
++	struct nvme_smart_log smart_log;
++	struct nvme_endurance_group_log endurance_log;
++	struct nvme_fdp_stats_log fdp_log;
++	struct nvme_error_log_page error_log;
++	struct nvme_zns_changed_zone_log zns_log;
++
++	if (nvm->support_checked)
++		return;
++
++	nvm->support_checked = true;
++
++	/* Assume all supported if we can't test. */
++	memset(nvm->log_supported, 1, sizeof(nvm->log_supported));
++
++	snprintf(path, sizeof(path), "/dev/%s", nvm->dev_name);
++	fd = open(path, O_RDONLY);
++	if (fd < 0)
++		return;
++
++	if (nvme_get_log_smart(fd, NVME_NSID_ALL, true, &smart_log) != 0)
++		nvm->log_supported[NVME_LOG_SMART] = false;
++
++	if (nvme_get_log_endurance_group(fd, 0, &endurance_log) != 0)
++		nvm->log_supported[NVME_LOG_ENDURANCE] = false;
++
++	if (nvme_get_log_fdp_stats(fd, 0, 0, sizeof(fdp_log), &fdp_log) != 0)
++		nvm->log_supported[NVME_LOG_FDP] = false;
++
++	if (nvme_get_log_error(fd, 1, true, &error_log) != 0)
++		nvm->log_supported[NVME_LOG_ERROR] = false;
++
++	if (nvme_get_log_zns_changed_zones(fd, NVME_NSID_ALL, true, &zns_log) != 0)
++		nvm->log_supported[NVME_LOG_ZNS] = false;
++
++	close(fd);
++}
++
++int nvme_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callback cb)
++{
++	struct nvme_pmu *nvm = container_of(pmu, struct nvme_pmu, pmu);
++	size_t i;
++
++	nvme_pmu__check_support(nvm);
++	for (i = 0; i < ARRAY_SIZE(nvme_events); i++) {
++		const struct nvme_event *e = &nvme_events[i];
++		char alias_buf[64];
++		char desc_buf[256];
++		char encoding_buf[128];
++		struct pmu_event_info info = {
++			.pmu = pmu,
++			.name = e->name,
++			.alias = alias_buf,
++			.scale_unit = e->scale_unit,
++			.desc = desc_buf,
++			.long_desc = NULL,
++			.encoding_desc = encoding_buf,
++
++			.topic = "nvme",
++			.pmu_name = pmu->name,
++			.event_type_desc = "NVMe event",
++			.deprecated = !nvm->log_supported[(e->config >> 24) & 0xFF],
++		};
++
++		int ret;
++
++		snprintf(alias_buf, sizeof(alias_buf), "%s", e->name);
++		snprintf(desc_buf, sizeof(desc_buf), "%s", e->desc);
++		snprintf(encoding_buf, sizeof(encoding_buf),
++			 "%s/config=0x%lx/", pmu->name, e->config);
++
++		ret = cb(state, &info);
++		if (ret)
++			return ret;
++	}
 +	return 0;
 +}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 6e7b15fab2ec..79c4ad10bc18 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1060,6 +1060,18 @@ ifndef NO_CAPSTONE
-   endif
- endif
- 
-+ifndef NO_LIBNVME
-+  $(call feature_check,libnvme)
-+  ifeq ($(feature-libnvme), 1)
-+    CFLAGS += -DHAVE_LIBNVME_SUPPORT $(shell $(PKG_CONFIG) --cflags libnvme)
-+    LDFLAGS += $(shell $(PKG_CONFIG) --libs-only-L libnvme)
-+    EXTLIBS += $(shell $(PKG_CONFIG) --libs-only-l libnvme)
-+    $(call detected,CONFIG_LIBNVME)
-+  else
-+    msg := $(warning No libnvme found, disables NVMe PMU support, please install libnvme-dev/libnvme-devel);
-+  endif
-+endif
 +
- ifdef EXTRA_TESTS
-     $(call detected,CONFIG_EXTRA_TESTS)
-     CFLAGS += -DHAVE_EXTRA_TESTS
++size_t nvme_pmu__num_events(struct perf_pmu *pmu __maybe_unused)
++{
++	return ARRAY_SIZE(nvme_events);
++}
++
++bool nvme_pmu__have_event(struct perf_pmu *pmu __maybe_unused, const char *name)
++{
++	size_t i;
++
++	for (i = 0; i < ARRAY_SIZE(nvme_events); i++) {
++		if (!strcasecmp(name, nvme_events[i].name))
++			return true;
++	}
++	return false;
++}
++
++static int nvme_pmu__config_term(const struct nvme_pmu *nvm __maybe_unused,
++				 struct perf_event_attr *attr,
++				 struct parse_events_term *term,
++				 struct parse_events_error *err)
++{
++	if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER) {
++		size_t i;
++
++		for (i = 0; i < ARRAY_SIZE(nvme_events); i++) {
++			if (!strcasecmp(term->config, nvme_events[i].name)) {
++				attr->config = nvme_events[i].config;
++				return 0;
++			}
++		}
++	}
++	if (err) {
++		char *err_str;
++
++		parse_events_error__handle(err, term->err_val,
++					asprintf(&err_str,
++						"unexpected nvme event term (%s) %s",
++						parse_events__term_type_str(term->type_term),
++						term->config) < 0
++					? strdup("unexpected nvme event term")
++					: err_str,
++					NULL);
++	}
++	return -EINVAL;
++}
++
++int nvme_pmu__config_terms(const struct perf_pmu *pmu,
++			   struct perf_event_attr *attr,
++			   struct parse_events_terms *terms,
++			   struct parse_events_error *err)
++{
++	struct nvme_pmu *nvm = container_of(pmu, struct nvme_pmu, pmu);
++	struct parse_events_term *term;
++
++	list_for_each_entry(term, &terms->terms, list) {
++		if (nvme_pmu__config_term(nvm, attr, term, err))
++			return -EINVAL;
++	}
++
++	return 0;
++}
++
++int nvme_pmu__check_alias(struct parse_events_terms *terms, struct perf_pmu_info *info,
++			  struct parse_events_error *err)
++{
++	struct parse_events_term *term =
++		list_first_entry(&terms->terms, struct parse_events_term, list);
++
++	if (term->type_term == PARSE_EVENTS__TERM_TYPE_USER) {
++		size_t i;
++
++		for (i = 0; i < ARRAY_SIZE(nvme_events); i++) {
++			if (!strcasecmp(term->config, nvme_events[i].name)) {
++				if (nvme_events[i].scale_unit) {
++					char *unit;
++
++					perf_pmu__convert_scale(nvme_events[i].scale_unit,
++								&unit, &info->scale);
++					info->unit = unit;
++				}
++				return 0;
++			}
++		}
++	}
++	if (err) {
++		char *err_str;
++
++		parse_events_error__handle(err, term->err_val,
++					asprintf(&err_str,
++						"unexpected nvme event term (%s) %s",
++						parse_events__term_type_str(term->type_term),
++						term->config) < 0
++					? strdup("unexpected nvme event term")
++					: err_str,
++					NULL);
++	}
++	return -EINVAL;
++}
++
++int perf_pmus__read_nvme_pmus(struct list_head *pmus)
++{
++	nvme_root_t r = nvme_scan(NULL);
++	nvme_host_t h;
++	nvme_subsystem_t s;
++	nvme_ctrl_t c;
++
++	if (!r)
++		return 0;
++
++	nvme_for_each_host(r, h) {
++		nvme_for_each_subsystem(h, s) {
++			nvme_subsystem_for_each_ctrl(s, c) {
++				nvme_pmu__new(pmus, nvme_ctrl_get_name(c), nvme_ctrl_get_name(c));
++			}
++		}
++	}
++	nvme_free_tree(r);
++	return 0;
++}
++
++
++static int nvme_pmu__read_val(int fd, uint64_t config, uint64_t *val)
++{
++	int log_type = (config >> 24) & 0xFF;
++	unsigned int size = (config >> 16) & 0xFF;
++	unsigned int offset = config & 0xFFFF;
++	uint8_t buf[4096];
++	uint8_t *p;
++
++	if (log_type == NVME_LOG_SMART) {
++		if (offset + size > sizeof(struct nvme_smart_log))
++			return -EINVAL;
++		if (nvme_get_log_smart(fd, NVME_NSID_ALL, true, (struct nvme_smart_log *)buf) != 0)
++			return -EINVAL;
++
++		if (offset == offsetof(struct nvme_smart_log, temperature)) {
++			uint64_t kelvin = ((struct nvme_smart_log *)buf)->temperature[0] |
++					  (((struct nvme_smart_log *)buf)->temperature[1] << 8);
++			*val = (kelvin * 1000) - 273150;
++			return 0;
++		}
++	} else if (log_type == NVME_LOG_ENDURANCE) {
++		if (offset + size > sizeof(struct nvme_endurance_group_log))
++			return -EINVAL;
++		if (nvme_get_log_endurance_group(fd, 0,
++				(struct nvme_endurance_group_log *)buf) != 0)
++			return -EINVAL;
++	} else if (log_type == NVME_LOG_FDP) {
++		if (offset + size > sizeof(struct nvme_fdp_stats_log))
++			return -EINVAL;
++		if (nvme_get_log_fdp_stats(fd, 0, 0, sizeof(struct nvme_fdp_stats_log), buf) != 0)
++			return -EINVAL;
++	} else if (log_type == NVME_LOG_ERROR) {
++		if (offset + size > sizeof(struct nvme_error_log_page))
++			return -EINVAL;
++		if (nvme_get_log_error(fd, 1, true, (struct nvme_error_log_page *)buf) != 0)
++			return -EINVAL;
++	} else if (log_type == NVME_LOG_ZNS) {
++		if (offset + size > sizeof(struct nvme_zns_changed_zone_log))
++			return -EINVAL;
++		if (nvme_get_log_zns_changed_zones(fd, NVME_NSID_ALL, true,
++				(struct nvme_zns_changed_zone_log *)buf) != 0)
++			return -EINVAL;
++	} else {
++		return -EINVAL;
++	}
++
++	p = buf + offset;
++	if (size == 16 || size == 8)
++		*val = get_unaligned_le64(p);
++	else if (size == 4)
++		*val = get_unaligned_le32(p);
++	else if (size == 2)
++		*val = get_unaligned_le16(p);
++	else if (size == 1)
++		*val = *p;
++	else
++		return -EINVAL;
++
++	return 0;
++}
++
++static bool nvme_pmu__is_gauge(uint64_t config)
++{
++	if (config == NVME_SMART(2, temperature) ||
++	    config == NVME_ENDURANCE(1, percent_used) ||
++	    config == NVME_ZNS(2, nrzid))
++		return true;
++	return false;
++}
++
++#define FD(e, x, y) (*(int *)xyarray__entry(e->core.fd, x, y))
++
++int evsel__nvme_pmu_open(struct evsel *evsel,
++			 struct perf_thread_map *threads,
++			 int start_cpu_map_idx, int end_cpu_map_idx)
++{
++	struct nvme_pmu *nvm = container_of(evsel->pmu, struct nvme_pmu, pmu);
++	int idx = 0, thread = 0, nthreads, err = 0;
++	char path[PATH_MAX];
++
++	snprintf(path, sizeof(path), "/dev/%s", nvm->dev_name);
++
++	nthreads = perf_thread_map__nr(threads);
++
++	if (!evsel->nvme.initial_values) {
++		int max_cpus = evsel->core.cpus ? perf_cpu_map__nr(evsel->core.cpus) : 1;
++
++		evsel->nvme.initial_values = xyarray__new(max_cpus, nthreads, sizeof(uint64_t));
++	}
++
++	for (idx = start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
++		for (thread = 0; thread < nthreads; thread++) {
++			int fd = open(path, O_RDONLY);
++
++			FD(evsel, idx, thread) = fd;
++			if (fd < 0) {
++				err = -errno;
++				goto out_close;
++			}
++			if (evsel->nvme.initial_values) {
++				uint64_t *initial_val =
++					xyarray__entry(evsel->nvme.initial_values, idx, thread);
++
++				if (nvme_pmu__read_val(fd, evsel->core.attr.config, initial_val))
++					*initial_val = 0;
++			}
++		}
++	}
++	return 0;
++out_close:
++	if (err)
++		threads->err_thread = thread;
++
++	do {
++		while (--thread >= 0) {
++			if (FD(evsel, idx, thread) >= 0)
++				close(FD(evsel, idx, thread));
++			FD(evsel, idx, thread) = -1;
++		}
++		thread = nthreads;
++	} while (--idx >= 0);
++	return err;
++}
++
++int evsel__nvme_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
++{
++	int fd;
++	struct perf_counts_values *count, *old_count = NULL;
++	uint64_t val = 0;
++	uint64_t *initial_val = NULL;
++
++	if (evsel->prev_raw_counts)
++		old_count = perf_counts(evsel->prev_raw_counts, cpu_map_idx, thread);
++
++	count = perf_counts(evsel->counts, cpu_map_idx, thread);
++	fd = FD(evsel, cpu_map_idx, thread);
++
++	if (fd < 0 || nvme_pmu__read_val(fd, evsel->core.attr.config, &val)) {
++		count->lost++;
++		return -EINVAL;
++	}
++
++	if (evsel->nvme.initial_values)
++		initial_val = xyarray__entry(evsel->nvme.initial_values, cpu_map_idx, thread);
++
++	if (old_count) {
++		if (nvme_pmu__is_gauge(evsel->core.attr.config))
++			count->val = old_count->val + val;
++		else
++			count->val = val - (initial_val ? *initial_val : 0);
++		count->run = old_count->run + 1;
++		count->ena = old_count->ena + 1;
++	} else {
++		if (nvme_pmu__is_gauge(evsel->core.attr.config))
++			count->val = val;
++		else
++			count->val = val - (initial_val ? *initial_val : 0);
++		count->run++;
++		count->ena++;
++	}
++	return 0;
++}
++
++
++#endif
+diff --git a/tools/perf/util/nvme_pmu.h b/tools/perf/util/nvme_pmu.h
+new file mode 100644
+index 000000000000..6d5d2bbe4167
+--- /dev/null
++++ b/tools/perf/util/nvme_pmu.h
+@@ -0,0 +1,112 @@
++/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
++#ifndef __NVME_PMU_H
++#define __NVME_PMU_H
++
++#include "pmu.h"
++#include <stdbool.h>
++#include <errno.h>
++
++struct list_head;
++struct perf_thread_map;
++struct evsel;
++
++#ifdef HAVE_LIBNVME_SUPPORT
++struct perf_pmu *nvme_pmu__new(struct list_head *pmus, const char *sysfs_name, const char *name);
++void nvme_pmu__exit(struct perf_pmu *pmu);
++
++int nvme_pmu__for_each_event(struct perf_pmu *pmu, void *state, pmu_event_callback cb);
++size_t nvme_pmu__num_events(struct perf_pmu *pmu);
++bool nvme_pmu__have_event(struct perf_pmu *pmu, const char *name);
++int nvme_pmu__config_terms(const struct perf_pmu *pmu,
++			   struct perf_event_attr *attr,
++			   struct parse_events_terms *terms,
++			   struct parse_events_error *err);
++int nvme_pmu__check_alias(struct parse_events_terms *terms, struct perf_pmu_info *info,
++			  struct parse_events_error *err);
++
++bool perf_pmu__is_nvme(const struct perf_pmu *pmu);
++bool evsel__is_nvme(const struct evsel *evsel);
++
++int perf_pmus__read_nvme_pmus(struct list_head *pmus);
++
++int evsel__nvme_pmu_open(struct evsel *evsel,
++			 struct perf_thread_map *threads,
++			 int start_cpu_map_idx, int end_cpu_map_idx);
++int evsel__nvme_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread);
++#else
++static inline struct perf_pmu *nvme_pmu__new(struct list_head *pmus __maybe_unused,
++					     const char *sysfs_name __maybe_unused,
++					     const char *name __maybe_unused)
++{
++	return NULL;
++}
++
++static inline void nvme_pmu__exit(struct perf_pmu *pmu __maybe_unused)
++{
++}
++
++static inline int nvme_pmu__for_each_event(struct perf_pmu *pmu __maybe_unused,
++					   void *state __maybe_unused,
++					   pmu_event_callback cb __maybe_unused)
++{
++	return 0;
++}
++
++static inline size_t nvme_pmu__num_events(struct perf_pmu *pmu __maybe_unused)
++{
++	return 0;
++}
++
++static inline bool nvme_pmu__have_event(struct perf_pmu *pmu __maybe_unused,
++					const char *name __maybe_unused)
++{
++	return false;
++}
++
++static inline int nvme_pmu__config_terms(const struct perf_pmu *pmu __maybe_unused,
++					 struct perf_event_attr *attr __maybe_unused,
++					 struct parse_events_terms *terms __maybe_unused,
++					 struct parse_events_error *err __maybe_unused)
++{
++	return -EINVAL;
++}
++
++static inline int nvme_pmu__check_alias(struct parse_events_terms *terms __maybe_unused,
++					struct perf_pmu_info *info __maybe_unused,
++					struct parse_events_error *err __maybe_unused)
++{
++	return -EINVAL;
++}
++
++static inline bool perf_pmu__is_nvme(const struct perf_pmu *pmu __maybe_unused)
++{
++	return false;
++}
++
++static inline bool evsel__is_nvme(const struct evsel *evsel __maybe_unused)
++{
++	return false;
++}
++
++static inline int perf_pmus__read_nvme_pmus(struct list_head *pmus __maybe_unused)
++{
++	return 0;
++}
++
++static inline int evsel__nvme_pmu_open(struct evsel *evsel __maybe_unused,
++				       struct perf_thread_map *threads __maybe_unused,
++				       int start_cpu_map_idx __maybe_unused,
++				       int end_cpu_map_idx __maybe_unused)
++{
++	return 0;
++}
++
++static inline int evsel__nvme_pmu_read(struct evsel *evsel __maybe_unused,
++				       int cpu_map_idx __maybe_unused,
++				       int thread __maybe_unused)
++{
++	return 0;
++}
++#endif
++
++#endif /* __NVME_PMU_H */
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 9994709ef12b..26ec19753644 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -22,6 +22,7 @@
+ #include "pmu.h"
+ #include "drm_pmu.h"
+ #include "hwmon_pmu.h"
++#include "nvme_pmu.h"
+ #include "pmus.h"
+ #include "tool_pmu.h"
+ #include "tp_pmu.h"
+@@ -1687,6 +1688,8 @@ int perf_pmu__config_terms(const struct perf_pmu *pmu,
+ 
+ 	if (perf_pmu__is_hwmon(pmu))
+ 		return hwmon_pmu__config_terms(pmu, attr, terms, err);
++	if (perf_pmu__is_nvme(pmu))
++		return nvme_pmu__config_terms(pmu, attr, terms, err);
+ 	if (perf_pmu__is_drm(pmu))
+ 		return drm_pmu__config_terms(pmu, attr, terms, err);
+ 
+@@ -1851,6 +1854,10 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct parse_events_terms *head_
+ 		ret = hwmon_pmu__check_alias(head_terms, info, err);
+ 		goto out;
+ 	}
++	if (perf_pmu__is_nvme(pmu)) {
++		ret = nvme_pmu__check_alias(head_terms, info, err);
++		goto out;
++	}
+ 	if (perf_pmu__is_drm(pmu)) {
+ 		ret = drm_pmu__check_alias(pmu, head_terms, info, err);
+ 		goto out;
+@@ -2071,6 +2078,8 @@ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name)
+ 		return tp_pmu__have_event(pmu, name);
+ 	if (perf_pmu__is_hwmon(pmu))
+ 		return hwmon_pmu__have_event(pmu, name);
++	if (perf_pmu__is_nvme(pmu))
++		return nvme_pmu__have_event(pmu, name);
+ 	if (perf_pmu__is_drm(pmu))
+ 		return drm_pmu__have_event(pmu, name);
+ 	if (perf_pmu__find_alias(pmu, name, /*load=*/ true) != NULL)
+@@ -2092,6 +2101,8 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
+ 		return tp_pmu__num_events(pmu);
+ 	if (perf_pmu__is_hwmon(pmu))
+ 		return hwmon_pmu__num_events(pmu);
++	if (perf_pmu__is_nvme(pmu))
++		return nvme_pmu__num_events(pmu);
+ 	if (perf_pmu__is_drm(pmu))
+ 		return drm_pmu__num_events(pmu);
+ 
+@@ -2223,6 +2234,8 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+ 		return tp_pmu__for_each_event(pmu, state, cb);
+ 	if (perf_pmu__is_hwmon(pmu))
+ 		return hwmon_pmu__for_each_event(pmu, state, cb);
++	if (perf_pmu__is_nvme(pmu))
++		return nvme_pmu__for_each_event(pmu, state, cb);
+ 	if (perf_pmu__is_drm(pmu))
+ 		return drm_pmu__for_each_event(pmu, state, cb);
+ 
+@@ -2714,6 +2727,8 @@ void perf_pmu__delete(struct perf_pmu *pmu)
+ 
+ 	if (perf_pmu__is_hwmon(pmu))
+ 		hwmon_pmu__exit(pmu);
++	if (perf_pmu__is_nvme(pmu))
++		nvme_pmu__exit(pmu);
+ 	else if (perf_pmu__is_drm(pmu))
+ 		drm_pmu__exit(pmu);
+ 
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 0d9f3c57e8e8..0fe47dd429e8 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -45,6 +45,8 @@ enum pmu_kind {
+ 	PERF_PMU_KIND_DRM,
+ 	/* A perf tool provided HWMON PMU. */
+ 	PERF_PMU_KIND_HWMON,
++	/* A perf tool provided NVME PMU. */
++	PERF_PMU_KIND_NVME,
+ 	/* Perf tool provided PMU for tool events like time. */
+ 	PERF_PMU_KIND_TOOL,
+ 	/* A testing PMU kind. */
+@@ -53,7 +55,9 @@ enum pmu_kind {
+ 
+ enum {
+ 	PERF_PMU_TYPE_PE_START    = 0,
+-	PERF_PMU_TYPE_PE_END      = 0xFFFDFFFF,
++	PERF_PMU_TYPE_PE_END      = 0xFFFCFFFF,
++	PERF_PMU_TYPE_NVME_START  = 0xFFFD0000,
++	PERF_PMU_TYPE_NVME_END    = 0xFFFDFFFF,
+ 	PERF_PMU_TYPE_DRM_START   = 0xFFFE0000,
+ 	PERF_PMU_TYPE_DRM_END     = 0xFFFEFFFF,
+ 	PERF_PMU_TYPE_HWMON_START = 0xFFFF0000,
+@@ -363,6 +367,8 @@ static inline enum pmu_kind perf_pmu__kind(const struct perf_pmu *pmu)
+ 	type = pmu->type;
+ 	if (type <= PERF_PMU_TYPE_PE_END)
+ 		return PERF_PMU_KIND_PE;
++	if (type <= PERF_PMU_TYPE_NVME_END)
++		return PERF_PMU_KIND_NVME;
+ 	if (type <= PERF_PMU_TYPE_DRM_END)
+ 		return PERF_PMU_KIND_DRM;
+ 	if (type <= PERF_PMU_TYPE_HWMON_END)
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 5e3f571450fe..83777f941e9a 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -17,6 +17,7 @@
+ #include "pmus.h"
+ #include "pmu.h"
+ #include "hwmon_pmu.h"
++#include "nvme_pmu.h"
+ #include "tool_pmu.h"
+ #include "print-events.h"
+ #include "strbuf.h"
+@@ -44,18 +45,21 @@ enum perf_tool_pmu_type {
+ 	PERF_TOOL_PMU_TYPE_PE_OTHER,
+ 	PERF_TOOL_PMU_TYPE_TOOL,
+ 	PERF_TOOL_PMU_TYPE_HWMON,
++	PERF_TOOL_PMU_TYPE_NVME,
+ 	PERF_TOOL_PMU_TYPE_DRM,
+ 
+ #define PERF_TOOL_PMU_TYPE_PE_CORE_MASK (1 << PERF_TOOL_PMU_TYPE_PE_CORE)
+ #define PERF_TOOL_PMU_TYPE_PE_OTHER_MASK (1 << PERF_TOOL_PMU_TYPE_PE_OTHER)
+ #define PERF_TOOL_PMU_TYPE_TOOL_MASK (1 << PERF_TOOL_PMU_TYPE_TOOL)
+ #define PERF_TOOL_PMU_TYPE_HWMON_MASK (1 << PERF_TOOL_PMU_TYPE_HWMON)
++#define PERF_TOOL_PMU_TYPE_NVME_MASK (1 << PERF_TOOL_PMU_TYPE_NVME)
+ #define PERF_TOOL_PMU_TYPE_DRM_MASK (1 << PERF_TOOL_PMU_TYPE_DRM)
+ 
+ #define PERF_TOOL_PMU_TYPE_ALL_MASK (PERF_TOOL_PMU_TYPE_PE_CORE_MASK |	\
+ 					PERF_TOOL_PMU_TYPE_PE_OTHER_MASK | \
+ 					PERF_TOOL_PMU_TYPE_TOOL_MASK |	\
+ 					PERF_TOOL_PMU_TYPE_HWMON_MASK | \
++					PERF_TOOL_PMU_TYPE_NVME_MASK | \
+ 					PERF_TOOL_PMU_TYPE_DRM_MASK)
+ };
+ static unsigned int read_pmu_types;
+@@ -175,12 +179,15 @@ struct perf_pmu *perf_pmus__find(const char *name)
+ 		return pmu;
+ 
+ 	/* Looking up an individual perf event PMU failed, check if a tool PMU should be read. */
+-	if (!strncmp(name, "hwmon_", 6))
+-		to_read_pmus |= PERF_TOOL_PMU_TYPE_HWMON_MASK;
+-	else if (!strncmp(name, "drm_", 4))
++	if (!strncmp(name, "hwmon_", 6)) {
++		to_read_pmus = PERF_TOOL_PMU_TYPE_HWMON_MASK;
++	} else if (!strncmp(name, "nvme_", 5)) {
++		to_read_pmus = PERF_TOOL_PMU_TYPE_NVME_MASK;
++	} else if (!strncmp(name, "drm_", 4)) {
+ 		to_read_pmus |= PERF_TOOL_PMU_TYPE_DRM_MASK;
+-	else if (!strcmp(name, "tool"))
++	} else if (!strcmp(name, "tool")) {
+ 		to_read_pmus |= PERF_TOOL_PMU_TYPE_TOOL_MASK;
++	}
+ 
+ 	if (to_read_pmus) {
+ 		pmu_read_sysfs(to_read_pmus);
+@@ -279,6 +286,10 @@ static void pmu_read_sysfs(unsigned int to_read_types)
+ 	    (read_pmu_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) == 0)
+ 		perf_pmus__read_hwmon_pmus(&other_pmus);
+ 
++	if ((to_read_types & PERF_TOOL_PMU_TYPE_NVME_MASK) != 0 &&
++	    (read_pmu_types & PERF_TOOL_PMU_TYPE_NVME_MASK) == 0)
++		perf_pmus__read_nvme_pmus(&other_pmus);
++
+ 	if ((to_read_types & PERF_TOOL_PMU_TYPE_DRM_MASK) != 0 &&
+ 	    (read_pmu_types & PERF_TOOL_PMU_TYPE_DRM_MASK) == 0)
+ 		perf_pmus__read_drm_pmus(&other_pmus);
+@@ -387,6 +398,10 @@ struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *eve
+ 		if (strlen(event) > 4 && strncmp("drm-", event, 4) == 0)
+ 			to_read_pmus |= PERF_TOOL_PMU_TYPE_DRM_MASK;
+ 
++		/* Could the event be an nvme event? */
++		if (nvme_pmu__have_event(NULL, event))
++			to_read_pmus |= PERF_TOOL_PMU_TYPE_NVME_MASK;
++
+ 		pmu_read_sysfs(to_read_pmus);
+ 		pmu = list_prepare_entry(pmu, &core_pmus, list);
+ 	}
+@@ -424,11 +439,14 @@ struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const c
+ 		 */
+ 		if (strisglob(wildcard)) {
+ 			to_read_pmus |= PERF_TOOL_PMU_TYPE_HWMON_MASK |
++				PERF_TOOL_PMU_TYPE_NVME_MASK |
+ 				PERF_TOOL_PMU_TYPE_DRM_MASK;
+ 		} else if (strlen(wildcard) >= 4 && strncmp("drm_", wildcard, 4) == 0) {
+ 			to_read_pmus |= PERF_TOOL_PMU_TYPE_DRM_MASK;
+ 		} else if (strlen(wildcard) >= 5 && strncmp("hwmon", wildcard, 5) == 0) {
+ 			to_read_pmus |= PERF_TOOL_PMU_TYPE_HWMON_MASK;
++		} else if (strlen(wildcard) >= 4 && strncmp("nvme", wildcard, 4) == 0) {
++			to_read_pmus |= PERF_TOOL_PMU_TYPE_NVME_MASK;
+ 		}
+ 
+ 		pmu_read_sysfs(to_read_pmus);
 -- 
 2.54.0.1099.g489fc7bff1-goog
 
