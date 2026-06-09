@@ -1,133 +1,146 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4681D3D4130;
-	Tue,  9 Jun 2026 06:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFE3CA4E;
+	Tue,  9 Jun 2026 06:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780986628; cv=none; b=Qx86m+xqEoFBnhmUsq3HAuPi3513vO703mstlFt+XUo/hN2Qyn6qSX0fK8rjrYbM05vVA5bC+FH8bvaXLJ1Dnt8vKyoPHv37VtNCxVwLX8Ek26eWqkIdUkm0nHar+V2ikb5jIIHiWutET959fV0OQFc0t0qxxTMLu8qJ2IWUxoo=
+	t=1780986811; cv=none; b=jOQ9enk/go2l8ahW1Yey7QGQGmLrM1PDCB8UCGZO6+SOi2YBOyyvDk/JX5EWKxQNrKmYG4iBd/rBrQ9DTC2AuPgO6HrFCgO8EurpWCjsSAcNJlowDji+6O0nPsJn7L+fWkI32q45l/+FP8KHMjosDkSmyqaTf0Tbnz306jAzvtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780986628; c=relaxed/simple;
-	bh=0KCT5lX/yA5lYF4rKIYrYcunKBGHZ4tEo6Vt4nyxfCw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RY5ffb5wCtGGEPGynh0PlD85bVtKd3grVCkvI6JKILdD6ukmGYY++a0+fTJD2VmjHNnQm0XV74AFuIJmsSS8LQ3ZCy4NS+Wg2Eyn1QRuBmY8My1vrTBfYl66tFRfPgMjEKWXoXWGUyXBntArYNm7lNmiFkQLtJuxmSR8atJPCoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ge0iK81i; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1780986811; c=relaxed/simple;
+	bh=UA9drqngoE5zlMZbpvc86sDOGhLcAAwtPIGOQT10MBM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=QTTGSEG20LGi7wnj7JlCwi5S+pU27PCvY6GD6Rb0uSY2oqJNCZxxAjMad7NhYUK5m1o7NHtuhui3FbsiPmJuFIveZ05F3nm26HqN0l1hMtQZlvCwWJFNWG0U+gTvmeS5wTDefmGJKSGfa8fLON+TZdE5rufZSh4GgqY6BJHQC4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2imHSZM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ge0iK81i"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1780986616; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ipNiCgq1zQDmCfj6MBMo/UwiU6bdUS/uJE7SlSsGs3U=;
-	b=ge0iK81iqsPuiVmpr0xd0LylLaGITQOrAPNusAfhsl2wQ4gYnPJkTPuXQoO1M3PiSG6Nd+fncF9Xw5NS3LuQsYou4XMgmWs3N6hwWhBV/2D5ROEAzdFsDiwIEt08TNdY4zOl8UBY+LvjMoGW03juIoMiynYKmXgCJELcU/BFUEo=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=wanghan@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X4VD53s_1780986613;
-Received: from wanghan-Workstation..(mailfrom:wanghan@linux.alibaba.com fp:SMTPD_---0X4VD53s_1780986613 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Jun 2026 14:30:14 +0800
-From: Wang Han <wanghan@linux.alibaba.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Chen Pei <cp0613@linux.alibaba.com>,
-	Andy Chiu <andybnac@gmail.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	oliver.yang@linux.alibaba.com,
-	xueshuai@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com,
-	jkchen@linux.alibaba.com,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 7/8] riscv: Kconfig: enable HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH
-Date: Tue,  9 Jun 2026 14:29:58 +0800
-Message-ID: <20260609063002.3943001-7-wanghan@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com>
-References: <20260528082310.1994388-1-wanghan@linux.alibaba.com> <cover.194d76e3a15b.v3.riscv-livepatch.wanghan@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2imHSZM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D801F00893;
+	Tue,  9 Jun 2026 06:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780986809;
+	bh=zhfXWCTQUZJATLR2jF2Bw6AjpiYZwt1mtklk/4JJLPM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=G2imHSZM/539inWdTMF3LL3jQF4ooRC6cjK0jMW/jKRXk2S4DEsa7WhNQ00/lHDRq
+	 R8LCpjQhyAcx/IpPEKm5DeBKkHP7RQQn2+K46FH4EMQxpGrYcKfHs0xjeHcMG/SSFR
+	 VlQTdJ04lrkZY48DPGA/CwswgWopjlDNa4rYSXw7L84a0JT722nq6JAe+sDmSqmuxx
+	 G68jvszTG17q7oPLsWltRzKRoqHIM2Ml0DqbQKgCqOi0X49iqV7WucWXv+rtrGDJdV
+	 Xhiz32lrbA1ck+mLG8TaYx0QTII+HcPiSjwymomoXAjjl8OBGJTSQx7oAH296thFCM
+	 xFdhOAXTyE2Tw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 14/21] RISC-V: perf: Skip PMU SBI extension when not
+ implemented
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Atish Patra" <atish.patra@linux.dev>
+Cc: devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260608-counter_delegation-v6-14-285b72ed65a9@meta.com>
+References: <20260608-counter_delegation-v6-14-285b72ed65a9@meta.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Jun 2026 06:33:28 +0000
+Message-Id: <20260609063329.66D801F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Now that the metadata frame records, the kunwind state machine and
-arch_stack_walk_reliable() are all in place, advertise the capability
-to the rest of the kernel:
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-  * select HAVE_RELIABLE_STACKTRACE under FRAME_POINTER && 64BIT, so
-    only the configurations with the tested metadata records and
-    FP-based reliable walker enable it.
-  * select HAVE_LIVEPATCH under the same condition and source
-    kernel/livepatch/Kconfig so the livepatch menu is reachable from
-    the RISC-V configuration.
+Pre-existing issues:
+- [Critical] Missing perf_pmu_unregister() on error paths leads to Use-Afte=
+r-Free of the pmu struct.
+- [High] Unconditional cpuhp_state_remove_instance() on an uninitialized hl=
+ist_node causes a kernel panic.
+--
 
-The 64BIT dependency is conservative scoping rather than a hard
-technical requirement: the metadata frame record, kunwind state machine
-and arch_stack_walk_reliable() also build on RV32, and the IRQ-stack
-frame-record adjustment fixes a latent RV32 issue. However, the syscall
-livepatch selftest and module relocation path have only been exercised
-on RV64 QEMU virt so far. The 64BIT gate can be relaxed in a follow-up
-once RV32 has equivalent coverage.
+commit bd51c5655be0902a2fc1fd90b8d692c299e7265b
+Author: Charlie Jenkins <charlie@rivosinc.com>
 
-This is split out from the unwinder change so the policy decision and
-the implementation can be reviewed and reverted independently.
+RISC-V: perf: Skip PMU SBI extension when not implemented
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
----
- arch/riscv/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+When the PMU SBI extension is not implemented, sbi_v2_available should
+not be set to true. The SBI implementation for counter config matching
+and firmware counter read  should also be skipped when the SBI extension
+is not implemented.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 674044754378..2921680d2132 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -185,6 +185,7 @@ config RISCV
- 	select HAVE_KRETPROBES
- 	# https://github.com/ClangBuiltLinux/linux/issues/1881
- 	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD
-+	select HAVE_LIVEPATCH if FRAME_POINTER && 64BIT
- 	select HAVE_MOVE_PMD
- 	select HAVE_MOVE_PUD
- 	select HAVE_PAGE_SIZE_4KB
-@@ -195,6 +196,7 @@ config RISCV
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
- 	select HAVE_PREEMPT_DYNAMIC_KEY
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-+	select HAVE_RELIABLE_STACKTRACE if FRAME_POINTER && 64BIT
- 	select HAVE_RETHOOK
- 	select HAVE_RSEQ
- 	select HAVE_RUST if RUSTC_SUPPORTS_RISCV && CC_IS_CLANG
-@@ -1394,3 +1396,5 @@ endmenu # "CPU Power Management"
- source "arch/riscv/kvm/Kconfig"
- 
- source "drivers/acpi/Kconfig"
-+
-+source "kernel/livepatch/Kconfig"
--- 
-2.43.0
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 1f16df9d0dd00..5bfcd3821f572 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+[ ... ]
+> @@ -2045,12 +2052,13 @@ static int __init rvpmu_devinit(void)
+>  	int ret;
+>  	struct platform_device *pdev;
+> =20
+> -	if (sbi_spec_version >=3D sbi_mk_version(0, 3) &&
+> -	    sbi_probe_extension(SBI_EXT_PMU))
+> -		static_branch_enable(&riscv_pmu_sbi_available);
+> +	if (sbi_probe_extension(SBI_EXT_PMU)) {
+> +		if (sbi_spec_version >=3D sbi_mk_version(0, 3))
+> +			static_branch_enable(&riscv_pmu_sbi_available);
+> +		if (sbi_spec_version >=3D sbi_mk_version(2, 0))
+> +			sbi_v2_available =3D true;
+> +	}
+> =20
+> -	if (sbi_spec_version >=3D sbi_mk_version(2, 0))
+> -		sbi_v2_available =3D true;
+>  	/*
+>  	 * We need all three extensions to be present to access the counters
+>  	 * in S-mode via Supervisor Counter delegation.
 
+[Severity: Critical]
+This is a pre-existing issue, but I noticed a potential use-after-free in t=
+he
+error handling path of rvpmu_device_probe() when allocating or registering
+fails after perf_pmu_register() succeeds.
+
+If an error occurs, such as pmu_sbi_snapshot_alloc() failing, the code jumps
+to out_unregister:
+
+out_unregister:
+	riscv_pmu_destroy(pmu);
+
+out_free:
+	kfree(pmu);
+	return ret;
+
+However, neither the error path nor riscv_pmu_destroy() calls
+perf_pmu_unregister(&pmu->pmu).
+
+This leaves the PMU registered in the perf core subsystem while its backing
+memory is freed via kfree(). Any subsequent access to the PMU could result
+in a use-after-free.
+
+Should perf_pmu_unregister() be called during teardown to avoid memory
+corruption?
+
+[Severity: High]
+This is a pre-existing issue, but the error teardown path in
+rvpmu_device_probe() seems to have a bug that could trigger a kernel panic.
+
+If rvpmu_device_probe() fails before successfully calling
+cpuhp_state_add_instance(), it jumps to out_unregister and calls
+riscv_pmu_destroy(pmu).
+
+Inside riscv_pmu_destroy(), it unconditionally removes the hotplug instance:
+
+static void riscv_pmu_destroy(struct riscv_pmu *pmu)
+{
+	...
+	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
+}
+
+Because the pmu struct is allocated with kzalloc() and the node hasn't been
+added to the hotplug list yet, its hlist_node is zero-initialized.
+
+When hlist_del() is called internally by cpuhp_state_remove_instance(), it
+attempts to dereference node->pprev (which is NULL), causing a NULL pointer
+dereference.
+
+Would it be better to check if the node is actually hashed before attempting
+to remove the hotplug instance?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608-counter_de=
+legation-v6-0-285b72ed65a9@meta.com?part=3D14
