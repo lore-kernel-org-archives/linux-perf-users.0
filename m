@@ -1,129 +1,168 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308082D97BB;
-	Tue,  9 Jun 2026 07:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B622AD00
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 07:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780989696; cv=none; b=fsRPkGi86tBdfkNDPa04eC/yg5QrRq8eyCQaMXjzyI1WaKttEWdUadoLQX7FekilWUsQF/7m+K6P+mBoj154HdabZ7i2alnkm57D68pmwChfYK1ejD7bMvtg3bK5+ntthlVQK3WWNdQB9ZCgQgvVEkoQHFEvYeY9Y8h71336pLQ=
+	t=1780989702; cv=none; b=OQ5PUl6064+S1akvYya0KTDEnLMqmFFoT/UIy7AcG6Vuw6GG4y5zBmmhWpbCIVMELlusyvTGXPmf0lkbdM3o5AIkuLZLNYQJSP0rqsBfkq/85nsWAhCyGxb+4qQZ3m/mCg3KGlwm+v95i0aRdiaVBrpMItRcB9UQCN4rAc1LRUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780989696; c=relaxed/simple;
-	bh=CezKHHhQEE8DvGrnYrNuiWiOWBwHKf5ANf+6Zq8CrQU=;
+	s=arc-20240116; t=1780989702; c=relaxed/simple;
+	bh=kt1uYRKw9nqcylTEKcR+JsRmAQVk3WvZlsf5Ql4LZXE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=A0wSor7BVbhXLuGi31uwayH5W4Is0ImN02AuIAYjI5/W0ULnIkmVniNZgxd1o0kueimMScvuWMjqVKH2Rb8czrJnczNt0xzUbetWXKOKZcpQE90qtj7gP5sXWi+5eGF8N9yGqFH/OKZMmMPDtuvZHS8Gbb9lv4KGgrgetWIo1Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ann3tzZ3; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ROh+162hzykEfJbX8FqS8RyqRKdsVZw/E5SF4SCwujZTS4qEbOq3eBFvOrL6MzVIJkkAMIpNUyedGgPdEv/tragI8k3w55Hszqv6xfLEuGNdAvPWUVGwAIcMHkBrbdIQ62KUANzg6Cl/tSpm1Jb1/fqMtUr3+zNznQNPlgfLuc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKh89tfL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ann3tzZ3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986601F00893;
-	Tue,  9 Jun 2026 07:21:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKh89tfL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70C981F00893;
+	Tue,  9 Jun 2026 07:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780989694;
-	bh=tkeFq894W5/H5feuxgF9iRed4hKzxalGDTZKcEh/qsA=;
+	s=k20260515; t=1780989700;
+	bh=A4IeuHtx2901m7fLaR+rMjVX14NUMHf/LJDapDisKxw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ann3tzZ3Leryo2b4Zd3miml91BBiEkIt9KkzN6hS8P4C7sZw64l6IHtJ8hzTZ3QAC
-	 6ZrfalH683sU09oVV2aA0PzStiGfd59BR5vpAu2Dt6XCTDqBb9BQgaYsJW70grMiBm
-	 hSem1x6WRLxhypXJ4S/xzYCOOA/Iz+qk05IGZZs/7OvSrJ9YtvDC9MQZJOoV31HVdU
-	 wHPf1sWD+pWY+lS2Sl34MpxaFl3bsrZyZrILYKNIhKi4tBN95UHdjfb3ls7DEhJNoE
-	 CL/gwFi5pxGNEbiBaUr2iYb5v218WAJhGKpbAsk4hvqhKTD5UGiy+CxY2X7u63wsrj
-	 +066KcxhpttXA==
+	b=XKh89tfLKRagdyt/AWB+rYoyT6lH1jZGF03Dm9tGrNMqBqWNIqf868jvcqtV23UOU
+	 U5bKTIbOKsOqhj6Io1b4nAZdGBja/rh1DtpTmir/5np+o/vJrYOVwT2okgZwFpbzYq
+	 T+tZBsFsMU24ePadcJHIhmEDjuulEIsnLk0yxbUOVJ8cg2Dbc/tQ562XzP6fCeH7xA
+	 63o0YeagEu+iE34p1NhxVzCbRRYXCPIchvvjyE03o+puZUSadfPSG85183oewFnUNV
+	 Xuzb9pXHIrjENrcONLMz4RwBYxdiOggUChAmYIhIhlK1uQaXAcOImXIUq/efMgDyXe
+	 J6PvoFPZQhKnA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/7] tools build: Add feature check for elfutils
- libasm
+Subject: Re: [PATCH v1 2/3] perf pmu: Implement tool-provided NVMe PMU
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260609070732.545416-2-irogers@google.com>
-References: <20260609070732.545416-2-irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260609070348.541964-3-irogers@google.com>
+References: <20260609070348.541964-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 07:21:34 +0000
-Message-Id: <20260609072134.986601F00893@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 07:21:39 +0000
+Message-Id: <20260609072140.70C981F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] The libasm feature check test relies on internal elfutils symbols =
-(`ebl_openbackend`), guaranteeing linkage failure on all systems.
+- [High] Unaligned memory access and strict aliasing violation in nvme_pmu_=
+_read_val() due to byte-aligned stack array cast to wider types.
+- [High] The NVMe PMU implementation hijacks the tool-owned `evsel->priv` f=
+ield, leading to arbitrary memory corruption and memory leaks.
 --
 
-commit cf97b2eea73923674f23b7d737c06550cb83a7a9
+commit 444d6a9adc97df412d7040ffe34f89b94548c30b
 Author: Ian Rogers <irogers@google.com>
 
-tools build: Add feature check for elfutils libasm
+perf pmu: Implement tool-provided NVMe PMU
 
-This commit introduces a build-time feature test for the elfutils libasm
-library in the shared tools/build system. It adds the test program and
-updates the Makefiles to attempt building it to detect support.
+This commit adds a tool-provided PMU for NVMe devices using libnvme to
+expose metrics from various NVMe logs as perf events under the
+nvme_nvmeX PMUs.
 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 62909a9c799d3..f0f39a2ab2035 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-
-[ ... ]
-
-> @@ -184,6 +185,11 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
->    DWARFLIBS +=3D -ldl
->  endif
-> =20
-> +ASMLIBS :=3D -lasm -ldw -lelf
-
-[Severity: High]
-On older systems where ebl_openbackend() was an exported symbol, it resided
-in libebl.so. Since ASMLIBS omits -lebl, won't this cause linkage failures
-during the test build due to missing dependencies?
-
-> +ifeq ($(findstring -static,${LDFLAGS}),-static)
-> +  ASMLIBS +=3D -lz -llzma -lbz2 -lzstd
-> +endif
-
-[ ... ]
-
-> diff --git a/tools/build/feature/test-libasm.c b/tools/build/feature/test=
--libasm.c
+> diff --git a/tools/perf/util/nvme_pmu.c b/tools/perf/util/nvme_pmu.c
 > new file mode 100644
-> index 0000000000000..f3598ad1cc9e1
+> index 0000000000000..17ba758aec59b
 > --- /dev/null
-> +++ b/tools/build/feature/test-libasm.c
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <stddef.h>
-> +#include <elfutils/libasm.h>
-> +#include <gelf.h>
-> +
-> +typedef struct ebl Ebl;
-> +extern Ebl *ebl_openbackend (Elf *elf);
-> +extern void ebl_closebackend (Ebl *ebl);
-> +
-> +int main(void)
+> +++ b/tools/perf/util/nvme_pmu.c
+[ ... ]
+> +static int nvme_pmu__read_val(int fd, uint64_t config, uint64_t *val)
 > +{
-> +	Elf *elf =3D elf_begin(0, ELF_C_READ, NULL);
-> +	Ebl *ebl =3D ebl_openbackend(elf);
+> +	int log_type =3D (config >> 24) & 0xFF;
+> +	unsigned int size =3D (config >> 16) & 0xFF;
+> +	unsigned int offset =3D config & 0xFFFF;
+> +	uint8_t buf[4096];
+> +	uint8_t *p;
+[ ... ]
+> +	p =3D buf + offset;
+> +	if (size =3D=3D 16 || size =3D=3D 8)
+> +		*val =3D le64_to_cpu(*(uint64_t *)p);
 
 [Severity: High]
-Will this test program universally fail to link?
+Does this cast violate C strict aliasing rules and risk unaligned memory
+access crashes?
 
-In modern elfutils (>=3D 0.177), libebl was merged into libdw, and functions
-like ebl_openbackend() and ebl_closebackend() were made strictly internal
-with hidden visibility. They are not exported by libdw.so or libasm.so.
+Since buf is a byte-aligned stack array and offset can be an arbitrary
+value, p is not guaranteed to be 8-byte aligned. On architectures that
+strictly enforce memory alignment, dereferencing an unaligned 64-bit
+pointer can cause an immediate bus error (SIGBUS).
 
-Because of the missing -lebl flag on older systems and the hidden visibility
-on newer systems, it seems this feature check will always fail, making
-any libasm disassembler backend depending on it unreachable. Is there a
-different way to initialize the disassembler context without relying on
-internal symbols?
+Additionally, casting a byte array to a wider type violates strict aliasing,
+which is enforced in the tools/ directory with -fstrict-aliasing.
 
-> +	DisasmCtx_t *ctx =3D disasm_begin(ebl, elf, NULL);
-> +	disasm_end(ctx);
-> +	ebl_closebackend(ebl);
-> +	elf_end(elf);
+Could we use get_unaligned_le64() here instead?
+
+> +	else if (size =3D=3D 4)
+> +		*val =3D le32_to_cpu(*(uint32_t *)p);
+> +	else if (size =3D=3D 2)
+> +		*val =3D le16_to_cpu(*(uint16_t *)p);
+> +	else if (size =3D=3D 1)
+> +		*val =3D *(uint8_t *)p;
+> +	else
+> +		return -EINVAL;
+> +
 > +	return 0;
 > +}
+[ ... ]
+> +int evsel__nvme_pmu_open(struct evsel *evsel,
+> +			 struct perf_thread_map *threads,
+> +			 int start_cpu_map_idx, int end_cpu_map_idx)
+> +{
+> +	struct nvme_pmu *nvm =3D container_of(evsel->pmu, struct nvme_pmu, pmu);
+> +	int idx =3D 0, thread =3D 0, nthreads, err =3D 0;
+> +	char path[PATH_MAX];
+> +
+> +	snprintf(path, sizeof(path), "/dev/%s", nvm->dev_name);
+> +
+> +	nthreads =3D perf_thread_map__nr(threads);
+> +
+> +	if (!evsel->priv) {
+> +		int max_cpus =3D evsel->core.cpus ? perf_cpu_map__nr(evsel->core.cpus)=
+ : 1;
+> +
+> +		evsel->priv =3D xyarray__new(max_cpus, nthreads, sizeof(uint64_t));
+> +	}
+
+[Severity: High]
+Can this leak the xyarray allocation?
+
+Since evsel->priv is conventionally owned by the specific perf tool executi=
+ng
+the command, allocating an xyarray here does not seem to have a matching
+destructor for the PMU, which might leave the memory unfreed when the event
+is closed.
+
+> +
+> +	for (idx =3D start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
+> +		for (thread =3D 0; thread < nthreads; thread++) {
+> +			int fd =3D open(path, O_RDONLY);
+> +
+> +			FD(evsel, idx, thread) =3D fd;
+> +			if (fd < 0) {
+> +				err =3D -errno;
+> +				goto out_close;
+> +			}
+> +			if (evsel->priv) {
+> +				uint64_t *initial_val =3D xyarray__entry(evsel->priv, idx, thread);
+> +
+> +				if (nvme_pmu__read_val(fd, evsel->core.attr.config, initial_val))
+> +					*initial_val =3D 0;
+> +			}
+
+[Severity: High]
+Is there a risk of memory corruption if a tool has already populated
+evsel->priv?
+
+If an active tool like perf stat has already set evsel->priv to its own
+structure, this code assumes it is an xyarray. The xyarray__entry()
+function will read from the tool's struct to compute a pointer offset,
+and then nvme_pmu__read_val() will write a 64-bit value to that
+invalid address, causing arbitrary heap corruption.
+
+> +		}
+> +	}
+> +	return 0;
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609070732.5454=
-16-1-irogers@google.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609070348.5419=
+64-1-irogers@google.com?part=3D2
