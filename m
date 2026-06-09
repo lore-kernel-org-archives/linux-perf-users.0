@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E493793BE
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 06:41:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F877384CCA
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 06:45:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780987320; cv=none; b=R9w1EYg57mq/IiWicY19SFUnUUzhIy/cuYyBbCpr4Pinq9+LpiOiZeBnmTVGhUYrlGGiQjwuj5gCmgNvAtM9ddO8SjFOoKB7qZmsY7r3kWZLCdDADjLoMGihJNTQ4+dmx2ptEC+vPfVOg2M9aLMuZ67tBBXj2uf887pnXYXtC84=
+	t=1780987553; cv=none; b=GbCeFht+s/hLvYEGcp3Agp1UmqeUp9LKJUa+w8gIV/vagEqqtgbnei1Q+WmBrrp9s0cv9COut21txelQG+Vf+/EN5nb/4di6RkcurH4FosWfmTVBlrFRfivSlwuqp44MMxsentdcWLQ5TL1IQr39Akn+2KIrkZr8NYzhwef1YW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780987320; c=relaxed/simple;
-	bh=N9tJJKjU3WnO/4sBTiRHqaI12sSYR5TFe35r7t0mwGw=;
+	s=arc-20240116; t=1780987553; c=relaxed/simple;
+	bh=HQwmncRdiv6AtGpVYfikN3+5KsHmheFOnPmApR/150U=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eiKaWs9cUfaMVDUojwZXPVvRQCtj0yHbJJ7j6ue/f+Uu/mkUPKJ1DCBOe/jy8CUak3DGAsZMpCnMnNsA2jdkVbkhKN/1JqZGqoCPsZ4WrBuwRPHq5lpK2MyvUrPvGSd/2YO/WtzOv0DJGJEPMcmkaz0YjVn96UNdkOL1pYX4WVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ATm7aor5; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=bSHX/Anc04IWfSpyFumJxgZMBi6U3k8KJrjWZjsGhMA1B2EWWQ4RFif0JHF5FjfIak+ScgBxXKX7EgAsyxsGELSd82nD3J93CP5mEEF4fjc4gwjxK9u1lLTQHt3VK90vG4Ns0i+zTQMP+Abf+4h0s4HctTexURpve+OfOGYxT1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ToW9xyco; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ATm7aor5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B461C1F00893;
-	Tue,  9 Jun 2026 06:41:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ToW9xyco"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F6C1F00898;
+	Tue,  9 Jun 2026 06:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780987318;
-	bh=HJQQKiQyGCGPwuYUH2n3+G04fE3jPl7kzapu4QS5Rmk=;
+	s=k20260515; t=1780987552;
+	bh=inK/46gKpdssexq5gCszlSU5AT8S2l6ZVa4cOSDn/rs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ATm7aor5TG/TL1tK29MY6Pfdb6ex7Q/a7wPQQHI+nBdL6/DkCIWLPIPR0kJQlDfhV
-	 +kCJpwfE/Q36CQAmrZh1Jn26BRmoTP/s7meZwdpD4d+otf5Lm1Hab0ODbDqtVmk/87
-	 XcK60o7UNXTKLx8eScymb4U9FRgWCQ8DmbQne9YkDb1EY3zwNqcvQC6xmEN03DXnXP
-	 9n3tmu5/+lt/JZrAR7fxxlcvPdXAc7ms+Iq4dvjzpgcQhoSB6q6BrsIf+IgX8vuXCV
-	 6USFIqXOqza/pGfnYWnyp8DSM83Os3ujWwL5Kk0srq2KCDyF+7Qnqj1TT3XB6SNf3G
-	 LRuCw9c14eaPg==
+	b=ToW9xycoxhJb8oBKGgIk+vj8E7szV9wBZVTeNZGJk5V2wSiUKzEpXrbxJ/Mkg2Y/p
+	 C1sfeVqwzfqptyWfnLsNY4kbgc59Tr5J9KS+d/LqTrbhGiOFwkGe3zkERsa+r//mtt
+	 0Dg5EivjPved2Bvkw3Rv6RtdW6y044KXwFmKk+HWigiOUmzRyFkBOva0MwJZU0oT4m
+	 8wQpHyFoKIRracuwwlTOj1N68DbhrOaq/lKYFweSPmTi3hyhYiQWigKpItCmSrvPLD
+	 bKzh67Wg2snr7UqwAGfe79C84vMAPzL9383FajdH6oPfSb8oVYy8E5h1723zPpC4CB
+	 eZxI+9DazHv6Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 5/8] riscv: stacktrace: introduce stack-bound
- tracking helpers
+Subject: Re: [PATCH v3 8/8] selftests/livepatch: Add RISC-V syscall wrapper
+ prefix
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Wang Han" <wanghan@linux.alibaba.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260609063002.3943001-5-wanghan@linux.alibaba.com>
-References: <20260609063002.3943001-5-wanghan@linux.alibaba.com>
+In-Reply-To: <20260609063002.3943001-8-wanghan@linux.alibaba.com>
+References: <20260609063002.3943001-8-wanghan@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 06:41:58 +0000
-Message-Id: <20260609064158.B461C1F00893@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 06:45:51 +0000
+Message-Id: <20260609064551.E2F6C1F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,59 +46,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] The new `stackinfo_get_irq()` helper will cause a linker error when=
- wired up if `CONFIG_IRQ_STACKS` is disabled.
+
+Pre-existing issues:
+- [High] The module initialization function `livepatch_init()` leaks `klp_k=
+obj` and its associated sysfs directory if `klp_enable_patch()` fails, lead=
+ing to a kernel use-after-free.
 --
 
-commit 106252794f147e577df13bf90a54471b531228ae
+commit 35d6758515b1de6295d7ae1a97c70e768cac9dfc
 Author: Wang Han <wanghan@linux.alibaba.com>
 
-riscv: stacktrace: introduce stack-bound tracking helpers
+selftests/livepatch: Add RISC-V syscall wrapper prefix
 
-This commit introduces the necessary building blocks for a robust frame-poi=
-nter
-unwinder on RISC-V. It adds stack boundary tracking and accessors for
-different stack types (IRQ, task, overflow) to ensure the unwinder stays
-within known, valid bounds.
+The syscall livepatch selftest resolves and patches a syscall wrapper
+symbol. To use that test for RISC-V livepatch validation, add the
+RISC-V FN_PREFIX definition for ARCH_HAS_SYSCALL_WRAPPER.
 
-> diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm=
-/stacktrace.h
-> index b1495a7e06ce6..bc87c49403798 100644
-> --- a/arch/riscv/include/asm/stacktrace.h
-> +++ b/arch/riscv/include/asm/stacktrace.h
+> diff --git a/tools/testing/selftests/livepatch/test_modules/test_klp_sysc=
+all.c b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
+> index dd802783ea849..275e4b10cf595 100644
+> --- a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
+> +++ b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
+> @@ -18,6 +18,8 @@
+>  #define FN_PREFIX __s390x_
+>  #elif defined(__aarch64__)
+>  #define FN_PREFIX __arm64_
+> +#elif defined(__riscv)
+> +#define FN_PREFIX __riscv_
+>  #else
+>  /* powerpc does not select ARCH_HAS_SYSCALL_WRAPPER */
+>  #define FN_PREFIX
 
-[ ... ]
+[Severity: High]
+This isn't a bug introduced by this patch, but does livepatch_init() leak
+klp_kobj and its associated sysfs directory if klp_enable_patch() fails?
 
-> -static inline bool on_thread_stack(void)
-> +/*
-> + * IRQ stack accessors
-> + */
-> +static inline struct stack_info stackinfo_get_irq(void)
-> +{
-> +	unsigned long low =3D (unsigned long)raw_cpu_read(irq_stack_ptr);
+If klp_enable_patch() returns an error code, livepatch_init() returns this
+error directly without calling kobject_put(klp_kobj):
 
-[Severity: Low]
-Does this cause a linker error when CONFIG_IRQ_STACKS is disabled?
+tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c:livepatch=
+_init() {
+    ...
+	klp_kobj =3D kobject_create_and_add("test_klp_syscall", kernel_kobj);
+	if (!klp_kobj)
+		return -ENOMEM;
 
-This function unconditionally references irq_stack_ptr, but the definition =
-of
-irq_stack_ptr in arch/riscv/kernel/irq.c is guarded by CONFIG_IRQ_STACKS.
-If CONFIG_IRQ_STACKS is disabled (which is possible if CONFIG_EXPERT=3Dy), =
-and=20
-the unwinder unconditionally evaluates this accessor to add the IRQ stack t=
-o=20
-its stack list, will this lead to an "undefined reference to 'irq_stack_ptr=
-'"=20
-during linking?
+	ret =3D sysfs_create_file(klp_kobj, &klp_attr.attr);
+	if (ret) {
+		kobject_put(klp_kobj);
+		return ret;
+	}
+    ...
+	return klp_enable_patch(&patch);
+}
 
-> +	unsigned long high =3D low + IRQ_STACK_SIZE;
-> +
-> +	return (struct stack_info) {
-> +		.low =3D low,
-> +		.high =3D high,
-> +	};
-> +}
+Because the initialization fails, the module loader frees the module memory,
+but the sysfs file /sys/kernel/test_klp_syscall/npids remains registered.
+
+A subsequent user-space access to this sysfs file could dereference a point=
+er
+to the now-freed module data (klp_attr) and execute a freed function pointer
+(npids_show), resulting in a use-after-free.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.194d76e3a15b.=
-v3.riscv-livepatch.wanghan@linux.alibaba.com?part=3D5
+v3.riscv-livepatch.wanghan@linux.alibaba.com?part=3D8
