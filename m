@@ -1,149 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74952F5A0E;
-	Tue,  9 Jun 2026 06:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDAB3CF68E;
+	Tue,  9 Jun 2026 06:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780985560; cv=none; b=bIHQPb0vruQRDZqFB1reA0XCVpUSe4sdD37IWO4Zl1MnPE6q1CHFoONYTTURBM9A0NCfNdsnDCuYVCRXUap3bkJuXn5lDv28wJAuX/Techzvekc3CDH+u7PqHjHn0ih6wgVJ1YzSQGgg+stMOuRPtmLKgVfDaz9zo1BNpuAYiKU=
+	t=1780985646; cv=none; b=LWADB5goJ5e6nr6vDMxL+nj+VasuKYigWvFtC2Ik7YNngxgRQvlgRDTWHzpznfEVTYReGhYjNUngpSXw1RQicFJEdW/ewRknasxYJSB4XUA15f58nDjwXEwJ7h0fePzPNuazC7lp9PtfrmWhd8T+Y/j5lYr+0PIPoRMAvo22Ylo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780985560; c=relaxed/simple;
-	bh=IbCWbhkmcBU09d/e9UT6DRTRIupKz5/XXAmpi3LN8iQ=;
+	s=arc-20240116; t=1780985646; c=relaxed/simple;
+	bh=Qav8HxT2N0VtEBEK7Ao3mDBsmMuFEZ/x6bpWIPsGoRw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=m7jY8GwVqMqvktuHR4zIY4R8qoPhAucASQiXtBveQ2kCCrGYx9I+2Sn7faD+3X4TN9vWEia8GJFdkAeyfN7DAIyaNQU/dmGDpa7f8EmQZx1X3f+BCGxyxpH5jW+REfmLVjZegJ5dXBrTPXzSxyD9oxP4z1AjgxcuXyhciKOT0fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8c4FQnS; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=TSFBGddyI59h5L9ZmoUgE4a3Oyg8PxsmWeVdcQKi3iCLCm/jwNi9+W5PZ1rny+7EIlcKA/9REPgX/om7sBWSw6fXM+ex/yNaRL9zXhGZi3UtPzb9+88X6XdndSJ8r3xp3kYbhvGMtZYJNMvZh8BwX10aBc4GQ5biBN3lmBDXhvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRwrptiL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8c4FQnS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 160901F00893;
-	Tue,  9 Jun 2026 06:12:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRwrptiL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1943F1F00893;
+	Tue,  9 Jun 2026 06:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780985559;
-	bh=C5Pe2cLn4crcljr3sJVEvV1sUygn/HIYPWL9+kPHbLI=;
+	s=k20260515; t=1780985645;
+	bh=k89+UKXIdU7yTbUn3YhJMTqC1uOd1xqD4j8ULcgl3nk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=U8c4FQnSHCII0c7GWTdieRgfVNRsExoU6cdt1PyVMPof7sBjseuEk2j/3M6GyqqAX
-	 1s2mJ8xlMvhrpdDIFxJvJgAysV9AfKxiFSgfsuMSCPOXe0WA7dwB2RQwkGM/uBZ0lt
-	 bQPCCiDuSVNSijmtv7DyOSdh4vNcXq8NSN10ucDSFQ7ihN7PXVKWYGo9NQfYk+Z2IE
-	 K1EnLeX9qjFdeL3+GGskGK0rAvN90y5WF1eLWMfAkBzse3AUm6K3NR4WEwPNN4o3ej
-	 7woPU2m3Xdk+03qy236AyQjd8R/xqcPYGLVPfyv59dmH07FsM33yxhNgt4IkeufUds
-	 wa4Po3Kwk3m0Q==
+	b=eRwrptiLCKJegNGDJINBzAAEDQjTcw+h9AFuNYyHQvbjfi7k3GNS7HeKAkvPOcG+s
+	 GFQpWeHhHYGkqeajdp+CQmbJJDWAaXC1xwy8bmrljpaya6XPd6giRSnW7iptXNIKhs
+	 VgfVXL4cEuzona4iWbWoKwDJ7GfjO8i4hIoVXINkAEPmd89Svs5oKjPe+wax1R+eCD
+	 4u39QLfr7hK1DfhYDXugMfXI50aIxwlpjfaXc2zQZMUCHXu1p0tlUeGP7hdnSHaKJ0
+	 1h8IAfNKrpIMj96th11D4A/MkgZGVWcrcxYt8ugSLbMeqDJixpYwh6/AoDaOvRSCha
+	 fXMdS35YpHkoA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 09/21] dt-bindings: riscv: add Counter delegation ISA
- extensions description
+Subject: Re: [PATCH v6 08/21] RISC-V: Add Ssccfg/Smcdeleg ISA extension
+ definition and parsing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Atish Patra" <atish.patra@linux.dev>
-Cc: conor+dt@kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20260608-counter_delegation-v6-9-285b72ed65a9@meta.com>
-References: <20260608-counter_delegation-v6-9-285b72ed65a9@meta.com>
+Cc: robh@kernel.org, linux-perf-users@vger.kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20260608-counter_delegation-v6-8-285b72ed65a9@meta.com>
+References: <20260608-counter_delegation-v6-8-285b72ed65a9@meta.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 06:12:38 +0000
-Message-Id: <20260609061239.160901F00893@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 06:14:04 +0000
+Message-Id: <20260609061405.1943F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Incorrect dependency for smcdeleg: depends on sscsrind instead o=
-f smcsrind.
-- [Medium] The ssccfg extension is over-constrained by strictly requiring s=
-mcntrpmf.
-- [Low] Contradictory description for the smcdeleg extension.
+- [High] Supervisor extension Ssccfg incorrectly depends on Machine extensi=
+on Smcdeleg, breaking virtualization.
+- [Medium] The Smcdeleg extension validation incorrectly checks for the Sup=
+ervisor-level CSR indirection extension (SSCSRIND) instead of the Machine-l=
+evel one (SMCSRIND).
 --
 
-commit 53fb261803de68f9caaa685d63588c9cac6c0f5c
+commit 53e139b078ec8b41f58b09bfd3d37e7132a15d45
 Author: Atish Patra <atishp@rivosinc.com>
 
-dt-bindings: riscv: add Counter delegation ISA extensions description
+    RISC-V: Add Ssccfg/Smcdeleg ISA extension definition and parsing
 
-This commit adds device tree binding descriptions for the Smcdeleg and
-Ssccfg RISC-V ISA extensions. It also specifies the conditional dependencies
-required for these extensions to pass schema validation.
+This commit adds definitions and parsing logic for the RISC-V Ssccfg
+and Smcdeleg ISA extensions. It introduces validation functions for
+both extensions and adds them to the riscv_isa_ext array.
 
-> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
-cumentation/devicetree/bindings/riscv/extensions.yaml
-> index ece3edccee42c..2845e8e2999a7 100644
-> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> @@ -181,6 +181,13 @@ properties:
->              changes to interrupts as frozen at commit ccbddab ("Merge pu=
-ll
->              request #42 from riscv/jhauser-2023-RC4") of riscv-aia.
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
+e.c
+> index 1452521d740a6..1fe647e035157 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -330,6 +330,27 @@ static const unsigned int riscv_a_exts[] =3D {
+>  	RISCV_ISA_EXT_ZKNE,	\
+>  	RISCV_ISA_EXT_ZKNH
 > =20
-> +        - const: smcdeleg
-> +          description: |
-> +            The standard Smcdeleg supervisor-level extension for the mac=
-hine mode
-
-[Severity: Low]
-This isn't a bug, but should this say machine-level instead of
-supervisor-level? Since it has an Sm prefix and is meant for machine mode,
-calling it a supervisor-level extension might be a copy-paste typo.
-
-> +            to delegate the hpmcounters to supervisor mode so that they =
-are
-> +            directly accessible in the supervisor mode as ratified in the
-> +            20240213 version of the privileged ISA specification.
-
-[ ... ]
-
-> @@ -1135,6 +1150,36 @@ properties:
->              allOf:
->                - const: zilsd
->                - const: zca
-> +      # Smcdeleg depends on Sscsrind, Zihpm, Zicntr
-> +      - if:
-> +          contains:
-> +            const: smcdeleg
-> +        then:
-> +          allOf:
-> +            - contains:
-> +                const: sscsrind
-
+> +static int riscv_ext_smcdeleg_validate(const struct riscv_isa_ext_data *=
+data,
+> +				       const unsigned long *isa_bitmap)
+> +{
+> +	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_SSCSRIND)=
+ &&
+                                                        ^^^^^^^^^^^^^^^^^^^=
+^^^
 [Severity: Medium]
-Does smcdeleg actually depend on sscsrind here?
+Since Smcdeleg is a Machine-mode extension, shouldn't its validation depend=
+ on
+the Machine-level CSR indirect access extension (SMCSRIND) rather than the
+Supervisor-level extension (SSCSRIND)?
 
-Since smcdeleg is a machine-mode extension that uses M-mode indirect CSRs to
-delegate counters, shouldn't it depend on the smcsrind extension instead of
-sscsrind? If a valid hardware configuration implements smcsrind and smcdeleg
-without sscsrind, would this schema incorrectly reject it?
+If the kernel runs in M-mode, or on hardware that implements SMCSRIND but n=
+ot
+SSCSRIND, this validation might incorrectly fail.
 
-> +            - contains:
-> +                const: zihpm
-> +            - contains:
-> +                const: zicntr
-> +      # Ssccfg depends on Smcdeleg, Sscsrind, Zihpm, Zicntr, Sscofpmf, S=
-mcntrpmf
-> +      - if:
-> +          contains:
-> +            const: ssccfg
-> +        then:
-> +          allOf:
-> +            - contains:
-> +                const: smcdeleg
-> +            - contains:
-> +                const: sscsrind
-> +            - contains:
-> +                const: sscofpmf
-> +            - contains:
-> +                const: smcntrpmf
+> +	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZIHPM) &&
+> +	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZICNTR))
+> +		return 0;
+> +
+> +	return -EPROBE_DEFER;
+> +}
+> +
+> +static int riscv_ext_ssccfg_validate(const struct riscv_isa_ext_data *da=
+ta,
+> +				     const unsigned long *isa_bitmap)
+> +{
+> +	if (!riscv_ext_smcdeleg_validate(data, isa_bitmap) &&
+> +	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_SMCDELEG))
 
-[Severity: Medium]
-Is smcntrpmf a strict requirement for ssccfg?
+[Severity: High]
+Does this break supervisor counter delegation in virtualized environments?
 
-The ssccfg extension provides supervisor-mode access to delegated counters,
-but the kernel implementation seems to only conditionally expose
-cyclecfg/instretcfg CSRs if smcntrpmf is present. If ssccfg can exist
-independently, will requiring smcntrpmf in this binding incorrectly fail
-validation for valid hardware that omits it?
+Smcdeleg is a Machine-mode extension, and hypervisors typically do not expo=
+se
+M-mode extensions to guest VMs. A guest kernel running in VS-mode won't see
+Smcdeleg in its ISA string, causing this validation to unconditionally fail
+and return -EPROBE_DEFER.
 
-> +            - contains:
-> +                const: zihpm
-> +            - contains:
-> +                const: zicntr
+Should Ssccfg validation only depend on S-mode visible extensions?
+
+> +		return 0;
+> +
+> +	return -EPROBE_DEFER;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608-counter_de=
-legation-v6-0-285b72ed65a9@meta.com?part=3D9
+legation-v6-0-285b72ed65a9@meta.com?part=3D8
