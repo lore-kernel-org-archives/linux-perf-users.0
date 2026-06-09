@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBF034250E;
-	Tue,  9 Jun 2026 05:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27D9382F1E;
+	Tue,  9 Jun 2026 05:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780981695; cv=none; b=XPb9k/AkIv+NFFvUVERwjO0DEYwpBNsGw8NP65rkfsxczsAJr9lir5pDBZPqeQyKgfBY+DcQc6EzLjloTEHCH9o2SoUeG6Fy5s0BQX0mP8ywaFgpC48FaW98VbmuMbX5sw61OyHGhUkHXHbJGxPemktddzkk0iNnn6ex+ZorjmE=
+	t=1780981699; cv=none; b=BshoyF50uf8U/uh9xb8J9w5uwGCjOPx2yEyx/fkWY/ChNZ4+cWwUwj6WA8skwgnubqW1wuw9ZiaZhOwHLywQ404uMmPDqR07FjAxz1jEmqaiZlCA/K75OIXbeLmAO/8ILk9MfWvMADblV5Q4I51vI0lQmakM+Cp/s/rMytr4TP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780981695; c=relaxed/simple;
-	bh=/HMpJYUnRjLOLb0b3XgXdYUsgp3rc8FEEUh5u0chOs4=;
+	s=arc-20240116; t=1780981699; c=relaxed/simple;
+	bh=0opGLz58tqOBQk0g3QkpKG/34nOsQ+Ls31VCt62BZAM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mR+I3Lzzxtmoovjc8EIkYzKL9rgayz4FksRQyCzMSJYP3JR/kIT/YFKA6gtLrilURceCIgv13YpjIEKiwVMuXKu7g7Ep00uFo8w/k7ltsxzjzJD/on9sLyUlNFNIA9lW0Y1Tn0Mkt1yFs3nmDhtcT00RXMu+jleDDZBudyUwC/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oAOoTV/r; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=I3wkLCiW3YP/f5CdlNJ0Hj2wzYTjLaMmkvtgMaMT8V32QTQwkg9ziWCvH5HHjqHhCGijdy+m1JyRwOEo1lO8cpfkWJ0vvYsetz/lSvCvuOoXC15jzhAe5Ofh2N9wdVR4DHxE8aiAT28eMmChUqIW59kQ8HR+r6PxG5+WiqKVfKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lY4BN1mI; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oAOoTV/r"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lY4BN1mI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780981694; x=1812517694;
+  t=1780981699; x=1812517699;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/HMpJYUnRjLOLb0b3XgXdYUsgp3rc8FEEUh5u0chOs4=;
-  b=oAOoTV/r9yimXFtFG+/SVUC9yIGBCnejDucRANl9HARgUy/KSCUf3NET
-   V8Ljspn7Sj6BoJeAhUyuR7TTY0xq9r5pmHGQRK039/VCH/+BCtnMFnony
-   Gmlc282JrnuXvgDeXstaFb1fXtiolAziNH0xA+8SYizWt7F4xyC3f3ae4
-   6YKJd4Z0fy/wgcF8QRSzBllkV0xVHtB2N2bEsr4eNIuETaoZ64SDSuR6F
-   U170Rwiw/VFxiLnz/Z3u+a3IJfxLdHisCxo6KgZJam6ugN0oMrc9uiIU+
-   u2rwpbH0SXIa4o/rMN8r6sJ+C8V4wpmCsly0aPINMMaSHEhEfgJdioz4f
-   w==;
-X-CSE-ConnectionGUID: hMFmGAmtSlul/S8DgdCplQ==
-X-CSE-MsgGUID: gszq5vlzSQeiAma6GVdk2g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="81586199"
+  bh=0opGLz58tqOBQk0g3QkpKG/34nOsQ+Ls31VCt62BZAM=;
+  b=lY4BN1mIFyXJE4MxUHY4yYp8ot5MnKNakfFQ8x5n8EECIZPNTS2DEdZ7
+   9/g0d45mkOIQWkOodkjfugsHP6QZLDVOZDFp0JBkZPHS6EtK6jUIbYB9W
+   Iu0XG+phD6WjrmmX2Drj/6kRdEo4nfFKOPmowiG3BVMzuh5NY5tBtQQe9
+   MudnoG1VVddL2zBN2+2c9AeqEzrXADIID1VVWrWXJPW8hfjEHdq1c+OVW
+   ZMjOJpGbjneCtDOCR+58euTUnt1YjkJ4fum/1AoML07wtr1T8FQgoYq6c
+   N0weIuHzttB2C2O5GvlR8VHugjD+GcWihi7qv+d1ZzOIdfaMPO8JEmbqE
+   Q==;
+X-CSE-ConnectionGUID: PJw/d0kCQlK93ksL5wm4mA==
+X-CSE-MsgGUID: 4zHON8w+SbSfqVSRSJqjRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="81586206"
 X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="81586199"
+   d="scan'208";a="81586206"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 22:08:14 -0700
-X-CSE-ConnectionGUID: X02cEoFDQR+t35v8rXsEgg==
-X-CSE-MsgGUID: cPBOwXGcRJCT6qXQ8KlLqA==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 22:08:18 -0700
+X-CSE-ConnectionGUID: l+nGj0DoRLeLmDqdMOLfzQ==
+X-CSE-MsgGUID: VXgNcThnQdqGw6Hh7LvXVA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="283838937"
+   d="scan'208";a="283838940"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa001.jf.intel.com with ESMTP; 08 Jun 2026 22:08:10 -0700
+  by orviesa001.jf.intel.com with ESMTP; 08 Jun 2026 22:08:14 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -61,9 +61,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Mark Rutland <mark.rutland@arm.com>
-Subject: [Patch v2 8/9] perf/core: Fix kernel register info leak via hardware skid
-Date: Tue,  9 Jun 2026 13:02:21 +0800
-Message-Id: <20260609050222.2458129-9-dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 9/9] perf/core: Check kernel access when kernel callchains are requested
+Date: Tue,  9 Jun 2026 13:02:22 +0800
+Message-Id: <20260609050222.2458129-10-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
 References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
@@ -75,20 +75,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-An unprivileged hardware perf event using exclude_kernel=1 can leak kernel
-register data to user space via PERF_SAMPLE_REGS_INTR or PERF_SAMPLE_IP.
-Due to hardware skid, a PMI may trigger after the CPU has already entered
-kernel space (Ring 0), bypassing the perf_allow_kernel() privilege
-barrier.
+perf_event_open() currently gates perf_allow_kernel() only on
+!attr.exclude_kernel.
 
-This security vulnerability is severely exacerbated by upcoming support
-for SIMD register sampling via XSAVES, which could expose sensitive kernel
-FPU states (such as active cryptographic keys).
+However, users can still request kernel callchain collection with
+attr.exclude_callchain_kernel == 0 even when attr.exclude_kernel == 1.
+That still requires kernel profiling privilege, but the existing check
+does not enforce it.
 
-Fix this by ensuring that sampled register data is dropped if the event's
-exclude_kernel attribute is set but the PMI catches the CPU in kernel mode.
+Update the permission check to call perf_allow_kernel() when either
+kernel sampling is requested or kernel callchains are requested.
 
-Link: https://lore.kernel.org/all/20260529085613.CCAFB1F00893@smtp.kernel.org/
+This keeps permission checks aligned with requested data and prevents
+unprivileged use of kernel callchain capture.
+
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -97,73 +97,24 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Ian Rogers <irogers@google.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- kernel/events/core.c | 37 ++++++++++++++++++++++++++++++-------
- 1 file changed, 30 insertions(+), 7 deletions(-)
+ kernel/events/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7935d5663944..1bde029eeca7 100644
+index 1bde029eeca7..57c9fd640cf5 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -7763,10 +7763,20 @@ unsigned long perf_misc_flags(struct perf_event *event,
- unsigned long perf_instruction_pointer(struct perf_event *event,
- 				       struct pt_regs *regs)
- {
--	if (should_sample_guest(event))
--		return perf_guest_get_ip();
-+	/*
-+	 * Hardware skid can lead to a scenario where a PMI is
-+	 * delivered after the CPU has already entered kernel mode.
-+	 * In that case, user-space sampling must not expose kernel
-+	 * register state.
-+	 */
-+	if (should_sample_guest(event)) {
-+		return event->attr.exclude_kernel &&
-+		       !(perf_guest_state() & PERF_GUEST_USER) ?
-+			0 : perf_guest_get_ip();
-+	}
+@@ -13895,7 +13895,9 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	if (err)
+ 		return err;
  
--	return perf_arch_instruction_pointer(regs);
-+	return event->attr.exclude_kernel && !user_mode(regs) ?
-+		0 : perf_arch_instruction_pointer(regs);
- }
- 
- static void
-@@ -7800,10 +7810,22 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
- }
- 
- static void perf_sample_regs_intr(struct perf_regs *regs_intr,
--				  struct pt_regs *regs)
-+				  struct pt_regs *regs,
-+				  bool exclude_kernel)
- {
--	regs_intr->regs = regs;
--	regs_intr->abi  = perf_reg_abi(current);
-+	/*
-+	 * Hardware skid can lead to a scenario where a PMI is
-+	 * delivered after the CPU has already entered kernel mode.
-+	 * In that case, user-space sampling must not expose kernel
-+	 * register state.
-+	 */
-+	if (exclude_kernel && !user_mode(regs)) {
-+		regs_intr->abi = PERF_SAMPLE_REGS_ABI_NONE;
-+		regs_intr->regs = NULL;
-+	} else {
-+		regs_intr->regs = regs;
-+		regs_intr->abi = perf_reg_abi(current);
-+	}
- }
- 
- 
-@@ -8694,7 +8716,8 @@ void perf_prepare_sample(struct perf_sample_data *data,
- 		/* regs dump ABI info */
- 		int size = sizeof(u64);
- 
--		perf_sample_regs_intr(&data->regs_intr, regs);
-+		perf_sample_regs_intr(&data->regs_intr, regs,
-+				      event->attr.exclude_kernel);
- 
- 		if (data->regs_intr.regs) {
- 			u64 mask = event->attr.sample_regs_intr;
+-	if (!attr.exclude_kernel) {
++	if (!attr.exclude_kernel ||
++	    ((attr.sample_type & PERF_SAMPLE_CALLCHAIN) &&
++	     !attr.exclude_callchain_kernel)) {
+ 		err = perf_allow_kernel();
+ 		if (err)
+ 			return err;
 -- 
 2.34.1
 
