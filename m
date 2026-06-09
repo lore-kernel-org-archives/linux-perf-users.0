@@ -1,129 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8AEB2E7BD3
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 16:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8921A3BCD23
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 16:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781023730; cv=none; b=BlLP1N1+vO3BEyDtIXcBjpgZPUSNBQJzjbG+p/x/FRVW57JfFWiyMhCxiYstJUkF+dZhz2T7cUNBjDxcv8cXZBz6wRZOjX+HLiZS09EloxEygdX2P79HdnWavlitaICdKjZH3JpM5jNoauta6ViJIFyx5KA7fE1sgAO7va0QRPk=
+	t=1781024254; cv=none; b=JwWUHRvvO1rCiFlaDIzmjga7VK7OO6AecJAZQmJedZT2qRtv7O5n+jq1YdlKgTr0pjQcHQkHsIfQIk4WjYQfmqTpFpowS9xsqn7TalQNSu8EN3NTLHtC1MJuXAWiI6JUik7z1yeIPW8T22efjdCIFXnApbIKk76e5dk1qrOlTGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781023730; c=relaxed/simple;
-	bh=L3NEGNUh5XiMl7m6RjMDGg3mgx59lSadjT3bT6qOpy0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hkFRLmWC4GVjJU5TD4wx+BYRvvECHxcGwLWRgcFy6v86kPxwjvewGjslTsus4DnxKA1Fa3WKt41CS0C10lUQGn81wc2xEiQvHp4gWs+G15YHByF0w/bd6Aygp6igl8xTpGvjICPT+y4OOn752GPD3spJLPa97142qUQl3Blvb68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccj/n1wf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781024254; c=relaxed/simple;
+	bh=j9rAu2ch3U0PopGp2J2OtpKMyKPvVhnNhyR4tZXXCII=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=cJia4zzGUo4ibc1WB5bZwd5qPFpFcLFYtYEDuE4EeWuBGaFsu7Yaas61JOOCELa1q5DgQvIZ1uvqRAek5iiP8pht7yXqXz2cIYrMm1GmjmLvCgnmjWuA2MK6rah0Y7m/ZUDxmZLSUnluy2wmn9j5CDtOWxOHeqYSp+LdMMsR/tU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aXYNsfiq; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccj/n1wf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE6B1F00898;
-	Tue,  9 Jun 2026 16:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781023729;
-	bh=u6DfgYB/kjoYIlPbnIcl0KBiav8nPGx697XbzASoSAw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ccj/n1wfr4Y6f0FyYcT6KXPxyDnPV7dlRpyEQ/eI/qkmqmL6lakWsZ9LeUNAQdIA4
-	 oHS+cRm+ZptM5a9StA/ZHb8VSQKQ7cBSIeNpAlzhIwWtuD8LVguIi1GmzLRUjqkb3l
-	 KFU+8l5kz+Zm3bhjm0BsCSblIwJotSN01gH0vPQS+bkZ69htsuIkn1ykrMYpez22Iy
-	 nIUc2zriVJqlfOoRt41BgREcqw9Ct0Xs0Q1GhwrumbniLDe5Shhwtgdwob+lv7ZJVw
-	 yrYFoXfY6NHWOkKH+Pc9wjujJ5d6Y3QO6rDkdMzMZBPOB/8MYL6u5PhsjnHP7p20D2
-	 wf8bGcluzVS8w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 18/19] perf test cs-etm: Speed up disassembly test
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260609-james-cs-context-tracking-fix-v5-18-d53a7d096a19@linaro.org>
-References: <20260609-james-cs-context-tracking-fix-v5-18-d53a7d096a19@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 16:48:48 +0000
-Message-Id: <20260609164849.6CE6B1F00898@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aXYNsfiq"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304d8613efbso5862049eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jun 2026 09:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781024253; x=1781629053; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2MaddhjZSLJjQwBreN2wO4fD/cwTQ9BQwJgEVkkOTsM=;
+        b=aXYNsfiqhrreXKHQ48e4kRTZXBQgQrHPsHrrk5bbC086gbaPMT41yRkSCpY+OzIp/U
+         Zz2NPyLIxvNUptLKnocAIAKcRumfiU29RUa6KT/6TnTkEyZnE7aHLeWt69/6oYCqw7PF
+         ODcScB9Rpc8Av7K1gLNt1WA7TxRUgyAWOlUbJ4jRXvTDJimD4BEbAjlUgQ8zrATCWsCe
+         TjXCo7jh3dmlWNEBcV00sRu80XTZnojSdh6lfIs+5EV2yt8G6RtG/EuYsMg1tTRVvYhY
+         NgaiJs+ctKrYQBOjdMLafwDTg9IZ2co8fwbe9qyeXVz+GMomVpGkMnlBoLJ0jYSbWD9h
+         q0HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781024253; x=1781629053;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2MaddhjZSLJjQwBreN2wO4fD/cwTQ9BQwJgEVkkOTsM=;
+        b=rt09p281vc/3ShuOmXjcLgOA82iz3cX+JGlWlSH1R5D6jl5vHUU7aICGiCanoYx1da
+         RzaqiPC8uWG9PMJ7+LZga+lPkfhb6q52Gn+duWQ4W5zo75BNL638nOWcC3d4df8eX5Ay
+         IBEJOBVsu1eAcJ6gBPfu8zyD0YQ5J6k3P6X2kBNNbmumP2xo9zdbWHutYAmdQkxgPlhS
+         LS1dmA8Ss+UhEpU6xZQSbtkhmUqLJoPge53bHbCBQZ6Cs3WxvnZphtd5Z4k2TLFv7Kvp
+         q3W3073HeE0GynT/lDF8/Y5qi2cnPs/lQqUASZ9anFItOl8ue+dibENnuNqZLiqOUr3A
+         sF/g==
+X-Forwarded-Encrypted: i=1; AFNElJ/TeYEfkfu9uIzKwJhUzo5drA0wrDOU9MTZ1QfD2aUkezBVsAyumWx1N7RxnaJxWLJ0DrNr1C0l+/6JuWH9YWKw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs5LQgYDFJzDq/Hn4ODHMOwaCczsplAziS/vZJ0S3qxlk4TSN2
+	AFLvyV8jv0qNt/qQsDTBcwRzqr5k/WKTxrZkOd+mg8hkyq+VcgBcer6C/tw7v+7UmvltH+42141
+	sKeVeUreRQQ==
+X-Received: from dybpk17.prod.google.com ([2002:a05:7301:4291:b0:303:c230:ac8f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:3b06:b0:2ed:e14:e954
+ with SMTP id 5a478bee46e88-3077b8014d6mr11298822eec.30.1781024252274; Tue, 09
+ Jun 2026 09:57:32 -0700 (PDT)
+Date: Tue,  9 Jun 2026 09:57:23 -0700
+In-Reply-To: <20260609070348.541964-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260609070348.541964-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
+Message-ID: <20260609165726.786694-1-irogers@google.com>
+Subject: [PATCH v2 0/3] perf pmu: Add tool-provided NVMe PMU
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, yuzhuo@google.com
+Cc: 9erthalion6@gmail.com, acme@kernel.org, adrian.hunter@intel.com, 
+	alexandre.chartre@oracle.com, ashelat@redhat.com, german.gomez@arm.com, 
+	james.clark@linaro.org, jolsa@kernel.org, leo.yan@arm.com, 
+	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, mjeanson@efficios.com, 
+	namhyung@kernel.org, peterz@infradead.org, tglozar@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Reducing `--stop-sample` to 2 causes extreme test flakiness due =
-to sample exhaustion and limited branch coverage.
---
+This patch series introduces a tool-provided PMU for NVMe devices to expose
+various hardware logs as perf events.
 
-commit ef4a0ff67bea24ddbc6e5c1bb7bfc2c172bd783d
-Author: James Clark <james.clark@linaro.org>
+Using libnvme, the new nvme_pmu extracts metrics from standard NVMe log pages
+including:
+- SMART / Health Information (e.g. data units read/written, power cycles,
+  temperature)
+- Endurance Group Information
+- FDP (Flexible Data Placement) Statistics
+- Error Information
+- Zoned Namespaces (ZNS) Changed Zones
 
-perf test cs-etm: Speed up disassembly test
+Changes in v2:
+- Fixed feature check: added test-libnvme.c to test-all.c to correctly
+  propagate fast-path discovery failures.
+- Makefile cleanup: added libnvme to FEATURE_PKG_CONFIG in Makefile.feature
+  to ensure correct pkg-config flags are used during feature testing.
+- Alignment safety: replaced strict-aliasing pointers with get_unaligned_le*
+  accessors inside nvme_pmu__read_val() to prevent crashes on strict-alignment
+  architectures.
+- Heap safety: refactored evsel delta snapshots to use a new 'nvme' union
+  member inside struct evsel instead of clashing with evsel->priv, preventing
+  memory leaks and heap corruption with active tools like perf script.
 
-This commit limits the amount of trace to decode by using exit snapshots
-and reduces the objdump sample limit from 30 to 2 to speed up the
-disassembly test.
+Ian Rogers (3):
+  perf build: Add libnvme feature detection
+  perf pmu: Implement tool-provided NVMe PMU
+  perf tests: Add NVMe PMU event parsing test
 
-> diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/=
-perf/tests/shell/test_arm_coresight_disasm.sh
-> index f78dfb6bf73e3..f2fb1aa92252a 100755
-> --- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-> +++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
-> @@ -43,9 +43,9 @@ branch_search=3D'[[:space:]](bl|b(\.(eq|ne|cs|cc|mi|pl|=
-vs|vc|hi|ls|ge|lt|gt|le|al)
->  ## Test kernel ##
->  if [ "$(id -u)" =3D=3D 0 ] && [ -e /proc/kcore ]; then
->  	echo "Testing kernel disassembly"
-> -	perf record -o ${perfdata} -e cs_etm//k --kcore -- touch $file > /dev/n=
-ull 2>&1
-> +	perf record -o ${perfdata} -e cs_etm//k --kcore -Se -m,64K -- touch $fi=
-le > /dev/null 2>&1
->  	perf script -i ${perfdata} -s python:${script_path} -- \
-> -		-d --stop-sample=3D30 -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${=
-file}
-> +		-d --stop-sample=3D2 -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${f=
-ile}
+ tools/build/Makefile.feature       |   5 +-
+ tools/build/feature/Makefile       |   3 +
+ tools/build/feature/test-all.c     |   5 +
+ tools/build/feature/test-libnvme.c |  11 +
+ tools/perf/Makefile.config         |  12 +
+ tools/perf/tests/Build             |   1 +
+ tools/perf/tests/builtin-test.c    |   1 +
+ tools/perf/tests/nvme_pmu.c        | 176 ++++++++++
+ tools/perf/tests/tests.h           |   1 +
+ tools/perf/util/Build              |   1 +
+ tools/perf/util/evsel.c            |  13 +-
+ tools/perf/util/evsel.h            |   4 +
+ tools/perf/util/nvme_pmu.c         | 537 +++++++++++++++++++++++++++++
+ tools/perf/util/nvme_pmu.h         | 143 ++++++++
+ tools/perf/util/pmu.c              |  15 +
+ tools/perf/util/pmu.h              |   8 +-
+ tools/perf/util/pmus.c             |  31 +-
+ tools/perf/util/pmus.h             |   1 +
+ 18 files changed, 960 insertions(+), 8 deletions(-)
+ create mode 100644 tools/build/feature/test-libnvme.c
+ create mode 100644 tools/perf/tests/nvme_pmu.c
+ create mode 100644 tools/perf/util/nvme_pmu.c
+ create mode 100644 tools/perf/util/nvme_pmu.h
 
-[Severity: Medium]
-Will this severe reduction in sample limit cause test flakiness?
+-- 
+2.54.0.1099.g489fc7bff1-goog
 
-Because sample index tracking in arm-cs-trace-disasm.py starts at -1,
-setting the limit to 2 allows exactly 3 samples to be processed. The
-script requires at least two branches events on the same CPU to invoke
-objdump, since the first event only initializes the cpu data.
-
-If a trace-on event or any instructions events are synthesized first,
-they will consume the limited sample count without ever triggering objdump.
-This could result in an empty disassembly output and a false negative
-failure from grep.
-
-Additionally, the branch regex lacks 32-bit return instructions like bx
-or blx. Previously, larger sample sizes hid this gap. Processing only one
-block might guarantee spurious failures on 32-bit systems if the block
-ends in an unlisted branch.
-
->  	grep -q -E ${branch_search} ${file}
->  	echo "Found kernel branches"
->  else
-
-[ ... ]
-
-> @@ -55,9 +55,9 @@ fi
-> =20
->  ## Test user ##
->  echo "Testing userspace disassembly"
-> -perf record -o ${perfdata} -e cs_etm//u -- touch $file > /dev/null 2>&1
-> +perf record -o ${perfdata} -e cs_etm//u -Se -m,64K -- touch $file > /dev=
-/null 2>&1
->  perf script -i ${perfdata} -s python:${script_path} -- \
-> -	-d --stop-sample=3D30 2> /dev/null > ${file}
-> +	-d --stop-sample=3D2 2> /dev/null > ${file}
-
-[Severity: Medium]
-Are userspace disassembly tests similarly affected by this sample
-exhaustion?
-
-Like the kernel test above, reducing the limit to 2 might not process
-enough events to trigger objdump if trace-on or instruction events are
-encountered first.
-
->  grep -q -E ${branch_search} ${file}
->  echo "Found userspace branches"
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609-james-cs-c=
-ontext-tracking-fix-v5-0-d53a7d096a19@linaro.org?part=3D18
