@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E44330CDB6;
-	Tue,  9 Jun 2026 01:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E2D30CDB6;
+	Tue,  9 Jun 2026 01:06:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780967165; cv=none; b=I6rlSCRBoVHlUteRpdmIWDQRmGOLwchYYa4W7iQdDfeyXioF+BwTTCqHK89E6u/tJF4KtnN5Iks/CWo2gr8FQUbIahIqe+FNas7voFmOSAi5Oo4xdKcbljdaikmvgjqOnFS08AOmoFstbPyBqkX4ryqTHXzro9HViGKcbPUD+fQ=
+	t=1780967168; cv=none; b=kUInD5i1paFPRgJYzSytdSHjUQL6229daoi2BEEoJQ2sL5vDGqIYQpZFqgJ/uCHTMuSk3cukYyzsH629ii9JJno/OgbD73rzpEomPbobkf2hYFTaN2BoFbYv3cnMn5PxXiy/+tgYXlE8CvyKZUz131PO6QgBXHgI+ho8+jDz1HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780967165; c=relaxed/simple;
-	bh=0ZkG9lJ93rQ6OkApVo1qEuoMs9PIleG2eZHndPbPSes=;
+	s=arc-20240116; t=1780967168; c=relaxed/simple;
+	bh=/Z5LiUCuhlMu4aHE9dt/dvDudINzTIXzQYGOU3CXi5c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EW5qR+ZmKB/VWf3/xoDXy9HtcsZGd73KgGxEJdRZ34/KYBJXuzgdVUFcsR7nPiE0Kdbukrg+QsNPlDIrANRQheoii3SR4LLaYijkxNO4oy4r7yxsrtGK5643WR0pDvMeDQgGpHW/fuZkdj3BuxH9RQYpSuWU/eXNc6gGcfar91A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sk3TvCzV; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=INDPj1HzciYIOlKW+hirXJpxN9fDFuSJcpVD5MYSoIYyF/ICHPits5bt8/Ky0lZh7tH4R6fqxgiUJyyVpKop3KDoQUxil6Uob1kHQ7OnT7zkfL92ro+1O1R36csFFnyKqORr7L/SbuDRuk1KFAG8pumXlkk9In9rwve+IbYeFy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TI//E+ci; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sk3TvCzV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F501F00893;
-	Tue,  9 Jun 2026 01:06:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TI//E+ci"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 422661F00898;
+	Tue,  9 Jun 2026 01:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780967163;
-	bh=8wUECwBStxE4t2rg+cS/WhlOkm3lJ8LcJsyOnDKZErU=;
+	s=k20260515; t=1780967167;
+	bh=xPOd5l/FQtVQSkuZbsIYVpu5CaTNTCJKbbqXyN1aq10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Sk3TvCzV5pcUirx/l2hOIyCb6ncRGeqakm22FqLVyyJHKBVc7mUB0s+QzpmTU9cPB
-	 7XrWby4Afaxj7mp+0LoD+7L4zk/sE2+8d3a7Ph9W+ZV0SAK4zymnX9xcdZOaiapJ9n
-	 lJSykvHtV0h3vmQMxdVQsmc25NfFCnAt4w3GvJXFWbeS38tjygxxuwl9ckLRmOiUOW
-	 PnbcR38RQt7PwD0rtRFhjDyDc22WtzQU+rz8nlC+U9TvyCE1geDIsxjLC018Pp2GnQ
-	 B3YfpjTO0/IFfXxmXVQmLw7liF48rdQgFdG/edbFTEoIK7k9vj5pBWIXlqXbnbwWL0
-	 wmG/H5z/UmJWA==
+	b=TI//E+cirZehSD7YXTdmAf02Yfrl111Gl0eGolC2TbLgJtWyf9d+qMoqi7y+GWExh
+	 IV4yYf02fX3d4M40MAYSIg3L8RmicdgJ68TDCl9KvDWymUrjFbsOOCsD7NwV9Sy6I/
+	 0gxP4Kf0MseeRlIkKt8gM8CWOrOdxS3T82DdxV+WwVdodXCZvkBIPnjlrrtqhgLhwl
+	 X7uiI6R8ofzFMgq3F7ssIeWoPJSorMYWVoQH26Cijhz0onHuiQGFXEZzCtCT8bMEQl
+	 woZqXiJFRu5gIKLbcWFcRTKOu2dGFbZQcK5wKLr99B+GiFS816ukWPHxoBpDVcwF6u
+	 P4tNOdu2mPe5Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Song Liu <song@kernel.org>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 08/11] perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
-Date: Mon,  8 Jun 2026 22:05:22 -0300
-Message-ID: <20260609010526.1998472-9-acme@kernel.org>
+Subject: [PATCH 09/11] perf hists: Fix snprintf() in hists__scnprintf_title() UID filter path
+Date: Mon,  8 Jun 2026 22:05:23 -0300
+Message-ID: <20260609010526.1998472-10-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260609010526.1998472-1-acme@kernel.org>
 References: <20260609010526.1998472-1-acme@kernel.org>
@@ -57,60 +56,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Both functions accumulate formatted output via ret += snprintf(buf + ret,
-size - ret, ...).  If the buffer is too small and snprintf() returns more
-than the remaining space, ret exceeds size and the next 'size - ret'
-underflows, causing snprintf() to write past the buffer end.
+hists__scnprintf_title() accumulates formatted output into a buffer
+using scnprintf() for all filter clauses except the UID filter, which
+uses snprintf().  If the buffer fills up and snprintf() returns more
+than the remaining space, printed exceeds size and the next 'size -
+printed' underflows, causing later scnprintf() calls to write past
+the buffer.
 
-Switch to scnprintf() which returns the actual number of bytes written,
-making the accumulation safe.
+Switch the UID filter clause to scnprintf() to match the rest of the
+function.
 
-Fixes: 7b612e291a5affb1 ("perf tools: Synthesize PERF_RECORD_* for loaded BPF programs")
+Fixes: 25c312dbf88ca402 ("perf hists: Move hists__scnprintf_title() away from the TUI code")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Song Liu <song@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-event.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ tools/perf/util/hist.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index a27945c279efb779..2c09842469f1f28c 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -36,7 +36,7 @@ static int snprintf_hex(char *buf, size_t size, unsigned char *data, size_t len)
- 	size_t i;
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 811d68fa6770c5b7..df978c996b6c2262 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -2963,9 +2963,10 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
+ 			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
  
- 	for (i = 0; i < len; i++)
--		ret += snprintf(buf + ret, size - ret, "%02x", data[i]);
-+		ret += scnprintf(buf + ret, size - ret, "%02x", data[i]);
- 	return ret;
- }
  
-@@ -140,7 +140,7 @@ static int synthesize_bpf_prog_name(char *buf, int size,
- 	const struct btf_type *t;
- 	int name_len;
- 
--	name_len = snprintf(buf, size, "bpf_prog_");
-+	name_len = scnprintf(buf, size, "bpf_prog_");
- 	name_len += snprintf_hex(buf + name_len, size - name_len,
- 				 prog_tags[sub_id], BPF_TAG_SIZE);
- 	if (btf) {
-@@ -153,9 +153,10 @@ static int synthesize_bpf_prog_name(char *buf, int size,
- 			short_name = info->name;
- 	} else
- 		short_name = "F";
--	if (short_name)
--		name_len += snprintf(buf + name_len, size - name_len,
--				     "_%s", short_name);
-+	if (short_name) {
-+		name_len += scnprintf(buf + name_len, size - name_len,
-+				      "_%s", short_name);
+-	if (hists->uid_filter_str)
+-		printed += snprintf(bf + printed, size - printed,
+-				    ", UID: %s", hists->uid_filter_str);
++	if (hists->uid_filter_str) {
++		printed += scnprintf(bf + printed, size - printed,
++				     ", UID: %s", hists->uid_filter_str);
 +	}
- 	return name_len;
- }
- 
+ 	if (thread) {
+ 		if (hists__has(hists, thread)) {
+ 			printed += scnprintf(bf + printed, size - printed,
 -- 
 2.54.0
 
