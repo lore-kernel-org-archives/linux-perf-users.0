@@ -1,180 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132C33D0924;
-	Tue,  9 Jun 2026 06:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5BA3CFF79;
+	Tue,  9 Jun 2026 06:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780985921; cv=none; b=skEnxYxcBCVf6IAOOtonSrOns6IvdNfm9vsii1bwzEDcsQm6UiZkRNcu+bqnRHw+QzcdubfvSST0VWj3NsmcjhRlhkfDfoMohr+3vG6eqhQ+FL/ddYcMsvTV9zv715vhbx0yPZTGDq1ttzWauAKmaWXejJYOQ99p3jVtqMFK5O0=
+	t=1780986024; cv=none; b=dpoPDirY1fw6VRs9kDa61lbMyQUahEYU9aztgLw7A9xVAcvAGHSlxZ35Gg0LDAwaRyaaj7encUJ/hGOVKSjbsizmMZarF6R0PiiVL//FG0BgYtWALE9q+NeSNukKpknCJqkF2HhE6ZucDf9zOHphyTVJK+iK4j8zSk6f9oRfHYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780985921; c=relaxed/simple;
-	bh=7KUJhKbfGfftEcjoYZn9xb2sQ8dkgLJeFWaSFHBhSqA=;
+	s=arc-20240116; t=1780986024; c=relaxed/simple;
+	bh=c5kmYxssNv2+QXBcadNsd7DLYqyE697n8amtj1pt1eI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GUy9D+C+5ofjC3Nh0L6jU+CR0fYhRsu9Age0T4fRwlu/0PTAx7SgWEiW7QjtQjKruXOD0hix+QwtxS6Ao8LbFcfYhxyiYLXnXf4EhCYRq/LeaglSvA9Mhlh5V/6UQAextp5yMuNdP4eWJDAxUnWrK7IPZNkH+B5ebG5kSBQiKeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+3G51xv; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=TxyR0WOr0dWU/bLUqY4y980sdCG6Rkz9fu+e1NJD0H70EvfPAhWWrocndz5YvkJBaZcSgfh0W5g8BkMdzgeWeIkiWkWxhxgal+AmPH3osAWU15L0yNrkoJVQhXqRWduOHOmLUV710Yy9PansFwiA8WRDNvkwnxZTg1NDtrgp16M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMOyw7g3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+3G51xv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70B9B1F00893;
-	Tue,  9 Jun 2026 06:18:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMOyw7g3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D53F1F00893;
+	Tue,  9 Jun 2026 06:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780985919;
-	bh=oyKW/W1KCCxAUnXLpvrza/LoeS+wlP4RZoHWDfluU1Q=;
+	s=k20260515; t=1780986023;
+	bh=GoL3sDyMYstwQ+9iJfrdUBueQBxXD/l/4UJapYSHDhM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=e+3G51xvIYLAgFBYZaEwSGDJJItZ9M1eYDtteln58GvaIXrcgF8YN05S+GJI4/5Uw
-	 LfvXMWZxthXtCDrfyO+ae7XvurC2DJg1GI6zO4gAR+nI2kme+goL5XP2JF2y6pihx8
-	 c/nsB0GD7ORbDC/+AnhbPWIW/3ppcd0Dcop2vjW5D7FfwCTwJmTVFqfiNkoFg+4N8N
-	 S3AlclCETo2nPkLlL2cIadDzWJyo74xNtYczKZ47JahqF5vl1YEM1B3hABNaMzh8aQ
-	 opIsx44Z6+SX/UZO3Y0fjM2t0le5rSmmPB2jAjvwCWrHuyxtqlNMYysAzoQOiKsDrs
-	 VjdeMA4DdkYTw==
+	b=nMOyw7g3punLJHEZRYLlgp8Ekjr/PPuiPAIZs8USNg0O32aT+GByOato/T5njXkX7
+	 DAtAK4/tQhOiGAZqg5zy17v56624fzYwc20g0vkFmCHv3CqZ3kiP0Xa4vD6z7v9xCa
+	 BhX3aQsu+nDqryN9pnj8S8BBxVUOMJ9M9I0PjPgccCd1ytpXD8ZxHlaZwnLSm92/MC
+	 GEeg1mzrCl3Ma1nVREHg+k9VHYm56qwvYiZ3AJzX5YxqFOpW9tgnmonmPo4XjfCXVU
+	 /PGWBtYbM6puGZBUgLatIYouCd1vuujQPJZE6q4W17cgvitJJ47vmoNEgLIi4Lp1Ri
+	 eqt9FHt6wQKlA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 10/21] RISC-V: perf: Restructure the SBI PMU code
+Subject: Re: [PATCH v6 21/21] TEST(do-not-upstream): fake qemu vendor JSON +
+ mapfile entry for CounterIDMask path
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Atish Patra" <atish.patra@linux.dev>
-Cc: linux-perf-users@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20260608-counter_delegation-v6-10-285b72ed65a9@meta.com>
-References: <20260608-counter_delegation-v6-10-285b72ed65a9@meta.com>
+Cc: linux-perf-users@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260608-counter_delegation-v6-21-285b72ed65a9@meta.com>
+References: <20260608-counter_delegation-v6-21-285b72ed65a9@meta.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 06:18:38 +0000
-Message-Id: <20260609061839.70B9B1F00893@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 06:20:22 +0000
+Message-Id: <20260609062023.0D53F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [Medium] This patch is explicitly marked 'TEST(do-not-upstream)' and adds=
+ fake testing events, which should not be merged into the mainline kernel.
+
 Pre-existing issues:
-- [Critical] NULL pointer dereference when tearing down the PMU on error pa=
-ths in probe.
-- [High] Missing cleanup on error paths in rvpmu_device_probe() leads to Us=
-e-After-Free and resource leaks.
-- [High] Broadcasting `SCOUNTEREN` updates to all CPUs in `mm_cpumask` leak=
-s counter access to userspace.
+- [High] Unconditional NULL pointer dereference in `get_cpuid`.
 --
 
-commit 497e3337649afaedc330eca31dba2dda185d6179
-Author: Atish Patra <atishp@rivosinc.com>
+commit d0ac889c30ab39821cba995143de6c24abe2efcc
+Author: Atish Patra <atishp@meta.com>
 
-    RISC-V: perf: Restructure the SBI PMU code
-   =20
-    With Ssccfg/Smcdeleg, supervisor mode can program and access the hpmcou=
-nters
-    and events directly, without the SBI PMU extension. The SBI PMU extensi=
-on is
-    still required for firmware counters. Restructure the existing SBI PMU =
-code so
-    the hpmcounter/event helpers can be shared between the SBI and the coun=
-ter
-    delegation paths that follow.
+TEST(do-not-upstream): fake qemu vendor JSON + mapfile entry for CounterIDM=
+ask path
 
-> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index 385af5e6e6d0d..7f21c16003f04 100644
-> --- a/drivers/perf/riscv_pmu_sbi.c
-> +++ b/drivers/perf/riscv_pmu_sbi.c
+This patch adds fake QEMU vendor JSON events and a corresponding mapfile en=
+try
+for the CounterIDMask path to test PMU masking.
 
-[ ... ]
+> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
+u-events/arch/riscv/mapfile.csv
+> index 87cfb0e0849fc..3533a8c0253f7 100644
+> --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> @@ -24,3 +24,4 @@
+>  0x602-0x3-0x0,v1,openhwgroup/cva6,core
+>  0x67e-0x80000000db0000[89]0-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
+>  0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
+> +0x0-0x0-0x0,v1,qemu/virt,core
 
-> @@ -1305,7 +1349,7 @@ static void riscv_pmu_destroy(struct riscv_pmu *pmu)
->  	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
->  }
+[Severity: Medium]
+Since this patch is explicitly marked "TEST(do-not-upstream)" and adds fake
+PMU events strictly for testing, should it be merged into the mainline
+kernel?
 
-[Severity: Critical]
-This is a pre-existing issue, but does this code cause a NULL pointer
-dereference on error paths?
+Merging this will populate the perf tool's PMU event tables with non-existe=
+nt
+hardware events.
 
-In rvpmu_device_probe(), if an error occurs (such as perf_pmu_register(),
-pmu_sbi_snapshot_alloc(), or cpuhp_state_add_instance() failing), the error
-path jumps to out_unregister and calls riscv_pmu_destroy().
-
-Because cpuhp_state_add_instance() either was not called yet, or failed and
-did not hash the node, pmu->node.pprev is NULL. The function
-cpuhp_state_remove_instance() does not check if the node is unhashed and
-directly calls hlist_del(). This attempts to write to the previous node
-pointer, which crashes the kernel with a NULL pointer dereference.
-
-> -static void pmu_sbi_event_init(struct perf_event *event)
-> +static void rvpmu_event_init(struct perf_event *event)
+> diff --git a/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json b/too=
+ls/perf/pmu-events/arch/riscv/qemu/virt/events.json
+> new file mode 100644
+> index 0000000000000..294c4ed645f67
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json
+> @@ -0,0 +1,26 @@
+> +[
+> +  {
+> +    "EventName": "fake-json-any",
 
 [ ... ]
 
-> @@ -1347,14 +1391,14 @@ static void pmu_sbi_event_mapped(struct perf_even=
-t *event, struct mm_struct *mm)
->  	 * that it is possible to do so to avoid any race.
->  	 * And we must notify all cpus here because threads that currently run
->  	 * on other cpus will try to directly access the counter too without
-> -	 * calling pmu_sbi_ctr_start.
-> +	 * calling rvpmu_sbi_ctr_start.
->  	 */
->  	if (event->hw.flags & PERF_EVENT_FLAG_USER_ACCESS)
->  		on_each_cpu_mask(mm_cpumask(mm),
-> -				 pmu_sbi_set_scounteren, (void *)event, 1);
-> +				 rvpmu_set_scounteren, (void *)event, 1);
->  }
+While reviewing this, I also noticed a pre-existing issue in
+tools/perf/arch/riscv/util/header.c:
+
+tools/perf/arch/riscv/util/header.c:get_cpuid() {
+    ...
+	char *cpuid =3D _get_cpuid();
+	int ret =3D 0;
+
+	if (sz < strlen(cpuid)) {
+		ret =3D -EINVAL;
+		goto free;
+	}
+    ...
+}
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does broadcasting scounteren
-updates to all CPUs leak counter access to userspace?
-
-When a user-accessible event is mapped, rvpmu_set_scounteren is broadcast
-across all CPUs where the process has threads running. This enables the
-scounteren bit corresponding to event->hw.idx.
-
-However, event->hw.idx is a dynamic, per-CPU hardware counter index allocat=
-ed
-only on the CPU where the event was scheduled. Broadcasting this index acro=
-ss
-all CPUs in the mask grants userspace access to that specific hardware
-counter slot on CPUs where the event is not running.
-
-Could a thread on another CPU read from that counter slot, potentially leak=
-ing
-the count of whatever unrelated perf event is active on that counter?
-
-> -static void pmu_sbi_event_unmapped(struct perf_event *event, struct mm_s=
-truct *mm)
-> +static void rvpmu_event_unmapped(struct perf_event *event, struct mm_str=
-uct *mm)
-
-[ ... ]
-
-> @@ -1419,7 +1463,7 @@ static const struct ctl_table sbi_pmu_sysctl_table[=
-] =3D {
->  	},
->  };
-> =20
-> -static int pmu_sbi_device_probe(struct platform_device *pdev)
-> +static int rvpmu_device_probe(struct platform_device *pdev)
->  {
->  	struct riscv_pmu *pmu =3D NULL;
->  	int ret =3D -ENODEV;
-
-[Severity: High]
-This is a pre-existing issue, but does this probe function correctly clean
-up resources on error paths?
-
-If initialization fails after perf_pmu_register(), the code jumps to the
-out_unregister label:
-
-out_unregister:
-	riscv_pmu_destroy(pmu);
-
-out_free:
-	kfree(pmu);
-	return ret;
-
-However, riscv_pmu_destroy() does not call perf_pmu_unregister(). This leav=
-es
-the core perf subsystem with a dangling pointer to the freed pmu structure,
-which can lead to a use-after-free when the perf core attempts to access it.
-
-Additionally, the per-CPU memory allocated for pmu->hw_events and the per-C=
-PU
-interrupts requested via request_percpu_irq() are never freed on these error
-paths, resulting in resource leaks.
+This is a pre-existing issue, but can get_cpuid() cause a segmentation fault
+here? If _get_cpuid() returns NULL (for example, if /proc/cpuinfo is missing
+or lacks specific fields in a container or QEMU without proper emulation), =
+it
+appears the unconditional call to strlen(cpuid) will dereference that NULL
+pointer.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608-counter_de=
-legation-v6-0-285b72ed65a9@meta.com?part=3D10
+legation-v6-0-285b72ed65a9@meta.com?part=3D21
