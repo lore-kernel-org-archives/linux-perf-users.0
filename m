@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30FB275AFD
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 01:18:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C903325B0B0
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jun 2026 01:22:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780967900; cv=none; b=D4lwWM3z1am6Yf/lrUFANg0ni7VgFJRfziDWMfX1fCCrp954TlYzGB2dO04jFvl8V3cFXxclt9aO+2fSzsiPkTX8Cyf0SksZwSVgJQK8/p/R6+6tBlkJd3DooC9N3o17KWwlXssPhA/Pa6c5zmba3DJx+4D7h9Pd0GscmNK5abc=
+	t=1780968133; cv=none; b=Y9VaaXtUk3On+TzPx9tNhtobuB9u3bhR555yyU29G/guDRKGqE04OiaUBPd82CT9pYlyRP3lZGHjgVDOXm/NSqYZf1uKYyW0pL12LESgKQUGmdehuooxWUE824jQ4LwHuU9lhmtqCswB+L1pEqxXkiEb5Re1RiETyOKySt3SAHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780967900; c=relaxed/simple;
-	bh=GfdD7ZZWNDRX6Xla/H1jsF8nBOuiRb2FuNtuUhwQy5g=;
+	s=arc-20240116; t=1780968133; c=relaxed/simple;
+	bh=+PyTdqcot7+G7mrcceVxHpY4UBO5m5rz8kc0CdsH8dc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZqnJ+uDhjoVo4Mc7a9eJPJeEta7ib2ulo5oGez1vxEJ00sAgoPQPbLDMbbmfHin+ykx9R1zPnIVNcOl+C/I3hro38+q5/w7AHqw8Fg9PHyYNY0fowSErly79iFvTSqOgxQE8Gyq6uS+6Oo9b+5TdfkWI0ckzIPgXBYy0Xo34JcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMycmAmV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Ga9NyWi6CYpw2OsexOkpL4XPLSz2kg0uSAbZM6aNmDqWzZkj92Zrbmz0p0LkAMAb9oVMSOlyNESoFbMW0VoUu+mWwLBHkN15oKnm+aMOAw/84Bwgt54iF2UWrwi787rgMOnfdaNIDald+F4Jo4CpSw56PTtjF/d7TUEzKD72tfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdQhTEDQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMycmAmV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FAEB1F00899;
-	Tue,  9 Jun 2026 01:18:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdQhTEDQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2BA1F00899;
+	Tue,  9 Jun 2026 01:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780967899;
-	bh=HTViNwkt8WLXmAvel8z2/RqnFCHRgCuyfOVxxNhk32Y=;
+	s=k20260515; t=1780968132;
+	bh=ydyXi4uvFPbYTm/X5cxljUpP8wPUtaJs1caSEg+WPEg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YMycmAmVLzLWORcJPC1RgW3E3YG0E30Ut2pgEyJrduqQo7Z0tb2abVrlNzpUzp9HG
-	 OMbFsSASqqwdkxo8m0TmAxLOPcc7a2gx3wUOTPSnEgi2cE9yc/kyCjqVkSFTDP8HaL
-	 8htvViVICIuaPe5ApABRNqQxlIoLYO59M0L6TRE8LmxzKXDHRzE432Uvu8Guk8Mj82
-	 8DiXLj16psKqYWYGPuYqPUtiKMLyeAIYFNPwFeqBBkj9jhFPP8XnT4OeZpP0WrmH4o
-	 NNM0wq4jR5vAdDPxKqnO/q2IfUGXT9GLD1+u1gU7EYWbq+oiqMAGaJpM0W93b5QGr1
-	 R64U10wyWif1A==
+	b=cdQhTEDQoS4gNcN/0cKZ5WJcVWx+rHxIDTrZz85B3xO4ZDAUUXZchWm2PjMvtKOR0
+	 XyJ+uM/dVJ3xeqh/NoPxL8RjP9WnQj8MaleToyLUvB26VPcfa+vW/wWdIadBZp9YHe
+	 GwVDddHZs5jKRAWV/GxuX7fzcyVcLerrQUFxoRc3yRao0LTghAdPtVRJpqcP/cpCEo
+	 1LGcUeidSoNKK/Wf0IUGaOSlCInboijvpAuvuA+n4cqnMo7SEKYK6LwLPUpzGfZ/is
+	 WGUbjn+XBDWNYTj7pTBWBj44iCzQg1F1QInCfB3HPk7a8bOnrSpWqTBttioUR+jHdc
+	 YZajMDi1y+/pA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 06/11] perf sched: Fix idle-hist callchain display using
- wrong rb_first variant
+Subject: Re: [PATCH 03/11] perf tools: Use perf_env__get_cpu_topology() in
+ machine__resolve()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260609010526.1998472-7-acme@kernel.org>
-References: <20260609010526.1998472-7-acme@kernel.org>
+In-Reply-To: <20260609010526.1998472-4-acme@kernel.org>
+References: <20260609010526.1998472-4-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 09 Jun 2026 01:18:18 +0000
-Message-Id: <20260609011819.3FAEB1F00899@smtp.kernel.org>
+Date: Tue, 09 Jun 2026 01:22:11 +0000
+Message-Id: <20260609012212.0A2BA1F00899@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,101 +48,73 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] In `perf sched map`, using the `--color-pids` option causes a segm=
-entation fault and an invalid free due to type confusion on `thread__priv()=
-`.
+- [High] Out-of-bounds read on the global `symbol_conf.parallelism_filter` =
+bitmap due to unclamped `al->parallelism`.
 --
 
-commit 52b25a8ed38e1c2d458f164827bbcfd55e08f69b
+commit 02d9d799b673cb65dd2a323c5686a0235ee2e563
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf sched: Fix idle-hist callchain display using wrong rb_first variant
+perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
 
-This commit fixes a bug in the idle-hist callchain display where
-rb_first_cached() was used on a tree populated with rb_insert_color(). The
-tree lacks the leftmost cache, so rb_first_cached() returned NULL and dropp=
-ed
-the callchain summary. The fix restores the original behavior by using
-rb_first() directly on the rb_root.
+This commit fixes an out-of-bounds heap read in machine__resolve() by prope=
+rly
+validating al->cpu against env->nr_cpus_avail before accessing the CPU
+topology. It also adds a bounds check before casting to struct perf_cpu to
+prevent silent truncation on large CPU values.
 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index ded511d851880..85f11d388392d 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -3130,7 +3130,8 @@ static size_t timehist_print_idlehist_callchain(str=
-uct rb_root_cached *root)
->  	size_t ret =3D 0;
->  	FILE *fp =3D stdout;
->  	struct callchain_node *chain;
-> -	struct rb_node *rb_node =3D rb_first_cached(root);
-> +	/* sort() uses rb_insert_color() on rb_root, not rb_root_cached */
-> +	struct rb_node *rb_node =3D rb_first(&root->rb_root);
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+
+[ ... ]
+
+> @@ -836,8 +837,18 @@ int machine__resolve(struct machine *machine, struct=
+ addr_location *al,
+>  	if (al->cpu >=3D 0) {
+>  		struct perf_env *env =3D machine->env;
+> =20
+> -		if (env && env->cpu)
+> -			al->socket =3D env->cpu[al->cpu].socket_id;
+> +		/*
+> +		 * Bounds-check al->cpu (s32) before casting to struct perf_cpu
+> +		 * (int16_t): without this, e.g. 65536 truncates to 0 and silently
+> +		 * returns CPU 0's topology.  Can go once perf_cpu.cpu is widened.
+> +		 */
+> +		if (env && al->cpu < env->nr_cpus_avail) {
+> +			struct cpu_topology_map *topo;
+> +
+> +			topo =3D perf_env__get_cpu_topology(env, (struct perf_cpu){ al->cpu }=
+);
+> +			if (topo)
+> +				al->socket =3D topo->socket_id;
+> +		}
+>  	}
+> =20
+>  	/* Account for possible out-of-order switch events. */
+>  	al->parallelism =3D max(1, min(machine->parallelism, machine__nr_cpus_a=
+vail(machine)));
+>  	if (test_bit(al->parallelism, symbol_conf.parallelism_filter))
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does the --color-pids
-option in perf sched map cause a segmentation fault and invalid free
-due to type confusion on thread__priv()?
+This is a pre-existing issue, but does this test_bit() allow an out-of-boun=
+ds
+read on the global symbol_conf.parallelism_filter bitmap?
 
-When --color-pids is used, map__findnew_thread() sets
-thread__priv(thread) to the scalar value (void*)1 to mark the thread
-for coloring:
+Since al->parallelism is computed using machine__nr_cpus_avail(machine),
+which depends on the HEADER_NRCPUS value in the perf.data file, a crafted
+file could specify an extremely large number of CPUs.
 
-tools/perf/builtin-sched.c:map__findnew_thread() {
-    ...
-    if (thread_map__has(sched->map.color_pids, tid))
-        color =3D true;
+If numerous PERF_RECORD_SWITCH events artificially inflate
+machine->parallelism, the unclamped al->parallelism value could far exceed
+the bounds of symbol_conf.parallelism_filter, which is statically sized to
+MAX_NR_CPUS + 1 bits (typically 4097 bits).
 
-    thread__set_priv(thread, color ? ((void*)1) : NULL);
-    ...
-}
+Could reading so far beyond the mapped boundaries of the global symbol_conf
+structure cause a segmentation fault when parsing an untrusted file?
 
-However, the rest of the perf sched code expects thread__priv() to
-hold a valid pointer to a struct thread_runtime. When
-map_switch_event() calls thread__get_runtime(), it retrieves the
-(void*)1 pointer and skips initialization because it is not NULL:
-
-tools/perf/builtin-sched.c:thread__get_runtime() {
-    ...
-    tr =3D thread__priv(thread);
-    if (tr =3D=3D NULL) {
-        tr =3D thread__init_runtime(thread);
-    ...
-}
-
-Then map_switch_event() attempts to read tr->shortname[0], which
-dereferences the invalid address and causes an immediate segmentation
-fault:
-
-tools/perf/builtin-sched.c:map_switch_event() {
-    ...
-    tr =3D thread__get_runtime(sched_in);
-    if (tr =3D=3D NULL)
-        goto out;
-    ...
-    if (!tr->shortname[0]) {
-    ...
-}
-
-Furthermore, because cmd_sched() registers free() as the destructor
-for thread priv data:
-
-tools/perf/builtin-sched.c:cmd_sched() {
-    ...
-    thread__set_priv_destructor(free);
-    ...
-}
-
-Tearing down the session will attempt to call free((void*)1),
-corrupting the heap.
-
-Could struct thread_runtime be expanded to include a coloring flag,
-or could the color state be tracked outside the thread__priv pointer
-to prevent this type confusion?
-
-> =20
->  	printf("  %16s  %8s  %s\n", "Idle time (msec)", "Count", "Callchains");
->  	printf("  %.16s  %.8s  %.50s\n", graph_dotted_line, graph_dotted_line,
+>  		al->filtered |=3D (1 << HIST_FILTER__PARALLELISM);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260609010526.1998=
-472-1-acme@kernel.org?part=3D6
+472-1-acme@kernel.org?part=3D3
