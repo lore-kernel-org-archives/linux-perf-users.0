@@ -1,324 +1,168 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C792D40BCD0;
-	Tue,  9 Jun 2026 13:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAE61DE8BE;
+	Tue,  9 Jun 2026 13:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781010571; cv=none; b=A7kEc6M4KN9hFNoxgZd33PaMWPx8Hi1fgSHeVGqIIzW++zXcPRxYvr39nK5CwtBBVn0ZObWZ+lkzmYN4zFS2TMXLy1SXFqUZp4nf8EJKLULR1qDTIqdJ1dhlsGHWdenZ4qYhn0FN3cAkXuGOL5JCp2yUwJX6WbLZkylApJ/qu0Y=
+	t=1781010974; cv=none; b=AcY4bS4XyeY+er1rAnbN5FVAVlOwtYeVKEwziXc/vLZfeY9OhHBdpPrKi+klDbexrJ6xjFBfjEIaZEirakyljtdtn+euKFwAWN3b2yuSmPDZdsAEHGXSHhVOfuKmgUWaQnheS6Fuewra6GHasbl2L9o8kwjKv4Sik89euHXsNs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781010571; c=relaxed/simple;
-	bh=ZVcYfKqMmKEEAU5smIs37DSmIs6iH5rNujM9bb5y3EE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l5mWU0QlNAB8F51aB6tzqWkpQJzOsoMnbEZTRLC/7Q+GUI1gE+C7qEFT3sfTIZC8Yaym/WCD2bqZcMcYRrqbbh5Dq386BMuMMx2ytIq/w6msfo4Scvs5qJQBFYnmemRQF+y9gSAKkXOytJAK5b3AHpyVN02cVVN8bOBg5NU1fs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kcRkg1Og; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1781010974; c=relaxed/simple;
+	bh=60Hz5+3eEkrBAnUhEtk9VB5qfD8DLzTUtlgK14Fe8II=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SrCKC/YGRE7fBt5PUcKk0WS11JB6AZ2rNZWm6ufzakh+G7XE6ihA6nDrpehMS45B8bTBV40oDe8ib37XnPmOQFlP4IMERSfxn4Vy0VvvjDXvGViRo4BhgpbHs4qoYkTEjkwJoLBIGqn2iu1kXKeHGeVnDJ/p5GnRD8dTR9Q50+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=slKC5uQp; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kcRkg1Og"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 658ME5Uv3475344;
-	Tue, 9 Jun 2026 13:09:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=p6YrsN
-	lH0WUoHuA2M8P+ezk6RWuyUcgH3Uxv5EAFeJs=; b=kcRkg1Ogu8Hpy/Z30RCMeH
-	11NJ3Tu4jnKL7z3+78+lQnd8zk0/R2j7sWtpS/Fd79upzKJpFkDk2t/RrHsvdszV
-	tsI1rSMz7pXXT9SSvlKiFQ0r6iFl2ZnfdVaa/SdTeoNNHvRm43oWz+Me6aLHsdB0
-	8GsdlhNGwNdNsnatuUec2FdP+nJ7ZyVskdn2V4Ghz0bsafZGJJYkzTstfX3H405s
-	XRWB1NHL/l/rtLcz8Jn97eXeEAUsM3feOQzw0R4E4KH4KO71Bu5pdrfbzZVPcoKz
-	KV5QI95rlHOda4wQqCvDRN1QB79ogQuQs7tCIaPwfrcJYc1XTdUDmuakBc17Yjxg
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4em8yhv86p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jun 2026 13:09:19 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 659D4bxk014215;
-	Tue, 9 Jun 2026 13:09:18 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4en03g1vks-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jun 2026 13:09:18 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 659D9FLw21692986
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Jun 2026 13:09:15 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 589665805A;
-	Tue,  9 Jun 2026 13:09:15 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C256258054;
-	Tue,  9 Jun 2026 13:09:08 +0000 (GMT)
-Received: from [9.124.209.4] (unknown [9.124.209.4])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Jun 2026 13:09:08 +0000 (GMT)
-Message-ID: <08e20eaa-d16a-45a0-8b8f-653782b6481c@linux.ibm.com>
-Date: Tue, 9 Jun 2026 18:39:07 +0530
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="slKC5uQp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Cc:To:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:
+	Reply-To:Content-ID:Content-Description:In-Reply-To:References;
+	bh=Rg6Uwn3qcv35IqK5mO+5MuTecRwPgI2mpMh7ThDFKtQ=; b=slKC5uQp8RpItbg43LgsfFS66j
+	5+UEJ9NQCJD1uUsXJFPHIE+x3pxdM0TQkE+tUXg6/LrxVJyhk/LvlxuJ2KVjH9pGnHhXfW8k8VmDW
+	Va+dxcG/ZOeB/byAJII33oByLOwhMgNI2l7AGmE3f6C/yCN2xZB5fN797Hz9ftP0YvQ5uG8A/Npt0
+	JI1Ro6YkzsPmgdD/uRE0gquxryfW1vHWdW2XrROjTfgTjyMpjrbPeJTYbmUS3Z0Ph+4sZgULTHtJS
+	VDpPscY+wZ7V4MaE3oRZ3sNTJbTk+UuKpp7xQGierJRadUfGaHl1cBPl8OVVKOx9agDTXlR4wnTlC
+	k8sLrceg==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <leitao@debian.org>)
+	id 1wWwJK-008QXf-2e;
+	Tue, 09 Jun 2026 13:16:07 +0000
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 09 Jun 2026 06:15:53 -0700
+Subject: [PATCH v2] arm64/hw_breakpoint: reject unaligned watchpoints that
+ would truncate BAS
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/4] perf: Add perf.data tracepoint events to
- trace.dat conversion
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
-        maddy@linux.ibm.com, namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
-References: <20260608125951.90425-2-tshah@linux.ibm.com>
- <CAP-5=fWbaEB=8niBhrUz6TLB2dgWv=kjrH8-Hn_PAmpUwqQThg@mail.gmail.com>
-Content-Language: en-US
-From: Tanushree Shah <tshah@linux.ibm.com>
-In-Reply-To: <CAP-5=fWbaEB=8niBhrUz6TLB2dgWv=kjrH8-Hn_PAmpUwqQThg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA5MDEyNCBTYWx0ZWRfX2OtKS8xD3diW
- TVNvPuCjPoQUGMSTlzaHRTmied4idCw9mSnsEQ8IHVNX5e7RwRfnb/lZcgdTQVIHZZT5TUxz9z5
- MjAjlrAsEty1klxXHfII+qG06VkrwGIiHuAfDKxe8ep3W/JUZsyZkKH28th6nKugh5/G40uTxFD
- 8sNRhQ3eTI4/Zu3EH8Pcq9bJimd0lITwn14VdcGlTtt9706S7TLuNdIQ3PceDRua9MsRYKpzn0P
- DszYRNKMl1zksKJLjXWqxuwWlVfeSIYgMptQy0/Hz4+c73uxDyymsM59GUiDcOCeJVB4ckKksrD
- GbPkFEVJ924V/mf1MwC0iH+JqEP3Iuw2MQxZNWKOH74JqDPey7e0+mH25gQ/fOO7qUT86k/5ypq
- E2N+nr3dsne2p2C715P0y/x0K/gffufRdJIF0D3zVWTowtfyyikV10plR/hlXWl98FxB65DSLxf
- DUJAgCNWNoRE1guHjAA==
-X-Authority-Analysis: v=2.4 cv=HvFG3UTS c=1 sm=1 tr=0 ts=6a281080 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=rA2XquP34O2BbOxzJ20A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: XmHAFh-fjo9LoJXnKCJHn6PQE_7MY9p4
-X-Proofpoint-GUID: EdwiTZTARwwlzOna22WlpypeezTdL7qG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-09_03,2026-06-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 phishscore=0 malwarescore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606090124
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260609-arm64_bas-v2-1-9f34dbbded88@debian.org>
+X-B4-Tracking: v=1; b=H4sIAAgSKGoC/23NSwrCMBSF4a2EO24kSWsiGbkPKZLHtb2CiSS1K
+ KV7l9apwwM/31mgYiGsYNkCBWeqlBNYphoGYXRpQE4RLAMllBZdK7grD91dvavcGGxNPLVCKQ0
+ Ng2fBG71369L/dn35O4ZpA7ZipDrl8tnPZrl1/9xZcsmDdl55eXQYxDmiJ5cOuQzQr+v6BSOQI
+ oy1AAAA
+X-Change-ID: 20260430-arm64_bas-77e37d830226
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Pratyush Anand <panand@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, clm@meta.com, leo.bras@arm.com, 
+ kernel-team@meta.com, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3791; i=leitao@debian.org;
+ h=from:subject:message-id; bh=60Hz5+3eEkrBAnUhEtk9VB5qfD8DLzTUtlgK14Fe8II=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBqKBIS+Gi5xCr81tProuji531Z+NisZK4+78aq7
+ +5uy5lUJJCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaigSEgAKCRA1o5Of/Hh3
+ bcJ+D/4raj8CmXOiWXwdIcfpOWG1UBX+93rbwV1W3Bco7TxtN5Q19MtVB3OdrwFH6MD2cA4luDR
+ hJzP9cvGuhPBLOLae7PVBohiA+w21izjHYsIvBFLZwD70pi2IJCgAdsQwI1egwRpmXU2bQQtO0Z
+ dreS8LMBlQT3xNGc4fpVanTUWmRuEiQlyG/dGWL5FxcI+VdtUhf1s3jT/+EKubJsuFnCepAs8oD
+ bAy1or+v1BZzRSwCxcdJcuPJblznVdGueec0sJ0O+ZPN1GTMJvplGUHt56uxtEZsP/dzW0LmHpK
+ I+ZVulkkJJo2pQPh5WLIJllw2BBEzJVzIV5fpGBE9N+XtPgfCWEFXWImk2nBf9TdxXwzjQIJZ3a
+ UintXDHWjpfvB6BLr2m+S4kZSFgG7GbQMPa23ItEJwXnZGUsFMgI7SGWpPRahRz8vWAN+vcKBEy
+ sHYV5UjREU/1RTbqDd29rW5U2asIu28wkv2ZHKDmp0ZwbzmjUYzNVjbylANMzaOpZZ+OQGE55ri
+ dsGinJGdgsqhpAeGc6Es8gS9YlK/QtrsFzCicfOxJhXpafajyQts4SZYdxMLIobKf3eN52gVCcI
+ 6/6VRB7w2meF0FFuHj+/F0mMwXdS8sv2EWonHTgjWemPaX1hRQ/HuMlOE6Zu6j/oEBgClsMF1HK
+ 8/TlgAGpZVv2uYg==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+X-Debian-User: leitao
 
-Hello Ian,
+hw_breakpoint_arch_parse() positions the BAS bit pattern in
+hw->ctrl.len with
 
-Thanks for the review. I will fix the typo in the next version.
+	offset = hw->address & alignment_mask;	/* 0..7 */
+	hw->ctrl.len <<= offset;
 
-I agree that shell test coverage similar to the existing converter tests 
-would be useful, and I plan to include that in the next revision.
+ctrl.len is an 8-bit bitfield (struct arch_hw_breakpoint_ctrl::len is
+u32 :8), so the shift silently drops any bits past bit 7.  For
+non-compat AArch64 watchpoints the offset is unbounded relative to
+ctrl.len: a perf_event_open(PERF_TYPE_BREAKPOINT) caller asking for
+HW_BREAKPOINT_W with bp_addr=page+1 and bp_len=HW_BREAKPOINT_LEN_8
+ends up with 0xff << 1 = 0x1fe, stored as 0xfe.  The kernel programs
+WCR.BAS=0xfe and the hardware watches bytes [1..7] instead of the
+requested [1..8] -- the eighth byte is silently dropped.  The
+syscall still returns success, leaving userspace to discover the
+gap by empirical probing.
 
-I will also go through the review comments from Sashiko, validate them, 
-and address the necessary fixes in the next version.
+The same class affects HW_BREAKPOINT_LEN_{2,4} when offset pushes the
+high BAS bit past bit 7 (e.g. LEN_4 with offset=5 yields 0xe0
+instead of 0x1e0).  No memory-safety impact -- the value is masked
+into 8 bits before encoding -- but debuggers and perf users observe
+missed events on bytes they thought they were watching.
 
-Thanks,
-Tanushree Shah
+The AArch32 branch immediately above already rejects unrepresentable
+(offset, len) combinations via an explicit switch.  Mirror that for
+the non-compat branch by checking that the shifted pattern fits in
+the BAS field, returning -EINVAL when it does not.
 
-On 08/06/26 20:48, Ian Rogers wrote:
-> On Mon, Jun 8, 2026 at 6:00 AM Tanushree Shah <tshah@linux.ibm.com> wrote:
->>
->> This RFC patch series introduces support for converting perf.data files
->> containing tracepoint events into trace.dat format, enabling seamless
->> visualization and analysis using KerneShark.
-> 
-> Thanks for doing this, this is a useful feature!
-> 
-> nit: typo KernelShark
-> 
->>
->> ======================
->> Background and Motivation
->> ======================
->>
->> Currently, perf and trace-cmd operate as separate tracing ecosystems with
->> incompatible data formats. Users who collect tracepoint data with
->> 'perf record' cannot easily visualize it in KernelShark's graphical
->> timeline view or leverage trace-cmd's analysis capabilities.
->>
->> This creates workflow friction when users need to:
->>
->> - Visualize perf tracepoint data in KernelShark's interactive graphical
->>    timeline
->> - Share trace data between perf and trace-cmd workflows and toolchains
->> - Perform architecture-independent conversion and analysis of traces
->>
->> This conversion bridge eliminates these barriers by enabling seamless
->> data exchange between perf and trace-cmd ecosystems, allowing users to
->> choose the best tool for each analysis phase.
->>
->> ======================
->> Implementation Overview
->> ======================
->>
->> The series implements the trace.dat file format specification (version 7)
->> within perf's data conversion framework.
->>
->> **Patch 1/4: Core trace.dat Export Infrastructure**
->> Introduces util/trace-dat.c and util/trace-dat.h implementing:
->> - Per-CPU raw event buffer management (init, collect, free)
->> - Ftrace ring buffer page construction
->> - trace.dat section writers (strings, options, flyrecord sections)
->>
->> **Patch 2/4: Metadata Integration**
->> Extends util/trace-event-read.c to write trace.dat metadata during
->> perf.data
->> parsing:
->> - Initial format header (magic, version, endian, page size, compression)
->> - Section 16: HEADER INFO (header_page + header_event)
->> - Section 17: FTRACE EVENT FORMATS
->> - Section 18: EVENT FORMATS (per system/event format files)
->> - Section 19: KALLSYMS
->> - Section 21: CMDLINES
->> - Section 15: STRINGS (written last after all sections)
->>
->> **Patch 3/4: Conversion Backend**
->> Implements util/data-convert-trace.c with trace_convert__perf2dat()
->> function:
->> - Processes PERF_TYPE_TRACEPOINT samples via process_sample_event()
->> - Collects raw event data per-CPU using trace_dat__collect_cpu_event()
->> - Writes OPTIONS sections (CPUCOUNT, TRACECLOCK, metadata offsets)
->> - Writes FLYRECORD section with per-CPU ring buffer pages
->>
->> **Patch 4/4: User Interface**
->> Extends tools/perf/builtin-data.c with --to-trace-dat option:
->> - Adds command-line option for trace.dat output
->> - Mutually exclusive with --to-ctf and --to-json
->> - Calls trace_convert__perf2dat() to perform conversion
->>
->> ======================
->> Current Implementation Details
->> ======================
->>
->> **trace.dat Format Version:**
->> The implementation currently targets trace.dat format version 7, which
->> is the stable version supported by current trace-cmd releases (v3.x).
->> This version is hardcoded to ensure compatibility with existing
->> trace-cmd and KernelShark installations. Future enhancements could add
->> version negotiation or support for newer format versions as they become
->> standardized.
->>
->> **Compression Strategy:**
->> Compression is explicitly disabled (set to NONE) in the generated
->> trace.dat files.
->> This design choice:
->> - Simplifies the initial implementation and testing
->> - Ensures maximum compatibility across trace-cmd versions
->> - Avoids external compression library dependencies
->>
->> Future work could add support for various compression algorithms (zlib,
->> zstd, lz4) with runtime selection via command-line options, significantly
->> reducing file sizes for large traces.
->>
->> ======================
->> Usage Example
->> ======================
->>
->> ```bash
->> *Record tracepoint events with perf*
->> perf record -e sched:sched_switch -e sched:sched_wakeup -a sleep 10
->>
->> *Convert to trace.dat format*
->> perf data convert --to-trace-dat=output.dat
->>
->> *Verify trace.dat structure*
->> trace-cmd dump --summary output.dat
->>
->> *Analyze with trace-cmd*
->> trace-cmd report output.dat
->>
->> *Visualize in KernelShark*
->> kernelshark output.dat
->> ```
->>
->> **Conversion Output:**
->> ```
->> [ perf data convert: Converted 'perf.data' into trace.dat format
->> 'output.dat' ]
->> [ perf data convert: Converted 2684 events ]
->> ```
->> **trace-cmd dump --summary Output:**
->> ```
->>   Tracing meta data in file output.dat:
->>          [Initial format]
->>                  7       [Version]
->>                  0       [Little endian]
->>                  8       [Bytes in a long]
->>                  65536   [Page size, bytes]
->>                  none    [Compression algorithm]
->>                          [Compression version]
->>          [buffer "", "local" clock, 65536 page size, 16 cpus, 1048576 bytes
->>      flyrecord data]
->>          [10 options]
->>          [Saved command lines, 0 bytes]
->>          [Kallsyms, 0 bytes]
->>          [Ftrace format, 0 events]
->>          [Header page, 206 bytes]
->>          [Header event, 205 bytes]
->>          [Events format, 1 systems]
->>          [9 sections]
->> ```
->> ======================
->> Testing and Verification
->> ======================
->>
->> The series has been extensively tested with:
->> - Various tracepoint events (sched, irq, syscalls, block I/O)
->> - Mixed recordings containing both tracepoint and non-tracepoint events
->>    only tracepoints converted)
->> - Verification with trace-cmd report and KernelShark visualization
->> - Memory leak testing with Valgrind (0 bytes leaked)
->> - Cross-architecture testing (x86_64, ppc64le)
-> 
-> It seems that some of this could be a test to give coverage of the
-> feature. We have similar tests for other convertors:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/test_perf_data_converter_ctf.sh?h=perf-tools-next
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/test_perf_data_converter_json.sh?h=perf-tools-next
-> 
-> I think Sashiko has caught some coding issues, so I'll hold off on a
-> full review until the churn from Sashiko subsides.
-> 
-> Thanks!
-> Ian
-> 
->> All generated trace.dat files successfully open in:
->> - trace-cmd report (v3.1+)
->> - KernelShark (v2.0+)
->>
->> ======================
->> Next Steps
->> ======================
->>
->> We would highly appreciate reviews, comments, and feedback on:
->> - The overall architectural approach and integration points
->> - Compatibility considerations with trace-cmd ecosystem
->> - Performance characteristics for large-scale traces
->> - Additional use cases or workflow scenarios
->> - Future enhancement priorities
->>
->> Tanushree Shah (4):
->>    perf/trace-dat: Add trace.dat export infrastructure
->>    perf/trace-event: Write trace.dat metadata sections during parsing
->>    perf data-convert: Add perf.data to trace.dat conversion backend
->>    perf data: Add --to-trace-dat option for converting perf.data
->>      tracepoint events into trace.dat format
->>
->>   tools/perf/builtin-data.c            |  38 +-
->>   tools/perf/util/Build                |   2 +
->>   tools/perf/util/data-convert-trace.c | 152 ++++++
->>   tools/perf/util/data-convert.h       |   4 +
->>   tools/perf/util/trace-dat.c          | 705 +++++++++++++++++++++++++++
->>   tools/perf/util/trace-dat.h          |  79 +++
->>   tools/perf/util/trace-event-read.c   | 259 +++++++++-
->>   7 files changed, 1230 insertions(+), 9 deletions(-)
->>   create mode 100644 tools/perf/util/data-convert-trace.c
->>   create mode 100644 tools/perf/util/trace-dat.c
->>   create mode 100644 tools/perf/util/trace-dat.h
->>
->> --
->> 2.53.0
->>
-> 
+GDB and similar debuggers are unaffected by the stricter check.
+aarch64_linux_set_debug_regs() already treats EINVAL on
+NT_ARM_HW_WATCH as a downgrade signal: it clears
+kernel_supports_any_contiguous_range, calls aarch64_downgrade_regs()
+to round the BAS up to a legacy 0x01/03/0f/ff mask with an aligned
+base, and retries -- the same fallback path that PR-20207 introduced.
+The new -EINVAL is therefore reachable only from a raw
+perf_event_open() that pairs an unaligned base with an oversized
+bp_len, which is precisely the bug.
+
+Reproducer:
+
+  struct perf_event_attr a = {
+      .type = PERF_TYPE_BREAKPOINT, .size = sizeof(a),
+      .bp_type = HW_BREAKPOINT_W,
+      .bp_addr = (uintptr_t)(buf + 1),
+      .bp_len = HW_BREAKPOINT_LEN_8,
+      .exclude_kernel = 1, .exclude_hv = 1,
+  };
+  int fd = perf_event_open(&a, 0, -1, -1, 0);
+  /* before this fix: succeeds, watches 7 bytes (buf+1..buf+7)   */
+  /* after  this fix: fails with EINVAL                          */
+
+Fixes: b08fb180bb88 ("arm64: Allow hw watchpoint at varied offset from base address")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changes in v2:
+- Use ARM_BREAKPOINT_LEN_8 instead of the 0xff magic number (Will).
+- Checked and Expand the commit log to explain why GDB and similar
+  debuggers are unaffected by the new -EINVAL
+- Link to v1: https://patch.msgid.link/20260430-arm64_bas-v1-1-c6ab2b15aec0@debian.org
+---
+ arch/arm64/kernel/hw_breakpoint.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+index ab76b36dce82..73cce8ac8368 100644
+--- a/arch/arm64/kernel/hw_breakpoint.c
++++ b/arch/arm64/kernel/hw_breakpoint.c
+@@ -559,6 +559,15 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+ 		else
+ 			alignment_mask = 0x7;
+ 		offset = hw->address & alignment_mask;
++
++		/*
++		 * BAS is an 8-bit field in WCR/BCR; the shift below would
++		 * silently drop the high bits of ctrl.len when offset + len
++		 * exceeds 8, programming hardware to watch fewer bytes than
++		 * the user requested.
++		 */
++		if (((u32)hw->ctrl.len << offset) > ARM_BREAKPOINT_LEN_8)
++			return -EINVAL;
+ 	}
+ 
+ 	hw->address &= ~alignment_mask;
+
+---
+base-commit: 0787c45ea08a13b5482e701fabc741877cf681f6
+change-id: 20260430-arm64_bas-77e37d830226
+
+Best regards,
+-- 
+Breno Leitao <leitao@debian.org>
 
