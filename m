@@ -1,429 +1,441 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65AB3E1716;
-	Wed, 10 Jun 2026 11:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6A22F7AC1;
+	Wed, 10 Jun 2026 12:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781092064; cv=none; b=E3DAjg/kYwTR7zmgTLDQtwvRK+J0IFDuG67pvEjzoFxOYzLPEMRlD5HAD1oY8rIZBZIYhYoiPKdXQeOPSvXQ3SQbJ+Vaf/q69dz9xvlUDEN5IumSIEAKJTPdHayXQoQWVJy39Ieojkn3dRlWkoveKGH9dtx9KqeCCRtEKRlGM3c=
+	t=1781093183; cv=none; b=qZWDuoSoL3DbXk9Z0Bi/534gcIIfORt/wRPgWJaX7jLlkVQ9SARAIQ7oDkfrqFpfMhCmAjrjksISxodqzU/G7aVP0L0vKx31orHhbNzcMOXCHYPDT5xpQZ6QLbyb46HP2RHt/apV46S+R6pNiMyguqGFqbLnWpASblDalrSyeyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781092064; c=relaxed/simple;
-	bh=mz2XZgkqHhahUDWxu7eMxcbax4iC6I7c1xKO++Y6qhc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J2I922S5kTEFrmglR80zrw+yEZ6aqxbLNHCXsCS5FlWzbc1NH1G9e3SxOdeECyvCiO65ddHxtZPD0ltppRYkyVdovuoPixbvg5q6xitCDm4oWmyHhGGMLnnEqwFN9/1gvSIO++ZEn1u8CewW0jBZIB+/kRil5Rd9Xx7AeICt9z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=L/rYqHKU; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="L/rYqHKU"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 659NNP141029990;
-	Wed, 10 Jun 2026 11:47:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=2slaiA
-	6D+XI4wg5R93fsJMsFzU6iRd0/kisNk3LqyDA=; b=L/rYqHKUGkGVjETKbDzVJp
-	ZwhmCrFMB8HQhUcCPmxDcHRHjNbIbOhuEOquo9pCNz9MSXJp+pTS5sHP6dCvvoPz
-	aM0t812wUt2vjTCa06Srgrnqi6VoB+ul/dhwCdVpH1YVqica0L6BNiaxQHvjFqEr
-	sHo88xJTEly+J6d/ivlVb3vqUI7BELtRcnKHr/yY8bJDzU/Y5CbxEjvtyHsLudun
-	7fvsWTmJY99zY/V9ZGe7oEN5nKoS61krwjgml23vrwmfqEHT6QUGwtwKhzSFzBOo
-	9Jdi9hXXEL99PDqU56mNXT2G4AMo9AtPuhlbqsTqPJoogrIUi+vsqVD+3vLwDlag
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4emb95gv0r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jun 2026 11:47:39 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65ABYcPB004405;
-	Wed, 10 Jun 2026 11:47:38 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emxvjxejs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Jun 2026 11:47:38 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65ABlaxt26345780
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Jun 2026 11:47:36 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 65FF42004B;
-	Wed, 10 Jun 2026 11:47:36 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E65E20043;
-	Wed, 10 Jun 2026 11:47:36 +0000 (GMT)
-Received: from [9.224.91.136] (unknown [9.224.91.136])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 10 Jun 2026 11:47:36 +0000 (GMT)
-Message-ID: <e3e8fd9f-3da5-4b03-b2a6-bacd521ec1a8@linux.ibm.com>
-Date: Wed, 10 Jun 2026 13:47:35 +0200
+	s=arc-20240116; t=1781093183; c=relaxed/simple;
+	bh=rujJyszYoZxVBuShIVSfJhMxKgJGNFD4xe3puWtSQTM=;
+	h=Message-Id:Date:Mime-Version:From:To:Cc:Subject:Content-Type; b=jCAkW5Yem67DM11aAI9U/J8ME4HTdi35ZjOvEL/xuxCxPNRbSJvJBSH0egqoaHKxYpz7UoC9fT7+7Lb/+S0sTq+CgfjPXyhKx74OIm+Pnf09riLCzMbeMtPUP6aK8iwXVt5pfBqzGVL3/iLJ4fjoE9fxckRMdjR8IKeGgsx5u4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4gb4Hm650pz5B13W;
+	Wed, 10 Jun 2026 20:06:12 +0800 (CST)
+Received: (from root@localhost)
+	by mse-fl1.zte.com.cn id 65AC69UA050105;
+	Wed, 10 Jun 2026 20:06:09 +0800 (+08)
+	(envelope-from yang.susheng@zte.com.cn)
+Message-Id: <202606101206.65AC69UA050105@mse-fl1.zte.com.cn>
+Received: from njb2app05.zte.com.cn ([10.55.22.121])
+	by mse-fl2.zte.com.cn with SMTP id 65AAenpW033653;
+	Wed, 10 Jun 2026 18:40:49 +0800 (+08)
+	(envelope-from yang.susheng@zte.com.cn)
+Received: from mapi (njy2app01[null])
+	by mapi (Zmail) with MAPI id mid201;
+	Wed, 10 Jun 2026 18:40:51 +0800 (CST)
+X-Zmail-TransId: 2af96a293f33401-d5197
+X-Mailer: Zmail v1.0
+Date: Wed, 10 Jun 2026 18:40:51 +0800 (CST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] perf build: Fix Python extension build with GCC 16
- hardening
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Jan Polensky <japo@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
-References: <20260520125637.105681-1-japo@linux.ibm.com>
- <20260520130905.9C85D1F000E9@smtp.kernel.org> <ahJnMnOr4i9urrRk@x1>
- <ahV2XGx_6h7upuc3@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
- <CAP-5=fXGG5PR8neTkozvOUOH83m8_EyZXZ_A7Zyrsock5EqAiQ@mail.gmail.com>
- <ahXITNt0Z-n4NCaj@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
- <CAP-5=fXcpoXMsezy1FNBX7mhKmRgw+97QmKTg5Fr6G-cY+wGpg@mail.gmail.com>
- <ahddRWPBk46HiR6x@google.com>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <ahddRWPBk46HiR6x@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=N4UZ0W9B c=1 sm=1 tr=0 ts=6a294edc cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=RmN1yAzgj0a4Wfzp4gMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: 2Dkcx7Moxf9uRQY-KRHxkkRwuZGGYebX
-X-Proofpoint-GUID: i7xuE7Jk_rvw5yLEw9kza2YKOZW_DqvX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjEwMDExMSBTYWx0ZWRfXwAsIxR0lDNi5
- VMdrhT4LducCWx6GbafH6ip8pqr57S42dslLbNCWOfaRGum3aVG/4nIexJuQKSDtkGrEQJyivDz
- BFkkC+IA8vJ0ZSpAYqoBIj4uRdbviVm7/DVj1QSebzcq4Z6vGLicxuNBkjoAytFSYtJzZCo01pb
- pfc4hnMeXvjjJwjT7nT35mBuUfwxmEY9U4+rtkZHEOy3/RfCf8ipgl1O8r+E9inXNJo5KRyB2tg
- WtZF4H2ON/3flsIpq1KuaD4C5bcM8353zJxYl4tM6geBn/XNhFCwYzTvuv6lPiWwH1vx6Iw4yC4
- uxA8ew1n/qR0hR5GLlXxnaNT0/KeZXcqomHjniRqTmbK00b+f2Fagj2Nyh7yY68q8xjMTfiI4Hm
- gsNsRyQ2DB2CPPBaainurf20bEKccYUzWRoz8sRYYb8jy0sVx53u7tm4moynUkq4BGZTnfKyFf6
- 82aBDMSwX+Z60zW+zjw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-10_02,2026-06-09_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 malwarescore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- phishscore=0 impostorscore=0 adultscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606100111
+Mime-Version: 1.0
+From: <yang.susheng@zte.com.cn>
+To: <zhangzhanpeng.jasper@bytedance.com>
+Cc: <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <kvm-riscv@lists.infradead.org>, <pjw@kernel.org>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+        <conor@kernel.org>, <cleger@rivosinc.com>, <himanshu@thechauhan.dev>,
+        <will@kernel.org>, <mark.rutland@arm.com>, <atish.patra@linux.dev>,
+        <anup@brainfault.org>, <shuah@kernel.org>, <cuiyunhui@bytedance.com>,
+        <yuanzhu@bytedance.com>, <zhangzhanpeng.jasper@bytedance.com>,
+        <liu.xuemei1@zte.com.cn>, <zhang.anmeng@zte.com.cn>,
+        <gao.rui@zte.com.cn>, <tan.hu@zte.com.cn>, <jin.qi@zte.com.cn>,
+        <li.zhichao@zte.com.cn>, <jia.yunxiang@zte.com.cn>,
+        <dai.hualiang@zte.com.cn>, <liu.qingtao2@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2OSA0LzVdIHBlcmY6IFJJU0MtVjogYWRkIHN1cHBvcnQgZm9yIFNTRSBldmVudA==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 65AC69UA050105
+X-MSS: AUDITRELEASE@mse-fl1.zte.com.cn
+X-TLS: YES
+X-ENVELOPE-SENDER: yang.susheng@zte.com.cn
+X-SOURCE-IP: 10.5.228.132 unknown Wed, 10 Jun 2026 20:06:12 +0800
+X-CLEAN: YES
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6A295334.000/4gb4Hm650pz5B13W
 
-On 5/27/2026 11:08 PM, Namhyung Kim wrote:
-> On Tue, May 26, 2026 at 09:59:41AM -0700, Ian Rogers wrote:
->> On Tue, May 26, 2026 at 9:20 AM Jan Polensky <japo@linux.ibm.com> wrote:
->>> On Tue, May 26, 2026 at 08:23:28AM -0700, Ian Rogers wrote:
->>>> On Tue, May 26, 2026 at 3:35 AM Jan Polensky <japo@linux.ibm.com> wrote:
->>>>> On Sat, May 23, 2026 at 11:49:22PM -0300, Arnaldo Carvalho de Melo wrote:
->>>>>> On Wed, May 20, 2026 at 01:09:05PM +0000, sashiko-bot@kernel.org wrote:
->>>>>>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->>>>>>> - [Medium] The patch explicitly allows text relocations in the Python extension shared object (`perf.so`) by adding `-Wl,-z,notext`, masking the root cause of missing `-fPIC` flags and breaking W^X (Write XOR Execute) security protections.
->>>>>>> --
->>>>>>>
->>>>>>> commit f3832fb0ad0d1f9c2e69039b2a5110f77d220d5e
->>>>>>> Author: Jan Polensky <japo@linux.ibm.com>
->>>>>>>
->>>>>>> perf build: Fix Python extension build with GCC 16 hardening
->>>>>>>
->>>>>>> This commit addresses a build failure in the Python extension caused by GCC 16
->>>>>>> stricter security policies regarding dynamic relocations in read-only segments.
->>>>>>> It adds the -Wl,-z,notext flag to the linker to explicitly allow text
->>>>>>> relocations in the Python extension shared object.
->>>>>>>
->>>>>>>> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->>>>>>>> index 76b35ac19acbf..eea170d6576db 100644
->>>>>>>> --- a/tools/perf/Makefile.perf
->>>>>>>> +++ b/tools/perf/Makefile.perf
->>>>>>>> @@ -749,7 +749,7 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
->>>>>>>>  $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
->>>>>>>>
->>>>>>>>  $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py $(PERFLIBS_PY)
->>>>>>>> - $(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
->>>>>>>> + $(QUIET_GEN)LDSHARED="$(CC) -pthread -shared -Wl,-z,notext" \
->>>>>>>
->>>>>>> [Severity: Medium]
->>>>>>> Does adding -Wl,-z,notext mask the root cause of the GCC 16 linker error?
->>>>>>>
->>>>>>> The error regarding dynamic relocations in a read-only segment usually
->>>>>>> indicates that non-position-independent code from the static libraries
->>>>>>> is being linked into the shared library.
->>>>>>>
->>>>>>> Using -Wl,-z,notext suppresses this error by allowing text relocations, which
->>>>>>> forces the dynamic linker to map the executable text segment as writable at
->>>>>>> load time. This breaks W^X security protections and weakens the security of
->>>>>>> any Python process loading the extension.
->>>>>>>
->>>>>>> Should the required object files be compiled with -fPIC instead to properly
->>>>>>> resolve the linker error without compromising security?
->>>>>>
->>>>>> So I asked Claude about this and he suggests doing like other parts of
->>>>>> perf and using -fPIC, can you try to do that?
->>>>>>
->>>>>> ---------------------------------------
->>>>>>
->>>>>> ● Sashiko is right. -Wl,-z,notext is a band-aid that weakens security —
->>>>>>   it makes the text segment writable at load time, defeating W^X.
->>>>>>
->>>>>>   The root cause is that PERFLIBS_PY (the static libraries linked into
->>>>>>   the Python .so) are compiled without -fPIC. When you link non-PIC .a
->>>>>>   archives into a shared library, the linker needs text relocations. GCC
->>>>>>   16 correctly rejects this by default.
->>>>>>
->>>>>>   The proper fix is to build the static libraries that go into the
->>>>>>   Python extension with -fPIC. The perf build system already has
->>>>>>   precedent for this — look for how libperf and libsubcmd handle PIC
->>>>>>   builds. The Python extension's dependencies need a parallel -fPIC
->>>>>>   build, or the existing objects need to be compiled with -fPIC when the
->>>>>>   Python binding is enabled.
->>>>>>
->>>>>>   The -Wl,-z,notext approach would also cause issues on distros that
->>>>>>   enforce RELRO + BIND_NOW hardening, and some package builders would
->>>>>>   reject the resulting .so outright.
->>>>>>
->>>>>> - Arnaldo
->>>>>
->>>>> Hi Arnaldo,
->>>>>
->>>>> thanks for the pointer. I double-checked this on s390x and did some reduced-link
->>>>> testing for the ET_DYN / Python-extension case.
->>>>>
->>>>> The failure is not triggered by the perf Python binding object alone.
->>>>>
->>>>> A reduced reproducer succeeds when linking:
->>>>>   python.o
->>>>>   + libapi.a
->>>>>   + libperf.a
->>>>>   + libsubcmd.a
->>>>>   + libsymbol.a
->>>>>   + libbpf.a
->>>>>   + libperf-ui.a
->>>>>
->>>>> The link starts to fail with:
->>>>>   /usr/bin/ld.bfd: error: read-only segment has dynamic relocations
->>>>>
->>>>> as soon as libperf-util.a is added.
->>>>>
->>>>> In my tree, libperf-util.a currently contains only perf-util-in.o, and replacing
->>>>> the archive with that single object still reproduces the same failure.
->>>>>
->>>>> Reduced reproducer:
->>>>>
->>>>>   gcc -pthread -shared \
->>>>>     -Wl,-z,noexecstack \
->>>>>     -o /tmp/try-perf-util-only.so \
->>>>>     /root/linux/tools/perf/python_ext_build/tmp/root/linux/tools/perf/util/python.o \
->>>>>     -Wl,--whole-archive \
->>>>>       /root/linux/tools/perf/libapi/libapi.a \
->>>>>       /root/linux/tools/perf/libperf/libperf.a \
->>>>>       /root/linux/tools/perf/libsubcmd/libsubcmd.a \
->>>>>       /root/linux/tools/perf/libsymbol/libsymbol.a \
->>>>>       /root/linux/tools/perf/libbpf/libbpf.a \
->>>>>       /root/linux/tools/perf/libperf-ui.a \
->>>>>     -Wl,--no-whole-archive \
->>>>>     /root/perf-util-one/perf-util-in.o \
->>>>>     -lpython3.14 -lpthread -ldl -lm -lutil
->>>>>
->>>>> Inspection of perf-util-in.o on s390x shows many direct R_390_PC32DBL
->>>>> relocations from .text against .data.rel.ro, .data.rel.ro.local,
->>>>> .data.rel.local, .bss, and .rodata.
+Hi Zhanpeng,
 
-R_390_PC32DBL are PC-relative relocations that usually get resolved by
-the linker during final link of the shared library.
-
->>>>>
->>>>> Representative examples include:
->>>>>
->>>>>   arm64__associate_instruction_ops:
->>>>>     larl %r6  -> R_390_PC32DBL .data.rel.ro+0x2
->>>>>
->>>>>   loongarch__associate_ins_ops:
->>>>>     larl %r9  -> R_390_PC32DBL .data.rel.ro+0x22
->>>>>     larl %r9  -> R_390_PC32DBL .data.rel.ro+0x42
->>>>>
->>>>>   check_ppc_insn:
->>>>>     larl %r4  -> R_390_PC32DBL .data.rel.local+0x4c2
->>>>>     larl %r2  -> R_390_PC32DBL .data.rel.ro.local+0x22
->>>>>     larl %r1  -> R_390_PC32DBL .data.rel.local+0x2
->>>>>     larl %r2  -> R_390_PC32DBL .data.rel.ro.local+0x2
->>>>>
->>>>>   s390__associate_ins_ops:
->>>>>     larl %r10 -> R_390_PC32DBL .data.rel.ro+0x732
->>>>>     larl %r10 -> R_390_PC32DBL .data.rel.ro+0x752
->>>>>
->>>>> So from my reproducer, I don't think we can describe this simply as
->>>>> "all Python-extension dependency archives are missing -fPIC".
->>>>>
->>>>> The issue narrows down much more specifically to perf-util-in.o in the ET_DYN
->>>>> link of the Python extension, and the direct text-to-data section relocations
->>>>> above look like the most relevant candidates.
->>>>>
->>>>> So I agree that -Wl,-z,notext is only a workaround. I'd prefer to understand
->>>>> and fix the underlying relocation pattern in perf-util-in.o rather than merge
->>>>> that as-is.
->>>>>
->>>>> If useful, I can send the relevant readelf/objdump snippets in a follow-up.
->>>>
->>>> Hi Jan,
->>>>
->>>> I wonder about two tests:
->>>> 1) adding V=1 JOBS=1 to your make command to switch on single
->>>> threading and build verbosity. This may make it possible to identify
->>>> the gcc command that is missing -fPIC. For example, I see -fPIC on
->>>> x86:
->>>>   gcc -Wp,-MD,/tmp/perf4/util/annotate-arch/.annotate-arm64.o.d
->>>> -Wp,-MT,/tmp/perf4/util/annotate-arch/annotate -arm64.o
->>>> -Wbad-function-cast -Wdeclaration-after-statement -Wformat-security
->>>> -Wformat-y2k -Winit-self -Wmissin g-declarations -Wmissing-prototypes
->>>> -Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls
->>>> -Wst rict-prototypes -Wswitch-default -Wswitch-enum -Wundef
->>>> -Wwrite-strings -Wformat -Wno-type-limits -Wstrict-alia sing=3
->>>> -Wshadow -fno-strict-aliasing -I/tmp/perf4/arch/x86/include/generated
->>>> -DHAVE_ARCH_X86_64_SUPPORT -Werro r -g -fno-omit-frame-pointer -Wall
->>>> -Wextra -std=gnu11 -funsigned-char -fstack-protector-all
->>>> -D_LARGEFILE64_SOU RCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
->>>> -I~/linux/tools/perf/util/include
->>>> -I~/linux/tools/perf/arch/x86/include
->>>> -I/usr/local/google/home/irogers/re pos/linux4/tools/include/
->>>> -I~/linux/tools/arch/x86/include/uapi -I/usr/loc
->>>> al/google/home/irogers/repos/linux4/tools/include/uapi
->>>> -I~/linux/tools/arc h/x86/include/ -I~/linux/tools/arch/x86/
->>>> -I/tmp/perf4//util -I/tmp/perf4/ -I~/linux/tools/perf/util
->>>> -I~/linux/to ols/perf -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
->>>> -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT -DHAVE_GETTID -DHAVE
->>>> _FILE_HANDLE -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT
->>>> -DHAVE_SCHED_GETCPU_SUPPORT -DHAVE_SETNS_SUPPORT -DHA VE_ZLIB_SUPPORT
->>>> -DHAVE_LIBELF_SUPPORT -DHAVE_ELF_GETPHDRNUM_SUPPORT
->>>> -DHAVE_GELF_GETNOTE_SUPPORT -DHAVE_ELF_GET SHDRSTRNDX_SUPPORT
->>>> -DHAVE_DEBUGINFOD_SUPPORT -DHAVE_LIBDW_SUPPORT -DHAVE_LIBBPF_SUPPORT
->>>> -DHAVE_SDT_EVENT -DHAV E_JITDUMP -DHAVE_LIBOPENSSL_SUPPORT
->>>> -DHAVE_BPF_SKEL -DHAVE_DWARF_UNWIND_SUPPORT -DHAVE_SLANG_SUPPORT
->>>> -DHAVE_TI MERFD_SUPPORT -fPIC -DHAVE_LIBLLVM_SUPPORT
->>>> -I/usr/lib/llvm-19/include -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS
->>>> -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
->>>> -DHAVE_CXA_DEMANGLE_SUPPORT -DHAVE_LZMA_SUPPORT -DHAVE_ZSTD_SUPPORT
->>>> -DHAVE_BACKTRACE_SUPPORT -DHAVE_LIBNUMA_SUPPORT
->>>> -DHAVE_PERF_READ_VDSO32 -DHAVE_LIBBABELTRACE_SUPPORT -DHAVE_
->>>> LIBCAPSTONE_SUPPORT -DHAVE_JVMTI_CMLR -DHAVE_LIBPFM
->>>> -DHAVE_LIBTRACEEVENT -I/usr/include/traceevent -DLIBTRACEE
->>>> VENT_VERSION=67072 -DHAVE_RUST_SUPPORT -I/tmp/perf4/libapi/include
->>>> -I/tmp/perf4/libbpf/include -I/tmp/perf4/li bsubcmd/include
->>>> -I/tmp/perf4/libsymbol/include -I/tmp/perf4/libperf/include
->>>> -I/tmp/perf4/ -D"BUILD_STR(s)=#s" -c -o
->>>> /tmp/perf4/util/annotate-arch/annotate-arm64.o
->>>> util/annotate-arch/annotate-arm64.c
->>>>
->>>> 2) adding EXTRA_CFLAGS="-fPIC" to your make command. This should force
->>>> this option wherever it might be missing.
->>>>
->>>> Thanks,
->>>> Ian
->>>>
->>>>> Best regards,
->>>>> Jan
->>>>>
->>> Hi Ian,
->>>
->>> I tested both suggestions the second in the beginning of my research:
->>>
->>> EXTRA_CFLAGS="-fPIC" - Does NOT work. Same error:
->>>
->>> /usr/bin/ld.bfd: error: read-only segment has dynamic relocations
->>> collect2: error: ld returned 1 exit status
-
-This did not work because EXTRA_CLFAGS do not get appended to CXXFLAGS
-(see below).
-
->>>
->>> The issue is s390x-specific R_390_PC32DBL relocations in perf-util-in.o
->>> (from `larl` instructions) that persist even with -fPIC.
->>>
->>> Current options:
->>> 1. Use -Wl,-z,notext (security issue)
->>> 2. Refactor code to avoid these relocations
->>> 3. Disable Python extension on s390x (not an option)
->>>
->>> Thoughts?
->>
->> So it appears that part of the problem is declaring arrays and structs
->> to be const. Making things non-const I think is also not an option.
->> Would  EXTRA_CFLAGS="-fvisibility=hidden" help?
->>
->> It would we interesting to build with -Wl,-z,notext and then look for
->> the symbol the linker is fighting with:
->>   eu-findtextrel perf.cpython....so
-
-Thanks for the hint!
-
-$ eu-findtextrel python_ext_build/lib/perf.cpython-314-s390x-linux-gnu.so
-either the file containing the function '_ZN4llvm7hashing6detailL2k3E' or the file containing the function '_ZN4llvm7numbersL7inv_pisE' is not compiled with -fpic/-fPIC
-either the file containing the function '_ZN4llvm7numbersL3pisE' or the file containing the function '_ZN4llvmL18BitReverseTable256E' is not compiled with -fpic/-fPIC
-
-Inspecting the objdump -wDzR output shows that the issue is caused by a
-few R_390_RELATIVE relocations in .rodata:
-
-$ objdump -wDzR tools/perf/python/perf.cpython-314-s390x-linux-gnu.so
-...
-Disassembly of section .rodata:
-...
-000000000034efc8 <_ZN4llvm7hashing6detailL2k3E>:
-  34efc8:       c9 49 d7 c7             .long   0xc949d7c7
-  34efcc:       50 9e 65 57             st      %r9,1367(%r14,%r6)
-  34efd0:       33 2e                   lcer    %f2,%f14
-...
-  34eff4:       38 34                   ler     %f3,%f4
-  34eff6:       00 00           .long   0x00000000      34eff8: R_390_RELATIVE  *ABS*+0x34efd0
-
-000000000034eff8 <_ZN4llvm7numbersL3pisE>:
-  34eff8:       00 00 00 00             .long   0x00000000      34eff8: R_390_RELATIVE  *ABS*+0x34efd0
-  34effc:       00 34 ef d0             .long   0x0034efd0
-  34f000:       30 2e                   lper    %f2,%f14
-...
-  34f024:       32 34                   lter    %f3,%f4
-  34f026:       00 00           .long   0x00000000      34f028: R_390_RELATIVE  *ABS*+0x34f000
-
-000000000034f028 <_ZN4llvm7numbersL7inv_pisE>:
-  34f028:       00 00 00 00             .long   0x00000000      34f028: R_390_RELATIVE  *ABS*+0x34f000
-  34f02c:       00 34 f0 00             .long   0x0034f000
-
-000000000034f030 <_ZN4llvmL18BitReverseTable256E>:
-  34f030:       00 80 40 c0             .long   0x008040c0
-...
-
-They originate from util/llvm-c-helpers.o, which gets linked into
-util/perf-util-in.o, which gets linked into perf-util-in.o, which gets
-copied into archive libperf-util.a, which finally gets linked into the
-shared library:
-
-$ find . -type f -name "*.o" -print0 | xargs -0 nm -A | grep "_ZN4llvm7numbersL7inv_pisE"
-nm: ./tools/perf/arch/perf-test-in.o: no symbols
-./tools/perf/perf-util-in.o:000000000006e240 r _ZN4llvm7numbersL7inv_pisE
-./tools/perf/util/llvm-c-helpers.o:0000000000000080 r _ZN4llvm7numbersL7inv_pisE
-./tools/perf/util/perf-util-in.o:000000000006e240 r _ZN4llvm7numbersL7inv_pisE
-
-util/llvm-c-helpers.o is built from util/llvm-c-helpers.cc.  The cause
-is that CXXFLAGS for s390 is missing -fPIC.  Commit a9a3f1d18a6c ("perf
-s390: Always build with -fPIC") added compiler option -fPIC to CFLAGS
-for s390.  I have sent a new patch to resolve this issue:
-
-[PATCH] perf s390: Fix TEXTREL in Python extension by compiling as PIC
-https://lore.kernel.org/all/20260610112451.1553054-1-jremus@linux.ibm.com/
-
->> or
->>   readelf -d perf.so | grep TEXTREL
->>   readelf -r perf.so
 > 
-> I'm curious if it's s390 specific.  I don't know what code patterns make
-> it relocatable.  Is taking an address of struct ins_ops variable a
-> problem?  Does it matter being a static variable?
-I did not investigate why other architectures do not (need to) add -fPIC
-to CFLAGS/CXXFLAGS in tools/perf/Makefile.config although a shared
-library is built.
+> In order to use SSE within PMU drivers, register an SSE handler for the
+> local PMU event. Reuse the existing overflow IRQ handler and pass
+> appropriate pt_regs. Add a config option RISCV_PMU_SBI_SSE to select event
+> delivery via SSE events.
+> 
+> When the SSE path is used, also honor the return value from
+> perf_event_overflow(). If perf core throttles or disables an event, do not
+> immediately restart the overflowed counters from the SSE handler.
+> 
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+> Co-developed-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+> Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+> ---
+>  drivers/perf/Kconfig           | 10 +++++
+>  drivers/perf/riscv_pmu.c       | 23 +++++++++++
+>  drivers/perf/riscv_pmu_sbi.c   | 78 ++++++++++++++++++++++++++++++++-----
+>  include/linux/perf/riscv_pmu.h |  5 +++
+>  4 files changed, 104 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index ab90932fc2d0..b6c58475091c 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -105,6 +105,16 @@ config RISCV_PMU_SBI
+>  	  full perf feature support i.e. counter overflow, privilege mode
+>  	  filtering, counter configuration.
+>  
+> +config RISCV_PMU_SBI_SSE
+> +	depends on RISCV_PMU && RISCV_SBI_SSE
+> +	bool "RISC-V PMU SSE events"
+> +	default n
+> +	help
+> +	  Say y if you want to use SSE events to deliver PMU interrupts. This
+> +	  provides a way to profile the kernel at any level by using NMI-like
+> +	  SSE events. Since SSE events can be intrusive, this option allows
+> +	  selecting them only when needed.
+> +
+>  config STARFIVE_STARLINK_PMU
+>  	depends on ARCH_STARFIVE || COMPILE_TEST
+>  	depends on 64BIT
+> diff --git a/drivers/perf/riscv_pmu.c b/drivers/perf/riscv_pmu.c
+> index 8e3cd0f35336..a48e286d9394 100644
+> --- a/drivers/perf/riscv_pmu.c
+> +++ b/drivers/perf/riscv_pmu.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/irqdesc.h>
+>  #include <linux/perf/riscv_pmu.h>
+>  #include <linux/printk.h>
+> +#include <linux/riscv_sbi_sse.h>
+>  #include <linux/smp.h>
+>  #include <linux/sched_clock.h>
+>  
+> @@ -254,6 +255,24 @@ void riscv_pmu_start(struct perf_event *event, int flags)
+>  	perf_event_update_userpage(event);
+>  }
+>  
+> +#ifdef CONFIG_RISCV_PMU_SBI_SSE
+> +static void riscv_pmu_disable(struct pmu *pmu)
+> +{
+> +	struct riscv_pmu *rvpmu = to_riscv_pmu(pmu);
+> +
+> +	if (rvpmu->sse_evt)
+> +		sse_event_disable_local(rvpmu->sse_evt);
+> +}
+> +
+> +static void riscv_pmu_enable(struct pmu *pmu)
+> +{
+> +	struct riscv_pmu *rvpmu = to_riscv_pmu(pmu);
+> +
+> +	if (rvpmu->sse_evt)
+> +		sse_event_enable_local(rvpmu->sse_evt);
+> +}
+> +#endif
+> +
+>  static int riscv_pmu_add(struct perf_event *event, int flags)
+>  {
+>  	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
+> @@ -411,6 +430,10 @@ struct riscv_pmu *riscv_pmu_alloc(void)
+>  		.event_mapped	= riscv_pmu_event_mapped,
+>  		.event_unmapped	= riscv_pmu_event_unmapped,
+>  		.event_idx	= riscv_pmu_event_idx,
+> +#ifdef CONFIG_RISCV_PMU_SBI_SSE
+> +		.pmu_enable	= riscv_pmu_enable,
+> +		.pmu_disable	= riscv_pmu_disable,
+> +#endif
+>  		.add		= riscv_pmu_add,
+>  		.del		= riscv_pmu_del,
+>  		.start		= riscv_pmu_start,
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 385af5e6e6d0..ac10ebd73c7c 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/irqdomain.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of.h>
+> +#include <linux/riscv_sbi_sse.h>
+>  #include <linux/cpu_pm.h>
+>  #include <linux/sched/clock.h>
+>  #include <linux/soc/andes/irq.h>
+> @@ -1038,10 +1039,10 @@ static void pmu_sbi_start_overflow_mask(struct riscv_pmu *pmu,
+>  		pmu_sbi_start_ovf_ctrs_sbi(cpu_hw_evt, ctr_ovf_mask);
+>  }
+>  
+> -static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+> +static irqreturn_t pmu_sbi_ovf_handler(struct cpu_hw_events *cpu_hw_evt,
+> +				       struct pt_regs *regs, bool from_sse)
+>  {
+>  	struct perf_sample_data data;
+> -	struct pt_regs *regs;
+>  	struct hw_perf_event *hw_evt;
+>  	union sbi_pmu_ctr_info *info;
+>  	int lidx, hidx, fidx;
+> @@ -1049,7 +1050,7 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  	struct perf_event *event;
+> +	int ev_overflow = 0;
+>  	u64 overflow;
+>  	u64 overflowed_ctrs = 0;
+> -	struct cpu_hw_events *cpu_hw_evt = dev;
+>  	u64 start_clock = sched_clock();
+>  	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
+>  
+> @@ -1059,13 +1059,15 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  	/* Firmware counter don't support overflow yet */
+>  	fidx = find_first_bit(cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS);
+>  	if (fidx == RISCV_MAX_COUNTERS) {
+> -		csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+> +		if (!from_sse)
+> +			csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+>  		return IRQ_NONE;
+>  	}
+>  
+>  	event = cpu_hw_evt->events[fidx];
+>  	if (!event) {
+> -		ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_mask);
+> +		if (!from_sse)
+> +			ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_mask);
+>  		return IRQ_NONE;
+>  	}
+>  
+> @@ -1080,16 +1082,16 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  
+>  	/*
+>  	 * Overflow interrupt pending bit should only be cleared after stopping
+> -	 * all the counters to avoid any race condition.
+> +	 * all the counters to avoid any race condition. When using SSE,
+> +	 * interrupt is cleared when stopping counters.
+>  	 */
+> -	ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_mask);
+> +	if (!from_sse)
+> +		ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_mask);
+>  
+>  	/* No overflow bit is set */
+>  	if (!overflow)
+>  		return IRQ_NONE;
+>  
+> -	regs = get_irq_regs();
+> -
+>  	for_each_set_bit(lidx, cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS) {
+>  		struct perf_event *event = cpu_hw_evt->events[lidx];
+>  
+> @@ -1133,18 +1136,65 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+>  			 * TODO: We will need to stop the guest counters once
+>  			 * virtualization support is added.
+>  			 */
+> -			perf_event_overflow(event, &data, regs);
+> +			ev_overflow |= perf_event_overflow(event, &data, regs);
+>  		}
+>  		/* Reset the state as we are going to start the counter after the loop */
+>  		hw_evt->state = 0;
+>  	}
+>  
+> -	pmu_sbi_start_overflow_mask(pmu, overflowed_ctrs);
+> +	if (!ev_overflow || !from_sse)
+> +		pmu_sbi_start_overflow_mask(pmu, overflowed_ctrs);
+> +
+>  	perf_sample_event_took(sched_clock() - start_clock);
+>  
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static irqreturn_t pmu_sbi_ovf_irq_handler(int irq, void *dev)
+> +{
+> +	return pmu_sbi_ovf_handler(dev, get_irq_regs(), false);
+> +}
+> +
+> +#ifdef CONFIG_RISCV_PMU_SBI_SSE
+> +static int pmu_sbi_ovf_sse_handler(u32 evt, void *arg, struct pt_regs *regs)
+> +{
+> +	struct cpu_hw_events __percpu *hw_events = arg;
+> +	struct cpu_hw_events *hw_event = raw_cpu_ptr(hw_events);
+> +
+> +	pmu_sbi_ovf_handler(hw_event, regs, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
+> +{
+> +	int ret;
+> +	struct sse_event *evt;
+> +	struct cpu_hw_events __percpu *hw_events = pmu->hw_events;
+> +
+> +	evt = sse_event_register(SBI_SSE_EVENT_LOCAL_PMU_OVERFLOW, 0,
+> +				 pmu_sbi_ovf_sse_handler, hw_events);
+> +	if (IS_ERR(evt))
+> +		return PTR_ERR(evt);
+> +
+> +	ret = sse_event_enable(evt);
+> +	if (ret) {
+> +		sse_event_unregister(evt);
+> +		return ret;
+> +	}
+> +
+> +	pr_info("using SSE for PMU event delivery\n");
+> +	pmu->sse_evt = evt;
+> +
+> +	return ret;
+> +}
+> +#else
+> +static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +#endif
+> +
+>  static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
+>  {
+>  	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
+> @@ -1195,6 +1242,10 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
+>  	struct cpu_hw_events __percpu *hw_events = pmu->hw_events;
+>  	struct irq_domain *domain = NULL;
+>  
+> +	ret = pmu_sbi_setup_sse(pmu);
+> +	if (!ret)
+> +		return 0;
+> +
+>  	if (riscv_isa_extension_available(NULL, SSCOFPMF)) {
+>  		riscv_pmu_irq_num = RV_IRQ_PMU;
+>  		riscv_pmu_use_irq = true;
+> @@ -1229,7 +1280,7 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
+>  		return -ENODEV;
+>  	}
+>  
+> -	ret = request_percpu_irq(riscv_pmu_irq, pmu_sbi_ovf_handler, "riscv-pmu", hw_events);
+> +	ret = request_percpu_irq(riscv_pmu_irq, pmu_sbi_ovf_irq_handler, "riscv-pmu", hw_events);
+>  	if (ret) {
+>  		pr_err("registering percpu irq failed [%d]\n", ret);
+>  		return ret;
+> diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
+> index f82a28040594..08fdcf6baf4e 100644
+> --- a/include/linux/perf/riscv_pmu.h
+> +++ b/include/linux/perf/riscv_pmu.h
+> @@ -28,6 +28,8 @@
+>  
+>  #define RISCV_PMU_CONFIG1_GUEST_EVENTS 0x1
+>  
+> +struct sse_event;
+> +
+>  struct cpu_hw_events {
+>  	/* currently enabled events */
+>  	int			n_events;
+> @@ -54,6 +56,9 @@ struct riscv_pmu {
+>  	char		*name;
+>  
+>  	irqreturn_t	(*handle_irq)(int irq_num, void *dev);
+> +#ifdef CONFIG_RISCV_PMU_SBI_SSE
+> +	struct sse_event *sse_evt;
+> +#endif
+>  
+>  	unsigned long	cmask;
+>  	u64		(*ctr_read)(struct perf_event *event);
+> -- 
+> 2.50.1 (Apple Git-155)
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
+We found that if RISCV_PMU_SBI_SSE is enabled, executing 'perf record -g 
+-F 999 ls' may occasionally fail. If the program is more complex, the 
+error occurs 100% of the time. After disabling RISCV_PMU_SBI_SSE, the 
+program runs normally. Therefore, we suspect there may be an issue with 
+the PMU_SBI_SSE functionality. Have you encountered this phenomenon? Do 
+you have any troubleshooting suggestions?
+Below are some fault information：
+[root@localhost ~]# perf record -g -F 999 ls
+[ 9478.867438] BUG: spinlock bad magic on CPU#2, ls/1046
+[ 9478.871534] Unable to handle kernel paging request at virtual address ffffffc6004940d0
+[ 9478.872804] Oops [#1]
+[ 9478.873359] Modules linked in: xt_MASQUERADE xfrm_user xfrm_algo iptable_nat xt_addrtype
+iptable_filter ip_tables xt_conntrack x_tables nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+libcrc32c br_netfilter bridge stp llc overlay virtio_gpu virtio_dma_buf drm_shmem_helper
+drm_client_lib drm_kms_helper nls_iso8859_1 drm drm_panel_orientation_quirks backlight configfs efivarfs
+[ 9478.877513] CPU: 2 UID: 0 PID: 1046 Comm: ls Not tainted 6.13.0-00006-ge94d0b11d044-dirty #7
+[ 9478.878544] Hardware name: QEMU QEMU Virtual Machine, BIOS 2.7 2/2/2022
+[ 9478.879324] epc : string+0x48/0xe6
+[ 9478.880100]  ra : vsnprintf+0xea/0x3b4
+[ 9478.880697] epc : ffffffff809e39ae ra : ffffffff809e656e sp : ffffffc600493360
+[ 9478.881331]  gp : ffffffff81516480 tp : ffffffd68d280000 t0 : ffffffc600493312
+[ 9478.881952]  t1 : ffffffffffffffff t2 : 6e697073203a4755 s0 : ffffffc6004933a0
+[ 9478.882557]  s1 : ffffffffffffffff a0 : ffffffc6004934d7 a1 : 0000000000000000
+[ 9478.883355]  a2 : ffffffc6004934a8 a3 : ffffffc6004930d0 a4 : ffffffc6004940d0
+[ 9478.883988]  a5 : ffffffc7004934d6 a6 : ffffffffffffe000 a7 : 0000000000000004
+[ 9478.884600]  s2 : ffffffc6004934d7 s3 : ffffffc6004934a8 s4 : ffffffff80f24ea4
+[ 9478.885420]  s5 : ffffffff000000ff s6 : ffffffff8100153e s7 : 0000000000ffffff
+[ 9478.886056]  s8 : ffffffff8100153c s9 : 0000000000000007 s10: 0000000000000002
+[ 9478.886859]  s11: ffffffc6004935f0 t3 : 0000000000000004 t4 : ffffffff80e592d8
+[ 9478.887493]  t5 : ffffffff8152cb20 t6 : ffffffc60049307a
+[ 9478.887946] status: 0000000200000100 badaddr: ffffffc6004940d0 cause: 000000000000000d
+[ 9478.888886] [<ffffffff809e39ae>] string+0x48/0xe6
+[ 9478.889342] [<ffffffff809e656e>] vsnprintf+0xea/0x3b4
+[ 9478.889795] [<ffffffff8007c2ce>] vprintk_store+0x108/0x3d2
+[ 9478.890459] [<ffffffff8007d0ce>] vprintk_emit+0x82/0x218
+[ 9478.890932] [<ffffffff8007d27a>] vprintk_default+0x16/0x1e
+[ 9478.891416] [<ffffffff8007e270>] vprintk+0x1e/0x3c
+[ 9478.892011] [<ffffffff8000332a>] _printk+0x32/0x50
+[ 9478.892441] [<ffffffff80002f84>] spin_dump+0x5e/0x6e
+[ 9478.892865] [<ffffffff80077bf4>] do_raw_spin_unlock+0x130/0x132
+[ 9478.893542] [<ffffffff809f50e0>] _raw_spin_unlock+0x10/0x22
+[ 9478.894031] [<ffffffff80166118>] filemap_map_pages+0x314/0x434
+[ 9478.894541] [<ffffffff8019f6ea>] __handle_mm_fault+0x9ac/0xd50
+[ 9478.895556] Code: 97aa a809 7463 00c5 0023 00d5 0505 2585 0663 00f5 (4683) 0007 
+[ 9478.896729] ---[ end trace 0000000000000000 ]---
+[ 9478.897637] note: ls[1046] exited with irqs disabled
+[ 9478.898653] note: ls[1046] exited with preempt_count 4
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+[root@localhost x264]# perf record -g -F 999 ./x264 -o output_static.mkv ./Kimono_1920x1080_24.yuv
+--input-res 1920x1080 --fps 24 --preset faster --vbv-maxrate 2400 --vbv-bufsize 4800 --ref 1
+--aq-mode 2 --aq-strength 1.2 --qcomp 0.8 --lookahead-threads 12 --ipratio 1.0 --bframes 3
+--rc-lookahead 6 --crf 28 --keyint 60 --scenecut 0 --frames 200                                                                                                      
+[   63.382672] Unable to handle kernel paging request at virtual address 0000003feb0ff5d8                                                               
+[   63.383325] Oops [#1]                                                                                                                                
+[   63.383395] Modules linked in: xt_MASQUERADE xfrm_user xfrm_algo iptable_nat xt_addrtype
+iptable_filter ip_tables xt_conntrack x_tables nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+libcrc32c br_netfilter bridge stp llc overlay virtio_gpu virtio_dma_buf drm_shmem_helper
+drm_client_lib drm_kms_helper nls_iso8859_1 drm configfs drm_panel_orientation_quirks
+backlight efivarfs                                                                          
+[   63.385401] CPU: 3 UID: 0 PID: 580 Comm: x264 Not tainted 6.13.0-00006-ge94d0b11d044-dirty #7                                                
+[   63.385521] Hardware name: QEMU QEMU Virtual Machine, BIOS 2.7 2/2/2022                                                                              
+[   63.385732] epc : walk_stackframe+0x5c/0x11a                                                                                                         
+[   63.386470]  ra : walk_stackframe+0xda/0x11a                                                                                                         
+[   63.386537] epc : ffffffff80013b5c ra : ffffffff80013bda sp : ffffffc600493a40                                                                       
+[   63.386579]  gp : ffffffff81516480 tp : ffffffd684b33300 t0 : ffffffd7febf9c20                                                                       
+[   63.386617]  t1 : 000000003b9aca00 t2 : ffffffd7febe8080 s0 : ffffffc600493a90                                                                       
+[   63.386654]  s1 : ffffffc600493ee0 a0 : 0000000000000001 a1 : ffffffff809f5a48                                                                       
+[   63.386692]  a2 : 0000000000000002 a3 : 0000003feb0ff5d0 a4 : ffffffffffffc000                                                                       
+[   63.386729]  a5 : 0000000000003fff a6 : ffffffff81552558 a7 : ffffffd698fb8000
+[   63.386769]  s2 : 0000003feb100000 s3 : 0000003feb0ff5e0 s4 : ffffffff8001886a
+[   63.386806]  s5 : ffffffc600493ac0 s6 : ffffffff809f5a48 s7 : 0000000000000000
+[   63.386844]  s8 : ffffffc600493ac0 s9 : 0000000000000000 s10: 000000000007fff8
+[   63.386886]  s11: ffffffd698fb8000 t3 : 0000000000000015 t4 : 00000000000003e7
+[   63.386932]  t5 : 0000000000452bf5 t6 : ffffffc600493f70
+[   63.386965] status: 0000000200000100 badaddr: 0000003feb0ff5d8 cause: 000000000000000d
+[   63.387069] [<ffffffff80013b5c>] walk_stackframe+0x5c/0x11a
+[   63.387122] [<ffffffff80018902>] perf_callchain_kernel+0x28/0x34
+[   63.387154] [<ffffffff80160294>] get_perf_callchain+0x88/0x18e
+[   63.387189] [<ffffffff8015bcf2>] perf_callchain+0x52/0x6e
+[   63.387219] [<ffffffff8015c0f4>] perf_prepare_sample+0x3e6/0x730
+[   63.387249] [<ffffffff8015c8d6>] perf_event_output_forward+0x56/0xb8
+[   63.387280] [<ffffffff8015c51a>] __perf_event_overflow+0xdc/0x2e2
+[   63.387310] [<ffffffff8015d954>] perf_event_overflow+0x12/0x1a
+[   63.387341] [<ffffffff807e15e0>] pmu_sbi_ovf_handler+0x684/0x736
+[   63.387383] [<ffffffff807e16ee>] pmu_sbi_ovf_sse_handler+0x26/0x30
+[   63.387417] [<ffffffff807b73a0>] sse_handle_event+0x16/0x48
+[   63.387449] [<ffffffff8001933a>] do_sse+0x76/0xa8
+[   63.387478] [<ffffffff800195ac>] handle_sse+0xc0/0x162
+[   63.387748] Code: 7933 00e9 6463 0539 f693 0079 e2a1 e062 8693 ff09 (bc03) 0086 
+[   63.388072] ---[ end trace 0000000000000000 ]---
+[   63.388547] Kernel panic - not syncing: Fatal exception in interrupt
+[   63.388870] SMP: stopping secondary CPUs
 
+Regards
+Yangsusheng
