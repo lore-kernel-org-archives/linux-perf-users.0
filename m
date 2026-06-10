@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE8737CD47;
-	Wed, 10 Jun 2026 19:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A3737D128;
+	Wed, 10 Jun 2026 19:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781121239; cv=none; b=uZkb3jx37bp58oshtHVJAUvhidi8FYBxe8pZdXDJxpVWsQ1DdP0AJ2H9A6+m4sKPc7WprfBkkyYNyLTGZZwhy1L6ZxWCFwTKW8rC8QBXvZFgzn9evtsoJ+dIB2Igr3AO21kFSF8IwFB28lOPgSSwuY3aAhs/ioo8QReWq/qSnB4=
+	t=1781121245; cv=none; b=UA867RZLl/93d/SLcEjJ6i3a9fN72c9RTSOKWev+c6BKF+fLH8BZyQthRDzgKN4OVseafABkI95Xn/Pj6+e/8EGLXy5+3JYPVN24AAzZ5lEYU4GeT2ih2RZcobB9HrdI5ymM8nYdtoOqlC3oqdCjfQ2dQsIRqpI0YD9vYfyYwbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781121239; c=relaxed/simple;
-	bh=4em8vKNteIb1UNqt5h027Y3vkwepxSV6M7Ik10IMRwg=;
+	s=arc-20240116; t=1781121245; c=relaxed/simple;
+	bh=r1FvOriVrZR3ostN93vKiIt9jeaWj8eqZ/bXbnkMTng=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gg2TIXjI9QtBADFpWki+ApPjbDCaa599GNONnQa9WehfO20nAcvadx5eljCKHv0y1wQ6fyWWmBu3AhZDJFSs1tHkCpyJ1DIbWXNPLYsq0gvZqQJlQldhZyTC7yI8u2epU1B7fp+8KwQAF3A2CJOAoYwmZTv+1Av/hC0j8rKAHL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/833uLC; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=TFngUS3RPxCQVH8ugTJ4T38ACWqlI0J8kTw98iXYg3jUaZ0r3fXfSfMiNN/PTyNyiaTgUuT73taXv9GyGytVUF+/JQ6T52NmnWygnusW2cgMwiNoJhBDVSGc7ysvEYuMqkIWxBBmMFpBiiZnTl3WEQzTgDQubYD4IcyGX0dr4zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNeFA8QG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/833uLC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D6741F00898;
-	Wed, 10 Jun 2026 19:53:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNeFA8QG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AEB41F00893;
+	Wed, 10 Jun 2026 19:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781121238;
-	bh=gi9ig3P9K1UdZqjlNma4F0IVfW4ofvxuYalApT/6lDA=;
+	s=k20260515; t=1781121243;
+	bh=nfTxi6hJrsAftZWf73Htz3mo6TQ573ldugdjpeqF6A8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=B/833uLCGBg1zsAlepFLRkDq+B9rpcc0I2wuwsb4s8wVtiPDot7ljyJv+sclqXP0c
-	 ofb6KD9XyHb/YSDXEl9DjCffNClkGe4ClRDuFAJ301cCbryjkN+mOb9U7JkXP5+xuh
-	 WxZrzYSVfx+6fwg7ZhpyTod6+ihIT5/QRc7HqouXQywnHpAz93lzNBkJtPnijoTKsA
-	 n0NloJpFus/yFmXUBxFuoFWffuPLI9+EhC5zzpy6VOjqHWzHZDiEI57al849EqZcQD
-	 WySSRgfcHjg0gy0pPySyu22m6uV3/x9MQmZEDEhvmumiL7UU8D2XFeQynK9565HwuB
-	 aA4/t3FxVZIlw==
+	b=JNeFA8QGiL2prGKcRFZgxLWxWVeNsRZzSLatk6LOwpEw5i2m9LJUAHvTapHDq2CGj
+	 ZMyCpjnez2IOiue3We9Tm5+0IsFh+sPdjJQwwX7dLLPGR7w27tjwJjnBvVUtRcfcZK
+	 6NxLRKnMEoRNWHWdeOOJYT4EmVOWvnexFcoPz7nlTriODndcv6thz/pnbhCK6GTo4Q
+	 YAnnRMvS4R8U5zuJOncBCOPg3XOHItc2QiN7pxQl7i8+UDvX7nQGOVmA14xbKjp1bk
+	 cHgo2c5I3mpei82WAQTUrNa3hOcwozJVKCI/eaD8SMxpvFqyliEh+/bSwQclKbpPZ6
+	 pyXfNBesaLXuQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 22/23] perf symbols: Add bounds checks to elf_read_build_id() note iteration
-Date: Wed, 10 Jun 2026 16:51:55 -0300
-Message-ID: <20260610195157.2091137-23-acme@kernel.org>
+Subject: [PATCH 23/23] perf symbols: Add bounds checks to read_build_id() note iteration in minimal build
+Date: Wed, 10 Jun 2026 16:51:56 -0300
+Message-ID: <20260610195157.2091137-24-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260610195157.2091137-1-acme@kernel.org>
 References: <20260610195157.2091137-1-acme@kernel.org>
@@ -56,48 +56,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-elf_read_build_id() iterates ELF notes using pointer arithmetic
-driven by n_namesz and n_descsz from the note headers.  Neither
-the note header read nor the subsequent name/desc advances are
-checked against the section boundary.  A malformed ELF file with
-oversized note sizes causes out-of-bounds reads past the section
-data buffer.
+symbol-minimal.c's read_build_id() iterates ELF notes with the same
+pattern as symbol-elf.c's elf_read_build_id(): pointer arithmetic
+driven by n_namesz and n_descsz from 32-bit note header fields,
+without validating that the name and desc fit within the note section
+data.  A malformed ELF file with oversized note sizes causes
+out-of-bounds reads past the section data buffer.
 
-Add two bounds checks: verify the note header fits within the
-remaining section data, and verify that namesz + descsz (after
-alignment) fits before advancing the pointer.
+Add the same bounds check as the libelf path: validate namesz and
+descsz individually against remaining data before advancing the
+pointer, avoiding size_t overflow on 32-bit.
 
-Fixes: fd7a346ea292074e ("perf symbols: Filename__read_build_id should look at .notes section too")
+Fixes: b691f64360ecec49 ("perf symbols: Implement poor man's ELF parser")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol-elf.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ tools/perf/util/symbol-minimal.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 10902a5dc6dbe6cc..d84e2e031d430cf5 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -835,10 +835,24 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
- 	ptr = data->d_buf;
- 	while (ptr < (data->d_buf + data->d_size)) {
- 		GElf_Nhdr *nhdr = ptr;
--		size_t namesz = NOTE_ALIGN(nhdr->n_namesz),
--		       descsz = NOTE_ALIGN(nhdr->n_descsz);
-+		size_t namesz, descsz, remaining;
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index 8221dc9868f7c9f8..091071d06416e290 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -1,3 +1,4 @@
++#include "debug.h"
+ #include "dso.h"
+ #include "symbol.h"
+ #include "symsrc.h"
+@@ -44,7 +45,7 @@ static int read_build_id(void *note_data, size_t note_len, struct build_id *bid,
+ 	ptr = note_data;
+ 	while ((ptr + sizeof(*nhdr)) < (note_data + note_len)) {
  		const char *name;
+-		size_t namesz, descsz;
++		size_t namesz, descsz, remaining;
  
-+		/* ensure the note header fits within the section */
-+		if (ptr + sizeof(*nhdr) > data->d_buf + data->d_size)
-+			break;
-+
-+		namesz = NOTE_ALIGN(nhdr->n_namesz);
-+		descsz = NOTE_ALIGN(nhdr->n_descsz);
-+
+ 		nhdr = ptr;
+ 		if (need_swap) {
+@@ -56,6 +57,14 @@ static int read_build_id(void *note_data, size_t note_len, struct build_id *bid,
+ 		namesz = NOTE_ALIGN(nhdr->n_namesz);
+ 		descsz = NOTE_ALIGN(nhdr->n_descsz);
+ 
 +		/* validate individually to avoid size_t overflow on 32-bit */
-+		remaining = data->d_buf + data->d_size - ptr - sizeof(*nhdr);
++		remaining = note_data + note_len - ptr - sizeof(*nhdr);
 +		if (namesz > remaining || descsz > remaining - namesz) {
 +			pr_warning("%s: oversized note: n_namesz=%u, n_descsz=%u\n",
 +				   __func__, nhdr->n_namesz, nhdr->n_descsz);
