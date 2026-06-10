@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C23328611;
-	Wed, 10 Jun 2026 01:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7773E33A9D6;
+	Wed, 10 Jun 2026 01:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781056080; cv=none; b=o5qi6EK8Eas890qed3F7et5dk+8U3RwYHIO0o/h96dpCoaGdbq9gyfQPcfsthH0xAgd2CebmgpIqRqOH5kEv2H5T/lOXMIKRY1nh9vplWxA94pg6EIRZnmfDgwaftBefQ4e+ReicgvsOlnBjgQxC0rE2THTiBtZfZMrmKA8g94I=
+	t=1781056443; cv=none; b=EuiGRI4TkA2fDeCjRc7lBvQofPToL1GoOEapVGCLncVP+V3dl9X2ZzFWfVapHWXuW3r6QxV8l8pmsD6CZt9rtKyF35avKz+c0axO4O2DIVaAvzIa9t+cYkOI+qAbBoq/vczRLyp9hVs7I5W97q4VN9d+xQmTIlFo9BxHxQE5x48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781056080; c=relaxed/simple;
-	bh=T5yJMN8rRvTP14H+vNXf9dcMaiK+Ou2hENgINVWFdIk=;
+	s=arc-20240116; t=1781056443; c=relaxed/simple;
+	bh=RP+DWHBxkgmSHhy9wallgHqbeQIUU/fLrb1tlReNW9c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SVDAxcAlNCFASly3pHwAuoRDTimhewOXEJZL+it8C8FIjI6JbwWUA5mafa4YtbEGAddBiyg6eakK+sXcBTcd4Cw8Z59aVYwFY0hQezFTr8DitM85XWSjsv6GZF6P71nO6NvwlnxMw94pLsAizLUi1C289xtHi6sCb9VE2e+pYRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JuEwjoQK; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=kXSnLDK6TM3zkePRjruY7j+HVJp5JO6rYg1asTpAqyKM+SNqtP1VfreTRcOOoiAcYa2QH9Wwhdv6cuL1bWLn0a6Ngn8BDw/m7jZEP1Q69Io9xpBz2SQ7RulkUsD/SC5uzU6JmOm/mdpdWJxTT8vHZAm8wzLUlEVTAOxo8mb876k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OFOlLjSP; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JuEwjoQK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OFOlLjSP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781056077; x=1812592077;
+  t=1781056439; x=1812592439;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=T5yJMN8rRvTP14H+vNXf9dcMaiK+Ou2hENgINVWFdIk=;
-  b=JuEwjoQK2IqtdfAQaXv7QeXtXbrohOxkt0BI4VDOOxs4cv30v24f3UId
-   oPpqiFWNYLMZnhucwMvEL5U9eXpCpvTw3WD39xWa4YIfCWXa8Ygg7GCwQ
-   IAXdZ5eu5XA8atF615+FBIq/9gbm4gBVinsHsAXu+ot4o6LyjlnFilUR7
-   abwS9Y//0Ws6Fr/FYEnGrMIzMG1tJhxkKrZDfb2c7S5HrMCpsMGEqfp6L
-   gay8JLSnwEJzdzdWX6PFYCxhqCOW4ulC9bPOGUd/FC8VYd2hjKO8rl86R
-   Lu/AScmTWJHE6FN0Jvj7+a2QF8NryesI5v96hrhphrZoKrVPlziT8Oxxz
-   A==;
-X-CSE-ConnectionGUID: ZcW3IO/6RJOH+HoUmr4qzA==
-X-CSE-MsgGUID: kx6yS+mXRu2t02McGDkE5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="92513315"
+  bh=RP+DWHBxkgmSHhy9wallgHqbeQIUU/fLrb1tlReNW9c=;
+  b=OFOlLjSPHP54zgm1feqMjw7TxvfvpeOTbu7dVyjX3xzsDs2OPzML5HWS
+   RSHL+SofeRWY74fCuvUGhDvmUEhDAOZ4rbIAoY05k18T8dPJ2cfOYSI3v
+   0a6zs3l3qkRa5ZrXLzkoIPSEZoeWDO07zcbEfp5nAD5FK6g5Q63G3o5KV
+   ymqIZ+bmic/0srXRyJ6NjzE9B8OqVaJQk7dUni9R2YNA/bmXXnLp0MSK+
+   gqOg5bC87p0eF4HoWjdlBusLc92Wm5/baBQ7ZGNdYB5WRerb5kDqyKmxy
+   IvsRMJOR2Ir+cZLeXrsRpVZdfgMbGU+pGlvX2RPtMx56CMjzlumQlcO7G
+   w==;
+X-CSE-ConnectionGUID: J3Ss/A1XSomYZzRoQ73TYw==
+X-CSE-MsgGUID: 5PtbDEwNRZOpLx9h3F/3/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="92513620"
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="92513315"
+   d="scan'208";a="92513620"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 18:47:56 -0700
-X-CSE-ConnectionGUID: cgGCwSRbTJuwiSYW0nIwCg==
-X-CSE-MsgGUID: QfZ4GDfURMyhryvjcIglJg==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 18:53:58 -0700
+X-CSE-ConnectionGUID: 7R05J1wBTCiDx4wr8Sy5cg==
+X-CSE-MsgGUID: 9qnRQNk0RUWZDT1Ta7ZU9w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="243056771"
+   d="scan'208";a="243057592"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 18:47:53 -0700
-Message-ID: <d8c41bd3-d167-41d0-8b49-042b16607101@linux.intel.com>
-Date: Wed, 10 Jun 2026 09:47:50 +0800
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 18:53:55 -0700
+Message-ID: <5e97f9a5-0d8d-41fb-ae8b-302698b76585@linux.intel.com>
+Date: Wed, 10 Jun 2026 09:53:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 3/9] perf/x86: Update cap_user_rdpmc base on rdpmc user
- disable state
+Subject: Re: [Patch v2 4/9] perf/x86/intel: Fallback to sw branch type
+ decoding if no hw decoding
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -64,71 +64,53 @@ Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
  Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
 References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
- <20260609050222.2458129-4-dapeng1.mi@linux.intel.com>
- <20260609144812.GB49951@noisy.programming.kicks-ass.net>
+ <20260609050222.2458129-5-dapeng1.mi@linux.intel.com>
+ <20260609144934.GC49951@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260609144812.GB49951@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260609144934.GC49951@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 6/9/2026 10:48 PM, Peter Zijlstra wrote:
-> On Tue, Jun 09, 2026 at 01:02:16PM +0800, Dapeng Mi wrote:
+On 6/9/2026 10:49 PM, Peter Zijlstra wrote:
+> On Tue, Jun 09, 2026 at 01:02:17PM +0800, Dapeng Mi wrote:
+>> intel_pmu_lbr_filter() currently assumes Arch LBR provides hardware
+>> branch-type decoding and skips software decoding on that path.
+>>
+>> However, Arch LBR may not always expose branch-type information. In
+>> that case, treating entries as hardware-decoded can misclassify sampled
+>> branches (for example, defaulting to JCC), which breaks branch-type
+>> filtering results.
+>>
+>> Fix this by using software branch-type decoding when hardware
+>> branch-type decoding is unavailable (that is, when x86_lbr_type is not
+>> enabled). This keeps branch classification and filtering behavior
+>> correct across Arch LBR configurations.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  arch/x86/events/intel/lbr.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+>> index 72f2adcda7c6..d4c0ed85e1fb 100644
+>> --- a/arch/x86/events/intel/lbr.c
+>> +++ b/arch/x86/events/intel/lbr.c
+>> @@ -1232,6 +1232,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>>  		 * OTHER_BRANCH branch type still rely on software decoding.
+>>  		 */
+>>  		if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
+>> +		    static_branch_likely(&x86_lbr_type) &&
+>>  		    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
+>>  			to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
+>>  			type = arch_lbr_br_type_map[type] | to_plm;
+> Now you have two static branches in concert. Best to make sure
+> x86_lbr_type covers both conditions, no?
+
+Oh, yes. Actually x86_lbr_type would be enabled only when there is
+arch-LBR, so it's unnecessary to check static_cpu_has(X86_FEATURE_ARCH_LBR)
+again. static_cpu_has(X86_FEATURE_ARCH_LBR) could be simply removed. Thanks.
+
+
 >
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 3bd0522afe6d..6cd95b8e31cb 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -2797,6 +2797,9 @@ void arch_perf_update_userpage(struct perf_event *event,
->>  	userpg->cap_user_time_zero = 0;
->>  	userpg->cap_user_rdpmc =
->>  		!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
->> +	if (x86_pmu_has_rdpmc_user_disable(event->pmu) &&
->> +	    event->hw.config & ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE)
->> +		userpg->cap_user_rdpmc = 0;
->>  	userpg->pmc_width = x86_pmu.cntval_bits;
->>  
->>  	if (!using_native_sched_clock() || !sched_clock_stable())
-> Remember, this is evaluated very very often. So it makes more sense to
-> ensure the hw.flags state is correct such that this remains a simple
-> expression.
-
-Yes, directly manipulating PERF_EVENT_FLAG_USER_READ_CNT is a simpler way.
-Thanks.
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 6cd95b8e31cb..3bd0522afe6d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2797,9 +2797,6 @@ void arch_perf_update_userpage(struct perf_event *event,
-        userpg->cap_user_time_zero = 0;
-        userpg->cap_user_rdpmc =
-                !!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
--       if (x86_pmu_has_rdpmc_user_disable(event->pmu) &&
--           event->hw.config & ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE)
--               userpg->cap_user_rdpmc = 0;
-        userpg->pmc_width = x86_pmu.cntval_bits;
-
-        if (!using_native_sched_clock() || !sched_clock_stable())
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index efd9caa3502c..afb86e5611bf 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3532,10 +3532,13 @@ static void
-intel_pmu_update_rdpmc_user_disable(struct perf_event *event)
-         */
-        if (x86_pmu.attr_rdpmc == X86_USER_RDPMC_ALWAYS_ENABLE ||
-            (x86_pmu.attr_rdpmc == X86_USER_RDPMC_CONDITIONAL_ENABLE &&
--            event->ctx->task))
-+            event->ctx->task)) {
-                event->hw.config &= ~ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
--       else
-+       } else {
-                event->hw.config |= ARCH_PERFMON_EVENTSEL_RDPMC_USER_DISABLE;
-+               if (event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT)
-+                       event->hw.flags &= ~PERF_EVENT_FLAG_USER_READ_CNT;
-+       }
- }
-
-
