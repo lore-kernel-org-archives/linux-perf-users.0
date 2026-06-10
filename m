@@ -1,116 +1,214 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB91145355
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199B3145355
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781111848; cv=none; b=f3lXczGYwWlJ6MCHOcUlGJUD+pMRd4njhCfWhuUopKMVdZrQJ48Ync86K5jcz2xr7NJHpiQELQF+rvg0TkEkj5Z3udFznkv96bZY2iFCRuZQfIpVg414YB9LBKD/gjtIjlCxNevC2ctOTXwqYE6MRSt7FPFuOueOOyJAB/zsEvk=
+	t=1781111924; cv=none; b=qCqCGUK3U54KBiLGw5gYesvBMltHqbntXBEXxmp9LCJJ/IF0hEJtcoK99rx0g2tf/JZsqowmtevw55fRqcuU5EXwVwyLBPMqMm76BIyu3KuM+hmavFrVYR8slWtcxcw6NiDaSBiAsu4ZiAm2th2TDHm9ql2RQU0/BmRtJ2bxSe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781111848; c=relaxed/simple;
-	bh=DKEq/7hk4xTkPokkETeSFTz91zF9kPDXXFQuwoAaULw=;
+	s=arc-20240116; t=1781111924; c=relaxed/simple;
+	bh=7FlrQV27nwMEgW47jqmu7FUz85/Qc5X6yLv7sh6GhWc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OYw9b3aojCukNIyNYrI2TxL4CygFwLN57Fc9Ij/Isv+5C1YWvA4reLjfYyh3MtLw/BDdiW/NegsnXuU/AYk1uZuGySB3q6MSqCgQ6rdbiAPJJrXjtXho2dx5uvLo5RwRkN/bOSXHvD+cZu6mSvrzs8y7nKca9mX8pWcMCdRkYww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXZD0fjU; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IS41dm6A+v2dcjoWvw27MZI6tmexQWcvCoPX/TAesQ5h2nVScJhIVTzuOkF17wkkS00FtzRbjOgVUSshCRu6Vzw26jb1Ce9HOl2Wx12cTxcRJbwxkHNwfnbUGZVKEhjpD5lmnaamJ/u1sgWEQrYFQNlOcW3fakLHZ9vyI175Fq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFEj/g6p; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXZD0fjU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD111F00893;
-	Wed, 10 Jun 2026 17:17:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFEj/g6p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F441F00893;
+	Wed, 10 Jun 2026 17:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781111847;
-	bh=cfrujXichDQsxY3GGA/OcLK6p78BUZWdKVPihTObE5o=;
+	s=k20260515; t=1781111922;
+	bh=+ccuW1iIfL2C9ip2orTNF8wOoVGUMbezpFTOFjm2FZI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CXZD0fjUER5JzHKsnWUpJn3B75m6fTvDJHlIh7/Pj30dcfRKtZtCkNIF2zGH+FPwM
-	 mMeXCkc0RdFPYWIupXajg2D7JsOdccPFjjyBsG2Nh0R2CZ3dX2EtgZTqDlegyHwMT+
-	 XrIOvcvx9QgSu+YuEpsTkMvaiy214iWaFJfNbWq496OCxd/XkLWQ6KJy2SIC884tBQ
-	 Yck50e4s/15x9pLkXpHn+gnuGH5Kmw76C9OhxHV/cqJiuB9mC2BdHQgOv6ySYTd9Pm
-	 e+HxfS8US9Chee964dQqezhLMVBIL5fK0navdQ+Gru6omfJV/ka1hgxzGizc91HtRa
-	 iwYuPre2cmhgQ==
+	b=HFEj/g6pGROJXqSzZ63GYgdoHV4DMh3auNxlRjId4Jg8FelsSMOmcq0rIu267L45X
+	 tWg4B0FrCzHRCUYLqVQAleonmxdCZHWIqaUFax53t//+QoFX05JRbhKNAr6KUyXgq7
+	 c4yBBWo84W8MPDF8VQ+2Rv8g+CRpQuWQSZULGuoyWepdIW9a6aOU+9dBfM8p7orEL3
+	 hKn0LPRX1O5pAxaMJQyLGFwVa6d1+CzA2xZgsOMX7DGobNA4Sjzm6NGfrz99yYADE1
+	 i+9TLY/RFeKtUc2P66g0SACGShp1ec3dbZxDVSje7YIOYNYUvkgJdMzKO3cA9a//rg
+	 dsSFTIkxppyZg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 10/11] perf tools: Use scnprintf() in
- build_id__snprintf() and hwmon read_events()
+Subject: Re: [PATCH 08/11] perf bpf: Use scnprintf() in snprintf_hex() and
+ synthesize_bpf_prog_name()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260610165207.2077258-11-acme@kernel.org>
-References: <20260610165207.2077258-11-acme@kernel.org>
+In-Reply-To: <20260610165207.2077258-9-acme@kernel.org>
+References: <20260610165207.2077258-9-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Jun 2026 17:17:26 +0000
-Message-Id: <20260610171727.6AD111F00893@smtp.kernel.org>
+Date: Wed, 10 Jun 2026 17:18:42 +0000
+Message-Id: <20260610171842.87F441F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Off-by-one stack buffer overflow when reading sysfs files without =
-reserving space for the null terminator.
+- [High] Missing NULL check for the result of `btf__type_by_id()` in `synth=
+esize_bpf_prog_name` leading to a potential NULL pointer dereference.
+- [High] The `synthesize_bpf_prog_name` function dereferences `func_infos` =
+unconditionally if a BTF object is present, even if the BPF program does no=
+t have function info.
+- [High] Unsafe use of snprintf in length accumulation sequences leads to s=
+ize_t underflow and stack buffer overflows in `perf_pmu__for_each_event`.
+- [High] The `bpil_offs_to_addr` function translates offsets to addresses w=
+ithout bounds checking, allowing out-of-bounds reads from malicious perf.da=
+ta files.
+- [Medium] Leaked `info_node->metadata` on the error path where `perf_env__=
+insert_bpf_prog_info` fails.
+- [Medium] Leaked BTF and rodata objects in `bpf_metadata_create` when `bpf=
+_metadata_alloc` fails.
 --
 
-commit e6063aeb686d4d547e9272a51fc950e7a84f13a8
+commit 7fa567954fb3de5f92865c25d5e803bee0ef956a
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
+perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
 
-build_id__snprintf() and hwmon_pmu__read_events() accumulate formatted
-output via snprintf(), which returns the would-have-been-written count
-on truncation.
+Both functions accumulate formatted output via snprintf. This patch switches
+them to scnprintf() to prevent buffer size underflows and write overruns
+when accumulating the output length.
 
-> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> index fb3ffa8d32ad2..dbf6a71af47f9 100644
-> --- a/tools/perf/util/hwmon_pmu.c
-> +++ b/tools/perf/util/hwmon_pmu.c
-> @@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmo=
-n_pmu *hwm, char *out_buf, si
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index a27945c279efb..2c09842469f1f 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+
+[ ... ]
+
+> @@ -140,7 +140,7 @@ static int synthesize_bpf_prog_name(char *buf, int si=
+ze,
+>  	const struct btf_type *t;
+>  	int name_len;
 > =20
->  				buf[read_len] =3D '\0';
+> -	name_len =3D snprintf(buf, size, "bpf_prog_");
+> +	name_len =3D scnprintf(buf, size, "bpf_prog_");
+>  	name_len +=3D snprintf_hex(buf + name_len, size - name_len,
+>  				 prog_tags[sub_id], BPF_TAG_SIZE);
+>  	if (btf) {
+> @@ -153,9 +153,10 @@ static int synthesize_bpf_prog_name(char *buf, int s=
+ize,
+>  			short_name =3D info->name;
+>  	} else
+>  		short_name =3D "F";
+> -	if (short_name)
+> -		name_len +=3D snprintf(buf + name_len, size - name_len,
+> -				     "_%s", short_name);
+> +	if (short_name) {
+> +		name_len +=3D scnprintf(buf + name_len, size - name_len,
+> +				      "_%s", short_name);
+> +	}
+>  	return name_len;
+>  }
 
 [Severity: High]
-This isn't a bug introduced by this patch, but could this lead to an
-off-by-one stack buffer overflow?
+This isn't a bug introduced by this patch, but could the surrounding code in
+synthesize_bpf_prog_name() segfault if a BPF program does not have func_inf=
+o?
 
-Looking at hwmon_pmu__describe_items() in tools/perf/util/hwmon_pmu.c, we
-read up to sizeof(buf) bytes:
+In synthesize_bpf_prog_name(), if the program lacks function info, func_inf=
+os
+becomes NULL. However, bpf_metadata_create() can pass the .rodata MAP's BTF,
+satisfying the if (btf) check:
 
-    ssize_t read_len =3D read(fd, buf, sizeof(buf));
+tools/perf/util/bpf-event.c:synthesize_bpf_prog_name() {
+    ...
+    if (btf) {
+        finfo =3D func_infos + sub_id * info->func_info_rec_size;
+        t =3D btf__type_by_id(btf, finfo->type_id);
+        short_name =3D btf__name_by_offset(btf, t->name_off);
+    ...
+}
 
-If the sysfs file contains exactly the capacity of the buffer (64 bytes) and
-does not end with a newline, read_len will be 64.
+Is it possible that finfo evaluates to an offset from NULL, leading to a
+segfault when dereferencing finfo->type_id?
 
-When terminating the string here:
+[Severity: High]
+This is a pre-existing issue, but does btf__type_by_id() guarantee returning
+a non-NULL pointer here?
 
-    buf[read_len] =3D '\0';
+If the provided type_id is out of bounds, t becomes NULL. Would the
+immediate dereference of t->name_off then cause a segfault?
 
-Does this write a null byte exactly one byte past the end of the buf array?
-It appears similar patterns exist in hwmon_pmu__read_events() and
-evsel__hwmon_pmu_read() as well, where reading the full buffer size
-leads to an out-of-bounds null termination.
+While reviewing these formatting string fixes, I noticed a few other
+pre-existing regressions in the perf bpf and pmu utilities.
 
-Should we reserve space for the null terminator by reading sizeof(buf) - 1
-instead?
+[Severity: High]
+This isn't a bug introduced by this patch, but does the length accumulation
+in perf_pmu__for_each_event() risk a stack buffer overflow?
 
->  				val =3D strtoll(buf, /*endptr=3D*/NULL, 10);
-> -				len +=3D snprintf(out_buf + len, out_buf_len - len, "%s%s%s=3D%g%s",
-> -						len =3D=3D 0 ? " " : ", ",
-> -						hwmon_item_strs[bit],
-> -						is_alarm ? "_alarm" : "",
-> -						(double)val / 1000.0,
-> -						hwmon_units[key.type]);
-> +				len +=3D scnprintf(out_buf + len, out_buf_len - len, "%s%s%s=3D%g%s",
-> +						 len =3D=3D 0 ? " " : ", ",
-> +						 hwmon_item_strs[bit],
-> +						 is_alarm ? "_alarm" : "",
-> +						 (double)val / 1000.0,
-> +						 hwmon_units[key.type]);
->  			}
->  			close(fd);
->  		}
+tools/perf/util/pmu.c:perf_pmu__for_each_event() {
+    ...
+    buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
+                         "%G%s", event->scale, event->unit) + 1;
+    ...
+}
+
+If the snprintf output is truncated, buf_used exceeds the buffer size. The
+subsequent call uses the remaining size, which would underflow to a large
+positive value. Can this cause the next snprintf call to write out of
+bounds?
+
+[Severity: Medium]
+This is a pre-existing issue, but does the error path in
+perf_env__add_bpf_info() leak the metadata object?
+
+tools/perf/util/bpf-event.c:perf_env__add_bpf_info() {
+    ...
+    if (!perf_env__insert_bpf_prog_info(env, info_node)) {
+        pr_debug("%s: duplicate add bpf info request for id %u\n",
+                 __func__, btf_id);
+        free(info_linear);
+        free(info_node);
+        goto out;
+    }
+    ...
+}
+
+If perf_env__insert_bpf_prog_info() fails, info_linear and info_node are
+freed, but there is no call to bpf_metadata_free(info_node->metadata).
+Should the allocated metadata be freed before jumping to the out label?
+
+[Severity: Medium]
+This is a pre-existing issue, but does the failure path for
+bpf_metadata_alloc() in bpf_metadata_create() leak the map resources?
+
+tools/perf/util/bpf-event.c:bpf_metadata_create() {
+    ...
+    metadata =3D bpf_metadata_alloc(info->nr_prog_tags, map.num_vars);
+    if (!metadata)
+        continue;
+    ...
+}
+
+If bpf_metadata_read_map_data() succeeds earlier in the loop, map.btf and
+map.rodata are allocated. If bpf_metadata_alloc() then fails, the loop
+continues without calling bpf_metadata_free_map_data(). Should these
+resources be cleaned up before continuing the loop?
+
+[Severity: High]
+This is a pre-existing issue, but does bpil_offs_to_addr() translate offsets
+to addresses without bounds checking?
+
+tools/perf/util/bpf-utils.c:bpil_offs_to_addr() {
+    ...
+    offs =3D bpf_prog_info_read_offset_u64(&info_linear->info,
+                                         desc->array_offset);
+    addr =3D offs + ptr_to_u64(info_linear->data);
+    bpf_prog_info_set_offset_u64(&info_linear->info,
+                                 desc->array_offset, addr);
+    ...
+}
+
+The untrusted offset from info_linear->info is added to
+ptr_to_u64(info_linear->data) to compute addr. If a crafted perf.data file
+provides an offset exceeding data_len, could this allow arbitrary
+out-of-bounds reads when the perf tool dereferences it?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610165207.2077=
-258-1-acme@kernel.org?part=3D10
+258-1-acme@kernel.org?part=3D8
