@@ -1,162 +1,163 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E237343D86
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781112305; cv=pass; b=WXD3vmhAtMxwa/Ry9yeLUKWjxftv/AZDZy1hX1Uci184Pu/vgktUnOK5t63grF1nb/G/uM3Oi/qONbZIxkisGLdVlYcvxtxUCcynzS1PscSjgXH7tM1aqpnSkX+nURvwU4mpk+cVeJ+lhuGZWMaxYebnrP8kmJhOMfOu3z+jvRE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781112305; c=relaxed/simple;
-	bh=pcXPxtxT4XNb/kCmW1gqRNh2oKr5WUNI3FcJqfvT5VM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O0bQLQPvg424+6De6GDYlp/l1I3z4J/S1bkt9KJXBTIiDloJleprm1Hta5AsAzjNUnauiTJzz2mrMGGgnRuu2xcJAevPmfqEKcC2qbrJAWVEAmxIul/PAzL6SGPsdUKs8lCuyTFtAYigRkzKQXXCcTbGOMCaZfGpUoiTWTgjrlc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b/UUjZpq; arc=pass smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05122D781B
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781112907; cv=none; b=NfpLeyQIqH0AhAu6WfS8Ux1UAF7BS2KGi7OJVvDdZdoKdStC+l9hPenEB1MbdFVC9450c459bQGO1kEwRZL5rveNiDiAS58kwkKc9SdH/EDaOSSObaOSqm+UJxzpupifuXi1WMexPignaN6VzJQzPDpcEBlTBDLJepkhBcngSjM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781112907; c=relaxed/simple;
+	bh=fPNA7xxEcyLNduJYaPo7nRUDXEgh0ata/81jzJzBMF4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KboC3+elNxprMorUDQ6mh0kdpeum7f4Ey+fLQ2KbYZpn68/ocyHSb+xpzPbcGyUOlxbMfGx8hmmFSBoQg4K/nJFvKK6REn4DRJUFpHmHlzrixdcR7eVM3pZ2dogPjm867DoFSjqAp1GVJ7JGjMHQZxMwlHfXMEFBG1YklEa+HUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VEMdUq0M; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b/UUjZpq"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2c0b1a48855so8625ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 10:25:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781112304; cv=none;
-        d=google.com; s=arc-20240605;
-        b=PXPuW+TAOp8DBpUfNSvLzDk+INKs9R6rnMS1Os4+/1RLJydZ+fhc80+S0IxBVIHoLa
-         ily7s9uGy9W6qx8N+A68dvjcIRofuWvD1LJ2mbIgdFR8/2wMa7Dye5iKbBYhzHqKseAd
-         rl1UzQszuW/RaVJPqNQuAQg2rSMMJqpXt3XVI4ZkAWdc7UNNj6DhWyhXZ14+GKrDsmju
-         4GjmKYdtxs/3QfOJ+rOJaxACXCVH4lJJ7xJPVDX0u4+v6tlAT1j+hqPbLO6cRu1+3Dtw
-         8yBRETam0O+GyHAiJcPWQIkrpeB0d2CrUK9OwpT1Pj8LvDkEQKre5f5cc2V/3Bs23ldW
-         w8Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=KUZ5KuNsTFrORb+3cfGVVnx4AD+5WgaR3uIFTCKj+d4=;
-        fh=AM8vwiOBFkjIlJQGCo5EJijipBGdIguYedVvXl+Ufp4=;
-        b=KTP3EsBa8a6kmjL7mdr/YLEXNCyE8sjnMSvIo1uraqjbPERi+jZos8buyhBgge/N1K
-         Kuj2PzGynlVwbXzBU1keMaZJRmSLMfl6OWI/cwRincfq3cBo8fOxyNYMn3KbtFvA3S8S
-         cV6E2pZ8uJ4wzUo3rPPUafhNx3VDMIIPYndgtIfcmItK+lf3DyZTXAw9vNRqgUqycFHn
-         ++zM3plJ1uK4jRQHdWYVleOY4nyTOfEj+4tefWumwh61RBT2arna0pGnTdz9QYP02faU
-         fS7f7PaCHvYBsbhZhZ7UBo/vR7v3c6h24Z4AHrtQ4EdfKcqu4ec9QT2L7sm9TviZZHLz
-         t0Yg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VEMdUq0M"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-842446a3851so3417319b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 10:35:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781112304; x=1781717104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KUZ5KuNsTFrORb+3cfGVVnx4AD+5WgaR3uIFTCKj+d4=;
-        b=b/UUjZpqE4XmNJ7cYmLUViYM2aa8n3erF5y+L5r0VujZ4OvkB2dNGxc8JvdKpw/Qm1
-         yYrSI3LbjFO2SmCCkkBAi0kSnswHcVRHe4WrnZeB2U8ExosL43YlhL7qm1u5CN+oZUM4
-         OdhIlc6df24XEJvWisAUBt+H2SVN+CRS70AzKsBwyb70Bkwc7sQjJKTt4iBGyLhUpqRG
-         Tg3jqgeVgLrqc0bvdYlZaDV211v99+/IgXCjFJcikNQVIf85Jpzurh+2tfw2zAkyrjIw
-         7l4JD1tSKCRazOa3oD/YH4urt9Nn2T6zOnf/xbsAQsP2V/kj8kpPkQvOwnIYCxaZwg4p
-         gxhA==
+        d=google.com; s=20251104; t=1781112904; x=1781717704; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7BLkgXTqKvHg4zposqfH/BelDZtbPAFFq1l9yrt8MNQ=;
+        b=VEMdUq0M78g35mGfNVuPe6Perezh1K/eH1Pd+RLiQuqv9/Eu9aOQMtpAECIKLsG3Yy
+         1hOzgEKMRkmKNMnmWWgshfmwCGRWQ14A3QRbwc7eKa4pip/2foETufpwTPLslctaplLZ
+         yeqGujKfVpEdsHzoBRun0ZqgAm7zBWIpPunfXb0OP48QhCi+Jg1C+CZkxiyTrE3/SZRf
+         fcN/1f5F1VV8jtbqGkxuX8YSsY8Rs9x/48m0MWIx8nFn2gwAt/QIZxQAhLMB7snwC/6V
+         Z3uOx4pMxiNtZL/I5PXprHxDLn/myuW8jqUiJTcCDtAu0Z/I0Fl2BtKxmhdVwaJmaY9s
+         lX5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781112304; x=1781717104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KUZ5KuNsTFrORb+3cfGVVnx4AD+5WgaR3uIFTCKj+d4=;
-        b=Aiw9BGV8mbQ6I5Ob1wpkF6UqjJshc4IfNFa2RwmB2sxN1CHMXbm0NaADHKwqkuZt9/
-         J03fcLr6lFkW6F7DPJcxtf0K/5EmafzwEQSfhr8aThT9aDrzuKzGTx5w5EMpEcZXNG3r
-         ghGMXbArjIWwgNbeaQp15u2d/6A/SQTFHB5JtL+wxkJTERon2dIeora7hG8HG9qUDz2f
-         GssaFLmi8VMA33zZsrGjLupfYkmZBX912bBN2zixDHd/A9s5o6jdSmkbuZ2fw087XiEH
-         FEf4UnDpluh2heJsjfJdcZM7gkqLW3MufIrrSf+eKyXlVeBWTGjtroyE9SXrWYW/KkGI
-         gwxg==
-X-Forwarded-Encrypted: i=1; AFNElJ8wblth6dCrWBeHrrbaWs44gCMClu2rRLg5OsbDqdh1wdwUFKNkTNGe+ITL76lpo6J73t7ccW6SMwg7p6Yf6N4a@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoJ10smgVHfgIPD6Pu9L/qF3/B2er8zBzB+WlUN0Mb+9YHaL2L
-	a6MXg/SpAUVkm9lyrrIlz1btmD14nNuQIo3mFbBPpMxoYLbfR9k+sByZZvyXP5muPYbeqaor2aN
-	QyfyTxx+Ul7mR9b8vdQpKK9fj2omCpCwgg8P+UGj3
-X-Gm-Gg: Acq92OFZ0nzkTNyyGBn7OueG7S+rnR/v2kH7RC/eNPzF1fslqCktd9druTbUap0Ubs9
-	TBZefxV3JQIfX/lyI9ZKOsYEMsifnE1tH0K0s7+1wPodEMObTd0K9hlSlzigIz6tl4ZnxdpfAuK
-	p5UNu1/9IEb9XuXrdL2yJDe8bRy83fjOwc1uoybaAkqUpIBt9/+oQ8IVMfPSfrTZwRNAZ1woWo1
-	XP/4tnpPNYALQGYkqHnnOMyGfHH1AVbIXrxWwtl1MGifWxZ2xMuzSkpMbVH5EmgF+r34FF3YZqn
-	eRfr8V7eP+TzDhfPrMejrJr5Y1ZKWjX9VumM+xQY9dYIcZbp
-X-Received: by 2002:a17:902:c941:b0:2c1:ee6e:be1e with SMTP id
- d9443c01a7336-2c2d940584cmr386605ad.28.1781112303095; Wed, 10 Jun 2026
- 10:25:03 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1781112904; x=1781717704;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7BLkgXTqKvHg4zposqfH/BelDZtbPAFFq1l9yrt8MNQ=;
+        b=ZJwUDL49fz69vtXjvKXwcjN7At2uc1TZHQxOVsX2erPSRPp4ddGlC8nfQHiju/uMD9
+         kfoTLlGOlt9xtOpVuULeBShBSNU1myvxS4CuNTmTCC8gdzGdqI2cTNwkaEes8mYP7bXZ
+         ZsvcABKysxFz1sFxJJrOkP54Ltm//iJo6tZnA6m8APePRR6ExjJLv2Fldoqz324VFt6+
+         YE10ibcjwrW+iBrce7GiSVmuW8zuMxUnQrYvfibE6RVGbejCErnf1Yxip+dBeho+zdea
+         nGY+6ATPVq6U90P6cqe2G8I/k43+etdWHPWxuhGf9QXdf58ZsFn0ZdzLZ6fGvYeZkapA
+         5Ewg==
+X-Forwarded-Encrypted: i=1; AFNElJ9Covm2Kkt6SdMPfT3xFfJzWUCD10CQbjDUhbpyWxQXMcX//SS5z5cidc9c1f/1RzuXr1/vR61TH+0oVUeNElcb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy903jAbf+EOqiMf01h7ov4r3FokruVpdcf66BlvbaI+30omUXk
+	/F6TeG0VQj7WA8xCTrhDqjx34u1JGlZCCGQlZRqyYUyKGHlRpzjEzmllSgTJzHO5rWL1SQnT6a0
+	t7AtWPw==
+X-Received: from pfr9.prod.google.com ([2002:a05:6a00:94c9:b0:842:3697:8685])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:21c5:b0:831:7f71:c810
+ with SMTP id d2e1a72fcca58-842b0f9455fmr26982078b3a.35.1781112903891; Wed, 10
+ Jun 2026 10:35:03 -0700 (PDT)
+Date: Wed, 10 Jun 2026 10:35:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260610165207.2077258-1-acme@kernel.org> <20260610165207.2077258-12-acme@kernel.org>
-In-Reply-To: <20260610165207.2077258-12-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 10 Jun 2026 10:24:51 -0700
-X-Gm-Features: AVVi8CeJu_W1f8Z8bQTqqbMjyHJCcpIqKuLeXECndOY_oYiYIww1kSUtXMEcW1s
-Message-ID: <CAP-5=fUsa+FDExbnSOqSdhe-T2VpM-3eNFmkWpZcAusWwBAb5w@mail.gmail.com>
-Subject: Re: [PATCH 11/11] libperf: Document code simplification case for
- widening struct perf_cpu
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
+Message-ID: <20260610173501.3557522-1-ctshao@google.com>
+Subject: [PATCH] perf stat: Fix false NMI watchdog warning in aggregation modes
+From: Chun-Tse Shao <ctshao@google.com>
+To: acme@kernel.org, namhyung@kernel.org
+Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 10, 2026 at 9:53=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> Add a bullet point to the libperf ABI TODO explaining the code
-> simplification benefit of widening struct perf_cpu.cpu from int16_t
-> to int: the narrow type forces defensive truncation checks at every
-> boundary where wider CPU indices are narrowed, and values > 32767
-> silently wrap to negative numbers (two's complement), bypassing
-> bounds validation without them.
->
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+In aggregation modes (e.g. --per-socket, --per-die, etc.), a
+counter might not be scheduled or counted on specific aggregate
+groups if it was not assigned to the CPUs belonging to those
+groups. However, the printout() check triggers the
+"print_free_counters_hint" logic unconditionally for any
+supported counter with a missing count. This results in a false
+"Some events weren't counted. Try disabling the NMI watchdog"
+warning.
 
-Acked-by: Ian Rogers <irogers@google.com>
+This warning was originally introduced in commit 02d492e5dcb7
+("perf stat: Issue a HW watchdog disable hint").
 
-The size motivation was for cases like having 1000 CPUs and a struct
-perf_cpu_map with a CPU for each entry. In the data file we compress
-this by tracking such cases as a range of CPUs. I wonder if the struct
-perf_cpu_map abstraction should do something similar. It would save
-memory, potentially be faster (iterating a range rather than loading
-incrementally increasing values from an array) and then we wouldn't
-care so much whether the struct perf_cpu was an int16_t or an int32_t.
+To fix this, add the helper evsel__should_run_on_aggr() to
+verify if the counter was supposed to run on the aggregate CPU
+ID before triggering the hint. Additionally, correctly handle
+per-thread/per-process execution (which uses a dummy CPU map
+with a single -1 entry) by immediately returning true,
+ensuring legitimate warnings are still reported.
 
-Looking at lscpu, which does a similar job:
-https://github.com/util-linux/util-linux/blob/master/sys-utils/lscpu.c
-They use cpu_set_t but that seems to be a bitmap with fixed support
-for around 1024 CPUs. So I prefer perf_cpu_map.
+Example before/after:
 
-Thanks,
-Ian
+$ perf stat -M lpm_miss_lat --metric-only --per-socket -a -- sleep 1
 
-> ---
->  tools/lib/perf/TODO | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/tools/lib/perf/TODO b/tools/lib/perf/TODO
-> index 486dd95dc57208a8..e179728697d8c7c0 100644
-> --- a/tools/lib/perf/TODO
-> +++ b/tools/lib/perf/TODO
-> @@ -11,6 +11,14 @@ together.
->       (x86_64 max is 8192, arm64 is 4096), but NR_CPUS limits keep
->       growing.  perf clamps to INT16_MAX in set_max_cpu_num() as a
->       safety net.
-> +   - Code simplification: the int16_t forces defensive truncation
-> +     checks at every boundary where a wider CPU index (int from
-> +     sample->cpu, al->cpu, etc.) is narrowed into struct perf_cpu.
-> +     Without these checks, values > 32767 silently wrap to negative
-> +     numbers (two's complement), bypassing bounds validation.
-> +     Widening to int eliminates this entire class of silent
-> +     truncation bugs and removes the need for the INT16_MAX clamp
-> +     in set_max_cpu_num().
->     - Scope: struct perf_cpu is embedded everywhere =E2=80=94 perf_cpu_ma=
-p__cpu(),
->       perf_cpu_map__min(), perf_cpu_map__max(), perf_cpu_map__has(), the
->       for_each_cpu macros, and all internal callers.  The perf_cpu_map
-> --
-> 2.54.0
->
+Before:
+ Performance counter stats for 'system wide':
+
+       ns  lpm_miss_lat_rem ns  lpm_miss_lat_loc
+S0      126                202.3               207.9
+S1      126                231.9               259.3
+
+       1.006029831 seconds time elapsed
+
+Some events weren't counted. Try disabling the NMI watchdog:
+        echo 0 > /proc/sys/kernel/nmi_watchdog
+        perf stat ...
+        echo 1 > /proc/sys/kernel/nmi_watchdog
+
+After:
+ Performance counter stats for 'system wide':
+
+       ns  lpm_miss_lat_rem ns  lpm_miss_lat_loc
+S0      126                202.3               207.9
+S1      126                231.9               259.3
+
+       1.006029831 seconds time elapsed
+
+Assisted-by: Gemini:gemini-next
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ tools/perf/util/stat-display.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 2b69d238858c..e50557964916 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -792,6 +792,28 @@ static bool evlist__has_hybrid_pmus(struct evlist *evlist)
+ 	return false;
+ }
+ 
++static bool evsel__should_run_on_aggr(struct perf_stat_config *config,
++				      struct evsel *counter,
++				      const struct aggr_cpu_id *id)
++{
++	struct perf_cpu cpu;
++	unsigned int idx;
++
++	if (!config->aggr_map || !config->aggr_get_id)
++		return true;
++
++	perf_cpu_map__for_each_cpu(cpu, idx, counter->core.cpus) {
++		struct aggr_cpu_id own_id;
++
++		if (cpu.cpu < 0)
++			return true;
++
++		own_id = config->aggr_get_id(config, cpu);
++		if (aggr_cpu_id__equal(id, &own_id))
++			return true;
++	}
++	return false;
++}
+ static void printout(struct perf_stat_config *config, struct outstate *os,
+ 		     double uval, u64 run, u64 ena, double noise, int aggr_idx)
+ {
+@@ -822,7 +844,8 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
+ 
+ 		if (counter->supported) {
+ 			if (!evlist__has_hybrid_pmus(counter->evlist)) {
+-				config->print_free_counters_hint = 1;
++				if (evsel__should_run_on_aggr(config, counter, &os->id))
++					config->print_free_counters_hint = 1;
+ 			}
+ 		}
+ 	}
+-- 
+2.54.0.1099.g489fc7bff1-goog
+
