@@ -1,90 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5C1233954;
-	Wed, 10 Jun 2026 22:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80F415746F;
+	Wed, 10 Jun 2026 22:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781129803; cv=none; b=Rig0pecnTobRzMTJbHAfhlBVI3VhMwqNQjBNHiZJN3O9FlYPbVWHxQJu7INR14hnrN9iMkwModarr1ezt2fWzbN0eFa7F80Gl5kz/+UaKYhSOiL02paroFiutkq5ap8TDHePl6i3hov7iC/FC47cq4JVBHWE0wQ03nNSvBAGE9w=
+	t=1781130144; cv=none; b=qvrTDlRb8HtGaQuO2qgWA3722KWeRMr1jbxm74Ps6JVX77oPEhAqJDEZvElHdvkN27Y1Jqkb0+v9mbaW/pcLBM8RtI4b3+b2bHuQfKxNQC++EYNg98rFcmoAPLaK5AlOhoXEahR6WLqC130t9/yAJhcaaIbJt5kl/hsfYQWAWSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781129803; c=relaxed/simple;
-	bh=fuiNKKPc7lmrCax+7CqrsRNg0tW3q/vQ+Gr8MEvYkSA=;
+	s=arc-20240116; t=1781130144; c=relaxed/simple;
+	bh=qWftYTEeAgM5cyyUe5/DYjYeUFcZ7kvb6YVHJDe5u4E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktbWaWATollNk7RRVAyBTrM0bE677vRFbUySsJ0ec/UYKH2Q8Fih853aGhdltRN8y8uV7SwqWd3Seg4CaaLiKhHCc5Gr0yrM/4kIb2eEl4nOdlrrPF+JIk9xDY2Q6TdpzVswZqgHnTxa5OU1L+9VQBIFgMt3bbRMlvVhetpPe4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXKWWxn7; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=i80Aa7tMCrjf4u0hY8FwBe1wnvmho+SZzqAQ1tiDrD68yqlqi95gydx22vDNhPDurrEHmugSBm44v7kKJWQT6DyG9NwG9hw5qcxYGH0PyyJXhz9inSX2uIqiC2ellcUlhu8mrtQ3ZzaH0NRgd98nxV6unzAR2VUYm32N0lDwZfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M3hsLvTY; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXKWWxn7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 795811F00893;
-	Wed, 10 Jun 2026 22:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781129802;
-	bh=JDmVUl+kqZiFDt/eGk7Ew8Cl/bFJ/LnjqKWASCJcX2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=MXKWWxn7H3Q369wjc+YaLOkzT5USByx6OIEAvaMWOSxMxl1Iu94GcTBUbbDT0OY/I
-	 X56OmZATHtEIHIe42VkPsigg1u3M/PbyHl2n5QjOyZxuYLuIFmiu3xGUfmdvcCoyrZ
-	 OjrDoZKdWtMhdadaCmkwrIuC5IlKphXNi1cUQi1t5uN1eYEuA0VA1jIQEJifYhrlP3
-	 jiHXEHD/y4abd+eWD100GR5y7zsZn5waf/6hVfZr2JgaX3p2SB7PIxtHFHij40zo02
-	 a1fHGUgug4oz306Ivk77fTvdkrTeSq31XOX/jJDFgnaRnS8kNOQvrhgOgdDZuqnAVT
-	 eu3TBmoIPvYpA==
-Date: Wed, 10 Jun 2026 19:16:38 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 13/23] perf tools: Fix uninitialized pathname on
- uncompressed fallback in filename__decompress()
-Message-ID: <ainiRoo-dVtkaQbS@x1>
-References: <20260610195157.2091137-14-acme@kernel.org>
- <20260610200810.8D93F1F00893@smtp.kernel.org>
- <aincj3a3BDJ22jfq@x1>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M3hsLvTY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=j+sE8nOh+9/EO+xK5fHjJoRmFR1wuFGoh0f0o4+gR5Y=; b=M3hsLvTYRGw0BsuPlRDV8D75wr
+	zKBKeoXB+m2pPP6melr3Q3SBkcgZ58qoGXyjSZlLwm6LCziA1o5y+B2pR2hk1M+uSm9z12Z0sekpp
+	IIcWBsdvOJaxs6afiDzV118kVa4iOuQAzqevUd3/TN6DGgNyfYu57b6LfcAgjaAtNhu8elyatQWWN
+	ZOuXdsKoNJ9JQ5d2ZHELgywEGy1u+pxvyQ1DZ37SEGYlDiTXaAEiZD2ieza5/7wQETYeFUiQHHByM
+	ra6KZYhvFsWmXMYIBHnLRRPr2wJLVPI5eb4IRpxXYuqKXIPAbM+Zj33ABqy0BhtdHTBGfbgdp4e33
+	TS7zTfng==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wXRJL-00000000jYg-28Pc;
+	Wed, 10 Jun 2026 22:22:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F07493002F0; Thu, 11 Jun 2026 00:22:09 +0200 (CEST)
+Date: Thu, 11 Jun 2026 00:22:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>, Yi Lai <yi1.lai@intel.com>
+Subject: Re: [Patch v2 7/9] perf/x86/intel: Drop fixed-counter PEBS
+ constraints for baseline PEBS
+Message-ID: <20260610222209.GF48970@noisy.programming.kicks-ass.net>
+References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
+ <20260609050222.2458129-8-dapeng1.mi@linux.intel.com>
+ <20260610082051.GF49951@noisy.programming.kicks-ass.net>
+ <b3485f13-039d-44d9-af02-5cea084ca304@linux.intel.com>
+ <20260610112114.GD187714@noisy.programming.kicks-ass.net>
+ <0636b71e-acb8-4e9e-bf55-2343471e52bd@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aincj3a3BDJ22jfq@x1>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0636b71e-acb8-4e9e-bf55-2343471e52bd@linux.intel.com>
 
-On Wed, Jun 10, 2026 at 06:52:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Jun 10, 2026 at 08:08:10PM +0000, sashiko-bot@kernel.org wrote:
-> > New issues:
-> > - [Medium] The commit message explicitly describes a logic flow that would cause a severe data-loss bug, while the code implements the opposite (safe) logic.
-> > 
-> > Pre-existing issues:
-> > - [High] Missing error code propagation and improper negative error handling cause `__open_dso` to mistakenly return valid file descriptors on failure.
-> > --
-> > 
-> > commit 5ae85aedfdb730a58a0d285fd77526ec0c92c20e
-> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > perf tools: Fix uninitialized pathname on uncompressed fallback in filename__decompress()
-> > 
-> > This commit addresses an issue where filename__decompress() left the
-> > pathname parameter uninitialized on the early return path for uncompressed
-> > files. The code is updated to set an empty string in this case, and
-> > callers are modified to check for this empty string condition.
-> > 
-> > > Fix by copying the original filename to pathname before the early return,
-> > > matching the behavior of the normal decompression path.
-> > 
-> > [Severity: Medium]
-> > Does this commit message accurately describe the implementation?
-> > 
-> > The code below sets pathname[0] = '\0' instead of copying the filename. If
-> > the code had copied the original filename as described here, wouldn't callers
-> > assume the populated pathname was a newly created temporary file and call
-> > unlink() on it, deleting the user's uncompressed kernel module or binary?
+On Wed, Jun 10, 2026 at 07:42:16PM +0800, Mi, Dapeng wrote:
+
+> >> including fixed counters (what the flag "PMU_FL_PEBS_ALL" indicates), like
+> >> the below code shows.
+> >>
+> >> ```
+> > Why the markdown nonsense? You're not an LLM, right? And you all know
+> > I'm reading this in mutt. Its just visual noise.
+> >
+> > Anyway, please clarify the Changelog.
 > 
-> So this was the only non pre-existing issue found in this series, I
-> rebased it on top of the 28 patches I merged in perf-tools-next while
-> waiting for this last series to be reviewed and will do a full container
-> suite test build, then push everything publicly.
+> Sorry for the visual noise. I'm using the thunderbird mail client,  not
+> sure why the markdown doesn't work.
 
-Ah, there was a patch for replacing snprintf with scnprintf by Athira
-that made one of the patches in my series to be dropped, same changes.
+How is it supposed to 'work'? LKML is plain text, there is no markup.
 
-- Arnaldo
+From what I can tell, there is this thunderbug markdown plugin to more
+'easily' write HTML mail, but that is explicitly forbidden on LKML.
+
+On top of that, markdown is utter garbage, the idiot that 'invented' it
+explicitly ignored the pre-existing standard of: *bold*, /italics/,
+_underline_ and -strike-through-, a convention that has existed longer
+than markdown is even is a thing (heck it pre-dates computers!).
+
+And yes, clearly I'm a dinosaur. But dammit, we stare at code and
+comments (and email) in text editors, not some web render bullshit.
+
+</rant>
