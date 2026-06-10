@@ -1,214 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199B3145355
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781111924; cv=none; b=qCqCGUK3U54KBiLGw5gYesvBMltHqbntXBEXxmp9LCJJ/IF0hEJtcoK99rx0g2tf/JZsqowmtevw55fRqcuU5EXwVwyLBPMqMm76BIyu3KuM+hmavFrVYR8slWtcxcw6NiDaSBiAsu4ZiAm2th2TDHm9ql2RQU0/BmRtJ2bxSe0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781111924; c=relaxed/simple;
-	bh=7FlrQV27nwMEgW47jqmu7FUz85/Qc5X6yLv7sh6GhWc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IS41dm6A+v2dcjoWvw27MZI6tmexQWcvCoPX/TAesQ5h2nVScJhIVTzuOkF17wkkS00FtzRbjOgVUSshCRu6Vzw26jb1Ce9HOl2Wx12cTxcRJbwxkHNwfnbUGZVKEhjpD5lmnaamJ/u1sgWEQrYFQNlOcW3fakLHZ9vyI175Fq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFEj/g6p; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E237343D86
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781112305; cv=pass; b=WXD3vmhAtMxwa/Ry9yeLUKWjxftv/AZDZy1hX1Uci184Pu/vgktUnOK5t63grF1nb/G/uM3Oi/qONbZIxkisGLdVlYcvxtxUCcynzS1PscSjgXH7tM1aqpnSkX+nURvwU4mpk+cVeJ+lhuGZWMaxYebnrP8kmJhOMfOu3z+jvRE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781112305; c=relaxed/simple;
+	bh=pcXPxtxT4XNb/kCmW1gqRNh2oKr5WUNI3FcJqfvT5VM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O0bQLQPvg424+6De6GDYlp/l1I3z4J/S1bkt9KJXBTIiDloJleprm1Hta5AsAzjNUnauiTJzz2mrMGGgnRuu2xcJAevPmfqEKcC2qbrJAWVEAmxIul/PAzL6SGPsdUKs8lCuyTFtAYigRkzKQXXCcTbGOMCaZfGpUoiTWTgjrlc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b/UUjZpq; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFEj/g6p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F441F00893;
-	Wed, 10 Jun 2026 17:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781111922;
-	bh=+ccuW1iIfL2C9ip2orTNF8wOoVGUMbezpFTOFjm2FZI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HFEj/g6pGROJXqSzZ63GYgdoHV4DMh3auNxlRjId4Jg8FelsSMOmcq0rIu267L45X
-	 tWg4B0FrCzHRCUYLqVQAleonmxdCZHWIqaUFax53t//+QoFX05JRbhKNAr6KUyXgq7
-	 c4yBBWo84W8MPDF8VQ+2Rv8g+CRpQuWQSZULGuoyWepdIW9a6aOU+9dBfM8p7orEL3
-	 hKn0LPRX1O5pAxaMJQyLGFwVa6d1+CzA2xZgsOMX7DGobNA4Sjzm6NGfrz99yYADE1
-	 i+9TLY/RFeKtUc2P66g0SACGShp1ec3dbZxDVSje7YIOYNYUvkgJdMzKO3cA9a//rg
-	 dsSFTIkxppyZg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 08/11] perf bpf: Use scnprintf() in snprintf_hex() and
- synthesize_bpf_prog_name()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260610165207.2077258-9-acme@kernel.org>
-References: <20260610165207.2077258-9-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Jun 2026 17:18:42 +0000
-Message-Id: <20260610171842.87F441F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b/UUjZpq"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2c0b1a48855so8625ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 10:25:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781112304; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PXPuW+TAOp8DBpUfNSvLzDk+INKs9R6rnMS1Os4+/1RLJydZ+fhc80+S0IxBVIHoLa
+         ily7s9uGy9W6qx8N+A68dvjcIRofuWvD1LJ2mbIgdFR8/2wMa7Dye5iKbBYhzHqKseAd
+         rl1UzQszuW/RaVJPqNQuAQg2rSMMJqpXt3XVI4ZkAWdc7UNNj6DhWyhXZ14+GKrDsmju
+         4GjmKYdtxs/3QfOJ+rOJaxACXCVH4lJJ7xJPVDX0u4+v6tlAT1j+hqPbLO6cRu1+3Dtw
+         8yBRETam0O+GyHAiJcPWQIkrpeB0d2CrUK9OwpT1Pj8LvDkEQKre5f5cc2V/3Bs23ldW
+         w8Cg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=KUZ5KuNsTFrORb+3cfGVVnx4AD+5WgaR3uIFTCKj+d4=;
+        fh=AM8vwiOBFkjIlJQGCo5EJijipBGdIguYedVvXl+Ufp4=;
+        b=KTP3EsBa8a6kmjL7mdr/YLEXNCyE8sjnMSvIo1uraqjbPERi+jZos8buyhBgge/N1K
+         Kuj2PzGynlVwbXzBU1keMaZJRmSLMfl6OWI/cwRincfq3cBo8fOxyNYMn3KbtFvA3S8S
+         cV6E2pZ8uJ4wzUo3rPPUafhNx3VDMIIPYndgtIfcmItK+lf3DyZTXAw9vNRqgUqycFHn
+         ++zM3plJ1uK4jRQHdWYVleOY4nyTOfEj+4tefWumwh61RBT2arna0pGnTdz9QYP02faU
+         fS7f7PaCHvYBsbhZhZ7UBo/vR7v3c6h24Z4AHrtQ4EdfKcqu4ec9QT2L7sm9TviZZHLz
+         t0Yg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781112304; x=1781717104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KUZ5KuNsTFrORb+3cfGVVnx4AD+5WgaR3uIFTCKj+d4=;
+        b=b/UUjZpqE4XmNJ7cYmLUViYM2aa8n3erF5y+L5r0VujZ4OvkB2dNGxc8JvdKpw/Qm1
+         yYrSI3LbjFO2SmCCkkBAi0kSnswHcVRHe4WrnZeB2U8ExosL43YlhL7qm1u5CN+oZUM4
+         OdhIlc6df24XEJvWisAUBt+H2SVN+CRS70AzKsBwyb70Bkwc7sQjJKTt4iBGyLhUpqRG
+         Tg3jqgeVgLrqc0bvdYlZaDV211v99+/IgXCjFJcikNQVIf85Jpzurh+2tfw2zAkyrjIw
+         7l4JD1tSKCRazOa3oD/YH4urt9Nn2T6zOnf/xbsAQsP2V/kj8kpPkQvOwnIYCxaZwg4p
+         gxhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781112304; x=1781717104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KUZ5KuNsTFrORb+3cfGVVnx4AD+5WgaR3uIFTCKj+d4=;
+        b=Aiw9BGV8mbQ6I5Ob1wpkF6UqjJshc4IfNFa2RwmB2sxN1CHMXbm0NaADHKwqkuZt9/
+         J03fcLr6lFkW6F7DPJcxtf0K/5EmafzwEQSfhr8aThT9aDrzuKzGTx5w5EMpEcZXNG3r
+         ghGMXbArjIWwgNbeaQp15u2d/6A/SQTFHB5JtL+wxkJTERon2dIeora7hG8HG9qUDz2f
+         GssaFLmi8VMA33zZsrGjLupfYkmZBX912bBN2zixDHd/A9s5o6jdSmkbuZ2fw087XiEH
+         FEf4UnDpluh2heJsjfJdcZM7gkqLW3MufIrrSf+eKyXlVeBWTGjtroyE9SXrWYW/KkGI
+         gwxg==
+X-Forwarded-Encrypted: i=1; AFNElJ8wblth6dCrWBeHrrbaWs44gCMClu2rRLg5OsbDqdh1wdwUFKNkTNGe+ITL76lpo6J73t7ccW6SMwg7p6Yf6N4a@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoJ10smgVHfgIPD6Pu9L/qF3/B2er8zBzB+WlUN0Mb+9YHaL2L
+	a6MXg/SpAUVkm9lyrrIlz1btmD14nNuQIo3mFbBPpMxoYLbfR9k+sByZZvyXP5muPYbeqaor2aN
+	QyfyTxx+Ul7mR9b8vdQpKK9fj2omCpCwgg8P+UGj3
+X-Gm-Gg: Acq92OFZ0nzkTNyyGBn7OueG7S+rnR/v2kH7RC/eNPzF1fslqCktd9druTbUap0Ubs9
+	TBZefxV3JQIfX/lyI9ZKOsYEMsifnE1tH0K0s7+1wPodEMObTd0K9hlSlzigIz6tl4ZnxdpfAuK
+	p5UNu1/9IEb9XuXrdL2yJDe8bRy83fjOwc1uoybaAkqUpIBt9/+oQ8IVMfPSfrTZwRNAZ1woWo1
+	XP/4tnpPNYALQGYkqHnnOMyGfHH1AVbIXrxWwtl1MGifWxZ2xMuzSkpMbVH5EmgF+r34FF3YZqn
+	eRfr8V7eP+TzDhfPrMejrJr5Y1ZKWjX9VumM+xQY9dYIcZbp
+X-Received: by 2002:a17:902:c941:b0:2c1:ee6e:be1e with SMTP id
+ d9443c01a7336-2c2d940584cmr386605ad.28.1781112303095; Wed, 10 Jun 2026
+ 10:25:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260610165207.2077258-1-acme@kernel.org> <20260610165207.2077258-12-acme@kernel.org>
+In-Reply-To: <20260610165207.2077258-12-acme@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 10 Jun 2026 10:24:51 -0700
+X-Gm-Features: AVVi8CeJu_W1f8Z8bQTqqbMjyHJCcpIqKuLeXECndOY_oYiYIww1kSUtXMEcW1s
+Message-ID: <CAP-5=fUsa+FDExbnSOqSdhe-T2VpM-3eNFmkWpZcAusWwBAb5w@mail.gmail.com>
+Subject: Re: [PATCH 11/11] libperf: Document code simplification case for
+ widening struct perf_cpu
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
+On Wed, Jun 10, 2026 at 9:53=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> Add a bullet point to the libperf ABI TODO explaining the code
+> simplification benefit of widening struct perf_cpu.cpu from int16_t
+> to int: the narrow type forces defensive truncation checks at every
+> boundary where wider CPU indices are narrowed, and values > 32767
+> silently wrap to negative numbers (two's complement), bypassing
+> bounds validation without them.
+>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Pre-existing issues:
-- [High] Missing NULL check for the result of `btf__type_by_id()` in `synth=
-esize_bpf_prog_name` leading to a potential NULL pointer dereference.
-- [High] The `synthesize_bpf_prog_name` function dereferences `func_infos` =
-unconditionally if a BTF object is present, even if the BPF program does no=
-t have function info.
-- [High] Unsafe use of snprintf in length accumulation sequences leads to s=
-ize_t underflow and stack buffer overflows in `perf_pmu__for_each_event`.
-- [High] The `bpil_offs_to_addr` function translates offsets to addresses w=
-ithout bounds checking, allowing out-of-bounds reads from malicious perf.da=
-ta files.
-- [Medium] Leaked `info_node->metadata` on the error path where `perf_env__=
-insert_bpf_prog_info` fails.
-- [Medium] Leaked BTF and rodata objects in `bpf_metadata_create` when `bpf=
-_metadata_alloc` fails.
---
+Acked-by: Ian Rogers <irogers@google.com>
 
-commit 7fa567954fb3de5f92865c25d5e803bee0ef956a
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+The size motivation was for cases like having 1000 CPUs and a struct
+perf_cpu_map with a CPU for each entry. In the data file we compress
+this by tracking such cases as a range of CPUs. I wonder if the struct
+perf_cpu_map abstraction should do something similar. It would save
+memory, potentially be faster (iterating a range rather than loading
+incrementally increasing values from an array) and then we wouldn't
+care so much whether the struct perf_cpu was an int16_t or an int32_t.
 
-perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
+Looking at lscpu, which does a similar job:
+https://github.com/util-linux/util-linux/blob/master/sys-utils/lscpu.c
+They use cpu_set_t but that seems to be a bitmap with fixed support
+for around 1024 CPUs. So I prefer perf_cpu_map.
 
-Both functions accumulate formatted output via snprintf. This patch switches
-them to scnprintf() to prevent buffer size underflows and write overruns
-when accumulating the output length.
+Thanks,
+Ian
 
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index a27945c279efb..2c09842469f1f 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-
-[ ... ]
-
-> @@ -140,7 +140,7 @@ static int synthesize_bpf_prog_name(char *buf, int si=
-ze,
->  	const struct btf_type *t;
->  	int name_len;
-> =20
-> -	name_len =3D snprintf(buf, size, "bpf_prog_");
-> +	name_len =3D scnprintf(buf, size, "bpf_prog_");
->  	name_len +=3D snprintf_hex(buf + name_len, size - name_len,
->  				 prog_tags[sub_id], BPF_TAG_SIZE);
->  	if (btf) {
-> @@ -153,9 +153,10 @@ static int synthesize_bpf_prog_name(char *buf, int s=
-ize,
->  			short_name =3D info->name;
->  	} else
->  		short_name =3D "F";
-> -	if (short_name)
-> -		name_len +=3D snprintf(buf + name_len, size - name_len,
-> -				     "_%s", short_name);
-> +	if (short_name) {
-> +		name_len +=3D scnprintf(buf + name_len, size - name_len,
-> +				      "_%s", short_name);
-> +	}
->  	return name_len;
->  }
-
-[Severity: High]
-This isn't a bug introduced by this patch, but could the surrounding code in
-synthesize_bpf_prog_name() segfault if a BPF program does not have func_inf=
-o?
-
-In synthesize_bpf_prog_name(), if the program lacks function info, func_inf=
-os
-becomes NULL. However, bpf_metadata_create() can pass the .rodata MAP's BTF,
-satisfying the if (btf) check:
-
-tools/perf/util/bpf-event.c:synthesize_bpf_prog_name() {
-    ...
-    if (btf) {
-        finfo =3D func_infos + sub_id * info->func_info_rec_size;
-        t =3D btf__type_by_id(btf, finfo->type_id);
-        short_name =3D btf__name_by_offset(btf, t->name_off);
-    ...
-}
-
-Is it possible that finfo evaluates to an offset from NULL, leading to a
-segfault when dereferencing finfo->type_id?
-
-[Severity: High]
-This is a pre-existing issue, but does btf__type_by_id() guarantee returning
-a non-NULL pointer here?
-
-If the provided type_id is out of bounds, t becomes NULL. Would the
-immediate dereference of t->name_off then cause a segfault?
-
-While reviewing these formatting string fixes, I noticed a few other
-pre-existing regressions in the perf bpf and pmu utilities.
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the length accumulation
-in perf_pmu__for_each_event() risk a stack buffer overflow?
-
-tools/perf/util/pmu.c:perf_pmu__for_each_event() {
-    ...
-    buf_used +=3D snprintf(buf + buf_used, sizeof(buf) - buf_used,
-                         "%G%s", event->scale, event->unit) + 1;
-    ...
-}
-
-If the snprintf output is truncated, buf_used exceeds the buffer size. The
-subsequent call uses the remaining size, which would underflow to a large
-positive value. Can this cause the next snprintf call to write out of
-bounds?
-
-[Severity: Medium]
-This is a pre-existing issue, but does the error path in
-perf_env__add_bpf_info() leak the metadata object?
-
-tools/perf/util/bpf-event.c:perf_env__add_bpf_info() {
-    ...
-    if (!perf_env__insert_bpf_prog_info(env, info_node)) {
-        pr_debug("%s: duplicate add bpf info request for id %u\n",
-                 __func__, btf_id);
-        free(info_linear);
-        free(info_node);
-        goto out;
-    }
-    ...
-}
-
-If perf_env__insert_bpf_prog_info() fails, info_linear and info_node are
-freed, but there is no call to bpf_metadata_free(info_node->metadata).
-Should the allocated metadata be freed before jumping to the out label?
-
-[Severity: Medium]
-This is a pre-existing issue, but does the failure path for
-bpf_metadata_alloc() in bpf_metadata_create() leak the map resources?
-
-tools/perf/util/bpf-event.c:bpf_metadata_create() {
-    ...
-    metadata =3D bpf_metadata_alloc(info->nr_prog_tags, map.num_vars);
-    if (!metadata)
-        continue;
-    ...
-}
-
-If bpf_metadata_read_map_data() succeeds earlier in the loop, map.btf and
-map.rodata are allocated. If bpf_metadata_alloc() then fails, the loop
-continues without calling bpf_metadata_free_map_data(). Should these
-resources be cleaned up before continuing the loop?
-
-[Severity: High]
-This is a pre-existing issue, but does bpil_offs_to_addr() translate offsets
-to addresses without bounds checking?
-
-tools/perf/util/bpf-utils.c:bpil_offs_to_addr() {
-    ...
-    offs =3D bpf_prog_info_read_offset_u64(&info_linear->info,
-                                         desc->array_offset);
-    addr =3D offs + ptr_to_u64(info_linear->data);
-    bpf_prog_info_set_offset_u64(&info_linear->info,
-                                 desc->array_offset, addr);
-    ...
-}
-
-The untrusted offset from info_linear->info is added to
-ptr_to_u64(info_linear->data) to compute addr. If a crafted perf.data file
-provides an offset exceeding data_len, could this allow arbitrary
-out-of-bounds reads when the perf tool dereferences it?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610165207.2077=
-258-1-acme@kernel.org?part=3D8
+> ---
+>  tools/lib/perf/TODO | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/tools/lib/perf/TODO b/tools/lib/perf/TODO
+> index 486dd95dc57208a8..e179728697d8c7c0 100644
+> --- a/tools/lib/perf/TODO
+> +++ b/tools/lib/perf/TODO
+> @@ -11,6 +11,14 @@ together.
+>       (x86_64 max is 8192, arm64 is 4096), but NR_CPUS limits keep
+>       growing.  perf clamps to INT16_MAX in set_max_cpu_num() as a
+>       safety net.
+> +   - Code simplification: the int16_t forces defensive truncation
+> +     checks at every boundary where a wider CPU index (int from
+> +     sample->cpu, al->cpu, etc.) is narrowed into struct perf_cpu.
+> +     Without these checks, values > 32767 silently wrap to negative
+> +     numbers (two's complement), bypassing bounds validation.
+> +     Widening to int eliminates this entire class of silent
+> +     truncation bugs and removes the need for the INT16_MAX clamp
+> +     in set_max_cpu_num().
+>     - Scope: struct perf_cpu is embedded everywhere =E2=80=94 perf_cpu_ma=
+p__cpu(),
+>       perf_cpu_map__min(), perf_cpu_map__max(), perf_cpu_map__has(), the
+>       for_each_cpu macros, and all internal callers.  The perf_cpu_map
+> --
+> 2.54.0
+>
