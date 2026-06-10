@@ -1,142 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC56429BD87;
-	Wed, 10 Jun 2026 16:49:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E842BE7AC;
+	Wed, 10 Jun 2026 16:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781110183; cv=none; b=UnsGhxGkhg9w7pm5qWXFknPATR9+sTPC1bDRgSE5+9smQaV1M5hK0HovotZ9rGItn5/rcGnmF/0EgZqEwMQTiomK+WI2Nd9m5y1ysFTDhNXS5PeZUGTVf/OBeTUKSO1KawJp/PuEpzHdtSj+IFpCLNoad82bnWz/LjpLqtGRWCQ=
+	t=1781110336; cv=none; b=RjJBLfizW5TGJPLZelpWOo+7m3kr5ZYtb8SI3ighpJTcCX6giOdRCRGew5NBFLHospyK6Jbb1EwIs6Zbp8R2Vd8HxDLujIO0E7xG61BH3t07HBHRebcnEAFVrkSqnM9u6H5i3bRbEJT2q/wbg5AV5qYJHhyiCK/RfyxtBw4Fx64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781110183; c=relaxed/simple;
-	bh=O83XDOgikWm/aHQxtAdPOrc3rrnDEv1cE/AhbTEUy9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Na+y2IXq6O0LWlgMQyc/6y+H+jOU6fKcTi7eZLrtaGdoWrjn49zem98bc4kTK4LY5fgZFsj927nAgTWhW/CaX8AFykrpJ4J6+IxgNdOy9OdtSAgum/FyJuLdizsKqza7AUhv7GJOB11LTxVM2r/oHp63RHJt2uQYgZVCaPFwscQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2Lvnip7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781110336; c=relaxed/simple;
+	bh=tH+AbyE7ilbJ/HwnoYOtnQn5mI1xlUPG7g88kkDPKzM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bLzg+ga3WS17/h5pwLufNgXMApE+6blzjqehXo8ksj6ugc/5Ik+rKbiovapvRr6W+K9znQXiPyBaLTjy1m9homyNicKrYvPtAs5jV0qWxCO+YFQq7mS0bdFL7PepVyiW/xSm1t7H3I+0w4vV0z02tyM/9SAQTQ3BJxeA5OxlkkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MzTIkTBU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2Lvnip7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB221F00893;
-	Wed, 10 Jun 2026 16:49:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MzTIkTBU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C44991F00893;
+	Wed, 10 Jun 2026 16:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781110182;
-	bh=1K4C5cPKeYBdJTzXedsW1nCTfxrxNHI7dcozTp6DT1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=F2Lvnip7EbfPISM9okFIkEP3k/JuVV/mi5jQjJMdpqRP598a7cwItWjA3UcSVqn9B
-	 LnePM/QC/qThnGvBw23vPIqr5fsOCzoQEG9u2eziLsHEXfZDuRpef2JGVaL6XAsmy1
-	 6WYzTenlEuLDmqmS19lInwBMlJoaGeqqc0kXBLE8R7/BTpjhxqZYbnPEXItLvnHQ/5
-	 3fSS5ogoFanq8uFf0VsYZrRS+Fserz2CM+XycOr4/SPH9dtwgAwjZApmcYuYea2q64
-	 fFzOopGjVgoi3L4dSjK72UcHa4901HrDmSmU9DTrzwWx/30d5R57CfNfG6D/F7Ljm3
-	 h+t2XmzVUumPw==
-Date: Wed, 10 Jun 2026 13:49:37 -0300
+	s=k20260515; t=1781110334;
+	bh=KzOKiOWKqTJpez6hfwzf9+0eYervIj7L8QyddjPBvNw=;
+	h=From:To:Cc:Subject:Date;
+	b=MzTIkTBU7UzXneoN87eRJ4wHt1IXKonDkWDG9c2QTWdQVrRHmPGbqyam+dyO+solN
+	 Oi+epMaKB0v6L/LcHFefv8i+rFwTyOq98dQO/6kyrERgR23XJ5KL9Bg/QA7lGIBXBw
+	 XtupTe1L6ggFUppCmbahBjg74W/A47sEdOh47ZK8/jb/PoGeb6FY35by0tlLDRpsGJ
+	 iGX86PLAwYWHXVN12QRuHafAgfGwYSLTTsBiy+JsXH6JxmbVZ53owDm9fQftF/VE+c
+	 DCbFxEoDVxwiiQDpgiBuxi/L47wDHyi1uITBbE8kR3akHh1pN22gOyq61p1veMMm9W
+	 qnx7T+Arnx06Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 07/11] perf tools: Add O_CLOEXEC to open() calls in DSO
- and ELF code
-Message-ID: <aimVobFTV8MZ0pFy@x1>
-References: <20260609010526.1998472-8-acme@kernel.org>
- <20260609011626.DE73D1F00893@smtp.kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCHES v5 00/11] perf tools: Assorted fixes
+Date: Wed, 10 Jun 2026 13:51:54 -0300
+Message-ID: <20260610165207.2077258-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260609011626.DE73D1F00893@smtp.kernel.org>
 
-On Tue, Jun 09, 2026 at 01:16:26AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> 
-> New issues:
-> - [High] Incomplete fix for file descriptor leaks in DSO and ELF code.
-> 
-> Pre-existing issues:
-> - [Critical] Stack buffer overflow in sysfs__read_build_id when skipping non-matching GNU notes.
-> --
-> 
-> commit 66274b4049c9a2092defa7caf237fe0295853d9c
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> perf tools: Add O_CLOEXEC to open() calls in DSO and ELF code
-> 
-> The commit adds O_CLOEXEC to open() calls in dso.c and symbol-elf.c to
-> prevent leaking file descriptors to child processes during symbol
-> resolution.
-> 
-> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > index 7dced896c64ea..fb2e78fe2aa8e 100644
-> > --- a/tools/perf/util/dso.c
-> > +++ b/tools/perf/util/dso.c
-> > @@ -344,7 +344,7 @@ int filename__decompress(const char *name, char *pathname,
-> >  	 * descriptor to the uncompressed file.
-> >  	 */
-> >  	if (!compressions[comp].is_compressed(name))
-> > -		return open(name, O_RDONLY);
-> > +		return open(name, O_RDONLY | O_CLOEXEC);
-> >  
-> >  	fd = mkstemp(tmpbuf);
-> 
-> [Severity: High]
-> Since the goal of this patch is to prevent leaking file descriptors to child
-> processes, should we also address the mkstemp() calls in these files?
-> 
-> mkstemp() creates file descriptors without O_CLOEXEC. For instance, here in
-> filename__decompress(), the temporary file descriptor will still be leaked.
-> Should mkostemp(tmpbuf, O_CLOEXEC) be used instead?
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This is fixed in the next patch series.
- 
-> [ ... ]
-> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> > index 186e6d92ac3d7..c2bdfd0003df2 100644
-> > --- a/tools/perf/util/symbol-elf.c
-> > +++ b/tools/perf/util/symbol-elf.c
-> [ ... ]
-> > @@ -935,7 +935,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
-> >  	size_t size = sizeof(bid->data);
-> >  	int fd, err = -1;
-> >  
-> > -	fd = open(filename, O_RDONLY);
-> > +	fd = open(filename, O_RDONLY | O_CLOEXEC);
-> >  	if (fd < 0)
-> >  		goto out;
-> 
-> [Severity: Critical]
-> This is a pre-existing issue, but while reviewing this function, could
-> an unbounded read() happen later in sysfs__read_build_id() when skipping
-> non-matching GNU notes?
-> 
-> If a crafted sysfs note has a maliciously large nhdr.n_descsz, the code does:
-> 
->     } else if (read(fd, bf, descsz) != (ssize_t)descsz)
-> 
-> Since bf is a fixed-size stack array (char bf[BUFSIZ]), could this read past
-> the end of bf and overwrite the stack frame if descsz exceeds BUFSIZ?
+Hi,
 
-Ditto, as several other issues you reported in this series and in other
-series.
+Sixth batch of pre-existing bug fixes found by sashiko-bot AI review
+during the perf-data-validation hardening series.  All bugs are latent
+in existing code — none were introduced by the hardening patches.
+
+Three broad categories:
+
+1. snprintf() accumulation overflows (patches 2, 8, 9, 10):
+
+   Several functions accumulate formatted output via ret += snprintf().
+   snprintf() returns the would-have-been-written count, so on truncation
+   ret overshoots the buffer size and the next 'size - ret' underflows
+   to a huge unsigned value, disabling bounds checking.  Switched to
+   scnprintf() which returns actual bytes written.
+
+   Affected: cpu_map__snprint(), snprintf_hex(),
+   synthesize_bpf_prog_name(), hists__scnprintf_title(),
+   build_id__snprintf(), hwmon_pmu__describe_items().
+
+2. Missing safety checks on untrusted data (patches 1, 3, 5, 6):
+
+   - get_max_num(): size_t underflow on empty sysfs file causes heap
+     over-read.
+   - machine__resolve(): unguarded env->cpu[] access with untrusted
+     CPU index — switched to perf_env__get_cpu_topology() accessor,
+     added bounds check before int16_t truncation.
+   - timehist: test_bit(prio, ...) without bounds check on untrusted
+     tracepoint priority.
+   - idle-hist: rb_first_cached() on a tree populated with plain
+     rb_insert_color() — rb_leftmost never set, callchains silently
+     dropped.
+
+3. Resource hygiene (patches 4, 7):
+
+   - bitmap_free() without NULLing the pointer (2 call sites).
+   - O_CLOEXEC missing from open() calls in DSO and ELF code
+     (12 call sites across 2 files).
+
+Patch 11 expands the libperf ABI TODO with the code simplification
+argument for widening struct perf_cpu.cpu — the int16_t forces
+truncation checks at every boundary where wider CPU indices are
+narrowed.
+
+Arnaldo Carvalho de Melo (11):
+  perf tools: Fix get_max_num() size_t underflow on empty sysfs file
+  perf tools: Use scnprintf() in cpu_map__snprint() to prevent overflow
+  perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
+  perf tools: NULL bitmap pointers after bitmap_free()
+  perf sched: Bounds-check prio before test_bit() in timehist
+  perf sched: Fix idle-hist callchain display using wrong rb_first variant
+  perf tools: Add O_CLOEXEC to open() calls in DSO and ELF code
+  perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
+  perf hists: Fix snprintf() in hists__scnprintf_title() UID filter path
+  perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
+  libperf: Document code simplification case for widening struct perf_cpu
+
+ tools/lib/perf/TODO          |  8 ++++++++
+ tools/perf/builtin-record.c  |  1 +
+ tools/perf/builtin-sched.c   |  7 +++++--
+ tools/perf/util/bpf-event.c  | 11 ++++++-----
+ tools/perf/util/build-id.c   |  7 +++++--
+ tools/perf/util/cpumap.c     | 24 +++++++++++++++---------
+ tools/perf/util/dso.c        |  4 ++--
+ tools/perf/util/event.c      | 15 +++++++++++++--
+ tools/perf/util/hist.c       |  7 ++++---
+ tools/perf/util/hwmon_pmu.c  | 12 ++++++------
+ tools/perf/util/mmap.c       |  2 ++
+ tools/perf/util/symbol-elf.c | 20 ++++++++++----------
+ 12 files changed, 77 insertions(+), 41 deletions(-)
+
+Changes since v4:
+  - Patch 4 (bitmap_free): also reset nbits to 0 in mmap__munmap()
+    — without this, a reused struct mmap retains the old positive
+    nbits while bits is NULL, and bitmap_scnprintf() dereferences
+    the NULL pointer when perf runs with -vv.
+    (Found by sashiko-bot lore review)
+  - Patch 10 (build_id__snprintf): null-terminate bf before the loop
+    — when bf_size == 1, the offs + 1 < bf_size guard skips the loop
+    entirely, leaving bf[0] uninitialized.
+    (Found by sashiko-bot lore review)
+  - Collected Reviewed-by tags from Ian Rogers' v3 reviews
+    (patches 1, 2, 4, 5, 7, 8, 9).
+  - Reordered Reviewed-by tags before Cc lines in commit trailers.
+
+Changes since v3:
+  - Patch 3 (machine__resolve): expanded comment explaining why the
+    outer al->cpu < nr_cpus_avail check is needed — the int16_t cast
+    to struct perf_cpu silently truncates e.g. 65536 to 0, bypassing
+    the accessor's internal bounds check.
+    (Ian Rogers review)
+  - Patch 10 (build_id__snprintf): fixed loop termination — after
+    switching to scnprintf(), offs never reaches bf_size, so the
+    loop spun doing zero-byte writes.  Changed condition to
+    offs + 1 < bf_size.
+    (Found by sashiko-bot, confirmed by Ian Rogers)
+  - Patch 11 (TODO wording): fixed "wrap to small positive numbers"
+    to "wrap to negative numbers (two's complement)".
+    (Found by sashiko-bot, confirmed by Ian Rogers)
+
+Changes since v2:
+  - Dropped mbind patch (was v2 patch 4): the original code was
+    correct — get_nodes() does --maxnode before computing
+    BITS_TO_LONGS, so bitmap_zalloc(node_index + 1) with
+    maxnode = node_index + 2 already match.  The commit message
+    misstated the kernel-side semantics.
+  - Split libperf ABI TODO hunk out of prio patch into standalone
+    patch 11.
+  - Patch 3 (machine__resolve): bounds-check al->cpu against
+    env->nr_cpus_avail before truncating to int16_t struct perf_cpu.
+    (Found by sashiko-bot lore review)
+  - Patch 4 (was v2 patch 5, bitmap_free): reworded from "Three
+    call sites" to "Two call sites" — removed dead store from
+    memory_node__delete_nodes() where NULLing a pointer right
+    before freeing the containing struct was useless.
+    (Found by sashiko-bot lore review)
+
+Changes since v1:
+  - Patch 5 (was v1 patch 6): fix prio bounds-check logic — the
+    v1 condition (prio < 0 || prio >= MAX_PRIO || !test_bit(...))
+    incorrectly skipped events with unknown priority (prio == -1).
+    Changed to (prio >= 0 && (prio >= MAX_PRIO || !test_bit(...)))
+    to preserve the original pass-through for events without
+    priority info.
+    (Found by sashiko-bot lore review)
+
+Developed with AI assistance (Claude/sashiko), tagged in commits.
+
+Thanks,
 
 - Arnaldo
- 
-> [ ... ]
-> > @@ -1985,7 +1985,7 @@ static int kcore__init(struct kcore *kcore, char *filename, int elfclass,
-> >  	if (temp)
-> >  		kcore->fd = mkstemp(filename);
-> >  	else
-> > -		kcore->fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400);
-> > +		kcore->fd = open(filename, O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, 0400);
-> >  	if (kcore->fd == -1)
-> >  		return -1;
-> 
-> [Severity: High]
-> Similarly to the issue in filename__decompress(), if temp is true here,
-> mkstemp() is called without O_CLOEXEC.
-> 
-> There is also a similar mkstemp() call in read_gnu_debugdata() in this file
-> that extracts debug data without O_CLOEXEC. Should all of these be updated
-> to prevent leaking file descriptors?
-> 
-> -- 
-> Sashiko AI review � https://sashiko.dev/#/patchset/20260609010526.1998472-1-acme@kernel.org?part=7
