@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A51376A00;
-	Wed, 10 Jun 2026 19:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7EF375F9E;
+	Wed, 10 Jun 2026 19:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781121167; cv=none; b=k+uN41A7JoGawKp7mqlrYfzfVFMKlXmnyjzd8uCGnpcwoaSVHpx/YFRmJTKaqePtJKnKEC8qND63X65bew+NFNb78Cjf8F6cB1gQ0GeNTpF/FzBrxXrnhe4HC0Q03Gc3ANYQLNBSTMIXw7KxjrBzmVauVs+4W1WbZjqzxkibscM=
+	t=1781121173; cv=none; b=baDKluGa4vtXSiLL1O52QVhJ8FWumL+vjQ3lQUIwEADa3Z5DLNlotbtl6Sg9wWVkIZIqd+4ELl+N8lq2pCxl02FfzzMeWTrAyqzo70vjnEM2nJJwfXT2iEVwpybUE+tp8mhuzr0eNXFx0Idq/fq+IDhYUlOEdVingp12LYPC0cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781121167; c=relaxed/simple;
-	bh=U8XUsMdBiSeRXn8BD1bxLHaGXk+cYzuPq1b6LICmGqo=;
+	s=arc-20240116; t=1781121173; c=relaxed/simple;
+	bh=IU+ezwazzSXKiMX4W7YZJvFUX44hgOpFhQlwM61NsW4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D6MPKcwH+kymuT9j24zUToqKPRx5TVYDv6AqfpgXlIxkxRqj7nJPFsl4BqOZvC0wS8CJg04WBp8VmcN/9d+op3opblQwdjT1j5wIKYNN2Zs1VBWatREbH3XKdnQtU6kmtR7q/yyNSv4tfkjqD5dPghMJcPhJHHhoknbEjSEOL2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USwvGME4; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=gw6s2c359bAj+bcaSgxpxGAou1tsq6SV8gGQYFPaBzzeSARYERWTq6ofZSxWp+wjeja96t84zhpKHu3lp1zuQJnMN+LRQNGjAkUKwILDsYg6vf6hNoigzPw2RLmonM7TSIGPkabiJLXy/PLY4Qp87A6hgGYn/IasTXYSAM9H0k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsKPg7FC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USwvGME4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8562B1F00893;
-	Wed, 10 Jun 2026 19:52:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsKPg7FC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED4401F00898;
+	Wed, 10 Jun 2026 19:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781121166;
-	bh=PZqBrR+wuBd/vnC+O1nigshQyObWcwPc/K+wvFXXE+s=;
+	s=k20260515; t=1781121171;
+	bh=1k2laDadMfW77x6Kr2jVszozrwycuXOW10MwBasYa9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=USwvGME4mEP4/yh+tINJgTXAd1a8XmnkS0ObOl/epZZFb/U3kki6TpPQhxR72h8dH
-	 p6Ge7SBWLP+9bQ4/1pl2nziaA1M4pXPhIgMZ90nzZqyM90ZJWdNjv31tRckQPSnT8Z
-	 8OncELySZv7nY+WrOXTPBIhxTuOPZLl8dy1/ZQiRssoCooFY3VY3vJ6QGLX4G8Nrf7
-	 yT/f3aI5Ga6tq9ogf+b8vjhPWGXQVOHtpQP2wC8ho8C5Vdn18JRo9iAsSH4qQhFeVm
-	 jam1WK7mYkPw/zqBzWAQXa6neOSpsxroiVvuHZTENceBaD3iiWx87FGFT1cS0o1rqF
-	 IkmD8mbObW5Aw==
+	b=HsKPg7FCAI5z5pxiTgb5eo9z/BVSs7eXKjQkLxqRBN0ys+j1THinqk5AzGdlQhpTp
+	 f8H8aZNpHHJaFQbgMU5YiUe5RWZfBMVlcxhHmLS79UhPg62y3DrBaeAb8NZlRAYNxh
+	 813gS0SvLKtPBplh0/526wEZD0ld+6VBEAlTvb9OXuXmuG6CS2oAcufHZ74gj8BRiO
+	 y9vv6rCDi0W1ndqe0PRQFvtKdr1CzwAbLNVQ8XVKaZFD10JNifvnELiToT4g8ZDt0u
+	 GckjgZwyJENyjqhZlunYMUP4BHWv5HjT1r/AzyjTVe8ZhcX2IxTIBYq3tqH+MEiry5
+	 iHXAq9k5ASB0g==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 08/23] perf tools: Fix thread__set_comm_from_proc() on empty comm file
-Date: Wed, 10 Jun 2026 16:51:41 -0300
-Message-ID: <20260610195157.2091137-9-acme@kernel.org>
+Subject: [PATCH 09/23] perf hwmon: Fix off-by-one null termination on sysfs reads
+Date: Wed, 10 Jun 2026 16:51:42 -0300
+Message-ID: <20260610195157.2091137-10-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260610195157.2091137-1-acme@kernel.org>
 References: <20260610195157.2091137-1-acme@kernel.org>
@@ -52,50 +52,63 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-thread__set_comm_from_proc() calls procfs__read_str() then strips
-the trailing newline via comm[sz - 1] = '\0'.  procfs__read_str()
-allocates the buffer before reading, so on an empty /proc/pid/comm
-(reachable during late exit teardown) it returns success with sz = 0
-and an unterminated heap buffer.
+Three functions read sysfs files into fixed-size stack buffers using
+the full buffer size, then null-terminate at buf[read_len].  If the
+read fills the buffer exactly, read_len equals sizeof(buf) and the
+null byte writes one past the array, corrupting an adjacent stack
+variable.
 
-The sz - 1 underflow was the original sashiko finding: it writes a
-null byte before the allocation.  But even with a sz > 0 guard on
-the newline strip, the unterminated buffer would still be passed to
-thread__set_comm() which calls strlen() — an unbounded heap read.
+Fix all three by reading sizeof(buf) - 1 bytes, reserving space for
+the null terminator:
 
-Fix by treating sz == 0 as failure: free the buffer and return -1.
-This is consistent with pmu.c's perf_pmu__parse_scale/unit which
-already treat len == 0 from filename__read_str as an error.
+  - hwmon_pmu__read_events(): buf[128]
+  - hwmon_pmu__describe_items(): buf[64]
+  - evsel__hwmon_pmu_read(): buf[32]
 
-Fixes: 2f3027ac28bf6bc3 ("perf thread: Introduce method to set comm from /proc/pid/self")
+Fixes: 53cc0b351ec99278 ("perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/util/hwmon_pmu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index ba33c0dfc18fe242..e483ffcb5d937fbc 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -295,6 +295,11 @@ int thread__set_comm_from_proc(struct thread *thread)
- 	if (!(snprintf(path, sizeof(path), "%d/task/%d/comm",
- 		       thread__pid(thread), thread__tid(thread)) >= (int)sizeof(path)) &&
- 	    procfs__read_str(path, &comm, &sz) == 0) {
-+		/* sz==0: read got nothing, e.g. race during exit teardown */
-+		if (sz == 0) {
-+			free(comm);
-+			return -1;
-+		}
- 		comm[sz - 1] = '\0';
- 		err = thread__set_comm(thread, comm, 0);
- 	}
+diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+index dbf6a71af47f9a42..d895cd74f2a05f9d 100644
+--- a/tools/perf/util/hwmon_pmu.c
++++ b/tools/perf/util/hwmon_pmu.c
+@@ -289,7 +289,7 @@ static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
+ 			if (fd < 0)
+ 				continue;
+ 
+-			read_len = read(fd, buf, sizeof(buf));
++			read_len = read(fd, buf, sizeof(buf) - 1);
+ 
+ 			while (read_len > 0 && buf[read_len - 1] == '\n')
+ 				read_len--;
+@@ -432,7 +432,7 @@ static size_t hwmon_pmu__describe_items(struct hwmon_pmu *hwm, char *out_buf, si
+ 			is_alarm ? "_alarm" : "");
+ 		fd = openat(dir, buf, O_RDONLY);
+ 		if (fd > 0) {
+-			ssize_t read_len = read(fd, buf, sizeof(buf));
++			ssize_t read_len = read(fd, buf, sizeof(buf) - 1);
+ 
+ 			while (read_len > 0 && buf[read_len - 1] == '\n')
+ 				read_len--;
+@@ -816,7 +816,7 @@ int evsel__hwmon_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
+ 
+ 	count = perf_counts(evsel->counts, cpu_map_idx, thread);
+ 	fd = FD(evsel, cpu_map_idx, thread);
+-	len = pread(fd, buf, sizeof(buf), 0);
++	len = pread(fd, buf, sizeof(buf) - 1, 0);
+ 	if (len <= 0) {
+ 		count->lost++;
+ 		return -EINVAL;
 -- 
 2.54.0
 
