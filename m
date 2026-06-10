@@ -1,177 +1,192 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAE73446CE
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873DA346FDA
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.179
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781111217; cv=pass; b=WR1BDopOJ8aTR4tUSGcr/vLmpz4uxTGLzcRSlW0IBTh4/N2gziEQfkxC1dKlvqIMO7dNetyJFi8UIcqmcJv9RPbveI+hdfDBMkVkl4UtTh311SVau2iMKJvsRagcJ6SyxP1+PqZw3DQauj4OqI7R7enCRdr+o3v1eRcD5EbDR1o=
+	t=1781111393; cv=pass; b=fm1dpNamrJvIl/8eEb54g+tl3Ay3lU9TXZrKIqrxW+amwNZFvObDH4Ie56vseRARFvWdNdIyXIHus+FTcrKLN1bucqtg95wOM05vsEo36vdg7r11BPpqZN2nGj0e81Or/GcDPSPqUnp0oQJ21GfCDCB+qpHTVtw4cydd9bTH2H0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781111217; c=relaxed/simple;
-	bh=rg0aiYDhHHZucD9w1OGtfujvoInDxOzvRtHWBuvfeCY=;
+	s=arc-20240116; t=1781111393; c=relaxed/simple;
+	bh=m9RegbNqcRLzI9ybYpxjWVdj5WlWfSwjL6mtaONC7Dw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z2DCLChAtATu+JMb83fBTKjUA5k72xFoSn/bP8ZqMkTQJAuAlfojvH+yknBH7jNkWESlAvnBivLoJ+BXpwCkhWa++6Vs4NBHTpkA6mbCwJ4ddemPL8eQjE0nO3qKaoMxrdx3ohQpBcRpWkheAig/2TSnMC85kG/9+s3haWe3TMw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LMrCWuKf; arc=pass smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=e+SsH2NCyOStDkPFqpm5ZokcaUW9s41c8hTvuoEWb5AJccKW9cH0jsJpKPxHzOHdcCF/Lt+7PeOwpAIDUToue15ynNMrJ+Qbsy5+rx8zetJotLCxEghL1T1qsbgBIh255+1qiabIpD4SkNLBpOyuH0M9n5y0jcZylz1964uXZ6o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QCba/0ev; arc=pass smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LMrCWuKf"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2bf2d865383so4595ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 10:06:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781111216; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QCba/0ev"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2bf2d865383so4985ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 10:09:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781111391; cv=none;
         d=google.com; s=arc-20240605;
-        b=ZbCRUb5rVT/+h75XTamx4QNBg0D5wRUJF2ggb84vNMvdxTTRL0aaxvHIviHwssZ3re
-         jH2GErjfD8VRhf8GzPejzmzfxEel3pM0CQeRm47NtA1nNSNBbL151S2ECGurufuUWUvU
-         gveqe0YlURN263c2sHtbJF/0HQ8sP1AKJP/XG9d1PLDJyJ9yzfZ5nnw3UomB5KDUTArC
-         AYyvrnDic8b2431bZSWtOJ0uaCpnWb6We6yz1+rVhkbVqhdx3v9Sx6laaqfyLSS4k67U
-         Haewuxwdt/RJ4Ybpp7EFe+i9zgdvT20i0Y6XejiXD5LUTqMIYrlfNGjcRhpWJqj5XuOq
-         Tx1A==
+        b=CKJORo4V4yMTgnRmxT158ILBgoX6dLHlmvvBB6XKwZtZPHmaugH92CTSbQIpx4WL7y
+         0Er6BCSSSeLFCRsQ1SYNDrxvhYv04xBs2cdMH9U4+FpWgr+49MYUK5KgR/qT/ug3EvRY
+         h20lKiL0uSU68+60cjR45yfM0cvRcC4C1hvh7zjFHgujqJ8FQ3hX+jl4XUP7Nj1tEo7O
+         8YA5mG8t6vOeCekhgOU9c93r2VYvrcX4gmM/cvMzfet+ayOUIl2tWv7oErcgud6Fiocl
+         7cvDuu1RumxProx2NAvAEsYjmlFawEXmYd83n52XRa9bZdE6NAE/f3syHubGtvCdF5d+
+         KjaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=0Mropv85BQrKNEGe/YL6H/Nji0UWEphvooDqge768FQ=;
-        fh=6UK06scBT2Fg9DCKSURzFy2tlozUtTVA09BMVQxqrCE=;
-        b=Z/r1ZjS7yRgCD1LJm/crn7gs6737qHWuvWL8S7oiZfmB4vdax7gMg2aM3u459ttKz9
-         1WOVfcAkgiEJMftyZf/ru7kLHYfKx+H1fjfQCxOa8nscmNgNbuauZJKS1bmRagjeep/3
-         wup03K/QVx6Z4xv51Y/hOOoociNRWEP7iLbart2OFtSVd2kNQzuNtTNB3IWcqbNM9EZy
-         3n7Rm1Z8UonM7ubtgmuwfooi/Ttly7uutHwDsHUHKP3ez/xSFQB+WbPjOHhg5PL/WR7n
-         i2V3jj5rI11qvEodGlrSW2i07GjQcO8nfFCHdD+XrUSLL7Q20nAlsq5JVRVO5ROVRI0d
-         Amrg==;
+        bh=vLzjLyziWygrwQcvyuw1Y4NpKopNA8D6FnsGf3f95Ic=;
+        fh=qHJjaYxrzI2qUByWHG0Qa4UQZgixjWn30bjtfrl2VeQ=;
+        b=Bc5ANcs36LU8z5QMU/x0esTQASDIrKeW9UTM5GIxHi+05qqQARsWlGBbXlT0GgrrO4
+         ZFtC9KMLbdi3qfYjbxzC44puiAE7ZFdcQMsy/VFuNvR+f1GmKSbg11qfBtAclT5CGBOt
+         24XVfGfhIKMeHZH6u8hIe8pP0zFShVfr1MIy4FLzEfUoovKL3xHVvv9Un2irR8cvbq8x
+         eBiKcGD+RXi/EXw+N7M0PC+pAjdZfS4LSTvz6Ay53hQPXB/knlJzeqIHLj6lTm4AltM4
+         nndHQo1S//szENGzhob1o8H8q7NffA2sil58ajGg/xRfvAuWNcwaSu5jw4d5FLX6mTN+
+         +83g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781111216; x=1781716016; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781111391; x=1781716191; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0Mropv85BQrKNEGe/YL6H/Nji0UWEphvooDqge768FQ=;
-        b=LMrCWuKfOpXkFo0QIvx1lZhvyHt46PN4aLcZx0icoXTK5w6injMvp+FRr7Xn7xifN7
-         8cL6Jm+U/gclK4bYmiFeake/iwmnKlqRMew8ceK32br4VDXCOa5Y3jnAgtjEYkjPSeRM
-         yEruJwNQDssi0Ta32K47D7NYiTAEY+5/E1fprBNaF3ISGw5GmHw9ecJDLVNddSWb/zTA
-         pWBc2Tb0ZgYTHwIpu9yUTZTJu+KNMjA8bbSd90iOXvAIURZdWThCr6DGiYAkaYMK5Kb5
-         XEDDNTNiJqtzJJlUHzF81Mj2q50mrE/q/RYSLlvCQt60Z+98xc6ESPjHwZ6jzG9FtnxG
-         YBhw==
+        bh=vLzjLyziWygrwQcvyuw1Y4NpKopNA8D6FnsGf3f95Ic=;
+        b=QCba/0ev3ZnJ+DZBBFZY3+49atshH0lFKGWgVhPydB8TXNSMwVjs8naH0hJt2Ujjs2
+         8MHELP/o3T6ey1BMDXf55JZRYUDPHD/v037PSm2s/xpTpqsqqIsTb32tF1Do99AyarLV
+         lls1nWcdWzmNtBKKZanNuC8cJJPzEphETdNAmpSc6TfYGNmDzjXN4U7DxWqee8p/HQY2
+         w4qcfCyqUzazhjuJgC1jNMLIfH0kAtMLOxnq5gNu0UKhFOCfHXS2rT10XXW9DI2UxslM
+         k3JwP2R34sKD8PzhSidjGgbM7AlVyigzk8CEuRyAdFSOAJIVu1RHvAyFWhJvRAraYK9V
+         ueUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781111216; x=1781716016;
+        d=1e100.net; s=20251104; t=1781111391; x=1781716191;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=0Mropv85BQrKNEGe/YL6H/Nji0UWEphvooDqge768FQ=;
-        b=f116ofcqtk64UMxdpNW75kw7dScUG97Vy0kCf3ZTm/xemVYJ3gUvwXA4eg8oANacI9
-         bAfaQMtD0gE/QVPGcYYdaiXTY3BWmD9NeqlhJSmbiNu+d5tLf5/K0VkWbMp/OKjDef7x
-         aJeHyqT14AFIPwToIdMlmDm5LYicbW8wQppPpZsFV33sJcDRrvJ7bmHUv+Z3vPNHGZVN
-         dzAV7q+j3dj2rpRqpwB/C+x1eXGkIycoDvsBnsjD4j8q1ES1zIn/ty/qOLY2c9EM0BA0
-         Hj57ff1YHRlrJ+KwfigEOKLQAfBemH2YBnyl2FcJ/3m893Un2pcn3VYXrKk3aQ7OCh8i
-         2N7g==
-X-Forwarded-Encrypted: i=1; AFNElJ+NYY2xSKwVP4/BblyheLoJ4XOGOUyuHA+apkn5QAt96CdiU9sBI/w/AeHaNCnz+vbaxkfsVXaxY4CZwJlA5lMV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1hyzAm/FZmnLRQfTgIM5MoR9SbsVNdKkO++c6eaBbUqJPEZAS
-	jfyqKkDtVaKDrELplmhPreuJuN288rVAOKbwnpC72rn4cWe/XmjYMWSl42q6jVj2aqvC5ut0oTy
-	b8kZAbU4breep3dlvDVzXTBPCNcfO2J8aUFtd/s5N
-X-Gm-Gg: Acq92OG0dor7vPRsG6pFSDSyz/hTIOUCH4mZbiglD+gnrufDdMR2oLM+FKzagGx6kBv
-	RSkLrpxNGtZdorKJ6SQWuf7rmyiV6kqAuBv+38zqdSIqMZWa8FAbObZwix9420gZyIfXpOamuOw
-	VXMmjvKQvbCO7KpMeIyqUw8mSKMaaX4EYz6JBz/XxbdqpiC3M3F2f4AQD6tW8eLV0vsWRe2A9yO
-	3CLHwdh9pEiIPbIat0zGon8mJOp01dTl00jnOeLiZw0ArCr08Z9hdyiMtCsItRNR19uTHxeQ31a
-	cy2+tIvR6gpEq9hWMjbLIE7sh+ZgYCPT4Vno514g3SWW8Jrw
-X-Received: by 2002:a17:903:2ac4:b0:2c1:ee6e:be22 with SMTP id
- d9443c01a7336-2c2d9405887mr266515ad.32.1781111215231; Wed, 10 Jun 2026
- 10:06:55 -0700 (PDT)
+        bh=vLzjLyziWygrwQcvyuw1Y4NpKopNA8D6FnsGf3f95Ic=;
+        b=Kk2cwm4Ev+dyAWd/2zpbH/5LaP5YuUIVVIqVfJW+QEJMj0Dom8lKXq3qzAAkUC1uPz
+         vIWpgMuDKBK5D2nFiD/lMqagnvgdYzfwAxuwN9UpjaWcIk1FyK3S/LUAOzjYzKmpcLzu
+         x5/KRvpLT3YYuWRYJF2g6KkNx1GnSAZkoTOGS/BrfKAPX5+mD3EvoIOQtjzDY0MkWqOw
+         VhFzgDvUXg33rIlSqoCjxpy0v22vjaFg19pPJ+jSGIDpPkJFRBraZBYyXUTUQElH82xz
+         JN2jpV1u+N3xPOGxoDRPB+JiO0gALGt/7tK7bW4xYoloTGvOH3e/sQ1lrVQtWx23aRUi
+         qLMg==
+X-Forwarded-Encrypted: i=1; AFNElJ84oNNPHq5wYlsbII/7L3aipecAB1mZQHLVFIQwIJs4jxBhjRatChdRIP2/pHunPIw8moxKonDXI5rId/j3NQtu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5vaJ4KCQnjs9i9BnhyHuYWd2G6jEO+E/KRcVjUkScsM+litmG
+	+DyiPd1uMxZPmTYAmMDiLDA2z7rxQfUhFctT8L5d1OmF6VLSXz7SaRVR2/QLYNI8VccRJnPdGsg
+	ikQ/UsR0Fvqn90R3PGfDMA7aZppCGXmm6Pz9mugxO
+X-Gm-Gg: Acq92OF+DrzwFiBWbm2zsd7POCNnG6JcdK206WryzeAKRRvWhh5Ckd0zROo/8PgPnQl
+	YlN+nUwjXPiJNc+YYM8EeA9Bm6gH4h7RfXipE2HQirXy54X4ZIUrz2CLbVFvRiJKsLBQRGyEoqP
+	NREDnZ/6GG+d6sqyZtI/mMUdX+EtepcXBHtm0FWRx/7X6L0/tbCJo/XgUM2tG7L4x4SF7RXhcPI
+	sShV3QcreED7NLvxVUfSCbpgbYR+TRkMxoejk3XZv10u41CeTV6N0XNBW8i+g9q4IArD9amfO3v
+	cG7LpvoTdTXbftwszgPxzMsyKDrdjriAk2bEMYYoTgtMG5Oh
+X-Received: by 2002:a17:903:2c9:b0:2c1:ee6e:be1f with SMTP id
+ d9443c01a7336-2c2d9571df9mr395405ad.29.1781111390345; Wed, 10 Jun 2026
+ 10:09:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260610165207.2077258-1-acme@kernel.org> <20260610165207.2077258-4-acme@kernel.org>
-In-Reply-To: <20260610165207.2077258-4-acme@kernel.org>
+References: <20260610165207.2077258-1-acme@kernel.org> <20260610165207.2077258-11-acme@kernel.org>
+In-Reply-To: <20260610165207.2077258-11-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 10 Jun 2026 10:06:43 -0700
-X-Gm-Features: AVVi8Cd6_5vKasSYaoGpr5bXZVE9ogmaQAy-bLhJtOKqwmJPH53bTr106O73puA
-Message-ID: <CAP-5=fUbJTXjqyM2kmW2JSxgqVJGtcdBPqq7S0f4PLzssXjyuQ@mail.gmail.com>
-Subject: Re: [PATCH 03/11] perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
+Date: Wed, 10 Jun 2026 10:09:38 -0700
+X-Gm-Features: AVVi8CfBMwsUrpZ1jIhF6GtlLNubC6ACCIjjThKVuh59pBlV06XHP-b7M-W6_sY
+Message-ID: <CAP-5=fVd=pi6bf8BscABmyEDTDFjFzEJ1j7K8mb_hEv8mr7Ecw@mail.gmail.com>
+Subject: Re: [PATCH 10/11] perf tools: Use scnprintf() in build_id__snprintf()
+ and hwmon read_events()
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	sashiko-bot <sashiko-bot@kernel.org>, Kan Liang <kan.liang@intel.com>, 
-	"Claude Opus 4.6" <noreply@anthropic.com>
+	sashiko-bot <sashiko-bot@kernel.org>, "Claude Opus 4.6" <noreply@anthropic.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 10, 2026 at 9:52=E2=80=AFAM Arnaldo Carvalho de Melo
+On Wed, Jun 10, 2026 at 9:53=E2=80=AFAM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> machine__resolve() accesses env->cpu[al->cpu].socket_id after checking
-> al->cpu >=3D 0 and env->cpu !=3D NULL, but without validating al->cpu
-> against env->nr_cpus_avail.  Since al->cpu comes from the untrusted
-> perf.data sample, a crafted file with a large CPU index causes an
-> out-of-bounds heap read.
+> build_id__snprintf() and hwmon_pmu__read_events() accumulate formatted
+> output via snprintf(), which returns the would-have-been-written count
+> on truncation.  In build_id__snprintf(), this inflates the return
+> value beyond the buffer size.  In hwmon_pmu__read_events(), len
+> overshoots out_buf_len and the next 'out_buf_len - len' underflows.
 >
-> Use perf_env__get_cpu_topology() which validates both NULL and bounds.
-> Also bounds-check al->cpu before the cast to struct perf_cpu (int16_t):
-> without this, values like 65536 silently truncate to 0, bypassing the
-> accessor's internal check and returning CPU 0's topology.
-
-Thanks for clarifying this. Perhaps we should have a general
-int-to-CPU helper, but that's out of scope here.
+> Switch both to scnprintf() which returns actual bytes written.
+>
+> In build_id__snprintf(), also tighten the loop guard from
+> 'offs < bf_size' to 'offs + 1 < bf_size': since scnprintf() returns
+> at most size-1, offs never reaches bf_size, and the original condition
+> would spin doing zero-byte writes once the buffer fills.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Fixes: 0c4c4debb0adda4c ("perf tools: Add processor socket info to hist_e=
-ntry and addr_location")
+> Fixes: fccaaf6fbbc59910 ("perf build-id: Change sprintf functions to snpr=
+intf")
+> Fixes: 53cc0b351ec99278 ("perf hwmon_pmu: Add a tool PMU exposing events =
+from hwmon in sysfs")
 > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Cc: Kan Liang <kan.liang@intel.com>
 > Cc: Ian Rogers <irogers@google.com>
 > Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  tools/perf/util/event.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+>  tools/perf/util/build-id.c  |  7 +++++--
+>  tools/perf/util/hwmon_pmu.c | 12 ++++++------
+>  2 files changed, 11 insertions(+), 8 deletions(-)
 >
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index 66f4843bb235df53..ea75816d126a14be 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -14,6 +14,7 @@
->  #include <linux/perf_event.h>
->  #include "cpumap.h"
->  #include "dso.h"
-> +#include "env.h"
->  #include "event.h"
->  #include "debug.h"
->  #include "hist.h"
-> @@ -836,8 +837,18 @@ int machine__resolve(struct machine *machine, struct=
- addr_location *al,
->         if (al->cpu >=3D 0) {
->                 struct perf_env *env =3D machine->env;
->
-> -               if (env && env->cpu)
-> -                       al->socket =3D env->cpu[al->cpu].socket_id;
-> +               /*
-> +                * Bounds-check al->cpu (s32) before casting to struct pe=
-rf_cpu
-> +                * (int16_t): without this, e.g. 65536 truncates to 0 and=
- silently
-> +                * returns CPU 0's topology.  Can go once perf_cpu.cpu is=
- widened.
-> +                */
-> +               if (env && al->cpu < env->nr_cpus_avail) {
-> +                       struct cpu_topology_map *topo;
-> +
-> +                       topo =3D perf_env__get_cpu_topology(env, (struct =
-perf_cpu){ al->cpu });
-> +                       if (topo)
-> +                               al->socket =3D topo->socket_id;
-> +               }
+> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> index 8c0a9ae932aa5798..eb95ab90f9741d5f 100644
+> --- a/tools/perf/util/build-id.c
+> +++ b/tools/perf/util/build-id.c
+> @@ -93,8 +93,11 @@ int build_id__snprintf(const struct build_id *build_id=
+, char *bf, size_t bf_size
+>                 return 0;
 >         }
 >
->         /* Account for possible out-of-order switch events. */
+> -       for (size_t i =3D 0; i < build_id->size && offs < bf_size; ++i)
+> -               offs +=3D snprintf(bf + offs, bf_size - offs, "%02x", bui=
+ld_id->data[i]);
+> +       if (bf_size > 0)
+> +               bf[0] =3D '\0';
+> +
+> +       for (size_t i =3D 0; i < build_id->size && offs + 1 < bf_size; ++=
+i)
+> +               offs +=3D scnprintf(bf + offs, bf_size - offs, "%02x", bu=
+ild_id->data[i]);
+>
+>         return offs;
+>  }
+> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+> index fb3ffa8d32ad2a93..dbf6a71af47f9a42 100644
+> --- a/tools/perf/util/hwmon_pmu.c
+> +++ b/tools/perf/util/hwmon_pmu.c
+> @@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmo=
+n_pmu *hwm, char *out_buf, si
+>
+>                                 buf[read_len] =3D '\0';
+>                                 val =3D strtoll(buf, /*endptr=3D*/NULL, 1=
+0);
+> -                               len +=3D snprintf(out_buf + len, out_buf_=
+len - len, "%s%s%s=3D%g%s",
+> -                                               len =3D=3D 0 ? " " : ", "=
+,
+> -                                               hwmon_item_strs[bit],
+> -                                               is_alarm ? "_alarm" : "",
+> -                                               (double)val / 1000.0,
+> -                                               hwmon_units[key.type]);
+> +                               len +=3D scnprintf(out_buf + len, out_buf=
+_len - len, "%s%s%s=3D%g%s",
+> +                                                len =3D=3D 0 ? " " : ", =
+",
+> +                                                hwmon_item_strs[bit],
+> +                                                is_alarm ? "_alarm" : ""=
+,
+> +                                                (double)val / 1000.0,
+> +                                                hwmon_units[key.type]);
+>                         }
+>                         close(fd);
+>                 }
 > --
 > 2.54.0
 >
