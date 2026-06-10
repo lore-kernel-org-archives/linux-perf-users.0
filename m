@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E842BE7AC;
-	Wed, 10 Jun 2026 16:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86577332909;
+	Wed, 10 Jun 2026 16:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781110336; cv=none; b=RjJBLfizW5TGJPLZelpWOo+7m3kr5ZYtb8SI3ighpJTcCX6giOdRCRGew5NBFLHospyK6Jbb1EwIs6Zbp8R2Vd8HxDLujIO0E7xG61BH3t07HBHRebcnEAFVrkSqnM9u6H5i3bRbEJT2q/wbg5AV5qYJHhyiCK/RfyxtBw4Fx64=
+	t=1781110343; cv=none; b=UlVbrb6hQZarXdldMm1oJu9pcyRYQCKiXMlukmVc9Zj9IXbeUzya8MsHToRr0mtlEhGwK3ORGzdh/CpNK9f7etFSR/mwSfMBylALI3N1hgMxl5s96YbweUJfnxwdZmoyeWI3fgFVQgTCPuCN2hpLW/B9zpwfXTbGfEjRj+Px+R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781110336; c=relaxed/simple;
-	bh=tH+AbyE7ilbJ/HwnoYOtnQn5mI1xlUPG7g88kkDPKzM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bLzg+ga3WS17/h5pwLufNgXMApE+6blzjqehXo8ksj6ugc/5Ik+rKbiovapvRr6W+K9znQXiPyBaLTjy1m9homyNicKrYvPtAs5jV0qWxCO+YFQq7mS0bdFL7PepVyiW/xSm1t7H3I+0w4vV0z02tyM/9SAQTQ3BJxeA5OxlkkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MzTIkTBU; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781110343; c=relaxed/simple;
+	bh=VC6q+mtq8KwC5Y4PLY6wDdpjHfEtE2CGjR6ZMYxBHMs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CJkhrZqXHIeI62LSHqQkm+f3QMfKH8sjyinWSsh3lDrHzXgFYR8irf8PGQCVmAsIO/T2q3lbqsIH04bi8TtFR3r8fV/+bmkweDHVfuf7DoCyIQOmonBZSbrMPZ9/+ioblM2loLkjcWEFVgw9kb0wesaC4fFOHuMeTiNz91Bfhdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4nVxycl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MzTIkTBU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C44991F00893;
-	Wed, 10 Jun 2026 16:52:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4nVxycl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D731F00898;
+	Wed, 10 Jun 2026 16:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781110334;
-	bh=KzOKiOWKqTJpez6hfwzf9+0eYervIj7L8QyddjPBvNw=;
-	h=From:To:Cc:Subject:Date;
-	b=MzTIkTBU7UzXneoN87eRJ4wHt1IXKonDkWDG9c2QTWdQVrRHmPGbqyam+dyO+solN
-	 Oi+epMaKB0v6L/LcHFefv8i+rFwTyOq98dQO/6kyrERgR23XJ5KL9Bg/QA7lGIBXBw
-	 XtupTe1L6ggFUppCmbahBjg74W/A47sEdOh47ZK8/jb/PoGeb6FY35by0tlLDRpsGJ
-	 iGX86PLAwYWHXVN12QRuHafAgfGwYSLTTsBiy+JsXH6JxmbVZ53owDm9fQftF/VE+c
-	 DCbFxEoDVxwiiQDpgiBuxi/L47wDHyi1uITBbE8kR3akHh1pN22gOyq61p1veMMm9W
-	 qnx7T+Arnx06Q==
+	s=k20260515; t=1781110341;
+	bh=HnEEYaaAEIVtR7qYXVTM1b0f6ONnauIaMoMKazEsRPc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Y4nVxyclrQLTnDhccHX3PcgeCDCssIGRXURR60HenLlctDp2ibWBKpGrExzYNC+qD
+	 0k44Yvqg9IKUTlQlnL+uVb+i/wYynrjHofQvDvBWrBhOanlu1OO+pgJxxPjY2vw8jh
+	 E79XlzxYoqSmcQ3k42cWuLfKDrLkLTHwRJoQXSr1jdgiI2OdFrbA+yGjcBNZdV6Dg+
+	 QhRNngl9SWlMbPBxKkRqS5W5G3uLMA6wPRB3L8k4pv03KgDWXyxoAtgoGTpnX3CHZK
+	 R1RbYCjNpHixX6ZMR3WXxs642hg4OiN+3G3F1UZ/tzg51q9bu2DE6EmkrELY/9ww1h
+	 k4AVIaxqUmnAg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,11 +37,16 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCHES v5 00/11] perf tools: Assorted fixes
-Date: Wed, 10 Jun 2026 13:51:54 -0300
-Message-ID: <20260610165207.2077258-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot <sashiko-bot@kernel.org>,
+	Don Zickus <dzickus@redhat.com>,
+	"Claude Opus 4.6" <noreply@anthropic.com>
+Subject: [PATCH 01/11] perf tools: Fix get_max_num() size_t underflow on empty sysfs file
+Date: Wed, 10 Jun 2026 13:51:55 -0300
+Message-ID: <20260610165207.2077258-2-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260610165207.2077258-1-acme@kernel.org>
+References: <20260610165207.2077258-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,134 +58,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hi,
+get_max_num() reads a sysfs file (cpu/possible, cpu/present, or
+node/possible) and scans backward from the end to find the last
+number.  If the file is empty, filename__read_str() returns num == 0.
+The loop `while (--num)` decrements the size_t from 0 to SIZE_MAX,
+reading backward across the heap until a comma or hyphen is found
+or unmapped memory is hit.
 
-Sixth batch of pre-existing bug fixes found by sashiko-bot AI review
-during the perf-data-validation hardening series.  All bugs are latent
-in existing code — none were introduced by the hardening patches.
+Add an early return for empty files before the backward scan.
 
-Three broad categories:
+Fixes: 7780c25bae59fd04 ("perf tools: Allow ability to map cpus to nodes easily")
+Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Cc: Don Zickus <dzickus@redhat.com>
+Cc: Ian Rogers <irogers@google.com>
+Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/cpumap.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-1. snprintf() accumulation overflows (patches 2, 8, 9, 10):
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 21fa781b03cc7409..1fab00ec4a59a0c7 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -448,6 +448,12 @@ static int get_max_num(char *path, int *max)
+ 
+ 	buf[num] = '\0';
+ 
++	/* empty file — nothing to parse */
++	if (num == 0) {
++		err = -1;
++		goto out;
++	}
++
+ 	/* start on the right, to find highest node num */
+ 	while (--num) {
+ 		if ((buf[num] == ',') || (buf[num] == '-')) {
+-- 
+2.54.0
 
-   Several functions accumulate formatted output via ret += snprintf().
-   snprintf() returns the would-have-been-written count, so on truncation
-   ret overshoots the buffer size and the next 'size - ret' underflows
-   to a huge unsigned value, disabling bounds checking.  Switched to
-   scnprintf() which returns actual bytes written.
-
-   Affected: cpu_map__snprint(), snprintf_hex(),
-   synthesize_bpf_prog_name(), hists__scnprintf_title(),
-   build_id__snprintf(), hwmon_pmu__describe_items().
-
-2. Missing safety checks on untrusted data (patches 1, 3, 5, 6):
-
-   - get_max_num(): size_t underflow on empty sysfs file causes heap
-     over-read.
-   - machine__resolve(): unguarded env->cpu[] access with untrusted
-     CPU index — switched to perf_env__get_cpu_topology() accessor,
-     added bounds check before int16_t truncation.
-   - timehist: test_bit(prio, ...) without bounds check on untrusted
-     tracepoint priority.
-   - idle-hist: rb_first_cached() on a tree populated with plain
-     rb_insert_color() — rb_leftmost never set, callchains silently
-     dropped.
-
-3. Resource hygiene (patches 4, 7):
-
-   - bitmap_free() without NULLing the pointer (2 call sites).
-   - O_CLOEXEC missing from open() calls in DSO and ELF code
-     (12 call sites across 2 files).
-
-Patch 11 expands the libperf ABI TODO with the code simplification
-argument for widening struct perf_cpu.cpu — the int16_t forces
-truncation checks at every boundary where wider CPU indices are
-narrowed.
-
-Arnaldo Carvalho de Melo (11):
-  perf tools: Fix get_max_num() size_t underflow on empty sysfs file
-  perf tools: Use scnprintf() in cpu_map__snprint() to prevent overflow
-  perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
-  perf tools: NULL bitmap pointers after bitmap_free()
-  perf sched: Bounds-check prio before test_bit() in timehist
-  perf sched: Fix idle-hist callchain display using wrong rb_first variant
-  perf tools: Add O_CLOEXEC to open() calls in DSO and ELF code
-  perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
-  perf hists: Fix snprintf() in hists__scnprintf_title() UID filter path
-  perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
-  libperf: Document code simplification case for widening struct perf_cpu
-
- tools/lib/perf/TODO          |  8 ++++++++
- tools/perf/builtin-record.c  |  1 +
- tools/perf/builtin-sched.c   |  7 +++++--
- tools/perf/util/bpf-event.c  | 11 ++++++-----
- tools/perf/util/build-id.c   |  7 +++++--
- tools/perf/util/cpumap.c     | 24 +++++++++++++++---------
- tools/perf/util/dso.c        |  4 ++--
- tools/perf/util/event.c      | 15 +++++++++++++--
- tools/perf/util/hist.c       |  7 ++++---
- tools/perf/util/hwmon_pmu.c  | 12 ++++++------
- tools/perf/util/mmap.c       |  2 ++
- tools/perf/util/symbol-elf.c | 20 ++++++++++----------
- 12 files changed, 77 insertions(+), 41 deletions(-)
-
-Changes since v4:
-  - Patch 4 (bitmap_free): also reset nbits to 0 in mmap__munmap()
-    — without this, a reused struct mmap retains the old positive
-    nbits while bits is NULL, and bitmap_scnprintf() dereferences
-    the NULL pointer when perf runs with -vv.
-    (Found by sashiko-bot lore review)
-  - Patch 10 (build_id__snprintf): null-terminate bf before the loop
-    — when bf_size == 1, the offs + 1 < bf_size guard skips the loop
-    entirely, leaving bf[0] uninitialized.
-    (Found by sashiko-bot lore review)
-  - Collected Reviewed-by tags from Ian Rogers' v3 reviews
-    (patches 1, 2, 4, 5, 7, 8, 9).
-  - Reordered Reviewed-by tags before Cc lines in commit trailers.
-
-Changes since v3:
-  - Patch 3 (machine__resolve): expanded comment explaining why the
-    outer al->cpu < nr_cpus_avail check is needed — the int16_t cast
-    to struct perf_cpu silently truncates e.g. 65536 to 0, bypassing
-    the accessor's internal bounds check.
-    (Ian Rogers review)
-  - Patch 10 (build_id__snprintf): fixed loop termination — after
-    switching to scnprintf(), offs never reaches bf_size, so the
-    loop spun doing zero-byte writes.  Changed condition to
-    offs + 1 < bf_size.
-    (Found by sashiko-bot, confirmed by Ian Rogers)
-  - Patch 11 (TODO wording): fixed "wrap to small positive numbers"
-    to "wrap to negative numbers (two's complement)".
-    (Found by sashiko-bot, confirmed by Ian Rogers)
-
-Changes since v2:
-  - Dropped mbind patch (was v2 patch 4): the original code was
-    correct — get_nodes() does --maxnode before computing
-    BITS_TO_LONGS, so bitmap_zalloc(node_index + 1) with
-    maxnode = node_index + 2 already match.  The commit message
-    misstated the kernel-side semantics.
-  - Split libperf ABI TODO hunk out of prio patch into standalone
-    patch 11.
-  - Patch 3 (machine__resolve): bounds-check al->cpu against
-    env->nr_cpus_avail before truncating to int16_t struct perf_cpu.
-    (Found by sashiko-bot lore review)
-  - Patch 4 (was v2 patch 5, bitmap_free): reworded from "Three
-    call sites" to "Two call sites" — removed dead store from
-    memory_node__delete_nodes() where NULLing a pointer right
-    before freeing the containing struct was useless.
-    (Found by sashiko-bot lore review)
-
-Changes since v1:
-  - Patch 5 (was v1 patch 6): fix prio bounds-check logic — the
-    v1 condition (prio < 0 || prio >= MAX_PRIO || !test_bit(...))
-    incorrectly skipped events with unknown priority (prio == -1).
-    Changed to (prio >= 0 && (prio >= MAX_PRIO || !test_bit(...)))
-    to preserve the original pass-through for events without
-    priority info.
-    (Found by sashiko-bot lore review)
-
-Developed with AI assistance (Claude/sashiko), tagged in commits.
-
-Thanks,
-
-- Arnaldo
