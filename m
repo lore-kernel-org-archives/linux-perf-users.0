@@ -1,123 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD50A1A683E;
-	Wed, 10 Jun 2026 16:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC56429BD87;
+	Wed, 10 Jun 2026 16:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781108992; cv=none; b=pkGXQ5eEnKh6hqXihJCsFWVp1VY7c+ve4SD/ZwytL2re5Nk3QbmidpdCd35IG7MQj0rIXOLHiUEd63Yp1ox9oWO7NEuHFs5qNLmrfDx4Dp4fInOt2BLIlxSmH9ql1gtYnKVtBjcPdtACmDkhEKUaS5xfCAAyCyCLXJV+sx47h/8=
+	t=1781110183; cv=none; b=UnsGhxGkhg9w7pm5qWXFknPATR9+sTPC1bDRgSE5+9smQaV1M5hK0HovotZ9rGItn5/rcGnmF/0EgZqEwMQTiomK+WI2Nd9m5y1ysFTDhNXS5PeZUGTVf/OBeTUKSO1KawJp/PuEpzHdtSj+IFpCLNoad82bnWz/LjpLqtGRWCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781108992; c=relaxed/simple;
-	bh=J9fDtTY/S1t42qKo8xW/SEJzVRf8B34wLgAeVLKfcDI=;
+	s=arc-20240116; t=1781110183; c=relaxed/simple;
+	bh=O83XDOgikWm/aHQxtAdPOrc3rrnDEv1cE/AhbTEUy9k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZimlUQ3SDiZ3aAU4cLQwu/dfKnW3B4xJGlX9CFUzRa9RME3GEDQENiSJ7ZMY1Z3rpjDXjQT9Ww1b0NAKfXJKArL20Qzluf6tOy9My/iJLgwGiYvIek17tliEm3Wvo6H7mNPPehj0pmWYqo5+d1/a6fP5iycXnw2uYFI7C8cfRcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkDfUGmM; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Na+y2IXq6O0LWlgMQyc/6y+H+jOU6fKcTi7eZLrtaGdoWrjn49zem98bc4kTK4LY5fgZFsj927nAgTWhW/CaX8AFykrpJ4J6+IxgNdOy9OdtSAgum/FyJuLdizsKqza7AUhv7GJOB11LTxVM2r/oHp63RHJt2uQYgZVCaPFwscQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2Lvnip7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkDfUGmM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 818D01F00893;
-	Wed, 10 Jun 2026 16:29:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2Lvnip7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB221F00893;
+	Wed, 10 Jun 2026 16:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781108991;
-	bh=5/nSBTrYlMpqaFGOlGvnc3S2H5d2hvsraiqd4mLdn1g=;
+	s=k20260515; t=1781110182;
+	bh=1K4C5cPKeYBdJTzXedsW1nCTfxrxNHI7dcozTp6DT1c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jkDfUGmMRPohuH5BFCDS3lPPo/TWjpJafkJJGu1SM1elHmJxgl230qOKm+MOLCopA
-	 0S2ruRysgD3bHiWzIRN+tkL9HkiQR8ZG1/OcYhQr7V+I6BDiUO/9SGt73jc5t30LOO
-	 KTRH7aQofypYMGV5g67/yn8K3ibGDkWd7SqpHR5DPpJcqHjFvE7J8ZBBOsPfZRVVNS
-	 IZOW1gLQnqXvDV7M5EuCd3vYfRdCvz9uo6Ai70+F5eBYCt+WDM3iaIAgFCSjP6t0H/
-	 wO2Wpww2IXTLqEEU1JmKN+E3vnPdsPlgMW4isgAQiZK8eKcH5x9suZP9AWt8AX8a1f
-	 /FDXxFfx+R6eg==
-Date: Wed, 10 Jun 2026 13:29:46 -0300
+	b=F2Lvnip7EbfPISM9okFIkEP3k/JuVV/mi5jQjJMdpqRP598a7cwItWjA3UcSVqn9B
+	 LnePM/QC/qThnGvBw23vPIqr5fsOCzoQEG9u2eziLsHEXfZDuRpef2JGVaL6XAsmy1
+	 6WYzTenlEuLDmqmS19lInwBMlJoaGeqqc0kXBLE8R7/BTpjhxqZYbnPEXItLvnHQ/5
+	 3fSS5ogoFanq8uFf0VsYZrRS+Fserz2CM+XycOr4/SPH9dtwgAwjZApmcYuYea2q64
+	 fFzOopGjVgoi3L4dSjK72UcHa4901HrDmSmU9DTrzwWx/30d5R57CfNfG6D/F7Ljm3
+	 h+t2XmzVUumPw==
+Date: Wed, 10 Jun 2026 13:49:37 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 10/11] perf tools: Use scnprintf() in
- build_id__snprintf() and hwmon read_events()
-Message-ID: <aimQ-pXYUnPBmeqy@x1>
-References: <20260609010526.1998472-11-acme@kernel.org>
- <20260609011717.79A371F00893@smtp.kernel.org>
+Subject: Re: [PATCH 07/11] perf tools: Add O_CLOEXEC to open() calls in DSO
+ and ELF code
+Message-ID: <aimVobFTV8MZ0pFy@x1>
+References: <20260609010526.1998472-8-acme@kernel.org>
+ <20260609011626.DE73D1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260609011717.79A371F00893@smtp.kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260609011626.DE73D1F00893@smtp.kernel.org>
 
-On Tue, Jun 09, 2026 at 01:17:17AM +0000, sashiko-bot@kernel.org wrote:
+On Tue, Jun 09, 2026 at 01:16:26AM +0000, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] build_id__snprintf() fails to null-terminate the output buffer when bf_size is 1.
-> - [Low] hwmon_pmu__describe_items() spins doing useless sysfs operations once the output buffer fills.
+> 
+> New issues:
+> - [High] Incomplete fix for file descriptor leaks in DSO and ELF code.
+> 
+> Pre-existing issues:
+> - [Critical] Stack buffer overflow in sysfs__read_build_id when skipping non-matching GNU notes.
 > --
 > 
-> commit 0f670823c7b8e81b469db29dc89cf4b4de7e4cad
+> commit 66274b4049c9a2092defa7caf237fe0295853d9c
 > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
+> perf tools: Add O_CLOEXEC to open() calls in DSO and ELF code
 > 
-> This commit switches build_id__snprintf() and hwmon_pmu__describe_items()
-> to use scnprintf() instead of snprintf() to prevent out-of-bounds length
-> tracking. It also modifies the loop guard in build_id__snprintf() to
-> prevent useless zero-byte writes once the buffer is full.
+> The commit adds O_CLOEXEC to open() calls in dso.c and symbol-elf.c to
+> prevent leaking file descriptors to child processes during symbol
+> resolution.
 > 
-> > diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-> > index 8c0a9ae932aa5..82af3dca7e2fb 100644
-> > --- a/tools/perf/util/build-id.c
-> > +++ b/tools/perf/util/build-id.c
-> > @@ -93,8 +93,8 @@ int build_id__snprintf(const struct build_id *build_id, char *bf, size_t bf_size
-> >  		return 0;
-> >  	}
+> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> > index 7dced896c64ea..fb2e78fe2aa8e 100644
+> > --- a/tools/perf/util/dso.c
+> > +++ b/tools/perf/util/dso.c
+> > @@ -344,7 +344,7 @@ int filename__decompress(const char *name, char *pathname,
+> >  	 * descriptor to the uncompressed file.
+> >  	 */
+> >  	if (!compressions[comp].is_compressed(name))
+> > -		return open(name, O_RDONLY);
+> > +		return open(name, O_RDONLY | O_CLOEXEC);
 > >  
-> > -	for (size_t i = 0; i < build_id->size && offs < bf_size; ++i)
-> > -		offs += snprintf(bf + offs, bf_size - offs, "%02x", build_id->data[i]);
-> > +	for (size_t i = 0; i < build_id->size && offs + 1 < bf_size; ++i)
-> > +		offs += scnprintf(bf + offs, bf_size - offs, "%02x", build_id->data[i]);
+> >  	fd = mkstemp(tmpbuf);
 > 
-> [Severity: Medium]
-> If bf_size is 1, does this new loop condition skip execution entirely?
+> [Severity: High]
+> Since the goal of this patch is to prevent leaking file descriptors to child
+> processes, should we also address the mkstemp() calls in these files?
 > 
-> If build_id->size > 0 and bf_size == 1, the offs + 1 < bf_size condition
-> is false on the first iteration. Because scnprintf is never called, would
-> bf[0] be left un-null-terminated?
+> mkstemp() creates file descriptors without O_CLOEXEC. For instance, here in
+> filename__decompress(), the temporary file descriptor will still be leaked.
+> Should mkostemp(tmpbuf, O_CLOEXEC) be used instead?
 
-Addressing this one in v5.
-> 
-> > +++ b/tools/perf/util/hwmon_pmu.c
+This is fixed in the next patch series.
+ 
 > [ ... ]
-> > @@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmon_pmu *hwm, char *out_buf, si
+> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> > index 186e6d92ac3d7..c2bdfd0003df2 100644
+> > --- a/tools/perf/util/symbol-elf.c
+> > +++ b/tools/perf/util/symbol-elf.c
+> [ ... ]
+> > @@ -935,7 +935,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
+> >  	size_t size = sizeof(bid->data);
+> >  	int fd, err = -1;
 > >  
-> >  				buf[read_len] = '\0';
-> >  				val = strtoll(buf, /*endptr=*/NULL, 10);
-> > -				len += snprintf(out_buf + len, out_buf_len - len, "%s%s%s=%g%s",
-> > -						len == 0 ? " " : ", ",
-> > -						hwmon_item_strs[bit],
-> > -						is_alarm ? "_alarm" : "",
-> > -						(double)val / 1000.0,
-> > -						hwmon_units[key.type]);
-> > +				len += scnprintf(out_buf + len, out_buf_len - len, "%s%s%s=%g%s",
-> > +						 len == 0 ? " " : ", ",
-> > +						 hwmon_item_strs[bit],
-> > +						 is_alarm ? "_alarm" : "",
-> > +						 (double)val / 1000.0,
-> > +						 hwmon_units[key.type]);
-> >  			}
-> >  			close(fd);
-> >  		}
+> > -	fd = open(filename, O_RDONLY);
+> > +	fd = open(filename, O_RDONLY | O_CLOEXEC);
+> >  	if (fd < 0)
+> >  		goto out;
 > 
-> [Severity: Low]
-> Does this loop also need an early break condition once the buffer fills?
- 
-> The commit message notes that build_id__snprintf() was updated to avoid
-> spinning doing zero-byte writes once the buffer fills. 
- 
-> In hwmon_pmu__describe_items(), once len reaches out_buf_len - 1, scnprintf
-> will return 0. Does this mean the loop continues for all remaining hardware
-> monitor items, performing unnecessary sysfs file open, read, and close
-> operations only to do a 0-byte scnprintf write?
+> [Severity: Critical]
+> This is a pre-existing issue, but while reviewing this function, could
+> an unbounded read() happen later in sysfs__read_build_id() when skipping
+> non-matching GNU notes?
+> 
+> If a crafted sysfs note has a maliciously large nhdr.n_descsz, the code does:
+> 
+>     } else if (read(fd, bf, descsz) != (ssize_t)descsz)
+> 
+> Since bf is a fixed-size stack array (char bf[BUFSIZ]), could this read past
+> the end of bf and overwrite the stack frame if descsz exceeds BUFSIZ?
 
-I've added this to a cleanups TODO file for future work, nice
-observation, the same pattern may happen in other places, worth a
+Ditto, as several other issues you reported in this series and in other
 series.
 
 - Arnaldo
+ 
+> [ ... ]
+> > @@ -1985,7 +1985,7 @@ static int kcore__init(struct kcore *kcore, char *filename, int elfclass,
+> >  	if (temp)
+> >  		kcore->fd = mkstemp(filename);
+> >  	else
+> > -		kcore->fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400);
+> > +		kcore->fd = open(filename, O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, 0400);
+> >  	if (kcore->fd == -1)
+> >  		return -1;
+> 
+> [Severity: High]
+> Similarly to the issue in filename__decompress(), if temp is true here,
+> mkstemp() is called without O_CLOEXEC.
+> 
+> There is also a similar mkstemp() call in read_gnu_debugdata() in this file
+> that extracts debug data without O_CLOEXEC. Should all of these be updated
+> to prevent leaking file descriptors?
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260609010526.1998472-1-acme@kernel.org?part=7
