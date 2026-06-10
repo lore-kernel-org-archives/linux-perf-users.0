@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F7837BE60;
-	Wed, 10 Jun 2026 19:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A48937BE60;
+	Wed, 10 Jun 2026 19:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781121204; cv=none; b=Z7QsqtgnyoCnYIYeNt8Sj9aVQCOvvgapExiEGkvfTixhDDkRv3UfpN4QZ9mO2SnCLd+D7LUvnBZc/Sfyk+GBowFIbS4BalmfdcgImGgGg1aT4U3h4rpJu+uHb3sPlt0Tohd70sW5+w5wEbZIHDPsfPKsoa5kB2QJwBAxvTUrs4c=
+	t=1781121208; cv=none; b=DSjhRVqiHYoi7JaCr+rNHKC8+iob9sVFTMG5UQXrFDuAda95NMD5yJoaqpXcto4tANfjT4pyqR5kT67o+D10KWL5lnMjUoyAJuep7C60F7BAI+aSM62RtXp4awOiO3QSlmM6H4ldm8ewq3O31/5JASodWdSajekFW0qSCkcvGIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781121204; c=relaxed/simple;
-	bh=tSuNoyEus6B/PhxaI810nD2tj4zGzVYkVBkHmDSKz0M=;
+	s=arc-20240116; t=1781121208; c=relaxed/simple;
+	bh=vjzno5/b6g27lurYaMq+MDNwXaEV4jX5dfMgM54WgrY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f5trzTYNzLf41djF+iI0KBq0vHGy5A/qpBI5bSbLCkM5cI9D35OtWOqqIc5+MdGOf7/oGg4FN2E6i2/cOZR3yNZUD7LSVPK7tMWjtswwaggcwUvahu7yHQITbKmMF2EXP6kiygSI7aIpNEG25OT5gKefW+pFY1hTRRbj/c38pRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4a2HnlY; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=e8GatdV6a9Y6UMkcnGTgn6B/+5iivff76C3N76JTWsK6HeSMeYmk6j/tlYqKM/EupsNj7selqY6Dc8i6dENZq+fepEfebDafNT77he8I55U9WS9Mb+qYjiVgjljVNTQzvwYpJsftCI+dFwH3jxg35bppBvx+CeHiT4/lDbZJw7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csKYzYs+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4a2HnlY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7AEC1F00893;
-	Wed, 10 Jun 2026 19:53:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csKYzYs+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BDA1F00898;
+	Wed, 10 Jun 2026 19:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781121203;
-	bh=e6pq4Pi2rTvQzgwveR9OLs8WTJXKO4Z+OmvvL6+9sQw=;
+	s=k20260515; t=1781121207;
+	bh=SQ8o+WE96JMrzzazKggnNeNvTGS7JtWkk6l3huHph7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=G4a2HnlYCTEviNdTvw14pudrIxB6mHxbTCmnI+pnakJ9L8CpolnIb4ZZZQHAHtvfS
-	 O0834DewF9gTb62UL9Lba3IrR+1sZO8xV7LislIdFGSn96rpH+0ro5bVAiT1W/midH
-	 IBfkN2L0+AxwqZt2HSx3uG30gB59fPfIxgANUsguUvm5MC3fhRP07BIqCFh421Bc0S
-	 u7urd+f3s7EcTr1ETnaAUO34h7fiMOahNW+m+0CmrcqYh/2i8TzHKmOFlwtBWoj0S9
-	 HBBamN5NytCSAYQbh6x6s5H/0Hqrz4FUdbcIHSTeu/okoKHz2E9CKdyRG/Igks4bNK
-	 wXRv5sU2ed6bQ==
+	b=csKYzYs+Hl0suKV1xRMzWU1Lx/lQ5jFZDBJUNGA64mE/oCYZ1BaBjVtUjDdLyTU8I
+	 cNamlBEpIIg9axnpHb2ETctqjdF7yAL05P/gRTrst5rF2Q3dDpj1lUbb0ZJN8sj/sP
+	 lXd25KDk+EIPmQPYHNHs2Y6X+lNLj39InIjLfqF2yQJSyKPDUP5xNg2N4NdcFF6GpC
+	 fUTQjCWrgts5WnqVvhBvJZptedti4l9UQrm2jhq9X5nAnFpfx5Nd0+MtRcBKMOClnd
+	 EHAa7VX6uV3psJoudtQLJPu4+KEb0kKRozRGy2M8BhrtLztPq+KXUJqUzCPCZarmJ2
+	 4AJSd4P1aBN1w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Cody P Schafer <cody@linux.vnet.ibm.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 15/23] perf pmu: Use scnprintf() in format_alias()
-Date: Wed, 10 Jun 2026 16:51:48 -0300
-Message-ID: <20260610195157.2091137-16-acme@kernel.org>
+Subject: [PATCH 16/23] perf tools: Use snprintf() in dso__read_running_kernel_build_id()
+Date: Wed, 10 Jun 2026 16:51:49 -0300
+Message-ID: <20260610195157.2091137-17-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260610195157.2091137-1-acme@kernel.org>
 References: <20260610195157.2091137-1-acme@kernel.org>
@@ -53,48 +52,39 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-format_alias() accumulates strings into a caller-provided buffer using
-snprintf().  On truncation, snprintf() returns the would-have-written
-count, which can exceed the buffer size.  When used is larger than len,
-buf + used computes a pointer past the buffer end — undefined behavior
-even though sub_non_neg() clamps the subsequent write size to zero.
+dso__read_running_kernel_build_id() uses sprintf() to format a sysfs
+path from machine->root_dir into a PATH_MAX buffer.  If root_dir is
+close to PATH_MAX in length, appending "/sys/kernel/notes" (18 bytes)
+overflows the stack buffer.
 
-Switch to scnprintf() which returns the actual number of bytes written,
-keeping used within bounds.
+Switch to snprintf() with sizeof(path) to prevent the overflow.
 
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Fixes: aaea36174991ff39 ("perf tools: Extend format_alias() to include event parameters")
-Cc: Cody P Schafer <cody@linux.vnet.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
+Fixes: cdd059d731eeb466 ("perf tools: Move dso_* related functions into dso object")
+Cc: Jiri Olsa <jolsa@kernel.org>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/dso.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 4ddccc863727d6ca..2fce38140eb8af2a 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -2155,11 +2155,11 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
- 		snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
- 		return buf;
- 	}
--	used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
-+	used = scnprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 6a34717c9f31f18d..5d017975873817ec 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1779,7 +1779,7 @@ void dso__read_running_kernel_build_id(struct dso *dso, struct machine *machine)
  
- 	list_for_each_entry(term, &terms.terms, list) {
- 		if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
--			used += snprintf(buf + used, sub_non_neg(len, used),
-+			used += scnprintf(buf + used, sub_non_neg(len, used),
- 					",%s=%s", term->config,
- 					term->val.str);
- 	}
+ 	if (machine__is_default_guest(machine))
+ 		return;
+-	sprintf(path, "%s/sys/kernel/notes", machine->root_dir);
++	snprintf(path, sizeof(path), "%s/sys/kernel/notes", machine->root_dir);
+ 	sysfs__read_build_id(path, &bid);
+ 	dso__set_build_id(dso, &bid);
+ }
 -- 
 2.54.0
 
