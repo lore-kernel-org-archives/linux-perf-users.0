@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24E82F619D
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCD2346FCA
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781111428; cv=none; b=HSsABCKSzKNISA4Q9xPdWzOPll145G7nkv6anWYbcwMJvSKyrxwYvDnBEbs6nMd2EK/Axohdzr3Efubn5an8mzTtOgTiFos0dxhP047ZkrNRXkj8TqDMTRy+xV1J3odQHfTpgVMLsbSCGjNGZNjl5PEDbYeArgsJgolAo0XGJqY=
+	t=1781111459; cv=none; b=PDa8IHi083iw/xBJVdHAuajTuoSPDwp0c1AW6NJ8lk0OBKJO5lSZ4H2ZQCqVt9i7nPfO9bQXKFfvLdbtrZEdJ+ZfIwkWpAbANXOcNkahm4PxOPfikyukH3L0npVm1oOuGJ4lx9V0nfgCSSLtRVl/R3qYJISWx091Zog/VB2qNrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781111428; c=relaxed/simple;
-	bh=+IcV3X+MH9eeN65b1V9l6HAMaO+TjjIPJNgtBlF18Rc=;
+	s=arc-20240116; t=1781111459; c=relaxed/simple;
+	bh=iTeFL0F8vtf4xVFtOAML8dwqUyFmZzbx5AmQqbdq6ZQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nadlg5fsDbebfGpBCFBcBfFxYlvjUrT3GQv5rp/a+CWH9SukQeuAXYwx4Nv+/GHPVa8i8yHD62oY+K6Z/F8aycUrC+cggHaKgnvhv6j6Khi737fSLVcnApq4bVwkw4wI1jRi8+IXD5jHFDmeF2JtbRAjXeRtg1pgnny1E685Ycs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBsp6+wj; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Bf6W5dQwymEUPMX4molCGiAbUy6WE21TViVCy9IWWFbyM2wypgwkUeO7M4Faellr0Z4pzg3E1rUr+JOF3Z9kNph3GS5znjmbXMH2bWIoTsFxgSr+DECFibtXTjaD84eRnmSUt7ap428B9HqxIH/n4IaIr+PkwD23wpeZUg7P/2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhaHfMiX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBsp6+wj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1095C1F00893;
-	Wed, 10 Jun 2026 17:10:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhaHfMiX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9F1A1F00893;
+	Wed, 10 Jun 2026 17:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781111427;
-	bh=wIzisUhxh7S/tbhP3O3sqZXfW2QBy0VaM4XsVniMeQg=;
+	s=k20260515; t=1781111458;
+	bh=QAxbqxXj+poenkhaaxS3jxHoIwfdvTjy5yX4mmz8vVg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jBsp6+wj391h+nb54QbJT0Wq2tagTWeidGCxsV/0DvD/Lunf+uuWG4DG5HtjRUU8P
-	 swDWez3/aJKVul5AomD9x4SHYYbjmPX+3V1VKrMzwNwG2KtDSORSB19WJ7/ljpsqql
-	 QBEY03NkxsyAE5oXPukaXIUXnlA3NFiSf8ztHbqGwJF06zlU0VoUY8emP4tqA2R04W
-	 bH+4X/D0txjqSD86yNmJ3EqvpVxZj4/zsZTqwy9P2+d1h7Ujxmr5z/1jdSY/j8L0mH
-	 gkaCDyaq7kSM/8ly+SSPoUCwPI8ZchDotMlZuW+YFmcZrly6GMC/vYVk6Eul0bXqlC
-	 oek1gi5ezeKIw==
+	b=FhaHfMiXBrBRarSNdZ9AZrDC1feOzxbxFw3FBY+z4ADEm85qE6cUyG4/bHJkvZEHe
+	 crG3KGvkINfjlkdB3kklw8fpWE96o7yI2artx803s7L0HUwCPZlIDMHYVIOVDeIfxc
+	 ka1rJi2zTlwcjUQSWilkn4oy5F7rJaTEf+M2+tljEVt41wz9KevWjViwpXER/SLi7W
+	 RatKtsmLjZmvePBgVBHveZO5OtSkqZptHqRejvUeeZJRr3mOt1qhvOy16LbUZemsba
+	 9sFOHWiiS3Y1tx9cVD5wsuj6rm1YsRopURgn1WGyd+8lBVTbWQ3M8M/towSBRUh3EF
+	 ZSpOZCmzBlqSA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 03/11] perf tools: Use perf_env__get_cpu_topology() in
- machine__resolve()
+Subject: Re: [PATCH 06/11] perf sched: Fix idle-hist callchain display using
+ wrong rb_first variant
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260610165207.2077258-4-acme@kernel.org>
-References: <20260610165207.2077258-4-acme@kernel.org>
+In-Reply-To: <20260610165207.2077258-7-acme@kernel.org>
+References: <20260610165207.2077258-7-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Jun 2026 17:10:26 +0000
-Message-Id: <20260610171027.1095C1F00893@smtp.kernel.org>
+Date: Wed, 10 Jun 2026 17:10:57 +0000
+Message-Id: <20260610171057.E9F1A1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,9 +46,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The bounds check on `al->cpu` fails to prevent 16-bit integer tr=
-uncation when `env->nr_cpus_avail` exceeds 32767, breaking topology resolut=
-ion and bypassing the patch's stated fix.
+- [Medium] The bounds check in `machine__resolve` fails to prevent `s32 al-=
+>cpu` from truncating to `int16_t` for large CPU values, leading to silent =
+topology resolution errors for systems with >=3D 32768 CPUs.
 --
 
 commit c3733692a65101be8730c41702471672bacd7115
@@ -56,12 +56,10 @@ Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 perf tools: Use perf_env__get_cpu_topology() in machine__resolve()
 
-This commit fixes an out-of-bounds heap read in machine__resolve() when a
-perf.data sample contains a large CPU index. It replaces the unsafe array
-access with perf_env__get_cpu_topology(), which performs bounds and NULL
-validation. A bounds check is also added to attempt to prevent 16-bit integ=
-er
-truncation during the cast to struct perf_cpu.
+This commit modifies machine__resolve() to retrieve CPU socket IDs using
+perf_env__get_cpu_topology() instead of direct array access. It adds a
+bounds check against env->nr_cpus_avail to prevent out-of-bounds heap
+reads before casting the CPU index to a struct perf_cpu.
 
 > diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
 > index 66f4843bb235d..ea75816d126a1 100644
@@ -87,26 +85,27 @@ truncation during the cast to struct perf_cpu.
 );
 
 [Severity: Medium]
-Does this bounds check prevent truncation if env->nr_cpus_avail exceeds 327=
-67?
+Will this still truncate to int16_t if env->nr_cpus_avail is larger than 32=
+767?
 
-If a perf.data file specifies a large nr_cpus_avail (for instance,=20
-process_nrcpus() bounds it to 1,048,576), could a malicious al->cpu of 6553=
-6=20
-still pass this check? If so, wouldn't it cast to int16_t as 0 and silently
-return CPU 0's topology, bypassing the fix?
+Since env->nr_cpus_avail can legally be up to 1,048,576, the check
+al->cpu < env->nr_cpus_avail evaluates to true for CPU values like 65536.
+When cast to struct perf_cpu, which wraps an int16_t, 65536 wraps to 0 and
+silently fetches the topology for CPU 0 instead of the requested CPU.
 
-Additionally, does this break valid topology resolution for CPUs >=3D 32768=
-? A
-valid al->cpu of 32768 would truncate to -32768, causing=20
-perf_env__get_cpu_topology() to return NULL since it verifies cpu >=3D 0.
+For CPUs between 32768 and 65535, the cast results in a negative number,
+causing perf_env__get_cpu_topology() to return NULL.
+
+Prior to this patch, env->cpu[al->cpu] successfully handled large CPU indic=
+es.
+Does this code introduce a functional regression on high-core-count systems
+or when parsing perf.data files with a large nr_cpus_avail?
 
 > +			if (topo)
 > +				al->socket =3D topo->socket_id;
 > +		}
 >  	}
->
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610165207.2077=
-258-1-acme@kernel.org?part=3D3
+258-1-acme@kernel.org?part=3D6
