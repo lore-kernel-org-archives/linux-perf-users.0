@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E28344D9F;
-	Wed, 10 Jun 2026 16:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA7C3537F8;
+	Wed, 10 Jun 2026 16:52:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781110375; cv=none; b=JDKvVzM9qDbBlNqb02LvarH4ZkCCrJgHF/jV7jroDUmmxT8ES6fOPvYLX8coQdjWs8QBUsM5hrXc/rStqVSWGoPRcytRyHNzqpFll9nvUFI1aKcwpAygavN0rJzxB5dMljh0cuP+umCISSc8m9a5aUWdBlaaxduoVKsvdGoAnAg=
+	t=1781110381; cv=none; b=iydBXe4Y0z2F1i72xEhPvwCVUrkLkzTNyc+3EqRAHzE9d3gQmDaaDBPTNglJPiZpGys8CBk9F954m9JPy1cyUqNGIkPIXhf5ilbjHMQxH3uaOpjwaOGb/o4sDuKZBCQjPS50zpmmkc1o+o5CPvo0AkG3l88rLmcGtLdRSMa2SGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781110375; c=relaxed/simple;
-	bh=KUkXd3UmVYJ5G4qR8v6h3usi2oQZnk0unbjDo4vQ5aE=;
+	s=arc-20240116; t=1781110381; c=relaxed/simple;
+	bh=7n6+PW6fm4CnN5i0Kkq2sFG6oHBydJcqFEad0lVdCCY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HvKDX9iMmG6FJ2kMLXVhUF4yDZD9f2zXSLz8z/yzbMTlfrm3NnkzRxKAvnPJT2oeMfYJTNGXN7t4QlQcnCXZ2fR5/57EJRR0XJK8AihfAlFiL2MQQE4s7RuoSPx6SA54YDfIpkeAZNorkkOqMl7M3yYxFjjhNEMO/uJKa74j3BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtWXP9e7; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=X0zF++tHdBmjA8lA8UaPamrMOiI8AyxcvdjnM2/44NvIg9qzOa+w77uAmn0yb47a8MDTT2g1doPgA7fX7tZ9uWOV1kd2SHqv90wXfbGHjwA8YQbM1UoHLQsolqU6gtDBgAKOLT6TDHS8IJbGw7KGIqwZtkv8QovIoLaZ58yOwWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSbiAm/z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtWXP9e7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C25CB1F00898;
-	Wed, 10 Jun 2026 16:52:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSbiAm/z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCA51F00893;
+	Wed, 10 Jun 2026 16:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781110374;
-	bh=ONf0Z5SkF9NCm7gcFgIhuCkhUSzRzpwU26c5Vm99WsQ=;
+	s=k20260515; t=1781110379;
+	bh=9Sna/5EcUpDAGkIvriG0r7m33IdzGdkBg8h/2wBoRA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KtWXP9e74Ahzq/KERIRjywMgfsxEXxdc9ekgHDzfZDpusR/93B3BAqJa0XIC7fzxy
-	 p2tup9G/xUCF7Ci/DVQfEu2OUW0AAKU7+BLkoBss6dCNUx+XQJgPQWrkGReal5dXYv
-	 e4Qg1I+PGtuqNgo4qPayEnqqUAtiO2UL7arcbqGNAV2/dh7ZuRAgtap2OI5mf8vCp4
-	 5GJQ+dB2CAnd2KKx733G8toB4nouUu7PtpLEByFiG6G+VKeKzMSnPdTHSQkDVa3TO9
-	 KbmAr6eZmAxUyYGfoOLQt7mrpupcdVGN6eG5dtcLHPKmbeyVid9HakehYFLAchjMdu
-	 Oic+5lfe+hypg==
+	b=JSbiAm/zpozYjFF+z1B7Se+I1nlMQ1hjQM7gJFPRc1ZjCyhAd4kj5P1i9qdhcDv39
+	 gzgMRlGMjsfrz3Vrb1yjJzyvNQuguEjgGq+dEWt1lHtp8h8nv9YMSH170TuJV5Y2y1
+	 xL0TVbth/HcAu61jp3sEtclOCTG0P6KXTd5HXGJqDMlKhn/xvQoiYVLkAkUHj35sMk
+	 QJj1ixsu5oKFU2XJBGGc4gxhu77AKn3Q6StgIVMIT1pfEtwoipZJXseSpLT5LOPtcS
+	 QpZheylskyuAcO7OU4cNMls/xjgGULAUeWj49X7nW8MEKlutdiRqcE7UBksVzzx1zJ
+	 OQcaaMbWkNXzw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,10 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
+	Song Liu <song@kernel.org>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 07/11] perf tools: Add O_CLOEXEC to open() calls in DSO and ELF code
-Date: Wed, 10 Jun 2026 13:52:01 -0300
-Message-ID: <20260610165207.2077258-8-acme@kernel.org>
+Subject: [PATCH 08/11] perf bpf: Use scnprintf() in snprintf_hex() and synthesize_bpf_prog_name()
+Date: Wed, 10 Jun 2026 13:52:02 -0300
+Message-ID: <20260610165207.2077258-9-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260610165207.2077258-1-acme@kernel.org>
 References: <20260610165207.2077258-1-acme@kernel.org>
@@ -56,137 +57,59 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-open() calls in dso.c and symbol-elf.c omit O_CLOEXEC, which leaks
-file descriptors to child processes spawned during symbol resolution
-(e.g., addr2line, objdump).  This can exhaust the fd limit during
-long profiling sessions or when processing many DSOs.
+Both functions accumulate formatted output via ret += snprintf(buf + ret,
+size - ret, ...).  If the buffer is too small and snprintf() returns more
+than the remaining space, ret exceeds size and the next 'size - ret'
+underflows, causing snprintf() to write past the buffer end.
 
-Add O_CLOEXEC to all open() calls in both files (12 call sites).
+Switch to scnprintf() which returns the actual number of bytes written,
+making the accumulation safe.
 
-Fixes: cdd059d731eeb466 ("perf tools: Move dso_* related functions into dso object")
-Fixes: e5a1845fc0aeca85 ("perf symbols: Split out util/symbol-elf.c")
+Fixes: 7b612e291a5affb1 ("perf tools: Synthesize PERF_RECORD_* for loaded BPF programs")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Reviewed-by: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <song@kernel.org>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c        |  4 ++--
- tools/perf/util/symbol-elf.c | 20 ++++++++++----------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ tools/perf/util/bpf-event.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 7dced896c64eafd7..fb2e78fe2aa8eb94 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -344,7 +344,7 @@ int filename__decompress(const char *name, char *pathname,
- 	 * descriptor to the uncompressed file.
- 	 */
- 	if (!compressions[comp].is_compressed(name))
--		return open(name, O_RDONLY);
-+		return open(name, O_RDONLY | O_CLOEXEC);
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index a27945c279efb779..2c09842469f1f28c 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -36,7 +36,7 @@ static int snprintf_hex(char *buf, size_t size, unsigned char *data, size_t len)
+ 	size_t i;
  
- 	fd = mkstemp(tmpbuf);
- 	if (fd < 0) {
-@@ -1911,7 +1911,7 @@ static const u8 *__dso__read_symbol(struct dso *dso, const char *symfs_filename,
- 	int saved_errno;
+ 	for (i = 0; i < len; i++)
+-		ret += snprintf(buf + ret, size - ret, "%02x", data[i]);
++		ret += scnprintf(buf + ret, size - ret, "%02x", data[i]);
+ 	return ret;
+ }
  
- 	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	fd = open(symfs_filename, O_RDONLY);
-+	fd = open(symfs_filename, O_RDONLY | O_CLOEXEC);
- 	saved_errno = errno;
- 	nsinfo__mountns_exit(&nsc);
- 	if (fd < 0) {
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 186e6d92ac3d7742..c2bdfd0003df2abe 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -217,7 +217,7 @@ bool filename__has_section(const char *filename, const char *sec)
- 	GElf_Shdr shdr;
- 	bool found = false;
+@@ -140,7 +140,7 @@ static int synthesize_bpf_prog_name(char *buf, int size,
+ 	const struct btf_type *t;
+ 	int name_len;
  
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, O_RDONLY | O_CLOEXEC);
- 	if (fd < 0)
- 		return false;
- 
-@@ -872,7 +872,7 @@ static int read_build_id(const char *filename, struct build_id *bid)
- 	if (size < BUILD_ID_SIZE)
- 		goto out;
- 
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, O_RDONLY | O_CLOEXEC);
- 	if (fd < 0)
- 		goto out;
- 
-@@ -935,7 +935,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
- 	size_t size = sizeof(bid->data);
- 	int fd, err = -1;
- 
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, O_RDONLY | O_CLOEXEC);
- 	if (fd < 0)
- 		goto out;
- 
-@@ -995,7 +995,7 @@ int filename__read_debuglink(const char *filename, char *debuglink,
- 	if (err >= 0)
- 		goto out;
- 
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, O_RDONLY | O_CLOEXEC);
- 	if (fd < 0)
- 		goto out;
- 
-@@ -1153,7 +1153,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 
- 		type = dso__symtab_type(dso);
- 	} else {
--		fd = open(name, O_RDONLY);
-+		fd = open(name, O_RDONLY | O_CLOEXEC);
- 		if (fd < 0) {
- 			*dso__load_errno(dso) = errno;
- 			return -1;
-@@ -1952,7 +1952,7 @@ static int kcore__open(struct kcore *kcore, const char *filename)
- {
- 	GElf_Ehdr *ehdr;
- 
--	kcore->fd = open(filename, O_RDONLY);
-+	kcore->fd = open(filename, O_RDONLY | O_CLOEXEC);
- 	if (kcore->fd == -1)
- 		return -1;
- 
-@@ -1985,7 +1985,7 @@ static int kcore__init(struct kcore *kcore, char *filename, int elfclass,
- 	if (temp)
- 		kcore->fd = mkstemp(filename);
- 	else
--		kcore->fd = open(filename, O_WRONLY | O_CREAT | O_EXCL, 0400);
-+		kcore->fd = open(filename, O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, 0400);
- 	if (kcore->fd == -1)
- 		return -1;
- 
-@@ -2461,11 +2461,11 @@ static int kcore_copy__compare_files(const char *from_filename,
- {
- 	int from, to, err = -1;
- 
--	from = open(from_filename, O_RDONLY);
-+	from = open(from_filename, O_RDONLY | O_CLOEXEC);
- 	if (from < 0)
- 		return -1;
- 
--	to = open(to_filename, O_RDONLY);
-+	to = open(to_filename, O_RDONLY | O_CLOEXEC);
- 	if (to < 0)
- 		goto out_close_from;
- 
-@@ -2883,7 +2883,7 @@ int get_sdt_note_list(struct list_head *head, const char *target)
- 	Elf *elf;
- 	int fd, ret;
- 
--	fd = open(target, O_RDONLY);
-+	fd = open(target, O_RDONLY | O_CLOEXEC);
- 	if (fd < 0)
- 		return -EBADF;
+-	name_len = snprintf(buf, size, "bpf_prog_");
++	name_len = scnprintf(buf, size, "bpf_prog_");
+ 	name_len += snprintf_hex(buf + name_len, size - name_len,
+ 				 prog_tags[sub_id], BPF_TAG_SIZE);
+ 	if (btf) {
+@@ -153,9 +153,10 @@ static int synthesize_bpf_prog_name(char *buf, int size,
+ 			short_name = info->name;
+ 	} else
+ 		short_name = "F";
+-	if (short_name)
+-		name_len += snprintf(buf + name_len, size - name_len,
+-				     "_%s", short_name);
++	if (short_name) {
++		name_len += scnprintf(buf + name_len, size - name_len,
++				      "_%s", short_name);
++	}
+ 	return name_len;
+ }
  
 -- 
 2.54.0
