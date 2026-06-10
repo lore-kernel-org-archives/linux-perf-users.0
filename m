@@ -1,67 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D96837BE78;
-	Wed, 10 Jun 2026 19:55:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D0D37E2F2;
+	Wed, 10 Jun 2026 20:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781121330; cv=none; b=ApRSXAJyWGTQHvonM5R2aC3g2BnK1ZCrm+GK0RSGA7Wo/Ajh8ZZBBoUlFBAO4ZroFq8hf9SFHalVL6+6z44cgoekldSdzNpakmuuLYCGoEkNhehiWjNXkNDAVEzhugmEclt5Q/R7xFLITqp8gLY/+A5w1WuG7JxHB4gxc3AzYiw=
+	t=1781121708; cv=none; b=Z4hFTXACH6jKKb+po5SgZI9Z7DeBJoKsqIMRPGcS0SadvPC5xwjCp2RzaURofhMsAxpyBorul8hLK84iOR5x5SZCCh/kUcp/x6/bu17wVQnYhrZeX9s8sR8VEoDWyPf0LiBXLdZyr0T7zooY0czuRGZJ2qGrOEv4HHWQfYryo9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781121330; c=relaxed/simple;
-	bh=jNqqEh3bF8+bueFpDQaLbDgUQ6Hc78rQzXI335uTMic=;
+	s=arc-20240116; t=1781121708; c=relaxed/simple;
+	bh=BYH7DvAQe4W47RkpaU9kOyDqppZB+u9IETBlqlRq76E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4o99sjpJ60n+cTGcNdJuckGexhlLfhfADMo2o+Sp7AFWQcd6zZpdOFZs4V16qP3x8YXKE5dtEIaPXkY4BTPuiKt3f/OSkQwKpmxoaudvesk/WYK8wyRRkvKgfiXkIGJPElS/JPFfL84GBpkmglF0rh1iZgCuqzgOaQbdyspaLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=je4peavy; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=s7QZTtpcJ7A/DCph8e13UAI5zf71FgFSHoy9D1pzewAvGYQxdRwv9TPTWMLSPJUwBsygRLRQQw4JDU5FrbAuuRtHWj9OaZfH5caqlkfJpl6JFCKffkNultHfpTHhVs+JPWJ2fCdKlH2POOlyVq/U/TZGuLzm9tPrVgLymTpf7Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPAJlN3D; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="je4peavy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 554A71F00893;
-	Wed, 10 Jun 2026 19:55:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPAJlN3D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619D01F00893;
+	Wed, 10 Jun 2026 20:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781121329;
-	bh=e+Ol4XmgoHN1bk7lUaCxTsxB8W5FSMvH1pGUFf5cHuE=;
+	s=k20260515; t=1781121706;
+	bh=vWxfL8K2S6Dq2oRRt3wuuTd1fXAn3e66jYJW3XSoiO8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=je4peavyf/p6Ir4fS+8WuVm5ZXl8WS7YpuDx/vsVh68apy23OlezIe+e7PoiUtl33
-	 XHDnaC042xZ6YKcUD83sn/CynstKlnMpLyGhgGNIevaOy36VqYiGZfhj623V7LvEds
-	 Z59tnJy9WDd01auxRS8wGy+BDNdwmkyBizzLCW4EL5U/EMVcM0kOzz9BCoN+uykivW
-	 M+MboekVjiJX27XyuJXmd+XE5MLIt6pmBfG6SjG6IhOYoItQB+ox0a/JQbTlP+BDuN
-	 BoPhdcOxPg3d6IhfxI6MqTt6P6kON3fNDNrFw4R+2q9ox13O9zzJKBHbW7r/7XehcX
-	 Di+FIJM6s/XOQ==
-Date: Wed, 10 Jun 2026 16:55:25 -0300
+	b=BPAJlN3D9jHSTp+UiOa9gBUEHwkv6E/fV76NEmezl8YfCDYYBAd6GNVYmEx3JcX+I
+	 fQ6st8XfLIbiyGQ4YzSE9bkpCvBslxVUMuGOphZBI6VYRwuHKjU4i15NOSi3csb1uB
+	 sGxrCMGsgfqjTalJQA1dNyzEIZfLyNxvp43dFru4L/BRcAP2C85J3p1t0hkU326W1l
+	 tKb7mLFtcs0eS4cIfPp2ZK/5TEqoGOy81mmeqq1IlKVD86+ncks49uv+htgxnOiDIV
+	 rq9LlG7YjLblDqrzhB2KlNrA9HSShNwQHP+7Jho+1jd5ma+GoEdO5pF9Get/M6qbcx
+	 nVgAv0KHpx1bA==
+Date: Wed, 10 Jun 2026 17:01:42 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] perf: riscv: fix register name strings
-Message-ID: <ainBLXCDcudjqBl2@x1>
-References: <20260609081500.743861-1-martin@kaiser.cx>
+To: Ian Rogers <irogers@google.com>
+Cc: Jens Remus <jremus@linux.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jan Polensky <japo@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [PATCH v2] perf build: Respect V=1 for Python extension builds
+Message-ID: <ainCpsgwEHLnLnZ-@x1>
+References: <20260608160613.3153795-1-jremus@linux.ibm.com>
+ <CAP-5=fVWuGKVT+g7RVkQy3zYYWVnHs7Ar76e+-RCJe0ZoZVsug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260609081500.743861-1-martin@kaiser.cx>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVWuGKVT+g7RVkQy3zYYWVnHs7Ar76e+-RCJe0ZoZVsug@mail.gmail.com>
 
-On Tue, Jun 09, 2026 at 10:13:07AM +0200, Martin Kaiser wrote:
-> Fix the register name strings for risc-v to match the syntax for kprobes.
+On Mon, Jun 08, 2026 at 09:15:36AM -0700, Ian Rogers wrote:
+> On Mon, Jun 8, 2026 at 9:06 AM Jens Remus <jremus@linux.ibm.com> wrote:
+> >
+> > Make util/setup.py respect the verbose build flag (V=1) by conditionally
+> > passing --quiet only when not in verbose mode.
+> >
+> > This eases debugging of Python extension compilation issues and aligns
+> > with the existing perf build system behavior.
+> >
+> > Tested-by: Jan Polensky <japo@linux.ibm.com>
+> > Signed-off-by: Jens Remus <jremus@linux.ibm.com>
 > 
-> This requires redefining REG_DWARFNUM_NAME. Make sure that different
-> definitions for different architectures don't create compiler warnings.
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks, applied to perf-tools-next, for v7.2.
 
 - Arnaldo
- 
-> Martin Kaiser (2):
->   perf: avoid redefinition warnings for REG_DWARFNUM_NAME
->   perf riscv: fix register name strings
-> 
->  tools/perf/arch/powerpc/include/dwarf-regs-table.h | 1 +
->  tools/perf/arch/riscv/include/dwarf-regs-table.h   | 3 ++-
->  tools/perf/arch/s390/include/dwarf-regs-table.h    | 1 +
->  3 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> -- 
-> 2.43.7
