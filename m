@@ -1,198 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA336224B15;
-	Wed, 10 Jun 2026 20:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05A1213E9C
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 20:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781122483; cv=none; b=B194U+9SvZEYUc6jFXEinLXoeLNItHW4S4qBYs+bi3INATy1EuPnkZXaDM8BhpDqmWRJd/jlgmwC+aqtujsK3xaD58kq5BjusaVlwR3Xf09PBwhoieRCw/+Gd04MBbNuQAoEGiKchjHid4+0xxgvYmB1jTsREfzyNl8zKWsGW4I=
+	t=1781122488; cv=none; b=uKrlUBZviTVLSITPk3H9e1KrtNnqgRQdVkF6CGkGvzqX7JnQtW2fjl+ztPYdNG48xsoT5rPop48qPR0NW57rO2dew5XYFgr/VTeQnP5vveQvWPc5mzshzDtxMv1T+si//1fpRxtBUNvWEEmQ1ZUQyojkVQ9AEFsETlA1X8Y1QTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781122483; c=relaxed/simple;
-	bh=3RxX2FyRQQa8heoLj42OYaT9uLCGSZnUpQe4qmTNQqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=InxugSxYkfQrvsc8mbTZ1Kc+isNgnEN2QiOq3diAUhbOoleoNH8l0aaoUSHw/3rwDeDXc79X2kSDnQmL55yVrf0AMJniZZjjFcMFRv8T4p+958q5rlcbnHtchEUdjY/0KvgL6mpzwteutFn2Qq0u4X1p/zjvsJBr809rpupxhKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GLVJ6puA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781122488; c=relaxed/simple;
+	bh=0wZDehZFb0A+zd/oU1s8tOED2ZYN7Ut/sCzPSzHlGv4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=mrgymMN9HnyPWp7PWlPS3hnvLERe1k2DmgqDn2xp21nyOOqcE9E+itfgB5FCs1ba3E1YTrUN6vUFL0wqrGP/oZsIKl591E+Qs/GNrCdtn0zoU0uyHFRcPJJ7J5Ng+TWgXovuvp2ng6qQ/XzZaHTDiloaX1N+lakWzK0kqfEMPgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUh72lWs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GLVJ6puA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E78E51F00893;
-	Wed, 10 Jun 2026 20:14:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUh72lWs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 585911F00893;
+	Wed, 10 Jun 2026 20:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781122479;
-	bh=QBHhgJ5rPR8+Lum7+XyXvPm6/Ckn6DZvX5YcfbbqSOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=GLVJ6puA8GbUE50OTKt6onOc5YYaFlPgTEbtkhKO1Y0tZ37RMU5lA83A9fqG7zA8f
-	 R1M0N/1QVuVKHmwzmKS7AXlOIUKylSvRR3UJZuyJU+xQomBXC+tQS9WyBX6wZOheE6
-	 bPydwUQ1k9PmGPWcMtfU0m5ARO+cGTgTJ022HVrj2bKTErfAoVSspUY1uQTfuVT8Px
-	 iIsvxV9whlCHfGa7VUOYEAC6Q5JTcGy48v2ZeMesc0nxpnyBAj0LxArXczuoP5c2Zg
-	 5JFI8FJc1CitXdtdrrjFNQ47GUY4pwCKbn0k3xO1aPotn7fyxiLpYVMNnsuxjHvlD4
-	 RgRDlhDQEc00w==
-Date: Wed, 10 Jun 2026 17:14:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Paschalis Mpeis <Paschalis.Mpeis@arm.com>,
-	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 00/19] perf cs-etm: Queue context packets for frontend
-Message-ID: <ainFqtxdLwhbRqrI@x1>
-References: <20260609-james-cs-context-tracking-fix-v5-0-d53a7d096a19@linaro.org>
+	s=k20260515; t=1781122487;
+	bh=YlCXqj3k2TgKIUtouGREyy5Zvf+d3G6kewf/PaGA8+E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ZUh72lWsZRAA+hVQBeDlQ5YPSci/srzFRNMKqyg9NjSBlTl2QQFrqPBUkbt6w1i40
+	 EkoOxupNHlCE927+ortuBh/tGOVr98LH3WlyAxulsCoEFEvI40HSYTmQpLT8Mr4mLn
+	 Mf+0JramCJWb2kWZrnBmeZ2RDpaTykx4NrmhBVANDdB+h1gy+WZ2SXcOiUdOJtxi3X
+	 3g0iNmtE7fb7gI9BL1K+XjP70SBBhKuIpGixbE685Cq2dQHXjoTyDSvm7seSzqF31R
+	 UyYVP01QTA37HZXHqQKMCw52JfNt4XLPfUe9B9/vVE3v+sEXXwoyK1P9IAxxoggzjP
+	 mY5CiSqkLS8hg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 19/23] perf bpf: Add NULL check for btf__type_by_id() in
+ synthesize_bpf_prog_name()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260610195157.2091137-20-acme@kernel.org>
+References: <20260610195157.2091137-20-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 10 Jun 2026 20:14:46 +0000
+Message-Id: <20260610201447.585911F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260609-james-cs-context-tracking-fix-v5-0-d53a7d096a19@linaro.org>
 
-On Tue, Jun 09, 2026 at 03:40:05PM +0100, James Clark wrote:
-> Fix thread tracking when decoding Coresight trace and add a new test for
-> it.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-The issues found by sashiko seem mild and you can address them in follow
-up patches, I think.
+Pre-existing issues:
+- [Critical] Unvalidated array offsets and skipped pointer translations in =
+perf.data BPF payload parsing lead to arbitrary memory read vulnerabilities.
+- [High] Missing bounds and array existence checks for func_infos allow out=
+-of-bounds reads and segmentation faults when parsing crafted BPF program i=
+nfo.
+--
 
-So for the benefit of having perf-tools-next available for linux-next
-testing and the window is closing soon, so I've merged this, ok?
+commit a92bfede2cc53dbfcffc14b00f211f62734591be
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-- Arnaldo
- 
-> The new test is added as a Perf test workload instead of a custom binary
-> with its own build system, but this requires a new feature in Perf test
-> to pass in control pipes which can enable and disable events. This
-> scopes the recording to just the workload and helps to reduce the amount
-> of data recorded in tracing tests.
-> 
-> With this new feature we can re-write all of the Coresight tests to make
-> use of it and remove the remaining binaries which fixes the following
-> issues:
-> 
->  * They didn't work in out of source builds
->  * A lot of the tests unnecessarily required root and didn't skip
->    without it
->  * They were mainly qualitative tests which didn't look for specific
->    behavior
-> 
-> Most importantly, the long build and runtime has been reduced. On a
-> Radxa Orion O6, unroll_loop_thread.c took 37s to compile which is longer
-> than the entire Perf build. Now the build time is negligible and the
-> before and after test runtimes for all the Coresight tests are:
-> 
->           |   N1SDP   |   Orion O6
->   -----------------------------------
->   Before  |   4m  0s  |    14m 49s
->   After   |      26s  |        56s
->   -----------------------------------
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
-> Changes in v5:
-> - Forgot to include this change:
->   - Test for actual length of expected raw dump (Leo)
-> - Link to v4: https://lore.kernel.org/r/20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org
-> 
-> Changes in v4:
-> - Rename workload-ctl to record-ctl and improve docs (Leo)
-> - Use new packet argument everywhere in
->   cs_etm__synth_instruction_sample() (Sashiko)
-> - Test for actual length of expected raw dump (Leo)
-> - Use -fno-inline instead of keyword (Leo)
-> - Don't test any brace or call lines in deterministic test
-> - Make sure context switch loop test does cleanup on failure (Sashiko)
-> - Remove undef int overflows in workloads (Sashiko)
-> - Link to v3: https://lore.kernel.org/r/20260603-james-cs-context-tracking-fix-v3-0-c392945d9ed5@linaro.org
-> 
-> Changes in v3:
-> - Minor sashiko comments
->   - Close some more pipes
->   - Fix warning messages
->   - Error handling improvements
-> - Pass packet into cs_etm__synth_instruction_sample()
-> - Fixup stale comment (Leo)
-> - Link to v2: https://lore.kernel.org/r/20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org
-> 
-> Changes in v2:
-> - Add --workload-ctl option to Perf test
-> - Re-write all the Coresight tests and speed them up
-> - Pass packet to memory access function so frontend can use either the
->   previous or current packet's EL
-> - Link to v1: https://lore.kernel.org/r/20260526-james-cs-context-tracking-fix-v1-0-ebd602e18287@linaro.org
-> 
-> ---
-> James Clark (19):
->       perf cs-etm: Queue context packets for frontend
->       perf test: Add workload-ctl option
->       perf test: Add a workload that forces context switches
->       perf test cs-etm: Test process attribution
->       perf test: Add deterministic workload
->       perf test cs-etm: Replace unroll loop thread with deterministic decode test
->       perf test cs-etm: Remove asm_pure_loop test
->       perf test cs-etm: Replace memcpy test with raw dump stress test
->       perf test: Add named_threads workload
->       perf test cs-etm: Test decoding for concurrent threads test
->       perf test cs-etm: Remove duplicate branch tests
->       perf test cs-etm: Skip if not root
->       perf test cs-etm: Reduce snapshot size
->       perf test cs-etm: Speed up basic test
->       perf test cs-etm: Remove unused Coresight workloads
->       perf test cs-etm: Make disassembly test use kcore
->       perf test cs-etm: Add all branch instructions to test
->       perf test cs-etm: Speed up disassembly test
->       perf test cs-etm: Move existing tests to coresight folder
-> 
->  Documentation/trace/coresight/coresight-perf.rst   |  78 +------
->  MAINTAINERS                                        |   2 -
->  tools/perf/Documentation/perf-test.txt             |  24 ++-
->  tools/perf/Makefile.perf                           |  14 +-
->  tools/perf/scripts/python/arm-cs-trace-disasm.py   |  20 +-
->  tools/perf/tests/builtin-test.c                    | 187 +++++++++++++++-
->  tools/perf/tests/shell/coresight/Makefile          |  29 ---
->  .../perf/tests/shell/coresight/Makefile.miniconfig |  14 --
->  tools/perf/tests/shell/coresight/asm_pure_loop.sh  |  22 --
->  .../tests/shell/coresight/asm_pure_loop/.gitignore |   1 -
->  .../tests/shell/coresight/asm_pure_loop/Makefile   |  34 ---
->  .../shell/coresight/asm_pure_loop/asm_pure_loop.S  |  30 ---
->  .../tests/shell/coresight/concurrent_threads.sh    |  45 ++++
->  .../tests/shell/coresight/context_switch_thread.sh |  69 ++++++
->  tools/perf/tests/shell/coresight/deterministic.sh  |  72 +++++++
->  .../tests/shell/coresight/memcpy_thread/.gitignore |   1 -
->  .../tests/shell/coresight/memcpy_thread/Makefile   |  33 ---
->  .../shell/coresight/memcpy_thread/memcpy_thread.c  |  80 -------
->  .../tests/shell/coresight/memcpy_thread_16k_10.sh  |  22 --
->  .../perf/tests/shell/coresight/raw_dump_stress.sh  |  65 ++++++
->  .../shell/{ => coresight}/test_arm_coresight.sh    |  43 ++--
->  .../{ => coresight}/test_arm_coresight_disasm.sh   |  23 +-
->  .../tests/shell/coresight/thread_loop/.gitignore   |   1 -
->  .../tests/shell/coresight/thread_loop/Makefile     |  33 ---
->  .../shell/coresight/thread_loop/thread_loop.c      |  85 --------
->  .../shell/coresight/thread_loop_check_tid_10.sh    |  23 --
->  .../shell/coresight/thread_loop_check_tid_2.sh     |  23 --
->  .../shell/coresight/unroll_loop_thread/.gitignore  |   1 -
->  .../shell/coresight/unroll_loop_thread/Makefile    |  33 ---
->  .../unroll_loop_thread/unroll_loop_thread.c        |  75 -------
->  .../tests/shell/coresight/unroll_loop_thread_10.sh |  22 --
->  tools/perf/tests/shell/lib/coresight.sh            | 134 ------------
->  tools/perf/tests/tests.h                           |   3 +
->  tools/perf/tests/workloads/Build                   |   4 +
->  tools/perf/tests/workloads/context_switch_loop.c   | 110 ++++++++++
->  tools/perf/tests/workloads/deterministic.c         |  39 ++++
->  tools/perf/tests/workloads/named_threads.c         | 109 ++++++++++
->  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  21 +-
->  tools/perf/util/cs-etm.c                           | 236 ++++++++++++---------
->  tools/perf/util/cs-etm.h                           |   8 +-
->  40 files changed, 926 insertions(+), 942 deletions(-)
-> ---
-> base-commit: 351a37f2fda4db668cff8ba12f2992d73dccdaea
-> change-id: 20260515-james-cs-context-tracking-fix-754998bae7ed
-> 
-> Best regards,
-> -- 
-> James Clark <james.clark@linaro.org>
+perf bpf: Add NULL check for btf__type_by_id() in synthesize_bpf_prog_name()
+
+synthesize_bpf_prog_name() calls btf__type_by_id() and immediately
+dereferences the result via t->name_off without checking for NULL.
+btf__type_by_id() returns NULL when the type_id is invalid or out
+of range, so an invalid ID from untrusted input causes a NULL pointer
+dereference. This patch adds a NULL check before dereferencing t.
+
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 2c09842469f1f..fe01551dc3e6c 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -146,7 +146,8 @@ static int synthesize_bpf_prog_name(char *buf, int si=
+ze,
+>  	if (btf) {
+>  		finfo =3D func_infos + sub_id * info->func_info_rec_size;
+
+[Severity: High]
+This is a pre-existing issue, but is there a missing bounds check on sub_id
+before we calculate the finfo pointer?
+
+In __bpf_event__print_bpf_prog_info(), this function is called in a loop
+bounded by info->nr_jited_ksyms, which is passed as sub_id.  However,
+func_infos is sized according to info->nr_func_info.
+
+Since these lengths and func_info_rec_size can be attacker-controlled from =
+an
+untrusted perf.data file, couldn't a large nr_jited_ksyms and a small
+nr_func_info cause the pointer arithmetic here to point out of bounds,
+leading to a segmentation fault when accessing finfo->type_id below?
+
+>  		t =3D btf__type_by_id(btf, finfo->type_id);
+
+[Severity: Critical]
+This isn't a bug introduced by this patch, but does the broader handling of
+perf.data BPF payloads allow for arbitrary memory reads?
+
+When parsing HEADER_BPF_PROG_INFO from an untrusted perf.data file,
+process_bpf_prog_info() reads attacker-controlled lengths and fields into
+info_linear->info.
+
+The helper bpil_offs_to_addr() translates these offsets into memory pointer=
+s,
+but if the corresponding bit in the arrays bitmask is unset, the translation
+is skipped, leaving the raw attacker-controlled 64-bit value intact:
+
+tools/perf/util/bpf-utils.c:bpil_offs_to_addr() {
+	...
+	if ((info_linear->arrays & (1UL << i)) =3D=3D 0)
+		continue;
+	offs =3D bpf_prog_info_read_offset_u64(&info_linear->info,
+					     desc->array_offset);
+	addr =3D offs + ptr_to_u64(info_linear->data);
+	...
+}
+
+Furthermore, even if the bit is set, it appears there is no verification th=
+at
+the calculated offset falls within info_linear->data_len.
+
+When functions like synthesize_bpf_prog_name() or
+__bpf_event__print_bpf_prog_info() dereference these unvalidated pointers
+(like info->func_info or info->prog_tags) and print their contents, could t=
+his
+provide an arbitrary memory read primitive if a privileged user runs
+perf report -D on an untrusted file?
+
+> -		short_name =3D btf__name_by_offset(btf, t->name_off);
+> +		if (t)
+> +			short_name =3D btf__name_by_offset(btf, t->name_off);
+>  	} else if (sub_id =3D=3D 0 && sub_prog_cnt =3D=3D 1) {
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610195157.2091=
+137-1-acme@kernel.org?part=3D19
