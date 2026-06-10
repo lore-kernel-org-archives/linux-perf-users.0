@@ -1,163 +1,119 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05122D781B
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 17:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4E031AF07;
+	Wed, 10 Jun 2026 18:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781112907; cv=none; b=NfpLeyQIqH0AhAu6WfS8Ux1UAF7BS2KGi7OJVvDdZdoKdStC+l9hPenEB1MbdFVC9450c459bQGO1kEwRZL5rveNiDiAS58kwkKc9SdH/EDaOSSObaOSqm+UJxzpupifuXi1WMexPignaN6VzJQzPDpcEBlTBDLJepkhBcngSjM=
+	t=1781115136; cv=none; b=bIv6L35koaBj03S2A4B1DAaMNvNDjfHcZ1m9EsItD7t30wca3A1pyKFC1cShApiyRJRnYGuyEg2tgsPU4zRRETBWvfpHgSrIY6yH10KeSXoImfGajKPGnI5MYcz2vjZVZ8+19KIpcRm1AzSiWYDBM89D6qYL+EAPu8Gwzdsra04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781112907; c=relaxed/simple;
-	bh=fPNA7xxEcyLNduJYaPo7nRUDXEgh0ata/81jzJzBMF4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KboC3+elNxprMorUDQ6mh0kdpeum7f4Ey+fLQ2KbYZpn68/ocyHSb+xpzPbcGyUOlxbMfGx8hmmFSBoQg4K/nJFvKK6REn4DRJUFpHmHlzrixdcR7eVM3pZ2dogPjm867DoFSjqAp1GVJ7JGjMHQZxMwlHfXMEFBG1YklEa+HUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VEMdUq0M; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1781115136; c=relaxed/simple;
+	bh=lQDdqxaaOQg3Un6brDdu15WtZczLHshM7hDywgUBRMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J1VdykK2T5e8Z90JiZC5yuNwn6PJ8yOG6UFv3GZcR/JmfBu8zYuw0zgtbqQUcTF3DbFEhkz2W4GGSlvR2NRlFpdJDqBbERaSHMxlcLo9YH5AlIWgcc+bU/jU9/1nb9dvYmZ4AyjSDEyc1l7ZKwt2AqLKjtl9H6Bv3+f0LVBQEME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qlgfw5W9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VEMdUq0M"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-842446a3851so3417319b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 10:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781112904; x=1781717704; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7BLkgXTqKvHg4zposqfH/BelDZtbPAFFq1l9yrt8MNQ=;
-        b=VEMdUq0M78g35mGfNVuPe6Perezh1K/eH1Pd+RLiQuqv9/Eu9aOQMtpAECIKLsG3Yy
-         1hOzgEKMRkmKNMnmWWgshfmwCGRWQ14A3QRbwc7eKa4pip/2foETufpwTPLslctaplLZ
-         yeqGujKfVpEdsHzoBRun0ZqgAm7zBWIpPunfXb0OP48QhCi+Jg1C+CZkxiyTrE3/SZRf
-         fcN/1f5F1VV8jtbqGkxuX8YSsY8Rs9x/48m0MWIx8nFn2gwAt/QIZxQAhLMB7snwC/6V
-         Z3uOx4pMxiNtZL/I5PXprHxDLn/myuW8jqUiJTcCDtAu0Z/I0Fl2BtKxmhdVwaJmaY9s
-         lX5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781112904; x=1781717704;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7BLkgXTqKvHg4zposqfH/BelDZtbPAFFq1l9yrt8MNQ=;
-        b=ZJwUDL49fz69vtXjvKXwcjN7At2uc1TZHQxOVsX2erPSRPp4ddGlC8nfQHiju/uMD9
-         kfoTLlGOlt9xtOpVuULeBShBSNU1myvxS4CuNTmTCC8gdzGdqI2cTNwkaEes8mYP7bXZ
-         ZsvcABKysxFz1sFxJJrOkP54Ltm//iJo6tZnA6m8APePRR6ExjJLv2Fldoqz324VFt6+
-         YE10ibcjwrW+iBrce7GiSVmuW8zuMxUnQrYvfibE6RVGbejCErnf1Yxip+dBeho+zdea
-         nGY+6ATPVq6U90P6cqe2G8I/k43+etdWHPWxuhGf9QXdf58ZsFn0ZdzLZ6fGvYeZkapA
-         5Ewg==
-X-Forwarded-Encrypted: i=1; AFNElJ9Covm2Kkt6SdMPfT3xFfJzWUCD10CQbjDUhbpyWxQXMcX//SS5z5cidc9c1f/1RzuXr1/vR61TH+0oVUeNElcb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy903jAbf+EOqiMf01h7ov4r3FokruVpdcf66BlvbaI+30omUXk
-	/F6TeG0VQj7WA8xCTrhDqjx34u1JGlZCCGQlZRqyYUyKGHlRpzjEzmllSgTJzHO5rWL1SQnT6a0
-	t7AtWPw==
-X-Received: from pfr9.prod.google.com ([2002:a05:6a00:94c9:b0:842:3697:8685])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:21c5:b0:831:7f71:c810
- with SMTP id d2e1a72fcca58-842b0f9455fmr26982078b3a.35.1781112903891; Wed, 10
- Jun 2026 10:35:03 -0700 (PDT)
-Date: Wed, 10 Jun 2026 10:35:01 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qlgfw5W9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8110F1F00893;
+	Wed, 10 Jun 2026 18:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781115135;
+	bh=sRVVUio2ofSz9c4VQ7KleR5VpQtUJIpCMjMpTWAjjcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Qlgfw5W99zxpa0fa8dm5AsIU2sczonb0XyznE1WgTPusWqVlb1sTfUywWZvMQhbn2
+	 ksWhCLL6IqroOOuweHtV+YvHcVSnRUCD75xXM4rss+apynZZOTktCd75wXmK+NdoEL
+	 klaM6v52opquVFu8z+gklQumorREPKJajitYG/dmJRtB52OWT7vc0hYW/w5/HqSC4x
+	 zXu+8GaRjYaU45FYerzKELxVnREYXd5Eepo19t/Q0AyH2ia9P+Mkqbb/UOXqwZeYLD
+	 xLNxGfSBLH3iiVQpRpML0KtzfP9hoEUTJ07N32hAvbtV9JQz7uwrPsbQSPbvhrZ4po
+	 YA9S0I9bxNIQA==
+Date: Wed, 10 Jun 2026 15:12:11 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 10/11] perf tools: Use scnprintf() in
+ build_id__snprintf() and hwmon read_events()
+Message-ID: <aimo-19X5W24ttaf@x1>
+References: <20260610165207.2077258-11-acme@kernel.org>
+ <20260610171727.6AD111F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.54.0.1099.g489fc7bff1-goog
-Message-ID: <20260610173501.3557522-1-ctshao@google.com>
-Subject: [PATCH] perf stat: Fix false NMI watchdog warning in aggregation modes
-From: Chun-Tse Shao <ctshao@google.com>
-To: acme@kernel.org, namhyung@kernel.org
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260610171727.6AD111F00893@smtp.kernel.org>
 
-In aggregation modes (e.g. --per-socket, --per-die, etc.), a
-counter might not be scheduled or counted on specific aggregate
-groups if it was not assigned to the CPUs belonging to those
-groups. However, the printout() check triggers the
-"print_free_counters_hint" logic unconditionally for any
-supported counter with a missing count. This results in a false
-"Some events weren't counted. Try disabling the NMI watchdog"
-warning.
+On Wed, Jun 10, 2026 at 05:17:26PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> 
+> Pre-existing issues:
+> - [High] Off-by-one stack buffer overflow when reading sysfs files without reserving space for the null terminator.
+> --
+> 
+> commit e6063aeb686d4d547e9272a51fc950e7a84f13a8
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
+> 
+> build_id__snprintf() and hwmon_pmu__read_events() accumulate formatted
+> output via snprintf(), which returns the would-have-been-written count
+> on truncation.
+> 
+> > diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+> > index fb3ffa8d32ad2..dbf6a71af47f9 100644
+> > --- a/tools/perf/util/hwmon_pmu.c
+> > +++ b/tools/perf/util/hwmon_pmu.c
+> > @@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmon_pmu *hwm, char *out_buf, si
+> >  
+> >  				buf[read_len] = '\0';
+> 
+> [Severity: High]
+> This isn't a bug introduced by this patch, but could this lead to an
+> off-by-one stack buffer overflow?
+> 
+> Looking at hwmon_pmu__describe_items() in tools/perf/util/hwmon_pmu.c, we
+> read up to sizeof(buf) bytes:
+> 
+>     ssize_t read_len = read(fd, buf, sizeof(buf));
+> 
+> If the sysfs file contains exactly the capacity of the buffer (64 bytes) and
+> does not end with a newline, read_len will be 64.
+> 
+> When terminating the string here:
+> 
+>     buf[read_len] = '\0';
 
-This warning was originally introduced in commit 02d492e5dcb7
-("perf stat: Issue a HW watchdog disable hint").
+This is fixed in the following series, acting on your comments.
 
-To fix this, add the helper evsel__should_run_on_aggr() to
-verify if the counter was supposed to run on the aggregate CPU
-ID before triggering the hint. Additionally, correctly handle
-per-thread/per-process execution (which uses a dummy CPU map
-with a single -1 entry) by immediately returning true,
-ensuring legitimate warnings are still reported.
-
-Example before/after:
-
-$ perf stat -M lpm_miss_lat --metric-only --per-socket -a -- sleep 1
-
-Before:
- Performance counter stats for 'system wide':
-
-       ns  lpm_miss_lat_rem ns  lpm_miss_lat_loc
-S0      126                202.3               207.9
-S1      126                231.9               259.3
-
-       1.006029831 seconds time elapsed
-
-Some events weren't counted. Try disabling the NMI watchdog:
-        echo 0 > /proc/sys/kernel/nmi_watchdog
-        perf stat ...
-        echo 1 > /proc/sys/kernel/nmi_watchdog
-
-After:
- Performance counter stats for 'system wide':
-
-       ns  lpm_miss_lat_rem ns  lpm_miss_lat_loc
-S0      126                202.3               207.9
-S1      126                231.9               259.3
-
-       1.006029831 seconds time elapsed
-
-Assisted-by: Gemini:gemini-next
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/util/stat-display.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 2b69d238858c..e50557964916 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -792,6 +792,28 @@ static bool evlist__has_hybrid_pmus(struct evlist *evlist)
- 	return false;
- }
+- Arnaldo
  
-+static bool evsel__should_run_on_aggr(struct perf_stat_config *config,
-+				      struct evsel *counter,
-+				      const struct aggr_cpu_id *id)
-+{
-+	struct perf_cpu cpu;
-+	unsigned int idx;
-+
-+	if (!config->aggr_map || !config->aggr_get_id)
-+		return true;
-+
-+	perf_cpu_map__for_each_cpu(cpu, idx, counter->core.cpus) {
-+		struct aggr_cpu_id own_id;
-+
-+		if (cpu.cpu < 0)
-+			return true;
-+
-+		own_id = config->aggr_get_id(config, cpu);
-+		if (aggr_cpu_id__equal(id, &own_id))
-+			return true;
-+	}
-+	return false;
-+}
- static void printout(struct perf_stat_config *config, struct outstate *os,
- 		     double uval, u64 run, u64 ena, double noise, int aggr_idx)
- {
-@@ -822,7 +844,8 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 
- 		if (counter->supported) {
- 			if (!evlist__has_hybrid_pmus(counter->evlist)) {
--				config->print_free_counters_hint = 1;
-+				if (evsel__should_run_on_aggr(config, counter, &os->id))
-+					config->print_free_counters_hint = 1;
- 			}
- 		}
- 	}
--- 
-2.54.0.1099.g489fc7bff1-goog
-
+> Does this write a null byte exactly one byte past the end of the buf array?
+> It appears similar patterns exist in hwmon_pmu__read_events() and
+> evsel__hwmon_pmu_read() as well, where reading the full buffer size
+> leads to an out-of-bounds null termination.
+> 
+> Should we reserve space for the null terminator by reading sizeof(buf) - 1
+> instead?
+> 
+> >  				val = strtoll(buf, /*endptr=*/NULL, 10);
+> > -				len += snprintf(out_buf + len, out_buf_len - len, "%s%s%s=%g%s",
+> > -						len == 0 ? " " : ", ",
+> > -						hwmon_item_strs[bit],
+> > -						is_alarm ? "_alarm" : "",
+> > -						(double)val / 1000.0,
+> > -						hwmon_units[key.type]);
+> > +				len += scnprintf(out_buf + len, out_buf_len - len, "%s%s%s=%g%s",
+> > +						 len == 0 ? " " : ", ",
+> > +						 hwmon_item_strs[bit],
+> > +						 is_alarm ? "_alarm" : "",
+> > +						 (double)val / 1000.0,
+> > +						 hwmon_units[key.type]);
+> >  			}
+> >  			close(fd);
+> >  		}
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260610165207.2077258-1-acme@kernel.org?part=10
