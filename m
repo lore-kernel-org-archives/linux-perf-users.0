@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B2821CA02;
-	Wed, 10 Jun 2026 08:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F1A3B5318
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 09:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781081454; cv=none; b=hBW1ou4C0+11gqsFApH553ys/l1kJem63uOnxV36hyJfoFCPhI+Ppv1qbqu9wxzw0bu50BUdqYrsckS58FzKkLBESJNeYiDrG7FgYHdUTB+PJe0X2LM7I4WE6cSCmaB/0znSjO0o8ppgwRYeNNhjYQZnSKUUASWmSCps+BHNvHE=
+	t=1781082284; cv=none; b=f5PW4nnNa6a7an9Zmud2YxD7Q7RzOg62EVLGKVxd2FbR7eStzelbo/KxR2Q87eP/cPuAI29Rg3EM22e/I+xpbjHleue6Vb4S9MJ1CtZo6XLnWze/DTGfzBX0Vc8DU7zYHXZzdGYRiVwJCN24RQJdu0MP1T3j1cBSDeoLBE4Lkmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781081454; c=relaxed/simple;
-	bh=i1gcldGTtQKfClZF6lHPzebxU5tvhV88z86jZdXp6eQ=;
+	s=arc-20240116; t=1781082284; c=relaxed/simple;
+	bh=igN/YCunjni4r2ieLz2L4oJPXp5CqAiw5gcg32sXaS4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qt+BbuUV4hlHWw9EBwExSOiQLMsIeI+Q4ghCKeyR9X5o/ny2EtcqUDViRKlKNNKF3f2XSA3DeVcd+d/ifvhUF4VcRmeRyAH73j6uwNMI+Fyh5J3sYmUjiJelHVNlwvPc1AYQYJMQOvyC92vBTmh+f3IgSM2cib0A7H4IoaOYxSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpDgNg5W; arc=none smtp.client-ip=192.198.163.7
+	 In-Reply-To:Content-Type; b=XJo+N2xQHvJQf+J1Mn6L64P4M3RCK16Ih54MsSTr09pL1Wd4QCMeUzQOJdXvl0ufCClQc2RYyG+FFspOwVqIGJC168p9MS7O8lyk1GckWxubOYrqhWSx9h7rCbMo7PPT6VzrUTBMStFn9E4vzoOW7il85rlLUsrgLgqFnJSFipc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ginHtPN7; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpDgNg5W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ginHtPN7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781081453; x=1812617453;
+  t=1781082282; x=1812618282;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=i1gcldGTtQKfClZF6lHPzebxU5tvhV88z86jZdXp6eQ=;
-  b=mpDgNg5WYg6eKWH0lXaq7ju8yUc9bN46ifuGXKRI7NGjifdVEfSQyJiT
-   ZVXP+hggYfCoHghWGdr33TB+RZNYhZQpbxnQ1AR45qsCdWKQpTzvJs+zt
-   WavanwO4i0HO6PZw2AIyG0eKdFuYLl3Jdvo3fPPvLXiApP08Stvz8g5PF
-   IDzpTevoSvNzHqDG9iQayPZxEABwOJlU/ORmch2+slV2xGkdydeXk/Kxb
-   q3bu2VoNN1v7+t4f70yhzpKeUOWrb1g6WFy0UObLoUQbGfYBeMPnYfU3L
-   LwRAuY+3W8+dTGSY0vLLxHOCeh01ktPgey09PTLTR8UyiVJ2wZktnq62v
-   Q==;
-X-CSE-ConnectionGUID: L+mIlrzqQ96+OnY5AIa4NA==
-X-CSE-MsgGUID: 7cwEvKV5Qn6oO8Y1YOGNuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="107303963"
+  bh=igN/YCunjni4r2ieLz2L4oJPXp5CqAiw5gcg32sXaS4=;
+  b=ginHtPN7ex2QgYNikmgSxRf2XWXcCaLS0FHu0L4xEfcuVQJbgrGjh0kV
+   YdMQkyx7svnnzrB7B54UdheWZXE4UzNu5zUjZwdPdcVBOzKErorvnhYUx
+   gvTvgDcxF/HrU9753A4iYVvmf2JbEH2OP7oqgz2fWx0dxOD+dsnJ2L4O8
+   6eRehc0yBLSgEpr8sl+dAipn0RzjCC1BRuQopB3wvyWk4W4/pAhdn2xgT
+   edyl+p9Q9ckTaD3SPfwjBNhLCw/fl8GwSs0NVUQE20d77F7kpDJAWfUkJ
+   Dwtg0Q0fINoHmL/Xgckx6Ic3tTtei4bK6SDteQyT8yqE+8KpDvDKK0RXD
+   w==;
+X-CSE-ConnectionGUID: s4w4I8D2Sg+WBcFfDwG7mQ==
+X-CSE-MsgGUID: 08ERqaybRKaH/kTjkfJB6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="80886424"
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="107303963"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 01:50:52 -0700
-X-CSE-ConnectionGUID: Hk8VJTPkQ0uzB3rthCTpmA==
-X-CSE-MsgGUID: YvvxHHm4Tai4xPuh+5Rsaw==
+   d="scan'208";a="80886424"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 02:04:41 -0700
+X-CSE-ConnectionGUID: xZh62xRpRuKX0gn5ZdA5Yg==
+X-CSE-MsgGUID: rzwUMrGqTwCgkC/7/9xf3w==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="251030848"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 01:50:49 -0700
-Message-ID: <b3485f13-039d-44d9-af02-5cea084ca304@linux.intel.com>
-Date: Wed, 10 Jun 2026 16:50:45 +0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 02:04:39 -0700
+Message-ID: <c0a5f131-db2d-4252-8e88-7336718e95ae@linux.intel.com>
+Date: Wed, 10 Jun 2026 17:04:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,204 +50,72 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 7/9] perf/x86/intel: Drop fixed-counter PEBS
- constraints for baseline PEBS
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
- Yi Lai <yi1.lai@intel.com>
-References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
- <20260609050222.2458129-8-dapeng1.mi@linux.intel.com>
- <20260610082051.GF49951@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v1 4/6] perf vendor events intel: Update lunarlake events
+ from 1.22 to 1.25
+To: Chun-Tse Shao <ctshao@google.com>, "Baker, Edward"
+ <edward.baker@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+References: <20260609215046.2391903-5-ctshao@google.com>
+ <20260609220242.A7B301F00893@smtp.kernel.org>
+ <CAJpZYjXoC=Z10_X_=TQw2Q+O-jrQfV+S-bHThAUoXEoenHpT0w@mail.gmail.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260610082051.GF49951@noisy.programming.kicks-ass.net>
+In-Reply-To: <CAJpZYjXoC=Z10_X_=TQw2Q+O-jrQfV+S-bHThAUoXEoenHpT0w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 6/10/2026 4:20 PM, Peter Zijlstra wrote:
-> On Tue, Jun 09, 2026 at 01:02:20PM +0800, Dapeng Mi wrote:
->> On SPR guests where pebs_baseline is not advertised, running:
+On 6/10/2026 6:58 AM, Chun-Tse Shao wrote:
+> + Dapeng and Edward
+>
+> On Tue, Jun 9, 2026 at 3:02 PM <sashiko-bot@kernel.org> wrote:
+>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+>> - [Medium] Accidental deletion of the UMask field for the BR_INST_RETIRED.COND_TAKEN_FWD PMU event, making it an alias of ALL_BRANCHES.
+>> --
 >>
->> $ ./perf record -e cpu/event=0x00,umask=0x01,i\
->> 	 name=INST_RETIRED.PREC_DIST/p -c 10000 sleep 1
+>> commit 5c9c0d0a9a04ac6fce773f8ccf00f8df75a3f68d
+>> Author: Chun-Tse Shao <ctshao@google.com>
 >>
->> can trigger:
+>> perf vendor events intel: Update lunarlake events from 1.22 to 1.25
 >>
->> unchecked MSR access error: WRMSR to 0x3f1 ... in\
->> 	 intel_pmu_pebs_enable_all()
+>> This commit updates the Lunar Lake PMU events from version 1.22 to 1.25
+>> based on the upstream intel/perfmon repository.
 >>
->> Root cause:
->> SPR-specific PEBS constraints allow fixed-counter scheduling,
->> for example INST_RETIRED.PREC_DIST on fixed counter 0. In guests without
->> pebs_baseline, KVM does not support PEBS sampling on fixed counters,
->> so enabling such events reaches an invalid MSR programming path.
+>>> diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json b/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+>>> index d66eafccebbb6..a7467b2f291de 100644
+>>> --- a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+>>> +++ b/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+>>> @@ -190,7 +190,6 @@
+>>>          "EventName": "BR_INST_RETIRED.COND_TAKEN_FWD",
+>>>          "PublicDescription": "Counts taken forward conditional branch instructions retired. Available PDIST counters: 0,1",
+>>>          "SampleAfterValue": "400009",
+>>> -        "UMask": "0x102",
+>> [Severity: Medium]
+>> Was the UMask field intentionally removed here?
 >>
->> Fix:
->> Drop fixed-counter entries from the PEBS constraint table. Without
->> pebs_baseline, those fixed-counter PEBS events now resolve to empty
->> constraints and are not scheduled/enabled, avoiding the warning and the
->> broken guest PEBS path.
+>> When UMask is missing, it is omitted from the generated event string.
+>> The kernel PMU driver interprets omitted mask bits as zero, which makes
+>> EventCode 0xc4 with UMask 0x00 an exact match for the ALL_BRANCHES event.
 >>
->> This is safe because, in pebs_baseline-capable cases, PEBS constraint
->> lookup already falls back to non-PEBS constraints when needed, and
->> fixed-counter constraints are effectively shared there.
-> I am confused, this works outside of KVM? (It appears to work fine on my
-> spr).. so removing this to fix some guest only issue seems wrong.
+>> Does this cause BR_INST_RETIRED.COND_TAKEN_FWD to incorrectly count all
+>> branches instead of only forward-taken conditional branches, potentially
+>> corrupting Topdown metrics that rely on this branching ratio?
+>>
+>> (This same UMask removal also appears to happen in the parallel Arrow Lake
+>> update patch within this series).
+> From perfmon: https://github.com/intel/perfmon/commit/5535a3e8cc14ae8ef58013cf3d8e9480018b911a
+> It seems like the umask of `BR_INST_RETIRED.COND_TAKEN_FWD` is changed
+> from 0x02 to 0x00.
+> Can you confirm if that is correct?
 
-The reason that it works on bare metal is currently the constraint lookup
-would fallback into non-PEBS constraints if there is no matched entry in
-the PEBS constraints as long as the PEBS supports sampling on all counters
-including fixed counters (what the flag "PMU_FL_PEBS_ALL" indicates), like
-the below code shows.
+I suppose it's correct, but need double check. Thanks.
 
-```
-
-struct event_constraint *intel_pebs_constraints(struct perf_event *event)
-{
-    struct event_constraint *pebs_constraints = hybrid(event->pmu,
-pebs_constraints);
-    struct event_constraint *c;
-
-    if (!event->attr.precise_ip)
-        return NULL;
-
-    if (pebs_constraints) {
-        for_each_event_constraint(c, pebs_constraints) {
-            if (constraint_match(c, event->hw.config)) {
-                event->hw.flags |= c->flags;
-                return c;
-            }
-        }
-    }
-
-    /*
-     * Extended PEBS support
-     * Makes the PEBS code search the normal constraints.
-     */
-    if (x86_pmu.flags & PMU_FL_PEBS_ALL)
-        return NULL;
-
-    return &emptyconstraint;
-}
-
-static struct event_constraint *
-__intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
-                struct perf_event *event)
-{
-    struct event_constraint *c;
-
-    c = intel_vlbr_constraints(event);
-    if (c)
-        return c;
-
-    c = intel_bts_constraints(event);
-    if (c)
-        return c;
-
-    c = intel_shared_regs_constraints(cpuc, event);
-    if (c)
-        return c;
-
-    c = intel_pebs_constraints(event);
-    if (c)
-        return c;
-
-    return x86_get_event_constraints(cpuc, idx, event);
-}
-
-```
-
-if intel_pebs_constraints() can't find the matched entry from PEBS
-constraints and PMU_FL_PEBS_ALL is set, NULL would be returned and it would
-lead to fallback the non-PEBS constraints lookup.
-
-From Icelake starts, regardless of the extended PEBS or the arch-PEBS, all
-counters including the fixed counters support PEBS  sampling and the
-flag PMU_FL_PEBS_ALL would set by default.
-
-Since the non-PEBS constraints contain the similar fixed counter
-constraints, the fixed counter events would still be correctly scheduled on
-the fixed counters.
-
-for example, here is the fixed counter constraints in
-intel_icl_event_constraints[],
-
-```
-
-static struct event_constraint intel_icl_event_constraints[] = {
-    FIXED_EVENT_CONSTRAINT(0x00c0, 0),    /* INST_RETIRED.ANY */
-    FIXED_EVENT_CONSTRAINT(0x01c0, 0),    /* old INST_RETIRED.PREC_DIST */
-    FIXED_EVENT_CONSTRAINT(0x0100, 0),    /* pseudo INST_RETIRED.ANY */
-    FIXED_EVENT_CONSTRAINT(0x003c, 1),    /* CPU_CLK_UNHALTED.CORE */
-    FIXED_EVENT_CONSTRAINT(0x0200, 1),    /* pseudo CPU_CLK_UNHALTED.THREAD */
-    FIXED_EVENT_CONSTRAINT(0x0300, 2),    /* pseudo CPU_CLK_UNHALTED.REF_TSC */
-    FIXED_EVENT_CONSTRAINT(0x0400, 3),    /* pseudo TOPDOWN.SLOTS */
-
-    ......
-
-```
 
 >
+> Thanks,
+> CT
 >
->> Reported-by: Yi Lai <yi1.lai@intel.com>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/intel/ds.c | 13 -------------
->>  1 file changed, 13 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->> index cb72af9b61ce..5db15a92017a 100644
->> --- a/arch/x86/events/intel/ds.c
->> +++ b/arch/x86/events/intel/ds.c
->> @@ -1447,10 +1447,6 @@ struct event_constraint intel_skl_pebs_event_constraints[] = {
->>  };
->>  
->>  struct event_constraint intel_icl_pebs_event_constraints[] = {
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x100000000ULL),	/* old INST_RETIRED.PREC_DIST */
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),	/* SLOTS */
->> -
->>  	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
->>  	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
->>  	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_STORES */
->> @@ -1473,9 +1469,6 @@ struct event_constraint intel_icl_pebs_event_constraints[] = {
->>  };
->>  
->>  struct event_constraint intel_glc_pebs_event_constraints[] = {
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
->> -
->>  	INTEL_FLAGS_EVENT_CONSTRAINT(0xc0, 0xfe),
->>  	INTEL_PLD_CONSTRAINT(0x1cd, 0xfe),
->>  	INTEL_PSD_CONSTRAINT(0x2cd, 0x1),
->> @@ -1500,9 +1493,6 @@ struct event_constraint intel_glc_pebs_event_constraints[] = {
->>  };
->>  
->>  struct event_constraint intel_lnc_pebs_event_constraints[] = {
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
->> -
->>  	INTEL_FLAGS_UEVENT_CONSTRAINT(0x012a, 0x1),		/* OCR.* events */
->>  	INTEL_FLAGS_UEVENT_CONSTRAINT(0x012b, 0x1),		/* OCR.* events */
->>  
->> @@ -1534,9 +1524,6 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
->>  };
->>  
->>  struct event_constraint intel_pnc_pebs_event_constraints[] = {
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
->> -	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
->> -
->>  	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0xfc),
->>  	INTEL_HYBRID_STLAT_CONSTRAINT(0x2cd, 0x3),
->>  	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
->> -- 
->> 2.34.1
->>
+>>>          "Unit": "cpu_core"
+>>>      },
+>> --
+>> Sashiko AI review · https://sashiko.dev/#/patchset/20260609215046.2391903-1-ctshao@google.com?part=4
