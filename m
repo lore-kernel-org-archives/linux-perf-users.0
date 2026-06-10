@@ -1,175 +1,123 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7ADF31E83B
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 16:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781108369; cv=pass; b=qAMhW+i7rROHX1S4iuhj+zhrsutIL/pGIY5xSe2NTFy22NbRNIEJrwOSaeWUGabrtio+f2vUEzuaVFw0Fpr/hY3BRhPHZPldXLwq8K96hQf5imcbFPe7ETWRKq2DYvw5bcmvxjteURXx4FNxi6z5kwgrReALcPSrh5WcAobNP+E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781108369; c=relaxed/simple;
-	bh=tEcBow2gdBp+/voVp/g9x+g9NV2I+Be2aTB/lbhkaHs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZlAPxV+bUGCNoQfYj1r5pfJcedAV1Qas5uLUvdKq0Ou9IrWO+7yXBVZsMlF+aK+q2xHGBFeuVIifwafaoLKvlOqVdx5HmMbcJFhTaoayi34vx2sqE1uGJ/VdZhqs2MetfbQrU/QjokWSL+WbRARpEpAcf3mvGQT834wMWWSYp44=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hL2pYXdr; arc=pass smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD50A1A683E;
+	Wed, 10 Jun 2026 16:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781108992; cv=none; b=pkGXQ5eEnKh6hqXihJCsFWVp1VY7c+ve4SD/ZwytL2re5Nk3QbmidpdCd35IG7MQj0rIXOLHiUEd63Yp1ox9oWO7NEuHFs5qNLmrfDx4Dp4fInOt2BLIlxSmH9ql1gtYnKVtBjcPdtACmDkhEKUaS5xfCAAyCyCLXJV+sx47h/8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781108992; c=relaxed/simple;
+	bh=J9fDtTY/S1t42qKo8xW/SEJzVRf8B34wLgAeVLKfcDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZimlUQ3SDiZ3aAU4cLQwu/dfKnW3B4xJGlX9CFUzRa9RME3GEDQENiSJ7ZMY1Z3rpjDXjQT9Ww1b0NAKfXJKArL20Qzluf6tOy9My/iJLgwGiYvIek17tliEm3Wvo6H7mNPPehj0pmWYqo5+d1/a6fP5iycXnw2uYFI7C8cfRcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkDfUGmM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hL2pYXdr"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2bf22c18ad3so111715ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jun 2026 09:19:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781108366; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Zsy3FPdThvANbKhBiJih6U6C+CGDIDRviOMehVCnTI3+0Qledb+lnCqyDjQnebqsXq
-         6o2LhCajRZxnxnMl7ZLUHQ9tFIQFOrQiO7wtCt4CI7Nq24w92hG8oFfwg/2u/PGinHyu
-         5Nfo9a9Gkalzv1CO50faJK5ZnKORJZ95i8W7WvUHb30KOcVCvZimdEV4WfW7Mqr+rLJD
-         Op3E4YayHodX+2xzB1Y2XsAQ0Zeyd7JZClHN8fQ8Crl7fSVIGD1m5MB9KkhGysyD3BA5
-         ZKEcMunrvD1W3viTvk9njiDBdwgeu+pwNbhnG5i6QbMUzACOQOEidjzeKqcEd/5vlyp/
-         flkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Vi11/rohvLJyMxroWGqfziqvFq44cunGgPMb0wuOPpg=;
-        fh=RMrrY8uXq9lB77DUwwyPsptwvso7Nzp3Z1os0aArzMM=;
-        b=Qay3MHkevTME4hxJ+rasAmG0/nEAqOULDOq8LcphPODbPrCEUT+nDn+JGbmJhMb5lm
-         bZst/vLfVXv2zuWk7es29sO15xPewJiya3+PMSKaiUL4pWaPi8Fkmu0jxChtXtQmvh5T
-         135iks1M7Jv4nIBnjSlwpnuo8syFPixGwlScEr938xiJ5whW0iC930vWUWjdlCnoyGoF
-         0HssVRbxC/VU+O7Oy+SIVlT6QywaXDumg1hf0hMbYEyHIb+MMXJvyjB9FJgRWREmr08D
-         IPMivj6LODEcB6x6EeKIF1Ff9D9QOI9G5jJs42ek6UoGOKylYNicw/sauBfxcNaf1Iz7
-         lUzA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781108366; x=1781713166; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vi11/rohvLJyMxroWGqfziqvFq44cunGgPMb0wuOPpg=;
-        b=hL2pYXdr4CwfLvTKLanwttjQywdcSG7O/Bm/S0nWjezyo/Ts6qjPR8SpufhVM/BHtf
-         426VJB2T2c74DaE43o3Be4qS/SKUuVNrCA3ybUzH8DQ0Bl6WIPudOtfmJy/s7917O0VP
-         gY7IL5e1UqKI+m/57hlg8LED4EugLzNFbgpRTv6bqX7YAlr3yIb68xGjs7Rda7AIeDYE
-         pqq1pxkkgE7zyaH3A/YmZunylYJfgQIqMyNkonklrmtA7szN37jzdTN9sG5/hWHw5wNK
-         ZbGaEx8MasU5cfl/VunIbccgAaZwk/YfOW6UDUeljotoLOmKsuIghsQxfqzmKxqxropL
-         +/uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781108366; x=1781713166;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Vi11/rohvLJyMxroWGqfziqvFq44cunGgPMb0wuOPpg=;
-        b=bOanPWvefS2CioUmbJWCcxIm+UndSBnU08FoB6A+UL6HYomzPFIBZN7V56xnjzG198
-         TazA+Nz8sGShjmSZ/gniAjpmdA1tLarAcRGVNaozyqcLyupZaJzgDdmqwQ/qD90EFIb/
-         Ah1Dx0OikpbpiVzhgvBkW8esEkf81PTVPGLG7SJtRteJOJ/xtze9yps4a26uJ9FcJI5m
-         oipzKAx5/D4g1onbOHGpgnCsg7xTchdfWlKGbj+CqISEfPxcRSDJKAfghh5mGeZ6g7xf
-         r0g1RuJaPDdJ93ncEnWyWDZ26tYAX9RMqsVrsggwSCmhI5e8J5vAW2fV2weAHf+dR450
-         1AkA==
-X-Forwarded-Encrypted: i=1; AFNElJ99Oob2jYno2x26c/Co4oZ0iaSZtmY0bqVfrj/f54yQSMn344hIddoCjI+bk7EDhG+Z7Hdx63E7dvWrT6ri3ho+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYP1PD3wJhjGtEqXT81OsNYWUmeqfzUsS1b3xPYelYiYJc/G6v
-	XnO4Bu6fcza2vUlr7PwFYAp/tPxfRCHaPPWFH8KVUheXwVu3kHzl5ufOn0YBq8AYb35mz9vJ8ts
-	7DFg+swLCzMZg/cf0QGVEe7WH1Rh6ZiDGIDnEKdZi
-X-Gm-Gg: Acq92OEPChipXv6PNeRxBS80jFyFxkRqq96ZMCpOOI30rru0+zseqreExiZPQCnujz/
-	MYPvPW2CySgFsEQyhReLYktOJQPbVRKfyCxvcGoJQTLJyde1RggOuSoY3/TBOiPz3A8dtjMJbm7
-	j9Wqokwq7QnPCYdhDdYkKP1bWEq8I7A3As6V1nSSFDs+tUgSsQeCtmYmWaJ/zwYsfOm1bFAWlby
-	gxu00sTxdd/Nz7E/EcMBaxQRM7SrpIzj+zYKzrCqxQO7975Vkdvpx1v+YcQdo581HJg5LI1RQJs
-	QAmJo9YTrJdDBRofsJ8VDQ0TX26h6QUt8IcjSBWnGMEz1wwkoMxnVnRiT8U=
-X-Received: by 2002:a17:903:3c25:b0:2c1:ee6e:4e4a with SMTP id
- d9443c01a7336-2c2d942700amr238395ad.27.1781108365793; Wed, 10 Jun 2026
- 09:19:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkDfUGmM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 818D01F00893;
+	Wed, 10 Jun 2026 16:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781108991;
+	bh=5/nSBTrYlMpqaFGOlGvnc3S2H5d2hvsraiqd4mLdn1g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jkDfUGmMRPohuH5BFCDS3lPPo/TWjpJafkJJGu1SM1elHmJxgl230qOKm+MOLCopA
+	 0S2ruRysgD3bHiWzIRN+tkL9HkiQR8ZG1/OcYhQr7V+I6BDiUO/9SGt73jc5t30LOO
+	 KTRH7aQofypYMGV5g67/yn8K3ibGDkWd7SqpHR5DPpJcqHjFvE7J8ZBBOsPfZRVVNS
+	 IZOW1gLQnqXvDV7M5EuCd3vYfRdCvz9uo6Ai70+F5eBYCt+WDM3iaIAgFCSjP6t0H/
+	 wO2Wpww2IXTLqEEU1JmKN+E3vnPdsPlgMW4isgAQiZK8eKcH5x9suZP9AWt8AX8a1f
+	 /FDXxFfx+R6eg==
+Date: Wed, 10 Jun 2026 13:29:46 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 10/11] perf tools: Use scnprintf() in
+ build_id__snprintf() and hwmon read_events()
+Message-ID: <aimQ-pXYUnPBmeqy@x1>
+References: <20260609010526.1998472-11-acme@kernel.org>
+ <20260609011717.79A371F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260610112451.1553054-1-jremus@linux.ibm.com> <a76b93d7-89bb-483a-80dd-59e3dbf921a3@linaro.org>
-In-Reply-To: <a76b93d7-89bb-483a-80dd-59e3dbf921a3@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 10 Jun 2026 09:19:14 -0700
-X-Gm-Features: AVVi8CeML9xOHpqDi-kOipKhEhSw8qM5oNh-G4lar_licy0sI8HoLNL-mbAU5DU
-Message-ID: <CAP-5=fUowmCCdfAOoPimduZ53GTfRPp1qPLMUfXU6R80=x88Eg@mail.gmail.com>
-Subject: Re: [PATCH] perf s390: Fix TEXTREL in Python extension by compiling
- as PIC
-To: James Clark <james.clark@linaro.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, Jan Polensky <japo@linux.ibm.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260609011717.79A371F00893@smtp.kernel.org>
 
-On Wed, Jun 10, 2026 at 6:39=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
->
->
-> On 10/06/2026 12:24 pm, Jens Remus wrote:
-> > On s390 the Python extension build fails as follows when using a linker
-> > that is configured to treat text relocations (TEXTREL) in shared
-> > libraries as error by default:
-> >
-> >    GEN     python/perf.cpython-314-s390x-linux-gnu.so
-> > /usr/bin/ld.bfd: error: read-only segment has dynamic relocations
-> >
-> > This occurrs because util/llvm-c-helpers.o is erroneously built from
-> > util/llvm-c-helpers.cpp without compiler option -fPIC but linked into
-> > the shared library (via libperf-util.a(perf-util-in.o)).
-> >
-> > On s390, object files must be compiled as position-indepedent code (PIC=
-)
-> > in order to be linked into shared libraries.  Commit a9a3f1d18a6c ("per=
-f
-> > s390: Always build with -fPIC") added compiler option -fPIC to CFLAGS
-> > for s390, which is used in C compiles.  Add -fPIC to CXXFLAGS for s390
-> > as well, so that it is also used in C++ compiles.
-> >
-> > Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+On Tue, Jun 09, 2026 at 01:17:17AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] build_id__snprintf() fails to null-terminate the output buffer when bf_size is 1.
+> - [Low] hwmon_pmu__describe_items() spins doing useless sysfs operations once the output buffer fills.
+> --
+> 
+> commit 0f670823c7b8e81b469db29dc89cf4b4de7e4cad
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> perf tools: Use scnprintf() in build_id__snprintf() and hwmon read_events()
+> 
+> This commit switches build_id__snprintf() and hwmon_pmu__describe_items()
+> to use scnprintf() instead of snprintf() to prevent out-of-bounds length
+> tracking. It also modifies the loop guard in build_id__snprintf() to
+> prevent useless zero-byte writes once the buffer is full.
+> 
+> > diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> > index 8c0a9ae932aa5..82af3dca7e2fb 100644
+> > --- a/tools/perf/util/build-id.c
+> > +++ b/tools/perf/util/build-id.c
+> > @@ -93,8 +93,8 @@ int build_id__snprintf(const struct build_id *build_id, char *bf, size_t bf_size
+> >  		return 0;
+> >  	}
+> >  
+> > -	for (size_t i = 0; i < build_id->size && offs < bf_size; ++i)
+> > -		offs += snprintf(bf + offs, bf_size - offs, "%02x", build_id->data[i]);
+> > +	for (size_t i = 0; i < build_id->size && offs + 1 < bf_size; ++i)
+> > +		offs += scnprintf(bf + offs, bf_size - offs, "%02x", build_id->data[i]);
+> 
+> [Severity: Medium]
+> If bf_size is 1, does this new loop condition skip execution entirely?
+> 
+> If build_id->size > 0 and bf_size == 1, the offs + 1 < bf_size condition
+> is false on the first iteration. Because scnprintf is never called, would
+> bf[0] be left un-null-terminated?
 
-Great! Perhaps we should add a fixes tag for backports. Perhaps:
+Addressing this one in v5.
+> 
+> > +++ b/tools/perf/util/hwmon_pmu.c
+> [ ... ]
+> > @@ -442,12 +442,12 @@ static size_t hwmon_pmu__describe_items(struct hwmon_pmu *hwm, char *out_buf, si
+> >  
+> >  				buf[read_len] = '\0';
+> >  				val = strtoll(buf, /*endptr=*/NULL, 10);
+> > -				len += snprintf(out_buf + len, out_buf_len - len, "%s%s%s=%g%s",
+> > -						len == 0 ? " " : ", ",
+> > -						hwmon_item_strs[bit],
+> > -						is_alarm ? "_alarm" : "",
+> > -						(double)val / 1000.0,
+> > -						hwmon_units[key.type]);
+> > +				len += scnprintf(out_buf + len, out_buf_len - len, "%s%s%s=%g%s",
+> > +						 len == 0 ? " " : ", ",
+> > +						 hwmon_item_strs[bit],
+> > +						 is_alarm ? "_alarm" : "",
+> > +						 (double)val / 1000.0,
+> > +						 hwmon_units[key.type]);
+> >  			}
+> >  			close(fd);
+> >  		}
+> 
+> [Severity: Low]
+> Does this loop also need an early break condition once the buffer fills?
+ 
+> The commit message notes that build_id__snprintf() was updated to avoid
+> spinning doing zero-byte writes once the buffer fills. 
+ 
+> In hwmon_pmu__describe_items(), once len reaches out_buf_len - 1, scnprintf
+> will return 0. Does this mean the loop continues for all remaining hardware
+> monitor items, performing unnecessary sysfs file open, read, and close
+> operations only to do a 0-byte scnprintf write?
 
-Fixes: a9a3f1d18a6c ("perf s390: Always build with -fPIC")
+I've added this to a cleanups TODO file for future work, nice
+observation, the same pattern may happen in other places, worth a
+series.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> > ---
-> >
-> > Notes (jremus):
-> >      This patch applies on top of the perf-tools-next tree:
-> >
-> >        git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-ne=
-xt.git  master
-> >
-> >      Note that this resolves the issue discussed in thread "[PATCH 1/1]=
- perf
-> >      build: Fix Python extension build with GCC 16 hardening":
-> >      https://lore.kernel.org/all/ahV2XGx_6h7upuc3@li-276bd24c-2dcc-11b2=
--a85c-945b6f05615c.ibm.com/T/
-> >
-> >   tools/perf/Makefile.config | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > index 333ddd0e4bd8..33f90968c8a9 100644
-> > --- a/tools/perf/Makefile.config
-> > +++ b/tools/perf/Makefile.config
-> > @@ -109,6 +109,7 @@ endif
-> >
-> >   ifeq ($(ARCH),s390)
-> >     CFLAGS +=3D -fPIC
-> > +  CXXFLAGS +=3D -fPIC
-> >   endif
-> >
-> >   ifeq ($(ARCH),mips)
->
-> Reviewed-by: James Clark <james.clark@linaro.org>
->
+- Arnaldo
