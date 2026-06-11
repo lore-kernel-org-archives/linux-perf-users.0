@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5A1A40D57C
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 14:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 813102EC571
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 14:51:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781189469; cv=none; b=gYgWJOFASFC/fAuE0Nj3D93UacjkkHsD/ScLvHZXxia/TBHuW2kcKBoEZ39LSvoC4gZHjgyxG4OlPA3UQbk036vNCR5JHNYhmg/+u6KU79OVjn+WzJUUXVRiHaLrez+4ug87ew66XMJc5nqbsxwlmcOCNwFIy/XPdto27OFmNlo=
+	t=1781189472; cv=none; b=JeSD7SBEOABCijEizjbRVNThB3PoScf+TadYUARe2BhVG6SIRwJVUDKY3thSncfyF5yvtfhk+tuz2/Ku+94+pGLqfMomu3njqnRuadgzJhx6zWXDF4kXN7KAfTfCi8kn75XvYtRW9H/kfV8nkL1VYaNa/nI7VAMj5U25SUKNyhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781189469; c=relaxed/simple;
-	bh=yCDPT+r13347330OEMQ74qxQB7TvSZnnVREtSLFRwiI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Cs7kDHg+KAqlPPCE2CeUOQAgQzUl0N6Ko9V9NzNJXFhIRLJ5rHHIlnQlMwRG+DOUQjrAzBFro6hqEQ6SIc6LU1a1MA7fb1KoYiO1muH1Ewa1nTDzXjQD1pHIUo/bVZDfO0F9quXTyuOw4zChxekPISETJ0Q8YJlk1Tm2+BtjWXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Y6XdEUae; arc=none smtp.client-ip=217.140.110.172
+	s=arc-20240116; t=1781189472; c=relaxed/simple;
+	bh=cdGRQ3U/UQnYVZG4wYBxQhjJO9QRtsm4QVrbYlabksY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RE/l8n+yM7+yK9MJv5vEgnfa2l1369Umyqai2oH0zvzF/SzLiiME6GxU7eZ2vuIjheOv9T871q+ffg+v+qDCHGQqGtUyfyXx/wAjn2f9YYDsQzW0I9q9UBYa7OW8sUdN5zr2F1HU+nD3HHbsqYjSMELiDyZs0RN9Vig8sm2uVrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ZLC8Wmly; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Y6XdEUae"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ZLC8Wmly"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 120471CDD;
-	Thu, 11 Jun 2026 07:51:02 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BC3C1DB5;
+	Thu, 11 Jun 2026 07:51:05 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 29C4C3FBB1;
-	Thu, 11 Jun 2026 07:51:04 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 273623FBB1;
+	Thu, 11 Jun 2026 07:51:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781189466; bh=yCDPT+r13347330OEMQ74qxQB7TvSZnnVREtSLFRwiI=;
-	h=From:Subject:Date:To:Cc:From;
-	b=Y6XdEUaeqJ1E/cTzwEs7hJ6ied+NkIuUgzrIho8cpP2JhsNvdgpSUmR5BeP+IIUyy
-	 sTU/ceGlVzdGXs3pncjd1M6JezRimnMCnnX27brdLkVD6pZEqiZVf7pDSdoIytlblC
-	 6Lax9QQhkPDXGYqw9UmD+jvs25tvyK2tekP5X84g=
+	t=1781189469; bh=cdGRQ3U/UQnYVZG4wYBxQhjJO9QRtsm4QVrbYlabksY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ZLC8Wmly6GvxFvoVDkNU60SThUpGACRkyyej9qBCWKCI2usG4L+V1iJvlLNXm4x4o
+	 7q2o1GhiSmvN8c4glfk+m0N/WFNj/tc8u0+dtnuumAvso0L7GfisteaCWUQFeFfO49
+	 IRR69kHwU6KPKeugYyVOL9a43rmoGxgf4SjcdcX0=
 From: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v8 0/8] perf cs-etm: Support thread stack and callchain
-Date: Thu, 11 Jun 2026 15:50:46 +0100
-Message-Id: <20260611-b4-arm_cs_callchain_support_v1-v8-0-737948584fea@arm.com>
+Date: Thu, 11 Jun 2026 15:50:47 +0100
+Subject: [PATCH v8 1/8] perf cs-etm: Filter synthesized branch samples
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,11 +37,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEbLKmoC/4XO0QqDIBQG4FcJr+dQV5q72nuMIXbSJbQMbbIRv
- fssGF12+R9+vv/MKJrgTETXYkbBJBedH3KoTwWCTg9Pg12bM2KEcVIxipsS6/BSEBXovs8dN6j
- 4HkcfJpUoZsC0IILKBgBlZAzGus82cH/k3Lk4+fDd9hJfr3+aH9GJY4KttKW01QVk295y+wz+h
- VY4iR3j9PDPJDJGGy0EgZozbXZsWZYfkQUEhxcBAAA=
-X-Change-ID: 20260521-b4-arm_cs_callchain_support_v1-2c2a70719bcc
+Message-Id: <20260611-b4-arm_cs_callchain_support_v1-v8-1-737948584fea@arm.com>
+References: <20260611-b4-arm_cs_callchain_support_v1-v8-0-737948584fea@arm.com>
+In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v8-0-737948584fea@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
  John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
  James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@arm.com>, 
@@ -55,155 +53,163 @@ Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
  linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>, 
  Leo Yan <leo.yan@linux.dev>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781189463; l=7320;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781189463; l=9782;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=yCDPT+r13347330OEMQ74qxQB7TvSZnnVREtSLFRwiI=;
- b=W7kGRiOgrTBqaD/1BHEqcJvqPSjYjMRaeB7zsS/fwu7VZNcA6V6JyXoJ7r0FpmDzRjJgXtms3
- 4hI4CmqbhGJAR+hFeHwe4DbH984mRzbhBW6hdisDxdL6Gp3wN93ED5q
+ bh=8RLDkIYwqNaO3Zek7qvsnG8DqENo1ijdoY1NRHnX1QU=;
+ b=bo4SkA1ujRGmxItriN53Tx7mvFUPGxLCoIIQK4ZbQubADTwOXzK6msd2RFgdtGSZNuz7xp0MO
+ mnNAdqcH30IA+xPs37U1K4gIgun+MumVpW/Qr4BvLWlyDPPJaol+nFA
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-This series adds thread-stack and synthesized callchain support for Arm
-CoreSight, which comes from older series [1] but heavily rewritten.
+From: Leo Yan <leo.yan@linaro.org>
 
-CS ETM previously kept last-branch state in a per-trace-queue buffer.
-That effectively makes the state per CPU, while the call/return history
-belongs to a thread. This series moves branch tracking to the common
-thread-stack code.
+The itrace 'c' and 'r' options request synthesized branch events for
+calls and returns only. For perf script the default itrace options are
+"--itrace=ce", so CS ETM should emit call branches and error events by
+default.
 
-The series records CoreSight branches with thread_stack__event(), uses
-thread_stack__br_sample() for last branch entries, flushes thread stacks
-after decoder resets.
+CS ETM currently synthesizes a branch sample for every decoded taken
+branch whenever branch synthesis is enabled. This produces redundant
+jump and conditional branch samples.
 
-A decoder reset between AUX trace buffers is treated as a global trace
-discontinuity, so all thread stacks are flushed, so avoids carrying
-stale call/return history across a trace discontinuity.
+Add a branch filter derived from the itrace calls and returns options.
+When neither option is set, keep the existing behavior and synthesize all
+branch samples. When calls or returns are requested, emit only branch
+samples whose flags match the selected branch type, while preserving trace
+begin/end markers.
 
-One limitation remains for instructions emulated by the kernel. In that
-case the exception return address may not match the return address
-stored in the thread stack, because after exception return can be one
-instruction ahead. The stack can still recover when a later return
-matches an upper caller. Given emulated instructions are not the common
-target for performance callchain analysis. Supporting this would require
-extending the common thread-stack path to accept both the real target
-address and an adjusted address for stack matching, so this series
-leaves that extra complexity out.
+Also update test_arm_coresight_disasm.sh and arm-cs-trace-disasm.py
+to use the --itrace=b option for generating branch samples.
 
-The series has been tested on Orion6 board:
+Before:
 
-  perf test 136 -vvv
-  136: CoreSight synthesized callchain:
-  --- start ---
-  test child forked, pid 3539
-  ---- end(0) ----
-  136: CoreSight synthesized callchain			: Ok
+  perf script -F,+flags
 
-  perf script --itrace=g16i10il64
+  callchain_test    6114 [005] 331519.825214:          1 branches:   tr strt jmp                           0 [unknown] ([unknown]) => ffff8000803a3a68 perf_report_aux_output_id+0x50 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a3a74 perf_report_aux_output_id+0x5c ([kernel.kallsyms]) => ffff8000817f4d88 memset+0x0 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jmp                    ffff8000817f4d8c memset+0x4 ([kernel.kallsyms]) => ffff8000817f4c00 __pi_memset_generic+0x0 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4c1c __pi_memset_generic+0x1c ([kernel.kallsyms]) => ffff8000817f4c44 __pi_memset_generic+0x44 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4c4c __pi_memset_generic+0x4c ([kernel.kallsyms]) => ffff8000817f4c5c __pi_memset_generic+0x5c ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4c5c __pi_memset_generic+0x5c ([kernel.kallsyms]) => ffff8000817f4cf0 __pi_memset_generic+0xf0 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4d30 __pi_memset_generic+0x130 ([kernel.kallsyms]) => ffff8000817f4d68 __pi_memset_generic+0x168 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4d78 __pi_memset_generic+0x178 ([kernel.kallsyms]) => ffff8000817f4d6c __pi_memset_generic+0x16c ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4d78 __pi_memset_generic+0x178 ([kernel.kallsyms]) => ffff8000817f4d6c __pi_memset_generic+0x16c ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4d78 __pi_memset_generic+0x178 ([kernel.kallsyms]) => ffff8000817f4d6c __pi_memset_generic+0x16c ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   return                 ffff8000817f4d84 __pi_memset_generic+0x184 ([kernel.kallsyms]) => ffff8000803a3a78 perf_report_aux_output_id+0x60 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000803a3a98 perf_report_aux_output_id+0x80 ([kernel.kallsyms]) => ffff8000803a3b04 perf_report_aux_output_id+0xec ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a3b1c perf_report_aux_output_id+0x104 ([kernel.kallsyms]) => ffff8000803a38f8 __perf_event_header__init_id+0x0 ([kernel.kallsyms])
 
-  callchain_test   17468 [005] 1031003.229943:         10 instructions:
-              aaaac32507c4 main+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
-              ffff90bd233c call_init+0x9c (inlined)
-              ffff90bd233c __libc_start_main_impl+0x9c (inlined)
-              aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+After:
 
-  callchain_test   17468 [005] 1031003.229943:         10 instructions:
-              aaaac3250774 do_svc+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              aaaac3250798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              aaaac32507b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              aaaac32507c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
-              ffff90bd233c call_init+0x9c (inlined)
-              ffff90bd233c __libc_start_main_impl+0x9c (inlined)
-              aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+  callchain_test    6114 [005] 331519.825214:          1 branches:   tr strt jmp                           0 [unknown] ([unknown]) => ffff8000803a3a68 perf_report_aux_output_id+0x50 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a3a74 perf_report_aux_output_id+0x5c ([kernel.kallsyms]) => ffff8000817f4d88 memset+0x0 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a3b1c perf_report_aux_output_id+0x104 ([kernel.kallsyms]) => ffff8000803a38f8 __perf_event_header__init_id+0x0 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a39c0 __perf_event_header__init_id+0xc8 ([kernel.kallsyms]) => ffff800080105258 __task_pid_nr_ns+0x0 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff80008010528c __task_pid_nr_ns+0x34 ([kernel.kallsyms]) => ffff8000801d5610 __rcu_read_lock+0x0 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000801052b0 __task_pid_nr_ns+0x58 ([kernel.kallsyms]) => ffff800080192078 lock_acquire+0x0 ([kernel.kallsyms])
+  callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000801923f4 lock_acquire+0x37c ([kernel.kallsyms]) => ffff8000801d6da0 rcu_is_watching+0x0 ([kernel.kallsyms])
 
-  callchain_test   17468 [005] 1031003.229944:         10 instructions:
-          ffff800080010c20 vectors+0x420 ([kernel.kallsyms])
-              aaaac3250784 do_svc+0x1c (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              aaaac3250798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              aaaac32507b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              aaaac32507c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-              ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
-              ffff90bd233c call_init+0x9c (inlined)
-              ffff90bd233c __libc_start_main_impl+0x9c (inlined)
-              aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-
-Note, the test fails on Juno board which is caused by many discontinuity
-packets (mainly caused by NO_SYNC elem). This is likely caused by the
-FIFO overflow on the path.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20200220052701.7754-1-leo.yan@linaro.org/
-
+Fixes: b12235b113cf ("perf tools: Add mechanic to synthesise CoreSight trace packets")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
-Changes in v8:
-- Updated test_arm_coresight_disasm.sh to pass "--itrace=b" and updated
-  examples in arm-cs-trace-disasm.py (James).
-- Removed static annotation in callchain workload and renamed functions
-  with prefix "callchain_" to reduce naming conflict (James).
-- For callchain test pre-condition check, removed the aarch64 check and
-  added the root permission check (James).
-- Resolved the shellcheck errors (James).
-- Link to v7: https://lore.kernel.org/r/20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com
+ tools/perf/scripts/python/arm-cs-trace-disasm.py          |  9 +++++----
+ .../tests/shell/coresight/test_arm_coresight_disasm.sh    |  4 ++--
+ tools/perf/util/cs-etm.c                                  | 15 +++++++++++++++
+ 3 files changed, 22 insertions(+), 6 deletions(-)
 
-Changes in v7:
-- Rebased on the latest perf-tools-next.
-- Used struct_size() for allocation callchain struct (James).
-- Added a helper cs_etm__packet_has_taken_branch() (James).
-- Minor improvements for the callchain test (used record-ctl FIFO and
-  reworked the validation callstack push / pop).
-- Link to v6: https://lore.kernel.org/r/20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com
+diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+index 8f6fa4a007b42fcc98e71b74b36ba3a61d7acb2f..42579f8586842704d3800ad731d4609d2bb968da 100755
+--- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
++++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+@@ -31,18 +31,19 @@ from perf_trace_context import perf_sample_srccode, perf_config_get
+ #
+ # Output disassembly with objdump and auto detect vmlinux
+ # (when running on same machine.):
+-#  perf script -s scripts/python/arm-cs-trace-disasm.py -d
++#  perf script --itrace=b -s scripts/python/arm-cs-trace-disasm.py \
++#       -- -d
+ #
+ # Output disassembly with llvm-objdump:
+-#  perf script -s scripts/python/arm-cs-trace-disasm.py \
++#  perf script --itrace=b -s scripts/python/arm-cs-trace-disasm.py \
+ #		-- -d llvm-objdump-11 -k path/to/vmlinux
+ #
+ # Output accurate disassembly by passing kcore to script:
+-#  perf script -s scripts/python/arm-cs-trace-disasm.py \
++#  perf script --itrace=b -s scripts/python/arm-cs-trace-disasm.py \
+ #		-- -d -k perf.data/kcore_dir/kcore
+ #
+ # Output only source line and symbols:
+-#  perf script -s scripts/python/arm-cs-trace-disasm.py
++#  perf script --itrace=b -s scripts/python/arm-cs-trace-disasm.py
+ 
+ def default_objdump():
+ 	config = perf_config_get("annotate.objdump")
+diff --git a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
+index ccb90dda24758522be12cba27140abc9b60d8261..f3ebad5963783e9ae74be5b046d20c3f2e01a5a1 100755
+--- a/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
++++ b/tools/perf/tests/shell/coresight/test_arm_coresight_disasm.sh
+@@ -44,7 +44,7 @@ branch_search='[[:space:]](bl|b(\.(eq|ne|cs|cc|mi|pl|vs|vc|hi|ls|ge|lt|gt|le|al)
+ if [ "$(id -u)" == 0 ] && [ -e /proc/kcore ]; then
+ 	echo "Testing kernel disassembly"
+ 	perf record -o ${perfdata} -e cs_etm//k --kcore -Se -m,64K -- touch $file > /dev/null 2>&1
+-	perf script -i ${perfdata} -s python:${script_path} -- \
++	perf script -i ${perfdata} --itrace=b -s python:${script_path} -- \
+ 		-d --stop-sample=2 -k ${perfdata}/kcore_dir/kcore 2> /dev/null > ${file}
+ 	grep -q -E ${branch_search} ${file}
+ 	echo "Found kernel branches"
+@@ -56,7 +56,7 @@ fi
+ ## Test user ##
+ echo "Testing userspace disassembly"
+ perf record -o ${perfdata} -e cs_etm//u -Se -m,64K -- touch $file > /dev/null 2>&1
+-perf script -i ${perfdata} -s python:${script_path} -- \
++perf script -i ${perfdata} --itrace=b -s python:${script_path} -- \
+ 	-d --stop-sample=2 2> /dev/null > ${file}
+ grep -q -E ${branch_search} ${file}
+ echo "Found userspace branches"
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 5e92359f51a7cb87a26866ae71466fcce809d551..c2b0f98ceee7671d0e98cfe5673c6f4ec19707a5 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -70,6 +70,7 @@ struct cs_etm_auxtrace {
+ 	int num_cpu;
+ 	u64 latest_kernel_timestamp;
+ 	u32 auxtrace_type;
++	u32 branches_filter;
+ 	u64 branches_sample_type;
+ 	u64 branches_id;
+ 	u64 instructions_sample_type;
+@@ -1681,6 +1682,10 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+ 	} dummy_bs;
+ 	u64 ip;
+ 
++	if (etm->branches_filter &&
++		!(etm->branches_filter & tidq->prev_packet->flags))
++		return 0;
++
+ 	ip = cs_etm__last_executed_instr(tidq->prev_packet);
+ 
+ 	event->sample.header.type = PERF_RECORD_SAMPLE;
+@@ -3517,6 +3522,16 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 		etm->synth_opts.callchain = false;
+ 	}
+ 
++	if (etm->synth_opts.calls)
++		etm->branches_filter |= PERF_IP_FLAG_CALL |
++					PERF_IP_FLAG_TRACE_BEGIN |
++					PERF_IP_FLAG_TRACE_END;
++
++	if (etm->synth_opts.returns)
++		etm->branches_filter |= PERF_IP_FLAG_RETURN |
++					PERF_IP_FLAG_TRACE_BEGIN |
++					PERF_IP_FLAG_TRACE_END;
++
+ 	etm->session = session;
+ 
+ 	etm->num_cpu = num_cpu;
 
-Changes in v6:
-- Heavily rewrote the patches since restarted the work after 6 years.
-- Changed to use the common thread-stack for branch stack and callchain
-  management.
-- Added a callchain test.
-- Link to v5: https://lore.kernel.org/linux-arm-kernel/20200220052701.7754-1-leo.yan@linaro.org/
-
-Changes in v5:
-- Addressed Mike's suggestion for performance improvement for function
-  cs_etm__instr_addr() for quick calculation for non T32;
-- Removed the patch 'perf cs-etm: Synchronize instruction sample with
-  the thread stack' (Mike);
-- Fixed the issue for exception is taken for branch target address
-  accessing, for the branch sample and stack thread handling, the
-  related patches are 01, 02, 07;
-- Fixed the stack thread handling for instruction emulation and single
-  step with patches 08, 09.
-- Link to v4: https://lore.kernel.org/linux-arm-kernel/20200203020716.31832-1-leo.yan@linaro.org/
-
-Changes in v4:
-- Split out separate patch set for instruction samples fixing.
-- Rebased on latest perf/core branch.
-- Link to v3: https://lore.kernel.org/linux-arm-kernel/20191005091614.11635-1-leo.yan@linaro.org/
-
----
-Leo Yan (8):
-      perf cs-etm: Filter synthesized branch samples
-      perf cs-etm: Decode ETE exception packets
-      perf cs-etm: Refactor instruction size handling
-      perf cs-etm: Use thread-stack for last branch entries
-      perf cs-etm: Flush thread stacks after decoder reset
-      perf cs-etm: Support call indentation
-      perf cs-etm: Synthesize callchains for instruction samples
-      perf test: Add Arm CoreSight callchain test
-
- tools/perf/Documentation/perf-test.txt             |   6 +-
- tools/perf/scripts/python/arm-cs-trace-disasm.py   |   9 +-
- tools/perf/tests/builtin-test.c                    |   1 +
- tools/perf/tests/shell/coresight/callchain.sh      | 172 ++++++++++
- .../shell/coresight/test_arm_coresight_disasm.sh   |   4 +-
- tools/perf/tests/tests.h                           |   1 +
- tools/perf/tests/workloads/Build                   |   2 +
- tools/perf/tests/workloads/callchain.c             |  33 ++
- tools/perf/util/cs-etm.c                           | 351 ++++++++++++---------
- 9 files changed, 430 insertions(+), 149 deletions(-)
----
-base-commit: 7336514f41e75d44782fee7e0990d4195a3d3161
-change-id: 20260521-b4-arm_cs_callchain_support_v1-2c2a70719bcc
-
-Best regards,
 -- 
-Leo Yan <leo.yan@arm.com>
+2.34.1
 
