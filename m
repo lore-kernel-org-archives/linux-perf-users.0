@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A0543DA5D
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 16:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF315331EC0
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 16:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781195418; cv=none; b=lsx6rXimvM6HZA2QUANEILj9ZrOnuWEg4PWSuBYipGXFvrkzBPGTrdKuW6BlHhpE2I1Jh0qgz27GhMZAeKZ+H3D9h9iIXfqXV7NFbAsxn5gvzWYJ+mmuY/KbX8kiy5wzm2N3Jn9ULk9IrO/OAiRy6MFQcgSvdEIeltSYFKMA3UQ=
+	t=1781195616; cv=none; b=P9VRAiWiD2kQqZw08JoF07KXNW+tZ9xmKWSlEdT2Doyv0ySDIY/QUcs5y5B+io5OQSsYyAmzaKXJYMpn7+us2wTbGtMJCGL7I7VPYo+TjAAGayXp1i+XhKpbQ5r7g96nHritXL1bgNHOILt3831m+M+rLIBkUWeWs6y+jh66dTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781195418; c=relaxed/simple;
-	bh=jqikidRWTwFcf+nbITcsEJgWqEXt/+6FSZx42dEdLNg=;
+	s=arc-20240116; t=1781195616; c=relaxed/simple;
+	bh=sHAV8ZnWiFMESqm7oQvknMG7F+vzWCrb/sW7O3ZOhZA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DskXzBaLZM4RW8Gn5tnfdOvKSxBWV9Fz6QUvHc+Z0oBIuw4E+Q2YpJ40bdfxcozvQMuHoich81420jut/uMPIVEPUM7G5Kk8sWBdST7LThKG+vRIw9z+IM958S+n/syqFQkJM41KU9Qs+9qfQ+DUSpUdQb3FYFjDXpExoaflWIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlXGXAm/; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=lvbbru7SQAbDYj4IQnsg76ctXOqxYiXzUZuSdiZ3P4YZVisb/D+5sBQSILcLZchSALP/K5AmVMyXEUVmMSCvFGgY0qHCrN6Av0MCVDHthZELdDd68oELKrcy6HBcP7OIoZO9ZCcQzptykmDKNkH2c16XC+QYoJgJlk3JCumM2A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTb0QRO1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlXGXAm/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1322A1F00893;
-	Thu, 11 Jun 2026 16:30:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTb0QRO1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 712951F00898;
+	Thu, 11 Jun 2026 16:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781195417;
-	bh=HGTEw8IY8C69ZcyYaTpORbWIrMnyt7xJKAmnqhmuXPA=;
+	s=k20260515; t=1781195614;
+	bh=zr9lRNF/pqDGSjXbrG3BNi1+wY6LuCO4o/MFGj3qvp8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NlXGXAm/ilt2X1Gr8YXIn6gaFn8osOMNkJEImRg84sayTXJBj9hBuHsFHFxpjvynC
-	 Jhs4h6VoQXeBnwBCuhyw9mCejWCpTqdYlDnzqDdXFYPjjYzeDzmspxlMqgPH63VtwF
-	 trhvMms5jpukTiz/Y9E6BI0P7dvHlmTHBFzTA8SAK7lAGIOfwnHTEIcHT0bdNnNKdt
-	 iOcXXMewGEpBHDQuyeUKXQ/H12LbXuvx0i64fCF251GgCV2L0AbkQfrEW7Z9jFaLpO
-	 w5TWvir450E9UMjHDyEfmrI3tSp/bTeriFZBthCx45GMCXNKLfvL6Gfg/Xf11N2Qdj
-	 UnttVOYbjP8Sg==
+	b=fTb0QRO17nJdTAHwbIgOiW/HuRT+CZMdoIgz9HYmYPWjYgACVDXAePHbydbbtuwc6
+	 PqxE44uoVul4RBaS+1YkhBmun+Qk/y4q+RC65OskeQxxdZODC5DWVdhwmPKXMSr65j
+	 A5V2SXz6NMMp2KQMKxOAUW3XlVplXbFWVUu1rwYVKVoJP3sVi4gytevH0ml+C9gG+K
+	 32CTKXJxTxlcQtEE0zf8Hs1v/YMaH/Uw2O4XeA9ythcyTXZdT3Hb/Aqp3r9oIlEN5W
+	 oZUaYm+ML9hWkLW2YtHDATI25Q8UYqrMp5mxt1ujSW73G/7wY8z+GKDjGQ5BOcf8kH
+	 4ywJsd+H9MJNw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V3 6/8] perf/x86/intel/uncore: Introduce PMU flags and
- broken state
+Subject: Re: [PATCH V3 8/8] perf/x86/intel/uncore: Implement lazy setup for
+ MSR/MMIO PMUs
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zide Chen" <zide.chen@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260611160033.66760-7-zide.chen@intel.com>
-References: <20260611160033.66760-7-zide.chen@intel.com>
+In-Reply-To: <20260611160033.66760-9-zide.chen@intel.com>
+References: <20260611160033.66760-9-zide.chen@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 16:30:16 +0000
-Message-Id: <20260611163017.1322A1F00893@smtp.kernel.org>
+Date: Thu, 11 Jun 2026 16:33:34 +0000
+Message-Id: <20260611163334.712951F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,69 +46,86 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Removal of `box->cpu =3D -1` introduces a race condition where c=
-oncurrent `perf_event_open` can install events on an offlining CPU during m=
-igration.
+- [Medium] The `pmu->activeboxes` counter can underflow during CPU offline =
+if `uncore_box_setup()` fails for an MSR/MMIO PMU lacking an `init_box` cal=
+lback.
 --
 
-commit 90f307cb2cce79d442ba12ad2d9b5ba2c1d5018e
+commit be5a594990bc5ad6318159289b770e88f7e8958d
 Author: Zide Chen <zide.chen@intel.com>
 
-perf/x86/intel/uncore: Introduce PMU flags and broken state
-   =20
-This commit replaces the boolean 'registered' field in intel_uncore_pmu with
-an unsigned long 'flags' field. It introduces a PMU_BROKEN flag to track box
-setup failures, which is sticky and clears only on module reload or reboot.
-Broken PMUs are skipped in CPU hotplug and box allocation paths.
+perf/x86/intel/uncore: Implement lazy setup for MSR/MMIO PMUs
+
+This commit delays the registration of MSR and MMIO uncore PMUs until the
+first box is successfully initialized, applying the same lazy registration
+model used by PCI uncore PMUs. Unregistration is deferred until the last
+box exits, while box allocation remains at module init/exit time.
 
 > diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncor=
 e.c
-> index 06ef89f6ccc28..feb8c3b0076b2 100644
+> index b9ac2f7d31caa..9f8a80c9dcb66 100644
 > --- a/arch/x86/events/intel/uncore.c
 > +++ b/arch/x86/events/intel/uncore.c
-
-[ ... ]
-
-> @@ -1507,7 +1526,8 @@ static void uncore_change_type_ctx(struct intel_unc=
-ore_type *type, int old_cpu,
-[ ... ]
->  		WARN_ON_ONCE(box->cpu !=3D -1 && box->cpu !=3D old_cpu);
-> -		box->cpu =3D -1;
->  		cpumask_clear_cpu(old_cpu, &pmu->cpu_mask);
-> -		if (new_cpu < 0)
-> +		if (new_cpu < 0) {
-> +			box->cpu =3D -1;
->  			continue;
-> +		}
-> =20
-> -		if (!uncore_die_has_box(type, die, pmu->pmu_idx))
-> +		/* An inactive box doesn't need migration. */
-> +		if (box->cpu =3D=3D -1)
->  			continue;
->  		uncore_pmu_cancel_hrtimer(box);
->  		perf_pmu_migrate_context(&pmu->pmu, old_cpu, new_cpu);
+> @@ -1570,8 +1570,13 @@ static void uncore_box_unref(struct intel_uncore_t=
+ype **types, int die)
+>  		pmu =3D type->pmus;
+>  		for (i =3D 0; i < type->num_boxes; i++, pmu++) {
+>  			box =3D pmu->boxes[die];
+> -			if (box && box->cpu >=3D 0 && atomic_dec_return(&box->refcnt) =3D=3D =
+0)
+> +			if (box && box->cpu >=3D 0 &&
+> +			    atomic_dec_return(&box->refcnt) =3D=3D 0) {
+> +				if (uncore_box_active(box) &&
+> +				    atomic_dec_return(&pmu->activeboxes) =3D=3D 0)
 
 [Severity: Medium]
-Does removing the temporary assignment of box->cpu =3D -1 before the
-perf_pmu_migrate_context() call introduce a race condition with concurrent
-sys_perf_event_open() calls?
+Could this atomic decrement cause pmu->activeboxes to underflow during CPU
+offline?
 
-During the CPU offline process in uncore_change_type_ctx(), old_cpu is still
-marked as online. If a user concurrently calls sys_perf_event_open(),
-uncore_pmu_event_init() locklessly reads box->cpu. Since it is no longer
-temporarily set to -1, it sees old_cpu and sets event->cpu =3D old_cpu.
+If uncore_box_setup() fails during initialization for a PMU that lacks an
+init_box callback, the activeboxes counter won't be incremented.
 
-If sys_perf_event_open() acquires the CPU's context mutex just after
-perf_pmu_migrate_context() has finished and unlocked it, the core perf code
-will successfully install the new event into old_cpu's context after the
-migration has completed. When old_cpu fully offlines, this stranded event is
-forcefully killed, leaving the user with a dead event even though the sysca=
-ll
-succeeded.
+Because uncore_box_active() unconditionally returns true when init_box is
+NULL, wouldn't uncore_box_unref() still decrement pmu->activeboxes here and
+cause it to become negative?
 
-Previously, setting box->cpu =3D -1 prevented this by safely rejecting such
-concurrent open requests with -EINVAL.
+> +					uncore_pmu_unregister(pmu);
+>  				uncore_box_exit(box);
+> +			}
+>  		}
+>  	}
+>  }
+
+[ ... ]
+
+> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncor=
+e.h
+> index 0adb477d97086..c8dfa2d21bfd9 100644
+> --- a/arch/x86/events/intel/uncore.h
+> +++ b/arch/x86/events/intel/uncore.h
+> @@ -568,6 +568,12 @@ static inline u64 uncore_read_counter(struct intel_u=
+ncore_box *box,
+>  	return box->pmu->type->ops->read_counter(box, event);
+>  }
+> =20
+> +static inline bool uncore_box_active(struct intel_uncore_box *box)
+> +{
+> +	return (!box->pmu->type->ops->init_box ||
+> +		test_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags));
+> +}
+
+[Severity: Medium]
+Is it safe to unconditionally return true when init_box is NULL?
+
+If uncore_box_setup() fails and marks the PMU as broken, this definition
+causes uncore_box_unref() to still consider the box active and perform an
+unbalanced decrement on the activeboxes counter.
+
+> +
+>  static inline int uncore_box_init(struct intel_uncore_box *box)
+>  {
+>  	int ret =3D 0;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611160033.6676=
-0-1-zide.chen@intel.com?part=3D6
+0-1-zide.chen@intel.com?part=3D8
