@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E464D2ED3
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 17:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2290E3BD63C
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 17:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781199290; cv=none; b=tuUqX84s0QgcGZShfHInsiNNUSX8OeJlp1QR17nd+K+30B3HGXENwlB+I0Ys9b1dOp+5H/lF9N2PCe5BcbttDX6Y//Gf+HjfpX4I2QvwLCFrPS3Qhf+CP8gHfNP0OC1eqtRzaDFVpHA2hHTA3QAmue0kgm3RZ8kdZZSnKTk87Gg=
+	t=1781199358; cv=none; b=S9x8naFcv1oTGToGRgdenQGmMEmSnOovBWZVkfwlMhQkccGwY4FJkMIG0Qxd80eUWqRIAadjIrnuoKTc62YyT2YBtJoQBloP0+vvl4fc7J35wQvrHci9NROWYvtfcPfSUaYs6kdeLbsms7xlX2b4vmD5kUCHOzFzvoGFYEhShSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781199290; c=relaxed/simple;
-	bh=dWu5VtWxiZwmFE1Z4wMjRJNwkS1/S1u/87A9m5PmGcA=;
+	s=arc-20240116; t=1781199358; c=relaxed/simple;
+	bh=MVKssIs3vmnzmRuU9CHPL2F5WVWAST1B8WALadeLBZo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lBdfIcFCO1sSi1esReBot5WFrk773Kxox0vNnK1pz1wNJoT8vRwtVjU0ZkeePJ7bvzk0lD30E8/db6flx5ULoKYRBK8WRiFwE4545hVkTjyv/Ienyw7z6lJPN8XaHI/b6n1F0SasxNNEzSOE8Iu8rQAk5Ze6o+JKW/iA308cIQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFVtqbWP; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=FrOKs9nQJ2fs2tc9/aVqWWPqXiHazuQq19UImq+cY7X9DEGelGvMhpB74/xaRouEQrvW5YYngWRVMPSyHd28G9CSx0OZ2h60mQv8eQAHSuDhOTBkNNZZvLeTndB1JEG8e8m0Gaqa0rMzE5H2WhFsGRqdkMQP+mOb3/hZR+qfBJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Um7lxfNB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFVtqbWP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E731F00893;
-	Thu, 11 Jun 2026 17:34:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Um7lxfNB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D76331F00893;
+	Thu, 11 Jun 2026 17:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781199288;
-	bh=4f8vKNPEOk6VxzADnqm9o9/0ZUQ8wNr12jGf+XMhemA=;
+	s=k20260515; t=1781199357;
+	bh=OBlaPvGzKi92S4uoTV9Wiw4GpsGfi/jKRXZOWBdX9Fs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oFVtqbWPgg+98AsDYZ4dsONfEY+KttktixmoCzcZua4NN1JqS01OaC2egenMRmc+p
-	 5ZbiC6U6Yt6DGB31EI0ck+S8t12/7C0gY55zk1RuELpnN+Sj5A5AwoTfvNGP7AwT02
-	 rqI+CkdcludFAA2c1bOzg3YIbAYpY9AA10gNVHGJnpJZmTO8nlOqxDGrwp4sRwmj1+
-	 G5o1P9ySE8pKmJ0t7ZPSbl0JuD5FIBUiVtkYFx8yMYWGvh0AiZF6V7hz2Q1U9epie8
-	 OBJtwh6UYAaL7fu4dsfwbh6eZzoPyugqSjSRoWEfXoUywiDhbaN6e3JffwDzHvyn9K
-	 tmrRcUk6RzX1g==
+	b=Um7lxfNBfAYYMowydnmAhQYSKlmOH0P1ZRxyBQP0U18iB2Z2MXaQJO7IAHgeP/uWy
+	 AjpCEeGQ0XitXjs2L9B2YsiPSAg1yAPTMAj13f/tu+n/O2mXiP08fruBnaQUOK+n26
+	 ICxvAiBMINdeqjGEisieZJc8YJeYPqnG1P/FIn6ciqt4+eT7GIWHus6dFpCWDv76vF
+	 g85eO0+jOWTWilwt68kq7LA7Y1XG+GOIDKnELbXMXZazJLcOQHkrA7ZKvr0JsfhGsI
+	 vjD+5ucU3e+3iI+x9aPMAA08Qw3O6PfPd0qxfi50iNW6mLKXqGVOy4sRUtompmqNru
+	 ax8ng04gDhCeQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 04/19] perf data: Add open flag
+Subject: Re: [PATCH v12 09/19] perf python: Add wrapper for perf_data file
+ abstraction
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260611171756.4008769-5-irogers@google.com>
-References: <20260611171756.4008769-5-irogers@google.com>
+In-Reply-To: <20260611171756.4008769-10-irogers@google.com>
+References: <20260611171756.4008769-10-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 17:34:47 +0000
-Message-Id: <20260611173448.C2E731F00893@smtp.kernel.org>
+Date: Thu, 11 Jun 2026 17:35:56 +0000
+Message-Id: <20260611173556.D76331F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,73 +46,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [Critical] TOCTOU race condition in perf.data creation allows arbitrary f=
-ile truncation via symlink attack.
+- [Medium] Re-initializing an existing `perf.data` object does not fully cl=
+ear the underlying `struct perf_data`, leaving stale state that causes logi=
+cal inconsistencies.
 --
 
-commit 97b48707f7309cb3d1dba375265cb2db7146189c
+commit 8f869060a5b25832b79160df4d9d6a99f7be3b9c
 Author: Ian Rogers <irogers@google.com>
 
-perf data: Add open flag
+perf python: Add wrapper for perf_data file abstraction
    =20
-Avoid double opens and ensure only open files are closed. This addresses so=
-me
-issues with python integration where the data file wants to be opened before
-being given to a session.
+The perf_data struct is needed for session supported.
 
-> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-> index 94dc534a73866..33fd1b82019eb 100644
-> --- a/tools/perf/util/data.c
-> +++ b/tools/perf/util/data.c
-
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 669b65ce3f3da..c86b9713c076f 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
 [ ... ]
-
-> @@ -457,6 +473,7 @@ int perf_data__switch(struct perf_data *data,
+> @@ -2455,6 +2457,121 @@ static PyObject *pyrf__metrics(PyObject *self, Py=
+Object *args)
+>  	return list;
+>  }
 > =20
->  	if (!at_exit) {
->  		perf_data_file__close(&data->file);
-> +		data->open =3D false;
->  		ret =3D perf_data__open(data);
+> +struct pyrf_data {
+> +	PyObject_HEAD
+> +
+> +	struct perf_data data;
+> +};
+> +
+> +static int pyrf_data__init(struct pyrf_data *pdata, PyObject *args, PyOb=
+ject *kwargs)
+> +{
+> +	static char *kwlist[] =3D { "path", "fd", NULL };
+> +	char *path =3D NULL;
+> +	int fd =3D -1;
+> +
+> +	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|si", kwlist, &path, &f=
+d))
+> +		return -1;
+> +
+> +	if (pdata->data.open)
+> +		perf_data__close(&pdata->data);
+> +	free((char *)pdata->data.path);
+> +	pdata->data.path =3D NULL;
 
-[Severity: Critical]
-This is a pre-existing issue, but does this sequence leave us open to a
-symlink attack?
+[Severity: Medium]
+When __init__ is called multiple times on the same object, is it possible
+for this re-initialization to leave stale fields in the underlying
+struct perf_data?
 
-During file rotation, the existing file at data->path is renamed, and then
-perf_data__open() is called:
+If the object was previously initialized as a directory, data.is_dir remains
+true and data.dir.version remains set. If it is then re-initialized as a
+pipe (fd !=3D -1), perf_data__open() returns early from check_pipe() without
+updating is_dir.
 
-tools/perf/util/data.c:perf_data__switch() {
-    ...
-    if (rename(data->path, *new_filepath))
-        ...
-    if (!at_exit) {
-        perf_data_file__close(&data->file);
-        data->open =3D false;
-        ret =3D perf_data__open(data);
-    ...
-}
+This leaves the object in an inconsistent state where both is_dir and
+is_pipe are true, causing failures later in perf_session__new(). Would it
+be safer to completely clear pdata->data here?
 
-Inside perf_data__open(), the call chain eventually reaches open_file_write=
-():
-
-tools/perf/util/data.c:open_file_write() {
-    int fd =3D open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
-                  S_IRUSR|S_IWUSR);
-    ...
-}
-
-Since open() is called without O_EXCL or O_NOFOLLOW, could an attacker
-predict this race window and insert a malicious symlink after the rename()
-but before open_file_write() creates the new file?
-
-If this runs in a world-writable directory like /tmp, it seems it would
-follow the symlink and truncate the target file.
-
->  		if (ret < 0)
->  			goto out;
+> +
+> +	if (fd !=3D -1) {
+> +		struct stat st;
+> +
+> +		if (fstat(fd, &st) < 0 || !S_ISFIFO(st.st_mode)) {
+> +			PyErr_SetString(PyExc_ValueError,
+> +					"fd argument is only supported for pipes");
+> +			return -1;
+> +		}
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611171756.4008=
-769-1-irogers@google.com?part=3D4
+769-1-irogers@google.com?part=3D9
