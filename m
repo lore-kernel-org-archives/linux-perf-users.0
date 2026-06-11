@@ -1,113 +1,161 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00003DCDB9
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 11:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCB53BBA01
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 11:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781176441; cv=none; b=kt7Si1b76U9qfhblId3Z3QQoPUJud4eFQSBJ/jUKYKRzrkDopDcmJn23Q6pz+8GITAhRN0aed+8YH1bMHi17cGsHO7QSZhmIXVjslfR6ug8rcyVf2Zf1jjHNiVOQF2uiF55u1aqVO1cFSRvgPOx5WMyvPo8akWTq5x3Xb9KZ88M=
+	t=1781178847; cv=none; b=NA8NPq/WJSUJemF3ocORzmaDfeg/0aQshr/XbrlFSkDTIh5bMa90D/XbqnNvwzmbdoo9H9mNy16BX0tmmpBqrl+Ws+6VSQT0c41Km4N+kwEY51k7bglOQTLycjNf24Hhut99ePjKLbrmtkpd4wOpeBAlzOpgPQE3lAxTFX4DpMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781176441; c=relaxed/simple;
-	bh=yyOMn7voOOX1yeWWnuZnlD0zWPd8yrmXuFoLFuKARM8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=P4H72oD9PWupkRAOnJaXHQIhve1yBmT/WEdmlxoQiuUlkSA4IovU5j4XB+IYfwiQfKQ7dw7cVNVdjFavCIvKVgCAl/7Y92gusvqNoyE4KBPEoNQdI8RCBNCt6alORI4V47cACJzyC0JjmXRbaTF4WDEzfnhlpTZocI7p1VdMkws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kn8cBewU; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1781178847; c=relaxed/simple;
+	bh=aW4JORNERhN8+diyC2UwAvJ7hHbXfj1/ZEYHGKWDDW4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FqxMVCOjsAoVR67QLF6ZOsAWqRtWMApSiDUpkWzznLkznoyy8b+2n9lnDxVEdocQ+nQhemXdB/UNK7iM18O47BHAiiY8OSbm1TkWhYQ7GdnuZaPTM4UlwzvVnCnPHLQAKqecHdBaeZ0OxYattvheITV8t+NF8bryGX0zXUE/UA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=B7v5jjct; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kn8cBewU"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-490b12270b3so47206755e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 04:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781176438; x=1781781238; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OL/I1lJYAZFqSuvR9Q/L0NeE9ZsXtQyi0URceTw1J7Q=;
-        b=kn8cBewUGcDdgvVhCBmKv2G0111RL3Ni1O1Oz5RJWqan4zDvfplkIVwrc4ZpjGvRiv
-         SDo9bQzwQTEHAEN0JKqlFfF5NZHzIUMT2ULrBkPlY7+esAQM9p40nI+pKZdhDB46rL9D
-         +skg8vU+ciYi26+LDTpHFQ7RU7cBI5gMVUvOgWXUWOAO5tmDvKda4VcVF8NYoouWYRAu
-         omWrFuPWPcYQnGvZHbiRsiPMVyhNd6BItGVIqjcfKl8cKYkQ5WteeRSaogRZRihFSucV
-         3gR17QImK3IhmrpMApKNixuLY4QYujzLJ3KpR0YYkvp1X/GYE1XBwJp7oN1STGVq17lk
-         d2eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781176438; x=1781781238;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OL/I1lJYAZFqSuvR9Q/L0NeE9ZsXtQyi0URceTw1J7Q=;
-        b=SFzBuHGHub+LzaxnBOCSEyTWdVYzPZ5XnWiim1XfZQLyrsxhU8tSZxHY4+6HNPD4HX
-         DYD3gsizl+QMucQ04LDEC6hexTwIbK50DRGNJcwM42IuSgmMl4njiAJsDPJQgTfsXsM2
-         7Rv7vXlKPcsPki6IATpgF8VrD4vV+7BLyAvmyttYGTo7uJnZMj5/LdvlPGoCECfRcJSp
-         SunZXNviI5etHOXsB6A1Rwo1aIIcoRE5kdMXMZ5TUMcBCtRBkMCUs92z1/DuC7PyY/dd
-         JILR115rZWJXBJCZAzQM3PKWucJZfgNClIjqf5cTX995VUGZXqy7QJTXKymRfDKemxX9
-         E3Sg==
-X-Gm-Message-State: AOJu0YzJG5rA16SIKVVA9UqMR7TnvXlEyQESxzVHmIxYu58MNRoGf5J4
-	M/Ws59RTOAYxoiq0YtSNfamG+2Bm45S7hxFkeQV914UrBArbNdT6m730sZfy/rWNh+Ql4GNo3/u
-	R9u6nP58=
-X-Gm-Gg: Acq92OHqzrv5KExXIFfrfBv0nf2xigWnsqseOQDyRKhfSKdHzVFNRc5ZWtWQHKWZUsZ
-	y9eM1xFqaU3N22WcayVrxqKiEZiLKBWqEcToVaNLDIwc2m/zc9SCeGOZBsq+XzcGaNrbcrsBoH1
-	WvfIJNs3CVsvfxMLJGvXH0XGaA9fbxCKdQShThUkNX3cTRFiYq4Ve3yhLYa/HDmLxuGad1PBqKy
-	kKbrlbjiN/inwFESmqwMvpmPGWFcMIX9LN4MABNhrP62WX/KDaAK9QH6hxQ7SgBFDZw/htjPhPn
-	J8TuSibKLzYtjk0KZiQHRNu1M7BOS4fMlaj0hySbyx3ca/0An5pP3xKnLoc+J0GQImz3tKny5wl
-	QPWGfbcLLDwLdDJLpsQ7UtqVli7caac4u51MCQKLrC+r/3sy33nfwvEb2MUOjCOMKi679POTu5B
-	1FwQp3w7HoppP2P2GY3RMrAEtHy5unA37KIS62dm0ZNkUutl0+veelbw==
-X-Received: by 2002:a05:600c:a39b:b0:490:c08b:b24b with SMTP id 5b1f17b1804b1-490e5607e3cmr18134915e9.26.1781176438157;
-        Thu, 11 Jun 2026 04:13:58 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490e2c7ead0sm64587515e9.3.2026.06.11.04.13.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 04:13:57 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Thu, 11 Jun 2026 12:13:46 +0100
-Subject: [PATCH] perf test: Compile named_threads workload with -O0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="B7v5jjct"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65AJu3tq1363798;
+	Thu, 11 Jun 2026 11:53:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=0mWUxL
+	z3p5Lpl1lpLK/0lFKKcDmXNFKzAdx41bNXCRE=; b=B7v5jjctym4+/xpcA8/82y
+	j0D+PdIac72gNgfckZTRhITfXciVbCEwNuezlTxSkC9QIYZZPRnCdv6vT4dLTT93
+	vKG/HxexF0OC5WLLcRNuVSETxARXsyLSpT+tV6kJ9KG+xJXsxDEPKt2T/7kvN5BE
+	CdrbUoCnarmxsO8h5eil+IKfqzg/GnNdJBZl4aYxpzF5Rlld7bYHtDdbvrMIbtKt
+	wsNBfeQta5tnakyVYldSQLLZ+G2e3V76E1hYBgLylniLXuhlxXjWU8XOoE4R4fUg
+	YZH9c3Rd+uv1qCeTVb3OOd93+U9olz2xeXXF1267RHdgnfQmOGTKRrP74t4k26Vw
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eqe8du4b8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jun 2026 11:53:57 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65BBnbw8024908;
+	Thu, 11 Jun 2026 11:53:56 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eqe09k0mn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jun 2026 11:53:56 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65BBrrsl29491878
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jun 2026 11:53:53 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1391058045;
+	Thu, 11 Jun 2026 11:53:53 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 73F4758050;
+	Thu, 11 Jun 2026 11:53:47 +0000 (GMT)
+Received: from [9.39.28.34] (unknown [9.39.28.34])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 11 Jun 2026 11:53:47 +0000 (GMT)
+Message-ID: <f6937d04-6346-443b-8054-6f8a801a4fd8@linux.ibm.com>
+Date: Thu, 11 Jun 2026 17:23:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf data convert json: Fix trace_seq memory leak in
+ process_sample_event()
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: jolsa@kernel.org, adrian.hunter@intel.com, vmolnaro@redhat.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+References: <20260604065519.112101-1-tshah@linux.ibm.com>
+ <aiHuIBAIgv3L6TI7@x1>
+Content-Language: en-US
+From: Tanushree Shah <tshah@linux.ibm.com>
+In-Reply-To: <aiHuIBAIgv3L6TI7@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-james-cs-unformatted-per-thread-fix-followup-v1-1-3c855d93dba8@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAGmYKmoC/x2NQQrDIBAAvxL23AWVIKVfKT1s4tpYEpVd0xZC/
- l7pcRiYOUBZEivchgOE30lTyR3sZYB5ofxkTKEzOOO88dbiizZWnBX3HIts1BoHrCzYFmEKGNM
- XY1nX8tkrTjRFd6WR/WigJ6tw9//d/XGeP5F0pHN+AAAA
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
- Leo Yan <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: HFFfAg-y1e4bC_HbkDjFY2jofZVlSSeJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjExMDExNiBTYWx0ZWRfX3UEHUx1P7uit
+ o88RUyCgNtqrsrkbsWmZrHGU9y8oCVs2/bpkAmBQkidIVWMJufZ60j/Oi9Zdi8KoYONJw82pXlv
+ M41XJqvKqHdolFNBYCm90muS4BJxnwmUVnyNtMyZeDF8fpH4aBgCkWwAsjSQPN1FCXCKti13wLO
+ GpTlm6L01ykdOdpztO9m2mbZGok+b1+vQ2PKg9zzEPsEtRMaYAeQYue7gGA/S0R+HVB/wTcklqS
+ W79QlSRzuXTPL0AwQMoKft4Tb9OTqGgJdZF+3K7RBF5QTiGvbfLBQakMTtBznUK9fpm6LMXrE/l
+ 17THkaDdbua/zYR9mIQpIxxJlwvtODXqJ/IeATklQtbRf7fDu514DFgZWeNIJlJk+B4dyMJP/UE
+ KQ3afRMC61lFU4KtOzJgNx/xrU9qO5mSlEaql7Q/zX+YFafSSNcWJjbdzTqZgMO9DyccBXqCDeq
+ kg0lC4dIJKOO/qPwChg==
+X-Authority-Analysis: v=2.4 cv=DPu/JSNb c=1 sm=1 tr=0 ts=6a2aa1d5 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=VGTbtgbnwzfKMrRC74UA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjExMDExNiBTYWx0ZWRfX16jOb6CDhv3Z
+ oLQO8hoossKh0UYExf1z1ALaHfYA7vk5BtaEpnKEb8xeXwlXwKz7szcpfV3q+AAUvMvwa87OZRT
+ moWEriIouwr57PnmBBwFrLeK30ZD1AY=
+X-Proofpoint-ORIG-GUID: dDcmPl3E-wVFw9sdNDjSp-Asfr27Zw3n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-11_02,2026-06-09_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 suspectscore=0 bulkscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606110116
 
-The work loop relies on the compiler not optimizing it away, although
-named_threads_work is not static for that reason, the compiler could
-still do it.
+Hello Arnaldo
 
-Fix it by compiling without optimization. Also add -fno-inline for
-consistency and in case anyone wants to look at callstacks.
+Thanks for checking the patch. I cannot see this patch applied on 
+perf-tools-next yet.
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
-One trailing Sashiko fix from the "perf cs-etm: Queue context packets
-for frontend" patch series that has been applied already.
----
- tools/perf/tests/workloads/Build | 1 +
- 1 file changed, 1 insertion(+)
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=perf-tools-next
 
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 75b377934a0e..7bb4b9829ba2 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -26,3 +26,4 @@ CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_inlineloop.o       = -g -O2
- CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+Thanks.
 
----
-base-commit: 7336514f41e75d44782fee7e0990d4195a3d3161
-change-id: 20260611-james-cs-unformatted-per-thread-fix-followup-babf28a4e640
-
-Best regards,
--- 
-James Clark <james.clark@linaro.org>
+On 05/06/26 02:59, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jun 04, 2026 at 12:25:19PM +0530, Tanushree Shah wrote:
+>> Unlike the in-kernel trace_seq which uses a statically allocated buffer,
+>> the userspace traceevent library's trace_seq uses a dynamically allocated
+>> one. Therefore, every trace_seq_init() call must be paired with a
+>> trace_seq_destroy(), otherwise it produces a memory leak.
+>>
+>> In process_sample_event(), a trace_seq is initialized for each field when
+>> formatting tracepoint raw_data, but the matching trace_seq_destroy() is
+>> never called, leaking memory for every field of every sample processed.
+>>
+>> Add the missing trace_seq_destroy() after using the trace_seq buffer to
+>> properly free the allocated memory.
+>>
+>> Detected with Valgrind on a perf.data file with 2,729 tracepoint samples:
+>>    Before: definitely lost: 55,537,664 bytes in 13,559 blocks
+>>    After:  definitely lost: 0 bytes in 0 blocks
+> 
+> Thanks, applied to perf-tools-next, for v7.2.
+> 
+> - Arnaldo
+>   
+>> Fixes: 9d895e468429 ("perf data: Add tracepoint fields when converting to JSON")
+>> Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+>> ---
+>>   tools/perf/util/data-convert-json.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+>> index d526c91312ed..6dd9349ab10f 100644
+>> --- a/tools/perf/util/data-convert-json.c
+>> +++ b/tools/perf/util/data-convert-json.c
+>> @@ -257,6 +257,7 @@ static int process_sample_event(const struct perf_tool *tool,
+>>   				trace_seq_init(&s);
+>>   				tep_print_field(&s, sample->raw_data, fields[i]);
+>>   				output_json_key_string(out, true, 3, fields[i]->name, s.buffer);
+>> +				trace_seq_destroy(&s);
+>>   
+>>   				i++;
+>>   			}
+>> -- 
+>> 2.47.3
 
