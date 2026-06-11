@@ -1,46 +1,45 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3272D403126;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719BE40BCD2;
 	Thu, 11 Jun 2026 16:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781194179; cv=none; b=PYQpc1cd/iDCkEvUMXGH5Xy38rd+6PefH1SRprFdQe0zQGOsrRN7W+n/V7TWMBeQQNQAlCPFcyayS2LELeefNDy4f5Od2LisE5kCW3OgQHFcAcjVVdryyTET4SvBwxU5OEKtr+2atcc4qv8kw0Sb6U6lPnHAdDleulni/v/ABHE=
+	t=1781194179; cv=none; b=ntgZjKbjp/Swjn7TSGnEyAgzL2JcLOsEhN6VVNf+yDvVBo8G2TF2xPe5PnrmGFUVeegEqw2UfpJ+sP8UTUbaPfaI3dDb2+gWDqss8Vr4qCLwHG936dIDvWzTMw9zAMA1ujuE6vDNZbWqBL8e2xvK8Mv0hVMLXB7mJFKB5FO1+zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781194179; c=relaxed/simple;
-	bh=MV1EkIxxvXZf8rXD2E5tvqg4tr9V/ORdqtb5Drq2BYQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WFtbfANjvm6QRUj6gA35kgey9hznppcZmyZTVrNIHAslY1wZalFOB0EomJR1C0YtbgUeLcg34Ia+JE7uoVXkL1xyo/ziYvZ919i0Gigc38VDXY1BCMnsvu9GS1gXJ18DlKb2rzX4WeOxdEYPmaB6/xIXIVEkUjRv6QyZTPerZ2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=goNsqC1h; arc=none smtp.client-ip=198.175.65.19
+	bh=WFdZo5p0PFYwwfSxQG6g7SnKxMLInk68ZfsArdFh2Ac=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FkKYN1c1f8AsiaaPzI9ykgSlK0HkoWov9mZ9TJSkC9lOzNl/bPrY8RGY+w51zQd5g169V7i325PWRv9MaMS/md99ryaREtlM/hnDT3M2+v92DXBjQ2lhjukkD5ZYR21L5P2Sk1N7Q9k9bDHUTwha55xk8LHDQtyvA438XnXm0H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODcWE3Ek; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="goNsqC1h"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODcWE3Ek"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1781194179; x=1812730179;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MV1EkIxxvXZf8rXD2E5tvqg4tr9V/ORdqtb5Drq2BYQ=;
-  b=goNsqC1h8EKdFCIcJR4CEX4HD3olPh94uTChM05K8AOxi/U5oXkSs8HZ
-   MjWmYR6kDjmlwNdBJRVifparnSsuBzFoQI6k+ziefHOy/zoN4vZ6fNVMZ
-   m8o7FJELO+vnZfDiDp2sZ9SAcpXnqejDPYIEOjiVHWDtOih5/ha7DvNNt
-   2o1zi+0+sSzLeEMPOI242zQlOFh/QeqD6B29jqd6yk4DmV1Xdkju/pt0j
-   S0N1C3l3fkVJo+yjhee7hRyrvPBct4vfe2SqcI3CAAtNJCO0/jNV1JPsq
-   a5hRb+1ayBZkzAiY2gUNLD/GvTknZ+dSA2ockhTTP6QQh33j8qvQN6pQC
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WFdZo5p0PFYwwfSxQG6g7SnKxMLInk68ZfsArdFh2Ac=;
+  b=ODcWE3EkCirHztmX0h0YFOyaeEbk07hbDErEOhWUna0KcdM/nWyMuVNb
+   QkkbvQXI49GqR1UIMxzMvWKVkKrpX5lh+nXxnSxmtA7gORL14UEbgNwCm
+   ppjgC4r494gHjb0btYq4uEATlMchbif+q6/EHv/QaDW41LKYhtaeW9oU2
+   IUI/p+TcmqAjdBsRQ5tY7QLfdknLqzCoxTdKPPCVKvYTFUWsrYy+QID3P
+   VkjGcAoT1pxoCA/KBVLYA/tJcEC+Qxf/gCKfwiETqxYe+Rks/XWnTfGrH
+   djgiOL0Kycq09Sk2XG34ae9UGhbPFG90NzzY6tqs6TYkAA18HVXLiSxrm
    Q==;
-X-CSE-ConnectionGUID: vWVsxwJjQd6swjs3j2yHBw==
-X-CSE-MsgGUID: irjzo87uTSeMdAF6yqNoGw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="81994969"
+X-CSE-ConnectionGUID: q/Fgwx0qQJGNcBej2fpzLA==
+X-CSE-MsgGUID: VNDxZC+uRdOX6fiHNbhjBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="81994957"
 X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="81994969"
+   d="scan'208";a="81994957"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
   by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 09:09:36 -0700
-X-CSE-ConnectionGUID: kM3lZYNyRZSoY1x1mw/aKg==
-X-CSE-MsgGUID: 62zP+JeDSpuOC31P1aJisg==
+X-CSE-ConnectionGUID: nAw7bhIbQr6AS0biQkDSwQ==
+X-CSE-MsgGUID: +2TdOfOLTcS7Xng08AGOkQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="246403591"
+   d="scan'208";a="246403586"
 Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.29])
   by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 09:09:36 -0700
 From: Zide Chen <zide.chen@intel.com>
@@ -57,12 +56,10 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Zide Chen <zide.chen@intel.com>
-Subject: [PATCH V3 2/8] perf/x86/intel/uncore: Fix refcnt and other cleanups
-Date: Thu, 11 Jun 2026 09:00:27 -0700
-Message-ID: <20260611160033.66760-3-zide.chen@intel.com>
+Subject: [PATCH v3 0/8] perf/x86/intel/uncore: PMU setup robustness fixes
+Date: Thu, 11 Jun 2026 09:00:25 -0700
+Message-ID: <20260611160033.66760-1-zide.chen@intel.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260611160033.66760-1-zide.chen@intel.com>
-References: <20260611160033.66760-1-zide.chen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,126 +68,67 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix typo UNCORE_BOX_FLAG_INITIATED to UNCORE_BOX_FLAG_INITIALIZED.
+This series fixes correctness issues in Intel uncore PMU setup:
 
-Rename the 'id' parameter in uncore_box_{ref,unref}() to 'die' to
-reflect its actual meaning and be consistent with other functions.
+- If all init_box() on a PMU fails, the PMU sysfs node may still exist,
+  while perf events read zeros and silently report wrong data.
+- If init_box() fails on only some dies, perf may return partial
+  non-zero counts, which is harder to diagnose.
+- CPU hotplug ref/unref ordering bugs can skip init_box() when the first
+  CPU in a die comes online, and can call box_exit() prematurely when
+  the second-to-last CPU goes offline.
+- PCI PMU cleanup on setup failure has activeboxes leaks and potential
+  NULL pointer dereference in error paths.
 
-box->refcnt is incremented in the PCI PMU register path but has never
-been checked or decremented. Although for PCI PMUs box->refcnt
-effectively tracks only a single user, add atomic_dec_return() in the
-PCI PMU unregister path to make the reference counting complete and
-consistent.
+To address this, the series introduces a PMU broken state to track setup
+failures and switches MSR/MMIO PMUs to lazy registration, matching
+existing PCI behavior.
 
-Signed-off-by: Zide Chen <zide.chen@intel.com>
----
-v3:
-- Instead of removing atomic_inc(&box->refcnt) in PMU register, add
-  the corresponding atomic_dec_return(&box->refcnt) in PMU unregister.
-  (Dapeng)
-v2:
-- Don't rename pmu->activeboxes and keep its semantics because in
-  uncore_pci_remove() path, uncore_pci_pmu_unregister() won't be
-  called for non-active boxes.
-- Since pmu->activeboxes keeps its name, don't need to rename
-  box->refcnt to box->cpu_refcnt.
----
- arch/x86/events/intel/uncore.c | 16 +++++++++-------
- arch/x86/events/intel/uncore.h |  6 +++---
- 2 files changed, 12 insertions(+), 10 deletions(-)
+To avoid merge conflicts, this series should be applied after:
+https://lore.kernel.org/lkml/20260527151154.130505-1-zide.chen@intel.com/
+(textual conflict, no logical dependency)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index b69b6a21d46b..21c8ed1628cb 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1255,8 +1255,10 @@ static void uncore_pci_pmu_unregister(struct intel_uncore_pmu *pmu, int die)
- 	pmu->boxes[die] = NULL;
- 	if (atomic_dec_return(&pmu->activeboxes) == 0)
- 		uncore_pmu_unregister(pmu);
--	uncore_box_exit(box);
--	kfree(box);
-+	if (atomic_dec_return(&box->refcnt) == 0) {
-+		uncore_box_exit(box);
-+		kfree(box);
-+	}
- }
- 
- static void uncore_pci_remove(struct pci_dev *pdev)
-@@ -1518,7 +1520,7 @@ static void uncore_change_context(struct intel_uncore_type **uncores,
- 		uncore_change_type_ctx(*uncores, old_cpu, new_cpu);
- }
- 
--static void uncore_box_unref(struct intel_uncore_type **types, int id)
-+static void uncore_box_unref(struct intel_uncore_type **types, int die)
- {
- 	struct intel_uncore_type *type;
- 	struct intel_uncore_pmu *pmu;
-@@ -1529,7 +1531,7 @@ static void uncore_box_unref(struct intel_uncore_type **types, int id)
- 		type = *types;
- 		pmu = type->pmus;
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
--			box = pmu->boxes[id];
-+			box = pmu->boxes[die];
- 			if (box && box->cpu >= 0 && atomic_dec_return(&box->refcnt) == 0)
- 				uncore_box_exit(box);
- 		}
-@@ -1604,14 +1606,14 @@ static int allocate_boxes(struct intel_uncore_type **types,
- }
- 
- static int uncore_box_ref(struct intel_uncore_type **types,
--			  int id, unsigned int cpu)
-+			  int die, unsigned int cpu)
- {
- 	struct intel_uncore_type *type;
- 	struct intel_uncore_pmu *pmu;
- 	struct intel_uncore_box *box;
- 	int i, ret;
- 
--	ret = allocate_boxes(types, id, cpu);
-+	ret = allocate_boxes(types, die, cpu);
- 	if (ret)
- 		return ret;
- 
-@@ -1619,7 +1621,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
- 		type = *types;
- 		pmu = type->pmus;
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
--			box = pmu->boxes[id];
-+			box = pmu->boxes[die];
- 			if (box && box->cpu >= 0 && atomic_inc_return(&box->refcnt) == 1)
- 				uncore_box_init(box);
- 		}
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index c2e5ccb1d72c..bad5d8dec8e0 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -185,7 +185,7 @@ struct intel_uncore_box {
- #define CFL_UNC_CBO_7_PERFEVTSEL0		0xf70
- #define CFL_UNC_CBO_7_PER_CTR0			0xf76
- 
--#define UNCORE_BOX_FLAG_INITIATED		0
-+#define UNCORE_BOX_FLAG_INITIALIZED		0
- /* event config registers are 8-byte apart */
- #define UNCORE_BOX_FLAG_CTL_OFFS8		1
- /* CFL 8th CBOX has different MSR space */
-@@ -559,7 +559,7 @@ static inline u64 uncore_read_counter(struct intel_uncore_box *box,
- 
- static inline void uncore_box_init(struct intel_uncore_box *box)
- {
--	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
-+	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
- 		if (box->pmu->type->ops->init_box)
- 			box->pmu->type->ops->init_box(box);
- 	}
-@@ -567,7 +567,7 @@ static inline void uncore_box_init(struct intel_uncore_box *box)
- 
- static inline void uncore_box_exit(struct intel_uncore_box *box)
- {
--	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
-+	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
- 		if (box->pmu->type->ops->exit_box)
- 			box->pmu->type->ops->exit_box(box);
- 	}
+Only cosmetic changes only in v3.
+
+V3 changes:
+- patch 2/8: Instead of removing atomic_inc(&box->refcnt) in PMU
+  register, add the corresponding atomic_dec_return(&box->refcnt) in
+  PMU unregister. (Dapeng)
+- patch 6/8: Minor changes in code comments.
+- patch 7/8: Minor changelog update. (Dapeng)
+- Add Reviewed-by tags.
+
+V2 changes:
+- Add new patch 1 to fix PCI PMU cleanup issues (Sashiko)
+- Keep pmu->activeboxes naming and semantics to avoid potential refcnt
+  leaks in the uncore_pci_remove() path. To accomplish this, make the
+  PMU broken flag sticky and decrement pmu->activeboxes on active box
+  only.
+- Update commit messages and changelogs according.
+
+V2: https://lore.kernel.org/lkml/20260601170114.173359-1-zide.chen@intel.com/
+V1: https://lore.kernel.org/lkml/20260512233048.9577-1-zide.chen@intel.com/
+Sashiko's review: https://sashiko.dev/#/patchset/20260512233048.9577-1-zide.chen@intel.com
+
+Zide Chen (8):
+  perf/x86/intel/uncore: Fix PCI PMU cleanup on setup failure
+  perf/x86/intel/uncore: Fix refcnt and other cleanups
+  perf/x86/intel/uncore: Let init_box() callback report failures
+  perf/x86/intel/uncore: Keep PCI PMUs working when MMIO/MSR setup fails
+  perf/x86/intel/uncore: Factor out box setup code
+  perf/x86/intel/uncore: Introduce PMU flags and broken state
+  perf/x86/intel/uncore: Fix uncore_box ref/unref ordering
+  perf/x86/intel/uncore: Implement lazy setup for MSR/MMIO PMUs
+
+ arch/x86/events/intel/uncore.c           | 225 +++++++++++------------
+ arch/x86/events/intel/uncore.h           |  39 +++-
+ arch/x86/events/intel/uncore_discovery.c |  21 ++-
+ arch/x86/events/intel/uncore_discovery.h |   6 +-
+ arch/x86/events/intel/uncore_nhmex.c     |   3 +-
+ arch/x86/events/intel/uncore_snb.c       |  82 ++++++---
+ arch/x86/events/intel/uncore_snbep.c     |  77 +++++---
+ 7 files changed, 255 insertions(+), 198 deletions(-)
+
 -- 
 2.54.0
 
