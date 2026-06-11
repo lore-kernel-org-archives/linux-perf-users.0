@@ -1,189 +1,1074 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010047.outbound.protection.outlook.com [52.101.69.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9CD2BDC2A;
-	Thu, 11 Jun 2026 10:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781173968; cv=fail; b=NlIl1tS2aQOmlibPhTI7zUHaB+MxpNuMc8MK8kXJv4s29yWsKkULh+n9phwHYsXFVp8yZD8dGfg31k1nHSJah0qp1yNEmG19fa3zyJm+ek8uvEUrV/hgGUBjCDyhnL8C3MxCzHLEm3ZfFXZUUIVyEt7gueXnEr54GPM351bKT8E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781173968; c=relaxed/simple;
-	bh=C8n0cOvP3wq6ySPsnxZUbM8QXKwzAWWUZ8B2Qietboo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mK+3O5ORXJRTzHIUoAY+vlF6thsU/GERL95t0aIEbKPA8edNoq+CVyMKtwfz3swOQCfOm0Vzor497GdynBZNWmyaqS3e45wGA+Zfw3e9x6zwA2y5s6Q4vfL8/U/M98UAocf0Mv88jjIgsfadh6ABl5NAUNmBBBVMRXqqATSa3uY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=GDn8+Fep; arc=fail smtp.client-ip=52.101.69.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=est.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E52C3DCDB6
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 11:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781176298; cv=none; b=BEatytbprn5FWqYSi/bEynn0oMcVjJH2kH3OSNzxmdU6njNLLuSGKGdzWvcB77p9lEI593NKDGoD7kiCrazewFG2aV0go7at9le3Owei3E6HhpQss8rsEJgDznP3NFrpL9HfCstp+Yv2KNQ7o8FKt+AFTWTBTAYCtUOCZQFIOG4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781176298; c=relaxed/simple;
+	bh=tgMEBuaRhMesd4eMPfJVRAFqc2XW8iWSV6PwB5z1Kwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jdojr/af1iqVrcAc9Vqg8uY6B5nlzhi66xZUY4lfdeayDkApTOkBwdZyYJX9E0J447MUHN/2KpN8cucoffWG//LwSb0YoBUMwvQvon493GmB/lokNe24XIREbhynCeCzqZacBn2ELvttfNEjhkVDMrxaBMUgHsJd6y5/PIf9LEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Mu3f7CPC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JIiZ7eV1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Mu3f7CPC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JIiZ7eV1; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="GDn8+Fep"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b1ARmgkmjWRdkHEmtv5IIgC6ysUy+v2TIBkk3j77t9yK5RkVfefQK+HAcWZplxoU4E6O5TWO4PUiLg5FcJ0hZp3lSMZBU97ldwNRSgj0p+WDC2zvLvrnL4MyM6cyr4R1FoTzLQCrQ212wMxt89wU7sziVcvQmXHf1hPt8klHzpjxt1M3dea83LOl5PYwhz8j6zXIQy75nYnPTq2dj0z8cobzJtlTDjGE+g/L7KKiUxqbrCGZirALRAzMTHhFD/BIX4Tc4CHPDe2+cKGQUbs/1KBQCz02lXM/Uh2FKjuZj+LHH2HSaB20cIbra9vEAS0UU1CVn7zKIMv0mTyuvpQYPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xnd8vlPEsWgjfybe30t7rk9585OMv/hmR4w5iE4Faao=;
- b=kj7OURoXeajCMGbcB895WSllM00tmGkWjO7d2OlKbHOqq4yIPH+Eb37V/R2oGu8NZixNL3KCzaySF+La16wXVcPN9vmP58D5rLpqLo2bFn3XjYoTs0lz5ZNh8kse7GrjYshfhLLeduI3hhc7qViPZeLvT19OtFQUmX4+ta2yDJ+wgs45RxPKgCaANSy9R9JMIbfWKmXd4o1XZl+kAUHvqaOZN9NKSezpHbisPX4LVA6fWam9r6iY4bMPyH5OAjTBZ65flMG/ucgObTici2Zu8t7tCxyWZvfQhF3ziTW58XT9g4lKkjrDPz7uaOd5DAUSZrf5dB5Jt6lo/95Lm1XMtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
- dkim=pass header.d=est.tech; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xnd8vlPEsWgjfybe30t7rk9585OMv/hmR4w5iE4Faao=;
- b=GDn8+FepYOgfP9qvwyMHAFJvohhz293b+LXEITLr5DsaPU0PpTu8DyUiUJIa5pb1ZU4aEBIMCHsMooAoLbL9zkWA9GP8/c6rTbiWabYHdkyGTJxasI9IpdF6/T12xtAjN/UInESJPImSffszBpyIwaAgMm9mYn6mku8CIR7SjSAsDned2wX1JKMtOkxMf9PYgUEPVViOBrFaBuscV/T8kLY2u/fMxM529U1wMO6s4/1vWwxG2X1xOR+tpV9nfExjOGeDS6loHion3aQpozRGPMT4yxm8rCnNflokTreKmDCGuZ2ZcjGynSaPpSMyW0oWdvyM6XZnErFFG6m8NieoZQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=est.tech;
-Received: from DB3P189MB2624.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:438::18)
- by AS4P189MB1848.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:4b0::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.11; Thu, 11 Jun
- 2026 10:32:42 +0000
-Received: from DB3P189MB2624.EURP189.PROD.OUTLOOK.COM
- ([fe80::8cd0:287c:2016:db67]) by DB3P189MB2624.EURP189.PROD.OUTLOOK.COM
- ([fe80::8cd0:287c:2016:db67%5]) with mapi id 15.21.0113.013; Thu, 11 Jun 2026
- 10:32:42 +0000
-Date: Thu, 11 Jun 2026 12:32:40 +0200
-From: Fredrik Markstrom <fredrik.markstrom@est.tech>
-To: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Santosh Shilimkar <santosh.shilimkar@ti.com>,
-	Olof Johansson <olof@lixom.net>, Tony Lindgren <tony@atomide.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Nicolas Pitre <nico@fluxnic.net>,
-	Ivar Holmqvist <ivar.holmqvist@est.tech>,
-	Malin Jonsson <malin.jonsson@est.tech>
-Subject: Re: [PATCH v2 0/3] arm64: perf: Skip device memory during user
- callchain unwinding
-Message-ID: <aiqOyA_ygr_ZImii@elx-5cg6022w5t>
-References: <20260430-master-with-pfix-v3-v2-0-bd526ec04a75@est.tech>
- <agsq4wZMGth-T3BG@willie-the-truck>
- <agweYAbxRWOs41BE@elx-5cg6022w5t>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <agweYAbxRWOs41BE@elx-5cg6022w5t>
-X-ClientProxiedBy: GVZP280CA0056.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:150:271::17) To DB3P189MB2624.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:10:438::18)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mu3f7CPC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JIiZ7eV1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mu3f7CPC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JIiZ7eV1"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5933275951;
+	Thu, 11 Jun 2026 11:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1781176293; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NEWaPGakCZpndo876tRlRUfu7Tkl0y3FHeGYSKNooOw=;
+	b=Mu3f7CPCuatbDm3sqvYFMvW/pzk7H3QW4Qryr5Ha3fV5/HsKTYrqBnGWEbVbdETflvNZsi
+	VInEZ18RXbV29efVG4/1kb5GoXoAxrWLuriCLvoqHKh9nYrxTsiUgbWDlEcOnFbPaw+RUO
+	nzZzB8pV27g0WTUjZL1SdaROF9DI/5w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1781176293;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NEWaPGakCZpndo876tRlRUfu7Tkl0y3FHeGYSKNooOw=;
+	b=JIiZ7eV1XVewMgV+DAA/v1AyOZEq3u5YtzP8plc0CAlb93nJ9M16j+KS5ls2LIct+zPL43
+	RAYNRJpXwgjvyrCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1781176293; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NEWaPGakCZpndo876tRlRUfu7Tkl0y3FHeGYSKNooOw=;
+	b=Mu3f7CPCuatbDm3sqvYFMvW/pzk7H3QW4Qryr5Ha3fV5/HsKTYrqBnGWEbVbdETflvNZsi
+	VInEZ18RXbV29efVG4/1kb5GoXoAxrWLuriCLvoqHKh9nYrxTsiUgbWDlEcOnFbPaw+RUO
+	nzZzB8pV27g0WTUjZL1SdaROF9DI/5w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1781176293;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NEWaPGakCZpndo876tRlRUfu7Tkl0y3FHeGYSKNooOw=;
+	b=JIiZ7eV1XVewMgV+DAA/v1AyOZEq3u5YtzP8plc0CAlb93nJ9M16j+KS5ls2LIct+zPL43
+	RAYNRJpXwgjvyrCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 454DA779A7;
+	Thu, 11 Jun 2026 11:11:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id IsSkDeGXKmqiCwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 11 Jun 2026 11:11:29 +0000
+Date: Thu, 11 Jun 2026 12:11:27 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Huang Shijie <huangsj@hygon.cn>
+Cc: akpm@linux-foundation.org, viro@zeniv.linux.org.uk, brauner@kernel.org, 
+	jack@suse.cz, muchun.song@linux.dev, osalvador@suse.de, david@kernel.org, 
+	surenb@google.com, mjguzik@gmail.com, liam@infradead.org, ljs@kernel.org, 
+	vbabka@kernel.org, shakeel.butt@linux.dev, rppt@kernel.org, mhocko@suse.com, 
+	corbet@lwn.net, skhan@linuxfoundation.org, linux@armlinux.org.uk, 
+	dinguyen@kernel.org, schuster.simon@siemens-energy.com, 
+	James.Bottomley@hansenpartnership.com, deller@gmx.de, djbw@kernel.org, willy@infradead.org, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
+	mhiramat@kernel.org, oleg@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
+	npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, 
+	lance.yang@linux.dev, linmiaohe@huawei.com, nao.horiguchi@gmail.com, jannh@google.com, 
+	riel@surriel.com, harry@kernel.org, will@kernel.org, brian.ruley@gehealthcare.com, 
+	rmk+kernel@armlinux.org.uk, dave.anglin@bell.net, linux-mm@kvack.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, zhongyuan@hygon.cn, fangbaoshun@hygon.cn, yingzhiwei@hygon.cn
+Subject: Re: [PATCH v2 3/4] mm/fs: split the file's i_mmap tree
+Message-ID: <aiqFgGbIo1Psy3pI@pedro-suse.lan>
+References: <20260611061915.2354307-1-huangsj@hygon.cn>
+ <20260611061915.2354307-4-huangsj@hygon.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB3P189MB2624:EE_|AS4P189MB1848:EE_
-X-MS-Office365-Filtering-Correlation-Id: 23b7b3e6-0243-416f-8b9a-08dec7a4c470
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|7416014|366016|1800799024|6133799003|56012099006|11063799006|4143699003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	W6jDP6Q/KxcEKJ1DRkyNj04HGmzzB0AcJ1mC7MDjuXCFMgyvz3TVJIVJ9jDc10YdptUBzAtQZzN3tKSD72VulmXGNZM1i5VN87Rqz72FzF3VtgPWNsxG8/ZljnVTMN1wW2bo27sG47S92+jL6Z1Ib+udC0c+xQxcVtO+U3sR3oq7b3spVynBHAk8q/imkQjmI4MiATBkLxoer1fhzKJqc0QM8AofZbS+YroelHccK5guLLxRl+DnSGwIvIHfdEov2tR4EGKmjLHdqLS8JXQ39Srp8ZjV9N4JZq/XPRSMkpLSjFIp2tlWFvsLk94KMUhOhb5CKwaO8OwjaGjBXz/kz761TpLCxAS1pg+cLIATE3yJbPGlllXNvFpYvHf4Xam+FrivlG+Z4gmYVPkpxNHxDQTcvZAl8/4BkJlzS02QozrsK5wBPV/gVPqaURQPJP0tOA0d+QuOLFrkBcBUOc5dI0WwmaASkkRsuat++gqFSKMk2Hw6k7zOVLzDZdpItdTdtAC7quvElK6YRA8kBCC7JJDL/PmZzgIrjI7Ob2cy7drrV0INHrxl5elp9TzMuKzp8iTyZZcBZa/LtUF71WXM8UYZ3OlTocOUfuU2K6geK7v99jn7droURlx5aFMc+4MrLwTbEvH+9h8oZsabI84gMO0q38JYAonybXUXIjtyg08/ODehj2mNb3RU6YvFyY89
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3P189MB2624.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(7416014)(366016)(1800799024)(6133799003)(56012099006)(11063799006)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R1pWNW1UaWxxOU0zYjFPV0NhRXAwcDdjK0xpVUo5WVFaREFUdG13bDNXNDNN?=
- =?utf-8?B?MCtVdVZOMzVsbDV2bHh3aWFPeVJmSnFkOHZ5WGdueGNkU3ZBeHRDeTNmbzYx?=
- =?utf-8?B?NlNkeEZVY01MbktQdDBLTldOdU1ENmhkZktQaG1jdnJ2NUF1ZjhpUk8zdjgy?=
- =?utf-8?B?ZEdMQjNPMEIxNjBZZDhZVmFORysyVmZaK0JET2VmaFFJVSt3V0FVcUszNUNx?=
- =?utf-8?B?UzFuWUVnUnp6aU5LYUdyTUpaWjlWbWhUL1ZMQlhQekxoRTh0OFh2SDFNMGp2?=
- =?utf-8?B?aTM2bTl6bSttbXU1RklGTU5MSFBxQVkzYmF4RUNrSkU2Yk9NN0xmOFh6bDN0?=
- =?utf-8?B?UGU2WlB2NmQ1Y09nY2tyWFVQNktWb0Z6a3d2alRiM1JwbUlTeVB3aVNRRkx0?=
- =?utf-8?B?R1RGTzJuVzM3VU9SN2hubzBsR2hjQ29CWk05akhJeStvakVzNWg0VkdoWGls?=
- =?utf-8?B?b0trM29JZFRCZW5nNUI1M2JMVWFKY2cwY1lFelloVTl4bXlmL0NsdUxzYS9j?=
- =?utf-8?B?ZjRtNUo5Nnl4eEJHamNkKy9CcE4zY2gxc3F0U2ZBRS9uT0tQU3Ftd0xmcXpu?=
- =?utf-8?B?Sjk2QXczMUo0d1NSdWJxd05BWVhlYW1EK3pVZldtS3YzeHh5TFpuUDJ6OFho?=
- =?utf-8?B?YytUTEtyMmR2RWFUMEdhTEg0aEtyZ25KTGw3WElFelFsVlNYVUM2VVl5R3ZJ?=
- =?utf-8?B?NGVxWXBPT2ZXVVRmREs4R3FqcVBTeTZRVUpJT0pmRjc4ZzRVRmVoekVtRFFx?=
- =?utf-8?B?N3JHRnB6SGNMVzYvR05DQnBUZXpjcmVMTkJxcXBtdThSUnJ3T3g4aVhjTERE?=
- =?utf-8?B?c0UzZzBMSjM4VmpZdk5YWEs1cW54UE9qTHZaeXk2WnV0TXdFSWcyY29pRzVh?=
- =?utf-8?B?ZzZLb2NOUUt5d2tTa0FqTURQWjZXRXZmd3pHRkppNDdyWEVmbmZLanE2YXlS?=
- =?utf-8?B?eFdjeXF3VXM2QUZubWlPaVphaXBuYWUyUVRacndQWGV0b1lvSlZrb1pQU2pz?=
- =?utf-8?B?aCtrU3dCKzZBby9jcnVLNXVEL3BxY1lsa25lUEFXVUF6RVdMeTVGN3VmZCs0?=
- =?utf-8?B?eEwray9OOFhUMk1YN1hyWFBIeU1lQXVwUVA3VHZnUjgyVGJWSDRKWXBrbmRM?=
- =?utf-8?B?cmNFZGVUdHd6NWdGdWo0SkdDbENBWmxHaDVlOSs5U2JMay9DSiszRWd1ck1V?=
- =?utf-8?B?R2tmdzJWU2tvUUZIcHRMRVV5MFVEanBMM1pZS1VUSUdpYmtxZ0hkMEd5Rkg0?=
- =?utf-8?B?SHRDR3E2QTRnUW5rS0pRTkZFT3dna0crZ1dJS3Rtb3loVm11QXcwNTlXZ1l6?=
- =?utf-8?B?cVlQM1pMeU1jd2RHYllpQitIc2lMeWxRRUFyRHRjck81RWw3RFZ0VStjQ003?=
- =?utf-8?B?Tks4ZUdVZ3Q2SGs3Y0JOUW5KTnU0bU05cFFGclFNVFk0ZUtkZUFaOWhmeDVM?=
- =?utf-8?B?bGFYMGI5aGR1MThFYjhJSWxXL2F1aXZTekJ5bnI4QjlNVkNVVjMxRzIzYVN2?=
- =?utf-8?B?YnpGaE5hQnptWmQ4TUt0bjFvUFhYWVloV05LRlFrTUFtLzE4eThYWjJDUnZG?=
- =?utf-8?B?R0dzSklERDZXTW1XVGhTR0k1TnJCRmJDZElsbXM0R1dQUXoxSFZDcFBLRWls?=
- =?utf-8?B?SXB6bVBKVGxXWldXc0ZHTVVOWmNibGFVaUEvWklIVWx2UFlKdHRQVXJJTm5v?=
- =?utf-8?B?aDViVEIvdEQwbUdJVGFvUFk5bnJGVVpOS1pvcEVLT2pSOXJLbFBubWFwY0V0?=
- =?utf-8?B?eE9pM3ZVTC84R0tXa1RlVjZlWTYyaGpaT3NXY2ltTWJidE9FSFRMTFlzUGhD?=
- =?utf-8?B?SlRVQzRSa0N4aDNOckNybVNjMWgybFhvd2kzalM5S01GdWdicEUwTFZSNWFs?=
- =?utf-8?B?c3NIcDg0cTNON2VkbFNPMGFNdXRid00rbm1acnkyV0E3SjgyaEpoZFlLS0NS?=
- =?utf-8?B?ek94b2xCUWFmM0ZIWXdhVW15Rjd5MnhadEF1K05qYjBUYzJMVEZJQWtrekJ2?=
- =?utf-8?B?bmV2bmloeHA0dEhXTGprNWZqL3F4N2RJejV4SkJGTTgrb0p2bm52Q2JoaGww?=
- =?utf-8?B?a0JvZUJwMk5JS0lYaEZtU1duM2xqd2p4bkgvZ2NwOE5rOExLWitObEJkL2dy?=
- =?utf-8?B?RzhPbXViTHJuQVg0c3g1UmVxYkFvOHlaRC9DbEJsbW9CWVNGRVhVR1NvQW5y?=
- =?utf-8?B?TnRpdzJsK3dwWloydklmelR2QVFBblhTaDU4SnpybHZGeUt2RkJzcFJMZ3hs?=
- =?utf-8?B?KzFDYXZaaDJmbVp6VFhYaXJ1akU4MWd3alJTZGhHS1pobm5Fa0QyeThEUnhB?=
- =?utf-8?B?OWxHOG01OVBXN0lzTG1tcFZtd3ZuWXRhV3h4KzlBOGc3bHpLSWNRdXRGL2Nh?=
- =?utf-8?Q?MiYXIoTy1Wy8UOUA=3D?=
-X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23b7b3e6-0243-416f-8b9a-08dec7a4c470
-X-MS-Exchange-CrossTenant-AuthSource: DB3P189MB2624.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2026 10:32:42.1391
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xAuRe2uRCxyrBEt+6HDnZK9eJOvQhqcvD+592MU6DZ/JKsLATTz6C3m0oEe7nKB1PVWqqCK0UVLMhXpv823qVpOJJr801FfpPYk7nKBEpX0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4P189MB1848
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260611061915.2354307-4-huangsj@hygon.cn>
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[kernel];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,zeniv.linux.org.uk,kernel.org,suse.cz,linux.dev,suse.de,google.com,gmail.com,infradead.org,suse.com,lwn.net,linuxfoundation.org,armlinux.org.uk,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,arm.com,linux.intel.com,intel.com,linaro.org,nvidia.com,linux.alibaba.com,huawei.com,surriel.com,gehealthcare.com,bell.net,kvack.org,vger.kernel.org,lists.infradead.org,lists.linux.dev,hygon.cn];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[65];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Score: -2.80
 
-Hello, is there anything I can do at this point to address this issue ?
+Hi,
 
-/Fredrik
+On Thu, Jun 11, 2026 at 02:18:59PM +0800, Huang Shijie wrote:
+> In the UnixBench tests, there is a test "execl" which tests
+> the execve system call.
+>   For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
+> When we test our server with "./Run -c 384 execl",
+> the test result is not good enough. The i_mmap locks contended heavily on
+> "libc.so" and "ld.so". The i_mmap tree for "libc.so" can be
+> over 6000 VMAs, all the VMAs can be in different NUMA mode. The insert/remove
+> operations do not run quickly enough.
 
-On Tue, May 19, 2026 at 10:25:04AM +0200, Fredrik Markstrom wrote:
-> On Mon, May 18, 2026 at 04:06:11PM +0100, Will Deacon wrote:
-> > On Thu, Apr 30, 2026 at 12:55:12PM +0200, Fredrik Markstrom wrote:
-> > > Perf callchain unwinding follows userspace frame pointers via
-> > > copy_from_user. A corrupted or malicious frame pointer can point
-> > > into device I/O memory mapped into the process (e.g. via UIO or
-> > > /dev/mem), causing the kernel to read from MMIO regions in PMU
-> > > interrupt context. Such reads can have side effects on hardware
-> > > (clearing status registers, advancing FIFOs, triggering DMA) and
-> > > on arm64 can produce a synchronous external abort that panics the
-> > > kernel.
-> > 
-> > Hmm, but why is unwinding special in this case? If userspace has access
-> > to sensitive MMIO/device mappings, it can presumably pass them to
-> > syscalls and trigger crashes all over the place?
+I _really_ would have appreciated some coordination here, because I said I was
+going to take a look at it. I have something that I think is much simpler
+in practice. These patches are also way too complex to be dropped just before
+the merge window.
+
+Some comments:
+
 > 
-> You’re totally right, a broken app with access to hardware like this can
-> already cause chaos by passing bad pointers to syscalls etc. But the big
-> difference here is who is to blame when things crash.
+>  In order to reduce the competition of the i_mmap lock, this patch does
+> following:
+>    1.) Split the single i_mmap tree into several sibling trees:
+>        Each tree has a lock. The CONFIG_SPLIT_I_MMAP is used to
+>        turn on/off this feature.
+
+There is no need for a config option. This needs to Just Work.
+
+>    2.) Introduce a new field "tree_idx" for vm_area_struct to save the
+>        sibling tree index for this VMA.
+
+This is possibly contentious, but there are holes in vm_area_struct.
+So I think this is fine.
+
+>    3.) Introduce a new field "vma_count" for address_space.
+>        The new mapping_mapped() will use it.
+>    4.) Rewrite the vma_interval_tree_foreach()
+>    5.) Rewrite the lock functions.	
+> 
+>  After this patch, the VMA insert/remove operations will work faster,
+> and we can get over 400% performance improvement with the above test.
+> 
+> Signed-off-by: Huang Shijie <huangsj@hygon.cn>
+> ---
+>  fs/Kconfig               |   8 ++
+>  fs/hugetlbfs/inode.c     |  20 ++++-
+>  fs/inode.c               |  75 ++++++++++++++++-
+>  include/linux/fs.h       | 174 ++++++++++++++++++++++++++++++++++++++-
+>  include/linux/mm.h       |  80 ++++++++++++++++++
+>  include/linux/mm_types.h |   3 +
+>  mm/internal.h            |   3 +-
+>  mm/mmap.c                |  11 ++-
+>  mm/nommu.c               |  23 ++++--
+>  mm/pagewalk.c            |   2 +-
+>  mm/vma.c                 |  72 +++++++++++-----
+>  mm/vma_init.c            |   3 +
+>  12 files changed, 436 insertions(+), 38 deletions(-)
+> 
+> diff --git a/fs/Kconfig b/fs/Kconfig
+> index 43cb06de297f..e24804f70432 100644
+> --- a/fs/Kconfig
+> +++ b/fs/Kconfig
+> @@ -9,6 +9,14 @@ menu "File systems"
+>  config DCACHE_WORD_ACCESS
+>         bool
 >  
-> If an app passes a bad pointer to a syscall, it’s self-inflicted.
-> 
-> Unwinding here is asynchronous and unrelated to the application.
-> Perf interrupts a perfectly healthy app at a random moment. If that app
-> is using the frame pointer as a normal register (totally legal in
-> optimized code), it might hold a junk value that points to MMIO memory.
+> +config SPLIT_I_MMAP
+> +	bool "Split the file's i_mmap to several trees"
+> +	default n
+> +	help
+> +	  Split the file's i_mmap to several trees, each tree has a separate
+> +	  lock. This will reduce the lock contention of file's i_mmap tree,
+> +	  but it will cost more memory for per inode.
+> +
+>  config VALIDATE_FS_PARSER
+>  	bool "Validate filesystem parameter description"
+>  	help
+> diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+> index da5b41ea5bdd..68d8308418dd 100644
+> --- a/fs/hugetlbfs/inode.c
+> +++ b/fs/hugetlbfs/inode.c
+> @@ -891,6 +891,23 @@ static struct inode *hugetlbfs_get_root(struct super_block *sb,
+>   */
+>  static struct lock_class_key hugetlbfs_i_mmap_rwsem_key;
 >  
-> If the kernel blindly follows that junk pointer during an unwind, perf
-> causes the crash. I think it's acceptable that an app (with hardware
-> access) causes a crash if buggy, but I don't think it's acceptable that
-> a profiling tool is causing a crash just by looking at it.
-> 
-> Fredrik
-> 
-> 
-> > 
-> > Will
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +static void hugetlbfs_lockdep_set_class(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++) {
+> +		lockdep_set_class(&mapping->i_mmap[i].rwsem,
+> +				&hugetlbfs_i_mmap_rwsem_key);
+> +	}
+> +}
+> +#else
+> +static void hugetlbfs_lockdep_set_class(struct address_space *mapping)
+> +{
+> +	lockdep_set_class(&mapping->i_mmap_rwsem, &hugetlbfs_i_mmap_rwsem_key);
+> +}
+> +#endif
+> +
+>  static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+>  					struct mnt_idmap *idmap,
+>  					struct inode *dir,
+> @@ -915,8 +932,7 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+>  
+>  		inode->i_ino = get_next_ino();
+>  		inode_init_owner(idmap, inode, dir, mode);
+> -		lockdep_set_class(&inode->i_mapping->i_mmap_rwsem,
+> -				&hugetlbfs_i_mmap_rwsem_key);
+> +		hugetlbfs_lockdep_set_class(inode->i_mapping);
+>  		inode->i_mapping->a_ops = &hugetlbfs_aops;
+>  		simple_inode_init_ts(inode);
+>  		info->resv_map = resv_map;
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 62c579a0cf7d..cb67ae83f5b3 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -214,6 +214,70 @@ static int no_open(struct inode *inode, struct file *file)
+>  	return -ENXIO;
+>  }
+>  
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +int split_tree_num;
+> +static int split_tree_align __maybe_unused = 32;
+> +
+> +static void __init init_split_tree_num(void)
+> +{
+> +#ifdef CONFIG_NUMA
+> +	split_tree_num = nr_node_ids;
+> +#else
+> +	split_tree_num = ALIGN(nr_cpu_ids, split_tree_align);
+> +#endif
+> +}
+
+Again, too configurable. I think you're too stuck up on the NUMA case -
+which does not matter for many people - and may actively harm NUMA users. If
+I have a 128 core 2 NUMA node system, what should I shard by?
+
+> +
+> +static void free_mapping_i_mmap(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	if (!mapping->i_mmap)
+> +		return;
+> +
+> +	for (i = 0; i < split_tree_num; i++)
+> +		kfree(mapping->i_mmap[i]);
+> +
+> +	kfree(mapping->i_mmap);
+> +	mapping->i_mmap = NULL;
+> +}
+> +
+> +static int init_mapping_i_mmap(struct address_space *mapping, gfp_t gfp)
+> +{
+> +	struct i_mmap_tree *tree;
+> +	int i;
+> +
+> +	/* The extra one is used as terminator in vma_interval_tree_foreach() */
+> +	mapping->i_mmap = kzalloc(sizeof(tree) * (split_tree_num + 1), gfp);
+> +	if (!mapping->i_mmap)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < split_tree_num; i++) {
+> +		tree = kzalloc_node(sizeof(*tree), gfp, i);
+> +		if (!tree)
+> +			goto nomem;
+> +
+> +		tree->root = RB_ROOT_CACHED;
+> +		init_rwsem(&tree->rwsem);
+
+This (as-is) should blow up with lockdep + the locking loops down there.
+
+> +
+> +		mapping->i_mmap[i] = tree;
+> +	}
+> +	return 0;
+> +nomem:
+> +	free_mapping_i_mmap(mapping);
+> +	return -ENOMEM;
+> +}
+
+Honestly, it's likely that a simple static array in struct address_space
+suffices. I would not go through the trouble of getting everything very
+tight and NUMA correct.
+
+> +#else
+> +static int init_mapping_i_mmap(struct address_space *mapping, gfp_t gfp)
+> +{
+> +	mapping->i_mmap = RB_ROOT_CACHED;
+> +	init_rwsem(&mapping->i_mmap_rwsem);
+> +	return 0;
+> +}
+> +
+> +static void free_mapping_i_mmap(struct address_space *mapping) { }
+> +static void __init init_split_tree_num(void) {}
+> +#endif
+> +
+>  /**
+>   * inode_init_always_gfp - perform inode structure initialisation
+>   * @sb: superblock inode belongs to
+> @@ -302,9 +366,14 @@ int inode_init_always_gfp(struct super_block *sb, struct inode *inode, gfp_t gfp
+>  #endif
+>  	inode->i_flctx = NULL;
+>  
+> -	if (unlikely(security_inode_alloc(inode, gfp)))
+> +	if (init_mapping_i_mmap(mapping, gfp))
+>  		return -ENOMEM;
+>  
+> +	if (unlikely(security_inode_alloc(inode, gfp))) {
+> +		free_mapping_i_mmap(mapping);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	this_cpu_inc(nr_inodes);
+>  
+>  	return 0;
+> @@ -380,6 +449,7 @@ void __destroy_inode(struct inode *inode)
+>  	if (inode->i_default_acl && !is_uncached_acl(inode->i_default_acl))
+>  		posix_acl_release(inode->i_default_acl);
+>  #endif
+> +	free_mapping_i_mmap(&inode->i_data);
+>  	this_cpu_dec(nr_inodes);
+>  }
+>  EXPORT_SYMBOL(__destroy_inode);
+> @@ -480,9 +550,7 @@ EXPORT_SYMBOL(inc_nlink);
+>  static void __address_space_init_once(struct address_space *mapping)
+>  {
+>  	xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ | XA_FLAGS_ACCOUNT);
+> -	init_rwsem(&mapping->i_mmap_rwsem);
+>  	spin_lock_init(&mapping->i_private_lock);
+> -	mapping->i_mmap = RB_ROOT_CACHED;
+>  }
+>  
+>  void address_space_init_once(struct address_space *mapping)
+> @@ -2619,6 +2687,7 @@ void __init inode_init(void)
+>  					&i_hash_mask,
+>  					0,
+>  					0);
+> +	init_split_tree_num();
+>  }
+>  
+>  void init_special_inode(struct inode *inode, umode_t mode, dev_t rdev)
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index cd46615b8f53..f4b3645b61df 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -450,6 +450,25 @@ struct mapping_metadata_bhs {
+>  	struct list_head list;	/* The list of bhs (b_assoc_buffers) */
+>  };
+>  
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +/*
+> + * struct i_mmap_tree - A single sibling tree of the file's split i_mmap.
+> + * @root: The red/black interval tree root.
+> + * @rwsem: Protects insert/remove operations on this sibling tree.
+> + * @vma_count: Number of VMAs in this sibling tree.
+> + *
+> + * When CONFIG_SPLIT_I_MMAP is enabled, the file's single i_mmap tree is
+> + * split into split_tree_num sibling trees, each with its own lock. This
+> + * reduces lock contention by allowing concurrent VMA insert/remove
+> + * operations on different sibling trees.
+> + */
+> +struct i_mmap_tree {
+> +	struct rb_root_cached	root;
+> +	struct rw_semaphore	rwsem;
+> +	atomic_t		vma_count;
+
+I don't see what you need this vma_count for? I get the one in address_space,
+but this one does not seem useful.
+
+> +};
+> +#endif
+> +
+>  /**
+>   * struct address_space - Contents of a cacheable, mappable object.
+>   * @host: Owner, either the inode or the block_device.
+> @@ -461,8 +480,13 @@ struct mapping_metadata_bhs {
+>   * @gfp_mask: Memory allocation flags to use for allocating pages.
+>   * @i_mmap_writable: Number of VM_SHARED, VM_MAYWRITE mappings.
+>   * @nr_thps: Number of THPs in the pagecache (non-shmem only).
+> - * @i_mmap: Tree of private and shared mappings.
+> - * @i_mmap_rwsem: Protects @i_mmap and @i_mmap_writable.
+> + * @i_mmap: Tree of private and shared mappings. When CONFIG_SPLIT_I_MMAP
+> + *   is enabled, this is an array of split_tree_num struct i_mmap_tree
+> + *   pointers (plus a NULL terminator).
+
+NULL terminator wastes more memory, so I would really strongly avoid it as
+well.
+
+> + * @vma_count: Total number of VMAs across all sibling trees (only when
+> + *   CONFIG_SPLIT_I_MMAP is enabled). Used by mapping_mapped().
+> + * @i_mmap_rwsem: Protects @i_mmap and @i_mmap_writable (only when
+> + *   CONFIG_SPLIT_I_MMAP is disabled; otherwise per-tree rwsem is used).
+
+So, there are very good reasons why you still need an i_mmap_rwsem protecting
+state, even with split mmap trees. Which I'll go into later.
+
+>   * @nrpages: Number of page entries, protected by the i_pages lock.
+>   * @writeback_index: Writeback starts here.
+>   * @a_ops: Methods.
+> @@ -480,14 +504,19 @@ struct address_space {
+>  	/* number of thp, only for non-shmem files */
+>  	atomic_t		nr_thps;
+>  #endif
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +	struct i_mmap_tree	**i_mmap;
+> +	atomic_t		vma_count;
+> +#else
+>  	struct rb_root_cached	i_mmap;
+> +	struct rw_semaphore	i_mmap_rwsem;
+> +#endif
+>  	unsigned long		nrpages;
+>  	pgoff_t			writeback_index;
+>  	const struct address_space_operations *a_ops;
+>  	unsigned long		flags;
+>  	errseq_t		wb_err;
+>  	spinlock_t		i_private_lock;
+> -	struct rw_semaphore	i_mmap_rwsem;
+
+See d3b1a9a778e1 ("fs/address_space: move i_mmap_rwsem to mitigate a false sharing with i_mmap.")
+
+>  } __attribute__((aligned(sizeof(long)))) __randomize_layout;
+>  	/*
+>  	 * On most architectures that alignment is already the case; but
+> @@ -508,6 +537,133 @@ static inline bool mapping_tagged(const struct address_space *mapping, xa_mark_t
+>  	return xa_marked(&mapping->i_pages, tag);
+>  }
+>  
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +static inline int mapping_mapped(const struct address_space *mapping)
+> +{
+> +	return	atomic_read(&mapping->vma_count);
+
+Now that I think of it, I don't think we need atomic_t, only unsigned long +
+READ_ONCE() suffices. Increments can race just fine, we don't expect any 
+consistency there - if you want consistency you probably hold the i_mmap lock.
+
+> +}
+> +
+> +static inline void inc_mapping_vma(struct address_space *mapping,
+> +				struct vm_area_struct *vma)
+> +{
+> +	struct i_mmap_tree *tree = mapping->i_mmap[vma->tree_idx];
+> +
+> +	atomic_inc(&tree->vma_count);
+> +	atomic_inc(&mapping->vma_count);
+> +}
+> +
+> +static inline void dec_mapping_vma(struct address_space *mapping,
+> +				struct vm_area_struct *vma)
+> +{
+> +	struct i_mmap_tree *tree = mapping->i_mmap[vma->tree_idx];
+> +
+> +	atomic_dec(&tree->vma_count);
+> +	atomic_dec(&mapping->vma_count);
+> +}
+
+This probably shouldn't be in linux/fs.h.
+
+> +
+> +static inline struct rb_root_cached *get_i_mmap_root(struct address_space *mapping)
+> +{
+> +	return (struct rb_root_cached *)mapping->i_mmap;
+> +}
+> +
+> +static inline void i_mmap_tree_lock_write(struct address_space *mapping,
+> +					struct vm_area_struct *vma)
+> +{
+> +	struct i_mmap_tree *tree = mapping->i_mmap[vma->tree_idx];
+> +
+> +	down_write(&tree->rwsem);
+> +}
+> +
+> +static inline void i_mmap_tree_unlock_write(struct address_space *mapping,
+> +					struct vm_area_struct *vma)
+> +{
+> +	struct i_mmap_tree *tree = mapping->i_mmap[vma->tree_idx];
+> +
+> +	up_write(&tree->rwsem);
+> +}
+> +
+> +#define i_mmap_lock_write_prepare(mapping)
+> +#define i_mmap_unlock_write_complete(mapping)
+
+It's unclear to me why you added write_prepare() and write_complete().
+
+> +
+> +extern int split_tree_num;
+> +static inline void i_mmap_lock_write(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++)
+> +		down_write(&mapping->i_mmap[i]->rwsem);
+
+Oof, this is an incredibly large hammer. This is basically why I think keeping
+i_mmap_rwsem (in a different form) is required. You do not want to take $nr_cpus
+locks (read _or_ write). For my design, I keep i_mmap_rwsem, but I invert its
+meaning - taking it in write = I'm reading from the tree; taking it in read =
+I'm writing to the tree. This provides some lighter-weight exclusion between
+rmap walks and rmap tree manipulation.
+
+_Technically_, you shouldn't need to always take a lock when manipulating the
+tree. A pattern like mnt_hold_writers()/mnt_get_write_access() can probably
+work well. But it may be too complex ATM.
+
+
+Also, note that you pretty much do not want i_mmap_lock_write() users after
+the conversion is done.
+
+> +}
+> +
+> +static inline int i_mmap_trylock_write(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++) {
+> +		if (!down_write_trylock(&mapping->i_mmap[i]->rwsem)) {
+> +			while (i--)
+> +				up_write(&mapping->i_mmap[i]->rwsem);
+> +			return 0;
+> +		}
+> +	}
+> +	return 1;
+> +}
+> +
+> +static inline void i_mmap_unlock_write(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++)
+> +		up_write(&mapping->i_mmap[i]->rwsem);
+> +}
+> +
+> +static inline int i_mmap_trylock_read(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++) {
+> +		if (!down_read_trylock(&mapping->i_mmap[i]->rwsem)) {
+> +			while (i--)
+> +				up_read(&mapping->i_mmap[i]->rwsem);
+> +			return 0;
+> +		}
+> +	}
+> +	return 1;
+> +}
+> +
+> +static inline void i_mmap_lock_read(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++)
+> +		down_read(&mapping->i_mmap[i]->rwsem);
+> +}
+> +
+> +static inline void i_mmap_unlock_read(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++)
+> +		up_read(&mapping->i_mmap[i]->rwsem);
+> +}
+> +
+> +static inline void i_mmap_assert_locked(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++)
+> +		lockdep_assert_held(&mapping->i_mmap[i]->rwsem);
+> +}
+> +
+> +static inline void i_mmap_assert_write_locked(struct address_space *mapping)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++)
+> +		lockdep_assert_held_write(&mapping->i_mmap[i]->rwsem);
+> +}
+> +
+> +#else
+> +
+>  static inline void i_mmap_lock_write(struct address_space *mapping)
+>  {
+>  	down_write(&mapping->i_mmap_rwsem);
+> @@ -561,6 +717,18 @@ static inline struct rb_root_cached *get_i_mmap_root(struct address_space *mappi
+>  	return &mapping->i_mmap;
+>  }
+>  
+> +static inline void inc_mapping_vma(struct address_space *mapping,
+> +				struct vm_area_struct *vma) { }
+> +static inline void dec_mapping_vma(struct address_space *mapping,
+> +				struct vm_area_struct *vma) { }
+> +
+> +#define i_mmap_lock_write_prepare(mapping)	i_mmap_lock_write(mapping)
+> +#define i_mmap_unlock_write_complete(mapping)	i_mmap_unlock_write(mapping)
+> +#define i_mmap_tree_lock_write(mapping, vma)
+> +#define i_mmap_tree_unlock_write(mapping, vma)
+> +
+> +#endif
+> +
+>  /*
+>   * Might pages of this file have been modified in userspace?
+>   * Note that i_mmap_writable counts all VM_SHARED, VM_MAYWRITE vmas: do_mmap
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 0a45c6a8b9f2..9aa8119fa9bf 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4041,11 +4041,91 @@ struct vm_area_struct *vma_interval_tree_iter_first(struct rb_root_cached *root,
+>  struct vm_area_struct *vma_interval_tree_iter_next(struct vm_area_struct *node,
+>  				unsigned long start, unsigned long last);
+>  
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +extern int split_tree_num;
+> +
+> +static inline int smallest_tree_idx(struct file *file)
+> +{
+> +	struct address_space *mapping = file->f_mapping;
+> +	int tmp = INT_MAX, count;
+> +	int i, j = 0;
+> +
+> +	/*
+> +	 * Since a not 100% accurate value is still okay,
+> +	 * we do not need any lock here.
+> +	 */
+> +	for (i = 0; i < split_tree_num; i++) {
+> +		count = atomic_read(&mapping->i_mmap[i]->vma_count);
+> +		if (count < tmp) {
+> +			j = i;
+> +			tmp = count;
+> +			if (!tmp)
+> +				break;
+> +		}
+> +	}
+
+Ohh, I see why you want the per-subtree vma_count now. But is this a net-win?
+I think doing something like vma-pointer-hashing or just smp_processor_id()
+would work a-ok.
+
+> +	return j;
+> +}
+> +
+> +static inline void vma_set_tree_idx(struct vm_area_struct *vma)
+> +{
+> +#ifdef CONFIG_NUMA
+> +	vma->tree_idx = numa_node_id();
+> +#else
+> +	vma->tree_idx = smallest_tree_idx(vma->vm_file);
+> +#endif
+> +}
+> +
+> +static inline struct rb_root_cached *get_rb_root(struct vm_area_struct *vma,
+> +					struct address_space *mapping)
+> +{
+> +	return &mapping->i_mmap[vma->tree_idx]->root;
+> +}
+> +
+> +/* Find the first valid VMA in the sibling trees */
+> +static inline struct vm_area_struct *first_vma(struct i_mmap_tree ***__r,
+> +				unsigned long start, unsigned long last)
+> +{
+> +	struct vm_area_struct *vma = NULL;
+> +	struct i_mmap_tree **tree = *__r;
+> +	struct rb_root_cached *root;
+> +
+> +	while (*tree) {
+> +		root = &(*tree)->root;
+> +		tree++;
+> +		vma = vma_interval_tree_iter_first(root, start, last);
+> +		if (vma)
+> +			break;
+> +	}
+> +
+> +	/* Save for the next loop */
+> +	*__r = tree;
+> +	return vma;
+> +}
+> +
+> +/*
+> + * Please use get_i_mmap_root() to get the @root.
+> + * @_tmp is referenced to avoid unused variable warning.
+> + */
+> +#define vma_interval_tree_foreach(vma, root, start, last)		\
+> +	for (struct i_mmap_tree **_r = (struct i_mmap_tree **)(root),	\
+> +		**_tmp = (vma = first_vma(&_r, start, last)) ? _r : NULL;\
+> +	     ((_tmp && vma) || (vma = first_vma(&_r, start, last)));	\
+> +		vma = vma_interval_tree_iter_next(vma, start, last))
+> +#else
+>  /* Please use get_i_mmap_root() to get the @root */
+>  #define vma_interval_tree_foreach(vma, root, start, last)		\
+>  	for (vma = vma_interval_tree_iter_first(root, start, last);	\
+>  	     vma; vma = vma_interval_tree_iter_next(vma, start, last))
+>  
+> +static inline void vma_set_tree_idx(struct vm_area_struct *vma) { }
+> +
+> +static inline struct rb_root_cached *get_rb_root(struct vm_area_struct *vma,
+> +					struct address_space *mapping)
+> +{
+> +	return &mapping->i_mmap;
+> +}
+> +#endif
+> +
+>  void anon_vma_interval_tree_insert(struct anon_vma_chain *node,
+>  				   struct rb_root_cached *root);
+>  void anon_vma_interval_tree_remove(struct anon_vma_chain *node,
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index a308e2c23b82..8d6aab3346ce 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -1072,6 +1072,9 @@ struct vm_area_struct {
+>  #ifdef __HAVE_PFNMAP_TRACKING
+>  	struct pfnmap_track_ctx *pfnmap_track_ctx;
+>  #endif
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +	int tree_idx;			/* The sibling tree index for the VMA */
+> +#endif
+
+FTR the struct hole isn't here, but right after vm_lock_seq or vm_refcnt in
+most configs.
+
+>  } __randomize_layout;
+>  
+>  /* Clears all bits in the VMA flags bitmap, non-atomically. */
+> diff --git a/mm/internal.h b/mm/internal.h
+> index 5a2ddcf68e0b..2d35cacffd19 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -1888,7 +1888,8 @@ static inline void maybe_rmap_unlock_action(struct vm_area_struct *vma,
+>  
+>  	VM_WARN_ON_ONCE(vma_is_anonymous(vma));
+>  	file = vma->vm_file;
+> -	i_mmap_unlock_write(file->f_mapping);
+> +	i_mmap_tree_unlock_write(file->f_mapping, vma);
+> +	i_mmap_unlock_write_complete(file->f_mapping);
+>  	action->hide_from_rmap_until_complete = false;
+>  }
+>  
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index d714fdb357e5..70036ec9dcaa 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1825,15 +1825,20 @@ __latent_entropy int dup_mmap(struct mm_struct *mm, struct mm_struct *oldmm)
+>  			struct address_space *mapping = file->f_mapping;
+>  
+>  			get_file(file);
+> -			i_mmap_lock_write(mapping);
+> +			i_mmap_lock_write_prepare(mapping);
+> +			i_mmap_tree_lock_write(mapping, mpnt);
+> +
+>  			if (vma_is_shared_maywrite(tmp))
+>  				mapping_allow_writable(mapping);
+>  			flush_dcache_mmap_lock(mapping);
+>  			/* insert tmp into the share list, just after mpnt */
+>  			vma_interval_tree_insert_after(tmp, mpnt,
+> -					get_i_mmap_root(mapping));
+> +					get_rb_root(mpnt, mapping));
+> +			inc_mapping_vma(mapping, tmp);
+
+Honestly, would prefer to hide all of these details from mmap.
+
+>  			flush_dcache_mmap_unlock(mapping);
+> -			i_mmap_unlock_write(mapping);
+> +
+> +			i_mmap_tree_unlock_write(mapping, mpnt);
+> +			i_mmap_unlock_write_complete(mapping);
+>  		}
+>  
+>  		if (!(tmp->vm_flags & VM_WIPEONFORK))
+> diff --git a/mm/nommu.c b/mm/nommu.c
+> index 0f18ffc658e9..1f2c60a220f6 100644
+> --- a/mm/nommu.c
+> +++ b/mm/nommu.c
+> @@ -567,11 +567,16 @@ static void setup_vma_to_mm(struct vm_area_struct *vma, struct mm_struct *mm)
+>  	if (vma->vm_file) {
+>  		struct address_space *mapping = vma->vm_file->f_mapping;
+>  
+> -		i_mmap_lock_write(mapping);
+> +		i_mmap_lock_write_prepare(mapping);
+> +		i_mmap_tree_lock_write(mapping, vma);
+> +
+>  		flush_dcache_mmap_lock(mapping);
+> -		vma_interval_tree_insert(vma, get_i_mmap_root(mapping));
+> +		vma_interval_tree_insert(vma, get_rb_root(vma, mapping));
+> +		inc_mapping_vma(mapping, vma);
+>  		flush_dcache_mmap_unlock(mapping);
+> -		i_mmap_unlock_write(mapping);
+> +
+> +		i_mmap_tree_unlock_write(mapping, vma);
+> +		i_mmap_unlock_write_complete(mapping);
+>  	}
+>  }
+>  
+> @@ -583,11 +588,16 @@ static void cleanup_vma_from_mm(struct vm_area_struct *vma)
+>  		struct address_space *mapping;
+>  		mapping = vma->vm_file->f_mapping;
+>  
+> -		i_mmap_lock_write(mapping);
+> +		i_mmap_lock_write_prepare(mapping);
+> +		i_mmap_tree_lock_write(mapping, vma);
+> +
+>  		flush_dcache_mmap_lock(mapping);
+> -		vma_interval_tree_remove(vma, get_i_mmap_root(mapping));
+> +		vma_interval_tree_remove(vma, get_rb_root(vma, mapping));
+> +		dec_mapping_vma(mapping, vma);
+>  		flush_dcache_mmap_unlock(mapping);
+> -		i_mmap_unlock_write(mapping);
+> +
+> +		i_mmap_tree_unlock_write(mapping, vma);
+> +		i_mmap_unlock_write_complete(mapping);
+>  	}
+>  }
+>  
+> @@ -1063,6 +1073,7 @@ unsigned long do_mmap(struct file *file,
+>  	if (file) {
+>  		region->vm_file = get_file(file);
+>  		vma->vm_file = get_file(file);
+> +		vma_set_tree_idx(vma);
+
+This is unrelated, shouldn't be done here.
+
+>  	}
+>  
+>  	down_write(&nommu_region_sem);
+> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> index 8df1b5077951..d5745519d95a 100644
+> --- a/mm/pagewalk.c
+> +++ b/mm/pagewalk.c
+> @@ -809,7 +809,7 @@ int walk_page_mapping(struct address_space *mapping, pgoff_t first_index,
+>  	if (!check_ops_safe(ops))
+>  		return -EINVAL;
+>  
+> -	lockdep_assert_held(&mapping->i_mmap_rwsem);
+> +	i_mmap_assert_locked(mapping);
+
+This kind of conversion should be done in a separate step.
+
+>  	vma_interval_tree_foreach(vma, get_i_mmap_root(mapping), first_index,
+>  				  first_index + nr - 1) {
+>  		/* Clip to the vma */
+> diff --git a/mm/vma.c b/mm/vma.c
+> index 6159650c1b42..2055758064a9 100644
+> --- a/mm/vma.c
+> +++ b/mm/vma.c
+> @@ -234,22 +234,23 @@ static void __vma_link_file(struct vm_area_struct *vma,
+>  		mapping_allow_writable(mapping);
+>  
+>  	flush_dcache_mmap_lock(mapping);
+> -	vma_interval_tree_insert(vma, get_i_mmap_root(mapping));
+> +	vma_interval_tree_insert(vma, get_rb_root(vma, mapping));
+> +	inc_mapping_vma(mapping, vma);
+
+inc_mapping_vma() should probably be done implicitly by insertion?
+
+>  	flush_dcache_mmap_unlock(mapping);
+>  }
+>  
+> -/*
+> - * Requires inode->i_mapping->i_mmap_rwsem
+> - */
+>  static void __remove_shared_vm_struct(struct vm_area_struct *vma,
+>  				      struct address_space *mapping)
+>  {
+> +	i_mmap_tree_lock_write(mapping, vma);
+>  	if (vma_is_shared_maywrite(vma))
+>  		mapping_unmap_writable(mapping);
+>  
+>  	flush_dcache_mmap_lock(mapping);
+> -	vma_interval_tree_remove(vma, get_i_mmap_root(mapping));
+> +	vma_interval_tree_remove(vma, get_rb_root(vma, mapping));
+> +	dec_mapping_vma(mapping, vma);
+>  	flush_dcache_mmap_unlock(mapping);
+> +	i_mmap_tree_unlock_write(mapping, vma);
+>  }
+>  
+>  /*
+> @@ -297,8 +298,9 @@ static void vma_prepare(struct vma_prepare *vp)
+>  			uprobe_munmap(vp->adj_next, vp->adj_next->vm_start,
+>  				      vp->adj_next->vm_end);
+>  
+> -		i_mmap_lock_write(vp->mapping);
+> +		i_mmap_lock_write_prepare(vp->mapping);
+>  		if (vp->insert && vp->insert->vm_file) {
+> +			i_mmap_tree_lock_write(vp->mapping, vp->insert);
+>  			/*
+>  			 * Put into interval tree now, so instantiated pages
+>  			 * are visible to arm/parisc __flush_dcache_page
+> @@ -307,6 +309,7 @@ static void vma_prepare(struct vma_prepare *vp)
+>  			 */
+>  			__vma_link_file(vp->insert,
+>  					vp->insert->vm_file->f_mapping);
+> +			i_mmap_tree_unlock_write(vp->mapping, vp->insert);
+>  		}
+>  	}
+>  
+> @@ -318,12 +321,17 @@ static void vma_prepare(struct vma_prepare *vp)
+>  	}
+>  
+>  	if (vp->file) {
+> +		i_mmap_tree_lock_write(vp->mapping, vp->vma);
+>  		flush_dcache_mmap_lock(vp->mapping);
+>  		vma_interval_tree_remove(vp->vma,
+> -					get_i_mmap_root(vp->mapping));
+> -		if (vp->adj_next)
+> +					get_rb_root(vp->vma, vp->mapping));
+> +		dec_mapping_vma(vp->mapping, vp->vma);
+> +		if (vp->adj_next) {
+> +			i_mmap_tree_lock_write(vp->mapping, vp->adj_next);
+>  			vma_interval_tree_remove(vp->adj_next,
+> -					get_i_mmap_root(vp->mapping));
+> +					get_rb_root(vp->adj_next, vp->mapping));
+> +			dec_mapping_vma(vp->mapping, vp->adj_next);
+> +		}
+>  	}
+>  
+>  }
+> @@ -340,12 +348,17 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
+>  			 struct mm_struct *mm)
+>  {
+>  	if (vp->file) {
+> -		if (vp->adj_next)
+> +		if (vp->adj_next) {
+>  			vma_interval_tree_insert(vp->adj_next,
+> -					get_i_mmap_root(vp->mapping));
+> +					get_rb_root(vp->adj_next, vp->mapping));
+> +			inc_mapping_vma(vp->mapping, vp->adj_next);
+> +			i_mmap_tree_unlock_write(vp->mapping, vp->adj_next);
+> +		}
+>  		vma_interval_tree_insert(vp->vma,
+> -					get_i_mmap_root(vp->mapping));
+> +					get_rb_root(vp->vma, vp->mapping));
+> +		inc_mapping_vma(vp->mapping, vp->vma);
+>  		flush_dcache_mmap_unlock(vp->mapping);
+> +		i_mmap_tree_unlock_write(vp->mapping, vp->vma);
+>  	}
+>  
+>  	if (vp->remove && vp->file) {
+> @@ -370,7 +383,7 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
+>  	}
+>  
+>  	if (vp->file) {
+> -		i_mmap_unlock_write(vp->mapping);
+> +		i_mmap_unlock_write_complete(vp->mapping);
+>  
+>  		if (!vp->skip_vma_uprobe) {
+>  			uprobe_mmap(vp->vma);
+> @@ -1799,12 +1812,12 @@ static void unlink_file_vma_batch_process(struct unlink_vma_file_batch *vb)
+>  	int i;
+>  
+>  	mapping = vb->vmas[0]->vm_file->f_mapping;
+> -	i_mmap_lock_write(mapping);
+> +	i_mmap_lock_write_prepare(mapping);
+>  	for (i = 0; i < vb->count; i++) {
+>  		VM_WARN_ON_ONCE(vb->vmas[i]->vm_file->f_mapping != mapping);
+>  		__remove_shared_vm_struct(vb->vmas[i], mapping);
+>  	}
+> -	i_mmap_unlock_write(mapping);
+> +	i_mmap_unlock_write_complete(mapping);
+>  
+>  	unlink_file_vma_batch_init(vb);
+>  }
+> @@ -1836,10 +1849,13 @@ static void vma_link_file(struct vm_area_struct *vma, bool hold_rmap_lock)
+>  
+>  	if (file) {
+>  		mapping = file->f_mapping;
+> -		i_mmap_lock_write(mapping);
+> +		i_mmap_lock_write_prepare(mapping);
+> +		i_mmap_tree_lock_write(mapping, vma);
+>  		__vma_link_file(vma, mapping);
+> -		if (!hold_rmap_lock)
+> -			i_mmap_unlock_write(mapping);
+> +		if (!hold_rmap_lock) {
+> +			i_mmap_tree_unlock_write(mapping, vma);
+> +			i_mmap_unlock_write_complete(mapping);
+> +		}
+>  	}
+>  }
+>  
+> @@ -2164,6 +2180,23 @@ static void vm_lock_anon_vma(struct mm_struct *mm, struct anon_vma *anon_vma)
+>  	}
+>  }
+
+I can but hope that all of the above is quite simplified before we get to the
+"making file rmap more complicated" bit.
+
+>  
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +static inline void i_mmap_nest_lock(struct address_space *mapping,
+> +				struct rw_semaphore *lock)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < split_tree_num; i++)
+> +		down_write_nest_lock(&mapping->i_mmap[i]->rwsem, lock);
+> +}
+> +#else
+> +static inline void i_mmap_nest_lock(struct address_space *mapping,
+> +				struct rw_semaphore *lock)
+> +{
+> +	down_write_nest_lock(&mapping->i_mmap_rwsem, lock);
+> +}
+> +#endif
+> +
+>  static void vm_lock_mapping(struct mm_struct *mm, struct address_space *mapping)
+>  {
+>  	if (!test_bit(AS_MM_ALL_LOCKS, &mapping->flags)) {
+> @@ -2178,7 +2211,7 @@ static void vm_lock_mapping(struct mm_struct *mm, struct address_space *mapping)
+>  		 */
+>  		if (test_and_set_bit(AS_MM_ALL_LOCKS, &mapping->flags))
+>  			BUG();
+> -		down_write_nest_lock(&mapping->i_mmap_rwsem, &mm->mmap_lock);
+> +		i_mmap_nest_lock(mapping, &mm->mmap_lock);
+>  	}
+>  }
+>  
+> @@ -2489,6 +2522,7 @@ static int __mmap_new_file_vma(struct mmap_state *map,
+>  	int error;
+>  
+>  	vma->vm_file = map->file;
+> +	vma_set_tree_idx(vma);
+>  	if (!map->file_doesnt_need_get)
+>  		get_file(map->file);
+>  
+> diff --git a/mm/vma_init.c b/mm/vma_init.c
+> index 3c0b65950510..c115e33d4812 100644
+> --- a/mm/vma_init.c
+> +++ b/mm/vma_init.c
+> @@ -72,6 +72,9 @@ static void vm_area_init_from(const struct vm_area_struct *src,
+>  #ifdef CONFIG_NUMA
+>  	dest->vm_policy = src->vm_policy;
+>  #endif
+> +#ifdef CONFIG_SPLIT_I_MMAP
+> +	dest->tree_idx = src->tree_idx;
+> +#endif
+>  #ifdef __HAVE_PFNMAP_TRACKING
+>  	dest->pfnmap_track_ctx = NULL;
+>  #endif
+
+-- 
+Pedro
