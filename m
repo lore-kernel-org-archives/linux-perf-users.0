@@ -1,66 +1,66 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3691F309EE2
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 09:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10543368D4A
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 09:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781168499; cv=none; b=bnrgIOZN4ygTjFh8XcypPLeylRtYk0e2JPNKKtAtZw7UAM1PJTf5RKiYR71Fq1yNvYzMWPQfex0A0LO0nlQpbmLfGxqqMvCvjRRZiZ0X3yPXogveTUIDqy6iuvE/hI0pbYPwFQGXwT+G5KZBh/enPiOb1vWgLCRibcQlAc3HCGc=
+	t=1781169102; cv=none; b=cYERhPud+glDMQ5zSavGQZVeMf1wryGC+0KHa96e0uCuEk0iomDwrQ92xggMc6A9zmpNVOHZq3XIRJwJlaBwzdXzNaacb2gMkrJFOatBX5PiSwE/gVhCwjIA9OQsxAopl6cAvONvbXsFE0ytrRL4xCA1gOCt9tpa7q3aOkp/wQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781168499; c=relaxed/simple;
-	bh=s7jR6iMmWhlqK78Tp/5a6ci8NkEtexNKxWV3FzW+eNE=;
+	s=arc-20240116; t=1781169102; c=relaxed/simple;
+	bh=CEZxLgC/u6Or746I2VQL7d48IHnhlAScXkAvqVqjI2M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bDE/2ILruKbR6drknM9RN4QDa/MFpECzeFL/vY2lS/Xp/WzFFZV7nHCL1IQEFoaG65PNchFbOvwNBomBZxiaAU5odGp4ETUTFV/tisjKOOPPoDB+X3OC8+8RjhvTbs7ZEKPin+PeVSwsqJCyyIFACdHtLvcfBR8c5Z2kB57OCKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KAuaQEKN; arc=none smtp.client-ip=209.85.208.45
+	 In-Reply-To:Content-Type; b=cdVGXVfEUTvU4Op+0BqYH3xRkWvhs5611Rti0HVPalnEsEKnJ181u7XWZuqQjZyajvEiy5ED4afAgtM2IsECY/ADHK3k3nqkO7M3tYDzFeQedlF+SE3bWDSjt7EynsfQK/qV2GxFG/xS/fLOIBR4qBEX9TLne2Xoq+8ZqpKSyPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qPTjjZcG; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KAuaQEKN"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-68d232e119dso12383527a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 02:01:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qPTjjZcG"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-bec405a6ea5so1104756966b.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 02:11:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781168495; x=1781773295; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1781169099; x=1781773899; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=x4jYOI1ytBaH/KvrNBwszKXOejxemu3+HMwBrWYzf4Q=;
-        b=KAuaQEKNGQBJylWnRCR8vZJ4iY/DXxUMqIWiJO/NE0CobQ1obV+WS+jqND9F3a5EB0
-         dB5owBsTrjlAUnAt9fORExxBfEUYrvsdtP/gZSlg+srSZxx8D7A/R46zjUElzlO9duFw
-         Qb6qw37pBAgeDOwv+7vOpVlz6G80NXz7wD3lVCImmACepBzrqt3aXv18/dV69uImWYem
-         w70H/0cXaSBaDJlcvhSdwWya9Spso6SFe3suuAqfJS8XPCskoW2oOlOpJEwQvFRO+M6O
-         FkVw7mXu3t+3d7h8hMkn4EtrJVG9AfHVnEwYkqgSyr2W8zHzzotjQjjgJBTzd2Grl2Nc
-         D60g==
+        bh=TemVgYrN3v0a2/ATuSaJzKVDM6WJr0lztDtX3dOOHeo=;
+        b=qPTjjZcGgXaAz6UJ5ROSbehJMXcSxseuRRilz9B5Lq7oK0rw3BtJtDkL4Fem3huWAt
+         yjtJMI4ixE8TeTw7LuRf6djFU01sVCC/gy5AT4mNGjtI4j3JRaGVOxOQ5d3j7Y9xOZYx
+         YSiYHeCXPrD4QjAlvj3LBuix+s0MIhtt1oqyFD+PVYRmPY+yGt2ssW7Wsyuy1kVm3TRa
+         hj1zz5KYefBKdqew7H3+OtttM2D5SWvPCg44rI/KBl9oJ72T8yTQKZSpFPHr7cF9OKh+
+         iM94NK43VLTDmWluNN5BMv9T5Npv5zk1m1ETJroQzm5QM9LUGz7zRHZXNQx3pzgkH5bt
+         f6Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781168495; x=1781773295;
+        d=1e100.net; s=20251104; t=1781169099; x=1781773899;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=x4jYOI1ytBaH/KvrNBwszKXOejxemu3+HMwBrWYzf4Q=;
-        b=T56E2LAKhI8d1faZ0yuYWqP6EYmuLgSqma0eP5HRm0KriXrRRAJR1Z+dGyJ0WNR9zY
-         CKVBvwVbZUyMywlyEel+1mwrun7FrlMzkqG4ZMAck/Aw6R4LJZseKhWzqyFsaEtcM5s6
-         CwOC4yLi8UIXFsDaPbzNvDRTXxndTANRJIg2xPWyR4ydZR3WYjlJMWCKwDcGKvm7wUNa
-         8DLCEE846BLAq0wNgBxZifZZPBoBafThGIvrX8/95UFAj8kFF9rdnw8bzLiFeyMYx57z
-         Qpf2RzGEMLcz4NZWTlkGjbazmh07i9tc2K2/uBfoZZeocBQZOHwYqoprKsdKhhoUC/+R
-         3/7g==
-X-Forwarded-Encrypted: i=1; AFNElJ9HlQ3dgSs8zgh8KYVkAkvFxH6OpI5e8YpZOKt5VSdmi3+v53HBPZAvAvWeZ99Kc8VFUP3piZf2ZP7HA4lsuO4s@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHS1VbrpZZn3NcSGpwsRH2bFzRQCNZEqq/1paZ7zmCFN+sckoz
-	59JKwBWz6WGIhJGluSH7Y6v0tO06aStmz+PMXHol2zNSasFmZyM6zRqNqVgyqK1Vyao=
-X-Gm-Gg: Acq92OEbZT5wwtTKpKzZvFk6MkeTQj4KJ20meJ6L9v2Mzm+ITLJs9K+Ip9ObFCHyYtR
-	a5alq3g3sIS/g/NNgoMKc38lTqQiFy1FDKhQAFAEfKPCkI0160FNyodOjAxF0RJj60VRvnJ4www
-	uiF7/yiUC7dHCQL0d1zpisjWygcfq/9smuc+YEfWric2iiT1u/FjgAfjA3KnsXAy1Y/HJHkenmb
-	lAXCunVDrwdayerr0ATIr2Cby0tQb3IIMQhCBdMZShD8pFn+Lt1UNY4Pd3naBbVLQgMwAxZqDIz
-	UXKDnaED1/Wvx0tDoS65ZJ2GTRoEKckZrnicrjED5PcZwL768AdFPcLGRfrxMc0xXuTOte045vd
-	KFSGnQ2fKOtp2sqEale04CpZYw9fnGlrDI/3Z2VOlUpPqKRN/P4elMhn6jK8BEqXY1D4IPx1YCl
-	A5SzBaAiITI+IGWMFc9vzl+81gYUs5JbFZEgETix4=
-X-Received: by 2002:a05:6402:913:b0:662:ac7e:aac9 with SMTP id 4fb4d7f45d1cf-6930e2d0326mr857408a12.20.1781168495474;
-        Thu, 11 Jun 2026 02:01:35 -0700 (PDT)
+        bh=TemVgYrN3v0a2/ATuSaJzKVDM6WJr0lztDtX3dOOHeo=;
+        b=coSgVpsrNRVGZ4YdJu9Ddt4oQ2qaeNMnS4DlyGsKI9JCp3caawaXgN8QrZGImdt/5h
+         r3Z5ty5DL9exHe2TZGmAJ4WhKnpRcmKxl+M4/gEPU+Vsx/Ld+8YQLTUX5m9ljpL+PAw4
+         gPpQ57Xw/CjM0c+gYcdhey3VnUyt7HDfwTouWxjYcaKXAHitbAUqZ4Ke+V3FqeYPA+Di
+         8eWG6Nw47X/mmZSBLHJyLisghy8yCyalJhH3uR6A8CqzRp/IQEpk5CWKRd6Kj/HealAB
+         IHEKc+ozxBGkAn/G41nj3OIVIEieGykQWGSREms24TGIBygndvbyejd1AbctxGB7qd6g
+         mjTg==
+X-Forwarded-Encrypted: i=1; AFNElJ8mW9aqkCjc18+D+gxAr+QveJsuVuwvszT2ozbCIijOGD/bGXTkMtLcGrMj+GININdOYCr2GAQ/R7WKaDQVnzxT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGwDiO1Icsrm8eaSiDilX/U+CagA9n5m/3TC9RwMREsG4S9G6P
+	HULAaiG9/919OIHWvFDLeObVaCGVkPLyWhL1hQyJ1iKYZj6HrN/idpS6EzPD68qCYy0=
+X-Gm-Gg: Acq92OEa9TCZSQ/ZtKih+5Quqm6Gdz62pKhLVEWBmKScFzJ+Uxd8ntMpRoCbAsqdCUq
+	Dtj6k0Gofq1H3KU0a4A8EJ/DekrcdiQT4zVO/7Xg5tIzowCAlG8nMnaPqiKxsGHwAeFMqjikskP
+	VaAWFhHv0Gqxq+7d3+Od2rC0i75t0pY0bBb2DjrCQheEKaXF8NyQj/G0MZTm1qf+TX88eg6e4z3
+	019TZqZAmFgng8FTP1tJXiP0W6SpAjzmGmC4EdvUDgIXERlzWZ24ziAbxlZ839sBeBjsV06zvGv
+	btlsj2vpPPv9wEZGGBKj0d0EErPnbU5c6wD2jjq1Bb8pYtndw3UlxRy/r5dbhPv+dSkaYL2S00K
+	r8uREUtbnlKp6BoY32kDx6QcZRwHzchgRn3yGTb5BTodok4LvXZqBMEmge9NG/IN6vNAwFDldxW
+	VInYh9BVp6BZHrf1x8VRZaG2HbEV4aIYap1/vZ2DA=
+X-Received: by 2002:a17:907:2d24:b0:be2:7f13:8e33 with SMTP id a640c23a62f3a-bfc87ef676fmr89235566b.45.1781169099271;
+        Thu, 11 Jun 2026 02:11:39 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68e65b4d988sm10647298a12.25.2026.06.11.02.01.34
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bfcb53c3461sm36589966b.41.2026.06.11.02.11.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2026 02:01:35 -0700 (PDT)
-Message-ID: <896279e2-eded-4388-afb9-0a633404928b@linaro.org>
-Date: Thu, 11 Jun 2026 10:01:33 +0100
+        Thu, 11 Jun 2026 02:11:38 -0700 (PDT)
+Message-ID: <c6f6766b-ef3f-4260-9569-620d351027ff@linaro.org>
+Date: Thu, 11 Jun 2026 10:11:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,8 +68,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/8] perf cs-etm: Use thread-stack for last branch
- entries
+Subject: Re: [PATCH v7 8/8] perf test: Add Arm CoreSight callchain test
 To: Leo Yan <leo.yan@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
  linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo
@@ -82,309 +81,348 @@ Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
  Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>,
  Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
 References: <20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com>
- <20260611-b4-arm_cs_callchain_support_v1-v7-4-1ba770c862ae@arm.com>
+ <20260611-b4-arm_cs_callchain_support_v1-v7-8-1ba770c862ae@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v7-4-1ba770c862ae@arm.com>
+In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v7-8-1ba770c862ae@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 11/06/2026 8:56 am, Leo Yan wrote:
-> CS ETM maintains its own circular array for last branch entries, with
-> local helpers to update, copy and reset the branch stack. This
-> duplicates logic already provided by the common code.
+On 11/06/2026 8:57 am, Leo Yan wrote:
+> Add a CoreSight shell test for synthesized callchains.
 > 
-> Record taken branches with thread_stack__event() and synthesize
-> PERF_SAMPLE_BRANCH_STACK data with thread_stack__br_sample(). This
-> removes the private last_branch_rb buffer and its position tracking.
+> The test uses the new callchain workload to generate trace and decodes
+> it with synthesis callchain. It then verifies that the instruction
+> samples show the expected callchain push and pop.
 > 
-> This also makes the branch history state belong to the thread rather
-> than the trace queue. That is a better fit for CoreSight traces where
-> a trace queue can effectively be CPU scoped, while call/return history
-> is per thread.
+> Use control FIFOs so tracing starts only around the workload, which
+> keeps the trace data small. The test is limited to arm64 systems with
+> the cs_etm event available.
 > 
-> Keep the buffer number updated via thread_stack__set_trace_nr(), which
-> is used when exporting samples to Python scripts. Pass callstack=false
-> for now; synthesized callchains are added by a later patch.
+> After:
 > 
-> The output should remain same, except that be->flags.predicted is no
-> longer set. Since CoreSight trace does not provide branch prediction
-> information, clearing the flag avoids confusion.
+>    perf test 136 -vvv
+>    136: CoreSight synthesized callchain:
+>    --- start ---
+>    test child forked, pid 3539
+>    ---- end(0) ----
+>    136: CoreSight synthesized callchain			: Ok
 > 
+> Assisted-by: Codex:GPT-5.5
 > Signed-off-by: Leo Yan <leo.yan@arm.com>
-
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-
 > ---
->   tools/perf/util/cs-etm.c | 159 ++++++++++++++---------------------------------
->   1 file changed, 46 insertions(+), 113 deletions(-)
+>   tools/perf/Documentation/perf-test.txt        |   6 +-
+>   tools/perf/tests/builtin-test.c               |   1 +
+>   tools/perf/tests/shell/coresight/callchain.sh | 168 ++++++++++++++++++++++++++
+>   tools/perf/tests/tests.h                      |   1 +
+>   tools/perf/tests/workloads/Build              |   2 +
+>   tools/perf/tests/workloads/callchain.c        |  24 ++++
+
+Maybe "syscall" is a better name? There's not any difference between 
+this one and others like the deterministic one I added with regards to 
+the callchain.
+
+>   6 files changed, 200 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 4127120459418389ca7aabb9a49dead2b50e7533..8798bf0471faf3b1813780b45c588263ff6b4416 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -84,10 +84,9 @@ struct cs_etm_auxtrace {
->   struct cs_etm_traceid_queue {
->   	u8 trace_chan_id;
->   	u64 period_instructions;
-> -	size_t last_branch_pos;
->   	union perf_event *event_buf;
-> +	unsigned int br_stack_sz;
->   	struct branch_stack *last_branch;
-> -	struct branch_stack *last_branch_rb;
->   	struct cs_etm_packet *prev_packet;
->   	struct cs_etm_packet *packet;
->   	struct cs_etm_packet_queue packet_queue;
-> @@ -644,9 +643,8 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->   		tidq->last_branch = zalloc(sz);
->   		if (!tidq->last_branch)
->   			goto out_free;
-> -		tidq->last_branch_rb = zalloc(sz);
-> -		if (!tidq->last_branch_rb)
-> -			goto out_free;
+> diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
+> index 81c8525f594680d814f80e6f88bcce8d867bb350..859df74e62efc4b1e80da13ae8e053356f68ae54 100644
+> --- a/tools/perf/Documentation/perf-test.txt
+> +++ b/tools/perf/Documentation/perf-test.txt
+> @@ -57,7 +57,8 @@ OPTIONS
+>   --workload=::
+>   	Run a built-in workload, to list them use '--list-workloads', current
+>   	ones include: noploop, thloop, leafloop, sqrtloop, brstack, datasym,
+> -	context_switch_loop, deterministic, named_threads and landlock.
+> +	context_switch_loop, deterministic, named_threads, landlock and
+> +	callchain.
+>   
+>   	Used with the shell script regression tests.
+>   
+> @@ -69,7 +70,8 @@ OPTIONS
+>   	'named_threads' accepts the number of threads and the number of loops to
+>   	do in each thread.
+>   
+> -	The datasym, landlock and deterministic workloads don't accept any.
+> +	The datasym, landlock, deterministic and callchain workloads don't accept
+> +	any.
+>   
+>   --list-workloads::
+>   	List the available workloads to use with -w/--workload.
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index afc06cec49546d29d86b94840c7021c5bf5c88e3..8994488cc206863ba77f7e7e5803e62f18e151ba 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -166,6 +166,7 @@ static struct test_workload *workloads[] = {
+>   	&workload__jitdump,
+>   	&workload__context_switch_loop,
+>   	&workload__deterministic,
+> +	&workload__callchain,
+>   
+>   #ifdef HAVE_RUST_SUPPORT
+>   	&workload__code_with_type,
+> diff --git a/tools/perf/tests/shell/coresight/callchain.sh b/tools/perf/tests/shell/coresight/callchain.sh
+> new file mode 100755
+> index 0000000000000000000000000000000000000000..e9f907f60e3a4574f13a9c651d541c675f07a4ad
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/coresight/callchain.sh
+> @@ -0,0 +1,168 @@
+> +#!/bin/bash
+> +# CoreSight synthesized callchain (exclusive)
+> +# SPDX-License-Identifier: GPL-2.0
 > +
-> +		tidq->br_stack_sz = etm->synth_opts.last_branch_sz;
->   	}
->   
->   	tidq->event_buf = malloc(PERF_SAMPLE_MAX_SIZE);
-> @@ -656,7 +654,6 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->   	return 0;
->   
->   out_free:
-> -	zfree(&tidq->last_branch_rb);
->   	zfree(&tidq->last_branch);
->   	zfree(&tidq->prev_packet);
->   	zfree(&tidq->packet);
-> @@ -939,7 +936,6 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
->   		thread__zput(tidq->decode_thread);
->   		zfree(&tidq->event_buf);
->   		zfree(&tidq->last_branch);
-> -		zfree(&tidq->last_branch_rb);
->   		zfree(&tidq->prev_packet);
->   		zfree(&tidq->packet);
->   		zfree(&tidq);
-> @@ -1299,57 +1295,6 @@ static int cs_etm__queue_first_cs_timestamp(struct cs_etm_auxtrace *etm,
->   	return ret;
->   }
->   
-> -static inline
-> -void cs_etm__copy_last_branch_rb(struct cs_etm_queue *etmq,
-> -				 struct cs_etm_traceid_queue *tidq)
-> -{
-> -	struct branch_stack *bs_src = tidq->last_branch_rb;
-> -	struct branch_stack *bs_dst = tidq->last_branch;
-> -	size_t nr = 0;
-> -
-> -	/*
-> -	 * Set the number of records before early exit: ->nr is used to
-> -	 * determine how many branches to copy from ->entries.
-> -	 */
-> -	bs_dst->nr = bs_src->nr;
-> -
-> -	/*
-> -	 * Early exit when there is nothing to copy.
-> -	 */
-> -	if (!bs_src->nr)
-> -		return;
-> -
-> -	/*
-> -	 * As bs_src->entries is a circular buffer, we need to copy from it in
-> -	 * two steps.  First, copy the branches from the most recently inserted
-> -	 * branch ->last_branch_pos until the end of bs_src->entries buffer.
-> -	 */
-> -	nr = etmq->etm->synth_opts.last_branch_sz - tidq->last_branch_pos;
-> -	memcpy(&bs_dst->entries[0],
-> -	       &bs_src->entries[tidq->last_branch_pos],
-> -	       sizeof(struct branch_entry) * nr);
-> -
-> -	/*
-> -	 * If we wrapped around at least once, the branches from the beginning
-> -	 * of the bs_src->entries buffer and until the ->last_branch_pos element
-> -	 * are older valid branches: copy them over.  The total number of
-> -	 * branches copied over will be equal to the number of branches asked by
-> -	 * the user in last_branch_sz.
-> -	 */
-> -	if (bs_src->nr >= etmq->etm->synth_opts.last_branch_sz) {
-> -		memcpy(&bs_dst->entries[nr],
-> -		       &bs_src->entries[0],
-> -		       sizeof(struct branch_entry) * tidq->last_branch_pos);
-> -	}
-> -}
-> -
-> -static inline
-> -void cs_etm__reset_last_branch_rb(struct cs_etm_traceid_queue *tidq)
-> -{
-> -	tidq->last_branch_pos = 0;
-> -	tidq->last_branch_rb->nr = 0;
-> -}
-> -
->   static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
->   					 struct cs_etm_traceid_queue *tidq,
->   					 struct cs_etm_packet *packet, u64 addr)
-> @@ -1419,38 +1364,6 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
->   	return addr;
->   }
->   
-> -static void cs_etm__update_last_branch_rb(struct cs_etm_queue *etmq,
-> -					  struct cs_etm_traceid_queue *tidq)
-> -{
-> -	struct branch_stack *bs = tidq->last_branch_rb;
-> -	struct branch_entry *be;
-> -
-> -	/*
-> -	 * The branches are recorded in a circular buffer in reverse
-> -	 * chronological order: we start recording from the last element of the
-> -	 * buffer down.  After writing the first element of the stack, move the
-> -	 * insert position back to the end of the buffer.
-> -	 */
-> -	if (!tidq->last_branch_pos)
-> -		tidq->last_branch_pos = etmq->etm->synth_opts.last_branch_sz;
-> -
-> -	tidq->last_branch_pos -= 1;
-> -
-> -	be       = &bs->entries[tidq->last_branch_pos];
-> -	be->from = cs_etm__last_executed_instr(tidq->prev_packet);
-> -	be->to	 = cs_etm__first_executed_instr(tidq->packet);
-> -	/* No support for mispredict */
-> -	be->flags.mispred = 0;
-> -	be->flags.predicted = 1;
-> -
-> -	/*
-> -	 * Increment bs->nr until reaching the number of last branches asked by
-> -	 * the user on the command line.
-> -	 */
-> -	if (bs->nr < etmq->etm->synth_opts.last_branch_sz)
-> -		bs->nr += 1;
-> -}
-> -
->   static int cs_etm__inject_event(struct cs_etm_auxtrace *etm, union perf_event *event,
->   			       struct perf_sample *sample, u64 type)
->   {
-> @@ -1614,6 +1527,42 @@ static inline u64 cs_etm__resolve_sample_time(struct cs_etm_queue *etmq,
->   		return etm->latest_kernel_timestamp;
->   }
->   
-> +static bool cs_etm__packet_has_taken_branch(struct cs_etm_packet *packet)
+> +glb_err=1
+> +
+> +if ! tmpdir=$(mktemp -d /tmp/perf-cs-callchain-test.XXXXXX); then
+> +	echo "mktemp failed"
+> +	exit 1
+> +fi
+> +
+> +cleanup_files()
 > +{
-> +	if (packet->sample_type == CS_ETM_RANGE &&
-> +	    packet->last_instr_taken_branch)
-> +		return true;
-> +
-> +	return false;
+> +	rm -rf "$tmpdir"
 > +}
 > +
-> +static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
-> +				    struct cs_etm_traceid_queue *tidq)
+> +trap cleanup_files EXIT
+> +trap 'cleanup_files; exit $glb_err' TERM INT
+> +
+> +skip_if_system_is_not_ready()
 > +{
-> +	u64 from, to;
-> +	int size;
-> +
-> +	if (!cs_etm__packet_has_taken_branch(tidq->prev_packet))
-> +		return;
-> +
-> +	if (etmq->etm->synth_opts.last_branch) {
-> +		from = cs_etm__last_executed_instr(tidq->prev_packet);
-> +		to = cs_etm__first_executed_instr(tidq->packet);
-> +
-> +		size = cs_etm__instr_size(etmq, tidq, tidq->prev_packet, from);
-> +
-> +		/* Enable callchain so thread stack entry can be allocated */
-> +		thread_stack__event(tidq->frontend_thread, tidq->prev_packet->cpu,
-> +				    tidq->prev_packet->flags, from, to, size,
-> +				    etmq->buffer->buffer_nr + 1, false,
-> +				    tidq->br_stack_sz, 0);
-> +	} else {
-> +		thread_stack__set_trace_nr(tidq->frontend_thread,
-> +					   tidq->prev_packet->cpu,
-> +					   etmq->buffer->buffer_nr + 1);
+> +	[ "$(uname -m)" = "aarch64" ] || {
+> +		echo "Skip: arm64 only test" >&2
+> +		return 2
 > +	}
+
+Minor nit, but for consistency with the other coresight tests we should 
+probably not check for arm64 and only check for cs_etm//.
+
+> +
+> +	perf list | grep -Pzq 'cs_etm//' || {
+> +		echo "Skip: cs_etm event is not available" >&2
+> +		return 2
+> +	}
+> +
+> +	return 0
 > +}
 > +
->   static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->   					    struct cs_etm_traceid_queue *tidq,
->   					    struct cs_etm_packet *packet,
-> @@ -1644,8 +1593,11 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+> +record_trace()
+> +{
+> +	local data=$1
+> +	local script=$2
+> +
+> +	local cf="$tmpdir/ctl"
+> +	local af="$tmpdir/ack"
+> +
+> +	mkfifo "$cf" "$af"
+> +
+> +	perf record -o "$data" -e cs_etm// --per-thread -D -1 --control fifo:"$cf","$af" -- \
+> +		perf test --record-ctl fifo:"$cf","$af" -w callchain >/dev/null 2>&1 &&
+> +
+> +	# It is safe to use 'i3i' with a three-instruction interval, since the
+> +	# workload is compiled with -O0.
+> +	perf script --itrace=g16i3il64 -i "$data" > "$script"
+> +}
+> +
+> +callchain_regex_1()
+> +{
+> +	printf '%s' \
+> +'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
+> +'[[:space:]]+[[:xdigit:]]+ foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'([[:space:]]+[[:xdigit:]]+ .*\n)*'
+> +}
+> +
+> +callchain_regex_2()
+> +{
+> +	printf '%s' \
+> +'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
+> +'[[:space:]]+[[:xdigit:]]+ do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'([[:space:]]+[[:xdigit:]]+ .*\n)*'
+> +}
+> +
+> +callchain_regex_3()
+> +{
+> +	printf '%s' \
+> +'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
+> +'[[:space:]]+[[:xdigit:]]+ syscall(@plt)?\+0x[[:xdigit:]]+ \(.*\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'([[:space:]]+[[:xdigit:]]+ .*\n)*'
+> +}
+> +
+> +callchain_regex_4()
+> +{
+> +	printf '%s' \
+> +'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
+> +'[[:space:]]+[[:xdigit:]]+ .*\+0x[[:xdigit:]]+ \(\[kernel\.kallsyms\]\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ syscall(@plt)?\+0x[[:xdigit:]]+ \(.*\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
+> +'([[:space:]]+[[:xdigit:]]+ .*\n)*'
+> +}
+> +
+> +find_after_line()
+> +{
+> +	local regex="$1"
+> +	local file="$2"
+> +	local start="$3"
+> +	local offset
+> +	local line
+> +
+> +	# Search in byte offset
+> +	offset=$(
+> +		tail -n +"$start" "$file" |
+> +		grep -Pzob -m1 "$regex" |
+> +		tr '\0' '\n' |
+> +		sed -n 's/^\([0-9][0-9]*\):.*/\1/p;q'
+> +	)
+> +
+> +	if [ -z "$offset" ]; then
+> +		echo "Failed to match regex after line $start" >&2
+> +		echo "Regex:" >&2
+> +		printf '%s\n' "$regex" >&2
+> +		echo "Context from line $start:" >&2
+> +		sed -n "${start},$((start + 100))p" "$file" >&2
+> +		return 1
+> +	fi
+> +
+> +	# Conver from offset to line
+> +	line=$(
+> +		tail -n +"$start" "$file" |
+> +		head -c "$offset" |
+> +		wc -l
+> +	)
+> +
+> +	echo "$((start + line))"
+> +}
+> +
+> +check_callchain_flow()
+> +{
+> +	local file="$1"
+> +	local l1 l2 l3 l4 l5 l6 l7
+> +
+> +	# Callchain push
+> +	l1=$(find_after_line "$(callchain_regex_1)" "$file" 1) || return 1
+> +	l2=$(find_after_line "$(callchain_regex_2)" "$file" "$((l1 + 1))") || return 1
+> +	l3=$(find_after_line "$(callchain_regex_3)" "$file" "$((l2 + 1))") || return 1
+> +	l4=$(find_after_line "$(callchain_regex_4)" "$file" "$((l3 + 1))") || return 1
+> +
+> +	# Callchain pop
+> +	l5=$(find_after_line "$(callchain_regex_3)" "$file" "$((l4 + 1))") || return 1
+> +	l6=$(find_after_line "$(callchain_regex_2)" "$file" "$((l5 + 1))") || return 1
+> +	l7=$(find_after_line "$(callchain_regex_1)" "$file" "$((l6 + 1))") || return 1
+> +
+
+In tests/shell/coresight/callchain.sh line 144:
+	l7=$(find_after_line "$(callchain_regex_1)" "$file" "$((l6 + 1))") || 
+return 1
+         ^-- SC2034 (warning): l7 appears unused. Verify use (or export 
+if used externally).
+
+
+
+> +	return 0
+> +}
+> +
+> +run_test()
+> +{
+> +	local data=$tmpdir/perf.data
+> +	local script=$tmpdir/perf.script
+> +
+> +	if ! record_trace "$data" "$script"; then
+> +		echo "$name: perf record/script failed"
+
+In tests/shell/coresight/callchain.sh line 155:
+		echo "$name: perf record/script failed"
+                       ^---^ SC2154 (warning): name is referenced but 
+not assigned.
+
+
+> +		return
+> +	fi
+> +
+> +	check_callchain_flow "$script" || return
+> +
+> +	glb_err=0
+> +}
+> +
+> +skip_if_system_is_not_ready || exit 2
+> +
+> +run_test
+> +
+> +exit $glb_err
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index 7cedf05be544ad79a99e86d30dfa4f7b01ca0837..cee9e6b62dcc838c864bbe76efe3b638ed75b134 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -248,6 +248,7 @@ DECLARE_WORKLOAD(inlineloop);
+>   DECLARE_WORKLOAD(jitdump);
+>   DECLARE_WORKLOAD(context_switch_loop);
+>   DECLARE_WORKLOAD(deterministic);
+> +DECLARE_WORKLOAD(callchain);
 >   
->   	cs_etm__copy_insn(etmq, tidq, packet, &sample);
+>   #ifdef HAVE_RUST_SUPPORT
+>   DECLARE_WORKLOAD(code_with_type);
+> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+> index 75b377934a0e62b9ac1fec245520ea0978ac957e..dfdf9a2720b22f67a3d7b53d0ed14e0654059c8f 100644
+> --- a/tools/perf/tests/workloads/Build
+> +++ b/tools/perf/tests/workloads/Build
+> @@ -13,6 +13,7 @@ perf-test-y += inlineloop.o
+>   perf-test-y += jitdump.o
+>   perf-test-y += context_switch_loop.o
+>   perf-test-y += deterministic.o
+> +perf-test-y += callchain.o
 >   
-> -	if (etm->synth_opts.last_branch)
-> +	if (etm->synth_opts.last_branch) {
-> +		thread_stack__br_sample(tidq->frontend_thread, tidq->packet->cpu,
-> +					tidq->last_branch, tidq->br_stack_sz);
->   		sample.branch_stack = tidq->last_branch;
-> +	}
->   
->   	if (etm->synth_opts.inject) {
->   		ret = cs_etm__inject_event(etm, event, &sample,
-> @@ -1836,14 +1788,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->   
->   	tidq->period_instructions += tidq->packet->instr_count;
->   
-> -	/*
-> -	 * Record a branch when the last instruction in
-> -	 * PREV_PACKET is a branch.
-> -	 */
-> -	if (etm->synth_opts.last_branch &&
-> -	    tidq->prev_packet->sample_type == CS_ETM_RANGE &&
-> -	    tidq->prev_packet->last_instr_taken_branch)
-> -		cs_etm__update_last_branch_rb(etmq, tidq);
-> +	cs_etm__add_stack_event(etmq, tidq);
->   
->   	if (etm->synth_opts.instructions &&
->   	    tidq->period_instructions >= etm->instructions_sample_period) {
-> @@ -1902,10 +1847,6 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->   		u64 offset = etm->instructions_sample_period - instrs_prev;
->   		u64 addr;
->   
-> -		/* Prepare last branches for instruction sample */
-> -		if (etm->synth_opts.last_branch)
-> -			cs_etm__copy_last_branch_rb(etmq, tidq);
-> -
->   		while (tidq->period_instructions >=
->   				etm->instructions_sample_period) {
->   			/*
-> @@ -1936,8 +1877,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
->   			generate_sample = true;
->   
->   		/* Generate sample for branch taken packet */
-> -		if (tidq->prev_packet->sample_type == CS_ETM_RANGE &&
-> -		    tidq->prev_packet->last_instr_taken_branch)
-> +		if (cs_etm__packet_has_taken_branch(tidq->prev_packet))
->   			generate_sample = true;
->   
->   		if (generate_sample) {
-> @@ -1985,10 +1925,6 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->   	    etmq->etm->synth_opts.instructions &&
->   	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
->   		u64 addr;
-> -
-> -		/* Prepare last branches for instruction sample */
-> -		cs_etm__copy_last_branch_rb(etmq, tidq);
-> -
->   		/*
->   		 * Generate a last branch event for the branches left in the
->   		 * circular buffer at the end of the trace.
-> @@ -2020,7 +1956,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
->   
->   	/* Reset last branches after flush the trace */
->   	if (etm->synth_opts.last_branch)
-> -		cs_etm__reset_last_branch_rb(tidq);
-> +		thread_stack__flush(tidq->frontend_thread);
->   
->   	return err;
->   }
-> @@ -2044,9 +1980,6 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
->   	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
->   		u64 addr;
->   
-> -		/* Prepare last branches for instruction sample */
-> -		cs_etm__copy_last_branch_rb(etmq, tidq);
-> -
->   		/*
->   		 * Use the address of the end of the last reported execution
->   		 * range.
+>   ifeq ($(CONFIG_RUST_SUPPORT),y)
+>       perf-test-y += code_with_type.o
+> @@ -26,3 +27,4 @@ CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>   CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>   CFLAGS_inlineloop.o       = -g -O2
+>   CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+> +CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+> diff --git a/tools/perf/tests/workloads/callchain.c b/tools/perf/tests/workloads/callchain.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..a7eca77277496eec2f47d6f1a646552c298a533f
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/callchain.c
+> @@ -0,0 +1,24 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/compiler.h>
+> +#include <sys/syscall.h>
+> +#include <unistd.h>
+> +#include "../tests.h"
+> +
+> +static void do_syscall(void)
+> +{
+> +	syscall(SYS_getpid);
+> +}
+> +
+> +static void foo(void)
+
+According to Sashiko on my other review, even with -O0 these symbols can 
+be renamed when built with LTO. As you are looking for matches on 
+function names, you should probably make them global and with unique 
+prefixes and leave a comment. At least I did that wherever I was 
+matching on a function name, and only used static for ones that weren't 
+matched. Would be a good habit to the pattern gets copy pasted to other 
+workloads and tests.
+
+> +{
+> +	do_syscall();
+> +}
+> +
+> +static int callchain(int argc __maybe_unused, const char **argv __maybe_unused)
+> +{
+> +	foo();
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_WORKLOAD(callchain);
 > 
 
