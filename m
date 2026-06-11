@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE11B4D2EFC
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 17:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03FA4D8D9C
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 17:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781198358; cv=none; b=WJN+EgRQYeAW2xcC9yJrPj8bmY+/0j3UCo5ls3iwukrSpZvEVaFPeVepZHrnidx/7lTgkioY+Sn9Xrij6EW/2XQwhzNeaL+L3imFjU7Oi4yQ8jYQwF4smgFeKdU01BTb4IoNccmyYbPc+OI6DKGKwTRQP4UhNkqKbyzSEON4cnk=
+	t=1781198358; cv=none; b=Ta7h+YY+eJ321ZFqamZLadkvxAh5MOXUGxeslHd8g5ZDYLEq8BjFsqyRVDqqXlsOHcwdD7chuIcNC99sHcFExp0+f0HUG6jjpk8hPNgXYRDi5cni7lwgS6twTokCK44+0jpSIB4qmNl0hyYvQ1c9yXEAVy79k3OvtucrTON0b2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781198358; c=relaxed/simple;
-	bh=Qhnj4TSCJahH6PJibpCTJes14hfzo8V6BZLxy5gk9ng=;
+	bh=Te+Lm4XROBVtifee5bBcJZlhJO3x6xcISlC99QOdMEY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=O0nkFxmZYXMJViZ+qqqFjdmw6XgNVKaU8uGsJgKW3sfIh5/8jw5mb339w7NwqRR575XpGl7ojt10aNkfr+5cFnnudLI4a05q4kMOb3p3N3nQCR9wueriiFyPEtzHqfj8hsriucpH9MjsxI8+WIIAqphmVkGLcDVDLTPj0g5U408=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VHeeb0db; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=sm2qkOBOgy1nwAY20+EaKX4NZhzZOBbCKIk6Tyw2gYpKOH7dENC7LxofqBbHgtK68fPFfBfA6ZSjn50ya30lh/SR2RTYQGE4bWwVK5EkHAZpO6xovMuWLNgtaPnUFoj/w2S/X4RFRJIFc/g8JhZu/UqOglxqPcE6P3u39OPZPEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CIdmGlzQ; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VHeeb0db"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1383678095cso215115c88.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 10:19:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CIdmGlzQ"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-138155294c4so181500c88.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 10:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781198349; x=1781803149; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781198351; x=1781803151; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oBXxRqTrr5JWKSddHPZ8Jmmc29dDcI85ARjTfI3iIe0=;
-        b=VHeeb0db5QOEkjXvINCJ+YlvYb4qNiIxwcHV++45xezqz2bmom/11Jq/WBl8pLom97
-         WaUondrJ1HJ2zwjxu7zJoLdYrpInqWe31hSYawYB+NBHeJYR94OwbWrL4u+fyuAVJd90
-         shMAUMsss54b7OlSEb2eMoG2nyJvRDkLnKgAdQ3FxG0tmJ2K6g5xRlPjzS2LEyTQYOuH
-         kmLltBbMFqFrBPMDxUKy17vACmIE5rgAeovbGViICEiUyS6274CzmJe3TNDiPYzvbi29
-         9PGZuCM6nfh1FdmyjfvFe8aKMdd0TdbV7sFrCbHAAM0h+2wtxRealrqPkGbmY06prRH0
-         547w==
+        bh=/DeqyEXyTXLLR5IZkFcZFEUXnriopqxIxsZ7mPdUC6k=;
+        b=CIdmGlzQ3jpqRLHzMyS4RINvTajXT4ToVZ3IfgOFmfCaD32BVelwcgKO5Rgd+ZqASW
+         Go43O+jPFw496krSJNPakYQkGFf61uuedRsdwceUvmahjCp24C+zx8qppkVVo7yiIoGX
+         h6Azp1yPsbZPU0OwzA8YcFArQn12uB7uwQgavAZswM+NpAAEHQnLNQ6VzvRoI/YJ1bfY
+         FYduHNdCoQQQ2dKYeYjEkF/i+3vDRlrtwTgpgaDaIPn65zd52QAPX6zzg6D/I1PdPLqM
+         OpWGJFXw6rW+FmLAYtRvAR7UH0F/nBXZt5DJaj9DJpeywuV+7k0qqpKFPczjTQEzNzgl
+         QMzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781198349; x=1781803149;
+        d=1e100.net; s=20251104; t=1781198351; x=1781803151;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oBXxRqTrr5JWKSddHPZ8Jmmc29dDcI85ARjTfI3iIe0=;
-        b=T7QH/sFdS3vvsfJrTejPrcqKa0MFh1qSf1UI5Ah+0bmASPcCVoc2OWFlbD3jTXUiTO
-         zUftGF7W554tQlOVelN2Q3IFz9J0+vU/DW0SvifD59TC1AtoR/TA5E5qBtjW+cBFEJ1J
-         C45rCpq7ynnorD1zo93nwuQnrCvzBgqb2lg4yZNfRdTYXKu0ya8en1Uwrj0pFNW7sDVA
-         KFRnRIFbI+w4PMV3dslaLyLqOXWW2Ml+olTl4RXmA/ruQTQsdJnxFJ08uJSBP1A5Hr94
-         QCmr8kdmiqDJwbafDL30FkpUwd5li/EknyNhILN0osBT/j+0JkfHK7dmxreKLn+gprO/
-         fxYw==
-X-Forwarded-Encrypted: i=1; AFNElJ/AtDf2jyfmcBsNdOYtyfmH/ihPPSPTB/4+N2WzVFnSGKKPS3+uo7YpcgLS5Cpd9yy+OoMAOG/eQr312/l4/GSm@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR7Re0BUllTOfDvbiXWjg+Tt3jdMUNKs1g3uWAJuwsivN4ftb4
-	ss3UburKLopGzJCY3srUcJ3j+Rt+fqMEy5P+FehfVwOFRwX1B/ZMjHU3ejqgr1eH0hnz9r059zq
-	9BiTf9+3dqA==
-X-Received: from dlbti13.prod.google.com ([2002:a05:7022:1b0d:b0:135:9081:542c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:985:b0:136:602b:80ac
- with SMTP id a92af1059eb24-138421cd97emr2262900c88.27.1781198348483; Thu, 11
- Jun 2026 10:19:08 -0700 (PDT)
-Date: Thu, 11 Jun 2026 10:17:53 -0700
+        bh=/DeqyEXyTXLLR5IZkFcZFEUXnriopqxIxsZ7mPdUC6k=;
+        b=V7Gzcud3lsoZ78gKjp+XObVZuE0xtMM3s7SMg3cDycWvsVCiGrb5SJpQDTxvFEKVRR
+         jFEsTaqnoyqL7gDmzHIMPXp8HB/P6ZcmjhzeN2COQv+ygsEnZmwQyxg3oJpFQHsitWT6
+         zV58KpR7pJNbAPJJ2s8B1mdpHRaGfOwkUaz2nQ58bRQg3J7YqNLH8msNttZxvzbfgMw/
+         Lz9mzrCEySUBOzd7wQmN8gAvuX61dLR877jvHJ/kSdy6aCe2exmih7fynsKyD8cs83qI
+         raw+DCkZBgQ7XZCQUGyBzs2ulIHE7SuwyxrmhGdRuTQ0V+4M8fplRZTRVTnzvZZKVr1b
+         02lA==
+X-Forwarded-Encrypted: i=1; AFNElJ+YkIZoefuvyA/yItuA+RlkGmHTIt5Xw3UWRgPHozK4Y9Is5mHFT3AmECD+NIKt6UgEJK/p9OwPqpvM+D6MP3dK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4wvta9TBnZmnvXX388RTW1fChxEH3xvT2KqyR2m6RSgU/ACzE
+	yWpuLoGnrLgJqBJj5qeF+ERlph1KtD3Bqk2GOo8pKkcYOpOEoB5xu8GvskQow5dnejT6BZwuzgH
+	+mDb6mRU+Fw==
+X-Received: from dlec6-n2.prod.google.com ([2002:a05:701b:4286:20b0:138:4e1:4728])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:50d:b0:128:d4be:7438
+ with SMTP id a92af1059eb24-138423fe628mr2250773c88.30.1781198350466; Thu, 11
+ Jun 2026 10:19:10 -0700 (PDT)
+Date: Thu, 11 Jun 2026 10:17:54 -0700
 In-Reply-To: <20260611171756.4008769-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260605191500.2477026-1-irogers@google.com> <20260611171756.4008769-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260611171756.4008769-17-irogers@google.com>
-Subject: [PATCH v12 16/19] perf python: Add syscall name/id to convert syscall
- number and name
+Message-ID: <20260611171756.4008769-18-irogers@google.com>
+Subject: [PATCH v12 17/19] perf python: Add config file access
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com
 Cc: acme@kernel.org, adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -70,130 +69,53 @@ Cc: acme@kernel.org, adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Use perf's syscalltbl support to convert syscall number to name
-assuming the number is for the host machine. This avoids python
-libaudit support as tools/perf/scripts/python/syscall-counts.py
-requires.
+Add perf.config_get(name) to expose the perf configuration system.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v2:
+ tools/perf/util/python.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-1. Guarded with HAVE_LIBTRACEEVENT : Wrapped the syscall functions and
-   their entries in perf__methods with #ifdef HAVE_LIBTRACEEVENT to
-   avoid potential linker errors if CONFIG_TRACE is disabled.
-
-2. Changed Exception Type: Updated pyrf__syscall_id to raise a
-   ValueError instead of a TypeError when a syscall is not found.
-
-3. Fixed Typo: Corrected "name number" to "name" in the docstring for
-   syscall_id.
-
-v6:
-- Added optional keyword-only `elf_machine` argument to `syscall_name`
-  and `syscall_id`.
-
-v7:
-- Made syscalltbl.o unconditional in Build to fix undefined symbol
-  when building without libtraceevent.
----
- tools/perf/util/Build    |  1 -
- tools/perf/util/python.c | 48 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index b22cdc24082a..cb180dd77222 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -75,7 +75,6 @@ perf-util-y += sample.o
- perf-util-y += sample-raw.o
- perf-util-y += s390-sample-raw.o
- perf-util-y += amd-sample-raw.o
--
- perf-util-y += ordered-events.o
- perf-util-y += namespaces.o
- perf-util-y += comm.o
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 56449183a9e7..fe332cb59862 100644
+index fe332cb59862..70c60675db00 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -21,6 +21,7 @@
+@@ -17,6 +17,7 @@
+ #include "build-id.h"
+ #include "callchain.h"
+ #include "comm.h"
++#include "config.h"
+ #include "counts.h"
  #include "data.h"
  #include "debug.h"
- #include "dso.h"
-+#include "dwarf-regs.h"
- #include "event.h"
- #include "branch.h"
- #include "evlist.h"
-@@ -40,6 +41,7 @@
- #include "symbol.h"
- #include "stat.h"
- #include "header.h"
-+#include "trace/beauty/syscalltbl.h"
- #include "thread.h"
- #include "thread_map.h"
- #include "tool.h"
-@@ -3951,6 +3953,40 @@ static int pyrf_session__setup_types(void)
- 	return PyType_Ready(&pyrf_session__type);
+@@ -3987,7 +3988,26 @@ static PyObject *pyrf__syscall_id(PyObject *self, PyObject *args, PyObject *kwar
+ 	return PyLong_FromLong(id);
  }
  
-+static PyObject *pyrf__syscall_name(PyObject *self, PyObject *args, PyObject *kwargs)
++static PyObject *pyrf__config_get(PyObject *self, PyObject *args)
 +{
-+	const char *name;
-+	int id;
-+	int elf_machine = EM_HOST;
-+	static char *kwlist[] = { "id", "elf_machine", NULL };
++	const char *config_name, *val;
 +
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|$i", kwlist, &id, &elf_machine))
++	if (!PyArg_ParseTuple(args, "s", &config_name))
 +		return NULL;
 +
-+	name = syscalltbl__name(elf_machine, id);
-+	if (!name)
++	val = perf_config_get(config_name);
++	if (!val)
 +		Py_RETURN_NONE;
-+	return PyUnicode_FromString(name);
-+}
-+
-+static PyObject *pyrf__syscall_id(PyObject *self, PyObject *args, PyObject *kwargs)
-+{
-+	const char *name;
-+	int id;
-+	int elf_machine = EM_HOST;
-+	static char *kwlist[] = { "name", "elf_machine", NULL };
-+
-+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|$i", kwlist, &name, &elf_machine))
-+		return NULL;
-+
-+	id = syscalltbl__id(elf_machine, name);
-+	if (id < 0) {
-+		PyErr_Format(PyExc_ValueError, "Failed to find syscall %s", name);
-+		return NULL;
-+	}
-+	return PyLong_FromLong(id);
++	return PyUnicode_FromString(val);
 +}
 +
  static PyMethodDef perf__methods[] = {
++	{
++		.ml_name  = "config_get",
++		.ml_meth  = (PyCFunction) pyrf__config_get,
++		.ml_flags = METH_VARARGS,
++		.ml_doc	  = PyDoc_STR("Get a perf config value.")
++	},
  	{
  		.ml_name  = "metrics",
-@@ -3984,6 +4020,18 @@ static PyMethodDef perf__methods[] = {
- 		.ml_flags = METH_NOARGS,
- 		.ml_doc	  = PyDoc_STR("Returns a sequence of pmus.")
- 	},
-+	{
-+		.ml_name  = "syscall_name",
-+		.ml_meth  = (PyCFunction) pyrf__syscall_name,
-+		.ml_flags = METH_VARARGS | METH_KEYWORDS,
-+		.ml_doc	  = PyDoc_STR("Turns a syscall number to a string.")
-+	},
-+	{
-+		.ml_name  = "syscall_id",
-+		.ml_meth  = (PyCFunction) pyrf__syscall_id,
-+		.ml_flags = METH_VARARGS | METH_KEYWORDS,
-+		.ml_doc	  = PyDoc_STR("Turns a syscall name to a number.")
-+	},
- 	{ .ml_name = NULL, }
- };
- 
+ 		.ml_meth  = (PyCFunction) pyrf__metrics,
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
