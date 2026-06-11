@@ -1,120 +1,151 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDBF4D8DBA
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 18:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77795374E6C
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 19:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781204094; cv=none; b=OoTYdEun6ADNweGlncVsCtVoLGIzfMM5lqLD2t1oWMLsMmHmqblPmhM+h5J6PFcXSBkI2NcHMmiIMPmwHB0519rUG6aahWDLzorbnKTOTgFui4zPtXzZGoz/OpsUjtXtft+gWqvK/dFqYtylPCZ1nCSGyLgs0J0tIYij7FWJ2kk=
+	t=1781206782; cv=none; b=lA08P+5HdUtQIFgyAab6M6WaHLe3qqZ17/rHkSvUjqxsd5Isqd0K8ev4l8SmGWJxikdi22UkIkzLcMjCRW9mbF0XHChhcQZLt5cfc16gPX5vmAwkxKRVaRftC6QI74xbZAykH8BF2C5DxP0FF9e2i78UNv3YXislN0B6dVDleDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781204094; c=relaxed/simple;
-	bh=6Dfy7SEBpWaNg3DQTkQKNi8rsPlexhOmoWDAiSj2NZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c+5yL+Eq0ndrYsSQpHd97zlLqzLdMmEUxIx5j5lU1esubHSYNvokRxzydBuqVZIfwV+IJTPhRcoxUzWzW8Sy/3uUG0BKa4CLl8N6c9To7QeYBMrqP+2XPNGkGEhgrDe9N1btR2UVrxofuHg1phSf0R4EykiHnfetzeMXGE94eyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q7UPz3Re; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781206782; c=relaxed/simple;
+	bh=YbITaw1i16YddEFsnuOiv9ywwTma310aGH98P5U6Zr8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=J555UXuHQ/lCSDzntnQQGuIBZYWPkqbloKUEbMZqDUsMkhVAGrssUAKo85t8rS+MOFDnGsW3my5dSnn836PMHruqURWBtOGmaW5Dqv4ITqVFLC/b7aaUwKhIyUKj/Ks8yxzaPSxWvrab6xINKGA4mdwhRZ5rXiu+2reZ00Wlsxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i556PHAQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7UPz3Re"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-490bb83a3f6so1156795e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 11:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781204091; x=1781808891; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mIp60jOuw6YasJhSGuwVtQdUMJRmifSkGDIQOjmNbzM=;
-        b=Q7UPz3ReGTSF2nqedydjX1BD+yJ1XfscRpl1TU1/tgRw0isWOXCR7rK2ghvlLq+xYi
-         TsKAwhWrvLSnxmjsdx3m7ZaYlIagh4Mf7gADae05sBcG6VHn8Pq/DhK9RY6n0pk3xJ3Z
-         al5WUzAVXcYjT7t48DlWhQ0gWs475LU4NveMZkYCZ8YKMGj7veMa1VJCWrXW8OygkNrX
-         MDkiPUAJqnybnL1zmbPVRD2s6yTQdVx7Ks50sl7g33OD2kXPx/muASBoWpcV2jy6Yg0l
-         pC2uQfEZYTRG15lT40eAxEPcQELxt5lL6PI9m911EfxMS2rNRYuArr1jOo3cSmD2MA8O
-         dbtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781204091; x=1781808891;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mIp60jOuw6YasJhSGuwVtQdUMJRmifSkGDIQOjmNbzM=;
-        b=IR24qcu4bgCUmh5EyIwJkgFU/KzKJOOglOroz1vMSgoY8hpBVz4WWzuu9I0rJyhSpF
-         nNDMpCD69W/sBpN2CzzDyH4EXX5wM3WfooaG6fmLS1xzTQjnggIF/JseUttrq3bHqlrh
-         HQML6GZW3smdD5jnL4SNvUGPCqzqP4Nx9mCvRXETdCklsNb06juOsAM74CG5a9D8FugG
-         UqmDeD0sdNx+6wqD75A3L9vuzFiu3K9dc8nIp0jKFQtHwQhTNT/BYlt+XC1SrrW8H5jW
-         PE2mD98vACK1Y1BBWNuexkSPWGqIO1fqsez8O5xi2l9J0i+E0WLclwzj7uD0pE4pYt6h
-         RnDw==
-X-Forwarded-Encrypted: i=1; AFNElJ/cEbTVMHfgi4jD4QrVApEF0JV+JGKmzEL/8F3+Rb9bScjsjF3K2tQ5YBkrCMbx+iUdHBH5hyp0gdUGMVnp3sEN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBzhnTnJKc2/Gcy9mztV7z/lnm+R9ZQnbFlPXnu3i0BfitJi7z
-	83ci1DmajsK8BmzlqZ5lGPirDDxvHxhR0jBUZYR2BuHpZxOr6RwxVU7s
-X-Gm-Gg: Acq92OHvN3AMrYbBrQJxV9SPrQfaU/5VsceUy5ODu6x7TR/PEL0PFmu7aOfbTKUeJ3l
-	u+0xOIgGuprdZP+Sp9nxpMqQiEr/ltTp3+y64K+DtfLP0o766czX24oFUgQtR8MEE3+y1qzFVi8
-	Ct2wnENG3MIOHAihlgSkoAUFkmVV2dnSzWqz4OcXJpzVWkIARzRQOqLCb69UNwo5xNGhc4p+ITY
-	HLiRkFymBRXpgsSNnfm6OaU2TLpFQ39H13Ks+sTL1XKpG7t8i5DdEbnvB4aoljxSXVlEgXMXx3B
-	H9rv3mIa5DJxC3nvsWzfjyVMWSuXB4+tyOXSSNwoUA/CFDeK9LSLs73KZOM3uk9jrnOjfskbBlF
-	ndSP9EqK1dxL4neL0br4lyqvptIwMMMJncK5ESCSK69NnkUNU01VEtX1XMYT9VNnD+DutxYkBut
-	/oL/JvHJ/eZv/syQMBfJW+6qVJSrufQGgSahww52dOabyWz/4Ox0P8kFJrkEnc
-X-Received: by 2002:a5d:64c9:0:b0:45e:f46d:fa95 with SMTP id ffacd0b85a97d-460673fbc3emr6880851f8f.0.1781204091090;
-        Thu, 11 Jun 2026 11:54:51 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606c0c2442sm1048525f8f.1.2026.06.11.11.54.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 11:54:50 -0700 (PDT)
-Date: Thu, 11 Jun 2026 19:54:49 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Leo Yan
- <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf test: Compile named_threads workload with -O0
-Message-ID: <20260611195449.7230e316@pumpkin>
-In-Reply-To: <20260611-james-cs-unformatted-per-thread-fix-followup-v1-1-3c855d93dba8@linaro.org>
-References: <20260611-james-cs-unformatted-per-thread-fix-followup-v1-1-3c855d93dba8@linaro.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i556PHAQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD2C1F000E9;
+	Thu, 11 Jun 2026 19:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781206779;
+	bh=VEAcJ2IiPVXVLfoafw9j7qv02XjzdvRXLXYQumI/LeM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=i556PHAQ65rARVsawr00TgwRoiqJxFH8ZlaU9EyjMB9cHhFg5fYAEwL1Im7E0M2Lv
+	 cI2kncyEkDaG1bmE7Neo/NzKa1FjoLhcRXsf2vKG7NlAtmMNZH34GHjJs+juU1rdrA
+	 JrnZIKd18Yxo9FN5USIPS/FFY/MbMHMzZTvuTcCQ+NSivqXtwVDOOn8vc0emlbY3nS
+	 ehixeVjqDAxKGCwZg9sPZbOQ6FfkiIynKplCQot6hsOtZ/pDu2K3cq7/cIAz+4+WQc
+	 ieYt9cfHXo3/27a4EyLxJ43GEcepKNGuqTlSNPhdNT17S0wnWNJ7a7W28sNYt7GR7L
+	 FhuJLDQ0uAklw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v12 06/19] perf evsel: Add reference count
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260611171756.4008769-7-irogers@google.com>
+References: <20260611171756.4008769-7-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 11 Jun 2026 19:39:38 +0000
+Message-Id: <20260611193939.1CD2C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Jun 2026 12:13:46 +0100
-James Clark <james.clark@linaro.org> wrote:
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] Missing NULL check before calling `evsel__get()` on the result o=
+f `evlist__id2evsel()` leads to a segmentation fault.
+- [Low] The 'idx' parameter is parsed but silently ignored in pyrf_evsel__i=
+nit.
+--
 
-> The work loop relies on the compiler not optimizing it away, although
-> named_threads_work is not static for that reason, the compiler could
-> still do it.
+commit 08240b36c25f305e7e8473035f740785982c5019
+Author: Ian Rogers <irogers@google.com>
 
-Isn't in enough to put barrier() in the loop?
+perf evsel: Add reference count
 
-	David
+As with evlist this a no-op for most of the perf tool. The reference
+count is set to 1 at allocation, the put will see the 1, decrement it
+and perform the delete. The purpose for adding the reference count is
+for the python code.
 
-> 
-> Fix it by compiling without optimization. Also add -fno-inline for
-> consistency and in case anyone wants to look at callstacks.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
-> One trailing Sashiko fix from the "perf cs-etm: Queue context packets
-> for frontend" patch series that has been applied already.
-> ---
->  tools/perf/tests/workloads/Build | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-> index 75b377934a0e..7bb4b9829ba2 100644
-> --- a/tools/perf/tests/workloads/Build
-> +++ b/tools/perf/tests/workloads/Build
-> @@ -26,3 +26,4 @@ CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->  CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->  CFLAGS_inlineloop.o       = -g -O2
->  CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-> +CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-> 
-> ---
-> base-commit: 7336514f41e75d44782fee7e0990d4195a3d3161
-> change-id: 20260611-james-cs-unformatted-per-thread-fix-followup-babf28a4e640
-> 
-> Best regards,
+[ ... ]
 
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -1027,11 +1031,11 @@ static int pyrf_evsel__init(struct pyrf_evsel *pe=
+vsel,
+>  	    watermark =3D 0,
+>  	    precise_ip =3D 0,
+>  	    mmap_data =3D 0,
+> -	    sample_id_all =3D 1;
+> -	int idx =3D 0;
+> +	    sample_id_all =3D 1,
+> +	    idx =3D 0;
+> =20
+>  	if (!PyArg_ParseTupleAndKeywords(args, kwargs,
+> -					 "|iKiKKiiiiiiiiiiiiiiiiiiiiiiKK", kwlist,
+> +					 "|iKiKKiiiiiiiiiiiiiiiiiiiiiiKKi", kwlist,
+>  					 &attr.type, &attr.config, &attr.sample_freq,
+>  					 &sample_period, &attr.sample_type,
+>  					 &attr.read_format, &disabled, &inherit,
+> @@ -1073,26 +1077,33 @@ static int pyrf_evsel__init(struct pyrf_evsel *pe=
+vsel,
+>  	attr.sample_id_all  =3D sample_id_all;
+>  	attr.size	    =3D sizeof(attr);
+> =20
+> -	evsel__init(&pevsel->evsel, &attr, idx);
+> +	evsel__put(pevsel->evsel);
+> +	pevsel->evsel =3D evsel__new(&attr);
+
+[Severity: Low]
+Is it intentional that the idx parameter is parsed but silently ignored
+here?
+
+In the previous code, idx was passed to evsel__init(). In the new code,
+idx is parsed from the keywords, but it is not passed to the allocation
+function (like evsel__new_idx()). Does this drop user-provided input?
+
+> +	if (!pevsel->evsel) {
+> +		PyErr_NoMemory();
+> +		return -1;
+> +	}
+>  	return 0;
+>  }
+
+[ ... ]
+
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1844,7 +1844,10 @@ static int evlist__deliver_deferred_callchain(stru=
+ct evlist *evlist,
+>  		struct evsel *saved_evsel =3D sample->evsel;
+> =20
+>  		sample->evsel =3D evlist__id2evsel(evlist, sample->id);
+> +		if (sample->evsel)
+> +			sample->evsel =3D evsel__get(sample->evsel);
+>  		ret =3D tool->callchain_deferred(tool, event, sample, machine);
+> +		evsel__put(sample->evsel);
+>  		sample->evsel =3D saved_evsel;
+>  		return ret;
+>  	}
+
+[Severity: Medium]
+Could a missing NULL check lead to a segmentation fault in other parts of
+the deferred callchain or flush paths when evlist__id2evsel() returns
+NULL?
+
+The evlist__id2evsel() function can return NULL if the ID is unknown or
+the perf.data file is corrupted.
+
+There appear to be other locations, such as in
+evlist__deliver_deferred_callchain() and
+session__flush_deferred_samples(), where the result of
+evlist__id2evsel() is unconditionally dereferenced in evsel__get():
+
+    new_evsel =3D evlist__id2evsel(evlist, orig_sample.id);
+    if (new_evsel !=3D orig_sample.evsel) {
+        evsel__put(orig_sample.evsel);
+        orig_sample.evsel =3D evsel__get(new_evsel);
+    }
+
+Should we ensure a NULL check is added before calling evsel__get()
+in these cases as well?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611171756.4008=
+769-1-irogers@google.com?part=3D6
