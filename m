@@ -1,126 +1,197 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A2533546D7;
-	Thu, 11 Jun 2026 06:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D6E9331EB8
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 07:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781160465; cv=none; b=CV8TmgadCjUnrbq/rZOVfXz1Ap99gGJYjJuqwsUQVRuZ+zc8s6dywIvHBfCW7teeSlmDLKSkqJCM4LRJrjiyeJoxLgstc8e4STRXoKa4av2qyM+ISER3xw2WV65USvXLJsndLzo6YoByUp/9oP3fYBBbzhz0oCm+bjzLspKHyCE=
+	t=1781164638; cv=none; b=QweX4QjwvCuECF/odjnZP/Fn3tRSxFGFra31Kx70Tj3x6Xzsakt66HafcYYukO7Vme2s+3bTVF7EyBdTzs8yVaWCcregdVIPokqJdFTC0VtlcFN8Y2EpUMNlRhsHD6NRspu2qiI8uCb3iUyb0q0/3rTrrr6X9W61QMui7aeecks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781160465; c=relaxed/simple;
-	bh=qQjh1hPpEnkXFa73SRjJ9kqCtdzJ5Kh2Hsa46GK1zZk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rAIjr7VcTXBtTRWh34A40zpJig1DegYI3yBAlQqdUG5oGm3ska8DBluNfiGzATwfEzc2LFSmf1c29Qy+nOqOjuMi3m0+oXSUu1eFVkOOl29kC3lGsqPvdGD89vgzkjYEeVk9RBhhqWB7kpPH6ir09ULqyW7KP+pA3VPRq71qqLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gbXbk745pz1dd8Y;
-	Thu, 11 Jun 2026 14:21:38 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gbXbh5hZnz1dd8Y;
-	Thu, 11 Jun 2026 14:21:36 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id 7FE3430004DB;
-	Thu, 11 Jun 2026 14:20:11 +0800 (CST)
-Received: from hsj-2U-Workstation.hygon.cn (172.19.20.61) by
- cncheex04.Hygon.cn (172.23.18.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Thu, 11 Jun 2026 14:21:31 +0800
-From: Huang Shijie <huangsj@hygon.cn>
-To: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
-	<brauner@kernel.org>, <jack@suse.cz>, <muchun.song@linux.dev>,
-	<osalvador@suse.de>, <david@kernel.org>
-CC: <surenb@google.com>, <mjguzik@gmail.com>, <liam@infradead.org>,
-	<ljs@kernel.org>, <vbabka@kernel.org>, <shakeel.butt@linux.dev>,
-	<rppt@kernel.org>, <mhocko@suse.com>, <corbet@lwn.net>,
-	<skhan@linuxfoundation.org>, <linux@armlinux.org.uk>, <dinguyen@kernel.org>,
-	<schuster.simon@siemens-energy.com>, <James.Bottomley@HansenPartnership.com>,
-	<deller@gmx.de>, <djbw@kernel.org>, <willy@infradead.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
-	<mhiramat@kernel.org>, <oleg@redhat.com>, <ziy@nvidia.com>,
-	<baolin.wang@linux.alibaba.com>, <npache@redhat.com>, <ryan.roberts@arm.com>,
-	<dev.jain@arm.com>, <baohua@kernel.org>, <lance.yang@linux.dev>,
-	<linmiaohe@huawei.com>, <nao.horiguchi@gmail.com>, <jannh@google.com>,
-	<pfalcato@suse.de>, <riel@surriel.com>, <harry@kernel.org>,
-	<will@kernel.org>, <brian.ruley@gehealthcare.com>,
-	<rmk+kernel@armlinux.org.uk>, <dave.anglin@bell.net>, <linux-mm@kvack.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-parisc@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-perf-users@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>, Huang
- Shijie <huangsj@hygon.cn>
-Subject: [PATCH v2 0/4] mm: split the file's i_mmap tree for NUMA
-Date: Thu, 11 Jun 2026 14:18:56 +0800
-Message-ID: <20260611061915.2354307-1-huangsj@hygon.cn>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1781164638; c=relaxed/simple;
+	bh=qROII+S+Mt5TD94CjKXDR9/nEGWbOl22/4Q3VHUgSvU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BoUrxFj9Jq+yrHYyyv65JKW3occOOLsa9NnIHREzrYiwNawk6Ls9fqESoMsZwqT9tL/qyRWsxAcnrOswMAsz96hhmsxvO8CtQGJU7/0bnMeylZXJOivlgBgLZ94cQeyCIW5JiIyEQmXf2Z4w1XHRaIjrFgO4OvN+orEcwANvX2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=I01brwHA; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="I01brwHA"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78BD21E4D;
+	Thu, 11 Jun 2026 00:57:09 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F1F63FD88;
+	Thu, 11 Jun 2026 00:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1781164634; bh=qROII+S+Mt5TD94CjKXDR9/nEGWbOl22/4Q3VHUgSvU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=I01brwHAgdg4N1IDCKoa8BC705ICluS7f22etwrgoKRMWewjG6lbXchhJo+nRFxk+
+	 DGDl8ek2WoxiaMgn41ebZ7FfoCiAXUWuXK4Ju72fcJWWqtib8hT+5cZRvSJ3IB9u15
+	 zPSpUevJzsK4dBRDGDVDOnl4IbTPNElDL6yLKydA=
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v7 0/8] perf cs-etm: Support thread stack and callchain
+Date: Thu, 11 Jun 2026 08:56:54 +0100
+Message-Id: <20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
- (172.23.18.114)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEZqKmoC/4WNwQqDMBAFf0X23JSYaiQ99T+KhLgmdUGNJDa0i
+ P/eVOi5x3k8ZjaINpCNcC02CDZRJD9naE4F4GDmh2XUZwbBheS1KFlXMRMmjVGjGcf8oVnH57L
+ 4sOpUMoHCNLwpVYcIWbIE6+h1BO5t5oHi6sP76CX5XX9q+U+dJOPMKVcpV19Q9f0tv8/oJ2j3f
+ f8Aix0HUsoAAAA=
+X-Change-ID: 20260521-b4-arm_cs_callchain_support_v1-2c2a70719bcc
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>, 
+ Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
+Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>, 
+ Leo Yan <leo.yan@linux.dev>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781164631; l=6627;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=qROII+S+Mt5TD94CjKXDR9/nEGWbOl22/4Q3VHUgSvU=;
+ b=+WBVpioLHrElL9t8QglEbQ+loKIsay2Wkk4B2/DuurTYjYFgCE5XZSJ22rSYA/2Na2XVjoKnO
+ zhaKKqWUkWcDvwfscieraInIViE8dX8A6iFPosbX/MM1EsqghLE6a7i
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-  In NUMA, there are maybe many NUMA nodes and many CPUs.
-For example, a Hygon's server has 12 NUMA nodes, and 384 CPUs.
-In the UnixBench tests, there is a test "execl" which tests
-the execve system call.
+This series adds thread-stack and synthesized callchain support for Arm
+CoreSight, which comes from older series [1] but heavily rewritten.
 
-  When we test our server with "./Run -c 384 execl",
-the test result is not good enough. The i_mmap locks contended heavily on
-"libc.so" and "ld.so". For example, the i_mmap tree for "libc.so" can have 
-over 6000 VMAs, all the VMAs can be in different NUMA mode.
-The insert/remove operations do not run quickly enough.
+CS ETM previously kept last-branch state in a per-trace-queue buffer.
+That effectively makes the state per CPU, while the call/return history
+belongs to a thread. This series moves branch tracking to the common
+thread-stack code.
 
-patch 1 & patch 2 are try to hide the direct access of i_mmap.
-patch 3 splits the i_mmap into sibling trees, each tree has separate lock,
-and we can get better performance with this patch set in our NUMA server:
-    we can get over 400% performance improvement.
+The series records CoreSight branches with thread_stack__event(), uses
+thread_stack__br_sample() for last branch entries, flushes thread stacks
+after decoder resets.
 
-I did not test the non-NUMA case, since I do not have such server.    
-    
-v1 --> v2:
-	Not only split the immap tree, but also split the lock.
-	v1 : https://lkml.org/lkml/2026/4/13/199
+A decoder reset between AUX trace buffers is treated as a global trace
+discontinuity, so all thread stacks are flushed, so avoids carrying
+stale call/return history across a trace discontinuity.
 
-Huang Shijie (4):
-  mm: use mapping_mapped to simplify the code
-  mm: use get_i_mmap_root to access the file's i_mmap
-  mm/fs: split the file's i_mmap tree
-  docs/mm: update document for split i_mmap tree
+One limitation remains for instructions emulated by the kernel. In that
+case the exception return address may not match the return address
+stored in the thread stack, because after exception return can be one
+instruction ahead. The stack can still recover when a later return
+matches an upper caller. Given emulated instructions are not the common
+target for performance callchain analysis. Supporting this would require
+extending the common thread-stack path to accept both the real target
+address and an adjusted address for stack matching, so this series
+leaves that extra complexity out.
 
- Documentation/mm/process_addrs.rst |  63 +++++++---
- arch/arm/mm/fault-armv.c           |   3 +-
- arch/arm/mm/flush.c                |   3 +-
- arch/nios2/mm/cacheflush.c         |   3 +-
- arch/parisc/kernel/cache.c         |   4 +-
- fs/Kconfig                         |   8 ++
- fs/dax.c                           |   3 +-
- fs/hugetlbfs/inode.c               |  30 +++--
- fs/inode.c                         |  75 +++++++++++-
- include/linux/fs.h                 | 179 ++++++++++++++++++++++++++++-
- include/linux/mm.h                 |  81 +++++++++++++
- include/linux/mm_types.h           |   3 +
- kernel/events/uprobes.c            |   3 +-
- mm/hugetlb.c                       |   7 +-
- mm/internal.h                      |   3 +-
- mm/khugepaged.c                    |   6 +-
- mm/memory-failure.c                |   8 +-
- mm/memory.c                        |   8 +-
- mm/mmap.c                          |  11 +-
- mm/nommu.c                         |  28 +++--
- mm/pagewalk.c                      |   4 +-
- mm/rmap.c                          |   2 +-
- mm/vma.c                           |  74 +++++++++---
- mm/vma_init.c                      |   3 +
- 24 files changed, 534 insertions(+), 78 deletions(-)
+The series has been tested on Orion6 board:
 
+  perf test 136 -vvv
+  136: CoreSight synthesized callchain:
+  --- start ---
+  test child forked, pid 3539
+  ---- end(0) ----
+  136: CoreSight synthesized callchain			: Ok
+
+  perf script --itrace=g16i10il64
+
+  callchain_test   17468 [005] 1031003.229943:         10 instructions:
+              aaaac32507c4 main+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
+              ffff90bd233c call_init+0x9c (inlined)
+              ffff90bd233c __libc_start_main_impl+0x9c (inlined)
+              aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+
+  callchain_test   17468 [005] 1031003.229943:         10 instructions:
+              aaaac3250774 do_svc+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              aaaac3250798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              aaaac32507b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              aaaac32507c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
+              ffff90bd233c call_init+0x9c (inlined)
+              ffff90bd233c __libc_start_main_impl+0x9c (inlined)
+              aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+
+  callchain_test   17468 [005] 1031003.229944:         10 instructions:
+          ffff800080010c20 vectors+0x420 ([kernel.kallsyms])
+              aaaac3250784 do_svc+0x1c (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              aaaac3250798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              aaaac32507b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              aaaac32507c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+              ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
+              ffff90bd233c call_init+0x9c (inlined)
+              ffff90bd233c __libc_start_main_impl+0x9c (inlined)
+              aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+
+Note, the test fails on Juno board which is caused by many discontinuity
+packets (mainly caused by NO_SYNC elem). This is likely caused by the
+FIFO overflow on the path.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20200220052701.7754-1-leo.yan@linaro.org/
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Changes in v7:
+- Rebased on the latest perf-tools-next.
+- Used struct_size() for allocation callchain struct (James).
+- Added a helper cs_etm__packet_has_taken_branch() (James).
+- Minor improvements for the callchain test (used record-ctl FIFO and
+  reworked the validation callstack push / pop).
+- Link to v6: https://lore.kernel.org/r/20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com
+
+Changes in v6:
+- Heavily rewrote the patches since restarted the work after 6 years.
+- Changed to use the common thread-stack for branch stack and callchain
+  management.
+- Added a callchain test.
+- Link to v5: https://lore.kernel.org/linux-arm-kernel/20200220052701.7754-1-leo.yan@linaro.org/
+
+Changes in v5:
+- Addressed Mike's suggestion for performance improvement for function
+  cs_etm__instr_addr() for quick calculation for non T32;
+- Removed the patch 'perf cs-etm: Synchronize instruction sample with
+  the thread stack' (Mike);
+- Fixed the issue for exception is taken for branch target address
+  accessing, for the branch sample and stack thread handling, the
+  related patches are 01, 02, 07;
+- Fixed the stack thread handling for instruction emulation and single
+  step with patches 08, 09.
+- Link to v4: https://lore.kernel.org/linux-arm-kernel/20200203020716.31832-1-leo.yan@linaro.org/
+
+Changes in v4:
+- Split out separate patch set for instruction samples fixing.
+- Rebased on latest perf/core branch.
+- Link to v3: https://lore.kernel.org/linux-arm-kernel/20191005091614.11635-1-leo.yan@linaro.org/
+
+---
+Leo Yan (8):
+      perf cs-etm: Filter synthesized branch samples
+      perf cs-etm: Decode ETE exception packets
+      perf cs-etm: Refactor instruction size handling
+      perf cs-etm: Use thread-stack for last branch entries
+      perf cs-etm: Flush thread stacks after decoder reset
+      perf cs-etm: Support call indentation
+      perf cs-etm: Synthesize callchains for instruction samples
+      perf test: Add Arm CoreSight callchain test
+
+ tools/perf/Documentation/perf-test.txt        |   6 +-
+ tools/perf/tests/builtin-test.c               |   1 +
+ tools/perf/tests/shell/coresight/callchain.sh | 168 ++++++++++++
+ tools/perf/tests/tests.h                      |   1 +
+ tools/perf/tests/workloads/Build              |   2 +
+ tools/perf/tests/workloads/callchain.c        |  24 ++
+ tools/perf/util/cs-etm.c                      | 351 +++++++++++++++-----------
+ 7 files changed, 410 insertions(+), 143 deletions(-)
+---
+base-commit: 7336514f41e75d44782fee7e0990d4195a3d3161
+change-id: 20260521-b4-arm_cs_callchain_support_v1-2c2a70719bcc
+
+Best regards,
 -- 
-2.53.0
-
+Leo Yan <leo.yan@arm.com>
 
