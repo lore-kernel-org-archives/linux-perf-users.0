@@ -1,204 +1,392 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012018.outbound.protection.outlook.com [52.101.66.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3005B478E4A
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 18:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.18
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781201263; cv=fail; b=SDJBElwVJkJroMUtjeXC3SsmfIPkUrUDU3tLrBcom41WSbKH5v013c/8KbQGftJYIoi5G0Wb+4hoSbZ0j9KJzsCfNcODM76DRWwJ0hzjTad+M1MX79MgH+/p3kZCM+PjXWuOBLCO5L/lUqGaAsAe9qnJH7lQFhKOV0poPCLwJhA=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781201263; c=relaxed/simple;
-	bh=3qyZ6LsXG3SkiIjnWOCv4nM6Nb9v0dj/uIzH//0uu/Q=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tULmdhxjuqtv6RzHmtyXIPjZYdAzkuUS5iHIaZbEJouVZUlAJcof2r3uHZcxR3RQI5tlVV4BHphoGaVO/4MaBdy1EEd0F+hDjF80WrlJ5IwLi5v+6I3zoDluR9/zaSn0BQ+VQYlsyv4JF2CUyoqC7ElRBvBa0Md1CHN8LBfWPU4=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Tzyw8+kE; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Tzyw8+kE; arc=fail smtp.client-ip=52.101.66.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBDE496904
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 18:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781202560; cv=pass; b=dN/LCahMeS2aM8eMfewpScdyJdQq0GviZ96K7kzw1PQdjY7gRisi8nqJNzfrf88hOKkpQSkYbirLrQHqjYmG8ra8lBjORyV5POxIX71EnwkFyME/hvIRwEsVYMnHYHHFS00b6FjXPvTuKGKf0x0KF1zQYklRTurTpxS1vzO+RxU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781202560; c=relaxed/simple;
+	bh=ndvgKkvborfdFcuiH1wveaByFcUBCP+3w82Y6FQMxNc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m2qa6SNrsB1xfhWHdFXLD0+Vo1aX0MjhToNQM3gMtP8ky7trvtIMij24P3rfe0sL26hCin8DKLK9ORvQRvyxAvv2V8mq3eSZ+rkLZFKUt3bSW63FuwglKDZjAqrRLj/4HiR1UhkaLFUu7fiDi/hxGohCRRgFFjcB7trVAn8uIW8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VvDQa5rR; arc=pass smtp.client-ip=74.125.82.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Tzyw8+kE";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Tzyw8+kE"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=N9KQV/aWg02zV/BXxlA6DtGGax1n9qb/vPihJ6NWAxxoVN7rcWpErC8lZwAYWcwtQh5X1KrG8SGnAetCYIEXGneCy/bM8SpDFbIe65+Jc7IY/X0NdTi+Wc1+VbALJ+B4ml0WeuGns+JUTprvlktbqg6H2gFKrVhjz5sfihmYHDxbCVsyeh39zT0wpaUkKofCvGMwNAc8tbYWUY2R9bFtfOkZ2j624eLI9PCnPyL6FaRVFOEh1xVCc+2yUKEWU1+cGK097FGy0y1P1JPvswG57s63MyeAJts4bETKnrLindu1++J7Qd0LZXrfiSZ7u1sCBW0YGdtXcRZJ9Ga06fS5Hg==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bPSgDJWgfa7uyEpZHvqn53EDJdvhgRlHf4Br/9dq3Jo=;
- b=pDYsXV/ElvCzua0vfYV3iJTuru+p8KzTIosTVUxbLEQbcSYRE9Rix1LgSSfn1GTH4G/FsNKM5rsjCpEDV0smLf15EAYpyJ0YVhfd1eDtvLr6fozly+Kvw/V0k+WS/x7RdTllAjGKBAMESaAYyzK89cxYRtYUIVa3u1MHqAvbDZrhbJcn43SNNTVupRiU0il34VHtSpDC+gfpfflt1TcjwgZE8GLN9PwZOKPGEQkj1CVtqp64OmotjDd70GOyYTl5Vsm/pua5XIIzIHjSCyIA69PsYTGJqaJI84BZ+Q7QTueez+z2a6VWKDF5RCKdh6dB8dkhdol+NcJQXxBrdVnFKw==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bPSgDJWgfa7uyEpZHvqn53EDJdvhgRlHf4Br/9dq3Jo=;
- b=Tzyw8+kEg8HbMASAqFtjtoikY7oAPnsRZY6R+Zo2ihmgyy3a/r1l2E3eQMF1PKmASRXwVXVgcR62JSr2FH6V/6E5AnRO59GEJJ/ZzTkN0mJs/vK/ko6d19xLYPApePIFl9y0idpysR6rYc04IxbRW9b6rCVKgD0QghvSYuGVGvk=
-Received: from CWLP265CA0408.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:1b6::21)
- by AS8PR08MB9503.eurprd08.prod.outlook.com (2603:10a6:20b:61d::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.17; Thu, 11 Jun
- 2026 18:07:32 +0000
-Received: from AM4PEPF00025F9B.EURPRD83.prod.outlook.com
- (2603:10a6:400:1b6:cafe::45) by CWLP265CA0408.outlook.office365.com
- (2603:10a6:400:1b6::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.113.11 via Frontend Transport; Thu,
- 11 Jun 2026 18:07:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AM4PEPF00025F9B.mail.protection.outlook.com (10.167.16.10) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.1
- via Frontend Transport; Thu, 11 Jun 2026 18:07:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yE3gW3ixiZD+5zF2YNvWM2OtGA14b8xZX8fhdmyMkbAjpRUMCAioLA76PyYTYDBvnDjjRpbkJeVaoH0j7vq7waC05a9ICSt8+IUeqUgbHp/e7WcmIr9wKDnnHDewrM65dmQBREg+1DWdPTuBDNC1Q65FZovrthrSkWFATfkPPnDV28b5w1uXNsVPs1PbT4Md4lz2jvXf5QHsdwAZyWN1TNpJnNuGQ8g+isZ78Zc9xnL1kCawJtF4MpFKYDyEMe3Mh3jfT2qvQhwz1MKqzEdQbO97Ibv+/f9aps8Wd+WqHq05c4Gz9gd7OIUXDBFd4vhPkohC6s+WmPx9tXK51LejGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bPSgDJWgfa7uyEpZHvqn53EDJdvhgRlHf4Br/9dq3Jo=;
- b=L+HL/KW28ZNfNVf7q1/+TuXU6+pX0YkePjVUdLt5PRxcuWPDelarNFZyb1j821gr40niTkLXuRGXaK13i7eN/GbboGxlc+OPFG5g/2oJpdi4tQB0WVi5qf4icZJzcERUNbWKw1xiEIQNXUIb1nm+E0Y8xHNV2Dhl9QyYsJop/QOReDhbctJKJS/j7rZaXCeZVm38FAirggH7zBXGbM5iXtsi+BEh1Lg/Os9rOQskjawWZyrrFmP6sUpfh8eIk38Gspbhklvoy2Ga+8AGzVwB75yWrwMLLbZWug8dH5P7y5xVt5E4zEj7uRzt1SQmyGXDtFYGTpOGyKaNDt4vzh807Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bPSgDJWgfa7uyEpZHvqn53EDJdvhgRlHf4Br/9dq3Jo=;
- b=Tzyw8+kEg8HbMASAqFtjtoikY7oAPnsRZY6R+Zo2ihmgyy3a/r1l2E3eQMF1PKmASRXwVXVgcR62JSr2FH6V/6E5AnRO59GEJJ/ZzTkN0mJs/vK/ko6d19xLYPApePIFl9y0idpysR6rYc04IxbRW9b6rCVKgD0QghvSYuGVGvk=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM8PR08MB5697.eurprd08.prod.outlook.com (2603:10a6:20b:1d7::24)
- by DBBPR08MB6315.eurprd08.prod.outlook.com (2603:10a6:10:209::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.17; Thu, 11 Jun
- 2026 18:06:29 +0000
-Received: from AM8PR08MB5697.eurprd08.prod.outlook.com
- ([fe80::1578:61f0:5e16:68af]) by AM8PR08MB5697.eurprd08.prod.outlook.com
- ([fe80::1578:61f0:5e16:68af%6]) with mapi id 15.21.0113.013; Thu, 11 Jun 2026
- 18:06:29 +0000
-Message-ID: <12fffa51-baf8-4366-a551-3e5a3a8fd65f@arm.com>
-Date: Thu, 11 Jun 2026 19:06:28 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 5/8] perf cs-etm: Flush thread stacks after decoder
- reset
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260611-b4-arm_cs_callchain_support_v1-v8-5-737948584fea@arm.com>
- <20260611150637.846891F00893@smtp.kernel.org>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <20260611150637.846891F00893@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: LO6P265CA0022.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2ff::17) To AM8PR08MB5697.eurprd08.prod.outlook.com
- (2603:10a6:20b:1d7::24)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VvDQa5rR"
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-137ff9a7d5eso1662c88.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 11:29:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781202556; cv=none;
+        d=google.com; s=arc-20240605;
+        b=hmRPLiq6I4r3GKk+ATTRsSXM6YvIqQaPFbawlUyHMh4R3KFC4VAm1FIRtwZb7keUuv
+         I851vqs6HofZOu9nbyP7o/hLMAqbVXvra99UXeYEul+DPsPyzffUhX9FhdkwINw1S7/x
+         oswTT2RzpdAnpiw6ck4nisTvaSs7efOuvlWN313KWtFpdtpOt0+ILjq6Vlit0lMQ7qXu
+         DNKI4O5K4V1ZpBoQBN3vYpfSQ657jI8bdpM12hC2M2aCIEV2R+HN0uwhy0fK3689iK/G
+         tTCIlefvu3ENnjI8O5x9cdWTlLxdo4V+aMBzcBJRokSQS4M91ZvS99nqyS9O47cdxZ7s
+         5wfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=t+/zolzW9KuI092WyXQ/I/4oKMksbMbjMyS5Z8cf5rw=;
+        fh=tFoQH2OoHO9UWMUXoRM+6UB1hLzKdDm3jX224U3OukI=;
+        b=J7co74UTap/doae1HO0w/aXJ+gPReCvTbPKl8qB86ObweebgNTnGEZKSsonohoWZEu
+         qKWOlUzG2TtXTW1MwFZuXuzRZuJy/35MCXWn7ARqaF0z35rYugB2Kt/gtR/gspRCn9qc
+         VoDIEBW6hOBs+Zrb1zQ1T/6NJkaG+K7zDAs+y6xWi9+7sIHq8tyWbWoppxeo8/MrWbqG
+         u/woknQlOa6B8lnEJ4GniomrKywhkWcflZ/n4xrd/8RcM/H+q7f7aCFrUWr8nCNnXbTi
+         c2UguIcjYK88GEKbZzAjkOHzSWcoCblG89nHVzomuB8O6FSMfvtVyWtQX3k+qFAK9Byi
+         gHkQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781202556; x=1781807356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t+/zolzW9KuI092WyXQ/I/4oKMksbMbjMyS5Z8cf5rw=;
+        b=VvDQa5rRrYyrrkm+IspPiObBkM9+MB7i9CnhlBk27hFdlXDk9ZTO8Gqwir7qiX1Wxn
+         3e11X9ajM07FnV/sEy32/9upid0ih4il3RfkdyfBVTAgOlczYkztL7qmiQbhrOYepdb9
+         h4I2p1H1TS+3Ry7AXaBiyWVHMjEZw4oO52/5SXBW4oDB+U5NUKZ+DDVFzjGcYgCqYiJa
+         oH2u2wgClvO9MmiUXRGtSpfVdDlCEHOX4AdV56/OQZnWBKE1gx1kZjPiP6teIaAxxA8b
+         k/Clcapw9uqooo4nMTYUMMb2ulUEnwN3KsqaLoB/sLpHjpYTd3iBx4qzqvSzE94Ze1kM
+         P55A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781202556; x=1781807356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=t+/zolzW9KuI092WyXQ/I/4oKMksbMbjMyS5Z8cf5rw=;
+        b=iM5YA1DAKged4soKAsMNvsbn8xkFdcswfmo2fO5XuC526BRU/9m6wZ6HQl7JqU+bP+
+         gbn7HonDuqVW9yaPlieE8BGUXyG4T2Jpf46zCEih8Y/vHoshlr2ecNPJ/8E6YF4QEWnZ
+         uPucMoFmUdxSiBOQylMjdSJMRTeV0JXZFEXNFJqV6H5jSCwIRvU1x/Rw34lujOpdXJlD
+         D7R0oQV+LauBhxyIdTvpULcBvP7oM35PZW+lJ1IL/Vi7zynhW3UCnAhJrU5SMG1uGCN+
+         RCiN1HTYMRI3ykq666/4Zhiqb8S/DMqazJGh9jHfofIN4ceQz43Ckzy6DJVSEl/zpoSF
+         Z/cA==
+X-Forwarded-Encrypted: i=1; AFNElJ/WgXqHhWhH1cL0lyZyaOxitk3qZRjmenDx1cZwDF5Bjz6SGwBa2ZV5MEKK6UVRT0qECXH3NuIYkidgSNSpY360@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCMEHKefb44enGku8EUTroXVBy8WKeGIDHoEyHe5DNHb4wQ4pP
+	1moBtBzv6qG7++gbakwPa/Wi3JyJekVpXkTq/vi18UIzg0MnNV4mBmyPsy07/dC7hMCdKeJyUEK
+	bEZIzSIw+QAdw4dxHaHPdCIhdmSsGv71zAgqbPR0c
+X-Gm-Gg: Acq92OFgypSRgeKPqd6MZ0UM5xofWPsjJd1VzZeUZa1qkWcUbiYbvjq+9TtuvgEGA3/
+	DUWZ+fChQjnSc6+IQe6JJ5cYyrY8k8cRy4niJE2mkKI6dSrN0LvItjA+xOuS5TrvJ9uRdI1LwbV
+	9+3elHg53o6Ub94bH9QaJq6EAy6ecvkmWEYjiqzH5+XkcOeXfQsM0tDp2SOhtPqcmhCamfeLjsp
+	v8m5q7M4j6H9hVxqeo8WR+HQ/G0pdq380VCSnpoQMEeQXQ19pWXHqZFe/D2prPZgMMZTImWXgBJ
+	hSpa8yoyqkOiJ19gGIdaiZHu+Y7GazbHlr4Aaw==
+X-Received: by 2002:a05:7022:60a0:b0:138:888:e999 with SMTP id
+ a92af1059eb24-1384ab19320mr26399c88.28.1781202554636; Thu, 11 Jun 2026
+ 11:29:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM8PR08MB5697:EE_|DBBPR08MB6315:EE_|AM4PEPF00025F9B:EE_|AS8PR08MB9503:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7e8fa352-05d4-4fd6-50fe-08dec7e44e7d
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|22082099003|18002099003|4143699003|6133799003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info-Original:
- 9K9jJwhJaufpwk0NOoGVeOsTIyQHrJ539JMsJdow9EJ7Owd0CqRzrmtEaraWev6iQZPTB7hzHjDtJtr0f6kc79UZ/7OCgraCjwhUC0Coh+DD0mqh9BymMjK5ojhlHySsH26id3C5JGsiP1C4MJPnwCWPOBN1UdttENVE+F1EF8aB7WXIAWtAO1Ttl8/EIymCdUBTYKXcElnlaK4kJ6m/pAveuHlE6lj9w65Y6VnyiDm6S6BFbCa6WuPe0ZKsPt09Z1iOsCjJq1QXnfHfwazc8h0damnRTg0hWaYLGiBzNBIKxV5GXlYnu+W0mx1VwEJdJ6vGl0DWmklbXiG2bOrWv8350SEARi6yOsNXABCSqfjmSc7osGOb662P68xPgBbncOskPm19SSlq+CnGCKMb8+FPhb1KkCbzJo5hot/oYbwkecz62+1BBjRbU/brZ+vej7DaKOIhK55sHcewvI5Lnkmly9OAz7Xtp3FImsc1uj48NW9nXTWeMovjcpabWkcSxDRfXHw6xl52/UxQ/O4Th/SrgvvbPHxOfVOXIcAkZ6u6y5uSCCrLZx7Vc+pKugdHlzfyD4mAc7G6rU4cvJt0xw7P3PB8NCtBGpsMJcebPLT/tFAVs2j/ZaFH01GgSRwi3rnJkIMhl498O1C08J70ICOiXql/LVRxgiCRHJY4PC7GKOOVoYtvALY9FbxEU/C+
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR08MB5697.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(22082099003)(18002099003)(4143699003)(6133799003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-Exchange-RoutingPolicyChecked:
- fqE1AZKoWSgtQ3a248xB9sgdsThLj1j8q5ytZcKTcHXXwySmyCGhptxLmkbXC/eNseh0gL8wXj95v94L219VYT+uzLcqgEoL9vtSVQLwqhPhkQQnQTOcDTwrBn2NMQ5bp7EDaJX/dvv5n8umrf5MZb8uARD88c34HiSL7QaOI2BvSQkJsD45RoxBd9bqX3dI/GxA98pGfV1R9sVxKZJi4LAFw/kfNcpVzJmSuvxfeEtf4UFy+iQ1EB8SzaiDAB7GV7rAUpOKPyFh3AnQtFiE4W/bm10cON3fYAONTtTxK3ICi22aLPXeqnEVAvVceGWJpMsXVPGMKDgPxol+t7ASmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6315
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM4PEPF00025F9B.EURPRD83.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	db1e985a-3100-4c1b-11c7-08dec7e4295b
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|35042699022|1800799024|14060799003|376014|82310400026|36860700016|6133799003|22082099003|18002099003|4143699003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	It2x6GTf1u5JWYydr+oCFHYACKOO3+DG+1iBH9V+TJr2W6pntWMLbdpY3Jo15eMCk0aIiZ4gK+ls36foDIDta/VWE/BDwglhpTiWhfDhiszfnPeNLksY09PZcxK4ICEV4pNxPCI7mIjmp5nPtPGQEe5kv/7nRn6zElEjkihPGNBKIHJY1pF6+iIVEIZjnpXMQgaxSv9UEPIM7SFj+db/p97MoC5onhXGS43B/Tmm5trlIuXx9LJLflYllcdvdoxZrSRivSCFiaS52HEoKJW3/kssvDcZzLT67Q4KnOyAdxEK95dMFgPUqNGWu1YB74xnkOLHjgQ5CaS0ROlOTYIcWUUaTXi06+3cpuUWHMYd7ldOWKf04F/cw5BIGBgblI/61asg/QWCjV4RAQ+NRgGUk959fEYDW4uLE3m2ZGCtBPONIh3BxzXUtRI85z4K+GQTP/4VKRvAqwWyRuAwojMbpQVdIJyJ4TeI1dWop7r7jIWSz06F0XaiQxQamTvi9axHfYyUfiTBF8dgzJdsEx3lgk4jnjFBtFYwdM++cpl0AtCtV5pi8jOg8zqlIbTX7KgMXPN6uKwfnZLT87eqaNp1KW/lq+Yc7yzbzoGev6SXpjcBXSBVeDSl5dvOrCp92V3JspwAOdXQxzKKWnELrSWF1IEgY7mCcrN3Qjug+4CTe8MGMPa6mnCFuqCsxmU1Ae8f1sbvlRdgx6WiT9FTB3kONByDo4ABVUmdct/liLGZlko=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(35042699022)(1800799024)(14060799003)(376014)(82310400026)(36860700016)(6133799003)(22082099003)(18002099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	H7btzKsA+a9+CMrK0Q+1dYPLF5+xe8nVai4u5Te7hUyLVzpT9nXXPq2l69VlFSM86Tfzlcgu2s3G7DYkIrIMG/ZYInBWPxB2VTJSAB7B7LkYf6mV6Ac0VBsyKC9z8cQnI2wmpsghwtrBPaPPkCrpoKTk2HffJoGpo1lCoWUg3ONEam788AAz8WaASm7+gjMdTXXwLOMUo+vwbIE/yGBqJCoKu41+nYlFVG0cfjxgClvp+5Zhg6ZKDw21vHKxXuM/T4IpHTUqTtNB4LjHbFpwh3JDl/XcNY1v0iYqORQDtFmv7n23oTUzKrrm3H38NdT4mRyqkd5WEy9sVcrMAQ23B5LxXB/LcIa9P2GzBZ7Il4BYv1UFfaaQGV6GllYDFUt4jwqcQ3ew33UGB52vJENCHA52oMTvWasjd26k0xqs805E4CHh0j4GHAqTjYT1KE6U
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2026 18:07:31.6123
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e8fa352-05d4-4fd6-50fe-08dec7e44e7d
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00025F9B.EURPRD83.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB9503
+References: <20260608054841.3856224-1-irogers@google.com> <20260611164122.3974068-1-irogers@google.com>
+In-Reply-To: <20260611164122.3974068-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 11 Jun 2026 11:29:02 -0700
+X-Gm-Features: AVVi8CenGcGJO2kbPzgTY-I72cRhojhqkXQCDpbefHw6jKKn2IqK9doFvDiOKv0
+Message-ID: <CAP-5=fW9uYdD9fB2ZbF0QVb-N=mVtn6yU8d5=+pacJ_v60OFGg@mail.gmail.com>
+Subject: Re: [PATCH v20 0/5] perf tools: Add inject --aslr feature
+To: irogers@google.com, acme@kernel.org, james.clark@linaro.org, 
+	namhyung@kernel.org
+Cc: adrian.hunter@intel.com, gmx@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/11/26 16:06, sashiko-bot@kernel.org wrote:
-
->> +static void cs_etm__flush_all_stack(struct cs_etm_queue *etmq)
->> +{
->> +    enum cs_etm_pid_fmt pid_fmt =3D cs_etm__get_pid_fmt(etmq);
->> +
->> +    if (!etmq->etm->synth_opts.last_branch)
->> +            return;
->> +
->> +    cs_etm__flush_machine_stack(etmq, HOST_KERNEL_ID);
->> +
->> +    /* Clear the guest stack if virtualization is supported */
->> +    if (pid_fmt =3D=3D CS_ETM_PIDFMT_CTXTID2)
->> +            cs_etm__flush_machine_stack(etmq, DEFAULT_GUEST_KERNEL_ID);
+On Thu, Jun 11, 2026 at 9:41=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> [Severity: Medium]
-> Will this leave guest machine thread stacks unflushed if the PID format i=
-s
-> CS_ETM_PIDFMT_NONE?
+> This patch series introduces the new 'perf inject --aslr' feature to
+> remap virtual memory addresses or drop physical memory event leaks
+> when profile record data is shared between machines. Bundled with this
+> feature is a bug fix inside the core map tracking tool that hardens
+> perf session analysis against concurrent lookup data races.
 >
-> When no context IDs are traced, the fallback logic in cs_etm__get_machine=
+> Detailed Mechanism of MMAP Mapping and ASLR virtual Address Allocation:
+>
+> The ASLR tool virtualizes the address space of the recorded processes by
+> intercepting MMAP and MMAP2 events to build a consistent translation
+> database, which is subsequently used to rewrite sample addresses.
+>
+> It maintains two primary lookup databases using hash maps:
+> 1. 'remap_addresses': Maps an original mapping key to its new remapped
+>    base address. The key uses topological invariant coordinates:
+>    (machine, dso, invariant). The invariant is computed as (start - pgoff=
+)
+>    for DSO-backed mappings. This invariant remains constant even when
+>    perf's internal overlap-resolution splits a VMA into fragmented
+>    pieces, ensuring split maps resolve consistently back to the same
+>    remapped base.
+> 2. 'top_addresses': Tracks the allocation state per process (machine, pid=
+).
+>    It maintains 'remapped_max' (the highest allocated address in the
+>    virtualized space).
+>
+> For each MMAP/MMAP2 event:
+> - We look up the DSO and invariant key in 'remap_addresses'. If found, we
+>   reuse the translation, preserving the offset within the mapping.
+> - If not found, we allocate a new remapped address space:
+>   - We use thread__find_map to look up the mapping immediately preceding
+>     the new one in the original address space (at start - 1). If
+>     the preceding
+>     mapping was also remapped, we place the new mapping
+>     contiguously after it in the remapped space. This preserves
+>     contiguity of split mappings (e.g., symbols split by HugeTLB,
+>     or anonymous .bss segments adjacent to initialized data).
+>   - If no contiguous mapping is found, we insert a 1-page gap from
+>     the highest allocated address (remapped_max) to prevent accidental
+>     merging of unrelated VMAs.
+> - The event's start address (and pgoff for kernel maps) is rewritten,
+>   and the event is delegated to the output writer.
+>
+> To remain strictly conservative and guarantee security, the tool
+> scrubs breakpoint addresses (bp_addr) from all synthesized stream
+> headers, completely drops PERF_RECORD_TEXT_POKE events to prevent
+> absolute immediate pointer operands leaks, and drops unsupported
+> complex payloads (such as user register stacks, raw tracepoints, and
+> hardware AUX tracing frames).
+>
+> Verification is reinforced with shell test ('inject_aslr.sh').
+>
+> Prerequisite Bug Fix (Patch 1). During development, a core map
+> indexing issue was identified and resolved to prevent concurrent
+> lookup data races during session analysis.
+>
+> Changes since v19:
+> - Patch 1: Group lock and unlock operations inside maps__mutate_mapping()=
+ into
+>   a single conditional block to resolve Clang 15 -Wthread-safety-analysis
+>   compilation errors.
+> - Patch 5: Skip kernel-based ASLR test cases (test_kernel_aslr and
+>   test_kernel_report_aslr) on ARM architectures (aarch64 and arm*) to
+>   bypass high latency constraints and symbolization inconsistencies.
+>
+> Changes since v18:
+> - Patch 2 & 3: Squashed the bounds checking boundary fixes into the "Stri=
+p
+>   sample registers" patch. The array bounds checking now correctly uses
+>   'orig_sample_type' to traverse the event payload, preventing heap
+>   corruption when dealing with events that have had their registers
+>   stripped by the ASLR tool pipeline.
+> - Patch 2 & 3: Rebased the commit series to properly isolate the sample
+>   address remapping logic from the register stripping logic.
+> - Patch 2 & 3: Expanded commit messages to extensively document the
+>   cross-endian behavior of 'perf inject'. Because 'perf inject' effective=
+ly
+>   acts as an endianness converter (writing a host-endian PERF_MAGIC and
+>   flushing events exactly as they sit in memory after being byte-swapped
+>   by perf_event__all64_swap), all injected events must be perfectly
+>   constructed in the host's native endianness. Specifically,
+>   perf_event__all64_swap byte-swaps the raw 64-bit payloads, which causes
+>   32-bit sequential fields like PERF_SAMPLE_TID (containing pid and tid)
+>   to have their ordering reversed in memory (e.g., [BE_pid][BE_tid] becom=
+es
+>   [LE_tid][LE_pid]). The ASLR tool's sample construction logic was
+>   expanded to explicitly unpack these fields and repack them sequentially
+>   via unions to guarantee a strictly host-endian layout that resolves
+>   these inversion anomalies. Similarly, branch stack flags (which are
+>   modified in-place to host-endian bitfields by the parser) are copied
+>   directly to the newly synthesized event, and 'needs_swap=3Dfalse' is ex=
+plicitly
+>   used when re-parsing the synthesized event to prevent erroneous double
+>   swapping.
+> - Series: Verified cross-endian robustness via the sashiko analyzer.
+>
+> Changes since v17:
+> - Patch 2: Reordered ksymbol deletion logic to ensure
+>   `perf_event__process_ksymbol` deletes the map *after* the
+>   `aslr_tool__findnew_mapping` translates the unregister offsets.
+> - Patch 2: Changed `aslr_tool__delete` to cleanly handle guest machine
+>   deletion memory leaks.
+> - Patch 2: Resolved read-only segfaults on memory-mapped perf.data
+>   headers during attribute stripping by using deep copies in
+>   `perf_event__repipe_attr`.
+> - Patch 2: Fixed user space remap invariant logic to include
+>   `(start - map__start(al.map))` preventing negative overflows on module
+>   offset boundaries.
+> - Patch 3: Removed duplicate `bswap_64` payload byte-swapping inside the
+>   array logic, allowing the host endianness macros `COPY_U64()` to
+>   handle it dynamically.
+> - Patch 3: Fixed LBR branch sample starvation by explicitly reading branc=
+h
+>   counters instead of dropping the entire sample.
+> - Patch 5: Fixed test flakiness by grepping out physical hex addresses
+>   `0x[0-9a-f]{8,}` instead of matching exact address strings.
+> - Patch 5: Parameterized temp reports and updated test to scale with
+>   `/dev/urandom` continuous random reads.
+> - Patch Series: Added Signed-off-by tags uniformly and Assisted-by tags t=
+o
+>   track assistance.
+>
+> Changes since v16:
+> - Patch 2: Refactored inline ASLR stripping logic out of builtin-inject.c
+>   and into dedicated helpers (aslr_tool__strip_attr_event and
+>   aslr_tool__strip_evlist) in aslr.c to better separate concerns.
+> - Patch 2: Fixed guest machine allocation memory leak in
+>   aslr_tool__delete() where machines__exit() explicitly skipped freeing
+>   the guest processes tree.
+> - Patch 3: Fixed bounds-check violations during cross-endian parsing insi=
+de
+>   aslr_tool__process_sample() by correctly applying bswap_64() to raw
+>   offsets, iteration counts, sizes, and addresses prior to logical
+>   evaluation when orig_needs_swap is active.
+> - Patch 4: Fixed pipe mode parser misalignment bug by safely fetching
+>   needs_swap from the initialized evsel rather than blindly intercepting
+>   HEADER_ATTR events prior to session parsing.
+> - Patch 4: Resolved checkpatch.pl line length warnings in the bswap_64
+>   endianness swapping logic.
+> - Patch Series: Reordered the final two patches. "perf aslr: Strip
+>   sample registers" is now Patch 4, and "perf test: Add inject ASLR
+>   test" is now Patch 5. This ensures the register stripping logic
+>   is fully introduced before the comprehensive shell tests validate it,
+>   preventing bisectability test failures and easing merge conflicts.
+> - Patch 5: Fixed "User registers stripping test" starvation when run as
+>   root by explicitly using '-e cycles:u' during recording, preventing
+>   the ring buffer from overflowing with kernel samples.
+>
+> Changes since v15:
+> - Patch 2: Added bounds checking for event->header.size before writing
+>   to breakpoint fields to avoid heap buffer overflow on older ABI events.
+> - Patch 2: Fixed asymmetric calculation bug in aslr_tool__findnew_mapping=
 ()
-> assigns EL1 traces to the guest machine:
+>   where pgoff for anonymous kernel memory was not properly subtracted upo=
+n
+>   insertion, causing the lookup addition to overflow.
+> - Patch 2: Added detailed comments documenting the symmetric lookup and
+>   insertion math for unmapped and mapped memory blocks.
+> - Patch 5: Add missing kprobe and uprobe scrubbing of config1 and
+>   config2 during aslr_tool__strip_evlist() to strictly conform with
+>   repipe constraints.
 >
-> tools/perf/util/cs-etm.c:cs_etm__get_machine() {
->          ...
->          switch (el) {
->          case ocsd_EL1:
->                  return machines__find_guest(&etmq->etm->session->machine=
-s,
->                                              DEFAULT_GUEST_KERNEL_ID);
->          ...
-> }
+> Changes since v14:
+> - Patch 2: Removed unnecessary vertical whitespace in builtin-inject.c.
+> - Patch 2: Added comments explaining why pgoff is assigned for
+>   anonymous memory maps to prevent ASLR leaks.
+> - Patch 2: Removed orig_last_end tracking and refactored contiguous mappi=
+ng
+>   detection to use thread__find_map(..., start - 1, ...) based on Gabriel=
+'s
+>   feedback.
+> - Patch 2: Scrub kprobe/uprobe event config1 and config2 fields to preven=
+t
+>   address leaks.
+> - Patch 2: Overwrite pgoff with the remapped start address for anonymous
+>   mappings (detected via is_anon_memory and is_no_dso_memory).
+> - Patch 3: Fix C90 mixed declaration error for orig_needs_swap.
+> - Patch 3: Temporarily disable evsel->needs_swap during the secondary
+>   evsel__parse_sample() call to prevent branch stack double-swapping bugs=
+.
 >
-> Since the flush here is strictly gated on CS_ETM_PIDFMT_CTXTID2, does thi=
-s
-> skip flushing those threads and leave their original stale call/return
-> history unresolved?
+> Changes since v13:
+> - Patch 2: Added a NULL check for env before calling
+>   perf_env__kernel_is_64_bit(env) to prevent potential segfaults if the
+>   recorded environment has no headers.
+> - Patch 5: Fixed sample_size and id_pos going out of sync during
+>   aslr_tool__strip_evlist() and aslr_tool__restore_evlist(). Instead of
+>   using evsel__reset_sample_bit(), which was acting as a no-op due to
+>   early bit clearing and corrupted sample_size, the tool now directly
+>   updates sample_type and recomputes sample_size/id_pos dynamically.
+>   Added orig_sample_size to aslr_evsel_priv to correctly restore the
+>   state.
+>
+> Changes since v12:
+> - Patch 2: Fixed potential NULL pointer dereference in
+>   remap_addresses__hash() when handling unmapped memory events (key->dso
+>   is NULL) under REFCNT_CHECKING.
+> - Patch 2: Dynamically detect machine architecture bitness via
+>   perf_env__kernel_is_64_bit() to select appropriate kernel_space_start
+>   boundaries, avoiding 64-bit address injection on 32-bit platforms.
+>
+> Changes since v11:
+> - Patch 1: Fixed struct dso name accessor in maps.c by using
+>   dso__name() instead of ->name.
+> - Patch 2: Fixed hash function in aslr.c to hash the underlying
+>   dso pointer using RC_CHK_ACCESS to support reference count checking.
+>
+> Changes since v10:
+> - Patch 1: Added explicit tracking array logic in maps__load_maps()
+>   to correctly accumulate valid maps (skipping NULL entries after
+>   failures) and safely return the exact populated count, resolving
+>   out-of-bounds pointer iteration panics.
+> - Patch 3: Fixed endianness bug during cross-endian sample parsing
+>   by passing evsel->needs_swap instead of false to __evsel__parse_sample
+>   in aslr.c, ensuring correct 32-bit field byte unswapping for packed
+>   fields. Refactored evsel__parse_sample to take a needs_swap argument
+>   via __evsel__parse_sample.
+> - Patch 4: Fixed inject_aslr.sh exit code handling in trap functions
+>   to capture and propagate the correct pipeline failure status code
+>   instead of unconditionally returning success or failing the test.
+>
+> Changes since v9:
+> - Patch 1: Added `-ENOMEM` error check inside
+>   `maps__find_symbol_by_name()` and return `NULL` early. Added map
+>   sorting state invalidation on early return in `maps__load_maps()`.
+> - Patch 2: Fixed encapsulation by using `thread__maps()` and
+>   `thread__pid()` accessors in `aslr_tool__findnew_mapping()`. Added
+>   `pr_warning_once` warning when raw auxtrace data is dropped.
+> - Patch 3: Fixed encapsulation by using `thread__maps()` and
+>   `thread__pid()` accessors in `aslr_tool__remap_address()`. Wrapped
+>   `evsel__parse_sample()` to temporarily disable `needs_swap` to avoid
+>   branch stack endianness corruption on cross-endian files. Fixed ISO
+>   C90 warning for declaration-after-statement for `orig_needs_swap`.
+> - Patch 4: Fixed duplicate cleanup by explicitly removing trap
+>   handlers (`trap - EXIT TERM INT`) inside the `cleanup()` function.
+> - Patch 5: Fixed heap corruption by adding size bounds checking before
+>   writing to `sample_regs_user` and `sample_regs_intr` fields. Added
+>   missing register mask clearing logic for the `itrace` synthesis path
+>   of `perf_event__repipe_attr()`.
+>
+> Ian Rogers (5):
+>   perf maps: Add maps__mutate_mapping
+>   perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
+>   perf inject/aslr: Implement sample address remapping
+>   perf aslr: Strip sample registers
+>   perf test: Add inject ASLR test
 
-I will update code to:
+The sashiko reviews are at:
+https://sashiko.dev/#/patchset/20260611164122.3974068-1-irogers%40google.co=
+m
 
-   /* Host only */
-   if (pid_fmt =3D=3D CS_ETM_PIDFMT_CTXTID) {
-       cs_etm__flush_machine_stack(etmq, HOST_KERNEL_ID);
-       return;
-   }
+To summarize:
 
-   /* Clear the guest stack if virtualization is supported */
-   cs_etm__flush_machine_stack(etmq, DEFAULT_GUEST_KERNEL_ID);
+Patch 2:
+ * TOCTOU if underlying event buffer mmaps change. Not an issue as
+rewriting a perf.data file while it is being read is out of scope.
+
+Patch 3:
+ * Mapping addresses to 0 for unknown mappings is criticized but the
+proposed alternative doesn't hide ASLR. This will cluster things on
+address 0 but the fix is simply to ensure no MMAPs are missing.
+ * Cross-endian issues, but as explained previously, these are out of scope=
+.
+
+The clang build issue reported by James and disabling the kernel
+testing for ARM are both in the v20 series. So I think the patches are
+ready for review/merging.
 
 Thanks,
-Leo
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+Ian
+
+>  tools/perf/builtin-inject.c           |   81 +-
+>  tools/perf/tests/shell/inject_aslr.sh |  533 ++++++++++
+>  tools/perf/util/Build                 |    1 +
+>  tools/perf/util/aslr.c                | 1406 +++++++++++++++++++++++++
+>  tools/perf/util/aslr.h                |   44 +
+>  tools/perf/util/evsel.c               |    6 +-
+>  tools/perf/util/evsel.h               |   10 +-
+>  tools/perf/util/machine.c             |   32 +-
+>  tools/perf/util/maps.c                |  148 ++-
+>  tools/perf/util/maps.h                |    3 +
+>  tools/perf/util/symbol-elf.c          |   41 +-
+>  tools/perf/util/symbol.c              |   17 +-
+>  12 files changed, 2251 insertions(+), 71 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/inject_aslr.sh
+>  create mode 100644 tools/perf/util/aslr.c
+>  create mode 100644 tools/perf/util/aslr.h
+>
+> --
+> 2.54.0.1099.g489fc7bff1-goog
+>
