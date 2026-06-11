@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D43110785
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 17:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8621548BD57
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 18:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781200660; cv=none; b=Yw3QCB7ZAEicBKub05Jlsfes5LREGLVgHVRz+84ZXlqxzgl+LU175kfckypmltXfEt6oYbprdjn+C2D3cW60rxS32qC3JcgdBzdsuV32vgcBL16GylvxN31NjoMKWlotpbzz2o/NoyvQs5pV0L/+4cz45h57OkMACvGZmTcg1qA=
+	t=1781200826; cv=none; b=euH13w9mXrZ6OHJi1U442ipL3jP9sxvuxkgO0nrtjumzs9SO+WXGdnSZY+27Rot+ngqN7rgBbkIvAmmDy0D0ZUWsnWZDmJ0mdqnnwETq0r4enqqXZvNO+tbQXYOeUk4Wms3/wGZJNLba2ESCWAekso9pc4WRBCw/zgdfHNUiqkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781200660; c=relaxed/simple;
-	bh=TGDG2xodoXeL5RkDw0JKkafScQExGY+x9mFQiYXnYms=;
+	s=arc-20240116; t=1781200826; c=relaxed/simple;
+	bh=h7ZcBSfP4dntZhWs9M3aWDleRYZA8gaRiCLJEAQF47M=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rJBLQ9bxqA4eMRIot9Oa9tI6RAfwwmxec0oVQH28XjGlGiQ+7rmYde2IXpz91iwBRWrXbQx9id2NjXgNJHXNl2ner3oyp+KxYkdbvSm5UDNxp9KVJBsB1Zhq8BXtPzHxMj690/yF4jOIQSQL+F9Yj2aN0+YVs8PEyWq2VowKxOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsStmkxb; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=fNA1P6KZz4SeE0U6dR4PGQd/PeankFAySypfbkojjUs/OgBSbXHWksqELcfMyXkLRHvOo88/q7+RUvCXfwaFqB92Pqji99Z06m8yd2GRathohPcIJu3Qm7IXY7DI3/UTkEqzS+N5lhdbIdsPqZXCMf0Py34kFh6iBBaUOLP5suk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rdn5wQjJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsStmkxb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3C631F00893;
-	Thu, 11 Jun 2026 17:57:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rdn5wQjJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBAC71F00893;
+	Thu, 11 Jun 2026 18:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781200658;
-	bh=LX/gEfYD+H+/6Sj6LyRlt0e2VGAVEBtdmsM95SuyIEc=;
+	s=k20260515; t=1781200824;
+	bh=/H4RPQYezPzAY0hil1b9eMrSSdyLkUMhgKtck8zcaY4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lsStmkxbT1iK+zFzKJU/9cKhN5kCd7ce8f1ILIe/8cCO7gvO0utEHn01nS6Qw3xTD
-	 xM+OJlt06Q1QBjc0BWQQnEGKrXuLAGhs4k5rBJJgmubgVczPeYanjLY7J1fSPwUzSk
-	 ngrV/FUrc/Be5uJo/8B1m4+jGDZygyf+xtgeHWUPjBuZT4RJhaXblzn1cE4g6HrqpM
-	 GbwDtML2JG41aBl+uI/jQiloiKIDqVaxxfEjprASbpVDE42nc8H9L7TZOqB00VO1CE
-	 FhE05PjqGF3OyjEloZ85NKetJK2Ou6QyE82B2jTVL7vCk9sCfEp3AcX3avD3XIpKVE
-	 kGPCTGqdCbyAQ==
+	b=Rdn5wQjJ3N3QiQd6cvYpXo6nSgLNL4ca3uW6YtBVgWBlvQ0nKuv6c6fhsQDvOTCuW
+	 k6QEXdKLPLiR+rr+Y01493EeXVXAT1tSpQdIVJ+OJ8SwV1TIVK0U7Zkz6NX7+tP0OE
+	 1ckvtm0FSyZ+yOvHBmbmiw0GrqMbTOJSPvD0PRDaRWDvgQjKDFcJWeOS2vjR3/yEv3
+	 aPc8eNG/u4oq2p9s2PCPkVEh6F/PKu6xfzYcpBbhbF9Ve4woX9xKbLJawuyUWKmTgS
+	 yiQcnMQxXbRIM5bp4cEpw0SpBneSfJo/LRrGCZLSnDxeAMBMw50HrzCGObPy3zgi62
+	 352n5CBP8xnfw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 11/19] perf python: Refactor and add accessors to
- sample event
+Subject: Re: [PATCH v12 18/19] perf python: Add perf.pyi stubs file
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260611171756.4008769-12-irogers@google.com>
-References: <20260611171756.4008769-12-irogers@google.com>
+In-Reply-To: <20260611171756.4008769-19-irogers@google.com>
+References: <20260611171756.4008769-19-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 17:57:38 +0000
-Message-Id: <20260611175738.A3C631F00893@smtp.kernel.org>
+Date: Thu, 11 Jun 2026 18:00:22 +0000
+Message-Id: <20260611180023.CBAC71F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,102 +45,114 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] pyrf_event__new dynamic sizing attempt fails, leading to silent ev=
-ent truncation and uninitialized memory exposure.
-- [Medium] Address truncation in map__start and map__end accessors on 32-bi=
-t architectures.
+- [Medium] The `perf.pyi` type stub file contains multiple inaccurate or in=
+complete class definitions that do not match the C implementation.
+- [Low] The Makefile rule for building the python extension misses `python/=
+perf.pyi` as a dependency.
 --
 
-commit 0b2bea919a58bcd2d7f94b25ee6584d9a64ef1ec
+commit f3d52b87d773a5fc9945194f762ef3353b9c5678
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Refactor and add accessors to sample event
+perf python: Add perf.pyi stubs file
 
-Add common evsel field for events and move sample specific fields to
-only be present in sample events. Add accessors for sample
-events. Ensure offsets are within the bounds of the event. Allocate
-just enough memory for the copied event, don't make the maximum event
-size each time.
+Add Python type stubs for the perf module to improve IDE support and
+static analysis. Includes docstrings for classes, methods, and
+constants derived from C source and JSON definitions.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index f060d4ead203a..7011a773e4504 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -522,7 +522,10 @@ $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util=
+/python.c util/setup.py $(PE
+>          CFLAGS=3D'$(CFLAGS)' LDFLAGS=3D'$(LDFLAGS) $(LIBS_PY)' \
+>  	  $(PYTHON_WORD) util/setup.py \
+>  	  $(python_setup_quiet) build_ext; \
+> -	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
+> +	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/; \
+> +	if [ "$(abspath python/perf.pyi)" !=3D "$(abspath $(OUTPUT)python/perf.=
+pyi)" ]; then \
+> +		cp python/perf.pyi $(OUTPUT)python/; \
+> +	fi
+
+[Severity: Low]
+Since python/perf.pyi is being copied to the output directory here, should
+it also be added to the dependency list for the target? Without it, if a
+developer modifies python/perf.pyi, the build system might not detect the
+change and copy the updated stub file.
+
+> diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
+> new file mode 100644
+> --- /dev/null
+> +++ b/tools/perf/python/perf.pyi
 
 [ ... ]
 
-> @@ -394,6 +449,199 @@ get_tracepoint_field(struct pyrf_event *pevent, PyO=
-bject *attr_name)
-
-[ ... ]
-
-> +static PyObject *pyrf_sample_event__get_map_start(struct pyrf_event *pev=
-ent,
-> +						  void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyLong_FromUnsignedLong(map__start(pevent->al.map));
+> +class counts_values:
+> +    """Raw counter values."""
+> +    val: int
+> +    ena: int
+> +    run: int
 
 [Severity: Medium]
-Since map__start() returns a u64, will PyLong_FromUnsignedLong() truncate
-the address on 32-bit Python builds? Should this use
-PyLong_FromUnsignedLongLong() similar to
-pyrf_sample_event__get_map_pgoff()?
+Are there missing fields in this class definition? Compared to the C
+implementation, it looks like the 'id' and 'lost' attributes might be missi=
+ng
+from counts_values.
 
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_map_end(struct pyrf_event *peven=
-t,
-> +						void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyLong_FromUnsignedLong(map__end(pevent->al.map));
+[ ... ]
+
+> +class lost_event(_sample_members):
+> +    """Represents a lost events record."""
+> +    type: int
+> +    id: int
+> +    lost: int
 
 [Severity: Medium]
-Similarly, does PyLong_FromUnsignedLong() truncate the 64-bit map__end()
-address here on 32-bit architectures?
+Does this class actually export a 'type' attribute? Checking the C
+implementation's PyMemberDef array, it doesn't appear to be exported,
+which might cause false positives in type checkers.
 
 [ ... ]
 
-> @@ -511,33 +840,63 @@ static PyTypeObject *pyrf_event__type[] =3D {
+> +class read_event(_sample_members):
+> +    """Represents a READ record."""
+> +    type: int
+> +    pid: int
+> +    tid: int
+
+[Severity: Medium]
+Similar to lost_event, is 'type' actually exported for read_event by the
+C extension?
 
 [ ... ]
 
-> +	size_t copy_size =3D event->header.size;
-> +
-> +	pevent =3D PyObject_New(struct pyrf_event, pyrf_event__type[event->head=
-er.type]);
-> +	if (pevent =3D=3D NULL)
-> +		return PyErr_NoMemory();
-> +
-> +	if (copy_size > sizeof(pevent->event))
-> +		copy_size =3D sizeof(pevent->event);
-> +
-> +	/* Copy the event for memory safety and initilaize variables. */
-> +	memcpy(&pevent->event, event, copy_size);
-> +	pevent->event.header.size =3D copy_size;
+> +class stat_event:
+> +    """Represents a stat event from perf."""
+> +    type: int
+> +    id: int
+> +    cpu: int
+> +    thread: int
+> +    val: int
+> +    ena: int
+> +    run: int
 
-[Severity: High]
-The commit message mentions allocating "just enough memory for the copied
-event", but PyObject_New() always allocates the static size of
-struct pyrf_event.
+[Severity: Medium]
+Should this class inherit from _sample_members? The C implementation
+for stat_event includes sample_members.
 
-If an oversized event is encountered, such as a sample with a large
-callchain where event->header.size > sizeof(union perf_event), will
-clamping copy_size to the union size silently truncate the payload?
-This truncation would cause the subsequent evsel__parse_sample() to fail.
+[ ... ]
 
-Additionally, for smaller events, does this leave the uncopied trailing
-bytes of the union in pevent->event uninitialized? This could potentially
-leak heap memory if those bytes are later accessed.
+> +class stat_round_event:
+> +    """Represents a stat round event from perf."""
+> +    type: int
+> +    time: int
 
-> +
-> +	if (event->header.type =3D=3D PERF_RECORD_MMAP) {
+[Severity: Medium]
+Does stat_round_event also need to inherit from _sample_members?
+Additionally, it looks like the 'stat_round_type' attribute might be
+missing from this stub.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611171756.4008=
-769-1-irogers@google.com?part=3D11
+769-1-irogers@google.com?part=3D18
