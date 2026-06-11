@@ -1,88 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2422FFFBE;
-	Thu, 11 Jun 2026 15:09:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291BA3A75A6
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 15:11:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781190542; cv=none; b=cwHg6zmIS6kVgcHcSJdoGvBaZMtyqzmbtYMUkBKR7RjBKq7JH2o5M7dqkgDrJFq0tFgi/X054+fuZG5u9GSvE5CPRpulPGWICyqn3eiMWRraUS78LUq/cxvuaVlOdRklMc0E+k8pYynLJv7rLgrR1cPQRylOAS4DaI0oVLFWxj8=
+	t=1781190690; cv=none; b=Qx8UTn7TybIvI4orBzkYRleww4G67ZIuXFVKeZWTn2re/ujr4DMBKGNgJqoD00TE0fMwdueG6CS+e113QDCQW8PWDmex3R79sEDysVvG3y72yG1BKzKb73Pbx6rlo8YIpMkq0HCz2DsAUAwx3nl0Gk9jb++x7IoPC6eHP0KoQgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781190542; c=relaxed/simple;
-	bh=u8Z1HwVQ6gNZfFbrHvWxvraaKsKvFg1yRaKyVTFkyd8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cnOcLe4T5Pqp9Ix0jNWmtKnbYeY7o0x95TmTDpQp7/ixbBHJV1jKzdnZ4ETFRpp1P4zcrcRn8lxMAgyNgG2aqnGhoE8m+Vt6u0Xfg21GPK4hZ5Nkq7Cd+syxfLKxGg8qBrW5JdmF+dOi0dfK6icxXfiE41G4mJhytpZEy7av8nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5FSZVvr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781190690; c=relaxed/simple;
+	bh=3Ed5geoa0X8MXiLiall0jIHqAA3thWNVSdsKi+S4fiY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=I9cBsVfzWSnqe0s4bTmIWmj8aoQi8GPMYtUIjb1C2bO7A0cWKDF/o2VsZ6XVJrkjeORxhQosmYHuEjy/j0V78rJqt8XsV/Qfzk4LYL39uPzwGKEtboBOFkoBCl0RKcZeyXv52oq7uDIQhqes3egh60aT6Q7UHcsCc9rL3135VTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kd85RP84; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5FSZVvr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2C91F00899;
-	Thu, 11 Jun 2026 15:09:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kd85RP84"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 993C71F00893;
+	Thu, 11 Jun 2026 15:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781190541;
-	bh=0uRLPyI0GfrqF0p32ngwFu1PHDAcTSIvRXBHRBkO/M8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=b5FSZVvrzfSoSkhd43JnNH9Cw0vj4H5/nANqbIs3pzPcAwkdKmWVfaYoyRIM7gGVm
-	 Q8NzYCyXX25Y//naJrf72k7zruYA6BxItvzYO7utF4hv+2yRqlLEpuuWxhuVVMwNGQ
-	 6q1v5onmVgNbJKFerODwmrNHlEorUSkB4Z9Yh27tkX8pxbKbUXN44Li9NVVrvwe3wW
-	 7VS8L8nqCaGyTB7WPg9X8CKZs/NxqLkzNG/zbQAsSc8IWyF9fivxWYIYyYumZrjExu
-	 qtT471kIMBDNfSIhwxHyKrKYp2QZaUbPjTfCp9LkyKuZfq17VPDamg2GWdGDiM+AzA
-	 c9r0Cz3pSxd8Q==
-Date: Thu, 11 Jun 2026 12:08:58 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf test: Compile named_threads workload with -O0
-Message-ID: <airPimFmTCute2PT@x1>
-References: <20260611-james-cs-unformatted-per-thread-fix-followup-v1-1-3c855d93dba8@linaro.org>
+	s=k20260515; t=1781190688;
+	bh=L4JdWl7aEYDwlFOIJTRGoG8Vy4U2YLii43Todra5TYY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Kd85RP84ca4mB89U5HRSvA31VwkLHQ5yWupb3LCmG75RlgJNYDshMTtTgJCTqmAqT
+	 6m/s1tFrezukUK9kdAs8CyhJTjbh5Zw5crG0c4eEo6QgOisUdLuWNlkM0qqSdEsM7v
+	 P9zJ/J+epQAH1aGNlAIRSx5qEIXfh5G0UWvTmwWqo3FGKfEihPlmK/yz3Gvx81knbp
+	 ZMYmcGeVhU1vAzp1TfViKXU9NHnLhgICFY89yFiw8Z3wVCHywL40of1SjGE08fVEWn
+	 Kdprnh7SUxYiT+i43/Lb+XcITTkbP0a0bchjX1KjRM8g8QZeHOM1l5gD8hE6UVWLzP
+	 7jrTGCI2DJPdw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 6/8] perf cs-etm: Support call indentation
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v8-6-737948584fea@arm.com>
+References: <20260611-b4-arm_cs_callchain_support_v1-v8-6-737948584fea@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 11 Jun 2026 15:11:28 +0000
+Message-Id: <20260611151128.993C71F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260611-james-cs-unformatted-per-thread-fix-followup-v1-1-3c855d93dba8@linaro.org>
 
-On Thu, Jun 11, 2026 at 12:13:46PM +0100, James Clark wrote:
-> The work loop relies on the compiler not optimizing it away, although
-> named_threads_work is not static for that reason, the compiler could
-> still do it.
-> 
-> Fix it by compiling without optimization. Also add -fno-inline for
-> consistency and in case anyone wants to look at callstacks.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
-> One trailing Sashiko fix from the "perf cs-etm: Queue context packets
-> for frontend" patch series that has been applied already.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] cs_etm__packet_swap() is missing the etm->use_thread_stack condi=
+tion, which breaks callindent when basic tracing options are disabled.
+--
 
-I'll add a Fixes tag pointing to that cset, also a reported-by sashiko
-and a closes, for completeness.
+commit 0a18549301f4498325c22df50ff20dde5b1f2489
+Author: Leo Yan <leo.yan@linux.dev>
 
-Thanks, applying.
+perf cs-etm: Support call indentation
 
-- Arnaldo
+The perf script callindent is derived from call stack in thread context,
+CS ETM ignores the requirement for callindent without pushing and poping
+call stack.
 
-> ---
->  tools/perf/tests/workloads/Build | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-> index 75b377934a0e..7bb4b9829ba2 100644
-> --- a/tools/perf/tests/workloads/Build
-> +++ b/tools/perf/tests/workloads/Build
-> @@ -26,3 +26,4 @@ CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->  CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->  CFLAGS_inlineloop.o       = -g -O2
->  CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-> +CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-> 
-> ---
-> base-commit: 7336514f41e75d44782fee7e0990d4195a3d3161
-> change-id: 20260611-james-cs-unformatted-per-thread-fix-followup-babf28a4e640
-> 
-> Best regards,
-> -- 
-> James Clark <james.clark@linaro.org>
+Enable thread-stack when either itrace thread-stack support or last branch
+entries are requested, allocate the branch stack storage accordingly, and
+feed taken branches to thread_stack__event() whenever thread-stack state
+is needed.
+
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 7069b4990e610..830618763d8b1 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+[ ... ]
+> @@ -1545,7 +1547,7 @@ static void cs_etm__add_stack_event(struct cs_etm_q=
+ueue *etmq,
+>  	if (!cs_etm__packet_has_taken_branch(tidq->prev_packet))
+>  		return;
+> =20
+> -	if (etmq->etm->synth_opts.last_branch) {
+> +	if (etmq->etm->use_thread_stack) {
+
+[Severity: Medium]
+When callindent is requested but basic synthesis options are disabled
+(for example, using --itrace=3De), could cs_etm__packet_swap() fail to
+swap the packets?
+
+If etm->use_thread_stack is set, but branches, last_branch, and instructions
+are disabled, it appears the packet swap is skipped:
+
+tools/perf/util/cs-etm.c:cs_etm__packet_swap() {
+	if (etm->synth_opts.branches || etm->synth_opts.last_branch ||
+	    etm->synth_opts.instructions) {
+		/*
+		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
+		 * the next incoming packet.
+		 */
+		tmp =3D tidq->packet;
+		tidq->packet =3D tidq->prev_packet;
+		tidq->prev_packet =3D tmp;
+	}
+}
+
+Would this leave tidq->prev_packet zero-initialized, causing
+cs_etm__packet_has_taken_branch() to always return false and break
+callindent functionality?
+
+>  		from =3D cs_etm__last_executed_instr(tidq->prev_packet);
+>  		to =3D cs_etm__first_executed_instr(tidq->packet);
+> =20
+> @@ -1554,7 +1556,8 @@ static void cs_etm__add_stack_event(struct cs_etm_q=
+ueue *etmq,
+>  		/* Enable callchain so thread stack entry can be allocated */
+>  		thread_stack__event(tidq->frontend_thread, tidq->prev_packet->cpu,
+>  				    tidq->prev_packet->flags, from, to, size,
+> -				    etmq->buffer->buffer_nr + 1, false,
+> +				    etmq->buffer->buffer_nr + 1,
+> +				    etmq->etm->use_callchain,
+>  				    tidq->br_stack_sz, 0);
+>  	} else {
+>  		thread_stack__set_trace_nr(tidq->frontend_thread,
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611-b4-arm_cs_=
+callchain_support_v1-v8-0-737948584fea@arm.com?part=3D6
