@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38CA357CED
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 23:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541FF374E7F
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 23:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781219349; cv=none; b=g7EGx9VhfsK8UHj/z2Ytt5R5kk3t+jlaq9WPJ9K0UMu9G6oWkCBBGQrSGIm0i52BS6tNjUlgPSPvXN31jRoW7mwds9lmYJzYMWhAIixiCWvHfDbOF+u6uP1Cm0w7w/57tF8o78pbn8AYJeUCcJwwVddX74k+b5BHST7fQ8HdHQc=
+	t=1781219547; cv=none; b=hR8jjSJwWZ7f+k4dGYMPbhcs76eXtgZBKk72+rMD9DpsnLdbqJ2aEBac+X6dJv8gMRwlNG4xnm3Z4zrwI+K7YCCcezlAJHUzfRwZ2nVG1s3G4/1A05Ki5HOiSpqqEbT3blOou8BZbKHyyhFHmpJl6n28UUFT9tRb+SUwy4Xkcaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781219349; c=relaxed/simple;
-	bh=sTJDbnXJX6oPRtIHp411hlEILLzywWwLTXTnmwG2Idw=;
+	s=arc-20240116; t=1781219547; c=relaxed/simple;
+	bh=+bNlIVdU98CNlUvS0e1v45+LSTrwMpdELVXz0VF/NMk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UsOOTIIEgZZL7ZBbdE+nMvkgiNRVseHIpXJA5NuOgVNUnJCdbbpPkCD1EvNKD0/SXB4V7PSMpHfiqj/UGCjHByjyZdEnZRA9dugX/GmnkjDI25mvaiEtv+gc7eWjYJ3T1hCOOz+ik+FR6tBQk587ipPS85mIAykMajPL23Ce5Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UWKMIhDY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=n1bCLJ9d4ZgFaFA8k/QAWnKZJpsjS/8erKX3gI1pMymucYNRda+dim55i1njxHohhDg8hEb6XzdZ9YYqmx8WLE6C9no4EdKK6E0qZjga9juswfmI1JBwi3lBvMjjn/uNod7QB/X8nax+mTZTodZ0lkb/ITniWTM3Zr47v9uGGwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f1v3eSRJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UWKMIhDY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92CE1F000E9;
-	Thu, 11 Jun 2026 23:09:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f1v3eSRJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 147DF1F000E9;
+	Thu, 11 Jun 2026 23:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781219348;
-	bh=0Tg/La9EYOcSrr4PMfK2AlCAJpHhR/nkO6M+iV3NOis=;
+	s=k20260515; t=1781219546;
+	bh=u9Tvbt7nKk5Eb1rtQ7xPmp1sDepROFM/R4valaqfQmw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UWKMIhDYON+6RC/jFsKhEyt6ugMmqB1J/SF7lwp31XVXE4UTGsHH7Q5Pdn8rcw6kr
-	 3Y9/nG18b2tDZRUznqSc6Ba6LSMzxlLD2yXCA+FjBvKc7pmIfTSg0Y2iDW3rCgs0j7
-	 mWpzQfmDL6EViAKm2fHH+pV7ns4PvQzZ7n4gIe2ptb+wE2nGWguNX3VlR6cClXZLS6
-	 ZR0asiazsP35yDPR05EOzRjBsAxw56b3TNxRI5fn/djYpVB3lVDRqaDP5KZhnGMg9o
-	 ih0tukN70H9Hgck37xZCRGTA640H3DYEn0vqbAaL40EEwqvHZ9UzwbGNEhbiJaqieK
-	 aVnRURtyHEPOQ==
+	b=f1v3eSRJ2ybc3GiTpZdp5RXkJIYLPmksFo6ZeJPAfI4OZDTXnQl7XZqjcN9CgZJVU
+	 0UgLTZJTvpz4zp9YL9tTemDVoh/WoVXaWIBhMTNjbQ6zNdfPk0fdle011g+Agrz3P4
+	 l5eaVbMSO0u4X2PVii7tj4VGG+rHkyYxV/CSL33mLx73DtK8TU1iSmnDcglv9Tpz5h
+	 jayqF8Ei2RpZdJVj4t6AGNCxlvYD7qLuFm4zd2fUK0juiRSB1B6/xjazwskpB56rc1
+	 Q5MGuunlRbS7JAWhygcakjSeYS9Ij93YiT99dHzyahOGTY9wJg4PFHMxKHwG09Uxfg
+	 9c/tTEMtcG2eQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 18/19] perf python: Add perf.pyi stubs file
+Subject: Re: [PATCH v13 19/19] perf python: Add LiveSession helper
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260611224455.201994-19-irogers@google.com>
-References: <20260611224455.201994-19-irogers@google.com>
+In-Reply-To: <20260611224455.201994-20-irogers@google.com>
+References: <20260611224455.201994-20-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 23:09:07 +0000
-Message-Id: <20260611230907.D92CE1F000E9@smtp.kernel.org>
+Date: Thu, 11 Jun 2026 23:12:25 +0000
+Message-Id: <20260611231226.147DF1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,98 +45,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] The newly added perf.pyi type stub contains multiple factual dis=
-crepancies from the exported C extension API, which will cause static analy=
-sis to either reject correct code or accept code that crashes at runtime.
-- [Low] The `python-clean` target does not remove the copied `perf.pyi` fil=
-e from the `$(OUTPUT)python/` directory.
+- [High] LiveSession.run() crashes immediately on empty ring buffer due to =
+incorrect errno attribute check.
+- [Medium] Using `continue` inside the 1000-event inner loop causes an expe=
+nsive busy-wait retry loop for offline CPUs.
 --
 
-commit 6ae06d00cb3a3e49696af83fdabeb86d78ae882e
+commit 8298891aaf516d3f5649df308e23fe24d2333a36
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add perf.pyi stubs file
-   =20
-Add Python type stubs for the perf module to improve IDE support and
-static analysis.  Includes docstrings for classes, methods, and
-constants derived from C source and JSON definitions.
+perf python: Add LiveSession helper
 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -522,7 +522,10 @@ $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util=
-/python.c util/setup.py $(PE
->          CFLAGS=3D'$(CFLAGS)' LDFLAGS=3D'$(LDFLAGS) $(LIBS_PY)' \
->  	  $(PYTHON_WORD) util/setup.py \
->  	  $(python_setup_quiet) build_ext; \
-> -	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
-> +	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/; \
-> +	if [ "$(abspath python/perf.pyi)" !=3D "$(abspath $(OUTPUT)python/perf.=
-pyi)" ]; then \
-> +		cp python/perf.pyi $(OUTPUT)python/; \
-> +	fi
+This commit adds a LiveSession class in tools/perf/python/perf_live.py to
+support live event collection using perf.evlist and perf.parse_events. It
+allows collecting events without needing to fork a separate perf record
+process.
 
-[Severity: Low]
-Since we are copying perf.pyi to the output directory here, should the
-python-clean target also be updated to remove it?
-
-The current python-clean target only removes the .so files and build dir:
-
-python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $=
-(OUTPUT)python/perf*.so
-
-> diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
-> new file mode 100644
+> diff --git a/tools/perf/python/perf_live.py b/tools/perf/python/perf_live=
+.py
+> new file mode 100755
+> index 0000000000000..7455f60d21157
 > --- /dev/null
-> +++ b/tools/perf/python/perf.pyi
+> +++ b/tools/perf/python/perf_live.py
 [ ... ]
-> +def syscall_name(sc_id: int, *, elf_machine: Optional[int] =3D None) -> =
-str:
+> +            while True:
+> +                # Poll for events with 100ms timeout
+> +                try:
+> +                    self.evlist.poll(100)
+> +                except InterruptedError:
+> +                    continue
+> +                for cpu in self.cpus:
+> +                    for _ in range(1000): # Limit to 1000 events per CPU=
+ per poll to prevent starvation
+> +                        try:
+> +                            event =3D self.evlist.read_on_cpu(cpu)
+> +                        except TypeError:
+> +                            # CPU might be unmapped or offline, wait for=
+ mmap event
+> +                            continue
 
 [Severity: Medium]
-Does the C API for syscall_name expect the first argument to be named id
-rather than sc_id? If the C definition uses id, won't this stub cause
-keyword argument usage to raise a TypeError at runtime?
+Will this 'continue' statement cause the script to busy-wait by retrying the
+same offline CPU 1000 times?
 
-> +    """Convert a syscall number to its name.
-[ ... ]
-> +class lost_event(_sample_members):
-> +    """Represents a lost events record."""
-> +    type: int
-> +    id: int
-> +    lost: int
+Since this is inside the inner 'for _ in range(1000):' loop, it skips to
+the next iteration of the inner loop rather than moving to the next CPU.
+Should this be a 'break' instead?
+
+> +                        except OSError as e:
+> +                            # Ignore -EAGAIN on empty buffer
+> +                            if e.errno =3D=3D errno.EAGAIN:
+> +                                break
+
+[Severity: High]
+Does checking 'e.errno =3D=3D errno.EAGAIN' cause a crash when the ring buf=
+fer
+is empty?
+
+The underlying C extension (pyrf_evlist__read_on_cpu) uses PyErr_Format to
+raise this OSError when perf_mmap__read_init returns -EAGAIN. Because
+PyErr_Format initializes the exception with only a format string, the
+Python exception's '.errno' attribute is implicitly None.
+
+This causes 'None =3D=3D 11' to evaluate as false, falling through to 'rais=
+e e'
+and crashing the live session instead of ignoring the empty buffer.
+
+> +                            # OS/mmap errors are unrecoverable
+> +                            raise e
 > +
-> +class comm_event(_sample_members):
-[ ... ]
-> +class read_event(_sample_members):
-> +    """Represents a READ record."""
-> +    type: int
-
-[Severity: Medium]
-Are the type properties actually exposed in the C PyMemberDef arrays for
-read_event and lost_event? If they are missing from the C array, could
-declaring them here lead developers to write code that throws an
-AttributeError at runtime?
-
-> +    pid: int
-> +    tid: int
-[ ... ]
-> +class callchain:
-> +    """Iterator over callchain frames."""
-> +    def __iter__(self) -> Iterator[callchain_node]: ...
-> +    def __next__(self) -> callchain_node: ...
+> +                        if event is None:
+> +                            break
 > +
-> +class stat_event:
-
-[Severity: Medium]
-Should stat_event inherit from _sample_members? Failing to inherit from it
-might hide properties in static analysis that are actually available on the
-object at runtime.
-
-> +    """Represents a stat event from perf."""
-> +    type: int
-> +    id: int
+> +                        if event.type =3D=3D perf.RECORD_SAMPLE:
+> +                            self.sample_callback(event)
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611224455.2019=
-94-1-irogers@google.com?part=3D18
+94-1-irogers@google.com?part=3D19
