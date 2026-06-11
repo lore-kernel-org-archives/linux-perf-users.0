@@ -1,108 +1,128 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 757CD2C21C7
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 12:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7B63F9F5E
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 12:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781181739; cv=none; b=YZUVbFLMzdb138m8EtZn32AHGII32U+ZkQh6AYz8cO0KNAHBzayXhMCpE88MNs1LFw57c+ASa5vpCrNpuxRvgKBsVd/HQ+zWX0xQGC8KshmVMqniiyysanV3p0Z6d+78WmgxNsj44w2f0mDsfo4mBumF8Y9WEqU+eA8hf4q/o2c=
+	t=1781182287; cv=none; b=D6nZfCVeTkeIL0CGid66JPKQJM7Lh+Jd22fEdziHd5f8gLDm1f4R2AQfzbi9e+hdGznzZJS73iJQwUBCCblgOH7YlK8XVw4fyG9pC2C/rvzPKonurIOWGIUayhtG/lelsxEmAI8AQyAEKRvhQttnUno3Mrpn/TgmNSwO4Sebx4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781181739; c=relaxed/simple;
-	bh=MSudZ5zCzii3klUWWm5+I6Li1DcZAve7/o6hW7n+OBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s8esJxEIzv9JkRD5iQOpIH1oC0GVcm4sfpGOlx+EicWe6slWsDBrB94v4UTWydztCZFTEgvojOgzWqqaTSLyKqpX1ZmF+C3u70wUXS1uoOaXOZU2D/gCR9GpOI39mkrUKRMe/TgdECfrL0Wdx5lMwK3vXhpT7aMhAlBKjA0z5fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DOYVnOIZ; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1781182287; c=relaxed/simple;
+	bh=18nZfrkXlHqAXNQXmjvYjPTOr6OF8vSx+TEkfpYAIII=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=h38IfUrl+w+EGioAouQ1tL29Uo6lz3JvYGqrcPWUxfDNMnI0kJDWNXlkFVqPuUjLVa+J5dimRzYDUu57j2l2ZeOkZLR/faHdYfx+uKYNwQqno1CMoAKpNPRNYWGPBqG6E6CyMYcygM0Af61sppaTQakFDoiAhx6ZbOput2l9v7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=U3PZacQR; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DOYVnOIZ"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0400C497;
-	Thu, 11 Jun 2026 05:42:12 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B70E3FD88;
-	Thu, 11 Jun 2026 05:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781181736; bh=MSudZ5zCzii3klUWWm5+I6Li1DcZAve7/o6hW7n+OBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DOYVnOIZVOG54P+iZ8fsBoQ2cxMCONmAJLNk1I8SaIdNqPXPXDbVUcxqZzugyRg57
-	 rhMcfwNIOSoenHsMC4IXjirg3vrQb7kt8hIMkHrauLsJDwBvPUeV4m/9xI6KrnN4JU
-	 +MQ9VgNXKuTTmwMeEhCLBTXMr3SlDemCyB0AmzUQ=
-Date: Thu, 11 Jun 2026 13:42:14 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Al Grant <al.grant@arm.com>,
-	Paschalis Mpeis <paschalis.mpeis@arm.com>,
-	Amir Ayupov <aaupov@fb.com>
-Subject: Re: [PATCH v7 8/8] perf test: Add Arm CoreSight callchain test
-Message-ID: <20260611124214.GX101133@e132581.arm.com>
-References: <20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com>
- <20260611-b4-arm_cs_callchain_support_v1-v7-8-1ba770c862ae@arm.com>
- <c6f6766b-ef3f-4260-9569-620d351027ff@linaro.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="U3PZacQR"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65BCCX791742452;
+	Thu, 11 Jun 2026 12:51:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=18nZfr
+	kXlHqAXNQXmjvYjPTOr6OF8vSx+TEkfpYAIII=; b=U3PZacQRmVXjPmUw+u6aqk
+	U0L8lieMx+uaSXloxiP4ZGKbxZhA+GOO8xrFLkLjlbv22brq2sc33IvN9FyEYDSw
+	ak/TvS0lemeSeZxeYSsmefeZ6RmtrsSY8mkYyOYYFMmxWKLpeBumHHsXHd5hefOB
+	+jvMV4Cfqlp3/HppwFzpsnxrq0sCcC8i/BJqd5oblBM23D1anhB0EpbNgqb2bNLn
+	KZJa3VqD1S3QNAQvgpx6Kw1E/Z8JYCFBHbbiMyOZvCYG59X+dKjDHhW0r9cU9I87
+	aP99F32YNaDw4QkMZn0p6F4VgFK3FUAwUs5j9if25s/2ttRWprsljxXEt2M8gApg
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eqe8bkdqd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jun 2026 12:51:16 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65BCYssC004073;
+	Thu, 11 Jun 2026 12:51:15 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4eqe09u6tk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jun 2026 12:51:15 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65BCpBfG60817722
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jun 2026 12:51:11 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F0D02004D;
+	Thu, 11 Jun 2026 12:51:11 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 743872004B;
+	Thu, 11 Jun 2026 12:51:08 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.124.213.187])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 11 Jun 2026 12:51:08 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c6f6766b-ef3f-4260-9569-620d351027ff@linaro.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH V5 1/2] tools/perf: Fix the check for parameterized field
+ in event term
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <ainEHlAh0aJ7zSyH@x1>
+Date: Thu, 11 Jun 2026 18:20:55 +0530
+Cc: jolsa@kernel.org, adrian.hunter@intel.com, mpetlan@redhat.com,
+        tmricht@linux.ibm.com, maddy@linux.ibm.com, irogers@google.com,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com,
+        venkat88@linux.ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6C24D6E1-28BB-4F43-8EA5-6B4E06014923@linux.ibm.com>
+References: <20260609134332.97954-1-atrajeev@linux.ibm.com>
+ <ainEHlAh0aJ7zSyH@x1>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=Xfa5Co55 c=1 sm=1 tr=0 ts=6a2aaf44 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=KlCRr-_lrQmZq1rU:21 a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22
+ a=VwQbUJbxAAAA:8 a=Rlq1kauLLktXqVg0nm8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjExMDEyNyBTYWx0ZWRfX0k84lfHFQEu5
+ pexGO0KoDWg26QasZApp+VAgRvXOp5XoakzQ/I+6B+QkiX8buRvsAHNoMoxlZSGYIUVNuvFtzCA
+ i0kDfP8utcXZaQQk+C64hXOQvEnKcsEQHGMADK6zBER1Rhl3ioGqSpmojw0eLvOWG0tZM/+IFmZ
+ FT9Im1jNURvKVAiOknapG+l6bhKfct8T5sBgafsxxHioQ73cnaAXd3lCJV/MSu52PZrvADKyDbv
+ 8E9Iv7m5bkYew5CWwzWo/72bHPuyqS2xruGU3ZojXVoNFuazFEv1EMzuoWu6Mpo1XyXv61Yu6YU
+ X6K52u+y1FguzvDY6GgijbUvIuy8/z4ICPFZu2L2nqHHfxfNqSo+T/binpNBbGk4owEMfIZghCr
+ FddQAdcdbGNQEUk01Eg/fiXj1zipm1Cocgr35XNhqZloSChjQW2F+sJbX5oXEDepVl8yy72zpQv
+ CHhq58rdIyA2IAtZvTw==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjExMDEyNyBTYWx0ZWRfX4o7RmcQyhH/c
+ MwD44ej+0NmRdtafFW4DF6eqSC1Fr/5X0llf01PaA4BgFxF4DEYKuAyjeyeQ1eAGkc3U5YESgp5
+ iGTbSSFN1X/py1povnyqbW49BuxV0lE=
+X-Proofpoint-ORIG-GUID: 1j94Gt6hXZWuMpSAbV5x7IC-P-9TNfss
+X-Proofpoint-GUID: FXsLwx4CEpiahbDtdv6Mv1cNXEGJrt4J
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-11_02,2026-06-11_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 spamscore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 clxscore=1015 phishscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606110127
 
-On Thu, Jun 11, 2026 at 10:11:37AM +0100, James Clark wrote:
-> 
-> 
-> On 11/06/2026 8:57 am, Leo Yan wrote:
-> > Add a CoreSight shell test for synthesized callchains.
-> > 
-> > The test uses the new callchain workload to generate trace and decodes
-> > it with synthesis callchain. It then verifies that the instruction
-> > samples show the expected callchain push and pop.
-> > 
-> > Use control FIFOs so tracing starts only around the workload, which
-> > keeps the trace data small. The test is limited to arm64 systems with
-> > the cs_etm event available.
-> > 
-> > After:
-> > 
-> >    perf test 136 -vvv
-> >    136: CoreSight synthesized callchain:
-> >    --- start ---
-> >    test child forked, pid 3539
-> >    ---- end(0) ----
-> >    136: CoreSight synthesized callchain			: Ok
-> > 
-> > Assisted-by: Codex:GPT-5.5
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> > ---
-> >   tools/perf/Documentation/perf-test.txt        |   6 +-
-> >   tools/perf/tests/builtin-test.c               |   1 +
-> >   tools/perf/tests/shell/coresight/callchain.sh | 168 ++++++++++++++++++++++++++
-> >   tools/perf/tests/tests.h                      |   1 +
-> >   tools/perf/tests/workloads/Build              |   2 +
-> >   tools/perf/tests/workloads/callchain.c        |  24 ++++
-> 
-> Maybe "syscall" is a better name? There's not any difference between this
-> one and others like the deterministic one I added with regards to the
-> callchain.
 
-The callchain workload has function calls in userspace and system call
-for the switch between userspace and kernel.
 
-Connecting to another comment for not static attribute to avoid LTO's
-function name tweaking, I will rename functions with prefix
-"callchain_", this can dismiss concern for naming conflict.
+> On 11 Jun 2026, at 1:37=E2=80=AFAM, Arnaldo Carvalho de Melo =
+<acme@kernel.org> wrote:
+>=20
+> On Tue, Jun 09, 2026 at 07:13:31PM +0530, Athira Rajeev wrote:
+>> The format_alias() function in util/pmu.c has a check to
+>> detect whether the event has parameterized field ( =3D? ).
+>> The string alias->terms contains the event and if the event
+>> has user configurable parameter, there will be presence of
+>> sub string "=3D?" in the alias->terms.
+>=20
+> Thanks, applied to perf-tools-next, for v7.2.
+>=20
+> - Arnaldo
+Thanks Arnaldo
 
-For above two reasons, I will keep the name.
+Athira
 
-Thanks,
-Leo
