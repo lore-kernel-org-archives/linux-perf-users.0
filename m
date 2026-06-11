@@ -1,66 +1,66 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C71C3546C1
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 08:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBA030B53C
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 08:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781167028; cv=none; b=f2vlsGYRDPJl8VsPhUnXz5uCAeNEvZZFognoBDJmmgd7EBCJNezVGnkDoY/psRQUgVualYLL7ac621LW4m4FpCIkxGtn1NTM+bWYCvyIh4KczAcuLsQYEhtjEfudC7omHv/PJzDnc2XUgQx5O4L6ctBVbnmnbjQ9B2S8qFwqq9A=
+	t=1781168331; cv=none; b=EpJbw3nDFfVkWioRqK0rigiyu3evLk+JkKDYbQx3G771jvO+ylD0efsbWL6Ifpeqsvig3lGPMT9+AWIPvQM6BcpgJta5AA0CVodhY7ZqMCHSlb5/Om41kBGFZYEL98O2JyFutqnshDYBmIP0mAeBssoO8jnbEy+CTqa8rTOACX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781167028; c=relaxed/simple;
-	bh=hgm46owwgzMaUFcHl+HzgyGCs3IA4eHkTIzGrzQLmes=;
+	s=arc-20240116; t=1781168331; c=relaxed/simple;
+	bh=HXGH2nyrVfIZnUpKXgLXmBtS3wqwT+RiEdAxLjpSzp0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RLcbsnzXNsWneiT1pw/w6Jl7FpKPTmU4pvj13JGsp46y1XIySmHjub2Nu4tp1bpZe0QDGJudg5qk7Z4MHXfVbLAJ9S0u26+gA1NwgVYeJoucqcKuRPrmqrynQnvs7S/Db3xLmKYUdx9zOVO3wGcJo5CJM7eowPAt38h9wOx+M9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aWkF66MV; arc=none smtp.client-ip=209.85.218.46
+	 In-Reply-To:Content-Type; b=iedgY5YS1GN8U6YqaHkzOKrG3EMPvUqLF2WXIkssPKNTLzgXB68+/yAUqeUi+IrjXwWX9YzAvCo5l50xY7AXg0FiOfFX+ON488n/I9hAkQOeqVlFe8MtmBWaERDKBTsmSWjiQu/ejOLU7//P3suZF57cinERL3xRGD7cELVPcKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ey7G4djO; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aWkF66MV"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-bec49f7e35eso1102130666b.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 01:37:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ey7G4djO"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-68c3421b009so1051118a12.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 01:58:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781167025; x=1781771825; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1781168328; x=1781773128; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=BPKGA+9bAXXUvMOMX/aVwRfsICeQnV0LevsQ5Yfaev4=;
-        b=aWkF66MVQgqb6PXpyOi6H+Nyw69qgvxGpI4cZuz4cqFUKA7pT+m8mH27iRXfTgl000
-         zF6X0B81D21XMfonJVo89YuQKxc1cU7eVcllNWrrpKlHDswfW6AJX/6cEW2bJ6XA7ZNw
-         /+e/sQ4EWgSXAsNXMp9gUSjK1yYPbKggmTQN2LJdbl9v8W4+7aBRlmp78Yh80+y7pQIG
-         auHva1AgS7Mr9FSpIQyh94olBelvn8talms+ooio39HWMfCHt/fenzTf12wrO1NOKieB
-         HP4ysmPC04gm9PCrKWmQT4+vOcFmsZSVx2EM9xHYR1QxEPjOwSOzgmVugY3qopSU7YAn
-         w4jg==
+        bh=JsKqgp1n6AXmb14SRj6QHkb3JGSi6WYvxFs7FRLG/FY=;
+        b=Ey7G4djOoUEN/WBNRMch+qptOkqBdzus5Jej231XBHMJxEKt8KshZRm+Ra3L6d6Rqm
+         nzZ52H9DbcVIh2Z259LGUptacQbF1HHwPBXikKZp/POGiqPukC0/S3txcL+7lUKNTcT4
+         dAhP2GtkmojktDobUq3TAN4xE/ooZ201dYuS6qXXgBw9h2ej77S/gKlY2roQ4gsSWDv9
+         cfGwHT5RjXep0B1oGkWUgPW6ouPnpBto5e85X7KDa4H4+hIGCiMsQOhT74lPHSXNn3rO
+         BibYfW6c9pm4GHlvQK/44X+gxicFQuZVuTHuNOvlxHR6ruA+QNSqdKiOD9pow36cO79f
+         VR9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781167025; x=1781771825;
+        d=1e100.net; s=20251104; t=1781168328; x=1781773128;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BPKGA+9bAXXUvMOMX/aVwRfsICeQnV0LevsQ5Yfaev4=;
-        b=SLqetm/y9mv2Uh9JhkUbCBrklpXKMcBnaOXBUXt6/xj06sJyhLKKjT47AqfPYeIO85
-         I1Vio+ssLblIoeOsIhwruXrt4iKsDZDlmED02RTlmDgyhyxUPMA2gWA9XSmwK85ZYnea
-         h3QAtTImENLGbiAVPRmNeaJc0H8D5ab/0d8xkEFBeIfLnB7IUacwtJ3Km/Bt+m0oeQxX
-         ae074JFzsR4LJosL6OpNB+vVuY3VUU2KC9UvbWYfseveXLoSOrzs67qkhgEKdnEmHER4
-         Xby3/sGDpYax6J0Tyx1Gjv3gmvqdGbcKBNe1Rk7mVEvWes8UzcByOq7OB5t48GZjXfOc
-         /yfw==
-X-Forwarded-Encrypted: i=1; AFNElJ/Mm36y4v1hHP7QnsQ81TMetyMvIRDqHvW8EKGK4xGRDbuq3QIvw0uNAXyMP5WtTBuK+w5gE+zBaQdd3lqk5zGR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4snzfpfEb+UjzwoRKwu9FCC8WLCSe/EP2rnpi4T3yhGDgqSPm
-	oa3YJRQgeZ+At7ZOXnauC9LNNZrm5+yo2fVJq0q4ajN3257WEUe2f9d5UWoz3WMGBXA=
-X-Gm-Gg: Acq92OHDks+baJdocLbEPX181dJSnl7hp7Vm1agPzFRWJh0Nj3+6BnIud36Z+V7GFo1
-	TbmaEd8MBeduwjD0OgHL1WfBq1PZ3u9W21kQ+7ltm2a10Uu2X66Q5y+No7oYyBjoaYl5fWP82Qy
-	s3De+JTOlQ5Ea6gbX9hUJJucfY4jgFLDuQmMlzLhJwIHcKwduXm0ZtwMmneD5AGp0w5MxIAnc9r
-	N0d10nW0UA/9Nj56TtFcG82dgkOpHG0TTeyIOjHEp1jWB0CVstILX/rAq1k/YDfs7uEGqXkpsYQ
-	KcBs48BlpMyHnexV/W/35uRSijUhwPZc26OoMQr1PvV4jacd5vYUJJhg/AHd2qArTRd9D1z3qKN
-	ynM7OFIdz6oPKJJfqmk3rcLSNnUw88KWaMjK3C5AItloq/DoZr8Oz4bHaor4Os2fjhXRRq5OXV8
-	MIzxOU4CvIVC4kuzt8L7aNdX3ho20Oli66mBUOCqc=
-X-Received: by 2002:a17:906:45a3:b0:bef:12f:346b with SMTP id a640c23a62f3a-bfc85a69a60mr53713466b.15.1781167024810;
-        Thu, 11 Jun 2026 01:37:04 -0700 (PDT)
+        bh=JsKqgp1n6AXmb14SRj6QHkb3JGSi6WYvxFs7FRLG/FY=;
+        b=TezjL0lXz1qWZjf2RXJjsUVCrwq+9hb+EvcsxvWcbRS0czBm/mA8PFjFqHHKxxMZHv
+         I8lHqi40XTyOxfyCrC6c53g74T+vAzFheBKUWVDgIP6qHvHNIfT7DcaBcpM3CGNJpx/0
+         AttbgQhB48LzHj1mgNYJ0lQGkE0oWV+6+zJjYI8G06uYaGR0hJsLZtTkCxgvR7r7G5vM
+         BSfOf1Hqi+6a6F4HQZptesbIZkRCe4eM0t6J/iLRsaZYcQ0qKeQvLrIwNEc66M78ZxGf
+         69qPILpe1bpRBjUfmp+Ga6k3JpTZEe5zM3KMPcJvNomsvXl3yLd6s9PpPcKduK9bMpnB
+         yPaA==
+X-Forwarded-Encrypted: i=1; AFNElJ8t+KuJBi5J/9W4xTxTT6AR72y/gddxGeK3ZnrBvC+oXkiA5y9bK4/UylmB3A/uaKoEl4p8L6pijCJQfj/QGmKx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfHtvno5nCNGeezPeHKAcfVwvSjZe1ReFlYoj8T4HT1jaRg3t5
+	mJ4d3oebu+QcyBqW3n4iX8rDu00Ma0MluqyVD9dybNyDOYNXBUzzUS4iyas+fNUWbMQ=
+X-Gm-Gg: Acq92OHVJ69VGKkmGrLgTsR79IX5lo96stSafPJPIov6AKJ50V0U69JZ4DTQtP9m9Qv
+	6oE5NKdyWXWWUakGTwAAcdmRBzeiP1kNpz+1R3bPsRYIHlJYrwvT+YmXOoTiuqg4yfodHHhbLwg
+	5XmTuCw6l2dPJ3NK2Rd5N54dSubFFhvNWhIY0CtZ5F1XMWUSUVWpY59sBLJ2B7dHsxfPmdLwkgl
+	KzeuQTtIAUwIEMl3EGseXxPVoqLTgnGnD79tk4enkMyBUGcABEmbeveA28EnPRS6Kebnj4o7kHl
+	14wfZ/9kJNRky6oYl7hKNGS7/FcSy2H6Glv2ZrcloTUXN33eIjeVakcTmCp4QoAWY7lAirjlUo5
+	7f7oaOXHGBEEPyO/VvNb3Mv6u8OG3HNqaUNNs2aMKn71Hm3A4+EQsX5InxijfKlsqjQLVmdM1HW
+	eCaLQkHGQp1HqewAc5jaSdgAMPcWtsC2jejOnYEjw=
+X-Received: by 2002:a17:907:3d4e:b0:bdf:b9fa:6683 with SMTP id a640c23a62f3a-bfc77004697mr82172666b.14.1781168328106;
+        Thu, 11 Jun 2026 01:58:48 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bfcb0f15621sm30523066b.13.2026.06.11.01.37.03
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68e64303892sm10683893a12.0.2026.06.11.01.58.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jun 2026 01:37:04 -0700 (PDT)
-Message-ID: <b22d3e31-754f-4490-9ae6-a47131383bb8@linaro.org>
-Date: Thu, 11 Jun 2026 09:37:03 +0100
+        Thu, 11 Jun 2026 01:58:47 -0700 (PDT)
+Message-ID: <81db69cb-ca86-45c2-b768-cf588c634270@linaro.org>
+Date: Thu, 11 Jun 2026 09:58:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,173 +68,130 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 00/19] perf cs-etm: Queue context packets for frontend
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Amir Ayupov <aaupov@meta.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Paschalis Mpeis <Paschalis.Mpeis@arm.com>, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@redhat.com>, linux-doc@vger.kernel.org
-References: <20260609-james-cs-context-tracking-fix-v5-0-d53a7d096a19@linaro.org>
- <ainFqtxdLwhbRqrI@x1>
+Subject: Re: [PATCH v7 1/8] perf cs-etm: Filter synthesized branch samples
+To: Leo Yan <leo.yan@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linux.dev>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Mike Leach <mike.leach@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>,
+ Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
+References: <20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com>
+ <20260611-b4-arm_cs_callchain_support_v1-v7-1-1ba770c862ae@arm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <ainFqtxdLwhbRqrI@x1>
+In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v7-1-1ba770c862ae@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 10/06/2026 9:14 pm, Arnaldo Carvalho de Melo wrote:
-> On Tue, Jun 09, 2026 at 03:40:05PM +0100, James Clark wrote:
->> Fix thread tracking when decoding Coresight trace and add a new test for
->> it.
+On 11/06/2026 8:56 am, Leo Yan wrote:
+> From: Leo Yan <leo.yan@linaro.org>
 > 
-> The issues found by sashiko seem mild and you can address them in follow
-> up patches, I think.
+> The itrace 'c' and 'r' options request synthesized branch events for
+> calls and returns only. For perf script the default itrace options are
+> "--itrace=ce", so CS ETM should emit call branches and error events by
+> default.
+
+You need to update test_arm_coresight_disasm.sh to pass --itrace=b for 
+both tests now because it needs every branch, not just calls. Should 
+probably update the documentation and examples in arm-cs-trace-disasm.py 
+too.
+
+With that,
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
 > 
-> So for the benefit of having perf-tools-next available for linux-next
-> testing and the window is closing soon, so I've merged this, ok?
+> CS ETM currently synthesizes a branch sample for every decoded taken
+> branch whenever branch synthesis is enabled. This produces redundant
+> jump and conditional branch samples.
 > 
-> - Arnaldo
+> Add a branch filter derived from the itrace calls and returns options.
+> When neither option is set, keep the existing behavior and synthesize all
+> branch samples. When calls or returns are requested, emit only branch
+> samples whose flags match the selected branch type, while preserving trace
+> begin/end markers.
+> 
+> Before:
+> 
+>    perf script -F,+flags
+> 
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   tr strt jmp                           0 [unknown] ([unknown]) => ffff8000803a3a68 perf_report_aux_output_id+0x50 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a3a74 perf_report_aux_output_id+0x5c ([kernel.kallsyms]) => ffff8000817f4d88 memset+0x0 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jmp                    ffff8000817f4d8c memset+0x4 ([kernel.kallsyms]) => ffff8000817f4c00 __pi_memset_generic+0x0 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4c1c __pi_memset_generic+0x1c ([kernel.kallsyms]) => ffff8000817f4c44 __pi_memset_generic+0x44 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4c4c __pi_memset_generic+0x4c ([kernel.kallsyms]) => ffff8000817f4c5c __pi_memset_generic+0x5c ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4c5c __pi_memset_generic+0x5c ([kernel.kallsyms]) => ffff8000817f4cf0 __pi_memset_generic+0xf0 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4d30 __pi_memset_generic+0x130 ([kernel.kallsyms]) => ffff8000817f4d68 __pi_memset_generic+0x168 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4d78 __pi_memset_generic+0x178 ([kernel.kallsyms]) => ffff8000817f4d6c __pi_memset_generic+0x16c ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4d78 __pi_memset_generic+0x178 ([kernel.kallsyms]) => ffff8000817f4d6c __pi_memset_generic+0x16c ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000817f4d78 __pi_memset_generic+0x178 ([kernel.kallsyms]) => ffff8000817f4d6c __pi_memset_generic+0x16c ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   return                 ffff8000817f4d84 __pi_memset_generic+0x184 ([kernel.kallsyms]) => ffff8000803a3a78 perf_report_aux_output_id+0x60 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   jcc                    ffff8000803a3a98 perf_report_aux_output_id+0x80 ([kernel.kallsyms]) => ffff8000803a3b04 perf_report_aux_output_id+0xec ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a3b1c perf_report_aux_output_id+0x104 ([kernel.kallsyms]) => ffff8000803a38f8 __perf_event_header__init_id+0x0 ([kernel.kallsyms])
+> 
+> After:
+> 
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   tr strt jmp                           0 [unknown] ([unknown]) => ffff8000803a3a68 perf_report_aux_output_id+0x50 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a3a74 perf_report_aux_output_id+0x5c ([kernel.kallsyms]) => ffff8000817f4d88 memset+0x0 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a3b1c perf_report_aux_output_id+0x104 ([kernel.kallsyms]) => ffff8000803a38f8 __perf_event_header__init_id+0x0 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000803a39c0 __perf_event_header__init_id+0xc8 ([kernel.kallsyms]) => ffff800080105258 __task_pid_nr_ns+0x0 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff80008010528c __task_pid_nr_ns+0x34 ([kernel.kallsyms]) => ffff8000801d5610 __rcu_read_lock+0x0 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000801052b0 __task_pid_nr_ns+0x58 ([kernel.kallsyms]) => ffff800080192078 lock_acquire+0x0 ([kernel.kallsyms])
+>    callchain_test    6114 [005] 331519.825214:          1 branches:   call                   ffff8000801923f4 lock_acquire+0x37c ([kernel.kallsyms]) => ffff8000801d6da0 rcu_is_watching+0x0 ([kernel.kallsyms])
+> 
+> Fixes: b12235b113cf ("perf tools: Add mechanic to synthesise CoreSight trace packets")
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   tools/perf/util/cs-etm.c | 15 +++++++++++++++
+>   1 file changed, 15 insertions(+)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 5e92359f51a7cb87a26866ae71466fcce809d551..c2b0f98ceee7671d0e98cfe5673c6f4ec19707a5 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -70,6 +70,7 @@ struct cs_etm_auxtrace {
+>   	int num_cpu;
+>   	u64 latest_kernel_timestamp;
+>   	u32 auxtrace_type;
+> +	u32 branches_filter;
+>   	u64 branches_sample_type;
+>   	u64 branches_id;
+>   	u64 instructions_sample_type;
+> @@ -1681,6 +1682,10 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+>   	} dummy_bs;
+>   	u64 ip;
 >   
-
-Thanks! I'll send any I think need fixes but I was going to mostly 
-ignore them, or I already replied to the same comments from it on 
-previous versions.
-
->> The new test is added as a Perf test workload instead of a custom binary
->> with its own build system, but this requires a new feature in Perf test
->> to pass in control pipes which can enable and disable events. This
->> scopes the recording to just the workload and helps to reduce the amount
->> of data recorded in tracing tests.
->>
->> With this new feature we can re-write all of the Coresight tests to make
->> use of it and remove the remaining binaries which fixes the following
->> issues:
->>
->>   * They didn't work in out of source builds
->>   * A lot of the tests unnecessarily required root and didn't skip
->>     without it
->>   * They were mainly qualitative tests which didn't look for specific
->>     behavior
->>
->> Most importantly, the long build and runtime has been reduced. On a
->> Radxa Orion O6, unroll_loop_thread.c took 37s to compile which is longer
->> than the entire Perf build. Now the build time is negligible and the
->> before and after test runtimes for all the Coresight tests are:
->>
->>            |   N1SDP   |   Orion O6
->>    -----------------------------------
->>    Before  |   4m  0s  |    14m 49s
->>    After   |      26s  |        56s
->>    -----------------------------------
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->> Changes in v5:
->> - Forgot to include this change:
->>    - Test for actual length of expected raw dump (Leo)
->> - Link to v4: https://lore.kernel.org/r/20260609-james-cs-context-tracking-fix-v4-0-44f9fb9e5c42@linaro.org
->>
->> Changes in v4:
->> - Rename workload-ctl to record-ctl and improve docs (Leo)
->> - Use new packet argument everywhere in
->>    cs_etm__synth_instruction_sample() (Sashiko)
->> - Test for actual length of expected raw dump (Leo)
->> - Use -fno-inline instead of keyword (Leo)
->> - Don't test any brace or call lines in deterministic test
->> - Make sure context switch loop test does cleanup on failure (Sashiko)
->> - Remove undef int overflows in workloads (Sashiko)
->> - Link to v3: https://lore.kernel.org/r/20260603-james-cs-context-tracking-fix-v3-0-c392945d9ed5@linaro.org
->>
->> Changes in v3:
->> - Minor sashiko comments
->>    - Close some more pipes
->>    - Fix warning messages
->>    - Error handling improvements
->> - Pass packet into cs_etm__synth_instruction_sample()
->> - Fixup stale comment (Leo)
->> - Link to v2: https://lore.kernel.org/r/20260602-james-cs-context-tracking-fix-v2-0-85b5ce6f55c6@linaro.org
->>
->> Changes in v2:
->> - Add --workload-ctl option to Perf test
->> - Re-write all the Coresight tests and speed them up
->> - Pass packet to memory access function so frontend can use either the
->>    previous or current packet's EL
->> - Link to v1: https://lore.kernel.org/r/20260526-james-cs-context-tracking-fix-v1-0-ebd602e18287@linaro.org
->>
->> ---
->> James Clark (19):
->>        perf cs-etm: Queue context packets for frontend
->>        perf test: Add workload-ctl option
->>        perf test: Add a workload that forces context switches
->>        perf test cs-etm: Test process attribution
->>        perf test: Add deterministic workload
->>        perf test cs-etm: Replace unroll loop thread with deterministic decode test
->>        perf test cs-etm: Remove asm_pure_loop test
->>        perf test cs-etm: Replace memcpy test with raw dump stress test
->>        perf test: Add named_threads workload
->>        perf test cs-etm: Test decoding for concurrent threads test
->>        perf test cs-etm: Remove duplicate branch tests
->>        perf test cs-etm: Skip if not root
->>        perf test cs-etm: Reduce snapshot size
->>        perf test cs-etm: Speed up basic test
->>        perf test cs-etm: Remove unused Coresight workloads
->>        perf test cs-etm: Make disassembly test use kcore
->>        perf test cs-etm: Add all branch instructions to test
->>        perf test cs-etm: Speed up disassembly test
->>        perf test cs-etm: Move existing tests to coresight folder
->>
->>   Documentation/trace/coresight/coresight-perf.rst   |  78 +------
->>   MAINTAINERS                                        |   2 -
->>   tools/perf/Documentation/perf-test.txt             |  24 ++-
->>   tools/perf/Makefile.perf                           |  14 +-
->>   tools/perf/scripts/python/arm-cs-trace-disasm.py   |  20 +-
->>   tools/perf/tests/builtin-test.c                    | 187 +++++++++++++++-
->>   tools/perf/tests/shell/coresight/Makefile          |  29 ---
->>   .../perf/tests/shell/coresight/Makefile.miniconfig |  14 --
->>   tools/perf/tests/shell/coresight/asm_pure_loop.sh  |  22 --
->>   .../tests/shell/coresight/asm_pure_loop/.gitignore |   1 -
->>   .../tests/shell/coresight/asm_pure_loop/Makefile   |  34 ---
->>   .../shell/coresight/asm_pure_loop/asm_pure_loop.S  |  30 ---
->>   .../tests/shell/coresight/concurrent_threads.sh    |  45 ++++
->>   .../tests/shell/coresight/context_switch_thread.sh |  69 ++++++
->>   tools/perf/tests/shell/coresight/deterministic.sh  |  72 +++++++
->>   .../tests/shell/coresight/memcpy_thread/.gitignore |   1 -
->>   .../tests/shell/coresight/memcpy_thread/Makefile   |  33 ---
->>   .../shell/coresight/memcpy_thread/memcpy_thread.c  |  80 -------
->>   .../tests/shell/coresight/memcpy_thread_16k_10.sh  |  22 --
->>   .../perf/tests/shell/coresight/raw_dump_stress.sh  |  65 ++++++
->>   .../shell/{ => coresight}/test_arm_coresight.sh    |  43 ++--
->>   .../{ => coresight}/test_arm_coresight_disasm.sh   |  23 +-
->>   .../tests/shell/coresight/thread_loop/.gitignore   |   1 -
->>   .../tests/shell/coresight/thread_loop/Makefile     |  33 ---
->>   .../shell/coresight/thread_loop/thread_loop.c      |  85 --------
->>   .../shell/coresight/thread_loop_check_tid_10.sh    |  23 --
->>   .../shell/coresight/thread_loop_check_tid_2.sh     |  23 --
->>   .../shell/coresight/unroll_loop_thread/.gitignore  |   1 -
->>   .../shell/coresight/unroll_loop_thread/Makefile    |  33 ---
->>   .../unroll_loop_thread/unroll_loop_thread.c        |  75 -------
->>   .../tests/shell/coresight/unroll_loop_thread_10.sh |  22 --
->>   tools/perf/tests/shell/lib/coresight.sh            | 134 ------------
->>   tools/perf/tests/tests.h                           |   3 +
->>   tools/perf/tests/workloads/Build                   |   4 +
->>   tools/perf/tests/workloads/context_switch_loop.c   | 110 ++++++++++
->>   tools/perf/tests/workloads/deterministic.c         |  39 ++++
->>   tools/perf/tests/workloads/named_threads.c         | 109 ++++++++++
->>   tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  21 +-
->>   tools/perf/util/cs-etm.c                           | 236 ++++++++++++---------
->>   tools/perf/util/cs-etm.h                           |   8 +-
->>   40 files changed, 926 insertions(+), 942 deletions(-)
->> ---
->> base-commit: 351a37f2fda4db668cff8ba12f2992d73dccdaea
->> change-id: 20260515-james-cs-context-tracking-fix-754998bae7ed
->>
->> Best regards,
->> -- 
->> James Clark <james.clark@linaro.org>
+> +	if (etm->branches_filter &&
+> +		!(etm->branches_filter & tidq->prev_packet->flags))
+> +		return 0;
+> +
+>   	ip = cs_etm__last_executed_instr(tidq->prev_packet);
+>   
+>   	event->sample.header.type = PERF_RECORD_SAMPLE;
+> @@ -3517,6 +3522,16 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>   		etm->synth_opts.callchain = false;
+>   	}
+>   
+> +	if (etm->synth_opts.calls)
+> +		etm->branches_filter |= PERF_IP_FLAG_CALL |
+> +					PERF_IP_FLAG_TRACE_BEGIN |
+> +					PERF_IP_FLAG_TRACE_END;
+> +
+> +	if (etm->synth_opts.returns)
+> +		etm->branches_filter |= PERF_IP_FLAG_RETURN |
+> +					PERF_IP_FLAG_TRACE_BEGIN |
+> +					PERF_IP_FLAG_TRACE_END;
+> +
+>   	etm->session = session;
+>   
+>   	etm->num_cpu = num_cpu;
+> 
 
