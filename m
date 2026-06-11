@@ -1,170 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16231607A4;
-	Thu, 11 Jun 2026 01:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0CF40D576;
+	Thu, 11 Jun 2026 06:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781140494; cv=none; b=LPG9+QJIIuDnUEk6FglssyKD9rfUjIPu+YXryTT2WhXTAAOUFlNhakbjzV23x05Bic+keH8lc754ygnTBZH1m3JTkLih6H+OWriUg+XhKsoX7XgltBiD97VZjuUhOH5hBCJwtHMqIDhTFsIvMq3roB11NUgWPkkS2HdIm2oPzs8=
+	t=1781158646; cv=none; b=Idp41BQgZ6bs9siih4anANjxn0RwunSXsNU+KGwits6yfcl43J9cLwL8+V4RRTADtlrDqWyd6Hhzg5bocVAuNIU1g61GcHpkQn7JFrm8cQy1abTdmIIzukehOoK1S8ceme3TGOYWM7CvPHyfWosodjSjuKvu/FfYe3aYFoxYl3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781140494; c=relaxed/simple;
-	bh=aKjZZs5gSoWr8SCjbTIQSW7gjhHgd/cl24/F7RKFGbM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=g9gDbqMYq8EyH0lzvhqQP0pAhWzbsjxkuTWRqCo2fVdQSQ8BxPPTrR3RR2zknP77etGRRZmHQErinoAAlCoM1X/l7g4e1p7llOtNjoLmli//1XZZdeDvamOq6dIHXhMVhGQ8O3HlCkA+6vAGfyH8E7h2QmTn4s6260tI+3P/HEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4FKi5HA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781158646; c=relaxed/simple;
+	bh=4V+S9fWTmJJOm4C50tCarN3J4FFa5XfmrT2pkh8/x0M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sGUNu1Zfg5Q8sQJzHwnCZh1RedpX1H18QADZz0sxU58Jm2h+DDPFdS8GYVrtKsGRa6VcS4y0XOPaS1xe5hhZztfycctVDEkvrd6WgMUM4eqgLodJK8G6kNwzobXhzlqS2JgndIed/07IdGF+sadGpbqNCeVgc1XptC6uXWIFO+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E2CBfApS; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4FKi5HA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A15121F00893;
-	Thu, 11 Jun 2026 01:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781140492;
-	bh=uLROrLkrMlNu2thLVtO7SNC5ExyFtAkVrQerHZ6RqIE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Z4FKi5HADjCk1RextUCJau4Euu98qTZ39w4DXXlQBG/XpDklijiXb9XSN3x0ZQVKZ
-	 c5xlZkG/uEYHAvWWEZv5onaI2tw3VhWX7sreGbNnqrLhWkW+XQG2+uC5J/taIU/mBZ
-	 +we8wIs5laltYhNNr6ndPyggzKA6l355U8KDCpXBpKZEJQTogWKjtYI7dv2HE1Hh5C
-	 6sBWoXlBwkcf8fIlTuJWsCc7qsClehu559+3dR3w815aijD+Tyal9EyDFETqSt+siK
-	 O+6Sxocmmj+LkTQLfPtSqgzsobepA/8yY8EzGj7hchwfn+/SZk2+IJcvrQLIcYEMNl
-	 by4GpQyRhYJ0A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/cxlpmu: Support Channel/Rank/Bank filter
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Davidlohr Bueso" <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260611010409.2776635-1-dave@stgolabs.net>
-References: <20260611010409.2776635-1-dave@stgolabs.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 01:14:52 +0000
-Message-Id: <20260611011452.A15121F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E2CBfApS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781158644; x=1812694644;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4V+S9fWTmJJOm4C50tCarN3J4FFa5XfmrT2pkh8/x0M=;
+  b=E2CBfApSWaLLJp+7BWNEFFagn/mh7r3R+4svw98yzq99VPgr1UWB3poD
+   o+Z1aYXD8hm8xNmhEMDh0+m72U5WVQox4atMSOlANYT2uIfp97JYYdagz
+   /CSyxjCchhyAszhAWi32Xe1ttZovrRoNb6Ig2OoRCVPcyJ6EOWNUpnOHM
+   5xpV6V/zXyIgU8HAQV5QkzasCFTOe5PGZ7nn/j1KAcx0DKsO05zdN7XYr
+   RZIBHL96l/XQZGUTG7tFygcTO7REPwTFh92cFAn+yY7HJjLT9ChGDR8ng
+   dy4vorhN3hNVJL9yBnWT+m825L6FA00nBwLXr3NjYE1c+dS6q+HIKyvRW
+   g==;
+X-CSE-ConnectionGUID: WMmAI89UT3yUOWuFWG6StQ==
+X-CSE-MsgGUID: MRtbqhC5SSqC/t+zXS+5bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="81944639"
+X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
+   d="scan'208";a="81944639"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 23:17:23 -0700
+X-CSE-ConnectionGUID: JV4MQKaNQNay95S0Fx7lLw==
+X-CSE-MsgGUID: r+nwfcFwT6myw972UKm64g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
+   d="scan'208";a="250667256"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 23:17:20 -0700
+Message-ID: <49a4a4f9-8de6-469c-b66d-160b124cd50c@linux.intel.com>
+Date: Thu, 11 Jun 2026 14:17:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 8/9] perf/core: Fix kernel register info leak via
+ hardware skid
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
+ Mark Rutland <mark.rutland@arm.com>
+References: <20260609050222.2458129-1-dapeng1.mi@linux.intel.com>
+ <20260609050222.2458129-9-dapeng1.mi@linux.intel.com>
+ <20260610091625.GE48970@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260610091625.GE48970@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] The function `cxl_pmu_config2_get_crb()` returns `u16`, silently t=
-runcating the 32-bit CRB filter value.
-- [High] Using `writeq()` to program the 32-bit CRB filter register causes =
-unaligned MMIO access and clobbers adjacent registers.
-- [Low] The mask `CXL_PMU_ATTR_CONFIG2_CRB_MSK` is defined using `GENMASK(6=
-3, 32)`, causing compilation errors and undefined behavior on 32-bit archit=
-ectures.
---
 
-commit a9330e1fbdf601456995f95b96ae724e328f12a5
-Author: Harshal Thakkar <harshal.t@samsung.com>
+On 6/10/2026 5:16 PM, Peter Zijlstra wrote:
+> On Tue, Jun 09, 2026 at 01:02:21PM +0800, Dapeng Mi wrote:
+>> An unprivileged hardware perf event using exclude_kernel=1 can leak kernel
+>> register data to user space via PERF_SAMPLE_REGS_INTR or PERF_SAMPLE_IP.
+>> Due to hardware skid, a PMI may trigger after the CPU has already entered
+>> kernel space (Ring 0), bypassing the perf_allow_kernel() privilege
+>> barrier.
+>>
+>> This security vulnerability is severely exacerbated by upcoming support
+>> for SIMD register sampling via XSAVES, which could expose sensitive kernel
+>> FPU states (such as active cryptographic keys).
+>>
+>> Fix this by ensuring that sampled register data is dropped if the event's
+>> exclude_kernel attribute is set but the PMI catches the CPU in kernel mode.
+> There is history here, see for example:
+>
+>   https://lore.kernel.org/r/CAP045Ap8cMx6mzSgcQ3n3bnh_8GJuCp7_KZe_5ZTCR_K6cPTLw@mail.gmail.com
 
-perf/cxlpmu: Support Channel/Rank/Bank filter
+Thanks for the information. What a long discussion!
 
-Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the current filte=
-ring
-support beyond HDM. These filters are only for DDR Interface events.
 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 68a54d97d2a8a..b709b2e6c0d95 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
+>
+> So your earlier patches also sanitize the branch stack, but not in
+> generic code.
+>
+> PHYS_ADDR already requires privileges
+> ADDR comes from PEBS on Intel, and IBS on AMD (iirc) and should be
+> reliable.
+>
+> So yeah, I suppose IP and REGS_INTR are the big ones.
 
-[ ... ]
+Yes. Besides IP and REGS_INTR, callchains could be another risk. Currently
+SAMPLE_CALLCHAIN doesn't explicitly require the perf_allow_kernel() check,
+which could leak to kernel callchains to user space. This would be fixed in
+next version.
 
-> @@ -246,7 +253,9 @@ static struct attribute *cxl_pmu_format_attr[] =3D {
->  #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
->  #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
->  #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
-> +#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
->  #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
-> +#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK(63, 32)
+As for the branch_stack, it should be reliable since it comes from LBR
+which already has correct CPL configuration.
 
-[Severity: Low]
-Does this code cause compilation errors on 32-bit architectures?
+Thanks.
 
-GENMASK generates an unsigned long, which is 32 bits wide on 32-bit
-architectures. Shifting by 32 or more results in undefined behavior and
-triggers the macro's internal BUILD_BUG_ON_ZERO(h >=3D BITS_PER_LONG).
 
-Should this use GENMASK_ULL(63, 32) for a 64-bit mask?
-
-[ ... ]
-
-> @@ -319,6 +333,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct pe=
-rf_event *event)
->  	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
->  }
-> =20
-> +static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
-> +{
-> +	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
-> +			 event->attr.config1);
-> +}
-> +
-> +static u16 cxl_pmu_config2_get_crb(struct perf_event *event)
-> +{
-> +	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-> +}
-
-[Severity: High]
-Does this function truncate the 32-bit CRB filter value?
-
-The CRB filter mask config2:32-63 is 32 bits wide, but
-cxl_pmu_config2_get_crb() returns u16. When the 32-bit value is extracted
-using FIELD_GET(), the upper 16 bits are silently dropped.
-
-Should the return type be changed to u32 to preserve the full filter value?
-
-[ ... ]
-
-> @@ -627,8 +660,8 @@ static void cxl_pmu_event_start(struct perf_event *ev=
-ent, int flags)
->  	hwc->state =3D 0;
-> =20
->  	/*
-> -	 * Currently only hdm filter control is implemented, this code will
-> -	 * want generalizing when more filters are added.
-> +	 * Filter ID=3D0: HDM decoder filter
-> +	 * Filter ID=3D1: Channel/Rank/Bank (CRB) filter
->  	 */
->  	if (info->filter_hdm) {
->  		if (cxl_pmu_config1_hdm_filter_en(event))
-> @@ -638,6 +671,14 @@ static void cxl_pmu_event_start(struct perf_event *e=
-vent, int flags)
->  		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
->  	}
-> =20
-> +	if (info->filter_chan_rank_bank) {
-> +		if (cxl_pmu_config1_crb_filter_en(event))
-> +			cfg =3D cxl_pmu_config2_get_crb(event);
-> +		else
-> +			cfg =3D GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
-> +		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
-
-[Severity: High]
-Can this writeq() trigger an unaligned MMIO access fault and clobber
-adjacent registers?
-
-The CXL PMU filter configuration registers are 32 bits wide with a 4-byte
-stride:
-
-0x400 + 4 * (f + n * 8)
-
-For f=3D1, CXL_PMU_FILTER_CFG_REG() resolves to an unaligned offset like
-0x404. Using a 64-bit writeq() on a 4-byte unaligned device memory
-address triggers undefined behavior and hardware alignment faults, such as
-a Synchronous External Abort on ARM64.=20
-
-Additionally, writing 64 bits to a 32-bit register clobbers the adjacent
-register (f=3D2).
-
-Would writel() be safer here?
-
-> +	}
-> +
->  	cfg =3D readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
->  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
->  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611010409.2776=
-635-1-dave@stgolabs.net?part=3D1
