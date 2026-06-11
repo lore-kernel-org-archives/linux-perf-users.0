@@ -1,35 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05C8131280C
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 07:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D9931280C
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jun 2026 07:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781164648; cv=none; b=WI6r+0q3tBz4ydZAqHT08jTvuxpbsG7Waamui6ERpQIbGgbxflKcfbr7OJmpDYLLBCzEfullT1R0GfIGefyFO6cnFQ6euIGvx0rfH8yhHi5lTyoHshLx9eAll2GyBIhvq1fCMTMj/ytsgNidW1oJ3KB73eDsloYAJwgIC0Amt68=
+	t=1781164651; cv=none; b=TR3iRsVrIwOAaoVQB/NBAxfhdHYMlCtuEY+PDgclraD8g/VgCT+u7WRa6yWZ/X9tef7zc0JQrbWdgcAQteWDyDe1ky2yD6DEKFLS5t6K0VXDmRwdFckkAgXvUv8jiRIYfxsBNLkjwmoPcOJDTLgxtl8ZDfKmCne0EKXip2gZeDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781164648; c=relaxed/simple;
-	bh=Dx0cK3uu6RmU0a1ZcSm/uO1yysW8rrOMz9gHGNriO68=;
+	s=arc-20240116; t=1781164651; c=relaxed/simple;
+	bh=K9XwVhFCJHiYVvXag6p9m+VswzyNDNL7GJxTZTjt/kM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=meZJiI/Cted/b9IC0RRxSJE2UnP45rLxiO+o/mPjJN8Qrn+Fd7CVecLr36rWln8sDZOjO84c0i5hnxA/kD1JuhKiIzHN5HDb+P2cHKxpapMKltfbVHBxb8mJ0pmZBJ6D8JguCC74sfAYLV0i7JAmC+2K4OYjLcePmlkvjA3vSik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=I0ARio+3; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=Xnba1o2pYWXRDyn+UKrGX2LFDqUaCWp0G0dEYFCnXoQ6SS1Ugf7wTi3jLhDPyP/RZK9Jwhd/oBDtrAeKWMgPCH8O3+4gtcAOznSoGcjz5mjysCIR0UDytRO4vCWtpum/U8GmxwmAoFhdO7DJ9n5LN4LJZzhAd9x0LEpqFfu6bB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=rSH3tAan; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="I0ARio+3"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="rSH3tAan"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A671A1E4D;
-	Thu, 11 Jun 2026 00:57:21 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A59941E4D;
+	Thu, 11 Jun 2026 00:57:24 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B8CF3FD88;
-	Thu, 11 Jun 2026 00:57:23 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F7773FD88;
+	Thu, 11 Jun 2026 00:57:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781164646; bh=Dx0cK3uu6RmU0a1ZcSm/uO1yysW8rrOMz9gHGNriO68=;
+	t=1781164649; bh=K9XwVhFCJHiYVvXag6p9m+VswzyNDNL7GJxTZTjt/kM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=I0ARio+3ZkANMFr6PHlyEESN77t+bU5ODiRj9hZ3z1DHBcJlC2W3I/pLqg8qqjdXy
-	 rHLibzCKTJOErS8egKbRxApWl6Mn1eEsO6ST/FP72Cwz959a9vzHq1iOdIVjCY/XZE
-	 Diecxicj2NVvXx1QAuEKSZW+nMO232muspa+9xv4=
+	b=rSH3tAanGJjQHPLwk1n/5eRgl15c7+3mCKqnklfpwRQzUKvKCG2efLfhdwppA4aTF
+	 fvPHAvu9WBRashsxS2vdC9/+J5+3CHvhBr5E37iki5iq+UY/6WQ2hT/jSewFSV9BA7
+	 KWEv1IY1oXWdf+JAB0DMi55t86io6JKOEQagPDPw=
 From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 11 Jun 2026 08:56:58 +0100
-Subject: [PATCH v7 4/8] perf cs-etm: Use thread-stack for last branch
- entries
+Date: Thu, 11 Jun 2026 08:56:59 +0100
+Subject: [PATCH v7 5/8] perf cs-etm: Flush thread stacks after decoder
+ reset
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260611-b4-arm_cs_callchain_support_v1-v7-4-1ba770c862ae@arm.com>
+Message-Id: <20260611-b4-arm_cs_callchain_support_v1-v7-5-1ba770c862ae@arm.com>
 References: <20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com>
 In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -53,304 +53,85 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
  linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781164631; l=10293;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781164631; l=2300;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=Dx0cK3uu6RmU0a1ZcSm/uO1yysW8rrOMz9gHGNriO68=;
- b=wgkgLseUFCgc6tsYV1FeW4MAG9I5C9QA6cUJ7KLLlCKsqPeZhcIvIM8dzpmNztiXhRbp7wfeA
- r8Z+bfImK6UDjql1m3D5VR+lXjC6UOFDDbCiXf+VisO02jK6lYaYKGd
+ bh=K9XwVhFCJHiYVvXag6p9m+VswzyNDNL7GJxTZTjt/kM=;
+ b=0yg1JBmAQT7swM7yhElcXxRe5nx0ViHMz/D+rTOFPNmcH8LzoT9N9krxzX9BkP5R97+je3Mfg
+ Ips4ayHZytOD+ZNmRuBOwUIFwMLvSHboyXmNkPlFagEUOhJnis4C2t8
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-CS ETM maintains its own circular array for last branch entries, with
-local helpers to update, copy and reset the branch stack. This
-duplicates logic already provided by the common code.
+Perf resets the CoreSight decoder when moving to a new AUX trace buffer,
+this causes trace discontinunity globally.
 
-Record taken branches with thread_stack__event() and synthesize
-PERF_SAMPLE_BRANCH_STACK data with thread_stack__br_sample(). This
-removes the private last_branch_rb buffer and its position tracking.
+For callchain synthesis, keeping thread-stack state after decoder reset
+can leave stale call/return history attached to threads that are decoded
+later, producing incorrect synthesized callchains.
 
-This also makes the branch history state belong to the thread rather
-than the trace queue. That is a better fit for CoreSight traces where
-a trace queue can effectively be CPU scoped, while call/return history
-is per thread.
+Flush all host thread stacks after a decoder reset. When virtualization
+is present, flush the guest thread stacks as well.
 
-Keep the buffer number updated via thread_stack__set_trace_nr(), which
-is used when exporting samples to Python scripts. Pass callstack=false
-for now; synthesized callchains are added by a later patch.
-
-The output should remain same, except that be->flags.predicted is no
-longer set. Since CoreSight trace does not provide branch prediction
-information, clearing the flag avoids confusion.
-
+Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/cs-etm.c | 159 ++++++++++++++---------------------------------
- 1 file changed, 46 insertions(+), 113 deletions(-)
+ tools/perf/util/cs-etm.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 4127120459418389ca7aabb9a49dead2b50e7533..8798bf0471faf3b1813780b45c588263ff6b4416 100644
+index 8798bf0471faf3b1813780b45c588263ff6b4416..7069b4990e6107fdece3cc5451142714f1d627ef 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -84,10 +84,9 @@ struct cs_etm_auxtrace {
- struct cs_etm_traceid_queue {
- 	u8 trace_chan_id;
- 	u64 period_instructions;
--	size_t last_branch_pos;
- 	union perf_event *event_buf;
-+	unsigned int br_stack_sz;
- 	struct branch_stack *last_branch;
--	struct branch_stack *last_branch_rb;
- 	struct cs_etm_packet *prev_packet;
- 	struct cs_etm_packet *packet;
- 	struct cs_etm_packet_queue packet_queue;
-@@ -644,9 +643,8 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
- 		tidq->last_branch = zalloc(sz);
- 		if (!tidq->last_branch)
- 			goto out_free;
--		tidq->last_branch_rb = zalloc(sz);
--		if (!tidq->last_branch_rb)
--			goto out_free;
-+
-+		tidq->br_stack_sz = etm->synth_opts.last_branch_sz;
- 	}
+@@ -1997,6 +1997,37 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
  
- 	tidq->event_buf = malloc(PERF_SAMPLE_MAX_SIZE);
-@@ -656,7 +654,6 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
  	return 0;
- 
- out_free:
--	zfree(&tidq->last_branch_rb);
- 	zfree(&tidq->last_branch);
- 	zfree(&tidq->prev_packet);
- 	zfree(&tidq->packet);
-@@ -939,7 +936,6 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
- 		thread__zput(tidq->decode_thread);
- 		zfree(&tidq->event_buf);
- 		zfree(&tidq->last_branch);
--		zfree(&tidq->last_branch_rb);
- 		zfree(&tidq->prev_packet);
- 		zfree(&tidq->packet);
- 		zfree(&tidq);
-@@ -1299,57 +1295,6 @@ static int cs_etm__queue_first_cs_timestamp(struct cs_etm_auxtrace *etm,
- 	return ret;
  }
- 
--static inline
--void cs_etm__copy_last_branch_rb(struct cs_etm_queue *etmq,
--				 struct cs_etm_traceid_queue *tidq)
--{
--	struct branch_stack *bs_src = tidq->last_branch_rb;
--	struct branch_stack *bs_dst = tidq->last_branch;
--	size_t nr = 0;
--
--	/*
--	 * Set the number of records before early exit: ->nr is used to
--	 * determine how many branches to copy from ->entries.
--	 */
--	bs_dst->nr = bs_src->nr;
--
--	/*
--	 * Early exit when there is nothing to copy.
--	 */
--	if (!bs_src->nr)
--		return;
--
--	/*
--	 * As bs_src->entries is a circular buffer, we need to copy from it in
--	 * two steps.  First, copy the branches from the most recently inserted
--	 * branch ->last_branch_pos until the end of bs_src->entries buffer.
--	 */
--	nr = etmq->etm->synth_opts.last_branch_sz - tidq->last_branch_pos;
--	memcpy(&bs_dst->entries[0],
--	       &bs_src->entries[tidq->last_branch_pos],
--	       sizeof(struct branch_entry) * nr);
--
--	/*
--	 * If we wrapped around at least once, the branches from the beginning
--	 * of the bs_src->entries buffer and until the ->last_branch_pos element
--	 * are older valid branches: copy them over.  The total number of
--	 * branches copied over will be equal to the number of branches asked by
--	 * the user in last_branch_sz.
--	 */
--	if (bs_src->nr >= etmq->etm->synth_opts.last_branch_sz) {
--		memcpy(&bs_dst->entries[nr],
--		       &bs_src->entries[0],
--		       sizeof(struct branch_entry) * tidq->last_branch_pos);
--	}
--}
--
--static inline
--void cs_etm__reset_last_branch_rb(struct cs_etm_traceid_queue *tidq)
--{
--	tidq->last_branch_pos = 0;
--	tidq->last_branch_rb->nr = 0;
--}
--
- static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
- 					 struct cs_etm_traceid_queue *tidq,
- 					 struct cs_etm_packet *packet, u64 addr)
-@@ -1419,38 +1364,6 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
- 	return addr;
- }
- 
--static void cs_etm__update_last_branch_rb(struct cs_etm_queue *etmq,
--					  struct cs_etm_traceid_queue *tidq)
--{
--	struct branch_stack *bs = tidq->last_branch_rb;
--	struct branch_entry *be;
--
--	/*
--	 * The branches are recorded in a circular buffer in reverse
--	 * chronological order: we start recording from the last element of the
--	 * buffer down.  After writing the first element of the stack, move the
--	 * insert position back to the end of the buffer.
--	 */
--	if (!tidq->last_branch_pos)
--		tidq->last_branch_pos = etmq->etm->synth_opts.last_branch_sz;
--
--	tidq->last_branch_pos -= 1;
--
--	be       = &bs->entries[tidq->last_branch_pos];
--	be->from = cs_etm__last_executed_instr(tidq->prev_packet);
--	be->to	 = cs_etm__first_executed_instr(tidq->packet);
--	/* No support for mispredict */
--	be->flags.mispred = 0;
--	be->flags.predicted = 1;
--
--	/*
--	 * Increment bs->nr until reaching the number of last branches asked by
--	 * the user on the command line.
--	 */
--	if (bs->nr < etmq->etm->synth_opts.last_branch_sz)
--		bs->nr += 1;
--}
--
- static int cs_etm__inject_event(struct cs_etm_auxtrace *etm, union perf_event *event,
- 			       struct perf_sample *sample, u64 type)
- {
-@@ -1614,6 +1527,42 @@ static inline u64 cs_etm__resolve_sample_time(struct cs_etm_queue *etmq,
- 		return etm->latest_kernel_timestamp;
- }
- 
-+static bool cs_etm__packet_has_taken_branch(struct cs_etm_packet *packet)
-+{
-+	if (packet->sample_type == CS_ETM_RANGE &&
-+	    packet->last_instr_taken_branch)
-+		return true;
 +
-+	return false;
++static int cs_etm__flush_stack_cb(struct thread *thread,
++				  void *data __maybe_unused)
++{
++	thread_stack__flush(thread);
++	return 0;
 +}
 +
-+static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
-+				    struct cs_etm_traceid_queue *tidq)
++static void cs_etm__flush_machine_stack(struct cs_etm_queue *etmq, pid_t pid)
 +{
-+	u64 from, to;
-+	int size;
++	struct machine *machine;
 +
-+	if (!cs_etm__packet_has_taken_branch(tidq->prev_packet))
++	machine = machines__find(&etmq->etm->session->machines, pid);
++	if (machine)
++		machine__for_each_thread(machine, cs_etm__flush_stack_cb, NULL);
++}
++
++static void cs_etm__flush_all_stack(struct cs_etm_queue *etmq)
++{
++	enum cs_etm_pid_fmt pid_fmt = cs_etm__get_pid_fmt(etmq);
++
++	if (!etmq->etm->synth_opts.last_branch)
 +		return;
 +
-+	if (etmq->etm->synth_opts.last_branch) {
-+		from = cs_etm__last_executed_instr(tidq->prev_packet);
-+		to = cs_etm__first_executed_instr(tidq->packet);
++	cs_etm__flush_machine_stack(etmq, HOST_KERNEL_ID);
 +
-+		size = cs_etm__instr_size(etmq, tidq, tidq->prev_packet, from);
-+
-+		/* Enable callchain so thread stack entry can be allocated */
-+		thread_stack__event(tidq->frontend_thread, tidq->prev_packet->cpu,
-+				    tidq->prev_packet->flags, from, to, size,
-+				    etmq->buffer->buffer_nr + 1, false,
-+				    tidq->br_stack_sz, 0);
-+	} else {
-+		thread_stack__set_trace_nr(tidq->frontend_thread,
-+					   tidq->prev_packet->cpu,
-+					   etmq->buffer->buffer_nr + 1);
-+	}
++	/* Clear the guest stack if virtualization is supported */
++	if (pid_fmt == CS_ETM_PIDFMT_CTXTID2)
++		cs_etm__flush_machine_stack(etmq, DEFAULT_GUEST_KERNEL_ID);
 +}
 +
- static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 					    struct cs_etm_traceid_queue *tidq,
- 					    struct cs_etm_packet *packet,
-@@ -1644,8 +1593,11 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ /*
+  * cs_etm__get_data_block: Fetch a block from the auxtrace_buffer queue
+  *			   if need be.
+@@ -2019,6 +2050,12 @@ static int cs_etm__get_data_block(struct cs_etm_queue *etmq)
+ 		ret = cs_etm_decoder__reset(etmq->decoder);
+ 		if (ret)
+ 			return ret;
++
++		/*
++		 * Since the decoder is reset, this causes a global trace
++		 * discontinuity. Flush all thread stacks.
++		 */
++		cs_etm__flush_all_stack(etmq);
+ 	}
  
- 	cs_etm__copy_insn(etmq, tidq, packet, &sample);
- 
--	if (etm->synth_opts.last_branch)
-+	if (etm->synth_opts.last_branch) {
-+		thread_stack__br_sample(tidq->frontend_thread, tidq->packet->cpu,
-+					tidq->last_branch, tidq->br_stack_sz);
- 		sample.branch_stack = tidq->last_branch;
-+	}
- 
- 	if (etm->synth_opts.inject) {
- 		ret = cs_etm__inject_event(etm, event, &sample,
-@@ -1836,14 +1788,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 
- 	tidq->period_instructions += tidq->packet->instr_count;
- 
--	/*
--	 * Record a branch when the last instruction in
--	 * PREV_PACKET is a branch.
--	 */
--	if (etm->synth_opts.last_branch &&
--	    tidq->prev_packet->sample_type == CS_ETM_RANGE &&
--	    tidq->prev_packet->last_instr_taken_branch)
--		cs_etm__update_last_branch_rb(etmq, tidq);
-+	cs_etm__add_stack_event(etmq, tidq);
- 
- 	if (etm->synth_opts.instructions &&
- 	    tidq->period_instructions >= etm->instructions_sample_period) {
-@@ -1902,10 +1847,6 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 		u64 offset = etm->instructions_sample_period - instrs_prev;
- 		u64 addr;
- 
--		/* Prepare last branches for instruction sample */
--		if (etm->synth_opts.last_branch)
--			cs_etm__copy_last_branch_rb(etmq, tidq);
--
- 		while (tidq->period_instructions >=
- 				etm->instructions_sample_period) {
- 			/*
-@@ -1936,8 +1877,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 			generate_sample = true;
- 
- 		/* Generate sample for branch taken packet */
--		if (tidq->prev_packet->sample_type == CS_ETM_RANGE &&
--		    tidq->prev_packet->last_instr_taken_branch)
-+		if (cs_etm__packet_has_taken_branch(tidq->prev_packet))
- 			generate_sample = true;
- 
- 		if (generate_sample) {
-@@ -1985,10 +1925,6 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 	    etmq->etm->synth_opts.instructions &&
- 	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
- 		u64 addr;
--
--		/* Prepare last branches for instruction sample */
--		cs_etm__copy_last_branch_rb(etmq, tidq);
--
- 		/*
- 		 * Generate a last branch event for the branches left in the
- 		 * circular buffer at the end of the trace.
-@@ -2020,7 +1956,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 
- 	/* Reset last branches after flush the trace */
- 	if (etm->synth_opts.last_branch)
--		cs_etm__reset_last_branch_rb(tidq);
-+		thread_stack__flush(tidq->frontend_thread);
- 
- 	return err;
- }
-@@ -2044,9 +1980,6 @@ static int cs_etm__end_block(struct cs_etm_queue *etmq,
- 	    tidq->prev_packet->sample_type == CS_ETM_RANGE) {
- 		u64 addr;
- 
--		/* Prepare last branches for instruction sample */
--		cs_etm__copy_last_branch_rb(etmq, tidq);
--
- 		/*
- 		 * Use the address of the end of the last reported execution
- 		 * range.
+ 	return etmq->buf_len;
 
 -- 
 2.34.1
