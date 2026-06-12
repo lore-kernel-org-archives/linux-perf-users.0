@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DA327B35F;
-	Fri, 12 Jun 2026 00:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649AE27B35F;
+	Fri, 12 Jun 2026 00:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781224538; cv=none; b=Zry0XQzcvLUve3QqFIJ9ss5r8gV9fcz/NrBmRuiNGMF1z4o1hANP7uBqMZcnkJUmzpYK7X9tAaB+kWM+SHJQZLPOdZCvWurN1PKXc+Wh79t2Z+Rw6yvwxM94IzhwkI5zEqu09F6dcf85AFmfprquye5LnozJw79wvOHzdvHDFYA=
+	t=1781224542; cv=none; b=ex3X/l7oTza2CmGz+ILbf3mIBv0oLL0esvSikJ8hNaVnhLjThy4NR7Si9pjC5G+WQ5KvWmqP9z3IpbFXV7w0Y8ybkKuPKGfwZIzohEkII1l8S64vWJjSncSkZD0ClbdRmwmbZYx9oQsznyFt/p0u8sXl/cjZ84MPVd7UFBR1+bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781224538; c=relaxed/simple;
-	bh=Q4fsncbmRmID7c6quLhWnxmE3rKTSHWrUlEqq++ABks=;
+	s=arc-20240116; t=1781224542; c=relaxed/simple;
+	bh=+6JaWrJ4iYQzg7eXzGi6/vMHqUpYgAZPzmfdfjpBfVU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rj3w3ZyawDNoybDytASGW9RuaxqIqYUlgNnl+1sHZY1KUp2fdnTl8/hK/MAP6aovMF4r487BoPDIcd+AKFct0+wZ68zpjFQpVWSONB5UvoOugGxbYr+K20qOIuk1FJhQjhOFxZFNCP2CdbodG47xzV4TAfAfUNzJfuJ6afDMrVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZnCiOT2; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=BPksT0AOxmqNoALt8CFF9FblPdVw0itLh5l24HzafarDs7VMsquUARrtJP1UCUSSZT0IJfSroKapIcBAto/Gtc4Ckp02HxEWkI+wKIEU+kho2Tj38zRBeBoi9uH8qAXfEu/FGP6o5yGk0v/48An4mGJm0Rsf55HlKBiSatpf/OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8JltjQj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZnCiOT2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DC51F000E9;
-	Fri, 12 Jun 2026 00:35:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8JltjQj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B83901F00A3D;
+	Fri, 12 Jun 2026 00:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781224537;
-	bh=2GVxeL9n9i64nQyWxWoDViRq81cnkUIKORHiyOMN7Rs=;
+	s=k20260515; t=1781224541;
+	bh=qzTzsD/ccVOr8cDLM4jg2BBitA/CpaStF8lfTIgjIOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=nZnCiOT2V3mAI7CrqOHOoOtLlJ4ioErwxAIu/tkhpc5kCdzn4hQKe3dlJfcll2zzK
-	 kDvhrs2N/E+4N17aNOYAC3Jfwihv+4hNAbvjFysS98kuDicdlF3kcoZOa0gexhWeOR
-	 FT2fWbUpLrqGHTHKq8mUXL4L2MN+OPxrAtLeD7bkG+nLiN7Cvgr6vIy7Cr+XI9PLho
-	 sHVwT5ukPavyKbSdjQDS0l4z15MXo1U2kjp1Wp4NVovejkOZXlEgLUN3A9Dqdvk2qT
-	 GTH2jF+fd3xr4cHscaWMF0Q1tLoTuwP8496c3XKcA3HvrdRb7yWc2nsvamVatN2ix3
-	 EKfHPfoMtGRAQ==
+	b=X8JltjQjy2w+caVvn9QOIbyBcSY6d7FvQCq8dPp0e7lFfHjwuOx6f0jCZOryliqvM
+	 xp8KRfpvacz5UxJ0nbdQt/0Mick5Y0sADHuvUhLu6gzjqaIvnJA0pO9YjnJt2HYEuT
+	 GJloYwsSzZnxpb59Blg4LY3qow+XwL6Phz6VBy/EEM97b3E1hkipLqGyiK+OzYTmuq
+	 mk6wgXFgjOnMX2WkUHjK92VUzc/z94ydDDB/ToQBdmjHLW/lg07M9WM8XB0vxVWZLu
+	 i2dKPMMT+Pln+qfV9861+jEbBM/Wyl3fCct3ER3j9W/L0SpUFVCui3dRMcglH4Sptx
+	 PNuVSQZXfLt0w==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Dave Marchevsky <davemarchevsky@fb.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 12/15] perf bpf: Bounds-check array offsets in bpil_offs_to_addr()
-Date: Thu, 11 Jun 2026 21:34:40 -0300
-Message-ID: <20260612003444.50723-13-acme@kernel.org>
+Subject: [PATCH 13/15] perf c2c: Free format list entries when releasing c2c hist entries
+Date: Thu, 11 Jun 2026 21:34:41 -0300
+Message-ID: <20260612003444.50723-14-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260612003444.50723-1-acme@kernel.org>
 References: <20260612003444.50723-1-acme@kernel.org>
@@ -53,65 +52,40 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-bpil_offs_to_addr() converts offsets stored in perf.data's
-bpf_prog_info_linear structure into heap pointers by adding the offset
-to the data allocation base.  The offsets come from untrusted file input
-and are not validated against data_len.
+c2c_hists__init() calls hpp_list__parse() which allocates and registers
+format entries on hists->list.  When c2c_he_free() destroys a c2c hist
+entry, it deletes the histogram entries and frees the hists container but
+never unregisters the format list entries, leaking them.
 
-If an offset exceeds data_len, the computed address points outside the
-allocated data buffer.  Callers like synthesize_bpf_prog_name() then
-dereference prog_tags[sub_id] or func_info pointers, reading arbitrary
-heap memory.
+Call perf_hpp__reset_output_field() before freeing the hists to properly
+unregister and free all format entries.
 
-Add a bounds check: when an offset exceeds data_len, zero the field
-and skip the conversion.  This prevents out-of-bounds pointer
-construction from crafted perf.data files.
-
+Fixes: f485e33c4543ac31 ("perf c2c report: Add cacheline hists processing")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Fixes: 6ac22d036f86c4e2 ("perf bpf: Pull in bpf_program__get_prog_info_linear()")
-Cc: Dave Marchevsky <davemarchevsky@fb.com>
+Closes: https://sashiko.dev/finding/41
+Cc: Jiri Olsa <jolsa@kernel.org>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-utils.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/perf/builtin-c2c.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/bpf-utils.c b/tools/perf/util/bpf-utils.c
-index d6d2c9c190f7afbf..98cf21a9113428dc 100644
---- a/tools/perf/util/bpf-utils.c
-+++ b/tools/perf/util/bpf-utils.c
-@@ -264,12 +264,26 @@ void bpil_offs_to_addr(struct perf_bpil *info_linear)
- 	for (i = PERF_BPIL_FIRST_ARRAY; i < PERF_BPIL_LAST_ARRAY; ++i) {
- 		const struct bpil_array_desc *desc = &bpil_array_desc[i];
- 		__u64 addr, offs;
-+		__u32 count, size;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e205f58b2f3d3786..07c7e8fb315e6cf3 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -185,6 +185,7 @@ static void c2c_he_free(void *he)
+ 	c2c_he = container_of(he, struct c2c_hist_entry, he);
+ 	if (c2c_he->hists) {
+ 		hists__delete_entries(&c2c_he->hists->hists);
++		perf_hpp__reset_output_field(&c2c_he->hists->list);
+ 		zfree(&c2c_he->hists);
+ 	}
  
- 		if ((info_linear->arrays & (1UL << i)) == 0)
- 			continue;
- 
- 		offs = bpf_prog_info_read_offset_u64(&info_linear->info,
- 						     desc->array_offset);
-+		count = bpf_prog_info_read_offset_u32(&info_linear->info,
-+						      desc->count_offset);
-+		size = bpf_prog_info_read_offset_u32(&info_linear->info,
-+						     desc->size_offset);
-+		/* offset and extent from perf.data are untrusted — keep within data[] */
-+		if (offs >= info_linear->data_len ||
-+		    (u64)count * size > info_linear->data_len - offs) {
-+			bpf_prog_info_set_offset_u64(&info_linear->info,
-+						     desc->array_offset, 0);
-+			bpf_prog_info_set_offset_u32(&info_linear->info,
-+						     desc->count_offset, 0);
-+			continue;
-+		}
- 		addr = offs + ptr_to_u64(info_linear->data);
- 		bpf_prog_info_set_offset_u64(&info_linear->info,
- 					     desc->array_offset, addr);
 -- 
 2.54.0
 
