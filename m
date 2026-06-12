@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC8A311967;
-	Fri, 12 Jun 2026 00:35:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00305314D1F;
+	Fri, 12 Jun 2026 00:35:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781224546; cv=none; b=aKDuIunEAx5IhhP+dZQYobstsRPnS3tYXiHffJOMBClZtA3x0eemuJ+ZMc02mOrVhINbqIyH+EFTh/LuttnoZg5hRToJmGjtVC7p25/k+5pUx2I30wJDwX14Ta3WWppJ8709y9FF509b5StdBTKBXraEukyiT7/KQu/XZZc52yo=
+	t=1781224550; cv=none; b=iprJNVP08S6/MFyBnk+GmEyJ2X6rlhZssFieAe4FGWJ+sOlbzgpUP47glZLYQS1j1ySjnjEaZPs5v6kRLy9zf+QlAfMnV7fjng3wsbxvDZNOhGbfB9+gCHTYENy4rN2AS/pBpcvVFz4tBSU8DFSW0urjF0wicEzXaHVasT7yOgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781224546; c=relaxed/simple;
-	bh=Wns1qTj4iJ6y3TikPVR1My11XrwfVjOmF6KY5JxPYno=;
+	s=arc-20240116; t=1781224550; c=relaxed/simple;
+	bh=Nl1djylyOIEP5OkTtFMerubFW+2NEVceyxXR/vhJynY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ckoqB/X8JmKUCDq03wqLpn1WP5i0Okz0STndwQYO3hbiQS48Q61hPgK/5a+veV15t/tV3Neg2bgSU4i8myivNTcl5o7QYHwtXlY2BoHWu5OBSIU8y/0XoJwvbpVUtriq1UR7Wf4jXZVV0Bhe3gEoGxzE2BEcAPxEHSKo25v6WcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cgA2X6Ja; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=ISULGYALncmwT1OrAhxB5Rac662aWEU4mSBl6y8z+6W+MXe3mAPayLjgE/Nx/+A+JiFsXuO1GS6nEFbuoi9rsyS1y4QUx1RXn/iJcmNSI0RS6HsHZCPwJVwsme8255Vo/0r1OY7VDU8nlHUEDpS/0XBgFlaeqsDyhB1AOw5Pj2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHz5bwZl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cgA2X6Ja"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CAAB1F000E9;
-	Fri, 12 Jun 2026 00:35:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHz5bwZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F0761F00A3A;
+	Fri, 12 Jun 2026 00:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781224544;
-	bh=DJlzqQy0AVb9lKHuIP6dUlHkyuar+ckpr83w7l2O+rY=;
+	s=k20260515; t=1781224548;
+	bh=Tp65WxPEKvMy0EMVyndBOE7srR8LwXCkKUGjqxDrZ6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cgA2X6JavR4M0eq6+k3LnjHZKJ3AH90koU4i2bCZEpVMrreGifJf3dG/RmXvsNQEH
-	 9AwjrC3bSuT8cKVv6BTsI4kDgElG7Xw8d0He7T2e7tuT2M9WCpCHgExIQGuhgYwNdR
-	 XjToVHh/riHeIJw4RxuL3Etfx+kNS60NtixqkAc6fCTo2c5CURgZyca8HsZunRvhFG
-	 uDgu7Y8BREA7225aP9ARy+dlFqG253Q6sHJpfLGHSgCV6Jmx+bSIxDzQmkEJ/2l19r
-	 7OXzkDxdQyubFHjT+DctpmJ9glNB9OgnV3/meZHd87PVq2WIeqv6XDzQD8HskHBbEs
-	 eKuuFJT5Qc+GQ==
+	b=HHz5bwZlqtqDDdApKVuxe+Jf8VPC8qiDNBWY+BR/DaeFmzIkWY5HI8bIqQJgA6E9v
+	 NQ4NH7dNoTT7U4P9AkywXrXva75CpqlzHismfaKD2a9BRydAyVL4qMvr91H7FyK07e
+	 1TOMpJWL2ad4Tv+V2vajM/qTN+4CZE+azIwc+boxOlBLmT+xD8vIxRxpjYqZMKm1qy
+	 gQ7+kijK4EDesnrWglVNMY4juUOwZbmDby2uSxXL+lkO6eJ386XtpJzPRGI0k1WYg1
+	 QAJArTU54C4HKPGpv1JXqF1UtQcJkeskVSv4qMbw2JiqEvaLcHXXcgrGBdjI9vmBU8
+	 CX1QjkkRcyAFA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,10 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
+	James Clark <james.clark@arm.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 14/15] perf symbols: Add O_NONBLOCK to DSO open() calls for untrusted paths
-Date: Thu, 11 Jun 2026 21:34:42 -0300
-Message-ID: <20260612003444.50723-15-acme@kernel.org>
+Subject: [PATCH 15/15] perf cs-etm: Reject CPU IDs that would overflow signed comparison
+Date: Thu, 11 Jun 2026 21:34:43 -0300
+Message-ID: <20260612003444.50723-16-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260612003444.50723-1-acme@kernel.org>
 References: <20260612003444.50723-1-acme@kernel.org>
@@ -56,123 +57,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-DSO paths from perf.data MMAP events could reference FIFOs, device
-nodes, or other special files.  Opening such paths without O_NONBLOCK
-can hang perf report/script indefinitely waiting for a writer or device.
+metadata[j][CS_ETM_CPU] is a u64 from perf.data, but the comparison
+with max_cpu casts it to (int).  A crafted value like 0xFFFFFFFF becomes
+-1 after the cast, which compares less than max_cpu (0), so the queue
+array is never sized to accommodate it.  When the value is later passed
+to cs_etm__get_queue(), it indexes queue_array with the original large
+value, causing an out-of-bounds access.
 
-Add O_NONBLOCK to all open() calls in the DSO symbol resolution paths:
-filename__read_build_id(), filename__read_debuglink(), symsrc__init(),
-do_open(), filename__decompress(), and __dso__read_symbol().
+Validate that CS_ETM_CPU fits in an int before using it in the signed
+comparison.
 
-O_NONBLOCK is a no-op on regular files but prevents blocking on special
-files, following the systemd "foreign file" convention.  Also add missing
-O_CLOEXEC flags in symbol-minimal.c for consistency.
-
-Fixes: a08cae03f430b971 ("perf tools: Allow to close dso fd in case of open failure")
+Fixes: 57880a7966be510c ("perf: cs-etm: Allocate queues for all CPUs")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/finding/6
-Cc: Jiri Olsa <jolsa@kernel.org>
+Closes: https://sashiko.dev/finding/2
+Cc: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c            | 6 +++---
- tools/perf/util/symbol-elf.c     | 7 ++++---
- tools/perf/util/symbol-minimal.c | 6 +++---
- 3 files changed, 10 insertions(+), 9 deletions(-)
+ tools/perf/util/cs-etm.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 1a2fc6d18da74d6c..dc0c8b9c63017239 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -344,7 +344,7 @@ int filename__decompress(const char *name, char *pathname,
- 	 * descriptor to the uncompressed file.
- 	 */
- 	if (!compressions[comp].is_compressed(name)) {
--		fd = open(name, O_RDONLY | O_CLOEXEC);
-+		fd = open(name, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
- 		if (fd < 0)
- 			*err = errno;
- 		if (pathname && len > 0)
-@@ -547,7 +547,7 @@ static void close_first_dso(void);
- static int do_open(char *name) EXCLUSIVE_LOCKS_REQUIRED(_dso__data_open_lock)
- {
- 	do {
--		int fd = open(name, O_RDONLY|O_CLOEXEC);
-+		int fd = open(name, O_RDONLY|O_CLOEXEC|O_NONBLOCK);
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 5e92359f51a7cb87..d8876b8362056c98 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -6,6 +6,7 @@
+  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+  */
  
- 		if (fd >= 0)
- 			return fd;
-@@ -1927,7 +1927,7 @@ static const u8 *__dso__read_symbol(struct dso *dso, const char *symfs_filename,
- 	int saved_errno;
++#include <limits.h>
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/coresight-pmu.h>
+@@ -3468,7 +3469,13 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 			goto err_free_metadata;
+ 		}
  
- 	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	fd = open(symfs_filename, O_RDONLY | O_CLOEXEC);
-+	fd = open(symfs_filename, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
- 	saved_errno = errno;
- 	nsinfo__mountns_exit(&nsc);
- 	if (fd < 0) {
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index dc48e2d2763379b9..01c7b09fc82bcddb 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -886,7 +886,8 @@ static int read_build_id(const char *filename, struct build_id *bid)
- 	if (size < BUILD_ID_SIZE)
- 		goto out;
- 
--	fd = open(filename, O_RDONLY | O_CLOEXEC);
-+	/* O_NONBLOCK avoids hangs on FIFOs/devices from crafted perf.data paths */
-+	fd = open(filename, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
- 	if (fd < 0)
- 		goto out;
- 
-@@ -1022,7 +1023,7 @@ int filename__read_debuglink(const char *filename, char *debuglink,
- 	if (err >= 0)
- 		goto out;
- 
--	fd = open(filename, O_RDONLY | O_CLOEXEC);
-+	fd = open(filename, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
- 	if (fd < 0)
- 		goto out;
- 
-@@ -1187,7 +1188,7 @@ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 
- 		type = dso__symtab_type(dso);
- 	} else {
--		fd = open(name, O_RDONLY | O_CLOEXEC);
-+		fd = open(name, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
- 		if (fd < 0) {
- 			*dso__load_errno(dso) = errno;
- 			return -1;
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index ea2de3d50d33cf33..dc4a06b2a03ad3cb 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -118,7 +118,7 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
- 	if (!is_regular_file(filename))
- 		return errno == 0 ? -EWOULDBLOCK : -errno;
- 
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -234,7 +234,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
- 	char buf[BUFSIZ] __aligned(4);
- 	ssize_t len;
- 
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -257,7 +257,7 @@ int sysfs__read_build_id(const char *filename, struct build_id *bid)
- int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
- 	         enum dso_binary_type type)
- {
--	int fd = open(name, O_RDONLY);
-+	int fd = open(name, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
- 	if (fd < 0)
- 		goto out_errno;
+-		if ((int) metadata[j][CS_ETM_CPU] > max_cpu)
++		/* CPU id comes from perf.data and must be a valid index */
++		if (metadata[j][CS_ETM_CPU] > INT_MAX) {
++			err = -EINVAL;
++			goto err_free_metadata;
++		}
++
++		if ((int)metadata[j][CS_ETM_CPU] > max_cpu)
+ 			max_cpu = metadata[j][CS_ETM_CPU];
+ 	}
  
 -- 
 2.54.0
