@@ -1,147 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4F1946A
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 00:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1309C258EC1;
+	Fri, 12 Jun 2026 00:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781225697; cv=none; b=Uj+5jUmly6TNO6dsLNrJnzE0A9+Gw1qA/yh6z+EWubafpj25rClC6aN0PhyCEbCxW6Kk4aJUyMPFPJNBWQ36AANLbS9ykSwLBSF7QY1DbxR7v4e3uD04H3qk7oGDjzOgSe+DNU0wDMiHBSHySpvMiKtU3fU7Yq21WobjEpi4kQ4=
+	t=1781225719; cv=none; b=X/JX2KgMOIooxfxttiD4j8N8Yhqkipz8hu2F/fvK23tFaVjx5sidy0iWscGBu0doYno9u7NGpOqLDjDGPStIC8zMUH+4vlHZx4goj2mgcMV1sKlTzfuT2x0vXH5IUqnrrY6n5+DTcZ2Ku1UKAO3gqEYO2Ar0wvK9CbyG/wVBKMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781225697; c=relaxed/simple;
-	bh=jCtqeJyH26MJ+DOTfVzkDZzCwizFu19Wut7DRzKP/Ic=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=aRcweCFM65F/gmArtcPP0PHa5BAksbUOLcMq1L1CYCpfdPRGyxu0kWPHvbq7HIEy4LL0AEQxvJw3Y2mfM8vam3cjwgJIM0HMuwPPk8c0/uvIepPU07irfjdcinkvFB8gNL6I+a8uT1MZKkboXJwkp++iHIVCIoNFHU7jjIbClQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMkqopC3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781225719; c=relaxed/simple;
+	bh=PULvi3h/F1+HzOx6ul4yoadlXQNLErzW6TxnQ60JFUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EfC8uWeIHo1v9jIQGA5W9KrR2GjvpCwmaT2qoDlhV5aiO8c1ZZds6Ikmbfkw7w9V35b30XdLco58Fj7U3B9IXdN7CCjUn5l6r3Cr1uaAWAhf4iIbko9GAeHz3ACkSoLgyz7ECgs71OXdPoXs5jBItzylrX8/TQABgf8dwEwotsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MMRgB4ql; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMkqopC3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC5E1F000E9;
-	Fri, 12 Jun 2026 00:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781225696;
-	bh=ESNRWuRR4n3BoYSj9EBDi2SJ9XJ4QjKfYrsQE8Gp3+k=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hMkqopC3pMAuHOmFHIenlq0hWptAaimMa+a8lkOH6TPdZaS7lu8g40nundGjGWYGq
-	 IjNLVGkT4P7BhuTPjZLtSOxkSOEHumqgrdU5g0qH+Jk6xVehwU1x6cQFJnv86AAAWD
-	 AZW4i/PsLJSG2Da3dtIH+cST7rhbY6T6bsaaNa1HzTv3Xijiwu5wlobt5ze8M1oEF8
-	 GmMIIlJOjNscKoknzWPSqb+785YEd9KdShqvCehwGglR/sTOtb5nVFOp1Kp6gSLJo2
-	 ezKsChzIyC82zMSpU7iCJKbjE/JqW9+Ql2aTccD1ec0Y/S4pqDd6tpDzBLH0EDo8SE
-	 2xW4uGg4dVRqg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 06/15] perf dso: Set error code when open() fails on
- uncompressed fallback path
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260612003444.50723-7-acme@kernel.org>
-References: <20260612003444.50723-7-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 12 Jun 2026 00:54:54 +0000
-Message-Id: <20260612005455.CCC5E1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MMRgB4ql"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781225718; x=1812761718;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PULvi3h/F1+HzOx6ul4yoadlXQNLErzW6TxnQ60JFUQ=;
+  b=MMRgB4qlY0LrD4IpvNssx7xkVEf6yqrNKoqaNmKIULYNskyG3PBnaEkk
+   lSnVajBZieFZS0r48Uyfu8s6H/rvjKWEZYZzeExcbiO4vY2qA0ErzdB7D
+   mhD/lyNvJphJr6I6QL7o++9XiJW0eRc4Js/tlVtfg1oBmO4uIZTm8yUtx
+   PpvPNP2FIKr9DlvnbWsZdmx0rCKfuRQFUOfdF0GbjPQOWM3EOLKPjd5aI
+   JunuCOgoT5aV25GgXkwbQy2hskH0qcesjiiGq9VAv6eLzhLGsauxZGM2/
+   G2mIYipX1pcXL/xPaIQV//qN/LDiDOoza8bwlX5CTB8iI8gz8X6WToqLX
+   A==;
+X-CSE-ConnectionGUID: 7k1qm0CnQhC8voc1hDdQ7Q==
+X-CSE-MsgGUID: gP/ygrV7Rnmk5nps4U15Cw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="92622871"
+X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
+   d="scan'208";a="92622871"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 17:55:18 -0700
+X-CSE-ConnectionGUID: gFrsCiYCR2ajFCMkACx5AQ==
+X-CSE-MsgGUID: 89UP3KaZSVCyYXo/4UqOpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
+   d="scan'208";a="245568356"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 17:55:15 -0700
+Message-ID: <8c424e86-d410-46bd-9389-e71fdfe657d5@linux.intel.com>
+Date: Fri, 12 Jun 2026 08:55:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 7/8] perf/x86/intel/uncore: Fix uncore_box ref/unref
+ ordering
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260611160033.66760-1-zide.chen@intel.com>
+ <20260611160033.66760-8-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260611160033.66760-8-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Type punning by accessing a char array through an incompatible p=
-ointer type in tools/.
---
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-commit 4b3994ef70950d73fb48b1cdff6e7ffb7ee129d2
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thanks.
 
-perf dso: Set error code when open() fails on uncompressed fallback path
-
-filename__decompress() has an early return for files that are not
-actually compressed, where it calls open() directly. When open()
-fails, the function returns -1 but never sets *err, leading to a stale
-or zero errno. This causes callers to treat fd 0 as a valid DSO file
-descriptor.
-
-> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-mi=
-nimal.c
-> index 091071d06416e..ea2de3d50d33c 100644
-> --- a/tools/perf/util/symbol-minimal.c
-> +++ b/tools/perf/util/symbol-minimal.c
-
-[ ... ]
-
-> @@ -217,29 +220,36 @@ int sysfs__read_build_id(const char *filename, stru=
-ct build_id *bid)
+On 6/12/2026 12:00 AM, Zide Chen wrote:
+> In uncore_event_cpu_online(), uncore_box_ref() was called before
+> uncore_change_context().  uncore_box_ref() gates on box->cpu >= 0,
+> but box->cpu is still -1 at that point because uncore_change_context()
+> has not run yet.  As a result, the box is never initialized on the
+> first CPU to come online in a die, leaving it permanently
+> uninitialized in the single-CPU-per-die case.
+>
+> Thus, box->refcnt is one count below the true value, and in the CPU
+> offline path, the box will be torn down on the second-to-last CPU.
+>
+> In uncore_event_cpu_offline(), uncore_box_unref() was called after
+> uncore_change_context(), so box->cpu is already -1 when the collector
+> CPU goes offline, which prevents it from tearing down the box.
+>
+> Fix by swapping the call order in both paths so that
+> uncore_box_{ref,unref}() runs at the point where box->cpu reflects
+> the correct context.
+>
+> Move allocate_boxes() out of uncore_box_ref() to enable this
+> reordering.
+>
+> Fixes: c74443d92f68 ("perf/x86/uncore: Support per PMU cpumask")
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+> v3:
+> - Update changelog to mention moving allocate_boxes(). (Dapeng)
+> - Update title; the bug is not limited to CPU hotplug.
+> ---
+>  arch/x86/events/intel/uncore.c | 50 ++++++++++++++++------------------
+>  1 file changed, 23 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index feb8c3b0076b..b9ac2f7d31ca 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1580,9 +1580,15 @@ static int uncore_event_cpu_offline(unsigned int cpu)
 >  {
->  	int fd;
->  	int ret =3D -1;
-> -	struct stat stbuf;
-> -	size_t buf_size;
-> -	void *buf;
-> +	/*
-> +	 * read_build_id() casts this buffer to a u32 note header pointer,
-> +	 * so it must be aligned for u32 access.
-> +	 *
-> +	 * Accessing a char[] through a u32* is technically type-punning
-> +	 * under C strict aliasing rules, but perf unconditionally builds
-> +	 * with -fno-strict-aliasing (Makefile.config), so this is safe.
-> +	 *
-> +	 * This file is only compiled when libelf is not available =E2=80=94 the
-> +	 * common case uses the libelf-based path in symbol-elf.c instead.
-> +	 */
-> +	char buf[BUFSIZ] __aligned(4);
-
-[Severity: Medium]
-The comment mentions that perf unconditionally builds with
--fno-strict-aliasing, making this safe. However, do files under the tools/
-directory generally assume standard -fstrict-aliasing?
-
-When this character array is passed to read_build_id() and cast to an
-incompatible structure pointer type:
-
-sysfs__read_build_id()->read_build_id() {
-	nhdr =3D ptr;
-	if (need_swap) {
-		nhdr->n_namesz =3D bswap_32(nhdr->n_namesz);
-
-Could this type punning lead to undefined behavior or compiler optimization
-issues if standard compiler flags are used for tools?
-
-> +	ssize_t len;
-> =20
->  	fd =3D open(filename, O_RDONLY);
->  	if (fd < 0)
->  		return -1;
-> =20
-> -	if (fstat(fd, &stbuf) < 0)
-> -		goto out;
-> +	/*
-> +	 * Use a fixed buffer and a single read() instead of fstat() + malloc(),
-> +	 * because sysfs pseudo-files often report st_size=3D0 or 4096
-> +	 * regardless of actual content size.
-> +	 *
-> +	 * BUFSIZ (8192) is more than sufficient: a sysfs build-id note is
-> +	 * ~36 bytes (12-byte note header + 4-byte "GNU" name + 20-byte SHA1).
-> +	 */
-> +	len =3D read(fd, buf, sizeof(buf));
-> +	if (len > 0)
-> +		ret =3D read_build_id(buf, len, bid, false);
-> =20
-> -	buf_size =3D stbuf.st_size;
-> -	buf =3D malloc(buf_size);
-> -	if (buf =3D=3D NULL)
-> -		goto out;
+>  	int die, target;
+>  
+> +	/* Clear the references */
+> +	die = topology_logical_die_id(cpu);
+> +	uncore_box_unref(uncore_msr_uncores, die);
+> +	uncore_box_unref(uncore_mmio_uncores, die);
+> +
+>  	/* Check if exiting cpu is used for collecting uncore events */
+>  	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
+> -		goto unref;
+> +		return 0;
+> +
+>  	/* Find a new cpu to collect uncore events */
+>  	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
+>  
+> @@ -1595,16 +1601,10 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+>  	uncore_change_context(uncore_msr_uncores, cpu, target);
+>  	uncore_change_context(uncore_mmio_uncores, cpu, target);
+>  	uncore_change_context(uncore_pci_uncores, cpu, target);
 > -
-> -	if (read(fd, buf, buf_size) !=3D (ssize_t) buf_size)
-> -		goto out_free;
-> -
-> -	ret =3D read_build_id(buf, buf_size, bid, false);
-> -out_free:
-> -	free(buf);
-> -out:
->  	close(fd);
->  	return ret;
+> -unref:
+> -	/* Clear the references */
+> -	die = topology_logical_die_id(cpu);
+> -	uncore_box_unref(uncore_msr_uncores, die);
+> -	uncore_box_unref(uncore_mmio_uncores, die);
+>  	return 0;
 >  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612003444.5072=
-3-1-acme@kernel.org?part=3D6
+>  
+> -static int allocate_boxes(struct intel_uncore_type **types,
+> +static void allocate_boxes(struct intel_uncore_type **types,
+>  			 unsigned int die, unsigned int cpu)
+>  {
+>  	struct intel_uncore_box *box, *tmp;
+> @@ -1621,8 +1621,10 @@ static int allocate_boxes(struct intel_uncore_type **types,
+>  			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
+>  				continue;
+>  			box = uncore_alloc_box(type, cpu_to_node(cpu));
+> -			if (!box)
+> +			if (!box) {
+> +				uncore_pmu_set_broken(pmu);
+>  				goto cleanup;
+> +			}
+>  			box->pmu = pmu;
+>  			box->dieid = die;
+>  			list_add(&box->active_list, &allocated);
+> @@ -1633,14 +1635,13 @@ static int allocate_boxes(struct intel_uncore_type **types,
+>  		list_del_init(&box->active_list);
+>  		box->pmu->boxes[die] = box;
+>  	}
+> -	return 0;
+> +	return;
+>  
+>  cleanup:
+>  	list_for_each_entry_safe(box, tmp, &allocated, active_list) {
+>  		list_del_init(&box->active_list);
+>  		kfree(box);
+>  	}
+> -	return -ENOMEM;
+>  }
+>  
+>  static int uncore_box_ref(struct intel_uncore_type **types,
+> @@ -1649,11 +1650,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
+>  	struct intel_uncore_type *type;
+>  	struct intel_uncore_pmu *pmu;
+>  	struct intel_uncore_box *box;
+> -	int i, ret;
+> -
+> -	ret = allocate_boxes(types, die, cpu);
+> -	if (ret)
+> -		return ret;
+> +	int i;
+>  
+>  	for (; *types; types++) {
+>  		type = *types;
+> @@ -1669,27 +1666,26 @@ static int uncore_box_ref(struct intel_uncore_type **types,
+>  
+>  static int uncore_event_cpu_online(unsigned int cpu)
+>  {
+> -	int die, target, msr_ret, mmio_ret;
+> +	int die, target;
+>  
+>  	die = topology_logical_die_id(cpu);
+> -	msr_ret = uncore_box_ref(uncore_msr_uncores, die, cpu);
+> -	mmio_ret = uncore_box_ref(uncore_mmio_uncores, die, cpu);
+> +	allocate_boxes(uncore_msr_uncores, die, cpu);
+> +	allocate_boxes(uncore_mmio_uncores, die, cpu);
+>  
+>  	/*
+>  	 * Check if there is an online cpu in the package
+>  	 * which collects uncore events already.
+>  	 */
+>  	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
+> -	if (target < nr_cpu_ids)
+> -		return 0;
+> -
+> -	cpumask_set_cpu(cpu, &uncore_cpu_mask);
+> -
+> -	if (!msr_ret)
+> +	if (target >= nr_cpu_ids) {
+> +		cpumask_set_cpu(cpu, &uncore_cpu_mask);
+>  		uncore_change_context(uncore_msr_uncores, -1, cpu);
+> -	if (!mmio_ret)
+>  		uncore_change_context(uncore_mmio_uncores, -1, cpu);
+> -	uncore_change_context(uncore_pci_uncores, -1, cpu);
+> +		uncore_change_context(uncore_pci_uncores, -1, cpu);
+> +	}
+> +
+> +	uncore_box_ref(uncore_msr_uncores, die, cpu);
+> +	uncore_box_ref(uncore_mmio_uncores, die, cpu);
+>  	return 0;
+>  }
+>  
