@@ -1,196 +1,345 @@
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021106.outbound.protection.outlook.com [52.101.100.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02F2388891;
-	Fri, 12 Jun 2026 22:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.106
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781302131; cv=fail; b=MWjZct7SImWH5610NY96T4o8r0G+9eUtzAuWYw6rcwQRbJrv0pTvcP9jO8GM6sUKh40FZHTBsLeoKfC26Y6QesHrm+NqS+dUpttFxkccJonnj6MwAIF6mr2imF7FrA1jnq0bH7WRZQ8xPqixZSEtquLe+hMeMj+J7PkrpJbpdEw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781302131; c=relaxed/simple;
-	bh=fmSyLTqodfFQHMq16m8DXsqwCn+8v4YqxFrHZ/8I4EQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=BSmYJryJop9XLd6gAbm8hcjgPYK68nZkDASfNF5KM8f+l2HBvxWnHl/jKy+ew/4t34Cdee0N190ec0M4sManU5ehBvxopmBE9HIqJHIacBWKX4yHYPTCi6dEDCbQzDyDYBcrUO5Uv4gcgueRgThe4j3lhswMJrJ+Ey+SNEcgbe8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.100.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MWHztw3815ChCQ39KETiy6r1eo5YBHy0bsutL1ZbEvvzGsCMjKZk4XV8boRIcNL802Xsh6y1mh+4PeddjzUYqBTk8jrOeCb55wD2bV8dxyqQD9a0TiVHz5C2IeUogVT2GziZ0FLnFiw+bUfSXUihm/nUlOC9kpQw9DfegVk5869stERonwyzylY2RiqYzGQRFmM3GpTPcDX0u7XXBPtG9dkGrcGF2j/1LblfJFBcL7dc/MDmU9swScFTQkdpP9WSFGEYa6uE4Voq6L6I073k83IPOuVBBAbrE+wF/q/ol0+U/UxxoL3tWWlqjc0ufGXEGRZ7GNvKE/D4vvXCmS7CkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=gJt+nQ5t44Mb5kHMHaNG57I/gLy1haUArrKDHrOCV/g=;
- b=HfKNhPSs/XbR9VeudBLJXXrlLmy6Z2YI3WM4I5rVFkdRnHYzPAClQYK6A5uiZeqXvMXBx4UyOoMC2Tsqg4Kck5iHlbPGPX0Z4pKUQn0Sd0iJqtbPKasWz5VIOlNtHIwnplHTBCsGWMXyYivYWsx/6vY2BmZk/nwcW9B+upbQEg1BWF0Z/6ZQBbvt2KBDh/BYGMGC2u3OOk2/d0j0WrktPHkvnITLKrYjbawNb1KCc27mFwVPu6/8tKCO/CjOfZM42A4tAYYdMxq2uz7kMYNbKURumkEpNSOfcENfAfxojZuZmFVIssA1xZO2bOTiWN7e6qf1sTARY/ensMks5U2oiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO2P123MB7161.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:32c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.15; Fri, 12 Jun
- 2026 22:08:45 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0113.014; Fri, 12 Jun 2026
- 22:08:45 +0000
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	howardchu95@gmail.com,
-	atomlin@atomlin.com,
-	neelx@suse.com,
-	sean@ashe.io,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf trace: Fix noise and signed formatting of __probe_ip in bare dynamic probes
-Date: Fri, 12 Jun 2026 18:08:43 -0400
-Message-ID: <20260612220843.1320348-1-atomlin@atomlin.com>
-X-Mailer: git-send-email 2.51.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0520.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:272::16) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D4A36EA8B
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781302360; cv=none; b=MCWfi3mGIxxqyiym80gvaQ3STu7ZzrAURh5kVnVFVxlPgnkhiG2tLuXt/Hehbehs55miouTI9WiTbyAAHJD4x9V/Fvnr6KLuPkvbr8vEQYdaHtJqE0Qe672QqEHIMttcLfoaXkm6rzDx/4+vYW1ITSQ/50o0FIP9tDqTk/y8JLs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781302360; c=relaxed/simple;
+	bh=2tfZ+rIAG6WnX1sttiUyIFI7WRNHQGekR9JGnpwLujY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rYcv4OeTpA+h7wjVqrgy5jn9E7x9uoVtjrvoZ+vyTDfWpXbAXFUlzXStBF3ONSGCSave8z7b8cK2e26VpBPUrMzqns3h2HczYOuEnCOlveiwswiCSyii3Iq+BK5pnTGXrIdpLVtdmhAeDQtzL0rzgy8JNprAJ4ZkcMS61tm27Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NxD+KGKJ; arc=none smtp.client-ip=74.125.82.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NxD+KGKJ"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-3074d4102a9so4025579eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 15:12:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781302356; x=1781907156; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XIDtjDbmGyLy5a7gREigsFvx2JwzStraLVD8xrHAoB8=;
+        b=NxD+KGKJllepl5dQNNSDfwavbIvdgXn4lQ8LEEXYoDOjS8PoYbwEB3tZZbhbJ/MtOi
+         ERdwQ2YdjBusiruXtEvzu1ZjvE6LAafSsshQWgIUrDO+Sqkey62VTpwC4AN2wwrSx/Fj
+         liNKzbYpEyL5j9lMrtsh+Tg7VOE7x/s7CMb/1/zJTDlAY9BJj6XnETum/rYlYgryacUU
+         WCv2VbEWHNqcKzn7D3xJncBNRtJFPIPupTbiAUYTO6VAuSI16iGD3goF58P4OKD4kEVw
+         VneAssbAPZSzKprMTJ6XH3r0NMzZjzW0E04ag4MWL3ivHDiOZtHpoQTzqLFX3txBw9m8
+         bzzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781302356; x=1781907156;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XIDtjDbmGyLy5a7gREigsFvx2JwzStraLVD8xrHAoB8=;
+        b=dFDBfR2I+6lZFFjFCaYFe3Z+FCAwuvqaGGzarBTuNmaGgR+wxj7h902FU1ochp18A2
+         qV1tGBurWxxhnLpfmu3iAoucbJCb5I/UCPu02GCarBGOtDFXZhwZAMGgCFXIS+oXZYYz
+         f6HFQpJ94wqYB7XfXkRBZotIKtbGRArXY+UMDvsndLVqk98PNjusvtfCWEtlowaGrD7G
+         fRstflVK7RgNyc6aX67B5ZS8sfhjZH7OPxnG2dR2Sp4t/oUpeauuKJjs5xSF5JsqWhc6
+         tfBdwdc2TjJ/v/A3FszbYwhHHfiEm3anG560hQfbv1Zc6GhmUVaGPUKTOEMIzN4Q+3LG
+         qD2A==
+X-Forwarded-Encrypted: i=1; AFNElJ9n9utlk2yMYYFHDK0lb0vs2ou8TMhTJsvFT0BHECIdPQduxGAkogYd6KZjByn/3Oz1Hzi3bqFKIcgpspX3EJzQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkhEyue0sbz4o36nUgkUrpe9ViRf1eDlIfOyGCBtoJfZOrOMx2
+	/AhLovoaPLgDbHFLoW+Wsv6bHYou87U0hrCBCYWzP/8Wsk5h9i+Np1lEMFGg9LrjuWyWZBSY8/Q
+	Tqet77ZyXkA==
+X-Received: from dycez15.prod.google.com ([2002:a05:7301:578f:b0:303:98b0:efec])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2c07:b0:304:9b48:5369
+ with SMTP id 5a478bee46e88-3081ff63d5dmr2698583eec.6.1781302355993; Fri, 12
+ Jun 2026 15:12:35 -0700 (PDT)
+Date: Fri, 12 Jun 2026 15:11:52 -0700
+In-Reply-To: <20260612180956.1105352-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO2P123MB7161:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1d5354cc-230b-4b70-8e7e-08dec8cf2b83
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|23010399003|5023799004|56012099006|3023799007|6133799003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	aq0TwuqjJCe2be6qvZprnsLekpcA1T2+r0yzN5efGq6TFvIOUL6F9+ALlMhuXW59nG6prcTDUcCsVfigkYn143zoFYI2001ZPshyErHtW81qwgGZhgsyr+Xud5Eu41Ohn6uxmo6u2OG/KgdzQ2shpU/cttsS8DDdcGlEJJjHCcVQipv4+5bGiej+tAcqHlBzFWPrj65h9MYF1v77H7AzRyZLnMsqB3MjIF7WeQOOAKPmRi/5+ksf/VOFGTovmECyFWFWqM9goKMMweganzPlwxYriLtLnZfIPEDFPPX08gOZOFfmcgLLz5/bIga67Lmx4EFnJKFnKqWjSVSm3QJjLIMHUts2d8CvKaivQ5Ou9Qvf4c6FSZh+JfcD84NuTrSuXEGrfkX/RTD2bhIyOmm5SZRkLCS6BZnfaqelJ8D2Ae/fxBTzyf/wqF4zhTDvimLiQVMuDusewRia/M9i+2zyKd19w/BiwpLWaR79MR28nC7/xGSsMP29RPd8csAckCcEEJ21muLy5+EbRwwGKmJ+DRkoqkZbUzhnbPnTGD3o5OtZsRNHnkBPitDXwRyrPJsQSyacadGZ8l5J+9rN7/MdQgmyT5OGnPTIPB5m4LLsq33fVcrbZuhQqVteu/mOHsSxpDygK9FvPpcgxdDBwca3OJ8D/k94Yq5ojpduQhNeuS2u5VV7ETp2XA9oblwuEN0I
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(23010399003)(5023799004)(56012099006)(3023799007)(6133799003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WHh4c0NteCtFcHgveXloOVphYzNRSVl0ZDY2Z0pxdXNHaVBKVEdkV2JwY0JJ?=
- =?utf-8?B?UFhrTk5HYXJJcldhdUZYZEVaTHhKOWFUUGVaWEpKclZQa0U5OU5HTy80TS9N?=
- =?utf-8?B?SWNBcnRSUzhpclNGTDcwL1QzSFZWV3BiOC9KZ1JMQVdMWjJSSnN6MDNOZUVx?=
- =?utf-8?B?aURPaStJNEtwSXFwUjgxR1ArcUU2Z3RYMW9sVVZrKzRzdGYwcWpqZjVBcWg5?=
- =?utf-8?B?SVhZRkN1WDIrdmVmcmN4YTJzMFZqRWJOSzRzeHpoRVIrTjBMT1J1eDgxNy9G?=
- =?utf-8?B?ZDVRQnkrbHdRcTdmVEFpS1RJQ2tra2RETDQvblJaS3d3Ly9JUmIxaVRYc2Y0?=
- =?utf-8?B?UlBNQm5MbFZzMlpQMUxQb2szaURiU0hsTTdIbHRoSmxnVEN0Z1hYMVlSMHZ6?=
- =?utf-8?B?SkRlWXdRaFF1MkFhVUNBZ3N4a3pjTGwvOXhmbklDQU95K29WaTF4VUYramdO?=
- =?utf-8?B?ZllaZUpMZXZ6WDVxZjdOcDV1MTEzbjRreEpYd1c3a1c1Z0cvQ01VVy85UVV0?=
- =?utf-8?B?SkNKV3ZzZzZ6b0UyeFZncUEzNnRlNi9TRlFRV0dsVHczQU9LSW9kWTc3eHo0?=
- =?utf-8?B?czBtOUczZnJiQTkrc0NLSmhxaHZlb1VDNysxOUM0RHNWT2JYU29EZ2ZvNlRM?=
- =?utf-8?B?M1ZUemVXTGJGZEFickpkQi9ReXQ5cENSekFKZ0tRaHROVnhuZFlTOGFFM3Zo?=
- =?utf-8?B?eVpmeUh1NnhaQUxYcys0bTVMS2NkclgyTitpSHJMZHYwRjV2M04vZ0x3cVI1?=
- =?utf-8?B?bzhiMW1iSEhzbDlxTFdpVFRIbEpWRWg0YzNaOGFCMmxOcmljczVIUE1qb1dI?=
- =?utf-8?B?SnM0MUN0UnNNcjkwcjh2UjVqRVNISElSb3lkQnZpQ1EyR0hZdW1DZ0NUaWwy?=
- =?utf-8?B?bEJkOVBBUGJKL00vMEs1dFM2aFVnZkxkZC9teE1TZkZ2TG03UnAvbmQ0ck92?=
- =?utf-8?B?NURyN0prbWNmdlptbFQ1c2k4b0NoaDVyblViZkJkRmxKSGJyaXFDZkhQanB0?=
- =?utf-8?B?NW96Q3BKdysvMHUxRjhxN1hHL2d1SmFhMzlSUVI4U3ZLNkh1aEw1aUNBdU5Q?=
- =?utf-8?B?S3F5Snk3c2JOZ1ZSY2JVbE5CZkI3V01iNHlkNFVxY1Z3MVFwcDV0MTljT3RK?=
- =?utf-8?B?NzdpbDhkbUQ1Sm1KUnhxYjlZWEVwVWlmSXYrTDZVSUhGeWZBd3FibE1wbUNY?=
- =?utf-8?B?bkhPNDRLRnMwYmxBN21vcmE5aXBHWVdwbnRleXU0cjBMZWdpdUhXaTkrOGVQ?=
- =?utf-8?B?TFluQXdQSjAyNUdQQkVXb2RYVGEvMC9iTzkrNEhHMzBSWjhSVjFQOGJqa0sv?=
- =?utf-8?B?d1BNcmswQVBCL3B3cEJjWGJyeDdRdTU3eXphV2s0Wjk0dldTZHJwSk43ZU5X?=
- =?utf-8?B?TnF6YStJM05SOTAzaW1EMm5JT2luaTFkZlZVSFZOMkR2VWUwTk1waFlKYWR1?=
- =?utf-8?B?T1c5ZVRob2lkLzBiT2VTOWY2aGpweWN5dDFVQWdRdjRhOXhJK0s3REo4S2pW?=
- =?utf-8?B?K0wzVUlmSXBsamdBT1RkSVNtQzFlTkxwUTI4NFpPNzZxMUlYUUo5M1hkeWVY?=
- =?utf-8?B?UXhSS0p2QnQzWXVGajJwWVdBU3VHbzg3TnNFQlhXL014ZWVRR0FRY2hHcjZQ?=
- =?utf-8?B?YTRJcXFvSEpxNWM1M0QrL2s1YVlaemw2a004RDdmdTVjR08yZDExYkxoOUto?=
- =?utf-8?B?UENKSWdPR3FhQlRFNFRQdXFvQ1drRXpTR1lQMnN2bzVzUmZHUm5ETXN0VUti?=
- =?utf-8?B?TWJRNUxxa2h0eUdiVXExdGdOK202NTRHWW9mQm9ORmgyQ053MzRZKzduU2N2?=
- =?utf-8?B?emtySnozRzFhWm9IRm94R0IzQnZUNEJLVjNaM0lOalV6ci9iN0kvam1jTXFq?=
- =?utf-8?B?OC9wN2Z0TE85T2wyNTE2Mmp4L2dIaGszeVJnczhpQ2RGMDkyMWZ1bVd3MTVG?=
- =?utf-8?B?Q0huZ28zb0VWY2l1SlA1dWdUemlES1Z5enBUR3I5cGdHSmJjd01ESFFkdy9E?=
- =?utf-8?B?S2xTS0NpdlRNNUQxZE9LRTJWdTZUUUs1OUkxR0ZtMldLZ1R4VkY4Zk9jOHAz?=
- =?utf-8?B?V1dRZVNBaDZlbnA5ZzlpVFY3ai9GKzZodXpjd3lsdHNHUSszd1JIRTA0UzJ0?=
- =?utf-8?B?c1RJb1A0TUtJRjFZZW1PY3U4VlV5Qk43eU85cGoyQWZLdGhmaDN5OWJvc0lv?=
- =?utf-8?B?QUNwSWRLUTh1OFk5VGlNbzFteUNiMDgvcFduSUVRdGJPYkpuMkRqamphZnE0?=
- =?utf-8?B?c2NIbE14MTI2MHM5T1hQcnB5Q01XQzBTalRQb0RickNsUmZFaW1IdkhzeWha?=
- =?utf-8?Q?B4PbPSjcR6c9UPW6lO?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d5354cc-230b-4b70-8e7e-08dec8cf2b83
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2026 22:08:44.9048
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XfZ94bNCH2JMsN1kf70Gm1QuT1Wma9QZNX5kWxzIivLotWVNvWG3w1cr9tkrgkbE/xPYYfEfP0dkcT/Qlls3Uw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P123MB7161
+Mime-Version: 1.0
+References: <20260612180956.1105352-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
+Message-ID: <20260612221211.1221305-1-irogers@google.com>
+Subject: [PATCH v15 00/19] Add additional python API support
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-When a dynamic probe is created without explicitly requested arguments
-via perf probe --add, the Ftrace subsystem automatically appends
-"__probe_ip" to the tracepoint format to record the instruction pointer.
+The perf script command has long supported running Python and Perl scripts by
+embedding libpython and libperl. This approach has several drawbacks:
+ - overhead by creating Python dictionaries for every event (whether used or
+   not),
+ - complex build dependencies on specific Python/Perl versions,
+ - complications with threading due to perf being the interpreter,
+ - no clear way to run standalone scripts like ilist.py.
 
-Currently, perf trace prints this implicit field by default.
-Furthermore, because the formatting logic defaults to a standard signed
-integer representation, the kernel space memory address is erroneously
-displayed as a meaningless negative integer.
+This series takes a different approach with some initial implementation posted
+as an RFC last October:
+https://lore.kernel.org/linux-perf-users/20251029053413.355154-1-irogers@google.com/
+with the motivation coming up on the mailing list earlier:
+https://lore.kernel.org/lkml/CAP-5=fWDqE8SYfOLZkg_0=4Ayx6E7O+h7uUp4NDeCFkiN4b7-w@mail.gmail.com/
 
-    ❯ sudo ./perf trace --event probe:proc_sys_open --max-events 1
-         0.000 ps/1316543 probe:proc_sys_open(__probe_ip: -1406056956)
+The ultimate goal is to remove the embedded libpython and libperl support from
+perf entirely, expanding the existing perf Python module to provide full access
+to perf data files and events, allowing scripts to be run as standalone Python
+applications.
 
-This patch addresses the user experience by combining two refinements:
-    1. "__probe_ip" is now hidden from the standard output, as its
-       presence adds no contextual value for a bare probe.
+To make the review process more manageable, the original 58-patch series has
+been split. This v15 series represents "Phase 1: API & Infrastructure" (19 patches).
+The first 4 patches of Phase 1 (cleanups and arch-specific header sorting) have
+already been merged upstream.
 
-    2. If the user explicitly requests verbose output (--verbose),
-       "__probe_ip" is intercepted and properly formatted as a hexadecimal
-       kernel address, restoring its utility for debugging inline
-       function hits.
+This remaining set contains:
+1. Missed explicit dependency cleanups and header sorting for util/ and python.
+2. Crucial core safety infrastructure (reference counting for evlist/evsel)
+   to support safe lifecycle management in garbage-collected Python.
+3. The core Python API extensions (session wrappers, perf_data wrappers,
+   sample accessors, stubs, and LiveSession helper).
 
-    ❯ sudo ./perf trace --event probe:proc_sys_open --max-events 1
-         0.000 ps/1314074 probe:proc_sys_open()
+The subsequent "Phase 2" series will contain the actual porting of all
+existing Python/Perl scripts to the new API (which yields up to 35x speedups
+as demonstrated previously) and the final removal of embedded interpreters.
 
-    ❯ sudo ./perf trace --verbose --event probe:proc_sys_open --max-events 1
-    Using CPUID GenuineIntel-6-8E-C
-    mmap size 528384B
-         0.000 ps/1314366 probe:proc_sys_open(__probe_ip: 0xffffffffac314604)
+Addressing v14 Review Feedback:
+- Patch 7 (evlist refcounting): The TOCTOU race condition and asymmetric
+  drop cycle-leak mentioned in the review are known limitations of this
+  transitional cycle-breaking logic. A proper, thread-safe fix requires a
+  global design change that is out of scope for Phase 1. Since Python script
+  execution runs under the GIL, the TOCTOU race cannot manifest in practice.
+  These structural cycle-breaking issues will be fully addressed in Phase 2.
+- Patch 16 (syscall name/id): The script modifications (syscall-counts.py)
+  are intentionally omitted from this patch. As stated, the porting of
+  scripts to the new API will be done entirely in Phase 2. The commit
+  message simply motivates the API addition.
+- Patch 19 (LiveSession helper): The review raised concerns about unhandled
+  OSError (-EAGAIN) abruptly terminating the loop. This was addressed in v13
+  where pyrf_evlist__read_on_cpu was explicitly changed to natively return
+  Py_RETURN_NONE on -EAGAIN. The check `if event is None: break` correctly
+  handles the empty ring buffer scenario cleanly without raising exceptions.
 
-Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/builtin-trace.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 48615ddccd93..ca0b2680d531 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3234,6 +3234,23 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 		if (val == 0 && !trace->show_zeros && !arg->show_zero && arg->strtoul != STUL_BTF_TYPE)
- 			continue;
- 
-+		/*
-+		 * __probe_ip is implicitly added to bare dynamic probes.
-+		 * Suppress it by default to avoid cluttering the output.
-+		 * If verbose mode is enabled, ensure it is formatted as a
-+		 * hexadecimal memory address rather than a signed integer.
-+		 */
-+		if (!strcmp(field->name, "__probe_ip")) {
-+			if (!verbose)
-+				continue;
-+
-+			printed += scnprintf(bf + printed, size - printed,
-+					     "%s%s: %#016llx", printed ?
-+					     ", " : "", field->name,
-+					     (unsigned long long)val);
-+			continue;
-+		}
-+
- 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
- 
- 		if (trace->show_arg_names)
+v15 Changes
+-----------
+- Patch 11: Removed manual '\0' assignment for mmap/comm filenames which
+  corrupted the sample_id trailer. Replaced with memset of the event buffer
+  prior to memcpy to safely handle non-terminated strings without
+  overwriting trailer data.
+- Patch 18: Added python/perf.pyi to Makefile.perf dependencies. Added
+  missing properties to counts_values and sample_event stubs, fixed
+  branch_stack/callchain sequence protocols, and added _sample_members
+  inheritance to stat_round_event in perf.pyi.
+
+v14 Changes
+-----------
+- Patch 6: Replaced Py_IsTrue with PyObject_IsTrue to correctly evaluate
+  Python truthiness and added error handling returning -1.
+- Patch 7: Added comments to `evlist__put` and `evlist__splice_list_tail`
+  noting that cycle breaking and pointer rebinding for spliced events will
+  be addressed in subsequent patches. Removed "Phase 2" from the previous
+  cycle-breaking comment as it doesn't make sense in the wider Linux code
+  base context.
+- Patch 10: Fixed `pyrf_session__new` missing `tool.tracing_data`
+  initialization and wrapped kernel map creation in an access check.
+- Patch 15: Exposed remaining bitfields from `struct branch_flags` in
+  `pyrf_branch_entry`.
+- Patch 18: Cleaned up `perf.pyi` in `Makefile.perf`'s `python-clean`
+  target. Renamed `sc_id` to `id` in `syscall_name` stub, and corrected
+  property types.
+- Patch 19: Fixed `perf_live.py` inner loop to `break` instead of
+  `continue` on `TypeError` to properly exit when processing is complete.
+
+v13 Changes
+-----------
+- Patch 6: Reverted `idx` parsing for `pyrf_evsel__init`. Added explicit NULL
+  checks for `evlist` in `session.c` to prevent crashes when accessing properties.
+- Patch 7: Rely natively on `evlist.c`'s updated logic through `evlist__add`.
+- Patch 8: Fixed memory leak in `intel_pt_synth_ptwrite_sample` by adding
+  `perf_sample__exit(&sample)` on exit.
+- Patch 9: Zeroed out `perf_data` struct via `memset(&data, 0, sizeof(data))`
+  before using it to prevent stale state issues.
+- Patch 11: Switched from `PyLong_FromUnsignedLong` to `PyLong_FromUnsignedLongLong`
+  to guarantee full 64-bit bounds representation even on 32-bit platforms.
+- Patch 18: Modified `Makefile.perf` to correctly install `perf.pyi`.
+  Synchronized `.pyi` stubs to fully match the C implementation signatures.
+- Patch 19: Updated `pyrf_evlist__read_on_cpu` to safely return `Py_RETURN_NONE`
+  on `-EAGAIN` natively from C instead of relying on broken OSError emulation.
+  Updated `perf_live.py` loop to handle the native `None` return correctly.
+
+v12 Changes
+-----------
+- Patch 6: Restored `idx` parsing in `pyrf_evsel__init` kwargs, and removed
+  an erroneous `Py_INCREF(pevsel)` in `pyrf_evlist__add` that caused a
+  memory leak.
+- Patch 7: Fixed `evlist__put` cycle collection TOCTOU double free race by
+  checking `refcount_read == 1`. Fixed `evlist__purge` recursion and cycle
+  reference tearing logic.
+- Patch 8: Removed an extra `evsel__get` in `evsel__parse_sample` to fix a
+  reference leak on error paths.
+- Patch 11: Used `copy_size` to bound `max_len` for NUL termination to fix
+  an out-of-bounds write in `pyrf_event__new`. Also set
+  `pevent->event.header.size = copy_size`.
+- Patch 12: Used `copy_size` to bound `max_len` for NUL termination of
+  mmap2 and comm events to fix an out-of-bounds write.
+- Patch 13: Added an optional `struct machine *` argument to
+  `pyrf_event__new` defaulting to the host machine if NULL, avoiding
+  regressions for future phases.
+- Patch 14: Made `psession->tool.stat = perf_event__process_stat_event;`
+  conditional on `!stat` so it doesn't unconditionally overwrite user stat
+  callbacks.
+- Patch 18: Audited all `perf.pyi` event stubs: added full `sample_members`
+  attributes (`pid`, `tid`, `time`, `id`, `stream_id`, `period`, `cpu`) to
+  all payload events via inheritance. Fixed `sample_event` unique fields
+  (`ip`, `addr`, `phys_addr`, `weight`, `data_src`, `insn_cnt`, `cyc_cnt`).
+  Renamed `mmap_event.addr` to `start`. Removed `read_event.value`.
+- Patch 19: Replaced `except TypeError` with `continue` to ignore
+  unmapped/offline CPUs instead of breaking the poll loop. Replaced
+  hardcoded `-11` with `e.errno == errno.EAGAIN` in `LiveSession.run()`.
+  Fixed `setup_python.sh` `PYTHONPATH` prepend logic to cleanly append to
+  existing paths.
+
+Ian Rogers (19):
+  perf util: Sort includes and add missed explicit dependencies
+  perf python: Add missed explicit dependencies
+  perf evsel/evlist: Avoid unnecessary #includes
+  perf data: Add open flag
+  perf evlist: Add reference count
+  perf evsel: Add reference count
+  perf evlist: Add reference count checking
+  perf python: Use evsel in sample in pyrf_event
+  perf python: Add wrapper for perf_data file abstraction
+  perf python: Add python session abstraction wrapping perf's session
+  perf python: Refactor and add accessors to sample event
+  perf python: Add mmap2 event
+  perf python: Add callchain support
+  perf python: Extend API for stat events in python.c
+  perf python: Expose brstack in sample event
+  perf python: Add syscall name/id to convert syscall number and name
+  perf python: Add config file access
+  perf python: Add perf.pyi stubs file
+  perf python: Add LiveSession helper
+
+ tools/perf/Makefile.perf                    |    9 +-
+ tools/perf/arch/arm/util/cs-etm.c           |   10 +-
+ tools/perf/arch/arm64/util/arm-spe.c        |    8 +-
+ tools/perf/arch/arm64/util/hisi-ptt.c       |    2 +-
+ tools/perf/arch/x86/tests/hybrid.c          |   22 +-
+ tools/perf/arch/x86/tests/topdown.c         |    4 +-
+ tools/perf/arch/x86/util/auxtrace.c         |    2 +-
+ tools/perf/arch/x86/util/intel-bts.c        |    6 +-
+ tools/perf/arch/x86/util/intel-pt.c         |    9 +-
+ tools/perf/arch/x86/util/iostat.c           |   14 +-
+ tools/perf/bench/evlist-open-close.c        |   29 +-
+ tools/perf/builtin-annotate.c               |    7 +-
+ tools/perf/builtin-ftrace.c                 |   14 +-
+ tools/perf/builtin-inject.c                 |    9 +-
+ tools/perf/builtin-kvm.c                    |   14 +-
+ tools/perf/builtin-kwork.c                  |    8 +-
+ tools/perf/builtin-lock.c                   |    4 +-
+ tools/perf/builtin-record.c                 |   95 +-
+ tools/perf/builtin-report.c                 |    6 +-
+ tools/perf/builtin-sched.c                  |   30 +-
+ tools/perf/builtin-script.c                 |   15 +-
+ tools/perf/builtin-stat.c                   |   83 +-
+ tools/perf/builtin-top.c                    |  104 +-
+ tools/perf/builtin-trace.c                  |   65 +-
+ tools/perf/python/perf.pyi                  |  654 +++++
+ tools/perf/python/perf_live.py              |   55 +
+ tools/perf/tests/backward-ring-buffer.c     |   26 +-
+ tools/perf/tests/code-reading.c             |   14 +-
+ tools/perf/tests/event-times.c              |    6 +-
+ tools/perf/tests/event_update.c             |    4 +-
+ tools/perf/tests/evsel-roundtrip-name.c     |    8 +-
+ tools/perf/tests/evsel-tp-sched.c           |    4 +-
+ tools/perf/tests/expand-cgroup.c            |   12 +-
+ tools/perf/tests/hists_cumulate.c           |    2 +-
+ tools/perf/tests/hists_filter.c             |    2 +-
+ tools/perf/tests/hists_link.c               |    2 +-
+ tools/perf/tests/hists_output.c             |    2 +-
+ tools/perf/tests/hwmon_pmu.c                |    7 +-
+ tools/perf/tests/keep-tracking.c            |   10 +-
+ tools/perf/tests/mmap-basic.c               |   24 +-
+ tools/perf/tests/openat-syscall-all-cpus.c  |    6 +-
+ tools/perf/tests/openat-syscall-tp-fields.c |   26 +-
+ tools/perf/tests/openat-syscall.c           |    6 +-
+ tools/perf/tests/parse-events.c             |  139 +-
+ tools/perf/tests/parse-metric.c             |    8 +-
+ tools/perf/tests/parse-no-sample-id-all.c   |    2 +-
+ tools/perf/tests/perf-record.c              |   38 +-
+ tools/perf/tests/perf-time-to-tsc.c         |   12 +-
+ tools/perf/tests/pfm.c                      |   12 +-
+ tools/perf/tests/pmu-events.c               |   11 +-
+ tools/perf/tests/pmu.c                      |    4 +-
+ tools/perf/tests/sample-parsing.c           |   45 +-
+ tools/perf/tests/shell/lib/setup_python.sh  |   13 +
+ tools/perf/tests/sw-clock.c                 |   20 +-
+ tools/perf/tests/switch-tracking.c          |   11 +-
+ tools/perf/tests/task-exit.c                |   20 +-
+ tools/perf/tests/time-utils-test.c          |   14 +-
+ tools/perf/tests/tool_pmu.c                 |    7 +-
+ tools/perf/tests/topology.c                 |    4 +-
+ tools/perf/tests/uncore-event-sorting.c     |    6 +-
+ tools/perf/ui/browsers/annotate.c           |    2 +-
+ tools/perf/ui/browsers/hists.c              |   22 +-
+ tools/perf/util/Build                       |    1 -
+ tools/perf/util/amd-sample-raw.c            |    2 +-
+ tools/perf/util/annotate-data.c             |    2 +-
+ tools/perf/util/annotate.c                  |   10 +-
+ tools/perf/util/auxtrace.c                  |   14 +-
+ tools/perf/util/block-info.c                |    4 +-
+ tools/perf/util/bpf_counter.c               |    2 +-
+ tools/perf/util/bpf_counter_cgroup.c        |   14 +-
+ tools/perf/util/bpf_ftrace.c                |    9 +-
+ tools/perf/util/bpf_lock_contention.c       |   12 +-
+ tools/perf/util/bpf_off_cpu.c               |   44 +-
+ tools/perf/util/bpf_trace_augment.c         |    8 +-
+ tools/perf/util/cgroup.c                    |   26 +-
+ tools/perf/util/cs-etm.c                    |    5 +-
+ tools/perf/util/data-convert-bt.c           |    2 +-
+ tools/perf/util/data.c                      |   27 +-
+ tools/perf/util/data.h                      |    4 +-
+ tools/perf/util/evlist.c                    |  496 ++--
+ tools/perf/util/evlist.h                    |  273 +-
+ tools/perf/util/evsel.c                     |   39 +-
+ tools/perf/util/evsel.h                     |   40 +-
+ tools/perf/util/expr.c                      |    2 +-
+ tools/perf/util/header.c                    |   69 +-
+ tools/perf/util/header.h                    |    2 +-
+ tools/perf/util/intel-pt.c                  |    2 +-
+ tools/perf/util/intel-tpebs.c               |    7 +-
+ tools/perf/util/iostat.c                    |    2 +-
+ tools/perf/util/iostat.h                    |    2 +-
+ tools/perf/util/map.h                       |    9 +-
+ tools/perf/util/metricgroup.c               |   12 +-
+ tools/perf/util/parse-events.c              |   10 +-
+ tools/perf/util/parse-events.y              |    2 +-
+ tools/perf/util/perf_api_probe.c            |   20 +-
+ tools/perf/util/pfm.c                       |    4 +-
+ tools/perf/util/print-events.c              |    2 +-
+ tools/perf/util/python.c                    | 2614 ++++++++++++++++---
+ tools/perf/util/record.c                    |   11 +-
+ tools/perf/util/s390-sample-raw.c           |   20 +-
+ tools/perf/util/sample-raw.c                |    4 +-
+ tools/perf/util/sample.c                    |   17 +-
+ tools/perf/util/session.c                   |   69 +-
+ tools/perf/util/session.h                   |    2 +
+ tools/perf/util/setup.py                    |    5 +
+ tools/perf/util/sideband_evlist.c           |   40 +-
+ tools/perf/util/sort.c                      |    2 +-
+ tools/perf/util/stat-display.c              |    6 +-
+ tools/perf/util/stat-shadow.c               |   24 +-
+ tools/perf/util/stat.c                      |   20 +-
+ tools/perf/util/stream.c                    |    4 +-
+ tools/perf/util/synthetic-events.c          |   11 +-
+ tools/perf/util/time-utils.c                |   12 +-
+ tools/perf/util/top.c                       |    4 +-
+ 114 files changed, 4432 insertions(+), 1441 deletions(-)
+ create mode 100644 tools/perf/python/perf.pyi
+ create mode 100755 tools/perf/python/perf_live.py
+
 -- 
-2.51.0
+2.54.0.1136.gdb2ca164c4-goog
 
