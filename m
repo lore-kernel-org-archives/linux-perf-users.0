@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AFC328B62
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A8C3D170B
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781302360; cv=none; b=uz2xWn3XvgQYR9Vd2IB0brm/okFM8RCOkBHwie/obgohdEl++iZEsHGmvvCJP1jpih+sR+m1JTBTO/JLttdmJw8NdVwRcFa1xUzpc9Z1hHkkC1Oy14uKbi5MZJkg9FnIrq1eLYab7oXTXbc1gEJZ45oMpCZZ6I5RXKt1OnpUpyk=
+	t=1781302363; cv=none; b=hsWJUHqV99bKPS3oCtGUvOz1bMMf9X5hCILdL78RPDb4zv8838hHB0j+wpVKlUXeJ74RkRGa7Q3SSWB0SQ4uANxI7omM/52+dOYGwS3eOX0e8QYcu1l1fWWTb/EIYCy6WGDV4gwby9V5fzltizgLufnXdFvwBXa+0ScBMBotmcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781302360; c=relaxed/simple;
-	bh=H6bwtJ2C6+1+XZrMDYNTqA9vOpa4fGupu5BK7K6cYPE=;
+	s=arc-20240116; t=1781302363; c=relaxed/simple;
+	bh=BmN+uIK2KozJ/CmJ6jybIyW1ngHuqgsLL5Q2oJs/n+Y=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KQX0YS0qozNmF3JN03/j52nNjkJol7E4vGb9d9v9lz0JQVLF0IuxageyRXSUSuaj9fTDeJD1fzkQWbygvcnQM1PK9DulLo427qe13A+Mmcg056owZ6v/2+TBafTYgQ/kVajNlWx+6oIpZLx2mdjOL5fxACx3CiJLS1c5ZFZJVEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cow54MzN; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=cXNfstSezAvrNn9bFh+UBhvtgu1BnQLyH8hKujGoq/XRqpue0LGbDTvn7GcUISEjIWSuOKRZwkjfodR1VXizfjTCYnNXghbgIOeSYRtDdtV/80/5cuA++OdR7o21PSKJG3pHH5VDKm7Ie/5R2HhkcYLBP+lbP4YL3O9ZhJ9Qpxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DyW3xGKl; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cow54MzN"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304d8613efbso1841876eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 15:12:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DyW3xGKl"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304f23c55b2so2044174eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 15:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781302358; x=1781907158; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781302360; x=1781907160; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G8ZZr5/kHTP8AME7TbpDnum2m/d0OHSaO2Xhj4KNO6Y=;
-        b=Cow54MzNImJHLF2yAF/TfDGFJ5Y4k0DMYb9mpqMEF6CtxuF5OvnZvLdWVbmChQAfEX
-         cZ+TX2rOViMtaMn0nZxBO6qwVFLoxVQkae2UfyrPLsq4x+TmIJsK/7kgw2L4QpEC724p
-         KcaYhrz5nUYGo8lInDylY3NunkvUMcdRRI2FM4K5/EZ7nfM42EoPxtB6hWcK6ghD2X1E
-         j+Pq9aoZXRfrN8iKujcvQtE//jhebobtM3LP8QJGj6XbPwOH2F83ZkvQ+7K4U7CzLUvg
-         Sxg/Ic1GzJxpOK0+mWgi11Oi802AD/UR5wGF1Cs121Fx5BB0QimXEV9/vFgikv0gydRp
-         dJ1w==
+        bh=VvL9FN3niBRwopfeT8jFF2/cj8/ZhVUpeFaQcjlgPs4=;
+        b=DyW3xGKlf6ELyNdDO7uHfufrA0sPI+aa9Xh3rFJiYS5j0AuV52BZJ8Ttzlee8InN6C
+         HCYWe8xwRpl2FPZ1iCZnk031BWG88otuHYlrT9vTGFp+3uUba3Pd/X6iBgFeSh2QYrRN
+         ViSjDFDTpI4A44J8ebkU7MkqJs0YR3ZQXUROj0rjhP8b7GBNTO8dZpL8K1oEyTGqqUHb
+         kF2m1NWiZO552OOg9M+mdYc1h5DzEoTm8EvafyQc+jNpTQTtC8nYVz8k1DqZDqUkOMZl
+         lDtRhVyGQR6FK0NnWKZiJFUf6ADmrJpygd5hjVZR2O67yY2QSJeqtdURjJXTe+74SJTA
+         a0Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781302358; x=1781907158;
+        d=1e100.net; s=20251104; t=1781302360; x=1781907160;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G8ZZr5/kHTP8AME7TbpDnum2m/d0OHSaO2Xhj4KNO6Y=;
-        b=FEof62mVwMCy/q9CnXRuKxdjFUhcc+uG42HY+N0CR3ThbtUYuX8K2c7NIQ2+/TE1dd
-         WNgaikrR2kB3qXgAdFi4vNtkEZxX1fauCPa8KSKybynWf881bCVIJv6vuJmrbPW+w7uK
-         rXtvSmqw0h2TsqA9FhAzU4eML3X5ZBWfFEjHBRJoB6+BjGrZese6XBuOOZQ4ktbH1zvv
-         q9QjQIjYznn+gN3LKoNEA4r8Lzmm5+soKb2mGPLymUt22rBXB3bDf4m1Lv8pwodoode/
-         Kpi5/34gNS5oyqyZCDStO9DTKrmApMQA7s3WbV4jfTMYnhhf8yDuhOoCel8t7FPMmU9j
-         neEQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9PzK4Rfj+H61Gk0tIUAg65bZzemzx3MkG8VU3QqgDDCA6x6t7aZOYNiMoNDSwncAIO8pRGsDF7qVdUOJ3ZYKV8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2wWzsWjBm9eu0NBXmX0gtDE83ioLl3fAnsxqVlpH0ZjjEsZYl
-	jtZMTphEdi9volSK3Zv2NfpPorprwpJV0hbgq7T9jG6prAa/92Dn9zNBnvWgs0TgzsQgKvocfFR
-	J1othdmr42g==
-X-Received: from dyp25.prod.google.com ([2002:a05:693c:65d9:b0:304:de31:a7b2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7fa1:b0:304:997c:d4b6
- with SMTP id 5a478bee46e88-3082004b852mr3039509eec.17.1781302357666; Fri, 12
- Jun 2026 15:12:37 -0700 (PDT)
-Date: Fri, 12 Jun 2026 15:11:53 -0700
+        bh=VvL9FN3niBRwopfeT8jFF2/cj8/ZhVUpeFaQcjlgPs4=;
+        b=WPiJQnqSExTbqwGdW/NHN19QZ2xHEo5EVWCkhpBEM5cfEngFIb+eFfLWnilyq2imSO
+         P43r89DZM9D/CM9gBXzIFB63//4CtLOdV5dj13x03MwaF7878Wvhla+3fuUNnzh89rzP
+         WAMBJdpMsHvwrpg8iVekWvKPgNHYflNqDgWXKr5VJ96fX+sSIt5UaCDsfpY+ehbrK007
+         I6lsItvsDUe9WMLHGUrXIsFI6ak4uvFhcGKr4IrBS5U6P7y8yk5vQzKC3aA7pzWh+7fN
+         +ZcPAr50MLy1yxcegdybuFkYYePE1nxBuqocKAfl3soKI1QFtu/olxTCdkgqiQb+tG8p
+         Xyww==
+X-Forwarded-Encrypted: i=1; AFNElJ/mP6ZxTqHQkAkmd9sWp58k62Qh/KL53ie0ZJgL/7XxfDW5FeLZtmaj5HFStR83u/OXr9XpLyKlncdA2xOCQVyy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+W1Shb4LirGh/FL3TqPcFI+1AkBFuj6yr1CN8bs/2mlgzx0YI
+	Q9TMIOgPcBy/rVOCnTJOCtQc4n4V77dAuzPvi/5y9YEew8kmWDnXfo5/Nk7ifjyLpcEMVWl2oJn
+	4aVYaIMCpZA==
+X-Received: from dybmc34.prod.google.com ([2002:a05:7301:19a2:b0:307:d71d:34a7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:2293:b0:304:5db8:da95
+ with SMTP id 5a478bee46e88-30820093b4bmr2675697eec.23.1781302359769; Fri, 12
+ Jun 2026 15:12:39 -0700 (PDT)
+Date: Fri, 12 Jun 2026 15:11:54 -0700
 In-Reply-To: <20260612221211.1221305-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260612180956.1105352-1-irogers@google.com> <20260612221211.1221305-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260612221211.1221305-2-irogers@google.com>
-Subject: [PATCH v15 01/19] perf util: Sort includes and add missed explicit dependencies
+Message-ID: <20260612221211.1221305-3-irogers@google.com>
+Subject: [PATCH v15 02/19] perf python: Add missed explicit dependencies
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,371 +68,92 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Fix missing includes found while cleaning the evsel/evlist header
-files. Sort the remaining header files for consistency with the rest
-of the code.
+Fix missing #include of pmus.h found while cleaning the evsel/evlist
+header files.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Also define PY_SSIZE_T_CLEAN before including Python.h to comply with
+modern Python 3 C-API requirements, and introduce CHECK_INITIALIZED
+and CHECK_INITIALIZED_INT safety macros to be used by subsequent patches.
+
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf_off_cpu.c       | 30 +++++-----
- tools/perf/util/bpf_trace_augment.c |  8 +--
- tools/perf/util/evlist.c            | 91 +++++++++++++++--------------
- tools/perf/util/map.h               |  9 ++-
- tools/perf/util/perf_api_probe.c    | 18 +++---
- tools/perf/util/s390-sample-raw.c   | 19 +++---
- tools/perf/util/stat-shadow.c       | 20 ++++---
- tools/perf/util/stat.c              | 16 +++--
- 8 files changed, 113 insertions(+), 98 deletions(-)
+ tools/perf/util/python.c | 41 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 32 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index a3b699a5322f..48cb930cdd2e 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -1,23 +1,25 @@
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index cc1019d29a5d..98a8dd9b673d 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -1,30 +1,37 @@
  // SPDX-License-Identifier: GPL-2.0
--#include "util/bpf_counter.h"
--#include "util/debug.h"
--#include "util/evsel.h"
--#include "util/evlist.h"
--#include "util/off_cpu.h"
--#include "util/perf-hooks.h"
--#include "util/record.h"
--#include "util/session.h"
--#include "util/target.h"
--#include "util/cpumap.h"
--#include "util/thread_map.h"
--#include "util/cgroup.h"
--#include "util/strlist.h"
-+#include <linux/time64.h>
++#define PY_SSIZE_T_CLEAN
+ #include <Python.h>
+-#include <structmember.h>
 +
- #include <bpf/bpf.h>
- #include <bpf/btf.h>
- #include <internal/xyarray.h>
--#include <linux/time64.h>
- 
-+#include "bpf_counter.h"
- #include "bpf_skel/off_cpu.skel.h"
-+#include "cgroup.h"
-+#include "cpumap.h"
-+#include "debug.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "off_cpu.h"
-+#include "parse-events.h"
-+#include "perf-hooks.h"
-+#include "record.h"
-+#include "session.h"
-+#include "strlist.h"
-+#include "target.h"
-+#include "thread_map.h"
- 
- #define MAX_STACKS  32
- #define MAX_PROC  4096
-diff --git a/tools/perf/util/bpf_trace_augment.c b/tools/perf/util/bpf_trace_augment.c
-index 9e706f0fa53d..a9cf2a77ded1 100644
---- a/tools/perf/util/bpf_trace_augment.c
-+++ b/tools/perf/util/bpf_trace_augment.c
-@@ -1,11 +1,11 @@
- #include <bpf/libbpf.h>
- #include <internal/xyarray.h>
- 
--#include "util/debug.h"
--#include "util/evlist.h"
--#include "util/trace_augment.h"
--
- #include "bpf_skel/augmented_raw_syscalls.skel.h"
-+#include "debug.h"
-+#include "evlist.h"
-+#include "parse-events.h"
-+#include "trace_augment.h"
- 
- static struct augmented_raw_syscalls_bpf *skel;
- static struct evsel *bpf_output;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1a238b245b3a..ab6bf5e935f4 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -5,67 +5,68 @@
-  * Parts came from builtin-{top,stat,record}.c, see those files for further
-  * copyright notes.
-  */
--#include <api/fs/fs.h>
-+#include "evlist.h"
-+
- #include <errno.h>
  #include <inttypes.h>
 -#include <poll.h>
--#include "cpumap.h"
--#include "util/mmap.h"
--#include "thread_map.h"
--#include "target.h"
--#include "dwarf-regs.h"
--#include "evlist.h"
--#include "evsel.h"
--#include "record.h"
--#include "debug.h"
--#include "units.h"
--#include "bpf_counter.h"
--#include <internal/lib.h> // page_size
--#include "affinity.h"
--#include "../perf.h"
--#include "asm/bug.h"
--#include "bpf-event.h"
--#include "util/event.h"
--#include "util/string2.h"
--#include "util/perf_api_probe.h"
--#include "util/evsel_fprintf.h"
--#include "util/pmu.h"
--#include "util/sample.h"
--#include "util/bpf-filter.h"
--#include "util/stat.h"
--#include "util/util.h"
--#include "util/env.h"
--#include "util/intel-tpebs.h"
--#include "util/metricgroup.h"
--#include "util/strbuf.h"
- #include <signal.h>
--#include <unistd.h>
--#include <sched.h>
- #include <stdlib.h>
- 
--#include "parse-events.h"
--#include <subcmd/parse-options.h>
--
- #include <fcntl.h>
--#include <sys/ioctl.h>
--#include <sys/mman.h>
--#include <sys/prctl.h>
--#include <sys/timerfd.h>
--#include <sys/wait.h>
--
- #include <linux/bitops.h>
-+#include <linux/err.h>
- #include <linux/hash.h>
- #include <linux/log2.h>
--#include <linux/err.h>
- #include <linux/string.h>
- #include <linux/time64.h>
- #include <linux/zalloc.h>
-+#include <poll.h>
-+#include <sched.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <sys/prctl.h>
-+#include <sys/timerfd.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
 +
-+#include <api/fs/fs.h>
-+#include <internal/lib.h> // page_size
-+#include <internal/xyarray.h>
-+#include <perf/cpumap.h>
- #include <perf/evlist.h>
- #include <perf/evsel.h>
--#include <perf/cpumap.h>
+ #include <linux/err.h>
++#include <poll.h>
++
++#include <internal/lib.h>
+ #include <perf/cpumap.h>
+-#ifdef HAVE_LIBTRACEEVENT
+-#include <event-parse.h>
+-#endif
  #include <perf/mmap.h>
-+#include <subcmd/parse-options.h>
- 
--#include <internal/xyarray.h>
-+#include "../perf.h"
-+#include "affinity.h"
-+#include "asm/bug.h"
-+#include "bpf-event.h"
-+#include "bpf-filter.h"
-+#include "bpf_counter.h"
-+#include "cpumap.h"
-+#include "debug.h"
-+#include "dwarf-regs.h"
-+#include "env.h"
++#include <structmember.h>
++
+ #include "callchain.h"
+ #include "counts.h"
 +#include "event.h"
-+#include "evsel.h"
-+#include "evsel_fprintf.h"
-+#include "intel-tpebs.h"
+ #include "evlist.h"
+ #include "evsel.h"
+-#include "event.h"
+ #include "expr.h"
 +#include "metricgroup.h"
 +#include "mmap.h"
-+#include "parse-events.h"
-+#include "perf_api_probe.h"
-+#include "pmu.h"
 +#include "pmus.h"
-+#include "record.h"
-+#include "sample.h"
-+#include "stat.h"
-+#include "strbuf.h"
-+#include "string2.h"
-+#include "target.h"
-+#include "thread_map.h"
-+#include "units.h"
-+#include "util.h"
- 
- #ifdef LACKS_SIGQUEUE_PROTOTYPE
- int sigqueue(pid_t pid, int sig, const union sigval value);
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 979b3e11b9bc..fb0279810ae9 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -2,14 +2,13 @@
- #ifndef __PERF_MAP_H
- #define __PERF_MAP_H
- 
--#include <linux/refcount.h>
--#include <linux/compiler.h>
--#include <linux/list.h>
--#include <linux/rbtree.h>
-+#include <stdbool.h>
- #include <stdio.h>
- #include <string.h>
--#include <stdbool.h>
-+
-+#include <linux/refcount.h>
- #include <linux/types.h>
-+
- #include <internal/rc_check.h>
- 
- struct dso;
-diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_api_probe.c
-index 6ecf38314f01..e1904a330b28 100644
---- a/tools/perf/util/perf_api_probe.c
-+++ b/tools/perf/util/perf_api_probe.c
-@@ -1,14 +1,18 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#include "perf_api_probe.h"
- 
--#include "perf-sys.h"
--#include "util/cloexec.h"
--#include "util/evlist.h"
--#include "util/evsel.h"
--#include "util/parse-events.h"
--#include "util/perf_api_probe.h"
--#include <perf/cpumap.h>
- #include <errno.h>
- 
-+#include <perf/cpumap.h>
-+
-+#include "cloexec.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "parse-events.h"
-+#include "perf-sys.h"
-+#include "pmu.h"
-+#include "pmus.h"
-+
- typedef void (*setup_probe_fn_t)(struct evsel *evsel);
- 
- static int perf_do_probe_api(setup_probe_fn_t fn, struct perf_cpu cpu, const char *str)
-diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-index 52bbca5c56c8..01111c4e3488 100644
---- a/tools/perf/util/s390-sample-raw.c
-+++ b/tools/perf/util/s390-sample-raw.c
-@@ -12,25 +12,26 @@
-  * sample was taken from.
-  */
- 
--#include <unistd.h>
-+#include <inttypes.h>
- #include <stdio.h>
- #include <string.h>
--#include <inttypes.h>
- 
--#include <sys/stat.h>
-+#include <asm/byteorder.h>
- #include <linux/compiler.h>
- #include <linux/err.h>
--#include <asm/byteorder.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
- 
-+#include "color.h"
- #include "debug.h"
--#include "session.h"
- #include "evlist.h"
--#include "color.h"
- #include "hashmap.h"
--#include "sample-raw.h"
-+#include "pmu.h"
-+#include "pmus.h"
- #include "s390-cpumcf-kernel.h"
--#include "util/pmu.h"
--#include "util/sample.h"
-+#include "sample-raw.h"
-+#include "sample.h"
-+#include "session.h"
- 
- static size_t ctrset_size(struct cf_ctrset_entry *set)
- {
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index c17373bb0e1e..35062f964618 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -2,20 +2,24 @@
- #include <errno.h>
- #include <math.h>
- #include <stdio.h>
--#include "evsel.h"
--#include "stat.h"
-+
-+#include <linux/zalloc.h>
-+
-+#include "cgroup.h"
- #include "color.h"
- #include "debug.h"
--#include "pmu.h"
--#include "rblist.h"
- #include "evlist.h"
-+#include "evsel.h"
- #include "expr.h"
--#include "metricgroup.h"
--#include "cgroup.h"
--#include "units.h"
-+#include "hashmap.h"
- #include "iostat.h"
--#include "util/hashmap.h"
-+#include "metricgroup.h"
-+#include "pmu.h"
-+#include "pmus.h"
-+#include "rblist.h"
-+#include "stat.h"
- #include "tool_pmu.h"
-+#include "units.h"
- 
- static bool tool_pmu__is_time_event(const struct perf_stat_config *config,
- 				   const struct evsel *evsel, int *tool_aggr_idx)
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 14d169e22e8f..66eb9a66a4f7 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -1,21 +1,25 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "stat.h"
-+
- #include <errno.h>
--#include <linux/err.h>
- #include <inttypes.h>
- #include <math.h>
- #include <string.h>
-+
-+#include <linux/err.h>
-+#include <linux/zalloc.h>
-+
- #include "counts.h"
- #include "cpumap.h"
- #include "debug.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "hashmap.h"
- #include "header.h"
--#include "stat.h"
-+#include "pmu.h"
- #include "session.h"
- #include "target.h"
--#include "evlist.h"
--#include "evsel.h"
+ #include "print_binary.h"
+ #include "record.h"
+ #include "strbuf.h"
  #include "thread_map.h"
--#include "util/hashmap.h"
--#include <linux/zalloc.h>
+ #include "tp_pmu.h"
+ #include "trace-event.h"
+-#include "metricgroup.h"
+-#include "mmap.h"
+ #include "util/sample.h"
+-#include <internal/lib.h>
++
++#ifdef HAVE_LIBTRACEEVENT
++#include <event-parse.h>
++#endif
  
- void update_stats(struct stats *stats, u64 val)
- {
+ PyMODINIT_FUNC PyInit_perf(void);
+ 
+@@ -38,6 +45,22 @@ PyMODINIT_FUNC PyInit_perf(void);
+ 	  offsetof(struct pyrf_event, sample) + offsetof(struct perf_sample, member), \
+ 	  0, help }
+ 
++#define CHECK_INITIALIZED(ptr, msg) \
++	do { \
++		if (!(ptr)) { \
++			PyErr_SetString(PyExc_ValueError, msg " not initialized"); \
++			return NULL; \
++		} \
++	} while (0)
++
++#define CHECK_INITIALIZED_INT(ptr, msg) \
++	do { \
++		if (!(ptr)) { \
++			PyErr_SetString(PyExc_ValueError, msg " not initialized"); \
++			return -1; \
++		} \
++	} while (0)
++
+ struct pyrf_event {
+ 	PyObject_HEAD
+ 	struct evsel *evsel;
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
