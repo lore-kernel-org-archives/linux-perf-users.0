@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3733D3D1C;
-	Fri, 12 Jun 2026 22:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6633A3D3CE9;
+	Fri, 12 Jun 2026 22:25:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781303107; cv=none; b=cJp/8al8l6Hh0RledD+Jq7KTbUU1r4FnC++NqfIe+AHiwQt0v2391JSPyM6LUS1rUtUwryhrDpO5xiAYlxfeiXTggeUR10IssMbFmFrryjuUaTdtwj/pN8gAK+VlMeVHny1ESTCUdKUBToc7fO17c+kjO6gN9uxOAZrKGdRjPOE=
+	t=1781303111; cv=none; b=tqDaX5kO0rlkstBEkMSyuP81CHSVFDukRtPMq5WfFJ92mC86nfbe9iHyg4Jhziiq4TTbUgB07DBis8ASPF4yRY/G6yHbfeGXIfH9vRQwnRVqLqiNQd029QlHBv+HN2seef0CtTt/noMxlYG/NwBNDEp0pPAJtQR2iwVoYjLRmzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781303107; c=relaxed/simple;
-	bh=+6JaWrJ4iYQzg7eXzGi6/vMHqUpYgAZPzmfdfjpBfVU=;
+	s=arc-20240116; t=1781303111; c=relaxed/simple;
+	bh=GXlCAYc/wiYVnIcVPlIX5bDt1XP0wizicv3+T7JYVO4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JGU2OUbrqxOaD0M+XRDA28Ggxngki+YjRwgDzN9ghhT5AYg22KAUOuHFlJHIx+DPFRI3HNrzf9FOR0+4BCfzrxqHaWQxJc0fatoYF1+84JFcYmj3kFymhEFAGSprrEkhJ+KesAmJ2GxEgmu87rk87ogZDoGxrhcOmN0JkbdB3jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cw/8Mobm; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=byaSaQ4yhav9inA0Te6X5F7v9hjW/STdDpMDPMd68Tm/30Ye4AE3FCNe14WDmLd7uWRbPbfpK0im//frhRTSDoPN1f1HxPjGjvzwLHdAvcZwTT4lVcg2miVAGRxuY1ndWm8TgfEUS1D7dDK94iAG51vRNefGprweufKaLPIA7ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiF5R9s0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cw/8Mobm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8FB1F000E9;
-	Fri, 12 Jun 2026 22:25:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiF5R9s0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D30D1F00A3A;
+	Fri, 12 Jun 2026 22:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781303106;
-	bh=qzTzsD/ccVOr8cDLM4jg2BBitA/CpaStF8lfTIgjIOc=;
+	s=k20260515; t=1781303110;
+	bh=hZKS4YqbQfqB0BFnDGSkIr0t9y7HmMKGZUr7+M+vtWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Cw/8Mobm5L9/BU7Kpppzd3YNUAAxfXp9wePX+sqqVxS/JmTHMxaIWO6y42e9Ykbdg
-	 2eKztTcA73/AqOJRym4oYn+CGMMmOjle6omOXWBIFrdQR5DCWyElSERBxr914KLEXI
-	 vq+pL8uRF/UTlg4YXPj8eRWS1O4PqcR61YH1VMobVjiRM2sXCGTFBHYBqpLj0zPTCO
-	 PWSxDvI/OZPj2cb8UJ5XAXUsPRDb500E2EtQOmCidqOUac3VM5XAOT8WoDN913WJyY
-	 //WIKEfHUTbdw8Ui/1oX3cWjHNwQgP/H4fy9XdrgR9mtoIidVd9vJG1YwsmFXRTQTE
-	 ygZPqG9ynpVYQ==
+	b=eiF5R9s0SiZumuWygndBwRXXCZCZdp5FlhgYUPqicKARXzTtPg2CwMyXDKRy/JGuu
+	 9F5uBq62Vm3xOkZKup8aJ1qksVHY1HT5w+xhPXBkp53O2g+FqoCIuKyO6USSxS/E2t
+	 7EDb/somtcQ5byt/nyWQNUQxwAhQ6A1MDhxYGzeLGkG4lXKb+n0mMAytcIHQFQp+Jl
+	 PC9UiW2opUIgnHUmTTSPdLXr4oRO7P36obs3ErFUpxGqI/+g4BeG2wR8pk0xVy3qYG
+	 ETb1JAZGD0zc5BczlwLzROGzl1SLVyZrt7tHx59wXF1rFYdXKgZojsVJ+azumMRlRC
+	 2oQmCkdLEierw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,10 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
+	James Clark <james.clark@arm.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 12/13] perf c2c: Free format list entries when releasing c2c hist entries
-Date: Fri, 12 Jun 2026 19:24:11 -0300
-Message-ID: <20260612222413.40791-13-acme@kernel.org>
+Subject: [PATCH 13/13] perf cs-etm: Reject CPU IDs that would overflow signed comparison
+Date: Fri, 12 Jun 2026 19:24:12 -0300
+Message-ID: <20260612222413.40791-14-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260612222413.40791-1-acme@kernel.org>
 References: <20260612222413.40791-1-acme@kernel.org>
@@ -56,34 +57,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-c2c_hists__init() calls hpp_list__parse() which allocates and registers
-format entries on hists->list.  When c2c_he_free() destroys a c2c hist
-entry, it deletes the histogram entries and frees the hists container but
-never unregisters the format list entries, leaking them.
+metadata[j][CS_ETM_CPU] is a u64 from perf.data, but the comparison
+with max_cpu casts it to (int).  A crafted value like 0xFFFFFFFF becomes
+-1 after the cast, which compares less than max_cpu (0), so the queue
+array is never sized to accommodate it.  When the value is later passed
+to cs_etm__get_queue(), it indexes queue_array with the original large
+value, causing an out-of-bounds access.
 
-Call perf_hpp__reset_output_field() before freeing the hists to properly
-unregister and free all format entries.
+Validate that CS_ETM_CPU fits in an int before using it in the signed
+comparison.
 
-Fixes: f485e33c4543ac31 ("perf c2c report: Add cacheline hists processing")
+Fixes: 57880a7966be510c ("perf: cs-etm: Allocate queues for all CPUs")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/finding/41
-Cc: Jiri Olsa <jolsa@kernel.org>
+Closes: https://sashiko.dev/finding/2
+Cc: James Clark <james.clark@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-c2c.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/cs-etm.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e205f58b2f3d3786..07c7e8fb315e6cf3 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -185,6 +185,7 @@ static void c2c_he_free(void *he)
- 	c2c_he = container_of(he, struct c2c_hist_entry, he);
- 	if (c2c_he->hists) {
- 		hists__delete_entries(&c2c_he->hists->hists);
-+		perf_hpp__reset_output_field(&c2c_he->hists->list);
- 		zfree(&c2c_he->hists);
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 5e92359f51a7cb87..0927b0b9c06b1504 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -6,6 +6,7 @@
+  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+  */
+ 
++#include <limits.h>
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/coresight-pmu.h>
+@@ -3468,7 +3469,13 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 			goto err_free_metadata;
+ 		}
+ 
+-		if ((int) metadata[j][CS_ETM_CPU] > max_cpu)
++		/* CPU id comes from perf.data and must fit max_cpu + 1 without overflow */
++		if (metadata[j][CS_ETM_CPU] >= INT_MAX) {
++			err = -EINVAL;
++			goto err_free_metadata;
++		}
++
++		if ((int)metadata[j][CS_ETM_CPU] > max_cpu)
+ 			max_cpu = metadata[j][CS_ETM_CPU];
  	}
  
 -- 
