@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791862EBB84;
-	Fri, 12 Jun 2026 00:35:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDF62EBB84;
+	Fri, 12 Jun 2026 00:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781224530; cv=none; b=DYhUd38RCPgw5wxQfuFnE1PWNQNFY7E1SGp3CPNOb695KZcRytj6b6D3k9y2oqv45xEqakgGRZRSrP5aNC3pnUcz2l9dmdanCw95KIyEC1dfiASAW0eFu3JWTE5RAUazmrkiYxHOoGzXD0o8YxsvlZnUIyWefrzu5O8Mhh+Wr+4=
+	t=1781224534; cv=none; b=KhnzGZPSQEd43kq3hPOybeFeYlRT0ArH9td8ORx1gtOopQtxtaIsIq+hiNgkQkLS6YBy2KwEPzSWXK3tVUAggbxnhZJMUMeJ5VnezcRgfz2q69tdtTv7RUYEYlze88aLLOG+guPb2lRAKMg/a5f8mfO1M3qYP4BwWSTkGq4IApY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781224530; c=relaxed/simple;
-	bh=ykNVuErbfJQg0B4bTh0qHB4ICh11BpKkRWG3Npn99Vc=;
+	s=arc-20240116; t=1781224534; c=relaxed/simple;
+	bh=2xkPTrxGOhzZfX7aIOOwowSEJj2Ts7/gMOE713U/tyk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I/HW+cyxEnTGeVFVeuL34tGKjEhzVl0Nx+BswKhbZKhKSL8AifYWpJB3SsS+Z15zS78UsmbgXKxGMNMa7D3XlcoMrt83joDHdvH/OaVShpa5YZwAi+ujuu1soAdPdvnj/V64TGdecekqHhFvuycAaGx41dYX3pNRHyQGGjcQPG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cJpeZX6w; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=qWYJ7kDplzgG6eLRMwffkH37iVFbo71gZKny1Yte37JMQ9vgC9T0Nn0wTrrDx+Kk6fl08I+Q899z114FIEn54u/wT8E0YeoL5gK7/z2r0RCqNhdO46Ba0wk34IU+5lq2/9qkaVxeILPTd9ci56AyIeZnmF92rQgJGc9QbFyVl/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKxeiO/s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cJpeZX6w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59771F000E9;
-	Fri, 12 Jun 2026 00:35:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKxeiO/s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB5511F00A3A;
+	Fri, 12 Jun 2026 00:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781224529;
-	bh=N+pSTo/Skue1syM+k/apN2oz+c3vwd5HAXXw71qySlg=;
+	s=k20260515; t=1781224533;
+	bh=d5eUlpvf4Z6s2VrN0LRJWwu8wwWwGEVee+PX7Q4Om40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cJpeZX6wahj0qOes+0bidL0Ze2onWniyTrCBDQ31gdHNwiuADZqJS06VbX+mCXmAh
-	 MrslnxU07H2zknIBCe2fV+ENpzdROHJ+E297LknjgYpVLWKSdI32iPidpPYEOnD0b7
-	 HCqPLiPiiYmFC/rSK7LgPzsLF/bimV7EJ0bVeGg0I0JMG2tRC24mLaRLvpk1/a7v3c
-	 iokiwJuaoP32zanzvuAcOkVjKlB7XkSC3Q6HyS+P87+R6sNUZppaq3bnCqiMSU/1Yw
-	 KAujlDu4uzpsNWRngr1L74fQ8Blr7Xiz8M5q+5v9PenV3mPMIXRHUT734SXnDPt7uh
-	 lmDpGqSNCW7xQ==
+	b=aKxeiO/sHq4LtnBa4rokN878x/7ngzDYjn/h9/LsznVkaNlMihGQY1co8OKI73Vt7
+	 +a6tmqPbubRmL3CJ7s7Pi4tNR9spqRcjod6OfkrXYo2p0xLx4vvNaYGCSVimZJtEsA
+	 MTcz6HpWaw4uWwHVQuNOybhmFgzL/CnabS1xy6Rcm/DLalw0hMq9i87Ol/Zf3TYTS/
+	 8LBjN/PSu7dNdqUsjfJnc8T173FWTUdHZYA647P7Ta/7pkFH/IQxsL2HnKAP5gSi9N
+	 /E22pz/xXdOeVkluFOUOnsd/dDtenGnhytlJo/9lPMcPy1pSXuiaixMOOG+/k32fxQ
+	 geVZMQ+sYWHVQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Song Liu <songliubraving@fb.com>,
+	Blake Jones <blakejones@google.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 10/15] perf bpf: Validate func_info_rec_size and sub_id in synthesize_bpf_prog_name()
-Date: Thu, 11 Jun 2026 21:34:38 -0300
-Message-ID: <20260612003444.50723-11-acme@kernel.org>
+Subject: [PATCH 11/15] perf bpf: Reject oversized BPF metadata events that truncate header.size
+Date: Thu, 11 Jun 2026 21:34:39 -0300
+Message-ID: <20260612003444.50723-12-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260612003444.50723-1-acme@kernel.org>
 References: <20260612003444.50723-1-acme@kernel.org>
@@ -53,49 +53,53 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-synthesize_bpf_prog_name() computes a pointer into the func_info array
-using sub_id * info->func_info_rec_size without validating either value.
-Both come from perf.data and are untrusted:
+bpf_metadata_alloc() computes event_size from the number of BPF metadata
+variables and stores it in header.size, which is __u16.  With 204 or
+more .rodata variables prefixed "bpf_metadata_", event_size exceeds
+65535 and silently truncates.
 
-- A func_info_rec_size smaller than sizeof(struct bpf_func_info) means
-  the finfo pointer would reference a truncated entry, reading past it
-  into adjacent data.
+The truncated header.size causes synthesize_perf_record_bpf_metadata()
+to allocate a buffer sized by the truncated value, then memcpy the full
+event data into it — a heap buffer overflow.
 
-- A sub_id >= nr_func_info computes an offset past the func_info buffer,
-  causing an out-of-bounds read.
-
-Add bounds checks for both values before computing the pointer offset.
-When validation fails, fall through to the non-BTF name path instead
-of reading garbage.
+Add a check that event_size fits in __u16 before proceeding.  BPF
+programs with that many metadata variables are exotic enough that
+silently dropping the metadata is acceptable.
 
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Fixes: 7b612e291a5affb1 ("perf tools: Synthesize PERF_RECORD_* for loaded BPF programs")
-Cc: Song Liu <songliubraving@fb.com>
+Fixes: ab38e84ba9a80581 ("perf record: collect BPF metadata from existing BPF programs")
+Cc: Blake Jones <blakejones@google.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-event.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/bpf-event.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index c4594969d7677238..fe6fbca508c5135c 100644
+index fe6fbca508c5135c..57d53ba848359e12 100644
 --- a/tools/perf/util/bpf-event.c
 +++ b/tools/perf/util/bpf-event.c
-@@ -143,7 +143,9 @@ static int synthesize_bpf_prog_name(char *buf, int size,
- 	name_len = scnprintf(buf, size, "bpf_prog_");
- 	name_len += snprintf_hex(buf + name_len, size - name_len,
- 				 prog_tags[sub_id], BPF_TAG_SIZE);
--	if (btf) {
-+	if (btf &&
-+	    info->func_info_rec_size >= sizeof(*finfo) &&
-+	    sub_id < info->nr_func_info) {
- 		finfo = func_infos + sub_id * info->func_info_rec_size;
- 		t = btf__type_by_id(btf, finfo->type_id);
- 		if (t)
+@@ -369,6 +369,15 @@ static struct bpf_metadata *bpf_metadata_alloc(__u32 nr_prog_tags,
+ 
+ 	event_size = sizeof(metadata->event->bpf_metadata) +
+ 	    nr_variables * sizeof(metadata->event->bpf_metadata.entries[0]);
++	/*
++	 * header.size is __u16.  synthesize_perf_record_bpf_metadata()
++	 * adds machine->id_hdr_size (up to ~64 bytes) after this, so
++	 * leave headroom to prevent the final size from wrapping.
++	 */
++	if (event_size > UINT16_MAX - 256) {
++		bpf_metadata_free(metadata);
++		return NULL;
++	}
+ 	metadata->event = zalloc(event_size);
+ 	if (!metadata->event) {
+ 		bpf_metadata_free(metadata);
 -- 
 2.54.0
 
