@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D759405C40
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:40:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4145B36654C
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:41:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781304020; cv=none; b=CgXuvcIC6Pxpv3Mf9OFP4+p76owLzR7oe5MxlrVeT0DB0DkChcqKAS/m2hMCg1Xk0KwTE996kD0JOEZkjRaCYhPnbzwRvTmXvl6ZKvcUuZN69sw7bpyczfcncjPCqGpD0e13fQaME7c0672p6EAZbNi/I272jhkPkyGWe4zI2kQ=
+	t=1781304067; cv=none; b=GYKh+id9Ooa2nKmsQqNNI5TfQQxlSjVlOQap2Ic1CvXHjaPviu4/ZQuVKOHeOHbE+oP5Zsdo22CIsCdyvwuG14fpAUpDCiG3HsGfMaV2oNWqjKgzp2pmbVx3k/Qsh22pKyCs/8QbnkYlElDpNW4oc70Jw275yIghO2FLE9+gyhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781304020; c=relaxed/simple;
-	bh=YjhMEcp8jhyhcHmd6D+2n1fjOykDNPpZ4pPIFYQUUXg=;
+	s=arc-20240116; t=1781304067; c=relaxed/simple;
+	bh=46W95IgemO7Y5zIe5mVEMrQKgbwvlEj29Gh/B1szmBo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Pk6wkleoElqgeUT13QRu290l21d1g4TSBnHezTtLLNQNogMuqtIsuh8oLzHy/0CDurliqES0cDPAYj4CdTQi0GOb3cslCO2VND3K3i3TBTYgKJ+XrmtggSs/wFFf5tjVUQ5hVA7ykWpWf8ZTckKD1YOgHsoxpP0DRcrSElu73pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5koaB6L; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ZIM3wxOYSy9u/v5WwYZ37fYLi6tGMrrNocTyi4saVx1mqFTsP5pXfz4fu5LGxxSkH7XyTWC2abOLoOVrk2l4d30GtDv1dYyRkxX3IzU/qju6LdHqP3V3hdnN+M+gelRrh+g4Rsg7Q8U3wOqjUbo2SMAuJjj+2fX3iQojIi94y28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bStZccAl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5koaB6L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EFD61F000E9;
-	Fri, 12 Jun 2026 22:40:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bStZccAl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A57461F000E9;
+	Fri, 12 Jun 2026 22:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781304019;
-	bh=+/FFgvS3p8HZwVnsSIFIGFsr78IQdw/1j6t07KBJkJ0=;
+	s=k20260515; t=1781304065;
+	bh=HSjokzk3Ib799Kq8ghix45WXz9/BSMbQrzLx92Zk9cA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=j5koaB6Lq23J+/oJOjnBfBSvJYKZXLZpaYwAitEhMAL3qO4R8V/sVCoyQNtL6M/+F
-	 DGF66SQ/TRAuLFejKVgCOtEepEa9Kjn6wtHTqD0k9NHWij9mgpU3RfTqHvX9bG+Owm
-	 +RUKYVM4qgm4FsXPg3EzBkSacZi2TynMN4j6VK+a0cawljJPx/PPRdNcvuYhYefv5R
-	 s6id5ADb1d86oVZESAuCXAC7MCl+/vqJJEQa2ZnL0tS28ESnHBosodYOEHZyRzI/mp
-	 KKeIzU8ZGNOWsKDjg4EyEkcC8i4sZ/yidGjiDxK2yn0qOEY8X9bYZ0IagD+gvLWLq7
-	 LSZnfx+8a1VAA==
+	b=bStZccAlAkYrIBGnbiHLInn7/Z7AYUZBUKWPvXgxokWnlDS0HO895HD5VGMRvXb1m
+	 6S5oxzguYrLAGm0E+z+asxJZPIyujZ0KjxGeiWSKqp1udJOBLX0ToLArUG7UTrrBHq
+	 wslO9E4rLPrEQLTlE2pS82OoJaXbi1Ri50xDntT1zA6oLyU5hEH1SbI5EvyoZkun2+
+	 BHENf3VeMMMWq5FB7vCs5i5QDuTBXtnLga1ajda6X05p+tSSG/3Wt11hvUXwgupkMh
+	 YfHNpFDDkD75vdRP8bGlxwfd54BStYAUZlNYy5t3zpIyxBNpb/g5fqxHgXCcriiJkj
+	 FcotI+nI+AO7A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 05/13] perf dso: Set error code when open() fails on
- uncompressed fallback path
+Subject: Re: [PATCH v15 18/19] perf python: Add perf.pyi stubs file
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260612222413.40791-6-acme@kernel.org>
-References: <20260612222413.40791-6-acme@kernel.org>
+In-Reply-To: <20260612221211.1221305-19-irogers@google.com>
+References: <20260612221211.1221305-19-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 12 Jun 2026 22:40:18 +0000
-Message-Id: <20260612224019.1EFD61F000E9@smtp.kernel.org>
+Date: Fri, 12 Jun 2026 22:41:04 +0000
+Message-Id: <20260612224105.A57461F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,73 +45,72 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Negative custom error codes leak into standard errno and cause __o=
-pen_dso() to compute a positive fake file descriptor.
+- [Medium] Type stubs incorrectly document `None` as a valid argument, lead=
+ing to memory corruption and segfaults in the C extension.
 --
 
-commit d095129ae47ce61267962a75bfe2602fe1eafe44
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+commit 9f279812734ffe49e65776760974bed198e67c6d
+Author: Ian Rogers <irogers@google.com>
 
-perf dso: Set error code when open() fails on uncompressed fallback path
+perf python: Add perf.pyi stubs file
 
-This commit sets the error code when open() fails on the uncompressed
-fallback path in filename__decompress(). It ensures the caller chain
-correctly reads the populated errno instead of a stale or zero value.
+This commit adds Python type stubs for the perf module to improve IDE suppo=
+rt
+and static analysis. It includes docstrings for classes, methods, and
+constants derived from C source and JSON definitions.
 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 511921bd901d8..1a2fc6d18da74 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -344,9 +344,12 @@ int filename__decompress(const char *name, char *pat=
-hname,
->  	 * descriptor to the uncompressed file.
->  	 */
->  	if (!compressions[comp].is_compressed(name)) {
-> +		fd =3D open(name, O_RDONLY | O_CLOEXEC);
-> +		if (fd < 0)
-> +			*err =3D errno;
->  		if (pathname && len > 0)
->  			pathname[0] =3D '\0';
-> -		return open(name, O_RDONLY | O_CLOEXEC);
-> +		return fd;
->  	}
-> =20
->  	fd =3D mkostemp(tmpbuf, O_CLOEXEC);
+> diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
+> new file mode 100644
+> index 0000000000000..f789cbfa1e410
+> --- /dev/null
+> +++ b/tools/perf/python/perf.pyi
 
-[Severity: High]
-This isn't a bug introduced by this patch, but the commit message mentions
-matching the error handling on the compressed path. Does that compressed
-path have an issue where negative custom error codes leak into standard
-errno?
+[ ... ]
 
-If filename__decompress() sets *err to the custom enum value
-DSO_LOAD_ERRNO__DECOMPRESSION_FAILURE (which is negative),
-dso__get_filename() assigns this directly into standard errno:
+> +def parse_events(
+> +    event_string: str,
+> +    cpus: Optional[cpu_map] =3D None,
+> +    threads: Optional[Any] =3D None
+> +) -> 'evlist':
 
-tools/perf/util/dso.c:dso__get_filename() {
+[Severity: Medium]
+Is it safe to document cpus and threads as Optional with a default of None?
+
+If a user follows this stub and explicitly passes None to the C extension,
+pyrf__parse_events() parses it into PyObject pointers via PyArg_ParseTuple(=
+).
+Because Py_None is not a NULL pointer, the C code will treat it as a valid
+struct pyrf_thread_map and try to dereference it, reading garbage memory:
+
+tools/perf/util/python.c:pyrf__parse_events() {
     ...
-    errno =3D *dso__load_errno(dso);
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|OO", kwlist,
+                                     &events, &pcpus, &pthreads))
+    ...
+    threads =3D pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : =
+NULL;
     ...
 }
 
-Then __open_dso() handles the failure by calculating fd =3D -errno:
+Should the C extension be updated to handle Py_None, or should the stubs
+avoid suggesting None is a valid argument?
 
-tools/perf/util/dso.c:__open_dso() {
-    ...
-    fd =3D -errno;
-    ...
-}
+[ ... ]
 
-Could this double-negate the custom error code into a positive file
-descriptor value (like 9996)?
+> +def parse_metrics(
+> +    metrics_string: str,
+> +    pmu: Optional[str] =3D None,
+> +    cpus: Optional[cpu_map] =3D None,
+> +    threads: Optional[Any] =3D None
+> +) -> 'evlist':
 
-If open_dso() then incorrectly believes it successfully opened the DSO
-because fd >=3D 0, could it cache this as the active file descriptor?
-This might cause close_data_fd() to later close an arbitrary file
-descriptor used by another subsystem when perf cleans up.
+[Severity: Medium]
+Does this also have the same issue where passing None for cpus or threads
+will cause pyrf__parse_metrics() to dereference Py_None as a struct pointer?
+
+Additionally, passing None for pmu might cause a TypeError if the C code
+expects a string format.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612222413.4079=
-1-1-acme@kernel.org?part=3D5
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612221211.1221=
+305-1-irogers@google.com?part=3D18
