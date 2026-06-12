@@ -1,121 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5715425A2A2
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 00:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA973946A;
+	Fri, 12 Jun 2026 00:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781225562; cv=none; b=rVblxJq9Ejq0ozW7E9upsc+cFnZbM9wEPrGCjyBItFDnIR6d3rFqLQBGrwCkED96E1FXUK/G1bhiJdCDqvPrql2nqBhChs01Gf2jqdvScPusqwy5VovzqxOyyVASltyW7tAEnyo8KmCghVj96puwLg85OcPHfFzL4tCgf4X0X6E=
+	t=1781225628; cv=none; b=hl1vuy2tXlKRc3/ZZ+r4WdOHWQI7p/e6GspsCWSZ+aPMYrazhqoLCzjUEg6hiAnwW0NfWWiesZI/QYrHRD9LLKPTDqyrvUSDVEUGfgssqgRxhRNPbsnCEA36iDFgD+kmw8UbrsxQV8atThOkrP4F6R84vDGh/quFFxqevprUuo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781225562; c=relaxed/simple;
-	bh=RNvj4zgQbI1XVuwYdP348ThRZHbGCAwQ3EJHjTwwdhM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=slUnUctaXYhlHQ6mQFCKu+1tEICi/b92Ie0nUTyQoKG8XJPv9SdqmI+DnVBAq6Lt1q6kuaZqbeF4ipEUXuFVVmV+wxm7dqEniUiHMCRstYSxpf/WO2g7sGzqI47pAdtCxkxj95ipOLpmzDaJlqRTUdgMvBKqK/yhOoO9BKcbOEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXSHAQBk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781225628; c=relaxed/simple;
+	bh=54+jvz2T0azE3brf4a87n87ORj/K9njDfJVPTH7BgA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=esos/af5Mnwq2zuabkIyn9Qe5GjYULJHRJYxwNcEKpAlv2x5Be0pWbIommoCZA5KZVy23A1/PT/5NtHMzw0lpTIpcy6/Edc6HcwNQPBnuqAJXkjsjguddHLNJbAffZXBl2uZcRPRPSXtG9UHauRzDcHtEO43rx4qdjaWNNwpEdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=avmU0Hge; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXSHAQBk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C68B31F000E9;
-	Fri, 12 Jun 2026 00:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781225561;
-	bh=Cj4RKcf+PQSs5i0tBnT/P90sE1u5zJDSsEMEGZMeb9E=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FXSHAQBkXkpa2ZMqChGVOdjAssk5VJ5eADQ60zKPVd8Mn/bzULafxzGIbsq54dXxk
-	 EOwbt8kmGDQ17EDKsCeTYm9e2MilMLipR+cfq3JUuKJF5QdCcYJho4Lp+mOreQOQlv
-	 enaIMsMsHW364fAiJ85jCfl4/oqxrAW3R8XXV/21NKcl+4R5kjeknUkJp+LbFBbOPi
-	 dLtigi/FZGhWDdh6WSvYnRgzH0gtw/HzzsOgAq3h9KhBAmh/J5daYJwn7N8Hrdwwmn
-	 yrlyFlcdBeF2JmTYRpyXRwJroKuX9W2Dc6kxotyCKv25xBKyfdBGPrkyfREB1p5OFs
-	 EaYzYhgn04nkw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 10/15] perf bpf: Validate func_info_rec_size and sub_id
- in synthesize_bpf_prog_name()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260612003444.50723-11-acme@kernel.org>
-References: <20260612003444.50723-11-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 12 Jun 2026 00:52:40 +0000
-Message-Id: <20260612005240.C68B31F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="avmU0Hge"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781225626; x=1812761626;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=54+jvz2T0azE3brf4a87n87ORj/K9njDfJVPTH7BgA4=;
+  b=avmU0HgeCuv+uDoS1Q8qS73QP+RznCcQwrl4nANyoXwF2o1fXzNbA4IA
+   J2znY99Y3po4/UYDZG3EL8sFunRpiB4fyH65CdYY5vHTlWkfnnDQ+wSMz
+   nO4Sqxqg5utH3iFOfXN7p+EXBoxMWeLfzR9I0GwLgjVJYQLXoaK6YxBh+
+   WV70yXd9RqcsznqEfJEETcVn5RErrDDvsvptsYyw1DniMEiFwqz6H+lyG
+   spc4pe9R8uzhvhCMHaJnKsBNZM+eKsSuafJDzbGr/TtDwgKhXnCZGLsC6
+   IMZDNlHy4eq5hOpAFM2DxjB6sN0rUJxAslfhEyKVBF7fewRKq8wNTC7IS
+   g==;
+X-CSE-ConnectionGUID: dbHvv8OsSHCQpm2aUiZZhQ==
+X-CSE-MsgGUID: EwQHadMBTG+UKJbHcig6SQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="93445923"
+X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
+   d="scan'208";a="93445923"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 17:53:45 -0700
+X-CSE-ConnectionGUID: Kj+yB46oQmaJKKYd5BuNpQ==
+X-CSE-MsgGUID: SimgheitQXO/uVsFD+q8wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
+   d="scan'208";a="242302605"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 17:53:43 -0700
+Message-ID: <23c4488b-a264-49ac-99ed-4df75aa8ea84@linux.intel.com>
+Date: Fri, 12 Jun 2026 08:53:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 6/8] perf/x86/intel/uncore: Introduce PMU flags and
+ broken state
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20260611160033.66760-1-zide.chen@intel.com>
+ <20260611160033.66760-7-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260611160033.66760-7-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Pre-existing issues:
-- [Medium] Arbitrary memory read due to unvalidated array offsets in `bpil_=
-offs_to_addr()` when array bits are unset
---
+Thanks.
 
-commit a163a7a43ee7ff41ce65cced45401ef40028fc1f
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-perf bpf: Validate func_info_rec_size and sub_id in synthesize_bpf_prog_nam=
-e()
-
-synthesize_bpf_prog_name() computes a pointer into the func_info array
-using sub_id * info->func_info_rec_size without validating either value.
-Both come from perf.data and are untrusted, so bounds checks are added
-before computing the pointer offset.
-
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index c4594969d7677..fe6fbca508c51 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-> @@ -143,7 +143,9 @@ static int synthesize_bpf_prog_name(char *buf, int si=
-ze,
->  	name_len =3D scnprintf(buf, size, "bpf_prog_");
->  	name_len +=3D snprintf_hex(buf + name_len, size - name_len,
->  				 prog_tags[sub_id], BPF_TAG_SIZE);
-
-[Severity: Medium]
-This is a pre-existing issue, but does casting info->prog_tags to a pointer
-and dereferencing it here allow an arbitrary memory read if a malicious
-perf.data is provided?
-
-If an attacker clears the array bit in info_linear->arrays,
-bpil_offs_to_addr() will silently skip converting or validating the offset:
-
-tools/perf/util/bpf-utils.c:bpil_offs_to_addr() {
-    ...
-    if ((info_linear->arrays & (1UL << i)) =3D=3D 0)
-        continue;
-    ...
-}
-
-This leaves the raw, untrusted 64-bit value from the file intact in
-info->prog_tags.
-
-> -	if (btf) {
-> +	if (btf &&
-> +	    info->func_info_rec_size >=3D sizeof(*finfo) &&
-> +	    sub_id < info->nr_func_info) {
-
-[Severity: Medium]
-This is a pre-existing issue, but does info->func_info face the same
-arbitrary memory read vulnerability?
-
-The func_infos pointer is assigned from info->func_info earlier in
-synthesize_bpf_prog_name(). If its array bit is cleared in
-info_linear->arrays, it retains the untrusted value.
-
-Since info->nr_func_info is also fully attacker-controlled in this
-scenario, could an attacker bypass this bounds check and read from
-an arbitrary address?
-
-Similar unvalidated pointer accesses appear to happen in
-__bpf_event__print_bpf_prog_info() when it casts info->jited_func_lens
-and info->jited_ksyms to pointers.
-
->  		finfo =3D func_infos + sub_id * info->func_info_rec_size;
->  		t =3D btf__type_by_id(btf, finfo->type_id);
->  		if (t)
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612003444.5072=
-3-1-acme@kernel.org?part=3D10
+On 6/12/2026 12:00 AM, Zide Chen wrote:
+> Replace the boolean 'registered' field in intel_uncore_pmu with an
+> unsigned long 'flags' field, and add a PMU_BROKEN flag to track box
+> setup failures. The broken flag is sticky, meaning it is cleared only
+> by a module reload or system reboot.
+>
+> Broken PMUs are skipped in the CPU hotplug and box allocation paths.
+>
+> When any box fails to initialize, the PMU is marked broken.  Broken
+> PMUs reject new event assignments and skip future box setup attempts.
+> If the PMU was already registered, it remains so to avoid disrupting
+> in-flight events on other boxes.
+>
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+> v3:
+> - Fix typo stick->sticky and other cosmetic fixes in code comment.
+> v2:
+> - Make the broken flag sticky by using clear_bit() in
+>   uncore_pmu_unregister() rather than zeroing out pmu->flags.
+> - In uncore_change_type_ctx(), don't stop CPU migration on broken PMU
+>   for in-flight events. (Sashiko).
+> - Use box->cpu == -1 to identify inactive boxes that don't need
+>   migration, no need to check uncore_die_has_box(), which is incomplete.
+> ---
+>  arch/x86/events/intel/uncore.c     | 44 ++++++++++++++++++++++--------
+>  arch/x86/events/intel/uncore.h     | 13 ++++++++-
+>  arch/x86/events/intel/uncore_snb.c |  2 +-
+>  3 files changed, 46 insertions(+), 13 deletions(-)
+>
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index 06ef89f6ccc2..feb8c3b0076b 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -757,7 +757,7 @@ static int uncore_pmu_event_init(struct perf_event *event)
+>  
+>  	pmu = uncore_event_to_pmu(event);
+>  	/* no device found for this pmu */
+> -	if (!pmu->registered)
+> +	if (!uncore_pmu_available(pmu))
+>  		return -ENOENT;
+>  
+>  	/* Sampling not supported yet */
+> @@ -953,16 +953,18 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
+>  
+>  	ret = perf_pmu_register(&pmu->pmu, pmu->name, -1);
+>  	if (!ret)
+> -		pmu->registered = true;
+> +		uncore_pmu_set_registered(pmu);
+>  	return ret;
+>  }
+>  
+>  static void uncore_pmu_unregister(struct intel_uncore_pmu *pmu)
+>  {
+> -	if (!pmu->registered)
+> +	if (!uncore_pmu_registered(pmu))
+>  		return;
+>  	perf_pmu_unregister(&pmu->pmu);
+> -	pmu->registered = false;
+> +
+> +	/* Keep PMU_BROKEN_BIT sticky. */
+> +	uncore_pmu_clear_registered(pmu);
+>  }
+>  
+>  static void uncore_free_boxes(struct intel_uncore_pmu *pmu)
+> @@ -1153,7 +1155,12 @@ static int uncore_box_setup(struct intel_uncore_pmu *pmu,
+>  {
+>  	int ret;
+>  
+> -	uncore_box_init(box);
+> +	if (uncore_pmu_broken(pmu))
+> +		return -ENODEV;
+> +
+> +	ret = uncore_box_init(box);
+> +	if (ret)
+> +		goto err;
+>  
+>  	/* First active box registers the pmu. */
+>  	if (atomic_inc_return(&pmu->activeboxes) > 1)
+> @@ -1167,6 +1174,16 @@ static int uncore_box_setup(struct intel_uncore_pmu *pmu,
+>  
+>  	return 0;
+>  err:
+> +	/*
+> +	 * If any box fails, mark the per-package PMU as broken regardless of
+> +	 * whether it was registered or not.
+> +	 *
+> +	 * Don't decrement refcnt to avoid other in-die CPUs from trying to set
+> +	 * up the PMU box again.
+> +	 *
+> +	 * Don't kfree box; MSR and MMIO boxes are freed at module exit only.
+> +	 */
+> +	uncore_pmu_set_broken(pmu);
+>  	uncore_box_exit(box);
+>  	return ret;
+>  }
+> @@ -1190,8 +1207,10 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
+>  		return -EINVAL;
+>  
+>  	box = uncore_alloc_box(type, NUMA_NO_NODE);
+> -	if (!box)
+> +	if (!box) {
+> +		uncore_pmu_set_broken(pmu);
+>  		return -ENOMEM;
+> +	}
+>  
+>  	atomic_inc(&box->refcnt);
+>  	box->dieid = die;
+> @@ -1507,7 +1526,8 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
+>  
+>  		if (old_cpu < 0) {
+>  			WARN_ON_ONCE(box->cpu != -1);
+> -			if (uncore_die_has_box(type, die, pmu->pmu_idx)) {
+> +			if (uncore_die_has_box(type, die, pmu->pmu_idx) &&
+> +			    !uncore_pmu_broken(pmu)) {
+>  				box->cpu = new_cpu;
+>  				cpumask_set_cpu(new_cpu, &pmu->cpu_mask);
+>  			}
+> @@ -1515,12 +1535,14 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
+>  		}
+>  
+>  		WARN_ON_ONCE(box->cpu != -1 && box->cpu != old_cpu);
+> -		box->cpu = -1;
+>  		cpumask_clear_cpu(old_cpu, &pmu->cpu_mask);
+> -		if (new_cpu < 0)
+> +		if (new_cpu < 0) {
+> +			box->cpu = -1;
+>  			continue;
+> +		}
+>  
+> -		if (!uncore_die_has_box(type, die, pmu->pmu_idx))
+> +		/* An inactive box doesn't need migration. */
+> +		if (box->cpu == -1)
+>  			continue;
+>  		uncore_pmu_cancel_hrtimer(box);
+>  		perf_pmu_migrate_context(&pmu->pmu, old_cpu, new_cpu);
+> @@ -1596,7 +1618,7 @@ static int allocate_boxes(struct intel_uncore_type **types,
+>  		type = *types;
+>  		pmu = type->pmus;
+>  		for (i = 0; i < type->num_boxes; i++, pmu++) {
+> -			if (pmu->boxes[die])
+> +			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
+>  				continue;
+>  			box = uncore_alloc_box(type, cpu_to_node(cpu));
+>  			if (!box)
+> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+> index d732b87be0a9..0adb477d9708 100644
+> --- a/arch/x86/events/intel/uncore.h
+> +++ b/arch/x86/events/intel/uncore.h
+> @@ -146,13 +146,24 @@ struct intel_uncore_pmu {
+>  	struct pmu			pmu;
+>  	char				name[UNCORE_PMU_NAME_LEN];
+>  	int				pmu_idx;
+> -	bool				registered;
+> +	unsigned long			flags;
+>  	atomic_t			activeboxes;
+>  	cpumask_t			cpu_mask;
+>  	struct intel_uncore_type	*type;
+>  	struct intel_uncore_box		**boxes;
+>  };
+>  
+> +#define PMU_REGISTERED_BIT	0
+> +#define PMU_BROKEN_BIT		1
+> +
+> +#define uncore_pmu_registered(pmu)	test_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
+> +#define uncore_pmu_broken(pmu)		test_bit(PMU_BROKEN_BIT, &(pmu)->flags)
+> +#define uncore_pmu_available(pmu)	(uncore_pmu_registered(pmu) &&  \
+> +					 !uncore_pmu_broken(pmu))
+> +#define uncore_pmu_set_registered(pmu)	set_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
+> +#define uncore_pmu_set_broken(pmu)	set_bit(PMU_BROKEN_BIT, &(pmu)->flags)
+> +#define uncore_pmu_clear_registered(pmu) clear_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
+> +
+>  struct intel_uncore_extra_reg {
+>  	raw_spinlock_t lock;
+>  	u64 config, config1, config2;
+> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+> index c5347920541c..055131c508ff 100644
+> --- a/arch/x86/events/intel/uncore_snb.c
+> +++ b/arch/x86/events/intel/uncore_snb.c
+> @@ -940,7 +940,7 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
+>  
+>  	pmu = uncore_event_to_pmu(event);
+>  	/* no device found for this pmu */
+> -	if (!pmu->registered)
+> +	if (!uncore_pmu_available(pmu))
+>  		return -ENOENT;
+>  
+>  	/* Sampling not supported yet */
