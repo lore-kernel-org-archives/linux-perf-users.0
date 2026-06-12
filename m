@@ -1,196 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC37156C6A;
-	Fri, 12 Jun 2026 00:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5715425A2A2
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 00:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781225531; cv=none; b=hpSonwOOj2r3QNl14W4Atdz13xwFrImcQYPRDO9v/BJK40JjdZCBjSdSCPIsOEP5h9tbcnfCAHXfMx3DFOE3/V26gmhqNH+lFkW+5z7XQpvUR+8iXGZ3k83zEtaIZuTWdmkE+dW9zXaiLx/OAK4MH3NOfxjLm9K+WrRMJsVQGyA=
+	t=1781225562; cv=none; b=rVblxJq9Ejq0ozW7E9upsc+cFnZbM9wEPrGCjyBItFDnIR6d3rFqLQBGrwCkED96E1FXUK/G1bhiJdCDqvPrql2nqBhChs01Gf2jqdvScPusqwy5VovzqxOyyVASltyW7tAEnyo8KmCghVj96puwLg85OcPHfFzL4tCgf4X0X6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781225531; c=relaxed/simple;
-	bh=Sj2uk2N3krt4TUcTVl9T/97IRtgQzmmdaZJm4/sxdDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pN18p1LYak2ZLzSzGINcU/OQNQEeIPdP1EXxhXXBmmWnCKc8Zln9vvOvdJIWZYvlwLz9kNHu+s7V9HMP90eJ4/AQ+CVyv4gmS6rU96hAJ8jTXEaKA+xfm5Ohf8kaPxECzP7BGjKeKATUOPz1VCERjAPBOnAf/1fSCjKiv9DK0xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DB1lYics; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781225562; c=relaxed/simple;
+	bh=RNvj4zgQbI1XVuwYdP348ThRZHbGCAwQ3EJHjTwwdhM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=slUnUctaXYhlHQ6mQFCKu+1tEICi/b92Ie0nUTyQoKG8XJPv9SdqmI+DnVBAq6Lt1q6kuaZqbeF4ipEUXuFVVmV+wxm7dqEniUiHMCRstYSxpf/WO2g7sGzqI47pAdtCxkxj95ipOLpmzDaJlqRTUdgMvBKqK/yhOoO9BKcbOEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXSHAQBk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DB1lYics"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781225530; x=1812761530;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Sj2uk2N3krt4TUcTVl9T/97IRtgQzmmdaZJm4/sxdDU=;
-  b=DB1lYicsEVB8KK2FH3SsEUrJTqHkdjqt55xyb/6rhGUp5kR/icEgi22E
-   UlVVb8UlzVk6sW7/lQz+8zvEug9SoW1a5fgcLlh6PkC6FkHf8rpPSWIFi
-   3lCd7HTqLewAUQIKnoUevwXPR+9j3Sz+x4c9+72PqEo9yyIFQrQ5kmdGo
-   c9AFqN50sr+Zqr6sd9t65+9YSmm72QaFn7GMn5Lu4bsaQ6VE9u/PmySho
-   DMcqV3te6IS5QnehlFZRoDVy9tsO+C0NAz+uR6+KGG4Vc2rHGFKR7t7KW
-   ex0SMlqSQTK7QNcbE28KE7Cxt5Am5NXO7w+GQ6Utu8tKddPDo2dRCgdPD
-   Q==;
-X-CSE-ConnectionGUID: D4i1F+NnSUa9M2op4SCgug==
-X-CSE-MsgGUID: gYFdWQt4RFqrTjcOS5o5Xw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="93445874"
-X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="93445874"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 17:52:09 -0700
-X-CSE-ConnectionGUID: 62LSDhl8QeKE2wGmCLBzxA==
-X-CSE-MsgGUID: 7pc0qlckTZmoE3skoIxfkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="242302501"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 17:52:06 -0700
-Message-ID: <0d5867c1-3d14-4c9a-805a-453b66a24fa9@linux.intel.com>
-Date: Fri, 12 Jun 2026 08:52:04 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXSHAQBk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C68B31F000E9;
+	Fri, 12 Jun 2026 00:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781225561;
+	bh=Cj4RKcf+PQSs5i0tBnT/P90sE1u5zJDSsEMEGZMeb9E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=FXSHAQBkXkpa2ZMqChGVOdjAssk5VJ5eADQ60zKPVd8Mn/bzULafxzGIbsq54dXxk
+	 EOwbt8kmGDQ17EDKsCeTYm9e2MilMLipR+cfq3JUuKJF5QdCcYJho4Lp+mOreQOQlv
+	 enaIMsMsHW364fAiJ85jCfl4/oqxrAW3R8XXV/21NKcl+4R5kjeknUkJp+LbFBbOPi
+	 dLtigi/FZGhWDdh6WSvYnRgzH0gtw/HzzsOgAq3h9KhBAmh/J5daYJwn7N8Hrdwwmn
+	 yrlyFlcdBeF2JmTYRpyXRwJroKuX9W2Dc6kxotyCKv25xBKyfdBGPrkyfREB1p5OFs
+	 EaYzYhgn04nkw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 10/15] perf bpf: Validate func_info_rec_size and sub_id
+ in synthesize_bpf_prog_name()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260612003444.50723-11-acme@kernel.org>
+References: <20260612003444.50723-11-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 12 Jun 2026 00:52:40 +0000
+Message-Id: <20260612005240.C68B31F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/8] perf/x86/intel/uncore: Fix refcnt and other
- cleanups
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260611160033.66760-1-zide.chen@intel.com>
- <20260611160033.66760-3-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260611160033.66760-3-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-LGTM. Thanks.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Pre-existing issues:
+- [Medium] Arbitrary memory read due to unvalidated array offsets in `bpil_=
+offs_to_addr()` when array bits are unset
+--
 
-On 6/12/2026 12:00 AM, Zide Chen wrote:
-> Fix typo UNCORE_BOX_FLAG_INITIATED to UNCORE_BOX_FLAG_INITIALIZED.
->
-> Rename the 'id' parameter in uncore_box_{ref,unref}() to 'die' to
-> reflect its actual meaning and be consistent with other functions.
->
-> box->refcnt is incremented in the PCI PMU register path but has never
-> been checked or decremented. Although for PCI PMUs box->refcnt
-> effectively tracks only a single user, add atomic_dec_return() in the
-> PCI PMU unregister path to make the reference counting complete and
-> consistent.
->
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
-> ---
-> v3:
-> - Instead of removing atomic_inc(&box->refcnt) in PMU register, add
->   the corresponding atomic_dec_return(&box->refcnt) in PMU unregister.
->   (Dapeng)
-> v2:
-> - Don't rename pmu->activeboxes and keep its semantics because in
->   uncore_pci_remove() path, uncore_pci_pmu_unregister() won't be
->   called for non-active boxes.
-> - Since pmu->activeboxes keeps its name, don't need to rename
->   box->refcnt to box->cpu_refcnt.
-> ---
->  arch/x86/events/intel/uncore.c | 16 +++++++++-------
->  arch/x86/events/intel/uncore.h |  6 +++---
->  2 files changed, 12 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index b69b6a21d46b..21c8ed1628cb 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -1255,8 +1255,10 @@ static void uncore_pci_pmu_unregister(struct intel_uncore_pmu *pmu, int die)
->  	pmu->boxes[die] = NULL;
->  	if (atomic_dec_return(&pmu->activeboxes) == 0)
->  		uncore_pmu_unregister(pmu);
-> -	uncore_box_exit(box);
-> -	kfree(box);
-> +	if (atomic_dec_return(&box->refcnt) == 0) {
-> +		uncore_box_exit(box);
-> +		kfree(box);
-> +	}
->  }
->  
->  static void uncore_pci_remove(struct pci_dev *pdev)
-> @@ -1518,7 +1520,7 @@ static void uncore_change_context(struct intel_uncore_type **uncores,
->  		uncore_change_type_ctx(*uncores, old_cpu, new_cpu);
->  }
->  
-> -static void uncore_box_unref(struct intel_uncore_type **types, int id)
-> +static void uncore_box_unref(struct intel_uncore_type **types, int die)
->  {
->  	struct intel_uncore_type *type;
->  	struct intel_uncore_pmu *pmu;
-> @@ -1529,7 +1531,7 @@ static void uncore_box_unref(struct intel_uncore_type **types, int id)
->  		type = *types;
->  		pmu = type->pmus;
->  		for (i = 0; i < type->num_boxes; i++, pmu++) {
-> -			box = pmu->boxes[id];
-> +			box = pmu->boxes[die];
->  			if (box && box->cpu >= 0 && atomic_dec_return(&box->refcnt) == 0)
->  				uncore_box_exit(box);
->  		}
-> @@ -1604,14 +1606,14 @@ static int allocate_boxes(struct intel_uncore_type **types,
->  }
->  
->  static int uncore_box_ref(struct intel_uncore_type **types,
-> -			  int id, unsigned int cpu)
-> +			  int die, unsigned int cpu)
->  {
->  	struct intel_uncore_type *type;
->  	struct intel_uncore_pmu *pmu;
->  	struct intel_uncore_box *box;
->  	int i, ret;
->  
-> -	ret = allocate_boxes(types, id, cpu);
-> +	ret = allocate_boxes(types, die, cpu);
->  	if (ret)
->  		return ret;
->  
-> @@ -1619,7 +1621,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
->  		type = *types;
->  		pmu = type->pmus;
->  		for (i = 0; i < type->num_boxes; i++, pmu++) {
-> -			box = pmu->boxes[id];
-> +			box = pmu->boxes[die];
->  			if (box && box->cpu >= 0 && atomic_inc_return(&box->refcnt) == 1)
->  				uncore_box_init(box);
->  		}
-> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-> index c2e5ccb1d72c..bad5d8dec8e0 100644
-> --- a/arch/x86/events/intel/uncore.h
-> +++ b/arch/x86/events/intel/uncore.h
-> @@ -185,7 +185,7 @@ struct intel_uncore_box {
->  #define CFL_UNC_CBO_7_PERFEVTSEL0		0xf70
->  #define CFL_UNC_CBO_7_PER_CTR0			0xf76
->  
-> -#define UNCORE_BOX_FLAG_INITIATED		0
-> +#define UNCORE_BOX_FLAG_INITIALIZED		0
->  /* event config registers are 8-byte apart */
->  #define UNCORE_BOX_FLAG_CTL_OFFS8		1
->  /* CFL 8th CBOX has different MSR space */
-> @@ -559,7 +559,7 @@ static inline u64 uncore_read_counter(struct intel_uncore_box *box,
->  
->  static inline void uncore_box_init(struct intel_uncore_box *box)
->  {
-> -	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
-> +	if (!test_and_set_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
->  		if (box->pmu->type->ops->init_box)
->  			box->pmu->type->ops->init_box(box);
->  	}
-> @@ -567,7 +567,7 @@ static inline void uncore_box_init(struct intel_uncore_box *box)
->  
->  static inline void uncore_box_exit(struct intel_uncore_box *box)
->  {
-> -	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIATED, &box->flags)) {
-> +	if (test_and_clear_bit(UNCORE_BOX_FLAG_INITIALIZED, &box->flags)) {
->  		if (box->pmu->type->ops->exit_box)
->  			box->pmu->type->ops->exit_box(box);
->  	}
+commit a163a7a43ee7ff41ce65cced45401ef40028fc1f
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+perf bpf: Validate func_info_rec_size and sub_id in synthesize_bpf_prog_nam=
+e()
+
+synthesize_bpf_prog_name() computes a pointer into the func_info array
+using sub_id * info->func_info_rec_size without validating either value.
+Both come from perf.data and are untrusted, so bounds checks are added
+before computing the pointer offset.
+
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index c4594969d7677..fe6fbca508c51 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -143,7 +143,9 @@ static int synthesize_bpf_prog_name(char *buf, int si=
+ze,
+>  	name_len =3D scnprintf(buf, size, "bpf_prog_");
+>  	name_len +=3D snprintf_hex(buf + name_len, size - name_len,
+>  				 prog_tags[sub_id], BPF_TAG_SIZE);
+
+[Severity: Medium]
+This is a pre-existing issue, but does casting info->prog_tags to a pointer
+and dereferencing it here allow an arbitrary memory read if a malicious
+perf.data is provided?
+
+If an attacker clears the array bit in info_linear->arrays,
+bpil_offs_to_addr() will silently skip converting or validating the offset:
+
+tools/perf/util/bpf-utils.c:bpil_offs_to_addr() {
+    ...
+    if ((info_linear->arrays & (1UL << i)) =3D=3D 0)
+        continue;
+    ...
+}
+
+This leaves the raw, untrusted 64-bit value from the file intact in
+info->prog_tags.
+
+> -	if (btf) {
+> +	if (btf &&
+> +	    info->func_info_rec_size >=3D sizeof(*finfo) &&
+> +	    sub_id < info->nr_func_info) {
+
+[Severity: Medium]
+This is a pre-existing issue, but does info->func_info face the same
+arbitrary memory read vulnerability?
+
+The func_infos pointer is assigned from info->func_info earlier in
+synthesize_bpf_prog_name(). If its array bit is cleared in
+info_linear->arrays, it retains the untrusted value.
+
+Since info->nr_func_info is also fully attacker-controlled in this
+scenario, could an attacker bypass this bounds check and read from
+an arbitrary address?
+
+Similar unvalidated pointer accesses appear to happen in
+__bpf_event__print_bpf_prog_info() when it casts info->jited_func_lens
+and info->jited_ksyms to pointers.
+
+>  		finfo =3D func_infos + sub_id * info->func_info_rec_size;
+>  		t =3D btf__type_by_id(btf, finfo->type_id);
+>  		if (t)
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612003444.5072=
+3-1-acme@kernel.org?part=3D10
