@@ -1,121 +1,145 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED8D2DB78C;
-	Fri, 12 Jun 2026 07:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8370D37F8A1
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 08:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781247785; cv=none; b=VX36bMsfNPmuMASl9nCaWpfB6BF9DLNnbwnzV4ljQotzY/SFJNgOCgTXtXTYIC9amqDSmB+hBfJkpXWKwa220jFERgshL/gzGrGH6foYuMx/sS+AdkQrlTR3jOTH7vicHud43embIVPY866JkzYSsNPLrrgB0eMPsXe92bKdq6o=
+	t=1781252675; cv=none; b=t3/gIm79ko4IpKB95U2uKhpv/GvPC3zmHi90dtUXFY6aB0+nab4WxsvkY8DB7tOTPHRlPahfITbc2fy7nwP8mQWxKAQKLmw3EhXuvZtdd7Wp0/mpPm0yXWu/7f+pxWv0ePbT4rA2cdr2TRtFl1m78vcQf+idLKl27cs/ftvKKYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781247785; c=relaxed/simple;
-	bh=NF+8vu7gvwjYxK/ME8jvSTRKV+sCm7boRacSBuCU/8Q=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJjs6nhFDjGNLXR8N70AEPo6M7Ud+cxP/8otS9HFcvvP5ul07e2Q0l984gDg2fxysqTyN7x87FyrZgEJmeqjPbpR6p83OTucs6LC7awtkyaNnjv0KX83NMeR6bgxr6rT7MxCh9aEqIhFkYkVKStcKMBgw8wDf7bpAKZReJTYzjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gc9Sh1Mmtz1dd8V;
-	Fri, 12 Jun 2026 15:02:44 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gc9Sd6rbMz1dd8V;
-	Fri, 12 Jun 2026 15:02:41 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id F286434C3EC5;
-	Fri, 12 Jun 2026 15:01:14 +0800 (CST)
-Received: from hsj-2U-Workstation (172.19.20.61) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Fri, 12 Jun
- 2026 15:02:35 +0800
-Date: Fri, 12 Jun 2026 15:02:32 +0800
-From: Huang Shijie <huangsj@hygon.cn>
-To: Lorenzo Stoakes <ljs@kernel.org>
-CC: <akpm@linux-foundation.org>, <viro@zeniv.linux.org.uk>,
-	<brauner@kernel.org>, <jack@suse.cz>, <muchun.song@linux.dev>,
-	<osalvador@suse.de>, <david@kernel.org>, <surenb@google.com>,
-	<mjguzik@gmail.com>, <liam@infradead.org>, <vbabka@kernel.org>,
-	<shakeel.butt@linux.dev>, <rppt@kernel.org>, <mhocko@suse.com>,
-	<corbet@lwn.net>, <skhan@linuxfoundation.org>, <linux@armlinux.org.uk>,
-	<dinguyen@kernel.org>, <schuster.simon@siemens-energy.com>,
-	<James.Bottomley@hansenpartnership.com>, <deller@gmx.de>, <djbw@kernel.org>,
-	<willy@infradead.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
-	<mhiramat@kernel.org>, <oleg@redhat.com>, <ziy@nvidia.com>,
-	<baolin.wang@linux.alibaba.com>, <npache@redhat.com>, <ryan.roberts@arm.com>,
-	<dev.jain@arm.com>, <baohua@kernel.org>, <lance.yang@linux.dev>,
-	<linmiaohe@huawei.com>, <nao.horiguchi@gmail.com>, <jannh@google.com>,
-	<pfalcato@suse.de>, <riel@surriel.com>, <harry@kernel.org>,
-	<will@kernel.org>, <brian.ruley@gehealthcare.com>,
-	<rmk+kernel@armlinux.org.uk>, <dave.anglin@bell.net>, <linux-mm@kvack.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-parisc@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-perf-users@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>
-Subject: Re: [PATCH v2 0/4] mm: split the file's i_mmap tree for NUMA
-Message-ID: <aiuvCHI32bfz6j20@hsj-2U-Workstation>
-References: <20260611061915.2354307-1-huangsj@hygon.cn>
- <airY5q_SspdbQDbi@lucifer>
+	s=arc-20240116; t=1781252675; c=relaxed/simple;
+	bh=pHsTtRh3BgJvRzkVkxECUE2h14thLlMYtqhfQrfyDAU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EZeXC4zwZ9SjmPozT/oOm5zDz99/HarQMonO7Q8ub8PJ1HXcdh/HfLU44ghPx35VN9lMAlwRrDIjczWW0LL0Na+dAiIxDZLt1rQnu9Ss85uMjFL5bPEmMrT9mGgc1EfLKuOdC8En9sOjtkTA6O+1kbIZnilJGGVM9gy1RagaKVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TY/zRNk0; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TY/zRNk0"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-68c1630159bso705142a12.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 01:24:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1781252671; x=1781857471; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ppN3q6i1kLf7wFBLTi3clAGN0Ie4CZBFcKsjThSzwnI=;
+        b=TY/zRNk0OcTX2xzoYUwnHaiuY4dGE5v3Yf/BCLV3UWKEHlZ153j+srcPgtG8b1p8F4
+         mMBMrSlc/NBERyh4caQhmZm83ZDZufIFTYniHuUPP0v3vvD8BJknkCJxgGEwFz2H9Z5+
+         BI/mX+qxYKn3wPXWPF+Bi51zxxLzgF6FALs9GwhO/riy2Ja5PRLUaRs4hPPNCEgJ3EBL
+         CJqa4yZUX5G+dEpl9dwskFCPvmlVwOTr8GmrGZRLZF90IJUOUtbLGv7vfDNeGBRoMYbF
+         hdWybRw3i1K4OB4UQueEEOgjWEbU3JCqGtzdH6SbWs2UXCSuQh9etNqnIC8MjHLWSDyz
+         NsXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781252671; x=1781857471;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ppN3q6i1kLf7wFBLTi3clAGN0Ie4CZBFcKsjThSzwnI=;
+        b=N2k1hTkPFVP5JNv/ddCQC4C3DoPM4PeGtB0RPQzqScb5GnXuuj/YXuabX830fRqVAz
+         GD5URY1cpubQhdQlXbkazPATdCIRxdUgTXJK6nQCEYoC3O0NLhk4e9tkIYlHfmikebL2
+         72uSgaW4mqfsT73uyP1xSDDljBP4N89t8w73O0ttETXOINUApq5SDP3toU7k1/eNuuc5
+         jEhAJSIYvEigxs3mEfSOQZYQZhvm0XARfrOHwPF6rbIxWjmCdksvWQBbtVJaFec6Ye+Q
+         /1offRT+AKV6RNRG9tx/o2qcSuVAGllgrl1zTFb3JRqAojwxGKA+2Bjr7G6FmhpAKoQ+
+         BREA==
+X-Forwarded-Encrypted: i=1; AFNElJ8GsPbiwAUTgKZJcMkWU8s86WEIAnRZAaB6gwMuZsAhQmGpvqM58NXDWiPRMHUOQ+bqASgi+npCVFeec8CDI4aV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkidbClV3ZuJi/h/OA0TCM7RxBf3LwgdpJ/AfnP8yqnu4HATRp
+	ESSJ35NueqcFTFHYY5vFEcAMCjuoeCALhg6Z9w3hEKj59ZZLJlJH2gz0rQKI53fgiHQ=
+X-Gm-Gg: Acq92OGuVYKd2sfj8v8qqIcWyW7sSoyj77z5opl6Qa5u4bhstwzPSCrAfjYami9+JqN
+	m7b2KYWLFYINGMGfzNfu8ehxJO3BtLdKA4D8P/ZiTxLMRhMqLSqbPceQRKh+1rVpteWOCWwBnIw
+	u4rKeaNIP4t37jx8xznojcGLJPcjCiwZSEddlYnU49S5S7Qig3nxB5kZlh5i0KCfZfL8fwfnmUQ
+	SXUrKAFtZgiyjIRFpJC11N2LgKgDS6E4Biq7eUI1f+t+UTLRN6Si5CDXw6Rl3uodF/gl5edqHVT
+	JEkP63kKWNnCB6eR9tOXIoG0sc1iHoclDZ9GSWwYfc/9Aey1Dx3dWOKLt0ucgvAaxskH7wb0yvP
+	AUFl/07mAosuJ98cpowI2SW3Mm9PPq+xqcXL27RfhwK8y+GHK25SGMgvk74tp1jN2Lj+FLTE35v
+	svMYeki6l6qX5uVhlzCLkgD8NT2zyd
+X-Received: by 2002:a17:906:ef0d:b0:bec:157:a630 with SMTP id a640c23a62f3a-bfe28e12485mr87169166b.23.1781252670620;
+        Fri, 12 Jun 2026 01:24:30 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bfdb44208c9sm77618266b.13.2026.06.12.01.24.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jun 2026 01:24:30 -0700 (PDT)
+Message-ID: <453d71dc-1bd1-40e0-81e4-c578f64f438c@linaro.org>
+Date: Fri, 12 Jun 2026 09:24:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <airY5q_SspdbQDbi@lucifer>
-X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
- (172.23.18.114)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test: Compile named_threads workload with -O0
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260611-james-cs-unformatted-per-thread-fix-followup-v1-1-3c855d93dba8@linaro.org>
+ <20260611195449.7230e316@pumpkin>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260611195449.7230e316@pumpkin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 11, 2026 at 05:00:49PM +0100, Lorenzo Stoakes wrote:
-> Hi Huang,
-> 
-> You seem to be replacing the file rmap altogether here, so you really ought
-> to have sent this as an RFC so we could discuss it as a community first.
-No problem.
 
-> 
-> Especially so as Pedro had publicly mentioned his plans to implement
-> something similar here, so coordination would have been appreciated.
-Yes. I am very happy to work with Pedro.
 
+On 11/06/2026 7:54 pm, David Laight wrote:
+> On Thu, 11 Jun 2026 12:13:46 +0100
+> James Clark <james.clark@linaro.org> wrote:
 > 
-> Anyway, as Pedro has pointed out, the code is overly complicated, it's far
-> too configurable (not always a good thing), and the locking implementation
-> is questionable.
-I can make the code more simple. :)
+>> The work loop relies on the compiler not optimizing it away, although
+>> named_threads_work is not static for that reason, the compiler could
+>> still do it.
+> 
+> Isn't in enough to put barrier() in the loop?
+> 
+> 	David
+> 
 
-> 
-> You seem to be adding a whole bunch of open-coded complexity too, which is
-> not something we want. Abstraction is key for the rmap.
-> 
-> You're also not adding any kdoc comments or really many comments at all,
-> and you've not added any tests (though perhaps it's difficult given how
-> core this is).
-Got it.
+Probably, but I don't think it would make a difference for this specific 
+test workload, and I don't think that style has ever been used for any 
+of the Perf tests.
 
-> 
-> So I would suggest that perhaps any respin should be sent as an RFC so we
-> can engage in that conversation and ensure we're all on the same page?
-> 
-> Especially since Pedro plans to send an alternative, simpler, solution I
-> believe.
-> 
-> It's also not helpful that you haven't examined the non-NUMA case :)
-> perhaps your particular server behaves a certain way that this approach
-> aids, but regresses other NUMA configurations?
+I think Sashiko's comment leading to this was overly pedantic, neither 
+GCC or Clang optimize this away even with -O2. So in this specific case 
+it was only fixing a hypothetical which is why I didn't add a fixes tag. 
+Although I admit there is some chance it could happen with other changes.
 
-emm. I ever hoped someone can help me to test this patch set on the non-NUMA
-server.
-
-It seems I should find some non-NUMA server before I send out the patch set. :)
-
-> 
-> We'd really need to be sure of this before accepting invasive changes like
-> this.
-Okay.
+However, I think -O0 is the appropriate fix for a workload because it 
+makes the stacks and order of execution predictable, which is what the 
+tests look at. And that also has the effect of guaranteeing this isn't 
+optimized away, so we probably don't need both.
 
 Thanks
-Huang Shijie
+James
+
+>>
+>> Fix it by compiling without optimization. Also add -fno-inline for
+>> consistency and in case anyone wants to look at callstacks.
+>>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>> One trailing Sashiko fix from the "perf cs-etm: Queue context packets
+>> for frontend" patch series that has been applied already.
+>> ---
+>>   tools/perf/tests/workloads/Build | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+>> index 75b377934a0e..7bb4b9829ba2 100644
+>> --- a/tools/perf/tests/workloads/Build
+>> +++ b/tools/perf/tests/workloads/Build
+>> @@ -26,3 +26,4 @@ CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>>   CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>>   CFLAGS_inlineloop.o       = -g -O2
+>>   CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>> +CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>>
+>> ---
+>> base-commit: 7336514f41e75d44782fee7e0990d4195a3d3161
+>> change-id: 20260611-james-cs-unformatted-per-thread-fix-followup-babf28a4e640
+>>
+>> Best regards,
+> 
 
