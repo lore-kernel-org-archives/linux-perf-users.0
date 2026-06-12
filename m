@@ -1,120 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EC7369203;
-	Fri, 12 Jun 2026 09:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556DF37CD52
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 09:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781255229; cv=none; b=qTJZU3qtHgW/9PKao3TCwWjk980NtP76WEkzw0Jb2RZ1mfqIUIEGjbHqriwoiVKvIZYtOfpsvf5abPeSHgJebrfkNQuDqWPjj6/nWktpzKSE+Ex0slRoBp0SL8sXSanTfRL9e4g/qDiFf5mH4KS+Xih1eBl4VHGUsLtQNCFffH8=
+	t=1781255927; cv=none; b=bNGuJf89diebrkGj7jxhqce1OrnFmxu/i73xq2kdNP458UXBOQ/eYu4dinNh0bIVB9CCsYhh63c1UTqAZyTshIC4/z3lK2yl92gXoxq/ZEybPphx/DPAPp6V/wM25ZH8YqZbvdONDmYX9huw0EboXGTvU4IditTdeNGh/vCDpvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781255229; c=relaxed/simple;
-	bh=mly2iaCfBkjoH7gmdQqUuuX71xCZ4hm2aMsANOSobHI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Qhieu6iwjzJrIMZXUR70jU1wekACJZndgXXS6/9JZSdzmxuePIN66y4raaW4//i/yoKuCpL0napQjDeIL9Yu/jmL3LqatCpZi8UF4wwCW5vOlqMetQtaZ6JbQ/VwnhsZeGRZecnssJfbQmXIowpmsJX3dIAqRaZ2mteWIUVCygQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jcTPxbFl; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781255927; c=relaxed/simple;
+	bh=J/b41HhMgVcqameQW2fZvFtIVLF4NRkxGxrG4fZ+7pA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=tsw1M5Svq9/A/hJonoEVMqXC4A7yAwyIyTkAvX+1mG2+IfXDFI+yKrjoUsyfPy0xKZ5V9zF3RpVszgw5xBfQ9U4tIqQ0nFNo0b+GsLWd2uzh5xoNjF3cnZl+Oai1bumHoDZeIhHlVdjqHHbtCzVYKCgTV9P3FB1WMh9aZ22Hp7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOSeCEds; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jcTPxbFl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781255223; x=1812791223;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mly2iaCfBkjoH7gmdQqUuuX71xCZ4hm2aMsANOSobHI=;
-  b=jcTPxbFl0M+H9La9JgHgCQNzGDHppuEd21GvE/UMUrAagsspaGU7E8MA
-   9KcIcaX9ottI/Tjk9YKpFfpWjFPlmzu+P+bc0NxLqRJMdVgRMLAakFF2r
-   DstHBdc8IriwI6fPVfhk1c3HKFoZ+wO1lzsQ9ibm2TduOkhaFs4xjUfC1
-   jkiUYp/xwKzdN3TfGtCU0FfrK6kfnY+7ST2usiLLsRk+LUDXxZICrecEJ
-   gJfx6XT+kj35h6ZwPlTcnFMOmDis5A1e6GNP64mEts+osliwRba/ig3cm
-   vEA+T7v8qiJMEfxG63QuR3nBq5tt8Cl66lp5CRDV8HNUU40zjO5sO6b1W
-   g==;
-X-CSE-ConnectionGUID: H10Cae+tSIaUdFrFO7YgVA==
-X-CSE-MsgGUID: /9Ial7rUScC1F2EeiouAEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="85714490"
-X-IronPort-AV: E=Sophos;i="6.24,200,1774335600"; 
-   d="scan'208";a="85714490"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 02:07:03 -0700
-X-CSE-ConnectionGUID: Y0HchbsRT/6x4S1JxYIVug==
-X-CSE-MsgGUID: XGs3VX0aThKJqP5nMxANlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,200,1774335600"; 
-   d="scan'208";a="246838781"
-Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa007.jf.intel.com with ESMTP; 12 Jun 2026 02:06:59 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: [Patch v3 8/8] perf/core: Check kernel access when kernel callchains are requested
-Date: Fri, 12 Jun 2026 17:01:14 +0800
-Message-Id: <20260612090114.3188886-9-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
-References: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOSeCEds"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E8AB1F000E9;
+	Fri, 12 Jun 2026 09:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781255922;
+	bh=KQOxZZ82Fs3XQhK1PYfqPPFwqtZe/vzgCaW+6IhVnG0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=UOSeCEdsoZDDNjwhZbMpBClZSLnpN268iYyqxCfaBEh6FzSBmw7u1QtTQ7pEOVWZl
+	 CepavIFo4Lf/ngoYnO2WxVmUXL0Lg7jRuib0Trm4mXEN5GQZykn/oPSjPPcXK/ACx1
+	 O15vJ2GYJ/GxLHjlhMiJc2DpyNLtVx0SQxKV1/6QHUS2f12ua5lg+Ekc2AFExRIw5H
+	 2GIlMUmS2DCVHoSLyWeBacNRZZmrvy3oxl7J2AYvs3cLMcswXBZzofyZaO/Yl1zQU/
+	 BsTbFgrqh6R96I6lD7cEwti8hKgBWMylxR7ljac/V4qAw6V9Nr7OuCG8eq88NfOM3a
+	 KOtCqyxycMrIg==
+From: sashiko-bot@kernel.org
+Subject: Re: [Patch v3 4/8] perf/x86/intel: Fix kernel address leakages in
+ LBR stack
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260612090114.3188886-5-dapeng1.mi@linux.intel.com>
+References: <20260612090114.3188886-5-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 12 Jun 2026 09:18:41 +0000
+Message-Id: <20260612091842.8E8AB1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-perf_event_open() currently gates perf_allow_kernel() only on
-!attr.exclude_kernel.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-However, users can still request kernel callchain collection with
-attr.exclude_callchain_kernel == 0 even when attr.exclude_kernel == 1.
-That still requires kernel profiling privilege, but the existing check
-does not enforce it.
+Pre-existing issues:
+- [High] Missing Privilege Escalation/Leakage Fix in AMD LBR
+--
 
-Update the permission check to call perf_allow_kernel() when either
-kernel sampling is requested or kernel callchains are requested.
+commit c04d9132d61b165193dd28c5a358e42d3c52a350
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-This keeps permission checks aligned with requested data and prevents
-unprivileged use of kernel callchain capture.
+perf/x86/intel: Fix kernel address leakages in LBR stack
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
+This commit fixes a kernel address leakage in the Intel LBR stack when
+PERF_SAMPLE_BRANCH_USER is requested. The intel_pmu_lbr_filter function
+previously only validated the privilege level of the "to" address, leaving
+kernel "from" addresses exposed on SYSRET/ERET branches. The fix extends
+software filtering to validate both addresses against the requested filter.
+
+Cc: stable@vger.kernel.org
+Reported-by: Ian Rogers <irogers@google.com>
+Fixes: 47125db27e47 ("perf/x86/intel/lbr: Support Architectural LBR")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- kernel/events/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 89f6c9ffb964..bbd260d9d5b5 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13924,7 +13924,9 @@ SYSCALL_DEFINE5(perf_event_open,
- 	if (err)
- 		return err;
- 
--	if (!attr.exclude_kernel) {
-+	if (!attr.exclude_kernel ||
-+	    ((attr.sample_type & PERF_SAMPLE_CALLCHAIN) &&
-+	     !attr.exclude_callchain_kernel)) {
- 		err = perf_allow_kernel();
- 		if (err)
- 			return err;
--- 
-2.34.1
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index e2657f791e507..16eef15378166 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
 
+[ ... ]
+
+> @@ -1244,8 +1244,14 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>  				type |=3D X86_BR_NO_TX;
+>  		}
+> =20
+> -		/* if type does not correspond, then discard */
+> -		if (type =3D=3D X86_BR_NONE || (br_sel & type) !=3D type) {
+> +		from_plm =3D kernel_ip(from) ? X86_BR_KERNEL : X86_BR_USER;
+> +		/*
+> +		 * If type does not correspond, then discard.
+> +		 * Specifically reject entries whose from address is in
+> +		 * kernel space when only X86_BR_USER is requested.
+> +		 */
+> +		if (type =3D=3D X86_BR_NONE || (br_sel & type) !=3D type ||
+> +		    (!(br_sel & X86_BR_KERNEL) && (from_plm & X86_BR_KERNEL))) {
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does the exact same kernel
+address leakage vulnerability exist in AMD's LBR implementation and remain
+unpatched?
+
+Looking at amd_pmu_lbr_filter() in arch/x86/events/amd/lbr.c, it relies on
+branch_type_fused() to determine the branch type. For kernel-to-user branch=
+es
+(like SYSRET), it evaluates the privilege purely based on the target (to)
+address and returns X86_BR_SYSRET | X86_BR_USER.
+
+When user-only branches are requested, br_sel includes X86_BR_USER and
+X86_BR_ANY. Because AMD hardware will record kernel-to-user branches when
+filtering by "ending in CPL > 0", the check in amd_pmu_lbr_filter():
+
+    if (type =3D=3D X86_BR_NONE || (br_sel & type) !=3D type) {
+        cpuc->lbr_entries[i].from =3D 0;
+        compress =3D true;
+    }
+
+evaluates to false since type is fully satisfied by br_sel. This allows the
+branch to bypass the software filter and leaks the kernel from addresses to
+unprivileged users.
+
+Should a similar from_plm validation check be added to amd_pmu_lbr_filter()
+to prevent KASLR bypass on AMD systems?
+
+>  			cpuc->lbr_entries[i].from =3D 0;
+>  			compress =3D true;
+>  		}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612090114.3188=
+886-1-dapeng1.mi@linux.intel.com?part=3D4
