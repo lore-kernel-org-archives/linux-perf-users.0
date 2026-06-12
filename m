@@ -1,54 +1,54 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E7B37CD48
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 18:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6923439DBFD
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 18:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781287836; cv=none; b=GG6tEP3GvYi8Xu9NhmHEWK6w0vIrrWnaG2LpiQdjQzh87dWXN8t4xkSpkseYP9OvyxyEHQcjQnsg8DqnN7QPfo6VGfxKbxi3bevgXTiB+gAbvJy7FaGcCSPQ5GR87C3MJbGXT56vyy/u2EghGAjR01ojci17khS2Ebmn2APPlSY=
+	t=1781287839; cv=none; b=cdSbC1fy46FS3TvPn4P1TiltIpCvYDBXmSwuoLwCfqPnRXtjsQC1We89z1xe5t6QulX/GIDdcLAGtbPcuB86B5XAVe4B4YY62Z4wA1C14Za8v8Zl0FwZ6scQ11p6hpT7mW4/HR6JwzasEYL87G9etVopUS3GksaS+gxVLQ0hH3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781287836; c=relaxed/simple;
-	bh=jLbyC74Qi6E4rsNJ0wfUqBQPaPyOUGoJmNcSdGYKJzk=;
+	s=arc-20240116; t=1781287839; c=relaxed/simple;
+	bh=rtbReCtNKgKWuJGqG5+idykJxG++lpy4PjiOb4KuwkM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z095fqt6jEogn9XQNoGylJIzJ+B9rGRsF/v5/Vq44AP5KC0VAC9gUCE+MoGLzb9rtHGg3Dc/3CB2fWp5Bx5+bsbdtTRNkeANT+yQehM7pnO68ae+lzpuWpCmaS0+eQ3s8QXFJbXwExPtlUpbRltrnZCWLqKDTduJXAw3uWJARO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oOnvo7Pc; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=PWnpGgdbpIjpSoMvM4WAeQZly3oWVEQNHIauKBSnOU+dbe6mt0KDtXJBjGnB6j24DJ7frfEBT0o5d/Z9J/RBq/M3UEQzTyWqnJiOPMq3gQXStUrIntHRCNH46zQ0W3EDZCsGpDD4rlamKZ6oJNb7tkHIg+N2oYdx9q77YuKOEc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UnY1ZVSq; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oOnvo7Pc"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304e7fc90b1so1489503eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 11:10:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UnY1ZVSq"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304f23c55b2so1764117eec.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 11:10:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781287832; x=1781892632; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781287835; x=1781892635; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/s74nIn8WPc+HB0Rhy5t72WH0t+HfJd7QjfH4BpC6ck=;
-        b=oOnvo7PcUBr6RVFkxmYAVg0wJNYRr4/6CL6n30WOS4QF/0mK34011pqfUwt7m9SBa5
-         /P0MKi8vJHoKj8R8dtt/mjneHYAJyxrkU1Bi/KILKURbi+Bk+cyEZeiSapVjm+FmYnNJ
-         iIcmqxYcNxcsB00Aj8hR7WyDFgsCcMzx+VdQM2w5fioyoI9MqcIiyePx9Vl/i7smN4Kh
-         I9X5VbHpjxlU2EduQJmjXxGjO15DN4vl+bhQ34CcEYM1ZlcBxeofR1AjKHuWmNVMjsIm
-         yHBAmwLVrmLc9l8rhKfwXIuY5NcAwkgYC5rw2hmsVvxiCf824R1I/4t/MP/O72QZDdgq
-         UJZg==
+        bh=NY9cM0un4jE88frXjqh5lzkwakDPLbqlq0gR1EcGkpU=;
+        b=UnY1ZVSqlmUvgJdtIVhDTnV7mTQgQk1+C1uOcDKPvuOIRWp08KXiWUr8N+jBsY8wex
+         zdFV5Men1RXD4SmdAQ4OZWZIkG8H1TbnlohOfhFSZw7KlFyn+WQ/6BI6Lt9TXdxGqQPk
+         yvOYiRdsmUolHwrwjWxVPTjUBap2W5HPZVbOIqOOw3ky5a5VDyV9KyRbhk/aw6SKS7hW
+         iZDIhzS6e49I5LfBX4Qzw5BSR9nuJ5onOOAIWLy5QRXjQZecCdu9LUedzX2tq1uOMV6e
+         Ha8K6MBle8+n0NBmOoRfgkYSwNBrsZwS+svwV4YvQKHNLVsEKlz/cRfY7ruEuyo+dR9y
+         1BNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781287832; x=1781892632;
+        d=1e100.net; s=20251104; t=1781287835; x=1781892635;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/s74nIn8WPc+HB0Rhy5t72WH0t+HfJd7QjfH4BpC6ck=;
-        b=bXlRG5MG71FyZMHVPb5Xj88RxdO64wL+Ov+ZtBhJjIYD6I9WFv8WRFj4EnbIJr/knc
-         8lmLk7PkXlX0mIN90ZzK9DzVGcte4Q7rXXn+OwSu0BtFh5xtBQHT35XvjdKhxxAxEAy3
-         nOr58dpOK5ya2AxPLKPpsMMyJL5lCnn7LGajdw8tVlCe17456H66ciTZyYuUXK1A+zF0
-         sUMQWjJXBwt1BJT/5eJm3dMZUkPn5gQYpUURnsaiLh9LdeUEj7ISXooqO6VFXDylsLDD
-         ZRD8QwMOjoZzqh7fugPIkOi3n/5Bb/oQW8Ji+QBPEO08bhK52KI6XAQlYLhbQtJnhNma
-         Y2Pw==
-X-Forwarded-Encrypted: i=1; AFNElJ/ReOLsTDd9seiIgsHjvFPLCadwWqz67tqNxAKjC7EHp+ZcfdHx6WrwTTU5yenycm0lsK/wF5+gCGPMoHom1IRn@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcInNz00miCmfAN+Ay1ePT8zc+jaCnGR/uptG7BMifBFuBXB5z
-	HDDsltVWgUjjGp8XA7Dq5VfBVh+kWH+7TlJtPp+NpBc5NCqtxWsJ6cUFjmGdNsVxMrJ0gOXxB/y
-	s2PKOObqI3Q==
-X-Received: from dlbps14.prod.google.com ([2002:a05:7023:88e:b0:138:9bc:b899])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4390:b0:136:c77a:6509
- with SMTP id a92af1059eb24-13874d4cda3mr321219c88.25.1781287831376; Fri, 12
- Jun 2026 11:10:31 -0700 (PDT)
-Date: Fri, 12 Jun 2026 11:09:50 -0700
+        bh=NY9cM0un4jE88frXjqh5lzkwakDPLbqlq0gR1EcGkpU=;
+        b=oZhq1Ir2oNzuq0iEKIhNLWFdXdvzZoBtq3AYR2R7fO8CKWeez/UAWLYMVNZToqeuvA
+         kylA0WXIqhObQO0QUQ6F2tBIwpK6UfIkVHULkJihR60pelz3ioPGe3cDbv7YHI2iVCuE
+         l5R6tyFRMQnHNspJK4Bnwc4ox+m4gZXaN1slQTebhGgw2pnMrL/XkwRggzcrbx8qPxC+
+         jPfzeX/UR8B/tgSOg9MkipEO9qh/Whf+pO80jxDMxEczPcUK6XeU/4AkLjC4dF1CJKT6
+         DpPzJRAPCF87GT25n1tB+Wj3Tz+sbh0LpCehHm/9/CCkX87SbI/4MEVAv4An19mcUWE4
+         RD8Q==
+X-Forwarded-Encrypted: i=1; AFNElJ9MznnmCpHYFV+yDwneHPZCohKmsuR9FRGHOWNMwreqyar/5CnN87isewz6L7KW+RWkvukX6EtofxBpprwXsh0S@vger.kernel.org
+X-Gm-Message-State: AOJu0YyH0eJu4YijWwD9Kmc5ggDXGLUUayEtszvD8Pl+YT3uOmHuzOvU
+	nkUeU/1ESf1pxw6a++SMPeKavf7ZPSBOx3+hbleh/t1I5SwlR2WftR/aL9yRkuo+U+9ZsROKsMk
+	yrx6W0LY9ag==
+X-Received: from dyz9.prod.google.com ([2002:a05:693c:4089:b0:2ed:8f25:962c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1e8a:b0:304:3c33:7ae7
+ with SMTP id 5a478bee46e88-3081ff40823mr2333650eec.7.1781287834986; Fri, 12
+ Jun 2026 11:10:34 -0700 (PDT)
+Date: Fri, 12 Jun 2026 11:09:52 -0700
 In-Reply-To: <20260612180956.1105352-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260611224455.201994-1-irogers@google.com> <20260612180956.1105352-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260612180956.1105352-14-irogers@google.com>
-Subject: [PATCH v14 13/19] perf python: Add callchain support
+Message-ID: <20260612180956.1105352-16-irogers@google.com>
+Subject: [PATCH v14 15/19] perf python: Expose brstack in sample event
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,341 +68,304 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Implement pyrf_callchain_node and pyrf_callchain types for lazy
-iteration over callchain frames. Add callchain property to
-sample_event.
+Implement pyrf_branch_entry and pyrf_branch_stack for lazy
+iteration over branch stack entries.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v12:
- - Added an optional `struct machine *` argument to `pyrf_event__new` defaulting to the host machine if NULL, avoiding regressions for future phases.
-
 v2:
 
-1. Eager Callchain Resolution: Moved the callchain resolution from
-   deferred iteration to eager processing in
-   pyrf_session_tool__sample() .  This avoids risks of reading from
-   unmapped memory or following dangling pointers to closed sessions.
+1. Avoided Keyword Collision: Renamed the properties "from" and "to"
+   to "from_ip" and "to_ip" in pyrf_branch_entry__getset[] to prevent
+   syntax errors in Python.
 
-2. Cached Callchain: Added a callchain field to struct pyrf_event to
-   store the resolved object.
+2. Eager Branch Stack Resolution: Updated pyrf_session_tool__sample()
+   to allocate and copy the branch stack entries eagerly when the
+   event is processed, instead of deferring it to iteration time. This
+   avoids reading from potentially overwritten or unmapped mmap
+   buffers.
 
-3. Simplified Access: pyrf_sample_event__get_callchain() now just
-   returns the cached object if available.
+3. Updated Iterators: Updated pyrf_branch_stack and
+   pyrf_branch_stack__next() to use the copied entries rather than
+   pointing directly to the sample's buffer.
 
-4. Avoided Double Free: Handled lazy cleanups properly.
+4. Avoided Reference Leak on Init Failure: Added proper error checking
+   for PyModule_AddObject() in the module initialization function,
+   decrementing references on failure.
 
 v6:
-- Moved callchain resolution from `session_tool__sample` to
+- Moved branch stack resolution from `session_tool__sample` to
   `pyrf_event__new`.
 ---
- tools/perf/util/python.c | 215 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 211 insertions(+), 4 deletions(-)
+ tools/perf/util/python.c | 198 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 198 insertions(+)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 908706b5f20c..ea1b79781584 100644
+index f5f5423dfc80..160b2f9868ad 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -87,6 +87,8 @@ struct pyrf_event {
- 	struct addr_location al;
- 	/** @al_resolved: True when machine__resolve been called. */
+@@ -22,6 +22,7 @@
+ #include "debug.h"
+ #include "dso.h"
+ #include "event.h"
++#include "branch.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "expr.h"
+@@ -89,6 +90,8 @@ struct pyrf_event {
  	bool al_resolved;
-+	/** @callchain: Resolved callchain, eagerly computed if requested. */
-+	PyObject *callchain;
+ 	/** @callchain: Resolved callchain, eagerly computed if requested. */
+ 	PyObject *callchain;
++	/** @brstack: Resolved branch stack, eagerly computed if requested. */
++	PyObject *brstack;
  	/** @event: The underlying perf_event that may be in a file or ring buffer. */
  	union perf_event event;
  };
-@@ -124,6 +126,7 @@ static void pyrf_event__delete(struct pyrf_event *pevent)
- {
+@@ -127,6 +130,7 @@ static void pyrf_event__delete(struct pyrf_event *pevent)
  	if (pevent->al_resolved)
  		addr_location__exit(&pevent->al);
-+	Py_XDECREF(pevent->callchain);
+ 	Py_XDECREF(pevent->callchain);
++	Py_XDECREF(pevent->brstack);
  	perf_sample__exit(&pevent->sample);
  	Py_TYPE(pevent)->tp_free((PyObject *)pevent);
  }
-@@ -785,6 +788,144 @@ static PyObject *pyrf_sample_event__insn(PyObject *self, PyObject *args __maybe_
- 					 pevent->sample.insn_len);
+@@ -997,6 +1001,154 @@ static PyObject *pyrf_sample_event__get_callchain(PyObject *self, void *closure
+ 	return pevent->callchain;
  }
  
-+struct pyrf_callchain_node {
++struct pyrf_branch_entry {
 +	PyObject_HEAD
-+	u64 ip;
-+	struct map *map;
-+	struct symbol *sym;
++	u64 from;
++	u64 to;
++	struct branch_flags flags;
 +};
 +
-+static void pyrf_callchain_node__delete(struct pyrf_callchain_node *pnode)
++static void pyrf_branch_entry__delete(struct pyrf_branch_entry *pentry)
 +{
-+	map__put(pnode->map);
-+	Py_TYPE(pnode)->tp_free((PyObject *)pnode);
++	Py_TYPE(pentry)->tp_free((PyObject *)pentry);
 +}
 +
-+static PyObject *pyrf_callchain_node__get_ip(struct pyrf_callchain_node *pnode,
++static PyObject *pyrf_branch_entry__get_from(struct pyrf_branch_entry *pentry,
 +					     void *closure __maybe_unused)
 +{
-+	return PyLong_FromUnsignedLongLong(pnode->ip);
++	return PyLong_FromUnsignedLongLong(pentry->from);
 +}
 +
-+static PyObject *pyrf_callchain_node__get_symbol(struct pyrf_callchain_node *pnode,
-+						 void *closure __maybe_unused)
++static PyObject *pyrf_branch_entry__get_to(struct pyrf_branch_entry *pentry,
++					   void *closure __maybe_unused)
 +{
-+	if (pnode->sym)
-+		return PyUnicode_FromString(pnode->sym->name);
-+	return PyUnicode_FromString("[unknown]");
++	return PyLong_FromUnsignedLongLong(pentry->to);
 +}
 +
-+static PyObject *pyrf_callchain_node__get_dso(struct pyrf_callchain_node *pnode,
++static PyObject *pyrf_branch_entry__get_mispred(struct pyrf_branch_entry *pentry,
++						void *closure __maybe_unused)
++{
++	return PyBool_FromLong(pentry->flags.mispred);
++}
++
++static PyObject *pyrf_branch_entry__get_predicted(struct pyrf_branch_entry *pentry,
++						  void *closure __maybe_unused)
++{
++	return PyBool_FromLong(pentry->flags.predicted);
++}
++
++static PyObject *pyrf_branch_entry__get_in_tx(struct pyrf_branch_entry *pentry,
 +					      void *closure __maybe_unused)
 +{
-+	const char *dsoname = "[unknown]";
-+
-+	if (pnode->map) {
-+		struct dso *dso = map__dso(pnode->map);
-+
-+		if (dso) {
-+			if (symbol_conf.show_kernel_path && dso__long_name(dso))
-+				dsoname = dso__long_name(dso);
-+			else
-+				dsoname = dso__name(dso);
-+		}
-+	}
-+	return PyUnicode_FromString(dsoname);
++	return PyBool_FromLong(pentry->flags.in_tx);
 +}
 +
-+static PyGetSetDef pyrf_callchain_node__getset[] = {
-+	{ .name = "ip",     .get = (getter)pyrf_callchain_node__get_ip, },
-+	{ .name = "symbol", .get = (getter)pyrf_callchain_node__get_symbol, },
-+	{ .name = "dso",    .get = (getter)pyrf_callchain_node__get_dso, },
++static PyObject *pyrf_branch_entry__get_abort(struct pyrf_branch_entry *pentry,
++					      void *closure __maybe_unused)
++{
++	return PyBool_FromLong(pentry->flags.abort);
++}
++
++static PyObject *pyrf_branch_entry__get_cycles(struct pyrf_branch_entry *pentry,
++					       void *closure __maybe_unused)
++{
++	return PyLong_FromUnsignedLongLong(pentry->flags.cycles);
++}
++
++static PyObject *pyrf_branch_entry__get_type(struct pyrf_branch_entry *pentry,
++					     void *closure __maybe_unused)
++{
++	return PyLong_FromUnsignedLongLong((unsigned long long)pentry->flags.type);
++}
++
++static PyGetSetDef pyrf_branch_entry__getset[] = {
++	{ .name = "from_ip",      .get = (getter)pyrf_branch_entry__get_from, },
++	{ .name = "to_ip",        .get = (getter)pyrf_branch_entry__get_to, },
++	{ .name = "mispred",   .get = (getter)pyrf_branch_entry__get_mispred, },
++	{ .name = "predicted", .get = (getter)pyrf_branch_entry__get_predicted, },
++	{ .name = "in_tx",     .get = (getter)pyrf_branch_entry__get_in_tx, },
++	{ .name = "abort",     .get = (getter)pyrf_branch_entry__get_abort, },
++	{ .name = "cycles",    .get = (getter)pyrf_branch_entry__get_cycles, },
++	{ .name = "type",      .get = (getter)pyrf_branch_entry__get_type, },
 +	{ .name = NULL, },
 +};
 +
-+static PyTypeObject pyrf_callchain_node__type = {
++static PyTypeObject pyrf_branch_entry__type = {
 +	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.callchain_node",
-+	.tp_basicsize	= sizeof(struct pyrf_callchain_node),
-+	.tp_dealloc	= (destructor)pyrf_callchain_node__delete,
++	.tp_name	= "perf.branch_entry",
++	.tp_basicsize	= sizeof(struct pyrf_branch_entry),
++	.tp_dealloc	= (destructor)pyrf_branch_entry__delete,
 +	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= "perf callchain node object.",
-+	.tp_getset	= pyrf_callchain_node__getset,
++	.tp_doc		= "perf branch entry object.",
++	.tp_getset	= pyrf_branch_entry__getset,
 +};
 +
-+struct pyrf_callchain_frame {
-+	u64 ip;
-+	struct map *map;
-+	struct symbol *sym;
-+};
-+
-+struct pyrf_callchain {
++struct pyrf_branch_stack {
 +	PyObject_HEAD
-+	struct pyrf_callchain_frame *frames;
-+	u64 nr_frames;
++	struct branch_entry *entries;
++	u64 nr;
 +};
 +
-+static void pyrf_callchain__delete(struct pyrf_callchain *pchain)
++static void pyrf_branch_stack__delete(struct pyrf_branch_stack *pstack)
 +{
-+	if (pchain->frames) {
-+		for (u64 i = 0; i < pchain->nr_frames; i++)
-+			map__put(pchain->frames[i].map);
-+		free(pchain->frames);
-+	}
-+	Py_TYPE(pchain)->tp_free((PyObject *)pchain);
++	free(pstack->entries);
++	Py_TYPE(pstack)->tp_free((PyObject *)pstack);
 +}
 +
-+static Py_ssize_t pyrf_callchain__length(PyObject *obj)
++static Py_ssize_t pyrf_branch_stack__length(PyObject *obj)
 +{
-+	struct pyrf_callchain *pchain = (void *)obj;
++	struct pyrf_branch_stack *pstack = (void *)obj;
 +
-+	return pchain->nr_frames;
++	return pstack->nr;
 +}
 +
-+static PyObject *pyrf_callchain__item(PyObject *obj, Py_ssize_t i)
++static PyObject *pyrf_branch_stack__item(PyObject *obj, Py_ssize_t i)
 +{
-+	struct pyrf_callchain *pchain = (void *)obj;
-+	struct pyrf_callchain_node *pnode;
++	struct pyrf_branch_stack *pstack = (void *)obj;
++	struct pyrf_branch_entry *pentry;
 +
-+	if (i < 0 || i >= (Py_ssize_t)pchain->nr_frames) {
++	if (i < 0 || i >= (Py_ssize_t)pstack->nr) {
 +		PyErr_SetString(PyExc_IndexError, "Index out of range");
 +		return NULL;
 +	}
 +
-+	pnode = PyObject_New(struct pyrf_callchain_node, &pyrf_callchain_node__type);
-+	if (!pnode)
++	pentry = PyObject_New(struct pyrf_branch_entry, &pyrf_branch_entry__type);
++	if (!pentry)
 +		return NULL;
 +
-+	pnode->ip = pchain->frames[i].ip;
-+	pnode->map = map__get(pchain->frames[i].map);
-+	pnode->sym = pchain->frames[i].sym;
++	pentry->from = pstack->entries[i].from;
++	pentry->to = pstack->entries[i].to;
++	pentry->flags = pstack->entries[i].flags;
 +
-+	return (PyObject *)pnode;
++	return (PyObject *)pentry;
 +}
 +
-+static PySequenceMethods pyrf_callchain__sequence_methods = {
-+	.sq_length = pyrf_callchain__length,
-+	.sq_item   = pyrf_callchain__item,
++static PySequenceMethods pyrf_branch_stack__sequence_methods = {
++	.sq_length = pyrf_branch_stack__length,
++	.sq_item   = pyrf_branch_stack__item,
 +};
 +
-+static PyTypeObject pyrf_callchain__type = {
++static PyTypeObject pyrf_branch_stack__type = {
 +	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name	= "perf.callchain",
-+	.tp_basicsize	= sizeof(struct pyrf_callchain),
-+	.tp_dealloc	= (destructor)pyrf_callchain__delete,
++	.tp_name	= "perf.branch_stack",
++	.tp_basicsize	= sizeof(struct pyrf_branch_stack),
++	.tp_dealloc	= (destructor)pyrf_branch_stack__delete,
 +	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-+	.tp_doc		= "perf callchain object.",
-+	.tp_as_sequence	= &pyrf_callchain__sequence_methods,
++	.tp_doc		= "perf branch stack object.",
++	.tp_as_sequence	= &pyrf_branch_stack__sequence_methods,
 +};
 +
-+static PyObject *pyrf_sample_event__get_callchain(PyObject *self, void *closure __maybe_unused)
++static PyObject *pyrf_sample_event__get_brstack(PyObject *self, void *closure __maybe_unused)
 +{
 +	struct pyrf_event *pevent = (void *)self;
 +
-+	if (!pevent->callchain)
++	if (!pevent->brstack)
 +		Py_RETURN_NONE;
 +
-+	Py_INCREF(pevent->callchain);
-+	return pevent->callchain;
++	Py_INCREF(pevent->brstack);
++	return pevent->brstack;
 +}
 +
  static PyObject*
  pyrf_sample_event__getattro(struct pyrf_event *pevent, PyObject *attr_name)
  {
-@@ -799,6 +940,12 @@ pyrf_sample_event__getattro(struct pyrf_event *pevent, PyObject *attr_name)
- }
- 
- static PyGetSetDef pyrf_sample_event__getset[] = {
+@@ -1017,6 +1169,12 @@ static PyGetSetDef pyrf_sample_event__getset[] = {
+ 		.set = NULL,
+ 		.doc = "event callchain.",
+ 	},
 +	{
-+		.name = "callchain",
-+		.get = pyrf_sample_event__get_callchain,
++		.name = "brstack",
++		.get = pyrf_sample_event__get_brstack,
 +		.set = NULL,
-+		.doc = "event callchain.",
++		.doc = "event branch stack.",
 +	},
  	{
  		.name = "raw_buf",
  		.get = (getter)pyrf_sample_event__get_raw_buf,
-@@ -968,6 +1115,12 @@ static int pyrf_event__setup_types(void)
- 	err = PyType_Ready(&pyrf_context_switch_event__type);
+@@ -1198,6 +1356,12 @@ static int pyrf_event__setup_types(void)
+ 	err = PyType_Ready(&pyrf_callchain__type);
  	if (err < 0)
  		goto out;
-+	err = PyType_Ready(&pyrf_callchain_node__type);
++	err = PyType_Ready(&pyrf_branch_entry__type);
 +	if (err < 0)
 +		goto out;
-+	err = PyType_Ready(&pyrf_callchain__type);
++	err = PyType_Ready(&pyrf_branch_stack__type);
 +	if (err < 0)
 +		goto out;
  out:
  	return err;
  }
-@@ -987,12 +1140,18 @@ static PyTypeObject *pyrf_event__type[] = {
- 	[PERF_RECORD_SWITCH_CPU_WIDE]  = &pyrf_context_switch_event__type,
- };
- 
--static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *evsel)
-+static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *evsel,
-+				 struct perf_session *session,
-+				 struct machine *machine)
- {
- 	struct pyrf_event *pevent;
-+	struct perf_sample *sample;
- 	int err;
- 	u32 min_size;
- 
-+	if (!machine)
-+		machine = session ? &session->machines.host : NULL;
-+
- 	if (event->header.type >= ARRAY_SIZE(pyrf_event__type) ||
- 	    pyrf_event__type[event->header.type] == NULL) {
- 		return PyErr_Format(PyExc_TypeError, "Unexpected header type %u",
-@@ -1038,6 +1197,7 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
- 	}
+@@ -1277,6 +1441,7 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
  
  	perf_sample__init(&pevent->sample, /*all=*/true);
-+	pevent->callchain = NULL;
+ 	pevent->callchain = NULL;
++	pevent->brstack = NULL;
  	pevent->al_resolved = false;
  	addr_location__init(&pevent->al);
  
-@@ -1051,6 +1211,50 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
- 		return PyErr_Format(PyExc_OSError,
- 				    "perf: can't parse sample, err=%d", err);
+@@ -1334,6 +1499,27 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
+ 			addr_location__exit(&al);
+ 		}
  	}
-+	sample = &pevent->sample;
-+	if (machine && sample->callchain) {
-+		struct addr_location al;
-+		struct callchain_cursor *cursor;
-+		u64 i;
-+		struct pyrf_callchain *pchain;
++	if (sample->branch_stack) {
++		struct branch_stack *bs = sample->branch_stack;
++		struct branch_entry *entries = perf_sample__branch_entries(sample);
++		struct pyrf_branch_stack *pstack;
 +
-+		addr_location__init(&al);
-+		if (machine__resolve(machine, &al, sample) >= 0) {
-+			cursor = get_tls_callchain_cursor();
-+			if (thread__resolve_callchain(al.thread, cursor, sample,
-+						      NULL, NULL, PERF_MAX_STACK_DEPTH) == 0) {
-+				callchain_cursor_commit(cursor);
-+
-+				pchain = PyObject_New(struct pyrf_callchain, &pyrf_callchain__type);
-+				if (!pchain) {
-+					addr_location__exit(&al);
-+					Py_DECREF(pevent);
-+					return NULL;
-+				}
-+				pchain->nr_frames = cursor->nr;
-+				pchain->frames = calloc(pchain->nr_frames,
-+							sizeof(*pchain->frames));
-+				if (!pchain->frames) {
-+					Py_DECREF(pchain);
-+					addr_location__exit(&al);
-+					Py_DECREF(pevent);
-+					return PyErr_NoMemory();
-+				}
-+				struct callchain_cursor_node *node;
-+
-+				for (i = 0; i < pchain->nr_frames; i++) {
-+					node = callchain_cursor_current(cursor);
-+					pchain->frames[i].ip = node->ip;
-+					pchain->frames[i].map =
-+						map__get(node->ms.map);
-+					pchain->frames[i].sym = node->ms.sym;
-+					callchain_cursor_advance(cursor);
-+				}
-+				pevent->callchain = (PyObject *)pchain;
-+			}
-+			addr_location__exit(&al);
++		pstack = PyObject_New(struct pyrf_branch_stack, &pyrf_branch_stack__type);
++		if (!pstack) {
++			Py_DECREF(pevent);
++			return NULL;
 +		}
++		pstack->nr = bs->nr;
++		pstack->entries = calloc(bs->nr, sizeof(struct branch_entry));
++		if (!pstack->entries) {
++			Py_DECREF(pstack);
++			Py_DECREF(pevent);
++			return PyErr_NoMemory();
++		}
++		memcpy(pstack->entries, entries,
++		       bs->nr * sizeof(struct branch_entry));
++		pevent->brstack = (PyObject *)pstack;
 +	}
  	return (PyObject *)pevent;
  }
  
-@@ -2422,7 +2626,7 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
- 		perf_mmap__consume(&md->core);
- 		Py_RETURN_NONE;
- 	}
--	pyevent = pyrf_event__new(event, evsel);
-+	pyevent = pyrf_event__new(event, evsel, evlist__session(evlist), /*machine=*/NULL);
- 	perf_mmap__consume(&md->core);
- 	if (pyevent == NULL)
- 		return PyErr_Occurred() ? NULL : PyErr_NoMemory();
-@@ -3185,10 +3389,10 @@ struct pyrf_session {
- static int pyrf_session_tool__sample(const struct perf_tool *tool,
- 				     union perf_event *event,
- 				     struct perf_sample *sample,
--				     struct machine *machine __maybe_unused)
-+				     struct machine *machine)
- {
- 	struct pyrf_session *psession = container_of(tool, struct pyrf_session, tool);
--	PyObject *pyevent = pyrf_event__new(event, sample->evsel);
-+	PyObject *pyevent = pyrf_event__new(event, sample->evsel, psession->session, machine);
- 	PyObject *ret;
+@@ -3902,6 +4088,18 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	Py_INCREF(&pyrf_session__type);
+ 	PyModule_AddObject(module, "session", (PyObject *)&pyrf_session__type);
  
- 	if (pyevent == NULL)
-@@ -3296,6 +3500,9 @@ static PyObject *pyrf_session__new(PyTypeObject *type, PyObject *args, PyObject
- 	}
- 	psession->session = session;
- 
-+	symbol_conf.use_callchain = true;
-+	symbol_conf.show_kernel_path = true;
-+	symbol_conf.inline_name = false;
- 	if (symbol__init(perf_session__env(session)) < 0) {
- 		PyErr_SetString(PyExc_OSError, "perf: symbol__init failed");
- 		goto err_out;
++	Py_INCREF(&pyrf_branch_entry__type);
++	if (PyModule_AddObject(module, "branch_entry", (PyObject *)&pyrf_branch_entry__type) < 0) {
++		Py_DECREF(&pyrf_branch_entry__type);
++		goto error;
++	}
++
++	Py_INCREF(&pyrf_branch_stack__type);
++	if (PyModule_AddObject(module, "branch_stack", (PyObject *)&pyrf_branch_stack__type) < 0) {
++		Py_DECREF(&pyrf_branch_stack__type);
++		goto error;
++	}
++
+ 	dict = PyModule_GetDict(module);
+ 	if (dict == NULL)
+ 		goto error;
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
