@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D4D3D3CF7;
-	Fri, 12 Jun 2026 22:24:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D58A3D3338;
+	Fri, 12 Jun 2026 22:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781303080; cv=none; b=L9s7VF/fHXqPrNNTRxyNutQ6wwBAwprcdYe1T1MhUizgI4o8TmXY1NFyYhy5Yc6sMXYDlOif+QkpZuWCq6+Z04hI3xYFLE8M5ZImJDmghmb5zXzzIIT43w1naEcImjboL34Qgr/LiRJXTpPgMO8vov1NbClW+efZH6hVRA6x3Qc=
+	t=1781303084; cv=none; b=tWHRKa8OKB1on7EBvLGSnkgPygoLQvXgTuIpAoleI0X7Z9niDJxxmq3ifJv1IT5zmMmSti8YCcqNHLvcj44k1AaKgPfmK3pSNRGzx7H7RtROGEhiYPSPoY9sJvVQymzVLGv0wYAPfut5J8IrhAnYrXWXK0ctcqwZiWooUSKz8r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781303080; c=relaxed/simple;
-	bh=RsvTEtZFimuiOFNKX5fKD3iZu3LRkThGQChVHy9/aAo=;
+	s=arc-20240116; t=1781303084; c=relaxed/simple;
+	bh=MOt3c1ftICu+qWVeOeX/X1xW0XC3TEh9ubHr7ByRYfo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=csn20IObPS6qZNyH0M/uc/d9qxJhHjr9ymyJD50wJ5C6g/Z8vDuklAwcBsBsk5x+o89CMm6ZHYwNkUbDofvuFwaxO10uG9xAUDgF30nwALkuFwulxTaxEn0BLqu1nGIcb8OxuWwLMcV7DZQ42sTDkJLZBV2LUP6FYbcGXNxvZXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l024P7jm; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Bsx30PSu9L4/yCn2Eed9vJWXvbqe4GcvXra2rjcbwaUa4ViciDq7jSXVgzmthXCDNv4Z8fh4esLSSEUCnUkadIm+rDUvq+8H9zgVz8UHf/nBFi0hbfvU1elhSpPLk2YvXxkGgXdKjLTZnfoJ4w15zhMiMVWdyWVs0PneA0I8o/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZbAKoCz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l024P7jm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F4D1F00A3A;
-	Fri, 12 Jun 2026 22:24:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZbAKoCz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 854771F000E9;
+	Fri, 12 Jun 2026 22:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781303079;
-	bh=Lzxwb2mVIhdmIzPqJINp8NNNztvFaeNcw3B6tnJg3AQ=;
+	s=k20260515; t=1781303083;
+	bh=XrzfqI1vaU2tlrcUxifTMBQ2C6q9m0ksStEmoc8wi6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=l024P7jmIGUP18NCf6zEjrBSDEJQQJHygNdO459Q8WP6Xibo6o6LjZmG7RgChu8P4
-	 XagzyDb/G/lI8mQqb1i4LminKSHU0ZFXqrBVM6V2hKNVowoNxAwSjO1ynGkIEJ055Y
-	 MuIpP5SjTYRpwhI2UmsY7yMq2WpmNLx/0IG/RtaSWPkSfDuTmzysKvQ5jYE5jl5pHD
-	 2gzP3Sx8NMxpVHYV1nij2F/wwg3X4knV6ukfFAN3z9WumOow1TTOZGHCNEX4Ogc32V
-	 6DKm9fyGBtXdS7g/Tk5mRugy6Rb/9rcC4U7j66+LSKspm4AGJs12tVhPfkk97G7Bs4
-	 tv1mRLnzh+Q0Q==
+	b=lZbAKoCztvM0IYafWB0pyEmbxy7xLtAnopiRO0t869P1XoAx6aFl8akRIbgyzT/2J
+	 2JFWYvM9wbN6Mni6jGcq+dM2dgEjb5rnxYv25A/bGdBGqvbpqFi9DDhX1whKGU9uCw
+	 pfgrhWwGryGbU1AscEEsZmKWOM1H204yAQVY+/b8Ky+jgk47kshm8IZGopO2ALQ0h4
+	 IoehPFxSOSSdarJmvt2c8j8qhvrJoDAxHv+Tt9Uzfrem/ppPaIRDxSZMLBq+T/V7qp
+	 u31txgNsOb3OQL+5RJm06d4m0FITdZsQsPilrsJsCavbVrWXBpOu+Ilm7dI1pA178x
+	 tW/3z9o9oo88A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,10 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
+	Zhang Yanmin <yanmin_zhang@linux.intel.com>,
 	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 05/13] perf dso: Set error code when open() fails on uncompressed fallback path
-Date: Fri, 12 Jun 2026 19:24:04 -0300
-Message-ID: <20260612222413.40791-6-acme@kernel.org>
+Subject: [PATCH 06/13] perf tools: Use snprintf() for root_dir path construction
+Date: Fri, 12 Jun 2026 19:24:05 -0300
+Message-ID: <20260612222413.40791-7-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260612222413.40791-1-acme@kernel.org>
 References: <20260612222413.40791-1-acme@kernel.org>
@@ -52,51 +53,55 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-filename__decompress() has an early return for files that are not
-actually compressed, where it calls open() directly.  When open()
-fails, the function returns -1 but never sets *err.  The caller chain
-(decompress_kmodule → dso__decompress_kmodule_path → dso__get_filename)
-then reads *dso__load_errno(dso) to set errno, but that field was never
-populated, so errno gets a stale or zero value.
+get_kernel_version() in machine.c and dso__load_guest_kernel_sym() in
+symbol.c use sprintf() to construct paths by prepending root_dir to
+"/proc/version" and "/proc/kallsyms" respectively.  Both write into
+PATH_MAX stack buffers, but root_dir comes from --guestmount or KVM
+configuration and is not length-checked.  A root_dir at or near
+PATH_MAX causes a stack buffer overflow.
 
-With errno=0, __open_dso() computes fd = -errno = 0, which is non-
-negative, so callers treat fd 0 (stdin) as a valid DSO file descriptor.
-
-Set *err = errno when open() fails on the uncompressed path, matching
-the error handling on the compressed path at line 354.
+Switch to snprintf() with sizeof(path) to prevent overflow.
 
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Fixes: 8b42b7e5e8b5692b ("perf tools: Add is_compressed callback to compressions array")
-Cc: Jiri Olsa <jolsa@kernel.org>
+Fixes: a1645ce12adb6c9c ("perf: 'perf kvm' tool for monitoring guest performance from host")
+Cc: Zhang Yanmin <yanmin_zhang@linux.intel.com>
 Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/machine.c | 2 +-
+ tools/perf/util/symbol.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 511921bd901d8145..1a2fc6d18da74d6c 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -344,9 +344,12 @@ int filename__decompress(const char *name, char *pathname,
- 	 * descriptor to the uncompressed file.
- 	 */
- 	if (!compressions[comp].is_compressed(name)) {
-+		fd = open(name, O_RDONLY | O_CLOEXEC);
-+		if (fd < 0)
-+			*err = errno;
- 		if (pathname && len > 0)
- 			pathname[0] = '\0';
--		return open(name, O_RDONLY | O_CLOEXEC);
-+		return fd;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index da1ad58758afd9d9..58fa57e3d1a15f37 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1336,7 +1336,7 @@ static char *get_kernel_version(const char *root_dir)
+ 	char *name, *tmp;
+ 	const char *prefix = "Linux version ";
+ 
+-	sprintf(version, "%s/proc/version", root_dir);
++	snprintf(version, sizeof(version), "%s/proc/version", root_dir);
+ 	file = fopen(version, "r");
+ 	if (!file)
+ 		return NULL;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 0c46b24ee0986059..c2328c9cec1565fc 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2275,7 +2275,7 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map)
+ 		if (!kallsyms_filename)
+ 			return -1;
+ 	} else {
+-		sprintf(path, "%s/proc/kallsyms", machine->root_dir);
++		snprintf(path, sizeof(path), "%s/proc/kallsyms", machine->root_dir);
+ 		kallsyms_filename = path;
  	}
  
- 	fd = mkostemp(tmpbuf, O_CLOEXEC);
 -- 
 2.54.0
 
