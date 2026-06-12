@@ -1,106 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB18E3A5433
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 09:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E7434CFD3;
+	Fri, 12 Jun 2026 09:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781256680; cv=none; b=EcUSGRo8KmuMrVf5NmB1xG3n3tWRy0Vi4HFBgkhgbR2UQ4yq9yUYg/+Zcn3Sfy6IrhxflemEu/TS2Iu7ffo1GsMAREayIX8Fjz083ZggWB9uaLbG3/3EniQzq6XjfW7qxP9gkmdYYePTBhqoP/xVSiNgPLfHs/3Y/KUTl8NPJI4=
+	t=1781257616; cv=none; b=WwV4ztho/iVTNXyO6v1aye+uzzU0oJfnLNgVkbT0M4spVOowrxW6ImwBZW5Ad5cHkBlnvlPfweH4lvAUYI9PiGfqVRKaSGqAsLTuDyqRlV7CDfzLswt/jZ1v0f5ZJq0cCJlHDsfeMTZJF59CTOF07TPFFZ/cbw0Rhz6VzeAhDt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781256680; c=relaxed/simple;
-	bh=eigepc0SQ3KvCcLb38iB/AO6I9kPe2zXM2uRswz3bxg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fr+18zJNGWKrZ/pez9K31u/AHZPCM6TgTn/bZ9MU9M6inQQa4XYJkSGYqi+CdgqygafASsUOfniwZDsNtkrF84Y6dOcdsjB4N9UXqnhNDrjASuAfMO4psBMU3gYuQtg9HcOisj1tH5UHkNsXexCrwEJ6q7G5h7XidEY/JHJiJMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwaaXp9X; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781257616; c=relaxed/simple;
+	bh=CmjqGI0s0vnqCK5JH597mmLCQGFSpnabTIVdkKXBQ0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TNDzn8cbnhIf6u6UfCo9k5IV+vwUG+aNLPZRitXyfzx97BihGQ3P9fArCeiyJkilo/+hh22l/p2qJPqQj/z1VBaxOOCp3Mfke72WZj6QS6XIvxW4zQ5Fg1q2U3iXdQ+Eq1JHk820saA9b8/z02rI1A/957UI2N1uaAFjrH7Ekng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VNA323Dr; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwaaXp9X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FA3E1F000E9;
-	Fri, 12 Jun 2026 09:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781256679;
-	bh=oHH4w0OFZ7wK5HZONPnbnlR76UhbGApYCIO6WzFiGVQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mwaaXp9Xy52gcpqBxAGOxE4IJqSqjQO9DgjD41HE3fonoRi5M6QhnjTepagx0/lyl
-	 OH2mzMNcw/OmcSGqZ5mp0w4rxCjYhPfACDPK4uyF80PswWTQS1BXmNVERC8kXUKgEu
-	 AZ4QW6kHv6e6vg+LtGnB/3RPE7HQSWPUerS7I23njot+9zW4gMtB60+oQ+VJEckce5
-	 QShHvOTPiHQAu50BD/VBMk2xOSm8QF7KFAWDgZqjy1Su1X8UgtJISDegpuGyx+qeeD
-	 oFzSFI/jB+3n3toLwxNQYZPdAoFgMJfiFhv8gxrUqjrd6c4AyDCC3Rv1LEWaAaQCuM
-	 bIis2b5Z5W/Cg==
-From: sashiko-bot@kernel.org
-Subject: Re: [Patch v3 5/8] perf/x86/intel: Validate the return value of
- intel_pmu_init_hybrid()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260612090114.3188886-6-dapeng1.mi@linux.intel.com>
-References: <20260612090114.3188886-6-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 12 Jun 2026 09:31:19 +0000
-Message-Id: <20260612093119.7FA3E1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VNA323Dr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rMS1rHvde0qOXS7Wu2x8UE9Q5Ye6ybC0ttjK2rfWB6Q=; b=VNA323DrX5BNk+JJOWyjsWhp3k
+	KPj5g5zLfSAQIow4hDlCntjhnbabObBxW8UOZtzL2wXIXTvqeF/7jEUjfw/Ud3Wp5q9ZvMTGb81iB
+	v27eu5sR/BcKatXQzYxNq5Yv0Sy/4YPaAcSlr3p/f/yKH/UvwfgQ+rkDExA11Ofac8m4Iw6wB2xxx
+	gEJWdpOTl/1z1um/xIETExZlQnjjbZkhVFf0dm9cDLafES15o59uvv4nCN5YUhLn5DdAK3yR7UG8R
+	2LdMBx1GMhnqwKb+JGeVtDJCOU1qQNTE/3OcPDbNkhQDS90gPksnH0E7Zx1qIMJPWuNGxzZsuITSN
+	ahHKxomQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wXyTR-00000006G7b-35qA;
+	Fri, 12 Jun 2026 09:46:50 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C62ED300312; Fri, 12 Jun 2026 11:46:48 +0200 (CEST)
+Date: Fri, 12 Jun 2026 11:46:48 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
+Subject: Re: [Patch v3 1/8] perf/x86/intel: Remove anythread_deprecated bit
+ from perf_capabilities
+Message-ID: <20260612094648.GB42921@noisy.programming.kicks-ass.net>
+References: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
+ <20260612090114.3188886-2-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260612090114.3188886-2-dapeng1.mi@linux.intel.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Relocating `intel_pmu_arch_lbr_init()` below `intel_pmu_check_ev=
-ent_constraints_all()` bypasses the dynamic constraint validation for branc=
-h counters.
---
+On Fri, Jun 12, 2026 at 05:01:07PM +0800, Dapeng Mi wrote:
+> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
+> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+> represent "anythread deprecation" in perf_capabilities. It leads to the
+> anythread_deprecated bit could be overwritten by the real value of
+> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
+> 
+> ```
+> if (!intel_pmu_broken_perf_cap()) {
+> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
+> }
+> ```
+> 
+> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
+> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
+> these support Perfmon v6 platforms, like Clearwater Forest.
+> 
+> ```
+> $grep . /sys/devices/cpu/format/*
+> /sys/devices/cpu/format/acr_mask:config2:0-63
+> /sys/devices/cpu/format/any:config:21
+> /sys/devices/cpu/format/cmask:config:24-31
+> ```
+> 
+> So remove the anythread_deprecated bit from perf_capabilities structure
+> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+> deprecated.
 
-commit 4ceb25a65fdf63fe8fa33e932139cf0a5d28e924
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-
-perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()
-
-This patch validates the return value of intel_pmu_init_hybrid() to avoid a
-null-pointer dereference. It also defers intel_pmu_arch_lbr_init() until af=
-ter
-hybrid PMU initialization succeeds to avoid destroying the kmem cache on
-failure.
-
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index db52e7e53a6cd..74dbf24b0ab63 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-[ ... ]
-> @@ -8829,6 +8842,9 @@ __init int intel_pmu_init(void)
-> =20
->  	intel_pmu_check_event_constraints_all(NULL);
-> =20
-> +	if (boot_cpu_has(X86_FEATURE_ARCH_LBR))
-> +		intel_pmu_arch_lbr_init();
-> +
-[Severity: Medium]
-Does moving intel_pmu_arch_lbr_init() below
-intel_pmu_check_event_constraints_all() bypass the dynamic constraint
-validation for branch counters?
-
-When intel_pmu_check_event_constraints_all() runs, it eventually calls
-intel_pmu_check_dyn_constr(). This check relies on the PMU_FL_BR_CNTR flag
-and the x86_pmu.lbr_counters mask:
-
-arch/x86/events/intel/core.c:intel_pmu_check_dyn_constr() {
-    ...
-		case DYN_CONSTR_BR_CNTR:
-			if (x86_pmu.flags & PMU_FL_BR_CNTR)
-				mask =3D x86_pmu.lbr_counters;
-			break;
-    ...
-}
-
-Because intel_pmu_arch_lbr_init() is now deferred until after this validati=
-on,
-the PMU_FL_BR_CNTR flag hasn't been set yet. Will this cause the dynamic
-constraint check for branch counters to evaluate to false and be skipped?
-
->  	/*
->  	 * Access LBR MSR may cause #GP under certain circumstances.
->  	 * Check all LBR MSR here.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612090114.3188=
-886-1-dapeng1.mi@linux.intel.com?part=3D5
+Again, no markdown please. I've stripped it from these patches.
