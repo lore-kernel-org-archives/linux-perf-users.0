@@ -1,145 +1,139 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8370D37F8A1
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 08:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330FE38238D;
+	Fri, 12 Jun 2026 09:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781252675; cv=none; b=t3/gIm79ko4IpKB95U2uKhpv/GvPC3zmHi90dtUXFY6aB0+nab4WxsvkY8DB7tOTPHRlPahfITbc2fy7nwP8mQWxKAQKLmw3EhXuvZtdd7Wp0/mpPm0yXWu/7f+pxWv0ePbT4rA2cdr2TRtFl1m78vcQf+idLKl27cs/ftvKKYM=
+	t=1781255193; cv=none; b=Vj7wCPYhu2GcLMTmYeMVJucZV6gAGj4nQ9lZaUR6EDnt3m23OqJCm8XkxPxa+UE881U162S1UZCgEkVKGw1+zNgM5pIsPczejnzYAQQHWarod/SposozLqZ9g5ScUW9Ek47oXzLa856XeGmxG8RhOI1PrGrus6SX2/NFdih38MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781252675; c=relaxed/simple;
-	bh=pHsTtRh3BgJvRzkVkxECUE2h14thLlMYtqhfQrfyDAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EZeXC4zwZ9SjmPozT/oOm5zDz99/HarQMonO7Q8ub8PJ1HXcdh/HfLU44ghPx35VN9lMAlwRrDIjczWW0LL0Na+dAiIxDZLt1rQnu9Ss85uMjFL5bPEmMrT9mGgc1EfLKuOdC8En9sOjtkTA6O+1kbIZnilJGGVM9gy1RagaKVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TY/zRNk0; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1781255193; c=relaxed/simple;
+	bh=NS2sEonnMSr3hZ09JbV3khvKmENt4dvdQ+R+ou1FK44=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ThW4GEBhG4zwo6RT/m5/HHcjjmt1U4wsmO+RvV+20k1TiGjjEjRJnfZXL+wUZHOacJL80drr8SYAt9e4mFCOqYGQjpAxCos/bRu2UU5DMVpzyBZPq/AGlgwArlvtVroK1BwVptRC9Ih8vXRMerXrfkDSRJVI2/LMY0CZ6qIHFSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fsg5Jp33; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TY/zRNk0"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-68c1630159bso705142a12.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 01:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781252671; x=1781857471; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ppN3q6i1kLf7wFBLTi3clAGN0Ie4CZBFcKsjThSzwnI=;
-        b=TY/zRNk0OcTX2xzoYUwnHaiuY4dGE5v3Yf/BCLV3UWKEHlZ153j+srcPgtG8b1p8F4
-         mMBMrSlc/NBERyh4caQhmZm83ZDZufIFTYniHuUPP0v3vvD8BJknkCJxgGEwFz2H9Z5+
-         BI/mX+qxYKn3wPXWPF+Bi51zxxLzgF6FALs9GwhO/riy2Ja5PRLUaRs4hPPNCEgJ3EBL
-         CJqa4yZUX5G+dEpl9dwskFCPvmlVwOTr8GmrGZRLZF90IJUOUtbLGv7vfDNeGBRoMYbF
-         hdWybRw3i1K4OB4UQueEEOgjWEbU3JCqGtzdH6SbWs2UXCSuQh9etNqnIC8MjHLWSDyz
-         NsXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781252671; x=1781857471;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ppN3q6i1kLf7wFBLTi3clAGN0Ie4CZBFcKsjThSzwnI=;
-        b=N2k1hTkPFVP5JNv/ddCQC4C3DoPM4PeGtB0RPQzqScb5GnXuuj/YXuabX830fRqVAz
-         GD5URY1cpubQhdQlXbkazPATdCIRxdUgTXJK6nQCEYoC3O0NLhk4e9tkIYlHfmikebL2
-         72uSgaW4mqfsT73uyP1xSDDljBP4N89t8w73O0ttETXOINUApq5SDP3toU7k1/eNuuc5
-         jEhAJSIYvEigxs3mEfSOQZYQZhvm0XARfrOHwPF6rbIxWjmCdksvWQBbtVJaFec6Ye+Q
-         /1offRT+AKV6RNRG9tx/o2qcSuVAGllgrl1zTFb3JRqAojwxGKA+2Bjr7G6FmhpAKoQ+
-         BREA==
-X-Forwarded-Encrypted: i=1; AFNElJ8GsPbiwAUTgKZJcMkWU8s86WEIAnRZAaB6gwMuZsAhQmGpvqM58NXDWiPRMHUOQ+bqASgi+npCVFeec8CDI4aV@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkidbClV3ZuJi/h/OA0TCM7RxBf3LwgdpJ/AfnP8yqnu4HATRp
-	ESSJ35NueqcFTFHYY5vFEcAMCjuoeCALhg6Z9w3hEKj59ZZLJlJH2gz0rQKI53fgiHQ=
-X-Gm-Gg: Acq92OGuVYKd2sfj8v8qqIcWyW7sSoyj77z5opl6Qa5u4bhstwzPSCrAfjYami9+JqN
-	m7b2KYWLFYINGMGfzNfu8ehxJO3BtLdKA4D8P/ZiTxLMRhMqLSqbPceQRKh+1rVpteWOCWwBnIw
-	u4rKeaNIP4t37jx8xznojcGLJPcjCiwZSEddlYnU49S5S7Qig3nxB5kZlh5i0KCfZfL8fwfnmUQ
-	SXUrKAFtZgiyjIRFpJC11N2LgKgDS6E4Biq7eUI1f+t+UTLRN6Si5CDXw6Rl3uodF/gl5edqHVT
-	JEkP63kKWNnCB6eR9tOXIoG0sc1iHoclDZ9GSWwYfc/9Aey1Dx3dWOKLt0ucgvAaxskH7wb0yvP
-	AUFl/07mAosuJ98cpowI2SW3Mm9PPq+xqcXL27RfhwK8y+GHK25SGMgvk74tp1jN2Lj+FLTE35v
-	svMYeki6l6qX5uVhlzCLkgD8NT2zyd
-X-Received: by 2002:a17:906:ef0d:b0:bec:157:a630 with SMTP id a640c23a62f3a-bfe28e12485mr87169166b.23.1781252670620;
-        Fri, 12 Jun 2026 01:24:30 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bfdb44208c9sm77618266b.13.2026.06.12.01.24.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jun 2026 01:24:30 -0700 (PDT)
-Message-ID: <453d71dc-1bd1-40e0-81e4-c578f64f438c@linaro.org>
-Date: Fri, 12 Jun 2026 09:24:29 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fsg5Jp33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781255191; x=1812791191;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NS2sEonnMSr3hZ09JbV3khvKmENt4dvdQ+R+ou1FK44=;
+  b=Fsg5Jp33XuHZ39JUDN/f634UqGRJXHnXK+Idr3VoH+Z7e0pxrT8FubL5
+   G63CqCRd5JKboftSx9ruKUsaJybHJxIJBnG1hq6RJqGx18hmANUshP5Fk
+   yxaJWvyv/G9LJLjOeD1iYHDXrz8Awldjr2lXVNT6gWKHoH4DU8iM/o/4g
+   i191ol7h9qleWNSqN+Jy7ieJGN4TfINlWWmV1A8hpIuMMDXqFIQ1/eT6q
+   A87lN3mOfGB3oQky1ARk6wvZqckqv0R+t6KV3SDvtCuk5EHuVJNZ4lAxI
+   Vkn5Hw7K9r1QtmkpGEVvxGpFnFejoQe82La2OAUmyA2zWxk+3AvX3JfYn
+   g==;
+X-CSE-ConnectionGUID: sKIyqVT0QJizVfL/VK5gCQ==
+X-CSE-MsgGUID: 2oZHNyqkQcWa2DNaUO0Q6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="85714423"
+X-IronPort-AV: E=Sophos;i="6.24,200,1774335600"; 
+   d="scan'208";a="85714423"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 02:06:30 -0700
+X-CSE-ConnectionGUID: 1UPE168ZTpW9no3QXBVQCg==
+X-CSE-MsgGUID: 2HHYZPW3Ty2vqMCpGe0UvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,200,1774335600"; 
+   d="scan'208";a="246838615"
+Received: from spr.sh.intel.com ([10.112.230.239])
+  by orviesa007.jf.intel.com with ESMTP; 12 Jun 2026 02:06:26 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 0/8] perf/x86: Miscellaneous PMU bug fixes
+Date: Fri, 12 Jun 2026 17:01:06 +0800
+Message-Id: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test: Compile named_threads workload with -O0
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260611-james-cs-unformatted-per-thread-fix-followup-v1-1-3c855d93dba8@linaro.org>
- <20260611195449.7230e316@pumpkin>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260611195449.7230e316@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+This series groups several independent PMU fixes to simplify review and
+backporting.
+
+Changes:
+v2 -> v3:
+- Patch 2/8: Directly update PERF_EVENT_FLAG_USER_READ_CNT according to
+  rdpmc user disable state (Peter).
+- Patch 3/8: Only keep x86_lbr_type check for the detection of hardware
+  branch type decoding (Peter).
+- Patch 4/8: Switch from_plm and to_plm variables order and refine
+  comments (Peter).
+- Patch 5/8: Move intel_pmu_arch_lbr_init() after model-specfic PMU
+  initialization to avoid extra kmem cache destroy (Peter).
+- Patch 6/8: Improve change log to add more details (Peter).
+
+v1 -> v2:
+- Fallback to software branch type decoding if hardware decoding is not
+  suppprted (Sashiko patch 4/9).
+- Drop kernel IP for PERF_SAMPLE_IP if exclude_kernel attribute is
+  required (Sashiko, patch 8/9).
+- Add kernel access check when kernel callchains are requested
+  (Sashiko, patch 9/9)
+- Address Zide and Thomas's comments.
+- Collect Reviewed-bys.
+
+Patch layout:
+- Patch 1/8: Fix anythread_deprecated being overwritten issue. 
+- Patch 2/8: Fix the issue that cap_user_rdpmc is not updated correctly.
+- Patch 3/8: Fallback to software branch type decoding if no hardware
+  decoding.
+- Patch 4/8: Fix the kernel address leakage issue in LBR stack.
+- Patch 5/8: Fix the issue that the return value of
+  intel_pmu_init_hybrid() is not valiated correctly.
+- Patch 6/8: Fix a "unchecked MSR access error" on PEBS_ENABLE MSR.
+- Patch 7/8: Prevent a theoretical kernel register data leak in sampling.
+- Patch 8/8: Add kernel access check when kernel callchains are
+  requested. 
+
+History:
+v2: https://lore.kernel.org/all/20260609050222.2458129-1-dapeng1.mi@linux.intel.com/
+v1: https://lore.kernel.org/all/20260605011136.2043393-1-dapeng1.mi@linux.intel.com/
+
+Dapeng Mi (8):
+  perf/x86/intel: Remove anythread_deprecated bit from perf_capabilities
+  perf/x86/intel: Keep cap_user_rdpmc in sync with RDPMC user-disable
+    state
+  perf/x86/intel: Fallback to sw branch type decoding if no hw decoding
+  perf/x86/intel: Fix kernel address leakages in LBR stack
+  perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()
+  perf/x86/intel: Drop fixed-counter PEBS constraints for baseline PEBS
+  perf/core: Fix kernel register info leak via hardware skid
+  perf/core: Check kernel access when kernel callchains are requested
+
+ arch/x86/events/core.c       |  3 +-
+ arch/x86/events/intel/core.c | 60 +++++++++++++++++++++---------------
+ arch/x86/events/intel/ds.c   | 13 --------
+ arch/x86/events/intel/lbr.c  | 14 ++++++---
+ arch/x86/events/perf_event.h |  4 +--
+ kernel/events/core.c         | 41 +++++++++++++++++++-----
+ 6 files changed, 83 insertions(+), 52 deletions(-)
 
 
-
-On 11/06/2026 7:54 pm, David Laight wrote:
-> On Thu, 11 Jun 2026 12:13:46 +0100
-> James Clark <james.clark@linaro.org> wrote:
-> 
->> The work loop relies on the compiler not optimizing it away, although
->> named_threads_work is not static for that reason, the compiler could
->> still do it.
-> 
-> Isn't in enough to put barrier() in the loop?
-> 
-> 	David
-> 
-
-Probably, but I don't think it would make a difference for this specific 
-test workload, and I don't think that style has ever been used for any 
-of the Perf tests.
-
-I think Sashiko's comment leading to this was overly pedantic, neither 
-GCC or Clang optimize this away even with -O2. So in this specific case 
-it was only fixing a hypothetical which is why I didn't add a fixes tag. 
-Although I admit there is some chance it could happen with other changes.
-
-However, I think -O0 is the appropriate fix for a workload because it 
-makes the stacks and order of execution predictable, which is what the 
-tests look at. And that also has the effect of guaranteeing this isn't 
-optimized away, so we probably don't need both.
-
-Thanks
-James
-
->>
->> Fix it by compiling without optimization. Also add -fno-inline for
->> consistency and in case anyone wants to look at callstacks.
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->> One trailing Sashiko fix from the "perf cs-etm: Queue context packets
->> for frontend" patch series that has been applied already.
->> ---
->>   tools/perf/tests/workloads/Build | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
->> index 75b377934a0e..7bb4b9829ba2 100644
->> --- a/tools/perf/tests/workloads/Build
->> +++ b/tools/perf/tests/workloads/Build
->> @@ -26,3 +26,4 @@ CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->>   CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->>   CFLAGS_inlineloop.o       = -g -O2
->>   CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->> +CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
->>
->> ---
->> base-commit: 7336514f41e75d44782fee7e0990d4195a3d3161
->> change-id: 20260611-james-cs-unformatted-per-thread-fix-followup-babf28a4e640
->>
->> Best regards,
-> 
+base-commit: 67d27727854def4a7e2b386429941f5c4741ccc4
+-- 
+2.34.1
 
