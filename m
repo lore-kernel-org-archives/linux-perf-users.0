@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8243988EB;
-	Fri, 12 Jun 2026 09:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7CF3A4F3B;
+	Fri, 12 Jun 2026 09:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781255222; cv=none; b=pHpNDTFs0r75nECScdG+W9XQkGRx0IXRP7SCG0hNK/d4xy+JkyOyRZSUtrDswXtFFczBSe/W/B225yJqR0C7ogdRoa/la2dWH6cbJE8XdWGhxrUBcQKGjzrFnXyVD0oIR8H/jCb7mGqExWQ5S/vbmrNwIc9ui+A0aQqSeFSRW5s=
+	t=1781255223; cv=none; b=oWv6BdXLhcCn6/dClTwvr3/hLqiOG66eulBkXBdCLbBKUpdBxXZwhPV+FuzdlcwgFicCSv8PzGTxTsoakALh3kpdgvybHgW+U0P+hbcexsjyjH+jEJOmcoxndYh0vKIio9yo1T/sUEY499Vz/fihw/rAA+TZBCPyF4gNYdip8vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781255222; c=relaxed/simple;
-	bh=s0XgtNysgzf7nYquLq39Lj6qcU45N3JbPRLtCUePeGk=;
+	s=arc-20240116; t=1781255223; c=relaxed/simple;
+	bh=LqWga/INHK1rzH2ms2/El4jnpXfJdHBn3fdrz2yDfPo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GEO6tpdzSoaj4pboMbCTQHVk0SYsQJrgz83oThIRk8fDZukJ6uhpPUnRMEBOMqzHJOvh6kQ48qxWrnChikNYXDT9OOwGMxvmRNly/P6aQigfMLUDDyHSEBzeNB5Ocwgkg6D0Gbv8fSj9IAj+d/wg1wO/mQVzY/xYbvNEo2BWgbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hmR4A8ij; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=kGSFfv6BlpmXJ/nWqVCwxVqJMFVLfxCGlmISi3g5lrWnMJ6TTCAXwZLtmFFohqHWkflTBnbqEBhXa3YXwp/Bsg5ay8cCb+1oWoDD9kwShUH9vu8PWCTR/6Z7oWoDn0pqURBjLKEKyVgj2QWBoTmuG1koNSqx2qdZHBzrCpkN8T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KEcNr1y2; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hmR4A8ij"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KEcNr1y2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781255215; x=1812791215;
+  t=1781255219; x=1812791219;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=s0XgtNysgzf7nYquLq39Lj6qcU45N3JbPRLtCUePeGk=;
-  b=hmR4A8ijm19YzrL/WFkdcw8tZhReL8aZgFoxT2Te/P36/5BEa+dCbtE+
-   G4RFLov38AieJoDZ2EGVh09f0VJxfdWyRoAedKc5eWgh8IE1CjOU8viDQ
-   q9vAyPx+xUZPnqewqkUdp8YkCTfCGbZ302nYvSUqAcMAHPmxSVfRR86sb
-   Bq5QZPPsQZV86FgDoSLmyqLNeRg/CNePqkaQVWj/kcl/n5u3GmSeqUf8z
-   gDgCLBtE7T2rZHavobCB2prQAo8AoD9bKXiLOZ2jWqP43hd5R5eLcJNiz
-   gV0R8F3KQQj1X27U/lV1YQWj1gofhc1q14Kc3lXPOGrr4pX9zgq+6QagA
-   g==;
-X-CSE-ConnectionGUID: XYpQ1ZQbSN27mCue2HMvbA==
-X-CSE-MsgGUID: CTvl+np2TLeyilJhTfyIYw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="85714468"
+  bh=LqWga/INHK1rzH2ms2/El4jnpXfJdHBn3fdrz2yDfPo=;
+  b=KEcNr1y2sKlVE+FVVoJ3KzcaDm+AhNIsD9+/85op6C8SBNFIRENAk6Rw
+   msfq5JzUg2Kvyk7QyGHYVGZ1URMPKwTB5QnWIpklwT6to93T3EAwjKPsW
+   /73eYPUz8PkU8TNKE53lPxQyRpsqz6Z9oRafdjspuLaE5UF0mpeqor/b+
+   ARzBQEjUIE0fJ6eU+6jSAiiXkw93dDLYfxKNd/Z+57jPIW4KwniFdVVVp
+   TUAF8+6TuBB3TajKzVxgRK13uWb7PYDpYUAEZJhIJ82MaxxoTzY1os9pq
+   qz+3Xb+KPaE9X90w+NyVdvPbfDLd5WeWn6QAqlyEo9+MFp83Mlit2mH4J
+   w==;
+X-CSE-ConnectionGUID: 4mR18ZJJR0GBVlAwwaNlHQ==
+X-CSE-MsgGUID: 3d6C2g73Q06FyQhbNelDTg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="85714479"
 X-IronPort-AV: E=Sophos;i="6.24,200,1774335600"; 
-   d="scan'208";a="85714468"
+   d="scan'208";a="85714479"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 02:06:55 -0700
-X-CSE-ConnectionGUID: NVSzAAOeQvSr1mCScC4+tA==
-X-CSE-MsgGUID: qOe8ABgKSCKtV+0FdWO6qg==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 02:06:59 -0700
+X-CSE-ConnectionGUID: nIraCesPSuCse0ylGObgug==
+X-CSE-MsgGUID: lwTcnybUT5qo0+YKj6gYjw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,200,1774335600"; 
-   d="scan'208";a="246838762"
+   d="scan'208";a="246838772"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by orviesa007.jf.intel.com with ESMTP; 12 Jun 2026 02:06:50 -0700
+  by orviesa007.jf.intel.com with ESMTP; 12 Jun 2026 02:06:55 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,10 +60,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Yi Lai <yi1.lai@intel.com>
-Subject: [Patch v3 6/8] perf/x86/intel: Drop fixed-counter PEBS constraints for baseline PEBS
-Date: Fri, 12 Jun 2026 17:01:12 +0800
-Message-Id: <20260612090114.3188886-7-dapeng1.mi@linux.intel.com>
+	Mark Rutland <mark.rutland@arm.com>
+Subject: [Patch v3 7/8] perf/core: Fix kernel register info leak via hardware skid
+Date: Fri, 12 Jun 2026 17:01:13 +0800
+Message-Id: <20260612090114.3188886-8-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
 References: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
@@ -75,90 +75,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Sapphire Rapids (SPR) guests where pebs_baseline is not advertised,
-running command
+An unprivileged hardware perf event using exclude_kernel=1 can leak kernel
+register data to user space via PERF_SAMPLE_REGS_INTR or PERF_SAMPLE_IP.
+Due to hardware skid, a PMI may trigger after the CPU has already entered
+kernel space (Ring 0), bypassing the perf_allow_kernel() privilege
+barrier.
 
-$ ./perf record -e cpu/event=0x00,umask=0x01,i\
-	 name=INST_RETIRED.PREC_DIST/p -c 10000 sleep 1
+This security vulnerability is severely exacerbated by upcoming support
+for SIMD register sampling via XSAVES, which could expose sensitive kernel
+FPU states (such as active cryptographic keys).
 
-can trigger:
+Fix this by ensuring that sampled register data is dropped if the event's
+exclude_kernel attribute is set but the PMI catches the CPU in kernel mode.
 
-unchecked MSR access error: WRMSR to 0x3f1 ... in\
-	 intel_pmu_pebs_enable_all()
-
-This occurs because SPR-specific PEBS constraints allow fixed-counter
-scheduling (for example, INST_RETIRED.PREC_DIST on fixed counter 0).
-In guests lacking pebs_baseline, KVM does not support PEBS sampling on
-fixed counters, so enabling such events reaches an invalid MSR
-programming path.
-
-Starting with Icelake, regardless of whether Extended PEBS or
-Architectural PEBS is in use, all counters (including fixed counters)
-support PEBS sampling, and the PMU_FL_PEBS_ALL flag is set by default.
-As long as PMU_FL_PEBS_ALL is set, constraint lookup automatically falls
-back to the corresponding non-PEBS constraints if no matching entry is
-found in the PEBS constraints table. Since non-PEBS event constraints
-already contain the same fixed-counter constraints, it is safe to remove
-these fixed-counter entries from the PEBS constraints table. The fallback
-mechanism will ensure that fixed PEBS events are scheduled onto the
-correct fixed counters.
-
-So, directly drop the fixed-counter entries from the PEBS constraint
-table. Without pebs_baseline, these fixed-counter PEBS events will now
-resolve to empty constraints and will not be scheduled or enabled,
-thereby avoiding the warning and bypassing the broken guest PEBS path.
-
-Reported-by: Yi Lai <yi1.lai@intel.com>
+Link: https://lore.kernel.org/all/20260529085613.CCAFB1F00893@smtp.kernel.org/
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/ds.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ kernel/events/core.c | 37 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index cb72af9b61ce..5db15a92017a 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1447,10 +1447,6 @@ struct event_constraint intel_skl_pebs_event_constraints[] = {
- };
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 95d806bba654..89f6c9ffb964 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7792,10 +7792,20 @@ unsigned long perf_misc_flags(struct perf_event *event,
+ unsigned long perf_instruction_pointer(struct perf_event *event,
+ 				       struct pt_regs *regs)
+ {
+-	if (should_sample_guest(event))
+-		return perf_guest_get_ip();
++	/*
++	 * Hardware skid can lead to a scenario where a PMI is
++	 * delivered after the CPU has already entered kernel mode.
++	 * In that case, user-space sampling must not expose kernel
++	 * register state.
++	 */
++	if (should_sample_guest(event)) {
++		return event->attr.exclude_kernel &&
++		       !(perf_guest_state() & PERF_GUEST_USER) ?
++			0 : perf_guest_get_ip();
++	}
  
- struct event_constraint intel_icl_pebs_event_constraints[] = {
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x100000000ULL),	/* old INST_RETIRED.PREC_DIST */
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),	/* SLOTS */
--
- 	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_STORES */
-@@ -1473,9 +1469,6 @@ struct event_constraint intel_icl_pebs_event_constraints[] = {
- };
+-	return perf_arch_instruction_pointer(regs);
++	return event->attr.exclude_kernel && !user_mode(regs) ?
++		0 : perf_arch_instruction_pointer(regs);
+ }
  
- struct event_constraint intel_glc_pebs_event_constraints[] = {
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
--
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xc0, 0xfe),
- 	INTEL_PLD_CONSTRAINT(0x1cd, 0xfe),
- 	INTEL_PSD_CONSTRAINT(0x2cd, 0x1),
-@@ -1500,9 +1493,6 @@ struct event_constraint intel_glc_pebs_event_constraints[] = {
- };
+ static void
+@@ -7829,10 +7839,22 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ }
  
- struct event_constraint intel_lnc_pebs_event_constraints[] = {
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
--
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x012a, 0x1),		/* OCR.* events */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x012b, 0x1),		/* OCR.* events */
+ static void perf_sample_regs_intr(struct perf_regs *regs_intr,
+-				  struct pt_regs *regs)
++				  struct pt_regs *regs,
++				  bool exclude_kernel)
+ {
+-	regs_intr->regs = regs;
+-	regs_intr->abi  = perf_reg_abi(current);
++	/*
++	 * Hardware skid can lead to a scenario where a PMI is
++	 * delivered after the CPU has already entered kernel mode.
++	 * In that case, user-space sampling must not expose kernel
++	 * register state.
++	 */
++	if (exclude_kernel && !user_mode(regs)) {
++		regs_intr->abi = PERF_SAMPLE_REGS_ABI_NONE;
++		regs_intr->regs = NULL;
++	} else {
++		regs_intr->regs = regs;
++		regs_intr->abi = perf_reg_abi(current);
++	}
+ }
  
-@@ -1534,9 +1524,6 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
- };
  
- struct event_constraint intel_pnc_pebs_event_constraints[] = {
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
--	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
--
- 	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0xfc),
- 	INTEL_HYBRID_STLAT_CONSTRAINT(0x2cd, 0x3),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
+@@ -8723,7 +8745,8 @@ void perf_prepare_sample(struct perf_sample_data *data,
+ 		/* regs dump ABI info */
+ 		int size = sizeof(u64);
+ 
+-		perf_sample_regs_intr(&data->regs_intr, regs);
++		perf_sample_regs_intr(&data->regs_intr, regs,
++				      event->attr.exclude_kernel);
+ 
+ 		if (data->regs_intr.regs) {
+ 			u64 mask = event->attr.sample_regs_intr;
 -- 
 2.34.1
 
