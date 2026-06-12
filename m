@@ -1,263 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA973946A;
-	Fri, 12 Jun 2026 00:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4F1946A
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 00:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781225628; cv=none; b=hl1vuy2tXlKRc3/ZZ+r4WdOHWQI7p/e6GspsCWSZ+aPMYrazhqoLCzjUEg6hiAnwW0NfWWiesZI/QYrHRD9LLKPTDqyrvUSDVEUGfgssqgRxhRNPbsnCEA36iDFgD+kmw8UbrsxQV8atThOkrP4F6R84vDGh/quFFxqevprUuo4=
+	t=1781225697; cv=none; b=Uj+5jUmly6TNO6dsLNrJnzE0A9+Gw1qA/yh6z+EWubafpj25rClC6aN0PhyCEbCxW6Kk4aJUyMPFPJNBWQ36AANLbS9ykSwLBSF7QY1DbxR7v4e3uD04H3qk7oGDjzOgSe+DNU0wDMiHBSHySpvMiKtU3fU7Yq21WobjEpi4kQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781225628; c=relaxed/simple;
-	bh=54+jvz2T0azE3brf4a87n87ORj/K9njDfJVPTH7BgA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=esos/af5Mnwq2zuabkIyn9Qe5GjYULJHRJYxwNcEKpAlv2x5Be0pWbIommoCZA5KZVy23A1/PT/5NtHMzw0lpTIpcy6/Edc6HcwNQPBnuqAJXkjsjguddHLNJbAffZXBl2uZcRPRPSXtG9UHauRzDcHtEO43rx4qdjaWNNwpEdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=avmU0Hge; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781225697; c=relaxed/simple;
+	bh=jCtqeJyH26MJ+DOTfVzkDZzCwizFu19Wut7DRzKP/Ic=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=aRcweCFM65F/gmArtcPP0PHa5BAksbUOLcMq1L1CYCpfdPRGyxu0kWPHvbq7HIEy4LL0AEQxvJw3Y2mfM8vam3cjwgJIM0HMuwPPk8c0/uvIepPU07irfjdcinkvFB8gNL6I+a8uT1MZKkboXJwkp++iHIVCIoNFHU7jjIbClQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMkqopC3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="avmU0Hge"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781225626; x=1812761626;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=54+jvz2T0azE3brf4a87n87ORj/K9njDfJVPTH7BgA4=;
-  b=avmU0HgeCuv+uDoS1Q8qS73QP+RznCcQwrl4nANyoXwF2o1fXzNbA4IA
-   J2znY99Y3po4/UYDZG3EL8sFunRpiB4fyH65CdYY5vHTlWkfnnDQ+wSMz
-   nO4Sqxqg5utH3iFOfXN7p+EXBoxMWeLfzR9I0GwLgjVJYQLXoaK6YxBh+
-   WV70yXd9RqcsznqEfJEETcVn5RErrDDvsvptsYyw1DniMEiFwqz6H+lyG
-   spc4pe9R8uzhvhCMHaJnKsBNZM+eKsSuafJDzbGr/TtDwgKhXnCZGLsC6
-   IMZDNlHy4eq5hOpAFM2DxjB6sN0rUJxAslfhEyKVBF7fewRKq8wNTC7IS
-   g==;
-X-CSE-ConnectionGUID: dbHvv8OsSHCQpm2aUiZZhQ==
-X-CSE-MsgGUID: EwQHadMBTG+UKJbHcig6SQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="93445923"
-X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="93445923"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 17:53:45 -0700
-X-CSE-ConnectionGUID: Kj+yB46oQmaJKKYd5BuNpQ==
-X-CSE-MsgGUID: SimgheitQXO/uVsFD+q8wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="242302605"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 17:53:43 -0700
-Message-ID: <23c4488b-a264-49ac-99ed-4df75aa8ea84@linux.intel.com>
-Date: Fri, 12 Jun 2026 08:53:40 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMkqopC3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCC5E1F000E9;
+	Fri, 12 Jun 2026 00:54:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781225696;
+	bh=ESNRWuRR4n3BoYSj9EBDi2SJ9XJ4QjKfYrsQE8Gp3+k=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hMkqopC3pMAuHOmFHIenlq0hWptAaimMa+a8lkOH6TPdZaS7lu8g40nundGjGWYGq
+	 IjNLVGkT4P7BhuTPjZLtSOxkSOEHumqgrdU5g0qH+Jk6xVehwU1x6cQFJnv86AAAWD
+	 AZW4i/PsLJSG2Da3dtIH+cST7rhbY6T6bsaaNa1HzTv3Xijiwu5wlobt5ze8M1oEF8
+	 GmMIIlJOjNscKoknzWPSqb+785YEd9KdShqvCehwGglR/sTOtb5nVFOp1Kp6gSLJo2
+	 ezKsChzIyC82zMSpU7iCJKbjE/JqW9+Ql2aTccD1ec0Y/S4pqDd6tpDzBLH0EDo8SE
+	 2xW4uGg4dVRqg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 06/15] perf dso: Set error code when open() fails on
+ uncompressed fallback path
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260612003444.50723-7-acme@kernel.org>
+References: <20260612003444.50723-7-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 12 Jun 2026 00:54:54 +0000
+Message-Id: <20260612005455.CCC5E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 6/8] perf/x86/intel/uncore: Introduce PMU flags and
- broken state
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260611160033.66760-1-zide.chen@intel.com>
- <20260611160033.66760-7-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260611160033.66760-7-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Type punning by accessing a char array through an incompatible p=
+ointer type in tools/.
+--
 
-Thanks.
+commit 4b3994ef70950d73fb48b1cdff6e7ffb7ee129d2
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On 6/12/2026 12:00 AM, Zide Chen wrote:
-> Replace the boolean 'registered' field in intel_uncore_pmu with an
-> unsigned long 'flags' field, and add a PMU_BROKEN flag to track box
-> setup failures. The broken flag is sticky, meaning it is cleared only
-> by a module reload or system reboot.
->
-> Broken PMUs are skipped in the CPU hotplug and box allocation paths.
->
-> When any box fails to initialize, the PMU is marked broken.  Broken
-> PMUs reject new event assignments and skip future box setup attempts.
-> If the PMU was already registered, it remains so to avoid disrupting
-> in-flight events on other boxes.
->
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
-> ---
-> v3:
-> - Fix typo stick->sticky and other cosmetic fixes in code comment.
-> v2:
-> - Make the broken flag sticky by using clear_bit() in
->   uncore_pmu_unregister() rather than zeroing out pmu->flags.
-> - In uncore_change_type_ctx(), don't stop CPU migration on broken PMU
->   for in-flight events. (Sashiko).
-> - Use box->cpu == -1 to identify inactive boxes that don't need
->   migration, no need to check uncore_die_has_box(), which is incomplete.
-> ---
->  arch/x86/events/intel/uncore.c     | 44 ++++++++++++++++++++++--------
->  arch/x86/events/intel/uncore.h     | 13 ++++++++-
->  arch/x86/events/intel/uncore_snb.c |  2 +-
->  3 files changed, 46 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 06ef89f6ccc2..feb8c3b0076b 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -757,7 +757,7 @@ static int uncore_pmu_event_init(struct perf_event *event)
->  
->  	pmu = uncore_event_to_pmu(event);
->  	/* no device found for this pmu */
-> -	if (!pmu->registered)
-> +	if (!uncore_pmu_available(pmu))
->  		return -ENOENT;
->  
->  	/* Sampling not supported yet */
-> @@ -953,16 +953,18 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
->  
->  	ret = perf_pmu_register(&pmu->pmu, pmu->name, -1);
->  	if (!ret)
-> -		pmu->registered = true;
-> +		uncore_pmu_set_registered(pmu);
->  	return ret;
->  }
->  
->  static void uncore_pmu_unregister(struct intel_uncore_pmu *pmu)
+perf dso: Set error code when open() fails on uncompressed fallback path
+
+filename__decompress() has an early return for files that are not
+actually compressed, where it calls open() directly. When open()
+fails, the function returns -1 but never sets *err, leading to a stale
+or zero errno. This causes callers to treat fd 0 as a valid DSO file
+descriptor.
+
+> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-mi=
+nimal.c
+> index 091071d06416e..ea2de3d50d33c 100644
+> --- a/tools/perf/util/symbol-minimal.c
+> +++ b/tools/perf/util/symbol-minimal.c
+
+[ ... ]
+
+> @@ -217,29 +220,36 @@ int sysfs__read_build_id(const char *filename, stru=
+ct build_id *bid)
 >  {
-> -	if (!pmu->registered)
-> +	if (!uncore_pmu_registered(pmu))
->  		return;
->  	perf_pmu_unregister(&pmu->pmu);
-> -	pmu->registered = false;
-> +
-> +	/* Keep PMU_BROKEN_BIT sticky. */
-> +	uncore_pmu_clear_registered(pmu);
->  }
->  
->  static void uncore_free_boxes(struct intel_uncore_pmu *pmu)
-> @@ -1153,7 +1155,12 @@ static int uncore_box_setup(struct intel_uncore_pmu *pmu,
->  {
->  	int ret;
->  
-> -	uncore_box_init(box);
-> +	if (uncore_pmu_broken(pmu))
-> +		return -ENODEV;
-> +
-> +	ret = uncore_box_init(box);
-> +	if (ret)
-> +		goto err;
->  
->  	/* First active box registers the pmu. */
->  	if (atomic_inc_return(&pmu->activeboxes) > 1)
-> @@ -1167,6 +1174,16 @@ static int uncore_box_setup(struct intel_uncore_pmu *pmu,
->  
->  	return 0;
->  err:
+>  	int fd;
+>  	int ret =3D -1;
+> -	struct stat stbuf;
+> -	size_t buf_size;
+> -	void *buf;
 > +	/*
-> +	 * If any box fails, mark the per-package PMU as broken regardless of
-> +	 * whether it was registered or not.
+> +	 * read_build_id() casts this buffer to a u32 note header pointer,
+> +	 * so it must be aligned for u32 access.
 > +	 *
-> +	 * Don't decrement refcnt to avoid other in-die CPUs from trying to set
-> +	 * up the PMU box again.
+> +	 * Accessing a char[] through a u32* is technically type-punning
+> +	 * under C strict aliasing rules, but perf unconditionally builds
+> +	 * with -fno-strict-aliasing (Makefile.config), so this is safe.
 > +	 *
-> +	 * Don't kfree box; MSR and MMIO boxes are freed at module exit only.
+> +	 * This file is only compiled when libelf is not available =E2=80=94 the
+> +	 * common case uses the libelf-based path in symbol-elf.c instead.
 > +	 */
-> +	uncore_pmu_set_broken(pmu);
->  	uncore_box_exit(box);
+> +	char buf[BUFSIZ] __aligned(4);
+
+[Severity: Medium]
+The comment mentions that perf unconditionally builds with
+-fno-strict-aliasing, making this safe. However, do files under the tools/
+directory generally assume standard -fstrict-aliasing?
+
+When this character array is passed to read_build_id() and cast to an
+incompatible structure pointer type:
+
+sysfs__read_build_id()->read_build_id() {
+	nhdr =3D ptr;
+	if (need_swap) {
+		nhdr->n_namesz =3D bswap_32(nhdr->n_namesz);
+
+Could this type punning lead to undefined behavior or compiler optimization
+issues if standard compiler flags are used for tools?
+
+> +	ssize_t len;
+> =20
+>  	fd =3D open(filename, O_RDONLY);
+>  	if (fd < 0)
+>  		return -1;
+> =20
+> -	if (fstat(fd, &stbuf) < 0)
+> -		goto out;
+> +	/*
+> +	 * Use a fixed buffer and a single read() instead of fstat() + malloc(),
+> +	 * because sysfs pseudo-files often report st_size=3D0 or 4096
+> +	 * regardless of actual content size.
+> +	 *
+> +	 * BUFSIZ (8192) is more than sufficient: a sysfs build-id note is
+> +	 * ~36 bytes (12-byte note header + 4-byte "GNU" name + 20-byte SHA1).
+> +	 */
+> +	len =3D read(fd, buf, sizeof(buf));
+> +	if (len > 0)
+> +		ret =3D read_build_id(buf, len, bid, false);
+> =20
+> -	buf_size =3D stbuf.st_size;
+> -	buf =3D malloc(buf_size);
+> -	if (buf =3D=3D NULL)
+> -		goto out;
+> -
+> -	if (read(fd, buf, buf_size) !=3D (ssize_t) buf_size)
+> -		goto out_free;
+> -
+> -	ret =3D read_build_id(buf, buf_size, bid, false);
+> -out_free:
+> -	free(buf);
+> -out:
+>  	close(fd);
 >  	return ret;
 >  }
-> @@ -1190,8 +1207,10 @@ static int uncore_pci_pmu_register(struct pci_dev *pdev,
->  		return -EINVAL;
->  
->  	box = uncore_alloc_box(type, NUMA_NO_NODE);
-> -	if (!box)
-> +	if (!box) {
-> +		uncore_pmu_set_broken(pmu);
->  		return -ENOMEM;
-> +	}
->  
->  	atomic_inc(&box->refcnt);
->  	box->dieid = die;
-> @@ -1507,7 +1526,8 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
->  
->  		if (old_cpu < 0) {
->  			WARN_ON_ONCE(box->cpu != -1);
-> -			if (uncore_die_has_box(type, die, pmu->pmu_idx)) {
-> +			if (uncore_die_has_box(type, die, pmu->pmu_idx) &&
-> +			    !uncore_pmu_broken(pmu)) {
->  				box->cpu = new_cpu;
->  				cpumask_set_cpu(new_cpu, &pmu->cpu_mask);
->  			}
-> @@ -1515,12 +1535,14 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
->  		}
->  
->  		WARN_ON_ONCE(box->cpu != -1 && box->cpu != old_cpu);
-> -		box->cpu = -1;
->  		cpumask_clear_cpu(old_cpu, &pmu->cpu_mask);
-> -		if (new_cpu < 0)
-> +		if (new_cpu < 0) {
-> +			box->cpu = -1;
->  			continue;
-> +		}
->  
-> -		if (!uncore_die_has_box(type, die, pmu->pmu_idx))
-> +		/* An inactive box doesn't need migration. */
-> +		if (box->cpu == -1)
->  			continue;
->  		uncore_pmu_cancel_hrtimer(box);
->  		perf_pmu_migrate_context(&pmu->pmu, old_cpu, new_cpu);
-> @@ -1596,7 +1618,7 @@ static int allocate_boxes(struct intel_uncore_type **types,
->  		type = *types;
->  		pmu = type->pmus;
->  		for (i = 0; i < type->num_boxes; i++, pmu++) {
-> -			if (pmu->boxes[die])
-> +			if (pmu->boxes[die] || uncore_pmu_broken(pmu))
->  				continue;
->  			box = uncore_alloc_box(type, cpu_to_node(cpu));
->  			if (!box)
-> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-> index d732b87be0a9..0adb477d9708 100644
-> --- a/arch/x86/events/intel/uncore.h
-> +++ b/arch/x86/events/intel/uncore.h
-> @@ -146,13 +146,24 @@ struct intel_uncore_pmu {
->  	struct pmu			pmu;
->  	char				name[UNCORE_PMU_NAME_LEN];
->  	int				pmu_idx;
-> -	bool				registered;
-> +	unsigned long			flags;
->  	atomic_t			activeboxes;
->  	cpumask_t			cpu_mask;
->  	struct intel_uncore_type	*type;
->  	struct intel_uncore_box		**boxes;
->  };
->  
-> +#define PMU_REGISTERED_BIT	0
-> +#define PMU_BROKEN_BIT		1
-> +
-> +#define uncore_pmu_registered(pmu)	test_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
-> +#define uncore_pmu_broken(pmu)		test_bit(PMU_BROKEN_BIT, &(pmu)->flags)
-> +#define uncore_pmu_available(pmu)	(uncore_pmu_registered(pmu) &&  \
-> +					 !uncore_pmu_broken(pmu))
-> +#define uncore_pmu_set_registered(pmu)	set_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
-> +#define uncore_pmu_set_broken(pmu)	set_bit(PMU_BROKEN_BIT, &(pmu)->flags)
-> +#define uncore_pmu_clear_registered(pmu) clear_bit(PMU_REGISTERED_BIT, &(pmu)->flags)
-> +
->  struct intel_uncore_extra_reg {
->  	raw_spinlock_t lock;
->  	u64 config, config1, config2;
-> diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-> index c5347920541c..055131c508ff 100644
-> --- a/arch/x86/events/intel/uncore_snb.c
-> +++ b/arch/x86/events/intel/uncore_snb.c
-> @@ -940,7 +940,7 @@ static int snb_uncore_imc_event_init(struct perf_event *event)
->  
->  	pmu = uncore_event_to_pmu(event);
->  	/* no device found for this pmu */
-> -	if (!pmu->registered)
-> +	if (!uncore_pmu_available(pmu))
->  		return -ENOENT;
->  
->  	/* Sampling not supported yet */
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612003444.5072=
+3-1-acme@kernel.org?part=3D6
