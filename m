@@ -1,110 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00305314D1F;
-	Fri, 12 Jun 2026 00:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCF978F4A
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 00:47:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781224550; cv=none; b=iprJNVP08S6/MFyBnk+GmEyJ2X6rlhZssFieAe4FGWJ+sOlbzgpUP47glZLYQS1j1ySjnjEaZPs5v6kRLy9zf+QlAfMnV7fjng3wsbxvDZNOhGbfB9+gCHTYENy4rN2AS/pBpcvVFz4tBSU8DFSW0urjF0wicEzXaHVasT7yOgk=
+	t=1781225240; cv=none; b=Kc+02v+Rlbz9SPsZYbLGPs+CWtE0O2nLdrzSXaStPD6jSZY+pfuc/klh+1Y5qSAASPMVq80Mc5kfWjcRlItLuU03d265ct0sYFNl040UjwmffSPexwAQyOHcw8pJiFBIUmv9p/xbHuuXWrWKS51FTO61W3OqskekEowb1nnAUcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781224550; c=relaxed/simple;
-	bh=Nl1djylyOIEP5OkTtFMerubFW+2NEVceyxXR/vhJynY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ISULGYALncmwT1OrAhxB5Rac662aWEU4mSBl6y8z+6W+MXe3mAPayLjgE/Nx/+A+JiFsXuO1GS6nEFbuoi9rsyS1y4QUx1RXn/iJcmNSI0RS6HsHZCPwJVwsme8255Vo/0r1OY7VDU8nlHUEDpS/0XBgFlaeqsDyhB1AOw5Pj2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHz5bwZl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781225240; c=relaxed/simple;
+	bh=Vh2eGfNVI2055qyQieuVVf4jmNy0yk+HRycC5P9nlL4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=IWpMJV9Ou3+EDeDWzNgGn6FunHNvj5ekhLs5GhdNS7RFkzvYSjRysLkcyGb9ArM8J8WQlqy64+fqeaCUHRKX2E9y4dH46aB4X9+xUTumx21tK/hHUPT66wqIh+UqD0A82cxMTq6UX8RHfhCiNzPaA4xWPUistaVlnJRil2yQm9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEgi7iBY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHz5bwZl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F0761F00A3A;
-	Fri, 12 Jun 2026 00:35:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEgi7iBY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B19861F000E9;
+	Fri, 12 Jun 2026 00:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781224548;
-	bh=Tp65WxPEKvMy0EMVyndBOE7srR8LwXCkKUGjqxDrZ6s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HHz5bwZlqtqDDdApKVuxe+Jf8VPC8qiDNBWY+BR/DaeFmzIkWY5HI8bIqQJgA6E9v
-	 NQ4NH7dNoTT7U4P9AkywXrXva75CpqlzHismfaKD2a9BRydAyVL4qMvr91H7FyK07e
-	 1TOMpJWL2ad4Tv+V2vajM/qTN+4CZE+azIwc+boxOlBLmT+xD8vIxRxpjYqZMKm1qy
-	 gQ7+kijK4EDesnrWglVNMY4juUOwZbmDby2uSxXL+lkO6eJ386XtpJzPRGI0k1WYg1
-	 QAJArTU54C4HKPGpv1JXqF1UtQcJkeskVSv4qMbw2JiqEvaLcHXXcgrGBdjI9vmBU8
-	 CX1QjkkRcyAFA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 15/15] perf cs-etm: Reject CPU IDs that would overflow signed comparison
-Date: Thu, 11 Jun 2026 21:34:43 -0300
-Message-ID: <20260612003444.50723-16-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260612003444.50723-1-acme@kernel.org>
-References: <20260612003444.50723-1-acme@kernel.org>
+	s=k20260515; t=1781225238;
+	bh=QAGO/Bgvm/TB2EDV2nxgvbhp5K/zy9GB88dObO54cZc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HEgi7iBYCbPD/8ilpv7iubRw8ZvSLrWG3IpFRjjrMj1nsYh34tW4jlCyTagxW0Pp3
+	 i8uZJEN+djVMOR6x8JXNgJ9dwxMG+TeVoQpt8RWYBk7Y+FCyZM+b07abjdOFmmHNGK
+	 De4oyOLdLUBC7PBTEZNhy9WbKE7Vc3MBWQapK4OXrBGZ/ygqQaswqHQ1BKywIJ9ygP
+	 62OLw2uyDGIkRM0ZXtiOttK3DNmQt+PHQAwHiftLim5MBVOZZQu6l+wxU152Pl28Db
+	 kLtQQ15xJEOH4Z8LfHXGNqWCdtPX4CjJcOpX83JGMdXrM0oOoDDj5Q7qyPFia1b7hp
+	 uukeGYMPG5QKg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 03/15] perf symbols: Use fixed buffer in
+ sysfs__read_build_id() for no-libelf build
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260612003444.50723-4-acme@kernel.org>
+References: <20260612003444.50723-4-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 12 Jun 2026 00:47:18 +0000
+Message-Id: <20260612004718.B19861F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Type punning via pointer casting from a declared character array to=
+ a struct pointer violates strict aliasing rules required for `tools/` code.
+--
 
-metadata[j][CS_ETM_CPU] is a u64 from perf.data, but the comparison
-with max_cpu casts it to (int).  A crafted value like 0xFFFFFFFF becomes
--1 after the cast, which compares less than max_cpu (0), so the queue
-array is never sized to accommodate it.  When the value is later passed
-to cs_etm__get_queue(), it indexes queue_array with the original large
-value, causing an out-of-bounds access.
+commit 712f0fc91e35c55d2c2445bb412251f7934f7642
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Validate that CS_ETM_CPU fits in an int before using it in the signed
-comparison.
+perf symbols: Use fixed buffer in sysfs__read_build_id() for no-libelf build
 
-Fixes: 57880a7966be510c ("perf: cs-etm: Allocate queues for all CPUs")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/finding/2
-Cc: James Clark <james.clark@arm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/cs-etm.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+This commit replaces an fstat() and malloc() approach with a fixed stack
+buffer and a single read() in sysfs__read_build_id(). This ensures proper
+handling of sysfs pseudo-files that report a size of 0 or 4096 regardless
+of actual content.
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 5e92359f51a7cb87..d8876b8362056c98 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -6,6 +6,7 @@
-  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-  */
- 
-+#include <limits.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/coresight-pmu.h>
-@@ -3468,7 +3469,13 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 			goto err_free_metadata;
- 		}
- 
--		if ((int) metadata[j][CS_ETM_CPU] > max_cpu)
-+		/* CPU id comes from perf.data and must be a valid index */
-+		if (metadata[j][CS_ETM_CPU] > INT_MAX) {
-+			err = -EINVAL;
-+			goto err_free_metadata;
-+		}
-+
-+		if ((int)metadata[j][CS_ETM_CPU] > max_cpu)
- 			max_cpu = metadata[j][CS_ETM_CPU];
- 	}
- 
--- 
-2.54.0
+> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-mi=
+nimal.c
+> index 0a71d14639527..ea2de3d50d33c 100644
+> --- a/tools/perf/util/symbol-minimal.c
+> +++ b/tools/perf/util/symbol-minimal.c
+> @@ -220,29 +220,36 @@ int sysfs__read_build_id(const char *filename, stru=
+ct build_id *bid)
+>  {
 
+[ ... ]
+
+> +	/*
+> +	 * read_build_id() casts this buffer to a u32 note header pointer,
+> +	 * so it must be aligned for u32 access.
+> +	 *
+> +	 * Accessing a char[] through a u32* is technically type-punning
+> +	 * under C strict aliasing rules, but perf unconditionally builds
+> +	 * with -fno-strict-aliasing (Makefile.config), so this is safe.
+> +	 *
+> +	 * This file is only compiled when libelf is not available =E2=80=94 the
+> +	 * common case uses the libelf-based path in symbol-elf.c instead.
+> +	 */
+> +	char buf[BUFSIZ] __aligned(4);
+
+[Severity: Low]
+While the comment notes that perf currently builds with -fno-strict-aliasin=
+g,
+the tools directory guidelines require assuming standard -fstrict-aliasing
+for all tools code.
+
+Does casting this character array to an incompatible u32 struct pointer
+inside read_build_id() violate the strict aliasing rules expected for this
+subsystem?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612003444.5072=
+3-1-acme@kernel.org?part=3D3
