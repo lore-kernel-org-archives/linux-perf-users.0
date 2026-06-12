@@ -1,110 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6633A3D3CE9;
-	Fri, 12 Jun 2026 22:25:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A6437B3F2
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781303111; cv=none; b=tqDaX5kO0rlkstBEkMSyuP81CHSVFDukRtPMq5WfFJ92mC86nfbe9iHyg4Jhziiq4TTbUgB07DBis8ASPF4yRY/G6yHbfeGXIfH9vRQwnRVqLqiNQd029QlHBv+HN2seef0CtTt/noMxlYG/NwBNDEp0pPAJtQR2iwVoYjLRmzY=
+	t=1781303133; cv=none; b=VnshZ8NpTMzBlHK8gULWumFZF33bME2+ARW53BWtYToFAzUgWTshrNqSLGGljEVFNYXk8WgIbdEDKw30gh8Pswbt8EVQg6n/dphEsDpGzNhDNMFT3+Nh80rAna8BDtsetMjP87Q12+IUrqdAmoaZ21Bg4/au8lOMnFnGcfkoFj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781303111; c=relaxed/simple;
-	bh=GXlCAYc/wiYVnIcVPlIX5bDt1XP0wizicv3+T7JYVO4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=byaSaQ4yhav9inA0Te6X5F7v9hjW/STdDpMDPMd68Tm/30Ye4AE3FCNe14WDmLd7uWRbPbfpK0im//frhRTSDoPN1f1HxPjGjvzwLHdAvcZwTT4lVcg2miVAGRxuY1ndWm8TgfEUS1D7dDK94iAG51vRNefGprweufKaLPIA7ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiF5R9s0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781303133; c=relaxed/simple;
+	bh=G/h2mAfCNqwvgRpTjZMLfLKcVKDJSeWZ8QoowSCrr0w=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=FlkrvKbs7l3z4mfBpWwz9dnNK3lDH8hq/RW58PB0BE7IjVqfsamgpxYUUyapS4QUvXUpxmEi+CuVsb6/HNQu19A34Zff1Omu1IO76pKO6chmWsIlrVNett35lykjrfcrnuPVs3mY6Y/ULfueDAQJZbdu5BwSoYB3Y/IQy2IYaI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WEaB01JT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiF5R9s0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D30D1F00A3A;
-	Fri, 12 Jun 2026 22:25:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WEaB01JT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C32731F000E9;
+	Fri, 12 Jun 2026 22:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781303110;
-	bh=hZKS4YqbQfqB0BFnDGSkIr0t9y7HmMKGZUr7+M+vtWU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eiF5R9s0SiZumuWygndBwRXXCZCZdp5FlhgYUPqicKARXzTtPg2CwMyXDKRy/JGuu
-	 9F5uBq62Vm3xOkZKup8aJ1qksVHY1HT5w+xhPXBkp53O2g+FqoCIuKyO6USSxS/E2t
-	 7EDb/somtcQ5byt/nyWQNUQxwAhQ6A1MDhxYGzeLGkG4lXKb+n0mMAytcIHQFQp+Jl
-	 PC9UiW2opUIgnHUmTTSPdLXr4oRO7P36obs3ErFUpxGqI/+g4BeG2wR8pk0xVy3qYG
-	 ETb1JAZGD0zc5BczlwLzROGzl1SLVyZrt7tHx59wXF1rFYdXKgZojsVJ+azumMRlRC
-	 2oQmCkdLEierw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 13/13] perf cs-etm: Reject CPU IDs that would overflow signed comparison
-Date: Fri, 12 Jun 2026 19:24:12 -0300
-Message-ID: <20260612222413.40791-14-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260612222413.40791-1-acme@kernel.org>
-References: <20260612222413.40791-1-acme@kernel.org>
+	s=k20260515; t=1781303132;
+	bh=q4g3tiIk0TggFrdiGyBemCjKmFJzj3CA1Bb/bRzjsjU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=WEaB01JTg4kcLq9Vc4iLBcqMWVLKBksib/cJL18TUJZJ0Cs2FsoqGIQFaDC/FHQrn
+	 iHwVAQU91/lS2MQmtgnDox/VHGl9GmGcs8913OMUSQs+jSaJBkkdxTAp+yq7Ijbcux
+	 uq9jyQTRd6WWV1gQi/f43oOKkNWWrNIDT+BFt2qJf6Vjofm5gs/bWfVRlGPhq04Unh
+	 KE4tvc4HI5xYHScbBVci4CG2bYupxpln/Zb2nU5C9DocE4g4Zim3g+TyEx93s5GJps
+	 BOgm0mhjgsXWDjc9karmWggsDbE7ajPY9nFMRJ7904RI0y865aKISzFQdOY7E2EFgX
+	 A90kaolcZGbAQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v15 02/19] perf python: Add missed explicit dependencies
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260612221211.1221305-3-irogers@google.com>
+References: <20260612221211.1221305-3-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 12 Jun 2026 22:25:31 +0000
+Message-Id: <20260612222531.C32731F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-metadata[j][CS_ETM_CPU] is a u64 from perf.data, but the comparison
-with max_cpu casts it to (int).  A crafted value like 0xFFFFFFFF becomes
--1 after the cast, which compares less than max_cpu (0), so the queue
-array is never sized to accommodate it.  When the value is later passed
-to cs_etm__get_queue(), it indexes queue_array with the original large
-value, causing an out-of-bounds access.
+Pre-existing issues:
+- [Critical] The `pyrf_counts_values_set_values` function does not validate=
+ the size of the Python list before writing into the fixed-size `values` ar=
+ray, leading to a heap buffer overflow.
+- [High] Functions accepting `perf.cpu_map` and `perf.thread_map` Python ob=
+jects use the generic `O` format specifier without type validation, leading=
+ to Type Confusion and potential memory corruption.
+--
 
-Validate that CS_ETM_CPU fits in an int before using it in the signed
-comparison.
+commit aae79d4d4c46ff069bf5908d4883c3da0d206df7
+Author: Ian Rogers <irogers@google.com>
 
-Fixes: 57880a7966be510c ("perf: cs-etm: Allocate queues for all CPUs")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/finding/2
-Cc: James Clark <james.clark@arm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/cs-etm.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+perf python: Add missed explicit dependencies
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 5e92359f51a7cb87..0927b0b9c06b1504 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -6,6 +6,7 @@
-  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-  */
- 
-+#include <limits.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/coresight-pmu.h>
-@@ -3468,7 +3469,13 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 			goto err_free_metadata;
- 		}
- 
--		if ((int) metadata[j][CS_ETM_CPU] > max_cpu)
-+		/* CPU id comes from perf.data and must fit max_cpu + 1 without overflow */
-+		if (metadata[j][CS_ETM_CPU] >= INT_MAX) {
-+			err = -EINVAL;
-+			goto err_free_metadata;
-+		}
-+
-+		if ((int)metadata[j][CS_ETM_CPU] > max_cpu)
- 			max_cpu = metadata[j][CS_ETM_CPU];
- 	}
- 
--- 
-2.54.0
+Fix missing #include of pmus.h found while cleaning the evsel/evlist header
+files. Define PY_SSIZE_T_CLEAN before including Python.h to comply with
+modern Python 3 C-API requirements, and introduce CHECK_INITIALIZED and
+CHECK_INITIALIZED_INT safety macros.
 
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index cc1019d29a5d0..98a8dd9b673de 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+
+[ ... ]
+
+> @@ -38,6 +45,22 @@ PyMODINIT_FUNC PyInit_perf(void);
+>  	  offsetof(struct pyrf_event, sample) + offsetof(struct perf_sample, me=
+mber), \
+>  	  0, help }
+> =20
+> +#define CHECK_INITIALIZED(ptr, msg) \
+> +	do { \
+> +		if (!(ptr)) { \
+> +			PyErr_SetString(PyExc_ValueError, msg " not initialized"); \
+> +			return NULL; \
+> +		} \
+> +	} while (0)
+> +
+> +#define CHECK_INITIALIZED_INT(ptr, msg) \
+> +	do { \
+> +		if (!(ptr)) { \
+> +			PyErr_SetString(PyExc_ValueError, msg " not initialized"); \
+> +			return -1; \
+> +		} \
+> +	} while (0)
+> +
+
+[Severity: Critical]
+This is a pre-existing issue, but I noticed a potential buffer overflow in
+pyrf_counts_values_set_values():
+
+tools/perf/util/python.c:pyrf_counts_values_set_values() {
+	size =3D PyList_Size(list);
+	for (Py_ssize_t i =3D 0; i < size; i++) {
+		item =3D PyList_GetItem(list, i);
+		// ...
+		self->values.values[i] =3D PyLong_AsLong(item);
+	}
+}
+
+The values array embedded in struct pyrf_counts_values has exactly 5 elemen=
+ts.
+
+Could a user provide a Python list with more than 5 elements and write past=
+ the
+end of the allocation, corrupting the heap?
+
+[Severity: High]
+This isn't a bug introduced by this patch, but the PyArg_ParseTuple type
+handling seems unsafe in several functions like pyrf_evsel__open():
+
+tools/perf/util/python.c:pyrf_evsel__open() {
+	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|OOii", kwlist,
+					 &pcpus, &pthreads, &group, &inherit))
+		return NULL;
+
+	if (pthreads !=3D NULL)
+		threads =3D ((struct pyrf_thread_map *)pthreads)->threads;
+}
+
+Similar casts occur in pyrf__parse_events() and pyrf__parse_metrics() where
+the 'O' format is used without type validation.
+
+Since 'O' accepts any Python object, what happens if an invalid object type
+like an integer or string is passed here?
+
+Can this cause the C extension to interpret arbitrary Python objects as
+struct pyrf_thread_map pointers and dereference them? Could we use the 'O!'
+format specifier instead to enforce the type constraint?
+
+>  struct pyrf_event {
+>  	PyObject_HEAD
+>  	struct evsel *evsel;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260612221211.1221=
+305-1-irogers@google.com?part=3D2
