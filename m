@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DE75474F;
-	Fri, 12 Jun 2026 00:34:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A9A5474F;
+	Fri, 12 Jun 2026 00:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781224492; cv=none; b=kyn/gucTy8ikaUdbSdQbnK20CjW45n7il3Z7QW3WADrwTPT/h0eZe5Kggl9zbfbMZCxzeX/+TLHqfWab//3bkyBHi8g+bZCjnSZp/1f5J4wcnYCU4EtC7bGc7dLMBDEdZgCabcmkRlqWIpFUYeXP4EpHZIiml7SjSHGQOdjCkkY=
+	t=1781224495; cv=none; b=OUzmXP8lGGYUy54ZS/SXJnXIRrkWo4R3ntqvmGDZP9uABtcKiGHgLFhEXiqYFz59CDKzw7e0/WW6LvmCY+cqv09oJw7oEJDvhumaz+qcwi/M6LmrXeG6v3zwZQkmWHDT6jVX/nNqqcLd9ARpMPutUYD4dLkaQ8R3uaMzmljyiU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781224492; c=relaxed/simple;
-	bh=aW2Hp5WDjMfbk7BCnkxkZ2udUQlf0TPvNVvxHfge8FY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SLBr0WDM8WJNA1cy67PUA/iikjKDZzhCVc0fjSdnHmS74pznWTIiKNNYh/vZm/ui807XIt99bav6gSn13tg2g1cbvlgwwqYmQzTCUa9V0iMkKYe71RwsG/B+SjBIHT9EUXLsID9Xih7hXzfkmGUmh9yEL0m/qY8tqcqTcit5dkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhN2iNQE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781224495; c=relaxed/simple;
+	bh=sUzViC1WFVYEcIbxbF8T56nDE6tG6MoOESqkY25KPgk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g4yq6uiJHDhu6KHNWW3cXSs37ruEyH+1GJzEhNdWZWJgOts/QAHvdQADYMOYJZW7pGKX202YhNrR0EQ2DNYxWeN5gj3dDQP6PBRpr/z5uqRlFjvk7zVikEb6CXPwU+bAN2g9etB8MNCeP/sTkPpaNVGraheOpYiyemOLl0JYyVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WduLdTnI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhN2iNQE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB9141F000E9;
-	Fri, 12 Jun 2026 00:34:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WduLdTnI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194E51F00A3A;
+	Fri, 12 Jun 2026 00:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781224490;
-	bh=982+NCBERiNBaFehSJWjNItC+BBYmRin2RcXpKIfPn4=;
-	h=From:To:Cc:Subject:Date;
-	b=ZhN2iNQErhgmpPQpmZISmfGQ1VXNKcnhCAXOVF0muafjZlsS8A4upxF1Cfb/eyClK
-	 cK4V+MaV+M5qCOcQKO0OVclYYvNUTVYbAs12JTqoOMwUBN8l/3VJRZJPf8AXA4Z+8Q
-	 YGhgR7mYklQ+R6KLPyyMtd+/9ZNPYw/Q6vKPPKsyesfPvk2RhIO5kM8DJ5wtZv4g+K
-	 nyPe7jtni7jWAgoxMT5EFzLXApwZBSbFeZ/6yGacv3rxUOcALOxbLTuom1AfTSoGfN
-	 Wksa//sKl6lIpzTIu6ZNjBYGEJRhpYQez+Mz7/yU4V6MJ4iYk85Bk+p+3GH2WOaNpS
-	 Oa87YKP95jwrg==
+	s=k20260515; t=1781224494;
+	bh=uKihYxeSFiFhXjPKrGLJkuVtnc6h8mryrIf11VT9gME=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=WduLdTnIehLKUvx4BOWi7xgP3xN9bvtiHBqJ/NAJ+GQ/9R0xTD5W+7YFdcj8AMP8o
+	 rRc23AADkZCrADKYTaZXsyL0AlZdTTQCe0CgYIpfv1zxaFTKmP7EsKeKv/7UPapq6I
+	 t9pie2dA21OUchRfHChKrKoFXCLwfN3GzEVOJJsTITZAxbY904LJ+SNFWChObA48jV
+	 yIPlxR9WcaKqpBO8Y/yy7FmoYmU30A5ldpGEBlenVUdelCsJCrmsScXuGDY4UtrGJ3
+	 7enQJvOE7g13tfUX7yBbNcPI60xJiL7Ehli5nPUbf6TsP6iIcI1ADVKhZbLECHjuXu
+	 YTu3epKAIgEgA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,112 +37,62 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCHES v1 00/15] perf tools: Fix pre-existing bugs in symbols, dso, bpf, sched, c2c, hwmon, and cs-etm
-Date: Thu, 11 Jun 2026 21:34:28 -0300
-Message-ID: <20260612003444.50723-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot <sashiko-bot@kernel.org>,
+	"Claude Opus 4.6" <noreply@anthropic.com>
+Subject: [PATCH 01/15] perf symbols: Fix bswap copy-paste error for 32-bit ELF p_filesz
+Date: Thu, 11 Jun 2026 21:34:29 -0300
+Message-ID: <20260612003444.50723-2-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260612003444.50723-1-acme@kernel.org>
+References: <20260612003444.50723-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fifteen more pre-existing bugs found by sashiko-bot during AI-assisted
-code review.  All are independent of the perf-data-validation hardening
-series -- they are latent bugs in surrounding code exposed during review.
+filename__read_build_id() byte-swaps 32-bit ELF program headers on
+cross-endian files, but line 178 passes p_offset to bswap_32() instead
+of p_filesz:
 
-The fixes are grouped by subsystem:
+  hdrs.phdr32[i].p_filesz = bswap_32(hdrs.phdr32[i].p_offset);
 
-ELF/build-id parsing in the no-libelf path (patches 1-3):
-  symbol-minimal.c carries a copy-paste typo that byte-swaps p_offset
-  instead of p_filesz for 32-bit ELF.  The ssize_t p_filesz value is
-  used without checking for negative, and sysfs__read_build_id() trusts
-  fstat() on sysfs pseudo-files that report incorrect sizes.  Replaced
-  with a fixed stack buffer and single read(), matching symbol-elf.c.
+This clobbers p_filesz with the already-swapped p_offset value.  The
+64-bit path on line 182 is correct and swaps p_filesz from p_filesz.
 
-ELF note iteration (patch 4):
-  sysfs__read_build_id() in the libelf path can loop forever when a
-  note section contains zero-filled entries (namesz + descsz == 0).
-  Break when no progress can be made.
+The consequence is that the PT_NOTE segment read uses the wrong size,
+which can cause either a short read (missing the build-id) or an
+oversized read (reading past the segment into adjacent data).
 
-DSO decompression and open (patches 5-6):
-  dso__get_filename() copies a decompressed path with strcpy() into a
-  potentially shorter heap buffer.  filename__decompress() fails to set
-  the error code on the uncompressed fallback path, leaving callers
-  with a stale errno.
+Fix by swapping the correct field.
 
-Buffer overflow in root_dir path construction (patch 7):
-  machine.c and symbol.c use sprintf() to build paths with root_dir,
-  which can overflow the fixed-size buffer.  Switch to snprintf().
+Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Fixes: fef8f648bb47726d ("perf symbol: Fix use-after-free in filename__read_build_id")
+Cc: Ian Rogers <irogers@google.com>
+Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/symbol-minimal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-hwmon fd check (patch 8):
-  hwmon_pmu__describe_items() tests fd > 0, rejecting the valid fd 0.
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index 091071d06416e290..f4b0a711a62cf3de 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -175,7 +175,7 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+ 			if (elf32) {
+ 				hdrs.phdr32[i].p_type = bswap_32(hdrs.phdr32[i].p_type);
+ 				hdrs.phdr32[i].p_offset = bswap_32(hdrs.phdr32[i].p_offset);
+-				hdrs.phdr32[i].p_filesz = bswap_32(hdrs.phdr32[i].p_offset);
++				hdrs.phdr32[i].p_filesz = bswap_32(hdrs.phdr32[i].p_filesz);
+ 			} else {
+ 				hdrs.phdr64[i].p_type = bswap_32(hdrs.phdr64[i].p_type);
+ 				hdrs.phdr64[i].p_offset = bswap_64(hdrs.phdr64[i].p_offset);
+-- 
+2.54.0
 
-Undefined behavior in perf sched (patch 9):
-  map__findnew_thread() uses (void*)1 as a sentinel for colored threads.
-  This value gets dereferenced as a struct pointer and passed to free()
-  on cleanup.  Replace with a proper allocation and a boolean color flag.
-
-BPF metadata validation (patches 10-12):
-  synthesize_bpf_prog_name() trusts func_info_rec_size and sub_id from
-  perf.data without validation.  bpf_metadata_alloc() stores the event
-  size in a __u16 without overflow checking.  bpil_offs_to_addr()
-  converts untrusted offsets to heap pointers without bounds checking.
-
-Memory leak in c2c (patch 13):
-  c2c hist entries register format list entries but never unregister
-  them on free, leaking the list nodes.
-
-O_NONBLOCK for untrusted paths (patch 14):
-  open() calls that process paths from perf.data events can hang on
-  FIFOs or device nodes planted by a crafted file.  Add O_NONBLOCK as
-  defense-in-depth on these foreign file opens.
-
-CoreSight ETM CPU ID validation (patch 15):
-  cs_etm__process_auxtrace_info_full() compares an unsigned CPU ID
-  from perf.data metadata against a signed int without range checking.
-  A large unsigned value wraps negative, bypassing the bounds check.
-
-Build-tested with gcc and clang.  Passes perf test on x86_64.
-
-Arnaldo Carvalho de Melo (15):
-  perf symbols: Fix bswap copy-paste error for 32-bit ELF p_filesz
-  perf symbols: Validate p_filesz before use in filename__read_build_id()
-  perf symbols: Use fixed buffer in sysfs__read_build_id() for no-libelf build
-  perf symbols: Break infinite loop on zero-filled notes in sysfs__read_build_id()
-  perf dso: Fix heap overflow in dso__get_filename() on decompressed path
-  perf dso: Set error code when open() fails on uncompressed fallback path
-  perf tools: Use snprintf() for root_dir path construction
-  perf hwmon: Fix fd check to accept fd 0 in hwmon_pmu__describe_items()
-  perf sched: Replace (void*)1 sentinel with proper runtime allocation
-  perf bpf: Validate func_info_rec_size and sub_id in synthesize_bpf_prog_name()
-  perf bpf: Reject oversized BPF metadata events that truncate header.size
-  perf bpf: Bounds-check array offsets in bpil_offs_to_addr()
-  perf c2c: Free format list entries when releasing c2c hist entries
-  perf symbols: Add O_NONBLOCK to DSO open() calls for untrusted paths
-  perf cs-etm: Reject CPU IDs that would overflow signed comparison
-
- tools/perf/builtin-c2c.c         |  1 +
- tools/perf/builtin-sched.c       | 23 ++++++++++++-----
- tools/perf/util/bpf-event.c      | 13 +++++++++-
- tools/perf/util/bpf-utils.c      | 14 +++++++++++
- tools/perf/util/cs-etm.c         |  9 ++++++-
- tools/perf/util/dso.c            | 18 +++++++++++---
- tools/perf/util/hwmon_pmu.c      |  2 +-
- tools/perf/util/machine.c        |  2 +-
- tools/perf/util/symbol-elf.c     | 10 +++++---
- tools/perf/util/symbol-minimal.c | 54 ++++++++++++++++++++++++----------------
- tools/perf/util/symbol.c         |  2 +-
- 11 files changed, 108 insertions(+), 40 deletions(-)
-
-Developed with AI assistance (Claude/sashiko), tagged in commits.
-
-Thanks,
-
-- Arnaldo
