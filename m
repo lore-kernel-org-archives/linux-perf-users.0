@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8F73C6611
-	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 07:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2503D3D7D89
+	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 07:11:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781334709; cv=none; b=WdVHCYhcgpwaEZjdr5jrJVHJ66uq+7riziTnSW8FhgM2On5ZduvTSBYblqcvxiF5okhq0pbWF1nErgZdRPMo1AfoyWyCiHD9S0szGlBhcQVooojNRYj2N+7Rk4Cuuih4FcnqhM8WguV2Rv0e4AlLSyuzyEL1/nPlrJvXF2HaSAo=
+	t=1781334713; cv=none; b=Tz7re8njo1vloib8l9/0VYMCeEtUsmzuUYbSUZhxi2Xw6r3q0cB5queREEgU5VqiGGGFtqQylgkig3TrEXhzwWieZI6qU2AJMG5/dvWxrYrecelkB64vHQZJD2og4LTpXhBtGJiFpw67yf0KE8yKvNx6rfj6wuZDmuhvwEd+yL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781334709; c=relaxed/simple;
-	bh=PLF4WJXZBpORTZ2JlH+GCFFWzFf6msVG7RwS3W4YDmg=;
+	s=arc-20240116; t=1781334713; c=relaxed/simple;
+	bh=vF7NLaECrxjS2Yht2QwBVcJ+oGiwgEaeXCO/Ja+f+tY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Hi3G9utEuxOgamTnFb6SoVqGvRVWCth2OF6/NAsw2tU3GtzMQm4yEhxdsr2ekeDHm6A15v+hypd/5LTHUYbvnyffbaHy4z/CVf0NU6wxQfXb9BcyZ/L76YNQFm3WNjkDc+1xm0FTk0grsPo6DfzdGXP5OIA6zrWqMEdXkpwcsfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B9eSIFs7; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=lj+5JsbW7UdYJWU3Byi3oYCvjg00ErHOv2mBUn3rzkc/I/c9pO/DkRR+r8vG83zIxzTZw9cOm/wo/VCiEaFfQB1egkBWU/llZhEVdbakXXOWF/nM8xlGWe1W0Iy/JlhjOCv1OKDbekVBxPViQFLKTwaoDdTyO9eBg6XoD/Fzpqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NqgsKhzf; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B9eSIFs7"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304e7fc90b1so1998327eec.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 00:11:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NqgsKhzf"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304f23c55b2so2351247eec.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 00:11:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781334700; x=1781939500; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781334704; x=1781939504; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5FmwGLPyViUdq322mofgfDRvlY2+s3k9Pg5JyAuFQcQ=;
-        b=B9eSIFs7l0lFHRfif1ABlwRcJMDv7DdIs0lz/00xFabeEKua04ek7G+V6gW5HiP3IA
-         S4GWC71/GomhnKzQFAaCx4Jf9pxOeBanR21tIsTShYYYUL//Nn/33m8CCmjZsuO/oISE
-         WPYMMUdVe5kZmvxFOYko+UR3HpPYoKP7aBxPqeCO6zxnjxIvXZuIVP141om1ylfjzVIV
-         HY4yPSX/pWfVts7cP0n3b0LtfcfkFqhGRpvzrxjnVG1MldIg+BdrgJ64s9tT7aXfmkit
-         8n51uc+xm3np2RxO4+Gkmjvz+e15RRApirE7brqXvAm+Hbu/7aOGbHWX+/RoHy6mjEwi
-         JA7A==
+        bh=NMJlLHuQrPjDG4u+udKznGqwYSNrkRwjUgIYMLwqeOQ=;
+        b=NqgsKhzfhRBZMdXQbqtok5A6woUh/tXj0tsu06XOLuEr1FtMfokEfrxUCwWQGwDNcK
+         93JdCVIaOmp7RqnwLrupgeOp1xOU6qHCk5yEE7kwK2+H6grhjkWT6nm97Vf2Cz/OX3Fy
+         dgw0BLJHbpU9vyv8/ax2sAQ38bGJaikWccOOa+avdpnagvg1GqlAVRhum2C47Dp+tv5N
+         sfap6gi15igII6Ocy55MNK5+Q/WZ3bjo0aKfhu0rQVpNwqZkkBDS6li1gkrDr3Sd9Y6F
+         I/5ICHaz2HDfkmgkmOEaFING/zjTO14hzs0SGMtPLS/4JBEttbKqA8BrRypv7AxjZk/J
+         1Rqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781334700; x=1781939500;
+        d=1e100.net; s=20251104; t=1781334704; x=1781939504;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5FmwGLPyViUdq322mofgfDRvlY2+s3k9Pg5JyAuFQcQ=;
-        b=KfSFZ1ylHXtwBvpIpRbnsk9tx/u+AIjxEnaofDTVK8fgDb6CzoS/DGYCIjDNxkASQZ
-         qitQVKNjrVw2fN/h093BCOnQDLpqn5BVYhQXua0w1wc5XyhfeN3bYXatskEc9bIXh+mr
-         PlP9B80zGMBi76124oBqX5YY68XL+e+7vuQH6c4pPfSjcB0SNiV0wrsqkVRI7bml3bF4
-         FBuoJYwjmdisiCcxI38f2xyYQJjCcCquG4Mr0L2Y3+yDnn5AJpEbLlHPf+ZzsnU/CI9f
-         KkS2krCttiNcMzFrzHvVZlpIH8i8r2s2MAmw9zEeqydUsw4mP0aADLTPbp4b360vyuE+
-         6gVA==
-X-Forwarded-Encrypted: i=1; AFNElJ8LQZttLvY3AfqfOzXRGQs/U4M/S9oowj7wX4q1QdfUcDfFH8b5lg/t0Fcbw7UA7kLz65ho48sM95qSk/ZQYbQj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+L0CXwILYxRAkBrQw4OI1o3o0GbPitTZLWbfh3UOoMYik3vNC
-	yc3/kXaT+/2SGYQgB89U84J6pEql9Je5xpavpYFr/H7a+9p19lgn/BipgDHvyd1iOQ/hD66sxME
-	Q/OJxNOQtZw==
-X-Received: from dybvc22.prod.google.com ([2002:a05:7301:5156:b0:2f4:b34a:2550])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:511:b0:304:de94:1c55
- with SMTP id 5a478bee46e88-30940542b00mr1654679eec.35.1781334700147; Sat, 13
- Jun 2026 00:11:40 -0700 (PDT)
-Date: Sat, 13 Jun 2026 00:10:58 -0700
+        bh=NMJlLHuQrPjDG4u+udKznGqwYSNrkRwjUgIYMLwqeOQ=;
+        b=UQBHJB9nRYuFZVPSZBfJPaCX4WHLxW5L0f5O15hxUClqTqfO03Y1roOW4be+qs2wxw
+         G3Kw6ey4YfmSl0KPFGkEIVfrZtZx7UbCFYZK1LZBZKrdPxsHmjT/GQxWU+pwBjLP9+jt
+         zl/+PaFtdo0rZljCK1SAmqFnkN9b7z2jLWaXITdOQQtaIKIa5ft+Ykd5zLXJv0PBzQUk
+         MPUQfKA7sAUEMq/npnwBlaIuFkTml0Zi7QuslsxCXn4d6eB5Vm/dux9uolHYT8Se1IXf
+         BwRzGgQL4LcwyJCWGAlASd4l0bQODJGqTBDb/bn2s6bZ5DfCZY479fyW9WBcu4UFvhQM
+         fX4g==
+X-Forwarded-Encrypted: i=1; AFNElJ8krMpFtCN2D5pGU7eOw9r4Gf9wxr8PP63Fs879XX0i5XWqMPhZVN/95ixtl/IueDR73N03AsgDHXc8eCimoUu+@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq4clFaYfmQEskGNWrqeOtQG7LpnRwfv2iute4uAnpm/S6ig5j
+	BjUl0cVseS0JmBAKa0q40P/leJ4oxVm84hf6HlPd9Pzard3E2o9yFBpgkkmqFtqXU4taDI3Cwas
+	WAg2MgHKOEg==
+X-Received: from dybod34.prod.google.com ([2002:a05:7301:3fa2:b0:2f1:5dbf:fd4e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:1f18:b0:2de:2f38:a7cb
+ with SMTP id 5a478bee46e88-3082004a0bfmr2782323eec.18.1781334703718; Sat, 13
+ Jun 2026 00:11:43 -0700 (PDT)
+Date: Sat, 13 Jun 2026 00:11:00 -0700
 In-Reply-To: <20260613071100.1508192-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260613052722.1424093-1-irogers@google.com> <20260613071100.1508192-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260613071100.1508192-19-irogers@google.com>
-Subject: [PATCH v17 18/20] perf python: Handle Py_None for thread and cpu maps
+Message-ID: <20260613071100.1508192-21-irogers@google.com>
+Subject: [PATCH v17 20/20] perf python: Add LiveSession helper
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,60 +68,126 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-The python stubs allow passing None for threads and cpus to the
-perf.parse_events() and perf.parse_metrics() bindings. However, PyArg_ParseTuple
-parses None into a Py_None object, which is not a NULL pointer.
-Because the C code lacked an explicit check for Py_None, it would cast
-Py_None to a pyrf_thread_map/pyrf_cpu_map struct pointer and dereference it,
-causing a memory corruption crash.
-
-Fix this pre-existing issue by explicitly checking for Py_None alongside NULL
-in pyrf__parse_events, pyrf__parse_metrics, and pyrf_evsel__open.
+Add LiveSession class in tools/perf/python/perf_live.py to support
+live event collection using perf.evlist and perf.parse_events,
+avoiding the need to fork a separate perf record process.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
+Assisted-by: Gemini:gemini-3.1-pro-preview
 ---
- tools/perf/util/python.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+v12:
+ - Fixed `setup_python.sh` `PYTHONPATH` prepend logic to cleanly append to existing paths.
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index ee88b3af98e3..8d4877148aa6 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -2086,10 +2086,10 @@ static PyObject *pyrf_evsel__open(struct pyrf_evsel *pevsel,
- 					 &pcpus, &pthreads, &group, &inherit))
- 		return NULL;
- 
--	if (pthreads != NULL)
-+	if (pthreads != NULL && pthreads != Py_None)
- 		threads = ((struct pyrf_thread_map *)pthreads)->threads;
- 
--	if (pcpus != NULL)
-+	if (pcpus != NULL && pcpus != Py_None)
- 		cpus = ((struct pyrf_cpu_map *)pcpus)->cpus;
- 
- 	evsel->core.attr.inherit = inherit;
-@@ -3335,8 +3335,8 @@ static PyObject *pyrf__parse_events(PyObject *self, PyObject *args)
- 		return NULL;
- 	}
- 
--	threads = pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : NULL;
--	cpus = pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
-+	threads = (pthreads && pthreads != Py_None) ? ((struct pyrf_thread_map *)pthreads)->threads : NULL;
-+	cpus = (pcpus && pcpus != Py_None) ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
- 
- 	parse_events_error__init(&err);
- 	perf_evlist__set_maps(evlist__core(evlist), cpus, threads);
-@@ -3369,8 +3369,8 @@ static PyObject *pyrf__parse_metrics(PyObject *self, PyObject *args)
- 		return NULL;
- 	}
- 
--	threads = pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : NULL;
--	cpus = pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
-+	threads = (pthreads && pthreads != Py_None) ? ((struct pyrf_thread_map *)pthreads)->threads : NULL;
-+	cpus = (pcpus && pcpus != Py_None) ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
- 
- 	perf_evlist__set_maps(evlist__core(evlist), cpus, threads);
- 	ret = metricgroup__parse_groups(evlist, pmu ?: "all", input,
+v2:
+
+1. Fixed File Descriptor Leak: I moved self.evlist.mmap() inside the
+   try block so that if it raises an exception, the finally block will
+   still be executed and call self.evlist.close() , preventing file
+   descriptor leaks.
+
+2. Handled InterruptedError in poll() : I wrapped the poll() call in a
+   try-except block to catch InterruptedError and continue the
+   loop. This prevents the live session from crashing on non-fatal
+   signals like SIGWINCH .
+
+3. Added evlist.config() : I added a call to self.evlist.config() in
+   the constructor after parse_events() . This applies the default
+   record options to the events, enabling sampling and setting up
+   PERF_SAMPLE_* fields so that the kernel will actually generate
+   PERF_RECORD_SAMPLE events.
+
+4. Enable the evlist and be robust to exceptions from reading unsupported
+   events like mmap2.
+
+v8:
+- Drain all events from a CPU before moving to the next.
+---
+ tools/perf/python/perf_live.py             | 54 ++++++++++++++++++++++
+ tools/perf/tests/shell/lib/setup_python.sh | 13 ++++++
+ 2 files changed, 67 insertions(+)
+ create mode 100755 tools/perf/python/perf_live.py
+
+diff --git a/tools/perf/python/perf_live.py b/tools/perf/python/perf_live.py
+new file mode 100755
+index 000000000000..0052031b18d9
+--- /dev/null
++++ b/tools/perf/python/perf_live.py
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0
++"""
++Live event session helper using perf.evlist.
++
++This module provides a LiveSession class that allows running a callback
++for each event collected live from the system, similar to perf.session
++but without requiring a perf.data file.
++"""
++
++import perf
++
++
++class LiveSession:
++    """Represents a live event collection session."""
++
++    def __init__(self, event_string: str, sample_callback):
++        self.event_string = event_string
++        self.sample_callback = sample_callback
++        # Create a cpu map for all online CPUs
++        self.cpus = perf.cpu_map()
++        # Parse events and set maps
++        self.evlist = perf.parse_events(self.event_string, self.cpus)
++        self.evlist.config()
++
++    def run(self):
++        """Run the live session."""
++        try:
++            self.evlist.open()
++            self.evlist.mmap()
++            self.evlist.enable()
++
++            while True:
++                # Poll for events with 100ms timeout
++                try:
++                    self.evlist.poll(100)
++                except InterruptedError:
++                    continue
++                for cpu in self.cpus:
++                    for _ in range(1000): # Limit to 1000 events per CPU per poll to prevent starvation
++                        try:
++                            event = self.evlist.read_on_cpu(cpu)
++                        except TypeError:
++                            # CPU might be unmapped or offline, wait for mmap event
++                            break
++
++                        if event is None:
++                            break
++
++                        if event.type == perf.RECORD_SAMPLE:
++                            self.sample_callback(event)
++        except KeyboardInterrupt:
++            pass
++        finally:
++            self.evlist.close()
+diff --git a/tools/perf/tests/shell/lib/setup_python.sh b/tools/perf/tests/shell/lib/setup_python.sh
+index a58e5536f2ed..2173215a0517 100644
+--- a/tools/perf/tests/shell/lib/setup_python.sh
++++ b/tools/perf/tests/shell/lib/setup_python.sh
+@@ -14,3 +14,16 @@ then
+   echo Skipping test, python not detected please set environment variable PYTHON.
+   exit 2
+ fi
++
++# Set PYTHONPATH to find the in-tree built perf.so first, avoiding system-wide perf.so
++if [ -n "$PERF_EXEC_PATH" ] && [ -d "$PERF_EXEC_PATH/python" ]; then
++  PYTHONPATH_DIR="$PERF_EXEC_PATH/python"
++elif [ -d "$(dirname "$0")/../../python" ]; then
++  PYTHONPATH_DIR="$(dirname "$0")/../../python"
++elif [ -d "$(dirname "$0")/../python" ]; then
++  PYTHONPATH_DIR="$(dirname "$0")/../python"
++fi
++
++if [ -n "$PYTHONPATH_DIR" ]; then
++  export PYTHONPATH="$PYTHONPATH_DIR${PYTHONPATH:+:$PYTHONPATH}"
++fi
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
