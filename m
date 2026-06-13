@@ -1,172 +1,381 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAC93090C6
-	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 05:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21887239E6C
+	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 07:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781330073; cv=none; b=c6Kz+7IN5I/iMwcccMA8SQBQtN+gXtJGROPImYjeK3OKzy7X8Kc8M0la+aRe3sxDR8ELja8pSGJV1eL4mMEOGEHWOsmjN5sPq5p9qhIEz8dmNQVo/zGfYZuYiJN0sNT3lBeFNZU4HJkyVaNPvadt4Nk6uDTsi6S6xYjhiEVCBGE=
+	t=1781334672; cv=none; b=LIYC4Un1tgmSf3HmhfpGQlkAUdckWIR3/0fKpzzPYo41lIET4EoXgFWfG1y41sgHbgBVa0WYHuMOpINXjVz+Oni54AtRjqx7i4GEYc7gQsFExhmkozAujJIm80pHEeQuYLjhH1zq7RcGNLh7LOFyIgFss3kBU8tq1oQKc8X83Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781330073; c=relaxed/simple;
-	bh=7O3Fj+D0IKUX/TQ2uPb34Rob0AgVz2akZ9vjOtR0DWc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Yo8aPQmedOZm28P7THiJw91qHZ73Luf4SD+S98QtTjTkJY31xvHzB5IlhquspBSqBGFs+l/uq6bsIUkrhoBc+s5pJr1pyuxav6IKA5FOMGaqkCrjelcV9pJZkxu6Pvn68X+e8CvOPEnR30lv+NqcQkQ+ApBaVOo238RhnjbPY3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gl5E/neK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781334672; c=relaxed/simple;
+	bh=uwxG048UjM6HwYYSeNBe7lRIX5ks6GhDBS6QkXIw3/s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ltPgMaUmB60tDWfk01cdlV8P7XwwOQS52/FVRF3y1MzfRJl9eJdxEVQu7SJzVKHPr/i9D3Tf7VWOcSadGuVKmGd5bATDyK1zwD+eKvYLJqaWXyHYxNWq+6HpNzBCzd+tdDDqG6zzLrHJWP1T8UzFDU+re99L8I/50Vfc1JNeUuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dz4R0OXx; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gl5E/neK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDA671F000E9;
-	Sat, 13 Jun 2026 05:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781330072;
-	bh=K9+UU9xPEkonUP1BiPpDmzGzGeuOo2+Ebn21dW3Mldw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Gl5E/neKBceW7dZ0SYx1LgBcf1LfO/R7Vlqb7zwERUFKUeLg6nu/L7oZjPqGFKLmR
-	 91YgOG8pUSaK8VWTnBs2Mt5O91zPfySEeYsfpIZwt8AlUscaWMZf9yZgruAZxA5cdE
-	 eOSAF4gyTNBoca1T4f+zChc8wiDi4JNWDKSP2HHKUOdEYHh8FgEdLOyt0/wwz/R+8F
-	 S8QeRj33qXNqCRmD+EhdHWUMPuJwX/VkGfjgdTFGI+rs6l1mEk0J1I/FsqFgnSNt8u
-	 92p/f78FXsYV7S/EYihdmcNbQsW2FCU8OYCMbCA2eMpiwVZufRN+s19EnF5Kz0aWQk
-	 nM1S+BRdrU/hA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v16 19/20] perf python: Add perf.pyi stubs file
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260613052722.1424093-20-irogers@google.com>
-References: <20260613052722.1424093-20-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 13 Jun 2026 05:54:31 +0000
-Message-Id: <20260613055431.CDA671F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dz4R0OXx"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-307625ee07fso3317668eec.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 00:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781334667; x=1781939467; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=izIphWmAZmxRJT3wvdqSXhctkGWp8cGTvWOYI1mf/b4=;
+        b=dz4R0OXx11BaEtQTF2U8fm38rZaUdQ/Q3WWSo41+mfuFpwj+oOmxk3DR+0Nczaz6Ym
+         BrB26gVY8ct+LR9Ks8J2F2fg6Lrtoblbk+eTynLSCZDIfyf8tX9zJ/uePOuqGkzp4NqZ
+         3J+L8i0TawI2/gNGlogTgo/s/Om8eMlHmFfPthfO+JiQ10urSByZ1qb1nsGQ3kyomP63
+         oSb1ZefMn6YwmPnA+/jztnmzU2+TxOsaqITPHBoYzhCTJAZQPhxi0uFARg6nNhyBYeZi
+         Twv/PfYfEe8txrULZLgdXfJmZSzMxUIcrz66liQlvBKSgRxuoLWhTGYxF2Mycvlnt37E
+         bpeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781334667; x=1781939467;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=izIphWmAZmxRJT3wvdqSXhctkGWp8cGTvWOYI1mf/b4=;
+        b=Pw46BFeIM6j+/iE9tQx+WwLjIJc09K2HY8wkwyqQsfCK/Q99ocCupk/IPrQ2P9f3QD
+         ohKX2fnxzD+OUf1HzmVXDG6Sv254WiX2RCK1AYtCpLxnD4nKnEjmko1HOgY7ONF28JQA
+         XTcCumrmFrZ2X4AikcLL0+LzdnLZwpampvR8Ttik06HMB7lxumq2KCouHavWqdRtPLKu
+         FVl4fBF3jCIW+80Hh+7WeCnFC1NZaZw81Y/KukbCjzLwO6qkbELOxIC94TqzKRxM41zw
+         LMAWr+CpTyrd8VXq9mbC70WRx0hMBELd1Y7+9flQCD9FLAzSzEqkbtVzaSlNhMAofNUp
+         H3yA==
+X-Forwarded-Encrypted: i=1; AFNElJ/qVPgEnmPCoWomNyhGtiB3WXRktpfC064NIDaISTkryKpH/BWCGVcmZqP/RXnpykpKp3vlA/cr6vDWtBv0TVzX@vger.kernel.org
+X-Gm-Message-State: AOJu0YznxH2lXAooenb1EaoAEpFeZMxe/NkRjJV4enfJhYSIi4aNjG8K
+	UvEpP45R61FL49iTApSMqPb9kX5s8TdqwPcV/GI70jH0rVzeZBkLpGcBQNMApA3B9ev3lpOHmcg
+	XD19JSCOE4Q==
+X-Received: from dyem12.prod.google.com ([2002:a05:7300:818c:b0:2ed:d9c:cdae])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e78a:b0:307:3a6c:ecf4
+ with SMTP id 5a478bee46e88-3081ff9598amr3649731eec.9.1781334666425; Sat, 13
+ Jun 2026 00:11:06 -0700 (PDT)
+Date: Sat, 13 Jun 2026 00:10:40 -0700
+In-Reply-To: <20260613052722.1424093-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260613052722.1424093-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
+Message-ID: <20260613071100.1508192-1-irogers@google.com>
+Subject: [PATCH v17 00/20] Add additional python API support
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The generated Python type stub (perf.pyi) inaccurately represent=
-s the C runtime API, missing several properties, misspecifying names, and u=
-sing overly restrictive return types.
---
+The perf script command has long supported running Python and Perl scripts
+by embedding libpython and libperl. This approach has several drawbacks:
+ - overhead by creating Python dictionaries for every event (whether used or
+   not),
+ - complex build dependencies on specific Python/Perl versions,
+ - complications with threading due to perf being the interpreter,
+ - no clear way to run standalone scripts like ilist.py.
 
-commit 7056c6beff82d5d13d0de91848cccdb94b9ac537
-Author: Ian Rogers <irogers@google.com>
+This series takes a different approach with some initial implementation posted
+as an RFC last October:
+https://lore.kernel.org/linux-perf-users/20251029053413.355154-1-irogers@google.com/
+with the motivation coming up on the mailing list earlier:
+https://lore.kernel.org/lkml/CAP-5=fWDqE8SYfOLZkg_0=4Ayx6E7O+h7uUp4NDeCFkiN4b7-w@mail.gmail.com/
 
-perf python: Add perf.pyi stubs file
+The ultimate goal is to remove the embedded libpython and libperl support from
+perf entirely, expanding the existing perf Python module to provide full access
+to perf data files and events, allowing scripts to be run as standalone Python
+applications.
 
-Add Python type stubs for the perf module to improve IDE support and
-static analysis.  Includes docstrings for classes, methods, and
-constants derived from C source and JSON definitions.
+To make the review process more manageable, the original 58-patch series has
+been split. This v17 series represents "Phase 1: API & Infrastructure" (20 patches).
+The first 4 patches of Phase 1 (cleanups and arch-specific header sorting) have
+already been merged upstream.
 
-> diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
-> new file mode 100644
-> index 0000000000000..f789cbfa1e410
-> --- /dev/null
-> +++ b/tools/perf/python/perf.pyi
+This remaining set contains:
+1. Missed explicit dependency cleanups and header sorting for util/ and python.
+2. Crucial core safety infrastructure (reference counting for evlist/evsel)
+   to support safe lifecycle management in garbage-collected Python.
+3. The core Python API extensions (session wrappers, perf_data wrappers,
+   sample accessors, stubs, and LiveSession helper).
 
-[ ... ]
+The subsequent "Phase 2" series will contain the actual porting of all
+existing Python/Perl scripts to the new API (which yields up to 35x speedups
+as demonstrated previously) and the final removal of embedded interpreters.
 
-> +class evsel:
-> +    """Event selector, represents a single event being monitored."""
-> +    def __init__(
-> +        self,
-> +        type: int =3D ...,
-[ ... ]
-> +        wakeup_events: int =3D ...,
-> +        bp_type: int =3D ...,
-> +        bp_addr: int =3D ...,
-> +        bp_len: int =3D ...,
-> +    ) -> None: ...
 
-[Severity: Medium]
-Are we missing the idx keyword argument here? pyrf_evsel__init() in the
-C extension parses an idx argument, but it seems to be omitted from the
-type stub.
+Addressing v16 Review Feedback:
+ - Patch 10: Removed unconditional `perf_session__create_kernel_maps` to
+   prevent corrupting cross-platform offline analysis.
+ - Patch 11: Corrected inaccurate commit message regarding memory
+   allocation sizing.
+ - Patch 19: Fixed numerous type inconsistencies, missing properties, and
+   incorrect return types in the `perf.pyi` stubs file.
+ - Patch 20: Cleaned up unused `import errno` in `perf_live.py`.
 
-[ ... ]
+Note: Several issues spotted in v16 review (e.g. pyrf_evsel__init format
+string type mismatch, evlist lockless double free, asymmetric memory
+leaks, and lack of NUL-termination for COMM/MMAP) are pre-existing
+limitations in the codebase or side-effects of the transitional
+cycle-breaking design. As discussed previously, these structurally complex
+or pre-existing bugs are deliberately deferred to the Phase 2 series.
 
-> +class sample_event(_sample_members):
-> +    """Represents a sample event from perf."""
-> +    evsel: evsel
-> +    sample_ip: int
-[ ... ]
-> +    raw_buf: bytes
-> +    dso: str
-> +    map_start: int
-> +    brstack: Optional['branch_stack']
+Addressing v15 Review Feedback:
+- Patch 2 (buffer overflow & type checks): The buffer overflow in
+  pyrf_counts_values_set_values and unsafe PyArg_ParseTupleAndKeywords
+  casts are pre-existing issues in tools/perf/util/python.c. To keep
+  Phase 1 scoped strictly to new API infrastructure, these will be
+  followed up and fixed independently during Phase 2.
+- Patch 7 (evlist refcounting): The TOCTOU race condition and asymmetric
+  drop cycle-leak mentioned in the review are known limitations of this
+  transitional cycle-breaking logic. A proper, thread-safe fix requires a
+  global design change that is out of scope for Phase 1. These structural
+  cycle-breaking issues will be fully addressed in Phase 2.
+- Patch 16 (syscall name/id): The script modifications (syscall-counts.py)
+  are intentionally omitted from this patch. As stated, the porting of
+  scripts to the new API will be done entirely in Phase 2. The commit
+  message simply motivates the API addition.
 
-[Severity: Medium]
-Are several properties missing from this class? pyrf_sample_event__getset
-in the C code exports dso_long_name, dso_bid, map_end, map_pgoff, symbol,
-sym_start, and sym_end, which do not appear in this stub.
+---
 
-> +    callchain: Optional['callchain']
-> +    def srccode(self) -> str: ...
-> +    def insn(self) -> str: ...
-> +    def __getattr__(self, name: str) -> Any: ...
-> +
-> +class mmap_event(_sample_members):
-> +    """Represents a mmap event from perf."""
-> +    type: int
-> +    misc: int
-> +    pid: int
 
-[Severity: Medium]
-Should this class (and other event classes) include the evsel property?
-The evsel property is exposed on all events via pyrf_event__getset in the
-C code, but the stub currently only defines it for sample_event and
-mmap2_event.
+v16 Changes
+-----------
+- Patch 6: Added missing CHECK_INITIALIZED for pevsel parameter in
+  pyrf_evlist__add and added evsel__put(pevent->evsel) to
+  pyrf_sample_event__delete to fix a git bisect reference leak.
+- Patch 11: Restored the TypeError for oversized events instead of
+  silently truncating them and causing memory corruption. Also added
+  specific handling for -EAGAIN in pyrf_evlist__read_on_cpu to return
+  Py_RETURN_NONE instead of raising OSError.
+- Patch 12: Added explicit null-termination for the mmap2 filename to
+  prevent heap out-of-bounds reads when accessed via T_STRING_INPLACE.
+- Patch 14: Removed the fallback to perf_event__process_stat_event when
+  no stat callback is provided, preventing a segmentation fault on
+  PERF_RECORD_STAT events.
+- Patch 18: Added a new patch 'perf python: Handle Py_None for thread
+  and cpu maps' to fix a pre-existing C API bug where passing None
+  from Python caused a crash. This addresses the feedback on the stubs.
 
-[ ... ]
+v15 Changes
+-----------
+- Patch 11: Removed manual '\0' assignment for mmap/comm filenames which
+  corrupted the sample_id trailer. Replaced with memset of the event buffer
+  prior to memcpy to safely handle non-terminated strings without
+  overwriting trailer data.
+- Patch 18: Added python/perf.pyi to Makefile.perf dependencies. Added
+  missing properties to counts_values and sample_event stubs, fixed
+  branch_stack/callchain sequence protocols, and added _sample_members
+  inheritance to stat_round_event in perf.pyi.
 
-> +class callchain_node:
-> +    """Represents a frame in the callchain."""
-> +    ip: int
-> +    sym: Optional[Any]
-> +    map: Optional[Any]
+v14 Changes
+-----------
+- Patch 6: Replaced Py_IsTrue with PyObject_IsTrue to correctly evaluate
+  Python truthiness and added error handling returning -1.
+- Patch 7: Added comments to `evlist__put` and `evlist__splice_list_tail`
+  noting that cycle breaking and pointer rebinding for spliced events will
+  be addressed in subsequent patches. Removed "Phase 2" from the previous
+  cycle-breaking comment as it doesn't make sense in the wider Linux code
+  base context.
+- Patch 10: Fixed `pyrf_session__new` missing `tool.tracing_data`
+  initialization and wrapped kernel map creation in an access check.
+- Patch 15: Exposed remaining bitfields from `struct branch_flags` in
+  `pyrf_branch_entry`.
+- Patch 18: Cleaned up `perf.pyi` in `Makefile.perf`'s `python-clean`
+  target. Renamed `sc_id` to `id` in `syscall_name` stub, and corrected
+  property types.
+- Patch 19: Fixed `perf_live.py` inner loop to `break` instead of
+  `continue` on `TypeError` to properly exit when processing is complete.
 
-[Severity: Medium]
-Should these properties be named symbol and dso instead of sym and map?
-The C code in pyrf_callchain_node__getset exports them as symbol and dso.
-This could cause static analysis tools to flag valid property accesses
-as errors.
+v13 Changes
+-----------
+- Patch 6: Reverted `idx` parsing for `pyrf_evsel__init`. Added explicit NULL
+  checks for `evlist` in `session.c` to prevent crashes when accessing properties.
+- Patch 7: Rely natively on `evlist.c`'s updated logic through `evlist__add`.
+- Patch 8: Fixed memory leak in `intel_pt_synth_ptwrite_sample` by adding
+  `perf_sample__exit(&sample)` on exit.
+- Patch 9: Zeroed out `perf_data` struct via `memset(&data, 0, sizeof(data))`
+  before using it to prevent stale state issues.
+- Patch 11: Switched from `PyLong_FromUnsignedLong` to `PyLong_FromUnsignedLongLong`
+  to guarantee full 64-bit bounds representation even on 32-bit platforms.
+- Patch 18: Modified `Makefile.perf` to correctly install `perf.pyi`.
+  Synchronized `.pyi` stubs to fully match the C implementation signatures.
+- Patch 19: Updated `pyrf_evlist__read_on_cpu` to safely return `Py_RETURN_NONE`
+  on `-EAGAIN` natively from C instead of relying on broken OSError emulation.
+  Updated `perf_live.py` loop to handle the native `None` return correctly.
 
-[ ... ]
+v12 Changes
+-----------
+- Patch 6: Restored `idx` parsing in `pyrf_evsel__init` kwargs, and removed
+  an erroneous `Py_INCREF(pevsel)` in `pyrf_evlist__add` that caused a
+  memory leak.
+- Patch 7: Fixed `evlist__put` cycle collection TOCTOU double free race by
+  checking `refcount_read == 1`. Fixed `evlist__purge` recursion and cycle
+  reference tearing logic.
+- Patch 8: Removed an extra `evsel__get` in `evsel__parse_sample` to fix a
+  reference leak on error paths.
+- Patch 11: Used `copy_size` to bound `max_len` for NUL termination to fix
+  an out-of-bounds write in `pyrf_event__new`. Also set
+  `pevent->event.header.size = copy_size`.
+- Patch 12: Used `copy_size` to bound `max_len` for NUL termination of
+  mmap2 and comm events to fix an out-of-bounds write.
+- Patch 13: Added an optional `struct machine *` argument to
+  `pyrf_event__new` defaulting to the host machine if NULL, avoiding
+  regressions for future phases.
+- Patch 14: Made `psession->tool.stat = perf_event__process_stat_event;`
+  conditional on `!stat` so it doesn't unconditionally overwrite user stat
+  callbacks.
+- Patch 18: Audited all `perf.pyi` event stubs: added full `sample_members`
+  attributes (`pid`, `tid`, `time`, `id`, `stream_id`, `period`, `cpu`) to
+  all payload events via inheritance. Fixed `sample_event` unique fields
+  (`ip`, `addr`, `phys_addr`, `weight`, `data_src`, `insn_cnt`, `cyc_cnt`).
+  Renamed `mmap_event.addr` to `start`. Removed `read_event.value`.
+- Patch 19: Replaced `except TypeError` with `continue` to ignore
+  unmapped/offline CPUs instead of breaking the poll loop. Replaced
+  hardcoded `-11` with `e.errno == errno.EAGAIN` in `LiveSession.run()`.
+  Fixed `setup_python.sh` `PYTHONPATH` prepend logic to cleanly append to
+  existing paths.
 
-> +class stat_round_event(_sample_members):
-> +    """Represents a stat round event from perf."""
-> +    type: int
-> +    time: int
+Ian Rogers (20):
+  perf util: Sort includes and add missed explicit dependencies
+  perf python: Add missed explicit dependencies
+  perf evsel/evlist: Avoid unnecessary #includes
+  perf data: Add open flag
+  perf evlist: Add reference count
+  perf evsel: Add reference count
+  perf evlist: Add reference count checking
+  perf python: Use evsel in sample in pyrf_event
+  perf python: Add wrapper for perf_data file abstraction
+  perf python: Add python session abstraction wrapping perf's session
+  perf python: Refactor and add accessors to sample event
+  perf python: Add mmap2 event
+  perf python: Add callchain support
+  perf python: Extend API for stat events in python.c
+  perf python: Expose brstack in sample event
+  perf python: Add syscall name/id to convert syscall number and name
+  perf python: Add config file access
+  perf python: Handle Py_None for thread and cpu maps
+  perf python: Add perf.pyi stubs file
+  perf python: Add LiveSession helper
 
-[Severity: Medium]
-Is the stat_round_type property missing here? It is explicitly exported
-by pyrf_stat_round_event__members in the C code.
+ tools/perf/Makefile.perf                    |    9 +-
+ tools/perf/arch/arm/util/cs-etm.c           |   10 +-
+ tools/perf/arch/arm64/util/arm-spe.c        |    8 +-
+ tools/perf/arch/arm64/util/hisi-ptt.c       |    2 +-
+ tools/perf/arch/x86/tests/hybrid.c          |   22 +-
+ tools/perf/arch/x86/tests/topdown.c         |    4 +-
+ tools/perf/arch/x86/util/auxtrace.c         |    2 +-
+ tools/perf/arch/x86/util/intel-bts.c        |    6 +-
+ tools/perf/arch/x86/util/intel-pt.c         |    9 +-
+ tools/perf/arch/x86/util/iostat.c           |   14 +-
+ tools/perf/bench/evlist-open-close.c        |   29 +-
+ tools/perf/builtin-annotate.c               |    7 +-
+ tools/perf/builtin-ftrace.c                 |   14 +-
+ tools/perf/builtin-inject.c                 |    9 +-
+ tools/perf/builtin-kvm.c                    |   14 +-
+ tools/perf/builtin-kwork.c                  |    8 +-
+ tools/perf/builtin-lock.c                   |    4 +-
+ tools/perf/builtin-record.c                 |   95 +-
+ tools/perf/builtin-report.c                 |    6 +-
+ tools/perf/builtin-sched.c                  |   30 +-
+ tools/perf/builtin-script.c                 |   15 +-
+ tools/perf/builtin-stat.c                   |   83 +-
+ tools/perf/builtin-top.c                    |  104 +-
+ tools/perf/builtin-trace.c                  |   65 +-
+ tools/perf/python/perf.pyi                  |  654 +++++
+ tools/perf/python/perf_live.py              |   55 +
+ tools/perf/tests/backward-ring-buffer.c     |   26 +-
+ tools/perf/tests/code-reading.c             |   14 +-
+ tools/perf/tests/event-times.c              |    6 +-
+ tools/perf/tests/event_update.c             |    4 +-
+ tools/perf/tests/evsel-roundtrip-name.c     |    8 +-
+ tools/perf/tests/evsel-tp-sched.c           |    4 +-
+ tools/perf/tests/expand-cgroup.c            |   12 +-
+ tools/perf/tests/hists_cumulate.c           |    2 +-
+ tools/perf/tests/hists_filter.c             |    2 +-
+ tools/perf/tests/hists_link.c               |    2 +-
+ tools/perf/tests/hists_output.c             |    2 +-
+ tools/perf/tests/hwmon_pmu.c                |    7 +-
+ tools/perf/tests/keep-tracking.c            |   10 +-
+ tools/perf/tests/mmap-basic.c               |   24 +-
+ tools/perf/tests/openat-syscall-all-cpus.c  |    6 +-
+ tools/perf/tests/openat-syscall-tp-fields.c |   26 +-
+ tools/perf/tests/openat-syscall.c           |    6 +-
+ tools/perf/tests/parse-events.c             |  139 +-
+ tools/perf/tests/parse-metric.c             |    8 +-
+ tools/perf/tests/parse-no-sample-id-all.c   |    2 +-
+ tools/perf/tests/perf-record.c              |   38 +-
+ tools/perf/tests/perf-time-to-tsc.c         |   12 +-
+ tools/perf/tests/pfm.c                      |   12 +-
+ tools/perf/tests/pmu-events.c               |   11 +-
+ tools/perf/tests/pmu.c                      |    4 +-
+ tools/perf/tests/sample-parsing.c           |   45 +-
+ tools/perf/tests/shell/lib/setup_python.sh  |   13 +
+ tools/perf/tests/sw-clock.c                 |   20 +-
+ tools/perf/tests/switch-tracking.c          |   11 +-
+ tools/perf/tests/task-exit.c                |   20 +-
+ tools/perf/tests/time-utils-test.c          |   14 +-
+ tools/perf/tests/tool_pmu.c                 |    7 +-
+ tools/perf/tests/topology.c                 |    4 +-
+ tools/perf/tests/uncore-event-sorting.c     |    6 +-
+ tools/perf/ui/browsers/annotate.c           |    2 +-
+ tools/perf/ui/browsers/hists.c              |   22 +-
+ tools/perf/util/Build                       |    1 -
+ tools/perf/util/amd-sample-raw.c            |    2 +-
+ tools/perf/util/annotate-data.c             |    2 +-
+ tools/perf/util/annotate.c                  |   10 +-
+ tools/perf/util/auxtrace.c                  |   14 +-
+ tools/perf/util/block-info.c                |    4 +-
+ tools/perf/util/bpf_counter.c               |    2 +-
+ tools/perf/util/bpf_counter_cgroup.c        |   14 +-
+ tools/perf/util/bpf_ftrace.c                |    9 +-
+ tools/perf/util/bpf_lock_contention.c       |   12 +-
+ tools/perf/util/bpf_off_cpu.c               |   44 +-
+ tools/perf/util/bpf_trace_augment.c         |    8 +-
+ tools/perf/util/cgroup.c                    |   26 +-
+ tools/perf/util/cs-etm.c                    |    5 +-
+ tools/perf/util/data-convert-bt.c           |    2 +-
+ tools/perf/util/data.c                      |   27 +-
+ tools/perf/util/data.h                      |    4 +-
+ tools/perf/util/evlist.c                    |  496 ++--
+ tools/perf/util/evlist.h                    |  273 +-
+ tools/perf/util/evsel.c                     |   39 +-
+ tools/perf/util/evsel.h                     |   40 +-
+ tools/perf/util/expr.c                      |    2 +-
+ tools/perf/util/header.c                    |   69 +-
+ tools/perf/util/header.h                    |    2 +-
+ tools/perf/util/intel-pt.c                  |    2 +-
+ tools/perf/util/intel-tpebs.c               |    7 +-
+ tools/perf/util/iostat.c                    |    2 +-
+ tools/perf/util/iostat.h                    |    2 +-
+ tools/perf/util/map.h                       |    9 +-
+ tools/perf/util/metricgroup.c               |   12 +-
+ tools/perf/util/parse-events.c              |   10 +-
+ tools/perf/util/parse-events.y              |    2 +-
+ tools/perf/util/perf_api_probe.c            |   20 +-
+ tools/perf/util/pfm.c                       |    4 +-
+ tools/perf/util/print-events.c              |    2 +-
+ tools/perf/util/python.c                    | 2633 ++++++++++++++++---
+ tools/perf/util/record.c                    |   11 +-
+ tools/perf/util/s390-sample-raw.c           |   20 +-
+ tools/perf/util/sample-raw.c                |    4 +-
+ tools/perf/util/sample.c                    |   17 +-
+ tools/perf/util/session.c                   |   69 +-
+ tools/perf/util/session.h                   |    2 +
+ tools/perf/util/setup.py                    |    5 +
+ tools/perf/util/sideband_evlist.c           |   40 +-
+ tools/perf/util/sort.c                      |    2 +-
+ tools/perf/util/stat-display.c              |    6 +-
+ tools/perf/util/stat-shadow.c               |   24 +-
+ tools/perf/util/stat.c                      |   20 +-
+ tools/perf/util/stream.c                    |    4 +-
+ tools/perf/util/synthetic-events.c          |   11 +-
+ tools/perf/util/time-utils.c                |   12 +-
+ tools/perf/util/top.c                       |    4 +-
+ 114 files changed, 4445 insertions(+), 1447 deletions(-)
+ create mode 100644 tools/perf/python/perf.pyi
+ create mode 100755 tools/perf/python/perf_live.py
 
-[ ... ]
+-- 
+2.54.0.1136.gdb2ca164c4-goog
 
-> +class evlist:
-> +    def __init__(self, cpus: cpu_map, threads: thread_map) -> None: ...
-> +    def open(self) -> None:
-[ ... ]
-> +    def poll(self, timeout: int) -> int:
-> +        """Poll for events.
-> +
-> +        Args:
-> +            timeout: Timeout in milliseconds.
-> +
-> +        Returns:
-> +            Number of events ready.
-> +        """
-> +        ...
-> +    def read_on_cpu(self, cpu: int) -> Optional[sample_event]:
-
-[Severity: Medium]
-Is the return type Optional[sample_event] overly restrictive? The C
-function pyrf_evlist__read_on_cpu dynamically instantiates and returns
-various event types (like mmap_event, comm_event, etc.) based on
-event->header.type, rather than just returning sample_event.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260613052722.1424=
-093-1-irogers@google.com?part=3D19
