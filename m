@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2F92EA731
-	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 05:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E1E2EA731
+	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 05:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781329672; cv=none; b=YGu4T40INLLRhFs1/ph6jPiaRJBMy6kKagPbbZP1HbwLMYuvZxDEbx6EZ36rlEZVM7bJYPRyBhHHQDFAYByrOuaXVuPRDpzERvqfJOIcBa2/KGywvMlVo5ENY/22/paxCGYnEOwEB2uu3zrH2lbYKm+j4wa7pxwCleqIreXzhF0=
+	t=1781329683; cv=none; b=WKEAD7KCpVgdLI73ICVGXUf10ERbS1gtmXzIha4/4La5bd5YtG12robm2zwdMARr0U4ke7sXmDuz2PcEjxMrLQ98F4Q/IRvvVmuzUISbV3q/wwRDqqpffyWK8MDAHwPcHowRnE9NLLeh2a6o9LNeF+TZnv6cyB7KNKk1njIF7H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781329672; c=relaxed/simple;
-	bh=P71zqFdbJHqALkuUWde4emOmRXJS/+xshbINU4c7KAY=;
+	s=arc-20240116; t=1781329683; c=relaxed/simple;
+	bh=c5sFqXdpXxbSFkxY3pvSnUwqhc35TdGSvNbQhG6Hkn8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YDEurlfGXQ7BNm/YcYsEbFmY2aENatYM87NLvMz+2vl68PJIuvXiRhJGOOjviyT7ZTDxTn7NEyLIeuWbEl138U/fBEbA0rwYdhJlAappIP8YkzXZHuBDzGdCLqzGs6Hib36nqvYjkkypsKtXY4gOwy0wTEXB661DKvSJrrVs770=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mb615Qyy; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=erObcYo4iLiOKcYHbpofOpsbM6ZtQasdWtjoQCSS50CYhlsE7suSs+AQgZARRWEJyGJlHIycRQ4HQ1GhW7fDG3ykdzzpzZ8D0qv+oVUZ+/Q8wRhVntJuZAjx6fyLhwTSYOVIxfSc/3ekv+ZS66+aBh12aewYgCis2TNZZkBSeVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T2QdTXgv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mb615Qyy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 112DE1F000E9;
-	Sat, 13 Jun 2026 05:47:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T2QdTXgv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A11761F000E9;
+	Sat, 13 Jun 2026 05:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781329671;
-	bh=lEqYRif55PKsqd1fJgOFuUJ8nh1D68p6QSkUwQprj2E=;
+	s=k20260515; t=1781329681;
+	bh=JYNo49msyunQSIZkdWQqATv2urHCpeK1v2B4D1Mto6M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Mb615QyyqnqbKv54jGmQ0hECKsFetPOcJe9cc6jy3NDcFrZDlk5gxJnqIlygpqISb
-	 Qne4NgL7Z28m9w4nc4aYQmSjtCIXMgqxb0YWLo8r3oZzQBd/+Rka2G4NsTAucok29m
-	 WfINxoRCITGibn1ceCXz/YNRNhEK5NYwzivKG61RSOCShcWr8lVFO1t2PAHsxPvTlc
-	 BUNkFDx2K1tNP3wSFhHPScRDl43flsJ3jZd1ILiUQqCemZAtcX56OBiKO9Og6QG9qS
-	 0cmuTaxgRVoSWPRAD7/jqc2VhRKm7zmtIdLdSmbEW0yrOsgZ5iodnqIsqGprMGLE/7
-	 lIr4eCMnESlHw==
+	b=T2QdTXgvqjo24h4HJKjX2mIfJYgsAuw3jnrxd0DT1/TDH/Yxz0TMTaE1o5Uhqoxbu
+	 RUka9bs9HkDfBVvAF2zYKEjuM2L1jRN99Belkgn6UFQdxXVGDwIo6y12609u+lEeS5
+	 t1Y1hjJQ22pdVJDsmc50/Gfpo1pPK/tFSE/CKiB3+2pfODhoRGO9Vpx4HTyJv2hR5O
+	 erQ2kuaWo299ArD8GWo8mc7IujruTjONTo5Vm+IloHRrD0DF4usDurkLapAsWnIc6l
+	 zC/d+AieFc+09PfxONC1bRMG8qr1W6hv7U+iJRa3NWlolX88+eSr+FHVmX364SK47o
+	 IRyXSghYZG7yw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v16 16/20] perf python: Add syscall name/id to convert
- syscall number and name
+Subject: Re: [PATCH v16 12/20] perf python: Add mmap2 event
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260613052722.1424093-17-irogers@google.com>
-References: <20260613052722.1424093-17-irogers@google.com>
+In-Reply-To: <20260613052722.1424093-13-irogers@google.com>
+References: <20260613052722.1424093-13-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 13 Jun 2026 05:47:50 +0000
-Message-Id: <20260613054751.112DE1F000E9@smtp.kernel.org>
+Date: Sat, 13 Jun 2026 05:48:01 +0000
+Message-Id: <20260613054801.A11761F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,54 +45,69 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Incomplete implementation: Python scripts not updated to use new=
-ly added `perf.syscall_name()` API, contrary to the commit message.
+
+Pre-existing issues:
+- [High] Missing explicit NUL-termination for `PERF_RECORD_COMM` and `PERF_=
+RECORD_MMAP` events allows an out-of-bounds heap read on malformed `perf.da=
+ta` streams.
 --
 
-commit efc13f37f43255fa0c87ef2573276e5694a324fc
+commit 424aa9d550ab571f0deb9bd53989e4b478af2b15
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add syscall name/id to convert syscall number and name
+perf python: Add mmap2 event
 
-This commit adds support to the python bindings to convert syscall numbers
-to names and vice versa using the perf syscalltbl.
+This commit adds support for mmap2 events as a distinct python event type
+in the perf python bindings. It extends the existing python module to parse
+and expose mmap2 specific fields like inode, major, minor, and build ID.
 
-> Use perf's syscalltbl support to convert syscall number to name
-> assuming the number is for the host machine. This avoids python
-> libaudit support as tools/perf/scripts/python/syscall-counts.py
-> requires.
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index e4731c94debaa..b3dca4b638441 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+[ ... ]
+> @@ -873,6 +1020,9 @@ static PyObject *pyrf_event__new(const union perf_ev=
+ent *event, struct evsel *ev
+>  	if (copy_size < sizeof(pevent->event))
+>  		memset((char *)&pevent->event + copy_size, 0, sizeof(pevent->event) - =
+copy_size);
+> =20
+> +	if (event->header.type =3D=3D PERF_RECORD_MMAP2)
+> +		pevent->event.mmap2.filename[sizeof(pevent->event.mmap2.filename) - 1]=
+ =3D '\0';
+> +
 
-[Severity: Medium]
-The commit message mentions this avoids the python libaudit support
-required by tools/perf/scripts/python/syscall-counts.py. However,
-were the updates to the Python scripts inadvertently left out of this patch?
+[Severity: High]
+This is a pre-existing issue, but while you are explicitly NUL-terminating
+the new PERF_RECORD_MMAP2 filename, should we also add explicit
+NUL-termination for PERF_RECORD_COMM and PERF_RECORD_MMAP events here?
 
-Looking at tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py,
-it appears to still rely on the external audit module instead of using the
-newly added API:
+If a malformed perf.data stream has event->header.size exactly equal to
+sizeof(union perf_event), the memset() used to zero-fill the remainder of t=
+he
+struct is bypassed. If the source data lacks NULs, comm.comm and mmap.filen=
+ame
+will remain unterminated.
 
-tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Util.py:syscall_na=
-me() {
-    ...
-    try:
-        return audit.audit_syscall_to_name(id, machine_id)
-    ...
+When Python accesses these fields via the T_STRING_INPLACE parser or C-stri=
+ng
+formatting in pyrf_comm_event__repr() and pyrf_mmap_event__repr(), strlen()
+can read past the array boundary into adjacent heap memory, for example:
+
+pyrf_comm_event__repr() {
+	return PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
+				   pevent->event.comm.pid,
+				   pevent->event.comm.tid,
+				   pevent->event.comm.comm);
 }
 
-The script tools/perf/scripts/python/syscall-counts.py also still calls
-this old utility function:
+Does it make sense to protect the existing string fields from out-of-bounds
+reads in the same way mmap2 is protected?
 
-tools/perf/scripts/python/syscall-counts.py:print_syscall_totals() {
-    ...
-    for id, val in sorted(syscalls.items(),
-            key =3D lambda kv: (kv[1], kv[0]), reverse =3D True):
-        print("%-40s  %10d" % (syscall_name(id), val))
-    ...
-}
-
-Should these scripts be updated in this commit to actually remove the
-libaudit dependency?
+>  	perf_sample__init(&pevent->sample, /*all=3D*/true);
+>  	pevent->al_resolved =3D false;
+>  	addr_location__init(&pevent->al);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260613052722.1424=
-093-1-irogers@google.com?part=3D16
+093-1-irogers@google.com?part=3D12
