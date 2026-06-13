@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE97F30B509
-	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 05:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751783C197F
+	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 05:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781328456; cv=none; b=PssZl6l23fyDPJk4BB81bTaYwcyW5hgq4XdhP3jwf4KUdTpG3TpqP1WdzHy7xQRqhfUeA9EBXcoKRlmtNde0LLtHZpLKQylCP680qeiNLyn5TbEFjJwf6FL1pKD+/X91QQ4F4Gex5KkPrdD7DbnZ5Ab56ahnET6WLF0aLzDjZAI=
+	t=1781328458; cv=none; b=DT2oF2vRlPinq8SRJESms8omBNOI67wJniFH876ZidhpV9uk7v+ImN8mVCEUuAZ2S18Tx+8VO1qZ6nHBtl7KAspbZzxaZAemhhjPv/GvnL7QggSMUC3b8zFj55uzZ09EkC7k+i82GaqY+kh7ipTxbspD0WxyoVoOn5V1tyd/eN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781328456; c=relaxed/simple;
-	bh=JSfVdaFgVT+16BkkuKzKlIjgGUMwUVUUeSc4uGtnw10=;
+	s=arc-20240116; t=1781328458; c=relaxed/simple;
+	bh=46UPsdVhKLSGOesq+b4o9rur5WYGR9zwjyMivGxYXrA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OGMakQa3yLCqGdbjtXeNP9zVF5P4S4ifkyehLVcbHtsvocdMoYGolSFOPWObmME6/CNjGk/d+aSx0jghC5lTW3Ndgkk+He/8RwEqign4K7NGS8IFosGrS6OHydIp09K/91P3jiP/I13DO7ZDRzwwRdEZ8yKvrvj1zmEPXyxyOaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jDdIGy4Y; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=cWcHU9iTUaaKHtYjNazuzOLM2bk+hHE7OBHsTp3sZ78cD3caJexgLowFZtY+PTOa+4CeO81MctkU/V1tejjNrbNhwSUlyMVteSNWCZIrtHfsj43zzb2GygSOV2hcvJQUt6f0Q8pwd+gMXdGReKe6RYkRznZPXY0v9xszQrk6kaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mlqnKfiK; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jDdIGy4Y"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304b8d0ee63so2790184eec.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:27:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mlqnKfiK"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304ec73b015so1391690eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:27:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781328453; x=1781933253; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781328454; x=1781933254; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lq0ALMVaEZfhSbzg5O+HM/S6tJqN1Cgs4e0hJ55fARY=;
-        b=jDdIGy4YZ7veZx7dpoDqzTxXHzaXNId4swmPI3EkZiyQ14IXrHHPj1KYPCi8NY6g1J
-         p4+fm0X5s7eNkOTGDc8xsSbWJ5yMZcpRFwKE9Dg/sF3ubq1Pu44lNUNnr5kBMVzM8jEc
-         HSKRH22fIUqfNyun1v6ZKl4RVUAFbYMI4y9SjWDunMgx1eUZ1Kmhxd6T3/ZBaeTdHsTn
-         LsY8rziD3QDvlSz1S56nCetSw6fOgcENnvZiAiEBma3oxVl9pguf0O6smboXAoKXgSAL
-         vqVgE3KrqxGIVHj8cCn8JlaWZ0lWaT4DicrmoFAAX7lIG7Z8FEQFlLKhfk4G6KIcQZPa
-         p0Xw==
+        bh=vT2Mha6cP/S+RPKLMMcfihXr8wIiT308bjbyJ4T0oAQ=;
+        b=mlqnKfiKp1Re+XgdgpHUBSUQADMctPE+vHCkAf/flN0znZ5XiPwwRChR6apwOaykmi
+         YEoM/kp80TvagtU9pLxVTQq92F+MXFFlzyrwVLHq9mK+Ucjj+rH8D2qUMnuY5wEP1oll
+         FJNtU+CFofb3nNw1x3ld8fZJTRNdkN0gTegrBADtkpVLmWcMQPUCSNy2KkD1wEExh9p8
+         SgV5eLo0ULQEEP4P3kBfHeuKJOgn0KBACsJe9IdwSaJbeWPDTHkTq2ktH1ARQXYNHJZm
+         XrMa9gtyXV11e2X/oxzxAXKAYP+QEqTV+QS3yn+On9Bhwc/snq4AFF6o3ElOqS1cB+Fj
+         Hg8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781328453; x=1781933253;
+        d=1e100.net; s=20251104; t=1781328454; x=1781933254;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lq0ALMVaEZfhSbzg5O+HM/S6tJqN1Cgs4e0hJ55fARY=;
-        b=aD4yIsngbEc4iAeYc7kd6oYJBvl8fYTdk4JPfwmV7GmSCy6Ck1Bx1e2pwPwdV6AN2Z
-         vONMztcL/yGs/yMQIeLZMIIzNL3AxKZmqy6WnnsOSEuRjhtgr2EbHcy/rTpf/6QItHoi
-         TjPMyD/unxzBCVGvZuSBNYyOEQH2yL54TwlBoBwLubnsLWiZtfFSL6XVLgShR7qMTHpC
-         d1fjgb0LITzgCxjSG1z8OpB6TKTqhXEgIfqQOczhbp0545zbaNQOfqFu408CYRDd4FZ+
-         Ccld5ElkaW6sXefjup2mlYS7c552PEbiRlgvnRl2IVyYNLagyERfzZd4K0oEUR2iK6VL
-         cMkw==
-X-Forwarded-Encrypted: i=1; AFNElJ+Ngke+3hcq97b8YOUpdmNICW46xXijmgCZwEihfpe2QMOdi948Ac1WgxsEO/fyURjWbG9PwtdD8o7atNX5Y3hD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw10bCOm69KJ9P/ycKi/emmo2jn/VT3Z0CUfXETQmXzfqnHM7Kt
-	mTGsR9Ntw0MclmdqC3vMIyhOxnP1869oXuxXyZ/9nh3F1ZdAcxtHz+0SXx3ymZjpVSDz1ZETYZF
-	54+Yn4+TZgw==
-X-Received: from dycpb7.prod.google.com ([2002:a05:7301:9c07:b0:304:e89d:c06b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:324a:b0:304:ab8:f89a
- with SMTP id 5a478bee46e88-30935239e36mr1550514eec.1.1781328452309; Fri, 12
- Jun 2026 22:27:32 -0700 (PDT)
-Date: Fri, 12 Jun 2026 22:27:04 -0700
+        bh=vT2Mha6cP/S+RPKLMMcfihXr8wIiT308bjbyJ4T0oAQ=;
+        b=ItW4qCSAGFlP66QDem2G4SCFLE+k+mpV6hpLVKcdR+LX4gJK2bMS5aP8tjFfu63FlF
+         SQO03j/IxnkZHtJLyJ1Wz9F6yQI2pXB71Mh5GtEoKQwh5Pxms7Ayd0yDg2alCsFae0Jo
+         GKqrbAj2O92LiVL6DQfqF1UlqGw2JYlqimByFBd2Od2m4IDsw9bO0991YhnpQDv//0IS
+         1cBgWQRE/dWLM7nYuQ50alm72qXIiGdnGeopbIIM+ydwrGeSywk7FOt6mo1RUg2Z/9Ao
+         hAFgkBZIMLSsaMngM9o0X78PiNZj8JkUWdNWBx5LTXUn4kggNXxQuXjABQyxPCyrIA73
+         hb6w==
+X-Forwarded-Encrypted: i=1; AFNElJ9Ap9g8ck3mQXWeMA5r27tYJzuBl2yaIe+m5blusvya/xrTN5NP8MVV4csINCOOg0Aozk32WtlURo/a68ZQr9Wu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7K/gbyVQcCDMdr5HBh84HS9tiLKrOBlp+LH4Op9NrpNujrIJM
+	PDFTOzLFodeXfb2A+ldpLKfCtEDV0TLRED8lRwCYMV1AYekqPqE/ynZOATiZPPpH30/o1pe6z0/
+	9bXjI2TcCow==
+X-Received: from dybmj14.prod.google.com ([2002:a05:7301:e0e:b0:304:dbcd:d155])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fd15:b0:304:8366:7456
+ with SMTP id 5a478bee46e88-3081ff41333mr3839485eec.3.1781328454262; Fri, 12
+ Jun 2026 22:27:34 -0700 (PDT)
+Date: Fri, 12 Jun 2026 22:27:05 -0700
 In-Reply-To: <20260613052722.1424093-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260612221211.1221305-1-irogers@google.com> <20260613052722.1424093-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260613052722.1424093-4-irogers@google.com>
-Subject: [PATCH v16 03/20] perf evsel/evlist: Avoid unnecessary #includes
+Message-ID: <20260613052722.1424093-5-irogers@google.com>
+Subject: [PATCH v16 04/20] perf data: Add open flag
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,140 +68,121 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Use forward declarations and remove unnecessary #includes in
-evsel.h. Sort the forward declarations in evsel.h and evlist.h. Move
-some PMU code into evsel.c.
+Avoid double opens and ensure only open files are closed. This
+addresses some issues with python integration where the data file
+wants to be opened before being given to a session.
 
+Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/evlist.h | 15 +++++++++------
- tools/perf/util/evsel.c  |  5 +++++
- tools/perf/util/evsel.h  | 25 ++++++++++++-------------
- 3 files changed, 26 insertions(+), 19 deletions(-)
+Changes in v2:
 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index e507f5f20ef6..e54761c670b6 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -2,29 +2,32 @@
- #ifndef __PERF_EVLIST_H
- #define __PERF_EVLIST_H 1
+1. Fixed File Rotation: In perf_data__switch() , I added data->open =
+   false; after the file is closed. This ensures that the subsequent
+   perf_data__open() call will not exit early and will successfully
+   open the new file.
+
+2. Fixed Memory Leak: In open_dir() , I added a call to
+   zfree(&data->file.path) if mkdir() fails, preventing the leak of
+   the path string.
+---
+ tools/perf/util/data.c | 27 ++++++++++++++++++++++-----
+ tools/perf/util/data.h |  4 +++-
+ 2 files changed, 25 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 94dc534a7386..33fd1b82019e 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -345,9 +345,10 @@ static int open_dir(struct perf_data *data)
+ 	if (asprintf(&data->file.path, "%s/data", data->path) < 0)
+ 		return -1;
  
-+#include <signal.h>
-+
- #include <linux/compiler.h>
- #include <linux/kernel.h>
--#include <linux/refcount.h>
- #include <linux/list.h>
-+#include <linux/refcount.h>
-+#include <pthread.h>
-+#include <unistd.h>
-+
- #include <api/fd/array.h>
- #include <internal/evlist.h>
- #include <internal/evsel.h>
- #include <perf/evlist.h>
-+
- #include "affinity.h"
- #include "events_stats.h"
- #include "evsel.h"
- #include "rblist.h"
--#include <pthread.h>
--#include <signal.h>
--#include <unistd.h>
+-	if (perf_data__is_write(data) &&
+-	    mkdir(data->path, S_IRWXU) < 0)
++	if (perf_data__is_write(data) && mkdir(data->path, 0700) < 0) {
++		zfree(&data->file.path);
+ 		return -1;
++	}
  
--struct pollfd;
--struct thread_map;
- struct perf_cpu_map;
- struct perf_stat_config;
-+struct pollfd;
- struct record_opts;
- struct strbuf;
- struct target;
-+struct thread_map;
+ 	ret = open_file(data);
  
- /*
-  * State machine of bkw_mmap_state:
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 34c03f47a913..19e48b9260e9 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -370,6 +370,11 @@ void evsel__set_sample_id(struct evsel *evsel,
- 	evsel->core.attr.read_format |= PERF_FORMAT_ID;
+@@ -360,9 +361,16 @@ static int open_dir(struct perf_data *data)
+ 
+ int perf_data__open(struct perf_data *data)
+ {
+-	if (check_pipe(data))
++	int ret;
++
++	if (data->open)
+ 		return 0;
+ 
++	if (check_pipe(data)) {
++		data->open = true;
++		return 0;
++	}
++
+ 	/* currently it allows stdio for pipe only */
+ 	data->file.use_stdio = false;
+ 
+@@ -375,16 +383,24 @@ int perf_data__open(struct perf_data *data)
+ 	if (perf_data__is_read(data))
+ 		data->is_dir = is_dir(data);
+ 
+-	return perf_data__is_dir(data) ?
+-	       open_dir(data) : open_file_dup(data);
++	ret = perf_data__is_dir(data) ? open_dir(data) : open_file_dup(data);
++
++	if (!ret)
++		data->open = true;
++
++	return ret;
  }
  
-+bool evsel__is_non_perf_event_open_pmu(const struct evsel *evsel)
-+{
-+	return evsel->pmu && evsel->pmu->type > PERF_PMU_TYPE_PE_END;
-+}
+ void perf_data__close(struct perf_data *data)
+ {
++	if (!data->open)
++		return;
 +
- /**
-  * evsel__is_function_event - Return whether given evsel is a function
-  * trace event
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 8178858d168a..6b28cd754a18 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -2,28 +2,30 @@
- #ifndef __PERF_EVSEL_H
- #define __PERF_EVSEL_H 1
+ 	if (perf_data__is_dir(data))
+ 		perf_data__close_dir(data);
  
--#include <linux/list.h>
- #include <stdbool.h>
--#include <sys/types.h>
-+
-+#include <linux/list.h>
- #include <linux/perf_event.h>
- #include <linux/types.h>
-+#include <sys/types.h>
-+
- #include <internal/evsel.h>
- #include <perf/evsel.h>
-+
- #include "symbol_conf.h"
--#include "pmus.h"
--#include "pmu.h"
- 
-+struct bperf_follower_bpf;
-+struct bperf_leader_bpf;
-+struct bpf_counter_ops;
- struct bpf_object;
- struct cgroup;
-+struct hashmap;
- struct perf_counts;
-+struct perf_pmu;
- struct perf_stat_config;
- struct perf_stat_evsel;
--union perf_event;
--struct bpf_counter_ops;
- struct target;
--struct hashmap;
--struct bperf_leader_bpf;
--struct bperf_follower_bpf;
-+union perf_event;
- 
- typedef int (evsel__sb_cb_t)(union perf_event *event, void *data);
- 
-@@ -356,10 +358,6 @@ void arch_evsel__apply_ratio_to_prev(struct evsel *evsel, struct perf_event_attr
- int evsel__set_filter(struct evsel *evsel, const char *filter);
- int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
- int evsel__append_addr_filter(struct evsel *evsel, const char *filter);
--static inline bool evsel__is_non_perf_event_open_pmu(const struct evsel *evsel)
--{
--	return evsel->pmu && evsel->pmu->type > PERF_PMU_TYPE_PE_END;
--}
- 
- int evsel__enable_cpu(struct evsel *evsel, int cpu_map_idx);
- int evsel__enable(struct evsel *evsel);
-@@ -478,6 +476,7 @@ static inline bool evsel__is_group_event(struct evsel *evsel)
- 	return evsel__is_group_leader(evsel) && evsel->core.nr_members > 1;
+ 	perf_data_file__close(&data->file);
++	data->open = false;
  }
  
-+bool evsel__is_non_perf_event_open_pmu(const struct evsel *evsel);
- bool evsel__is_function_event(struct evsel *evsel);
+ static ssize_t perf_data_file__read(struct perf_data_file *file, void *buf, size_t size)
+@@ -457,6 +473,7 @@ int perf_data__switch(struct perf_data *data,
  
- static inline bool evsel__is_bpf_output(struct evsel *evsel)
+ 	if (!at_exit) {
+ 		perf_data_file__close(&data->file);
++		data->open = false;
+ 		ret = perf_data__open(data);
+ 		if (ret < 0)
+ 			goto out;
+diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+index 8299fb5fa7da..76f57f60361f 100644
+--- a/tools/perf/util/data.h
++++ b/tools/perf/util/data.h
+@@ -50,6 +50,8 @@ struct perf_data {
+ 	const char		*path;
+ 	/** @file: Underlying file to be used. */
+ 	struct perf_data_file	 file;
++	/** @open: Has the file or directory been opened. */
++	bool			 open;
+ 	/** @is_pipe: Underlying file is a pipe. */
+ 	bool			 is_pipe;
+ 	/** @is_dir: Underlying file is a directory. */
+@@ -59,7 +61,7 @@ struct perf_data {
+ 	/** @in_place_update: A file opened for reading but will be written to. */
+ 	bool			 in_place_update;
+ 	/** @mode: Read or write mode. */
+-	enum perf_data_mode	 mode;
++	enum perf_data_mode	 mode:8;
+ 
+ 	struct {
+ 		/** @version: perf_dir_version. */
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
