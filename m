@@ -1,54 +1,54 @@
 Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0D53C9EF4
-	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 05:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F303C943A
+	for <linux-perf-users@vger.kernel.org>; Sat, 13 Jun 2026 05:27:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781328477; cv=none; b=bXLWBY/3uOp0WTPQfByIl1FJsJjMLhRWJbJS3OSZYkP5/o5cZhtlbm3kCK6HJV/FV+rxuQJc00Pnu/Y3vSawLjsSYORzlIkcES7lims7EaRo4mr2emBXCm2zJyphF4bnYueAAMS5381PSbZyI5zpVDTvdUJfAMieLHOKn0sSNxM=
+	t=1781328477; cv=none; b=hFmKcbk/XUNiHO48jWZJ0Pszzvyjj5SFtxQAMUMS9EAH0WmgdNzXWt0dVi2lMue86XW3NU4qwRDbuMLLKwjNwpSZlQYKXgLMuzeQmmdMZEr2tmurNWna8IAewjqStlz6D8j1aTT1b403Xlbq0qO2fnMSwzcZkepGbeOuxepkJ/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781328477; c=relaxed/simple;
-	bh=ik7lxJ8FpRTC/hEslw+CDDlvr/VgJH6AXcPydBU07Dw=;
+	bh=W14IQBD1Fw5uiaU+SdAUjBSVDEnbaoC23ccEMqma3Co=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=J1j3aXMGDoriNh3RMNYST1iWjEdd+60BoCw7IL6Mz9rc4LoR9jJ1BnKjjktsY7CdTflFEZa2/Pk+wSkcHTkfQ/0fIsS8VO+93cXGiSZfOMfob3GdXFtjtRgDk03JK6k0wIRhE66Q3U1l8on+72FtYX7Ur39c+gyfCutokWls7sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QLxMCIcX; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=Rx75C3b9gagQugFdrlnLvv5GZOOnekx/fv1QpjETq1zS5JvuiVbaZN9IJFerGK7tsVi7LuPk2XkOqt5qoLEgc01GkZPcVuWJCa0ZT6MHrcidha+1RGm0zhwXzP5V97uVV/i2Eao850S0aueVase6qmY2G1fCaT0+QL+1+WZvRU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BRlcesI+; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QLxMCIcX"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304f1820babso2645037eec.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:27:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BRlcesI+"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-307625ee07fso3069951eec.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jun 2026 22:27:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781328470; x=1781933270; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781328472; x=1781933272; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HUo52iTPuNcBqI0hcFYf5OP0aswC1JwJ1WVY3w39DEM=;
-        b=QLxMCIcXN4U1BfhznhxtLoyV1NRMIcOkelb+iQo9VAU3j0MYMaJk42ckVJVX9msy7X
-         NNc1Q+LDPpKxn9qNHusximQcVEuzmCgjDdBxw5uAJA1igd7nxkfHF5mJQIeSw6aLUCOe
-         AkUtAbhDie/baRplDNN74dwr+TF97kRirrOomf2x/Gb0gt9mYKw1Ia6jLZ+Qk0VZ+Kaa
-         GrGy0ZrwnDhVcHWW8cyy+wpfqa8jZYlcTIEwfGIKfMI9jYut1SXKTFO8Gv2+65U83wIT
-         24MorI8hWfmyILJiA6atGv9dmG3edoAO3aBXDaqTIIPD9uk0E3nw6K4yu42sFVES/Fzs
-         OGPQ==
+        bh=bBx9+uCNEQFJQwE2tadOy4OG5EMm4+qbqOG9vi99E4E=;
+        b=BRlcesI+iv1Quap5IHYEqPYdqgLJp0nljifvJimJSRGFEXWhNXwD6XXQM+YpfDkEiE
+         BUKupQVpjB3sLSTvpIBRQL+kO6KdOcxrlUeB+j5qbGEzxK8FabKYc97uhcJA43OQZDXU
+         FEGr9c6hVApvTtqF6V4u2BONsdcVnlpfY73u/tj87wPaTlerNL8mZ2iyq8UypLlMufLI
+         zKU4QuJwqc88bh4jXQHqUZe4qBeVdqGgsbm1mB9OQEjIpDylXRh+z45InZd+/eAoMVAt
+         5B2A6lZw0Ur6MbdSgxtVcbFIQbXBhNgFbg+HpgXrThJFqdSaXyqxizNssbu/qq/JRElg
+         RDSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781328470; x=1781933270;
+        d=1e100.net; s=20251104; t=1781328472; x=1781933272;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HUo52iTPuNcBqI0hcFYf5OP0aswC1JwJ1WVY3w39DEM=;
-        b=OqISno6A/DOtDowDMMa/hcZ4+AxfqzKm6NUYl/dv6VrlWhpvPjlet/OIZMSX4iQirk
-         V8h4hLpKdWOWfgpDrJ1RGUL/rIMWPlvPE7HrnZaTI+SA8G7zSfQ1kEb+KDegTHEwRnf0
-         HzHzh5++fbjhFp1roEqamsxdYe3OUOF4pQ2XjdSWxGFAeLcWqwefYon9G1MuckKoHuoj
-         NsBqerJ+hPeOE4EeXRTRovveHSAulmdiXL8Pse4mx2od0LGpNnw2dEl/FEyrLW4oyUj+
-         u76qh7Wi28KFCmJF/G3v22CHdVmBIKBKSQBzxzbqxyFRu+7YDx6jiC2X1DEjsBvPBpp5
-         SVzw==
-X-Forwarded-Encrypted: i=1; AFNElJ/D2T0hTlUJv/Ic42BnfLNCwJKpjapP6NVM5Gs5QbduakixfpYLa/Xk0+JiYcWoY0Rte4kBLa9UU+pQsw8eSXWK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCEP4BsN/83TxO4w33rbVE8YGO0MBJCEB9W4BMHP8BY+LdV8Zb
-	+dBDAMv5u7fMXwnpfRWiHORaDeSWX/liWBGvAczVAG+8dmZr5qUhB6IAVkG57mgsvTwst7bKjxv
-	diRWuh0GwqQ==
-X-Received: from dycal20.prod.google.com ([2002:a05:7301:1c94:b0:304:e34e:e1e1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:3202:b0:304:d788:ac5
- with SMTP id 5a478bee46e88-308200c9097mr3855587eec.35.1781328469573; Fri, 12
- Jun 2026 22:27:49 -0700 (PDT)
-Date: Fri, 12 Jun 2026 22:27:12 -0700
+        bh=bBx9+uCNEQFJQwE2tadOy4OG5EMm4+qbqOG9vi99E4E=;
+        b=og7OoNT07QfrpaPEb6uInWUj5K21jdvm/7yS0AnGjrUUmymihM+U8yVQ1OM5TXEVaO
+         sj4+UM6Ml1jTsDCQfd4YWoHK/ncjRHEe+cY5EnrgF6nCAiyNKSFmRbCXtj5DSRXusgGn
+         mfPrCLOUtbQSEmc9jWoKrT3t45OOZUCcIw5bLpfmO0mI54ffoeqCQGDO6HQkDhtUDsVs
+         gcvlu6WeCI+3UUK1Pc/JWhoRp20uLYFM0GHZvjnB0s2ANIkrCIdNbmqemPA6yUEB6X1e
+         s7ZAxLG9ptXY9JdP+0WWM1EDcnRzNYHCUANPNvH4FyEE2F8GVQ1EAhAVz2M9cdla3PZ7
+         YarQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9UitMl9ipslwR1TjrRWN4mou1odCOijmW6903bZi6E0djY+P21OL08Lu6TU4g2U6P2udbCsviQ62rpLbzH1hK/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfMxSLG+dgdv8ZpUV4FyrcCmXSK+1IXAwqCkZ5Otr9hc3Aub2d
+	xmeZrYkLg5UeH9pNH+/YT6mbYbZQPKOZr2pcdIhfMtGOWhPTvYhs86OU0uW5De/wMKzqjcSAMFC
+	1uU89yp/JGg==
+X-Received: from dybnq20.prod.google.com ([2002:a05:7300:e514:b0:2f9:af7:5043])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:5341:b0:2fc:9ae6:e5a8
+ with SMTP id 5a478bee46e88-3082009c394mr3889642eec.20.1781328471518; Fri, 12
+ Jun 2026 22:27:51 -0700 (PDT)
+Date: Fri, 12 Jun 2026 22:27:13 -0700
 In-Reply-To: <20260613052722.1424093-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260612221211.1221305-1-irogers@google.com> <20260613052722.1424093-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260613052722.1424093-12-irogers@google.com>
-Subject: [PATCH v16 11/20] perf python: Refactor and add accessors to sample event
+Message-ID: <20260613052722.1424093-13-irogers@google.com>
+Subject: [PATCH v16 12/20] perf python: Add mmap2 event
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,464 +68,94 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Add common evsel field for events and move sample specific fields to
-only be present in sample events. Add accessors for sample
-events. Ensure offsets are within the bounds of the event. Allocate
-just enough memory for the copied event, don't make the maximum event
-size each time.
+If mmap is handled so should mmap2 events. Add support as a distinct
+python event type.
 
 Assisted-by: Gemini:gemini-3.1-pro-preview
 Signed-off-by: Ian Rogers <irogers@google.com>
+
 ---
 v12:
- - Used `copy_size` to bound `max_len` for NUL termination to fix an out-of-bounds write in `pyrf_event__new`. Also set `pevent->event.header.size = copy_size`.
-
-v5:
-1. Fix Uninitialized Memory: Restore zero-initialization of `pevent->sample`
-   in `pyrf_event__new()` to prevent wild free crashes on error paths.
-
-v6:
-- Refactored `pyrf_event__new` to take `evsel` and `session`, and use
-  dynamic allocation based on event size. Updated callers.
-
-v8:
-- Ensure events are properly deallocated.
-
-v11:
-- Use `perf_event__too_small` for event size validation, sharing logic
-  with the session parser instead of replicating validation checks.
-
-# Conflicts:
-#	tools/perf/util/python.c
+ - Used `copy_size` to bound `max_len` for NUL termination of mmap2 and comm events to fix an out-of-bounds write.
 ---
- tools/perf/util/python.c  | 497 +++++++++++++++++++++++++++++++-------
- tools/perf/util/session.c |   2 +-
- tools/perf/util/session.h |   2 +
- 3 files changed, 416 insertions(+), 85 deletions(-)
+ tools/perf/util/python.c | 155 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 154 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 322ec14243af..e4731c94deba 100644
+index e4731c94deba..b3dca4b63844 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -13,21 +13,28 @@
- #include <perf/mmap.h>
- #include <structmember.h>
- 
-+#include "addr_location.h"
-+#include "build-id.h"
- #include "callchain.h"
- #include "comm.h"
- #include "counts.h"
- #include "data.h"
- #include "debug.h"
-+#include "dso.h"
- #include "event.h"
- #include "evlist.h"
- #include "evsel.h"
- #include "expr.h"
-+#include "map.h"
- #include "metricgroup.h"
- #include "mmap.h"
- #include "pmus.h"
- #include "print_binary.h"
- #include "record.h"
-+#include "sample.h"
- #include "session.h"
-+#include "srccode.h"
-+#include "srcline.h"
- #include "strbuf.h"
- #include "symbol.h"
- #include "stat.h"
-@@ -37,7 +44,6 @@
- #include "tool.h"
- #include "tp_pmu.h"
- #include "trace-event.h"
--#include "util/sample.h"
- 
- #ifdef HAVE_LIBTRACEEVENT
- #include <event-parse.h>
-@@ -45,6 +51,8 @@
- 
- PyMODINIT_FUNC PyInit_perf(void);
- 
-+static PyObject *pyrf_evsel__from_evsel(struct evsel *evsel);
-+
- #define member_def(type, member, ptype, help) \
- 	{ #member, ptype, \
- 	  offsetof(struct pyrf_event, event) + offsetof(struct type, member), \
-@@ -73,21 +81,53 @@ PyMODINIT_FUNC PyInit_perf(void);
- 
- struct pyrf_event {
- 	PyObject_HEAD
-+	/** @sample: The parsed sample from the event. */
- 	struct perf_sample sample;
--	union perf_event   event;
-+	/** @al: The address location from machine__resolve, lazily computed. */
-+	struct addr_location al;
-+	/** @al_resolved: True when machine__resolve been called. */
-+	bool al_resolved;
-+	/** @event: The underlying perf_event that may be in a file or ring buffer. */
-+	union perf_event event;
- };
- 
- #define sample_members \
--	sample_member_def(sample_ip, ip, T_ULONGLONG, "event ip"),			 \
- 	sample_member_def(sample_pid, pid, T_INT, "event pid"),			 \
- 	sample_member_def(sample_tid, tid, T_INT, "event tid"),			 \
- 	sample_member_def(sample_time, time, T_ULONGLONG, "event timestamp"),		 \
--	sample_member_def(sample_addr, addr, T_ULONGLONG, "event addr"),		 \
- 	sample_member_def(sample_id, id, T_ULONGLONG, "event id"),			 \
- 	sample_member_def(sample_stream_id, stream_id, T_ULONGLONG, "event stream id"), \
- 	sample_member_def(sample_period, period, T_ULONGLONG, "event period"),		 \
- 	sample_member_def(sample_cpu, cpu, T_UINT, "event cpu"),
- 
-+static PyObject *pyrf_event__get_evsel(PyObject *self, void *closure __maybe_unused)
-+{
-+	struct pyrf_event *pevent = (void *)self;
-+
-+	if (!pevent->sample.evsel)
-+		Py_RETURN_NONE;
-+
-+	return pyrf_evsel__from_evsel(pevent->sample.evsel);
-+}
-+
-+static PyGetSetDef pyrf_event__getset[] = {
-+	{
-+		.name = "evsel",
-+		.get = pyrf_event__get_evsel,
-+		.set = NULL,
-+		.doc = "tracking event.",
-+	},
-+	{ .name = NULL, },
-+};
-+
-+static void pyrf_event__delete(struct pyrf_event *pevent)
-+{
-+	if (pevent->al_resolved)
-+		addr_location__exit(&pevent->al);
-+	perf_sample__exit(&pevent->sample);
-+	Py_TYPE(pevent)->tp_free((PyObject *)pevent);
-+}
-+
- static const char pyrf_mmap_event__doc[] = PyDoc_STR("perf mmap event object.");
- 
+@@ -133,7 +133,7 @@ static const char pyrf_mmap_event__doc[] = PyDoc_STR("perf mmap event object.");
  static PyMemberDef pyrf_mmap_event__members[] = {
-@@ -126,9 +166,11 @@ static PyTypeObject pyrf_mmap_event__type = {
- 	PyVarObject_HEAD_INIT(NULL, 0)
- 	.tp_name	= "perf.mmap_event",
- 	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
- 	.tp_doc		= pyrf_mmap_event__doc,
- 	.tp_members	= pyrf_mmap_event__members,
-+	.tp_getset	= pyrf_event__getset,
+ 	sample_members
+ 	member_def(perf_event_header, type, T_UINT, "event type"),
+-	member_def(perf_event_header, misc, T_UINT, "event misc"),
++	member_def(perf_event_header, misc, T_USHORT, "event misc"),
+ 	member_def(perf_record_mmap, pid, T_UINT, "event pid"),
+ 	member_def(perf_record_mmap, tid, T_UINT, "event tid"),
+ 	member_def(perf_record_mmap, start, T_ULONGLONG, "start of the map"),
+@@ -174,6 +174,149 @@ static PyTypeObject pyrf_mmap_event__type = {
  	.tp_repr	= (reprfunc)pyrf_mmap_event__repr,
  };
  
-@@ -161,9 +203,11 @@ static PyTypeObject pyrf_task_event__type = {
- 	PyVarObject_HEAD_INIT(NULL, 0)
- 	.tp_name	= "perf.task_event",
- 	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
- 	.tp_doc		= pyrf_task_event__doc,
- 	.tp_members	= pyrf_task_event__members,
-+	.tp_getset	= pyrf_event__getset,
- 	.tp_repr	= (reprfunc)pyrf_task_event__repr,
- };
- 
-@@ -190,9 +234,11 @@ static PyTypeObject pyrf_comm_event__type = {
- 	PyVarObject_HEAD_INIT(NULL, 0)
- 	.tp_name	= "perf.comm_event",
- 	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
- 	.tp_doc		= pyrf_comm_event__doc,
- 	.tp_members	= pyrf_comm_event__members,
-+	.tp_getset	= pyrf_event__getset,
- 	.tp_repr	= (reprfunc)pyrf_comm_event__repr,
- };
- 
-@@ -222,9 +268,11 @@ static PyTypeObject pyrf_throttle_event__type = {
- 	PyVarObject_HEAD_INIT(NULL, 0)
- 	.tp_name	= "perf.throttle_event",
- 	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
- 	.tp_doc		= pyrf_throttle_event__doc,
- 	.tp_members	= pyrf_throttle_event__members,
-+	.tp_getset	= pyrf_event__getset,
- 	.tp_repr	= (reprfunc)pyrf_throttle_event__repr,
- };
- 
-@@ -257,9 +305,11 @@ static PyTypeObject pyrf_lost_event__type = {
- 	PyVarObject_HEAD_INIT(NULL, 0)
- 	.tp_name	= "perf.lost_event",
- 	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
- 	.tp_doc		= pyrf_lost_event__doc,
- 	.tp_members	= pyrf_lost_event__members,
-+	.tp_getset	= pyrf_event__getset,
- 	.tp_repr	= (reprfunc)pyrf_lost_event__repr,
- };
- 
-@@ -287,9 +337,11 @@ static PyTypeObject pyrf_read_event__type = {
- 	PyVarObject_HEAD_INIT(NULL, 0)
- 	.tp_name	= "perf.read_event",
- 	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
- 	.tp_doc		= pyrf_read_event__doc,
- 	.tp_members	= pyrf_read_event__members,
-+	.tp_getset	= pyrf_event__getset,
- 	.tp_repr	= (reprfunc)pyrf_read_event__repr,
- };
- 
-@@ -297,16 +349,17 @@ static const char pyrf_sample_event__doc[] = PyDoc_STR("perf sample event object
- 
- static PyMemberDef pyrf_sample_event__members[] = {
- 	sample_members
-+	sample_member_def(sample_ip, ip, T_ULONGLONG, "event ip"),
-+	sample_member_def(sample_addr, addr, T_ULONGLONG, "event addr"),
-+	sample_member_def(sample_phys_addr, phys_addr, T_ULONGLONG, "event physical addr"),
-+	sample_member_def(sample_weight, weight, T_ULONGLONG, "event weight"),
-+	sample_member_def(sample_data_src, data_src, T_ULONGLONG, "event data source"),
-+	sample_member_def(sample_insn_count, insn_cnt, T_ULONGLONG, "event instruction count"),
-+	sample_member_def(sample_cyc_count, cyc_cnt, T_ULONGLONG, "event cycle count"),
- 	member_def(perf_event_header, type, T_UINT, "event type"),
- 	{ .name = NULL, },
- };
- 
--static void pyrf_sample_event__delete(struct pyrf_event *pevent)
--{
--	perf_sample__exit(&pevent->sample);
--	Py_TYPE(pevent)->tp_free((PyObject *)pevent);
--}
--
- static PyObject *pyrf_sample_event__repr(const struct pyrf_event *pevent)
- {
- 	PyObject *ret;
-@@ -324,6 +377,8 @@ static PyObject *pyrf_sample_event__repr(const struct pyrf_event *pevent)
- #ifdef HAVE_LIBTRACEEVENT
- static bool is_tracepoint(const struct pyrf_event *pevent)
- {
-+	if (!pevent->sample.evsel)
-+		return false;
- 	return pevent->sample.evsel->core.attr.type == PERF_TYPE_TRACEPOINT;
- }
- 
-@@ -394,6 +449,199 @@ get_tracepoint_field(struct pyrf_event *pevent, PyObject *attr_name)
- }
- #endif /* HAVE_LIBTRACEEVENT */
- 
-+static int pyrf_sample_event__resolve_al(struct pyrf_event *pevent)
-+{
-+	struct evsel *evsel = pevent->sample.evsel;
-+	struct evlist *evlist = evsel ? evsel->evlist : NULL;
-+	struct perf_session *session = evlist ? evlist__session(evlist) : NULL;
++static const char pyrf_mmap2_event__doc[] = PyDoc_STR("perf mmap2 event object.");
 +
-+	if (pevent->al_resolved)
-+		return 0;
-+
-+	if (!session)
-+		return -1;
-+
-+	addr_location__init(&pevent->al);
-+	if (machine__resolve(&session->machines.host, &pevent->al, &pevent->sample) < 0) {
-+		addr_location__exit(&pevent->al);
-+		return -1;
-+	}
-+
-+	pevent->al_resolved = true;
-+	return 0;
-+}
-+
-+static PyObject *pyrf_sample_event__get_dso(struct pyrf_event *pevent,
-+					    void *closure __maybe_unused)
-+{
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-+		Py_RETURN_NONE;
-+
-+	return PyUnicode_FromString(dso__name(map__dso(pevent->al.map)));
-+}
-+
-+static PyObject *pyrf_sample_event__get_dso_long_name(struct pyrf_event *pevent,
-+						      void *closure __maybe_unused)
-+{
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-+		Py_RETURN_NONE;
-+
-+	return PyUnicode_FromString(dso__long_name(map__dso(pevent->al.map)));
-+}
-+
-+static PyObject *pyrf_sample_event__get_dso_bid(struct pyrf_event *pevent,
-+						void *closure __maybe_unused)
-+{
-+	char sbuild_id[SBUILD_ID_SIZE];
-+
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-+		Py_RETURN_NONE;
-+
-+	build_id__snprintf(dso__bid(map__dso(pevent->al.map)), sbuild_id, sizeof(sbuild_id));
-+	return PyUnicode_FromString(sbuild_id);
-+}
-+
-+static PyObject *pyrf_sample_event__get_map_start(struct pyrf_event *pevent,
-+						  void *closure __maybe_unused)
-+{
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-+		Py_RETURN_NONE;
-+
-+	return PyLong_FromUnsignedLong(map__start(pevent->al.map));
-+}
-+
-+static PyObject *pyrf_sample_event__get_map_end(struct pyrf_event *pevent,
-+						void *closure __maybe_unused)
-+{
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-+		Py_RETURN_NONE;
-+
-+	return PyLong_FromUnsignedLong(map__end(pevent->al.map));
-+}
-+
-+static PyObject *pyrf_sample_event__get_map_pgoff(struct pyrf_event *pevent,
-+						  void *closure __maybe_unused)
-+{
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-+		Py_RETURN_NONE;
-+
-+	return PyLong_FromUnsignedLongLong(map__pgoff(pevent->al.map));
-+}
-+
-+static PyObject *pyrf_sample_event__get_symbol(struct pyrf_event *pevent,
-+					       void *closure __maybe_unused)
-+{
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.sym)
-+		Py_RETURN_NONE;
-+
-+	return PyUnicode_FromString(pevent->al.sym->name);
-+}
-+
-+static PyObject *pyrf_sample_event__get_sym_start(struct pyrf_event *pevent,
-+						  void *closure __maybe_unused)
-+{
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.sym)
-+		Py_RETURN_NONE;
-+
-+	return PyLong_FromUnsignedLongLong(pevent->al.sym->start);
-+}
-+
-+static PyObject *pyrf_sample_event__get_sym_end(struct pyrf_event *pevent,
-+						void *closure __maybe_unused)
-+{
-+	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.sym)
-+		Py_RETURN_NONE;
-+
-+	return PyLong_FromUnsignedLongLong(pevent->al.sym->end);
-+}
-+
-+static PyObject *pyrf_sample_event__get_raw_buf(struct pyrf_event *pevent,
-+						void *closure __maybe_unused)
-+{
-+	if (pevent->event.header.type != PERF_RECORD_SAMPLE)
-+		Py_RETURN_NONE;
-+
-+	return PyBytes_FromStringAndSize((const char *)pevent->sample.raw_data,
-+					 pevent->sample.raw_size);
-+}
-+
-+static PyObject *pyrf_sample_event__srccode(PyObject *self, PyObject *args)
++static PyObject *pyrf_mmap2_event__get_maj(PyObject *self, void *closure __maybe_unused)
 +{
 +	struct pyrf_event *pevent = (void *)self;
-+	u64 addr = pevent->sample.ip;
-+	char *srcfile = NULL;
-+	char *srccode = NULL;
-+	unsigned int line = 0;
-+	int len = 0;
-+	PyObject *result;
-+	struct addr_location al;
 +
-+	if (!PyArg_ParseTuple(args, "|K", &addr))
-+		return NULL;
-+
-+	if (pyrf_sample_event__resolve_al(pevent) < 0)
++	if (pevent->event.header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)
 +		Py_RETURN_NONE;
 +
-+	if (addr != pevent->sample.ip) {
-+		addr_location__init(&al);
-+		thread__find_symbol_fb(pevent->al.thread, pevent->sample.cpumode, addr, &al);
-+	} else {
-+		addr_location__init(&al);
-+		al.thread = thread__get(pevent->al.thread);
-+		al.map = map__get(pevent->al.map);
-+		al.sym = pevent->al.sym;
-+		al.addr = pevent->al.addr;
-+	}
-+
-+	if (al.map) {
-+		struct dso *dso = map__dso(al.map);
-+
-+		if (dso) {
-+			srcfile = get_srcline_split(dso, map__rip_2objdump(al.map, addr),
-+						    &line);
-+		}
-+	}
-+	addr_location__exit(&al);
-+
-+	if (srcfile) {
-+		srccode = find_sourceline(srcfile, line, &len);
-+		result = Py_BuildValue("(sIs#)", srcfile, line, srccode, (Py_ssize_t)len);
-+		free(srcfile);
-+	} else {
-+		result = Py_BuildValue("(sIs#)", NULL, 0, NULL, (Py_ssize_t)0);
-+	}
-+
-+	return result;
++	return PyLong_FromUnsignedLong(pevent->event.mmap2.maj);
 +}
 +
-+static PyObject *pyrf_sample_event__insn(PyObject *self, PyObject *args __maybe_unused)
++static PyObject *pyrf_mmap2_event__get_min(PyObject *self, void *closure __maybe_unused)
 +{
 +	struct pyrf_event *pevent = (void *)self;
-+	struct thread *thread;
-+	struct machine *machine;
 +
-+	if (pyrf_sample_event__resolve_al(pevent) < 0)
++	if (pevent->event.header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)
 +		Py_RETURN_NONE;
 +
-+	thread = pevent->al.thread;
-+
-+	if (!thread || !thread__maps(thread))
-+		Py_RETURN_NONE;
-+
-+	machine = maps__machine(thread__maps(thread));
-+	if (!machine)
-+		Py_RETURN_NONE;
-+
-+	if (pevent->sample.ip && !pevent->sample.insn_len)
-+		perf_sample__fetch_insn(&pevent->sample, thread, machine);
-+
-+	if (!pevent->sample.insn_len)
-+		Py_RETURN_NONE;
-+
-+	return PyBytes_FromStringAndSize((const char *)pevent->sample.insn,
-+					 pevent->sample.insn_len);
++	return PyLong_FromUnsignedLong(pevent->event.mmap2.min);
 +}
 +
- static PyObject*
- pyrf_sample_event__getattro(struct pyrf_event *pevent, PyObject *attr_name)
- {
-@@ -407,13 +655,102 @@ pyrf_sample_event__getattro(struct pyrf_event *pevent, PyObject *attr_name)
- 	return obj ?: PyObject_GenericGetAttr((PyObject *) pevent, attr_name);
- }
- 
-+static PyGetSetDef pyrf_sample_event__getset[] = {
-+	{
-+		.name = "raw_buf",
-+		.get = (getter)pyrf_sample_event__get_raw_buf,
-+		.set = NULL,
-+		.doc = "event raw buffer.",
-+	},
++static PyObject *pyrf_mmap2_event__get_ino(PyObject *self, void *closure __maybe_unused)
++{
++	struct pyrf_event *pevent = (void *)self;
++
++	if (pevent->event.header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)
++		Py_RETURN_NONE;
++
++	return PyLong_FromUnsignedLongLong(pevent->event.mmap2.ino);
++}
++
++static PyObject *pyrf_mmap2_event__get_ino_generation(PyObject *self, void *closure __maybe_unused)
++{
++	struct pyrf_event *pevent = (void *)self;
++
++	if (pevent->event.header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)
++		Py_RETURN_NONE;
++
++	return PyLong_FromUnsignedLongLong(pevent->event.mmap2.ino_generation);
++}
++
++static PyObject *pyrf_mmap2_event__get_build_id(PyObject *self, void *closure __maybe_unused)
++{
++	struct pyrf_event *pevent = (void *)self;
++
++	if (!(pevent->event.header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID))
++		Py_RETURN_NONE;
++
++	int size = pevent->event.mmap2.build_id_size;
++
++	if (size > 20)
++		size = 20;
++
++	return PyBytes_FromStringAndSize((const char *)pevent->event.mmap2.build_id, size);
++}
++
++static PyGetSetDef pyrf_mmap2_event__getset[] = {
 +	{
 +		.name = "evsel",
 +		.get = pyrf_event__get_evsel,
@@ -533,337 +163,125 @@ index 322ec14243af..e4731c94deba 100644
 +		.doc = "tracking event.",
 +	},
 +	{
-+		.name = "dso",
-+		.get = (getter)pyrf_sample_event__get_dso,
++		.name = "maj",
++		.get = pyrf_mmap2_event__get_maj,
 +		.set = NULL,
-+		.doc = "event dso short name.",
++		.doc = "major number.",
 +	},
 +	{
-+		.name = "dso_long_name",
-+		.get = (getter)pyrf_sample_event__get_dso_long_name,
++		.name = "min",
++		.get = pyrf_mmap2_event__get_min,
 +		.set = NULL,
-+		.doc = "event dso long name.",
++		.doc = "minor number.",
 +	},
 +	{
-+		.name = "dso_bid",
-+		.get = (getter)pyrf_sample_event__get_dso_bid,
++		.name = "ino",
++		.get = pyrf_mmap2_event__get_ino,
 +		.set = NULL,
-+		.doc = "event dso build id.",
++		.doc = "inode number.",
 +	},
 +	{
-+		.name = "map_start",
-+		.get = (getter)pyrf_sample_event__get_map_start,
++		.name = "ino_generation",
++		.get = pyrf_mmap2_event__get_ino_generation,
 +		.set = NULL,
-+		.doc = "event map start address.",
++		.doc = "inode generation.",
 +	},
 +	{
-+		.name = "map_end",
-+		.get = (getter)pyrf_sample_event__get_map_end,
++		.name = "build_id",
++		.get = pyrf_mmap2_event__get_build_id,
 +		.set = NULL,
-+		.doc = "event map end address.",
-+	},
-+	{
-+		.name = "map_pgoff",
-+		.get = (getter)pyrf_sample_event__get_map_pgoff,
-+		.set = NULL,
-+		.doc = "event map page offset.",
-+	},
-+	{
-+		.name = "symbol",
-+		.get = (getter)pyrf_sample_event__get_symbol,
-+		.set = NULL,
-+		.doc = "event symbol name.",
-+	},
-+	{
-+		.name = "sym_start",
-+		.get = (getter)pyrf_sample_event__get_sym_start,
-+		.set = NULL,
-+		.doc = "event symbol start address.",
-+	},
-+	{
-+		.name = "sym_end",
-+		.get = (getter)pyrf_sample_event__get_sym_end,
-+		.set = NULL,
-+		.doc = "event symbol end address.",
++		.doc = "binary build ID.",
 +	},
 +	{ .name = NULL, },
 +};
 +
-+static PyMethodDef pyrf_sample_event__methods[] = {
-+	{
-+		.ml_name  = "srccode",
-+		.ml_meth  = (PyCFunction)pyrf_sample_event__srccode,
-+		.ml_flags = METH_VARARGS,
-+		.ml_doc	  = PyDoc_STR("Get source code for an address.")
-+	},
-+	{
-+		.ml_name  = "insn",
-+		.ml_meth  = (PyCFunction)pyrf_sample_event__insn,
-+		.ml_flags = METH_NOARGS,
-+		.ml_doc	  = PyDoc_STR("Get instruction bytes for a sample.")
-+	},
-+	{ .ml_name = NULL, }
++static PyMemberDef pyrf_mmap2_event__members[] = {
++	sample_members
++	member_def(perf_event_header, type, T_UINT, "event type"),
++	member_def(perf_event_header, misc, T_USHORT, "event misc"),
++	member_def(perf_record_mmap2, pid, T_UINT, "event pid"),
++	member_def(perf_record_mmap2, tid, T_UINT, "event tid"),
++	member_def(perf_record_mmap2, start, T_ULONGLONG, "start of the map"),
++	member_def(perf_record_mmap2, len, T_ULONGLONG, "map length"),
++	member_def(perf_record_mmap2, pgoff, T_ULONGLONG, "page offset"),
++	member_def(perf_record_mmap2, prot, T_UINT, "protection"),
++	member_def(perf_record_mmap2, flags, T_UINT, "flags"),
++	member_def(perf_record_mmap2, filename, T_STRING_INPLACE, "backing store"),
++	{ .name = NULL, },
 +};
 +
- static PyTypeObject pyrf_sample_event__type = {
- 	PyVarObject_HEAD_INIT(NULL, 0)
- 	.tp_name	= "perf.sample_event",
- 	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
- 	.tp_doc		= pyrf_sample_event__doc,
- 	.tp_members	= pyrf_sample_event__members,
-+	.tp_getset	= pyrf_sample_event__getset,
-+	.tp_methods	= pyrf_sample_event__methods,
- 	.tp_repr	= (reprfunc)pyrf_sample_event__repr,
- 	.tp_getattro	= (getattrofunc) pyrf_sample_event__getattro,
- };
-@@ -449,25 +786,17 @@ static PyTypeObject pyrf_context_switch_event__type = {
- 	PyVarObject_HEAD_INIT(NULL, 0)
- 	.tp_name	= "perf.context_switch_event",
- 	.tp_basicsize	= sizeof(struct pyrf_event),
-+	.tp_dealloc	= (destructor)pyrf_event__delete,
- 	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
- 	.tp_doc		= pyrf_context_switch_event__doc,
- 	.tp_members	= pyrf_context_switch_event__members,
-+	.tp_getset	= pyrf_event__getset,
- 	.tp_repr	= (reprfunc)pyrf_context_switch_event__repr,
- };
- 
- static int pyrf_event__setup_types(void)
- {
- 	int err;
--	pyrf_mmap_event__type.tp_new =
--	pyrf_task_event__type.tp_new =
--	pyrf_comm_event__type.tp_new =
--	pyrf_lost_event__type.tp_new =
--	pyrf_read_event__type.tp_new =
--	pyrf_sample_event__type.tp_new =
--	pyrf_context_switch_event__type.tp_new =
--	pyrf_throttle_event__type.tp_new = PyType_GenericNew;
--
--	pyrf_sample_event__type.tp_dealloc = (destructor)pyrf_sample_event__delete,
- 
- 	err = PyType_Ready(&pyrf_mmap_event__type);
- 	if (err < 0)
-@@ -511,33 +840,52 @@ static PyTypeObject *pyrf_event__type[] = {
- 	[PERF_RECORD_SWITCH_CPU_WIDE]  = &pyrf_context_switch_event__type,
- };
- 
--static PyObject *pyrf_event__new(const union perf_event *event)
-+static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *evsel)
- {
- 	struct pyrf_event *pevent;
--	PyTypeObject *ptype;
-+	int err;
-+	u32 min_size;
- 
--	if ((event->header.type < PERF_RECORD_MMAP ||
--	     event->header.type > PERF_RECORD_SAMPLE) &&
--	    !(event->header.type == PERF_RECORD_SWITCH ||
--	      event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)) {
--		PyErr_Format(PyExc_TypeError, "Unexpected header type %u",
-+	if (event->header.type >= ARRAY_SIZE(pyrf_event__type) ||
-+	    pyrf_event__type[event->header.type] == NULL) {
-+		return PyErr_Format(PyExc_TypeError, "Unexpected header type %u",
- 			     event->header.type);
--		return NULL;
- 	}
- 
--	// FIXME this better be dynamic or we need to parse everything
--	// before calling perf_mmap__consume(), including tracepoint fields.
--	if (sizeof(pevent->event) < event->header.size) {
--		PyErr_Format(PyExc_TypeError, "Unexpected event size: %zd < %u",
--			     sizeof(pevent->event), event->header.size);
--		return NULL;
-+	if (perf_event__too_small(event, &min_size)) {
-+		return PyErr_Format(PyExc_ValueError, "Event size %u too small for type %u",
-+				    event->header.size, event->header.type);
- 	}
- 
--	ptype = pyrf_event__type[event->header.type];
--	pevent = PyObject_New(struct pyrf_event, ptype);
--	if (pevent != NULL) {
--		memcpy(&pevent->event, event, event->header.size);
--		perf_sample__init(&pevent->sample, /*all=*/false);
-+	size_t copy_size = event->header.size;
++static PyObject *pyrf_mmap2_event__repr(const struct pyrf_event *pevent)
++{
++	PyObject *ret;
++	char *s;
 +
-+	if (copy_size > sizeof(pevent->event)) {
-+		return PyErr_Format(PyExc_TypeError, "Unexpected event size: %zd < %zu",
-+				    sizeof(pevent->event), copy_size);
-+	}
-+
-+	pevent = PyObject_New(struct pyrf_event, pyrf_event__type[event->header.type]);
-+	if (pevent == NULL)
++	if (asprintf(&s, "{ type: mmap2, pid: %u, tid: %u, start: %#" PRI_lx64 ", "
++			 "length: %#" PRI_lx64 ", offset: %#" PRI_lx64 ", "
++			 "flags: %#x, prot: %#x, filename: %s }",
++		     pevent->event.mmap2.pid, pevent->event.mmap2.tid,
++		     pevent->event.mmap2.start, pevent->event.mmap2.len,
++		     pevent->event.mmap2.pgoff, pevent->event.mmap2.flags,
++		     pevent->event.mmap2.prot, pevent->event.mmap2.filename) < 0)
 +		return PyErr_NoMemory();
 +
-+	/* Copy the event for memory safety and initialize variables. */
-+	memcpy(&pevent->event, event, copy_size);
-+	if (copy_size < sizeof(pevent->event))
-+		memset((char *)&pevent->event + copy_size, 0, sizeof(pevent->event) - copy_size);
++	ret = PyUnicode_FromString(s);
++	free(s);
++	return ret;
++}
 +
-+	perf_sample__init(&pevent->sample, /*all=*/true);
-+	pevent->al_resolved = false;
-+	addr_location__init(&pevent->al);
++static PyTypeObject pyrf_mmap2_event__type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name	= "perf.mmap2_event",
++	.tp_basicsize	= sizeof(struct pyrf_event),
++	.tp_dealloc	= (destructor)pyrf_event__delete,
++	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
++	.tp_doc		= pyrf_mmap2_event__doc,
++	.tp_members	= pyrf_mmap2_event__members,
++	.tp_getset	= pyrf_mmap2_event__getset,
++	.tp_repr	= (reprfunc)pyrf_mmap2_event__repr,
++};
 +
-+	if (!evsel)
-+		return (PyObject *)pevent;
-+
-+	/* Parse the sample again so that pointers are within the copied event. */
-+	err = evsel__parse_sample(evsel, &pevent->event, &pevent->sample);
-+	if (err < 0) {
-+		Py_DECREF(pevent);
-+		return PyErr_Format(PyExc_OSError,
-+				    "perf: can't parse sample, err=%d", err);
- 	}
- 	return (PyObject *)pevent;
- }
-@@ -1244,7 +1592,7 @@ static PyObject *pyrf_evsel__str(PyObject *self)
- 	if (!evsel)
- 		return PyUnicode_FromString("evsel(uninitialized)");
+ static const char pyrf_task_event__doc[] = PyDoc_STR("perf task (fork/exit) event object.");
  
--	return PyUnicode_FromFormat("evsel(%s/%s/)", evsel__pmu_name(evsel), evsel__name(evsel));
-+	return PyUnicode_FromFormat("evsel(%s)", evsel__name(evsel));
- }
- 
- static PyMethodDef pyrf_evsel__methods[] = {
-@@ -1878,9 +2226,11 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
- {
- 	struct evlist *evlist;
- 	union perf_event *event;
-+	struct evsel *evsel;
- 	int sample_id_all = 1, cpu;
- 	static char *kwlist[] = { "cpu", "sample_id_all", NULL };
- 	struct mmap *md;
-+	PyObject *pyevent;
+ static PyMemberDef pyrf_task_event__members[] = {
+@@ -799,6 +942,9 @@ static int pyrf_event__setup_types(void)
  	int err;
  
- 	CHECK_INITIALIZED(pevlist->evlist, "evlist");
-@@ -1891,44 +2241,33 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
- 		return NULL;
+ 	err = PyType_Ready(&pyrf_mmap_event__type);
++	if (err < 0)
++		goto out;
++	err = PyType_Ready(&pyrf_mmap2_event__type);
+ 	if (err < 0)
+ 		goto out;
+ 	err = PyType_Ready(&pyrf_lost_event__type);
+@@ -828,6 +974,7 @@ static int pyrf_event__setup_types(void)
  
- 	md = get_md(evlist, cpu);
--	if (!md) {
--		PyErr_Format(PyExc_TypeError, "Unknown CPU '%d'", cpu);
--		return NULL;
--	}
-+	if (!md)
-+		return PyErr_Format(PyExc_TypeError, "Unknown CPU '%d'", cpu);
+ static PyTypeObject *pyrf_event__type[] = {
+ 	[PERF_RECORD_MMAP]	 = &pyrf_mmap_event__type,
++	[PERF_RECORD_MMAP2]	 = &pyrf_mmap2_event__type,
+ 	[PERF_RECORD_LOST]	 = &pyrf_lost_event__type,
+ 	[PERF_RECORD_COMM]	 = &pyrf_comm_event__type,
+ 	[PERF_RECORD_EXIT]	 = &pyrf_task_event__type,
+@@ -873,6 +1020,9 @@ static PyObject *pyrf_event__new(const union perf_event *event, struct evsel *ev
+ 	if (copy_size < sizeof(pevent->event))
+ 		memset((char *)&pevent->event + copy_size, 0, sizeof(pevent->event) - copy_size);
  
--	if (perf_mmap__read_init(&md->core) < 0)
--		goto end;
-+	err = perf_mmap__read_init(&md->core);
-+	if (err < 0) {
-+		if (err == -EAGAIN)
-+			Py_RETURN_NONE;
-+		return PyErr_Format(PyExc_OSError,
-+				    "perf: error mmap read init, err=%d", err);
-+	}
- 
- 	event = perf_mmap__read_event(&md->core);
--	if (event != NULL) {
--		PyObject *pyevent = pyrf_event__new(event);
--		struct pyrf_event *pevent = (struct pyrf_event *)pyevent;
--		struct evsel *evsel;
--
--		if (pyevent == NULL)
--			return PyErr_NoMemory();
--
--		evsel = evlist__event2evsel(evlist, event);
--		if (!evsel) {
--			Py_DECREF(pyevent);
--			Py_INCREF(Py_None);
--			return Py_None;
--		}
-+	if (event == NULL)
-+		Py_RETURN_NONE;
- 
-+	evsel = evlist__event2evsel(evlist, event);
-+	if (!evsel) {
-+		/* Unknown evsel. */
- 		perf_mmap__consume(&md->core);
--
--		err = evsel__parse_sample(evsel, &pevent->event, &pevent->sample);
--		if (err) {
--			Py_DECREF(pyevent);
--			return PyErr_Format(PyExc_OSError,
--					    "perf: can't parse sample, err=%d", err);
--		}
--
--		return pyevent;
-+		Py_RETURN_NONE;
- 	}
--end:
--	Py_INCREF(Py_None);
--	return Py_None;
-+	pyevent = pyrf_event__new(event, evsel);
-+	perf_mmap__consume(&md->core);
-+	if (pyevent == NULL)
-+		return PyErr_Occurred() ? NULL : PyErr_NoMemory();
++	if (event->header.type == PERF_RECORD_MMAP2)
++		pevent->event.mmap2.filename[sizeof(pevent->event.mmap2.filename) - 1] = '\0';
 +
-+	return pyevent;
- }
+ 	perf_sample__init(&pevent->sample, /*all=*/true);
+ 	pevent->al_resolved = false;
+ 	addr_location__init(&pevent->al);
+@@ -3315,6 +3465,9 @@ PyMODINIT_FUNC PyInit_perf(void)
+ 	Py_INCREF(&pyrf_mmap_event__type);
+ 	PyModule_AddObject(module, "mmap_event", (PyObject *)&pyrf_mmap_event__type);
  
- static PyObject *pyrf_evlist__open(struct pyrf_evlist *pevlist,
-@@ -2140,10 +2479,7 @@ static PyObject *pyrf_evlist__str(PyObject *self)
- 	evlist__for_each_entry(pevlist->evlist, pos) {
- 		if (!first)
- 			strbuf_addch(&sb, ',');
--		if (!pos->pmu)
--			strbuf_addstr(&sb, evsel__name(pos));
--		else
--			strbuf_addf(&sb, "%s/%s/", pos->pmu->name, evsel__name(pos));
-+		strbuf_addstr(&sb, evsel__name(pos));
- 		first = false;
- 	}
- 	strbuf_addstr(&sb, "])");
-@@ -2692,19 +3028,12 @@ static int pyrf_session_tool__sample(const struct perf_tool *tool,
- 				     struct machine *machine __maybe_unused)
- {
- 	struct pyrf_session *psession = container_of(tool, struct pyrf_session, tool);
--	PyObject *pyevent = pyrf_event__new(event);
--	struct pyrf_event *pevent = (struct pyrf_event *)pyevent;
-+	PyObject *pyevent = pyrf_event__new(event, sample->evsel);
- 	PyObject *ret;
- 
- 	if (pyevent == NULL)
- 		return -ENOMEM;
- 
--	memcpy(&pevent->event, event, event->header.size);
--	if (evsel__parse_sample(sample->evsel, &pevent->event, &pevent->sample) < 0) {
--		Py_DECREF(pyevent);
--		return -1;
--	}
--
- 	ret = PyObject_CallFunction(psession->sample, "O", pyevent);
- 	if (!ret) {
- 		Py_DECREF(pyevent);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 18af70488e07..004593b8675f 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2672,7 +2672,7 @@ static const u32 perf_event__min_size[PERF_RECORD_HEADER_MAX] = {
-  * Caller must ensure event->header.type < PERF_RECORD_HEADER_MAX.
-  * If min is non-NULL, stores the required minimum on failure.
-  */
--static bool perf_event__too_small(const union perf_event *event, u32 *min)
-+bool perf_event__too_small(const union perf_event *event, u32 *min)
- {
- 	u32 min_sz = perf_event__min_size[event->header.type];
- 
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index d554e2a1a50e..ac5803d5fb4e 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -122,6 +122,8 @@ void perf_session__delete(struct perf_session *session);
- 
- void perf_event_header__bswap(struct perf_event_header *hdr);
- 
-+bool perf_event__too_small(const union perf_event *event, u32 *min);
++	Py_INCREF(&pyrf_mmap2_event__type);
++	PyModule_AddObject(module, "mmap2_event", (PyObject *)&pyrf_mmap2_event__type);
 +
- int perf_session__peek_event(struct perf_session *session, off_t file_offset,
- 			     void *buf, size_t buf_sz,
- 			     union perf_event **event_ptr,
+ 	Py_INCREF(&pyrf_lost_event__type);
+ 	PyModule_AddObject(module, "lost_event", (PyObject *)&pyrf_lost_event__type);
+ 
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
