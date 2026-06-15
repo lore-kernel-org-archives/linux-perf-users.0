@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8713B19D8
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 06:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3BA270575
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 06:47:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781505628; cv=none; b=qBT2Xf0MiN6WawAwmp5DlFU2FSp4WfeRlEJSVX8/p0QOcveoKE81t+dxTvamIq6byqysPe1vhZMvOY8tnxa9L9SlgVV4ScZbw0zMd3IZR+xKQKX3NW9/bVW5UTHZws8QMJ5P1EIS8LSzCdGdl4G4ccWIS6+ufU/pt+Mmm/G6OVk=
+	t=1781506067; cv=none; b=mDWivP4z3WDVwcxe6tXlpHx/HaVm7EV8fGpDvQXhr+nqrzsAVrrIGSyJEJEte4uB0QkJwWpTcTq9NN6oF+qi6ASb+82UpKvD9TDX9b+3V8hQ3vV+SPHcaIhjawkEQrAIfJ4P786cIcesG2BvffNsav+W68l72cCxO47i1z5mXoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781505628; c=relaxed/simple;
-	bh=ELCPR5w46NpatZySmzjvW0uOhO/+VNUcY16+pJsATg0=;
+	s=arc-20240116; t=1781506067; c=relaxed/simple;
+	bh=TLMZUoheUltm3md6xY/bLJibH7LclpsMAazwXxnjRIo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Brvopin3BaByj21hoYMQg3+SJR6PeBm0y8rlMjO4LT1RaXx7NV+0dd+UBuoAgWBNxWTCwaOQ8tgtLzEe+Rs/iL8/KtAxAW9QHTCP2zLVEdSI7Up+WCR9He6Qf/lQr3Z98NM/+seQMGXFVL9qGAn1h2ORerCMr5p9dcPr9wCLNuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbYhbT3S; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=chTtTGZVxDE4smJ2g0ApwpJkVEV64qX8kU8zlB+pyWgPCnJ7elyTZFyjRfFseDL6ggrdhQM1N+t2PVm71TaprkdIaHV1wDJTsED0Uc6cbkR2nueeqFeHBxmrNu8axXjAiHAfkZ/wTnFPIH+A+15R0k5CFgzc/mbbIT007XP244A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BU2hBoPG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbYhbT3S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDC3B1F000E9;
-	Mon, 15 Jun 2026 06:40:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BU2hBoPG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF7E21F000E9;
+	Mon, 15 Jun 2026 06:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781505627;
-	bh=x2iGCzGmm+itaSXorXApX2VnqgFdcS66rkUZlPxnkQ8=;
+	s=k20260515; t=1781506063;
+	bh=DF7BrweVNTE4j6MF6FThdjgkdQZeZKR9Y5gVM3whQSk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HbYhbT3S0pO6JwhxqC1szTq20mGOK6YshbCVs0t2z4Fay2q+EW8Gw3mi56K1ugmye
-	 8iIvV+/QooXcJZxegSp+xE38QrmZAOS3gJW+ayvlDTJVFkRpXk2QBl6luwxr56xcR0
-	 qdx2ffzljxmereQpeN8538nFw72PZAcVWNCNgsHPnnoPf+Zh77QMM97F7AyUhVbBW8
-	 EfCm8lz/YQfz+2HktRlvUYPVqPc7rLoZqBxkn2fWnzjoxL7LqNQDfXnHS29/JCBTpI
-	 nE1CsxTM7pGRC6+Tm4FjtXiXRFhCWqE36gj5Iq30TVJ/6Os8RVeREzjGmirZXPhCMi
-	 fPviFdqo47mtw==
+	b=BU2hBoPG0s6pDrmFQxXP7OY5AV+GRkn1Ovz0uRH0Ffy/tNOrBxs3uROT+BpLARofG
+	 vtVRMqOa4Lp5KRXwgSZ5TCaEvuJEfvSmsFT0kIICzNL1VswfueTdcUYCkA3dR4s96s
+	 TtKtZlhH16XqgtzfT5hJHQJyX27CS0f8/GQnoxmYO2AsnKzYEMXJlPbTOhW+RLeT0c
+	 Z/+N2YIILjnZmMTJI12turjsWHXbZ/tTosehNZIiI3gzSBBtENRMR6mKBO4N/xVcvy
+	 s0nmYDqKy1TMJMdFvR+1gXVjiCFOxm4znC2+8yNq+i2iwHFYVBidwQHFs0s1yDiFUt
+	 /1e7UI02uxR4g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v19 10/20] perf python: Add python session abstraction
- wrapping perf's session
+Subject: Re: [PATCH v19 07/20] perf evlist: Add reference count checking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615061631.2382079-11-irogers@google.com>
-References: <20260615061631.2382079-11-irogers@google.com>
+In-Reply-To: <20260615061631.2382079-8-irogers@google.com>
+References: <20260615061631.2382079-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 06:40:26 +0000
-Message-Id: <20260615064026.CDC3B1F000E9@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 06:47:42 +0000
+Message-Id: <20260615064742.EF7E21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,107 +45,150 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Premature call to `symbol__init` uses uninitialized `perf_env` fea=
-tures in pipe mode, breaking cross-platform symbol resolution.
-- [High] Disabling `needs_swap` bypasses cross-endian fixups, corrupting 32=
--bit fields in `PERF_RECORD_SAMPLE`.
-- [Medium] Python instantiation of `perf.thread()` leaves the underlying `t=
-hread` pointer uninitialized, leading to a segmentation fault.
+
+New issues:
+- [High] Use-After-Free and Double Free race condition in `evlist__put` cyc=
+le collection logic.
+- [High] Asymmetric cycle collection logic causes a permanent memory leak d=
+epending on the order of object deletion.
+
+Pre-existing issues:
+- [High] Use-after-free of `rec->sb_evlist` on the error path when the BPF =
+side-band thread fails to start in `perf record`.
 --
 
-commit 306cbe1ee7a8a3f3fbac7d4cfd177c65c25ce949
+commit 55ab8400c083f327ca6388cf200713b68d5ff7b4
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add python session abstraction wrapping perf's session
+perf evlist: Add reference count checking
 
-Sessions are necessary to be able to use perf.data files within a
-tool. Add a wrapper python type that incorporates the tool. Allow a
-sample callback to be passed when creating the session.
+Now the evlist is reference counted, add reference count checking so
+that gets and puts are paired and easy to debug.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 31da1283fc15e..dc71fe7e37877 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-[ ... ]
-> +static PyObject *pyrf_thread__get_pid(struct pyrf_thread *pthread, void =
-*closure __maybe_unused)
-> +{
-> +	return PyLong_FromLong(thread__pid(pthread->thread));
-> +}
-
-[Severity: Medium]
-Will this crash if a user creates a perf.thread object directly from Python?
-
-Since pyrf_thread__type has Py_TPFLAGS_BASETYPE and no tp_new or tp_init,
-Python inherits object_new, allowing direct creation which zero-initializes
-pthread->thread. Without CHECK_INITIALIZED() before calling thread__pid(),
-could accessing the pid property dereference a NULL pointer and cause a
-segmentation fault?
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 1721a2470fb67..eb7c0d7be064e 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
 
 [ ... ]
-> +static int pyrf_session_tool__sample(const struct perf_tool *tool,
-> +				     union perf_event *event,
-> +				     struct perf_sample *sample,
-> +				     struct machine *machine __maybe_unused)
-> +{
-[ ... ]
-> +	memcpy(&pevent->event, event, event->header.size);
-> +	/* The event is already swapped, disable swapping temporarily */
-> +	sample->evsel->needs_swap =3D false;
-> +	if (evsel__parse_sample(sample->evsel, &pevent->event, &pevent->sample)=
- < 0) {
+
+> @@ -215,11 +222,34 @@ static void evlist__exit(struct evlist *evlist)
+>  void evlist__put(struct evlist *evlist)
+>  {
+> +	struct evsel *evsel;
+> +	unsigned int count, ref_cnt;
+> +
+>  	if (evlist =3D=3D NULL)
+>  		return;
+> =20
+> -	if (!refcount_dec_and_test(&evlist->refcnt))
+> -		return;
+> +	if (refcount_dec_and_test(evlist__refcnt(evlist)))
+> +		goto out_delete;
+> +
+> +retry:
+> +	count =3D refcount_read(evlist__refcnt(evlist));
 
 [Severity: High]
-Does disabling needs_swap here corrupt 32-bit fields during cross-endian
-analysis?
+Does this sequence create a use-after-free race condition?=20
 
-perf_event__all64_swap() blindly swaps PERF_RECORD_SAMPLE payloads in 64-bit
-chunks, which swaps the positions of adjacent 32-bit fields (like pid and t=
-id).
-evsel__parse_sample() relies on needs_swap =3D=3D true to undo this 64-bit =
-swap
-and correctly restore the 32-bit fields.
+Looking at the new cycle collection logic in evlist__put(), if
+refcount_dec_and_test() returns false, it indicates that the current thread
+has dropped its reference, but the object's refcount has not reached zero.
+However, the thread then proceeds to access the evlist in the retry loop.
 
-By forcing needs_swap =3D false, are we bypassing this critical fixup and
-exposing corrupted PID, TID, and CPU data to Python tooling?
+If another thread drops the final external reference concurrently, it will
+evaluate count =3D=3D 0 and proceed to out_delete, freeing the evlist. The =
+first
+thread, which is still executing the retry loop, would then access the freed
+evlist. Could this also lead to a double free if the first thread independe=
+ntly
+concludes count =3D=3D 0?
 
-[ ... ]
-> +static PyObject *pyrf_session__new(PyTypeObject *type, PyObject *args, P=
-yObject *kwargs)
-> +{
-[ ... ]
-> +	session =3D perf_session__new(&pdata->data, &psession->tool);
-> +	if (IS_ERR(session)) {
-> +		PyErr_Format(PyExc_IOError, "failed to create session: %ld", PTR_ERR(s=
-ession));
-> +		goto err_out;
+> +	ref_cnt =3D count;
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		if (RC_CHK_EQUAL(evsel->evlist, evlist) && count &&
+> +		    refcount_read(&evsel->refcnt) =3D=3D 1)
+> +			count--;
 > +	}
-> +	psession->session =3D session;
-> +
-> +	if (symbol__init(perf_session__env(session)) < 0) {
+> +	if (refcount_read(evlist__refcnt(evlist)) !=3D ref_cnt)
+> +		goto retry;
+> =20
+> +	if (count !=3D 0) {
+> +		/*
+> +		 * Not the last reference except for back references from
+> +		 * evsels.
+> +		 */
+> +		RC_CHK_PUT(evlist);
+> +		return;
+> +	}
 
 [Severity: High]
-Will calling symbol__init() here break cross-platform symbol resolution in
-pipe mode?
+Can this asymmetric cycle collection logic cause a permanent memory leak?
 
-In pipe mode, perf_env is not populated by perf_session__new(); instead,
-features arrive dynamically later during perf_session__process_events().
+The patch series creates a reference cycle between evlist and evsel by
+replacing the entry->evlist back-pointer assignment with a reference-counted
+evlist__get(evlist). To break this cycle, evlist__put() includes the check
+above to destroy the evlist if the only remaining references come from its =
+own
+evsels.
 
-Since perf_env is empty at this point for piped streams, vmlinux_path__init=
-()
-falls back to the host machine's uname(). Doesn't this irreversibly configu=
-re
-symbol resolution for the host's architecture instead of the recorded
-machine's architecture?
+However, this cycle-breaking check only runs during evlist__put(). If an
+external caller (like the Python bindings) holds references to both objects
+and drops the evlist first, evlist__put() will see the evsel's refcount > 1
+and correctly return without freeing.
 
-> +		PyErr_SetString(PyExc_OSError, "perf: symbol__init failed");
-> +		goto err_out;
-> +	}
-> +
-> +
-> +
-> +	return (PyObject *)psession;
+When the caller subsequently drops the evsel, evsel__put() merely decrements
+the refcount without checking for the isolated cycle. Since neither object's
+refcount will ever reach 0, won't this leak both objects?
+
+[ ... ]
+
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index e4fa77a40dacb..ebd3ed0c9b3e8 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+
+[ ... ]
+
+> @@ -4283,14 +4284,14 @@ int cmd_record(int argc, const char **argv)
+>  out_delete_session:
+>  #ifdef HAVE_EVENTFD_SUPPORT
+>  	if (done_fd >=3D 0) {
+>  		fd =3D done_fd;
+>  		done_fd =3D -1;
+> =20
+>  		close(fd);
+>  	}
+>  #endif
+>  	zstd_fini(&session->zstd_data);
+>  	if (!opts->no_bpf_event)
+>  		evlist__stop_sb_thread(rec->sb_evlist);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does this error path cause a
+use-after-free if the BPF side-band thread fails to start?
+
+In __cmd_record(), if record__setup_sb_evlist(rec) fails (e.g., due to fail=
+ing
+to create the side-band thread in evlist__start_sb_thread()), the underlying
+evlist__start_sb_thread() function frees the sb_evlist via evlist__put()
+before returning an error:
+
+tools/perf/util/sideband_evlist.c:evlist__start_sb_thread() {
+    ...
+out_put_evlist:
+    evlist__put(evlist);
+    return -1;
+}
+
+The error path in __cmd_record() goes to out_free_threads, which falls thro=
+ugh
+to out_delete_session. Because opts->no_bpf_event is not set to true upon t=
+his
+failure (unlike the analogous handling in builtin-top.c), the cleanup code
+calls evlist__stop_sb_thread(rec->sb_evlist) with the already-freed pointer.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615061631.2382=
-079-1-irogers@google.com?part=3D10
+079-1-irogers@google.com?part=3D7
