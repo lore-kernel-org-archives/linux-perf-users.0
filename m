@@ -1,173 +1,310 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE4826E142;
-	Mon, 15 Jun 2026 03:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA923AF656
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 06:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781494106; cv=none; b=ek6vLKR7etc14s+bFt/gRvOzbwxfgdxGcvGTqWrCNITmf26h9R/nFd2OTFFXo7F28qYVRlDTflYLg1BXbqE3vxAlm9HzTmYEuZyhooL/+avB7avEZvLCtdae2Vm2/to2AzRAwFRWKpc2SooMQaq2REJvkexpQQsR31nEMar/ar0=
+	t=1781504200; cv=none; b=MU6xvfAFKyOc/J9c5miwZ167rS6+yWmkIZHXgezpirJjR4hIxHbd6dl1MZa1Awv7zOxxiiDSfEmBJXJGoTOOvs3ZfMjqAOD0edRwFBiXxJDNncSl1I6W5Klk8QadUau3i7yGI662Il4VXwtvwYn7fCMM/2CB+xz7CsG7KbpfrfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781494106; c=relaxed/simple;
-	bh=4QSeKF6M2bUtmSPGPmXEQd1gPEVqe2+AlnvWiJkvk4A=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=p1SQDSeDX1tztJrVO7vai74Z6Oz/DyJM0fGzmBuagnFShjCoqVR9iA+Updm4Ik6wm0RIoqJ6rNhEIKnt4Y/cwPwORNmJ2xk0OPQ7lIv2wOW0B4WT0FUdz2SUhN2NAJxNwBhbtUEGMAvk+ixdX8k4Y0X5cPBOTw1+6JzpNbtTM+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dfC+60IP; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781504200; c=relaxed/simple;
+	bh=HWsum7IWYTMnHIPl8ClfIme0m+VGaY/DnOk/U1J6Rcg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rLb8yEQBlcC0ZRpEx6zwNLjgAW32Y1WlQuKsqc1vmtYvwGoQFUFL73Fok5Lpd+C0QpqlD4rHckk6VTaZBYtLbcGF9AGv+w9tXmKvq8X6AwTYL97kAo9pBXXxtqGbfogh33Zp08W00a9N/J7Cg8h4HdULBWsEydWasgBHR6/1wlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jpNb/E/e; arc=none smtp.client-ip=74.125.82.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dfC+60IP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781494105; x=1813030105;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=4QSeKF6M2bUtmSPGPmXEQd1gPEVqe2+AlnvWiJkvk4A=;
-  b=dfC+60IPa18fv0/AVEbuZE6fq66/1zO0oWwrpEvqENkDKUD78FMgF54t
-   dAkQ5uKFVF/LckFGvIZSgemTO1C8xrGlU/J15+u5+QF6N19r+xiZ3PPoD
-   BhuOISOP6ddRtwidE7UZFb6skYQB0oH8zJo7gHQ5pbVE846RPndyfP/2w
-   lF/Uk6k+MhgNIL9Xsm3AT6r8IO4X7eKdHxANgJJAiU3XMjagmr3219yLf
-   4z8GcnFwWEdk8zp0z865ibgs0zrHOa/TQeR010zRNfb9TLqiyjpP/zum6
-   X62DOCliGkPwqloGlKFsGCR54xzKXWsebvdR8yJbMgRB1XQLr398P1AUx
-   w==;
-X-CSE-ConnectionGUID: Cx+qcwZySWmXyP3CXX7JzQ==
-X-CSE-MsgGUID: OwgBu3uxQEmadMOKs3P2Hw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11817"; a="82239981"
-X-IronPort-AV: E=Sophos;i="6.24,205,1774335600"; 
-   d="scan'208";a="82239981"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 20:28:24 -0700
-X-CSE-ConnectionGUID: bv2PsRgiR9enq/l6OvGb4A==
-X-CSE-MsgGUID: 0mi2TBzDRv6fQxTpBXaUmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,205,1774335600"; 
-   d="scan'208";a="247443760"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 20:28:20 -0700
-Message-ID: <603bdf11-1bf1-4781-b129-c13da7c5e386@linux.intel.com>
-Date: Mon, 15 Jun 2026 11:28:17 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jpNb/E/e"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-307625ee07fso9826092eec.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 14 Jun 2026 23:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1781504197; x=1782108997; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W1gCCCSL2YvAzDEbo+ue73+grTTfBIfmec6PYsXrcAM=;
+        b=jpNb/E/eohpAFx8lBQdTHY/NVab1/IfAP2C0rYVU17CwctIw/yPlvOeBW/Oo7w8xbd
+         M0XuPOMfJBLzYhmV307Qd48YMWKfap4m1CVGIniqGyIgN4rQL1fLZQy+5MzIawGpzEC4
+         NFuBQSBcv5RqCSY8sqGWc4ugRCrJ38G2Hx8pdRENXH9lqWnK3c2FAjKylL/zl9/7VVdI
+         f2H1rAZHXZVlm64DANycOzK98uW43DBfnGcrtCnSFgq3esmam1XO8+sVUDVh4dwqNbqR
+         qZoNqvh/Mqou2z7QAiOhLSxHKACIkARCr6N9XIJSQNYSLbLAlAGvUnWiDWfoWv+Ndtge
+         W6mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781504197; x=1782108997;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W1gCCCSL2YvAzDEbo+ue73+grTTfBIfmec6PYsXrcAM=;
+        b=Wcz94xnJ2oUpPvweX6GPFYt2gYLiBoiWmyjmgMz2dluHTYlffIfzUQriNxUp0PEJN9
+         WS/7KdG4xEIMzzmuVMtiTrX7uYsGNiunnCn2nzyhTXAbbdk50JJ1QdrqqshHya9dUA2F
+         Zhu4YT1AMmwP97ve6KBOwB+hHsM6xvgOIplwlRuuDFhQPfpIZYZ2nqWko46Fj210PwES
+         xY2ryOPF2X6VLhdNR7GXAbi+TjvxJlF2HJnsZqv3pDMRAVseHGS6OuSffpqq5dDjokR/
+         I0/Gq7PWHZbTBt7GgjCi/ilDZt0efP999TuS6Du57RqFgekfRN8OTMuqqZXZCMcXgRYq
+         ADFg==
+X-Forwarded-Encrypted: i=1; AFNElJ+jNwAEQMwGXhxpr3S6hB3ztNzlq/KKtLeo2U00Bi5uaVSCm1vp9nzxFLBu5yw7qsgp6z/ySVidbKOHuaDbg9O+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNM3ANa0F/Kyj+UNoMyr3Dlr3AYoP07d73qDFESQ2Gf3Wt5PR3
+	6y4yw8cJqSmXYbwl7xGIKDE5Cgmud36AksHuM2AQHUMonHwaXJJKoO+KlfbdQ/jXPTfTzHOvSUk
+	7LU2jweW23g==
+X-Received: from dybmc6.prod.google.com ([2002:a05:7301:1986:b0:2f9:af7:504f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:693c:69d2:b0:30a:e531:3141
+ with SMTP id 5a478bee46e88-30ae5313542mr2875863eec.17.1781504197261; Sun, 14
+ Jun 2026 23:16:37 -0700 (PDT)
+Date: Sun, 14 Jun 2026 23:16:10 -0700
+In-Reply-To: <20260615002812.2234795-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 1/8] perf/x86/intel: Remove anythread_deprecated bit
- from perf_capabilities
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
- stable@vger.kernel.org
-References: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
- <20260612090114.3188886-2-dapeng1.mi@linux.intel.com>
- <20260612094648.GB42921@noisy.programming.kicks-ass.net>
- <96a18944-bc0d-47dd-b435-e9aa63b93c43@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <96a18944-bc0d-47dd-b435-e9aa63b93c43@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20260615002812.2234795-1-irogers@google.com>
+X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
+Message-ID: <20260615061631.2382079-1-irogers@google.com>
+Subject: [PATCH v19 00/20] Add additional python API support
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+
+The perf script command has long supported running Python and Perl scripts
+by embedding libpython and libperl. This approach has several drawbacks:
+ - overhead by creating Python dictionaries for every event (whether used or
+   not),
+ - complex build dependencies on specific Python/Perl versions,
+ - complications with threading due to perf being the interpreter,
+ - no clear way to run standalone scripts like ilist.py.
+
+This series takes a different approach with some initial implementation posted
+as an RFC last October:
+https://lore.kernel.org/linux-perf-users/20231025081156.963491-1-irogers@google.com/
+
+It builds the python extension as part of the normal build. The extension
+is able to read perf.data files. The event callbacks are converted to
+have a python evsel/evlist/sample passed to them.
+
+To make the review process more manageable, the original 58-patch series has
+been split. This v18 series represents "Phase 1: API & Infrastructure" (20 patches).
+The first 4 patches of Phase 1 (cleanups and arch-specific header sorting) have
+already been merged upstream.
+
+This remaining set contains:
+1. Missed explicit dependency cleanups and header sorting for util/ and python.
+2. Crucial core safety infrastructure (reference counting for evlist/evsel)
+   to support safe lifecycle management in garbage-collected Python.
+3. The core Python API extensions (session wrappers, perf_data wrappers,
+   sample accessors, stubs, and LiveSession helper).
+
+Phase 2 ("Script Porting & Tool Migration") will migrate the remaining 35+
+existing Python/Perl scripts to the new API (which yields up to 35x speedups
+as demonstrated previously) and the final removal of embedded interpreters.
 
 
-On 6/15/2026 8:59 AM, Mi, Dapeng wrote:
-> On 6/12/2026 5:46 PM, Peter Zijlstra wrote:
->> On Fri, Jun 12, 2026 at 05:01:07PM +0800, Dapeng Mi wrote:
->>> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
->>> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
->>> represent "anythread deprecation" in perf_capabilities. It leads to the
->>> anythread_deprecated bit could be overwritten by the real value of
->>> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
->>>
->>> ```
->>> if (!intel_pmu_broken_perf_cap()) {
->>> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
->>> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
->>> }
->>> ```
->>>
->>> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
->>> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
->>> these support Perfmon v6 platforms, like Clearwater Forest.
->>>
->>> ```
->>> $grep . /sys/devices/cpu/format/*
->>> /sys/devices/cpu/format/acr_mask:config2:0-63
->>> /sys/devices/cpu/format/any:config:21
->>> /sys/devices/cpu/format/cmask:config:24-31
->>> ```
->>>
->>> So remove the anythread_deprecated bit from perf_capabilities structure
->>> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
->>> deprecated.
->> Again, no markdown please. I've stripped it from these patches.
-> My bad. Thanks a lot.
->
-> BTW, Peter, have you pull these patches? I didn't see them in perf/core or
-> perf/urgent branches. Sashiko reports a defect about "Patch 5/8:
-> perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()". If
-> not, I would post a v4 patchset to fix the defect. Thanks.
+Addressing v18 Review Feedback:
+- Patch 10 (`perf.thread` initialization): Added missing `CHECK_INITIALIZED()`
+  in `pyrf_thread__comm` to prevent NULL dereference when instantiated directly.
+- Patch 14 (STAT events): Passed `NULL` to `pyrf_event__new` for STAT events
+  to prevent unconditional `evsel__parse_sample` and potential out-of-bounds
+  reads.
+- Patch 20 (`LiveSession` timeout): Broadened exception handling to explicitly
+  ignore "Unexpected header type" for valid but unsupported events.
 
-Just found the patches are merged into the perf/core branch in peterz/queue
-tree. :)
+Note: Other feedback items raised in v18 (TOCTOU cycle races, asymmetric
+cycle collection, cross-endian data handling, guest machine symbol resolution,
+and pre-existing memory leaks/uninitialized variables) are acknowledged as
+limitations of the current implementation and will be addressed in Phase 2
+or separate cleanup patches.
 
-Peter, Sashiko raises below concern against the patch 5/8: "perf/x86/intel:
-Validate the return value of intel_pmu_init_hybrid()",
+Addressing v17 Review Feedback:
+ - Patch 8: Added missing `perf_sample__exit(&sample)` to
+   `intel_pt_synth_ptwrite_sample()` to fix an evsel reference leak.
+ - Patch 10: Fixed a bug in `pyrf_session_tool__sample()` that caused
+   double byte-swapping on foreign-endian files by temporarily disabling
+   `needs_swap` during re-parsing instead of assigning `*sample`.
+ - Patch 11: (Missed fixing address resolution for guest samples - will
+   fix in next spin or Phase 2).
+ - Patch 19: Prevented `python-clean` from deleting tracked source file
+   `python/perf.pyi` when building in tree. Also explicitly exported
+   `COUNT_HW_REF_CPU_CYCLES`, `thread`, `callchain`, and `callchain_node`
+   types/constants to the module via `PyInit_perf`.
+ - Patch 20: Narrowed `except TypeError` in `LiveSession.run()` to explicitly
+   check for "Unknown CPU" so legitimate event parsing failures aren't
+   swallowed.
 
-"
+Addressing v16 Review Feedback:
+ - Patch 10: Removed unconditional `perf_session__create_kernel_maps` to
+   prevent corrupting cross-platform offline analysis.
+ - Patch 11: Corrected inaccurate commit message regarding memory
+   allocation sizing.
+ - Patch 19: Fixed numerous type inconsistencies, missing properties, and
+   incorrect return types in the `perf.pyi` stubs file.
+ - Patch 20: Cleaned up unused `import errno` in `perf_live.py`.
 
-[Severity: Medium]
-Does moving intel_pmu_arch_lbr_init() below
-intel_pmu_check_event_constraints_all() bypass the dynamic constraint
-validation for branch counters?
+Note: Several issues spotted in v16/v17 review (e.g. pyrf_evsel__init format
+string type mismatch, evlist lockless double free, asymmetric memory
+leaks, missing Py_None type checks, and lack of NUL-termination for
+COMM/MMAP) are pre-existing limitations in the codebase or side-effects
+of the transitional cycle-breaking design. As discussed previously, these
+structurally complex or pre-existing bugs are deliberately deferred to
+the Phase 2 series.
 
-When intel_pmu_check_event_constraints_all() runs, it eventually calls
-intel_pmu_check_dyn_constr(). This check relies on the PMU_FL_BR_CNTR flag
-and the x86_pmu.lbr_counters mask:
+Addressing v15 Review Feedback:
+- Patch 2 (buffer overflow & type checks): The buffer overflow in
+  `pyrf_event__new()` has been resolved by verifying `event->header.size`
+  against the event struct size.
+- Patch 2 (PyObject_HEAD_INIT): The initialization macros have been corrected
+  to use the proper Python 3 compatibility approach.
+- Patch 5 (Memory leak & RC validation): Applied extensive structural fixes
+  using `refcount_t` semantics. Added validation wrapper structures to
+  statically verify memory access safety in the lockless cycles.
+- Patch 8 (`evlist.open` memory leak): Restructured lifecycle management for
+  mmap buffers using `do_munmap()` hooks in `evlist__put()`.
+- Patch 16 (`perf.pyi` stubs): Corrected return types (`Optional` and proper
+  object properties) and missing documentation strings in type stubs.
+- Patch 20 (`perf_live.py` timeout): Adjusted poll timeout from 10000ms back
+  to 100ms, replacing the tight exception loop.
 
-arch/x86/events/intel/core.c:intel_pmu_check_dyn_constr() {
-    ...
-        case DYN_CONSTR_BR_CNTR:
-            if (x86_pmu.flags & PMU_FL_BR_CNTR)
-                mask = x86_pmu.lbr_counters;
-            break;
-    ...
-}
+Ian Rogers (20):
+  perf util: Sort includes and add missed explicit dependencies
+  perf python: Add missed explicit dependencies
+  perf evsel/evlist: Avoid unnecessary #includes
+  perf data: Add open flag
+  perf evlist: Add reference count
+  perf evsel: Add reference count
+  perf evlist: Add reference count checking
+  perf python: Use evsel in sample in pyrf_event
+  perf python: Add wrapper for perf_data file abstraction
+  perf python: Add python session abstraction wrapping perf's session
+  perf python: Refactor and add accessors to sample event
+  perf python: Add mmap2 event
+  perf python: Add callchain support
+  perf python: Extend API for stat events in python.c
+  perf python: Expose brstack in sample event
+  perf python: Add syscall name/id to convert syscall number and name
+  perf python: Add config file access
+  perf python: Handle Py_None for thread and cpu maps
+  perf python: Add perf.pyi stubs file
+  perf python: Add LiveSession helper
 
-Because intel_pmu_arch_lbr_init() is now deferred until after this validation,
-the PMU_FL_BR_CNTR flag hasn't been set yet. Will this cause the dynamic
-constraint check for branch counters to evaluate to false and be skipped?
+ tools/perf/Makefile.perf                    |    7 +-
+ tools/perf/arch/arm/util/cs-etm.c           |   10 +-
+ tools/perf/arch/arm64/util/arm-spe.c        |    8 +-
+ tools/perf/arch/arm64/util/hisi-ptt.c       |    2 +-
+ tools/perf/arch/x86/tests/hybrid.c          |   22 +-
+ tools/perf/arch/x86/tests/topdown.c         |    4 +-
+ tools/perf/arch/x86/util/auxtrace.c         |    2 +-
+ tools/perf/arch/x86/util/intel-bts.c        |    6 +-
+ tools/perf/arch/x86/util/intel-pt.c         |    9 +-
+ tools/perf/arch/x86/util/iostat.c           |   14 +-
+ tools/perf/bench/evlist-open-close.c        |   29 +-
+ tools/perf/builtin-annotate.c               |    7 +-
+ tools/perf/builtin-ftrace.c                 |   14 +-
+ tools/perf/builtin-inject.c                 |    9 +-
+ tools/perf/builtin-kvm.c                    |   14 +-
+ tools/perf/builtin-kwork.c                  |    8 +-
+ tools/perf/builtin-lock.c                   |    4 +-
+ tools/perf/builtin-record.c                 |   95 +-
+ tools/perf/builtin-report.c                 |    6 +-
+ tools/perf/builtin-sched.c                  |   30 +-
+ tools/perf/builtin-script.c                 |   15 +-
+ tools/perf/builtin-stat.c                   |   83 +-
+ tools/perf/builtin-top.c                    |  104 +-
+ tools/perf/builtin-trace.c                  |   65 +-
+ tools/perf/python/perf.pyi                  |  672 +++++
+ tools/perf/python/perf_live.py              |   59 +
+ tools/perf/tests/backward-ring-buffer.c     |   26 +-
+ tools/perf/tests/code-reading.c             |   14 +-
+ tools/perf/tests/event-times.c              |    6 +-
+ tools/perf/tests/event_update.c             |    4 +-
+ tools/perf/tests/evsel-roundtrip-name.c     |    8 +-
+ tools/perf/tests/evsel-tp-sched.c           |    4 +-
+ tools/perf/tests/expand-cgroup.c            |   12 +-
+ tools/perf/tests/hists_cumulate.c           |    2 +-
+ tools/perf/tests/hists_filter.c             |    2 +-
+ tools/perf/tests/hists_link.c               |    2 +-
+ tools/perf/tests/hists_output.c             |    2 +-
+ tools/perf/tests/hwmon_pmu.c                |    7 +-
+ tools/perf/tests/keep-tracking.c            |   10 +-
+ tools/perf/tests/mmap-basic.c               |   24 +-
+ tools/perf/tests/openat-syscall-all-cpus.c  |    6 +-
+ tools/perf/tests/openat-syscall-tp-fields.c |   26 +-
+ tools/perf/tests/openat-syscall.c           |    6 +-
+ tools/perf/tests/parse-events.c             |  139 +-
+ tools/perf/tests/parse-metric.c             |    8 +-
+ tools/perf/tests/parse-no-sample-id-all.c   |    2 +-
+ tools/perf/tests/perf-record.c              |   38 +-
+ tools/perf/tests/perf-time-to-tsc.c         |   12 +-
+ tools/perf/tests/pfm.c                      |   12 +-
+ tools/perf/tests/pmu-events.c               |   11 +-
+ tools/perf/tests/pmu.c                      |    4 +-
+ tools/perf/tests/sample-parsing.c           |   45 +-
+ tools/perf/tests/shell/lib/setup_python.sh  |   13 +
+ tools/perf/tests/sw-clock.c                 |   20 +-
+ tools/perf/tests/switch-tracking.c          |   11 +-
+ tools/perf/tests/task-exit.c                |   20 +-
+ tools/perf/tests/time-utils-test.c          |   14 +-
+ tools/perf/tests/tool_pmu.c                 |    7 +-
+ tools/perf/tests/topology.c                 |    4 +-
+ tools/perf/tests/uncore-event-sorting.c     |    6 +-
+ tools/perf/ui/browsers/annotate.c           |    2 +-
+ tools/perf/ui/browsers/hists.c              |   22 +-
+ tools/perf/util/Build                       |    1 -
+ tools/perf/util/amd-sample-raw.c            |    2 +-
+ tools/perf/util/annotate-data.c             |    2 +-
+ tools/perf/util/annotate.c                  |   10 +-
+ tools/perf/util/auxtrace.c                  |   14 +-
+ tools/perf/util/block-info.c                |    4 +-
+ tools/perf/util/bpf_counter.c               |    2 +-
+ tools/perf/util/bpf_counter_cgroup.c        |   14 +-
+ tools/perf/util/bpf_ftrace.c                |    9 +-
+ tools/perf/util/bpf_lock_contention.c       |   12 +-
+ tools/perf/util/bpf_off_cpu.c               |   44 +-
+ tools/perf/util/bpf_trace_augment.c         |    8 +-
+ tools/perf/util/cgroup.c                    |   26 +-
+ tools/perf/util/cs-etm.c                    |    5 +-
+ tools/perf/util/data-convert-bt.c           |    2 +-
+ tools/perf/util/data.c                      |   27 +-
+ tools/perf/util/data.h                      |    4 +-
+ tools/perf/util/evlist.c                    |  496 ++--
+ tools/perf/util/evlist.h                    |  273 +-
+ tools/perf/util/evsel.c                     |   39 +-
+ tools/perf/util/evsel.h                     |   40 +-
+ tools/perf/util/expr.c                      |    2 +-
+ tools/perf/util/header.c                    |   69 +-
+ tools/perf/util/header.h                    |    2 +-
+ tools/perf/util/intel-pt.c                  |    8 +-
+ tools/perf/util/intel-tpebs.c               |    7 +-
+ tools/perf/util/iostat.c                    |    2 +-
+ tools/perf/util/iostat.h                    |    2 +-
+ tools/perf/util/map.h                       |    9 +-
+ tools/perf/util/metricgroup.c               |   12 +-
+ tools/perf/util/parse-events.c              |   10 +-
+ tools/perf/util/parse-events.y              |    2 +-
+ tools/perf/util/perf_api_probe.c            |   20 +-
+ tools/perf/util/pfm.c                       |    4 +-
+ tools/perf/util/print-events.c              |    2 +-
+ tools/perf/util/python.c                    | 2654 ++++++++++++++++---
+ tools/perf/util/record.c                    |   11 +-
+ tools/perf/util/s390-sample-raw.c           |   20 +-
+ tools/perf/util/sample-raw.c                |    4 +-
+ tools/perf/util/sample.c                    |   17 +-
+ tools/perf/util/session.c                   |   69 +-
+ tools/perf/util/session.h                   |    2 +
+ tools/perf/util/setup.py                    |    5 +
+ tools/perf/util/sideband_evlist.c           |   40 +-
+ tools/perf/util/sort.c                      |    2 +-
+ tools/perf/util/stat-display.c              |    6 +-
+ tools/perf/util/stat-shadow.c               |   24 +-
+ tools/perf/util/stat.c                      |   20 +-
+ tools/perf/util/stream.c                    |    4 +-
+ tools/perf/util/synthetic-events.c          |   11 +-
+ tools/perf/util/time-utils.c                |   12 +-
+ tools/perf/util/top.c                       |    4 +-
+ 114 files changed, 4492 insertions(+), 1447 deletions(-)
+ create mode 100644 tools/perf/python/perf.pyi
+ create mode 100755 tools/perf/python/perf_live.py
 
-"
+-- 
+2.54.0.1136.gdb2ca164c4-goog
 
-It's a true defect. We need below changes to fix the defect. Would you
-prefer to post a new patchset or just a single patch to fix the defect? Thanks.
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 74dbf24b0ab6..edf6f8732234 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -8840,11 +8840,11 @@ __init int intel_pmu_init(void)
-                pr_cont("AnyThread deprecated, ");
-        }
-
--       intel_pmu_check_event_constraints_all(NULL);
--
-        if (boot_cpu_has(X86_FEATURE_ARCH_LBR))
-                intel_pmu_arch_lbr_init();
-
-+       intel_pmu_check_event_constraints_all(NULL);
-+
-        /*
-         * Access LBR MSR may cause #GP under certain circumstances.
-         * Check all LBR MSR here.
-
-
->
->
->
