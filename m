@@ -1,194 +1,268 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3BA270575
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 06:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80872F8EB1;
+	Mon, 15 Jun 2026 07:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781506067; cv=none; b=mDWivP4z3WDVwcxe6tXlpHx/HaVm7EV8fGpDvQXhr+nqrzsAVrrIGSyJEJEte4uB0QkJwWpTcTq9NN6oF+qi6ASb+82UpKvD9TDX9b+3V8hQ3vV+SPHcaIhjawkEQrAIfJ4P786cIcesG2BvffNsav+W68l72cCxO47i1z5mXoQ=
+	t=1781509212; cv=none; b=lcgO7jS3khiIM0LLpOWDMuawwyiOeLDoMmXi6UVOEtNTiH1gRU09usV8zPMMlhyhF/LA5aUGcSz95VnrtdIk/CcpDkzlB6mPdKciTMbzXIFzOcvP/14dqg1K40+2dMEsHUCaREORY+oe2Lb9eksnk3Hd/J5PGolisIhQ7s8PZPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781506067; c=relaxed/simple;
-	bh=TLMZUoheUltm3md6xY/bLJibH7LclpsMAazwXxnjRIo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=chTtTGZVxDE4smJ2g0ApwpJkVEV64qX8kU8zlB+pyWgPCnJ7elyTZFyjRfFseDL6ggrdhQM1N+t2PVm71TaprkdIaHV1wDJTsED0Uc6cbkR2nueeqFeHBxmrNu8axXjAiHAfkZ/wTnFPIH+A+15R0k5CFgzc/mbbIT007XP244A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BU2hBoPG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781509212; c=relaxed/simple;
+	bh=FS9kIa6OUcuzSV0c68Lo6rSeNDkiovDeRrA91Kb1nxw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=t3lQzSZTwVDmkuFtT5W9zyQQcAWb9yWu7xACBhmvm3ZbppZYd4WbiJ27AbdySNYALxg6sAl1SNc3XiO/8ET1Jfoz3AJmPQLl2p0hLkc7xYapDq235+szDjsUv//oywu+7EefnDMFF+akPe/rxMu8fgiZ6fpEhQZeSSfhWcTdc4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DZAVRQ/x; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BU2hBoPG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF7E21F000E9;
-	Mon, 15 Jun 2026 06:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781506063;
-	bh=DF7BrweVNTE4j6MF6FThdjgkdQZeZKR9Y5gVM3whQSk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BU2hBoPG0s6pDrmFQxXP7OY5AV+GRkn1Ovz0uRH0Ffy/tNOrBxs3uROT+BpLARofG
-	 vtVRMqOa4Lp5KRXwgSZ5TCaEvuJEfvSmsFT0kIICzNL1VswfueTdcUYCkA3dR4s96s
-	 TtKtZlhH16XqgtzfT5hJHQJyX27CS0f8/GQnoxmYO2AsnKzYEMXJlPbTOhW+RLeT0c
-	 Z/+N2YIILjnZmMTJI12turjsWHXbZ/tTosehNZIiI3gzSBBtENRMR6mKBO4N/xVcvy
-	 s0nmYDqKy1TMJMdFvR+1gXVjiCFOxm4znC2+8yNq+i2iwHFYVBidwQHFs0s1yDiFUt
-	 /1e7UI02uxR4g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v19 07/20] perf evlist: Add reference count checking
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615061631.2382079-8-irogers@google.com>
-References: <20260615061631.2382079-8-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 06:47:42 +0000
-Message-Id: <20260615064742.EF7E21F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DZAVRQ/x"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65F6IkkX1565063;
+	Mon, 15 Jun 2026 07:39:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=FS9kIa
+	6OUcuzSV0c68Lo6rSeNDkiovDeRrA91Kb1nxw=; b=DZAVRQ/x6L3gfAR8e9aEZP
+	ZIU+NH9OzfIFY6gKGa+AsVcYyDzpw+EbWoimFLRAzM1pyydTEu0I9bu1Tv36w9+O
+	HJY9kE6FwbiuHUqT8GpjyoUa0uA/c7SoOihQUCNITbY6jYqejNUIwyHo/JiOZcxq
+	jzkXbx5pOqgm+3A8irXG1rbGqMQ4tEQOGqdvgEb7G05ebHKQ8ZEq3MF6IXrpuwSe
+	Bsp+Dq8fZJitMAAam/QKgsq+kuJ0rIVfSOPTI1Uciv5NkDymaeqGePektLm6bWwZ
+	csbF8e3negBcRxdowRnwpGte0Gnl14BQb64W8IKaQybLHBc1Dl7dzo+xDZXrrSGg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4es1wkycrc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jun 2026 07:39:49 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65F7Yqtk016872;
+	Mon, 15 Jun 2026 07:39:48 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4eshwvwn2t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Jun 2026 07:39:47 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65F7diRf55574814
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Jun 2026 07:39:44 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1A0B32004D;
+	Mon, 15 Jun 2026 07:39:44 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 324F420043;
+	Mon, 15 Jun 2026 07:39:41 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.123.9.103])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 15 Jun 2026 07:39:40 +0000 (GMT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
+Subject: Re: [PATCH v2 1/2] perf script powerpc: Update the hcall list with
+ new hcalls
+From: Shivani Nittor <shivani@linux.ibm.com>
+In-Reply-To: <20260602115644.8133-1-Gautam.Menghani@ibm.com>
+Date: Mon, 15 Jun 2026 13:00:01 +0530
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+        atrajeev@linux.ibm.com, Gautam Menghani <gautam@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C0E7A32C-CC5B-41B5-87DE-150947DBA12C@linux.ibm.com>
+References: <20260602115644.8133-1-Gautam.Menghani@ibm.com>
+To: Gautam Menghani <Gautam.Menghani@ibm.com>
+X-Mailer: Apple Mail (2.3864.600.51.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDA3NSBTYWx0ZWRfX30SjxwnGwI6S
+ mpAtK5PPQe7fGy6APA2RECa7Djp4Y2Rm5SkPboA+tXV1EEHTc1phmGBqNhKDLYXlkbzMhbMQD/B
+ 560fN5L5PkX8VS/arwT4ynLV6XEzPfk=
+X-Proofpoint-GUID: mG415jIiPaS93vcvfLf9Clk7rJoZAcPn
+X-Authority-Analysis: v=2.4 cv=SY/HsPRu c=1 sm=1 tr=0 ts=6a2fac45 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=kj9zAlcOel0A:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
+ a=9AdMxfjQAAAA:20 a=Eu7ggDVoetdrdGGIGtIA:9 a=CjuIK1q_8ugA:10
+ a=bA3UWDv6hWIuX7UZL3qL:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDA3NSBTYWx0ZWRfX7Ui3ACUhewDA
+ mMVyN4RAK3aY+5arinAB4VpK/6YGS9aMBFugPEEB9+yRVdDNvDJNCLFqDq0+3toxmv7BjvU1503
+ rwnCnMthYDFrQM5VyEpQjoHHwWVhHA7MOU1pXBYk7PIc0+NlVkVd0AprAL8KRgzvnzZQteDkKVX
+ 6XV0VVguklugaogiiH6VqNZ3zSVmo4ZOPjGH4IN1kJizv6U03/VRzI1oJ1/IpSQoMh3U19leDBT
+ LBLdzD+l3h9zcroDcoFQB1gObX1I8HbNqJuMp6zCniRiUwly+J9kVa+bEidCZxOhPF5H6LZ18fr
+ ZtJhO8ZG1Wo5C650NSWp45NUGMOWyFzEXB3FCHpgA/0r9MAUUZ9pajsFArB99gx/cgUPTlkU3zt
+ 69qEgZsrBBWRBcmsYYCDY1HkaDBceo1d808gquq7WA1J8vW0Di8fhlVgzcpakmlgUprZpC7ZhCL
+ 9e8cU/NPGvuMR9eGiKA==
+X-Proofpoint-ORIG-GUID: 85MvA3p4zkrPeh-pOY6UdhKEW_5OOKNb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-15_02,2026-06-12_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 phishscore=0 suspectscore=0 spamscore=0 impostorscore=0
+ malwarescore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606040000
+ definitions=main-2606150075
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
 
-New issues:
-- [High] Use-After-Free and Double Free race condition in `evlist__put` cyc=
-le collection logic.
-- [High] Asymmetric cycle collection logic causes a permanent memory leak d=
-epending on the order of object deletion.
 
-Pre-existing issues:
-- [High] Use-after-free of `rec->sb_evlist` on the error path when the BPF =
-side-band thread fails to start in `perf record`.
---
+> On 2 Jun 2026, at 17:26, Gautam Menghani <Gautam.Menghani@ibm.com> =
+wrote:
+>=20
+> From: Gautam Menghani <gautam@linux.ibm.com>
+>=20
+> Update the hcall list with the newer hcalls in PPC.
+>=20
+> [1]: =
+github.com/torvalds/linux/blob/master/arch/powerpc/include/asm/hvcall.h
+>=20
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+> v1 -> v2:
+> 1. Add some of the missing hcalls. (Tejas)
+> 2. Separate out the typo fix for H_DISABLE_AND_GET in another patch.
+>=20
 
-commit 55ab8400c083f327ca6388cf200713b68d5ff7b4
-Author: Ian Rogers <irogers@google.com>
+Changes looks fine to me. I have checked the names and hcall numbers in =
+hvcall.h header file.
 
-perf evlist: Add reference count checking
+Reviewed-by: Shivani Nittor <shivani@linux.ibm.com>
 
-Now the evlist is reference counted, add reference count checking so
-that gets and puts are paired and easy to debug.
+> tools/perf/scripts/python/powerpc-hcalls.py | 89 +++++++++++++++++++++
+> 1 file changed, 89 insertions(+)
+>=20
+> diff --git a/tools/perf/scripts/python/powerpc-hcalls.py =
+b/tools/perf/scripts/python/powerpc-hcalls.py
+> index 8b78dc790adb..f897d6a5e051 100644
+> --- a/tools/perf/scripts/python/powerpc-hcalls.py
+> +++ b/tools/perf/scripts/python/powerpc-hcalls.py
+> @@ -117,10 +117,12 @@ hcall_table =3D {
+> 440: 'H_GET_HCA_INFO',
+> 444: 'H_GET_PERF_COUNT',
+> 448: 'H_MANAGE_TRACE',
+> + 456: 'H_GET_CPU_CHARACTERISTICS',
+> 468: 'H_FREE_LOGICAL_LAN_BUFFER',
+> 472: 'H_POLL_PENDING',
+> 484: 'H_QUERY_INT_STATE',
+> 580: 'H_ILLAN_ATTRIBUTES',
+> + 584: 'H_ADD_LOGICAL_LAN_BUFFERS',
+> 592: 'H_MODIFY_HEA_QP',
+> 596: 'H_QUERY_HEA_QP',
+> 600: 'H_QUERY_HEA',
+> @@ -135,11 +137,17 @@ hcall_table =3D {
+> 644: 'H_ADD_CONN',
+> 648: 'H_DEL_CONN',
+> 664: 'H_JOIN',
+> + 672: 'H_VASI_SIGNAL',
+> 676: 'H_VASI_STATE',
+> + 680: 'H_VIOCTL',
+> 688: 'H_ENABLE_CRQ',
+> 696: 'H_GET_EM_PARMS',
+> 720: 'H_SET_MPP',
+> 724: 'H_GET_MPP',
+> + 732: 'H_REG_SUB_CRQ',
+> + 736: 'H_FREE_SUB_CRQ',
+> + 740: 'H_SEND_SUB_CRQ',
+> + 744: 'H_SEND_SUB_CRQ_INDIRECT',
+> 748: 'H_HOME_NODE_ASSOCIATIVITY',
+> 756: 'H_BEST_ENERGY',
+> 764: 'H_XIRR_X',
+> @@ -147,7 +155,88 @@ hcall_table =3D {
+> 772: 'H_COP',
+> 788: 'H_GET_MPP_X',
+> 796: 'H_SET_MODE',
+> + 808: 'H_BLOCK_REMOVE',
+> + 856: 'H_CLEAR_HPT',
+> + 864: 'H_REQUEST_VMC',
+> + 876: 'H_RESIZE_HPT_PREPARE',
+> + 880: 'H_RESIZE_HPT_COMMIT',
+> + 892: 'H_REGISTER_PROC_TBL',
+> + 896: 'H_SIGNAL_SYS_RESET',
+> + 904: 'H_ALLOCATE_VAS_WINDOW',
+> + 908: 'H_MODIFY_VAS_WINDOW',
+> + 912: 'H_DEALLOCATE_VAS_WINDOW',
+> + 916: 'H_QUERY_VAS_WINDOW',
+> + 920: 'H_QUERY_VAS_CAPABILITIES',
+> + 924: 'H_QUERY_NX_CAPABILITIES',
+> + 928: 'H_GET_NX_FAULT',
+> + 936: 'H_INT_GET_SOURCE_INFO',
+> + 940: 'H_INT_SET_SOURCE_CONFIG',
+> + 944: 'H_INT_GET_SOURCE_CONFIG',
+> + 948: 'H_INT_GET_QUEUE_INFO',
+> + 952: 'H_INT_SET_QUEUE_CONFIG',
+> + 956: 'H_INT_GET_QUEUE_CONFIG',
+> + 960: 'H_INT_SET_OS_REPORTING_LINE',
+> + 964: 'H_INT_GET_OS_REPORTING_LINE',
+> + 968: 'H_INT_ESB',
+> + 972: 'H_INT_SYNC',
+> + 976: 'H_INT_RESET',
+> + 996: 'H_SCM_READ_METADATA',
+> + 1000: 'H_SCM_WRITE_METADATA',
+> + 1004: 'H_SCM_BIND_MEM',
+> + 1008: 'H_SCM_UNBIND_MEM',
+> + 1012: 'H_SCM_QUERY_BLOCK_MEM_BINDING',
+> + 1016: 'H_SCM_QUERY_LOGICAL_MEM_BINDING',
+> + 1020: 'H_SCM_UNBIND_ALL',
+> + 1024: 'H_SCM_HEALTH',
+> + 1048: 'H_SCM_PERFORMANCE_STATS',
+> + 1052: 'H_PKS_GET_CONFIG',
+> + 1056: 'H_PKS_SET_PASSWORD',
+> + 1060: 'H_PKS_GEN_PASSWORD',
+> + 1068: 'H_PKS_WRITE_OBJECT',
+> + 1072: 'H_PKS_GEN_KEY',
+> + 1076: 'H_PKS_READ_OBJECT',
+> + 1080: 'H_PKS_REMOVE_OBJECT',
+> + 1084: 'H_PKS_CONFIRM_OBJECT_FLUSHED',
+> + 1096: 'H_RPT_INVALIDATE',
+> + 1100: 'H_SCM_FLUSH',
+> + 1104: 'H_GET_ENERGY_SCALE_INFO',
+> + 1108: 'H_PKS_SIGNED_UPDATE',
+> + 1112: 'H_HTM',
+> + 1116: 'H_WATCHDOG',
+> + # Platform specific hcalls used by KVM on PowerVM
+> + 1120: 'H_GUEST_GET_CAPABILITIES',
+> + 1124: 'H_GUEST_SET_CAPABILITIES',
+> + 1136: 'H_GUEST_CREATE',
+> + 1140: 'H_GUEST_CREATE_VCPU',
+> + 1144: 'H_GUEST_GET_STATE',
+> + 1148: 'H_GUEST_SET_STATE',
+> + 1152: 'H_GUEST_RUN_VCPU',
+> + 1156: 'H_GUEST_COPY_MEMORY',
+> + 1160: 'H_GUEST_DELETE',
+> + # Key wrapping hcalls
+> + 1168: 'H_PKS_WRAP_OBJECT',
+> + 1172: 'H_PKS_UNWRAP_OBJECT',
+> + # Platform-specific hcalls used by the Ultravisor
+> + 61184: 'H_SVM_PAGE_IN',
+> + 61188: 'H_SVM_PAGE_OUT',
+> + 61192: 'H_SVM_INIT_START',
+> + 61196: 'H_SVM_INIT_DONE',
+> + 61204: 'H_SVM_INIT_ABORT',
+> + # Platform specific hcalls used by KVM
+> 61440: 'H_RTAS',
+> + # Platform specific hcalls used by QEMU/SLOF
+> + 61441: 'H_LOGICAL_MEMOP',
+> + 61442: 'H_CAS',
+> + 61443: 'H_UPDATE_DT',
+> + # Platform specific hcalls provided by PHYP
+> + 61560: 'H_GET_24X7_CATALOG_PAGE',
+> + 61564: 'H_GET_24X7_DATA',
+> + 61568: 'H_GET_PERF_COUNTER_INFO',
+> + # Platform-specific hcalls used for nested HV KVM
+> + 63488: 'H_SET_PARTITION_TABLE',
+> + 63492: 'H_ENTER_NESTED',
+> + 63496: 'H_TLB_INVALIDATE',
+> + 63500: 'H_COPY_TOFROM_GUEST',
+> }
+>=20
+> def hcall_table_lookup(opcode):
+> --=20
+> 2.53.0
+>=20
+>=20
 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 1721a2470fb67..eb7c0d7be064e 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-
-[ ... ]
-
-> @@ -215,11 +222,34 @@ static void evlist__exit(struct evlist *evlist)
->  void evlist__put(struct evlist *evlist)
->  {
-> +	struct evsel *evsel;
-> +	unsigned int count, ref_cnt;
-> +
->  	if (evlist =3D=3D NULL)
->  		return;
-> =20
-> -	if (!refcount_dec_and_test(&evlist->refcnt))
-> -		return;
-> +	if (refcount_dec_and_test(evlist__refcnt(evlist)))
-> +		goto out_delete;
-> +
-> +retry:
-> +	count =3D refcount_read(evlist__refcnt(evlist));
-
-[Severity: High]
-Does this sequence create a use-after-free race condition?=20
-
-Looking at the new cycle collection logic in evlist__put(), if
-refcount_dec_and_test() returns false, it indicates that the current thread
-has dropped its reference, but the object's refcount has not reached zero.
-However, the thread then proceeds to access the evlist in the retry loop.
-
-If another thread drops the final external reference concurrently, it will
-evaluate count =3D=3D 0 and proceed to out_delete, freeing the evlist. The =
-first
-thread, which is still executing the retry loop, would then access the freed
-evlist. Could this also lead to a double free if the first thread independe=
-ntly
-concludes count =3D=3D 0?
-
-> +	ref_cnt =3D count;
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (RC_CHK_EQUAL(evsel->evlist, evlist) && count &&
-> +		    refcount_read(&evsel->refcnt) =3D=3D 1)
-> +			count--;
-> +	}
-> +	if (refcount_read(evlist__refcnt(evlist)) !=3D ref_cnt)
-> +		goto retry;
-> =20
-> +	if (count !=3D 0) {
-> +		/*
-> +		 * Not the last reference except for back references from
-> +		 * evsels.
-> +		 */
-> +		RC_CHK_PUT(evlist);
-> +		return;
-> +	}
-
-[Severity: High]
-Can this asymmetric cycle collection logic cause a permanent memory leak?
-
-The patch series creates a reference cycle between evlist and evsel by
-replacing the entry->evlist back-pointer assignment with a reference-counted
-evlist__get(evlist). To break this cycle, evlist__put() includes the check
-above to destroy the evlist if the only remaining references come from its =
-own
-evsels.
-
-However, this cycle-breaking check only runs during evlist__put(). If an
-external caller (like the Python bindings) holds references to both objects
-and drops the evlist first, evlist__put() will see the evsel's refcount > 1
-and correctly return without freeing.
-
-When the caller subsequently drops the evsel, evsel__put() merely decrements
-the refcount without checking for the isolated cycle. Since neither object's
-refcount will ever reach 0, won't this leak both objects?
-
-[ ... ]
-
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index e4fa77a40dacb..ebd3ed0c9b3e8 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-
-[ ... ]
-
-> @@ -4283,14 +4284,14 @@ int cmd_record(int argc, const char **argv)
->  out_delete_session:
->  #ifdef HAVE_EVENTFD_SUPPORT
->  	if (done_fd >=3D 0) {
->  		fd =3D done_fd;
->  		done_fd =3D -1;
-> =20
->  		close(fd);
->  	}
->  #endif
->  	zstd_fini(&session->zstd_data);
->  	if (!opts->no_bpf_event)
->  		evlist__stop_sb_thread(rec->sb_evlist);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does this error path cause a
-use-after-free if the BPF side-band thread fails to start?
-
-In __cmd_record(), if record__setup_sb_evlist(rec) fails (e.g., due to fail=
-ing
-to create the side-band thread in evlist__start_sb_thread()), the underlying
-evlist__start_sb_thread() function frees the sb_evlist via evlist__put()
-before returning an error:
-
-tools/perf/util/sideband_evlist.c:evlist__start_sb_thread() {
-    ...
-out_put_evlist:
-    evlist__put(evlist);
-    return -1;
-}
-
-The error path in __cmd_record() goes to out_free_threads, which falls thro=
-ugh
-to out_delete_session. Because opts->no_bpf_event is not set to true upon t=
-his
-failure (unlike the analogous handling in builtin-top.c), the cleanup code
-calls evlist__stop_sb_thread(rec->sb_evlist) with the already-freed pointer.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615061631.2382=
-079-1-irogers@google.com?part=3D7
