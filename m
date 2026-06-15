@@ -1,54 +1,54 @@
 Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F9A4218B7
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 16:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE88B423A79
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 16:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781542250; cv=none; b=i567j+4Ludw7rq93krJu2COMN3hsasESNMHavB/pSGOzjEER380neyIyj/vp9ZtRaXailZEYARP4WgeMZjqETbRsCIhVnAldrOWCeEuEBXGlqqL9T3w/4uJRi48R6+PEnw9CeerEURneXKj7HiR86iM/R9dZyK9mfHpcbAWxmHI=
+	t=1781542253; cv=none; b=Ri3fk/z9emTOVWpyrrRKhBXx1751vbaX5lVPhW8xva6RRXKpcJ1SYs8O+QyzEuOV3zayf0qI9qh2mQ5fLU1ePkiYqlbu6Ls69mPKhPbUCp3iEA1Rs9r4a37z02oPaiXhNvWGgJ7wHQqFPzWVVKjDaytK9Emnpnu49Ym6ahQDU8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781542250; c=relaxed/simple;
-	bh=+kArYm+PyddyuOuiwzAv+Df/IciTN+QUSyH+40Mm5e8=;
+	s=arc-20240116; t=1781542253; c=relaxed/simple;
+	bh=7Ou4Ehb3EB5Nvzu1qULu8OlFOd9EWLp6NCml3x1Ym5s=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N3vYh9VCBSrIg9gAZDwTws4+XdI2ed2ot4G/YHdeWHL3wpJGEkCOEbzZ+JJ5P3DIV0PrIYR2KwTTG94nwQoPR/oUTDk38i2Klusj96EXlLtiWKu9a8HW8pgjs4rTENHgdK16doE8HwJ9OWuFk6KxxjG2Ev0dE5ORGBXtKAaEnOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KLLdLEk2; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=MPfeD0+z6pTU5aLjvBYRDIDf1Uaf6kkkejteJ3T6tJ7aQtf9GEv5QzbSuNdszOqEqcCXeveAW4CxuLwMKcEwu+V2Hu3700kyjiZWBNMKKNmMCUVixjTKYjI8fqxThZXTMfLkrpQCfJ7rsJDWakhBxP6gHyK1LkU8/oI7wsAQzMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pJY5JMrb; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KLLdLEk2"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304e7fc90b1so4038237eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 09:50:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pJY5JMrb"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30ba395b047so189383eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 09:50:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781542249; x=1782147049; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781542251; x=1782147051; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wFmvWkkGaC/UhMYsb9kvVBBU8wa/WhdEif7SwlvhvB4=;
-        b=KLLdLEk2LDNn06VOH09uxk4Vrrnq6xf7sKSUTY0h7fRu+WoRiozxnsp275nt20KZT8
-         RK84dgp/ym/ug6d6fqzDB544HpEjTfWkW6QYvsKKDgRTx8G6m40/JYKXdHtGYpamzNHP
-         Kwo/iPqyc5ocKysP1Hb5Vw6C1sE0jXzvGtJYPP6ed8kvpGkHaZpQHRsWmoICF9qMpHGA
-         iO/gIFFcIT9QIJJlCvhdOBh1KT6etH/F18tpGYd5mS07Zp2dRIcdfFpXDMh06GPLqlOU
-         O/8YL1qT7DaijpKcglg89owvbCJ7rjqWHcTtuxbEhyQ2z3Bg6GKWJQXtXJHUarMHVWV4
-         Ewkg==
+        bh=XD26SctRAczF8gjk3e/dIIjJ4oWi9jYsbtNxYyZiuQs=;
+        b=pJY5JMrbHk5b6i2ZAhTEFyhGPkPSjWCqgTsSKdkP70f3bjyKJhec/PO87jY06Lev11
+         odwi/VqquuvJyqAFEaBgdTuJOCp0q398KpNA9FJWT6hvKcNHekUip15m01wspzXYd/4+
+         eh0hXUIaBioWr/UCNnl1JKSAtcCWu4tVSyGRqdBaPzWKxFpOEBKvO2NzTMuA42lfYlS4
+         P71xlIGDe0hs/Ltdlxa6bqy0PnFPlBhojm+a6rBENkuGA8gNr2t6JAWdadEbRwt3myfh
+         Ob+Dx1wCl4+d/fSODSfbzSJ3mpYIshI8Ptju3MN1A3mOWhdUTM81/5Xo5PPg9yVam6Jm
+         EMOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781542249; x=1782147049;
+        d=1e100.net; s=20251104; t=1781542251; x=1782147051;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wFmvWkkGaC/UhMYsb9kvVBBU8wa/WhdEif7SwlvhvB4=;
-        b=CPYLNxAUZ4pFFqcesDTTSOkO/zy0lYiNuCWQ5RxnVeS+dc1CIRZpeEaG+qtRn8581D
-         8wOAzALYqMb00i2p9wejHHIO3LQQ/VF/XGgn3d4dSV+jpgCdGh5WkW0gkkKiw8HAQxpv
-         nnbPRRvX1PDgiHzndcH0ly7+vtiHkMUr7rTRjDSuCy2AssjnCzwjAkQdEp1nV60H4TJH
-         FhkVFYzreFu6dsffy9s47GpUSxYTaZylS4GYPriqryENnfveERAxThzmvQUKpD+0EWoD
-         MVRTWHtooSJ0PkE66qoj7TfV9WmvpgST+kx0ji3lR9975bRgW4E0I1odyaXYaAlDJgv0
-         EMpQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/BAnD9JQtDCQwU3fGC632s5wDZg6f2AGbTN2ZHSkISmTy4uxMUuwFip4MRXTUorrz4Sy4T9IyQ/zn9sLY1r66c@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9jn10SyZ95Spj3O0Xe7Q9nznF2sfViZU06IXSL79sb8CGep44
-	0NiQCCJm9hiHujtmTTiUdIBLP67JHclbCApyo5gfuWtKlkDPK79x6IAfGuz2mx5ke2sZGII5Aix
-	79DRO5fJRWA==
-X-Received: from dyuw24.prod.google.com ([2002:a05:693c:8818:b0:2ee:b6da:180])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:fe07:b0:304:2cc9:2ba8
- with SMTP id 5a478bee46e88-3093ef21d25mr5927879eec.30.1781542248558; Mon, 15
- Jun 2026 09:50:48 -0700 (PDT)
-Date: Mon, 15 Jun 2026 09:50:07 -0700
+        bh=XD26SctRAczF8gjk3e/dIIjJ4oWi9jYsbtNxYyZiuQs=;
+        b=h7bwNnz6keMF7EgML/ja50MSK2rB0BVE6uN8tuMiMbL52OGvczp3A8eh391JcxTPRl
+         uf6ZhZwr1HdMyZ/E7RqcO2k08A4Gdaw+fy0Ymqcfyg6d9LQhR7XOTJfsu8igG1cN12dY
+         KFzJoFVd1ayeGV0pYIyKh5yX2taCFw1tFsjsg0ZXyslcCF96fHCZy3R35u/AVx86ZWO3
+         EBA3/HAfReW5CSMId9hVBmUb5dLabIHOnz9zSVfyl7SAo5YXdg8U5RzauKbJGOOirU44
+         C26FlJBUtiyN2dSpRvmKtmrximtZ3rBUjgiDLfdCBp7YkIrM+P74kNRut68Xqv1IFQxR
+         UC8Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/hRHZPUqj0dR8zsxZ42PYjTNnmPZFOOO0jadPaPCgTF9nYfO4DriEGSKhWddwwFAdBOl5c/ZsciDH3XIKkNC+j@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRJynNX6WID3saUzgVHI7fUlxaPtM3HfwxfBjK3qi/AjjCor4g
+	1bSfG0V8W+UVXg5ZsiUY8HTWo5y1YbR7OWogNZNP3olk/kNwcj/0aquQ6hA2Xn8sG1Y4d32Fzyb
+	SkB4nAs0H7g==
+X-Received: from dybnb29.prod.google.com ([2002:a05:7300:cc9d:b0:304:d272:2198])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:5795:b0:304:9b48:53d0
+ with SMTP id 5a478bee46e88-3093979212fmr6039061eec.12.1781542250473; Mon, 15
+ Jun 2026 09:50:50 -0700 (PDT)
+Date: Mon, 15 Jun 2026 09:50:08 -0700
 In-Reply-To: <20260615165010.2724690-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260615061631.2382079-1-irogers@google.com> <20260615165010.2724690-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260615165010.2724690-18-irogers@google.com>
-Subject: [PATCH v19 17/20] perf python: Add config file access
+Message-ID: <20260615165010.2724690-19-irogers@google.com>
+Subject: [PATCH v19 18/20] perf python: Handle Py_None for thread and cpu maps
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,53 +68,64 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Add perf.config_get(name) to expose the perf configuration system.
+The python stubs allow passing None for threads and cpus to the
+perf.parse_events() and perf.parse_metrics() bindings. However, PyArg_ParseTuple
+parses None into a Py_None object, which is not a NULL pointer.
+Because the C code lacked an explicit check for Py_None, it would cast
+Py_None to a pyrf_thread_map/pyrf_cpu_map struct pointer and dereference it,
+causing a memory corruption crash.
 
-Assisted-by: Gemini:gemini-3.1-pro-preview
+Fix this pre-existing issue by explicitly checking for Py_None alongside NULL
+in pyrf__parse_events, pyrf__parse_metrics, and pyrf_evsel__open.
+
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ tools/perf/util/python.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index f1230bd222d7..38a41bd6c9b5 100644
+index 38a41bd6c9b5..a6593c388a48 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -17,6 +17,7 @@
- #include "build-id.h"
- #include "callchain.h"
- #include "comm.h"
-+#include "config.h"
- #include "counts.h"
- #include "data.h"
- #include "debug.h"
-@@ -3990,7 +3991,26 @@ static PyObject *pyrf__syscall_id(PyObject *self, PyObject *args, PyObject *kwar
- 	return PyLong_FromLong(id);
- }
+@@ -2089,10 +2089,10 @@ static PyObject *pyrf_evsel__open(struct pyrf_evsel *pevsel,
+ 					 &pcpus, &pthreads, &group, &inherit))
+ 		return NULL;
  
-+static PyObject *pyrf__config_get(PyObject *self, PyObject *args)
-+{
-+	const char *config_name, *val;
-+
-+	if (!PyArg_ParseTuple(args, "s", &config_name))
-+		return NULL;
-+
-+	val = perf_config_get(config_name);
-+	if (!val)
-+		Py_RETURN_NONE;
-+	return PyUnicode_FromString(val);
-+}
-+
- static PyMethodDef perf__methods[] = {
-+	{
-+		.ml_name  = "config_get",
-+		.ml_meth  = (PyCFunction) pyrf__config_get,
-+		.ml_flags = METH_VARARGS,
-+		.ml_doc	  = PyDoc_STR("Get a perf config value.")
-+	},
- 	{
- 		.ml_name  = "metrics",
- 		.ml_meth  = (PyCFunction) pyrf__metrics,
+-	if (pthreads != NULL)
++	if (pthreads != NULL && pthreads != Py_None)
+ 		threads = ((struct pyrf_thread_map *)pthreads)->threads;
+ 
+-	if (pcpus != NULL)
++	if (pcpus != NULL && pcpus != Py_None)
+ 		cpus = ((struct pyrf_cpu_map *)pcpus)->cpus;
+ 
+ 	evsel->core.attr.inherit = inherit;
+@@ -3338,8 +3338,10 @@ static PyObject *pyrf__parse_events(PyObject *self, PyObject *args)
+ 		return NULL;
+ 	}
+ 
+-	threads = pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : NULL;
+-	cpus = pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
++	threads = (pthreads && pthreads != Py_None) ?
++			((struct pyrf_thread_map *)pthreads)->threads : NULL;
++	cpus = (pcpus && pcpus != Py_None) ?
++			((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
+ 
+ 	parse_events_error__init(&err);
+ 	perf_evlist__set_maps(evlist__core(evlist), cpus, threads);
+@@ -3372,8 +3374,10 @@ static PyObject *pyrf__parse_metrics(PyObject *self, PyObject *args)
+ 		return NULL;
+ 	}
+ 
+-	threads = pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : NULL;
+-	cpus = pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
++	threads = (pthreads && pthreads != Py_None) ?
++			((struct pyrf_thread_map *)pthreads)->threads : NULL;
++	cpus = (pcpus && pcpus != Py_None) ?
++			((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
+ 
+ 	perf_evlist__set_maps(evlist__core(evlist), cpus, threads);
+ 	ret = metricgroup__parse_groups(evlist, pmu ?: "all", input,
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
