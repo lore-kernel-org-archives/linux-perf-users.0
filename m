@@ -1,126 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20363BB116
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 22:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D7938BF61
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 23:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781564127; cv=none; b=gndC2yXGuNehYL8cQFCislb/ptDGebCrNdZwI/rlgC5SPs7AYEn7Ylo7O/QoWmEaSld5vc/BJiR6BlgPGnmJR8MIcxOYT1F4pfI/V9Rm9+GD7C2qyz6kvUw9ZuROxNTkPIcZTYmXhBzb3AvevX8aEfQwC0G/dgomYo24I7sZkn8=
+	t=1781564498; cv=none; b=UkqQYE/uvqJWrAxLqY/sdPgDtuoMNDeU/C9qoy4b92la4zWwO+okv8m2W/zZ+259bZX6lmjQVI9Q88c1nd6KTqYCESvDb8pXkuh2AbvvKK2qKUt9stCCnzwhI4bDvYr5ddn6vfZZmzx/u0m5CufFywVe0Gng5NFUMvBqwCrAycE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781564127; c=relaxed/simple;
-	bh=7TGLEpU+0LrR6xMVHchd4/WSs8BIeTwQX5jGmtD9x44=;
+	s=arc-20240116; t=1781564498; c=relaxed/simple;
+	bh=5t2Un0LrY8xTjXRX+YD3wki9U6Wm9gtyfasJgQqlX4w=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ng4yp5d0gCTWoMIcDLPHTwghdqLj4r4+iqWTPKvlzS56hQR41fZ8C8Dtbgc/dbskUBRJ2HML7+NfYn4DtbzBz/7rQ6jkfpAAv+GZl4e1zIG/chp5os0CV0zjIQFSakg73uM7AQrWdgZ5aq1UYSVa0NyPguJ/96vpq75adShjiyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAnRLWyV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=HoHc31b4XfAJv/WhzMJWbFTCaRv8et5GL2I62o8BpcfLWSA8K/DoMnlRY7P+fnTyuTWBRgM5vG0RUUBDonH0/5fLr9b3sePVDghx/0QHg+PM+dZD6Z/kqhku7gjltkw+zstaHFyg8dHLzWdIjCVVpq2s6jW6TgSRa9dacrAx2IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEwTLrRp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAnRLWyV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E82A71F00A3A;
-	Mon, 15 Jun 2026 22:55:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEwTLrRp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486821F000E9;
+	Mon, 15 Jun 2026 23:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781564126;
-	bh=Fm1RENPQcTTjWHqpKBD6mKpXgvhtdK4yrJV7DyV+LEc=;
+	s=k20260515; t=1781564497;
+	bh=aqCsZTWeCJ944tgV1H+05X42thujBCQN+ZFrKaEXF5w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fAnRLWyVVoKBYMnhpIbSeA09SlOhcuq+kjRXPu6LF84xiIoDQznenci6BuBNQkoIl
-	 o6eZTrCyJT3jpMH24Dy6tXOs76RJKxobBKAGyCVSCjjj3gWM9GE0Myoiw5mI1eQMry
-	 sY1M1IW5U2S/U5Z3BC9mg/9teaGcawTvRYHu3wiQiO6xZZ/sf2+NrcTJ3CC0jS611W
-	 4KcmIH1HYDF/+qr4Sy2rdL3EMG2YTDgqGnUNv+nhCglJ/EcA8wDdT2KIfbc23d5gsS
-	 sLIqQ95LtbPA4vds45TuHlHuXQaUOvp5AfuJtakIRYo1F6T9LUh4GaAU2yVBM90KJE
-	 KV2RMigZ3UbWg==
+	b=YEwTLrRpE5YXUym0s0BGuMyiSY+4gj7XRoiN5ZL4oYPa1I8e43ADIrVqwVEjcBwwo
+	 fsfS8Q7mj8a9tIPD+8y+vKe86eQxm/acvvj3fGwqQCkY4SB9Vp5CUoU7MEa6YkJe7i
+	 zdRAE88g2RWkbjGUTRW5N9jcnzwQ8wuyG69T5IPUxLSn5EDrPUSqs54mcA1Wa8sRof
+	 yseytJDqAwzJUhNZzanTV5gxS5SnJOaxkY5Z/WIJnEllB7UieO0P9tSe0kctTCVdzt
+	 4dEYBjGGRdDHyMA7buW41cAYDRi8bA/s129TsM7bRU3qq03XL3GSzlMSc+31gYKY7j
+	 dQsj5Nxyo1emw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v20 10/21] perf python: Add python session abstraction
- wrapping perf's session
+Subject: Re: [PATCH 8/9] perf bpf: Validate array presence before casting
+ BPF prog info pointers
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615223011.3873955-11-irogers@google.com>
-References: <20260615223011.3873955-11-irogers@google.com>
+In-Reply-To: <20260615223249.36598-9-acme@kernel.org>
+References: <20260615223249.36598-9-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 22:55:25 +0000
-Message-Id: <20260615225525.E82A71F00A3A@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 23:01:36 +0000
+Message-Id: <20260615230137.486821F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Disabling `needs_swap` in `pyrf_session_tool__sample` breaks parsi=
-ng of 32-bit fields (like `pid`, `tid`, `cpu`) for cross-endian `perf.data`=
- files.
+
+Pre-existing issues:
+- [High] The newly added array bitmask validation in `__bpf_event__print_bp=
+f_prog_info()` is incomplete, missing critical validations for `PERF_BPIL_P=
+ROG_TAGS` and `PERF_BPIL_FUNC_INFO` arrays.
+- [High] The libbfd annotation path completely misses the newly added array=
+ bitmask validations, allowing arbitrary file offsets for `jited_prog_insns=
+`, `line_info`, and `jited_line_info` to be dereferenced.
 --
 
-commit bcc392a3d23443fffd50461d98d652ca9e98f59b
-Author: Ian Rogers <irogers@google.com>
+commit 0cf9a385d10d4f34d342db1cd59a01ae41698542
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf python: Add python session abstraction wrapping perf's session
+perf bpf: Validate array presence before casting BPF prog info pointers
 
-This commit adds a wrapper Python type for perf sessions, allowing the use
-of perf.data files within Python tools. It allows a sample callback to be
-passed when creating a session and includes support for retrieving thread
-associations for filtering.
+This commit adds bitmask validations to ensure that BPF program info fields
+like jited_ksyms and jited_func_lens are actually valid pointers before
+they are dereferenced. It aims to prevent issues where crafted perf.data
+files leave these bits unset, causing functions to dereference raw file
+offsets.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 31da1283fc15e..dc71fe7e37877 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-[ ... ]
-> @@ -2579,6 +2587,332 @@ static int pyrf_data__setup_types(void)
->  	return PyType_Ready(&pyrf_data__type);
->  }
-> =20
-[ ... ]
-> +static int pyrf_session_tool__sample(const struct perf_tool *tool,
-> +				     union perf_event *event,
-> +				     struct perf_sample *sample,
-> +				     struct machine *machine __maybe_unused)
-> +{
-> +	struct pyrf_session *psession =3D container_of(tool, struct pyrf_sessio=
-n, tool);
-> +	PyObject *pyevent =3D pyrf_event__new(event);
-> +	struct pyrf_event *pevent =3D (struct pyrf_event *)pyevent;
-> +	PyObject *ret;
-> +	bool needs_swap;
-> +
-> +	if (pyevent =3D=3D NULL)
-> +		return -ENOMEM;
-> +
-> +	needs_swap =3D sample->evsel->needs_swap;
-> +
-> +	memcpy(&pevent->event, event, event->header.size);
-> +	/* The event is already swapped, disable swapping temporarily */
-> +	sample->evsel->needs_swap =3D false;
-> +	if (evsel__parse_sample(sample->evsel, &pevent->event, &pevent->sample)=
- < 0) {
+>     A crafted perf.data can leave these bits unset while setting non-zero
+>     counts and offset values, causing the functions to dereference raw fi=
+le
+>     offsets as pointers.
+>    =20
+>     Add array bitmask validation to all perf.data processing paths:
 
 [Severity: High]
-Does disabling the needs_swap flag here break the parsing of 32-bit fields
-like pid, tid, and cpu for cross-endian perf.data files?
+This is a pre-existing issue, but does the libbfd annotation path also need
+similar validation?
 
-When perf_session__process_events() processes a cross-endian file, it first
-swaps the event payload in 64-bit chunks. The evsel__parse_sample() function
-relies on the needs_swap flag to correctly undo this 64-bit swap and apply
-32-bit swaps for fields like pid and tid.
+The commit message states validations are added to all perf.data processing
+paths, but symbol__disassemble_bpf_libbfd() in tools/perf/util/libbfd.c
+accesses info_linear->info.jited_prog_insns and passes it to
+bpf_prog_linfo__new().=20
 
-By temporarily forcing sample->evsel->needs_swap =3D false before calling
-evsel__parse_sample() on a copy of the event, won't the 32-bit fixup logic
-be skipped?
+bpf_prog_linfo__new() then casts info->line_info and info->jited_line_info
+to pointers and calls memcpy():
 
-This could cause pevent->sample.pid and pevent->sample.tid to receive
-byte-swapped values, and break raw_size extraction, which might misalign
-subsequent parsed fields resulting in data corruption.
+tools/lib/bpf/bpf_prog_linfo.c:bpf_prog_linfo__new() {
+    ...
+    memcpy(prog_linfo->raw_linfo, (void *)(long)info->line_info, data_sz);
+    ...
+    memcpy(prog_linfo->raw_jited_linfo,
+           (void *)(long)info->jited_line_info, data_sz);
+    ...
+}
 
-Although this logic is moved to pyrf_event__new() later in the series, the
-needs_swap override appears to persist. Could this be adjusted to ensure
-cross-endian data is handled correctly?
+Can a crafted perf.data file omitting PERF_BPIL_JITED_INSNS,
+PERF_BPIL_LINE_INFO, or PERF_BPIL_JITED_LINE_INFO bits cause an
+out-of-bounds read or segmentation fault here?
 
-> +		sample->evsel->needs_swap =3D needs_swap;
-> +		Py_DECREF(pyevent);
-> +		return -1;
-> +	}
-> +	sample->evsel->needs_swap =3D needs_swap;
+>       - __bpf_event__print_bpf_prog_info(): check JITED_KSYMS and
+>         JITED_FUNC_LENS (changed to take struct perf_bpil *)
+>       - machine__process_bpf_event_load(): check JITED_KSYMS
+>       - bpf_read(): check JITED_INSNS before memcpy from jited_prog_insns
+>       - dso__disassemble_filename(): check JITED_INSNS before returning
+>         jited_prog_insns pointer
+
+[ ... ]
+
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 57d53ba848359..fa3ebc8ea7f09 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+
+[ ... ]
+
+> @@ -959,12 +963,15 @@ int evlist__add_bpf_sb_event(struct evlist *evlist,=
+ struct perf_env *env)
+>  	return evlist__add_sb_event(evlist, &attr, bpf_event__sb_cb, env);
+>  }
+> =20
+> -void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> +void __bpf_event__print_bpf_prog_info(struct perf_bpil *info_linear,
+>  				      struct perf_env *env,
+>  				      FILE *fp)
+>  {
+> -	__u32 *prog_lens =3D (__u32 *)(uintptr_t)(info->jited_func_lens);
+> -	__u64 *prog_addrs =3D (__u64 *)(uintptr_t)(info->jited_ksyms);
+> +	struct bpf_prog_info *info =3D &info_linear->info;
+> +	__u64 required_arrays =3D (1UL << PERF_BPIL_JITED_KSYMS) |
+> +				(1UL << PERF_BPIL_JITED_FUNC_LENS);
+
+[Severity: High]
+This is a pre-existing issue, but is this required_arrays bitmask missing
+validations for PERF_BPIL_PROG_TAGS and PERF_BPIL_FUNC_INFO?
+
+__bpf_event__print_bpf_prog_info() calls synthesize_bpf_prog_name(), which
+casts info->prog_tags and info->func_info to pointers and dereferences them:
+
+tools/perf/util/bpf-event.c:synthesize_bpf_prog_name() {
+    ...
+    u8 (*prog_tags)[BPF_TAG_SIZE] =3D (void *)(uintptr_t)(info->prog_tags);
+    void *func_infos =3D (void *)(uintptr_t)(info->func_info);
+    ...
+    name_len +=3D snprintf_hex(buf + name_len, size - name_len,
+                             prog_tags[sub_id], BPF_TAG_SIZE);
+    ...
+}
+
+If a crafted perf.data file leaves the PERF_BPIL_PROG_TAGS and
+PERF_BPIL_FUNC_INFO bits unset but provides non-zero offset values, will=20
+untranslated raw offsets be dereferenced here?
+
+> +	__u32 *prog_lens;
+> +	__u64 *prog_addrs;
+>  	char name[KSYM_NAME_LEN];
+>  	struct btf *btf =3D NULL;
+>  	u32 sub_prog_cnt, i;
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615223011.3873=
-955-1-irogers@google.com?part=3D10
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615223249.3659=
+8-1-acme@kernel.org?part=3D8
