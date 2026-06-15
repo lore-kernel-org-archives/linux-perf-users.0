@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C21C1D416C
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 01:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF9317A31C
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 01:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781485732; cv=none; b=HyVqV0AYg5ZbuZwiGo6eH9es9o1FcJju8IEmNKJWn+PLAP2UzpjmWsanWU3KtBdhY9czBmeC2MZ3XIkbieeCajFptJjF/hAB3mcvQTBAiDu8nXBwOnLiTxkCSlm49YZBHh58VrT1DCOPxy/CdGQ4EeEE3woEe9dRkO10Q07Mxls=
+	t=1781486162; cv=none; b=hDfh6zy+yEBnWgvE8rrRqcIyEtCeZF5hXb3lOlQKouj80WFA8zsVJrZ2yuWhMYPFFWu0ryBJvLTCIxpDM29/exDe4yw5Qm+V7xQq8tyCe+hoq80ujxZJvp9d5H6S16r0a+XawPo+Iq0aJR2nVC3pMKISLexiR+fA8xijK5IPsts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781485732; c=relaxed/simple;
-	bh=2cIcsCvKnwMKqPtykZo2xdOIhv/jORdM497BMTBjIvU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cLP2+n/87i8CxRmperawam3Wc+6BHFrfiwyxUm+lChE05/ReV50Fvsj9COk7yBpPOvCvqXMNoRfiq2nnhH5+s65HINtgxQl2/c0G7pql4CUM8Nyu0Tt0eMIM36MgHAF9ahhq0JWAJT3jNC/k8YJxtJfk+w9VF50r/VJ3V2E648Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xv0jccvW; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1781486162; c=relaxed/simple;
+	bh=2rzc2ZONiC7l0r9cGqvkP3EkcFTvoUL332G1Vc2tMM0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HP5FfrozI6l2LM7skrbIHHWmZSN4M7zY4NF/k0ubLOO9HCdjQgQ+MCof6vIQ6thmXU4swxc4ieenH0+w0XCWKXLaGk9yD6H1AvhvoQDjBaiDqNPcD6YgA6SLwITybVyzflsa4MtG4ulVG+Z6u4UcAJ3wQ+3wBBsGE2efzqUzIeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jz3SZN/2; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xv0jccvW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jz3SZN/2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781485731; x=1813021731;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2cIcsCvKnwMKqPtykZo2xdOIhv/jORdM497BMTBjIvU=;
-  b=Xv0jccvWGlqvLlFD0WJ7tOf94IWnMxShOrxYjLVq3/zKrgtlXT2UxCxU
-   7C4FJGO5AmOzxfY+TMmYbnqMrmjveLYiRVX+qFu65WuIVlcmoSAEKIjcn
-   aFB8GnACxIdl9qDe88hjCNFkZ8DH0coEjDgUE0C77T/g80SPnZ4e7EcZ9
-   1p9MPxKx4WSjD99AWKevuiWygtMp1wb99FIEDvWfyMeoJwKg+7QvYhegV
-   9NUJOTRqiBIdq8fmYAbtXT5AQvZCx+5Oqinr10zFPsaKKbmwZvMGdq/eK
-   7qcJjAaT/pnNkPWTRGfdUYQ5ucW4ZVHs54Av3sY+pUA//1GQ3FZlttFBI
-   Q==;
-X-CSE-ConnectionGUID: 5mqbdIJxSbGeZcED3NONzw==
-X-CSE-MsgGUID: gTWjbMZkR3O/yDruX0O7AA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11817"; a="104892756"
+  t=1781486160; x=1813022160;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=2rzc2ZONiC7l0r9cGqvkP3EkcFTvoUL332G1Vc2tMM0=;
+  b=jz3SZN/2tMRA8cwCY+rGeDFOQPbgspLW26vvln9nVvZTL8/bomWzTxe/
+   Euibq/3d87EFAA+sY/yOE9ROKj7x2+NVMeWooEmErRWmgn7nDqPk54Rwb
+   jgGFcCCtsx9XG/1QCwWrBoziRZkg4IBP7V9u5Nk2GR222MgM/Rr6HppDZ
+   zf624s98IQDgfoG9zPOLvySwnF/Bf/FUBXdO2DjBSpcrZARMCrJT18/Mj
+   edb0eSxhJpRnzZVVj7i3cSTQlOyVVsuSrNnV6ynU/EdOjHhlmsbG5/CMA
+   P1aFnVb3ON96ZrVZazMtfsamVNuLoUYbCa6HSshnlSylIbai+QnIS8Upb
+   g==;
+X-CSE-ConnectionGUID: 3DEBfNjATOCH9cnV7jibnQ==
+X-CSE-MsgGUID: M+lWvpnnSFOwNpyoJ+10Ag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11817"; a="81963187"
 X-IronPort-AV: E=Sophos;i="6.24,205,1774335600"; 
-   d="scan'208";a="104892756"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 18:08:50 -0700
-X-CSE-ConnectionGUID: K58lDKO/R3WPXSlcVdcZ/Q==
-X-CSE-MsgGUID: hVf3muYuT/ehm6d1B46lAQ==
+   d="scan'208";a="81963187"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 18:16:00 -0700
+X-CSE-ConnectionGUID: gLNC6KeKQvOzDaP2zecUuA==
+X-CSE-MsgGUID: nteyLqvDSSyBL9Sy4z5VYg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,205,1774335600"; 
-   d="scan'208";a="271007189"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 18:08:50 -0700
-Message-ID: <45c6a869-6e61-467f-9904-5b21a4164e93@linux.intel.com>
-Date: Mon, 15 Jun 2026 09:08:47 +0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 18:15:59 -0700
+Message-ID: <ac2849f5-bfe9-4532-b2f7-b9dbc3925c00@linux.intel.com>
+Date: Mon, 15 Jun 2026 09:15:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,94 +50,77 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 5/8] perf/x86/intel: Validate the return value of
- intel_pmu_init_hybrid()
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260612090114.3188886-6-dapeng1.mi@linux.intel.com>
- <20260612093119.7FA3E1F000E9@smtp.kernel.org>
-Content-Language: en-US
+Subject: Re: [PATCH v1 4/6] perf vendor events intel: Update lunarlake events
+ from 1.22 to 1.25
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260612093119.7FA3E1F000E9@smtp.kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>, "Baker, Edward"
+ <edward.baker@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+References: <20260609215046.2391903-5-ctshao@google.com>
+ <20260609220242.A7B301F00893@smtp.kernel.org>
+ <CAJpZYjXoC=Z10_X_=TQw2Q+O-jrQfV+S-bHThAUoXEoenHpT0w@mail.gmail.com>
+ <c0a5f131-db2d-4252-8e88-7336718e95ae@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <c0a5f131-db2d-4252-8e88-7336718e95ae@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 6/12/2026 5:31 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Relocating `intel_pmu_arch_lbr_init()` below `intel_pmu_check_event_constraints_all()` bypasses the dynamic constraint validation for branch counters.
-> --
->
-> commit 4ceb25a65fdf63fe8fa33e932139cf0a5d28e924
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()
->
-> This patch validates the return value of intel_pmu_init_hybrid() to avoid a
-> null-pointer dereference. It also defers intel_pmu_arch_lbr_init() until after
-> hybrid PMU initialization succeeds to avoid destroying the kmem cache on
-> failure.
->
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index db52e7e53a6cd..74dbf24b0ab63 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
-> [ ... ]
->> @@ -8829,6 +8842,9 @@ __init int intel_pmu_init(void)
->>  
->>  	intel_pmu_check_event_constraints_all(NULL);
->>  
->> +	if (boot_cpu_has(X86_FEATURE_ARCH_LBR))
->> +		intel_pmu_arch_lbr_init();
->> +
-> [Severity: Medium]
-> Does moving intel_pmu_arch_lbr_init() below
-> intel_pmu_check_event_constraints_all() bypass the dynamic constraint
-> validation for branch counters?
->
-> When intel_pmu_check_event_constraints_all() runs, it eventually calls
-> intel_pmu_check_dyn_constr(). This check relies on the PMU_FL_BR_CNTR flag
-> and the x86_pmu.lbr_counters mask:
->
-> arch/x86/events/intel/core.c:intel_pmu_check_dyn_constr() {
->     ...
-> 		case DYN_CONSTR_BR_CNTR:
-> 			if (x86_pmu.flags & PMU_FL_BR_CNTR)
-> 				mask = x86_pmu.lbr_counters;
-> 			break;
->     ...
-> }
->
-> Because intel_pmu_arch_lbr_init() is now deferred until after this validation,
-> the PMU_FL_BR_CNTR flag hasn't been set yet. Will this cause the dynamic
-> constraint check for branch counters to evaluate to false and be skipped?
+On 6/10/2026 5:04 PM, Mi, Dapeng wrote:
+> On 6/10/2026 6:58 AM, Chun-Tse Shao wrote:
+>> + Dapeng and Edward
+>>
+>> On Tue, Jun 9, 2026 at 3:02 PM <sashiko-bot@kernel.org> wrote:
+>>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+>>> - [Medium] Accidental deletion of the UMask field for the BR_INST_RETIRED.COND_TAKEN_FWD PMU event, making it an alias of ALL_BRANCHES.
+>>> --
+>>>
+>>> commit 5c9c0d0a9a04ac6fce773f8ccf00f8df75a3f68d
+>>> Author: Chun-Tse Shao <ctshao@google.com>
+>>>
+>>> perf vendor events intel: Update lunarlake events from 1.22 to 1.25
+>>>
+>>> This commit updates the Lunar Lake PMU events from version 1.22 to 1.25
+>>> based on the upstream intel/perfmon repository.
+>>>
+>>>> diff --git a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json b/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+>>>> index d66eafccebbb6..a7467b2f291de 100644
+>>>> --- a/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+>>>> +++ b/tools/perf/pmu-events/arch/x86/lunarlake/pipeline.json
+>>>> @@ -190,7 +190,6 @@
+>>>>          "EventName": "BR_INST_RETIRED.COND_TAKEN_FWD",
+>>>>          "PublicDescription": "Counts taken forward conditional branch instructions retired. Available PDIST counters: 0,1",
+>>>>          "SampleAfterValue": "400009",
+>>>> -        "UMask": "0x102",
+>>> [Severity: Medium]
+>>> Was the UMask field intentionally removed here?
+>>>
+>>> When UMask is missing, it is omitted from the generated event string.
+>>> The kernel PMU driver interprets omitted mask bits as zero, which makes
+>>> EventCode 0xc4 with UMask 0x00 an exact match for the ALL_BRANCHES event.
+>>>
+>>> Does this cause BR_INST_RETIRED.COND_TAKEN_FWD to incorrectly count all
+>>> branches instead of only forward-taken conditional branches, potentially
+>>> corrupting Topdown metrics that rely on this branching ratio?
+>>>
+>>> (This same UMask removal also appears to happen in the parallel Arrow Lake
+>>> update patch within this series).
+>> From perfmon: https://github.com/intel/perfmon/commit/5535a3e8cc14ae8ef58013cf3d8e9480018b911a
+>> It seems like the umask of `BR_INST_RETIRED.COND_TAKEN_FWD` is changed
+>> from 0x02 to 0x00.
+>> Can you confirm if that is correct?
+> I suppose it's correct, but need double check. Thanks.
 
-That's right, should move intel_pmu_arch_lbr_init() just before
-intel_pmu_check_event_constraints_all(), just like this,
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 74dbf24b0ab6..edf6f8732234 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -8840,11 +8840,11 @@ __init int intel_pmu_init(void)
-                pr_cont("AnyThread deprecated, ");
-        }
-
--       intel_pmu_check_event_constraints_all(NULL);
--
-        if (boot_cpu_has(X86_FEATURE_ARCH_LBR))
-                intel_pmu_arch_lbr_init();
-
-+       intel_pmu_check_event_constraints_all(NULL);
-+
-        /*
-         * Access LBR MSR may cause #GP under certain circumstances.
-         * Check all LBR MSR here.
-
-Thanks.
+Ed confirmed the change is correct. The umask should be 0x00 instead of
+0x00. Thanks.
 
 
 >
->>  	/*
->>  	 * Access LBR MSR may cause #GP under certain circumstances.
->>  	 * Check all LBR MSR here.
+>
+>> Thanks,
+>> CT
+>>
+>>>>          "Unit": "cpu_core"
+>>>>      },
+>>> --
+>>> Sashiko AI review · https://sashiko.dev/#/patchset/20260609215046.2391903-1-ctshao@google.com?part=4
