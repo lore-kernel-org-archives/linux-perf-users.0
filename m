@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A86130DED1;
-	Mon, 15 Jun 2026 21:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374DB30DED1;
+	Mon, 15 Jun 2026 21:37:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781559442; cv=none; b=DjoWtf2aI6aS1OCoFYOdCgQlj8demSb+NmYHCJGZh4CmyMo7yCDO8lnRFuNUSl9i6HM9ZGZXXiEtYLimOMOOHZIqE3GV/ZHW+29dYIMIswTFghPbHz++J+YhFgVVke5eOLWB2JcPRE56IW5sC1NcQoHRtfqmj6We3MvXzQAUqGU=
+	t=1781559446; cv=none; b=TQdlYgRRGYkMMIsYuj5nO7oZ+N2KCZTg3UdKPXEDFF3Wibg+WeqjRlzpKcmcg2oakxfU09T28JpnoCPlkNM0qW3rBoY4XMila6HQ9H3h/HtnOwNMRc6qKPjFvpVOiCtPfuCbfvo0x7HqNvYPKi5HkqV1mqyCvC4ZplUX5GJFYM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781559442; c=relaxed/simple;
-	bh=/ouZAdwPNodkqdYcbLkgddbPDqEhLnZ+uZcM97iV06I=;
+	s=arc-20240116; t=1781559446; c=relaxed/simple;
+	bh=dtzYcHZgG0hqkA9z54QV309PHffUSU2ySymNNbOxs8E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YwjcQMpCVw52SBa6xdjxkIvkY+FGyBvMRuqEkbyJiGDEQEtXlSDLedxHGXCSoF3W5NP1RlUb//zlu1lDp1YufgUxhqI8UBpFsJtCcV8vcrrxvuNaq3BBHuFrNGbx1snZujjQAPV0HG0n3d46PgAUC3KnP0sIQ1/nLtq/fh2+hNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+uBOz7O; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=qWkmzGiiWdRENv/+XWtZhcmxpJEPJRdRr1sw+xvu9EBlRAt5Ndmb9oNeX2bpbOmcopa2ojbJQpGw1aB5e4b6wqGb4AwrKnDPoRH4z5nrq17ls5XwuWKHmcXzCZw/rAcuGbHy3ro6fdO98E6xR1yVKie88VSIbV1jluzKGSJ6DH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWDifemR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+uBOz7O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42A721F000E9;
-	Mon, 15 Jun 2026 21:37:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWDifemR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8131F00A3A;
+	Mon, 15 Jun 2026 21:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781559440;
-	bh=go+3OAOQAlKkBE7/7hRA2XivK9iT+vmvDtATOYjf8XQ=;
+	s=k20260515; t=1781559445;
+	bh=hICK0f9EXipK30sHw4w7F3YugcEvbyriZHsVdJLEggc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=c+uBOz7OVxuR86EaVMGgbENcXTzCpjDzV31vwXkn14KucQg7361AWqArj2rDsfkxs
-	 6eqsaAYO7MvXbxxmybt9pu+SbVR/Iz5y+PIk4pCeyTGs6WzkdjgKPs5lVNzsuTxPzQ
-	 EA1vohhHdExI/e2zu3OVj/VPCtF98454t3vnzfndXAMiG1QDoChkn9ckZWBfQnAhjb
-	 wCJWFqrXleQPYptjI7tOSlX2s2F4i8GlitZCLOYmOmnTG8C8BDasQ1fiK59KAFIZR8
-	 BglhcOt1a8znHSMhxb7TcNVPYImam+W/5p3g0BVrZ3/TcS+qvJ+gjmEyeFlpQVGE4Y
-	 iTnG4yYVsDLDA==
+	b=bWDifemRbc0Q3Eme6fId6eRulL+NI2nI5IP/6l4Djzif/4DbcKRMsylchG3up97iz
+	 ypEzpmaloDnUw+pa10f1GoxuMd1eq3bsHCr0xT0F2hUmEbMzWeVkjSjyRGrqZb1SA6
+	 /czEdFu51KvgIKjeAVVJbcAc7bdvP8bfSaOzP0QdDsYZsVy+9htVz/8I0eCdOvi2U/
+	 5Ep4Efj2DQZRz6pJbu5ZzLWOQ0z/BgjHsOc6J+qTVq9801VGqAi3Br8PoQptMK69TF
+	 vZXZqqQtElJ7PaO96u+X/UT86Ivan1Hmz//o4/sSZ40EPPVyOKt+WdcpIYs21k/YYn
+	 25Ay8fxXCTvIA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -42,9 +42,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	James Clark <james.clark@arm.com>,
 	Leo Yan <leo.yan@linaro.org>,
 	Claude <noreply@anthropic.com>
-Subject: [PATCH 4/9] perf cs-etm: Require full global header in auxtrace_info size check
-Date: Mon, 15 Jun 2026 18:36:52 -0300
-Message-ID: <20260615213657.35776-5-acme@kernel.org>
+Subject: [PATCH 5/9] perf cs-etm: Bounds-check CPU in cs_etm__get_queue()
+Date: Mon, 15 Jun 2026 18:36:53 -0300
+Message-ID: <20260615213657.35776-6-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260615213657.35776-1-acme@kernel.org>
 References: <20260615213657.35776-1-acme@kernel.org>
@@ -54,21 +54,29 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-cs_etm__process_auxtrace_info() checks that header.size covers
-event_header_size + INFO_HEADER_SIZE (16 bytes total), but then
-accesses ptr[CS_PMU_TYPE_CPUS] at offset 24 from the start of the
-event.  A crafted 16-byte auxtrace_info event passes the size check
-but reads out-of-bounds.
+cs_etm__get_queue() indexes etm->queues.queue_array[cpu] without
+validating that cpu is within nr_queues.  When processing
+AUX_OUTPUT_HW_ID events, the cpu value comes from untrusted perf.data
+trace payload and flows through cs_etm__process_trace_id_v0_1() and
+cs_etm__queue_aux_fragment() without bounds checking, allowing an
+out-of-bounds read with a crafted file.
 
-Include CS_ETM_HEADER_SIZE in the minimum size check so that the
-global header entries (version, pmu_type_cpus, snapshot) are
-guaranteed to fit within the event.
+Add a bounds check in cs_etm__get_queue() and NULL checks in all
+callers.
 
-Fixes: 55c1de9973d66516 ("perf cs-etm: Print auxtrace info even if OpenCSD isn't linked")
+Also add NULL checks for queue_array[i].priv in the queue iteration
+loops in cs_etm__map_trace_id_v0() and cs_etm__process_trace_id_v0_1()
+— after auxtrace_queues__grow() new entries are zero-initialized so
+.priv can be NULL.  Add a get_cpu_data() NULL check in
+cs_etm__process_trace_id_v0_1(), matching the existing check in
+cs_etm__process_trace_id_v0().
+
+Fixes: 77c123f53e97ad4b ("perf: cs-etm: Move traceid_list to each queue")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: James Clark <james.clark@arm.com>
@@ -76,24 +84,87 @@ Cc: Leo Yan <leo.yan@linaro.org>
 Assisted-by: Claude <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm-base.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/cs-etm.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
-index 4abe416e3febd2cc..aebef71d3a0a1d7b 100644
---- a/tools/perf/util/cs-etm-base.c
-+++ b/tools/perf/util/cs-etm-base.c
-@@ -170,7 +170,9 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
- 	u64 *ptr = NULL;
- 	u64 hdr_version;
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index d121c8f22028d5ba..5d0664ff73b79122 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -292,8 +292,11 @@ static struct cs_etm_queue *cs_etm__get_queue(struct cs_etm_auxtrace *etm, int c
+ {
+ 	if (etm->per_thread_decoding)
+ 		return etm->queues.queue_array[0].priv;
+-	else
+-		return etm->queues.queue_array[cpu].priv;
++
++	if (cpu < 0 || cpu >= (int)etm->queues.nr_queues)
++		return NULL;
++
++	return etm->queues.queue_array[cpu].priv;
+ }
  
--	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE))
-+	/* Ensure priv[] is large enough for the global header entries */
-+	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE +
-+					  CS_ETM_HEADER_SIZE))
- 		return -EINVAL;
+ static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id,
+@@ -306,6 +309,9 @@ static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id
+ 	 * queue associated with that CPU so only one decoder is made.
+ 	 */
+ 	etmq = cs_etm__get_queue(etm, cpu_metadata[CS_ETM_CPU]);
++	if (!etmq)
++		return -EINVAL;
++
+ 	if (etmq->format == UNFORMATTED)
+ 		return cs_etm__insert_trace_id_node(etmq, trace_chan_id,
+ 						    cpu_metadata);
+@@ -318,6 +324,9 @@ static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id
+ 		int ret;
  
- 	/* First the global part */
+ 		etmq = etm->queues.queue_array[i].priv;
++		if (!etmq)
++			continue;
++
+ 		ret = cs_etm__insert_trace_id_node(etmq, trace_chan_id,
+ 						   cpu_metadata);
+ 		if (ret)
+@@ -358,6 +367,9 @@ static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace *etm, int cpu,
+ 	u32 sink_id = FIELD_GET(CS_AUX_HW_ID_SINK_ID_MASK, hw_id);
+ 	u8 trace_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
+ 
++	if (!etmq)
++		return -EINVAL;
++
+ 	/*
+ 	 * Check sink id hasn't changed in per-cpu mode. In per-thread mode,
+ 	 * let it pass for now until an actual overlapping trace ID is hit. In
+@@ -375,6 +387,9 @@ static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace *etm, int cpu,
+ 	for (unsigned int i = 0; i < etm->queues.nr_queues; ++i) {
+ 		struct cs_etm_queue *other_etmq = etm->queues.queue_array[i].priv;
+ 
++		if (!other_etmq)
++			continue;
++
+ 		/* Different sinks, skip */
+ 		if (other_etmq->sink_id != etmq->sink_id)
+ 			continue;
+@@ -396,6 +411,9 @@ static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace *etm, int cpu,
+ 	}
+ 
+ 	cpu_data = get_cpu_data(etm, cpu);
++	if (!cpu_data)
++		return -EINVAL;
++
+ 	ret = cs_etm__insert_trace_id_node(etmq, trace_id, cpu_data);
+ 	if (ret)
+ 		return ret;
+@@ -3144,6 +3162,9 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
+ 		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, auxtrace_event->cpu);
+ 
++		if (!etmq)
++			return -EINVAL;
++
+ 		/*
+ 		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
+ 		 * based on the sizes of the aux event, and queue that fragment.
 -- 
 2.54.0
 
