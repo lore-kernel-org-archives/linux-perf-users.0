@@ -1,655 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out28-102.mail.aliyun.com (out28-102.mail.aliyun.com [115.124.28.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F113F3A3E8C;
-	Mon, 15 Jun 2026 12:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91593E6DC3;
+	Mon, 15 Jun 2026 12:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781525631; cv=none; b=etsil1oH5cOaq/GdkTz8iEwD1lHBqUSHsX2WaoxbG2szMw2R0ueYHoZkwnO3jwBD2h6lhTj4sO67YaauQOMQ5wyQByfZfQ+b07oHi5C4sUw+sjfekBQAf9+BSCV5DvPM5aAHF67al0N6AY4o5CtBBRY8uObNKcpcUUAeP5ZLQfA=
+	t=1781526125; cv=none; b=qanVJeaxqjfKtbnxbgUCSknqeOIOzF6VeTjIdWO5Li4g5hY9DOHY+ibSy4KFdogENxoakvy2mzc9P6NNXy3ZRAOh4Fb30uOmQi+TzRFoyRHworOQ0YwHjNms2MUYBK+Gnr8yp08bs3Ol3BddyTRoWEDyfVyHEOEsVgirTGOz1TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781525631; c=relaxed/simple;
-	bh=Fvm6mFknULEvdfnv72EFfG4QNogiZyYGDsQ/HXeEUWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C+vFz3pWOpmNZnr7vh2iz+qCpp2lGbNdAeDwxYrWb3K1mhST7lokIUth1sUGZJox4D6v/h/ggwggISxViLP8urxQ+OCWHRfcGNVWRgoH7ty+I0hL/ACqy6p93NzpC+7+1Q1utoVW5adp1o1umVmCNpybStbqU+6z9co7JCHDb2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXXSio/U; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXXSio/U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56B51F000E9;
-	Mon, 15 Jun 2026 12:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781525629;
-	bh=0KuYhVaMvuDh+c8sFfhbWvZXQm/sW+CYfefygv/x0ls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=dXXSio/UxvEAayoSd4QiXzZZr6yEG8a/68P+gZn2ufWO/Ih2EeywO3jZhpZw1+QcV
-	 +XovPc1j4uQOmHJ7YVi6viKJq0f8iBSGFrnbaTOrPbsQb6tr7MXJlrP+o/BvOLKOvH
-	 QfO/91aIyhqV+7iQ//fK6N6dVN0Eq4WGc0qtOMnz9JDXFzA1ElcbVjRRKCObPufqia
-	 KOpMxePi0JQSB9WUIT6K1/sqiUg76rh8Ytx5LcBwI6dfsaDTgAv8UFZPx7kH2lY+sb
-	 L4uxvQVoiVX9kPY56E8fWCOyWYhT2xFL8QKSXURlkP6BqoSdTUMkdCcNOXpXz3nbUH
-	 m8zva/GbSIBbA==
-Date: Mon, 15 Jun 2026 09:13:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: james.clark@linaro.org, namhyung@kernel.org, adrian.hunter@intel.com,
-	gmx@google.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, mingo@redhat.com,
-	peterz@infradead.org
-Subject: Re: [PATCH v20 3/5] perf inject/aslr: Implement sample address
- remapping
-Message-ID: <ai_sesDicE7R7fm5@x1>
-References: <20260608054841.3856224-1-irogers@google.com>
- <20260611164122.3974068-1-irogers@google.com>
- <20260611164122.3974068-4-irogers@google.com>
+	s=arc-20240116; t=1781526125; c=relaxed/simple;
+	bh=zcZUUqXmhvVsUCZo2ZpeOPPXUC4zoQnmyclx5qA1NiI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PzCWQPt3H3fEwBXsEfMLjMNZIMFfjlzG7U7VnJOg1JzgEFvEwAInyPcAhV5YHs+a4F3H6XVMLOSicY6WXfqsY8c9cmISgJ4NtQNRBSh1tjNaNbxghS5XYEdlZxK+M1UKaci/iO33NDrZ5K2trsjlZLILtFXWFohA00pRKpETl6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=open-hieco.net; spf=pass smtp.mailfrom=open-hieco.net; arc=none smtp.client-ip=115.124.28.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=open-hieco.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=open-hieco.net
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07436417|-1;CH=blue;DM=|OVERLOAD|false|;DS=CONTINUE|ham_alarm|0.00828711-0.000511096-0.991202;FP=5927377541447355792|1|1|1|0|-1|-1|-1;HT=maildocker-contentspam033045018182;MF=fuhao@open-hieco.net;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.hyr8tcc_1781526093;
+Received: from higon..(mailfrom:fuhao@open-hieco.net fp:SMTPD_---.hyr8tcc_1781526093 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Mon, 15 Jun 2026 20:21:53 +0800
+From: Fu Hao <fuhao@open-hieco.net>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	tglx@kernel.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	james.clark@linaro.org,
+	hpa@zytor.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tingyin.duan@gmail.com,
+	Fu Hao <fuhao@open-hieco.net>
+Subject: [PATCH v3 4/7] perf/x86/uncore: Add L3 PMU support for Hygon family 18h model 6h
+Date: Mon, 15 Jun 2026 20:20:39 +0800
+Message-Id: <d387dd1497ac938b82ecc0c56505a64a61443c22.1781523812.git.fuhao@open-hieco.net>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1781523812.git.fuhao@open-hieco.net>
+References: <cover.1781523812.git.fuhao@open-hieco.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260611164122.3974068-4-irogers@google.com>
 
-On Thu, Jun 11, 2026 at 09:41:20AM -0700, Ian Rogers wrote:
-> Add the sample address remapping logic to the ASLR tool. This patch
-> implements aslr_tool__process_sample, which parses sample events,
-> remaps IPs, ADDRs, callchains, and branch stacks using the mappings
-> collected from metadata events, and drops potentially leaking raw,
-> register, stack, physical address, and aux samples.
-> 
-> Also adds the aslr_tool__remap_address helper function.
-> 
-> Note on cross-endian compatibility:
-> 'perf inject' functions as an endianness converter. Input files are read,
-> and their events are byte-swapped to host endianness in memory. When the
-> tool emits its output, it writes a host-endian PERF_MAGIC in the file
-> header, thereby marking the output file as host-endian natively.
-> 
-> Because the output file is always written in host endianness, events and
-> payloads must be constructed entirely using host-endian layouts. For this
-> reason, this patch explicitly un-packs and repacks PERF_SAMPLE_TID (and
-> PERF_SAMPLE_CPU) using unions to ensure that the sequential 32-bit layout
-> is correctly aligned in host endianness. Similarly, branch stack flags
-> (which are modified in-place to host-endian bitfields by the parser) are
-> copied directly to the newly synthesized event. When re-parsing the newly
-> synthesized event, 'needs_swap=false' is explicitly used to prevent double
-> swapping the already host-endian fields.
-> 
-> Co-developed-by: Gabriel Marin <gmx@google.com>
-> Signed-off-by: Gabriel Marin <gmx@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Assisted-by: Antigravity:gemini-3.1-pro
-> ---
->  tools/perf/util/aslr.c  | 465 +++++++++++++++++++++++++++++++++++++++-
->  tools/perf/util/evsel.c |   6 +-
->  tools/perf/util/evsel.h |  10 +-
->  3 files changed, 472 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> index 56fc444fbf54..c4602a43e04f 100644
-> --- a/tools/perf/util/aslr.c
-> +++ b/tools/perf/util/aslr.c
-> @@ -20,6 +20,7 @@
->  #include <linux/zalloc.h>
->  #include <inttypes.h>
->  #include <unistd.h>
-> +#include <byteswap.h>
->  
->  /**
->   * struct remap_addresses_key - Key for mapping original addresses to remapped ones.
-> @@ -112,6 +113,60 @@ static u64 round_up_to_page_size(u64 addr)
->  	return (addr + page_size - 1) & ~((u64)page_size - 1);
->  }
->  
-> +static u64 aslr_tool__remap_address(struct aslr_tool *aslr,
-> +				    struct thread *aslr_thread,
-> +				    u8 cpumode,
-> +				    u64 addr)
-> +{
-> +	struct addr_location al;
-> +	struct remap_addresses_key key;
-> +	u64 *remapped_invariant_ptr = NULL;
-> +	u64 remap_addr = 0;
-> +	u8 effective_cpumode = cpumode;
-> +
-> +	if (!aslr_thread)
-> +		return 0; /* No thread. */
-> +
-> +	addr_location__init(&al);
-> +	if (!thread__find_map(aslr_thread, cpumode, addr, &al)) {
-> +		/*
-> +		 * If lookup fails with specified cpumode, try fallback to the other space
-> +		 * to be robust against bad cpumode in samples.
-> +		 */
-> +		if (cpumode == PERF_RECORD_MISC_KERNEL)
-> +			effective_cpumode = PERF_RECORD_MISC_USER;
-> +		else if (cpumode == PERF_RECORD_MISC_USER)
-> +			effective_cpumode = PERF_RECORD_MISC_KERNEL;
-> +		else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL)
-> +			effective_cpumode = PERF_RECORD_MISC_GUEST_USER;
-> +		else if (cpumode == PERF_RECORD_MISC_GUEST_USER)
-> +			effective_cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
-> +
-> +		if (!thread__find_map(aslr_thread, effective_cpumode, addr, &al)) {
-> +			addr_location__exit(&al);
-> +			return 0; /* No mmap. */
-> +		}
-> +	}
-> +
-> +	key.machine = maps__machine(thread__maps(aslr_thread));
-> +	key.dso = map__dso(al.map);
-> +	key.invariant = map__start(al.map) - map__pgoff(al.map);
-> +	key.pid = (effective_cpumode == PERF_RECORD_MISC_KERNEL ||
-> +		   effective_cpumode == PERF_RECORD_MISC_GUEST_KERNEL) ?
-> +		  kernel_pid : thread__pid(aslr_thread);
-> +
-> +	if (hashmap__find(&aslr->remap_addresses, &key, &remapped_invariant_ptr)) {
-> +		remap_addr = *remapped_invariant_ptr + map__pgoff(al.map) +
-> +			     (addr - map__start(al.map));
-> +	} else {
-> +		pr_debug("Cannot find a remapped entry for address %lx in mapping %lx(%lx) for pid=%d\n",
-> +			 addr, map__start(al.map), map__size(al.map), key.pid);
-> +	}
-> +
-> +	addr_location__exit(&al);
-> +	return remap_addr;
-> +}
-> +
->  struct aslr_machine_priv {
->  	bool kernel_maps_loaded;
->  };
-> @@ -616,13 +671,415 @@ static int aslr_tool__process_sample(const struct perf_tool *tool,
->  				     struct perf_sample *sample,
->  				     struct machine *machine)
->  {
-> -	struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool);
-> -	struct aslr_tool *aslr = container_of(del_tool, struct aslr_tool, tool);
-> -	struct perf_tool *delegate = aslr->tool.delegate;
-> +	struct evsel *evsel = sample->evsel;
-> +	struct delegate_tool *del_tool;
-> +	struct aslr_tool *aslr;
-> +	struct perf_tool *delegate;
-> +	int ret;
-> +	u64 sample_type;
-> +	struct thread *thread;
-> +	struct machine *aslr_machine;
-> +	__u64 max_i;
-> +	__u64 max_j;
-> +	union perf_event *new_event;
-> +	struct perf_sample new_sample;
-> +	__u64 *in_array, *out_array;
-> +	u8 cpumode;
-> +	u64 addr;
-> +	size_t i;
-> +	size_t j;
+Adjust the L3 PMU slicemask and threadmask for Hygon family 18h
+model 6h processor.
 
-The following 4 variables are not used in this patch, so the build at
-this point fails:
+Signed-off-by: Fu Hao <fuhao@open-hieco.net>
+Tested-by: Tingyin Duan <tingyin.duan@gmail.com>
+---
+ arch/x86/events/amd/uncore.c      | 48 ++++++++++++++++++++++++++++++-
+ arch/x86/include/asm/perf_event.h |  8 ++++++
+ 2 files changed, 55 insertions(+), 1 deletion(-)
 
-> +	struct aslr_evsel_priv *priv = NULL;
-> +	u64 orig_sample_type;
-> +	u64 orig_regs_user;
-> +	u64 orig_regs_intr;
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index dd956cfca..e71d9e784 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -308,6 +308,14 @@ amd_f17h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ 	       attr->mode : 0;
+ }
+ 
++static umode_t
++hygon_f18h_m6h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
++{
++	return boot_cpu_data.x86 == 0x18 &&
++	       boot_cpu_data.x86_model >= 0x6 && boot_cpu_data.x86_model <= 0xf	?
++	       attr->mode : 0;
++}
++
+ static umode_t
+ amd_f19h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ {
+@@ -359,6 +367,8 @@ DEFINE_UNCORE_FORMAT_ATTR(enallslices,	enallslices,	"config:46");		   /* F19h L3
+ DEFINE_UNCORE_FORMAT_ATTR(enallcores,	enallcores,	"config:47");		   /* F19h L3 */
+ DEFINE_UNCORE_FORMAT_ATTR(sliceid,	sliceid,	"config:48-50");	   /* F19h L3 */
+ DEFINE_UNCORE_FORMAT_ATTR(rdwrmask,	rdwrmask,	"config:8-9");		   /* PerfMonV2 UMC */
++DEFINE_UNCORE_FORMAT_ATTR(slicemask4,	slicemask,	"config:28-31");	   /* F18h L3 */
++DEFINE_UNCORE_FORMAT_ATTR(threadmask32,	threadmask,	"config:32-63");	   /* F18h L3 */
+ 
+ /* Common DF and NB attributes */
+ static struct attribute *amd_uncore_df_format_attr[] = {
+@@ -388,6 +398,12 @@ static struct attribute *amd_f17h_uncore_l3_format_attr[] = {
+ 	NULL,
+ };
+ 
++/* F18h M06h unique L3 attributes */
++static struct attribute *hygon_f18h_m6h_uncore_l3_format_attr[] = {
++	&format_attr_slicemask4.attr,	/* slicemask */
++	NULL,
++};
++
+ /* F19h unique L3 attributes */
+ static struct attribute *amd_f19h_uncore_l3_format_attr[] = {
+ 	&format_attr_coreid.attr,	/* coreid */
+@@ -413,6 +429,12 @@ static struct attribute_group amd_f17h_uncore_l3_format_group = {
+ 	.is_visible = amd_f17h_uncore_is_visible,
+ };
+ 
++static struct attribute_group hygon_f18h_m6h_uncore_l3_format_group = {
++	.name = "format",
++	.attrs = hygon_f18h_m6h_uncore_l3_format_attr,
++	.is_visible = hygon_f18h_m6h_uncore_is_visible,
++};
++
+ static struct attribute_group amd_f19h_uncore_l3_format_group = {
+ 	.name = "format",
+ 	.attrs = amd_f19h_uncore_l3_format_attr,
+@@ -442,6 +464,11 @@ static const struct attribute_group *amd_uncore_l3_attr_update[] = {
+ 	NULL,
+ };
+ 
++static const struct attribute_group *hygon_uncore_l3_attr_update[] = {
++	&hygon_f18h_m6h_uncore_l3_format_group,
++	NULL,
++};
++
+ static const struct attribute_group *amd_uncore_umc_attr_groups[] = {
+ 	&amd_uncore_attr_group,
+ 	&amd_uncore_umc_format_group,
+@@ -820,6 +847,12 @@ static int amd_uncore_l3_event_init(struct perf_event *event)
+ 		mask = AMD64_L3_F19H_THREAD_MASK | AMD64_L3_EN_ALL_SLICES |
+ 		       AMD64_L3_EN_ALL_CORES;
+ 
++	if (boot_cpu_data.x86 == 0x18 &&
++	    boot_cpu_data.x86_model >= 0x6 &&
++	    boot_cpu_data.x86_model <= 0xf)
++		mask = ((config & HYGON_L3_SLICE_MASK) ? : HYGON_L3_SLICE_MASK) |
++		       ((config & HYGON_L3_THREAD_MASK) ? : HYGON_L3_THREAD_MASK);
++
+ 	hwc->config |= mask;
+ 
+ 	return 0;
+@@ -877,7 +910,8 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 	pmu->rdpmc_base = RDPMC_BASE_LLC;
+ 	pmu->group = amd_uncore_ctx_gid(uncore, cpu);
+ 
+-	if (boot_cpu_data.x86 >= 0x17) {
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD &&
++	    boot_cpu_data.x86 >= 0x17) {
+ 		*l3_attr++ = &format_attr_event8.attr;
+ 		*l3_attr++ = &format_attr_umask8.attr;
+ 		*l3_attr++ = boot_cpu_data.x86 >= 0x19 ?
+@@ -904,6 +938,18 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 		.module		= THIS_MODULE,
+ 	};
+ 
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON &&
++	    boot_cpu_data.x86 == 0x18) {
++		*l3_attr++ = &format_attr_event8.attr;
++		*l3_attr++ = &format_attr_umask8.attr;
++		if (boot_cpu_data.x86_model >= 0x6 && boot_cpu_data.x86_model <= 0xf) {
++			*l3_attr++ = &format_attr_threadmask32.attr;
++			pmu->pmu.attr_update = hygon_uncore_l3_attr_update;
++		} else {
++			*l3_attr++ = &format_attr_threadmask8.attr;
++		}
++	}
++
+ 	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
+ 		free_percpu(pmu->ctx);
+ 		pmu->ctx = NULL;
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index ff5acb8b1..404752601 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -89,6 +89,14 @@
+ #define AMD64_L3_COREID_MASK				\
+ 	(0x7ULL << AMD64_L3_COREID_SHIFT)
+ 
++#define HYGON_L3_SLICE_SHIFT				28
++#define HYGON_L3_SLICE_MASK				\
++	(0xFULL << HYGON_L3_SLICE_SHIFT)
++
++#define HYGON_L3_THREAD_SHIFT				32
++#define HYGON_L3_THREAD_MASK				\
++	(0xFFFFFFFFULL << HYGON_L3_THREAD_SHIFT)
++
+ #define X86_RAW_EVENT_MASK		\
+ 	(ARCH_PERFMON_EVENTSEL_EVENT |	\
+ 	 ARCH_PERFMON_EVENTSEL_UMASK |	\
+-- 
+2.34.1
 
-
-With:
-
-  CC      /tmp/build/perf-tools-next/util/bpf_lock_contention.o
-util/aslr.c: In function ‘aslr_tool__process_sample’:
-util/aslr.c:694:13: error: unused variable ‘orig_regs_intr’ [-Werror=unused-variable]
-  694 |         u64 orig_regs_intr;
-      |             ^~~~~~~~~~~~~~
-util/aslr.c:693:13: error: unused variable ‘orig_regs_user’ [-Werror=unused-variable]
-  693 |         u64 orig_regs_user;
-      |             ^~~~~~~~~~~~~~
-util/aslr.c:692:13: error: unused variable ‘orig_sample_type’ [-Werror=unused-variable]
-  692 |         u64 orig_sample_type;
-      |             ^~~~~~~~~~~~~~~~
-util/aslr.c:691:33: error: unused variable ‘priv’ [-Werror=unused-variable]
-  691 |         struct aslr_evsel_priv *priv = NULL;
-      |                                 ^~~~
-cc1: all warnings being treated as errors
-make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:95: /tmp/build/perf-tools-next/util/aslr.o] Error 1
-
-So I moved it to the next patch, where they start to be used.
-
-> +	del_tool = container_of(tool, struct delegate_tool, tool);
-> +	aslr = container_of(del_tool, struct aslr_tool, tool);
-> +	delegate = aslr->tool.delegate;
-> +
-
-I also removed these extra blank lines and collected James Tested-by.
-
-Thanks, applied to perf-tools-next, for v7.2.
-
-- Arnaldo
-
-> +
-> +
-> +	if (evsel__is_dummy_event(evsel))
-> +		return delegate->sample(delegate, event, sample, machine);
-> +
-> +	ret = -EFAULT;
-> +	sample_type = evsel->core.attr.sample_type;
-> +	max_i = (event->header.size - sizeof(struct perf_event_header)) / sizeof(__u64);
-> +	max_j = (PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_event_header)) / sizeof(__u64);
-> +	new_event = (union perf_event *)aslr->event_copy;
-> +	cpumode = sample->cpumode;
-> +	i = 0;
-> +	j = 0;
-> +
-> +	aslr_machine = machines__findnew(&aslr->machines, machine->pid);
-> +	if (!aslr_machine)
-> +		return -ENOMEM;
-> +	if (aslr_tool__preload_kernel_maps(aslr_machine) < 0)
-> +		return -ENOMEM;
-> +
-> +	thread = machine__findnew_thread(aslr_machine, sample->pid, sample->tid);
-> +
-> +	if (!thread)
-> +		return -ENOMEM;
-> +
-> +	if (max_i > PERF_SAMPLE_MAX_SIZE / sizeof(u64))
-> +		goto out_put;
-> +
-> +	new_event->sample.header = event->sample.header;
-> +
-> +	in_array = &event->sample.array[0];
-> +	out_array = &new_event->sample.array[0];
-> +
-> +#define CHECK_BOUNDS(required_i, required_j) \
-> +	(i + (required_i) > max_i || j + (required_j) > max_j)
-> +
-> +#define COPY_U64() \
-> +	do { \
-> +		if (CHECK_BOUNDS(1, 1)) { \
-> +			ret = -EFAULT; \
-> +			goto out_put; \
-> +		} \
-> +		out_array[j++] = in_array[i++]; \
-> +	} while (0)
-> +
-> +#define REMAP_U64(addr_field) \
-> +	do { \
-> +		u64 remapped; \
-> +		if (CHECK_BOUNDS(1, 1)) { \
-> +			ret = -EFAULT; \
-> +			goto out_put; \
-> +		} \
-> +		remapped = aslr_tool__remap_address(aslr, thread, cpumode, addr_field); \
-> +		out_array[j++] = remapped; \
-> +		i++; \
-> +	} while (0)
-> +
-> +	if (sample_type & PERF_SAMPLE_IDENTIFIER)
-> +		COPY_U64(); /* id */
-> +	if (sample_type & PERF_SAMPLE_IP)
-> +		REMAP_U64(sample->ip);
-> +	if (sample_type & PERF_SAMPLE_TID) {
-> +		union {
-> +			u64 val64;
-> +			u32 val32[2];
-> +		} u;
-> +
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		u.val32[0] = sample->pid;
-> +		u.val32[1] = sample->tid;
-> +		out_array[j++] = u.val64;
-> +		i++;
-> +	}
-> +	if (sample_type & PERF_SAMPLE_TIME)
-> +		COPY_U64(); /* time */
-> +	if (sample_type & PERF_SAMPLE_ADDR)
-> +		REMAP_U64(sample->addr);
-> +	if (sample_type & PERF_SAMPLE_ID)
-> +		COPY_U64(); /* id */
-> +	if (sample_type & PERF_SAMPLE_STREAM_ID)
-> +		COPY_U64(); /* stream_id */
-> +	if (sample_type & PERF_SAMPLE_CPU)
-> +		COPY_U64(); /* cpu, res */
-> +	if (sample_type & PERF_SAMPLE_PERIOD)
-> +		COPY_U64(); /* period */
-> +	if (sample_type & PERF_SAMPLE_READ) {
-> +		if ((evsel->core.attr.read_format & PERF_FORMAT_GROUP) == 0) {
-> +			COPY_U64(); /* value */
-> +			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-> +				COPY_U64(); /* time_enabled */
-> +			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-> +				COPY_U64(); /* time_running */
-> +			if (evsel->core.attr.read_format & PERF_FORMAT_ID)
-> +				COPY_U64(); /* id */
-> +			if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
-> +				COPY_U64(); /* lost */
-> +		} else {
-> +			u64 nr;
-> +
-> +			if (CHECK_BOUNDS(1, 1)) {
-> +				ret = -EFAULT;
-> +				goto out_put;
-> +			}
-> +			nr = in_array[i];
-> +			COPY_U64();
-> +			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-> +				COPY_U64(); /* time_enabled */
-> +			if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-> +				COPY_U64(); /* time_running */
-> +			for (u64 cntr = 0; cntr < nr; cntr++) {
-> +				COPY_U64(); /* value */
-> +				if (evsel->core.attr.read_format & PERF_FORMAT_ID)
-> +					COPY_U64(); /* id */
-> +				if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
-> +					COPY_U64(); /* lost */
-> +			}
-> +		}
-> +	}
-> +	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
-> +		u64 nr;
-> +
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		nr = in_array[i];
-> +		COPY_U64();
-> +
-> +		for (u64 cntr = 0; cntr < nr; cntr++) {
-> +			if (CHECK_BOUNDS(1, 1)) {
-> +				ret = -EFAULT;
-> +				goto out_put;
-> +			}
-> +			addr = in_array[i++];
-> +			if (addr >= PERF_CONTEXT_MAX) {
-> +				out_array[j++] = addr;
-> +				switch (addr) {
-> +				case PERF_CONTEXT_HV:
-> +					cpumode = PERF_RECORD_MISC_HYPERVISOR;
-> +					break;
-> +				case PERF_CONTEXT_KERNEL:
-> +					cpumode = PERF_RECORD_MISC_KERNEL;
-> +					break;
-> +				case PERF_CONTEXT_USER:
-> +					cpumode = PERF_RECORD_MISC_USER;
-> +					break;
-> +				case PERF_CONTEXT_GUEST:
-> +					cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
-> +					break;
-> +				case PERF_CONTEXT_GUEST_KERNEL:
-> +					cpumode = PERF_RECORD_MISC_GUEST_KERNEL;
-> +					break;
-> +				case PERF_CONTEXT_GUEST_USER:
-> +					cpumode = PERF_RECORD_MISC_GUEST_USER;
-> +					break;
-> +				case PERF_CONTEXT_USER_DEFERRED:
-> +					if (cntr + 1 >= nr) {
-> +						pr_debug("Truncated callchain deferred cookie context\n");
-> +						ret = 0;
-> +						goto out_put;
-> +					}
-> +					/*
-> +					 * Immediately followed by a 64-bit
-> +					 * stitching cookie. Skip/Copy it!
-> +					 */
-> +					if (CHECK_BOUNDS(1, 1)) {
-> +						ret = -EFAULT;
-> +						goto out_put;
-> +					}
-> +					out_array[j++] = in_array[i++];
-> +					cntr++;
-> +					cpumode = PERF_RECORD_MISC_USER;
-> +					break;
-> +				default:
-> +					pr_debug("invalid callchain context: %"PRIx64"\n", addr);
-> +					ret = 0;
-> +					goto out_put;
-> +				}
-> +				continue;
-> +			}
-> +			addr = aslr_tool__remap_address(aslr, thread, cpumode, addr);
-> +			out_array[j++] = addr;
-> +		}
-> +	}
-> +	if (sample_type & PERF_SAMPLE_RAW) {
-> +		size_t bytes = sizeof(u32) + sample->raw_size;
-> +		size_t u64_words = (bytes + 7) / 8;
-> +
-> +		if (i + u64_words > max_i || j + u64_words > max_j) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		memcpy(&out_array[j], &in_array[i], bytes);
-> +		i += u64_words;
-> +		j += u64_words;
-> +		/*
-> +		 * TODO: certain raw samples can be remapped, such as
-> +		 * tracepoints by examining their fields.
-> +		 */
-> +		pr_debug("Dropping raw samples as possible ASLR leak\n");
-> +		ret = 0;
-> +		goto out_put;
-> +	}
-> +	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
-> +		u64 nr;
-> +
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		nr = in_array[i];
-> +		COPY_U64();
-> +
-> +		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX)
-> +			COPY_U64(); /* hw_idx */
-> +
-> +		if (nr > (ULLONG_MAX / 3)) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		if (nr * 3 > max_i - i || nr * 3 > max_j - j) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		for (u64 cntr = 0; cntr < nr; cntr++) {
-> +			u64 from = in_array[i++];
-> +			u64 to = in_array[i++];
-> +
-> +			from = aslr_tool__remap_address(aslr, thread, sample->cpumode, from);
-> +			to = aslr_tool__remap_address(aslr, thread, sample->cpumode, to);
-> +
-> +			out_array[j++] = from;
-> +			out_array[j++] = to;
-> +			out_array[j++] = in_array[i++]; /* flags */
-> +		}
-> +		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) {
-> +			if (nr > max_i - i || nr > max_j - j) {
-> +				ret = -EFAULT;
-> +				goto out_put;
-> +			}
-> +			for (u64 cntr = 0; cntr < nr; cntr++)
-> +				COPY_U64();
-> +		}
-> +	}
-> +	if (sample_type & PERF_SAMPLE_REGS_USER) {
-> +		if (CHECK_BOUNDS(1, 0)) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		/* abi */
-> +		COPY_U64();
-> +		/* TODO: can this be less conservative? */
-> +		pr_debug("Dropping regs user sample as possible ASLR leak\n");
-> +		ret = 0;
-> +		goto out_put;
-> +	}
-> +	if (sample_type & PERF_SAMPLE_STACK_USER) {
-> +		u64 size;
->  
-> -	return delegate->sample(delegate, event, sample, machine);
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		size = in_array[i];
-> +		COPY_U64();
-> +		if (size > 0) {
-> +			size_t u64_words = size / 8 + (size % 8 ? 1 : 0);
-> +
-> +			if (u64_words > max_i - i || u64_words > max_j - j) {
-> +				ret = -EFAULT;
-> +				goto out_put;
-> +			}
-> +			memcpy(&out_array[j], &in_array[i], size);
-> +			if (size % 8) {
-> +				size_t pad = 8 - (size % 8);
-> +
-> +				memset(((char *)&out_array[j]) + size, 0, pad);
-> +			}
-> +			i += u64_words;
-> +			j += u64_words;
-> +		}
-> +		/* TODO: can this be less conservative? */
-> +		pr_debug("Dropping stack user sample as possible ASLR leak\n");
-> +		ret = 0;
-> +		goto out_put;
-> +	}
-> +	if (sample_type & PERF_SAMPLE_WEIGHT_TYPE)
-> +		COPY_U64(); /* perf_sample_weight */
-> +	if (sample_type & PERF_SAMPLE_DATA_SRC)
-> +		COPY_U64(); /* data_src */
-> +	if (sample_type & PERF_SAMPLE_TRANSACTION)
-> +		COPY_U64(); /* transaction */
-> +	if (sample_type & PERF_SAMPLE_REGS_INTR) {
-> +		if (CHECK_BOUNDS(1, 0)) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		/* abi */
-> +		COPY_U64();
-> +		/* TODO: can this be less conservative? */
-> +		pr_debug("Dropping interrupt register sample as possible ASLR leak\n");
-> +		ret = 0;
-> +		goto out_put;
-> +	}
-> +	if (sample_type & PERF_SAMPLE_PHYS_ADDR) {
-> +		COPY_U64(); /* phys_addr */
-> +		/* TODO: can this be less conservative? */
-> +		pr_debug("Dropping physical address sample as possible ASLR leak\n");
-> +		ret = 0;
-> +		goto out_put;
-> +	}
-> +	if (sample_type & PERF_SAMPLE_CGROUP)
-> +		COPY_U64(); /* cgroup */
-> +	if (sample_type & PERF_SAMPLE_DATA_PAGE_SIZE)
-> +		COPY_U64(); /* data_page_size */
-> +	if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE)
-> +		COPY_U64(); /* code_page_size */
-> +
-> +	if (sample_type & PERF_SAMPLE_AUX) {
-> +		u64 size;
-> +
-> +		if (CHECK_BOUNDS(1, 1)) {
-> +			ret = -EFAULT;
-> +			goto out_put;
-> +		}
-> +		out_array[j] = in_array[i];
-> +		size = out_array[j++];
-> +		i++;
-> +		if (size > 0) {
-> +			size_t u64_words = size / 8 + (size % 8 ? 1 : 0);
-> +
-> +			if (u64_words > max_i - i || u64_words > max_j - j) {
-> +				ret = -EFAULT;
-> +				goto out_put;
-> +			}
-> +			memcpy(&out_array[j], &in_array[i], size);
-> +			if (size % 8) {
-> +				size_t pad = 8 - (size % 8);
-> +
-> +				memset(((char *)&out_array[j]) + size, 0, pad);
-> +			}
-> +			i += u64_words;
-> +			j += u64_words;
-> +		}
-> +		/* TODO: can this be less conservative? */
-> +		pr_debug("Dropping aux sample as possible ASLR leak\n");
-> +		ret = 0;
-> +		goto out_put;
-> +	}
-> +
-> +	if (evsel__is_offcpu_event(evsel)) {
-> +		/* TODO: can this be less conservative? */
-> +		pr_debug("Dropping off-CPU sample as possible ASLR leak\n");
-> +		ret = 0;
-> +		goto out_put;
-> +	}
-> +
-> +	new_event->sample.header.size = sizeof(struct perf_event_header) + j * sizeof(u64);
-> +
-> +	perf_sample__init(&new_sample, /*all=*/ true);
-> +	ret = __evsel__parse_sample(evsel, new_event, &new_sample, /*needs_swap=*/false);
-> +
-> +	if (ret) {
-> +		perf_sample__exit(&new_sample);
-> +		goto out_put;
-> +	}
-> +
-> +	new_sample.evsel = evsel;
-> +	ret = delegate->sample(delegate, new_event, &new_sample, machine);
-> +	perf_sample__exit(&new_sample);
-> +
-> +out_put:
-> +	thread__put(thread);
-> +	return ret;
->  }
->  
-> +#undef CHECK_BOUNDS
-> +#undef COPY_U64
-> +#undef REMAP_U64
-> +
->  static int skipn(int fd, off_t n)
->  {
->  	char buf[4096];
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 34c03f47a913..05fa0010c858 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -3337,11 +3337,11 @@ static int __set_offcpu_sample(struct perf_sample *data)
->  	return -EFAULT;
->  }
->  
-> -int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> -			struct perf_sample *data)
-> +int __evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> +			  struct perf_sample *data, bool needs_swap)
->  {
->  	u64 type = evsel->core.attr.sample_type;
-> -	bool swapped = evsel->needs_swap;
-> +	bool swapped = needs_swap;
->  	const __u64 *array;
->  	u16 max_size = event->header.size;
->  	const void *endp = (void *)event + max_size;
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 8178858d168a..8009be22cc3f 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -432,8 +432,14 @@ static inline int evsel__read_on_cpu_scaled(struct evsel *evsel, int cpu_map_idx
->  	return __evsel__read_on_cpu(evsel, cpu_map_idx, thread, true);
->  }
->  
-> -int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> -			struct perf_sample *sample);
-> +int __evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> +			  struct perf_sample *data, bool needs_swap);
-> +
-> +static inline int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> +				      struct perf_sample *data)
-> +{
-> +	return __evsel__parse_sample(evsel, event, data, evsel->needs_swap);
-> +}
->  
->  int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
->  				  u64 *timestamp);
-> -- 
-> 2.54.0.1099.g489fc7bff1-goog
