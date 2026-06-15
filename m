@@ -1,67 +1,66 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE2D332EC8
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 09:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC93A211A14
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 09:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781514644; cv=none; b=IYPkHTEHNE5fV4+gVtmjaeDO14Ud2xb0GYkSacit896GohzWrjFXtPwq6E0lZV2fABx7UB1gAzvSVP0csdJ/FQ77CUx1//NN0VrzM/IvCoDDJPd8ywojrssnEI9KhuWFgccb7KdFMtIOzdsE7/atlzWoTmsEkVei0oQrjpC5EVA=
+	t=1781515984; cv=none; b=o5Fxff/+EtweYBC1fqGgOUEcA05F3VxJwXeN3/LbmYcGaE6nZuyZ/0F6zBJ9CA684Tnyi4II2+b6w5kqJ3Y3mzoH1J1t7sgxcX4RID6bA5yoHdxv8oagMtEq/EC5vZw/eTbA0H/vEY3cTalFrI3EXV8KZyp8WEoeSQ2G39Wk3UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781514644; c=relaxed/simple;
-	bh=AG5tM17U5bGG/P2AzMp90l90OMthC+eLntSZbcU4tsM=;
+	s=arc-20240116; t=1781515984; c=relaxed/simple;
+	bh=6eFgUarl130hblAtHvXDY3WgBXBGJLDa8Qj7oPO1ow8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ox86LgpSu7HFTh3+yCkN4TS1AeQBV8UlUpkpjMWLHgHFJnBYpRJRXjeD0ASBTU7pXVuYYw4a28LtqRXzPrrizmT8X9W8qJQxSHkmEepxS0LpSrJ/3HwbeBZY3W9la1hXLXvPgi87jHMHWf2AmWUwSIKdBQgwJVM+WSiEupc41jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n/x+z7nv; arc=none smtp.client-ip=209.85.208.51
+	 In-Reply-To:Content-Type; b=kh8kg2vryNABb2h0E0Pg1/A4cMJOm2cm76Qt2Y5aOQsfJOcUW7qsSN481j5jBejFwEI5xMcHK8uNqrTiK8l0sNzhKxeFLM1KStB0TMG6ziEOTiTKCIyykueBKBXDlCOph49eEVp5/qPiX+w5nR6ZshQoSEVBEWxAg+DKOcMsX4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yuWmEVSy; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/x+z7nv"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-68c19f1f3ceso4689784a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 02:10:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yuWmEVSy"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-691c5776f95so5961937a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 02:33:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781514640; x=1782119440; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1781515981; x=1782120781; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=0ZzMrz8hyVSrVY8XdOE7sGb3h3Q0+aQVNIOqrKu6H4k=;
-        b=n/x+z7nvOwmL1uC9gNKoYFaRMA9E9k06UuCDXWljopmLRZ5NxoKlDTixGZZ92kdt7I
-         KJPEofGAnlJFJEWcDIDlMM6X2zzizygfFncOwFP87K2yb62H1j8SFJZw7ggEKJrCMrQO
-         nZJT+7BPQ0xMbv51B0s7FMOuneeLM4yEyKIO6h5BmexSvUou2QUaGjGJUBn3fDoJ/Dun
-         a0uYJ8u2JUzQM3sC+81ex9P++mU63UjT92Hj0bEwoJo7h0ONRH0pq5L9Nt32Sb91rFvg
-         +S/j7s8ku9+IzXB/wSWTE+/YzyGR6b7AtCx3suJHAu+6XhoCybMO/eHNQ+5USd78MPwc
-         4UbQ==
+        bh=tngrBAF6XpDRoWtFVzMWX84OyA/6g4HK0wmr2yCm46w=;
+        b=yuWmEVSy0Qlcd4Gm7iH9VHVAjRCdUvW5uUsIlEwGQjE451AeAZQ04lWDe/YebFx5ea
+         NJ9Fi9REqMtjxzga1Ek6zjELvawQkpBwkmSkjcC7X40f/8rRBS+byRPwIwCimoa5RbRi
+         zI2SYobXdgAW7PuvWRQ1Pf9MhtmunLrdR1xvdkm56sPEDPGKzea3n/QA5fbkknJ1spzM
+         tLaTTK7j4BiFhvhFcxagMNo0atvcCmhMkBBpc37o3S1kxhQWEgNPEEn1x4LPK9JEgfnR
+         M2hY+OVY8bykoym1j+ytHaLiwO+4A0FiINEzG/secFxU63U7NQGepckgpEcfToqWVyMU
+         AZyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781514640; x=1782119440;
+        d=1e100.net; s=20251104; t=1781515981; x=1782120781;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0ZzMrz8hyVSrVY8XdOE7sGb3h3Q0+aQVNIOqrKu6H4k=;
-        b=OPXiyEPOzhlqGynW6e/rhz9n4Y4LchQXBepoVPHuvUwE7IQ5V1/vzbvY3eFRQT5u0K
-         Eu9QlOB2Ci/mbnxSHaVUTM0YUOWvvyUb7YXUufXHXC2COPFdYZSRmvZD9G0r6MQT8GTN
-         QGjEkA6DJS7dO10ig6Jf6+pX2uFvnOA5vp5OtRZQ8vsYFHu4F7/jl7j7jDkwinrTfNVB
-         2FxPhyAVVllTE7tq59/rjyO9Gy0oi99Kf+bX3Ipy3f0EAuehhF+UZE9GBZKplIgGtjVu
-         pysKtxE2oS9Jmlbt+hbqMquIABq5CAdsrJ/kSx5nmGYy/AfW7ZbdrasTCRB8EqJnyS6V
-         Gc2A==
-X-Forwarded-Encrypted: i=1; AFNElJ/PZavZkOyGPOg6AsN+CSL2XZXDZL7Uz5Zy7hCuAIvBmu1btCl1+ksqpwu1VEle+SSKX9pWpWgKxU8jfruCutVg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXFodxgNn653XscrwKLPWbN0mGWh8f/UPnFQdamDe8/AXh+8ta
-	TYPuG/pa/kQYqlipJifMlxJB/g+JCQnm823cCJrpoTp6zab/c1M4zww02LwIKK1yN6Li21/eObP
-	n/4BXr8o=
-X-Gm-Gg: Acq92OGU36m14QTe9UC+mDFEB7TSEJO5Cp44b2QN24+rcRpwClTTjutuJKaI+E/N9Ww
-	Hvij+vvzkxbP4Ec/jVOjHbD2G5EEIXjtAiYUuz80ksTcH/sSK3UvwVuFqY/lGRq5fqLmuiVwMwq
-	TT/u+G0qiP+//oj39w1ZPi/G4YkJttGen+BuMBle2JYcBWaBBN0YP7EZCdlQklL8FfHSbJOWsMJ
-	fa131cdz7DgHb0Um0gRJC1m/+WMbfQpMrWOFzE6A9hkXolTWRNZxGQZXRqWEpa9R3kKapcEu3pt
-	PJbhuuBFI+zXPT43EB8412OhDYVzTs+a8Z2j6CDgZR4gAq2I9sy1CpnIxVpDSMl271P/Nqd5Jcp
-	09p14wXMgn+oB3fG98aASZeIho6PmIMRnuBWEEGgCso/EFzWUvYbH16mVTa8OTewy2dHMjctqz3
-	Ktm62OE26zgoz7/N5UVDELonZ1LiJ7
-X-Received: by 2002:a17:907:3f1e:b0:bed:9a4f:a42e with SMTP id a640c23a62f3a-bfe2890b360mr593605966b.17.1781514640360;
-        Mon, 15 Jun 2026 02:10:40 -0700 (PDT)
+        bh=tngrBAF6XpDRoWtFVzMWX84OyA/6g4HK0wmr2yCm46w=;
+        b=gAHaCsECD4HJmVFqjara8KsSdmUZcLmyr0VIwQugU2zwHWy9StIvK+K09Sy9imgZPF
+         /U8B9q4kFNLfBc3h8n7zs+TV7B94soqKOoqBkNJD6WhRdwiqrKvC5yHFL/L/5PLRhHUO
+         8rCr3w0oneLGW7ZuSX+m0T3jp9rpydrJYfQGCEQD7Bq9ymOJQxOlQUbtES/g0XkfTvSN
+         xxIOo8KQA0DEFGdoTiiXFwxQOv91HCq3mSsF3bc3aoVVTHimEAsAse/FKJAC0kBSVO6z
+         UK7aUU2OS2TUeQ3jlNNU/SvvMkSOtb8WIkdQtcRHQLylpVkViY9ri9ZH7LZ4E3hnyd61
+         ooZA==
+X-Forwarded-Encrypted: i=1; AFNElJ+5uPGFpSjDkFb6kYG5GffFcn9sh9R9p9kGxZI1VHktK0L80wpyhAA1vlri0tHDWnLWrN7O2soQ0LTuqji9yfQK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVZKfz4pA7+cPz1AyV2+GUn1TyhnNz3sIqBUltJs+eauYXiC0/
+	OfhGcFUXhv8ZQPm2beFjwYPZ42oWR2/CtiA/Ec9iRaREZT5ce2IOlsvM5kU4TChjs1o=
+X-Gm-Gg: Acq92OEWyO5Ebt6LGuQPzzEtsS3329sSSM1NxzLOg66MW31uVxqCW+judeHJ4BWoyIj
+	tEYWoOmU0dUKja/VrNdlJ71uyVnGu8pRA5WI7AVGIczVwktgnOh77nV1QiFvkQs7jpHdSHvMJNw
+	cJisuRBBtR6c7ErSnoB9ahIbgt8e2FCioR7hYS8/WtdL9ow8cwMuAL93NP6J7g175T7QBRqE/SG
+	TJkeEWGbmYv9w6onNF/MPgP3Q2R94D9+aiLZH9PUBkXDIwV/L1CKW+QMk024anok1til6dAt2oC
+	1eMlUYHxx1BEOCrZibp7nM5vmSRsuOGcnA2ri9tJslC+SKvNPQrEwaxFEmQ6HovA28QQvyAlfKX
+	J4f0oZf/dHwLqvYw3/Px7U4Y7d3s8IcvPk6zz6phM1l+3bE1qHfKLVyzmi/6FzZwhLM6y3ILlR2
+	fj1LdOJ+aOC4V8Ty1S0Q56+lVXSTL5cl9RGHt988c=
+X-Received: by 2002:a17:907:e143:b0:bfe:7f45:44d7 with SMTP id a640c23a62f3a-bfe7f454612mr318576466b.47.1781515981249;
+        Mon, 15 Jun 2026 02:33:01 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bfdb7b6d8c2sm414372666b.38.2026.06.15.02.10.39
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bfdb8b24457sm423422966b.54.2026.06.15.02.33.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2026 02:10:39 -0700 (PDT)
-Message-ID: <83646a3f-f9da-4005-8217-2d569405219d@linaro.org>
-Date: Mon, 15 Jun 2026 10:10:38 +0100
+        Mon, 15 Jun 2026 02:33:00 -0700 (PDT)
+Message-ID: <78d7e5c8-9f00-47a1-972b-33b42c5dfd99@linaro.org>
+Date: Mon, 15 Jun 2026 10:32:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,270 +68,104 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 0/5] perf tools: Add inject --aslr feature
-To: Ian Rogers <irogers@google.com>, acme@kernel.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, gmx@google.com, jolsa@kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mingo@redhat.com, peterz@infradead.org
-References: <20260608054841.3856224-1-irogers@google.com>
- <20260611164122.3974068-1-irogers@google.com>
+Subject: Re: [PATCH v2] perf trace: Fix noise and signed formatting of
+ __probe_ip in bare dynamic probes
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+ howardchu95@gmail.com, neelx@suse.com, sean@ashe.io,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org
+References: <20260612225610.1326644-1-atomlin@atomlin.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260611164122.3974068-1-irogers@google.com>
+In-Reply-To: <20260612225610.1326644-1-atomlin@atomlin.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 11/06/2026 5:41 pm, Ian Rogers wrote:
-> This patch series introduces the new 'perf inject --aslr' feature to
-> remap virtual memory addresses or drop physical memory event leaks
-> when profile record data is shared between machines. Bundled with this
-> feature is a bug fix inside the core map tracking tool that hardens
-> perf session analysis against concurrent lookup data races.
+On 12/06/2026 11:56 pm, Aaron Tomlin wrote:
+> When a dynamic probe is created without explicitly requested arguments
+> via perf probe --add, the Ftrace subsystem automatically appends
+> "__probe_ip" to the tracepoint format to record the instruction pointer.
 > 
-> Detailed Mechanism of MMAP Mapping and ASLR virtual Address Allocation:
+> Currently, perf trace prints this implicit field by default.
+> Furthermore, because the formatting logic defaults to a standard signed
+> integer representation, the kernel space memory address is erroneously
+> displayed as a meaningless negative integer.
 > 
-> The ASLR tool virtualizes the address space of the recorded processes by
-> intercepting MMAP and MMAP2 events to build a consistent translation
-> database, which is subsequently used to rewrite sample addresses.
+>      ❯ sudo ./perf trace --event probe:proc_sys_open --max-events 1
+>           0.000 ps/1316543 probe:proc_sys_open(__probe_ip: -1406056956)
 > 
-> It maintains two primary lookup databases using hash maps:
-> 1. 'remap_addresses': Maps an original mapping key to its new remapped
->     base address. The key uses topological invariant coordinates:
->     (machine, dso, invariant). The invariant is computed as (start - pgoff)
->     for DSO-backed mappings. This invariant remains constant even when
->     perf's internal overlap-resolution splits a VMA into fragmented
->     pieces, ensuring split maps resolve consistently back to the same
->     remapped base.
-> 2. 'top_addresses': Tracks the allocation state per process (machine, pid).
->     It maintains 'remapped_max' (the highest allocated address in the
->     virtualized space).
+> This patch addresses the user experience by combining two refinements:
+>      1. "__probe_ip" is now hidden from the standard output, as its
+>         presence adds no contextual value for a bare probe.
 > 
-> For each MMAP/MMAP2 event:
-> - We look up the DSO and invariant key in 'remap_addresses'. If found, we
->    reuse the translation, preserving the offset within the mapping.
-> - If not found, we allocate a new remapped address space:
->    - We use thread__find_map to look up the mapping immediately preceding
->      the new one in the original address space (at start - 1). If
->      the preceding
->      mapping was also remapped, we place the new mapping
->      contiguously after it in the remapped space. This preserves
->      contiguity of split mappings (e.g., symbols split by HugeTLB,
->      or anonymous .bss segments adjacent to initialized data).
->    - If no contiguous mapping is found, we insert a 1-page gap from
->      the highest allocated address (remapped_max) to prevent accidental
->      merging of unrelated VMAs.
-> - The event's start address (and pgoff for kernel maps) is rewritten,
->    and the event is delegated to the output writer.
+>      2. If the user explicitly requests verbose output (--verbose),
+>         "__probe_ip" is intercepted and properly formatted as a hexadecimal
+>         kernel address, restoring its utility for debugging inline
+>         function hits.
 > 
-> To remain strictly conservative and guarantee security, the tool
-> scrubs breakpoint addresses (bp_addr) from all synthesized stream
-> headers, completely drops PERF_RECORD_TEXT_POKE events to prevent
-> absolute immediate pointer operands leaks, and drops unsupported
-> complex payloads (such as user register stacks, raw tracepoints, and
-> hardware AUX tracing frames).
+>      ❯ sudo ./perf trace --event probe:proc_sys_open --max-events 1
+>           0.000 ps/1314074 probe:proc_sys_open()
 > 
-> Verification is reinforced with shell test ('inject_aslr.sh').
+>      ❯ sudo ./perf trace --verbose --event probe:proc_sys_open --max-events 1
+>      Using CPUID GenuineIntel-6-8E-C
+>      mmap size 528384B
+>           0.000 ps/1314366 probe:proc_sys_open(__probe_ip: 0xffffffffac314604)
 > 
-> Prerequisite Bug Fix (Patch 1). During development, a core map
-> indexing issue was identified and resolved to prevent concurrent
-> lookup data races during session analysis.
+> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+> ---
+> Changes since v1:
 > 
-> Changes since v19:
-> - Patch 1: Group lock and unlock operations inside maps__mutate_mapping() into
->    a single conditional block to resolve Clang 15 -Wthread-safety-analysis
->    compilation errors.
-> - Patch 5: Skip kernel-based ASLR test cases (test_kernel_aslr and
->    test_kernel_report_aslr) on ARM architectures (aarch64 and arm*) to
->    bypass high latency constraints and symbolization inconsistencies.
+>   - Fixed a bug where the hardcoded format string for "__probe_ip"
+>     bypassed the trace->show_arg_names configuration. The formatting
+>     logic is now properly decoupled to respect trace.show_arg_names when
+>     verbose mode is enabled.
 > 
-> Changes since v18:
-> - Patch 2 & 3: Squashed the bounds checking boundary fixes into the "Strip
->    sample registers" patch. The array bounds checking now correctly uses
->    'orig_sample_type' to traverse the event payload, preventing heap
->    corruption when dealing with events that have had their registers
->    stripped by the ASLR tool pipeline.
-> - Patch 2 & 3: Rebased the commit series to properly isolate the sample
->    address remapping logic from the register stripping logic.
-> - Patch 2 & 3: Expanded commit messages to extensively document the
->    cross-endian behavior of 'perf inject'. Because 'perf inject' effectively
->    acts as an endianness converter (writing a host-endian PERF_MAGIC and
->    flushing events exactly as they sit in memory after being byte-swapped
->    by perf_event__all64_swap), all injected events must be perfectly
->    constructed in the host's native endianness. Specifically,
->    perf_event__all64_swap byte-swaps the raw 64-bit payloads, which causes
->    32-bit sequential fields like PERF_SAMPLE_TID (containing pid and tid)
->    to have their ordering reversed in memory (e.g., [BE_pid][BE_tid] becomes
->    [LE_tid][LE_pid]). The ASLR tool's sample construction logic was
->    expanded to explicitly unpack these fields and repack them sequentially
->    via unions to guarantee a strictly host-endian layout that resolves
->    these inversion anomalies. Similarly, branch stack flags (which are
->    modified in-place to host-endian bitfields by the parser) are copied
->    directly to the newly synthesized event, and 'needs_swap=false' is explicitly
->    used when re-parsing the synthesized event to prevent erroneous double
->    swapping.
-> - Series: Verified cross-endian robustness via the sashiko analyzer.
+>   - Linked to v1: https://lore.kernel.org/lkml/20260612220843.1320348-1-atomlin@atomlin.com/
+> ---
+>   tools/perf/builtin-trace.c | 21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
 > 
-> Changes since v17:
-> - Patch 2: Reordered ksymbol deletion logic to ensure
->    `perf_event__process_ksymbol` deletes the map *after* the
->    `aslr_tool__findnew_mapping` translates the unregister offsets.
-> - Patch 2: Changed `aslr_tool__delete` to cleanly handle guest machine
->    deletion memory leaks.
-> - Patch 2: Resolved read-only segfaults on memory-mapped perf.data
->    headers during attribute stripping by using deep copies in
->    `perf_event__repipe_attr`.
-> - Patch 2: Fixed user space remap invariant logic to include
->    `(start - map__start(al.map))` preventing negative overflows on module
->    offset boundaries.
-> - Patch 3: Removed duplicate `bswap_64` payload byte-swapping inside the
->    array logic, allowing the host endianness macros `COPY_U64()` to
->    handle it dynamically.
-> - Patch 3: Fixed LBR branch sample starvation by explicitly reading branch
->    counters instead of dropping the entire sample.
-> - Patch 5: Fixed test flakiness by grepping out physical hex addresses
->    `0x[0-9a-f]{8,}` instead of matching exact address strings.
-> - Patch 5: Parameterized temp reports and updated test to scale with
->    `/dev/urandom` continuous random reads.
-> - Patch Series: Added Signed-off-by tags uniformly and Assisted-by tags to
->    track assistance.
-> 
-> Changes since v16:
-> - Patch 2: Refactored inline ASLR stripping logic out of builtin-inject.c
->    and into dedicated helpers (aslr_tool__strip_attr_event and
->    aslr_tool__strip_evlist) in aslr.c to better separate concerns.
-> - Patch 2: Fixed guest machine allocation memory leak in
->    aslr_tool__delete() where machines__exit() explicitly skipped freeing
->    the guest processes tree.
-> - Patch 3: Fixed bounds-check violations during cross-endian parsing inside
->    aslr_tool__process_sample() by correctly applying bswap_64() to raw
->    offsets, iteration counts, sizes, and addresses prior to logical
->    evaluation when orig_needs_swap is active.
-> - Patch 4: Fixed pipe mode parser misalignment bug by safely fetching
->    needs_swap from the initialized evsel rather than blindly intercepting
->    HEADER_ATTR events prior to session parsing.
-> - Patch 4: Resolved checkpatch.pl line length warnings in the bswap_64
->    endianness swapping logic.
-> - Patch Series: Reordered the final two patches. "perf aslr: Strip
->    sample registers" is now Patch 4, and "perf test: Add inject ASLR
->    test" is now Patch 5. This ensures the register stripping logic
->    is fully introduced before the comprehensive shell tests validate it,
->    preventing bisectability test failures and easing merge conflicts.
-> - Patch 5: Fixed "User registers stripping test" starvation when run as
->    root by explicitly using '-e cycles:u' during recording, preventing
->    the ring buffer from overflowing with kernel samples.
-> 
-> Changes since v15:
-> - Patch 2: Added bounds checking for event->header.size before writing
->    to breakpoint fields to avoid heap buffer overflow on older ABI events.
-> - Patch 2: Fixed asymmetric calculation bug in aslr_tool__findnew_mapping()
->    where pgoff for anonymous kernel memory was not properly subtracted upon
->    insertion, causing the lookup addition to overflow.
-> - Patch 2: Added detailed comments documenting the symmetric lookup and
->    insertion math for unmapped and mapped memory blocks.
-> - Patch 5: Add missing kprobe and uprobe scrubbing of config1 and
->    config2 during aslr_tool__strip_evlist() to strictly conform with
->    repipe constraints.
-> 
-> Changes since v14:
-> - Patch 2: Removed unnecessary vertical whitespace in builtin-inject.c.
-> - Patch 2: Added comments explaining why pgoff is assigned for
->    anonymous memory maps to prevent ASLR leaks.
-> - Patch 2: Removed orig_last_end tracking and refactored contiguous mapping
->    detection to use thread__find_map(..., start - 1, ...) based on Gabriel's
->    feedback.
-> - Patch 2: Scrub kprobe/uprobe event config1 and config2 fields to prevent
->    address leaks.
-> - Patch 2: Overwrite pgoff with the remapped start address for anonymous
->    mappings (detected via is_anon_memory and is_no_dso_memory).
-> - Patch 3: Fix C90 mixed declaration error for orig_needs_swap.
-> - Patch 3: Temporarily disable evsel->needs_swap during the secondary
->    evsel__parse_sample() call to prevent branch stack double-swapping bugs.
-> 
-> Changes since v13:
-> - Patch 2: Added a NULL check for env before calling
->    perf_env__kernel_is_64_bit(env) to prevent potential segfaults if the
->    recorded environment has no headers.
-> - Patch 5: Fixed sample_size and id_pos going out of sync during
->    aslr_tool__strip_evlist() and aslr_tool__restore_evlist(). Instead of
->    using evsel__reset_sample_bit(), which was acting as a no-op due to
->    early bit clearing and corrupted sample_size, the tool now directly
->    updates sample_type and recomputes sample_size/id_pos dynamically.
->    Added orig_sample_size to aslr_evsel_priv to correctly restore the
->    state.
-> 
-> Changes since v12:
-> - Patch 2: Fixed potential NULL pointer dereference in
->    remap_addresses__hash() when handling unmapped memory events (key->dso
->    is NULL) under REFCNT_CHECKING.
-> - Patch 2: Dynamically detect machine architecture bitness via
->    perf_env__kernel_is_64_bit() to select appropriate kernel_space_start
->    boundaries, avoiding 64-bit address injection on 32-bit platforms.
-> 
-> Changes since v11:
-> - Patch 1: Fixed struct dso name accessor in maps.c by using
->    dso__name() instead of ->name.
-> - Patch 2: Fixed hash function in aslr.c to hash the underlying
->    dso pointer using RC_CHK_ACCESS to support reference count checking.
-> 
-> Changes since v10:
-> - Patch 1: Added explicit tracking array logic in maps__load_maps()
->    to correctly accumulate valid maps (skipping NULL entries after
->    failures) and safely return the exact populated count, resolving
->    out-of-bounds pointer iteration panics.
-> - Patch 3: Fixed endianness bug during cross-endian sample parsing
->    by passing evsel->needs_swap instead of false to __evsel__parse_sample
->    in aslr.c, ensuring correct 32-bit field byte unswapping for packed
->    fields. Refactored evsel__parse_sample to take a needs_swap argument
->    via __evsel__parse_sample.
-> - Patch 4: Fixed inject_aslr.sh exit code handling in trap functions
->    to capture and propagate the correct pipeline failure status code
->    instead of unconditionally returning success or failing the test.
-> 
-> Changes since v9:
-> - Patch 1: Added `-ENOMEM` error check inside
->    `maps__find_symbol_by_name()` and return `NULL` early. Added map
->    sorting state invalidation on early return in `maps__load_maps()`.
-> - Patch 2: Fixed encapsulation by using `thread__maps()` and
->    `thread__pid()` accessors in `aslr_tool__findnew_mapping()`. Added
->    `pr_warning_once` warning when raw auxtrace data is dropped.
-> - Patch 3: Fixed encapsulation by using `thread__maps()` and
->    `thread__pid()` accessors in `aslr_tool__remap_address()`. Wrapped
->    `evsel__parse_sample()` to temporarily disable `needs_swap` to avoid
->    branch stack endianness corruption on cross-endian files. Fixed ISO
->    C90 warning for declaration-after-statement for `orig_needs_swap`.
-> - Patch 4: Fixed duplicate cleanup by explicitly removing trap
->    handlers (`trap - EXIT TERM INT`) inside the `cleanup()` function.
-> - Patch 5: Fixed heap corruption by adding size bounds checking before
->    writing to `sample_regs_user` and `sample_regs_intr` fields. Added
->    missing register mask clearing logic for the `itrace` synthesis path
->    of `perf_event__repipe_attr()`.
-> 
-> Ian Rogers (5):
->    perf maps: Add maps__mutate_mapping
->    perf inject/aslr: Add ASLR tool infrastructure and MMAP tracking
->    perf inject/aslr: Implement sample address remapping
->    perf aslr: Strip sample registers
->    perf test: Add inject ASLR test
-> 
->   tools/perf/builtin-inject.c           |   81 +-
->   tools/perf/tests/shell/inject_aslr.sh |  533 ++++++++++
->   tools/perf/util/Build                 |    1 +
->   tools/perf/util/aslr.c                | 1406 +++++++++++++++++++++++++
->   tools/perf/util/aslr.h                |   44 +
->   tools/perf/util/evsel.c               |    6 +-
->   tools/perf/util/evsel.h               |   10 +-
->   tools/perf/util/machine.c             |   32 +-
->   tools/perf/util/maps.c                |  148 ++-
->   tools/perf/util/maps.h                |    3 +
->   tools/perf/util/symbol-elf.c          |   41 +-
->   tools/perf/util/symbol.c              |   17 +-
->   12 files changed, 2251 insertions(+), 71 deletions(-)
->   create mode 100755 tools/perf/tests/shell/inject_aslr.sh
->   create mode 100644 tools/perf/util/aslr.c
->   create mode 100644 tools/perf/util/aslr.h
-> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 48615ddccd93..ac15b5588a27 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -3234,6 +3234,27 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+>   		if (val == 0 && !trace->show_zeros && !arg->show_zero && arg->strtoul != STUL_BTF_TYPE)
+>   			continue;
+>   
+> +		/*
+> +		 * __probe_ip is implicitly added to bare dynamic probes.
+> +		 * Suppress it by default to avoid cluttering the output.
+> +		 * If verbose mode is enabled, ensure it is formatted as a
+> +		 * hexadecimal memory address rather than a signed integer.
+> +		 */
+> +		if (!strcmp(field->name, "__probe_ip")) {
 
-Tested-by: James Clark <james.clark@linaro.org>
+I checked to see if it was possible to include the #define for this 
+constant (FIELD_STRING_IP) in the tools folder, but there wasn't 
+anything existing in include/ that fits nicely. Either way:
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+> +			if (!verbose)
+> +				continue;
+> +
+> +			printed += scnprintf(bf + printed, size - printed,
+> +					     "%s", printed ? ", " : "");
+> +			if (trace->show_arg_names)
+> +				printed += scnprintf(bf + printed, size - printed,
+> +						     "%s: ", field->name);
+> +
+> +			printed += scnprintf(bf + printed, size - printed, "%#016llx",
+> +					     (unsigned long long)val);
+> +			continue;
+> +		}
+> +
+>   		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
+>   
+>   		if (trace->show_arg_names)
 
