@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D90F330659
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 06:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0887226E710
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 06:34:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781505177; cv=none; b=gqliMRaCYXG9hL6XVfgNhEsSYflk1IG8Q9Pi09CqIDBzbIzzC9aofwZmVElmsmgWZ+qumHX/sv2nA/WiUX4C+RLw+fT0wL4MuoVKB9Mza6v6t/Hft/66m/idH8srZ36M18NDycqS36q4Mo1//kjFOQU9GaRB4VCYbbyJUrBvqZE=
+	t=1781505282; cv=none; b=E6cDkU5iuLdEQDjy6o8yPoiwVeCsuhWVRekheTkqHxxbhsJwKDmpKMShGfQHJ+2fYG29bzacnmhS/3pw1ppi8Rnqs1l4FbeYS0TxpQ0mQQoJixZumUrh3LcdDsfonXix8UiVXWzit69Sa+Y2Cz+M/BjZGp1a4ve+jGjsSN0tNu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781505177; c=relaxed/simple;
-	bh=zxFNneFqTRepfjFAt2SBZSX70GpNroj3sC2WHOaNF+A=;
+	s=arc-20240116; t=1781505282; c=relaxed/simple;
+	bh=HPlqwuBsEFyNVo7yBVuQDKKkr9p6v/5IdHBbR4i5MzI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cUikY4IncPtGYM80VRuv5WPDcUyRNnixGg/fLzN9iSe1GgXmPo7bObapc6xMbdyyOVljo7xoMrPYuSxfoOyFvLoOtY1JGgEHfec3m32ewncHMVqUX1CtNYe7o7S03V+pYVDNYiLd3rvgj6KbATgFvyGgyWIXYLee50IeXMfqwgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aH1pAYHw; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=f4Xcv7wuc8m3jBKEzKZafACgFAybTBJkyj0R26EzdaxR757EHFC/ZRyumkWkCxTSZzfXZx7LvqJdw3tGccvz2ReGWlKd7GPSZZLdHY7DVRuIub2zMSuSy4oxUNTCF0CFurIZOSdy3kxLllV1JCjObX5Pp0EF6GEMqTQRtSV3M34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwvbxEf6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aH1pAYHw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BA11F000E9;
-	Mon, 15 Jun 2026 06:32:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwvbxEf6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C12D1F000E9;
+	Mon, 15 Jun 2026 06:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781505175;
-	bh=F3dNHyE4c6VGh513y4QMOhQligxGYhb8g9N+4HuD2NY=;
+	s=k20260515; t=1781505280;
+	bh=GOMZs2vShT3j0nIIy6NmeTY2XkRrfoqztWWlrq9FAYs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aH1pAYHwfcs6SC6Szazh1eKwYtc7/OMCxjVy6f+EOlMbIy0Kzv/IPchs+bG+LDBEM
-	 AfQ97rVeWo9igQJSI3cPBeIHxKEsOyvw609G0bKGy6DJDbChFncv2g9vryf/cHEKSv
-	 QpMsctdj2LxvLi7MWTiEqXPFr7RqIsm6RbdEU+/WbIJB+BLmlIq9b/+dcdjzFKmatH
-	 oZsnSeKZQfB+1j+tk9T30JDTWrRd1bDa+F/S7G+qzgx3t2GX1rkiCKL8YM9Kdr1/8c
-	 xWN+XAMl5D4evX5Nxj/W7kna2peVBvBpaeJ5TDtWtrLNPCPgiJ707ZWvMs8LuP8OyQ
-	 vHpkE9iKKFwcw==
+	b=NwvbxEf6srBV/uZTgMkjMtJl92ukMP9qn/K93lvzSEcX+4P4imM27EfSV4mQGDs/1
+	 I+GuqZc2x9NOTiWeTENCGlwWQXtsa5jys90CAz4UjEvXq0sLl/lmfBCXi7KuuHQQvq
+	 vV0xl5gTvf8dnmiYxzHN9Hnd4iLcdwaIUwhM9iSYTYFRxYqam3Zeex3nvPySSClLDW
+	 v8eAc0XgjsDKBLcJ4fhESF+EEF93CK+9JVfKocJNDa7nBUhNkNahlafeWq4wNsIpse
+	 E5pVPP7K2AajsuWp5lhwXw/xICQAVFuS4ONEMVJDtARhkXzAprDfRHjfFNAvven5i0
+	 /+iBbBMKs5apw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v19 04/20] perf data: Add open flag
+Subject: Re: [PATCH v19 12/20] perf python: Add mmap2 event
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615061631.2382079-5-irogers@google.com>
-References: <20260615061631.2382079-5-irogers@google.com>
+In-Reply-To: <20260615061631.2382079-13-irogers@google.com>
+References: <20260615061631.2382079-13-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 06:32:55 +0000
-Message-Id: <20260615063255.B9BA11F000E9@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 06:34:40 +0000
+Message-Id: <20260615063440.7C12D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,56 +47,70 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] If rename() fails during perf_data__switch(), the original data fi=
-le is truncated and all previously recorded data is lost instead of continu=
-ing to be filled.
+- [High] Missing NUL termination for `PERF_RECORD_COMM` and `PERF_RECORD_MM=
+AP` events allows out-of-bounds heap reads if `event->header.size` is malic=
+iously crafted.
 --
 
-commit a0b3375203a55f3480fde4ba60f2092e9ceac100
+commit aa149d023f31a497bc34e157fcbc350f77516ffd
 Author: Ian Rogers <irogers@google.com>
 
-perf data: Add open flag
+perf python: Add mmap2 event
 
-Avoid double opens and ensure only open files are closed. This addresses
-some issues with python integration where the data file wants to be opened
-before being given to a session.
+This patch adds support for mmap2 events to the perf python module. It
+implements the event type, getters for its fields, and registers the new
+python event object.
 
-> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-> --- a/tools/perf/util/data.c
-> +++ b/tools/perf/util/data.c
-
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 3f4aff7ddc766..8da39587a39c9 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
 [ ... ]
-
-> @@ -457,6 +473,7 @@ int perf_data__switch(struct perf_data *data,
+> @@ -874,6 +1019,9 @@ static PyObject *pyrf_event__new(const union perf_ev=
+ent *event, struct evsel *ev
+>  	if (copy_size < sizeof(pevent->event))
+>  		memset((char *)&pevent->event + copy_size, 0, sizeof(pevent->event) - =
+copy_size);
 > =20
->  	if (!at_exit) {
->  		perf_data_file__close(&data->file);
-> +		data->open =3D false;
->  		ret =3D perf_data__open(data);
+> +	if (event->header.type =3D=3D PERF_RECORD_MMAP2)
+> +		pevent->event.mmap2.filename[sizeof(pevent->event.mmap2.filename) - 1]=
+ =3D '\0';
+> +
 
 [Severity: High]
-This is a pre-existing issue, but if the preceding rename() call in
-perf_data__switch() fails, the code prints a warning and intends to "contin=
-ue
-fill original file". However, we unconditionally close and reopen the file
-here by calling perf_data__open().
+This isn't a bug introduced by this patch, but since you are explicitly
+NUL-terminating the mmap2 filename here, should we also do the same for
+PERF_RECORD_COMM and PERF_RECORD_MMAP?
 
-Because the rename failed, data->path still points to the original file.
-Looking at open_file_write(), it hardcodes the O_TRUNC flag:
+If an attacker crafts an event with a size exactly equal to
+sizeof(union perf_event), the condition:
 
-tools/perf/util/data.c:open_file_write() {
-    int fd =3D open(data->file.path, O_CREAT|O_RDWR|O_TRUNC|O_CLOEXEC,
-                  S_IRUSR|S_IWUSR);
+    if (copy_size < sizeof(pevent->event))
+        memset(...)
+
+evaluates to false, bypassing the zero-padding logic. This can leave the
+comm.comm and mmap.filename fields completely unterminated.
+
+When Python's repr functions print these fields using %s:
+
+tools/perf/util/python.c:pyrf_comm_event__repr() {
     ...
+	return PyUnicode_FromFormat("{ type: comm, pid: %u, tid: %u, comm: %s }",
+				   pevent->event.comm.pid,
+				   pevent->event.comm.tid,
+				   pevent->event.comm.comm);
 }
 
-Does this cause the existing trace file to be truncated to 0 bytes,
-destroying all previously recorded data instead of continuing to append
-to it?
+the string reader will scan past the field bounds and continue reading
+out-of-bounds into adjacent heap memory.
 
->  		if (ret < 0)
->  			goto out;
+Could we add explicit NUL-termination for the existing mmap and comm events
+as well to prevent this?
+
+>  	perf_sample__init(&pevent->sample, /*all=3D*/true);
+>  	pevent->al_resolved =3D false;
+>  	addr_location__init(&pevent->al);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615061631.2382=
-079-1-irogers@google.com?part=3D4
+079-1-irogers@google.com?part=3D12
