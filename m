@@ -1,94 +1,94 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E152F413244
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 17:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FEC413D60
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 17:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.177
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781543325; cv=pass; b=FC0cl0OsrazcvjP3mBsjxS8fwoU2v3q0Mfdob+DHX4WNNSExRaO93QBKeZSJz3XAf6GdCEdc1xetWoeq1lnMeRCMG1gBO9tEj6AlV24F22Nl97iwD/OSvOEfLQmASoUBux575X4YPcZt/+Z3u8nOrcyPHFcsKZDs0GZzllmcUuQ=
+	t=1781543396; cv=pass; b=uf0S+YAvdlhLHgVpFRyWMVdh9zxOZgwYRcfVFoSArUnUrGGplczVLmHdGpM/AM+N6kOH2bOgIhjZ5OByFIwfw1/Tjp5A5h/zs8sMH7EE7V7mtZC2sQWnTFHchzLJCzdIYjOlClJ4BCOuouVPEYpum4MAgBL3F4WE/FScxWa+pKs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781543325; c=relaxed/simple;
-	bh=vpMRjROsmvyVsk5PDbZXnNBKDfpK91rB8XVAGXCeD0w=;
+	s=arc-20240116; t=1781543396; c=relaxed/simple;
+	bh=RWLnb0Yv8dvenMFQjdHz/0w8cchOVac5ZvNpqCyHfYk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NFVUMbFboh37s74HGGNnXdMsQpgyDDLsTMmK8RLkTnWamxxH13ejPKDdXTp+oWo0IzXgJVgytEeJDT7EAR1m0MubDi58NR30hJHgQXPWIGvpi+yr6L+K5zh3m45rW6WxUWT8Cjq0XSyJ70w2FPZ33RpZOo4aLz607gztLNShz88=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JvCIpnS6; arc=pass smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=DRXErBvGGlt+9dTwEwZkNpfU0NBAO+Sr4PbewXuhVVu/gROy3WQSlsss5JXnWziTzOenY0VWrNzkSvFljqQFnUSV92wRNOV/clJ2jAgyqN/fEpuwNCEsi01R73E4PAr/5UjF9YOUrXj3E2u8Ga2ZR+6w/GME+bHN+g+cg0MZl2o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hJp1MbPX; arc=pass smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JvCIpnS6"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2c0b1a48855so3425ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 10:08:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781543323; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hJp1MbPX"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2bf2d865383so2295ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 10:09:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781543394; cv=none;
         d=google.com; s=arc-20240605;
-        b=lQxb71WqxnVRQYj2EXHwfZHhL3Q9AfLZioIPYrvmJE58gRRUSX0h85TWjH72b/AgVI
-         Sls4gwsGR8sXpOTfpry5gzXvWkETw2Kw5p8Q3wObTqjRRqmd9pW9UJ6BgYfOGwQO7DTg
-         bCKTZklR47rBv6bD9qR45GZP1rj2ZVGbzlM/Fvv8DVGKuhNRkHBZDbedVShI9YbC2S1z
-         blnPkGtArN7ttTSdqu+2RUo1iAe/LDD6cFpK9jU81JTqaea6Hvu25V0J6MwdKl0wvCy0
-         5ZF2pOPAodbU7zDK4l1MRTMEkTqeXSEgB0T3LPkAOQaVwk7DPmwmB1AdvEj51wGCWXm5
-         ar/Q==
+        b=VLXGc86k4IhkHe8CoJtOcPLND7Jx4cRrUTmLTZa+oGQ+TmoKFrQm8CcerD3UveUm/K
+         VcJuXKFFBil7XdvN7nDDLfusW4qImzGbyK1Vxx4JLhWaftUb80JEQHjFeDcFbrTIl1jI
+         szmlv8V/G3QJnjthYmTMk3WthuHd8k/kCUmRRgKQvoVWolXldacGGedmn+6VyWWIFMDI
+         oyl1uvbG+yN+v0PF4H5pgeoK46dgkkUkuvDA3wvLBYIuVyNIrlqlFXsXCrZ/Y8zO8j8L
+         8b3PBTbmR+lEL8Q/IXSC1tXm39g74J4DOuFfsPaPcbubua6rO+OUeXXuCa1siD6c4g2j
+         RX0w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=hRo3qHvIzeTwVFfj/toNv6rrQyFgWLgSt/UF0wIRUC4=;
-        fh=hajCyDPHMAK4smWiqaiRNBzc6xvXy+HSIB04RXJkgz4=;
-        b=k1L+6BF0hGarVcLTAil+yR+079VqxCxpYhegiCRWepFmjQxGT7qbf/MmA9Ek34zXaQ
-         D6vwBEyCL0AIBSjHETW5obfBFRkCRVPSL+BIfzXgxoBPNc32ifjQgCXJT6rPxTOs+C/0
-         31r0sd/Jq4kCw+nvJld2jbvVwU3XjaC68ujtUGJZZ6xTZLkuPfPjZG6Cf2QDx7R0o7dp
-         E1QzQ8uSXHEUew9G4IIQvjwoHksMuBEbvkDkLdP9MY/ssJRhNXbOuIAuZHbu+e3TdB+G
-         TtCyQmnDcbfyaDHNqgLrBSO99ksd1ME0gnMaIuZdAxhkjFGCx6TaR+25Y+YcKdRqM+UE
-         G53A==;
+        bh=bR+ZBxy7Dr+6bKECydHxJUiz6jez+EZlbzueJEUyeqg=;
+        fh=RP/VJ4QONnuieq1sY96SjzYbwQ3lNon+jTw8ekNfImg=;
+        b=VmazinAJTPCZwD2AaQRfuhztxFwBJjnJZc8V6S2/5m6phYmrCePtwkiXlCh1ChJ/gg
+         OT51kT1ckXmZn1qs6e4CIqTy5lSoVoUeom1f/AEfyzQ3luGBb8tgAnAzZX/OmkM43KAK
+         bMd8rXbWwCRbLC8+jYfeJdjR2K43zaM/Am2titMNvHXo+nlV5aVEtdhET3QsmrEQG9ry
+         WGg4CyA0PVfWMbbFus5VODsU3TADOXt42lHGbDbvFhzwYYZTwWAcUuLb+/jpntXmcXGs
+         mttflzPgpRj4istHLhcQl5waKRFA18HwUvxLsvzTA1UFqm6PupP3iG8hXmMz4Yzb0L82
+         IUMg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781543323; x=1782148123; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781543394; x=1782148194; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hRo3qHvIzeTwVFfj/toNv6rrQyFgWLgSt/UF0wIRUC4=;
-        b=JvCIpnS6I51FJSfpQe1jR0DXjnXv3fbCFFIHxCGnH+4/pNQkB+30g+VLkCjsEqDeC3
-         f9qnkaSARlBp/YofEtX/EoJ8QlIyxjvmgsrOlrz4jKQzFiQyBAbrdNVpDLY+jaF/vEns
-         xVYGubYBPqq5yGXDfCxTCJcl/ZvsmpdORLjiCidhR7eWIyy6tY1g7d7uNqD505oSBTxN
-         nAnlTgdJhX6o0LrAb3gufdjCD61f6+YzcbQa8ADRAQ6ValGkYdrl0OWjEtrOzRTZK6i0
-         SgSad94wRkMJyY/fLpJ9lEJ4MrKG8SEv+NHCNxd/5fpmkLCrfuHY9xOnyuwHgF3YxodS
-         n3WA==
+        bh=bR+ZBxy7Dr+6bKECydHxJUiz6jez+EZlbzueJEUyeqg=;
+        b=hJp1MbPXajK1dL5kw9s32CkE2RXUPau7rH5ThLSlmemlrd23Ex2GbT1uir9MHDZ7af
+         fgQlXkeTrVR3AuQl94ASoANbqMAjU8iuAKBxeFRmCpq1zfjAli8clbbZxA8GSIBZ82LJ
+         IKRLDSD04evHWHKfg+jkEAdzpEDeQsNlQ0a6dLAHwkuX0SHGWTg6pANZYI+02gPZwKvA
+         yHFWCwyk7jPKTy0Q/wy2bgJwyrzSTxUhHf/tzJkScPcJwHu6kILUeGn8/4RMxhcJ4pvx
+         GBgntP/qzL31n3BcWEhdlnnrA0vYxXo0XdZnX4VzY4AtXX4suE7zQ436RQRu4AsNdCgz
+         tK9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781543323; x=1782148123;
+        d=1e100.net; s=20251104; t=1781543394; x=1782148194;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=hRo3qHvIzeTwVFfj/toNv6rrQyFgWLgSt/UF0wIRUC4=;
-        b=cRRqzP+xhL/PId9ECD1gVSoCGJ/DjyDY9he57/5qc/sR4OzD7Dqi/2B64t26YZHyv1
-         R5OZua6BuD3uLUSXyu5bjlC3PR+USDZXqmUnUsDjxvYN9Mj1dtuINaQ/abe9Ny8fO2C0
-         xbuMhft08GBsQtKJxiIDjd232BkFK8vSAHlMc97Z680dzKvx50g/LfCFEAFka2YzvnRn
-         6aVkmJP8h/ZjNNKKvRItZNA1miCpqj3HJhlYDAz7TpjUgteavv/CVF79sImoWo2O5hnI
-         QytvgFOU8nwsq5uAFsZrMsiWLv8lklDSkVAx6hl83wg3+BQ8d7KNkj1sIAknQrqIsWGN
-         J2lA==
-X-Forwarded-Encrypted: i=1; AFNElJ/uzllwAmzeOmKimivclpRWqiu2sC4rJzTnX9o3ZvCEBjQg/5wIu/DTgFA6A1491Sr6kCXjfLClKcsv4u1zbugG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqaurI5nf6IFHJFTZv/9fKE0t5gC5g2SSfCq2zXK/g/TNFaXRm
-	uDC8/NSQQTaKtdex4BDOl5GhEYYrLn8WNCgSdI+Sx4QqA5RfK3gOEv+LrCY4uj71CYQ9F8lH8nh
-	AeQXCXgObF4WF/SpH1f3cQ9kbof7mm7yuwBjcR/Oi
-X-Gm-Gg: Acq92OHtWWVOAsI79W/FRtRxp5y/kqS9PudVsxQnc9ZsdBu61rJydrwatHUwqFcfJK4
-	neDyNzPoM+rKrO+8nCKvEi1/eL0kaI3xousXsA/jiHLuZXwigrCbV2yyeYAecsuw2u4hRiExmqE
-	OzTP8DM5pZ5WRSjADGIptKjisXdVAbc9Xmco0b2c+xpIfj8q5b7wntDy28/Fki56AYEiEN5s5nJ
-	YNxQYU1ih6aibW3jIds3KFS0Dtt45pR0WHq1XcRZgrUQ49FylgXiqCeBc2OBnQe1yLHn2zqQOHZ
-	RdPLrFycKuzwIgaiCaueGAg+0RIaAp6h4bB+
-X-Received: by 2002:a17:903:4b47:b0:2bf:3579:cdaa with SMTP id
- d9443c01a7336-2c69a2c716emr35195ad.10.1781543322662; Mon, 15 Jun 2026
- 10:08:42 -0700 (PDT)
+        bh=bR+ZBxy7Dr+6bKECydHxJUiz6jez+EZlbzueJEUyeqg=;
+        b=LecpmM/3Avc9fAJC6rOQ6NY+M8WV+F34+yibFOgSb7a6nyAxDmpuUnrdGs50hHqMHY
+         Y3WD83P04yubxQtUf+zgwe8z0w09N3UTNks7qRvOBRKHL61jzic15tai0FZyEeecJ6I5
+         an7TG0DK4LFK1SANcwchAurxoKXsWF5BblgpNeMhwhDgnCcOs/K2Wk5diOpOy8lVzEZ3
+         CGKHRx2wQYGBUUWohvrjeFpQvxi1fJz7OFzxf9g0hZBCBgSU2Kixl815GjTlZrMwALQe
+         y3wbUp/eZrainq7eRUiKKRx3ilXW+2BtmcIuZdJ46T93RAaemi2eX1vv6ukUmQL3puUx
+         T3gw==
+X-Forwarded-Encrypted: i=1; AFNElJ/qZceLaKpeeqSXcVFKXwZo/BAKQRlOkdK0vkxjUuQ3CdbyQvl/1P4+ZUr5tikx31whXBbph200/cl8B4M8d+D6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyoc/RoDSSCKy3Mm5pptuqa9qVEppVVfn1fUMawla88y9dhOrB1
+	UsE4SsaTGbhbyrRaoIPpCPwm7EuzxsPaRJDWO3KATwp/wZ9WMQGwdQWW/eA/4eSNovaj8UDWSIS
+	J4TcTN5Py/sgt/p4bPHxBeYwSzkgGp3tdqdmDTNOZ
+X-Gm-Gg: Acq92OHko85a3xVFSbD2qB7mv4ctY5O6XBr98+bTPLksYspGCeikCYbQ5BJk0t6k1br
+	D8m4W96AIo9DOhagj2TS95Fo+ORmYRTHV3h8zThNGSIlkfuh2nhIbzbA9vjflnqoTSALzFV4Y5E
+	HhlFeRm7pW00H4+BRxpmQxgydexzi3xUD95aNn53UnXTDE6EzKfCcReL9JOQMDKYxaz/NJzrj8c
+	wDMhGm+NZQNlSmNxZORjcGzFBxPNEp5LsI/o7F0KKYi5GZ39xoHh6nsyVjrp16OrFS9zDhdhfYy
+	iy5nPJlqRACK+ZF6AM6/mQD71IqUZquOZKPFa7JNmoCfO+s=
+X-Received: by 2002:a17:903:1446:b0:2bf:1000:d3ac with SMTP id
+ d9443c01a7336-2c69a3c5d96mr1295ad.11.1781543393265; Mon, 15 Jun 2026 10:09:53
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260612222413.40791-1-acme@kernel.org> <20260612222413.40791-4-acme@kernel.org>
-In-Reply-To: <20260612222413.40791-4-acme@kernel.org>
+References: <20260612222413.40791-1-acme@kernel.org> <20260612222413.40791-5-acme@kernel.org>
+In-Reply-To: <20260612222413.40791-5-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 15 Jun 2026 10:08:30 -0700
-X-Gm-Features: AVVi8Cf38Sh5bBDqjXdD0R4plMw1SIDClyeobN8HZ22dxIsavYbgOKhXWWfkgwY
-Message-ID: <CAP-5=fW46hfqMNPwyb9_Ai6fqqjJoMnwBtPkDfR3qV9kjqyAtQ@mail.gmail.com>
-Subject: Re: [PATCH 03/13] perf symbols: Break infinite loop on zero-filled
- notes in sysfs__read_build_id()
+Date: Mon, 15 Jun 2026 10:09:41 -0700
+X-Gm-Features: AVVi8Cefvp75cGm8kYdfRmINlPDocdG_VWXfZ99kUX7sDMqdvOar868GEEsUZrE
+Message-ID: <CAP-5=fUnH=4z6L9fhQY=3iYV-70s5YThq3e1wbqVTwg6u5gWHg@mail.gmail.com>
+Subject: Re: [PATCH 04/13] perf dso: Fix heap overflow in dso__get_filename()
+ on decompressed path
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
@@ -104,23 +104,20 @@ On Fri, Jun 12, 2026 at 3:24=E2=80=AFPM Arnaldo Carvalho de Melo
 >
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> sysfs__read_build_id() iterates ELF note headers from sysfs files in a
-> while(1) loop.  If the file contains a zero-filled note header (both
-> n_namesz and n_descsz are 0), the code computes n =3D namesz + descsz =3D=
- 0
-> and calls read(fd, bf, 0).  read() with count 0 returns 0, which
-> matches the expected (ssize_t)n value, so the error check passes and
-> the loop repeats =E2=80=94 reading the same zero bytes and spinning forev=
-er.
+> dso__get_filename() allocates name with malloc(PATH_MAX), but the
+> dso__filename_with_chroot() path replaces name with an asprintf'd
+> exact-size string (e.g. 8 bytes for "/a/b.ko").  When the DSO needs
+> decompression, dso__decompress_kmodule_path() writes the temp path
+> ("/tmp/perf-kmod-XXXXXX", 22 bytes) into newpath, and strcpy(name,
+> newpath) overflows the smaller allocation.
 >
-> This can happen with corrupted or zero-padded sysfs pseudo-files.
->
-> Add a check for n =3D=3D 0 before the read, since no valid ELF note has
-> both name and description of zero length.
+> Replace the strcpy with strdup(newpath) + free(name) so the buffer
+> is always correctly sized for its content.
 >
 > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Fixes: f1617b40596cb341 ("perf symbols: Record the build_ids of kernel mo=
-dules too")
+> Fixes: 1d6b3c9ba756a513 ("perf tools: Decompress kernel module when readi=
+ng DSO data")
+> Cc: Namhyung Kim <namhyung@kernel.org>
 > Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -130,25 +127,32 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/symbol-elf.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  tools/perf/util/dso.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index d84e2e031d430cf5..dc48e2d2763379b9 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -995,6 +995,9 @@ int sysfs__read_build_id(const char *filename, struct=
- build_id *bid)
->                         } else {
->                                 n =3D namesz + descsz;
->                         }
-> +                       /* no valid note has both namesz and descsz zero =
-*/
-> +                       if (n =3D=3D 0)
-> +                               break;
->                         if (read(fd, bf, n) !=3D (ssize_t)n)
->                                 break;
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 5d017975873817ec..511921bd901d8145 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -603,8 +603,15 @@ static char *dso__get_filename(struct dso *dso, cons=
+t char *root_dir,
+>
+>                 /* empty pathname means file wasn't actually compressed *=
+/
+>                 if (newpath[0] !=3D '\0') {
+> +                       char *tmp =3D strdup(newpath);
+> +
+> +                       if (!tmp) {
+> +                               unlink(newpath);
+> +                               goto out;
+> +                       }
+> +                       free(name);
+> +                       name =3D tmp;
+>                         *decomp =3D true;
+> -                       strcpy(name, newpath);
 >                 }
+>         }
+>         return name;
 > --
 > 2.54.0
 >
