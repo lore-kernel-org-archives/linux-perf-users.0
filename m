@@ -1,161 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EE13B18A
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 00:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D65D1E7C03;
+	Mon, 15 Jun 2026 00:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781485007; cv=none; b=C1xspnNGgdZvQP9wmW/2q07gKPV27STq7mGRCPm7MKphHLBdcH14ok50dEgeV70TLedtCOzSSV5CVVSjaaCe6sQJxzF7GylLtubtCl2Nx8S9cM9wX7+fUPxCagVzbZzoRM2Hq/ItRhHtwHqalLWQfpyJHkJJVDnowyI0/Uy7JNc=
+	t=1781485178; cv=none; b=l/3+b2DdVmhlQtf//AmdnSGRMTyvltolZNoPb7winDDVKUAdWF8foF1H2+3hA0/2lmqCaSFdnUZtXsD1lhpow8LNfT+Z1YGM6OrYMwLyDiJ4IBHBOuL5H/+q6OoYHCo9GgNwMCEcwJht/recUcRQN+oFd3dLstEaO1RdZGg9g+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781485007; c=relaxed/simple;
-	bh=Qy4iVDMuOsladjA8LZqQpEpsURSDVdxcX7RFY4CNECc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FXe6oljkvaW+rbY5qOwLvgZES5DinK96cb+yJ84pp6KSfMtmnpPLxnqchgnmV8MazLxRpNSKb6DYEsW+GohPLFRViLKMtWAE7dWdrVPL1AnMt+cIIVcwVzmQAYJ9Cp7D80Y/2KaqyHpFdVQXbXtz+5ozOmWthn9AbeVnTCyXfac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvdmtDga; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781485178; c=relaxed/simple;
+	bh=GvzcFmDoKn2j61FPJppk4b/2L7xwpyTxsJdRLuDHZGM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ClGLy3KgqZj9U1xOyQn0uAwzStdxrrh4EizUtbP9kZ/Vbp9MPG+b2DR1hriVumSh3aQ+7gPoNrQlQ8vdLGtenNomgHffqIxVdIsFRHMjXzEP4y54H4+HlWsUIF1z+iNRmqWShi/m7GiritYq1ul9KIWHsgSGPsibgieoKUYF1c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J6y7rilT; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvdmtDga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D1021F000E9;
-	Mon, 15 Jun 2026 00:56:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781485006;
-	bh=MvqtrIZc6T4GYi+wj/k0Q0bGstdwF2rMpZwtSG5rIVs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JvdmtDgamUTvXu2opmpx7f70jKwNA68nErqUhgRpm84o7hoA9TYSkmp5mkPK/hYLN
-	 26AKiYrspGZsCgwxn3szrb/0Ikbbc0Y9WDTpRNRTQ1Kjjw8DDa++iDtjBBuA/bP5Hh
-	 zdHuebWOuXXSvZS0sHchHVIj+gQxhKfMk916W7KZHuqZd7HkT7vipdJExXJ4AdBm6W
-	 A2BSpFOgUmn1c1BexwHoMMaDGTs1Cl4GFchJh8T2z3qrax8oXYjaSUKTmH9+KY2TC7
-	 OwhE/W14KmxKkW2AOxtA1ZHujcivToFjulesdkVDa2jsg7ukYdfoM4mStayUvEbJnt
-	 TK85BnrUQ4NdA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v18 18/20] perf python: Handle Py_None for thread and
- cpu maps
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615002812.2234795-19-irogers@google.com>
-References: <20260615002812.2234795-19-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 00:56:45 +0000
-Message-Id: <20260615005646.5D1021F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J6y7rilT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781485177; x=1813021177;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GvzcFmDoKn2j61FPJppk4b/2L7xwpyTxsJdRLuDHZGM=;
+  b=J6y7rilTakBlSaBchHwDJoe63Bg0i3m8gNazjO139HwOolMd6XfXv+Ft
+   dXCcFe9qrFjL2QWLz/IFDw3GzxUhf6xak4cYIDzE7Zk85S7l2d3JqCmqp
+   mETm40+/tLuzIBtTLL5ECH99R2BQuKdumv5qFtDXfmkipm79pTiixyYba
+   PtzsNwdr6PfQoM0yCJB7AtsjO07IczTiFBtEBeaRgB5VBuOQ9jJJ7DOpB
+   aXtzUaN31Zui6Pu4QTdoxXqRxHnhXMhWv5vQN1kEcCGxInnVo29CjAkiU
+   hTvTL7Ae11vZINLZ0GJdToethFIT8+nyuMPlH72850V6M4dsQDuPLBoKr
+   A==;
+X-CSE-ConnectionGUID: 3/MWPdaKQvKoOwwwqLW/eg==
+X-CSE-MsgGUID: ygS2ZJGiRyGH5bWpPoxCng==
+X-IronPort-AV: E=McAfee;i="6800,10657,11817"; a="93339250"
+X-IronPort-AV: E=Sophos;i="6.24,205,1774335600"; 
+   d="scan'208";a="93339250"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 17:59:35 -0700
+X-CSE-ConnectionGUID: 7Z/un19+RbG+4st5CYsTFw==
+X-CSE-MsgGUID: Cy/u5eTMS2uI271e1+3yGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,205,1774335600"; 
+   d="scan'208";a="244418393"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2026 17:59:31 -0700
+Message-ID: <96a18944-bc0d-47dd-b435-e9aa63b93c43@linux.intel.com>
+Date: Mon, 15 Jun 2026 08:59:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 1/8] perf/x86/intel: Remove anythread_deprecated bit
+ from perf_capabilities
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
+ stable@vger.kernel.org
+References: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
+ <20260612090114.3188886-2-dapeng1.mi@linux.intel.com>
+ <20260612094648.GB42921@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260612094648.GB42921@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] Lack of Python object type validation before casting PyObject poin=
-ters leads to type confusion and arbitrary memory reads/crashes.
-- [High] Missing bounds check in `pyrf_counts_values_set_values` leads to a=
- heap buffer overflow.
---
+On 6/12/2026 5:46 PM, Peter Zijlstra wrote:
+> On Fri, Jun 12, 2026 at 05:01:07PM +0800, Dapeng Mi wrote:
+>> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
+>> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+>> represent "anythread deprecation" in perf_capabilities. It leads to the
+>> anythread_deprecated bit could be overwritten by the real value of
+>> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
+>>
+>> ```
+>> if (!intel_pmu_broken_perf_cap()) {
+>> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+>> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
+>> }
+>> ```
+>>
+>> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
+>> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
+>> these support Perfmon v6 platforms, like Clearwater Forest.
+>>
+>> ```
+>> $grep . /sys/devices/cpu/format/*
+>> /sys/devices/cpu/format/acr_mask:config2:0-63
+>> /sys/devices/cpu/format/any:config:21
+>> /sys/devices/cpu/format/cmask:config:24-31
+>> ```
+>>
+>> So remove the anythread_deprecated bit from perf_capabilities structure
+>> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+>> deprecated.
+> Again, no markdown please. I've stripped it from these patches.
 
-commit b18f84f122fea57b8e464425cd3fe35dff581429
-Author: Ian Rogers <irogers@google.com>
+My bad. Thanks a lot.
 
-perf python: Handle Py_None for thread and cpu maps
+BTW, Peter, have you pull these patches? I didn't see them in perf/core or
+perf/urgent branches. Sashiko reports a defect about "Patch 5/8:
+perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()". If
+not, I would post a v4 patchset to fix the defect. Thanks.
 
-The python stubs allow passing None for threads and cpus to the
-perf.parse_events() and perf.parse_metrics() bindings. This commit fixes
-a crash caused by dereferencing Py_None by explicitly checking for it
-alongside NULL.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -2091,10 +2091,10 @@ static PyObject *pyrf_evsel__open(struct pyrf_evs=
-el *pevsel,
->  					 &pcpus, &pthreads, &group, &inherit))
->  		return NULL;
-> =20
-> -	if (pthreads !=3D NULL)
-> +	if (pthreads !=3D NULL && pthreads !=3D Py_None)
->  		threads =3D ((struct pyrf_thread_map *)pthreads)->threads;
-> =20
-> -	if (pcpus !=3D NULL)
-> +	if (pcpus !=3D NULL && pcpus !=3D Py_None)
->  		cpus =3D ((struct pyrf_cpu_map *)pcpus)->cpus;
-
-[Severity: High]
-This isn't a bug introduced by this patch, but since we are handling Python
-types here, should we also verify the object type before casting?
-
-PyArg_ParseTuple uses the generic O format specifier, which accepts any Pyt=
-hon
-object. If a script passes an integer or string instead of a thread or cpu
-map, could this blind cast lead to type confusion and arbitrary memory read=
-s?
-
-[ ... ]
-
-> @@ -3340,8 +3340,8 @@ static PyObject *pyrf__parse_events(PyObject *self,=
- PyObject *args)
->  		return NULL;
->  	}
-> =20
-> -	threads =3D pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : =
-NULL;
-> -	cpus =3D pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
-> +	threads =3D (pthreads && pthreads !=3D Py_None) ? ((struct pyrf_thread_=
-map *)pthreads)->threads : NULL;
-> +	cpus =3D (pcpus && pcpus !=3D Py_None) ? ((struct pyrf_cpu_map *)pcpus)=
-->cpus : NULL;
-
-[Severity: High]
-This is a pre-existing issue, but it shares the same type confusion risk.
-Is it possible for an invalid Python object type to cause a crash when
-dereferencing threads or cpus here?
-
-[ ... ]
-
-> @@ -3374,8 +3374,8 @@ static PyObject *pyrf__parse_metrics(PyObject *self=
-, PyObject *args)
->  		return NULL;
->  	}
-> =20
-> -	threads =3D pthreads ? ((struct pyrf_thread_map *)pthreads)->threads : =
-NULL;
-> -	cpus =3D pcpus ? ((struct pyrf_cpu_map *)pcpus)->cpus : NULL;
-> +	threads =3D (pthreads && pthreads !=3D Py_None) ? ((struct pyrf_thread_=
-map *)pthreads)->threads : NULL;
-> +	cpus =3D (pcpus && pcpus !=3D Py_None) ? ((struct pyrf_cpu_map *)pcpus)=
-->cpus : NULL;
-
-[Severity: High]
-This is a pre-existing issue, but again, could casting an unverified Python
-object type lead to unexpected behavior in this function as well?
-
-While reviewing this file, I also noticed another pre-existing issue in
-pyrf_counts_values_set_values():
-
-tools/perf/util/python.c:pyrf_counts_values_set_values() {
-    ...
-    size =3D PyList_Size(list);
-    for (Py_ssize_t i =3D 0; i < size; i++) {
-        item =3D PyList_GetItem(list, i);
-        if (!PyLong_Check(item)) {
-            PyErr_SetString(PyExc_TypeError, "List members should be number=
-s");
-            return -1;
-        }
-        self->values.values[i] =3D PyLong_AsLong(item);
-    }
-    ...
-}
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does this code overflow the
-values array?
-
-The target C array values inside struct perf_counts_values has a fixed
-length of 5 elements, but the loop iterates up to PyList_Size(list). If a
-Python script passes a list with more than 5 elements, could this overwrite
-adjacent heap memory?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615002812.2234=
-795-1-irogers@google.com?part=3D18
