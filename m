@@ -1,111 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02342BE639
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 06:38:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8713B19D8
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 06:40:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781505505; cv=none; b=ZqGhcoiRwUPAavcDo9hs9spzMgdAcZ/qY/Eln9tGEzNtDQo0LpA6oVq0BNm5iE54OqxFRfXVnJhjRm6whqdQmw7xHP3U5UJwqweQ5/8qEEU02Id8O1GAoZCnq15TbbzdIjtfYNs6z74JG7ikVmwyxN9l9qJd/wEV1EpZn9I3hVU=
+	t=1781505628; cv=none; b=qBT2Xf0MiN6WawAwmp5DlFU2FSp4WfeRlEJSVX8/p0QOcveoKE81t+dxTvamIq6byqysPe1vhZMvOY8tnxa9L9SlgVV4ScZbw0zMd3IZR+xKQKX3NW9/bVW5UTHZws8QMJ5P1EIS8LSzCdGdl4G4ccWIS6+ufU/pt+Mmm/G6OVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781505505; c=relaxed/simple;
-	bh=SGI/pBMZnXDMkWMZJaArSv9ep52so46eT23Vvc+gcBo=;
+	s=arc-20240116; t=1781505628; c=relaxed/simple;
+	bh=ELCPR5w46NpatZySmzjvW0uOhO/+VNUcY16+pJsATg0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=a3GHVj83AI2lBhRRsnmN2SS1yDQhY0ZA9hlhewx7rhT3OL55z12QcOD9g1YgsAeAGf5mGa29yUHpuEkjFkgOLYYg3ytr4O3mx2poh6mn3OPOPI7k+ABBHGln6sYKzBQMCQinQ+H5Z9gKemrKHk/61PRb2BHmLeJ/wHncl031ZPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z87Rl5kp; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Brvopin3BaByj21hoYMQg3+SJR6PeBm0y8rlMjO4LT1RaXx7NV+0dd+UBuoAgWBNxWTCwaOQ8tgtLzEe+Rs/iL8/KtAxAW9QHTCP2zLVEdSI7Up+WCR9He6Qf/lQr3Z98NM/+seQMGXFVL9qGAn1h2ORerCMr5p9dcPr9wCLNuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbYhbT3S; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z87Rl5kp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775131F00A3A;
-	Mon, 15 Jun 2026 06:38:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbYhbT3S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDC3B1F000E9;
+	Mon, 15 Jun 2026 06:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781505504;
-	bh=9ckaXcd6jItucB+3QnRi8Pj+iVv2lxsCtXVTTNdMgVg=;
+	s=k20260515; t=1781505627;
+	bh=x2iGCzGmm+itaSXorXApX2VnqgFdcS66rkUZlPxnkQ8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Z87Rl5kpYA0kb6x2FJDfqsPqWOiKZpjEABD7NAdnb5GJKSvpXg04B7OQIYsb6/bbl
-	 3VQM+T0c7Y0i/VDc70tO8NuQ9kIsRVYrrAmrW9gK465sJVNlw3uDfggz6eTF7SN4kq
-	 7ep6fR1sz4U1iSTH4XAGK+l1dJUov2E4+CfR3TYmwQ/3U4zkBDVTnzhmcF0+EnTCFy
-	 HhVHQd5b8LUzCjm8Z6j2heCf25cA5cVgkk5ptiHYKrhoOJ/NmbbBNe1Ynu9zWuXUTz
-	 4Cj433mkaDPcs9o348Th1fQwVRSAvp1H838NwoI6VI6byq8zDp3tVCXAJnfxZ/xno6
-	 MKpbsiLjzWEzA==
+	b=HbYhbT3S0pO6JwhxqC1szTq20mGOK6YshbCVs0t2z4Fay2q+EW8Gw3mi56K1ugmye
+	 8iIvV+/QooXcJZxegSp+xE38QrmZAOS3gJW+ayvlDTJVFkRpXk2QBl6luwxr56xcR0
+	 qdx2ffzljxmereQpeN8538nFw72PZAcVWNCNgsHPnnoPf+Zh77QMM97F7AyUhVbBW8
+	 EfCm8lz/YQfz+2HktRlvUYPVqPc7rLoZqBxkn2fWnzjoxL7LqNQDfXnHS29/JCBTpI
+	 nE1CsxTM7pGRC6+Tm4FjtXiXRFhCWqE36gj5Iq30TVJ/6Os8RVeREzjGmirZXPhCMi
+	 fPviFdqo47mtw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v19 11/20] perf python: Refactor and add accessors to
- sample event
+Subject: Re: [PATCH v19 10/20] perf python: Add python session abstraction
+ wrapping perf's session
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615061631.2382079-12-irogers@google.com>
-References: <20260615061631.2382079-12-irogers@google.com>
+In-Reply-To: <20260615061631.2382079-11-irogers@google.com>
+References: <20260615061631.2382079-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 06:38:24 +0000
-Message-Id: <20260615063824.775131F00A3A@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 06:40:26 +0000
+Message-Id: <20260615064026.CDC3B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] The structural memory footprint optimization claimed by the patc=
-h is technically absent.
+- [High] Premature call to `symbol__init` uses uninitialized `perf_env` fea=
+tures in pipe mode, breaking cross-platform symbol resolution.
+- [High] Disabling `needs_swap` bypasses cross-endian fixups, corrupting 32=
+-bit fields in `PERF_RECORD_SAMPLE`.
+- [Medium] Python instantiation of `perf.thread()` leaves the underlying `t=
+hread` pointer uninitialized, leading to a segmentation fault.
 --
 
-commit 289f61e1dea23b3af626349fcb1e607ab8f8a6e6
+commit 306cbe1ee7a8a3f3fbac7d4cfd177c65c25ce949
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Refactor and add accessors to sample event
+perf python: Add python session abstraction wrapping perf's session
 
-Add common evsel field for events and move sample specific fields to only
-be present in sample events. Add accessors for sample events. Ensure
-offsets are within the bounds of the event. Allocate just enough memory
-for the copied event, don't make the maximum event size each time.
+Sessions are necessary to be able to use perf.data files within a
+tool. Add a wrapper python type that incorporates the tool. Allow a
+sample callback to be passed when creating the session.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 31da1283fc15e..dc71fe7e37877 100644
 > --- a/tools/perf/util/python.c
 > +++ b/tools/perf/util/python.c
 [ ... ]
-> @@ -511,33 +840,57 @@ static PyTypeObject *pyrf_event__type[] =3D {
->  	[PERF_RECORD_SWITCH_CPU_WIDE]  =3D &pyrf_context_switch_event__type,
->  };
-> =20
-> -static PyObject *pyrf_event__new(const union perf_event *event)
-> +static PyObject *pyrf_event__new(const union perf_event *event, struct e=
-vsel *evsel)
->  {
->  	struct pyrf_event *pevent;
-[ ... ]
-> +	size_t copy_size =3D event->header.size;
-> +
-> +	if (copy_size > sizeof(pevent->event)) {
-> +		return PyErr_Format(PyExc_TypeError, "Unexpected event size: %zd < %zu=
-",
-> +				    sizeof(pevent->event), copy_size);
-> +	}
-> +
-> +	pevent =3D PyObject_New(struct pyrf_event, pyrf_event__type[event->head=
-er.type]);
-                 ^^^^^^^^^^^^
+> +static PyObject *pyrf_thread__get_pid(struct pyrf_thread *pthread, void =
+*closure __maybe_unused)
+> +{
+> +	return PyLong_FromLong(thread__pid(pthread->thread));
+> +}
 
 [Severity: Medium]
-The commit message claims to allocate just enough memory for the copied eve=
-nt
-and avoid making the maximum event size each time. Does this code actually
-accomplish that?
+Will this crash if a user creates a perf.thread object directly from Python?
 
-Looking at PyObject_New() in pyrf_event__new(), it unconditionally allocates
-the static maximum size defined by the type's tp_basicsize, which is
-sizeof(struct pyrf_event).
+Since pyrf_thread__type has Py_TPFLAGS_BASETYPE and no tp_new or tp_init,
+Python inherits object_new, allowing direct creation which zero-initializes
+pthread->thread. Without CHECK_INITIALIZED() before calling thread__pid(),
+could accessing the pid property dereference a NULL pointer and cause a
+segmentation fault?
 
-Because struct pyrf_event includes union perf_event by value, wouldn't this
-allocate the maximum event size every time regardless of the actual
-event->header.size?
+[ ... ]
+> +static int pyrf_session_tool__sample(const struct perf_tool *tool,
+> +				     union perf_event *event,
+> +				     struct perf_sample *sample,
+> +				     struct machine *machine __maybe_unused)
+> +{
+[ ... ]
+> +	memcpy(&pevent->event, event, event->header.size);
+> +	/* The event is already swapped, disable swapping temporarily */
+> +	sample->evsel->needs_swap =3D false;
+> +	if (evsel__parse_sample(sample->evsel, &pevent->event, &pevent->sample)=
+ < 0) {
 
-> +	if (pevent =3D=3D NULL)
-> +		return PyErr_NoMemory();
+[Severity: High]
+Does disabling needs_swap here corrupt 32-bit fields during cross-endian
+analysis?
+
+perf_event__all64_swap() blindly swaps PERF_RECORD_SAMPLE payloads in 64-bit
+chunks, which swaps the positions of adjacent 32-bit fields (like pid and t=
+id).
+evsel__parse_sample() relies on needs_swap =3D=3D true to undo this 64-bit =
+swap
+and correctly restore the 32-bit fields.
+
+By forcing needs_swap =3D false, are we bypassing this critical fixup and
+exposing corrupted PID, TID, and CPU data to Python tooling?
+
+[ ... ]
+> +static PyObject *pyrf_session__new(PyTypeObject *type, PyObject *args, P=
+yObject *kwargs)
+> +{
+[ ... ]
+> +	session =3D perf_session__new(&pdata->data, &psession->tool);
+> +	if (IS_ERR(session)) {
+> +		PyErr_Format(PyExc_IOError, "failed to create session: %ld", PTR_ERR(s=
+ession));
+> +		goto err_out;
+> +	}
+> +	psession->session =3D session;
 > +
-> +	/* Copy the event for memory safety and initialize variables. */
-> +	memcpy(&pevent->event, event, copy_size);
+> +	if (symbol__init(perf_session__env(session)) < 0) {
+
+[Severity: High]
+Will calling symbol__init() here break cross-platform symbol resolution in
+pipe mode?
+
+In pipe mode, perf_env is not populated by perf_session__new(); instead,
+features arrive dynamically later during perf_session__process_events().
+
+Since perf_env is empty at this point for piped streams, vmlinux_path__init=
+()
+falls back to the host machine's uname(). Doesn't this irreversibly configu=
+re
+symbol resolution for the host's architecture instead of the recorded
+machine's architecture?
+
+> +		PyErr_SetString(PyExc_OSError, "perf: symbol__init failed");
+> +		goto err_out;
+> +	}
+> +
+> +
+> +
+> +	return (PyObject *)psession;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615061631.2382=
-079-1-irogers@google.com?part=3D11
+079-1-irogers@google.com?part=3D10
