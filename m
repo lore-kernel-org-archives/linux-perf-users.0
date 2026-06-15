@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFEB33A6E2
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 22:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F56B3BB116
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 22:54:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781563947; cv=none; b=KV7qFJ3Iaw419RIYXz1uIGdt5mkGyX6+YAYd4ZoDi4eC4WLFtypsW7xoL/zFb5noW52kCGnJdaNQD4YwFsXVnLU3UcEW22M94X/lew/KouVyZ7O5NZRXOfwDtDD6qaNEHrst73L6XH4EfvJYy+iBVZPIPV2GTygNd9ILHJPB380=
+	t=1781564066; cv=none; b=YbQHsJJoEN3vHgxXsPPhzHlh1bAlyUvUl9ms/8BK0jowBubxAX7njdCS0LLI0hjicHxg7RsWJDR5pAgWQxiDy7NGDkPREWxluldfr1FiCTrybwPnP0WDod/4i4ysqdddudbYhChvNJhqSMSL4AQGb+EPfKqpTn58XTW9EB/5Aqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781563947; c=relaxed/simple;
-	bh=TDDBx1ELWRVS/MMECjANVGs92CyNfD0hnJo+mu07oQU=;
+	s=arc-20240116; t=1781564066; c=relaxed/simple;
+	bh=PkQq7iD+J+FPbIPUEclcWODeBVlbWnstSLitAqu7/x4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FzbAq48BmObZNs/UZ9df+Q/c/QBFG0+FEHJPOevQp8Kx3W8eqzjFwT/5oIhw9jLC2SGIUAITS0emEhso4UpGZN5LAUt3omf9KHcbgfdxn/7mG59rcKEoeBqIKYs2EfFfnf3fzyFvQ1SE1ajcmDhRVo4F/8n6sz8R7rcE3d5Oc/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1uCXA/Z; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=VybVPPhRvGLknse2EyJSnvHR8efE8Fq48jvWuFgVWjSkILk+6sQXat+fzwcX+4kcvr2H8o84cszM6fQYEuJz+bWPKjnXP8GKVW+Jvk9wmSJyYQ5ENQd61qnB21x43kA5IMQGaiO2NGWWIPJJNuaV+x3fLmgCXNNg2YB4m7BdNnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DVN6ZyYx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1uCXA/Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E8B61F000E9;
-	Mon, 15 Jun 2026 22:52:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DVN6ZyYx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DECF21F000E9;
+	Mon, 15 Jun 2026 22:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781563946;
-	bh=lIQw5jhgQ1SEfRGYanodh9p4QLAIz1qZ8Ykob3xnh1c=;
+	s=k20260515; t=1781564065;
+	bh=fDMnAm48HaFg/P/VUU1flN9Tc4zIPS9JUBj1bv0fm6w=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Y1uCXA/Zewgz7oiKT48+upFWSJt7EdJgza8Xlz9R0uU6oxGPOAudsjpWM1tUZcoL8
-	 o+r+CFkPCxEVZK+faJs/W4tRHc8qpiM/PbtfrWMLRH2scIIlEg/pi2kQyoaO7zC01h
-	 kYdS0Xgvy21ZxagKADxCRrfMnXU0qi9BCd+sq+mH2oGU+0HtjCz4IKVtbWqRHvo4g6
-	 hpfxqV3JtOt8rt15+VnSVUYibizalOJ3HO+OunCeZro4Z+72aTE7ihSqg+9m+jhUkl
-	 bZs7EqmwrLB5CBBaaWraYcXWWSAXSBjnoNkY/8VwwAl2hGhhcVoshXe2qgbyG1fcBf
-	 DzJECMh9laZkQ==
+	b=DVN6ZyYx8KxQdmSpLlAC5hWtctTiD8PYFA0R22vPZllGeQxz/z1Gn+kToq+HtD2sW
+	 XFknllCBGRRmwZlCnWNTQwCtxuvdF7gKx7TPPH/bfXSfTUCn1KSMQTVAwAUn6oCu/R
+	 SGSpax97h2cUTBsfevHqlxjJTVnto4F1vkcbpGQlb3H/qW86OGRjTGeeAhK4ko98sD
+	 3Mxk5RWmOs/FrYSR2BAdQh2Y/sQ9rIEI9CpgUzLU/ZpVbeJzsW24us1iFF7GfKHgLO
+	 5bqxIiVGJUPlbbLgQA9U25cyI31/9VuNSw8+u9hg5lBtIBGqADKpLQyHaidbCYijPR
+	 wspLSAk6jbI0w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/9] perf machine: Propagate machine__init() error to
- callers
+Subject: Re: [PATCH v20 19/21] perf python: Add type checking for
+ parse_events/parse_metrics
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615223249.36598-2-acme@kernel.org>
-References: <20260615223249.36598-2-acme@kernel.org>
+In-Reply-To: <20260615223011.3873955-20-irogers@google.com>
+References: <20260615223011.3873955-20-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 22:52:25 +0000
-Message-Id: <20260615225226.1E8B61F000E9@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 22:54:24 +0000
+Message-Id: <20260615225424.DECF21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,61 +46,74 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Calling `perf_session__delete()` on early failure before `perf_e=
-nv__init()` is called attempts to lock and destroy uninitialized mutexes an=
-d rw_semaphores.
+
+Pre-existing issues:
+- [High] Missing type checks for Python objects blindly cast to internal ma=
+p structs in pyrf_evsel__open.
 --
 
-commit 0e04858ad5c2ebb0c7b3cfa94d694fd312c0bd25
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+commit fe6a29ea73634479b123e57801dc3fa83e09bec2
+Author: Ian Rogers <irogers@google.com>
 
-perf machine: Propagate machine__init() error to callers
+perf python: Add type checking for parse_events/parse_metrics
 
-This commit updates machine__init() to return an error code upon failure
-instead of 0. It modifies callers like machines__init() to check the
-return value and propagate the error further up the stack.
+The threads and cpus parameters in parse_events and parse_metrics
+are parsed with the 'O' format specifier but blindly casted in the
+C extension. If a user passes an invalid object type, this leads to
+memory corruption when dereferencing the expected struct.
 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 1a9a008ddda35..26bacb6c1a572 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -160,7 +160,9 @@ struct perf_session *__perf_session__new(struct perf_=
-data *data,
->  	session->decomp_data.zstd_decomp =3D &session->zstd_data;
->  	session->active_decomp =3D &session->decomp_data;
->  	INIT_LIST_HEAD(&session->auxtrace_index);
-> -	machines__init(&session->machines);
-> +	if (machines__init(&session->machines))
-> +		goto out_delete;
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 4ec5a91d45c01..11e1f39c1bea9 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -3341,6 +3341,20 @@ static PyObject *pyrf__parse_events(PyObject *self=
+, PyObject *args)
+>  		return NULL;
+>  	}
+> =20
+> +	if (pthreads && pthreads !=3D Py_None &&
+> +	    !PyObject_TypeCheck(pthreads, &pyrf_thread_map__type)) {
+> +		PyErr_SetString(PyExc_TypeError, "threads must be a perf.thread_map or=
+ None");
+> +		evlist__put(evlist);
+> +		return NULL;
+> +	}
 > +
+> +	if (pcpus && pcpus !=3D Py_None &&
+> +	    !PyObject_TypeCheck(pcpus, &pyrf_cpu_map__type)) {
+> +		PyErr_SetString(PyExc_TypeError, "cpus must be a perf.cpu_map or None"=
+);
+> +		evlist__put(evlist);
+> +		return NULL;
+> +	}
+> +
+>  	threads =3D (pthreads && pthreads !=3D Py_None) ?
+>  			((struct pyrf_thread_map *)pthreads)->threads : NULL;
 
-[Severity: Medium]
-Will jumping to out_delete here cause a crash when cleaning up the
-environment?
+[Severity: High]
+This isn't a bug introduced by this patch, but does pyrf_evsel__open()
+need these same validations?
 
-When this goto is taken, perf_session__delete() is called, which in turn
-calls perf_env__exit().
+Looking at pyrf_evsel__open() in tools/perf/util/python.c, it appears to
+parse the exact same cpus and threads arguments without checking their
+type before casting:
 
-However, perf_env__init(&session->header.env) is only called later in
-__perf_session__new(), meaning the environment is still zero-initialized
-from the zalloc() of the session.
+tools/perf/util/python.c:pyrf_evsel__open() {
+    ...
+	if (pthreads !=3D NULL && pthreads !=3D Py_None)
+		threads =3D ((struct pyrf_thread_map *)pthreads)->threads;
 
-When perf_env__exit() runs, it does:
+	if (pcpus !=3D NULL && pcpus !=3D Py_None)
+		cpus =3D ((struct pyrf_cpu_map *)pcpus)->cpus;
+    ...
+}
 
-perf_env__exit()
-    mutex_destroy(&env->lock);
-    perf_env__purge_bpf(env);
+Could a user passing an invalid object type to evsel.open(cpus=3D...) trigg=
+er
+the same memory corruption when dereferencing the expected struct?
 
-And perf_env__purge_bpf() calls down_write(&env->bpf_progs.lock).
-
-Could attempting to destroy and lock these uninitialized synchronization
-primitives lead to undefined behavior depending on the underlying libc
-implementation?
-
->  	ordered_events__init(&session->ordered_events,
->  			     ordered_events__deliver_event, NULL);
->
+[ ... ]
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615223249.3659=
-8-1-acme@kernel.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615223011.3873=
+955-1-irogers@google.com?part=3D19
