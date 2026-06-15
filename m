@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374DB30DED1;
-	Mon, 15 Jun 2026 21:37:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4022030DED1;
+	Mon, 15 Jun 2026 21:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781559446; cv=none; b=TQdlYgRRGYkMMIsYuj5nO7oZ+N2KCZTg3UdKPXEDFF3Wibg+WeqjRlzpKcmcg2oakxfU09T28JpnoCPlkNM0qW3rBoY4XMila6HQ9H3h/HtnOwNMRc6qKPjFvpVOiCtPfuCbfvo0x7HqNvYPKi5HkqV1mqyCvC4ZplUX5GJFYM8=
+	t=1781559450; cv=none; b=r+JxoX5rYlOTtgCVatJRqFQyto2cBfcr764UqgXJqG11zff6+9pZ9BqwUhjWfIsac5vEeQP5TottdOxIGwzsBIZfJOQJtaxmoeFklWesBBd8EW4aJjG9mqrsx4AFkB3VDvGeOTNasYpd1wAn0o3bdeNo6mVl3U6mkkC2CodY39w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781559446; c=relaxed/simple;
-	bh=dtzYcHZgG0hqkA9z54QV309PHffUSU2ySymNNbOxs8E=;
+	s=arc-20240116; t=1781559450; c=relaxed/simple;
+	bh=iZcqG58TA5LGQvJYby9/qaw07A039ETs3uwWOc5UV8w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qWkmzGiiWdRENv/+XWtZhcmxpJEPJRdRr1sw+xvu9EBlRAt5Ndmb9oNeX2bpbOmcopa2ojbJQpGw1aB5e4b6wqGb4AwrKnDPoRH4z5nrq17ls5XwuWKHmcXzCZw/rAcuGbHy3ro6fdO98E6xR1yVKie88VSIbV1jluzKGSJ6DH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWDifemR; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=XjKDuC2sZsjND3rBQGpW7GGsE2rmicdhsYVV14mmRpDzMsg3BeSG2H3b05Wa79fT5Gx7sUTmF9qQ32EGEWNGBV5J8HkzVkp49/4Hr1ExNtBHKzu0BMycdXfC4juq6D+k4uWOShozPtd9deQXWRfNFptQetuOBl86Q4L7oWWQX30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3oeeVPd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWDifemR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8131F00A3A;
-	Mon, 15 Jun 2026 21:37:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3oeeVPd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90EC11F000E9;
+	Mon, 15 Jun 2026 21:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781559445;
-	bh=hICK0f9EXipK30sHw4w7F3YugcEvbyriZHsVdJLEggc=;
+	s=k20260515; t=1781559448;
+	bh=kgJYoHlcqFV+eugqlEuDQnuZ+mPxNa7dqap9zdwn9z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bWDifemRbc0Q3Eme6fId6eRulL+NI2nI5IP/6l4Djzif/4DbcKRMsylchG3up97iz
-	 ypEzpmaloDnUw+pa10f1GoxuMd1eq3bsHCr0xT0F2hUmEbMzWeVkjSjyRGrqZb1SA6
-	 /czEdFu51KvgIKjeAVVJbcAc7bdvP8bfSaOzP0QdDsYZsVy+9htVz/8I0eCdOvi2U/
-	 5Ep4Efj2DQZRz6pJbu5ZzLWOQ0z/BgjHsOc6J+qTVq9801VGqAi3Br8PoQptMK69TF
-	 vZXZqqQtElJ7PaO96u+X/UT86Ivan1Hmz//o4/sSZ40EPPVyOKt+WdcpIYs21k/YYn
-	 25Ay8fxXCTvIA==
+	b=n3oeeVPdK3Au5LymmGH3kFaDEgFeZjYJ4p1DUH2UCuO8YH+QYaRcILiALC0k8YEPU
+	 OZ/orHxqw2xz+pcVpgwERwj6FsQArMk0Cld3MbJ7vPwTRQPASPMAkqqnIG16HQbvYn
+	 5JVeOlNBrnrPvevcYO9EXKMNFAZLhF3AcnGrxid8JBJAvIzdkS+MxYvIxYdg6PPqVv
+	 1rHJtcMSdeK3gSHZc/BfAkp2PpKY0sGAObgj7YkAoYK5VPxjQznjlR8J0Mvtd5kLyd
+	 eLxzEYkh6KZ+p7SD8trVnyhTOQeVzQPxVNjUMXi0roYXI9V3uG4cyzEtF+HAHhZ0vI
+	 lViCalaKn2aWQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,12 +39,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Leo Yan <leo.yan@linaro.org>,
 	Claude <noreply@anthropic.com>
-Subject: [PATCH 5/9] perf cs-etm: Bounds-check CPU in cs_etm__get_queue()
-Date: Mon, 15 Jun 2026 18:36:53 -0300
-Message-ID: <20260615213657.35776-6-acme@kernel.org>
+Subject: [PATCH 6/9] perf c2c: Free format list entries when c2c_hists__init() fails
+Date: Mon, 15 Jun 2026 18:36:54 -0300
+Message-ID: <20260615213657.35776-7-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260615213657.35776-1-acme@kernel.org>
 References: <20260615213657.35776-1-acme@kernel.org>
@@ -54,117 +52,40 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-cs_etm__get_queue() indexes etm->queues.queue_array[cpu] without
-validating that cpu is within nr_queues.  When processing
-AUX_OUTPUT_HW_ID events, the cpu value comes from untrusted perf.data
-trace payload and flows through cs_etm__process_trace_id_v0_1() and
-cs_etm__queue_aux_fragment() without bounds checking, allowing an
-out-of-bounds read with a crafted file.
+When c2c_hists__init() fails partway through hpp_list__parse(),
+dynamically allocated format structures that were already added to
+hists->list are leaked because he__get_c2c_hists() frees the hists
+container without first unregistering the format entries.
 
-Add a bounds check in cs_etm__get_queue() and NULL checks in all
-callers.
+Call perf_hpp__reset_output_field() before freeing the hists container
+on the error path, matching what c2c_he_free() already does on the
+normal destruction path.
 
-Also add NULL checks for queue_array[i].priv in the queue iteration
-loops in cs_etm__map_trace_id_v0() and cs_etm__process_trace_id_v0_1()
-— after auxtrace_queues__grow() new entries are zero-initialized so
-.priv can be NULL.  Add a get_cpu_data() NULL check in
-cs_etm__process_trace_id_v0_1(), matching the existing check in
-cs_etm__process_trace_id_v0().
-
-Fixes: 77c123f53e97ad4b ("perf: cs-etm: Move traceid_list to each queue")
+Fixes: 17a7c5946d79a12c ("perf c2c report: Decode c2c_stats for hist entries")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Assisted-by: Claude <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ tools/perf/builtin-c2c.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index d121c8f22028d5ba..5d0664ff73b79122 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -292,8 +292,11 @@ static struct cs_etm_queue *cs_etm__get_queue(struct cs_etm_auxtrace *etm, int c
- {
- 	if (etm->per_thread_decoding)
- 		return etm->queues.queue_array[0].priv;
--	else
--		return etm->queues.queue_array[cpu].priv;
-+
-+	if (cpu < 0 || cpu >= (int)etm->queues.nr_queues)
-+		return NULL;
-+
-+	return etm->queues.queue_array[cpu].priv;
- }
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 07c7e8fb315e6cf3..eabb922ef295ef86 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -226,6 +226,7 @@ he__get_c2c_hists(struct hist_entry *he,
  
- static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id,
-@@ -306,6 +309,9 @@ static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id
- 	 * queue associated with that CPU so only one decoder is made.
- 	 */
- 	etmq = cs_etm__get_queue(etm, cpu_metadata[CS_ETM_CPU]);
-+	if (!etmq)
-+		return -EINVAL;
-+
- 	if (etmq->format == UNFORMATTED)
- 		return cs_etm__insert_trace_id_node(etmq, trace_chan_id,
- 						    cpu_metadata);
-@@ -318,6 +324,9 @@ static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id
- 		int ret;
- 
- 		etmq = etm->queues.queue_array[i].priv;
-+		if (!etmq)
-+			continue;
-+
- 		ret = cs_etm__insert_trace_id_node(etmq, trace_chan_id,
- 						   cpu_metadata);
- 		if (ret)
-@@ -358,6 +367,9 @@ static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace *etm, int cpu,
- 	u32 sink_id = FIELD_GET(CS_AUX_HW_ID_SINK_ID_MASK, hw_id);
- 	u8 trace_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
- 
-+	if (!etmq)
-+		return -EINVAL;
-+
- 	/*
- 	 * Check sink id hasn't changed in per-cpu mode. In per-thread mode,
- 	 * let it pass for now until an actual overlapping trace ID is hit. In
-@@ -375,6 +387,9 @@ static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace *etm, int cpu,
- 	for (unsigned int i = 0; i < etm->queues.nr_queues; ++i) {
- 		struct cs_etm_queue *other_etmq = etm->queues.queue_array[i].priv;
- 
-+		if (!other_etmq)
-+			continue;
-+
- 		/* Different sinks, skip */
- 		if (other_etmq->sink_id != etmq->sink_id)
- 			continue;
-@@ -396,6 +411,9 @@ static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace *etm, int cpu,
- 	}
- 
- 	cpu_data = get_cpu_data(etm, cpu);
-+	if (!cpu_data)
-+		return -EINVAL;
-+
- 	ret = cs_etm__insert_trace_id_node(etmq, trace_id, cpu_data);
- 	if (ret)
- 		return ret;
-@@ -3144,6 +3162,9 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
- 		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, auxtrace_event->cpu);
- 
-+		if (!etmq)
-+			return -EINVAL;
-+
- 		/*
- 		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
- 		 * based on the sizes of the aux event, and queue that fragment.
+ 	ret = c2c_hists__init(hists, sort, nr_header_lines, env);
+ 	if (ret) {
++		perf_hpp__reset_output_field(&hists->list);
+ 		c2c_he->hists = NULL;
+ 		free(hists);
+ 		return NULL;
 -- 
 2.54.0
 
