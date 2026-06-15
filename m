@@ -1,192 +1,136 @@
-Received: from out28-102.mail.aliyun.com (out28-102.mail.aliyun.com [115.124.28.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91593E6DC3;
-	Mon, 15 Jun 2026 12:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903EA37B41B
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 12:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781526125; cv=none; b=qanVJeaxqjfKtbnxbgUCSknqeOIOzF6VeTjIdWO5Li4g5hY9DOHY+ibSy4KFdogENxoakvy2mzc9P6NNXy3ZRAOh4Fb30uOmQi+TzRFoyRHworOQ0YwHjNms2MUYBK+Gnr8yp08bs3Ol3BddyTRoWEDyfVyHEOEsVgirTGOz1TA=
+	t=1781527103; cv=none; b=i2+OP4XCXBArm4a8KqLSfhny18lhS32xY1sxLupVntfLy7I0vqIqCLHCW0wkquPw0FYHMXqAkxI90sI4DXNTNxqr3z1Ngg8EcDogsnVsc8wB6Jdjfk+EydbInZuU22Xzif162jnz2vx3OZ3edlLzdMbn61IWOipg7gx+REeTvcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781526125; c=relaxed/simple;
-	bh=zcZUUqXmhvVsUCZo2ZpeOPPXUC4zoQnmyclx5qA1NiI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PzCWQPt3H3fEwBXsEfMLjMNZIMFfjlzG7U7VnJOg1JzgEFvEwAInyPcAhV5YHs+a4F3H6XVMLOSicY6WXfqsY8c9cmISgJ4NtQNRBSh1tjNaNbxghS5XYEdlZxK+M1UKaci/iO33NDrZ5K2trsjlZLILtFXWFohA00pRKpETl6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=open-hieco.net; spf=pass smtp.mailfrom=open-hieco.net; arc=none smtp.client-ip=115.124.28.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=open-hieco.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=open-hieco.net
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07436417|-1;CH=blue;DM=|OVERLOAD|false|;DS=CONTINUE|ham_alarm|0.00828711-0.000511096-0.991202;FP=5927377541447355792|1|1|1|0|-1|-1|-1;HT=maildocker-contentspam033045018182;MF=fuhao@open-hieco.net;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.hyr8tcc_1781526093;
-Received: from higon..(mailfrom:fuhao@open-hieco.net fp:SMTPD_---.hyr8tcc_1781526093 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Mon, 15 Jun 2026 20:21:53 +0800
-From: Fu Hao <fuhao@open-hieco.net>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	tglx@kernel.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	james.clark@linaro.org,
-	hpa@zytor.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tingyin.duan@gmail.com,
-	Fu Hao <fuhao@open-hieco.net>
-Subject: [PATCH v3 4/7] perf/x86/uncore: Add L3 PMU support for Hygon family 18h model 6h
-Date: Mon, 15 Jun 2026 20:20:39 +0800
-Message-Id: <d387dd1497ac938b82ecc0c56505a64a61443c22.1781523812.git.fuhao@open-hieco.net>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1781523812.git.fuhao@open-hieco.net>
-References: <cover.1781523812.git.fuhao@open-hieco.net>
+	s=arc-20240116; t=1781527103; c=relaxed/simple;
+	bh=lzu8Fh3pIoV3Nz+OZ7MTorJ9EmZB88Y1YWPs5Js9n6E=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=fkhYYcUgl/T2lSj94DK9LDbqUGKvjQf64hPJtHM5grjbgyR/ADvoY6X706tvEJpaJQ+W6b3bHzjncYkPzYChkCFXOoGLw+czSulwcdb5YtTnABecmCJlWaovM5eGBiwk8fmnXjfm2hZ6Ez05KfU427k9S+eHIJ2Z2AN0R3Ld7Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ckiLD/iC; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ckiLD/iC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9311F000E9;
+	Mon, 15 Jun 2026 12:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781527102;
+	bh=bfdTLgQ9ePTL8DqI5waDCI4LcuhlagkHe7Y7476kEm0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ckiLD/iCb44tJqiIyY1z/3XsmY1aGGdfvU3FCRGEpx5UOUkuLLL/4QaVNu5KeIv2F
+	 Vr2SX3qZmddPpyYs9RMYjPXt2gD6duNRWbKr+p7pi+g3IoVwH3uh+kjnrBrUAnv/ra
+	 BXRMVq/25CAMP+feqa3P6Whs8ok5/b6joGE3lMY5yPbKuqG1psBWWfNJfiztCduhAE
+	 aA+lcKuAmErcStfFBZ+vY5MDLC1XS3XeyI6ILRBirMSFSIdNUZQmZDkCcsapQW4b98
+	 3chuNs/Jc7DTrvzrFjwGEvIuUIk1nPL+SwQgs0P/KwfD+Untkde2n51o9XXl4ff1kT
+	 ovQKQEk0OTTNw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 4/7] perf/x86/uncore: Add L3 PMU support for Hygon
+ family 18h model 6h
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Fu Hao" <fuhao@open-hieco.net>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <d387dd1497ac938b82ecc0c56505a64a61443c22.1781523812.git.fuhao@open-hieco.net>
+References: <d387dd1497ac938b82ecc0c56505a64a61443c22.1781523812.git.fuhao@open-hieco.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 15 Jun 2026 12:38:21 +0000
+Message-Id: <20260615123822.3B9311F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Adjust the L3 PMU slicemask and threadmask for Hygon family 18h
-model 6h processor.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Signed-off-by: Fu Hao <fuhao@open-hieco.net>
-Tested-by: Tingyin Duan <tingyin.duan@gmail.com>
----
- arch/x86/events/amd/uncore.c      | 48 ++++++++++++++++++++++++++++++-
- arch/x86/include/asm/perf_event.h |  8 ++++++
- 2 files changed, 55 insertions(+), 1 deletion(-)
+Pre-existing issues:
+- [High] Registered PMUs are not unregistered if `cpuhp_setup_state()` fail=
+s during module initialization, leading to a Use-After-Free.
+--
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index dd956cfca..e71d9e784 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -308,6 +308,14 @@ amd_f17h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- 	       attr->mode : 0;
- }
- 
-+static umode_t
-+hygon_f18h_m6h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-+{
-+	return boot_cpu_data.x86 == 0x18 &&
-+	       boot_cpu_data.x86_model >= 0x6 && boot_cpu_data.x86_model <= 0xf	?
-+	       attr->mode : 0;
-+}
-+
- static umode_t
- amd_f19h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- {
-@@ -359,6 +367,8 @@ DEFINE_UNCORE_FORMAT_ATTR(enallslices,	enallslices,	"config:46");		   /* F19h L3
- DEFINE_UNCORE_FORMAT_ATTR(enallcores,	enallcores,	"config:47");		   /* F19h L3 */
- DEFINE_UNCORE_FORMAT_ATTR(sliceid,	sliceid,	"config:48-50");	   /* F19h L3 */
- DEFINE_UNCORE_FORMAT_ATTR(rdwrmask,	rdwrmask,	"config:8-9");		   /* PerfMonV2 UMC */
-+DEFINE_UNCORE_FORMAT_ATTR(slicemask4,	slicemask,	"config:28-31");	   /* F18h L3 */
-+DEFINE_UNCORE_FORMAT_ATTR(threadmask32,	threadmask,	"config:32-63");	   /* F18h L3 */
- 
- /* Common DF and NB attributes */
- static struct attribute *amd_uncore_df_format_attr[] = {
-@@ -388,6 +398,12 @@ static struct attribute *amd_f17h_uncore_l3_format_attr[] = {
- 	NULL,
- };
- 
-+/* F18h M06h unique L3 attributes */
-+static struct attribute *hygon_f18h_m6h_uncore_l3_format_attr[] = {
-+	&format_attr_slicemask4.attr,	/* slicemask */
-+	NULL,
-+};
-+
- /* F19h unique L3 attributes */
- static struct attribute *amd_f19h_uncore_l3_format_attr[] = {
- 	&format_attr_coreid.attr,	/* coreid */
-@@ -413,6 +429,12 @@ static struct attribute_group amd_f17h_uncore_l3_format_group = {
- 	.is_visible = amd_f17h_uncore_is_visible,
- };
- 
-+static struct attribute_group hygon_f18h_m6h_uncore_l3_format_group = {
-+	.name = "format",
-+	.attrs = hygon_f18h_m6h_uncore_l3_format_attr,
-+	.is_visible = hygon_f18h_m6h_uncore_is_visible,
-+};
-+
- static struct attribute_group amd_f19h_uncore_l3_format_group = {
- 	.name = "format",
- 	.attrs = amd_f19h_uncore_l3_format_attr,
-@@ -442,6 +464,11 @@ static const struct attribute_group *amd_uncore_l3_attr_update[] = {
- 	NULL,
- };
- 
-+static const struct attribute_group *hygon_uncore_l3_attr_update[] = {
-+	&hygon_f18h_m6h_uncore_l3_format_group,
-+	NULL,
-+};
-+
- static const struct attribute_group *amd_uncore_umc_attr_groups[] = {
- 	&amd_uncore_attr_group,
- 	&amd_uncore_umc_format_group,
-@@ -820,6 +847,12 @@ static int amd_uncore_l3_event_init(struct perf_event *event)
- 		mask = AMD64_L3_F19H_THREAD_MASK | AMD64_L3_EN_ALL_SLICES |
- 		       AMD64_L3_EN_ALL_CORES;
- 
-+	if (boot_cpu_data.x86 == 0x18 &&
-+	    boot_cpu_data.x86_model >= 0x6 &&
-+	    boot_cpu_data.x86_model <= 0xf)
-+		mask = ((config & HYGON_L3_SLICE_MASK) ? : HYGON_L3_SLICE_MASK) |
-+		       ((config & HYGON_L3_THREAD_MASK) ? : HYGON_L3_THREAD_MASK);
-+
- 	hwc->config |= mask;
- 
- 	return 0;
-@@ -877,7 +910,8 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 	pmu->rdpmc_base = RDPMC_BASE_LLC;
- 	pmu->group = amd_uncore_ctx_gid(uncore, cpu);
- 
--	if (boot_cpu_data.x86 >= 0x17) {
-+	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD &&
-+	    boot_cpu_data.x86 >= 0x17) {
- 		*l3_attr++ = &format_attr_event8.attr;
- 		*l3_attr++ = &format_attr_umask8.attr;
- 		*l3_attr++ = boot_cpu_data.x86 >= 0x19 ?
-@@ -904,6 +938,18 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 		.module		= THIS_MODULE,
- 	};
- 
-+	if (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON &&
-+	    boot_cpu_data.x86 == 0x18) {
-+		*l3_attr++ = &format_attr_event8.attr;
-+		*l3_attr++ = &format_attr_umask8.attr;
-+		if (boot_cpu_data.x86_model >= 0x6 && boot_cpu_data.x86_model <= 0xf) {
-+			*l3_attr++ = &format_attr_threadmask32.attr;
-+			pmu->pmu.attr_update = hygon_uncore_l3_attr_update;
-+		} else {
-+			*l3_attr++ = &format_attr_threadmask8.attr;
-+		}
-+	}
-+
- 	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
- 		free_percpu(pmu->ctx);
- 		pmu->ctx = NULL;
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index ff5acb8b1..404752601 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -89,6 +89,14 @@
- #define AMD64_L3_COREID_MASK				\
- 	(0x7ULL << AMD64_L3_COREID_SHIFT)
- 
-+#define HYGON_L3_SLICE_SHIFT				28
-+#define HYGON_L3_SLICE_MASK				\
-+	(0xFULL << HYGON_L3_SLICE_SHIFT)
-+
-+#define HYGON_L3_THREAD_SHIFT				32
-+#define HYGON_L3_THREAD_MASK				\
-+	(0xFFFFFFFFULL << HYGON_L3_THREAD_SHIFT)
-+
- #define X86_RAW_EVENT_MASK		\
- 	(ARCH_PERFMON_EVENTSEL_EVENT |	\
- 	 ARCH_PERFMON_EVENTSEL_UMASK |	\
--- 
-2.34.1
+commit 98d69c16b51701dce640f5ac92cee0daa35f2cfb
+Author: Fu Hao <fuhao@open-hieco.net>
 
+perf/x86/uncore: Add L3 PMU support for Hygon family 18h model 6h
+
+This patch adds L3 PMU support for the Hygon family 18h model 6h processor
+by adjusting the slicemask and threadmask in the uncore driver.
+
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 9293ce50574da..21f00edd3caa6 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+
+[ ... ]
+
+> @@ -877,7 +910,8 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore,=
+ unsigned int cpu)
+>  	pmu->rdpmc_base =3D RDPMC_BASE_LLC;
+>  	pmu->group =3D amd_uncore_ctx_gid(uncore, cpu);
+> =20
+> -	if (boot_cpu_data.x86 >=3D 0x17) {
+> +	if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_AMD &&
+> +	    boot_cpu_data.x86 >=3D 0x17) {
+>  		*l3_attr++ =3D &format_attr_event8.attr;
+>  		*l3_attr++ =3D &format_attr_umask8.attr;
+
+[ ... ]
+
+> +	if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_HYGON &&
+> +	    boot_cpu_data.x86 =3D=3D 0x18) {
+> +		*l3_attr++ =3D &format_attr_event8.attr;
+> +		*l3_attr++ =3D &format_attr_umask8.attr;
+> +		if (boot_cpu_data.x86_model >=3D 0x6 && boot_cpu_data.x86_model <=3D 0=
+xf) {
+> +			*l3_attr++ =3D &format_attr_threadmask32.attr;
+> +			pmu->pmu.attr_update =3D hygon_uncore_l3_attr_update;
+> +		} else {
+> +			*l3_attr++ =3D &format_attr_threadmask8.attr;
+> +		}
+> +	}
+> +
+>  	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
+>  		free_percpu(pmu->ctx);
+>  		pmu->ctx =3D NULL;
+
+[Severity: High]
+This is a pre-existing issue, but registering the PMU here exposes a teardo=
+wn
+issue in the module initialization error path.
+
+If cpuhp_setup_state() fails for the online state in amd_uncore_init(), the
+error path jumps to fail_start and removes the hotplug states. This triggers
+the amd_uncore_cpu_dead() teardown callback, which correctly frees the
+per-CPU context by calling amd_uncore_ctx_free().
+
+However, the error path does not unregister the PMU or free the uncore->pmus
+array:
+
+arch/x86/events/amd/uncore.c:amd_uncore_init() {
+    ...
+fail:
+	for (i =3D 0; i < UNCORE_TYPE_MAX; i++) {
+		uncore =3D &uncores[i];
+		if (uncore->info) {
+			free_percpu(uncore->info);
+			uncore->info =3D NULL;
+		}
+	}
+
+	return ret;
+}
+
+Since the initialization failed, the module will be unloaded, but the perf
+subsystem retains references to the registered PMUs.
+
+Could this lead to a use-after-free if the perf subsystem later accesses
+these dangling PMUs (for instance, via perf stat) after the module memory
+has been freed?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1781523812.gi=
+t.fuhao@open-hieco.net?part=3D4
