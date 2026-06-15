@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C743F40FDAF
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 16:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A11403B13
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 16:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781542220; cv=none; b=Q7/a69+FYH8lBWB36BSSG/EWEvCRtE1qJinNeH5durPc8m0mw0Sl5FXlKGJ9wbzkVAC0oQAzASsSr0Q9LhohVW75/2S6TxEabUKvtL3TGCazhROvWuri9uVW315z7UA8khHPsMpSxDr6RIIV1+BslLsm7nmhngr2XtXktI0dDLY=
+	t=1781542223; cv=none; b=A2L7A1nItyr84p8kSLu3Lqx/MDi18i6tmvp8l77Ba03NbOu6PDATyIoiLt2chsdeCCzy5ZRa34Q3EZ2+35+YpfO/UDJmBCXuszT4cgVhcp7XMyLksM9O5mBnXsgm+/fcBxbIEE9e/E1McWiu6duNOR4QgCWNfTGtm0h1ikua5Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781542220; c=relaxed/simple;
-	bh=BmN+uIK2KozJ/CmJ6jybIyW1ngHuqgsLL5Q2oJs/n+Y=;
+	s=arc-20240116; t=1781542223; c=relaxed/simple;
+	bh=JSfVdaFgVT+16BkkuKzKlIjgGUMwUVUUeSc4uGtnw10=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Xk0kvP8WVZDOL3/gAk/kQCp81LiMv0CCNF+S6qnaGnyM0s2/ffmMH5RZvxH4oKVskYpLrJI+vfiyijWBBBEa/Efp1XhhSEv8n88jGNIMFtBsAez+y6CtnNDYZwZqvj1fgB9wy59Q4adpt+w3vBVnhDiH/v6dMbl3/Ei3B9Hl8Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=phAIOqN+; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=B/s9hajImL2J5BhoPlB/2fY6ksluOhav9VrdSV8+JX8SvygmBxAlAG+5KtyFDdvHTtbYByhE9Vu+/GPw3fDoa738vYmZUT6PCl6V2OjgcxjFz2nTvUC1C1EuYJe4q+l1bv9XSHOZzkKFuOMsTPO0fmETuvs11Wr2IMQLda9B7ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PlS5eL4i; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="phAIOqN+"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1370417c0bfso2474493c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 09:50:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PlS5eL4i"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304df51ff3eso7608947eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 09:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781542219; x=1782147019; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781542221; x=1782147021; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VvL9FN3niBRwopfeT8jFF2/cj8/ZhVUpeFaQcjlgPs4=;
-        b=phAIOqN+SV85mhtKT07iyI/uEHb43y78y5L2DJL5B4quf82o63N39aqTuHYoGTrdD+
-         GLMSmCeVICi1dcorQTTF3WAzPQE6uZ7QWLa2r3Lofd+lgDo5lG51LWG8mj7ZK7St3m7f
-         w8JcptoHvWJuNBPLOkUo68RxKy92dJfCCJtHS4n7IgYGJQe+Tu6KMt9Qo/gqDN6X1nf4
-         h63qLFOP8jpp+zsy/RSYr8uuKRMogQow4nLy7t3NItte9z76QodlYvruoQXMnk22OPLy
-         XRGHihKb7pP1sA0Y+dJunKOqDNy5K0tN3XZ6yncdJ6AKM140tbUcuv1mXcaiQq96qME4
-         qMOQ==
+        bh=lq0ALMVaEZfhSbzg5O+HM/S6tJqN1Cgs4e0hJ55fARY=;
+        b=PlS5eL4i5T+HsBHhns/T1GHZmJrhZE+hXJuH6u8YP9EoK0+FWRzc+TNiqYoFkHTOz9
+         fuwAmIRwR+0aCQGc8teebwQNerp/2GapMPdmvQvba2woZI2mta15Yk0wtvIjxpuEQnzO
+         EcbiEl9Xx62LN184CweDX7ATvA4D6XMyD0giRdlFXFmYkPIylf7mYH6KJ5LJAHJ3tcCM
+         X2lKluZmKjul0kSmfioTg0/et+4/LfMnidUILBS1Hm2+qzlaQvViAiqx3Q6Az5Gpop9J
+         OGyXhEfRJbJAlzJ+YTXyxrN4bFu++HmGyd5NZF9s8yEb6g6P+p/pk8W7DunAr2+FEhnT
+         EV2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781542219; x=1782147019;
+        d=1e100.net; s=20251104; t=1781542221; x=1782147021;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VvL9FN3niBRwopfeT8jFF2/cj8/ZhVUpeFaQcjlgPs4=;
-        b=O9fhtTc6FcJMLGA/lX9opEI6fya69V9/gjSz+1XSrITV0IJhxqPv6GOrgOVYnOdwa5
-         jRmkD/6a4DxzYwVJ12f7+x5X30ayfNFaNlB8oBgBrXAkQzax3b8iwrdO9O0bn+w6nHeN
-         11NdN9k21PFrso8Nw0ERNQEp+fKj2BJYF6WFCvXrlSpgTvt2zrDHpfDkVCR2Q1VCniFI
-         O9D9qaIfENOneWwp3VvWCJBOs8Y0BX39M7iMPvdDegHytb7+waOjM3nCNw6R2xFG/UN2
-         NN78bzknbjFY9I0S7h4N7lGsYZJF7emzqHVyLUCCwrsxkyq78vr5mrDjVx7e7hocGxBq
-         RFyg==
-X-Forwarded-Encrypted: i=1; AFNElJ+XLyIDKca+jdm5iPFL+EXFLa+GnnHY8D3mwSZYwWu0JVVcf2PvarCndNzdyrYzVCoVqZdOxkK0KTTZLewmAulY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXWusKrPPqAofQmQLHeERy8LZBUsDBoviyazo3G9roKNJUu7op
-	t+LEDqnzjsdMaTBk3Xn7mowo3tFt2nx4uJC0preeNPQA9solEayigIugOSopvyQmJtvikUUQtEU
-	p1a0q5UGXew==
-X-Received: from dyctz8.prod.google.com ([2002:a05:7301:9f08:b0:304:e34e:e1e1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:4190:b0:138:43a4:925b
- with SMTP id a92af1059eb24-1398581a0a2mr130840c88.20.1781542218447; Mon, 15
- Jun 2026 09:50:18 -0700 (PDT)
-Date: Mon, 15 Jun 2026 09:49:52 -0700
+        bh=lq0ALMVaEZfhSbzg5O+HM/S6tJqN1Cgs4e0hJ55fARY=;
+        b=ESL5CASDCt/rWSuLE9nsg5fWuyI5lI8uM1RGL2svBoFIitObu7OHcHePFrP2KylU+I
+         pyz0oJJk84dxEUb2dBf49zfBF8j2ayF6wzEh0C4kBFWQPwEdnAPa/Qw4d5mUgz7aya8u
+         eB/MraqopDIamDoaEhiYneRLnyXs/Ffv+gNH9DUlLqlZe2YYhii62fPTgM42qKttiNCI
+         xuXBn87KZ6tCbKGj/vH1UMew1MYxn0Mm3fpn1+VM8EziJm/U0fCNHgSzZtEFqkYZCw1K
+         OcNfLQ4lriYMj5T3aFITEvp2Ej5At4h0Ar+DtxLIK+cTN2s1SDwmHbvN4/TyP1W7yXsL
+         vg+g==
+X-Forwarded-Encrypted: i=1; AFNElJ+6AsGxVOJSiQRzYk23Do9rPu6VNJUOTq8H1z+jURZ5lV2pRUDOQI2QlK/p62viI+8TxEteitAS+xE8lBCrU7al@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Dkf/iVBihM6C26JUi/K7pofDKEbaMiiH/nO/RnBE/TR7lJR/
+	0W1Ztn1vIYOZFNs7hNUTKVmO1ixfCQ3u6z3arSIQDe6fxAuhmHuUAgXPSgC1KnuQyfdyW2yuAFi
+	pvGKKjqbQXQ==
+X-Received: from dydn14.prod.google.com ([2002:a05:7300:730e:b0:2f9:af7:5041])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:f10a:b0:307:91f5:92e2
+ with SMTP id 5a478bee46e88-3081ff4b659mr8193908eec.4.1781542220454; Mon, 15
+ Jun 2026 09:50:20 -0700 (PDT)
+Date: Mon, 15 Jun 2026 09:49:53 -0700
 In-Reply-To: <20260615165010.2724690-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260615061631.2382079-1-irogers@google.com> <20260615165010.2724690-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260615165010.2724690-3-irogers@google.com>
-Subject: [PATCH v19 02/20] perf python: Add missed explicit dependencies
+Message-ID: <20260615165010.2724690-4-irogers@google.com>
+Subject: [PATCH v19 03/20] perf evsel/evlist: Avoid unnecessary #includes
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,92 +68,140 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Fix missing #include of pmus.h found while cleaning the evsel/evlist
-header files.
-
-Also define PY_SSIZE_T_CLEAN before including Python.h to comply with
-modern Python 3 C-API requirements, and introduce CHECK_INITIALIZED
-and CHECK_INITIALIZED_INT safety macros to be used by subsequent patches.
+Use forward declarations and remove unnecessary #includes in
+evsel.h. Sort the forward declarations in evsel.h and evlist.h. Move
+some PMU code into evsel.c.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/python.c | 41 +++++++++++++++++++++++++++++++---------
- 1 file changed, 32 insertions(+), 9 deletions(-)
+ tools/perf/util/evlist.h | 15 +++++++++------
+ tools/perf/util/evsel.c  |  5 +++++
+ tools/perf/util/evsel.h  | 25 ++++++++++++-------------
+ 3 files changed, 26 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index cc1019d29a5d..98a8dd9b673d 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -1,30 +1,37 @@
- // SPDX-License-Identifier: GPL-2.0
-+#define PY_SSIZE_T_CLEAN
- #include <Python.h>
--#include <structmember.h>
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index e507f5f20ef6..e54761c670b6 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -2,29 +2,32 @@
+ #ifndef __PERF_EVLIST_H
+ #define __PERF_EVLIST_H 1
+ 
++#include <signal.h>
 +
- #include <inttypes.h>
--#include <poll.h>
+ #include <linux/compiler.h>
+ #include <linux/kernel.h>
+-#include <linux/refcount.h>
+ #include <linux/list.h>
++#include <linux/refcount.h>
++#include <pthread.h>
++#include <unistd.h>
 +
- #include <linux/err.h>
-+#include <poll.h>
+ #include <api/fd/array.h>
+ #include <internal/evlist.h>
+ #include <internal/evsel.h>
+ #include <perf/evlist.h>
 +
-+#include <internal/lib.h>
- #include <perf/cpumap.h>
--#ifdef HAVE_LIBTRACEEVENT
--#include <event-parse.h>
--#endif
- #include <perf/mmap.h>
-+#include <structmember.h>
-+
- #include "callchain.h"
- #include "counts.h"
-+#include "event.h"
- #include "evlist.h"
+ #include "affinity.h"
+ #include "events_stats.h"
  #include "evsel.h"
--#include "event.h"
- #include "expr.h"
-+#include "metricgroup.h"
-+#include "mmap.h"
-+#include "pmus.h"
- #include "print_binary.h"
- #include "record.h"
- #include "strbuf.h"
- #include "thread_map.h"
- #include "tp_pmu.h"
- #include "trace-event.h"
--#include "metricgroup.h"
--#include "mmap.h"
- #include "util/sample.h"
--#include <internal/lib.h>
-+
-+#ifdef HAVE_LIBTRACEEVENT
-+#include <event-parse.h>
-+#endif
+ #include "rblist.h"
+-#include <pthread.h>
+-#include <signal.h>
+-#include <unistd.h>
  
- PyMODINIT_FUNC PyInit_perf(void);
+-struct pollfd;
+-struct thread_map;
+ struct perf_cpu_map;
+ struct perf_stat_config;
++struct pollfd;
+ struct record_opts;
+ struct strbuf;
+ struct target;
++struct thread_map;
  
-@@ -38,6 +45,22 @@ PyMODINIT_FUNC PyInit_perf(void);
- 	  offsetof(struct pyrf_event, sample) + offsetof(struct perf_sample, member), \
- 	  0, help }
+ /*
+  * State machine of bkw_mmap_state:
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 34c03f47a913..19e48b9260e9 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -370,6 +370,11 @@ void evsel__set_sample_id(struct evsel *evsel,
+ 	evsel->core.attr.read_format |= PERF_FORMAT_ID;
+ }
  
-+#define CHECK_INITIALIZED(ptr, msg) \
-+	do { \
-+		if (!(ptr)) { \
-+			PyErr_SetString(PyExc_ValueError, msg " not initialized"); \
-+			return NULL; \
-+		} \
-+	} while (0)
++bool evsel__is_non_perf_event_open_pmu(const struct evsel *evsel)
++{
++	return evsel->pmu && evsel->pmu->type > PERF_PMU_TYPE_PE_END;
++}
 +
-+#define CHECK_INITIALIZED_INT(ptr, msg) \
-+	do { \
-+		if (!(ptr)) { \
-+			PyErr_SetString(PyExc_ValueError, msg " not initialized"); \
-+			return -1; \
-+		} \
-+	} while (0)
+ /**
+  * evsel__is_function_event - Return whether given evsel is a function
+  * trace event
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 8178858d168a..6b28cd754a18 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -2,28 +2,30 @@
+ #ifndef __PERF_EVSEL_H
+ #define __PERF_EVSEL_H 1
+ 
+-#include <linux/list.h>
+ #include <stdbool.h>
+-#include <sys/types.h>
 +
- struct pyrf_event {
- 	PyObject_HEAD
- 	struct evsel *evsel;
++#include <linux/list.h>
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
++#include <sys/types.h>
++
+ #include <internal/evsel.h>
+ #include <perf/evsel.h>
++
+ #include "symbol_conf.h"
+-#include "pmus.h"
+-#include "pmu.h"
+ 
++struct bperf_follower_bpf;
++struct bperf_leader_bpf;
++struct bpf_counter_ops;
+ struct bpf_object;
+ struct cgroup;
++struct hashmap;
+ struct perf_counts;
++struct perf_pmu;
+ struct perf_stat_config;
+ struct perf_stat_evsel;
+-union perf_event;
+-struct bpf_counter_ops;
+ struct target;
+-struct hashmap;
+-struct bperf_leader_bpf;
+-struct bperf_follower_bpf;
++union perf_event;
+ 
+ typedef int (evsel__sb_cb_t)(union perf_event *event, void *data);
+ 
+@@ -356,10 +358,6 @@ void arch_evsel__apply_ratio_to_prev(struct evsel *evsel, struct perf_event_attr
+ int evsel__set_filter(struct evsel *evsel, const char *filter);
+ int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
+ int evsel__append_addr_filter(struct evsel *evsel, const char *filter);
+-static inline bool evsel__is_non_perf_event_open_pmu(const struct evsel *evsel)
+-{
+-	return evsel->pmu && evsel->pmu->type > PERF_PMU_TYPE_PE_END;
+-}
+ 
+ int evsel__enable_cpu(struct evsel *evsel, int cpu_map_idx);
+ int evsel__enable(struct evsel *evsel);
+@@ -478,6 +476,7 @@ static inline bool evsel__is_group_event(struct evsel *evsel)
+ 	return evsel__is_group_leader(evsel) && evsel->core.nr_members > 1;
+ }
+ 
++bool evsel__is_non_perf_event_open_pmu(const struct evsel *evsel);
+ bool evsel__is_function_event(struct evsel *evsel);
+ 
+ static inline bool evsel__is_bpf_output(struct evsel *evsel)
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
