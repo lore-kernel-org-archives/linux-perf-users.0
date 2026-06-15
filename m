@@ -1,101 +1,102 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3785A411667
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 17:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9913A40B6E2
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 17:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781543717; cv=pass; b=idOGuARaFKGL8af8M+t/iLo/PTzemIw3JtGy754zkYYeaOH1C0HsKJxJLf8k1HzD4gTJexEv/4L9wdWs6hSQMfyl7uQMnUKP3P+NHeGrdxOeykTTRiNpKbnr00OAiS6mEYn8w0hpDDIyyRyN9B9rCzJp/FOdn+Uz5sv22Z0VXC8=
+	t=1781543835; cv=pass; b=CiQirLWPhqmdRx3Zd9XHZZsp7V0fOtMBZ0He2Q4iz8AS2BP4DIRGHLfP9+V0EzPFmvX69tHPItTFQzDaBSA0sO/UsC8u1KbWN5U4HFtBTi50WV7bhQqTFpSH2z0+whu9XYAniy9QsY+LwSW8xKABFb7c2tNLVZ2OsuAUgakFOys=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781543717; c=relaxed/simple;
-	bh=LUM4hPSeO63idINy2/kJHThckwP26oImjP4X14PQ9eE=;
+	s=arc-20240116; t=1781543835; c=relaxed/simple;
+	bh=HF1hOcVimeh8R5kre0DyP47e1VsT6976Ae7PNDA8K7o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VXSaVEscHQWOvYuKjA7g1qgMVxXREVlXLDHsxIOItI14IzxVwujv5SzyJtpM2Fct7rKa1Bc2dAKOxMCra/GJqYRWGkYNW3IkbQaDBaRXK/JE0Zu+ccelWVTPEB5c4o2ivabfQ4x/fzIURWSzoshnChHDmrSn6ZeoVl9G96DAdeI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fAc227os; arc=pass smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=dWUgYztUgCtyj/D/tvz3ZO9t97zBgkJBFbkXTANKNN+ZPtM1f1USLkuo8RhK/ToDrLCWa7QXo0d9ff/LK3vZVQSABnCHtluToIjIKQ9cR0F+zTpkMHx3EfEGwy0D8Ic81MkZ11pEhfrCO+jsGwUYKy3ewrLN23ytxeG9U6fieFE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZVxX9Tc+; arc=pass smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fAc227os"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2bf22c18ad3so3345ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 10:15:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781543715; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZVxX9Tc+"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2bf22c18ad3so3515ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 10:17:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781543833; cv=none;
         d=google.com; s=arc-20240605;
-        b=lqwrF/bp0+547IhIYG0a4maahnaZVdPoQ9TBXvIiJplWOktGeRlsIdbtsDWBHDZ/28
-         AeCDfVNE5St64bI1kU0iVa5XtbDaH+XhKwsCWAnrCLYpJkTkqdrb9/lkWyaGlG4zLJ97
-         5UuEuOCY1nNyNq1wCeuA+XzXPpIYRq8phA/SFIVpQxn9e+ezzxeGOeIol+uLQt+7WrGi
-         HE22ZlSjE6S0JXQ9Jzv2HAePxotVnXhSEUTvou1l7o/tVF1wqa8F/zMn5ZdQ9l7y4tNW
-         qI2k3bfxXpHN3WOI52wVD7Z1Floxlw/REa2qdG2wvbiYsyaPO+TCnJrL7Ntm4eFnb90Q
-         5HnA==
+        b=WhVhOzfffXP5e/CEDXR7XBXtqHyCJVFHIwypkVKSssTHgTFK6wYFm+8qeITSq6/40K
+         ymMyWfEY5zSnv06LZW2IsOdTk8U9VA0TPLUIAkPGd2iTemYTbdW3UMcsE8wyeQf64aVt
+         WaIikcZQEsqqSBRZw0DEugvRBzeGIsiAU5tR3P0YymcoE2lYLN62gpMxOyhBjZWu2O0r
+         dwwEjSYwxWVuIrltLddMWREssp9X8bCUfsscnv4LRVmMqzebya5C3KUHEeX0RyRTjxHI
+         VSFegcc3QTYC2uWvO9pzzSem7m7z7Gw1I57w+EuNV1y/h03t0fjsvRffFe5jbX7OBNWL
+         jubg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=jt1b6yZuySthSIJzDO+sQfG+sRSus5hUkJLauMSzfxs=;
-        fh=eaNeZ9app6aOwSuYIita+PwEGyDaKPkCyvgUc+3vaEM=;
-        b=lXZDy3eaE5yZNP2jwpUFlGeeoV+KsdH02ex413dHDtnAH9HuaCSp8sun7XjlBuVOI9
-         7lAftteuJzn5ve1CvjgD9vX3NuXzG8PDv9viJ4jbrru2YEULlWCx7Ah3KFtxP5NpNAMa
-         FCNq+VP/sb9DtAVWMLCdgRr4p/jjYwHZZGWpF3n6/wlmH7VFiofyCvfb+08oJBx5VGn+
-         lxWd/TMRgr/cY2NN1i9aa4nT1Hp93iOJBVdYq+4h4Ks/jtIGIrxggt+1uGhe5zWbsBPy
-         VQ1668EIVTVJGmrLcnbC4xX+xDV55pFQ+yJ00/S2lKdZU7V7Efhd4ZoM8RJx/FK0drKQ
-         Wj/A==;
+        bh=ydD1ZG4KQsf0sVlfiUeoG2cZqJf+h9rhV1/rDd+jT5g=;
+        fh=UyyqQZ8wMhQQqjPUIcXyJ1NTbVgZYMoukCnvYm9CzHk=;
+        b=YkAOfNmRJCZNtVxYEIkCGEGFyymsqxcfTU40Wr0QtOteEVUULiYaYtLwnKaHBn4gZO
+         ksA8SnUsjGAi0yfSP+8KRGnf4lNmOFLy6AOxoKPlQ178uBO+KS/9DXw7af/FeJgItGrK
+         9wyCbLqTIJrY+0r0g9eRZmt3AIkp1Ib1vyMu7Y1AjH9zkkLw7exPIMqNCdWL4i6Z+m+s
+         Wd2U42m4b4X3+Micy7+xkgKJMVuyUGeb17mkjQlBT5gh/kxHJDuWiuF5Pf/oM9Q1QkAe
+         ZleQgITOwR6NFnTwf37/PwKb2JoLVpOgdJhIB/brnxBHPAyOpvK2kF1K2gLm/BdhBRxs
+         aIkg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781543715; x=1782148515; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781543833; x=1782148633; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jt1b6yZuySthSIJzDO+sQfG+sRSus5hUkJLauMSzfxs=;
-        b=fAc227ostSXLSZMkzgfdk8JtnijozRfvfZAowlNas4ByW9Urpt5AL+HafflKUJqMuq
-         jNjYeDE7JgOYqdaPgvyStNYrvcToo+53Wh9wKvg3JOovOQOX+gMVaaqXpenRnSBmLqoE
-         GoVm5Ovn+DbU2i6p9bJrAbhljDEQtJ75VQCQSssYK35KugYw/0LoauJya8or0lPEzNsT
-         XWxcAabOmg8Nm8zpLP3KUloV0cbawpud2FAu1yZCTxgySXvvxyPEZqr6IS0hatLv8UWA
-         vmQ8BOFyEOmhpKagU75E3dZ7qrd+YZyKxQkF25iKOG6Zv30C6zID9f7HYHudTnOlLlZ7
-         WZPw==
+        bh=ydD1ZG4KQsf0sVlfiUeoG2cZqJf+h9rhV1/rDd+jT5g=;
+        b=ZVxX9Tc+2sxxtJVzDH1N59w5mChOXNCoBtlDeIkZpnauahkica0DKsLLcMaaKT5YlT
+         StECbat/hTZw9olfhsD4EJcHSJRUrtuFDWg7UF71Pwjmn8bk2hlJYjpV46O0Aneo4y8g
+         D8n9Gf7GxEzOk5zM2Ohx2OXBoPimScJrmR+fLOrFIzCxK8H9tLdPOvixhD1b0NSfe53r
+         3/QCIlXD3sJhFBqfUqG34kcPOGNn1g3yrNLsgwqxKBHR7mk8iS0OcbTqDGD+FBMwlLI+
+         US27/x6TQIXcARXzTRlgKaK7oC0JTsN5y7VLEkTnUpTqwB0djP9eZKp8AqJdy9F0E7l5
+         pdjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781543715; x=1782148515;
+        d=1e100.net; s=20251104; t=1781543833; x=1782148633;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=jt1b6yZuySthSIJzDO+sQfG+sRSus5hUkJLauMSzfxs=;
-        b=rLe999Wkn1YxOQEi1wDkzl0k3J/SXK/K7aF8YNSgskRj/yps0GyNbpiAYxuo+joo/a
-         CRD9p8Bug/unkLVeBPOuFscnnSFvt25qM1LzaRl0VV30/VBevbFVVSj9wFZTZMXBeimB
-         0n6Txvn4ueRoayoFe9jelKAaXEB7Kl1/FbhBefsKRMynCxjvqGpDGVyVbc7zQCXHxWiX
-         qYgj+cARLDx8U/kJAOfUuZRZjQ7aPexWmhrlDyOhttVQi4r/Dehdt6lEnsofK4ATxSsS
-         v70gEthWKtHDIeL7oZuLpiPWSiPJDJcE7pBZUf/o3Qv+FWvnCxMgpwrDEbQQZklaKTxS
-         Upzg==
-X-Forwarded-Encrypted: i=1; AFNElJ+EXa/1iH4Ohc7YaUtWn1Hg7+YqECBF4mkNz7hKlS8q+sfdPrkugPmyHBWLZPmBTUCQgkGl+dZx75DuxvqIImpO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz989hBBvDQXLApD+i+RYQUy6y0/V6D2uLKpZ/dN1PK354UxddI
-	uZzdaZunFzQrZxnaHWQR38RfF/M+3+lW/zHMKOjRhQSW9odo2e2/uqDtbSbcOftn+69WSyo0qrY
-	l7dFvkx24qm/rojcd6XPErpabsHneDXtmEcWtRSfu
-X-Gm-Gg: Acq92OGraPtLjuWt0PkE5MU4wAhpstf8fX3mjoVNN0uVnyMvuyp5WVL54Q1xSni63f/
-	m3eAqmRY+NzgbG+8BQrggrqOI7Yd0LOWsVeg7UpDWIEIOEkPvZp/ZPIwlKgdO2OwLMcRkmbjT6T
-	MkY1+H+tC6ImLAVUP3tHI/ZOEwY0D8lap3o23WUvLGK8ztZ06D0TBswfLE157R4ECdJNdksuxT1
-	jZ48Mqao4GrWT9QGGzZ+s2fI9hByIVTAPiOCc/wuGhh8w2yKgPd9mMhzTd/oBBm3z47o+pj3tID
-	gVS4bGUTSyuTNeejWWINUD5xGrUkbRSY5Q1l
-X-Received: by 2002:a17:903:37c7:b0:2c4:3ba1:9b26 with SMTP id
- d9443c01a7336-2c69a151fd1mr119405ad.0.1781543714976; Mon, 15 Jun 2026
- 10:15:14 -0700 (PDT)
+        bh=ydD1ZG4KQsf0sVlfiUeoG2cZqJf+h9rhV1/rDd+jT5g=;
+        b=gBFMmEADmKmFhM/2rnazGImhlQ1kwOoTpO3WECZsuQYM7MZ4pFUNZSyLR0HtIVF3T6
+         UgyPJrrwSQqr3CH5aNxQBOVSKyyWLHxdGOJZolcQDoVe5dSV4skO/Yc3sue3yUTJjl2e
+         lVNh/UrFJE1D1v54HBjKL2ebCTlpaSjGJY+IdshP8PaqAhTY8UyzqXPGnhIaOuxUNxOK
+         RDFpjVgxSEDBsH9YPVs02Cy0/P0vfAwzNgsxcf9Xn+2W3HjVtCUTtCE+Pp3T67TjasN+
+         3n2UaPqex9s84+7a0oyzLCniotjDskhbNFhU4nc8CQQ/6enPBEB21fz6lbBgDQWBtr0+
+         mbrw==
+X-Forwarded-Encrypted: i=1; AFNElJ/CBBVs/jq+1CeBPoxKhW/8K9DWavatSuKwVARiTq77v5mRx/mR8FGclKj2q8C00VpTblNelFHjCaN7J9VKXZUP@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJcbTsBuVDabiVflufJWEtyKQV6qMq5u6mpyCaHxJlmgnovp/8
+	1XJj+kMNRbeAuaX9If3vR0D4DrhK1y4cQ1Ex5KmdNcPD+kjsl8Gc1209SYwi98zfiOst/T2B/Hd
+	fz6AEzyY2RVOB08yrgLDD7Kfao1hM10H/cnkKUIvC
+X-Gm-Gg: Acq92OHPlc76TbLyeUrQRqwyx64prci0oXVw9orgdf6IcXrn5tBZveVkg2bn6lF43OZ
+	RSFK59O2gJ0IjytJMPVvOwIfxlPNthXSUGBJ8ZbQlI5V1OpQnYn6lnPZOxdJCYcHK3dc9jWBbIv
+	2Q5cjpJA4LcQeK6DhDW1NWeYePzccS7VZXuGuo1KDY7rei2JJKi6ZbIQoyeDoEGlsv7AnjiHBjv
+	TOSSe52/DUk4qhUUVHAj/xvGu6oWUeJEziCBda8roaHGvZRCrHsrOrEOEybY0NQ/tZj8gPoadP4
+	lQGzPzqu8JSdm8bDdXVrY+nyz8iJK9NCgWnZ
+X-Received: by 2002:a17:902:eccf:b0:2b4:641a:6b7c with SMTP id
+ d9443c01a7336-2c69a34e6f2mr53355ad.13.1781543832443; Mon, 15 Jun 2026
+ 10:17:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260612222413.40791-1-acme@kernel.org> <20260612222413.40791-9-acme@kernel.org>
-In-Reply-To: <20260612222413.40791-9-acme@kernel.org>
+References: <20260612222413.40791-1-acme@kernel.org> <20260612222413.40791-11-acme@kernel.org>
+In-Reply-To: <20260612222413.40791-11-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 15 Jun 2026 10:15:02 -0700
-X-Gm-Features: AVVi8CcUHTX95HVU66en1HQIxfRePf_BIhpPs4Vui2XYi4SBc8h1NNTO98TBY20
-Message-ID: <CAP-5=fULowK8tmKe1KnkR4YMFE51CRuq69444=tFnbq+BMKYKw@mail.gmail.com>
-Subject: Re: [PATCH 08/13] perf sched: Replace (void*)1 sentinel with proper
- runtime allocation
+Date: Mon, 15 Jun 2026 10:17:00 -0700
+X-Gm-Features: AVVi8CfHrpLu7EpqcrpqpaYsdrK8ihZflEmYXUayOYdEx4y-mcF93CrOYQFbh8I
+Message-ID: <CAP-5=fWUZQ8XKsWHL-i81y1+oBX3VyP90CRsR5O4orDUEqWBGQ@mail.gmail.com>
+Subject: Re: [PATCH 10/13] perf bpf: Reject oversized BPF metadata events that
+ truncate header.size
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	sashiko-bot <sashiko-bot@kernel.org>, "Claude Opus 4.6" <noreply@anthropic.com>
+	sashiko-bot <sashiko-bot@kernel.org>, Blake Jones <blakejones@google.com>, 
+	"Claude Opus 4.6" <noreply@anthropic.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -104,27 +105,23 @@ On Fri, Jun 12, 2026 at 3:24=E2=80=AFPM Arnaldo Carvalho de Melo
 >
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> map__findnew_thread() marks color-pid threads by storing (void*)1 as
-> the thread private data via thread__set_priv().  This sentinel value
-> causes two problems:
+> bpf_metadata_alloc() computes event_size from the number of BPF metadata
+> variables and stores it in header.size, which is __u16.  With 204 or
+> more .rodata variables prefixed "bpf_metadata_", event_size exceeds
+> 65535 and silently truncates.
 >
-> 1. thread__get_runtime() returns (void*)1 as a struct thread_runtime
->    pointer.  Any field access (e.g. tr->shortname) dereferences address
->    1, which is an unmapped page =E2=80=94 immediate segfault.
+> The truncated header.size causes synthesize_perf_record_bpf_metadata()
+> to allocate a buffer sized by the truncated value, then memcpy the full
+> event data into it =E2=80=94 a heap buffer overflow.
 >
-> 2. cmd_sched() registers free() as the thread priv destructor, so thread
->    cleanup calls free((void*)1) =E2=80=94 undefined behavior that corrupt=
-s the
->    heap on many allocators.
->
-> Fix by adding a 'color' flag to struct thread_runtime and allocating a
-> real runtime struct for color-pid threads.  thread__has_color() now
-> checks the flag instead of relying on priv being non-NULL.
+> Add a check that event_size fits in __u16 before proceeding.  BPF
+> programs with that many metadata variables are exotic enough that
+> silently dropping the metadata is acceptable.
 >
 > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Fixes: 58a606149c60d5da ("perf sched: Avoid union type punning undefined =
-behavior")
-> Cc: Ian Rogers <irogers@google.com>
+> Fixes: ab38e84ba9a80581 ("perf record: collect BPF metadata from existing=
+ BPF programs")
+> Cc: Blake Jones <blakejones@google.com>
 > Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -134,67 +131,31 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/builtin-sched.c | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
+>  tools/perf/util/bpf-event.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 5f16caebd9645da0..7fd63a9db4574fbf 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -274,6 +274,7 @@ struct thread_runtime {
->         u64 migrations;
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index fe6fbca508c5135c..57d53ba848359e12 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+> @@ -369,6 +369,15 @@ static struct bpf_metadata *bpf_metadata_alloc(__u32=
+ nr_prog_tags,
 >
->         int prio;
-> +       bool color;
->  };
->
->  /* per event run time data */
-> @@ -1589,22 +1590,32 @@ static int process_sched_wakeup_ignore(const stru=
-ct perf_tool *tool __maybe_unus
->
->  static bool thread__has_color(struct thread *thread)
->  {
-> -       return thread__priv(thread) !=3D NULL;
-> +       struct thread_runtime *tr =3D thread__priv(thread);
-> +
-> +       return tr !=3D NULL && tr->color;
->  }
->
->  static struct thread*
->  map__findnew_thread(struct perf_sched *sched, struct machine *machine, p=
-id_t pid, pid_t tid)
->  {
->         struct thread *thread =3D machine__findnew_thread(machine, pid, t=
-id);
-> -       bool color =3D false;
->
-> -       if (!sched->map.color_pids || !thread || thread__priv(thread))
-> +       if (!sched->map.color_pids || !thread)
->                 return thread;
->
-> -       if (thread_map__has(sched->map.color_pids, tid))
-> -               color =3D true;
+>         event_size =3D sizeof(metadata->event->bpf_metadata) +
+>             nr_variables * sizeof(metadata->event->bpf_metadata.entries[0=
+]);
 > +       /*
-> +        * Always check the color-pids map, even if thread__priv() is
-> +        * already set.  COMM events processed before the first sched_swi=
-tch
-> +        * allocate a thread_runtime via thread__get_runtime(), so priv i=
-s
-> +        * non-NULL before we ever get here.  Skipping the check on non-N=
-ULL
-> +        * priv would prevent those threads from being colored.
+> +        * header.size is __u16.  synthesize_perf_record_bpf_metadata()
+> +        * adds machine->id_hdr_size (up to ~64 bytes) after this, so
+> +        * leave headroom to prevent the final size from wrapping.
 > +        */
-> +       if (thread_map__has(sched->map.color_pids, tid)) {
-> +               struct thread_runtime *tr =3D thread__get_runtime(thread)=
-;
->
-> -       thread__set_priv(thread, color ? ((void*)1) : NULL);
-> +               if (tr)
-> +                       tr->color =3D true;
+> +       if (event_size > UINT16_MAX - 256) {
+> +               bpf_metadata_free(metadata);
+> +               return NULL;
 > +       }
->         return thread;
->  }
->
+>         metadata->event =3D zalloc(event_size);
+>         if (!metadata->event) {
+>                 bpf_metadata_free(metadata);
 > --
 > 2.54.0
 >
