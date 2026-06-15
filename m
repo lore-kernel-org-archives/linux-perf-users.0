@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230703B7747;
-	Mon, 15 Jun 2026 22:33:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD163AA9F3;
+	Mon, 15 Jun 2026 22:33:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781562786; cv=none; b=u5kEUme/Mp+txuo9BNAcS1Dfa+jh76aJlUFSUIeXPN4gihwxy5JGChsMScUju/bGzMkL5TSkxnQUm9ZyA5iyxeNEjPWS0rcoUx7mV4T2khWrrejyRBWz9B4y5qXifZXxHbIYcqlc6bO9GMUXUUvhvjqNKx5VYK9WVPm0MAlVbwI=
+	t=1781562790; cv=none; b=tOInNPktM1tzfgh502Zy4sp/mYtQ+ewxFDl6yY9cw5I9ktnGyxSyeA65GJKxDeVGn2d4ZLFZgNd+F2gwi/wXbp77b6fDDPvq3UsZB47Qa+uO8aI7jiT2QM4vL+4JwF+cP/M3pBafF6AwzrTIRDr7ENSEHo9zDLIFwIAWR+GfP5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781562786; c=relaxed/simple;
-	bh=D+951BMiZerWJJkB10MWC9Wo471exaC4XfeTCGrDx+c=;
+	s=arc-20240116; t=1781562790; c=relaxed/simple;
+	bh=qJr1/NG9cTBYMASr4fVzIqKY43KoGkxI2WexRuxmORM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R3vOQzDCnxfqzdIvzYSxibQM+uC1qgfK4g3xUvjUdzJa6yrWR5d7IhvhEUtTsRlQDv3CdihCPpwlEviP3egIedFDf4H8ujzuiSHvuuPlliPdk4uF+mbjo4vnkU7ifACyT96YESqPrtimrPhm9UF9NE+RwVvN1/HjHsXVNt0EWJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNaxaN8N; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=dzOXBorZgnf+7UDQYf3hvzp6egtHP2STje/iMK7mfZE+aMHMwiSGSw836R0LdWNFtCS7Y6N6iS4pGzqNOZULlFyqGvoL5Hbk2liqHh/ZNDaqKjmu8Qo58w0W4XS20mXGxfBxX1XIPtzrcw3FGeamOGOIc+OKnPOasP7UfWdR71M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULyXNYT7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNaxaN8N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA5D1F000E9;
-	Mon, 15 Jun 2026 22:33:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULyXNYT7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4435F1F00A3A;
+	Mon, 15 Jun 2026 22:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781562784;
-	bh=AXqFVgFdeOvbBMGAhAKr3rkSEfSBR1qgR6jCIPrYcRE=;
+	s=k20260515; t=1781562789;
+	bh=wUHEbHiIOFcesf5bKC+5299t6lhCsUWWWGLvnb5OUj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JNaxaN8NHrg3JDfGSsEYSYVBwETtfkEwVF+ggnv5Tc6T3WjibG4eHR5lUepAQkMMe
-	 xe5OhApPnJk367aa7VzFFk+2QJVmI4NR0ZryzVb1/c2mIjJi9lgmrEOe+swNBRh4q3
-	 SHE+JawTXC1NaXXAURtWX0mdAEf1iTHplQElD1oUDKBs8tZVjRWU2tBO6ZCeEe5n+c
-	 gkbNKF9+Ld7lCK0W4SKr4N9N+2+dh8PD/qG5G+VfGygXfGrVTvrNeEYx+zjg44u9is
-	 St1ktAo6QBHT5wKDkzU12jOEVQyBBO3fBaBIEFI4UiLwlr/UHu1Zu9aDC5+OmUA/+g
-	 1nqwCGa6pYYlQ==
+	b=ULyXNYT73lAeFGgeeg3MVbBk/up+pTsg5NJxYqcOczYFwUeyEjbbfZISXMflephRu
+	 j3K5COsJqOxDvrImURnQHB0OjXHvQatqwPvfLF138mvELPAJIhD4Bm0Isq9KD0fDnw
+	 s/5dSw/1mJcdhBP28S0sVfluoNPKUJYdhWLsMS72DbLQMbdzlamF6R2orN8rk4Lt1w
+	 t0jMiWq1pUc9mi+k1ZKfAkGIvKi7jgqupFXWnu/eMh33zVC47m4VYs9KMh1cEg2E/Z
+	 XcBC9NAFHPmI8Iy+1FCsi8c0JGOGqlcq5cVPhnQy1s5sW9IEUKZoJfJIBEInQ4OimU
+	 1dDhBCuoywW4Q==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,11 +39,13 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	"Zhang, Yanmin" <yanmin_zhang@linux.intel.com>,
+	James Clark <james.clark@arm.com>,
+	Leo Yan <leo.yan@linaro.org>,
+	Tor Jeremiassen <tor@ti.com>,
 	Claude <noreply@anthropic.com>
-Subject: [PATCH 2/9] perf machine: Use snprintf() for guestmount path construction
-Date: Mon, 15 Jun 2026 19:32:42 -0300
-Message-ID: <20260615223249.36598-3-acme@kernel.org>
+Subject: [PATCH 3/9] perf cs-etm: Validate num_cpu before metadata allocation
+Date: Mon, 15 Jun 2026 19:32:43 -0300
+Message-ID: <20260615223249.36598-4-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260615223249.36598-1-acme@kernel.org>
 References: <20260615223249.36598-1-acme@kernel.org>
@@ -53,58 +55,58 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-machines__findnew(), machines__create_guest_kernel_maps(), and
-get_kernel_version() use sprintf() to build paths by prepending
-symbol_conf.guestmount or root_dir.  All write into PATH_MAX stack
-buffers, but guestmount comes from user configuration and is not
-length-checked.  A guestmount path at or near PATH_MAX causes a
-stack buffer overflow — and a truncated root_dir propagated to
-get_kernel_version() would overflow its own version[PATH_MAX] buffer
-when "/proc/version" is appended.
+cs_etm__process_auxtrace_info_full() reads num_cpu from untrusted
+perf.data and uses it to allocate the metadata pointer array:
 
-Switch to snprintf() with sizeof() to prevent overflow.  The
-subsequent access()/fopen() calls will fail on a truncated path.
+  metadata = zalloc(sizeof(*metadata) * num_cpu);
 
-Fixes: a1645ce12adb6c9c ("perf: 'perf kvm' tool for monitoring guest performance from host")
+On 32-bit, sizeof(*metadata) is 4, so num_cpu = 0x40000000 overflows
+the multiplication to 0, causing zalloc(0) to return a valid zero-sized
+allocation followed by out-of-bounds writes in the population loop.
+
+Fix by computing priv_size early and using it to bound num_cpu: each
+CPU needs at least one u64 metadata entry, so num_cpu cannot exceed
+the total number of u64 entries in the event's private data area.
+
+Fixes: cd8bfd8c973eaff8 ("perf tools: Add processing of coresight metadata")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Zhang, Yanmin <yanmin_zhang@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Tor Jeremiassen <tor@ti.com>
 Assisted-by: Claude <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/cs-etm.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 9329d319bd033699..0d2ebf6a84bcf880 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -333,7 +333,7 @@ struct machine *machines__findnew(struct machines *machines, pid_t pid)
- 	if ((pid != HOST_KERNEL_ID) &&
- 	    (pid != DEFAULT_GUEST_KERNEL_ID) &&
- 	    (symbol_conf.guestmount)) {
--		sprintf(path, "%s/%d", symbol_conf.guestmount, pid);
-+		snprintf(path, sizeof(path), "%s/%d", symbol_conf.guestmount, pid);
- 		if (access(path, R_OK)) {
- 			static struct strlist *seen;
- 
-@@ -1260,9 +1260,9 @@ int machines__create_guest_kernel_maps(struct machines *machines)
- 					 namelist[i]->d_name);
- 				continue;
- 			}
--			sprintf(path, "%s/%s/proc/kallsyms",
--				symbol_conf.guestmount,
--				namelist[i]->d_name);
-+			snprintf(path, sizeof(path), "%s/%s/proc/kallsyms",
-+				 symbol_conf.guestmount,
-+				 namelist[i]->d_name);
- 			ret = access(path, R_OK);
- 			if (ret) {
- 				pr_debug("Can't access file %s\n", path);
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 0927b0b9c06b1504..d121c8f22028d5ba 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -3431,6 +3431,18 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	/* First the global part */
+ 	ptr = (u64 *) auxtrace_info->priv;
+ 	num_cpu = ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
++
++	/*
++	 * Bound num_cpu by the event size: the global header consumes
++	 * CS_ETM_HEADER_SIZE bytes, and each CPU needs at least one u64
++	 * metadata entry after that.
++	 */
++	priv_size = total_size - event_header_size - INFO_HEADER_SIZE -
++		    CS_ETM_HEADER_SIZE;
++	if (num_cpu <= 0 || priv_size <= 0 ||
++	    num_cpu > priv_size / (int)sizeof(u64))
++		return -EINVAL;
++
+ 	metadata = zalloc(sizeof(*metadata) * num_cpu);
+ 	if (!metadata)
+ 		return -ENOMEM;
 -- 
 2.54.0
 
