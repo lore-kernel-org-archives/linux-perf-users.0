@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471123769F6
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6F0322C88
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781573272; cv=none; b=t0qSmHdTn3coVctyT3XflxhWgYerPihprZYgIZtTXBIWJgrMrrriCkiR3Lz7qHbSjTFwGIKKJn+hIDiuwEG6BnOBu2jS0xLgvgGTdgROHAs3pnxVoT3/e7GgkECwBrJlPMU/k9Qt+lUN4u66nVr2riC5/5TdnL+gR/+klLjpHg0=
+	t=1781573275; cv=none; b=Jnflnm73W23kLHpHUa+1rnloqKn5k3UufK6z5dOOelgvfBtMJmXoc0de4FhzZJcxJxc2uYjxUv1znBSys+vbk8Tn3+rv1qfPJRj+rsZVhGb1SJSVg9xTgxJedDBAP7QSBIO3ebsZLfXRcRClySB6FuEsokox29gBfKod/DMrYhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781573272; c=relaxed/simple;
-	bh=EfqJsn8KFK32VDjp50C5ePSIbArNoqCNxXuHCG9lKCU=;
+	s=arc-20240116; t=1781573275; c=relaxed/simple;
+	bh=ENH5hP9aGzKETqso2LBvAyTBhflFN1/U+GCJnpEfJcE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=cLUa0i6gii0QrXg1mBXWXvKG17E5TNkD+Rxw4Ea8DZJIiWGYlG56VddybbYUuK9dJyZL2rk0DFaocylLntvftgi6dQ+zA2tZKKTszJTgt4a9SdEMiRXpEV45UlCl7N2GswZSfjEJ4wg/Iq085iqkN5kajOcrILhae7f/iuQRVXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tkUrCpSG; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=dmeH8aPo8gDZopXA7IbCBDqxBH1iQ9frxO5SshytAs0LBMwDuSZih6b72xcfygDu22EQTeNof6z9pIukCC6sUZqy5TU6brbQvjA9FQkJBOhFabDAu/Le74xVxnXZCCW7Echt0fS+I3MAo7goBV96LeU2O6uOfOMyZfh2xbHxe2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ITAcgnNk; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tkUrCpSG"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1394c3ee7f2so9410011c88.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:27:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ITAcgnNk"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304e7fc90b1so4528122eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781573270; x=1782178070; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781573273; x=1782178073; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PbYEkTdE7MzY4ctVOjukaeG4CFxqyMsZ/LapcXDNnjg=;
-        b=tkUrCpSGREXIDAbPGVp+Lr6Pk9fsYNONV/+4lGXZ9MRWMJwDvDFxZoTLt9pq37ax51
-         JO6wC/8nSG7c9cmlaBuvqCnkftoh4molqe7FcHVV2Q0UXpu5TZHdAHH36ORWOR1uEPDW
-         OxKsm/GinJJfy0ZEOiwR8ZbeV2elrbGnmVjkXQ6Htwc6D1iPyKa76nTQNtv5Z9ortcIl
-         CKKoBsKArlEb+vgCjtElFje1uFUjGJlAPRa5AYaqtQog5Rl6T4LqvsGvyq1zvGgmX6P3
-         V5n/qR6ln6tIt3MHIg/23CuVjHTz7AJ9Ul9MCgwfmS9F4GIlrRvCHhNU8NJDSzk/JWLV
-         xyzg==
+        bh=cT6WG9kw9RfGQcCRsKkhgwBfCQ93XVJMyY7O3hVY3J4=;
+        b=ITAcgnNkujXqjzRjih85l0fWRJXZ7roNJEdz1OEQmKXDJzgVx8PZHZDMpowzwknpu4
+         kRcmizQ2RnV1+p1eLdiTp8B0QFcB9o3mZsTNhKveMMkw12QiLczxkqUUKTIqc1ezwEMm
+         covcSNDxqg0pGbyAD91h39oph6UrS9E96aGe1TqmG8MoesDY6xVH3kkXXri3R7EGVkY9
+         gkgkjA2HXmcpSay3Uf/EWx/08sS3EsSt/F2PU/YNvSPzci3DVmJsbvHutwZtGokvHv80
+         4BRUBOgAxEjdKbD8VQKXrYoX70YqDWdegMP5zti82aEIJokVGFfaddyZ2MGTJWxtGLAU
+         bD6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781573270; x=1782178070;
+        d=1e100.net; s=20251104; t=1781573273; x=1782178073;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PbYEkTdE7MzY4ctVOjukaeG4CFxqyMsZ/LapcXDNnjg=;
-        b=B3gZ0bConFhLYnH+wjQT8VdG/XtqEafNW7Ap1sKq0GnRuyI9p8hIEDFMWVixs4uOk4
-         326zMInXeDWCTQdN5R4CHRF17gHAlLECPzXazkeo6mUSJxgOuAzMOPaBVhvjTuoYJmDr
-         FJrSWuS77l/jpPbg31quD8NcRwXuxsoxSlB+u0Zx7dTcqtkSe2tXtlKmE9mGkqO2CVue
-         cwyUNJs08nqw1G7F7eDMvbD3LVAO0J2imSZmo+7CEF3/vggO5NbItWqhuKm//kKsHJ13
-         8pneCr5btjhGCXYD2HuCowifxAl5JUAbB1EjWixOscRUgNYMt3i45SWnUfLz3olrCnxV
-         p2Cg==
-X-Forwarded-Encrypted: i=1; AFNElJ9gknWpW4W5EPT54jFY5AjY2HWbjqA2hoN6psjqimJnlTJQEWp053/sYSDzY8fu7/KfhN2hIcG4hi8AUBUPjPOw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtT7az6zCk+n5/rRUSmBnKBlc7ruJJzlyRsqVK+t7bT+9ABi0u
-	tcXWYMXNmlExx+g0bdwzG2MpVPQ2fVz/0BWLaLmycH+CcFw0gvGjDPtDafnO3OT1uPn1LhV7lCR
-	wfhEITRmB4w==
-X-Received: from dldyq24-n1.prod.google.com ([2002:a05:701b:4558:10b0:139:61db:1ecb])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f96:b0:137:ec47:8fd7
- with SMTP id a92af1059eb24-1386f245648mr6577366c88.9.1781573269691; Mon, 15
- Jun 2026 18:27:49 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:27:33 -0700
+        bh=cT6WG9kw9RfGQcCRsKkhgwBfCQ93XVJMyY7O3hVY3J4=;
+        b=rnVj9J5gBb1W3pV33obudNU8Lv6sh/mDYFZmx6RPy7LuOLibNmIEqT9GVb+rnrVziC
+         ryxbXOq50q3mZ6b4UmWLoOuaMsKU10cRKV1jDM1Rj/unWwltNRzxDkcBYcKFO7q/YQ8f
+         IX9RZx67MVGwOGVs+AK9GFgm9Xe4j3aBdn+9fvRIqLPuiNric5i7Rw6bYjkTxSV8oDSv
+         K3y4inqfP5fZWZQWnRYaXr1DCq8Pw+XMwp0SdfN2aWQqyUF9G7B2PRvu07jLdq1o/Bcr
+         skfqALob3mVH/BCkW9LS3Xj2VDHIfRfs002twP0zPRexQWGKUbdI2xh3dNpmFyPAi3/d
+         dqrw==
+X-Forwarded-Encrypted: i=1; AFNElJ+MM4izXkt7CkLa5F7FiI/TvbXdJbbA0lPeUmJpfIzkEmwSFw4mePrulm9Kn+xhbVhqYDdhjGtzappV4z/PLs/l@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEZCW4FaQl0BAMVihA4m0Eqdl3Ou0DLICTD3h3AwIudLzZ4aF2
+	tSjwiRQZPhSzufzFrwnhRZuY7/4vMwdPIigrDIf9FiVNKCURrBf10f0CVncCZaQymdv5aBa2Xkv
+	hEoa88HpzEA==
+X-Received: from dlbrh19.prod.google.com ([2002:a05:7022:f313:b0:137:ebca:4053])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:61a7:b0:136:6883:c4bf
+ with SMTP id a92af1059eb24-1386f352332mr5075159c88.15.1781573272371; Mon, 15
+ Jun 2026 18:27:52 -0700 (PDT)
+Date: Mon, 15 Jun 2026 18:27:34 -0700
 In-Reply-To: <20260616012744.4049193-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616012744.4049193-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616012744.4049193-2-irogers@google.com>
-Subject: [PATCH v1 01/12] perf parse-events: Restrict core PMU bypass to
- --cputype option
+Message-ID: <20260616012744.4049193-3-irogers@google.com>
+Subject: [PATCH v1 02/12] perf test: Truncate test description to fit terminal width
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -70,206 +69,206 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Commit b1c5efbfd92e ("perf parse-events: Remove hard coded legacy hardware
-and cache parsing") introduced a bypass to PMU filtering to prevent uncore PMUs
-from being filtered out during event parsing, which was required for resolving
-`duration_time` and `uncore_freq` when running with `--cputype`. However, this
-bypass was active whenever `pmu_filter` was set, which also incorrectly bypassed
-filtering for the `--pmu-filter` option.
+The parallel test harness uses the carriage return delete escape sequence
+`PERF_COLOR_DELETE_LINE` ("\033[A\33[2K\r") to erase and update the
+"Running (X active)" progress lines.
 
-Introduce a `cputype_filter` boolean flag in `parse_events_state` and
-`parse_events_option_args` to distinguish filtering initiated by `--cputype`
-from that initiated by `--pmu-filter`. Restrict the core-only check in
-`parse_events__filter_pmu()` to when `cputype_filter` is true.
+However, if a test description is longer than the terminal width, the line
+wraps around. When this happens, the cursor up escape sequence `\033[A` only
+moves the cursor to the last wrapped row, leaving the top half of the description
+printed on the previous line. This leads to name duplication and output corruption
+spilling over multiple rows on consoles narrower than the maximum description length
+(e.g., 101 columns wide).
 
-Fixes: b1c5efbfd92e ("perf parse-events: Remove hard coded legacy hardware and cache parsing")
+Fix this by dynamically querying the terminal width using `get_term_dimensions`
+and truncating the printed test descriptions using the `%-*.*s` printf format.
+We reserve 35 characters for prefix, status, and spacing metrics to guarantee
+the progress line never wraps.
+
+Fixes: 0e036dcad4e6 ("perf test: Display number of active running tests")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c       |  2 ++
- tools/perf/tests/parse-events.c | 11 +++++++----
- tools/perf/tests/pmu-events.c   |  6 ++++--
- tools/perf/util/metricgroup.c   |  4 +++-
- tools/perf/util/parse-events.c  | 22 ++++++++++++++--------
- tools/perf/util/parse-events.h  | 17 +++++++++++------
- 6 files changed, 41 insertions(+), 21 deletions(-)
+ tools/perf/tests/builtin-test.c | 95 ++++++++++++++++++++++++---------
+ 1 file changed, 71 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index a04466ea3b0a..cc682740dccb 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1210,6 +1210,7 @@ static int parse_cputype(const struct option *opt,
- 		return -1;
- 	}
- 	parse_events_option_args.pmu_filter = pmu->name;
-+	parse_events_option_args.cputype_filter = true;
- 
- 	return 0;
- }
-@@ -1226,6 +1227,7 @@ static int parse_pmu_filter(const struct option *opt,
- 	}
- 
- 	parse_events_option_args.pmu_filter = str;
-+	parse_events_option_args.cputype_filter = false;
- 	return 0;
- }
- 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 05c3e899b425..2cbe81b9c886 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2556,8 +2556,10 @@ static int test_event(const struct evlist_test *e)
- 		return TEST_FAIL;
- 	}
- 	parse_events_error__init(&err);
--	ret = __parse_events(evlist, e->name, /*pmu_filter=*/NULL, &err, /*fake_pmu=*/false,
--			     /*warn_if_reordered=*/true, /*fake_tp=*/true);
-+	ret = __parse_events(evlist, e->name, /*pmu_filter=*/NULL,
-+			     /*cputype_filter=*/false, &err, /*fake_pmu=*/false,
-+			     /*warn_if_reordered=*/true,
-+			     /*fake_tp=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d\n", e->name, ret);
- 		parse_events_error__print(&err, e->name);
-@@ -2584,8 +2586,9 @@ static int test_event_fake_pmu(const char *str)
- 		return -ENOMEM;
- 
- 	parse_events_error__init(&err);
--	ret = __parse_events(evlist, str, /*pmu_filter=*/NULL, &err,
--			     /*fake_pmu=*/true, /*warn_if_reordered=*/true,
-+	ret = __parse_events(evlist, str, /*pmu_filter=*/NULL,
-+			     /*cputype_filter=*/false, &err, /*fake_pmu=*/true,
-+			     /*warn_if_reordered=*/true,
- 			     /*fake_tp=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d\n",
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index fd5630f0a13c..962bc101e967 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -794,8 +794,10 @@ static int check_parse_id(const char *id, struct parse_events_error *error)
- 	for (cur = strchr(dup, '@') ; cur; cur = strchr(++cur, '@'))
- 		*cur = '/';
- 
--	ret = __parse_events(evlist, dup, /*pmu_filter=*/NULL, error, /*fake_pmu=*/true,
--			     /*warn_if_reordered=*/true, /*fake_tp=*/false);
-+	ret = __parse_events(evlist, dup, /*pmu_filter=*/NULL,
-+			     /*cputype_filter=*/false, error, /*fake_pmu=*/true,
-+			     /*warn_if_reordered=*/true,
-+			     /*fake_tp=*/false);
- 	free(dup);
- 
- 	evlist__delete(evlist);
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index c2ce3e53aaee..e9854d7bf07a 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1317,7 +1317,9 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
- 	pr_debug("Parsing metric events '%s'\n", events.buf);
- 	parse_events_error__init(&parse_error);
- 	ret = __parse_events(parsed_evlist, events.buf, filter_pmu,
--			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
-+			     /*cputype_filter=*/filter_pmu != NULL,
-+			     &parse_error, fake_pmu,
-+			     /*warn_if_reordered=*/false,
- 			     /*fake_tp=*/false);
- 	if (ret) {
- 		parse_events_error__print(&parse_error, events.buf);
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 943569e82b82..9f64d5197b8a 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -429,6 +429,9 @@ bool parse_events__filter_pmu(const struct parse_events_state *parse_state,
- 	if (parse_state->pmu_filter == NULL)
- 		return false;
- 
-+	if (parse_state->cputype_filter && !pmu->is_core)
-+		return false;
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index afc06cec4954..51484e84d7c1 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -10,35 +10,39 @@
+ #ifdef HAVE_BACKTRACE_SUPPORT
+ #include <execinfo.h>
+ #endif
+-#include <poll.h>
+-#include <unistd.h>
+ #include <setjmp.h>
+-#include <string.h>
+ #include <stdlib.h>
+-#include <sys/types.h>
++#include <string.h>
 +
- 	return perf_pmu__wildcard_match(pmu, parse_state->pmu_filter) == 0;
+ #include <dirent.h>
+-#include <sys/wait.h>
++#include <linux/kernel.h>
++#include <linux/string.h>
++#include <linux/zalloc.h>
++#include <poll.h>
++#include <sys/ioctl.h>
+ #include <sys/stat.h>
+ #include <sys/time.h>
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <unistd.h>
++
++#include <subcmd/exec-cmd.h>
++#include <subcmd/parse-options.h>
++#include <subcmd/run-command.h>
++
+ #include "builtin.h"
++#include "color.h"
+ #include "config.h"
++#include "debug.h"
+ #include "hist.h"
+ #include "intlist.h"
+-#include "tests.h"
+-#include "debug.h"
+-#include "color.h"
+-#include <subcmd/parse-options.h>
+-#include <subcmd/run-command.h>
+ #include "string2.h"
+ #include "symbol.h"
++#include "tests-scripts.h"
++#include "tests.h"
+ #include "util/rlimit.h"
+ #include "util/strbuf.h"
+-#include <linux/kernel.h>
+-#include <linux/string.h>
+-#include <subcmd/exec-cmd.h>
+-#include <linux/zalloc.h>
+-
+-#include "tests-scripts.h"
++#include "util/term.h"
+ 
+ static const char *junit_filename;
+ static struct strbuf junit_xml_buf = STRBUF_INIT;
+@@ -413,19 +417,52 @@ static char *xml_escape(const char *str)
+ 	return res ? res : strdup("");
  }
  
-@@ -2288,18 +2291,20 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	return (idx_changed || num_leaders != orig_num_leaders) ? 1 : 0;
- }
- 
--int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
-+int __parse_events(struct evlist *evlist, const char *str,
-+		   const char *pmu_filter, bool cputype_filter,
- 		   struct parse_events_error *err, bool fake_pmu,
- 		   bool warn_if_reordered, bool fake_tp)
++static int get_max_desc_width(int width)
++{
++	struct winsize ws;
++	int cols = 80;
++	int max_desc_width;
++
++	get_term_dimensions(&ws);
++	if (ws.ws_col > 0)
++		cols = ws.ws_col;
++
++	/*
++	 * Limit description width to fit on a single line. We subtract 35
++	 * columns of headroom to allocate space for:
++	 * - The suite index prefix: e.g. " 10.100:" (9 characters).
++	 * - The colon separator and spaces: " : " (3 characters).
++	 * - The longest status results: e.g. "Skip (some metrics failed)" (26 characters)
++	 *   or "Running (XX active)" (20 characters).
++	 *
++	 * A minimum description width of 10 is enforced to ensure names are
++	 * legible even on very narrow consoles.
++	 */
++	max_desc_width = cols - 35;
++	if (max_desc_width < 10)
++		max_desc_width = 10;
++
++	return width > max_desc_width ? max_desc_width : width;
++}
++
+ static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
+ 			     int result, int width, int running,
+ 			     const char *err_output, double elapsed)
  {
- 	struct parse_events_state parse_state = {
--		.list	  = LIST_HEAD_INIT(parse_state.list),
--		.idx	  = evlist->core.nr_entries,
--		.error	  = err,
--		.stoken	  = PE_START_EVENTS,
-+		.list = LIST_HEAD_INIT(parse_state.list),
-+		.idx = evlist->core.nr_entries,
-+		.error = err,
-+		.stoken = PE_START_EVENTS,
- 		.fake_pmu = fake_pmu,
--		.fake_tp  = fake_tp,
-+		.fake_tp = fake_tp,
- 		.pmu_filter = pmu_filter,
-+		.cputype_filter = cputype_filter,
- 		.match_legacy_cache_terms = true,
- 	};
- 	int ret, ret2;
-@@ -2518,8 +2523,9 @@ int parse_events_option(const struct option *opt, const char *str,
++	width = get_max_desc_width(width);
++
+ 	if (test_suite__num_test_cases(t) > 1) {
+ 		char prefix[32];
+ 		int len = snprintf(prefix, sizeof(prefix), "%3d.%1d:",
+ 				   curr_suite + 1, curr_test_case + 1);
+ 		int subw = len >= 4 ? width + 4 - len : width;
+ 
+-		pr_info("%s %-*s:", prefix, subw, test_description(t, curr_test_case));
+-	} else
+-		pr_info("%3d: %-*s:", curr_suite + 1, width, test_description(t, curr_test_case));
++		pr_info("%s %-*.*s:", prefix, subw, subw,
++			test_description(t, curr_test_case));
++	} else {
++		pr_info("%3d: %-*.*s:", curr_suite + 1, width, width,
++			test_description(t, curr_test_case));
++	}
+ 
+ 	switch (result) {
+ 	case TEST_RUNNING:
+@@ -695,6 +732,7 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
  	int ret;
+ 	struct timespec end_time;
+ 	double elapsed;
++	width = get_max_desc_width(width);
  
- 	parse_events_error__init(&err);
--	ret = __parse_events(*args->evlistp, str, args->pmu_filter, &err,
--			     /*fake_pmu=*/false, /*warn_if_reordered=*/true,
-+	ret = __parse_events(*args->evlistp, str, args->pmu_filter,
-+			     args->cputype_filter, &err, /*fake_pmu=*/false,
-+			     /*warn_if_reordered=*/true,
- 			     /*fake_tp=*/false);
+ 	if (child_test == NULL) {
+ 		/* Test wasn't started. */
+@@ -709,7 +747,8 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
+ 	 * sub test names.
+ 	 */
+ 	if (test_suite__num_test_cases(t) > 1 && curr_test_case == 0)
+-		pr_info("%3d: %-*s:\n", curr_suite + 1, width, test_description(t, -1));
++		pr_info("%3d: %-*.*s:\n", curr_suite + 1, width, width,
++			test_description(t, -1));
  
- 	if (ret) {
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 3577ab213730..b14c832b03a1 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -26,20 +26,23 @@ const char *event_type(size_t type);
- struct parse_events_option_args {
- 	struct evlist **evlistp;
- 	const char *pmu_filter;
-+	bool cputype_filter;
- };
- int parse_events_option(const struct option *opt, const char *str, int unset);
- int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset);
--__attribute__((nonnull(1, 2, 4)))
--int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
--		   struct parse_events_error *error, bool fake_pmu,
--		   bool warn_if_reordered, bool fake_tp);
-+__attribute__((nonnull(1, 2, 5))) int
-+__parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
-+	       bool cputype_filter, struct parse_events_error *error,
-+	       bool fake_pmu, bool warn_if_reordered, bool fake_tp);
+ 	/*
+ 	 * Busy loop reading from the child's stdout/stderr that are set to be
+@@ -917,6 +956,8 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
+ 	int last_suite_printed = -1;
+ 	sigset_t set, oldset;
  
- __attribute__((nonnull(1, 2, 3)))
- static inline int parse_events(struct evlist *evlist, const char *str,
- 			       struct parse_events_error *err)
- {
--	return __parse_events(evlist, str, /*pmu_filter=*/NULL, err, /*fake_pmu=*/false,
--			      /*warn_if_reordered=*/true, /*fake_tp=*/false);
-+	return __parse_events(evlist, str, /*pmu_filter=*/NULL,
-+			      /*cputype_filter=*/false, err, /*fake_pmu=*/false,
-+			      /*warn_if_reordered=*/true,
-+			      /*fake_tp=*/false);
- }
++	width = get_max_desc_width(width);
++
+ 	sigemptyset(&set);
+ 	sigaddset(&set, SIGINT);
+ 	sigaddset(&set, SIGTERM);
+@@ -985,8 +1026,11 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
+ 			if (next_child) {
+ 				if (test_suite__num_test_cases(next_child->test) > 1 &&
+ 				    last_suite_printed != next_child->suite_num) {
+-					pr_info("%3d: %-*s:\n", next_child->suite_num + 1, width,
+-						test_description(next_child->test, -1));
++					pr_info("%3d: %-*.*s:\n",
++						next_child->suite_num + 1,
++						width, width,
++						test_description(
++							next_child->test, -1));
+ 					last_suite_printed = next_child->suite_num;
+ 				}
+ 				print_test_result(next_child->test, next_child->suite_num,
+@@ -1049,7 +1093,8 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
  
- int parse_event(struct evlist *evlist, const char *str);
-@@ -161,6 +164,8 @@ struct parse_events_state {
- 	bool			   fake_tp;
- 	/* If non-null, when wildcard matching only match the given PMU. */
- 	const char		  *pmu_filter;
-+	/* If true, the pmu_filter was set by --cputype option. */
-+	bool cputype_filter;
- 	/* Should PE_LEGACY_NAME tokens be generated for config terms? */
- 	bool			   match_legacy_cache_terms;
- 	/* Were multiple PMUs scanned to find events? */
+ 			if (test_suite__num_test_cases(child->test) > 1 &&
+ 			    last_suite_printed != child->suite_num) {
+-				pr_info("%3d: %-*s:\n", child->suite_num + 1, width,
++				pr_info("%3d: %-*.*s:\n", child->suite_num + 1,
++					width, width,
+ 					test_description(child->test, -1));
+ 				last_suite_printed = child->suite_num;
+ 			}
+@@ -1296,7 +1341,9 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
+ 
+ 			if (intlist__find(skiplist, curr_suite + 1)) {
+ 				if (pass == 1) {
+-					pr_info("%3d: %-*s:", curr_suite + 1, width,
++					int max_width = get_max_desc_width(width);
++
++					pr_info("%3d: %-*.*s:", curr_suite + 1, max_width, max_width,
+ 						test_description(*t, -1));
+ 					color_fprintf(stderr, PERF_COLOR_YELLOW,
+ 						      " Skip (user override)\n");
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
