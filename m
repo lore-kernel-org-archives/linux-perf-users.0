@@ -1,166 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53234657F4;
-	Tue, 16 Jun 2026 16:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9E645BD57
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 16:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781625786; cv=none; b=AwfE8cCwf4aihbqMoL+TlEvukqwkvYbaaWwuAb/RoJsJ8eX6CabC7/vvdak12TkSLgE3YmRsklrABNQYDBtTReTm24rMl0djJqbxCTpygx3ZcaD5e+AirRfzUD272Nj6fdB4MOqZNfTbHjYipLytxhrnxx/TxU0fzG8AnQXmU1c=
+	t=1781625820; cv=none; b=IimVLFA6NgIT1T+lzflIpvJ8TbsWHtUrnW97QmT4LbtBQIky1rOiENyCZwr6luAM1BZs6Cdp51LPbl5SBVuIYKqE1ROVfYip2pK98z5tjYwIU68SZpgKjsjwZCofDxj1ektdy1nb/JNgoG+T5xzctM62QSNn490fAuMoaRZk49U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781625786; c=relaxed/simple;
-	bh=Mw5IgsnN7DNwwUQHsgasLdh9fk6jhKqNpH2Nv522Vrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SQ0tlON1e1h+BjKSJsV/fKMVHfh8fljguQ0uwV4wD5vanh/qhb04yTAMweF/5Q6hRqnJwn296dRUGyNotbhtevAsa849EOp/hyLNqbL3MPXVWMcExxUos7bnCIn5oRX84+5EW8mthqJLaWBizDEPgj80hbr4ac2katS8nywSHD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZS50b5o; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781625820; c=relaxed/simple;
+	bh=Xiv7sokzBCawQC2AMaMMHGYqqbrZ/6KLAq28HZTR1hw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Nsro4AZ9cPI7bOIl6YuHy129NdYJoUC7AlBDk+fP38DFx2bVUimwGnSRfXvUbccYKnQ6ksXo26wf1ylzZFE7fvb/9d3AqKh2O6aqwuDQeCnA2RUNv7MeyAAr1dcpNVEDJjQVQ5w0o/mkMUyBc9+Eb2lwfKReray6Hu1SS+WLxT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lqDSKkcD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZS50b5o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B0C41F000E9;
-	Tue, 16 Jun 2026 16:03:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lqDSKkcD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DFF1F00A3A;
+	Tue, 16 Jun 2026 16:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781625784;
-	bh=7OHd0UBpn0rgUH6NJV8ruQioGXLuV/btshrbeH7Pyyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FZS50b5owRSlNiNmvBC7hf743BZmidStIwVBwouxAABBrgP+2jkz10FIo0rDADkxl
-	 ZSV0LAfBQuDR7zeBrX/sx+UO0tVENtRIOezku+SGdrwl9SW/goYzXiAB0s6Z+X3Ge5
-	 IH9ocnBWeLRpLKa4TpiaWm9q5XYJNxAwUdEPcJ1wSoM0lrnQRwD2v+x/eCTCdX9KL6
-	 stG6nUm+7naMeBkN0kGMd0k+TupxunOjV/JgH3EcadBpXxY8M8yhfSXM1I5nvjVfa+
-	 1M5RIz7EEsoIyfu/Cg0MulNgXI415hUkxqEa9qt3YJZF3IKKSraqMtBPtUtsdpbc5M
-	 /lr7Wf7Z6GLKg==
-Date: Tue, 16 Jun 2026 13:03:01 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v21 08/21] perf python: Use evsel in sample in pyrf_event
-Message-ID: <ajFztSaBdZgJ6sJF@x1>
-References: <20260616011543.4037138-9-irogers@google.com>
- <20260616015219.0BCC51F000E9@smtp.kernel.org>
+	s=k20260515; t=1781625818;
+	bh=LbweZTS/RuCc+Qe7hvGT2QPQs1cT3PBmDDs6WtYkpHc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=lqDSKkcDc1cpCqJxpXOb+wK0iVMd7EXdxo0S3hhy1v0K8CrSaKwofTNt+n7bZROU1
+	 lLw2jHjAOqFRp2dVDSuYO7NkgNMKWuJGFkCQAFsG5Ax02N7lmM+61/iFXxDfxnNYMS
+	 2WkdOBF/OObjUbrdKmqM33QJJcNNEAB5DZ3bNZInW8OZI69kHCMTLDi+Pxfj+0pL8A
+	 VWZNU6r60/YSfuW03nOg4lYpKPZmMRBVqFh/qfaL2IJBQRr48fRd3lgoWwg1eo2wAW
+	 ecrOlr4V6JiNxnsFPbvrqXOvJuyB2anli09SjqVJSQngM9zLm8xprbzmVM+908tH+F
+	 nNLKaGppN+9dg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 8/9] perf bpf: Validate array presence before casting
+ BPF prog info pointers
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260616153920.6852-9-acme@kernel.org>
+References: <20260616153920.6852-9-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 16 Jun 2026 16:03:38 +0000
+Message-Id: <20260616160338.B5DFF1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260616015219.0BCC51F000E9@smtp.kernel.org>
 
-On Tue, Jun 16, 2026 at 01:52:16AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [High] Missing NULL check before calling evsel__get() on the result of evlist__id2evsel() leads to a potential crash.
-> - [Medium] Missing perf_sample__exit() on the error path of guest_session__fetch() leaks the evsel reference.
-> - [Medium] Missing perf_sample__exit() on the error path out of perf_mmap__read_event() loop in test__perf_time_to_tsc leaks the evsel reference.
-> --
-> 
-> commit c23db56d8fc8d40b59596916ce6b0537514263aa
-> Author: Ian Rogers <irogers@google.com>
-> 
-> perf python: Use evsel in sample in pyrf_event
->     
-> Avoid a duplicated evsel by using the one in sample. Add
-> evsel__get/put to the evsel in perf_sample.
-> 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index ec759a11f7588..d79112cebb716 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -3365,7 +3365,7 @@ int __evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-> >  	union u64_swap u;
-> >  
-> >  	perf_sample__init(data, /*all=*/true);
-> > -	data->evsel = evsel;
-> > +	data->evsel = evsel__get(evsel);
-> 
-> [Severity: Medium]
-> Does this new reference acquisition cause memory leaks in existing callers
-> that do not expect sample.evsel to hold a reference on early errors? 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-So this was something I wasn't expecting: patches for tools/perf/util/
-inside a python binding series :-\
- 
-> For example, in tools/perf/builtin-inject.c:guest_session__inject_events(),
-> if guest_session__fetch() fails, it returns an error but the cleanup block
-> checking if (ret && gs->fetched) prevents perf_sample__exit() from running,
-> leaking the evsel reference.
+New issues:
+- [Medium] Unconditional bitmask validation in `__bpf_event__print_bpf_prog=
+_info` silently drops BPF program info for programs without subprograms (e.=
+g., non-JITed or non-BTF programs).
 
-this looks valid, no?
+Pre-existing issues:
+- [High] Incomplete validation of BPF prog info array bitmasks allows arbit=
+rary pointer dereferences via crafted `perf.data` files.
+--
 
-And while looking at it, there is another bug in that function, but now
-I'm looking like sashiko ;-)
+commit c8a78c4f19f095efa7672153271eb294c216288b
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Namely:
+perf bpf: Validate array presence before casting BPF prog info pointers
 
- tools/perf/builtin-inject.c
-╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
- 1970        if (sample->cpu >= gs->vcpu_cnt) {
- 1971          pr_err("Guest event with unknown VCPU %u\n",
- 1972                 sample->cpu);
- 1973 -        return -EINVAL;
- 1973 +        ret = -EINVAL;
- 1974 +        break;
- 1975        }
- 1976        /* Change to host CPU instead of guest VCPU */
- 1977        sample->cpu = gs->vcpu[sample->cpu].cpu;
+Several functions cast bpf_prog_info fields (jited_ksyms,
+jited_func_lens, jited_prog_insns) from u64 to pointers and
+dereference them. These fields are only valid pointers if
+bpil_offs_to_addr() converted their file offsets to addresses.
 
-But the comment for your patch seems actionable, i.e. it is an issue
-introduced by your series, by calling that evsel__get(), no?
- 
-> Similarly, in tools/perf/tests/perf-time-to-tsc.c:test__perf_time_to_tsc(),
-> the CHECK__(evsel__parse_sample(...)) macro jumps to out_err on failure,
-> bypassing perf_sample__exit(&sample) and permanently leaking the newly
-> acquired evsel.
-> 
-> >  	data->cpu = data->pid = data->tid = -1;
-> >  	data->stream_id = data->id = data->time = -1ULL;
-> >  	data->period = evsel->core.attr.sample_period;
-> 
-> [ ... ]
-> 
-> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > index 89d0f4cec6c7f..18af70488e07a 100644
-> > --- a/tools/perf/util/session.c
-> > +++ b/tools/perf/util/session.c
-> > @@ -1874,7 +1875,11 @@ static int evlist__deliver_deferred_callchain(struct evlist *evlist,
-> >  		else
-> >  			orig_sample.deferred_callchain = false;
-> >  
-> > -		orig_sample.evsel = evlist__id2evsel(evlist, orig_sample.id);
-> > +		new_evsel = evlist__id2evsel(evlist, orig_sample.id);
-> > +		if (new_evsel != orig_sample.evsel) {
-> > +			evsel__put(orig_sample.evsel);
-> > +			orig_sample.evsel = evsel__get(new_evsel);
-> > +		}
-> 
-> [Severity: High]
-> Can this cause a segmentation fault if the sample ID is unknown or corrupted?
-> 
-> The evlist__id2evsel() function can return NULL for malformed perf.data files.
-> If new_evsel is NULL, passing it directly to evsel__get(new_evsel) will
-> dereference the NULL pointer when trying to increment its reference count.
-> 
-> Could we add a NULL check here before calling evsel__get()?
-> 
-> >  		ret = evlist__deliver_sample(evlist, tool, de->event,
-> >  					     &orig_sample, machine);
-> >  
-> > @@ -1913,7 +1919,11 @@ static int session__flush_deferred_samples(struct perf_session *session,
-> >  		}
-> >  		sample.file_offset = de->file_offset;
-> >  
-> > -		sample.evsel = evlist__id2evsel(evlist, sample.id);
-> > +		new_evsel = evlist__id2evsel(evlist, sample.id);
-> > +		if (new_evsel != sample.evsel) {
-> > +			evsel__put(sample.evsel);
-> > +			sample.evsel = evsel__get(new_evsel);
-> > +		}
-> 
-> [Severity: High]
-> Similarly, could evlist__id2evsel() return NULL here and cause a crash when
-> passed to evsel__get()?
-> 
-> >  		ret = evlist__deliver_sample(evlist, tool, de->event,
-> >  					     &sample, machine);
-> >
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260616011543.4037138-1-irogers@google.com?part=8
+> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+> index 57d53ba848359..fa3ebc8ea7f09 100644
+> --- a/tools/perf/util/bpf-event.c
+> +++ b/tools/perf/util/bpf-event.c
+[ ... ]
+> @@ -959,12 +963,15 @@ int evlist__add_bpf_sb_event(struct evlist *evlist,=
+ struct perf_env *env)
+>  	return evlist__add_sb_event(evlist, &attr, bpf_event__sb_cb, env);
+>  }
+> =20
+> -void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
+> +void __bpf_event__print_bpf_prog_info(struct perf_bpil *info_linear,
+>  				      struct perf_env *env,
+>  				      FILE *fp)
+>  {
+> -	__u32 *prog_lens =3D (__u32 *)(uintptr_t)(info->jited_func_lens);
+> -	__u64 *prog_addrs =3D (__u64 *)(uintptr_t)(info->jited_ksyms);
+> +	struct bpf_prog_info *info =3D &info_linear->info;
+> +	__u64 required_arrays =3D (1UL << PERF_BPIL_JITED_KSYMS) |
+> +				(1UL << PERF_BPIL_JITED_FUNC_LENS);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does this incomplete bitmask
+validation allow arbitrary pointer dereferences via crafted perf.data files?
+
+The required_arrays bitmask enforces PERF_BPIL_JITED_KSYMS and
+PERF_BPIL_JITED_FUNC_LENS but omits PERF_BPIL_PROG_TAGS and
+PERF_BPIL_FUNC_INFO.
+
+Later in this function, synthesize_bpf_prog_name() is called, which blindly
+casts and dereferences info->prog_tags and info->func_info without checking
+if their array presence bits were set.
+
+Additionally, symbol__disassemble_bpf_libbfd() in tools/perf/util/libbfd.c
+lacks any array bitmask validation and blindly casts and dereferences
+jited_prog_insns and jited_ksyms. A crafted perf.data file can provide
+these fields as raw file offsets while unsetting their corresponding bits,
+bypassing the bpil_offs_to_addr() conversion and leading to segmentation
+faults.
+
+> +	__u32 *prog_lens;
+> +	__u64 *prog_addrs;
+>  	char name[KSYM_NAME_LEN];
+>  	struct btf *btf =3D NULL;
+>  	u32 sub_prog_cnt, i;
+> @@ -974,6 +981,13 @@ void __bpf_event__print_bpf_prog_info(struct bpf_pro=
+g_info *info,
+>  	    sub_prog_cnt !=3D info->nr_jited_func_lens)
+>  		return;
+> =20
+> +	/* Ensure the arrays were present and converted by bpil_offs_to_addr() =
+*/
+> +	if ((info_linear->arrays & required_arrays) !=3D required_arrays)
+> +		return;
+
+[Severity: Medium]
+Will this unconditional check silently drop BPF program info for programs
+without subprograms?
+
+The function bpil_offs_to_addr() has an edge case where it clears an array's
+presence bit if its count is 0 and it is placed at the end of the data buff=
+er
+(offset equals data_len).
+
+Valid BPF programs that legitimately have nr_jited_ksyms =3D=3D 0 and
+nr_jited_func_lens =3D=3D 0 (such as non-JITed programs) will have these bi=
+ts
+unset. The new validation check will unconditionally fail here, causing
+perf report --header to silently omit their basic program info.
+
+Should this check only be enforced when sub_prog_cnt > 0?
+
+> +
+> +	prog_lens =3D (__u32 *)(uintptr_t)(info->jited_func_lens);
+> +	prog_addrs =3D (__u64 *)(uintptr_t)(info->jited_ksyms);
+> +
+>  	if (info->btf_id) {
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616153920.6852=
+-1-acme@kernel.org?part=3D8
