@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45E33C8738
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 05:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6CE3C9EDF
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 05:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781586224; cv=none; b=RY8qxdSycOkysZfBCFGynMRP01sYWjR1TkcQr/hINwt9aKTWxiYH5jQYtDZfLHo6TP+YA9SQuEJzWPbJj1IYkjJMbWN0Jr2gLPW+fBDfgW1rWJ2kslqKpJDBFgjGKKxVJFeB7flnH+ojcXotzjogFmeGoND2zW+tCGQ7Lg0tLpY=
+	t=1781586235; cv=none; b=c6OJ9g0f7s8Wz9cImwdjVbFZYVmJ3TCnYZn3qvzd1pOgrAXKXvjZu+0kj27jW0/VRi4zHHUoh/Q6aTVou2Xw/+qOaAmkmV9Aau16TRkus5v8p8w/m7KYOJ2yqCLx1abrGa8PhBCNnyUg2ZT2QXj8HcHp6LLzrq+c3zE3MxFJHXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781586224; c=relaxed/simple;
-	bh=010GdWB6CwR0bUkp2M4897Eibr4s+08g7Ev+8pc2QR4=;
+	s=arc-20240116; t=1781586235; c=relaxed/simple;
+	bh=lV8B/lQJ0YzOcCD+2I8I0NLuIB0N0Y9JbeGiWlwu3Fg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QjdzLNcs8fjuoXNb54AlZxMeBQSKLg7MARnLPEMQvGqClDgNQf2CkaRsTUSt+frWgVBkpwS6i2ILND1nL9JIGHHlvT0RGtE9FjhOE45PsNyiwvkmRhGYBGVVY37VitxOmDheFLeNq7B7sfsrzREWqlIGTh5mNxH0cQ4T6KrU9vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwofqBaY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=FYiwinW9qT1rAx8vgm5EXa6V0MyY3kS0izsiPIa4tIQcsKr852m23iEVudLyR15Kp7gf+H1kwGyeKZ4uuqcJ9chC2PZVTuezxEdRlYm8CeLrfr33oAIrfFWSq5ji/tFNTUtMcP+V7wC+ynlejVdd1LbXZwltID07x9ZeNt0IYAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b6wWCGaM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwofqBaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D8111F000E9;
-	Tue, 16 Jun 2026 05:03:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6wWCGaM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E31FA1F000E9;
+	Tue, 16 Jun 2026 05:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781586223;
-	bh=qyQl3as2Vw5xT7uIjB5KH1EI7q/rpwzeITrlnPfGKk8=;
+	s=k20260515; t=1781586234;
+	bh=8BTBR0sVCK3rsOiLqjEpgVPvpbKc37aZgqu3ZmE2eOY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YwofqBaY0aMo9r+bJDg9/+yn7jSOgUdUIYea7Z4bSJ18TDbvTJVpjNXNmd5xsOdhI
-	 CWY6uLssKwTavTN+E236k2Ob3ukxTMRtAB4ZjvAjc8uoFrRSl5FO/0j+/An4ZsLcQ6
-	 AK77UEqwzXkzEfoQy35xcepCwXNp/d9/VQ0iJTv7AGpxCnYd7IVr4U+saxA/kqjyk8
-	 m4yebIsW2foTvevbwYKo/ddm1ueLmwCj4vMIhSzDSuR9CCwQxZc78DnpkWGpDgPRSA
-	 p1nzoICiXRUr3bW6YgNYJMCxwoIm+3zQqJ2SH2vlMpjVsRr0xATYA0L+lPWfCIDBYO
-	 pYGHvtW6LeJtQ==
+	b=b6wWCGaMsag9jJlLI8rJMjUUCvErygF2lXxIUXZjSKDLvqlvbq3KFlK05HbqVt/oU
+	 9f1SzRzuqd0sacX8RS+hyM61HmW2Y8Satp1TgtvaO8pT33rEyyGM4hE4AsZfM/D9P9
+	 KNsZmp5gLWBGyLlXiYkoSQ3L4g1btYBKRTtfofChiFV7fyTme4SkM+vxCoCdSZopym
+	 GBVgzzu+4UO1D/djmrZrmIW7eAV/iY79V4ZIItt5gxIegkBwS3JXkJIcUhyQa3zviq
+	 Rq2ZjwcdKETFxNv8MAtBUWxFNyD+hZNPo+9nUta3EziKcZkjEH90hFXwGR6jWsZJV1
+	 GgNCQyRhRi9iw==
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v4 3/8] perf/x86/intel: Fallback to sw branch type
- decoding if no hw decoding
+Subject: Re: [Patch v4 4/8] perf/x86/intel: Fix kernel address leakages in
+ LBR stack
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616044654.3468742-4-dapeng1.mi@linux.intel.com>
-References: <20260616044654.3468742-4-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260616044654.3468742-5-dapeng1.mi@linux.intel.com>
+References: <20260616044654.3468742-5-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 05:03:42 +0000
-Message-Id: <20260616050343.5D8111F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 05:03:53 +0000
+Message-Id: <20260616050353.E31FA1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,72 +46,85 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Forcing `X86_BR_TYPE_SAVE` on Arch LBR CPUs without hardware branc=
-h-type support causes massive NMI overhead due to an unconditional fallback=
- to software decoding.
+
+Pre-existing issues:
+- [High] The kernel address leak fixed in Intel LBR is also present in the =
+AMD LBR and AMD BRS implementations.
 --
 
-commit f25e57aa8ef5b59fd749c6fcb24f34aa7668326f
+commit 6e58211ef4792cdee63b678a385b927eb7214af9
 Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-perf/x86/intel: Fallback to sw branch type decoding if no hw decoding
+perf/x86/intel: Fix kernel address leakages in LBR stack
 
-This commit updates the arch-LBR filtering to fall back to software
-branch-type decoding when the hardware feature is unavailable. This ensures
-branch classification works correctly across different arch-LBR
-configurations.
+This commit fixes an information leak in Intel LBR where the software filter
+failed to validate the from address. By validating both the from and to
+addresses against the requested privilege mask, it prevents kernel addresses
+from leaking into user-only branch stacks.
 
 > diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-> index 72f2adcda7c68..e2657f791e507 100644
+> index e2657f791e507..16eef15378166 100644
 > --- a/arch/x86/events/intel/lbr.c
 > +++ b/arch/x86/events/intel/lbr.c
-> @@ -1231,7 +1231,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
->  		 * Doesn't support OTHER_BRANCH decoding for now.
->  		 * OTHER_BRANCH branch type still rely on software decoding.
->  		 */
-> -		if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
-> +		if (static_branch_likely(&x86_lbr_type) &&
+
+[ ... ]
+
+> @@ -1244,8 +1244,14 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+>  				type |=3D X86_BR_NO_TX;
+>  		}
+> =20
+> -		/* if type does not correspond, then discard */
+> -		if (type =3D=3D X86_BR_NONE || (br_sel & type) !=3D type) {
+> +		from_plm =3D kernel_ip(from) ? X86_BR_KERNEL : X86_BR_USER;
+> +		/*
+> +		 * If type does not correspond, then discard.
+> +		 * Specifically reject entries whose from address is in
+> +		 * kernel space when only X86_BR_USER is requested.
+> +		 */
+> +		if (type =3D=3D X86_BR_NONE || (br_sel & type) !=3D type ||
+> +		    (!(br_sel & X86_BR_KERNEL) && (from_plm & X86_BR_KERNEL))) {
 
 [Severity: High]
-Does this change unintentionally cause a massive performance regression on
-systems without hardware branch-type support?
+This isn't a bug introduced by this patch, but does the same kernel address
+leak exist in the AMD LBR and BRS implementations?
 
-In intel_pmu_setup_hw_lbr_filter(), X86_BR_TYPE_SAVE is always forced
-for all Arch LBR CPUs:
+Looking at arch/x86/events/amd/lbr.c, the software filter sets the branch
+privilege strictly based on the target address. Kernel-to-user branches mig=
+ht
+bypass the filter and leak the kernel from address:
 
-arch/x86/events/intel/lbr.c:intel_pmu_setup_hw_lbr_filter() {
+arch/x86/events/amd/lbr.c:amd_pmu_lbr_filter() {
     ...
-    if (static_cpu_has(X86_FEATURE_ARCH_LBR)) {
-        reg->config =3D mask;
-        ...
-        reg->reg |=3D X86_BR_TYPE_SAVE;
+    type =3D branch_type_fused(from, to, 0, &offset);
+
+    /* If type does not correspond, then discard */
+    if (type =3D=3D X86_BR_NONE || (br_sel & type) !=3D type) {
+    ...
+}
+
+Similarly, in arch/x86/events/amd/brs.c, the privilege filter only evaluates
+the target address against the requested privilege mask:
+
+arch/x86/events/amd/brs.c:amd_brs_match_plm() {
+    ...
+    if (!(type & plm_k) && kernel_ip(to))
         return 0;
-    }
+
+    if (!(type & plm_u) && !kernel_ip(to))
+        return 0;
+
+    return 1;
 }
 
-Because X86_BR_TYPE_SAVE is forced, the fast-path early exit in
-intel_pmu_lbr_filter() is never taken:
+Because the hardware PMU natively records branches going from kernel space =
+to
+user space, could unprivileged users requesting user-only branches still
+sample kernel addresses on AMD through these paths?
 
-arch/x86/events/intel/lbr.c:intel_pmu_lbr_filter() {
-    ...
-    if (((br_sel & X86_BR_ALL) =3D=3D X86_BR_ALL) &&
-        ((br_sel & X86_BR_TYPE_SAVE) !=3D X86_BR_TYPE_SAVE))
-        return;
-    ...
-}
-
-With the fallback introduced by this patch, won't every sampled branch be
-forced to undergo high-overhead software disassembly in the NMI context, ev=
-en
-when the user requested no specific branch type filtering?
-
-Should intel_pmu_setup_hw_lbr_filter() be updated to conditionally force
-X86_BR_TYPE_SAVE only if x86_lbr_type is actually enabled?
-
->  		    type <=3D ARCH_LBR_BR_TYPE_KNOWN_MAX) {
->  			to_plm =3D kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
->  			type =3D arch_lbr_br_type_map[type] | to_plm;
+>  			cpuc->lbr_entries[i].from =3D 0;
+>  			compress =3D true;
+>  		}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616044654.3468=
-742-1-dapeng1.mi@linux.intel.com?part=3D3
+742-1-dapeng1.mi@linux.intel.com?part=3D4
