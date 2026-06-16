@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683FD3C0A05;
-	Tue, 16 Jun 2026 02:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831423C0A05;
+	Tue, 16 Jun 2026 02:27:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781576854; cv=none; b=eg3wlZg7pShjD1tDMrMt0Xj/2guh3aP07R8bEchKv8OI0mg3rEvwwvLed+YnF5JfTfa0DsQsBZwYTf/YudRjKZXGUBLscMSq5e/eDG7GpVUtRqj1fDGR3PhggBlqz4jMjy+UIOKqs2TXHIo0w/LA/AlCXXuZJ6ca2NOyQ7OKZE8=
+	t=1781576858; cv=none; b=LPBPOHV9OwJVgiQnwL+60TT/aAuOyvWKdeMR4kW6pVnFpz5vxx0DT4vZKnUAAlC7P6GeKiEJoYWWZolM7q6zMgYQuary22jj3MJ9W6lZMXgsbQ7qxqTewDOYvnmYYuYs3T+CAbS6HTu5O3uwkxxo1ROzgko8iuh24+VMC8i05i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781576854; c=relaxed/simple;
-	bh=qJr1/NG9cTBYMASr4fVzIqKY43KoGkxI2WexRuxmORM=;
+	s=arc-20240116; t=1781576858; c=relaxed/simple;
+	bh=/ouZAdwPNodkqdYcbLkgddbPDqEhLnZ+uZcM97iV06I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t4zhswkPyR3Bv9h/ma1Gfn434abHPCFZQJ0qQ8pUneZoaZshx5aK1WskznCIClPoGSva4mmTsX5CkZ9civEOlDqV1EEFPu4X1stEue0NSkA8gVWHxDo7oKKf/qzzBx7T0PABeBYV7ctv75l4eBH9t5Pweoz5v0dCunCkfqfX8Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTsPa9J6; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=JJwGKi1gxajex5pRukXFL9/Y43+Ubj78FNJiV8AZGaidArCXnAT/ZPEPZeNQWSXo+ArIkJZzIjx2KqnaznX6WLh/Ib5npw/q1W5O7+o0I9uszT+nBIbud1uiPVql39I7AI8SoRhUi0zDVNZWZ9KzfeGEwLt85EZ7ndQ30BSEX2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPhXK3dl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTsPa9J6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664BB1F00A3A;
-	Tue, 16 Jun 2026 02:27:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPhXK3dl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EE161F000E9;
+	Tue, 16 Jun 2026 02:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781576853;
-	bh=wUHEbHiIOFcesf5bKC+5299t6lhCsUWWWGLvnb5OUj4=;
+	s=k20260515; t=1781576857;
+	bh=go+3OAOQAlKkBE7/7hRA2XivK9iT+vmvDtATOYjf8XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=XTsPa9J6wojPKQNwf6hVFMxxBnSZvv0Nh97XAQbJjuPp8K767pxYzHmFA3U5gzJef
-	 ZIJO3RwqeKaDUQ0w9K2tqFu7iu7l8hkjsvhCcZOpj46h2zK5mVU3zEKow7zxYiz47G
-	 CMA71YsxwF4Gb/0XtaLFXJdoplZmokV71JBU2Q9QwD8Gd31IaKuSQljdjuqgDaVk+H
-	 FOrHZPKRAy6e7TpMyIi2PxGG1loV8AlHHQz2x4rGUeePDwWBDjGD9mMlCQt/+NMBQF
-	 MZTLSc3JwdO+g3bI0hDkOWebTWhCDbD6lbdmGsWpDUm02rhqHef1WyII1Lo+MW7ls2
-	 T47Dr1JUdfX9A==
+	b=dPhXK3dl8XPeBCuXQfVVKWZhNbmhNcI0FD9KNi0iCdVTmJhuWlBU2I6mN8LfRYETZ
+	 JpQb3lEYuuUqGo+k6dr9qWZecFXwAQcQh9jKUnJXZ4WC0pvJR6voenxVxc3xhiC21g
+	 1MtiQB50U4tv7+hR6ymEkU40Z/s6HFKRo/PiVI5tNJjmhYJW3SgkLkpO+Q7LzMdB8h
+	 wW0iwBUtx1tzEFDR2ya1tQUdOsIh+NUl/A2lAconTBDcdAfvSQHWbuPpRCQq6qr6/N
+	 OuAXbKuERZYs7v2nJoSYs8hEwgYRQkQdYMK+czdmaf72M3WyUtzLP5jdawg/EHhqZV
+	 IkDkBztGVvOqQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,11 +41,10 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	sashiko-bot <sashiko-bot@kernel.org>,
 	James Clark <james.clark@arm.com>,
 	Leo Yan <leo.yan@linaro.org>,
-	Tor Jeremiassen <tor@ti.com>,
 	Claude <noreply@anthropic.com>
-Subject: [PATCH 3/9] perf cs-etm: Validate num_cpu before metadata allocation
-Date: Mon, 15 Jun 2026 23:27:09 -0300
-Message-ID: <20260616022715.5739-4-acme@kernel.org>
+Subject: [PATCH 4/9] perf cs-etm: Require full global header in auxtrace_info size check
+Date: Mon, 15 Jun 2026 23:27:10 -0300
+Message-ID: <20260616022715.5739-5-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260616022715.5739-1-acme@kernel.org>
 References: <20260616022715.5739-1-acme@kernel.org>
@@ -59,54 +58,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-cs_etm__process_auxtrace_info_full() reads num_cpu from untrusted
-perf.data and uses it to allocate the metadata pointer array:
+cs_etm__process_auxtrace_info() checks that header.size covers
+event_header_size + INFO_HEADER_SIZE (16 bytes total), but then
+accesses ptr[CS_PMU_TYPE_CPUS] at offset 24 from the start of the
+event.  A crafted 16-byte auxtrace_info event passes the size check
+but reads out-of-bounds.
 
-  metadata = zalloc(sizeof(*metadata) * num_cpu);
+Include CS_ETM_HEADER_SIZE in the minimum size check so that the
+global header entries (version, pmu_type_cpus, snapshot) are
+guaranteed to fit within the event.
 
-On 32-bit, sizeof(*metadata) is 4, so num_cpu = 0x40000000 overflows
-the multiplication to 0, causing zalloc(0) to return a valid zero-sized
-allocation followed by out-of-bounds writes in the population loop.
-
-Fix by computing priv_size early and using it to bound num_cpu: each
-CPU needs at least one u64 metadata entry, so num_cpu cannot exceed
-the total number of u64 entries in the event's private data area.
-
-Fixes: cd8bfd8c973eaff8 ("perf tools: Add processing of coresight metadata")
+Fixes: 55c1de9973d66516 ("perf cs-etm: Print auxtrace info even if OpenCSD isn't linked")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: James Clark <james.clark@arm.com>
 Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Tor Jeremiassen <tor@ti.com>
 Assisted-by: Claude <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ tools/perf/util/cs-etm-base.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 0927b0b9c06b1504..d121c8f22028d5ba 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -3431,6 +3431,18 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
+index 4abe416e3febd2cc..aebef71d3a0a1d7b 100644
+--- a/tools/perf/util/cs-etm-base.c
++++ b/tools/perf/util/cs-etm-base.c
+@@ -170,7 +170,9 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+ 	u64 *ptr = NULL;
+ 	u64 hdr_version;
+ 
+-	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE))
++	/* Ensure priv[] is large enough for the global header entries */
++	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE +
++					  CS_ETM_HEADER_SIZE))
+ 		return -EINVAL;
+ 
  	/* First the global part */
- 	ptr = (u64 *) auxtrace_info->priv;
- 	num_cpu = ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
-+
-+	/*
-+	 * Bound num_cpu by the event size: the global header consumes
-+	 * CS_ETM_HEADER_SIZE bytes, and each CPU needs at least one u64
-+	 * metadata entry after that.
-+	 */
-+	priv_size = total_size - event_header_size - INFO_HEADER_SIZE -
-+		    CS_ETM_HEADER_SIZE;
-+	if (num_cpu <= 0 || priv_size <= 0 ||
-+	    num_cpu > priv_size / (int)sizeof(u64))
-+		return -EINVAL;
-+
- 	metadata = zalloc(sizeof(*metadata) * num_cpu);
- 	if (!metadata)
- 		return -ENOMEM;
 -- 
 2.54.0
 
