@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3163CD8B9;
-	Tue, 16 Jun 2026 04:52:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5829B3CD8B9;
+	Tue, 16 Jun 2026 04:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781585559; cv=none; b=Y3A+UergQPS98aMS5Y3NDyfsN4AGyAol4I3qlGCguRzSFB6d9MhmuVmBv4fImp9JpuZaDbEJmV45JIz+Y3z9/ICUhgYsxiaPvpw4wmwwakx6/3dPdZo3uJvWY+1SpCq3bXlwH59TOLA0LOdlQvyuafxz79k4JMDxbSVD6/4oJvY=
+	t=1781585563; cv=none; b=efvDNReiA9Kla0oBCulSlh48oGp0Yo66Cf1zvLXi6q+bh7udHZ8soAGwtFWaxIWAk1d6zs/zdgBQCPHRF2IkmvmAdwum+5YphYXSXkudskoEZH8LQmEJLuAYpcxk5xqYEVRlb8QakkDjis84kqyb4o6lpfcSuIU5r9LeRCIMeAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781585559; c=relaxed/simple;
-	bh=TgcV4h+TDwdSYWgyL6ihk3QjrMclAphRz9ZqbKtA7G0=;
+	s=arc-20240116; t=1781585563; c=relaxed/simple;
+	bh=VBK0ktbAZEblhul2ZSD/6BFwCP42zOQDKriOL6zk4wY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tXrDij7Eq0bEu8eFSuV3qyvWr/Hm113ak7DUByxFFVRnBrI7ZK3JkO1R3OpfCaqBLvKMUu0l9xxaKU0wSzmA80Unfa8J+LC0ZxdJTvzjRBo7sUnZdyyLo4+YtnfppUQ5wOChw1KTX8N5fo5Zv24xz2gHektBsYpwU4hTq+hkH8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mcovCP5J; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version; b=hJWM6RcVhgLjc0ENBMZdePJRlas2d1MHgIy1Bv+z8dsDlknAQL9/X+qYdrH32pYVZAnhfcKAoKWFCEACNM67iNMX+PoctHgy2359e0B+fzGkp/NHBb47P43MIwuaa+mTOHbe5f8tNNhKibpNPjkawWhESlgSZFVAOT12y8sSXQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j86Su8Oc; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mcovCP5J"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j86Su8Oc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781585558; x=1813121558;
+  t=1781585562; x=1813121562;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TgcV4h+TDwdSYWgyL6ihk3QjrMclAphRz9ZqbKtA7G0=;
-  b=mcovCP5J1q2ywjjyBUb+ChGs6j3PcQbbyjJTO2PKN7IULj50UD+ezSSj
-   qHX1HDEDquLT5bJnLeZi0jWFWcoCGOV2Tq1zOF+qamxVrKYNXci2fp6Gh
-   DQ85j3Ia01qDI3Hksgy7x8ZmnY837E/Qc5j2ono9pDkc9lyQFOMKN4UAH
-   GkFiOScwylndmQsF54Vr7M9KBMkmygnoRHw0Z+kTPBexo3jMTIUvoN1Kn
-   +vtfSsHn3smgPDhIfdF5rXqYLnS1bXNil32/IYbPPPOqxBssEJpUtkxPy
-   bmFN+AqB9jQVOf2bzf5fpQ0cs6pBDy/sJTQXSFIsh/MQfUxNOPX0AQvX7
-   g==;
-X-CSE-ConnectionGUID: Ru5RFJdhReCjjMnSKAaAXQ==
-X-CSE-MsgGUID: bNHT5NhbSaWrZ3WF6/RthQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="82445401"
+  bh=VBK0ktbAZEblhul2ZSD/6BFwCP42zOQDKriOL6zk4wY=;
+  b=j86Su8OcU78in8Ki97t6pAIVc4TUOmYp8an+38GXwdj/7G5944Sfy64Y
+   nJdbm2RxYqKHLSLdegP6TGvkpwg9heryynEHgLfzMzLeAxC+bbshNO+V3
+   8qHYcUot+PCx35IQwhyVL6PI7zejl3sXFbl4Zxl1ONnRiYv4ZEe888Emn
+   JlfPi8800OFfP7Do54AhiTyR+tZIcwHz5uDWpEDaAgTwlotBBEoM7iAQZ
+   8I+LrctSjv2EQLDOSMpgh1RIqeC5WmYGC4zi1n7wPxL/7eagAo/5GqkW0
+   8bg1uM6ElXsGryYN1eqsKhmbc8drovLilVp0KqQlun4LCe5PdP6n95qpx
+   Q==;
+X-CSE-ConnectionGUID: FAHBThzhSMqKNwBosS7DkA==
+X-CSE-MsgGUID: CFgxvNQ6TrSyJXJD4sIYJg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="82445423"
 X-IronPort-AV: E=Sophos;i="6.24,207,1774335600"; 
-   d="scan'208";a="82445401"
+   d="scan'208";a="82445423"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 21:52:38 -0700
-X-CSE-ConnectionGUID: 7Idsm93GRtar7FQ+ox9oTw==
-X-CSE-MsgGUID: 8ILmNeOfQ0eTbPcctutsdQ==
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 21:52:42 -0700
+X-CSE-ConnectionGUID: G3pndbb0TWufGkvOd6hxKw==
+X-CSE-MsgGUID: fwCXms2RR8y35ZuWweZMxQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,207,1774335600"; 
-   d="scan'208";a="271726319"
+   d="scan'208";a="271726379"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by fmviesa001.fm.intel.com with ESMTP; 15 Jun 2026 21:52:33 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 15 Jun 2026 21:52:38 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -59,10 +59,11 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v4 3/8] perf/x86/intel: Fallback to sw branch type decoding if no hw decoding
-Date: Tue, 16 Jun 2026 12:46:49 +0800
-Message-Id: <20260616044654.3468742-4-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [Patch v4 4/8] perf/x86/intel: Fix kernel address leakages in LBR stack
+Date: Tue, 16 Jun 2026 12:46:50 +0800
+Message-Id: <20260616044654.3468742-5-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260616044654.3468742-1-dapeng1.mi@linux.intel.com>
 References: <20260616044654.3468742-1-dapeng1.mi@linux.intel.com>
@@ -74,40 +75,78 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-intel_pmu_lbr_filter() currently assumes arch-LBR provides hardware
-branch-type decoding and skips software decoding on that path.
+Before Arch LBR gained CPL filtering support, a user-only branch stack
+could still contain kernel addresses. As a result, kernel branch records
+may be exposed to user space even when PERF_SAMPLE_BRANCH_USER is
+requested.
 
-However, arch-LBR may not always expose branch-type information. In
-that case, treating entries as hardware-decoded can misclassify sampled
-branches (for example, defaulting to JCC), which breaks branch-type
-filtering results.
+For example, on Intel Tiger Lake, the following command can still report
+SYSRET/ERET entries with kernel-space from addresses:
 
-Fix this by using software branch-type decoding when hardware
-branch-type decoding is unavailable (that is, when x86_lbr_type is not
-enabled). This keeps branch classification and filtering behavior
-correct across arch-LBR configurations.
+$ ./perf record -e cycles:p -o - --branch-filter any,save_type,u -- \
+ 	./perf bench syscall basic --loop 1000 | \
+	./perf script -i - --fields brstack|tr ' ' '\n'| \
+	grep -E '0x[89a-f][0-9a-f]{15}'
 
-Since x86_lbr_type is only set to true when arch-LBR is supported,
-it's unnecessary to check if the CPU has the arch-LBR feature.
+    Total time: 0.000 [sec]
 
+      0.219000 usecs/op
+     4,566,210 ops/sec
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.551 MB - ]
+0xffffffff93c001c8/0x7f12a2b1d647/P/-/-/16959/SYSRET/-
+0xffffffff93c001c8/0x7f12a2b1d5c2/P/-/-/17535/SYSRET/-
+0xffffffff93c01928/0x7f12a2861000/P/-/-/6719/ERET/-
+0xffffffff93c01928/0x7f12a297a000/P/-/-/8575/ERET/-
+
+The problem is that intel_pmu_lbr_filter() does not fully validate the
+privilege level of sampled entries. It filters some mismatches based on
+the branch type and the to address, but it does not reject entries whose
+from address violates the requested branch privilege filter.
+
+Fix this by extending software filtering to validate both from and to
+addresses against br_sel. Any LBR entry contains kernel address does not
+match the requested user filter is dropped. This prevents kernel
+addresses from appearing in user-only branch stacks.
+
+Cc: stable@vger.kernel.org
+Reported-by: Ian Rogers <irogers@google.com>
+Fixes: 47125db27e47 ("perf/x86/intel/lbr: Support Architectural LBR")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/lbr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/lbr.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 72f2adcda7c6..e2657f791e50 100644
+index e2657f791e50..16eef1537816 100644
 --- a/arch/x86/events/intel/lbr.c
 +++ b/arch/x86/events/intel/lbr.c
-@@ -1231,7 +1231,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
- 		 * Doesn't support OTHER_BRANCH decoding for now.
- 		 * OTHER_BRANCH branch type still rely on software decoding.
- 		 */
--		if (static_cpu_has(X86_FEATURE_ARCH_LBR) &&
-+		if (static_branch_likely(&x86_lbr_type) &&
- 		    type <= ARCH_LBR_BR_TYPE_KNOWN_MAX) {
- 			to_plm = kernel_ip(to) ? X86_BR_KERNEL : X86_BR_USER;
- 			type = arch_lbr_br_type_map[type] | to_plm;
+@@ -1212,7 +1212,7 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+ {
+ 	u64 from, to;
+ 	int br_sel = cpuc->br_sel;
+-	int i, j, type, to_plm;
++	int i, j, type, from_plm, to_plm;
+ 	bool compress = false;
+ 
+ 	/* if sampling all branches, then nothing to filter */
+@@ -1244,8 +1244,14 @@ intel_pmu_lbr_filter(struct cpu_hw_events *cpuc)
+ 				type |= X86_BR_NO_TX;
+ 		}
+ 
+-		/* if type does not correspond, then discard */
+-		if (type == X86_BR_NONE || (br_sel & type) != type) {
++		from_plm = kernel_ip(from) ? X86_BR_KERNEL : X86_BR_USER;
++		/*
++		 * If type does not correspond, then discard.
++		 * Specifically reject entries whose from address is in
++		 * kernel space when only X86_BR_USER is requested.
++		 */
++		if (type == X86_BR_NONE || (br_sel & type) != type ||
++		    (!(br_sel & X86_BR_KERNEL) && (from_plm & X86_BR_KERNEL))) {
+ 			cpuc->lbr_entries[i].from = 0;
+ 			compress = true;
+ 		}
 -- 
 2.34.1
 
