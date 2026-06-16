@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F9A47DF82
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 16:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C5E47DFA5
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 16:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781628532; cv=none; b=c6gBiSRTALBXXpTBH6U+bIOxEUjXSQT7a6Tmg8ZWocR1B/Gs8kSCj8IZhx6DE+IvzjjuKIU9RtAuOJ1y4WCF9MHotDoaqugsMuhWRHP12tI6Z+m4DD3709d3Ldh59PyYezgdrdngcOjvqZPsreAU7sGqdEmc/iVJvZcWTykujrA=
+	t=1781628534; cv=none; b=a5CieQ7jn7EQ/ctZh7gChRNfF0KGCvFPbqfDxDHPRRQA+X9td7H8L7N+S5OdbQaRbcbeJsR69G4bSOwkWPIKqBP+VEbkluVI8Mtuv87eQSje6iqBdZ3YTrO12R8F0Sge5Y6IrG6KvHlFqUgAdQ+C3xz41Wjwa9nenq2eQdvouro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781628532; c=relaxed/simple;
-	bh=BVEqPg1/gLWp+6UtIzaJVrAG6IkBWeSXqNe4kwQz3F4=;
+	s=arc-20240116; t=1781628534; c=relaxed/simple;
+	bh=comN1lU50UtE6xZMRFNhOmPnFpXHRiIrauxHtx1aZks=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nEkhmRO8QGU4Z9PyN0XWS8Zt3UuTL1d/tXn4J5lWPz5fylbAZYkp4vbtAx26hwDw3UqlXU4c7ZRKfZd3zEKZd1sNmuqOpgznMduJP7dl5yUvBmtqeN4qqf+5e/65m8PN30mEI4ipNvFfne8TZp5k9kI8+59gnHPUjTzynQqRTpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rk04wC9T; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=VO2KuMYXmEmhvlfcsAE8JAb6G4nkYCdyb6c7zQgNgTt/ugh2/eOpz2iA/eWpJGMTkmS3/v/PnfUtMGxmixlOF+1w8bImZ4AIqKJfzEnc8BH61XBzrPBNKRjQ0RGcARjUxuT89758YYAO04E+2WLpTUwE1pIjINofMuedA5NnY5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j5LUWMJ+; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rk04wC9T"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-307625ee07fso16772063eec.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 09:48:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5LUWMJ+"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-30bc7296c59so295056eec.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 09:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781628529; x=1782233329; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781628532; x=1782233332; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nthEv6EusQawzI2xPar1f8e6+ba1HIZX31oEpmZqeAs=;
-        b=rk04wC9TZJ/FYVAJDajIcChDWss0NMFiOWHKiEwsu1xECN75cQ3bwMscIoYuUUEI5H
-         C/oVJ7MimOmhdysjeXun8BDMWwW6JgFv5kDtFpAfGG/LpP8vk6BE4edeaRodL0k0ZHJi
-         5TTuMWMkUATdAkfcMpUyRmo4hNdLLpXiqL80sR8uGdEMjIBDw3v2H4f69hrivDJKCSqJ
-         N2R84HHCzC/273BVOACvm4sGooXDlK+i1lYA+BJC4oHoywDZvJCFE9gXXWU4+Bq/BJnW
-         BmyNvSq7goDPaBZlDsVky46aLqkSWd8M4zq/LCG6vOjw0ZgaGXDQW3frrKsonHM9wVxH
-         YtMg==
+        bh=8f67QcyBWEbf5xZSpkTjIM3UVNd5TGoldZSjoyXtin0=;
+        b=j5LUWMJ+ReCN565bEu2p9SS39tysii93AUBIBpnk/Z7zt5Oo0osoVQWAqyHwu+EXk+
+         rmQJ3EaTGVcNDNZNOjxAUDZMOVCvcl0zto/EglY312zMPEkFMxKES8YsUjJ3odLEAJAo
+         v0KadYzG/Y6LJH5yIdUIdnEho+4snjewX6Y0FJyQ2lwwuicx5dGIK95eOf07n3VOUlAl
+         ku4I0H/EflFiXK1wd1P5ZHZm9GZfDG6kzxc/de7taoMlKWBhfjIm48GSevLJZaZ4Y6FN
+         /n089CBzx8tzc0kxkjzpbW6754UgXvz4NF8egkPFUjzUlUjY9dvQvxDX/MtOncVKvw7M
+         u5Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781628529; x=1782233329;
+        d=1e100.net; s=20251104; t=1781628532; x=1782233332;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nthEv6EusQawzI2xPar1f8e6+ba1HIZX31oEpmZqeAs=;
-        b=ELKWvnYsG9hYp2f6guoWzkbVg0pY01n4CNJztHUmsYW4JeWoGkaUO4rBiyBDFfJ/hf
-         Dqijm3eAucl/hvYpUDZXF+HPcoakzg739ZmJRMdfMUmzHlGiZPge+XuITA4QOa55FQ9L
-         a3Zhxk3Rq+2b5DLfJvuryHo7pZ38fZGriYS2LsDeWH7IvC1Iy9kTLIdOLhuKMvXQqGv7
-         FAN1Exp8HlYugEIIi5MoSxlc0EwZq4H1pMQKRh73IObzqor3s1xinPGS/xY0NRzZIeyw
-         xX5W5RE1vEEVw/lQOw0xavNnA4RlYwJmRjN7j54Uj1KUN4EEeX0rhLc44g1+VIZOPy9F
-         Sc9g==
-X-Forwarded-Encrypted: i=1; AFNElJ+6IQdeuuNd8sOVN/c3aL0VXsycoJnJkj+6nN76IWKa1MCWriGlCDFTIqpOBcFUH7u0fB8Pe0mXbW5wQclMBsiz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwibHyIfLxy5gJ8tidfMz7l3cDbagcFM8i6SG03X32vlGdCC07u
-	eiuTVFcLvLWPLlNUuoeNcif/vVH70yX5KRd6YW+N6NeRztyMtS3V9CQeYfIGhlswjuDqbM/gETt
-	XWQaKIwB//g==
-X-Received: from dybmw17.prod.google.com ([2002:a05:7300:cd91:b0:30b:96b8:80b2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e82e:b0:304:e72a:d4d9
- with SMTP id 5a478bee46e88-30bca09cf59mr57105eec.19.1781628529079; Tue, 16
- Jun 2026 09:48:49 -0700 (PDT)
-Date: Tue, 16 Jun 2026 09:48:16 -0700
+        bh=8f67QcyBWEbf5xZSpkTjIM3UVNd5TGoldZSjoyXtin0=;
+        b=qLg1uviDzmbFm/+cUWLxtphnt/ct5wrGMv1q5OCWbQXRzeLbWoV57EWe7GhK4QwE8+
+         cC2a4/6qeiXhyMMbTk7JdJ8vvoOBPN4NSkrNFhjMV9HXF+4oIvn+NdX653BRqJFkc9EM
+         JfKDcsomfl9kvQGK9PqtoACI2vaFUgV/rOTirj1sSHtNaSUhKJ9BvMpKmIkbV5XkCEA2
+         Mcx2F/X5yleQcSnwP0fU7BjhtPvE4vLcw6kEI3WSnhYDGu5BfIi8uA7y3zyGCW2u3pHZ
+         B+IL1/dcr7sdSW5XY4emM7VlZnElZUoWdINj/5ZOO2Q6ypYl1Fdy2RE22N3CvquWdY4p
+         Jghg==
+X-Forwarded-Encrypted: i=1; AFNElJ/1g75ve027sfabPGOZ0diIoJ4erjK1Ae8tESgXkZHZjWlDvoaEFg86n9/WZVK2tPbr7cOOtl0ZjDc+IuxwFZCr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzycIMD1myaDZsBWDusSBANrD/GO0lFq2hUv9ZoLwb1fynumsr7
+	L8Ai2/XSGS88qoYVD3aSjFE0uGsFSFzN7lzMkSkeXvy0or7CJcT0nT4ZtlB7SUEOlrnvSDHlLwc
+	KYSgTI/aAZQ==
+X-Received: from dyz9.prod.google.com ([2002:a05:693c:4089:b0:2ed:8f25:962c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:7c0e:b0:30b:6191:7f96
+ with SMTP id 5a478bee46e88-30bca08d65bmr51283eec.30.1781628531675; Tue, 16
+ Jun 2026 09:48:51 -0700 (PDT)
+Date: Tue, 16 Jun 2026 09:48:17 -0700
 In-Reply-To: <20260616164819.370939-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616061404.41929-1-irogers@google.com> <20260616164819.370939-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1189.g8c84645362-goog
-Message-ID: <20260616164819.370939-12-irogers@google.com>
-Subject: [PATCH v3 11/13] perf tests: Speed up lock contention analysis shell test
+Message-ID: <20260616164819.370939-13-irogers@google.com>
+Subject: [PATCH v3 12/13] perf tests: Speed up metrics checking shell tests
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -68,165 +68,56 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	thomas.falcon@intel.com, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-The lock contention analysis test suite (`lock_contention.sh`) performs a
-series of 13 separate profiling checks to verify various aggregation and
-filtering parameters of `perf lock contention`. Each of these checks runs
-the `perf bench sched messaging` messaging benchmark as its workload.
+Optimize the execution of the metric validation and metric listing shell
+test suites:
 
-By default, `sched messaging` runs 10 groups of 40 processes (400
-processes total) generating substantial task scheduling, context
-switching, and IPC message passing. When traced system-wide for lock
-events, the tracing overhead (handling millions of lock acquisitions and
-releases) slows execution down significantly, causing the test suite to
-take over 80 seconds.
+1. `stat_metrics_values.sh`:
+   The Python metric validator runs the `perf bench futex hash` workload
+   for each validated metric relationship. Reduce the benchmark runtime
+   limit from `-r 2` (2 seconds) to `-r 1` (1 second). This cuts the
+   workload duration in half while still generating sufficient PMU events
+   to satisfy non-zero threshold metric validations.
 
-Optimize this by introducing a scaled-down messaging benchmark workload:
-`perf bench sched messaging -g 1 -p`. Running 1 group (40 processes) takes
-only 0.01 seconds natively (instead of 0.08 seconds), drastically reduces
-the sheer volume of lock acquire/release trace events, and reduces CPU
-context switching during tracing while still generating sufficient lock
-events to fully exercise the BPF/record filters.
+2. `stat_all_metrics.sh`:
+   The metric checking test runs `perf stat` sequentially across all
+   433+ listed metrics. Change the default workload for system-wide runs
+   from `sleep 0.01` to `true`. This avoids the 10ms sleep delay on each
+   sequential metric invocation, saving over 4 seconds of total wall
+   time during full test suite runs.
 
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/lock_contention.sh | 32 ++++++++++++++---------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+ tools/perf/tests/shell/stat_all_metrics.sh    | 2 +-
+ tools/perf/tests/shell/stat_metrics_values.sh | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index 52e8b9db9fbd..953483d987e9 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -9,6 +9,10 @@ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
- result=$(mktemp /tmp/__perf_test.result.XXXXX)
- errout=$(mktemp /tmp/__perf_test.errout.XXXXX)
+diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+index feeb34c6fa6d..df5fa27b21ae 100755
+--- a/tools/perf/tests/shell/stat_all_metrics.sh
++++ b/tools/perf/tests/shell/stat_all_metrics.sh
+@@ -7,7 +7,7 @@ ParanoidAndNotRoot()
+   [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
+ }
  
-+# Workload to generate lock contention.
-+# Using 1 group (-g 1) keeps runtime low while generating sufficient lock events.
-+msg_workload="perf bench sched messaging -g 1 -p"
-+
- cleanup() {
- 	rm -f ${perfdata}
- 	rm -f ${result}
-@@ -50,7 +54,7 @@ check() {
- test_record()
- {
- 	echo "Testing perf lock record and perf lock contention"
--	perf lock record -o ${perfdata} -- perf bench sched messaging -p > /dev/null 2>&1
-+	perf lock record -o ${perfdata} -- ${msg_workload} > /dev/null 2>&1
- 	# the output goes to the stderr and we expect only 1 output (-E 1)
- 	perf lock contention -i ${perfdata} -E 1 -q 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
-@@ -70,7 +74,7 @@ test_bpf()
- 	fi
+-test_prog="sleep 0.01"
++test_prog="true"
+ system_wide_flag="-a"
+ if ParanoidAndNotRoot 0
+ then
+diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/tests/shell/stat_metrics_values.sh
+index 76f1e99d1273..86c5c7f70933 100755
+--- a/tools/perf/tests/shell/stat_metrics_values.sh
++++ b/tools/perf/tests/shell/stat_metrics_values.sh
+@@ -18,7 +18,7 @@ fi
+ pythonvalidator=$(dirname $0)/lib/perf_metric_validation.py
+ rulefile=$(dirname $0)/lib/perf_metric_validation_rules.json
+ tmpdir=$(mktemp -d /tmp/__perf_test.program.XXXXX)
+-workload="perf bench futex hash -r 2 -s"
++workload="perf bench futex hash -r 1 -s"
  
- 	# the perf lock contention output goes to the stderr
--	perf lock con -a -b -E 1 -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b -E 1 -q -- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] BPF result count is not 1:" "$(cat "${result}" | wc -l)"
- 		err=1
-@@ -81,7 +85,7 @@ test_bpf()
- test_record_concurrent()
- {
- 	echo "Testing perf lock record and perf lock contention at the same time"
--	perf lock record -o- -- perf bench sched messaging -p 2> ${errout} | \
-+	perf lock record -o- -- ${msg_workload} 2> ${errout} | \
- 	perf lock contention -i- -E 1 -q 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] Recorded result count is not 1:" "$(cat "${result}" | wc -l)"
-@@ -107,7 +111,7 @@ test_aggr_task()
- 	fi
- 
- 	# the perf lock contention output goes to the stderr
--	perf lock con -a -b -t -E 1 -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b -t -E 1 -q -- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] BPF result count is not 1:" "$(cat "${result}" | wc -l)"
- 		err=1
-@@ -130,7 +134,7 @@ test_aggr_addr()
- 	fi
- 
- 	# the perf lock contention output goes to the stderr
--	perf lock con -a -b -l -E 1 -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b -l -E 1 -q -- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] BPF result count is not 1:" "$(cat "${result}" | wc -l)"
- 		err=1
-@@ -148,7 +152,7 @@ test_aggr_cgroup()
- 	fi
- 
- 	# the perf lock contention output goes to the stderr
--	perf lock con -a -b --lock-cgroup -E 1 -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b --lock-cgroup -E 1 -q -- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] BPF result count is not 1:" "$(cat "${result}" | wc -l)"
- 		err=1
-@@ -170,7 +174,7 @@ test_type_filter()
- 		return
- 	fi
- 
--	perf lock con -a -b -Y spinlock -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b -Y spinlock -q -- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(grep -c -v spinlock "${result}")" != "0" ]; then
- 		echo "[Fail] BPF result should not have non-spinlocks:" "$(cat "${result}")"
- 		err=1
-@@ -202,7 +206,7 @@ test_lock_filter()
- 		return
- 	fi
- 
--	perf lock con -a -b -L tasklist_lock -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b -L tasklist_lock -q -- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(grep -c -v "${test_lock_filter_type}" "${result}")" != "0" ]; then
- 		echo "[Fail] BPF result should not have non-${test_lock_filter_type} locks:" "$(cat "${result}")"
- 		err=1
-@@ -241,7 +245,7 @@ test_stack_filter()
- 		return
- 	fi
- 
--	perf lock con -a -b -S unix_stream -E 1 -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b -S unix_stream -E 1 -q -- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] BPF result should have a lock from unix_stream:" "$(cat "${result}")"
- 		err=1
-@@ -269,7 +273,7 @@ test_aggr_task_stack_filter()
- 		return
- 	fi
- 
--	perf lock con -a -b -t -S unix_stream -E 1 -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b -t -S unix_stream -E 1 -q -- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] BPF result should have a task from unix_stream:" "$(cat "${result}")"
- 		err=1
-@@ -285,7 +289,8 @@ test_cgroup_filter()
- 		return
- 	fi
- 
--	perf lock con -a -b --lock-cgroup -E 1 -F wait_total -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b --lock-cgroup -E 1 -F wait_total -q \
-+		-- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] BPF result should have a cgroup result:" "$(cat "${result}")"
- 		err=1
-@@ -293,7 +298,8 @@ test_cgroup_filter()
- 	fi
- 
- 	cgroup=$(cat "${result}" | awk '{ print $3 }')
--	perf lock con -a -b --lock-cgroup -E 1 -G "${cgroup}" -q -- perf bench sched messaging -p > /dev/null 2> ${result}
-+	perf lock con -a -b --lock-cgroup -E 1 -G "${cgroup}" -q \
-+		-- ${msg_workload} > /dev/null 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] BPF result should have a result with cgroup filter:" "$(cat "${cgroup}")"
- 		err=1
-@@ -328,7 +334,7 @@ test_csv_output()
- 	fi
- 
- 	# the perf lock contention output goes to the stderr
--	perf lock con -a -b -E 1 -x , --output ${result} -- perf bench sched messaging -p > /dev/null 2>&1
-+	perf lock con -a -b -E 1 -x , --output ${result} -- ${msg_workload} > /dev/null 2>&1
- 	output=$(grep -v "^#" ${result} | tr -d -c , | wc -c)
- 	if [ "${header}" != "${output}" ]; then
- 		echo "[Fail] BPF result does not match the number of commas: ${header} != ${output}"
+ # Add -debug, save data file and full rule file
+ echo "Launch python validation script $pythonvalidator"
 -- 
 2.54.0.1189.g8c84645362-goog
 
