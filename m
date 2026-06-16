@@ -1,210 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758EE3DE429
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 06:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B356E345CCE;
+	Tue, 16 Jun 2026 07:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781591520; cv=none; b=ZXEsltoDxuNXhyQZ2g8u6HQYGAV5P01D3Urx46smu4rM8ANb2UgTdnZNqBKCD3aAw9zfcKZqYo1SCAJejzeNh5XC3l8xKnkwYrIEY6jEmA0+BAbPHrKshR1fj3jD8qHSqMYl1JwxpppEXcZESnOBmQ9AYPbiUe+6sV6Dwnp8xQM=
+	t=1781593937; cv=none; b=o67aEyvZzzSGWS9Jg8lT8gykUMOse9pxTQF99U+8T14mfI5p33VCOaBVLRSZxDLs+xpQnX3GmGgk1LIujBWMU+VFWLL6cuNKPw5JdXu4JXk/5oSrpC1XH5WCQU7WQhcaKrfcDqXrClERXExHQYXNJxUQSv5z8bEHkBfmu2wgve0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781591520; c=relaxed/simple;
-	bh=6W71g2sNFduBOr+Pfbsv/tQ6wkob4nVuTkcc/kOEDOA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NyInFirFANVIHiwWsPW4VkiPxqW7YAoQSya+tEsIiKYZ/MS5Nzs3DFrbT4+Yr1mCU4qDyEuMmpk3wDvELAjmg+XqLBXMSYN2Lh6xEkpAML5fqW4OXOYWcHlSe3xAgpRReorOgrovTwiKVawawlp5/DBnE67v9IQj/PdaiwV+Hi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VL0tsjSV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781593937; c=relaxed/simple;
+	bh=frngJV/hBWqNzrMhtzgewkS3rTGgy3IIT//Vn06Ndy0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FecVVD1sLhxynmV7c/bn2ZZal1d2BPFDea8kFjR1QWwToFYeCHbcmdfrIFjmfzPM/seaAfQNK/ckQyg5BWFo5VPybgZc71Ym0CCTu++vaogwJghQtwjaR9xTFpoMkmBQi+EAPUYbUIE2tATG6scoxvp1pVDldLSdMa1yD6of1ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=ZCa4qIr8; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VL0tsjSV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 945531F000E9;
-	Tue, 16 Jun 2026 06:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781591517;
-	bh=rzlUOAj+kWgZbVwsqREGAsezWHSxEXg8cMvm8199U0Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VL0tsjSVx7/XValLmMHtXbO7qSuVboqnPYmC0KcLQ6eVxdV2tior/S6j5HV32y0GR
-	 NC6qNYwGD5ypuvs60u2L30Nody3WoX9/Y3ACPhgjd6LYiRZD14mFR4w4LvVyywkdlr
-	 Mn3Z+1aFwYS4HSCvV06s0byIc8v8gL1yDxAITjsaB118xGG2txqsEheOyCHaQ0o3J3
-	 wAsp4wjZg8pPwrEBqXaiCK2zBBLHY0lOlaEXv4out/LpxVQZQBjxnlPuieizRI1MAQ
-	 pwPe8rSsCQFjoBbcrRjbIhslfvsJIdC4Wvb3pdgC0VTnq7U59AME00YDQ3Eq8MnELl
-	 UtKP4DKOZ9NGA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 01/12] perf parse-events: Restrict core PMU bypass to
- --cputype option
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616061404.41929-2-irogers@google.com>
-References: <20260616061404.41929-2-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 06:31:57 +0000
-Message-Id: <20260616063157.945531F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ZCa4qIr8"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65G66QlT2715623;
+	Tue, 16 Jun 2026 00:11:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	pfpt0220; bh=KFQhCwI2XRgHAY4VX3EsV/7XNZL6c8jN5EtxQfawdAc=; b=ZCa
+	4qIr8SdV1ZCDHNFGClaSkzMcjvrcrE3MMcVPG56eb/m+uAmFXC/eW9CPSftX/xjb
+	LtlR0kOl7W0Oe+6jiW2gKafzGX9agvt49Ux7Hjh1FvQKRBmTYdeO5oHNCp/hAZrB
+	eAmVhj357a2yi7OWAPi2ryLc2P4zu1X36AiF3YLi9tp4KzQL9QMDTeNOOIqEori3
+	n8h40psZKz5vd7EyDigIxjMXJ8INb+ejNk3w41xqMXHeyApgf0jqhC24JTj4jy8K
+	GRia9ospOyDMRcWI0BvMOoT+FsF5iHApe88j6+Twvg9/Lj2r4nisqHoRIoOdIhZE
+	HOisgggOVsCerDdGbVQ==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 4es6qek0jh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jun 2026 00:11:54 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 16 Jun 2026 00:11:54 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
+ Transport; Tue, 16 Jun 2026 00:11:54 -0700
+Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
+	by maili.marvell.com (Postfix) with ESMTP id 2F27F3F7099;
+	Tue, 16 Jun 2026 00:11:50 -0700 (PDT)
+From: Geetha sowjanya <gakula@marvell.com>
+To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
+CC: <mark.rutland@arm.com>, <will@kernel.org>, <krzk+dt@kernel.org>,
+        <gakula@marvell.com>
+Subject: [PATCH v3 0/3] perf: marvell: LLC-TAD PMU MPAM filtering support
+Date: Tue, 16 Jun 2026 12:41:46 +0530
+Message-ID: <20260616071149.12523-1-gakula@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-GUID: g6AZezlY3GdQFavchmv-96kWSL4d7Kru
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE2MDA3MCBTYWx0ZWRfX9JM50qDX2sfs
+ bdLI6e6hPfb+ThZWnsM3sFxYzfCxlT9m3XkIN/FbERUQG2P15NZJP0zRejsueRFwcHAFv7m3RY1
+ w0/24gNWhWkZgvIAbGAh3Pbq2m5pi1c=
+X-Authority-Analysis: v=2.4 cv=TuXWQjXh c=1 sm=1 tr=0 ts=6a30f73a cx=c_pps
+ a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=l0iWHRpgs5sLHlkKQ1IR:22
+ a=QXcCYyLzdtTjyudCfB6f:22 a=M5GUcnROAAAA:8 a=mgbCCiCACyxXVg7t1IEA:9
+ a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-ORIG-GUID: g6AZezlY3GdQFavchmv-96kWSL4d7Kru
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE2MDA3MCBTYWx0ZWRfXxEfNl4NPKD0V
+ ZN7a4Idw+ktfHjIzEWqvf2vmqZNVtDa0JnaqS77HV7BR5BTgQh6gY4Z/jptY1FxQiugPgRZ+RV8
+ wuowBxWvSRI5lko1XbOHsaKxWW2Rh5QkC4ikWY8eO0TtUaPW8mShrrZmEIZTFQLUM2soGd9yMNx
+ Xcv3DuckXLKcC1BSP5o71AawU28NJwhXW1FDIQ6wagrbAaoK2Pjvu0zeU90qEy2tvfuK561TU+O
+ OJvPmdW9rbpPRxWWIvAff4+T0OEFo5zJXLXjoPIJ0kF49Qi4i9HWpjIvSBkSHLp1NgsGnnPC7Aj
+ bKQNg0WlLJpIDXXgmdyGGB+aiX51E5Lcqg5G/fVRIeIpph4gxAXgR4HqzNch+RXRqyk24DvNQDI
+ 5XbHfQwADOLFxEtZRth04T3OQbwpxYqQnjpXWvXKC8CtQ8ArZrtDtKlS7CGExzuLKszdaW+hq8k
+ 8s+MFifJVUUnGV0OTZw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-16_02,2026-06-15_04,2025-10-01_01
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+This series extends the Marvell LLC-TAD performance driver used on CN10K
+and CN20K systems.
 
-New issues:
-- [High] Hardcoded `false` for `cputype_filter` in `add_default_events()` b=
-reaks parsing of default metrics when `--cputype` is used.
+Patch 1 adds optional MPAM partition-id filtering for the subset of TAD
+events that support it, exposes partid / partid_en in the PMU format string,
+and keeps the reduced Odyssey event surface without advertising partid where
+it does not apply.  It also fixes probe resource handling (no in-place
+mutation of platform_get_resource() bounds, validate MMIO window vs
+tad-cnt), orders perf registration vs hotplug with unwind, and aligns the
+filter-enable bit in config1 with the sysfs format (bit 9).
 
-Pre-existing issues:
-- [High] In `__parse_events()`, an error during group sorting leads to a me=
-mory leak and incorrect success return code.
-- [High] In `parse_groups()`, `combined_evlist` is leaked on error paths.
---
+Patch 2 introduces CN20K LLC-TAD support: non-standard PFC/PRF offsets,
+additional programmable events with visibility checks so CN10K does not
+advertise V3-only events, CN20K-specific MPAM encoding for the V3 profile,
+local64_set(prev_count) on counter start, and device discovery via OF and
+ACPI.
 
-commit b77824e04893a569eb872e4ec5bd9c15848d74b6
-Author: Ian Rogers <irogers@google.com>
+Patch 3 extends the DeviceTree binding for marvell,cn20k-tad-pmu.
 
-perf parse-events: Restrict core PMU bypass to --cputype option
+Changes since v2
+----------------
+- Validate the eventId using an appropriate mask to ensure it is restricted to 8 bits.
 
-This commit introduces a cputype_filter flag to distinguish PMU filtering
-initiated by --cputype from --pmu-filter, restricting the core-only PMU
-bypass to the former.
+Changes since v1
+----------------
+- config1: use bit 9 for MPAM filter enable consistently with partid_en in
+  the PMU format; allow only bits 0..9 in event_init on CN10K/CN20K paths.
+- Reject reserved bits in attr.config and use the same 8-bit event index in
+  start_counter as in event_init so MPAM validation cannot be bypassed.
+- Hide V3-only sysfs events on V1.
+- Reset prev_count when starting counters after clearing hardware.
+- DT binding: explain non-fallback compatibles for CN10K vs CN20K.
 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index a04466ea3b0a0..2505bc604e532 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-[ ... ]
-> @@ -1999,7 +2001,7 @@ static int add_default_events(void)
->  			ret =3D -1;
->  			goto out;
->  		}
-> -		ret =3D metricgroup__parse_groups(evlist, pmu, "transaction",
-> +		ret =3D metricgroup__parse_groups(evlist, pmu, false, "transaction",
+Tanmay Jagdale (1):
+  perf: marvell: Add MPAM partid filtering to CN10K TAD PMU
 
-[Severity: High]
-Should parse_events_option_args.cputype_filter be passed here instead of
-hardcoding false?
+Geetha sowjanya (2):
+  perf: marvell: Add CN20K LLC-TAD PMU support
+  dt-bindings: perf: marvell: Extend CN10K TAD PMU binding for CN20K
 
-If the --cputype option is active, hardcoding false causes
-parse_events__filter_pmu() to filter out software and uncore PMU events
-required by default metrics (like duration_time). This causes default metric
-parsing to fail and can abort perf stat entirely.
+Signed-off-by: Geetha sowjanya <gakula@marvell.com>
 
-[ ... ]
-> @@ -2036,7 +2038,7 @@ static int add_default_events(void)
->  		if (!force_metric_only)
->  			stat_config.metric_only =3D true;
-> =20
-> -		ret =3D metricgroup__parse_groups(evlist, pmu, "smi",
-> +		ret =3D metricgroup__parse_groups(evlist, pmu, false, "smi",
-
-[Severity: High]
-Similarly here, does this hardcoded false break the smi metric when using
-the --cputype option?
-
-[ ... ]
-> @@ -2073,7 +2075,7 @@ static int add_default_events(void)
->  		}
->  		str[8] =3D stat_config.topdown_level + '0';
->  		if (metricgroup__parse_groups(evlist,
-> -						pmu, str,
-> +					      pmu, false, str,
-
-[Severity: High]
-Does this hardcoded false break the Topdown metric group parsing when using
-the --cputype option?
-
-[ ... ]
-> @@ -2112,7 +2114,7 @@ static int add_default_events(void)
->  				ret =3D -ENOMEM;
->  				break;
->  			}
-> -			if (metricgroup__parse_groups(metric_evlist, pmu, default_metricgroup=
-_names[i],
-> +			if (metricgroup__parse_groups(metric_evlist, pmu, false, default_metr=
-icgroup_names[i],
-
-[Severity: High]
-Does this hardcoded false break the standard default metrics when using
-the --cputype option?
-
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index c2ce3e53aaee7..9c9b048838411 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-[ ... ]
-> @@ -1476,7 +1480,8 @@ static int parse_groups(struct evlist *perf_evlist,
->  		if (!metric_evlist) {
->  			ret =3D parse_ids(metric_no_merge, fake_pmu, m->pctx, m->modifier,
->  					m->group_events, tool_events, &m->evlist,
-> -					(pmu && strcmp(pmu, "all") =3D=3D 0) ? NULL : pmu);
-> +					(pmu && strcmp(pmu, "all") =3D=3D 0) ? NULL : pmu,
-> +					cputype_filter);
->  			if (ret)
->  				goto out;
-
-[Severity: High]
-This is a pre-existing issue, but does this error path leak combined_evlist?
-
-If a subsequent operation in the metric_list loop fails, the function jumps
-to the out: label:
-
-tools/perf/util/metricgroup.c:parse_groups() {
-    ...
-    if (combined_evlist) {
-        evlist__splice_list_tail(perf_evlist, &combined_evlist->core.entrie=
-s);
-        evlist__delete(combined_evlist);
-    }
-    ...
-out:
-    metricgroup__free_metrics(&metric_list);
-    return ret;
-}
-
-Since the cleanup for combined_evlist is located above the out: label, it g=
-ets
-completely skipped, leaking the list and its events.
-
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index 943569e82b82f..9f64d5197b8a8 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-[ ... ]
-> @@ -2288,18 +2291,20 @@ static int parse_events__sort_events_and_fix_grou=
-ps(struct list_head *list)
->  	return (idx_changed || num_leaders !=3D orig_num_leaders) ? 1 : 0;
->  }
-> =20
-> -int __parse_events(struct evlist *evlist, const char *str, const char *p=
-mu_filter,
-> +int __parse_events(struct evlist *evlist, const char *str,
-> +		   const char *pmu_filter, bool cputype_filter,
->  		   struct parse_events_error *err, bool fake_pmu,
->  		   bool warn_if_reordered, bool fake_tp)
->  {
->  	struct parse_events_state parse_state =3D {
-
-[Severity: High]
-This is a pre-existing issue, but does __parse_events() leak memory and
-falsely report success if group sorting fails?
-
-If parse_events__sort_events_and_fix_groups() returns a negative error code
-(e.g., due to ENOMEM), the function returns the successful ret instead of
-the error code ret2:
-
-tools/perf/util/parse-events.c:__parse_events() {
-    ...
-    ret =3D parse_events__scanner(str, &parse_state);
-    ...
-    ret2 =3D parse_events__sort_events_and_fix_groups(&parse_state.list);
-    if (ret2 < 0)
-        return ret;
-    ...
-}
-
-Returning here also bypasses the call to evlist__splice_list_tail(), which
-causes all dynamically allocated evsel elements in parse_state.list to be
-lost and leaked when the list goes out of scope.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616061404.4192=
-9-1-irogers@google.com?part=3D1
+-- 
+2.25.1
