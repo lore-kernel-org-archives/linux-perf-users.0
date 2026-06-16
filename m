@@ -1,123 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D7F22D7A1
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 02:40:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E374F3A9D8C
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 02:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781577636; cv=none; b=pwS8ISmqDwzgfyjGbg8r3+yw2oRZ3s6zT3pj1/4Zy8P5hzGpNHE0+BZrwcHic9x0eAqiIXianmXwHwe21+dUi/T0vm5vMIx9B/FDCBqpM9HzNYK1clVmYmWbxWyGLNnp7ubeu14AtihQoZEpuaBL3zy30gYN7uTo/qFF6DpCmn4=
+	t=1781577786; cv=none; b=hCNqAZLkdubsgqtP7+ux0ANoxPkPVsA9NDoxntCxHrPZotBWT4cHl20DYaUl452MTEfy658Co+TgZgNdXE9tg+D8ULjZjqLbxaaTxX0mLw174XAulpwZywwTrYuFFPn28+m6lWhlb1hXIKlTKD8Jc9FE1w7cvKpgT7Sxb/uUvK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781577636; c=relaxed/simple;
-	bh=d+sxnwOo9qigbtJOAFqaUtSczxlVozul+3fXiSEv85s=;
+	s=arc-20240116; t=1781577786; c=relaxed/simple;
+	bh=7q9M13J0DpGElgicznzAwWL6yAgPM4Fwb/Ck1VHrIu4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=X5GtOjYEb2C7D2gVMC4l18h8Pr2Xa/F9ws306B97reKHINc3WbRz4t0hIieSnywd/uHWFRNjhHREy+EQJ5YThYz45DqfcrIa8fKuVa2LAaeRISAfY6aVOj1u/Luq1/jM9Y/MpK3C7M8K4RJvXNzWt69AWEcY6+Hj2BAIXmCWvx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=brUo1Sll; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Z3WuFvyx4NnNkbpq0Nf58Z+dUKcPNuB23ZqeAMl/8VB8muuAEhgZGbGB7HPATe3R5QebWiV2/fQqKUEwT3GqqY/BrvVS7K+lIM+LkO6twfOPvhwqjfKJLyVeUnpkUAgh4UGNr7toTSSk4OG9l4IZjtfMo/2RawhstoRVTZFP+oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EsSWFtjw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="brUo1Sll"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F28831F000E9;
-	Tue, 16 Jun 2026 02:40:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EsSWFtjw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924261F000E9;
+	Tue, 16 Jun 2026 02:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781577635;
-	bh=TH6jigPB6/0fpNfCEzcftrwMSptKpqFe1c1QijP6HeQ=;
+	s=k20260515; t=1781577785;
+	bh=sI49DsP3gk/FKzQl/+eMFG+ikhjrxoWhBgvJnM9Idwc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=brUo1SllsjrtE5aKFDlYnRHuRTuuLoZLXzwY2BCae3A3E2EKKsLux94XY5C6J1eCb
-	 WBtazyxMj/MCbBpTk5wyS7BBx0Ja7sa5e3o2g2EHkMnTuQb1jPOhedsAPrI5q25jW/
-	 md5rbamWXVsL7cQ2OLG8+A98/BqwFUhsDg9KVAPENwfxCMBXEmz1WI4msmozrcQJh0
-	 cm1h5bZQhFmMappEt23Garl7VaHozGPP7fXkylhUzRKm8ulxOLz1oe7H+6JYc8fegt
-	 917iACvNPtus3AGIHcrIJ5Wd7L34MoZktVfdJAN2wR1SDJ2qTFrUQ+hT8ZK6X2vgfK
-	 NSBav5nsStNng==
+	b=EsSWFtjwlnDtfAYb0zJKZd18sV3FmBMUOgEYps4GeQ/gUMm5fbFMaFL+eRXkMIDi3
+	 HiVWvt1PbdZtWB6nUv1sFscnZJO/7wNMjWKzCrjlmqL1L0nWeWdN/KIc52szuuMrNI
+	 iPgpPhv40QpaRnYy+aWJlctcc/WI0QzwF+cDwbtDRSS3phLWV0hYaKQcot3hIdyu6X
+	 72MlW4Z9Mrti027DDdGnQGPeavu2wmqaBW/t5Sq63eUEzadUVkK/NNLUaU8emYwaH/
+	 BGzUpl22k5Ys7gQytWzjbZZnhDuRda4vUtgIq8gM1vFyGtkSrcu2cGNKZ1E/k1x7/G
+	 Of7fFUaWDIxBw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/9] perf machine: Use snprintf() for guestmount path
- construction
+Subject: Re: [PATCH 4/9] perf cs-etm: Require full global header in
+ auxtrace_info size check
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616022715.5739-3-acme@kernel.org>
-References: <20260616022715.5739-3-acme@kernel.org>
+In-Reply-To: <20260616022715.5739-5-acme@kernel.org>
+References: <20260616022715.5739-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 02:40:34 +0000
-Message-Id: <20260616024034.F28831F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 02:43:05 +0000
+Message-Id: <20260616024305.924261F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Aborting processing of all remaining guest maps when a single dire=
-ctory lacks proc/kallsyms.
-- [High] Uninitialized errno checked against ERANGE after strtol() causes v=
-alid directory names to be erroneously skipped.
+- [Medium] Unbounded memory accesses during per-CPU metadata parsing and pr=
+inting allow out-of-bounds reads on maliciously crafted perf.data files.
 --
 
-commit 33df4f15ea6c660ee8ff4b243d151622bd2d9271
+commit bac918b1be09ad8eb36712cc82561391a2657983
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf machine: Use snprintf() for guestmount path construction
+perf cs-etm: Require full global header in auxtrace_info size check
 
-This commit prevents a potential stack buffer overflow by replacing
-sprintf() with snprintf() when building paths using the user-provided
-guestmount configuration.
+cs_etm__process_auxtrace_info() checks that header.size covers
+event_header_size + INFO_HEADER_SIZE (16 bytes total), but then
+accesses ptr[CS_PMU_TYPE_CPUS] at offset 24 from the start of the
+event.  A crafted 16-byte auxtrace_info event passes the size check
+but reads out-of-bounds.
 
-Fixes: a1645ce12adb6c9c ("perf: 'perf kvm' tool for monitoring guest perfor=
-mance from host")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Zhang, Yanmin <yanmin_zhang@linux.intel.com>
-Assisted-by: Claude <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Include CS_ETM_HEADER_SIZE in the minimum size check so that the
+global header entries (version, pmu_type_cpus, snapshot) are
+guaranteed to fit within the event.
 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 9329d319bd033..0d2ebf6a84bcf 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
+> diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
+> index 4abe416e3febd..aebef71d3a0a1 100644
+> --- a/tools/perf/util/cs-etm-base.c
+> +++ b/tools/perf/util/cs-etm-base.c
+> @@ -170,7 +170,9 @@ int cs_etm__process_auxtrace_info(union perf_event *e=
+vent,
+>  	u64 *ptr =3D NULL;
+>  	u64 hdr_version;
+> =20
+> -	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE))
+> +	/* Ensure priv[] is large enough for the global header entries */
+> +	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE +
+> +					  CS_ETM_HEADER_SIZE))
+>  		return -EINVAL;
 
 [ ... ]
 
-> @@ -1260,9 +1260,9 @@ int machines__create_guest_kernel_maps(struct machi=
-nes *machines)
->  					 namelist[i]->d_name);
->  				continue;
->  			}
+>  	if (dump_trace) {
+>  		num_cpu =3D ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
+>  		cs_etm__print_auxtrace_info(ptr, num_cpu);
+>  	}
+> =20
+>  	return cs_etm__process_auxtrace_info_full(event, session);
+>  }
 
-[Severity: High]
-This isn't a bug introduced by this patch, but does the strtol() parsing in
-machines__create_guest_kernel_maps() handle errno correctly?
+[Severity: Medium]
+This is a pre-existing issue, but does this still leave an out-of-bounds re=
+ad
+if the event size only covers the global header, and the parsed num_cpu val=
+ue
+requires more data?
 
-Since errno is not explicitly cleared to 0 before the strtol() call right
-above this continue statement, if a previous directory name caused an
-overflow, errno will remain set to ERANGE.
+Looking at the dump_trace path above, cs_etm__print_auxtrace_info() uses=20
+num_cpu as a loop boundary:
 
-This would cause the (errno =3D=3D ERANGE) check to evaluate to true for all
-subsequent valid directory PIDs, erroneously skipping them. Could we set
-errno =3D 0 before parsing?
+tools/perf/util/cs-etm-base.c:cs_etm__print_auxtrace_info() {
+        ...
+        for (i =3D CS_HEADER_VERSION_MAX; cpu < num; cpu++) {
+                ...
+}
 
-> -			sprintf(path, "%s/%s/proc/kallsyms",
-> -				symbol_conf.guestmount,
-> -				namelist[i]->d_name);
-> +			snprintf(path, sizeof(path), "%s/%s/proc/kallsyms",
-> +				 symbol_conf.guestmount,
-> +				 namelist[i]->d_name);
->  			ret =3D access(path, R_OK);
->  			if (ret) {
->  				pr_debug("Can't access file %s\n", path);
+Could this read and print memory out of bounds if the remaining event size
+isn't checked to ensure it contains all the variable-length per-CPU=20
+parameters?
 
-[Severity: High]
-This is also a pre-existing issue, but does this access failure in
-machines__create_guest_kernel_maps() intend to abort the entire
-initialization loop?
+Additionally, in cs_etm__process_auxtrace_info_full(), num_cpu is checked=20
+against the total size:
 
-If access() fails here, the code executes a goto failure. This means one
-inaccessible guest directory or missing proc/kallsyms will abort the loop
-and skip all subsequent valid guest map directories.
+tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_info_full() {
+        ...
+        if (num_cpu > priv_size / (int)sizeof(u64))
+                return -EINVAL;
+        ...
+}
 
-Earlier in the loop, invalid directory names use continue to safely skip
-just that entry. Would it be better to continue instead of aborting the
-processing of all remaining maps?
+Does this check only guarantee a single 64-bit word per CPU? If=20
+cs_etm__create_meta_blk() later consumes multiple words per CPU and=20
+dynamically advances the stream offset based on untrusted payload counts li=
+ke=20
+nr_in_params, could this also result in reading past the end of the event=20
+payload before the final size match validation catches it?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616022715.5739=
--1-acme@kernel.org?part=3D2
+-1-acme@kernel.org?part=3D4
