@@ -1,180 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F62B370ACF
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA933370ACF
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781572993; cv=none; b=RLOuCUsW4zblSwXsKeROPKIj0RciVyJeBma5FYW98hfNKibbDd6/6OYq93AG335uHj5dxPLodfFlpx65/Qdiac/Eh/LRPdcp314ApmJLb8lA8cRY5zvesi86OcGvRf1HVCzoXO/014/i2AL4FMsZrI5J98m52eEcWiqalcoB+Gw=
+	t=1781573025; cv=none; b=dDJ+l6uL/5nCo32APlydqTmt4L+5LL+Lm9ziJheiMtnWzFwewrUzhPdvDdCUIUgY7vSXaJmtfdfdeHcsSrAvWHh8O5l7CQ2oJUDV33C1kHGCgTiCt2S7/cb1IXXp1wX+xOLdraDsI0Ag0+MuzAX3rnaR12myKv+KA4x3lq96V/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781572993; c=relaxed/simple;
-	bh=BmXN/6ByOjg0czfqvPfgnsJ8QJgJ9AKptYppBZADIYE=;
+	s=arc-20240116; t=1781573025; c=relaxed/simple;
+	bh=TsZzZah5GpmqcCV3EaLNnp/bEKdMHpCyyEY9CFQ6BzE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Av0K5oyvceOOG+LzYvmyD4q3mu80/Bdw074DNg/BBzjhNC1jGOJF1beqrxpt/9CJzokuSSg7rQYVe6JCJ+DFxQi94KjJhzMyfB+mJWJEDxz9S1dr4fPRdPU6YsWLn6fGH7WEUYP5GciILhFR/Fbsvw/R4zfReSXl4xFFCF6CnrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXl+F3zR; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=I4J0R+SsbcMASxzMtK5hnTRZwnI/eKAN0Y2K7uZHQpl1WAwXYZDbGImqvzjQ2bGMWjwlJphWvQE5VsHC8xSWEy+jPwm7nCa05Mv1e+J4mmGssV8A9HN86kdhIGu6ie21d4+m2oq1vUnxtoOtEP2H+L5ainso9Acyy45po8sdyx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dxGyoYWR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXl+F3zR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC101F000E9;
-	Tue, 16 Jun 2026 01:23:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxGyoYWR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE4B1F00A3A;
+	Tue, 16 Jun 2026 01:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781572991;
-	bh=ek/2/c8ALZiJuAappF242UrXs3fSNXcFGsmDD1ZRoUw=;
+	s=k20260515; t=1781573024;
+	bh=vXhL1YGHyH1eGl5owuIpRGCs9AzUDfUbaYV0eBK3WHo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LXl+F3zRjs4pHzX9dNWQSklcYdPr8bSKGHGXFHKinb2z6iRAoZgArLcrFnoH6Bl9+
-	 vwAsAqXQcyNhL6SQQJeiMe+gEhYCUtn4r8NKWnJgvYKafU5OPHmiDPQWLY47xAD0uV
-	 uwXS0rEQ25ccSW3redmqtPzzeZmEAM6F5ybiz+WEJ2pVJol8JspxsxmevHdEmqeq3Y
-	 M4TfLpbBxs7cDKu8adkhXNHl3hrABLMKDU0vKOa7Ys2L0v+GXmZpwUXxB5LWWPvahQ
-	 ULELg0KM3Qgb1jr0RD46glk1P/VM7zNpR752aR96eKcgfAVMLM9Q3Q3JVYNe/yLlSn
-	 TX3qY0BW5G7oA==
+	b=dxGyoYWRW3SKZPqEWj/SAY3YRa7Ps5HNvqxGJRx8v3wqkAIHLrW8yEHh8OxelRWCa
+	 1L25VuMVjdYm03nzKtBJoXk/oPw4sXz3g8A1/j6iLvDQpxh3ng3bQPRa9mIZvJY6rR
+	 YyprIH8Y1fyZIkMMsWOoq9sXGVIwveC9PHwYbmQrSBwocHO/LoDJzO8gTf/a/D4NZg
+	 o6IfbQOGy/DkqqPp9AIpXM6sFlQfVXOYCjGJWc9LYfWkyqZaS9r/Hkyezp0ywV2Ot8
+	 eWOh9txhLyadLnRpT9Lp1R4dZM7siaQofibb5Yuder3b39sNdVkmzUU4ePknHCKVek
+	 hxO6SNdwD/tDg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/9] perf machine: Use snprintf() for guestmount path
- construction
+Subject: Re: [PATCH 6/9] perf c2c: Free format list entries when
+ c2c_hists__init() fails
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616010834.37618-3-acme@kernel.org>
-References: <20260616010834.37618-3-acme@kernel.org>
+In-Reply-To: <20260616010834.37618-7-acme@kernel.org>
+References: <20260616010834.37618-7-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 01:23:11 +0000
-Message-Id: <20260616012311.AEC101F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 01:23:43 +0000
+Message-Id: <20260616012343.BDE4B1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
-New issues:
-- [High] Silent path truncation due to unchecked snprintf return value can =
-cause data corruption.
-- [Medium] The patch claims to fix get_kernel_version() by switching it to =
-snprintf(), but the provided code changes do not modify this function.
-
 Pre-existing issues:
-- [High] Unchecked failure of strlist__new() leads to a NULL pointer derefe=
-rence in strlist__has_entry().
-- [High] Unchecked failure of machine__findnew_thread() leads to a NULL poi=
-nter dereference.
+- [High] perf_hpp__setup_output_field() unconditionally appends missing sor=
+t keys to the global perf_hpp_list instead of the provided local list.
+- [Medium] Error return from PARSE_LIST(output, ...) is silently overwritte=
+n by PARSE_LIST(sort, ...) in hpp_list__parse().
+- [Medium] Out-of-memory failures during string duplication are silently ma=
+sked as empty inputs in hpp_list__parse() and kvm_hpp_list__parse().
 --
 
-commit 95810f32b8a216c1bb3b9a1565b24c27cfec9f8d
+commit 82a61a9eafaa1d6dd28dc01f46106f2ec1acc81e
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+perf c2c: Free format list entries when c2c_hists__init() fails
 
-perf machine: Use snprintf() for guestmount path construction
+This commit fixes a memory leak in the error path of he__get_c2c_hists(). It
+ensures that dynamically allocated format structures are correctly cleaned =
+up by
+calling perf_hpp__reset_output_field() before freeing the hists container.
 
-This commit updates machines__findnew() and
-machines__create_guest_kernel_maps() to use snprintf() instead of sprintf()
-for constructing guestmount paths. This change prevents stack buffer
-overflows caused by unchecked user configuration strings.
-
->     machines__findnew(), machines__create_guest_kernel_maps(), and
->     get_kernel_version() use sprintf() to build paths by prepending
->     symbol_conf.guestmount or root_dir.  All write into PATH_MAX stack
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 07c7e8fb315e6..eabb922ef295e 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -226,6 +226,7 @@ he__get_c2c_hists(struct hist_entry *he,
+> =20
+>  	ret =3D c2c_hists__init(hists, sort, nr_header_lines, env);
 
 [Severity: Medium]
-Is the commit message description for get_kernel_version() accurate?
+This is a pre-existing issue, but I noticed something when looking at
+c2c_hists__init() -> hpp_list__parse().
 
-The commit message states that get_kernel_version() uses sprintf() and is
-being switched to snprintf() to prevent overflow. However, the provided code
-changes do not modify this function. It appears get_kernel_version() already
-uses snprintf() in the baseline.
+When an invalid --fields key is provided, the first PARSE_LIST(output, ...)
+macro correctly sets ret to an error code and breaks its internal loop.
 
-[ ... ]
+However, the subsequent PARSE_LIST(sort, ...) macro invocation immediately
+resets ret =3D 0:
 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -333,7 +333,7 @@ struct machine *machines__findnew(struct machines *ma=
-chines, pid_t pid)
->  	if ((pid !=3D HOST_KERNEL_ID) &&
->  	    (pid !=3D DEFAULT_GUEST_KERNEL_ID) &&
->  	    (symbol_conf.guestmount)) {
-> -		sprintf(path, "%s/%d", symbol_conf.guestmount, pid);
-> +		snprintf(path, sizeof(path), "%s/%d", symbol_conf.guestmount, pid);
-
-[Severity: High]
-Could this unchecked snprintf() lead to silent data corruption?
-
-If symbol_conf.guestmount is long enough, snprintf() could silently truncate
-the trailing digits of the guest PID. If the resulting shorter PID=20
-coincidentally exists (e.g., guestmount/12 instead of guestmount/1234),=20
-access() will falsely succeed. This would assign the wrong root_dir to the=
-=20
-guest, silently corrupting profiling data by attributing maps to the wrong=
-=20
-guest.
-
->  		if (access(path, R_OK)) {
->  			static struct strlist *seen;
-
-[Severity: High]
-This is a pre-existing issue, but does this code handle a failed allocation
-correctly?
-
-If access() fails, a static seen list is initialized:
-
-tools/perf/util/machine.c:machines__findnew() {
+tools/perf/builtin-c2c.c:hpp_list__parse() {
     ...
-    if (!seen)
-        seen =3D strlist__new(NULL, NULL);
-
-    if (!strlist__has_entry(seen, path)) {
+    PARSE_LIST(output, c2c_hists__init_output);
+    PARSE_LIST(sort,   c2c_hists__init_sort);
     ...
 }
 
-If strlist__new() fails due to out-of-memory, it returns a null pointer. The
-immediate subsequent check !strlist__has_entry(seen, path) unconditionally
-passes this null pointer, which causes an immediate segmentation fault when
-accessing underlying structures.
+Does this silently swallow the error from the output parsing, returning
+success and allowing execution to proceed with an invalid configuration?
 
-[ ... ]
+[Severity: Medium]
+This isn't a bug introduced by this patch, but while reviewing the parsing
+logic in hpp_list__parse() and kvm_hpp_list__parse(), I noticed how strdup()
+failures are handled.
 
-> @@ -1260,9 +1260,9 @@ int machines__create_guest_kernel_maps(struct machi=
-nes *machines)
->  					 namelist[i]->d_name);
->  				continue;
->  			}
-> -			sprintf(path, "%s/%s/proc/kallsyms",
-> -				symbol_conf.guestmount,
-> -				namelist[i]->d_name);
-> +			snprintf(path, sizeof(path), "%s/%s/proc/kallsyms",
-> +				 symbol_conf.guestmount,
-> +				 namelist[i]->d_name);
+If strdup() fails due to memory exhaustion, the resulting variables become =
+NULL:
 
-[Severity: High]
-Could an unchecked snprintf() here also result in a falsely successful
-access() check?
-
-Similar to the issue above, if the path is truncated, it might inadvertently
-match an existing shorter path instead of properly failing the access() tes=
-t.
-
-[ ... ]
-
-While reviewing this file, I noticed another pre-existing issue unrelated to
-the patch diff:
-
-[Severity: High]
-This isn't a bug introduced by this patch, but can machine__findnew_thread()
-return a null pointer here?
-
-tools/perf/util/machine.c:machine__process_fork_event() {
-    struct thread *parent =3D machine__findnew_thread(machine,
-                                                    event->fork.ppid,
-                                                    event->fork.ptid);
+tools/perf/builtin-c2c.c:hpp_list__parse() {
+    char *output =3D output_ ? strdup(output_) : NULL;
+    char *sort   =3D sort_   ? strdup(sort_) : NULL;
     ...
-    if (thread__pid(parent) !=3D (pid_t)event->fork.ppid) {
+    PARSE_LIST(output, c2c_hists__init_output);
+}
+
+Since PARSE_LIST short-circuits a NULL list to success (0), does this mask
+out-of-memory failures as empty inputs, skipping configuration entirely
+instead of properly aborting?
+
+[Severity: High]
+This is a pre-existing issue, but looking deeper into the initialization
+path, perf_hpp__setup_output_field() seems to append missing sort keys
+to the wrong list.
+
+The function iterates over the local list->sorts, but then calls
+perf_hpp__column_register(fmt):
+
+tools/perf/ui/hist.c:perf_hpp__setup_output_field() {
+    perf_hpp_list__for_each_sort_list(list, fmt) {
         ...
+        perf_hpp__column_register(fmt);
+next:
+        continue;
+    }
 }
 
-If memory allocation fails within thread creation, machine__findnew_thread()
-returns a null pointer. Unconditionally evaluating thread__pid(parent) acce=
-sses
-fields of the null object, which results in a segmentation fault.
+This inline wrapper explicitly targets the global perf_hpp_list:
+
+tools/perf/util/hist.h:perf_hpp__column_register() {
+    perf_hpp_list__column_register(&perf_hpp_list, format);
+}
+
+Could this pollute the global list with pointers to dynamically allocated
+format structures owned by the local c2c_hists or kvm_hists?
+
+If so, does this lead to use-after-free vulnerabilities for concurrent
+global list accessors when the local list is destroyed?
+
+>  	if (ret) {
+> +		perf_hpp__reset_output_field(&hists->list);
+>  		c2c_he->hists =3D NULL;
+>  		free(hists);
+>  		return NULL;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616010834.3761=
-8-1-acme@kernel.org?part=3D2
+8-1-acme@kernel.org?part=3D6
