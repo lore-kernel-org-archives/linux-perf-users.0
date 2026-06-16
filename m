@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE571448E0;
-	Tue, 16 Jun 2026 04:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628133CB919;
+	Tue, 16 Jun 2026 04:52:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781585547; cv=none; b=ukf4j3FttGAkCCcPUqv4GFcsYRzXS3ASpb8RxpNmGNDgYkYM+vI/XhU7Jd33QvPHTGCLkRwSqKEF71ZPcNl/v/HygAjDuPzYNx39wUHCNWu8M1UHV4OC9oNNsuYmusrvckr1bas1Ul4zGuFTWXxnLX4C/Yfh4juERUhSICHj0/g=
+	t=1781585550; cv=none; b=icZwln2Lwb2xulndGKtkF9z17ITHRo28DusEwI8+4eNAWOCo27fSbMEABi2gAydVMfD70brYsXgrduuwm2LIK/VJ8o3jT8l/mG36C4ukUvmxYmU96aalzSij1x6FeWV2Tdq9pvKwN5K4PrhWSDqlfrxuRF8SlCctA5qh43pV47c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781585547; c=relaxed/simple;
-	bh=+/ZA1GRuyDQ/Y9+X7EtGScjkMnHeS6JaSAmm9hQyDuo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fU6DfNOtyHjMDkzM/HZ0Xc38q5P8a4ZiIMEYPxjV14bidB6uVl8t0S0Bmb+BR+G/UagoqDsiUbs44DUIamL2Pm04cOfSr5Tx08ISgaGYdntBHtU77AOYknAp9jdw5wYkAJ0BN4rFzeaF9rdg6KFTAYfSGE2/04O76p+QmpnIQoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UFUaLGRL; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1781585550; c=relaxed/simple;
+	bh=hLt4dKAkFM1ezvOFdUYbEocTcEcOU35jbSpPyPX0veA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=s6RzJzRNUgkFpSENKXaLU5jb6aUZ3tT5BgfdgBxN/eL4FU5qvHlrrafpiusEOgx5SSiwe/SFs0Q3OkUSGE4fcWWJIg2w4GprC/yhUzIV5ZnJHznUJslNQbBzB4Q8HmpK/Hd63JON+roh3Bjf2EcAAreXg2OxQY0IHbNPj5LMNx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BA6A8nGW; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UFUaLGRL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BA6A8nGW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781585546; x=1813121546;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+/ZA1GRuyDQ/Y9+X7EtGScjkMnHeS6JaSAmm9hQyDuo=;
-  b=UFUaLGRL37S9HDVdXbb7cTp9iz5b00bNfTcIbki4KVCyOjTlFwvm/vml
-   rb0QIZzUkjc1yZMEM6XWhDmBKBBG1YQkp+8e6XXsoPCWFehK6s7K/MS8g
-   PieCfO61f1EzImMAiq5CB3M6fA68DngFbhUvCEKEkB32uniugYcxFm8vQ
-   CvX5huSYr5y7xdYLoS5R/d5UEbhTrusoXzJPt4X77VP2r8DozMI4VpD5I
-   cOI1ZBOMmPaC8gslztYCTDX4xYvx3aYTipVTpgNnTAEAqIdVpkJPUd4pn
-   fwoGQ5x3S86bE1+kb/7vVUPY3ZEjHh/IAyEAEnbjftAczirrqO7YBr8T1
-   Q==;
-X-CSE-ConnectionGUID: CEeLD6PIQeyAOXdDHS143g==
-X-CSE-MsgGUID: 6chlIN28SHGW6HVFh3IWLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="82445359"
+  t=1781585549; x=1813121549;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hLt4dKAkFM1ezvOFdUYbEocTcEcOU35jbSpPyPX0veA=;
+  b=BA6A8nGWDmOhoYc0xKmjjyqMW7X2hSPOZmFZxPuTRsmfiv4dE68NKyWl
+   kAVoYDOXZgggZq8FlkdY4P2Q7kNpmAU8LFjInttHKLIrEDCcqduMIzRjx
+   f3hVl9FB0l2ObTMWoRAjiR6QOTvHzYk3LvUYQDbsv5nwcBp2pXr+8xEyx
+   OMs0zNBm6o0LT1/feAqEme61/6jnaqG7K7BAMNRlDfaoeifrRIi08393J
+   +/6/wSV634DY7TNMHJdxiZDoEIZR53eq7RDZU3SbHD87cSR/DQltQ7ZUI
+   JMtYbMbw6Rj8jngslwlwCoAM2kVU7F4iMDMjShJWkDVX1nM59fMeJgjWa
+   w==;
+X-CSE-ConnectionGUID: cNcI8yOSRXOqr1Hwc8YJvg==
+X-CSE-MsgGUID: hLcn2VwFRcm7N5WtY0+dRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="82445367"
 X-IronPort-AV: E=Sophos;i="6.24,207,1774335600"; 
-   d="scan'208";a="82445359"
+   d="scan'208";a="82445367"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 21:52:25 -0700
-X-CSE-ConnectionGUID: 4IwaJmlmQ4y9VTTKNyRPxA==
-X-CSE-MsgGUID: VspHv4DNSR6GPR8DkcTj7g==
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 21:52:29 -0700
+X-CSE-ConnectionGUID: lIOe5CbVQjmURSdeFmJ03A==
+X-CSE-MsgGUID: D22z9UO+QrWN1A7C2oHEmQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,207,1774335600"; 
-   d="scan'208";a="271726187"
+   d="scan'208";a="271726210"
 Received: from spr.sh.intel.com ([10.112.230.239])
-  by fmviesa001.fm.intel.com with ESMTP; 15 Jun 2026 21:52:21 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 15 Jun 2026 21:52:25 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,11 +59,14 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v4 0/8] perf/x86: Miscellaneous PMU bug fixes
-Date: Tue, 16 Jun 2026 12:46:46 +0800
-Message-Id: <20260616044654.3468742-1-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [Patch v4 1/8] perf/x86/intel: Remove anythread_deprecated bit from perf_capabilities
+Date: Tue, 16 Jun 2026 12:46:47 +0800
+Message-Id: <20260616044654.3468742-2-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260616044654.3468742-1-dapeng1.mi@linux.intel.com>
+References: <20260616044654.3468742-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,78 +75,84 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series groups several independent PMU fixes to simplify review and
-backporting.
+AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
+PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+represent "anythread deprecation" in perf_capabilities. It leads to the
+anythread_deprecated bit could be overwritten by the real value of
+PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
 
-Changes:
-v3 -> v4:
-- Patch 5/8: Move intel_pmu_arch_lbr_init() before
-  intel_pmu_check_event_constraints_all() which depends on
-  PMU_FL_BR_CNTR flag which is initialized in intel_pmu_arch_lbr_init()
-  (Sashiko).
-- Refine change log, remove markdown format (Peter).
+if (!intel_pmu_broken_perf_cap()) {
+	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
+}
 
-v2 -> v3:
-- Patch 2/8: Directly update PERF_EVENT_FLAG_USER_READ_CNT according to
-  rdpmc user disable state (Peter).
-- Patch 3/8: Only keep x86_lbr_type check for the detection of hardware
-  branch type decoding (Peter).
-- Patch 4/8: Switch from_plm and to_plm variables order and refine
-  comments (Peter).
-- Patch 5/8: Move intel_pmu_arch_lbr_init() after model-specfic PMU
-  initialization to avoid extra kmem cache destroy (Peter).
-- Patch 6/8: Improve change log to add more details (Peter).
+It leads to the anythread_deprecated bit is cleared to 0 and the "any"
+attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
+these support Perfmon v6 platforms, like Clearwater Forest.
 
-v1 -> v2:
-- Fallback to software branch type decoding if hardware decoding is not
-  suppprted (Sashiko patch 4/9).
-- Drop kernel IP for PERF_SAMPLE_IP if exclude_kernel attribute is
-  required (Sashiko, patch 8/9).
-- Add kernel access check when kernel callchains are requested
-  (Sashiko, patch 9/9)
-- Address Zide and Thomas's comments.
-- Collect Reviewed-bys.
+$ grep . /sys/devices/cpu/format/*
+/sys/devices/cpu/format/acr_mask:config2:0-63
+/sys/devices/cpu/format/any:config:21
+/sys/devices/cpu/format/cmask:config:24-31
 
-Patch layout:
-- Patch 1/8: Fix anythread_deprecated being overwritten issue. 
-- Patch 2/8: Fix the issue that cap_user_rdpmc is not updated correctly.
-- Patch 3/8: Fallback to software branch type decoding if no hardware
-  decoding.
-- Patch 4/8: Fix the kernel address leakage issue in LBR stack.
-- Patch 5/8: Fix the issue that the return value of
-  intel_pmu_init_hybrid() is not valiated correctly.
-- Patch 6/8: Fix a "unchecked MSR access error" on PEBS_ENABLE MSR.
-- Patch 7/8: Prevent a theoretical kernel register data leak in sampling.
-- Patch 8/8: Add kernel access check when kernel callchains are
-  requested. 
+So remove the anythread_deprecated bit from perf_capabilities structure
+and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+deprecated.
 
-History:
-v3: https://lore.kernel.org/all/20260612090114.3188886-1-dapeng1.mi@linux.intel.com/
-v2: https://lore.kernel.org/all/20260609050222.2458129-1-dapeng1.mi@linux.intel.com/
-v1: https://lore.kernel.org/all/20260605011136.2043393-1-dapeng1.mi@linux.intel.com/
+Cc: stable@vger.kernel.org
+Reported-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: cadbaa039b99 ("perf/x86/intel: Make anythread filter support conditional")
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Reviewed-by: Zide Chen <zide.chen@intel.com>
+Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+ arch/x86/events/intel/core.c | 10 +++-------
+ arch/x86/events/perf_event.h |  2 +-
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-
-Dapeng Mi (8):
-  perf/x86/intel: Remove anythread_deprecated bit from perf_capabilities
-  perf/x86/intel: Keep cap_user_rdpmc in sync with RDPMC user-disable
-    state
-  perf/x86/intel: Fallback to sw branch type decoding if no hw decoding
-  perf/x86/intel: Fix kernel address leakages in LBR stack
-  perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()
-  perf/x86/intel: Drop fixed-counter PEBS constraints for baseline PEBS
-  perf/core: Fix kernel register info leak via hardware skid
-  perf/core: Check kernel access when kernel callchains are requested
-
- arch/x86/events/core.c       |  3 +-
- arch/x86/events/intel/core.c | 60 +++++++++++++++++++++---------------
- arch/x86/events/intel/ds.c   | 13 --------
- arch/x86/events/intel/lbr.c  | 14 ++++++---
- arch/x86/events/perf_event.h |  4 +--
- kernel/events/core.c         | 41 +++++++++++++++++++-----
- 6 files changed, 83 insertions(+), 52 deletions(-)
-
-
-base-commit: 67d27727854def4a7e2b386429941f5c4741ccc4
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 0217e701aeeb..ea3ab3050a3b 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -7946,12 +7946,6 @@ __init int intel_pmu_init(void)
+ 
+ 	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
+ 
+-	if (version >= 5) {
+-		x86_pmu.intel_cap.anythread_deprecated = edx.split.anythread_deprecated;
+-		if (x86_pmu.intel_cap.anythread_deprecated)
+-			pr_cont(" AnyThread deprecated, ");
+-	}
+-
+ 	/* The perf side of core PMU is ready to support the mediated vPMU. */
+ 	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
+ 
+@@ -8828,8 +8822,10 @@ __init int intel_pmu_init(void)
+ 				      &x86_pmu.intel_ctrl);
+ 
+ 	/* AnyThread may be deprecated on arch perfmon v5 or later */
+-	if (x86_pmu.intel_cap.anythread_deprecated)
++	if (version >= 5 && edx.split.anythread_deprecated) {
+ 		x86_pmu.format_attrs = intel_arch_formats_attr;
++		pr_cont("AnyThread deprecated, ");
++	}
+ 
+ 	intel_pmu_check_event_constraints_all(NULL);
+ 
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index eae24bb35dc1..5902a297daa1 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -668,7 +668,7 @@ union perf_capabilities {
+ 		u64	perf_metrics:1;
+ 		u64	pebs_output_pt_available:1;
+ 		u64	pebs_timing_info:1;
+-		u64	anythread_deprecated:1;
++		u64	__reserved:1;
+ 		u64	rdpmc_metrics_clear:1;
+ 	};
+ 	u64	capabilities;
 -- 
 2.34.1
 
