@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FFC37C92E
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2F038E124
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 02:02:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781575186; cv=none; b=tIOWZfLx6Qm5Sc1PxZKJKxs4x87Yf4bxIZCnAGtHftnGotwbqodHBTWkU/wxmwCrHUbaIN0f/tWLt5KEaeNt5SJDWK+x97iflBvKxzfTRV5OELuxYsamfTL8PdiVe4FGo1gPVWKhfvB5+aoNeWy+2fBlzgfQOryS+NPFydAST6M=
+	t=1781575356; cv=none; b=oktCvsdi6Sr7l4TWMzlNmXg1esvd/F3yxwzYyEzl/sx93S7nx706taNKvGwxROVaHMM3bSZU+nMAq1NGtmlNMCqt2NenP2aSpA//MQ/icgw65JwBaA7ZtkT7yoMiw3ad2xTChF9ZHfZKBpv8DxrcIq4Z4a4QE8t4CNznkvzgA+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781575186; c=relaxed/simple;
-	bh=Cgd4Q5G3ZejkPrHpNVeeMr1mVSAa36foAp8rg5koC5k=;
+	s=arc-20240116; t=1781575356; c=relaxed/simple;
+	bh=dibUrtODILnr8AkhqjuNUHrem770pkO7brDvHFM1QVk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OkUAcuie1EOIcm5vaDdRSHOk7RZU8QmNPKAcUqphh/nqXQBHvtxvQ5LB+svCjV4hu5ZOEM1uJw07TzkHzgE/fWcHBKQHO8hHmmjx/jypggY03kPwnC04E47S6utQc2bs6ZzjePUItC03UnE//iN5d/9sB1FrMA/MjpMGSpdL4mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtBzISzV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=isAvNdOsv/OcMjJ7dh7nMdRz6zKL6P7i/q8GZSk/J+eupXctPLWoxyEwn2Z8arKOgBRQp/mG96831ZRC+o77Lq+KtyfsckuSC0DM83n6bl2xw/UT4SNJbVffrAdeNldEshDlJIFf7X+oYhOkdVLR5ShlRZNZ4dhmqqVHpbX0APA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUZ5ZhLX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtBzISzV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522511F00A3A;
-	Tue, 16 Jun 2026 01:59:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUZ5ZhLX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA2821F000E9;
+	Tue, 16 Jun 2026 02:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781575185;
-	bh=zMsa1durl2B5NnXUqB3ZF8DHXEkVnEc/rjQ71BP0XOA=;
+	s=k20260515; t=1781575354;
+	bh=Q4yqeFHRMw81icKamygWC+iF2hiv6U9qzvSxHVl1htU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EtBzISzVkWyq7LGuI+J9vctDML0aVev6yDRH40HvyoCme6XbzQKd9gpqpKjXkPp6A
-	 ujbbcR52ghyKbqxl/wUEENT/dz/hnQoy+vn3s8dNYqA411GLYKJ/CpU6ObgxeI/wa8
-	 5olcSk9G0PhuJv4Pm1lYPlKorNg46GMPTSZSOzpf2vy+q8Z6LVmVN/c8shOxZKB1Ax
-	 esos/soZFtcNagbPwRa2OLPT4dMiP+D4UIir9DIN9uf6RV2MUFmntJxBnCv1CO9fh3
-	 HmEVgyuSxQ8nZTXnahEbd3BRYDUTqn/AhAo/wptloIrSDan9thvOhs1rXxKQ0P10vB
-	 Se5VMhHKcZp1Q==
+	b=ZUZ5ZhLX5RjvBEDPQ+AGVWy20a6raQy6HQpw/AWxhI3Ju1AcKzuchGJdR8CW5XmR9
+	 zpP9ral/9DVgBXDdM3UiTGvwQysGq21Sp99Xm7TaMm32lraRDyRp5H20gIMU67H3Q2
+	 Vdx7W3FuOKL8ttJZ5k6O6hfYxjXWScC4ZnvIQKLBea95p/4R1T+IBHmrZs5iKIYEzv
+	 p4ebP3TF9vxIuPUeKTNUhzpruHAuLIYZAmOa1sXzEWYMvCaTnxtOHQEZdOEUEEEL8p
+	 7JDI4yQRGAR0MqKi2e+oU+O/x3k2fUuELuJID4Y9jcVNrkVhAzZcIShS1kVyRQd6a4
+	 6mnUL+4/jff9g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v21 16/21] perf python: Add syscall name/id to convert
- syscall number and name
+Subject: Re: [PATCH v21 18/21] perf python: Handle Py_None for thread and
+ cpu maps
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616011543.4037138-17-irogers@google.com>
-References: <20260616011543.4037138-17-irogers@google.com>
+In-Reply-To: <20260616011543.4037138-19-irogers@google.com>
+References: <20260616011543.4037138-19-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 01:59:43 +0000
-Message-Id: <20260616015944.522511F00A3A@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 02:02:34 +0000
+Message-Id: <20260616020234.BA2821F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,24 +46,21 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The commit introduces `syscall_name` and `syscall_id` to the `pe=
-rf` Python extension explicitly to avoid relying on `python-audit` for `too=
-ls/perf/scripts/python/syscall-counts.py` as stated in the commit message. =
-However, the patch series fails to actually update `syscall-counts.py` or i=
-ts utility libraries (`Util.py`) to use these new functions, leaving an inc=
-omplete implementation and a mismatch between the commit message and the ac=
-tual code changes.
+
+Pre-existing issues:
+- [High] Missing Python object type check before pointer cast in `pyrf_evse=
+l__open` leads to type confusion and potential memory corruption.
 --
 
-commit 5f14858d1e943fba0e189e558464ae637b5fb965
+commit 3a81d3b48b518ddfa19a43ac15366264b0a3588b
 Author: Ian Rogers <irogers@google.com>
 
-perf python: Add syscall name/id to convert syscall number and name
+perf python: Handle Py_None for thread and cpu maps
 
-This commit adds syscall_name and syscall_id methods to the perf Python
-extension to map between syscall numbers and names. The commit message stat=
-es
-this is intended to replace the libaudit dependency in syscall-counts.py.
+This commit fixes a memory corruption issue where passing None for threads
+and cpus to perf bindings results in Py_None being incorrectly cast and
+dereferenced. It adds explicit checks for Py_None alongside NULL in several
+Python binding functions.
 
 > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
 > --- a/tools/perf/util/python.c
@@ -71,35 +68,33 @@ this is intended to replace the libaudit dependency in syscall-counts.py.
 
 [ ... ]
 
-> @@ -3990,6 +4026,18 @@ static PyMethodDef perf__methods[] =3D {
->  		.ml_flags =3D METH_NOARGS,
->  		.ml_doc	  =3D PyDoc_STR("Returns a sequence of pmus.")
->  	},
-> +	{
-> +		.ml_name  =3D "syscall_name",
-> +		.ml_meth  =3D (PyCFunction) pyrf__syscall_name,
+> @@ -2091,10 +2091,10 @@ static PyObject *pyrf_evsel__open(struct pyrf_evs=
+el *pevsel,
+>  					 &pcpus, &pthreads, &group, &inherit))
+>  		return NULL;
+> =20
+> -	if (pthreads !=3D NULL)
+> +	if (pthreads !=3D NULL && pthreads !=3D Py_None)
+>  		threads =3D ((struct pyrf_thread_map *)pthreads)->threads;
+> =20
+> -	if (pcpus !=3D NULL)
+> +	if (pcpus !=3D NULL && pcpus !=3D Py_None)
+>  		cpus =3D ((struct pyrf_cpu_map *)pcpus)->cpus;
 
-[Severity: Medium]
-The commit message states that adding these methods avoids the python libau=
-dit
-support required by tools/perf/scripts/python/syscall-counts.py.
+[Severity: High]
+This is a pre-existing issue, but is it possible for a user to pass an
+arbitrary Python object (like an integer or string) instead of a thread or
+cpu map here?
 
-However, the patch doesn't appear to update syscall-counts.py or its helper
-modules to actually use these new methods. Should the script update be
-included in this patch, or is it planned for a later patch in the series?
+It looks like pyrf_evsel__open() uses the "|OOii" format specifier to parse
+generic PyObject pointers, but it does not verify the object types before
+casting the pointers to struct pyrf_thread_map and struct pyrf_cpu_map.
 
-> +		.ml_flags =3D METH_VARARGS | METH_KEYWORDS,
-> +		.ml_doc	  =3D PyDoc_STR("Turns a syscall number to a string.")
-> +	},
-> +	{
-> +		.ml_name  =3D "syscall_id",
-> +		.ml_meth  =3D (PyCFunction) pyrf__syscall_id,
-> +		.ml_flags =3D METH_VARARGS | METH_KEYWORDS,
-> +		.ml_doc	  =3D PyDoc_STR("Turns a syscall name to a number.")
-> +	},
->  	{ .ml_name =3D NULL, }
->  };
+While other functions like pyrf__parse_events() and pyrf__parse_metrics()
+use PyObject_TypeCheck() to validate these arguments, pyrf_evsel__open()
+seems to be missing this validation. If an invalid object type is provided,
+could casting and dereferencing it cause memory corruption?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616011543.4037=
-138-1-irogers@google.com?part=3D16
+138-1-irogers@google.com?part=3D18
