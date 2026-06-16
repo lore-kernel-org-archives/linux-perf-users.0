@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1B14508E9;
-	Tue, 16 Jun 2026 15:57:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C52466B69;
+	Tue, 16 Jun 2026 15:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781625460; cv=none; b=mtaiAjCsjPwRgEg2FmNZ4us1QK1vVYwqVWMLfx7CU3yJ229thjwRP1rWsLiaVUFtNZe6MYcWzpuxmOHXUXYdyrRfMIOLGGqTG/6o11egXBcGdIc9Wooy/25H21V0awupvw1qKTS945MpdXPclIof3/NlhTaqdx4795QPBjKk1zQ=
+	t=1781625463; cv=none; b=Gucv9MTDDQFnR0lMHmf3Nk5JAKgazMz4Npx26v9vnFdS4odENBKdeDRdFMwpMs5HaHo1byR93bbuxlvXNyuVP8dVgPvihqMGbAOPJ+yaSzGZhqGOfgB9C6YSf/W4NhpBf9uJ4JGTnYMC07uDTT5D9Oj5VFSfo4l95S0W5+3+CuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781625460; c=relaxed/simple;
-	bh=/t22Ufo1TWQl+8eUGdEHLy9GAgphqs2agBvYPBixQ68=;
+	s=arc-20240116; t=1781625463; c=relaxed/simple;
+	bh=aes1XEmYBDl2RmYRB/wQuLLgjq8XkF/pQwwZsWdtxr0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DNFWYc68dSnmXmHorAdmQSoLCxiZViolP4gGrdFQaVWyl+V0+UcNDymQzKKhUk5NW2f8yDE4w2lvO93smjDpfTPAG/+WIuT9BCwFpqejmq8PsN4rTgrM4hG9R56JtVfy9B8wa/0LlTVLjpzZinqwSrW/UrWgylgJVPIsdIvxNPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3MFfWnb; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=B692jS387+PtI3mmCa6LBaJyYqbhwVBu0ZrhZY81UyrQtvml/kG8Jn1vKeq9cOk1Uv5b9bS8bvnnmmlnWqWORAgqv53FnvTJx6vJ3XMPiwoZqTN+0KWrUB670C5KDWIBpINYNcGT9lCbnaarsZR/ZQLKe/IbG9tDHK1/bY/dDlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSczpPvt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3MFfWnb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E2B81F00A3A;
-	Tue, 16 Jun 2026 15:57:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSczpPvt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9B21F00A3A;
+	Tue, 16 Jun 2026 15:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781625458;
-	bh=+VVoEj6gKLm6QpDzoKPZEs8KuFBJW/1u5UDllJ4ILPs=;
+	s=k20260515; t=1781625461;
+	bh=8sgGW/qEFwPxZcovDLzHGJGJ+O9xnnJBPViL03Al5ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=g3MFfWnbbjmGUc3L793M2E9oL6Z2upxdxulI4iWXaWHZu6RksYYoKjmGSp+2GqfSy
-	 cgFTdz9frDYcnMdcAtgpWTvoBl0VQGnLnXhIsNC3lJo4hgByeJe7UMBCqtI2/aA5O7
-	 x51vWyjKqZthh0Oz6+ar5ipR5H0vXOr53neW+RVSU0MvfWJKSxhXzODdJHIj5yLI7o
-	 ZxyVRLzixfwVnB8PZZevUGQ4L7xo/1tyBESPqKSrznvTVnH/rgfIXUs3t/6XngyqW8
-	 IjhV5pqJcZ964PznEce84RdsNKWtl+4VQMfb8vQPsURaApZMx4ietWNOIk/1XgMQ9o
-	 0wdLO3Ihu/qog==
+	b=XSczpPvtXcnnisWlEMeu/A6NHYYOUbsDG0MP/BqBk4r/YpnvF8KmEAFtYN3XuvEd+
+	 HN5nSo3HjZo5i2YdUnlpMY4WRIa59jsg4O/WZVyleuOEoXRdNfGFOwJK1dQf83XZy6
+	 wxje0P88CYhbylHt5sSGJ+wKHVszHfmHNTAzz7B8RPKAS9Yo4h5w5ZVLLIFYe7y/jE
+	 sOcsRWiO0xewKhH8W5Luf+sUzNj4sZyfH0m1728/3PdAlkk1fjv5XaTS8Qih87c+zD
+	 2a90ne1lczfTgobg7WYqkznhZxpFCsplxIOsZ3pbWQCAN8OzaZXZkp6YVqT1f5Outz
+	 yCqVe2fkpoyQQ==
 From: Puranjay Mohan <puranjay@kernel.org>
 To: bpf@vger.kernel.org
 Cc: Puranjay Mohan <puranjay@kernel.org>,
@@ -61,9 +61,9 @@ Cc: Puranjay Mohan <puranjay@kernel.org>,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v5 2/4] perf/core: Clear the whole branch entry in perf_clear_branch_entry()
-Date: Tue, 16 Jun 2026 08:57:07 -0700
-Message-ID: <20260616155716.2631508-3-puranjay@kernel.org>
+Subject: [PATCH v5 3/4] perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+Date: Tue, 16 Jun 2026 08:57:08 -0700
+Message-ID: <20260616155716.2631508-4-puranjay@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260616155716.2631508-1-puranjay@kernel.org>
 References: <20260616155716.2631508-1-puranjay@kernel.org>
@@ -75,135 +75,267 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-perf_clear_branch_entry_bitfields() resets the bitfields of struct
-perf_branch_entry one at a time and deliberately leaves from/to alone,
-since callers overwrite those immediately. The list of assignments has to
-be kept in sync with the struct by hand, and it has already drifted:
-new_type and priv were added to perf_branch_entry but never cleared here,
-so stale values can leak into the records handed to userspace.
+Enable bpf_get_branch_snapshot() on ARM64 by implementing the
+perf_snapshot_branch_stack static call for BRBE.
 
-Clear the entry with a single struct assignment instead:
+BRBE is paused before masking exceptions to avoid branch buffer
+pollution from trace_hardirqs_off(). Exceptions are then masked with
+local_daif_save() to prevent PMU overflow pseudo-NMIs from interfering.
+If an overflow between pause and DAIF save re-enables BRBE, the snapshot
+detects this via BRBFCR_EL1.PAUSED and bails out.
 
-	*br = (struct perf_branch_entry){ };
+Branch records are read using perf_entry_from_brbe_regset() with a NULL
+event pointer to bypass event-specific filtering. The buffer is
+invalidated after reading.
 
-Every caller writes from/to right after the clear, so zeroing them as well
-is harmless and the dead stores are elided on the x86 LBR read paths.
-There is no longer anything to keep in sync when a field is added.
+Introduce a for_each_brbe_entry() iterator to deduplicate bank
+iteration between brbe_read_filtered_entries() and the snapshot.
 
-The helper no longer touches only the bitfields, so rename it to
-perf_clear_branch_entry() and update the callers, fixing up the
-br+nr/br+out spacing on the touched lines while at it.
-
-Fixes: b190bc4ac9e6 ("perf: Extend branch type classification")
-Fixes: 5402d25aa571 ("perf: Capture branch privilege information")
-Suggested-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- arch/x86/events/amd/brs.c   |  2 +-
- arch/x86/events/amd/lbr.c   |  2 +-
- arch/x86/events/intel/lbr.c |  6 +++---
- drivers/perf/arm_brbe.c     |  2 +-
- include/linux/perf_event.h  | 16 ++--------------
- 5 files changed, 8 insertions(+), 20 deletions(-)
+ drivers/perf/arm_brbe.c  | 128 ++++++++++++++++++++++++++++++++-------
+ drivers/perf/arm_brbe.h  |   9 +++
+ drivers/perf/arm_pmuv3.c |   5 +-
+ 3 files changed, 120 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/events/amd/brs.c b/arch/x86/events/amd/brs.c
-index 06f35a6b58a5..68c5f42965e9 100644
---- a/arch/x86/events/amd/brs.c
-+++ b/arch/x86/events/amd/brs.c
-@@ -343,7 +343,7 @@ void amd_brs_drain(void)
- 
- 		rdmsrq(brs_from(brs_idx), from);
- 
--		perf_clear_branch_entry_bitfields(br+nr);
-+		perf_clear_branch_entry(br + nr);
- 
- 		br[nr].from = from;
- 		br[nr].to   = to;
-diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-index d24da377df77..08401fd60585 100644
---- a/arch/x86/events/amd/lbr.c
-+++ b/arch/x86/events/amd/lbr.c
-@@ -181,7 +181,7 @@ void amd_pmu_lbr_read(void)
- 		    entry.to.split.reserved)
- 			continue;
- 
--		perf_clear_branch_entry_bitfields(br + out);
-+		perf_clear_branch_entry(br + out);
- 
- 		br[out].from	= sign_ext_branch_ip(entry.from.split.ip);
- 		br[out].to	= sign_ext_branch_ip(entry.to.split.ip);
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 72f2adcda7c6..295da179fa74 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -755,7 +755,7 @@ void intel_pmu_lbr_read_32(struct cpu_hw_events *cpuc)
- 
- 		rdmsrq(x86_pmu.lbr_from + lbr_idx, msr_lastbranch.lbr);
- 
--		perf_clear_branch_entry_bitfields(br);
-+		perf_clear_branch_entry(br);
- 
- 		br->from	= msr_lastbranch.from;
- 		br->to		= msr_lastbranch.to;
-@@ -846,7 +846,7 @@ void intel_pmu_lbr_read_64(struct cpu_hw_events *cpuc)
- 		if (abort && x86_pmu.lbr_double_abort && out > 0)
- 			out--;
- 
--		perf_clear_branch_entry_bitfields(br+out);
-+		perf_clear_branch_entry(br + out);
- 		br[out].from	 = from;
- 		br[out].to	 = to;
- 		br[out].mispred	 = mis;
-@@ -920,7 +920,7 @@ static void intel_pmu_store_lbr(struct cpu_hw_events *cpuc,
- 		to = rdlbr_to(i, lbr);
- 		info = rdlbr_info(i, lbr);
- 
--		perf_clear_branch_entry_bitfields(e);
-+		perf_clear_branch_entry(e);
- 
- 		e->from		= from;
- 		e->to		= to;
 diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-index ba554e0c846c..effbdeacfcbb 100644
+index effbdeacfcbb..a141ad7abcf2 100644
 --- a/drivers/perf/arm_brbe.c
 +++ b/drivers/perf/arm_brbe.c
-@@ -604,7 +604,7 @@ static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *ent
- 		return false;
+@@ -9,6 +9,7 @@
+ #include <linux/types.h>
+ #include <linux/bitmap.h>
+ #include <linux/perf/arm_pmu.h>
++#include <asm/daifflags.h>
+ #include "arm_brbe.h"
  
- 	brbinf = bregs.brbinf;
--	perf_clear_branch_entry_bitfields(entry);
-+	perf_clear_branch_entry(entry);
- 	if (brbe_record_is_complete(brbinf)) {
- 		entry->from = bregs.brbsrc;
- 		entry->to = bregs.brbtgt;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 48d851fbd8ea..e034be4a473a 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1467,21 +1467,9 @@ static inline u32 perf_sample_data_size(struct perf_sample_data *data,
- 	return size;
+ #define BRBFCR_EL1_BRANCH_FILTERS (BRBFCR_EL1_DIRECT   | \
+@@ -256,6 +257,14 @@ static bool valid_brbe_version(int brbe_version)
+ 	       brbe_version == ID_AA64DFR0_EL1_BRBE_BRBE_V1P1;
  }
  
--/*
-- * Clear all bitfields in the perf_branch_entry.
-- * The to and from fields are not cleared because they are
-- * systematically modified by caller.
-- */
--static inline void perf_clear_branch_entry_bitfields(struct perf_branch_entry *br)
-+static inline void perf_clear_branch_entry(struct perf_branch_entry *br)
++static __always_inline bool cpu_has_brbe(void)
++{
++	u64 aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
++	int brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
++
++	return valid_brbe_version(brbe);
++}
++
+ static void select_brbe_bank(int bank)
  {
--	br->mispred	= 0;
--	br->predicted	= 0;
--	br->in_tx	= 0;
--	br->abort	= 0;
--	br->cycles	= 0;
--	br->type	= 0;
--	br->spec	= PERF_BR_SPEC_NA;
--	br->reserved	= 0;
-+	*br = (struct perf_branch_entry){ };
+ 	u64 brbfcr;
+@@ -271,6 +280,20 @@ static void select_brbe_bank(int bank)
+ 	isb();
  }
  
- extern void perf_output_sample(struct perf_output_handle *handle,
++static inline void __brbe_advance(int *bank, int *idx, int nr_hw)
++{
++	if (++(*idx) >= BRBE_BANK_MAX_ENTRIES &&
++	    *bank * BRBE_BANK_MAX_ENTRIES + *idx < nr_hw) {
++		*idx = 0;
++		select_brbe_bank(++(*bank));
++	}
++}
++
++#define for_each_brbe_entry(idx, nr_hw)					\
++	for (int __bank = (select_brbe_bank(0), 0), idx = 0;		\
++	     __bank * BRBE_BANK_MAX_ENTRIES + idx < (nr_hw);		\
++	     __brbe_advance(&__bank, &idx, (nr_hw)))
++
+ static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
+ {
+ 	entry->brbinf = get_brbinf_reg(idx);
+@@ -474,11 +497,9 @@ unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu)
+ 
+ void brbe_probe(struct arm_pmu *armpmu)
+ {
+-	u64 brbidr, aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
+-	u32 brbe;
++	u64 brbidr;
+ 
+-	brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
+-	if (!valid_brbe_version(brbe))
++	if (!cpu_has_brbe())
+ 		return;
+ 
+ 	brbidr = read_sysreg_s(SYS_BRBIDR0_EL1);
+@@ -618,10 +639,10 @@ static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *ent
+ 
+ 	brbe_set_perf_entry_type(entry, brbinf);
+ 
+-	if (!branch_sample_no_cycles(event))
++	if (!event || !branch_sample_no_cycles(event))
+ 		entry->cycles = brbinf_get_cycles(brbinf);
+ 
+-	if (!branch_sample_no_flags(event)) {
++	if (!event || !branch_sample_no_flags(event)) {
+ 		/* Mispredict info is available for source only and complete branch records. */
+ 		if (!brbe_record_is_target_only(brbinf)) {
+ 			entry->mispred = brbinf_get_mispredict(brbinf);
+@@ -774,32 +795,97 @@ void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+ {
+ 	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
+ 	int nr_hw = brbe_num_branch_records(cpu_pmu);
+-	int nr_banks = DIV_ROUND_UP(nr_hw, BRBE_BANK_MAX_ENTRIES);
+ 	int nr_filtered = 0;
+ 	u64 branch_sample_type = event->attr.branch_sample_type;
+ 	DECLARE_BITMAP(event_type_mask, PERF_BR_ARM64_MAX);
+ 
+ 	prepare_event_branch_type_mask(branch_sample_type, event_type_mask);
+ 
+-	for (int bank = 0; bank < nr_banks; bank++) {
+-		int nr_remaining = nr_hw - (bank * BRBE_BANK_MAX_ENTRIES);
+-		int nr_this_bank = min(nr_remaining, BRBE_BANK_MAX_ENTRIES);
++	for_each_brbe_entry(i, nr_hw) {
++		struct perf_branch_entry *pbe = &branch_stack->entries[nr_filtered];
+ 
+-		select_brbe_bank(bank);
++		if (!perf_entry_from_brbe_regset(i, pbe, event))
++			break;
+ 
+-		for (int i = 0; i < nr_this_bank; i++) {
+-			struct perf_branch_entry *pbe = &branch_stack->entries[nr_filtered];
++		if (!filter_branch_record(pbe, branch_sample_type, event_type_mask))
++			continue;
+ 
+-			if (!perf_entry_from_brbe_regset(i, pbe, event))
+-				goto done;
++		nr_filtered++;
++	}
+ 
+-			if (!filter_branch_record(pbe, branch_sample_type, event_type_mask))
+-				continue;
++	branch_stack->nr = nr_filtered;
++}
+ 
+-			nr_filtered++;
+-		}
++/*
++ * Best-effort BRBE snapshot for BPF tracing. Pause BRBE to avoid
++ * self-recording and return 0 if the snapshot state appears disturbed.
++ */
++int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries, unsigned int cnt)
++{
++	unsigned long flags;
++	int nr_hw, nr_copied = 0;
++	u64 brbfcr, brbcr;
++
++	if (!cnt)
++		return 0;
++
++	/* Guard against running on a CPU without BRBE (e.g. big.LITTLE). */
++	if (!cpu_has_brbe())
++		return 0;
++
++	/*
++	 * Pause BRBE first to avoid recording our own branches. The
++	 * sysreg read/write and ISB are branchless, so pausing before
++	 * checking BRBCR avoids polluting the buffer with our own
++	 * conditional branches.
++	 */
++	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
++	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
++	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
++	isb();
++
++	/* Bail out if BRBE is not enabled (BRBCR_EL1 == 0). */
++	if (!brbcr) {
++		write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
++		isb();
++		return 0;
+ 	}
+ 
+-done:
+-	branch_stack->nr = nr_filtered;
++	/* Block local exception delivery while reading the buffer. */
++	flags = local_daif_save();
++
++	/*
++	 * A PMU overflow before local_daif_save() could have re-enabled
++	 * BRBE, clearing the PAUSED bit. The overflow handler already
++	 * restored BRBE to its correct state, so just bail out.
++	 */
++	if (!(read_sysreg_s(SYS_BRBFCR_EL1) & BRBFCR_EL1_PAUSED)) {
++		local_daif_restore(flags);
++		return 0;
++	}
++
++	nr_hw = FIELD_GET(BRBIDR0_EL1_NUMREC_MASK,
++			  read_sysreg_s(SYS_BRBIDR0_EL1));
++
++	for_each_brbe_entry(i, nr_hw) {
++		if (nr_copied >= cnt)
++			break;
++
++		if (!perf_entry_from_brbe_regset(i, &entries[nr_copied], NULL))
++			break;
++
++		nr_copied++;
++	}
++
++	brbe_invalidate();
++
++	/* Restore BRBCR before unpausing via BRBFCR, matching brbe_enable(). */
++	write_sysreg_s(brbcr, SYS_BRBCR_EL1);
++	isb();
++	write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
++	/* Ensure BRBE is unpaused before returning to the caller. */
++	isb();
++	local_daif_restore(flags);
++
++	return nr_copied;
+ }
+diff --git a/drivers/perf/arm_brbe.h b/drivers/perf/arm_brbe.h
+index b7c7d8796c86..c2a1824437fb 100644
+--- a/drivers/perf/arm_brbe.h
++++ b/drivers/perf/arm_brbe.h
+@@ -10,6 +10,7 @@
+ struct arm_pmu;
+ struct perf_branch_stack;
+ struct perf_event;
++struct perf_branch_entry;
+ 
+ #ifdef CONFIG_ARM64_BRBE
+ void brbe_probe(struct arm_pmu *arm_pmu);
+@@ -22,6 +23,8 @@ void brbe_disable(void);
+ bool brbe_branch_attr_valid(struct perf_event *event);
+ void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+ 				const struct perf_event *event);
++int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries,
++				   unsigned int cnt);
+ #else
+ static inline void brbe_probe(struct arm_pmu *arm_pmu) { }
+ static inline unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu)
+@@ -44,4 +47,10 @@ static void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+ 				       const struct perf_event *event)
+ {
+ }
++
++static inline int arm_brbe_snapshot_branch_stack(struct perf_branch_entry *entries,
++						 unsigned int cnt)
++{
++	return 0;
++}
+ #endif
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 8014ff766cff..1a9f129a0f94 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -1449,8 +1449,11 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
+ 	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
+ 
+ 	cpu_pmu->pmu.event_idx		= armv8pmu_user_event_idx;
+-	if (brbe_num_branch_records(cpu_pmu))
++	if (brbe_num_branch_records(cpu_pmu)) {
+ 		cpu_pmu->pmu.sched_task		= armv8pmu_sched_task;
++		static_call_update(perf_snapshot_branch_stack,
++				   arm_brbe_snapshot_branch_stack);
++	}
+ 
+ 	cpu_pmu->name			= name;
+ 	cpu_pmu->map_event		= map_event;
 -- 
 2.53.0-Meta
 
