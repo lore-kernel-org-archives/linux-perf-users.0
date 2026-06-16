@@ -1,183 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFD4175A62
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A406361DA9;
+	Tue, 16 Jun 2026 01:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781574286; cv=none; b=Q2NUpX3BLO22bhYPf3GUN47ELv/LB1MisGwkZmSDU3qa14RBF4zgqNHUAb1kaQjgIHAwFMi7PelROy9UOASY9CyfBmLlfurPwZKT6pdkWyWa1+jGtWWZoD+klIw/Pff32fYVYyg5wL15qrNyWyjcuh289IQOtN2R9yjrvcy8FfE=
+	t=1781574413; cv=none; b=obse+ClpPsUtjmZyW69jTr7CYuSX0Uj1P/jzbVBdguS+gQiEYIgWYAUb8ptNPugB+e8bXOvHxhYIMTgs2xpEtzOn2lMmbxF4gHVGh5/rtK6d8H2Dr6f+BitYVK4RJ00CNwqNxWlFuUI71D/I6/5cfJzvUT2BPL4GhrnbuzNNawo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781574286; c=relaxed/simple;
-	bh=c3Iu2Ye38vl9f72RGUIxayVO+PkcwXsi1aIUzISTsCY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=G76hVI8Z6+KyTQNlzKoMVvSOCfRwY+VzV274UzhfdNV9XwByO3BYxerHhjsRiwN7QtcZAcpG6WmrnbpSdNHy7GtegCPh8muq72lyj7lmIZTC/Al/w6Cl85oZprrdUNaXf1J33oUpSBB8uoFGoo/ipw/CwtoEYBcbCqznZLicU+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cWskSsjJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781574413; c=relaxed/simple;
+	bh=Vh3qr68/iKT2PEMExBYqrPSm2NJqt8zwh4MLjWDwv5k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ekr2s/2U4ZC8msO0kDxjFgQ3UtTzSays3Eqz16LZRL4ZCoy2pbP4jSQi+WBzrk9HmkD8+zTC5FcC6MyewXS984juTdcAHP7+BOxq/PjofyPV9B13Q74Pu5ZWJ7lwP6q5dOhC1XNqN3x/cu34XKbBLVMGPd94foWzB4+Xkq8i9cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hr69Wejh; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cWskSsjJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B3D71F000E9;
-	Tue, 16 Jun 2026 01:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781574285;
-	bh=t3ii4+/XXPId+xgs1z8GMpzLNg3JAtO8rCBoQxeNqJc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cWskSsjJtzf1bhPJx3CP8axw7BSRYcigbpuMHxJXZkXwUX4OZJvq2+2QWFVWfsmzG
-	 v6SLFqN4o3jIYItvjuZttMylYvz0wUme1drvccDB1sNowiyTkhD8dML17EOyM42wKS
-	 hXH6gaJcLa7BggbraAb0mKIFM6QVLUzsJsw+vc/D/JQvkJabQ92KwxkUlCfCLEQCm7
-	 B3Ib20o+9eiPq+qBU0QEbKD5sumc0SBFwGGXnnZMnboiyPQzbJ8+uNqkLxu777OnXW
-	 IB4sZwIOtvbH3CB/EyWd2fdcs0rPQnmv0uvQod2GjHkhMMDvMBvywl6eXbkM332DHw
-	 f68xXG3ZoP6Iw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v21 07/21] perf evlist: Add reference count checking
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616011543.4037138-8-irogers@google.com>
-References: <20260616011543.4037138-8-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 01:44:44 +0000
-Message-Id: <20260616014445.4B3D71F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hr69Wejh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781574411; x=1813110411;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Vh3qr68/iKT2PEMExBYqrPSm2NJqt8zwh4MLjWDwv5k=;
+  b=hr69WejhOLJH/oB+bAPOP6XieCnE641GDfqHD9/ApUHlvzfxswYS9HG6
+   JQF84HRK6i8dIZgHGxmb0+gsY290fLXon3GpPKtUmdC4feBMyZl0l0gfU
+   zIhAbYSHOI/WK/5HLmMENqBrbgkXHnOaSQkLhN3uoUIfV5+fYPA2MhhLH
+   G+Z5dmR8fp6E+GpfM07w/DffJTNTVZUt0bGTZP/3y5/NynGXgzR1WRCNc
+   BGX8GGu/SeRiANFubKf8r8BMVGoZwMeNvsvrtwoB2qKvlHwcq+/7YotzX
+   qVZGp+STjPZUJMem8XzmTcaISK9i9TFn0ujiGkTp9+Tyi+CvCM2yUSfPz
+   w==;
+X-CSE-ConnectionGUID: ir4MJu4USp2t2HPIE5ImGg==
+X-CSE-MsgGUID: pRgZGPPDRYCa93nMnFR34g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="93000788"
+X-IronPort-AV: E=Sophos;i="6.24,207,1774335600"; 
+   d="scan'208";a="93000788"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 18:46:50 -0700
+X-CSE-ConnectionGUID: zdmC6ac6Rw2XQL0mSRy7eA==
+X-CSE-MsgGUID: xFW/PJU2SZSCASocpnw3TA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,207,1774335600"; 
+   d="scan'208";a="245230881"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 18:46:47 -0700
+Message-ID: <9eed6d07-7258-4d74-bff7-76fa24170aba@linux.intel.com>
+Date: Tue, 16 Jun 2026 09:46:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3] perf tests: Add auto counter reload (ACR) sampling
+ test
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
+References: <20260421045511.2401316-1-dapeng1.mi@linux.intel.com>
+ <CAP-5=fVrJg9YZE7k_ZhGOsjtHXvfqbz2Yw74YC+DcW0Hn0gFAA@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fVrJg9YZE7k_ZhGOsjtHXvfqbz2Yw74YC+DcW0Hn0gFAA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Critical] Race condition in `evlist__put` lockless cycle-detection leadi=
-ng to double-free.
-- [High] Order-dependent memory leak of `evlist` and `evsel` objects due to=
- asymmetric cycle-breaking logic.
-- [Low] Missing accessor replacement causes build failure on s390 when `REF=
-CNT_CHECKING` is enabled.
---
 
-commit 90f010720902ca448ae8e2550b479cb3776be988
-Author: Ian Rogers <irogers@google.com>
-Subject: perf evlist: Add reference count checking
+On 6/16/2026 2:37 AM, Ian Rogers wrote:
+> On Mon, Apr 20, 2026 at 9:59 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>> Add auto counter reload sampling test to verify that the intended event
+>> records can be captured and the self-reloaded events won't generate any
+>> records.
+>>
+>> Additionally, enhance ratio_to_prev test to verify ACR sampling as well
+>> if ACR is supported.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>
+>> V3: Move ratio-to-prev ACR sampling test into ratio_to_prev test.
+>> V2: https://lore.kernel.org/all/20260420025501.2133495-1-dapeng1.mi@linux.intel.com/
+>> v1: https://lore.kernel.org/all/20260413010920.546501-1-dapeng1.mi@linux.intel.com/
+>>
+>>  tools/perf/tests/shell/record.sh | 92 +++++++++++++++++++++++++++++++-
+>>  1 file changed, 91 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>> index 7cb81cf3444a..091d8b0a998b 100755
+>> --- a/tools/perf/tests/shell/record.sh
+>> +++ b/tools/perf/tests/shell/record.sh
+>> @@ -402,7 +402,52 @@ test_callgraph() {
+>>    echo "Callgraph test [Success]"
+>>  }
+>>
+>> +test_acr_sampling() {
+>> +  events="{instructions/period=40000,acr_mask=0x2/u,cycles/period=20000,acr_mask=0x3/u}"
+>> +  pebs_events="{instructions/period=40000,acr_mask=0x2/pu,cycles/period=20000,acr_mask=0x3/u}"
+>> +  echo "Auto counter reload (ACR) sampling test"
+>> +  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
+>> +  then
+>> +    echo "Auto counter reload sampling [Skipped not supported]"
+>> +    return
+>> +  fi
+>> +  if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
+>> +  then
+>> +    echo "Auto counter reload sampling [Failed missing instructions event]"
+>> +    err=1
+>> +    return
+>> +  fi
+>> +  if perf script -i "${perfdata}" -F event | grep -q "cycles"
+>> +  then
+>> +    echo "Auto counter reload sampling [Failed cycles event shouldn't be sampled]"
+>> +    err=1
+>> +    return
+>> +  fi
+>> +  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2> /dev/null
+>> +  then
+>> +    echo "Auto counter reload PEBS sampling [Skipped not supported]"
+>> +    echo "Auto counter reload sampling [Success]"
+>> +    return
+>> +  fi
+>> +  if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
+>> +  then
+>> +    echo "Auto counter reload PEBS sampling [Failed missing instructions event]"
+>> +    err=1
+>> +    return
+>> +  fi
+>> +  if perf script -i "${perfdata}" -F event | grep -q "cycles"
+>> +  then
+>> +    echo "Auto counter reload PEBS sampling [Failed cycles event shouldn't be sampled]"
+>> +    err=1
+>> +    return
+>> +  fi
+>> +  echo "Auto counter reload sampling [Success]"
+>> +}
+>> +
+>>  test_ratio_to_prev() {
+>> +  ratio_events="{instructions:u,cycles/period=20000,ratio-to-prev=0.5/u}"
+>> +  p_core_ratio_events="{cpu_core/instructions/u,cpu_core/cycles,period=20000,ratio-to-prev=0.5/u}"
+>> +  e_core_ratio_events="{cpu_atom/instructions/u,cpu_atom/cycles,period=20000,ratio-to-prev=0.5/u}"
+> Could there also be cpu_lowpower coverage? What about e-core or p-core
+> only devices?
 
-Now the evlist is reference counted, add reference count checking so
-that gets and puts are paired and easy to debug. Reference count
-checking is documented here:
-https://perfwiki.github.io/main/reference-count-checking/
+I suspect if the lowpower e-core really supporta ACR. There should be only
+one device ARL-H has the lowpower e-core with different uarch. But anyway,
+I can add cpu_lowpower for the full coverage. 
 
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-[ ... ]
-> @@ -59,7 +60,7 @@ enum bkw_mmap_state {
-> =20
->  struct event_enable_timer;
-> =20
-> -struct evlist {
-> +DECLARE_RC_STRUCT(evlist) {
->  	struct perf_evlist core;
->  	refcount_t	 refcnt;
->  	bool		 enabled;
+The e-core or p-core only devices would be covered by the basic
+"ratio_events". Thanks.
 
-[Severity: Low]
-Is a direct access to evlist->core.nr_entries missing an accessor replaceme=
-nt?
 
-With REFCNT_CHECKING enabled, struct evlist is replaced with this opaque
-DECLARE_RC_STRUCT(evlist) wrapper. This requires all direct member accesses
-to be migrated to accessor macros like evlist__nr_entries(). However,
-auxtrace_record__init() in tools/perf/arch/s390/util/auxtrace.c still
-accesses it directly:
-
-        if (evlist->core.nr_entries =3D=3D 0)
-                return NULL;
-
-Will this cause a build failure on s390 when REFCNT_CHECKING is enabled?
-
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-[ ... ]
->  void evlist__put(struct evlist *evlist)
->  {
-> +	struct evsel *evsel;
-> +	unsigned int count, ref_cnt;
-> +
->  	if (evlist =3D=3D NULL)
->  		return;
-> =20
-> -	if (!refcount_dec_and_test(&evlist->refcnt))
-> -		return;
-> +	if (refcount_dec_and_test(evlist__refcnt(evlist)))
-> +		goto out_delete;
-> +
-> +retry:
-> +	count =3D refcount_read(evlist__refcnt(evlist));
-> +	ref_cnt =3D count;
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (RC_CHK_EQUAL(evsel->evlist, evlist) && count &&
-> +		    refcount_read(&evsel->refcnt) =3D=3D 1)
-> +			count--;
-> +	}
-> +	if (refcount_read(evlist__refcnt(evlist)) !=3D ref_cnt)
-> +		goto retry;
-> =20
-> +	if (count !=3D 0) {
-> +		/*
-> +		 * Not the last reference except for back references from
-> +		 * evsels.
-> +		 */
-> +		RC_CHK_PUT(evlist);
-> +		return;
-> +	}
-> +out_delete:
-
-[Severity: Critical]
-Can this race when executed concurrently, leading to a double-free?
-
-Looking at evlist__put() in tools/perf/util/evlist.c, if multiple threads
-concurrently drop external references to the same evlist, they can both=20
-decrement the atomic refcount without reaching zero. They would then=20
-concurrently execute this fallback verification loop, read the exact same=20
-evlist refcount, and independently subtract the internal cyclic references.=
-=20
-
-Could both threads calculate that the list should be destroyed and
-simultaneously enter out_delete, freeing the evlist and all its evsel
-structures twice?
-
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-[ ... ]
-> @@ -1811,28 +1830,33 @@ static PyObject *pyrf_evlist__add(struct pyrf_evl=
-ist *pevlist,
-[ ... ]
->  	evsel =3D ((struct pyrf_evsel *)pevsel)->evsel;
-> -	evsel->core.idx =3D evlist->core.nr_entries;
-> +	CHECK_INITIALIZED(evsel, "evsel");
-> +
-> +	evsel->core.idx =3D evlist__nr_entries(evlist);
->  	evlist__add(evlist, evsel__get(evsel));
-> =20
-> -	return Py_BuildValue("i", evlist->core.nr_entries);
-> +	return Py_BuildValue("i", evlist__nr_entries(evlist));
->  }
-
-[Severity: High]
-Does this code create an order-dependent memory leak of the evlist and evse=
-l=20
-objects?
-
-In Python bindings (pyrf_evlist__add), an explicit external reference is ad=
-ded
-to the evsel via evsel__get(evsel), making its refcnt =3D=3D 2. Because the=
- Python
-garbage collector reclaims objects non-deterministically, the evlist might =
-be
-finalized before the evsel.
-
-If evlist__put() runs first, it sees evsel->refcnt =3D=3D 2, determines the=
-re are
-external references, and skips teardown. Later, when the evsel is finalized,
-evsel__put() simply drops the refcount to 1 and returns, as it lacks any
-cycle-breaking logic. Does this permanently leak the evlist and all its
-evsel structures since neither reaches 0?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616011543.4037=
-138-1-irogers@google.com?part=3D7
+>
+> Thanks,
+> Ian
+>
+>>    echo "ratio-to-prev test"
+>>    if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
+>>       true 2> /dev/null
+>> @@ -438,7 +483,51 @@ test_ratio_to_prev() {
+>>      err=1
+>>      return
+>>    fi
+>> -  echo "Basic ratio-to-prev record test [Success]"
+>> +
+>> +  ratio_err=0
+>> +  do_ratio_to_prev_test() {
+>> +    local events=$1
+>> +    local cpu=$2
+>> +    if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
+>> +    then
+>> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed sampling]"
+>> +      ratio_err=1
+>> +      return
+>> +    fi
+>> +    if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
+>> +    then
+>> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed missing instructions event]"
+>> +      ratio_err=1
+>> +      return
+>> +    fi
+>> +    if perf script -i "${perfdata}" -F event | grep -q "cycles"
+>> +    then
+>> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed cycles event shouldn't be sampled]"
+>> +      ratio_err=1
+>> +      return
+>> +    fi
+>> +  }
+>> +
+>> +  # ratio-to-prev sampling would fallback to normal sampling if ACR sampling
+>> +  # is not supported, so acr_mask must be checked before testing ratio-to-prev sampling.
+>> +  if [ -e /sys/bus/event_source/devices/cpu/format/acr_mask ]
+>> +  then
+>> +    do_ratio_to_prev_test "${ratio_events}" ""
+>> +  fi
+>> +  if [ -e /sys/bus/event_source/devices/cpu_core/format/acr_mask ]
+>> +  then
+>> +    do_ratio_to_prev_test "${p_core_ratio_events}" "P-core"
+>> +  fi
+>> +  if [ -e /sys/bus/event_source/devices/cpu_atom/format/acr_mask ]
+>> +  then
+>> +    do_ratio_to_prev_test "${e_core_ratio_events}" "E-core"
+>> +  fi
+>> +  if test "$ratio_err" -eq 0
+>> +  then
+>> +    echo "Basic ratio-to-prev record test [Success]"
+>> +  else
+>> +    err="${ratio_err}"
+>> +  fi
+>>  }
+>>
+>>  # raise the limit of file descriptors to minimum
+>> @@ -457,6 +546,7 @@ test_leader_sampling
+>>  test_topdown_leader_sampling
+>>  test_precise_max
+>>  test_callgraph
+>> +test_acr_sampling
+>>  test_ratio_to_prev
+>>
+>>  # restore the default value
+>> --
+>> 2.34.1
+>>
