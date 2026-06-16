@@ -1,65 +1,65 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D2836F8E9
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B530636F911
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781572553; cv=none; b=fbgrYODvIPzvrCgpbC2k/66MtKN8r3HHQ6BZKr+un0ZqDJ/jiLrxzzxgY9qKoPmnAcUNPkC4jjG6zpxPu1dv8Fwp+sMrO7X+Zo+nS5ShYNCNovzw4my1zIQ3TmIG7NwYAwWVrmfyaQ/JmF199HqAbfNZ8Mb7izBC+pVTRT7Ov44=
+	t=1781572556; cv=none; b=KPaSqPqMrYG55erlRINRqyU7EoMszOjWeke1ELAWTK2Qzu+Tm17f4yPyMhci4okLo++LivLzvy5yAsQ00FcRGW8PSZRRiwWWrpL5OrW9Jym1qxuJBk8Bibar33dtQwPp06p34acgb2Y/YS9ML9q2XS8JdJXex7tyEWVv6Pn4Exc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781572553; c=relaxed/simple;
-	bh=6mYBiIRklj34uWuQ6b4WVrZF7/3Jw1i2lpMOBftO/NE=;
+	s=arc-20240116; t=1781572556; c=relaxed/simple;
+	bh=H6bwtJ2C6+1+XZrMDYNTqA9vOpa4fGupu5BK7K6cYPE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YYhuNoZkyO2IY2joMg1Nf7EKUZEeIW04iveYM6zJ3VqPWY5xWewmzOGj6Fdg6Yd8ThJCrWeH6OA3oQ6obU0pUEFZPOc6Z55zBUqsTaKc421XlCY+2BN0xhGxT0CXmpcH946OEex3m2kAaU/sVtdDHDZFuaeUu3neWlNcjt9Wowo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SYwiTyAK; arc=none smtp.client-ip=74.125.82.201
+	 To:Cc:Content-Type; b=Y5ezNP7LY62eqqhX8G2HxpBTb4uqJZCnzjP9KJS8LFRpPdcMvPdqjCe6etHpO0WUeAW6FXZckeDxh2oYZopxl2mtcl2OojYSPPerbV82AzdSQsQJGKfR2EQ4b8euDfz5ZZ3j3xatppsImU6OOg42BtASOZ5XphghIWF1SSCSYfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WcKeLFwh; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SYwiTyAK"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304d8613efbso4762631eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:15:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WcKeLFwh"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30b877ee493so1302237eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:15:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781572551; x=1782177351; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781572553; x=1782177353; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dLF0SvMYWxOqGqKEkS0yvZT5Xqaytro0fWT3t9HacOA=;
-        b=SYwiTyAKUU+KH7l24MV8XuN2JUhN1n0x0xm09lM+uEz0pfizBGACOWBtSqP0/1viVX
-         6NesxeKClY3xmpUW7LKKDs2EFuKKUO6BPCNi5kWq+S2FG+PXDG2Sy7afvSF++sIS2k4W
-         6ntDJFPXBgp/j0IECSf9q8ARV3PTUjWQoDuY4boUFjdyyjvG6BmFROh7LoDNaVRXgidi
-         nuGz8nCRg9wE2uKNPcRRM5pYlvIM56AqCF2bfK866r/9jjIR5O76vmtQ4LotfzoDXKn3
-         l6S+yiGh2DEtGtMPVn1TxKvfaGChnyBRFKAQrlXtZHKZavDg8OX/sBx55TFoaDVqkWzE
-         SMdQ==
+        bh=G8ZZr5/kHTP8AME7TbpDnum2m/d0OHSaO2Xhj4KNO6Y=;
+        b=WcKeLFwhDr5Fi0Y4wchITcakLjmQHyztcWi2az0dKd3wqEIiJ5mX4guv72mYjrK1ZT
+         e2FJC9zo8JU3WpkR8L975gMrYQvtvMkD7I9HYD4GA8x0DPgJNVIKTaZX5wXf9mWy1a1k
+         96L9EdcJ85MX9LpF+643gOVeHIAiGE9AEzXmawYA00w82+BC0+5+HM7NE1tHubBPUYe1
+         vCEM1/ezkYO+NtM/WLATQAGOUphRVIiUO0U+6aItze52Rh0QKNUCEWIQHEVlkVPHhcwC
+         t7dEVRv+4pFP+8y2YL+ghdi9V7XY2G2sBcKjsMM/VqTG5AQbTWAWmlXs1xYt9C2/PXZk
+         GEXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781572551; x=1782177351;
+        d=1e100.net; s=20251104; t=1781572553; x=1782177353;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dLF0SvMYWxOqGqKEkS0yvZT5Xqaytro0fWT3t9HacOA=;
-        b=jiktKBquAG+pfXBCPZ4hASGD1F8nE9lf9daQPZ2BGrqEv9zzZtshN62jH+oKNVx2oE
-         x9EseovFV3/jtwGm22pz70PMR5cHfIDKf0rapipmTf8sYch35e7vN4eK/y9DAsToD4Mx
-         uutQ2iAxgLKHsQe6qexKF4K7Drc190JoBbarw08CQgv1LdezqOVMjMh4aXVIyQZGsaba
-         80/0RKDb4fKjEcm3kUCBHB9j1S82UKpQUxMYedW0pU/oBe1uOuex/E6ppxqTjB3nYLFT
-         U0LfT4719louW1Z+Jnq/t1HoEjofze7qFpCjLJZwvAe3iHAtU7TYBiarSkmP4kYLQ2Xh
-         SaJA==
-X-Forwarded-Encrypted: i=1; AFNElJ+GJh8Zf+3WFJT178HLpFt+maJeXR/Z7DLo4/GYalEDdgf0MID/xjBviR+KIYKkbkpNlRJIfuvh4iQt6840ssmA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTaB7queSYj+vRZTz4Fg1iUg0QzxskyU9kWNwoccLzHOpRvGwy
-	EM9nZ06HbixPL8j6TCJSBl5nnH8y+cvDSJR9YsYhYiXEG4zYYFRXe7RtPCIUmvLjoNX1ciTvUWR
-	ECsUICOS94g==
-X-Received: from dybmj48.prod.google.com ([2002:a05:7301:e30:b0:304:ec70:1029])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:9e46:b0:304:8870:2ac5
- with SMTP id 5a478bee46e88-30ba596a8b0mr964678eec.6.1781572550186; Mon, 15
- Jun 2026 18:15:50 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:15:22 -0700
-In-Reply-To: <20260615223011.3873955-1-irogers@google.com>
+        bh=G8ZZr5/kHTP8AME7TbpDnum2m/d0OHSaO2Xhj4KNO6Y=;
+        b=T+Y0lbcUGlJ3W5YjIIKFuLv4hk3WTauEm6KeN6+B5JbFLHbHHm6R3e8myQDF2oxrZv
+         OS7quj08Mfgce5lvG9N4gRv/rDBiRbhIUNcuVZWJYgWqwVTJz+5ZwSyhhvJiIcUHvPiR
+         5/1V0pvle2zmkjJytTfc8iv23U898BDeaUkjzH5zzCXhhTIW3Vt6P8UkLrMu/Oql3v/F
+         TqMrZXpasQAtG+UAmNSIIeCPcWKdRjZeQE9iHP9q/hjzIWXblSjSWcB5eUrVy4Hbu3jD
+         a8CR27gHHXVFwG3waCGykiJs1XFr72sxG6RjBgGY5m0U7KIZZobhVWuwANemNrzlmaq7
+         NxxA==
+X-Forwarded-Encrypted: i=1; AFNElJ/+qFZVmlxqnKD+Zh1oMVxqYsAkdOffC/OJWBDIVtES0znrTvq1PtrWcDbg8Qw0q/Xzl1XJrDgASro7fdlugptk@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6exIzk0NCycqGqO/OKBklgoU58T8gz4BLSinMh+MjEnlX0rkM
+	RfnVvKW/00C5TPDprUUrbFKY4QEAe4GvCapzL3Uk5sAACxYh5sgFKkJGc94C+sEJeDjvfSTA6Sf
+	Rn/lcFD1nxA==
+X-Received: from dyjw33.prod.google.com ([2002:a05:7300:56a1:b0:30b:61f5:5091])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:41b:b0:2c0:df3b:ec1e
+ with SMTP id 5a478bee46e88-30ba38076a8mr677217eec.11.1781572552121; Mon, 15
+ Jun 2026 18:15:52 -0700 (PDT)
+Date: Mon, 15 Jun 2026 18:15:23 -0700
+In-Reply-To: <20260616011543.4037138-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260615223011.3873955-1-irogers@google.com>
+References: <20260615223011.3873955-1-irogers@google.com> <20260616011543.4037138-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616011543.4037138-1-irogers@google.com>
-Subject: [PATCH v21 00/21] Add additional python API support
+Message-ID: <20260616011543.4037138-2-irogers@google.com>
+Subject: [PATCH v21 01/21] perf util: Sort includes and add missed explicit dependencies
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,307 +68,371 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-The perf script command has long supported running Python and Perl scripts
-by embedding libpython and libperl. This approach has several drawbacks:
- - overhead by creating Python dictionaries for every event (whether used or
-   not),
- - complex build dependencies on specific Python/Perl versions,
- - complications with threading due to perf being the interpreter,
- - no clear way to run standalone scripts like ilist.py.
+Fix missing includes found while cleaning the evsel/evlist header
+files. Sort the remaining header files for consistency with the rest
+of the code.
 
-This series takes a different approach with some initial implementation posted
-as an RFC last October:
-https://lore.kernel.org/linux-perf-users/20231025081156.963491-1-irogers@google.com/
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf_off_cpu.c       | 30 +++++-----
+ tools/perf/util/bpf_trace_augment.c |  8 +--
+ tools/perf/util/evlist.c            | 91 +++++++++++++++--------------
+ tools/perf/util/map.h               |  9 ++-
+ tools/perf/util/perf_api_probe.c    | 18 +++---
+ tools/perf/util/s390-sample-raw.c   | 19 +++---
+ tools/perf/util/stat-shadow.c       | 20 ++++---
+ tools/perf/util/stat.c              | 16 +++--
+ 8 files changed, 113 insertions(+), 98 deletions(-)
 
-It builds the python extension as part of the normal build. The extension
-is able to read perf.data files. The event callbacks are converted to
-have a python evsel/evlist/sample passed to them.
-
-To make the review process more manageable, the original 58-patch
-series has been split. This v18 series represents "Phase 1: API &
-Infrastructure" (20 patches).  The first 4 patches of Phase 1
-(cleanups and arch-specific header sorting) have already been merged
-upstream.
-
-This remaining set contains:
-1. Missed explicit dependency cleanups and header sorting for util/ and python.
-2. Crucial core safety infrastructure (reference counting for evlist/evsel)
-   to support safe lifecycle management in garbage-collected Python.
-3. The core Python API extensions (session wrappers, perf_data wrappers,
-   sample accessors, stubs, and LiveSession helper).
-
-Phase 2 ("Script Porting & Tool Migration") will migrate the remaining 35+
-existing Python/Perl scripts to the new API (which yields up to 35x speedups
-as demonstrated previously) and the final removal of embedded interpreters.
-
-
-Addressing v20 Review Feedback:
-
-The v21 patches merely update a commit message. Sashiko has correctly
-identified several structural limitations and edge cases. Almost all
-of these points correspond to known limitations that we have
-explicitly mapped out and planned for "Phase 2" of this Python binding
-refactor. Our primary goal with this v21 series (Phase 1) is to
-establish the baseline abstractions, fix immediate memory corruption
-bugs, and provide the foundational wrappers.
-
-- Patch 4 (perf data: Add open flag): The reported issue with
-  perf_data__switch failing to close thread-local files during directory
-  mode rotation is a pre-existing bug in the C core. This patch strictly
-  fixes the boolean data->open state tracking for Python integration.
-
-- Patch 7 (perf evlist: Add reference count checking): evlist is
-  fundamentally not thread-safe for concurrent destruction in the C core.
-  The asymmetric leak (leaving cycles intact if evlist is dropped before
-  evsel) is a known limitation. Implementing a thread-safe, symmetrical
-  global GC lifecycle for evlist/evsel is planned for Phase 2.
-
-- Patch 10 (perf python: Add python session abstraction):
-  1) perf.thread cannot cause a NULL dereference because it does not
-  implement tp_new/tp_init, so it cannot be instantiated directly from
-  Python. 2) Proper cross-endian analysis of packed 32-bit fields and
-  the implementation of the remaining tool callbacks are explicitly
-  deferred to Phase 2.
-
-- Patch 11 (perf python: Refactor and add accessors to sample event):
-  1) Session UAF due to tracking the topological lifetime of the session
-  relative to events requires a major lifecycle overhaul, slated for
-  Phase 2. 2) The commit message previously inaccurately claimed we only
-  allocate the strictly necessary copy size. This has been corrected
-  in v21. We use PyObject_New with the static tp_basicsize; optimizing
-  the dynamic allocation size is a future cleanup.
-
-- Patch 16 (perf python: Add syscall name/id): The legacy scripts
-  remain untouched in this series. Migrating the existing Python/Perl
-  scripts to use the new C-API and dropping libaudit entirely is the
-  core objective of Phase 2.
-
-- Patch 20 (perf python: Add perf.pyi stubs file): While the stub is
-  currently loosely typed as Any for threads, the segmentation fault is
-  no longer possible since Patch 19 added runtime type validation
-  (PyObject_TypeCheck) to the C implementation. We will tighten the
-  stub typing in a follow-up patch.
-
-Addressing v19 Review Feedback:
-- Patch 19: Added PyObject_TypeCheck runtime validations to parse_events
-  and parse_metrics to prevent memory corruption when invalid objects
-  are passed from Python, resolving the blind C cast vulnerability.
-- Patch 20: Updated perf.pyi stubs to properly type the threads parameter
-  as Optional['thread_map'] instead of Optional[Any] to catch invalid
-  types during static analysis.
-
-Note: Other architectural limitations raised in the v19 review (e.g. TOCTOU
-cycle races, asymmetric cycle leaks, cross-endian needs_swap bypass, and
-session object dangling pointers) are explicitly acknowledged as limitations
-of this transitional patch set. As noted previously, implementing thread-safe,
-symmetrical GC for the Python bindings and hardening the C-API boundary
-are the primary focus of the upcoming Phase 2 series.
-
-Addressing v18 Review Feedback:
-- Patch 10 (`perf.thread` initialization): Added missing `CHECK_INITIALIZED()`
-  in `pyrf_thread__comm` to prevent NULL dereference when instantiated directly.
-- Patch 14 (STAT events): Passed `NULL` to `pyrf_event__new` for STAT events
-  to prevent unconditional `evsel__parse_sample` and potential out-of-bounds
-  reads.
-- Patch 20 (`LiveSession` timeout): Broadened exception handling to explicitly
-  ignore "Unexpected header type" for valid but unsupported events.
-
-Note: Other feedback items raised in v18 (TOCTOU cycle races, asymmetric
-cycle collection, cross-endian data handling, guest machine symbol resolution,
-and pre-existing memory leaks/uninitialized variables) are acknowledged as
-limitations of the current implementation and will be addressed in Phase 2
-or separate cleanup patches.
-
-Addressing v17 Review Feedback:
- - Patch 8: Added missing `perf_sample__exit(&sample)` to
-   `intel_pt_synth_ptwrite_sample()` to fix an evsel reference leak.
- - Patch 10: Fixed a bug in `pyrf_session_tool__sample()` that caused
-   double byte-swapping on foreign-endian files by temporarily disabling
-   `needs_swap` during re-parsing instead of assigning `*sample`.
- - Patch 11: (Missed fixing address resolution for guest samples - will
-   fix in next spin or Phase 2).
- - Patch 19: Prevented `python-clean` from deleting tracked source file
-   `python/perf.pyi` when building in tree. Also explicitly exported
-   `COUNT_HW_REF_CPU_CYCLES`, `thread`, `callchain`, and `callchain_node`
-   types/constants to the module via `PyInit_perf`.
- - Patch 20: Narrowed `except TypeError` in `LiveSession.run()` to explicitly
-   check for "Unknown CPU" so legitimate event parsing failures aren't
-   swallowed.
-
-Addressing v16 Review Feedback:
- - Patch 10: Removed unconditional `perf_session__create_kernel_maps` to
-   prevent corrupting cross-platform offline analysis.
- - Patch 11: Corrected inaccurate commit message regarding memory
-   allocation sizing.
- - Patch 19: Fixed numerous type inconsistencies, missing properties, and
-   incorrect return types in the `perf.pyi` stubs file.
- - Patch 20: Cleaned up unused `import errno` in `perf_live.py`.
-
-Note: Several issues spotted in v16/v17 review (e.g. pyrf_evsel__init format
-string type mismatch, evlist lockless double free, asymmetric memory
-leaks, missing Py_None type checks, and lack of NUL-termination for
-COMM/MMAP) are pre-existing limitations in the codebase or side-effects
-of the transitional cycle-breaking design. As discussed previously, these
-structurally complex or pre-existing bugs are deliberately deferred to
-the Phase 2 series.
-
-Addressing v15 Review Feedback:
-- Patch 2 (buffer overflow & type checks): The buffer overflow in
-  `pyrf_event__new()` has been resolved by verifying `event->header.size`
-  against the event struct size.
-- Patch 2 (PyObject_HEAD_INIT): The initialization macros have been corrected
-  to use the proper Python 3 compatibility approach.
-- Patch 5 (Memory leak & RC validation): Applied extensive structural fixes
-  using `refcount_t` semantics. Added validation wrapper structures to
-  statically verify memory access safety in the lockless cycles.
-- Patch 8 (`evlist.open` memory leak): Restructured lifecycle management for
-  mmap buffers using `do_munmap()` hooks in `evlist__put()`.
-- Patch 16 (`perf.pyi` stubs): Corrected return types (`Optional` and proper
-  object properties) and missing documentation strings in type stubs.
-- Patch 20 (`perf_live.py` timeout): Adjusted poll timeout from 10000ms back
-  to 100ms, replacing the tight exception loop.
-
-Ian Rogers (21):
-  perf util: Sort includes and add missed explicit dependencies
-  perf python: Add missed explicit dependencies
-  perf evsel/evlist: Avoid unnecessary #includes
-  perf data: Add open flag
-  perf evlist: Add reference count
-  perf evsel: Add reference count
-  perf evlist: Add reference count checking
-  perf python: Use evsel in sample in pyrf_event
-  perf python: Add wrapper for perf_data file abstraction
-  perf python: Add python session abstraction wrapping perf's session
-  perf python: Refactor and add accessors to sample event
-  perf python: Add mmap2 event
-  perf python: Add callchain support
-  perf python: Extend API for stat events in python.c
-  perf python: Expose brstack in sample event
-  perf python: Add syscall name/id to convert syscall number and name
-  perf python: Add config file access
-  perf python: Handle Py_None for thread and cpu maps
-  perf python: Add type checking for parse_events/parse_metrics
-  perf python: Add perf.pyi stubs file
-  perf python: Add LiveSession helper
-
- tools/perf/Makefile.perf                    |    7 +-
- tools/perf/arch/arm/util/cs-etm.c           |   10 +-
- tools/perf/arch/arm64/util/arm-spe.c        |    8 +-
- tools/perf/arch/arm64/util/hisi-ptt.c       |    2 +-
- tools/perf/arch/x86/tests/hybrid.c          |   22 +-
- tools/perf/arch/x86/tests/topdown.c         |    4 +-
- tools/perf/arch/x86/util/auxtrace.c         |    2 +-
- tools/perf/arch/x86/util/intel-bts.c        |    6 +-
- tools/perf/arch/x86/util/intel-pt.c         |    9 +-
- tools/perf/arch/x86/util/iostat.c           |   14 +-
- tools/perf/bench/evlist-open-close.c        |   29 +-
- tools/perf/builtin-annotate.c               |    7 +-
- tools/perf/builtin-ftrace.c                 |   14 +-
- tools/perf/builtin-inject.c                 |    9 +-
- tools/perf/builtin-kvm.c                    |   14 +-
- tools/perf/builtin-kwork.c                  |    8 +-
- tools/perf/builtin-lock.c                   |    4 +-
- tools/perf/builtin-record.c                 |   95 +-
- tools/perf/builtin-report.c                 |    6 +-
- tools/perf/builtin-sched.c                  |   30 +-
- tools/perf/builtin-script.c                 |   15 +-
- tools/perf/builtin-stat.c                   |   83 +-
- tools/perf/builtin-top.c                    |  104 +-
- tools/perf/builtin-trace.c                  |   65 +-
- tools/perf/python/perf.pyi                  |  672 +++++
- tools/perf/python/perf_live.py              |   59 +
- tools/perf/tests/backward-ring-buffer.c     |   26 +-
- tools/perf/tests/code-reading.c             |   14 +-
- tools/perf/tests/event-times.c              |    6 +-
- tools/perf/tests/event_update.c             |    4 +-
- tools/perf/tests/evsel-roundtrip-name.c     |    8 +-
- tools/perf/tests/evsel-tp-sched.c           |    4 +-
- tools/perf/tests/expand-cgroup.c            |   12 +-
- tools/perf/tests/hists_cumulate.c           |    2 +-
- tools/perf/tests/hists_filter.c             |    2 +-
- tools/perf/tests/hists_link.c               |    2 +-
- tools/perf/tests/hists_output.c             |    2 +-
- tools/perf/tests/hwmon_pmu.c                |    7 +-
- tools/perf/tests/keep-tracking.c            |   10 +-
- tools/perf/tests/mmap-basic.c               |   24 +-
- tools/perf/tests/openat-syscall-all-cpus.c  |    6 +-
- tools/perf/tests/openat-syscall-tp-fields.c |   26 +-
- tools/perf/tests/openat-syscall.c           |    6 +-
- tools/perf/tests/parse-events.c             |  139 +-
- tools/perf/tests/parse-metric.c             |    8 +-
- tools/perf/tests/parse-no-sample-id-all.c   |    2 +-
- tools/perf/tests/perf-record.c              |   38 +-
- tools/perf/tests/perf-time-to-tsc.c         |   12 +-
- tools/perf/tests/pfm.c                      |   12 +-
- tools/perf/tests/pmu-events.c               |   11 +-
- tools/perf/tests/pmu.c                      |    4 +-
- tools/perf/tests/sample-parsing.c           |   45 +-
- tools/perf/tests/shell/lib/setup_python.sh  |   13 +
- tools/perf/tests/sw-clock.c                 |   20 +-
- tools/perf/tests/switch-tracking.c          |   11 +-
- tools/perf/tests/task-exit.c                |   20 +-
- tools/perf/tests/time-utils-test.c          |   14 +-
- tools/perf/tests/tool_pmu.c                 |    7 +-
- tools/perf/tests/topology.c                 |    4 +-
- tools/perf/tests/uncore-event-sorting.c     |    6 +-
- tools/perf/ui/browsers/annotate.c           |    2 +-
- tools/perf/ui/browsers/hists.c              |   22 +-
- tools/perf/util/Build                       |    1 -
- tools/perf/util/amd-sample-raw.c            |    2 +-
- tools/perf/util/annotate-data.c             |    2 +-
- tools/perf/util/annotate.c                  |   10 +-
- tools/perf/util/auxtrace.c                  |   14 +-
- tools/perf/util/block-info.c                |    4 +-
- tools/perf/util/bpf_counter.c               |    2 +-
- tools/perf/util/bpf_counter_cgroup.c        |   14 +-
- tools/perf/util/bpf_ftrace.c                |    9 +-
- tools/perf/util/bpf_lock_contention.c       |   12 +-
- tools/perf/util/bpf_off_cpu.c               |   44 +-
- tools/perf/util/bpf_trace_augment.c         |    8 +-
- tools/perf/util/cgroup.c                    |   26 +-
- tools/perf/util/cs-etm.c                    |    5 +-
- tools/perf/util/data-convert-bt.c           |    2 +-
- tools/perf/util/data.c                      |   27 +-
- tools/perf/util/data.h                      |    4 +-
- tools/perf/util/evlist.c                    |  496 ++--
- tools/perf/util/evlist.h                    |  273 +-
- tools/perf/util/evsel.c                     |   39 +-
- tools/perf/util/evsel.h                     |   40 +-
- tools/perf/util/expr.c                      |    2 +-
- tools/perf/util/header.c                    |   69 +-
- tools/perf/util/header.h                    |    2 +-
- tools/perf/util/intel-pt.c                  |    8 +-
- tools/perf/util/intel-tpebs.c               |    7 +-
- tools/perf/util/iostat.c                    |    2 +-
- tools/perf/util/iostat.h                    |    2 +-
- tools/perf/util/map.h                       |    9 +-
- tools/perf/util/metricgroup.c               |   12 +-
- tools/perf/util/parse-events.c              |   10 +-
- tools/perf/util/parse-events.y              |    2 +-
- tools/perf/util/perf_api_probe.c            |   20 +-
- tools/perf/util/pfm.c                       |    4 +-
- tools/perf/util/print-events.c              |    2 +-
- tools/perf/util/python.c                    | 2846 ++++++++++++++++---
- tools/perf/util/record.c                    |   11 +-
- tools/perf/util/s390-sample-raw.c           |   20 +-
- tools/perf/util/sample-raw.c                |    4 +-
- tools/perf/util/sample.c                    |   17 +-
- tools/perf/util/session.c                   |   69 +-
- tools/perf/util/session.h                   |    2 +
- tools/perf/util/setup.py                    |    5 +
- tools/perf/util/sideband_evlist.c           |   40 +-
- tools/perf/util/sort.c                      |    2 +-
- tools/perf/util/stat-display.c              |    6 +-
- tools/perf/util/stat-shadow.c               |   24 +-
- tools/perf/util/stat.c                      |   20 +-
- tools/perf/util/stream.c                    |    4 +-
- tools/perf/util/synthetic-events.c          |   11 +-
- tools/perf/util/time-utils.c                |   12 +-
- tools/perf/util/top.c                       |    4 +-
- 114 files changed, 4602 insertions(+), 1529 deletions(-)
- create mode 100644 tools/perf/python/perf.pyi
- create mode 100755 tools/perf/python/perf_live.py
-
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index a3b699a5322f..48cb930cdd2e 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -1,23 +1,25 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include "util/bpf_counter.h"
+-#include "util/debug.h"
+-#include "util/evsel.h"
+-#include "util/evlist.h"
+-#include "util/off_cpu.h"
+-#include "util/perf-hooks.h"
+-#include "util/record.h"
+-#include "util/session.h"
+-#include "util/target.h"
+-#include "util/cpumap.h"
+-#include "util/thread_map.h"
+-#include "util/cgroup.h"
+-#include "util/strlist.h"
++#include <linux/time64.h>
++
+ #include <bpf/bpf.h>
+ #include <bpf/btf.h>
+ #include <internal/xyarray.h>
+-#include <linux/time64.h>
+ 
++#include "bpf_counter.h"
+ #include "bpf_skel/off_cpu.skel.h"
++#include "cgroup.h"
++#include "cpumap.h"
++#include "debug.h"
++#include "evlist.h"
++#include "evsel.h"
++#include "off_cpu.h"
++#include "parse-events.h"
++#include "perf-hooks.h"
++#include "record.h"
++#include "session.h"
++#include "strlist.h"
++#include "target.h"
++#include "thread_map.h"
+ 
+ #define MAX_STACKS  32
+ #define MAX_PROC  4096
+diff --git a/tools/perf/util/bpf_trace_augment.c b/tools/perf/util/bpf_trace_augment.c
+index 9e706f0fa53d..a9cf2a77ded1 100644
+--- a/tools/perf/util/bpf_trace_augment.c
++++ b/tools/perf/util/bpf_trace_augment.c
+@@ -1,11 +1,11 @@
+ #include <bpf/libbpf.h>
+ #include <internal/xyarray.h>
+ 
+-#include "util/debug.h"
+-#include "util/evlist.h"
+-#include "util/trace_augment.h"
+-
+ #include "bpf_skel/augmented_raw_syscalls.skel.h"
++#include "debug.h"
++#include "evlist.h"
++#include "parse-events.h"
++#include "trace_augment.h"
+ 
+ static struct augmented_raw_syscalls_bpf *skel;
+ static struct evsel *bpf_output;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 1a238b245b3a..ab6bf5e935f4 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -5,67 +5,68 @@
+  * Parts came from builtin-{top,stat,record}.c, see those files for further
+  * copyright notes.
+  */
+-#include <api/fs/fs.h>
++#include "evlist.h"
++
+ #include <errno.h>
+ #include <inttypes.h>
+-#include <poll.h>
+-#include "cpumap.h"
+-#include "util/mmap.h"
+-#include "thread_map.h"
+-#include "target.h"
+-#include "dwarf-regs.h"
+-#include "evlist.h"
+-#include "evsel.h"
+-#include "record.h"
+-#include "debug.h"
+-#include "units.h"
+-#include "bpf_counter.h"
+-#include <internal/lib.h> // page_size
+-#include "affinity.h"
+-#include "../perf.h"
+-#include "asm/bug.h"
+-#include "bpf-event.h"
+-#include "util/event.h"
+-#include "util/string2.h"
+-#include "util/perf_api_probe.h"
+-#include "util/evsel_fprintf.h"
+-#include "util/pmu.h"
+-#include "util/sample.h"
+-#include "util/bpf-filter.h"
+-#include "util/stat.h"
+-#include "util/util.h"
+-#include "util/env.h"
+-#include "util/intel-tpebs.h"
+-#include "util/metricgroup.h"
+-#include "util/strbuf.h"
+ #include <signal.h>
+-#include <unistd.h>
+-#include <sched.h>
+ #include <stdlib.h>
+ 
+-#include "parse-events.h"
+-#include <subcmd/parse-options.h>
+-
+ #include <fcntl.h>
+-#include <sys/ioctl.h>
+-#include <sys/mman.h>
+-#include <sys/prctl.h>
+-#include <sys/timerfd.h>
+-#include <sys/wait.h>
+-
+ #include <linux/bitops.h>
++#include <linux/err.h>
+ #include <linux/hash.h>
+ #include <linux/log2.h>
+-#include <linux/err.h>
+ #include <linux/string.h>
+ #include <linux/time64.h>
+ #include <linux/zalloc.h>
++#include <poll.h>
++#include <sched.h>
++#include <sys/ioctl.h>
++#include <sys/mman.h>
++#include <sys/prctl.h>
++#include <sys/timerfd.h>
++#include <sys/wait.h>
++#include <unistd.h>
++
++#include <api/fs/fs.h>
++#include <internal/lib.h> // page_size
++#include <internal/xyarray.h>
++#include <perf/cpumap.h>
+ #include <perf/evlist.h>
+ #include <perf/evsel.h>
+-#include <perf/cpumap.h>
+ #include <perf/mmap.h>
++#include <subcmd/parse-options.h>
+ 
+-#include <internal/xyarray.h>
++#include "../perf.h"
++#include "affinity.h"
++#include "asm/bug.h"
++#include "bpf-event.h"
++#include "bpf-filter.h"
++#include "bpf_counter.h"
++#include "cpumap.h"
++#include "debug.h"
++#include "dwarf-regs.h"
++#include "env.h"
++#include "event.h"
++#include "evsel.h"
++#include "evsel_fprintf.h"
++#include "intel-tpebs.h"
++#include "metricgroup.h"
++#include "mmap.h"
++#include "parse-events.h"
++#include "perf_api_probe.h"
++#include "pmu.h"
++#include "pmus.h"
++#include "record.h"
++#include "sample.h"
++#include "stat.h"
++#include "strbuf.h"
++#include "string2.h"
++#include "target.h"
++#include "thread_map.h"
++#include "units.h"
++#include "util.h"
+ 
+ #ifdef LACKS_SIGQUEUE_PROTOTYPE
+ int sigqueue(pid_t pid, int sig, const union sigval value);
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index 979b3e11b9bc..fb0279810ae9 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -2,14 +2,13 @@
+ #ifndef __PERF_MAP_H
+ #define __PERF_MAP_H
+ 
+-#include <linux/refcount.h>
+-#include <linux/compiler.h>
+-#include <linux/list.h>
+-#include <linux/rbtree.h>
++#include <stdbool.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <stdbool.h>
++
++#include <linux/refcount.h>
+ #include <linux/types.h>
++
+ #include <internal/rc_check.h>
+ 
+ struct dso;
+diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_api_probe.c
+index 6ecf38314f01..e1904a330b28 100644
+--- a/tools/perf/util/perf_api_probe.c
++++ b/tools/perf/util/perf_api_probe.c
+@@ -1,14 +1,18 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++#include "perf_api_probe.h"
+ 
+-#include "perf-sys.h"
+-#include "util/cloexec.h"
+-#include "util/evlist.h"
+-#include "util/evsel.h"
+-#include "util/parse-events.h"
+-#include "util/perf_api_probe.h"
+-#include <perf/cpumap.h>
+ #include <errno.h>
+ 
++#include <perf/cpumap.h>
++
++#include "cloexec.h"
++#include "evlist.h"
++#include "evsel.h"
++#include "parse-events.h"
++#include "perf-sys.h"
++#include "pmu.h"
++#include "pmus.h"
++
+ typedef void (*setup_probe_fn_t)(struct evsel *evsel);
+ 
+ static int perf_do_probe_api(setup_probe_fn_t fn, struct perf_cpu cpu, const char *str)
+diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
+index 52bbca5c56c8..01111c4e3488 100644
+--- a/tools/perf/util/s390-sample-raw.c
++++ b/tools/perf/util/s390-sample-raw.c
+@@ -12,25 +12,26 @@
+  * sample was taken from.
+  */
+ 
+-#include <unistd.h>
++#include <inttypes.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <inttypes.h>
+ 
+-#include <sys/stat.h>
++#include <asm/byteorder.h>
+ #include <linux/compiler.h>
+ #include <linux/err.h>
+-#include <asm/byteorder.h>
++#include <sys/stat.h>
++#include <unistd.h>
+ 
++#include "color.h"
+ #include "debug.h"
+-#include "session.h"
+ #include "evlist.h"
+-#include "color.h"
+ #include "hashmap.h"
+-#include "sample-raw.h"
++#include "pmu.h"
++#include "pmus.h"
+ #include "s390-cpumcf-kernel.h"
+-#include "util/pmu.h"
+-#include "util/sample.h"
++#include "sample-raw.h"
++#include "sample.h"
++#include "session.h"
+ 
+ static size_t ctrset_size(struct cf_ctrset_entry *set)
+ {
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index c17373bb0e1e..35062f964618 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -2,20 +2,24 @@
+ #include <errno.h>
+ #include <math.h>
+ #include <stdio.h>
+-#include "evsel.h"
+-#include "stat.h"
++
++#include <linux/zalloc.h>
++
++#include "cgroup.h"
+ #include "color.h"
+ #include "debug.h"
+-#include "pmu.h"
+-#include "rblist.h"
+ #include "evlist.h"
++#include "evsel.h"
+ #include "expr.h"
+-#include "metricgroup.h"
+-#include "cgroup.h"
+-#include "units.h"
++#include "hashmap.h"
+ #include "iostat.h"
+-#include "util/hashmap.h"
++#include "metricgroup.h"
++#include "pmu.h"
++#include "pmus.h"
++#include "rblist.h"
++#include "stat.h"
+ #include "tool_pmu.h"
++#include "units.h"
+ 
+ static bool tool_pmu__is_time_event(const struct perf_stat_config *config,
+ 				   const struct evsel *evsel, int *tool_aggr_idx)
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 14d169e22e8f..66eb9a66a4f7 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -1,21 +1,25 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include "stat.h"
++
+ #include <errno.h>
+-#include <linux/err.h>
+ #include <inttypes.h>
+ #include <math.h>
+ #include <string.h>
++
++#include <linux/err.h>
++#include <linux/zalloc.h>
++
+ #include "counts.h"
+ #include "cpumap.h"
+ #include "debug.h"
++#include "evlist.h"
++#include "evsel.h"
++#include "hashmap.h"
+ #include "header.h"
+-#include "stat.h"
++#include "pmu.h"
+ #include "session.h"
+ #include "target.h"
+-#include "evlist.h"
+-#include "evsel.h"
+ #include "thread_map.h"
+-#include "util/hashmap.h"
+-#include <linux/zalloc.h>
+ 
+ void update_stats(struct stats *stats, u64 val)
+ {
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
