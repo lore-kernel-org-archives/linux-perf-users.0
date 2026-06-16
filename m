@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505E837B409
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F34F37D107
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781573281; cv=none; b=rO/0AhnGeH45+GdqjeIZ8al4Glgdh9Egb9ZkgaBrSN2rk1h/q2e/U/n2EKEfgH8QY/Rdid9DUTCZaXiXiUQzK+AiYCMhdgEi5ONTHnNEPVusdb1qt2eaHB0cf6IBhRbTuNBrNs8bEay7JzFcSKqlVjZFZzax2LG3s0gc4cvcpk8=
+	t=1781573283; cv=none; b=DHuivsJaH5vSgfmrx9TeoHdHZz3Y4g5kVDQcyljzUwrngReI9QjBQUiY8CR5Q6WbSP3a+aigNK9mYv/5E2oPKzZN2JSjYrXV0e6WCBvqn+9Z+DNxjKEP+JAD5dY47MkXOH1yNFGEIqd40op/6WUHAxnrGzyjkQPGKkeLKtbcZxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781573281; c=relaxed/simple;
-	bh=ieNSnk8InNx0eWkFhAIk4BmhDq8DzOe82rkgBbh3CqA=;
+	s=arc-20240116; t=1781573283; c=relaxed/simple;
+	bh=N84R/GNyF73og9fH6qgDolhwDPgl2tM5sIiTaWNlP8Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=LOg0f3Q8lFRJbFE/ILZjm7dhdLOLGfkACw0794Xn/m2N1klexRy1D0angDikwhz5z019Mnzl85mei8HQGqiQReomGQvC1UabeHIkDQChoGkRG7g/WDTtXYJFzwuzwNuwYn/3JBIeUk6ckvGdGhmTVeKc9mVnLEOxVeK5OcVeYnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jNCqlJHE; arc=none smtp.client-ip=74.125.82.73
+	 To:Content-Type; b=T3L7ENnsaQYjAAFotqiTgKlU8tRKdkxnaX+9T4fZ+qZdbWfoIdjY+iXEErFlIchYCAufN7jml7tXUPc47O0HsWmAu8Vyf32ZuHWv2yT02EYOgRx9+3pf2Wga6xOPo9hbNAA3pOEI29PJzureYpT2IXGnIqg/Q4VNDXolNjkadJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RcGUCaFY; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jNCqlJHE"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1382674ba2eso3734852c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:28:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RcGUCaFY"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1361d52b3a0so4782697c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:28:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781573279; x=1782178079; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781573281; x=1782178081; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4hsL47I5zaiVnaLTQoCJyQZIinwq4aJZJZDWkCjxwRI=;
-        b=jNCqlJHEcOlbSgtOAFN5sfZqwrXaoEjVlG7GdPuhkwlO2lMcXVU07Brr4JnRzm0aBd
-         EChRiV0iH17NR49UK1npkRBTc7rA6t3XWPUO3Y5IuCgzLVjjt7c5Y3JVGgMTLLzH6Nve
-         4suW9dWQItqZF9klsEzJ6Ih846rC8fYHHaOhUKPK+OqyImInvkkUH863skQREiuG95bM
-         XlFuV4m2f1WDIn6q1VaOqkRxJvTMfR4tJ8BF/YPp2U2IQyPwGDuKlgGdrSAxr7W9aQrV
-         UcBgnB05dj7nV2/a5hOWlDhxuUv7hgt79hBvOAfIVpf9JwAjh+3RrxOelHAO+lOCABwS
-         +I7A==
+        bh=cZN7oaZiYetKkM4funzugfk4Rmu6NQMJeZAG5RjuOFo=;
+        b=RcGUCaFYVjhyPRoXkm7JNyyG7lBqMULIIKHI8iFuzd2f05vsylI+BLEkpkvDB1UYJt
+         PAO2XSQx1rXcsI1J7wRHnFlKSo+PYv6CACArGpzCAjbMm6VzmVjaSnDqs7iOSi2YBeQ/
+         RaxlWc8I6uJpcXLcxzwmy9VT6vryaQpmoEmmhOeT8+wg7SVbc28k7fnZhuRuMZfUOmVx
+         5tUtu5r2MYNEWnV/7XTqDKAdGnNFaiJ+mLGLz8m/HkEE7KdCHZXbNRzNlp4kOxY77Vy8
+         RpYk2FHbZZcPEp0Pnry+m9K9y5PHre8isB3hjxFIjlerOcHymLN+9HmDC7W5irqTJxe/
+         x5vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781573279; x=1782178079;
+        d=1e100.net; s=20251104; t=1781573281; x=1782178081;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4hsL47I5zaiVnaLTQoCJyQZIinwq4aJZJZDWkCjxwRI=;
-        b=JhbCcSjiAn+MASA9cVQUB0OpdePAkZVZCyOK/9qLhr8sZhKWr1wvo3ZsSueNqMrAuk
-         yyyykMWKQStzHashhw6K8hZ+n3aZtOm5seRt2nw8+IO9dC/Jy9LZSp1n4WeI4A1Ffnmq
-         WysJ4T4qXJkifi7PCXONphLa0VMFruSuEAZJzfFNV6Fw749X566Af1okLq9Qs3phCKVp
-         JO2ptaDPxU1G17cwaOJqbEHAlPQiIb2YTJ0Xx+MGYMXK015s/GRLTf8ey011vEI2PrYq
-         1Czqrb/KN4fjMLwCw0GZbu87nmChmO97alH918C2v5oUl4P0KBoR7nfr29AeeoSs8JI5
-         UlGg==
-X-Forwarded-Encrypted: i=1; AFNElJ/99ARmc2KeC9OtXVOxGxmazIlQqzivA8wwZ7RCslIaAIDgl+6aZS5UvJ16OikWjkEEz/dGBZuNw8GEMvf4u9cD@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHJ/i5a/pqI21cN1UYbZT4H3di5XR1vYi0EfnlppDkVAEZZktR
-	3I09dp67ptbSx6walfazaL2NYPOvRgndpyh5dJDx7vqF1KtJpQ15G0fhQOetXgDFiH0C3XuWUC2
-	SEjqCNaHbUQ==
-X-Received: from dled15-n2.prod.google.com ([2002:a05:701b:42cf:20b0:137:fb16:a9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:fd08:b0:137:fe07:8a2c
- with SMTP id a92af1059eb24-1384bb698femr7071024c88.22.1781573279036; Mon, 15
- Jun 2026 18:27:59 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:27:37 -0700
+        bh=cZN7oaZiYetKkM4funzugfk4Rmu6NQMJeZAG5RjuOFo=;
+        b=g0Jr3pZgZiUP+xSZw96oKp171KpD4hlHMsedE7IwKUA73A0ofTEzjsLaaTViE1tKJo
+         EzYZT5a4TjGgWaOZjPqf9Ew83wEm9e9ouqMTyfr1o4IYcpPOde1KqObh8LfQ2YFCOfkA
+         HcdOScdsflrit3QEX/rSwzP8owIX2DoRYg3iIb2fF7YgOb/6LY8rRB9PTH1K5JFzWBKB
+         9FF4K4sXKqMtihssPYaW4/V66ceW0LPjAYFXHsrCsAwQ/xoxUPhvqckBOS3As7GF0MT6
+         fbuKf/CrqtsgQLrGoTIYUoQXS/2/njWFSO0UvnbDctz7asRYQh/VTYd5kc6WPJHSkybP
+         qHFA==
+X-Forwarded-Encrypted: i=1; AFNElJ+4FMIhUJukN7dlFoOcbbrWFi3bUpL09jOxA5QxcA4A98nWa2ZboO4TtoXCaApTUK/MN4suJP9Vkr8tuF/DnS66@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb8fV2jlfH1BnISlEDZ/O/ldOpHFRtKhnx3P51hF654qJhPOvS
+	hln7+X4jq1mmOziIqOFN6vbEgoU5WVaywKq74jfEjL35EKWQysu3PlOnXA8MqxltbRZmZoOzL6R
+	4X2qgoDZvUQ==
+X-Received: from dlbcj30.prod.google.com ([2002:a05:7022:699e:b0:135:b432:37dc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4504:20b0:139:879c:dba1
+ with SMTP id a92af1059eb24-139879cdcc8mr151546c88.5.1781573280886; Mon, 15
+ Jun 2026 18:28:00 -0700 (PDT)
+Date: Mon, 15 Jun 2026 18:27:38 -0700
 In-Reply-To: <20260616012744.4049193-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616012744.4049193-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616012744.4049193-6-irogers@google.com>
-Subject: [PATCH v1 05/12] perf tests: Skip metrics validation if system-wide
- recording lacks permission
+Message-ID: <20260616012744.4049193-7-irogers@google.com>
+Subject: [PATCH v1 06/12] perf tests: Fix Python JIT dump profiling test failure
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -70,167 +69,116 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The metrics value validation test requires system-wide recording (`-a`),
-which can fail on systems without root permissions or where paranoid
-levels restrict tracing. Add a check to skip the test if `-a` is not
-supported.
+The `python profiling with jitdump` test failed due to:
+1. Target PID extraction resolving to duplicate space-separated values,
+   which broke the buildid-cache loops.
+2. The default workload duration being too short to capture JIT stack
+   trampoline samples, resulting in 0 matching JIT symbols.
 
-Also fix false negatives during validation by updating parse error string
-patterns and resolving issues in metric list generation.
+Fix the PID parsing by sorting and retrieving a unique single-line value.
+Implement a robust retry loop starting at 1M python loop iterations and
+scaling up to 100M iterations until JIT symbols are successfully captured
+and verified.
 
-Fixes: 3ad7092f5145 ("perf test: Add metric value validation test")
+Fixes: c9cd0c7e529e ("perf test: Add python JIT dump test")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../tests/shell/lib/perf_metric_validation.py | 11 ++--
- tools/perf/tests/shell/stat_all_metrics.sh    | 63 ++++++++++---------
- tools/perf/tests/shell/stat_metrics_values.sh |  7 +++
- 3 files changed, 48 insertions(+), 33 deletions(-)
+ tools/perf/tests/shell/jitdump-python.sh | 66 +++++++++++++++---------
+ 1 file changed, 41 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
-index dea8ef1977bf..3d52f94f22b9 100644
---- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-+++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-@@ -383,10 +383,13 @@ class Validator:
-         wl = workload.split()
-         command.extend(wl)
-         print(" ".join(command))
--        cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
--        data = [x+'}' for x in cmd.stderr.split('}\n') if x]
--        if data[0][0] != '{':
--            data[0] = data[0][data[0].find('{'):]
-+        cmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
-+        lines = cmd.stderr.splitlines() + cmd.stdout.splitlines()
-+        data = []
-+        for line in lines:
-+            line = line.strip()
-+            if line.startswith('{') and line.endswith('}'):
-+                data.append(line)
-         return data
+diff --git a/tools/perf/tests/shell/jitdump-python.sh b/tools/perf/tests/shell/jitdump-python.sh
+index ae86203b14a2..6f3d1edd6f04 100755
+--- a/tools/perf/tests/shell/jitdump-python.sh
++++ b/tools/perf/tests/shell/jitdump-python.sh
+@@ -20,7 +20,10 @@ PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXXX)
  
-     def collect_perf(self, workload: str):
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index b582d23f28c9..5ee869452ee7 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -12,38 +12,53 @@ system_wide_flag="-a"
- if ParanoidAndNotRoot 0
- then
-   system_wide_flag=""
--  test_prog="perf test -w noploop"
-+  test_prog="perf test -w noploop 0.01"
- fi
+ cleanup() {
+     echo "Cleaning up files..."
+-    rm -f ${PERF_DATA} ${PERF_DATA}.jit /tmp/jit-${PID}.dump /tmp/jitted-${PID}-*.so 2> /dev/null
++    rm -f ${PERF_DATA} ${PERF_DATA}.jit 2> /dev/null
++    for p in ${ALL_PIDS}; do
++        rm -f /tmp/jit-${p}.dump /tmp/jitted-${p}-*.so 2> /dev/null
++    done
  
-+check_metric() {
-+  local output="$1"
-+  local status="$2"
-+  local metric="$3"
-+
-+  if [[ $status -ne 0 || ! "$output" =~ ${metric:0:50} ]]; then
-+    return 1
-+  fi
-+
-+  if [[ "$output" =~ "<not counted>" || "$output" =~ "<not supported>" ]]; then
-+    return 1
-+  fi
-+
-+  return 0
-+}
-+
- skip=0
- err=3
- for m in $(perf list --raw-dump metrics); do
-   echo "Testing $m"
-   result=$(perf stat -M "$m" $system_wide_flag -- $test_prog 2>&1)
-   result_err=$?
--  if [[ $result_err -eq 0 && "$result" =~ ${m:0:50} ]]
--  then
--    # No error result and metric shown.
-+
-+  if check_metric "$result" $result_err "$m"; then
-     if [[ "$err" -ne 1 ]]
-     then
-       err=0
-     fi
-     continue
-   fi
--  if [[ "$result" =~ "Cannot resolve IDs for" || "$result" =~ "No supported events found" ]]
--  then
--    if [[ $(perf list --raw-dump $m) == "Default"* ]]
-+
-+  result=$(perf stat -M "$m" $system_wide_flag -- perf test -w noploop 0.1 2>&1)
-+  result_err=$?
-+
-+  if check_metric "$result" $result_err "$m"; then
-+    if [[ "$err" -ne 1 ]]
-     then
--      echo "[Ignored $m] failed but as a Default metric this can be expected"
--      echo $result
--      continue
-+      err=0
-     fi
--    echo "[Failed $m] Metric contains missing events"
--    echo $result
--    err=1 # Fail
-     continue
--  elif [[ "$result" =~ \
--        "Access to performance monitoring and observability operations is limited" ]]
-+  fi
-+
-+  # If retry also failed, determine if we skip, ignore, or fail
-+  if [[ "$result" =~ "Access to performance monitoring and observability operations is limited" ]]
-   then
-     echo "[Skipped $m] Permission failure"
-     echo $result
-@@ -61,7 +76,9 @@ for m in $(perf list --raw-dump metrics); do
-       skip=1
-     fi
-     continue
--  elif [[ "$result" =~ "<not supported>" ]]
-+  elif [[ "$result" =~ "<not supported>" || \
-+          "$result" =~ "Cannot resolve IDs for" || \
-+          "$result" =~ "No supported events found" ]]
-   then
-     if [[ $(perf list --raw-dump $m) == "Default"* ]]
-     then
-@@ -105,19 +122,7 @@ for m in $(perf list --raw-dump metrics); do
-     continue
-   fi
+     trap - EXIT TERM INT
+ }
+@@ -33,9 +36,11 @@ trap_cleanup() {
  
--  # Failed, possibly the workload was too small so retry with something longer.
--  result=$(perf stat -M "$m" $system_wide_flag -- perf bench internals synthesize 2>&1)
--  result_err=$?
--  if [[ $result_err -eq 0 && "$result" =~ ${m:0:50} ]]
--  then
--    # No error result and metric shown.
--    if [[ "$err" -ne 1 ]]
--    then
--      err=0
--    fi
--    continue
--  fi
--  echo "[Failed $m] has non-zero error '$result_err' or not printed in:"
-+  echo "[Failed $m] has non-zero error '$result_err' or not printed/counted in:"
-   echo "$result"
-   err=1
+ trap trap_cleanup EXIT TERM INT
+ 
+-echo "Run python with -Xperf_jit"
+-cat <<EOF | perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" \
+-		 -- ${PYTHON} -Xperf_jit
++ALL_PIDS=""
++NUM=0
++for iterations in 1000000 10000000 50000000 100000000; do
++    echo "Running with $iterations iterations..."
++    cat <<EOF | perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" -- ${PYTHON} -Xperf_jit
+ def foo(n):
+     result = 0
+     for _ in range(n):
+@@ -49,29 +54,40 @@ def baz(n):
+     bar(n)
+ 
+ if __name__ == "__main__":
+-    baz(1000000)
++    baz($iterations)
+ EOF
+ 
+-# extract PID of the target process from the data
+-_PID=$(perf report -i "${PERF_DATA}" -F pid -q -g none | cut -d: -f1 -s)
+-PID=$(echo -n $_PID)  # remove newlines
+-
+-echo "Generate JIT-ed DSOs using perf inject"
+-DEBUGINFOD_URLS='' perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
+-
+-echo "Add JIT-ed DSOs to the build-ID cache"
+-for F in /tmp/jitted-${PID}-*.so; do
+-  perf buildid-cache -a "${F}"
+-done
+-
+-echo "Check the symbol containing the function/module name"
+-NUM=$(perf report -i "${PERF_DATA}.jit" -s sym | grep -cE 'py::(foo|bar|baz):<stdin>')
+-
+-echo "Found ${NUM} matching lines"
+-
+-echo "Remove JIT-ed DSOs from the build-ID cache"
+-for F in /tmp/jitted-${PID}-*.so; do
+-  perf buildid-cache -r "${F}"
++    # extract PID of the target process from the data
++    PID=$(perf report -i "${PERF_DATA}" --stdio -F pid -q -g none | \
++          cut -d: -f1 -s | sort -u | head -n 1 | tr -d ' ')
++    if [ -z "${PID}" ]; then
++        echo "Failed to get PID, retrying..."
++        continue
++    fi
++    ALL_PIDS="${ALL_PIDS} ${PID}"
++
++    echo "Generate JIT-ed DSOs using perf inject"
++    DEBUGINFOD_URLS='' perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
++
++    echo "Add JIT-ed DSOs to the build-ID cache"
++    for F in /tmp/jitted-${PID}-*.so; do
++        perf buildid-cache -a "${F}"
++    done
++
++    echo "Check the symbol containing the function/module name"
++    NUM=$(perf report -i "${PERF_DATA}.jit" -s sym --stdio | grep -cE 'py::(foo|bar|baz):<stdin>')
++
++    echo "Remove JIT-ed DSOs from the build-ID cache"
++    for F in /tmp/jitted-${PID}-*.so; do
++        perf buildid-cache -r "${F}"
++    done
++    rm -f /tmp/jitted-${PID}-*.so /tmp/jit-${PID}.dump 2>/dev/null
++
++    if [ "${NUM}" -gt 0 ]; then
++        echo "Success: found ${NUM} matching lines"
++        break
++    fi
++    echo "No matching lines found, retrying with more iterations..."
  done
-diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/tests/shell/stat_metrics_values.sh
-index 30566f0b5427..76f1e99d1273 100755
---- a/tools/perf/tests/shell/stat_metrics_values.sh
-+++ b/tools/perf/tests/shell/stat_metrics_values.sh
-@@ -8,6 +8,13 @@ shelldir=$(dirname "$0")
  
- grep -q GenuineIntel /proc/cpuinfo || { echo Skipping non-Intel; exit 2; }
- 
-+# Skip if no permission to record system-wide events
-+if ! perf stat -a -e instructions sleep 0.01 >/dev/null 2>&1; then
-+  echo "Skipping: no permission to record system-wide events (-a)"
-+  exit 2
-+fi
-+
-+
- pythonvalidator=$(dirname $0)/lib/perf_metric_validation.py
- rulefile=$(dirname $0)/lib/perf_metric_validation_rules.json
- tmpdir=$(mktemp -d /tmp/__perf_test.program.XXXXX)
+ cleanup
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
