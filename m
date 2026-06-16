@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D08C450917;
-	Tue, 16 Jun 2026 15:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6B4450911;
+	Tue, 16 Jun 2026 15:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781624698; cv=none; b=uPUoJKtuQ2NnrlAoF/DHVJ1lPK/B2dWb8E/wvpGHyDUCMcoRJG2/RYycOCzvxr4QcxPdrSXuFq4d/IKVAsLiNN8oGqictoFUqjK0Z8iB4UArNdJQweggi4vJmYqly2ZJ/7nT6L9R8ybERC8qqmwktxGycvoKcJpe3k70eJ8aJyA=
+	t=1781624702; cv=none; b=sx/3l8Ac/b4xEV+Fe0zufn2GfF49a0I/OThoFHyN2MCN7ztNw0iMEzn4zRala6H3tHRlPy00OtUgN7suphwot+bV2qLj4vn+KODBpHmpOyd3XgO4TT1dyYYU2ySSP+E1tVTai9lR7EJhXgRbFIHMkUIOxmDCsMnXFFXFXXOoo2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781624698; c=relaxed/simple;
-	bh=0sqncjj6x2Tj+dz2Ih9q+LvrEcweALtmKO6xF635zqk=;
+	s=arc-20240116; t=1781624702; c=relaxed/simple;
+	bh=T/Mu13zdV4DjS2WdIhdeC9UY++R8kmGc0o41kLv5qME=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iE1Uk3zvpcBapGMblBkvjPaKehYz8EtyRTuRAx0VdnT1JJJAaQWR5Fdo7sJyeRVL9a7fJdjGcBuYaV3apFm3Wbv9AM7b0aaPOtXqkpJalDuC64S9CVVlX5Gu2PkUdasHvgE+OEe9TDkuRIwmt+69+CyB2duMb1jlTQ94AetMA0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jksc0d2c; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=cmZpc/Jc8XfhyYGUJDwY+1YdQzzgx/WNPml8DOOMVZuMFPDZH6Nf/uIm05D2mSkfSUGUVimC1lRzPfMt+N7Wz4Z8ZdxX+shklP24USMKQxauViQilWzCyK/yREfpsbErPCZ7DTu5yE6sc5T3y7OPQXwWBz10Gn/IxUa5mSpC3B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnziFGJ/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jksc0d2c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3BF71F00AC4;
-	Tue, 16 Jun 2026 15:44:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnziFGJ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AEF71F00A3A;
+	Tue, 16 Jun 2026 15:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781624696;
-	bh=8hcLvp0Y39Y7GqB8qjde2MUDiIh1PAeX1exfMAaAznM=;
+	s=k20260515; t=1781624699;
+	bh=ja6HFfIID+G9AN89mM0NtD+HNlbq940B7f7OpakyXKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=jksc0d2cjq+55L0rdaVYiPWZ9F65/i8z4vFkrc57X/DD2hXH5bt6Bpx/L8cO9uBf5
-	 1BkIoLU8OyiSTD2aPH3zNBBDfAWAytwUXzQME2q16NzjDgo4faWrKQQj2UQTmSe9j3
-	 9QbFpFcN+wt61sDG0oT5nHQ0sT1MozbVHZJ8UdAl5POlf2IgrJuK7jpzWKy+sHA9oT
-	 syWGP6uKsMkJ2MZShP6EZQK8XmDlbo0HjiL5CEJxoIxo2+I6ShGNIJzs43fQrsqW6F
-	 i4/En/uCio0BVQk/ScZats5MNVDviJ3ptwezggYsJRvA/jWb4Dx0qBZGAD3eUOQ/OQ
-	 CETScE2bdD62w==
+	b=QnziFGJ/leAVHeOqvdqVoOiBc3+8GsDZ9ydcfqAa9Uxcn6ho2HLgOPIIMkvCbOFWN
+	 PgPrXhPPZ2O0ZlVrEHPdzYp9G/2L/sXi74K+SRekNDCF2TysAeCcGZFkI5ofK3nBJ9
+	 Y5uEpxRSU7IVgFuRhOu3Rw5rSNBhhI8ulr7Ealt7juw1SLKevxZKvwQ5iT5XKbhBQc
+	 5qtzVixtJRamNbkgGG1G12x5NuWtZ1KkyMTXKVO28CWoZDLRdNn+BpByAo5Y6a6VSS
+	 fbS2aNYMlhrJn7zmKjR/ewj9HyRAVprQGguwRVd+Nz9EqSkcxwF6RqdF+x6YnPlOTS
+	 keCpJ0DvDVFXA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,10 +38,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	"Claude Opus 4.6" <noreply@anthropic.com>
-Subject: [PATCH 1/2] perf evsel: Add lazy-initialized probe type detection helpers
-Date: Tue, 16 Jun 2026 12:44:45 -0300
-Message-ID: <20260616154446.7206-2-acme@kernel.org>
+	Aaron Tomlin <atomlin@atomlin.com>,
+	Claude <noreply@anthropic.com>
+Subject: [PATCH 2/2] perf trace: Guard __probe_ip suppression with evsel__is_probe()
+Date: Tue, 16 Jun 2026 12:44:46 -0300
+Message-ID: <20260616154446.7206-3-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260616154446.7206-1-acme@kernel.org>
 References: <20260616154446.7206-1-acme@kernel.org>
@@ -51,133 +52,37 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Several places in perf need to check whether an evsel is a kprobe or
-uprobe, which requires looking up the PMU by name via evsel__find_pmu().
-This lookup walks the PMU list each time, which is wasteful when the
-same evsel is checked repeatedly.
+trace__fprintf_tp_fields() compares every field name against
+"__probe_ip" for all tracepoint events, but this field is only
+implicitly added by the Ftrace subsystem to bare dynamic probes.
 
-Add evsel__is_kprobe(), evsel__is_uprobe(), and evsel__is_probe() that
-resolve the probe type on first call via evsel__pmu_name() and cache
-the result in a 3-bit field (probe_type) in struct evsel.  The field
-fits in existing padding after the bool fields, so struct size does not
-grow.
+Add an evsel__is_probe() check before the strcmp so the string
+comparison is skipped entirely for non-probe events.
 
-The enum uses PROBE__UNKNOWN (0) as the uninitialized sentinel —
-explicitly set in evsel__init() — so the lookup happens on first use.
-PROBE__NOPE (1) caches "not a probe" to avoid repeated negative lookups.
-
-PMU-based probes (kprobe/uprobe PMU) are detected by PMU name.
-Ftrace-based dynamic probes (created via tracefs, reported as PMU
-"tracepoint") are detected by the __probe_ip field that the kernel
-adds to all dynamic probe formats.  This covers kprobes, uprobes, and
-fprobes regardless of their group/system name.
-
-Assisted-by: Claude Opus 4.6 <noreply@anthropic.com>
+Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
+Assisted-by: Claude <noreply@anthropic.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 53 +++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/evsel.h |  5 ++++
- 2 files changed, 58 insertions(+)
+ tools/perf/builtin-trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 05fa0010c858a51e..ea9fa04429f08a9e 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -254,6 +254,58 @@ const char *evsel__pmu_name(const struct evsel *evsel)
- 	return event_type(evsel->core.attr.type);
- }
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index a8492da23a9cc178..57f3f14c5d435805 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3267,7 +3267,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
+ 		 * If verbose mode is enabled, ensure it is formatted as a
+ 		 * hexadecimal memory address rather than a signed integer.
+ 		 */
+-		if (!strcmp(field->name, "__probe_ip")) {
++		if (evsel__is_probe(evsel) && !strcmp(field->name, "__probe_ip")) {
+ 			if (!verbose)
+ 				continue;
  
-+enum evsel_probe_type {
-+	PROBE__UNKNOWN	= 0,
-+	PROBE__NOPE	= 1,
-+	PROBE__KPROBE	= 2,
-+	PROBE__UPROBE	= 3,
-+	/*
-+	 * Ftrace-based dynamic probes (kprobes/uprobes/fprobes created via
-+	 * tracefs) report PMU "tracepoint", not "kprobe"/"uprobe".  Detect
-+	 * them by the __probe_ip field that the kernel adds to all dynamic
-+	 * probe formats.
-+	 */
-+	PROBE__FTRACE	= 4,
-+};
-+
-+static void evsel__resolve_probe_type(struct evsel *evsel)
-+{
-+	const char *name = evsel__pmu_name(evsel);
-+
-+	if (!strcmp(name, "kprobe"))
-+		evsel->probe_type = PROBE__KPROBE;
-+	else if (!strcmp(name, "uprobe"))
-+		evsel->probe_type = PROBE__UPROBE;
-+	else if (!strcmp(name, "tracepoint") && evsel__field(evsel, "__probe_ip"))
-+		evsel->probe_type = PROBE__FTRACE;
-+	else
-+		evsel->probe_type = PROBE__NOPE;
-+}
-+
-+bool evsel__is_probe(struct evsel *evsel)
-+{
-+	if (evsel->probe_type == PROBE__UNKNOWN)
-+		evsel__resolve_probe_type(evsel);
-+
-+	return evsel->probe_type > PROBE__NOPE;
-+}
-+
-+bool evsel__is_kprobe(struct evsel *evsel)
-+{
-+	if (evsel->probe_type == PROBE__UNKNOWN)
-+		evsel__resolve_probe_type(evsel);
-+
-+	return evsel->probe_type == PROBE__KPROBE;
-+}
-+
-+bool evsel__is_uprobe(struct evsel *evsel)
-+{
-+	if (evsel->probe_type == PROBE__UNKNOWN)
-+		evsel__resolve_probe_type(evsel);
-+
-+	return evsel->probe_type == PROBE__UPROBE;
-+}
-+
- #define FD(e, x, y) (*(int *)xyarray__entry(e->core.fd, x, y))
- 
- int __evsel__sample_size(u64 sample_type)
-@@ -413,6 +465,7 @@ void evsel__init(struct evsel *evsel,
- 	evsel->supported     = true;
- 	evsel->alternate_hw_config = PERF_COUNT_HW_MAX;
- 	evsel->script_output_type = -1; // FIXME: OUTPUT_TYPE_UNSET, see builtin-script.c
-+	evsel->probe_type = PROBE__UNKNOWN;
- }
- 
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 8009be22cc3f1055..300c64d1e0c15e7d 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -126,6 +126,7 @@ struct evsel {
- 	bool			needs_uniquify;
- 	bool			fallenback_eacces;
- 	bool			fallenback_eopnotsupp;
-+	u8			probe_type:3;
- 	struct hashmap		*per_pkg_mask;
- 	int			err;
- 	int			script_output_type;
-@@ -259,6 +260,10 @@ struct perf_pmu *evsel__find_pmu(const struct evsel *evsel);
- const char *evsel__pmu_name(const struct evsel *evsel);
- bool evsel__is_aux_event(const struct evsel *evsel);
- 
-+bool evsel__is_probe(struct evsel *evsel);
-+bool evsel__is_kprobe(struct evsel *evsel);
-+bool evsel__is_uprobe(struct evsel *evsel);
-+
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx);
- 
- static inline struct evsel *evsel__new(struct perf_event_attr *attr)
 -- 
 2.54.0
 
