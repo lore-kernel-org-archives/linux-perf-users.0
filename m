@@ -1,102 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196913C4B9B;
-	Tue, 16 Jun 2026 02:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797E822D7A1
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 02:40:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781576877; cv=none; b=clkvb9SsNVi8IpxP9gDaoNbKnbLigC1W1oztcaY3OoOHl0JvBQfqlmnxg44xpLqFLGa3HIOIvOyWTmueEjRYJm0+ESounnlNaole2lXyKB1CBpOuD5ZPiwV7ilxKiBq739+Leh/uMd3HhY7vFQ9KazmszcgwxUY2m4WoDO4dOLY=
+	t=1781577620; cv=none; b=VK4+EpzXDuQqBzMAIJ3uDxaiy2Et9+yB2Na6tjgPWBuWln4cJV8M/WGlj/2G6ULJ4BD3jOLFob4mNmBbbp8MWxHtahEpsbwx3JFL18t4fculwHnI/Dd/qr8dWysblCi9cJrgZz6tXTX3zredg/9+e1xPWEikcpsIzYEAYF1Xocs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781576877; c=relaxed/simple;
-	bh=NRiKmhnmjLYlJafMKqk7qKUNLZ2QLSADLHKNOka4yqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uzpE4FY7ZolL/8+spjMUpDhUyGce6sWVUakVGobSWhsgEFkw4x46bDPNNNj4YV8/1VRRu9XDldABQbg79C2Zr6/n3dHPGCM/TuD96kxfbgpJEtG6pfWaX2/Jg7Up8PxRAnVTYHj17N3G2e3KjT6LSIB/RW5rVI0QcE5oCcb+udo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CF4BLEks; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781577620; c=relaxed/simple;
+	bh=32+hZs8JzCbBiGlUxL7ayLjGwW9A8kN70umIiU4w1xU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=KIQUbECNeHdyaxfgnndEKZGLYl98Z8TePXKl0Fv1Irv0Wogwk7lWfq5YmlxqDJf5Fj8QpxSmfPR/9NhW4Tm61vz6KSBKnmo12I/cC356wane33lJNTCazTcilO2sUSSb5SJS0DoVShvxwxaertHhclw+68QUSV8xjDIGREMoNHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0tj+hlv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CF4BLEks"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9AD81F00A3A;
-	Tue, 16 Jun 2026 02:27:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0tj+hlv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7528B1F000E9;
+	Tue, 16 Jun 2026 02:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781576876;
-	bh=bY7pKN93MZ0mC+o+KJ5949YOMQsNMysQBTZt8566+70=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CF4BLEksRyqd1XWLY8bIXlDS612/WSDbcwSsPF/pq8HcjAQamlsYB9WJW2iv50lS0
-	 /5DH2J38AlunWiC/YT1/ip0Rk1t9EGoCX5fJrlOnPfwMDoVQ0+Eh6EjpZU/E/8PUlt
-	 HMnMtGNrFDzAtd12X3c1/pI6xev1OrpYGbyRyFPc8zks+VLKtskSvx7TU2dahLKa/W
-	 N+YH3m6t8IzTm0zE0joN+1IiZeDXHRLR6HDVnqB85543yKaA2LHlSLJG68tsDj3FZc
-	 L420z2ntQdDroft73cE3yqQUM75B2JUBhadoIhHF4Sp58+prupDdNqtKrNh6ndBzVA
-	 0WF+/wISy/qLg==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
-	Claude <noreply@anthropic.com>
-Subject: [PATCH 9/9] perf dso: Set standard errno on decompression failure
-Date: Mon, 15 Jun 2026 23:27:15 -0300
-Message-ID: <20260616022715.5739-10-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260616022715.5739-1-acme@kernel.org>
-References: <20260616022715.5739-1-acme@kernel.org>
+	s=k20260515; t=1781577619;
+	bh=cAXFCyoMZKaC1E5VeFGHr7Zht7RnwggxjBqZJ5upAnM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=k0tj+hlv5KMj6A87/db8MfTqnBDip9xHYfTL+ZqubspLyJuPFWY1YWyyZLk9LV6kg
+	 QS2GX6Hdm7bBg6hNAwpDC1Wst0K2nVV/THSzXBgrdRy5H8CMbHbORUd9MpJkzLeTZK
+	 CpM+nW5jJ2+s8n7IuDCScl7/zmL0GwmAdm/lBJdaZ/8yU+7VaaFFBMhUb3XHPdErRY
+	 4q8IAhr1XSYkGFGkFLvi9a90FkV2YWUHfhxw7a5W3nOQxwtCdNvwjqY5GZt9av9lXH
+	 uoq6GQ8jIdbKdiZxAoINJt55WPtMWPI1M+fAGTPu/lb9RUsEdl02SBdO9rHLgai6L9
+	 FUtVaI6t18u0w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 3/9] perf cs-etm: Validate num_cpu before metadata
+ allocation
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260616022715.5739-4-acme@kernel.org>
+References: <20260616022715.5739-4-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 16 Jun 2026 02:40:18 +0000
+Message-Id: <20260616024018.7528B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-dso__get_filename() sets errno to a negative custom DSO_LOAD_ERRNO
-value when kernel module decompression fails:
+Pre-existing issues:
+- [High] Insufficient bounds checking in the per-CPU metadata parsing loop =
+allows arbitrary out-of-bounds reads based on untrusted event data.
+- [Medium] Memory allocated for `etm->queues` array elements (`etmq`) is le=
+aked when initialization fails on the error path.
+--
 
-  errno = *dso__load_errno(dso);  /* e.g. -9996 */
+commit 3997f8cbed57aaf438aeb6594523932b36c0d9d5
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The caller __open_dso() then computes fd = -errno, producing a large
-positive value (9996) that looks like a valid file descriptor.  This
-can cause close_data_fd() to close an unrelated fd used by another
-subsystem.
+perf cs-etm: Validate num_cpu before metadata allocation
 
-Set errno to EIO instead.  The detailed error code is already stored
-in dso__load_errno(dso) for diagnostic messages.
+This commit computes priv_size early to bound num_cpu against the private
+data area size. This prevents a 32-bit multiplication overflow and
+subsequent out-of-bounds writes when allocating the metadata array.
 
-Fixes: 1d6b3c9ba756a513 ("perf tools: Decompress kernel module when reading DSO data")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Assisted-by: Claude <noreply@anthropic.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/dso.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 0927b0b9c06b1..d121c8f22028d 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -3431,6 +3431,18 @@ int cs_etm__process_auxtrace_info_full(union perf_=
+event *event,
+>  	/* First the global part */
+>  	ptr =3D (u64 *) auxtrace_info->priv;
+>  	num_cpu =3D ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
+> +
+> +	/*
+> +	 * Bound num_cpu by the event size: the global header consumes
+> +	 * CS_ETM_HEADER_SIZE bytes, and each CPU needs at least one u64
+> +	 * metadata entry after that.
+> +	 */
+> +	priv_size =3D total_size - event_header_size - INFO_HEADER_SIZE -
+> +		    CS_ETM_HEADER_SIZE;
+> +	if (num_cpu <=3D 0 || priv_size <=3D 0 ||
+> +	    num_cpu > priv_size / (int)sizeof(u64))
+> +		return -EINVAL;
+> +
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 79f1a30f3683d6b3..2309196d8df3111c 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -600,7 +600,13 @@ static char *dso__get_filename(struct dso *dso, const char *root_dir,
- 		size_t len = sizeof(newpath);
- 
- 		if (dso__decompress_kmodule_path(dso, name, newpath, len) < 0) {
--			errno = *dso__load_errno(dso);
-+			/*
-+			 * Use a standard errno value, not the negative custom
-+			 * DSO_LOAD_ERRNO stored in dso__load_errno(dso):
-+			 * __open_dso() computes fd = -errno, so a negative
-+			 * errno produces a positive fd that looks valid.
-+			 */
-+			errno = EIO;
- 			goto out;
- 		}
- 
--- 
-2.54.0
+[Severity: High]
+This is a pre-existing issue, but does the new validation fully prevent
+out-of-bounds reads during metadata parsing?
 
+While the check ensures a minimum of one 8-byte entry per CPU, it doesn't
+protect the inner parsing loop. When cs_etm__create_meta_blk() is called,
+it reads nr_in_params directly from the untrusted perf.data file payload:
+
+tools/perf/util/cs-etm.c:cs_etm__create_meta_blk()
+    ...
+    nr_in_params =3D buff_in[i + CS_ETM_NR_TRC_PARAMS];
+    ...
+    for (k =3D 0; k < nr_in_params; k++)
+        metadata[k] =3D buff_in[i + k];
+    ...
+
+Could a maliciously crafted perf.data file provide an arbitrarily large
+nr_in_params, causing an out-of-bounds read before the index i is finally
+validated against priv_size at the end of the function?
+
+>  	metadata =3D zalloc(sizeof(*metadata) * num_cpu);
+>  	if (!metadata)
+>  		return -ENOMEM;
+
+[Severity: Medium]
+This is a pre-existing issue, but does the error handling in this function
+leak memory?
+
+During initialization, cs_etm__setup_queue() allocates a struct
+cs_etm_queue and assigns it to the .priv pointer. If initialization fails
+later, the code branches here:
+
+tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_info_full()
+    ...
+err_free_queues:
+    auxtrace_queues__free(&etm->queues);
+
+Since auxtrace_queues__free() is a generic helper that doesn't clean up
+subsystem-specific .priv contexts, will these dynamically allocated
+queue structures be leaked when the error path is taken?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616022715.5739=
+-1-acme@kernel.org?part=3D3
