@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F34F37D107
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3421B3822A8
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781573283; cv=none; b=DHuivsJaH5vSgfmrx9TeoHdHZz3Y4g5kVDQcyljzUwrngReI9QjBQUiY8CR5Q6WbSP3a+aigNK9mYv/5E2oPKzZN2JSjYrXV0e6WCBvqn+9Z+DNxjKEP+JAD5dY47MkXOH1yNFGEIqd40op/6WUHAxnrGzyjkQPGKkeLKtbcZxw=
+	t=1781573285; cv=none; b=PARecpA0SyLgPs7wm6WPEJc40l3rIG6BN8pzps3Z3GKisIFov8Dh3EAjilg7ByIF/YNQQRn3rEfqsvyZtvhqFwSY3SHkD091IX/lDPRWCzjknRJasNRHGnR9KetSDuvD7mZhExS+lw+W7Iygt7/ytIEjTdroPHI2NS6iNZ0bHV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781573283; c=relaxed/simple;
-	bh=N84R/GNyF73og9fH6qgDolhwDPgl2tM5sIiTaWNlP8Q=;
+	s=arc-20240116; t=1781573285; c=relaxed/simple;
+	bh=+m67fhKQcnMHZtzQqE9cCyp9n3Q8wVYEuFBL3/r/VqU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=T3L7ENnsaQYjAAFotqiTgKlU8tRKdkxnaX+9T4fZ+qZdbWfoIdjY+iXEErFlIchYCAufN7jml7tXUPc47O0HsWmAu8Vyf32ZuHWv2yT02EYOgRx9+3pf2Wga6xOPo9hbNAA3pOEI29PJzureYpT2IXGnIqg/Q4VNDXolNjkadJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RcGUCaFY; arc=none smtp.client-ip=74.125.82.74
+	 To:Content-Type; b=R4uj7DW8GEO8jx0JqRB7VvhSzlz9X07wMBW0H3lmYezkpGo9WSLJMs+zBvxpBgl4OmTkY1+TOao4Y8pj2DJXp3FVm1er7ymF+i0Ca+fdBjLbyV0YOjQgpV0Gvn+asKZPsrkMH7Gt3PfFrysN7Fl7MqQVoqQ8EF7wTYxG+8bRcSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qWh4D19d; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RcGUCaFY"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1361d52b3a0so4782697c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:28:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qWh4D19d"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304f23c55b2so4982336eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781573281; x=1782178081; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781573283; x=1782178083; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cZN7oaZiYetKkM4funzugfk4Rmu6NQMJeZAG5RjuOFo=;
-        b=RcGUCaFYVjhyPRoXkm7JNyyG7lBqMULIIKHI8iFuzd2f05vsylI+BLEkpkvDB1UYJt
-         PAO2XSQx1rXcsI1J7wRHnFlKSo+PYv6CACArGpzCAjbMm6VzmVjaSnDqs7iOSi2YBeQ/
-         RaxlWc8I6uJpcXLcxzwmy9VT6vryaQpmoEmmhOeT8+wg7SVbc28k7fnZhuRuMZfUOmVx
-         5tUtu5r2MYNEWnV/7XTqDKAdGnNFaiJ+mLGLz8m/HkEE7KdCHZXbNRzNlp4kOxY77Vy8
-         RpYk2FHbZZcPEp0Pnry+m9K9y5PHre8isB3hjxFIjlerOcHymLN+9HmDC7W5irqTJxe/
-         x5vw==
+        bh=a5Vy0qwWUHw2I6yu3pLjy7gg/wcMWMPiIDRvgkzuW0o=;
+        b=qWh4D19d/1eKZnj0F6c94xDRjLHN417ErOuJftWZ8IQnB7+A5t4eMyJ/Z46FM5ZKZZ
+         B4VmQZtL+kK34gCeagqzUdBUiignZ7Dsi7lVbGyPsyiZDJpmJUHZXoy09E+ypTDMSX2a
+         1ke/NKNHxs1Qgzk4RsE3U0DtiXm6OsLrakn8Oa+s2wcs90i5xNsoIJlU8hmuqDFxf/Zb
+         8p/3x0VMwmWQlbyIaRo2mz+MmGf14VpIbKUdX788CBEsCiZV31uPG4S4wzIl/T77AOkr
+         TNe6vmAM++NmoJLkR/GSkqhBPp82C30WCaxlco/2WJ78u4hjCgEz4zurYE6k+lSkdL88
+         AQug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781573281; x=1782178081;
+        d=1e100.net; s=20251104; t=1781573283; x=1782178083;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cZN7oaZiYetKkM4funzugfk4Rmu6NQMJeZAG5RjuOFo=;
-        b=g0Jr3pZgZiUP+xSZw96oKp171KpD4hlHMsedE7IwKUA73A0ofTEzjsLaaTViE1tKJo
-         EzYZT5a4TjGgWaOZjPqf9Ew83wEm9e9ouqMTyfr1o4IYcpPOde1KqObh8LfQ2YFCOfkA
-         HcdOScdsflrit3QEX/rSwzP8owIX2DoRYg3iIb2fF7YgOb/6LY8rRB9PTH1K5JFzWBKB
-         9FF4K4sXKqMtihssPYaW4/V66ceW0LPjAYFXHsrCsAwQ/xoxUPhvqckBOS3As7GF0MT6
-         fbuKf/CrqtsgQLrGoTIYUoQXS/2/njWFSO0UvnbDctz7asRYQh/VTYd5kc6WPJHSkybP
-         qHFA==
-X-Forwarded-Encrypted: i=1; AFNElJ+4FMIhUJukN7dlFoOcbbrWFi3bUpL09jOxA5QxcA4A98nWa2ZboO4TtoXCaApTUK/MN4suJP9Vkr8tuF/DnS66@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb8fV2jlfH1BnISlEDZ/O/ldOpHFRtKhnx3P51hF654qJhPOvS
-	hln7+X4jq1mmOziIqOFN6vbEgoU5WVaywKq74jfEjL35EKWQysu3PlOnXA8MqxltbRZmZoOzL6R
-	4X2qgoDZvUQ==
-X-Received: from dlbcj30.prod.google.com ([2002:a05:7022:699e:b0:135:b432:37dc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:4504:20b0:139:879c:dba1
- with SMTP id a92af1059eb24-139879cdcc8mr151546c88.5.1781573280886; Mon, 15
- Jun 2026 18:28:00 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:27:38 -0700
+        bh=a5Vy0qwWUHw2I6yu3pLjy7gg/wcMWMPiIDRvgkzuW0o=;
+        b=LgSpgmDGsppa/+af1Uz4XAddcWlW8JO/2PNSBh8H0ptvKpvpM8IjV5IIhdK2KVbxKI
+         +XR1O7GAu5STb5EQSuVsJRUv/UXzE5rvfpISb2KqguQp/xGkuRl26OMK8gjthWm1HVDI
+         3haMjKaYA87onxE6mj332FZIqBHjVPirOpMayCDLeBJGE3hJnqa5PLkVsK75pypbSzRF
+         pr6jfaSGO10TzByG1C/Fy0t64gK0/BaSBskQ7jYsAIaqUulOHsF5owngOBTmKqgvrZMN
+         RfjUrX2JrFg0ahbRA5mOnlPekpMXnBNDYwI1P4DjKVdwVafTFeu0SQgD5RhwzlLx+sXD
+         tZLA==
+X-Forwarded-Encrypted: i=1; AFNElJ8IffXLZRGIp4cni0L9eh5MmaXHWXwZ0PD7HXjKguNdYiL6dpOHKYsQQr091+a+DSAotjFuyA2b5cEVk0ot2L6m@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYBItS4FGAP9fl8LdnEtqc8g/KMof8MDM4o8mANSRjrhNaLe6P
+	Hk+GerGmkP3pT305dDm6c4kz5Kda7wIZC/Cxbhxuk1CtNtOPfnEK0pgUwUvvpSkMiZffgCspVGn
+	L6T2UPDX8sA==
+X-Received: from dycmh8.prod.google.com ([2002:a05:693c:2588:b0:30b:a993:39a7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:7312:b0:303:f2dc:8ab4
+ with SMTP id 5a478bee46e88-30ba5b22866mr910563eec.2.1781573282897; Mon, 15
+ Jun 2026 18:28:02 -0700 (PDT)
+Date: Mon, 15 Jun 2026 18:27:39 -0700
 In-Reply-To: <20260616012744.4049193-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616012744.4049193-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616012744.4049193-7-irogers@google.com>
-Subject: [PATCH v1 06/12] perf tests: Fix Python JIT dump profiling test failure
+Message-ID: <20260616012744.4049193-8-irogers@google.com>
+Subject: [PATCH v1 07/12] perf tests: Fix flakiness in trace record and replay test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,116 +69,83 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The `python profiling with jitdump` test failed due to:
-1. Target PID extraction resolving to duplicate space-separated values,
-   which broke the buildid-cache loops.
-2. The default workload duration being too short to capture JIT stack
-   trampoline samples, resulting in 0 matching JIT symbols.
+The `perf trace record and replay` test fails intermittently on slow or
+virtualized hosts because the default recording workload (`sleep 1`) occasionally
+completes without scheduling the target `nanosleep` or `clock_nanosleep` system
+calls inside the recorded sample window, resulting in the error:
+`Failed: cannot find *nanosleep syscall`.
 
-Fix the PID parsing by sorting and retrieving a unique single-line value.
-Implement a robust retry loop starting at 1M python loop iterations and
-scaling up to 100M iterations until JIT symbols are successfully captured
-and verified.
+Generalize the `perf_record_with_retry` helper in `tests/shell/lib/perf_record.sh`
+to support a custom record command prefix via the `PERF_RECORD_CMD` environment
+variable (defaulting to "perf record").
 
-Fixes: c9cd0c7e529e ("perf test: Add python JIT dump test")
+Update `trace_record_replay.sh` to use this robust retry loop running with
+`PERF_RECORD_CMD="perf trace record"` and a base workload of `sleep`. The test
+will automatically retry with scaled sleep durations (from 0.01s up to 2.0s)
+until the required `nanosleep` event is successfully captured.
+
+Fixes: 15bcfb96d0dd ("perf test: Add trace record and replay test")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/jitdump-python.sh | 66 +++++++++++++++---------
- 1 file changed, 41 insertions(+), 25 deletions(-)
+ tools/perf/tests/shell/lib/perf_record.sh     |  7 ++++++-
+ tools/perf/tests/shell/trace_record_replay.sh | 18 ++++++++++++++----
+ 2 files changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/shell/jitdump-python.sh b/tools/perf/tests/shell/jitdump-python.sh
-index ae86203b14a2..6f3d1edd6f04 100755
---- a/tools/perf/tests/shell/jitdump-python.sh
-+++ b/tools/perf/tests/shell/jitdump-python.sh
-@@ -20,7 +20,10 @@ PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXXX)
- 
- cleanup() {
-     echo "Cleaning up files..."
--    rm -f ${PERF_DATA} ${PERF_DATA}.jit /tmp/jit-${PID}.dump /tmp/jitted-${PID}-*.so 2> /dev/null
-+    rm -f ${PERF_DATA} ${PERF_DATA}.jit 2> /dev/null
-+    for p in ${ALL_PIDS}; do
-+        rm -f /tmp/jit-${p}.dump /tmp/jitted-${p}-*.so 2> /dev/null
-+    done
- 
-     trap - EXIT TERM INT
- }
-@@ -33,9 +36,11 @@ trap_cleanup() {
- 
- trap trap_cleanup EXIT TERM INT
- 
--echo "Run python with -Xperf_jit"
--cat <<EOF | perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" \
--		 -- ${PYTHON} -Xperf_jit
-+ALL_PIDS=""
-+NUM=0
-+for iterations in 1000000 10000000 50000000 100000000; do
-+    echo "Running with $iterations iterations..."
-+    cat <<EOF | perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" -- ${PYTHON} -Xperf_jit
- def foo(n):
-     result = 0
-     for _ in range(n):
-@@ -49,29 +54,40 @@ def baz(n):
-     bar(n)
- 
- if __name__ == "__main__":
--    baz(1000000)
-+    baz($iterations)
- EOF
- 
--# extract PID of the target process from the data
--_PID=$(perf report -i "${PERF_DATA}" -F pid -q -g none | cut -d: -f1 -s)
--PID=$(echo -n $_PID)  # remove newlines
--
--echo "Generate JIT-ed DSOs using perf inject"
--DEBUGINFOD_URLS='' perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
--
--echo "Add JIT-ed DSOs to the build-ID cache"
--for F in /tmp/jitted-${PID}-*.so; do
--  perf buildid-cache -a "${F}"
--done
--
--echo "Check the symbol containing the function/module name"
--NUM=$(perf report -i "${PERF_DATA}.jit" -s sym | grep -cE 'py::(foo|bar|baz):<stdin>')
--
--echo "Found ${NUM} matching lines"
--
--echo "Remove JIT-ed DSOs from the build-ID cache"
--for F in /tmp/jitted-${PID}-*.so; do
--  perf buildid-cache -r "${F}"
-+    # extract PID of the target process from the data
-+    PID=$(perf report -i "${PERF_DATA}" --stdio -F pid -q -g none | \
-+          cut -d: -f1 -s | sort -u | head -n 1 | tr -d ' ')
-+    if [ -z "${PID}" ]; then
-+        echo "Failed to get PID, retrying..."
-+        continue
-+    fi
-+    ALL_PIDS="${ALL_PIDS} ${PID}"
+diff --git a/tools/perf/tests/shell/lib/perf_record.sh b/tools/perf/tests/shell/lib/perf_record.sh
+index c5de25244770..5c7feb294ebb 100644
+--- a/tools/perf/tests/shell/lib/perf_record.sh
++++ b/tools/perf/tests/shell/lib/perf_record.sh
+@@ -21,9 +21,14 @@ perf_record_with_retry() {
+   local duration
+   local first_run=true
+   local ret=1
++  local cmd_prefix="perf record"
++  if [ -n "${PERF_RECORD_CMD}" ]; then
++    cmd_prefix="${PERF_RECORD_CMD}"
++  fi
 +
-+    echo "Generate JIT-ed DSOs using perf inject"
-+    DEBUGINFOD_URLS='' perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
-+
-+    echo "Add JIT-ed DSOs to the build-ID cache"
-+    for F in /tmp/jitted-${PID}-*.so; do
-+        perf buildid-cache -a "${F}"
-+    done
-+
-+    echo "Check the symbol containing the function/module name"
-+    NUM=$(perf report -i "${PERF_DATA}.jit" -s sym --stdio | grep -cE 'py::(foo|bar|baz):<stdin>')
-+
-+    echo "Remove JIT-ed DSOs from the build-ID cache"
-+    for F in /tmp/jitted-${PID}-*.so; do
-+        perf buildid-cache -r "${F}"
-+    done
-+    rm -f /tmp/jitted-${PID}-*.so /tmp/jit-${PID}.dump 2>/dev/null
-+
-+    if [ "${NUM}" -gt 0 ]; then
-+        echo "Success: found ${NUM} matching lines"
-+        break
-+    fi
-+    echo "No matching lines found, retrying with more iterations..."
- done
+   for duration in 0.01 0.1 0.3 1.0 2.0; do
+     rm -f "${perfdata}" "${perfdata}".old
+-    perf record "$@" -o "${perfdata}" ${testprog_base} ${duration} > "$logfile" 2>&1
++    ${cmd_prefix} "$@" -o "${perfdata}" ${testprog_base} ${duration} > "$logfile" 2>&1
+     local record_exit=$?
  
- cleanup
+     if [ "$first_run" = true ] && [ $record_exit -ne 0 ]; then
+diff --git a/tools/perf/tests/shell/trace_record_replay.sh b/tools/perf/tests/shell/trace_record_replay.sh
+index 88d30a03dcec..f27e32b18697 100755
+--- a/tools/perf/tests/shell/trace_record_replay.sh
++++ b/tools/perf/tests/shell/trace_record_replay.sh
+@@ -6,16 +6,26 @@
+ 
+ # shellcheck source=lib/probe.sh
+ . "$(dirname $0)"/lib/probe.sh
++# shellcheck source=lib/perf_record.sh
++. "$(dirname $0)"/lib/perf_record.sh
+ 
+ skip_if_no_perf_trace || exit 2
+ [ "$(id -u)" = 0 ] || exit 2
+ 
+ file=$(mktemp /tmp/temporary_file.XXXXX)
+ 
+-perf trace record -o ${file} sleep 1 || exit 1
+-if ! perf trace -i ${file} 2>&1 | grep nanosleep; then
++check_nanosleep() {
++  perf trace -i "${file}" 2>&1 | grep -q nanosleep
++}
++
++PERF_RECORD_CMD="perf trace record" perf_record_with_retry "${file}" "check_nanosleep" "sleep"
++err=$?
++
++perf_record_cleanup
++rm -f ${file}
++
++if [ $err -ne 0 ]; then
+ 	echo "Failed: cannot find *nanosleep syscall"
+ 	exit 1
+ fi
+-
+-rm -f ${file}
++exit 0
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
