@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3D234AAE9
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 06:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A753DA7F4
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 06:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781591134; cv=none; b=gnCf2Ji106tJvtJGof4W3Y+OZ1itX87pxK3ieARF3IcDL4MZ3BQ0prUrDEcNfTdAWoYEFUrLZqJK2h+N3ba4zbJWaSkBPI6MPaukahD6EZIv/ncNPGDc/0uxU8ShoiFOiYk/lR7jmP3LClshm/jgoifjSoGi7KSloDF9bWD8Qqc=
+	t=1781591230; cv=none; b=ZdD63ubsbP69c4X1FMCITmTj8B19/NX6FIWiPUzuQ3QW2zmyTIY0MQ5XC19K/QkJmD5lMGSrPo06ITMpJ4fl0EfoieXcX0wN9Ig9EMaKJ8Ijabblqztv4MTGgxmLVFOXHjqlJYnprtXXG6lno0u7xHKgazYffe96ZuPxx9SPMik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781591134; c=relaxed/simple;
-	bh=qFzWS0zyat7kvnEUGM6exlYqooFYrQb87Nt4KDfcoao=;
+	s=arc-20240116; t=1781591230; c=relaxed/simple;
+	bh=DhVEl31g58WiL38/L/VEbuu4cZ19NvlEVniaxLDR2io=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=MAXBBBE6JXfl2HWCc5MHmggmATsRek1XmRzNi7psFx7sg3iMPhj9EUDu9PWqa6UOwOst1wfdUl0DsPnBDA6SSwJ9jlVI0Od6nRqKodWet+b2DSz8UCsAIz3Hlstv0/ZXzfBgBoMNEGBxQGeyJkH7vNG3FXl9jknGVJ48LeCt1w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZfcbUv5; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=C5a1OVSdvIp0b1HqiBxUlfAVUYiz+Tt7DDJ6ZHrnhkBQ6IOiAVxD9NTGN7H5sCOV3cHjKL2SPm9wrQFATAiOk4Oj+WGu82cEdgTk8gFHEGSFdHcRjwgg495gHmQVKy3qlIgWLtwfrfOMNkCm4+uV4iWQn+N/wddgz2qvxmiLXzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V31c2Gta; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZfcbUv5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46701F000E9;
-	Tue, 16 Jun 2026 06:25:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V31c2Gta"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 024121F000E9;
+	Tue, 16 Jun 2026 06:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781591132;
-	bh=DAfb4lG0xk9ZymUj6bRpVwMIvj85b8//o/Qb4BpAQHQ=;
+	s=k20260515; t=1781591229;
+	bh=nKzXKBN4SReMeocU58USOo9v2vHsu45f1YtzYrb+dHI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=NZfcbUv5LliyaVmFrkFgljQaVbq0so18wWbumpRM6yMyV7MkfJXvOHfoJLCFGxgAg
-	 rhVEN/8R3cCar27NvGm7asVAqjtWfjX01CxdIn+z4fG/WJkM/rdP+PEnMZDh2LtJRz
-	 fl/yc/ifYsLJiDBnSdhtQWwzNmJEVB8rG7T3iP8w8H2CFQQTGJ+IMnIB1kMZKgFGB8
-	 MxFsmeY0Q1t9cdr1Ln8SDfbC9Tw2cGT0j76A5Th2w+SwngGV6o2uiSLo68l16fBVTC
-	 UWkY+K1IHVFkIiqFUF8dVdR/ZN/I3RouMlNE5kgU1sFj/F9sw6WyjYZvCSj2n2fLEz
-	 ZgbTUFTpok6BQ==
+	b=V31c2GtalpQ7J4gJiSPl10tY35tFrcu0tmKI1vt45t4upe42Nn0rLvy8OC5wc/OHd
+	 MOhXitDEgPBQV+H2qqpwxHAP0MBWL3kNv7brWbI5rqE68tXi39SjH5KqhS2YUc10eH
+	 TE7nFVz/mP2Q+SXp1vqiIhcq6qL1RpLIPTYinUTZL/Fb3oKkR+ChWaD2+OhQ1KY7iR
+	 ZGQYA6Tn0Qob87VUzgwOCOt0zz19EF01vHqtWUK4sZfIGVzmwvvAx3I3D0lBA1Uifv
+	 Ol/1vHhZSjVTDmpJ1RwDAsauRgYPi22B3uoHNwH8MKq3vzr9/vXT/L+sO/Ucc+Op9b
+	 xQ40FuiNh9/CA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 10/12] perf tests: Speed up off-cpu profiling tests
+Subject: Re: [PATCH v2 06/12] perf tests: Fix Python JIT dump profiling test
+ failure
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616061404.41929-11-irogers@google.com>
-References: <20260616061404.41929-11-irogers@google.com>
+In-Reply-To: <20260616061404.41929-7-irogers@google.com>
+References: <20260616061404.41929-7-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 06:25:32 +0000
-Message-Id: <20260616062532.C46701F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 06:27:08 +0000
+Message-Id: <20260616062709.024121F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,44 +46,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The commit message inaccurately describes the new off-cpu thresh=
-old values applied in the code.
+- [Medium] Predictable temporary file name allows an attacker to perform a =
+symlink attack leading to arbitrary file overwrite.
 --
 
-commit 7c145dd0880cd69d24f8148542c77c20c1d72e64
+commit 5cc8bb6cfd6331b267045e9aa8e8f0e141a7441e
 Author: Ian Rogers <irogers@google.com>
 
-perf tests: Speed up off-cpu profiling tests
+perf tests: Fix Python JIT dump profiling test failure
 
-This commit speeds up off-cpu profiling tests by scaling down the workload
-durations and off-cpu threshold configurations, reducing the raw test
-sleep overhead from 3.0s to 0.3s.
+This commit fixes PID parsing in the Python JIT dump profiling test by
+resolving duplicate space-separated values. It also introduces a retry loop
+that scales from 1M to 100M iterations to ensure JIT stack trampoline
+samples are successfully captured.
 
-> - Change the above-threshold test to use `--off-cpu-thresh 99` and `sleep=
- 0.1`.
-> - Change the below-threshold test to use `--off-cpu-thresh 120` and `slee=
-p 0.1`.
+> diff --git a/tools/perf/tests/shell/jitdump-python.sh b/tools/perf/tests/=
+shell/jitdump-python.sh
+> index ae86203b14a22..dd4a401cd2455 100755
+> --- a/tools/perf/tests/shell/jitdump-python.sh
+> +++ b/tools/perf/tests/shell/jitdump-python.sh
+[ ... ]
+> @@ -33,9 +36,16 @@ trap_cleanup() {
+> =20
+>  trap trap_cleanup EXIT TERM INT
+> =20
+> -echo "Run python with -Xperf_jit"
+> -cat <<EOF | perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" \
+> -		 -- ${PYTHON} -Xperf_jit
+> +ALL_PIDS=3D""
+> +NUM=3D0
+> +for iterations in 1000000 10000000 50000000 100000000; do
+> +    echo "Running with $iterations iterations..."
+> +    rm -f "${PERF_DATA}.pid"
+> +    cat <<EOF | perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}"=
+ -- ${PYTHON} -Xperf_jit
+> +import os
+> +with open("${PERF_DATA}.pid", "w") as f:
 
 [Severity: Medium]
-Are these threshold descriptions accurate?
+Could this create a time-of-check to time-of-use race condition?
 
-Looking at test_offcpu_above_thresh() in
-tools/perf/tests/shell/record_offcpu.sh, the implementation actually uses
-a 50ms threshold:
+While the main perf data file is securely created using mktemp, this uses
+a predictable filename in a shared directory for the PID file. Even though
+the file is removed right before the python script runs:
 
-    if ! perf record -e dummy --off-cpu --off-cpu-thresh 50 -o ${perfdata} =
--- sleep 0.1 2> /dev/null
+    rm -f "${PERF_DATA}.pid"
 
-Similarly, test_offcpu_below_thresh() implements a 500ms threshold instead
-of 120ms:
+Is there a risk that a malicious symlink could be recreated at the
+predictable path in the window between the removal and the python open()
+call?
 
-    if ! perf record -e dummy --off-cpu --off-cpu-thresh 500 -o ${perfdata}=
- -- sleep 0.1 2> /dev/null
+If the symlink is recreated and followed during the python script execution:
 
-While these implemented values provide a safer margin against execution
-jitter, could this commit message regression be updated to match the actual
-code?
+    with open("${PERF_DATA}.pid", "w") as f:
+        f.write(str(os.getpid()))
+
+Does this allow arbitrary file overwrites with the python process PID?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616061404.4192=
-9-1-irogers@google.com?part=3D10
+9-1-irogers@google.com?part=3D6
