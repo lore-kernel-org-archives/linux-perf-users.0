@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE03C36F8F1
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 15:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98ADA43DA25
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 15:13:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781622764; cv=none; b=SkH9eXvxirb5d4lcdMtpAvtwnJA+cE0qy9E80uPbaqW2ljAGmS8xdfVcwld9kjU2xYrdGLekx7b6Cu3TJttb14zalAi1zaWWB3YshI2f8O7e+BzETzn65L/IICJpegwldkeN07UEXXwKy4m/rPeeJ2e054rB1w60qPwtcO/PFS4=
+	t=1781622795; cv=none; b=P2khdhhCVdPOmnOzCD+4pKlM41kmGrVEuymliKrLTiwt9SDnMG86Ez/ZISu9lQFVQ8CMlOuv3zgH0jpJujgdMP04HvU2Wr2UUypAip9k7o+BH8oHZf4e714VbGSrmCN5RRXw2owCl7wLratxip4gsm2so1CgZaFs3SEsUXyy5WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781622764; c=relaxed/simple;
-	bh=H71fy9ZouarCfpNJo1sVfAxZZCMTbZXsFRCajZ2Sb0U=;
+	s=arc-20240116; t=1781622795; c=relaxed/simple;
+	bh=5UkbU+QWOX83a71MjnagT8sCxY3K6R7qSuOk5Z/bmHA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nBsQtFu5kCQ44pQzkYjfmMdG5KY4TP6Wcfp+z01kVulFIaCmgNeX0YNm1o/tAvsFaz7U2WHbEG4JN04eI7Ifly2hmF8oS+C/nGeWSj6ZRNCn4OCaojx9WNHawN8NCOQRWuaV9XAa4ybmHLzCw93apVYDXx8J2OeFGk6V9DG0jD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bFPoFY3A; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Kfm+7DattybVROzuwHkoHGgjYh0cOwEG3+EE8NxyTRHhH1gDsa5LZhrabdnRcAtTguf68gzfoOLiSlA8DF2P1DhPKmNT36CkRrRgMrvM+QDqTUBajK1HRMbjPy065LSj7xEgKy10Nv0+ChynyvXmn1dKrZzxPquGQM7Ec8ejniM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XT+SUqbb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bFPoFY3A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC161F000E9;
-	Tue, 16 Jun 2026 15:12:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XT+SUqbb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BBD11F000E9;
+	Tue, 16 Jun 2026 15:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781622763;
-	bh=9QkK8KcLn7jLj14bl7A2Gd2qRyAcfW+Uh8PEQD1BsaQ=;
+	s=k20260515; t=1781622794;
+	bh=s4Rrjo24trf5HuZ5I5hCN6fXaozYjQtPzkUHYUALVGs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bFPoFY3A4rbSyHuzvcC6p+7HqaLoCjuHTwwCKD2I+QbaLvWuSonWn7uOqGblhZuqN
-	 JJhxVwqILF4ogzCj3q1Xzwzzx0b7oNLbEnZhAzH4kw2X+lWZm9HxkkrSvPJAtmag7W
-	 RkJdCrCUlxGHGw2RGc8L95/4Dk378lC/XG6vL+TgeY0j59lSO+KKcivtUFpnUjW3Mo
-	 dXUTuMGWKNvkxpiX8zjyWWNE7paPLdF6S5o5VP6lrv4npz+LG7OJG+COFqFwU1t+v0
-	 3UvLhMuD/EaGFySfjsIZf4kUwvr1Ez/zPprHQ8k814ojF1DaF2guihay7XtRlP7//6
-	 1fYss62ufYnRA==
+	b=XT+SUqbbV3BtDkuymfxd1yhNuPH4rDQ+M3Kwo3gpmZR8T6tRGT1pw9iQ3ztMw3JtI
+	 Z4NhCle52cERwDi4+tW31cURSooZ8xKEP7pyqJYYxdP8TCzGfAEttiEImS/x2SnNCM
+	 2RNbQ0aIMOc3YCPKWk6osRn0IY+MX4S56r20QLdHbsNSv3jxYf5ZK1qu1+9WBmGdL2
+	 IlmhzG6E3kh2GwjoI6bJK5br/fgAiTo4RRcbtjjCiXXNdjtY/3oHC0rusS8YDCuuZw
+	 sP7fX1K+wiyXM60frXd8YEeIcMTEexP+xDPYXULs+OrOd2Kwd8uewQKSBgryvPDN38
+	 +wH7vjSlt2XqQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 8/9] perf cs-etm: Synthesize callchains for
- instruction samples
+Subject: Re: [PATCH v9 5/9] perf cs-etm: Use thread-stack for last branch
+ entries
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616-b4-arm_cs_callchain_support_v1-v9-8-f8fad931c413@arm.com>
-References: <20260616-b4-arm_cs_callchain_support_v1-v9-8-f8fad931c413@arm.com>
+In-Reply-To: <20260616-b4-arm_cs_callchain_support_v1-v9-5-f8fad931c413@arm.com>
+References: <20260616-b4-arm_cs_callchain_support_v1-v9-5-f8fad931c413@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 15:12:43 +0000
-Message-Id: <20260616151243.8CC161F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 15:13:13 +0000
+Message-Id: <20260616151314.5BBD11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,85 +46,60 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Prematurely freeing `tidq->frontend_thread` on the error path in=
- `cs_etm__context()` leads to a fatal NULL pointer dereference.
+- [High] Cross-CPU state corruption when flushing shared thread stacks on l=
+ocal trace discontinuity
 --
 
-commit beaeb914d5e99fcdf91b04714fe39931a7466896
-Author: Leo Yan <leo.yan@linux.dev>
+commit abf6f97a0108ff607c740e49b61365089d433985
+Author: Leo Yan <leo.yan@arm.com>
 
-perf cs-etm: Synthesize callchains for instruction samples
+perf cs-etm: Use thread-stack for last branch entries
 
-This commit synthesizes callchains for CS ETM instruction samples. It alloc=
-ates
-a callchain buffer per queue, uses thread_stack__sample() for instruction
-samples, and introduces cs_etm__context() to handle context packets.
+CS ETM maintains its own circular array for last branch entries, with
+local helpers to update, copy and reset the branch stack. This
+duplicates logic already provided by the common code.
 
 > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index e18d2dec79431..34489476681b8 100644
+> index 6827ef8871a8f..51b05a0bc1898 100644
 > --- a/tools/perf/util/cs-etm.c
 > +++ b/tools/perf/util/cs-etm.c
 [ ... ]
-> @@ -1904,6 +1941,34 @@ static int cs_etm__sample(struct cs_etm_queue *etm=
-q,
->  	return 0;
->  }
+> @@ -2025,7 +1965,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
 > =20
-> +static int cs_etm__context(struct cs_etm_queue *etmq,
-> +			   struct cs_etm_traceid_queue *tidq)
-> +{
-> +	ocsd_ex_level el =3D tidq->packet->el;
-> +	struct machine *machine;
-> +	int ret;
-> +
-> +	machine =3D cs_etm__get_machine(etmq, el);
-> +	if (!machine) {
-> +		ret =3D -EINVAL;
-> +		goto err;
-> +	}
-> +
-> +	tidq->kernel_start =3D machine__kernel_start(machine);
-> +
-> +	ret =3D cs_etm__etmq_update_thread(etmq, el, tidq->packet->tid,
-> +					 &tidq->frontend_thread);
-> +	if (ret)
-> +		goto err;
-> +
-> +	return 0;
-> +
-> +err:
-> +	thread__zput(tidq->frontend_thread);
+>  	/* Reset last branches after flush the trace */
+>  	if (etm->synth_opts.last_branch)
+> -		cs_etm__reset_last_branch_rb(tidq);
+> +		thread_stack__flush(tidq->frontend_thread);
 
-[Severity: Medium]
-Will this error path result in a NULL pointer dereference?
+[Severity: High]
+Can this cause cross-CPU state corruption when flushing shared thread stack=
+s?
 
-If cs_etm__get_machine() or cs_etm__etmq_update_thread() fails, thread__zpu=
-t()
-is called which drops the reference and sets tidq->frontend_thread to NULL.
+When cs_etm__flush() is called due to a local trace discontinuity or the en=
+d of
+a block on a specific trace queue (CPU), it calls thread_stack__flush() on
+the frontend_thread.
 
-However, the calling loops, such as cs_etm__run_per_cpu_timeless_decoder()
-which calls cs_etm__process_traceid_queue(), can ignore the error and conti=
-nue
-processing trace buffer packets.
+If the traced thread is shared across multiple CPUs (such as the global idle
+thread pid =3D=3D 0), thread_stack__flush() will iterate over ts->arr_sz and
+reset the branch stacks for all CPUs associated with that thread:
 
-When a subsequent packet like CS_ETM_RANGE is processed, it calls
-cs_etm__synth_instruction_sample() which unconditionally dereferences the N=
-ULL
-thread pointer:
-
-cs_etm__synth_instruction_sample() {
-    ...
-    sample.pid =3D thread__pid(tidq->frontend_thread);
-    ...
+tools/perf/util/thread-stack.c:thread_stack__flush() {
+	...
+	for (pos =3D 0; pos < ts->arr_sz; pos++) {
+		int ret =3D __thread_stack__flush(thread, ts + pos);
+	...
 }
 
-Should the frontend_thread pointer be preserved on failure, or should the
-caller be updated to abort packet processing when an error occurs?
+This replaces the previously safe localized reset for the trace queue with a
+global flush. Could a localized discontinuity on CPU A silently wipe out the
+active branch stack and callchain history of the shared thread executing
+concurrently on CPU B?
 
-> +	tidq->kernel_start =3D 0;
-> +	return ret;
-> +}
+> =20
+>  	return err;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616-b4-arm_cs_=
-callchain_support_v1-v9-0-f8fad931c413@arm.com?part=3D8
+callchain_support_v1-v9-0-f8fad931c413@arm.com?part=3D5
