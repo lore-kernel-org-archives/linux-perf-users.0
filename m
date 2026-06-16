@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3760B3DA7F7
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 06:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408883D903A
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 06:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781590471; cv=none; b=pXhx2LqSTlSA6UVhohBJRCJMLEdcn7Z2SNiRX4X0H8acLKFCq8U5uKl8eiFor2erpXeb+jJz/ZwcO7rdVW8b0amUqIeqsth0FemybXJAv/NWBhdJaD1ZXR32OK5IDm3A9vokFfyS4lGF66W6tPcg4+6wAQDI06yVS7ilD/TCqOU=
+	t=1781590471; cv=none; b=Tj6nTgOVYgtpnfU5Jvu6c8OU2692/Gjbk6xYEkLaZrYMiLb2bHlBqrAflL9CC8pekIcZESjwUgH6WyDmPaBvQXtvmKWjntqosVPDfObTGYCHl9E0XTiQPXXV+ZgaFo+IgnjdVcJmtt0v2wIzKpmykaShu/8OcGU6iXTq1kiJmJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781590471; c=relaxed/simple;
-	bh=r8/7Jna2CkA1CFTVW9MT/Ke3/lfBcUauN5+OOX36AO0=;
+	bh=kLGmkyB1pBsMp6ifHn+49KVvWcjvKZrFfv68kgIdZoI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rK40JVm0m/r7cAfJuKD7BmaUH9OrkftdQH0mYMiTSRumeA6kLDuvkoFwr7XQfAZKFzYpHG4UDHCnMD+dAFCKpL6PGvTdVzF/kWIwnNzSXH+ssOSmaosZB50LpJpYbG/GHWZYf2KWKDc8SuAqYDW+4VZtHF/8MK+qaLnZZ7qK5eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TrS7dYXO; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=fZE9dw3lsS7k98B6NPy3dQ7hDk/7nWDL6fZ6FoyjxL+z2ZJ3d+4tq0fwAA6scTDf6yA99mLxLt2u5NjzOOdTBiaAqK2MKirCFYGSrv33reYjZUKG6MI/TtYNu++Pf5aV5QD4kUSAjKGy5BiRLZkutTGCEOMtu4sQaJyf89+EdfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aqQXRE+1; arc=none smtp.client-ip=74.125.82.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TrS7dYXO"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-307fd7138b1so6290874eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 23:14:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aqQXRE+1"
+Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-3074d4102a9so11855188eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 23:14:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781590468; x=1782195268; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781590466; x=1782195266; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=X+MdisBjbmRL7+GBLJDrSQQ4Fm1FQx0WoUaZg0rN5WY=;
-        b=TrS7dYXOI6WZmUR3Mp1Pd/hZGfqtGCmMy9iCytjbzJjtGFE8ZdiJzypjl6VHTWOmC8
-         P+6eugo+Y0efm5IF0CHY3IZEp5R8jlXCsINKsirHTxF+WWe9zyo8Fd0KyB5ZkswnZ4if
-         8p7xnJTXvM1AZb1idkABuqAMQozVkHdR2/gCzjptn5WO1hSN2hT3hJYIzi/j4ImQEqPF
-         cEx7Qgz9DsFUzPSRe+SjuLfffgKMkxZKwxcLDto7GhKsiDzekcCbU3vIk3Z+EJFBtJci
-         64MNAGf2NXHCmUnaYxn4qDvlXAKUxvwdO4d0q138fPGYAzXDlss+Hp0OyUO14L4b3rlk
-         lVmA==
+        bh=uVI6jvfk6d9EL/ENbwXNBwXF++3mwFN65akUydTqkcI=;
+        b=aqQXRE+107FVpbPtQfD8Sae7gfF11koxOHCeDixCew+a1a4ple16U7znlYCMsgFbv8
+         a87sVJgAda2Ct2hPxdmFxqcFyb4jo5t25jwq3qISlmt7mhR2BiHd3qXf/Mjj7mA//Q3p
+         yZlhBOJdES5VeMSeYtlOtFJDW3BRb1duxo33mXvSzevbYR9+G7x+LRbLDy5v4BgF4DSk
+         Jh9qbfUZvtLM1snzpIk4OQVOWku+xALdYZJbMegpiKrwe82yEbe4AjdVYfWqnniCmec8
+         YHmVfOyYedmBpjmhphr/pERfVySqCR6BuvHuxiVKXa6chqDi6jo9SuARFvOojpQFvZhV
+         h4Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781590468; x=1782195268;
+        d=1e100.net; s=20251104; t=1781590466; x=1782195266;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X+MdisBjbmRL7+GBLJDrSQQ4Fm1FQx0WoUaZg0rN5WY=;
-        b=au6xqigd+VRBUfYSNso80LYG6LFdZMWsjf5iC6slYHYPDSzU28yy9lxp7+kLfOY0HZ
-         UFOiZTdZCyERIYDNVGjb8oFCAAqsPPNaVSQP2MIPekf9yTNmLqh7fUiyIXN7s9yWppdl
-         OMB6cmMbI8zgC6RBAUgrxv51VRPckQRqnrbCvvlHRjHdglXZt6kbZ65+uDbxSt0DrFXD
-         oW1nDe7h+avixrCGyOGbWN6bUALzvjQlkEGifTSMBQVCOG8MfGbksNUKH8urYI7UcxeG
-         gt7y854DY+50+GXtRrl5ce1JSGaKya25Uml9OnDIXo0A4E4O637QRd110MGm8bSM71ua
-         Op/w==
-X-Forwarded-Encrypted: i=1; AFNElJ9yT8CizavKAAzo5ONKsguuWxHXZ+UgqYjevAhPpK8sunyUQFgAA/oTU/cSP9luJd52zGTUp010+ViAuiiDV78V@vger.kernel.org
-X-Gm-Message-State: AOJu0YwA45wJf6Z4sloAFH9XI7YXOUfXpBz2YvwhEqkU80cyeL9/8X1e
-	LLzca1ioOG+u2BAm5KXZv9eLekPsxZXDy9Miv0Yky37boJWEDmEbXx88+AuTu/l403ggd+LnEx5
-	Q/p0qKHAbAw==
-X-Received: from dyaz5-n2.prod.google.com ([2002:a05:693c:6385:20b0:30b:9d0c:889f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:5707:b0:304:ab8:f87c
- with SMTP id 5a478bee46e88-30936956646mr8381296eec.12.1781590468046; Mon, 15
- Jun 2026 23:14:28 -0700 (PDT)
-Date: Mon, 15 Jun 2026 23:14:02 -0700
+        bh=uVI6jvfk6d9EL/ENbwXNBwXF++3mwFN65akUydTqkcI=;
+        b=F1sJRMITBEs6EIupBi5K4LtE3bvgiR22Sx1yfIixZF2Euq+fF+d4wYd6A+ce0s/Hf0
+         klK4tK4BGzoB35FotqRgBGJ6LrPCvooI3IN7PiVJ33upE7usx09aeOCzJs5rfB8H8rEJ
+         VQadnVtsSY5g3XJ449F857N55YehMy9g4JbFAb5vsWhpqqi2cOx9u+p+P8QQL7j90fgi
+         SSCxt0MCM+QSLWVBm7ws++bHP7RwtZ7BiDcJhuFJPPOEhoYOMORHMvZpgK2Qc3SN8nRX
+         AJZA4qZl0CoN2LfZAQgypK/x6zZgS+5JZPM84zNLrAfX57ew9ttuaHDThB+87MlLhZ0t
+         xBpA==
+X-Forwarded-Encrypted: i=1; AFNElJ8PGN8f7Uxfhlm0GzV7Iq+9a/GwHYEos33eCManHmS+Rzk9ppWtEMlzwm4oxNzJQ/tJwc3dX+vZpQDZK64tqvKg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm+W5L3DkMtZBiNzpRu3C1mz/y7DmovdLjpyeY5AUvjHUTUJ3S
+	TksTgQvt8McGYREljPy42Z3Jhs8+vphxOxyV0piFdyC4+nOagVOVNCWnmAVilnBT/MeiORaQ6u0
+	dHXwNeRclrw==
+X-Received: from dybmw17.prod.google.com ([2002:a05:7300:cd91:b0:30b:96b8:80b2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:e7a5:b0:2ef:8b91:212
+ with SMTP id 5a478bee46e88-3081ffb0498mr9929621eec.14.1781590466019; Mon, 15
+ Jun 2026 23:14:26 -0700 (PDT)
+Date: Mon, 15 Jun 2026 23:14:01 -0700
 In-Reply-To: <20260616061404.41929-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616012744.4049193-1-irogers@google.com> <20260616061404.41929-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616061404.41929-11-irogers@google.com>
-Subject: [PATCH v2 10/12] perf tests: Speed up off-cpu profiling tests
+Message-ID: <20260616061404.41929-10-irogers@google.com>
+Subject: [PATCH v2 09/12] perf tests: Fix flakiness in branch stack sampling tests
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -68,70 +68,61 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	thomas.falcon@intel.com, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-The off-cpu profiling test suite runs multiple recording commands with
-a default workload of `sleep 1` to test the off-cpu threshold configurations
-(specifically, above 999ms and below 1200ms). This adds a mandatory 3.0
-seconds of sleep overhead.
+The branch stack sampling test (test 130) runs short iteration-based
+workloads to verify syscall, kernel, and trap branch stack sampling.
+Specifically, `test_syscall()` and `test_kernel_branches()` run
+`perf bench syscall basic` with loop counts of 8000 and 1000, and
+`test_trap_eret_branches()` runs `traploop` with 1000 iterations.
 
-Optimize this by scaling down the thresholds and workload durations by a
-factor of 10:
-- Use `sleep 0.1` as the workload duration.
-- Change the above-threshold test to use `--off-cpu-thresh 99` and `sleep 0.1`.
-- Change the below-threshold test to use `--off-cpu-thresh 120` and `sleep 0.1`.
-- Update the awk period check in the above-threshold test to look for a period greater than 99,000,000 ns (99ms) instead of 999,000,000 ns (999ms).
+Because these loop limits are extremely small, the total benchmark runtimes
+last only a few milliseconds (or less). Under high load, virtualization,
+or coarse sampling conditions, PMU cycle sampling fails to capture enough
+samples inside the brief benchmark loops. This leads to false negatives
+where the script output lacks the expected syscall, kernel, or trap branch
+entries (e.g. "ERROR: Branches missing getppid[^ ]*/SYSCALL/").
 
-This reduces raw test sleep overhead from 3.0s down to 0.3s, yielding a
-~2.7 second speedup for this test.
+Fix this by increasing the workload loop counts to 100,000 across all
+three test sections. Running 100,000 loops still finishes virtually
+instantaneously (less than 0.1 seconds), but generates enough iterations
+to guarantee robust branch stack capture.
 
+Fixes: b55878c90ab9 ("perf test: Add test for branch stack sampling")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/record_offcpu.sh | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ tools/perf/tests/shell/test_brstack.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
-index 860a2d6f4b75..8ee2112b7778 100755
---- a/tools/perf/tests/shell/record_offcpu.sh
-+++ b/tools/perf/tests/shell/record_offcpu.sh
-@@ -45,7 +45,7 @@ test_offcpu_priv() {
- test_offcpu_basic() {
-   echo "Basic off-cpu test"
+diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+index eb5837f82e39..be46a68daf76 100755
+--- a/tools/perf/tests/shell/test_brstack.sh
++++ b/tools/perf/tests/shell/test_brstack.sh
+@@ -112,7 +112,7 @@ test_trap_eret_branches() {
+ 	start_err=$err
+ 	err=0
+ 	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
+-		perf test -w traploop 1000 > "$TMPDIR/record.txt" 2>&1
++		perf test -w traploop 100000 > "$TMPDIR/record.txt" 2>&1
+ 	perf script -i $TMPDIR/perf.data --fields brstacksym | \
+ 		tr ' ' '\n' > $TMPDIR/perf.script
  
--  if ! perf record --off-cpu -e dummy -o ${perfdata} sleep 1 2> /dev/null
-+  if ! perf record --off-cpu -e dummy -o ${perfdata} sleep 0.1 2> /dev/null
-   then
-     echo "Basic off-cpu test [Failed record]"
-     err=1
-@@ -98,8 +98,8 @@ test_offcpu_child() {
- test_offcpu_above_thresh() {
-   echo "${test_above_thresh}"
+@@ -137,7 +137,7 @@ test_kernel_branches() {
+ 	start_err=$err
+ 	err=0
+ 	perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
+-		perf bench syscall basic --loop 1000 > "$TMPDIR/record.txt" 2>&1
++		perf bench syscall basic --loop 100000 > "$TMPDIR/record.txt" 2>&1
+ 	perf script -i $TMPDIR/perf.data --fields brstack | \
+ 		tr ' ' '\n' > $TMPDIR/perf.script
  
--  # collect direct off-cpu samples for tasks blocked for more than 999ms
--  if ! perf record -e dummy --off-cpu --off-cpu-thresh 999 -o ${perfdata} -- sleep 1 2> /dev/null
-+  # collect direct off-cpu samples for tasks blocked for more than 50ms
-+  if ! perf record -e dummy --off-cpu --off-cpu-thresh 50 -o ${perfdata} -- sleep 0.1 2> /dev/null
-   then
-     echo "${test_above_thresh} [Failed record]"
-     err=1
-@@ -115,7 +115,7 @@ test_offcpu_above_thresh() {
-   fi
-   # there should only be one direct sample, and its period should be higher than off-cpu-thresh
-   if ! perf script --time "0, ${dummy_timestamp}" -i ${perfdata} -F period | \
--       awk '{ if (int($1) > 999000000) exit 0; else exit 1; }'
-+       awk '{ if (int($1) > 50000000) exit 0; else exit 1; }'
-   then
-     echo "${test_above_thresh} [Failed off-cpu time too short]"
-     err=1
-@@ -128,8 +128,8 @@ test_offcpu_above_thresh() {
- test_offcpu_below_thresh() {
-   echo "${test_below_thresh}"
+@@ -209,7 +209,7 @@ test_syscall() {
+ 	err=0
+ 	perf record -o $TMPDIR/perf.data --branch-filter \
+ 		any_call,save_type,u,k -c 10007 -- \
+-		perf bench syscall basic --loop 8000  > "$TMPDIR/record.txt" 2>&1
++		perf bench syscall basic --loop 100000  > "$TMPDIR/record.txt" 2>&1
+ 	perf script -i $TMPDIR/perf.data --fields brstacksym | \
+ 		tr ' ' '\n' > $TMPDIR/perf.script
  
--  # collect direct off-cpu samples for tasks blocked for more than 1.2s
--  if ! perf record -e dummy --off-cpu --off-cpu-thresh 1200 -o ${perfdata} -- sleep 1 2> /dev/null
-+  # collect direct off-cpu samples for tasks blocked for more than 500ms
-+  if ! perf record -e dummy --off-cpu --off-cpu-thresh 500 -o ${perfdata} -- sleep 0.1 2> /dev/null
-   then
-     echo "${test_below_thresh} [Failed record]"
-     err=1
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
