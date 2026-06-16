@@ -1,173 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAAD25A2B5
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 00:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06042EBBB9;
+	Tue, 16 Jun 2026 01:08:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781571264; cv=none; b=DC9pR5KkUby/g88zHlz92sg0OXpTmjW1bKUjZcFgXzi+4kPzddXKZyAu/dWFoLBWfXMtdS9xtYjqaHuzxqqa3JcnCPw2HSTKHqWRvRolIlWwfLzHnUtBSt0KZ8GUhhdW7MFaOV3rMMBVaeDxhOez8vn6B+8IdgQ6gUERfj9GLjQ=
+	t=1781572122; cv=none; b=GYAazoMrsts79jA8aSN6KWFd84gniu/DsQFl/MesSTjx72ln+Ma22YH4VRtxwwT0D/YadDB2auPLhy2VrTLKNuqKOA0Tiy2p4JdCiRyGJ3QzB8RbpWC4QsQoxj/IO5ht7/gT2K5SIWq49OlT9z+p5WC9MOB7Qk4xgNttYv5kDAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781571264; c=relaxed/simple;
-	bh=RST8ZvFpfjMifxj3Y4uUv83bHD1+q8Z2BwkWQK/aHnY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=O7qydAc0OV5bIps6YpCvSJgOoO4v/L8ABO6BEkvoHAybK9mRKuVS4EXg2LWQdmXsjYhjeqMy5Pk0DAfE4EFEJIT+AXYDJyJXRmnXWhv1UpjOSzAD/GO+TGJw1rNDz+672vj4Uhm21GqXuXpU9uStloU+JHb/dG192T6BLBPKp7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CD66HFLY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781572122; c=relaxed/simple;
+	bh=O6V8NWfhT2Wpfw8LeAmdFCSoOt2TFb/LJwhVMXLwy6M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R1XjjVk10VPJP0Xhjo3AjjxyYYOTghvGtL5i3iNp5zzWazMR3rmi972RefGXczm4cR5+ACQug4YlGOLTweRqHRNeI5Ce4CLA/TWeelFkfRLaIcQ0gFiHgoKHdlZJvNyv3d+rxVx22FrHXAF7ml122m77u8cKNmAy3hji23fGK20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nqfti+5z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CD66HFLY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74BC41F000E9;
-	Tue, 16 Jun 2026 00:54:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nqfti+5z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 947481F000E9;
+	Tue, 16 Jun 2026 01:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781571262;
-	bh=ZmU3SeNF0uDikA4nVb1xCdorEPUbTGdEXysOoWh/tq0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CD66HFLYkOzEt24TWfubi47BpQ9IDdtad4c4ZHLkcjq31VbdIWgDSwnFXx6kcUYrU
-	 SxmDBtOJZKmVyWmKwnp5Z+jFZ/nEEpTJlg9mY2ualSiPl/6MRYS+6K3TD4ZIwoaZKx
-	 +dQgs5BZgFcl8sgBGzaOJC8KSdTZeLvh20asfb8W3WXcwI3A5VUcw8A7vQs8Z3UoiB
-	 O9WswDft9qL4TGPdCTFAfk1S5x2j51MRTBb3lzhulRdDvl2OE0aM8G7zck9h5Op8V/
-	 Aop7/+diNoouey8cabz+G45Z2EhMvniOkJ9Ho2OovyuGaI/iehouFCNbH4yyCJHxc+
-	 LIbCDXe5Aiftg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v20 11/21] perf python: Refactor and add accessors to
- sample event
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615223011.3873955-12-irogers@google.com>
-References: <20260615223011.3873955-12-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 00:54:21 +0000
-Message-Id: <20260616005422.74BC41F000E9@smtp.kernel.org>
+	s=k20260515; t=1781572121;
+	bh=hbcBSl+GwcBpqLhH2SBaTwDyQXw1m2VZ2pP7jzBHGxw=;
+	h=From:To:Cc:Subject:Date;
+	b=Nqfti+5zQgf9TByMw/sGYt9IpwkAoXIuUgDA2II7wfBincJ7FR4CMDDtlTFB2uXWh
+	 NmQDjd2FGrPtA5NSJVtEVjDESCIN93vn0ZsFGsaRNkynUVFvK9cZaRMVs2/uKMYBG/
+	 XU7I7doNuGdn2FpEhdMaeM8IqB4e1fIhYG2E5f/WUjubMyA4YBbOExCZod3rE5+A2J
+	 qTY5i8Y+UR0jUGwNiZXe/bfD100eBQ5YWnDXRE+aOYtfOV2fXVwJBCyDP6edQH9m6+
+	 fHklj4mSLHY/q/c2df2rpb0OU5pJ+fe01++LJusfNYEXqyJZ0eYGa0g9Nib9JfaZmt
+	 K5pJ266r+CMWQ==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v3 0/9] perf tools: Fix pre-existing bugs in machine, cs-etm, c2c, bpf, and dso
+Date: Mon, 15 Jun 2026 22:08:25 -0300
+Message-ID: <20260616010834.37618-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] Accessor functions for `dso` blindly dereference the result of `ma=
-p__dso()` which can be NULL.
-- [Medium] 64-bit map start and end addresses are truncated to 32 bits when=
- `perf` is compiled on a 32-bit host.
---
+Hi,
 
-commit 18ea80c7f1771915bbf09a1482be621af384623d
-Author: Ian Rogers <irogers@google.com>
+Nine more pre-existing bugs found by sashiko-bot during AI-assisted
+code review.  All are independent of the perf-data-validation hardening
+series — they are latent bugs in surrounding code exposed during review.
 
-perf python: Refactor and add accessors to sample event
+The fixes are grouped by subsystem:
 
-Add common evsel field for events and move sample specific fields to
-only be present in sample events. Add accessors for sample
-events. Ensure offsets are within the bounds of the event. Allocate
-just enough memory for the copied event, don't make the maximum event
-size each time.
+machine__init() error propagation (patches 1-2):
+  machine__init() always returns 0 on allocation failure because the
+  error code is never propagated through the return statement.  Callers
+  (including machines__init() and __machine__new_host()) proceed with a
+  partially initialized machine struct.  The error cleanup also uses
+  zfree() on refcounted kmaps instead of maps__zput().  Additionally,
+  machines__findnew() and get_kernel_version() use sprintf() with
+  unsanitized guestmount paths that can overflow PATH_MAX stack buffers.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index dc71fe7e37877..72d297156ad05 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
+CoreSight ETM metadata validation (patches 3-5):
+  cs_etm__process_auxtrace_info_full() reads num_cpu from untrusted
+  perf.data and uses it directly in a multiplication that can overflow
+  to zero on 32-bit, producing a zero-sized allocation followed by OOB
+  writes.  The minimum size check in cs_etm__process_auxtrace_info()
+  doesn't cover the global header fields actually accessed.
+  cs_etm__get_queue() indexes queue_array[] without bounds checking
+  the CPU value from untrusted trace payload, and several queue
+  iteration loops dereference .priv without NULL checks after array
+  growth zero-initializes new entries.
 
-[ ... ]
+c2c hist entry leaks (patches 6-7):
+  When c2c_hists__init() fails, dynamically allocated format structures
+  are leaked because the error path frees the container without
+  unregistering them.  During resort merges, c2c_he_free() only walks
+  the output-sorted tree (empty before resort), leaking all inner
+  hist_entry objects from entries_in_array[] and entries_collapsed.
 
-> @@ -394,6 +451,199 @@ get_tracepoint_field(struct pyrf_event *pevent, PyO=
-bject *attr_name)
->  }
->  #endif /* HAVE_LIBTRACEEVENT */
-> =20
-> +static int pyrf_sample_event__resolve_al(struct pyrf_event *pevent)
-> +{
+BPF prog info pointer validation (patch 8):
+  Several functions cast bpf_prog_info u64 fields to pointers without
+  checking whether bpil_offs_to_addr() actually converted the file
+  offsets.  A crafted perf.data with PERF_BPIL_* bits unset but non-zero
+  counts causes raw file offsets to be dereferenced as pointers.
 
-[ ... ]
+DSO decompression errno (patch 9):
+  dso__get_filename() sets errno to a negative custom DSO_LOAD_ERRNO
+  value on decompression failure.  __open_dso() computes fd = -errno,
+  producing a large positive value that looks like a valid fd, causing
+  close_data_fd() to close an unrelated file descriptor.
 
-> +static PyObject *pyrf_sample_event__get_dso(struct pyrf_event *pevent,
-> +					    void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyUnicode_FromString(dso__name(map__dso(pevent->al.map)));
+Build-tested with gcc and clang.  Passes perf test on x86_64.
 
-[Severity: High]
-Does this code risk a NULL pointer dereference? map__dso() can return NULL =
-for
-certain mappings, and passing it unconditionally to dso__name() would crash
-the python process.
+Changes in v3 (patch 1 only):
+  - Move perf_env__init() before machines__init() in
+    __perf_session__new() so the goto out_delete error path doesn't
+    call perf_env__exit() on uninitialized mutexes/rwlocks
+    (sashiko-bot).
 
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_dso_long_name(struct pyrf_event =
-*pevent,
-> +						      void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyUnicode_FromString(dso__long_name(map__dso(pevent->al.map)));
+Changes in v2 (patch 1 only):
+  - Move dsos__init()/threads__init() before maps__new() so that
+    machine__exit() is safe to call when machine__init() fails at the
+    first allocation (sashiko-bot).
+  - Propagate machines__init() error in aslr_tool__init(), which was
+    added by the ASLR patches after v1 was written (sashiko-bot).
 
-[Severity: High]
-Can map__dso() return NULL here as well, leading to a NULL pointer derefere=
-nce
-in dso__long_name()?
+Arnaldo Carvalho de Melo (9):
+  perf machine: Propagate machine__init() error to callers
+  perf machine: Use snprintf() for guestmount path construction
+  perf cs-etm: Validate num_cpu before metadata allocation
+  perf cs-etm: Require full global header in auxtrace_info size check
+  perf cs-etm: Bounds-check CPU in cs_etm__get_queue()
+  perf c2c: Free format list entries when c2c_hists__init() fails
+  perf c2c: Fix hist entry and format list leaks in c2c_he_free()
+  perf bpf: Validate array presence before casting BPF prog info pointers
+  perf dso: Set standard errno on decompression failure
 
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_dso_bid(struct pyrf_event *peven=
-t,
-> +						void *closure __maybe_unused)
-> +{
-> +	char sbuild_id[SBUILD_ID_SIZE];
-> +
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	build_id__snprintf(dso__bid(map__dso(pevent->al.map)), sbuild_id, sizeo=
-f(sbuild_id));
+ tools/perf/builtin-c2c.c             |  3 ++-
+ tools/perf/tests/hists_cumulate.c    |  3 ++-
+ tools/perf/tests/hists_filter.c      |  3 ++-
+ tools/perf/tests/hists_link.c        |  3 ++-
+ tools/perf/tests/hists_output.c      |  3 ++-
+ tools/perf/tests/thread-maps-share.c |  2 +-
+ tools/perf/util/aslr.c               | 12 +++++++++---
+ tools/perf/util/bpf-event.c          | 20 ++++++++++++++++---
+ tools/perf/util/bpf-event.h          |  4 ++--
+ tools/perf/util/cs-etm-base.c        |  4 +++-
+ tools/perf/util/cs-etm.c             | 37 ++++++++++++++++++++++++++++++++++--
+ tools/perf/util/dso.c                | 18 +++++++++++++++++-
+ tools/perf/util/header.c             |  3 +--
+ tools/perf/util/hist.c               |  2 +-
+ tools/perf/util/hist.h               |  1 +
+ tools/perf/util/machine.c            | 32 +++++++++++++++++--------------
+ tools/perf/util/machine.h            |  2 +-
+ tools/perf/util/session.c            |  7 ++++---
+ 18 files changed, 120 insertions(+), 39 deletions(-)
 
-[Severity: High]
-Similarly, if map__dso() returns NULL, will this cause a crash when passed =
-to
-dso__bid()?
+Developed with AI assistance (Claude/sashiko), tagged in commits.
 
-> +	return PyUnicode_FromString(sbuild_id);
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_map_start(struct pyrf_event *pev=
-ent,
-> +						  void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyLong_FromUnsignedLong(map__start(pevent->al.map));
+Thanks,
 
-[Severity: Medium]
-Since map__start() returns a u64, will PyLong_FromUnsignedLong() truncate t=
-he
-upper 32 bits of the address on 32-bit hosts? This might break cross-platfo=
-rm
-analysis when analyzing 64-bit perf.data files. Should this use
-PyLong_FromUnsignedLongLong() instead?
-
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_map_end(struct pyrf_event *peven=
-t,
-> +						void *closure __maybe_unused)
-> +{
-> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
-> +		Py_RETURN_NONE;
-> +
-> +	return PyLong_FromUnsignedLong(map__end(pevent->al.map));
-
-[Severity: Medium]
-Will this also truncate the 64-bit end address on 32-bit hosts?
-
-> +}
-> +
-> +static PyObject *pyrf_sample_event__get_map_pgoff(struct pyrf_event *pev=
-ent,
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615223011.3873=
-955-1-irogers@google.com?part=3D11
+- Arnaldo
