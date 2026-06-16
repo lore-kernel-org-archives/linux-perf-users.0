@@ -1,154 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4833D890D
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 19:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAAE21D596
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 19:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781639058; cv=none; b=saWYSzsCkhj8zUu0OhQGhynqW4TIMoqeGcb2Qoa6i/9MyY3doip6ZSyDp6vbYqMiGD5ePDFo3rTlnWL7Bfmv1SwXY4mDpo76r50Exk39qv47ukL0djmhRjbU0xWNOGC0bJs9nnSnLOam4rFxvPRcX3VZ6Bbo+EFnxcCrzVJ5gfA=
+	t=1781639129; cv=none; b=VC0pOE8kIkagX/ZO64eUF7l09UXP8ZF8fYzilNZYMdZoP4RzzoOLngUZmKmTPRdmb9h0ku0CN/zCGEZbE9smIZ1SZs20kASObugzHQbffcpcui8PDw+8vRTdEa+Tkx4NF6eUSz/yODyig1zXqRRfUNkoCV3PRIslYHUeyD1EMQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781639058; c=relaxed/simple;
-	bh=3DOeI9iLn1F1eKULfdZp0GAFUnhrg4AQkaybLT/IqrM=;
+	s=arc-20240116; t=1781639129; c=relaxed/simple;
+	bh=mp/9FskplwArFt/PmwCwX9yGq8CHc7ABG3aQu20nxwY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=n7ck6czqiWi83KIGaHZVS73pqWomZqG2kfTG1jZOPGEj/0QG2Da5wwZfKEmeW8H4welnYu/OMMzJ1evCVL8kU+KssYRrQmF+4FVhEeXl6Lm8CK0ObtgzPlsFhAXq7RjMKd83EkU+5R2PBPfe39CwNjZVEFnN8MnHBHuSMFlmB94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhmIiXWk; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=fdRuCh67nShxxV17ludV+kZcMcRGjVPhNx+eXHXz18v4N2Q6NqGcPI35sW4Cw4XCFEB/uV2YfFhBvYt7ThLo62b25Ei7P/CDiqDjXABNarT6S1U7aiohEgbQAXk5cf4jGM8S4/WQRKK7gnFqo83rgFOAaVKuslB1+Ok4ArR8kJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C2vxHOJG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhmIiXWk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC6DA1F00A3A;
-	Tue, 16 Jun 2026 19:44:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C2vxHOJG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36C411F000E9;
+	Tue, 16 Jun 2026 19:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781639057;
-	bh=8QR2SdJ0UhCO2FCgqt36i7RYCzTd8wOFwPsJ1DAIfzg=;
+	s=k20260515; t=1781639128;
+	bh=e2KnuKODUwmI3wQ4tt9yrnN+qwPsGdLIhNSgWIFbLrI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nhmIiXWkng0+FosZBuamsw7oApRSPmwjAa9pf8cxyXkXEjQQaUNSOQCyahtEk52d/
-	 EVVuCaKUrVFgxHLYPbbr9b5s9R4QRFxFttaPimh3KsmmnrFrIt9/6qDzUpexCyFYnM
-	 WSovruZko3jQJqQ69tHib9nF20QlyH5qdzVKn1aCT/ftc1aL6shCSghOhD1NYCraU5
-	 KyQFAzLxtI61/d3nAZmIcXV2N1tSWiHQo9JpacUg5RGhi9RKLd3toiCqrHw1xwAPn5
-	 76ltHwOdWzM8PzEsyHFP+S55q6z8SmXyGeNtCtO+Eg99uLtg1tGoMkBIhD1C02I2Ku
-	 PlP3SWI6q+zvw==
+	b=C2vxHOJGTem8GhhA223GBkVW0Sz3u0LvGZVmn68zM2SezaGvOCEdPbNYXehdjQx7n
+	 E7i90sn7pRTN+3HQ4f5zSzcQP5VRHc2XT8ZOFUlwVhRWiLpDAa+W1cP/kqekStWwJC
+	 LgTsqhnMrLt6nklK4rXZIBBhTdy8oOwVVtA7SYs/FjjMuwZihjBfmyOmu3DZ3IqHk9
+	 PXC9wIdeqoAEA6rDlh+us/X/XMhbAckSA42ZMENJqxAW+fNl9eMw21RIGUs2f0hT/F
+	 k2egH8inT9hbx/0+0aLxG1pJfbtdRIamw5uOkOUjYxOTtfr+6D5PbStXMPNsYJ46Yv
+	 GD4Aig85fLthQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 8/9] perf bpf: Validate array presence before casting
- BPF prog info pointers
+Subject: Re: [PATCH 4/9] perf cs-etm: Require full global header in
+ auxtrace_info size check
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616193033.10035-9-acme@kernel.org>
-References: <20260616193033.10035-9-acme@kernel.org>
+In-Reply-To: <20260616193033.10035-5-acme@kernel.org>
+References: <20260616193033.10035-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 19:44:16 +0000
-Message-Id: <20260616194416.EC6DA1F00A3A@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 19:45:27 +0000
+Message-Id: <20260616194528.36C411F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Incomplete array validation in __bpf_event__print_bpf_prog_info() =
-leaves prog_tags and func_info vulnerable to raw offset dereferences.
-- [High] symbol__disassemble_bpf_libbfd() completely lacks array validation=
-, leading to raw offset dereferences.
+- [High] The commit fixes an out-of-bounds read for the global header but l=
+eaves identical vulnerabilities in the per-CPU metadata printing and parsin=
+g paths. A crafted event with an untrusted `num_cpu` or dynamically read pa=
+rameter offsets can trigger out-of-bounds memory reads and information leak=
+s.
 --
 
-commit 3d136fa4b35cc5388e537f4cdae3d81c00325ba1
+commit d5e67aa605749da8c7ff5a7e9079bf76e63f88c7
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf bpf: Validate array presence before casting BPF prog info pointers
+perf cs-etm: Require full global header in auxtrace_info size check
 
-Several functions cast bpf_prog_info fields (jited_ksyms,
-jited_func_lens, jited_prog_insns) from u64 to pointers and
-dereference them.  These fields are only valid pointers if
-bpil_offs_to_addr() converted their file offsets to addresses, which
-only happens when the corresponding PERF_BPIL_* bits are set in
-info_linear->arrays.
+This commit includes CS_ETM_HEADER_SIZE in the minimum size check for
+auxtrace_info events. This ensures that the global header entries fit within
+the event, fixing an out-of-bounds read.
 
-A crafted perf.data can leave these bits unset while setting non-zero
-counts and offset values, causing the functions to dereference raw file
-offsets as pointers.
-
-> Add array bitmask validation to all perf.data processing paths:
->=20
->   - __bpf_event__print_bpf_prog_info(): check JITED_KSYMS and
->     JITED_FUNC_LENS (changed to take struct perf_bpil *)
->   - machine__process_bpf_event_load(): check JITED_KSYMS
->   - bpf_read(): check JITED_INSNS before memcpy from jited_prog_insns
->   - dso__disassemble_filename(): check JITED_INSNS before returning
->     jited_prog_insns pointer
-
-[Severity: High]
-This isn't a bug introduced by this patch, but since the commit message
-mentions adding validation to all perf.data processing paths, are we missing
-the validation in symbol__disassemble_bpf_libbfd() located in
-tools/perf/util/libbfd.c?
-
-The function symbol__disassemble_bpf_libbfd() directly casts
-jited_prog_insns and jited_ksyms to pointers, and also passes info to
-bpf_prog_linfo__new() which accesses line_info. Because it never checks
-info_linear->arrays for the presence of PERF_BPIL_JITED_INSNS,
-PERF_BPIL_JITED_KSYMS, etc., a crafted perf.data file with missing array
-bits could cause the function to pass raw file offsets to the disassembler,
-resulting in arbitrary memory reads and crashes when running perf annotate.
-
-> diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-> index 57d53ba848359..fa3ebc8ea7f09 100644
-> --- a/tools/perf/util/bpf-event.c
-> +++ b/tools/perf/util/bpf-event.c
-
-[ ... ]
-
-> @@ -959,12 +963,15 @@ int evlist__add_bpf_sb_event(struct evlist *evlist,=
- struct perf_env *env)
->  	return evlist__add_sb_event(evlist, &attr, bpf_event__sb_cb, env);
->  }
+> diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
+> index 4abe416e3febd..aebef71d3a0a1 100644
+> --- a/tools/perf/util/cs-etm-base.c
+> +++ b/tools/perf/util/cs-etm-base.c
+> @@ -170,7 +170,9 @@ int cs_etm__process_auxtrace_info(union perf_event *e=
+vent,
+>  	u64 *ptr =3D NULL;
+>  	u64 hdr_version;
 > =20
-> -void __bpf_event__print_bpf_prog_info(struct bpf_prog_info *info,
-> +void __bpf_event__print_bpf_prog_info(struct perf_bpil *info_linear,
->  				      struct perf_env *env,
->  				      FILE *fp)
->  {
-> -	__u32 *prog_lens =3D (__u32 *)(uintptr_t)(info->jited_func_lens);
-> -	__u64 *prog_addrs =3D (__u64 *)(uintptr_t)(info->jited_ksyms);
-> +	struct bpf_prog_info *info =3D &info_linear->info;
-> +	__u64 required_arrays =3D (1UL << PERF_BPIL_JITED_KSYMS) |
-> +				(1UL << PERF_BPIL_JITED_FUNC_LENS);
+> -	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE))
+> +	/* Ensure priv[] is large enough for the global header entries */
+> +	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE +
+> +					  CS_ETM_HEADER_SIZE))
+>  		return -EINVAL;
+> =20
+>  	/* First the global part */
 
 [Severity: High]
-This isn't a bug introduced by this patch, but should this required_arrays
-bitmask also include PERF_BPIL_PROG_TAGS and PERF_BPIL_FUNC_INFO?
+This isn't a bug introduced by this patch, but while this size check fixes
+the out-of-bounds read for the global header, does this code leave similar
+out-of-bounds reads unaddressed in the per-CPU metadata processing?
 
-The current bitmask omits these arrays, meaning if a crafted perf.data file
-sets offsets for these fields but leaves their bits unset in the arrays
-bitmask, bpil_offs_to_addr() will not convert the raw file offsets into safe
-pointers.
+When dump_trace is true, cs_etm__process_auxtrace_info() extracts num_cpu=20
+and passes it to cs_etm__print_auxtrace_info():
 
-These unvalidated offsets are then passed to synthesize_bpf_prog_name() whi=
-ch
-is called below:
+    if (dump_trace) {
+        num_cpu =3D ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
+        cs_etm__print_auxtrace_info(ptr, num_cpu);
+    }
 
-tools/perf/util/bpf-event.c:synthesize_bpf_prog_name() {
+Can a crafted perf.data file provide an untrusted num_cpu without it being
+bounded against the remaining event size?
+
+In cs_etm__print_auxtrace_info(), this loops num_cpu times and iteratively
+calls metadata printing functions:
+
+tools/perf/util/cs-etm-base.c:cs_etm__print_auxtrace_info() {
     ...
-    u8 (*prog_tags)[BPF_TAG_SIZE] =3D (void *)(uintptr_t)(info->prog_tags);
-    ...
-    name_len +=3D snprintf_hex(buf + name_len, size - name_len,
-                             prog_tags[sub_id], BPF_TAG_SIZE);
+    for (i =3D CS_HEADER_VERSION_MAX; cpu < num; cpu++) {
+        if (version =3D=3D 0)
+            err =3D cs_etm__print_cpu_metadata_v0(val, &i);
     ...
 }
 
-Processing an untrusted perf.data file could trigger arbitrary memory reads=
- or
-segmentation faults when the raw offset is treated as a pointer and
-dereferenced.
+Could this read unbounded parameters and potentially leak heap memory to
+stdout?
 
-> +	__u32 *prog_lens;
-> +	__u64 *prog_addrs;
->  	char name[KSYM_NAME_LEN];
->  	struct btf *btf =3D NULL;
->  	u32 sub_prog_cnt, i;
+Additionally, in the parsing loop, cs_etm__process_auxtrace_info_full()=20
+calls cs_etm__create_meta_blk():
+
+tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_info_full() {
+    ...
+    for (int j =3D 0; j < num_cpu; j++) {
+        if (ptr[i] =3D=3D __perf_cs_etmv3_magic) {
+            metadata[j] =3D cs_etm__create_meta_blk(...);
+    ...
+}
+
+Inside cs_etm__create_meta_blk(), parameter counts are read to advance the
+parsing offset:
+
+    nr_in_params =3D buff_in[i + CS_ETM_NR_TRC_PARAMS];
+    ...
+    i +=3D nr_in_params + nr_cmn_params;
+    *buff_in_offset =3D i;
+
+Since the offset i is advanced dynamically without validating against the
+remaining event capacity, could the next iteration of the loop in
+cs_etm__process_auxtrace_info_full() read ptr[i] out-of-bounds before the
+post-loop size validation is reached?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616193033.1003=
-5-1-acme@kernel.org?part=3D8
+5-1-acme@kernel.org?part=3D4
