@@ -1,156 +1,101 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B53344025;
-	Tue, 16 Jun 2026 07:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20F1372EDD;
+	Tue, 16 Jun 2026 07:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781593953; cv=none; b=BLLnntvqPqThY8KYQp9Al6gkIN0TxrMuMCHyFc1rkmxL3fnrCtr+Ez1ZrOyVYZZ/qnwTHB3pq06ev7iMssAupCetb9A77EsZ+BbPWIxZJ5ZruRNl4c+J/OGfoS4C355kXWRGyBGRjVEgc5Ze7Y55dyeouKUuhmvAhxmYF2L19TQ=
+	t=1781594581; cv=none; b=cbtp6JdkGOHyYaY1WMfLg7qXa1qchZRC5o9Aw1KNM34oEsh6tbp7pGF0qcYyqqfggu6zGFOhvSSKi36mvku0sA+fjdUeIvIGlNqn1VscMVNFSm1GlkJN+KASebxGfyShPsi+se3tdbKGgs3X4andM6OKqMj9q2FSEr/GRa3RpVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781593953; c=relaxed/simple;
-	bh=ghU7yvd24u+YVNGOyu9D6o/OxWmliqt4vz5b+Z3yIzo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s2f8x1qYBVHGGOLPTK7gTH2YPgRyu/DGyZK9ozK+MwHrbE0LFqamPKNiWVWBDrwkicom+OfoZ3YwDJ30Q5lgklgLlbpuQ+M61JCNc8JbG5fFbW2S+yc29ifhM7MOlRfsXpkyCXY6OoXLcOgMufkW0E88fj19E0Frquj+49ENMME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=KtE7azVY; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1781594581; c=relaxed/simple;
+	bh=9eVdqzc0z7mxiveO9nqoavn+r3UtbNVEDgMxAX0/3qY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=UiSeirwmQXo1UYIZCV2v1pnBHwg4sqyePBBtbzyq5a4MHt4jV4MMmJr0AT4o7qcMsXg55UEfQXbIjbkxBtWMbOKnlEUH05ho05KHAVzsFknH+PeNnt1mqA78+MT43825f0tEZavBoBuhoeNfZvYGKkGCyMAqEN7PgaCqlrBzhh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPFVpbpF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="KtE7azVY"
-Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65G65xNP1992650;
-	Tue, 16 Jun 2026 00:12:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=bOaklr0Z8A7gtp1ktpsq7SgsT
-	np+Akvr7bZ3S4KWi2o=; b=KtE7azVYOALGjMKQrS6kr7xTZNOusvzTJyVsn3G6k
-	ZMEoXJELQZG/l7xkITI/LdMS7+uOR52Art9sxSyCzOLS9gCDdzKrDs8aEjYxrqQZ
-	3Q433G3kmmA5kT3uyJ4EG/TF4+i5XngWCAfi8yUOFP+lpGiZr9v3yqYxtzzYLUGn
-	Mh7aMgqUGWV4NtZQyT6IgsViBV4sUBX9xLef8kxIr9Oq1Diozg9Q0DpJV94X9Udl
-	vHuWHhwNRsjN3r6/XXJekQ4QG8mG4BELpCIGZo0ASsxayK982lugeINxYq2+OqFi
-	kq7KymX2LwaMu/rZGQ7iFfKWH7slw6hr8DUrdk8ErcFEg==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 4etu38hk04-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Jun 2026 00:12:04 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 16 Jun 2026 00:12:03 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.25 via Frontend
- Transport; Tue, 16 Jun 2026 00:12:03 -0700
-Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id 9F3043F7043;
-	Tue, 16 Jun 2026 00:12:00 -0700 (PDT)
-From: Geetha sowjanya <gakula@marvell.com>
-To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
-CC: <mark.rutland@arm.com>, <will@kernel.org>, <krzk+dt@kernel.org>,
-        <gakula@marvell.com>
-Subject: [PATCH v3 3/3] dt-bindings: perf: marvell: add CN20K TAD PMU support
-Date: Tue, 16 Jun 2026 12:41:49 +0530
-Message-ID: <20260616071149.12523-4-gakula@marvell.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20260616071149.12523-1-gakula@marvell.com>
-References: <20260616071149.12523-1-gakula@marvell.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPFVpbpF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2381F000E9;
+	Tue, 16 Jun 2026 07:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781594580;
+	bh=re16amGrlda+ctS1l2OJOpLcDPtBWFSeOgyAmqmuq2M=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EPFVpbpFpCt0sTUsg+VXHMbiv1CoC/yaQ6URxUE+Lx35AV4vEkrXEWJ6636c6gsLr
+	 dFd75vI7bCF8nvoKwXpa1HyBu/GvTNJoPJMRhGqlyXToA1iV9pleXHPl1DPlGZan3U
+	 1+43u2a1TIqRh47Bk85BeDqsnb2kwaypELHIOl3iBW2VmgmoqnVgF6Us83xBQrTAqs
+	 t1Ayj0RhlmLfHzlbha0CXnIC3Ac6xskQKD7CAPKC1T6lqJdGEl4l4o1iKJ8TvVUXFz
+	 SbnUvvbJj0mpmA/tIqUjKZstxV//SyOg76VQDzF6njM3RGrvsxt+Kp//qQ6225a4yU
+	 JTuLrU0qC0n6g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 2/3] perf: marvell: Add CN20K LLC-TAD PMU support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Geetha sowjanya" <gakula@marvell.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org
+In-Reply-To: <20260616071149.12523-3-gakula@marvell.com>
+References: <20260616071149.12523-3-gakula@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 16 Jun 2026 07:22:59 +0000
+Message-Id: <20260616072300.0D2381F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-GUID: J-001GTt2QhuW3hjQn_6GIYHdK4EJTCW
-X-Proofpoint-ORIG-GUID: J-001GTt2QhuW3hjQn_6GIYHdK4EJTCW
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE2MDA3MCBTYWx0ZWRfX46XvziRoK90Z
- QdpURor9aX4QYA4f8ASoHkvIB4I/nOqUCiuu0AtY2J0atdbghg3/2FbETPpgfXw88a827HOEfIW
- RyRx7pGXtwGMWulBDeXFo2Ew33P1juA=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE2MDA3MCBTYWx0ZWRfX0pMvjy00X74u
- Ci+O5y/f8DKE28Rpz6p1pf8iHJlE2VGuoGgfCspFioe9vYs05OLfSM3JbY8665/SIJ8QAGB1tj4
- EQenEujtC9YzxKbCeRU8kXheuz7vbPAB3qfFNC53eqN66ESPZ+Fhi+1d7U5mV7Ck0Hujc0vQF4E
- 3jD2uqhgIVf2zTYOpIJK3FA9fmvO6XVsbrR+kRwg+V3/qjQ7VmClS83EXOUvM1Dwv6WfDmjdzp3
- nd2KUfNclYDyFbUCOWrgO/UXKL2xkEca8o+VpyyD/WHDJIo4NIBaU7QoMZwRFqnMXh8MvFNLWt+
- hHMMiLJYN8tgQrRBE42OmeNL3f+8/om1ncb4APql5s3EWFsH2FHvoFKzO/9EIZUd1VXvRgy2dtI
- ZE0iibj79DTIwoEAEGMqLJB/tCX3jOBcVMK9k8rXAvq8vVN0JBEfkSMePAWacfEMQPSbu4XbGqb
- QUqUW6SwC1ZwtgraMEQ==
-X-Authority-Analysis: v=2.4 cv=SeXHsPRu c=1 sm=1 tr=0 ts=6a30f744 cx=c_pps
- a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=l0iWHRpgs5sLHlkKQ1IR:22
- a=qit2iCtTFQkLgVSMPQTB:22 a=gEfo2CItAAAA:8 a=M5GUcnROAAAA:8 a=EUspDBNiAAAA:8
- a=AeVSjtvhjGoncaazplIA:9 a=sptkURWiP4Gy88Gu7hUp:22 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-16_02,2026-06-15_04,2025-10-01_01
 
-Marvell CN20K SoCs integrate a Performance Monitoring Unit (PMU)
-associated with the LLC Tag-and-Data (TAD) blocks. The PMU provides
-hardware counters to monitor cache traffic and performance events
-via a dedicated MMIO region.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The patch series reverses the registration order of the PMU and =
+CPU hotplug, creating a race window where the PMU is exposed to userspace b=
+efore hotplug migration is wired up.
+--
 
-The CN20K LLC-TAD PMU is largely similar to CN10K, but differs in the
-layout of PFC/PRF register offsets relative to each TAD base. These
-offsets are derived from the compatible string in the driver and are
-not described through Devicetree properties.
+commit 71b7ba2b271b1080739c44e37ec7465ecb45ee0e
+Author: Geetha sowjanya <gakula@marvell.com>
 
-Because of this, using "marvell,cn10k-tad-pmu" as a fallback for CN20K
-would result in incorrect register programming. Therefore, add a
-separate compatible string:
+perf: marvell: Add CN20K LLC-TAD PMU support
 
-  "marvell,cn20k-tad-pmu"
+Add support for the LLC Tag-and-Data (TAD) PMU present in
+Marvell CN20K SoCs.
 
-Update the binding to document CN20K alongside CN10K.
+> diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_=
+cn10k_tad_pmu.c
+> index 69a6648fa6648..cd81bf8ff5690 100644
+> --- a/drivers/perf/marvell_cn10k_tad_pmu.c
+> +++ b/drivers/perf/marvell_cn10k_tad_pmu.c
 
-Signed-off-by: Geetha sowjanya <gakula@marvell.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
----
- .../bindings/perf/marvell-cn10k-tad.yaml      | 25 +++++++++++++------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+[ ... ]
 
-diff --git a/Documentation/devicetree/bindings/perf/marvell-cn10k-tad.yaml b/Documentation/devicetree/bindings/perf/marvell-cn10k-tad.yaml
-index 362142252667..d11121a1e2c9 100644
---- a/Documentation/devicetree/bindings/perf/marvell-cn10k-tad.yaml
-+++ b/Documentation/devicetree/bindings/perf/marvell-cn10k-tad.yaml
-@@ -4,23 +4,32 @@
- $id: http://devicetree.org/schemas/perf/marvell-cn10k-tad.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Marvell CN10K LLC-TAD performance monitor
-+title: Marvell CN10K / CN20K LLC-TAD performance monitor
- 
- maintainers:
-   - Bhaskara Budiredla <bbudiredla@marvell.com>
-+  - Geetha sowjanya <gakula@marvell.com>
- 
- description: |
--  The Tag-and-Data units (TADs) maintain coherence and contain CN10K
--  shared on-chip last level cache (LLC). The tad pmu measures the
--  performance of last-level cache. Each tad pmu supports up to eight
--  counters.
-+  The Tag-and-Data units (TADs) maintain coherence and contain the
-+  shared on-chip last level cache (LLC) on Marvell CN10K and CN20K SoCs.
-+  The TAD PMU measures last-level cache performance. Each TAD PMU
-+  supports up to eight counters.
- 
--  The DT setup comprises of number of tad blocks, the sizes of pmu
--  regions, tad blocks and overall base address of the HW.
-+  The DT setup describes the number of TAD blocks, the sizes of PMU
-+  regions and TAD pages, and the overall MMIO base of the hardware.
-+
-+  marvell,cn20k-tad-pmu is not a compatible fallback for
-+  marvell,cn10k-tad-pmu (and vice versa): the driver selects different
-+  PFC/PRF MMIO offsets from the compatible string, and those offsets are
-+  not described by separate DT properties today.
- 
- properties:
-   compatible:
--    const: marvell,cn10k-tad-pmu
-+    items:
-+      - enum:
-+          - marvell,cn10k-tad-pmu
-+          - marvell,cn20k-tad-pmu
- 
-   reg:
-     maxItems: 1
--- 
-2.25.1
+> @@ -478,7 +521,7 @@ static int tad_pmu_probe(struct platform_device *pdev)
+>  		.read		=3D tad_pmu_event_counter_read,
+>  	};
+> =20
+> -	if (version =3D=3D TAD_PMU_V1) {
+> +	if (version =3D=3D TAD_PMU_V1 || version =3D=3D TAD_PMU_V3) {
+>  		tad_pmu->pmu.attr_groups =3D tad_pmu_attr_groups;
+>  		tad_pmu->ops		 =3D &tad_pmu_ops;
+>  	} else {
 
+[Severity: Medium]
+Looking at the remainder of tad_pmu_probe(), the registration order is:
+
+	ret =3D perf_pmu_register(&tad_pmu->pmu, "tad", -1);
+	if (ret) {
+		dev_err(&pdev->dev, "Error %d registering perf PMU\n", ret);
+		return ret;
+	}
+
+	ret =3D cpuhp_state_add_instance_nocalls(tad_pmu_cpuhp_state,
+					       &tad_pmu->node);
+
+Does this sequence create a race window where the PMU is exposed to
+userspace before hotplug migration is wired up?
+
+If userspace immediately creates events assigned to tad_pmu->cpu, and that
+CPU goes offline before the hotplug state instance is added, the hotplug
+callback wouldn't be invoked to migrate the context. This could leave the
+PMU tied to an offline CPU, preventing its events from being scheduled.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616071149.1252=
+3-1-gakula@marvell.com?part=3D2
