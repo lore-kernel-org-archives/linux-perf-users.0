@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6738E37C0FC
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9648F388390
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781573289; cv=none; b=rc/tgeHrZCCIqV3pMUzJy255g4UoRzkdAHLaCbKK0kDVEv964rS6kvSTn2b9b2+RvlazWwbd1lzgWrq+Wr3n76xK0ivLtXcedDjXo1lNpSWlEimsBzpOri2R26TNXEY9K+TWkyNbied7A1TFCWMIPGWgfZjOa6oq44qKZXg9jP8=
+	t=1781573289; cv=none; b=U6dOzC+dcBbfH1ygkjvjPHmlE462Kr3MRP8PtJwR4K3+yhA7ShTv/wRGFAANIbDmqXUpCUrSpVBAoUCs14gXjF2noFeuVfxZ0yPsqUy321L+C5DcrfNyy4ljSp0IymbR7Mwc2Xi7BTAIWN5Oil3+tdFzEEDOEtmHtMnmZVy+S6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781573289; c=relaxed/simple;
-	bh=d1l9O0Ursk9irEjdNKSCcOl8mlqjfaRX/z6ly5Y6G2k=;
+	bh=kLGmkyB1pBsMp6ifHn+49KVvWcjvKZrFfv68kgIdZoI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=VJpMf3/elF49NLwuuIw6F5cnKL5adG4CgkA33hVWVI4VLs97t4DIRjZqa8kD8bZ3zMHgfPH4qZ5GMRyttPd8Z+nvfHj70nAqwgGprBvnCwbtX7UrAea4ynIH/rZyoB5uiqm96rN92SgVnit74LDYSSD/C1HfEEVeEymFQIh17vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mzgOc0yC; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=Xau5H/rnNiRKktjMNDr1yNvESnqOY9j3NAJBg5Igl1wBtLEXi64oY38b+XVa42xE6MwXVbdGTG126hDbmj1ENtIKwQyUm9Tsmxkk79HHAGu+V5Kk4ULrZ/URfAw42RsX4DQnFiG5sjhlilFtaaxD7dUIsbDHqx3Ak4qXVfs6+FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TaI8VxdP; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mzgOc0yC"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-307625ee07fso13987864eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:28:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TaI8VxdP"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1370417c0bfso2755051c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:28:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781573286; x=1782178086; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781573288; x=1782178088; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=wlWTMBTGUUs0KMAWTHlPpE8gLWyfQrfVnfm0X/gpu54=;
-        b=mzgOc0yCP2mqo8cU+mPNCvAXrZ4B1bQ8Dccsx0KiNFRtMXQiFtHhPiD1tSVJdRNSOH
-         sBnIpEysxI2HGk8Li4l80+9dXkMRUAK967tN/Oq4C6PxtzPl9HqbgKWSpO71i1Onjnsl
-         oglGCJ2ttuuCsoz3uHgFiMfOJBfmOxa2CnXM7YrYo+E+n1BaszlpyyOZZ3+GU4c97qW3
-         +hjxRz+b/7iiMSYks0vX9vqETCcgxNNf1yTvQwXmIwlfqWBWqp7FHbplmTV3ZS9sXWSD
-         U7ijl2dGvo90iVvJYoRRqGMm6Qx5aeMJ90NNrhozrJX7ayOOq+ly6lfTQosgcudNoAVN
-         oe5A==
+        bh=uVI6jvfk6d9EL/ENbwXNBwXF++3mwFN65akUydTqkcI=;
+        b=TaI8VxdPe9e9131F9/E2Liv8jJYhNBrf0VBvsQ4jnvsx+L/BQqVbWScGoFzqyqYj+T
+         MSL99RCkIHjprG0/QzM7aRMLJsXy/tUQl48KY+wytfC+7sfnM8rubOavDa1bwWzrFFHH
+         qjS60ifai4XJTxuneiSCJPw5lWKkgbiEMtpvBmK0ZoYRmRXw2RMoMaQAZMLw0ZdgzSqO
+         Odu8No/9H/TMSGY3GEw+VJsSytbauukaZ17SXQHKXfh+uOu5IN2bHjYJDR9OCq2LAJL6
+         yWafA9H7Is0AKEKSkr/TptuLErNHymo4AUFFKg24zkMYY6sz2IC7rujKXwHpacwgOrcJ
+         Y6Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781573286; x=1782178086;
+        d=1e100.net; s=20251104; t=1781573288; x=1782178088;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlWTMBTGUUs0KMAWTHlPpE8gLWyfQrfVnfm0X/gpu54=;
-        b=pKljgM0gnIJY41+AE0a5zHli5yJf8AY7b/SNCantDRkjQwy0Iudl0MQ7BQqrqSbLpv
-         ewDi/pKXgvpvYjAIvUvvSq23uui5cnx9pLK/IXx+mIqnZDOSh05FOOsYQWqj6IqoM3LU
-         3ZlQrVlLAiGYXY7dNVk5AFMZ1ljf1JdLwbX7jfJmM8lqXliDJD3fZM0WK2u5x4+PU4sQ
-         Fd9MmB/qMpOUyqwJ72TGVPwdkKImj5Qz1KUIqIpvX2cP3sjYjmGk4tCujakvKtNaD/jS
-         iRUX2C4rFl5ofuTyapai/i1nTTLLN0b+ZeRAIGKuHwmfo2r9orE3HBWzyfNZ6JemmncO
-         QSrw==
-X-Forwarded-Encrypted: i=1; AFNElJ9On2iqtagbzzJQuul69tky2AQ643XmtIMvittLCdquhCVON6uLhHyp5vzvSNqBkImwbTGXiL13B1do8Bvo1Zsj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOrhlbH717JBVzaYwD/HCKbO23vxn4LEejT5u3PsTqdx0zapcG
-	IPaWXbLNDcXfrI/EooyManJ8yTXlsak4tgdUZgAk9DKtUGDBDffdSl84zxN/CcpxHp486xSBR+p
-	Lkv9XcpSe+g==
-X-Received: from dyjt21.prod.google.com ([2002:a05:7300:7b15:b0:304:ee5b:e1a5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:6ca5:b0:304:cefc:5fde
- with SMTP id 5a478bee46e88-308202087c5mr8867844eec.26.1781573285195; Mon, 15
- Jun 2026 18:28:05 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:27:40 -0700
+        bh=uVI6jvfk6d9EL/ENbwXNBwXF++3mwFN65akUydTqkcI=;
+        b=fU/IbBIP9fkOkckrFBZVMXvxZeJdhXsVXS02cAJjOf/uV4p8JgU/q8fuoqUWFqoqmO
+         +BMbUHB1dLS48QH/sirLDC8FRYyuX6uvkjhGXF2IQMG2o4SnIMQ4Xf9KQFUlf9fzVIab
+         jOnh1tPqtqm93l+Lms5GhBEkoFh+5U5m6/KSe0xwNNNzVCGDqBYUzbZgiorPiT4dQM7+
+         7fZP33myOqPDiymgkEhDbRfZk27Zlhkb8WaXd/h8Zwhw/bCMxXp1n0R3Lros1b6Crltc
+         7faMwmhsig2fx73lZJIldqvHHrxBnWAf0Yt3kMmdrU3EU7NBEppUmIo6eDtIdW7pCINV
+         /5gg==
+X-Forwarded-Encrypted: i=1; AFNElJ/PEPzGQ73f0UJYlz1HD/6Hn+EJfPgsO7rSn+WbxHcCTHv7fxm6tplQi4KDepi0tmkPZqXx5TllsZpn6lyQjuEy@vger.kernel.org
+X-Gm-Message-State: AOJu0YznXq2PY718QzY0Jf+v5eExgruI674OB1J4jlY5WXLJwC2HJBqo
+	h2q0Gzqg/7zoPTFIhGnbzme3nXosEsVomsl7CKUSOxKwAfX/FekWlTFlv1FypFLYcyNuwqeD+9w
+	4GVuWYS+aVA==
+X-Received: from dlec7-n1.prod.google.com ([2002:a05:701b:4287:10b0:138:15e3:14ab])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:78d:b0:12c:1288:ce63
+ with SMTP id a92af1059eb24-139858024bamr795662c88.13.1781573287459; Mon, 15
+ Jun 2026 18:28:07 -0700 (PDT)
+Date: Mon, 15 Jun 2026 18:27:41 -0700
 In-Reply-To: <20260616012744.4049193-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616012744.4049193-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616012744.4049193-9-irogers@google.com>
-Subject: [PATCH v1 08/12] perf tests: Fix flakiness in BPF counters test on
- hybrid systems
+Message-ID: <20260616012744.4049193-10-irogers@google.com>
+Subject: [PATCH v1 09/12] perf tests: Fix flakiness in branch stack sampling tests
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -70,101 +69,61 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The `perf stat --bpf-counters test` fails intermittently on hybrid
-architectures or systems with dynamic frequency scaling (DVFS). This happens
-because the test workload (`sqrtloop`) runs for a fixed 1-second duration, and
-the CPU frequency can scale dynamically between idle and maximum frequency.
-As the first run runs on a cold CPU and the second run runs on a warmed-up CPU
-(or vice versa), the number of instructions executed in 1 second differs by
-up to 2.2x, violating the comparison tolerance.
+The branch stack sampling test (test 130) runs short iteration-based
+workloads to verify syscall, kernel, and trap branch stack sampling.
+Specifically, `test_syscall()` and `test_kernel_branches()` run
+`perf bench syscall basic` with loop counts of 8000 and 1000, and
+`test_trap_eret_branches()` runs `traploop` with 1000 iterations.
 
-Also, when running as root, BPF tracepoints and scheduling programs trigger
-frequently. Since standard `perf stat -e instructions` measures both user and
-kernel space instructions, it counts BPF helper and program execution overheads,
-whereas the BPF counters themselves do not self-measure. This introduces a large
-kernel-space instruction count discrepancy between standard and BPF counters.
+Because these loop limits are extremely small, the total benchmark runtimes
+last only a few milliseconds (or less). Under high load, virtualization,
+or coarse sampling conditions, PMU cycle sampling fails to capture enough
+samples inside the brief benchmark loops. This leads to false negatives
+where the script output lacks the expected syscall, kernel, or trap branch
+entries (e.g. "ERROR: Branches missing getppid[^ ]*/SYSCALL/").
 
-Fix these issues by:
-1. Switching the workload to a strictly deterministic, iteration-based
-   workload: `awk 'BEGIN { for (i=0; i<10000000; i++) sum+=i }'`. We pin the
-   workload to a single random allowed CPU using `taskset -c $CPU` via a bash array.
-2. Restricting the counted event to user-space only (`instructions:u` or `/u`).
-3. Tightening the comparison tolerance from 20% to 15%.
+Fix this by increasing the workload loop counts to 100,000 across all
+three test sections. Running 100,000 loops still finishes virtually
+instantaneously (less than 0.1 seconds), but generates enough iterations
+to guarantee robust branch stack capture.
 
-These modifications isolate the measurements to user-space instructions of the
-deterministic loop, which executes a virtually identical number of instructions
-on both runs (with less than 0.001% variation), eliminating Dynamic Frequency
-Scaling (DVFS), kernel scheduling noise, and BPF helper self-measurement overheads.
-
-Fixes: 2c0cb9f56020 ("perf test: Add a shell test for 'perf stat --bpf-counters' new option")
+Fixes: b55878c90ab9 ("perf test: Add test for branch stack sampling")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat_bpf_counters.sh | 27 +++++++++++++--------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ tools/perf/tests/shell/test_brstack.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index 35463358b273..2f01608c95e3 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -4,21 +4,25 @@
+diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+index eb5837f82e39..be46a68daf76 100755
+--- a/tools/perf/tests/shell/test_brstack.sh
++++ b/tools/perf/tests/shell/test_brstack.sh
+@@ -112,7 +112,7 @@ test_trap_eret_branches() {
+ 	start_err=$err
+ 	err=0
+ 	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
+-		perf test -w traploop 1000 > "$TMPDIR/record.txt" 2>&1
++		perf test -w traploop 100000 > "$TMPDIR/record.txt" 2>&1
+ 	perf script -i $TMPDIR/perf.data --fields brstacksym | \
+ 		tr ' ' '\n' > $TMPDIR/perf.script
  
- set -e
+@@ -137,7 +137,7 @@ test_kernel_branches() {
+ 	start_err=$err
+ 	err=0
+ 	perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
+-		perf bench syscall basic --loop 1000 > "$TMPDIR/record.txt" 2>&1
++		perf bench syscall basic --loop 100000 > "$TMPDIR/record.txt" 2>&1
+ 	perf script -i $TMPDIR/perf.data --fields brstack | \
+ 		tr ' ' '\n' > $TMPDIR/perf.script
  
--workload="perf test -w sqrtloop"
-+CPU=0
-+if command -v shuf >/dev/null 2>&1; then
-+	CPU=$(shuf -i 0-$(($(nproc) - 1)) -n 1 2>/dev/null || echo 0)
-+fi
-+workload=(taskset -c "$CPU" awk 'BEGIN { for (i=0; i<10000000; i++) sum+=i }')
+@@ -209,7 +209,7 @@ test_syscall() {
+ 	err=0
+ 	perf record -o $TMPDIR/perf.data --branch-filter \
+ 		any_call,save_type,u,k -c 10007 -- \
+-		perf bench syscall basic --loop 8000  > "$TMPDIR/record.txt" 2>&1
++		perf bench syscall basic --loop 100000  > "$TMPDIR/record.txt" 2>&1
+ 	perf script -i $TMPDIR/perf.data --fields brstacksym | \
+ 		tr ' ' '\n' > $TMPDIR/perf.script
  
--# check whether $2 is within +/- 20% of $1
-+# check whether $2 is within +/- 15% of $1
- compare_number()
- {
- 	first_num=$1
- 	second_num=$2
- 
--	# upper bound is first_num * 120%
--	upper=$(expr $first_num + $first_num / 5 )
--	# lower bound is first_num * 80%
--	lower=$(expr $first_num - $first_num / 5 )
-+	# upper bound is first_num * 115%
-+	upper=$(expr $first_num + $first_num \* 3 / 20 )
-+	# lower bound is first_num * 85%
-+	lower=$(expr $first_num - $first_num \* 3 / 20 )
- 
- 	if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
--		echo "The difference between $first_num and $second_num are greater than 20%."
-+		echo "The difference between $first_num and $second_num are greater than 15%."
- 		exit 1
- 	fi
- }
-@@ -41,11 +45,12 @@ check_counts()
- test_bpf_counters()
- {
- 	printf "Testing --bpf-counters "
--	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | \
-+	base_instructions=$(perf stat --no-big-num -e instructions:u -- "${workload[@]}" 2>&1 | \
- 				awk -v i=0 -v c=0 '/instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
- 				} END { if (i > 0) printf "%.0f", c; else print "<not" }')
--	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | \
-+	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions:u \
-+				-- "${workload[@]}"  2>&1 | \
- 				awk -v i=0 -v c=0 '/instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
- 				} END { if (i > 0) printf "%.0f", c; else print "<not" }')
-@@ -57,7 +62,9 @@ test_bpf_counters()
- test_bpf_modifier()
- {
- 	printf "Testing bpf event modifier "
--	stat_output=$(perf stat --no-big-num -e instructions/name=base_instructions/,instructions/name=bpf_instructions/b -- $workload 2>&1)
-+	stat_output=$(perf stat --no-big-num \
-+		-e instructions/name=base_instructions/u,instructions/name=bpf_instructions/bu \
-+		-- "${workload[@]}" 2>&1)
- 	base_instructions=$(echo "$stat_output"| \
- 				awk -v i=0 -v c=0 '/base_instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
