@@ -1,66 +1,62 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F043379EE7
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C673783C5
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781573163; cv=none; b=NOClUa4uQQQGAw7SVEbgVXmJJe8NDUss2TO2SK5aOwj7WzhTLIcIixixinjO/hpBJBHyom1vpJfNv1r7lfArK9qRTA5mcUf60L7zFIhKMv67mOZc3bb+PlNM9kU9YjduyucKh6V3QCmbmED2DsNrbMF3oxc587Cf6Mrah/B8gH4=
+	t=1781573271; cv=none; b=OR5XbFinG4S2CioLC5pPHWacdr3aHPjgPraKSIlPgm26TY8r35G7S+yh8CnpkTYEcnk/2Mnav0r3TxMqWiEA+BK63+kE7xAbIZKdUtmy3pOxpHoPVr/5FUKFvHkrV+fiSlSVOUd95926WihHMYSUXDXwd3T7PbHpULxOSaKG/4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781573163; c=relaxed/simple;
-	bh=jaGUZa+3n4Hj6kL4s4C5AhVaazro4xHt2cu4tVcyJyI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Eah33uiTeU1HwCXpxDjxwZKIdw03a0QqzTy1a/hN2EdDTvs6yNX37RdzQ+3QMKK/aV32gf/4ItRS/VTz52kNFc1wpXYT/eBXcMniAOwrDhczRohl3bWeYUdZFQy/0cub2uZsCjo9bl9F4XQ9r7HVVjzQr60r05lKhswoFOV6RCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IUW41RPa; arc=none smtp.client-ip=74.125.82.202
+	s=arc-20240116; t=1781573271; c=relaxed/simple;
+	bh=Tiqo9IaW/wwyI484NeDMg+gc4SLAznxpgxGxO/dP7XY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=GVsL9RRMeduefs2XPu9l112oRH4hEkA13GmEn4IZFTy/c6ibgB+tSgglNHKh8DlRoMAcMWAAH41kIDCozI8pbdPaq2xQuouoRjNPqSPP++y3RE/FyLHlGK6Abn710XcF7C35bIFiENN4qLtSnuGIqBeuYQ8szUYcV2Mu+e/yAUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VHaKJJGP; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IUW41RPa"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304ec73b015so1576240eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:25:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VHaKJJGP"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137e49e896aso3509719c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781573154; x=1782177954; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ey3859c+dCCZhIYYYmcqI0MV2QtbNDTAgy9JyyB/qJM=;
-        b=IUW41RPaLxz/sRyiaR90NbJGj1ltuj/ijTosKNrVIgpnwdSJMuca0NsZr6slaaPN/t
-         hxPgDood+bQDYWyD8dPVru0Zx7o/YJlhisX2RyMIUILx/CYoGGGfG+eMKpbG+LbFE+w8
-         Ke2Zxp23DrqBD93oGJn47jweYU/50c9bOAscWcxZoFj1hSNZBtZmx39dOUvNR5Y61hEr
-         v7eq/VzMEAsryBidk6v1FjICsh655RxGF1luK3U+Izi2mij+udxM9JsCDhzxliTRmNW2
-         kMv5St7ozTpFTalN2tfRUWBa5+rVSa7nZTJ5a487/ToKTLQdgG46lyKzWY5trPF6TAPS
-         aWJA==
+        d=google.com; s=20251104; t=1781573268; x=1782178068; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ydpgY4RgnVhCmW55zQPEcy6WxaTHb+YujBSQ2McuqmQ=;
+        b=VHaKJJGPjGx7wG8cdXzgxCVccKvO18eaE08CI+R2uQy53UOCfVsZbCShBjzHKHQ/KF
+         SBGjscjGUwLSjVZAi7IdjdI6M2/CVGr4nIuNZ5JYFmB/681l+UQ8Ai/Pw+m8ezez/c6p
+         hg6dCPuU/3v9IkCdkkoJGJMQN4Q9keS4IMDj+NK03IhTiiR5tHKCYlfNuxh4iIcU7DWD
+         dlhNjwILq7YnZ/+JPyJ8VH48SnevQyFEb7UNiRoabUfW8gTz+6CL0JWdvUFOX9zLwnLR
+         lPnxUl4ukORLpAUNyOPUx7RLkdCbynbkIuH0f9++Fb8NTVx5+zz7Mgp4ZhFS+kuVXlBM
+         Du9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781573154; x=1782177954;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ey3859c+dCCZhIYYYmcqI0MV2QtbNDTAgy9JyyB/qJM=;
-        b=g0nKGWhWCjE1BMzx7n8ORARRjZXrmjQmI5GbTMiloEwTgtfICfbEFdbCAKun4KU/ql
-         YMhYeF/42OEjvVgnl057j4lHcEuqzrfA/Om0kUZJWwuHy7AHnXb5tQq7WnhgtyJLqe9k
-         4hp/pU3EBauIECEGxnYB/a3Sfg/kPugA76Jk6VBSASHPOF1Yp+9ee1z6FgKGWc5BnoMD
-         yH8+r+zCAmzR56pvV/Mt/N/KIRJ+Y+NLvNX0Dviny0dpdzUrC/dEu49EwKZ5/Um/MiWu
-         CEaoa+Ds3RAP1h2uUNejhMacufa+6FNTFFb1qwPNy1STtx3tW5hhhbMxtLICsv1Cpmrk
-         t82w==
-X-Forwarded-Encrypted: i=1; AFNElJ/ecuhSU5TgdjqX3Flc7H4AO6Xi8r1BoW+As/DoCwCXHe62E3ZikWC140zZjvgO+VIV2Nm172wo1rsoq+g/MGgu@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUgccMilT7Lapsg7eipJagbWmmbGU82mXcuND3ODV5z0Mgdbha
-	PO5ynK8GQzzj21fCHOTS0mIUdC99J5z42XIh1dmBZbvsvFxEZaSHIZH2U1+eXUG6HO+He/erqgR
-	mRj/I2nLStw==
-X-Received: from dybox23.prod.google.com ([2002:a05:7300:ec97:b0:2ee:9140:ff36])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d10:b0:305:56a:c38f
- with SMTP id 5a478bee46e88-30ba5fe1d2amr983626eec.26.1781573153256; Mon, 15
- Jun 2026 18:25:53 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:25:17 -0700
-In-Reply-To: <20260616012521.4045202-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1781573268; x=1782178068;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ydpgY4RgnVhCmW55zQPEcy6WxaTHb+YujBSQ2McuqmQ=;
+        b=gbTQbUcEYiYZWeO/QV/4e6liiKRSqg7Wn8gEBqg9N5sCrAQmZ97AMpO4PumY5fe4U4
+         q1wO+b1DBtFhV/dufubYyY/pCHKBBfSWFzJzPRF/giQ56FrtahdGzJtGXavcGmOBp/59
+         gLqF7HRTRBhJAbVRCwD8QFld6CCEadIo2uyfhLYmD93Xtf3Il6e137mXtdMGM3a0Fj38
+         CkXGr1VZy3a0Ct0dbO5MNn+vpxwFCxHVxIzV2wU4RF7U8RrWJNg+2vmD0ljeokMLb1d4
+         wPLyrO+UZ3UAnxWSUvyOHWLMAIMZOG3OCk48w6waEFUsZQEJJ2vbsisHfBrKshgtTVQ+
+         4ARw==
+X-Forwarded-Encrypted: i=1; AFNElJ9n2V2OAUsJtMmOpKtRnzr94eGFNfkkdwH549sL5LRjrie3PhFmmDfX1EKMMBaXt4/EXgcXTaT+NRq5ht8jZI5a@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+uGjI43y6ACey6RGTG1LScAA+v6Onu+aIp7M9xkHooFQRT3wN
+	mSaRBmCTS7K36zJSloXI3YveAGFFKY1cCq1c5uuM42i/xK67eTffFRmruXk0TjrnSPX3xxYHFWy
+	qrzqQWjJwUA==
+X-Received: from dlep14-n1.prod.google.com ([2002:a05:701b:458e:10b0:139:43a0:ac1d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2525:b0:135:e781:74af
+ with SMTP id a92af1059eb24-1398580cb94mr849103c88.18.1781573267625; Mon, 15
+ Jun 2026 18:27:47 -0700 (PDT)
+Date: Mon, 15 Jun 2026 18:27:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260616012521.4045202-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616012521.4045202-9-irogers@google.com>
-Subject: [PATCH v1 08/12] perf tests: Fix flakiness in BPF counters test on
- hybrid systems
+Message-ID: <20260616012744.4049193-1-irogers@google.com>
+Subject: [PATCH v1 00/12] perf tests: Enhancements, speedups, and flakiness fixes
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -70,103 +66,71 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The `perf stat --bpf-counters test` fails intermittently on hybrid
-architectures or systems with dynamic frequency scaling (DVFS). This happens
-because the test workload (`sqrtloop`) runs for a fixed 1-second duration, and
-the CPU frequency can scale dynamically between idle and maximum frequency.
-As the first run runs on a cold CPU and the second run runs on a warmed-up CPU
-(or vice versa), the number of instructions executed in 1 second differs by
-up to 2.2x, violating the comparison tolerance.
+This patch series introduces a comprehensive set of improvements to the perf
+test suite, focusing on execution speed, reliability, and correctness.
 
-Also, when running as root, BPF tracepoints and scheduling programs trigger
-frequently. Since standard `perf stat -e instructions` measures both user and
-kernel space instructions, it counts BPF helper and program execution overheads,
-whereas the BPF counters themselves do not self-measure. This introduces a large
-kernel-space instruction count discrepancy between standard and BPF counters.
+It contains the following key updates:
+1. Speed optimizations for shell tests (lock contention, off-cpu profiling,
+   metrics validation) by scaling down workload durations and using lighter
+   system-wide defaults.
+2. Fixes for test flakiness in branch stack sampling, BPF counters on hybrid
+   systems, Python JIT dump profiling, and trace record/replay.
+3. A new robust retry helper (perf_record_with_retry) to ensure reliable
+   recording of intermittent events in slow or virtualized environments.
+4. Support for sub-second durations in noploop and thloop workloads to
+   accelerate tests that only require brief sampling windows.
+5. Fixes for terminal width truncation during parallel test execution, ensuring
+   the progress output does not wrap or corrupt the screen when test names
+   exceed the terminal width (including skipped tests).
+6. Restrictions on core PMU bypass parsing to correctly enforce the
+   --pmu-filter option.
 
-Fix these issues by:
-1. Switching the workload to a strictly deterministic, iteration-based
-   workload: `awk 'BEGIN { for (i=0; i<10000000; i++) sum+=i }'`. We pin the
-   workload to a single random allowed CPU using `taskset -c $CPU` via a bash array.
-2. Restricting the counted event to user-space only (`instructions:u` or `/u`).
-3. Tightening the comparison tolerance from 20% to 15%.
+The combined changes drastically reduce the total runtime of the test suite
+while improving the stability of hardware-dependent and sampling-based tests.
 
-These modifications isolate the measurements to user-space instructions of the
-deterministic loop, which executes a virtually identical number of instructions
-on both runs (with less than 0.001% variation), eliminating Dynamic Frequency
-Scaling (DVFS), kernel scheduling noise, and BPF helper self-measurement overheads.
+Ian Rogers (12):
+  perf parse-events: Restrict core PMU bypass to --cputype option
+  perf test: Truncate test description to fit terminal width
+  perf tests workloads: Support sub-second durations in noploop and
+    thloop
+  perf tests: Add robust record retry helper and use subsecond workloads
+  perf tests: Skip metrics validation if system-wide recording lacks
+    permission
+  perf tests: Fix Python JIT dump profiling test failure
+  perf tests: Fix flakiness in trace record and replay test
+  perf tests: Fix flakiness in BPF counters test on hybrid systems
+  perf tests: Fix flakiness in branch stack sampling tests
+  perf tests: Speed up off-cpu profiling tests
+  perf tests: Speed up lock contention analysis shell test
+  perf tests: Speed up metrics checking shell tests
 
-Fixes: 2c0cb9f56020 ("perf test: Add a shell test for 'perf stat --bpf-counters' new option")
-Signed-off-by: Ian Rogers <irogers@google.com>
-TAG=agy
-CONV=7e7ee33a-e940-4a8a-8e64-878da6a68b59
----
- tools/perf/tests/shell/stat_bpf_counters.sh | 27 +++++++++++++--------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ tools/perf/builtin-stat.c                     |   2 +
+ tools/perf/tests/builtin-test.c               |  95 +++++++---
+ tools/perf/tests/parse-events.c               |  11 +-
+ tools/perf/tests/pmu-events.c                 |   6 +-
+ tools/perf/tests/shell/jitdump-python.sh      |  66 ++++---
+ tools/perf/tests/shell/kvm.sh                 |  61 ++++---
+ .../tests/shell/lib/perf_metric_validation.py |  11 +-
+ tools/perf/tests/shell/lib/perf_record.sh     |  52 ++++++
+ tools/perf/tests/shell/lock_contention.sh     |  30 +--
+ tools/perf/tests/shell/pipe_test.sh           |   4 +-
+ tools/perf/tests/shell/record.sh              | 172 +++++++++---------
+ tools/perf/tests/shell/record_lbr.sh          |  50 +++--
+ tools/perf/tests/shell/record_offcpu.sh       |  12 +-
+ tools/perf/tests/shell/stat_all_metrics.sh    |  65 ++++---
+ tools/perf/tests/shell/stat_all_pfm.sh        |   2 +-
+ tools/perf/tests/shell/stat_bpf_counters.sh   |  27 ++-
+ tools/perf/tests/shell/stat_metrics_values.sh |   9 +-
+ tools/perf/tests/shell/test_brstack.sh        |   6 +-
+ tools/perf/tests/shell/trace_record_replay.sh |  18 +-
+ tools/perf/tests/workloads/noploop.c          |  15 +-
+ tools/perf/tests/workloads/thloop.c           |  14 +-
+ tools/perf/util/metricgroup.c                 |   4 +-
+ tools/perf/util/parse-events.c                |  22 ++-
+ tools/perf/util/parse-events.h                |  17 +-
+ 24 files changed, 494 insertions(+), 277 deletions(-)
+ create mode 100644 tools/perf/tests/shell/lib/perf_record.sh
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index 35463358b273..2f01608c95e3 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -4,21 +4,25 @@
- 
- set -e
- 
--workload="perf test -w sqrtloop"
-+CPU=0
-+if command -v shuf >/dev/null 2>&1; then
-+	CPU=$(shuf -i 0-$(($(nproc) - 1)) -n 1 2>/dev/null || echo 0)
-+fi
-+workload=(taskset -c "$CPU" awk 'BEGIN { for (i=0; i<10000000; i++) sum+=i }')
- 
--# check whether $2 is within +/- 20% of $1
-+# check whether $2 is within +/- 15% of $1
- compare_number()
- {
- 	first_num=$1
- 	second_num=$2
- 
--	# upper bound is first_num * 120%
--	upper=$(expr $first_num + $first_num / 5 )
--	# lower bound is first_num * 80%
--	lower=$(expr $first_num - $first_num / 5 )
-+	# upper bound is first_num * 115%
-+	upper=$(expr $first_num + $first_num \* 3 / 20 )
-+	# lower bound is first_num * 85%
-+	lower=$(expr $first_num - $first_num \* 3 / 20 )
- 
- 	if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
--		echo "The difference between $first_num and $second_num are greater than 20%."
-+		echo "The difference between $first_num and $second_num are greater than 15%."
- 		exit 1
- 	fi
- }
-@@ -41,11 +45,12 @@ check_counts()
- test_bpf_counters()
- {
- 	printf "Testing --bpf-counters "
--	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | \
-+	base_instructions=$(perf stat --no-big-num -e instructions:u -- "${workload[@]}" 2>&1 | \
- 				awk -v i=0 -v c=0 '/instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
- 				} END { if (i > 0) printf "%.0f", c; else print "<not" }')
--	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | \
-+	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions:u \
-+				-- "${workload[@]}"  2>&1 | \
- 				awk -v i=0 -v c=0 '/instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
- 				} END { if (i > 0) printf "%.0f", c; else print "<not" }')
-@@ -57,7 +62,9 @@ test_bpf_counters()
- test_bpf_modifier()
- {
- 	printf "Testing bpf event modifier "
--	stat_output=$(perf stat --no-big-num -e instructions/name=base_instructions/,instructions/name=bpf_instructions/b -- $workload 2>&1)
-+	stat_output=$(perf stat --no-big-num \
-+		-e instructions/name=base_instructions/u,instructions/name=bpf_instructions/bu \
-+		-- "${workload[@]}" 2>&1)
- 	base_instructions=$(echo "$stat_output"| \
- 				awk -v i=0 -v c=0 '/base_instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
