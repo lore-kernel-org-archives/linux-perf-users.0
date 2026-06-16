@@ -1,273 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA96283FE5;
-	Tue, 16 Jun 2026 15:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A1A44CAFB;
+	Tue, 16 Jun 2026 15:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781623563; cv=none; b=LB7f27xSx/mbTRZukxsImChmTO9x/gUzd0wyCV51M9DOeXpZSZLSqHZEPv/TY1sN+ihGKhBNZjxJlVFUl7qOS5KsZh7flCnE88hOoKtjB9xNQXm3HFxMaBnjHzqL2sYHDqs5mLH7unziWk0cqmHmPVBvxkYrYS0gl4OE/mCqetg=
+	t=1781624367; cv=none; b=HB9SypeSZm0R/kvenhRb4s435HIf37hEUc923LQgYWR5AovEcw/un7jncuCcdpiF8wsDDBKcFiI1kjzNQU6yKg6Ejbp5CFQht4tpDkAwKZnySGCy4bh78kEN9uzoacG5yotOZ+fkVvI91vOwu2g/zvLuoQI1CK9NlmTD26qxKJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781623563; c=relaxed/simple;
-	bh=UkhiuhHMI1LYKLqBSLZ7TvOZ7n2b4wnNtgxCtBg+TxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rKAiKAfVX5mDnKan0x6ZIm51BdfybUK1PDr4s0jKF2vT/WPWAw09RsCg500/FOAuJFkOYWOdsE9QHyh3bbGghr4IgmmO2QdKgFPuWdXmMEV3KuVP9L+UvcLhzCZLRubtF+vYIu5lGH1IA8IAEAWza/UJlYvg6qdR7AlKd3McRBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0IfBNth; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781624367; c=relaxed/simple;
+	bh=S2eUX59S46MIQV3BPXQCdLcZDCV4ScjEktKyH12X014=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F1VYDoy7lANrsXqWK49u4GBmDBeHiFc7iQZyPlK4kRcNMwgPy2jorwzFctp7Jl82gLqL8CT3+bX4dQwEhj5GGHpc8W7sxTJpExNyrKy1hr/BGDzfFPuN0jVqUW3KgRO6l6x2snXrBpBYQSR2wDWrLOr8xTb5o9FpMvH5x28sDZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbAlyGXr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0IfBNth"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E12861F00A3A;
-	Tue, 16 Jun 2026 15:26:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbAlyGXr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2219F1F000E9;
+	Tue, 16 Jun 2026 15:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781623562;
-	bh=i6hTKoLKEHRj32VlzOaqvEx5YDShHWKHuW7KWNBFAh4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=C0IfBNthd6p1qjUP+er51Ex7vxnrR6o+LBTGkVg2VaXiJU2ixZ+HD78+dqpyXf00r
-	 ad9XsZPAYp24ctpQ795O5yVLFX60czcGjSys12XB9uUiAOV3T7rKyyRfpdlF6l+YQe
-	 MmhTtlUUQmCSKPYVubHwOcclVTBAri4n6vQWR4XH8zg2jAAurAq2bc53Re/QJ/3/zr
-	 YlNGBC12Addo6FHyWPn3Y9S/kqW8RClaIvex4sxB6SFKka3SI+RcwrY56OD3MEsbDj
-	 gCm7glsN3BjBtIB6osStUuE6jeVz3isYzKdAk60Ohx63hgamyC4qVW6OdHQ4FQ/dLu
-	 43qqpLcQRWu7A==
-Date: Tue, 16 Jun 2026 12:25:59 -0300
+	s=k20260515; t=1781624366;
+	bh=LzKtOcRh2fUMqRjNqSr6m5tP09b7QgeqPJbFWqvvC/s=;
+	h=From:To:Cc:Subject:Date;
+	b=mbAlyGXrBUBQjrG7LIHsW/PRLGXt/19aw15bgh8i10T2ximmSff/adrb4JP6OaSKc
+	 Gq6LL6bz35lRnTG49x1tbK2paSOCfo5RFxnLyvKsFx41JD4PMc3Tk0H3I1zExlxTU8
+	 j4N6xitENaR02dZ8KsxEG9wH93WL3skmtKGpLdjTa62cZx0Sdm4q9xxaKZb2ln2wR9
+	 ZqkumQ5ptPUhlp8pcY97RPWGNhPYs3xtWqDfAGrmwfL8fmUZh8igyHT0hqOS6UE7MW
+	 +h8fCKXDn5Md9YvU4Qaa99M1VYyQ7SKaT09Ovyp8hgL9/mC/P/qB/FLnWofIE7aGaJ
+	 rEh83qHdo3vsw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: namhyung@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
-	jolsa@kernel.org, leo.yan@arm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, mingo@redhat.com,
-	peterz@infradead.org, thomas.falcon@intel.com,
-	tmricht@linux.ibm.com
-Subject: Re: [PATCH v2 02/12] perf test: Truncate test description to fit
- terminal width
-Message-ID: <ajFrBwTzZuqpWPd1@x1>
-References: <20260616012744.4049193-1-irogers@google.com>
- <20260616061404.41929-1-irogers@google.com>
- <20260616061404.41929-3-irogers@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v5 0/9] perf tools: Fix pre-existing bugs in machine, cs-etm, c2c, bpf, and dso
+Date: Tue, 16 Jun 2026 12:39:11 -0300
+Message-ID: <20260616153920.6852-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260616061404.41929-3-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 15, 2026 at 11:13:54PM -0700, Ian Rogers wrote:
-> The parallel test harness uses the carriage return delete escape sequence
-> `PERF_COLOR_DELETE_LINE` ("\033[A\33[2K\r") to erase and update the
-> "Running (X active)" progress lines.
-> 
-> However, if a test description is longer than the terminal width, the line
-> wraps around. When this happens, the cursor up escape sequence `\033[A` only
-> moves the cursor to the last wrapped row, leaving the top half of the description
-> printed on the previous line. This leads to name duplication and output corruption
-> spilling over multiple rows on consoles narrower than the maximum description length
-> (e.g., 101 columns wide).
-> 
-> Fix this by dynamically querying the terminal width using `get_term_dimensions`
-> and truncating the printed test descriptions using the `%-*.*s` printf format.
-> We reserve 35 characters for prefix, status, and spacing metrics to guarantee
-> the progress line never wraps.
-> 
-> Fixes: 0e036dcad4e6 ("perf test: Display number of active running tests")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/builtin-test.c | 110 ++++++++++++++++++++++++--------
->  1 file changed, 85 insertions(+), 25 deletions(-)
-> 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index afc06cec4954..65a2dc50ef55 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -10,35 +10,39 @@
->  #ifdef HAVE_BACKTRACE_SUPPORT
->  #include <execinfo.h>
->  #endif
-> -#include <poll.h>
-> -#include <unistd.h>
->  #include <setjmp.h>
-> -#include <string.h>
->  #include <stdlib.h>
-> -#include <sys/types.h>
-> +#include <string.h>
-> +
->  #include <dirent.h>
-> -#include <sys/wait.h>
-> +#include <linux/kernel.h>
-> +#include <linux/string.h>
-> +#include <linux/zalloc.h>
-> +#include <poll.h>
-> +#include <sys/ioctl.h>
->  #include <sys/stat.h>
->  #include <sys/time.h>
-> +#include <sys/types.h>
-> +#include <sys/wait.h>
-> +#include <unistd.h>
-> +
-> +#include <subcmd/exec-cmd.h>
-> +#include <subcmd/parse-options.h>
-> +#include <subcmd/run-command.h>
-> +
->  #include "builtin.h"
-> +#include "color.h"
->  #include "config.h"
-> +#include "debug.h"
->  #include "hist.h"
->  #include "intlist.h"
-> -#include "tests.h"
-> -#include "debug.h"
-> -#include "color.h"
-> -#include <subcmd/parse-options.h>
-> -#include <subcmd/run-command.h>
->  #include "string2.h"
->  #include "symbol.h"
-> +#include "tests-scripts.h"
-> +#include "tests.h"
->  #include "util/rlimit.h"
->  #include "util/strbuf.h"
-> -#include <linux/kernel.h>
-> -#include <linux/string.h>
-> -#include <subcmd/exec-cmd.h>
-> -#include <linux/zalloc.h>
-> -
-> -#include "tests-scripts.h"
-> +#include "util/term.h"
->  
->  static const char *junit_filename;
->  static struct strbuf junit_xml_buf = STRBUF_INIT;
-> @@ -413,19 +417,64 @@ static char *xml_escape(const char *str)
->  	return res ? res : strdup("");
->  }
->  
-> +static int get_term_width(void)
-> +{
-> +	struct winsize ws;
-> +	int cols = 80;
-> +	int term_width;
-> +
+Hi,
 
-A comment here to explain this 10000 magic number?
+Nine more pre-existing bugs found by sashiko-bot during AI-assisted
+code review.  All are independent of the perf-data-validation hardening
+series — they are latent bugs in surrounding code exposed during review.
 
-> +	if (!isatty(1))
-> +		return 10000;
-> +
-> +	get_term_dimensions(&ws);
-> +	if (ws.ws_col > 0)
-> +		cols = ws.ws_col;
-> +
-> +	/*
-> +	 * Limit description width to fit on a single line. We subtract 35
-> +	 * columns of headroom to allocate space for:
-> +	 * - The suite index prefix: e.g. " 10.100:" (9 characters).
-> +	 * - The colon separator and spaces: " : " (3 characters).
-> +	 * - The longest status results: e.g. "Skip (some metrics failed)" (26 characters)
-> +	 *   or "Running (XX active)" (20 characters).
-> +	 *
-> +	 * A minimum description width of 10 is enforced to ensure names are
-> +	 * legible even on very narrow consoles.
-> +	 */
+The fixes are grouped by subsystem:
 
-> +	term_width = cols - 35;
-> +	if (term_width < 10)
-> +		term_width = 10;
-> +
-> +	return term_width;
-> +}
-> +
-> +static int get_max_desc_width(int width)
-> +{
-> +	int term_width = get_term_width();
-> +
-> +	return width > term_width ? term_width : width;
-> +}
-> +
->  static int print_test_result(struct test_suite *t, int curr_suite, int curr_test_case,
->  			     int result, int width, int running,
->  			     const char *err_output, double elapsed)
->  {
-> +	int pad_width = get_max_desc_width(width);
-> +	int term_width = get_term_width();
-> +
->  	if (test_suite__num_test_cases(t) > 1) {
->  		char prefix[32];
->  		int len = snprintf(prefix, sizeof(prefix), "%3d.%1d:",
->  				   curr_suite + 1, curr_test_case + 1);
-> -		int subw = len >= 4 ? width + 4 - len : width;
-> +		int pad = len >= 4 ? pad_width + 4 - len : pad_width;
-> +		int trunc = len >= 4 ? term_width + 4 - len : term_width;
->  
-> -		pr_info("%s %-*s:", prefix, subw, test_description(t, curr_test_case));
-> -	} else
-> -		pr_info("%3d: %-*s:", curr_suite + 1, width, test_description(t, curr_test_case));
-> +		pr_info("%s %-*.*s:", prefix, pad, trunc,
-> +			test_description(t, curr_test_case));
-> +	} else {
-> +		pr_info("%3d: %-*.*s:", curr_suite + 1, pad_width, term_width,
-> +			test_description(t, curr_test_case));
-> +	}
->  
->  	switch (result) {
->  	case TEST_RUNNING:
-> @@ -695,6 +744,7 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
->  	int ret;
->  	struct timespec end_time;
->  	double elapsed;
-> +	width = get_max_desc_width(width);
->  
->  	if (child_test == NULL) {
->  		/* Test wasn't started. */
-> @@ -709,7 +759,8 @@ static void finish_test(struct child_test **child_tests, int running_test, int c
->  	 * sub test names.
->  	 */
->  	if (test_suite__num_test_cases(t) > 1 && curr_test_case == 0)
-> -		pr_info("%3d: %-*s:\n", curr_suite + 1, width, test_description(t, -1));
-> +		pr_info("%3d: %-*.*s:\n", curr_suite + 1, width, width,
-> +			test_description(t, -1));
->  
->  	/*
->  	 * Busy loop reading from the child's stdout/stderr that are set to be
-> @@ -917,6 +968,8 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
->  	int last_suite_printed = -1;
->  	sigset_t set, oldset;
->  
-> +	width = get_max_desc_width(width);
-> +
->  	sigemptyset(&set);
->  	sigaddset(&set, SIGINT);
->  	sigaddset(&set, SIGTERM);
-> @@ -985,8 +1038,11 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
->  			if (next_child) {
->  				if (test_suite__num_test_cases(next_child->test) > 1 &&
->  				    last_suite_printed != next_child->suite_num) {
-> -					pr_info("%3d: %-*s:\n", next_child->suite_num + 1, width,
-> -						test_description(next_child->test, -1));
-> +					pr_info("%3d: %-*.*s:\n",
-> +						next_child->suite_num + 1,
-> +						width, width,
-> +						test_description(
-> +							next_child->test, -1));
->  					last_suite_printed = next_child->suite_num;
->  				}
->  				print_test_result(next_child->test, next_child->suite_num,
-> @@ -1049,7 +1105,8 @@ static int finish_tests_parallel(struct child_test **child_tests, size_t num_tes
->  
->  			if (test_suite__num_test_cases(child->test) > 1 &&
->  			    last_suite_printed != child->suite_num) {
-> -				pr_info("%3d: %-*s:\n", child->suite_num + 1, width,
-> +				pr_info("%3d: %-*.*s:\n", child->suite_num + 1,
-> +					width, width,
->  					test_description(child->test, -1));
->  				last_suite_printed = child->suite_num;
->  			}
-> @@ -1296,7 +1353,10 @@ static int __cmd_test(struct test_suite **suites, int argc, const char *argv[],
->  
->  			if (intlist__find(skiplist, curr_suite + 1)) {
->  				if (pass == 1) {
-> -					pr_info("%3d: %-*s:", curr_suite + 1, width,
-> +					int pad_width = get_max_desc_width(width);
-> +					int term_width = get_term_width();
-> +
-> +					pr_info("%3d: %-*.*s:", curr_suite + 1, pad_width, term_width,
->  						test_description(*t, -1));
->  					color_fprintf(stderr, PERF_COLOR_YELLOW,
->  						      " Skip (user override)\n");
-> -- 
-> 2.54.0.1136.gdb2ca164c4-goog
+machine__init() error propagation (patches 1-2):
+  machine__init() always returns 0 on allocation failure because the
+  error code is never propagated through the return statement.  Callers
+  (including machines__init() and __machine__new_host()) proceed with a
+  partially initialized machine struct.  The error cleanup also uses
+  zfree() on refcounted kmaps instead of maps__zput().  Additionally,
+  machines__findnew() and machines__create_guest_kernel_maps() use
+  sprintf() with unsanitized guestmount paths that can overflow
+  PATH_MAX stack buffers.
+
+CoreSight ETM metadata validation (patches 3-5):
+  cs_etm__process_auxtrace_info_full() reads num_cpu from untrusted
+  perf.data and uses it directly in a multiplication that can overflow
+  to zero on 32-bit, producing a zero-sized allocation followed by OOB
+  writes.  The minimum size check in cs_etm__process_auxtrace_info()
+  doesn't cover the global header fields actually accessed.
+  cs_etm__get_queue() indexes queue_array[] without bounds checking
+  the CPU value from untrusted trace payload, and several queue
+  iteration loops dereference .priv without NULL checks after array
+  growth zero-initializes new entries.
+
+c2c hist entry leaks (patches 6-7):
+  When c2c_hists__init() fails, dynamically allocated format structures
+  are leaked because the error path frees the container without
+  unregistering them.  During resort merges, c2c_he_free() only walks
+  the output-sorted tree (empty before resort), leaking all inner
+  hist_entry objects from entries_in_array[] and entries_collapsed.
+
+BPF prog info pointer validation (patch 8):
+  Several functions cast bpf_prog_info u64 fields to pointers without
+  checking whether bpil_offs_to_addr() actually converted the file
+  offsets.  A crafted perf.data with PERF_BPIL_* bits unset but non-zero
+  counts causes raw file offsets to be dereferenced as pointers.
+
+DSO decompression errno (patch 9):
+  dso__get_filename() sets errno to a negative custom DSO_LOAD_ERRNO
+  value on decompression failure.  __open_dso() computes fd = -errno,
+  producing a large positive value that looks like a valid fd, causing
+  close_data_fd() to close an unrelated file descriptor.
+
+Build-tested with gcc and clang.  Passes perf test on x86_64.
+
+Changes in v5 (patch 1 only):
+  - Check machine__init() return value in test__kallsyms_split() and
+    test__vmlinux_matches_kallsyms() — two test callers missed in v1
+    (sashiko-bot).
+
+Changes in v4 (patch 2 only):
+  - Remove incorrect get_kernel_version() reference from commit
+    message — that function already uses snprintf() in the baseline
+    (sashiko-bot).
+
+Changes in v3 (patch 1 only):
+  - Move perf_env__init() before machines__init() in
+    __perf_session__new() so the goto out_delete error path doesn't
+    call perf_env__exit() on uninitialized mutexes/rwlocks
+    (sashiko-bot).
+
+Changes in v2 (patch 1 only):
+  - Move dsos__init()/threads__init() before maps__new() so that
+    machine__exit() is safe to call when machine__init() fails at the
+    first allocation (sashiko-bot).
+  - Propagate machines__init() error in aslr_tool__init(), which was
+    added by the ASLR patches after v1 was written (sashiko-bot).
+
+Arnaldo Carvalho de Melo (9):
+  perf machine: Propagate machine__init() error to callers
+  perf machine: Use snprintf() for guestmount path construction
+  perf cs-etm: Validate num_cpu before metadata allocation
+  perf cs-etm: Require full global header in auxtrace_info size check
+  perf cs-etm: Bounds-check CPU in cs_etm__get_queue()
+  perf c2c: Free format list entries when c2c_hists__init() fails
+  perf c2c: Fix hist entry and format list leaks in c2c_he_free()
+  perf bpf: Validate array presence before casting BPF prog info pointers
+  perf dso: Set standard errno on decompression failure
+
+ tools/perf/builtin-c2c.c             |  3 ++-
+ tools/perf/tests/hists_cumulate.c    |  3 ++-
+ tools/perf/tests/hists_filter.c      |  3 ++-
+ tools/perf/tests/hists_link.c        |  3 ++-
+ tools/perf/tests/hists_output.c      |  3 ++-
+ tools/perf/tests/kallsyms-split.c    |  5 ++++-
+ tools/perf/tests/thread-maps-share.c |  2 +-
+ tools/perf/tests/vmlinux-kallsyms.c  |  6 ++++--
+ tools/perf/util/aslr.c               | 12 +++++++++---
+ tools/perf/util/bpf-event.c          | 20 ++++++++++++++++---
+ tools/perf/util/bpf-event.h          |  4 ++--
+ tools/perf/util/cs-etm-base.c        |  4 +++-
+ tools/perf/util/cs-etm.c             | 37 ++++++++++++++++++++++++++++++++++--
+ tools/perf/util/dso.c                | 18 +++++++++++++++++-
+ tools/perf/util/header.c             |  3 +--
+ tools/perf/util/hist.c               |  2 +-
+ tools/perf/util/hist.h               |  1 +
+ tools/perf/util/machine.c            | 32 +++++++++++++++++--------------
+ tools/perf/util/machine.h            |  2 +-
+ tools/perf/util/session.c            |  7 ++++---
+ 20 files changed, 128 insertions(+), 42 deletions(-)
+
+Developed with AI assistance (Claude/sashiko), tagged in commits.
+
+Thanks,
+
+- Arnaldo
