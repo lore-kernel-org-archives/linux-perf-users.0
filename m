@@ -1,58 +1,98 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8777425CF4;
-	Tue, 16 Jun 2026 10:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16E343CECD;
+	Tue, 16 Jun 2026 10:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781604131; cv=none; b=gN+IBTb0dKz7N+dWrSt5p6yRSu5DA2qt/hyef9BsJSjp9Avju+dJ77lEh589S4sxS5MsTMyDR9onqM3rGQ4Ui+4+0ikJGHGM1qczJVDG15R1CP0SxLV2KhfOu8Y+VBwWMQwqhbv159P8bYgLIF/msHu2G0nBvwT4RZfiYtvi8Ys=
+	t=1781604834; cv=none; b=e95vIZvJYSV4dISEAB+4W9sWusTSXHfa08C4bOYTBwf5ETK7u6J75NIKpyTxh2+VMe+uVPfLQsXPStyY/EpsJ9oRDSHRLTsOC7zbVJuGsJBpPj+tA7Fr57SCrgFMaWdPlmBDjGRnVPcYk0G1szI5k5Trn9QYgzh06xGtd3s+UKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781604131; c=relaxed/simple;
-	bh=BNy+8x57irBxsuWD1p+cRZxqf4Noxxn61V/KJ780R80=;
+	s=arc-20240116; t=1781604834; c=relaxed/simple;
+	bh=h39yfY9vKWcnHsup000s5QqqY2OYLsCc/BA54RYV6Fw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bROMZYUN4fwPMtzoVNonRWQwmfwvQa43v8sFrJCDlV/VBdmD9dzwS2LQFQ4teaZ7a5bdwA9HVK12n8skxl8rTZuzmq09emFTZjOBTpqln5iAr81hkgKxleH/ETK7NafrBuVIsjsySm7EzV2RdePpTE3R8SUak4rBSNqOB15jOzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oKv+fYVs; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=EdELQyoRNjqnN13t/3t+nqhjRGZ8D9wehBXXq3wLUh27+RBWN3qK6JzX7wNPiyww2DSAZD8594O2jCOI7l0aCGOSN+pJBwNzk+LNYx6wJq0qACJOJjruCj2XsjXjrSZRN2SOiNGIsRQdDjLTJ44PInWiFbzgof+XclPxB3WsQ2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=KLRdeFA2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AkG//VcB; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oKv+fYVs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0pA+uIAI5ZHf6Li4fMStaCXihEfBiMnRSgkaH7I2IhY=; b=oKv+fYVsRMSQNM3AM4uZ01aMcQ
-	+x74yh6yddmOeVEOtBpiXMmJKE6qm1sB7NDnG78udDq7BU1D1fflLWhoLrSbIObf5H3ubYvbJ6Roy
-	iXcy82V5JFSKGIgEwATrCax9GP8tv0syjJLsXOtESI8obC5T44LiGNWjOq/H7wFBonCczsfvcGQL3
-	LtXzvelURnK5ApN+AHFgT3gKfUl00eYOsn1sDhjENtWnDCaAnCpRQxYNNOgu0sJXImjWo5y+oSmBz
-	EFg0297wNTIIEQeqWW2bneMclSPjacA3fNnl8KZsijBXtgww071tOEkuNFUH53AOnZd6Jz5wDohMF
-	Qeu7+Kzw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wZQcM-0000000AWQ2-3yzO;
-	Tue, 16 Jun 2026 10:02:03 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 18B3330036F; Tue, 16 Jun 2026 12:02:02 +0200 (CEST)
-Date: Tue, 16 Jun 2026 12:02:02 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KLRdeFA2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AkG//VcB"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 32199140013C;
+	Tue, 16 Jun 2026 06:13:52 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Tue, 16 Jun 2026 06:13:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1781604832; x=1781691232; bh=yscGnKM6Pn
+	1eN1WlHGZpo/1egnmUAfNS3O+ct8E0NcQ=; b=KLRdeFA2u+bknoVpi6wLPAu7Yt
+	iJdd2/Ii38ypS/HihS6Z208HihWl6c/A269wVfmNZUcYPRy3GjKQGkOU6gC1HxyP
+	2BUp6/woB2mslX+AU9Ho0gYMwxvcFE5p64q0CWPnBqZsatmqrd6lvrhXAclNpPka
+	qebzk6gT/6/oXGsthzXU43MbVuF1ZoTNub6E/rCc+Mh/Hb3o11fRbMGKaaHDQnkW
+	yZgJCWGQYI0QOG3RMmWA5ea0dX0dhcka3E1BwGV4ca1zS1Otyh772wajEB5/iW40
+	Y0WY/5C2T066kl8/Cw/jLhklnwm7p9trBzdOUuIa9GmAUmOhq/1Gx0nvF+3A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1781604832; x=1781691232; bh=yscGnKM6Pn1eN1WlHGZpo/1egnmUAfNS3O+
+	ct8E0NcQ=; b=AkG//VcBlWPkGp5+QX0CqU957h5/2UEj/XMYVfh5TkBa5JAEwFD
+	GZ8so3d42RbYMkqnnoEzqiPcSJIGRn536ajBRJAI/4q/OKVIM+UpxSBtaPLzNUwV
+	lJtrA0FNiuhAUbnnGbSavDm5A2neCdBdjRhYIggcHSxvHWcerXwmZX1XrSC3Pcad
+	kmue6YuS+5uAhjahkx89P++vVaEXZ49ff/6J49vcIttgBpjtKp6p4Z4Y3S3jyjBo
+	mCBw3GcrZRNAZAyg7ZFfkpAFrb0+gxXM4VHkLmT3YxnqfLr//pzLvX31thfL64Vi
+	aEZ7t4WQHG4AgF1k9ymbDXashyytfdr6TNQ==
+X-ME-Sender: <xms:3yExasOq_hfD91-KgcnzcWI-InKHHQ9H-HHRzn9NZAoVno9NOjh6jA>
+    <xme:3yExauo0oR8mN_VBvyV2z1-LxDwp8eZq_lCpXCWi-YTr2iBxkchLqxEuY-6_EOc8a
+    r6WETbqjxZD-JCQ-kB--2PzVfIzJwjaT4rvI4k60d1ry0KMag>
+X-ME-Received: <xmr:3yExam5hIbugwhUOCO_yLy-bHdS_WgFM3aglR68GwbEZAhD7kNSGvV61>
+X-ME-Proxy-Cause: dmFkZTFXmFjhiZ/J01Wd7/tv5c36hbRy67DrxzHLzGUvqVoob6gyrI5rUk2TRsZF3TxXXy
+    Eqgfu+llVeu6X32bw3wTR93BrAokj6h+nD5mSFQR4EGjTjQgXkzrvdL1oZSrLLHJ5ZaEXP
+    eaW04bkL9ANOpZ7eqEK9sl2/phNYVie5S4DBbmqvXJ0eCIm06lqXVM0lQBIw/hHOkFNqfb
+    AydGSX9A4rVRRF1ozlS604g7aojkY6CaiA4+XH+1yJ6XUBOQRJQ5hCsI91GjHNRmhlzUQo
+    PVL9+m9l+5dHMCHIJ1uQ0rbTva8xA/YVRH20faRhiH6bLyY/lpTO7/3+HUanxXwMnE9Of5
+    q6wYPNxxCAigFA3VjxcRBu4F0rl7MLCy61b1Hco2V1UgkgiypxPIJIROEQcnjinGrDAz42
+    6lFtYSILqUoo/GUYk91Be7xYKOFGgSI5BD3CvpndRESrU3vmNpE/RaD4bUZbmB1UUtFGMx
+    ye/XEzKUNThptMfX88SZhVxjwt/wnco1txQiuCkWjjXst6uijKmWxjnYHlg47bqVb8sR3D
+    AlCdyKGyB24en+/TRzzXfEdyuh/kbAwuSDoIjBF7O75Ohd+l8rkFEahWX8+yNoIixeT4Pn
+    x8Z1W31Tk/QVtuv3+xtJIVxNI5hpbcDragT9TeS9YWwZL+1+N5CJgPZ13c7Q
+X-ME-Proxy: <xmx:3yExak8eKc29oJxfcfyK0Od4a-87_oCLG8W7UXqv6u5hrVb5PsXG_Q>
+    <xmx:3yExaicnt6lfrQcLSaZi-mmr0qYemsDudfJuWTVe2e4R7J3yeMRy-g>
+    <xmx:3yExag1XSy9XrCi1pGc5bJxCCqyfXk1xkzZBnsX_ihulF2q77cYF6A>
+    <xmx:3yExarpV1hTtDrxhQ9JhKiBTEVTSk53lv6J_cGdraz6-SgpZJDtotw>
+    <xmx:4CExauycks29AcIPDqsus0W6Sv8WnerBEUU0rBmVMLdUsXvbFirkjbpb>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 16 Jun 2026 06:13:49 -0400 (EDT)
+Date: Tue, 16 Jun 2026 15:42:45 +0530
+From: Greg KH <greg@kroah.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>, stable@vger.kernel.org
-Subject: Re: [Patch v3 1/8] perf/x86/intel: Remove anythread_deprecated bit
- from perf_capabilities
-Message-ID: <20260616100202.GJ42921@noisy.programming.kicks-ass.net>
-References: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
- <20260612090114.3188886-2-dapeng1.mi@linux.intel.com>
- <20260612094648.GB42921@noisy.programming.kicks-ass.net>
- <96a18944-bc0d-47dd-b435-e9aa63b93c43@linux.intel.com>
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
+	"open list:BPF [MISC]" <bpf@vger.kernel.org>,
+	"open list:CLANG/LLVM BUILD SUPPORT" <llvm@lists.linux.dev>,
+	bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH stable 6.1 v2 5/5] perf build: Remove
+ -Wno-unused-but-set-variable from the flex flags when building with clang <
+ 13.0.0
+Message-ID: <2026061639-curfew-hexagon-386b@gregkh>
+References: <20260520163320.3073037-1-florian.fainelli@broadcom.com>
+ <20260520163320.3073037-6-florian.fainelli@broadcom.com>
+ <6541a5f4-a150-44b9-af27-8712cdafc1ae@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,49 +101,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <96a18944-bc0d-47dd-b435-e9aa63b93c43@linux.intel.com>
+In-Reply-To: <6541a5f4-a150-44b9-af27-8712cdafc1ae@broadcom.com>
 
-On Mon, Jun 15, 2026 at 08:59:29AM +0800, Mi, Dapeng wrote:
+On Wed, May 20, 2026 at 09:35:02AM -0700, Florian Fainelli wrote:
+> On 5/20/26 09:33, Florian Fainelli wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > clang < 13.0.0 doesn't grok -Wno-unused-but-set-variable, so just remove
+> > it to avoid:
+> > 
+> >    error: unknown warning option '-Wno-unused-but-set-variable'; did you mean '-Wno-unused-const-variable'? [-Werror,-Wunknown-warning-option]
+> >    make[4]: *** [/git/perf-6.5.0-rc4/tools/build/Makefile.build:128: /tmp/build/perf/util/pmu-flex.o] Error 1
+> >    make[4]: *** Waiting for unfinished jobs....
+> > 
+> > Fixes: ddc8e4c966923ad1 ("perf build: Disable fewer bison warnings")
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Link: https://lore.kernel.org/lkml/ZNUSWr52jUnVaaa%2F@kernel.org/
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > Change-Id: I8db8a372d1e83d26fbe8beda2bcf4d1a871a2b80
 > 
-> On 6/12/2026 5:46 PM, Peter Zijlstra wrote:
-> > On Fri, Jun 12, 2026 at 05:01:07PM +0800, Dapeng Mi wrote:
-> >> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
-> >> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
-> >> represent "anythread deprecation" in perf_capabilities. It leads to the
-> >> anythread_deprecated bit could be overwritten by the real value of
-> >> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
-> >>
-> >> ```
-> >> if (!intel_pmu_broken_perf_cap()) {
-> >> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
-> >> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
-> >> }
-> >> ```
-> >>
-> >> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
-> >> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
-> >> these support Perfmon v6 platforms, like Clearwater Forest.
-> >>
-> >> ```
-> >> $grep . /sys/devices/cpu/format/*
-> >> /sys/devices/cpu/format/acr_mask:config2:0-63
-> >> /sys/devices/cpu/format/any:config:21
-> >> /sys/devices/cpu/format/cmask:config:24-31
-> >> ```
-> >>
-> >> So remove the anythread_deprecated bit from perf_capabilities structure
-> >> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
-> >> deprecated.
-> > Again, no markdown please. I've stripped it from these patches.
-> 
-> My bad. Thanks a lot.
-> 
-> BTW, Peter, have you pull these patches? I didn't see them in perf/core or
-> perf/urgent branches. Sashiko reports a defect about "Patch 5/8:
-> perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()". If
-> not, I would post a v4 patchset to fix the defect. Thanks.
-> 
+> Argh, sorry the Change-Id snuck in there, let me know if you need me to
+> resubmit.
 
-I had them in queue:perf/core, but realized it was *really* late in the
-window. I'll probably move them into tip post -rc1. If there's a new
-version by then, I'll be sure to pick it up.
+I got it, no worries.
