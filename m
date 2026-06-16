@@ -1,123 +1,167 @@
-Received: from mail-dy1-f201.google.com (mail-dy1-f201.google.com [74.125.82.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06483890FC
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF0031F98C
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781573295; cv=none; b=YcywIlKxEnk5PqTV5G8b+lFAYEa88CwmRTlPyQnPz3oIOq/e+Lt60yyl2pNETOgZq9NTjWXfYiZd+m9VSAKL1goO/CB9O8mvplILYt3YSfpEpLNE5oXv43gVJFIO4bfskuxcw6KM+4hLG428H+QReR5hQqvpczci6BaM9aH3XuM=
+	t=1781573333; cv=none; b=IdR72rHf4QC6s5Ed1meB1+vQNK0fVP3AB6hUmQrqMrmcFA6k8c8hlIr6VmBu4nNZ7qrWMCyGBWv27fLQkbrpRSmcCeHRoe+CfS5d5544rzhEDLUMsyI6xz9BTvMTfEnA5xHiXVlTjZC5iwW3t0aUU/UIdfNAQaNp6izbDs6mIfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781573295; c=relaxed/simple;
-	bh=BIIsVHw14AlfB5+sUSiVc2BYFc8fwPr+bn6W64wSPPk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=u1CI0CMl5ChNXQ3plyRGKw2GCSvPZxEiJwAtPdIZetiF0HVs+E610gnl/NKL3gSVR5PpiURwxMcgixXmeigpBpJ5u9m1z4KmFyOUI8rE5N0O9zeQwc9SQKQ3sRp/m1cjJtV3VbEguD4kRcc9ut8e+SCXKx9on//SlYBwFVyZOfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=agsSZ7ha; arc=none smtp.client-ip=74.125.82.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1781573333; c=relaxed/simple;
+	bh=FsJxGhMhwYePoUMahBvYefhZccA8nxH7zRMY9U59jkA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=EXO8p462lpG0i8UNDTnk5DvRlJ2jVskbvYpV6WJ3idRVmw8nIA7aE8ufPx72RY7UsFx7t+jsVOMw23WTuNjIUo+YBLpIb1sy1l7sP1EbytJkqExTu/Pwre18jnZR04YaTROSozmwJVsKYTlkkiuf1VT09H3ANVJUNTeK5oK7LiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8xQMoiY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agsSZ7ha"
-Received: by mail-dy1-f201.google.com with SMTP id 5a478bee46e88-304dd917645so8314745eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781573294; x=1782178094; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=X1FPpTj4tXNFYu5bl111NYkOm6sMBpzwoN1Xqptn2N8=;
-        b=agsSZ7haTjd3t0K2wsbHyiGWuNTW94uE4lBBX6+kmO2uXjP8X0yaP9+frBW3WQ2mdc
-         WO41hoDpYNn77XKkumGjJkwnKIMqmmJ5z11zfJqg9i2O2k/WRDEfkK1EqXBD+zGApOJD
-         X4aIGfM+ZOwnhSFMg45w+JHIchRM/PAKWl+Jc7GqsS+Cu1PI3OyBtDrz42U3OHKddPOC
-         2a6wmy5m6lsoGcB801hI03EoNlXbz8YhTazOkAT/6nA0JyNGyCVYAZeDTeew1SWDjNnH
-         qA/CqmRL8hbj8vhsEIl7WdDE5o2/rJH5IpkhH1OkIm35ur5fcp8LXuBDmqTUkckI8X1/
-         WqXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781573294; x=1782178094;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X1FPpTj4tXNFYu5bl111NYkOm6sMBpzwoN1Xqptn2N8=;
-        b=q1UUxEcW1yA5H9o4IVwpQxCfWLvsGzp1VVpky0pxOyTyF3HZgnRxNjABDCoPCiSppF
-         Oih4XWUqvOKWZYFmP57Pm+6ehtqGSFvEZFo3gTCYf3/kHRSl1Z7QN88mGteIGpQgFXL1
-         LXvAtau+JhNbqJzXjUqCCfTm7nxVTevnkKS7dJPQWL6kfv68NQ/C1OxqLGLEhrxgNL5g
-         Um1IDLkFtFxuhovdlmtFEesf0J97pXdpfw50da633e/88BShQJKLukc4gbDU4MnRf2xS
-         4vn4lWSY14wEERLpvLw6csLE9rUdsOQ861Py/jphilQfelcZQp4iFVWBlKhUsnX5tvhj
-         ijxQ==
-X-Forwarded-Encrypted: i=1; AFNElJ94zNxB5r6xq0S7+zb9fUx8PUviuVt1+4hFfO4wtg39ikA/e4DVGO7GvP6gOeUueFBefpOGQ16NhYvILfK7Xk3V@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEkCEIdV30syUrSb1sqypEoDD9GGTgSOaoeskBjZ2VDWtoxTjj
-	KthgKrYlfDUp/JtpzlPPRxlmDZwu/iPkT25Zd/eoYLdH0wV97xN8sJ2B9xDBpwGjR6HwnrLi4YF
-	w+P1g2ePMqw==
-X-Received: from dlaf6.prod.google.com ([2002:a05:701b:2406:b0:139:8598:5f49])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2390:b0:12c:44a5:fb4f
- with SMTP id a92af1059eb24-1384bafed09mr7298568c88.10.1781573293463; Mon, 15
- Jun 2026 18:28:13 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:27:44 -0700
-In-Reply-To: <20260616012744.4049193-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8xQMoiY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BD861F000E9;
+	Tue, 16 Jun 2026 01:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781573331;
+	bh=UKkPIjsM2ZdA/peEbseG6LLCo/8dVgWnpXockFb++kc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=R8xQMoiYaa45WSSjxGls1Vd7Djy4WdoJFoCVNLga59MiVlzE7pLp3d/UdJz20qsaQ
+	 VRoIWokClH1NfZV5XACI7wiOqg8aDiQl9XwpMybH4TWMsyV1auQReoEe+Wu1BVlJVq
+	 XBHDT0loihqoZk5S/vecWoZ6Z24eNCb4yAwmpdJRoZn6tcQi2fE50X0e48F7Qjpcup
+	 CGlzVMQ1qR+TL2uJvIFSxAShLO7/ONZduGpX/wEHIAMpxhDeEHvhe3HberIIPyU4q9
+	 WizJ+Oc+aVBVl7lTkDBh6/qTJsM4x2yyDwh3jlYS/jnuIF4gVR644cO2hq+4ZhalX0
+	 YL/2MBONpQJWQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 5/9] perf cs-etm: Bounds-check CPU in
+ cs_etm__get_queue()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260616010834.37618-6-acme@kernel.org>
+References: <20260616010834.37618-6-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 16 Jun 2026 01:28:50 +0000
+Message-Id: <20260616012851.6BD861F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260616012744.4049193-1-irogers@google.com>
-X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616012744.4049193-13-irogers@google.com>
-Subject: [PATCH v1 12/12] perf tests: Speed up metrics checking shell tests
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Leo Yan <leo.yan@arm.com>, Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Optimize the execution of the metric validation and metric listing shell
-test suites:
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
 
-1. `stat_metrics_values.sh`:
-   The Python metric validator runs the `perf bench futex hash` workload
-   for each validated metric relationship. Reduce the benchmark runtime
-   limit from `-r 2` (2 seconds) to `-r 1` (1 second). This cuts the
-   workload duration in half while still generating sufficient PMU events
-   to satisfy non-zero threshold metric validations.
+Pre-existing issues:
+- [High] Integer overflow in auxtrace queue growth logic allows massive out=
+-of-bounds heap corruption.
+- [High] Implicit signedness cast of `event->auxtrace.idx` causes a negativ=
+e index out-of-bounds access.
+- [Medium] cs_etm__dump_event() lacks a NULL check for `etmq`, leading to a=
+ NULL pointer dereference when processing malformed PERF_RECORD_AUXTRACE ev=
+ents with the dump_trace (-D) option.
+- [Medium] The `auxtrace_queues__grow` function leaks the old `queues->queu=
+e_array` memory when growing the array.
+- [Medium] The error path in `cs_etm__process_auxtrace_info_full` permanent=
+ly leaks all allocated `etmq` structures.
+--
 
-2. `stat_all_metrics.sh`:
-   The metric checking test runs `perf stat` sequentially across all
-   433+ listed metrics. Change the default workload for system-wide runs
-   from `sleep 0.01` to `true`. This avoids the 10ms sleep delay on each
-   sequential metric invocation, saving over 4 seconds of total wall
-   time during full test suite runs.
+commit d0ad74eaa00ab2c6c0f68cce04f6849c506a5134
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/stat_all_metrics.sh    | 2 +-
- tools/perf/tests/shell/stat_metrics_values.sh | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+perf cs-etm: Bounds-check CPU in cs_etm__get_queue()
 
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index 5ee869452ee7..066e6cfd427b 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -7,7 +7,7 @@ ParanoidAndNotRoot()
-   [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
- }
- 
--test_prog="sleep 0.01"
-+test_prog="true"
- system_wide_flag="-a"
- if ParanoidAndNotRoot 0
- then
-diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/tests/shell/stat_metrics_values.sh
-index 76f1e99d1273..86c5c7f70933 100755
---- a/tools/perf/tests/shell/stat_metrics_values.sh
-+++ b/tools/perf/tests/shell/stat_metrics_values.sh
-@@ -18,7 +18,7 @@ fi
- pythonvalidator=$(dirname $0)/lib/perf_metric_validation.py
- rulefile=$(dirname $0)/lib/perf_metric_validation_rules.json
- tmpdir=$(mktemp -d /tmp/__perf_test.program.XXXXX)
--workload="perf bench futex hash -r 2 -s"
-+workload="perf bench futex hash -r 1 -s"
- 
- # Add -debug, save data file and full rule file
- echo "Launch python validation script $pythonvalidator"
--- 
-2.54.0.1136.gdb2ca164c4-goog
+This commit adds a bounds check for the cpu parameter in cs_etm__get_queue()
+to prevent out-of-bounds reads when processing untrusted trace payloads.
+It also adds NULL checks for the returned etmq pointer in callers to handle
+uninitialized entries correctly.
 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index d121c8f22028d..5d0664ff73b79 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+
+[ ... ]
+
+[Severity: High]
+This is a pre-existing issue, but does assigning the untrusted u32 index to=
+ a
+signed int lead to an out-of-bounds access?
+
+In tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_event():
+    int idx =3D event->auxtrace.idx;
+    ...
+    cs_etm__dump_event(etm->queues.queue_array[idx].priv, buffer);
+
+If event->auxtrace.idx is 0xffffffff, it casts to -1. If dump_trace is
+enabled, this uses a negative idx as an array index, reading an out-of-boun=
+ds
+pointer from the heap before passing it to cs_etm__dump_event().
+
+
+[Severity: High]
+This is a pre-existing issue, but is there an integer overflow in the auxtr=
+ace
+queue growth logic that could lead to out-of-bounds heap corruption?
+
+In tools/perf/util/auxtrace.c:auxtrace_queues__queue_buffer():
+    queue =3D &queues->queue_array[idx];
+    ...
+    list_add_tail(&buffer->list, &queue->head);
+
+If idx is read as 0xffffffff from the untrusted perf.data,
+auxtrace_queues__grow(queues, idx + 1) is called. The value idx + 1 overflo=
+ws
+to 0. Inside auxtrace_queues__grow():
+    if (nr_queues < queues->nr_queues || nr_queues < new_nr_queues)
+        return -EINVAL;
+
+This evaluates to false, the array remains at its original size, and
+success is returned. Execution continues with
+queue =3D &queues->queue_array[0xffffffff], which writes linked-list pointe=
+rs
+massively out of bounds.
+
+
+[Severity: Medium]
+This is a pre-existing issue, but does cs_etm__dump_event() need a NULL che=
+ck
+for etmq?
+
+In tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_event():
+    cs_etm__dump_event(etm->queues.queue_array[idx].priv, buffer);
+
+If idx is larger than the currently allocated queues, auxtrace_queues__grow=
+()
+dynamically expands the array, leaving the new .priv pointers
+zero-initialized (NULL). Because cs_etm__dump_event() unconditionally
+dereferences etmq->decoder, could a malformed PERF_RECORD_AUXTRACE event
+with the dump_trace (-D) option cause a segmentation fault?
+
+
+[Severity: Medium]
+This is a pre-existing issue, but does auxtrace_queues__grow() leak the old
+queues->queue_array memory?
+
+In tools/perf/util/auxtrace.c:auxtrace_queues__grow():
+    queues->queue_array =3D queue_array;
+
+When the array is expanded, a new array is allocated and the old state is
+copied, but it doesn't appear that free() is ever called on the old
+queues->queue_array pointer.
+
+
+[Severity: Medium]
+This is a pre-existing issue, but does the error path in
+cs_etm__process_auxtrace_info_full() permanently leak all allocated etmq
+structures?
+
+In tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_info_full():
+err_free_queues:
+    auxtrace_queues__free(&etm->queues);
+    session->auxtrace =3D NULL;
+
+If a setup step fails, auxtrace_queues__free() is called, which only frees
+the queue array and buffers, but not the decoder-specific .priv pointers.
+Because session->auxtrace is then set to NULL, the generic session teardown
+will also fail to call cs_etm__free_events(), leaking the etmq structures
+and their internal red-black trees.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616010834.3761=
+8-1-acme@kernel.org?part=3D5
