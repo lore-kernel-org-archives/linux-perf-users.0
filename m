@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30B642B738;
-	Tue, 16 Jun 2026 15:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7665143E4A1;
+	Tue, 16 Jun 2026 15:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781622878; cv=none; b=AAm1BRaP/WcFHMwkQm3oAWfSwY3JyWwupKTUALL0HpBtwchPlT7ZV9BbyREM5OAJz+GzwJ34Nuv3MPdfyrkh7bIhd7XFlr54x7dPxLLg2UaHvRZduN/0lFMJJ/cjBGyIo3teSWdQJs43rwG4fMicW090q3i0w47pPF/+4Cv08Uw=
+	t=1781623032; cv=none; b=eSwCiUx7t4nyTeBOcKOhCV0JPsJ8PIJKcok4lx/H3W5638rV97H4FAKlsTeBWkm8NJ9T4Ocmls5tukNiwZSg295f9g6lo2r1frXE7h2nwabnehiCHKsUDeOys39QYw22uq3B5ZpBlz9q4yvZdx/sVBnnfx7Syxhi1fFtoDKrD8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781622878; c=relaxed/simple;
-	bh=i/qUVEdaycYTyv2TwiXecke6+YYEN19q63iQzyZqnyM=;
+	s=arc-20240116; t=1781623032; c=relaxed/simple;
+	bh=ui98S0UqHi7J5WQOJKldjKg+fn5pT+sKF+N+LMR3iF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QDIkP7voeObcrjaFbW1vOTnMADNhySWirczArrr6dpIJr/R8PGVdKvtjvsPqB4EwJ7b2lSwDds2g050zEyCVHj+2RWTJxCaEPmGN9W7NR7fEwCBoGrSxceVoA7S3/lvA7g4ExB2wPo0SOXlwnh15/Qr7IAsfzlbGjoZcLHCmqaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRu1E56p; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=orHmVCHYVoA8OyhX9staNDhv2ICs09LkD22cqq4RzKIQxOMz7yS5n/feb/B8yyq7SYhvmvXkRtWbGMd8LVKCefVo8Qj0dkxhhjoTP7JvmjFHuLIx1VI+Mb1VkgjzYbQFosXKbvdE3tQnPP86xGejvN8xyNJQzHHTEaS3OC/purI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iMGmNCtI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRu1E56p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E09E1F000E9;
-	Tue, 16 Jun 2026 15:14:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iMGmNCtI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 755B61F000E9;
+	Tue, 16 Jun 2026 15:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781622876;
-	bh=8FXZexeNSZqk5GRUPsjvCQLupGguPkMMqxQqfO+OkGc=;
+	s=k20260515; t=1781623030;
+	bh=trmOiWa9bB86+EhYopYW33obWafDz1c3Y133mQbYMhs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=JRu1E56plw66anbFxis8nVw+bPv4pX0w//6Tk+2wyxBjfltTuzATBEcLVcg26lX3p
-	 Pfc4lSQ6OpmKFga0+PDyyIG/rEbOKR3rWk36LB17aojDu5P3jOrgJcnLtpU5ht3XFm
-	 /LCxkoDTFjah5u9FIfHzMSUII4fypTrcz8STcYhOaOeJRX3d9jXdFRBECKemGWzcZZ
-	 XZSSrlK9jjO/1lO6daci6QGSIxR2ayyoE4xA5C7gdcmD4GWMHPSU1s5TQZjcZArTPh
-	 QJ3zNbl3SbMAe08eYxPvWW7ERL9P6dmR6+E8RFoWZb5r4c+9QLbEiHiwzx1TucftXC
-	 jHLDRjlBwcISQ==
-Date: Tue, 16 Jun 2026 12:14:33 -0300
+	b=iMGmNCtIoQiwGOQsj/GxSMqkSlQspyBjtcisaeZlKv6i0xzyX5a9TMEtFi2tE6s0x
+	 7rWCcCMB2EKvt7LngV8jNqwr1a0NwUCoavEJrr74AHwhkEPZ8xcUgpAv4No8plQ8Lb
+	 ZRyIzdH91+N7a4Jk/bju6A5uRXLCUv62DMEGjAy3O/HZfLvwkDr5pTccmeWqASv8r+
+	 sxv5NiOI62X006Qd2ornAictIR/rg6PlNVYjMUQgmzuhPfKWykkqKvjIvXOmg3LHd+
+	 bRbJ7cpn3LYD4Nho9V1t+BkT0w0ILm20y48m9FiuIATjUm+6nXlItqlzNeyS/EWPT/
+	 H4/qgDAw1jWiw==
+Date: Tue, 16 Jun 2026 12:17:07 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: namhyung@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
@@ -36,7 +36,7 @@ Cc: namhyung@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org,
 	tmricht@linux.ibm.com
 Subject: Re: [PATCH v2 01/12] perf parse-events: Restrict core PMU bypass to
  --cputype option
-Message-ID: <ajFoWWjocBCgbnu4@x1>
+Message-ID: <ajFo85OEFvvFidNi@x1>
 References: <20260616012744.4049193-1-irogers@google.com>
  <20260616061404.41929-1-irogers@google.com>
  <20260616061404.41929-2-irogers@google.com>
@@ -117,11 +117,6 @@ On Mon, Jun 15, 2026 at 11:13:53PM -0700, Ian Rogers wrote:
 >  		}
 > -		ret = metricgroup__parse_groups(evlist, pmu, "transaction",
 > +		ret = metricgroup__parse_groups(evlist, pmu, false, "transaction",
-
-                                                 Missing /*parm_name=*/false ?
-						
-I'll turn this into a rule for my patches :-)
-
 >  						stat_config.metric_no_group,
 >  						stat_config.metric_no_merge,
 >  						stat_config.metric_no_threshold,
@@ -131,9 +126,6 @@ I'll turn this into a rule for my patches :-)
 >  
 > -		ret = metricgroup__parse_groups(evlist, pmu, "smi",
 > +		ret = metricgroup__parse_groups(evlist, pmu, false, "smi",
-
-Ditto
-
 >  						stat_config.metric_no_group,
 >  						stat_config.metric_no_merge,
 >  						stat_config.metric_no_threshold,
@@ -143,9 +135,6 @@ Ditto
 >  		if (metricgroup__parse_groups(evlist,
 > -						pmu, str,
 > +					      pmu, false, str,
-
-ditto
-
 >  						/*metric_no_group=*/false,
 >  						/*metric_no_merge=*/false,
 >  						/*metric_no_threshold=*/true,
@@ -386,6 +375,10 @@ ditto
 > +		.idx = evlist->core.nr_entries,
 > +		.error = err,
 > +		.stoken = PE_START_EVENTS,
+
+Nit: usually we touch unchanged lines to make it align, this time it was
+in reverse? Why not keep it aligned? 
+
 >  		.fake_pmu = fake_pmu,
 > -		.fake_tp  = fake_tp,
 > +		.fake_tp = fake_tp,
