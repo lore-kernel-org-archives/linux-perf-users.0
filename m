@@ -1,138 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCE337AA8C
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:43:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A110370ACE
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:44:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781574181; cv=none; b=aLVUJE+dME2JHUBiGRtBduj88yBtlpq4c24f/Ez/2IDNtc4ZoupAh/zoJPZb0wPyv3I+KalUbUssRkLILfx/s4+keBUwm/DUYzJ+TWD2QyyxJpK2abPpAs4rfj9uX9ebn8DIXJinmMPUlyUM27ombT6X4IiFftfMICmvE3ivpZQ=
+	t=1781574262; cv=none; b=BK3j7Kw0Z8pw7cp23nhR5xL443RuvPHj032na3zrD1jGqYy7jofBC2WhUg3PErzsYfEd0JJK3/2YXjxxMWZ90zn6YVOMb2i67MWqdSy/t/XO5NJecvMW4CLAM0HEI8KwktOrBbKWr+DmXddbKqbfVo87FMhd5n1iXBpH7ZkCRCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781574181; c=relaxed/simple;
-	bh=BQMpp+qmcNrxADVjfy/u6pYZzGI9VUahHfyRRwlLHIo=;
+	s=arc-20240116; t=1781574262; c=relaxed/simple;
+	bh=Jn0ppqHnuXIn4rGDsyGgb5X6c5FBwDcIsPyKHmi7Z4w=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RiLzI04rjFo9lHfeLk/XpTt0EK43wsOaFBtdSbGJJuANVmDr233CP3EuLd774zFJyiFdR5XMrtw38UjblinTKwsqK3iEw2cZ9x1zv6Cv5V17LQVnUHBT1rUIJ0O/OGxorZYsCH6XlYyGHFpPzw+URRu7qlwFN71DCeEhV13GMQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHx3o1xV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=iuSqdolhAkOIf4eD3vf9Qhtt+KSOF61B/RkS4GFSvWwuC7m4rg+W7GMmu7Z9fDC9rgtkiElpVDz1PTAqZqAForbeZN7Q2vXYVr9ca8rnbe7psJHW1W0uMbsuJ4GwHr2Vtg4iGVaM/8ZSgB9ipYogJSDEefWAc/H7JTmJdjOMhpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LC24AU6o; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHx3o1xV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDBC1F000E9;
-	Tue, 16 Jun 2026 01:43:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LC24AU6o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07FCD1F000E9;
+	Tue, 16 Jun 2026 01:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781574180;
-	bh=ujd5LAnMBIlGcsGYooZ2fVcRlIN0cWdT8MPu4FTM12E=;
+	s=k20260515; t=1781574261;
+	bh=eMehpB15GrenlKIuujQNKVNW7iX1TRxC/AGVSgbXzaw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nHx3o1xVgCq2dj0IXOeqGtqi8rMiU5TgIyLklfrcNGuEKsF5bh/l3gmjmOt6L7U4z
-	 bkN/3ny/hkGoF4Hj/k68Yj/NeZz1eaQDKKfpTRLNbxwBGi7HJ6QJI8NaINsKm7smR7
-	 YPFPz0Lu6Vojw/N8GWUUfMFwesIxeN2gBXCs1wATXDBZsGqucUmsQsMgAi2cdtRQw0
-	 5TNrX+glMQcmKLfdCvl7Ob+8ODH7aLNO+ioxK+y9s7Ev5oVndcLzCH2D5V4uby81Rk
-	 VoYgN+TkUZeclY4RpCRkujQ0uHo9uDS6Sneq+2ypgjh6E3kP2pimtNGOb5c+THgTg9
-	 GCE7kg9eKIGUA==
+	b=LC24AU6oH2JB+S5EinviR/bUV7HT/VJpAURGfe3Ur6NHlkCUZYsZiSFb7PG39UNwt
+	 4AQGwBHLHFbDU2XrPZOvm8sByJ/E1Rp5praC+HXNTpfGzIX7M5gpI+WTdQ6AjHwHz7
+	 doZcKbjkORaJBFJBgPrmjhwGhFawmnSeQ3NUoTNvZKByTuApBvtQ7gQWaFQqca+uTs
+	 2DJ8q6UHg2ChGAT/v9PZjrO8oUyYPCONJhIHFWzNDyfWPOb0k8VFU7OcpPpAT5gxMr
+	 fQR2T55TaJgAO0It8v5wLSjIh7wIDN9z/+ccLXXLPAmcWNpJ2GCJlq+TwESJrMciFE
+	 L9HxJwdvYsYLw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 07/12] perf tests: Fix flakiness in trace record and
- replay test
+Subject: Re: [PATCH v1 01/12] perf parse-events: Restrict core PMU bypass to
+ --cputype option
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616012744.4049193-8-irogers@google.com>
-References: <20260616012744.4049193-8-irogers@google.com>
+In-Reply-To: <20260616012744.4049193-2-irogers@google.com>
+References: <20260616012744.4049193-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 01:42:59 +0000
-Message-Id: <20260616014300.6BDBC1F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 01:44:20 +0000
+Message-Id: <20260616014421.07FCD1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Deleting a safely created `mktemp` file before reuse creates a Tim=
-e-Of-Check to Time-Of-Use (TOCTOU) race condition, allowing arbitrary file =
-overwrites.
-- [High] The use of a predictable logfile path in `/tmp` combined with unsa=
-fe shell redirection allows local attackers to overwrite arbitrary files.
+- [Medium] The patch fails to correctly distinguish between `--cputype` and=
+ `--pmu-filter` when parsing metrics, causing uncore PMU events to incorrec=
+tly bypass the PMU filter.
 --
 
-commit 9a64d257cf386372ecbfc443356890a8a5a33cd2
+commit 4dcfee88ee0f6425d471a5e115dd295cc67baf7d
 Author: Ian Rogers <irogers@google.com>
 
-perf tests: Fix flakiness in trace record and replay test
+perf parse-events: Restrict core PMU bypass to --cputype option
 
-The perf trace record and replay test fails intermittently on slow or
-virtualized hosts because the default recording workload occasionally
-completes without scheduling the target nanosleep system calls. Generalize
-perf_record_with_retry to support a custom record command prefix via
-PERF_RECORD_CMD and retry with scaled sleep durations.
+This commit introduces a cputype_filter flag to distinguish filtering
+initiated by --cputype from --pmu-filter. This restricts the uncore
+PMU bypass during event parsing to only apply when using --cputype.
 
-Fixes: 15bcfb96d0dd ("perf test: Add trace record and replay test")
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+[ ... ]
+> @@ -1317,7 +1317,9 @@ static int parse_ids(bool metric_no_merge, bool fak=
+e_pmu,
+>  	pr_debug("Parsing metric events '%s'\n", events.buf);
+>  	parse_events_error__init(&parse_error);
+>  	ret =3D __parse_events(parsed_evlist, events.buf, filter_pmu,
+> -			     &parse_error, fake_pmu, /*warn_if_reordered=3D*/false,
+> +			     /*cputype_filter=3D*/filter_pmu !=3D NULL,
 
-> diff --git a/tools/perf/tests/shell/lib/perf_record.sh b/tools/perf/tests=
-/shell/lib/perf_record.sh
-> index c5de252447705..5c7feb294ebbf 100644
-> --- a/tools/perf/tests/shell/lib/perf_record.sh
-> +++ b/tools/perf/tests/shell/lib/perf_record.sh
-> @@ -21,9 +21,14 @@ perf_record_with_retry() {
->    local duration
->    local first_run=3Dtrue
->    local ret=3D1
-> +  local cmd_prefix=3D"perf record"
-> +  if [ -n "${PERF_RECORD_CMD}" ]; then
-> +    cmd_prefix=3D"${PERF_RECORD_CMD}"
-> +  fi
+[Severity: Medium]
+Does hardcoding this argument to filter_pmu !=3D NULL cause metric parsing =
+to
+lose the distinction between --cputype and --pmu-filter?
+
+If metric parsing is initiated and a --pmu-filter was provided, this will
+cause cputype_filter to be evaluated as true in __parse_events().
+
+This will then trigger the new bypass logic in parse_events__filter_pmu(),
+preventing uncore PMUs from being filtered out. As a result, users specifyi=
+ng
+--pmu-filter with uncore metrics might silently aggregate events from all
+identical uncore PMUs instead of the single requested one.
+
+> +			     &parse_error, fake_pmu,
+> +			     /*warn_if_reordered=3D*/false,
+>  			     /*fake_tp=3D*/false);
+>  	if (ret) {
+>  		parse_events_error__print(&parse_error, events.buf);
+[ ... ]
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+[ ... ]
+> @@ -429,6 +429,9 @@ bool parse_events__filter_pmu(const struct parse_even=
+ts_state *parse_state,
+>  	if (parse_state->pmu_filter =3D=3D NULL)
+>  		return false;
+> =20
+> +	if (parse_state->cputype_filter && !pmu->is_core)
+> +		return false;
 > +
->    for duration in 0.01 0.1 0.3 1.0 2.0; do
->      rm -f "${perfdata}" "${perfdata}".old
 
-[Severity: High]
-Does this rm -f introduce a time-of-check to time-of-use race condition?
+[Severity: Medium]
+Is it possible for this block to be incorrectly reached during metric
+evaluation if cputype_filter was erroneously set to true by parse_ids()?
 
-In trace_record_replay.sh, the perfdata file is securely created using
-mktemp:
-
-tools/perf/tests/shell/trace_record_replay.sh:
-file=3D$(mktemp /tmp/temporary_file.XXXXX)
-...
-PERF_RECORD_CMD=3D"perf trace record" perf_record_with_retry "${file}" ...
-
-By explicitly deleting this securely created file here in
-perf_record_with_retry before executing the command, the script relinquishes
-the uniqueness and security guarantees of mktemp.
-
-Since the test enforces running as root, a local attacker monitoring /tmp
-could create a symlink with the deleted file's name pointing to an arbitrary
-critical system file.
-
-When the perf command later calls open_file_write() in tools/perf/util/data=
-.c
-using O_TRUNC and without O_NOFOLLOW, it will follow the symlink and trunca=
-te
-the attacker's target file.
-
-> -    perf record "$@" -o "${perfdata}" ${testprog_base} ${duration} > "$l=
-ogfile" 2>&1
-> +    ${cmd_prefix} "$@" -o "${perfdata}" ${testprog_base} ${duration} > "=
-$logfile" 2>&1
-
-[Severity: High]
-Could this shell redirection allow for arbitrary file overwrites via symlink
-attacks?
-
-This issue was introduced in an earlier patch in this series when
-perf_record_with_retry was added. The logfile path is predictable:
-
-tools/perf/tests/shell/lib/perf_record.sh:perf_record_with_retry() {
-    logfile=3D"/tmp/__perf_record_retry.$(id -u).$BASHPID.log"
-}
-
-Since the process ID space is limited, a local attacker could pre-create
-symlinks for likely process IDs pointing to sensitive system files.
-
-When the script executes and the shell performs redirection without
-noclobber enabled, it will blindly follow the symlink as root and
-overwrite the target file.
-
->      local record_exit=3D$?
+>  	return perf_pmu__wildcard_match(pmu, parse_state->pmu_filter) =3D=3D 0;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616012744.4049=
-193-1-irogers@google.com?part=3D7
+193-1-irogers@google.com?part=3D1
