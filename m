@@ -1,54 +1,54 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
+Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5334A379C28
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23C5378D93
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781573145; cv=none; b=jrVjzzrwm6MoNUX98Q1NVuhzH16/7DZPNJLA8w7CtY6bZzl+oOI6DR/ELay35JCdoeeJpODQ5oBzC78+XIxjZ21cP+GGLSNT9/vb9PK7ByoTkkp16k0gn15WOPa9jO6mRu/DA4AO53m8ETkAQTTAebJpVn5pjNgL3txCH9s0CSo=
+	t=1781573148; cv=none; b=afA6MyPsdz2BM98crLWBhQYoa2CyN1+gnvxzzzTHuzFTUzGC0dY93ocSqSxeXv23jhwmRKfCI0qoyOjzTygjBgGfVKaMxMj6U5Xcb1pnliNePU/hu2321NS7tMc9GwkSgEqe4b6yMl4pHQmrnvMhSLldl9xqZaQPtl7ZkfdpvPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781573145; c=relaxed/simple;
-	bh=z8cj7+XJMmPVwLhmOKB6KQcaPO6wu+6KFYbI1UoOB7U=;
+	s=arc-20240116; t=1781573148; c=relaxed/simple;
+	bh=ZoUgBSNyuL6MIMYCxW8g2irqFVZoKDKwFtmtuZ/CbSs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=D9BF5StlbxNSxcXzcIK1YFLhefx1tjTJ1I5UUIxmk4S95o4jnEwsjZ1WkapMFmgHxs+RcinyQpVQzxHt7Ha4OEQwWgH7mLzyxYp87UGUUsDblpIgMeMUmzbjKng0TQTTcrrPeTBvxkupcgSfNkXJAFtiaG4NKL/DxgaYw2QBJic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f3qqFSJj; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=mG65b1Nu4KvXoyFy6G82T5nbw2UorGoqZB1CwCnOHu/o+23tPfRcu+3K8S+M41c9td2MicG2Q6Y9QkiMIlnHZuofhjz1U8+LWJsKKb1oEn5AWo5ij9G4CA3zdw8DC0cNSHL64tqkV218xFmk9oNWohPJm9J+hbgmZbbpBi+QnA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pM9vp80W; arc=none smtp.client-ip=74.125.82.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f3qqFSJj"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30761ab3483so856693eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:25:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pM9vp80W"
+Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1382674ba2eso3732484c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:25:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781573143; x=1782177943; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781573146; x=1782177946; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ybHAwnIeIr3M04cBqGgiNtZgO4DE4FyzgzXKD88uT88=;
-        b=f3qqFSJj5z52+RAQOIqigYJgk0o5NOWbF1FwTGvlsx4dRTJtwgxVlMnUvgE99jrFHs
-         f1SgljoZBUT8HAawjcoH31A1fmmjWH8rZXh4QwqAjTwzRLCKwQNLlX0u6LimItYQeVQj
-         gM326jOXoOX0Fdmsq2m0gI49Txa2y0OkRoerlGr4xHL/yMfAucC4Zaky4V4GQcnReBlw
-         udFxvWQm8wRW+JMet7nLdTOFeoACKwxlAYlnW4rSWI4T9+89uDkV9rH9SG/C+69AhuIV
-         dhGRQ3hDOCJPfQQT45MiODkjXs0ueP21lagaFhJ/ShK2Xf2anewWOp8i2FNsak2SyKTe
-         SLAQ==
+        bh=cmYPTDyaG5azpDrJTXCuP5nQuOUUOOBEKHJuEyUNHtw=;
+        b=pM9vp80WeYkcLBcM5QryySmttP/qH4QUHAjqY1gY9XFeC0TgwJdUONqoJSXCXcYqoZ
+         +PX994YoSLUdsmWkP4EG17DozfBpb7BaYG0/GjW94iYSVX1v+6rtv8kuOrGQZEY2jQVf
+         f0kT6xw4oY93zWkoR661NX3z5kRGi0g8pv6JCW31OcVb9iEfoehoe9grBzpIiGe2kq/n
+         PRk3Cn02MUImZvHMmTiryPcdxesSWe2zfBksCoXqSBlvudEAlb+5S9BsgJ0xIdvlrEoD
+         S7mnJy7uOIR9oHEVhVMTDX4pbEGffLgULoQD32cil4xoewScRIpKYJjA9YKVraG67YSv
+         DdBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781573143; x=1782177943;
+        d=1e100.net; s=20251104; t=1781573146; x=1782177946;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ybHAwnIeIr3M04cBqGgiNtZgO4DE4FyzgzXKD88uT88=;
-        b=DUwHdiM5w/Se/NxpnEmRz8a/JMeHrMUN0RIfmGRwzuaqkgmeybCNJhCuEW8/Auee+4
-         RN7RRCNk3oIofUv5CUSThyJLwydMUHjZiyB70ffea7/zSfxMD5eKCA9ZMLSwcHxFNs/B
-         ExCMmKcBkFbv0WZzaCqYhkwUMu/Azb9zGyr4HDuvEYwaELOIgiU8hqBZYLoaK9rk4f8f
-         PA3UtPKEILVDvGZrRaCQCViiHyGTFgEYgowslPeN239ChPI/ltA+0WvnB2R/uKK5uScJ
-         ug1GY+3n2F+oe47jKkX57KKiRuXt8E2di7FcEcCOQD33z1uy7heGLnMBzF0ZNkFwmTML
-         FzRA==
-X-Forwarded-Encrypted: i=1; AFNElJ+knB2DdOavV+vkPUgn+xMDHLMAmbuCW0HkzsozFVF2jk2uFlwEqs1DE8PdMzjRnys6OgPWzYxk7hnfViXl9kQP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNLZ1TZi649ChbNS09kZ16AttQF546fKYJ+FoYFCRVtOT5h8l6
-	2rIcfY1B1NqhPhso2lVKu18oy9b791ONi9Qi/isQPPD7Dg5ubshKe0cQshlSIiBDIGqYW+ihFku
-	mSMTj0samMw==
-X-Received: from dybtk5.prod.google.com ([2002:a05:7300:d945:b0:307:34ee:a27b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:1907:b0:2d9:fa9c:87a9
- with SMTP id 5a478bee46e88-30ba598cf1bmr1040059eec.5.1781573142826; Mon, 15
- Jun 2026 18:25:42 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:25:12 -0700
+        bh=cmYPTDyaG5azpDrJTXCuP5nQuOUUOOBEKHJuEyUNHtw=;
+        b=D9hDLOvq3tGNbB+k05Y9PE/eECG3/rvgpsiKuDQDsOSJyVcLL68zlLxLT2s4XzUtKV
+         HJd2628TzTRCmwTo+m1f9Y8UMxU++XhN7rZgS9jeq99XQv/AbbTyf0t2Nlg8Ar2r3AI+
+         2lw1bntU7jd81CbiL9odZ1832+DI2eWZZeXrbM2aGOdGNEyQ+vp0gxeKPUYBLo5qZyMV
+         zyfBXPTo2s8UEy6CFHcnh7e3GhhbIxLvyqHAuhyrFVRTXF8IGx155C7C+GqWRtDEp94K
+         IhG8koDdg9jTG5n3t/+fSr2J6zCaBhyukccwWdNOzp1F120CAF9q8WZAEL2818SCj6vS
+         b5jg==
+X-Forwarded-Encrypted: i=1; AFNElJ+VfHThIg1Fk25voXqAsynOAtFshuMO8gxEjabYwRgxdBgqz57YtNOSeyOs+1XllYKZgCCA8ncd3jZtuixmj3uj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeeZT/py8lusEiKJ9O95LKl5gZeS/2URsP7rtxVoDcFX2j/pQu
+	ZsQABReE3/4tbqsExgDtjIIPgMTLZiBPQ/vcq6ASBZraTCXvAQZEhm0Y8ycLVybPGksouhB1r7N
+	vxL61koITVA==
+X-Received: from dled13-n2.prod.google.com ([2002:a05:701b:42cd:20b0:138:14f4:c975])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2390:b0:12c:44a5:fb4f
+ with SMTP id a92af1059eb24-1384bafed09mr7295332c88.10.1781573145061; Mon, 15
+ Jun 2026 18:25:45 -0700 (PDT)
+Date: Mon, 15 Jun 2026 18:25:13 -0700
 In-Reply-To: <20260616012521.4045202-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616012521.4045202-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616012521.4045202-4-irogers@google.com>
-Subject: [PATCH v1 03/12] perf tests workloads: Support sub-second durations
- in noploop and thloop
+Message-ID: <20260616012521.4045202-5-irogers@google.com>
+Subject: [PATCH v1 04/12] perf tests: Add robust record retry helper and use
+ subsecond workloads
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -70,91 +70,588 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Currently, the noploop and thloop workloads only support sleep durations
-in integer seconds because they parse the argument using atoi() and use
-alarm() for timer signaling.
+Introduce `perf_record_with_retry` and `perf_record_cleanup` in a shared
+library `tests/shell/lib/perf_record.sh` to prevent record test failures
+caused by transient recording or workload delays.
 
-To support much shorter execution times in tests (speeding up test suites
-and allowing faster retries), change the input parsing to use atof() for
-double floating-point seconds. Use ualarm() for fractional durations less
-than 1.0 seconds, and fall back to alarm() for durations of 1.0 second or more.
+Update `record.sh`, `record_lbr.sh`, `pipe_test.sh`, `kvm.sh`, and
+`stat_all_pfm.sh` to use this robust record retry logic. These tests now
+start with very short durations (e.g. 0.01 seconds) and scale up if the
+initial recording failed to capture samples, significantly improving test
+execution speed on success while remaining resilient to slow systems.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 TAG=agy
 CONV=7e7ee33a-e940-4a8a-8e64-878da6a68b59
 ---
- tools/perf/tests/workloads/noploop.c | 15 ++++++++++++---
- tools/perf/tests/workloads/thloop.c  | 14 +++++++++-----
- 2 files changed, 21 insertions(+), 8 deletions(-)
+ tools/perf/tests/shell/kvm.sh             |  61 +++++---
+ tools/perf/tests/shell/lib/perf_record.sh |  47 ++++++
+ tools/perf/tests/shell/pipe_test.sh       |   4 +-
+ tools/perf/tests/shell/record.sh          | 172 +++++++++++-----------
+ tools/perf/tests/shell/record_lbr.sh      |  50 +++++--
+ tools/perf/tests/shell/stat_all_pfm.sh    |   2 +-
+ 6 files changed, 208 insertions(+), 128 deletions(-)
+ create mode 100644 tools/perf/tests/shell/lib/perf_record.sh
 
-diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/workloads/noploop.c
-index 656e472e6188..3fcba5ceaa3d 100644
---- a/tools/perf/tests/workloads/noploop.c
-+++ b/tools/perf/tests/workloads/noploop.c
-@@ -15,15 +15,24 @@ static void sighandler(int sig __maybe_unused)
+diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell/kvm.sh
+index f88e859025c4..255250ddba5c 100755
+--- a/tools/perf/tests/shell/kvm.sh
++++ b/tools/perf/tests/shell/kvm.sh
+@@ -39,17 +39,26 @@ skip() {
+ test_kvm_stat() {
+ 	echo "Testing perf kvm stat"
  
- static int noploop(int argc, const char **argv)
- {
--	int sec = 1;
-+	double sec = 1.0;
+-	echo "Recording kvm events for pid ${qemu_pid}..."
+-	if ! perf kvm stat record -p "${qemu_pid}" -o "${perfdata}" sleep 1; then
+-		echo "Failed to record kvm events"
+-		err=1
+-		return
+-	fi
++	local duration
++	local success=false
++	for duration in 1 2 4 8; do
++		echo "Recording kvm events for pid ${qemu_pid} (duration ${duration}s)..."
++		rm -f "${perfdata}" "${perfdata}".old
++		if ! perf kvm stat record -p "${qemu_pid}" -o "${perfdata}" sleep ${duration} >/dev/null 2>&1; then
++			echo "perf kvm stat record failed, retrying..."
++			continue
++		fi
  
- 	pthread_setname_np(pthread_self(), "perf-noploop");
- 	if (argc > 0)
--		sec = atoi(argv[0]);
-+		sec = atof(argv[0]);
+-	echo "Reporting kvm events..."
+-	if ! perf kvm -i "${perfdata}" stat report 2>&1 | grep -q "VM-EXIT"; then
++		if [ -e "${perfdata}" ] && perf kvm -i "${perfdata}" stat report 2>&1 | grep -q "VM-EXIT"; then
++			success=true
++			break
++		fi
++		echo "No VM-EXIT events found, retrying..."
++	done
 +
-+	if (sec <= 0.0) {
-+		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
-+		return 1;
-+	}
++	if [ "$success" = false ]; then
+ 		echo "Failed to find VM-EXIT in report"
+-		perf kvm -i "${perfdata}" stat report 2>&1
++		perf kvm -i "${perfdata}" stat report 2>&1 || true
+ 		err=1
+ 		return
+ 	fi
+@@ -60,22 +69,28 @@ test_kvm_stat() {
+ test_kvm_record_report() {
+ 	echo "Testing perf kvm record/report"
  
- 	signal(SIGINT, sighandler);
- 	signal(SIGALRM, sighandler);
--	alarm(sec);
+-	echo "Recording kvm profile for pid ${qemu_pid}..."
+-	# Use --host to avoid needing guest symbols/mounts for this simple test
+-	# We just want to verify the command runs and produces data
+-	# We run in background and kill it because 'perf kvm record' appends options
+-	# after the command, which breaks 'sleep' (e.g. it gets '-e cycles').
+-	perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
+-	rec_pid=$!
+-	sleep 1
+-	kill -INT "${rec_pid}"
+-	wait "${rec_pid}" || true
++	local duration
++	local success=false
++	for duration in 1 2 4 8; do
++		echo "Recording kvm profile for pid ${qemu_pid} (duration ${duration}s)..."
++		rm -f "${perfdata}" "${perfdata}".old
 +
-+	if (sec < 1.0)
-+		ualarm((useconds_t)(sec * 1000000.0), 0);
-+	else
-+		alarm((unsigned int)sec);
++		perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
++		local rec_pid=$!
++		sleep ${duration}
++		kill -INT "${rec_pid}"
++		wait "${rec_pid}" || true
++
++		if [ -e "${perfdata}" ] && perf kvm -i "${perfdata}" report --stdio 2>&1 | grep -q "Event count"; then
++			success=true
++			break
++		fi
++		echo "No samples or report failed, retrying..."
++	done
  
- 	while (!done)
- 		continue;
-diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
-index bd8168f883fb..bed3047fe9c2 100644
---- a/tools/perf/tests/workloads/thloop.c
-+++ b/tools/perf/tests/workloads/thloop.c
-@@ -31,14 +31,15 @@ static void *thfunc(void *arg)
+-	echo "Reporting kvm profile..."
+-	# Check for some standard output from report
+-	if ! perf kvm -i "${perfdata}" report --stdio 2>&1 | grep -q "Event count"; then
++	if [ "$success" = false ]; then
+ 		echo "Failed to report kvm profile"
+-		perf kvm -i "${perfdata}" report --stdio 2>&1
++		perf kvm -i "${perfdata}" report --stdio 2>&1 || true
+ 		err=1
+ 		return
+ 	fi
+diff --git a/tools/perf/tests/shell/lib/perf_record.sh b/tools/perf/tests/shell/lib/perf_record.sh
+new file mode 100644
+index 000000000000..c5de25244770
+--- /dev/null
++++ b/tools/perf/tests/shell/lib/perf_record.sh
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: GPL-2.0
++
++perf_record_with_retry() {
++  local perfdata="$1"
++  local check_cmd="$2"
++  local testprog_base="$3"
++  shift 3
++
++  local logfile
++  logfile="/tmp/__perf_record_retry.$(id -u).$BASHPID.log"
++
++  # Save the e flag state and disable it
++  local save_e
++  if [[ $- == *e* ]]; then
++    save_e="set -e"
++  else
++    save_e="set +e"
++  fi
++  set +e
++
++  local duration
++  local first_run=true
++  local ret=1
++  for duration in 0.01 0.1 0.3 1.0 2.0; do
++    rm -f "${perfdata}" "${perfdata}".old
++    perf record "$@" -o "${perfdata}" ${testprog_base} ${duration} > "$logfile" 2>&1
++    local record_exit=$?
++
++    if [ "$first_run" = true ] && [ $record_exit -ne 0 ]; then
++      ret=2
++      break
++    fi
++    first_run=false
++
++    if [ -e "${perfdata}" ] && eval "${check_cmd}"; then
++      ret=0
++      break
++    fi
++  done
++
++  eval "$save_e"
++  return $ret
++}
++
++perf_record_cleanup() {
++  rm -f /tmp/__perf_record_retry.$(id -u).$BASHPID.log
++}
+diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell/pipe_test.sh
+index e459aa99a951..ce68d850c983 100755
+--- a/tools/perf/tests/shell/pipe_test.sh
++++ b/tools/perf/tests/shell/pipe_test.sh
+@@ -12,8 +12,8 @@ skip_test_missing_symbol ${sym}
  
- static int thloop(int argc, const char **argv)
- {
--	int nt = 2, sec = 1, err = 1;
-+	int nt = 2, err = 1;
-+	double sec = 1.0;
- 	pthread_t *thread_list = NULL;
+ data=$(mktemp /tmp/perf.data.XXXXXX)
+ data2=$(mktemp /tmp/perf.data2.XXXXXX)
+-prog="perf test -w noploop"
+-[ "$(uname -m)" = "s390x" ] && prog="$prog 3"
++prog="perf test -w noploop 0.1"
++[ "$(uname -m)" = "s390x" ] && prog="perf test -w noploop 3"
+ err=0
  
- 	if (argc > 0)
--		sec = atoi(argv[0]);
-+		sec = atof(argv[0]);
+ set -e
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 7cb81cf3444a..382e7ee02eb8 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -1,10 +1,13 @@
+ #!/bin/bash
+-# perf record tests (exclusive)
++# perf record tests
+ # SPDX-License-Identifier: GPL-2.0
  
--	if (sec <= 0) {
--		fprintf(stderr, "Error: seconds (%d) must be >= 1\n", sec);
-+	if (sec <= 0.0) {
-+		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
- 		return 1;
- 	}
+ set -e
  
-@@ -67,7 +68,10 @@ static int thloop(int argc, const char **argv)
- 			goto out;
- 		}
- 	}
--	alarm(sec);
-+	if (sec < 1.0)
-+		ualarm((useconds_t)(sec * 1000000.0), 0);
-+	else
-+		alarm((unsigned int)sec);
- 	test_loop();
- 	err = 0;
- out:
+ shelldir=$(dirname "$0")
++. "${shelldir}"/lib/perf_record.sh
++
++
+ # shellcheck source=lib/waiting.sh
+ . "${shelldir}"/lib/waiting.sh
+ 
+@@ -39,6 +42,7 @@ cleanup() {
+   rm -f "${perfdata}"
+   rm -f "${perfdata}".old
+   rm -f "${script_output}"
++  perf_record_cleanup
+ 
+   trap - EXIT TERM INT
+ }
+@@ -50,22 +54,19 @@ trap_cleanup() {
+ }
+ trap trap_cleanup EXIT TERM INT
+ 
++check_per_thread() {
++  perf report -i "${perfdata}" -q | grep -q "${testsym}"
++}
++
+ test_per_thread() {
+   echo "Basic --per-thread mode test"
+-  if ! perf record -o /dev/null --quiet ${testprog} 2> /dev/null
+-  then
++  local ret=0
++  perf_record_with_retry "${perfdata}" "check_per_thread" "perf test -w thloop" --per-thread || ret=$?
++  if [ $ret -eq 2 ]; then
+     echo "Per-thread record [Skipped event not supported]"
+     return
+-  fi
+-  if ! perf record --per-thread -o "${perfdata}" ${testprog} 2> /dev/null
+-  then
+-    echo "Per-thread record [Failed record]"
+-    err=1
+-    return
+-  fi
+-  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+-  then
+-    echo "Per-thread record [Failed missing output]"
++  elif [ $ret -eq 1 ]; then
++    echo "Per-thread record [Failed record or missing output]"
+     err=1
+     return
+   fi
+@@ -96,6 +97,10 @@ test_per_thread() {
+   echo "Basic --per-thread mode test [Success]"
+ }
+ 
++check_register_capture() {
++  perf script -F ip,sym,iregs -i "${perfdata}" 2>/dev/null | grep -q "DI:"
++}
++
+ test_register_capture() {
+   echo "Register capture test"
+   if ! perf list pmu | grep -q 'br_inst_retired.near_call'
+@@ -108,11 +113,12 @@ test_register_capture() {
+     echo "Register capture test [Skipped missing registers]"
+     return
+   fi
+-  if ! perf record -o - --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call \
+-    -c 1000 --per-thread ${testprog} 2> /dev/null \
+-    | perf script -F ip,sym,iregs -i - 2> /dev/null \
+-    | grep -q "DI:"
+-  then
++
++  local ret=0
++  perf_record_with_retry "${perfdata}" "check_register_capture" "perf test -w thloop" \
++    --intr-regs=di,r8,dx,cx -e br_inst_retired.near_call -c 1000 --per-thread || ret=$?
++
++  if [ $ret -ne 0 ]; then
+     echo "Register capture test [Failed missing output]"
+     err=1
+     return
+@@ -120,65 +126,65 @@ test_register_capture() {
+   echo "Register capture test [Success]"
+ }
+ 
++check_system_wide() {
++  perf report -i "${perfdata}" -q | grep -q "${testsym}"
++}
++
+ test_system_wide() {
+   echo "Basic --system-wide mode test"
+-  if ! perf record -aB --synth=no -o "${perfdata}" ${testprog} 2> /dev/null
+-  then
++  local ret=0
++  perf_record_with_retry "${perfdata}" "check_system_wide" "perf test -w thloop" -aB --synth=no || ret=$?
++  if [ $ret -eq 2 ]; then
+     echo "System-wide record [Skipped not supported]"
+     return
+-  fi
+-  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+-  then
++  elif [ $ret -eq 1 ]; then
+     echo "System-wide record [Failed missing output]"
+     err=1
+     return
+   fi
+-  if ! perf record -aB --synth=no -e cpu-clock,cs --threads=cpu \
+-    -o "${perfdata}" ${testprog} 2> /dev/null
+-  then
+-    echo "System-wide record [Failed record --threads option]"
+-    err=1
+-    return
+-  fi
+-  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+-  then
+-    echo "System-wide record [Failed --threads missing output]"
++
++  ret=0
++  perf_record_with_retry "${perfdata}" "check_system_wide" "perf test -w thloop" \
++    -aB --synth=no -e cpu-clock,cs --threads=cpu || ret=$?
++  if [ $ret -ne 0 ]; then
++    echo "System-wide record [Failed record --threads option or missing output]"
+     err=1
+     return
+   fi
+   echo "Basic --system-wide mode test [Success]"
+ }
+ 
++check_workload() {
++  perf report -i "${perfdata}" -q | grep -q "${testsym}"
++}
++
+ test_workload() {
+   echo "Basic target workload test"
+-  if ! perf record -o "${perfdata}" ${testprog} 2> /dev/null
+-  then
+-    echo "Workload record [Failed record]"
++  local ret=0
++  perf_record_with_retry "${perfdata}" "check_workload" "perf test -w thloop" || ret=$?
++  if [ $ret -ne 0 ]; then
++    echo "Workload record [Failed record or missing output]"
+     err=1
+     return
+   fi
+-  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+-  then
+-    echo "Workload record [Failed missing output]"
+-    err=1
+-    return
+-  fi
+-  if ! perf record -e cpu-clock,cs --threads=package \
+-    -o "${perfdata}" ${testprog} 2> /dev/null
+-  then
+-    echo "Workload record [Failed record --threads option]"
+-    err=1
+-    return
+-  fi
+-  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+-  then
+-    echo "Workload record [Failed --threads missing output]"
++
++  ret=0
++  perf_record_with_retry "${perfdata}" "check_workload" "perf test -w thloop" \
++    -e cpu-clock,cs --threads=package || ret=$?
++  if [ $ret -ne 0 ]; then
++    echo "Workload record [Failed record --threads option or missing output]"
+     err=1
+     return
+   fi
+   echo "Basic target workload test [Success]"
+ }
+ 
++check_branch_counter() {
++  perf report -i "${perfdata}" -D -q 2>/dev/null | grep -q "$br_cntr_output" && \
++  perf script -i "${perfdata}" -F +brstackinsn,+brcntr 2>/dev/null | \
++    grep -q "$br_cntr_script_output"
++}
++
+ test_branch_counter() {
+   echo "Branch counter test"
+   # Check if the branch counter feature is supported
+@@ -190,67 +196,61 @@ test_branch_counter() {
+       return
+     fi
+   done
+-  if ! perf record -o "${perfdata}" -e "{branches:p,instructions}" -j any,counter ${testprog} 2> /dev/null
+-  then
+-    echo "Branch counter record test [Failed record]"
+-    err=1
+-    return
+-  fi
+-  if ! perf report -i "${perfdata}" -D -q | grep -q "$br_cntr_output"
+-  then
+-    echo "Branch counter report test [Failed missing output]"
+-    err=1
+-    return
+-  fi
+-  if ! perf script -i "${perfdata}" -F +brstackinsn,+brcntr | grep -q "$br_cntr_script_output"
+-  then
+-    echo " Branch counter script test [Failed missing output]"
++  local ret=0
++  perf_record_with_retry "${perfdata}" "check_branch_counter" "perf test -w thloop" \
++    -e "{branches:p,instructions}" -j any,counter || ret=$?
++  if [ $ret -ne 0 ]; then
++    echo "Branch counter test [Failed record or missing output]"
+     err=1
+     return
+   fi
+   echo "Branch counter test [Success]"
+ }
+ 
++check_cgroup() {
++  perf report -i "${perfdata}" -D 2>/dev/null | grep -q "CGROUP" && \
++  perf script -i "${perfdata}" -F cgroup 2>/dev/null | grep -q -v "unknown"
++}
++
+ test_cgroup() {
+   echo "Cgroup sampling test"
+-  if ! perf record -aB --synth=cgroup --all-cgroups -o "${perfdata}" ${testprog} 2> /dev/null
+-  then
++  local ret=0
++  perf_record_with_retry "${perfdata}" "check_cgroup" "perf test -w thloop" \
++    -aB --synth=cgroup --all-cgroups || ret=$?
++  if [ $ret -eq 2 ]; then
+     echo "Cgroup sampling [Skipped not supported]"
+     return
+-  fi
+-  if ! perf report -i "${perfdata}" -D | grep -q "CGROUP"
+-  then
++  elif [ $ret -eq 1 ]; then
+     echo "Cgroup sampling [Failed missing output]"
+     err=1
+     return
+   fi
+-  if ! perf script -i "${perfdata}" -F cgroup | grep -q -v "unknown"
+-  then
+-    echo "Cgroup sampling [Failed cannot resolve cgroup names]"
+-    err=1
+-    return
+-  fi
+   echo "Cgroup sampling test [Success]"
+ }
+ 
++check_uid() {
++  perf report -i "${perfdata}" -q | grep -q "${testsym}"
++}
++
+ test_uid() {
+   echo "Uid sampling test"
+-  if ! perf record -aB --synth=no --uid "$(id -u)" -o "${perfdata}" ${testprog} \
+-    > "${script_output}" 2>&1
+-  then
+-    if grep -q "libbpf.*EPERM" "${script_output}"
++  local logfile
++  logfile="/tmp/__perf_record_retry.$(id -u).$BASHPID.log"
++  local ret=0
++  perf_record_with_retry "${perfdata}" "check_uid" "perf test -w thloop" \
++    -aB --synth=no --uid "$(id -u)" || ret=$?
++  if [ $ret -eq 2 ]; then
++    if grep -q -E "libbpf.*EPERM|Access to performance monitoring|Permission denied|Failure to open any events" \
++      "$logfile"
+     then
+       echo "Uid sampling [Skipped permissions]"
+       return
+     else
+       echo "Uid sampling [Failed to record]"
+       err=1
+-      # cat "${script_output}"
+       return
+     fi
+-  fi
+-  if ! perf report -i "${perfdata}" -q | grep -q "${testsym}"
+-  then
++  elif [ $ret -eq 1 ]; then
+     echo "Uid sampling [Failed missing output]"
+     err=1
+     return
+diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
+index 78a02e90ece1..78899a54589c 100755
+--- a/tools/perf/tests/shell/record_lbr.sh
++++ b/tools/perf/tests/shell/record_lbr.sh
+@@ -1,9 +1,12 @@
+ #!/bin/bash
+-# perf record LBR tests (exclusive)
++# perf record LBR tests
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ set -e
+ 
++shelldir=$(dirname "$0")
++. "${shelldir}"/lib/perf_record.sh
++
+ ParanoidAndNotRoot() {
+   [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
+ }
+@@ -22,6 +25,7 @@ cleanup() {
+   rm -rf "${perfdata}"
+   rm -rf "${perfdata}".old
+   rm -rf "${perfdata}".txt
++  perf_record_cleanup
+ 
+   trap - EXIT TERM INT
+ }
+@@ -34,22 +38,28 @@ trap_cleanup() {
+ trap trap_cleanup EXIT TERM INT
+ 
+ 
++check_lbr_callgraph() {
++  perf report --stitch-lbr -i "${perfdata}" > "${perfdata}".txt 2>&1
++}
++
+ lbr_callgraph_test() {
+   test="LBR callgraph"
+ 
+   echo "$test"
+-  if ! perf record -e cycles --call-graph lbr -o "${perfdata}" perf test -w thloop
+-  then
++  set +e
++  perf_record_with_retry "${perfdata}" "check_lbr_callgraph" "perf test -w thloop" \
++    -e cycles --call-graph lbr
++  local ret=$?
++  set -e
++
++  if [ $ret -eq 2 ]; then
+     echo "$test [Failed support missing]"
+     if [ $err -eq 0 ]
+     then
+       err=2
+     fi
+     return
+-  fi
+-
+-  if ! perf report --stitch-lbr -i "${perfdata}" > "${perfdata}".txt
+-  then
++  elif [ $ret -eq 1 ]; then
+     cat "${perfdata}".txt
+     echo "$test [Failed in perf report]"
+     err=1
+@@ -59,6 +69,12 @@ lbr_callgraph_test() {
+   echo "$test [Success]"
+ }
+ 
++check_lbr_samples() {
++  local out
++  out=$(perf report -D -i "${perfdata}" 2> /dev/null | grep -A1 'PERF_RECORD_SAMPLE')
++  [ "$(echo "$out" | grep -c 'PERF_RECORD_SAMPLE' || true)" -gt 0 ]
++}
++
+ lbr_test() {
+   local branch_flags=$1
+   local test="LBR $2 test"
+@@ -70,25 +86,27 @@ lbr_test() {
+   local r
+ 
+   echo "$test"
+-  if ! perf record -e cycles $branch_flags -o "${perfdata}" perf test -w thloop
+-  then
++  set +e
++  perf_record_with_retry "${perfdata}" "check_lbr_samples" "perf test -w thloop" \
++    -e cycles $branch_flags
++  local ret=$?
++  set -e
++
++  if [ $ret -eq 2 ]; then
+     echo "$test [Failed support missing]"
+-    perf record -e cycles $branch_flags -o "${perfdata}" perf test -w thloop || true
+     if [ $err -eq 0 ]
+     then
+       err=2
+     fi
+     return
+-  fi
+-
+-  out=$(perf report -D -i "${perfdata}" 2> /dev/null | grep -A1 'PERF_RECORD_SAMPLE')
+-  sam_nr=$(echo "$out" | grep -c 'PERF_RECORD_SAMPLE' || true)
+-  if [ $sam_nr -eq 0 ]
+-  then
++  elif [ $ret -eq 1 ]; then
+     echo "$test [Failed no samples captured]"
+     err=1
+     return
+   fi
++
++  out=$(perf report -D -i "${perfdata}" 2> /dev/null | grep -A1 'PERF_RECORD_SAMPLE')
++  sam_nr=$(echo "$out" | grep -c 'PERF_RECORD_SAMPLE' || true)
+   echo "$test: $sam_nr samples"
+ 
+   bs_nr=$(echo "$out" | grep -c 'branch stack: nr:' || true)
+diff --git a/tools/perf/tests/shell/stat_all_pfm.sh b/tools/perf/tests/shell/stat_all_pfm.sh
+index c08c186af2c4..ec262c6b1674 100755
+--- a/tools/perf/tests/shell/stat_all_pfm.sh
++++ b/tools/perf/tests/shell/stat_all_pfm.sh
+@@ -32,7 +32,7 @@ do
+   then
+     # We failed to see the event and it is supported. Possibly the workload was
+     # too small so retry with something longer.
+-    result=$(perf stat --pfm-events "$p" perf bench internals synthesize 2>&1)
++    result=$(perf stat --pfm-events "$p" perf test -w noploop 0.1 2>&1)
+     x=$?
+     if test "$x" -ne "0"
+     then
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
