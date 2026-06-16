@@ -1,228 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A406361DA9;
-	Tue, 16 Jun 2026 01:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E70A17A2FB
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781574413; cv=none; b=obse+ClpPsUtjmZyW69jTr7CYuSX0Uj1P/jzbVBdguS+gQiEYIgWYAUb8ptNPugB+e8bXOvHxhYIMTgs2xpEtzOn2lMmbxF4gHVGh5/rtK6d8H2Dr6f+BitYVK4RJ00CNwqNxWlFuUI71D/I6/5cfJzvUT2BPL4GhrnbuzNNawo=
+	t=1781574740; cv=none; b=UtQLtB7946xM4PBq5fp9EwlJALKUdDYRb4TXJxVc2hIsBlfw+0lkvqGm8g623UyB5bm2spBLW2+DqutJy9TD8NVLgSGgG9TsHrVrms7lWVqq4gndiE8P7nafZV1SsFT03rJpgY47bDC09nTPJL12OLuOWnzTgVJ47RD1gDsQ/Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781574413; c=relaxed/simple;
-	bh=Vh3qr68/iKT2PEMExBYqrPSm2NJqt8zwh4MLjWDwv5k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ekr2s/2U4ZC8msO0kDxjFgQ3UtTzSays3Eqz16LZRL4ZCoy2pbP4jSQi+WBzrk9HmkD8+zTC5FcC6MyewXS984juTdcAHP7+BOxq/PjofyPV9B13Q74Pu5ZWJ7lwP6q5dOhC1XNqN3x/cu34XKbBLVMGPd94foWzB4+Xkq8i9cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hr69Wejh; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781574740; c=relaxed/simple;
+	bh=Nj9I1gDEr1hgG357yYIZNvMsx7nNOPJ38xv73q4iTtc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=A8IuJtNLnYeT82Dis/TSH3vml8gJGzBOMuQRLcs8cbDdVAGV8EQgmprOh7eS6HDHeFUKLRDSX2Eifo+Dh2Rb+2Pejy05QdJO70OF3j+eFws9Fm7YMrKwEr4nKyD1Zsxde9OY1FHqhRQajI8oJzXc47RygIi+f+31jP4DpAp+1vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1n4WEGg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hr69Wejh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781574411; x=1813110411;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Vh3qr68/iKT2PEMExBYqrPSm2NJqt8zwh4MLjWDwv5k=;
-  b=hr69WejhOLJH/oB+bAPOP6XieCnE641GDfqHD9/ApUHlvzfxswYS9HG6
-   JQF84HRK6i8dIZgHGxmb0+gsY290fLXon3GpPKtUmdC4feBMyZl0l0gfU
-   zIhAbYSHOI/WK/5HLmMENqBrbgkXHnOaSQkLhN3uoUIfV5+fYPA2MhhLH
-   G+Z5dmR8fp6E+GpfM07w/DffJTNTVZUt0bGTZP/3y5/NynGXgzR1WRCNc
-   BGX8GGu/SeRiANFubKf8r8BMVGoZwMeNvsvrtwoB2qKvlHwcq+/7YotzX
-   qVZGp+STjPZUJMem8XzmTcaISK9i9TFn0ujiGkTp9+Tyi+CvCM2yUSfPz
-   w==;
-X-CSE-ConnectionGUID: ir4MJu4USp2t2HPIE5ImGg==
-X-CSE-MsgGUID: pRgZGPPDRYCa93nMnFR34g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="93000788"
-X-IronPort-AV: E=Sophos;i="6.24,207,1774335600"; 
-   d="scan'208";a="93000788"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 18:46:50 -0700
-X-CSE-ConnectionGUID: zdmC6ac6Rw2XQL0mSRy7eA==
-X-CSE-MsgGUID: xFW/PJU2SZSCASocpnw3TA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,207,1774335600"; 
-   d="scan'208";a="245230881"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 18:46:47 -0700
-Message-ID: <9eed6d07-7258-4d74-bff7-76fa24170aba@linux.intel.com>
-Date: Tue, 16 Jun 2026 09:46:44 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1n4WEGg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BCC51F000E9;
+	Tue, 16 Jun 2026 01:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781574739;
+	bh=3O47j1rif6VTBoOdUt7KaJ541gHk/Zkhi6YjXU2QcTk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=m1n4WEGgEaDHkh/3QbJe59w+c7V4GWh+0E/dcm8PxN0myGTr2BFwpCPbkfQQhQuO4
+	 GNCfQoN4kO6y0Sz/5Ocl1gW4XUA90RVjRID8I3eH3AvHz700kCAe27ZQmzbeDOR7Nj
+	 sghLseT30jqWzy9bPGxmdPlUNqBSzSpB7nwiZV9YHMxfzzpwB6twR0oyT7ovEgAaNR
+	 IEv86zpDO9TzkS8C1mj0UhSioVIK4DC4AJ8980lhX1oNhp7KY37qiOKYgPNr6UJiHZ
+	 g9VKv4WNiNLY/sxEqqLvIt9hOBJ15p/Mhh1PJuhQhxxGAcd7RMSP1t8x4jjlCPOtok
+	 Bm/JlORgn4/Hg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v21 08/21] perf python: Use evsel in sample in
+ pyrf_event
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260616011543.4037138-9-irogers@google.com>
+References: <20260616011543.4037138-9-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 16 Jun 2026 01:52:16 +0000
+Message-Id: <20260616015219.0BCC51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3] perf tests: Add auto counter reload (ACR) sampling
- test
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20260421045511.2401316-1-dapeng1.mi@linux.intel.com>
- <CAP-5=fVrJg9YZE7k_ZhGOsjtHXvfqbz2Yw74YC+DcW0Hn0gFAA@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fVrJg9YZE7k_ZhGOsjtHXvfqbz2Yw74YC+DcW0Hn0gFAA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] Missing NULL check before calling evsel__get() on the result of ev=
+list__id2evsel() leads to a potential crash.
+- [Medium] Missing perf_sample__exit() on the error path of guest_session__=
+fetch() leaks the evsel reference.
+- [Medium] Missing perf_sample__exit() on the error path out of perf_mmap__=
+read_event() loop in test__perf_time_to_tsc leaks the evsel reference.
+--
 
-On 6/16/2026 2:37 AM, Ian Rogers wrote:
-> On Mon, Apr 20, 2026 at 9:59 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->> Add auto counter reload sampling test to verify that the intended event
->> records can be captured and the self-reloaded events won't generate any
->> records.
->>
->> Additionally, enhance ratio_to_prev test to verify ACR sampling as well
->> if ACR is supported.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>
->> V3: Move ratio-to-prev ACR sampling test into ratio_to_prev test.
->> V2: https://lore.kernel.org/all/20260420025501.2133495-1-dapeng1.mi@linux.intel.com/
->> v1: https://lore.kernel.org/all/20260413010920.546501-1-dapeng1.mi@linux.intel.com/
->>
->>  tools/perf/tests/shell/record.sh | 92 +++++++++++++++++++++++++++++++-
->>  1 file changed, 91 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index 7cb81cf3444a..091d8b0a998b 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
->> @@ -402,7 +402,52 @@ test_callgraph() {
->>    echo "Callgraph test [Success]"
->>  }
->>
->> +test_acr_sampling() {
->> +  events="{instructions/period=40000,acr_mask=0x2/u,cycles/period=20000,acr_mask=0x3/u}"
->> +  pebs_events="{instructions/period=40000,acr_mask=0x2/pu,cycles/period=20000,acr_mask=0x3/u}"
->> +  echo "Auto counter reload (ACR) sampling test"
->> +  if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
->> +  then
->> +    echo "Auto counter reload sampling [Skipped not supported]"
->> +    return
->> +  fi
->> +  if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
->> +  then
->> +    echo "Auto counter reload sampling [Failed missing instructions event]"
->> +    err=1
->> +    return
->> +  fi
->> +  if perf script -i "${perfdata}" -F event | grep -q "cycles"
->> +  then
->> +    echo "Auto counter reload sampling [Failed cycles event shouldn't be sampled]"
->> +    err=1
->> +    return
->> +  fi
->> +  if ! perf record -o "${perfdata}" -e "${pebs_events}" ${testprog} 2> /dev/null
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Skipped not supported]"
->> +    echo "Auto counter reload sampling [Success]"
->> +    return
->> +  fi
->> +  if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Failed missing instructions event]"
->> +    err=1
->> +    return
->> +  fi
->> +  if perf script -i "${perfdata}" -F event | grep -q "cycles"
->> +  then
->> +    echo "Auto counter reload PEBS sampling [Failed cycles event shouldn't be sampled]"
->> +    err=1
->> +    return
->> +  fi
->> +  echo "Auto counter reload sampling [Success]"
->> +}
->> +
->>  test_ratio_to_prev() {
->> +  ratio_events="{instructions:u,cycles/period=20000,ratio-to-prev=0.5/u}"
->> +  p_core_ratio_events="{cpu_core/instructions/u,cpu_core/cycles,period=20000,ratio-to-prev=0.5/u}"
->> +  e_core_ratio_events="{cpu_atom/instructions/u,cpu_atom/cycles,period=20000,ratio-to-prev=0.5/u}"
-> Could there also be cpu_lowpower coverage? What about e-core or p-core
-> only devices?
+commit c23db56d8fc8d40b59596916ce6b0537514263aa
+Author: Ian Rogers <irogers@google.com>
 
-I suspect if the lowpower e-core really supporta ACR. There should be only
-one device ARL-H has the lowpower e-core with different uarch. But anyway,
-I can add cpu_lowpower for the full coverage. 
+perf python: Use evsel in sample in pyrf_event
+   =20
+Avoid a duplicated evsel by using the one in sample. Add
+evsel__get/put to the evsel in perf_sample.
 
-The e-core or p-core only devices would be covered by the basic
-"ratio_events". Thanks.
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index ec759a11f7588..d79112cebb716 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3365,7 +3365,7 @@ int __evsel__parse_sample(struct evsel *evsel, unio=
+n perf_event *event,
+>  	union u64_swap u;
+> =20
+>  	perf_sample__init(data, /*all=3D*/true);
+> -	data->evsel =3D evsel;
+> +	data->evsel =3D evsel__get(evsel);
 
+[Severity: Medium]
+Does this new reference acquisition cause memory leaks in existing callers
+that do not expect sample.evsel to hold a reference on early errors?=20
 
+For example, in tools/perf/builtin-inject.c:guest_session__inject_events(),
+if guest_session__fetch() fails, it returns an error but the cleanup block
+checking if (ret && gs->fetched) prevents perf_sample__exit() from running,
+leaking the evsel reference.
+
+Similarly, in tools/perf/tests/perf-time-to-tsc.c:test__perf_time_to_tsc(),
+the CHECK__(evsel__parse_sample(...)) macro jumps to out_err on failure,
+bypassing perf_sample__exit(&sample) and permanently leaking the newly
+acquired evsel.
+
+>  	data->cpu =3D data->pid =3D data->tid =3D -1;
+>  	data->stream_id =3D data->id =3D data->time =3D -1ULL;
+>  	data->period =3D evsel->core.attr.sample_period;
+
+[ ... ]
+
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 89d0f4cec6c7f..18af70488e07a 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1874,7 +1875,11 @@ static int evlist__deliver_deferred_callchain(stru=
+ct evlist *evlist,
+>  		else
+>  			orig_sample.deferred_callchain =3D false;
+> =20
+> -		orig_sample.evsel =3D evlist__id2evsel(evlist, orig_sample.id);
+> +		new_evsel =3D evlist__id2evsel(evlist, orig_sample.id);
+> +		if (new_evsel !=3D orig_sample.evsel) {
+> +			evsel__put(orig_sample.evsel);
+> +			orig_sample.evsel =3D evsel__get(new_evsel);
+> +		}
+
+[Severity: High]
+Can this cause a segmentation fault if the sample ID is unknown or corrupte=
+d?
+
+The evlist__id2evsel() function can return NULL for malformed perf.data fil=
+es.
+If new_evsel is NULL, passing it directly to evsel__get(new_evsel) will
+dereference the NULL pointer when trying to increment its reference count.
+
+Could we add a NULL check here before calling evsel__get()?
+
+>  		ret =3D evlist__deliver_sample(evlist, tool, de->event,
+>  					     &orig_sample, machine);
+> =20
+> @@ -1913,7 +1919,11 @@ static int session__flush_deferred_samples(struct =
+perf_session *session,
+>  		}
+>  		sample.file_offset =3D de->file_offset;
+> =20
+> -		sample.evsel =3D evlist__id2evsel(evlist, sample.id);
+> +		new_evsel =3D evlist__id2evsel(evlist, sample.id);
+> +		if (new_evsel !=3D sample.evsel) {
+> +			evsel__put(sample.evsel);
+> +			sample.evsel =3D evsel__get(new_evsel);
+> +		}
+
+[Severity: High]
+Similarly, could evlist__id2evsel() return NULL here and cause a crash when
+passed to evsel__get()?
+
+>  		ret =3D evlist__deliver_sample(evlist, tool, de->event,
+>  					     &sample, machine);
 >
-> Thanks,
-> Ian
->
->>    echo "ratio-to-prev test"
->>    if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
->>       true 2> /dev/null
->> @@ -438,7 +483,51 @@ test_ratio_to_prev() {
->>      err=1
->>      return
->>    fi
->> -  echo "Basic ratio-to-prev record test [Success]"
->> +
->> +  ratio_err=0
->> +  do_ratio_to_prev_test() {
->> +    local events=$1
->> +    local cpu=$2
->> +    if ! perf record -o "${perfdata}" -e "${events}" ${testprog} 2> /dev/null
->> +    then
->> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed sampling]"
->> +      ratio_err=1
->> +      return
->> +    fi
->> +    if ! perf script -i "${perfdata}" -F event | grep -q "instructions"
->> +    then
->> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed missing instructions event]"
->> +      ratio_err=1
->> +      return
->> +    fi
->> +    if perf script -i "${perfdata}" -F event | grep -q "cycles"
->> +    then
->> +      echo "Auto counter reload ${cpu} ratio-to-prev sampling [Failed cycles event shouldn't be sampled]"
->> +      ratio_err=1
->> +      return
->> +    fi
->> +  }
->> +
->> +  # ratio-to-prev sampling would fallback to normal sampling if ACR sampling
->> +  # is not supported, so acr_mask must be checked before testing ratio-to-prev sampling.
->> +  if [ -e /sys/bus/event_source/devices/cpu/format/acr_mask ]
->> +  then
->> +    do_ratio_to_prev_test "${ratio_events}" ""
->> +  fi
->> +  if [ -e /sys/bus/event_source/devices/cpu_core/format/acr_mask ]
->> +  then
->> +    do_ratio_to_prev_test "${p_core_ratio_events}" "P-core"
->> +  fi
->> +  if [ -e /sys/bus/event_source/devices/cpu_atom/format/acr_mask ]
->> +  then
->> +    do_ratio_to_prev_test "${e_core_ratio_events}" "E-core"
->> +  fi
->> +  if test "$ratio_err" -eq 0
->> +  then
->> +    echo "Basic ratio-to-prev record test [Success]"
->> +  else
->> +    err="${ratio_err}"
->> +  fi
->>  }
->>
->>  # raise the limit of file descriptors to minimum
->> @@ -457,6 +546,7 @@ test_leader_sampling
->>  test_topdown_leader_sampling
->>  test_precise_max
->>  test_callgraph
->> +test_acr_sampling
->>  test_ratio_to_prev
->>
->>  # restore the default value
->> --
->> 2.34.1
->>
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616011543.4037=
+138-1-irogers@google.com?part=3D8
