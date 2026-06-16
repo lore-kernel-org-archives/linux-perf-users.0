@@ -1,218 +1,267 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3508F44CAF9
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 15:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4233336E46C;
+	Tue, 16 Jun 2026 15:57:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781625425; cv=none; b=HN1y7v5WZuGz9trfixtePa/aIa5HHxu40wL7U/406FbH9i7PDTAYDrWgOAJoR1WsztUpHDqvWn+tqAgUkaHnaE1zZ4PJdKzQ/0WJ8JrgeYodlpwW9BQzzjdq65x6D+Z+U26lVvFieGzrvar43+g8rYPLU9ZWz/7pJexDU17gdX0=
+	t=1781625452; cv=none; b=fug8308DpDjNQ+15IjIwyeS3ZPZRW4ZJq2m2O6jT0/mhMc7Jxo9PGHEC1V3LeqNZFK9gmS+p1mRPRy3loaRzaibLvhzbuEDT48IH19IrbBWtyoPonxftdK2JyL9e/7x8E5J4d+1sYbsmVTBbBvojzYwSBEaIZt3g8g970F8DNiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781625425; c=relaxed/simple;
-	bh=6Q97g+HHuaT4/Mo29uc9KJIhLLiev5fW+MYEwg0HFX4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=te0sOMyhV+IPlZruTrgYCennGhdJnjI1XqtBRII+jhsKuZCm3YShfk4mQTo4Tpvj8iWFM42lxo2E+SDrbI6t8OkRi/+lr8KW7keFfT8OBi1UWinEFRQhRiUIju0mlD9Ky9NXcPNUYW4GQMFcdydc1w7WBkH3hKJm679IhvH8EVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlMudrKZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781625452; c=relaxed/simple;
+	bh=LEj1DunlGYNvF7304mYhaUu3u+PPI6Owz46Vr6AOv1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FdT1SIEfz7JhBE9mWr2L7+mkWvacQQ8qX3psFBfFxV3CU6KQJ/H+Wu7lbbsjo58ObyIZZddm1MF3sC1XpHF9NDs/U+55vhsQ7F+AeUw19eW9PJJcsXjlq0ZEqV+AwRP5PCRbFOWgnPOH+UGCV4HPpOPulEq9DB/8+/147R4fPlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b9jU2oko; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlMudrKZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC20F1F00A3A;
-	Tue, 16 Jun 2026 15:57:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b9jU2oko"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF7DA1F000E9;
+	Tue, 16 Jun 2026 15:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781625423;
-	bh=bqjBikjlgB106MXZm4BQAkaL2Y8MNNDHF+7tqplb3dM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jlMudrKZkQGsCwR2WHM6AVXC9TkSr2cvv5UCfGPX2uG9BQgEDDxCF/FXZVd9IWUWo
-	 Gl9ZHI7aiJpd87A+/jXEfwxBaeLoNJULCXoxVqb+eRDOS1jSyMoX/zu7WiBSQX9BTW
-	 MuI1P/bZbabxaN+ZqeqPMQI5OONNSxp67t/1bA4DsaONwLokk9dLiWnj+mmImbZLJp
-	 TuO2NRDYJ3wS3xJYDb8uOGRYRIePo5jc5MpdGQmW5arl72RlWnTVpHXKFzp9fUptIS
-	 gb2+355o5r7AqMjnyHdlKaXSOkalRDt1uZ/l/9/LwPoVQTKnfe4mm70Pzrb4TflUt7
-	 CF1VAP2eeK5ew==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/9] perf cs-etm: Require full global header in
- auxtrace_info size check
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616153920.6852-5-acme@kernel.org>
-References: <20260616153920.6852-5-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 15:57:03 +0000
-Message-Id: <20260616155703.BC20F1F00A3A@smtp.kernel.org>
+	s=k20260515; t=1781625451;
+	bh=SXT956we/pvHMCg7HJNBGEzr36+ZFfEiTIqghkS2hWs=;
+	h=From:To:Cc:Subject:Date;
+	b=b9jU2okoZGb9Jm9z64N/QH99s1dl9mtki1yNMl2FD1EI/UFflpwyEzyqNvzNvC+KX
+	 VoCRFtiLrJDpeWyK4oHrOSzwonpTyT9vV2RyUYll1wvzVBQLKWrGEtd5rBXd3AwrgP
+	 jDHZLAcmcY6mupb2lYUhGVDzdtHnDnSMrlO/B80rJVJ/MPF9GREOvsZwlKxMxbVi2U
+	 3vZiyJnTxvYppg4AAlDDAy7M4O0PEzuEkJcC5RvaFU0P+vjX6PeA5JXzZn1wAXBKSC
+	 +brmvO4YloRQrCWGf1224JAp+ovmEGR0A0hTBHf9EDRyjKe//qNCUjRzrbhAdTgnBE
+	 Is+TSZ5Xo+OpA==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: bpf@vger.kernel.org
+Cc: Puranjay Mohan <puranjay@kernel.org>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Leo Yan <leo.yan@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Stephane Eranian <eranian@google.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Usama Arif <usama.arif@linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH v5 0/4] arm64: Add BRBE support for bpf_get_branch_snapshot()
+Date: Tue, 16 Jun 2026 08:57:05 -0700
+Message-ID: <20260616155716.2631508-1-puranjay@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+Changelog:
 
-Pre-existing issues:
-- [High] Missing bounds checks when parsing variable-length per-CPU metadat=
-a in CS-ETM auxtrace_info allows out-of-bounds reads.
-- [High] Missing size validations in auxtrace info processing for Intel PT,=
- Intel BTS, and PowerPC VPADTL allow out-of-bounds memory reads from the ev=
-ent payload.
-- [High] Insufficient bounds checking and untrusted input usage in Arm SPE =
-auxtrace info processing lead to division by zero and out-of-bounds memory =
-accesses.
---
+v4: https://lore.kernel.org/all/20260527121207.2312181-1-puranjay@kernel.org/
+Changes in v5:
+- Rework patch 2: drop the UAPI union. Instead rename the helper to perf_clear_branch_entry() and
+  clear the entry with a single
+  	*br = (struct perf_branch_entry){ }.
+  This stays kernel-internal, with no changes to the uapi/ or tools/ headers (James Clark).
+- Add an isb() to the BRBCR_EL1 == 0 early-exit in the snapshot, for consistency with the other
+  two exit paths (bpf-ci).
+- Add Rob Herring's Reviewed-by to patch 3
 
-commit 6aff40a5f5a82fdada5b1248defc410025292df0
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+v3: https://lore.kernel.org/all/20260413185740.3286146-1-puranjay@kernel.org/
+Changes in v4:
+- Fix leaking branch records when scheduled task has an unrelated perf event (Sashiko)
+- Update tools/include/uapi/linux/perf_event.h as well for patch 2
+- Introduce cpu_has_brbe() and use it in
+  arm_brbe_snapshot_branch_stack(0 to make sure we don't run on a CPU
+  without BRBE.
+- Add explicit isb() after after writing to SYS_BRBFCR_EL1.
+- Rebase on latest arm64 tree.
 
-perf cs-etm: Require full global header in auxtrace_info size check
+v2: https://lore.kernel.org/all/20260318171706.2840512-1-puranjay@kernel.org/
+Changes in v3:
+- Move NULL pmu_ctx fix from arm_pmuv3.c to perf core (Leo Yan)
+- Use union to clear branch entry bitfields instead of per-field
+  zeroing (Leo Yan)
+- Remove per-CPU brbe_active flag; check BRBCR_EL1 == 0 instead (Rob
+  Herring)
+- Remove redundant valid_brbidr() check in snapshot path (Rob Herring)
+- Introduce for_each_brbe_entry() iterator to deduplicate bank
+  iteration (Rob Herring)
+- Include perf core maintainers (Leo Yan, Rob Herring)
 
-This commit updates cs_etm__process_auxtrace_info() to include
-CS_ETM_HEADER_SIZE in the minimum size check. This ensures that the global
-header entries fit within the event, fixing an out-of-bounds read issue
-with crafted auxtrace_info events.
+v1: https://lore.kernel.org/all/20260313180352.3800358-1-puranjay@kernel.org/
+Changes in v2:
+- Rebased on arm64/for-next/core
+- Add per-CPU brbe_active flag to guard against UNDEFINED sysreg access
+  on non-BRBE CPUs in heterogeneous big.LITTLE systems.
+- Fix pre-existing bug in perf_clear_branch_entry_bitfields() that missed
+  zeroing new_type and priv bitfields, added as a separate patch with
+  Fixes tags (new patch 2).
+- Use architecture-specific selftest threshold (#if defined(__aarch64__))
+  instead of raising the global threshold, to preserve x86 regression
+  detection.
 
-> diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
-> index 4abe416e3febd..aebef71d3a0a1 100644
-> --- a/tools/perf/util/cs-etm-base.c
-> +++ b/tools/perf/util/cs-etm-base.c
-> @@ -170,7 +170,9 @@ int cs_etm__process_auxtrace_info(union perf_event *e=
-vent,
->  	u64 *ptr =3D NULL;
->  	u64 hdr_version;
-> =20
-> -	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE))
-> +	/* Ensure priv[] is large enough for the global header entries */
-> +	if (auxtrace_info->header.size < (event_header_size + INFO_HEADER_SIZE +
-> +					  CS_ETM_HEADER_SIZE))
->  		return -EINVAL;
-> =20
->  	/* First the global part */
+RFC: https://lore.kernel.org/all/20260102214043.1410242-1-puranjay@kernel.org/
+Changes from RFC:
+ - Fix pre-existing NULL pointer dereference in armv8pmu_sched_task()
+   found by Leo Yan during testing (patch 1)
+ - Pause BRBE before local_daif_save() to avoid branch pollution from
+   trace_hardirqs_off()
+ - Use local_daif_save() to prevent pNMI race from counter overflow
+   (Mark Rutland)
+ - Reuse perf_entry_from_brbe_regset() instead of duplicating register
+   read logic, by making it accept NULL event (Mark Rutland)
+ - Invalidate BRBE after reading to maintain record contiguity for
+   other consumers (Mark Rutland)
+ - Adjust selftest wasted_entries threshold for ARM64 (patch 3)
+ - Tested on ARM FVP with BRBE enabled
 
-[Severity: High]
-This isn't a bug introduced by this patch, but the patch attempts to fix a
-related out-of-bounds read by validating the global header size. Is the fix
-incomplete?
+This series enables the bpf_get_branch_snapshot() BPF helper on ARM64
+by implementing the perf_snapshot_branch_stack static call for ARM's
+Branch Record Buffer Extension (BRBE).
 
-The per-CPU metadata is still read dynamically without verifying that the
-event payload (auxtrace_info->header.size) is large enough to contain it.
+bpf_get_branch_snapshot() [1] allows BPF programs to capture hardware
+branch records on-demand from any BPF tracing context. This was
+previously only available on x86 (Intel LBR) since v5.16. With BRBE
+available on ARMv9, this series closes the gap for ARM64.
 
-In cs_etm__process_auxtrace_info(), if dump_trace is true,
-cs_etm__print_auxtrace_info() reads at least 7 64-bit words per CPU without
-checking the buffer bounds, leading to an out-of-bounds read and exposing h=
-eap
-memory contents to standard output:
+Usage model
+-----------
 
-tools/perf/util/cs-etm-base.c:cs_etm__print_cpu_metadata_v1() {
-    ...
-    total_params =3D val[i + CS_ETM_NR_TRC_PARAMS] + CS_ETM_COMMON_BLK_MAX_=
-V1;
-    ...
-}
+The helper works in conjunction with perf events. The userspace
+component of the BPF application opens a perf event with
+PERF_SAMPLE_BRANCH_STACK on each CPU, which configures the hardware
+to continuously record branches into BRBE (on ARM64) or LBR (on x86).
+A BPF program attached to a tracepoint, kprobe, or fentry hook can
+then call bpf_get_branch_snapshot() to snapshot the branch buffer at
+any point. Without an active perf event, BRBE is not recording and
+the buffer is empty.
 
-Similarly, cs_etm__process_auxtrace_info_full() validates that there is at
-least 1 word per CPU, but cs_etm__create_meta_blk() iterates and reads mult=
-iple
-words per CPU based on CS_ETM_NR_TRC_PARAMS, causing out-of-bounds heap rea=
-ds:
+On-demand branch snapshots from BPF are useful for diagnosing which
+specific code path was taken inside a function. Stack traces only show
+function boundaries, but branch records reveal the exact sequence of
+jumps, calls, and returns within a function -- making it possible to
+identify which specific error check triggered a failure, or which
+callback implementation was invoked through a function pointer.
 
-tools/perf/util/cs-etm.c:cs_etm__create_meta_blk() {
-    ...
-    for (k =3D CS_ETM_MAGIC; k < nr_out_params; k++)
-        metadata[k] =3D buff_in[i + k];
-    ...
-}
+For example, retsnoop [2] is a BPF-based tool for non-intrusive
+mass-tracing of kernel internals. Its LBR mode (--lbr) creates per-CPU
+perf events with PERF_SAMPLE_BRANCH_STACK and then uses
+bpf_get_branch_snapshot() in its fentry/fexit BPF programs to capture
+branch records whenever a traced function returns an error.
 
-And later validates the total number of words read only after the out-of-bo=
-unds
-memory accesses have already occurred:
+Consider debugging a bpf() syscall that returns -EINVAL when creating
+a BPF map with invalid parameters. Running retsnoop on an ARM64 FVP
+with BRBE to trace the bpf() syscall and array_map_alloc_check():
 
-tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_info_full() {
-    ...
-    if (i * 8 !=3D priv_size) {
-    ...
-}
+  $ retsnoop -e '*sys_bpf' -a 'array_map_alloc_check' --lbr=any \
+             -F -k vmlinux --debug full-lbr
+  $ simfail bpf-bad-map-max-entries-array  # in another terminal
 
-Could a crafted trace file with insufficient per-CPU metadata size crash the
-perf tool or leak memory?
+Output of retsnoop:
 
-[Severity: High]
-This is a pre-existing issue, but it exists in similar auxtrace decoders for
-Intel PT, Intel BTS, and PowerPC VPADTL. Do these decoders also miss size
-validations, allowing out-of-bounds memory reads from the event payload?
+  --- fentry BPF program (entries #63-#17) ---
 
-In intel_pt_process_auxtrace_info(), min_sz is calculated as sizeof(u64) *
-INTEL_PT_PER_CPU_MMAPS (which is sizeof(u64) * 9). This guarantees the payl=
-oad
-has space for indices 0 to 8. The code then reads index 9, which accesses 8
-bytes strictly beyond the validated boundary if the size is exactly min_sz:
+  [#63-#59] __htab_map_lookup_elem: hash table walk with memcmp        (hashtab.c)
+  [#58] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xc850           (hashtab.c:750)
+  [#57-#55] ... dump_bpf_prog internal branches ...
+  [#54] dump_bpf_prog+0xcab8        -> bpf_get_current_pid_tgid+0x0    (helpers.c:225)
+  [#53] bpf_get_current_pid_tgid+0x1c -> dump_bpf_prog+0xcabc          (helpers.c:225)
+  [#52-#51] ... dump_bpf_prog -> __htab_map_lookup_elem ...
+  [#50-#47] __htab_map_lookup_elem: htab_map_hash (jhash2), select_bucket
+  [#46-#42] lookup_nulls_elem_raw: hash chain walk with memcmp         (hashtab.c:717)
+  [#41] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xcaf8           (hashtab.c:750)
+  [#40-#37] ... dump_bpf_prog -> bpf_ktime_get_ns ...
+  [#36] bpf_ktime_get_ns+0x10       -> ktime_get_mono_fast_ns+0x0      (helpers.c:178)
+  [#35-#32] ktime_get_mono_fast_ns: tk_clock_read -> arch_counter_get_cntpct
+  [#31] ktime_get_mono_fast_ns+0x9c -> bpf_ktime_get_ns+0x14           (timekeeping.c:493)
+  [#30] bpf_ktime_get_ns+0x18       -> dump_bpf_prog+0xcd50            (helpers.c:178)
+  [#29-#25] ... dump_bpf_prog internal branches ...
+  [#24] dump_bpf_prog+0x11b28       -> __bpf_prog_exit_recur+0x0       (trampoline.c:1190)
+  [#23-#17] __bpf_prog_exit_recur: rcu_read_unlock, migrate_enable     (trampoline.c:1195)
 
-tools/perf/util/intel-pt.c:intel_pt_process_auxtrace_info() {
-    ...
-    pt->per_cpu_mmaps =3D auxtrace_info->priv[INTEL_PT_PER_CPU_MMAPS];
-    ...
-}
+  --- array_map_alloc_check (entries #16-#12) ---
 
-The exact same off-by-one enum indexing pattern causes out-of-bounds reads =
-in
-intel_bts_process_auxtrace_info(), which validates up to
-INTEL_BTS_SNAPSHOT_MODE but accesses index 5:
+  [#16] dump_bpf_prog+0x11b38       -> array_map_alloc_check+0x8       (arraymap.c:55)
+  [#15] array_map_alloc_check+0x18  -> array_map_alloc_check+0xb8      (arraymap.c:56)
+        . bpf_map_attr_numa_node       . bpf_map_attr_numa_node
+  [#14] array_map_alloc_check+0xbc  -> array_map_alloc_check+0x20      (arraymap.c:59)
+        . bpf_map_attr_numa_node
+  [#13] array_map_alloc_check+0x24  -> array_map_alloc_check+0x94      (arraymap.c:64)
+  [#12] array_map_alloc_check+0x98  -> dump_bpf_prog+0x11b3c           (arraymap.c:82)
 
-tools/perf/util/intel-bts.c:intel_bts_process_auxtrace_info() {
-    ...
-    bts->snapshot_mode =3D auxtrace_info->priv[INTEL_BTS_SNAPSHOT_MODE];
-    ...
-}
+  --- fexit trampoline overhead (entries #11-#00) ---
 
-And in powerpc_vpadtl_process_auxtrace_info(), which validates up to
-POWERPC_VPADTL_TYPE (0 bytes) but reads index 0:
+  [#11] dump_bpf_prog+0x11b5c       -> __bpf_prog_enter_recur+0x0      (trampoline.c:1145)
+  [#10-#03] __bpf_prog_enter_recur: rcu_read_lock, migrate_disable     (trampoline.c:1146)
+  [#02] __bpf_prog_enter_recur+0x114 -> dump_bpf_prog+0x11b60          (trampoline.c:1157)
+  [#01] dump_bpf_prog+0x11b6c       -> dump_bpf_prog+0xd230
+  [#00] dump_bpf_prog+0xd340        -> arm_brbe_snapshot_branch_stack+0x0 (arm_brbe.c:814)
 
-tools/perf/util/powerpc-vpadtl.c:powerpc_vpadtl_process_auxtrace_info() {
-    ...
-    vpa->pmu_type =3D auxtrace_info->priv[POWERPC_VPADTL_TYPE];
-    ...
-}
+                   el0t_64_sync+0x168
+                   el0t_64_sync_handler+0x98
+                   el0_svc+0x28
+                   do_el0_svc+0x4c
+                   invoke_syscall.constprop.0+0x54
+    373us [-EINVAL] __arm64_sys_bpf+0x8
+                    __sys_bpf+0x87c
+                    map_create+0x120
+     95us [-EINVAL] array_map_alloc_check+0x8
 
-Can parsing a crafted perf.data file trigger out-of-bounds heap reads and
-potential segmentation faults in these decoders?
+The FVP's BRBE buffer has 64 entries (BRBE supports 8, 16, 32, or
+64). Of these, entries #63-#17 (47) are consumed by the fentry BPF
+trampoline that ran before the function, and entries #11-#00 (12)
+are consumed by the fexit trampoline that runs after. Entry #00
+shows the very last branch recorded before BRBE is paused: the call
+into arm_brbe_snapshot_branch_stack().
 
-[Severity: High]
-This is a pre-existing issue, but it also exists in the Arm SPE auxtrace
-decoder. Are there insufficient bounds checks and untrusted input usage in
-arm_spe_process_auxtrace_info() that lead to division by zero and
-out-of-bounds memory accesses?
+The 5 useful entries (#16-#12) show the exact path taken inside
+array_map_alloc_check(). Record #14 shows a jump from line 56
+(bpf_map_attr_numa_node) to line 59 (the if-condition), and #13
+shows an immediate jump from line 59 (attr->max_entries == 0) to
+line 64 (return -EINVAL), skipping lines 60-63. This pinpoints
+max_entries==0 as the cause -- a diagnosis impossible with stack
+traces alone.
 
-The event size is only verified to be at least ARM_SPE_AUXTRACE_V1_PRIV_SIZE
-(16 bytes). If the size is 17 bytes, it skips the V1 branch and reads index=
- 3
-(offset 24) from the payload, causing an immediate out-of-bounds read:
+[1] 856c02dbce4f ("bpf: Introduce helper bpf_get_branch_snapshot")
+[2] https://github.com/anakryiko/retsnoop
 
-tools/perf/util/arm-spe.c:arm_spe__alloc_metadata() {
-    ...
-    *nr_cpu =3D ptr[ARM_SPE_CPUS_NUM];
-    ...
-}
+Puranjay Mohan (4):
+  perf/core: Fix sched_task callbacks for CPU-wide branch stack events
+  perf/core: Clear the whole branch entry in perf_clear_branch_entry()
+  perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+  selftests/bpf: Adjust wasted entries threshold for ARM64 BRBE
 
-Furthermore, *nr_cpu is taken directly from the untrusted payload without
-checking for zero, and allows unsigned wraparound if hdr_sz is larger than
-metadata_size:
+ arch/x86/events/amd/brs.c                     |   2 +-
+ arch/x86/events/amd/lbr.c                     |   2 +-
+ arch/x86/events/intel/lbr.c                   |   6 +-
+ drivers/perf/arm_brbe.c                       | 130 +++++++++++++++---
+ drivers/perf/arm_brbe.h                       |   9 ++
+ drivers/perf/arm_pmuv3.c                      |   5 +-
+ include/linux/perf_event.h                    |  16 +--
+ kernel/events/core.c                          |  17 ++-
+ .../bpf/prog_tests/get_branch_snapshot.c      |  13 +-
+ 9 files changed, 150 insertions(+), 50 deletions(-)
 
-tools/perf/util/arm-spe.c:arm_spe__alloc_metadata() {
-    ...
-    per_cpu_sz =3D (metadata_size - (hdr_sz * sizeof(u64))) / (*nr_cpu);
-    ...
-}
 
-This could result in a huge per_cpu_sz value passed to memcpy(), leading to=
- a
-massive out-of-bounds heap read and segmentation fault:
+base-commit: 61c19a9feb1d87156e46e38d7759f3ad23710e24
+-- 
+2.53.0-Meta
 
-tools/perf/util/arm-spe.c:arm_spe__alloc_per_cpu_metadata() {
-    ...
-    memcpy(metadata, buf, per_cpu_size);
-    ...
-}
-
-Can a crafted perf.data file with nr_cpu =3D=3D 0 cause a SIGFPE and crash =
-the
-perf tool?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616153920.6852=
--1-acme@kernel.org?part=3D4
