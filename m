@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E683CF673
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 06:24:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3D234AAE9
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 06:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781591087; cv=none; b=ZZRcx0G2lf+NmAkdGapLSQKOzYk/K/ViQkZcx+pC0JHt9vDeKUONywMrH7M/Bfkfdvu8H057oS1Taxvnuum5+1JjOkbGGprP3OXxYoal6dVv/y+yXExojH5fZx/9jVgOiMi4fLFDoIugZ8VdgieRIANu6zBJlPWTADMTAiNkoyY=
+	t=1781591134; cv=none; b=gnCf2Ji106tJvtJGof4W3Y+OZ1itX87pxK3ieARF3IcDL4MZ3BQ0prUrDEcNfTdAWoYEFUrLZqJK2h+N3ba4zbJWaSkBPI6MPaukahD6EZIv/ncNPGDc/0uxU8ShoiFOiYk/lR7jmP3LClshm/jgoifjSoGi7KSloDF9bWD8Qqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781591087; c=relaxed/simple;
-	bh=8yGGt86qWfqeBMQ6SDWjpPbT+RnM4Oy1ArlJgOyVG6I=;
+	s=arc-20240116; t=1781591134; c=relaxed/simple;
+	bh=qFzWS0zyat7kvnEUGM6exlYqooFYrQb87Nt4KDfcoao=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SERmUMcCvSEeHBqORKuZK7UtAO8D1QL/BG5X0Q5CcNb8eAh1on8lknVqiQjDtQ3p/bKoow+ZZF6XGoiiq2RJktFvIWPND1QRV9Vl8y7Xw2I/bvSsHGY6D9QeuGHuod+SYIVa41J7+hTA8jIufzUWizFwGKjX6uvw6JeqKPGEE6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4EnMrH/; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=MAXBBBE6JXfl2HWCc5MHmggmATsRek1XmRzNi7psFx7sg3iMPhj9EUDu9PWqa6UOwOst1wfdUl0DsPnBDA6SSwJ9jlVI0Od6nRqKodWet+b2DSz8UCsAIz3Hlstv0/ZXzfBgBoMNEGBxQGeyJkH7vNG3FXl9jknGVJ48LeCt1w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZfcbUv5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4EnMrH/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 583041F000E9;
-	Tue, 16 Jun 2026 06:24:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZfcbUv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46701F000E9;
+	Tue, 16 Jun 2026 06:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781591086;
-	bh=VPPNuudFATsgNfDUsL71DNMU54jNR3q85gEEzFc0EW4=;
+	s=k20260515; t=1781591132;
+	bh=DAfb4lG0xk9ZymUj6bRpVwMIvj85b8//o/Qb4BpAQHQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m4EnMrH/62hJEoiEirFqLoohZ25A4nuTDlvpyubIpx/BF0fvSUs8nmsi2pFcJCD/c
-	 vF7fIBUOMioqarje7IPH4kMOhUEDQJVu6fWDyYJwlaLEhKMZscxyVvyJ8E2HdA/wLm
-	 8S9KHiJb0pqC4Yfb+TefPoBdbugAxCozFt1OXVdIiuAL/Ah9+D2LDEFBXWzIYCm0aB
-	 C/v+RFURhcccUoQ17ga17086mhgE+pC3fc0WRL+r8J7FZxQhEbrJAtp7pJZgsaL6XZ
-	 6RJe5Q3jW6Wn/bogDwOl3zR/+jfBMCi/9BgVlzCMEgeRFDB9kY6KWstuYYkz7yU/B3
-	 H45oNl6pXZItg==
+	b=NZfcbUv5LliyaVmFrkFgljQaVbq0so18wWbumpRM6yMyV7MkfJXvOHfoJLCFGxgAg
+	 rhVEN/8R3cCar27NvGm7asVAqjtWfjX01CxdIn+z4fG/WJkM/rdP+PEnMZDh2LtJRz
+	 fl/yc/ifYsLJiDBnSdhtQWwzNmJEVB8rG7T3iP8w8H2CFQQTGJ+IMnIB1kMZKgFGB8
+	 MxFsmeY0Q1t9cdr1Ln8SDfbC9Tw2cGT0j76A5Th2w+SwngGV6o2uiSLo68l16fBVTC
+	 UWkY+K1IHVFkIiqFUF8dVdR/ZN/I3RouMlNE5kgU1sFj/F9sw6WyjYZvCSj2n2fLEz
+	 ZgbTUFTpok6BQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 02/12] perf test: Truncate test description to fit
- terminal width
+Subject: Re: [PATCH v2 10/12] perf tests: Speed up off-cpu profiling tests
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616061404.41929-3-irogers@google.com>
-References: <20260616061404.41929-3-irogers@google.com>
+In-Reply-To: <20260616061404.41929-11-irogers@google.com>
+References: <20260616061404.41929-11-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 06:24:45 +0000
-Message-Id: <20260616062446.583041F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 06:25:32 +0000
+Message-Id: <20260616062532.C46701F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,59 +45,44 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Incorrect File Descriptor Check for Terminal Width
+- [Medium] The commit message inaccurately describes the new off-cpu thresh=
+old values applied in the code.
 --
 
-commit f74a2825a5f95152494bcb0ab5c482df7aacb93e
+commit 7c145dd0880cd69d24f8148542c77c20c1d72e64
 Author: Ian Rogers <irogers@google.com>
 
-perf test: Truncate test description to fit terminal width
+perf tests: Speed up off-cpu profiling tests
 
-This commit dynamically queries the terminal width to truncate printed test
-descriptions. This prevents output corruption caused by long descriptions
-wrapping around and breaking the carriage return delete sequences used in
-the parallel test harness.
+This commit speeds up off-cpu profiling tests by scaling down the workload
+durations and off-cpu threshold configurations, reducing the raw test
+sleep overhead from 3.0s to 0.3s.
 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-[ ... ]
-> @@ -413,19 +417,64 @@ static char *xml_escape(const char *str)
->  	return res ? res : strdup("");
->  }
-> =20
-> +static int get_term_width(void)
-> +{
-> +	struct winsize ws;
-> +	int cols =3D 80;
-> +	int term_width;
-> +
-> +	if (!isatty(1))
+> - Change the above-threshold test to use `--off-cpu-thresh 99` and `sleep=
+ 0.1`.
+> - Change the below-threshold test to use `--off-cpu-thresh 120` and `slee=
+p 0.1`.
 
 [Severity: Medium]
-Is isatty(1) the correct file descriptor to check here?
+Are these threshold descriptions accurate?
 
-The test progress and results are printed to stderr via pr_info() and expli=
-cit
-color_fprintf(stderr, ...) calls.
+Looking at test_offcpu_above_thresh() in
+tools/perf/tests/shell/record_offcpu.sh, the implementation actually uses
+a 50ms threshold:
 
-If a user runs perf test > /dev/null, stdout is redirected but stderr remai=
-ns a
-TTY. This check would return false and bypass truncation, causing the long
-descriptions to wrap and corrupt the terminal display.
+    if ! perf record -e dummy --off-cpu --off-cpu-thresh 50 -o ${perfdata} =
+-- sleep 0.1 2> /dev/null
 
-Conversely, if a user redirects stderr to a log file but leaves stdout as a
-terminal (perf test 2> log.txt), this check evaluates to true and unnecessa=
-rily
-truncates the log file output, destroying diagnostic information.
+Similarly, test_offcpu_below_thresh() implements a 500ms threshold instead
+of 120ms:
 
-Should this check isatty(2) instead, since the output is sent to stderr?
+    if ! perf record -e dummy --off-cpu --off-cpu-thresh 500 -o ${perfdata}=
+ -- sleep 0.1 2> /dev/null
 
-> +		return 10000;
-> +
-> +	get_term_dimensions(&ws);
+While these implemented values provide a safer margin against execution
+jitter, could this commit message regression be updated to match the actual
+code?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616061404.4192=
-9-1-irogers@google.com?part=3D2
+9-1-irogers@google.com?part=3D10
