@@ -1,89 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A4644508E4
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 15:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E334C44DB64;
+	Tue, 16 Jun 2026 15:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781624582; cv=none; b=Z+PP28gUTIVc2DqmKHWVu4fDIh+rX7V0XGuPaDePJUe7nNMvps/mV+rqaqr2hwVWD6KHL+nURGP4XOudhZ862GUdmPqsq/0GldyoKvre1dIU5Lz44K29JIK8Bkpz55J4oLzao30dmeZyLZ1GFcA2l9Evj1JgnZ3bo6iDxz3PpLI=
+	t=1781624695; cv=none; b=qAqhma0U2bm820m3I6EsOoTKvJLt0n2cltgmKWQ+cgmdekTrQOhaz7YYV/meHR8bvd/f003JKjRZ4lwg7F+XNVk6/Gkll297EDW3OTCWaFTBH6GZxLGsAObj8R8pPjiAuRw/XNwAJ2bv+bsid48vMjXPYie4B8t3RLwSD4z1x7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781624582; c=relaxed/simple;
-	bh=qfhyLRaPXn/Brs5tI57ZmQIgYFgDPjJdjPgyEN64EWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h47aLGgAanHISdFvhgVopNglVbruIn94n1XtgdUGJll7biN6MW846kLhSAMilRM5BoFb5seMCjAMo5EA+n8pagpeg+JD+gbfKfqIf3Mev/g/Y5JAOOgCS1y1ZhiXDT4IiM2szYGVM/H0V156lFJGIX7LltWi02LFzTpJam8Mm4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=oXp3XwV2; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1781624695; c=relaxed/simple;
+	bh=32rz68k4g9ImjkdVGzMKEmNKGdT1iRycgbFiFHTItCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k9Qx4MYZTB4l2TGkvQI87eN7cpMhC/cUyPWQ9FBV/DHtOHjxmJ4/4MY2b18NFPKlb1jgJGFZgH9QP46PEwOI/JHV5DvdYL67iYtHBR8bjfHdNI4KR0oxtilixgdKi0GOcA/YX+q/YQ/HgGMDtDSVeSNY7M28E8NBAyx2bs6IcdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iS4c3lP0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="oXp3XwV2"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B430C1688;
-	Tue, 16 Jun 2026 08:42:54 -0700 (PDT)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8DAD3F62B;
-	Tue, 16 Jun 2026 08:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781624579; bh=qfhyLRaPXn/Brs5tI57ZmQIgYFgDPjJdjPgyEN64EWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oXp3XwV2DWq8kpEi9ishP0kOZmxL/sxaoayB+PitRuRHqUjSxtbHkUeTJkDoTwEES
-	 z4os8zMgegOcI6dM3MQuSL/Ny3WUdi2Vmgj5AUEzoNeExZNMX53bnIOamppKxu2WYA
-	 FP6WPNTAzuzTvmiVNxcpoWeLayGLMmGKfrILtQjE=
-Date: Tue, 16 Jun 2026 16:42:56 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 5/9] perf cs-etm: Use thread-stack for last branch
- entries
-Message-ID: <20260616154256.GB31870@e132581.arm.com>
-References: <20260616-b4-arm_cs_callchain_support_v1-v9-5-f8fad931c413@arm.com>
- <20260616151314.5BBD11F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iS4c3lP0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 764751F00A3F;
+	Tue, 16 Jun 2026 15:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781624692;
+	bh=4sAz4b2UiAlm8HGx4vFXgx9y7DtRhF52e/TjSLYHLig=;
+	h=From:To:Cc:Subject:Date;
+	b=iS4c3lP0nQlAf4JoegfooDiOLtgh598GsBe+VIMGSIQfTu8BgMSkwdZzGHfJwvqRr
+	 mRHdus8LyWB/8nq+nfn7sB6TOaTBb6KAnah2YeJHgFW6BfQeQ8octm615hH5wFXXIF
+	 rJVoKq8s4RFpxqnYWz/fyuuxcklpAIr6Tjlhc81jzANmQtMjjrgrL0AoO9PiDXpQ7b
+	 4Sbyq02yOFCdrTn8lsg5M3/nl6rxaUzNRnuyntXjoYE8Rfhijj/1EWLg0z7avynIvf
+	 RVCYprLk7JlcX4QDDC36wcOFT5ckubUMfbQREk7DDLAp5sWK+hxUT227+0VJ9yp6Pb
+	 I551Y3GNM5z5g==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Aaron Tomlin <atomlin@atomlin.com>
+Subject: [PATCHES v2 0/2] perf tools: Add cached probe type detection for evsel
+Date: Tue, 16 Jun 2026 12:44:44 -0300
+Message-ID: <20260616154446.7206-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260616151314.5BBD11F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 16, 2026 at 03:13:13PM +0000, sashiko-bot@kernel.org wrote:
+Hi,
 
-[...]
+Checking whether an evsel is a kprobe or uprobe currently requires
+walking the PMU list via evsel__find_pmu() on every call.  This is
+wasteful when the same evsel is checked repeatedly in hot paths like
+trace__fprintf_tp_fields().
 
-> > @@ -2025,7 +1965,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
-> >  
-> >  	/* Reset last branches after flush the trace */
-> >  	if (etm->synth_opts.last_branch)
-> > -		cs_etm__reset_last_branch_rb(tidq);
-> > +		thread_stack__flush(tidq->frontend_thread);
-> 
-> [Severity: High]
-> Can this cause cross-CPU state corruption when flushing shared thread stacks?
-> 
-> When cs_etm__flush() is called due to a local trace discontinuity or the end of
-> a block on a specific trace queue (CPU), it calls thread_stack__flush() on
-> the frontend_thread.
-> 
-> If the traced thread is shared across multiple CPUs (such as the global idle
-> thread pid == 0), thread_stack__flush() will iterate over ts->arr_sz and
-> reset the branch stacks for all CPUs associated with that thread:
-> 
-> tools/perf/util/thread-stack.c:thread_stack__flush() {
-> 	...
-> 	for (pos = 0; pos < ts->arr_sz; pos++) {
-> 		int ret = __thread_stack__flush(thread, ts + pos);
-> 	...
-> }
-> 
-> This replaces the previously safe localized reset for the trace queue with a
-> global flush. Could a localized discontinuity on CPU A silently wipe out the
-> active branch stack and callchain history of the shared thread executing
-> concurrently on CPU B?
+Patch 1 adds evsel__is_kprobe(), evsel__is_uprobe(), and
+evsel__is_probe() helpers that resolve the probe type on first call
+and cache the result in a 3-bit field that fits in existing struct
+padding.
 
-So far, this only affects idle threads across CPUs. In most cases, idle
-threads are not the profiling target, and it requires to refactor the
-common code that manages idle threads on a per-CPU basis.
+Detection covers both PMU-based probes (kprobe/uprobe PMU, detected
+by PMU name) and ftrace-based dynamic probes (kprobes/uprobes/fprobes
+created via tracefs, which report as PMU "tracepoint").  Ftrace probes
+are detected by the __probe_ip field that the kernel adds to all
+dynamic probe formats — this is authoritative regardless of the
+group/system name the user chose.
 
-I would defer this until there is a clear requirement.
+Patch 2 is the first user: it guards the __probe_ip field name
+comparison in perf trace with evsel__is_probe(), so the strcmp is
+skipped entirely for the common case of non-probe tracepoint events.
 
-That said, I hope we rather spend time to improve cs-etm discontinuity
-issue (from both driver and tooling).
+Build-tested with gcc and clang.
+
+Changes in v2 (patch 1 only):
+  - Detect ftrace-based dynamic probes (kprobes/uprobes/fprobes created
+    via tracefs) that report PMU "tracepoint" instead of "kprobe"/
+    "uprobe".  Check for the __probe_ip field presence in the tracepoint
+    format.  Without this, evsel__is_probe() returned false for ftrace
+    probes, breaking __probe_ip suppression in perf trace for probes
+    created via 'perf probe' (sashiko-bot).
+  - Widen probe_type bitfield from 2 to 3 bits for PROBE__FTRACE.
+
+Arnaldo Carvalho de Melo (2):
+  perf evsel: Add lazy-initialized probe type detection helpers
+  perf trace: Guard __probe_ip suppression with evsel__is_probe()
+
+ tools/perf/builtin-trace.c |  2 +-
+ tools/perf/util/evsel.c    | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/evsel.h    |  5 +++++
+ 3 files changed, 59 insertions(+), 1 deletion(-)
+
+Cc: Aaron Tomlin <atomlin@atomlin.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+
+Developed with AI assistance (Claude/sashiko), tagged in commits.
+
+Thanks,
+
+- Arnaldo
