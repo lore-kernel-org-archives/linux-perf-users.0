@@ -1,169 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E89314D37
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 19:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC461303C8A
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 19:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781639242; cv=none; b=f44vgYJaKayjw7f+9E9BNZza66DqFHiH7aYSTWu+kZOXNt9PfLDpz8kA6ojUjO0af0t58+DM8WFavb5t8DeRCLaJVdBX7FXOoVdkOGKzqpzD/vQs7jAGNObAh/3UKJ2QJ14ow+MOpgokxobRfOMIEX/ceqpwz5atJ6iqRiIfg0I=
+	t=1781639303; cv=none; b=NxkoCC3cbZN+361QEZWFw+q4fFvn5Xh+maCzFlnfzLgpTVPJF+0C/m7eALeM4kWEFpT93dV31mTNYMZzW7VcNNNwvURcAxx+PqCrNuc4NDHElTQjk9SvlkkV3NvcqWWvbeW7QI9OCU5X/qBI/xc2GYVMk58XHrVXn587UxNbsDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781639242; c=relaxed/simple;
-	bh=WfwhCk3B4K0Vf96+5wlRxUBbIHNKAJ5CqK58cCGN1yM=;
+	s=arc-20240116; t=1781639303; c=relaxed/simple;
+	bh=dnPZlcRJOBz5xsoV5cdpPMGsngAN77C5WkYDf0kK/C4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DMl2gZFDO9FYpepIDHZOFZpko7CFidep0T9YUySKrhLuIWBM22IzJlmiY7192zWRgLg6fwzXYF/rcli8F/9QfnrEbrHAb7RPBCfDaow8EgUQ7AD0STYisqt4zvStWSgwmhV864IVBDEwX57eksUtI1VT6BHS0OvrX67C5UmzauU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqR58022; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=pEyAlqythqKSRsvSxIEj427GUGo5EKA0GwXCbFR7TmpBU6j/aKEf+9CmddQVAbeMxL1ukgVtrPYfxNe72v//nckMaYOp2cAhLKAlOGoNEsxeXhAXd4HZbYGusaDPC5HuSBTajunRjCZ9gVDBIs/IJXHTMBvj+MBbuuiSrK3/P7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQTD8s49; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqR58022"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D5281F000E9;
-	Tue, 16 Jun 2026 19:47:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQTD8s49"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D5B1F000E9;
+	Tue, 16 Jun 2026 19:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781639241;
-	bh=cd38XD5U9pNl5UGLvCyzuUKn0JhWt4dNDxOYL01Bn+0=;
+	s=k20260515; t=1781639302;
+	bh=FJcmmWFzYuS0wMv0l6v+dhpGdz/CEiWcpPwPHZ31UL0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YqR58022q42UmBdzz1QUAWoTWCeGzOMmTrUwxaeDC856de6T2gtktMSf9dMkkkElW
-	 CnY8lGhuk9QrNExg0/kdzR4poteY2bOuaV+xyIUGd0hxA+cSxK+nD+yJGCjeLuyzdE
-	 frXr1fISoanW122hCy0MXJ2yJMBXi1J6swr5zjU2KAhCX1hq+U8UDD190K494PPRvm
-	 TBOGvFJybUbcK6vpUFtGnLKTiT2XCEcdvGFPcKac6Ji0gb0+ojAsldmBHE5S8p7QxF
-	 wb9nbQU/OkCrjyylvOko5nVwAPpSP4qI4k6AI9y4BLJ95Nqsc7GFm1+jNiGI9pqq9k
-	 umHOfvfNSV2PA==
+	b=lQTD8s49ZVCueFEOMZwyG5xW2YGJmNC3rJ96WhfBwb8SzGtvFbvosjB8X9fPLFSqy
+	 Z26Fo7ZqOgcsrkz95AUwAnkaQ3Z1TtKbhu8wwDQD4oavg8MNOaVo57Z5SovtuNQewk
+	 G1rtgboW+KyWI1kNTmGn8LjTU7AUi/2sklnqVwHD3VTHq/kZQJ5OxrDGi5sHW7a9F+
+	 /RQHoG+DGzukoAMdLcv/x+Ht1actRyzFo53aYPlbMKd70zANruh7/gb3/8Vhnlk1Xd
+	 VWcZPtF0qwjT4Hy+Q/VmFxPscxw6ajnQzSFtCvyU4VTHkJOi6ZeMwXfRWBghzYhd/n
+	 o8hSEAUUpBRIw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 5/9] perf cs-etm: Bounds-check CPU in
- cs_etm__get_queue()
+Subject: Re: [PATCH 3/9] perf cs-etm: Validate num_cpu before metadata
+ allocation
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616193033.10035-6-acme@kernel.org>
-References: <20260616193033.10035-6-acme@kernel.org>
+In-Reply-To: <20260616193033.10035-4-acme@kernel.org>
+References: <20260616193033.10035-4-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 19:47:20 +0000
-Message-Id: <20260616194721.2D5281F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 19:48:21 +0000
+Message-Id: <20260616194822.22D5B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] The patch fixes NULL pointer dereferences for dynamically grown qu=
-eues in ID mapping functions, but misses identical vulnerabilities in `cs_e=
-tm__create_decoders()` and `cs_etm__dump_event()` callers.
-- [High] The old `queue_array` is unconditionally leaked when dynamically r=
-esizing in `auxtrace_queues__grow()`.
+- [High] Insufficient bounds checking during per-CPU metadata parsing allow=
+s out-of-bounds reads and potential info leaks.
 --
 
-commit 6d207e2a691cccf4b079e5ecdc5b0aa1cd4cc3b0
+commit 473102d55bf7bd2e3011265b42ca3a3d07213392
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf cs-etm: Bounds-check CPU in cs_etm__get_queue()
+perf cs-etm: Validate num_cpu before metadata allocation
 
-This commit adds bounds checking for the CPU value against nr_queues in
-cs_etm__get_queue(). It also introduces NULL checks for the queue's private
-data across several functions to safely handle untrusted perf.data events.
-
->     perf cs-etm: Bounds-check CPU in cs_etm__get_queue()
->    =20
->     cs_etm__get_queue() indexes etm->queues.queue_array[cpu] without
->     validating that cpu is within nr_queues.  When processing
->     AUX_OUTPUT_HW_ID events, the cpu value comes from untrusted perf.data
->     trace payload and flows through cs_etm__process_trace_id_v0_1() and
->     cs_etm__queue_aux_fragment() without bounds checking, allowing an
->     out-of-bounds read with a crafted file.
->    =20
->     Add a bounds check in cs_etm__get_queue() and NULL checks in all
->     callers.
->    =20
->     Also add NULL checks for queue_array[i].priv in the queue iteration
->     loops in cs_etm__map_trace_id_v0() and cs_etm__process_trace_id_v0_1()
->     =E2=80=94 after auxtrace_queues__grow() new entries are zero-initiali=
-zed so
->     .priv can be NULL.  Add a get_cpu_data() NULL check in
->     cs_etm__process_trace_id_v0_1(), matching the existing check in
->     cs_etm__process_trace_id_v0().
-
-[Severity: High]
-This isn't a bug introduced by this patch, but while handling the
-zero-initialized entries from auxtrace_queues__grow(), does
-auxtrace_queues__grow() itself have a memory leak?
-
-When it reallocates the queue array, the old queues->queue_array pointer
-seems to be overwritten without being freed:
-
-tools/perf/util/auxtrace.c:auxtrace_queues__grow() {
-    ...
-    queues->nr_queues =3D nr_queues;
-    queues->queue_array =3D queue_array;
-
-    return 0;
-}
-
-Could a crafted perf.data file providing events with successively increasing
-indices trigger repeated reallocations and leak the old arrays each time?
+cs_etm__process_auxtrace_info_full() reads num_cpu from untrusted
+perf.data and uses it to allocate the metadata pointer array. On 32-bit,
+this can overflow the multiplication and cause a zero-sized allocation.
+This patch computes priv_size early and uses it to bound num_cpu to prevent
+out-of-bounds writes.
 
 > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index d121c8f22028d..5d0664ff73b79 100644
+> index 0927b0b9c06b1..d121c8f22028d 100644
 > --- a/tools/perf/util/cs-etm.c
 > +++ b/tools/perf/util/cs-etm.c
-[ ... ]
-> @@ -318,6 +324,9 @@ static int cs_etm__map_trace_id_v0(struct cs_etm_auxt=
-race *etm, u8 trace_chan_id
->  		int ret;
-> =20
->  		etmq =3D etm->queues.queue_array[i].priv;
-> +		if (!etmq)
-> +			continue;
+> @@ -3431,6 +3431,18 @@ int cs_etm__process_auxtrace_info_full(union perf_=
+event *event,
+>  	/* First the global part */
+>  	ptr =3D (u64 *) auxtrace_info->priv;
+>  	num_cpu =3D ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
 > +
->  		ret =3D cs_etm__insert_trace_id_node(etmq, trace_chan_id,
->  						   cpu_metadata);
+> +	/*
+> +	 * Bound num_cpu by the event size: the global header consumes
+> +	 * CS_ETM_HEADER_SIZE bytes, and each CPU needs at least one u64
+> +	 * metadata entry after that.
+> +	 */
+> +	priv_size =3D total_size - event_header_size - INFO_HEADER_SIZE -
+> +		    CS_ETM_HEADER_SIZE;
+> +	if (num_cpu <=3D 0 || priv_size <=3D 0 ||
+> +	    num_cpu > priv_size / (int)sizeof(u64))
+> +		return -EINVAL;
+> +
+>  	metadata =3D zalloc(sizeof(*metadata) * num_cpu);
+>  	if (!metadata)
+>  		return -ENOMEM;
 
 [Severity: High]
-This is a pre-existing issue, but since we are adding NULL checks for etmq
-here, are similar checks missing in other functions that iterate over the
-queues or process them?
+This isn't a bug introduced by this patch, but does the per-CPU metadata
+parsing loop still allow out-of-bounds reads when processing crafted
+perf.data files?
 
-In cs_etm__create_decoders():
+While this patch bounds num_cpu, the subsequent parsing loop repeatedly
+calls cs_etm__create_meta_blk(). This function advances the parse index
+based on an untrusted length read directly from the payload:
 
-tools/perf/util/cs-etm.c:cs_etm__create_decoders() {
+tools/perf/util/cs-etm.c:cs_etm__create_meta_blk() {
     ...
-    assert(empty || etmq->format !=3D UNSET);
-    if (empty)
-        continue;
+    } else {
+        /* read version 1 info block - input and output nr_params may diffe=
+r */
+        /* version 1 has 3 common params */
+        nr_cmn_params =3D 3;
+        nr_in_params =3D buff_in[i + CS_ETM_NR_TRC_PARAMS];
+    ...
+    /* adjust in offset by number of in params used */
+    i +=3D nr_in_params + nr_cmn_params;
+    *buff_in_offset =3D i;
+    return metadata;
+}
 
-    ret =3D cs_etm__create_queue_decoders(etmq);
+The updated index is then used in the next loop iteration without being
+checked against the bounded priv_size:
+
+tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_info_full() {
+    ...
+    for (int j =3D 0; j < num_cpu; j++) {
+        if (ptr[i] =3D=3D __perf_cs_etmv3_magic) {
+            metadata[j] =3D cs_etm__create_meta_blk(ptr, &i, ...);
+        } else if (ptr[i] =3D=3D __perf_cs_etmv4_magic) {
+            ...
+        } else {
+            ui__error("CS ETM Trace: Unrecognised magic number %#"PRIx64". =
+...\n",
+                      ptr[i]);
+            err =3D -EINVAL;
+            goto err_free_metadata;
+        }
     ...
 }
 
-If auxtrace_queues__add_event() adds buffers to a newly grown queue, empty
-would be false, but etmq could still be NULL. Could this lead to a NULL
-pointer dereference on etmq->format?
+Could an excessively large or negative value for nr_in_params cause arbitra=
+ry
+forward or backward out-of-bounds reads when evaluating ptr[i]?
 
-Similarly, in dump_queued_data() and cs_etm__process_auxtrace_event(), the
-uninitialized priv pointer is passed directly to cs_etm__dump_event() when
-iterating over nr_queues:
-
-tools/perf/util/cs-etm.c:dump_queued_data() {
-    ...
-    for (i =3D 0; i < etm->queues.nr_queues; ++i)
-        list_for_each_entry(buf, &etm->queues.queue_array[i].head, list)
-            if (buf->reference =3D=3D event->reference)
-                cs_etm__dump_event(etm->queues.queue_array[i].priv, buf);
-}
-
-Inside cs_etm__dump_event(), etmq->decoder is unconditionally dereferenced:
-
-tools/perf/util/cs-etm.c:cs_etm__dump_event() {
-    ...
-    color_fprintf(stdout, color,
-                 ". ... CoreSight %s Trace data: size %#zx bytes\n",
-                 cs_etm_decoder__get_name(etmq->decoder), buffer->size);
-    ...
-}
-
-Could this cause a crash if dump_trace is active?
+If the out-of-bounds memory does not match a recognized magic number,
+ui__error() prints the memory directly to stderr, which could potentially
+leak heap memory or trigger a segmentation fault.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616193033.1003=
-5-1-acme@kernel.org?part=3D5
+5-1-acme@kernel.org?part=3D3
