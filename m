@@ -1,54 +1,54 @@
 Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8784C378806
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F043379EE7
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 01:25:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781573153; cv=none; b=ASBDsA8hC8GWBgPyodDSEKLgqTTTJQar/hfINMml/OhWobnM3xCbsPzLMUj/Z0Lc1n7iuIXhi/NwuY81CMxs/euKglImZfqmgKeQrKr7STBcjuXYLRl7ouHkJPJJgmx1V0Bd5NimY1h+l60z++skefv98J3OsAQE63eoZNxkGbY=
+	t=1781573163; cv=none; b=NOClUa4uQQQGAw7SVEbgVXmJJe8NDUss2TO2SK5aOwj7WzhTLIcIixixinjO/hpBJBHyom1vpJfNv1r7lfArK9qRTA5mcUf60L7zFIhKMv67mOZc3bb+PlNM9kU9YjduyucKh6V3QCmbmED2DsNrbMF3oxc587Cf6Mrah/B8gH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781573153; c=relaxed/simple;
-	bh=Xl/Z23Ywp7doqIRABOZcKj/6xeZj1hOnZyU4+ckoqQM=;
+	s=arc-20240116; t=1781573163; c=relaxed/simple;
+	bh=jaGUZa+3n4Hj6kL4s4C5AhVaazro4xHt2cu4tVcyJyI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=jH1qIEgCFqgv2SZR4C9YhG4kvk6wDz0tcDl4uAvewcPO9uGBELgp7pnVhUX0FFGy3C4HzgxA0gHC2VprElomLnbUG97xeI0ArdY4cWjtSYPdLdUWjaYNVJfuIpMge+9Cip89zp+Q2kJHCSfg5CJjHhix4aXcYNCDAO6D8oM0yK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pzSUtkry; arc=none smtp.client-ip=74.125.82.202
+	 To:Content-Type; b=Eah33uiTeU1HwCXpxDjxwZKIdw03a0QqzTy1a/hN2EdDTvs6yNX37RdzQ+3QMKK/aV32gf/4ItRS/VTz52kNFc1wpXYT/eBXcMniAOwrDhczRohl3bWeYUdZFQy/0cub2uZsCjo9bl9F4XQ9r7HVVjzQr60r05lKhswoFOV6RCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IUW41RPa; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pzSUtkry"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304e7fc90b1so4526945eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:25:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IUW41RPa"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-304ec73b015so1576240eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 18:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1781573152; x=1782177952; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1781573154; x=1782177954; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LKTxltXDjiPQ1t4wRosfkoNKM6z5rj9TW2X9tI16Pak=;
-        b=pzSUtkryI9tyMh13Dla+vxgMulfDAoP6HlgilacVV6b6SqQU7EGELKuk+DQ1pAQ6Wv
-         QSIXRUprd97JGWpYJMwKbbAYgPAgiwXpI10A0ePePrK9mZvpggbhhGdavV310sHDXVv9
-         mi4Np0ZPSlWx3s5guF2rXfJHKCV5R+cYzI+4h5NEuwSs/mjmI3mOffNwDsjBQ/ouEept
-         C7Spf9prIu8Jlz4C2K5pyMgsmS9kACVBWnOsGEiZCSLNDMGOXy35tVBtl8BSyHFzrdMS
-         BF+C4gQfjk3FYfPME5+j2HiW5HFrTIA12e/ugvtr78Ehl1DxWZ7d+62ekiM2AIXq5yxR
-         BMbA==
+        bh=ey3859c+dCCZhIYYYmcqI0MV2QtbNDTAgy9JyyB/qJM=;
+        b=IUW41RPaLxz/sRyiaR90NbJGj1ltuj/ijTosKNrVIgpnwdSJMuca0NsZr6slaaPN/t
+         hxPgDood+bQDYWyD8dPVru0Zx7o/YJlhisX2RyMIUILx/CYoGGGfG+eMKpbG+LbFE+w8
+         Ke2Zxp23DrqBD93oGJn47jweYU/50c9bOAscWcxZoFj1hSNZBtZmx39dOUvNR5Y61hEr
+         v7eq/VzMEAsryBidk6v1FjICsh655RxGF1luK3U+Izi2mij+udxM9JsCDhzxliTRmNW2
+         kMv5St7ozTpFTalN2tfRUWBa5+rVSa7nZTJ5a487/ToKTLQdgG46lyKzWY5trPF6TAPS
+         aWJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781573152; x=1782177952;
+        d=1e100.net; s=20251104; t=1781573154; x=1782177954;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LKTxltXDjiPQ1t4wRosfkoNKM6z5rj9TW2X9tI16Pak=;
-        b=jvYTsHfBQh3Ak+NCsbMxsMEjfF47xLiG+C/brhen1oIkAfNG759+lzmkvy4SljEpif
-         6QqVBfEYSm/O/U4jKE5DjILThhRDUA2YleB8XTBZ5pdNSdu7fmyuk9bnQO+DPk/Vnsfd
-         BmZGruWi03HgAXjpIvU6G2WEp/xjVgo88vfS2Q+x48pUHCu3vdFkrQSlWrzAlqahQ5hg
-         kyIsIguzSBZkTrsCuZmovS9RGC4DW5Fh+jiFEx6KxVGKwXkv6/xvVbOp+qc7xzoq9PxR
-         JPmuywp4Q13Z6wvWzxJkZASQ0ttIgswzyb+rA7j25Kflar0yo3we9EGZ5C228yjn+A49
-         pf5A==
-X-Forwarded-Encrypted: i=1; AFNElJ8Hi+86SJp7IyRVJzMn3KpJaR99SGATHua8N7v4R5WzwaWkLhQUhaYL3ApPw0Q4oiz/BfFigpoxKdYQ4nw6RqoT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrOxbhU2rxYcwHFnwIvtegIp+3tws3enU+pZcAa1jWDabiPg/+
-	hen7rrY2KHvG/0PuiaZb0jquufyp764ClioxAhlGK5fgn4ktv/3pwJUevk3HHK1+1J71j2EK0no
-	VNnUIHubA4g==
-X-Received: from dybff23.prod.google.com ([2002:a05:7300:bf17:b0:2ee:de47:cde3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:4355:b0:2ed:e14:42e9
- with SMTP id 5a478bee46e88-30940357f24mr8449584eec.34.1781573151221; Mon, 15
- Jun 2026 18:25:51 -0700 (PDT)
-Date: Mon, 15 Jun 2026 18:25:16 -0700
+        bh=ey3859c+dCCZhIYYYmcqI0MV2QtbNDTAgy9JyyB/qJM=;
+        b=g0nKGWhWCjE1BMzx7n8ORARRjZXrmjQmI5GbTMiloEwTgtfICfbEFdbCAKun4KU/ql
+         YMhYeF/42OEjvVgnl057j4lHcEuqzrfA/Om0kUZJWwuHy7AHnXb5tQq7WnhgtyJLqe9k
+         4hp/pU3EBauIECEGxnYB/a3Sfg/kPugA76Jk6VBSASHPOF1Yp+9ee1z6FgKGWc5BnoMD
+         yH8+r+zCAmzR56pvV/Mt/N/KIRJ+Y+NLvNX0Dviny0dpdzUrC/dEu49EwKZ5/Um/MiWu
+         CEaoa+Ds3RAP1h2uUNejhMacufa+6FNTFFb1qwPNy1STtx3tW5hhhbMxtLICsv1Cpmrk
+         t82w==
+X-Forwarded-Encrypted: i=1; AFNElJ/ecuhSU5TgdjqX3Flc7H4AO6Xi8r1BoW+As/DoCwCXHe62E3ZikWC140zZjvgO+VIV2Nm172wo1rsoq+g/MGgu@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUgccMilT7Lapsg7eipJagbWmmbGU82mXcuND3ODV5z0Mgdbha
+	PO5ynK8GQzzj21fCHOTS0mIUdC99J5z42XIh1dmBZbvsvFxEZaSHIZH2U1+eXUG6HO+He/erqgR
+	mRj/I2nLStw==
+X-Received: from dybox23.prod.google.com ([2002:a05:7300:ec97:b0:2ee:9140:ff36])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:d10:b0:305:56a:c38f
+ with SMTP id 5a478bee46e88-30ba5fe1d2amr983626eec.26.1781573153256; Mon, 15
+ Jun 2026 18:25:53 -0700 (PDT)
+Date: Mon, 15 Jun 2026 18:25:17 -0700
 In-Reply-To: <20260616012521.4045202-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616012521.4045202-1-irogers@google.com>
 X-Mailer: git-send-email 2.54.0.1136.gdb2ca164c4-goog
-Message-ID: <20260616012521.4045202-8-irogers@google.com>
-Subject: [PATCH v1 07/12] perf tests: Fix flakiness in trace record and replay test
+Message-ID: <20260616012521.4045202-9-irogers@google.com>
+Subject: [PATCH v1 08/12] perf tests: Fix flakiness in BPF counters test on
+ hybrid systems
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -69,85 +70,103 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The `perf trace record and replay` test fails intermittently on slow or
-virtualized hosts because the default recording workload (`sleep 1`) occasionally
-completes without scheduling the target `nanosleep` or `clock_nanosleep` system
-calls inside the recorded sample window, resulting in the error:
-`Failed: cannot find *nanosleep syscall`.
+The `perf stat --bpf-counters test` fails intermittently on hybrid
+architectures or systems with dynamic frequency scaling (DVFS). This happens
+because the test workload (`sqrtloop`) runs for a fixed 1-second duration, and
+the CPU frequency can scale dynamically between idle and maximum frequency.
+As the first run runs on a cold CPU and the second run runs on a warmed-up CPU
+(or vice versa), the number of instructions executed in 1 second differs by
+up to 2.2x, violating the comparison tolerance.
 
-Generalize the `perf_record_with_retry` helper in `tests/shell/lib/perf_record.sh`
-to support a custom record command prefix via the `PERF_RECORD_CMD` environment
-variable (defaulting to "perf record").
+Also, when running as root, BPF tracepoints and scheduling programs trigger
+frequently. Since standard `perf stat -e instructions` measures both user and
+kernel space instructions, it counts BPF helper and program execution overheads,
+whereas the BPF counters themselves do not self-measure. This introduces a large
+kernel-space instruction count discrepancy between standard and BPF counters.
 
-Update `trace_record_replay.sh` to use this robust retry loop running with
-`PERF_RECORD_CMD="perf trace record"` and a base workload of `sleep`. The test
-will automatically retry with scaled sleep durations (from 0.01s up to 2.0s)
-until the required `nanosleep` event is successfully captured.
+Fix these issues by:
+1. Switching the workload to a strictly deterministic, iteration-based
+   workload: `awk 'BEGIN { for (i=0; i<10000000; i++) sum+=i }'`. We pin the
+   workload to a single random allowed CPU using `taskset -c $CPU` via a bash array.
+2. Restricting the counted event to user-space only (`instructions:u` or `/u`).
+3. Tightening the comparison tolerance from 20% to 15%.
 
-Fixes: 15bcfb96d0dd ("perf test: Add trace record and replay test")
+These modifications isolate the measurements to user-space instructions of the
+deterministic loop, which executes a virtually identical number of instructions
+on both runs (with less than 0.001% variation), eliminating Dynamic Frequency
+Scaling (DVFS), kernel scheduling noise, and BPF helper self-measurement overheads.
+
+Fixes: 2c0cb9f56020 ("perf test: Add a shell test for 'perf stat --bpf-counters' new option")
 Signed-off-by: Ian Rogers <irogers@google.com>
 TAG=agy
 CONV=7e7ee33a-e940-4a8a-8e64-878da6a68b59
 ---
- tools/perf/tests/shell/lib/perf_record.sh     |  7 ++++++-
- tools/perf/tests/shell/trace_record_replay.sh | 18 ++++++++++++++----
- 2 files changed, 20 insertions(+), 5 deletions(-)
+ tools/perf/tests/shell/stat_bpf_counters.sh | 27 +++++++++++++--------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lib/perf_record.sh b/tools/perf/tests/shell/lib/perf_record.sh
-index c5de25244770..5c7feb294ebb 100644
---- a/tools/perf/tests/shell/lib/perf_record.sh
-+++ b/tools/perf/tests/shell/lib/perf_record.sh
-@@ -21,9 +21,14 @@ perf_record_with_retry() {
-   local duration
-   local first_run=true
-   local ret=1
-+  local cmd_prefix="perf record"
-+  if [ -n "${PERF_RECORD_CMD}" ]; then
-+    cmd_prefix="${PERF_RECORD_CMD}"
-+  fi
-+
-   for duration in 0.01 0.1 0.3 1.0 2.0; do
-     rm -f "${perfdata}" "${perfdata}".old
--    perf record "$@" -o "${perfdata}" ${testprog_base} ${duration} > "$logfile" 2>&1
-+    ${cmd_prefix} "$@" -o "${perfdata}" ${testprog_base} ${duration} > "$logfile" 2>&1
-     local record_exit=$?
+diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
+index 35463358b273..2f01608c95e3 100755
+--- a/tools/perf/tests/shell/stat_bpf_counters.sh
++++ b/tools/perf/tests/shell/stat_bpf_counters.sh
+@@ -4,21 +4,25 @@
  
-     if [ "$first_run" = true ] && [ $record_exit -ne 0 ]; then
-diff --git a/tools/perf/tests/shell/trace_record_replay.sh b/tools/perf/tests/shell/trace_record_replay.sh
-index 88d30a03dcec..f27e32b18697 100755
---- a/tools/perf/tests/shell/trace_record_replay.sh
-+++ b/tools/perf/tests/shell/trace_record_replay.sh
-@@ -6,16 +6,26 @@
+ set -e
  
- # shellcheck source=lib/probe.sh
- . "$(dirname $0)"/lib/probe.sh
-+# shellcheck source=lib/perf_record.sh
-+. "$(dirname $0)"/lib/perf_record.sh
+-workload="perf test -w sqrtloop"
++CPU=0
++if command -v shuf >/dev/null 2>&1; then
++	CPU=$(shuf -i 0-$(($(nproc) - 1)) -n 1 2>/dev/null || echo 0)
++fi
++workload=(taskset -c "$CPU" awk 'BEGIN { for (i=0; i<10000000; i++) sum+=i }')
  
- skip_if_no_perf_trace || exit 2
- [ "$(id -u)" = 0 ] || exit 2
+-# check whether $2 is within +/- 20% of $1
++# check whether $2 is within +/- 15% of $1
+ compare_number()
+ {
+ 	first_num=$1
+ 	second_num=$2
  
- file=$(mktemp /tmp/temporary_file.XXXXX)
+-	# upper bound is first_num * 120%
+-	upper=$(expr $first_num + $first_num / 5 )
+-	# lower bound is first_num * 80%
+-	lower=$(expr $first_num - $first_num / 5 )
++	# upper bound is first_num * 115%
++	upper=$(expr $first_num + $first_num \* 3 / 20 )
++	# lower bound is first_num * 85%
++	lower=$(expr $first_num - $first_num \* 3 / 20 )
  
--perf trace record -o ${file} sleep 1 || exit 1
--if ! perf trace -i ${file} 2>&1 | grep nanosleep; then
-+check_nanosleep() {
-+  perf trace -i "${file}" 2>&1 | grep -q nanosleep
-+}
-+
-+PERF_RECORD_CMD="perf trace record" perf_record_with_retry "${file}" "check_nanosleep" "sleep"
-+err=$?
-+
-+perf_record_cleanup
-+rm -f ${file}
-+
-+if [ $err -ne 0 ]; then
- 	echo "Failed: cannot find *nanosleep syscall"
- 	exit 1
- fi
--
--rm -f ${file}
-+exit 0
+ 	if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
+-		echo "The difference between $first_num and $second_num are greater than 20%."
++		echo "The difference between $first_num and $second_num are greater than 15%."
+ 		exit 1
+ 	fi
+ }
+@@ -41,11 +45,12 @@ check_counts()
+ test_bpf_counters()
+ {
+ 	printf "Testing --bpf-counters "
+-	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | \
++	base_instructions=$(perf stat --no-big-num -e instructions:u -- "${workload[@]}" 2>&1 | \
+ 				awk -v i=0 -v c=0 '/instructions/ { \
+ 					if ($1 != "<not") { i++; c += $1 } \
+ 				} END { if (i > 0) printf "%.0f", c; else print "<not" }')
+-	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | \
++	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions:u \
++				-- "${workload[@]}"  2>&1 | \
+ 				awk -v i=0 -v c=0 '/instructions/ { \
+ 					if ($1 != "<not") { i++; c += $1 } \
+ 				} END { if (i > 0) printf "%.0f", c; else print "<not" }')
+@@ -57,7 +62,9 @@ test_bpf_counters()
+ test_bpf_modifier()
+ {
+ 	printf "Testing bpf event modifier "
+-	stat_output=$(perf stat --no-big-num -e instructions/name=base_instructions/,instructions/name=bpf_instructions/b -- $workload 2>&1)
++	stat_output=$(perf stat --no-big-num \
++		-e instructions/name=base_instructions/u,instructions/name=bpf_instructions/bu \
++		-- "${workload[@]}" 2>&1)
+ 	base_instructions=$(echo "$stat_output"| \
+ 				awk -v i=0 -v c=0 '/base_instructions/ { \
+ 					if ($1 != "<not") { i++; c += $1 } \
 -- 
 2.54.0.1136.gdb2ca164c4-goog
 
