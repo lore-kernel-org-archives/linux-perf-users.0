@@ -1,35 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F59A3BFE41
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 14:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6CB3BFE41
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 14:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781621514; cv=none; b=GM4GETpD597taAedulScjMAbq6ck8dO8TnOLCXpeOdtjsHb5C7qAv3pWgSEEunwhUXQhmcockWbcj5GIo0NTEPhSKN938niqIwyYFUDJv4Y1vUch71FVXmLjESwvCrZL2+g7At23VPdEv6Na1fN4EpI0tVbwaoyJXZjhpZ/qP3k=
+	t=1781621517; cv=none; b=G7M0llLlIlfbt22O+pUFRUnRXu48cO659RKSJv4BQF+UsZNvuhPnvP41QOPMVJN9M9B5wPNjETZbRNbjST0UR+SXD2dQ8dCBF6j/jeQOQ3vszJntneOofmGk1Wb2GIeZ6XL260w16/R62a9FSCZ5pfVIC/NHjxs3bAGdMhUO7FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781621514; c=relaxed/simple;
-	bh=GkY92qS3kV/YzvCGViExqM8+c4BXxEucZP3jk9mabKA=;
+	s=arc-20240116; t=1781621517; c=relaxed/simple;
+	bh=yH39mJsah7rBmLBv2qYRyGV4+sIRBU0Xd0+XKiGCDwI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lafRGWDQBPUCYduT2VhlfFbk4TXkRXfgLxO1BCX1ShEyzAS+Tf9AC++AynnKGtGHf6X4dcynHMS7kLKPNcv75I6Sw5raqQ/+XIX+fv3wfMWkVdkn/o3PVW0SLkw+0k8NxQPY+IdfausN8UjMHGLYce9pUo1t1nDj31RA6+92ycc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DLkKtKKq; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=ATg9LOsOy5b9SyOmnVog73BUGmYu+GLowM2ltAeh8TXyE2ZQQfeOe0qcGPxePVrv0jk9Db/krXGFz5v7eyChYFDrrAxuWeDuzVW1Bi4L+rC8obQS91Thg+/fUPqlYyKGfOIXipFRyWRLMW/sZvF+x9L1xO52k3jn3pybHi5I928=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=TQ50YOFd; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DLkKtKKq"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="TQ50YOFd"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 164F51FC7;
-	Tue, 16 Jun 2026 07:51:47 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 604F62008;
+	Tue, 16 Jun 2026 07:51:50 -0700 (PDT)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABB0B3F915;
-	Tue, 16 Jun 2026 07:51:48 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21D9A3F915;
+	Tue, 16 Jun 2026 07:51:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781621511; bh=GkY92qS3kV/YzvCGViExqM8+c4BXxEucZP3jk9mabKA=;
+	t=1781621515; bh=yH39mJsah7rBmLBv2qYRyGV4+sIRBU0Xd0+XKiGCDwI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DLkKtKKqpj/l5Q2SCsn10tEPTa2iJDQ2nYKhDxokqpT7ENbWX4VFsKsklJwD5Y0Rp
-	 nd75kQ+WRK0KewmjwjT4HuLxiZz0wKJRZltY+ZbhzVCYjIN0+eC6DN+jDeYV5jhrEU
-	 3Dnjb3mcTeAyCivtcPO/zU3DfPuRoQdj44NczR8U=
+	b=TQ50YOFdRHW2EvuwxOcg0Wa1y/fSxKftV0JBhh7CgVuJZbsPulTbsQppfzhUfLAY0
+	 TePoPf3k8TVdVbvvL0fFw0sdUjoxydLJaiuIQuTjjZ8BdoM3jT8uepRHPdSvXWjrJc
+	 QeCjT0RrrLeHkuaMdP13Sl5FAI+1KCyeuFx36wcE=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 16 Jun 2026 15:51:16 +0100
-Subject: [PATCH v9 8/9] perf cs-etm: Synthesize callchains for instruction
- samples
+Date: Tue, 16 Jun 2026 15:51:17 +0100
+Subject: [PATCH v9 9/9] perf test: Add Arm CoreSight callchain test
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260616-b4-arm_cs_callchain_support_v1-v9-8-f8fad931c413@arm.com>
+Message-Id: <20260616-b4-arm_cs_callchain_support_v1-v9-9-f8fad931c413@arm.com>
 References: <20260616-b4-arm_cs_callchain_support_v1-v9-0-f8fad931c413@arm.com>
 In-Reply-To: <20260616-b4-arm_cs_callchain_support_v1-v9-0-f8fad931c413@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -51,224 +50,330 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
  Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>, 
  Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
 Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>, 
- Leo Yan <leo.yan@linux.dev>
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781621481; l=7031;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781621481; l=10348;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=webtXuA8GHeeHCvS3PnEnZbaTIbnGT2UXa95b4BMKTg=;
- b=pBy2w3Y3ZNuXzzlnau5sRuFJryYRQkW5dsV/Ja8cAzO2ogGn7RorISVPE3nPUlvgU5WOhpXDs
- joUcAGiq1lVCIflfX5Z+wb0G6xp/QporrQczb6qTvTltwstF+g5PF9D
+ bh=yH39mJsah7rBmLBv2qYRyGV4+sIRBU0Xd0+XKiGCDwI=;
+ b=prSMg1Qi0wTPu5UQvAaZj2tRPqIEX9ZSRsYSD4prRH+K56F47Qb0d6WUpMKYE52caS/t+eYrz
+ kBbp6k2rVShBJkHpuKDue6VzL32V4jW6ctMH9+aAqL2I1dJ1uVApXJ5
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-From: Leo Yan <leo.yan@linaro.org>
+Add a CoreSight shell test for synthesized callchains.
 
-CS ETM already records branches into the thread stack, but instruction
-samples do not carry synthesized callchains. It misses to support the
-callchain and no output with the itrace option 'g'.
+The test uses the new callchain workload to generate trace and decodes
+it with synthesis callchain. It then verifies that the instruction
+samples show the expected callchain push and pop.
 
-Allocate a callchain buffer per queue and use thread_stack__sample()
-when synthesizing instruction samples.
-
-Advertise PERF_SAMPLE_CALLCHAIN on the synthetic instruction event.
-Allocate one extra callchain entry than requested, as the first entry
-is reserved for storing context information.
-
-cs_etm__context() is introduced for handling context packet and update
-the thread info and start kernel address for frontend decoding.
+Use control FIFOs so tracing starts only around the workload, which
+keeps the trace data small. The test is limited to with the cs_etm
+event available and root permission.
 
 After:
 
-  perf script --itrace=g16l64i1i
+  perf test 138 -vvv
+  138: CoreSight synthesized callchain:
+  ---- start ----
+  test child forked, pid 35581
+  Callchain flow matched:
+    l1=4642868 l2=4642880 l3=4642895 l4=4642919 l5=4670494 l6=4670500 l7=4670520
+  ---- end(0) ----
+  138: CoreSight synthesized callchain                                                                           : Ok
 
-  callchain_test    6543 [002]          1 instructions:
-        ffff800080010c14 vectors+0x414 ([kernel.kallsyms])
-            aaaad6b60784 do_svc+0x1c (/home/kernel/leoy/test_cs_callchain/callchain_test)
-            aaaad6b60798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-            aaaad6b607b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-            aaaad6b607c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
-            ffff9325225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
-            ffff9325233c call_init+0x9c (inlined)
-            ffff9325233c __libc_start_main_impl+0x9c (inlined)
-            aaaad6b60670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-        ffff800080012290 ret_to_user+0x120 ([kernel.kallsyms])
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: James Clark <james.clark@linaro.org>
+Assisted-by: Codex:GPT-5.5
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/cs-etm.c | 83 +++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 78 insertions(+), 5 deletions(-)
+ tools/perf/Documentation/perf-test.txt        |   6 +-
+ tools/perf/tests/builtin-test.c               |   1 +
+ tools/perf/tests/shell/coresight/callchain.sh | 172 ++++++++++++++++++++++++++
+ tools/perf/tests/tests.h                      |   1 +
+ tools/perf/tests/workloads/Build              |   2 +
+ tools/perf/tests/workloads/callchain.c        |  33 +++++
+ 6 files changed, 213 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index e18d2dec79431f7e4b26742d98cf074483c4a246..34489476681b8e46c7a0d9e20bff433f66962484 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -18,6 +18,7 @@
- #include <stdlib.h>
+diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
+index 81c8525f594680d814f80e6f88bcce8d867bb350..859df74e62efc4b1e80da13ae8e053356f68ae54 100644
+--- a/tools/perf/Documentation/perf-test.txt
++++ b/tools/perf/Documentation/perf-test.txt
+@@ -57,7 +57,8 @@ OPTIONS
+ --workload=::
+ 	Run a built-in workload, to list them use '--list-workloads', current
+ 	ones include: noploop, thloop, leafloop, sqrtloop, brstack, datasym,
+-	context_switch_loop, deterministic, named_threads and landlock.
++	context_switch_loop, deterministic, named_threads, landlock and
++	callchain.
  
- #include "auxtrace.h"
-+#include "callchain.h"
- #include "color.h"
- #include "cs-etm.h"
- #include "cs-etm-decoder/cs-etm-decoder.h"
-@@ -87,9 +88,11 @@ struct cs_etm_auxtrace {
- struct cs_etm_traceid_queue {
- 	u8 trace_chan_id;
- 	u64 period_instructions;
-+	u64 kernel_start;
- 	union perf_event *event_buf;
- 	unsigned int br_stack_sz;
- 	struct branch_stack *last_branch;
-+	struct ip_callchain *callchain;
- 	struct cs_etm_packet *prev_packet;
- 	struct cs_etm_packet *packet;
- 	struct cs_etm_packet_queue packet_queue;
-@@ -652,6 +655,15 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
- 		tidq->br_stack_sz = etm->synth_opts.last_branch_sz;
- 	}
+ 	Used with the shell script regression tests.
  
-+	if (etm->synth_opts.callchain) {
-+		/* Add 1 to callchain_sz for callchain context */
-+		tidq->callchain =
-+			zalloc(struct_size(tidq->callchain, ips,
-+					   etm->synth_opts.callchain_sz + 1));
-+		if (!tidq->callchain)
-+			goto out_free;
-+	}
+@@ -69,7 +70,8 @@ OPTIONS
+ 	'named_threads' accepts the number of threads and the number of loops to
+ 	do in each thread.
+ 
+-	The datasym, landlock and deterministic workloads don't accept any.
++	The datasym, landlock, deterministic and callchain workloads don't accept
++	any.
+ 
+ --list-workloads::
+ 	List the available workloads to use with -w/--workload.
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 7e75f590f225e3284980829707ca8d916c98cada..1d1f38127e05429a27f31beda814f2b5f5a75089 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -168,6 +168,7 @@ static struct test_workload *workloads[] = {
+ 	&workload__jitdump,
+ 	&workload__context_switch_loop,
+ 	&workload__deterministic,
++	&workload__callchain,
+ 
+ #ifdef HAVE_RUST_SUPPORT
+ 	&workload__code_with_type,
+diff --git a/tools/perf/tests/shell/coresight/callchain.sh b/tools/perf/tests/shell/coresight/callchain.sh
+new file mode 100755
+index 0000000000000000000000000000000000000000..13cca7dc11184002e3ddc058c0d0ffa1c458c483
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight/callchain.sh
+@@ -0,0 +1,172 @@
++#!/bin/bash
++# CoreSight synthesized callchain (exclusive)
++# SPDX-License-Identifier: GPL-2.0
 +
- 	tidq->event_buf = malloc(PERF_SAMPLE_MAX_SIZE);
- 	if (!tidq->event_buf)
- 		goto out_free;
-@@ -659,6 +671,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
- 	return 0;
- 
- out_free:
-+	zfree(&tidq->callchain);
- 	zfree(&tidq->last_branch);
- 	zfree(&tidq->prev_packet);
- 	zfree(&tidq->packet);
-@@ -942,6 +955,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
- 		thread__zput(tidq->frontend_thread);
- 		thread__zput(tidq->decode_thread);
- 		zfree(&tidq->event_buf);
-+		zfree(&tidq->callchain);
- 		zfree(&tidq->last_branch);
- 		zfree(&tidq->prev_packet);
- 		zfree(&tidq->packet);
-@@ -1611,6 +1625,26 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 		sample.branch_stack = tidq->last_branch;
- 	}
- 
-+	if (etm->synth_opts.callchain) {
-+		if (tidq->kernel_start)
-+			thread_stack__sample(tidq->frontend_thread,
-+					     tidq->packet->cpu,
-+					     tidq->callchain,
-+					     etm->synth_opts.callchain_sz + 1,
-+					     sample.ip, tidq->kernel_start);
-+		else
-+			/*
-+			 * Clear the callchain when the kernel start address is
-+			 * not available yet. The empty callchain can then be
-+			 * consumed by cs_etm__inject_event().
-+			 */
-+			memset(tidq->callchain, 0,
-+			       struct_size(tidq->callchain, ips,
-+					   etm->synth_opts.callchain_sz + 1));
++glb_err=1
 +
-+		sample.callchain = tidq->callchain;
-+	}
++if ! tmpdir=$(mktemp -d /tmp/perf-cs-callchain-test.XXXXXX); then
++	echo "mktemp failed"
++	exit 1
++fi
 +
- 	if (etm->synth_opts.inject) {
- 		ret = cs_etm__inject_event(etm, event, &sample,
- 					   etm->instructions_sample_type);
-@@ -1773,6 +1807,9 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
- 		attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
- 	}
- 
-+	if (etm->synth_opts.callchain)
-+		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
-+
- 	if (etm->synth_opts.instructions) {
- 		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
- 		attr.sample_period = etm->synth_opts.period;
-@@ -1904,6 +1941,34 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 	return 0;
- }
- 
-+static int cs_etm__context(struct cs_etm_queue *etmq,
-+			   struct cs_etm_traceid_queue *tidq)
++cleanup_files()
 +{
-+	ocsd_ex_level el = tidq->packet->el;
-+	struct machine *machine;
-+	int ret;
-+
-+	machine = cs_etm__get_machine(etmq, el);
-+	if (!machine) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	tidq->kernel_start = machine__kernel_start(machine);
-+
-+	ret = cs_etm__etmq_update_thread(etmq, el, tidq->packet->tid,
-+					 &tidq->frontend_thread);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	thread__zput(tidq->frontend_thread);
-+	tidq->kernel_start = 0;
-+	return ret;
++	rm -rf "$tmpdir"
 +}
 +
- static int cs_etm__exception(struct cs_etm_traceid_queue *tidq)
- {
- 	/*
-@@ -2504,9 +2569,7 @@ static int cs_etm__process_traceid_queue(struct cs_etm_queue *etmq,
- 			 * tracing the kernel the context packet will be emitted
- 			 * between two ranges.
- 			 */
--			ret = cs_etm__etmq_update_thread(etmq, tidq->packet->el,
--							 tidq->packet->tid,
--							 &tidq->frontend_thread);
-+			ret = cs_etm__context(etmq, tidq);
- 			if (ret)
- 				goto out;
- 			break;
-@@ -3530,6 +3593,14 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 					PERF_IP_FLAG_TRACE_BEGIN |
- 					PERF_IP_FLAG_TRACE_END;
- 
-+	if (etm->synth_opts.callchain && !symbol_conf.use_callchain) {
-+		symbol_conf.use_callchain = true;
-+		if (callchain_register_param(&callchain_param) < 0) {
-+			symbol_conf.use_callchain = false;
-+			etm->synth_opts.callchain = false;
-+		}
++trap cleanup_files EXIT
++trap 'cleanup_files; exit $glb_err' TERM INT
++
++skip_if_system_is_not_ready()
++{
++	perf list | grep -Pzq 'cs_etm//' || {
++		echo "[Skip] cs_etm event is not available" >&2
++		return 2
 +	}
 +
- 	etm->session = session;
++	# Requires root for trace in kernel
++	[ "$(id -u)" = 0 ] || {
++		echo "[Skip] No root permission" >&2
++		return 2
++	}
++
++	return 0
++}
++
++record_trace()
++{
++	local data=$1
++	local script=$2
++
++	local cf="$tmpdir/ctl"
++	local af="$tmpdir/ack"
++
++	mkfifo "$cf" "$af"
++
++	perf record -o "$data" -e cs_etm// --per-thread -D -1 --control fifo:"$cf","$af" -- \
++		perf test --record-ctl fifo:"$cf","$af" -w callchain >/dev/null 2>&1 &&
++
++	# It is safe to use 'i3i' with a three-instruction interval, since the
++	# workload is compiled with -O0.
++	perf script --itrace=g16i3il64 -i "$data" > "$script"
++}
++
++callchain_regex_1()
++{
++	printf '%s' \
++'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain_foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'([[:space:]]+[[:xdigit:]]+ .*\n)*'
++}
++
++callchain_regex_2()
++{
++	printf '%s' \
++'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain_do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain_foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'([[:space:]]+[[:xdigit:]]+ .*\n)*'
++}
++
++callchain_regex_3()
++{
++	printf '%s' \
++'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
++'[[:space:]]+[[:xdigit:]]+ syscall(@plt)?\+0x[[:xdigit:]]+ \(.*\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain_do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain_foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'([[:space:]]+[[:xdigit:]]+ .*\n)*'
++}
++
++callchain_regex_4()
++{
++	printf '%s' \
++'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
++'[[:space:]]+[[:xdigit:]]+ .*\+0x[[:xdigit:]]+ \(\[kernel\.kallsyms\]\)\n'\
++'[[:space:]]+[[:xdigit:]]+ syscall(@plt)?\+0x[[:xdigit:]]+ \(.*\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain_do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain_foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
++'([[:space:]]+[[:xdigit:]]+ .*\n)*'
++}
++
++find_after_line()
++{
++	local regex="$1"
++	local file="$2"
++	local start="$3"
++	local offset
++	local line
++
++	# Search in byte offset
++	offset=$(
++		tail -n +"$start" "$file" |
++		grep -Pzob -m1 "$regex" |
++		tr '\0' '\n' |
++		sed -n 's/^\([0-9][0-9]*\):.*/\1/p;q'
++	)
++
++	if [ -z "$offset" ]; then
++		echo "Failed to match regex after line $start" >&2
++		echo "Regex:" >&2
++		printf '%s\n' "$regex" >&2
++		echo "Context from line $start:" >&2
++		sed -n "${start},$((start + 100))p" "$file" >&2
++		return 1
++	fi
++
++	# Convert from offset to line
++	line=$(
++		tail -n +"$start" "$file" |
++		head -c "$offset" |
++		wc -l
++	)
++
++	echo "$((start + line))"
++}
++
++check_callchain_flow()
++{
++	local file="$1"
++	local l1 l2 l3 l4 l5 l6 l7
++
++	# Callchain push
++	l1=$(find_after_line "$(callchain_regex_1)" "$file" 1) || return 1
++	l2=$(find_after_line "$(callchain_regex_2)" "$file" "$((l1 + 1))") || return 1
++	l3=$(find_after_line "$(callchain_regex_3)" "$file" "$((l2 + 1))") || return 1
++	l4=$(find_after_line "$(callchain_regex_4)" "$file" "$((l3 + 1))") || return 1
++
++	# Callchain pop
++	l5=$(find_after_line "$(callchain_regex_3)" "$file" "$((l4 + 1))") || return 1
++	l6=$(find_after_line "$(callchain_regex_2)" "$file" "$((l5 + 1))") || return 1
++	l7=$(find_after_line "$(callchain_regex_1)" "$file" "$((l6 + 1))") || return 1
++
++	echo "Callchain flow matched:"
++	echo "  l1=$l1 l2=$l2 l3=$l3 l4=$l4 l5=$l5 l6=$l6 l7=$l7"
++
++	return 0
++}
++
++run_test()
++{
++	local data=$tmpdir/perf.data
++	local script=$tmpdir/perf.script
++
++	if ! record_trace "$data" "$script"; then
++		echo "perf record/script failed"
++		return
++	fi
++
++	check_callchain_flow "$script" || return
++
++	glb_err=0
++}
++
++skip_if_system_is_not_ready || exit 2
++
++run_test
++
++exit $glb_err
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 7cedf05be544ad79a99e86d30dfa4f7b01ca0837..cee9e6b62dcc838c864bbe76efe3b638ed75b134 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -248,6 +248,7 @@ DECLARE_WORKLOAD(inlineloop);
+ DECLARE_WORKLOAD(jitdump);
+ DECLARE_WORKLOAD(context_switch_loop);
+ DECLARE_WORKLOAD(deterministic);
++DECLARE_WORKLOAD(callchain);
  
- 	etm->num_cpu = num_cpu;
-@@ -3581,9 +3652,11 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	}
+ #ifdef HAVE_RUST_SUPPORT
+ DECLARE_WORKLOAD(code_with_type);
+diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+index 7bb4b9829ba245740c8967e6bf3235614cdd55a3..048e371eb63e316453b6b46ebd0a02794c3d25d7 100644
+--- a/tools/perf/tests/workloads/Build
++++ b/tools/perf/tests/workloads/Build
+@@ -13,6 +13,7 @@ perf-test-y += inlineloop.o
+ perf-test-y += jitdump.o
+ perf-test-y += context_switch_loop.o
+ perf-test-y += deterministic.o
++perf-test-y += callchain.o
  
- 	etm->use_thread_stack = etm->synth_opts.thread_stack ||
--				etm->synth_opts.last_branch;
-+				etm->synth_opts.last_branch ||
-+				etm->synth_opts.callchain;
- 
--	etm->use_callchain = etm->synth_opts.thread_stack;
-+	etm->use_callchain = etm->synth_opts.thread_stack ||
-+			     etm->synth_opts.callchain;
- 
- 	err = cs_etm__synth_events(etm, session);
- 	if (err)
+ ifeq ($(CONFIG_RUST_SUPPORT),y)
+     perf-test-y += code_with_type.o
+@@ -27,3 +28,4 @@ CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_inlineloop.o       = -g -O2
+ CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
++CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+diff --git a/tools/perf/tests/workloads/callchain.c b/tools/perf/tests/workloads/callchain.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..3951423d8115e9efb49af8ba2586001fc6f02761
+--- /dev/null
++++ b/tools/perf/tests/workloads/callchain.c
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/compiler.h>
++#include <sys/syscall.h>
++#include <unistd.h>
++#include "../tests.h"
++
++/*
++ * Mark as noinline to establish the call chain, and avoid the static
++ * annotation to prevent LTO from renaming the functions.
++ */
++noinline void callchain_do_syscall(void);
++noinline void callchain_foo(void);
++noinline int callchain(int argc, const char **argv);
++
++noinline void callchain_do_syscall(void)
++{
++	syscall(SYS_getpid);
++}
++
++noinline void callchain_foo(void)
++{
++	callchain_do_syscall();
++}
++
++noinline int callchain(int argc __maybe_unused,
++		       const char **argv __maybe_unused)
++{
++	callchain_foo();
++
++	return 0;
++}
++
++DEFINE_WORKLOAD(callchain);
 
 -- 
 2.34.1
