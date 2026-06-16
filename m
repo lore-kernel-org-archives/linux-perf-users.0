@@ -1,100 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B8B339853
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jun 2026 23:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAAD25A2B5
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 00:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781564655; cv=none; b=ms2yjVc3OAJk1xhany7Q9WQ0VrogXthbygChh7MZRL29qln2OJ4CFaCI30SsEGagXHmo0IZRyI1FO8k33TAuJZ2P6liVk2AM+WWljQWE0eatChZeY7Nu94CpkJbRxI9HS9p3tl2kqWDL0bN3jMgJ7uJfzjjoIo0ERIfb1E2vh8g=
+	t=1781571264; cv=none; b=DC9pR5KkUby/g88zHlz92sg0OXpTmjW1bKUjZcFgXzi+4kPzddXKZyAu/dWFoLBWfXMtdS9xtYjqaHuzxqqa3JcnCPw2HSTKHqWRvRolIlWwfLzHnUtBSt0KZ8GUhhdW7MFaOV3rMMBVaeDxhOez8vn6B+8IdgQ6gUERfj9GLjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781564655; c=relaxed/simple;
-	bh=564WMzKtc/Kikm5+V75+e85jwIjd01vgqhps1d5c1ns=;
+	s=arc-20240116; t=1781571264; c=relaxed/simple;
+	bh=RST8ZvFpfjMifxj3Y4uUv83bHD1+q8Z2BwkWQK/aHnY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FaPirQhkDjMny2KrLiPuDLciRjPbNDm+oqWPvLqZD8Aod3PqLgdr/PI2sMfrhBMxtSng5m2vYedl8poYMbAhFEo63reXvoNReV5rKJE0DxiMqn+X7lz0szdnY/dBLAgp2YqkTyKs7enCIvObgeEGXPmKxu00MNk1yat4VzO2UA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUjqLHzK; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=O7qydAc0OV5bIps6YpCvSJgOoO4v/L8ABO6BEkvoHAybK9mRKuVS4EXg2LWQdmXsjYhjeqMy5Pk0DAfE4EFEJIT+AXYDJyJXRmnXWhv1UpjOSzAD/GO+TGJw1rNDz+672vj4Uhm21GqXuXpU9uStloU+JHb/dG192T6BLBPKp7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CD66HFLY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUjqLHzK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0914D1F000E9;
-	Mon, 15 Jun 2026 23:04:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CD66HFLY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74BC41F000E9;
+	Tue, 16 Jun 2026 00:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781564654;
-	bh=0dH4rqFcBkf3r8hDu8RtZsjrUPTIDVNrxvC+ty/Kaig=;
+	s=k20260515; t=1781571262;
+	bh=ZmU3SeNF0uDikA4nVb1xCdorEPUbTGdEXysOoWh/tq0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RUjqLHzKtw6y8NgkP/l4jL25f1grDWvrVrLE2/fK4VSQOySPJyFRnwJKj3dDd5gSj
-	 ITB9XAwhJYpWEE7z3MLvhOS0AqwY72qI1/9GJmXR0f1duvL4/utL1B3EaGIjC1oo/D
-	 hfIPTHN9ar7T0wTnp5HTJGFmHcx/NrXiwwqr6ntJmQr4t/r9A2nD3CCqogTCKlX02f
-	 i2t+eGrPhDnPqQbpyvxgSsh4MJFEGdCK2w6tQ1/r2aoQ5fdrPUd2VOv3MwKYISjagT
-	 3LZALOe2/6XZQ5Yd9ha09vnsePVXUc/ZJxDE+ySYxL/WzGA8dkCYeLiqBhrhCAlFjC
-	 3OACt/jM3B31A==
+	b=CD66HFLYkOzEt24TWfubi47BpQ9IDdtad4c4ZHLkcjq31VbdIWgDSwnFXx6kcUYrU
+	 SxmDBtOJZKmVyWmKwnp5Z+jFZ/nEEpTJlg9mY2ualSiPl/6MRYS+6K3TD4ZIwoaZKx
+	 +dQgs5BZgFcl8sgBGzaOJC8KSdTZeLvh20asfb8W3WXcwI3A5VUcw8A7vQs8Z3UoiB
+	 O9WswDft9qL4TGPdCTFAfk1S5x2j51MRTBb3lzhulRdDvl2OE0aM8G7zck9h5Op8V/
+	 Aop7/+diNoouey8cabz+G45Z2EhMvniOkJ9Ho2OovyuGaI/iehouFCNbH4yyCJHxc+
+	 LIbCDXe5Aiftg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/9] perf c2c: Fix hist entry and format list leaks in
- c2c_he_free()
+Subject: Re: [PATCH v20 11/21] perf python: Refactor and add accessors to
+ sample event
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260615223249.36598-8-acme@kernel.org>
-References: <20260615223249.36598-8-acme@kernel.org>
+In-Reply-To: <20260615223011.3873955-12-irogers@google.com>
+References: <20260615223011.3873955-12-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 23:04:13 +0000
-Message-Id: <20260615230414.0914D1F000E9@smtp.kernel.org>
+Date: Tue, 16 Jun 2026 00:54:21 +0000
+Message-Id: <20260616005422.74BC41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [Medium] perf_hpp__setup_output_field() and perf_hpp__append_sort_keys() =
-append formats to the global perf_hpp_list instead of the provided local li=
-st, polluting global state and causing missing output columns.
+- [High] Accessor functions for `dso` blindly dereference the result of `ma=
+p__dso()` which can be NULL.
+- [Medium] 64-bit map start and end addresses are truncated to 32 bits when=
+ `perf` is compiled on a 32-bit host.
 --
 
-commit a4f0bc9a81bce084555c8dfe98ae2f6675da0ef8
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+commit 18ea80c7f1771915bbf09a1482be621af384623d
+Author: Ian Rogers <irogers@google.com>
 
-perf c2c: Fix hist entry and format list leaks in c2c_he_free()
+perf python: Refactor and add accessors to sample event
 
-This commit addresses leaks in c2c_he_free() by replacing
-hists__delete_entries() with hists__delete_all_entries() to walk and free
-all inner hist_entry objects across all rb_root trees. It also adds a call
-to perf_hpp__reset_output_field() to unregister and free dynamically
-allocated format entries on the hists->list.
+Add common evsel field for events and move sample specific fields to
+only be present in sample events. Add accessors for sample
+events. Ensure offsets are within the bounds of the event. Allocate
+just enough memory for the copied event, don't make the maximum event
+size each time.
 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index eabb922ef295e..c9584dbedf77a 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -184,7 +184,7 @@ static void c2c_he_free(void *he)
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index dc71fe7e37877..72d297156ad05 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+
+[ ... ]
+
+> @@ -394,6 +451,199 @@ get_tracepoint_field(struct pyrf_event *pevent, PyO=
+bject *attr_name)
+>  }
+>  #endif /* HAVE_LIBTRACEEVENT */
 > =20
->  	c2c_he =3D container_of(he, struct c2c_hist_entry, he);
->  	if (c2c_he->hists) {
-> -		hists__delete_entries(&c2c_he->hists->hists);
-> +		hists__delete_all_entries(&c2c_he->hists->hists);
->  		perf_hpp__reset_output_field(&c2c_he->hists->list);
+> +static int pyrf_sample_event__resolve_al(struct pyrf_event *pevent)
+> +{
+
+[ ... ]
+
+> +static PyObject *pyrf_sample_event__get_dso(struct pyrf_event *pevent,
+> +					    void *closure __maybe_unused)
+> +{
+> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
+> +		Py_RETURN_NONE;
+> +
+> +	return PyUnicode_FromString(dso__name(map__dso(pevent->al.map)));
+
+[Severity: High]
+Does this code risk a NULL pointer dereference? map__dso() can return NULL =
+for
+certain mappings, and passing it unconditionally to dso__name() would crash
+the python process.
+
+> +}
+> +
+> +static PyObject *pyrf_sample_event__get_dso_long_name(struct pyrf_event =
+*pevent,
+> +						      void *closure __maybe_unused)
+> +{
+> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
+> +		Py_RETURN_NONE;
+> +
+> +	return PyUnicode_FromString(dso__long_name(map__dso(pevent->al.map)));
+
+[Severity: High]
+Can map__dso() return NULL here as well, leading to a NULL pointer derefere=
+nce
+in dso__long_name()?
+
+> +}
+> +
+> +static PyObject *pyrf_sample_event__get_dso_bid(struct pyrf_event *peven=
+t,
+> +						void *closure __maybe_unused)
+> +{
+> +	char sbuild_id[SBUILD_ID_SIZE];
+> +
+> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
+> +		Py_RETURN_NONE;
+> +
+> +	build_id__snprintf(dso__bid(map__dso(pevent->al.map)), sbuild_id, sizeo=
+f(sbuild_id));
+
+[Severity: High]
+Similarly, if map__dso() returns NULL, will this cause a crash when passed =
+to
+dso__bid()?
+
+> +	return PyUnicode_FromString(sbuild_id);
+> +}
+> +
+> +static PyObject *pyrf_sample_event__get_map_start(struct pyrf_event *pev=
+ent,
+> +						  void *closure __maybe_unused)
+> +{
+> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
+> +		Py_RETURN_NONE;
+> +
+> +	return PyLong_FromUnsignedLong(map__start(pevent->al.map));
 
 [Severity: Medium]
-This isn't a bug introduced by this patch, but does the setup for these loc=
-al
-hpp lists append formats to the global perf_hpp_list by mistake?
+Since map__start() returns a u64, will PyLong_FromUnsignedLong() truncate t=
+he
+upper 32 bits of the address on 32-bit hosts? This might break cross-platfo=
+rm
+analysis when analyzing 64-bit perf.data files. Should this use
+PyLong_FromUnsignedLongLong() instead?
 
-Looking at perf_hpp__setup_output_field() in tools/perf/ui/hist.c, it takes=
- a
-local list argument but uses the global wrapper perf_hpp__column_register(f=
-mt)
-instead of perf_hpp_list__column_register(list, fmt).
+> +}
+> +
+> +static PyObject *pyrf_sample_event__get_map_end(struct pyrf_event *peven=
+t,
+> +						void *closure __maybe_unused)
+> +{
+> +	if (pyrf_sample_event__resolve_al(pevent) < 0 || !pevent->al.map)
+> +		Py_RETURN_NONE;
+> +
+> +	return PyLong_FromUnsignedLong(map__end(pevent->al.map));
 
-A similar issue appears in perf_hpp__append_sort_keys() in the same file,
-which uses perf_hpp__register_sort_field(fmt) instead of
-perf_hpp_list__register_sort_field(list, fmt).
+[Severity: Medium]
+Will this also truncate the 64-bit end address on 32-bit hosts?
 
-Does this inject sort formats into the global list (polluting global state
-during processing) while leaving the local list missing those columns and
-breaking the output display for inner hists?
+> +}
+> +
+> +static PyObject *pyrf_sample_event__get_map_pgoff(struct pyrf_event *pev=
+ent,
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615223249.3659=
-8-1-acme@kernel.org?part=3D7
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615223011.3873=
+955-1-irogers@google.com?part=3D11
