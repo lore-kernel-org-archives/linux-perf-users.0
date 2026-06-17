@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B7E478870
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 15:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42C8247D93F
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 15:09:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781708954; cv=none; b=Whh7mSKg18yBvMXPtzmPWOrHGAWQ9kwpDQAYho0tCG/5JABq1AKNS2aaPd0wEekLDdDVXVaKbdjMsWqVirNrs1veyveWwlhLpwoqG9bEW2BITaZmWJLU/IXTYc0jKKO0RT6Ka8qy2SZ1o2ISnvtvcXoIp3cOyveVnnCd179Ippw=
+	t=1781708960; cv=none; b=WBGHVOwrMaB94t6fLiPDge/O+ncHdLxYl07VTi5vspf02MfLb3ViZ3l8hv/kfn9SeSoLZifXyG7XGwB7UcmbEyXHVDHz1NxqeDsbnerh0jD6lLdPHJpRI5RrKiDjnsmTqb9j37v+WnHtx9iN8FK1EfCoXTHxuAWZZ7wResgn7F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781708954; c=relaxed/simple;
-	bh=D1FtZyXlzdlSZeEQumhz16VVUk8Y+LyL/Y9/6kB7zD0=;
+	s=arc-20240116; t=1781708960; c=relaxed/simple;
+	bh=ysJUWJWNRZ09KY16IF++nf/Xmx3pQ0MU0riqsvus9BQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VWcUx5cDcpcEqsLyVzPlEaYMLdnECwyC5yRw1epKBaW/SDPkLCOrTpPmuMretyQBidBCtsiqwrM6QHyAD63afhxANeF52kKQ0QfveZWhCz03j+KpJHL3f2qZZaUhRiVEqQ6R0jT/9z0+GTiz36yMezTjAamFyYDyAUb18ZT+d1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=UGyzWXhM; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=Xj+ZsMZdH8JC6WnEEjXW+rBupvzMqDoHJ7StmD+ZNRoKlYxNVuZ80sUkkKfHHtBftIGgfRAmbcMoYGo4XorZdvIDb4ln/lyAfyH6DS/q6YPyaukECfWTCTFhOnsOhTGsdsakJ32GLcXQpqG1cOc0EJWSjqM8BCXIaaKdUieP5GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=TT6oolUl; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="UGyzWXhM"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="TT6oolUl"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 555ED32AB;
-	Wed, 17 Jun 2026 08:09:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD0353589;
+	Wed, 17 Jun 2026 08:09:11 -0700 (PDT)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11F963F915;
-	Wed, 17 Jun 2026 08:09:09 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 595C73F915;
+	Wed, 17 Jun 2026 08:09:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781708953; bh=D1FtZyXlzdlSZeEQumhz16VVUk8Y+LyL/Y9/6kB7zD0=;
+	t=1781708956; bh=ysJUWJWNRZ09KY16IF++nf/Xmx3pQ0MU0riqsvus9BQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UGyzWXhMTZLVy6fEHdjBbU2ugpnVdmuwTPbbh3wH5N5iz3VhDrcQqMYCnYPKARO1j
-	 iQHNQYrIJjlUw4txUNRRDKnd3QxkAqevaq9NJyCV7pSIf0ja7ZjvQtf9Zlt+XpCBnh
-	 hPcT2FBlGxXB4uVHB81egzKzcuM6dSFGyPbXYVJw=
+	b=TT6oolUljNh/mYxaTdC59wExByuco4vkj096CCn8elP7KuqdpsTP1Yo9nIkRkUvNm
+	 Lkc2Iln78OMF00J9HhfzFGeRWkIN0WtShVGfjip57nhyvWIigsaOd8MFD/d21FPmLZ
+	 P8VrQMqWpJdu6u8ukgS1rHphcYv/63/1WuRKPKI0=
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 17 Jun 2026 16:08:54 +0100
-Subject: [PATCH v10 3/9] perf cs-etm: Decode ETE exception packets
+Date: Wed, 17 Jun 2026 16:08:55 +0100
+Subject: [PATCH v10 4/9] perf cs-etm: Refactor instruction size handling
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260617-b4-arm_cs_callchain_support_v1-v10-3-e8b6e5d63db5@arm.com>
+Message-Id: <20260617-b4-arm_cs_callchain_support_v1-v10-4-e8b6e5d63db5@arm.com>
 References: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
 In-Reply-To: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -50,59 +50,103 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
  Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>, 
  Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
 Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>, 
+ Leo Yan <leo.yan@linux.dev>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781708939; l=2006;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781708939; l=2953;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=D1FtZyXlzdlSZeEQumhz16VVUk8Y+LyL/Y9/6kB7zD0=;
- b=dRuBYCTI+cptutfNwpcOECzBHEdd1e5O/Kf4Hwou6Ulul2ixcQoGfV7Gq75cqDDzC14xpsjyp
- nkXESrFPBuuCRme09AfPGI4b4DZmBPrHc65jXU1RZpmNk7lkJrcAfbq
+ bh=r9k1yf8NPCHOaIU2ub0gjIQagE9+NZF2NT9kKZmJ2Lc=;
+ b=8itoz6P8yjEpItMB3zyVsWeZYk/eb57Dxg+q73M3cA5iia2ofNnNMP6LntxTNZM3+k4Cuo0ET
+ 4eJU6Kzx4RdA62QxZQNToLHPaHkHkTnfVJwgGaeULwX5to+Pv6StEpI
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-ETE shares the same packet format as ETMv4, but exception decoding
-handled ETMv4 packets only. As a result, ETE exception packets were
-not classified.
+From: Leo Yan <leo.yan@linaro.org>
 
-Recognize the ETE magic for exception number decoding.
+This patch introduces a new function cs_etm__instr_size() to calculate
+the instruction size based on ISA type and instruction address.
 
+Given the trace data can be MB and most likely that will be A64/A32 on
+a lot of platforms, cs_etm__instr_addr() keeps a single ISA type check
+for A64/A32 and executes an optimized calculation (addr + offset * 4).
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/cs-etm.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/cs-etm.c | 43 ++++++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 42de2d82fd728bcc719adcab80670efa9859762f..e2c3d2efb5982136abf9295159acab04271897a0 100644
+index e2c3d2efb5982136abf9295159acab04271897a0..6827ef8871a8fc092500b93a8284d5d162558357 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -2181,7 +2181,7 @@ static bool cs_etm__is_syscall(struct cs_etm_queue *etmq,
- 	 * HVC cases; need to check if it's SVC instruction based on
- 	 * packet address.
- 	 */
--	if (magic == __perf_cs_etmv4_magic) {
-+	if (magic == __perf_cs_etmv4_magic || magic == __perf_cs_ete_magic) {
- 		if (packet->exception_number == CS_ETMV4_EXC_CALL &&
- 		    cs_etm__is_svc_instr(etmq, tidq, prev_packet,
- 					 prev_packet->end_addr))
-@@ -2204,7 +2204,7 @@ static bool cs_etm__is_async_exception(struct cs_etm_traceid_queue *tidq,
- 		    packet->exception_number == CS_ETMV3_EXC_FIQ)
- 			return true;
+@@ -1371,6 +1371,18 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
+ 	return ((instrBytes[1] & 0xF8) >= 0xE8) ? 4 : 2;
+ }
  
--	if (magic == __perf_cs_etmv4_magic)
-+	if (magic == __perf_cs_etmv4_magic || magic == __perf_cs_ete_magic)
- 		if (packet->exception_number == CS_ETMV4_EXC_RESET ||
- 		    packet->exception_number == CS_ETMV4_EXC_DEBUG_HALT ||
- 		    packet->exception_number == CS_ETMV4_EXC_SYSTEM_ERROR ||
-@@ -2234,7 +2234,7 @@ static bool cs_etm__is_sync_exception(struct cs_etm_queue *etmq,
- 		    packet->exception_number == CS_ETMV3_EXC_GENERIC)
- 			return true;
++static inline int cs_etm__instr_size(struct cs_etm_queue *etmq,
++				     struct cs_etm_traceid_queue *tidq,
++				     struct cs_etm_packet *packet,
++				     u64 addr)
++{
++	if (packet->isa == CS_ETM_ISA_T32)
++		return cs_etm__t32_instr_size(etmq, tidq, packet, addr);
++
++	/* Otherwise, 4-byte instruction size for A32/A64 */
++	return 4;
++}
++
+ static inline u64 cs_etm__first_executed_instr(struct cs_etm_packet *packet)
+ {
+ 	/*
+@@ -1399,19 +1411,17 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
+ 				     struct cs_etm_packet *packet,
+ 				     u64 offset)
+ {
+-	if (packet->isa == CS_ETM_ISA_T32) {
+-		u64 addr = packet->start_addr;
++	u64 addr = packet->start_addr;
  
--	if (magic == __perf_cs_etmv4_magic) {
-+	if (magic == __perf_cs_etmv4_magic || magic == __perf_cs_ete_magic) {
- 		if (packet->exception_number == CS_ETMV4_EXC_TRAP ||
- 		    packet->exception_number == CS_ETMV4_EXC_ALIGNMENT ||
- 		    packet->exception_number == CS_ETMV4_EXC_INST_FAULT ||
+-		while (offset) {
+-			addr += cs_etm__t32_instr_size(etmq, tidq, packet,
+-						       addr);
+-			offset--;
+-		}
+-		return addr;
+-	}
++	/* 4-byte instruction size for A32/A64 */
++	if (packet->isa == CS_ETM_ISA_A64 || packet->isa == CS_ETM_ISA_A32)
++		return addr + offset * 4;
+ 
+-	/* Assume a 4 byte instruction size (A32/A64) */
+-	return packet->start_addr + offset * 4;
++	while (offset) {
++		addr += cs_etm__instr_size(etmq, tidq, packet, addr);
++		offset--;
++	}
++	return addr;
+ }
+ 
+ static void cs_etm__update_last_branch_rb(struct cs_etm_queue *etmq,
+@@ -1581,16 +1591,7 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
+ 		return;
+ 	}
+ 
+-	/*
+-	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
+-	 * cs_etm__t32_instr_size().
+-	 */
+-	if (packet->isa == CS_ETM_ISA_T32)
+-		sample->insn_len = cs_etm__t32_instr_size(etmq, tidq, packet,
+-							  sample->ip);
+-	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
+-	else
+-		sample->insn_len = 4;
++	sample->insn_len = cs_etm__instr_size(etmq, tidq, packet, sample->ip);
+ 
+ 	cs_etm__frontend_mem_access(etmq, tidq, packet, sample->ip,
+ 				    sample->insn_len, (void *)sample->insn);
 
 -- 
 2.34.1
