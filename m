@@ -1,123 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0745425C80E;
-	Wed, 17 Jun 2026 16:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8DE33FE02
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 17:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781714175; cv=none; b=DCe1iYG2x9l1Ksdte5HCtp8na8ji/sjhull2acILfLI39pkUvOy5ijkBvpG25TNhgSolChQq+PBaCGcllLqY/DWqPBOq/hwCaJIFW671rWI8kiaar7OrYmG8X6pZxQ2xuyIM1Fb/RttUYqfZj6lvTZQ3Vb3fkRs+S0s6ycYGO14=
+	t=1781717738; cv=none; b=I/5wNurSi7gWO3rLLt5lrQkpFXzgNH2aJO3ZhLKIX+vawi1y1lYACL++bWRoaN8/l4NSXNZAtqRPQZyCwIQ91hOl6ufeK8fCklMgy9cdtNANSgF9HyAq9GD3/q3+8V4P7GnJq+aJFJNvPUGU1apGpC2o1t7naU532EROysgnzHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781714175; c=relaxed/simple;
-	bh=xbLRRL2K4v97ic0CcW1ES7aykW8oSsL8P7jP9mPrg0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lNG++WtZR50SjMrwZgs7o3lXMqKGRpOMUJYAhsq7RKA+fEw8mRFFwsz2lpJPtmCUkH7fBWVNcmc3jnPFIl9y+URhnFEt7jhcKKQQNQm+z2yKxOK8n5xNNFBD6kwg4WGGj0eTIfI7gR9uR6Rw2UsAgD9NNCJtuPpqhrfJ6tGXNG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TD+m7O+I; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781717738; c=relaxed/simple;
+	bh=40AA+w8DMyPZxZArtDvvXE0vfYCyQ96LWNfbLLhav7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=WmOAmZ4+exlEQCnsvj4Z6c64zlshDdi7RarTxbTA20JyoY1yuM1hYKB8gyn99Ncu8GXpxEGaZ+2F1Naqzf+M+l0UniPkxZkWbAWrzTqmX8xSfoxW83Tkt0MKiohz8al6pjy8ygqL3k63rXFPLl9YDZQBefu5oluxOoLkocfvqN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vw7XcHs1; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TD+m7O+I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D55F41F000E9;
-	Wed, 17 Jun 2026 16:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781714172;
-	bh=2QQlDWV6mbNjLVMhUAuDKm4aZrJTpf6CYkxKGnYpNyw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=TD+m7O+I+Z4lV0HfgFO5E+31N4J2XEUFcg3eNmZQ3pen/SJTxlylrM5vlgngHzzjn
-	 8KbJJyjHm0xeF3aGLK+rQfuLmRD6LJfYRIs2aZ7TNU5kng3T5X53vCRyrLJi+Nyc2k
-	 bsyyodDP5atxbQMhRFmAb3EIcIVbw+XSyJuVkaWICYcCMODUEAYf9eg68yg1grLnJh
-	 C6OddYcMAz0BdwnU4oo5/lj9x2BDoS1aXEzUxGjN4SAu18In2GqigMcGYke79FJjc/
-	 q8v+O2P6hZ3fslu3twz/uPMWKP0RgcqLV5SAbxD3zqrUkVNZZtAr76omqP40qzT0KH
-	 AlL7yYxjD3nog==
-Date: Wed, 17 Jun 2026 13:36:09 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: namhyung@kernel.org, adrian.hunter@intel.com,
-	alice.mei.rogers@gmail.com, dapeng1.mi@linux.intel.com,
-	james.clark@linaro.org, leo.yan@linux.dev,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
-Subject: Re: [PATCH v21 03/21] perf evsel/evlist: Avoid unnecessary #includes
-Message-ID: <ajLM-d58lwP7C1Iu@x1>
-References: <20260615223011.3873955-1-irogers@google.com>
- <20260616011543.4037138-1-irogers@google.com>
- <20260616011543.4037138-4-irogers@google.com>
- <ajLGZBOPNraF3Fj3@x1>
- <CAP-5=fWPgRn-Oa=9h367xbciDFeWBPkWfSji3qydwQ1nf08gaw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vw7XcHs1"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-490bc6a7958so10074635e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 10:35:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1781717735; x=1782322535; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZbfT4p8yU7ZrJ4sRwz2av7CZIwruqT0NN3US4mW4m7I=;
+        b=Vw7XcHs1v4N9bd6HmTRYBGDZwuckZFM/Wt8IEMggqaPBL0ZiGmhohYpnTuWkfwOAIM
+         BC2LE95kpdANHwdlFSqCDC9sChsFmAUaSsjgKKxAQD5jpF0t+Fh5fcgOncDetCmeuua6
+         g9+jWinZtXwRzB+NSAUv3gLYV3tYdOCccioHFf7LC/uyLsOzj0MRhbDFAJ4tc4YcUskv
+         5qsitcMuvO+g/O3wFmuim3W3Nw/oyz7YpTVK+vNvqIhyXqazWsBG+I9rnhST9RLLHqXl
+         uK1/hUUcs18NNZk2qtbjKk4D7PhP5eWLIvQ6JGjx6133FRvzpdKs0BKVE9IUGwl4ugzM
+         aDSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781717735; x=1782322535;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZbfT4p8yU7ZrJ4sRwz2av7CZIwruqT0NN3US4mW4m7I=;
+        b=V41XUuTLdmrvjBEIW/HfQtuCgNO9DQCRnLx/ctMS8RXzN45BZg3XyXMEoYwISXlBdU
+         wtMyml5cRo/AzVdLeJFB2uy+cPKueS7+cE9WrKn1ONwWnhp4LEjUbtShbzefj664HsF4
+         dbAAx7maDHNXA48rsui/YsKSQ9SfIxOH9ec/pJQNXD+Kw/HhETaz/ybZKbw4kQQ7PF7T
+         xR7ftrSK4G5Kf0tXtHEa5JLVnGqRJbSrFo/wU679f7JBXSSJuJYgiM4ap0wvkEQ2xZFW
+         Yxj+rZXaluw+RZrPMrXO2PbGtYRiERBoAfqatW3EI2OkE6sUHmc2sRVZI7wmWKkvFnrn
+         8KUg==
+X-Forwarded-Encrypted: i=1; AFNElJ+zVWN9c2O7LYvKcGU2O1QR/v2GF68fO6/7Dm9ubu6TYLI6ZjA1XRo0GPfZJqhC+fC1smuWISjdCKgvYHR0H9vy@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSi5V5486vKnXhRoM5WIHeJws5UJqfDuF1IpDKVtgE3v2lXLpF
+	0dVc7dYb/FwYNRhLv/FtrEDWEBTcl2wHYOh9dhU60yMyrj1rfdO7DHgckn2XoJxu5WI8+kcf9l8
+	A0VnAFZY=
+X-Gm-Gg: Acq92OH2u6XHVohsGuxi+/Go6rcs6MxuTwrQuDGp0R0nFYw188rFufrnHak+bwQns0I
+	IPlRi4hpqtUAFcdSOcIDZ7FML6ppnXy8VeQOTMI4jZib76T7wPjVEKLWIIG0bl/APMN//wHGlLA
+	WFclhV6ocubvWnxGOTjZDWFWbE3HmX5erD90T5YqYgk/FaYfK9ziyUFQAwnjBk1toESentXYj5F
+	opu36CA5vTya+FnCaxB+opnygitWxcpCed9TuQ3mq6rYmvrcnfscb7aogkpwM7TIHN2FYZxeSrq
+	vBUPGKZDr7AMJw4MLO/3U6sKKG9CxlhI7gaSWv4htu/BeLzQcKNdNtCLxBuJbhuKlMHAWkZl9Sg
+	slbfY/Zp733jHNfjV8WpXyO/zTs4ZY5IvdVF34m+HzmC3k1L7UvwRmAlVVZDArQSBjovG2OmYBl
+	NvOf+fVpzkS9Oxl8ibOQ==
+X-Received: by 2002:a05:600c:6089:b0:490:5000:917 with SMTP id 5b1f17b1804b1-4923815425fmr6793785e9.1.1781717735275;
+        Wed, 17 Jun 2026 10:35:35 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923687d2casm30255415e9.0.2026.06.17.10.35.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2026 10:35:34 -0700 (PDT)
+Message-ID: <41a05d00-a870-490e-beed-5c4eff46db38@linaro.org>
+Date: Wed, 17 Jun 2026 18:35:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWPgRn-Oa=9h367xbciDFeWBPkWfSji3qydwQ1nf08gaw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 9/9] perf test: Add Arm CoreSight callchain test
+To: Leo Yan <leo.yan@arm.com>
+References: <20260616-b4-arm_cs_callchain_support_v1-v9-0-f8fad931c413@arm.com>
+ <20260616-b4-arm_cs_callchain_support_v1-v9-9-f8fad931c413@arm.com>
+ <6855d77f-d2f4-4dab-8481-a8c586e4872b@linaro.org>
+ <20260617123322.GD31870@e132581.arm.com>
+ <20260617150828.GE31870@e132581.arm.com>
+Content-Language: en-US
+Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260617150828.GE31870@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 17, 2026 at 09:23:52AM -0700, Ian Rogers wrote:
-> On Wed, Jun 17, 2026 at 9:08 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Mon, Jun 15, 2026 at 06:15:25PM -0700, Ian Rogers wrote:
-> > > Use forward declarations and remove unnecessary #includes in
-> > > evsel.h. Sort the forward declarations in evsel.h and evlist.h. Move
-> > > some PMU code into evsel.c.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > ⬢ [acme@toolbx perf-tools-next2]$ git log --oneline -5
-> > ce69f4f6d7467ef4 (HEAD) perf evsel/evlist: Avoid unnecessary #includes
-> > 23dce143f5ed0557 perf python: Add missed explicit dependencies
-> > ca74d08280ad690f perf util: Sort includes and add missed explicit dependencies
-> > 776bd9ac834556ab (x1/perf-tools-next, perf-tools-next.korg/tmp.perf-tools-next, perf-tools-next.korg/perf-tools-next, origin/perf-tools-next) perf bpf: Fix up build failure due to change of btf_vlen() return type
-> > 522ae978ac720a91 (origin/perf/hardening-9) perf dso: Set standard errno on decompression failure
-> > ⬢ [acme@toolbx perf-tools-next2]$
-> >
-> >   LD      /tmp/build/perf-tools-next2/util/scripting-engines/perf-util-in.o
-> > make[3]: *** [/home/acme/git/perf-tools-next2/tools/build/Makefile.build:158: util] Error 2
-> > make[2]: *** [Makefile.perf:573: /tmp/build/perf-tools-next2/perf-util-in.o] Error 2
-> > make[2]: *** Waiting for unfinished jobs....
-> >   LD      /tmp/build/perf-tools-next2/tests/perf-test-in.o
-> >   LD      /tmp/build/perf-tools-next2/perf-test-in.o
-> >   LD      /tmp/build/perf-tools-next2/perf-in.o
-> > make[1]: *** [Makefile.perf:288: sub-make] Error 2
-> > make: *** [Makefile:122: install-bin] Error 2
-> > make: Leaving directory '/home/acme/git/perf-tools-next2/tools/perf'
-> > ⬢ [acme@toolbx perf-tools-next2]$
-> >
-> > I added this to fix the build:
-> >
-> > ⬢ [acme@toolbx perf-tools-next2]$ git diff
-> > diff --git a/tools/perf/util/aslr.c b/tools/perf/util/aslr.c
-> > index 6a7542e7db827d1b..027695d967798487 100644
-> > --- a/tools/perf/util/aslr.c
-> > +++ b/tools/perf/util/aslr.c
-> > @@ -13,6 +13,7 @@
-> >  #include "session.h"
-> >  #include "data.h"
-> >  #include "dso.h"
-> > +#include "pmu.h"
-> >  #include "pmus.h"
-> >
-> >  #include <internal/lib.h>  /* page_size */
-> > ⬢ [acme@toolbx perf-tools-next2]$
-> >
-> > Applied the series, now testing.
+
+
+On 17/06/2026 4:08 pm, Leo Yan wrote:
+> On Wed, Jun 17, 2026 at 01:33:22PM +0100, Coresight ML wrote:
+>> On Wed, Jun 17, 2026 at 11:03:07AM +0100, James Clark wrote:
+>>
+>> [...]
+>>
+>>>> +	# It is safe to use 'i3i' with a three-instruction interval, since the
+>>>> +	# workload is compiled with -O0.
+>>>> +	perf script --itrace=g16i3il64 -i "$data" > "$script"
+>>>
+>>> Is there a reason we don't generate callstacks on branch samples and use
+>>> --itrace=g16bl64? That removes the magic number 3 and reduces the output
+>>> file size and test runtime a bit.
+>>
+>> I checked Intel-PT which does not generate callchain and branch stack for
+>> branch samples. I just keep cs-etm aligned.
+>>
+>> I can add callstack / branch stack for branch samples.
 > 
-> Thanks, I'd found the same aslr issue but was testing with fixing the
-> wider issues you raised. Presumably the aslr code was depending on the
-> the #include via evsel.h and so cleaning those up broke the build as
-> the aslr code needed a fix.
+> Tried a bit for this.
 > 
-> Thanks for testing, I can rebase my fixes on top of the v21 changes
-> assuming testing goes ok.
+> The branch stack is skipped due the check:
+> 
+>    if (is_bts_event(attr)) {
+>            perf_sample__fprintf_bts(sample, evsel, thread, al, addr_al, machine, fp);
+>            return;
+>    }
+> 
+> For the callstack attached to branch samples, the output seems not
+> directive:
+> 
+>    callchain_test    4372 [003] 75596.459422:          1 branches:
+>              aaaaabdb0794 print+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+>              aaaaabdb0798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+>              aaaaabdb07b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+>              aaaaabdb07c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+>              ffff9a10225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
+>              ffff9a10233c call_init+0x9c (inlined)
+>              ffff9a10233c __libc_start_main_impl+0x9c (inlined)
+>              aaaaabdb0670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+>              ffff9a2206a0 __libc_early_init+0x100 (/usr/lib/aarch64-linux-gnu/libc.so.6)
+>   =>     aaaaabdb0768 do_svc+0x0 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+> 
+> It is hard to digest the log as it separates branch from address
+> (aaaaabdb0794 print+0x8) and to address (aaaaabdb0768 do_svc+0x0),
+> and put the callchain in the middle of from and to ranges.
+> 
+> Given this is not enabled by other hardware trace (e.g., Intel-PT),
+> and we need to change the common code to make it better, I'd first
+> enable callchain/branch stack for instruction samples. Let's see if
+> further requirement after get this done.
+> 
+> Thanks,
+> Leo
 
-Since 7.1 was already released I'm inclined to push what I have, your
-v21 series + this simple fix, so that it can sit in linux-next for a few
-days and you would send fixes on top of it, ok?
-
-I'm basically stopping merging patch series and switching to processing
-just fixes so that I can send the PR to Linus by the end of this week.
-
-I'll push what I have to tmp.perf-tools-next now.
-
-- Arnaldo
+Yep that sounds ok to me
