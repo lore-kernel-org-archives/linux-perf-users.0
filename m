@@ -1,125 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BF72E06EF
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 14:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CA09477E27
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 15:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781707603; cv=none; b=m1H0Xi5DgIiNRiEEMGt+yto89bD39zXTvQSLMcGbeMxS7VZypmuT/g/vZSOta1SdcY28LlX3IKxPa9DapjtDAm/RbbGq1ck5rbNiXoowZ7Ge6mQyDuQk7XcuMMpIO7map1w9zPAk412BxQflRLhjLIrv2KJzvQzqx9G/Rn6ipf0=
+	t=1781708915; cv=none; b=nlCfUpncrJ/SVeoXkB4sew43++D6CbYugtevxj//IeNgkZb1NnGzOlwF5N42uZaWqmh3Di2z0GuQG05lBqGkBAWPEzY79jh/YRO6TpLugmYqzg986tBXix9v7nPsPv2fk2fafrLqmjyPlJJNu+r5PK+4Z0LNRHquuGtBRrJp2aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781707603; c=relaxed/simple;
-	bh=wk/U3dHAEePSVR50U9ZPQgOqEQ3Cf4TaLxuV1TFcjHw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=F9bT94gYAiL3Y82trI599eZaCFwRgK4ILO/mIC0ndNaWTlhTVfl6wMZaA2y3ZNHxIdtPr+AJJl0h2AT443JZkQsXavUSVLMO9RV9NhC8Ldmpi1uP1eDd8WOimh8C32ow2fx1mZ9ycK21EoFc4VtUxM4oGRKj+wi3qIGfU0eaOZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwN4tLYp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781708915; c=relaxed/simple;
+	bh=dn8rVySMl5MW0er6iW4qyJ7r/M1hv8iOh+kv6XTqsmU=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cpCgZiB6JIUQWzwrVMfHQV9OkUOkxt5ExKO1f/7BYyJOgrhqQ4a52iKzzQnYUa4aJiid+2zs6aZ5XW/DDbbvA/ZuTORn+ZdoYUDxJ85cxcxsqmtn0ILseqUWmY2XGD/rlvPOb1a6F2LAK8R9LUUjRUFQzxfJo0Je3Ex0VLbGv/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=i8u3J2So; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwN4tLYp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092BE1F000E9;
-	Wed, 17 Jun 2026 14:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781707602;
-	bh=6ZB6+Llhj8gW87tTKQSmsVvZrZZR+Dm+HyGkO/c4NPA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AwN4tLYpXDQ93hNpfSP2NZBtz2sllaUFjC/ck6o/RBUzUCRI1Rn/JoISRek/KExJM
-	 /xL5NvQLsJlUUIRbB+U5v8DQHWlxn4vdeUN8mMbRe3ITyflkVuYSKy4yP5gvdZd85g
-	 GeztQZ/wg9o63AZg476Inb9I1LgKqhxE6zjQ/dY4Jwt59tOr+4RXsKBXOK/8rhwzg5
-	 468YLbZdl8cP3ifIttTLD71pwsScx7OkUZKjVRX0TkzGY1RMiWOWyjV93VjIF7sCul
-	 rUpaQcPBTL+qsMgFbpWUyoVm7id4kuOxR30DLIaPt7obHPWY+gXdLOlHKrrxHkgwLm
-	 s9hsEXTV7H8UA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf scripts: Add configurable sorting option to
- powerpc-hcalls
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Shivani Nittor" <shivani@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260617144011.17359-1-shivani@linux.ibm.com>
-References: <20260617144011.17359-1-shivani@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jun 2026 14:46:41 +0000
-Message-Id: <20260617144642.092BE1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="i8u3J2So"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 940982D91;
+	Wed, 17 Jun 2026 08:08:26 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2D0D3F915;
+	Wed, 17 Jun 2026 08:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1781708911; bh=dn8rVySMl5MW0er6iW4qyJ7r/M1hv8iOh+kv6XTqsmU=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=i8u3J2So2vHEgBZlM0Fh7RJphmc4hwc2GkvJ64vcDSZZaSq1pTWigp2bJEe1KfADf
+	 n5o38uvZwbS2AaSgfzzZ87r1azmrenbDMGChAY/7i4JkMERUxPV7in0caviw7l4FES
+	 PAg4dUihLTf7Cby53Zcjhz0RupmHhyxG+geHkzFI=
+Date: Wed, 17 Jun 2026 16:08:28 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@arm.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Paschalis Mpeis <paschalis.mpeis@arm.com>,
+	Amir Ayupov <aaupov@fb.com>
+Subject: Re: [PATCH v9 9/9] perf test: Add Arm CoreSight callchain test
+Message-ID: <20260617150828.GE31870@e132581.arm.com>
+References: <20260616-b4-arm_cs_callchain_support_v1-v9-0-f8fad931c413@arm.com>
+ <20260616-b4-arm_cs_callchain_support_v1-v9-9-f8fad931c413@arm.com>
+ <6855d77f-d2f4-4dab-8481-a8c586e4872b@linaro.org>
+ <20260617123322.GD31870@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260617123322.GD31870@e132581.arm.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The `--sort` argument value is not validated, leading to silentl=
-y ignored user intent and misleading output for invalid keys.
---
+On Wed, Jun 17, 2026 at 01:33:22PM +0100, Coresight ML wrote:
+> On Wed, Jun 17, 2026 at 11:03:07AM +0100, James Clark wrote:
+> 
+> [...]
+> 
+> > > +	# It is safe to use 'i3i' with a three-instruction interval, since the
+> > > +	# workload is compiled with -O0.
+> > > +	perf script --itrace=g16i3il64 -i "$data" > "$script"
+> > 
+> > Is there a reason we don't generate callstacks on branch samples and use
+> > --itrace=g16bl64? That removes the magic number 3 and reduces the output
+> > file size and test runtime a bit.
+> 
+> I checked Intel-PT which does not generate callchain and branch stack for
+> branch samples. I just keep cs-etm aligned.
+> 
+> I can add callstack / branch stack for branch samples.
 
-commit 1aa1f92efbcdcc2ec41737225787d40ac02abf40
-Author: Shivani Nittor <shivani@linux.ibm.com>
+Tried a bit for this.
 
-perf scripts: Add configurable sorting option to powerpc-hcalls
+The branch stack is skipped due the check:
 
-The powerpc-hcalls.py script currently prints hypercall statistics in a
-fixed sort order based on the number of hcall occurrences. This patch
-adds a --sort option to runtime-configure the sort order (count, min, max, =
-avg).
+  if (is_bts_event(attr)) {
+          perf_sample__fprintf_bts(sample, evsel, thread, al, addr_al, machine, fp);
+          return;
+  }
 
-> diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scr=
-ipts/python/powerpc-hcalls.py
-> index 8b78dc790adb1..e5b0c1bee65fb 100644
-> --- a/tools/perf/scripts/python/powerpc-hcalls.py
-> +++ b/tools/perf/scripts/python/powerpc-hcalls.py
+For the callstack attached to branch samples, the output seems not
+directive:
 
-[ ... ]
+  callchain_test    4372 [003] 75596.459422:          1 branches:
+            aaaaabdb0794 print+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+            aaaaabdb0798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+            aaaaabdb07b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+            aaaaabdb07c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
+            ffff9a10225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
+            ffff9a10233c call_init+0x9c (inlined)
+            ffff9a10233c __libc_start_main_impl+0x9c (inlined)
+            aaaaabdb0670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
+            ffff9a2206a0 __libc_early_init+0x100 (/usr/lib/aarch64-linux-gnu/libc.so.6)
+ =>     aaaaabdb0768 do_svc+0x0 (/home/kernel/leoy/test_cs_callchain/callchain_test)
 
-> @@ -158,10 +159,45 @@ def hcall_table_lookup(opcode):
-> =20
->  print_ptrn =3D '%-28s%10s%10s%10s%10s'
-> =20
-> +def sort_output(opcode):
-> +	stats =3D output[opcode]
-> +
-> +	if sort_key =3D=3D 'min':
-> +		return stats['min']
-> +	if sort_key =3D=3D 'max':
-> +		return stats['max']
-> +	if sort_key =3D=3D 'avg':
-> +		return stats['time'] // stats['cnt']
-> +
-> +	return stats['cnt']
-> +
-> +def trace_begin():
-> +    global sort_key
-> +
-> +    i =3D 1
-> +    while i < len(sys.argv):
-> +        arg =3D sys.argv[i]
-> +
-> +        if arg =3D=3D '-s' or arg =3D=3D '--sort':
-> +            if i + 1 >=3D len(sys.argv):
-> +                print("Error: -s/--sort requires a sort key argument")
-> +                sys.exit(1)
-> +            sort_key =3D sys.argv[i + 1]
-> +            i +=3D 2
-> +            continue
-> +
-> +        if arg.startswith('--sort=3D'):
-> +            sort_key =3D arg.split('=3D', 1)[1]
-> +
-> +        i +=3D 1
-> +
-> +    print("SORT KEY =3D", sort_key)
+It is hard to digest the log as it separates branch from address
+(aaaaabdb0794 print+0x8) and to address (aaaaabdb0768 do_svc+0x0),
+and put the callchain in the middle of from and to ranges.
 
-[Severity: Medium]
-Will this result in silently falling back to sorting by count if an invalid
-sort key is provided?
+Given this is not enabled by other hardware trace (e.g., Intel-PT),
+and we need to change the common code to make it better, I'd first
+enable callchain/branch stack for instruction samples. Let's see if
+further requirement after get this done.
 
-If a user runs the script with an invalid sort option like --sort=3Dlatency,
-trace_begin() will assign it to sort_key and print "SORT KEY =3D latency".
-
-Then in sort_output(), it will fall through the conditionals and return
-stats['cnt'], leaving the user with output sorted by count despite the
-printed sort key.
-
-Could we add validation for the sort_key argument to error out if it isn't
-one of the expected values (count, min, max, avg)?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260617144011.1735=
-9-1-shivani@linux.ibm.com?part=3D1
+Thanks,
+Leo
