@@ -1,111 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC8F3793AA
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jun 2026 19:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E610164A8C;
+	Wed, 17 Jun 2026 00:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781639699; cv=none; b=IPqbdSTc/+4GsOxT9o9b9PR9buUo5x2M6IuSTepwtbQx6pmDQNCkauBvFhMz9qWYEB7Fsu46HBU2voXhvUxDaTqlQ2dw/+OsSM+m7GL/2IKoEmF8N290EAK3Xxl6BBhio+XQNJch4RVsCgR/Zhk6oy9VUvwTdM7eXqTABR2QG6k=
+	t=1781655268; cv=none; b=FENBLZT+jxsiq/ASZjeOzo4FYAD14Tffuz2mFgP1hH7jK+5S+QCYArulwxki8DRf5bsoAqCpAemLHTiqKv6M6Hh0aibgHlWJT0ZoPGYj+Xk6w7w236Oisfq54dVmLuoxSSORTG1Irt1xgWnBNJE8oyDLEE3DxEnyRsyVlQPJV4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781639699; c=relaxed/simple;
-	bh=ZqNstQue1XEbQxzY1PCWWFzK/KnxIjO3TSbNVR4qirY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=N+Gpk1Nc3ouPO3IiUvLi7kEWCTjIuJ5vAiog24q27uKa05fWl+gAOEITHt7CKuVd2ctoP9GPWAUjx3OVLyuunAkO0TWoTzie9bVaa2t3ia83t2QpZIogObe+yu3eGB0qjIr1XwiceHNPtJSr3tIKi4lHx41COMVF+sacCRHqqv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TIyLAsQE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781655268; c=relaxed/simple;
+	bh=m4b8G7jItuY1gGNh1LAd2eHdKrNcegBZPJbhiqWxcoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XrnY1dJnT2pYcRnS3sjCeiHfXWuomquw2nc9W8dAuZqA0G/JqxYH0L/jD7STzMjRsWZ3Kvs7pSjM0TMo6VLqPuv5aTGMA3qTt7h/duQm4fpeHb4p0naujICA6uEq+TH4r2DG203CEJfgu9nJ68r5VoGCyRX2PH2RirtzxbKW9xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hsd3cEbc; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TIyLAsQE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D051F00ACA;
-	Tue, 16 Jun 2026 19:54:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781639698;
-	bh=VQHDGrV6x9Bnb3KYbMgtsC4f2Bz4STQdvGfB5hgYhbI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TIyLAsQEE5dMuDXyblZDQkfzzLtZiSsjG4tjMH8U1U1m5Pcfy3ozT2Hh8Cz69djIt
-	 StMi+7qKYWFJFjBZei/z6MeDr6Xv7ncXeWxfS8fReYyoUvJHxh2fzPnkIj4AYgIEDM
-	 oJ5Dr/ASeYFnJcfdJbUj7NeNWwndCA5ohxVMpT6CTR5qQl249EsldHOnKd2oEgey2V
-	 dkZoKuOXm8dZWVrW5tIz07Nr/d6xHFvTtFCXHOyZVzkN3CzU6SECxp21y9GYw1zESf
-	 rbM/PQj8CaD7tOYlv2aAbItKzHrNNi4+7CDfiugm/9U5cDrrUAbY6ook7os77FXntH
-	 qRq41SmTcC07g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 6/9] perf c2c: Free format list entries when
- c2c_hists__init() fails
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260616193033.10035-7-acme@kernel.org>
-References: <20260616193033.10035-7-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Jun 2026 19:54:58 +0000
-Message-Id: <20260616195458.84D051F00ACA@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hsd3cEbc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781655266; x=1813191266;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=m4b8G7jItuY1gGNh1LAd2eHdKrNcegBZPJbhiqWxcoo=;
+  b=Hsd3cEbcxXdIQttnVAHd1iB0tjzlMmv1PXWNIrd3zmofD9IZ6wLe4oDV
+   gnd2YPEiIRRSdMbFpc9anl4GpyUBcwW+dc6f63uHioF7TNMYHjMXw9BzP
+   GygeVV2+ZqsB5VFIJOU+vGyU3b84QKBXneEogpink0yBFMJmbF/J6XaRM
+   japK+1PUytIdKGEAbTJxLNG6rx4CBRa90v5NWNC5B4zaLp+Qnk0S+R142
+   o3BzvNLIRGOSX6Kn4zy1LkkvfqXmvTZcGKSqyuT7O4pWZrbK69XbA1JxA
+   wrudbJCnRzvW3+UNkcNx1ueQv6xtnX3LcM71v2hC6I4Cdn+cEAxqKwtT2
+   g==;
+X-CSE-ConnectionGUID: aKNDIfOoQXqVtxm4LNMFMA==
+X-CSE-MsgGUID: Mpk6vBKdRiebZ7COvvi8KQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11819"; a="82340983"
+X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
+   d="scan'208";a="82340983"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 17:14:25 -0700
+X-CSE-ConnectionGUID: 12mnV9WcQCSHP4om7t8aQg==
+X-CSE-MsgGUID: eQ8zBdHMTvubKd7ktbpVQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
+   d="scan'208";a="252234066"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 17:14:21 -0700
+Message-ID: <47a9642f-68ab-432c-a607-548995bd82fa@linux.intel.com>
+Date: Wed, 17 Jun 2026 08:14:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 1/8] perf/x86/intel: Remove anythread_deprecated bit
+ from perf_capabilities
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
+ stable@vger.kernel.org
+References: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
+ <20260612090114.3188886-2-dapeng1.mi@linux.intel.com>
+ <20260612094648.GB42921@noisy.programming.kicks-ass.net>
+ <96a18944-bc0d-47dd-b435-e9aa63b93c43@linux.intel.com>
+ <20260616100202.GJ42921@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260616100202.GJ42921@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] perf_hpp__setup_output_field and perf_hpp__append_sort_keys corrup=
-t the global perf_hpp_list when passed a local list.
---
+On 6/16/2026 6:02 PM, Peter Zijlstra wrote:
+> On Mon, Jun 15, 2026 at 08:59:29AM +0800, Mi, Dapeng wrote:
+>> On 6/12/2026 5:46 PM, Peter Zijlstra wrote:
+>>> On Fri, Jun 12, 2026 at 05:01:07PM +0800, Dapeng Mi wrote:
+>>>> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
+>>>> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
+>>>> represent "anythread deprecation" in perf_capabilities. It leads to the
+>>>> anythread_deprecated bit could be overwritten by the real value of
+>>>> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
+>>>>
+>>>> ```
+>>>> if (!intel_pmu_broken_perf_cap()) {
+>>>> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+>>>> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
+>>>> }
+>>>> ```
+>>>>
+>>>> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
+>>>> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
+>>>> these support Perfmon v6 platforms, like Clearwater Forest.
+>>>>
+>>>> ```
+>>>> $grep . /sys/devices/cpu/format/*
+>>>> /sys/devices/cpu/format/acr_mask:config2:0-63
+>>>> /sys/devices/cpu/format/any:config:21
+>>>> /sys/devices/cpu/format/cmask:config:24-31
+>>>> ```
+>>>>
+>>>> So remove the anythread_deprecated bit from perf_capabilities structure
+>>>> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
+>>>> deprecated.
+>>> Again, no markdown please. I've stripped it from these patches.
+>> My bad. Thanks a lot.
+>>
+>> BTW, Peter, have you pull these patches? I didn't see them in perf/core or
+>> perf/urgent branches. Sashiko reports a defect about "Patch 5/8:
+>> perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()". If
+>> not, I would post a v4 patchset to fix the defect. Thanks.
+>>
+> I had them in queue:perf/core, but realized it was *really* late in the
+> window. I'll probably move them into tip post -rc1. If there's a new
+> version by then, I'll be sure to pick it up.
 
-commit 22c7f5ad675216ec0ff17ec1087b36169d928283
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thanks Peter. I posted the v4 patchset yesterday to fix the defect of
+Sashiko. Please pick up the v4 version. Here is the v4 patchset link. 
 
-perf c2c: Free format list entries when c2c_hists__init() fails
+https://lore.kernel.org/all/20260616044654.3468742-1-dapeng1.mi@linux.intel.com/
 
-When c2c_hists__init() fails partway through hpp_list__parse(),
-dynamically allocated format structures that were already added to
-hists->list are leaked because he__get_c2c_hists() frees the hists
-container without first unregistering the format entries.
 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 07c7e8fb315e6..eabb922ef295e 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -226,6 +226,7 @@ he__get_c2c_hists(struct hist_entry *he,
-> =20
->  	ret =3D c2c_hists__init(hists, sort, nr_header_lines, env);
->  	if (ret) {
-> +		perf_hpp__reset_output_field(&hists->list);
-
-[Severity: High]
-This is a pre-existing issue, but it looks like c2c_hists__init() triggers a
-state corruption.
-
-When c2c_hists__init() initializes the local &hists->list, does it call
-perf_hpp__setup_output_field() and perf_hpp__append_sort_keys() which then
-mutate the global perf_hpp_list instead of the passed local list?
-
-Looking at tools/perf/util/hist.h:
-
-static inline void perf_hpp__column_register(struct perf_hpp_fmt *format)
-{
-	perf_hpp_list__column_register(&perf_hpp_list, format);
-}
-
-When perf_hpp__setup_output_field() in tools/perf/ui/hist.c loops over the
-provided local list's sort keys, it incorrectly triggers registration into =
-the
-global list via perf_hpp__column_register().
-
-Similarly, perf_hpp__append_sort_keys() in tools/perf/ui/hist.c calls
-perf_hpp__register_sort_field(), which also hardcodes insertion into the gl=
-obal
-&perf_hpp_list.sorts.
-
-Does this mean dynamically allocated format structures from potentially tho=
-usands
-of local cachelines are erroneously appended to the global UI format list
-instead of the local list?
-
->  		c2c_he->hists =3D NULL;
->  		free(hists);
->  		return NULL;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260616193033.1003=
-5-1-acme@kernel.org?part=3D6
