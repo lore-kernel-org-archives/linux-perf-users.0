@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47D7352007
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 21:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DC337B00F
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 21:35:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781731227; cv=none; b=DVOUBFRPZ3y/rWj9eIDcytxUCLG10u8DOu5y4cyBlvCA5cepxuox4P2v7FLs5LWH58oHvEdeX7l3qWvGV7Y4fOYqKhEfpj82VKU8onmhZZ0SbVzEDRoXlkcVSnK2FmyN1xyaEZGKkyvsJGzxPH17w/nclqSEaC+mV/CGvUlHSxk=
+	t=1781732111; cv=none; b=i/RRicI0lFjvlzdZI1rND/AQ2gHfAKxZji/D3ZdjEf14hrbWINORu0ehj/uGxTU3YM2sf8Z2aQWXyjzxbzVgXGU/o7JEJmIcVWUnjEM75pJ2oKA0bstLvvB8ImpymkcQYQnK6vPxWWc/20jUFTxA249GfCn015n+gE+i6ioKmhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781731227; c=relaxed/simple;
-	bh=Ulknh3sXPM0HGu0jLeLHBRQbW0BuDdXFK3RjOmt6Imc=;
+	s=arc-20240116; t=1781732111; c=relaxed/simple;
+	bh=Le7j/B99x/F6h5AdI7b2lhtkQ+i453sxG02o9GV1Pq0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gboMmqobFmMyj0vHPa/XnM0pQkEiDkE+m6Q9B0BgAGKA616arawaMu5j2kawMIFoMVGKWpUofCMZZToNIsYjqAzH7FZSGBd/+6N9aKbKqwyevOVIvZFTLUxIMBjht8EaDiOXVXEt1C3i0GYNfOd5FHUIxf3zvkh9JeBlXvKQZGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=koz9I568; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=VfZxQk7/R9XkMNYYvsX8ZdC+bQ3zIdrJrfokcr798YcBq3MJ9m9d11A5aWRxYdP3YJPhFpUiVHVOZoD0rxvam6a6IQS9SxMP3IyQCccRByhysq26RiogdpPvNpul91X1IcEDWFASRgkwmNaA8aYkUAG2blL9DNdXyJ07YlFHpI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jx6w8vLG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="koz9I568"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E49EA1F000E9;
-	Wed, 17 Jun 2026 21:20:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jx6w8vLG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C2031F000E9;
+	Wed, 17 Jun 2026 21:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781731226;
-	bh=PoBecDPHxMh2MGOsFdboUFrg4JF/wIHdd7c2xwyOFwM=;
+	s=k20260515; t=1781732110;
+	bh=qx/CJke+W9m4FPhu3HBeknuUAFLMK729MpS7VXiSsDA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=koz9I5680MOP/29pgQ9yyqPI3zg1Jn4Xb+GjP2kHij10phUWwseHg9qbGXJlcOPAn
-	 DP9DGnMBwO4TtLRHaZadVahWgDbbBQugcPmLBYuwWJD3Qeif5l1oAMNJbK/erX4ayP
-	 medkxbWz3XmRvF449rDVnndu/l4aTYXNMy/xyN8Kf02pvMGMQ0rRhYDPDWv5t/Y2/8
-	 85kv+YJdAQrUudw9DkrfB7RIVHbZY1yg2fAR57BW7nMyMmRk2YXUW/izyOo6jzcTGb
-	 v/RYHTcXWFehhgNmD6O8Me5PmfL+fi/yZtjw+MEgAJZt7aiyGM6BhxY1aqE8pjyX7u
-	 j3Uvr3AaSzUIA==
+	b=jx6w8vLG0i2UomTKn4ymhApiq05Kxi5vfuoX6p3wp7xv9NQA4FUJOxfkdB3Pt2e8q
+	 KWgkLph4gPDGh8B71l9fJNO0NfulfHywyETIPWFCRUg3UA7VN9JoNq49xBBZrFNV5m
+	 2p65OjRAcfIxQEdq+pBYPYjScdbEQXP9fZGEYUjPMLNehZk490Xy3YxZHMgfW1aoT9
+	 9bf8gY8dFj+AiBwoA+ZiZ+qcz7WKqZbAlBLAf+9WGz/JLX4TnYjy95PbebdY8U0MRo
+	 FRm0iLztbq2aCvFeHTAkNGa7ahoSIob4j6SzktVO3uyw6um5CKQ9WZ10m8bzF0Hu4L
+	 wTafdUz7cLZxA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 7/9] perf cs-etm: Support call indentation
+Subject: Re: [PATCH v10 8/9] perf cs-etm: Synthesize callchains for
+ instruction samples
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260617-b4-arm_cs_callchain_support_v1-v10-7-e8b6e5d63db5@arm.com>
+In-Reply-To: <20260617-b4-arm_cs_callchain_support_v1-v10-8-e8b6e5d63db5@arm.com>
 References: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
- <20260617-b4-arm_cs_callchain_support_v1-v10-7-e8b6e5d63db5@arm.com>
+ <20260617-b4-arm_cs_callchain_support_v1-v10-8-e8b6e5d63db5@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jun 2026 21:20:25 +0000
-Message-Id: <20260617212025.E49EA1F000E9@smtp.kernel.org>
+Date: Wed, 17 Jun 2026 21:35:10 +0000
+Message-Id: <20260617213510.9C2031F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,66 +47,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Unnecessary allocation and tracking of branch stacks when only t=
-hread stack is requested.
+- [Medium] The error path in `cs_etm__context()` destructively nullifies `t=
+idq->frontend_thread`, leading to a predictable NULL pointer dereference cr=
+ash in the perf tool when processing subsequent packets.
 --
 
-commit 169dda630ecfdc4196986b24719c6d9bd8a72971
+commit 3e6647ae053d9c4c2c79da5f0062f4a5c6da23e3
 Author: Leo Yan <leo.yan@linux.dev>
 
-perf cs-etm: Support call indentation
+perf cs-etm: Synthesize callchains for instruction samples
 
-The perf script callindent is derived from call stack in thread context.
-This commit enables thread-stack when either itrace thread-stack support or
-last branch entries are requested, and feeds taken branches to
-thread_stack__event().
+This patch adds callchain synthesis for instruction samples in CS ETM. It
+allocates a callchain buffer and introduces cs_etm__context() to handle
+context packets. The synthetic instruction events are updated to advertise
+PERF_SAMPLE_CALLCHAIN.
 
 > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index e43f0c1dd0078..30536b919af73 100644
+> index 30536b919af73..67885ed43bab9 100644
 > --- a/tools/perf/util/cs-etm.c
 > +++ b/tools/perf/util/cs-etm.c
-[ ... ]
-> @@ -638,7 +640,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_q=
-ueue *etmq,
->  	if (!tidq->prev_packet)
->  		goto out_free;
-> =20
-> -	if (etm->synth_opts.last_branch) {
-> +	if (etm->use_thread_stack) {
->  		size_t sz =3D sizeof(struct branch_stack);
-> =20
->  		sz +=3D etm->synth_opts.last_branch_sz *
-
-[Severity: Medium]
-Does this code unnecessarily allocate and track branch stacks when only the
-thread stack is requested?
-
-By changing this condition from etm->synth_opts.last_branch to
-etm->use_thread_stack, it appears tidq->last_branch will be allocated and
-tidq->br_stack_sz set to a non-zero value even when the user only
-requests thread stacks.
 
 [ ... ]
-> @@ -1563,7 +1565,8 @@ static void cs_etm__add_stack_event(struct cs_etm_q=
-ueue *etmq,
->  		/* Enable callchain so thread stack entry can be allocated */
->  		thread_stack__event(tidq->frontend_thread, tidq->prev_packet->cpu,
->  				    tidq->prev_packet->flags, from, to, size,
-> -				    etmq->buffer->buffer_nr + 1, false,
-> +				    etmq->buffer->buffer_nr + 1,
-> +				    etmq->etm->use_callchain,
->  				    tidq->br_stack_sz, 0);
->  	} else {
+
+> @@ -1910,6 +1947,34 @@ static int cs_etm__sample(struct cs_etm_queue *etm=
+q,
+>  	return 0;
+>  }
+> =20
+> +static int cs_etm__context(struct cs_etm_queue *etmq,
+> +			   struct cs_etm_traceid_queue *tidq)
+> +{
+> +	ocsd_ex_level el =3D tidq->packet->el;
+> +	struct machine *machine;
+> +	int ret;
+> +
+> +	machine =3D cs_etm__get_machine(etmq, el);
+> +	if (!machine) {
+> +		ret =3D -EINVAL;
+> +		goto err;
+> +	}
+> +
+> +	tidq->kernel_start =3D machine__kernel_start(machine);
+> +
+> +	ret =3D cs_etm__etmq_update_thread(etmq, el, tidq->packet->tid,
+> +					 &tidq->frontend_thread);
+> +	if (ret)
+> +		goto err;
+> +
+> +	return 0;
+> +
+> +err:
+> +	thread__zput(tidq->frontend_thread);
 
 [Severity: Medium]
-Because tidq->br_stack_sz is now non-zero, this feeds into
-thread_stack__event() and forces the thread stack subsystem to allocate an
-internal branch ring buffer and update it on every taken branch.
+Can this error path lead to a NULL pointer dereference crash in the perf to=
+ol?
 
-Since etm->synth_opts.last_branch is false, isn't this tracked branch stack
-completely ignored later, resulting in unnecessary memory allocation and CPU
-overhead during trace decoding?
+If cs_etm__get_machine() fails, we take the err path and nullify
+tidq->frontend_thread here.
+
+If the caller, such as cs_etm__run_per_thread_timeless_decoder(), ignores
+the error and continues processing the trace buffer, a subsequent
+CS_ETM_RANGE packet will call cs_etm__synth_instruction_sample(). That func=
+tion
+unconditionally accesses the nullified pointer:
+
+    sample.pid =3D thread__pid(tidq->frontend_thread);
+    sample.tid =3D thread__tid(tidq->frontend_thread);
+
+> +	tidq->kernel_start =3D 0;
+> +	return ret;
+> +}
+> +
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260617-b4-arm_cs_=
-callchain_support_v1-v10-0-e8b6e5d63db5@arm.com?part=3D7
+callchain_support_v1-v10-0-e8b6e5d63db5@arm.com?part=3D8
