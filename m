@@ -1,207 +1,125 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8828438FEA
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 14:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BF72E06EF
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 14:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781707251; cv=none; b=lQYvMT2SuRa5vb+0tDNJ6Xe8COBQAdzvdy9j8yHXesh9CWC9mTaYnrDT3uJtQ02gTQDRC1JaLDbG7XS0vM27GLuRpMnwOJ51wuBhaK1Pp9C94ObJPlTky7LHa9JoNV5OKQemxcB+N3xoJXEsG1jK2xjNjj5WfG+kuAS2hMaRwOE=
+	t=1781707603; cv=none; b=m1H0Xi5DgIiNRiEEMGt+yto89bD39zXTvQSLMcGbeMxS7VZypmuT/g/vZSOta1SdcY28LlX3IKxPa9DapjtDAm/RbbGq1ck5rbNiXoowZ7Ge6mQyDuQk7XcuMMpIO7map1w9zPAk412BxQflRLhjLIrv2KJzvQzqx9G/Rn6ipf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781707251; c=relaxed/simple;
-	bh=dX2/CMSEEM+zQi0NU9GX9uuErcJ8awlB2cu5W/vIo+c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c2+mLRKUZQjY2G3e6KDSF/bBUYprukjx1c1FxIbHjAC8FQ9WVTTYGu1iehgVieTHkY5jVincPzT/rl0EtHCEf17rT5CsPL/UmXRqp/UedpX0phInY50n+FuA+yw1dj+8E7sOIe3KRIt3QoYaMEpwYkdBgsFcOJCx4DMTjVpNn5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=g2hNqRw9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1781707603; c=relaxed/simple;
+	bh=wk/U3dHAEePSVR50U9ZPQgOqEQ3Cf4TaLxuV1TFcjHw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=F9bT94gYAiL3Y82trI599eZaCFwRgK4ILO/mIC0ndNaWTlhTVfl6wMZaA2y3ZNHxIdtPr+AJJl0h2AT443JZkQsXavUSVLMO9RV9NhC8Ldmpi1uP1eDd8WOimh8C32ow2fx1mZ9ycK21EoFc4VtUxM4oGRKj+wi3qIGfU0eaOZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwN4tLYp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g2hNqRw9"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65HEINDx789654;
-	Wed, 17 Jun 2026 14:40:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=HeGPIPeqtVpN0fN3nQP6DcjhjIUixOgxFktO4XZ/R
-	3g=; b=g2hNqRw9gwWwyq1MJ0RgQCzMfa4UIhsKzQy7YnY6GsbeV+yz0C652Na2a
-	Q5et/HToPNSJRYmNuK3JpNhmKAgRmOJphXB+yJtM+NIW26oI0U0M0nrVd33A6CNN
-	i0zXIGbMicEijuRWslzirf09jEyVLLxZsbeASV6Sjtju5hV42ckhgn45fvyOCoFG
-	a2HA0S8arhxhKHv4ZfX5pz/nuywEkFs5K0oEznAqrDkPr+mR33iePKaUxxvzM8q5
-	SG4CSzHvDEESyHckaqrOl+5t9RcdmbEWoVNET3+TdbXKl697dUb3y5Cfg4pwbu23
-	eumfsFU3By6TPiWm0oCam8yXtAutw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4euequ3ebp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jun 2026 14:40:39 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65HEYkdE006778;
-	Wed, 17 Jun 2026 14:40:38 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4eudvakjxk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jun 2026 14:40:37 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65HEeX0S29688322
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Jun 2026 14:40:33 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A98BB2004D;
-	Wed, 17 Jun 2026 14:40:33 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CD11F2004B;
-	Wed, 17 Jun 2026 14:40:28 +0000 (GMT)
-Received: from Mac.ibm.com (unknown [9.124.217.32])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 17 Jun 2026 14:40:28 +0000 (GMT)
-From: Shivani Nittor <shivani@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org, ravi.bangoria@amd.com
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
-Subject: [PATCH v2] perf scripts: Add configurable sorting option to powerpc-hcalls
-Date: Wed, 17 Jun 2026 20:10:11 +0530
-Message-ID: <20260617144011.17359-1-shivani@linux.ibm.com>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwN4tLYp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092BE1F000E9;
+	Wed, 17 Jun 2026 14:46:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781707602;
+	bh=6ZB6+Llhj8gW87tTKQSmsVvZrZZR+Dm+HyGkO/c4NPA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=AwN4tLYpXDQ93hNpfSP2NZBtz2sllaUFjC/ck6o/RBUzUCRI1Rn/JoISRek/KExJM
+	 /xL5NvQLsJlUUIRbB+U5v8DQHWlxn4vdeUN8mMbRe3ITyflkVuYSKy4yP5gvdZd85g
+	 GeztQZ/wg9o63AZg476Inb9I1LgKqhxE6zjQ/dY4Jwt59tOr+4RXsKBXOK/8rhwzg5
+	 468YLbZdl8cP3ifIttTLD71pwsScx7OkUZKjVRX0TkzGY1RMiWOWyjV93VjIF7sCul
+	 rUpaQcPBTL+qsMgFbpWUyoVm7id4kuOxR30DLIaPt7obHPWY+gXdLOlHKrrxHkgwLm
+	 s9hsEXTV7H8UA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] perf scripts: Add configurable sorting option to
+ powerpc-hcalls
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Shivani Nittor" <shivani@linux.ibm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260617144011.17359-1-shivani@linux.ibm.com>
+References: <20260617144011.17359-1-shivani@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 17 Jun 2026 14:46:41 +0000
+Message-Id: <20260617144642.092BE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE3MDEzNyBTYWx0ZWRfX8mqXrcn+xVlX
- mDyrV79td9T3GyN7NmVU3boTUQaG3DRgvQJMT3wGIR9hrM0XWQ5HXUK4n6zKEP2AkA+Pe5aYIPY
- mUOhrxpfLfKXlHxF9e3PcbMLfak5v2c=
-X-Proofpoint-ORIG-GUID: CsdKZnBiWlh0GdDXAtR9unc9M08tvnD4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE3MDEzNyBTYWx0ZWRfX9vU97JB0Lmfg
- ccjt1eNm/UdJyBvborTId974ZT/RJ7QT0oqexd37yBoQdBoNFVsUhVt2CkTNbG2+TpZ0NQw4lNO
- aq9/WSiyaQeXnmli4yA8tWjmkcWK0JNlwp4Jve73EMjqrqGcxLK9y36RnJaf2ECOC8VHmvJZDQC
- cM+c5mlMFICz384wVrlTJ7997cGqKn8v+E45IL5w7mas2iBRMxi8ODdz3lmZicQ82kXntOfGlqk
- hqE0tGpd5cFcpx9tgKFrXQwM9a/1zoXy3GKmwWkZXt7bSlDrlx3/dKCkeVDwyFLJMNUsZp+PV3k
- NrSsuy4Z68pC3yp6AoZZiYu6toyuLJtT9wz+FF1VtlL5IBq5ibl2GawRWZBpp8zAjFqK3FTRh2p
- Kx5grY/nkAcbVIQNKVqLh1d/VsuzU5iSjVFeLQXON3BOf4XuQqctZIkBM10NxfMp2cR+32yYrj2
- DJBQ6b4nqYpZSxCouHQ==
-X-Proofpoint-GUID: cx2724GWrKo4EEIWI7BngnO4Z8JjSwAu
-X-Authority-Analysis: v=2.4 cv=L9gtheT8 c=1 sm=1 tr=0 ts=6a32b1e7 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=-UTqftxNVshRFOYItwsA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-17_02,2026-06-16_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 malwarescore=0 clxscore=1015 adultscore=0
- phishscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606170137
 
-The powerpc-hcalls.py script currently prints hypercall
-statistics in a fixed sort order based on the number of
-hcall occurrences, making it difficult to analyze hcalls
-from different execution characteristics.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The `--sort` argument value is not validated, leading to silentl=
+y ignored user intent and misleading output for invalid keys.
+--
 
-Add support for runtime-configurable sorting so users
-can order hypercall statistics by count, minimum
-latency, maximum latency, or average latency using
-a --sort option.
+commit 1aa1f92efbcdcc2ec41737225787d40ac02abf40
+Author: Shivani Nittor <shivani@linux.ibm.com>
 
-Parse arguments through sys.argv to support perf script
-argument passing semantics.
+perf scripts: Add configurable sorting option to powerpc-hcalls
 
-Example:
+The powerpc-hcalls.py script currently prints hypercall statistics in a
+fixed sort order based on the number of hcall occurrences. This patch
+adds a --sort option to runtime-configure the sort order (count, min, max, =
+avg).
 
-perf record -a -e powerpc* sleep 10
+> diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scr=
+ipts/python/powerpc-hcalls.py
+> index 8b78dc790adb1..e5b0c1bee65fb 100644
+> --- a/tools/perf/scripts/python/powerpc-hcalls.py
+> +++ b/tools/perf/scripts/python/powerpc-hcalls.py
 
-perf script -s ./powerpc-hcalls.py -i ./perf.data -- --sort=max
+[ ... ]
 
-SORT KEY = max
-hcall                            count   min(ns)   max(ns)   avg(ns)
+> @@ -158,10 +159,45 @@ def hcall_table_lookup(opcode):
+> =20
+>  print_ptrn =3D '%-28s%10s%10s%10s%10s'
+> =20
+> +def sort_output(opcode):
+> +	stats =3D output[opcode]
+> +
+> +	if sort_key =3D=3D 'min':
+> +		return stats['min']
+> +	if sort_key =3D=3D 'max':
+> +		return stats['max']
+> +	if sort_key =3D=3D 'avg':
+> +		return stats['time'] // stats['cnt']
+> +
+> +	return stats['cnt']
+> +
+> +def trace_begin():
+> +    global sort_key
+> +
+> +    i =3D 1
+> +    while i < len(sys.argv):
+> +        arg =3D sys.argv[i]
+> +
+> +        if arg =3D=3D '-s' or arg =3D=3D '--sort':
+> +            if i + 1 >=3D len(sys.argv):
+> +                print("Error: -s/--sort requires a sort key argument")
+> +                sys.exit(1)
+> +            sort_key =3D sys.argv[i + 1]
+> +            i +=3D 2
+> +            continue
+> +
+> +        if arg.startswith('--sort=3D'):
+> +            sort_key =3D arg.split('=3D', 1)[1]
+> +
+> +        i +=3D 1
+> +
+> +    print("SORT KEY =3D", sort_key)
 
-H_SEND_LOGICAL_LAN                  47      7380     40148      8739
-H_VIO_SIGNAL                       706       880     17454      1911
-H_RANDOM                             1     15176     15176     15176
-H_PUT_TCE_INDIRECT                   4      3032     10444      4956
-H_ADD_LOGICAL_LAN_BUFFER           363      1250      8716      1534
-H_SEND_CRQ                           8      2086      6846      3044
-H_PUT_TCE                            9      1284      4932      2646
-H_STUFF_TCE                         13      1620      3962      2358
+[Severity: Medium]
+Will this result in silently falling back to sorting by count if an invalid
+sort key is provided?
 
-This makes it easier to identify frequently occurring
-or high-latency hypercalls depending on the analysis
-being performed.
+If a user runs the script with an invalid sort option like --sort=3Dlatency,
+trace_begin() will assign it to sort_key and print "SORT KEY =3D latency".
 
-Signed-off-by: Shivani Nittor <shivani@linux.ibm.com>
----
-Changelog:
-v1 -> v2
-- Add bounds check for --sort argument handling
-- Prevent IndexError when sort key is omitted
+Then in sort_output(), it will fall through the conditionals and return
+stats['cnt'], leaving the user with output sorted by count despite the
+printed sort key.
 
----
-tools/perf/scripts/python/powerpc-hcalls.py | 38 ++++++++++++++++++++-
-1 file changed, 37 insertions(+), 1 deletion(-)
+Could we add validation for the sort_key argument to error out if it isn't
+one of the expected values (count, min, max, avg)?
 
-diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scripts/python/powerpc-hcalls.py
-index 8b78dc790adb..e5b0c1bee65f 100644
---- a/tools/perf/scripts/python/powerpc-hcalls.py
-+++ b/tools/perf/scripts/python/powerpc-hcalls.py
-@@ -25,6 +25,7 @@ from Util import *
- #	} ...
- # }
- output = {}
-+sort_key = 'count'
- 
- # d_enter: {
- #	cpu: {
-@@ -158,10 +159,45 @@ def hcall_table_lookup(opcode):
- 
- print_ptrn = '%-28s%10s%10s%10s%10s'
- 
-+def sort_output(opcode):
-+	stats = output[opcode]
-+
-+	if sort_key == 'min':
-+		return stats['min']
-+	if sort_key == 'max':
-+		return stats['max']
-+	if sort_key == 'avg':
-+		return stats['time'] // stats['cnt']
-+
-+	return stats['cnt']
-+
-+def trace_begin():
-+    global sort_key
-+
-+    i = 1
-+    while i < len(sys.argv):
-+        arg = sys.argv[i]
-+
-+        if arg == '-s' or arg == '--sort':
-+            if i + 1 >= len(sys.argv):
-+                print("Error: -s/--sort requires a sort key argument")
-+                sys.exit(1)
-+            sort_key = sys.argv[i + 1]
-+            i += 2
-+            continue
-+
-+        if arg.startswith('--sort='):
-+            sort_key = arg.split('=', 1)[1]
-+
-+        i += 1
-+
-+    print("SORT KEY =", sort_key)
-+
- def trace_end():
- 	print(print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)'))
- 	print('-' * 68)
--	for opcode in output:
-+	for opcode in sorted(output, key = sort_output,
-+                            reverse=True):
- 		h_name = hcall_table_lookup(opcode)
- 		time = output[opcode]['time']
- 		cnt = output[opcode]['cnt']
--- 
-2.54.0
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260617144011.1735=
+9-1-shivani@linux.ibm.com?part=3D1
