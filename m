@@ -1,66 +1,66 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985CB37EFF8
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 08:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FA1391837
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 10:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781685527; cv=none; b=I/OAKX2PSR/Jg/Nr8B2selMVwqKwIZ5tg8IfXmTsqju5P3A1qmhNZ40EPWea8UEuhIe7Vg7Ln8YaYs6K4IkJ4af7f8kZDe2xGGpKRg0jHw9L9aPZhJADeNa3DfgegtE/1iDldLAzV7AG8k82jJ/x2BDaY7/gSzfhexWIJ5egEdA=
+	t=1781690592; cv=none; b=UwBW0+8tnvX4agKThWF+mStOW0IUg1LlI40s9CHUApS89U5pLbSX03BJgf4b1sCNE0ZcIwwBqOwfD4qw+1qkzLKcjDpxSJvLO3ejcHmPAv4sHTCyeHz3J6XbfuhumksmSUWfpfX8lXPZjoLuA3bZg/CjVarjpr+gg1nT91mraPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781685527; c=relaxed/simple;
-	bh=O4iN7aVV/pNI27dsN3kIyLuSzh1Ed06GXj6tzoq0qKc=;
+	s=arc-20240116; t=1781690592; c=relaxed/simple;
+	bh=PRgkRPcQX9Xg1tW8psEfh4If1R8Xzcc8szIKjEWUE9s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M5+KZpJrywQcEBwe1fzHwlCzBFLRSlTAMMxvnanbRewXsdRjbVqhuuGinncqXb2sUOGfU+AyugJBsgLvi/KGhEZsXEiN48DFOjKPLOMeY2ElI2Lp8Nc7nSms8wTlHZjcA+lD+IVY1LnKdO3tyFrgVWiynMyenBafoARiwVyMYuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cq3ymy/U; arc=none smtp.client-ip=209.85.221.48
+	 In-Reply-To:Content-Type; b=I/rtj8TO/nHHfxi8+zhrrL+/cTVsbpmkrerSg0wZWg+yJk5D7alALRSIhRTa3+aaCKK89Tyc+/YOhy52XuQ+EVRBA9Q+EiNW0m97ecDY/xH11hq2pO2xJ8IxV0Q7050aUbDC5XMZUmjnK4oZMlCxhLyeDx0cKo+uqr0TosiPfzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QRQH8jHq; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cq3ymy/U"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-45fd461e4a5so4261270f8f.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 01:38:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QRQH8jHq"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c03a466c96aso476584966b.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 03:03:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1781685524; x=1782290324; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1781690589; x=1782295389; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QxQkYPDeG9/K/PqOacJLwmZ2WmaJbUWGTbBP5HUZIyU=;
-        b=Cq3ymy/UQcJjDUPZK5b52lj5MOdgaaADUilw6MojTUnUzeXdi6q77zPBMB9/VzwENQ
-         UkWm4UphX6XR9Y3rw15wID4tkjQ78Ax3vcQv+BrW+xAVS5gEGjDevaCBM2n37nk7dwG/
-         TezzlocHT6hIlMQoUBz2DIiNtxRBVK5lVtCFKqToukQDjBTssM62YrVSoHx4739/dxud
-         WmmH3IYzo5ZEMLsJvwBWDjA7A6kiq1r0w1Xhb7I+OCFb6nBhp4tuWG3GclobiMZKxC1i
-         OuR0UILOxwzdyzK626HxYo9q4S39cYx6G/ItpuHlGCaj4Aj/quTqYi55pUOkOYCPASOn
-         aKig==
+        bh=77m7XmxZxoMZ+hJVVcRi6NTPfR6X7G0M3uaxyWlQVUo=;
+        b=QRQH8jHq8YIspp7OhbdXlppI77StrIDGvoDAaX4ZaiLDe7rvYEmv3VMrBhqRxOC6cw
+         wShTctzZ/VPoUH0nx4HK/2nEWsqgb0vrirw81aR+Daad2bcfcaOn33Cjycxr4t12Y/n3
+         O6QiUbJxDBzxVmmnr6StZs6PoHH9sTZnpdmXQmGQLDKk1Xx34DRYzBhWA4lYkRfrtPLN
+         OItqJhaBVY2Gvy9mNAY3XURL8340Jr1GPakbSqySe2/vvtXKZqED7lvIVXLtwsm8Vncs
+         hpcbC9XIkhPPrHuK0gF1/X3OGREcR2XMCn2GYv6JcOcnAfPQZx31/wAMygDJ7bET2nsg
+         xvHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781685524; x=1782290324;
+        d=1e100.net; s=20251104; t=1781690589; x=1782295389;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QxQkYPDeG9/K/PqOacJLwmZ2WmaJbUWGTbBP5HUZIyU=;
-        b=HHDmM7eJ6g3IoJ5NXv1AcbBrBRmaaBmLhsDnvZyE6wmKRO25A68dKmONoGSNlPM+nn
-         BmAJs6n+FlebjsjxRlrgSoBUoQvd6lwfN5eQY2khCNSIiW6Ql8BYHdPXIgiyFpqjjwmw
-         91+JHm/j7TsgAjMTKE0DMtzVnizlS8MJXbyM1oq9rhPOdolxDxVlmbu5RkUfxJrZhREG
-         Hwmr3NC8HwoEDJQUtFTyxXgVVlrU/BbK1OhLipbWH+GN3c3kBE22a6oPBsqsgxpHGQ37
-         ylIJbLD2WnoqiVJdNwzRVmKOQRxblg4hp27wr83okYmP1DB5kiCGtRADuS2P/fscoQfL
-         DuuA==
-X-Forwarded-Encrypted: i=1; AFNElJ9o5/9VJtuXSnXXxTkqORvovmd/Ye2xfXpqkg07qpKybePgKLU8uJ4UVvgNGBUEM+S8SN5JbXWxyuSoYyQxQayN@vger.kernel.org
-X-Gm-Message-State: AOJu0YypFTz6NbJYycnPFZ3i0KoeQKx7tzCx+/OFJmVTn39pbZXj440N
-	0H6Ml+iK/CdVhqm56azogz7Lk6C92e/1LKJHvJGuhM/5vV8LiDTx7UMjJU+s+yVO1po=
-X-Gm-Gg: AfdE7cm9C0dfhGuehYrBr0Cyb7pmFeop+qphIXNl46dK9+jVYld/V0TRG5IeaNFpBdJ
-	nEfSU8/a47YKCWPoyLCvzy1q4cX8zvWgD2wDghjjyoyibmjNHXvIlUix/whCQOLNqi8Pz9PLOb4
-	VV8v/lBw2tSo8K3rJkZDrcCERKVj9Fi7c88FVVufzhns4ubfG2cqL+Y8+g2gAs2Z6TsDVpXXDeZ
-	Bdr2cutGNTs5AuNnIfb8OywsCVKr1vQDKg9mps79CGuKCEGuXcZIUugu8361GTx3PRCQufEErST
-	q2HqqOT9BCHFVY+H+PpniXjccUz+ID7lUsLrJldGcxYh+Dx/sbqGbq6w4UnQGnL07h5Sj0QKA+m
-	LhbXfVHZ0iel8acXFWchpMMUi/ePg4hMaKT4nLiNZBocZvQ897rkuI6Bop3DUDhYnHfwPJLa+/l
-	U4dV7bO8w1nhc9UgEV+g==
-X-Received: by 2002:a05:6000:4602:b0:460:70d1:c75 with SMTP id ffacd0b85a97d-4623f3e0a31mr4263904f8f.13.1781685523826;
-        Wed, 17 Jun 2026 01:38:43 -0700 (PDT)
+        bh=77m7XmxZxoMZ+hJVVcRi6NTPfR6X7G0M3uaxyWlQVUo=;
+        b=P/6s22mTjL8Dp4PCjKuOo8c08aBf3iolluOSjXA8oap2K1E2yBWh+RoBL0MSyXVnAE
+         90NdGUbr8xSKcg40QXV40Qg9CnQBPClihQyZw8jytlumCdkwgkMyESl5OwRL49u5t4Rl
+         MesDe8S05dCBtUMRwxJjvYcUsjuoN8WQA35ORvj1fCbg7Xprdy0uBJCwOsnPVnRuSWdW
+         /NR/4w9OQH4tT5yLb3jzjc0jeNI3S6nR4EVXu7+xCD1ZICKK8YLG/O+kpMRbj7F5rtSG
+         K0nJboqYhMRNFWGssREexQjoepO9K4Zcy/U2XFVVBeXMRS7PPmYdIE9urJG02TOmyNJ5
+         wDqA==
+X-Forwarded-Encrypted: i=1; AFNElJ8g0V8pAnEyeID95LJEvjLX6xCHJSdXuVWLJWNCEYKBKd19kyCBNHvOVfN4k8+qpaF7IGANm5XCz0tdVWtOkx7D@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4+EPK+NurWiR/qjCOrx1cmW7btxiwLUEGKbF3WMGHp4p48I0F
+	hAvYwg7NV1DK7LdGbNgOP0q55ckZLjJKd3MnMSrJw+/dKiiZ42xfRlHCIxG1+GgWmAo=
+X-Gm-Gg: Acq92OGeLksWE4kzdu6+d1m6CKqqpSm3Bpv1qxAGO1ptzb4via3N/UeosRjSAj24FYn
+	uYJhMtg+QPfsonVvyBHoyVgbhvhZSsdHmwqtCi7Lu/CLMFulQXq6nwVle1wRrWMBlQGCzmMSiv1
+	fjtIMoUPuBsSmSgUth5GR4M5TEwREsXP5en2nCwB0V2+lNSjRHpAoLImMbTvVTBOVNzqp1RR2Sc
+	THhNe0n0evh6uLmFiTF1Zb7EREOMdMvMTm8HKlm0mDfXLM6lwMP5zcQVrwT5X6z+h/KmvxulsyE
+	ZtJ/bAP+yg3wmLI/4ERAxXlecGZ7l8W77CMrTeSgyagaAiM6Xup8WcbStCbP+J+Gd9FARBLYfZf
+	s39XwnfoSYNKMTP3inZqVeVu1inx0Xov2QpWZm1hmQE7cME50XM5EilRHaTwqmLVx+kg73pqENY
+	xpNm9ucgPBwYQxKu06AQ==
+X-Received: by 2002:a17:907:3f83:b0:bce:80db:77ef with SMTP id a640c23a62f3a-c05a7db0e15mr179278266b.43.1781690589017;
+        Wed, 17 Jun 2026 03:03:09 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-462236047c8sm7311876f8f.10.2026.06.17.01.38.42
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bfdb4b22136sm794143666b.15.2026.06.17.03.03.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jun 2026 01:38:43 -0700 (PDT)
-Message-ID: <00183ce3-e387-4ca3-9eb8-67aa6a1221e5@linaro.org>
-Date: Wed, 17 Jun 2026 09:38:42 +0100
+        Wed, 17 Jun 2026 03:03:08 -0700 (PDT)
+Message-ID: <6855d77f-d2f4-4dab-8481-a8c586e4872b@linaro.org>
+Date: Wed, 17 Jun 2026 11:03:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -216,6 +216,20 @@ On 16/06/2026 3:51 pm, Leo Yan wrote:
 > +	# It is safe to use 'i3i' with a three-instruction interval, since the
 > +	# workload is compiled with -O0.
 > +	perf script --itrace=g16i3il64 -i "$data" > "$script"
+
+Is there a reason we don't generate callstacks on branch samples and use 
+--itrace=g16bl64? That removes the magic number 3 and reduces the output 
+file size and test runtime a bit.
+
+All I had to do was copy the same "if (etm->synth_opts.callchain) { ..." 
+block to cs_etm__synth_branch_sample(). It seems like the grepping 
+doesn't exactly match the branch sample format so the test fails, but 
+I'm sure that could be fixed.
+
+I suppose there is value in testing instruction output, but maybe we can 
+add the option for users to add callstacks to branch samples, even if 
+it's not tested.
+
 > +}
 > +
 > +callchain_regex_1()
@@ -389,18 +403,6 @@ On 16/06/2026 3:51 pm, Leo Yan wrote:
 > +noinline void callchain_do_syscall(void)
 > +{
 > +	syscall(SYS_getpid);
-
-I get this error when compiling for x86, but it works on Arm:
-
-tests/workloads/callchain.c:17:10: error: use of undeclared identifier 
-'SYS_getpid'; did you mean '__getpgid'?
-         syscall(SYS_getpid);
-                 ^~~~~~~~~~
-                 __getpgid
-/usr/include/unistd.h:659:16: note: '__getpgid' declared here
-extern __pid_t __getpgid (__pid_t __pid) __THROW;
-
-
 > +}
 > +
 > +noinline void callchain_foo(void)
