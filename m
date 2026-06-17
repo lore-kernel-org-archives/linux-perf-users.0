@@ -1,50 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E610164A8C;
-	Wed, 17 Jun 2026 00:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2934B3AE6FB
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jun 2026 06:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781655268; cv=none; b=FENBLZT+jxsiq/ASZjeOzo4FYAD14Tffuz2mFgP1hH7jK+5S+QCYArulwxki8DRf5bsoAqCpAemLHTiqKv6M6Hh0aibgHlWJT0ZoPGYj+Xk6w7w236Oisfq54dVmLuoxSSORTG1Irt1xgWnBNJE8oyDLEE3DxEnyRsyVlQPJV4Q=
+	t=1781678680; cv=none; b=qxvUcytzJOFyk7V0yCpNnGhc3VUdmckV/5q194qucww0khiV3E+JqFpRjI/GM00S7eIq3MxGEUHvcrxqEE7tNLXLI//aH4YqRAwIEEPwP1RBZ8VBOR45sNmDkY+QgixoDgSJ+YWsMtCPbdGstopZmApkjb44F5N8emK6Xtig2ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781655268; c=relaxed/simple;
-	bh=m4b8G7jItuY1gGNh1LAd2eHdKrNcegBZPJbhiqWxcoo=;
+	s=arc-20240116; t=1781678680; c=relaxed/simple;
+	bh=Lgw9QfBJbWOR/qzl8zwpi2KdlTn6X/zGvFYrGNheJY4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XrnY1dJnT2pYcRnS3sjCeiHfXWuomquw2nc9W8dAuZqA0G/JqxYH0L/jD7STzMjRsWZ3Kvs7pSjM0TMo6VLqPuv5aTGMA3qTt7h/duQm4fpeHb4p0naujICA6uEq+TH4r2DG203CEJfgu9nJ68r5VoGCyRX2PH2RirtzxbKW9xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hsd3cEbc; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=Rx6CBPIkbONFU21itb9RsPFisQXSJWT6WYI76sSrpy3MvktmIPWbg8mieA9eb/UWCoEx+t79/1zZ11nwWIzH4SjtWTd/rXu+hFL4SR3EvwSVca4a0jOCOVpY245O9er1+6xKKwsLtMpSytggimf7OOcN0+mlgIIWgrprAHCVFs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WFW8IzrK; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hsd3cEbc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781655266; x=1813191266;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=m4b8G7jItuY1gGNh1LAd2eHdKrNcegBZPJbhiqWxcoo=;
-  b=Hsd3cEbcxXdIQttnVAHd1iB0tjzlMmv1PXWNIrd3zmofD9IZ6wLe4oDV
-   gnd2YPEiIRRSdMbFpc9anl4GpyUBcwW+dc6f63uHioF7TNMYHjMXw9BzP
-   GygeVV2+ZqsB5VFIJOU+vGyU3b84QKBXneEogpink0yBFMJmbF/J6XaRM
-   japK+1PUytIdKGEAbTJxLNG6rx4CBRa90v5NWNC5B4zaLp+Qnk0S+R142
-   o3BzvNLIRGOSX6Kn4zy1LkkvfqXmvTZcGKSqyuT7O4pWZrbK69XbA1JxA
-   wrudbJCnRzvW3+UNkcNx1ueQv6xtnX3LcM71v2hC6I4Cdn+cEAxqKwtT2
-   g==;
-X-CSE-ConnectionGUID: aKNDIfOoQXqVtxm4LNMFMA==
-X-CSE-MsgGUID: Mpk6vBKdRiebZ7COvvi8KQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11819"; a="82340983"
-X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
-   d="scan'208";a="82340983"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 17:14:25 -0700
-X-CSE-ConnectionGUID: 12mnV9WcQCSHP4om7t8aQg==
-X-CSE-MsgGUID: eQ8zBdHMTvubKd7ktbpVQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
-   d="scan'208";a="252234066"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 17:14:21 -0700
-Message-ID: <47a9642f-68ab-432c-a607-548995bd82fa@linux.intel.com>
-Date: Wed, 17 Jun 2026 08:14:18 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WFW8IzrK"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65GLnGRQ2619096;
+	Wed, 17 Jun 2026 06:44:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=QGL9XU
+	f8t8wmtpOfqZQ2Sa93PRgv0LQqW457H0ZOuJQ=; b=WFW8IzrKrG31irtBXXEeSG
+	iCJ+gEO/RzoUhPOqxewTH6ZDA8y4tPUx1oVEGFVgGk6EGz9x570IQLpuN4r5iZ+E
+	UIC5J2OhHTHaIIK47EIw9hublWQ8MR+Z0Z+SKNtU8mvgz2AMAfojOUtqCkI7mFau
+	XeDWyHZ31Wg+HRHmPd3BsfNJHcrjzlbgQ0n0qjFdNTwTZCL/g+Fx9RKdp7eCssvk
+	3UqUT9/gA+B4mL+YSn/Tyt5YahLS3M+HitTE6MRxDOy5HfBqOyxOQxxTim4Xe8dV
+	kzp2IuW3rsm0H329PTHMMKWHuEv0OuX3jfY8nvaJTgshvMlrTzfIPwYCpENmCThQ
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4eueqx1jkb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jun 2026 06:44:34 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65H6YdA8020913;
+	Wed, 17 Jun 2026 06:44:33 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4eudva9w7j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jun 2026 06:44:33 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65H6iUuk62849348
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Jun 2026 06:44:30 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4120920043;
+	Wed, 17 Jun 2026 06:44:30 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 16B1220040;
+	Wed, 17 Jun 2026 06:44:30 +0000 (GMT)
+Received: from [9.224.77.157] (unknown [9.224.77.157])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Jun 2026 06:44:30 +0000 (GMT)
+Message-ID: <64b353ab-6079-49fb-8495-06087e6686fb@linux.ibm.com>
+Date: Wed, 17 Jun 2026 08:44:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,76 +62,150 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 1/8] perf/x86/intel: Remove anythread_deprecated bit
- from perf_capabilities
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>,
- stable@vger.kernel.org
-References: <20260612090114.3188886-1-dapeng1.mi@linux.intel.com>
- <20260612090114.3188886-2-dapeng1.mi@linux.intel.com>
- <20260612094648.GB42921@noisy.programming.kicks-ass.net>
- <96a18944-bc0d-47dd-b435-e9aa63b93c43@linux.intel.com>
- <20260616100202.GJ42921@noisy.programming.kicks-ass.net>
+Subject: Re: Missing information in HEADER_CPU_DOMAIN_INFO
+To: Swapnil Sapkal <swapnil.sapkal@amd.com>, Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc: Jan Polensky <japo@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        ravi.bangoria@amd.com
+References: <3428df2b-abdc-4cb1-98f2-afdd759919b1@linux.ibm.com>
+ <46b69b4c-b7d7-4155-93aa-62d2c34e0105@amd.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260616100202.GJ42921@noisy.programming.kicks-ass.net>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <46b69b4c-b7d7-4155-93aa-62d2c34e0105@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-GUID: fq0gOBlx2-AnFavpRkbw86N9K8GXgcLC
+X-Authority-Analysis: v=2.4 cv=Le0MLDfi c=1 sm=1 tr=0 ts=6a324252 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=odcnNUf13kXu-11lWZ8A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE3MDA1NyBTYWx0ZWRfXyAzH1UTVBjIy
+ NPsA25TfPSYjOJouJo2T9/ib3p3pyuyfPxtEXMMWNjBlLKG18IbIG+2G5Q6fJ7etpuQt6ossSIJ
+ tqMrJx70dC0tiyO345M0QCIB4tx2rVQ=
+X-Proofpoint-ORIG-GUID: IR3Nja91-OHUg7Hcn3De76j_Ga-5pkzF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE3MDA1NyBTYWx0ZWRfXy/BzEm2Ztrcg
+ 67FYgeZ3awV7lK/Pj7KzSnNFvNAQaqJZIxsRSswGcpoD0U/u1xvht013Q284st9sxvD12BuiB5Z
+ ZHf/pfd1yXmu0ulim6WTmKsf68UgbzEpUBWYAWXlDF7RE1OEX0T9McBMApttARDToMOd73cwW7P
+ mrsIdF4EaLFzL9PYE1bPSkfLGJmPl7m9wpeV6B7h5Z6ePUB1ao2hUDU7K3Yr8BfTq9Vp44Uf7u1
+ QlNHeMbwat1VtBYCcp5e10WlCSnIA45ypsDMceWC2sHXaa+6Xyg+JHbuzzxLOwXQZfB4xl9Y+fQ
+ LerAs7C1HeARG+4R2nH1oXt6ugHDqjh6UFmTe3uf6TGQusV191HZ7UbWs/iQoz/+KdWcxlqkDah
+ jJRqiWprn/8i+giPYfj3PgdaGvzozCUoHn4tuiajd0DN07OLbzuYs05+BBGBVZEfq9zmk2OdHYh
+ SJrtHtiOpVO/etrQ9+g==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-16_05,2026-06-16_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 priorityscore=1501 malwarescore=0 spamscore=0 suspectscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606170057
 
-
-On 6/16/2026 6:02 PM, Peter Zijlstra wrote:
-> On Mon, Jun 15, 2026 at 08:59:29AM +0800, Mi, Dapeng wrote:
->> On 6/12/2026 5:46 PM, Peter Zijlstra wrote:
->>> On Fri, Jun 12, 2026 at 05:01:07PM +0800, Dapeng Mi wrote:
->>>> AnyThread mode deprecation is enumerated by CPUID.0AH:EDX[15] instead of
->>>> PERF_CAPABILITIES MSR. It's not a good practice to define a bit to
->>>> represent "anythread deprecation" in perf_capabilities. It leads to the
->>>> anythread_deprecated bit could be overwritten by the real value of
->>>> PERF_CAPABILITIES MSR, just like the below code in update_pmu_cap() does.
->>>>
->>>> ```
->>>> if (!intel_pmu_broken_perf_cap()) {
->>>> 	/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
->>>> 	rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
->>>> }
->>>> ```
->>>>
->>>> It leads to the anythread_deprecated bit is cleared to 0 and the "any"
->>>> attribute is incorrectly shown in the /sys/devices/cpu/format/ folder on
->>>> these support Perfmon v6 platforms, like Clearwater Forest.
->>>>
->>>> ```
->>>> $grep . /sys/devices/cpu/format/*
->>>> /sys/devices/cpu/format/acr_mask:config2:0-63
->>>> /sys/devices/cpu/format/any:config:21
->>>> /sys/devices/cpu/format/cmask:config:24-31
->>>> ```
->>>>
->>>> So remove the anythread_deprecated bit from perf_capabilities structure
->>>> and directly depends on CPUID.0AH:EDX[15] to judge if anythread is
->>>> deprecated.
->>> Again, no markdown please. I've stripped it from these patches.
->> My bad. Thanks a lot.
+On 6/16/26 15:21, Swapnil Sapkal wrote:
+> Hi Thomas,
+> 
+> Thank you for pointing this issues.
+> 
+> On 12-06-2026 19:03, Thomas Richter wrote:
 >>
->> BTW, Peter, have you pull these patches? I didn't see them in perf/core or
->> perf/urgent branches. Sashiko reports a defect about "Patch 5/8:
->> perf/x86/intel: Validate the return value of intel_pmu_init_hybrid()". If
->> not, I would post a v4 patchset to fix the defect. Thanks.
+>> Hi Swapnil,
 >>
-> I had them in queue:perf/core, but realized it was *really* late in the
-> window. I'll probably move them into tip post -rc1. If there's a new
-> version by then, I'll be sure to pick it up.
+>> Commit d40c68a49f69 ("perf header: Support CPU DOMAIN relation info")
+>> introduced the HEADER_CPU_DOMAIN_INFO bit and the necessary data.
+>>
+>> However two issues came to my attention.
+>>
+>> 1. The documentation is incomplete.
+>> File Documentation/perf.data-file-format.txt differs from the data written
+>> in function write_cpu_domain_info().
+>> The first two values written to the header section are schedstat_version
+>> and max_sched_domains. They are missing in the documentation.
+>>
+> 
+> I agree with this. I will update the documentation for the same.
 
-Thanks Peter. I posted the v4 patchset yesterday to fix the defect of
-Sashiko. Please pick up the v4 version. Here is the v4 patchset link. 
+Great Thanks
 
-https://lore.kernel.org/all/20260616044654.3468742-1-dapeng1.mi@linux.intel.com/
+> 
+>> 2. The function write_cpu_domain_info() writes a variable amount of data,
+>> but does not indicate how much CPU members have actually been written.
+>> This makes it much harder to read back that data from a perf.data file,
+>> because the reader does not know in advance how much data to read.
+>> Since the data structures also contain strings, the file section size does
+>> not help at all, because strings are of variable size.
+>>
+>> In my opinion the structure should contain the number of CPU data to read.
+>> My suggestion:
+>> Modify structure cpu_domain_info, which contains the
+>> missing schedstat_version and max_sched_domains fields and contains the
+>> number of CPU records actually written to that header section.
+>> Here is an idea:
+>>
+>>          HEADER_CPU_DOMAIN_INFO = 32,
+>>
+>>   List of cpu-domain relation info. The format of the data is as below.
+>>
+>>   struct domain_info {
+>>          int domain;
+>>          char dname[];
+>>          char cpumask[];
+>>          char cpulist[];
+>>   };
+>>
+>>   struct cpu_domain_info {
+>>          int schedstat_version;
+>>          int max_sched_domains;
+>>          int nr_cpus;             <--- new
+>>          struct {
+>>                  u32 cpu;
+>>                  u32 nr_domains;
+>>                  struct domain_info [nr_domains];
+>>          } [nr_cpus];
+>>   };
+>>
+>> The above syntax is also in sync the other sections of that documentation file.
+>>
+>> What do you think?
+>>
+> 
+> I agree with you on addition of schedstat_version and max_sched_domains fields to struct cpu_domain_info.
+> 
+> Regarding nr_cpus: since /proc/schedstat only contains stats for online CPUs, the number of CPU stats written equals env->nr_cpus_online. This information is already available via HEADER_NRCPUS, so I didn't include it in cpu_domain_info. Please let me know if I've overlooked something.
+> 
+
+Ah, now I get it. This is fine with me but should be mentioned in the documentation as well.
+See header feature HEADER_CPU_TOPOLOGY documentation. 
+There is a similar situation and is expained in the comment:
+
+       struct {
+              uint32_t core_id;
+              uint32_t socket_id;
+       } cpus[nr]; /* Variable length records */
+       /* 'nr' comes from previously processed HEADER_NRCPUS's nr_cpu_avail */  <--- here
+
+So the reader is aware of the cross reference and what value to use when reading the feature file section.
+
+> -- 
+> Thanks and Regards,
+> Swapnil
+> 
 
 
+Thanks.
+
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
