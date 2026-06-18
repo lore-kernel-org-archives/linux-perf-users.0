@@ -1,125 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC272E0914
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jun 2026 16:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A0C2F1FC7;
+	Thu, 18 Jun 2026 16:28:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781799969; cv=none; b=p0OsfuLSciY5GM12OrH4xVcM2CKwsu6liJtLFTkwNXimjKY7FrzEOGwGmICqYBXM5DB7vQtiTcdVl4yF1kiucA4z3c1jgI6E192XRjO1+KpMKbP0Na3vh8c29NoyhhimxlLq/8oGkL/BweNDic9JQAzgaPpcuncijEroTCsatjI=
+	t=1781800126; cv=none; b=KYODvhrNX//u5c65zsvRj6teA5e0MMvk9mne/VcfKyk77LZoOqGVE5rJVi2QROXb1UMZc+cq39xS/sv08Quu8Ej5VlO8uTzWe/xQd8ldXzBm2wy0syem93EU+iZjz2ZoAteHZkc+d7kmJYGfeAWnmPciY7Mzo7nHqWaTfu9hZho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781799969; c=relaxed/simple;
-	bh=nZgE3837EHUCnxOVJ6pnZzbloDuhm85UakGUGCpot/8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=phcORi9xDjiMnVAudB/fQVwMnRoSlX9+JpP7geWP6Xe/GatGZCIxkRYdcv2mWIkmOuhzj+7B7EEgG1Uhs2YEu3/Ak+wWPTUuEFijpaWAQu9sdddTuw0N6MnEPwK0toTT3i0KqUUHT+YV2io45udB2udKE7DNDWJyKPS1CLy8NAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIRjQy/s; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781800126; c=relaxed/simple;
+	bh=E5HAizW64IFFlpUPvCs/aM5Cgn6ks6/CU0Q7zjirHfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WeFgV2DWYX99+RUkHfh1q8s3DHeZdB0pknfPaD0O5jPS3DvcrgbtFrYDouzl9XYfaEouwJxfNt6Icss1yZKef+YO2AZhaeH/KFM5Z1ofsR9kSW2YSsMl18C1/cZGcIk54Id+alK+jNvazlFxsK2I77dZsTrCGf2j2EXEeevPvRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUhd0abT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIRjQy/s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C381F000E9;
-	Thu, 18 Jun 2026 16:26:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUhd0abT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A741F000E9;
+	Thu, 18 Jun 2026 16:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781799967;
-	bh=rWjBOLrV3RYEaQQ1uIKxT4etS5m/uBnvIZvEUDiSiuc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MIRjQy/sEOKthwgwzd0ZZTaqFhkDhw2YJAY/I8WOjptGL3rWX15IWXg2jo7SiiYB6
-	 lpW0yiNyCVL2+jOkf+13iTUjlKlhl4uVsKkMag2Isn8rj7GJ2MRnacTq5FQ0QaYFsX
-	 swSiNPBOVXxOqtcWbWoszBu+WcH32ZL/6ugs9WrMqlNKBg300JAu149Mnvr4eaCz5Y
-	 vsalHxzhaWiuMDmwUCPTuX7WCPEkdbx4DqzZln1G60VNfE2C1nQ92g2+b4hqK1O2ou
-	 fM6ln6yaOx4r6BwGNAHhZ/5Xrb4y4xtGMOWKSleEXbTUzaNMLTsAHMhFLr5lrmbGpd
-	 i6beHUgFeWxrA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] perf record: Fix multiple PERF_RECORD_COMPRESSED2
- records per push
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dmitry Ilvokhin" <d@ilvokhin.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <efb81ee56e376079050d79690c00c718bbb444cf.1781797544.git.d@ilvokhin.com>
-References: <cover.1781797544.git.d@ilvokhin.com>
- <efb81ee56e376079050d79690c00c718bbb444cf.1781797544.git.d@ilvokhin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 18 Jun 2026 16:26:07 +0000
-Message-Id: <20260618162607.B9C381F000E9@smtp.kernel.org>
+	s=k20260515; t=1781800125;
+	bh=yfYxaGW6jn2uGZ+2EoY6Tvfw3kF3jHEtiBL1eoULZgc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bUhd0abTvfAvK6PvAy35qM4ki0TISpbGaNby8/76Y/uDM5dTJd7LSyh0GPMbiAJOB
+	 9YYzNaOfazekUfe4w5sD/L+NGmmQLKIRAKqEdXVxpppdDxF12Xnv+Mh8VC5jj+aLvW
+	 i6TkV6pKsYEEXoHtZLhppnSYzOovUO8AArhl+G3odviXbsCTfjM6pd+f9bX38ZR0as
+	 +647c/QFlRsgqquXY5UbtL2ErERe1Zpz9Y+l5Z0AKFbFpMRH7IAAEuzHSD0NunsZpD
+	 8NotyFV7bAqDz3dl93Is/++YDm69U08Csm+wP+HQtgEsMGItflWxpoWHOsFS0qI4Xd
+	 2QBIEPRmHK9IQ==
+Date: Thu, 18 Jun 2026 09:28:42 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Aaron Tomlin <atomlin@atomlin.com>
+Subject: Re: [PATCHES v3 0/2] perf tools: Add cached probe type detection for
+ evsel
+Message-ID: <ajQcukDCbMgjLA7b@google.com>
+References: <20260616182546.8892-1-acme@kernel.org>
+ <ajMkLzJpXzyeqQh4@google.com>
+ <ajPzhxj3KEF7jOTE@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ajPzhxj3KEF7jOTE@x1>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Thu, Jun 18, 2026 at 10:32:55AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Jun 17, 2026 at 03:48:15PM -0700, Namhyung Kim wrote:
+> > On Tue, Jun 16, 2026 at 03:25:44PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > 
+> > > Arnaldo Carvalho de Melo (3):
+> > >   perf evsel: Add lazy-initialized probe type detection helpers
+> > >   perf trace: Guard __probe_ip suppression with evsel__is_probe()
+> > >   perf evsel: Add no-libtraceevent stubs for evsel__field() and evsel__common_field()
+> > 
+> > It seems you squashed patch 3 into 1. :)
+> 
+> Yeah, I noticed and fixed it up before pushing publicly:
+> 
+> acme@x1:~/git/perf-tools-next$ git log --oneline 27dc372c83d90ccbb19107a2acffe01d6a076a53^.. | tail -3
+> 846f367ff02226e7 perf trace: Guard __probe_ip suppression with evsel__is_probe()
+> fbb5e6e3ca28a325 perf evsel: Add lazy-initialized probe type detection helpers
+> 27dc372c83d90ccb perf evsel: Add no-libtraceevent stubs for evsel__field() and evsel__common_field()
+> acme@x1:~/git/perf-tools-next$
 
-Pre-existing issues:
-- [Critical] Missing bounds check on `dst_size` during the first iteration =
-causes unsigned underflow and out-of-bounds writes.
---
+Thanks, looks good to me.  For the series,
 
-commit 05c1411c44b6c31eba9854745a0f8d5ce767f17a
-Author: Dmitry Ilvokhin <d@ilvokhin.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-perf record: Fix multiple PERF_RECORD_COMPRESSED2 records per push
+Thanks,
+Namhyung
 
-With Zstd compression enabled, a single mmap push whose compressed output
-exceeds the maximum record size emits several back-to-back compressed
-records. The record__pushfn() function incorrectly rewrote only the first
-record's header to describe the whole blob, which resulted in a bogus
-truncated length and corrupted the perf.data file. This patch fixes the
-issue by framing each record properly where it is produced, ensuring the
-sizes remain valid.
-
-[ ... ]
-
-> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-> index 57027e0ac7b65..1955fa2431d17 100644
-> --- a/tools/perf/util/zstd.c
-> +++ b/tools/perf/util/zstd.c
-> @@ -30,7 +30,7 @@ int zstd_fini(struct zstd_data *data)
-> =20
->  ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *ds=
-t, size_t dst_size,
->  				       void *src, size_t src_size, size_t max_record_size,
-> -				       size_t process_header(void *record, size_t increment))
-> +				       size_t process_header(void *record, size_t data_size))
->  {
->  	size_t ret, size, compressed =3D 0;
->  	ZSTD_inBuffer input =3D { src, src_size, 0 };
-
-[Severity: Critical]
-This isn't a bug introduced by this patch, but is there a missing bounds ch=
-eck
-on dst_size during the first iteration in this function?
-
-Looking at zstd_compress_stream_to_records(), the bounds check explicitly
-skips the first iteration because hdr_size is initialized to 0:
-
-	while (input.pos < input.size) {
-		if (hdr_size &&
-		    dst_size < hdr_size + max_record_size + sizeof(u64)) {
-			pr_err("failed to compress: output buffer too small\n");
-			return -1;
-		}
-		record =3D dst;
-		size =3D process_header(record, 0);
-		hdr_size =3D size;
-		compressed +=3D size;
-		dst +=3D size;
-		dst_size -=3D size;
-
-If this function is called with an initially small dst_size (e.g., < 16),
-process_header() will perform an out-of-bounds write of the 16-byte
-perf_record_compressed2 header.
-
-Following this, dst_size -=3D size will unconditionally unsigned underflow =
-to a
-massive value. This allows ZSTD_compressStream() to write up to
-max_record_size bytes out-of-bounds into the dst buffer.
-
-Could this be triggered in aio mode if perf_mmap__push() splits a wrap-arou=
-nd
-kernel ring buffer, and the first compressed chunk leaves less than 16 bytes
-in the aio->data buffer? The second call to zstd_compress() would then pass
-a dst_size < 16, bypassing the bounds check on the first iteration and
-triggering a buffer overflow.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1781797544.gi=
-t.d@ilvokhin.com?part=3D1
+> 
+> acme@x1:~/git/perf-tools-next$ git show 27dc372c83d90ccb
+> commit 27dc372c83d90ccbb19107a2acffe01d6a076a53
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Tue Jun 16 16:37:09 2026 -0300
+> 
+>     perf evsel: Add no-libtraceevent stubs for evsel__field() and evsel__common_field()
+> 
+>     When building without libtraceevent (NO_LIBTRACEEVENT=1), evsel__field()
+>     and evsel__common_field() are declared but never defined, causing link
+>     errors in any code path that references them.
+> 
+>     Add inline stubs that return NULL when HAVE_LIBTRACEEVENT is not defined,
+>     matching the pattern used by other evsel accessor functions.
+> 
+>     Cc: Aaron Tomlin <atomlin@atomlin.com>
+>     Assisted-by: Claude:claude-opus-4.6
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 8009be22cc3f1055..b959d4797b14035d 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -397,8 +397,22 @@ struct tep_format_field;
+> 
+>  u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample, bool needs_swap);
+> 
+> +#ifdef HAVE_LIBTRACEEVENT
+>  struct tep_format_field *evsel__field(struct evsel *evsel, const char *name);
+>  struct tep_format_field *evsel__common_field(struct evsel *evsel, const char *name);
+> +#else
+> +static inline struct tep_format_field *
+> +evsel__field(struct evsel *evsel __maybe_unused, const char *name __maybe_unused)
+> +{
+> +       return NULL;
+> +}
+> +
+> +static inline struct tep_format_field *
+> +evsel__common_field(struct evsel *evsel __maybe_unused, const char *name __maybe_unused)
+> +{
+> +       return NULL;
+> +}
+> +#endif
+> 
+>  bool __evsel__match(const struct evsel *evsel, u32 type, u64 config);
+> 
+> acme@x1:~/git/perf-tools-next$
+> 
+> acme@x1:~/git/perf-tools-next$ git show 846f367ff02226e7
+> commit 846f367ff02226e7089181d2adae45a6cca4a3e6 (number/perf/evsel-probe-type)
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Mon Jun 15 22:17:41 2026 -0300
+> 
+>     perf trace: Guard __probe_ip suppression with evsel__is_probe()
+> 
+>     trace__fprintf_tp_fields() compares every field name against
+>     "__probe_ip" for all tracepoint events, but this field is only
+>     implicitly added by the Ftrace subsystem to bare dynamic probes.
+> 
+>     Add an evsel__is_probe() check before the strcmp so the string
+>     comparison is skipped entirely for non-probe events.
+> 
+>     Reviewed-by: Aaron Tomlin <atomlin@atomlin.com>
+>     Assisted-by: Claude:claude-opus-4.6
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index a8492da23a9cc178..57f3f14c5d435805 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -3267,7 +3267,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
+>                  * If verbose mode is enabled, ensure it is formatted as a
+>                  * hexadecimal memory address rather than a signed integer.
+>                  */
+> -               if (!strcmp(field->name, "__probe_ip")) {
+> +               if (evsel__is_probe(evsel) && !strcmp(field->name, "__probe_ip")) {
+>                         if (!verbose)
+>                                 continue;
+> 
+> acme@x1:~/git/perf-tools-next$
