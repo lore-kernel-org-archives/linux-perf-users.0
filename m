@@ -1,185 +1,257 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B632E7365
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jun 2026 16:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6373745BE3
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jun 2026 16:24:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781799661; cv=none; b=c2E6feZ/OEAqSt3KItG7wcZSlYnSyz1Vo3ARz7uqVHMVxZamdcDAnFL/ILfVHEYDMOzbUGnwLToNdcW9Sn3nkuVz3jf3cw1I3NpkQgihIvecnVp0dkhGNI4FDl4KQID/F61aMc19/Sv/JsFH1kE1od7qr86DfHkrZ92gFU/69hk=
+	t=1781799861; cv=none; b=bv4AAl5qXGA5+ejiLpWKiZgbmUJz6oPbSj072q9UZqt0atqfg5VilbJF+omJ345d+sSn8tD+Ch47Sw1dqCHstibdGn1oatYm+x4r6a5VDq4gm9MYXyvAvmRbfQsE0BuhYtnd9JSrNpY+APmVBcEFRfNKXNBbDs8jQhrQcW6N4D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781799661; c=relaxed/simple;
-	bh=a+3eRjDSRRRaw1q6U+NLSeeVwP2XXOyxVdjdzTuyths=;
+	s=arc-20240116; t=1781799861; c=relaxed/simple;
+	bh=FO+0/TYzvhvoI++ACqMg6MxEQuO77ACKH3sR4cQaGvo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HF87U/YRtrp56OgOf4b2BGzCifiBeMumppFt+VDktKcuaNQjCpkbf0GVqz4JbvUTy6pEjHaNpz46qOwP5/bsm6N1Fw6kt6SUkXa6Cbp2iVpygHDBSaAdzBrq+bwPKXye1WIcTxfwEKNIUVuhyu78Ok5axUqzVA6p+sNOmFtGzn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wwmtl9W0; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=lGQu9nKHgQYS4cqEFk9vYziy4vYazKnkrfpDkyszBcrMHkugzWjGSLYW47yQQIRhMPiz6IQpr7sS2fMurXqufPxYdbGLUsjYK+igQ60o41ga/ifJfr0op+Xw72LM8q83akLqP3lEazNxizoBN5Xu2hsMB1RUlFIYq+hXI9DKdpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O8+4kBgd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wwmtl9W0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B59B1F000E9;
-	Thu, 18 Jun 2026 16:20:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O8+4kBgd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D51761F000E9;
+	Thu, 18 Jun 2026 16:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781799659;
-	bh=cctEe7BMA02manXpewLQT2bZRk8m2zyJOw7jXniCHCk=;
+	s=k20260515; t=1781799860;
+	bh=gggsSEf0UJAzt/SDWvfXzo1VvsOHrZmp7pSjm4xmUtA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Wwmtl9W0nFoPmE0+J6x2HlgIFDybO+R6fUMiiDq+m8gQrcPILC6EBPbP1/N6RvdKH
-	 Semm5wvotSFbF+mKLiSc9lfzwtcB9uh2vNWhhrE6olJyYK/4vh2/XCeObxSfsu15L4
-	 hViBgnua+7p9tB80zFnseGjjXSAYbTj9xgFBvLaMc3CSztqaJUJ0bRlHUW7l/e5iR2
-	 uXa8tnwCk3C2A7DT9CvUhKybsG7+DIyjuodfrFI4EFjaCdzBUrHkFJDg4S7rP3NI39
-	 Nf7BuaVcNl/4+vcPSch59VUf0aPIfMPzEbXJBab74PXpzCitYXkuuQ89vCZ5hcO+vZ
-	 kU/0IAsj1+y0A==
+	b=O8+4kBgd+QHLjC3RaPxRwt0zGZsYMbZdugxfdTlZMsuFJ1qD2mIU+WMGDO2QVn7Ou
+	 I1vUz36tcmUq/Qsz/G16WnsR8gFaIbJZWpv3cC4r5WBeblexMMBT23WeIH/jnute0o
+	 GZqI4PHART5Mq8eVG6Vg56m6l0uyty08g3GEEOZnsrHREEXjNsL0b2BeLoKbElhAi2
+	 EqCPiJfFN1At8AX9GOsl38r9yLPXHMyPtjORgmsJy479v2rFE+u+8lMuB4awQobrl0
+	 3kYfVpe9GtKGuXteLlJZUYSS3Sqi1tSVSw9ZDaI1KWVN5n+xkijUNln24CqyhfuyNh
+	 AVqchODdbrwTw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/3] perf record: Avoid overrunning the zstd output
- buffer
+Subject: Re: [PATCH 3/3] perf record: Don't store raw data on zstd
+ compression failure
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dmitry Ilvokhin" <d@ilvokhin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <7860259ac13e539dfb907489be29d0487d36aeb8.1781797544.git.d@ilvokhin.com>
+In-Reply-To: <6fb9225500ede2bb607a287d6b8b5bea9065b780.1781797544.git.d@ilvokhin.com>
 References: <cover.1781797544.git.d@ilvokhin.com>
- <7860259ac13e539dfb907489be29d0487d36aeb8.1781797544.git.d@ilvokhin.com>
+ <6fb9225500ede2bb607a287d6b8b5bea9065b780.1781797544.git.d@ilvokhin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 18 Jun 2026 16:20:59 +0000
-Message-Id: <20260618162059.8B59B1F000E9@smtp.kernel.org>
+Date: Thu, 18 Jun 2026 16:24:19 +0000
+Message-Id: <20260618162419.D51761F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 7 potential issue(=
 s) to consider:
 
-New issues:
-- [High] The patch introduces an overly strict buffer size check that cause=
-s compression to fail prematurely whenever less than `max_record_size` (~64=
-KB) space remains.
-
 Pre-existing issues:
-- [High] The safety bounds check added to `zstd_compress_stream_to_records`=
- is bypassed on the first loop iteration, leaving the buffer vulnerable to =
-overflow and integer underflow.
-- [High] In `zstd_decompress_stream()`, the `output.dst` pointer is advance=
-d while `output.pos` is improperly preserved, leading to out-of-bounds writ=
-es and corrupted output if the decompression loop executes more than once.
-- [High] If `perf_mmap__push` processes the ring buffer in two chunks and t=
-he second chunk's compression fails, the reference to `map->core` acquired =
-during the first chunk is leaked.
+- [Critical] The `zstd_decompress_stream` function incorrectly updates the =
+output buffer pointer, causing an out-of-bounds write and data corruption.
+- [Critical] Buffer overflow via integer underflow in `zstd_compress_stream=
+_to_records` bypasses the bounds check.
+- [High] Unflushed compressed data is left in the ZSTD internal buffer and =
+permanently lost at the end of a recording session.
+- [High] The return value of `ZSTD_flushStream()` is entirely ignored, mask=
+ing potential compression state errors.
+- [High] A missing `perf_mmap__put` in the error path of `record__aio_push`=
+ causes a reference count leak of `map->core`.
+- [High] Skipped `perf_mmap__consume` on partial failure causes duplicate e=
+vent records in the `perf.data` file.
+- [High] An overly strict bounds check in `zstd_compress_stream_to_records`=
+ causes `perf record` to abort when compressing large chunks of trace data.
 --
 
-commit 09f418a2fa19ace0234b4443e193f65fb347ed8b
+commit 460b94129652aafbc57f9667aa7c4a4a81ffacbe
 Author: Dmitry Ilvokhin <d@ilvokhin.com>
 
-perf record: Avoid overrunning the zstd output buffer
+perf record: Don't store raw data on zstd compression failure
 
-This commit adds a bounds check in zstd_compress_stream_to_records() to
-prevent writing past the end of the output buffer. It verifies if the
-remaining buffer size is sufficient for a full record.
+On a ZSTD_compressStream() error, zstd_compress_stream_to_records()
+falls back to copying the uncompressed input into the output buffer and
+returning its size. That cannot work:
+
+- a COMPRESSED2 payload is always fed to zstd_decompress_stream(), so
+  raw bytes placed there can never be read back.
+
+- the record header is never finalized: process_header() is not called
+  to write the real header.size and data_size, so they keep their
+  initial values and do not match the bytes written.
+
+- the copy is unbounded and can write past the output buffer.
+
+Propagate the error instead.
+
+Fixes: f24c1d7523e6 ("perf tools: Introduce Zstd streaming based compressio=
+n API")
 
 > diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-> index 1955fa2431d17..a0f6572ad2017 100644
+> index a0f6572ad2017..2de777d49ee0b 100644
 > --- a/tools/perf/util/zstd.c
 > +++ b/tools/perf/util/zstd.c
-
 [ ... ]
-
-> @@ -53,8 +53,14 @@ ssize_t zstd_compress_stream_to_records(struct zstd_da=
-ta *data, void *dst, size_
->  	}
-> =20
->  	while (input.pos < input.size) {
-> +		if (hdr_size &&
-> +		    dst_size < hdr_size + max_record_size + sizeof(u64)) {
-
-[Severity: High]
-This isn't a bug introduced by this patch, but by gating the bounds check on
-hdr_size, isn't the check bypassed on the very first loop iteration since
-hdr_size is initialized to 0?
-
-If dst_size is initially very small (which can legitimately happen in=20
-record__aio_pushfn() when calculating mmap__mmap_len(map) - aio->size), the=
-=20
-code will unconditionally write the header and decrement dst_size.
-
-Could this underflow dst_size to a massive positive value, bypassing
-subsequent bounds checks and allowing ZSTD_compressStream() to write out of
-bounds?
-
-[Severity: High]
-Does this check introduce an overly strict requirement that causes compress=
-ion=20
-to fail prematurely?
-
-By requiring dst_size < hdr_size + max_record_size + sizeof(u64), this=20
-condition unconditionally fails compression if the remaining buffer is less=
-=20
-than the maximum record size (typically ~64KB).
-
-In AIO mode, dst_size represents the remaining space in the AIO buffer, whi=
-ch
-naturally dwindles. If a small chunk needs to be compressed and could fit in
-the remaining space, wouldn't this check spuriously abort the compression a=
-nd
-render the last ~64KB of every buffer unusable?
-
-> +			pr_err("failed to compress: output buffer too small\n");
+> @@ -71,8 +69,7 @@ ssize_t zstd_compress_stream_to_records(struct zstd_dat=
+a *data, void *dst, size_
+>  		if (ZSTD_isError(ret)) {
+>  			pr_err("failed to compress %ld bytes: %s\n",
+>  				(long)src_size, ZSTD_getErrorName(ret));
+> -			memcpy(dst, src, src_size);
+> -			return src_size;
 > +			return -1;
-> +		}
->  		record =3D dst;
->  		size =3D process_header(record, 0);
-> +		hdr_size =3D size;
->  		compressed +=3D size;
->  		dst +=3D size;
->  		dst_size -=3D size;
+>  		}
+>  		size =3D output.pos;
+>  		size =3D process_header(record, size);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but looking at
-zstd_decompress_stream() in the same file, is there an issue with how
-output.pos is handled?
+This isn't a bug introduced by this patch, but does the loop ignore the
+return value of ZSTD_flushStream()?
 
-tools/perf/util/zstd.c:zstd_decompress_stream() {
-    ...
-    output.dst  =3D dst + output.pos;
-    output.size =3D dst_size - output.pos;
-    ...
-}
+Looking at zstd_compress_stream_to_records():
 
-The loop advances the destination pointer but fails to clear output.pos.
+		ret =3D ZSTD_compressStream(data->cstream, &output, &input);
+		ZSTD_flushStream(data->cstream, &output);
+		if (ZSTD_isError(ret)) {
 
-If the decompression loop executes more than once, will ZSTD start writing
-at the new output.dst + output.pos, effectively skipping output.pos bytes
-and corrupting the decompressed stream?
+The return value of ZSTD_flushStream() is never checked. The subsequent
+ZSTD_isError(ret) only evaluates the error code of ZSTD_compressStream().
+If the flush operation encounters a failure, the error code is discarded,
+potentially resulting in silently corrupted data streams or emitting an
+incomplete compressed payload without propagating an error to the user.
+
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does the strict bounds check
-introduced above make a memory leak in AIO mode more easily triggerable?
+This is a pre-existing issue, but does zstd_compress_stream_to_records()
+leave unflushed compressed data in the ZSTD internal buffer?
 
-In tools/perf/builtin-record.c:record__aio_pushfn(), a reference to map->co=
-re=20
-is acquired on the first successful chunk:
+In tools/perf/util/zstd.c:zstd_compress_stream_to_records():
 
-tools/perf/builtin-record.c:record__aio_pushfn() {
-    ...
-    if (!aio->size) {
-        perf_mmap__get(&map->core);
-    }
-    ...
-}
+	while (input.pos < input.size) {
+        ...
 
-If perf_mmap__push() processes the ring buffer in two chunks, and the
-second chunk's compression fails (which happens more frequently now due
-to the ~64KB bounds check), perf_mmap__push() aborts and passes the error
-back to record__aio_push():
+The loop exits strictly when input.pos =3D=3D input.size. Since
+ZSTD_flushStream() can leave unflushed data in the internal compression
+stream if the output buffer fills up, and perf record never calls
+ZSTD_endStream() to force a final flush at the end of the session, any
+remaining compressed data trapped in the stream buffer is silently and
+permanently lost, resulting in truncated or corrupted trace files.
 
-tools/perf/builtin-record.c:record__aio_push() {
-    ...
-    ret =3D perf_mmap__push(map, &aio, record__aio_pushfn);
-    if (ret !=3D 0)
-        return ret;
-    ...
-}
 
-Will this return immediately on failure and bypass the perf_mmap__put()
-cleanup that occurs later, resulting in a leak of the map->core resource?
+[Severity: Critical]
+This is a pre-existing issue, but does zstd_decompress_stream() incorrectly
+advance the output buffer pointer, causing an out-of-bounds write?
+
+In tools/perf/util/zstd.c:zstd_decompress_stream():
+
+	while (input.pos < input.size) {
+		ret =3D ZSTD_decompressStream(data->dstream, &output, &input);
+        ...
+		output.dst  =3D dst + output.pos;
+		output.size =3D dst_size - output.pos;
+	}
+
+The output.dst pointer is advanced by output.pos
+(output.dst =3D dst + output.pos). However, output.pos is the accumulated
+number of bytes written, which ZSTD_decompressStream() internally adds to
+output.dst. This evaluates to an effective write address of
+dst + 2 * output.pos.
+
+Consequently, the decompression loop skips over output.pos bytes on every
+iteration, leaving uninitialized gaps in the decompressed output and quickly
+writing past the dst_size bounds, causing severe memory corruption.
+
+
+[Severity: Critical]
+This is a pre-existing issue, but does zstd_compress_stream_to_records()
+have a buffer overflow via integer underflow that bypasses bounds checking?
+
+In tools/perf/util/zstd.c:zstd_compress_stream_to_records():
+
+		if (hdr_size &&
+		    dst_size < hdr_size + max_record_size + sizeof(u64)) {
+			pr_err("failed to compress: output buffer too small\n");
+			return -1;
+		}
+		record =3D dst;
+		size =3D process_header(record, 0);
+
+When perf_mmap__push() splits the ring buffer, the second chunk can be
+passed to zstd_compress() with a very small dst_size (e.g., 8 bytes). Since
+hdr_size is initially 0, the boundary check is bypassed on the first
+iteration.
+
+process_header() unconditionally writes a 24-byte header into the <24 byte
+remaining buffer, corrupting memory. Then dst_size -=3D 24 underflows to a
+huge value (SIZE_MAX), causing ZSTD_compressStream() to write up to 64KB
+(max_record_size) entirely out of bounds.
+
+
+[Severity: High]
+This is a pre-existing issue, but does the error path in record__aio_push()
+cause a reference count leak of map->core?
+
+In tools/perf/builtin-record.c:record__aio_push():
+
+	if (ret !=3D 0) /* ret > 0 - no data, ret < 0 - error */
+		return ret;
+
+When zstd_compress() fails on the second mmap chunk, record__aio_pushfn()
+propagates the error (< 0). perf_mmap__push() then aborts and returns the
+error code.
+
+The code checks if (ret !=3D 0) and returns immediately, skipping the
+perf_mmap__put(&map->core) cleanup that balances the perf_mmap__get()
+acquired during the successful first chunk. This unhandled error path causes
+an LSAN-reportable memory leak and violates perf tool reference counting
+invariants.
+
+
+[Severity: High]
+This is a pre-existing issue, but does skipping perf_mmap__consume() on
+partial failure cause duplicate event records in the perf.data file?
+
+In tools/perf/util/mmap.c:perf_mmap__push():
+
+	if (push(md, to, buf, size) < 0) {
+		rc =3D -1;
+		goto out;
+	}
+
+If the second chunk of a split ring buffer fails during zstd_compress(),
+perf_mmap__push() aborts via goto out, skipping the
+perf_mmap__consume(&md->core) call.
+
+Because perf_mmap__consume() is skipped, the ring buffer's consumer tail
+pointer is never advanced, even though the first chunk was successfully
+compressed and written. The caller record__mmap_read_evlist() receives the
+error, aborts, and triggers a retry via record__mmap_read_all(rec, true),
+which reads and writes the exact same first chunk again, resulting in
+duplicated events and corrupted profiling data.
+
+
+[Severity: High]
+This is a pre-existing issue, but does an overly strict bounds check in
+zstd_compress_stream_to_records() cause perf record to improperly abort?
+
+In tools/perf/util/zstd.c:zstd_compress_stream_to_records():
+
+		if (hdr_size &&
+		    dst_size < hdr_size + max_record_size + sizeof(u64)) {
+			pr_err("failed to compress: output buffer too small\n");
+			return -1;
+		}
+
+The loop requires dst_size to be larger than approximately 64KB
+(hdr_size + max_record_size + sizeof(u64)) to proceed to the next iteration.
+
+If the remaining buffer space falls below this threshold near the end of a
+compression loop, it unconditionally returns -1 and prints "output buffer
+too small", even if only a few bytes of input remain to be compressed. This
+logic effectively turns a normal buffer sizing condition into a fatal error,
+instantly aborting the entire perf record session.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1781797544.gi=
-t.d@ilvokhin.com?part=3D2
+t.d@ilvokhin.com?part=3D3
