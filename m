@@ -1,112 +1,185 @@
-Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EE831079B;
-	Thu, 18 Jun 2026 16:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B632E7365
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jun 2026 16:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781798820; cv=none; b=YnuAeaI4WSi8pkJCkP6RjUnebMhvmEYgWON8dPSepf1m/iKe+9jWu5jxCa04zooKnIHSCsz1qfGRePImnvAVed4tEpzNGDir9/eXGMInwxila4+Oz5wBkJqNfVXqx7KtcSwwYWVp5rXLkDxO5IB2wg1UbnihLyMYQVQ6u3P9ffs=
+	t=1781799661; cv=none; b=c2E6feZ/OEAqSt3KItG7wcZSlYnSyz1Vo3ARz7uqVHMVxZamdcDAnFL/ILfVHEYDMOzbUGnwLToNdcW9Sn3nkuVz3jf3cw1I3NpkQgihIvecnVp0dkhGNI4FDl4KQID/F61aMc19/Sv/JsFH1kE1od7qr86DfHkrZ92gFU/69hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781798820; c=relaxed/simple;
-	bh=9q/iOv+VZn0k6RR4pQ4ZjagOUrxXhaDIsDsXhZ5OYWk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cenTnnm1DqfiK04b693x32tYpL9qGZIVczM7ybYQLSZM6RXupwXTIbykBUyQwuZk/tKrodLczl0PJNjR25xw11KsT4DekLR1M53VlizEX+KhdvTIyDMrRhJCx975nEKNT8WNxTb13ltruNdLi8yN8EMOCT4mp2o0gxKAvtlTQa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=ZS/p5lIu; arc=none smtp.client-ip=178.62.254.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
+	s=arc-20240116; t=1781799661; c=relaxed/simple;
+	bh=a+3eRjDSRRRaw1q6U+NLSeeVwP2XXOyxVdjdzTuyths=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=HF87U/YRtrp56OgOf4b2BGzCifiBeMumppFt+VDktKcuaNQjCpkbf0GVqz4JbvUTy6pEjHaNpz46qOwP5/bsm6N1Fw6kt6SUkXa6Cbp2iVpygHDBSaAdzBrq+bwPKXye1WIcTxfwEKNIUVuhyu78Ok5axUqzVA6p+sNOmFtGzn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wwmtl9W0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="ZS/p5lIu"
-Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
-	(Authenticated sender: d@ilvokhin.com)
-	by mail.ilvokhin.com (Postfix) with ESMTPSA id CCBC3D180A;
-	Thu, 18 Jun 2026 15:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
-	s=mail; t=1781798371;
-	bh=GMrlM71V5NN4Ct486vom2tEp4snFIhVpO8vmRw31gtY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ZS/p5lIuVI7E9DjUMPQC4OZUdF4KqUGk3uLuZFv2JeLgr+QyOXJ+y/O2tUgbE/tRV
-	 +3juIUyf9rKHI/mxs6vBoLmw6wetBLqbXz1PAuJncnyAMYblP2os9mSZUY13VE9zTO
-	 +IduJMluOSSw4x2D5eKyzEQfiWUhMBBpKJf0I6ew=
-From: Dmitry Ilvokhin <d@ilvokhin.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Nick Terrell <terrelln@fb.com>,
-	David Sterba <dsterba@suse.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	kernel-team@meta.com,
-	Farid Zakaria <fmzakari@meta.com>,
-	Dmitry Ilvokhin <d@ilvokhin.com>
-Subject: [PATCH 2/3] perf record: Avoid overrunning the zstd output buffer
-Date: Thu, 18 Jun 2026 15:59:08 +0000
-Message-ID: <7860259ac13e539dfb907489be29d0487d36aeb8.1781797544.git.d@ilvokhin.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <cover.1781797544.git.d@ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wwmtl9W0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B59B1F000E9;
+	Thu, 18 Jun 2026 16:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781799659;
+	bh=cctEe7BMA02manXpewLQT2bZRk8m2zyJOw7jXniCHCk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Wwmtl9W0nFoPmE0+J6x2HlgIFDybO+R6fUMiiDq+m8gQrcPILC6EBPbP1/N6RvdKH
+	 Semm5wvotSFbF+mKLiSc9lfzwtcB9uh2vNWhhrE6olJyYK/4vh2/XCeObxSfsu15L4
+	 hViBgnua+7p9tB80zFnseGjjXSAYbTj9xgFBvLaMc3CSztqaJUJ0bRlHUW7l/e5iR2
+	 uXa8tnwCk3C2A7DT9CvUhKybsG7+DIyjuodfrFI4EFjaCdzBUrHkFJDg4S7rP3NI39
+	 Nf7BuaVcNl/4+vcPSch59VUf0aPIfMPzEbXJBab74PXpzCitYXkuuQ89vCZ5hcO+vZ
+	 kU/0IAsj1+y0A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/3] perf record: Avoid overrunning the zstd output
+ buffer
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dmitry Ilvokhin" <d@ilvokhin.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <7860259ac13e539dfb907489be29d0487d36aeb8.1781797544.git.d@ilvokhin.com>
 References: <cover.1781797544.git.d@ilvokhin.com>
+ <7860259ac13e539dfb907489be29d0487d36aeb8.1781797544.git.d@ilvokhin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 18 Jun 2026 16:20:59 +0000
+Message-Id: <20260618162059.8B59B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-zstd_compress_stream_to_records() compresses one mmap chunk into 'dst'
-as a chain of records, decrementing 'dst_size' as each record's header
-and compressed payload are written, but it never checks that the space
-left can still hold a record before writing one.
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
 
-When the compressed output does not fit in 'dst', 'dst_size -= size'
-underflows ('dst_size' is a size_t), the output size is then taken as
-max_record_size again, and ZSTD_compressStream() writes past the end
-of 'dst'.
+New issues:
+- [High] The patch introduces an overly strict buffer size check that cause=
+s compression to fail prematurely whenever less than `max_record_size` (~64=
+KB) space remains.
 
-Bail out when the remaining 'dst_size' can no longer hold a full record
-(header + max_record_size + 8-byte alignment) rather than writing past
-'dst'.
+Pre-existing issues:
+- [High] The safety bounds check added to `zstd_compress_stream_to_records`=
+ is bypassed on the first loop iteration, leaving the buffer vulnerable to =
+overflow and integer underflow.
+- [High] In `zstd_decompress_stream()`, the `output.dst` pointer is advance=
+d while `output.pos` is improperly preserved, leading to out-of-bounds writ=
+es and corrupted output if the decompression loop executes more than once.
+- [High] If `perf_mmap__push` processes the ring buffer in two chunks and t=
+he second chunk's compression fails, the reference to `map->core` acquired =
+during the first chunk is leaked.
+--
 
-Fixes: f24c1d7523e6 ("perf tools: Introduce Zstd streaming based compression API")
-Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
----
- tools/perf/util/zstd.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+commit 09f418a2fa19ace0234b4443e193f65fb347ed8b
+Author: Dmitry Ilvokhin <d@ilvokhin.com>
 
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 1955fa2431d1..a0f6572ad201 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -32,7 +32,7 @@ ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_
- 				       void *src, size_t src_size, size_t max_record_size,
- 				       size_t process_header(void *record, size_t data_size))
- {
--	size_t ret, size, compressed = 0;
-+	size_t ret, size, compressed = 0, hdr_size = 0;
- 	ZSTD_inBuffer input = { src, src_size, 0 };
- 	ZSTD_outBuffer output;
- 	void *record;
-@@ -53,8 +53,14 @@ ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_
- 	}
- 
- 	while (input.pos < input.size) {
-+		if (hdr_size &&
-+		    dst_size < hdr_size + max_record_size + sizeof(u64)) {
-+			pr_err("failed to compress: output buffer too small\n");
-+			return -1;
-+		}
- 		record = dst;
- 		size = process_header(record, 0);
-+		hdr_size = size;
- 		compressed += size;
- 		dst += size;
- 		dst_size -= size;
--- 
-2.53.0-Meta
+perf record: Avoid overrunning the zstd output buffer
 
+This commit adds a bounds check in zstd_compress_stream_to_records() to
+prevent writing past the end of the output buffer. It verifies if the
+remaining buffer size is sufficient for a full record.
+
+> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+> index 1955fa2431d17..a0f6572ad2017 100644
+> --- a/tools/perf/util/zstd.c
+> +++ b/tools/perf/util/zstd.c
+
+[ ... ]
+
+> @@ -53,8 +53,14 @@ ssize_t zstd_compress_stream_to_records(struct zstd_da=
+ta *data, void *dst, size_
+>  	}
+> =20
+>  	while (input.pos < input.size) {
+> +		if (hdr_size &&
+> +		    dst_size < hdr_size + max_record_size + sizeof(u64)) {
+
+[Severity: High]
+This isn't a bug introduced by this patch, but by gating the bounds check on
+hdr_size, isn't the check bypassed on the very first loop iteration since
+hdr_size is initialized to 0?
+
+If dst_size is initially very small (which can legitimately happen in=20
+record__aio_pushfn() when calculating mmap__mmap_len(map) - aio->size), the=
+=20
+code will unconditionally write the header and decrement dst_size.
+
+Could this underflow dst_size to a massive positive value, bypassing
+subsequent bounds checks and allowing ZSTD_compressStream() to write out of
+bounds?
+
+[Severity: High]
+Does this check introduce an overly strict requirement that causes compress=
+ion=20
+to fail prematurely?
+
+By requiring dst_size < hdr_size + max_record_size + sizeof(u64), this=20
+condition unconditionally fails compression if the remaining buffer is less=
+=20
+than the maximum record size (typically ~64KB).
+
+In AIO mode, dst_size represents the remaining space in the AIO buffer, whi=
+ch
+naturally dwindles. If a small chunk needs to be compressed and could fit in
+the remaining space, wouldn't this check spuriously abort the compression a=
+nd
+render the last ~64KB of every buffer unusable?
+
+> +			pr_err("failed to compress: output buffer too small\n");
+> +			return -1;
+> +		}
+>  		record =3D dst;
+>  		size =3D process_header(record, 0);
+> +		hdr_size =3D size;
+>  		compressed +=3D size;
+>  		dst +=3D size;
+>  		dst_size -=3D size;
+
+[Severity: High]
+This isn't a bug introduced by this patch, but looking at
+zstd_decompress_stream() in the same file, is there an issue with how
+output.pos is handled?
+
+tools/perf/util/zstd.c:zstd_decompress_stream() {
+    ...
+    output.dst  =3D dst + output.pos;
+    output.size =3D dst_size - output.pos;
+    ...
+}
+
+The loop advances the destination pointer but fails to clear output.pos.
+
+If the decompression loop executes more than once, will ZSTD start writing
+at the new output.dst + output.pos, effectively skipping output.pos bytes
+and corrupting the decompressed stream?
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does the strict bounds check
+introduced above make a memory leak in AIO mode more easily triggerable?
+
+In tools/perf/builtin-record.c:record__aio_pushfn(), a reference to map->co=
+re=20
+is acquired on the first successful chunk:
+
+tools/perf/builtin-record.c:record__aio_pushfn() {
+    ...
+    if (!aio->size) {
+        perf_mmap__get(&map->core);
+    }
+    ...
+}
+
+If perf_mmap__push() processes the ring buffer in two chunks, and the
+second chunk's compression fails (which happens more frequently now due
+to the ~64KB bounds check), perf_mmap__push() aborts and passes the error
+back to record__aio_push():
+
+tools/perf/builtin-record.c:record__aio_push() {
+    ...
+    ret =3D perf_mmap__push(map, &aio, record__aio_pushfn);
+    if (ret !=3D 0)
+        return ret;
+    ...
+}
+
+Will this return immediately on failure and bypass the perf_mmap__put()
+cleanup that occurs later, resulting in a leak of the map->core resource?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1781797544.gi=
+t.d@ilvokhin.com?part=3D2
