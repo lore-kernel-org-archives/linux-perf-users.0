@@ -1,88 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690FE3BB13C;
-	Fri, 19 Jun 2026 16:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BD926E70E
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jun 2026 23:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781886978; cv=none; b=Pr2480sNUgTm6ld62kcqMRCZOBrGkRuh2mfPb0O9oTqS4yb9tPTr5sHogTFkqqBRKAO9W2cXIisJPKcO8+41EPXVC8KG4s8C5YQ9sB+yWbpxKwlG1umQb0Tl7Z5lcTKqmy7rOk1L3KvhWwnpUiKb8xa+P44b8cPNMaPkxGu+tbE=
+	t=1781912373; cv=none; b=iqtAZ43R7dtDdZ+sHvCypRJWzbi19aUXNzaI9GZ7erhKcL0rXv9VSPNYSIsvPQQW1NiOH7o6rs+ZvP3kQaPkAyB2vVpM0vC0ph790TORkTzwqZrRKiy1b/Il4dsE/4goprdmtgQMXW6SSkxDcB9oaZkcsJte0bT2hzGft5P0MdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781886978; c=relaxed/simple;
-	bh=A1ZuLKdaXGkEwxLzuiLX0xtdgQQrJhKZEc6XbV0TeeM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pmk7mFpnuMSyQUAhsUse6YkUYIgGKAp4nZZPIpuUV8V2msj5Jod7LpfSE2YWOJHiosDnamZ5CJRVPxcKO326RxH0s4CPEtiuWWQEOmaW0GbewXmRFF04jWZoIhaSNskjQ8icpUUW/CD61/c2sYH/WXubOjjzIXqGunYo+Xgay18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BHd+vfHM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781912373; c=relaxed/simple;
+	bh=C1Y3OdP/bAcdNgU5rQcA7TEt7rhXSGoAbUtrrGhKV2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MlDTS3is8SD1PZIXMB0Tj7QtMryInIhVSDmolg/428xr9a2KiKfAKENCxF58IBMvnp8fG3XJQEG2k4XVA358TtQQxm684OQPpiqw0jKp27fOE8yqXJyrxUymH4whU7/zutUn8umVjMjg3eqDsJ/Zcnxl8fdR4aS6vOdSFAXlz+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y3WZgT3H; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BHd+vfHM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E08DF1F00A3A;
-	Fri, 19 Jun 2026 16:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781886976;
-	bh=1xhqGNsWnLwZPaj0pcMJoR83OBrixQwsUN/yCO5ZiV0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=BHd+vfHMQzr+0RFkOzXvLyLSntCWYGfUuzo5Ka3pF2zX+r+6hGDvdf/UR8yRaPyJm
-	 TTHgQ6uT1Tu8uOFtS4x8nF6/pjkvq9vWkIafHYYeIxuxriW1MqcvqkldYSFnysPI4P
-	 NKl2IWHJ7ZgxJnTOXBfZQ+RIDF01SsO4CG0lN7OtlvB1VyIMi+TUrdQz5+S4UBSUNc
-	 kJhzNbZCrfmXFYamZGHERF4ujuUx0rGpPV9fRZjtltXVVDqL/bN0BkTQoKENbD4YWg
-	 VXvu8QBqNxoHjdUmK04IpaMzeKVV0q/TQPzHyRacO+rlSq1ogVvapdHGLGbUXJktdI
-	 RU/ilp4A4+zjQ==
-From: Will Deacon <will@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Pratyush Anand <panand@redhat.com>,
-	Breno Leitao <leitao@debian.org>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	clm@meta.com,
-	leo.bras@arm.com,
-	kernel-team@meta.com
-Subject: Re: [PATCH v2] arm64/hw_breakpoint: reject unaligned watchpoints that would truncate BAS
-Date: Fri, 19 Jun 2026 17:36:05 +0100
-Message-ID: <178188509799.1161904.13699894903976335311.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260609-arm64_bas-v2-1-9f34dbbded88@debian.org>
-References: <20260609-arm64_bas-v2-1-9f34dbbded88@debian.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y3WZgT3H"
+Message-ID: <4a08c2ca-8137-428d-9f27-337401b62f11@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1781912359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NNpb7L2Dqpu2wyeTGuiQDnyk9igjFskq57DPZVvFEao=;
+	b=Y3WZgT3H8P0jSvw93j3YMzpV/qRHSkpIE/CwHlCo0dnsmtnb9lwv5yEH5kyMBbH5WIycxb
+	ruxLtUN44dm46SUyssPaguRnQC0ML7g2GWdK1u9ger8I6xD12OOvCGrRc4Nu6/sF/iB9tV
+	eqpxZ5ploHhn096cDxFDp9B52Cn2vvk=
+Date: Fri, 19 Jun 2026 16:39:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v6 04/21] RISC-V: Define indirect CSR access helpers
+To: sashiko-reviews@lists.linux.dev
+Cc: robh@kernel.org, devicetree@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, conor+dt@kernel.org
+References: <20260608-counter_delegation-v6-4-285b72ed65a9@meta.com>
+ <20260609061511.276E31F00893@smtp.kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20260609061511.276E31F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 09 Jun 2026 06:15:53 -0700, Breno Leitao wrote:
-> hw_breakpoint_arch_parse() positions the BAS bit pattern in
-> hw->ctrl.len with
-> 
-> 	offset = hw->address & alignment_mask;	/* 0..7 */
-> 	hw->ctrl.len <<= offset;
-> 
-> ctrl.len is an 8-bit bitfield (struct arch_hw_breakpoint_ctrl::len is
-> u32 :8), so the shift silently drops any bits past bit 7.  For
-> non-compat AArch64 watchpoints the offset is unbounded relative to
-> ctrl.len: a perf_event_open(PERF_TYPE_BREAKPOINT) caller asking for
-> HW_BREAKPOINT_W with bp_addr=page+1 and bp_len=HW_BREAKPOINT_LEN_8
-> ends up with 0xff << 1 = 0x1fe, stored as 0xfe.  The kernel programs
-> WCR.BAS=0xfe and the hardware watches bytes [1..7] instead of the
-> requested [1..8] -- the eighth byte is silently dropped.  The
-> syscall still returns success, leaving userspace to discover the
-> gap by empirical probing.
-> 
-> [...]
 
-Applied to arm64 (for-next/core), thanks!
+On 6/8/26 11:15 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] Unsafe statement-expression macro definitions causing delayed evaluation and variable shadowing hazards.
+> --
+>
+> commit 572b7555547c1b5bc07701482ba67d379f6a2177
+> Author: Atish Patra <atishp@rivosinc.com>
+>
+> RISC-V: Define indirect CSR access helpers
+>
+> This commit introduces helper macros to read, write, and perform WARL
+> operations on indirect CSRs. The macros use statement-expressions to handle
+> the multiple instructions required while disabling interrupts.
+>
+>> diff --git a/arch/riscv/include/asm/csr_ind.h b/arch/riscv/include/asm/csr_ind.h
+>> new file mode 100644
+>> index 0000000000000..6fd7d44dc640a
+>> --- /dev/null
+>> +++ b/arch/riscv/include/asm/csr_ind.h
+>> @@ -0,0 +1,44 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (C) 2024 Rivos Inc.
+>> + */
+>> +
+>> +#ifndef _ASM_RISCV_CSR_IND_H
+>> +#define _ASM_RISCV_CSR_IND_H
+>> +
+>> +#include <linux/irqflags.h>
+>> +
+>> +#include <asm/csr.h>
+>> +
+>> +#define csr_ind_read(iregcsr, iselbase, iseloff) ({		\
+>> +	unsigned long __value = 0;				\
+>> +	unsigned long __flags;					\
+> [Severity: Medium]
+> Will these generic variable names (__value, __flags) cause shadowing issues if
+> the caller passes in arguments with the same names?
+>
+> Evaluating macro arguments into unique local variables before entering the
+> IRQ-disabled region would avoid this regression.
+>
+>> +	local_irq_save(__flags);				\
+>> +	csr_write(CSR_ISELECT, (iselbase) + (iseloff));		\
+>> +	__value = csr_read(iregcsr);				\
+>> +	local_irq_restore(__flags);				\
+>> +	__value;						\
+>> +})
+>> +
+>> +#define csr_ind_write(iregcsr, iselbase, iseloff, value) ({	\
+>> +	unsigned long __flags;					\
+>> +	local_irq_save(__flags);				\
+>> +	csr_write(CSR_ISELECT, (iselbase) + (iseloff));		\
+>> +	csr_write(iregcsr, (value));				\
+> [Severity: Medium]
+> Since value is evaluated here after CSR_ISELECT has been programmed, what
+> happens if a caller passes an expression that accesses another indirect CSR,
+> such as a nested csr_ind_read(), as the value argument?
+>
+> It appears the nested call would overwrite CSR_ISELECT, causing the write to
+> silently corrupt the wrong hardware register. Evaluating arguments into local
+> variables before disabling interrupts would prevent this, and also avoid the
+> risk of evaluating expressions with side effects while interrupts are disabled.
+>
+>> +	local_irq_restore(__flags);				\
+>> +})
+>> +
+>> +#define csr_ind_warl(iregcsr, iselbase, iseloff, warl_val) ({	\
+>> +	unsigned long __old_val = 0, __value = 0;		\
+>> +	unsigned long __flags;					\
+> [Severity: Medium]
+> Do these generic local variables risk shadowing caller arguments?
+>
+>> +	local_irq_save(__flags);				\
+>> +	csr_write(CSR_ISELECT, (iselbase) + (iseloff));		\
+>> +	__old_val = csr_read(iregcsr);				\
+>> +	csr_write(iregcsr, (warl_val));				\
+> [Severity: Medium]
+> Is there a risk that evaluating warl_val here could overwrite CSR_ISELECT if
+> the caller provides an expression that performs another indirect CSR access?
+>
+>> +	__value = csr_read(iregcsr);				\
+>> +	csr_write(iregcsr, __old_val);				\
+>> +	local_irq_restore(__flags);				\
+>> +	__value;						\
+>> +})
+>> +
+>> +#endif
 
-[1/1] arm64/hw_breakpoint: reject unaligned watchpoints that would truncate BAS
-      https://git.kernel.org/arm64/c/4cc70f75853b
+Given the callers, I don't think the possibilities raised by Sashiko can 
+actually happen.
+It's a macro. So the new callers should ensure they are invoking it with 
+proper argument.
 
-Cheers,
--- 
-Will
+N/A.
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+
