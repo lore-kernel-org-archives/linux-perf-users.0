@@ -1,132 +1,131 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F6940D593
-	for <linux-perf-users@vger.kernel.org>; Sat, 20 Jun 2026 00:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19024136358
+	for <linux-perf-users@vger.kernel.org>; Sat, 20 Jun 2026 00:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781915499; cv=none; b=kyuVDZhLKeM+VdU5ofDQdFIpmpZLS8LlCEyqfc607FUpMjHOFIJGw5BcJAxn7DF+qCIsjcW3X4GO7c+cPVIdMjf1tLJtRwenaQNGKBcPh83y2T32dJNzXj/XiK7LOSAXVcVsG7bZlV7ny2ciXELtTfBjZoUYJi3JjoCdtuN4FEc=
+	t=1781915754; cv=none; b=D6+IWFMZhAU5QhIVaNaGqJwtfgNAJWFLpaUuGCfZPRDOI1LBe1alRGh8hGJSjnsNAlFwkvmoFRiyTBkfeijR8MmS6UvDqydpnNsjLTHhhZ+YrJ+5Fxq82mrTVVNTJ+TX4xRrUy9jHE5tQoe25oDPfwPS/ZRO31MKV1VQt9WwcHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781915499; c=relaxed/simple;
-	bh=aP9VryteV0sGRUsKxpGorBjNrL5CCCl/ru2DhVAzob8=;
+	s=arc-20240116; t=1781915754; c=relaxed/simple;
+	bh=RlxAjKzRt8XRO4CRmFT2F6yQjuupfM2gHD3+/l35IfM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UUzVoU/7OYQuqPCQR+n5eU5E95Qya56FDGCvmIyZxsvO361XPWQXOt+4Znyaw/LogNxnNZmHR59OB53yUPv+zQKUmhN9BFs7NF+85MpDObGdOVeDYU0XIng2LsXhoEe+NhLCLgrkKa4TkFZvyGtdwqPnG04Rgf3AsM7qKmbVHBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lGCbwe3u; arc=none smtp.client-ip=91.218.175.172
+	 In-Reply-To:Content-Type; b=mrCaJLr6eoNpPopYdKpi/kIcVftNxZmWZK7TLjZP41rzq4yeAT8uDzfVobP5rDlua0Db50tOyJatPFuu5+J4s4HX7p/kq1HFQONQ1hwYFs5LmI7USKHeyW2RFCNL8bH8PVEWmuDbah+83sY0zI4k7aud8N9K19Z9RZ15DA3SZhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lwZsj/nb; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lGCbwe3u"
-Message-ID: <f888c7e9-fd4f-4ebf-baff-e45df3ef68c6@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lwZsj/nb"
+Message-ID: <389a9141-277d-4325-8099-de17eb4e19fa@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781915485;
+	t=1781915751;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=INRG9hgCacGXfMNt5+OlD3xAOOeoBTUlZ1ygCBSn3Qo=;
-	b=lGCbwe3uB7WEz9IIUwSfRnms2Jl5mzPvYnBXo24ItKN/LOf4qvkJy3VtkZHAnXl5K0YUhp
-	nxcP7Z72bTpo28XFBLPPQJbyUbPBjWT0NDdDCMIlMmeJj3rFCa9symVsVPUdBejjErSWAB
-	JdnH394iP5vdzsoLQO89c9CnFk6EeDg=
-Date: Fri, 19 Jun 2026 17:31:12 -0700
+	bh=Erh4jwB4l3hfJMazZbrRVUERfRd67oKz+ZwQVO1+Te8=;
+	b=lwZsj/nbf43DWttCMigRXCPU80SWC4TV7N9n29BmPVqA0F6PjIUMQ1X42rQebg0gGuaric
+	Nz3UxfbTfpQB9It+4+FzdGeydAhCoR9W/3I7MzGDQTXrocxKQ3cLcgl4dcRXys6jf5HMiQ
+	zF28q35P4TkYE3tnHDKmDWy7RqQk+No=
+Date: Fri, 19 Jun 2026 17:35:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 11/21] RISC-V: perf: Modify the counter discovery
- mechanism
+Subject: Re: [PATCH v6 16/21] RISC-V: perf: Add legacy event encodings via
+ sysfs
 To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
- conor+dt@kernel.org, robh@kernel.org
-References: <20260608-counter_delegation-v6-11-285b72ed65a9@meta.com>
- <20260609061751.59CD71F00898@smtp.kernel.org>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, robh@kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20260608-counter_delegation-v6-16-285b72ed65a9@meta.com>
+ <20260609062110.1D0C61F00893@smtp.kernel.org>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20260609061751.59CD71F00898@smtp.kernel.org>
+In-Reply-To: <20260609062110.1D0C61F00893@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
 
-On 6/8/26 11:17 PM, sashiko-bot@kernel.org wrote:
+On 6/8/26 11:21 PM, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Negative error codes returned by SBI are improperly cast to an unsigned integer, and systems with >64 counters are incorrectly aborted instead of clamped.
+> - [Medium] The globally scoped pmu_ctr_list array is leaked if PMU counter discovery fails, compounded by a flawed error code cast.
 > --
 >
-> commit ea0f7376968d4f5943d9d279886b0b59e6dfd41c
+> commit 7d64e724e6eff197f10e62cdd709e07f0a5c9a7d
 > Author: Atish Patra <atishp@rivosinc.com>
-> Subject: RISC-V: perf: Modify the counter discovery mechanism
 >
-> This commit modifies the PMU counter discovery mechanism to use a hybrid
-> scheme. It utilizes counter delegation for hardware PMU counters while falling
-> back to the SBI PMU for firmware counters, and updates logging appropriately.
+> RISC-V: perf: Add legacy event encodings via sysfs
+>
+> Define sysfs details for the legacy events so that any tool can
+> parse these to understand the minimum set of legacy events
+> supported by the platform. The sysfs entry will describe both event
+> encoding and corresponding counter map so that an perf event can be
+> programmed accordingly.
 >
 >> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
->> index 7f21c16003f04..57ab15beab3e1 100644
+>> index 4b4f151a0744d..00b84b28117a8 100644
 >> --- a/drivers/perf/riscv_pmu_sbi.c
 >> +++ b/drivers/perf/riscv_pmu_sbi.c
+>> @@ -130,7 +130,20 @@ static struct attribute_group riscv_cdeleg_pmu_format_group = {
+>>   	.attrs = riscv_cdeleg_pmu_formats_attr,
+>>   };
 > [ ... ]
 >
->> @@ -1159,16 +1180,42 @@ static void rvpmu_ctr_stop(struct perf_event *event, unsigned long flag)
->>   	/* TODO: Counter delegation implementation */
->>   }
->>   
->> -static int rvpmu_find_num_ctrs(void)
->> +static int rvpmu_find_ctrs(void)
->>   {
->> -	return rvpmu_sbi_find_num_ctrs();
->> -	/* TODO: Counter delegation implementation */
->> -}
->> +	u32 num_sbi_counters = 0, num_deleg_counters = 0;
->> +	u32 num_hw_ctr = 0, num_fw_ctr = 0, num_ctr = 0;
->> +	/*
->> +	 * We don't know how many firmware counters are available. Just allocate
->> +	 * for maximum counters the driver can support. The default is 64 anyways.
->> +	 */
->> +	pmu_ctr_list = kcalloc(RISCV_MAX_COUNTERS, sizeof(*pmu_ctr_list),
->> +			       GFP_KERNEL);
->> +	if (!pmu_ctr_list)
->> +		return -ENOMEM;
->>   
->> -static int rvpmu_get_ctrinfo(int nctr, unsigned long *mask)
->> -{
->> -	return rvpmu_sbi_get_ctrinfo(nctr, mask);
->> -	/* TODO: Counter delegation implementation */
->> +	if (riscv_pmu_cdeleg_available_boot())
->> +		num_deleg_counters = rvpmu_deleg_find_ctrs();
->> +
->> +	/* This is required for firmware counters even if the above is true */
->> +	if (riscv_pmu_sbi_available_boot())
->> +		num_sbi_counters = rvpmu_sbi_find_num_ctrs();
->> +
->> +	if (num_sbi_counters > RISCV_MAX_COUNTERS || num_deleg_counters > RISCV_MAX_COUNTERS)
->> +		return -ENOSPC;
-> [Severity: High]
-> Does this code inadvertently convert negative error codes from
-> rvpmu_sbi_find_num_ctrs() into large unsigned values?
+> [Severity: Medium]
+> Does this code leak the pmu_ctr_list array if PMU counter discovery fails?
 >
-> Since num_sbi_counters is defined as a u32, if rvpmu_sbi_find_num_ctrs()
-> returns an error code like -EOPNOTSUPP, it will wrap to a large positive
-> integer, instantly satisfying the > RISCV_MAX_COUNTERS condition. This seems
-> to mask the original error code.
+> In rvpmu_find_ctrs(), pmu_ctr_list is allocated via kcalloc(), but the function
+> bails out without freeing it if num_sbi_counters or num_deleg_counters
+> exceeds RISCV_MAX_COUNTERS:
 >
-> If the > RISCV_MAX_COUNTERS condition is met, the function returns -ENOSPC
-> early. Can this leak the pmu_ctr_list allocated via kcalloc() just above,
-> since there is no free before the return?
-
-Valid. Fixed in v7.
-
-> Additionally, could this introduce a regression for platforms legitimately
-> exposing more than 64 counters? Previously, the driver appeared to safely
-> clamp the usable count to 64 and continue, whereas this new logic seems to
-> abort the driver probe entirely.
-
-That's the current max counter supported by the driver. So it is fine to 
-abort
-
-until such a case arises to avoid confusion.
-
-> [ ... ]
+> drivers/perf/riscv_pmu_sbi.c:rvpmu_find_ctrs() {
+> ...
+> 	pmu_ctr_list = kcalloc(RISCV_MAX_COUNTERS, sizeof(*pmu_ctr_list),
+> 			       GFP_KERNEL);
+> 	if (!pmu_ctr_list)
+> 		return -ENOMEM;
 >
+> 	if (riscv_pmu_cdeleg_available_boot())
+> 		num_deleg_counters = rvpmu_deleg_find_ctrs();
+>
+> 	/* This is required for firmware counters even if the above is true */
+> 	if (riscv_pmu_sbi_available_boot())
+> 		num_sbi_counters = rvpmu_sbi_find_num_ctrs();
+>
+> 	if (num_sbi_counters > RISCV_MAX_COUNTERS || num_deleg_counters > RISCV_MAX_COUNTERS)
+> 		return -ENOSPC;
+> ...
+> }
+>
+> Also, could num_sbi_counters inadvertently capture negative error codes?
+>
+> rvpmu_sbi_find_num_ctrs() returns an int which can be a negative error
+> code. Storing it in the u32 num_sbi_counters implicitly casts
+> it to a very large positive value.
+>
+> This triggers the RISCV_MAX_COUNTERS check and causes the function to abort
+> with -ENOSPC, losing the original error.
+>
+> The caller rvpmu_device_probe() then fails to clean up the leaked globally
+> scoped pmu_ctr_list pointer during its error handling:
+>
+> drivers/perf/riscv_pmu_sbi.c:rvpmu_device_probe() {
+> ...
+> 	num_counters = rvpmu_find_ctrs();
+> 	if (num_counters < 0) {
+> 		pr_err("SBI PMU extension doesn't provide any counters\n");
+> 		goto out_free;
+> 	}
+> ...
+> out_free:
+> 	kfree(pmu);
+> 	return ret;
+> }
+
+valid points but same as issue raised in PATCH11. Fixed in v7.
+
+
