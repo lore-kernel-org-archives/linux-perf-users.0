@@ -1,154 +1,126 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E792E3451CE
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jun 2026 23:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3B940D565
+	for <linux-perf-users@vger.kernel.org>; Sat, 20 Jun 2026 00:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781912970; cv=none; b=MLiNTMLXQcoqs8NQ5qFJTdnt1MG9mYuSwUEWPLzIUSOhDWoeoDJAxigCg+aomS/xOTcAVhdABD3LtnETrXsPU1AQg3Xbz6iySs6Nyaf2+bYwWYPCeA2Bbxb4INbjOF99tMm3ai/VF9fPfzPvG/tBSO/glmtVC3qz8ihWemrDy9g=
+	t=1781913891; cv=none; b=rhKYhVOM0WNF6nmR0n+r0SF9RdA1fWyHFaxU0PZzTwgeI84NGkHJrQvQdSGHLrUPCKQ8SavJhm2wAvR5R7tmL0HpNVL1jYPtnXIK12pVT9dDNP7OVjH2sLqfSnQ6EsI0bNzXnd5X+LDMM/Kl+pg8zYDd3K7/ejujF5q1iMCgZPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781912970; c=relaxed/simple;
-	bh=iAaQXQfyyez7M9huvHEEK5f4DTZlorcC+Cw0pos3tdI=;
+	s=arc-20240116; t=1781913891; c=relaxed/simple;
+	bh=1zQ6MR05KiWq832d0x4+mmjporHs56IkboccBh+p4Uo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=frLGLI+4yyFiwTkl3c6l6WDG1XjqfYfnhhm8/ybYwk/rKpNGaAPMCZnhQKphvzi49PvmdurAy+HfiL8DBzvtHM+Zw7GYPsz1GcT1qrU4KGSkq/Y/JL0MxV+nSAdMM13xOmUKkWEbyqot4Esm5o3f4Gbt2uNQsMQdtz0Psd4/5Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qcWl5Rk5; arc=none smtp.client-ip=91.218.175.188
+	 In-Reply-To:Content-Type; b=Tzl4CVO4c/rbKkIHmPs/3xqb64jOF/1ySNfq6pdZRqgcUbr5p/g6gAElqr/beu7R3iJwpQT8ZILyBc3qksmKggvh1CYPL3VpIWUwc7g1t/JgRgeQJY26icV1qtHS5aHd7apYsHRlqZE/9Qaz8G3mQdvEyfo0ZCVQG44ju8HvRK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=srM9yUeh; arc=none smtp.client-ip=91.218.175.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qcWl5Rk5"
-Message-ID: <d997993c-5383-414c-bf07-9316ea956404@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="srM9yUeh"
+Message-ID: <94b39d53-db53-4201-8367-c2745c9530ed@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781912967;
+	t=1781913878;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lBI6Yu5z162t9+MmhDRgf4ObBGTmChunkGVdzdlyXuw=;
-	b=qcWl5Rk5hEd52czj3AJO03YxYK7AgrwV/IcN7vZkEFltt2pRfU56JXe8nbMcM/SCP48KVA
-	o9qVJoXyCO/nlGa+lXZRmTyjUHx79tgHOaDohNTL6qnwASZeyDquEAp5RrR37KXzepJFRV
-	vgCTjvR2eGLFe8caXuH9mDElnIjILoI=
-Date: Fri, 19 Jun 2026 16:49:23 -0700
+	bh=t1YP/5vAvufKhS6Q/igOIHH4GN3rD2SRijEw2Od++PQ=;
+	b=srM9yUehDRLO+E2biHB4Hj0mbJ05bIxm5j7QpkxLYXpqdZ/DPq/g4MrbnEEM2K3ZY977XK
+	FCVHzv06eEJEan9aEO6kHJuH/qOFxyJWhkjLM9XakzBaS/JWWecRyN2/guqz2QFYe4itgY
+	COuu8A6BGf5w41wcW0KDL3lGpQoc/Jo=
+Date: Fri, 19 Jun 2026 17:04:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v6 09/21] dt-bindings: riscv: add Counter delegation ISA
- extensions description
+Subject: Re: [PATCH v6 21/21] TEST(do-not-upstream): fake qemu vendor JSON +
+ mapfile entry for CounterIDMask path
 To: sashiko-reviews@lists.linux.dev
-Cc: conor+dt@kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org,
- devicetree@vger.kernel.org
-References: <20260608-counter_delegation-v6-9-285b72ed65a9@meta.com>
- <20260609061239.160901F00893@smtp.kernel.org>
+Cc: linux-perf-users@vger.kernel.org, robh@kernel.org,
+ devicetree@vger.kernel.org, conor+dt@kernel.org
+References: <20260608-counter_delegation-v6-21-285b72ed65a9@meta.com>
+ <20260609062023.0D53F1F00893@smtp.kernel.org>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20260609061239.160901F00893@smtp.kernel.org>
+In-Reply-To: <20260609062023.0D53F1F00893@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
 
-On 6/8/26 11:12 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [Medium] Incorrect dependency for smcdeleg: depends on sscsrind instead of smcsrind.
-> - [Medium] The ssccfg extension is over-constrained by strictly requiring smcntrpmf.
-> - [Low] Contradictory description for the smcdeleg extension.
+On 6/8/26 11:20 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+>
+> New issues:
+> - [Medium] This patch is explicitly marked 'TEST(do-not-upstream)' and adds fake testing events, which should not be merged into the mainline kernel.
+>
+> Pre-existing issues:
+> - [High] Unconditional NULL pointer dereference in `get_cpuid`.
 > --
 >
-> commit 53fb261803de68f9caaa685d63588c9cac6c0f5c
-> Author: Atish Patra <atishp@rivosinc.com>
+> commit d0ac889c30ab39821cba995143de6c24abe2efcc
+> Author: Atish Patra <atishp@meta.com>
 >
-> dt-bindings: riscv: add Counter delegation ISA extensions description
+> TEST(do-not-upstream): fake qemu vendor JSON + mapfile entry for CounterIDMask path
 >
-> This commit adds device tree binding descriptions for the Smcdeleg and
-> Ssccfg RISC-V ISA extensions. It also specifies the conditional dependencies
-> required for these extensions to pass schema validation.
+> This patch adds fake QEMU vendor JSON events and a corresponding mapfile entry
+> for the CounterIDMask path to test PMU masking.
 >
->> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
->> index ece3edccee42c..2845e8e2999a7 100644
->> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
->> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
->> @@ -181,6 +181,13 @@ properties:
->>               changes to interrupts as frozen at commit ccbddab ("Merge pull
->>               request #42 from riscv/jhauser-2023-RC4") of riscv-aia.
->>   
->> +        - const: smcdeleg
->> +          description: |
->> +            The standard Smcdeleg supervisor-level extension for the machine mode
-> [Severity: Low]
-> This isn't a bug, but should this say machine-level instead of
-> supervisor-level? Since it has an Sm prefix and is meant for machine mode,
-> calling it a supervisor-level extension might be a copy-paste typo.
+>> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+>> index 87cfb0e0849fc..3533a8c0253f7 100644
+>> --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+>> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+>> @@ -24,3 +24,4 @@
+>>   0x602-0x3-0x0,v1,openhwgroup/cva6,core
+>>   0x67e-0x80000000db0000[89]0-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
+>>   0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
+>> +0x0-0x0-0x0,v1,qemu/virt,core
+> [Severity: Medium]
+> Since this patch is explicitly marked "TEST(do-not-upstream)" and adds fake
+> PMU events strictly for testing, should it be merged into the mainline
+> kernel?
+>
+> Merging this will populate the perf tool's PMU event tables with non-existent
+> hardware events.
 
-In this case, it is not true. Quoting the RISC-V spec.
-For a RISC-V hardware platform, Smcdeleg and Ssccfg must always be 
-implemented in tandem.
+N/A. this patch is just an example and marked explicitly not for merging.
 
-https://docs.riscv.org/reference/isa/v20260120/priv/smcdeleg.html
 
->> +            to delegate the hpmcounters to supervisor mode so that they are
->> +            directly accessible in the supervisor mode as ratified in the
->> +            20240213 version of the privileged ISA specification.
+>> diff --git a/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json b/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json
+>> new file mode 100644
+>> index 0000000000000..294c4ed645f67
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json
+>> @@ -0,0 +1,26 @@
+>> +[
+>> +  {
+>> +    "EventName": "fake-json-any",
 > [ ... ]
 >
->> @@ -1135,6 +1150,36 @@ properties:
->>               allOf:
->>                 - const: zilsd
->>                 - const: zca
->> +      # Smcdeleg depends on Sscsrind, Zihpm, Zicntr
->> +      - if:
->> +          contains:
->> +            const: smcdeleg
->> +        then:
->> +          allOf:
->> +            - contains:
->> +                const: sscsrind
-> [Severity: Medium]
-> Does smcdeleg actually depend on sscsrind here?
+> While reviewing this, I also noticed a pre-existing issue in
+> tools/perf/arch/riscv/util/header.c:
 >
-> Since smcdeleg is a machine-mode extension that uses M-mode indirect CSRs to
-> delegate counters, shouldn't it depend on the smcsrind extension instead of
-> sscsrind? If a valid hardware configuration implements smcsrind and smcdeleg
-> without sscsrind, would this schema incorrectly reject it?
-
-Yes. Answered above.
-
-
->> +            - contains:
->> +                const: zihpm
->> +            - contains:
->> +                const: zicntr
->> +      # Ssccfg depends on Smcdeleg, Sscsrind, Zihpm, Zicntr, Sscofpmf, Smcntrpmf
->> +      - if:
->> +          contains:
->> +            const: ssccfg
->> +        then:
->> +          allOf:
->> +            - contains:
->> +                const: smcdeleg
->> +            - contains:
->> +                const: sscsrind
->> +            - contains:
->> +                const: sscofpmf
->> +            - contains:
->> +                const: smcntrpmf
-> [Severity: Medium]
-> Is smcntrpmf a strict requirement for ssccfg?
+> tools/perf/arch/riscv/util/header.c:get_cpuid() {
+>      ...
+> 	char *cpuid = _get_cpuid();
+> 	int ret = 0;
 >
-> The ssccfg extension provides supervisor-mode access to delegated counters,
-> but the kernel implementation seems to only conditionally expose
-> cyclecfg/instretcfg CSRs if smcntrpmf is present. If ssccfg can exist
-> independently, will requiring smcntrpmf in this binding incorrectly fail
-> validation for valid hardware that omits it?
+> 	if (sz < strlen(cpuid)) {
+> 		ret = -EINVAL;
+> 		goto free;
+> 	}
+>      ...
+> }
+>
+> [Severity: High]
+> This is a pre-existing issue, but can get_cpuid() cause a segmentation fault
+> here? If _get_cpuid() returns NULL (for example, if /proc/cpuinfo is missing
+> or lacks specific fields in a container or QEMU without proper emulation), it
+> appears the unconditional call to strlen(cpuid) will dereference that NULL
+> pointer.
 
-While it is ideal to have that, we can relax that dependency.
+Yes. I will send a separate patch series for these fixes.
 
-Smcntrpmf is strictly dependant on Smcdeleg/Ssccfg extensions 
-implementation but not the other way around.
 
->> +            - contains:
->> +                const: zihpm
->> +            - contains:
->> +                const: zicntr
