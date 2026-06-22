@@ -1,199 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6416C3ACEF2
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 12:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E0F3B6360
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 13:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782132812; cv=none; b=o9L2jXG03c85RWyfn1Rf93WcUioIvy/JZ1NGAgdotpwXxZxn+4OgmzRbpVZbwSKfzWCjZY+V6xRqXK+lERg3yA2OV6v0gE/9uKQlYAottlTKRUKQLuRsPp+QKy3ID0WXxUbZXYD2810omOOCYU8geh9xF2MpT5W6iGzACOJQJXw=
+	t=1782136224; cv=none; b=iseP1ARDAK7BHI8xntWo3QgB1QFZa1QRekxVSnlGDZbxqunzl5zMARjZZ/r4mwh5O9P8lvRSLW6AAF9A3V1CHNHtPtImdnR+20Hr/IZ3RfbJ9QdGF0k5WBbtWVbjsdbivWvulgEtTBNE+NHRCFVFCbx4jHm8Wba6feFqJg2O2OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782132812; c=relaxed/simple;
-	bh=1gjbYUKCLXrCMjxiZzQwjuKTjYfrNWU9G0Y0Vu7JiMc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lm0EujZRCQdLExsDJHYtrEabxO5UntSar85BnChqM9G4OftFa7V5wk0ywC73G7AZP9RZNLN9VdyDNHoe2nKxwB0sTkhnnRvxIuUPJVk81HSmVv/4/6ugSe0imvCnrTSb4gUgPEf2OBoKxr9uyJgLpk6VM4TBCavAmhnPc6UldtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJ2jMYMh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782136224; c=relaxed/simple;
+	bh=8Gu2tJYFoyb5VwElQkcHWnUWNuKHdvLf5o6HzO83OjM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IC+lR1E5EUSKhqx/Yv8Yink11Hf7U2iYxe3WlrwZaIZQ1gb2DAdx1LlgtsLApm1XpJy8F2kTPuJptNg4FcBJO0qFXFTs6W8r7OmpSTw9CrEPYeGMh81XH0PTa4+8vlZk8L7HFMTjU8wH/ICXlFwIe6E5G9Z36BTRdIXNRfGPM2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LXONoZqw; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJ2jMYMh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9361F000E9;
-	Mon, 22 Jun 2026 12:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782132811;
-	bh=WTrNCLD32S/hgjs4xCzo8jNs+w44MBN7WuhlUxk7y5Y=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UJ2jMYMhftj0sZ0zE31hK9xNLrfnSu+99+XdDllzw+61NJWJeA1qd4wV6PA6ZmZ0m
-	 jiehK4Wvx4wCK/aTY8gcSkt+1g/ONSr5hDKwR3OzTG9MBdRlo5VwCzHFyBbHvouWTF
-	 RSK+LwXDGOX7m2ObKzg7kx4u0T+mvcQ/6qTekS2HjQfQNjJlTQyFToov2ByyDWeyP8
-	 UJScZLEKl9Iu88CxmjwXIkR02jDkCPwfzNRQLLy+qsPUNAL1hUCNLifNSCB1fFJQuZ
-	 vlcYtC9yMuP3LUfBPxb/krmHuHrsrblAGJIyKCA2MiHCh5AFqxpmZrVhLeZY47oTRA
-	 g6XVnZjUOkjiQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC][PATCH] perf: Fix perf_addr_filters_afjust()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Peter Zijlstra" <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260622123245.GS48970@noisy.programming.kicks-ass.net>
-References: <20260622123245.GS48970@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 22 Jun 2026 12:53:30 +0000
-Message-Id: <20260622125330.EB9361F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXONoZqw"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-8453a67659fso2373070b3a.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 06:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782136221; x=1782741021; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YsDqfnUc8Eb+3zE5VclFey58OVxE0obrmPbjDO3qhv8=;
+        b=LXONoZqwb7cOj2OJ1Ka2srmuy8nUe9kRixfTbAMLzsgMpwr6kXSBBTOx/E1lEOhcZ8
+         GaM7xWe4HFV1TeR1DAufLz2wsrJwGjHYj+RzmFLwbYoWi+zHc8qkDg/449CvN7GcDYyQ
+         8H8YahA6xApxpQ1O6Ed5KIxzvgYCIDHR/nR3JGoC5gxhoAy59LsBBLLdU7PdiyB6gm8z
+         HKxs36tJrwCOGHxRYVcTxFTY7f13hgDBI4yqDaDLZhMPyBVjnH2VetiUKQ8gKEwsRCaV
+         BUwAA5Te3TUcuatUjrRoDjV0f9ZOMABzwDiarcPfkBJTOW8UK9YadcpS2APUoi/jnHnn
+         yhDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782136221; x=1782741021;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YsDqfnUc8Eb+3zE5VclFey58OVxE0obrmPbjDO3qhv8=;
+        b=Z60r9YKHImvYw9vXS8k/YJuQ5B5G0n4LpuTaDMoNbKyGEYfiwUGjmr1bYjg2BbCN4E
+         cHj96qlyOR9ImJDJhgGvoYkXAyl4vNXm/UvEqeLfrjYpdHplTgR0guhMUOvlYlOtLO8r
+         sRYCzzUw2FfDXOKrxkAMuQOVgt5H8KwUhoU0nLw3SjPlbiArBLfjJMk/0b1PQg1H1sjc
+         gowyHkIIN6SOecc5vxN9QxU9X8HepRWozB7tQgNBT3281I5KjHlrxARHIXEUCSS5DinP
+         i6qOxT85rWX8bwSEYimxdLQGI8x4X0loXYiZ6GiUs0qJbKA2ASlq+F+u0qXXY8ZjLyXQ
+         mpnQ==
+X-Gm-Message-State: AOJu0Yw+1dRz/2Q8fQnJuXCyd9ql1TiOZDREdlpjgmWVSy5g7VqXHFsc
+	Z5RLb9s17iliE84edhGR7SGH3HXfWP49Px4QrahMvzcEla5NIja+UsdB
+X-Gm-Gg: AfdE7ckzhZMeF2qjIsl7+k+P8Y5w2mlmsv9p/5oJkF8YcYLLMqttGWLigIEf/TtwWJd
+	xi4rQpwEVJba74WbpbAZNTtu1trjc2yr9jtUklX/jFrD8BgceAQFcPmvsC2hzAhIarnEkdyGp1z
+	xYYEIvjcGj9eeYsqHaNmMPuR/ZRrrq07VnzWI98bHAZBDeXB7E4wrzsQj1RSTCR4XcLvQMsR9nN
+	LEAh0x2ZLXfpIkgPVQxIyvfYDN78tT5iNNS8gSWgGjXMBZNFPoldXVQMF+f7kv1ec01NCaTqMGC
+	h61glErGAeNp8/awWWmHEE/ZVmuqJhSG1z/lcCnRdXBjZ3PU7ayPnO1nMhxJnRJo1zI+S4S+6lf
+	HkA4ZXSWtbK1R0WK/yGuP0FjszFCyXhg/Laxu2ZvgwsR6cHWJnsd8AZ3rgYdTypd414BIWHU4cl
+	dJsxi4F3H5iLC1PTSjsYZ74jjZTg==
+X-Received: by 2002:a05:6a00:2d82:b0:842:2280:5386 with SMTP id d2e1a72fcca58-845507bcd5amr15524294b3a.16.1782136221256;
+        Mon, 22 Jun 2026 06:50:21 -0700 (PDT)
+Received: from localhost.localdomain ([240f:34:212d:1:47f:2522:acac:f810])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84564ea146asm7606177b3a.43.2026.06.22.06.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2026 06:50:19 -0700 (PDT)
+From: Akinobu Mita <akinobu.mita@gmail.com>
+To: damon@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org,
+	sj@kernel.org,
+	ravis.opensrc@gmail.com,
+	akinobu.mita@gmail.com
+Subject: [RFC PATCH 0/2] damo: support perf event configuration
+Date: Mon, 22 Jun 2026 22:49:31 +0900
+Message-ID: <20260622134933.35773-1-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+This patch set aims to make it easier to specify the perf event settings
+proposed for DAMON by Ravi's hardware-sampled access reports patch set [1]
+from the damo tool.
 
-New issues:
-- [High] Incomplete RCU conversion for `child_list`: missing `list_add_tail=
-_rcu` in `inherit_event` leads to a data race and potential crashes for con=
-current RCU readers.
-- [High] The parent event is completely skipped during address filter adjus=
-tments, breaking hardware address filtering for the primary task.
+It consists of patches for the perf tool and the damo tool.
 
-Pre-existing issues:
-- [Critical] The `event->addr_filter_ranges` array is freed synchronously, =
-leading to a Use-After-Free when concurrent RCU readers access it during th=
-e RCU grace period.
---
+[1] https://lore.kernel.org/damon/20260529165640.820-1-ravis.opensrc@gmail.com/
 
-commit a5419e8444b35216c0ba361188f91ecd86875fd1
-Author: Peter Zijlstra <peterz@infradead.org>
+* perf
 
-perf: Fix perf_addr_filters_afjust()
+Akinobu Mita (1):
+  perf python: Add access to various members of evsel
 
-This patch adjusts the locking order for perf_event_addr_filters_apply()
-and converts child_list to be RCU-protected to avoid taking child_mutex
-under mmap_lock. It updates perf_addr_filters_adjust() to iterate through
-child events under RCU.
+ tools/perf/util/python.c | 50 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 00e6dcb931d96..af3c123010407 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
+* damo
 
-[ ... ]
+Akinobu Mita (1):
+  damo: add --perf_event option
 
-> @@ -9902,35 +9903,64 @@ static bool perf_addr_filter_vma_adjust(struct pe=
-rf_addr_filter *filter,
->  	return true;
->  }
-> =20
-> -static void __perf_addr_filters_adjust(struct perf_event *event, void *d=
-ata)
-> +static int perf_child_addr_filters_adjust(struct perf_event *event,
-> +					  struct vm_area_struct *vma)
->  {
->  	struct perf_addr_filters_head *ifh =3D perf_event_addr_filters(event);
-> -	struct vm_area_struct *vma =3D data;
-> -	struct perf_addr_filter *filter;
->  	unsigned int restart =3D 0, count =3D 0;
-> -	unsigned long flags;
-> -
-> -	if (!has_addr_filter(event))
-> -		return;
-> +	struct perf_addr_filter *filter;
-> =20
-> -	if (!vma->vm_file)
-> -		return;
-> +	guard(raw_spinlock)(&ifh->lock);
-> =20
-> -	raw_spin_lock_irqsave(&ifh->lock, flags);
->  	list_for_each_entry(filter, &ifh->list, entry) {
->  		if (perf_addr_filter_vma_adjust(filter, vma,
->  						&event->addr_filter_ranges[count]))
+ src/_damo_fmt_str.py |   5 ++
+ src/_damon.py        | 106 +++++++++++++++++++++++++++++++++-
+ src/_damon_args.py   |  79 +++++++++++++++++++++++--
+ src/_damon_sysfs.py  | 133 ++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 314 insertions(+), 9 deletions(-)
 
-[Severity: Critical]
-This is a pre-existing issue, but could a concurrent RCU reader access an
-already freed addr_filter_ranges array here?
+-- 
+2.43.0
 
-When an event's refcount drops to zero, __free_event() frees the array
-synchronously:
-
-kernel/events/core.c:__free_event() {
-    ...
-    kfree(event->addr_filter_ranges);
-    ...
-}
-
-If a concurrent mmap() traverses the child_list under RCU, could it find the
-dying event during the grace period and write to this freed memory?
-
->  			restart++;
-> =20
->  		count++;
-> +
->  	}
-> =20
->  	if (restart)
->  		event->addr_filters_gen++;
-> -	raw_spin_unlock_irqrestore(&ifh->lock, flags);
-> =20
-> -	if (restart)
-> -		perf_event_stop(event, 1);
-> +	return restart;
-> +}
-> +
-> +static void __perf_addr_filters_adjust(struct perf_event *event, void *d=
-ata)
-> +{
-> +	struct perf_event *child, *parent =3D event->parent ?: event;
-> +	struct vm_area_struct *vma =3D data;
-> +
-> +	if (!has_addr_filter(event))
-> +		return;
-> +
-> +	if (!vma->vm_file)
-> +		return;
-> +
-> +	list_for_each_entry_rcu(child, &parent->child_list, child_list) {
-
-[Severity: High]
-Are the parent event's address filters skipped during adjustments?
-
-Because list_for_each_entry_rcu() only iterates over the list nodes, the
-parent event hosting the child_list head won't be included in the iteration.
-
-If a standalone process creates an event and mmaps it, its child_list is
-empty. Will this cause the parent's filter ranges to remain unadjusted,
-breaking hardware address filtering for the primary task?
-
-
-[Severity: High]
-Since child_list is now RCU-protected, should the addition of child events
-use RCU primitives to prevent data races?
-
-In inherit_event(), child events are still added using the non-RCU
-list_add_tail():
-
-kernel/events/core.c:inherit_event() {
-    ...
-    /*
-     * Link this into the parent event's child list
-     */
-    list_add_tail(&child_event->child_list, &parent_event->child_list);
-    mutex_unlock(&parent_event->child_mutex);
-    ...
-}
-
-Because list_add_tail() lacks the memory release barrier provided by
-list_add_tail_rcu(), could concurrent lockless RCU readers observe the newly
-linked list node before its initialization is visible to the reading CPU?
-
-> +		struct perf_event_context *ctx;
-> +		struct task_struct *task;
-> +		int restart =3D 0;
-> +
-> +again:
-> +		ctx =3D READ_ONCE(child->ctx);
-> +		scoped_guard (raw_spinlock_irqsave, &ctx->lock) {
-> +			if (child->ctx !=3D ctx)
-> +				goto again;
-> +
-> +			task =3D ctx->task;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260622123245.GS48=
-970@noisy.programming.kicks-ass.net?part=3D1
