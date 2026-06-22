@@ -1,98 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12EB377ED7;
-	Mon, 22 Jun 2026 10:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561D62BE02A;
+	Mon, 22 Jun 2026 10:53:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782125420; cv=none; b=VRCoB1XfyZ5Fkl4tPSbIdSIjlsgjI1nIDh6WbrBzfhnUen+G4ArZFxuPR1P5bjl8Z98rZM8QYOK44I8xxvv7q8DPIsI7TN+q2owuIS6v4IdUN6IoEtxeyZ2oA3Ha8IXi0i7NAZxBrj4RPteTkdpJuv0OrWYD+cV+HHmBKEv6xHc=
+	t=1782125627; cv=none; b=Wd7MzIODYl0eM3v5Ci/f9b6AFIMMqXUR8uApiS2+rLzELZTHyt9lxH0KlDJvbLhtd4avYivbpM/5Tb5EK9+YUT+x5HlWP5joIT3yiUbE+ltH/FUgdX66gtIr7ctg653iQYhgJ6yZKXbatLnv6lCs0pqN8BpNhophmhXsEeCLJVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782125420; c=relaxed/simple;
-	bh=H8X06Phiim+aCjKErJmP0Uhgj7HAnHtKvFPNYP9ebLM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=aUmQW7zNs/nBIOdPJ/ejzturttjutwI6pkpkEh1QEQ4OywEwamRwEYGCM55zs4GzSaayBr3zm1Ecfy907ljVrBhvKCrOlMQY08Bfg60PHy2Ktn+wcCZbB1pvXugz0LjH/SrOaKiPcutiF8Kbll6Dp2eebTe5ToVAHargaVbUbUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLhvxVdJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782125627; c=relaxed/simple;
+	bh=cUIRBx1eWFVlX6QDKNebm2yGk1UXdcJeAaY+Re8zrJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGOlHLTySZdxOQRyesXiQ0ky78/QmhyJZO1ag3pqadwl6vYHOELOnqTU3jJKrR4v16Nvetpb7MyONCgdYhOJuDI1toKAhGXVqxqTwR77kip/w7wUo9wy8mTjTqUa8jilTMsB4MX8Ce8Mms31+tfUlhfqTVT4cmLpg0DdzVDpx+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iyp1l7it; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLhvxVdJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5244C1F000E9;
-	Mon, 22 Jun 2026 10:50:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyp1l7it"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 479E71F000E9;
+	Mon, 22 Jun 2026 10:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782125419;
-	bh=HQJiszT1tHQGIQuQnntE3/aHyY+hEliajFsrxSTAP/o=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mLhvxVdJzz6QliRuAtHLS2fjLa8CaPdF+iF12xuITPyaLbQwUDKjpm0C54IGz72w6
-	 NoCTNOMoeWM2ZD2N5Zlh+83zBhKO7K/y56n5HRQM/vMWTSeqE787sRhzs809zdn0f4
-	 WieNUkrE5mxB4/gtt+eC7ILXz9OpjG/ihdqbjhqmvd1mP/WQUgUmsGXxoK4m6RghsT
-	 f4bvuVvcs7pB3Mqv85TUL6ys/lW1/T4/+501E//keUHB9uDUkqu+Tm/ca6ID23WN2v
-	 u7NEXp0juYGeNp7mrbLY7W16UDeAv7S7cwEaO5H1mAg+T1lqHgJO1716AFn+vg3Q6A
-	 lsWr9tM8phMiQ==
-From: sashiko-bot@kernel.org
+	s=k20260515; t=1782125626;
+	bh=7oh2pArXlZ7RI0k84khGxLSedN+uhzyD/9U5BqE5BLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=iyp1l7ittnJ5NbVj+npvXrpKugdG0+lbeZUA/i7INu16PmxwaY5LAiHwJs5AnOvob
+	 xYy+8LKwAg91dPd4qzugia/uSTUmBPpZMYprfOvNzDjpXcrS99qS+SR1g5lIO0ZgVA
+	 HMdAXcU/k4xbaF4LLQktBKn1+GqcW+PO/gnQ5jN3MOuKPXfJK4zPf2eiE4JyNm5kHu
+	 txjCyGefoWWzLh/O0seeJaP2v3LbHSObAuZ2hwtaRvxOpsLj2mdibCR1XVV5VBveSo
+	 LEEkWqbW3dH0Bl29ky17InKUOgRI9Ty2J0vstMQdJynw33ziRvBHAR9Z6j27A02Lyq
+	 LSTNUSeMRA65g==
+Date: Mon, 22 Jun 2026 11:53:40 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Alan Maguire <alan.maguire@oracle.com>
+Cc: peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
 Subject: Re: [PATCH perf] perf: Fix btf_vlen() signedness errors
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alan Maguire" <alan.maguire@oracle.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260622103418.579115-1-alan.maguire@oracle.com>
+Message-ID: <ffdbf003-5f08-4db8-b633-7ed053a738f1@sirena.org.uk>
 References: <20260622103418.579115-1-alan.maguire@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 22 Jun 2026 10:50:18 +0000
-Message-Id: <20260622105019.5244C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4VvRBQcMeiGWmdwc"
+Content-Disposition: inline
+In-Reply-To: <20260622103418.579115-1-alan.maguire@oracle.com>
+X-Cookie: Now I am depressed ...
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [Medium] Silent truncation of BTF_INFO_VLEN in libbpf's btf_vlen()
---
+--4VvRBQcMeiGWmdwc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-commit c28608c8a13cb7af8bf42f5aaadf102bb452fc40
-Author: Alan Maguire <alan.maguire@oracle.com>
+On Mon, Jun 22, 2026 at 11:34:18AM +0100, Alan Maguire wrote:
+> Commit f7a6b9eaff3e6 ("bpf: Extend BTF UAPI vlen, kinds to use unused bit=
+s")
+>=20
+> extended the return value for btf_vlen() to __u32, triggering
+> errors for cases where an int was used to store return value.
+> Fix these cases for perf as was done for other libbpf consumers.
 
-perf: Fix btf_vlen() signedness errors
+I already sent:
 
-This commit updates perf to use unsigned int loop counters when
-iterating up to btf_vlen(). This avoids signedness errors after commit
-f7a6b9eaff3e6 extended the BTF UAPI vlen to use previously unused bits.
+  https://lore.kernel.org/r/20260617130038.34534-1-broonie@kernel.org
 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 48615ddccd93a..9903d79c4b77a 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -964,7 +964,7 @@ static bool syscall_arg__strtoul_btf_enum(char *bf, s=
-ize_t size, struct syscall_
->  	struct btf *btf =3D arg->trace->btf;
->  	struct btf_enum *be =3D btf_enum(bt);
-> =20
-> -	for (int i =3D 0; i < btf_vlen(bt); ++i, ++be) {
-> +	for (unsigned int i =3D 0; i < btf_vlen(bt); ++i, ++be) {
+which I have been using as a fixup since I originally reported the issue
+since Linus' tree is broken, Arnaldo said he'd applied it to the
+perf-tools-next branch but it has not yet appeared in Linus' tree (and
+it looks like he forgot to push it so his copy isn't getting picked up
+in the merge either, the last update was on the 15th).
 
-[Severity: Medium]
-This is a pre-existing issue, but does the btf_vlen function still silently
-truncate the newly extended length?
+--4VvRBQcMeiGWmdwc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Looking at tools/lib/bpf/btf.h, it appears to be defined as:
+-----BEGIN PGP SIGNATURE-----
 
-static inline __u16 btf_vlen(const struct btf_type *t)
-{
-        return BTF_INFO_VLEN(t->info);
-}
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmo5FDMACgkQJNaLcl1U
+h9A2Hwf4sx441S8wLC7+sUkNiLTT3tl7HkkAr1PY5yGy/mxAFZjnnfKdrHZVqxc3
+z8wG2RZCtx9nY4WpPXGBrtqonOgTeW28KFI3xGf2AMiL2QVPjfFomH1wrgopoQ4Z
+8x6LtMd4dC2K6K+8biJZ/Co3O6SjlsHq4WFHr09AVoWwUEMxw8Q387cXorcDpdfj
+AaSUWH+8dg+z4g/O8m9Ses1i8HuqYFEYi5DarcDI4upnOcoMSPweP7SJiqShNc+x
+dzrokPxczpkSnJnM4ftamyFDKnCdAWjJyddcBTkhTq1gP06v4/KKzJi5JViG2ah0
+tu6Raj+2vWDsTqUQTbLPs1qFXijw
+=bmp2
+-----END PGP SIGNATURE-----
 
-Since commit f7a6b9eaff3e6 extended the internal BTF_INFO_VLEN from 16 to
-24 bits to support more than 65535 elements, won't returning __u16 here
-truncate the upper 8 bits?
-
-While updating the loop variables to unsigned int fixes the signedness
-warnings in consumers, does the underlying library still need an update to
-return __u32 and prevent truncation?
-
->  		const char *name =3D btf__name_by_offset(btf, be->name_off);
->  		int max_len =3D max(size, strlen(name));
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260622103418.5791=
-15-1-alan.maguire@oracle.com?part=3D1
+--4VvRBQcMeiGWmdwc--
