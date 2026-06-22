@@ -1,114 +1,196 @@
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D432D24B7
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 11:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86125361641;
+	Mon, 22 Jun 2026 12:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782127909; cv=none; b=Ter9NUTKfjp2biBr3u9PZXGPue6fqAzYK22BDJOz6Fwm9JZ2KBQYtoWKBJ0ADZy6ZBso51wXfcPLsTh4VZQqHCbOLcZvAaOfp+gDhu8z89CQ1+dfbHbjm+j5Ki3cR3nxjSvJYVYDnrJSPS4SZlfCDScgHFLLLykVQRFn8WD9BNU=
+	t=1782131577; cv=none; b=bejQW6NW9d9YI0xpaOMsW743e1PUpnSzkD/x1Mf8j6uKZWGPHxeCfLijst1qQNsq6OCT8OQfiuSQl09zR+oC9yrv0g18+z0jgpuml2xr8Vy+94qK5EI+SaC92LryXd5Kulcp/L64gqNWKxzZ3PYOhp8ihLW00wlRXikCNCffaDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782127909; c=relaxed/simple;
-	bh=KDRTustqNurCNZREaf1pCPYcaui3zDoqOsKxZ4GWsPI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=HueOG51Dh2MeuygtP8t4P7rhw2S1bsA548qX8naHTxwERWgR+O3DD0EgSUe2trJTWsb7tNdTaewz51u6pNUw6+/JGt/JiTc28T/8VndZgrJfLhLeh3Kc2dWlESvP10j2QH47xsGAZ0bAIIaK58bKX22Ym6sPeHii5D7IFS7CM1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+hOA6DI; arc=none smtp.client-ip=74.125.82.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782131577; c=relaxed/simple;
+	bh=h2uS0kWah7tJXsJnvk1/vM9s6NLROF9DJMtTxV1rOag=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jR405Vfhpd9CCWnoAUTUttL5CT0FCojmT+CWyiYx9rpwvz44lllfe1tUFnkzSzf2KgrhEMnl/aagRN7Y0VzdweeI3y6RkFDTwWX+BjXA1QEAbIDhmowUpCn4zU2B+P29tYDKYXDVS41B3CLteQL0qL48GetrzpXhbHKbbAseZw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GniacP8g; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+hOA6DI"
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-30c001b21feso3866411eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 04:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782127907; x=1782732707; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cKiQyyK2YqfLKDVDbtobty9TrjuyTTupcskU2j0RRiU=;
-        b=g+hOA6DICGp1AdtQ0pe09HsN1+XKzy8wBQDXb9jjeTfzN45DMBIYcBxppTSzveIHb9
-         p/x0Cy88P29ZjwgTvzRIO6gGQSnD14JY+d1s1+ZMJPf76Qu075PtQmipjNalPUeqCAV5
-         WC6n8P3PJlEL6LKtbzY1utL3xax1a+BiTIgqLzSPyUmRnNVFXYdPK/MszNZAzC0Diaoa
-         NyXE67bJKaJR5jWJ1Oeohief151Rg1Nb86+wvT3GMTu/23vA7ac6x1bqc6iFeN9p14Xs
-         GBQXX5NCLSY3H+LPth66ykNDJKAhcmrMHZUAOAOfXimce1SQ8C/b4BqmBxHar3HUsPdo
-         6Etw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782127907; x=1782732707;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cKiQyyK2YqfLKDVDbtobty9TrjuyTTupcskU2j0RRiU=;
-        b=c/C+4hYdzakK1WVPfZtnksAcCT8i2KOOf9u//FW7yQ3eFNGzkwVZIfS5p8EEJg34Au
-         RDTTMeihhb29F17ObxJmZ06UTrTlQsy14P9EcuP8tM3/df2DqszrObH4WP2hdRyjDf0I
-         9Ej5NLZqgqAvXq+ULE1VRDuk+ojhbaCYEDPSaZQoGEoS71Q05lCD5GO6wwIXIYUGDTgK
-         tXQ0sWLLcscu7pef/BiRnM9H+/B3Y3XEMCeMNzS3KzZwswdZuSNjeXOSbbqPPf3DLxIn
-         dB7Fgnp6prULIZrbArMy2UQzo3ilH3pJ2MNJE/IN6Zp65xY4uku3wg/O+FCDd/fda+eb
-         kCvw==
-X-Forwarded-Encrypted: i=1; AHgh+Rq3906ezoHawlrtTv0O73nHUwwXj9aHM3w0RNtsWBOOZsOeLZ0dVKMU5CUAXIwXl2ryVvpt/+y1GfpdU2nJJpHm@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGclJr5CVRGYQsCA7ZnlpQUH01qXWI7Lr9T9g+dVFjUSjoB4iM
-	n+JzpTXfiwBMMgasLUm6j+xXLMOw21Ezev9HbG0RmPXIyLwsveOcKX0R
-X-Gm-Gg: AfdE7ckml+Bn73TGUNmf1RUgQgcVrhE6BriWqnOHgDq2+6hD7jovUyMtsUOgHOQlyNC
-	GesygPAkG002BPZbHzrxpvFfarOoAzsLm8bH1n3PdV//Rngv5N5OFwmPeS3bvyr8Odi6Cniakm7
-	lZHGhETaswNptfDavkG7txSIy5xan3xcWYsMzO99cC5G1OqEY8Ztqoi5W1LB8j87JOXqbnS2oTH
-	/Zl1jcOEVwjWp8/IosRWww68HOpH4Nfhk6AoHjgx90CAz5GijdAB4WjZqDb6pli8I97i0DFGQIW
-	GbVJUz+UHJXx9300mkUvTsZ6/S2K0WMTbHyaMVMsM3EdgQndI6MUvCQLVf2DOUrHMCSyWIbGh1g
-	D8ZLPDb52eN8Nme4De5UlbFxASJL5q0VS+9tPPxi78Nw9rfyEKOcJQjkWJWRsaxCAh8XqXkUZ2a
-	kLfkSTeqg7eVIons0qIBI8NwL0SAdc/Q==
-X-Received: by 2002:a05:7300:3b1a:b0:2da:a813:a5fd with SMTP id 5a478bee46e88-30c07156e55mr8418040eec.22.1782127907348;
-        Mon, 22 Jun 2026 04:31:47 -0700 (PDT)
-Received: from ehlo.thunderbird.net ([2804:2bf0:60e7:ae00:61b2:c320:bcb9:eac0])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c1ba1c32csm10815274eec.6.2026.06.22.04.31.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jun 2026 04:31:46 -0700 (PDT)
-Date: Mon, 22 Jun 2026 08:31:43 -0300
-From: Arnaldo Melo <arnaldo.melo@gmail.com>
-To: Mark Brown <broonie@kernel.org>
-CC: Alan Maguire <alan.maguire@oracle.com>, peterz@infradead.org, acme@kernel.org,
- mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, james.clark@linaro.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH perf] perf: Fix btf_vlen() signedness errors
-User-Agent: Thunderbird for Android
-In-Reply-To: <ab95c312-061f-47ae-9202-432aa48afa70@sirena.org.uk>
-References: <20260622103418.579115-1-alan.maguire@oracle.com> <ffdbf003-5f08-4db8-b633-7ed053a738f1@sirena.org.uk> <A52F0C17-9617-4F5F-9537-C9643F5EF347@gmail.com> <ab95c312-061f-47ae-9202-432aa48afa70@sirena.org.uk>
-Message-ID: <B9C3897F-AE35-44B1-8608-49178BB2E629@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GniacP8g"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=QuErbYDD5kyKhATeqyLFTlHQ8KgPUBJ9ZvYZzYtYobY=; b=GniacP8gXmjrtrN/AwesUksp1a
+	sQpn5zSrpBJ7aOPVd4wN10eFXgCZllVm4QSEVJnLc21o6AMDeEF94kJ8xNCaMLXy8mJtr/hSC50Va
+	gDkDx8XbRvFk33+HetS57ZyL8uPstMbtuBDKJkU0R6FI9SHt0FkAb9ZmYJpej+H8eqicGgv6bw9qm
+	aQD8wFbdbAq7ir/YYuRjIJolS1UVRNgXHnNfrDB8pgpxnKzNODuw2NmjwalchGCW7/L4rO6jH6gJ5
+	wFoMGpgQ3hbd62i2oe4GUvHRv2IAIXqkSlRRbikSEBicADLJhjNV24zZ1TjUi3NKSlbmfUb/XAfoi
+	/1hyhqTQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wbdpY-0000000HRib-13Qt;
+	Mon, 22 Jun 2026 12:32:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 83560300B5F; Mon, 22 Jun 2026 14:32:45 +0200 (CEST)
+Date: Mon, 22 Jun 2026 14:32:45 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: mingo@kernel.org
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	suzuki.poulose@arm.com, mike.leach@arm.com, leo.yan@arm.com
+Subject: [RFC][PATCH] perf: Fix perf_addr_filters_afjust()
+Message-ID: <20260622123245.GS48970@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
 
-On June 22, 2026 8:18:43 AM GMT-03:00, Mark Brown <broonie@kernel=2Eorg> w=
-rote:
->On Mon, Jun 22, 2026 at 08:09:33AM -0300, Arnaldo Melo wrote:
->> On June 22, 2026 7:53:40 AM GMT-03:00, Mark Brown <broonie@kernel=2Eorg=
-> wrote:
->
->> >which I have been using as a fixup since I originally reported the iss=
-ue
->> >since Linus' tree is broken, Arnaldo said he'd applied it to the
->> >perf-tools-next branch but it has not yet appeared in Linus' tree (and
->> >it looks like he forgot to push it so his copy isn't getting picked up
->> >in the merge either, the last update was on the 15th)=2E
->
->> Its here:
->
->> <https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/perf/perf-tools-ne=
-xt=2Egit/commit/?h=3Dperf-tools-next&id=3D776bd9ac834556ab6ff6b7ef74b71ac53=
-d37855e>
->
->Ah, so it is - I missed it because Ian's series was applied on top of it
->and doesn't look at all like fixes so I stopped reading the log (should
->it be in -next given the merge window?)=2E
+ - adjust lock order; since perf_event_addr_filters_apply() takes mmap_lock
+   inside child_mutex.
 
-Ian's series? Yeah, I was unsure about having it in this merge window, it =
-went thru many versions, but your question is a fair one, I'll move it to t=
-he next merge window and send only up to your fix (+ Alan's missing hunk),
+ - note that perf_event_mmap() is called by the thread doing the
+   mmap()/mprotect()/.. operation, but not the other threads in the address
+   space that might have inherited the same event.
 
-- Arnaldo 
+ - have perf_addr_filters_adjust() iterate the child_list to find all other
+   events for tasks that have the same mm.
+
+ - since this can now adjust addr_filter_ranges[] for remote events, make sure
+   to adjust things while holding ctx->lock; local_irq_disable() as implied by
+   the ifh->lock is no longer suffient to serialize against event scheduling.
+
+ - per the previous locking order; perf_event_mmap(), which is called holding
+   mmap_lock, cannot take child_mutex, as such, make child_list RCU protected
+   and iterate under RCU.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/core.c |   69 ++++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 49 insertions(+), 20 deletions(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1454,10 +1454,11 @@ static void put_ctx(struct perf_event_co
+  *	  perf_event_context::mutex
+  *	    perf_event::child_mutex;
+  *	      perf_event_context::lock
+- *	    mmap_lock
+- *	      perf_event::mmap_mutex
+- *	        perf_buffer::aux_mutex
+- *	      perf_addr_filters_head::lock
++ *	        perf_addr_filters_head::lock
++ *	      mmap_lock
++ *	        perf_event::mmap_mutex
++ *	          perf_buffer::aux_mutex
++ *	        perf_addr_filters_head::lock
+  *
+  *    cpu_hotplug_lock
+  *      pmus_lock
+@@ -2429,7 +2430,7 @@ static void perf_child_detach(struct per
+ 	lockdep_assert_held(&parent_event->child_mutex);
+ 	 */
+ 
+-	list_del_init(&event->child_list);
++	list_del_rcu(&event->child_list);
+ }
+ 
+ static bool is_orphaned_event(struct perf_event *event)
+@@ -9902,35 +9903,64 @@ static bool perf_addr_filter_vma_adjust(
+ 	return true;
+ }
+ 
+-static void __perf_addr_filters_adjust(struct perf_event *event, void *data)
++static int perf_child_addr_filters_adjust(struct perf_event *event,
++					  struct vm_area_struct *vma)
+ {
+ 	struct perf_addr_filters_head *ifh = perf_event_addr_filters(event);
+-	struct vm_area_struct *vma = data;
+-	struct perf_addr_filter *filter;
+ 	unsigned int restart = 0, count = 0;
+-	unsigned long flags;
+-
+-	if (!has_addr_filter(event))
+-		return;
++	struct perf_addr_filter *filter;
+ 
+-	if (!vma->vm_file)
+-		return;
++	guard(raw_spinlock)(&ifh->lock);
+ 
+-	raw_spin_lock_irqsave(&ifh->lock, flags);
+ 	list_for_each_entry(filter, &ifh->list, entry) {
+ 		if (perf_addr_filter_vma_adjust(filter, vma,
+ 						&event->addr_filter_ranges[count]))
+ 			restart++;
+ 
+ 		count++;
++
+ 	}
+ 
+ 	if (restart)
+ 		event->addr_filters_gen++;
+-	raw_spin_unlock_irqrestore(&ifh->lock, flags);
+ 
+-	if (restart)
+-		perf_event_stop(event, 1);
++	return restart;
++}
++
++static void __perf_addr_filters_adjust(struct perf_event *event, void *data)
++{
++	struct perf_event *child, *parent = event->parent ?: event;
++	struct vm_area_struct *vma = data;
++
++	if (!has_addr_filter(event))
++		return;
++
++	if (!vma->vm_file)
++		return;
++
++	list_for_each_entry_rcu(child, &parent->child_list, child_list) {
++		struct perf_event_context *ctx;
++		struct task_struct *task;
++		int restart = 0;
++
++again:
++		ctx = READ_ONCE(child->ctx);
++		scoped_guard (raw_spinlock_irqsave, &ctx->lock) {
++			if (child->ctx != ctx)
++				goto again;
++
++			task = ctx->task;
++			if (!task || task == TASK_TOMBSTONE)
++				continue;
++
++			if (vma->vm_mm != task->mm)
++				continue;
++
++			restart = perf_child_addr_filters_adjust(child, vma);
++		}
++		if (restart)
++			perf_event_stop(child, 1);
++	}
+ }
+ 
+ /*
+@@ -9947,11 +9977,10 @@ static void perf_addr_filters_adjust(str
+ 	if (!(vma->vm_flags & VM_EXEC))
+ 		return;
+ 
+-	rcu_read_lock();
++	guard(rcu)();
+ 	ctx = rcu_dereference(current->perf_event_ctxp);
+ 	if (ctx)
+ 		perf_iterate_ctx(ctx, __perf_addr_filters_adjust, vma, true);
+-	rcu_read_unlock();
+ }
+ 
+ void perf_event_mmap(struct vm_area_struct *vma)
