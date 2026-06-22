@@ -1,88 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEC6352029;
-	Mon, 22 Jun 2026 08:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095D1238159;
+	Mon, 22 Jun 2026 08:37:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782117303; cv=none; b=TgeV0WaqLlBbszUq+iug0okLzxULgeGYMg+6ThlBzPhBfJfMLHDz8arjISp7YEn2LRFDJXVWOZ+mRDp50RhVEzVXdL9Zd/LlhwTT8yA0JozfE/xxMvIGqCWKHSQuR5VdsE/jmpDXupZFTbhCkY4PbxxfySGWq1rIh45m6Kgm4ts=
+	t=1782117471; cv=none; b=Qf/0kATbivMuVZTC6NRp2yVNhBpSATd8UW97WNTco9HX1Vnr66h+qf/rKmEYtJSoNhSlrdxZqR/4BgBfZveqjWWGbFFp13a65rYd0ifw15wgWQItntZCeFzTa/FI4QcnIp9IO1Hh2RP3AqPgdowisEb+rCmTsMZff1bZBexCAB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782117303; c=relaxed/simple;
-	bh=WL0DqHprf03BiR6kYcbEI9cIPO25Jsw1dIArROkipHo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eUa9XR75zJVxcKQA6cwLVtjUL/Zxj6PT+yJPbne3meQ3dKSeYpXhNZ+nmZm1E6s54AkDycKpodduB4HY/ndSfkWh8mnrhWIh5QCkFKilHLTY+YZbHzzV+qUOpBat8xo5isPzvcC4kodQsFY9v8NkPpcB9HDkSLbNUyRS3I0zzHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ksoi79Oa; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782117471; c=relaxed/simple;
+	bh=o0XPey02pNHXumHWa6TQBgjgCeS/R84YiOVlMcvQRTw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kdsgHnVGCzUbVL9DRipZrLUJnChZekP9N+jzeqr/olTe2w18p91Hmi9jWv+qibOuHS32MTpVtRMM4VQ8JRah1snf3S7sR+7kCw94jccFu7cakKpp6WTQgRT4wbX8aImb3bj9j8yTyTEHqLYrq0il7V0AGWb3j2nF6YcGm0Tks/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lwi+leCq; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ksoi79Oa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43DDB1F00A3A;
-	Mon, 22 Jun 2026 08:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782117302;
-	bh=qiTRqMZV9vIEwn9JTOedh6hS7T0O4XnhoJZAworRYpo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ksoi79OaFDGM61qKGj85c6zPF/fMOkZeJudRUhYdekhJ0aNPPgUBW9In1fbUb61Qa
-	 PrSvcowBM9ZuoB9t5oIep/U+SuAc+ttHJrkRC9Q+VDnhVe/UxPShUVQwCq57mSWUWj
-	 7goemdMoImoVL7cGcbMu+E8oQanDya6w/Ye2djwWtOpxXcnC8laM/VoVj4g8HkW7J0
-	 N2goTqV2xX5kyoJA7EVp0Cyyu09yuw1L3Lqb3TpVvZ8DDpYKBqNSBjt41OKuPzSqp9
-	 eMyPAqD4FgMy+y9BhBehma88/HbF03kZ4S/lgp/WfBF6siPyJ8XGh84N91VkrmF5or
-	 Claess+5wilog==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 22/22] TEST(do-not-upstream): fake qemu vendor JSON +
- mapfile entry for CounterIDMask path
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Atish Patra" <atish.patra@linux.dev>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org
-In-Reply-To: <20260622-counter_delegation-v7-22-0ba2fd34614e@meta.com>
-References: <20260622-counter_delegation-v7-0-0ba2fd34614e@meta.com>
- <20260622-counter_delegation-v7-22-0ba2fd34614e@meta.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 22 Jun 2026 08:35:01 +0000
-Message-Id: <20260622083502.43DDB1F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lwi+leCq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782117469; x=1813653469;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=o0XPey02pNHXumHWa6TQBgjgCeS/R84YiOVlMcvQRTw=;
+  b=lwi+leCqmYWmuFst6FQBZ5DAHNBzvjzKOvdFm9YAWYeck1lFLPstlLLE
+   HfvGplF7vI7ppon4Tfz83R0sJ7Q6UnhkB/puK65jNkqLWlw+oi1UKW+D2
+   dmHcxGUFHvd15Dc0mMhfGhhAkaz7ESnKhl+LjgjHZNbe03xX5s2/kyNKX
+   T2bQkviWBa+gpSAAvQYc38+tPbNSKQi5BFa0ScUd3NRX/apt0d888B4Lh
+   XD1X3LFU5Ma16ZgS00f+GAY92w+Y1DarSdKVL2ZmHgWSG3tOfzLz3BQvQ
+   ft49GdYMp53Vh5tvIMO+kqgJGdj8W04FzLYd7CsN+FVf6+Cmg2mV7j/HT
+   A==;
+X-CSE-ConnectionGUID: MUrLK/3DQ/+jOxbEeduDLw==
+X-CSE-MsgGUID: jN0ZpEg6Tg+TQc4Ge4NM4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11824"; a="82844719"
+X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
+   d="scan'208";a="82844719"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 01:37:48 -0700
+X-CSE-ConnectionGUID: 51x2ahlxRfadoXyoUtL0hA==
+X-CSE-MsgGUID: PGIuZ8mzSP2g3MT4S82HXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
+   d="scan'208";a="254255860"
+Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.82])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 01:37:33 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Kaitao Cheng <kaitao.cheng@linux.dev>, Andrew Morton
+ <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Jens
+ Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+ Paul Moore <paul@paul-moore.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, Christian
+ =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: David Howells <dhowells@redhat.com>, Simona Vetter
+ <simona.vetter@ffwll.ch>, Randy Dunlap <rdunlap@infradead.org>, Luca
+ Ceresoli <luca.ceresoli@bootlin.com>, Philipp Stanner <phasta@kernel.org>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+ linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+ audit@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ live-patching@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
+ rcu@vger.kernel.org, sched-ext@lists.linux.dev, linux-mm@kvack.org,
+ virtualization@lists.linux.dev, damon@lists.linux.dev,
+ llvm@lists.linux.dev, chengkaitao <chengkaitao@kylinos.cn>
+Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor
+ state
+In-Reply-To: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
+ 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
+References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
+Date: Mon, 22 Jun 2026 11:37:29 +0300
+Message-ID: <88f34c7fa5a3d1700cc8005818751d6aa31f09df@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The commit is explicitly marked as 'do-not-upstream' and introdu=
-ces artificial test data into the perf tool's PMU events database.
---
+On Mon, 22 Jun 2026, Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
+> Add *_mutable() iterator variants for list, hlist and llist.  The new
+> helpers are variadic and support both forms.  In the common case, the
+> caller omits the temporary cursor and the macro creates a unique internal
+> cursor with typeof(pos) and __UNIQUE_ID().  If a loop really needs an
+> explicit temporary cursor, the caller can still pass it and the helper
+> keeps the existing *_safe() behaviour.
+>
+> For example, a call site may use the shorter form:
+>
+>   list_for_each_entry_mutable(pos, head, member)
+>
+> or keep the explicit temporary cursor form:
+>
+>   list_for_each_entry_mutable(pos, tmp, head, member)
 
-commit 845c89532d7f6f6ae99c8ce7e80ef23f83afdd90
-Author: Atish Patra <atishp@meta.com>
+I'm unconvinced it's a good idea to allow two forms with macro trickery,
+*especially* when it's not the last argument you can omit. I think it's
+a footgun.
 
-TEST(do-not-upstream): fake qemu vendor JSON + mapfile entry for CounterIDM=
-ask path
+IMO stick with the first form only, and there'll always be the _safe
+variant that can be used when the temp pointer is needed.
 
-This commit adds fake JSON events for qemu/virt to the PMU events database.
-It exercises jevents CounterIDMask handling locally and is explicitly=20
-marked as not for upstreaming.
 
-> diff --git a/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json b/too=
-ls/perf/pmu-events/arch/riscv/qemu/virt/events.json
-> new file mode 100644
-> index 0000000000000..294c4ed645f67
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json
-> @@ -0,0 +1,26 @@
-> +[
-> +  {
-> +    "EventName": "fake-json-any",
+BR,
+Jani.
 
-[Severity: Medium]
-Since the commit subject specifies this is for testing and should not be
-upstreamed, does this patch need to be dropped from the series before it
-is merged?=20
 
-Merging this into the mainline kernel would pollute the production PMU even=
-ts
-database with artificial test events that have no meaning on real hardware.
-
-> +    "EventCode": "0xF10",
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260622-counter_de=
-legation-v7-0-0ba2fd34614e@meta.com?part=3D22
+-- 
+Jani Nikula, Intel
