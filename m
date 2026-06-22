@@ -1,120 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095D1238159;
-	Mon, 22 Jun 2026 08:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAF81DA60D;
+	Mon, 22 Jun 2026 08:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782117471; cv=none; b=Qf/0kATbivMuVZTC6NRp2yVNhBpSATd8UW97WNTco9HX1Vnr66h+qf/rKmEYtJSoNhSlrdxZqR/4BgBfZveqjWWGbFFp13a65rYd0ifw15wgWQItntZCeFzTa/FI4QcnIp9IO1Hh2RP3AqPgdowisEb+rCmTsMZff1bZBexCAB0=
+	t=1782117580; cv=none; b=Yw/ZGfZmCGDLs+nLsd51KEgQbOSba1oY1DutokEwrryNJYOPEck3bidgadX6F045+g+UL/EU5k2WrXhCFKlbxJNupLlRQACJgX2B8x5OArupX+m1DUlDdg58tEkNpN9o6lIEbtxDi9f0U6ha37XRkWuUGFljLW3k034tCBHy+WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782117471; c=relaxed/simple;
-	bh=o0XPey02pNHXumHWa6TQBgjgCeS/R84YiOVlMcvQRTw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kdsgHnVGCzUbVL9DRipZrLUJnChZekP9N+jzeqr/olTe2w18p91Hmi9jWv+qibOuHS32MTpVtRMM4VQ8JRah1snf3S7sR+7kCw94jccFu7cakKpp6WTQgRT4wbX8aImb3bj9j8yTyTEHqLYrq0il7V0AGWb3j2nF6YcGm0Tks/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lwi+leCq; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1782117580; c=relaxed/simple;
+	bh=8KVnwnLIZEOXEt+9WXQZ5xooTYl9LkiX4IFdFYuORoc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=u/In1bDybhK9jeTVasevjGQiwlEDJlUikJ1OFkWhRVxJ642NAkfpBgCdgKpAgH/F6nkulsaNnvfSnnh65DS/by+hNSfa+yJjTrNhATqAChKvIor2q8AxgYpQEbHaMn6dj6z3C4+GiIOC+LW6sw6tTL+tuDgfP6JyNLvcVKW21V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzdsZcBg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lwi+leCq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782117469; x=1813653469;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=o0XPey02pNHXumHWa6TQBgjgCeS/R84YiOVlMcvQRTw=;
-  b=lwi+leCqmYWmuFst6FQBZ5DAHNBzvjzKOvdFm9YAWYeck1lFLPstlLLE
-   HfvGplF7vI7ppon4Tfz83R0sJ7Q6UnhkB/puK65jNkqLWlw+oi1UKW+D2
-   dmHcxGUFHvd15Dc0mMhfGhhAkaz7ESnKhl+LjgjHZNbe03xX5s2/kyNKX
-   T2bQkviWBa+gpSAAvQYc38+tPbNSKQi5BFa0ScUd3NRX/apt0d888B4Lh
-   XD1X3LFU5Ma16ZgS00f+GAY92w+Y1DarSdKVL2ZmHgWSG3tOfzLz3BQvQ
-   ft49GdYMp53Vh5tvIMO+kqgJGdj8W04FzLYd7CsN+FVf6+Cmg2mV7j/HT
-   A==;
-X-CSE-ConnectionGUID: MUrLK/3DQ/+jOxbEeduDLw==
-X-CSE-MsgGUID: jN0ZpEg6Tg+TQc4Ge4NM4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11824"; a="82844719"
-X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
-   d="scan'208";a="82844719"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 01:37:48 -0700
-X-CSE-ConnectionGUID: 51x2ahlxRfadoXyoUtL0hA==
-X-CSE-MsgGUID: PGIuZ8mzSP2g3MT4S82HXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,218,1774335600"; 
-   d="scan'208";a="254255860"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.82])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 01:37:33 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Kaitao Cheng <kaitao.cheng@linux.dev>, Andrew Morton
- <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, Jens
- Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Alexei
- Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>, Juri Lelli
- <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
- Paul Moore <paul@paul-moore.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, Christian
- =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: David Howells <dhowells@redhat.com>, Simona Vetter
- <simona.vetter@ffwll.ch>, Randy Dunlap <rdunlap@infradead.org>, Luca
- Ceresoli <luca.ceresoli@bootlin.com>, Philipp Stanner <phasta@kernel.org>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
- linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
- audit@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kexec@lists.infradead.org,
- live-patching@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
- rcu@vger.kernel.org, sched-ext@lists.linux.dev, linux-mm@kvack.org,
- virtualization@lists.linux.dev, damon@lists.linux.dev,
- llvm@lists.linux.dev, chengkaitao <chengkaitao@kylinos.cn>
-Subject: Re: [PATCH v3 0/7] Prepare mutable list iterators to cache cursor
- state
-In-Reply-To: <20260622040533.29824-1-kaitao.cheng@linux.dev>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
- 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
-References: <20260622040533.29824-1-kaitao.cheng@linux.dev>
-Date: Mon, 22 Jun 2026 11:37:29 +0300
-Message-ID: <88f34c7fa5a3d1700cc8005818751d6aa31f09df@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzdsZcBg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7418B1F000E9;
+	Mon, 22 Jun 2026 08:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782117578;
+	bh=R8FJ6OSfMvgdpSiE1mEZObRvH+o1Z0zmiQSNkmZTBmI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HzdsZcBgyOlTfQ1xoKGQBHGltU013D4plwPpx3tw1XJaJfH4K/LVjVcMHdTU4TOvY
+	 SuTxEJoLw0UbLadPIRn7Socs7O4uWINwgIfNAMSkuCkxqGhw5mUh6KXM5QBANTh7yw
+	 MLes18ufW1imU43DZnStf2ZnI+dLBaLYea0UOao6j3ISkYwpeRoELZakO4lfSd/GZb
+	 PCwepkBjlabk1BCPK+OFQhquWz6gOylKrcz5udT75av90Es25hHPamyonOlKNJt5Cb
+	 q8IwlEsPuijpi+JnnnBljw8Pxn9qbUwHdp/o9kjGec5x5RvNI2hpN3fztZfMaJ0cbl
+	 kCt30y4/3jj1g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 18/22] RISC-V: perf: Add Qemu virt machine events
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Atish Patra" <atish.patra@linux.dev>
+Cc: robh@kernel.org, linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260622-counter_delegation-v7-18-0ba2fd34614e@meta.com>
+References: <20260622-counter_delegation-v7-0-0ba2fd34614e@meta.com>
+ <20260622-counter_delegation-v7-18-0ba2fd34614e@meta.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 22 Jun 2026 08:39:38 +0000
+Message-Id: <20260622083938.7418B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-On Mon, 22 Jun 2026, Kaitao Cheng <kaitao.cheng@linux.dev> wrote:
-> Add *_mutable() iterator variants for list, hlist and llist.  The new
-> helpers are variadic and support both forms.  In the common case, the
-> caller omits the temporary cursor and the macro creates a unique internal
-> cursor with typeof(pos) and __UNIQUE_ID().  If a loop really needs an
-> explicit temporary cursor, the caller can still pass it and the helper
-> keeps the existing *_safe() behaviour.
->
-> For example, a call site may use the shorter form:
->
->   list_for_each_entry_mutable(pos, head, member)
->
-> or keep the explicit temporary cursor form:
->
->   list_for_each_entry_mutable(pos, tmp, head, member)
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Using mvendorid=3D0, marchid=3D0, and mimpid=3D0 to uniquely ident=
+ify QEMU virt incorrectly hijacks PMU event mappings for all non-commercial=
+ RISC-V cores.
+--
 
-I'm unconvinced it's a good idea to allow two forms with macro trickery,
-*especially* when it's not the last argument you can omit. I think it's
-a footgun.
+commit 6c37953807499d33e32d891aa7fbc5980f5e88bb
+Author: Atish Patra <atishp@rivosinc.com>
+Subject: RISC-V: perf: Add Qemu virt machine events
 
-IMO stick with the first form only, and there'll always be the _safe
-variant that can be used when the temp pointer is needed.
+This commit adds a set of legacy perf events for the Qemu virt machine to=20
+the vendor table, allowing users to use them when counter delegation is=20
+enabled.
 
+> diff --git a/arch/riscv/include/asm/vendorid_list.h b/arch/riscv/include/=
+asm/vendorid_list.h
+> --- a/arch/riscv/include/asm/vendorid_list.h
+> +++ b/arch/riscv/include/asm/vendorid_list.h
+> @@ -11,4 +11,8 @@
+>  #define SIFIVE_VENDOR_ID	0x489
+>  #define THEAD_VENDOR_ID		0x5b7
+> =20
+> +#define QEMU_VIRT_VENDOR_ID		0x000
+> +#define QEMU_VIRT_IMPL_ID		0x000
+> +#define QEMU_VIRT_ARCH_ID		0x000
 
-BR,
-Jani.
+[ ... ]
 
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+[ ... ]
+>  static struct riscv_vendor_pmu_events pmu_vendor_events_table[] =3D {
+> +	RISCV_VENDOR_PMU_EVENTS(QEMU_VIRT_VENDOR_ID, QEMU_VIRT_ARCH_ID, QEMU_VI=
+RT_IMPL_ID,
+> +				qemu_virt_hw_event_map, qemu_virt_cache_event_map,
+> +				qemu_virt_event_group)
+>  };
 
--- 
-Jani Nikula, Intel
+[Severity: High]
+Will this apply QEMU's limited PMU mappings to all non-commercial
+implementations?
+
+The RISC-V privileged specification defines mvendorid=3D0, marchid=3D0, and
+mimpid=3D0 as indicating a non-commercial implementation or that the field
+is unimplemented. Academic cores and FPGA soft-cores (like BOOM or CVA6)
+legitimately return 0 for these IDs.
+
+Registering QEMU's specific legacy PMU event encodings against these generic
+0x000 IDs could incorrectly apply them to actual physical hardware that
+implements counter delegation. This might force compliant open-source cores
+to be restricted to QEMU's limited 5-event map, and write QEMU's raw event
+encodings to physical cores' mhpmeventX CSRs, potentially causing silent
+measurement corruption or illegal instruction traps.
+
+Would it be safer to identify QEMU virt via device tree machine compat
+strings instead, such as checking of_machine_is_compatible("qemu,riscv-virt=
+")?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260622-counter_de=
+legation-v7-0-0ba2fd34614e@meta.com?part=3D18
