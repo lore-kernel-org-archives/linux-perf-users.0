@@ -1,36 +1,36 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2AA37189B
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 08:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B215C38F23D
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 08:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782115542; cv=none; b=a9prd2i9d/gGO8S0NNjBZjtq7lAIZqww3RhDMv14rws2s7rZgM3ZuSoPeeKnTki/OmjG7R+0tAkvCW1aiv1djmZ+uTQsXfTghMgShAouNVlzIaNZFskv0wugc6HKnbhrfFWNuAIWWKAD4utl1qemZuYlYCOkb86OeMMnXhaPodQ=
+	t=1782115545; cv=none; b=o7aCa96ojkTYUdh2HNmEyGWIjxunWOO5d5WlYAUiLu/4SoIO3w7TOHyc90XyS3DIEx39sThLnUs99ZL9T2ekycS+eWV6oTWTi8LPARHl3rMXsihniyAyR5izzFMVue5j8GcCslFrR3/9XMm5hmTGHvbeTJPivL4vXmUMNrBqQU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782115542; c=relaxed/simple;
-	bh=qI7ylPGhf6GPYHa6rJhXo0UFdpIqMb7rB+hO27t6rWw=;
+	s=arc-20240116; t=1782115545; c=relaxed/simple;
+	bh=DMlDviBD4xs9HqEdZpdNmhs7JEUKHNCtiUuP6Nt4Hi4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IZMoCe3RzQOQma/yzsFfy8sgRzw8Y/wXtKFXFnJA2YTX1lDMtLY5u8YpPbIvPxuYi+1rWqHmbXSkpAGfwNQ/f0Uuoc/b/5925iWrNAvSIPTYGPhWKacXOgvrXmkGgJNLXJ4uuCJsx/UPnr19PpBKPrSaOG8ELtAdCCHWLkdaI0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aNBGBuS0; arc=none smtp.client-ip=95.215.58.180
+	 In-Reply-To:To:Cc; b=Cq1qwovk9eKZDxVnwFnugXdXuvJshOWDtHjgybqP8q+41Pv67pswbUcijeUkME7VLPvkNc0y29xpBsuTBLvXCf63wC4eCEBGM+if2LfA1gmKKBB+G+qvkd+nN4rRYAva9fxY9DZDgwXqatp0iNCDN3i8jBAR4FNspqZjl1qu28Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V0F38aiJ; arc=none smtp.client-ip=91.218.175.185
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aNBGBuS0"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V0F38aiJ"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782115538;
+	t=1782115541;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NUBImEnq8hbrnJQhJKzk1cL/zkOMmDZcmfYv80HVE44=;
-	b=aNBGBuS0hlzNpMXLUH1KWbj9FIspLxwmOTzlI2PUtPWxY/p1oxMHuK3/dpsk1mqeN9st95
-	/r7x1BiqA3raEEeBaX6vCXunZm5TLpKsb2sQEV5Ta5wNdo/x2vKQKsf9KWascBt/94jZt2
-	QcnBKTkZNkKhnrhQIvQPzrSW7eq4m0Q=
+	bh=zCjQpneLNRBCiuygsyfB7UCIbsXua9nygQEyYm86NNo=;
+	b=V0F38aiJjZl+9UJZIDLe7ttaYRmDE5qEMKw86sBa2BbTs6q2pCE9HWuhqjN91pIo3cq+IW
+	qc90BQWLvUlj557+YoL54+jPtYvmD0PyCYxmW0me2EiLXfS9+U9G2KkiV61ZkL9ayQGGy3
+	vHYbLOtSwyi9YidDfE2CM4sD1bRfIfE=
 From: Atish Patra <atish.patra@linux.dev>
-Date: Mon, 22 Jun 2026 01:04:21 -0700
-Subject: [PATCH v7 09/22] RISC-V: Add Ssccfg/Smcdeleg ISA extension
- definition and parsing
+Date: Mon, 22 Jun 2026 01:04:22 -0700
+Subject: [PATCH v7 10/22] dt-bindings: riscv: add Counter delegation ISA
+ extensions description
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,8 +38,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260622-counter_delegation-v7-9-0ba2fd34614e@meta.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260622-counter_delegation-v7-10-0ba2fd34614e@meta.com>
 References: <20260622-counter_delegation-v7-0-0ba2fd34614e@meta.com>
 In-Reply-To: <20260622-counter_delegation-v7-0-0ba2fd34614e@meta.com>
 To: Jiri Olsa <jolsa@kernel.org>, James Clark <james.clark@linaro.org>, 
@@ -55,83 +55,80 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Atish Patra <atishp@rivosinc.com>
 
-Smcdeleg extension allows the M-mode to delegate selected counters
-to S-mode so that it can access those counters and correpsonding
-hpmevent CSRs without M-mode.
-
-Ssccfg (‘Ss’ for Privileged architecture and Supervisor-level
-extension, ‘ccfg’ for Counter Configuration) provides access to
-delegated counters and new supervisor-level state.
-
-This patch just enables these definitions and enable parsing.
+Add description for the Smcdeleg/Ssccfg extension.
 
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- arch/riscv/include/asm/hwcap.h |  2 ++
- arch/riscv/kernel/cpufeature.c | 24 ++++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
+ .../devicetree/bindings/riscv/extensions.yaml      | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-index 51ad55b9677a..089353b250b0 100644
---- a/arch/riscv/include/asm/hwcap.h
-+++ b/arch/riscv/include/asm/hwcap.h
-@@ -115,6 +115,8 @@
- #define RISCV_ISA_EXT_SSCSRIND		106
- #define RISCV_ISA_EXT_SMCSRIND		107
- #define RISCV_ISA_EXT_SMCNTRPMF		108
-+#define RISCV_ISA_EXT_SSCCFG		109
-+#define RISCV_ISA_EXT_SMCDELEG		110
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index 2493766e956d..eef5eeb198d0 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -181,6 +181,13 @@ properties:
+             changes to interrupts as frozen at commit ccbddab ("Merge pull
+             request #42 from riscv/jhauser-2023-RC4") of riscv-aia.
  
- #define RISCV_ISA_EXT_XLINUXENVCFG	127
++        - const: smcdeleg
++          description: |
++            The standard Smcdeleg machine-level extension for the machine mode
++            to delegate the hpmcounters to supervisor mode so that they are
++            directly accessible in the supervisor mode as ratified in the
++            20240213 version of the privileged ISA specification.
++
+         - const: smcntrpmf
+           description: |
+             The standard Smcntrpmf machine-level extension for the machine mode
+@@ -220,6 +227,14 @@ properties:
+             behavioural changes to interrupts as frozen at commit ccbddab
+             ("Merge pull request #42 from riscv/jhauser-2023-RC4") of riscv-aia.
  
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index 1452521d740a..1fe647e03515 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -330,6 +330,27 @@ static const unsigned int riscv_a_exts[] = {
- 	RISCV_ISA_EXT_ZKNE,	\
- 	RISCV_ISA_EXT_ZKNH
++        - const: ssccfg
++          description: |
++            The standard Ssccfg supervisor-level extension for configuring
++            the delegated hpmcounters to be accessible directly in supervisor
++            mode as ratified in the 20240213 version of the privileged ISA
++            specification. This extension depends on Sscsrind, Smcdeleg, Zihpm,
++            Zicntr extensions.
++
+         - const: ssccptr
+           description: |
+             The standard Ssccptr extension for main memory (cacheability and
+@@ -1135,6 +1150,32 @@ properties:
+             allOf:
+               - const: zilsd
+               - const: zca
++      # Smcdeleg depends on Sscsrind, Zihpm, Zicntr
++      - if:
++          contains:
++            const: smcdeleg
++        then:
++          allOf:
++            - contains:
++                const: sscsrind
++            - contains:
++                const: zihpm
++            - contains:
++                const: zicntr
++      # Ssccfg depends on Smcdeleg, Sscsrind, Zihpm, Zicntr
++      - if:
++          contains:
++            const: ssccfg
++        then:
++          allOf:
++            - contains:
++                const: smcdeleg
++            - contains:
++                const: sscsrind
++            - contains:
++                const: zihpm
++            - contains:
++                const: zicntr
  
-+static int riscv_ext_smcdeleg_validate(const struct riscv_isa_ext_data *data,
-+				       const unsigned long *isa_bitmap)
-+{
-+	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_SSCSRIND) &&
-+	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZIHPM) &&
-+	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZICNTR))
-+		return 0;
-+
-+	return -EPROBE_DEFER;
-+}
-+
-+static int riscv_ext_ssccfg_validate(const struct riscv_isa_ext_data *data,
-+				     const unsigned long *isa_bitmap)
-+{
-+	if (!riscv_ext_smcdeleg_validate(data, isa_bitmap) &&
-+	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_SMCDELEG))
-+		return 0;
-+
-+	return -EPROBE_DEFER;
-+}
-+
- static const unsigned int riscv_zk_bundled_exts[] = {
- 	RISCV_ISA_EXT_ZKN,
- 	RISCV_ISA_EXT_ZKR,
-@@ -576,12 +597,15 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
- 	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksg, riscv_zvksg_bundled_exts, riscv_ext_vector_crypto_validate),
- 	__RISCV_ISA_EXT_DATA_VALIDATE(zvkt, RISCV_ISA_EXT_ZVKT, riscv_ext_vector_crypto_validate),
- 	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
-+	__RISCV_ISA_EXT_DATA_VALIDATE(smcdeleg, RISCV_ISA_EXT_SMCDELEG,
-+				      riscv_ext_smcdeleg_validate),
- 	__RISCV_ISA_EXT_DATA(smcntrpmf, RISCV_ISA_EXT_SMCNTRPMF),
- 	__RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
- 	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
- 	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
- 	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
- 	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
-+	__RISCV_ISA_EXT_DATA_VALIDATE(ssccfg, RISCV_ISA_EXT_SSCCFG, riscv_ext_ssccfg_validate),
- 	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
- 	__RISCV_ISA_EXT_DATA(sscsrind, RISCV_ISA_EXT_SSCSRIND),
- 	__RISCV_ISA_EXT_SUPERSET(ssnpm, RISCV_ISA_EXT_SSNPM, riscv_xlinuxenvcfg_exts),
+ allOf:
+   # Zcf extension does not exist on rv64
 
 -- 
 2.53.0-Meta
