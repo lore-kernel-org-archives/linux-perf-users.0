@@ -1,174 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091C3263C8C
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 13:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782220753; cv=none; b=UBNfmTCrt7MGI1HYRMsUckLQVvomO5WGP7NfYeBUUReW6Eg3gxCwpP6wLrkAXbZCmeVjt05wXqGBqJvezNHvNAbWEjmPrN/bWdTOpbdCuqtSxynQSitL2cDbAU+Ada4Slzr/G1Kp01WeYFdfXPFsk2hkwvk16FYWP/PUYBUK4cQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782220753; c=relaxed/simple;
-	bh=8Ed/g/fbjMDiynwJzY8M2NisATT2tR1mKd+CJRgOd90=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=JlMf+L4AjZAHYHV17/L3avpxee1k8kxZwXbktbAZz+lyivtAoyRxK2gzy7ju7T3w++BgZDp1XGcOJ4PG28SDg+PN9gCdK5r8rG5xIOE5gc1ZkHCMevnoQNs4E/UwLj2XnnnWN+Rp7r6LFpYNAmdQANwyVK6yIrM1WR+2MUstENg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nypi6Vks; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B50350A18
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 13:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782221395; cv=pass; b=XTI78UMkBEkCSywOLjpw6/FdnONxqSUUyhCON4RSI/OAdzx27cMiOAEDRXM1b5neNL7FsjXlWnk1NL8Y/Dc8oXR/nU+MCCL5ZDqFDVanbAChvPIVV1s1LILN3av+19etj+2P4VQa0+G44niQDqmm1lrYlf2WCL0z/kO5HtkAX8s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782221395; c=relaxed/simple;
+	bh=pvopdsMv5vMxVcxFnrVZ7Q3OIZo7brgzX0LyyVbmd/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PJifC9m7qm8XlALc5Oq4bwH/QbcfODeyVsPyHWKM9THAvS4VqZPCmt3ghR3ZmgdqCFMbmXgRiHy1MHFW1ctx67JmZIwWsK6mD0CVxSeLx5ItRw0yYuUWgWYHHRdxlQAlxnQ4kkLeyU0k39qdHCTxTDuROU4EqpaNfdgg/CaNPgo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JRSHfj3Q; arc=pass smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nypi6Vks"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803831F000E9;
-	Tue, 23 Jun 2026 13:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782220751;
-	bh=nwnJ2FPoFKQgb0G+mi//fMq+sdqSsnd+gbwLfbidkmw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Nypi6Vksz1BZbJLKOtXrndk1o2pypl17CLWP22V5OLAo+TtBuxAs9UViB5ux47Mxr
-	 xmYULrAmJvSXx02RFOxnzONTR3HVRWQyID3bchoC+68fTn3TaL6VCKvYjOmC0CYy5f
-	 JfxUOOWYYT94argiscN9GbEHW46RSHNjt7RTNjSSBjMk5wAWh/9F71zkgK9XxD4kZ8
-	 oFGAQVKnNg2V7THkRpheOa9fUP0mjGGTku9K9Vpx4l1w22KCl/ZngtQMgpoNe54cIv
-	 hcSXGZhsaAAl0PoOdD5bFvRS6EuiKpgjdVHjkSoA1kcgEM39dsWrBuDJmRoIwMdGTZ
-	 wKFi9QgC5gIDw==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v1 2/5] perf disasm: Add ARM64 architecture
- detection and raw instruction parsing
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Shuai Xue" <xueshuai@linux.alibaba.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260623130234.8709-3-xueshuai@linux.alibaba.com>
-References: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
- <20260623130234.8709-3-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 13:19:10 +0000
-Message-Id: <20260623131911.803831F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRSHfj3Q"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-804e46366d7so22271997b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 06:29:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782221394; cv=none;
+        d=google.com; s=arc-20240605;
+        b=c2G0DJQG/asAOWfKxuyri8PRJIXNvWFZH2H2rLXnhZ3Vygg3/uhln2kMssUFQVH++E
+         EyqQIKCJ+XPExJBqSoT26sFzZgd5/vvVBnlU50Rl4YkDXtVOxhRPLWHX7hWboLm8Q3nB
+         ceD1B0/CIn8bYaoRMpN4IzeeelkKiDIIsniJhLi9kN6yIppQpAyCGDCUZNi86TdHAWaO
+         X39ZwAnBzoGeMPvuQXQee7QKnCb/vIH9Dzv5AbRp/seEBuEDQPTeN0Mua0+0wCstWSC5
+         qBgXM4CSLaFoTTTy6Xt2FfuHMRsQX3bkrbF35zSrtAxqdNveoUHad8eHTHYDZA3+71Np
+         f4xA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=FmHmIXXw9DS5fEEeykM6L+uF9W8BEvYOXYiQBx9JZS4=;
+        fh=FHAtYlEnyx2pJ/+0YgIoSTH+Nu0lUVWr7V0aFPNsnvo=;
+        b=h0pofh331zfdyWKmUhaxrv3z/FozUT835eBfXMYBOz6Te+gNZV4kT9WUWxI/xeujdq
+         E0iOE8rSGJBu7CskyrXe32UWcKuule2NU7ZgPdpq1xgI5eUXlvpHPEeIy8Eiy06ZeCKL
+         EsMrINvWoDkhaP87vwDvA0hIawnrFDwklmGnR4Fo91nRzrwwLK9jsohJ9nbAr5hq2VGu
+         Wk9mS4hQt8LIUnfezStCdTjFD7Nb9DeFa6aaf2g8FNxP1Ea8OueNvNgGDVFu1risDldf
+         sF4W6IyqzxyeCpbfW8BsnM2aG1yQ7GQA7a2+y6Fgq2PJ1LMSZG7TbsNzDKJvss5ILOYl
+         TgpQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782221394; x=1782826194; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FmHmIXXw9DS5fEEeykM6L+uF9W8BEvYOXYiQBx9JZS4=;
+        b=JRSHfj3QHxjn/kBk8mhftQt/ON0IKA+h4qd67yvUAAkaJkO/BeWXMZdjX4caQf/Bim
+         bKCpGogZGXIb3F9ka1ESphnvZ9zRon+2yoSD9FRJvbFJLKSRPtu4VBVltE9AtS7r8tKb
+         OfNijWMJkC9vI3lqW1Q43VlZg7u7c0KwSjFIZ5ZSz6J0KuKEbr66FFYnGkp5v2OuXxMl
+         efEiUbeOtTc5yAekgjToQQgkIw5/Gpkjf1LXG4o6Fjn9D9VYZlnYtRpcA5zWBBJbUmcI
+         MZ0XInKKd8g8sU8bY6cKNkeyqc7iuJ2ywAz4ZEpgvsjBJnbRb8Cayy27d/VueyL6ZQXg
+         JMgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782221394; x=1782826194;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=FmHmIXXw9DS5fEEeykM6L+uF9W8BEvYOXYiQBx9JZS4=;
+        b=PbnvNuhgEDAEwAPtghB/ltdVB+TBtNhM/5d6tK3GvHZenVr3Ny7A961CsVgmToatGz
+         2l8mJkRyk7tvgnMeZm1ywcpuJlC+FbuY6Nhi8vJ76Cp8qUSGDtHOP+dgpOo/7h0jfYZA
+         kN0dsKGxWVqcrB/d9vKeQ3OSPbMek7m9WMur911+vvwcKD8wqVKb8QwqUyDoYqZzS8i5
+         sJAYu3elLPLj2cuwgR7Zw+oU8UgC/8DQ+F4o6jHgLKAaYUX1OFjFJN7IZogTSYX8BvgE
+         LBm6tNNtvZICOCxC04JzC8Gx8MXZtvhjZMxpmGEVx4SWuR1iLOMcn3ZIPKVnUW7/hcpk
+         ycfg==
+X-Forwarded-Encrypted: i=1; AHgh+RqBnNErO93DmLfIXanXif5p22xgFNkSzdYAeGES8Gyp7cRYYWy+p6DIdDtB0y2e3fxOBZtTp3r+vZQwF3ZodOZB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnEK6s5WqOQndM97SIPo81U+5a0nCrcbwhn+Fm5A+rTm2Velxo
+	2NfRNkkrnlXfuWgPPN/oFWf9N/R0psdaUgPtWnKyzeQqfW8usbkTrnYANZ5vb8CKzBG02Sqaj0J
+	mzkkABGaWFZD52KDjdCKfoSp+yVs5JpM=
+X-Gm-Gg: AfdE7cnQnXVXxr+grXEKvkq2kSvmb6kiHHWPLPiKXnLZ7kJ0Y7udIm8clyMzqYjLeP4
+	nukarSF9px4bq6cVGmNbhfodhvCpQZjnjZ3wfb33X+S+O4ttJOtuilfwCYkiYEb4aCQfhfgKXq3
+	EdLk1D35swhFOWEfP7oPE3mwfmVDQyI37w+PZqFMI8IANJ1C3zRjhtVAeuLdEWNqTqURN1CVpke
+	Fx795KJo69MM4UlViDGJLrLY0Csk6rGmejjyxpaJrTlqpS8zcnl96KZCCFsQmuK0/J6QHkwWWcc
+	Mk/hIQva/5QLhn1OmVGfJcRmmpblNJuh/SQ=
+X-Received: by 2002:a05:690c:9b0a:b0:7fd:2b49:181a with SMTP id
+ 00721157ae682-806c226341dmr27480367b3.19.1782221393456; Tue, 23 Jun 2026
+ 06:29:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260622134933.35773-1-akinobu.mita@gmail.com> <20260622152432.32788-1-sj@kernel.org>
+In-Reply-To: <20260622152432.32788-1-sj@kernel.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Date: Tue, 23 Jun 2026 22:29:42 +0900
+X-Gm-Features: AVVi8CfnlzfNTmMwHdN7shEapsXJbXkpYk4ewUy7jToRUMM10YJXpvwK5mFO01E
+Message-ID: <CAC5umyi0v8Z3Frtr4yL_LRZu9O7wWF1HZfVbutagORde_i-7XQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] damo: support perf event configuration
+To: SeongJae Park <sj@kernel.org>
+Cc: damon@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	ravis.opensrc@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-
-New issues:
-- [High] `disasm_line__parse_arm64` corrupts disassembly lines from LLVM an=
-d Capstone by assuming the first word is always raw hex bytes.
-- [High] Assigning `dl->ins.name =3D ""` leads to a glibc crash (`free(): i=
-nvalid pointer`) during teardown.
-- [Low] Missing explicit inclusion of `<stdio.h>` for `sscanf`.
-
-Pre-existing issues:
-- [High] Reads past the end of the line buffer when processing raw hexadeci=
-mal instructions.
---
-
-commit 76213afac23a5e082aabd6700958b58201fa5b8a
-Author: Shuai Xue <xueshuai@linux.alibaba.com>
-
-perf disasm: Add ARM64 architecture detection and raw instruction parsing
-
-This commit adds an architecture detection helper for ARM64 binaries and
-introduces a new parser to extract raw 32-bit instruction words from ARM64
-objdump output. It wires up the new ARM64 parsing path alongside the existi=
+2026=E5=B9=B46=E6=9C=8823=E6=97=A5(=E7=81=AB) 0:24 SeongJae Park <sj@kernel=
+.org>:
+>
+> Hello Akinobu,
+>
+> On Mon, 22 Jun 2026 22:49:31 +0900 Akinobu Mita <akinobu.mita@gmail.com> =
+wrote:
+>
+> > This patch set aims to make it easier to specify the perf event setting=
+s
+> > proposed for DAMON by Ravi's hardware-sampled access reports patch set =
+[1]
+> > from the damo tool.
+>
+> Seems this patch is built on top of the per-CPU/thread/read/write monitor=
+ing
+> patch series [1].  We made a plan [2] to use another user interface, thou=
+gh.
+> The plan is, making the interface ready for page table accessed bits base=
+d
+> monitoring by LPC'26 (milestone 1), and implementing the perf event based
+> monitoring on top of it, by LSFMMBPF'27 (milestone 2).
+>
+> So the eventual damo part change for supporting perf event based monitori=
 ng
-PowerPC implementation.
+> will be quite different from this series.  I guess you are sharing this s=
+eries
+> not because you aiming to merge it as is right now, but just for sharing =
+the
+> code with other stakeholders like Ravis, not me?  If I'm not wrong, I wil=
+l skip
+> this series for now, to focus on the milestone 1.
 
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 59ba88e1f7443..83fad4f01442b 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -902,6 +916,53 @@ static int disasm_line__parse_powerpc(struct disasm_=
-line *dl, struct annotate_ar
+Since I will align with the final user interface later, please focus on
+the optimal interface for Milestone 1 without worrying about that.
 
-[Severity: High]
-This is a pre-existing issue, but does the pointer arithmetic in
-disasm_line__parse_powerpc() read past the end of the line buffer?
+> Please let me know if you want more of my feedback.
 
-char *tmp_raw_insn, *name_raw_insn =3D skip_spaces(line);
-char *name =3D skip_spaces(name_raw_insn + RAW_BYTES);
+However, even if the interface ends up being completely different from the
+current one, I believe that enabling configuration via `damo` using
+symbolic event names like this would still require calling the perf
+python interface (`import perf`) from damo and modifying the `perf` tool
+itself; could you please check if that approach is acceptable?
 
-If symbol__disassemble_raw() populates the line argument with an 8-character
-string, and RAW_BYTES is hardcoded to 11, could skip_spaces() end up reading
-from uninitialized stack memory?
+Thank you for your continued excellent work on improving DAMON.
 
-> +/*
-> + * Parses ARM64 disassembly output which includes raw instruction bytes.
-> + * ARM64 objdump format:
-> + *   a9bf7bfd 	stp	x29, x30, [sp, #-16]!
-> + *
-> + * The raw instruction is a hex word (typically 8 chars) followed by whi=
-tespace.
-> + */
-> +static int disasm_line__parse_arm64(struct disasm_line *dl, struct annot=
-ate_args *args)
-> +{
-> +	char *line =3D dl->al.line;
-> +	const char **namep =3D &dl->ins.name;
-> +	char **rawp =3D &dl->ops.raw;
-> +	char *name_raw_insn =3D skip_spaces(line);
-> +	char *end_raw, *name, *tmp_raw_insn;
-> +	int ret =3D 0;
-> +
-> +	if (name_raw_insn[0] =3D=3D '\0')
-> +		return -1;
-> +
-> +	/* Find end of raw instruction hex by looking for whitespace */
-> +	end_raw =3D name_raw_insn;
-> +	while (*end_raw && !isspace(*end_raw))
-> +		end_raw++;
-> +
-> +	name =3D skip_spaces(end_raw);
-> +
-> +	if (args->options->disassembler_used)
-> +		ret =3D disasm_line__parse(name, namep, rawp);
-
-[Severity: High]
-If a user analyzes a binary with the capstone or llvm disassemblers, the
-output lacks raw hexadecimal bytes. Does this loop assume the first
-non-whitespace token is always the raw hex instruction?
-
-If so, could this isolate the instruction mnemonic by mistake, and cause the
-remaining operands to be parsed incorrectly as the instruction mnemonic?
-
-> +	else
-> +		*namep =3D "";
-
-[Severity: High]
-When perf annotate is run with the source flag, the disassembler_used option
-evaluates to 0. This assigns a read-only string literal to the namep pointe=
-r.
-
-Later on, disasm_line__free() unconditionally attempts to free this memory:
-
-void disasm_line__free(struct disasm_line *dl)
-{
-        zfree(&dl->ins.name);
-        ...
-
-Will attempting to free this string literal cause a glibc crash?
-
-> +
-> +	tmp_raw_insn =3D strndup(name_raw_insn, end_raw - name_raw_insn);
-> +	if (tmp_raw_insn =3D=3D NULL) {
-> +		if (args->options->disassembler_used)
-> +			zfree(namep);
-> +		return -1;
-> +	}
-> +
-> +	remove_spaces(tmp_raw_insn);
-> +
-> +	if (sscanf(tmp_raw_insn, "%x", &dl->raw.raw_insn) !=3D 1)
-
-[Severity: Low]
-Does this new usage of sscanf require an explicit include of <stdio.h> at t=
-he
-top of the file to prevent musl libc build failures?
-
-> +		dl->raw.raw_insn =3D 0;
-> +	free(tmp_raw_insn);
-> +
-> +	return ret;
-> +}
-> +
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623130234.8709=
--1-xueshuai@linux.alibaba.com?part=3D2
+> [1] https://lore.kernel.org/20251208062943.68824-1-sj@kernel.org
+> [2] https://lore.kernel.org/20260525225208.1179-1-sj@kernel.org/
+>
+>
+> Thanks,
+> SJ
+>
+> [...]
