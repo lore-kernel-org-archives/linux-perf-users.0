@@ -1,80 +1,80 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC505372661
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 23:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2A9285066
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 00:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782172769; cv=pass; b=GN1ZyhaUI5u+0bNTiTHugBWCcomdKzWphTMbuJ2UQueRbZ2bVV6IO9Ux5WD1y3QhoaYp7Q1R5WXFv3X/pcHw7FDM+5lXOeay/CZsVjHzjhpP3nYibCxtGS6gDu4kMUVtIW0uHAvVNH8+ar9m/kQRhLRZ4MGYV1lw4xvo0P9VViU=
+	t=1782175925; cv=pass; b=BiCOPwB+lFgbuSmRiJ6DN2YHOJz/918MVfufz4f8gGZH2AJGNwzVhQEMuQ/2MpvFmZXXWQaegqZ8gWhEDO+VYOZBpJPrdWD6nS73GH6BzKcXrH5Dvdq/lVGzALwhqRJh6BNe2OxbEeBRkbzYdau3jvhA6xkXstmMXMZ9nx3B0xk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782172769; c=relaxed/simple;
-	bh=K51GHx82gzsQATgtTITm/HOcXusIVMempY6163wk2Ds=;
+	s=arc-20240116; t=1782175925; c=relaxed/simple;
+	bh=uHUV9aJt3qmeqRpKSvYEGi1cQdNEJmWLA/blzr9jpwA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HqEd1GxkUGEfSt6z6WO7ip32gtyynQTPk2euzBXgEx2CRH5ZGXZghw3I0ukOuPBOHVzsNMJjy9Jq1gHN1ZHVDMDmJEbI9R/yOiVtFOYUpwDKIFOnY3KxP2ODZwcbDG/mg0mtPDIurdP3loUxbkM9rK2GypBKviorNVrHGxjxHr8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W/AAZ+L3; arc=pass smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=bGdCFDXIll9KtttASDlOXbHmvJKJcQCv41F6gdEYiCPU+CkEGx19n6uvvN3JrfGoebVJwUUze1gngvcuefnlozneC8xIF/CYl4M0Fy7eI5RVrcqE53lRUHLR5Ie0JiPzXJEkTvhtNPAPN27DiXHduivIq5csvIy/3RWnXmkNPio=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vp2KxqLz; arc=pass smtp.client-ip=74.125.82.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W/AAZ+L3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2c6a4eccab1so10745ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 16:59:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782172767; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vp2KxqLz"
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-139a251a6ceso5802c88.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 17:52:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782175921; cv=none;
         d=google.com; s=arc-20260327;
-        b=F4zvun6y9M6lP3PxRrep1JjvBhzHYv8xD7V/O8wzyWqgqEXykdz0P+FWl62RxynjUH
-         sfpBRDcklcjR0Thwn29K4UL4eYmzL36jUmMGVbybvd3l3hFlaPbAeU0GjDtb64FXAdCk
-         A0MlMVIXmPL8uxAlJPHUA3zItyWymvXMYCM5LNzZyADm04Ael9D7/f2JF0zox/JzKHqK
-         +ub9Up2G4n4ALmEg8cZM9j6BtLVufrKoEa6bspB6llYWrpNYPLEZNqTPe7Wyui8fIFbQ
-         FuOcZ8s6HULN7dyCyv+fGmK/LtymwzlsahcmrewAy2FHsJFYfi91BKzuobqF81sWBfC2
-         3jaA==
+        b=RER+3XwSeoJkk8P9/cbCvmDq9TaqtPzxF80ZOkM9aY8sI4Iijy48XpYjytezMu1Ura
+         3pyGJybI1vKq9rfOfvGTK2OLujBQ+NVx2lh7nL6M3O2nMY2UOvmmAFigeIePKpjfDIK0
+         3wNs4Vlw7vHjo74fgqgpf+VrUGt4eHvuiWBdHzfHHsbJQVzGLKmPTzMSuNA9W4wXzDq3
+         cI6NFfAqEHLBNXYV56eowP61zNdI9J1/QijQgCJg0RZElAbOH8Nx9P/xRDVV6JNdjct/
+         G9IfBLJHn3Ia5ciHo38vhzBT3ZulaX/xgj77m6HqJjBZqa/equmeSz+KBcrRp3bhxs3G
+         oShw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=UxzcRs2UWqLZ9LFgDOruDpH1+oVKLoL4iLpHMznbCgU=;
-        fh=e/dZ2NKLAOWzvekJSJjQhgwsOv6SR85WpCEsC5f9rIs=;
-        b=oFtvwAocqz/vZoMia8AoO1vQFTWBONHP8tQ06rK3sFKMIpKmwYGiygs50/d9mqmd4S
-         00uqwIqc5P9iu8U38z3dytpHPZNdCvV/5wb0Qhlw6Kst88K8cAs33wgZvaiyn0v861PW
-         2tDRBAtdL+Ts3o5RgV5szojAduagb0licVhz6hY8BS1qmUz2n+fb/HNllGyQDK7f9usW
-         7eIRAbbu5PW9VclrRRk3CvXPxwQjyGmVU5hyqrOwQijw+PI1/NK609A4DL4EDTQCwY7X
-         gIKdOItpXtJ4RpGl+AvfXtFh6uF1851TJkJCGJm6QmERTqO3Br3hdfk3spbw9Z+U7pho
-         e/GQ==;
+        bh=FamSot50PBYVTL6MJiapknBP3Rx+ecY9WSssddKwWks=;
+        fh=nb+Mtnr3JuzcMbhqm1qpf5iRLW2/oDo1IUeTCRdToxY=;
+        b=L+Edm5Q8qeXe7Oz+sz+UC46NJ6biuUj21HLkt0QnJ4earAmynmFOmI+DtN58uxfHfl
+         kbRK5H+DiAgCFCzngSkVBgJ0VXA6y7q+fdknaHEMWH5iNt3InMhK20YyIenzMzn/SoTY
+         fe9oBgjpOkkoL/3eupedcGMdM3vZIsSElaMMfKwP7S8gwv5HKtyr1+KwJCYS5ltOwO82
+         7pk+Rc5bsVphuCldhJhlWySnTx8TCbbKpFhE8SvMZUaUA6XOHBl1vixutt1Bn3NrVHxA
+         ADUpnnjvGDNBnGthckbF5xBWpAA0xPW9inSP6fBvzATlvZ/2ragABetUmHtSblqSbyHn
+         nIcQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782172767; x=1782777567; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782175921; x=1782780721; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=UxzcRs2UWqLZ9LFgDOruDpH1+oVKLoL4iLpHMznbCgU=;
-        b=W/AAZ+L3E5vr0+iVUYnb6X7EY6w8xS/epQUPe/uZY/J9HKDVqaootwkbfkEQKgLXyR
-         zMM6e34cpwtO9G9VMCM9ozrcl1JOcLOdWlS8luX4LZPs25q/VArUWgHk5I8dSAGpp8kk
-         zrxV4NhwA5TLHnGU8q20m7ldaK+E1zLs736JrlpyCJ2OqdnB7HXgl0C+GmOufcbmyw3W
-         yWtAR1hFzDu7Gm+ZVzmOutLOS4UwSv9SDN6R2ahFN9nvIx2g+byW8xzLL3EMzWaJ6n3f
-         3VAIT3ESysDcoVISDwkkbaV0cl1hKDQ5zmQukaacZNKzy1zAh3UkgoiQZGxlzcchwUMw
-         Webw==
+        bh=FamSot50PBYVTL6MJiapknBP3Rx+ecY9WSssddKwWks=;
+        b=vp2KxqLzXdXfbuBTCHf78EejEgZxcp9+KesqH2DTLQ/AyuVt2RdaYzE+mH1Hbsx3Qu
+         FAml0A336lxp5wDH58X62sMDmpT/l6BccIpv+K3z3udvhxQWzhCAfVDSVX9aS30c5kFe
+         DByNHKDs33fTkBOhZ215m28Wq+ti/lbAn9IkM61IBgpoO/6h1p7JoZyGd0LulcyDOLi8
+         jxjgESrPZBhhZA4muWOr6mdDBMvIRcQUuTrPkeycX6fL6dZO/f0jpiyYlRi+Uac/s0ev
+         JdZisjM5pLmdVkguWcG4mB3CD+dqqNkPJA0rLz9ncSa+XfT2i3gdrMoKyWHb5Gm1vmDe
+         nZKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782172767; x=1782777567;
+        d=1e100.net; s=20251104; t=1782175921; x=1782780721;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=UxzcRs2UWqLZ9LFgDOruDpH1+oVKLoL4iLpHMznbCgU=;
-        b=KyGeDMPqNTmNTQp8xL+a05DgppZpE1uNn08C9AjVanddILNOJTfN5uVt8HjFt4WoBV
-         w5/8dkmS3KXIdRh1320/DDrM6527VIr9EQOFat/yKsUOUZZWSL+fLDOvqumwVP78fFCQ
-         cesXlBPCIKIr8XKkeKUl1lzm1ryaW+ZsgDtosNQKmHykhRNJofCsrEWnlUmpXCq60hoy
-         i348g+NmnquB5yv91bQtjE6cjiPn1eRosjoAo34Y3xzmAKqu3oniYBWSZPLDcxEytVKi
-         h8la2Qi4Pla7LWs0Dcwlmq63houueJAAmDfdhBo0Faejp6WjnlCGbYr+x5BwNLkctNaI
-         4ytA==
-X-Forwarded-Encrypted: i=1; AHgh+RphXemfdOiMAkxK8syDkPFH+/ks9VojecAuGWDoiJZdP3tEN49GxD1uxFP8874a2RgB/q9wBVuo5eOy8JbLUhOf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxXTwp6AXh+DxXFBckV36bKdE28andoS2W2BmOkhFQJ7HBlGMc
-	0TUajQ9rcKwkX3LIYYULU3h3VS8o7TmAMAbbrJpgDLIWmOGLrAAoraqPHqH/moWtPddjxGC/NqM
-	DfglcHIq4RLEUBpFkIdXuKufkRT0OffYkht5d27Az
-X-Gm-Gg: AfdE7cly4Gxymmc4I+ApnE2/r/wn+5PG21Cl8yE6O+kVPF/VxhoPua6G4ZPghNq1oW8
-	mc7pyhDzNLsVZPcftjsSZs/+ox7O1OzNsrS2OBOn7FFZcys+p3+l0WeCEjyNOJ9xvJiZsonpMtp
-	pzGMAsPPERZcuXVACh6wPOoDXY6AZ4wK3LKeW5u5XdIxJYQc+/g8cWeNKazX/pnzgWFcNeIQA62
-	BPtoCyFCOdwRHmkFuKetOfvuPQmSVVKXTUtRzfGiX/mbeG3Pm3lsCuDkjVd/rOc/22+wQrUPA==
-X-Received: by 2002:a17:902:c404:b0:2bf:749:55c with SMTP id
- d9443c01a7336-2c7c711c2f1mr560595ad.21.1782172766271; Mon, 22 Jun 2026
- 16:59:26 -0700 (PDT)
+        bh=FamSot50PBYVTL6MJiapknBP3Rx+ecY9WSssddKwWks=;
+        b=GNj+AiCxgNM1B+D46kMnT0nyzCEOxhb6Bv/3KUf0nE09xZvv82KZmPfxmE0gHzvGhK
+         RmMj9CRSZcdjXgLmtJuVwAU9dfZ22Ce2xDpkzHaICmuGTJGSdPIddevP8K1NPuRlrklP
+         Zbq+cmwH0Mw0L/rueHAzgujEpMeVhRxP6Xlmi3/KI8dqfYq4Djk2lWreDQuasv+n9Rtc
+         WiQpQ5Sh9kWILMIqsxu+VKF3aCfyG0FzqRIJEqhndzXT2Sp0Smp4+N4Hh303su26mNX8
+         TYfLaEcn5bCk3Hozb3+MW0aWtHCbIuZAdJis9yTHYzN7s+Pfu7oez9gUEAEeduoBbG6a
+         DBoQ==
+X-Forwarded-Encrypted: i=1; AFNElJ977MNRolgE5P3jEGd1H6JaZ/uNl6P+fFjwlLj5Z6CC/FShlMp2HUc6iAafJCidRtiuvRRAZS+2oC+8T9d/58ES@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzpZ+Q3jsI0uNJ3XyPji9SnkXffWmxBBRGc5vR/J6QyIKdwAPc
+	f3+z27JXbyzt7u7pYi0r+pkeBM0hrpNnHtwirHJUrYzZGy+pYAkPVvOMxlR71Cj2jv1tAdCiae4
+	qsiWmiH+JlhvPru9wQsYTPdn/PE7q/EaN+PqUa6gY
+X-Gm-Gg: AfdE7cnNLNLwWr6kB9pZIf/u1d08PYrpvC3dP4MFfFDR3mHZN0cEeGzObUgTsr99+1X
+	sR1WX3PfajHEKlSr9C7NncEloakJQCZHrKyW1qZzMzugZXHHWJZEXN6F27EJZQzZCMPqrv4eiQF
+	gKM6M7XmDRrDaPQ9fLzl4ygiFEUCtFpDYczeE5YQyD0Gp7Nx69Hl+dqzkTRXIabIX2kKbNmuWB6
+	AxUGuiCJaFJ+GySfTdDSDdgTc8n0JiGxXEsfZSHmQ9CxlUM32PAxCfKsgdeOHqezSsEiLbEXA==
+X-Received: by 2002:a05:7022:7a4:b0:139:b0fc:f84 with SMTP id
+ a92af1059eb24-139c55ed220mr57524c88.11.1782175920530; Mon, 22 Jun 2026
+ 17:52:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -82,140 +82,227 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260616061404.41929-1-irogers@google.com> <20260616164819.370939-1-irogers@google.com>
- <20260616164819.370939-5-irogers@google.com> <ajMhklrFodxJmb2F@google.com> <ajPxqM3s0fGP4fFi@x1>
-In-Reply-To: <ajPxqM3s0fGP4fFi@x1>
+ <20260616164819.370939-3-irogers@google.com> <ajMg1JQBlnMxhNfl@google.com>
+In-Reply-To: <ajMg1JQBlnMxhNfl@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 22 Jun 2026 16:59:15 -0700
-X-Gm-Features: AVVi8Ce8TowVPI5oKFqFO8vY7Sn6r8C9JA-kzz5gIevB500ckGQj4plgVl__L7A
-Message-ID: <CAP-5=fVwvX01JpjJarBBYUnKwWmQ-1WKPBAj3ZDL9cwTCHvqpQ@mail.gmail.com>
-Subject: Re: [PATCH v3 04/13] perf tests: Add robust record retry helper and
- use subsecond workloads
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, adrian.hunter@intel.com, james.clark@linaro.org, 
+Date: Mon, 22 Jun 2026 17:51:48 -0700
+X-Gm-Features: AVVi8CeW0zJv9nFqrIoIbYSW48rSyyUzkQ2f9zBk88GsavGq9xAqt8PzHdiRhYs
+Message-ID: <CAP-5=fXU_7Hgo=6N8gQOFuwr3=Jf7tz70GTxXEKmNsE5vHqPSw@mail.gmail.com>
+Subject: Re: [PATCH v3 02/13] perf test: Truncate test description to fit
+ terminal width
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
 	jolsa@kernel.org, leo.yan@arm.com, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
 	thomas.falcon@intel.com, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 18, 2026 at 6:25=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Wed, Jun 17, 2026 at 3:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Wed, Jun 17, 2026 at 03:37:06PM -0700, Namhyung Kim wrote:
-> > On Tue, Jun 16, 2026 at 09:48:09AM -0700, Ian Rogers wrote:
-> > > Introduce `perf_record_with_retry` and `perf_record_cleanup` in a sha=
-red
-> > > library `tests/shell/lib/perf_record.sh` to prevent record test failu=
-res
-> > > caused by transient recording or workload delays.
-> > >
-> > > Update `record.sh`, `record_lbr.sh`, `pipe_test.sh`, `kvm.sh`, and
-> > > `stat_all_pfm.sh` to use this robust record retry logic. These tests =
-now
-> > > start with very short durations (e.g. 0.01 seconds) and scale up if t=
-he
-> > > initial recording failed to capture samples, significantly improving =
-test
-> > > execution speed on success while remaining resilient to slow systems.
-> > >
-> > > Assisted-by: Antigravity:gemini-3.1-pro
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > [SNIP]
-> > > @@ -60,22 +71,29 @@ test_kvm_stat() {
-> > >  test_kvm_record_report() {
-> > >     echo "Testing perf kvm record/report"
-> > >
-> > > -   echo "Recording kvm profile for pid ${qemu_pid}..."
-> > > -   # Use --host to avoid needing guest symbols/mounts for this simpl=
-e test
-> > > -   # We just want to verify the command runs and produces data
-> > > -   # We run in background and kill it because 'perf kvm record' appe=
-nds options
-> > > -   # after the command, which breaks 'sleep' (e.g. it gets '-e cycle=
-s').
-> > > -   perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
-> > > -   rec_pid=3D$!
-> > > -   sleep 1
-> > > -   kill -INT "${rec_pid}"
-> > > -   wait "${rec_pid}" || true
-> > > +   local duration
-> > > +   local success=3Dfalse
-> > > +   for duration in 1 2 4 8; do
-> > > +           echo "Recording kvm profile for pid ${qemu_pid} (duration=
- ${duration}s)..."
-> > > +           rm -f "${perfdata}" "${perfdata}".old
-> > > +
-> > > +           perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" =
-&
-> > > +           local rec_pid=3D$!
-> > > +           sleep ${duration}
-> > > +           kill -INT "${rec_pid}"
-> > > +           wait "${rec_pid}" || true
+> On Tue, Jun 16, 2026 at 09:48:07AM -0700, Ian Rogers wrote:
+> > The parallel test harness uses the carriage return delete escape sequen=
+ce
+> > `PERF_COLOR_DELETE_LINE` ("\033[A\33[2K\r") to erase and update the
+> > "Running (X active)" progress lines.
 > >
-> > Can this be just like below?
+> > However, if a test description is longer than the terminal width, the l=
+ine
+> > wraps around. When this happens, the cursor up escape sequence `\033[A`
+> > only moves the cursor to the last wrapped row, leaving the top half of =
+the
+> > description printed on the previous line. This leads to name duplicatio=
+n
+> > and output corruption spilling over multiple rows on consoles narrower
+> > than the maximum description length (e.g., 101 columns wide).
 > >
-> >               perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" =
-sleep ${duration}
+> > Fix this by dynamically querying the terminal width using
+> > `get_term_dimensions` and truncating the printed test descriptions usin=
+g
+> > the `%-*.*s` printf format. We reserve 35 characters for prefix, status=
+,
+> > and spacing metrics to guarantee the progress line never wraps.
+> >
+> > Fixes: 0e036dcad4e6 ("perf test: Display number of active running tests=
+")
+> > Assisted-by: Antigravity:gemini-3.1-pro
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/builtin-test.c | 130 ++++++++++++++++++++++++--------
+> >  1 file changed, 98 insertions(+), 32 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
+-test.c
+> > index afc06cec4954..1dcaeb8505b7 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -10,35 +10,39 @@
+> >  #ifdef HAVE_BACKTRACE_SUPPORT
+> >  #include <execinfo.h>
+> >  #endif
+> > -#include <poll.h>
+> > -#include <unistd.h>
+> >  #include <setjmp.h>
+> > -#include <string.h>
+> >  #include <stdlib.h>
+> > -#include <sys/types.h>
+> > +#include <string.h>
+> > +
+> >  #include <dirent.h>
+> > -#include <sys/wait.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/string.h>
+> > +#include <linux/zalloc.h>
+> > +#include <poll.h>
+> > +#include <sys/ioctl.h>
+> >  #include <sys/stat.h>
+> >  #include <sys/time.h>
+> > +#include <sys/types.h>
+> > +#include <sys/wait.h>
+> > +#include <unistd.h>
+> > +
+> > +#include <subcmd/exec-cmd.h>
+> > +#include <subcmd/parse-options.h>
+> > +#include <subcmd/run-command.h>
+> > +
+> >  #include "builtin.h"
+> > +#include "color.h"
+> >  #include "config.h"
+> > +#include "debug.h"
+> >  #include "hist.h"
+> >  #include "intlist.h"
+> > -#include "tests.h"
+> > -#include "debug.h"
+> > -#include "color.h"
+> > -#include <subcmd/parse-options.h>
+> > -#include <subcmd/run-command.h>
+> >  #include "string2.h"
+> >  #include "symbol.h"
+> > +#include "tests-scripts.h"
+> > +#include "tests.h"
+> >  #include "util/rlimit.h"
+> >  #include "util/strbuf.h"
+> > -#include <linux/kernel.h>
+> > -#include <linux/string.h>
+> > -#include <subcmd/exec-cmd.h>
+> > -#include <linux/zalloc.h>
+> > -
+> > -#include "tests-scripts.h"
+> > +#include "util/term.h"
+> >
+> >  static const char *junit_filename;
+> >  static struct strbuf junit_xml_buf =3D STRBUF_INIT;
+> > @@ -413,23 +417,73 @@ static char *xml_escape(const char *str)
+> >       return res ? res : strdup("");
+> >  }
+> >
+> > +static int get_term_width(void)
+> > +{
+> > +     struct winsize ws;
+> > +     int cols =3D 80;
+> > +     int term_width;
+> > +
+> > +     /*
+> > +      * If output is redirected to a file or piped, we don't need to w=
+rap
+> > +      * or truncate at all. Use a massive virtually infinite terminal =
+width
+> > +      * so descriptions are printed in full.
+> > +      */
+> > +     if (!isatty(fileno(debug_file())))
+> > +             return 10000;
+> > +
+> > +     get_term_dimensions(&ws);
+> > +     if (ws.ws_col > 0)
+> > +             cols =3D ws.ws_col;
+> > +
+> > +     /*
+> > +      * Limit description width to fit on a single line. We subtract 3=
+5
+> > +      * columns of headroom to allocate space for:
+> > +      * - The suite index prefix: e.g. " 10.100:" (9 characters).
+> > +      * - The colon separator and spaces: " : " (3 characters).
+> > +      * - The longest status results: e.g. "Skip (some metrics failed)=
+" (26 characters)
+> > +      *   or "Running (XX active)" (20 characters).
 >
-> Right, looks equivalent and simpler,
+> I don't understand how it can be 35.  The suite index prefix pattern
+> looks like "%3d.%1d:" which is 6.  Also it seems we don't have a space
+> before the colon (for the test result).
+
+There are 2 colons, one after the test.subtest and one before the
+result. I'll tweakt the comments.
+
 >
-> I was making notes to address the flakiness that is making me use the
-> end summary of entries that fail (great feature) to run them in
-> isolation to check if they work that way, which most do :-\
+> > +      *
+> > +      * A minimum description width of 10 is enforced to ensure names =
+are
+> > +      * legible even on very narrow consoles.
+> > +      */
+> > +     term_width =3D cols - 35;
+> > +     if (term_width < 10)
+> > +             term_width =3D 10;
+> > +
+> > +     return term_width;
+> > +}
+> > +
+> > +static int get_max_desc_width(int width)
+> > +{
+> > +     int term_width =3D get_term_width();
+> > +
+> > +     return width > term_width ? term_width : width;
+> > +}
+> > +
+> >  static int print_test_result(struct test_suite *t, int curr_suite, int=
+ curr_test_case,
+> >                            int result, int width, int running,
+> >                            const char *err_output, double elapsed)
+> >  {
+> > +     int pad_width =3D get_max_desc_width(width);
+> > +     int term_width =3D get_term_width();
+> > +
+> >       if (test_suite__num_test_cases(t) > 1) {
+> >               char prefix[32];
+> >               int len =3D snprintf(prefix, sizeof(prefix), "%3d.%1d:",
+> >                                  curr_suite + 1, curr_test_case + 1);
+> > -             int subw =3D len >=3D 4 ? width + 4 - len : width;
+> > +             int pad =3D len >=3D 4 ? pad_width + 4 - len : pad_width;
+> > +             int trunc =3D len >=3D 4 ? term_width + 4 - len : term_wi=
+dth;
+>
+> Can 'len' be less than 4?  I don't think so..
+>
+> Anyway, do you know why do we care?
 
-Here is an explanation from antigravity (sorry I have some typing
-issues atm), but it comes down to how the command line is built up:
-
-  Normally, we could just write:
-
-    perf kvm --host record -p "qemu=E2=82=9Aid" - o"{perfdata}" sleep
-${duration}
-
-  However, on Intel x86 architectures, if no  -e  option is supplied
-to  perf kvm record , it calls architecture-specific setup logic (
-__kvm_add_default_arch_event_x86() ) which automatically appends  "-e"
- and  "cycles"  to the end of the  argv  array.
-  Because  perf record  option parsing stops at the first non-option
-(which is  "sleep" ), any arguments appended after the workload name
-are forwarded directly to the workload command. This turns the
-executed command into:
-
-    sleep 1 -e cycles
-
-  Which causes  sleep  to crash with:
-   sleep: invalid option -- 'e'
-
-I'll revise this in v4 to be clearer, but we should probably also fix
-the option parsing issue.
+It was a safety measure carried forward, maybe due to Sashiko originally.
 
 Thanks,
 Ian
 
-> - Arnaldo
+> thanks,
+> Namhyung
 >
 > >
-> > Thanks,
-> > Namhyung
+> > -             pr_info("%s %-*s:", prefix, subw, test_description(t, cur=
+r_test_case));
+> > -     } else
+> > -             pr_info("%3d: %-*s:", curr_suite + 1, width, test_descrip=
+tion(t, curr_test_case));
+> > +             pr_info("%s %-*.*s:", prefix, pad, trunc,
+> > +                     test_description(t, curr_test_case));
+> > +     } else {
+> > +             pr_info("%3d: %-*.*s:", curr_suite + 1, pad_width, term_w=
+idth,
+> > +                     test_description(t, curr_test_case));
+> > +     }
 > >
-> > > +
-> > > +           if [ -e "${perfdata}" ] && \
-> > > +                   perf kvm -i "${perfdata}" report --stdio 2>&1 | g=
-rep -q "Event count"; then
-> > > +                   success=3Dtrue
-> > > +                   break
-> > > +           fi
-> > > +           echo "No samples or report failed, retrying..."
-> > > +   done
-> > >
-> > > -   echo "Reporting kvm profile..."
-> > > -   # Check for some standard output from report
-> > > -   if ! perf kvm -i "${perfdata}" report --stdio 2>&1 | grep -q "Eve=
-nt count"; then
-> > > +   if [ "$success" =3D false ]; then
-> > >             echo "Failed to report kvm profile"
-> > > -           perf kvm -i "${perfdata}" report --stdio 2>&1
-> > > +           perf kvm -i "${perfdata}" report --stdio 2>&1 || true
-> > >             err=3D1
-> > >             return
-> > >     fi
+> >       switch (result) {
+> >       case TEST_RUNNING:
+> > -             color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d ac=
+tive)\n", running);
+> > +             color_fprintf(debug_file(), PERF_COLOR_YELLOW, " Running =
+(%d active)\n", running);
+> >               break;
+> >       case TEST_OK:
+> >               if (test_suite__num_test_cases(t) > 1)
