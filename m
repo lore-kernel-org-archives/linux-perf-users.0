@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575EB2853FD;
-	Tue, 23 Jun 2026 16:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E771531A572;
+	Tue, 23 Jun 2026 16:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782233354; cv=none; b=i3UKSfTMHNv7dp04DNvBTluQ9XqaornSaEv0Q5SOtK1qBxkV7XhRaRWqGj1R9k6EYZpBKmN39O8LzaS6hZzR4yykVFa55tzG2OvEWqMtV5xYuYec7DFXer84q8m4NMopRa/nC5506+zSX4f5ejKPD0JkMILvJPTnMmaFDGH6AyA=
+	t=1782233439; cv=none; b=frwVBN70DIMQl8xMRoZWe1CkaEyZnEgEKBxuo3TRdHo4TdMknSTVovEpwfN18nQrKszeHfDFYZ0DcImn6SJBlij67JtrRP0LX4/Uk3EhbiuvXdspoR0jAhqUajsUcboOdK1JTHKpcqHKvEThw32Bp6Rl3WVNKZtpZONu7vxF5zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782233354; c=relaxed/simple;
-	bh=uJESZwzQetj7bsP1Y5YB4Rky1pTFuKDm1eTLjrcKgD4=;
+	s=arc-20240116; t=1782233439; c=relaxed/simple;
+	bh=iSPyoWrYb2LuFO1daSjKV4Q++qam+9le+dn+2rPNgYs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QxSegIDaKpNCwkgiqgBtXsJS8kbmKmfORRz5wd++cfjIO2daZTKPGHXAhE+p/OJUqyosOrFAALHPwksMp9cjPTWrEqb1MaLe1En6yAOzC+vdHwPZG23Qnxanvba6gYTZltU59kr2+f3AQfdGBwj7hMXv3+NiYt8y53SCid7T4Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPIsYuJZ; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=YWFA4iJfnawNWOVAyfFUr9jKAhwDATqKgB+DpYTCPoKg0Vuq7SkODKLlI20K1HreEiib219x/QE+mAmYkskLMwy4W2IgAnlhn+f8+WZlwZIDy43odkZiKLwuYp7LfGZ8djLYcwbrwbBPlF3BjR83pCQM2u+Mzb1eeEO/SokJetw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=An35byh6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPIsYuJZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BF51F000E9;
-	Tue, 23 Jun 2026 16:49:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="An35byh6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0FA1F000E9;
+	Tue, 23 Jun 2026 16:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782233353;
-	bh=UAIuZzJVuMknDux/bEzPsZD71ovTlDxXumqdgDrt0ro=;
+	s=k20260515; t=1782233437;
+	bh=OeRJ0tgCTUv568G8vi1FHh0MfeToMCU0SIxW5SVSQnI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FPIsYuJZMGuNFb42/8CgB2rsdvqjeyPAE9jDG55eYI6/yUBXW4b0e4N7MBjr6GcoT
-	 LDTTDrmyYI3+Y3RMAGlHFVYanMN3h6m3fjvpKFTSY5Lj06rTBPDEj0DcGs9VcgWC4t
-	 S3Yg5EZf0r1xnd+3opAAidwlQij8Z34ESDxD5CiiB6VHl0tOdWPE4mDnh8yz7fBN9H
-	 GSOTcvSLyhkaUPwbfhgbXB4bcXzrL4RMmwQch9oEPG6P9DGRbtGHUj+EXSq/6/V4im
-	 0jiaVUeLYYEmSUIzVfp8idRaLjGKrSm8N0tKIBQ3KUFq24bJgVdohJaH1RRco2UoLz
-	 zJH1PsSUg7Mzg==
-Date: Tue, 23 Jun 2026 09:49:10 -0700
+	b=An35byh6s/FKYEMweqFtnFd68VP/zUeZVx1fdJ93tcv/00LlzgWJJddsUSuZ8+FhX
+	 aPWuS2RdWPq8foN3ZYpXHEjA6BT25dHfyeo5MyDkI/2KM+bEqvEHTmbT377LO+O7YJ
+	 d5zz7EFfJzwq+8dTLLhbCpaMJh9njMuNp7xKaK254OfwNoclHlH8hDBFkoBYpmv9Da
+	 UzOUjLp1Hbv00mb03wEVrwYyMHBAJTL8vIBw6E2jHZfcSlRdJ8eA8MvG3xXhvf3vOg
+	 C7LoLjrAL2ydCBaY8ShMniVujnGWFZYgVnkBbVMhw+sozXfMr4XYQxb5fbm+nXUJz2
+	 gqKsP0H1e8Z1Q==
+Date: Tue, 23 Jun 2026 09:50:35 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf kvm: Check kvm_need_default_arch_event() early
-Message-ID: <ajq5BhgBMjWpAc2S@google.com>
+Subject: Re: [PATCH 3/4] perf kvm: Kill STRDUP_FAIL_EXIT()
+Message-ID: <ajq5WwN07wH35012@google.com>
 References: <20260623070313.55225-1-namhyung@kernel.org>
- <20260623070313.55225-3-namhyung@kernel.org>
- <20260623071657.7D2E61F00A3A@smtp.kernel.org>
+ <20260623070313.55225-4-namhyung@kernel.org>
+ <20260623071259.C36A01F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,72 +43,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260623071657.7D2E61F00A3A@smtp.kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260623071259.C36A01F000E9@smtp.kernel.org>
 
-On Tue, Jun 23, 2026 at 07:16:57AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] BUG_ON() unconditionally triggers and crashes `perf kvm record` on architectures where default arch events are not added (e.g., ARM64, RISC-V, s390).
+On Tue, Jun 23, 2026 at 07:12:59AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> 
+> New issues:
+> - [Medium] Memory leak of dynamically allocated strings in PowerPC default arch events due to removal of array cleanup loops.
+> 
+> Pre-existing issues:
+> - [High] perf kvm record unconditionally crashes via BUG_ON() on non-Intel x86 hosts and architectures without default events.
 > --
 > 
-> commit e180ad0afcd0778bb15a60785a0b08bfd2f76a50
+> commit d3c8251de71559c69211fb2d23ba99dd14669107
 > Author: Namhyung Kim <namhyung@kernel.org>
 > 
-> perf kvm: Check kvm_need_default_arch_event() early
+> perf kvm: Kill STRDUP_FAIL_EXIT()
 > 
-> This commit modifies perf kvm record to check if default options are needed
-> before allocating arguments and passing the extra command line, preventing
-> the default event from being incorrectly passed to the external command.
+> This commit removes the STRDUP_FAIL_EXIT macro and replaces dynamically
+> allocated copied strings with stack variables for passing command line
+> options. It also removes the cleanup loops that freed these string
+> copies, addressing a subtle double free issue.
 > 
 > > diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> > index c236093eac473..acc6f2a706b35 100644
+> > index acc6f2a706b35..477c28915c037 100644
 > > --- a/tools/perf/builtin-kvm.c
 > > +++ b/tools/perf/builtin-kvm.c
-> > @@ -1996,13 +1996,14 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
-> >  {
-> >  	int rec_argc, i = 0, j, ret;
-> >  	const char **rec_argv;
-> > +	int need_arch_event = !!kvm_need_default_arch_event(argc, argv);
-> >  
-> >  	/*
-> >  	 * Besides the 2 more options "-o" and "filename",
-> >  	 * kvm_add_default_arch_event() may add 2 extra options,
-> > -	 * so allocate 4 more items.
-> > +	 * so allocate more items conditionally.
-> >  	 */
-> > -	rec_argc = argc + 2 + 2;
-> > +	rec_argc = argc + 2 + (2 * need_arch_event);
-> 
 > [ ... ]
-> 
-> > -	if (kvm_need_default_arch_event(argc, argv)) {
-> > +	if (need_arch_event) {
-> >  		ret = kvm_add_default_arch_event(EM_HOST, &i, rec_argv);
-> >  		if (ret)
-> >  			goto EXIT;
-> >  	}
+> > @@ -2008,9 +2004,9 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+> [ ... ]
+> >  	for (j = 1; j < argc; j++, i++)
+> > -		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
+> > +		rec_argv[i] = argv[j];
 > >  
-> > +	for (j = 1; j < argc; j++, i++)
-> > +		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
-> > +
-> > -	BUG_ON(i + 2 != rec_argc);
-> > +	BUG_ON(i != rec_argc);
+> >  	BUG_ON(i != rec_argc);
 > 
 > [Severity: High]
-> Could this BUG_ON() cause a regression for perf kvm record on architectures
-> that do not add default events?
+> This is a pre-existing issue, but can this BUG_ON() crash the tool on
+> non-Intel x86 hosts or architectures without default events?
 > 
-> If kvm_need_default_arch_event() returns true, rec_argc is set to argc + 4.
+> If need_arch_event is true but the architecture hook returns early without
+> adding events, rec_argc will be greater than the final value of i.
 > 
-> However, on architectures like ARM64, RISC-V, or s390, it appears
-> kvm_add_default_arch_event() can return 0 without actually appending any
-> events or incrementing i.
+> For example, in tools/perf/util/kvm-stat-arch/kvm-stat-x86.c:
 > 
-> If that happens, i will only equal argc + 2 after the loop, causing this
-> assertion to unconditionally fail and abort the process.
+> __kvm_add_default_arch_event_x86() {
+>         if (!x86__is_intel_cpu())
+>                 return 0;
+>         ...
+> }
+> 
+> On AMD hosts, this returns 0 without incrementing the argument count, leaving
+> i less than rec_argc and triggering the BUG_ON() assertion.
+> 
+> >  
+> >  	ret = cmd_record(i, rec_argv);
+> >  
+> >  EXIT:
+> > -	for (j = 0; j < i; j++)
+> > -		free((void *)rec_argv[j]);
+> 
+> [Severity: Medium]
+> Does removing this cleanup loop leak memory on PowerPC architectures?
+> 
+> While the central code now uses stack variables, the PowerPC architecture
+> hook still dynamically allocates its default events. 
+> 
+> In tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c:
+> 
+> __kvm_add_default_arch_event_powerpc() {
+>         ...
+>         argv[j++] = strdup("-e");
+>         argv[j++] = strdup("trace_imc/trace_cycles/");
+>         ...
+> }
+> 
+> Since these strings are allocated with strdup() and the free() loops in
+> __cmd_record(), __cmd_top(), and kvm_events_record() have been removed,
+> will these strings leak during command execution?
 
-I'll check those arch and make sure they return 0 in
-kvm_need_default_arch_event().
+Right, will update powerpc.
 
 Thanks,
 Namhyung
 
+> 
+> >  	free(rec_argv);
+> >  	return ret;
+> >  }
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260623070313.55225-1-namhyung@kernel.org?part=3
