@@ -1,54 +1,54 @@
 Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966123845AC
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 01:28:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C166378D7F
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 01:28:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782178090; cv=none; b=q/54+f7dmi6R3hRkUJr84WoWhXss2eiD6E0aCEVV+OcIgwwkujnZ7gQyaxyjROzEXAm/YTZJ2ou+JvLmnJohxlIBxUCU5+ZxkYkbE1ASYxTKx6OTy7SEmoKL1xd3eLrc4m+Ae4/WVYKVCwsitLXlU933RK6U2dcVxDqrYooQpEU=
+	t=1782178095; cv=none; b=iNgAPEIg4jZIT96MKTGaTHy1q6keHludJW0TzoL3W1CdtdlSXhlt5gu3m690BqPC6cUlm6tpyMoftSBEYBDG2bF05GKseNYS9DkirTVb3JokDQWvPm34wYjKahHVM6Qg23hk/pWTxepQCygYbGvc/oDbcjKh+25h4CeVaraeUOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782178090; c=relaxed/simple;
-	bh=APmFoGm4ITAgg2azRynMJp0sFMMLDdTzMdeW4BLj+Mg=;
+	s=arc-20240116; t=1782178095; c=relaxed/simple;
+	bh=PtWWGJ/Ctm1uLboowDiO4kDVB3yzxkjc2xpNGc9ceek=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Kw42xKk9JBabni8B35ezb3c5DOYvsI9kZRh1NgvBAerbXOSEL2PklwSYMee3XUTvEdE7UoucFl8ztXxB1C+Faa5ql10NSxDY4IB2KqQvyoMbsqzKXikfcw6AN8gbEICv3d4vw1m7wZG8Jq6zRp/D1qxTtDSd1D9SFQMrH0aWe10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eM9xRk9y; arc=none smtp.client-ip=74.125.82.202
+	 To:Cc:Content-Type; b=X0XSv/RKNKddKkJ5VgxercU3pOPC7ETq2RQ7Eizc5v3IErali0YXJSF3Nc2sQgFTA2eqCQErQLK9BkrK3pF8h1GdPSMVzlj+UsWYuNWh6fYpjsvUEzLr+nYqETCaWeU4W7f5gf45hMZ4KlTm/gTOAPAJiY48fpVSHJXW57ACLPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hb4YBX2a; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eM9xRk9y"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30ba395b047so4009481eec.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 18:28:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hb4YBX2a"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30c5978b108so604796eec.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 18:28:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782178089; x=1782782889; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782178093; x=1782782893; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gl8Kb466gA98yrYZLHyNHPZc2QoHrdyhnvcLpXbuUZs=;
-        b=eM9xRk9yzzoWZLuTaQt2HDT4GqCZP/Vua/1Nl/s4i9lGCjHwarBr/yKOqo5JQo6Y50
-         U8/9l/yxX4NcrWccZ0pHOccD2YTgCu0zBRJ5Ctbj7WdH1ayyf/fCJm+6VHrcoxC8/WS7
-         FnNPX4b7Ne/fEkqXavxEXWFWUJQrqR2yKxNFpfN7Mr+6THBOOLtzef6kaq7/6HsbSZNa
-         d/fzAPlT6Jd90RALWjonAreemRguLXn16Ic4xINXzzVcfwfXCd7HxxCRY1fmUqMm+aCO
-         yMybMDMU7aftFL0h2wMFqT/p5goO5tHYXE3dsSpiHtyl8IfMwGYwqmFm8OthoE3TuSwy
-         IdOA==
+        bh=7pHJ75Bd63iHwPl+9t6VKLfo15t05Xfuvj9+KYTB0Vg=;
+        b=Hb4YBX2a9Re5fYl5jWbE/bph8gFu6g8ViXLOZo+BfSirAILP3CvwCwc5rlp1d/A1Pf
+         Ok5r53y+FlrfZPzScIaTs99lsiFUIiXjyIHvYHM9McY2CXcGEyeASyiIGsd6UhkC7ywX
+         vNrtmhKbpizgKFggQ/HIyHyEzmAlRagJIETMzvZOQjHKq3J/UNbqovgCGiQl4XQNDmgd
+         yOZmUS5G3iF+FDiU4s2isqQp+WZfSL9PgWgL6dav+1rZq0lyyw2K9x9Y0Y9GvggmlISA
+         PKAbaw33CYNTAooRKe0LLAkECbXrS0h2Ax3WW/LJeO9nJ4c4hff+XsEaGbxlSLj7vklk
+         oH8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782178089; x=1782782889;
+        d=1e100.net; s=20251104; t=1782178093; x=1782782893;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gl8Kb466gA98yrYZLHyNHPZc2QoHrdyhnvcLpXbuUZs=;
-        b=qOHJwlplqA8uvFSYilc6/KQ7vBXgF/wo0nOK6fmqKB4yxuZp/9xZVV18DTcno8dws4
-         x+Z4O+gwL2nGvKWQi9NsH2r+Wpc0wSLggL2UBC5NilP1ibZpvew/QwYlkoECCNRbOdtc
-         xPqIUO1ZwbGkdw/TvYNSsrJsXlJj8QJl0lGb/dB1na2SIcSeJuXmM7tQUQK+DszEsCWQ
-         9Z50kJW2F/sFu76wM7Zq67lZ6SCp2wdjKL4bO9fA/oQcXSmvOUmvQ+clyOg2xbc/ipAa
-         q18RPCzNra+ZmLrzjiDseCUimoIniXq5ev51ntCBkC8Q/y6phyA536PYG0VeWdog/sJz
-         VMNA==
-X-Forwarded-Encrypted: i=1; AHgh+RqDp1/Yv7ZXsOlhJI7dHM+EK11d/HBg65bFGpAwq8A8JyfAFTtQp9tk22NyUa0KJNQwyhluUTJaIARJt45tuaEj@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxiquS/egkeQLnycBO/a5YmoMM3Xofj7CFGtdD8h5nWOyGv3ZX
-	UUsVORxL+NBEhZeNHqHhDeWbR2ABc8YuCwZSKga9ZvCU+G5xWSXUe9BraW7GOn4O4qKHWeOkxu6
-	B/zkLI0HYaA==
-X-Received: from dybmh13.prod.google.com ([2002:a05:7301:f0d:b0:30b:beb4:7f3e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:f609:b0:30b:9e57:1e6b
- with SMTP id 5a478bee46e88-30c5b8d35edmr257455eec.17.1782178088302; Mon, 22
- Jun 2026 18:28:08 -0700 (PDT)
-Date: Mon, 22 Jun 2026 18:27:48 -0700
+        bh=7pHJ75Bd63iHwPl+9t6VKLfo15t05Xfuvj9+KYTB0Vg=;
+        b=kXJpGDAMW4gOz6pjRlqo3EO825HkhQuLmmGl26peO7izDopZ8J+mPLPkTlVqL4Qf08
+         nQzO6zv/YfN71wq6qGmlw0XXuMnoPW0vt0DNyqPviUs6qHLu22mHokopIA2NW9Q/7tcg
+         2Hu7L3jUGu+goA5XBIUF3xUrmVYS6tA0O51clrMiNOau9vPJjJhWtiBPMwQmPi4dLBRY
+         02zXm+s388bkZMM/O6m01XSz2rveQJ76bi1hsOiyLALDiK2ICXnzAE4HDIs3GBCjLm6x
+         RplSQiqrOMwF+4l5kA40sdhba+0SBtbWY+wm3ehig5yTjxBkAFy4UOwPP0RPh/nGt2ku
+         sU7Q==
+X-Forwarded-Encrypted: i=1; AHgh+Rrl4U3k96HMNVocwTOGUx/M4flR9ipVs735yRP7VZLzwwHnd0LmXXOOv8k1duXj4qsXaQNgfKEL+N/Wn/mXCmZe@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWAl7843mlCn436+l1AQd7CnwqFAOXN8uElYeMT+jYk9ZYCgzp
+	bclpgVvksMMQngv4HT7t5ouksbknQ2NGrYD0sYEj+Dtf1eq4PYp+0souGHgaiMzoPErjdoSHBJ7
+	d7ND5zw6VOg==
+X-Received: from dyeq5.prod.google.com ([2002:a05:7300:42c5:b0:2f9:af7:504e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:38a4:b0:30b:bae1:aec7
+ with SMTP id 5a478bee46e88-30c5b96c259mr229970eec.30.1782178092997; Mon, 22
+ Jun 2026 18:28:12 -0700 (PDT)
+Date: Mon, 22 Jun 2026 18:27:50 -0700
 In-Reply-To: <20260623012758.2291858-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616164819.370939-1-irogers@google.com> <20260623012758.2291858-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.rc0.786.g65d90a0328-goog
-Message-ID: <20260623012758.2291858-4-irogers@google.com>
-Subject: [PATCH v4 03/13] perf tests workloads: Support sub-second durations
- in noploop and thloop
+Message-ID: <20260623012758.2291858-6-irogers@google.com>
+Subject: [PATCH v4 05/13] perf tests: Skip metrics validation if system-wide
+ recording lacks permission
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -69,95 +69,180 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	thomas.falcon@intel.com, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Currently, the noploop and thloop workloads only support sleep durations
-in integer seconds because they parse the argument using atoi() and use
-alarm() for timer signaling.
+The metrics value validation test requires system-wide recording (`-a`),
+which can fail on systems without root permissions or where paranoid
+levels restrict tracing. Add a check to skip the test if `-a` is not
+supported.
 
-To support much shorter execution times in tests (speeding up test suites
-and allowing faster retries), change the input parsing to use atof() for
-double floating-point seconds. Use ualarm() for fractional durations less
-than 1.0 seconds, and fall back to alarm() for durations of 1.0 second or
-more.
+Also fix false negatives during validation by updating parse error string
+patterns and resolving issues in metric list generation.
 
+Fixes: 3ad7092f5145 ("perf test: Add metric value validation test")
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/workloads/noploop.c | 17 ++++++++++++++---
- tools/perf/tests/workloads/thloop.c  | 16 +++++++++++-----
- 2 files changed, 25 insertions(+), 8 deletions(-)
+ .../tests/shell/lib/perf_metric_validation.py | 11 ++-
+ tools/perf/tests/shell/stat_all_metrics.sh    | 75 ++++++++++++-------
+ tools/perf/tests/shell/stat_metrics_values.sh |  7 ++
+ 3 files changed, 60 insertions(+), 33 deletions(-)
 
-diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/workloads/noploop.c
-index 656e472e6188..ca9f871e136f 100644
---- a/tools/perf/tests/workloads/noploop.c
-+++ b/tools/perf/tests/workloads/noploop.c
-@@ -15,15 +15,26 @@ static void sighandler(int sig __maybe_unused)
+diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
+index dea8ef1977bf..3d52f94f22b9 100644
+--- a/tools/perf/tests/shell/lib/perf_metric_validation.py
++++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
+@@ -383,10 +383,13 @@ class Validator:
+         wl = workload.split()
+         command.extend(wl)
+         print(" ".join(command))
+-        cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
+-        data = [x+'}' for x in cmd.stderr.split('}\n') if x]
+-        if data[0][0] != '{':
+-            data[0] = data[0][data[0].find('{'):]
++        cmd = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
++        lines = cmd.stderr.splitlines() + cmd.stdout.splitlines()
++        data = []
++        for line in lines:
++            line = line.strip()
++            if line.startswith('{') and line.endswith('}'):
++                data.append(line)
+         return data
  
- static int noploop(int argc, const char **argv)
- {
--	int sec = 1;
-+	double sec = 1.0;
+     def collect_perf(self, workload: str):
+diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+index b582d23f28c9..feeb34c6fa6d 100755
+--- a/tools/perf/tests/shell/stat_all_metrics.sh
++++ b/tools/perf/tests/shell/stat_all_metrics.sh
+@@ -12,38 +12,65 @@ system_wide_flag="-a"
+ if ParanoidAndNotRoot 0
+ then
+   system_wide_flag=""
+-  test_prog="perf test -w noploop"
++  test_prog="perf test -w noploop 0.01"
+ fi
  
- 	pthread_setname_np(pthread_self(), "perf-noploop");
- 	if (argc > 0)
--		sec = atoi(argv[0]);
-+		sec = atof(argv[0]);
++check_metric() {
++  local output="$1"
++  local status="$2"
++  local metric="$3"
 +
-+	if (!(sec > 0.0)) {
-+		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
-+		return 1;
-+	}
- 
- 	signal(SIGINT, sighandler);
- 	signal(SIGALRM, sighandler);
--	alarm(sec);
++  if [[ $status -ne 0 || ! "$output" =~ ${metric:0:50} ]]; then
++    return 1
++  fi
 +
-+	if (sec < 1.0) {
-+		useconds_t usecs = (useconds_t)(sec * 1000000.0);
++  if [[ "$output" =~ "<not counted>" || "$output" =~ "<not supported>" ]]; then
++    return 1
++  fi
 +
-+		ualarm(usecs > 0 ? usecs : 1, 0);
-+	} else
-+		alarm((unsigned int)sec);
- 
- 	while (!done)
- 		continue;
-diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
-index bd8168f883fb..c830d739489f 100644
---- a/tools/perf/tests/workloads/thloop.c
-+++ b/tools/perf/tests/workloads/thloop.c
-@@ -31,14 +31,15 @@ static void *thfunc(void *arg)
- 
- static int thloop(int argc, const char **argv)
- {
--	int nt = 2, sec = 1, err = 1;
-+	int nt = 2, err = 1;
-+	double sec = 1.0;
- 	pthread_t *thread_list = NULL;
- 
- 	if (argc > 0)
--		sec = atoi(argv[0]);
-+		sec = atof(argv[0]);
- 
--	if (sec <= 0) {
--		fprintf(stderr, "Error: seconds (%d) must be >= 1\n", sec);
-+	if (!(sec > 0.0)) {
-+		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
- 		return 1;
- 	}
- 
-@@ -67,7 +68,12 @@ static int thloop(int argc, const char **argv)
- 			goto out;
- 		}
- 	}
--	alarm(sec);
-+	if (sec < 1.0) {
-+		useconds_t usecs = (useconds_t)(sec * 1000000.0);
++  return 0
++}
 +
-+		ualarm(usecs > 0 ? usecs : 1, 0);
-+	} else
-+		alarm((unsigned int)sec);
- 	test_loop();
- 	err = 0;
- out:
+ skip=0
+ err=3
+ for m in $(perf list --raw-dump metrics); do
+   echo "Testing $m"
+   result=$(perf stat -M "$m" $system_wide_flag -- $test_prog 2>&1)
+   result_err=$?
+-  if [[ $result_err -eq 0 && "$result" =~ ${m:0:50} ]]
+-  then
+-    # No error result and metric shown.
++
++  if check_metric "$result" $result_err "$m"; then
+     if [[ "$err" -ne 1 ]]
+     then
+       err=0
+     fi
+     continue
+   fi
+-  if [[ "$result" =~ "Cannot resolve IDs for" || "$result" =~ "No supported events found" ]]
++
++  if [[ "$result" =~ "Access to performance monitoring and observability operations is limited" || \
++        "$result" =~ "in per-thread mode, enable system wide" || \
++        "$result" =~ "<not supported>" || \
++        "$result" =~ "Cannot resolve IDs for" || \
++        "$result" =~ "No supported events found" || \
++        "$result" =~ "FP_ARITH" || \
++        "$result" =~ "AMX" || \
++        "$result" =~ "PMM" ]]
+   then
+-    if [[ $(perf list --raw-dump $m) == "Default"* ]]
+-    then
+-      echo "[Ignored $m] failed but as a Default metric this can be expected"
+-      echo $result
++    true
++  else
++    result=$(perf stat -M "$m" $system_wide_flag -- perf test -w noploop 0.1 2>&1)
++    result_err=$?
++
++    if check_metric "$result" $result_err "$m"; then
++      if [[ "$err" -ne 1 ]]
++      then
++        err=0
++      fi
+       continue
+     fi
+-    echo "[Failed $m] Metric contains missing events"
+-    echo $result
+-    err=1 # Fail
+-    continue
+-  elif [[ "$result" =~ \
+-        "Access to performance monitoring and observability operations is limited" ]]
++  fi
++
++  # If retry also failed, determine if we skip, ignore, or fail
++  if [[ "$result" =~ "Access to performance monitoring and observability operations is limited" ]]
+   then
+     echo "[Skipped $m] Permission failure"
+     echo $result
+@@ -61,7 +88,9 @@ for m in $(perf list --raw-dump metrics); do
+       skip=1
+     fi
+     continue
+-  elif [[ "$result" =~ "<not supported>" ]]
++  elif [[ "$result" =~ "<not supported>" || \
++          "$result" =~ "Cannot resolve IDs for" || \
++          "$result" =~ "No supported events found" ]]
+   then
+     if [[ $(perf list --raw-dump $m) == "Default"* ]]
+     then
+@@ -105,19 +134,7 @@ for m in $(perf list --raw-dump metrics); do
+     continue
+   fi
+ 
+-  # Failed, possibly the workload was too small so retry with something longer.
+-  result=$(perf stat -M "$m" $system_wide_flag -- perf bench internals synthesize 2>&1)
+-  result_err=$?
+-  if [[ $result_err -eq 0 && "$result" =~ ${m:0:50} ]]
+-  then
+-    # No error result and metric shown.
+-    if [[ "$err" -ne 1 ]]
+-    then
+-      err=0
+-    fi
+-    continue
+-  fi
+-  echo "[Failed $m] has non-zero error '$result_err' or not printed in:"
++  echo "[Failed $m] has non-zero error '$result_err' or not printed/counted in:"
+   echo "$result"
+   err=1
+ done
+diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/tests/shell/stat_metrics_values.sh
+index 30566f0b5427..76f1e99d1273 100755
+--- a/tools/perf/tests/shell/stat_metrics_values.sh
++++ b/tools/perf/tests/shell/stat_metrics_values.sh
+@@ -8,6 +8,13 @@ shelldir=$(dirname "$0")
+ 
+ grep -q GenuineIntel /proc/cpuinfo || { echo Skipping non-Intel; exit 2; }
+ 
++# Skip if no permission to record system-wide events
++if ! perf stat -a -e instructions sleep 0.01 >/dev/null 2>&1; then
++  echo "Skipping: no permission to record system-wide events (-a)"
++  exit 2
++fi
++
++
+ pythonvalidator=$(dirname $0)/lib/perf_metric_validation.py
+ rulefile=$(dirname $0)/lib/perf_metric_validation_rules.json
+ tmpdir=$(mktemp -d /tmp/__perf_test.program.XXXXX)
 -- 
 2.55.0.rc0.786.g65d90a0328-goog
 
