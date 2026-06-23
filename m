@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5352938550C
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 01:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE7F37B011
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 01:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782178103; cv=none; b=KkFuZlMhuRafSxl32+hAluXmbikHjry9JsX1s9uurRUgE5q3R4w0HdzKGvKkTzMHLHqk/+uFcVVa9uj4tZNScOp/fVaFPxHj1HSBRWV2TyCYLQISKcgAXvPv65a8E+UmOS7PpFhC9b+4YQOg8uzWlKOdDFfw2hyP88XJaof/26E=
+	t=1782178103; cv=none; b=aRQZ5OdKb1Y+z6mZ3dY7OO2YR07USIZP0PTDo2ET2TC5eYTa+MF8vLKzEuzsrRjSCDiowUQ8dNV6Po/ezK3iWin0+5GMTaR4zkv1HQf0pjKXI0JzXCAUfZPAR+Sat8FU0zyYPd3YlUtvAJkPeX0CzxIFEWGQqOrymDHO7w/wn24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1782178103; c=relaxed/simple;
-	bh=sPDzVOwBLM/ZQRqAXNByDdWHoCykc49dVlgrdLeyqWM=;
+	bh=UJHBZsCHadCBDFI4p0v6rsP0RKO4sMW+JhYy8UUY+yE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=gPYn1fuQ5nK8bmKp1hmLGB0AIZc89qgp7QvcqVMIq8DxoOe3dCXiNW7kR1M1i4Ql0GLGyr6DVeG8i4nws7KlcGhnEQcLgtDXDWL5djHwAuhRLA8b3insu+dPvHLWT0WS/P+BVCeLkmxTcjJ50F6kzYL0aJMiwS5RHQ6ySTHNxt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hMgJkz7T; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=fqmtgoWVf3PsGxprrQkLZ3SxxupVxRDDoK7bj4gDEtAJVZ3Ns8XCK9uf+GfAmt10nBnrxrVtnc8KwrWeLU9fvtxleFjmTzaEv/bvYyem3FPU0GN48FyEi5+rHU1Lt33s4r13yrvjOYM0T4wrBcoFJ1xljqcaQi0x/1aPjbX/IAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=migW5jZC; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hMgJkz7T"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-137e49e896aso350347c88.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 18:28:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="migW5jZC"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30c0a27ad86so12155974eec.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 18:28:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782178099; x=1782782899; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782178101; x=1782782901; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SN2ktKyN5IjzwKoAdV05tastVl2RGruJcaYjq+0yEWM=;
-        b=hMgJkz7TWqMXHyD7/Pa2P77NWtERYWhWRoaEpN0b7LGUOAAFZuAzOnOVAbSuYbOr8K
-         q33d4ICIE8wzF02uqVTnS6yK9vuSmHhpb95NJUVyt24IFOKukE21bF7DpZgsccnQF2rC
-         m+0UC8gysJqqldBm+sFX18Dm71EPoYhzcbp5vIC4fwLQ2/tYzLHPurwOIYSg9s/yY4yC
-         zEey2H6AEe6Qe6gdNGYVHxYvojiiNgh17Wt/s5LosfP/SSzm+omZP2xzEkhNWocX0VuG
-         CEzSrMJQ7v8I8wexVdyY2HSoz731UqC8D0glwlrZlw/tzIfCefElGiI4kBrpkCgnNEAc
-         u38A==
+        bh=KXqC2nkiAPxRb3b5mkkUePpyXFw0zrQfCf40Ysi1MlY=;
+        b=migW5jZCPThnpp9Iaee3V4iNAeKDNz2Or3jKJLMzBcTQ+iXuX8pace4tqlJqvtiIzn
+         vyAFenu8eWI54GEftiOVXDCkl4ViLbj3cMeaZmLCOvlDjbZx9MX0bshJuUwVz6C236Xv
+         YJL0A1M6PG06TP3r7nVyEBcYY3MxNWbi7/JcCb1BMtzAyNdvZ1SyWO0hXPDC2MA+dDIQ
+         jpBZatRgM8MgzglbVbcfpbd9YuIqN2l/nxlZBN6LZ9xSYPgth5vzrk4gpw51SM9weU1G
+         ekB2ATtt3qYNIgZC4WmL3zAVh2QrHlcGxCY6FowByPALKqZOp7ah7GSJcHUkz8FznD/3
+         byRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782178099; x=1782782899;
+        d=1e100.net; s=20251104; t=1782178101; x=1782782901;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SN2ktKyN5IjzwKoAdV05tastVl2RGruJcaYjq+0yEWM=;
-        b=PuDXk3l8eFlVJrsvMeU8D+96WvqlBFpZeJhxQN4M75joRmp8T7sPSXk+qTjefp59nc
-         l1X0FIRBk07Z0iXB/0JPEc29P5YcWAZikgo0y/oyPIG68UGPD8Xp6Jci8V88zWdzBiTb
-         64AR8MhnwZV2jCGLfIYPwmF7L+7SUwr/IIuOSq3YGDOk7/Pg230CAHcf8PQrHXGGF4ES
-         E2csWi8AX1VbIbIIvZkzddDyQ8D9Y2n+2k8d+6Gjf6gxUen3hQWzVu7kim809qCn0InM
-         ww98N0sBIJh5USep5NK8st5fbEqY00iamMocxULsb2QlGiWP1ORM+8c5GBZcnnwDsOma
-         uOIQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/A9TSnPH8lkSVSr0hCJigNw0QPZWwY7MTP9mQEuZa01scy/HMu1fncXZ7hqJa/xiSAwXMEgk1Bs3Wxw0ABo7rz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLujySHFT2p7UXLUpZGHLHcQErIiiirop5FDi6RkwIaPDp2Q+c
-	FQlBrVYqApDJClyYthCGMccuNB8jLROEGcFxyjIZTlrP+SRXucCfPWpMDzHeEGe8wazlZY2Urf3
-	h+cvdNZgdQA==
-X-Received: from dlep14-n1.prod.google.com ([2002:a05:701b:458e:10b0:139:43a0:ac1d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:f68c:b0:136:8b76:14eb
- with SMTP id a92af1059eb24-139c3c80c88mr1049784c88.14.1782178099042; Mon, 22
- Jun 2026 18:28:19 -0700 (PDT)
-Date: Mon, 22 Jun 2026 18:27:53 -0700
+        bh=KXqC2nkiAPxRb3b5mkkUePpyXFw0zrQfCf40Ysi1MlY=;
+        b=LnSx0RcDAsfCWHu89d8kViW433DGd+QpB72kvk6lXcjxHAcG+vtoURcfmAOPTGudUF
+         d7hNBQ3P1p7BJrGH4qSnxUQohFfJJ/w4Innt0O9jWbwgTH9lyzXGtEJ/oNNszHSDIs7U
+         /rsEPcG9iXp6dbwMxsNnJ91KFvePN9+ASq0CDcBNBsptiAGmrumJjPCTjQyZDZuqLVe8
+         RXy5bTYz99tISShznbFp8OtCYPY67TGs6+diSi+RsZ2euPquhIK5mb4IPriCo1Pnou5V
+         PN1mbiAPymBg1v30y3KchvooyFEgoid02gCLZqmidQfAH8pDK7fpjtfqaFmWpYaWN8Co
+         cXSA==
+X-Forwarded-Encrypted: i=1; AHgh+RoEJHYogI0QC88v7+jg50xDplluxVfOcaQHiBhFPn0J12oriGQd8ot+sxgsZAO2D184FEzqktp1VipCziuvJ5we@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4rEwo7hIo8xrarH6eUu2O0XMnu6ouHokGqhmRBKL0u5d2JZzI
+	tpLpBvaKcDEoxLtyKhN6rcsmggSpFLtZXj/1UFmMElwzlafPk6BAP1zJf40ZThzu143BgLG3+eA
+	6k2XI3AVqyw==
+X-Received: from dybmc6.prod.google.com ([2002:a05:7301:1986:b0:30c:4b01:7f0c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:80ca:b0:2dd:c066:bf7
+ with SMTP id 5a478bee46e88-30c06e3177amr12773729eec.11.1782178101156; Mon, 22
+ Jun 2026 18:28:21 -0700 (PDT)
+Date: Mon, 22 Jun 2026 18:27:54 -0700
 In-Reply-To: <20260623012758.2291858-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,9 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260616164819.370939-1-irogers@google.com> <20260623012758.2291858-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.rc0.786.g65d90a0328-goog
-Message-ID: <20260623012758.2291858-9-irogers@google.com>
-Subject: [PATCH v4 08/13] perf tests: Fix flakiness in BPF counters test on
- hybrid systems
+Message-ID: <20260623012758.2291858-10-irogers@google.com>
+Subject: [PATCH v4 09/13] perf tests: Fix flakiness in branch stack sampling tests
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -69,109 +68,177 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	thomas.falcon@intel.com, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-The `perf stat --bpf-counters test` fails intermittently on hybrid
-architectures or systems with dynamic frequency scaling (DVFS). This
-happens because the test workload (`sqrtloop`) runs for a fixed 1-second
-duration, and the CPU frequency can scale dynamically between idle and
-maximum frequency. As the first run runs on a cold CPU and the second run
-runs on a warmed-up CPU (or vice versa), the number of instructions
-executed in 1 second differs by up to 2.2x, violating the comparison
-tolerance.
+The branch stack sampling test (test 130) runs short iteration-based
+workloads to verify syscall, kernel, and trap branch stack sampling.
+Specifically, `test_syscall()` and `test_kernel_branches()` run `perf
+bench syscall basic` with loop counts of 8000 and 1000, and
+`test_trap_eret_branches()` runs `traploop` with 1000 iterations.
 
-Also, when running as root, BPF tracepoints and scheduling programs
-trigger frequently. Since standard `perf stat -e instructions` measures
-both user and kernel space instructions, it counts BPF helper and program
-execution overheads, whereas the BPF counters themselves do not self-
-measure. This introduces a large kernel-space instruction count
-discrepancy between standard and BPF counters.
+Because these loop limits are extremely small, the total benchmark
+runtimes last only a few milliseconds (or less). Under high load,
+virtualization, or coarse sampling conditions, PMU cycle sampling fails to
+capture enough samples inside the brief benchmark loops. This leads to
+false negatives where the script output lacks the expected syscall,
+kernel, or trap branch entries (e.g. "ERROR: Branches missing getppid[^
+]*/SYSCALL/").
 
-Fix these issues by:
-1. Switching the workload to a strictly deterministic, iteration-based
-   workload: `awk 'BEGIN { for (i=0; i<10000000; i++) sum+=i }'`. We pin
-the
-   workload to a single random allowed CPU using `taskset -c $CPU` via a
-bash array.
-2. Restricting the counted event to user-space only (`instructions:u` or
-`/u`).
-3. Tightening the comparison tolerance from 20% to 15%.
+Fix this by increasing the workload loop counts to 100,000 across all
+three test sections. Running 100,000 loops still finishes virtually
+instantaneously (less than 0.1 seconds), but generates enough iterations
+to guarantee robust branch stack capture.
 
-These modifications isolate the measurements to user-space instructions of
-the deterministic loop, which executes a virtually identical number of
-instructions on both runs (with less than 0.001% variation), eliminating
-Dynamic Frequency Scaling (DVFS), kernel scheduling noise, and BPF helper
-self-measurement overheads.
-
-Fixes: 2c0cb9f56020 ("perf test: Add a shell test for 'perf stat --bpf-counters' new option")
+Fixes: b55878c90ab9 ("perf test: Add test for branch stack sampling")
 Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat_bpf_counters.sh | 28 +++++++++++++--------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ tools/perf/tests/shell/test_brstack.sh | 107 +++++++++++++++----------
+ 1 file changed, 66 insertions(+), 41 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
-index 35463358b273..11de77ee38ad 100755
---- a/tools/perf/tests/shell/stat_bpf_counters.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters.sh
-@@ -4,21 +4,26 @@
- 
- set -e
- 
--workload="perf test -w sqrtloop"
-+# Get the first allowed CPU
-+CPU=$(taskset -c -p $$ | awk -F': ' '{print $2}' | awk -F'[,-]' '{print $1}')
-+if [ -z "$CPU" ]; then
-+	CPU=0
-+fi
-+workload=(taskset -c "$CPU" awk 'BEGIN { for (i=0; i<10000000; i++) sum+=i }')
- 
--# check whether $2 is within +/- 20% of $1
-+# check whether $2 is within +/- 15% of $1
- compare_number()
- {
- 	first_num=$1
- 	second_num=$2
- 
--	# upper bound is first_num * 120%
--	upper=$(expr $first_num + $first_num / 5 )
--	# lower bound is first_num * 80%
--	lower=$(expr $first_num - $first_num / 5 )
-+	# upper bound is first_num * 115%
-+	upper=$(expr $first_num + $first_num / 20 \* 3 )
-+	# lower bound is first_num * 85%
-+	lower=$(expr $first_num - $first_num / 20 \* 3 )
- 
- 	if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
--		echo "The difference between $first_num and $second_num are greater than 20%."
-+		echo "The difference between $first_num and $second_num are greater than 15%."
- 		exit 1
+diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+index eb5837f82e39..71550e0b37ba 100755
+--- a/tools/perf/tests/shell/test_brstack.sh
++++ b/tools/perf/tests/shell/test_brstack.sh
+@@ -110,20 +110,29 @@ test_trap_eret_branches() {
+ 		return
+ 	fi
+ 	start_err=$err
+-	err=0
+-	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
+-		perf test -w traploop 1000 > "$TMPDIR/record.txt" 2>&1
+-	perf script -i $TMPDIR/perf.data --fields brstacksym | \
+-		tr ' ' '\n' > $TMPDIR/perf.script
+-
+-	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
+-	check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
+-	check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
+-	if [ $err -eq 0 ]; then
++	local ret=1
++	for loops in 1000 10000 100000; do
++		err=0
++		perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
++			perf test -w traploop $loops > "$TMPDIR/record.txt" 2>&1
++		perf script -i $TMPDIR/perf.data --fields brstacksym | \
++			tr ' ' '\n' > $TMPDIR/perf.script
++
++		# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
++		check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
++		check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
++		if [ $err -eq 0 ]; then
++			ret=0
++			break
++		fi
++	done
++
++	if [ $ret -eq 0 ]; then
+ 		echo "Testing trap & eret branches [Passed]"
+ 		err=$start_err
+ 	else
+ 		echo "Testing trap & eret branches [Failed]"
++		err=1
  	fi
  }
-@@ -41,11 +46,12 @@ check_counts()
- test_bpf_counters()
- {
- 	printf "Testing --bpf-counters "
--	base_instructions=$(perf stat --no-big-num -e instructions -- $workload 2>&1 | \
-+	base_instructions=$(perf stat --no-big-num -e instructions:u -- "${workload[@]}" 2>&1 | \
- 				awk -v i=0 -v c=0 '/instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
- 				} END { if (i > 0) printf "%.0f", c; else print "<not" }')
--	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions -- $workload  2>&1 | \
-+	bpf_instructions=$(perf stat --no-big-num --bpf-counters -e instructions:u \
-+				-- "${workload[@]}"  2>&1 | \
- 				awk -v i=0 -v c=0 '/instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
- 				} END { if (i > 0) printf "%.0f", c; else print "<not" }')
-@@ -57,7 +63,9 @@ test_bpf_counters()
- test_bpf_modifier()
- {
- 	printf "Testing bpf event modifier "
--	stat_output=$(perf stat --no-big-num -e instructions/name=base_instructions/,instructions/name=bpf_instructions/b -- $workload 2>&1)
-+	stat_output=$(perf stat --no-big-num \
-+		-e instructions/name=base_instructions/u,instructions/name=bpf_instructions/bu \
-+		-- "${workload[@]}" 2>&1)
- 	base_instructions=$(echo "$stat_output"| \
- 				awk -v i=0 -v c=0 '/base_instructions/ { \
- 					if ($1 != "<not") { i++; c += $1 } \
+ 
+@@ -135,32 +144,40 @@ test_kernel_branches() {
+ 		return
+ 	fi
+ 	start_err=$err
+-	err=0
+-	perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
+-		perf bench syscall basic --loop 1000 > "$TMPDIR/record.txt" 2>&1
+-	perf script -i $TMPDIR/perf.data --fields brstack | \
+-		tr ' ' '\n' > $TMPDIR/perf.script
+-
+-	# Example of branch entries:
+-	#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
+-	# Source addresses come first in user or kernel code. Next is the target
+-	# address that must be in the kernel.
+-
+-	# Look for source addresses with top bit set
+-	if ! grep -q -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
+-		echo "Testing kernel branch sampling [Failed kernel branches missing]"
+-		err=1
+-	fi
+-	# Look for no target addresses without top bit set
+-	if grep -q -E -m1 "^0x[0-9a-f]{0,16}/0x[0-7][0-9a-f]{1,15}/" $TMPDIR/perf.script; then
+-		echo "Testing kernel branch sampling [Failed user branches found]"
+-		err=1
+-	fi
+-	if [ $err -eq 0 ]; then
++	local ret=1
++	for loops in 1000 10000 100000; do
++		err=0
++		perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
++			perf bench syscall basic --loop $loops > "$TMPDIR/record.txt" 2>&1
++		perf script -i $TMPDIR/perf.data --fields brstack | \
++			tr ' ' '\n' > $TMPDIR/perf.script
++
++		# Example of branch entries:
++		#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
++		# Source addresses come first in user or kernel code. Next is the target
++		# address that must be in the kernel.
++
++		# Look for source addresses with top bit set
++		if ! grep -q -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
++			err=1
++		fi
++		# Look for no target addresses without top bit set
++		if grep -q -E -m1 "^0x[0-9a-f]{0,16}/0x[0-7][0-9a-f]{1,15}/" \
++			$TMPDIR/perf.script; then
++			err=1
++		fi
++		if [ $err -eq 0 ]; then
++			ret=0
++			break
++		fi
++	done
++
++	if [ $ret -eq 0 ]; then
+ 		echo "Testing kernel branch sampling [Passed]"
+ 		err=$start_err
+ 	else
+ 		echo "Testing kernel branch sampling [Failed]"
++		err=1
+ 	fi
+ }
+ 
+@@ -206,20 +223,28 @@ test_syscall() {
+ 		return
+ 	fi
+ 	start_err=$err
+-	err=0
+-	perf record -o $TMPDIR/perf.data --branch-filter \
+-		any_call,save_type,u,k -c 10007 -- \
+-		perf bench syscall basic --loop 8000  > "$TMPDIR/record.txt" 2>&1
+-	perf script -i $TMPDIR/perf.data --fields brstacksym | \
+-		tr ' ' '\n' > $TMPDIR/perf.script
+-
+-	check_branches "getppid[^ ]*/SYSCALL/"
++	local ret=1
++	for loops in 8000 30000 100000; do
++		err=0
++		perf record -o $TMPDIR/perf.data --branch-filter \
++			any_call,save_type,u,k -c 10007 -- \
++			perf bench syscall basic --loop $loops  > "$TMPDIR/record.txt" 2>&1
++		perf script -i $TMPDIR/perf.data --fields brstacksym | \
++			tr ' ' '\n' > $TMPDIR/perf.script
++
++		check_branches "getppid[^ ]*/SYSCALL/"
++		if [ $err -eq 0 ]; then
++			ret=0
++			break
++		fi
++	done
+ 
+-	if [ $err -eq 0 ]; then
++	if [ $ret -eq 0 ]; then
+ 		echo "Testing syscalls [Passed]"
+ 		err=$start_err
+ 	else
+ 		echo "Testing syscalls [Failed]"
++		err=1
+ 	fi
+ }
+ set -e
 -- 
 2.55.0.rc0.786.g65d90a0328-goog
 
