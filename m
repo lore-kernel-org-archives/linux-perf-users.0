@@ -1,109 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE114395ADE
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:12:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB559397E8E
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782249135; cv=none; b=UNmM9zsx55/m/wFFHkVxifXxy78GFGSCXqQoKTnI/q39MmPwo1DW9Sgl0PIc+jQwqz6pEMsM4/BP8XsgLv+rkZSaBXxfDl24la5ApfL2NNY0dnyzKgtV5J6rbxITEj2FShl655W/svdSiOgsPgnGDO1jxTXJoCBlbpodlbJjclI=
+	t=1782249608; cv=none; b=i0KuZLW9g1SY0hDuH3dwBdsPZg3wXdZU/yKhT7DHxNun+Z+SDT3f5N7OpmY5Ls2/UY6x4k/jVcv8xXiL3lJVO8uR5alP58bbBrW7FXGBXviAwJk7ubVl/AaeU/sBCdrYfvZlC4A7wSovvrXuxmJkNVue7XzEoHCT14SVuQdpmQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782249135; c=relaxed/simple;
-	bh=gVpPhQJuSwY4TE5VrV9yWM7PICW1UIgxam+zlTFi0Nc=;
+	s=arc-20240116; t=1782249608; c=relaxed/simple;
+	bh=HG/7c+MRz+16iwpVXO3/ELN/u/o6Fmrwadd1XkeHEvE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SHfavwWR20p3CjmsA/Z8rQFEgGAieaK1aqVieOuAbsj1Vh4yD1DhleiIT0nECu5Yv6nIjwiThpTojCFk5JJ4/TOcadwAQEbUqrJMVvlPy7qd28dbezU0H0nrUJOlCBI/cuB0ZoYukJ/UIqQsE/J7nzzlmz2JsTvTXFHRgUj60kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnZEwm6W; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=a0eJOyuYCQn5qICFB6JXHpKqDcbnLIBUt0ValZvAgFDiwVcOyQaije28vdN8Ji/5J6sO2W5zzBu7sxKnJBGLtFWxrMVNOTBbFfa+NdLtIPgocaIYRgKTnCs66zeFaeBE2dS0tIalCnf+/d4Rb2albXqN/sXZ1JAhxn1K69NnQI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGL7Ays9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnZEwm6W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367481F00A3D;
-	Tue, 23 Jun 2026 21:12:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGL7Ays9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4085D1F000E9;
+	Tue, 23 Jun 2026 21:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782249134;
-	bh=ABYNDQL/ZFp63l/iVnFyLewcyzlJ0hUcqnwS8o/GF9k=;
+	s=k20260515; t=1782249607;
+	bh=UfIaSFGz9/8Fg3ABiyb9JIkdAq94HFW9MPLq98JTkoE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SnZEwm6WxLwFFFce8qoP5MdKDKPiF/uMC7lZHpAyH5fWYK6g+xAAKSWTK9V/28mrB
-	 F8Dj9rp3OKIqCAr8qkm0s3ZexzfPltkjq37Igx8t/MELo5Ed6vru8N1jRSklFlZrAC
-	 j6xha3MiYNS7z3OBVrCbBJpOoRXurXK7mCS++NGnwSzD8++mU9+qbp6i3xezACjBBn
-	 SVCfKwR0IY96KwEEOQbG935fdx+qRRyXlNm6UlL7ZrYsMut5BVcbP8GSzyrKxbpJub
-	 ExUjB3sgP3kR34VqReVJ8O3VkTWBsAjnk2PcZB21zOiSAirhq0jLWbiSvgxQxt1MXo
-	 wle8jVTlD0lxw==
+	b=YGL7Ays9cDKUyIIjo/k3A0L8B0OOrQxmw4B38n++iLZYNMEg1Nd2HXCzz+dUpda4e
+	 FNDik/J4E06zAR27DfNTFwYCJ/YgnYYunNymU+oQ9d4g6oTO4NlNINO0waWNEwj1CN
+	 iR2nslgQFGCO5voVu2Fx5/mMGxmPMoZfE4/+3qeaA1FiGZsLCSRl7TxB7CGKhPDxZx
+	 7R1/ZFy2CD7MECZoin5DZmh1gqUTWcXotJImjOSwM2G3FTzpAKfL9FJTHc4H+k5P7M
+	 FJPBFj1HIP55yecns8mahga4hQ6hdEAR85FmXAEu74jKgi8rcfabyPzN4c7kWsOUIc
+	 EuYluot6gAuhQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 02/13] perf test: Truncate test description to fit
- terminal width
+Subject: Re: [PATCH v2 1/6] perf kvm: Factor out
+ kvm_need_default_arch_event()
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
+To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260623012758.2291858-3-irogers@google.com>
-References: <20260616164819.370939-1-irogers@google.com>
- <20260623012758.2291858-1-irogers@google.com>
- <20260623012758.2291858-3-irogers@google.com>
+In-Reply-To: <20260623191439.3621593-2-namhyung@kernel.org>
+References: <20260623191439.3621593-1-namhyung@kernel.org>
+ <20260623191439.3621593-2-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 21:12:13 +0000
-Message-Id: <20260623211214.367481F00A3D@smtp.kernel.org>
+Date: Tue, 23 Jun 2026 21:20:06 +0000
+Message-Id: <20260623212007.4085D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] Missing explicit inclusion of `<stdio.h>` for POSIX standard I/O fu=
-nctions.
+- [Medium] Silent error suppression on memory allocation failure in kvm_nee=
+d_default_arch_event()
+- [Low] Missing POSIX standard header <stdlib.h> for calloc() and free() in=
+ kvm-stat.c
 --
 
-commit a38919168aca480a6e9314b30b0c93edcb90fb79
-Author: Ian Rogers <irogers@google.com>
+commit 79c29a62706a76c9c3a62f6592977712a8f8b5fd
+Author: Namhyung Kim <namhyung@kernel.org>
 
-perf test: Truncate test description to fit terminal width
+perf kvm: Factor out kvm_need_default_arch_event()
 
-This commit addresses an issue with the parallel test harness where long te=
-st
-descriptions wrap around and cause output corruption. It fixes this by
-querying terminal dimensions and dynamically truncating test descriptions.
+The kvm_add_default_arch_event() has a similar logic in each arch to
+check if there's an existing command line option for events.  Let's
+check it in the generic code and remove the duplication.
 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
-est.c
-> index 7e75f590f225e..8b8f63f706d93 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
+> diff --git a/tools/perf/util/kvm-stat.c b/tools/perf/util/kvm-stat.c
+> index 755ab659a05c3..c571d2ed711a8 100644
+> --- a/tools/perf/util/kvm-stat.c
+> +++ b/tools/perf/util/kvm-stat.c
+> @@ -1,8 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "debug.h"
+> +#include "env.h"
+>  #include "evsel.h"
+>  #include "kvm-stat.h"
+>  #include <dwarf-regs.h>
+> +#include <subcmd/parse-options.h>
+
+[Severity: Low]
+Should <stdlib.h> be explicitly included here for calloc() and free() used
+later in this file?
+
+Relying on implicit inclusions can lead to compilation failures when buildi=
+ng
+the perf tool against musl libc.
 
 [ ... ]
 
-> @@ -415,73 +418,73 @@ static char *xml_escape(const char *str)
->  	return res ? res : strdup("");
->  }
-> =20
-> -static const char *format_test_description(const char *desc, int max_des=
-c_width,
-> -					  char *buf, size_t buf_sz)
-> +static int get_term_width(void)
->  {
-> -	int len =3D strlen(desc);
-> +	struct winsize ws;
-> +	int cols =3D 80;
-> +	int term_width;
-> =20
->  	/*
-> -	 * Clamp to buf_sz to prevent GCC format-truncation warnings
-> -	 * when terminal width is very large.
-> +	 * If output is redirected to a file or piped, we don't need to wrap
-> +	 * or truncate at all. Use a massive virtually infinite terminal width
-> +	 * so descriptions are printed in full.
->  	 */
-> -	if (max_desc_width >=3D (int)buf_sz)
-> -		max_desc_width =3D buf_sz - 1;
-> +	if (!isatty(fileno(debug_file())))
-> +		return 10000;
+> +	/* parse_options() may change the argv, let's make a copy */
+> +	tmp_argv =3D calloc(argc + 1, sizeof(char *));
+> +	if (!tmp_argv)
+> +		return false;
 
-[Severity: Low]
-Does this new call to fileno() need an explicit include for <stdio.h> at the
-top of the file to ensure it builds correctly under musl libc?
+[Severity: Medium]
+Is it intended to silently swallow the allocation error here and return fal=
+se?
 
-This file already lacked the <stdio.h> header, but since musl libc strictly
-separates declarations rather than relying on implicit inclusions, this new
-POSIX standard I/O function call might cause build failures without it.
+If calloc() fails, returning false conflates a memory allocation failure wi=
+th
+the logical state of the default arch event not being needed. While the cal=
+ler
+might fail on a subsequent allocation, would it be better to propagate the
+error so memory pressure conditions are explicitly caught?
+
+[ ... ]
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623012758.2291=
-858-1-irogers@google.com?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623191439.3621=
+593-1-namhyung@kernel.org?part=3D1
