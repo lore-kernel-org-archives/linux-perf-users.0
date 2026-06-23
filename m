@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84AF3A63EF
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 20:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE114395ADE
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:12:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782246707; cv=none; b=ZAQnAV4yiaVIQCANHeqbrJdQjv8ka9FuQVTVfFya3ixiLdDuclzO/bqAT3iwg+oMraCmqGqzY71DhAAKUEVj6L6/2l33jrCnFrunYX3FJax9W1M2XlnoCZdhoNKFjO2eF+JZ9D047mYP7IcsVbSrD1VE0pMhUyR54qDjwAodr/A=
+	t=1782249135; cv=none; b=UNmM9zsx55/m/wFFHkVxifXxy78GFGSCXqQoKTnI/q39MmPwo1DW9Sgl0PIc+jQwqz6pEMsM4/BP8XsgLv+rkZSaBXxfDl24la5ApfL2NNY0dnyzKgtV5J6rbxITEj2FShl655W/svdSiOgsPgnGDO1jxTXJoCBlbpodlbJjclI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782246707; c=relaxed/simple;
-	bh=qb0g1j32Sff6d6UCy4MZ1jCZA76D6fk385g0wvSLGCY=;
+	s=arc-20240116; t=1782249135; c=relaxed/simple;
+	bh=gVpPhQJuSwY4TE5VrV9yWM7PICW1UIgxam+zlTFi0Nc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=m9zj019QUdlduBI/3hyL8phShlttxX1SrTjMIxwPNsNG1dN6iKzc86KqI0KzZJTwG4XjhHaAkH6riU2SE/o5pJ1pqKHs9N6H/b/gSZm5hPgpDwHRY+V5x0q6xuaCWq7atAbe1wMx30157jiyyRrs5Go/8ypOD4oGTjG7cCvZYw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiU16kqD; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=SHfavwWR20p3CjmsA/Z8rQFEgGAieaK1aqVieOuAbsj1Vh4yD1DhleiIT0nECu5Yv6nIjwiThpTojCFk5JJ4/TOcadwAQEbUqrJMVvlPy7qd28dbezU0H0nrUJOlCBI/cuB0ZoYukJ/UIqQsE/J7nzzlmz2JsTvTXFHRgUj60kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SnZEwm6W; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiU16kqD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06B771F000E9;
-	Tue, 23 Jun 2026 20:31:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SnZEwm6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367481F00A3D;
+	Tue, 23 Jun 2026 21:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782246704;
-	bh=Gt0oZZ1y2eL6xxNvTLTHhz6iiKkqaxw5Xi596NUM2B0=;
+	s=k20260515; t=1782249134;
+	bh=ABYNDQL/ZFp63l/iVnFyLewcyzlJ0hUcqnwS8o/GF9k=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XiU16kqDtmkPuSH/LPfMT3R9ZP3OhpJhvVL6pOEddt0UEHPMI7lYpG9Qe5W+Bu/is
-	 B8RYRVTFQWJIDeCpmbhHGPiCuwYifQFOTDYj1MDy/CNZs6WHiV3Ohe8J0FsMA0AFUo
-	 6GEiDKRFXNf82iifLpB+WpvfJCSvEVPZ+tKhpNzWRcl8i2qxh25c0pLCcL83usoq6B
-	 7TtKIxER4X+UlRFTczKituS3wO/3xBBhsb2PhRrUSGwlbt6Gd0u0T3hpuTdhelpAv5
-	 rFexkDSeciGBMZU0Gl8m1763BmWmZhvhhuAeL9RqQfIq8YuysDeTA/30D3/GPHRkha
-	 w97vNocuK+e7g==
+	b=SnZEwm6WxLwFFFce8qoP5MdKDKPiF/uMC7lZHpAyH5fWYK6g+xAAKSWTK9V/28mrB
+	 F8Dj9rp3OKIqCAr8qkm0s3ZexzfPltkjq37Igx8t/MELo5Ed6vru8N1jRSklFlZrAC
+	 j6xha3MiYNS7z3OBVrCbBJpOoRXurXK7mCS++NGnwSzD8++mU9+qbp6i3xezACjBBn
+	 SVCfKwR0IY96KwEEOQbG935fdx+qRRyXlNm6UlL7ZrYsMut5BVcbP8GSzyrKxbpJub
+	 ExUjB3sgP3kR34VqReVJ8O3VkTWBsAjnk2PcZB21zOiSAirhq0jLWbiSvgxQxt1MXo
+	 wle8jVTlD0lxw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 8/8] perf test: Add Arm CoreSight callchain test
+Subject: Re: [PATCH v4 02/13] perf test: Truncate test description to fit
+ terminal width
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leo Yan" <leo.yan@arm.com>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v7-8-1ba770c862ae@arm.com>
-References: <20260611-b4-arm_cs_callchain_support_v1-v7-8-1ba770c862ae@arm.com>
+In-Reply-To: <20260623012758.2291858-3-irogers@google.com>
+References: <20260616164819.370939-1-irogers@google.com>
+ <20260623012758.2291858-1-irogers@google.com>
+ <20260623012758.2291858-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 20:31:43 +0000
-Message-Id: <20260623203144.06B771F000E9@smtp.kernel.org>
+Date: Tue, 23 Jun 2026 21:12:13 +0000
+Message-Id: <20260623211214.367481F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,105 +48,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Test script relies on non-portable GNU-specific extensions (`gre=
-p -Pzq`, `grep -Pzob`, `head -c`), breaking execution on embedded/BusyBox e=
-nvironments.
+- [Low] Missing explicit inclusion of `<stdio.h>` for POSIX standard I/O fu=
+nctions.
 --
 
-commit fd03c33f345e7a9116fc0df15c974d8c6e112e1c
-Author: Leo Yan <leo.yan@arm.com>
+commit a38919168aca480a6e9314b30b0c93edcb90fb79
+Author: Ian Rogers <irogers@google.com>
 
-perf test: Add Arm CoreSight callchain test
+perf test: Truncate test description to fit terminal width
 
-This commit adds a CoreSight shell test for synthesized callchains using the
-new callchain workload. It traces the workload with cs_etm and verifies that
-the instruction samples show the expected callchain push and pop.
+This commit addresses an issue with the parallel test harness where long te=
+st
+descriptions wrap around and cause output corruption. It fixes this by
+querying terminal dimensions and dynamically truncating test descriptions.
 
-> diff --git a/tools/perf/tests/shell/coresight/callchain.sh b/tools/perf/t=
-ests/shell/coresight/callchain.sh
-> new file mode 100755
-> index 0000000000000..e9f907f60e3a4
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/coresight/callchain.sh
-
-[ ... ]
-
-> +skip_if_system_is_not_ready()
-> +{
-> +	[ "$(uname -m)" =3D "aarch64" ] || {
-> +		echo "Skip: arm64 only test" >&2
-> +		return 2
-> +	}
-> +
-> +	perf list | grep -Pzq 'cs_etm//' || {
-
-[Severity: Medium]
-Is this grep command safe for embedded environments like BusyBox?
-
-The -P (PCRE), -z, and -q combinations are GNU-specific extensions.
-On minimal environments without PCRE support or full GNU grep, this command
-will fail, causing the test to incorrectly skip or error out on ARM targets
-that otherwise support the event.
-
-> +		echo "Skip: cs_etm event is not available" >&2
-> +		return 2
-> +	}
-> +
-> +	return 0
-> +}
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 7e75f590f225e..8b8f63f706d93 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
 
 [ ... ]
 
-> +find_after_line()
-> +{
-> +	local regex=3D"$1"
-> +	local file=3D"$2"
-> +	local start=3D"$3"
-> +	local offset
-> +	local line
-> +
-> +	# Search in byte offset
-> +	offset=3D$(
-> +		tail -n +"$start" "$file" |
-> +		grep -Pzob -m1 "$regex" |
+> @@ -415,73 +418,73 @@ static char *xml_escape(const char *str)
+>  	return res ? res : strdup("");
+>  }
+> =20
+> -static const char *format_test_description(const char *desc, int max_des=
+c_width,
+> -					  char *buf, size_t buf_sz)
+> +static int get_term_width(void)
+>  {
+> -	int len =3D strlen(desc);
+> +	struct winsize ws;
+> +	int cols =3D 80;
+> +	int term_width;
+> =20
+>  	/*
+> -	 * Clamp to buf_sz to prevent GCC format-truncation warnings
+> -	 * when terminal width is very large.
+> +	 * If output is redirected to a file or piped, we don't need to wrap
+> +	 * or truncate at all. Use a massive virtually infinite terminal width
+> +	 * so descriptions are printed in full.
+>  	 */
+> -	if (max_desc_width >=3D (int)buf_sz)
+> -		max_desc_width =3D buf_sz - 1;
+> +	if (!isatty(fileno(debug_file())))
+> +		return 10000;
 
-[Severity: Medium]
-Could this multiline regex search fail on non-GNU grep implementations?
+[Severity: Low]
+Does this new call to fileno() need an explicit include for <stdio.h> at the
+top of the file to ensure it builds correctly under musl libc?
 
-Using -Pzob relies heavily on GNU extensions. BusyBox grep, which is
-commonly used on embedded ARM boards, lacks -P, -z, and -b flags.
-
-> +		tr '\0' '\n' |
-> +		sed -n 's/^\([0-9][0-9]*\):.*/\1/p;q'
-> +	)
-> +
-> +	if [ -z "$offset" ]; then
-> +		echo "Failed to match regex after line $start" >&2
-> +		echo "Regex:" >&2
-> +		printf '%s\n' "$regex" >&2
-> +		echo "Context from line $start:" >&2
-> +		sed -n "${start},$((start + 100))p" "$file" >&2
-> +		return 1
-> +	fi
-> +
-> +	# Conver from offset to line
-> +	line=3D$(
-> +		tail -n +"$start" "$file" |
-> +		head -c "$offset" |
-
-[Severity: Medium]
-Does head -c break POSIX compatibility here?
-
-The -c option is a GNU extension and is not mandated by POSIX. This could
-cause the test to fail on minimal filesystems or minimal rootfs setups that
-use standard POSIX tools.
-
-> +		wc -l
-> +	)
-> +
-> +	echo "$((start + line))"
-> +}
+This file already lacked the <stdio.h> header, but since musl libc strictly
+separates declarations rather than relying on implicit inclusions, this new
+POSIX standard I/O function call might cause build failures without it.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611-b4-arm_cs_=
-callchain_support_v1-v7-0-1ba770c862ae@arm.com?part=3D8
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623012758.2291=
+858-1-irogers@google.com?part=3D2
