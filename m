@@ -1,30 +1,30 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B662BEC2A;
-	Tue, 23 Jun 2026 13:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902AF2C0274;
+	Tue, 23 Jun 2026 13:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782219770; cv=none; b=Z0T+n7WN13RVdmiEhEUKYYtJScuyA5pDzNEXFGrfEWJVa1QC3c1jpAzDBMdliFKmHTre4EGfwlmr1XKKbFhLM1bLc2660rGOfDRck60A56YzPVTQmsVVGShyPa6F0ndtIEZfDPJDenvuFDQV0kWwJnC3RZ6SP0QpoQcgxjUunbk=
+	t=1782219772; cv=none; b=tv6+NuU5hMgP45jRg9tin8wokiwTGu2HRPWJWtaoGf7S1FeXV9urYqbKKUemMW0fHCi5RNk+VZ5CdH87t5tTLJv86V+K1BMnzujqyms7zyQEe3IWyDfF7BKsGzdDwkPC/8imQSjFfF7TcN1t2PQHZ8UGa9wG7MQLezfQhiokSk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782219770; c=relaxed/simple;
-	bh=umVj2ORw1phCxDDZ8wUxNSRSV+I6hPul80WxYGswG5w=;
+	s=arc-20240116; t=1782219772; c=relaxed/simple;
+	bh=HEztHkOFkxO16MO9XGC/+fnxWTEGgS3rnIIu4pIymG4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RRQriP1vVgDqIRzjzrIt4ZsjswlbXvf1j7V+unoOCqSFbVOQkUTrQitCb7CJX7XSniKRfzWlTyJCDEaLmyGEjlBK6TrIQqM8hPP6L5Mn4KQ9z53v6n5OesXj3ZbkMBmXvGpTv15IZPD5h9IYxZbDXt0E33JKnMEThprpGlIQnv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xqlDbmQw; arc=none smtp.client-ip=115.124.30.97
+	 MIME-Version; b=nfCi8LwxIO00lZEQ2JNvcCZsuB4wB0M0HVD+WI17qeQac4eKEPANtIqYLg90ZYkFMcrjd0I6jgHjldMFHYrwxDVVR4a5ZZvQUj1sXyUBhMkR3bkN98xJRVpDSM4uwkNBvCHVXqBiMdDNwX7yW/eHCHijRXG8ttvs9YQepHmRMHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jNNRbVu0; arc=none smtp.client-ip=115.124.30.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xqlDbmQw"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jNNRbVu0"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1782219764; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=myZQdNFKoJDQgZTeIs7E/e5gDli66UFS3bIMOJ3e2Qw=;
-	b=xqlDbmQww+xN8BNMMrEeO3brGRxzADc71t7aSmKlrLhD2H6SIH491QlbK/6PbRg6rVH/M9MYnk7MgHtMB1qE9AQwOcI/ZBB1AKEbMTfDBu6SWRI8jD0iFaY67eGf84q5mfiSeVQ09LxAJtn4ygCmCl/Bc7RqX1Q8ATJLcxQsTr4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X5UKImf_1782219761;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X5UKImf_1782219761 cluster:ay36)
+	t=1782219760; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=1EOBDjSp2BT4GfmyDKZGpvjuBfszC44WhhJFmULarWc=;
+	b=jNNRbVu0RvFQw0asz1U97vI/YI0l6hxVVtc3Rb9zABZTf2z7csH6rkrrWhBcSZ4JQFOMTqSSGpixtfOnljszCrDkf7icnWZuvL32Le9AGD20/g2lDdLovVBiYSZv8gxXbGlEu1Rul3ZVa84AN1XqfCyMPjWFb5tKln1bMSxqrFc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X5UKIlc_1782219758;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X5UKIlc_1782219758 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 23 Jun 2026 21:02:41 +0800
+          Tue, 23 Jun 2026 21:02:38 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -39,9 +39,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Zecheng Li <zli94@ncsu.edu>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 4/5] perf annotate: Wire up ARM64 data type profiling infrastructure
-Date: Tue, 23 Jun 2026 21:02:33 +0800
-Message-Id: <20260623130234.8709-5-xueshuai@linux.alibaba.com>
+Subject: [RFC PATCH v1 1/5] perf annotate-data: Widen type_state_reg::imm_value to u64
+Date: Tue, 23 Jun 2026 21:02:30 +0800
+Message-Id: <20260623130234.8709-2-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
 References: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
@@ -53,102 +53,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add ARM64 support to the core dispatch and initialization points:
+The imm_value field in struct type_state_reg is used to store addresses
+computed from PC-relative instructions (e.g., ARM64 ADRP). As a u32,
+it silently truncates addresses above 4GB, which breaks global variable
+resolution for kernel profiling and large-address userspace on ARM64.
 
-1. annotate_get_insn_location(): Add an arm64 branch alongside the
-   existing powerpc branch to call get_arm64_regs() for extracting
-   register numbers and memory offsets from raw instructions.
-
-2. arch_supports_insn_tracking(): Include arm64 so that
-   find_data_type_block() can perform instruction-level type state
-   tracking on ARM64.
-
-3. init_type_state(): Add arm64 branch to set caller-saved registers
-   (x0-x18 per AAPCS64) and stack register (SP, DWARF reg 31).
-   Without this, stack_reg defaults to 0 (x0) after memset, causing
-   x0-based memory accesses to be misidentified as stack accesses.
+Widen it to u64 to support the full 64-bit address space. Update the
+corresponding format string in the x86 annotation code.
 
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
- tools/perf/util/annotate-data.c | 18 +++++++++++++++++-
- tools/perf/util/annotate.c      | 12 ++++++++----
- 2 files changed, 25 insertions(+), 5 deletions(-)
+ tools/perf/util/annotate-arch/annotate-x86.c | 2 +-
+ tools/perf/util/annotate-data.h              | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 1eff0a27237d..c04ad66ff077 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -29,6 +29,11 @@
- /* register number of the stack pointer */
- #define X86_REG_SP 7
+diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+index 7e6136536393..985aa8bbd0b9 100644
+--- a/tools/perf/util/annotate-arch/annotate-x86.c
++++ b/tools/perf/util/annotate-arch/annotate-x86.c
+@@ -547,7 +547,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 			tsr->offset = 0;
+ 			tsr->ok = true;
  
-+/* ARM64 DWARF register numbers: x0-x30=0-30, SP=31 */
-+#define ARM64_REG_SP 31
-+#define ARM64_REG_LR 30
-+#define ARM64_REG_FP 29
-+
- static void delete_var_types(struct die_var_type *var_types);
- 
- #define pr_debug_dtp(fmt, ...)					\
-@@ -178,6 +183,16 @@ static void init_type_state(struct type_state *state, const struct arch *arch)
- 		state->ret_reg = 0;
- 		state->stack_reg = X86_REG_SP;
- 	}
-+
-+	if (arch__is_arm64(arch)) {
-+		int i;
-+
-+		/* ARM64 ABI: x0-x18 are caller-saved */
-+		for (i = 0; i <= 18; i++)
-+			state->regs[i].caller_saved = true;
-+		state->ret_reg = 0;
-+		state->stack_reg = ARM64_REG_SP;
-+	}
- }
- 
- static void exit_type_state(struct type_state *state)
-@@ -1421,7 +1436,8 @@ static enum type_match_result find_data_type_insn(struct data_loc_info *dloc,
- 
- static int arch_supports_insn_tracking(struct data_loc_info *dloc)
- {
--	if ((arch__is_x86(dloc->arch)) || (arch__is_powerpc(dloc->arch)))
-+	if ((arch__is_x86(dloc->arch)) || (arch__is_powerpc(dloc->arch)) ||
-+	    (arch__is_arm64(dloc->arch)))
- 		return 1;
- 	return 0;
- }
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e745f3034a0e..bd734826538d 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2574,19 +2574,23 @@ int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
- 		op_loc->reg2 = -1;
- 
- 		if (insn_str == NULL) {
--			if (!arch__is_powerpc(arch))
-+			if (!arch__is_powerpc(arch) && !arch__is_arm64(arch))
- 				continue;
+-			pr_debug_dtp("mov [%x] imm=%#x -> reg%d\n",
++			pr_debug_dtp("mov [%x] imm=%#"PRIx64" -> reg%d\n",
+ 				     insn_offset, tsr->imm_value, dst->reg1);
+ 			return;
  		}
- 
- 		/*
--		 * For powerpc, call get_powerpc_regs function which extracts the
--		 * required fields for op_loc, ie reg1, reg2, offset from the
--		 * raw instruction.
-+		 * For powerpc and arm64, call arch-specific functions to
-+		 * extract the required fields for op_loc (reg1, reg2, offset)
-+		 * from the raw instruction.
- 		 */
- 		if (arch__is_powerpc(arch)) {
- 			op_loc->mem_ref = mem_ref;
- 			op_loc->multi_regs = multi_regs;
- 			get_powerpc_regs(dl->raw.raw_insn, !i, op_loc);
-+		} else if (arch__is_arm64(arch)) {
-+			op_loc->mem_ref = mem_ref;
-+			op_loc->multi_regs = multi_regs;
-+			get_arm64_regs(dl->raw.raw_insn, !i, op_loc);
- 		} else if (strchr(insn_str, arch->objdump.memory_ref_char)) {
- 			op_loc->mem_ref = true;
- 			op_loc->multi_regs = multi_regs;
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index c26130744260..4a9b4814479f 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -173,7 +173,7 @@ extern struct annotated_data_stat ann_data_stat;
+  */
+ struct type_state_reg {
+ 	Dwarf_Die type;
+-	u32 imm_value;
++	u64 imm_value;
+ 	/*
+ 	 * The offset within the struct that the register points to.
+ 	 * A value of 0 means the register points to the beginning.
 -- 
 2.51.2.612.gdc70283dfc
 
