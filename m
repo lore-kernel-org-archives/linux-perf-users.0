@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB559397E8E
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277C53ACF02
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782249608; cv=none; b=i0KuZLW9g1SY0hDuH3dwBdsPZg3wXdZU/yKhT7DHxNun+Z+SDT3f5N7OpmY5Ls2/UY6x4k/jVcv8xXiL3lJVO8uR5alP58bbBrW7FXGBXviAwJk7ubVl/AaeU/sBCdrYfvZlC4A7wSovvrXuxmJkNVue7XzEoHCT14SVuQdpmQg=
+	t=1782249609; cv=none; b=YqdErWWswB/kn2sPMHn459pTXjs/D+OPPvvYSaGN5FOEWJ+4h8MZIXZsorDF3t8LqX7b2aWg0xa7pYvT2pIm1knPFrFUBsWzNTVG8MUSz8msNH6c7/NJs9KRI1OJSrYGHmSJAMfSquBKXWpw8Sb6Nk5ShQr0Eg1EmK1F5kjH6pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782249608; c=relaxed/simple;
-	bh=HG/7c+MRz+16iwpVXO3/ELN/u/o6Fmrwadd1XkeHEvE=;
+	s=arc-20240116; t=1782249609; c=relaxed/simple;
+	bh=bI7PnSjwjBzMiUTn7ki0g+UBhaDTjPeIO7PJ00UJirs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=a0eJOyuYCQn5qICFB6JXHpKqDcbnLIBUt0ValZvAgFDiwVcOyQaije28vdN8Ji/5J6sO2W5zzBu7sxKnJBGLtFWxrMVNOTBbFfa+NdLtIPgocaIYRgKTnCs66zeFaeBE2dS0tIalCnf+/d4Rb2albXqN/sXZ1JAhxn1K69NnQI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGL7Ays9; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Rg9FhrjNKOVwziWNm1tghIZTH2Cm1VP34LpzNahZWN3/pYA9ZwolUFcXtoISS5veMncJ4g9FsEPm2w01HF4QWNx9WTw10j4onruvZSBFFIoZe7idwpt7GMJvQAdxjNHwkk1fYw3p6W7dE7zj7K2sRMltlJclEObszixwajvoChA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTRWS+Yr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGL7Ays9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4085D1F000E9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTRWS+Yr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF11F1F00A3A;
 	Tue, 23 Jun 2026 21:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782249607;
-	bh=UfIaSFGz9/8Fg3ABiyb9JIkdAq94HFW9MPLq98JTkoE=;
+	s=k20260515; t=1782249608;
+	bh=VFPguv+jiLfsJALcU3tz4L5Wd5SC/EjewhxyiKL5U50=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YGL7Ays9cDKUyIIjo/k3A0L8B0OOrQxmw4B38n++iLZYNMEg1Nd2HXCzz+dUpda4e
-	 FNDik/J4E06zAR27DfNTFwYCJ/YgnYYunNymU+oQ9d4g6oTO4NlNINO0waWNEwj1CN
-	 iR2nslgQFGCO5voVu2Fx5/mMGxmPMoZfE4/+3qeaA1FiGZsLCSRl7TxB7CGKhPDxZx
-	 7R1/ZFy2CD7MECZoin5DZmh1gqUTWcXotJImjOSwM2G3FTzpAKfL9FJTHc4H+k5P7M
-	 FJPBFj1HIP55yecns8mahga4hQ6hdEAR85FmXAEu74jKgi8rcfabyPzN4c7kWsOUIc
-	 EuYluot6gAuhQ==
+	b=nTRWS+YrtWBSuVeNLL3IGmbKpJxqWb3a4Tk1zbqF2T2XBQVWU5ohOrGlkhBxo4U4w
+	 tc3sLrZkj0kW6iJ/WWjLvq6aAg1tF0JzDKbrtVDAG+/+JRsLZFJE5iySBalA9UsiVj
+	 H3znlEAVtqpFca2h2OAvDIaZqG58DJ0vzNqrz3WkiIortbIupQh/UZiMtwNbNZAmiO
+	 bz/pxs0Q2SsjcKPSEIKJmym4y6yTPikvdBZc+ODmCUGHm6RuIRojkqq9iZy83zFfrp
+	 JzSTObJhcu+hAWzP3yjg/74K6yfK0h5eLco5MXcrSQUP45bq7srHwYSvwd5AoG3Ua9
+	 wd1dc/hEzLfxQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/6] perf kvm: Factor out
- kvm_need_default_arch_event()
+Subject: Re: [PATCH v4 03/13] perf tests workloads: Support sub-second
+ durations in noploop and thloop
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
+To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260623191439.3621593-2-namhyung@kernel.org>
-References: <20260623191439.3621593-1-namhyung@kernel.org>
- <20260623191439.3621593-2-namhyung@kernel.org>
+In-Reply-To: <20260623012758.2291858-4-irogers@google.com>
+References: <20260616164819.370939-1-irogers@google.com>
+ <20260623012758.2291858-1-irogers@google.com>
+ <20260623012758.2291858-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 21:20:06 +0000
-Message-Id: <20260623212007.4085D1F000E9@smtp.kernel.org>
+Date: Tue, 23 Jun 2026 21:20:07 +0000
+Message-Id: <20260623212007.CF11F1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,62 +48,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Silent error suppression on memory allocation failure in kvm_nee=
-d_default_arch_event()
-- [Low] Missing POSIX standard header <stdlib.h> for calloc() and free() in=
- kvm-stat.c
+- [Medium] Conversion of an unbounded floating-point value to `unsigned int=
+` invokes undefined behavior.
+- [Low] Missing explicit inclusion of `<stdio.h>` for `fprintf` and `stderr=
+` usage.
 --
 
-commit 79c29a62706a76c9c3a62f6592977712a8f8b5fd
-Author: Namhyung Kim <namhyung@kernel.org>
+commit 7d05873e679bf07cde18f37a2d18403b7405f3c4
+Author: Ian Rogers <irogers@google.com>
 
-perf kvm: Factor out kvm_need_default_arch_event()
+perf tests workloads: Support sub-second durations in noploop and thloop
 
-The kvm_add_default_arch_event() has a similar logic in each arch to
-check if there's an existing command line option for events.  Let's
-check it in the generic code and remove the duplication.
+This commit updates noploop and thloop workloads to support sub-second sleep
+durations by switching from atoi() to atof(). It uses ualarm() for durations
+under 1.0 second and falls back to alarm() for longer durations.
 
-> diff --git a/tools/perf/util/kvm-stat.c b/tools/perf/util/kvm-stat.c
-> index 755ab659a05c3..c571d2ed711a8 100644
-> --- a/tools/perf/util/kvm-stat.c
-> +++ b/tools/perf/util/kvm-stat.c
-> @@ -1,8 +1,10 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include "debug.h"
-> +#include "env.h"
->  #include "evsel.h"
->  #include "kvm-stat.h"
->  #include <dwarf-regs.h>
-> +#include <subcmd/parse-options.h>
+> diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/work=
+loads/noploop.c
+> index 656e472e61882..ca9f871e136f5 100644
+> --- a/tools/perf/tests/workloads/noploop.c
+> +++ b/tools/perf/tests/workloads/noploop.c
+> @@ -15,15 +15,26 @@ static void sighandler(int sig __maybe_unused)
+> =20
+>  static int noploop(int argc, const char **argv)
+>  {
+> -	int sec =3D 1;
+> +	double sec =3D 1.0;
+> =20
+>  	pthread_setname_np(pthread_self(), "perf-noploop");
+>  	if (argc > 0)
+> -		sec =3D atoi(argv[0]);
+> +		sec =3D atof(argv[0]);
+> +
+> +	if (!(sec > 0.0)) {
+> +		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
 
 [Severity: Low]
-Should <stdlib.h> be explicitly included here for calloc() and free() used
-later in this file?
+Does this code compile cleanly under musl libc? The perf subsystem guidelin=
+es
+require explicit POSIX header inclusions for all libc functions to prevent
+musl compilation failures. The stdio.h header appears to be missing for this
+fprintf and stderr usage.
 
-Relying on implicit inclusions can lead to compilation failures when buildi=
-ng
-the perf tool against musl libc.
-
-[ ... ]
-
-> +	/* parse_options() may change the argv, let's make a copy */
-> +	tmp_argv =3D calloc(argc + 1, sizeof(char *));
-> +	if (!tmp_argv)
-> +		return false;
+> +		return 1;
+> +	}
+> =20
+>  	signal(SIGINT, sighandler);
+>  	signal(SIGALRM, sighandler);
+> -	alarm(sec);
+> +
+> +	if (sec < 1.0) {
+> +		useconds_t usecs =3D (useconds_t)(sec * 1000000.0);
+> +
+> +		ualarm(usecs > 0 ? usecs : 1, 0);
+> +	} else
+> +		alarm((unsigned int)sec);
 
 [Severity: Medium]
-Is it intended to silently swallow the allocation error here and return fal=
-se?
-
-If calloc() fails, returning false conflates a memory allocation failure wi=
-th
-the logical state of the default arch event not being needed. While the cal=
-ler
-might fail on a subsequent allocation, would it be better to propagate the
-error so memory pressure conditions are explicitly caught?
+What happens if the parsed duration exceeds UINT_MAX? Converting an unbound=
+ed
+floating-point value like 1e20 to an unsigned int invokes undefined behavio=
+r.
+Should sec be bound-checked before this cast?
 
 [ ... ]
 
+> diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workl=
+oads/thloop.c
+> index bd8168f883fb6..c830d739489fe 100644
+> --- a/tools/perf/tests/workloads/thloop.c
+> +++ b/tools/perf/tests/workloads/thloop.c
+> @@ -31,14 +31,15 @@ static void *thfunc(void *arg)
+> =20
+>  static int thloop(int argc, const char **argv)
+>  {
+> -	int nt =3D 2, sec =3D 1, err =3D 1;
+> +	int nt =3D 2, err =3D 1;
+> +	double sec =3D 1.0;
+>  	pthread_t *thread_list =3D NULL;
+> =20
+>  	if (argc > 0)
+> -		sec =3D atoi(argv[0]);
+> +		sec =3D atof(argv[0]);
+> =20
+> -	if (sec <=3D 0) {
+> -		fprintf(stderr, "Error: seconds (%d) must be >=3D 1\n", sec);
+> +	if (!(sec > 0.0)) {
+> +		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
+
+[Severity: Low]
+Similarly, this usage of fprintf and stderr might cause musl compilation to
+fail if stdio.h is not explicitly included in this file.
+
+[ ... ]
+
+> @@ -67,7 +68,12 @@ static int thloop(int argc, const char **argv)
+>  			goto out;
+>  		}
+>  	}
+> -	alarm(sec);
+> +	if (sec < 1.0) {
+> +		useconds_t usecs =3D (useconds_t)(sec * 1000000.0);
+> +
+> +		ualarm(usecs > 0 ? usecs : 1, 0);
+> +	} else
+> +		alarm((unsigned int)sec);
+
+[Severity: Medium]
+Is this unbounded cast to unsigned int safe? Just as in noploop(), if sec is
+excessively large, this cast could result in undefined behavior.
+
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623191439.3621=
-593-1-namhyung@kernel.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623012758.2291=
+858-1-irogers@google.com?part=3D3
