@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05DB364929
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 19:58:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753112FB97D
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 20:11:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782244717; cv=none; b=glhNJl97k2Wv/UBxVtWO0htW7jqIedMYYxiQqmrfOm8vzjhwi9nwxgGRtjfN0J63jLfreXrJ7AF97QxdU2c+JRYDPBtd2waPs9cW8LKLYhgz0WwLu/uR+cQVmQrWJnky63JhnM2Mvp8M7Eji304rxm4OYrDDZti8eWZLlNI4/yw=
+	t=1782245518; cv=none; b=XquhCy8sHNRq8OBmpur2a3iF0SgLUDWLgVHL5SFQTfaTOqQt6RDf3Szdk4B+KQ7uIz/69aoi3QidcfMh7IKF1D/3Oy8Ep8txcplOCCHtEzuMBQuCr0yECMKdLjAG47ZXKHKRq0LHIHb/kJQ8sanXCV+N24wgYysPenwqo3XVumk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782244717; c=relaxed/simple;
-	bh=66Ohk2lvsyZn6O7DRqhJGtC60F6es8M07hqQuOH4Xnk=;
+	s=arc-20240116; t=1782245518; c=relaxed/simple;
+	bh=pOQv/kPPr0hb5Uubi/nDVmZ1dSltCbNVebQFObxzInc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=drTiP8epnejxQ5eqazA/nIt4JWEcqWU/FkLnluDHIZDT5Xk9UwXbz661xZrQIL6WKL9ro3HWUCN4hpoBoX0z1CvrPFxHLKBJtycahPaIohj6TLzBeeyC5VR4NOeVC2vUHzCxG1kKza9xvqHgM/SgEMTOR0SqvcnqvK0cE45+nGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctAHc5P6; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=AiGHufjHds0/i/Lhz+ulwz/hqlvjD7A0zTUkNX8I+8ZwgkBgznj8Lxx9NmEzpeDrSWiZXRc3yNE+cuLlJsAj8EFwp9idYeI0rBaOb2E3WcFsHt2zeAfDGzKqg76zrct16b3czlfQCQ9eFEIBQ6MRv1aqMqEnsbrqcXWhJayZ7Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTgspFsL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctAHc5P6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0451F000E9;
-	Tue, 23 Jun 2026 19:58:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTgspFsL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77221F000E9;
+	Tue, 23 Jun 2026 20:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782244715;
-	bh=wKS941ePgX6qlk2np1lQeVch0n6yN//gh4ZbW65nzH8=;
+	s=k20260515; t=1782245517;
+	bh=5scCo+KHHS2AeNF8gRlc3Yqw08UJmgolDUG4PymRalE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ctAHc5P6NKlxL+ev/PRSS2vZ9c55pcV+1jSGrCcPdXA7mq3/YwJ9Gfr2LAtg154KA
-	 aYE3+lD+ZYLlTJ3pWEYvxEocdTeHzFJ+1tscwczVlu7QOw0n0YPiQq3qa63FBNCUUv
-	 XKqF4sdGM52Y8R80/RJrF5VBsBx+/nbnBaF1cOfAm6T9PTl4FoU4czKVtMng+BWL+C
-	 SEtJFoxVEUL5kALyKOHDtYxetq10PyUPQbdK5Swa9e8PQWwF4Bmh6S2a2DD8v+QViI
-	 vbiJWBQ88zjx3TFfgIsO/VrDE9gmNPprwDb9YXh82iS3ziQZJH+ZC6YGcV0CFueZmt
-	 z7Y9H7ewtdFmg==
+	b=lTgspFsLiB+oPmgNgroW80Zsod0k1HBRmImxi+LWrGVShR1GA2+jlHq1Xg41QCAib
+	 xoUX/UKlfVzTRLqH6VuMUPgV2phkmZEjmZaczkDOpKFKzlGz0UOSZyKGflwSHbIBp9
+	 WiQwoOaRYyjuiqokHfPr0SevVxCS6GNH0vQMAwdVhUgwiJfL2JmQjjAzkqhTG8yYsA
+	 EmFvybgTUE4Q/0+3J38mKpHM4uA/GFGDoKCm08BGIOfpIm+4j7i5iO+uRrQCFvwkVe
+	 T/hj8j2NvFLYjDOb8WWd1pOeCUQAV6KjxS0yQXDTto5JyaAF4EwZ+6QxEzXQbbbMfT
+	 P49q4Nh+icMdQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 5/8] perf cs-etm: Flush thread stacks after decoder
- reset
+Subject: Re: [PATCH v7 6/8] perf cs-etm: Support call indentation
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v7-5-1ba770c862ae@arm.com>
-References: <20260611-b4-arm_cs_callchain_support_v1-v7-5-1ba770c862ae@arm.com>
+In-Reply-To: <20260611-b4-arm_cs_callchain_support_v1-v7-6-1ba770c862ae@arm.com>
+References: <20260611-b4-arm_cs_callchain_support_v1-v7-6-1ba770c862ae@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 19:58:35 +0000
-Message-Id: <20260623195835.6C0451F000E9@smtp.kernel.org>
+Date: Tue, 23 Jun 2026 20:11:56 +0000
+Message-Id: <20260623201156.E77221F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,114 +45,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Temporal and spatial violation causing global thread stack destruc=
-tion on local queue replenishment.
-- [High] Guest machine thread stacks are bypassed during flush when context=
- IDs are disabled (`CS_ETM_PIDFMT_NONE`).
+
+New issues:
+- [High] cs_etm__packet_swap improperly bypasses packet swapping when only =
+thread_stack is requested, breaking call indentation.
+
+Pre-existing issues:
+- [High] Incorrect CPU used to fetch the branch stack in `cs_etm__synth_ins=
+truction_sample`.
 --
 
-commit 44f2b7bdbbeef1f4cf7936476255084d1e513f39
-Author: Leo Yan <leo.yan@arm.com>
-perf cs-etm: Flush thread stacks after decoder reset
+commit 75bb53812475ad4dde7bad4012f3997de1cd7ce0
+Author: Leo Yan <leo.yan@linux.dev>
 
-This commit introduces a mechanism to flush all host and guest thread
-stacks when the CoreSight decoder is reset due to trace discontinuities.
-This is intended to prevent stale call/return histories from corrupting
-synthesized callchains.
+perf cs-etm: Support call indentation
+
+This commit enables thread-stack support when either itrace thread-stack
+support or last branch entries are requested. It allocates the branch stack
+storage accordingly and feeds taken branches to thread_stack__event() to
+maintain call depth for branch samples.
 
 > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 8798bf0471faf..7069b4990e610 100644
+> index 7069b4990e610..830618763d8b1 100644
 > --- a/tools/perf/util/cs-etm.c
 > +++ b/tools/perf/util/cs-etm.c
 [ ... ]
-> @@ -1997,6 +1997,37 @@ static int cs_etm__end_block(struct cs_etm_queue *=
-etmq,
+> @@ -1545,7 +1547,7 @@ static void cs_etm__add_stack_event(struct cs_etm_q=
+ueue *etmq,
+>  	if (!cs_etm__packet_has_taken_branch(tidq->prev_packet))
+>  		return;
 > =20
->  	return 0;
->  }
-> +
-> +static int cs_etm__flush_stack_cb(struct thread *thread,
-> +				  void *data __maybe_unused)
-> +{
-> +	thread_stack__flush(thread);
-> +	return 0;
-> +}
-> +
-> +static void cs_etm__flush_machine_stack(struct cs_etm_queue *etmq, pid_t=
- pid)
-> +{
-> +	struct machine *machine;
-> +
-> +	machine =3D machines__find(&etmq->etm->session->machines, pid);
-> +	if (machine)
-> +		machine__for_each_thread(machine, cs_etm__flush_stack_cb, NULL);
-> +}
-> +
-> +static void cs_etm__flush_all_stack(struct cs_etm_queue *etmq)
-> +{
-> +	enum cs_etm_pid_fmt pid_fmt =3D cs_etm__get_pid_fmt(etmq);
-> +
-> +	if (!etmq->etm->synth_opts.last_branch)
-> +		return;
-> +
-> +	cs_etm__flush_machine_stack(etmq, HOST_KERNEL_ID);
-> +
-> +	/* Clear the guest stack if virtualization is supported */
-> +	if (pid_fmt =3D=3D CS_ETM_PIDFMT_CTXTID2)
-> +		cs_etm__flush_machine_stack(etmq, DEFAULT_GUEST_KERNEL_ID);
+> -	if (etmq->etm->synth_opts.last_branch) {
+> +	if (etmq->etm->use_thread_stack) {
 
 [Severity: High]
-Does this logic bypass populated guest machine thread stacks when tracing
-with CS_ETM_PIDFMT_NONE on hardware where the kernel runs at EL1?
+If a user runs perf script -F +callindent and disables other sample types
+(for example, using --itrace=3De), etm->synth_opts.thread_stack becomes true
+while branches, last_branch, and instructions remain false.
 
-Looking at cs_etm__get_machine(), traces with exception level ocsd_EL1 are
-assigned to the guest machine even when pid_fmt is CS_ETM_PIDFMT_NONE.
+When this happens, does cs_etm__packet_swap() bypass packet swapping?
+Looking at cs_etm__packet_swap() in tools/perf/util/cs-etm.c:
 
-By restricting the guest machine flush strictly to CS_ETM_PIDFMT_CTXTID2
-here, it seems these populated guest thread stacks are skipped during the
-trace discontinuity flush, which could allow stale branch histories to
-persist.
+	if (etm->synth_opts.branches || etm->synth_opts.last_branch ||
+	    etm->synth_opts.instructions) {
+		/* Swap PACKET with PREV_PACKET ... */
+		tmp =3D tidq->packet;
+		tidq->packet =3D tidq->prev_packet;
+		...
 
-> +}
-> +
+If use_thread_stack isn't checked here, tidq->prev_packet remains
+zero-initialized, which means cs_etm__packet_has_taken_branch() will always
+evaluate to false. Does cs_etm__packet_swap() need to be updated to check
+etm->use_thread_stack so that thread_stack__event() can be called properly?
+
+>  		from =3D cs_etm__last_executed_instr(tidq->prev_packet);
+>  		to =3D cs_etm__first_executed_instr(tidq->packet);
+> =20
 [ ... ]
-> @@ -2019,6 +2050,12 @@ static int cs_etm__get_data_block(struct cs_etm_qu=
-eue *etmq)
->  		ret =3D cs_etm_decoder__reset(etmq->decoder);
->  		if (ret)
->  			return ret;
-> +
-> +		/*
-> +		 * Since the decoder is reset, this causes a global trace
-> +		 * discontinuity. Flush all thread stacks.
-> +		 */
-> +		cs_etm__flush_all_stack(etmq);
+> @@ -1955,7 +1958,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+>  	cs_etm__packet_swap(etm, tidq);
+> =20
+>  	/* Reset last branches after flush the trace */
+> -	if (etm->synth_opts.last_branch)
+> +	if (etm->use_thread_stack)
+>  		thread_stack__flush(tidq->frontend_thread);
+> =20
+>  	return err;
 
 [Severity: High]
-Could this global flush cause a temporal and spatial violation by destroying
-thread states for events that haven't been processed yet?
+This is a pre-existing issue, but I noticed a potential problem with how the
+branch stack is fetched during a trace flush.
 
-When a local auxtrace queue runs out of data and triggers a read-ahead via
-cs_etm__get_data_block(), it unconditionally calls cs_etm__flush_all_stack(=
-).
-Because CoreSight auxtrace operates using a min-heap to chronologically
-interleave events across multiple independent CPU queues, events from other
-queues are still chronologically sorted in the min-heap waiting to be
-processed.
+In cs_etm__synth_instruction_sample(), the code hardcodes tidq->packet->cpu
+instead of using the local packet parameter:
 
-Iterating over machine__for_each_thread() and flushing all thread stacks
-globally during the read-ahead phase of a single queue appears to
-prematurely destroy the thread state for events that happened before the
-discontinuity on the current queue, as well as for threads tracked by
-other CPU queues.
+	if (etm->synth_opts.last_branch) {
+		thread_stack__br_sample(tidq->frontend_thread,
+					tidq->packet->cpu,
+					tidq->last_branch, tidq->br_stack_sz);
+		...
 
-Is it safe to perform this synchronous global flush ahead of the
-chronological min-heap processing?
+If cs_etm__flush() calls cs_etm__synth_instruction_sample() with
+tidq->prev_packet as the packet argument, and exactly one packet was
+processed before the flush, tidq->packet will still hold the initial
+zero-allocated prev_packet struct.
 
->  	}
-> =20
->  	return etmq->buf_len;
+Would this cause tidq->packet->cpu to evaluate to 0, resulting in
+thread_stack__br_sample() fetching the branch stack for CPU 0 instead of
+the actual CPU of the packet?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611-b4-arm_cs_=
-callchain_support_v1-v7-0-1ba770c862ae@arm.com?part=3D5
+callchain_support_v1-v7-0-1ba770c862ae@arm.com?part=3D6
