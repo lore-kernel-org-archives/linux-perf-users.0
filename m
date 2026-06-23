@@ -1,205 +1,240 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24E026E165
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 17:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD68391842
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 18:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.176
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782235014; cv=pass; b=dK8kNxMNNbnoFnCl2n5t2YNATZOVal93e62Iz3kdcw9auu+BjVh1wF8lwu8eTvOdtTHsrTAJKfRTxs+WPIrhbJRNRGP0N7PKlqGB5bsx18tE8Wgs+kzRWMKVbWGr+WILO+IOZC5lep+N00qOasenqF0vwHfBrLoGmEyefg0OlVM=
+	t=1782238239; cv=pass; b=aWeuf85oZu7FpxkDQavYwUgaI27X3T86lONGOjWtHeSpHcrN94oPXtDdSSi34M1aNzLfAlATdkbAJVs3Jzz22q/nDCO+q85yZgEz5F6FHZY9vXNqVQXAcl8pVPYGPgTLoEVquGT2IUlegXoS7sHfOywkGJEpH2eP2kqRf94KpJ4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782235014; c=relaxed/simple;
-	bh=Jc3NFIyBGO0I0IA43oP18JYuheVpqNYBKCnYTwx2ijc=;
+	s=arc-20240116; t=1782238239; c=relaxed/simple;
+	bh=gtEtA/1bnlJadumPvs7pL49nsw17aLwbOXX60YN3LT8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=utCXLcZkYmhkLpA1r7SjjgWfLJKVty9l9tIZL4oXHcosFNt4J2CVcHsApQYMx4XfaSXIlfjyv575OC4Zt1peBP75dXl6NdGuSRRDGKaTjN9PRymnLjopOzQaKRfdz9+gcbl0MenqDSKnEs9mmiat0t9ZhnqKc4D2ejVr06hagEM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rWOdSYcQ; arc=pass smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=mYEn5qcTgelVjgTkGwDWSbb31FhpJx62dHFaKReBMpNWwUP1pavrizXlFMXcPiQ6RcwpBp5Be7U50vQUCt0xgUGiA9srx5ea2LQTPOD42NqrXwjBMBWPHx8TOpq48M+W8TLlqErc7Gvs2T7UCbNRubt7mT4u3D0B85b8WmYJHjg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=olJs7MxT; arc=pass smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rWOdSYcQ"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2c69fa0b1f8so2945ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 10:16:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782235012; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="olJs7MxT"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2c73cefe192so6805ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 11:10:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782238237; cv=none;
         d=google.com; s=arc-20260327;
-        b=BL9ZdwOnwYKvEdeEcX3VyuhGxYBk3/yA+aA52qvr0GpifudEbK2FlPny54Ls9xnx0x
-         CB1cfgJ5rAdZjm0UbbFGBtsbWgW25iF2w+mmtUwV5Zjnf39GipRdnoiMHb8w5F1cvAWY
-         JILWcTl/1Eo9GDg7QJXUGwgzwTtAhEVtiJzHwqfevGqfRzVHM7egqf/x4D6bBfXhhyEf
-         kW9QVcdIYa0tt6GekBR2cOORDFzmsKpQplK9ujnVR1UZ6PG185qbbmHH2liTKalzAnYm
-         mRLk9nRYL5Pa3QLnWa2aYBmQD0p+79fc9IwOdDF+cVyV5V/1VgUPnrxy0G90R/rjSiuc
-         DJtw==
+        b=orvUtv677W+RN1t+TS3RN0Poifsv9kHEgP55qZxKVG+xKrVsAKEcrvQCNL4XEHyMg4
+         qmZ0fMlXZz/6+EGgF6DpG+Sj1XLdJyPGZ6LwVpcftsxsYC/Q/AXGDo7s4XgnRaIHNBNC
+         65YLtscIFJrY7ceKzAmZ7E+TXxa6hZiuxd2D9Ojpiw0KmvYi5cVE51sdx5zY7tBRvWAr
+         LBgLQxJxxeiTN0d9ee6/Hflai8qBEylb8QoaJKyL9vNFlPCKw0teCQDjX6RRbvM2k5ZV
+         ezRUJ2Eei0/OS9HA+xfuLoLMO+T7odAXJTsrdZvc4zqLzu/nOAIBEvDCXw3bgWJpe4LP
+         jWrA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=8V8XmSTsxuXnjrPVNLI5LwVP6bo1s9Bz+C8FMG18Z54=;
-        fh=MTb/KjYajXCezPOJZSpC6VOZWW9+LiEuvKdxfa9wWmg=;
-        b=Zw4P/1TW6x1mywintCjr+Lt9SQbbVcQBLI9YPD4KmWCvO2c968B2XOe8R+YX6L4WdT
-         9pwLQNTRWSMXR2ele+6AtTMxEGCRnUbIU6+6145hm125tV8wjtelRziyTinDn69r1IdN
-         whAo3O63QfiaxZn6W6MbdBmKn0FFEQFjLQQY2Kf8or3SKm3i+tbc8/y4SvF4pqPEWJdS
-         8XdxVcQqe/PMWKzaDGgqALKE13DQR7bLoN7juSUFADtaH/SWrc96GhWgOmei7UmZZSY9
-         NmjjxoVSjEjS+C3BMs1Y+gKe3owKwu/ncirMXUZeXqork6t6xRzf37MdFmIMScdaeg77
-         x8mg==;
+        bh=PYUZIf/xO4ROpWjr/J8Svhai5QstrZTR0FAs3E0usJk=;
+        fh=btIjwof9Zf+GpEXwyju4w48bikhyQFY5j/bbdSUaDwk=;
+        b=BlPC+xR+n5K0+a6OJmo522Xb9YNQJ8Cpx8/P5ma5bWU/h/qsPU2lH05aC/Xd2SynXB
+         AvVrsACKZgxM0dDa3MCnFvpROd4Kvte9Gdlo4Chgiubu1vNPnLVvzT8UzG9vnm7iUUeJ
+         GDCZTVKmzCNxDob6PL7s8tKedMpjiU5jVVJ1f/MO2Dm8zxgy2V7bYK2ICVmRhJyF65hc
+         dj7qihi93o6tZIPEQ6HE8MHPShFCQ2w/aBMqezOhYRoW3k2EArGXJ+SZW70Nk54j0eui
+         lm5AIWLjj6BYIIkOtwAFZmBspuYpFqySx+POzjHljPdvvT9vgee7WR06cGNbJdlbf1hc
+         Wocw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782235012; x=1782839812; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782238237; x=1782843037; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=8V8XmSTsxuXnjrPVNLI5LwVP6bo1s9Bz+C8FMG18Z54=;
-        b=rWOdSYcQRqxJ4SkiWSEygmXvf4MOatk6ekzsQvGYaxn96+tluU7WItGWWD+5Cc8DzI
-         LV8ri2uCRJ9DAqllQCToVhrR+IbLJiTvg5mQ41tOYH5m+1/2d2KEr/qpCj5yKcsbbdIb
-         wkOGbMnTLi2QhtjFMG4NkhvmCpZOQywzK7gdNhwOXvElnX3CbVeYSx8woU67JCTFoImE
-         VNuN/+yhPnN/9YeRIfI9Knaly8AKBz0bsSy4fim6RPZ/wRe9YN09wNfllGl33nSnAsRX
-         ZhcyA8Po4a0lxpJlZYueX5Y4+4+q+EOqwGEswcHqG9WmCF2A6/1s2RonMQNnXQ+3S4r2
-         UDOA==
+        bh=PYUZIf/xO4ROpWjr/J8Svhai5QstrZTR0FAs3E0usJk=;
+        b=olJs7MxT34vyBiPdfxMt2cNht0UFfyYzhUwCyqXFxf238SJRDSTzjR66DtQaD83MfU
+         IK/YTfebOkWpl/wX66Oj8z3fjbBjX7hXkn4/Apn+91Z2MWS+pSwU1c3v/jwAPv+ziqHl
+         2sTZ62PGURTg3mgeR7NJ50Ot6mSmIp4PPSAFapmjIwtTf51cQe+oavMagAxPHwaVYClT
+         QCD5oE0Fz1/NiE4muisPOgHrTGmWmmgDV+uV+yiLqKmvBkf855ADDOvJC51IavqfR94O
+         v0Dv5sae2hAdL9X0rnN7efHND+D9aOLxShhfnanCEz7umVEfQxRIEpfEhIi8n4Hkt2jM
+         hENw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782235012; x=1782839812;
+        d=1e100.net; s=20251104; t=1782238237; x=1782843037;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=8V8XmSTsxuXnjrPVNLI5LwVP6bo1s9Bz+C8FMG18Z54=;
-        b=BCMwBBxh42Eu6N27i/v44syD27P445A2iAP18l8AOdPcVae+nCgsv1lEWb8pHBLvXE
-         yZtt2HuDG0RpRO6E1fgrHITI2EKNjzrCTXX/rKiPRv//DMNOJPGFTTJXd4HAOlHght7e
-         E7mjUK1uFC+dPRJE5+flNsyWJ5SagI5hX4M6V7WD/bcUR+JCAecnlaX0KeczZPtCS6Tm
-         xyaZ9BABp/oviAFAWEspljOW9FQpr1LIKfnhEJTbftZA0YCBgruThJC18bdV3I7aA7wt
-         hsuu09KeNpuZmx9aM47QEYyMsz9BzqlwKchl9jupfpkrGedjgOaV5C67M2Pt/HvtYfdo
-         dQng==
-X-Gm-Message-State: AOJu0YyZGdhbKVJpjDW9X41m77c2hR1pe/LHYGR0EmUCmWUElOP8S1F3
-	z5JUAW8xGLlFrXFrOqgG1nv0DL7DHckY3PuSgqPk5jG13E7B37ppDWf97LtSDnFjVWUWnAKbMnS
-	BWjuYZOiHH4VnEUUKqB8mN6Ftdqo+iivH31So3Uu7
-X-Gm-Gg: AfdE7ck0c7UWjCiyfT1Gs9Y/wzroMv5gg5Chh+Gjxkzl+23E7f1TOnFKOiDwm0Jtpip
-	C6mQWtPRg3VtaGbdMY8sQKK3eYgRjG4lc9Ca12dHeKBT1Kyl8cAZwgHIs+8UwdiEpmDU6bbbGRY
-	kIWYJaVrpyP5CXMXJDM1r7mMGHD0UB/atCVOnX/BnF+ZghxN0FH6S2rsGqrGaNd0ic/LriGgbLv
-	7iKQW5Lf5G78F7yAXe+Wdxlk3FkDH27IRY3HtgYVCI7fcsTPJmbe9/FqGcvAB9z3nCj0iCQNQ==
-X-Received: by 2002:a17:902:f60e:b0:2b0:b0c9:96e2 with SMTP id
- d9443c01a7336-2c7e080f9edmr7995ad.21.1782235011263; Tue, 23 Jun 2026 10:16:51
- -0700 (PDT)
+        bh=PYUZIf/xO4ROpWjr/J8Svhai5QstrZTR0FAs3E0usJk=;
+        b=Tb4LcIpJsjqB5ete9XrhWlRncO2lMnFtCdlToMtjyndKzBdO9q7YjruqBlQx3EZlFh
+         tEiN/oo8OWTGectxpQdhRfAiMwtBP7PMwTJf4epMMkHZ2la/oYUUvMDti+p7h6VvDIIT
+         oMbM+es0mN4b2Np43odJlJlH1czczRmRgXw0SA2j3umZFmozcrWko61KaJOpshYBquiC
+         8I9Y+fmR1/hgTxiH0h3UQ4BSK0ukar/Z60ZAcOZMOpfRGRTlctibfSaNXcmySkcWOilE
+         AWeyEesQQ+vtkN+iCDxlj7cqe1kwTSCJnPgWBMnhRNaQgsq/ilAvpfHaBeCJ6XxhF8EP
+         3d7A==
+X-Forwarded-Encrypted: i=1; AHgh+RoiwpcLixHJpM6CRoP4iR4aZQuFTLS3iqlceTGnWcSI2CvIqWiS8RJqdgQNbqFQHq7AOZVnx6IoCv+Y16+4xMXj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGn18nRZcrqgn06zoC4zB2nzyyN4JN4IlXLLQUHlbmXLxWIWzH
+	qTPuzoq5S9A77QF0eGPHV4pzI5Hz/DNuhC25aALgjmNoGKyP08adHgcUcT7158fMvYWR/qKvaEU
+	681g7jmAkRIhCOGs9vP3I27T6ELsargse20wVGQXb
+X-Gm-Gg: AfdE7cmxQQcFAxe4/WmBU36vbsv3HjTlYLHnazEQNcPSBPCMuMcsYF8VUr5BMXUJHTF
+	2BOd8dn3LDygMvNUZMyyYQB5WM5r0hZ6ibh5ivZqzfbgsUdXjhEsxfbHHAmiR0HwU5HGxezOknO
+	j56odZD/scPyiqhidM8Qlx6dNnyaMepFdq0u3XlyocouItX3L1neoSQur512FD9aW53LRwdgg5z
+	sHihpR70NodbAW0YF/D2LvIdT2pHDdjPNTbB0N3mtC4VwT7m34dVddJ5CcrMP6qfvqSmIClpA==
+X-Received: by 2002:a17:903:2441:b0:2c7:ba0d:dd4b with SMTP id
+ d9443c01a7336-2c7e0967b17mr198555ad.29.1782238236327; Tue, 23 Jun 2026
+ 11:10:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0f2cff983d79521e153d211ce412fedbc4ed942c.1782211518.git.sandipan.das@amd.com>
-In-Reply-To: <0f2cff983d79521e153d211ce412fedbc4ed942c.1782211518.git.sandipan.das@amd.com>
+References: <20260622134933.35773-1-akinobu.mita@gmail.com> <20260622134933.35773-2-akinobu.mita@gmail.com>
+In-Reply-To: <20260622134933.35773-2-akinobu.mita@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 23 Jun 2026 10:16:40 -0700
-X-Gm-Features: AVVi8CeH-QPUKKatnRpEeQ62Nrbd950T6a5bkATHYk_ePokt8Ba-7R7KOLnTdaU
-Message-ID: <CAP-5=fVg-mjLj2v6Q2kXMBU26rn=CgZNyFE7O=-+ZuE90RC_8Q@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/amd/uncore: Add group validation
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Ananth Narayan <ananth.narayan@amd.com>
+Date: Tue, 23 Jun 2026 11:10:25 -0700
+X-Gm-Features: AVVi8CesPbUpGDhyVpDgdk0MbQUWRo8HG5p-Gvg90gzS8O1Ugf19-59vTEDO9Yw
+Message-ID: <CAP-5=fVyAskTbcB-pJbcNChq8GJnQ_098EfsnZzcO7O9A-8x4g@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] perf python: Add access to various members of evsel
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: damon@lists.linux.dev, linux-perf-users@vger.kernel.org, sj@kernel.org, 
+	ravis.opensrc@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 23, 2026 at 3:49=E2=80=AFAM Sandipan Das <sandipan.das@amd.com>=
- wrote:
+On Mon, Jun 22, 2026 at 6:57=E2=80=AFAM Akinobu Mita <akinobu.mita@gmail.co=
+m> wrote:
 >
-> The amd_uncore driver currently does not validate event groups and
-> allows creation of groups with more events than the number of available
-> hardware counters. Because of this, pmu->event_init() succeeds but
-> counter assignment fails later in pmu->add() which returns -EBUSY once
-> all counters are exhausted.
+> This change is necessary to specify the same PMU event selection as the
+> 'perf record' -e option from DAMON's userspace tools.
 >
-> Address this by introducing group validation in the pmu->event_init()
-> path. Since the uncore PMUs have no per-event constraints and all
-> counters of a PMU are interchangeable, validation is reduced to just
-> counting the group members that target a PMU and ensuring that they fit
-> within the available set of counters.
+> For example, a Python script like the following will allow you to obtain
+> the values to be set in the type, config, config1, and config2 members of
+> perf_event_attr by providing a symbolic event name.
 >
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> import perf
+>
+> if __name__ =3D=3D '__main__':
+>     evlist =3D perf.parse_events("cpu/mem-loads,ldlat=3D30/P")
+>     for evsel in evlist:
+>         print(f"{evsel}: type=3D{evsel.type} config=3D{evsel.config}",
+>               f"config1=3D{evsel.config1} config2=3D{evsel.config2}")
+>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 
-This is great Sandipan! Thanks for addressing this! I'd been wondering
-if in the perf tool if we could test hardware PMUs for not supporting
-failing at open properly. This is a problem for weak groups, as used
-by metrics, because they try to group all events and then break the
-group when the open fails. I'd observed that AMD uncore events
-supposedly opened but then failed during reading. I suspect other PMUs
-also suffer this.
+Thanks Akinobu! I agree we should expose more parts of the evsel
+through the perf python API. I refactored this area recently so that
+we could better support perf.data file usage (the session API).
+There's a long series here that is merged enough to mean these changes
+will need a refactor too:
+https://lore.kernel.org/lkml/20260419235911.2186050-1-irogers@google.com/
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/python.c?h=3Dperf-tools-next#n2449
 
-Peter mentioned a behavior in the past: opening events in a group in a
-disabled state, with more events than counters, and then the software
-enables and disables events in the group to control counter
-allocation. The perf tool doesn't currently utilize this behavior but
-I think it explains some of the Sashiko feedback.
+The main change I made was avoiding copying evsels in the python API,
+as it adds many complications, and switching to reference counting.
+This means the Python `evsel` can no longer directly access inner
+variables and now requires an indirection. So in:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/python.c?h=3Dperf-tools-next#n2290
+```
+static PyObject *pyrf_evsel__get_attr_config(PyObject *self, void
+*closure __maybe_unused)
+{
+struct pyrf_evsel *pevsel =3D (void *)self;
 
-Would it be possible to get a Fixes tag for stable backports?
+CHECK_INITIALIZED(pevsel->evsel, "evsel");
+
+return PyLong_FromUnsignedLongLong(pevsel->evsel->core.attr.config);
+}
+```
+Note how it is `evsel->core` rather than `evsel.core` as it was before.
+
+I believe you can copy-paste the code and tweak it for config1 and
+config2, but I'm afraid the previous evsel_attr_member_def approach
+won't work.
 
 Thanks,
 Ian
 
 > ---
->  arch/x86/events/amd/uncore.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  tools/perf/util/python.c | 50 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
 >
-> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-> index dbc00b6dd69e..9715cfb8cce3 100644
-> --- a/arch/x86/events/amd/uncore.c
-> +++ b/arch/x86/events/amd/uncore.c
-> @@ -265,6 +265,29 @@ static void amd_uncore_del(struct perf_event *event,=
- int flags)
->         hwc->idx =3D -1;
->  }
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index cc1019d29a5d..3f108b405ee3 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -1241,11 +1241,60 @@ static PyMemberDef pyrf_evsel__members[] =3D {
+>         evsel_attr_member_def(sample_type, T_ULONGLONG, "attribute sample=
+_type."),
+>         evsel_attr_member_def(read_format, T_ULONGLONG, "attribute read_f=
+ormat."),
+>         evsel_attr_member_def(wakeup_events, T_UINT, "attribute wakeup_ev=
+ents."),
+> +       evsel_attr_member_def(config1, T_ULONGLONG, "attribute config1.")=
+,
+> +       evsel_attr_member_def(config2, T_ULONGLONG, "attribute config2.")=
+,
+>         { .name =3D NULL, },
+>  };
 >
-> +static bool amd_uncore_group_valid(struct perf_event *event)
+>  static const char pyrf_evsel__doc[] =3D PyDoc_STR("perf event selector l=
+ist object.");
+>
+> +static PyObject *pyrf_evsel__get_freq(struct pyrf_evsel *pevsel, void *c=
+losure)
 > +{
-> +       struct amd_uncore_pmu *pmu =3D event_to_amd_uncore_pmu(event);
-> +       struct perf_event *leader =3D event->group_leader;
-> +       struct perf_event *sibling;
-> +       int counters =3D 0;
-> +
-> +       /* Ignore software events as they do not occupy hardware counters=
- */
-> +       if (leader->pmu =3D=3D event->pmu && !is_software_event(leader))
-> +               counters++;
-> +
-> +       for_each_sibling_event(sibling, leader) {
-> +               if (sibling->pmu =3D=3D event->pmu && !is_software_event(=
-sibling))
-> +                       counters++;
-> +       }
-> +
-> +       /*
-> +        * When pmu->event_init() is called, the event is yet to be linke=
-d to
-> +        * its leader's sibling list, so it is counted separately
-> +        */
-> +       return (counters + 1) <=3D pmu->num_counters;
+> +       return PyLong_FromLong(pevsel->evsel.core.attr.freq);
 > +}
 > +
->  static int amd_uncore_event_init(struct perf_event *event)
->  {
->         struct amd_uncore_pmu *pmu;
-> @@ -282,6 +305,15 @@ static int amd_uncore_event_init(struct perf_event *=
-event)
->         if (!ctx)
->                 return -ENODEV;
->
-> +       /*
-> +        * Ensure that all events in a group can be scheduled together so=
- that
-> +        * a failure can be reported at perf_event_open() time rather tha=
-n
-> +        * silently at pmu->add() time when no free counter is found
-> +        */
-> +       if (event->group_leader !=3D event &&
-> +           !amd_uncore_group_valid(event))
-> +               return -EINVAL;
+> +static PyObject *pyrf_evsel__get_exclude_kernel(struct pyrf_evsel *pevse=
+l,
+> +                                               void *closure)
+> +{
+> +       return PyLong_FromLong(pevsel->evsel.core.attr.exclude_kernel);
+> +}
 > +
->         /*
->          * NB and Last level cache counters (MSRs) are shared across all =
-cores
->          * that share the same NB / Last level cache.  On family 16h and =
-below,
+> +static PyObject *pyrf_evsel__get_exclude_hv(struct pyrf_evsel *pevsel,
+> +                                           void *closure)
+> +{
+> +       return PyLong_FromLong(pevsel->evsel.core.attr.exclude_hv);
+> +}
+> +
+> +static PyObject *pyrf_evsel__get_precise_ip(struct pyrf_evsel *pevsel,
+> +                                           void *closure)
+> +{
+> +       return PyLong_FromLong(pevsel->evsel.core.attr.precise_ip);
+> +}
+> +
+> +static PyGetSetDef pyrf_evsel__getset[] =3D {
+> +       {
+> +               .name   =3D "freq",
+> +               .get    =3D (getter)pyrf_evsel__get_freq,
+> +               .doc    =3D PyDoc_STR("freq"),
+> +       },
+> +       {
+> +               .name   =3D "exclude_kernel",
+> +               .get    =3D (getter)pyrf_evsel__get_exclude_kernel,
+> +               .doc    =3D PyDoc_STR("exclude_kernel"),
+> +       },
+> +       {
+> +               .name   =3D "exclude_hv",
+> +               .get    =3D (getter)pyrf_evsel__get_exclude_hv,
+> +               .doc    =3D PyDoc_STR("exclude_hv"),
+> +       },
+> +       {
+> +               .name   =3D "precise_ip",
+> +               .get    =3D (getter)pyrf_evsel__get_precise_ip,
+> +               .doc    =3D PyDoc_STR("precise_ip"),
+> +       },
+> +       { .name =3D NULL, },
+> +};
+> +
+>  static PyTypeObject pyrf_evsel__type =3D {
+>         PyVarObject_HEAD_INIT(NULL, 0)
+>         .tp_name        =3D "perf.evsel",
+> @@ -1255,6 +1304,7 @@ static PyTypeObject pyrf_evsel__type =3D {
+>         .tp_doc         =3D pyrf_evsel__doc,
+>         .tp_members     =3D pyrf_evsel__members,
+>         .tp_methods     =3D pyrf_evsel__methods,
+> +       .tp_getset      =3D pyrf_evsel__getset,
+>         .tp_init        =3D (initproc)pyrf_evsel__init,
+>         .tp_str         =3D pyrf_evsel__str,
+>         .tp_repr        =3D pyrf_evsel__str,
 > --
-> 2.53.0
+> 2.43.0
+>
 >
