@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277C53ACF02
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDB73ACF02
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:26:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782249609; cv=none; b=YqdErWWswB/kn2sPMHn459pTXjs/D+OPPvvYSaGN5FOEWJ+4h8MZIXZsorDF3t8LqX7b2aWg0xa7pYvT2pIm1knPFrFUBsWzNTVG8MUSz8msNH6c7/NJs9KRI1OJSrYGHmSJAMfSquBKXWpw8Sb6Nk5ShQr0Eg1EmK1F5kjH6pU=
+	t=1782250018; cv=none; b=QVgyrpnYpofFHUMA9m/f38eUOrKrVYt7ah1CYCWj+Niw6LX+evayJCmVXATtpqOJVGCDt0D+UfK5qh+k52xLakPJWKWypBP/GUpzMrEdAUXKDVKXviDV0Tly5Ie/0weNMFXH2VRDzB4FEKM/BXKd/USF+RnCqufAhyvTHAWLph4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782249609; c=relaxed/simple;
-	bh=bI7PnSjwjBzMiUTn7ki0g+UBhaDTjPeIO7PJ00UJirs=;
+	s=arc-20240116; t=1782250018; c=relaxed/simple;
+	bh=nsbXYJLLDEwrv6bo3OzZUa66Tk/U7jm1yc7HNRuDWA8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Rg9FhrjNKOVwziWNm1tghIZTH2Cm1VP34LpzNahZWN3/pYA9ZwolUFcXtoISS5veMncJ4g9FsEPm2w01HF4QWNx9WTw10j4onruvZSBFFIoZe7idwpt7GMJvQAdxjNHwkk1fYw3p6W7dE7zj7K2sRMltlJclEObszixwajvoChA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTRWS+Yr; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=bj8fXMmx/Zq/O5mdmAC0lmFGuQLzqDqn0fedNAP8xAlS4MDdX4nbQpVHV68nxEpv5BXWvfhlyarPnUntsCdLnYgF1au+eyamyGIjhqx0FY9u5BYwAtq/ZAhd7y0uaglo2yek/at8LqPsd+B3jOPeH2Q/ff8JBUEEZcv74Nd6JF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/xbERlm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTRWS+Yr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF11F1F00A3A;
-	Tue, 23 Jun 2026 21:20:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/xbERlm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABB11F000E9;
+	Tue, 23 Jun 2026 21:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782249608;
-	bh=VFPguv+jiLfsJALcU3tz4L5Wd5SC/EjewhxyiKL5U50=;
+	s=k20260515; t=1782250017;
+	bh=Da7aYzvxSzvM1n0LuAFdJgAk5E6k0bWNSBCM2zlG60c=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nTRWS+YrtWBSuVeNLL3IGmbKpJxqWb3a4Tk1zbqF2T2XBQVWU5ohOrGlkhBxo4U4w
-	 tc3sLrZkj0kW6iJ/WWjLvq6aAg1tF0JzDKbrtVDAG+/+JRsLZFJE5iySBalA9UsiVj
-	 H3znlEAVtqpFca2h2OAvDIaZqG58DJ0vzNqrz3WkiIortbIupQh/UZiMtwNbNZAmiO
-	 bz/pxs0Q2SsjcKPSEIKJmym4y6yTPikvdBZc+ODmCUGHm6RuIRojkqq9iZy83zFfrp
-	 JzSTObJhcu+hAWzP3yjg/74K6yfK0h5eLco5MXcrSQUP45bq7srHwYSvwd5AoG3Ua9
-	 wd1dc/hEzLfxQ==
+	b=C/xbERlm1uxNNX0gAoixgTz3heWA94zt6DPz0kBT9y8VR/ilDV7Zqx6LIQBWVx1Kh
+	 jLM2Ca2oU57OLwurYV2aWdYLh1GBrOEeCIlGwYbAtep26SddVdnnIJHtt/AYaL5iJS
+	 R8UregPTjT9W0f5vIa1lP8GlQhOPE9ikywgVId8Tt2A8HQBmiYy9qizlLljMPXu3ay
+	 sNlqyMCpu7+wuO56wvhczrcZiigAmbS3npQhEcKvn/GqS1Cgo+T8Q1JujkyyA1ru3b
+	 hGKxCDl3nTEVWkL4zku3QS5ENhpM1ZnlAsC36Ev+rT0R3L5dtuJEKrV7jP/52ujIHv
+	 xR3cjTznUIE2g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 03/13] perf tests workloads: Support sub-second
- durations in noploop and thloop
+Subject: Re: [PATCH v1 03/13] perf top: Fix sb_evlist leak
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260623012758.2291858-4-irogers@google.com>
-References: <20260616164819.370939-1-irogers@google.com>
- <20260623012758.2291858-1-irogers@google.com>
- <20260623012758.2291858-4-irogers@google.com>
+In-Reply-To: <20260623053515.2677888-4-irogers@google.com>
+References: <20260623053515.2677888-1-irogers@google.com>
+ <20260623053515.2677888-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 21:20:07 +0000
-Message-Id: <20260623212007.CF11F1F00A3A@smtp.kernel.org>
+Date: Tue, 23 Jun 2026 21:26:56 +0000
+Message-Id: <20260623212657.3ABB11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,116 +46,103 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Conversion of an unbounded floating-point value to `unsigned int=
-` invokes undefined behavior.
-- [Low] Missing explicit inclusion of `<stdio.h>` for `fprintf` and `stderr=
-` usage.
+
+Pre-existing issues:
+- [High] Error path in `record__setup_sb_evlist()` bypasses state update, l=
+eading to a segmentation fault from an uninitialized `pthread_join()`.
+- [High] Sideband thread and `sb_evlist` are leaked when using `--switch-ou=
+tput-event` together with `--no-bpf-event`.
 --
 
-commit 7d05873e679bf07cde18f37a2d18403b7405f3c4
+commit 9bc374ffd1b7ae00f5342c051ca479b32bc92942
 Author: Ian Rogers <irogers@google.com>
 
-perf tests workloads: Support sub-second durations in noploop and thloop
+perf top: Fix sb_evlist leak
 
-This commit updates noploop and thloop workloads to support sub-second sleep
-durations by switching from atoi() to atof(). It uses ualarm() for durations
-under 1.0 second and falls back to alarm() for longer durations.
+Fix a memory leak in cmd_top() where top.sb_evlist was not freed if
+evlist__add_bpf_sb_event() fails. Note that evlist__start_sb_thread() and
+evlist__stop_sb_thread() take ownership of the evlist and free it, so
+we must only free it if we fail before starting the thread.
 
-> diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/work=
-loads/noploop.c
-> index 656e472e61882..ca9f871e136f5 100644
-> --- a/tools/perf/tests/workloads/noploop.c
-> +++ b/tools/perf/tests/workloads/noploop.c
-> @@ -15,15 +15,26 @@ static void sighandler(int sig __maybe_unused)
-> =20
->  static int noploop(int argc, const char **argv)
->  {
-> -	int sec =3D 1;
-> +	double sec =3D 1.0;
-> =20
->  	pthread_setname_np(pthread_self(), "perf-noploop");
->  	if (argc > 0)
-> -		sec =3D atoi(argv[0]);
-> +		sec =3D atof(argv[0]);
-> +
-> +	if (!(sec > 0.0)) {
-> +		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
-
-[Severity: Low]
-Does this code compile cleanly under musl libc? The perf subsystem guidelin=
-es
-require explicit POSIX header inclusions for all libc functions to prevent
-musl compilation failures. The stdio.h header appears to be missing for this
-fprintf and stderr usage.
-
-> +		return 1;
-> +	}
-> =20
->  	signal(SIGINT, sighandler);
->  	signal(SIGALRM, sighandler);
-> -	alarm(sec);
-> +
-> +	if (sec < 1.0) {
-> +		useconds_t usecs =3D (useconds_t)(sec * 1000000.0);
-> +
-> +		ualarm(usecs > 0 ? usecs : 1, 0);
-> +	} else
-> +		alarm((unsigned int)sec);
-
-[Severity: Medium]
-What happens if the parsed duration exceeds UINT_MAX? Converting an unbound=
-ed
-floating-point value like 1e20 to an unsigned int invokes undefined behavio=
-r.
-Should sec be bound-checked before this cast?
-
-[ ... ]
-
-> diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workl=
-oads/thloop.c
-> index bd8168f883fb6..c830d739489fe 100644
-> --- a/tools/perf/tests/workloads/thloop.c
-> +++ b/tools/perf/tests/workloads/thloop.c
-> @@ -31,14 +31,15 @@ static void *thfunc(void *arg)
-> =20
->  static int thloop(int argc, const char **argv)
->  {
-> -	int nt =3D 2, sec =3D 1, err =3D 1;
-> +	int nt =3D 2, err =3D 1;
-> +	double sec =3D 1.0;
->  	pthread_t *thread_list =3D NULL;
-> =20
->  	if (argc > 0)
-> -		sec =3D atoi(argv[0]);
-> +		sec =3D atof(argv[0]);
-> =20
-> -	if (sec <=3D 0) {
-> -		fprintf(stderr, "Error: seconds (%d) must be >=3D 1\n", sec);
-> +	if (!(sec > 0.0)) {
-> +		fprintf(stderr, "Error: seconds (%f) must be > 0\n", sec);
-
-[Severity: Low]
-Similarly, this usage of fprintf and stderr might cause musl compilation to
-fail if stdio.h is not explicitly included in this file.
-
-[ ... ]
-
-> @@ -67,7 +68,12 @@ static int thloop(int argc, const char **argv)
->  			goto out;
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 5933c46ee137e..abc74b8ab7599 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1881,6 +1881,7 @@ int cmd_top(int argc, const char **argv)
+>  		if (evlist__add_bpf_sb_event(top.sb_evlist, &host_env)) {
+>  			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
+>  			status =3D -EINVAL;
+> +			evlist__put(top.sb_evlist);
+>  			goto out_put_evlist;
 >  		}
 >  	}
-> -	alarm(sec);
-> +	if (sec < 1.0) {
-> +		useconds_t usecs =3D (useconds_t)(sec * 1000000.0);
-> +
-> +		ualarm(usecs > 0 ? usecs : 1, 0);
-> +	} else
-> +		alarm((unsigned int)sec);
 
-[Severity: Medium]
-Is this unbounded cast to unsigned int safe? Just as in noploop(), if sec is
-excessively large, this cast could result in undefined behavior.
+[Severity: High]
+This is a pre-existing issue, but does tools/perf/builtin-record.c have a
+similar problem where the error path in record__setup_sb_evlist() bypasses
+updating the state?
+
+If evlist__add_bpf_sb_event() fails in record__setup_sb_evlist(), it
+returns -1 without updating the opts->no_bpf_event flag:
+
+tools/perf/builtin-record.c:record__setup_sb_evlist() {
+    ...
+	if (evlist__add_bpf_sb_event(rec->sb_evlist, perf_session__env(rec->sessio=
+n))) {
+		pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
+		return -1;
+	}
+    ...
+}
+
+During cleanup in __cmd_record(), the unmodified no_bpf_event flag causes
+evlist__stop_sb_thread() to be unconditionally invoked:
+
+tools/perf/builtin-record.c:__cmd_record() {
+    ...
+	if (!opts->no_bpf_event)
+		evlist__stop_sb_thread(rec->sb_evlist);
+    ...
+}
+
+This could blindly call pthread_join() on the uninitialized thread ID in
+evlist__stop_sb_thread():
+
+tools/perf/util/sideband_evlist.c:evlist__stop_sb_thread() {
+    ...
+	pthread_join(*evlist__sb_thread_th(evlist), NULL);
+    ...
+}
+
+Could this trigger undefined behavior and a crash?
+
+[Severity: High]
+This is also a pre-existing issue, but is there a leak of the sideband
+thread and sb_evlist in tools/perf/builtin-record.c when using
+--switch-output-event together with --no-bpf-event?
+
+In record__setup_sb_evlist(), the sideband thread is started when using
+--switch-output-event, even if BPF events are disabled:
+
+tools/perf/builtin-record.c:record__setup_sb_evlist() {
+    ...
+	if (evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
+    ...
+}
+
+However, cleanup in __cmd_record() is bypassed because opts->no_bpf_event
+evaluates to true:
+
+tools/perf/builtin-record.c:__cmd_record() {
+    ...
+	if (!opts->no_bpf_event)
+		evlist__stop_sb_thread(rec->sb_evlist);
+    ...
+}
+
+Does this permanently strand the background poll thread and leak the
+allocated evlist during process teardown?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623012758.2291=
-858-1-irogers@google.com?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623053515.2677=
+888-1-irogers@google.com?part=3D3
