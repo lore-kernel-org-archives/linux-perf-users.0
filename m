@@ -1,129 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7033D3CFF;
-	Tue, 23 Jun 2026 11:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AB92BDC23;
+	Tue, 23 Jun 2026 13:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782214749; cv=none; b=qpezFyfwQIF3UsoEAbDxw/mkbQdvDPAe2QfcLaZDaoGbR902/AUY1yXmD+dh+xa+njkQF4R6YNUc2V8gpmIYw6wRUadoGii8VOJvAKErjCW1H2vDtc/XIoP/tyt9N7bY7NcMBjqoljXYJ6KueiRfniOGoAUUfa4VZkr43/E+DAs=
+	t=1782219763; cv=none; b=AL53SXkSqgZyU9Ub/C9S6odG45DYsX5Dqmsum0j32NUa79/NceIVU6gQmXshZaZqvNlO8r6EDrnXOHUJ8/ruIP+BPjLT/Go5XQhD+SC1VChFJcdi3bAxPtuLE+R4upu5ziWYVsm0uByVidW7Ew3cCwScRfMcg9ubikOphMXYefg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782214749; c=relaxed/simple;
-	bh=YfOGm4mePtSHlYGvRQsCo4SePdsUDk2J815DxdmWrak=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=i6fmLxnHPVsORiLVaq9g7BiwgwI7I4eOgUQWjvk8JU4zxM+WJ+6xLPp+TY67NU1wg1ka30lkb9vwbbx2JuhmnptNP78bvtvnfwSWWhOzbKdnwoUgwtHVRbTxS5ZrbI0oxuncY6YgvMS2JJMbAgBy4JSMNdUmX0zw/grzoNU2e48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e0h4zLcH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782219763; c=relaxed/simple;
+	bh=hwjSxM3uxzDf28CFP1h1Hw1szG4yATblmPoKpz1TCK8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fy1KvTce/tUtmatSaiP1W+zEgQlOqyus25QjMmccN7yUNI/9nMfeKAbe7VKbhS7uFkgzkyXmnRS8wTsP56XbTJQhpxakxQp+kg/99wRMcJNXoiEqrhaLGGvXwJx2d1eyw79sLvzNfH0scCxfE6A7t305wN0YN9PeadLmx/3AkwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gq3zfF7r; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e0h4zLcH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C75811F000E9;
-	Tue, 23 Jun 2026 11:39:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782214748;
-	bh=I5epRq7EE5p+8L8FlSyYRZumJwLbkHRC1x3t4VFlkOQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=e0h4zLcHKNaoWkotcWswA38FZkZcLXnP3ZsukmEUj2sKL2GYrojlCvsMaPumZMfiG
-	 DMWEqq8y8zRuu/A3mnUVcGqqPh+C0wsPin9OrSc5/xCUP4vk8mGPigBHwbhFhH+bvG
-	 4HnlMc3Oyz+5CktSrb6ZGOBHlr6icJ1QI5uJwkcWwSeClqx/KcBzZ371IYiBxJHAQK
-	 SSDFG8bzkJ4pqfMA+Lyw5+/1zwwr6ytFbNZXE/SKi3onklSaYB2S2N/m0ga1T7XnMT
-	 yLO1djQAlDjPFfzPko62AGUogZVXB87rVoXv89fzitshzkKkzVIipWv+4H5tSd957e
-	 5LE3rmFCJFGdw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf trace: Refactor augmented_raw_syscalls using
- bpf_loop
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Viktor Malik" <vmalik@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260623112533.1151502-1-vmalik@redhat.com>
-References: <20260623112533.1151502-1-vmalik@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 11:39:07 +0000
-Message-Id: <20260623113907.C75811F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gq3zfF7r"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1782219759; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=EhqqbMTm4S0ZI5UEiS5qZmiEnmlwFTIr9bbjL1NKGzg=;
+	b=gq3zfF7reDczda79i66tY5pbiX5BLaYVp0OeTmviY2dY8avgcSIP5qEIYS3Zamy8b1W6dNGPwADb7sE+ff7APcxuLoAsk2Willtm5GLayNVoeUsZt2uFaU3x731C5xJUFy8a/dtVEq/JbGv47fysAIgRpDSg2P2t8y3yKh+lMz4=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X5UKIlL_1782219756;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X5UKIlL_1782219756 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Jun 2026 21:02:37 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Zecheng Li <zli94@ncsu.edu>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 0/5] perf annotate: Add ARM64 data type profiling support
+Date: Tue, 23 Jun 2026 21:02:29 +0800
+Message-Id: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] Removal of the `aug_size < 0` check causes negative BPF helper e=
-rror codes to corrupt the perf event payload and abort tracing.
-- [Medium] Truncation of 64-bit syscall buffer lengths to a 32-bit signed i=
-nteger silently drops buffer augmentations or bypasses bounds checks.
---
+`perf test -v "perf data type profiling tests"` fails on ARM64:
 
-commit 9622318b331a56255744b4baafdc95c2083ba210
-Author: Viktor Malik <vmalik@redhat.com>
-perf trace: Refactor augmented_raw_syscalls using bpf_loop
+    Basic Rust perf annotate test
+    perf mem record -o /tmp/perf.data perf test -w code_with_type
+    perf annotate --code-with-type -i /tmp/perf.data --stdio --percent-limit 1
+    Basic annotate [Failed: missing target data type]
 
-This patch refactors the loop body in augment_raw_syscalls into a
-callback function to be used with the bpf_loop helper. This helps the
-BPF verifier prove termination and avoids -E2BIG load failures.
+The root cause is that ARM64 lacks the instruction parsing infrastructure
+required for data type profiling. Specifically:
 
-> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tool=
-s/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-[ ... ]
-> +static long process_arg_cb(u64 i, void *ctx)
-> +{
-[ ... ]
-> +	struct augmented_arg *augmented_arg;
-> +	struct args_loop_ctx *loop_ctx;
-> +	int aug_size, size, index;
-> +	bool augmented;
-> +	void *arg;
-[ ... ]
-> +	if (size =3D=3D 1) { /* string */
-> +		aug_size =3D bpf_probe_read_user_str(augmented_arg->value, loop_ctx->v=
-alue_size, arg);
+  1. annotate_get_insn_location() cannot extract register numbers and
+     memory offsets from ARM64 load/store instructions, because ARM64
+     does not set objdump.register_char or objdump.memory_ref_char
+     (unlike x86 which uses '%' and '(').
 
-[Severity: Medium]
-Since bpf_probe_read_user_str() can return a negative error code like
--EFAULT, does the removal of the previous clamping check cause an issue
-here?
+  2. arch_supports_insn_tracking() does not include ARM64, so
+     find_data_type_block() cannot perform instruction-level type state
+     tracking.
 
-If a negative error code is assigned to aug_size, it might result in a
-negative size being added to offsetof() later, which could abort the loop
-prematurely or misalign payload offsets:
+  3. init_type_state() has no ARM64 branch, leaving stack_reg as 0 (x0)
+     after memset, which causes x0-based memory accesses to be
+     misidentified as stack accesses.
 
-    int written =3D offsetof(struct augmented_arg, value) + aug_size;
+As a result, perf annotate --code-with-type silently produces no type
+annotations on ARM64, and the test grep for "# data-type: struct Buf"
+fails.
 
-    if (written < 0 || written > sizeof(struct augmented_arg))
-        return 1; /* break */
+This series adds ARM64 data type profiling support following the PowerPC
+model: decode raw 32-bit instruction words rather than parsing objdump
+text. ARM64's fixed-width encoding and trivial DWARF register mapping
+(x0-x30 = DWARF 0-30) make this approach clean and robust.
 
-> +		augmented =3D true;
-> +	} else if (size > 0 && size <=3D loop_ctx->value_size) { /* struct */
-> +		if (!bpf_probe_read_user(augmented_arg->value, size, arg))
-> +			augmented =3D true;
-> +	} else if (size < 0 && size >=3D -6) { /* buffer */
-> +		index =3D -(size + 1);
-> +		barrier_var(index); // Prevent clang (noticed with v18) from removing =
-the &=3D 7 trick.
-> +		index &=3D 7;	    // Satisfy the bounds checking with the verifier in =
-some kernels.
-> +		aug_size =3D loop_ctx->args->args[index];
+Three classes of instructions are tracked for register state propagation:
+  - ADRP: compute PC-relative page address for global variable resolution
+  - ADD (immediate): combine with ADRP result to form full variable address
+  - MOV (register): propagate type state between registers
 
-[Severity: Medium]
-Does assigning the 64-bit user-provided buffer length to a 32-bit signed
-integer (aug_size) cause truncation before bounds checking is performed?
+This covers the common `adrp + add + ldr/str` pattern that ARM64
+compilers emit for global variable access.
 
-If a length over 2GB is provided, it might wrap to a negative number and
-fail the subsequent aug_size > 0 check. Values over 4GB could wrap to small
-positive numbers, bypass the max buffer size clamp, and result in capturing
-fewer bytes than expected.
+Known limitations:
+  - The `adrp + ldr` pattern (with :lo12: folded into the load offset,
+    without an intermediate ADD) is not yet handled. This requires
+    extending check_matching_type() to resolve TSR_KIND_CONST with the
+    load offset, which can be added incrementally.
+  - Pointer chain tracking (load-from-memory propagating type to the
+    destination register) is not implemented, matching PowerPC's current
+    scope.
 
-> +
-> +		if (aug_size > TRACE_AUG_MAX_BUF)
-> +			aug_size =3D TRACE_AUG_MAX_BUF;
-> +
-> +		if (aug_size > 0) {
-> +			if (!bpf_probe_read_user(augmented_arg->value, aug_size, arg))
-> +				augmented =3D true;
-> +		}
-> +	}
-[ ... ]
+Testing:
+  All four sub-tests in `perf test "perf data type profiling tests"`
+  pass reliably on ARM64 (AArch64, SPE-capable hardware):
+    - Basic/Pipe Rust: struct Buf (code_with_type workload)
+    - Basic/Pipe C: struct buf (datasym workload, global variable)
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623112533.1151=
-502-1-vmalik@redhat.com?part=3D1
+Patch breakdown:
+  1/5  Widen type_state_reg::imm_value from u32 to u64 (prerequisite
+       for storing 64-bit addresses from ADRP)
+  2/5  Add arch__is_arm64() detection, raw instruction parsing from
+       objdump output, and enable show_asm_raw for ARM64
+  3/5  Add get_arm64_regs() to extract registers and memory offsets
+       from load/store instruction encodings (4 addressing modes)
+  4/5  Wire up ARM64 in annotate_get_insn_location(),
+       arch_supports_insn_tracking(), and init_type_state()
+  5/5  Main patch: instruction classification, ADRP/ADD/MOV register
+       state tracking, and architecture initialization
+
+Shuai Xue (5):
+  perf annotate-data: Widen type_state_reg::imm_value to u64
+  perf disasm: Add ARM64 architecture detection and raw instruction
+    parsing
+  perf dwarf-regs: Add ARM64 register and offset extraction from raw
+    instructions
+  perf annotate: Wire up ARM64 data type profiling infrastructure
+  perf annotate-arch: Add ARM64 data type profiling support
+
+ .../perf/util/annotate-arch/annotate-arm64.c  | 333 ++++++++++++++++++
+ tools/perf/util/annotate-arch/annotate-x86.c  |   2 +-
+ tools/perf/util/annotate-data.c               |  18 +-
+ tools/perf/util/annotate-data.h               |   2 +-
+ tools/perf/util/annotate.c                    |  12 +-
+ tools/perf/util/disasm.c                      |  64 ++++
+ tools/perf/util/disasm.h                      |   2 +
+ .../util/dwarf-regs-arch/dwarf-regs-arm64.c   | 125 +++++++
+ tools/perf/util/include/dwarf-regs.h          |   7 +
+ 9 files changed, 558 insertions(+), 7 deletions(-)
+
+-- 
+2.51.2.612.gdc70283dfc
