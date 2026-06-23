@@ -1,30 +1,30 @@
 Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90612BE621;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FEA2BE05A;
 	Tue, 23 Jun 2026 13:02:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782219766; cv=none; b=gANd9vFh+o3ghQYEOA9O2dF2ZEtfK709ORUDEuVrL3eoyWqvtIwmtdZ9J1KYNGfXsoAKMQ9rDbXa1SA97d1/Rnu/n5ggzflDPY7V6XyVvTTOF6ZY1DYhk7kAtmGry46tp2bX+NfN2a5LxNe7ibbCzdKLUclorHpB7dZvd+NpatA=
+	t=1782219767; cv=none; b=KUq4m9R8Mb4/t5g06mtDJdu0Dk173P0x18sxaSqQuFkuHicilgzWtlXwp+9ydIZxHY+ouw5z8qrGxwC2c14HVqKhHFsSpRDgCNFE6hHCxRuSlSMbdg5jIohvgDS/Ywxh9B4NpxJ1GjLxXU9guboI0edQTeJjXtbDVTLX+BpZ7yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782219766; c=relaxed/simple;
-	bh=BjY78BM00n/pJaHi9xvKmPqX5EWfAqV7rH4FBPpQ7zY=;
+	s=arc-20240116; t=1782219767; c=relaxed/simple;
+	bh=uqhoioUKJmm5ByIRFMn7RRM3RgTEGlrLJTWIE8DnSU8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ft93dpvtKc/8x536yH0mIcOVKwSIZ+peOSf/My8nqO1DcOmWPZHiXQgS9lZtTmZzx9sh2rTpda9aESTK59wN0pRPFjGBZI3TnAnbiRoqTVr8B8fk2O1QSEcMXFWqdCRnVOOBk3+URs/2/YC1keSOsoFSR9Ppco12PiIwJdkRDwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=m+qo2BLH; arc=none smtp.client-ip=115.124.30.110
+	 MIME-Version; b=FUz/ZVL/N7IAMSLHuCKoqKqZRXqSNpFqSF7UFcm76UdAFlAPXw2i4pah9brt9PqD4rfDuiOEbHHcszdNw78W7lKlEanckV7i71z6oAvQqPVn5omp9kqKbFHOU8Lot1yimm022MVOgL90DpmjgLUomNwXGZXY9NDCTYrbBbRx7Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=oBId7k6Q; arc=none smtp.client-ip=115.124.30.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="m+qo2BLH"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="oBId7k6Q"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1782219762; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=tx9Ne21uZNy+GWMuJdeXidlQMBRpymzFnOMylWu+eps=;
-	b=m+qo2BLHef/Vz3zjQA2Ev6OlYAEtCgf7NGeSVV1a4piaxbTdj8/E4XtKs7bKmxeC8E8Gv4BIJ+mvdOFZV3O9F0F7z3lH0dPwOK8MxbeFyosWydvs0M5+igxqpYh471pYsIw1u0hGACvXcJpWJKNmvrgJ9MpnHHlZsFir/EUEyjE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X5UKImC_1782219760;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X5UKImC_1782219760 cluster:ay36)
+	t=1782219761; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=zIHwQ42aJHxpbTfGhKZHK2ouoH4tx53i5ocbBCdN6CE=;
+	b=oBId7k6QUZYP4t9AqF/e9aqqi/+YCOWX5Pfr89m94aE9X7zX2rFZ6Bob5/dAFl0xaGO6zt8SaYMksAKgEP5aV/JzrTcWTdehr1BGTziQsZ9nchz9bF7RHdyy/v4yCtXUv2Y3gYEJ0Tm8kNPSgdb9YmSpsmstdsj5dSXUY4ZTypg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X5UKIlu_1782219759;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X5UKIlu_1782219759 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 23 Jun 2026 21:02:40 +0800
+          Tue, 23 Jun 2026 21:02:39 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -39,9 +39,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Zecheng Li <zli94@ncsu.edu>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 3/5] perf dwarf-regs: Add ARM64 register and offset extraction from raw instructions
-Date: Tue, 23 Jun 2026 21:02:32 +0800
-Message-Id: <20260623130234.8709-4-xueshuai@linux.alibaba.com>
+Subject: [RFC PATCH v1 2/5] perf disasm: Add ARM64 architecture detection and raw instruction parsing
+Date: Tue, 23 Jun 2026 21:02:31 +0800
+Message-Id: <20260623130234.8709-3-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
 References: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
@@ -53,188 +53,164 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add get_arm64_regs() to extract register numbers (Rn, Rt, Rm) and
-memory offsets from raw ARM64 load/store instruction encodings. This
-follows the same pattern as get_powerpc_regs() for PowerPC.
+Add arch__is_arm64() helper to identify ARM64 binaries by ELF machine
+type, following the existing arch__is_x86() and arch__is_powerpc()
+pattern.
 
-ARM64 DWARF register numbers map trivially: x0-x30 = 0-30, sp = 31,
-so the hardware register fields can be used directly as DWARF regnums.
+Add disasm_line__parse_arm64() to extract raw 32-bit instruction words
+from ARM64 objdump output. Unlike PowerPC which needs be32_to_cpu()
+byte-swapping, ARM64 instructions are always little-endian and can be
+used directly. The parser finds the hex word boundary dynamically
+instead of using a hardcoded width, and validates the sscanf result.
 
-Four addressing modes are handled:
-  - Unsigned offset: imm12 scaled by access size
-  - Pre/Post-indexed: sign-extended 9-bit immediate
-  - Register offset: offset from Rm (set to 0, handled via multi_regs)
-  - Load/Store Pair: sign-extended 7-bit immediate scaled by element size
+Set annotate_opts.show_asm_raw in arch__new_arm64() so that objdump
+includes raw instruction bytes, which the parser requires.
+
+Wire up the ARM64 parsing path in disasm_line__new() alongside the
+existing PowerPC path.
 
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
- .../util/dwarf-regs-arch/dwarf-regs-arm64.c   | 125 ++++++++++++++++++
- tools/perf/util/include/dwarf-regs.h          |   7 +
- 2 files changed, 132 insertions(+)
+ .../perf/util/annotate-arch/annotate-arm64.c  |  1 +
+ tools/perf/util/disasm.c                      | 64 +++++++++++++++++++
+ tools/perf/util/disasm.h                      |  2 +
+ 3 files changed, 67 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-index 593ca7d4fccc..26f296624966 100644
---- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-+++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-@@ -1,8 +1,133 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
- #include <dwarf-regs.h>
-+#include "../annotate.h"
- #include "../../../arch/arm64/include/uapi/asm/perf_regs.h"
+diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+index 33080fdca125..b98aaf9a8a7b 100644
+--- a/tools/perf/util/annotate-arch/annotate-arm64.c
++++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+@@ -104,6 +104,7 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
+ 	arch->objdump.comment_char	  = '/';
+ 	arch->objdump.skip_functions_char = '+';
+ 	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
++	annotate_opts.show_asm_raw = true;
  
-+/*
-+ * ARM64 instruction field extraction.
-+ * Mirrors definitions in annotate-arm64.c.
-+ */
-+#define A64_RT(insn)	((insn) & 0x1f)
-+#define A64_RN(insn)	(((insn) >> 5) & 0x1f)
-+#define A64_RT2(insn)	(((insn) >> 10) & 0x1f)
-+#define A64_RM(insn)	(((insn) >> 16) & 0x1f)
-+
-+/*
-+ * Load/Store encoding sub-class detection.
-+ * Derived from ARM Architecture Reference Manual, C4.1.
-+ *
-+ * Load/Store Pair (offset/pre/post): bits[29:27]=101, bit[26]=0
-+ * Load/Store Register:              bits[29:27]=111, bit[26]=0
-+ *   - Unsigned offset:              bits[25:24]=01
-+ *   - Pre/Post-indexed:             bits[25:24]=00, bit[21]=0
-+ *   - Register offset:              bits[25:24]=00, bit[21]=1, bits[11:10]=10
-+ */
-+#define A64_INSN_LS_PAIR_MASK		0x3c000000
-+#define A64_INSN_LS_PAIR_VAL		0x28000000
-+
-+#define A64_INSN_LS_REG_MASK		0x3c000000
-+#define A64_INSN_LS_REG_VAL		0x38000000
-+
-+#define A64_INSN_LS_UNSIGNED_MASK	0x3b000000
-+#define A64_INSN_LS_UNSIGNED_VAL	0x39000000
-+
-+#define A64_INSN_LS_PREPOST_MASK	0x3b200000
-+#define A64_INSN_LS_PREPOST_VAL		0x38000000
-+
-+#define A64_INSN_LS_REG_OFF_MASK	0x3b200c00
-+#define A64_INSN_LS_REG_OFF_VAL	0x38200800
-+
-+static int arm64_get_immoff_unsigned(u32 insn)
-+{
-+	int size = (insn >> 30) & 0x3;
-+	int imm12 = (insn >> 10) & 0xfff;
-+
-+	return imm12 << size;
-+}
-+
-+static int arm64_get_immoff_prepost(u32 insn)
-+{
-+	int imm9 = (insn >> 12) & 0x1ff;
-+
-+	/* sign-extend 9-bit immediate */
-+	if (imm9 & 0x100)
-+		imm9 |= ~0x1ff;
-+
-+	return imm9;
-+}
-+
-+static int arm64_get_immoff_pair(u32 insn)
-+{
-+	int imm7 = (insn >> 15) & 0x7f;
-+	int scale = 2 + ((insn >> 31) & 1);
-+
-+	/* sign-extend 7-bit immediate */
-+	if (imm7 & 0x40)
-+		imm7 |= ~0x7f;
-+
-+	return imm7 << scale;
-+}
-+
-+/*
-+ * Fills op_loc fields depending on whether it is a source or target operand.
-+ *
-+ * ARM64 load/store encoding forms:
-+ *   Register (unsigned offset):  [Rn, #imm12 << scale]
-+ *   Register (pre/post-indexed): [Rn, #imm9]  or  [Rn], #imm9
-+ *   Register (register offset):  [Rn, Rm{, extend/shift}]
-+ *   Pair:                        [Rn, #imm7 << scale]
-+ *
-+ * For source (memory) operand: reg1=Rn (base), offset=immediate
-+ * For target (register) operand: reg1=Rt
-+ */
-+void get_arm64_regs(u32 raw_insn, int is_source,
-+		    struct annotated_op_loc *op_loc)
-+{
-+	if (is_source)
-+		op_loc->reg1 = A64_RN(raw_insn);
-+	else
-+		op_loc->reg1 = A64_RT(raw_insn);
-+
-+	if (op_loc->multi_regs) {
-+		/* LDP/STP pair: second register is Rt2 (bits[14:10]) */
-+		if ((raw_insn & A64_INSN_LS_PAIR_MASK) == A64_INSN_LS_PAIR_VAL)
-+			op_loc->reg2 = A64_RT2(raw_insn);
-+		else
-+			op_loc->reg2 = A64_RM(raw_insn);
-+	}
-+
-+	if (!op_loc->mem_ref || !is_source)
-+		return;
-+
-+	/* Load/Store Pair */
-+	if ((raw_insn & A64_INSN_LS_PAIR_MASK) == A64_INSN_LS_PAIR_VAL) {
-+		op_loc->offset = arm64_get_immoff_pair(raw_insn);
-+		return;
-+	}
-+
-+	/* Load/Store Register */
-+	if ((raw_insn & A64_INSN_LS_REG_MASK) == A64_INSN_LS_REG_VAL) {
-+		/* Unsigned offset */
-+		if ((raw_insn & A64_INSN_LS_UNSIGNED_MASK) == A64_INSN_LS_UNSIGNED_VAL) {
-+			op_loc->offset = arm64_get_immoff_unsigned(raw_insn);
-+			return;
-+		}
-+
-+		/* Register offset */
-+		if ((raw_insn & A64_INSN_LS_REG_OFF_MASK) == A64_INSN_LS_REG_OFF_VAL) {
-+			op_loc->offset = 0;
-+			return;
-+		}
-+
-+		/* Pre/Post-indexed */
-+		if ((raw_insn & A64_INSN_LS_PREPOST_MASK) == A64_INSN_LS_PREPOST_VAL) {
-+			op_loc->offset = arm64_get_immoff_prepost(raw_insn);
-+			return;
-+		}
-+	}
-+}
-+
- int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum)
+ 	/* bl, blr */
+ 	err = regcomp(&arm->call_insn, "^blr?$", REG_EXTENDED);
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 59ba88e1f744..83fad4f01442 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -52,6 +52,7 @@ const struct ins_ops arithmetic_ops;
+ static void ins__sort(struct arch *arch);
+ static int disasm_line__parse(char *line, const char **namep, char **rawp);
+ static int disasm_line__parse_powerpc(struct disasm_line *dl, struct annotate_args *args);
++static int disasm_line__parse_arm64(struct disasm_line *dl, struct annotate_args *args);
+ 
+ static __attribute__((constructor)) void symbol__init_regexpr(void)
  {
- 	if (perf_regnum < 0 || perf_regnum >= PERF_REG_ARM64_MAX)
-diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-index 46a764cf322f..c3f730d2fd88 100644
---- a/tools/perf/util/include/dwarf-regs.h
-+++ b/tools/perf/util/include/dwarf-regs.h
-@@ -129,6 +129,7 @@ int get_dwarf_regnum_for_perf_regnum(int perf_regnum, unsigned int machine, unsi
- 				     bool only_libdw_supported);
- 
- void get_powerpc_regs(u32 raw_insn, int is_source, struct annotated_op_loc *op_loc);
-+void get_arm64_regs(u32 raw_insn, int is_source, struct annotated_op_loc *op_loc);
- 
- #else /* HAVE_LIBDW_SUPPORT */
- 
-@@ -144,6 +145,12 @@ static inline void get_powerpc_regs(u32 raw_insn __maybe_unused, int is_source _
- {
- 	return;
+@@ -203,6 +204,11 @@ bool arch__is_powerpc(const struct arch *arch)
+ 	return arch->id.e_machine == EM_PPC || arch->id.e_machine == EM_PPC64;
  }
-+
-+static inline void get_arm64_regs(u32 raw_insn __maybe_unused, int is_source __maybe_unused,
-+		struct annotated_op_loc *op_loc __maybe_unused)
-+{
-+	return;
-+}
- #endif
  
- #endif
++bool arch__is_arm64(const struct arch *arch)
++{
++	return arch->id.e_machine == EM_AARCH64;
++}
++
+ static void ins_ops__delete(struct ins_operands *ops)
+ {
+ 	if (ops == NULL)
+@@ -777,6 +783,14 @@ static const struct ins_ops *__ins__find(const struct arch *arch, const char *na
+ 			return ops;
+ 	}
+ 
++	if (arch__is_arm64(arch)) {
++		const struct ins_ops *ops;
++
++		ops = check_arm64_insn(dl);
++		if (ops)
++			return ops;
++	}
++
+ 	if (!arch->sorted_instructions) {
+ 		ins__sort((struct arch *)arch);
+ 		((struct arch *)arch)->sorted_instructions = true;
+@@ -902,6 +916,53 @@ static int disasm_line__parse_powerpc(struct disasm_line *dl, struct annotate_ar
+ 	return ret;
+ }
+ 
++/*
++ * Parses ARM64 disassembly output which includes raw instruction bytes.
++ * ARM64 objdump format:
++ *   a9bf7bfd 	stp	x29, x30, [sp, #-16]!
++ *
++ * The raw instruction is a hex word (typically 8 chars) followed by whitespace.
++ */
++static int disasm_line__parse_arm64(struct disasm_line *dl, struct annotate_args *args)
++{
++	char *line = dl->al.line;
++	const char **namep = &dl->ins.name;
++	char **rawp = &dl->ops.raw;
++	char *name_raw_insn = skip_spaces(line);
++	char *end_raw, *name, *tmp_raw_insn;
++	int ret = 0;
++
++	if (name_raw_insn[0] == '\0')
++		return -1;
++
++	/* Find end of raw instruction hex by looking for whitespace */
++	end_raw = name_raw_insn;
++	while (*end_raw && !isspace(*end_raw))
++		end_raw++;
++
++	name = skip_spaces(end_raw);
++
++	if (args->options->disassembler_used)
++		ret = disasm_line__parse(name, namep, rawp);
++	else
++		*namep = "";
++
++	tmp_raw_insn = strndup(name_raw_insn, end_raw - name_raw_insn);
++	if (tmp_raw_insn == NULL) {
++		if (args->options->disassembler_used)
++			zfree(namep);
++		return -1;
++	}
++
++	remove_spaces(tmp_raw_insn);
++
++	if (sscanf(tmp_raw_insn, "%x", &dl->raw.raw_insn) != 1)
++		dl->raw.raw_insn = 0;
++	free(tmp_raw_insn);
++
++	return ret;
++}
++
+ static void annotation_line__init(struct annotation_line *al,
+ 				  struct annotate_args *args,
+ 				  int nr)
+@@ -958,6 +1019,9 @@ struct disasm_line *disasm_line__new(struct annotate_args *args)
+ 		if (arch__is_powerpc(args->arch)) {
+ 			if (disasm_line__parse_powerpc(dl, args) < 0)
+ 				goto out_free_line;
++		} else if (arch__is_arm64(args->arch)) {
++			if (disasm_line__parse_arm64(dl, args) < 0)
++				goto out_free_line;
+ 		} else if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
+ 			goto out_free_line;
+ 
+diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
+index 25756e3f47e4..dfce128a3188 100644
+--- a/tools/perf/util/disasm.h
++++ b/tools/perf/util/disasm.h
+@@ -111,6 +111,7 @@ struct annotate_args {
+ const struct arch *arch__find(uint16_t e_machine, uint32_t e_flags, const char *cpuid);
+ bool arch__is_x86(const struct arch *arch);
+ bool arch__is_powerpc(const struct arch *arch);
++bool arch__is_arm64(const struct arch *arch);
+ 
+ extern const struct ins_ops call_ops;
+ extern const struct ins_ops dec_ops;
+@@ -143,6 +144,7 @@ bool ins__is_ret(const struct ins *ins);
+ bool ins__is_lock(const struct ins *ins);
+ 
+ const struct ins_ops *check_ppc_insn(struct disasm_line *dl);
++const struct ins_ops *check_arm64_insn(struct disasm_line *dl);
+ 
+ struct disasm_line *disasm_line__new(struct annotate_args *args);
+ void disasm_line__free(struct disasm_line *dl);
 -- 
 2.51.2.612.gdc70283dfc
 
