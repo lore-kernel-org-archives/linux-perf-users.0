@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E771531A572;
-	Tue, 23 Jun 2026 16:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C0831F985;
+	Tue, 23 Jun 2026 16:52:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782233439; cv=none; b=frwVBN70DIMQl8xMRoZWe1CkaEyZnEgEKBxuo3TRdHo4TdMknSTVovEpwfN18nQrKszeHfDFYZ0DcImn6SJBlij67JtrRP0LX4/Uk3EhbiuvXdspoR0jAhqUajsUcboOdK1JTHKpcqHKvEThw32Bp6Rl3WVNKZtpZONu7vxF5zs=
+	t=1782233549; cv=none; b=Zs7Lff63Yk0v8TVpAXXrx3N06S0ra/MGkPUDHG9L1KrnFQFqarLaAv/KnOsZWn8Y9VeDiGKWE+d6tY+wUOJ5xKnBu8Ue7qY5jUphQgK4AXoqTPZCNkuh4JmDUHlCPkBW67bp4E7z2I9erVHSTO+qi7cQU5uXOEmNe8MW0qCmfts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782233439; c=relaxed/simple;
-	bh=iSPyoWrYb2LuFO1daSjKV4Q++qam+9le+dn+2rPNgYs=;
+	s=arc-20240116; t=1782233549; c=relaxed/simple;
+	bh=UYWOptM37JOqNL1tejgv4fbtap5pycxkgQPycqdZQBY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YWFA4iJfnawNWOVAyfFUr9jKAhwDATqKgB+DpYTCPoKg0Vuq7SkODKLlI20K1HreEiib219x/QE+mAmYkskLMwy4W2IgAnlhn+f8+WZlwZIDy43odkZiKLwuYp7LfGZ8djLYcwbrwbBPlF3BjR83pCQM2u+Mzb1eeEO/SokJetw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=An35byh6; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=f5y4mHX3ul4jkgpR1nD9uXzyZOoLEQxL2YXYZff+PIqugvTki10DUQEqVw5Xnb6jFuz+8GJW3Bly7XaXA55PtQNBqdd6wvU1vX8fV9f2FIVWoEo71LfuT4XQqDrHbWzrLxGjfKpP+4CPJz2p4TfN8iGByznWW99CaId+/vL+R2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HdboKwUX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="An35byh6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0FA1F000E9;
-	Tue, 23 Jun 2026 16:50:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HdboKwUX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB7B21F000E9;
+	Tue, 23 Jun 2026 16:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782233437;
-	bh=OeRJ0tgCTUv568G8vi1FHh0MfeToMCU0SIxW5SVSQnI=;
+	s=k20260515; t=1782233548;
+	bh=xIHwRB2oKcXUGAkVZTMiCM8TWyMtXCzCtm8mb1pouSY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=An35byh6s/FKYEMweqFtnFd68VP/zUeZVx1fdJ93tcv/00LlzgWJJddsUSuZ8+FhX
-	 aPWuS2RdWPq8foN3ZYpXHEjA6BT25dHfyeo5MyDkI/2KM+bEqvEHTmbT377LO+O7YJ
-	 d5zz7EFfJzwq+8dTLLhbCpaMJh9njMuNp7xKaK254OfwNoclHlH8hDBFkoBYpmv9Da
-	 UzOUjLp1Hbv00mb03wEVrwYyMHBAJTL8vIBw6E2jHZfcSlRdJ8eA8MvG3xXhvf3vOg
-	 C7LoLjrAL2ydCBaY8ShMniVujnGWFZYgVnkBbVMhw+sozXfMr4XYQxb5fbm+nXUJz2
-	 gqKsP0H1e8Z1Q==
-Date: Tue, 23 Jun 2026 09:50:35 -0700
+	b=HdboKwUXIzMH7Ta7dsrJSwDf0HBUVsDw299CtxA8qdYjp0MTIj5XXyNk+IhQW2p/1
+	 T6kVJDfb1XuX+6Pjha1DkRQp55Yv2IRVlc+JQbs+VGH0CwF4Y4bK1PqX1wN7iDhZZd
+	 8mcMPjuJdblIH3GUKIPm514db7DTf1q+/FH0Y9qAITdxStBz3H6+fu0K1A16J0L8tz
+	 u8QllWXvZd2sYeF+96Y3Z62O+8LLnZL3HYbEmdTEtOVNDd/njXDrNEAOhT3ql3LqfU
+	 kAz6WzAwGkI2YoV9JUz3ukh1gHadYtO48A8kQlzP5uq4KGZtJ12eatS/o4wZJ+Q67x
+	 m1Kk8mEOE5YBA==
+Date: Tue, 23 Jun 2026 09:52:26 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/4] perf kvm: Kill STRDUP_FAIL_EXIT()
-Message-ID: <ajq5WwN07wH35012@google.com>
+Subject: Re: [PATCH 4/4] perf test: Simplify perf kvm record/report tests
+Message-ID: <ajq5ykK0tdf4vqlo@google.com>
 References: <20260623070313.55225-1-namhyung@kernel.org>
- <20260623070313.55225-4-namhyung@kernel.org>
- <20260623071259.C36A01F000E9@smtp.kernel.org>
+ <20260623070313.55225-5-namhyung@kernel.org>
+ <20260623070915.16B291F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,94 +44,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260623071259.C36A01F000E9@smtp.kernel.org>
+In-Reply-To: <20260623070915.16B291F000E9@smtp.kernel.org>
 
-On Tue, Jun 23, 2026 at 07:12:59AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> 
-> New issues:
-> - [Medium] Memory leak of dynamically allocated strings in PowerPC default arch events due to removal of array cleanup loops.
-> 
-> Pre-existing issues:
-> - [High] perf kvm record unconditionally crashes via BUG_ON() on non-Intel x86 hosts and architectures without default events.
+On Tue, Jun 23, 2026 at 07:09:14AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] The synchronous `perf kvm record` command is not wrapped in an error-checking conditional, causing the script to unexpectedly abort via `set -e` upon failure.
 > --
 > 
-> commit d3c8251de71559c69211fb2d23ba99dd14669107
+> commit a940fab65237cd8e4c37035fe66af932fcd3f955
 > Author: Namhyung Kim <namhyung@kernel.org>
 > 
-> perf kvm: Kill STRDUP_FAIL_EXIT()
+> perf test: Simplify perf kvm record/report tests
 > 
-> This commit removes the STRDUP_FAIL_EXIT macro and replaces dynamically
-> allocated copied strings with stack variables for passing command line
-> options. It also removes the cleanup loops that freed these string
-> copies, addressing a subtle double free issue.
+> This commit simplifies the perf kvm tests by passing sleep directly as a
+> command line argument to perf kvm record, rather than running it in the
+> background and manually killing it.
 > 
-> > diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> > index acc6f2a706b35..477c28915c037 100644
-> > --- a/tools/perf/builtin-kvm.c
-> > +++ b/tools/perf/builtin-kvm.c
+> > diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell/kvm.sh
+> > index f88e859025c42..4ca10388748de 100755
+> > --- a/tools/perf/tests/shell/kvm.sh
+> > +++ b/tools/perf/tests/shell/kvm.sh
 > [ ... ]
-> > @@ -2008,9 +2004,9 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
-> [ ... ]
-> >  	for (j = 1; j < argc; j++, i++)
-> > -		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
-> > +		rec_argv[i] = argv[j];
-> >  
-> >  	BUG_ON(i != rec_argc);
-> 
-> [Severity: High]
-> This is a pre-existing issue, but can this BUG_ON() crash the tool on
-> non-Intel x86 hosts or architectures without default events?
-> 
-> If need_arch_event is true but the architecture hook returns early without
-> adding events, rec_argc will be greater than the final value of i.
-> 
-> For example, in tools/perf/util/kvm-stat-arch/kvm-stat-x86.c:
-> 
-> __kvm_add_default_arch_event_x86() {
->         if (!x86__is_intel_cpu())
->                 return 0;
->         ...
-> }
-> 
-> On AMD hosts, this returns 0 without incrementing the argument count, leaving
-> i less than rec_argc and triggering the BUG_ON() assertion.
-> 
-> >  
-> >  	ret = cmd_record(i, rec_argv);
-> >  
-> >  EXIT:
-> > -	for (j = 0; j < i; j++)
-> > -		free((void *)rec_argv[j]);
+> > @@ -63,13 +63,7 @@ test_kvm_record_report() {
+> >  	echo "Recording kvm profile for pid ${qemu_pid}..."
+> >  	# Use --host to avoid needing guest symbols/mounts for this simple test
+> >  	# We just want to verify the command runs and produces data
+> > -	# We run in background and kill it because 'perf kvm record' appends options
+> > -	# after the command, which breaks 'sleep' (e.g. it gets '-e cycles').
+> > -	perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
+> > -	rec_pid=$!
+> > -	sleep 1
+> > -	kill -INT "${rec_pid}"
+> > -	wait "${rec_pid}" || true
+> > +	perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" sleep 1
 > 
 > [Severity: Medium]
-> Does removing this cleanup loop leak memory on PowerPC architectures?
+> If this command fails, will the script abort immediately due to set -e being
+> enabled globally?
 > 
-> While the central code now uses stack variables, the PowerPC architecture
-> hook still dynamically allocates its default events. 
+> The previous implementation guarded against non-zero exit codes by using
+> wait "${rec_pid}" || true. Without an error-checking conditional or an
+> appended || true, a failure during this synchronous execution could cause the
+> script to instantly terminate.
 > 
-> In tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c:
-> 
-> __kvm_add_default_arch_event_powerpc() {
->         ...
->         argv[j++] = strdup("-e");
->         argv[j++] = strdup("trace_imc/trace_cycles/");
->         ...
-> }
-> 
-> Since these strings are allocated with strdup() and the free() loops in
-> __cmd_record(), __cmd_top(), and kvm_events_record() have been removed,
-> will these strings leak during command execution?
+> Would this bypass the test's intended logic of recording the failure (err=1)
+> and accidentally skip subsequent tests like test_kvm_buildid_list?
 
-Right, will update powerpc.
+I think it's ok to fail when the record command failed.
 
 Thanks,
 Namhyung
 
 > 
-> >  	free(rec_argv);
-> >  	return ret;
-> >  }
+> >  
+> >  	echo "Reporting kvm profile..."
+> >  	# Check for some standard output from report
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260623070313.55225-1-namhyung@kernel.org?part=3
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260623070313.55225-1-namhyung@kernel.org?part=4
