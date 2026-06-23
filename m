@@ -1,295 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECA530C164;
-	Tue, 23 Jun 2026 17:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782234612; cv=none; b=rRMHQBXYbvPZPcMjeBd0ekCYmG/exBHVPmwRwchP/MghxvINTYSSEs5rJwymfOs9kS44UkTkTXIPyS425PeYeSctIEp/DmPJTLI2vxbM3OTO8F1b+147qlc4qYHnDYagP9g+tJoOChnDBffbFp4Qp2wC3JbyApg1P0zfqvg99O4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782234612; c=relaxed/simple;
-	bh=G2juHNm0MQSkesq1JQVu2orcc7IIrgmx+oXkd4LHWFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GX1HiVwNsOOPfcIiOMkUr8x7GmgzDSEMaSsnrztJQZfnFtZze19qHt18PWlYAjKy96Xqeaq/It3Ns8SLv3v30qj7CWtcK0zSO/MPeZ63SSGKSokC8yxvxamr6EWCZQpXS3NmBnVygTym7IhUTDdK2DnewP6DcMYNkxQ1O0Pb0sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieednaGG; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24E026E165
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 17:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782235014; cv=pass; b=dK8kNxMNNbnoFnCl2n5t2YNATZOVal93e62Iz3kdcw9auu+BjVh1wF8lwu8eTvOdtTHsrTAJKfRTxs+WPIrhbJRNRGP0N7PKlqGB5bsx18tE8Wgs+kzRWMKVbWGr+WILO+IOZC5lep+N00qOasenqF0vwHfBrLoGmEyefg0OlVM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782235014; c=relaxed/simple;
+	bh=Jc3NFIyBGO0I0IA43oP18JYuheVpqNYBKCnYTwx2ijc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=utCXLcZkYmhkLpA1r7SjjgWfLJKVty9l9tIZL4oXHcosFNt4J2CVcHsApQYMx4XfaSXIlfjyv575OC4Zt1peBP75dXl6NdGuSRRDGKaTjN9PRymnLjopOzQaKRfdz9+gcbl0MenqDSKnEs9mmiat0t9ZhnqKc4D2ejVr06hagEM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rWOdSYcQ; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieednaGG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AD771F000E9;
-	Tue, 23 Jun 2026 17:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782234611;
-	bh=WDvdzY1ErQFnk/RK+FkTuVAjD4osJ5TRcU6EtvGfSxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ieednaGGvYm2myJJqbDa4a12RAoxTEbph0h036DThaLkxKy8+88OP8D9jqmPrWkwM
-	 01V+i/rkY+XNLsY5VStIr/7otCQcFVI8wNNFqnBepeqEso4vTP9l7Wa3PcSX0jKrHL
-	 SEeOfdVL12UoCq6lSenY/0hy+7liT+WdYP/I3GClj3a5K3D+5KXKEmYTwOkDv311Az
-	 vy5hch/wNQh5KNeZ7ZTFT2jCGOuJI8etMF3RKLnSBS1lZfbSorNno8uPE96Ju6rx/w
-	 gmJp8+l5VLxeFyJU0dj5g9EINushzC+23dCws8Rrwr8nUQdW1kb9jzDrNqlYOX0GZg
-	 +CujLJOl3V1/Q==
-Date: Tue, 23 Jun 2026 10:10:09 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Viktor Malik <vmalik@redhat.com>, linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Refactor augmented_raw_syscalls using
- bpf_loop
-Message-ID: <ajq98dm4gAwEzkMb@google.com>
-References: <20260623112533.1151502-1-vmalik@redhat.com>
- <DJGJ9F6WQZV9.2W4WBIHYLJQ97@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rWOdSYcQ"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2c69fa0b1f8so2945ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 10:16:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782235012; cv=none;
+        d=google.com; s=arc-20260327;
+        b=BL9ZdwOnwYKvEdeEcX3VyuhGxYBk3/yA+aA52qvr0GpifudEbK2FlPny54Ls9xnx0x
+         CB1cfgJ5rAdZjm0UbbFGBtsbWgW25iF2w+mmtUwV5Zjnf39GipRdnoiMHb8w5F1cvAWY
+         JILWcTl/1Eo9GDg7QJXUGwgzwTtAhEVtiJzHwqfevGqfRzVHM7egqf/x4D6bBfXhhyEf
+         kW9QVcdIYa0tt6GekBR2cOORDFzmsKpQplK9ujnVR1UZ6PG185qbbmHH2liTKalzAnYm
+         mRLk9nRYL5Pa3QLnWa2aYBmQD0p+79fc9IwOdDF+cVyV5V/1VgUPnrxy0G90R/rjSiuc
+         DJtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=8V8XmSTsxuXnjrPVNLI5LwVP6bo1s9Bz+C8FMG18Z54=;
+        fh=MTb/KjYajXCezPOJZSpC6VOZWW9+LiEuvKdxfa9wWmg=;
+        b=Zw4P/1TW6x1mywintCjr+Lt9SQbbVcQBLI9YPD4KmWCvO2c968B2XOe8R+YX6L4WdT
+         9pwLQNTRWSMXR2ele+6AtTMxEGCRnUbIU6+6145hm125tV8wjtelRziyTinDn69r1IdN
+         whAo3O63QfiaxZn6W6MbdBmKn0FFEQFjLQQY2Kf8or3SKm3i+tbc8/y4SvF4pqPEWJdS
+         8XdxVcQqe/PMWKzaDGgqALKE13DQR7bLoN7juSUFADtaH/SWrc96GhWgOmei7UmZZSY9
+         NmjjxoVSjEjS+C3BMs1Y+gKe3owKwu/ncirMXUZeXqork6t6xRzf37MdFmIMScdaeg77
+         x8mg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782235012; x=1782839812; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=8V8XmSTsxuXnjrPVNLI5LwVP6bo1s9Bz+C8FMG18Z54=;
+        b=rWOdSYcQRqxJ4SkiWSEygmXvf4MOatk6ekzsQvGYaxn96+tluU7WItGWWD+5Cc8DzI
+         LV8ri2uCRJ9DAqllQCToVhrR+IbLJiTvg5mQ41tOYH5m+1/2d2KEr/qpCj5yKcsbbdIb
+         wkOGbMnTLi2QhtjFMG4NkhvmCpZOQywzK7gdNhwOXvElnX3CbVeYSx8woU67JCTFoImE
+         VNuN/+yhPnN/9YeRIfI9Knaly8AKBz0bsSy4fim6RPZ/wRe9YN09wNfllGl33nSnAsRX
+         ZhcyA8Po4a0lxpJlZYueX5Y4+4+q+EOqwGEswcHqG9WmCF2A6/1s2RonMQNnXQ+3S4r2
+         UDOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782235012; x=1782839812;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=8V8XmSTsxuXnjrPVNLI5LwVP6bo1s9Bz+C8FMG18Z54=;
+        b=BCMwBBxh42Eu6N27i/v44syD27P445A2iAP18l8AOdPcVae+nCgsv1lEWb8pHBLvXE
+         yZtt2HuDG0RpRO6E1fgrHITI2EKNjzrCTXX/rKiPRv//DMNOJPGFTTJXd4HAOlHght7e
+         E7mjUK1uFC+dPRJE5+flNsyWJ5SagI5hX4M6V7WD/bcUR+JCAecnlaX0KeczZPtCS6Tm
+         xyaZ9BABp/oviAFAWEspljOW9FQpr1LIKfnhEJTbftZA0YCBgruThJC18bdV3I7aA7wt
+         hsuu09KeNpuZmx9aM47QEYyMsz9BzqlwKchl9jupfpkrGedjgOaV5C67M2Pt/HvtYfdo
+         dQng==
+X-Gm-Message-State: AOJu0YyZGdhbKVJpjDW9X41m77c2hR1pe/LHYGR0EmUCmWUElOP8S1F3
+	z5JUAW8xGLlFrXFrOqgG1nv0DL7DHckY3PuSgqPk5jG13E7B37ppDWf97LtSDnFjVWUWnAKbMnS
+	BWjuYZOiHH4VnEUUKqB8mN6Ftdqo+iivH31So3Uu7
+X-Gm-Gg: AfdE7ck0c7UWjCiyfT1Gs9Y/wzroMv5gg5Chh+Gjxkzl+23E7f1TOnFKOiDwm0Jtpip
+	C6mQWtPRg3VtaGbdMY8sQKK3eYgRjG4lc9Ca12dHeKBT1Kyl8cAZwgHIs+8UwdiEpmDU6bbbGRY
+	kIWYJaVrpyP5CXMXJDM1r7mMGHD0UB/atCVOnX/BnF+ZghxN0FH6S2rsGqrGaNd0ic/LriGgbLv
+	7iKQW5Lf5G78F7yAXe+Wdxlk3FkDH27IRY3HtgYVCI7fcsTPJmbe9/FqGcvAB9z3nCj0iCQNQ==
+X-Received: by 2002:a17:902:f60e:b0:2b0:b0c9:96e2 with SMTP id
+ d9443c01a7336-2c7e080f9edmr7995ad.21.1782235011263; Tue, 23 Jun 2026 10:16:51
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <DJGJ9F6WQZV9.2W4WBIHYLJQ97@gmail.com>
+References: <0f2cff983d79521e153d211ce412fedbc4ed942c.1782211518.git.sandipan.das@amd.com>
+In-Reply-To: <0f2cff983d79521e153d211ce412fedbc4ed942c.1782211518.git.sandipan.das@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 23 Jun 2026 10:16:40 -0700
+X-Gm-Features: AVVi8CeH-QPUKKatnRpEeQ62Nrbd950T6a5bkATHYk_ePokt8Ba-7R7KOLnTdaU
+Message-ID: <CAP-5=fVg-mjLj2v6Q2kXMBU26rn=CgZNyFE7O=-+ZuE90RC_8Q@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/amd/uncore: Add group validation
+To: Sandipan Das <sandipan.das@amd.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H . Peter Anvin" <hpa@zytor.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Ananth Narayan <ananth.narayan@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, Jun 23, 2026 at 3:49=E2=80=AFAM Sandipan Das <sandipan.das@amd.com>=
+ wrote:
+>
+> The amd_uncore driver currently does not validate event groups and
+> allows creation of groups with more events than the number of available
+> hardware counters. Because of this, pmu->event_init() succeeds but
+> counter assignment fails later in pmu->add() which returns -EBUSY once
+> all counters are exhausted.
+>
+> Address this by introducing group validation in the pmu->event_init()
+> path. Since the uncore PMUs have no per-event constraints and all
+> counters of a PMU are interchangeable, validation is reduced to just
+> counting the group members that target a PMU and ensuring that they fit
+> within the available set of counters.
+>
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 
-On Tue, Jun 23, 2026 at 08:27:39AM -0700, Alexei Starovoitov wrote:
-> On Tue Jun 23, 2026 at 4:25 AM PDT, Viktor Malik wrote:
-> > The loop for processing syscall args in augment_raw_syscalls has a
-> > history of breaking with Clang updates, see e.g. commit 013eb043f37b
-> > ("perf trace: Fix BPF loading failure (-E2BIG)") from Clang 15 to 16.
-> >
-> > Now, a similar thing happened between Clang 21 and 22. While the issue
-> > is mitigated on the main line by a recent verifier update, it remains
-> > broken on the 6.12 and 6.18 stable branches:
-> >
-> >     [linux-6.18.y]# sudo perf trace true
-> >     libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
-> >     libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
-> >     [...]
-> >     BPF program is too large. Processed 1000001 insn
-> >     processed 1000001 insns (limit 1000000) max_states_per_insn 40 total_states 37941 peak_states 232 mark_read 0
-> >     -- END PROG LOAD LOG --
-> >     libbpf: prog 'sys_enter': failed to load: -E2BIG
-> >     libbpf: failed to load object 'augmented_raw_syscalls_bpf'
-> >     libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -E2BIG
-> >     Error: failed to get syscall or beauty map fd
-> >     [...]
-> >
-> > The reason is that the loop is quite complex and the BPF verifier often
-> > struggles to prove that it terminates.
-> >
-> > Fix the issue by refactoring the loop body into a callback function and
-> > calling the bpf_loop helper. This should prevent future breakages of
-> > this kind since the callback function has no loops. It also allows to
-> > drop a few artificial checks to help the verifier, including the changes
-> > introduced by 013eb043f37b.
+This is great Sandipan! Thanks for addressing this! I'd been wondering
+if in the perf tool if we could test hardware PMUs for not supporting
+failing at open properly. This is a problem for weak groups, as used
+by metrics, because they try to group all events and then break the
+group when the open fails. I'd observed that AMD uncore events
+supposedly opened but then failed during reading. I suspect other PMUs
+also suffer this.
 
-Thanks for working on this.  I encountered this issue before and never
-found time to take a deeper look yet.
+Peter mentioned a behavior in the past: opening events in a group in a
+disabled state, with more events than counters, and then the software
+enables and disables events in the group to control counter
+allocation. The perf tool doesn't currently utilize this behavior but
+I think it explains some of the Sashiko feedback.
 
-> >
-> > Signed-off-by: Viktor Malik <vmalik@redhat.com>
-> > Fixes: a68fd6a6cdd3 ("perf trace: Collect augmented data using BPF")
-> > Fixes: 013eb043f37b ("perf trace: Fix BPF loading failure (-E2BIG)")
-> > Cc: stable@vger.kernel.org
-> > ---
-> >  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 157 +++++++++++-------
-> >  1 file changed, 96 insertions(+), 61 deletions(-)
-> >
-> > diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > index 2a6e61864ee0..6d553ed3ac23 100644
-> > --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > @@ -429,15 +429,96 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
-> >  	return bpf_map_lookup_elem(pids, &pid) != NULL;
-> >  }
-> >  
-> > +struct args_loop_ctx {
-> > +	struct syscall_enter_args *args;
-> > +	unsigned int *beauty_map;
-> > +	void *payload_offset;
-> > +	int value_size;
-> > +	u64 *output;
-> > +	bool *do_output;
-> > +};
-> > +
-> > +static long process_arg_cb(u64 i, void *ctx)
-> > +{
-> > +	/*
-> > +	 * Determine what type of argument and how many bytes to read from user space, using the
-> > +	 * value in the beauty_map. This is the relation of parameter type and its corresponding
-> > +	 * value in the beauty map, and how many bytes we read eventually:
-> > +	 *
-> > +	 * string: 1			      -> size of string
-> > +	 * struct: size of struct	      -> size of struct
-> > +	 * buffer: -1 * (index of paired len) -> value of paired len (maximum: TRACE_AUG_MAX_BUF)
-> > +	 */
-> > +	struct augmented_arg *augmented_arg;
-> > +	struct args_loop_ctx *loop_ctx;
-> > +	int aug_size, size, index;
-> > +	bool augmented;
-> > +	void *arg;
-> > +
-> > +	/* Bounds check for the below map access to help the verifier */
-> > +	if (i < 0 || i >= 6)
-> > +		return 1;
-> > +
-> > +	loop_ctx = (struct args_loop_ctx *)ctx;
-> > +	arg = (void *)loop_ctx->args->args[i];
-> > +	augmented = false;
-> > +	size = loop_ctx->beauty_map[i];
-> > +	aug_size = size; /* size of the augmented data read from user space */
-> > +	augmented_arg = (struct augmented_arg *)loop_ctx->payload_offset;
-> > +
-> > +	if (size == 0 || arg == NULL)
-> > +		return 0; /* continue */
-> > +
-> > +	if (size == 1) { /* string */
-> > +		aug_size = bpf_probe_read_user_str(augmented_arg->value, loop_ctx->value_size, arg);
-> > +		augmented = true;
-> > +	} else if (size > 0 && size <= loop_ctx->value_size) { /* struct */
-> > +		if (!bpf_probe_read_user(augmented_arg->value, size, arg))
-> > +			augmented = true;
-> > +	} else if (size < 0 && size >= -6) { /* buffer */
-> > +		index = -(size + 1);
-> > +		barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
-> > +		index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels.
-> > +		aug_size = loop_ctx->args->args[index];
-> > +
-> > +		if (aug_size > TRACE_AUG_MAX_BUF)
-> > +			aug_size = TRACE_AUG_MAX_BUF;
-> > +
-> > +		if (aug_size > 0) {
-> > +			if (!bpf_probe_read_user(augmented_arg->value, aug_size, arg))
-> > +				augmented = true;
-> > +		}
-> > +	}
-> > +
-> > +	/* Augmented data size is limited to sizeof(augmented_arg->unnamed union with value field) */
-> > +	if (aug_size > loop_ctx->value_size)
-> > +		aug_size = loop_ctx->value_size;
-> > +
-> > +	/* write data to payload */
-> > +	if (augmented) {
-> > +		int written = offsetof(struct augmented_arg, value) + aug_size;
-> > +
-> > +		if (written < 0 || written > sizeof(struct augmented_arg))
-> > +			return 1; /* break */
-> > +
-> > +		augmented_arg->size = aug_size;
-> > +		*loop_ctx->output += written;
-> > +		loop_ctx->payload_offset += written;
-> > +		*loop_ctx->do_output = true;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
-> >  {
-> > -	bool augmented, do_output = false;
-> > -	int zero = 0, index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
-> > +	bool do_output = false;
-> > +	int zero = 0, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
-> >  	u64 output = 0; /* has to be u64, otherwise it won't pass the verifier */
-> > -	s64 aug_size, size;
-> >  	unsigned int nr, *beauty_map;
-> >  	struct beauty_payload_enter *payload;
-> > -	void *arg, *payload_offset;
-> > +	void *payload_offset;
-> > +	long iters;
-> >  
-> >  	/* fall back to do predefined tail call */
-> >  	if (args == NULL)
-> > @@ -457,63 +538,17 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
-> >  	/* copy the sys_enter header, which has the syscall_nr */
-> >  	__builtin_memcpy(&payload->args, args, sizeof(struct syscall_enter_args));
-> >  
-> > -	/*
-> > -	 * Determine what type of argument and how many bytes to read from user space, using the
-> > -	 * value in the beauty_map. This is the relation of parameter type and its corresponding
-> > -	 * value in the beauty map, and how many bytes we read eventually:
-> > -	 *
-> > -	 * string: 1			      -> size of string
-> > -	 * struct: size of struct	      -> size of struct
-> > -	 * buffer: -1 * (index of paired len) -> value of paired len (maximum: TRACE_AUG_MAX_BUF)
-> > -	 */
-> > -	for (int i = 0; i < 6; i++) {
-> > -		arg = (void *)args->args[i];
-> > -		augmented = false;
-> > -		size = beauty_map[i];
-> > -		aug_size = size; /* size of the augmented data read from user space */
-> > -
-> > -		if (size == 0 || arg == NULL)
-> > -			continue;
-> > -
-> > -		if (size == 1) { /* string */
-> > -			aug_size = bpf_probe_read_user_str(((struct augmented_arg *)payload_offset)->value, value_size, arg);
-> > -			/* minimum of 0 to pass the verifier */
-> > -			if (aug_size < 0)
-> > -				aug_size = 0;
-> > -
-> > -			augmented = true;
-> > -		} else if (size > 0 && size <= value_size) { /* struct */
-> > -			if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg))
-> > -				augmented = true;
-> > -		} else if ((int)size < 0 && size >= -6) { /* buffer */
-> > -			index = -(size + 1);
-> > -			barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
-> > -			index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels.
-> > -			aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
-> > -
-> > -			if (aug_size > 0) {
-> > -				if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
-> > -					augmented = true;
-> > -			}
-> > -		}
-> > -
-> > -		/* Augmented data size is limited to sizeof(augmented_arg->unnamed union with value field) */
-> > -		if (aug_size > value_size)
-> > -			aug_size = value_size;
-> > -
-> > -		/* write data to payload */
-> > -		if (augmented) {
-> > -			int written = offsetof(struct augmented_arg, value) + aug_size;
-> > -
-> > -			if (written < 0 || written > sizeof(struct augmented_arg))
-> > -				return 1;
-> > -
-> > -			((struct augmented_arg *)payload_offset)->size = aug_size;
-> > -			output += written;
-> > -			payload_offset += written;
-> > -			do_output = true;
-> > -		}
-> > -	}
-> > +	struct args_loop_ctx loop_ctx = {
-> > +		.args = args,
-> > +		.beauty_map = beauty_map,
-> > +		.payload_offset = payload_offset,
-> > +		.value_size = value_size,
-> > +		.output = &output,
-> > +		.do_output = &do_output
-> > +	};
-> > +	iters = bpf_loop(6, process_arg_cb, &loop_ctx, 0);
-> 
-> bpf_loop() is old and generally not recommended.
-> Please use bpf_for() then the diff will be one line change and
-> can scale to any number of args. Not just 6.
- 
-One thing we should take care is to support old kernels.  The oldest
-LTS kernel in the kernel.org is 5.10 and bpf_loop() was introduced in
-5.17 and bpf_for (bpf_iter_num) was 6.4.
-
-Maybe we can factor out the loop body and call it from different
-mechanisms like open-coded loop, bpf_loop or bpf_for depending on the
-kernel version.  But not sure it'd fix the verifier issue though.
+Would it be possible to get a Fixes tag for stable backports?
 
 Thanks,
-Namhyung
+Ian
 
+> ---
+>  arch/x86/events/amd/uncore.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index dbc00b6dd69e..9715cfb8cce3 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -265,6 +265,29 @@ static void amd_uncore_del(struct perf_event *event,=
+ int flags)
+>         hwc->idx =3D -1;
+>  }
+>
+> +static bool amd_uncore_group_valid(struct perf_event *event)
+> +{
+> +       struct amd_uncore_pmu *pmu =3D event_to_amd_uncore_pmu(event);
+> +       struct perf_event *leader =3D event->group_leader;
+> +       struct perf_event *sibling;
+> +       int counters =3D 0;
+> +
+> +       /* Ignore software events as they do not occupy hardware counters=
+ */
+> +       if (leader->pmu =3D=3D event->pmu && !is_software_event(leader))
+> +               counters++;
+> +
+> +       for_each_sibling_event(sibling, leader) {
+> +               if (sibling->pmu =3D=3D event->pmu && !is_software_event(=
+sibling))
+> +                       counters++;
+> +       }
+> +
+> +       /*
+> +        * When pmu->event_init() is called, the event is yet to be linke=
+d to
+> +        * its leader's sibling list, so it is counted separately
+> +        */
+> +       return (counters + 1) <=3D pmu->num_counters;
+> +}
+> +
+>  static int amd_uncore_event_init(struct perf_event *event)
+>  {
+>         struct amd_uncore_pmu *pmu;
+> @@ -282,6 +305,15 @@ static int amd_uncore_event_init(struct perf_event *=
+event)
+>         if (!ctx)
+>                 return -ENODEV;
+>
+> +       /*
+> +        * Ensure that all events in a group can be scheduled together so=
+ that
+> +        * a failure can be reported at perf_event_open() time rather tha=
+n
+> +        * silently at pmu->add() time when no free counter is found
+> +        */
+> +       if (event->group_leader !=3D event &&
+> +           !amd_uncore_group_valid(event))
+> +               return -EINVAL;
+> +
+>         /*
+>          * NB and Last level cache counters (MSRs) are shared across all =
+cores
+>          * that share the same NB / Last level cache.  On family 16h and =
+below,
+> --
+> 2.53.0
+>
