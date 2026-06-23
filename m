@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94943B102F
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:46:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2919D3955CF
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 21:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782251218; cv=none; b=mpJDJEMTjJZXKzqgZIbdxkqefpj/NOpaVg0qzGqqRWIOIAz00M5O0ZE5zdpp4idyVc1kTi/nXC+D9DllpRAC27W+TZjbcvz0mj8V9PbLR0BeSjLfQeGnO/l6IXyueLdZZwWFOIuMTSArw0v/mWrJIAamZgx1WpkHcSs7iL3sBQs=
+	t=1782251850; cv=none; b=mDNtE7eveCO2AwMWTKxSGd/ln4kygniNqjVw/JsOoHpkss3Y6Jq/mN4BDFTVM6Vw8FR9JVIe5m+pmsMGPAhuZ7a/irCdhHUEf8GC5NWnPNJzwJOOuZfQG+t13uaJ0m0ld1kUbqdh67/L65O33fL5oWChRvf9pvm7EqqLe+GLgXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782251218; c=relaxed/simple;
-	bh=JXgxWQa95XIvCphWzvEbtA6e/RopWT1PDUGRYNBthcg=;
+	s=arc-20240116; t=1782251850; c=relaxed/simple;
+	bh=hJKmK2GucSp1Tx5pMzufZTONbuuV3d6NkqFBZVcia9E=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tmZpLb9zJlrjzv3zdW3odWuX8hheelPgVmtHNBNRAcTqp/BQME1/814NAJ3uVQUkgtvY5uVRnLr8BAoD+8fVtUOJoKVj50EoTM8Y1nlMyZixFZ2IMsQXzzo7uh+4xxYim99Tn3/WKlOBJ5GpBwvtvf1ZNGf82+Npvxf+Jroohc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ISiS3b88; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=tqf74pSku/tVr0DWsxwUBrC6vVv/rztUbxZ36mHCfwNK5kxBRiuueHROxc4xYdnL0HqlPmJfnnFswgwRkkO5H+GS2+1iO8B1cOYGGJiiRrL7wL2L5DxI6m84a+FhI0Ke07ebvNLRnys+Sgy2cpq/BxiznlxXDx7GGbuw7lCm+to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbuY8iRV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ISiS3b88"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E522E1F000E9;
-	Tue, 23 Jun 2026 21:46:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbuY8iRV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 947A21F000E9;
+	Tue, 23 Jun 2026 21:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782251216;
-	bh=NliGj/nFWfb+7WeHEeLqJHTzSUW6uWRjKDfqfFfHw6I=;
+	s=k20260515; t=1782251848;
+	bh=PC+s7VozN349OFE1YpxUjD+ENcnUVXD6ZpIgxq3YS4M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ISiS3b889cicbswXQHPYWZfSGeeArOnWkAoje0RaPZnGJZFPIx7cG0pidERABlQ4P
-	 dsrA9QbvPSMMEBBk8d6RIDI1W0BT1nnTaUVIzexmps6ghcR862ABy2FcU4aWZZM/YW
-	 iohJU1a/ZBa39wu15e90bifPNB/dF9jywcj/lZOmpACWNJ9R0Kl3pzKOSCW86/fw49
-	 DLvZJbVu2dxrHM/Jh0O1XQZddSL+UV+UtvGIHCqpPibTXXk1WzepBE+s4pXNH/e5Oi
-	 DqP9I26eDk7VZlLvZ3Pd+1MwQF1F+Ftt2rVtrtvirUrCZSgsEUq6NqI/LKxn+Cc7ej
-	 7mh0zwFoaFz/A==
+	b=AbuY8iRVrph3lVDGcHihYoHJMkgB82ZCTVDej+6lsVtctoiWDs1z3QG7M6SdAIRxA
+	 1W1MdhKEU1ryC9FWxc62Xz5t5SJW318ASLWTtW/9Pv1iKd1qCIXOn00RBLkt5wUech
+	 aF4Spzzbr77qieF2OPHsJ+vt0/BIT11v8eKu4UGC3mnSIMvx8JXCZmKB2peixcjLVw
+	 vVUyvkPAhM8ryRoTdn7yRUNVG1jm0fdsar7AGsDS8C2VikMVENm3HNqXZJvem5yVz1
+	 kOkSBNtetFZgXXkOl6fdkZ1/aNlm9bXtcZHb1P2wxd9OwV0yBA+sRcwa+JWfKWvoho
+	 D/fKBLV+KEGtA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/6] perf kvm: Do not copy filename string
+Subject: Re: [PATCH v2 6/6] perf test: Simplify perf kvm record/report tests
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Namhyung Kim" <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260623191439.3621593-5-namhyung@kernel.org>
+In-Reply-To: <20260623191439.3621593-7-namhyung@kernel.org>
 References: <20260623191439.3621593-1-namhyung@kernel.org>
- <20260623191439.3621593-5-namhyung@kernel.org>
+ <20260623191439.3621593-7-namhyung@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 21:46:55 +0000
-Message-Id: <20260623214655.E522E1F000E9@smtp.kernel.org>
+Date: Tue, 23 Jun 2026 21:57:28 +0000
+Message-Id: <20260623215728.947A21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,59 +46,51 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] The error checking logic for `get_filename_for_perf_kvm()` is unrea=
-chable dead code.
+- [Medium] Unwrapped command execution in test script with `set -e` causes =
+premature exit on failure.
 --
 
-commit 0b8de0bac81d07f5d9beff7d22b8144187910bab
+commit 3ce1271a163998e293f818fbfbc37ed07914f209
 Author: Namhyung Kim <namhyung@kernel.org>
 
-perf kvm: Do not copy filename string
+perf test: Simplify perf kvm record/report tests
 
-As it removed STRDUP_FAIL_EXIT(), it no longer calls free() for elements
-in the copied argv.  Thus, the filename should not be allocated as well.
-In fact, it's a pointer to string literals and should be fine to pass
-the pointer.
+It can now pass command line arguments to perf kvm record --host.
+Let's pass 'sleep 1' directly rather than running it in background.
 
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 278543ca66a37..021af3c64acd0 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -607,11 +607,11 @@ static const char *get_filename_for_perf_kvm(void)
->  	const char *filename;
-> =20
->  	if (perf_host && !perf_guest)
-> -		filename =3D strdup("perf.data.host");
-> +		filename =3D "perf.data.host";
->  	else if (!perf_host && perf_guest)
-> -		filename =3D strdup("perf.data.guest");
-> +		filename =3D "perf.data.guest";
->  	else
-> -		filename =3D strdup("perf.data.kvm");
-> +		filename =3D "perf.data.kvm";
-> =20
->  	return filename;
->  }
+> diff --git a/tools/perf/tests/shell/kvm.sh b/tools/perf/tests/shell/kvm.sh
+> index f88e859025c42..4ca10388748de 100755
+> --- a/tools/perf/tests/shell/kvm.sh
+> +++ b/tools/perf/tests/shell/kvm.sh
+> @@ -63,13 +63,7 @@ test_kvm_record_report() {
+>  	echo "Recording kvm profile for pid ${qemu_pid}..."
+>  	# Use --host to avoid needing guest symbols/mounts for this simple test
+>  	# We just want to verify the command runs and produces data
+> -	# We run in background and kill it because 'perf kvm record' appends op=
+tions
+> -	# after the command, which breaks 'sleep' (e.g. it gets '-e cycles').
+> -	perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
+> -	rec_pid=3D$!
+> -	sleep 1
+> -	kill -INT "${rec_pid}"
+> -	wait "${rec_pid}" || true
+> +	perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" sleep 1
 
-[Severity: Low]
-Does this change leave unreachable dead code in cmd_kvm()?
+[Severity: Medium]
+Since this script runs with set -e, will a failure in perf kvm here cause=20
+the script to exit immediately?
 
-Now that get_filename_for_perf_kvm() returns static string literals, it can
-never return NULL. However, its caller cmd_kvm() still checks for NULL and
-returns -ENOMEM:
+The previous backgrounding implementation handled failures gracefully using
+wait "${rec_pid}" || true. If this new foreground command fails (for exampl=
+e=20
+due to restricted perf_event_paranoid settings), it seems the entire test=20
+script will abort early and skip the remaining tests instead of accumulatin=
+g=20
+errors gracefully.=20
 
-	if (!file_name) {
-		file_name =3D get_filename_for_perf_kvm();
-
-		if (!file_name) {
-			pr_err("Failed to allocate memory for filename\n");
-			return -ENOMEM;
-		}
-	}
-
-Is it okay to clean up the redundant NULL check and error message from
-cmd_kvm() since this allocation failure is no longer possible?
+Should this be wrapped to catch failures, or append || true to prevent a=20
+premature script exit?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623191439.3621=
-593-1-namhyung@kernel.org?part=3D4
+593-1-namhyung@kernel.org?part=3D6
