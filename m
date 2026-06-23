@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBD4395AE8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81267399001;
 	Tue, 23 Jun 2026 07:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782198201; cv=none; b=oMuNIy1ZZKcH9yb2BAwApycX1gZhWeT9n9W0x3puDnUVBlQBjEIp7VkrC99eduhx9C2AFXiCjwE4Vq9WlIZCE832V3tnwuOGyJwerM36Ct1eXY90gBP68wubE6/8izA4et/pD2K2iP9Sk0ZuaXrzoe+9m5HGMBxR8F1dnG7QT24=
+	t=1782198201; cv=none; b=hVuH5Vhq8AsFAXhCEcNZe0f3wH4Lrdfq90y/VSxcRl6moIWbb3sCbjmTjubaPSRQcUHbp29W6gDbuiGCx7BDFnLEf8rGZk1/Dsto//ghtY7pufifSziNyU3ipc3JzX+53ja3rH/83q6P/q+ajBiCtRT5EllMmBWG74Mbd3G2odw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1782198201; c=relaxed/simple;
-	bh=aGGN6gGbdt54kL3yasIE4QzclRvHDZ7GLjSfZHJd1X0=;
+	bh=SPPlzNQeZXQdJfgWqdsBN8cJX8myAOgsOMuxOJscpHw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nk0byQh/B81vulKPsbPvTQzjOMKxkYP0HovAOR6mi50daeVGd64knXPkWsqxN0xzkkjFJAzQWgWaA4GaBIkN7wjK0/qnH9ThH8qm6Ah1M86Qh3yHeeBZNGuRaWG9SRI34Y0J8KXuOP+eCRejBX/RHdMGFRlJ/KvdLM8PXQfOgag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8pnZEJA; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=fkcwxMbAyQ9DSXYnK1FbHHFky4AuAxoMuqrhxnzGFziL5wrhbWfUX7XtjAXxmzDKoe8wlGhAPevHgkmzKD9h3o/9jbPKM7aR+tPsmdWB9MHlvgsa2Bm7Sk1Av7Vxyeh+FmxgcndTf4PUIBIvFYSASLQ5x0cKifSWTZnY1gTnwzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d56Znfdm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8pnZEJA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC171F00A3D;
-	Tue, 23 Jun 2026 07:03:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d56Znfdm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F031F00A3E;
+	Tue, 23 Jun 2026 07:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782198199;
-	bh=jcqK+z0WU+M4/VnRRVhzCiLrfeMv3l9IRn/PKLAqAzc=;
+	s=k20260515; t=1782198200;
+	bh=sAUBqAlSC2h11QcgVKxI8iZzmTOn/CSHD/JG+NdbN1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=H8pnZEJAKwb/kw6yUu1iI866BbwcJM3sK0lv/kyz1gmSxT93dkrw40vuIXfftPQvp
-	 WcenBY2nGhZ6rCfBm+xEtrKAGBZomt36jRMBZxSivPXdQ7qt4536VwVdGNhlpdjSa8
-	 JVVK98kIQfDzjjOsemfKGmilRwCiNJocxkhP4b/v6BtI53m85/6fvqF58Pjlc0Yx0e
-	 wUvvCytzBaUzgudCorVlE0jQj6dQo0DpUawEdRmIs1USurUnxJG2F3EAouMLAkLQLa
-	 gaSqtSPQNcx1dMlDpE+FlKN5VSn0fpX7Ei924rWPwKn71x2jxUZK4HuKUo3M3V9r+c
-	 lW3OFrdbWGifg==
+	b=d56Znfdm1KDM4wR9chtsU49CsJtOVkQphWOwAEcQhmP/zPNo/BXnYEbe6kmljdqvM
+	 mBwJcIEMKGtZgG8R+YcBhMPRMD0m9chZy9VOm7b2soWfil+rq6xaH13R7Uo31vOlnp
+	 yo9kXqSEw8PD3tkueOl1EJ3xYG8x4ofkN3esHmR7iv5PNhiPd1ckfYtcrlo8RVcJeb
+	 tbM2uFZd6nk/nXJVPQ+3IbgkFLi3Qoh9ss4EfK7R4DvLOq01U55RE5UuxPveHYnvRK
+	 zH0DLg5E/Kt8YeasTY43bNPPiMpIhm2YBTqa/OwiEXotl2HIGT5MaXHJVrnLoODS0x
+	 PrsjXO4VkSEIA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/4] perf kvm: Factor out kvm_need_default_arch_event()
-Date: Tue, 23 Jun 2026 00:03:10 -0700
-Message-ID: <20260623070313.55225-2-namhyung@kernel.org>
+Subject: [PATCH 2/4] perf kvm: Check kvm_need_default_arch_event() early
+Date: Tue, 23 Jun 2026 00:03:11 -0700
+Message-ID: <20260623070313.55225-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260623070313.55225-1-namhyung@kernel.org>
 References: <20260623070313.55225-1-namhyung@kernel.org>
@@ -50,212 +50,80 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The kvm_add_default_arch_event() has a similar logic in each arch to
-check if there's an existing command line option for events.  Let's
-check it in the generic code and remove the duplication.
+There's a subtle issue with option parsing in perf record.  It calls the
+function with PARSE_OPT_STOP_AT_NON_OPTION so that it can pass later
+options to the external command it runs.
+
+But perf kvm record passes the default arch events after the argv.  So
+if user calls it with command, then it passes the event to the external
+command and fails it like below:
+
+  $ sudo perf kvm --host record sleep 1
+  sleep: invalid option -- 'e'
+  Try 'sleep --help' for more information.
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.046 MB perf.data.kvm (5 samples) ]
+
+We can check if the default options are needed before passing the extra
+command line to make sure it's passed to perf record.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-kvm.c                      |  8 +++--
- .../util/kvm-stat-arch/kvm-stat-powerpc.c     | 31 +++----------------
- tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  | 29 +++--------------
- tools/perf/util/kvm-stat.c                    | 27 ++++++++++++++++
- tools/perf/util/kvm-stat.h                    |  7 +++++
- 5 files changed, 48 insertions(+), 54 deletions(-)
+ tools/perf/builtin-kvm.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 394302ebdb161077..acb1d2f8148c7c9b 100644
+index acb1d2f8148c7c9b..cec26f898bf6eaeb 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -2014,9 +2014,11 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+@@ -1995,13 +1995,14 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+ {
+ 	int rec_argc, i = 0, j, ret;
+ 	const char **rec_argv;
++	int need_arch_event = !!kvm_need_default_arch_event(argc, argv);
  
- 	BUG_ON(i + 2 != rec_argc);
+ 	/*
+ 	 * Besides the 2 more options "-o" and "filename",
+ 	 * kvm_add_default_arch_event() may add 2 extra options,
+-	 * so allocate 4 more items.
++	 * so allocate more items conditionally.
+ 	 */
+-	rec_argc = argc + 2 + 2;
++	rec_argc = argc + 2 + (2 * need_arch_event);
+ 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+ 	if (!rec_argv)
+ 		return -ENOMEM;
+@@ -2009,22 +2010,22 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+ 	rec_argv[i++] = STRDUP_FAIL_EXIT("record");
+ 	rec_argv[i++] = STRDUP_FAIL_EXIT("-o");
+ 	rec_argv[i++] = STRDUP_FAIL_EXIT(file_name);
+-	for (j = 1; j < argc; j++, i++)
+-		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
+-
+-	BUG_ON(i + 2 != rec_argc);
+-
+-	if (kvm_need_default_arch_event(argc, argv)) {
++	if (need_arch_event) {
+ 		ret = kvm_add_default_arch_event(EM_HOST, &i, rec_argv);
+ 		if (ret)
+ 			goto EXIT;
+ 	}
  
--	ret = kvm_add_default_arch_event(EM_HOST, &i, rec_argv);
--	if (ret)
--		goto EXIT;
-+	if (kvm_need_default_arch_event(argc, argv)) {
-+		ret = kvm_add_default_arch_event(EM_HOST, &i, rec_argv);
-+		if (ret)
-+			goto EXIT;
-+	}
- 
++	for (j = 1; j < argc; j++, i++)
++		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
++
++	BUG_ON(i != rec_argc);
++
  	ret = cmd_record(i, rec_argv);
  
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-index 96d9c4ae020940f0..8d4133c35c12f14b 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-@@ -9,7 +9,6 @@
- 
- #include "book3s_hv_exits.h"
- #include "book3s_hcalls.h"
--#include <subcmd/parse-options.h>
- 
- #define NR_TPS 4
- 
-@@ -177,35 +176,15 @@ int __cpu_isa_init_powerpc(struct perf_kvm_stat *kvm)
-  */
- int __kvm_add_default_arch_event_powerpc(int *argc, const char **argv)
- {
--	const char **tmp;
--	bool event = false;
--	int i, j = *argc;
-+	int j = *argc;
- 
--	const struct option event_options[] = {
--		OPT_BOOLEAN('e', "event", &event, NULL),
--		OPT_END()
--	};
--
--	tmp = calloc(j + 1, sizeof(char *));
--	if (!tmp)
-+	if (!perf_pmus__have_event("trace_imc", "trace_cycles"))
- 		return -EINVAL;
- 
--	for (i = 0; i < j; i++)
--		tmp[i] = argv[i];
--
--	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
--	if (!event) {
--		if (perf_pmus__have_event("trace_imc", "trace_cycles")) {
--			argv[j++] = strdup("-e");
--			argv[j++] = strdup("trace_imc/trace_cycles/");
--			*argc += 2;
--		} else {
--			free(tmp);
--			return -EINVAL;
--		}
--	}
-+	argv[j++] = strdup("-e");
-+	argv[j++] = strdup("trace_imc/trace_cycles/");
-+	*argc += 2;
- 
--	free(tmp);
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-index 788d216f0852147d..7bef7657a68a3e55 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-@@ -7,7 +7,6 @@
- #include "../../../arch/x86/include/uapi/asm/svm.h"
- #include "../../../arch/x86/include/uapi/asm/vmx.h"
- #include "../../../arch/x86/include/uapi/asm/kvm.h"
--#include <subcmd/parse-options.h>
- 
- define_exit_reasons_table(vmx_exit_reasons, VMX_EXIT_REASONS);
- define_exit_reasons_table(svm_exit_reasons, SVM_EXIT_REASONS);
-@@ -211,38 +210,18 @@ int __cpu_isa_init_x86(struct perf_kvm_stat *kvm, const char *cpuid)
-  */
- int __kvm_add_default_arch_event_x86(int *argc, const char **argv)
- {
--	const char **tmp;
--	bool event = false;
--	int ret = 0, i, j = *argc;
--
--	const struct option event_options[] = {
--		OPT_BOOLEAN('e', "event", &event, NULL),
--		OPT_BOOLEAN(0, "pfm-events", &event, NULL),
--		OPT_END()
--	};
-+	int ret = 0, j = *argc;
- 
- 	if (!x86__is_intel_cpu())
- 		return 0;
- 
--	tmp = calloc(j + 1, sizeof(char *));
--	if (!tmp)
--		return -ENOMEM;
--
--	for (i = 0; i < j; i++)
--		tmp[i] = argv[i];
--
--	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
--	if (!event) {
--		argv[j++] = STRDUP_FAIL_EXIT("-e");
--		argv[j++] = STRDUP_FAIL_EXIT("cycles");
--		*argc += 2;
--	}
-+	argv[j++] = STRDUP_FAIL_EXIT("-e");
-+	argv[j++] = STRDUP_FAIL_EXIT("cycles");
-+	*argc += 2;
- 
--	free(tmp);
- 	return 0;
- 
  EXIT:
--	free(tmp);
+-	for (i = 0; i < rec_argc; i++)
+-		free((void *)rec_argv[i]);
++	for (j = 0; j < i; j++)
++		free((void *)rec_argv[j]);
+ 	free(rec_argv);
  	return ret;
  }
- 
-diff --git a/tools/perf/util/kvm-stat.c b/tools/perf/util/kvm-stat.c
-index 755ab659a05c30f0..5c2d1e57672ae5dd 100644
---- a/tools/perf/util/kvm-stat.c
-+++ b/tools/perf/util/kvm-stat.c
-@@ -3,6 +3,7 @@
- #include "evsel.h"
- #include "kvm-stat.h"
- #include <dwarf-regs.h>
-+#include <subcmd/parse-options.h>
- 
- bool kvm_exit_event(struct evsel *evsel)
- {
-@@ -268,3 +269,29 @@ int kvm_add_default_arch_event(uint16_t e_machine, int *argc, const char **argv)
- 		return 0;
- 	}
- }
-+
-+bool kvm_need_default_arch_event(int argc, const char **argv)
-+{
-+	const char **tmp_argv;
-+	bool event = false;
-+	int i;
-+
-+	const struct option event_options[] = {
-+		OPT_BOOLEAN('e', "event", &event, NULL),
-+		OPT_BOOLEAN(0, "pfm-events", &event, NULL),
-+		OPT_END()
-+	};
-+
-+	/* parse_options() may change the argv, let's make a copy */
-+	tmp_argv = calloc(argc + 1, sizeof(char *));
-+	if (!tmp_argv)
-+		return false;
-+
-+	for (i = 0; i < argc; i++)
-+		tmp_argv[i] = argv[i];
-+
-+	parse_options(argc, tmp_argv, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
-+	free(tmp_argv);
-+
-+	return !event;
-+}
-diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-index cdbd921a555f4e51..111b02fd0878efc2 100644
---- a/tools/perf/util/kvm-stat.h
-+++ b/tools/perf/util/kvm-stat.h
-@@ -174,12 +174,19 @@ const char * const *__kvm_skip_events_riscv(void);
- const char * const *__kvm_skip_events_s390(void);
- const char * const *__kvm_skip_events_x86(void);
- 
-+bool kvm_need_default_arch_event(int argc, const char **argv);
- int kvm_add_default_arch_event(uint16_t e_machine, int *argc, const char **argv);
- int __kvm_add_default_arch_event_powerpc(int *argc, const char **argv);
- int __kvm_add_default_arch_event_x86(int *argc, const char **argv);
- 
- #else /* !HAVE_LIBTRACEEVENT */
- 
-+static inline bool kvm_need_default_arch_event(int argc __maybe_unused,
-+					       const char **argv __maybe_unused)
-+{
-+	return false;
-+}
-+
- static inline int kvm_add_default_arch_event(uint16_t e_machine __maybe_unused,
- 					     int *argc __maybe_unused,
- 					     const char **argv __maybe_unused)
 -- 
 2.54.0
 
