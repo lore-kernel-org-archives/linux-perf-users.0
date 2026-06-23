@@ -1,144 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CAA3AB498;
-	Tue, 23 Jun 2026 06:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD083C1419;
+	Tue, 23 Jun 2026 06:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782194779; cv=none; b=PPKnKvqsgsW3Jz/QiArl7UD/ANTbqzHjFyvrcitoxHY3/J+Y5wbD6sdTc7OmQSXkV30w7FIatEFxutsVRkaOXfZ7G1nJPjvrDPzaIiuCg3bq2uW4wFJFD7YgEDGqdbBQod9Vx9zqbQPyAbqMaTBMDReZmWpMVy0MvUSHtRwFsyM=
+	t=1782195780; cv=none; b=k6IrfPKOYVLr+e163m2T/O3FG+qDrG5r5FnmdjmUt8KQeWF4iUnVS3tPjokbcNaO9L/2BR9safQwKvcHdDzk1ohdE1j+EobV2zqLt1sSwuXRk2cggMPv3sx97160TQZtyH16hW5nltpD8OdDUeq1jBCAQ6ZaMLASJBP6e7yWtSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782194779; c=relaxed/simple;
-	bh=Mi+E53XlHsNCECOe4MYY+y5xjc7n1rZ/6tY33l4iPCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b8ipBYLMCisGF6UfRQKm5k9mtE1O3jkbqoEp9IQw+jesnUKZyXeAfoXNfAL4ms8B4MV2STHr2VR+vlkm2zmsBqIlTjcUugc0IQY8jtgjqGrthhLEcZ6mzAGolEsQM2E3iv4+A6r7gr1Wofbdu6Dv2PpdFKjOkmIxVjBG46OYkJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaJe2KfL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782195780; c=relaxed/simple;
+	bh=IVgG6NvJm9Es5+sffdVNfKWEHJiM9hV0GsV+VTlMVT8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YlF1Dgx/qwei156I9AZr4daRjP2VNQ6d+U+7ITK+eDHfGJfBmjf75k1dxaIJDyPLDHrNlpIEiPw6J7xX4flpnu5tFPHvJ4cMwYbCVn/YkFrGm2ghyxQMwMLJjFZ3uOKNrYspAwzsdx2KCFPQfAtznVmaA1Jy91CWkLnT6d3B+fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=y0IYv/MP; arc=none smtp.client-ip=113.46.200.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaJe2KfL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96881F000E9;
-	Tue, 23 Jun 2026 06:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782194774;
-	bh=P/VcoxarpCvnN8n9tYenvyX9+N8fpxhGJUjj0zwSBfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kaJe2KfLEdANVXm5OQxShn0mJZ7E3KHm3WiFTRNiS9jnp5GxnCH3ybJaX2FxAyR0S
-	 8z+JS31ChyNaMTrTJEygeNPuC9K47JvVmMBX3uaeDyhNe4N67fIjf4Mb2tRL3zeJlj
-	 CGQIe58fOF8ALiZtP468KYiu7NAzL0qFZZNwl01a6jyWXa+GlSCYnDYDVi+FWf8rg3
-	 u87xlVNyt2ReVyV0AIDPcQR9N42ysaM2s5oxgTNdtU6451MWPwgSlnq1YetjTOxSX3
-	 Es7SkYAy1iuklGPRmaY9R67xTuIjOblDeEi31Sd/2iR0ReMBbhsligAO37yzX5Bjtu
-	 3lg4KzFTD2I+Q==
-Date: Mon, 22 Jun 2026 23:06:12 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, adrian.hunter@intel.com,
-	james.clark@linaro.org, jolsa@kernel.org, leo.yan@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org, thomas.falcon@intel.com,
-	tmricht@linux.ibm.com
-Subject: Re: [PATCH v3 04/13] perf tests: Add robust record retry helper and
- use subsecond workloads
-Message-ID: <ajoiVNOuDTzGxVDM@z2>
-References: <20260616061404.41929-1-irogers@google.com>
- <20260616164819.370939-1-irogers@google.com>
- <20260616164819.370939-5-irogers@google.com>
- <ajMhklrFodxJmb2F@google.com>
- <ajPxqM3s0fGP4fFi@x1>
- <CAP-5=fVwvX01JpjJarBBYUnKwWmQ-1WKPBAj3ZDL9cwTCHvqpQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="y0IYv/MP"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=TsOIDQHLeJVoh2Y+lyI8ucBGR3XpXR4/MnAAlsDUFhw=;
+	b=y0IYv/MPx3uVD49Yhldz1WO072FSONjmt+s0FuVZgaVd/sDFf5kQbr429aXblcQcebDj/IKo7
+	g5Wg0CWrsMJBbLZJd3572bKQJheZ2Cvjw44gCMHtTqi159n34fN1anRGMggcvoBq8pyK2ToyVj7
+	olH95dxpdGwYwaouuFHHcd4=
+Received: from mail.maildlp.com (unknown [172.19.163.15])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4gkvs25T6rz1cyQ9;
+	Tue, 23 Jun 2026 14:13:42 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id EC4CF40571;
+	Tue, 23 Jun 2026 14:22:45 +0800 (CST)
+Received: from [10.67.120.170] (10.67.120.170) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 23 Jun 2026 14:22:45 +0800
+Message-ID: <a9f25a27-5f71-4d64-a42c-ef9c7ed8107b@huawei.com>
+Date: Tue, 23 Jun 2026 14:22:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf pmu: Recognize default_core as a core PMU in more
+ places
+To: Ian Rogers <irogers@google.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter
+	<adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Dapeng Mi
+	<dapeng1.mi@linux.intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, Thomas
+ Falcon <thomas.falcon@intel.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20260612012413.3253516-1-irogers@google.com>
+ <26291bce-9be4-4edc-9dc5-4c685d9811c8@huawei.com>
+ <CAP-5=fWY35hNSi8uNjX95TnDMmC3Pek9B7Yaf6Ax0ty_6ZtmCQ@mail.gmail.com>
+From: Qinxin Xia <xiaqinxin@huawei.com>
+In-Reply-To: <CAP-5=fWY35hNSi8uNjX95TnDMmC3Pek9B7Yaf6Ax0ty_6ZtmCQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVwvX01JpjJarBBYUnKwWmQ-1WKPBAj3ZDL9cwTCHvqpQ@mail.gmail.com>
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-On Mon, Jun 22, 2026 at 04:59:15PM -0700, Ian Rogers wrote:
-> On Thu, Jun 18, 2026 at 6:25 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Wed, Jun 17, 2026 at 03:37:06PM -0700, Namhyung Kim wrote:
-> > > On Tue, Jun 16, 2026 at 09:48:09AM -0700, Ian Rogers wrote:
-> > > > Introduce `perf_record_with_retry` and `perf_record_cleanup` in a shared
-> > > > library `tests/shell/lib/perf_record.sh` to prevent record test failures
-> > > > caused by transient recording or workload delays.
-> > > >
-> > > > Update `record.sh`, `record_lbr.sh`, `pipe_test.sh`, `kvm.sh`, and
-> > > > `stat_all_pfm.sh` to use this robust record retry logic. These tests now
-> > > > start with very short durations (e.g. 0.01 seconds) and scale up if the
-> > > > initial recording failed to capture samples, significantly improving test
-> > > > execution speed on success while remaining resilient to slow systems.
-> > > >
-> > > > Assisted-by: Antigravity:gemini-3.1-pro
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > [SNIP]
-> > > > @@ -60,22 +71,29 @@ test_kvm_stat() {
-> > > >  test_kvm_record_report() {
-> > > >     echo "Testing perf kvm record/report"
-> > > >
-> > > > -   echo "Recording kvm profile for pid ${qemu_pid}..."
-> > > > -   # Use --host to avoid needing guest symbols/mounts for this simple test
-> > > > -   # We just want to verify the command runs and produces data
-> > > > -   # We run in background and kill it because 'perf kvm record' appends options
-> > > > -   # after the command, which breaks 'sleep' (e.g. it gets '-e cycles').
-> > > > -   perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
-> > > > -   rec_pid=$!
-> > > > -   sleep 1
-> > > > -   kill -INT "${rec_pid}"
-> > > > -   wait "${rec_pid}" || true
-> > > > +   local duration
-> > > > +   local success=false
-> > > > +   for duration in 1 2 4 8; do
-> > > > +           echo "Recording kvm profile for pid ${qemu_pid} (duration ${duration}s)..."
-> > > > +           rm -f "${perfdata}" "${perfdata}".old
-> > > > +
-> > > > +           perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
-> > > > +           local rec_pid=$!
-> > > > +           sleep ${duration}
-> > > > +           kill -INT "${rec_pid}"
-> > > > +           wait "${rec_pid}" || true
-> > >
-> > > Can this be just like below?
-> > >
-> > >               perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" sleep ${duration}
-> >
-> > Right, looks equivalent and simpler,
-> >
-> > I was making notes to address the flakiness that is making me use the
-> > end summary of entries that fail (great feature) to run them in
-> > isolation to check if they work that way, which most do :-\
-> 
-> Here is an explanation from antigravity (sorry I have some typing
-> issues atm), but it comes down to how the command line is built up:
-> 
->   Normally, we could just write:
-> 
->     perf kvm --host record -p "qemuₚid" - o"{perfdata}" sleep
-> ${duration}
-> 
->   However, on Intel x86 architectures, if no  -e  option is supplied
-> to  perf kvm record , it calls architecture-specific setup logic (
-> __kvm_add_default_arch_event_x86() ) which automatically appends  "-e"
->  and  "cycles"  to the end of the  argv  array.
->   Because  perf record  option parsing stops at the first non-option
-> (which is  "sleep" ), any arguments appended after the workload name
-> are forwarded directly to the workload command. This turns the
-> executed command into:
-> 
->     sleep 1 -e cycles
-> 
->   Which causes  sleep  to crash with:
->    sleep: invalid option -- 'e'
-> 
-> I'll revise this in v4 to be clearer, but we should probably also fix
-> the option parsing issue.
 
-Thanks for the explanation!  I found it's in the deleted comment.
 
-Let me think about the option parsing issue.
+On 2026/6/23 01:53:52, Ian Rogers <irogers@google.com> wrote:
+> On Mon, Jun 22, 2026 at 2:11 AM Qinxin Xia<xiaqinxin@huawei.com> wrote:
+>>
+>>
+>> On 2026/6/12 09:24:13, Ian Rogers<irogers@google.com> wrote:
+>>> The python metrics code used in places like ilist.py passes a
+>>> pmu-filter of "default_core" on non-hybrid x86/ARM/.. systems. As a
+>>> PMU like "cpu" isn't a literal name match then no PMU matches
+>>> "default_core" and the events fail to parse for the metric. Fix the
+>>> name matching and PMU lookup for "default_core" and check that it
+>>> fixes ilist.py.
+>>>
+>>> Fixes: 74e2dbe7be50 ("perf tools: Add --pmu-filter option for filtering PMUs")
+>>> Signed-off-by: Ian Rogers<irogers@google.com>
+>>> ---
+>>> Note: this bug is in 7.1 but it is a little too late to send for the
+>>>         release. It should get picked up via the fixes tag.
+>>> ---
+>>>    tools/perf/util/pmu.c  | 6 +++++-
+>>>    tools/perf/util/pmus.c | 2 ++
+>>>    2 files changed, 7 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>>> index a550f030b85d..836e3b5615cd 100644
+>>> --- a/tools/perf/util/pmu.c
+>>> +++ b/tools/perf/util/pmu.c
+>>> @@ -2660,8 +2660,12 @@ bool perf_pmu__wildcard_match(const struct perf_pmu *pmu, const char *wildcard_t
+>>>                pmu->name,
+>>>                pmu->alias_name,
+>>>        };
+>>> -     bool need_fnmatch = strisglob(wildcard_to_match);
+>>> +     bool need_fnmatch;
+>>>
+>>> +     if (pmu->is_core && !strcmp(wildcard_to_match, "default_core"))
+>>> +             return true;
+>>> +
+>>> +     need_fnmatch = strisglob(wildcard_to_match);
+>>>        if (!strncmp(wildcard_to_match, "uncore_", 7))
+>>>                wildcard_to_match += 7;
+>>>
+>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+>>> index 5e3f571450fe..e0a4cb2428ca 100644
+>>> --- a/tools/perf/util/pmus.c
+>>> +++ b/tools/perf/util/pmus.c
+>>> @@ -150,6 +150,8 @@ struct perf_pmu *perf_pmus__find(const char *name)
+>>>        bool core_pmu;
+>>>        unsigned int to_read_pmus = 0;
+>>>
+>>> +     if (!strcmp(name, "default_core"))
+>>> +             return perf_pmus__find_core_pmu();
+>>>        /*
+>>>         * Once PMU is loaded it stays in the list,
+>>>         * so we keep us from multiple reading/parsing
+>> Thank you for the fix, Ian.
+>> In the previous patch, I overlooked the handling of the "default_core"
+>> alias. Also, perhaps we can leave need_fnmatch as-is, since it doesn't
+>> seem to affect anything here.
+> Thanks. I moved need_fnmatch's initialization just to save some work
+> in the "default_core" case where the value is unused. While leaving it
+> in place would reduce the diff, I think the optimization is worth it
+> as we would otherwise call strisglob when say iterating all metrics.
+> 
+Perhaps we can do it this way：
+	if (pmu->is_core && !strcmp(wildcard_to_match, "default_core"))
+              	return true;
 
+	bool need_fnmatch = strisglob(wildcard_to_match);
+> Would it be okay to supply a Reviewed-by tag? I notice this fix is
+> missing from perf-tools-next.
+> 
+Sure, add my Reviewed‑by.:-)
+
+> Thanks!
+> Ian
+> 
+>> --
+>> Thanks,
+>> Qinxin
+
+-- 
 Thanks,
-Namhyung
+Qinxin
 
