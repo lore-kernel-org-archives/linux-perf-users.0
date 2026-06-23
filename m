@@ -1,103 +1,144 @@
-Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472F83AD538
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 05:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CAA3AB498;
+	Tue, 23 Jun 2026 06:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782192960; cv=none; b=E4w6/hspU//OAvWZaj+jL5sId0UADrsoPy4q5D4e9UcKO48gVEWRXpE0j84hsreO2ucALOuRXTFRdgzFtxuQ75co5kUoRs0SHCxlVE/eLk+94IbnjkE67rvLzy6BlCdphTbT10eyulQyH6EUvhSQY1ik42LWFa64lT4yUjRoE6g=
+	t=1782194779; cv=none; b=PPKnKvqsgsW3Jz/QiArl7UD/ANTbqzHjFyvrcitoxHY3/J+Y5wbD6sdTc7OmQSXkV30w7FIatEFxutsVRkaOXfZ7G1nJPjvrDPzaIiuCg3bq2uW4wFJFD7YgEDGqdbBQod9Vx9zqbQPyAbqMaTBMDReZmWpMVy0MvUSHtRwFsyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782192960; c=relaxed/simple;
-	bh=oqhYnROVYN+uhmhEILbW47ecwDxPD69BlZJGYzTiZtM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MxyuN/HS+fCcHYSDZb/lXKH9mmyUK3Oh9rt0I7baCyrFWHBWPRm5RnkBJofBsl61ba6oosvwVt1YPSAZpZW5MTE1uityyzVf/4xyviuzmU2n01wsR+It9vR8VRbr4lAS+dDK9PBBhil1TfseLCNOn0pu4F6t3TfNV++/9R9bNDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S2XT+sGe; arc=none smtp.client-ip=74.125.82.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1782194779; c=relaxed/simple;
+	bh=Mi+E53XlHsNCECOe4MYY+y5xjc7n1rZ/6tY33l4iPCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b8ipBYLMCisGF6UfRQKm5k9mtE1O3jkbqoEp9IQw+jesnUKZyXeAfoXNfAL4ms8B4MV2STHr2VR+vlkm2zmsBqIlTjcUugc0IQY8jtgjqGrthhLEcZ6mzAGolEsQM2E3iv4+A6r7gr1Wofbdu6Dv2PpdFKjOkmIxVjBG46OYkJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaJe2KfL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S2XT+sGe"
-Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30bccca5620so7238871eec.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jun 2026 22:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782192959; x=1782797759; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOTWi2Oy80/u4HXNInRtNrjRvWfGKmddn99YBSkYc8Y=;
-        b=S2XT+sGe5jVqgy9o45hEVC0kkwwaZ1NjZSZkDQHn/C46/aarn2y4NNrJLDdhekT+rI
-         doNqcOdgMX+jpPKJB39pKLsyHgmdv2ZptvIlXab1tQ1m0qDMJ+HwBqMlMzz/4myu5mU3
-         adfRfTD2iXeZtY3SDdchHIBYaHueThP5FP+j2/VgUgO/AK9N9Z7780bZdBaUiM3ZET5P
-         4N2SCE6mwrdB5Rn2ZfasDC0HkA1wGwaaV/eT9HA+e+PSd0V1bhXVq+UzwkMvCmcOUsND
-         umtJqYGTVO/IzOIGGLCmDGuC1UleT7ZfNoqHiMtBT958WZgbHO4rgzDyi88O1Hr3tGnW
-         9S3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782192959; x=1782797759;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOTWi2Oy80/u4HXNInRtNrjRvWfGKmddn99YBSkYc8Y=;
-        b=LOopxsXxuU/W9IsuL3Vgs5ZqFv04TAQGGyFPvTfrp3cJw3EMaMj6kqwWOe4c0BZipk
-         Y9JCPZgfeEUUKkhJqVKpKwL1IfF9dTdzlY7lNsYKcMUxLiHInpoFzc/+QVWqmHoziWpq
-         TyyuDpyppWRvZbcXNMYBvz7f59n20tmO+FN1IfkImTXfg0X0TChvLm3ANf/ZmratRoEg
-         Kq1FXoQeM7FR2Dz8SGE/u3lqu/5v6MHUc6/pI7DSSO1LaFb/CIKwhluf36eK6yo3yc6V
-         OfacAOwsJYrQl4b9bhqIGLOkri7NuYd1/ieNKpw6zfjvPTLBJspL3ASpMAMZ6nS/INet
-         UqUg==
-X-Forwarded-Encrypted: i=1; AHgh+RrH0lbE24Rxn85/xAipzM76CsFp2et6KONXqPv0+/gPgxZRAsu11ImBfX6W6STdS2WkKbU1jWXA86awOWEoXHVY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDHyfS1bs2fLStUkaBh7KJCSXi3nK7E5OwdMfPLKGZ+j+WiSF7
-	7rOi2pHN66P5YDhO7dCAUwRLja18w2MH0OXG2g/PljTZpYybOnH4Hrku1w5AtS0SnHjwDJoV1Q7
-	kFF+gRLXg3Q==
-X-Received: from dycmb16-n1.prod.google.com ([2002:a05:693c:20d0:10b0:30c:c25:298b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:214b:b0:30c:544f:a861
- with SMTP id 5a478bee46e88-30c544fc9a4mr3008236eec.20.1782192958272; Mon, 22
- Jun 2026 22:35:58 -0700 (PDT)
-Date: Mon, 22 Jun 2026 22:35:15 -0700
-In-Reply-To: <20260623053515.2677888-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaJe2KfL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96881F000E9;
+	Tue, 23 Jun 2026 06:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782194774;
+	bh=P/VcoxarpCvnN8n9tYenvyX9+N8fpxhGJUjj0zwSBfs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=kaJe2KfLEdANVXm5OQxShn0mJZ7E3KHm3WiFTRNiS9jnp5GxnCH3ybJaX2FxAyR0S
+	 8z+JS31ChyNaMTrTJEygeNPuC9K47JvVmMBX3uaeDyhNe4N67fIjf4Mb2tRL3zeJlj
+	 CGQIe58fOF8ALiZtP468KYiu7NAzL0qFZZNwl01a6jyWXa+GlSCYnDYDVi+FWf8rg3
+	 u87xlVNyt2ReVyV0AIDPcQR9N42ysaM2s5oxgTNdtU6451MWPwgSlnq1YetjTOxSX3
+	 Es7SkYAy1iuklGPRmaY9R67xTuIjOblDeEi31Sd/2iR0ReMBbhsligAO37yzX5Bjtu
+	 3lg4KzFTD2I+Q==
+Date: Mon, 22 Jun 2026 23:06:12 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, adrian.hunter@intel.com,
+	james.clark@linaro.org, jolsa@kernel.org, leo.yan@arm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org, thomas.falcon@intel.com,
+	tmricht@linux.ibm.com
+Subject: Re: [PATCH v3 04/13] perf tests: Add robust record retry helper and
+ use subsecond workloads
+Message-ID: <ajoiVNOuDTzGxVDM@z2>
+References: <20260616061404.41929-1-irogers@google.com>
+ <20260616164819.370939-1-irogers@google.com>
+ <20260616164819.370939-5-irogers@google.com>
+ <ajMhklrFodxJmb2F@google.com>
+ <ajPxqM3s0fGP4fFi@x1>
+ <CAP-5=fVwvX01JpjJarBBYUnKwWmQ-1WKPBAj3ZDL9cwTCHvqpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260623053515.2677888-1-irogers@google.com>
-X-Mailer: git-send-email 2.55.0.rc0.786.g65d90a0328-goog
-Message-ID: <20260623053515.2677888-14-irogers@google.com>
-Subject: [PATCH v1 13/13] perf python: Fix MetricGroup return type in perf.pyi
-From: Ian Rogers <irogers@google.com>
-To: acme@kernel.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com, 
-	Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVwvX01JpjJarBBYUnKwWmQ-1WKPBAj3ZDL9cwTCHvqpQ@mail.gmail.com>
 
-The metrics() function can return a dictionary where the value is either
-a string or a list of strings, so the type signature in the stub file
-should be Union[str, List[str]].
+On Mon, Jun 22, 2026 at 04:59:15PM -0700, Ian Rogers wrote:
+> On Thu, Jun 18, 2026 at 6:25 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Wed, Jun 17, 2026 at 03:37:06PM -0700, Namhyung Kim wrote:
+> > > On Tue, Jun 16, 2026 at 09:48:09AM -0700, Ian Rogers wrote:
+> > > > Introduce `perf_record_with_retry` and `perf_record_cleanup` in a shared
+> > > > library `tests/shell/lib/perf_record.sh` to prevent record test failures
+> > > > caused by transient recording or workload delays.
+> > > >
+> > > > Update `record.sh`, `record_lbr.sh`, `pipe_test.sh`, `kvm.sh`, and
+> > > > `stat_all_pfm.sh` to use this robust record retry logic. These tests now
+> > > > start with very short durations (e.g. 0.01 seconds) and scale up if the
+> > > > initial recording failed to capture samples, significantly improving test
+> > > > execution speed on success while remaining resilient to slow systems.
+> > > >
+> > > > Assisted-by: Antigravity:gemini-3.1-pro
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > [SNIP]
+> > > > @@ -60,22 +71,29 @@ test_kvm_stat() {
+> > > >  test_kvm_record_report() {
+> > > >     echo "Testing perf kvm record/report"
+> > > >
+> > > > -   echo "Recording kvm profile for pid ${qemu_pid}..."
+> > > > -   # Use --host to avoid needing guest symbols/mounts for this simple test
+> > > > -   # We just want to verify the command runs and produces data
+> > > > -   # We run in background and kill it because 'perf kvm record' appends options
+> > > > -   # after the command, which breaks 'sleep' (e.g. it gets '-e cycles').
+> > > > -   perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
+> > > > -   rec_pid=$!
+> > > > -   sleep 1
+> > > > -   kill -INT "${rec_pid}"
+> > > > -   wait "${rec_pid}" || true
+> > > > +   local duration
+> > > > +   local success=false
+> > > > +   for duration in 1 2 4 8; do
+> > > > +           echo "Recording kvm profile for pid ${qemu_pid} (duration ${duration}s)..."
+> > > > +           rm -f "${perfdata}" "${perfdata}".old
+> > > > +
+> > > > +           perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" &
+> > > > +           local rec_pid=$!
+> > > > +           sleep ${duration}
+> > > > +           kill -INT "${rec_pid}"
+> > > > +           wait "${rec_pid}" || true
+> > >
+> > > Can this be just like below?
+> > >
+> > >               perf kvm --host record -p "${qemu_pid}" -o "${perfdata}" sleep ${duration}
+> >
+> > Right, looks equivalent and simpler,
+> >
+> > I was making notes to address the flakiness that is making me use the
+> > end summary of entries that fail (great feature) to run them in
+> > isolation to check if they work that way, which most do :-\
+> 
+> Here is an explanation from antigravity (sorry I have some typing
+> issues atm), but it comes down to how the command line is built up:
+> 
+>   Normally, we could just write:
+> 
+>     perf kvm --host record -p "qemuₚid" - o"{perfdata}" sleep
+> ${duration}
+> 
+>   However, on Intel x86 architectures, if no  -e  option is supplied
+> to  perf kvm record , it calls architecture-specific setup logic (
+> __kvm_add_default_arch_event_x86() ) which automatically appends  "-e"
+>  and  "cycles"  to the end of the  argv  array.
+>   Because  perf record  option parsing stops at the first non-option
+> (which is  "sleep" ), any arguments appended after the workload name
+> are forwarded directly to the workload command. This turns the
+> executed command into:
+> 
+>     sleep 1 -e cycles
+> 
+>   Which causes  sleep  to crash with:
+>    sleep: invalid option -- 'e'
+> 
+> I'll revise this in v4 to be clearer, but we should probably also fix
+> the option parsing issue.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/python/perf.pyi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks for the explanation!  I found it's in the deleted comment.
 
-diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
-index f266c9baffd0..58b0b3ed819d 100644
---- a/tools/perf/python/perf.pyi
-+++ b/tools/perf/python/perf.pyi
-@@ -1,5 +1,5 @@
- """Type stubs for the perf Python module."""
--from typing import Callable, Dict, List, Optional, Any, Iterator
-+from typing import Callable, Dict, List, Optional, Any, Iterator, Union
- 
- def config_get(name: str) -> Optional[str]:
-     """Get a configuration value from perf config.
-@@ -12,7 +12,7 @@ def config_get(name: str) -> Optional[str]:
-     """
-     ...
- 
--def metrics() -> List[Dict[str, str]]:
-+def metrics() -> List[Dict[str, Union[str, List[str]]]]:
-     """Get a list of available metrics.
- 
-     Returns:
--- 
-2.55.0.rc0.786.g65d90a0328-goog
+Let me think about the option parsing issue.
+
+Thanks,
+Namhyung
 
