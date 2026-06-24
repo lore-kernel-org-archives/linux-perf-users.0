@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46979350D74;
-	Wed, 24 Jun 2026 19:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAE01A9FB0;
+	Wed, 24 Jun 2026 19:58:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782330877; cv=none; b=MqSK04Zt1sbcigOH2QJLc2b4M9IRMrIG8iwiPZkM3qsbSbqOmwMKGLyvdlffEzfxGRhTfUNI7Li1CXw9uIURf5yTLDw6AIkqu0s865o5DSVww6KI80/xTsVYx9QYULUErG0EGU2+VAPKLAtlLuZWsgSyGLL03ENh3QCCKCOsMtE=
+	t=1782331125; cv=none; b=e+Buw2IGgUvuZ8iKbtcOeFDscm/5e9xz6t5lTI6tN0xm56BnhFC23mVQpEYbs7fkJEq3Tn51QAsk1eURaLQc96vMlwPakkqViVgTkjwSw1M8B1EDS7YuQb2fIkLPuZDOf32lPS90tqbKmDDx0Y3S7c6ixhjliHCkgpLc5Wjh7ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782330877; c=relaxed/simple;
-	bh=rQA2bVRDUoq5updBuj5BPOpEGdkrSd0MTk5fOIC5tcs=;
+	s=arc-20240116; t=1782331125; c=relaxed/simple;
+	bh=SpLSv/jLHAx1s3HSo1akAK5trq8/6Up1BA+b/MtPJKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g8aivgLn1P/PKUFn0vRrIVTDi5mUPbP6tKmMtyObm2EQ9CzXPDQ+uCN5qLDCpfKi2cOsg7LqISoHErhfy047Z6PH1TLWtwOtc+1mw8WD8ooCFsD9AkPxFLlZVH+VuOEakQtJmdpWz7eH1S0jAoP1y37ykcymc2Yh1p3A0UchC7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKsnhegv; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=ThIrV3e9jy1XlfFCGtcxt5irSN2hcTyvWrG0DRcw+jDPMSvcm2xEDnRTpMukoTdzuCDRLUscJzYbEXYCzE674H+W+SORlWCFPVwZqgP85ltNTy6AGrX1AmDpBBxLsqoNPTHuU2Fmc1dJQN9d3LY8SCXh7iop/0YM7bKxTFvk0bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ao72++ii; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKsnhegv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BECDB1F000E9;
-	Wed, 24 Jun 2026 19:54:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ao72++ii"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1AF1F000E9;
+	Wed, 24 Jun 2026 19:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782330875;
-	bh=l52T1hPqpsabcP9Ij/Sys/hFGIxfnjOY+cKaKZ5TXVE=;
+	s=k20260515; t=1782331123;
+	bh=Ea3HIUVto5uwz2Q2ZR8R/Q6C7MwhYo1rdMh3Z+B5Zow=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=AKsnhegvjnyfZU3OQbnuysBi+koDN1Nuq2c5zlD8zb1C4FFnWvvzv49edfKlMGKv7
-	 yuVNxf3Qc0/ooNYqKP02LVJk5GlG7pMmRigXXXtj/C8pe6GbQqp13BCl2c15bOs+hb
-	 lBQdhoeSvm6R1Yk8S2/yM9KqHDEh3ObCp8tH7F+cODGaCbRggItVaJS6qu2jgTjoR5
-	 kIhhLxsPaDds8zsp8pbIXKx4JtKx0FTinyjgooUoJb5ELwIudmzHxPE/oQb7geQydn
-	 9aPN86mA981Itj7JAdeauCzsKH3pFXfrWpFLr4nepA+CFHiElJTs2REuUuDctDBCNI
-	 LdxiRMBojd/EA==
-Date: Wed, 24 Jun 2026 12:54:34 -0700
+	b=Ao72++iiPoFqzJl2YBsSYZPh4n4xYyvUTnNNajCu1hcd6VeiYmJijo77sns55UflP
+	 NA8N08hF0H6bhwqDP5WTDg9sz8tarvMFAvc44L4tSqSDk2597ikCgRgUost2aQ5EuX
+	 RJ9oC+Pk2tojI6Mv/PuwNDVTUATo1AF9E1pIyB6eXf8S062mrsmBghZiFbqz73T5f4
+	 0vv4BICnJ1iJ90boPuH3mp0gGONcbnX0TgfLF40SDaqSaXVQlEb6iHCc2oaJgxWIpa
+	 rNlITbjYWM5xWsGZjxa7oX0tWJXs4CxYQSt6ViNAR2XapvEAMulGStLUKkotZGC3xf
+	 ksgLCYQ6z/eFw==
+Date: Wed, 24 Jun 2026 12:58:42 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Tanushree Shah <tshah@linux.ibm.com>
-Cc: sashiko@lists.linux.dev, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf dso: Fix kallsyms DSO detection with fallback
- logic
-Message-ID: <ajw1-ivLfQo3psZa@google.com>
-References: <20260416091657.578429-2-tshah@linux.ibm.com>
- <20260416110905.3A68AC2BCAF@smtp.kernel.org>
- <714f2022-879e-4f6a-9b1c-cce06be6db65@linux.ibm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Michael Jeanson <mjeanson@efficios.com>,
+	Dmitrii Dolgov <9erthalion6@gmail.com>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>,
+	Yuzhuo Jing <yuzhuo@google.com>, Leo Yan <leo.yan@arm.com>,
+	German Gomez <german.gomez@arm.com>,
+	Anubhav Shelat <ashelat@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v1 0/3] perf pmu: Add tool-provided NVMe PMU
+Message-ID: <ajw28nITeOgtH0GF@google.com>
+References: <20260609070348.541964-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,78 +53,73 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <714f2022-879e-4f6a-9b1c-cce06be6db65@linux.ibm.com>
+In-Reply-To: <20260609070348.541964-1-irogers@google.com>
 
-On Thu, Jun 11, 2026 at 06:04:23PM +0530, Tanushree Shah wrote:
+On Tue, Jun 09, 2026 at 12:03:45AM -0700, Ian Rogers wrote:
+> This patch series introduces a tool-provided PMU for NVMe devices to expose
+> various hardware logs as perf events.
 > 
+> Using libnvme, the new nvme_pmu extracts metrics from standard NVMe log pages
+> including:
+> - SMART / Health Information (e.g. data units read/written, power cycles,
+>   temperature)
+> - Endurance Group Information
+> - FDP (Flexible Data Placement) Statistics
+> - Error Information
+> - Zoned Namespaces (ZNS) Changed Zones
 > 
-> On 16/04/26 16:39, sashiko-bot@kernel.org wrote:
-> > Sashiko AI review found 2 potential issue(s):
-> > - [High] Path Traversal and Information Disclosure due to `strncmp` matching any prefix.
-> > - [Medium] Incomplete fix: Fallback logic is missing from `dso__is_kcore()` and `dso__is_vmlinux()`.
-> > --
-> > 
-> > commit 9ee80283f13c6a0a5235a2add7a94736c1dfcbba
-> > Author: Tanushree Shah <tshah@linux.ibm.com>
-> > 
-> > perf dso: Fix kallsyms DSO detection with fallback logic
-> > 
-> > This commit fixes an issue where kallsyms DSOs are not correctly identified
-> > during build-id injection because the dso_binary_type is not yet set. It
-> > adds a fallback string matching check against the DSO's long_name.
-> > 
-> > > diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> > > index ede691e9a2495..515ab6e95b0e4 100644
-> > > --- a/tools/perf/util/dso.h
-> > > +++ b/tools/perf/util/dso.h
-> > 
-> > [ ... ]
-> > 
-> > > @@ -915,6 +917,14 @@ static inline bool dso__is_kallsyms(const struct dso *dso)
-> > >   {
-> > >   	enum dso_binary_type bt = dso__binary_type(dso);
-> > > +	if (bt == DSO_BINARY_TYPE__NOT_FOUND) {
-> > 
-> > Since the fallback logic was added here because dso_binary_type(dso) is
-> > DSO_BINARY_TYPE__NOT_FOUND during perf record and inject, do dso__is_kcore()
-> > and dso__is_vmlinux() require a similar fallback?
-> > 
-> > Looking at dso__cache_build_id(), it relies on dso__is_kcore() to flag the
-> > DSO for special caching logic. If dso__is_kcore() returns false during
-> > build-id caching, kcore DSOs are treated as regular files, which causes
-> > nsinfo__realpath() to fail and breaks perf archive for kcore sessions.
-> > 
-> > > +		return RC_CHK_ACCESS(dso)->kernel &&
-> > > +			((strncmp(RC_CHK_ACCESS(dso)->long_name, DSO__NAME_KALLSYMS,
-> > > +				strlen(DSO__NAME_KALLSYMS)) == 0) ||
-> > 
-> > Does using strncmp() here allow a path traversal if long_name is
-> > intentionally crafted?
-> > 
-> > If a malicious perf.data file contains an MMAP event with a filename like
-> > "[kernel.kallsyms]/../../../../tmp/leak", this prefix check evaluates
-> > to true.
-> > 
-> > Could this allow build_id_cache__cachedir() to construct a cache directory
-> > using this malicious path, causing build_id_cache__add() to unconditionally
-> > copy the host's /proc/kallsyms into an attacker-controlled directory?
-> 
-> Hello,
-> The current code relies on dso_binary_type to check if its a kallsyms dso.
-> While running perf archive, the code calls dso__is_kallsyms check to create
-> a build-id dir. But till that time, dso_binary_type is not getting set yet.
-> Hence, this patch introduced usage of dso->long_name to check if it is
-> kallsyms. But based on the above review from Sashiko, it seems that this may
-> create a security concern.
-> 
-> I tried to check for the possibility to set the dso binary type before
-> dso__is_kallsyms gets called. But, I found that dso binary type is getting
-> set based on dso__is_kallsyms only.
-> 
-> So, I am looking for suggestions/approach that we can take here.
+> Key features:
+> - Dynamic probing of supported log pages on /dev/nvmeX. Unsupported events
+>   are marked as deprecated and hidden from `perf list` by default.
+> - Generic configuration encoding where the log type, size, and offset are
+>   encoded directly into the event configuration.
+> - Correct interval delta tracking using baseline offset snapshots. This mimics
+>   the behavior of the hwmon PMU, allowing gauges like Temperature to be
+>   reported instantaneously in `perf stat -I`, while standard counters
+>   correctly accumulate deltas.
+> - Robust handling of cross-architecture endianness when reading 128-bit and
+>   64-bit fields from the NVMe specification.
 
-Can we simply check with strcmp() for the whole string?
+Can you please show actual output so that we can understand what you're
+doing?
 
 Thanks,
 Namhyung
 
+> 
+> The series is broken down into:
+> 1. Adding the libnvme feature detection via pkg-config in tools/build.
+> 2. The core implementation of the NVMe tool PMU.
+> 3. A unit test suite verifying the parsing and encoding of the NVMe PMU
+>    events using a mocked device.
+> 
+> Ian Rogers (3):
+>   perf build: Add libnvme feature detection
+>   perf pmu: Implement tool-provided NVMe PMU
+>   perf tests: Add NVMe PMU event parsing test
+> 
+>  tools/build/Makefile.feature       |   2 +
+>  tools/build/feature/Makefile       |   3 +
+>  tools/build/feature/test-libnvme.c |  11 +
+>  tools/perf/Makefile.config         |  12 +
+>  tools/perf/tests/Build             |   1 +
+>  tools/perf/tests/builtin-test.c    |   1 +
+>  tools/perf/tests/nvme_pmu.c        | 176 ++++++++++
+>  tools/perf/tests/tests.h           |   1 +
+>  tools/perf/util/Build              |   1 +
+>  tools/perf/util/evsel.c            |  11 +-
+>  tools/perf/util/nvme_pmu.c         | 535 +++++++++++++++++++++++++++++
+>  tools/perf/util/nvme_pmu.h         | 143 ++++++++
+>  tools/perf/util/pmu.c              |  15 +
+>  tools/perf/util/pmu.h              |   8 +-
+>  tools/perf/util/pmus.c             |  31 +-
+>  tools/perf/util/pmus.h             |   1 +
+>  16 files changed, 945 insertions(+), 7 deletions(-)
+>  create mode 100644 tools/build/feature/test-libnvme.c
+>  create mode 100644 tools/perf/tests/nvme_pmu.c
+>  create mode 100644 tools/perf/util/nvme_pmu.c
+>  create mode 100644 tools/perf/util/nvme_pmu.h
+> 
+> -- 
+> 2.54.0.1064.gd145956f57-goog
+> 
