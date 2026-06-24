@@ -1,148 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98283E1682
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 20:26:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F5E21638D;
+	Wed, 24 Jun 2026 20:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782332783; cv=none; b=ULuTTFSPC5QLU63u1KCcNasFoRKx9qScOMGmWop5wMqRXQQSBSL8yvIRipt7zzW/hNfTI0ZDcSVTdTA2yJRL1KP37/q50AxJOBs0KnmLxD5tSQU8sEuzxg2eMWnImVk37q+AR338qXJMUdYYvwTTEqUQt9dylSHP7RdXD3ZYqEQ=
+	t=1782334734; cv=none; b=APhQGHhGxZYsxL6PwR4kbRfbCBPHfcOVMJROCblhUlK08j6A/Dgtm5H/fUoNwAr7cN0dyMTTKiDvlJEMw7hKj7u0jPSndCpXxhz6kJahdwkBeznKJScDOilWGoBAr1VrAMq6YCwSAydXsOTJBBsb9/FKyowilcBw/xTXPZvv9A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782332783; c=relaxed/simple;
-	bh=Zp5rLvdnw0Wcu14pBMZ2CZwppuE3wGhUBhu6LbFOlJ0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=aMQtre8yKkVw8lU1c2zVoS7JFCigen4V2ayHEnpjEiR8qK/Uit1ymGhc805W1+pOqOAOY3EYL5N6npDvR85E8j1PRbFeTB9e1iytIOVC8B1b2M/M7FRl7D/Y65QvQEDFqpYxU61LpmHe2VEhWUT7KfytPGjcgf1rBzlIhnjZcWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZdLg7kg; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782334734; c=relaxed/simple;
+	bh=wzVdNEgHHuQ8O2Uo4dpPAMN7mZUj9GuHCz/g/KLqpcY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=liqErdVXp9E3k9+V4poWx8dTWkrpfkorMm6GkoeZYqRcZF2wfaBQc3gce/JNqNBCdWFOWYgSO8XKoTAPAukFSUdFfFWic9ySuHJKSN08hTClQiZegHwT+p509Zp2U9ouhhrftmtt3ltRS/EgOI6jEbJcj9xI5OWr9tIMl7LrOq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXtywF++; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZdLg7kg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3301F000E9;
-	Wed, 24 Jun 2026 20:26:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXtywF++"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03251F000E9;
+	Wed, 24 Jun 2026 20:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782332780;
-	bh=qRrcEkn2OPkjIZTomLtOGevxpucKpmcDAFXBRQPiOjE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FZdLg7kgGullspxCNKfjJ5ma8eIHtTJQCoiseHmRDpfrhaOi3VCrPmNDfcFmjeCIv
-	 qhvHE/vU4F4si8NQk/2EEgA6Wc02sLwTtBdC3MSBhOtPWxx0GXQk/Y97vSCSrAL3p3
-	 mi+D2ndmQl4HcW23rJmRmsjM6ty7bwbewSmBiWCob3S82RfUviKja7IY9QMjNxm5ws
-	 yCtxxwPM9H6Pzahje7+fKVQRp/niK8W7N7YbBIygs8F29p/yVZLdyMo8HOuSe0pMEB
-	 pZuz/FOzJkPVq7Q+/4IBKsTxNzD1e80Lh0OLEJo7sXGsTZI0z/oJuGHlODeosFWMTT
-	 qysG0cTtzpCIQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf symbols: ignore livepatch symbols
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Joe Lawrence" <joe.lawrence@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260624201254.472576-1-joe.lawrence@redhat.com>
-References: <20260624201254.472576-1-joe.lawrence@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 24 Jun 2026 20:26:19 +0000
-Message-Id: <20260624202620.2C3301F000E9@smtp.kernel.org>
+	s=k20260515; t=1782334733;
+	bh=kmEUdIYMMXphddrS0rAdNquY3vJ8sEBXzbtsIsDP+/M=;
+	h=From:To:Cc:Subject:Date;
+	b=JXtywF++ATvwcLLoAgG1va+NfxHkp546Oo1cA8/KG/JhH8AxgskpEhjJfMa2In8XF
+	 oKb0eqpbzSR9lq7aUx7NhIMWpqBRqNwrm9oZ5yCxqg6u7MlAS35+ewVPmlmD/yjLDF
+	 FNHBgOwwI5DPAiXhjwTSY+QfZlwyrvzKy7jZsXwyBM9K5xaRUEC0/KoanqNBfVUHjA
+	 2JgwszdOElHXrW0x3sTBuzyz4SarVYpyezJHmvfREjMk8izbjS+nUJR8Q3HbP/abrG
+	 IgcFkSOx5lCHTaUm0VW2M5AXF4cYH7z4l39gu7UYkDmicuC+SOFLp/1E9TJmLircw7
+	 wNDcaAforNLVw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 0/8] perf timechart: Fix memory leaks
+Date: Wed, 24 Jun 2026 13:58:26 -0700
+Message-ID: <20260624205852.3864874-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+Hello,
 
-Pre-existing issues:
-- [Critical] Out-of-bounds write of a null terminator in kallsyms__parse() =
-stack array.
-- [High] Livepatch symbols (.klp.sym.*) corrupt module boundaries in kcore_=
-copy, leading to silently omitted module memory and bogus mappings.
---
+This patchset fixes memory leaks in the perf timechart code.
+I've extended and verified the timechart test with ASAN.
 
-commit 2ebd0b4f62f44ca82022b5aeb4aaa75ac016e938
-Author: Joe Lawrence <joe.lawrence@redhat.com>
+I'm sending it with my previous work on backtrace optimization.
 
-    perf symbols: ignore livepatch symbols
-   =20
-    Livepatch modules contain special symbols (prefixed by ".klp.sym.") that
-    act as relocation placeholders. Once resolved, they point to the same
-    addresses as the original kernel symbols they reference. These special
-    symbols confuse the 'vmlinux symtab matches kallsyms' perf test as
-    kallsyms may report multiple symbols sharing a single kernel address.
-   =20
-    Link: https://docs.kernel.org/livepatch/module-elf-format.html#livepatc=
-h-symbols [1]
+v3)
+ * combine small optimization series
 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index fcaeeddbbb6b9..eeaed3f5cf50d 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -774,6 +774,10 @@ static int map__process_kallsym_symbol(void *arg, co=
-nst char *name,
->  	if (name[0] =3D=3D '$')
->  		return 0;
-> =20
-> +	/* Ignore livepatch symbols */
-> +	if (strstarts(name, ".klp.sym."))
-> +		return 0;
-> +
+v2)
+ * use zfree() and explicit clear for potential misuse  (Arnaldo)
+ * fix a wrong condition in the draw_wakeups()  (Sashiko)
+ * move misplaced hunk in the second commit to the first
 
-[Severity: High]
-This isn't a bug introduced by this patch, but does kcore_copy__process_kal=
-lsyms()
-need a similar filter for livepatch symbols?
-
-Livepatch symbols contain a module name bracket (e.g., "[kpatch...]") but
-their address points to the core kernel space. In symbol-elf.c, this appears
-to trick the module boundary tracking:
-
-tools/perf/util/symbol-elf.c:kcore_copy__process_kallsyms() {
-    ...
-	if (strchr(name, '[')) {
-		if (!kci->first_module_symbol || start < kci->first_module_symbol)
-			kci->first_module_symbol =3D start;
-		if (start > kci->last_module_symbol)
-			kci->last_module_symbol =3D start;
-		return 0;
-	}
-    ...
-}
-
-Because the livepatch symbol address is in the core kernel range, does this
-incorrectly lower kci->first_module_symbol to the core kernel address space
-instead of the module vmalloc space, omitting module memory and creating a
-bogus mapping?
+Thanks,
+Namhyung
 
 
-[Severity: Critical]
-This is a pre-existing issue, but while reviewing the kallsyms parsing I
-noticed a potential out-of-bounds write when reading symbol names:
+Namhyung Kim (8):
+  perf timechart: Don't pass @event to cat_backtrace()
+  perf timechart: Generate backtrace only if needed
+  perf timechart: Remove unused backtrace in trace_handler
+  perf timechart: Remove unnecessary copy of backtrace
+  perf timechart: Release event samples at the end
+  perf timechart: Fix memory leaks during record
+  perf timechart: Fix memory leaks in draw_wakeups()
+  perf test: Update perf timechart test
 
-tools/lib/symbol/kallsyms.c:kallsyms__parse() {
-    ...
-		char symbol_name[KSYM_NAME_LEN + 1];
+ tools/perf/builtin-timechart.c      | 212 +++++++++++++++++++---------
+ tools/perf/tests/shell/timechart.sh |  24 ++--
+ 2 files changed, 158 insertions(+), 78 deletions(-)
 
-		[ ... ]
+-- 
+2.55.0.rc0.799.gd6f94ed593-goog
 
-		for (i =3D 0; i < sizeof(symbol_name); i++) {
-			ch =3D io__get_char(&io);
-			if (ch < 0 || ch =3D=3D '\n')
-				break;
-			symbol_name[i]  =3D ch;
-		}
-		symbol_name[i]  =3D '\0';
-    ...
-}
-
-If a symbol name in kallsyms is longer than KSYM_NAME_LEN characters and
-doesn't have a newline or EOF, the loop increments i up to sizeof(symbol_na=
-me)
-(which is KSYM_NAME_LEN + 1). When the loop terminates without breaking, it
-writes '\0' at symbol_name[sizeof(symbol_name)], which is one byte past the
-end of the array.
-
-Can this corrupt the stack if an untrusted user provides a crafted --kallsy=
-ms
-file to perf?
-
->  	/*
->  	 * module symbols are not sorted so we add all
->  	 * symbols, setting length to 0, and rely on
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260624201254.4725=
-76-1-joe.lawrence@redhat.com?part=3D1
