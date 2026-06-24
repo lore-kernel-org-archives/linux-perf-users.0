@@ -1,54 +1,54 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
+Received: from mail-dy1-f202.google.com (mail-dy1-f202.google.com [74.125.82.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA1F319617
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D84330AD0B
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782278162; cv=none; b=OMGFcBhJBHCKa0iZtoGZasJEhk4jwyzKMCAvRqxsfzwBgFRfa9EukMAzl3xPKaqk2jPzqFZUTEkoIZtM5tNvD67c7IGl8Oou6V0f3TnC7bSVrq8I6vXG7rsNJxSMRnKb5ABgbu7AIlWrI1Tx8qRjCeHbtCyCGc/aIagMhyqcTBM=
+	t=1782278168; cv=none; b=KSvFPmT3XhnDUYY3a0dxw66ErfwVvQTpQCI/iR0J9W/6COZoVmrQAA50U7N2JzwF0aHh6WO5PjU5SQLLvgaLUQmnF2oyh9KwEDX6Dqavn6JeSmW+sIlQmB/L8pnSZFUB4Ig2j77u3JM5YPjTNdYziukhHh0FdQXe0DbRoc0l9s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782278162; c=relaxed/simple;
-	bh=UOPyw+KH82bKmrT2wWo9qGlEDVIgKSYCQGuMNkhlRvw=;
+	s=arc-20240116; t=1782278168; c=relaxed/simple;
+	bh=U41WycCXJkj4twqrVFPf6ahvLkQuMOIOUkjLVn9c6ZM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GujSfBCKfNfqptYSdV78P7iHcDhSlZeBWV86PWYkekVgc+cPVgymsuRccBOcHGQgiGH5JOrVPi+VsR2uX3aVY4ISDbzd+yzpjgf1/ikmukC5bGNCV3HhjYo/aqEPyojGutr2pE1FULiGhiL7ByPI0EMYJOILKHDQ0B6Aqi0gFew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hU+nbVll; arc=none smtp.client-ip=74.125.82.74
+	 To:Cc:Content-Type; b=EvJ7wC1rfQ/TgNTSTk8Vk8VT8MCC0AIGqVxlymFnNPKFKnWAJlAPWa4mhCeMslU8mvkRokQzrV44R8U6ej+boLbozU/PrFnMvsRiXeUSHhtXjQbxykNEwFVk8BXp1vS5bwSROLurOaGkhRg3m4Gp3NCyu7qyk/OqptWMaE0s4Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SF12lLbV; arc=none smtp.client-ip=74.125.82.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hU+nbVll"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-1383723dfddso1390033c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:16:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SF12lLbV"
+Received: by mail-dy1-f202.google.com with SMTP id 5a478bee46e88-30c1f6c5559so681317eec.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:16:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782278161; x=1782882961; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782278166; x=1782882966; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6IRXsGh6mE2mlJalCaM/DVcdrY6wWm8wNEi8wIAtoCA=;
-        b=hU+nbVllhdUfY/THHOUAu0nTkceclfDhkke+y79iWurnQtCRNqozgcOGGltjtezu+b
-         0JG4JqgwKx7StGrYkvdR8EvTHFEjgmuimkqk7AqP7yCm93rtghUYJlPB49qUYCf5/tAq
-         e2NtOoKD9Alti0kiAFqusPriJve8Wk2Vr4mSPXHAxAwfLbISUHbKfEfUlLRJ91FWYYAF
-         lNCn46WYzUkNgCW4aN2rfNkt8Wj5SNtNHYZyjQpKK70Rs3ivIKsjO13Tu5RwOuoex002
-         5pdlAKB3i3i9dGWNvLgkWlY5idac2QZlSp3VHcefTO3ny3njiNChoPZVRQdyMTs0Btwt
-         Q4sA==
+        bh=LNRhUfPfnFHw5PlWbwx2PQPSrRiKBvtXr39D6eDjMi4=;
+        b=SF12lLbVtllrZ+V9X4xd8BOtrRvgC5VpP+wO4WBadWrx1XAumueKKCGZ3huBrMZjGd
+         tNTKiuD/WSgMcqt2ff9fQ99uA3rCNwstTeA9R3eMHvJcPZITPbpLUGy2s12/fGvvH+Ut
+         MuQRy8PM6NgQrfYr6xJk3IMlYvnsR2ZL8l42KjC9T7XbFaMbTuCs8GyOk2TsdsgLUK72
+         G/ZPjnujjQWX7CZjzlAQDmWg91Q53VRuH1i7ndisH8IRjuiQVmq4tiMzAV3Z7Yipp3mb
+         2Ato7uwy56RJELuu38Rhl2zpWgGQ+WF8gT+PNTmLX/bVTrVBqIdECiRroVdGRTNRun5s
+         GTXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782278161; x=1782882961;
+        d=1e100.net; s=20251104; t=1782278166; x=1782882966;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6IRXsGh6mE2mlJalCaM/DVcdrY6wWm8wNEi8wIAtoCA=;
-        b=GbhR168/TfWBHZ7SZwAaBH4fnHg2clH59kBTluKtmEde7Rzn3quSbMLA9nvsHRoQAn
-         q9Yj+rc8Gg9hpR0uLaLgtSPFTE7i5dN2RVD1IcPhRClhny2GsiFLz+7G9Nj8AdTPGgJG
-         Yu2jdzE8Lcbx7Le/lqb+037fYqmMN58RQ0RfX+qWHIf/CfOv9WVwvR0RlG8vdvAIb3e+
-         xr/Dl4lTwi79iy9dV0Lg6r8MN159x5dm+tauFXzjdrqo6OSD+vMGYkxLO2pzPd33OqF3
-         QcptEvnp2VBJ4jNHZLdfY10pFNjxmmJtJGWHByBZV2hiP6vpC2K9cJRl0Wi9KfwZJYWg
-         K1oA==
-X-Forwarded-Encrypted: i=1; AFNElJ+hXoAZW9rnJxrpVyKdnaVl4tqmLwEVGd6JAL7fjchIkuSB4nE+oXQqaJK8NFxwqUSImONscC7epq1Kz9rbsg7C@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWIgFGQSacQB0JpXJY+m8U8pfSyMf8qYPJqA4FB2DS/GRSBqgS
-	qcuP65i46wtuLm+ALHwe+LKwxAfg6J61enwCm1zv2gVUYJGNbCDPJ5qK/D3BjgN9r1gI3Nm/7nl
-	xXud+1DupZQ==
-X-Received: from dloo19.prod.google.com ([2002:a05:7023:a53:b0:139:c655:b2de])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2386:b0:135:dd7c:7
- with SMTP id a92af1059eb24-139d0cf5943mr1595479c88.38.1782278160052; Tue, 23
- Jun 2026 22:16:00 -0700 (PDT)
-Date: Tue, 23 Jun 2026 22:15:26 -0700
+        bh=LNRhUfPfnFHw5PlWbwx2PQPSrRiKBvtXr39D6eDjMi4=;
+        b=M3KT+PKUhTDjB0zs64qFZLAx/eTj9QmO6+hrdDkB9qV5tU12M6YpJXLIIbKP/ITwjF
+         rQnEtN44qYZuT3/Bn857/DELwag9bplhfU0PvQ4dMITSCa0n6KcoNMhiUDfgB1VbmPU9
+         BbSAsRtcT4sbeGsniKdoSV25TGVcpfeNbfr8Rc1qP6nEO2tq67i81ZKXzxVH/dMcl4DP
+         mZTu9PhDAAYz2Uo3EggTkfO7wTehI/BMgtI2tFicdydFiugkAuCV7qhzGTeHC3qO301A
+         ul7ui3JBjxDVFaCyJEMZS1swXFZ6cxdUphkOFcJiM6RR+nNIjFBj2+3J6tD2zFfqUKED
+         7mXw==
+X-Forwarded-Encrypted: i=1; AFNElJ/VnEP3td3l6hZ6A1/22atOIkfjdRy87+elqm5Xf+gQ6RZUABKy7cxZXcIXYN5x4+K/O+ZSY+bbpWYIFOHceB5H@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJz0Wogk0AeDBC1gMBdnnAOnG94HeqfRdeH39ygjRXmQ888OVB
+	xx6HhP9045XAFVU4mG6UiI/foL9ak8abYzq9q8eMB5wmS2L6DQoafE4XnvdbY5xEH+yARDaKN+e
+	FtVstk5OyVA==
+X-Received: from dlbqd19.prod.google.com ([2002:a05:7023:b13:b0:138:9f7:2b4a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:2220:b0:138:3613:db8
+ with SMTP id a92af1059eb24-139d0bf3371mr1608517c88.3.1782278165106; Tue, 23
+ Jun 2026 22:16:05 -0700 (PDT)
+Date: Tue, 23 Jun 2026 22:15:28 -0700
 In-Reply-To: <20260624051535.3584977-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260623053515.2677888-1-irogers@google.com> <20260624051535.3584977-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
-Message-ID: <20260624051535.3584977-10-irogers@google.com>
-Subject: [PATCH v2 08/16] perf python: Check counts_values size in set_values
+Message-ID: <20260624051535.3584977-12-irogers@google.com>
+Subject: [PATCH v2 10/16] perf python: Validate attribute setters in pyrf_evsel
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,79 +68,177 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-The set_values function incorrectly assumed the list contained exactly
-5 elements. Add a check to prevent out-of-bounds access.
+If val is NULL when setting an attribute, PyErr_SetString should be
+called as deleting the attribute isn't supported. In addition, ensure
+PyErr_Occurred is checked before setting the attribute to avoid setting
+a garbage value.
 
 Fixes: 877108e42b1b ("perf tools: Initial python binding")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 33 +++++++++++++++++++++++++--------
- 1 file changed, 25 insertions(+), 8 deletions(-)
+ tools/perf/util/python.c | 89 ++++++++++++++++++++++++++++++++++------
+ 1 file changed, 77 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 550f1e7d1449..c6c729808a0f 100644
+index 4bf37e2afb18..657b054f5e51 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -1881,11 +1881,11 @@ static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values
- 	  0, help }
+@@ -2296,6 +2296,11 @@ static int pyrf_evsel__set_tracking(PyObject *self, PyObject *val, void *closure
  
- static PyMemberDef pyrf_counts_values_members[] = {
--	counts_values_member_def(val, T_ULONG, "Value of event"),
--	counts_values_member_def(ena, T_ULONG, "Time for which enabled"),
--	counts_values_member_def(run, T_ULONG, "Time for which running"),
--	counts_values_member_def(id, T_ULONG, "Unique ID for an event"),
--	counts_values_member_def(lost, T_ULONG, "Num of lost samples"),
-+	counts_values_member_def(val, T_ULONGLONG, "Value of event"),
-+	counts_values_member_def(ena, T_ULONGLONG, "Time for which enabled"),
-+	counts_values_member_def(run, T_ULONGLONG, "Time for which running"),
-+	counts_values_member_def(id, T_ULONGLONG, "Unique ID for an event"),
-+	counts_values_member_def(lost, T_ULONGLONG, "Num of lost samples"),
- 	{ .name = NULL, },
- };
+ 	CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
  
-@@ -1895,8 +1895,15 @@ static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_values *self,
- 
- 	if (!vals)
- 		return NULL;
--	for (int i = 0; i < 5; i++)
--		PyList_SetItem(vals, i, PyLong_FromLong(self->values.values[i]));
-+	for (int i = 0; i < 5; i++) {
-+		PyObject *val = PyLong_FromUnsignedLongLong(self->values.values[i]);
-+
-+		if (!val) {
-+			Py_DECREF(vals);
-+			return NULL;
-+		}
-+		PyList_SetItem(vals, i, val);
-+	}
- 
- 	return vals;
- }
-@@ -1913,13 +1920,23 @@ static int pyrf_counts_values_set_values(struct pyrf_counts_values *self, PyObje
- 	}
- 
- 	size = PyList_Size(list);
-+	if (size != 5) {
-+		PyErr_SetString(PyExc_ValueError, "List must have exactly 5 entries");
++	if (val == NULL) {
++		PyErr_SetString(PyExc_TypeError, "cannot delete attribute");
 +		return -1;
 +	}
 +
- 	for (Py_ssize_t i = 0; i < size; i++) {
-+		unsigned long long val;
-+
- 		item = PyList_GetItem(list, i);
- 		if (!PyLong_Check(item)) {
- 			PyErr_SetString(PyExc_TypeError, "List members should be numbers");
- 			return -1;
- 		}
--		self->values.values[i] = PyLong_AsLong(item);
-+		val = PyLong_AsUnsignedLongLong(item);
-+		if (val == (unsigned long long)-1 && PyErr_Occurred())
-+			return -1;
-+		self->values.values[i] = val;
- 	}
+ 	is_true = PyObject_IsTrue(val);
+ 	if (is_true < 0)
+ 		return -1;
+@@ -2307,11 +2312,21 @@ static int pyrf_evsel__set_tracking(PyObject *self, PyObject *val, void *closure
+ static int pyrf_evsel__set_attr_config(PyObject *self, PyObject *val, void *closure __maybe_unused)
+ {
+ 	struct pyrf_evsel *pevsel = (void *)self;
++	unsigned long long new_val;
  
- 	return 0;
+ 	CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
+ 
+-	pevsel->evsel->core.attr.config = PyLong_AsUnsignedLongLong(val);
+-	return PyErr_Occurred() ? -1 : 0;
++	if (val == NULL) {
++		PyErr_SetString(PyExc_TypeError, "cannot delete attribute");
++		return -1;
++	}
++
++	new_val = PyLong_AsUnsignedLongLong(val);
++	if (PyErr_Occurred())
++		return -1;
++
++	pevsel->evsel->core.attr.config = new_val;
++	return 0;
+ }
+ 
+ static PyObject *pyrf_evsel__get_attr_config(PyObject *self, void *closure __maybe_unused)
+@@ -2326,11 +2341,21 @@ static PyObject *pyrf_evsel__get_attr_config(PyObject *self, void *closure __may
+ static int pyrf_evsel__set_attr_read_format(PyObject *self, PyObject *val, void *closure __maybe_unused)
+ {
+ 	struct pyrf_evsel *pevsel = (void *)self;
++	unsigned long long new_val;
+ 
+ 	CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
+ 
+-	pevsel->evsel->core.attr.read_format = PyLong_AsUnsignedLongLong(val);
+-	return PyErr_Occurred() ? -1 : 0;
++	if (val == NULL) {
++		PyErr_SetString(PyExc_TypeError, "cannot delete attribute");
++		return -1;
++	}
++
++	new_val = PyLong_AsUnsignedLongLong(val);
++	if (PyErr_Occurred())
++		return -1;
++
++	pevsel->evsel->core.attr.read_format = new_val;
++	return 0;
+ }
+ 
+ static PyObject *pyrf_evsel__get_attr_read_format(PyObject *self, void *closure __maybe_unused)
+@@ -2345,11 +2370,21 @@ static PyObject *pyrf_evsel__get_attr_read_format(PyObject *self, void *closure
+ static int pyrf_evsel__set_attr_sample_period(PyObject *self, PyObject *val, void *closure __maybe_unused)
+ {
+ 	struct pyrf_evsel *pevsel = (void *)self;
++	unsigned long long new_val;
+ 
+ 	CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
+ 
+-	pevsel->evsel->core.attr.sample_period = PyLong_AsUnsignedLongLong(val);
+-	return PyErr_Occurred() ? -1 : 0;
++	if (val == NULL) {
++		PyErr_SetString(PyExc_TypeError, "cannot delete attribute");
++		return -1;
++	}
++
++	new_val = PyLong_AsUnsignedLongLong(val);
++	if (PyErr_Occurred())
++		return -1;
++
++	pevsel->evsel->core.attr.sample_period = new_val;
++	return 0;
+ }
+ 
+ static PyObject *pyrf_evsel__get_attr_sample_period(PyObject *self, void *closure __maybe_unused)
+@@ -2364,11 +2399,21 @@ static PyObject *pyrf_evsel__get_attr_sample_period(PyObject *self, void *closur
+ static int pyrf_evsel__set_attr_sample_type(PyObject *self, PyObject *val, void *closure __maybe_unused)
+ {
+ 	struct pyrf_evsel *pevsel = (void *)self;
++	unsigned long long new_val;
+ 
+ 	CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
+ 
+-	pevsel->evsel->core.attr.sample_type = PyLong_AsUnsignedLongLong(val);
+-	return PyErr_Occurred() ? -1 : 0;
++	if (val == NULL) {
++		PyErr_SetString(PyExc_TypeError, "cannot delete attribute");
++		return -1;
++	}
++
++	new_val = PyLong_AsUnsignedLongLong(val);
++	if (PyErr_Occurred())
++		return -1;
++
++	pevsel->evsel->core.attr.sample_type = new_val;
++	return 0;
+ }
+ 
+ static PyObject *pyrf_evsel__get_attr_sample_type(PyObject *self, void *closure __maybe_unused)
+@@ -2392,11 +2437,21 @@ static PyObject *pyrf_evsel__get_attr_size(PyObject *self, void *closure __maybe
+ static int pyrf_evsel__set_attr_type(PyObject *self, PyObject *val, void *closure __maybe_unused)
+ {
+ 	struct pyrf_evsel *pevsel = (void *)self;
++	unsigned long new_val;
+ 
+ 	CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
+ 
+-	pevsel->evsel->core.attr.type = PyLong_AsUnsignedLong(val);
+-	return PyErr_Occurred() ? -1 : 0;
++	if (val == NULL) {
++		PyErr_SetString(PyExc_TypeError, "cannot delete attribute");
++		return -1;
++	}
++
++	new_val = PyLong_AsUnsignedLong(val);
++	if (PyErr_Occurred())
++		return -1;
++
++	pevsel->evsel->core.attr.type = new_val;
++	return 0;
+ }
+ 
+ static PyObject *pyrf_evsel__get_attr_type(PyObject *self, void *closure __maybe_unused)
+@@ -2411,11 +2466,21 @@ static PyObject *pyrf_evsel__get_attr_type(PyObject *self, void *closure __maybe
+ static int pyrf_evsel__set_attr_wakeup_events(PyObject *self, PyObject *val, void *closure __maybe_unused)
+ {
+ 	struct pyrf_evsel *pevsel = (void *)self;
++	unsigned long new_val;
+ 
+ 	CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
+ 
+-	pevsel->evsel->core.attr.wakeup_events = PyLong_AsUnsignedLong(val);
+-	return PyErr_Occurred() ? -1 : 0;
++	if (val == NULL) {
++		PyErr_SetString(PyExc_TypeError, "cannot delete attribute");
++		return -1;
++	}
++
++	new_val = PyLong_AsUnsignedLong(val);
++	if (PyErr_Occurred())
++		return -1;
++
++	pevsel->evsel->core.attr.wakeup_events = new_val;
++	return 0;
+ }
+ 
+ static PyObject *pyrf_evsel__get_attr_wakeup_events(PyObject *self, void *closure __maybe_unused)
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
