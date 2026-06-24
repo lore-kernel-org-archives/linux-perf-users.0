@@ -1,54 +1,54 @@
-Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C24188596
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A7B287510
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782278146; cv=none; b=JnuZnGID9LnNvPHDnvaokdM8BRxpyUu9tBPCLz/MT8Mfef+6UG3grJ8SHmgf7CV/p5bvr2fXr15DPu29RwfKeIGd/npAwHPxral/IHHXU6egsA482NkT9cqZVcZMtG3VrsKxWT15lOwPgGcP04/Aq13y6T2OWatUkdnq/VfsyS0=
+	t=1782278150; cv=none; b=XUm7a7iwkBSLUbf3ZBEn762BRaegW4pevgkh6YovtlmpH3/v96lAzZBCZBYkB+sC7khdDeThpvBjhBu9EgfHnQS0qLRKBuRUk5AVxPZbh922YMpTX/SVsTg/2X5huJnabMTyCXPndcepudAzMnuPnDGqvfiQS5SWoFZd7ype1uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782278146; c=relaxed/simple;
-	bh=5IR3Y7yxwYU2NdldzOBlpO60YnfYPkrVOuYWDq5rgVw=;
+	s=arc-20240116; t=1782278150; c=relaxed/simple;
+	bh=w9/h5A9i0tFKwvMZ+fm1xkezA7frbUU0xlPQ5bEXIeA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ApypvSkBrRToRd57iwMzrg4QP19scSK5872Bazqk5pG7UEUHoB1otoEvNMlonfr5gsIt0l4iys5nusVgGu3bztSKxOX2yMdbWhpQAv51XGkWRF7j5QseiX7CGCKf7T8z1xoxBKoYC4XFI6Ke0gqJIpWxIPhtGhOftkciyU1sfYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y2rFczlB; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=F8S3Y9laQJFPaNq2mgoMpK8WtvDrkh4SZ4KHSgq1ngSFaHyKBpNY9gvk4sxcaXG3stees33FCSXpd9WT8vIVlxIbgjLc88X/tGgGjWbpEOi/asR0cnAthQh+bmzgQawtEbfwOS57tFr++Or/f8YtGBFBbQ31q93XQw0ejxa7qig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=elnZkWyT; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y2rFczlB"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-139b74d67e0so2473722c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:15:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="elnZkWyT"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2c0532a6588so5142575ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782278144; x=1782882944; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782278147; x=1782882947; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bIL+Tp6zKMWwaF87s5eZEL1dndgClmwDblOjZVw/Mi4=;
-        b=Y2rFczlBwwjqsnjXbLo3BYSrz5JjbUkEiCH3OuX+pR4kogmMspnClcMymsQmaeT6h0
-         mBh+QQO7/ACcXPwCQzyzvCzl85pL7gpm4/nQ0FOd9d0oe8sSILEsY0RSxgwZtDvzOFgD
-         GQWv2oZSi8XVei8usjHEL+YUVKR1qo2g4ITtceg5qHwNMbR2iQNTqavpg1dlGxJUD8Ro
-         HfNRqxRjCk3Xg0lAXeqI2rNf2iziGBnYzvAKzttf39y8v+fit+NfrPeo5YGakqSv+7qf
-         TixNCLm9/cRDn7We3EdqeKq8zrcnvJIgbmoxvJmkFiRwPfBIgYM3DT5bLXifY3i/UaLp
-         wDsg==
+        bh=KFPERd+D8cAoAmR9+PDjt8Eoz3E0uFhdvI4++MtaiD0=;
+        b=elnZkWyTZULmHLRWqTady8WNbTf9RQTpRlz7lP6ToMJtfsHVdSVkAutnffgJsdGoDV
+         oDEj1iZjhVVb8RU3gLvSv/NZOZi+0rzq/ZbVsoe/zcZ/M/6UYs1Uuz8x97wI7wVgKIGf
+         zL1dE02pAOaY6jHfpdUwwl5UzF4+l9D+NF4eEoYktgeyfJxsRlRczAkVuaXRctIStxih
+         ApLO1M44IlyaUf71QsFGM7wFoOFKbO5+qWf5KGpO0j2/CqRX42bVwCEbANyXSwF4bCj+
+         mBajui0/FD6Mmw+7tV47slf0C6LHZMM9/bTDMsZbpMDUEUXH/+qGOgE5knm7lhLEhQPk
+         FKKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782278144; x=1782882944;
+        d=1e100.net; s=20251104; t=1782278147; x=1782882947;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bIL+Tp6zKMWwaF87s5eZEL1dndgClmwDblOjZVw/Mi4=;
-        b=ltHXq4dGHXzAfR36hU4K22n+GtMJGbkGurexP5BLXj7wPr27SqPFtU4XGN5EojromQ
-         f8Zueyw7qLUD7ejuj6wKXBFJuDvu0jloZBg/E0U7/gUIg1xi8p8bGq8JIeu9V9CQSc5u
-         sLrjWMPmuh3b7fTyQbVclucknT1n2Xbc6E+XIzoP+B7Ck1FSsBaXr2/0/eJ3svL0eHAO
-         5emutF3O/RWRXmgM29q5jU9LFfRE50PuLOPZL8klUNc9FeoPoH+HdVfJwWQyM8AkvAL6
-         +Rxqlh2YSoM2b+cO1oDbI5QC0g76NGhnA5sERKOY9z3LWdDxdSCdKEQ1O1wpkgucAopV
-         UVfQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8iuv0nctoTPhTcjpN7G57aKi9XFJQq+a49CtqV0mmscME/9HsG5ryId+e4JpyRuSm9XcAhS5gaenyhUzK3DhDu@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoGveXIlT4G0Auer0+na0omWXxSDc/O8y4L2OWuh6fiGoMKq2g
-	CrXNKDZGIpYeijI/QvyfaGkh1fjNSxTr89uLzjdFaKvk99P2zi6uM6ojBCdObBWeMp8D4vhN3FC
-	5ZzLvnp4bTw==
-X-Received: from dlec20-n1.prod.google.com ([2002:a05:701b:4294:10b0:139:d29f:3560])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:e995:b0:137:9ab:2cb8
- with SMTP id a92af1059eb24-139ad6ff181mr11869364c88.21.1782278143899; Tue, 23
- Jun 2026 22:15:43 -0700 (PDT)
-Date: Tue, 23 Jun 2026 22:15:19 -0700
+        bh=KFPERd+D8cAoAmR9+PDjt8Eoz3E0uFhdvI4++MtaiD0=;
+        b=azCtuTDv3S1G9V9Px7ezNOVtHfxNDS91RHYn2dLMNxN0YCJsI9fHdwusB+uKHBDMRW
+         cvvQiFuGbKsBStyWRz2FI7S1k0rrW/zzyrMC33x4mMk951BTIRun0hhIQfaX84r83PS+
+         lLrzaqlDDSh3r/s4KWkn8yF8jnsGLfIHowBAfRdBJWz1RUVrouPMGM8P/1gn+yH4BMVb
+         5B8yGdVuwWubdM1eyNTIbQbgqeM9YX+DHmZVFxB1oR1LHAg/+ijcwT2hHBSIxRUTPPTF
+         iXZCmZx+dvzawwfRFr+nW6/bpWwLf/TQBTwh7g9yvGTxfiVcWjcJoPz2kncv5KgEAr2g
+         2U8Q==
+X-Forwarded-Encrypted: i=1; AHgh+RriAX3kAB9iXurBh3DNeihCiqgoE1tWpWM0KOVKxxlQPZ8YVlKLS2/lH3gLvj4v+htM86tIPrDHTQQ+fXVp5bzT@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNs1T/GBUBR/qCRqEiyPUBUXl0zaRPIpYVHeqcgSQ1IB5cXP6w
+	9aTdu5iQssB04QroymrhcrPVX/q+j+Fndv3sGo1mGn4Xxx8cQPgEGE1ZCBgBit2lLX4oysINZDl
+	OQbqDGHLzYg==
+X-Received: from plgw16.prod.google.com ([2002:a17:902:e890:b0:2ba:67f8:6257])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:18e:b0:2c0:c625:400d
+ with SMTP id d9443c01a7336-2c7e171c1bamr20457025ad.37.1782278146334; Tue, 23
+ Jun 2026 22:15:46 -0700 (PDT)
+Date: Tue, 23 Jun 2026 22:15:20 -0700
 In-Reply-To: <20260624051535.3584977-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260623053515.2677888-1-irogers@google.com> <20260624051535.3584977-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
-Message-ID: <20260624051535.3584977-3-irogers@google.com>
-Subject: [PATCH v2 02/16] perf stat: Fix evsel_list leak in cmd_stat
+Message-ID: <20260624051535.3584977-4-irogers@google.com>
+Subject: [PATCH v2 03/16] perf tools: Fix sb_evlist leaks in top and record
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,50 +68,49 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Fix a memory leak in cmd_stat() where evsel_list is leaked if an error
-occurs while opening the output file.
+Fix a memory leak in cmd_top() where top.sb_evlist was not freed if
+evlist__add_bpf_sb_event() fails. Note that evlist__start_sb_thread() and
+evlist__stop_sb_thread() take ownership of the evlist and free it, so
+we must only free it if we fail before starting the thread. Also set
+top.sb_evlist to NULL to prevent use-after-free bugs.
+
+Apply the same fix to builtin-record.c to avoid leaking rec->sb_evlist
+and calling pthread_join on uninitialized threads in the error path.
 
 Assisted-by: Antigravity:gemini-3.1-pro
-Fixes: 361c99a661a7 ("perf evsel: Introduce perf_evlist")
+Fixes: b38d85ef49cf ("perf bpf: Decouple creating the evlist from adding the SB event")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/builtin-record.c | 2 ++
+ tools/perf/builtin-top.c    | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 3f897b2e8638..7cb6ea937e87 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2718,7 +2718,8 @@ int cmd_stat(int argc, const char **argv)
- 		output = fopen(output_name, mode);
- 		if (!output) {
- 			perror("failed to create output file");
--			return -1;
-+			status = -1;
-+			goto out;
- 		}
- 		if (!stat_config.json_output) {
- 			clock_gettime(CLOCK_REALTIME, &tm);
-@@ -2729,7 +2730,8 @@ int cmd_stat(int argc, const char **argv)
- 		output = fdopen(output_fd, mode);
- 		if (!output) {
- 			perror("Failed opening logfd");
--			return -errno;
-+			status = -errno;
-+			goto out;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ebd3ed0c9b3e..b106d50f6d97 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2247,6 +2247,8 @@ static int record__setup_sb_evlist(struct record *rec)
+ 
+ 		if (evlist__add_bpf_sb_event(rec->sb_evlist, perf_session__env(rec->session))) {
+ 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
++			evlist__put(rec->sb_evlist);
++			rec->sb_evlist = NULL;
+ 			return -1;
  		}
  	}
- 
-@@ -2738,7 +2740,8 @@ int cmd_stat(int argc, const char **argv)
- 		parse_options_usage(stat_usage, stat_options, "o", 1);
- 		parse_options_usage(NULL, stat_options, "log-fd", 0);
- 		parse_options_usage(NULL, stat_options, "interval-clear", 0);
--		return -1;
-+		status = -1;
-+		goto out;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 5933c46ee137..570410599f1b 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1881,6 +1881,8 @@ int cmd_top(int argc, const char **argv)
+ 		if (evlist__add_bpf_sb_event(top.sb_evlist, &host_env)) {
+ 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
+ 			status = -EINVAL;
++			evlist__put(top.sb_evlist);
++			top.sb_evlist = NULL;
+ 			goto out_put_evlist;
+ 		}
  	}
- 
- 	stat_config.output = output;
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
