@@ -1,125 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAE01A9FB0;
-	Wed, 24 Jun 2026 19:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028B43839A8
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 20:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782331125; cv=none; b=e+Buw2IGgUvuZ8iKbtcOeFDscm/5e9xz6t5lTI6tN0xm56BnhFC23mVQpEYbs7fkJEq3Tn51QAsk1eURaLQc96vMlwPakkqViVgTkjwSw1M8B1EDS7YuQb2fIkLPuZDOf32lPS90tqbKmDDx0Y3S7c6ixhjliHCkgpLc5Wjh7ZM=
+	t=1782331986; cv=none; b=tdNVy0b0m7p0nlpM4iD4UgN4MrrLouJPRD7Jsa5otxkOjKdDd7kZiNHhwf5v1apNKDLBZcZG6f56PVZZmfvxP/Wm9DvjAKr52RuVjaPCLCR/OTk6Wt3EdyWULyJLAE8KWlwSPJhJ0Z4RM7Vvt+5I/eF88pImcAR2aa0ozuR1URw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782331125; c=relaxed/simple;
-	bh=SpLSv/jLHAx1s3HSo1akAK5trq8/6Up1BA+b/MtPJKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ThIrV3e9jy1XlfFCGtcxt5irSN2hcTyvWrG0DRcw+jDPMSvcm2xEDnRTpMukoTdzuCDRLUscJzYbEXYCzE674H+W+SORlWCFPVwZqgP85ltNTy6AGrX1AmDpBBxLsqoNPTHuU2Fmc1dJQN9d3LY8SCXh7iop/0YM7bKxTFvk0bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ao72++ii; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782331986; c=relaxed/simple;
+	bh=YY1C5v75W3mnHcnXZ+5t8u6QmuYSf91omqmWfC6cA0o=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-type; b=GKuPsIi/pxsfdn+gKWhuhxEeqDQac3xnNtASR94S3dgCs0spLlJ/hclkksaD+JUSm4mvfhoWaHkJvOx2fYn8FANVAgD67+6xr+xF8RGdG/13vf0mla+xvgNEVDHTz8iMxZoumPxTwmeTupJr0dQfxxuTRuNEkHFbr3MGWZYCec4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WVXARf8z; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ao72++ii"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1AF1F000E9;
-	Wed, 24 Jun 2026 19:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782331123;
-	bh=Ea3HIUVto5uwz2Q2ZR8R/Q6C7MwhYo1rdMh3Z+B5Zow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ao72++iiPoFqzJl2YBsSYZPh4n4xYyvUTnNNajCu1hcd6VeiYmJijo77sns55UflP
-	 NA8N08hF0H6bhwqDP5WTDg9sz8tarvMFAvc44L4tSqSDk2597ikCgRgUost2aQ5EuX
-	 RJ9oC+Pk2tojI6Mv/PuwNDVTUATo1AF9E1pIyB6eXf8S062mrsmBghZiFbqz73T5f4
-	 0vv4BICnJ1iJ90boPuH3mp0gGONcbnX0TgfLF40SDaqSaXVQlEb6iHCc2oaJgxWIpa
-	 rNlITbjYWM5xWsGZjxa7oX0tWJXs4CxYQSt6ViNAR2XapvEAMulGStLUKkotZGC3xf
-	 ksgLCYQ6z/eFw==
-Date: Wed, 24 Jun 2026 12:58:42 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Michael Jeanson <mjeanson@efficios.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	Alexandre Chartre <alexandre.chartre@oracle.com>,
-	Yuzhuo Jing <yuzhuo@google.com>, Leo Yan <leo.yan@arm.com>,
-	German Gomez <german.gomez@arm.com>,
-	Anubhav Shelat <ashelat@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-nvme@lists.infradead.org
-Subject: Re: [PATCH v1 0/3] perf pmu: Add tool-provided NVMe PMU
-Message-ID: <ajw28nITeOgtH0GF@google.com>
-References: <20260609070348.541964-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WVXARf8z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782331984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=W0GXuJv5UDxvc9Rlg8693/s/vmTKfkYVUYav87nVFDc=;
+	b=WVXARf8zrEBrOYBWRWaxN86mIBLUPg0pYeWYu90b9V8gVkNWmksYasdzmfXrZmP65f96KI
+	WmBWl7vxt6FL5DBk+69gDMU510yLptazWqgELQLLqRdOQr8rj68/dJ1jR0uDRrrahbZ/wO
+	TkCwqePwzy1M9MSHKQG75svJdCge3h4=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-8-cEqbm0HuNk-sscslkSV8cw-1; Wed,
+ 24 Jun 2026 16:13:00 -0400
+X-MC-Unique: cEqbm0HuNk-sscslkSV8cw-1
+X-Mimecast-MFC-AGG-ID: cEqbm0HuNk-sscslkSV8cw_1782331979
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 471631955E91;
+	Wed, 24 Jun 2026 20:12:59 +0000 (UTC)
+Received: from jolawren-thinkpadp1gen7.ibmlowe.csb (unknown [10.22.80.46])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 713C730002DD;
+	Wed, 24 Jun 2026 20:12:58 +0000 (UTC)
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org
+Subject: [PATCH] perf symbols: ignore livepatch symbols
+Date: Wed, 24 Jun 2026 16:12:54 -0400
+Message-ID: <20260624201254.472576-1-joe.lawrence@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260609070348.541964-1-irogers@google.com>
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, Jun 09, 2026 at 12:03:45AM -0700, Ian Rogers wrote:
-> This patch series introduces a tool-provided PMU for NVMe devices to expose
-> various hardware logs as perf events.
-> 
-> Using libnvme, the new nvme_pmu extracts metrics from standard NVMe log pages
-> including:
-> - SMART / Health Information (e.g. data units read/written, power cycles,
->   temperature)
-> - Endurance Group Information
-> - FDP (Flexible Data Placement) Statistics
-> - Error Information
-> - Zoned Namespaces (ZNS) Changed Zones
-> 
-> Key features:
-> - Dynamic probing of supported log pages on /dev/nvmeX. Unsupported events
->   are marked as deprecated and hidden from `perf list` by default.
-> - Generic configuration encoding where the log type, size, and offset are
->   encoded directly into the event configuration.
-> - Correct interval delta tracking using baseline offset snapshots. This mimics
->   the behavior of the hwmon PMU, allowing gauges like Temperature to be
->   reported instantaneously in `perf stat -I`, while standard counters
->   correctly accumulate deltas.
-> - Robust handling of cross-architecture endianness when reading 128-bit and
->   64-bit fields from the NVMe specification.
+Livepatch modules contain special symbols (prefixed by ".klp.sym.") that
+act as relocation placeholders.  Once resolved, they point to the same
+addresses as the original kernel symbols they reference. [1]
 
-Can you please show actual output so that we can understand what you're
-doing?
+These special symbols confuse the 'vmlinux symtab matches kallsyms' perf
+test as kallsyms may report multiple symbols sharing a single kernel
+address.  For example:
 
-Thanks,
-Namhyung
+  kallsyms (without livepatch)
+  ----------------------------
+  ffffffff81a41110 T __pfx_arch_release_task_struct
+> ffffffff81a41120 T arch_release_task_struct
+  ffffffff81a41140 T __pfx_exit_thread
+  ffffffff81a41150 T exit_thread
 
-> 
-> The series is broken down into:
-> 1. Adding the libnvme feature detection via pkg-config in tools/build.
-> 2. The core implementation of the NVMe tool PMU.
-> 3. A unit test suite verifying the parsing and encoding of the NVMe PMU
->    events using a mocked device.
-> 
-> Ian Rogers (3):
->   perf build: Add libnvme feature detection
->   perf pmu: Implement tool-provided NVMe PMU
->   perf tests: Add NVMe PMU event parsing test
-> 
->  tools/build/Makefile.feature       |   2 +
->  tools/build/feature/Makefile       |   3 +
->  tools/build/feature/test-libnvme.c |  11 +
->  tools/perf/Makefile.config         |  12 +
->  tools/perf/tests/Build             |   1 +
->  tools/perf/tests/builtin-test.c    |   1 +
->  tools/perf/tests/nvme_pmu.c        | 176 ++++++++++
->  tools/perf/tests/tests.h           |   1 +
->  tools/perf/util/Build              |   1 +
->  tools/perf/util/evsel.c            |  11 +-
->  tools/perf/util/nvme_pmu.c         | 535 +++++++++++++++++++++++++++++
->  tools/perf/util/nvme_pmu.h         | 143 ++++++++
->  tools/perf/util/pmu.c              |  15 +
->  tools/perf/util/pmu.h              |   8 +-
->  tools/perf/util/pmus.c             |  31 +-
->  tools/perf/util/pmus.h             |   1 +
->  16 files changed, 945 insertions(+), 7 deletions(-)
->  create mode 100644 tools/build/feature/test-libnvme.c
->  create mode 100644 tools/perf/tests/nvme_pmu.c
->  create mode 100644 tools/perf/util/nvme_pmu.c
->  create mode 100644 tools/perf/util/nvme_pmu.h
-> 
-> -- 
-> 2.54.0.1064.gd145956f57-goog
-> 
+  kallsyms (with livepatch loaded)
+  ---------------------------------
+  ffffffff81a41110 T __pfx_arch_release_task_struct
+> ffffffff81a41120 T arch_release_task_struct
+  ffffffff81a41140 T __pfx_exit_thread
+  ffffffff81a41150 T exit_thread
+> ffffffff81a41120 w .klp.sym.vmlinux.arch_release_task_struct,0  [kpatch_5_14_0_570_94_1_1_3]
+
+When perf loads kallsyms, both symbols are inserted into the
+symbol table at the same address, corrupting symbol end-address
+calculations and causing test failures.
+
+Filter out symbols prefixed with ".klp.sym." when loading kallsyms, as
+they alias existing kernel symbols.
+
+Link: https://docs.kernel.org/livepatch/module-elf-format.html#livepatch-symbols [1]
+Reported-and-tested-by: Ben Procknow <bprockno@redhat.com>
+Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+---
+ tools/perf/util/symbol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+From Ben's tests:
+
+  Without patch:
+  ./tools/perf/perf test 1
+   1: vmlinux symtab matches kallsyms                                 : FAILED!
+
+  With patch:
+  ./tools/perf/perf test 1
+   1: vmlinux symtab matches kallsyms                                 : Ok
+
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index fcaeeddbbb6b..eeaed3f5cf50 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -774,6 +774,10 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
+ 	if (name[0] == '$')
+ 		return 0;
+ 
++	/* Ignore livepatch symbols */
++	if (strstarts(name, ".klp.sym."))
++		return 0;
++
+ 	/*
+ 	 * module symbols are not sorted so we add all
+ 	 * symbols, setting length to 0, and rely on
+-- 
+2.54.0
+
