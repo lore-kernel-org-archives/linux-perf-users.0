@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261023E51C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793683E51E4;
 	Wed, 24 Jun 2026 20:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782334736; cv=none; b=eEQo2K1AyFF2Z633aZudatXavpznOvU1EZXCqAL6IXWDvY+tYpJjtUMfPt0WFL8fQrf+PaB4DLwcEdxdQK+mCyAcGy8qvBRehHUPX8KC5wLDewqiPQVqhpSGgJ02gRk4Pro7sTTUfZ78DLWXJ4dT0G/kmfQayVeXnH6665K9vOc=
+	t=1782334736; cv=none; b=QZnNQC3UlLVOIrU51hrz+qW3BaE6OHav7bG8s5DhXLhPzi2ifnGKuZ8OIM6HpK6avgJ7rVrGHJOEVQdq5SYTmudPyquvHRhHFMwfvDNnWSD4mCoa/yPDhRdbHZarndu+zJj6fTGXtohpJrTtnyUmv6XUYBjMtBZu2c8AqAmHnbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1782334736; c=relaxed/simple;
-	bh=vW5vgJzW6VbffrsI52ciV4/HMmoKPgFAe4Xrg0n52So=;
+	bh=YGGQf9dhGbmbCJqBPshZrMoC5SWqkROcKUZGJx6lo8M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zyx2+aav8n224sPjeSVPEj2JT8NfaNaK7D3hBW52vfQGGGEIKliAJgWR0ZJuz8Uz3NQlNjrJoUBhgDCDkAT760TtPwGBMezMyKELyVEprBIwoY4tYeCoH4UALDMM57fBGt/7pomfQ6qzg2DrudrptLGUCsPCw6oaX6Yo27lscxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JzskP6DB; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=lul0r7hFKp5ZcoHfJ1hOt74t4ppTWieGodHlYhoZxNz4uKaC57CW9772F9aoFRJ0iyqdncO5YNrMOi6LfrO/ygczvEHB+ydNpYPg7F8eewsvuYneM/mLrHdwQyUPHdyutXt9EDmwtPPaAGWvKoOggffYeWKd5yvv38nP8ql9K48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adscovgv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JzskP6DB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A82AD1F00A3E;
-	Wed, 24 Jun 2026 20:58:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adscovgv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D4CE1F000E9;
+	Wed, 24 Jun 2026 20:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1782334735;
-	bh=N839jw9SWgaUYVf04ONJUhtRVXvDxViEyzZcCUzWVz8=;
+	bh=w8f8N8IPBDVtHs9aRocSn84SJNcAg5lfJXV/2ZixKMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JzskP6DB0Myj+3qO6Jlgp0U7h6BHDmxWpnupUCvOX5/pt6H/AbjWok+5FznoLWvP+
-	 XyJYln7AiPn3mdLdbF0xKioFecxFBkSLuYn5OEjRtEtUIqBmRb2kbwB19/U+UtOyHN
-	 lrn0M7wGZC2m5W64Q5Tid09ZsmcPUpEsCz4dpYFj74EO+gmgb6ykkfTUYXxTnZ6I1U
-	 uT0U/JNI5K2v6RjLZ8iKauOtnMzI31ueZawHT6TGQunw9PRW3cGTFDn/IWBEGvOnK3
-	 SlkTsCjyId2i3i2ijgfoqaZUbf2f6lXTo/MUmwrMbEKux0i+X8Phug/lff+zTTWK26
-	 mUTWXkvA2Ga2A==
+	b=adscovgviIZoMhIfYBCXapiu4/BlYcMwcdSKX5g2uzxaw9GHQQg2itdWs/8pOtkmY
+	 1PE7kZNWl8u4QEG6/LMS6AK5+L0sNoyHh5l5jSVw566i0MWpyUdhAqKlRovokiUASp
+	 ln2ux5s06FhwmSWOIo1VCjvABw/2rzaAfJwvz6By7J09IAZQL2D1vgbO7KxtJjyLdG
+	 VDOcm3z9RdgpzCgh5CoNlyrVeXEx3fJ7zgQI+eZOr4y5qbPlgYPoYtBb+17B4EIVTl
+	 3FD0ZbY7fVe2rLH/CXVw1YzKI/hfa5yITVJJ0SVb1C+hfkRTQcudMwDvVTv3SzRRX8
+	 l9/1vmT0XOVvw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 4/8] perf timechart: Remove unnecessary copy of backtrace
-Date: Wed, 24 Jun 2026 13:58:30 -0700
-Message-ID: <20260624205852.3864874-5-namhyung@kernel.org>
+Subject: [PATCH v3 5/8] perf timechart: Release event samples at the end
+Date: Wed, 24 Jun 2026 13:58:31 -0700
+Message-ID: <20260624205852.3864874-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
 In-Reply-To: <20260624205852.3864874-1-namhyung@kernel.org>
 References: <20260624205852.3864874-1-namhyung@kernel.org>
@@ -50,101 +50,100 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The pattern of strdup() and free() is found, and I think it just can
-use the original backtrace directly.
+Add timechart__release() to free all data structures added during the
+sample processing.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-timechart.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ tools/perf/builtin-timechart.c | 68 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
 diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 4efac73a714c5e5f..04dbb944a42720b4 100644
+index 04dbb944a42720b4..27d17268395ed760 100644
 --- a/tools/perf/builtin-timechart.c
 +++ b/tools/perf/builtin-timechart.c
-@@ -300,7 +300,7 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
- 	sample->type = type;
- 	sample->next = c->samples;
- 	sample->cpu = cpu;
--	sample->backtrace = backtrace ? strdup(backtrace) : NULL;
-+	sample->backtrace = backtrace;
- 	c->samples = sample;
+@@ -1548,6 +1548,73 @@ static void write_svg_file(struct timechart *tchart, const char *filename)
+ 	svg_close();
+ }
  
- 	if (sample->type == TYPE_RUNNING && end > start && start > 0) {
-@@ -429,12 +429,14 @@ static void sched_wakeup(struct timechart *tchart, int cpu, u64 timestamp,
- 	struct per_pid *p;
- 	struct wake_event *we = zalloc(sizeof(*we));
- 
--	if (!we)
-+	if (!we) {
-+		free((char *)backtrace);
- 		return;
-+	}
- 
- 	we->time = timestamp;
- 	we->waker = waker;
--	we->backtrace = backtrace ? strdup(backtrace) : NULL;
-+	we->backtrace = backtrace;
- 
- 	if ((flags & TRACE_FLAG_HARDIRQ) || (flags & TRACE_FLAG_SOFTIRQ))
- 		we->waker = -1;
-@@ -461,20 +463,28 @@ static void sched_switch(struct timechart *tchart, int cpu, u64 timestamp,
- 			 const char *backtrace)
- {
- 	struct per_pid *p = NULL, *prev_p;
-+	bool backtrace_used = false;
- 
- 	prev_p = find_create_pid(tchart, prev_pid);
- 
- 	p = find_create_pid(tchart, next_pid);
- 
--	if (prev_p->current && prev_p->current->state != TYPE_NONE)
-+	if (prev_p->current && prev_p->current->state != TYPE_NONE) {
- 		pid_put_sample(tchart, prev_pid, TYPE_RUNNING, cpu,
- 			       prev_p->current->state_since, timestamp,
- 			       backtrace);
-+		backtrace_used = true;
-+	}
- 	if (p && p->current) {
--		if (p->current->state != TYPE_NONE)
-+		if (p->current->state != TYPE_NONE) {
-+			if (backtrace && backtrace_used)
-+				backtrace = strdup(backtrace);
++static void timechart__release(struct timechart *tchart)
++{
++	struct per_pid *p = tchart->all_data;
++	struct power_event *pwr = tchart->power_events;
++	struct wake_event *we = tchart->wake_events;
 +
- 			pid_put_sample(tchart, next_pid, p->current->state, cpu,
- 				       p->current->state_since, timestamp,
- 				       backtrace);
-+			backtrace_used = true;
++	while (p) {
++		struct per_pid *next_pid = p->next;
++		struct per_pidcomm *c = p->all;
++
++		while (c) {
++			struct per_pidcomm *next_comm = c->next;
++			struct cpu_sample *cs = c->samples;
++			struct io_sample *ios = c->io_samples;
++
++			while (cs) {
++				struct cpu_sample *next = cs->next;
++
++				zfree(&cs->backtrace);
++				cs->next = NULL;
++				free(cs);
++
++				cs = next;
++			}
++
++			while (ios) {
++				struct io_sample *next = ios->next;
++
++				ios->next = NULL;
++				free(ios);
++
++				ios = next;
++			}
++
++			zfree(&c->comm);
++			c->next = NULL;
++			free(c);
++
++			c = next_comm;
 +		}
- 
- 		p->current->state_since = timestamp;
- 		p->current->state = TYPE_RUNNING;
-@@ -488,6 +498,9 @@ static void sched_switch(struct timechart *tchart, int cpu, u64 timestamp,
- 		if (prev_state == 0)
- 			prev_p->current->state = TYPE_WAITING;
- 	}
 +
-+	if (!backtrace_used)
-+		free((char *)backtrace);
- }
++		p->next = NULL;
++		free(p);
++
++		p = next_pid;
++	}
++
++	while (pwr) {
++		struct power_event *next = pwr->next;
++
++		pwr->next = NULL;
++		free(pwr);
++
++		pwr = next;
++	}
++
++	while (we) {
++		struct wake_event *next = we->next;
++
++		zfree(&we->backtrace);
++		we->next = NULL;
++		free(we);
++
++		we = next;
++	}
++}
++
+ static int process_header(struct perf_file_section *section __maybe_unused,
+ 			  struct perf_header *ph,
+ 			  int feat,
+@@ -2079,6 +2146,7 @@ int cmd_timechart(int argc, const char **argv)
  
- /*
-@@ -655,7 +668,6 @@ process_sample_sched_wakeup(struct timechart *tchart,
- 
- 	backtrace = cat_backtrace(sample, &tchart->session->machines.host);
- 	sched_wakeup(tchart, sample->cpu, sample->time, waker, wakee, flags, backtrace);
--	free((char *)backtrace);
- 	return 0;
- }
- 
-@@ -678,7 +690,6 @@ process_sample_sched_switch(struct timechart *tchart,
- 	backtrace = cat_backtrace(sample, &tchart->session->machines.host);
- 	sched_switch(tchart, sample->cpu, sample->time, prev_pid, next_pid,
- 		     prev_state, backtrace);
--	free((char *)backtrace);
- 	return 0;
- }
- 
+ 	ret = __cmd_timechart(&tchart, output_name);
+ out:
++	timechart__release(&tchart);
+ 	zfree(&cpus_cstate_start_times);
+ 	zfree(&cpus_cstate_state);
+ 	zfree(&cpus_pstate_start_times);
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
