@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881422FDC27;
-	Wed, 24 Jun 2026 19:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46979350D74;
+	Wed, 24 Jun 2026 19:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782330174; cv=none; b=sFvoKUcqrRY7KeNGmGCeMm2RzYIh+ghnVQ3zwCtkh1y5rDDgASC3+UtEl1QLdlllPpqG3Kh7Oilhbmi/GfRC+X/Ei0RrurNHaMYf6xu5xVlojbxvJWjYDNPeszWTlxeuaVU+Tq7P0OAxT4piGHEUMnIWqGV/WhXaZ2tRuN0kyaU=
+	t=1782330877; cv=none; b=MqSK04Zt1sbcigOH2QJLc2b4M9IRMrIG8iwiPZkM3qsbSbqOmwMKGLyvdlffEzfxGRhTfUNI7Li1CXw9uIURf5yTLDw6AIkqu0s865o5DSVww6KI80/xTsVYx9QYULUErG0EGU2+VAPKLAtlLuZWsgSyGLL03ENh3QCCKCOsMtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782330174; c=relaxed/simple;
-	bh=k51SzreYYc6OWMxarcx2xv3vo2OEIeu4VVhb4u47im8=;
+	s=arc-20240116; t=1782330877; c=relaxed/simple;
+	bh=rQA2bVRDUoq5updBuj5BPOpEGdkrSd0MTk5fOIC5tcs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bJEBENXbgBy2+lcPNuuKGPaxLTz6/xM9rRADmuH7L9CkKyTAACcjeIQkLRk1+upVGzWXX/DEdyN3Z9x6i3vNa8d+QvMOUtZCdLJBeNGu2KoHvz72LXG5DA0On9L9GdB8TNKubTQ1XykkpI0x28L/B/Bas54AgpbLT8CsLE9Dh8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSNs8RiX; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=g8aivgLn1P/PKUFn0vRrIVTDi5mUPbP6tKmMtyObm2EQ9CzXPDQ+uCN5qLDCpfKi2cOsg7LqISoHErhfy047Z6PH1TLWtwOtc+1mw8WD8ooCFsD9AkPxFLlZVH+VuOEakQtJmdpWz7eH1S0jAoP1y37ykcymc2Yh1p3A0UchC7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKsnhegv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSNs8RiX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D33271F000E9;
-	Wed, 24 Jun 2026 19:42:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKsnhegv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BECDB1F000E9;
+	Wed, 24 Jun 2026 19:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782330173;
-	bh=XaTrra4jAwM7L+mMY3rH7yoWBvnMPGJ0SOPpDlK5TFo=;
+	s=k20260515; t=1782330875;
+	bh=l52T1hPqpsabcP9Ij/Sys/hFGIxfnjOY+cKaKZ5TXVE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aSNs8RiXUHbaqK9HgAP+PzqZnR13tvauD5sKlkH6LYuaNo+wcmgjCeR1uMob7J+dz
-	 hEyNF6TPVWrLkO5N49Dq1bsw02bFuEC0mOY4LyNWNy4U8+O9nfheBzoMzL20RMftzR
-	 XWGBL80Z5VrWMrvUgANMNo5ELCGjPhjy1pW76Vdp5sjk/0cjUlX3XAdc9PHkhkzZrI
-	 IrlgNjal7f4kV+82hFDqFQQCaCIbjNHGYMENANZZgsmSilftKxRDpGPr5uGy/KmHYc
-	 mGUPBaqr0KPr0jw8jLVCaOybTyNIvvlpdAwbtTZzANiGmlQvRuQVCUjkt4opDo0JLN
-	 zgcX559s8JIZQ==
-Date: Wed, 24 Jun 2026 12:42:51 -0700
+	b=AKsnhegvjnyfZU3OQbnuysBi+koDN1Nuq2c5zlD8zb1C4FFnWvvzv49edfKlMGKv7
+	 yuVNxf3Qc0/ooNYqKP02LVJk5GlG7pMmRigXXXtj/C8pe6GbQqp13BCl2c15bOs+hb
+	 lBQdhoeSvm6R1Yk8S2/yM9KqHDEh3ObCp8tH7F+cODGaCbRggItVaJS6qu2jgTjoR5
+	 kIhhLxsPaDds8zsp8pbIXKx4JtKx0FTinyjgooUoJb5ELwIudmzHxPE/oQb7geQydn
+	 9aPN86mA981Itj7JAdeauCzsKH3pFXfrWpFLr4nepA+CFHiElJTs2REuUuDctDBCNI
+	 LdxiRMBojd/EA==
+Date: Wed, 24 Jun 2026 12:54:34 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: sashiko-reviews@lists.linux.dev, Thomas Richter <tmricht@linux.ibm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH linux-next] perf test: Skip failing 'perf test aslr' test
- case
-Message-ID: <ajwzO4GJ8Uj_2mwi@google.com>
-References: <20260619093531.4038655-1-tmricht@linux.ibm.com>
- <20260619094233.CBA9B1F000E9@smtp.kernel.org>
- <CAP-5=fUJbh=dXiadCJJ4d_prCxox1G0WW_WODwSHC4DvwWuQag@mail.gmail.com>
+To: Tanushree Shah <tshah@linux.ibm.com>
+Cc: sashiko@lists.linux.dev, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf dso: Fix kallsyms DSO detection with fallback
+ logic
+Message-ID: <ajw1-ivLfQo3psZa@google.com>
+References: <20260416091657.578429-2-tshah@linux.ibm.com>
+ <20260416110905.3A68AC2BCAF@smtp.kernel.org>
+ <714f2022-879e-4f6a-9b1c-cce06be6db65@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,105 +45,78 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUJbh=dXiadCJJ4d_prCxox1G0WW_WODwSHC4DvwWuQag@mail.gmail.com>
+In-Reply-To: <714f2022-879e-4f6a-9b1c-cce06be6db65@linux.ibm.com>
 
-Hello,
-
-On Mon, Jun 22, 2026 at 11:17:41AM -0700, Ian Rogers wrote:
-> On Fri, Jun 19, 2026 at 2:42 AM <sashiko-bot@kernel.org> wrote:
-> >
-> > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> > - [Medium] Unconditionally setting `err=2` when skipping `test_callchain_aslr` masks prior test failures.
-> > - [Medium] Skipping the test incorrectly triggers the test failure cleanup path, leaking the temporary directory in `/tmp/`.
+On Thu, Jun 11, 2026 at 06:04:23PM +0530, Tanushree Shah wrote:
+> 
+> 
+> On 16/04/26 16:39, sashiko-bot@kernel.org wrote:
+> > Sashiko AI review found 2 potential issue(s):
+> > - [High] Path Traversal and Information Disclosure due to `strncmp` matching any prefix.
+> > - [Medium] Incomplete fix: Fallback logic is missing from `dso__is_kcore()` and `dso__is_vmlinux()`.
 > > --
-> >
-> > commit d772895777a1677561d1802ac157c32ce73e1379
-> > Author: Thomas Richter <tmricht@linux.ibm.com>
-> >
-> > perf test: Skip failing 'perf test aslr' test case
-> >
-> > The test case 'perf test aslr' fails on s390. This commit fixes the failure
-> > by skipping the subtest test_callchain_aslr and emitting a hint when the
-> > --call-graph dwarf option is selected.
-> >
-> > Fixes: 60bc9fbc0589 ("perf test: Add inject ASLR test")
+> > 
+> > commit 9ee80283f13c6a0a5235a2add7a94736c1dfcbba
+> > Author: Tanushree Shah <tshah@linux.ibm.com>
+> > 
+> > perf dso: Fix kallsyms DSO detection with fallback logic
+> > 
+> > This commit fixes an issue where kallsyms DSOs are not correctly identified
+> > during build-id injection because the dso_binary_type is not yet set. It
+> > adds a fallback string matching check against the DSO's long_name.
+> > 
+> > > diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> > > index ede691e9a2495..515ab6e95b0e4 100644
+> > > --- a/tools/perf/util/dso.h
+> > > +++ b/tools/perf/util/dso.h
+> > 
+> > [ ... ]
+> > 
+> > > @@ -915,6 +917,14 @@ static inline bool dso__is_kallsyms(const struct dso *dso)
+> > >   {
+> > >   	enum dso_binary_type bt = dso__binary_type(dso);
+> > > +	if (bt == DSO_BINARY_TYPE__NOT_FOUND) {
+> > 
+> > Since the fallback logic was added here because dso_binary_type(dso) is
+> > DSO_BINARY_TYPE__NOT_FOUND during perf record and inject, do dso__is_kcore()
+> > and dso__is_vmlinux() require a similar fallback?
+> > 
+> > Looking at dso__cache_build_id(), it relies on dso__is_kcore() to flag the
+> > DSO for special caching logic. If dso__is_kcore() returns false during
+> > build-id caching, kcore DSOs are treated as regular files, which causes
+> > nsinfo__realpath() to fail and breaks perf archive for kcore sessions.
+> > 
+> > > +		return RC_CHK_ACCESS(dso)->kernel &&
+> > > +			((strncmp(RC_CHK_ACCESS(dso)->long_name, DSO__NAME_KALLSYMS,
+> > > +				strlen(DSO__NAME_KALLSYMS)) == 0) ||
+> > 
+> > Does using strncmp() here allow a path traversal if long_name is
+> > intentionally crafted?
+> > 
+> > If a malicious perf.data file contains an MMAP event with a filename like
+> > "[kernel.kallsyms]/../../../../tmp/leak", this prefix check evaluates
+> > to true.
+> > 
+> > Could this allow build_id_cache__cachedir() to construct a cache directory
+> > using this malicious path, causing build_id_cache__add() to unconditionally
+> > copy the host's /proc/kallsyms into an attacker-controlled directory?
+> 
+> Hello,
+> The current code relies on dso_binary_type to check if its a kallsyms dso.
+> While running perf archive, the code calls dso__is_kallsyms check to create
+> a build-id dir. But till that time, dso_binary_type is not getting set yet.
+> Hence, this patch introduced usage of dso->long_name to check if it is
+> kallsyms. But based on the above review from Sashiko, it seems that this may
+> create a security concern.
+> 
+> I tried to check for the possibility to set the dso binary type before
+> dso__is_kallsyms gets called. But, I found that dso binary type is getting
+> set based on dso__is_kallsyms only.
+> 
+> So, I am looking for suggestions/approach that we can take here.
 
-Shouldn't it be 190c45463844?
-
-> >
-> > > diff --git a/tools/perf/tests/shell/inject_aslr.sh b/tools/perf/tests/shell/inject_aslr.sh
-> > > index c00461828ea79..7fdb43679dc84 100755
-> > > --- a/tools/perf/tests/shell/inject_aslr.sh
-> > > +++ b/tools/perf/tests/shell/inject_aslr.sh
-> > > @@ -135,8 +135,15 @@ test_callchain_aslr() {
-> > >      echo "Callchain ASLR test [Failed - no noploop samples in original file]"
-> > >      err=1
-> > >    elif [ -z "$new_addr" ]; then
-> > > -    echo "Callchain ASLR test [Failed - could not find remapped address]"
-> > > -    err=1
-> > > +    if perf evlist -v -i "${data}" | grep -q 'sample_type:.*STACK_USER'; then
-> > > +      echo "Dropping stack user sample as possible ASLR leak"
-> > > +      echo "Call-graph dwarf not supported with 'perf inject --aslr'"
-> > > +      echo "Callchain ASLR test [Skip]"
-> > > +      err=2
-> >
-> > [Severity: Medium]
-> > Does unconditionally setting err=2 here mask prior test failures?
-> >
-> > If an earlier subtest fails, the global err variable is set to 1. When
-> > test_callchain_aslr() decides to skip and assigns err=2, it overwrites
-> > this previous failure state.
-> >
-> > Since the perf test framework treats an exit code of 2 as a SKIP, the test
-> > suite will report the entire script as skipped, completely hiding the
-> > actual failure from the prior subtest.
-
-Right, it should not overwrite if it's already 1.
+Can we simply check with strcmp() for the whole string?
 
 Thanks,
-Namhyng
+Namhyung
 
-> >
-> > [Severity: Medium]
-> > Will skipping this test inadvertently trigger the test failure cleanup path
-> > and leak the temporary directory?
-> >
-> > The cleanup() function in tools/perf/tests/shell/inject_aslr.sh explicitly
-> > aborts deletion if the exit code or err is non-zero:
-> >
-> > cleanup() {
-> >   if [ "${exit_code}" -ne 0 ] || [ "${err}" -ne 0 ]; then
-> 
-> 
-> Thanks for the fix Thomas! I completely agree with what you've done,
-> but it exposed this latent issue that we should make the exit_code/err
-> comparison -eq 1 rather than -ne 0. Perhaps Arnaldo can fix this, or
-> we can address it as a follow-up.
-> 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> 
-> Thanks,
-> Ian
-> 
-> >     echo "Test failed! Preserving temp directory: ${temp_dir}"
-> >     return
-> >   fi
-> >   ...
-> > }
-> >
-> > Because cleanup() was not updated to handle the new skip state, it
-> > mistakenly treats err=2 as a test failure. This unconditionally leaves
-> > behind the /tmp/perf-test-aslr.XXXXXX directory every time the test skips.
-> >
-> > > +    else
-> > > +      echo "Callchain ASLR test [Failed - could not find remapped address]"
-> > > +      err=1
-> > > +    fi
-> > >    elif [ "$orig_addr" = "$new_addr" ]; then
-> > >      echo "Callchain ASLR test [Failed - addresses are not remapped]"
-> > >      err=1
-> >
-> > --
-> > Sashiko AI review · https://sashiko.dev/#/patchset/20260619093531.4038655-1-tmricht@linux.ibm.com?part=1
-> >
