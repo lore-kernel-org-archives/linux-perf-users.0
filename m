@@ -1,124 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028B43839A8
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 20:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591D03DE434
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 20:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782331986; cv=none; b=tdNVy0b0m7p0nlpM4iD4UgN4MrrLouJPRD7Jsa5otxkOjKdDd7kZiNHhwf5v1apNKDLBZcZG6f56PVZZmfvxP/Wm9DvjAKr52RuVjaPCLCR/OTk6Wt3EdyWULyJLAE8KWlwSPJhJ0Z4RM7Vvt+5I/eF88pImcAR2aa0ozuR1URw=
+	t=1782332594; cv=none; b=ei3RrPI0uN7M39VTQPDih7ynfFr6+dFwVXostqHlKM0w0BVGdvms24Vo/CbCYRRy925iHIgAdvAKpWlQlyplAD7ZPDrxu0j65wOxTQdU0oespK4xhXaxZ5A4GnsGmjYs6WYEHvB0e4ZqSyaNzOZBN4+WjOL0Q/j5v0i+IQjtYnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782331986; c=relaxed/simple;
-	bh=YY1C5v75W3mnHcnXZ+5t8u6QmuYSf91omqmWfC6cA0o=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-type; b=GKuPsIi/pxsfdn+gKWhuhxEeqDQac3xnNtASR94S3dgCs0spLlJ/hclkksaD+JUSm4mvfhoWaHkJvOx2fYn8FANVAgD67+6xr+xF8RGdG/13vf0mla+xvgNEVDHTz8iMxZoumPxTwmeTupJr0dQfxxuTRuNEkHFbr3MGWZYCec4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WVXARf8z; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782332594; c=relaxed/simple;
+	bh=mXq8uhySQPF8ggxYuTh2tipsRsWg1T8BZ1/WQDfuJLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dpvYSaCbvkZCxr6WbvjA6lH++ADIdndiBvzY7/+xiE74siWThQdNtUQFcmzboem+fb77H6MJsdv1POC94RFaRsDNT6PkTXfQ3JAywPw4zFw3QlKD+dlCmUL6Jf36dlcAO0F4u2THLKuP8OjqULiH3kYIwK/4V4PfwTbYccpN+gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RAh1yISv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WVXARf8z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782331984;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=W0GXuJv5UDxvc9Rlg8693/s/vmTKfkYVUYav87nVFDc=;
-	b=WVXARf8zrEBrOYBWRWaxN86mIBLUPg0pYeWYu90b9V8gVkNWmksYasdzmfXrZmP65f96KI
-	WmBWl7vxt6FL5DBk+69gDMU510yLptazWqgELQLLqRdOQr8rj68/dJ1jR0uDRrrahbZ/wO
-	TkCwqePwzy1M9MSHKQG75svJdCge3h4=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-8-cEqbm0HuNk-sscslkSV8cw-1; Wed,
- 24 Jun 2026 16:13:00 -0400
-X-MC-Unique: cEqbm0HuNk-sscslkSV8cw-1
-X-Mimecast-MFC-AGG-ID: cEqbm0HuNk-sscslkSV8cw_1782331979
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 471631955E91;
-	Wed, 24 Jun 2026 20:12:59 +0000 (UTC)
-Received: from jolawren-thinkpadp1gen7.ibmlowe.csb (unknown [10.22.80.46])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 713C730002DD;
-	Wed, 24 Jun 2026 20:12:58 +0000 (UTC)
-From: Joe Lawrence <joe.lawrence@redhat.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	live-patching@vger.kernel.org
-Subject: [PATCH] perf symbols: ignore livepatch symbols
-Date: Wed, 24 Jun 2026 16:12:54 -0400
-Message-ID: <20260624201254.472576-1-joe.lawrence@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAh1yISv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0297E1F000E9;
+	Wed, 24 Jun 2026 20:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782332593;
+	bh=mmgPIp6anEqUUcgnOW35J5BU43jQifQPS1RKVOw0zXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RAh1yISvp3bvkmyW33ZaH7O7zetHOFjDrcTu2uqKeVffw1yuvZSCSicHmnqkNjzwy
+	 +g8EnL+yHPR5g7bKFO/ZOB6/Ev5l07AYKAkMDHVcPwfpbDksRuUkToVi3l7XXtjrTp
+	 daJ++wEAgCdcn46N3x2O7Z8B5oi5aXR3qG5YFetZ+Jy6fkKSMo3HlsNVV1oL0RFZe0
+	 M4N1nAYTDCmL9LbEAajy5wlnkL4ji3yiYcq0icX1ravL+eBP3guOLUWSu0yYWrgFuk
+	 ZUK+KY2go0nLBsdHHy+pYyyzr4qub5v2GCuqCzW2n2sFvJoSNYy8Hn4Kryot0+XqmY
+	 Nem6FgvtSkQgw==
+Date: Wed, 24 Jun 2026 13:23:11 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Todd Lipcon <tlipcon@google.com>, Stephane Eranian <eranian@google.com>,
+	"Mi, Dapeng1" <dapeng1.mi@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: perf script intel_pt decoding reading instructions from wrong
+ shared lib
+Message-ID: <ajw8r2Y2shs6sBJW@google.com>
+References: <CAGH6UiG=RJLqBU3kLu9XJciPyPO1HZkbAPERguVUMRuWQgqf=A@mail.gmail.com>
+ <c45fea55-b03d-40ac-a89f-8882b057fe5b@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c45fea55-b03d-40ac-a89f-8882b057fe5b@intel.com>
 
-Livepatch modules contain special symbols (prefixed by ".klp.sym.") that
-act as relocation placeholders.  Once resolved, they point to the same
-addresses as the original kernel symbols they reference. [1]
+Hello,
 
-These special symbols confuse the 'vmlinux symtab matches kallsyms' perf
-test as kallsyms may report multiple symbols sharing a single kernel
-address.  For example:
+On Tue, Jun 02, 2026 at 10:32:02PM +0300, Adrian Hunter wrote:
+> On 15/04/2025 00:59, Todd Lipcon wrote:
+> > Hi folks,
+> > 
+> > It seems there may be a bug in perf-script when processing intel_pt.
+> > Specifically, in order to reconstruct the instructions, it maps
+> > instruction pointers back to DSO-relative addresses, and then reads
+> > from the associated ELF files to find the actual instructions that
+> > were traced.
+> > 
+> > In the case that the ELF file has an associated separate-debug ELF
+> > file linked via `.gnu-debuglink` (common in some Linux distros), it
+> > appears to be reading the debuginfo file instead of the shared library
+> > that actually contains the code.
+> > 
+> > I've posted a simple repro here:
+> > https://github.com/toddlipcon/perf-debuglink-bug/blob/main/repro.sh
+> > 
+> > I haven't dug into the code yet enough to see where it's going wrong,
+> > but figured I would report to the users list first.
+> 
+> Seems to be caused by commit 5363c306787c8 - see further below.
+> Reverting that makes the issue go away.
 
-  kallsyms (without livepatch)
-  ----------------------------
-  ffffffff81a41110 T __pfx_arch_release_task_struct
-> ffffffff81a41120 T arch_release_task_struct
-  ffffffff81a41140 T __pfx_exit_thread
-  ffffffff81a41150 T exit_thread
+Sorry for the trouble.
 
-  kallsyms (with livepatch loaded)
-  ---------------------------------
-  ffffffff81a41110 T __pfx_arch_release_task_struct
-> ffffffff81a41120 T arch_release_task_struct
-  ffffffff81a41140 T __pfx_exit_thread
-  ffffffff81a41150 T exit_thread
-> ffffffff81a41120 w .klp.sym.vmlinux.arch_release_task_struct,0  [kpatch_5_14_0_570_94_1_1_3]
+> 
+> With that commit, dso__load() sets the binary_type to the first symbol
+> source file type, which is DSO_BINARY_TYPE__DEBUGLINK in this case.
+> That causes dso__get_filename() to get the file name of the debug file,
+> not the file actually executed.
+> 
+> Leaving the binary_type as DSO_BINARY_TYPE__NOT_FOUND will result in
+> try_to_open_dso() using either DSO_BINARY_TYPE__BUILD_ID_CACHE or
+> DSO_BINARY_TYPE__SYSTEM_PATH_DSO.
 
-When perf loads kallsyms, both symbols are inserted into the
-symbol table at the same address, corrupting symbol end-address
-calculations and causing test failures.
+Ok, I feel like we should split the dso access for the binary file (for
+annotate or intel-pt) and debug symbols (symbol table or DWARF).
+Probably we can use the binary_type and symtab_type respectively.
 
-Filter out symbols prefixed with ".klp.sym." when loading kallsyms, as
-they alias existing kernel symbols.
+I'll take a look.
 
-Link: https://docs.kernel.org/livepatch/module-elf-format.html#livepatch-symbols [1]
-Reported-and-tested-by: Ben Procknow <bprockno@redhat.com>
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
----
- tools/perf/util/symbol.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks,
+Namhyung
 
-From Ben's tests:
-
-  Without patch:
-  ./tools/perf/perf test 1
-   1: vmlinux symtab matches kallsyms                                 : FAILED!
-
-  With patch:
-  ./tools/perf/perf test 1
-   1: vmlinux symtab matches kallsyms                                 : Ok
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index fcaeeddbbb6b..eeaed3f5cf50 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -774,6 +774,10 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
- 	if (name[0] == '$')
- 		return 0;
- 
-+	/* Ignore livepatch symbols */
-+	if (strstarts(name, ".klp.sym."))
-+		return 0;
-+
- 	/*
- 	 * module symbols are not sorted so we add all
- 	 * symbols, setting length to 0, and rely on
--- 
-2.54.0
-
+> 
+> A quick workaround hack:
+> 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index dd30f17cb1ca..09fd79ca1d48 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1825,7 +1825,10 @@ int dso__load(struct dso *dso, struct map *map)
+>  		if (next_slot) {
+>  			ss_pos++;
+>  
+> -			if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND)
+> +			if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND ||
+> +			    symtab_type == DSO_BINARY_TYPE__BUILD_ID_CACHE ||
+> +			    (symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_DSO &&
+> +			     dso__binary_type(dso) != DSO_BINARY_TYPE__BUILD_ID_CACHE))
+>  				dso__set_binary_type(dso, symtab_type);
+>  
+>  			if (syms_ss && runtime_ss)
