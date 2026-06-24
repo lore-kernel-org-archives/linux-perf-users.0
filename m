@@ -1,87 +1,186 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CE913D7D69;
-	Wed, 24 Jun 2026 15:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7009D38BF8D;
+	Wed, 24 Jun 2026 16:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782313855; cv=none; b=rOgbP6F49mjZM/4hJDh4IakEkQS9U+EO3yZt9lH1QlMgIEZAZDy6Zf+8xDcwXZNyMa0dJxSvSMz8Gq9j9O4Hn9QtIK2f/1WGlBBU67i/aFDHq8OdN9qWhOU2XYrCENnMJf5zYI/5UR4YaLh1aARbAVWmYxgLvnF7FEi+Ax/yLZQ=
+	t=1782317423; cv=none; b=KjaHU4HFmExVhpCDyrbXkwCk/n1TS+LhXPRwGO0X8wu2/yxoWEkb/rgqwCJtOOb3MT356CSxggMvhqlNQFGAredhhBbSamnRSu9JpbKAW+FlxyuadPqed8aCpVXOr5YdD7LYmQUGJtU/uL/AM5AxN/FeegCH7rrVEzguwQUUlh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782313855; c=relaxed/simple;
-	bh=W7QTmy1F8U/KAyAIKXQu2u2a1YZFer6aOohGKyQzEp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eUEBF8w6TiHo9hcdQ0FSrIKkqCaNT1eXKitSICdJA3chp159P5Lq5pTtWsrWoTk6562fhafqijzftbcjYXTzPGca6Cmw4RAuQg0WnvgGcK4gFjiTrRHgkBMTOpN+is+b/QS/cb8DdpnjT7WnkdK2v14xMMMvYDhuxkHGoJNhmzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=mJ4nSg6I; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1782317423; c=relaxed/simple;
+	bh=f29rjEzccaxikcfMV/UlaGaqP7SIGecjL3tfgA9P+5Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H5bVjsHaGimAeaq8qx3gXYPlu9ZvwWDddT3+AIfSzCE4O9dfF2c7848/PFiSY+hNHdKMn0DNSJfLNIsxt4vXfccm3lxF3TlqwkC42bzCYTu8rhpxi4TFOIdYDIKU5SBA2qmp8S7WGNc4chInrsw9zpcq1JBoqCs8Y433ZX/Uhv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xGmbNoC/; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="mJ4nSg6I"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 625412308;
-	Wed, 24 Jun 2026 08:10:49 -0700 (PDT)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C5313F905;
-	Wed, 24 Jun 2026 08:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782313854; bh=W7QTmy1F8U/KAyAIKXQu2u2a1YZFer6aOohGKyQzEp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mJ4nSg6I2d+Qe8OQyOk1OYnBxvwsdTyI+QEdpdqI0kGoPQZVEhy39vKuR8bZUVGOd
-	 k2PCxTxVLOFh//6Ezvhp1cq0ZhPwDxQqpCdkwkPWfYgZ6ejAixUGAwkRpvf8S1nNLD
-	 gPsgU+QoobqEeHvmmj+dfMqGo7OPbGNMxrx1YpWs=
-Date: Wed, 24 Jun 2026 16:10:51 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
-	mike.leach@arm.com
-Subject: Re: [RFC][PATCH v2] perf: Fix perf_addr_filters_afjust()
-Message-ID: <20260624151051.GB575984@e132581.arm.com>
-References: <20260622123245.GS48970@noisy.programming.kicks-ass.net>
- <20260623091426.GF49529@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xGmbNoC/"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1782317417; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=nCCQWTKW2UPQgfBit6FzBL9wp9wdN4x/C64Ts2RWGl0=;
+	b=xGmbNoC/1aFC5k/Q3TNKpi5j1i9PlqTcxXfz6NInwA/CRTEgQ5MsH/URk9O9AiH5Z18+ewEs7GGsFCEjrv/opuKuRAsLv/cdzOsDig1pHmFqU4bgoWI4tn/rKfxv6I5g2xfbmxZn4F2TKPkyq9U0OuSSTzB4vlxT/F3+xVc/lfM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0X5YeW7B_1782317413;
+Received: from 30.100.148.205(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X5YeW7B_1782317413 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 25 Jun 2026 00:10:15 +0800
+Message-ID: <eaea0995-a68d-4d42-a8da-e66f19664865@linux.alibaba.com>
+Date: Thu, 25 Jun 2026 00:10:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260623091426.GF49529@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 0/5] perf annotate: Add ARM64 data type profiling
+ support
+To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
+ <ajq6tD43gW0KR4N1@google.com>
+ <726d154e-cc7e-4f1d-996d-27c3d143e2a1@linux.alibaba.com>
+ <7f95a323-b2af-4355-abbf-1d1d418fb99a@huaweicloud.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <7f95a323-b2af-4355-abbf-1d1d418fb99a@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 23, 2026 at 11:14:26AM +0200, Peter Zijlstra wrote:
+
+
+On 6/24/26 2:37 PM, Tengda Wu wrote:
+> Hi Shuai,
 > 
->  - adjust lock order; since perf_event_addr_filters_apply() takes mmap_lock
->    inside child_mutex.
+> On 2026/6/24 9:51, Shuai Xue wrote:
+>> Hi, Namhyung
+>>
+>> On 6/24/26 12:56 AM, Namhyung Kim wrote:
+>>> Hello,
+>>>
+>>> On Tue, Jun 23, 2026 at 09:02:29PM +0800, Shuai Xue wrote:
+>>>> `perf test -v "perf data type profiling tests"` fails on ARM64:
+>>>>
+>>>>       Basic Rust perf annotate test
+>>>>       perf mem record -o /tmp/perf.data perf test -w code_with_type
+>>>>       perf annotate --code-with-type -i /tmp/perf.data --stdio --percent-limit 1
+>>>>       Basic annotate [Failed: missing target data type]
+>>>>
+>>>> The root cause is that ARM64 lacks the instruction parsing infrastructure
+>>>> required for data type profiling. Specifically:
+>>>>
+>>>>     1. annotate_get_insn_location() cannot extract register numbers and
+>>>>        memory offsets from ARM64 load/store instructions, because ARM64
+>>>>        does not set objdump.register_char or objdump.memory_ref_char
+>>>>        (unlike x86 which uses '%' and '(').
+>>>>
+>>>>     2. arch_supports_insn_tracking() does not include ARM64, so
+>>>>        find_data_type_block() cannot perform instruction-level type state
+>>>>        tracking.
+>>>>
+>>>>     3. init_type_state() has no ARM64 branch, leaving stack_reg as 0 (x0)
+>>>>        after memset, which causes x0-based memory accesses to be
+>>>>        misidentified as stack accesses.
+>>>>
+>>>> As a result, perf annotate --code-with-type silently produces no type
+>>>> annotations on ARM64, and the test grep for "# data-type: struct Buf"
+>>>> fails.
+>>>>
+>>>> This series adds ARM64 data type profiling support following the PowerPC
+>>>> model: decode raw 32-bit instruction words rather than parsing objdump
+>>>> text. ARM64's fixed-width encoding and trivial DWARF register mapping
+>>>> (x0-x30 = DWARF 0-30) make this approach clean and robust.
+>>>>
+>>>> Three classes of instructions are tracked for register state propagation:
+>>>>     - ADRP: compute PC-relative page address for global variable resolution
+>>>>     - ADD (immediate): combine with ADRP result to form full variable address
+>>>>     - MOV (register): propagate type state between registers
+>>>>
+>>>> This covers the common `adrp + add + ldr/str` pattern that ARM64
+>>>> compilers emit for global variable access.
+>>>>
+>>>> Known limitations:
+>>>>     - The `adrp + ldr` pattern (with :lo12: folded into the load offset,
+>>>>       without an intermediate ADD) is not yet handled. This requires
+>>>>       extending check_matching_type() to resolve TSR_KIND_CONST with the
+>>>>       load offset, which can be added incrementally.
+>>>>     - Pointer chain tracking (load-from-memory propagating type to the
+>>>>       destination register) is not implemented, matching PowerPC's current
+>>>>       scope.
+>>>>
+>>>> Testing:
+>>>>     All four sub-tests in `perf test "perf data type profiling tests"`
+>>>>     pass reliably on ARM64 (AArch64, SPE-capable hardware):
+>>>>       - Basic/Pipe Rust: struct Buf (code_with_type workload)
+>>>>       - Basic/Pipe C: struct buf (datasym workload, global variable)
+>>>>
+>>>> Patch breakdown:
+>>>>     1/5  Widen type_state_reg::imm_value from u32 to u64 (prerequisite
+>>>>          for storing 64-bit addresses from ADRP)
+>>>>     2/5  Add arch__is_arm64() detection, raw instruction parsing from
+>>>>          objdump output, and enable show_asm_raw for ARM64
+>>>>     3/5  Add get_arm64_regs() to extract registers and memory offsets
+>>>>          from load/store instruction encodings (4 addressing modes)
+>>>>     4/5  Wire up ARM64 in annotate_get_insn_location(),
+>>>>          arch_supports_insn_tracking(), and init_type_state()
+>>>>     5/5  Main patch: instruction classification, ADRP/ADD/MOV register
+>>>>          state tracking, and architecture initialization
+>>>>
+>>>> Shuai Xue (5):
+>>>>     perf annotate-data: Widen type_state_reg::imm_value to u64
+>>>>     perf disasm: Add ARM64 architecture detection and raw instruction
+>>>>       parsing
+>>>>     perf dwarf-regs: Add ARM64 register and offset extraction from raw
+>>>>       instructions
+>>>>     perf annotate: Wire up ARM64 data type profiling infrastructure
+>>>>     perf annotate-arch: Add ARM64 data type profiling support
+>>>
+>>> Thanks for the contribution!
+>>>
+>>> There was another series on this, please take a look.  I hope you guys
+>>> can collaborate.
+>>>
+>>> https://lore.kernel.org/r/20260403094800.1418825-1-wutengda@huaweicloud.com
+>>>
+>>
+>> Thanks for the pointer! I wasn't aware of Wutengda's series.
+>>
+>> I'll take a close look at it and compare our approaches. Since both
+>> series target ARM64 data type profiling, I'll reach out to Wutengda
+>> directly so we can align our efforts and avoid duplicated work.
+>>
+>>
+>> Best regards,
+>> Shuai Xue
+>>
+> Thanks for reaching out!
 > 
->  - note that perf_event_mmap() is called by the thread doing the
->    mmap()/mprotect()/.. operation, but not the other threads in the address
->    space that might have inherited the same event.
+> I'm currently finalizing the v3 of my patch series. Most of the work is
+> already done (19/21 patches verified), and I plan to send it out within
+> the next few days.
+
+Glad to hear that.
+
 > 
->  - have perf_addr_filters_adjust() iterate the child_list to find all other
->    events for tasks that have the same mm.
+> The overall approach remains unchanged and continues to follow the x86
+> implementation. However, compared to v2, it includes several bug fixes
+> and optimizations addressing known issues.
 > 
->  - since this can now adjust addr_filter_ranges[] for remote events, make sure
->    to adjust things while holding ctx->lock; local_irq_disable() as implied by
->    the ifh->lock is no longer suffient to serialize against event scheduling.
+> Once v3 is out, I'd appreciate it if you could review the series and see
+> if your specific use cases or ideas can be integrated on top of it.
 > 
->  - per the previous locking order; perf_event_mmap(), which is called holding
->    mmap_lock, cannot take child_mutex, as such, make child_list RCU protected
->    and iterate under RCU.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Just verified this patch with Arm CoreSight:
+Sure. I am glad to review.
 
-  perf record -e cs_etm//u --filter 'filter traced_region @/root/test' -- /root/test
+Thanks.
+Shuai
 
-The workload forks a child process to inherited the event, also used
-trace_printk() to confirm perf_event_addr_filters_adjust() has been hit.
-No warning reported by LOCKDEP.
 
-Tested-by: Leo Yan <leo.yan@arm.com>
 
-If you want me to try any specific test, pleaset let me know and I am
-glad to give a run.
-
-Maybe it is good to fix typo in the subject: s/afjust()/adjust()/.
