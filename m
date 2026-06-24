@@ -1,191 +1,179 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012017.outbound.protection.outlook.com [40.93.195.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310D4308F3E;
-	Wed, 24 Jun 2026 06:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782283075; cv=none; b=Fpoadq9zu7ib3hutmjTi/NC4uSh2xBgnkB5AWFH70+1NxrbCZ4QDTxl2nrc6d2Ec82UcW26BDOhErn20jJ/YSMLwd+EVkLV8eemohL2JTz1YGXLsOdaSYSff2z+2jxbaM9j1LEchSEj2Z0bCF5KsFE8FrRwC2/3SulPn1q1htTQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782283075; c=relaxed/simple;
-	bh=rRvDOpPNHsh8I9iNW2zJe9yCGCs+8R8D4ga8el/IMik=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZY2XjQPn/5/6TUXT3oRRWF7uioTr4Pu7qGL64MXoDtAuc+Y68sns8JSvdBqDlvwL/9N/YDMWhImHSPPnW32FmGPQY4p4TGoOlmskz6LhYmIIA/Ab/Czx6sFmB2tSA5Pb2EHd7B4y8+r4XeSpezHGzxUQnzv31aYKVPQC045mmR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4glXKW5ZxfzYQts4;
-	Wed, 24 Jun 2026 14:37:03 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id CE48C4058C;
-	Wed, 24 Jun 2026 14:37:45 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP1 (Coremail) with SMTP id cCh0CgDXJTs2eztqqeOoCw--.30751S2;
-	Wed, 24 Jun 2026 14:37:43 +0800 (CST)
-Message-ID: <7f95a323-b2af-4355-abbf-1d1d418fb99a@huaweicloud.com>
-Date: Wed, 24 Jun 2026 14:37:42 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3342609EE;
+	Wed, 24 Jun 2026 06:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782283182; cv=fail; b=tSsXfcktiOLmHH5WlcfkWuwz/6JSnMWR+pOMr+bTM9wThY9pHKuiwcZ055rsjjo+Gxo+JiBCIoqiA+UEvVAxcoqNQlGKAQiigeo2vdjkCGu62KyunZRn5Hnqh4IWnvbJHNT4XSS0b9Mz5Aki8A6UiOKnfzw7agTnlJPmvDRO6fE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782283182; c=relaxed/simple;
+	bh=4PUS7JiXS0mvCbHHKm+Rnyb0DrkLkHtuEt9sd+1iO8s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ndMG00KJdUvqEd4qdKd4SHj26Tsjueb+0RBEPueZsz5Hw/SjEPfRzUduZy9Qgcw4bye5n3e6rxfZIp0li8ncJO6ltYZld9tC2nG7cxc+M4gqqYRLhyh5W2cHk4iLw6n1zP7frLyPgDruJX/heLwqmLibBophZHnT4gJm4EK4k/4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MHrbkVfP; arc=fail smtp.client-ip=40.93.195.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MHrbkVfP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AJrlQLcFYcm9NjMpTe9pqR83/XB2HZWBzMaENAm5jR1V5YeqhPsv52zahq9/RMEpZf3OyNcHwUfZGxIUq+loE52LhHyMLmtdf7nVXioaV7+bwMDWKu5aGrddvvSYFe2IXRFdmpv+AfFC3TMoUystx3F2ZXqjEx1uo1Otbp/GZK/g0Y1kr+UPzxodETtfEjTmKvL/0379Zi0JSjQKNNb4H+jdHwrZGE7bwtjvMu+UfxLR10ojaT3FiToym6K0Ru3w83sH4Ogb6weWdrHoFQ41uKRzaOLaHO5zoaqnwDvIRxJLR7wplcTvUmSU7eS66YDwVwcJc3BwY0Aw5hH1e8aYow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uT3qrZOCt7VUPyTe9G6XsdE06/3gzwlZ7wuPDgaS7sU=;
+ b=Zks6h6uKJM3jNw0vqe5beggDMkQTlafVmRnjMhqwesNLiMNV7msdOKBvxF6omkZ+fdGi7Ch1cB7X6xNc/c2eOilDbm+T1q89RdPSf7teV1wFMenRqoa4jtSjd3R8CyTFIj+kkyJGf3I/uZ52Ug/4BBTChswhFJ5guGv8Obs+tM1J3EZsbAgOE+wQNs4LfZa7sXuE0XQAoKaAus+ngAQz+6cOdlcN31LO7hRL8iRakEcLzcsoG6OTVbDqUyiRaTFIobcxrPbmuSpjgiHGOnG5oCjhg6MG/xWa5vbqWtfAtPcei/QodJQQS1xgWXsE7/YzKrU6JpXNCWNskQq9FnW1bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uT3qrZOCt7VUPyTe9G6XsdE06/3gzwlZ7wuPDgaS7sU=;
+ b=MHrbkVfP7l3n03V5cjA2xFuYp79grRA1mq2hkk+jqOd67PmzMRXd9+c4Ld+3gBTjmRrGURh1rNKTEsLLiSuYorGxgfKjvOX2o9kULOr8CYHUjg5SNOMJ+c3NvFx890weYTjCckedgyijTCR8AaYtPV+vozBok3ZWICJeKjoKQx8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB5713.namprd12.prod.outlook.com (2603:10b6:208:370::18)
+ by SJ2PR12MB8134.namprd12.prod.outlook.com (2603:10b6:a03:4fa::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.12; Wed, 24 Jun
+ 2026 06:39:37 +0000
+Received: from MN0PR12MB5713.namprd12.prod.outlook.com
+ ([fe80::cab0:6260:dd96:3fd8]) by MN0PR12MB5713.namprd12.prod.outlook.com
+ ([fe80::cab0:6260:dd96:3fd8%4]) with mapi id 15.21.0159.012; Wed, 24 Jun 2026
+ 06:39:37 +0000
+Message-ID: <71f4c100-ea02-4a64-b2ee-5bd2d5d01fbb@amd.com>
+Date: Wed, 24 Jun 2026 12:09:26 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/amd/uncore: Add group validation
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>
+References: <0f2cff983d79521e153d211ce412fedbc4ed942c.1782211518.git.sandipan.das@amd.com>
+ <CAP-5=fVg-mjLj2v6Q2kXMBU26rn=CgZNyFE7O=-+ZuE90RC_8Q@mail.gmail.com>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <CAP-5=fVg-mjLj2v6Q2kXMBU26rn=CgZNyFE7O=-+ZuE90RC_8Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BMXP287CA0017.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:b00:2c::27) To MN0PR12MB5713.namprd12.prod.outlook.com
+ (2603:10b6:208:370::18)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 0/5] perf annotate: Add ARM64 data type profiling
- support
-To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
- <ajq6tD43gW0KR4N1@google.com>
- <726d154e-cc7e-4f1d-996d-27c3d143e2a1@linux.alibaba.com>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <726d154e-cc7e-4f1d-996d-27c3d143e2a1@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDXJTs2eztqqeOoCw--.30751S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxtF1fAFyfJr4fWr17CFWrAFb_yoW7AF4kpF
-	WvyFy5KrW5Crs7Jr17tr4UurySg3y8J3WDWr1UGFW0yFsIyr1S9F42g34j9Fy7Crs5Gw1j
-	vryYyF17u3W3AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB5713:EE_|SJ2PR12MB8134:EE_
+X-MS-Office365-Filtering-Correlation-Id: c75fbf22-36cc-4ad8-c933-08ded1bb5c6c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|23010399003|1800799024|366016|3023799007|18002099003|22082099003|11063799006|4143699003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	a1XOCdg30/qEiYjG9+NqzluqHYqvN8s670lVheJHbzehirYw/2kDGfpmOwXp+eawPZguSK86kJEx5oNdhEFowdglFvCMu8JYbEGsb6C9CyHSiTD+1e+qXmNsp+Fwql31pNTQylXBfRSr+HpMFAZy0BG4pMBLEWXkNFn1BFeu0gr18qAHbHlM1qCWK+qDXGBklzp2ka9l8+1VsTvluKI6i4AE3BHL4awuJr9U/NmbGaHA4snQiJAvPMKVzs/cXK2lA9ECMxp6FNf3sxjFrFnAeklGFs6Bq2cYqqaw4nAo8eKhVddAdpkjLgBG7M8LDWVioA+8nogJV8QirPCg9Np0V7nW4FncUqh0RM6gDBPs4Vu2aG4rFzRUbPMZwGgGCkk2PQsPK+jtcQ52dADlRTUvw78U7Ie9S1mnktbqwN3QEqh6+wxd9jaTT0IHlKuEuRD3v20NgWw5Wx4p7s2H4KiSi231y0K9Mf7O5cVwsHS6UFIozghrAcobq/53XltFUCaucPP7E4NBnti0eRB9/EUptudEMDclIVbt8omTZJH/y6y0AE2KLs4yKzn8bAhbe1Xsq407GhjPiWcV3PDBEKUn1X21EREkXHzxDDtN65arZQBnCcZShxDXb1noXsBhyUPdibPSzQKI/LAhdw05IGatDVvG4dl/9tMwd6h/ZDAxiRo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5713.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(1800799024)(366016)(3023799007)(18002099003)(22082099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TDZCNTRaaUZ2U0grSFNGMEJJZG12djJzWGdKczVUenJiVko2WUh1bGQ1RVRm?=
+ =?utf-8?B?V0t6K3pObEY5K1p2MG8vT3UwTFkyK0RyUmhkSmNyUEpTWmNRNmpZN2UyUUtE?=
+ =?utf-8?B?Yy9uUWFVNGFQQXExeS9YT1ROVXdCZE9rVUxESklLcGRiTGx5YXdhVHZYR1Vs?=
+ =?utf-8?B?clJnMGFDbmV1YUdmeklKQVN3VXBuREVydFhUWWlRbzh1WFpXbHVmVTRMN3pD?=
+ =?utf-8?B?cWYyL0JHVzBVT2NGa216bjZjQVUxY2xGUkZmU1NJQndkRDg2WGNYTUcvTjBn?=
+ =?utf-8?B?Z3cvZVBRY3pqa1QyRlV2WHMvaTU1SHpBeFEyL3dyMU13T1RoTTFKengzNmZG?=
+ =?utf-8?B?YTQ1OUxPdmRIaDFWSlpUVDMvVjl0VjBXNmdBU3NYSDBnRVkzUWxkazU4RFdZ?=
+ =?utf-8?B?OUZ6azFHMEFOK3BSanZqL2VwMDdEOVpac2NZK1hrVnJGNjNkZFZpa1V6MTR4?=
+ =?utf-8?B?LzVuZmgxNkhza3hRUkhoNWRKTHd5dzZ4Q1l0cjFEMUtQM0FpUDk1R1NlSlE1?=
+ =?utf-8?B?TzFkTm1yRlBiUnpLREhIb2R1dVJ4RS9OQlh3NGRlZ1NxV0h2ZmRXOVFBeXRo?=
+ =?utf-8?B?K3hUS24vcld3L2J6SktTY1RSU3huRjRKRmtZZTZCckd4bjNuM0Jnd3JjRUlr?=
+ =?utf-8?B?T2J1Y2pTWHRHa2VyMDZiK1k5UVlTUjh5UnpwY1g1aTl2WGJDRlFnTE9hUnJx?=
+ =?utf-8?B?RjFVeWRzK2dwb2NMYXJoUW4rcTZwTW1uK2lIdU9EL1ZqcW53SG9jK0tXb211?=
+ =?utf-8?B?RDVWSkFQZE1ObTVsYnRyS2pSNzdDRVd6SlhDREdQU2MvV2k4NnpWU3pFekVJ?=
+ =?utf-8?B?TkZvRDhneDZjaG9abFBVYi9UWGZZeXZQa2NEeG5nK3EvZDZEQVJGUzVJd2dm?=
+ =?utf-8?B?UjBJRGV4dW9YZTJ1SU90eFUxMlp5SDcwWlUwODhkdVo5QUE1VmFkcXdyNTN4?=
+ =?utf-8?B?MkxsbHA0cUxWUFg3YU5LN29QN0ZrNjMxd0tlQzlxVUplc3hRR016S1B2VFVF?=
+ =?utf-8?B?M0lCTVc5VSswbTlwUzVTaUptS1ZZU2NQTGI0N3FlbFRMWTFHQ0QrVVRHVFdQ?=
+ =?utf-8?B?bE9EeC80b0tXSzQxVW41cTNPK3pDUXROTytZOVFhb2U1dkJnbFdMWThQWHVV?=
+ =?utf-8?B?cHlFWkRZS21wS0pDaG9nYThmQm1Bd1dDZWV6cVl6UG5GU3lTcWQwQ0xIMGVs?=
+ =?utf-8?B?ZUQ2eENwdDhvMjRYQXQzQVZaUkpsci9kZGVENjFUNVRmSFdPSkU4WCtnUzZh?=
+ =?utf-8?B?THdxUjZqSG1pRTBJTXAzT2U3eTNwWFZiOEx1amxCMEFxc1JkUkIyN3ovY1ZN?=
+ =?utf-8?B?UFB0VVNSQ3h5L3BpMExEbXYzL3FrNFVXMitUZkNUdEJrMHNHUHVWcmU0bUsw?=
+ =?utf-8?B?eVJoekM5NWJ3RWxQaTF4dkJCU1o5L1NHU05xd0dRU01Qc1dydGNkUG5JcE9n?=
+ =?utf-8?B?T1RxaURzV2orVSt6QkR6UzZkdk9kcCtHUjJaRWNOSEVlZjdRc1pzNWx1RWtU?=
+ =?utf-8?B?QVFiT0NwdzVCNHFTWkhsY1BDRTh3c3JIQVJ2YU1PQmFaZEYzWmlLY1gwUjBQ?=
+ =?utf-8?B?aThBMExGaHlLTS83VjF2UVBLbEF5ODR1VGJOZ3dPOXI0VS9uMXBvRjE1VTcr?=
+ =?utf-8?B?ejlZK29FQndhZmg5YWNQVUdmZjVkRG5JeXBISzZsWDc3VFFZMnR3WFl3dTll?=
+ =?utf-8?B?S1hhbWwxY0lmckJ1THkwMUpOUXExc05kSlIxR2ZReTE0dWNmTktJU0VXYVAv?=
+ =?utf-8?B?Q1FqcWxwWG5KQXBGdlFic2hPUXdUZ2VXb2RBdWNEQkx4QjUveG1BQ21qV0Mz?=
+ =?utf-8?B?TzArOGtndk90NW1hWjBkRUhBSkEyQVNHdGF5Tm54OUFVQVNGZVRqUnhURDJ2?=
+ =?utf-8?B?aHR0eUhEVHN5bnNuUmlra3BtZnNiRW90SWhOWkJSS3ZCbmEzSVAxL1RxZStR?=
+ =?utf-8?B?TnZMQVNiTjBQMnF5V1JTbTlGdmJBNzZnemVKUitHdzFpcFg2S1pBVDBWbEYy?=
+ =?utf-8?B?MWlDckxuc2RJaExlUXpqMWhycTdFZFBCbUpQT1ZqYlI0SFB1eGRBRnpFMjhF?=
+ =?utf-8?B?ejE2UHB3SlpPRDlOTlMyZnczbjF4OENHSVJlT3Z6MGxSTG5PM0pjTGtaK0I4?=
+ =?utf-8?B?SkRldFNKUkQveHNtb3dZYjRsTGFLNUl0eXg2TzhhL004THdXU3lWRjFnb3px?=
+ =?utf-8?B?dlh6bGRDQzlLL0tER2ZvMTJwSWd0SStWaFNJYmpMN3ZDR0k0SzZTVE44U3FE?=
+ =?utf-8?B?RWNCK1R0QjlIbmFyYTFBU1JVVWNveFkrN2diMUpYZ2dsUlhYQzFLNXFTMDEz?=
+ =?utf-8?B?c2MwQ0U2aWVVeWEzNndza0RkTC85enUxaGJYLzU0ZXA1Zm40aWtFUT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c75fbf22-36cc-4ad8-c933-08ded1bb5c6c
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5713.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2026 06:39:37.4293
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lQKilTCxz9EIdiERxb6nFjNFb6Th3hiMcQe+pXzlhfdFWNqnNcI2PSDA0nvZpgvV5a+2ahe5ORN0yn6HPXs+oA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8134
 
-Hi Shuai,
-
-On 2026/6/24 9:51, Shuai Xue wrote:
-> Hi, Namhyung
-> 
-> On 6/24/26 12:56 AM, Namhyung Kim wrote:
->> Hello,
+On 23-06-2026 22:46, Ian Rogers wrote:
+> On Tue, Jun 23, 2026 at 3:49 AM Sandipan Das <sandipan.das@amd.com> wrote:
 >>
->> On Tue, Jun 23, 2026 at 09:02:29PM +0800, Shuai Xue wrote:
->>> `perf test -v "perf data type profiling tests"` fails on ARM64:
->>>
->>>      Basic Rust perf annotate test
->>>      perf mem record -o /tmp/perf.data perf test -w code_with_type
->>>      perf annotate --code-with-type -i /tmp/perf.data --stdio --percent-limit 1
->>>      Basic annotate [Failed: missing target data type]
->>>
->>> The root cause is that ARM64 lacks the instruction parsing infrastructure
->>> required for data type profiling. Specifically:
->>>
->>>    1. annotate_get_insn_location() cannot extract register numbers and
->>>       memory offsets from ARM64 load/store instructions, because ARM64
->>>       does not set objdump.register_char or objdump.memory_ref_char
->>>       (unlike x86 which uses '%' and '(').
->>>
->>>    2. arch_supports_insn_tracking() does not include ARM64, so
->>>       find_data_type_block() cannot perform instruction-level type state
->>>       tracking.
->>>
->>>    3. init_type_state() has no ARM64 branch, leaving stack_reg as 0 (x0)
->>>       after memset, which causes x0-based memory accesses to be
->>>       misidentified as stack accesses.
->>>
->>> As a result, perf annotate --code-with-type silently produces no type
->>> annotations on ARM64, and the test grep for "# data-type: struct Buf"
->>> fails.
->>>
->>> This series adds ARM64 data type profiling support following the PowerPC
->>> model: decode raw 32-bit instruction words rather than parsing objdump
->>> text. ARM64's fixed-width encoding and trivial DWARF register mapping
->>> (x0-x30 = DWARF 0-30) make this approach clean and robust.
->>>
->>> Three classes of instructions are tracked for register state propagation:
->>>    - ADRP: compute PC-relative page address for global variable resolution
->>>    - ADD (immediate): combine with ADRP result to form full variable address
->>>    - MOV (register): propagate type state between registers
->>>
->>> This covers the common `adrp + add + ldr/str` pattern that ARM64
->>> compilers emit for global variable access.
->>>
->>> Known limitations:
->>>    - The `adrp + ldr` pattern (with :lo12: folded into the load offset,
->>>      without an intermediate ADD) is not yet handled. This requires
->>>      extending check_matching_type() to resolve TSR_KIND_CONST with the
->>>      load offset, which can be added incrementally.
->>>    - Pointer chain tracking (load-from-memory propagating type to the
->>>      destination register) is not implemented, matching PowerPC's current
->>>      scope.
->>>
->>> Testing:
->>>    All four sub-tests in `perf test "perf data type profiling tests"`
->>>    pass reliably on ARM64 (AArch64, SPE-capable hardware):
->>>      - Basic/Pipe Rust: struct Buf (code_with_type workload)
->>>      - Basic/Pipe C: struct buf (datasym workload, global variable)
->>>
->>> Patch breakdown:
->>>    1/5  Widen type_state_reg::imm_value from u32 to u64 (prerequisite
->>>         for storing 64-bit addresses from ADRP)
->>>    2/5  Add arch__is_arm64() detection, raw instruction parsing from
->>>         objdump output, and enable show_asm_raw for ARM64
->>>    3/5  Add get_arm64_regs() to extract registers and memory offsets
->>>         from load/store instruction encodings (4 addressing modes)
->>>    4/5  Wire up ARM64 in annotate_get_insn_location(),
->>>         arch_supports_insn_tracking(), and init_type_state()
->>>    5/5  Main patch: instruction classification, ADRP/ADD/MOV register
->>>         state tracking, and architecture initialization
->>>
->>> Shuai Xue (5):
->>>    perf annotate-data: Widen type_state_reg::imm_value to u64
->>>    perf disasm: Add ARM64 architecture detection and raw instruction
->>>      parsing
->>>    perf dwarf-regs: Add ARM64 register and offset extraction from raw
->>>      instructions
->>>    perf annotate: Wire up ARM64 data type profiling infrastructure
->>>    perf annotate-arch: Add ARM64 data type profiling support
+>> The amd_uncore driver currently does not validate event groups and
+>> allows creation of groups with more events than the number of available
+>> hardware counters. Because of this, pmu->event_init() succeeds but
+>> counter assignment fails later in pmu->add() which returns -EBUSY once
+>> all counters are exhausted.
 >>
->> Thanks for the contribution!
+>> Address this by introducing group validation in the pmu->event_init()
+>> path. Since the uncore PMUs have no per-event constraints and all
+>> counters of a PMU are interchangeable, validation is reduced to just
+>> counting the group members that target a PMU and ensuring that they fit
+>> within the available set of counters.
 >>
->> There was another series on this, please take a look.  I hope you guys
->> can collaborate.
->>
->> https://lore.kernel.org/r/20260403094800.1418825-1-wutengda@huaweicloud.com
->>
+>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 > 
-> Thanks for the pointer! I wasn't aware of Wutengda's series.
+> This is great Sandipan! Thanks for addressing this! I'd been wondering
+> if in the perf tool if we could test hardware PMUs for not supporting
+> failing at open properly. This is a problem for weak groups, as used
+> by metrics, because they try to group all events and then break the
+> group when the open fails. I'd observed that AMD uncore events
+> supposedly opened but then failed during reading. I suspect other PMUs
+> also suffer this.
 > 
-> I'll take a close look at it and compare our approaches. Since both
-> series target ARM64 data type profiling, I'll reach out to Wutengda
-> directly so we can align our efforts and avoid duplicated work.
+> Peter mentioned a behavior in the past: opening events in a group in a
+> disabled state, with more events than counters, and then the software
+> enables and disables events in the group to control counter
+> allocation. The perf tool doesn't currently utilize this behavior but
+> I think it explains some of the Sashiko feedback.
 > 
+
+Thanks, I think it does explain the Sashiko feedback.
+
+> Would it be possible to get a Fixes tag for stable backports?
 > 
-> Best regards,
-> Shuai Xue
-> 
-Thanks for reaching out!
 
-I'm currently finalizing the v3 of my patch series. Most of the work is
-already done (19/21 patches verified), and I plan to send it out within
-the next few days.
-
-The overall approach remains unchanged and continues to follow the x86
-implementation. However, compared to v2, it includes several bug fixes
-and optimizations addressing known issues.
-
-Once v3 is out, I'd appreciate it if you could review the series and see
-if your specific use cases or ideas can be integrated on top of it.
-
-Best regards,
-Tengda
-
+Sure. This has always been a gap in the amd_uncore driver ever since
+its introduction in commit c43ca5091a37 ("perf/x86/amd: Add support for
+AMD NB and L2I "uncore" counters.").
