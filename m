@@ -1,54 +1,54 @@
 Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBF0322522
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB51325706
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782278172; cv=none; b=qSTTExeUzLQipOjblPlMKQh3nEvDWkHU1st5uBWp0l9YEIJb/LUfMILjNSKtYI8WqcPqPtxgPXY+GBIJlaZOAszcjr2FQz8ufQhjzegne1qpvwzfK+Jh5HNVKah7zWxtEfWQGqUKXUjS9vcTjj5WE96C7Kp4ixeHYQS6ted4p8Q=
+	t=1782278173; cv=none; b=tSJvXtUPQG9/g9goWCQFi3NOkPQ/QwUJuYAcXZAK+d+FnFfRk4dSDUxxsgJIrVkLJ9Hk8RNL07TjmPkuQfqNjQXzcwROISJXxLQ9F+73B+uG7s+IeFxtk/NmlT02WSV3Ix5fqPt9OVxww9u0xsv3flkkyiQKh0UJNVdWeXJCD5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782278172; c=relaxed/simple;
-	bh=5NSOfZxC9tZSZzh5nzx4J56ffxbdULsyGYFbtB+mfwA=;
+	s=arc-20240116; t=1782278173; c=relaxed/simple;
+	bh=yBgJxLFlM8XfS2AmTQ1euX53AU1ZCMgDXuBQCLE6iuM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jqkcOq12FsSf2TlM/rKd7mj2ylSY/0c2fkON9GzaMyVfuTzHSNJqajUGipNq4f/lmr2v3Et2G1roU9QTK3m+ZKe1uSixumxnFykHt+RSYjpQpMvRxfavhWwDVkA/Db1w1ujopajlqfMvlCJ42Q8Apg+DuygfZ3RWaz4Zs2aukAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MeI6Qk39; arc=none smtp.client-ip=74.125.82.73
+	 To:Cc:Content-Type; b=meYc8VBDHi610Cl5Ygcz50nZVo3RwMuGKbJA2nriXHsaB02xL0KlnE4Dc18rVOh9+nNmoUX3J0N5H6g3mTPc+zq8wURCcvVG6SJYB2bgzG7VOmdTIQxwNdiKo0c68J7EzO+G965s71hLAD5hG3NxgqtkIDBkK/4PFhCBwZCt+k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C5hbBZDs; arc=none smtp.client-ip=74.125.82.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MeI6Qk39"
-Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-139b62317d0so2509061c88.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:16:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C5hbBZDs"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-139553dd8acso1219033c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:16:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782278169; x=1782882969; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1782278172; x=1782882972; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GVfnkNq1PIBmqGscS0ilZAevukokJ/LZeW/s+TEeeuo=;
-        b=MeI6Qk39JwyHZmJaTlnOIrDUgdr1pOeViSikekaA4PxLts/NOWzUXoYtaGN5dnj3C6
-         PRvoaBiplWg5ff+E9yGSHdCX2ER4YE95CYY10owpEJzu2BVu1RABBBLn9/BTB2pP6NMo
-         /LQdsiFI6VNPi1YMGNAsgEA5nGx1sElqlsLRF/5KTEP2BC/zLN6UM29nflrB4aJlRQS0
-         jD9UxfiM15A4fZQToKL49dG/YyIjx5Q+8J0DPBDZNRy+SlaNYdRBk03EXAJcEU+NAL9C
-         kefcYm8bYLdgBa6nN4/rXYbbQlTZhqtOvtVG8pZnNFZahmAwvlCmFJJ1FbEXYfIHou6L
-         fAgw==
+        bh=gmw7pU9fNjTzs0L46fsauUoX5XHvR/H/XvPyxAUTAOY=;
+        b=C5hbBZDsfVYh+nvxoHqzgvcSmfJBwBfUvOhB+xhUwuiEFPUa27ZT9Qrw55SbF7sXMk
+         MpQWIJfuFaNRqkSZc4ZBzB+sxu+E9SeSNmoKxI2QamXku9v21F6xTTtSEekmn2zeARez
+         6mjwlt/TRdLfi7NhK6MVRhxu8RLptDduhLsKUGgvt9QTW9+7L9zrsmgmdx+6kXrKu+51
+         ldqQgObtcG8I6stbW6ALe1hIeMRN3n28ACG5VepbNI1PfGIdTcfqZl9DBZff9AEtiHBN
+         2k4Vxa0J2XaFoeOL7Jsk714nu3XY22gqeazJMEoBmsapaWjlNNcEJyskue0SjbF6nmCm
+         MpAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782278169; x=1782882969;
+        d=1e100.net; s=20251104; t=1782278172; x=1782882972;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GVfnkNq1PIBmqGscS0ilZAevukokJ/LZeW/s+TEeeuo=;
-        b=LvNtpz49GJZuiATrueUunLpuZqsF97CqbsVuxfDp22haGMs20BFkk4jh5/w6uEyyGC
-         y0LrEYdJUlI/KqnMBC1ajTv6Xs4eXcPPXhd924pVXMBqBXpTQYV5bk/HEyAPnBn5w1ih
-         J7pvKfUiZaZg5tZCw98jy3Hs3ov4Bx64bjwOtHdDepqmCGbK5jCwiS5eC+4QBSPy82aq
-         xNciStmik6o9O6w8HJMzLPleztT+0aytX20PPSosHRDEhtAQrmY0v9TyKISZSowf8LCH
-         CB+9+rhNIOCf2ZXBTWhMGhtrYhK8mnp8iasc1LYRUgys/eSElCWuQ0g7tQ6gBJDtjP7x
-         yGXw==
-X-Forwarded-Encrypted: i=1; AFNElJ/Qs58JLOWJLctAIFXsQng+pNcLWGrKz4r9uDXpnl4TP9mfNmezpSvTibu33k6gP6aYfsls7e/jsazkQsiUS+bI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8Q0chGP9E3KEetNZhScNfZb7kF8qhyuqA2LOfYSW/MCbdpOAJ
-	H4YCYPxTardXYSrrmxrvRI3+/u5K9cnAWzDSJN+dfptpvFfv6MItVdVZ2SK9ER1CPr3DRewgKev
-	/i4Wpe8e/Uw==
-X-Received: from dlbqc12.prod.google.com ([2002:a05:7023:a8c:b0:139:c208:51f7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ec6:b0:136:4a60:43ce
- with SMTP id a92af1059eb24-139d0c1921bmr1579546c88.11.1782278169134; Tue, 23
- Jun 2026 22:16:09 -0700 (PDT)
-Date: Tue, 23 Jun 2026 22:15:30 -0700
+        bh=gmw7pU9fNjTzs0L46fsauUoX5XHvR/H/XvPyxAUTAOY=;
+        b=r3v6OjsC2cAIn6UqXAFIEcK+1oIM54oU6PUVyRLdnGc4FbZo1Ft2S3WwlR4jln+qxc
+         LaGAG65NDTwbjkHJs5xvRNEITAIjMSwrVGjmeAtHwEfLP8l4fW7qfzMQIR38+YCLojIM
+         X62jWTgEfDlIbxlH8gC0ZhxTHdXEnVyKgv5IfTQd8pDhRsfyDUPtsQfxbTji5z2sNehv
+         tZuynj5U9gJCw2jAGVWw5C2v8zGYNwNHzWfSM//JTL0BXpGA9Q04piYP0+FQ7HN6DhNk
+         5lkVnjWx8rAxcaKSpwcXkXc3uZiLviZhd0KFayqXkwv+i6LysE5HW0QOfmJAtnuA+iOG
+         gwlQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/Wk6xv9xfh6aWlg2zY1IrxCWm5HKIx2SvkkBKyWNS2cKhwOS06BeqadD8Z7H0vuz8O3X/yRRdT/YXwpQO9Is7h@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPI+xUFCME8JrtSd8Mx/mU/mpjdvn2uULPJCug5g651vJmcThs
+	tx0HT/KYpIXxAEWW9SmtD2bNfHuzDI36zd7PEM5QkKvvYUbRv+XTpVMI/B0nGRiHOrwxNOfaD9Z
+	QJ4Ruh3O/ZA==
+X-Received: from dlbur9.prod.google.com ([2002:a05:7022:ea49:b0:139:c977:96ad])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:419d:b0:139:90ab:36bc
+ with SMTP id a92af1059eb24-139d0cf69e4mr1575473c88.38.1782278171339; Tue, 23
+ Jun 2026 22:16:11 -0700 (PDT)
+Date: Tue, 23 Jun 2026 22:15:31 -0700
 In-Reply-To: <20260624051535.3584977-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260623053515.2677888-1-irogers@google.com> <20260624051535.3584977-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
-Message-ID: <20260624051535.3584977-14-irogers@google.com>
-Subject: [PATCH v2 12/16] perf python: Add thread and PMU uninitialized checks
+Message-ID: <20260624051535.3584977-15-irogers@google.com>
+Subject: [PATCH v2 13/16] perf python: Fix MetricGroup return type in perf.pyi
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -68,63 +68,35 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Add CHECK_INITIALIZED checks to the thread attribute getters
-(get_pid, get_tid, get_ppid) to prevent crashes if they are accessed
-before being properly initialized.
+The metrics() function can return a dictionary where the value is either
+a string or a list of strings, so the type signature in the stub file
+should be Union[str, List[str]].
 
-Fixes: 3b96bf7af60d ("perf python: Add python session abstraction wrapping perf's session")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/python/perf.pyi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 71be130b38c5..b17b191b1625 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -1678,6 +1678,7 @@ static PyObject *pyrf_pmu__name(PyObject *self)
- {
- 	struct pyrf_pmu *ppmu = (void *)self;
+diff --git a/tools/perf/python/perf.pyi b/tools/perf/python/perf.pyi
+index f266c9baffd0..58b0b3ed819d 100644
+--- a/tools/perf/python/perf.pyi
++++ b/tools/perf/python/perf.pyi
+@@ -1,5 +1,5 @@
+ """Type stubs for the perf Python module."""
+-from typing import Callable, Dict, List, Optional, Any, Iterator
++from typing import Callable, Dict, List, Optional, Any, Iterator, Union
  
-+	CHECK_INITIALIZED(ppmu->pmu, "pmu");
- 	return PyUnicode_FromString(ppmu->pmu->name);
- }
+ def config_get(name: str) -> Optional[str]:
+     """Get a configuration value from perf config.
+@@ -12,7 +12,7 @@ def config_get(name: str) -> Optional[str]:
+     """
+     ...
  
-@@ -1730,6 +1731,8 @@ static PyObject *pyrf_pmu__events(PyObject *self)
- 	PyObject *py_list = PyList_New(0);
- 	int ret;
+-def metrics() -> List[Dict[str, str]]:
++def metrics() -> List[Dict[str, Union[str, List[str]]]]:
+     """Get a list of available metrics.
  
-+	CHECK_INITIALIZED(ppmu->pmu, "pmu");
-+
- 	if (!py_list)
- 		return NULL;
- 
-@@ -3758,21 +3761,25 @@ static PyMethodDef pyrf_thread__methods[] = {
- 
- static PyObject *pyrf_thread__get_pid(struct pyrf_thread *pthread, void *closure __maybe_unused)
- {
-+	CHECK_INITIALIZED(pthread->thread, "thread");
- 	return PyLong_FromLong(thread__pid(pthread->thread));
- }
- 
- static PyObject *pyrf_thread__get_tid(struct pyrf_thread *pthread, void *closure __maybe_unused)
- {
-+	CHECK_INITIALIZED(pthread->thread, "thread");
- 	return PyLong_FromLong(thread__tid(pthread->thread));
- }
- 
- static PyObject *pyrf_thread__get_ppid(struct pyrf_thread *pthread, void *closure __maybe_unused)
- {
-+	CHECK_INITIALIZED(pthread->thread, "thread");
- 	return PyLong_FromLong(thread__ppid(pthread->thread));
- }
- 
- static PyObject *pyrf_thread__get_cpu(struct pyrf_thread *pthread, void *closure __maybe_unused)
- {
-+	CHECK_INITIALIZED(pthread->thread, "thread");
- 	return PyLong_FromLong(thread__cpu(pthread->thread));
- }
- 
+     Returns:
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
