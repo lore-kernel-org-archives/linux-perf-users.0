@@ -1,98 +1,93 @@
-Received: from mail-dl1-f74.google.com (mail-dl1-f74.google.com [74.125.82.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17FB32B126
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A7331ED81
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782278180; cv=none; b=IZ+AjvZUFtfBLPSFKAXYNiqHKwnEUQpkD98Hty5laZXEzmkEdsl4GletNiKSaDZXpFoy0j5nruEbgHqWtPigZQHsvUo4z9t3xr9CmbPa4prj5KYBlr5RdwlfjPLqfq8O0WUCGUhXjMU32w0wVAj5qmtWBvw6hRAEjbsiZ8E3S2M=
+	t=1782278852; cv=none; b=tpz6J5jrgdoe7wABo7bmCXIfwjnQWHV8iyryy8J+jlUAeaJLvVRRMGkY+gXW7v0JqUwpp/KZTv3T6tvRWL/dYcYOqhcqCQydvnWRZuaCm1JzY+/umYq3aPp32S2aHz7Cfbf8c4NCXkdGwpiIn/aH3EHP3OQa1z6/ddoFqCNmfBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782278180; c=relaxed/simple;
-	bh=ntfUbjerjoiwZYnmLDvdmJfc3i00I0KJggwMyX+cjvU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YCieWsye7n9jowln696s42y09FSA6Xpy7SaclyBLT2NQUKJmuaDl6zsmD5oh4y5CJFNFv7G+TVyMFPOuEu8YHbCZKvsB4obciPN+y1JHRSwigoMLBccr04td2kpFUegCPZbff1i9Ir+jt8WJiLpvijNlufaRoA0DmJvAmdjulkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PUJxLl3a; arc=none smtp.client-ip=74.125.82.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1782278852; c=relaxed/simple;
+	bh=ceFIDcs8n8JWVfjSXIVv5qb1HceJ0wykTKBLoVY9OrE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=IB34WWLLCePcVCUHHncySHoReW0C1Tg2mwhMmktXBbIDyUB8yERWwEmkNZZISeYgmehmpi/5ldPqYT+4fY/XhOtgO/jNxxzZoYPRtpeQ8iwKiOj4fEngZ6w3od4nYyvqbzchKX7li04leRQSmW05xgjSwLA+jQBg54A3Ecu11jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjku817Y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PUJxLl3a"
-Received: by mail-dl1-f74.google.com with SMTP id a92af1059eb24-137fc6f8e9fso1238232c88.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782278179; x=1782882979; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOvgfK/YXBnBbR1lk38E5LQPe20hVZUh4Fxj/vXJics=;
-        b=PUJxLl3aw1KMHRhcDey/7E/64p5A08ScFDA0cmUOJLqzGOwaBSbMxql8GI1e9t1+3N
-         j+Pesm2EZAbrQgdorlyXxURxh/Z+Pl9Pz10Z8TWL6NOwy0bKIAtwfwxLs5X+39GCMs3z
-         VxyOftgdUgjyP/tcJsFNtPYf7TH9F8+5ymIjG8qV3tmtuskr2MlMPnTsaojpZQ0bwJVf
-         rc9dDp1fzN9fVWokzRrYUwOgyonvczJQU4nIYf7AWrBy2TktCOwPSMpg9YZjnxVBIPIc
-         g8EIs+hwNna18r0z5oC52uf4szv2lT9Yj7AY3wRxtAlVsENbpKRfMXe2SJYayTF0fJbt
-         IUxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782278179; x=1782882979;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOvgfK/YXBnBbR1lk38E5LQPe20hVZUh4Fxj/vXJics=;
-        b=MULG6eL/S2RXGtFzFzJge7ozfrE4wnM/ImjGU8AqBOdce/JS6MpaiBRUy314pL7flm
-         /0zPcEdAk2x8UWbfVGANhTaJEm4fy/K9hLgvx6EsHp6Y1c29QM8AvmDdERq2FT1M0Dpf
-         msaPfH88C4LDjYXmHbpyUBSxcU80EeUUaiQhBlBTEWRgG9SEo/80kHuYFlCalY3fClbL
-         s1Rzo3CSV097wXW2hPINQwC9hm56Nb5Xr63FAr7gd0zfuY+9NlY9yxxRSpb8kCyyz3yE
-         hJPIfKKTCzkdn99kjeBZAp+k+YK9ddfGu+dNX5xRIo2Hv3TJb8CKhEgLhN02cqZoGvls
-         DZeg==
-X-Forwarded-Encrypted: i=1; AFNElJ/CqbV2eWVK9h/N6SgGfcc7XCxESuSG+QJnp3Rb0pr/CkKDYBivqjDSPbenEYo5IHFa8jJk5tgg7/AgclM23zKM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzznhTeOTE7q92yPA+zYWngFLziV9aKR5qmpQ0MbkHbeD9/euVg
-	6SPezqhBiohx4c5y5Fsr+iBF6Peu1x2NbMCtlTAD8wxV0LX5mXliStgBfL07vefEFfdMgBUBqGZ
-	f3fMuqbkddA==
-X-Received: from dlbtd2.prod.google.com ([2002:a05:7022:1a82:b0:138:17ae:de57])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:ef12:b0:137:fad9:3a30
- with SMTP id a92af1059eb24-139d0c89276mr1391954c88.19.1782278178417; Tue, 23
- Jun 2026 22:16:18 -0700 (PDT)
-Date: Tue, 23 Jun 2026 22:15:34 -0700
-In-Reply-To: <20260624051535.3584977-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjku817Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 539231F000E9;
+	Wed, 24 Jun 2026 05:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782278851;
+	bh=6MGiWy5zMsg4n9PlM8vucY15wW5Gw+kAFIOg8f+Mo3M=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=cjku817Y4aMFcGs37HXnYQXyMRI1kQs0hGTPtWHxqn6151PcVLif0OtQ5K/SayhQO
+	 q9XS62RXK37h8rxdWxDHDfnDzHOngf5K8W0XY0uyia0fCryWorBiP9j6m1HiWcPr5R
+	 R3o5qwY8EcpWn9r1figvYW71/brc0EJAD6sh5UDbCr2T8sEewhWY7LCkQQ8sr61W+W
+	 SBFRqjfb8uAGK3G9kd0sfFrqZrJJShtlQNpfpJRYENxU43lK5I25r/ViB3ziE80mK5
+	 FoWys8eja+Huzh8URp/9rd+jtDNYILMaNmZlwfIxWwIsD/eXBZDB7yodLQLtp65TV1
+	 bpL5stzcoEmIQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 05/16] perf synthetic-events: Fix uninitialized
+ pthread_join
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260624051535.3584977-7-irogers@google.com>
+References: <20260623053515.2677888-1-irogers@google.com>
+ <20260624051535.3584977-1-irogers@google.com>
+ <20260624051535.3584977-7-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 24 Jun 2026 05:27:30 +0000
+Message-Id: <20260624052731.539231F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260623053515.2677888-1-irogers@google.com> <20260624051535.3584977-1-irogers@google.com>
-X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
-Message-ID: <20260624051535.3584977-18-irogers@google.com>
-Subject: [PATCH v2 16/16] perf synthetic-events: Fix divide by zero in perf_event__synthesize_threads
-From: Ian Rogers <irogers@google.com>
-To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
 
-If scandir() finds no matching tasks in /proc, n is 0. If thread_nr is > 1,
-we bypass the single-thread fast path and then clamp thread_nr to n, making
-it 0. This results in a divide by zero when calculating num_per_thread.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Handle n <= 1 early to use the single-thread fast path and prevent the
-crash.
+Pre-existing issues:
+- [Low] Missing explicit POSIX inclusions for <stdlib.h> and <pthread.h> in=
+ synthetic-events.c.
+--
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/synthetic-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+commit 9ead28d76c34623188955779076a3c283fe73884
+Author: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 35de41ad14d3..19c1f3eaf58d 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1058,7 +1058,7 @@ int perf_event__synthesize_threads(const struct perf_tool *tool,
- 	else
- 		thread_nr = nr_threads_synthesize;
- 
--	if (thread_nr <= 1) {
-+	if (thread_nr <= 1 || n <= 1) {
- 		err = __perf_event__synthesize_threads(tool, process,
- 						       machine,
- 						       needs_mmap, mmap_data,
--- 
-2.55.0.rc0.799.gd6f94ed593-goog
+perf synthetic-events: Fix uninitialized pthread_join
 
+This commit fixes an uninitialized pthread_join() call in
+perf_event__synthesize_threads() when thread creation fails. It updates the
+cleanup loop to only join the threads that were successfully created.
+
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
+ic-events.c
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -1104,8 +1104,8 @@ int perf_event__synthesize_threads(const struct per=
+f_tool *tool,
+>  	}
+>  	err =3D 0;
+>  out_join:
+> -	for (i =3D 0; i < thread_nr; i++)
+> -		pthread_join(synthesize_threads[i], NULL);
+> +	for (j =3D 0; j < i; j++)
+> +		pthread_join(synthesize_threads[j], NULL);
+
+[Severity: Low]
+This is a pre-existing issue, but should this file have explicit POSIX head=
+er
+inclusions for <stdlib.h> and <pthread.h> to ensure compatibility with musl
+libc? The code here relies on pthread_join() and free(), but appears to
+depend on implicit header inclusions to resolve them.
+
+>  	free(args);
+>  free_threads:
+>  	free(synthesize_threads);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260624051535.3584=
+977-1-irogers@google.com?part=3D5
