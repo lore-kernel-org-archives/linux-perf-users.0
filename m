@@ -1,156 +1,127 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f73.google.com (mail-dl1-f73.google.com [74.125.82.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7251A223708;
-	Wed, 24 Jun 2026 01:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC115478D
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jun 2026 05:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782265923; cv=none; b=QAbRy/dKXkRWVIqUgtq1tC+QKaB+LSS57R0TtAcKPAW2pDAV8BMNt9b9kuEk/uvbDhWRvIYFq7XdEimNAtMtBJ+9+j8lmQdjPs6AV2WYzX4wfR1my9DwL9tY7m7xOgWRc/133xOLwWB4/+J1y3/gahQo/ppcLxd5mT9I2kCW92E=
+	t=1782278143; cv=none; b=olKPS+PRbId1jSkKaVzPokCh98kexzpaC2vkjCzShayLEdwFSLIIn4O0h/72FrVBAT06iG+ZIJeFNayLG50eGp3+dRS6e4whULeWB0SW9jNQLd7iIH6jWSOKMPYsCcUBq9lTQjfnZbyPTscmxrAeg5lpHTDMC+qkHwBXWQRZ4lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782265923; c=relaxed/simple;
-	bh=0iJ6b3lbu49f0HfjUyoIDjjJuvdtNCLssrC9+GRnfNc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P4xy5j9OL4hCFjlMJRZGkA/2tzX8r95cbMaW/L/aCqFfxl3ykhR9n97bTYQp/hQ+FoZ5HhQlN11GTj7TumoyupPxZbqz4TShEX6MZekQV3I3Kyuu+1bkfWv4uOoWcdrdXUeqd0H3ipdn7vTqqYiQdFQWSy3PnQ2MaQIWgntRPTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=o+s15/C8; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1782278143; c=relaxed/simple;
+	bh=f6aRFBSMrUrutxUiu7Qxb6D2ih9vf7jdTX0KENMCEXY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=b45q0oZd0zr6cDZAJgh2cGAtCF71uqwxFYWkWJu1yh5T+4uPX+SVA8orkPL93Td6S5TX1grq4SmAK2i5YrHTwnYlkx8UCOFluwrI3kXX+qy4vVJfHxb4K6OBdsOEtAXRhW6UBwJ5rmYrOpjcm7jFc1Du9bsBAvmi5Z0To7tLvYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W70oJ0rj; arc=none smtp.client-ip=74.125.82.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="o+s15/C8"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1782265917; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=jQ4FzfkJ0zm3rfmB/2UT3SLjcl/uAslm0IAJSButBlM=;
-	b=o+s15/C8iI7fuWTq97WbLWCBfPxoCq5wLQCvIRtSHCqb3Kr2SxwU5iFVppYZH01axzdkX18CVOloqcrhz+AY8mYCt7FXN7+ixLwcuOPudnYvJ1np7yhp7lC5mH8m3CkKhRARFto6ygofsqgPI0ZwL8cJB1GTz6zlzBifgy0XpVI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0X5VoFv7_1782265914;
-Received: from 30.246.162.163(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X5VoFv7_1782265914 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Jun 2026 09:51:55 +0800
-Message-ID: <726d154e-cc7e-4f1d-996d-27c3d143e2a1@linux.alibaba.com>
-Date: Wed, 24 Jun 2026 09:51:54 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W70oJ0rj"
+Received: by mail-dl1-f73.google.com with SMTP id a92af1059eb24-1383723dfddso1389630c88.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782278140; x=1782882940; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oCx16PzRbxbeQQ/K4lYA9nE8cZ81dunqw+SrPqeUg6c=;
+        b=W70oJ0rjUKvQwDJE24hPJf3+D6uXz9v03ox4lnsWHVFGEafjUrh3BaAj+QqDXv63nJ
+         sMcr0JvdZ0XrbVTM6CFaf4RstR7B/5CrgPPXBEnTK3JJ6meY0xgmyC6jNi4ewA0QYrlk
+         4dcTK+Bs3uCZmeP62wWZaSAUN1DQJDlgtT0MEVSEFb8YVPcGHD3Z0VVJ//uhnxp3gdGA
+         zhX1jXANxr0zdCgZuHt1trExVe3WW2t/KFOor+/ouOIWhdzPlORzs1QMdC3+ZRYVVXCv
+         TNY6K/A4wF451DOE+qmBRo+rKEUdwTwAjx9TCNGYtTcGKDtu8k6BzX68hXskToWnUWgm
+         aCUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782278140; x=1782882940;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oCx16PzRbxbeQQ/K4lYA9nE8cZ81dunqw+SrPqeUg6c=;
+        b=WSbcVRWdpNf1P8RjIxrJVFJrwy/JpWJOtZ4IgkabUOlojVwzthJeOh4EbwHfA2Rgkb
+         I/8f48O8FTjZ42nPi2HIa4yowEkQgOeEMfOOngn+clRjvhauzEhP8d4AR2QSYHcKYlxV
+         BMx3hdAP7ZnshlglbFH5FRK/Smr2FbfyfZ+Tz0ig47s5AQMQjZhzknoARfosqm9of/Tr
+         FIpvU5i+TfNBi3nKtbgm/sqa2lAPJ/gLQQknEalxRLLNtjupMzmwhSmNHzUdQvrURJ2B
+         nrFlz1XH/M/lUitkHs+DjBbgNf2S1FDyc8nWgcptVjOGYN10k6iamzA6AsjuTKX0IGt+
+         KHYg==
+X-Forwarded-Encrypted: i=1; AFNElJ/YqBT5EdVaLKaI08eaOzY8Ccw3bXlg90u9800UJjMqOyzzIkF3ar2s9SeigaJE12inGA116h0hCa7Xff1b3Zqo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFyaFKLcR9bOMHDWrhY3wHyrSk+GBYenHIGGJJbattvXschfsv
+	6fASa6rOOTOtvQDfBAO517jKb54oP5HEEYKYSeTyu/9Z625PcaaxrDeja5DcCXbL52ZxoHHzwCn
+	pgMXcXNHdvQ==
+X-Received: from dlep12.prod.google.com ([2002:a05:701b:458c:b0:139:b637:8de6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:622:b0:136:5c88:d917
+ with SMTP id a92af1059eb24-139d0c0a8e2mr1462064c88.2.1782278139951; Tue, 23
+ Jun 2026 22:15:39 -0700 (PDT)
+Date: Tue, 23 Jun 2026 22:15:17 -0700
+In-Reply-To: <20260623053515.2677888-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 0/5] perf annotate: Add ARM64 data type profiling
- support
-To: Namhyung Kim <namhyung@kernel.org>, wutengda@huaweicloud.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260623130234.8709-1-xueshuai@linux.alibaba.com>
- <ajq6tD43gW0KR4N1@google.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <ajq6tD43gW0KR4N1@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20260623053515.2677888-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
+Message-ID: <20260624051535.3584977-1-irogers@google.com>
+Subject: [PATCH v2 00/16] perf python: Fix python extension bugs from v19 review
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Namhyung
+Phase 1 of splitting the v19 review patches into smaller fixes.
+These patches address issues identified in the python extension during
+the review of the v19 script porting series, as well as fixing several
+pre-existing bugs and leaks.
 
-On 6/24/26 12:56 AM, Namhyung Kim wrote:
-> Hello,
-> 
-> On Tue, Jun 23, 2026 at 09:02:29PM +0800, Shuai Xue wrote:
->> `perf test -v "perf data type profiling tests"` fails on ARM64:
->>
->>      Basic Rust perf annotate test
->>      perf mem record -o /tmp/perf.data perf test -w code_with_type
->>      perf annotate --code-with-type -i /tmp/perf.data --stdio --percent-limit 1
->>      Basic annotate [Failed: missing target data type]
->>
->> The root cause is that ARM64 lacks the instruction parsing infrastructure
->> required for data type profiling. Specifically:
->>
->>    1. annotate_get_insn_location() cannot extract register numbers and
->>       memory offsets from ARM64 load/store instructions, because ARM64
->>       does not set objdump.register_char or objdump.memory_ref_char
->>       (unlike x86 which uses '%' and '(').
->>
->>    2. arch_supports_insn_tracking() does not include ARM64, so
->>       find_data_type_block() cannot perform instruction-level type state
->>       tracking.
->>
->>    3. init_type_state() has no ARM64 branch, leaving stack_reg as 0 (x0)
->>       after memset, which causes x0-based memory accesses to be
->>       misidentified as stack accesses.
->>
->> As a result, perf annotate --code-with-type silently produces no type
->> annotations on ARM64, and the test grep for "# data-type: struct Buf"
->> fails.
->>
->> This series adds ARM64 data type profiling support following the PowerPC
->> model: decode raw 32-bit instruction words rather than parsing objdump
->> text. ARM64's fixed-width encoding and trivial DWARF register mapping
->> (x0-x30 = DWARF 0-30) make this approach clean and robust.
->>
->> Three classes of instructions are tracked for register state propagation:
->>    - ADRP: compute PC-relative page address for global variable resolution
->>    - ADD (immediate): combine with ADRP result to form full variable address
->>    - MOV (register): propagate type state between registers
->>
->> This covers the common `adrp + add + ldr/str` pattern that ARM64
->> compilers emit for global variable access.
->>
->> Known limitations:
->>    - The `adrp + ldr` pattern (with :lo12: folded into the load offset,
->>      without an intermediate ADD) is not yet handled. This requires
->>      extending check_matching_type() to resolve TSR_KIND_CONST with the
->>      load offset, which can be added incrementally.
->>    - Pointer chain tracking (load-from-memory propagating type to the
->>      destination register) is not implemented, matching PowerPC's current
->>      scope.
->>
->> Testing:
->>    All four sub-tests in `perf test "perf data type profiling tests"`
->>    pass reliably on ARM64 (AArch64, SPE-capable hardware):
->>      - Basic/Pipe Rust: struct Buf (code_with_type workload)
->>      - Basic/Pipe C: struct buf (datasym workload, global variable)
->>
->> Patch breakdown:
->>    1/5  Widen type_state_reg::imm_value from u32 to u64 (prerequisite
->>         for storing 64-bit addresses from ADRP)
->>    2/5  Add arch__is_arm64() detection, raw instruction parsing from
->>         objdump output, and enable show_asm_raw for ARM64
->>    3/5  Add get_arm64_regs() to extract registers and memory offsets
->>         from load/store instruction encodings (4 addressing modes)
->>    4/5  Wire up ARM64 in annotate_get_insn_location(),
->>         arch_supports_insn_tracking(), and init_type_state()
->>    5/5  Main patch: instruction classification, ADRP/ADD/MOV register
->>         state tracking, and architecture initialization
->>
->> Shuai Xue (5):
->>    perf annotate-data: Widen type_state_reg::imm_value to u64
->>    perf disasm: Add ARM64 architecture detection and raw instruction
->>      parsing
->>    perf dwarf-regs: Add ARM64 register and offset extraction from raw
->>      instructions
->>    perf annotate: Wire up ARM64 data type profiling infrastructure
->>    perf annotate-arch: Add ARM64 data type profiling support
-> 
-> Thanks for the contribution!
-> 
-> There was another series on this, please take a look.  I hope you guys
-> can collaborate.
-> 
-> https://lore.kernel.org/r/20260403094800.1418825-1-wutengda@huaweicloud.com
-> 
+v2:
+- Addressed sashiko review feedback:
+  - Fixed 64-bit casting for counts_values by using T_ULONGLONG and PyLong_FromUnsignedLongLong.
+  - Replaced strict Py_TYPE checks with PyObject_TypeCheck for thread/cpu maps.
+  - Fixed a missing CHECK_INITIALIZED for pyrf_thread__get_cpu, pyrf_pmu__name, pyrf_pmu__events.
+  - Included <string.h> where memset was used.
+- Fixed line splitting formatting on PyObject_New in pyrf_evsel__read.
+- Added fixes for memory leaks and issues discovered during review:
+  - Fix memory leak of key and value in pyrf__metrics_cb
+  - Fix count_values memory leak in pyrf_evsel__read
+  - Fix sb_evlist leaks in both top and record paths.
+  - Fix potential divide by zero in perf_event__synthesize_threads
 
-Thanks for the pointer! I wasn't aware of Wutengda's series.
-
-I'll take a close look at it and compare our approaches. Since both
-series target ARM64 data type profiling, I'll reach out to Wutengda
-directly so we can align our efforts and avoid duplicated work.
+v1:
+- Decomposed the single large "Fix python extension bugs" patch into 13 individual fixes.
+- Added Fixes: tags for issues that date back to earlier commits.
+- Addressed checkpatch warnings (line lengths, Signed-off-by, etc).
 
 
-Best regards,
-Shuai Xue
+Ian Rogers (16):
+  perf script: Fix metric_evlist leak in script_find_metrics
+  perf stat: Fix evsel_list leak in cmd_stat
+  perf tools: Fix sb_evlist leaks in top and record
+  perf python: Fix memory leak in pyrf_evlist__get_pollfd
+  perf synthetic-events: Fix uninitialized pthread_join
+  perf data: Fix directory file descriptor leak in perf_data__switch
+  perf test: Fix skiplist leak in cmd_test
+  perf python: Check counts_values size in set_values
+  perf python: Validate CPU and thread maps in pyrf_evsel__open
+  perf python: Validate attribute setters in pyrf_evsel
+  perf python: Zero initialize perf_data in pyrf_data__init
+  perf python: Add thread and PMU uninitialized checks
+  perf python: Fix MetricGroup return type in perf.pyi
+  perf python: Fix count_values memory leak in pyrf_evsel__read
+  perf python: Fix memory leak in pyrf__metrics_cb
+  perf synthetic-events: Fix divide by zero in
+    perf_event__synthesize_threads
 
+ tools/perf/builtin-record.c        |   2 +
+ tools/perf/builtin-script.c        |   2 +-
+ tools/perf/builtin-stat.c          |   9 +-
+ tools/perf/builtin-top.c           |   2 +
+ tools/perf/python/perf.pyi         |   4 +-
+ tools/perf/tests/builtin-test.c    |   5 +-
+ tools/perf/util/data.c             |   3 +-
+ tools/perf/util/python.c           | 160 ++++++++++++++++++++++++-----
+ tools/perf/util/synthetic-events.c |   6 +-
+ 9 files changed, 153 insertions(+), 40 deletions(-)
 
+-- 
+2.55.0.rc0.799.gd6f94ed593-goog
 
