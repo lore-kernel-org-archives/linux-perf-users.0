@@ -1,160 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7342BC8EB
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jun 2026 22:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298DC9463;
+	Wed, 24 Jun 2026 00:05:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782254993; cv=none; b=NSpHPJ0PRz2SW1MXHouVkTznMM1aF5Eb23EO7TyOxNufE2eJpopHeK4+/FLvxgmra8KTkkRtg590K0SoDNLnllG3yS0vtMWIX9/h363oB4meHOUfxc6Y4qkD3AYzY7LZROj9JO2vxkbfoq2Ji210O8w3ZuSiudeSObfL2K0V/tk=
+	t=1782259535; cv=none; b=JiqmolMo0NYHXFQ6djnf8lB2sWoL739Wjc5XnPWlp87rVVFJ/ZGm3p0X3uEqu4MzZggZKa+T83Ae2trbJBvzb0ekn6gZsSyFSe9XrKfkpy/kZM4CQxTgcPMtkavzhudS60y60Iqv6JfbN8/9lBAttuyZzKKlrBnFPeuXs4E4REs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782254993; c=relaxed/simple;
-	bh=V+5yyt80Xcy7C5kjBc4trD6MlvRH0Jd6s7JVvAv1770=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=n8PVLXX8q8cMZNw3iu5qNm1tVeMpwTLk1ksajFryJLPDZODbNfO7q3zO85kl+3ko52LA4sC/9OrqP0WXHsoU6C/jNhMX2mVVOxvVKqL+Kch0NA9o7oVASa0FU37EpFf/r1AGH0o3clav3YaQKaGNIKr4U3ycfPEEMpd4zykn/u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fjEU4ZVH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782259535; c=relaxed/simple;
+	bh=tseaaar3FgzOfHVbjsRg/rQIFhUw7ULHsr776xtTwPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ojeKTDeMMFzcaYt1q26JrNK5IfzraFH45wn6DYt97jxn6wTK2X0pz2Izajes8SdNbmNN5ICpZxQWGN35CjGm9gUQFTuh8qjaJ+SGDLcIRh0TasQf8H9kjwOF32w/zo14qJ0WK3HnQBRzkVL3pANuPLbie3M4jAS1fcRcOI+oCXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLMH1QXR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fjEU4ZVH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F331F000E9;
-	Tue, 23 Jun 2026 22:49:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLMH1QXR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322B11F000E9;
+	Wed, 24 Jun 2026 00:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782254992;
-	bh=re53XfIhLthyDrpqVAPByH3Pkf2AvJ+arRGyUoabnPw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fjEU4ZVHVxeZqVjgCVqysQSg3wI/UleyOY6niNAF9QivuPOlQqYOi7z0jqq6ojZhK
-	 cok9vCKDFgB+HaboQ3W2WNaNgGbkPb8mxjuC9Rm001u7UXYmeg2nh0h6l2dG3YKL0B
-	 wJMBuUVHPNIEkMLNh+9ZujPyENfl5r/02+O0N+bR4mGl7QZHxtlsH0bJIl1VlowLA2
-	 NIVEQx0Fh6gB4Zjp/1Xdi020brCQ4qkr/n+sEgH0B8HerFKSLPEYKYq73PWD50VD4F
-	 EOLfEvb4DrH2KWuS7GrkYUcfcTC6moGX+LwsOmhT6Z+bKDxF5KLIxiFJ2fuUsGWxsH
-	 WpvXvqFwHXrfA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 12/13] perf python: Add thread uninitialized checks
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260623053515.2677888-13-irogers@google.com>
-References: <20260623053515.2677888-1-irogers@google.com>
- <20260623053515.2677888-13-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 22:49:51 +0000
-Message-Id: <20260623224951.E2F331F000E9@smtp.kernel.org>
+	s=k20260515; t=1782259533;
+	bh=enO2id2p+i9jMoKe0el4j29yxZLGsPLm04Pp9vqp1II=;
+	h=Date:From:To:Cc:Subject;
+	b=kLMH1QXRcw5gG7kQbdiLURxUwBQ2nau+hE7EPjvWnhVhkqWZLX3l35bRgh68Xc6/1
+	 alRJdkB8DILmYpdYw00rB59PN0+ZY2vSsQAnwI5uhosC/MJMUYOlgYRQdzz+AKi1E8
+	 TE7S6ydYN9AMAv9RIHti206aEKbFCRcDX2hjXbPVy5Raxw6F8YHpPi730FBi2JO9co
+	 fhBmQNvEp6dDZcwOmDa+9/jTyaJmnLroRD+tFA3uP8XSXsykTnEXk+AusR2y1JcWr3
+	 Tro6ipqOeDBlqXzHcCeVSBtUZou5yiKUka79IUg0JJDHwHu8DItVhdcSYqxnT8CPQE
+	 W3qsQ+naG3d6Q==
+Date: Tue, 23 Jun 2026 21:05:30 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf bench bpf: Add missing .gitignore file
+Message-ID: <ajsfSkRm0T7J2eF3@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+Hi Linus,
 
-Pre-existing issues:
-- [High] The patch incompletely fixes the missing initialization checks by =
-omitting `pyrf_thread__get_cpu`, leaving a NULL pointer dereference vulnera=
-bility.
-- [High] The `perf.pmu` type methods lack initialization guards, allowing u=
-ninitialized objects to cause NULL pointer dereferences.
-- [Medium] The Python object `count_values` is leaked in multiple error pat=
-hs within `pyrf_evsel__read`.
---
+	I'll have this in the next pull req if you prefer not to merge
+now,
 
-commit 95a2c7473298664fd72c7086443470ff19559438
-Author: Ian Rogers <irogers@google.com>
+- Arnaldo
 
-perf python: Add thread uninitialized checks
+---
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The patch adds CHECK_INITIALIZED checks to the thread attribute getters
-(get_pid, get_tid, get_ppid) in the perf python module to prevent crashes
-when accessing uninitialized thread objects.
+In 713eeb2279402758 ("perf build: Move BPF skeleton generation out of
+Makefile.perf") the bpf_skel used with 'perf bench uprobe' was moved
+from tools/perf/util/bpf_skel/ to tools/perf/bench/bpf_skel.
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 03b4e88091074..70f985ad3dd20 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -3743,16 +3743,19 @@ static PyMethodDef pyrf_thread__methods[] =3D {
-> =20
->  static PyObject *pyrf_thread__get_pid(struct pyrf_thread *pthread, void =
-*closure __maybe_unused)
->  {
-> +	CHECK_INITIALIZED(pthread->thread, "thread");
->  	return PyLong_FromLong(thread__pid(pthread->thread));
->  }
-> =20
->  static PyObject *pyrf_thread__get_tid(struct pyrf_thread *pthread, void =
-*closure __maybe_unused)
->  {
-> +	CHECK_INITIALIZED(pthread->thread, "thread");
->  	return PyLong_FromLong(thread__tid(pthread->thread));
->  }
-> =20
->  static PyObject *pyrf_thread__get_ppid(struct pyrf_thread *pthread, void=
- *closure __maybe_unused)
->  {
-> +	CHECK_INITIALIZED(pthread->thread, "thread");
->  	return PyLong_FromLong(thread__ppid(pthread->thread));
->  }
-> =20
+Copy tools/perf/util/bpf_skel/.gitignore to that new directory so that
+files generated during build get ignored by git.
 
-[Severity: High]
-This isn't a bug introduced by this patch, but pyrf_thread__get_cpu() is
-missing a similar check:
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 713eeb2279402758 ("perf build: Move BPF skeleton generation out of Makefile.perf")
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/bench/bpf_skel/.gitignore | 4 ++++
+ 1 file changed, 4 insertions(+)
+ create mode 100644 tools/perf/bench/bpf_skel/.gitignore
 
-tools/perf/util/python.c:pyrf_thread__get_cpu() {
-    return PyLong_FromLong(thread__cpu(pthread->thread));
-}
+diff --git a/tools/perf/bench/bpf_skel/.gitignore b/tools/perf/bench/bpf_skel/.gitignore
+new file mode 100644
+index 0000000000000000..cd01455e1b53c3d9
+--- /dev/null
++++ b/tools/perf/bench/bpf_skel/.gitignore
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0-only
++.tmp
++*.skel.h
++vmlinux.h
+-- 
+2.54.0
 
-Could accessing the .cpu property on an uninitialized thread object cause a
-NULL pointer dereference? Does it make sense to add a CHECK_INITIALIZED
-guard here as well?
-
-[Severity: High]
-This isn't a bug introduced by this patch, but looking at the perf.pmu
-methods, they also appear to lack initialization checks:
-
-tools/perf/util/python.c:pyrf_pmu__name() {
-    return PyUnicode_FromString(ppmu->pmu->name);
-}
-
-tools/perf/util/python.c:pyrf_pmu__events() {
-    ...
-    ret =3D perf_pmu__for_each_event(ppmu->pmu,
-                                   false,
-                                   py_list,
-                                   pyrf_pmu__events_cb);
-    ...
-}
-
-Since perf.pmu uses PyType_GenericNew, could a script instantiate an
-uninitialized PMU and trigger a NULL pointer dereference when calling .name=
-()
-or .events()?
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but I noticed a leak in
-pyrf_evsel__read() on its error paths:
-
-tools/perf/util/python.c:pyrf_evsel__read() {
-    count_values =3D PyObject_New(struct pyrf_counts_values,
-                                &pyrf_counts_values__type);
-    if (!count_values)
-        return NULL;
-
-    if (!PyArg_ParseTuple(args, "ii", &cpu, &thread))
-        return NULL;
-
-    cpu_idx =3D perf_cpu_map__idx(evsel->core.cpus, (struct perf_cpu){.cpu =
-=3D cpu});
-    if (cpu_idx < 0) {
-        PyErr_Format(PyExc_TypeError, "CPU %d is not part of evsel's CPUs",=
- cpu);
-        return NULL;
-    }
-    ...
-}
-
-Does returning NULL directly on argument parsing or bounds checking failures
-leak the newly allocated count_values object? Should we call
-Py_DECREF(count_values) before returning?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623053515.2677=
-888-1-irogers@google.com?part=3D12
