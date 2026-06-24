@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB01C3E3166;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC7E3E4508;
 	Wed, 24 Jun 2026 20:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782334746; cv=none; b=RoXiUV/v51pngcFMY6nNVPj7/AawTKp2PiQwHr2BTKAm/ITYHGy1DOQtOTCZMdMEANkBAEaAAz7tQn0H4fJ+dfUMLmz9CvLVR5g1GB3y8ZJulgnBI+rIsvgrL8FkNLSGFw+1/SLnffXzw11CkmE8ZUFG0lEl+mjaryVjbccYZJ4=
+	t=1782334747; cv=none; b=GDWt584k7qTv2PuIjZzkIU6Wr5eKITgvlFFgbGHL5K3M4BeRCzhwChGXE8uQ+1kOTA5E7deMnbx0wv+nOTPAs/voeKSomn9XRNepEN9Spw7CymWafDzSpMhvhvEstpd7plhV3xq3veZLebWnhxsjDszjZwEZNiEFi0fGgenuzvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782334746; c=relaxed/simple;
-	bh=WM8LXdIzWgBiD1wFM3CcmS4f3OdhhdRtvQV5TR5staU=;
+	s=arc-20240116; t=1782334747; c=relaxed/simple;
+	bh=0rymhOv9L/NUKQUxWthx76O8ck7wDyLHmzxYbP5/Ves=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p7kUjw/7pv1cvGBTRRbNKgHk8ibS21FyLBiIYpDYL6BLtsYl+r764r+V76SndK2gDlzorIeWw/GVHaiwDGq99LD5VhgTBIq/4RGAJltCuktCw0646rgWnXUE4dYk261neAZkWy0ZJYSN8m1qXs5Wl0KIpYb4fcK3VvtXZ00PbYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3Kok59t; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=RqJKSG2eCl4besBLwJ0oC8H8wW8M/cHa6bHAO7tBADlUSgARG7JyQXCwS5eLoA0Qwl47xcGkIe/8DXbf1gyYtVVYLORxd2qJg5cmsjz2rc5wge+xMVCQjzIB20EXwFOBBwDW1UcuPxEVJ7mh1UV1VBAcF6dOGVTe5W3MLkjxWTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+8aFZWg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3Kok59t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA341F000E9;
-	Wed, 24 Jun 2026 20:59:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+8aFZWg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 852601F00ACF;
+	Wed, 24 Jun 2026 20:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1782334745;
-	bh=paV4I5MQw2l+GE85HVOmhBVUrf6nWZr2qIl2UsX9X+A=;
+	bh=wLM6722Lccgvgv5qWTPKiduZTfmz2wLK5I1Ej7XqWtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=h3Kok59t9knx7BCB0KXslyOYYPXC38Cp6a3P0vmdiQ5YBi4Rcl3Lq+CbecoLhY6fo
-	 zKJjBj+FiB5ZQ9aMLK3Uc5plKq1UvEYZf1y7IU6+awWZdy/IcYBUThOu4m06MYghFH
-	 f/RGMl2hE801mWX8102Z+ODrugKXQBOAQ3/Q0RIFOMXoKbnav9sCpQwNr/1KxCnZLm
-	 pnk7IqxVv4/9gEFFRbC7qcclnb39IsF7RTdSkvrdwkTC5zvwMFAVrugTyzkGv3L0fR
-	 Rt9lfJpEZvsg6rLyAdGXlnISOOk6vdgRW7XuVdjz9l595vaPZBKA7hiAdTbS5WhHTZ
-	 tFS7FVDlK+sYA==
+	b=B+8aFZWg2heKiMiPHWrVt58YaYxy3rIvD9RjmCqbqFbueBcCWfiJYEMxoj8icHGBe
+	 4V7yuTjogBYRdM+HCGoHylqFOLJLvW4i7GxP9hrF4juT8y8fSGcOXjzUw4Nlwpr6GQ
+	 5sevLAw7TJKSxgkTEljWt1Ve7R4oD18tEdUzHFycijj8B1W+Add9vqNJvNkxzznLq0
+	 cwkUhaElZuNyow3sx4nzH+ty4yObtmoBbW6YbDTTJ41UC7LNpdno84++UxQ+3DtMxq
+	 XZ/iuF9u06GMCNGXm0ly7KLJ7EU9fsbgaVVCCZkMpZ2CeyKaMLmj17FvmROcEqmtaq
+	 CJzdt3hHwukeQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -35,11 +35,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 6/8] perf timechart: Fix memory leaks during record
-Date: Wed, 24 Jun 2026 13:58:32 -0700
-Message-ID: <20260624205852.3864874-7-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 8/8] perf test: Update perf timechart test
+Date: Wed, 24 Jun 2026 13:58:34 -0700
+Message-ID: <20260624205852.3864874-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
 In-Reply-To: <20260624205852.3864874-1-namhyung@kernel.org>
 References: <20260624205852.3864874-1-namhyung@kernel.org>
@@ -51,118 +50,106 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The command line options can be passed without copy as their lifetime is
-limited within the same function.
+To include IO-only and backtrace modes to test different code paths.
 
-Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  $ sudo perf test -vv timechart
+  135: perf timechart tests                        : Running
+  135: perf timechart tests:
+  ---- start ----
+  test child forked, pid 2413665
+  perf timechart Basic test
+  perf timechart Basic test [Success]
+  perf timechart IO-only test
+  perf timechart IO-only test [Success]
+  perf timechart Backtrace test
+  perf timechart Backtrace test [Success]
+  ---- end(0) ----
+  135: perf timechart tests                        : Ok
+
+  === Test Summary ===
+  Passed main tests : 1
+  Passed subtests   : 0
+  Skipped tests     : 0
+  Failed tests      : 0
+
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-timechart.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+ tools/perf/tests/shell/timechart.sh | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 27d17268395ed760..a73f0ab22fd64241 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -1834,6 +1834,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 		"syscalls:sys_exit_select",
- 	};
- 	unsigned int poll_events_nr = ARRAY_SIZE(poll_events);
-+	int ret;
+diff --git a/tools/perf/tests/shell/timechart.sh b/tools/perf/tests/shell/timechart.sh
+index b14b3472c2846b32..40072b32171a9a1c 100755
+--- a/tools/perf/tests/shell/timechart.sh
++++ b/tools/perf/tests/shell/timechart.sh
+@@ -9,7 +9,7 @@ perfdata=$(mktemp /tmp/__perf_timechart_test.perf.data.XXXXX)
+ output=$(mktemp /tmp/__perf_timechart_test.output.XXXXX.svg)
  
- 	rec_argc = common_args_nr +
- 		disk_events_nr * 4 +
-@@ -1852,7 +1853,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
+ cleanup() {
+-	rm -f "${perfdata}"
++	rm -f "${perfdata}"*
+ 	rm -f "${output}"
+ 	trap - EXIT TERM INT
+ }
+@@ -22,38 +22,41 @@ trap_cleanup() {
+ trap trap_cleanup EXIT TERM INT
  
- 	p = rec_argv;
- 	for (i = 0; i < common_args_nr; i++)
--		*p++ = strdup(common_args[i]);
-+		*p++ = common_args[i];
- 
- 	for (i = 0; i < disk_events_nr; i++) {
- 		if (!is_valid_tracepoint(disk_events[i])) {
-@@ -1861,7 +1862,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 		}
- 
- 		*p++ = "-e";
--		*p++ = strdup(disk_events[i]);
-+		*p++ = disk_events[i];
- 		*p++ = "--filter";
- 		*p++ = filter;
- 	}
-@@ -1872,7 +1873,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 		}
- 
- 		*p++ = "-e";
--		*p++ = strdup(net_events[i]);
-+		*p++ = net_events[i];
- 		*p++ = "--filter";
- 		*p++ = filter;
- 	}
-@@ -1883,7 +1884,7 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 		}
- 
- 		*p++ = "-e";
--		*p++ = strdup(poll_events[i]);
-+		*p++ = poll_events[i];
- 		*p++ = "--filter";
- 		*p++ = filter;
- 	}
-@@ -1891,7 +1892,11 @@ static int timechart__io_record(int argc, const char **argv, const char *output_
- 	for (i = 0; i < (unsigned int)argc; i++)
- 		*p++ = argv[i];
- 
--	return cmd_record(rec_argc, rec_argv);
-+	ret = cmd_record(rec_argc, rec_argv);
+ test_timechart() {
+-	echo "Basic perf timechart test"
++	NAME=$1
++	OPTION=$2
 +
-+	free(rec_argv);
-+	free(filter);
-+	return ret;
++	echo "perf timechart ${NAME} test"
+ 
+ 	# Try to record timechart data.
+ 	# perf timechart record uses system-wide recording and specific tracepoints.
+ 	# If it fails (e.g. permissions, missing tracepoints), skip the test.
+-	if ! perf timechart record -o "${perfdata}" true > /dev/null 2>&1; then
+-		echo "Basic perf timechart test [Skipped: perf timechart record failed (permissions/events?)]"
++	if ! perf timechart record -o "${perfdata}" ${OPTION} true > /dev/null 2>&1; then
++		echo "perf timechart ${NAME} test [Skipped: perf timechart record failed (permissions/events?)]"
+ 		return
+ 	fi
+ 
+ 	# Generate the timechart
+ 	if ! perf timechart -i "${perfdata}" -o "${output}" > /dev/null 2>&1; then
+-		echo "Basic perf timechart test [Failed: perf timechart command failed]"
++		echo "perf timechart ${NAME} test [Failed: perf timechart command failed]"
+ 		err=1
+ 		return
+ 	fi
+ 
+ 	# Check if output file exists and is not empty
+ 	if [ ! -s "${output}" ]; then
+-		echo "Basic perf timechart test [Failed: output file is empty or missing]"
++		echo "perf timechart ${NAME} test [Failed: output file is empty or missing]"
+ 		err=1
+ 		return
+ 	fi
+ 
+ 	# Check if it looks like an SVG
+ 	if ! grep -q "svg" "${output}"; then
+-		echo "Basic perf timechart test [Failed: output doesn't look like SVG]"
++		echo "perf timechart ${NAME} test [Failed: output doesn't look like SVG]"
+ 		err=1
+ 		return
+ 	fi
+ 
+-	echo "Basic perf timechart test [Success]"
++	echo "perf timechart ${NAME} test [Success]"
  }
  
+ if ! perf check feature -q libtraceevent ; then
+@@ -62,6 +65,9 @@ if ! perf check feature -q libtraceevent ; then
+ 	exit 2
+ fi
  
-@@ -1902,6 +1907,7 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
- 	const char **rec_argv;
- 	const char **p;
- 	unsigned int record_elems;
-+	int ret;
- 
- 	const char * const common_args[] = {
- 		"record", "-a", "-R", "-c", "1", "-o", output_data,
-@@ -1966,24 +1972,27 @@ static int timechart__record(struct timechart *tchart, int argc, const char **ar
- 
- 	p = rec_argv;
- 	for (i = 0; i < common_args_nr; i++)
--		*p++ = strdup(common_args[i]);
-+		*p++ = common_args[i];
- 
- 	for (i = 0; i < backtrace_args_no; i++)
--		*p++ = strdup(backtrace_args[i]);
-+		*p++ = backtrace_args[i];
- 
- 	for (i = 0; i < tasks_args_nr; i++)
--		*p++ = strdup(tasks_args[i]);
-+		*p++ = tasks_args[i];
- 
- 	for (i = 0; i < power_args_nr; i++)
--		*p++ = strdup(power_args[i]);
-+		*p++ = power_args[i];
- 
- 	for (i = 0; i < old_power_args_nr; i++)
--		*p++ = strdup(old_power_args[i]);
-+		*p++ = old_power_args[i];
- 
- 	for (j = 0; j < (unsigned int)argc; j++)
- 		*p++ = argv[j];
- 
--	return cmd_record(rec_argc, rec_argv);
-+	ret = cmd_record(rec_argc, rec_argv);
+-test_timechart
++test_timechart "Basic" ""
++test_timechart "IO-only" "-I"
++test_timechart "Backtrace" "-g"
 +
-+	free(rec_argv);
-+	return ret;
- }
- 
- static int
+ cleanup
+ exit $err
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
