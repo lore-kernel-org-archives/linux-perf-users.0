@@ -1,112 +1,152 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BF5332604;
-	Thu, 25 Jun 2026 07:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3827E35AC00
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jun 2026 09:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782374042; cv=none; b=Dk00AyTTU3N+ljvDaKeGIFQUgpPfyPbIQdAyG+qAaVS/RA4GeHu76qXh3loX71V63VXIXUHku73kz8N1xuEBgP5lvO36UiY81cgipW0wTmlUXrNc2d8aKFRJl2m2A+cBXMslDoOa9/NAnZC7sidtIpKvbIbOSYdHS96y09EsyDI=
+	t=1782378642; cv=none; b=kIVTydfrAf53sIG+oj/HUEKjaEXsmYRwNveHEf70EZTCgt6ejXuSTfXPDbkjHOYAjO/YvJnztXKKoR9uMMh7DS/souk7RH2hhBeX12a0liL9TETiyvS0jZY2a0IgFVsx7j1+Z3PAiE1xw6EPz7hFd0HhdNGsmFC3xxQe7IRQiV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782374042; c=relaxed/simple;
-	bh=ERuqJGfBMrirKjmDbETROUHKZmnz/FKqpS2UzUsTj0c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iYrzycoAMObI5qT6suOFVbz+gnFlIrkJzK4Aa8UqGijj5Xf3Nykex5bllLYg1m/j4v2q4AFnPQqZvbxqYMxjK5HRoHWAgtBJe2W1yy9zVNaB5NiUsatfimxbRGHqdLC8a2OVCSOVjJHXgzUtF5aMcdl6YR/8PCUDiI7lnSivSzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [117.182.75.66])
-	by APP-03 (Coremail) with SMTP id rQCowAAnMsl23jxqPhrLFQ--.32777S2;
-	Thu, 25 Jun 2026 15:53:29 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	tglx@kernel.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	hpa@zytor.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/uncore: Fix reference leak in discover_upi_topology()
-Date: Thu, 25 Jun 2026 15:53:11 +0800
-Message-Id: <20260625075311.45599-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	s=arc-20240116; t=1782378642; c=relaxed/simple;
+	bh=G0vBagMm0ieFzup4YLfopFJNtJUW4rndd7e+AydHtO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZfa01actQwKH/RqKG7KgW1Y+VcYpgueziEL2/hYqrIukHfQoUasmY5/ywuM/AJCivFdrvBdRBYqoL2RjgiVe3K0a+otLuKgVfv3vQ64RPSgiEcUOWG9/j0ZCZAD1y2iD9cg/3OCoSa0xxogK29f5XsqhwENTUbznCven+2uauA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JBh67hq8; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JBh67hq8"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-46019b190b6so1669690f8f.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jun 2026 02:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1782378640; x=1782983440; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MiLqXmBDb7ZWVjHCd2a5Lz+vJUTtAmbRgJLuU9Ruhcw=;
+        b=JBh67hq8mddQ6mcUJpzD092VVC/3s+opTmR7Wg/gX8+s5w/MzKgD9dRFiDY7xEGhD7
+         Z4y28HERPHI+r/znUsUscQuQRifPXxiY9jCR0wqQn8YSP++rh47wTQUUCI2iijLa241e
+         aanltwTDq4Lg96AbuCbCsEBfIPnDqr5JRsX29CVPQQTOGkY+FopCZZ7wVKDksrwz1/hK
+         lcrivgyInDpjX++AbETUUJ87rQlgDVRMZlSWQgigrrFZiWPtfnMoL5raoEB2Sb/2xOdw
+         HS3wHf3An0ns2EsNUbrW/S8wwGhw8HAVk9komOG2axmmgK52XjGqSY/1iAJufRz/DsLd
+         rdOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782378640; x=1782983440;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MiLqXmBDb7ZWVjHCd2a5Lz+vJUTtAmbRgJLuU9Ruhcw=;
+        b=deB0rTEuAWLfEASvBPXYylS/9ceBGSk24hWuWsb3kvBUm7DpmfdhzxqoR6opQIl3/f
+         trIVpJDjCGZGMIfWfiI6h3GVwcW/bTc6M4H0PuFF4a6jfe9SufxzokBo6dYsoIH2LEV1
+         ZoYsbtGAHyi1Dmjoevm5DxUWJJmWBLYrti83aS15oXrFXl5KW5dfGQ72Jdp/U1tZAKSN
+         vu8o9jHTaB+ghJHvk9F2TPT2Mnxm7wwPW/fdGOgaIBnlxnm1gEIuk/w209K5gX4TX2P9
+         xEZ6Ew0tsZznm/LXNifXgKHhTNBoWe7cerArlJhCHN4487gIgMuLmQuBNneinxCW3c44
+         6qdA==
+X-Gm-Message-State: AOJu0YxZe8aAASiymrswLUsxgpCvYd/u14EfPuc+4mZ9KqkzKfWY0HM5
+	sIVK/+UShqy7iYq5/nvd3ig+3yVB7+0XD9n0Y8fWjz84HxqX9crNGii9BK7Xbqx689M=
+X-Gm-Gg: AfdE7clWF/3J4LUVNEn5peepuxxmcHrtCfBxCyfez5SUibQvANeiB1RB6OywkUvLEOc
+	NJBIEDwXP8h73AzTCY6OZg9DZMnCF+MzckkoCD/zWo1bNS4G21Iy/sau9mO7mMNGEtiv9FXbrkn
+	/EysBW9CVeWfHrkKjPnBgZNl9m1DiBH3EV04kyC/k9DVZZFCzh9e3YQJsk9ijnMTzgPyxQ3sJN9
+	3XmxYoT0nelipRvky0lAVe7at6RqYbRcaTIIj9FJWefiMvzk2oDGZzhF7VDIuy4ucmpfJiUaJBI
+	UvcsBMQ3T+Hv8l1Ob8hApjX8DwYKOLnjqEO7vK6U2DGlviipWfGpHYgDCydIjw+eD8tfVtrvRP2
+	ONsoWInLCUWHW5zTM7VNq/Dyj7B+GI9rx5nOLmfUgt6kpmMxCC8U00yD+jwr6qZ3YJbCBwnicMZ
+	12iBAU7ZAWbnf2rXs=
+X-Received: by 2002:a05:6000:25f1:b0:460:64e8:2553 with SMTP id ffacd0b85a97d-46dbf303509mr2291377f8f.4.1782378639570;
+        Thu, 25 Jun 2026 02:10:39 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46c221d9405sm15939403f8f.22.2026.06.25.02.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2026 02:10:38 -0700 (PDT)
+Date: Thu, 25 Jun 2026 11:10:36 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org
+Subject: Re: [PATCH] perf symbols: ignore livepatch symbols
+Message-ID: <ajzwjNncrI3Bob_o@pathway.suse.cz>
+References: <20260624201254.472576-1-joe.lawrence@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAnMsl23jxqPhrLFQ--.32777S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ur1rur1xAryfWF18GryUJrb_yoW8Aw4fpr
-	Wa9Fyvyr1rZrn2g3yDu3WS9FyYyan5t3s5Wr48W3yIkw15Xwn3tFW2ga4Ygay8CrWxtr1Y
-	qw1qva18X3s8ZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjTRNJ5oDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8JA2o8pkqxnQABsb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260624201254.472576-1-joe.lawrence@redhat.com>
 
-In discover_upi_topology(), pci_get_domain_bus_and_slot() returns a PCI
-device with its reference count incremented. The caller must call
-pci_dev_put() after use.
+On Wed 2026-06-24 16:12:54, Joe Lawrence wrote:
+> Livepatch modules contain special symbols (prefixed by ".klp.sym.") that
+> act as relocation placeholders.  Once resolved, they point to the same
+> addresses as the original kernel symbols they reference. [1]
+> 
+> These special symbols confuse the 'vmlinux symtab matches kallsyms' perf
+> test as kallsyms may report multiple symbols sharing a single kernel
+> address.  For example:
+> 
+>   kallsyms (without livepatch)
+>   ----------------------------
+>   ffffffff81a41110 T __pfx_arch_release_task_struct
+> > ffffffff81a41120 T arch_release_task_struct
+>   ffffffff81a41140 T __pfx_exit_thread
+>   ffffffff81a41150 T exit_thread
+> 
+>   kallsyms (with livepatch loaded)
+>   ---------------------------------
+>   ffffffff81a41110 T __pfx_arch_release_task_struct
+> > ffffffff81a41120 T arch_release_task_struct
+>   ffffffff81a41140 T __pfx_exit_thread
+>   ffffffff81a41150 T exit_thread
+> > ffffffff81a41120 w .klp.sym.vmlinux.arch_release_task_struct,0  [kpatch_5_14_0_570_94_1_1_3]
+> 
+> When perf loads kallsyms, both symbols are inserted into the
+> symbol table at the same address, corrupting symbol end-address
+> calculations and causing test failures.
+> 
+> Filter out symbols prefixed with ".klp.sym." when loading kallsyms, as
+> they alias existing kernel symbols.
+> 
+> Link: https://docs.kernel.org/livepatch/module-elf-format.html#livepatch-symbols [1]
+> Reported-and-tested-by: Ben Procknow <bprockno@redhat.com>
+> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+> ---
+>  tools/perf/util/symbol.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> >From Ben's tests:
+> 
+>   Without patch:
+>   ./tools/perf/perf test 1
+>    1: vmlinux symtab matches kallsyms                                 : FAILED!
+> 
+>   With patch:
+>   ./tools/perf/perf test 1
+>    1: vmlinux symtab matches kallsyms                                 : Ok
+> 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index fcaeeddbbb6b..eeaed3f5cf50 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -774,6 +774,10 @@ static int map__process_kallsym_symbol(void *arg, const char *name,
+>  	if (name[0] == '$')
+>  		return 0;
 
-However, the inner loop overwrites dev without releasing the previous
-reference, causing leaks:
-  - Between inner loop iterations within the same outer loop iteration.
-  - Between outer loop iterations (dev from a previous ubox's inner
-    loop is overwritten at the start of the next inner loop).
-  - On the normal exit path from the while loop (the last dev is never
-    put before falling through to err:).
+It seems that the above checks has been moved into is_ignored_kernel_symbol(),
+in the current Linus' tree, see
+https://lore.kernel.org/lkml/20260522082604.89447-2-qirui.001@bytedance.com/
 
-Fix by calling pci_dev_put(dev) and clearing dev after upi_fill_topology()
-succeeds, so each reference is released immediately after use. The error
-path (goto err) already calls pci_dev_put(dev) and remains correct since
-dev is set to NULL after release, making the subsequent put a no-op.
+> +	/* Ignore livepatch symbols */
+> +	if (strstarts(name, ".klp.sym."))
+> +		return 0;
 
-The similar sad_cfg_iio_topology() function does not have this problem
-because it uses a single pci_get_device() loop and releases the last
-reference correctly in all exit paths.
+I guess that this check should be moved there as well.
 
-Cc: stable@vger.kernel.org
-Fixes: fdd041028f22 ("perf/x86/intel/uncore: Factor out topology_gidnid_map()")
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- arch/x86/events/intel/uncore_snbep.c | 2 ++
- 1 file changed, 2 insertions(+)
+Nit: It might be possible to include <linux/livepatch_external.h>
+     and use KLP_SYM_PREFIX instead of ".klp.sym."
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 215d33e260ed..1561bda43835 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -5499,6 +5499,8 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
- 							  devfn);
- 			if (dev) {
- 				ret = upi_fill_topology(dev, upi, idx);
-+				pci_dev_put(dev);
-+				dev = NULL;
- 				if (ret)
- 					goto err;
- 			}
--- 
-2.39.5 (Apple Git-154)
+> +
+>  	/*
+>  	 * module symbols are not sorted so we add all
+>  	 * symbols, setting length to 0, and rely on
 
+Best Regards,
+Petr
