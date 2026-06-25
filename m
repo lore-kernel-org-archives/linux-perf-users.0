@@ -1,488 +1,345 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923003ECBDD
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jun 2026 17:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782410155; cv=pass; b=CSOZitilHZlg/SgWapHYzSbJpc8k/F8WeYT9PSwfFt4jh/Rk6Rd9AYlaMe7+yo5BXHLAQGl+Gjug1LaNsH2fF7/14Vzzr35np1HAxg/T5Ab1JaD8L3jKFFZmiYzo9ctGRN0FvVhOF/gVqQAreZDjRvJe05eXZLQTLjHr5rcNMFA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782410155; c=relaxed/simple;
-	bh=KL7OUqxN1KQ/RK0Z6x8GGRsQ1dDi9OfJ6FYOtkRv5cw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ncsqhumeFpAR7bFr1YhmgM9bg9/9u05s6KvlEWAlBxG686NAgIj2lvPP8QGnURrA5CFZjKuoUPqDB3COHS+pLYg+mvy8x2eVlUXNbgAAT5BZjcFSsmkZ9Ia9LdgeG5d78VwBC4sC7L6/MlFrEpwwkTmVMszopr575TeKEvC0UxE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dCmZW8m+; arc=pass smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A6A25B099;
+	Thu, 25 Jun 2026 18:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782410711; cv=none; b=DFSgiDVZ/sZNgnmJOqjbVpoGSoSSWqatf9M/ki9GS3Eb5csRFl7L+3V3lvfjtmIWLmt89mji2xBFBD2KAknnDmsMZjtujkykwID7ZnfwVMy6jdW7rnrH+JhRsSSTi9FdNLG/KxdYWlgUV0EVwkyVwrxW5F9JZIRVBOPxmRXzFTo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782410711; c=relaxed/simple;
+	bh=H3OT0G9QmaHCgy2jHeIKObVPBJUM7C32qkE0XSEgtHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o72qViXi20oT6rTEO1SLkM5EueYHjkOQo30IYZENBToE8zT/9RX9lQJRTJ7i4ZijW9ZjkU3JOIImy0J/mc3EXRb6mkMmVJH0Y5o1F6qpSjlEqsOb8YOSajpYX6K+WvQ44h9V1nkTrgw/vwY8fGaKz5GVjkdcA5mEuMRCDVIEVKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fWFh4yvd; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCmZW8m+"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-37d82f3a244so65718a91.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jun 2026 10:55:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782410153; cv=none;
-        d=google.com; s=arc-20260327;
-        b=kMLMqn5u6zouMuJLYIo1l9jzoaifoUhDmQdMhsKqMGggE1cp063Xi4067w6WwXF3N7
-         soxFvPyBEysxFDdeF3M1+nAOHP8fwM4OE3L7OAg7be7B6o4NRnvfciuT4rFR+31lhXKs
-         MLzZ2Px/KMrYHmdb4W1xtLt+3wHdAuGcYzGiHcZsFf+ntIuKfmpo3jtZcY6rwXzVkLGY
-         zO8wNkot+qBTDfCP6raDXCu4B5RjIhzrssxDztbLdXNYPYosHTzR55TOH5MEjw94tNEx
-         nXE3Gvp1LUu4v+TJ48CNRAFbFMIgH3dkSXc02CU3DrHYZ9no0tLV+tUezbUZkY1iMS7V
-         kBoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=70lqxrDgx0O9fRvHia8p/z9fa6BrG/EerRGOH0ZlW+w=;
-        fh=gNfvbinJ4IRuqJ5r6GKFfBvtG0kaRyNjT675zeuXp1Y=;
-        b=hQ0E/BMaa4F+iIAfhgAGwsntz71XDFXdbPjMkaD7B6XFpTPzevYJVs7Pe079t73pRN
-         IcNHTkzbaeK9h6ZOSUX5jfnmtrx2fTb4pvoX6dotYcZhF68wciUAlsS/XWtjJ21LAmjh
-         UJaZOUd+cWptZLjATONV9CJajTxnNvScMZffrVhxFuFPmorPZ67zknIgvW+IJzDxNQ5o
-         CysrLdhpCcJ/RHgnHy2JrajpoxiHrs/hbFlUrGMMksv7dUxyrwHUkzHtRZm4iPfINR+H
-         pRd7MlCSbO6l3PfDQnntzc7as1C0Z5tXGm8AibXM2KwA29AFCyDsdfRLvoJ7ibpMdiqT
-         B2+Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782410153; x=1783014953; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=70lqxrDgx0O9fRvHia8p/z9fa6BrG/EerRGOH0ZlW+w=;
-        b=dCmZW8m+tPSpcfvosK8NvfuqT9s7O6I4WW8Dq8VjgW7ReLiaGG4DlZtJN4qUSbf7Zx
-         svAEmoQnm9ZtX8yToat+edfLEhhq9uZU+hHoKihlLx40IKkV58s+Pfk4lRrQflzYcf3V
-         kq0uyGPxorRRcKJgcWrZMM4omrKZZs/a+yMDiSu9O8dYCsJ1F+5MpyBMgP0KcS98gpII
-         b0Fvz0uCmAuFZ8zqHa2l8GoZN8XnyUlHebOFPoVjjnImSZow7ypOt75u+o91m+hOgjbg
-         ioUX147vaDd2E5qz/ccRWmbkwif6SgLILarxYKad34TZsj5S17RXxvPC4tb1Tnem694o
-         J9Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782410153; x=1783014953;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=70lqxrDgx0O9fRvHia8p/z9fa6BrG/EerRGOH0ZlW+w=;
-        b=jVFdx7KyCr9nrxYbJ+hYSPuWKVqQ5aDHpg8GfADFNDjSoto2TjLeUciqUvP+8Mx1aS
-         5oJ9Ox2RsfbyAEWipfHuFksrR6C7SphgboulRpv/127sWNTsKRpT0r3kYlYhvMquz8h1
-         h5nLX+1kLxrEstpR52ZskY6vPJS+D3QfSrJJNVj4il8/zmvWwrcsw1KP7BCoICE2khw+
-         L4wobDgObfw8D+tF4vXFm7Gb/q2TttQFlSXrYallfx6BzExWMl+SvQpCs7ZYZsrCWorQ
-         cn8MD45wXXjG9m0m6Jt2esfWJhgp8sz2xC1TLWeBKBky+L6+jqHA55uLHs/FoMVOKf4N
-         sx+A==
-X-Forwarded-Encrypted: i=1; AHgh+RpQwif2q4Ab2AzEcjtWhXkMxfkdgnOEi3AkM+teY5MqpyupuG3kkGFAPjs0tQ5uFbzwZERVCF/yLulWjNb/S3m/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcTVs01JyjPN+9Z6KkkBHd7joiHhHncS0iefAIzyNWAAgcKidl
-	zlDp6pZ2F1ZHL3gEIC3uOyXnCPmLW5Dq7zhvB3q/feYRBvPmQRZ04fhK/JA5bK/1KG9QBTf6wZN
-	dHeQ6PPhM48BLsiCcjZUWFax5MFOU53g=
-X-Gm-Gg: AfdE7cn8vP3oXJubtc7HuDN3mcr47zylYuzEzlb3WMizOAWqWb1696jcLRv1kN1TSLF
-	xUhqBh70EZ68OiUtal/SANIUqeqsolZ2QQR/x50awIXp/cCfnGHLbs9q2p7OgWCI2rshR3bCDB5
-	K/Pllt39Kkqe2UGXF2sRbEDgphDWmm/wIJgGFdf8dwAuX9+V815fpAH1bqTGgLg416KGKRDbhsw
-	qS5pQOTzq/3DUJI0Y1zypcE1vT2W/KOiLVIy8r8gmM8/9xY2SZT/nRf3p0YxktG4Z/VfNOmtJOx
-	K70A3agEYVJvbXdpyGKBgJMQNRUxAX+G2zJ8KQFM2MSPEEY7fGldB0qmNf5CZ0fpRDfAzA==
-X-Received: by 2002:a17:902:e544:b0:2c8:8f7:cc36 with SMTP id
- d9443c01a7336-2c808f7cf3amr17223595ad.17.1782410152652; Thu, 25 Jun 2026
- 10:55:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fWFh4yvd"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65PFmNuA486681;
+	Thu, 25 Jun 2026 18:05:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=NTtn2o
+	f1Q6ma3TxAy13nPjm3yLYMAfh7v1DXbybPSbk=; b=fWFh4yvd/u8hIaBNGLoXzX
+	+C1eDPfwE93STT6yB8EewSkDYHuqIKcKaFcPNyXJMVRVF7u4Jqsiabw/UXBE6/ZH
+	RLn1LPwG+8qtqNgrOGect9bly8bKRILKmpSFoylA/WgTU5GDpVl4GU2QaOvW5K6O
+	hKx8ULRRKnyIk/vSktVWR9sw2MVmXva8A0FgPRwxhIYG4gPSpYn0V4LVQZ1AQMJh
+	AAZNEI5iiLdcJ2A1zDeUK6g97GBVhGSRkIPunHAdZ3z3R+R91bu7FkuQra3X1CKP
+	0qH3W724CP+t1YFGQ4cOcfVJ6HuPB50q8zU2+Ml8p+8qa2Ek6BN1+XARf9J7ZPmg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjc3ubw5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jun 2026 18:05:05 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65PI4gEd028990;
+	Thu, 25 Jun 2026 18:05:04 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex6phqcu0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jun 2026 18:05:03 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65PI534N19268244
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Jun 2026 18:05:03 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E058A58066;
+	Thu, 25 Jun 2026 18:05:02 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3411558059;
+	Thu, 25 Jun 2026 18:04:59 +0000 (GMT)
+Received: from [9.124.220.252] (unknown [9.124.220.252])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Jun 2026 18:04:58 +0000 (GMT)
+Message-ID: <e7bec79c-09fc-41aa-973c-0af89362f860@linux.ibm.com>
+Date: Thu, 25 Jun 2026 23:34:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260623112533.1151502-1-vmalik@redhat.com> <DJGJ9F6WQZV9.2W4WBIHYLJQ97@gmail.com>
- <ajq98dm4gAwEzkMb@google.com> <c2f4e45e-d5c9-42e9-a46b-25fb0cacb267@redhat.com>
- <93e70dc7-e52f-444e-b57e-09d149dc4808@redhat.com> <CAEf4BzYWdsBDQ3D41=+n_oCO68bVOtKuqQCqZOEVo=j7nK9Ozg@mail.gmail.com>
- <82252ae0-133a-45dc-9622-315236a437ad@redhat.com>
-In-Reply-To: <82252ae0-133a-45dc-9622-315236a437ad@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 25 Jun 2026 10:55:38 -0700
-X-Gm-Features: AVVi8CfHmVjHnPKT82GCu2a4GZmhSlG7FqqlONu-C9MUDK52gjtj7DMiNoteTMQ
-Message-ID: <CAEf4Bza8vFSkuiD_Vd47-eGuDS40kKvTcHQR=V3OY=c505a9=g@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Refactor augmented_raw_syscalls using bpf_loop
-To: Viktor Malik <vmalik@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
-	linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Michael Petlan <mpetlan@redhat.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/4] perf/trace-dat: Add trace.dat export
+ infrastructure
+To: sashiko-reviews@lists.linux.dev,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, namhyung@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-perf-users@vger.kernel.org
+References: <20260608125951.90425-3-tshah@linux.ibm.com>
+ <20260608131352.BA2831F00893@smtp.kernel.org>
+Content-Language: en-US
+From: Tanushree Shah <tshah@linux.ibm.com>
+In-Reply-To: <20260608131352.BA2831F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=X4Ni7mTe c=1 sm=1 tr=0 ts=6a3d6dd1 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=cYM135ekG8_zCDq0hgIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI1MDE1MyBTYWx0ZWRfXyONu3ijbS8Gw
+ 6+c551tly3ThXdy0gkgy/zzyldgVQoLGD2Z7lMAhBSBBuMctgQF1hXwAn2aNkdDkODRhxIQIZUs
+ ifGmpyL8CjTwjuzJ4qVXOMh0GqH0wX0=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI1MDE1MyBTYWx0ZWRfX8HN6/L8h4z4w
+ 0ebDoQusOtKNhSjxG69Ro0+gclWw1/QFvqE0XY/rOYripAk98Y18tQBkjaTQVz3ww04kOHES5Gl
+ 6bD+bmnVSRH9uadN4KAf3VkD8IXFm/GSw8vZ6GiqOyLZNV8xQHqDD5dgyJZ8EF3VNoyKjkuOIeT
+ eYW8hjLV9InyFZ0SDH0qcON0RKGy7/iIXMZcsx46371doxsX24xWwF5hYLmxlz9Upj65qX7bDtI
+ jJeaLfZyRvcxllyT/j5wVWoFbS2DXn0ErCJpzqG1O8WoWcfkHu9GYv4KXSNYU00cXQgIkHnkchl
+ Fznnk7NwLBVPPlhMyO6w4i4VnydXGISH3Jh9Me1+40rFRkBlEfrbWGBT0/IsxeIKEb/IwX0YVkk
+ aCis2C0woOG7bv4aCqtSc0Q0/sg90bOuIYepJxaMQPC1kv3zQPnhAJvmr+eQM9HIsBTQLSzx5P9
+ xWscgQEyrBu4gTkWd3A==
+X-Proofpoint-ORIG-GUID: bh_K2se38b90dV06dsTL4Rn1f864LkoS
+X-Proofpoint-GUID: lkKRHvDqkbLd2yX-rDBAnroq7PXSeY9f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-25_02,2026-06-24_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 suspectscore=0 spamscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 clxscore=1015 adultscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606250153
 
-On Thu, Jun 25, 2026 at 4:58=E2=80=AFAM Viktor Malik <vmalik@redhat.com> wr=
-ote:
->
-> On 6/24/26 19:19, Andrii Nakryiko wrote:
-> > On Wed, Jun 24, 2026 at 3:27=E2=80=AFAM Viktor Malik <vmalik@redhat.com=
-> wrote:
-> >>
-> >> On 6/24/26 08:47, Viktor Malik wrote:
-> >>> On 6/23/26 19:10, Namhyung Kim wrote:
-> >>>> Hello,
-> >>>>
-> >>>> On Tue, Jun 23, 2026 at 08:27:39AM -0700, Alexei Starovoitov wrote:
-> >>>>> On Tue Jun 23, 2026 at 4:25 AM PDT, Viktor Malik wrote:
-> >>>>>> The loop for processing syscall args in augment_raw_syscalls has a
-> >>>>>> history of breaking with Clang updates, see e.g. commit 013eb043f3=
-7b
-> >>>>>> ("perf trace: Fix BPF loading failure (-E2BIG)") from Clang 15 to =
-16.
-> >>>>>>
-> >>>>>> Now, a similar thing happened between Clang 21 and 22. While the i=
-ssue
-> >>>>>> is mitigated on the main line by a recent verifier update, it rema=
-ins
-> >>>>>> broken on the 6.12 and 6.18 stable branches:
-> >>>>>>
-> >>>>>>     [linux-6.18.y]# sudo perf trace true
-> >>>>>>     libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
-> >>>>>>     libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
-> >>>>>>     [...]
-> >>>>>>     BPF program is too large. Processed 1000001 insn
-> >>>>>>     processed 1000001 insns (limit 1000000) max_states_per_insn 40=
- total_states 37941 peak_states 232 mark_read 0
-> >>>>>>     -- END PROG LOAD LOG --
-> >>>>>>     libbpf: prog 'sys_enter': failed to load: -E2BIG
-> >>>>>>     libbpf: failed to load object 'augmented_raw_syscalls_bpf'
-> >>>>>>     libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bp=
-f': -E2BIG
-> >>>>>>     Error: failed to get syscall or beauty map fd
-> >>>>>>     [...]
-> >>>>>>
-> >>>>>> The reason is that the loop is quite complex and the BPF verifier =
-often
-> >>>>>> struggles to prove that it terminates.
-> >>>>>>
-> >>>>>> Fix the issue by refactoring the loop body into a callback functio=
-n and
-> >>>>>> calling the bpf_loop helper. This should prevent future breakages =
-of
-> >>>>>> this kind since the callback function has no loops. It also allows=
- to
-> >>>>>> drop a few artificial checks to help the verifier, including the c=
-hanges
-> >>>>>> introduced by 013eb043f37b.
-> >>>>
-> >>>> Thanks for working on this.  I encountered this issue before and nev=
-er
-> >>>> found time to take a deeper look yet.
-> >>>>
-> >>>>>>
-> >>>>>> Signed-off-by: Viktor Malik <vmalik@redhat.com>
-> >>>>>> Fixes: a68fd6a6cdd3 ("perf trace: Collect augmented data using BPF=
-")
-> >>>>>> Fixes: 013eb043f37b ("perf trace: Fix BPF loading failure (-E2BIG)=
-")
-> >>>>>> Cc: stable@vger.kernel.org
-> >>>>>> ---
-> >>>>>>  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 157 +++++++++++--=
------
-> >>>>>>  1 file changed, 96 insertions(+), 61 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c=
- b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> >>>>>> index 2a6e61864ee0..6d553ed3ac23 100644
-> >>>>>> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> >>>>>> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> >>>>>> @@ -429,15 +429,96 @@ static bool pid_filter__has(struct pids_filt=
-ered *pids, pid_t pid)
-> >>>>>>    return bpf_map_lookup_elem(pids, &pid) !=3D NULL;
-> >>>>>>  }
-> >>>>>>
-> >>>>>> +struct args_loop_ctx {
-> >>>>>> +  struct syscall_enter_args *args;
-> >>>>>> +  unsigned int *beauty_map;
-> >>>>>> +  void *payload_offset;
-> >>>>>> +  int value_size;
-> >>>>>> +  u64 *output;
-> >>>>>> +  bool *do_output;
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static long process_arg_cb(u64 i, void *ctx)
-> >>>>>> +{
-> >>>>>> +  /*
-> >>>>>> +   * Determine what type of argument and how many bytes to read f=
-rom user space, using the
-> >>>>>> +   * value in the beauty_map. This is the relation of parameter t=
-ype and its corresponding
-> >>>>>> +   * value in the beauty map, and how many bytes we read eventual=
-ly:
-> >>>>>> +   *
-> >>>>>> +   * string: 1                          -> size of string
-> >>>>>> +   * struct: size of struct             -> size of struct
-> >>>>>> +   * buffer: -1 * (index of paired len) -> value of paired len (m=
-aximum: TRACE_AUG_MAX_BUF)
-> >>>>>> +   */
-> >>>>>> +  struct augmented_arg *augmented_arg;
-> >>>>>> +  struct args_loop_ctx *loop_ctx;
-> >>>>>> +  int aug_size, size, index;
-> >>>>>> +  bool augmented;
-> >>>>>> +  void *arg;
-> >>>>>> +
-> >>>>>> +  /* Bounds check for the below map access to help the verifier *=
-/
-> >>>>>> +  if (i < 0 || i >=3D 6)
-> >>>>>> +          return 1;
-> >>>>>> +
-> >>>>>> +  loop_ctx =3D (struct args_loop_ctx *)ctx;
-> >>>>>> +  arg =3D (void *)loop_ctx->args->args[i];
-> >>>>>> +  augmented =3D false;
-> >>>>>> +  size =3D loop_ctx->beauty_map[i];
-> >>>>>> +  aug_size =3D size; /* size of the augmented data read from user=
- space */
-> >>>>>> +  augmented_arg =3D (struct augmented_arg *)loop_ctx->payload_off=
-set;
-> >>>>>> +
-> >>>>>> +  if (size =3D=3D 0 || arg =3D=3D NULL)
-> >>>>>> +          return 0; /* continue */
-> >>>>>> +
-> >>>>>> +  if (size =3D=3D 1) { /* string */
-> >>>>>> +          aug_size =3D bpf_probe_read_user_str(augmented_arg->val=
-ue, loop_ctx->value_size, arg);
-> >>>>>> +          augmented =3D true;
-> >>>>>> +  } else if (size > 0 && size <=3D loop_ctx->value_size) { /* str=
-uct */
-> >>>>>> +          if (!bpf_probe_read_user(augmented_arg->value, size, ar=
-g))
-> >>>>>> +                  augmented =3D true;
-> >>>>>> +  } else if (size < 0 && size >=3D -6) { /* buffer */
-> >>>>>> +          index =3D -(size + 1);
-> >>>>>> +          barrier_var(index); // Prevent clang (noticed with v18)=
- from removing the &=3D 7 trick.
-> >>>>>> +          index &=3D 7;         // Satisfy the bounds checking wi=
-th the verifier in some kernels.
-> >>>>>> +          aug_size =3D loop_ctx->args->args[index];
-> >>>>>> +
-> >>>>>> +          if (aug_size > TRACE_AUG_MAX_BUF)
-> >>>>>> +                  aug_size =3D TRACE_AUG_MAX_BUF;
-> >>>>>> +
-> >>>>>> +          if (aug_size > 0) {
-> >>>>>> +                  if (!bpf_probe_read_user(augmented_arg->value, =
-aug_size, arg))
-> >>>>>> +                          augmented =3D true;
-> >>>>>> +          }
-> >>>>>> +  }
-> >>>>>> +
-> >>>>>> +  /* Augmented data size is limited to sizeof(augmented_arg->unna=
-med union with value field) */
-> >>>>>> +  if (aug_size > loop_ctx->value_size)
-> >>>>>> +          aug_size =3D loop_ctx->value_size;
-> >>>>>> +
-> >>>>>> +  /* write data to payload */
-> >>>>>> +  if (augmented) {
-> >>>>>> +          int written =3D offsetof(struct augmented_arg, value) +=
- aug_size;
-> >>>>>> +
-> >>>>>> +          if (written < 0 || written > sizeof(struct augmented_ar=
-g))
-> >>>>>> +                  return 1; /* break */
-> >>>>>> +
-> >>>>>> +          augmented_arg->size =3D aug_size;
-> >>>>>> +          *loop_ctx->output +=3D written;
-> >>>>>> +          loop_ctx->payload_offset +=3D written;
-> >>>>>> +          *loop_ctx->do_output =3D true;
-> >>>>>> +  }
-> >>>>>> +
-> >>>>>> +  return 0;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>>  static int augment_sys_enter(void *ctx, struct syscall_enter_args=
- *args)
-> >>>>>>  {
-> >>>>>> -  bool augmented, do_output =3D false;
-> >>>>>> -  int zero =3D 0, index, value_size =3D sizeof(struct augmented_a=
-rg) - offsetof(struct augmented_arg, value);
-> >>>>>> +  bool do_output =3D false;
-> >>>>>> +  int zero =3D 0, value_size =3D sizeof(struct augmented_arg) - o=
-ffsetof(struct augmented_arg, value);
-> >>>>>>    u64 output =3D 0; /* has to be u64, otherwise it won't pass the=
- verifier */
-> >>>>>> -  s64 aug_size, size;
-> >>>>>>    unsigned int nr, *beauty_map;
-> >>>>>>    struct beauty_payload_enter *payload;
-> >>>>>> -  void *arg, *payload_offset;
-> >>>>>> +  void *payload_offset;
-> >>>>>> +  long iters;
-> >>>>>>
-> >>>>>>    /* fall back to do predefined tail call */
-> >>>>>>    if (args =3D=3D NULL)
-> >>>>>> @@ -457,63 +538,17 @@ static int augment_sys_enter(void *ctx, stru=
-ct syscall_enter_args *args)
-> >>>>>>    /* copy the sys_enter header, which has the syscall_nr */
-> >>>>>>    __builtin_memcpy(&payload->args, args, sizeof(struct syscall_en=
-ter_args));
-> >>>>>>
-> >>>>>> -  /*
-> >>>>>> -   * Determine what type of argument and how many bytes to read f=
-rom user space, using the
-> >>>>>> -   * value in the beauty_map. This is the relation of parameter t=
-ype and its corresponding
-> >>>>>> -   * value in the beauty map, and how many bytes we read eventual=
-ly:
-> >>>>>> -   *
-> >>>>>> -   * string: 1                          -> size of string
-> >>>>>> -   * struct: size of struct             -> size of struct
-> >>>>>> -   * buffer: -1 * (index of paired len) -> value of paired len (m=
-aximum: TRACE_AUG_MAX_BUF)
-> >>>>>> -   */
-> >>>>>> -  for (int i =3D 0; i < 6; i++) {
-> >>>>>> -          arg =3D (void *)args->args[i];
-> >>>>>> -          augmented =3D false;
-> >>>>>> -          size =3D beauty_map[i];
-> >>>>>> -          aug_size =3D size; /* size of the augmented data read f=
-rom user space */
-> >>>>>> -
-> >>>>>> -          if (size =3D=3D 0 || arg =3D=3D NULL)
-> >>>>>> -                  continue;
-> >>>>>> -
-> >>>>>> -          if (size =3D=3D 1) { /* string */
-> >>>>>> -                  aug_size =3D bpf_probe_read_user_str(((struct a=
-ugmented_arg *)payload_offset)->value, value_size, arg);
-> >>>>>> -                  /* minimum of 0 to pass the verifier */
-> >>>>>> -                  if (aug_size < 0)
-> >>>>>> -                          aug_size =3D 0;
-> >>>>>> -
-> >>>>>> -                  augmented =3D true;
-> >>>>>> -          } else if (size > 0 && size <=3D value_size) { /* struc=
-t */
-> >>>>>> -                  if (!bpf_probe_read_user(((struct augmented_arg=
- *)payload_offset)->value, size, arg))
-> >>>>>> -                          augmented =3D true;
-> >>>>>> -          } else if ((int)size < 0 && size >=3D -6) { /* buffer *=
-/
-> >>>>>> -                  index =3D -(size + 1);
-> >>>>>> -                  barrier_var(index); // Prevent clang (noticed w=
-ith v18) from removing the &=3D 7 trick.
-> >>>>>> -                  index &=3D 7;         // Satisfy the bounds che=
-cking with the verifier in some kernels.
-> >>>>>> -                  aug_size =3D args->args[index] > TRACE_AUG_MAX_=
-BUF ? TRACE_AUG_MAX_BUF : args->args[index];
-> >>>>>> -
-> >>>>>> -                  if (aug_size > 0) {
-> >>>>>> -                          if (!bpf_probe_read_user(((struct augme=
-nted_arg *)payload_offset)->value, aug_size, arg))
-> >>>>>> -                                  augmented =3D true;
-> >>>>>> -                  }
-> >>>>>> -          }
-> >>>>>> -
-> >>>>>> -          /* Augmented data size is limited to sizeof(augmented_a=
-rg->unnamed union with value field) */
-> >>>>>> -          if (aug_size > value_size)
-> >>>>>> -                  aug_size =3D value_size;
-> >>>>>> -
-> >>>>>> -          /* write data to payload */
-> >>>>>> -          if (augmented) {
-> >>>>>> -                  int written =3D offsetof(struct augmented_arg, =
-value) + aug_size;
-> >>>>>> -
-> >>>>>> -                  if (written < 0 || written > sizeof(struct augm=
-ented_arg))
-> >>>>>> -                          return 1;
-> >>>>>> -
-> >>>>>> -                  ((struct augmented_arg *)payload_offset)->size =
-=3D aug_size;
-> >>>>>> -                  output +=3D written;
-> >>>>>> -                  payload_offset +=3D written;
-> >>>>>> -                  do_output =3D true;
-> >>>>>> -          }
-> >>>>>> -  }
-> >>>>>> +  struct args_loop_ctx loop_ctx =3D {
-> >>>>>> +          .args =3D args,
-> >>>>>> +          .beauty_map =3D beauty_map,
-> >>>>>> +          .payload_offset =3D payload_offset,
-> >>>>>> +          .value_size =3D value_size,
-> >>>>>> +          .output =3D &output,
-> >>>>>> +          .do_output =3D &do_output
-> >>>>>> +  };
-> >>>>>> +  iters =3D bpf_loop(6, process_arg_cb, &loop_ctx, 0);
-> >>>>>
-> >>>>> bpf_loop() is old and generally not recommended.
-> >>>>> Please use bpf_for() then the diff will be one line change and
-> >>>>> can scale to any number of args. Not just 6.
-> >>>
-> >>> Thanks Alexei, I didn't know about this preference.
-> >>>
-> >>>> One thing we should take care is to support old kernels.  The oldest
-> >>>> LTS kernel in the kernel.org is 5.10 and bpf_loop() was introduced i=
-n
-> >>>> 5.17 and bpf_for (bpf_iter_num) was 6.4.
-> >>>
-> >>> The problematic loop was introduced in 6.12 by a68fd6a6cdd3 ("perf
-> >>> trace: Collect augmented data using BPF") so we should be good using
-> >>> bpf_for. Or is perf from 7.2 supposed to work on 5.10 LTS kernels?
-> >>>
-> >>> I'll refactor with bpf_for and will send v2.
-> >>
-> >> Or I won't. It turns out that just swapping the for loop for bpf_for
-> >> leads to -E2BIG from the verifier again. Looking at the verifier log, =
-it
-> >> fails to find equivalence between states at the loop head:
-> >>
-> >>     [...]
-> >>     78: (85) call bpf_iter_num_next#84922 [...]
-> >> fp-56=3Dmap_value(map=3Dbeauty_payload_,ks=3D4,vs=3D24688,imm=3D112)
-> >>     [...]
-> >>     78: (85) call bpf_iter_num_next#84922 [...]
-> >> fp-56=3Dmap_value(map=3Dbeauty_payload_,ks=3D4,vs=3D24688,imm=3D120)
-> >>     [...]
-> >>
-> >> IMHO, the reason is that payload_offset, which points to the
-> >> beauty_payload_enter_map entry, gets updated in every iteration.
-> >>
-> >> This could be probably fixed on the perf side by reworking how augment=
-ed
-> >> args are stored but at this point, bpf_loop sounds like an easier and
-> >> more reliable approach.
-> >>
-> >> Let me know if anyone has objections, otherwise I'll send v2 of the
-> >> bpf_loop approach, with suggestions from Sashiko incorporated.
-> >>
-> >
-> > I'd still try to adapt bpf_for(), it's a much better code structure.
-> > You probably need to add a bounding checking/confirming `if ()`
-> > condition validating that offset at which you access map_value is
-> > always correct. And/or you might need barrier_var() before using i,
-> > because bpf_for() macro does bounds checking (check the macro itself),
-> > but compiler often will reorder instructions leading to verifier
-> > complaints.
->
-> I gave it a try but wasn't successful so far. I think that the problem
-> is that while it would be possible to add an upper bound condition for
-> `payload_offset`, the verifier tracks the value of `payload_offset` too
-> precisely (as map_value(..., imm=3DX) with a concrete offset) and never
-> merges states with different offsets. And since there are multiple
-> branches inside the loop, each incrementing `payload_offset` by a
-> different value, the verifier seems to fork its state on each branch,
-> effectively leading to the amount of states growing exponentially and
-> hitting the jump limit.
->
-> To me, bpf_loop sounds like a more reliable choice in this situation.
+Thank you for the detailed review. I have investigated all identified 
+issues and confirmed them. All will be addressed in v2.
 
-correctly verified bpf_loop would basically have to follow the same
-logic, so if it works with bpf_loop, it should work with bpf_for. Is
-it possible to share your bpf_for-based code in some branch to try
-locally? I'm sure it can be done one way or another.
+On 08/06/26 18:43, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 10 potential issue(s) to consider:
+> - [High] Sequential realloc failures cause a use-after-free, double-free, and memory leak.
+> - [High] Unchecked realloc overwrite leads to array leak and a later NULL pointer dereference.
+> - [High] Unchecked calloc failure leads to NULL pointer dereference in fwrite.
+> - [High] Heap buffer overflow when processing abnormally large trace records.
+> - [High] Unchecked get_tracing_file failure leads to NULL pointer dereference in fopen.
+> - [High] Ftrace ring buffer format is incorrectly constructed for events >= 28 words, causing data corruption.
+> - [High] Timestamp deltas larger than 27 bits are silently truncated
+> - [Medium] Direct return on record allocation failure bypasses cleanup, leaking accumulated memory.
+> - [Medium] The section_size for the flyrecord section is incorrectly calculated, violating the trace.dat format.
+> - [Medium] The current event record is leaked if flushing the page or reallocating the batch array fails.
+> --
+> 
+> commit b7f763e536c02304fb52bceb9c78dd92220fa81a
+> Author: Tanushree Shah <tshah@linux.ibm.com>
+> 
+> perf/trace-dat: Add trace.dat export infrastructure
+> 
+> Add new utility files util/trace-dat.c and util/trace-dat.h
+> implementing the infrastructure for exporting perf.data tracepoints
+> to trace.dat format compatible with trace-cmd and KernelShark.
+> 
+>> diff --git a/tools/perf/util/trace-dat.c b/tools/perf/util/trace-dat.c
+>> index 0000000000000..aa34a7b89b7a3
+>> --- /dev/null
+>> +++ b/tools/perf/util/trace-dat.c
+> [ ... ]
+>> +int trace_dat__collect_cpu_event(int cpu, unsigned long long ts,
+>> +				 void *raw, unsigned int raw_size)
+>> +{
+> [ ... ]
+>> +	if (cpu_events->count >= cpu_events->capacity) {
+>> +		cpu_events->capacity = cpu_events->capacity ?
+>> +				       cpu_events->capacity * 2 : INITIAL_EVENT_CAPACITY;
+>> +		cpu_events->events   = realloc(cpu_events->events,
+>> +				       cpu_events->capacity * sizeof(*cpu_events->events));
+>> +		if (!cpu_events->events)
+>> +			return -ENOMEM;
+> 
+> [Severity: High]
+> If realloc fails, it returns NULL and overwrites cpu_events->events, leaking
+> the original memory block. Later, trace_dat__free_cpu_buffers() iterates over
+> the events and dereferences trace_cpu_data[cpu].events[i].raw. Can this cause
+> a segmentation fault during cleanup since events is NULL?
+Reproduced with fault injection. Direct assignment causes pointer loss 
+on failure, leading to use-after-free in cleanup. Will use temporary 
+pointer pattern.
+> 
+>> +	}
+> [ ... ]
+>> +static int trace_dat__write_page(FILE *fp, unsigned long long base_ts,
+>> +			char **records, int *rec_sizes, int nr_recs)
+>> +{
+> [ ... ]
+>> +	page = calloc(1, trace_dat_page_size);
+>> +	if (!page)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < nr_recs; i++) {
+>> +		memcpy(page + offset, records[i], rec_sizes[i]);
+> 
+> [Severity: High]
+> When a trace event's size exceeds trace_dat_page_size - 16 bytes, the
+> oversized event is queued into a new batch. Does this memcpy copy data past
+> the end of the page allocation, causing a heap buffer overflow?
+> 
+Records larger than page payload can overflow buffer. Will reject 
+oversized records before batching, matching upstream ftrace behavior.
+>> +		offset += rec_sizes[i];
+>> +		commit += rec_sizes[i];
+>> +	}
+> [ ... ]
+>> +static int trace_dat__write_cpu_dat(FILE *fp, int cpu, unsigned long long *file_offset_out)
+>> +{
+> [ ... ]
+>> +	for (i = 0; i < cpu_events->count; i++) {
+>> +		struct cpu_event *event = &cpu_events->events[i];
+>> +		unsigned long long time_delta = event->ts - base_ts;
+>> +		unsigned int data_len = event->raw_size;
+>> +		unsigned int words = (data_len + TRACE_DAT_WORD_ALIGN_MASK) / TRACE_DAT_WORD_SIZE;
+>> +		unsigned int type_len = words & TRACE_DAT_RECORD_TYPE_LEN_MASK;
+>> +		unsigned int hdr_word = ((time_delta & TRACE_DAT_RECORD_TIME_MASK) <<
+>> +					TRACE_DAT_RECORD_TIME_SHIFT) | type_len;
+> 
+> [Severity: High]
+> If the gap between events on a CPU exceeds 0x07FFFFFF, the ftrace
+> specification requires emitting a TIME_EXTEND or TIME_STAMP record to advance
+> base_ts. Does masking off the upper bits via time_delta &
+> TRACE_DAT_RECORD_TIME_MASK silently truncate the timestamp and corrupt the
+> chronological ordering?
+Deltas >27 bits are silently masked. Will emit TIME_EXTEND records for 
+large gaps, matching ftrace ring buffer semantics.
+> 
+> [Severity: High]
+> The ftrace ring buffer specification uses the 5-bit type_len field to encode
+> lengths up to 27 words. For 28 words or more, type_len must be 0, and the
+> actual length must be written as a 32-bit word immediately following the
+> header. Does applying words & 0x1F map large events into special types (like
+> PADDING for 29) or to type_len = 0 without appending the required 32-bit
+> length word?
 
-> It's also older, which is good in this case, since compatibility with
-> older kernels seems to be important for perf (see other messages in the
-> thread).
->
-> I'm also wondering if the verifier could be improved to handle these
-> cases but that's a different discussion.
->
-> >
-> >> Thanks,
-> >> Viktor
-> >>
-> >>> It should be then
-> >>> backported to stable kernels down to 6.12 LTS.
-> >>>
-> >>> Viktor
-> >>>
-> >>>>
-> >>>> Maybe we can factor out the loop body and call it from different
-> >>>> mechanisms like open-coded loop, bpf_loop or bpf_for depending on th=
-e
-> >>>> kernel version.  But not sure it'd fix the verifier issue though.
-> >>>>
-> >>>> Thanks,
-> >>>> Namhyung
-> >>>>
-> >>
-> >>
-> >
->
+Events ≥28 words incorrectly map to reserved types (29=PADDING, 
+30=TIME_EXTEND, 31=TIME_STAMP). Will implement proper encoding with 
+type_len=0 and separate length word for large events.
+> 
+>> +		int rec_size;
+>> +		char *rec;
+>> +
+>> +		rec_size = TRACE_DAT_WORD_SIZE + data_len;
+>> +		if (rec_size % TRACE_DAT_WORD_SIZE)
+>> +			rec_size += TRACE_DAT_WORD_SIZE - (rec_size % TRACE_DAT_WORD_SIZE);
+>> +
+>> +		rec = calloc(1, rec_size);
+>> +		if (!rec)
+>> +			return -ENOMEM;
+> 
+> [Severity: Medium]
+> If calloc fails, this directly returns -ENOMEM. Does this bypass the out_free
+> cleanup label entirely, leaking the page_records and page_rec_sizes tracking
+> arrays and any previously allocated record strings?
+Failed calloc returns directly, leaking page_records arrays. Will use 
+proper error path with goto.
+> 
+>> +		memcpy(rec, &hdr_word, TRACE_DAT_WORD_SIZE);
+>> +		memcpy(rec + TRACE_DAT_WORD_SIZE, event->raw, data_len);
+>> +
+>> +		if (page_size_used + rec_size > trace_dat_page_size -
+>> +		    TRACE_DAT_RECORD_HEADER_SIZE) {
+>> +			ret = trace_dat__write_page(fp, base_ts,
+>> +			      page_records, page_rec_sizes, nr_page_recs);
+>> +			for (j = 0; j < nr_page_recs; j++)
+>> +				free(page_records[j]);
+>> +			nr_page_recs = 0;
+>> +			page_size_used = 0;
+>> +			base_ts = event->ts;
+>> +			if (ret < 0)
+>> +				goto out_free;
+> 
+> [Severity: Medium]
+> If trace_dat__write_page fails and we jump to out_free, the newly allocated
+> rec has not yet been appended to the page_records array. Is this memory
+> permanently leaked since it is skipped by the cleanup loop?
+> 
+Newly allocated rec not yet in page_records when flush fails. Will check 
+page fit before allocating record.
+>> +		}
+>> +
+>> +		if (nr_page_recs >= page_cap) {
+>> +			char **tmp_records;
+>> +			int *tmp_sizes;
+>> +
+>> +			page_cap = page_cap ? page_cap * 2 : INITIAL_PAGE_RECORD_CAPACITY;
+>> +			tmp_records = realloc(page_records, page_cap * sizeof(char *));
+>> +			tmp_sizes = realloc(page_rec_sizes, page_cap * sizeof(int));
+>> +			if (!tmp_records || !tmp_sizes) {
+>> +				ret = -ENOMEM;
+>> +				goto out_free;
+> 
+> [Severity: High]
+> If realloc for tmp_sizes fails, the code jumps to out_free without updating
+> page_records to point to the newly allocated block in tmp_records. Does the
+> cleanup path then iterate over the potentially freed page_records pointer,
+> dereference it (use-after-free), and then call free(page_records) again
+> (double-free)?
+Partial realloc failure can cause use-after-free and double-free. Will 
+replace with malloc/memcpy/free pattern.
+> 
+>> +			}
+> [ ... ]
+>> +int trace_dat__write_options_section1(void)
+>> +{
+> [ ... ]
+>> +	/* TRACECLOCK option */
+>> +	opt_id = TRACE_DAT_OPTION_TRACECLOCK;
+>> +
+>> +	path = get_tracing_file("trace_clock");
+>> +	clock_file = fopen(path, "r");
+> 
+> [Severity: High]
+> The get_tracing_file function internally uses asprintf and can return NULL on
+> memory allocation failure. Is it possible for fopen to receive a NULL path,
+> leading to a segmentation fault?
+> 
+Can return NULL on asprintf failure. Passing NULL to fopen() causes 
+segmentation fault. Will add NULL check before fopen().
+>> +	put_tracing_file(path);
+> [ ... ]
+>> +int trace_dat__write_flyrecord_section(void)
+>> +{
+> [ ... ]
+>> +	/* Align to page boundary */
+>> +	after_header   = ftell(trace_dat_fp);
+>> +	padding_needed = (trace_dat_page_size -
+>> +			 (after_header % trace_dat_page_size)) % trace_dat_page_size;
+>> +
+>> +	if (padding_needed > 0) {
+>> +		pad = calloc(1, padding_needed);
+>> +
+>> +		if (!fwrite(pad, 1, padding_needed, trace_dat_fp)) {
+> 
+> [Severity: High]
+> Is pad passed directly to fwrite without checking if calloc succeeded? Can
+> this lead to a segmentation fault if the allocation fails and fwrite receives
+> a NULL buffer?
+NULL pad can be passed to fwrite() causing segmentation fault. Will add 
+explicit NULL check.
+> 
+>> +			free(pad);
+>> +			ret = -EIO;
+>> +			goto cleanup;
+>> +		}
+>> +		free(pad);
+>> +	}
+> [ ... ]
+>> +	/* fill section size */
+>> +	end_pos = ftell(trace_dat_fp);
+>> +
+>> +	section_size = end_pos - flyrecord_start;
+> 
+> [Severity: Medium]
+> In the trace.dat specification, the section_size field must indicate the size
+> of the payload following the 16-byte section header. By capturing
+> flyrecord_start before the header is written, does the final section_size
+> erroneously include the 16 bytes of the header itself, causing parsing tools
+> to miscalculate the boundary?
+> 
+>> +	if (fseek(trace_dat_fp, section_size_pos, SEEK_SET) < 0 ||
+>> +	    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp)) {
+>> +		ret = -EIO;
+>> +		goto cleanup;
+>> +	}
+> 
+Verified by comparing with trace-cmd. trace-cmd excludes the header in 
+the section size. Will fix by capturing position after writing header.
