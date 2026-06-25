@@ -1,580 +1,488 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CC7031AAAA;
-	Thu, 25 Jun 2026 13:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782395623; cv=none; b=ZVuS8fxURHIZA1+5n7IYgoTFRxasO6vF7Ie8MAuXEYl/tLUuik4IQbU1tSCDku8a3+3oMBv8ASPI4/bqeP8GV4eB/YzZEYX1xIGwZP/EvAIzhA3pSm+14S2mVqiHXTNvmYy1P6UaL6Oj+mQho+IfZ3cQOGqv/0FtcaDxJu4V8Ds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782395623; c=relaxed/simple;
-	bh=0T8HEEzPv+gUEW5s2qzSLuWTsnHb5dkZyaIvFCWyMXo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I4gbnmPhoHmAHhytzUzkaSKAEKX/HtUzc9HkOE+cUKr8calQJ55+67wfY6aMgr1P/eb2V0edk4m37ThZOZ3Z4tQ/8Vxo4a97P9p6abx8zMVpcxoMsz+Hq8iZqT0VhudkqGs2qV39aKLWYSG3fo/gOmP4nnR0O5lWl5W2EMqY0MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Q1CSj4hF; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923003ECBDD
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jun 2026 17:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782410155; cv=pass; b=CSOZitilHZlg/SgWapHYzSbJpc8k/F8WeYT9PSwfFt4jh/Rk6Rd9AYlaMe7+yo5BXHLAQGl+Gjug1LaNsH2fF7/14Vzzr35np1HAxg/T5Ab1JaD8L3jKFFZmiYzo9ctGRN0FvVhOF/gVqQAreZDjRvJe05eXZLQTLjHr5rcNMFA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782410155; c=relaxed/simple;
+	bh=KL7OUqxN1KQ/RK0Z6x8GGRsQ1dDi9OfJ6FYOtkRv5cw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ncsqhumeFpAR7bFr1YhmgM9bg9/9u05s6KvlEWAlBxG686NAgIj2lvPP8QGnURrA5CFZjKuoUPqDB3COHS+pLYg+mvy8x2eVlUXNbgAAT5BZjcFSsmkZ9Ia9LdgeG5d78VwBC4sC7L6/MlFrEpwwkTmVMszopr575TeKEvC0UxE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dCmZW8m+; arc=pass smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Q1CSj4hF"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A728F165C;
-	Thu, 25 Jun 2026 06:53:35 -0700 (PDT)
-Received: from [10.2.212.8] (e134344.arm.com [10.2.212.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A1613F632;
-	Thu, 25 Jun 2026 06:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782395620; bh=0T8HEEzPv+gUEW5s2qzSLuWTsnHb5dkZyaIvFCWyMXo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q1CSj4hFSq7JHrFz+hoJICKSlnsaWN1cT0Jnh5o0RsFvU9Wmej6xuj7AiXF2KLYRB
-	 BnqXUFLWXGYaHJSopJBx2QCZY9mQlgM7gZwwy9SEzdlEuFM2m/KcMzLR0PvDKsO3M4
-	 IrX9Vrb/azfIsq9+PjPZRjbqikqaMbWB0Tbp44pU=
-Message-ID: <6b15d3fc-4b4e-4c6c-a96d-5817d7114d02@arm.com>
-Date: Thu, 25 Jun 2026 14:53:24 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCmZW8m+"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-37d82f3a244so65718a91.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jun 2026 10:55:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782410153; cv=none;
+        d=google.com; s=arc-20260327;
+        b=kMLMqn5u6zouMuJLYIo1l9jzoaifoUhDmQdMhsKqMGggE1cp063Xi4067w6WwXF3N7
+         soxFvPyBEysxFDdeF3M1+nAOHP8fwM4OE3L7OAg7be7B6o4NRnvfciuT4rFR+31lhXKs
+         MLzZ2Px/KMrYHmdb4W1xtLt+3wHdAuGcYzGiHcZsFf+ntIuKfmpo3jtZcY6rwXzVkLGY
+         zO8wNkot+qBTDfCP6raDXCu4B5RjIhzrssxDztbLdXNYPYosHTzR55TOH5MEjw94tNEx
+         nXE3Gvp1LUu4v+TJ48CNRAFbFMIgH3dkSXc02CU3DrHYZ9no0tLV+tUezbUZkY1iMS7V
+         kBoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=70lqxrDgx0O9fRvHia8p/z9fa6BrG/EerRGOH0ZlW+w=;
+        fh=gNfvbinJ4IRuqJ5r6GKFfBvtG0kaRyNjT675zeuXp1Y=;
+        b=hQ0E/BMaa4F+iIAfhgAGwsntz71XDFXdbPjMkaD7B6XFpTPzevYJVs7Pe079t73pRN
+         IcNHTkzbaeK9h6ZOSUX5jfnmtrx2fTb4pvoX6dotYcZhF68wciUAlsS/XWtjJ21LAmjh
+         UJaZOUd+cWptZLjATONV9CJajTxnNvScMZffrVhxFuFPmorPZ67zknIgvW+IJzDxNQ5o
+         CysrLdhpCcJ/RHgnHy2JrajpoxiHrs/hbFlUrGMMksv7dUxyrwHUkzHtRZm4iPfINR+H
+         pRd7MlCSbO6l3PfDQnntzc7as1C0Z5tXGm8AibXM2KwA29AFCyDsdfRLvoJ7ibpMdiqT
+         B2+Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782410153; x=1783014953; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=70lqxrDgx0O9fRvHia8p/z9fa6BrG/EerRGOH0ZlW+w=;
+        b=dCmZW8m+tPSpcfvosK8NvfuqT9s7O6I4WW8Dq8VjgW7ReLiaGG4DlZtJN4qUSbf7Zx
+         svAEmoQnm9ZtX8yToat+edfLEhhq9uZU+hHoKihlLx40IKkV58s+Pfk4lRrQflzYcf3V
+         kq0uyGPxorRRcKJgcWrZMM4omrKZZs/a+yMDiSu9O8dYCsJ1F+5MpyBMgP0KcS98gpII
+         b0Fvz0uCmAuFZ8zqHa2l8GoZN8XnyUlHebOFPoVjjnImSZow7ypOt75u+o91m+hOgjbg
+         ioUX147vaDd2E5qz/ccRWmbkwif6SgLILarxYKad34TZsj5S17RXxvPC4tb1Tnem694o
+         J9Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782410153; x=1783014953;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=70lqxrDgx0O9fRvHia8p/z9fa6BrG/EerRGOH0ZlW+w=;
+        b=jVFdx7KyCr9nrxYbJ+hYSPuWKVqQ5aDHpg8GfADFNDjSoto2TjLeUciqUvP+8Mx1aS
+         5oJ9Ox2RsfbyAEWipfHuFksrR6C7SphgboulRpv/127sWNTsKRpT0r3kYlYhvMquz8h1
+         h5nLX+1kLxrEstpR52ZskY6vPJS+D3QfSrJJNVj4il8/zmvWwrcsw1KP7BCoICE2khw+
+         L4wobDgObfw8D+tF4vXFm7Gb/q2TttQFlSXrYallfx6BzExWMl+SvQpCs7ZYZsrCWorQ
+         cn8MD45wXXjG9m0m6Jt2esfWJhgp8sz2xC1TLWeBKBky+L6+jqHA55uLHs/FoMVOKf4N
+         sx+A==
+X-Forwarded-Encrypted: i=1; AHgh+RpQwif2q4Ab2AzEcjtWhXkMxfkdgnOEi3AkM+teY5MqpyupuG3kkGFAPjs0tQ5uFbzwZERVCF/yLulWjNb/S3m/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcTVs01JyjPN+9Z6KkkBHd7joiHhHncS0iefAIzyNWAAgcKidl
+	zlDp6pZ2F1ZHL3gEIC3uOyXnCPmLW5Dq7zhvB3q/feYRBvPmQRZ04fhK/JA5bK/1KG9QBTf6wZN
+	dHeQ6PPhM48BLsiCcjZUWFax5MFOU53g=
+X-Gm-Gg: AfdE7cn8vP3oXJubtc7HuDN3mcr47zylYuzEzlb3WMizOAWqWb1696jcLRv1kN1TSLF
+	xUhqBh70EZ68OiUtal/SANIUqeqsolZ2QQR/x50awIXp/cCfnGHLbs9q2p7OgWCI2rshR3bCDB5
+	K/Pllt39Kkqe2UGXF2sRbEDgphDWmm/wIJgGFdf8dwAuX9+V815fpAH1bqTGgLg416KGKRDbhsw
+	qS5pQOTzq/3DUJI0Y1zypcE1vT2W/KOiLVIy8r8gmM8/9xY2SZT/nRf3p0YxktG4Z/VfNOmtJOx
+	K70A3agEYVJvbXdpyGKBgJMQNRUxAX+G2zJ8KQFM2MSPEEY7fGldB0qmNf5CZ0fpRDfAzA==
+X-Received: by 2002:a17:902:e544:b0:2c8:8f7:cc36 with SMTP id
+ d9443c01a7336-2c808f7cf3amr17223595ad.17.1782410152652; Thu, 25 Jun 2026
+ 10:55:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Thunderbird Daily
-Subject: Re: [PATCH v4 1/3] perf: marvell: Add MPAM partid filtering to CN10K
- TAD PMU
-To: Geetha sowjanya <gakula@marvell.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, will@kernel.org, krzk+dt@kernel.org,
- james.morse@arm.com
-References: <20260618153610.13649-1-gakula@marvell.com>
- <20260618153610.13649-2-gakula@marvell.com>
-Content-Language: en-US
-From: Ben Horgan <ben.horgan@arm.com>
-In-Reply-To: <20260618153610.13649-2-gakula@marvell.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260623112533.1151502-1-vmalik@redhat.com> <DJGJ9F6WQZV9.2W4WBIHYLJQ97@gmail.com>
+ <ajq98dm4gAwEzkMb@google.com> <c2f4e45e-d5c9-42e9-a46b-25fb0cacb267@redhat.com>
+ <93e70dc7-e52f-444e-b57e-09d149dc4808@redhat.com> <CAEf4BzYWdsBDQ3D41=+n_oCO68bVOtKuqQCqZOEVo=j7nK9Ozg@mail.gmail.com>
+ <82252ae0-133a-45dc-9622-315236a437ad@redhat.com>
+In-Reply-To: <82252ae0-133a-45dc-9622-315236a437ad@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 25 Jun 2026 10:55:38 -0700
+X-Gm-Features: AVVi8CfHmVjHnPKT82GCu2a4GZmhSlG7FqqlONu-C9MUDK52gjtj7DMiNoteTMQ
+Message-ID: <CAEf4Bza8vFSkuiD_Vd47-eGuDS40kKvTcHQR=V3OY=c505a9=g@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: Refactor augmented_raw_syscalls using bpf_loop
+To: Viktor Malik <vmalik@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Michael Petlan <mpetlan@redhat.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geetha,
+On Thu, Jun 25, 2026 at 4:58=E2=80=AFAM Viktor Malik <vmalik@redhat.com> wr=
+ote:
+>
+> On 6/24/26 19:19, Andrii Nakryiko wrote:
+> > On Wed, Jun 24, 2026 at 3:27=E2=80=AFAM Viktor Malik <vmalik@redhat.com=
+> wrote:
+> >>
+> >> On 6/24/26 08:47, Viktor Malik wrote:
+> >>> On 6/23/26 19:10, Namhyung Kim wrote:
+> >>>> Hello,
+> >>>>
+> >>>> On Tue, Jun 23, 2026 at 08:27:39AM -0700, Alexei Starovoitov wrote:
+> >>>>> On Tue Jun 23, 2026 at 4:25 AM PDT, Viktor Malik wrote:
+> >>>>>> The loop for processing syscall args in augment_raw_syscalls has a
+> >>>>>> history of breaking with Clang updates, see e.g. commit 013eb043f3=
+7b
+> >>>>>> ("perf trace: Fix BPF loading failure (-E2BIG)") from Clang 15 to =
+16.
+> >>>>>>
+> >>>>>> Now, a similar thing happened between Clang 21 and 22. While the i=
+ssue
+> >>>>>> is mitigated on the main line by a recent verifier update, it rema=
+ins
+> >>>>>> broken on the 6.12 and 6.18 stable branches:
+> >>>>>>
+> >>>>>>     [linux-6.18.y]# sudo perf trace true
+> >>>>>>     libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
+> >>>>>>     libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+> >>>>>>     [...]
+> >>>>>>     BPF program is too large. Processed 1000001 insn
+> >>>>>>     processed 1000001 insns (limit 1000000) max_states_per_insn 40=
+ total_states 37941 peak_states 232 mark_read 0
+> >>>>>>     -- END PROG LOAD LOG --
+> >>>>>>     libbpf: prog 'sys_enter': failed to load: -E2BIG
+> >>>>>>     libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+> >>>>>>     libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bp=
+f': -E2BIG
+> >>>>>>     Error: failed to get syscall or beauty map fd
+> >>>>>>     [...]
+> >>>>>>
+> >>>>>> The reason is that the loop is quite complex and the BPF verifier =
+often
+> >>>>>> struggles to prove that it terminates.
+> >>>>>>
+> >>>>>> Fix the issue by refactoring the loop body into a callback functio=
+n and
+> >>>>>> calling the bpf_loop helper. This should prevent future breakages =
+of
+> >>>>>> this kind since the callback function has no loops. It also allows=
+ to
+> >>>>>> drop a few artificial checks to help the verifier, including the c=
+hanges
+> >>>>>> introduced by 013eb043f37b.
+> >>>>
+> >>>> Thanks for working on this.  I encountered this issue before and nev=
+er
+> >>>> found time to take a deeper look yet.
+> >>>>
+> >>>>>>
+> >>>>>> Signed-off-by: Viktor Malik <vmalik@redhat.com>
+> >>>>>> Fixes: a68fd6a6cdd3 ("perf trace: Collect augmented data using BPF=
+")
+> >>>>>> Fixes: 013eb043f37b ("perf trace: Fix BPF loading failure (-E2BIG)=
+")
+> >>>>>> Cc: stable@vger.kernel.org
+> >>>>>> ---
+> >>>>>>  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 157 +++++++++++--=
+-----
+> >>>>>>  1 file changed, 96 insertions(+), 61 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c=
+ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> >>>>>> index 2a6e61864ee0..6d553ed3ac23 100644
+> >>>>>> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> >>>>>> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> >>>>>> @@ -429,15 +429,96 @@ static bool pid_filter__has(struct pids_filt=
+ered *pids, pid_t pid)
+> >>>>>>    return bpf_map_lookup_elem(pids, &pid) !=3D NULL;
+> >>>>>>  }
+> >>>>>>
+> >>>>>> +struct args_loop_ctx {
+> >>>>>> +  struct syscall_enter_args *args;
+> >>>>>> +  unsigned int *beauty_map;
+> >>>>>> +  void *payload_offset;
+> >>>>>> +  int value_size;
+> >>>>>> +  u64 *output;
+> >>>>>> +  bool *do_output;
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +static long process_arg_cb(u64 i, void *ctx)
+> >>>>>> +{
+> >>>>>> +  /*
+> >>>>>> +   * Determine what type of argument and how many bytes to read f=
+rom user space, using the
+> >>>>>> +   * value in the beauty_map. This is the relation of parameter t=
+ype and its corresponding
+> >>>>>> +   * value in the beauty map, and how many bytes we read eventual=
+ly:
+> >>>>>> +   *
+> >>>>>> +   * string: 1                          -> size of string
+> >>>>>> +   * struct: size of struct             -> size of struct
+> >>>>>> +   * buffer: -1 * (index of paired len) -> value of paired len (m=
+aximum: TRACE_AUG_MAX_BUF)
+> >>>>>> +   */
+> >>>>>> +  struct augmented_arg *augmented_arg;
+> >>>>>> +  struct args_loop_ctx *loop_ctx;
+> >>>>>> +  int aug_size, size, index;
+> >>>>>> +  bool augmented;
+> >>>>>> +  void *arg;
+> >>>>>> +
+> >>>>>> +  /* Bounds check for the below map access to help the verifier *=
+/
+> >>>>>> +  if (i < 0 || i >=3D 6)
+> >>>>>> +          return 1;
+> >>>>>> +
+> >>>>>> +  loop_ctx =3D (struct args_loop_ctx *)ctx;
+> >>>>>> +  arg =3D (void *)loop_ctx->args->args[i];
+> >>>>>> +  augmented =3D false;
+> >>>>>> +  size =3D loop_ctx->beauty_map[i];
+> >>>>>> +  aug_size =3D size; /* size of the augmented data read from user=
+ space */
+> >>>>>> +  augmented_arg =3D (struct augmented_arg *)loop_ctx->payload_off=
+set;
+> >>>>>> +
+> >>>>>> +  if (size =3D=3D 0 || arg =3D=3D NULL)
+> >>>>>> +          return 0; /* continue */
+> >>>>>> +
+> >>>>>> +  if (size =3D=3D 1) { /* string */
+> >>>>>> +          aug_size =3D bpf_probe_read_user_str(augmented_arg->val=
+ue, loop_ctx->value_size, arg);
+> >>>>>> +          augmented =3D true;
+> >>>>>> +  } else if (size > 0 && size <=3D loop_ctx->value_size) { /* str=
+uct */
+> >>>>>> +          if (!bpf_probe_read_user(augmented_arg->value, size, ar=
+g))
+> >>>>>> +                  augmented =3D true;
+> >>>>>> +  } else if (size < 0 && size >=3D -6) { /* buffer */
+> >>>>>> +          index =3D -(size + 1);
+> >>>>>> +          barrier_var(index); // Prevent clang (noticed with v18)=
+ from removing the &=3D 7 trick.
+> >>>>>> +          index &=3D 7;         // Satisfy the bounds checking wi=
+th the verifier in some kernels.
+> >>>>>> +          aug_size =3D loop_ctx->args->args[index];
+> >>>>>> +
+> >>>>>> +          if (aug_size > TRACE_AUG_MAX_BUF)
+> >>>>>> +                  aug_size =3D TRACE_AUG_MAX_BUF;
+> >>>>>> +
+> >>>>>> +          if (aug_size > 0) {
+> >>>>>> +                  if (!bpf_probe_read_user(augmented_arg->value, =
+aug_size, arg))
+> >>>>>> +                          augmented =3D true;
+> >>>>>> +          }
+> >>>>>> +  }
+> >>>>>> +
+> >>>>>> +  /* Augmented data size is limited to sizeof(augmented_arg->unna=
+med union with value field) */
+> >>>>>> +  if (aug_size > loop_ctx->value_size)
+> >>>>>> +          aug_size =3D loop_ctx->value_size;
+> >>>>>> +
+> >>>>>> +  /* write data to payload */
+> >>>>>> +  if (augmented) {
+> >>>>>> +          int written =3D offsetof(struct augmented_arg, value) +=
+ aug_size;
+> >>>>>> +
+> >>>>>> +          if (written < 0 || written > sizeof(struct augmented_ar=
+g))
+> >>>>>> +                  return 1; /* break */
+> >>>>>> +
+> >>>>>> +          augmented_arg->size =3D aug_size;
+> >>>>>> +          *loop_ctx->output +=3D written;
+> >>>>>> +          loop_ctx->payload_offset +=3D written;
+> >>>>>> +          *loop_ctx->do_output =3D true;
+> >>>>>> +  }
+> >>>>>> +
+> >>>>>> +  return 0;
+> >>>>>> +}
+> >>>>>> +
+> >>>>>>  static int augment_sys_enter(void *ctx, struct syscall_enter_args=
+ *args)
+> >>>>>>  {
+> >>>>>> -  bool augmented, do_output =3D false;
+> >>>>>> -  int zero =3D 0, index, value_size =3D sizeof(struct augmented_a=
+rg) - offsetof(struct augmented_arg, value);
+> >>>>>> +  bool do_output =3D false;
+> >>>>>> +  int zero =3D 0, value_size =3D sizeof(struct augmented_arg) - o=
+ffsetof(struct augmented_arg, value);
+> >>>>>>    u64 output =3D 0; /* has to be u64, otherwise it won't pass the=
+ verifier */
+> >>>>>> -  s64 aug_size, size;
+> >>>>>>    unsigned int nr, *beauty_map;
+> >>>>>>    struct beauty_payload_enter *payload;
+> >>>>>> -  void *arg, *payload_offset;
+> >>>>>> +  void *payload_offset;
+> >>>>>> +  long iters;
+> >>>>>>
+> >>>>>>    /* fall back to do predefined tail call */
+> >>>>>>    if (args =3D=3D NULL)
+> >>>>>> @@ -457,63 +538,17 @@ static int augment_sys_enter(void *ctx, stru=
+ct syscall_enter_args *args)
+> >>>>>>    /* copy the sys_enter header, which has the syscall_nr */
+> >>>>>>    __builtin_memcpy(&payload->args, args, sizeof(struct syscall_en=
+ter_args));
+> >>>>>>
+> >>>>>> -  /*
+> >>>>>> -   * Determine what type of argument and how many bytes to read f=
+rom user space, using the
+> >>>>>> -   * value in the beauty_map. This is the relation of parameter t=
+ype and its corresponding
+> >>>>>> -   * value in the beauty map, and how many bytes we read eventual=
+ly:
+> >>>>>> -   *
+> >>>>>> -   * string: 1                          -> size of string
+> >>>>>> -   * struct: size of struct             -> size of struct
+> >>>>>> -   * buffer: -1 * (index of paired len) -> value of paired len (m=
+aximum: TRACE_AUG_MAX_BUF)
+> >>>>>> -   */
+> >>>>>> -  for (int i =3D 0; i < 6; i++) {
+> >>>>>> -          arg =3D (void *)args->args[i];
+> >>>>>> -          augmented =3D false;
+> >>>>>> -          size =3D beauty_map[i];
+> >>>>>> -          aug_size =3D size; /* size of the augmented data read f=
+rom user space */
+> >>>>>> -
+> >>>>>> -          if (size =3D=3D 0 || arg =3D=3D NULL)
+> >>>>>> -                  continue;
+> >>>>>> -
+> >>>>>> -          if (size =3D=3D 1) { /* string */
+> >>>>>> -                  aug_size =3D bpf_probe_read_user_str(((struct a=
+ugmented_arg *)payload_offset)->value, value_size, arg);
+> >>>>>> -                  /* minimum of 0 to pass the verifier */
+> >>>>>> -                  if (aug_size < 0)
+> >>>>>> -                          aug_size =3D 0;
+> >>>>>> -
+> >>>>>> -                  augmented =3D true;
+> >>>>>> -          } else if (size > 0 && size <=3D value_size) { /* struc=
+t */
+> >>>>>> -                  if (!bpf_probe_read_user(((struct augmented_arg=
+ *)payload_offset)->value, size, arg))
+> >>>>>> -                          augmented =3D true;
+> >>>>>> -          } else if ((int)size < 0 && size >=3D -6) { /* buffer *=
+/
+> >>>>>> -                  index =3D -(size + 1);
+> >>>>>> -                  barrier_var(index); // Prevent clang (noticed w=
+ith v18) from removing the &=3D 7 trick.
+> >>>>>> -                  index &=3D 7;         // Satisfy the bounds che=
+cking with the verifier in some kernels.
+> >>>>>> -                  aug_size =3D args->args[index] > TRACE_AUG_MAX_=
+BUF ? TRACE_AUG_MAX_BUF : args->args[index];
+> >>>>>> -
+> >>>>>> -                  if (aug_size > 0) {
+> >>>>>> -                          if (!bpf_probe_read_user(((struct augme=
+nted_arg *)payload_offset)->value, aug_size, arg))
+> >>>>>> -                                  augmented =3D true;
+> >>>>>> -                  }
+> >>>>>> -          }
+> >>>>>> -
+> >>>>>> -          /* Augmented data size is limited to sizeof(augmented_a=
+rg->unnamed union with value field) */
+> >>>>>> -          if (aug_size > value_size)
+> >>>>>> -                  aug_size =3D value_size;
+> >>>>>> -
+> >>>>>> -          /* write data to payload */
+> >>>>>> -          if (augmented) {
+> >>>>>> -                  int written =3D offsetof(struct augmented_arg, =
+value) + aug_size;
+> >>>>>> -
+> >>>>>> -                  if (written < 0 || written > sizeof(struct augm=
+ented_arg))
+> >>>>>> -                          return 1;
+> >>>>>> -
+> >>>>>> -                  ((struct augmented_arg *)payload_offset)->size =
+=3D aug_size;
+> >>>>>> -                  output +=3D written;
+> >>>>>> -                  payload_offset +=3D written;
+> >>>>>> -                  do_output =3D true;
+> >>>>>> -          }
+> >>>>>> -  }
+> >>>>>> +  struct args_loop_ctx loop_ctx =3D {
+> >>>>>> +          .args =3D args,
+> >>>>>> +          .beauty_map =3D beauty_map,
+> >>>>>> +          .payload_offset =3D payload_offset,
+> >>>>>> +          .value_size =3D value_size,
+> >>>>>> +          .output =3D &output,
+> >>>>>> +          .do_output =3D &do_output
+> >>>>>> +  };
+> >>>>>> +  iters =3D bpf_loop(6, process_arg_cb, &loop_ctx, 0);
+> >>>>>
+> >>>>> bpf_loop() is old and generally not recommended.
+> >>>>> Please use bpf_for() then the diff will be one line change and
+> >>>>> can scale to any number of args. Not just 6.
+> >>>
+> >>> Thanks Alexei, I didn't know about this preference.
+> >>>
+> >>>> One thing we should take care is to support old kernels.  The oldest
+> >>>> LTS kernel in the kernel.org is 5.10 and bpf_loop() was introduced i=
+n
+> >>>> 5.17 and bpf_for (bpf_iter_num) was 6.4.
+> >>>
+> >>> The problematic loop was introduced in 6.12 by a68fd6a6cdd3 ("perf
+> >>> trace: Collect augmented data using BPF") so we should be good using
+> >>> bpf_for. Or is perf from 7.2 supposed to work on 5.10 LTS kernels?
+> >>>
+> >>> I'll refactor with bpf_for and will send v2.
+> >>
+> >> Or I won't. It turns out that just swapping the for loop for bpf_for
+> >> leads to -E2BIG from the verifier again. Looking at the verifier log, =
+it
+> >> fails to find equivalence between states at the loop head:
+> >>
+> >>     [...]
+> >>     78: (85) call bpf_iter_num_next#84922 [...]
+> >> fp-56=3Dmap_value(map=3Dbeauty_payload_,ks=3D4,vs=3D24688,imm=3D112)
+> >>     [...]
+> >>     78: (85) call bpf_iter_num_next#84922 [...]
+> >> fp-56=3Dmap_value(map=3Dbeauty_payload_,ks=3D4,vs=3D24688,imm=3D120)
+> >>     [...]
+> >>
+> >> IMHO, the reason is that payload_offset, which points to the
+> >> beauty_payload_enter_map entry, gets updated in every iteration.
+> >>
+> >> This could be probably fixed on the perf side by reworking how augment=
+ed
+> >> args are stored but at this point, bpf_loop sounds like an easier and
+> >> more reliable approach.
+> >>
+> >> Let me know if anyone has objections, otherwise I'll send v2 of the
+> >> bpf_loop approach, with suggestions from Sashiko incorporated.
+> >>
+> >
+> > I'd still try to adapt bpf_for(), it's a much better code structure.
+> > You probably need to add a bounding checking/confirming `if ()`
+> > condition validating that offset at which you access map_value is
+> > always correct. And/or you might need barrier_var() before using i,
+> > because bpf_for() macro does bounds checking (check the macro itself),
+> > but compiler often will reorder instructions leading to verifier
+> > complaints.
+>
+> I gave it a try but wasn't successful so far. I think that the problem
+> is that while it would be possible to add an upper bound condition for
+> `payload_offset`, the verifier tracks the value of `payload_offset` too
+> precisely (as map_value(..., imm=3DX) with a concrete offset) and never
+> merges states with different offsets. And since there are multiple
+> branches inside the loop, each incrementing `payload_offset` by a
+> different value, the verifier seems to fork its state on each branch,
+> effectively leading to the amount of states growing exponentially and
+> hitting the jump limit.
+>
+> To me, bpf_loop sounds like a more reliable choice in this situation.
 
-+CC James
+correctly verified bpf_loop would basically have to follow the same
+logic, so if it works with bpf_loop, it should work with bpf_for. Is
+it possible to share your bpf_for-based code in some branch to try
+locally? I'm sure it can be done one way or another.
 
-On 6/18/26 16:36, Geetha sowjanya wrote:
-> From: Tanmay Jagdale <tanmay@marvell.com>
-> 
-> The TAD PMU exposes counters that can be filtered by MPAM partition id
-> for a subset of allocation and hit events.
-> 
-> Add a 9-bit partid format attribute (config1) and route counter programming
-> through variant-specific ops so CN10K keeps MPAM-capable programming while
-> Odyssey keeps the reduced event set without advertising partid in sysfs.
-> 
-> Probe no longer mutates the platform_device MMIO resource (walk a local
-> map_start), rejects tad-cnt / page sizes of zero, validates the memory
-> window against tad-cnt, and registers the perf PMU before hotplug with
-> correct unwind.
-> 
-> Example:
->   perf stat -e tad/tad_alloc_any,partid=0x12,partid_en=1/ -- <program>
-
-Where is the user expected to get the PARTID from? The MPAM driver
-considers the PARTID as an internal only value.
-
-resctrl does support a 'debug' mount option which will show the CLOSID
-associated with a control group. Whilst the CLOSID is often the PARTID,
-it is really a set of PARTIDs. When the cdp mount option is used, CLOSID
-maps to 2 PARTIDs and if we use PARTID narrowing to give us more
-monitors, as in proposed in [1], then the set of PARTIDs may be bigger.
-Furthermore, if the PARTID narrowing scheme is made dynamic the size of
-the PARTID set may change when control or monitoring groups are created
-or deleted.
-
-It seems that a way to map from a resctrl control group to the set of
-PARTIDs is required and a mechanism to tie this to lifetime of the
-resctrl mount.
-
-Perhaps some helpers along the lines of:
-
-int resctrl_mount_generation(void)
-int mpam_rdtgrp_to_partid_is_static(int mount_gen)
-int resctrl_rdtgrp_generation(char *name)
-int mpam_rdtgrp_to_partid_count(char *name, int rdt_gen)
-int mpam_rdtgrp_to_partid_array(char *name, int rdt_gen, int* partids)
-
-The rdtgrp generation is to an attempt to avoid having to use a debug
-interface in anger and cope with renaming of control groups in resctrl.
-This does seem a bit unwieldly so hopefully there is better way to do this.
-
-Sorry to throw a spanner in the works.
-
-Thanks,
-
-Ben
-
-> 
-> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
-> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
-> ---
-> 
-> Changelog (since v3)
-> --------------------
-> - Restore cpuhp_state_add_instance_nocalls before perf_pmu_register in probe
->   so users cannot attach events before the hotplug instance exists; unwind
->   removes the hotplug instance if perf registration fails.
-> - Add perf_ready: tad_pmu_offline_cpu skips perf_pmu_migrate_context until after
->   successful perf_pmu_register, so a CPU offline between hotplug add and perf
->   register does not touch perf core state for an unregistered PMU.
-> 
-> Changelog (since v2)
-> --------------------
-> - Validate the eventId using an appropriate mask to ensure
->   it is restricted to 8 bits.
-> 
-> Changelog (since v1)
-> --------------------
-> - Fix config1 filter enable to use bit 9 consistently with the PMU format
->   string (partid_en) and reject reserved bits with GENMASK(9, 0).
-> - Register perf_pmu_register before cpuhp_state_add_instance_nocalls and
->   unregister on hotplug failure.
-> 
->  drivers/perf/marvell_cn10k_tad_pmu.c | 220 +++++++++++++++++++++------
->  1 file changed, 171 insertions(+), 49 deletions(-)
-> 
-> diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_cn10k_tad_pmu.c
-> index 51ccb0befa05..340be3776fe7 100644
-> --- a/drivers/perf/marvell_cn10k_tad_pmu.c
-> +++ b/drivers/perf/marvell_cn10k_tad_pmu.c
-> @@ -7,6 +7,8 @@
->  #define pr_fmt(fmt) "tad_pmu: " fmt
->  
->  #include <linux/io.h>
-> +#include <linux/bits.h>
-> +#include <linux/compiler.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/cpuhotplug.h>
-> @@ -14,12 +16,20 @@
->  #include <linux/platform_device.h>
->  #include <linux/acpi.h>
->  
-> -#define TAD_PFC_OFFSET		0x800
-> -#define TAD_PFC(counter)	(TAD_PFC_OFFSET | (counter << 3))
->  #define TAD_PRF_OFFSET		0x900
-> -#define TAD_PRF(counter)	(TAD_PRF_OFFSET | (counter << 3))
-> +#define TAD_PFC_OFFSET		0x800
-> +#define TAD_PFC(base, counter)	((base) | ((u64)(counter) << 3))
-> +#define TAD_PRF(base, counter)	((base) | ((u64)(counter) << 3))
->  #define TAD_PRF_CNTSEL_MASK	0xFF
-> +#define TAD_PRF_MATCH_PARTID	BIT(8)
-> +#define TAD_PRF_PARTID_NS	BIT(10)
-> +/*
-> + * config1: bits 0..8 MPAM partition id (including 0); bit 9 requests
-> + * filtering for MPAM-capable events. All-zero config1 means no filter.
-> + */
-> +#define TAD_PARTID_FILTER_EN	BIT(9)
->  #define TAD_MAX_COUNTERS	8
-> +#define TAD_EVENT_SEL_MASK	GENMASK(7, 0)
->  
->  #define to_tad_pmu(p) (container_of(p, struct tad_pmu, pmu))
->  
-> @@ -27,30 +37,94 @@ struct tad_region {
->  	void __iomem	*base;
->  };
->  
-> +enum mrvl_tad_pmu_version {
-> +	TAD_PMU_V1 = 1,
-> +	TAD_PMU_V2,
-> +};
-> +
-> +struct tad_pmu_data {
-> +	int id;
-> +	u64 tad_prf_offset;
-> +	u64 tad_pfc_offset;
-> +};
-> +
->  struct tad_pmu {
->  	struct pmu pmu;
->  	struct tad_region *regions;
->  	u32 region_cnt;
->  	unsigned int cpu;
-> +	/* Set after successful perf_pmu_register(); gates offline migration. */
-> +	bool perf_ready;
-> +	const struct tad_pmu_ops *ops;
-> +	const struct tad_pmu_data *pdata;
->  	struct hlist_node node;
->  	struct perf_event *events[TAD_MAX_COUNTERS];
->  	DECLARE_BITMAP(counters_map, TAD_MAX_COUNTERS);
->  };
->  
-> -enum mrvl_tad_pmu_version {
-> -	TAD_PMU_V1 = 1,
-> -	TAD_PMU_V2,
-> -};
-> -
-> -struct tad_pmu_data {
-> -	int id;
-> +struct tad_pmu_ops {
-> +	void (*start_counter)(struct tad_pmu *pmu, struct perf_event *event);
->  };
->  
->  static int tad_pmu_cpuhp_state;
->  
-> +static void tad_pmu_start_counter(struct tad_pmu *pmu,
-> +				  struct perf_event *event)
-> +{
-> +	const struct tad_pmu_data *pdata = pmu->pdata;
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	u32 event_idx = (u32)(event->attr.config & TAD_EVENT_SEL_MASK);
-> +	u32 counter_idx = hwc->idx;
-> +	u64 partid_filter = 0;
-> +	u64 reg_val;
-> +	u64 cfg1 = event->attr.config1;
-> +	bool use_mpam = cfg1 & TAD_PARTID_FILTER_EN;
-> +	u32 partid = (u32)(cfg1 & GENMASK(8, 0));
-> +	int i;
-> +
-> +	for (i = 0; i < pmu->region_cnt; i++)
-> +		writeq_relaxed(0, pmu->regions[i].base +
-> +			       TAD_PFC(pdata->tad_pfc_offset, counter_idx));
-> +
-> +	if (use_mpam && event_idx > 0x19 && event_idx < 0x21) {
-> +		partid_filter = TAD_PRF_MATCH_PARTID | TAD_PRF_PARTID_NS |
-> +				((u64)partid << 11);
-> +	}
-> +
-> +
-> +	for (i = 0; i < pmu->region_cnt; i++) {
-> +		reg_val = event_idx & 0xFF;
-> +		reg_val |= partid_filter;
-> +		writeq_relaxed(reg_val, pmu->regions[i].base +
-> +			       TAD_PRF(pdata->tad_prf_offset, counter_idx));
-> +	}
-> +}
-> +
-> +static void tad_pmu_v2_start_counter(struct tad_pmu *pmu,
-> +				     struct perf_event *event)
-> +{
-> +	const struct tad_pmu_data *pdata = pmu->pdata;
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	u32 event_idx = (u32)(event->attr.config & TAD_EVENT_SEL_MASK);
-> +	u32 counter_idx = hwc->idx;
-> +	u64 reg_val;
-> +	int i;
-> +
-> +	for (i = 0; i < pmu->region_cnt; i++)
-> +		writeq_relaxed(0, pmu->regions[i].base +
-> +			       TAD_PFC(pdata->tad_pfc_offset, counter_idx));
-> +
-> +	for (i = 0; i < pmu->region_cnt; i++) {
-> +		reg_val = event_idx & 0xFF;
-> +		writeq_relaxed(reg_val, pmu->regions[i].base +
-> +			       TAD_PRF(pdata->tad_prf_offset, counter_idx));
-> +	}
-> +}
-> +
->  static void tad_pmu_event_counter_read(struct perf_event *event)
->  {
->  	struct tad_pmu *tad_pmu = to_tad_pmu(event->pmu);
-> +	const struct tad_pmu_data *pdata = tad_pmu->pdata;
->  	struct hw_perf_event *hwc = &event->hw;
->  	u32 counter_idx = hwc->idx;
->  	u64 prev, new;
-> @@ -60,7 +134,7 @@ static void tad_pmu_event_counter_read(struct perf_event *event)
->  		prev = local64_read(&hwc->prev_count);
->  		for (i = 0, new = 0; i < tad_pmu->region_cnt; i++)
->  			new += readq(tad_pmu->regions[i].base +
-> -				     TAD_PFC(counter_idx));
-> +				     TAD_PFC(pdata->tad_pfc_offset, counter_idx));
->  	} while (local64_cmpxchg(&hwc->prev_count, prev, new) != prev);
->  
->  	local64_add(new - prev, &event->count);
-> @@ -69,16 +143,14 @@ static void tad_pmu_event_counter_read(struct perf_event *event)
->  static void tad_pmu_event_counter_stop(struct perf_event *event, int flags)
->  {
->  	struct tad_pmu *tad_pmu = to_tad_pmu(event->pmu);
-> +	const struct tad_pmu_data *pdata = tad_pmu->pdata;
->  	struct hw_perf_event *hwc = &event->hw;
->  	u32 counter_idx = hwc->idx;
->  	int i;
->  
-> -	/* TAD()_PFC() stop counting on the write
-> -	 * which sets TAD()_PRF()[CNTSEL] == 0
-> -	 */
->  	for (i = 0; i < tad_pmu->region_cnt; i++) {
->  		writeq_relaxed(0, tad_pmu->regions[i].base +
-> -			       TAD_PRF(counter_idx));
-> +			       TAD_PRF(pdata->tad_prf_offset, counter_idx));
->  	}
->  
->  	tad_pmu_event_counter_read(event);
-> @@ -89,26 +161,10 @@ static void tad_pmu_event_counter_start(struct perf_event *event, int flags)
->  {
->  	struct tad_pmu *tad_pmu = to_tad_pmu(event->pmu);
->  	struct hw_perf_event *hwc = &event->hw;
-> -	u32 event_idx = event->attr.config;
-> -	u32 counter_idx = hwc->idx;
-> -	u64 reg_val;
-> -	int i;
->  
->  	hwc->state = 0;
->  
-> -	/* Typically TAD_PFC() are zeroed to start counting */
-> -	for (i = 0; i < tad_pmu->region_cnt; i++)
-> -		writeq_relaxed(0, tad_pmu->regions[i].base +
-> -			       TAD_PFC(counter_idx));
-> -
-> -	/* TAD()_PFC() start counting on the write
-> -	 * which sets TAD()_PRF()[CNTSEL] != 0
-> -	 */
-> -	for (i = 0; i < tad_pmu->region_cnt; i++) {
-> -		reg_val = event_idx & 0xFF;
-> -		writeq_relaxed(reg_val,	tad_pmu->regions[i].base +
-> -			       TAD_PRF(counter_idx));
-> -	}
-> +	tad_pmu->ops->start_counter(tad_pmu, event);
->  }
->  
->  static void tad_pmu_event_counter_del(struct perf_event *event, int flags)
-> @@ -128,7 +184,6 @@ static int tad_pmu_event_counter_add(struct perf_event *event, int flags)
->  	struct hw_perf_event *hwc = &event->hw;
->  	int idx;
->  
-> -	/* Get a free counter for this event */
->  	idx = find_first_zero_bit(tad_pmu->counters_map, TAD_MAX_COUNTERS);
->  	if (idx == TAD_MAX_COUNTERS)
->  		return -EAGAIN;
-> @@ -148,6 +203,9 @@ static int tad_pmu_event_counter_add(struct perf_event *event, int flags)
->  static int tad_pmu_event_init(struct perf_event *event)
->  {
->  	struct tad_pmu *tad_pmu = to_tad_pmu(event->pmu);
-> +	const struct tad_pmu_data *pdata = tad_pmu->pdata;
-> +	u32 event_idx = (u32)(event->attr.config & TAD_EVENT_SEL_MASK);
-> +	u64 cfg1 = event->attr.config1;
->  
->  	if (event->attr.type != event->pmu->type)
->  		return -ENOENT;
-> @@ -158,6 +216,23 @@ static int tad_pmu_event_init(struct perf_event *event)
->  	if (event->state != PERF_EVENT_STATE_OFF)
->  		return -EINVAL;
->  
-> +	if (event->attr.config & ~TAD_EVENT_SEL_MASK)
-> +		return -EINVAL;
-> +
-> +	if (pdata->id == TAD_PMU_V2) {
-> +		if (cfg1)
-> +			return -EINVAL;
-> +	} else {
-> +		if ((cfg1 & GENMASK(8, 0)) && !(cfg1 & TAD_PARTID_FILTER_EN))
-> +			return -EINVAL;
-> +		if (cfg1 & TAD_PARTID_FILTER_EN) {
-> +			if (event_idx <= 0x19 || event_idx >= 0x21)
-> +				return -EINVAL;
-> +		}
-> +		if (cfg1 & ~GENMASK(9, 0))
-> +			return -EINVAL;
-> +	}
-> +
->  	event->cpu = tad_pmu->cpu;
->  	event->hw.idx = -1;
->  	event->hw.config_base = event->attr.config;
-> @@ -232,7 +307,7 @@ static struct attribute *ody_tad_pmu_event_attrs[] = {
->  	TAD_PMU_EVENT_ATTR(tad_hit_ltg, 0x1e),
->  	TAD_PMU_EVENT_ATTR(tad_hit_any, 0x1f),
->  	TAD_PMU_EVENT_ATTR(tad_tag_rd, 0x20),
-> -	TAD_PMU_EVENT_ATTR(tad_tot_cycle, 0xFF),
-> +	TAD_PMU_EVENT_ATTR(tad_tot_cycle, 0xff),
->  	NULL
->  };
->  
-> @@ -242,9 +317,13 @@ static const struct attribute_group ody_tad_pmu_events_attr_group = {
->  };
->  
->  PMU_FORMAT_ATTR(event, "config:0-7");
-> +PMU_FORMAT_ATTR(partid, "config1:0-8");
-> +PMU_FORMAT_ATTR(partid_en, "config1:9-9");
->  
->  static struct attribute *tad_pmu_format_attrs[] = {
->  	&format_attr_event.attr,
-> +	&format_attr_partid.attr,
-> +	&format_attr_partid_en.attr,
->  	NULL
->  };
->  
-> @@ -253,6 +332,16 @@ static struct attribute_group tad_pmu_format_attr_group = {
->  	.attrs = tad_pmu_format_attrs,
->  };
->  
-> +static struct attribute *ody_tad_pmu_format_attrs[] = {
-> +	&format_attr_event.attr,
-> +	NULL
-> +};
-> +
-> +static struct attribute_group ody_tad_pmu_format_attr_group = {
-> +	.name = "format",
-> +	.attrs = ody_tad_pmu_format_attrs,
-> +};
-> +
->  static ssize_t tad_pmu_cpumask_show(struct device *dev,
->  				struct device_attribute *attr, char *buf)
->  {
-> @@ -281,16 +370,25 @@ static const struct attribute_group *tad_pmu_attr_groups[] = {
->  
->  static const struct attribute_group *ody_tad_pmu_attr_groups[] = {
->  	&ody_tad_pmu_events_attr_group,
-> -	&tad_pmu_format_attr_group,
-> +	&ody_tad_pmu_format_attr_group,
->  	&tad_pmu_cpumask_attr_group,
->  	NULL
->  };
->  
-> +static const struct tad_pmu_ops tad_pmu_ops = {
-> +	.start_counter = tad_pmu_start_counter,
-> +};
-> +
-> +static const struct tad_pmu_ops tad_pmu_v2_ops = {
-> +	.start_counter = tad_pmu_v2_start_counter,
-> +};
-> +
->  static int tad_pmu_probe(struct platform_device *pdev)
->  {
->  	const struct tad_pmu_data *dev_data;
->  	struct device *dev = &pdev->dev;
->  	struct tad_region *regions;
-> +	resource_size_t map_start;
->  	struct tad_pmu *tad_pmu;
->  	struct resource *res;
->  	u32 tad_pmu_page_size;
-> @@ -298,7 +396,6 @@ static int tad_pmu_probe(struct platform_device *pdev)
->  	u32 tad_cnt;
->  	int version;
->  	int i, ret;
-> -	char *name;
->  
->  	tad_pmu = devm_kzalloc(&pdev->dev, sizeof(*tad_pmu), GFP_KERNEL);
->  	if (!tad_pmu)
-> @@ -312,6 +409,7 @@ static int tad_pmu_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  	version = dev_data->id;
-> +	tad_pmu->pdata = dev_data;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	if (!res) {
-> @@ -338,22 +436,31 @@ static int tad_pmu_probe(struct platform_device *pdev)
->  		dev_err(&pdev->dev, "Can't find tad-cnt property\n");
->  		return ret;
->  	}
-> +	if (!tad_cnt || !tad_page_size || !tad_pmu_page_size) {
-> +		dev_err(&pdev->dev, "Invalid tad-cnt or page size\n");
-> +		return -EINVAL;
-> +	}
->  
->  	regions = devm_kcalloc(&pdev->dev, tad_cnt,
->  			       sizeof(*regions), GFP_KERNEL);
->  	if (!regions)
->  		return -ENOMEM;
->  
-> -	/* ioremap the distributed TAD pmu regions */
-> -	for (i = 0; i < tad_cnt && res->start < res->end; i++) {
-> -		regions[i].base = devm_ioremap(&pdev->dev,
-> -					       res->start,
-> +	map_start = res->start;
-> +	for (i = 0; i < tad_cnt; i++) {
-> +		if (map_start > res->end ||
-> +		    tad_pmu_page_size > (resource_size_t)(res->end - map_start + 1)) {
-> +			dev_err(&pdev->dev, "TAD PMU mem window too small for tad-cnt=%u\n",
-> +				tad_cnt);
-> +			return -EINVAL;
-> +		}
-> +		regions[i].base = devm_ioremap(&pdev->dev, map_start,
->  					       tad_pmu_page_size);
->  		if (!regions[i].base) {
->  			dev_err(&pdev->dev, "TAD%d ioremap fail\n", i);
->  			return -ENOMEM;
->  		}
-> -		res->start += tad_page_size;
-> +		map_start += tad_page_size;
->  	}
->  
->  	tad_pmu->regions = regions;
-> @@ -374,14 +481,16 @@ static int tad_pmu_probe(struct platform_device *pdev)
->  		.read		= tad_pmu_event_counter_read,
->  	};
->  
-> -	if (version == TAD_PMU_V1)
-> +	if (version == TAD_PMU_V1) {
->  		tad_pmu->pmu.attr_groups = tad_pmu_attr_groups;
-> -	else
-> +		tad_pmu->ops		 = &tad_pmu_ops;
-> +	} else {
->  		tad_pmu->pmu.attr_groups = ody_tad_pmu_attr_groups;
-> +		tad_pmu->ops		 = &tad_pmu_v2_ops;
-> +	}
->  
->  	tad_pmu->cpu = raw_smp_processor_id();
->  
-> -	/* Register pmu instance for cpu hotplug */
->  	ret = cpuhp_state_add_instance_nocalls(tad_pmu_cpuhp_state,
->  					       &tad_pmu->node);
->  	if (ret) {
-> @@ -389,19 +498,24 @@ static int tad_pmu_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	name = "tad";
-> -	ret = perf_pmu_register(&tad_pmu->pmu, name, -1);
-> -	if (ret)
-> +	ret = perf_pmu_register(&tad_pmu->pmu, "tad", -1);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Error %d registering perf PMU\n", ret);
->  		cpuhp_state_remove_instance_nocalls(tad_pmu_cpuhp_state,
->  						    &tad_pmu->node);
-> +		return ret;
-> +	}
->  
-> -	return ret;
-> +	WRITE_ONCE(tad_pmu->perf_ready, true);
-> +
-> +	return 0;
->  }
->  
->  static void tad_pmu_remove(struct platform_device *pdev)
->  {
->  	struct tad_pmu *pmu = platform_get_drvdata(pdev);
->  
-> +	WRITE_ONCE(pmu->perf_ready, false);
->  	cpuhp_state_remove_instance_nocalls(tad_pmu_cpuhp_state,
->  						&pmu->node);
->  	perf_pmu_unregister(&pmu->pmu);
-> @@ -410,12 +524,17 @@ static void tad_pmu_remove(struct platform_device *pdev)
->  #if defined(CONFIG_OF) || defined(CONFIG_ACPI)
->  static const struct tad_pmu_data tad_pmu_data = {
->  	.id   = TAD_PMU_V1,
-> +	.tad_prf_offset = TAD_PRF_OFFSET,
-> +	.tad_pfc_offset = TAD_PFC_OFFSET,
->  };
-> +
->  #endif
->  
->  #ifdef CONFIG_ACPI
->  static const struct tad_pmu_data tad_pmu_v2_data = {
->  	.id   = TAD_PMU_V2,
-> +	.tad_prf_offset = TAD_PRF_OFFSET,
-> +	.tad_pfc_offset = TAD_PFC_OFFSET,
->  };
->  #endif
->  
-> @@ -451,6 +570,9 @@ static int tad_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
->  	struct tad_pmu *pmu = hlist_entry_safe(node, struct tad_pmu, node);
->  	unsigned int target;
->  
-> +	if (!READ_ONCE(pmu->perf_ready))
-> +		return 0;
-> +
->  	if (cpu != pmu->cpu)
->  		return 0;
->  
-> @@ -491,6 +613,6 @@ static void __exit tad_pmu_exit(void)
->  module_init(tad_pmu_init);
->  module_exit(tad_pmu_exit);
->  
-> -MODULE_DESCRIPTION("Marvell CN10K LLC-TAD Perf driver");
-> +MODULE_DESCRIPTION("Marvell CN10K LLC-TAD perf driver");
->  MODULE_AUTHOR("Bhaskara Budiredla <bbudiredla@marvell.com>");
->  MODULE_LICENSE("GPL v2");
-
+> It's also older, which is good in this case, since compatibility with
+> older kernels seems to be important for perf (see other messages in the
+> thread).
+>
+> I'm also wondering if the verifier could be improved to handle these
+> cases but that's a different discussion.
+>
+> >
+> >> Thanks,
+> >> Viktor
+> >>
+> >>> It should be then
+> >>> backported to stable kernels down to 6.12 LTS.
+> >>>
+> >>> Viktor
+> >>>
+> >>>>
+> >>>> Maybe we can factor out the loop body and call it from different
+> >>>> mechanisms like open-coded loop, bpf_loop or bpf_for depending on th=
+e
+> >>>> kernel version.  But not sure it'd fix the verifier issue though.
+> >>>>
+> >>>> Thanks,
+> >>>> Namhyung
+> >>>>
+> >>
+> >>
+> >
+>
