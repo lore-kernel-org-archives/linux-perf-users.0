@@ -1,158 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.83.148.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DED3DDDAB
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jun 2026 12:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F0632B99E;
+	Thu, 25 Jun 2026 13:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.83.148.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782389138; cv=none; b=ZzMe0MCY92+MIpvnE7y2Ax9s7zhqDA2InA+3eXdlICU5fYiwpsCUvRwLttginKZ9IjzlXE88hfBVzfAEFI6iRQF8lbSRtsrkQoiGU2GHRvcpUufgIhRSfXhGKzC+NBn8FoMsK2kT8zsGK78IRwql1Mwl1VZ3W/cUVi85rYYPtTk=
+	t=1782394380; cv=none; b=CCD+7ux6M/+daVBMw/B3fRUJYwsOeatCt3M/XsyqYXuj2UeVEb5dq3bhIdEQ/It86/fzPPPAfT4jC8YzFUqiHTkzLewP8V/KGD7wLzU7yZ4xctgOhtT+xgYxaXQn1z3BtU93JqcsMGt0zhM7/7GLUVJMlWG/KTfvyGrotMefshQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782389138; c=relaxed/simple;
-	bh=1XNAuaLY5p2QwZ1xZOVagV8DDqx/t5x6UyDOQ78JEtc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=svscDzin2E9nUmZ9FEn8BmEUZ6pmxNqAESL9n1XEUAF/ehssEuAVlbMOfpYvkbE8Do9h6p8djvkuupQB0wF7L5av1RI5LHTAdGJ8cW2Sn0z/hVKB4MS1jWMbjnii020hwoxUEPta920wPBZ7PrPqZb0YUuYdtXyTkWtopzZdEMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cBjbeiug; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=jYIp5s1a; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782394380; c=relaxed/simple;
+	bh=uinX7VfrDcyCLlZv5BCWfLiMKRCkJYGjqcTraIDeyo0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mruyY5Oqm2y7m3MTbfwPOD+zlaLOokhVZFQeDEXuYKCIUdR6TPoaTemq+aNizHCZWenfXkL4KszbqCpgr2ygg2kWQc3RpgPy7L4Hh9ByphLjq/pksrtDPMz+Cn0vcB/QiudVg4rsqddeILrhX6+zPss8CFTlRCvxq8DN2PcH0vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=UQXe19AS; arc=none smtp.client-ip=35.83.148.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cBjbeiug";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="jYIp5s1a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782389136;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S5dk0+y7YIP6iBUeL3aPYTXXsaNDLnD9g/Qpkl8DKV8=;
-	b=cBjbeiugDd8erRbsoRYgKShzE3DGElEzXVFEWGK3TKpxhUf02seZcQCmO63WhHcCHZKWfp
-	pNgx1MqANwPjyp5pA+PPqxBfJhkf4iZuHnSMa5An4PfGvm1LDWG3+V0ObyWT+R4xa6maEZ
-	RQSwoxQm7aK2K/Exq5kfUYjPZl+jXSg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-655-2MMudG8FNRyg9UvofQtr0Q-1; Thu, 25 Jun 2026 08:05:35 -0400
-X-MC-Unique: 2MMudG8FNRyg9UvofQtr0Q-1
-X-Mimecast-MFC-AGG-ID: 2MMudG8FNRyg9UvofQtr0Q_1782389134
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49243626f15so20866625e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jun 2026 05:05:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="UQXe19AS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1782389134; x=1782993934; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S5dk0+y7YIP6iBUeL3aPYTXXsaNDLnD9g/Qpkl8DKV8=;
-        b=jYIp5s1asOJJ5vUo7Meax3KhXOaYD6u6UV7L4zTSbe1A9F3S+zvw8jqFgNYQsSkBVV
-         olbIYL5kb9APxD3JWELB7yYBjjuBlIwI/uBjmita7AshgAUg1Lap1QorPGz7kqquVmDU
-         qqTG8B39sQSwmJpcUnPeOfmhovWg75PgFsoinhXwhtRrNeEQ4OZ839c2COPHw1V+KxGP
-         sAJ8KYzhVe6RGcxdTUIhXc7JLwdYvPtmqbv2G+RGyBctUc5rz5PmJMJmzkD1Q6SKZFMm
-         qG2FwjSkM9nKUbYZ1Ei6mFwOOz4K8LbTZ8AZJ9iwi6EGlK68agafIjcV98TcMTUDYUly
-         h+jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782389134; x=1782993934;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S5dk0+y7YIP6iBUeL3aPYTXXsaNDLnD9g/Qpkl8DKV8=;
-        b=eHCmIUo+BGVo0LmsAvCIGjOLY5bhV1ensNza6tcK3zjkTZQ0jbPDysXlGNC5Og4xtx
-         stlniFhfQcVw5QlqlUdcg5DwTv89haZjJXzyarTHm9ynWOa1HkznUavhq4H1xqhx78hL
-         M5DJVldySw9KdXHlCY7GmJGrO7oiN9cCdl4cn54TWHeZ+Zt2yFUR/ovOOC3DJzYIzVRM
-         2n0dvdv27YXCgYygJWFbjLJo/csrf9xnpfxz9F7Vv21nfVLu91v4vntjaDXPhtgIl1Vq
-         t+Tv+LE6+n/G2dPOR3zSNlIBudotCwTXSIhq2kmaoE7DJNfKC46ePbrIZP93bOU+j8MN
-         3nrw==
-X-Forwarded-Encrypted: i=1; AFNElJ8kqcCt0dCzveetemcz76iEVcipWKnTDAZcFqYXqd1DiH0DVLrRCZ+mDusVKkyGIDmxpBF1D2C08H/rOTwW7/Ds@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL7Ss1GX44vidHWc9Lq2ocAl2OH/Wln/C0m6nPkaTvcK84bBoB
-	uCcAzaQEK11wEvzgGegNF9emrwTk6kphupK4VZjLeOTNDuOG87hcLwT7Tc7CMfTQluh7F3OAxLb
-	GbhqaThkDebQrfhXQRwGUAl8IgmPRnGGGoz6/hbqIe9kqKPvdvR0X+hEii6J+RtQUbkMKEg==
-X-Gm-Gg: AfdE7cnWElxiLforPg5HhwYEDlnNHZKHZMNQBQRk4ceIl39GeGP/7bZ5hf04AC1RCxE
-	hJrgFoR+N6WJEEgpupHpeRzdSQKscXnwCF422LjMTPL8tiHDTrG8gIQ+IrtT5RZx71vAf1crkST
-	XFcHKxhr96OhbiVl17P8i/yjj0V8IxzL1EImhw7DhDNgN/Yt3Lai7rEQse+ml1Cwnm7WieB+m76
-	H2YNAK3TTdU3Un/bd9Cofz4o1400c6TugSgZ06d9rJ8VaXxV83d3dmpZWT0QMSd6C/pmC2w5GZX
-	6FG8VIoUME4eB2/Jg6KpJpuMRNEjDxY0wo3nf5kmdlMmMGtUypbZZOuLbWEs+CxUKYSUsOn7JAI
-	=
-X-Received: by 2002:a05:600d:844f:10b0:490:ae52:499c with SMTP id 5b1f17b1804b1-49266899ff0mr23855125e9.21.1782389133735;
-        Thu, 25 Jun 2026 05:05:33 -0700 (PDT)
-X-Received: by 2002:a05:600d:844f:10b0:490:ae52:499c with SMTP id 5b1f17b1804b1-49266899ff0mr23854805e9.21.1782389133345;
-        Thu, 25 Jun 2026 05:05:33 -0700 (PDT)
-Received: from [10.43.17.131] ([213.175.37.14])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46e3d6ba143sm1630033f8f.33.2026.06.25.05.05.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jun 2026 05:05:32 -0700 (PDT)
-Message-ID: <3c221e35-d642-4036-88fd-d25df7f8807e@redhat.com>
-Date: Thu, 25 Jun 2026 14:05:29 +0200
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1782394379; x=1813930379;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Jhzw3hDe1qETvRMOXpQ3ufg25Aa3Q0kmNblxIpF9o3Q=;
+  b=UQXe19ASWa5y/BwYwpbWinyfCvHMrvn4jTCA/RZij96wKI6NCTgIlSVz
+   NmHPHK3yR+fUeyrD7T0eCSd/J5ukhHn9EbJdg+3Qt8kpLcfTWT9RlYPdX
+   fh4x5ksJn1GT0QO1d44LSHRBQv8OTcvc89Tly1fY7qPV1kcLpZqncenU/
+   0i+kPqAPha2HC8+klz/b8AeUGmaUlxFrNPtKbWIAvzkNqtTSZGcxxn6bT
+   cQJ5IN3LZ7WySB1qUka45H4zQCJ27C7SeeHGV91qsf8994aHJKio92iA1
+   NFR8gXPoHWXL4SdcBVYlzEt/7JTT03G+yCgp0nsFU3XMOtnaQ0UsJBWjl
+   w==;
+X-CSE-ConnectionGUID: 3i4i2+ppRnS1kTJFipTfdg==
+X-CSE-MsgGUID: qLUHoCpdRjCzC4F5/UTbCQ==
+X-IronPort-AV: E=Sophos;i="6.24,224,1774310400"; 
+   d="scan'208";a="22277557"
+Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
+  by internal-pdx-out-014.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 13:32:56 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.53:20069]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.52.142:2525] with esmtp (Farcaster)
+ id 4af665ad-abdf-4f6c-942e-bae9622621b0; Thu, 25 Jun 2026 13:32:55 +0000 (UTC)
+X-Farcaster-Flow-ID: 4af665ad-abdf-4f6c-942e-bae9622621b0
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
+ Thu, 25 Jun 2026 13:32:55 +0000
+Received: from dev-dsk-simonlie-1b-ad174abf.eu-west-1.amazon.com
+ (172.19.78.185) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43; Thu, 25 Jun 2026
+ 13:32:53 +0000
+From: Simon Liebold <simonlie@amazon.de>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Namhyung
+ Kim" <namhyung@kernel.org>, Simon Liebold <simonlie@amazon.de>, Ian Rogers
+	<irogers@google.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: [PATCH 6.1.y 0/2] Backport dependency commits for 616b14b47a86 ("perf build: Conditionally define NDEBUG")
+Date: Thu, 25 Jun 2026 13:32:20 +0000
+Message-ID: <20260625133222.3412820-1-simonlie@amazon.de>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf trace: Refactor augmented_raw_syscalls using
- bpf_loop
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- Michael Petlan <mpetlan@redhat.com>, stable@vger.kernel.org
-References: <20260623112533.1151502-1-vmalik@redhat.com>
- <DJGJ9F6WQZV9.2W4WBIHYLJQ97@gmail.com> <ajq98dm4gAwEzkMb@google.com>
- <c2f4e45e-d5c9-42e9-a46b-25fb0cacb267@redhat.com>
- <ajwu7xR6V6MAQOFw@google.com>
-From: Viktor Malik <vmalik@redhat.com>
-Content-Language: en-US
-In-Reply-To: <ajwu7xR6V6MAQOFw@google.com>
-Content-Type: text/plain; charset=UTF-8
+X-ClientProxiedBy: EX19D037UWB002.ant.amazon.com (10.13.138.121) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 
-On 6/24/26 21:24, Namhyung Kim wrote:
-> On Wed, Jun 24, 2026 at 08:47:38AM +0200, Viktor Malik wrote:
->> On 6/23/26 19:10, Namhyung Kim wrote:
->>> Hello,
->>>
->>> On Tue, Jun 23, 2026 at 08:27:39AM -0700, Alexei Starovoitov wrote:
->>>> On Tue Jun 23, 2026 at 4:25 AM PDT, Viktor Malik wrote:
-> [SNIP]
->>>>> +	struct args_loop_ctx loop_ctx = {
->>>>> +		.args = args,
->>>>> +		.beauty_map = beauty_map,
->>>>> +		.payload_offset = payload_offset,
->>>>> +		.value_size = value_size,
->>>>> +		.output = &output,
->>>>> +		.do_output = &do_output
->>>>> +	};
->>>>> +	iters = bpf_loop(6, process_arg_cb, &loop_ctx, 0);
->>>>
->>>> bpf_loop() is old and generally not recommended.
->>>> Please use bpf_for() then the diff will be one line change and
->>>> can scale to any number of args. Not just 6.
->>
->> Thanks Alexei, I didn't know about this preference.
->>
->>> One thing we should take care is to support old kernels.  The oldest
->>> LTS kernel in the kernel.org is 5.10 and bpf_loop() was introduced in
->>> 5.17 and bpf_for (bpf_iter_num) was 6.4.
->>
->> The problematic loop was introduced in 6.12 by a68fd6a6cdd3 ("perf
->> trace: Collect augmented data using BPF") so we should be good using
->> bpf_for. Or is perf from 7.2 supposed to work on 5.10 LTS kernels?
-> 
-> Yep, we'd like to support old kernels.
+Hi, please backport the following two patches to 6.1.y:
 
-How much strict are you on this requirement? IMHO, the very least we
-need to fix the verifier issue is bpf_loop, so that would still not work
-on 5.10 and 5.15 LTS kernels.
+- d1babea9c382 ("perf bench: Avoid NDEBUG warning")
+- 984a785f25e5 ("perf block-range: Move debug code behind ifndef NDEBUG")
 
-We could probably keep the open-coded loop in case bpf_loop is not
-available but `perf trace` would still fail on kernels without bpf_loop
-for new perf built with Clang>=22. Also, the code would be a bit ugly
-and I'm not sure how well the feature check for helpers (bpf_loop) works
-on old kernels.
+They are stable dependencies for commit 616b14b47a86 ("perf build: Conditionally
+define NDEBUG") which was backported to v6.1.176 as 7bf35a0237d04.
 
-Viktor
+That commit adds -DNDEBUG=1 to perf CFLAGS, which compiles out assert() calls,
+leaving variables consumed only by asserts as unused-but-set. Combined with
+-Werror this breaks the build:
+
+    bench/find-bit-bench.c:64:22: error: variable 'old' set but not used
+    util/block-range.c:20:13: error: variable 'old' set but not used
+
+We need these two dependency patches, because both guard assert-only variables
+with #ifndef NDEBUG so they are compiled out alongside the asserts they
+validate.
+
+Tested using our regression test suite including kselftest and LTP on various
+EC2 instances.
+
+Thanks.
+
+- Simon
+
+Ian Rogers (2):
+  perf bench: Avoid NDEBUG warning
+  perf block-range: Move debug code behind ifndef NDEBUG
+
+ tools/perf/bench/find-bit-bench.c | 8 ++++++--
+ tools/perf/util/block-range.c     | 6 +-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+
+base-commit: fdb6fcb41cc741ad5eaa7995f278dfcb94fdf795
+-- 
+2.50.1
+
+
+
+
+Amazon Web Services Development Center Germany GmbH
+Tamara-Danz-Str. 13
+10243 Berlin
+Geschaeftsfuehrung: Christof Hellmis, Andreas Stieger
+Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
+Sitz: Berlin
+Ust-ID: DE 365 538 597
 
