@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1393DBD51;
-	Fri, 26 Jun 2026 07:03:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2067D3DBD51;
+	Fri, 26 Jun 2026 07:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782457424; cv=none; b=hM6cv8+fLYHanIBr/9nyu1GLaKUoMUAqtLyRgPhqltjscixec0EXX2KtJ/mnuFBD+/NZKxvxZ76cb5j9eh61w46oG5DCYWCGv/HpZvhu9jzP17SiaMQY3772FVFMe3ijy+qasSryk/vPaBRVMz+GBeLG4cdSVquIR5QaAngu6qQ=
+	t=1782457433; cv=none; b=QERavU+GUGIOtaJJtE5yonM61D5tw+6Hzs89dOHpqC/Cs+EMYI1PDEgpLqPQBsBLUwBt7gAAgK0Sa7bgzt6X5+T8gVqgUVu25frxswc7JMkYlENOLfxdKySEMf0OtSwC0QB8qJuYwHmlu7UMRYQFLuB+o8/zCabW7x3gdCo+DGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782457424; c=relaxed/simple;
-	bh=ErXlWbBb/u7leNblJCP4CinFu0NHX1t/fcSnf7zOgWU=;
+	s=arc-20240116; t=1782457433; c=relaxed/simple;
+	bh=+/PvM3ZNQq69m+A3zv46yII4xQu8t77nciHma9+ZSOY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dc+H0mQdpCzenS4eF0VkQH1ONAx0aDyPOjWMAXdxOXymTlYdyPmA04V1RCpG3eLpm68256C14MjDYUAWsJT+NVxq1rBtPeYlpgQKfj2xYvwMZXRP2zfO1oXdvOyxrCg4r7Q1r1aiq/sNxacReSG+2hTDMe5xzhQDnCe5aqsKYrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aWm9q7IJ; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=ERMbqLCbhAcYLjRwPZVMgQ5QysE8W/VXxYpG40OaYNEBnfBf7sxrlu0esGlGOsTfzo0x2BlWLGqOCzuoA7WECI2ibQqLxsIAKwIvX4vGkNUc9bqVTOks/VZVa5u44JspcdYXQCOdyQfWaitg+wv6oAZ00iwi+y10h4NhzzTWH1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnLxNQ6v; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aWm9q7IJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnLxNQ6v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782457424; x=1813993424;
+  t=1782457432; x=1813993432;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ErXlWbBb/u7leNblJCP4CinFu0NHX1t/fcSnf7zOgWU=;
-  b=aWm9q7IJ1Sfr0Eq0tdUJTlIDDAJclZHisOolbJNirFHPFUQVYgKGvUFS
-   L0Ozz0IAPTnBEInRGNH1xarYMq22an37GwauEtKmPxKpdVqMuOysNhJzV
-   wWrTSQcw0ZJ9o7/nYDg6KQSduF5R3hcAHDmu0K4ndeoYdhCU66OsLaUnt
-   Qf6WQoI/bgurGXiVeT9HSeEREBXZyHVnam9nXSSLR5weaTRfGn4JnHqKg
-   3kuzBR2Ap5OrT4ucfAqqXFokHn8dlxnP5IcZs3PQ3bPaq66wWOJWwuv4Z
-   nXKTLN2IJteF4F3UXAqXSjJ0/SRXVNi5eqsqyugAKZgRVItSvyxei0Vrd
-   w==;
-X-CSE-ConnectionGUID: foD5n2WmQnGirXognrNzAg==
-X-CSE-MsgGUID: 18Ml3is1THqrpje5NrxT8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="94397402"
+  bh=+/PvM3ZNQq69m+A3zv46yII4xQu8t77nciHma9+ZSOY=;
+  b=dnLxNQ6vNAj+Ui9GEspRBVq6VUnv9T+qq19rzMof7jpwzpwdyZQqR87c
+   gb6dCX28b75evPg2JaHl1Ydl/k/jpAOzpMz6tCcMHYsaTjDdZWGYh8ph7
+   XtTo2Mz6rejie688ShfpxvIk1bARefwnFE9ipR+s26l7VRKhjLalJa5Gr
+   ynsiP575xhC77OMz0uy2GtwL+Vak3oQS3RtuARrM2MpzpEvSB80LeJvmC
+   MEi3NRbx56iRKJcmIVszAj4s+Puj3PWUVmUCzTlEfhOsIectvqgRLEUDW
+   kGcg4GMJ1ubu62h8C07S6K8mSoh8KtG/atrqI2m5NsVfQss0XnRYZ1iVR
+   A==;
+X-CSE-ConnectionGUID: ICdHpSj1S/61/LDcZRUJMA==
+X-CSE-MsgGUID: YoYg4ezSSpa0xCrl3ipU8A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="94397416"
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="94397402"
+   d="scan'208";a="94397416"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 00:03:43 -0700
-X-CSE-ConnectionGUID: 9uCkJnH0TMSH0KGiZtDhSA==
-X-CSE-MsgGUID: 5IxS943/Rhqkln7H24cH9Q==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 00:03:47 -0700
+X-CSE-ConnectionGUID: ACF5Ay4kQ9K0RUqms6KAuQ==
+X-CSE-MsgGUID: l93ufXv4SiChOQ6T2jN+Dw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="247893474"
+   d="scan'208";a="247893490"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2026 00:03:39 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2026 00:03:43 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -61,9 +61,9 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH 07/14] perf c2c: add dimension definitions and format creation
-Date: Fri, 26 Jun 2026 15:03:48 +0800
-Message-ID: <20260626070355.1556721-8-jiebin.sun@intel.com>
+Subject: [PATCH 08/14] perf c2c: add HPP list parsing for function view histograms
+Date: Fri, 26 Jun 2026 15:03:49 +0800
+Message-ID: <20260626070355.1556721-9-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260626070355.1556721-1-jiebin.sun@intel.com>
 References: <20260626070355.1556721-1-jiebin.sun@intel.com>
@@ -75,22 +75,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the function view dimension definitions that bind column names to
-their rendering and comparison functions:
+Add the histogram initialization and column parsing infrastructure:
 
-- dim_cycles_percent: estimated load-cycles percentage (L1 only)
-- dim_total_stores: store count per function
-- dim_cacheline_symbol: cacheline address (L3 only)
-- dim_iaddr_symbol: instruction code address
-- dim_symbol_view: symbol name with fold indicators
+- c2c_function_hists__init_output(): register output columns
+- c2c_function_hists__init_sort(): register sort columns
+- function_hpp_list__parse(): parse comma-separated column strings
+- c2c_function_hists__init(): initialize function histograms with sort
+- c2c_function_hists__reinit(): reinitialize with new output/sort
 
-Remove __maybe_unused from the entry and comparison functions now that
-they are referenced by the dimension structs above.
-
-Also add get_function_dimension() and get_function_format() to look up
-dimensions by name and create perf_hpp_fmt wrappers. These two helpers
-are intentionally left __maybe_unused here; they are wired into the
-function view initialization in the following patch.
+These functions bridge the function view's custom dimensions with
+the perf HPP list infrastructure, enabling dynamic column
+configuration during hierarchy construction.
 
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -108,242 +103,173 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/ui/browsers/c2c-function.c | 143 +++++++++++++++++++++++---
- 1 file changed, 131 insertions(+), 12 deletions(-)
+ tools/perf/ui/browsers/c2c-function.c | 144 +++++++++++++++++++++++++-
+ 1 file changed, 142 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
-index 172e1aa86eca..794a023239ce 100644
+index 794a023239ce..c11a81d93c21 100644
 --- a/tools/perf/ui/browsers/c2c-function.c
 +++ b/tools/perf/ui/browsers/c2c-function.c
-@@ -66,7 +66,7 @@ static __maybe_unused inline u64 hist_entry__iaddr(struct hist_entry *he)
- 	return he->ip;
+@@ -442,7 +442,7 @@ static struct c2c_dimension *function_view_dimensions[] = {
+ 	NULL,
+ };
+ 
+-static __maybe_unused struct c2c_dimension *get_function_dimension(const char *name)
++static struct c2c_dimension *get_function_dimension(const char *name)
+ {
+ 	unsigned int i;
+ 
+@@ -477,7 +477,7 @@ static int64_t c2c_se_collapse(struct perf_hpp_fmt *fmt,
+ 	return collapse_fn(a, b);
  }
  
--static __maybe_unused int symbol_width(struct hists *hists, struct sort_entry *se)
-+static int symbol_width(struct hists *hists, struct sort_entry *se)
+-static __maybe_unused struct c2c_fmt *get_function_format(const char *name)
++static struct c2c_fmt *get_function_format(const char *name)
  {
- 	int width = hists__col_len(hists, se->se_width_idx);
- 
-@@ -81,7 +81,7 @@ static struct c2c_dimension dim_symbol_view;
- /*
-  * c2c_width - Calculate width for a C2C column in function view
-  */
--static __maybe_unused int c2c_width(struct perf_hpp_fmt *fmt,
-+static int c2c_width(struct perf_hpp_fmt *fmt,
- 		     struct perf_hpp *hpp __maybe_unused,
- 		     struct hists *hists)
- {
-@@ -98,7 +98,7 @@ static __maybe_unused int c2c_width(struct perf_hpp_fmt *fmt,
- 			 dim->width;
- }
- 
--static __maybe_unused int c2c_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+static int c2c_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 		      struct hists *hists, int line, int *span)
- {
+ 	struct c2c_dimension *dim = get_function_dimension(name);
  	struct c2c_fmt *c2c_fmt;
-@@ -183,7 +183,7 @@ static __maybe_unused u64 hist_entry__child_stores(struct hist_entry *he)
- 	return sum;
+@@ -509,6 +509,146 @@ static __maybe_unused struct c2c_fmt *get_function_format(const char *name)
+ 	return c2c_fmt;
  }
  
--static __maybe_unused int
 +static int
- total_stores_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 		   struct hist_entry *he)
- {
-@@ -200,7 +200,7 @@ total_stores_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- /*
-  * cacheline_symbol_entry - Render cacheline address for function view
-  */
--static __maybe_unused int
-+static int
- cacheline_symbol_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 		       struct hist_entry *he)
- {
-@@ -219,7 +219,7 @@ cacheline_symbol_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- }
- 
- /* Render the code (instruction) address for level-1 and level-2 entries. */
--static __maybe_unused int
-+static int
- iaddr_symbol_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 		   struct hist_entry *he)
- {
-@@ -250,7 +250,7 @@ iaddr_symbol_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- /*
-  * symbol_view_entry - Render symbol name for function view with expansion indicators
-  */
--static __maybe_unused int
-+static int
- symbol_view_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 		  struct hist_entry *he)
- {
-@@ -283,7 +283,7 @@ symbol_view_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- /*
-  * cycles_percent_entry - Render cycles percentage column
-  */
--static __maybe_unused int
-+static int
- cycles_percent_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 		     struct hist_entry *he)
- {
-@@ -318,7 +318,7 @@ cycles_percent_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- /*
-  * cycles_percent_cmp - Comparison function for cycles percentage sorting
-  */
--static __maybe_unused int64_t
-+static int64_t
- cycles_percent_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 		   struct hist_entry *left, struct hist_entry *right)
- {
-@@ -339,7 +339,7 @@ cycles_percent_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- /*
-  * iaddr_symbol_cmp - Comparison function for instruction address sorting
-  */
--static __maybe_unused int64_t
-+static int64_t
- iaddr_symbol_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 		 struct hist_entry *left, struct hist_entry *right)
- {
-@@ -362,7 +362,7 @@ iaddr_symbol_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	return (left_iaddr < right_iaddr) - (left_iaddr > right_iaddr);
- }
- 
--static __maybe_unused int64_t
-+static int64_t
- empty_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	  struct hist_entry *left __maybe_unused,
- 	  struct hist_entry *right __maybe_unused)
-@@ -373,7 +373,7 @@ empty_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- /*
-  * total_stores_cmp - Comparison function for total stores sorting
-  */
--static __maybe_unused int64_t
-+static int64_t
- total_stores_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 		 struct hist_entry *left, struct hist_entry *right)
- {
-@@ -390,6 +390,125 @@ total_stores_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	return (left_store > right_store) - (left_store < right_store);
- }
- 
-+/*
-+ * Function view dimensions
-+ */
-+static struct c2c_dimension dim_cycles_percent = {
-+	.header		= HEADER_BOTH("Cycles", "%"),
-+	.name		= "cycles_percent",
-+	.cmp		= cycles_percent_cmp,
-+	.entry		= cycles_percent_entry,
-+	.width		= 9,
-+};
-+
-+static struct c2c_dimension dim_total_stores = {
-+	.header		= HEADER_BOTH("Store", "count"),
-+	.name		= "total_stores",
-+	.cmp		= total_stores_cmp,
-+	.entry		= total_stores_entry,
-+	.width		= 7,
-+};
-+
-+static struct c2c_dimension dim_cacheline_symbol = {
-+	.header		= HEADER_LOW("Cacheline"),
-+	.name		= "cacheline_symbol",
-+	.cmp		= empty_cmp,
-+	.entry		= cacheline_symbol_entry,
-+	.width		= 18,
-+};
-+
-+static struct c2c_dimension dim_iaddr_symbol = {
-+	.header		= HEADER_LOW("Code address"),
-+	.name		= "iaddr_symbol",
-+	.cmp		= iaddr_symbol_cmp,
-+	.entry		= iaddr_symbol_entry,
-+	.width		= 20,
-+};
-+
-+static struct c2c_dimension dim_symbol_view = {
-+	.header		= HEADER_LOW("Symbol"),
-+	.name		= "symbol_view",
-+	.se		= &sort_sym,
-+	.entry		= symbol_view_entry,
-+	.width		= SYMBOL_WIDTH,
-+};
-+
-+static struct c2c_dimension *function_view_dimensions[] = {
-+	&dim_iaddr_symbol,
-+	&dim_cycles_percent,
-+	&dim_total_stores,
-+	&dim_cacheline_symbol,
-+	&dim_symbol_view,
-+	NULL,
-+};
-+
-+static __maybe_unused struct c2c_dimension *get_function_dimension(const char *name)
++c2c_function_hists__init_output(struct perf_hpp_list *hpp_list, char *name,
++				struct perf_env *env __maybe_unused)
 +{
-+	unsigned int i;
++	struct c2c_fmt *c2c_fmt = get_function_format(name);
++	int level = 0;
 +
-+	for (i = 0; function_view_dimensions[i]; i++) {
-+		struct c2c_dimension *dim = function_view_dimensions[i];
-+
-+		if (!strcmp(dim->name, name))
-+			return dim;
++	if (!c2c_fmt) {
++		reset_dimensions();
++		return output_field_add(hpp_list, name, &level);
 +	}
 +
-+	return NULL;
++	/*
++	 * Mark symbol-backed columns so hists__has(hists, sym) is correct.
++	 * Only dim_symbol_view carries a sort_entry (.se); the function
++	 * view's field strings are fixed and always include symbol_view, so
++	 * this single check is sufficient (unlike the user-configurable
++	 * cacheline view, which must also test dim_iaddr).
++	 */
++	if (c2c_fmt->dim->se == &sort_sym)
++		hpp_list->sym = 1;
++
++	perf_hpp_list__column_register(hpp_list, &c2c_fmt->fmt);
++	return 0;
 +}
 +
-+/* Wrappers so sort_entry-backed dimensions sort/collapse via their se. */
-+static int64_t c2c_se_cmp(struct perf_hpp_fmt *fmt,
-+			  struct hist_entry *a, struct hist_entry *b)
++static int
++c2c_function_hists__init_sort(struct perf_hpp_list *hpp_list, char *name,
++			      struct perf_env *env)
 +{
-+	struct c2c_fmt *c2c_fmt = container_of(fmt, struct c2c_fmt, fmt);
-+	struct c2c_dimension *dim = c2c_fmt->dim;
++	struct c2c_fmt *c2c_fmt = get_function_format(name);
 +
-+	return dim->se->se_cmp(a, b);
++	if (!c2c_fmt) {
++		reset_dimensions();
++		return sort_dimension__add(hpp_list, name, /*evlist=*/NULL, env, /*level=*/0);
++	}
++
++	/* Mark symbol-backed sort keys so hists__has(hists, sym) is correct. */
++	if (c2c_fmt->dim->se == &sort_sym)
++		hpp_list->sym = 1;
++
++	perf_hpp_list__register_sort_field(hpp_list, &c2c_fmt->fmt);
++	return 0;
 +}
 +
-+static int64_t c2c_se_collapse(struct perf_hpp_fmt *fmt,
-+			       struct hist_entry *a, struct hist_entry *b)
-+{
-+	struct c2c_fmt *c2c_fmt = container_of(fmt, struct c2c_fmt, fmt);
-+	struct c2c_dimension *dim = c2c_fmt->dim;
-+	int64_t (*collapse_fn)(struct hist_entry *a, struct hist_entry *b);
++typedef int (*hpp_list_add_fn)(struct perf_hpp_list *hpp_list, char *name,
++			       struct perf_env *env);
 +
-+	collapse_fn = dim->se->se_collapse ?: dim->se->se_cmp;
-+	return collapse_fn(a, b);
++static int function_hpp_list__add_tokens(struct perf_hpp_list *hpp_list, char *list,
++					 struct perf_env *env, hpp_list_add_fn add)
++{
++	char *tok, *tmp;
++	int ret;
++
++	if (!list)
++		return 0;
++
++	for (tok = strtok_r(list, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
++		ret = add(hpp_list, tok, env);
++		if (ret) {
++			if (ret == -EINVAL || ret == -ESRCH)
++				pr_err("Invalid c2c function-view field: %s", tok);
++			return ret;
++		}
++	}
++	return 0;
 +}
 +
-+static __maybe_unused struct c2c_fmt *get_function_format(const char *name)
++static int
++function_hpp_list__parse(struct perf_hpp_list *hpp_list,
++			 const char *output_str,
++			 const char *sort_str,
++			 struct perf_env *env)
 +{
-+	struct c2c_dimension *dim = get_function_dimension(name);
-+	struct c2c_fmt *c2c_fmt;
-+	struct perf_hpp_fmt *fmt;
++	char *output = output_str ? strdup(output_str) : NULL;
++	char *sort   = sort_str   ? strdup(sort_str)   : NULL;
++	int ret = 0;
 +
-+	if (!dim)
-+		return NULL;
++	if ((output_str && !output) || (sort_str && !sort)) {
++		ret = -ENOMEM;
++		goto out;
++	}
 +
-+	c2c_fmt = zalloc(sizeof(*c2c_fmt));
-+	if (!c2c_fmt)
-+		return NULL;
++	ret = function_hpp_list__add_tokens(hpp_list, output, env,
++					    c2c_function_hists__init_output);
++	if (ret)
++		goto out;
 +
-+	fmt = &c2c_fmt->fmt;
++	ret = function_hpp_list__add_tokens(hpp_list, sort, env,
++					    c2c_function_hists__init_sort);
++	if (ret)
++		goto out;
 +
-+	c2c_fmt->dim = dim;
-+	INIT_LIST_HEAD(&fmt->list);
-+	INIT_LIST_HEAD(&fmt->sort_list);
++	perf_hpp__setup_output_field(hpp_list);
++out:
++	free(output);
++	free(sort);
++	return ret;
++}
 +
-+	fmt->cmp	= dim->se ? c2c_se_cmp : dim->cmp;
-+	fmt->sort	= dim->se ? c2c_se_cmp : dim->cmp;
-+	fmt->color	= dim->color;
-+	fmt->entry	= dim->entry;
-+	fmt->header	= c2c_header;
-+	fmt->width	= c2c_width;
-+	fmt->collapse	= dim->se ? c2c_se_collapse : dim->cmp;
-+	fmt->equal	= fmt_equal;
-+	fmt->free	= fmt_free;
++static __maybe_unused int
++c2c_function_hists__init(struct c2c_hists *hists,
++			 const char *sort,
++			 int nr_header_lines,
++			 struct perf_env *env)
++{
++	__hists__init(&hists->hists, &hists->list);
 +
-+	return c2c_fmt;
++	perf_hpp_list__init(&hists->list);
++
++	hists->list.nr_header_lines = nr_header_lines;
++
++	return function_hpp_list__parse(&hists->list, /*output=*/NULL, sort, env);
++}
++
++static __maybe_unused int
++c2c_function_hists__reinit(struct c2c_hists *c2c_hists,
++			   const char *output,
++			   const char *sort,
++			   struct perf_env *env)
++{
++	int nr_header_lines = c2c_hists->list.nr_header_lines;
++
++	perf_hpp__reset_output_field(&c2c_hists->list);
++	INIT_LIST_HEAD(&c2c_hists->list.sorts);
++
++	/* Clear stale state flags so a different output/sort set starts fresh. */
++	c2c_hists->list.need_collapse = 0;
++	c2c_hists->list.parent = 0;
++	c2c_hists->list.sym = 0;
++	c2c_hists->list.dso = 0;
++	c2c_hists->list.socket = 0;
++	c2c_hists->list.thread = 0;
++	c2c_hists->list.comm = 0;
++	c2c_hists->list.comm_nodigit = 0;
++	c2c_hists->list.nr_header_lines = nr_header_lines;
++
++	return function_hpp_list__parse(&c2c_hists->list, output, sort, env);
 +}
 +
  int perf_c2c__browse_function_view(struct hists *hists __maybe_unused)
