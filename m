@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A382F7F0E;
-	Fri, 26 Jun 2026 07:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0AE2F7F0E;
+	Fri, 26 Jun 2026 07:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782457393; cv=none; b=YQy9d6pIP8qBx6G7g55qm5fUt11w3b//At6P8V9IILpEN9im3XYygGSvGPk0x8A5jTNxiZoUMJKhQJyoia2CAv/1tDER0uV3pUaODadVOH+gFpl+Zpt32RvXpI5vr79bfF+i+Pjo6hRnM77YMl7VhJ+yMZzE0nyYqVOZntXHu2c=
+	t=1782457398; cv=none; b=eFzofk1i/K5kxJ8h0X6isVy9U4PZjwEwdtHnmTw/1O+8CnlY4gUlv54KPBqDKlorlcCuL/iOd28N8pI4Sxir0la1ULUS0RAw66JCJYELpt439Av96fAVHIBgxFJjsmLdXQf+e/Uf4eGDwc9xkYSP1gBh4Irt4tfDj/t6KtoSHtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782457393; c=relaxed/simple;
-	bh=oTyss8XBiikabJWgMNoRtel3jHZ8ucQHeFMOearjVyo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ciTATCg6LdJaDNkd8moWDlqoibwy7uhi5RA8asusp1fNtfN8lK4zrpwNBnAyfNhG0f/p7D4OWoNRxQfUWf0Sea2To51ptLQAxoGT9g7wKpNDvB4nbeSYxFR7MI/lYdrLxxTkzd3ieqN7GQgRheFHoFHRbcaNnOgUs3xa5WTRbvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=El8AT3xo; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1782457398; c=relaxed/simple;
+	bh=hRv4FcPEWOjLntjaWAuKYcHOGBA0sBgRHrHCZjHMhZo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NBo5shhNZ/wuxMQomXbhw+tH9+uq4JkmqOcnnbOV0PMqshN7mKCCue1ugfaEquKSwAztozfyh5mas/dmxFX9cIPhpyP+bhF8OUbelEaA3QVZtvQOew1Z6qgrdUKTTEvvp2ek/FidSsAtc4jWUNpBf+Pj6QH3uPsQjlchHYcXnUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JknqTSFl; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="El8AT3xo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JknqTSFl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782457392; x=1813993392;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oTyss8XBiikabJWgMNoRtel3jHZ8ucQHeFMOearjVyo=;
-  b=El8AT3xoUaUq3p5igXoi32YR0rCZYRowSNsIvJaBTFcRT40IrlPNAx16
-   5MvelH3mYr8rqLN3viagW43tHWuidzuIq487JAeopAu6yXe5i+iDb25zA
-   BEqS7f9LJYWWdyZkL40IEqUSj/RnDxoWX0X2MGElkprHCJUx9HYa8aCxP
-   3FzLiI8ODPnkzzbBFGhXVj8/qjS6eNMomEB95ciX5DglzeNJGJBYtTV4q
-   W2+OJCDawDXpqX19vBoMW/SubSyIs34kKul16THl39DQ6eW2KEHaV0y64
-   DqFimZd3FmZNK/jlj9VRFPFWGUFenChDkklzddNjXU1AlCWYI8zpE1/S/
-   Q==;
-X-CSE-ConnectionGUID: TuZhHzgrQxSwU14CNZRrkQ==
-X-CSE-MsgGUID: 3cV3qMvoTFKodlDdhPCHow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="94397322"
+  t=1782457397; x=1813993397;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hRv4FcPEWOjLntjaWAuKYcHOGBA0sBgRHrHCZjHMhZo=;
+  b=JknqTSFliYirJkiKtdJX/sZHPPLywcMexSgg3DeXhemiFKaBkcqsIZWq
+   QGjoF19RwMN1vAJB9iFMMoTzkWp3L2x0Gw1Krokw4XG5dRLX7ecXG9g5F
+   2SQ5NYwUdDL9cFq0Dpa8mZ+xAFaJGMf6fh2drCf4lB0RYOFJ76XdU2htz
+   Bv3Mk1sObMvLJMu6PYGr0pY5sfL9PtIOxsJu3VB5R+wyNmyxuq7X362bd
+   XKrxYy3NLDF4PR+cArHl2lnvytqHY3LgsdGYOdxQ5AW3skdgkjkHuYH9V
+   Ao1fh0p9kpugie+3vVAteh5ExnlYlFmOyCbb4D2OWEj7ISWR25Tdb4cCQ
+   w==;
+X-CSE-ConnectionGUID: joiMXPF3RU+Js5bmXTolbg==
+X-CSE-MsgGUID: aN3h4wc7SR+Q5XoOtWE9CQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="94397331"
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="94397322"
+   d="scan'208";a="94397331"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 00:03:11 -0700
-X-CSE-ConnectionGUID: j7LsI7k8SxWC5FVknaehBQ==
-X-CSE-MsgGUID: s2UzX83XTF+s1rTKlgdB7A==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 00:03:17 -0700
+X-CSE-ConnectionGUID: GQaaCYZOTM+p/GWoVRVL6Q==
+X-CSE-MsgGUID: zVUadJLQQ2W9nC/IUmZLXw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="247893397"
+   d="scan'208";a="247893414"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2026 00:03:07 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2026 00:03:11 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,10 +61,12 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH 00/14] perf c2c: add a function view
-Date: Fri, 26 Jun 2026 15:03:41 +0800
-Message-ID: <20260626070355.1556721-1-jiebin.sun@intel.com>
+Subject: [PATCH 01/14] perf c2c: extract shared data structures into c2c.h
+Date: Fri, 26 Jun 2026 15:03:42 +0800
+Message-ID: <20260626070355.1556721-2-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260626070355.1556721-1-jiebin.sun@intel.com>
+References: <20260626070355.1556721-1-jiebin.sun@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,128 +75,371 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds a new "function view" to perf c2c report, on top of the
-existing cacheline view. It does not change the cacheline view; it adds a
-second, complementary way to look at the same cache-to-cache (C2C) data.
+Move c2c_hists, compute_stats, c2c_hist_entry, and perf_c2c structure
+definitions from builtin-c2c.c into a new shared header c2c.h. This
+allows the upcoming function view browser (c2c-function.c) to reuse these
+types.
 
-Motivation
-==========
+Make the global perf_c2c instance 'c2c' non-static and export
+perf_c2c__browse_cacheline() so they can be accessed from the new
+function view module.
 
-The existing perf c2c report is organized by cacheline: it lists the most
-contended cachelines and the symbols touching each one. That answers
-"which cachelines are hot", but two common follow-up questions are harder
-to answer directly:
+No functional change.
 
-  - Which functions are contending with each other?
-  - For a given function, which other functions does it share cachelines
-    with, and over which specific cachelines?
-
-The function view reorganizes the same data around functions to answer
-these directly, which is useful when chasing false sharing and cross-core
-contention at the source-function level.
-
-What it does
-============
-
-In the perf c2c TUI, press TAB in the cacheline view to switch to the
-function view. It presents a 3-level hierarchy:
-
-  Level 1: primary functions, sorted by Cycles % (estimated load cycles:
-           HITM, peer-snoop and other-load cycles -- on systems whose
-           default display mode is peer, such as Arm64, the peer-snoop
-           component dominates)
-  Level 2: other functions that share cachelines with the level-1 function
-  Level 3: the specific shared cachelines for each function pair
-
-Keys in the function view:
-  TAB/ESC/q   return to the cacheline view
-  d           show cacheline details for the selected entry
-  e / +       expand / collapse the selected entry
-  ?           help
-
-The cacheline view and the --stdio output are unchanged.
-
-Example
-=======
-
-A level-1 function is expanded (press 'e') to reveal the functions it
-shares cachelines with, and one of those is expanded again to reveal the
-specific shared cachelines:
-
-  Shared Data Functions Table   (27 entries, sorted on Cycles %)
-   Cycles  Store
-        %  count  Code address        Symbol           Cacheline
-  ----------------------------------------------------------------------
-  - 39.03%   541  - 0xffffffffa2fc5b08  - [k] cpupri_set
-             450  - 0xffffffffa2fa28a5  - [k] pull_rt_task
-             450                                      0xff2d0082809da080
-
-Reading the three levels:
-
-  - Level 1: cpupri_set is the top contended function, accounting for
-    39.03% of the estimated load cycles. The table is sorted by this
-    Cycles % column.
-  - Level 2: expanding cpupri_set (press 'e') lists the functions it
-    shares cachelines with, sorted by store count. Here pull_rt_task is
-    the contending function, with 450 stores into the shared data.
-  - Level 3: expanding pull_rt_task lists the specific cachelines the two
-    functions contend over -- in this case the single cacheline at
-    0xff2d0082809da080.
-
-The view reads top-down as "cpupri_set is hottest; it shares data with
-pull_rt_task; the contention is on cacheline ...da080" -- the false-
-sharing chain that the cacheline view otherwise makes you reconstruct by
-hand.
-
-Implementation
-==============
-
-The function view is built as a separate hist_browser in
-tools/perf/ui/browsers/c2c-function.c. Shared types and helpers used by
-both views are factored out of builtin-c2c.c into a new c2c.h. The
-hierarchy is constructed from the existing cacheline histograms into a
-dedicated set of hists, keyed by (symbol, instruction address), and
-rendered with custom column formatters.
-
-The series is split into 14 small, self-contained patches so each step
-can be reviewed and builds on its own.
-
-Testing
-=======
-
-  - Each of the 14 commits builds individually and as a full series.
-  - perf c2c report --stdio (cacheline view) output is unchanged versus
-    the baseline: identical trace-event totals, shared-cacheline counts,
-    and HITM tallies.
-  - The function view was exercised on c2c recordings; the level-1
-    ordering and the level-2/3 sharing breakdown match the underlying
-    cacheline data.
-
-Jiebin Sun (14):
-  perf c2c: extract shared data structures into c2c.h
-  perf c2c: add function view browser skeleton
-  perf c2c: add function view type definitions and helpers
-  perf c2c: add column format infrastructure for function view
-  perf c2c: add column entry functions for function view
-  perf c2c: add comparison functions for function view sorting
-  perf c2c: add dimension definitions and format creation
-  perf c2c: add HPP list parsing for function view histograms
-  perf c2c: add stats merging and memory management helpers
-  perf c2c: add hierarchy entry creation and lookup functions
-  perf c2c: add function view hierarchy builder
-  perf c2c: add function view browser UI
-  perf c2c: add TAB key to switch to function view
-  perf c2c: document function view in perf-c2c man page
-
- tools/perf/Documentation/perf-c2c.txt |   15 +
- tools/perf/builtin-c2c.c              |  128 +-
- tools/perf/c2c.h                      |  140 +++
- tools/perf/ui/browsers/Build          |    1 +
- tools/perf/ui/browsers/c2c-function.c | 1547 +++++++++++++++++++++++++
- 5 files changed, 1713 insertions(+), 118 deletions(-)
+Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Falcon <thomas.falcon@intel.com>
+Reviewed-by: Tianyou Li <tianyou.li@intel.com>
+Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
+---
+ tools/perf/builtin-c2c.c | 124 ++--------------------------------
+ tools/perf/c2c.h         | 139 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 145 insertions(+), 118 deletions(-)
  create mode 100644 tools/perf/c2c.h
- create mode 100644 tools/perf/ui/browsers/c2c-function.c
 
-base-commit: 40db90ac9f66c8246c1746c56d397283d161655c
---
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index c9584dbedf77..33271554e354 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -38,6 +38,7 @@
+ #include "mem-events.h"
+ #include "mem-info.h"
+ #include "mem2node.h"
++#include "c2c.h"
+ #include "pmus.h"
+ #include "session.h"
+ #include "sort.h"
+@@ -52,75 +53,9 @@
+ #include "util/symbol.h"
+ #include "util/util.h"
+ 
+-struct c2c_hists {
+-	struct hists		hists;
+-	struct perf_hpp_list	list;
+-	struct c2c_stats	stats;
+-};
+-
+-struct compute_stats {
+-	struct stats		 lcl_hitm;
+-	struct stats		 rmt_hitm;
+-	struct stats		 lcl_peer;
+-	struct stats		 rmt_peer;
+-	struct stats		 load;
+-};
+-
+-struct c2c_hist_entry {
+-	struct c2c_hists	*hists;
+-	struct evsel		*evsel;
+-	struct c2c_stats	 stats;
+-	unsigned long		*cpuset;
+-	unsigned long		*nodeset;
+-	struct c2c_stats	*node_stats;
+-	unsigned int		 cacheline_idx;
+-
+-	struct compute_stats	 cstats;
+-
+-	unsigned long		 paddr;
+-	unsigned long		 paddr_cnt;
+-	bool			 paddr_zero;
+-	char			*nodestr;
+-
+-	/*
+-	 * must be at the end,
+-	 * because of its callchain dynamic entry
+-	 */
+-	struct hist_entry	he;
+-};
+ 
+ static char const *coalesce_default = "iaddr";
+ 
+-struct perf_c2c {
+-	struct perf_tool	tool;
+-	struct c2c_hists	hists;
+-	struct mem2node		mem2node;
+-
+-	unsigned long		**nodes;
+-	int			 nodes_cnt;
+-	int			 cpus_cnt;
+-	int			*cpu2node;
+-	int			 node_info;
+-
+-	bool			 show_src;
+-	bool			 show_all;
+-	bool			 use_stdio;
+-	bool			 stats_only;
+-	bool			 symbol_full;
+-	bool			 stitch_lbr;
+-
+-	/* Shared cache line stats */
+-	struct c2c_stats	shared_clines_stats;
+-	int			shared_clines;
+-
+-	int			 display;
+-
+-	const char		*coalesce;
+-	char			*cl_sort;
+-	char			*cl_resort;
+-	char			*cl_output;
+-};
+-
+ enum {
+ 	DISPLAY_LCL_HITM,
+ 	DISPLAY_RMT_HITM,
+@@ -141,9 +76,9 @@ static const struct option c2c_options[] = {
+ 	OPT_END()
+ };
+ 
+-static struct perf_c2c c2c;
++struct perf_c2c c2c;
+ 
+-static void *c2c_he_zalloc(size_t size)
++void *c2c_he_zalloc(size_t size)
+ {
+ 	struct c2c_hist_entry *c2c_he;
+ 
+@@ -458,36 +393,6 @@ static const char * const __usage_report[] = {
+ 
+ static const char * const *report_c2c_usage = __usage_report;
+ 
+-#define C2C_HEADER_MAX 2
+-
+-struct c2c_header {
+-	struct {
+-		const char *text;
+-		int	    span;
+-	} line[C2C_HEADER_MAX];
+-};
+-
+-struct c2c_dimension {
+-	struct c2c_header	 header;
+-	const char		*name;
+-	int			 width;
+-	struct sort_entry	*se;
+-
+-	int64_t (*cmp)(struct perf_hpp_fmt *fmt,
+-		       struct hist_entry *, struct hist_entry *);
+-	int   (*entry)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+-		       struct hist_entry *he);
+-	int   (*color)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+-		       struct hist_entry *he);
+-};
+-
+-struct c2c_fmt {
+-	struct perf_hpp_fmt	 fmt;
+-	struct c2c_dimension	*dim;
+-};
+-
+-#define SYMBOL_WIDTH 30
+-
+ static struct c2c_dimension dim_symbol;
+ static struct c2c_dimension dim_srcline;
+ 
+@@ -1389,23 +1294,6 @@ cl_idx_empty_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
+ }
+ 
+-#define HEADER_LOW(__h)			\
+-	{				\
+-		.line[1] = {		\
+-			.text = __h,	\
+-		},			\
+-	}
+-
+-#define HEADER_BOTH(__h0, __h1)		\
+-	{				\
+-		.line[0] = {		\
+-			.text = __h0,	\
+-		},			\
+-		.line[1] = {		\
+-			.text = __h1,	\
+-		},			\
+-	}
+-
+ #define HEADER_SPAN(__h0, __h1, __s)	\
+ 	{				\
+ 		.line[0] = {		\
+@@ -1928,7 +1816,7 @@ static struct c2c_dimension *dimensions[] = {
+ 	NULL,
+ };
+ 
+-static void fmt_free(struct perf_hpp_fmt *fmt)
++void fmt_free(struct perf_hpp_fmt *fmt)
+ {
+ 	struct c2c_fmt *c2c_fmt;
+ 
+@@ -1936,7 +1824,7 @@ static void fmt_free(struct perf_hpp_fmt *fmt)
+ 	free(c2c_fmt);
+ }
+ 
+-static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
++bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
+ {
+ 	struct c2c_fmt *c2c_a = container_of(a, struct c2c_fmt, fmt);
+ 	struct c2c_fmt *c2c_b = container_of(b, struct c2c_fmt, fmt);
+@@ -2710,7 +2598,7 @@ c2c_cacheline_browser__new(struct hists *hists, struct hist_entry *he)
+ 	return browser;
+ }
+ 
+-static int perf_c2c__browse_cacheline(struct hist_entry *he)
++int perf_c2c__browse_cacheline(struct hist_entry *he)
+ {
+ 	struct c2c_hist_entry *c2c_he;
+ 	struct c2c_hists *c2c_hists;
+diff --git a/tools/perf/c2c.h b/tools/perf/c2c.h
+new file mode 100644
+index 000000000000..3e974dd1d7ee
+--- /dev/null
++++ b/tools/perf/c2c.h
+@@ -0,0 +1,139 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _PERF_C2C_H_
++#define _PERF_C2C_H_ 1
++
++#include <stdbool.h>
++#include <stddef.h>
++#include <linux/types.h>
++#include "util/stat.h"
++#include "util/hist.h"
++#include "util/mem-events.h"
++#include "util/mem2node.h"
++#include "util/tool.h"
++
++struct sort_entry;
++
++struct compute_stats {
++	struct stats		 lcl_hitm;
++	struct stats		 rmt_hitm;
++	struct stats		 lcl_peer;
++	struct stats		 rmt_peer;
++	struct stats		 load;
++};
++
++struct c2c_hists {
++	struct hists		hists;
++	struct perf_hpp_list	list;
++	struct c2c_stats	stats;
++};
++
++struct c2c_hist_entry {
++	struct c2c_hists	*hists;
++	struct evsel		*evsel;
++	struct c2c_stats	 stats;
++	unsigned long		*cpuset;
++	unsigned long		*nodeset;
++	struct c2c_stats	*node_stats;
++	unsigned int		 cacheline_idx;
++
++	struct compute_stats	 cstats;
++
++	unsigned long		 paddr;
++	unsigned long		 paddr_cnt;
++	bool			 paddr_zero;
++	char			*nodestr;
++
++	/*
++	 * must be at the end,
++	 * because of its callchain dynamic entry
++	 */
++	struct hist_entry	he;
++};
++
++struct perf_c2c {
++	struct perf_tool	tool;
++	struct c2c_hists	hists;
++	struct mem2node		mem2node;
++
++	unsigned long		**nodes;
++	int			 nodes_cnt;
++	int			 cpus_cnt;
++	int			*cpu2node;
++	int			 node_info;
++
++	bool			 show_src;
++	bool			 show_all;
++	bool			 use_stdio;
++	bool			 stats_only;
++	bool			 symbol_full;
++	bool			 stitch_lbr;
++
++	/* Shared cache line stats */
++	struct c2c_stats	shared_clines_stats;
++	int			shared_clines;
++
++	int			 display;
++
++	const char		*coalesce;
++	char			*cl_sort;
++	char			*cl_resort;
++	char			*cl_output;
++};
++
++extern struct perf_c2c c2c;
++
++#define C2C_HEADER_MAX 2
++#define SYMBOL_WIDTH 30
++
++#define HEADER_LOW(__h)			\
++	{				\
++		.line[1] = {		\
++			.text = __h,	\
++		},			\
++	}
++
++#define HEADER_BOTH(__h0, __h1)		\
++	{				\
++		.line[0] = {		\
++			.text = __h0,	\
++		},			\
++		.line[1] = {		\
++			.text = __h1,	\
++		},			\
++	}
++
++struct c2c_header {
++	struct {
++		const char *text;
++		int	    span;
++	} line[C2C_HEADER_MAX];
++};
++
++struct c2c_dimension {
++	struct c2c_header	 header;
++	const char		*name;
++	int			 width;
++	struct sort_entry	*se;
++
++	int64_t	(*cmp)(struct perf_hpp_fmt *fmt,
++		       struct hist_entry *left, struct hist_entry *right);
++	int	(*entry)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++			 struct hist_entry *he);
++	int	(*color)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++			 struct hist_entry *he);
++};
++
++struct c2c_fmt {
++	struct perf_hpp_fmt	 fmt;
++	struct c2c_dimension	*dim;
++};
++
++void *c2c_he_zalloc(size_t size);
++void fmt_free(struct perf_hpp_fmt *fmt);
++bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b);
++
++#ifdef HAVE_SLANG_SUPPORT
++int perf_c2c__browse_cacheline(struct hist_entry *he);
++#endif
++
++#endif /* _PERF_C2C_H_ */
+-- 
 2.52.0
+
