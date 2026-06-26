@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28C2362130
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 07:14:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7622F8E8E
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 07:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782458091; cv=none; b=RTcgxufV25prJmfzVFarVB2V3oynqWvG1F+md8uGyfiE2KKpVCXnGYyCta34+73WWgmLsxLbCciTIW88FAqMO3DlnJ+AAq3vdJXmMDXAFVZLhbqwReBr7dl9qfdYV/DqyVyrBXEjYeuMpQC6lxLGpple/zG2yzuDgNAPkX2P2lA=
+	t=1782458188; cv=none; b=K1PflRMzLslzS0fm+2GXLEXI95qQA6MxVLMf1gotg/2MkXaGAfE8MsvY4C5ke2CNvIAiG8WHqlQVGAozUs7R3EYOX7VaeHtgVm2WN1hRnmA7ORxsAoYFp6ZZ/GUNB48QTgnqj9HA//rQxdxY8XpswwpA/r3bBpE228leJ+vue5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782458091; c=relaxed/simple;
-	bh=nJwfv+KYXFm6EdCf8y4OiuuLF9VL9/m4vroghJ+aJ0I=;
+	s=arc-20240116; t=1782458188; c=relaxed/simple;
+	bh=fgzbOET+EIL2qG2JZOmH5baDviwVN9XG2Wetwklhjso=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YORJfEhkFwUCiASbiz/+DekAQP01MFK19rBcxIKmEOz7pIzxE8MNgo9R4tTZ6+G0/gCI0uSPQbWtmh0Y3rnU64+6WNn92XEVGMOBP9ZDmFpgrddXY6Lo0vCID7dIlZF8hW65BnBxbX7wLMj8tDv1MlW7F9akSeF0R6yRu3Qf7oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DF6kRi4H; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=R4/on/aX9jjhi+UGXYKLYXCUnbEBJcwN4RyjKPklJZrYP78z3g0GooM+Q0/5Z4D3afuOjKGhMSWbwtMJkVYhyQ9vGZ9ScFrxqUoFtP/1KkkthoCgLicfF/B8WdKpySSXsz/RBB9t1A4EOXa0qFAY3aeuxZ5iOHgiIquUAJxuqy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aq9U6ZmY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DF6kRi4H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0CC1F000E9;
-	Fri, 26 Jun 2026 07:14:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq9U6ZmY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BBDE1F00A3A;
+	Fri, 26 Jun 2026 07:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782458090;
-	bh=+9xCvj9nnJhIAw2/IXynkgTiWYV3mXW1gZFNlgto8os=;
+	s=k20260515; t=1782458186;
+	bh=ps3BsgDNZ7VurGqJIqMF6ov5TFXEKz1FUlUqqxCLH0Q=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DF6kRi4HZMrrer9n2NojGXsobV5cxe2RNMXe0evauQx1S4JGwWgh5h85XBjtqsZEF
-	 caeAPlJkZcQjcgpCxaO35UCcgcBQXr+f1JyEWTEW+qjyC/sXiWrYSKDVBwg8maOCSG
-	 zbjMidvqmyiZS7tHSo41JLTiusX5DyZjvmPYaPbIX22sbZ3hXqA+voIA2+XLW+LerE
-	 Cg+aRXf8Tuq9+Fn7Vur/rNRgJxJv/jYdZqkwOZS/4tgI7admRvdy7zjJlyxLMtinoX
-	 zHIsmaPPj6kaBC2V1jU25eUxYa7j8G/seEA61hkqg3nFyjIfj1h9wKpigptuEyfcay
-	 Up3NutFECxr3A==
+	b=Aq9U6ZmY6bfiuQKvNUiuQY6yDIdgGicJkjorUUMDL46lByQaLps0GIATHz+T/YOKv
+	 NAGTICrd9GzWdHC2+lkjUkEpBngd0VSKOZ+UNUVnFa3cnZAr7v8Shvxp9wySeCOT18
+	 IycX+rl3RYhubpZLFW1G7ndaXOii0kL1rvxbWgPe5J8cSPHGOClCkSbYH+AKw9820M
+	 GDdANd4rcJibbMraA+m/hMfeOpqVN2TQZqs1S2xdohsYTkOInnanw40D8Eitx+eJOQ
+	 bEkPu0r3i8SvDDqggNNwwt3z6o3+c/QXxRoPpUXIEzzTBlw+9hRfXIfEIntFafRZvo
+	 WxOLPFsUWT4VQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 03/14] perf c2c: add function view type definitions and
- helpers
+Subject: Re: [PATCH 08/14] perf c2c: add HPP list parsing for function view
+ histograms
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jiebin Sun" <jiebin.sun@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260626070355.1556721-4-jiebin.sun@intel.com>
+In-Reply-To: <20260626070355.1556721-9-jiebin.sun@intel.com>
 References: <20260626070355.1556721-1-jiebin.sun@intel.com>
- <20260626070355.1556721-4-jiebin.sun@intel.com>
+ <20260626070355.1556721-9-jiebin.sun@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 26 Jun 2026 07:14:49 +0000
-Message-Id: <20260626071450.3B0CC1F000E9@smtp.kernel.org>
+Date: Fri, 26 Jun 2026 07:16:26 +0000
+Message-Id: <20260626071626.9BBDE1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,53 +47,74 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The `symbol_name_equal` helper relies on host-bound `arch__compa=
-re_symbol_names()`, which breaks cross-platform analysis for the c2c functi=
-on view.
+- [Medium] OOM failures in get_function_format() are swallowed and misrepor=
+ted as invalid dimensions.
 --
 
-commit a7beef2e1248ae5cd6dc127b26c6803a87eb9dd4
+commit c2feb45b926c3d4847f0ee3b178a0bfe059a7079
 Author: Jiebin Sun <jiebin.sun@intel.com>
 
-perf c2c: add function view type definitions and helpers
+perf c2c: add HPP list parsing for function view histograms
 
-Add the foundational type definitions and helper functions for the
-function view browser.
+This commit adds the histogram initialization and column parsing
+infrastructure for the perf c2c function view. It bridges custom dimensions
+with the perf HPP list infrastructure to enable dynamic column configuratio=
+n.
 
 > diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
 rs/c2c-function.c
-> index 040266288be3d..dbc912a4a242b 100644
+> index 794a023239ce1..c11a81d93c21e 100644
 > --- a/tools/perf/ui/browsers/c2c-function.c
 > +++ b/tools/perf/ui/browsers/c2c-function.c
 [ ... ]
-> +static __maybe_unused inline bool symbol_name_equal(struct symbol *a, st=
-ruct symbol *b)
+> @@ -509,6 +509,146 @@ static __maybe_unused struct c2c_fmt *get_function_=
+format(const char *name)
+>  	return c2c_fmt;
+>  }
+> =20
+> +static int
+> +c2c_function_hists__init_output(struct perf_hpp_list *hpp_list, char *na=
+me,
+> +				struct perf_env *env __maybe_unused)
 > +{
-> +	return a && b && arch__compare_symbol_names(a->name, b->name) =3D=3D 0;
+> +	struct c2c_fmt *c2c_fmt =3D get_function_format(name);
+> +	int level =3D 0;
+> +
+> +	if (!c2c_fmt) {
+> +		reset_dimensions();
+> +		return output_field_add(hpp_list, name, &level);
+> +	}
 
 [Severity: Medium]
-Does this break cross-platform analysis for the c2c function view?
+If zalloc() fails inside get_function_format(), it returns NULL. Does this
+fallback path swallow the -ENOMEM and mistakenly treat it as an unknown
+dimension?
 
-Calling arch__compare_symbol_names() relies on a weak symbol bound to the h=
-ost
-architecture at compile time, since files in tools/perf/arch/ are condition=
-ally
-linked based on the build machine.
+Since it falls back to output_field_add() which will fail with -EINVAL, the
+caller function_hpp_list__add_tokens() might print the misleading error
+'Invalid c2c function-view field' instead of reporting the memory allocation
+failure.
 
-If a user runs perf c2c on an x86 host to analyze a perf.data file recorded=
- on
-PowerPC, this falls back to strcmp(). Can this result in failing to correct=
-ly
-group identical symbols that have architecture-specific variations (like
-PowerPC's .my_func vs my_func)?
-
-Should this dynamically query the e_machine of the analyzed perf.data file
-instead of relying on host-bound architecture functions?
-
-> +}
+[ ... ]
+> +static int
+> +c2c_function_hists__init_sort(struct perf_hpp_list *hpp_list, char *name,
+> +			      struct perf_env *env)
+> +{
+> +	struct c2c_fmt *c2c_fmt =3D get_function_format(name);
 > +
-> +static __maybe_unused inline u64 hist_entry__iaddr(struct hist_entry *he)
+> +	if (!c2c_fmt) {
+> +		reset_dimensions();
+> +		return sort_dimension__add(hpp_list, name, /*evlist=3D*/NULL, env, /*l=
+evel=3D*/0);
+> +	}
+
+[Severity: Medium]
+Similarly here, does this path also swallow an -ENOMEM from
+get_function_format() and mistakenly treat it as an unknown dimension?
+
+> +
+> +	/* Mark symbol-backed sort keys so hists__has(hists, sym) is correct. */
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260626070355.1556=
-721-1-jiebin.sun@intel.com?part=3D3
+721-1-jiebin.sun@intel.com?part=3D8
