@@ -1,249 +1,185 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6BE26F2BE
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 13:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB40E3E1D05
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 13:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782482074; cv=pass; b=QCPXjByhl+MZXT7Yk8peTFn3/aJWcDgpmloKkxxs7YIB0PJ2sZ+Kj/6qUjhO9kN85GvpUKEkXJ0bfSuCSYKXpFnDhNkmeuRHvT7ggb7cQieBprtd0IXUXzB8M+0PTdUkRLLJHZcJhL8WCCLvyhrnoAg1pc6ryHlkvgmIFZwERQk=
+	t=1782482198; cv=pass; b=WhelqnhjzCy/MVx2a3O1bWjxQyTnbpefovoNAD28qdlFD3+MqHB8r+8YKcdxDT4L+N3Uh39h/gtcYfG3syr8B5nJ1DIh83vLP+3f2VS3lshEJdMynd9b1SqTd9gSX2eS1Gyh0iVxDy1V8rJR85G5J4ad/GL+G6+UWqBT0PzIK+8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782482074; c=relaxed/simple;
-	bh=2kujxcsx4SBcTF16/vnx9rx10+HFQ9s0MPTG4nlD3x4=;
+	s=arc-20240116; t=1782482198; c=relaxed/simple;
+	bh=YVDL1aGMn8IULAzLPaQ63t5D6FVvaCLO75OWrWADPZ8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gCJ+x0LBadMnBymq6q2kYJeFmL781TtHkOQYMeHuESpi+L1iRmvoOOvgpLKtveFgQCgVW96DpBsvjTF+77jmOG+bdl+PJxyeN2hyrAMGs0mM+ncpjY0oazHjRQntJctBaaqfcbIcK/hVFMA0CRWTpaEMjsU9dgT8rQY88ABiKrY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TT1s5t2I; arc=pass smtp.client-ip=209.85.219.42
+	 To:Cc:Content-Type; b=qUFM9eVb0MRFVIuL2n+V2vzrBPreZWSNRD35pDZiZ2VMZD56uo3pOdGjA6UErzVIww1V+EWXqN2/BTx8bPdL6r0oaV2wectj1UF/qg/iRU1jHrX9cTKT9v4MoGgV2wdr4EDOfCwSdbDFw0r+Vfkg5bcxr8ZyDw9AapgFChqG24Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cn3KVw+R; arc=pass smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TT1s5t2I"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-8cc0ef7c306so10084966d6.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 06:54:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782482071; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cn3KVw+R"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8ce0f17a69cso8398146d6.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 06:56:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782482196; cv=none;
         d=google.com; s=arc-20260327;
-        b=j2faIei4H/ANpE4R69rl6ciQLtOsBbfB/tX3Y/p7ZW4L/emi1IDS6rBNO+OgzMu/EH
-         fOcbIJfJ/GofcYOVmeiQY+ApBNbnRscnUzrbwFcnyNVCZ6S1V64pf/RwGbBCneXqQNnQ
-         WHbGsGTkijJu7uV7+GCZPemLSf7wXmDf7Q1xd/fZvxY5Jaky0HImtPotZ7HAd0kp4j+V
-         DSmyA0o0I2z6VS6O7v07J5qEhFbr/W4OgzT7Fo888aedzCib7xRGdIKeAN3UsLqISYnr
-         yXV13Obvt/1BSHKBr/7CxjszmAo1YKCKba9KhHdgCEx0364cfBzuRKxT3JCZW6kKYVUM
-         J5tw==
+        b=SD/oWkuTfP28Oryedqw2ipWJ9oqpZQ7AQkBtNS91SzgckezKmkEoMgncRseESSzN3b
+         B4iwBVBxi33E1qc91DMbM8BeApMICFudiC/6Fp9wma5oH0GIV3ZcTml5W8vkBfb6ute1
+         aG7jkpK4hq0ecr46Y5UbPrx+s2EDtPweedPk+Rm+E1gblD8MCncg7EhdN2Pwy22aGKTk
+         uKf3Z5yXYaf57xBVrl11DKlCjKvFawDDrmvbaW8zoBvK8PSAxtRZC6aWL9EbXdJX+3Io
+         Fb5jL5N6eDr4Eq5aAzppTIChsa7qjEyOdx0MzXoceUkJFb+Rj3yTK3+eQpKtvI0ekEZ9
+         paMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=VjHNiP0IoRwlBG7ewKYx5rusZ8lcYYfVVLXImxvlHaA=;
-        fh=J/o4ro8HCPDj8spy4H/O0qnVXZ9BwjimlvMqTrRAaws=;
-        b=AaBYPNFfmj4Sohi+EoDaz5qY9WH8vKrps+RMR2kaWL/rrWYsmwbV+AEW7XX/jGaacc
-         X1iWyl+oOu3vG7WbtIzt0MOWQGnGX3BQPGgd+HRJIj8t7atDPlcJBfqhxWME9Xo6UIXf
-         QtfXoBG8QIMY0p9sUw9TolPLnNmgudkoZqJtR7E7hHAoPJ9Fq3I0hFteJtNy1W+0di9y
-         PJ9BoRE9o/1HRXNUbXeZiXGJ7rFOEywKbM1K1rQr+vvu2khMptqa+kAmbR5RX0IBFOTR
-         oqDwRI0EQbM7z+rYTi/0jEwtgcmB+iGVGJQ4cswsOQzIxiizU4GKmnZtn5wyCbDRrbH2
-         n6wA==;
+        bh=j8UgPLpU59EN9jrvEy4338bhTXSBs+KvINqBsOxg3n8=;
+        fh=NHGhhXMekIQd9nGASjjXGi16icZmme/GpoQnD72Lr5M=;
+        b=j2jLes5Y2V3/Hs2a+sGRE4z/TZVb0VW9RXjTYbykkCBRlS/7CFiwoa1x+BcsssaZKu
+         uRSDlhwjvkDc/+vI1hqaxDwCKYMgRPxCfDLXPBzGibSwy8pAT8ml5n2mbODV4J0vt2el
+         BOwyYwfnyD+NlLe0eErROc02dgEXXC39UjzAnYErHCd5L7FknScDe5liw/deAzRr6Naf
+         trD2RFg5GNMBDcRPbEcWaT7FnGrYT/Qe8AOO5ZwLVwpI3JJS2c+5P4o4VTXHToOMnzjc
+         tDbHFEXNgl8Yc8fW+b2VMVEJYtnm8VdNINwgRjuUwgmMClmKZuK2xEV32eT5h3D3+rz0
+         AS+Q==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782482071; x=1783086871; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782482196; x=1783086996; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VjHNiP0IoRwlBG7ewKYx5rusZ8lcYYfVVLXImxvlHaA=;
-        b=TT1s5t2IU9+Tupjs+kUPHzL+pOfwb4yhqxVi5QJ+cpjgvnyLO8JPnj9HLeJSjqNkPI
-         5Ws6uFVdYWs4QqQrjF15lLS5wt0X6h+CoX9nwKW/xvIWjbEb5yvbTk2HFbS1BOgq9oxJ
-         37+1D9IBlLqWTQ7+zKwH3SDV5DQcvzXdS7MOkbcWQ7EdXRtp2KuIWoibLXoTYLEFdbQT
-         5stVxEs7KOBgz/qp1tZO4mgVF4ynQayGIXbnouj0pv8Dz8uh8F1AbcnVYUpm8kMla+rd
-         gqlEcOjmZIRboWl8MlLyzBn0arxgJFLtCU/iSeZmxcPLP9uhw/qlGpAo0ce3dRHoyRec
-         h8gQ==
+        bh=j8UgPLpU59EN9jrvEy4338bhTXSBs+KvINqBsOxg3n8=;
+        b=cn3KVw+RWN5wCPce2bjgeAqV16Jq/VOSh4CZnAZIV9h2Qiwo7xv8iahtf/iXNKqvQe
+         4xdPpcSFJ7t5hbShqwxySoYn5raAZTF9eFS07k6N96Qz5easb/xc7TiSJkl0We4qecs8
+         P1+5hWNpeUYPTM4d23pb4HOuavBmKQqKQIhK7l+aTizKkTajnzxL0j6qrCfIKPY4RS8A
+         +gma/xq0E5dcr0tB+2QLk42oozQyvI73Diak6kP/xjutAFuapGtQ56lLD2uH2jgUoubQ
+         5xod44SER6yJFjL5aG8NXM1oUkp7/NXH5/HefRjMFw2shQpYBQonfn9QuC9c0o+uXxDK
+         4wyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782482071; x=1783086871;
+        d=1e100.net; s=20251104; t=1782482196; x=1783086996;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=VjHNiP0IoRwlBG7ewKYx5rusZ8lcYYfVVLXImxvlHaA=;
-        b=fTCB9AXT1hNcTsMTLEfI+T7GaGoBdC65uKw+hTGFkMWKoo/KuPtfHvnsm6kVuio2cL
-         QPIkS+XuTk7Z30MguU3W5/NdmZgx4rsLbonxp52c1PHsWyqemfLKzUsFq09edRs/rEdS
-         QOX2OvNs7TtflMooyXLia3/nWxAHqpBtwZIrvjpREcL3DMsQ8kClbOta5Rcyf1c+G0X+
-         5X71sTDZ29+mqh6ujgVCXGNQ6shi7gArTjfw795DoiNGezLDwK9GJm7q6mICYutS3vaZ
-         YJTyNlo7VEjw/bed+ygJTtdlQAP02VLeeO2lwE1tL2ol8DGfFrJo2Tvj9tsgnTPsaIX4
-         ZXdw==
-X-Forwarded-Encrypted: i=1; AHgh+RoeWmZyCfjK5qMA5yCuvqmAhqAO4nR0hdOGP7IHqEiN3JNEp7q1sd17m1TDQUIl4Q6OCJJOQ39gd+d4akOiCAMS@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd8X8Gp2Wz8KyazrVZP1iyLkql+8+xXFvV/LfncA7iRMrS459Z
-	znlza7jP91VSKbi0G1X5n0DnkUWq4jLwSyvrMFFCUjnFIQ7sj/G1r4Hvgnnh9UvQMsCiRkVL9cv
-	JzfHX8G2n2yWvYMLe/yVW8bPwzqkRi+Q=
-X-Gm-Gg: AfdE7cm4e/HZywUFxuJBj0amlETmd97aRVUDcI3dVsPYzgvxT2xtck21ptLdPGhB1a+
-	phVtpacaVLbhSKzvWXlB0VmWP0MPKw7A6w20DUiI2z5sO47M3mgWrT+GHa00aTO0GuIn+Qsa3E+
-	Cpe+uBnxG/U3lhtbdW0++n5Khob8bA8ag6T9fCrhUpHgoNSS082s5it7rNzTBZP87dUz9cjkxEY
-	XneBIjHWt6LcAmjHHDPOeQC/wvliZya6vT4kSsPeeh0y2B8AUaJCA+iDkSqygr94+ko7pcQUhJ4
-	i8RVwvUa9wlMEw/ZHMbFDwCR
-X-Received: by 2002:a05:6214:3213:b0:8db:1179:d180 with SMTP id
- 6a1803df08f44-8e6d8103a36mr123617816d6.23.1782482071286; Fri, 26 Jun 2026
- 06:54:31 -0700 (PDT)
+        bh=j8UgPLpU59EN9jrvEy4338bhTXSBs+KvINqBsOxg3n8=;
+        b=XoJdYq6H/aiVpRYBLBoTjlXwtZPx4TkQQQPyHAbgttw51G4xzUxp5aIVDbJsiujvEU
+         y721uBDH5DhWhHQDQiXRyqQuVIidHrrNrTCbu6Nk708s+sueDGTSpmmJzvmD6i/AhnpA
+         6uEJ33Uq4FrADwQVrRR0UIjVBNMgFozMNspEpvs6+p/ZSI+yGD1LmYPMxre5GnXfuF5C
+         f/eoVZjT5xYkp9jSioc8wakuR3R4YZdO35bp/HE3XiXImQGHS1uft1G6mGOgNakmgVfs
+         BftyaO0+EQ6yfxJ/WmphG7mKYuZi0SSSH9YcKnMDndAssjaJvhkM1wkOR1L2eAlRofVE
+         ZD4g==
+X-Forwarded-Encrypted: i=1; AHgh+Rp0knzhSz7O2unDgxSf1p9jepaNPq0qWDSfAqWt9pBzbOn8h0m4CQgLRnPfUePY0oRGdrUy4gGyERF5usrb2hPJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6lWHubOTXxgtC4l/66p88qCC+3Ox0QbpQ/Etf3Qf1LpU5k9jw
+	Vd1N2lEEeLFiO7nyt+sxFmY9etiQSVcKpk22fbASLl8+BN8I96tb50jZ/b4fod/7FZ+E8mT6Uwp
+	9fml5cBT+nslId3LCmcnSN/Ce9L4IyA4=
+X-Gm-Gg: AfdE7cl8iMc69U2zzsu1w/XLrc+QMHp1b4KEiEI50D2L1WNZ2++JB0SVldsAwi8Faph
+	7uJI2GeYP4y0kOdbwCkqu5aY7qLoYAM3hpTuoh1ANMWqVMTVDRq7EXwALv0exSrwXzRrRYTp/w0
+	tGSm4fqer3pxNxe8C/BzYvkiDDa2GQhC86Ky50DGxqAtubJIIBWvcTU/Dqs9b9P9Ze5oWlKvafw
+	wMqecy1qAQSmUz4tYUd0TfMdX/cDFxpe9VnMTQBx2clUpiKPMPrgnGeYNtSAkwUx+YElIjvDvtx
+	OzAo8FFmZSxxAo5Sal4zL+W5wKDaY/q2+l4=
+X-Received: by 2002:a05:6214:300b:b0:8aa:a025:78e3 with SMTP id
+ 6a1803df08f44-8e6d5fa1841mr110765616d6.6.1782482195752; Fri, 26 Jun 2026
+ 06:56:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260622134933.35773-1-akinobu.mita@gmail.com>
- <20260622134933.35773-2-akinobu.mita@gmail.com> <CAP-5=fVyAskTbcB-pJbcNChq8GJnQ_098EfsnZzcO7O9A-8x4g@mail.gmail.com>
-In-Reply-To: <CAP-5=fVyAskTbcB-pJbcNChq8GJnQ_098EfsnZzcO7O9A-8x4g@mail.gmail.com>
+References: <CAC5umyi0v8Z3Frtr4yL_LRZu9O7wWF1HZfVbutagORde_i-7XQ@mail.gmail.com>
+ <20260623134951.67000-1-sj@kernel.org>
+In-Reply-To: <20260623134951.67000-1-sj@kernel.org>
 From: Akinobu Mita <akinobu.mita@gmail.com>
-Date: Fri, 26 Jun 2026 22:54:20 +0900
-X-Gm-Features: AVVi8CdklkvDlugov6HgfVnIoohUA6wCsjPFgkazexlVbIHTJ002frAvg-Q5_n8
-Message-ID: <CAC5umyj6jXucmjUa2c-QMVxMZMV8wskzzcBAGTm4+C_HtuBTNw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] perf python: Add access to various members of evsel
-To: Ian Rogers <irogers@google.com>
-Cc: damon@lists.linux.dev, linux-perf-users@vger.kernel.org, sj@kernel.org, 
+Date: Fri, 26 Jun 2026 22:56:24 +0900
+X-Gm-Features: AVVi8Cd52BvgGNRDlWuqiJtllEEyQt-RK1HSoMYDsqisgeQtuaev5JOT6AjbT5w
+Message-ID: <CAC5umyj0qTqR0HpHux6+G6bvGCQqtM8CVVXSZSCt66OtJU7+AA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] damo: support perf event configuration
+To: SeongJae Park <sj@kernel.org>
+Cc: damon@lists.linux.dev, linux-perf-users@vger.kernel.org, 
 	ravis.opensrc@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-2026=E5=B9=B46=E6=9C=8824=E6=97=A5(=E6=B0=B4) 3:10 Ian Rogers <irogers@goog=
-le.com>:
+2026=E5=B9=B46=E6=9C=8823=E6=97=A5(=E7=81=AB) 22:50 SeongJae Park <sj@kerne=
+l.org>:
 >
-> On Mon, Jun 22, 2026 at 6:57=E2=80=AFAM Akinobu Mita <akinobu.mita@gmail.=
-com> wrote:
+> On Tue, 23 Jun 2026 22:29:42 +0900 Akinobu Mita <akinobu.mita@gmail.com> =
+wrote:
+>
+> > 2026=E5=B9=B46=E6=9C=8823=E6=97=A5(=E7=81=AB) 0:24 SeongJae Park <sj@ke=
+rnel.org>:
+> > >
+> > > Hello Akinobu,
+> > >
+> > > On Mon, 22 Jun 2026 22:49:31 +0900 Akinobu Mita <akinobu.mita@gmail.c=
+om> wrote:
+> > >
+> > > > This patch set aims to make it easier to specify the perf event set=
+tings
+> > > > proposed for DAMON by Ravi's hardware-sampled access reports patch =
+set [1]
+> > > > from the damo tool.
+> > >
+> > > Seems this patch is built on top of the per-CPU/thread/read/write mon=
+itoring
+> > > patch series [1].  We made a plan [2] to use another user interface, =
+though.
+> > > The plan is, making the interface ready for page table accessed bits =
+based
+> > > monitoring by LPC'26 (milestone 1), and implementing the perf event b=
+ased
+> > > monitoring on top of it, by LSFMMBPF'27 (milestone 2).
+> > >
+> > > So the eventual damo part change for supporting perf event based moni=
+toring
+> > > will be quite different from this series.  I guess you are sharing th=
+is series
+> > > not because you aiming to merge it as is right now, but just for shar=
+ing the
+> > > code with other stakeholders like Ravis, not me?  If I'm not wrong, I=
+ will skip
+> > > this series for now, to focus on the milestone 1.
 > >
-> > This change is necessary to specify the same PMU event selection as the
-> > 'perf record' -e option from DAMON's userspace tools.
+> > Since I will align with the final user interface later, please focus on
+> > the optimal interface for Milestone 1 without worrying about that.
+>
+> Thank you, Akinobu.
+>
 > >
-> > For example, a Python script like the following will allow you to obtai=
-n
-> > the values to be set in the type, config, config1, and config2 members =
-of
-> > perf_event_attr by providing a symbolic event name.
+> > > Please let me know if you want more of my feedback.
 > >
-> > import perf
-> >
-> > if __name__ =3D=3D '__main__':
-> >     evlist =3D perf.parse_events("cpu/mem-loads,ldlat=3D30/P")
-> >     for evsel in evlist:
-> >         print(f"{evsel}: type=3D{evsel.type} config=3D{evsel.config}",
-> >               f"config1=3D{evsel.config1} config2=3D{evsel.config2}")
-> >
-> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > However, even if the interface ends up being completely different from =
+the
+> > current one, I believe that enabling configuration via `damo` using
+> > symbolic event names like this would still require calling the perf
+> > python interface (`import perf`) from damo and modifying the `perf` too=
+l
+> > itself; could you please check if that approach is acceptable?
 >
-> Thanks Akinobu! I agree we should expose more parts of the evsel
-> through the perf python API. I refactored this area recently so that
-> we could better support perf.data file usage (the session API).
-> There's a long series here that is merged enough to mean these changes
-> will need a refactor too:
-> https://lore.kernel.org/lkml/20260419235911.2186050-1-irogers@google.com/
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/python.c?h=3Dperf-tools-next#n2449
->
-> The main change I made was avoiding copying evsels in the python API,
-> as it adds many complications, and switching to reference counting.
-> This means the Python `evsel` can no longer directly access inner
-> variables and now requires an indirection. So in:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/python.c?h=3Dperf-tools-next#n2290
-> ```
-> static PyObject *pyrf_evsel__get_attr_config(PyObject *self, void
-> *closure __maybe_unused)
-> {
-> struct pyrf_evsel *pevsel =3D (void *)self;
->
-> CHECK_INITIALIZED(pevsel->evsel, "evsel");
->
-> return PyLong_FromUnsignedLongLong(pevsel->evsel->core.attr.config);
-> }
-> ```
-> Note how it is `evsel->core` rather than `evsel.core` as it was before.
->
-> I believe you can copy-paste the code and tweak it for config1 and
-> config2, but I'm afraid the previous evsel_attr_member_def approach
-> won't work.
+> I'm bit concerned at having such dependencies.  I'd prefer making DAMON s=
+ysfs
+> interface uses a symbolic names and just use it from damo if possible.  I=
+f that
+> is not possible, could you share more details about why such changes are
+> required?  I'm still lazily delaying studying about perf events, so pleas=
+e bear
+> in mind with me.
 
-Thank you for letting me know.
-I think I will be able to handle it once those improvements are merged.
+Theoretically, it might be possible to initialize `perf_event_attr` within
+the kernel based on the symbolic names of specified PMU events.
+However, doing so would require implementing logic to read
+`/sys/bus/event_source/devices/<pmu>/format/*`, as well as duplicating
+functionality within the kernel that is currently provided by the `perf`
+user-space tools.
 
+However, if we limit processing to only the minimal format, such as
+`pmu/config=3DM,config1=3DN,config3=3DK/`, described in the explanation of =
+the
+`-e` option in `tools/perf/Documentation/perf-record.txt`, it may be
+possible to minimize duplication.
+
+> >
+> > Thank you for your continued excellent work on improving DAMON.
+>
+> Thank you for your grateful contributions, too!
+>
+>
 > Thanks,
-> Ian
+> SJ
 >
-> > ---
-> >  tools/perf/util/python.c | 50 ++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> >
-> > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> > index cc1019d29a5d..3f108b405ee3 100644
-> > --- a/tools/perf/util/python.c
-> > +++ b/tools/perf/util/python.c
-> > @@ -1241,11 +1241,60 @@ static PyMemberDef pyrf_evsel__members[] =3D {
-> >         evsel_attr_member_def(sample_type, T_ULONGLONG, "attribute samp=
-le_type."),
-> >         evsel_attr_member_def(read_format, T_ULONGLONG, "attribute read=
-_format."),
-> >         evsel_attr_member_def(wakeup_events, T_UINT, "attribute wakeup_=
-events."),
-> > +       evsel_attr_member_def(config1, T_ULONGLONG, "attribute config1.=
-"),
-> > +       evsel_attr_member_def(config2, T_ULONGLONG, "attribute config2.=
-"),
-> >         { .name =3D NULL, },
-> >  };
-> >
-> >  static const char pyrf_evsel__doc[] =3D PyDoc_STR("perf event selector=
- list object.");
-> >
-> > +static PyObject *pyrf_evsel__get_freq(struct pyrf_evsel *pevsel, void =
-*closure)
-> > +{
-> > +       return PyLong_FromLong(pevsel->evsel.core.attr.freq);
-> > +}
-> > +
-> > +static PyObject *pyrf_evsel__get_exclude_kernel(struct pyrf_evsel *pev=
-sel,
-> > +                                               void *closure)
-> > +{
-> > +       return PyLong_FromLong(pevsel->evsel.core.attr.exclude_kernel);
-> > +}
-> > +
-> > +static PyObject *pyrf_evsel__get_exclude_hv(struct pyrf_evsel *pevsel,
-> > +                                           void *closure)
-> > +{
-> > +       return PyLong_FromLong(pevsel->evsel.core.attr.exclude_hv);
-> > +}
-> > +
-> > +static PyObject *pyrf_evsel__get_precise_ip(struct pyrf_evsel *pevsel,
-> > +                                           void *closure)
-> > +{
-> > +       return PyLong_FromLong(pevsel->evsel.core.attr.precise_ip);
-> > +}
-> > +
-> > +static PyGetSetDef pyrf_evsel__getset[] =3D {
-> > +       {
-> > +               .name   =3D "freq",
-> > +               .get    =3D (getter)pyrf_evsel__get_freq,
-> > +               .doc    =3D PyDoc_STR("freq"),
-> > +       },
-> > +       {
-> > +               .name   =3D "exclude_kernel",
-> > +               .get    =3D (getter)pyrf_evsel__get_exclude_kernel,
-> > +               .doc    =3D PyDoc_STR("exclude_kernel"),
-> > +       },
-> > +       {
-> > +               .name   =3D "exclude_hv",
-> > +               .get    =3D (getter)pyrf_evsel__get_exclude_hv,
-> > +               .doc    =3D PyDoc_STR("exclude_hv"),
-> > +       },
-> > +       {
-> > +               .name   =3D "precise_ip",
-> > +               .get    =3D (getter)pyrf_evsel__get_precise_ip,
-> > +               .doc    =3D PyDoc_STR("precise_ip"),
-> > +       },
-> > +       { .name =3D NULL, },
-> > +};
-> > +
-> >  static PyTypeObject pyrf_evsel__type =3D {
-> >         PyVarObject_HEAD_INIT(NULL, 0)
-> >         .tp_name        =3D "perf.evsel",
-> > @@ -1255,6 +1304,7 @@ static PyTypeObject pyrf_evsel__type =3D {
-> >         .tp_doc         =3D pyrf_evsel__doc,
-> >         .tp_members     =3D pyrf_evsel__members,
-> >         .tp_methods     =3D pyrf_evsel__methods,
-> > +       .tp_getset      =3D pyrf_evsel__getset,
-> >         .tp_init        =3D (initproc)pyrf_evsel__init,
-> >         .tp_str         =3D pyrf_evsel__str,
-> >         .tp_repr        =3D pyrf_evsel__str,
-> > --
-> > 2.43.0
-> >
-> >
+> [...]
