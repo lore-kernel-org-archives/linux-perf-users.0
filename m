@@ -1,191 +1,225 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB0B3E0234;
-	Fri, 26 Jun 2026 15:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8678B3FA5E7
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 16:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782488319; cv=none; b=ZYqcghOn1+Sxjh+m1LYiaa8Egkud24BZdUYq/F1NowFg43or882dQ3keAkfyqsiKti6m5IhHpTzD4kkHSMIRX/sra2Dm3/zOTSW/TGbm2gulFEsLH6yWH3SUsRsYDhbOCaojMb5hDQI0KlclhJ7FQ5kdE0wpw2u0jAWqWdAST14=
+	t=1782490324; cv=none; b=b32+IyCsvaC4tE6ETIcDFmbU6CcQuolYVkXjJczeE5j97fjh9tMLVflznKn/Sq/PFbpnz8F8vxJyqrLiYbd0yjj2Gz+U585XgvttNhWenhExtzgP+ALi23sMTEpYUKKFIZh4VWfUJy0ChAkkpe5R6PRz476SuApnh7FoDyiLHZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782488319; c=relaxed/simple;
-	bh=M2QWtGBmg9P/yJMY7zTMOQRY99YLRtA2GtYBqmv6fcE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZEf8QmQXU4w3gUtRJlqluCMbHS9sc6RxZt8EOQwFRlXGI+tXeu+CBBwcwLcNmYap58N7NT6RcLt8froc5yMtyM/8tjdiKCNh2Yz355GWDyKVP9wvQN2ZBtHRecULMKPyJNcWp9V5yacy2V5yhbVsimrisBmZkjYOrAV+lG4zfGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=r+a2bVmZ; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1782490324; c=relaxed/simple;
+	bh=X18gDVlZE/nxXXwlVia4aRkdJQboksHh1AonRkRDCPw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h9TRYW1r/xX3EVe+FZ3Zc+PhIh+tza+bybgmMf0LMK3wsjO9T/LfRrOM7gbaHhxu2YX7EWpuqNZUVKmMyPPIeK4pyrwoJYI9ou+nsIFInsNot/INra/gFQClxJEPqGNH1LUiLZlGbmgUacISU08S3GLqkt6WJY4yN3042qKwRMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=s8QNz9qb; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="r+a2bVmZ"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65QFIJCg3555346;
-	Fri, 26 Jun 2026 15:38:35 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="s8QNz9qb"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65QFnnYh3312102;
+	Fri, 26 Jun 2026 16:11:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ieQQ59
-	4hIHktNShyhA33bh90gKxBbfEwMWg/CI4yNN0=; b=r+a2bVmZGpol7sUX8kprQf
-	aze97a9DT4ay2ry5c5vmXNYom0JmtrhtVZIs/M0NSwwHC1lQrVYtcOyFQAYHLC59
-	0IKLhCa+5TmE7abdUH18H2dIgwFwDV+fquwx322YfEIcsPQv5nLrlzGMlVE50qnm
-	BZM95dTzgScDY/cGq97PzuFg01Kds7NiEfCUsXVYDd6i08IPKECI84lFonFCKmKx
-	2nnDeQaCsR5UfzV/pDnj8L3SDQ3ZxiRLAl6MNslNCSnEy1+ufOAuCtwVwRvDfhh/
-	2Kh9dkXv2YyF51F7umF++b3u3gG0Oiest+R8PT3y/JDYB8PRz9zzrfIYb+PXw4sg
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjhr7pkv-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=EP9eH0oRE4eRM9pYXQuyyzmRq3l/3tg5EKZE6KeM8
+	1w=; b=s8QNz9qb241scJe/ztPShoZ5Tu4Emy6yLy3/32F7VA5j62ieCMFLrBA9i
+	IDszEw6U3IaTY0VC+lgpm6MGZssLbcU6/vuI0TyJAlUSlAXur8RKPBlmIC5pt2n0
+	vrUxoR2R/5aTYf9/ubyw4svshPAnrkGmZswJVhmJ0KjgEuzWTzkEjQ3MTg7jJl4d
+	kDQdEpeKhXcAtHMuysihKveNONNF6oBQGDpwaUnj5GLaOtP83X/X80d92fWjISTe
+	5rKoitlv6PPQ7qyl33k88dfwh2fZw8RBt7dbT1hh472RcQs6n1FNLSv/8pjhgxtw
+	tEN1R0aq2oO+WXJ2zZyw4zKar+d1g==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4ewjgt7cma-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jun 2026 15:38:35 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65QFYdto002097;
-	Fri, 26 Jun 2026 15:38:34 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex5jwuvf8-1
+	Fri, 26 Jun 2026 16:11:49 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65QG53jw019219;
+	Fri, 26 Jun 2026 16:11:48 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4ex7w03hg8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jun 2026 15:38:34 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65QFcXZd21561870
+	Fri, 26 Jun 2026 16:11:48 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65QGBivA27132286
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Jun 2026 15:38:33 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AC34F58058;
-	Fri, 26 Jun 2026 15:38:33 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7693158059;
-	Fri, 26 Jun 2026 15:38:31 +0000 (GMT)
-Received: from [9.124.221.251] (unknown [9.124.221.251])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 26 Jun 2026 15:38:31 +0000 (GMT)
-Message-ID: <45ccef84-be0d-4c5f-b686-358ff29a7290@linux.ibm.com>
-Date: Fri, 26 Jun 2026 21:08:29 +0530
+	Fri, 26 Jun 2026 16:11:44 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 86ADD20043;
+	Fri, 26 Jun 2026 16:11:44 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8C0AF20040;
+	Fri, 26 Jun 2026 16:11:40 +0000 (GMT)
+Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.124.221.251])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 26 Jun 2026 16:11:40 +0000 (GMT)
+From: Tanushree Shah <tshah@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
+        Tanushree Shah <tshah@linux.ibm.com>
+Subject: [PATCH v3] perf dso: Fix kallsyms DSO detection with fallback logic
+Date: Fri, 26 Jun 2026 21:40:53 +0530
+Message-ID: <20260626161052.1024439-2-tshah@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf dso: Fix kallsyms DSO detection with fallback
- logic
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: sashiko@lists.linux.dev, Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-References: <20260416091657.578429-2-tshah@linux.ibm.com>
- <20260416110905.3A68AC2BCAF@smtp.kernel.org>
- <714f2022-879e-4f6a-9b1c-cce06be6db65@linux.ibm.com>
- <ajw1-ivLfQo3psZa@google.com>
-Content-Language: en-US
-From: Tanushree Shah <tshah@linux.ibm.com>
-In-Reply-To: <ajw1-ivLfQo3psZa@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=I4VVgtgg c=1 sm=1 tr=0 ts=6a3e9cfb cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=whIH0kqEkjxX7mCK2xEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI2MDEyNiBTYWx0ZWRfX9CZzAd5RhNK6
- CQQLOmFaa8+p0moqmA3EkjmYD8KtrTS8ro479jnLtxFvmxPT5AJG2hyS9c262/jyPY4JUgbvKhm
- tqMoXEZxYyylUSF6/wbDfhuI6YG113ENw4wpili5/NWAoLhVkqr36erc+81iCPxYTX51JnbtzL6
- QImuGjOXWcYN1qJmyHKQgpXwIJmCgpYJf8ovo0T4rbqqoUCN+i25ZV+iLBqdbiBKvw4zZzEsU2j
- FbUzKl+NFDwMfppVAtFH6BOuCIP0qoR0NRPZkeC5DX0CCDtiIGqHiGCgICPg1Va+rUnUS1fU2M+
- w87oWMRXOuKdU/G8Zx3VDfm3O4KCMuPGIkzW4csjeSIG8eifWHsFYg/V4nZGtNJuOnyv0W2+1Ox
- Up+AqatpxZJ6JAr/g7uxZH7DEnfBzjHQQUX+6lohZv6r+MDqp6UVw0O15xNSoOpe9tq0krP6pSa
- pdTlz+JzgBu+Xs8uH+w==
-X-Proofpoint-GUID: VtoDwTUC_2d6qHT2m-k1ios1dQYSiTEy
-X-Proofpoint-ORIG-GUID: KJN2G3GI3YxQtBPMFa1kz4YJEHBOycs7
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI2MDEyNiBTYWx0ZWRfX7Gb+shb/5gBj
- eDCU5YuZqOmVjUmK6oaGCwOdsfPGBQVbirzuOyVAslrls9c2UxJgLaCgVqkf5Vm8cCOeVvTEWmx
- u7fhubWB7/dsTrZACmYlJ8wQV55Cu/s=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI2MDEzMSBTYWx0ZWRfXwU3qr5gqvhsL
+ 0L2FBSCAsbS4OBuk9HMYrJDUuxWkfBzz2yLyDNA4vPF4ms5P6yznhQblX3DjV6vpH5cdRjvEzbH
+ HOB3PPrfIOOtqmH9npKKspAmZ0s0HYqI78lR9l7wt3SvkcfzeM9H1egGW85VT66IsHxGO9E14VR
+ hlkeK7VASpdpwvB0mCsHx5bHeLovCS+SVs+RBiT/teJb06s8B7jDUjOH5NGWPspcqnqzOwUBqEH
+ T0BRaoRYMWQ+5cpYar1XAlB5AcyfTXUEQA3u5HctxrLxFa1fdGEsrBjLlF7em0/hFrwu4/CPVyH
+ SqQxsXwAIMVrHkcNZNfxa0Q58MNeqIhWoQYkYb6NK0TFXaG9GrGwdxZGsYq2DPXWK6D5bp72KYi
+ iA83kSQp41OnWxkahrnKHsFwKRC0T6d/AclH5pztNwqlhZRiwc0gCvwKHBEcLb+giYNJ2Yn01go
+ NsZJZU3JRsK4iV1LrLw==
+X-Proofpoint-GUID: YdKosPuWuGxdbbhI_zyVdQBMCWEFQfxB
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI2MDEzMSBTYWx0ZWRfXzcZokNkqYf6T
+ z3sqJC9qkRAi49WIydSUhi9poWW808eLNUKHSvT/dvw+8n5nvjmPAdR2DfLBJ33yaN1pljoFatH
+ 8i+NZWo5kpQQem+ecw+UO5sd2/ZltoY=
+X-Authority-Analysis: v=2.4 cv=I/lVgtgg c=1 sm=1 tr=0 ts=6a3ea4c5 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=4ZgrmD5STv3GE8aCXdIA:9
+X-Proofpoint-ORIG-GUID: xaxaAKM_F0dEc8ol06I7siiMw_JIhT4N
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-26_03,2026-06-26_01,2025-10-01_01
+ definitions=2026-06-26_04,2026-06-26_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 impostorscore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2606260126
+ lowpriorityscore=0 spamscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606260131
 
-Thank you for the suggestion. The reason strcmp() was not used before 
-was due to different variations of guest kallsyms. I further did a bit 
-more analysis and identified that kallsyms can be in three formats:
+The current kallsyms detection in dso__is_kallsyms() uses the
+dso_binary_type enum which fixes the issue of kallsyms being cached in
+the build-id cache for out-of-tree modules.
 
-"[kernel.kallsyms]"
-"[guest.kernel.kallsyms]"
-"[guest.kernel.kallsyms.<pid>]"
+However, during build-id injection in perf record/inject, dso_binary_type
+has not been explicitly set yet,so dso__binary_type() returns
+DSO_BINARY_TYPE__NOT_FOUND instead of DSO_BINARY_TYPE__KALLSYMS for the
+kernel DSO. The current check then fails to identify it as kallsyms,
+causing build-id symlinks to not be created in ~/.debug/.build-id/ and
+perf archive to fail with "Cannot stat" errors.
 
-I will implement v3 based on this.
+Steps to reproduce the issue:
+1. rm -rf ~/.debug/.build-id
+2. perf record sleep 1
+3. perf archive
 
-Thanks,
-Tanushree Shah
+Fix by falling back to matching long_name against the known kallsyms
+strings explicitly when binary_type is not yet set
+(== DSO_BINARY_TYPE__NOT_FOUND). Use strcmp() for exact matching of
+fixed names and strict validation for guest kallsyms with embedded PID
+to prevent path traversal attacks.
 
-On 25/06/26 01:24, Namhyung Kim wrote:
-> On Thu, Jun 11, 2026 at 06:04:23PM +0530, Tanushree Shah wrote:
->>
->> On 16/04/26 16:39,sashiko-bot@kernel.org wrote:
->>> Sashiko AI review found 2 potential issue(s):
->>> - [High] Path Traversal and Information Disclosure due to `strncmp` matching any prefix.
->>> - [Medium] Incomplete fix: Fallback logic is missing from `dso__is_kcore()` and `dso__is_vmlinux()`.
->>> --
->>>
->>> commit 9ee80283f13c6a0a5235a2add7a94736c1dfcbba
->>> Author: Tanushree Shah<tshah@linux.ibm.com>
->>>
->>> perf dso: Fix kallsyms DSO detection with fallback logic
->>>
->>> This commit fixes an issue where kallsyms DSOs are not correctly identified
->>> during build-id injection because the dso_binary_type is not yet set. It
->>> adds a fallback string matching check against the DSO's long_name.
->>>
->>>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
->>>> index ede691e9a2495..515ab6e95b0e4 100644
->>>> --- a/tools/perf/util/dso.h
->>>> +++ b/tools/perf/util/dso.h
->>> [ ... ]
->>>
->>>> @@ -915,6 +917,14 @@ static inline bool dso__is_kallsyms(const struct dso *dso)
->>>>    {
->>>>    	enum dso_binary_type bt = dso__binary_type(dso);
->>>> +	if (bt == DSO_BINARY_TYPE__NOT_FOUND) {
->>> Since the fallback logic was added here because dso_binary_type(dso) is
->>> DSO_BINARY_TYPE__NOT_FOUND during perf record and inject, do dso__is_kcore()
->>> and dso__is_vmlinux() require a similar fallback?
->>>
->>> Looking at dso__cache_build_id(), it relies on dso__is_kcore() to flag the
->>> DSO for special caching logic. If dso__is_kcore() returns false during
->>> build-id caching, kcore DSOs are treated as regular files, which causes
->>> nsinfo__realpath() to fail and breaks perf archive for kcore sessions.
->>>
->>>> +		return RC_CHK_ACCESS(dso)->kernel &&
->>>> +			((strncmp(RC_CHK_ACCESS(dso)->long_name, DSO__NAME_KALLSYMS,
->>>> +				strlen(DSO__NAME_KALLSYMS)) == 0) ||
->>> Does using strncmp() here allow a path traversal if long_name is
->>> intentionally crafted?
->>>
->>> If a malicious perf.data file contains an MMAP event with a filename like
->>> "[kernel.kallsyms]/../../../../tmp/leak", this prefix check evaluates
->>> to true.
->>>
->>> Could this allow build_id_cache__cachedir() to construct a cache directory
->>> using this malicious path, causing build_id_cache__add() to unconditionally
->>> copy the host's /proc/kallsyms into an attacker-controlled directory?
->> Hello,
->> The current code relies on dso_binary_type to check if its a kallsyms dso.
->> While running perf archive, the code calls dso__is_kallsyms check to create
->> a build-id dir. But till that time, dso_binary_type is not getting set yet.
->> Hence, this patch introduced usage of dso->long_name to check if it is
->> kallsyms. But based on the above review from Sashiko, it seems that this may
->> create a security concern.
->>
->> I tried to check for the possibility to set the dso binary type before
->> dso__is_kallsyms gets called. But, I found that dso binary type is getting
->> set based on dso__is_kallsyms only.
->>
->> So, I am looking for suggestions/approach that we can take here.
-> Can we simply check with strcmp() for the whole string?
-> 
-> Thanks,
-> Namhyung
-> 
-> 
+Fixes: ebf0b332732d ("perf dso: fix dso__is_kallsyms() check")
+Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+---
+v2 -> v3: Replace strncmp() prefix matching with strcmp() for fixed
+          kallsyms names and add is_guest_kallsyms_pid_name() to
+          strictly validate guest kallsyms with PID format, preventing
+          path traversal attacks.
+
+v1 -> v2: Rename DSO__NAME_GUEST_KALLSYMS to DSO__PREFIX_GUEST_KALLSYMS
+          to reflect that it is a prefix, not a full name.
+
+v1: https://lore.kernel.org/all/20260410071225.708005-2-tshah@linux.ibm.com/
+
+ tools/perf/util/dso.h | 57 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 56 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index ede691e9a249..8763e6f65316 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -9,6 +9,7 @@
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include <linux/bitops.h>
++#include <string.h>
+ #include "build-id.h"
+ #include "debuginfo.h"
+ #include "mutex.h"
+@@ -20,6 +21,40 @@ struct perf_env;
+ 
+ #define DSO__NAME_KALLSYMS	"[kernel.kallsyms]"
+ #define DSO__NAME_KCORE		"[kernel.kcore]"
++#define DSO__NAME_GUEST_KALLSYMS		"[guest.kernel.kallsyms]"
++#define DSO__NAME_GUEST_KALLSYMS_PID_PREFIX	"[guest.kernel.kallsyms."
++
++/*
++ * Validate names of the form "[guest.kernel.kallsyms.<pid>]", where
++ * <pid> is the PID of the guest VM and varies per guest, so it
++ * cannot be matched with strcmp() against a fixed string.
++ *
++ * Every character after the fixed prefix must be a decimal digit,
++ * with ']' immediately terminating the digit run and nothing
++ * following it. This rules out '/', "..", or any other character
++ * being smuggled into the name.
++ */
++static inline bool is_guest_kallsyms_pid_name(const char *name)
++{
++	const size_t prefix_len = sizeof(DSO__NAME_GUEST_KALLSYMS_PID_PREFIX) - 1;
++	size_t digits;
++
++	if (strncmp(name, DSO__NAME_GUEST_KALLSYMS_PID_PREFIX, prefix_len) != 0)
++		return false;
++
++	digits = strspn(name + prefix_len, "0123456789");
++	if (digits == 0)
++		return false;
++
++	/* ']' must terminate the digit run, with nothing trailing it */
++	if (name[prefix_len + digits] != ']')
++		return false;
++
++	if (name[prefix_len + digits + 1] != '\0')
++		return false;
++
++	return true;
++}
+ 
+ /**
+  * enum dso_binary_type - The kind of DSO generally associated with a memory
+@@ -914,8 +949,28 @@ static inline bool dso__is_kcore(const struct dso *dso)
+ static inline bool dso__is_kallsyms(const struct dso *dso)
+ {
+ 	enum dso_binary_type bt = dso__binary_type(dso);
++	const char *name;
++
++	if (bt == DSO_BINARY_TYPE__KALLSYMS || bt == DSO_BINARY_TYPE__GUEST_KALLSYMS)
++		return true;
++
++	if (bt != DSO_BINARY_TYPE__NOT_FOUND)
++		return false;
++
++	if (!RC_CHK_ACCESS(dso)->kernel)
++		return false;
++
++	name = RC_CHK_ACCESS(dso)->long_name;
++	if (!name)
++		return false;
++
++	if (!strcmp(name, DSO__NAME_KALLSYMS))
++		return true;
++
++	if (!strcmp(name, DSO__NAME_GUEST_KALLSYMS))
++		return true;
+ 
+-	return bt == DSO_BINARY_TYPE__KALLSYMS || bt == DSO_BINARY_TYPE__GUEST_KALLSYMS;
++	return is_guest_kallsyms_pid_name(name);
+ }
+ 
+ bool dso__is_object_file(const struct dso *dso);
+-- 
+2.47.3
 
