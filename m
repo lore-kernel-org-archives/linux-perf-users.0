@@ -1,97 +1,159 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07AC3EBF04;
-	Fri, 26 Jun 2026 10:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26B13ED12D
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 10:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782468058; cv=none; b=MZObO2rgfoOuMvqLuE4G2dVTretEuo+TaJKkvTDk58k9rOBnygy//cTJpOsOFGH3E/dG5ndxZmq5EvIG7BEtmLrt0c1Mj4h79R3gdBs0qvLgEJrwYVwnJY98RWNDqEtBPeGxNazjzHhM9VWnvHP+OwEnkXgRNONdIQ26F1e3HlM=
+	t=1782469091; cv=none; b=d/wCMN5vm08QjI81GNbCbGocgXBJ5Z52YhzKmWGlaOvylXQE0tQHz/1i3MAhjT1lfGro11tYbQ9qnXd4D+RIwkPpTynckmzOSp9g/oK+VyiSK2zREqQcp1ULBT2GhRZjZkmMRJgOAuKc96xJk3f6vtH+g/InQpzZDxh7HKkKdHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782468058; c=relaxed/simple;
-	bh=UQVMOzVSc1P4F67Vk3YGL4CKtzNcOICf4bkwy2cjU/M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qYdF1/PeownP+r0qiSdQrtpvznM75nPT2cujg4uQHYvN0GIKdwu/i0lT1uGyqlSTmaMWPc4AAoQJ1nlEXMu+ElaPl0MfEs8BgzgWwXo8iaV2Pz7nO9jY/BDsZ3n90EwPWeVUjl4pHVyiXrI6hPISmQNp5ACYc3h5JFkqUjri0Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [117.182.75.66])
-	by APP-03 (Coremail) with SMTP id rQCowACXaZDBTT5qhSXrFQ--.21S2;
-	Fri, 26 Jun 2026 18:00:35 +0800 (CST)
-From: WenTao Liang <vulab@iscas.ac.cn>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	tglx@kernel.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	hpa@zytor.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	WenTao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] fix: x86/events/intel/uncore: discover_upi_topology: inner loop leaks PCI   device references from pci_get_domain_bus_and_slot
-Date: Fri, 26 Jun 2026 18:00:31 +0800
-Message-Id: <20260626100031.31494-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	s=arc-20240116; t=1782469091; c=relaxed/simple;
+	bh=FxDz30n0QguB3ttYJ5ueNZJIba7/0ZM/ZVg0PFm9PNQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=GL31y3UpJj9x4uNKAiNmfmesr6CX43ki648129K6m5IgFvCqq1smNJkfRj0ruI6WowVGtRQbDcu4Dbjw5SaSKr+cTqCEZJCgNg/tavxiabSEj2ZMKNrkPKvF2Tz5bj+sd9ySbXTWEE/6owlc20Uae/EjMyJSicpw/bJyM+BRpv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jB1PkaJ/; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jB1PkaJ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28B181F00A3A;
+	Fri, 26 Jun 2026 10:18:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782469087;
+	bh=P/w8oNcjeONHjzZUE98GFKB0hvKEglbHQw+Gk/LH8es=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=jB1PkaJ/uar+0HbZLivmHZtxaW+Od9im3Y+7rTrAGZe8aC+eLfQA0CLhDRcUZBGT7
+	 qOlESzmcDIzxQnuLwv2DWZiKxveb4TUi72s3iem1iCVFNmzh/6stfKHbTcoHiki40w
+	 ArQjD3ofAIiFWw1ROYvYUWj1l3Pv+/cj94luXAjHJtbG1o5SSGrVL7IdQS8jrsdlmE
+	 QxGO5wU6XztmE+v/YfMdYTYbrjZ5tkXuoKrF/33P7h7u96ffao9s17EN7SV1pdSQjp
+	 09pYKXt7oXJ5ir430YgwXjazPuGa35rQLHRsqrNoFvqPxOKzAZnMFPTR0Q+Hz+5WJA
+	 QVkufnKz11/BA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] fix: x86/events/intel/uncore: discover_upi_topology:
+ inner loop leaks PCI   device references from pci_get_domain_bus_and_slot
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "WenTao Liang" <vulab@iscas.ac.cn>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260626100031.31494-1-vulab@iscas.ac.cn>
+References: <20260626100031.31494-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 26 Jun 2026 10:18:06 +0000
+Message-Id: <20260626101807.28B181F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACXaZDBTT5qhSXrFQ--.21S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KrykuFWfGw1fKw1ktFWUJwb_yoW8JF4fpF
-	WaqFy7Kr1fWas2ga98u3WS9rZFvF4kGF9Yg3yIg34I9wn8Xr17JFW2g3WYga48CrykXr1a
-	y3W2vw48X34UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjTRNJ5oDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgoKA2o+SxkLIQAAsp
 
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [High] The patch fixes a PCI device reference leak in `discover_upi_topol=
+ogy()`, but misses an identical leak in `skx_upi_topology_cb()` within the =
+same file.
+- [High] `uncore_pci_pmus_register()` leaks PCI device references acquired =
+via `pci_get_domain_bus_and_slot()`.
+- [High] Uninitialized variable `ret` is returned from `skx_upi_topology_cb=
+()` if no PCI devices are found.
+--
+
+commit 353e07e70f653f5204fbf8fbdb47ac7e0d92375b
+Author: WenTao Liang <vulab@iscas.ac.cn>
+
+fix: x86/events/intel/uncore: discover_upi_topology: inner loop leaks PCI d=
+evice references from pci_get_domain_bus_and_slot
+   =20
 In the inner for loop, dev is repeatedly overwritten by
-  pci_get_domain_bus_and_slot() without first releasing the previous dev 
-  via pci_dev_put(). The err label only releases the last ubox and dev
-  references, while the references from earlier loop iterations are
-  permanently leaked. Fix by adding pci_dev_put(dev) before the overwriting
-  assignment.
+pci_get_domain_bus_and_slot() without first releasing the previous dev
+via pci_dev_put(). The err label only releases the last ubox and dev
+references, while the references from earlier loop iterations are
+permanently leaked. Fix by adding pci_dev_put(dev) before the overwriting
+assignment.
 
-Cc: stable@vger.kernel.org
-Fixes: fdd041028f22 ("perf/x86/intel/uncore: Factor out topology_gidnid_map()")
-Signed-off-by: WenTao Liang <vulab@iscas.ac.cn>
----
- arch/x86/events/intel/uncore_snbep.c | 1 +
- 1 file changed, 1 insertion(+)
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel=
+/uncore_snbep.c
+> index e1f370b8d065f..9eacc0b3d1212 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -5600,6 +5600,7 @@ static int discover_upi_topology(struct intel_uncor=
+e_type *type, int ubox_did, i
+>  		for (idx =3D 0; idx < type->num_boxes; idx++) {
+>  			upi =3D &type->topology[lgc_pkg][idx];
+>  			devfn =3D PCI_DEVFN(dev_link0 + idx, ICX_UPI_REGS_ADDR_FUNCTION);
+> +			pci_dev_put(dev);
+>  			dev =3D pci_get_domain_bus_and_slot(pci_domain_nr(ubox->bus),
+>  							  ubox->bus->number,
+>  							  devfn);
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 215d33e260ed..cecc1ce0a248 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -5494,6 +5494,7 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
- 		for (idx = 0; idx < type->num_boxes; idx++) {
- 			upi = &type->topology[lgc_pkg][idx];
- 			devfn = PCI_DEVFN(dev_link0 + idx, ICX_UPI_REGS_ADDR_FUNCTION);
-+			pci_dev_put(dev);
- 			dev = pci_get_domain_bus_and_slot(pci_domain_nr(ubox->bus),
- 							  ubox->bus->number,
- 							  devfn);
--- 
-2.39.5 (Apple Git-154)
+[Severity: High]
+This is a pre-existing issue, but while you are fixing this leak here, I
+noticed an identical leak in skx_upi_topology_cb() in the same file.
 
+In arch/x86/events/intel/uncore_snbep.c:skx_upi_topology_cb():
+
+	for (idx =3D 0; idx < type->num_boxes; idx++) {
+		upi =3D &type->topology[die][idx];
+		devfn =3D PCI_DEVFN(SKX_UPI_REGS_ADDR_DEVICE_LINK0 + idx,
+				  SKX_UPI_REGS_ADDR_FUNCTION);
+		dev =3D pci_get_domain_bus_and_slot(segment, bus, devfn);
+
+If type->num_boxes > 1, dev is repeatedly overwritten without calling
+pci_dev_put(dev) on the previous reference. Should skx_upi_topology_cb() be
+updated to include the same fix?
+
+
+[Severity: High]
+This is another pre-existing issue, but looking closely at
+skx_upi_topology_cb() in arch/x86/events/intel/uncore_snbep.c, the ret
+variable is declared without initialization:
+
+	int idx, ret;
+	struct intel_uncore_topology *upi;
+	unsigned int devfn;
+	struct pci_dev *dev =3D NULL;
+...
+	for (idx =3D 0; idx < type->num_boxes; idx++) {
+...
+		dev =3D pci_get_domain_bus_and_slot(segment, bus, devfn);
+		if (dev) {
+			ret =3D upi_fill_topology(dev, upi, idx);
+			if (ret)
+				break;
+		}
+	}
+
+	pci_dev_put(dev);
+	return ret;
+
+If pci_get_domain_bus_and_slot() returns NULL for all iterations, the loop
+completes without executing the if (dev) block, and the function returns the
+uninitialized ret. Could this result in returning stack garbage and treating
+a failed discovery as successful?
+
+
+[Severity: High]
+This is also a pre-existing issue, but I noticed a broader leak involving
+pci_get_domain_bus_and_slot() during uncore PMU registration.
+
+In arch/x86/events/intel/uncore.c:uncore_pci_pmus_register():
+
+			pdev =3D pci_get_domain_bus_and_slot(UNCORE_DISCOVERY_PCI_DOMAIN(unit->a=
+ddr),
+							   UNCORE_DISCOVERY_PCI_BUS(unit->addr),
+							   UNCORE_DISCOVERY_PCI_DEVFN(unit->addr));
+
+			if (!pdev)
+				continue;
+			pmu =3D &type->pmus[unit->pmu_idx];
+			uncore_pci_pmu_register(pdev, type, pmu, unit->die);
+
+It seems the reference-counted pdev acquired here is stored but never relea=
+sed
+during module teardown (such as in uncore_free_boxes() and
+uncore_pci_pmu_unregister()), which would leak the PCI device reference on
+module unload. Does this teardown path need to call pci_dev_put(box->pci_de=
+v)?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260626100031.3149=
+4-1-vulab@iscas.ac.cn?part=3D1
