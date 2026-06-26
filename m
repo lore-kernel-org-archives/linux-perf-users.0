@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D78A3D891B;
-	Fri, 26 Jun 2026 07:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15793DBD4E;
+	Fri, 26 Jun 2026 07:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782457418; cv=none; b=AwB0B33yH5TFsCJ2tuiWQny/xC1Ry2x2tHoVj3PfqP8JOKnZ4e9wCs2GHWlvboe8UsaliHMjM37UfZBoC5vNtHm0axYyJSnza6nQ63XOkwI/xwb6WHOJq1L3i1MJ674sFn3DCWGfAjZj4uaPtFPF6/v90ZVHLdbEfsnuo68kBJc=
+	t=1782457422; cv=none; b=iKthSRSzXxbkLk/of6O9p6s3jLiGUhR3Ax99R9j3qbww9+I87i9yoV73YVOlUjkbcHwc+0mPdHNgkHyVf3qMLY3MjFexSi6aNNUbRGQDw5B4249IrPm7RkGfFelm7VZ6hPV3iMSL/W88Kqn0hj53op4hMV0ot7EQSq5fIGTp9F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782457418; c=relaxed/simple;
-	bh=2HvipvwAAcXT04R5ca2DkEP1ghtY4/tV8z8s6FHHN+U=;
+	s=arc-20240116; t=1782457422; c=relaxed/simple;
+	bh=zSA0kWuZX2xNS8kzAvFpAFd3nbn0GHgMA9ewfWdSkRI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gz7D5bXPYV2qw3Ugd+BZ/8dhTmJ6yHojwA5ItLiTjPk07axEmqIBQT3uWeo3ZuIpaZEVy9+IWE5Q5gA0yCZB1GS9eL1IORtjR9TtptAPizuXm5bMA8Npp8KeXOLS7zcW3DFLDqObLVJdHT9gfVhRxZH+BcXz5QKJhC0g8tvZUrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VWXPXWdA; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=Zs0+2BB7T6Bmg+dAH0gna/dvWNzQiXzU5g6gnl9Eaamo+iK2BEM8HZqm0InVOGFB8wOb+hjGEW9kvyYvIEeFUCaznWchxFse0TQCraFbUeWcYUrdeIeVaDiPB4raabaRmkU4URW0b0OJs+CH6EP4ouzcNx8GpOBYT1K8/XdHFt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Evz58u7g; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VWXPXWdA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Evz58u7g"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782457417; x=1813993417;
+  t=1782457419; x=1813993419;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2HvipvwAAcXT04R5ca2DkEP1ghtY4/tV8z8s6FHHN+U=;
-  b=VWXPXWdAqRvip+3o192e7UuMQ+tvuKHuuqbr/iTY/GkzGrvNXvqS8shs
-   oMF/Wh1+AYhnSThnc+0fCW44MtyUYy294v+obtUMF9kjCSVk88CZiX7Mo
-   fu1PQu2Y51pKFVFs3Kycrnh6tbxglFbou2gtSKhyzmydw0BpND4g4kufw
-   rlVkbMpu4MOo26tEDVC5R1lWmC30JS4vzWm5AEXqn2oPhxwD6DzU0j6bm
-   IbbVrNIYZ/cbPlpgMqaMGqWT8mjOWrXgAWIHIEwn9uqR1ZjViaja2r27A
-   HL1tiI6ILYe4Sz7WTqISPJExaFF9QDcFQu/pQ+5DyrDYcaODNyCdYr9Rk
-   A==;
-X-CSE-ConnectionGUID: 1Wno++FhT4iNUMmW5pQYBw==
-X-CSE-MsgGUID: zmzYJbBCS8WcpzKE0gH/gg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="94397374"
+  bh=zSA0kWuZX2xNS8kzAvFpAFd3nbn0GHgMA9ewfWdSkRI=;
+  b=Evz58u7gWGPZBZhIajRYgn50KlTlaSn5P7a9JPR7uLfnXGemhHUjMHXm
+   GjVjQ+h4hpheeXOUc87k5BE/sNpnXVpXx5FWisD5o1cnzy76cH6wf9kwQ
+   3D1ZD33u7ps49xJGs5FmlG8iQleeiUGshd8UYieOzPMCYU8ugC11KtlpY
+   awEAq8wXsZryRFAOUBLKJN3ebx0IMpaBPnTVzTQ5DhJs3cuJ78PJYBnSP
+   t0l8SwK8DPQUR/xnSDH+pWjRA5e87nf1lrkgD9R/9XF2ukJ0x9ZSxozQo
+   qzm/xOtP7w/d2zsKtAAC2sl+7XrBKKvsyc4VpP15EpL5+R9Ar84d+DLWw
+   g==;
+X-CSE-ConnectionGUID: V7CA1hl4RQyvb0LKB8ZKBw==
+X-CSE-MsgGUID: PyO2XNh2QtSTD4AwX4DmEw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="94397382"
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="94397374"
+   d="scan'208";a="94397382"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 00:03:34 -0700
-X-CSE-ConnectionGUID: /9JydWymQeC88B6FY28iqA==
-X-CSE-MsgGUID: rLyzmucwSVec494NHMbZmg==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 00:03:39 -0700
+X-CSE-ConnectionGUID: kOSMKBJGTAGKyXbKziapwg==
+X-CSE-MsgGUID: WfnISVfaTUOMO1PSfe6evw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="247893446"
+   d="scan'208";a="247893464"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2026 00:03:29 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 26 Jun 2026 00:03:33 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -61,9 +61,9 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH 05/14] perf c2c: add column entry functions for function view
-Date: Fri, 26 Jun 2026 15:03:46 +0800
-Message-ID: <20260626070355.1556721-6-jiebin.sun@intel.com>
+Subject: [PATCH 06/14] perf c2c: add comparison functions for function view sorting
+Date: Fri, 26 Jun 2026 15:03:47 +0800
+Message-ID: <20260626070355.1556721-7-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260626070355.1556721-1-jiebin.sun@intel.com>
 References: <20260626070355.1556721-1-jiebin.sun@intel.com>
@@ -75,17 +75,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add rendering functions for each column in the function view:
+Add sort comparison functions for the function view columns:
 
-- total_stores_entry(): render store count, summing children for L1
-- cacheline_symbol_entry(): render cacheline address for L3 entries
-- iaddr_symbol_entry(): render code address with fold indicators
-- symbol_view_entry(): render symbol name with fold indicators
-- cycles_percent_entry(): render estimated load-cycle percentage for L1
-  (HITM, peer-snoop and other-load cycles)
+- cycles_percent_cmp(): compare by weighted HITM cycle count
+- iaddr_symbol_cmp(): compare by instruction address
+- total_stores_cmp(): compare by store count
+- empty_cmp(): no-op comparator for display-only columns
 
-Each entry function handles the 3-level hierarchy by checking
-parent_he depth to decide what to display.
+Use overflow-safe (a > b) - (a < b) pattern for unsigned
+comparisons in cycles_percent_cmp() and total_stores_cmp().
 
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -103,147 +101,90 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/ui/browsers/c2c-function.c | 132 ++++++++++++++++++++++++++
- 1 file changed, 132 insertions(+)
+ tools/perf/ui/browsers/c2c-function.c | 75 +++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
 diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
-index d718cab6537d..5393f603c864 100644
+index 5393f603c864..172e1aa86eca 100644
 --- a/tools/perf/ui/browsers/c2c-function.c
 +++ b/tools/perf/ui/browsers/c2c-function.c
-@@ -183,6 +183,138 @@ static __maybe_unused u64 hist_entry__child_stores(struct hist_entry *he)
- 	return sum;
+@@ -315,6 +315,81 @@ cycles_percent_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	return ret;
  }
  
-+static __maybe_unused int
-+total_stores_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		   struct hist_entry *he)
++/*
++ * cycles_percent_cmp - Comparison function for cycles percentage sorting
++ */
++static __maybe_unused int64_t
++cycles_percent_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++		   struct hist_entry *left, struct hist_entry *right)
 +{
-+	struct c2c_hist_entry *c2c_he = container_of(he, struct c2c_hist_entry, he);
-+	int width = c2c_width(fmt, hpp, he->hists);
-+	u64 total;
++	struct c2c_hist_entry *c2c_left = container_of(left, struct c2c_hist_entry, he);
++	struct c2c_hist_entry *c2c_right = container_of(right, struct c2c_hist_entry, he);
++	u64 cycles_left, cycles_right;
 +
-+	/* L1 shows the sum of sharing-function stores; L2/L3 show their own. */
-+	total = he->parent_he ? (u64)c2c_he->stats.store : hist_entry__child_stores(he);
++	/* Cycles Percent is only shown for level-1 entries; others compare equal. */
++	if (left->parent_he || right->parent_he)
++		return 0;
 +
-+	return scnprintf(hpp->buf, hpp->size, "%*" PRIu64, width, total);
++	cycles_left = c2c_hist_entry__cycles(c2c_left);
++	cycles_right = c2c_hist_entry__cycles(c2c_right);
++
++	return (cycles_left > cycles_right) - (cycles_left < cycles_right);
 +}
 +
 +/*
-+ * cacheline_symbol_entry - Render cacheline address for function view
++ * iaddr_symbol_cmp - Comparison function for instruction address sorting
 + */
-+static __maybe_unused int
-+cacheline_symbol_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		       struct hist_entry *he)
++static __maybe_unused int64_t
++iaddr_symbol_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++		 struct hist_entry *left, struct hist_entry *right)
 +{
-+	int width = c2c_width(fmt, hpp, he->hists);
-+	char buf[24];
-+	u64 addr;
++	u64 left_iaddr, right_iaddr;
 +
-+	/* Only show the address on level-3 cacheline entries. */
-+	if (!he->parent_he || !he->parent_he->parent_he || !he->mem_info)
-+		return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
++	/* IAddr is hidden for level-3 cacheline entries; they compare equal. */
++	if ((left->parent_he && left->parent_he->parent_he) ||
++	    (right->parent_he && right->parent_he->parent_he))
++		return 0;
 +
-+	addr = cl_address(mem_info__daddr(he->mem_info)->addr, chk_double_cl);
-+	scnprintf(buf, sizeof(buf), "0x%" PRIx64, addr);
++	left_iaddr = hist_entry__iaddr(left);
++	right_iaddr = hist_entry__iaddr(right);
 +
-+	return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
++	/*
++	 * Descending by instruction address (same direction as sort__iaddr_cmp(),
++	 * which also returns r - l): the expression is +1 when left < right.
++	 * Uses hist_entry__iaddr(), which falls back to he->ip when mem_info is
++	 * NULL, so it matches what iaddr_symbol_entry() displays.
++	 */
++	return (left_iaddr < right_iaddr) - (left_iaddr > right_iaddr);
 +}
 +
-+/* Render the code (instruction) address for level-1 and level-2 entries. */
-+static __maybe_unused int
-+iaddr_symbol_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		   struct hist_entry *he)
++static __maybe_unused int64_t
++empty_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++	  struct hist_entry *left __maybe_unused,
++	  struct hist_entry *right __maybe_unused)
 +{
-+	int width = c2c_width(fmt, hpp, he->hists);
-+	int iaddr_width, ret;
-+	char buf[24];
-+	u64 addr;
-+	char folded_sign;
-+
-+	/* Hide for cacheline (level-3) entries. */
-+	if (he->parent_he && he->parent_he->parent_he)
-+		return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
-+
-+	addr = hist_entry__iaddr(he);
-+
-+	folded_sign = he->has_children ? (he->unfolded ? '-' : '+') : ' ';
-+	ret = scnprintf(hpp->buf, hpp->size, "%c ", folded_sign);
-+
-+	iaddr_width = width - ret;
-+	if (iaddr_width <= 0)
-+		return ret;
-+
-+	scnprintf(buf, sizeof(buf), "0x%" PRIx64, addr);
-+	ret += scnprintf(hpp->buf + ret, hpp->size - ret, "%*.*s", iaddr_width, iaddr_width, buf);
-+	return ret;
++	return 0;
 +}
 +
 +/*
-+ * symbol_view_entry - Render symbol name for function view with expansion indicators
++ * total_stores_cmp - Comparison function for total stores sorting
 + */
-+static __maybe_unused int
-+symbol_view_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		  struct hist_entry *he)
++static __maybe_unused int64_t
++total_stores_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
++		 struct hist_entry *left, struct hist_entry *right)
 +{
-+	int width = c2c_width(fmt, hpp, he->hists);
-+	int sym_width;
-+	int ret;
-+	char symbuf[512];
-+	char folded_sign;
++	struct c2c_hist_entry *c2c_left = container_of(left, struct c2c_hist_entry, he);
++	struct c2c_hist_entry *c2c_right = container_of(right, struct c2c_hist_entry, he);
++	u64 left_store, right_store;
 +
-+	/* Hide Symbol for cacheline entries */
-+	if (he->parent_he && he->parent_he->parent_he)
-+		return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
++	/* Match total_stores_entry(): L1 sums child stores, L2/L3 use their own. */
++	left_store = left->parent_he ? (u64)c2c_left->stats.store :
++				       hist_entry__child_stores(left);
++	right_store = right->parent_he ? (u64)c2c_right->stats.store :
++					 hist_entry__child_stores(right);
 +
-+	folded_sign = he->has_children ? (he->unfolded ? '-' : '+') : ' ';
-+
-+	ret = scnprintf(hpp->buf, hpp->size, "%c ", folded_sign);
-+
-+	sym_width = width - ret;
-+
-+	if (sym_width <= 0)
-+		return ret;
-+
-+	/* sort_sym.se_snprintf is statically set and never cleared. */
-+	sort_sym.se_snprintf(he, symbuf, sizeof(symbuf), sym_width);
-+
-+	ret += scnprintf(hpp->buf + ret, hpp->size - ret, "%-*.*s", sym_width, sym_width, symbuf);
-+	return ret;
-+}
-+
-+/*
-+ * cycles_percent_entry - Render cycles percentage column
-+ */
-+static __maybe_unused int
-+cycles_percent_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		     struct hist_entry *he)
-+{
-+	struct c2c_hist_entry *c2c_he;
-+	int width = c2c_width(fmt, hpp, he->hists);
-+	u64 fn_cycles, total_cycles;
-+	char folded_sign;
-+	double pct;
-+	int ret, pct_width;
-+
-+	/* Hide Cycles Percent for child functions and cachelines. */
-+	if (he->parent_he)
-+		return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
-+
-+	c2c_he = container_of(he, struct c2c_hist_entry, he);
-+	fn_cycles = c2c_hist_entry__cycles(c2c_he);
-+	/* Populated by build_function_view_hierarchy() once the L1 tree is built. */
-+	total_cycles = c2c_ext.total_cycles;
-+	pct = total_cycles > 0 ? (double)fn_cycles / total_cycles * 100.0 : 0.0;
-+
-+	/* Add folded sign only for level-1 entries */
-+	folded_sign = he->has_children ? (he->unfolded ? '-' : '+') : ' ';
-+	ret = scnprintf(hpp->buf, hpp->size, "%c ", folded_sign);
-+
-+	pct_width = width - ret;
-+	if (pct_width <= 0)
-+		return ret;
-+	ret += scnprintf(hpp->buf + ret, hpp->size - ret, "%*.2f%%", pct_width - 1, pct);
-+	return ret;
++	return (left_store > right_store) - (left_store < right_store);
 +}
 +
  int perf_c2c__browse_function_view(struct hists *hists __maybe_unused)
