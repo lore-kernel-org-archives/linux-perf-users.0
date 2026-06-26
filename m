@@ -1,148 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07998362130
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 07:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28C2362130
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 07:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782458036; cv=none; b=P2emkW95PNXPOwO88vm66riVwnMQmBCqmEYL+YuA39md/S0q1TKguSam7YXhN+UG6nYMH8eH6DzQJq5yLcnxQqYHrtX1GkRzboQigwUZ4l+iZ1XaKEFK9EIDf+LzzJZMIkRyVf376Z8towALVCPCLFIQay3rdV9avy2TL1TBmls=
+	t=1782458091; cv=none; b=RTcgxufV25prJmfzVFarVB2V3oynqWvG1F+md8uGyfiE2KKpVCXnGYyCta34+73WWgmLsxLbCciTIW88FAqMO3DlnJ+AAq3vdJXmMDXAFVZLhbqwReBr7dl9qfdYV/DqyVyrBXEjYeuMpQC6lxLGpple/zG2yzuDgNAPkX2P2lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782458036; c=relaxed/simple;
-	bh=z2Wvh6fSVJlD5kRwsiEyvbicptmQWKkDMz34bhM3hbA=;
+	s=arc-20240116; t=1782458091; c=relaxed/simple;
+	bh=nJwfv+KYXFm6EdCf8y4OiuuLF9VL9/m4vroghJ+aJ0I=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=oILbBd7RH23KizXnY3S2AlaAZ/Dc5gtyPzreamota2IxwKngCG9ks6INrc4pvtwrvlYXs+sKlZi2uduloz+f+XKLavCFI+A95bfn+RYRElct2zAP5RZb9nga0ZAP+RvbTNdQATEv516z4wbz0ZaL9A3y1XMD8ClUdq045+B0OFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UeSAixv0; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YORJfEhkFwUCiASbiz/+DekAQP01MFK19rBcxIKmEOz7pIzxE8MNgo9R4tTZ6+G0/gCI0uSPQbWtmh0Y3rnU64+6WNn92XEVGMOBP9ZDmFpgrddXY6Lo0vCID7dIlZF8hW65BnBxbX7wLMj8tDv1MlW7F9akSeF0R6yRu3Qf7oE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DF6kRi4H; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UeSAixv0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3931C1F000E9;
-	Fri, 26 Jun 2026 07:13:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DF6kRi4H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0CC1F000E9;
+	Fri, 26 Jun 2026 07:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782458033;
-	bh=/P76opxal01Y/GuKuRHJbwC1oJA84JnKjiCktEym7Ng=;
+	s=k20260515; t=1782458090;
+	bh=+9xCvj9nnJhIAw2/IXynkgTiWYV3mXW1gZFNlgto8os=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UeSAixv0coiZAQ3VDTxiQkfy9e9dEfVJ/1pB+HMzKsbeIAnbtCTyqWtTJ9jpP8vih
-	 5WLYYbM+5tyQM9f1+uSk0odcZyxA9kPqtZfGPLOkqJmphRzmvA5LzItzDF2fjI/Hd/
-	 s81OKdgYwVBNzsCsluEW67vAT5KmhEF63OKIb5gl0CzKPE5PF4ZSuaGLAUux61ntJ4
-	 x8cB3RsMyVvgHDz8yBGrkJHwn8pIOHxR/NtZ0UH9eR4iEl9Tnsumq+CIMf058IaoTZ
-	 zAzTWT2nOg6S53/sovRlUhq8tb/NpvXrFCJawUr89JxNyc63iEWVEoUf6BaAViOriP
-	 ZzH+dZRPTt/wA==
+	b=DF6kRi4HZMrrer9n2NojGXsobV5cxe2RNMXe0evauQx1S4JGwWgh5h85XBjtqsZEF
+	 caeAPlJkZcQjcgpCxaO35UCcgcBQXr+f1JyEWTEW+qjyC/sXiWrYSKDVBwg8maOCSG
+	 zbjMidvqmyiZS7tHSo41JLTiusX5DyZjvmPYaPbIX22sbZ3hXqA+voIA2+XLW+LerE
+	 Cg+aRXf8Tuq9+Fn7Vur/rNRgJxJv/jYdZqkwOZS/4tgI7admRvdy7zjJlyxLMtinoX
+	 zHIsmaPPj6kaBC2V1jU25eUxYa7j8G/seEA61hkqg3nFyjIfj1h9wKpigptuEyfcay
+	 Up3NutFECxr3A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 01/14] perf c2c: extract shared data structures into
- c2c.h
+Subject: Re: [PATCH 03/14] perf c2c: add function view type definitions and
+ helpers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jiebin Sun" <jiebin.sun@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260626070355.1556721-2-jiebin.sun@intel.com>
+In-Reply-To: <20260626070355.1556721-4-jiebin.sun@intel.com>
 References: <20260626070355.1556721-1-jiebin.sun@intel.com>
- <20260626070355.1556721-2-jiebin.sun@intel.com>
+ <20260626070355.1556721-4-jiebin.sun@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 26 Jun 2026 07:13:52 +0000
-Message-Id: <20260626071353.3931C1F000E9@smtp.kernel.org>
+Date: Fri, 26 Jun 2026 07:14:49 +0000
+Message-Id: <20260626071450.3B0CC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Missing feature fallback inline stubs for SLANG-dependent functi=
-ons in header.
-- [Medium] Asymmetric memory management API leading to potential resource l=
-eaks.
-- [Medium] Global namespace pollution with generic function names.
+- [Medium] The `symbol_name_equal` helper relies on host-bound `arch__compa=
+re_symbol_names()`, which breaks cross-platform analysis for the c2c functi=
+on view.
 --
 
-commit e451cf21befaafcbe2925718151023dd5ccba2cc
+commit a7beef2e1248ae5cd6dc127b26c6803a87eb9dd4
 Author: Jiebin Sun <jiebin.sun@intel.com>
 
-perf c2c: extract shared data structures into c2c.h
+perf c2c: add function view type definitions and helpers
 
-This patch moves c2c_hists, compute_stats, c2c_hist_entry, and perf_c2c
-structure definitions from builtin-c2c.c into a new shared header c2c.h.
-This allows the upcoming function view browser to reuse these types.
+Add the foundational type definitions and helper functions for the
+function view browser.
 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index c9584dbedf77a..33271554e354b 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
+> diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
+rs/c2c-function.c
+> index 040266288be3d..dbc912a4a242b 100644
+> --- a/tools/perf/ui/browsers/c2c-function.c
+> +++ b/tools/perf/ui/browsers/c2c-function.c
 [ ... ]
-> @@ -141,9 +76,9 @@ static const struct option c2c_options[] =3D {
->  	OPT_END()
->  };
-> =20
-> -static struct perf_c2c c2c;
-> +struct perf_c2c c2c;
-> =20
-> -static void *c2c_he_zalloc(size_t size)
-> +void *c2c_he_zalloc(size_t size)
->  {
->  	struct c2c_hist_entry *c2c_he;
+> +static __maybe_unused inline bool symbol_name_equal(struct symbol *a, st=
+ruct symbol *b)
+> +{
+> +	return a && b && arch__compare_symbol_names(a->name, b->name) =3D=3D 0;
 
 [Severity: Medium]
-By exporting c2c_he_zalloc(), is there a risk of memory leaks since a
-corresponding free function is not exported?
+Does this break cross-platform analysis for the c2c function view?
 
-Looking at the rest of c2c_he_zalloc() in builtin-c2c.c, it allocates sever=
-al
-sub-structures:
+Calling arch__compare_symbol_names() relies on a weak symbol bound to the h=
+ost
+architecture at compile time, since files in tools/perf/arch/ are condition=
+ally
+linked based on the build machine.
 
-    c2c_he->cpuset =3D bitmap_zalloc(c2c.cpus_cnt);
-    ...
-    c2c_he->nodeset =3D bitmap_zalloc(c2c.nodes_cnt);
-    ...
-    c2c_he->node_stats =3D calloc(c2c.nodes_cnt, sizeof(*c2c_he->node_stats=
-));
+If a user runs perf c2c on an x86 host to analyze a perf.data file recorded=
+ on
+PowerPC, this falls back to strcmp(). Can this result in failing to correct=
+ly
+group identical symbols that have architecture-specific variations (like
+PowerPC's .my_func vs my_func)?
 
-Any external module (like the new function view) that uses this allocator
-won't have an encapsulated way to clean these up, forcing manual duplication
-of the teardown logic to avoid leaks.
+Should this dynamically query the e_machine of the analyzed perf.data file
+instead of relying on host-bound architecture functions?
 
-[ ... ]
-> @@ -1928,7 +1816,7 @@ static struct c2c_dimension *dimensions[] =3D {
->  	NULL,
->  };
-> =20
-> -static void fmt_free(struct perf_hpp_fmt *fmt)
-> +void fmt_free(struct perf_hpp_fmt *fmt)
->  {
->  	struct c2c_fmt *c2c_fmt;
-> =20
-> @@ -1936,7 +1824,7 @@ static void fmt_free(struct perf_hpp_fmt *fmt)
->  	free(c2c_fmt);
->  }
-> =20
-> -static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-> +bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-
-[Severity: Medium]
-Could the removal of the static keyword here lead to symbol collisions?
-
-Since fmt_free() and fmt_equal() lack a subsystem prefix (like c2c_ or
-perf_c2c_), exporting these generic names to the global namespace increases
-the risk of collisions during static linking or Link-Time Optimization with
-other perf tool objects.
-
-> diff --git a/tools/perf/c2c.h b/tools/perf/c2c.h
-> new file mode 100644
-> index 0000000000000..3e974dd1d7ee6
-> --- /dev/null
-> +++ b/tools/perf/c2c.h
-[ ... ]
-> +#ifdef HAVE_SLANG_SUPPORT
-> +int perf_c2c__browse_cacheline(struct hist_entry *he);
-> +#endif
-
-[Severity: Medium]
-Should this header provide a fallback stub for perf_c2c__browse_cacheline()
-when HAVE_SLANG_SUPPORT is not defined?
-
-The perf subsystem build guidelines require header files to provide
-compatible dummy inline stubs (e.g., returning -ENOTSUPP) when feature
-defines are absent. Omitting the #else block here might lead to missing
-functionality or build breakages on systems lacking SLANG.
+> +}
+> +
+> +static __maybe_unused inline u64 hist_entry__iaddr(struct hist_entry *he)
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260626070355.1556=
-721-1-jiebin.sun@intel.com?part=3D1
+721-1-jiebin.sun@intel.com?part=3D3
