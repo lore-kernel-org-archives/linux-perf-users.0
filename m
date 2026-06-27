@@ -1,201 +1,218 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED2616DEB1
-	for <linux-perf-users@vger.kernel.org>; Sat, 27 Jun 2026 01:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782525006; cv=pass; b=KX6zj2S8h0jp3pkLV9mGB8g3FlhroWSYlAClVDwnhcWM4QRZB6deJw366XU61FdO1lWuvTokuovE6yNXm00JxvBVd2932K1TzRadaxXRTmB5/Lji2hZFD01xraoWcehF5Vck1dbK4k//jL5DXsdq6/Rulf/rLd9dOPjEMjiYLmE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782525006; c=relaxed/simple;
-	bh=28SzcZB63EPANLQAGb5GhL6Vgwx4XoM3Z6Z+icV3TBM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=boMou+npEBOFU3axDgFVOCx93mT/TLUcb/Vx7jg0S9p0RQvopbQE681zQBoPVtOIH2soKWj0P7Cnw/L4c8ZmmrFBbgygfkpgsjB1xxg0rw3tyg8ss/90aHAH8S8CCMN9PEf1ZEgEi4K1sNmBAg8oLwyhHeSAadSAG9RF7+5ftrI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HdjoS/wj; arc=pass smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBE41A262D
+	for <linux-perf-users@vger.kernel.org>; Sat, 27 Jun 2026 09:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782551045; cv=none; b=ttIwNsd3mW9FtxdrJ6svIq5lQ+U4+jij4Pe7fCk/k8oU0+ZwRCwhAhzUgRA3cwscl1RHNTDpJ6TH12OkoBSmS8+J02fOZOwgbH5UspD5lWL3/YgzSoVnD5gNsiscshAFthQBu1sau/MMl8Bl8zkkhOYRF7VwdN7UlCOoVsa0D2g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782551045; c=relaxed/simple;
+	bh=b99gTXKBE9A3gI1wUV1zGId7yOTu6S5cJu8EFno58kk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tEyaXiTKwWG587ML6aTKPoRZkV+LWjxd5sudBQ3YfnKTvtSpmXlEIBHtO94ol7i+P/EolI1fpfBWNUvt8qAPNd5v6I+xN//dvIffFJB3OFU1mAdrkc4fctSIMHqyUpF3gdHRJHJXFovLGZEBMX35EcR0BAtsnAgmiZ1xk66Mkc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oRkyWLZR; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HdjoS/wj"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2c9b2ac97cdso2025ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Jun 2026 18:50:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782525005; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ZvN5TnHWAyvdJRQjXwESb3SgfO3KUGBlFni3PN6JW2IAWhbobccjgWdJufQvhy+AfZ
-         SQVWc1Y7OVhV/khSpfBdWdMgC0HvmNGjm77mALd+sUS5Y1cb9vIiEpTtslQKliu+U3gK
-         fiDTZohGPFiRihEFiydLa6JuOb2eZBKCsoYZKhgroEd55swu4cbkHUznpVn5ZUXWggwG
-         AG25L5inM5GBSV9O/Dl1X6T951uvzZjBfsXq+UFKHYCkrwol5Aa9Und4Xza27qyp6KGT
-         2g3lduR8D+dxzlcU+bWTxW8C5eUhoQXSAxHzrFN02+Wod2EB659H/YQEGq7pPhfWtcH7
-         bqaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Ry0pIlmRrwoIT1artIhbtGBHW8BSI1ot0gUlYplyYsM=;
-        fh=Nfcfnc6llN6k49u4tpG3NcotVK1JcZQHjaHIqDSRiqE=;
-        b=FrZ8H1RTsbpZqnahAuRJq89G9EP0U/ZY5wuhopqjhw6zknXPe85+4gP0udmrBSuK0k
-         8GeYrd2YemJqoNcZOvLBeaQ3RMcZhuHqFcXQPt7kzHJr6v15WiQMPJsNjmw15xLN+w7i
-         oE+T7qQ4yDkh5osVswh5eFVMSLb2dVc7Pqk1xWOi2qezb3i+KJxCBscZOaGgiRRLb+9N
-         /LA8xh7W/a/WqumGeZ60geVWm/00oj3muTGvcHTH15pF97oFiT7nWeNKtSiFBcWFNsbG
-         6nzLPav92vQ+BNmfKgUe9mkjnOB/yILw9Ex6+zrxsoAwc1wQvBfVWwySUeoL6lc0dCP5
-         ANzg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782525005; x=1783129805; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Ry0pIlmRrwoIT1artIhbtGBHW8BSI1ot0gUlYplyYsM=;
-        b=HdjoS/wjU9Au8RvmnA2yqmvMP8UPGmqsD5Pa6oB6nxVrTZ4bo7oRo0Rn1NwJ1gSJcW
-         qoKm5pR54XQeQ0EztYl0ZnimhTmpjhDvuvpkgXmpi1slGjjneHuLIxuHoRBF6UL+bBs8
-         8o3NbZSEmf64ZQ1Urna1dOChnvQSC2iyokoq8BsG11qwcdx2sqz/0ruEw9i9KVq0ZTpV
-         MObhNGoX/UG/nbgiTemibiId6csU1gqfp0jvpMEOPKQmC2ljcyrX/gEXDw9G5peCMsjO
-         vs9lyH4mmh2+p/UQQSMotYW7/kucBnyEttYXDoioaTnWI1WUWPlBapya0eGfpqwauDl9
-         chZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782525005; x=1783129805;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Ry0pIlmRrwoIT1artIhbtGBHW8BSI1ot0gUlYplyYsM=;
-        b=Jguaj/hzDkwGL9V1M89m2DdOPBoCIGi/FQdaiZLc6GlCshPIpLJS16NvIsz3y0GRTJ
-         F4/HXc0X9gZUY+Tu7vcBhkjN2lQsWyOoH+6FiLx03z+lfSsDA4gf23lT7QImyMEvt+rf
-         VZTBaTVUTcGpsV1e4kO7PMpwBLq29i7VselFncRBgKQVeP082CpphjnUM6+837HGWPDP
-         w5ye5q+H4f3oCNGusYWkOsgmXh1Uh6YsDKaLz8UBSdeJNe3KwCQ2wVTTck2rYQQA7RDQ
-         aM5oPQbZ3VNa6yd1F4A2sg4bK8IeC0AtwTXgCRYkldZRxX1d8G61qY0zesedPfAOaysU
-         xGzg==
-X-Forwarded-Encrypted: i=1; AHgh+Rpho9ziqIIuPUJrtECEyXNi0f6CRHeJ1pfwgWuM54CYsZAJVKYMax2lfroNZsBjPr3Om1KRZ3zWUwybk7p3wriL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVEcykPb65iENOvNHVL0PW6RauP8l1GTEaoOAQrHM5UMjH4LDc
-	Vhd70fKVtTt2KY9x9fQj3FbrckD+auPY5aCmI/6UmL8nN45k89Y27ECdIdBx6HUlpcXTiVpt8c3
-	890FssqtWHOX2vYj3aBIotsdOam7S/QHXid9A+Zfx
-X-Gm-Gg: AfdE7cm3i/ezvxiQUK/wz9TC7Uatmi8NE4mVhiYhW6DSrlxXAx2mdGCc1riFGTjchDn
-	szgS4crq+2/OH5KJaTqHfMg3hE/ywtxVkirm7hyjtrSxq/AAzw1VYGx0CQZmZS5HzBZzqpfigPp
-	MQjqgEGZMbwxTLC7rA6RPII0Gs0LCYJ4zyRNLZKVR+ZNHxKXZpQsjzT6oDkLrGmyedxGahYiqnH
-	hpW0kc69N6haAq/RhgdCmF2jTt6TAz6uVLcpSVPaaZ4AqEIAuNGufWd3VFMfWjKKLxmdbyeBw==
-X-Received: by 2002:a17:903:184f:b0:2c6:cbcb:bc72 with SMTP id
- d9443c01a7336-2c9ae78a3c0mr978305ad.23.1782525004208; Fri, 26 Jun 2026
- 18:50:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oRkyWLZR"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65R3SgR4635123;
+	Sat, 27 Jun 2026 09:03:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=R3oxmrHEu3DxHUyIeRYPRcYft4luqjoeznjd6iV4x
+	yA=; b=oRkyWLZR5WsJvMRfEBVTu2+iaNORJneGe9+HS54d2kcKOoew3wm7An8hc
+	Uyy40Y4HpfyLZ33wyG+s8+My9zCKXd9UCjjBOSwtXIX2ByooveNaY/8jFXLEvRTd
+	P0PYH2MJwiy+xpQYp0jwvpGS9L3lsqJjGssH5ONbQgIUPjOaGkcJDPMP6Sf0bafn
+	fPpJHnX6AVaiZeuboh/rhcpB+vf91FzB0YuclOnz1jqTdnMOOuWrbJYwiCmC3RGs
+	Pz7Y0/2oGibTR+telA33oRCUpO+M8HdWh4HUAavnbhfL9SmoenzPsjN4mxY8jqN1
+	kljxpL1HblJ3CNxVrh/LK1xWns1Tw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26n590yg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 27 Jun 2026 09:03:50 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65R8nj9w018731;
+	Sat, 27 Jun 2026 09:03:49 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex66kpn5v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 27 Jun 2026 09:03:49 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65R93jAb28967370
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 27 Jun 2026 09:03:45 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 38BE72004E;
+	Sat, 27 Jun 2026 09:03:45 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B12FD20040;
+	Sat, 27 Jun 2026 09:03:40 +0000 (GMT)
+Received: from Mac.ibm.com (unknown [9.39.21.58])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 27 Jun 2026 09:03:40 +0000 (GMT)
+From: Shivani Nittor <shivani@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
+        irogers@google.com, namhyung@kernel.org, ravi.bangoria@amd.com
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
+Subject: [PATCH v3] perf scripts: Add configurable sorting option to powerpc-hcalls
+Date: Sat, 27 Jun 2026 14:33:33 +0530
+Message-ID: <20260627090334.67847-1-shivani@linux.ibm.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260612012413.3253516-1-irogers@google.com> <26291bce-9be4-4edc-9dc5-4c685d9811c8@huawei.com>
- <CAP-5=fWY35hNSi8uNjX95TnDMmC3Pek9B7Yaf6Ax0ty_6ZtmCQ@mail.gmail.com> <a9f25a27-5f71-4d64-a42c-ef9c7ed8107b@huawei.com>
-In-Reply-To: <a9f25a27-5f71-4d64-a42c-ef9c7ed8107b@huawei.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 26 Jun 2026 18:49:52 -0700
-X-Gm-Features: AVVi8CfuH3pKbrkcfAdpZxtxEb-BDBm6Fri-r3mT8dvEBOzDdvUe-2s7L9-LpdA
-Message-ID: <CAP-5=fUrRvBuJ93e=QzDrE9OiVEoOQng_WLRU6wr_iF_r40Hzg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf pmu: Recognize default_core as a core PMU in more places
-To: Qinxin Xia <xiaqinxin@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI3MDA3NSBTYWx0ZWRfX8GHrVINKo/rc
+ 82v3sE7H3b1ZbSB/zF4OQitqS9ST0S4mr63QAtAWWo/7ifOkCzqiKn55zRodV1MYJFPWOIxLUmF
+ JvYYB5lkkG4kt41Y3txXR9y+DhgJGkMqBhqVqb2lU2PlVInjfcrEM/FNTAUtXP6OzltyY69P/Nk
+ QZvUXPOalr2W2THhNSeiNqtPd0o5Xs7HnIE1K3jHi21o+pscyjH/Axn7g9Wx4neNVU9rRaVLXcX
+ fpwig9JOGuIOv39TziwkuTPIih0QB1uaad9s82mQ+grlII9P6HgW8I78N5NyfD/2KibpCZUu0yh
+ WhA+r8Z4CimSrXohc+iyURtPqwRxFDtEN3FI4FgrQl05FqNowlAh4Odtx2k7z7tHSF6JX7wByHq
+ k2XJdsED3GQpuzF4G04u4H0CoPN+Q4/0XNCODiIR8/YRrStHioQNl+oPp6Gx5DbbMPlqMg/LQG/
+ DVCeNbxBzUsGRFKiCBQ==
+X-Authority-Analysis: v=2.4 cv=V45NF+ni c=1 sm=1 tr=0 ts=6a3f91f6 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=-UTqftxNVshRFOYItwsA:9
+X-Proofpoint-ORIG-GUID: h6argQTvTZJXYt9Icqmtig88y55ksaE1
+X-Proofpoint-GUID: DlSsYyZ3pXWg6XB8G7dzV5gTDXo4wjQa
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI3MDA3NSBTYWx0ZWRfX/n/fasDHopju
+ ZGxzGydz4ssOlPu6+5ZW4JgHO1h+FftmZV52/aAGn9fZl7shyInPc68qWGvQihp7tyjFGsrwVdZ
+ WSG6abys+wszEVLrEfKr6T/jZ73V/Ck=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-27_01,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 impostorscore=0 malwarescore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606270075
 
-On Mon, Jun 22, 2026 at 11:22=E2=80=AFPM Qinxin Xia <xiaqinxin@huawei.com> =
-wrote:
->
->
->
-> On 2026/6/23 01:53:52, Ian Rogers <irogers@google.com> wrote:
-> > On Mon, Jun 22, 2026 at 2:11=E2=80=AFAM Qinxin Xia<xiaqinxin@huawei.com=
-> wrote:
-> >>
-> >>
-> >> On 2026/6/12 09:24:13, Ian Rogers<irogers@google.com> wrote:
-> >>> The python metrics code used in places like ilist.py passes a
-> >>> pmu-filter of "default_core" on non-hybrid x86/ARM/.. systems. As a
-> >>> PMU like "cpu" isn't a literal name match then no PMU matches
-> >>> "default_core" and the events fail to parse for the metric. Fix the
-> >>> name matching and PMU lookup for "default_core" and check that it
-> >>> fixes ilist.py.
-> >>>
-> >>> Fixes: 74e2dbe7be50 ("perf tools: Add --pmu-filter option for filteri=
-ng PMUs")
-> >>> Signed-off-by: Ian Rogers<irogers@google.com>
-> >>> ---
-> >>> Note: this bug is in 7.1 but it is a little too late to send for the
-> >>>         release. It should get picked up via the fixes tag.
-> >>> ---
-> >>>    tools/perf/util/pmu.c  | 6 +++++-
-> >>>    tools/perf/util/pmus.c | 2 ++
-> >>>    2 files changed, 7 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> >>> index a550f030b85d..836e3b5615cd 100644
-> >>> --- a/tools/perf/util/pmu.c
-> >>> +++ b/tools/perf/util/pmu.c
-> >>> @@ -2660,8 +2660,12 @@ bool perf_pmu__wildcard_match(const struct per=
-f_pmu *pmu, const char *wildcard_t
-> >>>                pmu->name,
-> >>>                pmu->alias_name,
-> >>>        };
-> >>> -     bool need_fnmatch =3D strisglob(wildcard_to_match);
-> >>> +     bool need_fnmatch;
-> >>>
-> >>> +     if (pmu->is_core && !strcmp(wildcard_to_match, "default_core"))
-> >>> +             return true;
-> >>> +
-> >>> +     need_fnmatch =3D strisglob(wildcard_to_match);
-> >>>        if (!strncmp(wildcard_to_match, "uncore_", 7))
-> >>>                wildcard_to_match +=3D 7;
-> >>>
-> >>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> >>> index 5e3f571450fe..e0a4cb2428ca 100644
-> >>> --- a/tools/perf/util/pmus.c
-> >>> +++ b/tools/perf/util/pmus.c
-> >>> @@ -150,6 +150,8 @@ struct perf_pmu *perf_pmus__find(const char *name=
-)
-> >>>        bool core_pmu;
-> >>>        unsigned int to_read_pmus =3D 0;
-> >>>
-> >>> +     if (!strcmp(name, "default_core"))
-> >>> +             return perf_pmus__find_core_pmu();
-> >>>        /*
-> >>>         * Once PMU is loaded it stays in the list,
-> >>>         * so we keep us from multiple reading/parsing
-> >> Thank you for the fix, Ian.
-> >> In the previous patch, I overlooked the handling of the "default_core"
-> >> alias. Also, perhaps we can leave need_fnmatch as-is, since it doesn't
-> >> seem to affect anything here.
-> > Thanks. I moved need_fnmatch's initialization just to save some work
-> > in the "default_core" case where the value is unused. While leaving it
-> > in place would reduce the diff, I think the optimization is worth it
-> > as we would otherwise call strisglob when say iterating all metrics.
-> >
-> Perhaps we can do it this way=EF=BC=9A
->         if (pmu->is_core && !strcmp(wildcard_to_match, "default_core"))
->                 return true;
->
->         bool need_fnmatch =3D strisglob(wildcard_to_match);
+The powerpc-hcalls.py script currently prints hypercall
+statistics in a fixed sort order based on the number of
+hcall occurrences, making it difficult to analyze hcalls
+from different execution characteristics.
 
-Unfortunately we require variables to be declared at the top of
-blocks/functions.
+Add support for runtime-configurable sorting so users
+can order hypercall statistics by count, minimum
+latency, maximum latency, or average latency using
+a --sort option.
 
-> > Would it be okay to supply a Reviewed-by tag? I notice this fix is
-> > missing from perf-tools-next.
-> >
-> Sure, add my Reviewed=E2=80=91by.:-)
+Parse arguments through sys.argv to support perf script
+argument passing semantics.
 
-Thanks,
-Ian
+Example:
 
->
-> > Thanks!
-> > Ian
-> >
-> >> --
-> >> Thanks,
-> >> Qinxin
->
-> --
-> Thanks,
-> Qinxin
->
+perf record -a -e powerpc* sleep 10
+
+perf script -s ./powerpc-hcalls.py -i ./perf.data -- --sort=max
+
+SORT KEY = max
+hcall                            count   min(ns)   max(ns)   avg(ns)
+
+H_SEND_LOGICAL_LAN                  47      7380     40148      8739
+H_VIO_SIGNAL                       706       880     17454      1911
+H_RANDOM                             1     15176     15176     15176
+H_PUT_TCE_INDIRECT                   4      3032     10444      4956
+H_ADD_LOGICAL_LAN_BUFFER           363      1250      8716      1534
+H_SEND_CRQ                           8      2086      6846      3044
+H_PUT_TCE                            9      1284      4932      2646
+H_STUFF_TCE                         13      1620      3962      2358
+
+This makes it easier to identify frequently occurring
+or high-latency hypercalls depending on the analysis
+being performed.
+
+Signed-off-by: Shivani Nittor <shivani@linux.ibm.com>
+---
+Changelog:
+v2 -> v3
+- Add validation for supported sort keys
+- Print valid sort options for invalid input
+
+v1 -> v2
+- Add bounds check for --sort argument handling
+- Prevent IndexError when sort key is omitted
+
+ tools/perf/scripts/python/powerpc-hcalls.py | 46 ++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scripts/python/powerpc-hcalls.py
+index 8b78dc790adb..bfa628d8c952 100644
+--- a/tools/perf/scripts/python/powerpc-hcalls.py
++++ b/tools/perf/scripts/python/powerpc-hcalls.py
+@@ -25,6 +25,7 @@ from Util import *
+ #	} ...
+ # }
+ output = {}
++sort_key = 'count'
+ 
+ # d_enter: {
+ #	cpu: {
+@@ -158,10 +159,53 @@ def hcall_table_lookup(opcode):
+ 
+ print_ptrn = '%-28s%10s%10s%10s%10s'
+ 
++def sort_output(opcode):
++	stats = output[opcode]
++
++	if sort_key == 'min':
++		return stats['min']
++	if sort_key == 'max':
++		return stats['max']
++	if sort_key == 'avg':
++		return stats['time'] // stats['cnt']
++
++	return stats['cnt']
++
++def trace_begin():
++	global sort_key
++
++	valid_sort_keys = ['count', 'min', 'max', 'avg']
++
++	i = 1
++	while i < len(sys.argv):
++		arg = sys.argv[i]
++
++		if arg == '-s' or arg == '--sort':
++			if i + 1 >= len(sys.argv):
++				print("Error: -s/--sort requires a sort key argument")
++				sys.exit(1)
++			sort_key = sys.argv[i + 1]
++			i += 2
++			continue
++
++		if arg.startswith('--sort='):
++			sort_key = arg.split('=', 1)[1]
++			i += 1
++			continue
++
++		i += 1
++
++	if sort_key not in valid_sort_keys:
++		print(f"Error: Invalid sort key '{sort_key}'. Valid options are: {', '.join(valid_sort_keys)}")
++		sys.exit(1)
++
++	print("SORT KEY =", sort_key)
++
+ def trace_end():
+ 	print(print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)'))
+ 	print('-' * 68)
+-	for opcode in output:
++	for opcode in sorted(output, key = sort_output,
++                            reverse=True):
+ 		h_name = hcall_table_lookup(opcode)
+ 		time = output[opcode]['time']
+ 		cnt = output[opcode]['cnt']
+-- 
+2.54.0
+
