@@ -1,218 +1,225 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBE41A262D
-	for <linux-perf-users@vger.kernel.org>; Sat, 27 Jun 2026 09:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E3F331ECC
+	for <linux-perf-users@vger.kernel.org>; Sat, 27 Jun 2026 17:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782551045; cv=none; b=ttIwNsd3mW9FtxdrJ6svIq5lQ+U4+jij4Pe7fCk/k8oU0+ZwRCwhAhzUgRA3cwscl1RHNTDpJ6TH12OkoBSmS8+J02fOZOwgbH5UspD5lWL3/YgzSoVnD5gNsiscshAFthQBu1sau/MMl8Bl8zkkhOYRF7VwdN7UlCOoVsa0D2g=
+	t=1782582571; cv=none; b=R9shBHKPAF5kvbbSDUhwXuqRyWmQFVMj08/J9bAxmB3/3HOPvrYQHNg2FooWi1WwzKm2mk9rrzfgbcKBw9qqxEE/v8JFKjnvtZ5LmUwvFOiNRzvfSHJjFZkEFG5dVgXcOLBilgtE+QwXcvEXXU13ZMFY9y84ll2x9RHVy0fQcTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782551045; c=relaxed/simple;
-	bh=b99gTXKBE9A3gI1wUV1zGId7yOTu6S5cJu8EFno58kk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tEyaXiTKwWG587ML6aTKPoRZkV+LWjxd5sudBQ3YfnKTvtSpmXlEIBHtO94ol7i+P/EolI1fpfBWNUvt8qAPNd5v6I+xN//dvIffFJB3OFU1mAdrkc4fctSIMHqyUpF3gdHRJHJXFovLGZEBMX35EcR0BAtsnAgmiZ1xk66Mkc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oRkyWLZR; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1782582571; c=relaxed/simple;
+	bh=YA+1i/UnBYMi612cEFEOy+3MzER+Xfj7iA6l8jGXb4M=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uqBWml+sZkZLyg3tgy3QWUrv+O87pvRvuZ80rDtczf5Wgo6yto2O9I/3FkFj/I+vhxgFODDK2NfOTzrlCZA2Jf6Ma0Q2cxq0emG7r4fRbVPkP/4UBoQKuhzsPUWPYpC5apcJmHKqjk27WwGuY+hwyQUVSRZrQ70/uoTpSELuNvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D+APVrVB; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oRkyWLZR"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65R3SgR4635123;
-	Sat, 27 Jun 2026 09:03:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=R3oxmrHEu3DxHUyIeRYPRcYft4luqjoeznjd6iV4x
-	yA=; b=oRkyWLZR5WsJvMRfEBVTu2+iaNORJneGe9+HS54d2kcKOoew3wm7An8hc
-	Uyy40Y4HpfyLZ33wyG+s8+My9zCKXd9UCjjBOSwtXIX2ByooveNaY/8jFXLEvRTd
-	P0PYH2MJwiy+xpQYp0jwvpGS9L3lsqJjGssH5ONbQgIUPjOaGkcJDPMP6Sf0bafn
-	fPpJHnX6AVaiZeuboh/rhcpB+vf91FzB0YuclOnz1jqTdnMOOuWrbJYwiCmC3RGs
-	Pz7Y0/2oGibTR+telA33oRCUpO+M8HdWh4HUAavnbhfL9SmoenzPsjN4mxY8jqN1
-	kljxpL1HblJ3CNxVrh/LK1xWns1Tw==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26n590yg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 27 Jun 2026 09:03:50 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65R8nj9w018731;
-	Sat, 27 Jun 2026 09:03:49 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4ex66kpn5v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 27 Jun 2026 09:03:49 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65R93jAb28967370
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 27 Jun 2026 09:03:45 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 38BE72004E;
-	Sat, 27 Jun 2026 09:03:45 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B12FD20040;
-	Sat, 27 Jun 2026 09:03:40 +0000 (GMT)
-Received: from Mac.ibm.com (unknown [9.39.21.58])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 27 Jun 2026 09:03:40 +0000 (GMT)
-From: Shivani Nittor <shivani@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        mpetlan@redhat.com, tmricht@linux.ibm.com, maddy@linux.ibm.com,
-        irogers@google.com, namhyung@kernel.org, ravi.bangoria@amd.com
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
-        Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, shivani@linux.ibm.com
-Subject: [PATCH v3] perf scripts: Add configurable sorting option to powerpc-hcalls
-Date: Sat, 27 Jun 2026 14:33:33 +0530
-Message-ID: <20260627090334.67847-1-shivani@linux.ibm.com>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+APVrVB"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-734478b19f7so1484059137.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 Jun 2026 10:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782582569; x=1783187369; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+uflCN5dEoFADXWjqBtV9JZXNhAeBkbLG/4dD0z7b4I=;
+        b=D+APVrVB7sDaioieVdmISDPXpLFAuW6Z8ACka+jIwp7ns0TQdWs5MEy+Z/dxvn8VAa
+         e29T4yf7lV++S7Zg1KPGSJLqvjfqzUAvUEu7tSGmqaCsQogJoe9MO5ZfM/HH/GhY8ux0
+         YW6ZINIMDlm8qugBnJpjrCnTOHTSXKlAPJF11MzR2txP/MrDTMvFDy0oCu+HsC/1rWic
+         5RnQmKwAXJpxLkTmgZLfBFUKtZnCgcM2yM4bDprDEVL6jHCMPi1e3zAqIe9XmKpm9HEA
+         GY5jXZXmdNMNEJwgCkWWPPLSrpsmhX+cbfcTpaZTE+Q/IJm4Gxe+tsxjkBwBxlPFhi9j
+         4y8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782582569; x=1783187369;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+uflCN5dEoFADXWjqBtV9JZXNhAeBkbLG/4dD0z7b4I=;
+        b=Q5qKxUtqMYpRDmo4vAvuI7/GMol1tod+eu4Ahw0lgScEwX4jaqO6XKhOFTmXoag81g
+         Nw2GxFIE2LvYJ3voyzbrOtxs0KYnty4ZmK7XZsrytTGORbBh9h8dEpR9JHerFQw4KtPS
+         qQVHgnDEa6X6E874pwDm+HV43Tx6hLVnvGmmMb0QHMpexzgSqt4NeCUM+guoLt3anXNB
+         KuqYzany5Ae9mJl5fQ/AWHW/Zx7bRkrgJQlm+c4Q5/+/NCL/5Wt1pbI+xI9l86UEkxK/
+         tbD57wMofqPRfie0cobyE7bOrHcYqltD1ukUObmBI/8ZPCmVNrZPTR1EXQnh3jfpHqX4
+         fVUg==
+X-Forwarded-Encrypted: i=1; AHgh+Rp/yiZPRGIkLV8qunvZeQ7PxfQWMAxKftw17MaQtXxwwwa5O5L6AJpEp2WejQdtkGS18x4iRl8RTtwT/6l2zt55@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcKAm+7sFKFH8yGMCkxFIWJLWAhAv0EbOrkkraFuPbwIMI1czl
+	SE3cm3Y6QE2s45GJsQOQTGJgUPJgSV4oztJTwkg7UmdJuw+jGMmnFYBX
+X-Gm-Gg: AfdE7clwTG3cvY/ZlkZcJI7qYb053tPs1L5xWHXPdvAXvNvf9ct2LqY9R/oBEuSlPvR
+	LgzwFm1aN/hHD8IIqmLOWODGXXkSAbTob+p410joNXPSh6oa4n6nV1T5f5sU6rS8WV0IN+/+Tky
+	U4yA1jdB7KTLsu/cPfAiaSanxKjLB5q1lHe6DHULi+KoW5pUeasTOms1U8XnzjA7uJXBx7H2J1H
+	gHWTqUhYxKCclFoL3vzVWyi4J4YC6ynDanFaBRnK09fmqhcAr7A3JfcGx/q5z3ro0qrO2AbZm4q
+	ERMREnAyGD6pRqnPsxUDEbgwJ+V8bNfrYa0gkEQobawc21p+l/KrLweInkRl3bwjw4LVPIJGgUL
+	8MEpJn0osY3bH5APY3ieBgANQxlmoeLWg/XBAA9SZuJj6Iptp0GkJi/HYcsK0VrnENHAS7buQyq
+	DI2NGO4Gy7xqowu7NnLlE0vAinzKmzzYzkkC4CsOP/CemM
+X-Received: by 2002:a05:6102:440f:b0:730:db02:1d08 with SMTP id ada2fe7eead31-73434452fd5mr5471882137.10.1782582569056;
+        Sat, 27 Jun 2026 10:49:29 -0700 (PDT)
+Received: from localhost (d-24-145-72-22.fl.cpe.atlanticbb.net. [24.145.72.22])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-96916e5b10dsm2811280241.4.2026.06.27.10.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2026 10:49:28 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+X-Google-Original-From: Yury Norov <ynorov@nvidia.com>
+Date: Sat, 27 Jun 2026 13:49:27 -0400
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Dan Williams <djbw@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>,
+	Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Xu Yang <xu.yang_2@nxp.com>, Linu Cherian <lcherian@marvell.com>,
+	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
+	Chengwen Feng <fengchengwen@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-perf-users@vger.kernel.org, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org,
+	linux-rdma@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 13/16] perf: Use sysfs_emit() for cpumask show callbacks
+Message-ID: <akANJ-AT7nHpRMq-@yury>
+References: <20260528183625.870813-1-ynorov@nvidia.com>
+ <20260528183625.870813-14-ynorov@nvidia.com>
+ <7e980b99-1e4e-408b-8ebd-4d28116e7ad5@arm.com>
+ <20260529130619.12f24264@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI3MDA3NSBTYWx0ZWRfX8GHrVINKo/rc
- 82v3sE7H3b1ZbSB/zF4OQitqS9ST0S4mr63QAtAWWo/7ifOkCzqiKn55zRodV1MYJFPWOIxLUmF
- JvYYB5lkkG4kt41Y3txXR9y+DhgJGkMqBhqVqb2lU2PlVInjfcrEM/FNTAUtXP6OzltyY69P/Nk
- QZvUXPOalr2W2THhNSeiNqtPd0o5Xs7HnIE1K3jHi21o+pscyjH/Axn7g9Wx4neNVU9rRaVLXcX
- fpwig9JOGuIOv39TziwkuTPIih0QB1uaad9s82mQ+grlII9P6HgW8I78N5NyfD/2KibpCZUu0yh
- WhA+r8Z4CimSrXohc+iyURtPqwRxFDtEN3FI4FgrQl05FqNowlAh4Odtx2k7z7tHSF6JX7wByHq
- k2XJdsED3GQpuzF4G04u4H0CoPN+Q4/0XNCODiIR8/YRrStHioQNl+oPp6Gx5DbbMPlqMg/LQG/
- DVCeNbxBzUsGRFKiCBQ==
-X-Authority-Analysis: v=2.4 cv=V45NF+ni c=1 sm=1 tr=0 ts=6a3f91f6 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=-UTqftxNVshRFOYItwsA:9
-X-Proofpoint-ORIG-GUID: h6argQTvTZJXYt9Icqmtig88y55ksaE1
-X-Proofpoint-GUID: DlSsYyZ3pXWg6XB8G7dzV5gTDXo4wjQa
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI3MDA3NSBTYWx0ZWRfX/n/fasDHopju
- ZGxzGydz4ssOlPu6+5ZW4JgHO1h+FftmZV52/aAGn9fZl7shyInPc68qWGvQihp7tyjFGsrwVdZ
- WSG6abys+wszEVLrEfKr6T/jZ73V/Ck=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-27_01,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 impostorscore=0 malwarescore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606270075
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260529130619.12f24264@pumpkin>
 
-The powerpc-hcalls.py script currently prints hypercall
-statistics in a fixed sort order based on the number of
-hcall occurrences, making it difficult to analyze hcalls
-from different execution characteristics.
+On Fri, May 29, 2026 at 01:06:19PM +0100, David Laight wrote:
+> On Fri, 29 May 2026 12:05:08 +0100
+> Robin Murphy <robin.murphy@arm.com> wrote:
+> 
+> > On 2026-05-28 7:36 pm, Yury Norov wrote:
+> > > These callbacks are sysfs show paths.
+> > > 
+> > > Use sysfs_emit() and cpumask_pr_args() to emit the masks.
+> > > 
+> > > This prepares for removing cpumap_print_to_pagebuf().  
+> > 
+> > TBH, looking at this diff I think it only shows the value of having a 
+> > helper to abstract the boilerplate...
+> > 
+> > I'm not sure I agree with the argument of removing something entirely 
+> > just because it may occasionally be misused, but could we at least have 
+> > something like:
+> > 
+> > #define sysfs_emit_cpumask(buf, mask) \
+> > 	sysfs_emit((buf), "%*pbl\n", cpumask_pr_args(mask))
+> >
+> > to save the mess in all the many places where the current 
+> > cpumap_print_to_pagebuf() usage _is_ entirely appropriate?
 
-Add support for runtime-configurable sorting so users
-can order hypercall statistics by count, minimum
-latency, maximum latency, or average latency using
-a --sort option.
+This way you have to add 2 wrappers:
 
-Parse arguments through sys.argv to support perf script
-argument passing semantics.
+ #define sysfs_emit_cpulist(buf, mask) \
+ 	sysfs_emit((buf), "%*pbl\n", cpumask_pr_args(mask))
 
-Example:
+ and
 
-perf record -a -e powerpc* sleep 10
+ #define sysfs_emit_cpumask(buf, mask) \
+ 	sysfs_emit((buf), "%*pb\n", cpumask_pr_args(mask))
 
-perf script -s ./powerpc-hcalls.py -i ./perf.data -- --sort=max
+There are people who complain even about DIV_ROUND_UP(), how hard it is
+to keep all that helpers in memory, and all that things.
 
-SORT KEY = max
-hcall                            count   min(ns)   max(ns)   avg(ns)
+https://lore.kernel.org/all/20260304124805.GB2277644@noisy.programming.kicks-ass.net/
 
-H_SEND_LOGICAL_LAN                  47      7380     40148      8739
-H_VIO_SIGNAL                       706       880     17454      1911
-H_RANDOM                             1     15176     15176     15176
-H_PUT_TCE_INDIRECT                   4      3032     10444      4956
-H_ADD_LOGICAL_LAN_BUFFER           363      1250      8716      1534
-H_SEND_CRQ                           8      2086      6846      3044
-H_PUT_TCE                            9      1284      4932      2646
-H_STUFF_TCE                         13      1620      3962      2358
+Disagree about DIV_ROUND_UP() (because yeah, I'm bad in math), but
+this sysfs_emit_cpumask() is a complete syntax redundancy.
 
-This makes it easier to identify frequently occurring
-or high-latency hypercalls depending on the analysis
-being performed.
+Once we have it, people will do this type of things:
 
-Signed-off-by: Shivani Nittor <shivani@linux.ibm.com>
----
-Changelog:
-v2 -> v3
-- Add validation for supported sort keys
-- Print valid sort options for invalid input
+        tmp = kmalloc(PAGE_SIZE);
+        sysfs_emit_cpumask(tmp, mask);
+        sysfs_emit(buf, "my prefix: %s\n", tmp);
+        kfree(tmp);
 
-v1 -> v2
-- Add bounds check for --sort argument handling
-- Prevent IndexError when sort key is omitted
+Patch #1 in this series is one example. My series that removes
+bitmap_print_to_pagebuf() will give you more:
 
- tools/perf/scripts/python/powerpc-hcalls.py | 46 ++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+https://lore.kernel.org/all/20260303200842.124996-2-ynorov@nvidia.com/
 
-diff --git a/tools/perf/scripts/python/powerpc-hcalls.py b/tools/perf/scripts/python/powerpc-hcalls.py
-index 8b78dc790adb..bfa628d8c952 100644
---- a/tools/perf/scripts/python/powerpc-hcalls.py
-+++ b/tools/perf/scripts/python/powerpc-hcalls.py
-@@ -25,6 +25,7 @@ from Util import *
- #	} ...
- # }
- output = {}
-+sort_key = 'count'
- 
- # d_enter: {
- #	cpu: {
-@@ -158,10 +159,53 @@ def hcall_table_lookup(opcode):
- 
- print_ptrn = '%-28s%10s%10s%10s%10s'
- 
-+def sort_output(opcode):
-+	stats = output[opcode]
-+
-+	if sort_key == 'min':
-+		return stats['min']
-+	if sort_key == 'max':
-+		return stats['max']
-+	if sort_key == 'avg':
-+		return stats['time'] // stats['cnt']
-+
-+	return stats['cnt']
-+
-+def trace_begin():
-+	global sort_key
-+
-+	valid_sort_keys = ['count', 'min', 'max', 'avg']
-+
-+	i = 1
-+	while i < len(sys.argv):
-+		arg = sys.argv[i]
-+
-+		if arg == '-s' or arg == '--sort':
-+			if i + 1 >= len(sys.argv):
-+				print("Error: -s/--sort requires a sort key argument")
-+				sys.exit(1)
-+			sort_key = sys.argv[i + 1]
-+			i += 2
-+			continue
-+
-+		if arg.startswith('--sort='):
-+			sort_key = arg.split('=', 1)[1]
-+			i += 1
-+			continue
-+
-+		i += 1
-+
-+	if sort_key not in valid_sort_keys:
-+		print(f"Error: Invalid sort key '{sort_key}'. Valid options are: {', '.join(valid_sort_keys)}")
-+		sys.exit(1)
-+
-+	print("SORT KEY =", sort_key)
-+
- def trace_end():
- 	print(print_ptrn % ('hcall', 'count', 'min(ns)', 'max(ns)', 'avg(ns)'))
- 	print('-' * 68)
--	for opcode in output:
-+	for opcode in sorted(output, key = sort_output,
-+                            reverse=True):
- 		h_name = hcall_table_lookup(opcode)
- 		time = output[opcode]['time']
- 		cnt = output[opcode]['cnt']
--- 
-2.54.0
+It doesn't mean that *you* will misuse the API. It means that *I* will
+have to inspect the codebase for that type of bugs periodically.
 
+So, the overall state is simple: we've got well-established
+printf()-like functions that people know and understand, and we also
+have exotic APIs here and there with a non-standard interface and a
+clear potential to misuse. In this case, they have historical roots,
+but now we don't need them.
+
+> That has the advantage of letting you change how it is done (again)
+> without having to find all the callers.
+
+You mean things like silencing the prints or adding a prefix?
+
+If you believe that perf subsystem would benefit from it - that's
+OK. Just please keep it local. The kernel globally doesn't need to
+'change how it is done' beyond the lib/vsprintf.  The kernel really
+needs people to use something that the other people are familiar with.
+
+Thanks,
+Yury
