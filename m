@@ -1,123 +1,103 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1977BE63;
-	Sun, 28 Jun 2026 03:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1765F35E936;
+	Sun, 28 Jun 2026 11:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782618751; cv=none; b=dLYJD+DvH56IxkyZGkHV9LkzkZdMTznALrqYSPQCEF9/gWihjtAeacrvzo9o5a2qnE2dpe/QUHKlEo9NcnZ432kMoImHip30AJPbSUScQ/yqk2VLrlFNnUMMroqOqs+LI6wxj0cSkL2vLCnylp0FvjQDc0WZjQ/oEw4sJb5fJuY=
+	t=1782645495; cv=none; b=sniOZnaXofyrwC0Vjf8o5gBwAB7IexccE1uEk1NFcZUtyS6gKEfizboPfzj7H5NrXYdhRZlEHzml73mCmYk4Wou8jOKr/WueSGKWjyqBGF1umyhe2Ooh1t4w5DLoGEYVF6LzJnPCBhUdBOJSRTxRAIxWT6lN7N3voIbiKm9K+t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782618751; c=relaxed/simple;
-	bh=GDhZtVi/HEjSDmzrwyQe8n7Rbfqy6kPel1JN9psgbKs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=SOjaSlg2IuJF9u4r4uIVEraQS7P/hy6Br0GDOIOs7R2eL6Gm2s1c+xw3ztA3yWQIZynY7lI1+rvQuYKvN+5MZADrvXgVlDwKMyjaMpF9nHiGQ/ZoTo9FJlB2j8TgZykv5Jsir1nzXJGucxqRdWyaVYTZ2n/LX6WIslOFBnrtDF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+	s=arc-20240116; t=1782645495; c=relaxed/simple;
+	bh=eybrTZFW+5aGnf77L00LY6WYIYBuAr3zDWx/OvIhanc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p2Pk9CNPaQi0TzoPaOchc5AL+Rl+jkoLazRvD/YNEKh6rzUc09seJ2EYI/oGdsItSHTq26eGTTsoGLewAAclD/kAiBfo/KAeMFEPasZP9TZGOgaQhTpAeHNoZwjpOyt2nTfvtVHvFPFItgDdZnSygvlV5UtJzfNUXHrPX4FUkHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from smtpclient.apple (unknown [117.182.74.7])
-	by APP-01 (Coremail) with SMTP id qwCowAA33NRbmkBqExKqAw--.34181S2;
-	Sun, 28 Jun 2026 11:51:58 +0800 (CST)
-Content-Type: text/plain;
-	charset=utf-8
+Received: from localhost.localdomain (unknown [117.182.74.7])
+	by APP-05 (Coremail) with SMTP id zQCowAAHfO_ZAkFqYAzCFQ--.32658S2;
+	Sun, 28 Jun 2026 19:17:48 +0800 (CST)
+From: WenTao Liang <vulab@iscas.ac.cn>
+To: linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	tglx@kernel.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	WenTao Liang <vulab@iscas.ac.cn>,
+	Greg KH <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] x86/events/intel/uncore: fix PCI refcount leak in discover_upi_topology
+Date: Sun, 28 Jun 2026 19:17:39 +0800
+Message-Id: <20260628111739.43731-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81.1.8\))
-Subject: Re: [PATCH] fix: x86/events/intel/uncore: discover_upi_topology:
- inner loop leaks PCI   device references from pci_get_domain_bus_and_slot
-From: WenTao Liang <vulab@iscas.ac.cn>
-In-Reply-To: <20260626100031.31494-1-vulab@iscas.ac.cn>
-Date: Sun, 28 Jun 2026 11:51:45 +0800
-Cc: mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com,
- jolsa@kernel.org,
- irogers@google.com,
- adrian.hunter@intel.com,
- james.clark@linaro.org,
- hpa@zytor.com,
- linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3AFD696C-F83F-4DDF-AEDE-E7774C8859D4@iscas.ac.cn>
-References: <20260626100031.31494-1-vulab@iscas.ac.cn>
-To: peterz@infradead.org,
- mingo@redhat.com,
- acme@kernel.org,
- namhyung@kernel.org,
- tglx@kernel.org,
- bp@alien8.de,
- dave.hansen@linux.intel.com,
- x86@kernel.org
-X-Mailer: Apple Mail (2.3826.700.81.1.8)
-X-CM-TRANSID:qwCowAA33NRbmkBqExKqAw--.34181S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF4DGr43XF18Kr13GrykKrg_yoW8Xw18pr
-	W3tFyxKFWfWas2ga9ru3WS9FW2yrZ8Gr9Ygw40g34I9ws8X347JFW2g3WYgayrGry8tr13
-	t3Wj9r48X345AFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvKb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
-	C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kI
-	c2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-	VjvjDU0xZFpf9x07jDKsUUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRMMA2pAiNkY1AABsj
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAHfO_ZAkFqYAzCFQ--.32658S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KrykuFWfGw1fKw1ktFWUJwb_yoW8GFyUpr
+	W3tF9rtr4fW3s2ga98C3WI9rW2vFs8Gr9Ygr4UK34I9wn8Xr1xJFW2gw15KFy8CrykJr1a
+	v3Wjvw48X34UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0pRx-BiUUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRQMA2pAiNnF5gABsL
 
+In the inner for loop, dev is repeatedly overwritten by
+pci_get_domain_bus_and_slot() without first releasing the previous dev
+via pci_dev_put(). The err label only releases the last ubox and dev
+references, while the references from earlier loop iterations are
+permanently leaked. Fix by adding pci_dev_put(dev) before the overwriting
+assignment.
 
+Suggested-by: Greg KH <gregkh@linuxfoundation.org>
+Fixes: fdd041028f22 ("perf/x86/intel/uncore: Factor out topology_gidnid_map()")
+Cc: stable@vger.kernel.org
+Signed-off-by: WenTao Liang <vulab@iscas.ac.cn>
+---
+Changes in v2:
+- Fix patch format based on reviewer feedback
+---
+---
+ arch/x86/events/intel/uncore_snbep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 2026=E5=B9=B46=E6=9C=8826=E6=97=A5 18:00=EF=BC=8CWenTao Liang =
-<vulab@iscas.ac.cn> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> In the inner for loop, dev is repeatedly overwritten by
->  pci_get_domain_bus_and_slot() without first releasing the previous =
-dev=20
->  via pci_dev_put(). The err label only releases the last ubox and dev
->  references, while the references from earlier loop iterations are
->  permanently leaked. Fix by adding pci_dev_put(dev) before the =
-overwriting
->  assignment.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: fdd041028f22 ("perf/x86/intel/uncore: Factor out =
-topology_gidnid_map()")
-> Signed-off-by: WenTao Liang <vulab@iscas.ac.cn>
-> ---
-> arch/x86/events/intel/uncore_snbep.c | 1 +
-> 1 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/x86/events/intel/uncore_snbep.c =
-b/arch/x86/events/intel/uncore_snbep.c
-> index 215d33e260ed..cecc1ce0a248 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -5494,6 +5494,7 @@ static int discover_upi_topology(struct =
-intel_uncore_type *type, int ubox_did, i
-> 		for (idx =3D 0; idx < type->num_boxes; idx++) {
-> 			upi =3D &type->topology[lgc_pkg][idx];
-> 			devfn =3D PCI_DEVFN(dev_link0 + idx, =
-ICX_UPI_REGS_ADDR_FUNCTION);
-> +			pci_dev_put(dev);
-> 			dev =3D =
-pci_get_domain_bus_and_slot(pci_domain_nr(ubox->bus),
-> 							  =
-ubox->bus->number,
-> 							  devfn);
-> --=20
-> 2.39.5 (Apple Git-154)
-
-Please ignore this patch. I will resend a proper version after
-learning the kernel submission process.
-
-Apologies for the noise.
-
-Best regards,
-WenTao Liang=
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 215d33e260ed..cecc1ce0a248 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -5494,6 +5494,7 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
+ 		for (idx = 0; idx < type->num_boxes; idx++) {
+ 			upi = &type->topology[lgc_pkg][idx];
+ 			devfn = PCI_DEVFN(dev_link0 + idx, ICX_UPI_REGS_ADDR_FUNCTION);
++			pci_dev_put(dev);
+ 			dev = pci_get_domain_bus_and_slot(pci_domain_nr(ubox->bus),
+ 							  ubox->bus->number,
+ 							  devfn);
+-- 
+2.39.5 (Apple Git-154)
 
