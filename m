@@ -1,132 +1,108 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993B43451A9;
-	Mon, 29 Jun 2026 07:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC31C3C3451
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jun 2026 07:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782718457; cv=none; b=VBc6rupP5Y02jqBRwE84a19jo3hO+AlKHKSUgyJPQsb2n928rE35113lwQ40SEaJNSgXvajM9c52QwDrsfUpjHj0uTL03cZuNQOpPrZ51Kz6yM28jI68G198g96Co+zBjd52G+s/kLMJloj8Q31OV7VcbG7+kit1OAnR0CDLW+4=
+	t=1782718958; cv=none; b=H6YjiY70Pco6QILPuYqdhjYFoSsZ/iz2RZORDO0lCrq4VKh+lUYWfRHiHX9INWARWcYJZD8jQfLyT2SYGrQl4g2ElKKxbp/ErjtORsP1b9eHlUMzOkPSII+sEIEIF27EAWPwZW3PqKCMa6CPy9caLmjplr6Xbdcrme03tyVk9GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782718457; c=relaxed/simple;
-	bh=08k0xw9LFq6C72qks0xPJ3bNAKGrB4AtmqLfkB/CTks=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=br3i+EtStPraxhVG7knTt8sqzXz/SGoGyPmISmM3Nv5A+tqZ1i72QpgNGqg+oEacWKmWPvJdWa+GfmP0iTJlDdiYJShxD69Sui5z6kNbFUJ3ehB0b5qYgQr/S+S0FMarZWbwhKVPMvy3R8yoOh8P8PFR9x7PmLHyUsbyZrybcC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=x43Uoqdm; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1782718958; c=relaxed/simple;
+	bh=lfVsb/euxFwx4aQaVYg9BkHcjIFFz6YgWu8lMP6M3KY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=qr1J9zoeesNUvpaxm5tEy2F+swbrk1UG3vze7FoUZRTQEys96XE9gpFEdMsIg3hekjgL8CZ/iKD8DWq8rX6scS5J0txwFq9s7slY2TmR574HDMwDVBPMsiCid6n7mjbG6q7fM3lX/I7+IzMK1aSlmfBB/St0RajbgPo5n0ApAoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwCjiAPm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="x43Uoqdm"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1782718447; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=MQtuIWmKp0yK/pGFuoUioKxVm/GbD9KEgakpTzJtQ9I=;
-	b=x43UoqdmANxaiwblvTqrNmc8MBV4qJPPiu+ZQRouQxyzzlUuGEDb1hiNVUAM1CVPGLyq29G60yz9WEJ0eW4E3E/+uIONlkv/qRoTKgp24aoj70wOHk7qP6bW75yblHoG0/P69p8e6WFx/0a0d0B4DZMMIAdhv7LReGNEjMe0TpM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=wanghan@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X5oo1TO_1782718117;
-Received: from wanghan-Workstation..(mailfrom:wanghan@linux.alibaba.com fp:SMTPD_---0X5oo1TO_1782718117 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 29 Jun 2026 15:28:39 +0800
-From: Wang Han <wanghan@linux.alibaba.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org,
-	Oleg Nesterov <oleg@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	oliver.yang@linux.alibaba.com,
-	xueshuai@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com,
-	jkchen@linux.alibaba.com,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 RESEND 6/7] riscv: Kconfig: enable HAVE_RELIABLE_STACKTRACE and HAVE_LIVEPATCH
-Date: Mon, 29 Jun 2026 15:27:12 +0800
-Message-ID: <20260629072713.3273743-7-wanghan@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260629072713.3273743-1-wanghan@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwCjiAPm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133DB1F000E9;
+	Mon, 29 Jun 2026 07:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782718953;
+	bh=uTXermlok/dm7qGYRoU2w9v1+iEu+I7P+0BRrDzT5KY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mwCjiAPmfG4fLkCKFwA2EIrh4xeReZAx+DdhhvoGcXThCTgf4ru2OAk6Woix1uHG6
+	 QtxHTmf5enuxcSWeXFpt41zE5VUvjkmKEPCz8DYLosNgwyE0cAw4CmxYfrZmn7T4bP
+	 krwSfYE4KAPaEvobk+M2ugFEm0byb47PLjf+5uUz1AElAdN0j4EF4uEHzyXrrwKo6O
+	 W2nkNS2vZbXB4L7v1WZD66T4lQZeLeDAxfBQc2TWe2fImI72J5GHfYmwaPEvE3fcIP
+	 /PjZmarFR2f2tBzilk9K3EBWr6BaPyQN8V/nn3S/DD2JM/gLd6tqYbG1s0Hs/Xi1zd
+	 Oae5occSPV1tg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 RESEND 4/7] riscv: stacktrace: introduce stack-bound
+ tracking helpers
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Wang Han" <wanghan@linux.alibaba.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260629072713.3273743-5-wanghan@linux.alibaba.com>
 References: <20260629072713.3273743-1-wanghan@linux.alibaba.com>
+ <20260629072713.3273743-5-wanghan@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 29 Jun 2026 07:42:32 +0000
+Message-Id: <20260629074233.133DB1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Now that the metadata frame records, the kunwind state machine and
-arch_stack_walk_reliable() are all in place, advertise the capability
-to the rest of the kernel:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Unconditional reference to conditionally defined irq_stack_ptr caus=
+es a link-time error when CONFIG_IRQ_STACKS is disabled.
+--
 
-  * select HAVE_RELIABLE_STACKTRACE under FRAME_POINTER && 64BIT, so
-    only the configurations with the tested metadata records and
-    FP-based reliable walker enable it.
-  * select HAVE_LIVEPATCH under the same condition and source
-    kernel/livepatch/Kconfig so the livepatch menu is reachable from
-    the RISC-V configuration.
+commit 64aa629bbd032157beeb94e2add8faf14c975e32
+Author: Wang Han <wanghan@linux.alibaba.com>
 
-The 64BIT dependency is conservative scoping rather than a hard
-technical requirement: the metadata frame record, kunwind state machine
-and arch_stack_walk_reliable() also build on RV32, and the IRQ-stack
-frame-record adjustment fixes a latent RV32 issue. However, the syscall
-livepatch selftest and module relocation path have only been exercised
-on RV64 QEMU virt so far. The 64BIT gate can be relaxed in a follow-up
-once RV32 has equivalent coverage.
+riscv: stacktrace: introduce stack-bound tracking helpers
 
-This is split out from the unwinder change so the policy decision and
-the implementation can be reviewed and reverted independently.
+This commit introduces building blocks for a reliable stack unwinder=20
+in RISC-V. It adds stack-bound tracking helpers such as stack_info=20
+and unwind_state, along with accessors for IRQ, task, and overflow stacks.
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
----
- arch/riscv/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+> diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm=
+/stacktrace.h
+> index b1495a7e06ce6..bc87c49403798 100644
+> --- a/arch/riscv/include/asm/stacktrace.h
+> +++ b/arch/riscv/include/asm/stacktrace.h
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index cb3d85abf595..4d09fab682ac 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -186,6 +186,7 @@ config RISCV
- 	select HAVE_KRETPROBES
- 	# https://github.com/ClangBuiltLinux/linux/issues/1881
- 	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD
-+	select HAVE_LIVEPATCH if FRAME_POINTER && 64BIT
- 	select HAVE_MOVE_PMD
- 	select HAVE_MOVE_PUD
- 	select HAVE_PAGE_SIZE_4KB
-@@ -196,6 +197,7 @@ config RISCV
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
- 	select HAVE_PREEMPT_DYNAMIC_KEY
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-+	select HAVE_RELIABLE_STACKTRACE if FRAME_POINTER && 64BIT
- 	select HAVE_RETHOOK
- 	select HAVE_RSEQ
- 	select HAVE_RUST if RUSTC_SUPPORTS_RISCV && CC_IS_CLANG
-@@ -1392,3 +1394,5 @@ endmenu # "CPU Power Management"
- source "arch/riscv/kvm/Kconfig"
- 
- source "drivers/acpi/Kconfig"
-+
-+source "kernel/livepatch/Kconfig"
--- 
-2.43.0
+[ ... ]
+
+> @@ -16,14 +21,70 @@ extern void notrace walk_stackframe(struct task_struc=
+t *task, struct pt_regs *re
+>  extern void dump_backtrace(struct pt_regs *regs, struct task_struct *tas=
+k,
+>  			   const char *loglvl);
+> =20
+> -static inline bool on_thread_stack(void)
+> +/*
+> + * IRQ stack accessors
+> + */
+> +static inline struct stack_info stackinfo_get_irq(void)
+> +{
+> +	unsigned long low =3D (unsigned long)raw_cpu_read(irq_stack_ptr);
+
+[Severity: Low]
+Will this cause a link error when CONFIG_IRQ_STACKS is disabled?=20
+
+Looking at arch/riscv/kernel/irq.c, irq_stack_ptr is defined inside an=20
+#ifdef CONFIG_IRQ_STACKS block. Since stackinfo_get_irq() unconditionally
+references it here, it seems this might result in an undefined reference
+to irq_stack_ptr during linking.=20
+
+Should this accessor be conditionally compiled, or should it provide a
+fallback when CONFIG_IRQ_STACKS is not set?
+
+> +	unsigned long high =3D low + IRQ_STACK_SIZE;
+> +
+> +	return (struct stack_info) {
+> +		.low =3D low,
+> +		.high =3D high,
+> +	};
+> +}
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260629072713.3273=
+743-1-wanghan@linux.alibaba.com?part=3D4
