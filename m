@@ -1,247 +1,179 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C013F8EB2
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jun 2026 09:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BC614884C;
+	Mon, 29 Jun 2026 11:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782725399; cv=none; b=ucy3C7XEAQJnqakKwZSOvw/uS/KCSciY1yMNeCUJQeLR22/UCAC5vGocOgMvISNFJjkvmxDNZ+DrKrfn7kMd0vDodrOL4eHX6CD8Wx5mczjOySo7m8lIDau845CNbFCHOhILoiB2S6gULUbEfJqHPX4py8EDTvCZT0jbzsyMbu0=
+	t=1782731193; cv=none; b=CMVeHwNPBTUVlae0r76okSGAOeL2lRn9NneScpS9+xQfCaD6866KwlLmWjmchCi3Tw2NkgpEw/EWhCxdshg7Rp9/RCOqMVT/B81hwD/b6XgADuCbBEX28DlB3LIfne5crYkd7cxNPe7eQfIbgiUktN5t0bJRh0GgEW6if5YG+wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782725399; c=relaxed/simple;
-	bh=mvmgu5uBTBfMAEJlxYDsrZzwbpYc+IO6eX52BnghmVw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FQQ3sftF01slunEXMWerXQ20H4nEbW683af79Lj9A9h8t90Xpzf2RzrEOdtgzEcu9OW8TjBm7Et4N8QSPSaEJ1QdmWHelgzwFh0iJoQpOHNYKcVNuvxpzZLJ6WMczgoY49wAGZ/lVwcl9iBD4RcbQ4Q+vaoncRsmgkQWAea5a9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bwGiXYe1; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1782731193; c=relaxed/simple;
+	bh=SUpFdr2UrRS7r/EQXwliEeGOvlThQjJpw0ORxBE8I/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=it0Q6Efnatn0B/Bs9HE4igejIO6qjo1r89sgvLdZI1W0K2Eqc2GzT4dSQvQyXL80LZfPI05ISqdJG1ZiYlXgKzjGMq08Glb9IHlB7f6In23sKLSHyUQ+Q7Ko9lt54ZLAJD80rQ24kewfUM9O092tOOjFG4YJg3Cb8BO+SXn5x5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=su7UyIuq; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bwGiXYe1"
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-4927014c0deso13215015e9.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jun 2026 02:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1782725396; x=1783330196; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5VzBTGZrdgpQvGtlKCw94HtWGY2NhejYI3ygK47bEVw=;
-        b=bwGiXYe1YQ+DmfUt7zsBYj/BBM2fnUvyNnxpA2zDhVHmVHWNzBQKD2BOVbXOFcZiZA
-         IYQG0VV6HN+fe70N2wSH75dKUewveiXDO8j83I1WDDBzHuq07JpdchTD4dV/2Ue5Jl/0
-         IuUh1sEE/dkWip098RUG9O+nkzh0XcpyLa71hy7326+CNARcR6SPO0MRXLPeI/3wRW2S
-         yUQ+kTwUOgvvAOo6wU/r6ex5bp25lN2NGymcc1bHKk4jyhqE4IB3jikL3SZRGgZkeplD
-         0OeW4RQsqJ8r0ye037NVI8GwOnuWdS187cDNTartObng7yoRyj8g2tZci3ptxcR6tm/P
-         fnbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782725396; x=1783330196;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5VzBTGZrdgpQvGtlKCw94HtWGY2NhejYI3ygK47bEVw=;
-        b=Bkc5LeFep+e0nbQ7Jn0sj5VPWVEBXeksotbnLB+GuU5DLwdgltifr/K2ZQOPfr2/Ii
-         9nb+gj0yaAX1W8jSRMvR1lyaimEaweclWnfV5LG/k51rjYZhJ6qfP2TyU9JyahTLaMVy
-         7lkdX7VlYHD1r3PrPqsLlxxb3yKOEqWjZtJQpg7AtGxsYADrZ9LsMEkyVCXAK9FbZ+Zp
-         1tc6/PgLHDo+xATlHYL2WqEke4kC3pIa341soS0PZEL7uykAXJaDCF+ttndIoZTBdByu
-         9b22zwfM2Oc23/eBF+h3KqSJJb+PdtQPAaeXii9UnvatNOIOZaH4Te0FsiLwEhWi3hsu
-         6TmA==
-X-Forwarded-Encrypted: i=1; AFNElJ/QvOYj34ftMMHDtVt9b8IBVe7iAyxCjlPNnDouH069vHLLJh3sEYFYzVuh3ZQaufNm95ll7w0aZsyNd8vmNG4i@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgCnw0aK4bhTKizD9xaPHrZDcJwfvSH4aanacfz1Aro1IzQ2i0
-	ZeB2w6iZ+KuNNVTP75QdiwaCvHyF7T23eWHYn5uiG1/Spy+tuvdioPrDERL15TIN2uY=
-X-Gm-Gg: AfdE7cnjonhjgfQ53bbrfnsaumdnVjZOf1l3ql6ZID9IQ7Vg7jQsRGSV2+VNJepZeWE
-	7rYoBTtPWDFwGO9u2809pGHs6XjPxWyzPWoNiSKzjvEkBx7TlNWf16kw6Bk62sLMuw4Wikw2alP
-	Wcb0XcqVJR3lBUa4ttidtlgA+qqdvG7V4Sf7XacTqknXY6x+UmurqvmWth23T1t4ncOWKoGPJM9
-	mo/rxFnZ07T/o/qOBwBoDvc0BfTLTUZTHtZJCLNYrZUrD6XDxqRFNnibnsYAllRUMMp3KOctPzF
-	P2c2efJWeXf1UdL+LjnnB9Nq9NuHQjOhFGKHPdd6rkzrT9vMdeForcW60i+D5NiszisVA4JR1Dp
-	i6uW/FNGcBou0Yzn5wbwcOBvKODL4xurTNkpTuk7zEEpGayCja7Rd6/TvzQpzqmyZBebeUjgt8V
-	Ym4MhS3xMiZGnxbmCLvA==
-X-Received: by 2002:a05:600c:4e4b:b0:490:b724:5085 with SMTP id 5b1f17b1804b1-4926689ab05mr226507435e9.33.1782725396228;
-        Mon, 29 Jun 2026 02:29:56 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-492690100c7sm331873245e9.12.2026.06.29.02.29.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2026 02:29:55 -0700 (PDT)
-Message-ID: <9918583c-30c0-44c6-9a3f-26b02654b53b@linaro.org>
-Date: Mon, 29 Jun 2026 10:29:54 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="su7UyIuq"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65TAmgga3182164;
+	Mon, 29 Jun 2026 11:06:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=osNV81Cf+qoUqivRpWhl87Sjtkk2rTLNSEGwDsoMJ
+	7E=; b=su7UyIuq0EKMLiyCPiEW7MYEZpqdFGJDR2oysccWNbTFmLX1Klj0HKo+E
+	Wbz3KxDAuSGgg00wAJHHPSbX1ud9MJkdujEHae2HZiO5eFUTs9tuFstVTRexbBIb
+	OhKn7J2QNaUC4I+HcSzIYfRGbRrM+mm8YxWoZRlQnaPTUL/TkKgGwVz34gJbo/2B
+	UCiS1qXSeyRh8H8Eh5GWNwa8m8SZ1z8SJGua0aRM9nOpeKWYhA6BLrY+gvn/D2Wu
+	pkEfl+qUmlO+3UtAIkg7I56TNaM6PlhWuXTYvcv9QCvgQPFf11VF5NQ98v1Aop01
+	BVo1d6IEHxksdccAqpQMCwD8nuTWw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26qfrw2y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jun 2026 11:06:29 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65TB4i9V001024;
+	Mon, 29 Jun 2026 11:06:28 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2s7vw6dd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jun 2026 11:06:28 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65TB6Nac11338226
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 29 Jun 2026 11:06:23 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8A8DB20043;
+	Mon, 29 Jun 2026 11:06:23 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5B28320040;
+	Mon, 29 Jun 2026 11:06:23 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 29 Jun 2026 11:06:23 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH V2 linux-next] perf test: Skip failing 'perf test aslr' test case
+Date: Mon, 29 Jun 2026 13:05:59 +0200
+Message-ID: <20260629110559.1283453-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 0/9] perf cs-etm: Support thread stack and callchain
-To: Leo Yan <leo.yan@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linux.dev>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>,
- Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
-References: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=RYqgzVtv c=1 sm=1 tr=0 ts=6a4251b6 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8
+ a=j8SYJSOdr0Np5z0DVMAA:9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI5MDA4OCBTYWx0ZWRfX3iLHSj/0ftgq
+ A7Ml+KZ/QaMDoyDDM34jgB9NedPkbDmJpoYKfu5sVN9RoEGxvakAk9lAl+c33wVlkh3TJY9nbca
+ LYIVBeL/ABPSHHz9vsNHuueAiwrU0l8=
+X-Proofpoint-GUID: 25ahuPyf_DlhMRWgsz1OnPqnAEIkS40G
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI5MDA4OCBTYWx0ZWRfXw6s8H+jTlHL9
+ 5n70k4YmOFOtn5KSX36UjaESY9ZbvEKqESR90vSEcvfptNp5Of4Dkz/u30Hjho7c+k38Ofrdnx9
+ 1TdNf0OFE/9Cc8DXtUdVWEKEInLk3VFEHOUir/Fjzjm7Ky5KiSmhzd1f/SpHcIWFGy4ywLzNJvM
+ wT3+iUqPdOYoUSoYhWNCownkNinxCTFTgnkD5Pi3jFER+KXFrjPIvtGXyA1lRlN2365uyzdnzhE
+ 58GgQ7gvRiphRRDraoMsToseJtYAnGvg9QFQkqMouWCulXKBxbSpoeSVJXFCBWtaw25tuRF7fqf
+ aOKeCSzIBBd484timETs8jcPHYJ/DtJU3JOYvsmqBxXIbaFzetAIol64z9CiQ5PTjEEwXNsILqU
+ RXg3IQD6iIVAXBPkKWJBr6FosXJ7O1N63WeqD7ijGnBh5s1xppQfmMpIiLCmM2Z4aidU/Sc+01z
+ 40yBNxh5PXkBho90dwg==
+X-Proofpoint-ORIG-GUID: _18UJoo5VyKUh_s6iao3IyZLLRVgForc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-29_03,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 impostorscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606290088
 
+V2: In response to sashiko:
+  > [Severity: Medium]
+  > Does unconditionally setting err=2 here mask prior test failures?
+  >
+  Do not change the return code when skipping the test. The failure
+  is printed on stdout anyway and does not hide any previouly
+  failed tests.
 
+  Added correct commit-id as suggested by Namhyung Kim
 
-On 17/06/2026 4:08 pm, Leo Yan wrote:
-> This series adds thread-stack and synthesized callchain support for Arm
-> CoreSight, which comes from older series [1] but heavily rewritten.
-> 
-> CS ETM previously kept last-branch state in a per-trace-queue buffer.
-> That effectively makes the state per CPU, while the call/return history
-> belongs to a thread. This series moves branch tracking to the common
-> thread-stack code.
-> 
-> The series records CoreSight branches with thread_stack__event(), uses
-> thread_stack__br_sample() for last branch entries, flushes thread stacks
-> after decoder resets.
-> 
-> A decoder reset between AUX trace buffers is treated as a global trace
-> discontinuity, so all thread stacks are flushed, so avoids carrying
-> stale call/return history across a trace discontinuity.
-> 
-> One limitation remains for instructions emulated by the kernel. In that
-> case the exception return address may not match the return address
-> stored in the thread stack, because after exception return can be one
-> instruction ahead. The stack can still recover when a later return
-> matches an upper caller. Given emulated instructions are not the common
-> target for performance callchain analysis. Supporting this would require
-> extending the common thread-stack path to accept both the real target
-> address and an adjusted address for stack matching, so this series
-> leaves that extra complexity out.
-> 
-> The series has been tested on Orion6 board:
-> 
->    perf test 136 -vvv
->    136: CoreSight synthesized callchain:
->    --- start ---
->    test child forked, pid 3539
->    ---- end(0) ----
->    136: CoreSight synthesized callchain			: Ok
-> 
->    perf script --itrace=g16i10il64
-> 
->    callchain_test   17468 [005] 1031003.229943:         10 instructions:
->                aaaac32507c4 main+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
->                ffff90bd233c call_init+0x9c (inlined)
->                ffff90bd233c __libc_start_main_impl+0x9c (inlined)
->                aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-> 
->    callchain_test   17468 [005] 1031003.229943:         10 instructions:
->                aaaac3250774 do_svc+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaac3250798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaac32507b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaac32507c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
->                ffff90bd233c call_init+0x9c (inlined)
->                ffff90bd233c __libc_start_main_impl+0x9c (inlined)
->                aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-> 
->    callchain_test   17468 [005] 1031003.229944:         10 instructions:
->            ffff800080010c20 vectors+0x420 ([kernel.kallsyms])
->                aaaac3250784 do_svc+0x1c (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaac3250798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaac32507b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                aaaac32507c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->                ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
->                ffff90bd233c call_init+0x9c (inlined)
->                ffff90bd233c __libc_start_main_impl+0x9c (inlined)
->                aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-> 
-> Note, the test fails on Juno board which is caused by many discontinuity
-> packets (mainly caused by NO_SYNC elem). This is likely caused by the
-> FIFO overflow on the path.
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20200220052701.7754-1-leo.yan@linaro.org/
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
-> Changes in v10:
-> - Change to syscall(SYS_gettid) for build failure on x86 (James).
-> - Extracted sample thread stack into cs_etm__sample_branch_stack().
-> - Link to v9: https://lore.kernel.org/r/20260616-b4-arm_cs_callchain_support_v1-v9-0-f8fad931c413@arm.com
-> 
-> Changes in v9:
-> - Added patch 01 to fixed thread leak during trace queue init (sashiko).
-> - Added check in instruction and branch samples in
->    cs_etm__add_stack_event() (sashiko).
-> - Released frontend_thread properly in cs_etm__context() (sashiko).
-> - Refined cs_etm__flush_all_stack() to use switch (sashiko).
-> - Gathered James' review tags.
-> - Rebased on the latest perf-tools-next.
-> - Link to v8: https://lore.kernel.org/r/20260611-b4-arm_cs_callchain_support_v1-v8-0-737948584fea@arm.com
-> 
-> Changes in v8:
-> - Updated test_arm_coresight_disasm.sh to pass "--itrace=b" and updated
->    examples in arm-cs-trace-disasm.py (James).
-> - Removed static annotation in callchain workload and renamed functions
->    with prefix "callchain_" to reduce naming conflict (James).
-> - For callchain test pre-condition check, removed the aarch64 check and
->    added the root permission check (James).
-> - Resolved the shellcheck errors (James).
-> - Link to v7: https://lore.kernel.org/r/20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com
-> 
-> Changes in v7:
-> - Rebased on the latest perf-tools-next.
-> - Used struct_size() for allocation callchain struct (James).
-> - Added a helper cs_etm__packet_has_taken_branch() (James).
-> - Minor improvements for the callchain test (used record-ctl FIFO and
->    reworked the validation callstack push / pop).
-> - Link to v6: https://lore.kernel.org/r/20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com
-> 
-> Changes in v6:
-> - Heavily rewrote the patches since restarted the work after 6 years.
-> - Changed to use the common thread-stack for branch stack and callchain
->    management.
-> - Added a callchain test.
-> - Link to v5: https://lore.kernel.org/linux-arm-kernel/20200220052701.7754-1-leo.yan@linaro.org/
-> 
-> Changes in v5:
-> - Addressed Mike's suggestion for performance improvement for function
->    cs_etm__instr_addr() for quick calculation for non T32;
-> - Removed the patch 'perf cs-etm: Synchronize instruction sample with
->    the thread stack' (Mike);
-> - Fixed the issue for exception is taken for branch target address
->    accessing, for the branch sample and stack thread handling, the
->    related patches are 01, 02, 07;
-> - Fixed the stack thread handling for instruction emulation and single
->    step with patches 08, 09.
-> - Link to v4: https://lore.kernel.org/linux-arm-kernel/20200203020716.31832-1-leo.yan@linaro.org/
-> 
-> ---
-> Leo Yan (9):
->        perf cs-etm: Fix thread leaks on trace queue init failure
->        perf cs-etm: Filter synthesized branch samples
->        perf cs-etm: Decode ETE exception packets
->        perf cs-etm: Refactor instruction size handling
->        perf cs-etm: Use thread-stack for last branch entries
->        perf cs-etm: Flush thread stacks after decoder reset
->        perf cs-etm: Support call indentation
->        perf cs-etm: Synthesize callchains for instruction samples
->        perf test: Add Arm CoreSight callchain test
-> 
->   tools/perf/Documentation/perf-test.txt             |   6 +-
->   tools/perf/scripts/python/arm-cs-trace-disasm.py   |   9 +-
->   tools/perf/tests/builtin-test.c                    |   1 +
->   tools/perf/tests/shell/coresight/callchain.sh      | 172 ++++++++++
->   .../shell/coresight/test_arm_coresight_disasm.sh   |   4 +-
->   tools/perf/tests/tests.h                           |   1 +
->   tools/perf/tests/workloads/Build                   |   2 +
->   tools/perf/tests/workloads/callchain.c             |  33 ++
->   tools/perf/util/cs-etm.c                           | 377 +++++++++++++--------
->   9 files changed, 454 insertions(+), 151 deletions(-)
-> ---
-> base-commit: 8c214ad8cb8d692c82c6466b8e88973dbfa8e064
-> change-id: 20260521-b4-arm_cs_callchain_support_v1-2c2a70719bcc
-> 
-> Best regards,
+The test case 'perf test aslr' fails on s390. The root cause of the
+failure is subtest test_callchain_aslr. This test invokes command
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+ # ./perf record -g -e task-clock:u -o /tmp/perf-test-aslr \
+	-- perf test -w noploop 3
+
+to generate a call stack using event task-clock:u. On s390 this defaults
+to '--call-graph dwarf' whereas on x86_64 this defaults to framepointer
+(fp) format. The command
+
+ # ./perf inject --aslr -i /tmp/perf-test-aslr
+
+now scans all SAMPLE entries recorded in the perf.data file to convert
+possible addresses. This is done in aslr_tool__process_sample() looking
+at sample_type bits PERF_SAMPLE_IP, PERF_SAMPLE_TID,
+PERF_SAMPLE_TIME, PERF_SAMPLE_PERIOD, PERF_SAMPLE_CALLCHAIN,
+PERF_SAMPLE_REGS_USER and PERF_SAMPLE_STACK_USER.
+On s390 the samples do not contain FP entries
+of type PERF_SAMPLE_CALLCHAIN (the bit is set in sample_type, but the
+number of FP entries is 0).
+The processing enters the PERF_SAMPLE_STACK_USER portion where the
+data is copied to the newly constructed sample and then aborted with
+this warning:
+
+ /* TODO: can this be less conservative? */
+ pr_debug("Dropping stack user sample as possible ASLR leak\n");
+
+With command line option '--call-graph dwarf' the new output file
+does not contain any samples at all. This leads to a missing $new_addr
+value in the shell script and a failure.
+
+Fix this and skip this subtest. Emit a hint that this subtest is
+currently unsupported on all platform when option --call-graph dwarf
+is selected.
+Since one subtest is skipped, the complete test is reported as
+skipped.
+
+Fixes: 190c45463844 ("perf test: Add inject ASLR test")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Suggusted-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ tools/perf/tests/shell/inject_aslr.sh | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/shell/inject_aslr.sh b/tools/perf/tests/shell/inject_aslr.sh
+index c00461828ea7..d83c2591db8f 100755
+--- a/tools/perf/tests/shell/inject_aslr.sh
++++ b/tools/perf/tests/shell/inject_aslr.sh
+@@ -135,8 +135,14 @@ test_callchain_aslr() {
+     echo "Callchain ASLR test [Failed - no noploop samples in original file]"
+     err=1
+   elif [ -z "$new_addr" ]; then
+-    echo "Callchain ASLR test [Failed - could not find remapped address]"
+-    err=1
++    if perf evlist -v -i "${data}" | grep -q 'sample_type:.*STACK_USER'; then
++      echo "Dropping stack user sample as possible ASLR leak"
++      echo "Call-graph dwarf not supported with 'perf inject --aslr'"
++      echo "Callchain ASLR test [Skip]"
++    else
++      echo "Callchain ASLR test [Failed - could not find remapped address]"
++      err=1
++    fi
+   elif [ "$orig_addr" = "$new_addr" ]; then
+     echo "Callchain ASLR test [Failed - addresses are not remapped]"
+     err=1
+-- 
+2.54.0
 
