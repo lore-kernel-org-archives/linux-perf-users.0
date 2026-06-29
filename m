@@ -1,103 +1,111 @@
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1765F35E936;
-	Sun, 28 Jun 2026 11:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60F82853E9;
+	Mon, 29 Jun 2026 02:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782645495; cv=none; b=sniOZnaXofyrwC0Vjf8o5gBwAB7IexccE1uEk1NFcZUtyS6gKEfizboPfzj7H5NrXYdhRZlEHzml73mCmYk4Wou8jOKr/WueSGKWjyqBGF1umyhe2Ooh1t4w5DLoGEYVF6LzJnPCBhUdBOJSRTxRAIxWT6lN7N3voIbiKm9K+t0=
+	t=1782700363; cv=none; b=jnPQIUlog5vPpUIqH076jQM4KxjhPQkxvv5wn9Nz7HIi5kPZJUQSW3ru2xZJ+KcfmBybPzjwV/M5ZejjHERuwdgdMRQWKpH1OAUyJoi1SR/zeYaVbVgplDwqu0kTbix5VE9+dtpKLJsNn7YxcsBQHTH0eC92gOulB/Katge19T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782645495; c=relaxed/simple;
-	bh=eybrTZFW+5aGnf77L00LY6WYIYBuAr3zDWx/OvIhanc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p2Pk9CNPaQi0TzoPaOchc5AL+Rl+jkoLazRvD/YNEKh6rzUc09seJ2EYI/oGdsItSHTq26eGTTsoGLewAAclD/kAiBfo/KAeMFEPasZP9TZGOgaQhTpAeHNoZwjpOyt2nTfvtVHvFPFItgDdZnSygvlV5UtJzfNUXHrPX4FUkHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [117.182.74.7])
-	by APP-05 (Coremail) with SMTP id zQCowAAHfO_ZAkFqYAzCFQ--.32658S2;
-	Sun, 28 Jun 2026 19:17:48 +0800 (CST)
-From: WenTao Liang <vulab@iscas.ac.cn>
-To: linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	tglx@kernel.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	WenTao Liang <vulab@iscas.ac.cn>,
-	Greg KH <gregkh@linuxfoundation.org>
-Subject: [PATCH v2] x86/events/intel/uncore: fix PCI refcount leak in discover_upi_topology
-Date: Sun, 28 Jun 2026 19:17:39 +0800
-Message-Id: <20260628111739.43731-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	s=arc-20240116; t=1782700363; c=relaxed/simple;
+	bh=GnN17H6SRBKR6hb60Yf3kz5VFJHX+q9782F+0B3duFc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z/jwnX2i+NaBhJOt7q8J3HSK5ktNTpM/XJ2lVOhPfk49u8pDiPOOkChag64Y2hAjHyzoEirnMYogBLGG9xhubQc2Hat6ao5JoOCHCnab8LCbDc3rH+KEAFLG5wySxBZqUc1fZOnlvpaHI4UlHRIJ8cvnQEcqXEHR0A1t1lrlspM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nHGwesjU; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nHGwesjU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782700361; x=1814236361;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GnN17H6SRBKR6hb60Yf3kz5VFJHX+q9782F+0B3duFc=;
+  b=nHGwesjUxO6XuY0TqFxmIkiTv0bNmNYDJPODkcAICoJjGczpS71M9W5c
+   yfGcbnOXVEKX1LmaCTiTX+t9Jfciy8c124acMbkTDLvSLzDAiOCZjmyBH
+   Rsy+ukTsYuS1HNOoo+mghKYu+KlODlIAXqlDtlthEdLR1Mc/83fTGmF3a
+   Ni6lvClX01O5dtzwK8bwuYwiZ9Hyx2n8ebn4u4N49nPcX/jmxo2CMVE1y
+   9CoqHu4eES7INK/0vosX6XdcHrJyS9CYHWBDKJzbz83GD012aUGrQsWaA
+   VLBKia14gFBjCA7DcGKr5lcRmpXCYFES7Rxs9wdjX6nx4ETY8pHd0fg0b
+   A==;
+X-CSE-ConnectionGUID: RlQ8b5++RbyrVYFZ/lWTlg==
+X-CSE-MsgGUID: SVuVmqMITTW/Ay4hFbihaw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11831"; a="82377993"
+X-IronPort-AV: E=Sophos;i="6.24,231,1774335600"; 
+   d="scan'208";a="82377993"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2026 19:32:39 -0700
+X-CSE-ConnectionGUID: NjZUo6jVQV+ZdGJfWqcEdQ==
+X-CSE-MsgGUID: ObzSnO0MRJO3mwJ9hH5T+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,231,1774335600"; 
+   d="scan'208";a="249201539"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2026 19:32:34 -0700
+Message-ID: <d29d83a9-4b29-4f1a-8b63-7308e09ab295@linux.intel.com>
+Date: Mon, 29 Jun 2026 10:32:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAHfO_ZAkFqYAzCFQ--.32658S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KrykuFWfGw1fKw1ktFWUJwb_yoW8GFyUpr
-	W3tF9rtr4fW3s2ga98C3WI9rW2vFs8Gr9Ygr4UK34I9wn8Xr1xJFW2gw15KFy8CrykJr1a
-	v3Wjvw48X34UAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0pRx-BiUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRQMA2pAiNnF5gABsL
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] x86/events/intel/uncore: fix PCI refcount leak in
+ discover_upi_topology
+To: WenTao Liang <vulab@iscas.ac.cn>, linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org, tglx@kernel.org,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <20260628111739.43731-1-vulab@iscas.ac.cn>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260628111739.43731-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In the inner for loop, dev is repeatedly overwritten by
-pci_get_domain_bus_and_slot() without first releasing the previous dev
-via pci_dev_put(). The err label only releases the last ubox and dev
-references, while the references from earlier loop iterations are
-permanently leaked. Fix by adding pci_dev_put(dev) before the overwriting
-assignment.
 
-Suggested-by: Greg KH <gregkh@linuxfoundation.org>
-Fixes: fdd041028f22 ("perf/x86/intel/uncore: Factor out topology_gidnid_map()")
-Cc: stable@vger.kernel.org
-Signed-off-by: WenTao Liang <vulab@iscas.ac.cn>
----
-Changes in v2:
-- Fix patch format based on reviewer feedback
----
----
- arch/x86/events/intel/uncore_snbep.c | 1 +
- 1 file changed, 1 insertion(+)
+On 6/28/2026 7:17 PM, WenTao Liang wrote:
+> In the inner for loop, dev is repeatedly overwritten by
+> pci_get_domain_bus_and_slot() without first releasing the previous dev
+> via pci_dev_put(). The err label only releases the last ubox and dev
+> references, while the references from earlier loop iterations are
+> permanently leaked. Fix by adding pci_dev_put(dev) before the overwriting
+> assignment.
+>
+> Suggested-by: Greg KH <gregkh@linuxfoundation.org>
+> Fixes: fdd041028f22 ("perf/x86/intel/uncore: Factor out topology_gidnid_map()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: WenTao Liang <vulab@iscas.ac.cn>
+> ---
+> Changes in v2:
+> - Fix patch format based on reviewer feedback
+> ---
+> ---
+>  arch/x86/events/intel/uncore_snbep.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+> index 215d33e260ed..cecc1ce0a248 100644
+> --- a/arch/x86/events/intel/uncore_snbep.c
+> +++ b/arch/x86/events/intel/uncore_snbep.c
+> @@ -5494,6 +5494,7 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
+>  		for (idx = 0; idx < type->num_boxes; idx++) {
+>  			upi = &type->topology[lgc_pkg][idx];
+>  			devfn = PCI_DEVFN(dev_link0 + idx, ICX_UPI_REGS_ADDR_FUNCTION);
+> +			pci_dev_put(dev);
+>  			dev = pci_get_domain_bus_and_slot(pci_domain_nr(ubox->bus),
+>  							  ubox->bus->number,
+>  							  devfn);
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 215d33e260ed..cecc1ce0a248 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -5494,6 +5494,7 @@ static int discover_upi_topology(struct intel_uncore_type *type, int ubox_did, i
- 		for (idx = 0; idx < type->num_boxes; idx++) {
- 			upi = &type->topology[lgc_pkg][idx];
- 			devfn = PCI_DEVFN(dev_link0 + idx, ICX_UPI_REGS_ADDR_FUNCTION);
-+			pci_dev_put(dev);
- 			dev = pci_get_domain_bus_and_slot(pci_domain_nr(ubox->bus),
- 							  ubox->bus->number,
- 							  devfn);
--- 
-2.39.5 (Apple Git-154)
+I have replied previous patch, I suppose this issue has been fixed by this
+patch
+https://lore.kernel.org/all/20260602144908.263680-4-zide.chen@intel.com/,
+isn't it? Thanks.
+
 
