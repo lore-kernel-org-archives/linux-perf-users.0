@@ -1,127 +1,206 @@
-Received: from out199-13.us.a.mail.aliyun.com (out199-13.us.a.mail.aliyun.com [47.90.199.13])
+Received: from flow-a7-smtp.messagingengine.com (flow-a7-smtp.messagingengine.com [103.168.172.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EE33AE188;
-	Mon, 29 Jun 2026 06:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E493A7F46;
+	Mon, 29 Jun 2026 06:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782715706; cv=none; b=DYJRO4Gl8o9TkXNP6PvOiJ0ea4JDSWgFf/J8SoPHntOtJZNk9z0JGeVSDUBvjV0RKlam3tsB5XbiajwM6AeQhy0lPGR5A0/hrDHP68q9f+2Quep+xHDU7R2O78osymf8TLobh79QOaIzdoLisp9QBVy/Y5j9nEDM908knO3F6Xo=
+	t=1782715965; cv=none; b=WNukvshhnJkMqJBrSROazgTBp/aNL0z0aSUiHeCC6lGNic7EZyj+kn4BZPp511yrNGQzSO9mLPx8eMBB6Y4JKaUeEDc7JIOSEWa3XQxLTNB+xV1Hx3kj8WQpMUV8OHsibPk5XTDpdUs8xtMr3DUSlSDsUqaQxKARfHh4Gkw6WFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782715706; c=relaxed/simple;
-	bh=S9PPBd03nshTXdebHu0IRlNHz4qa/HrTIvMxXIyLevQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A0phZaABrFuQ2vyfkMFzFj5jj7RARkvACAPK7TnGpsWeHTZPkrXgskbT/JYvGg9Xut2NMv2Xvnn9jgTHjKFro9sZAJFVofjn2DKu2aTft2XYTmd+ETCDflBu6wf1P4S/tkq+RatFZYCnM01t1IbsQSor2f5yaSbkJ85O680QNzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RMnGm7bG; arc=none smtp.client-ip=47.90.199.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1782715965; c=relaxed/simple;
+	bh=H2lwxsHZZ7EtTub4WwMeUp/eTT8kysSLHLDVR3xxm8k=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=KKsoXH/8hwsJhExR7X/khsHMbB7QJFaGcun7LAMsYVzgiT2v9Nj0k5bb5CUtCwnI3/Xdih9pJMKgmIsPi4P2Vch0y1pk7Zz2UPHXeDNvN8qCHD4TS6pDMoQ8xIiDYdNsOv5N2LPdSo8l/an2SMNPKT1n/2SmZ3b7zLshmlsZyco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=moVeurPh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hB46Z3Kr; arc=none smtp.client-ip=103.168.172.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RMnGm7bG"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1782715689; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=cs5txbx9bpKaRI7bmx5ga6+SdBKGKPqwgmoXTwT+GtE=;
-	b=RMnGm7bGVVXeA52sHPH5YIYUBBBDtE6zrwfryltfVAt1PtVhGj0UefGc9IlY4gSyg3iQ2T1udaWTPKFqHDQxAe0EtD6Ic9nJfoJKeo6rAuJ8/ePC35kMOQL5QqsFeZdLKrZNHCfw+ANQZnnEpqtyfaIh4iVtImo5rksqyltPo+k=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=wanghan@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X5nWtcO_1782715355;
-Received: from wanghan-Workstation..(mailfrom:wanghan@linux.alibaba.com fp:SMTPD_---0X5nWtcO_1782715355 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 29 Jun 2026 14:42:36 +0800
-From: Wang Han <wanghan@linux.alibaba.com>
-To: Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org,
-	Oleg Nesterov <oleg@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	oliver.yang@linux.alibaba.com,
-	xueshuai@linux.alibaba.com,
-	zhuo.song@linux.alibaba.com,
-	jkchen@linux.alibaba.com,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 3/7] riscv: ftrace: always preserve s0 in dynamic ftrace register frame
-Date: Mon, 29 Jun 2026 14:42:24 +0800
-Message-ID: <20260629064228.3195856-4-wanghan@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="moVeurPh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hB46Z3Kr"
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailflow.phl.internal (Postfix) with ESMTP id 8ADB1138013F;
+	Mon, 29 Jun 2026 02:52:41 -0400 (EDT)
+Received: from phl-imap-05 ([10.202.2.95])
+  by phl-compute-04.internal (MEProxy); Mon, 29 Jun 2026 02:52:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1782715961;
+	 x=1782723161; bh=tOv4MTUTsrDaiEgHTG/NX+h1I0Ci3tUDRjXnSX8B8ZY=; b=
+	moVeurPh2zmNrJzP8rbqUPqQIFGV1KR17RcUSPE3wJu/2S/XINfbBToo5f9RQh1/
+	clf/45HkV8kiwjLDnKA0ZGB+xXs/LxQ97UYdGp3mAyhY1rMWfb2ut8ebDlQumP3M
+	VdcxoT0cWYJThMe3tHYwBYuJA8gYjCl4dkRIsx+Q/6emrBa3QY8Idt3PtT6T4gzt
+	pjXS/9QEWhZ2jfyda0VyMgxTDzLco04X3qt/vrJYJWvdC+PMyVwHCjEhVeOyJIAS
+	gEH+rz/z5nLfxJeyVUnha0jbbsfFFgbhjlE2+BlgPqMCXL8vkYcgC6UiT7hGGY74
+	xGTwwQphEUZ53wLPdY/lOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782715961; x=
+	1782723161; bh=tOv4MTUTsrDaiEgHTG/NX+h1I0Ci3tUDRjXnSX8B8ZY=; b=h
+	B46Z3KrfXyr5c4NuJHJwRpFO3VNQg2XJYEDC6YUGKJUsEhIcM3CblEFDPTT7wsQg
+	LH0S5A3tvITWrXHqFdF1EkeHZjTnuQT+pgHJLOdtZCOrRZh456xh3Sx0k+T+zXCp
+	kNYUxD9xFRSmKJKTjyfm848VuBVywgSQdS0Y1730vc3RugkRsZPqt6GHmPUgFsPs
+	4nONFFGrtMfsX7i/XMkZbKMKnAy+BEdiCfia6dBPn42W2/ZviCTsT6LG5Oj/ruof
+	ficdFWVRuGB5I8j63MB1URziScDM3F1SM330Kw/lKTbew/mmDBQO8+P/9fMGp4QQ
+	AUBT5DiFaGcisBboaL0uQ==
+X-ME-Sender: <xms:NxZCaklUX7qMSFvSQI3f1it9KkLu2jpq-bfNhuZJai7DIcz_l7yaVw>
+    <xme:NxZCaupMK91NnfDxBP2Jl6u4UEarGr4W4BjRkQiIO7vCuXpmdFgh7w7Ak6Ow7kDLB
+    GwQtBq3A_KdmViF1Mt2hB3V4JkgKSjPIp_adeSQyOs0PGQS4AmZ4t8m>
+X-ME-Proxy-Cause: dmFkZTGwOHixY05HMZ27iS84Skvde8o1DDsiwY6D60DzXWO2ZVrwdRrpSa8R1278jed1uY
+    wlWCiz3tDrtZHQkvMp/MBP5v/ghF2ufPQuFtrtJ4F0wh9DtG/XVpt0pROqEThSmUEDgCf0
+    eTVEoMiS68VQPXRPt6VCUkkecnFqx+ZBjUZbbdMDP3RsDcc++iQYtFCDsx7qN3zPyVD3xY
+    9i6Bzl+AIdZTqf3H9PE4La2YJtJbmBtGNvfDerKjWxD0tIQdIxc4ff6CyIl+oAxSN3L67g
+    IQoXuyz4qEo4Q1DYv/YVlijZQSf0JOEgla6HGT0QZP1hJCRQsFe920XNZ7JCBQqZpPrjbH
+    Tnk4/qORnBMbT1wfL00kYIifWwvRfHEzwO8X4XjYvXGKPupOF+Aih7SyjMueufJZIiNJhm
+    gk+r3F4ioudpLQgLl8s2Bai/sQm/lpFYJPWmS816rZo8N1I3fGaKF8vaCjnsPMfwksRvl0
+    6Af/2BtixmkFEnOpg4axh9H+xCdn89MnkDhmnuoJzY/popvh/LfTLliWEeyDWOhpCgCE4O
+    h18zdmDtHrrW/u8WZmRXrY3iQ3r0wTSENEm+dusuNb8xtIAhju1BiHn0naN+53TgzSbvzd
+    yzmZYCi7ifaUifdFk2wMrmhMIjP1c9DeNzX5Xx4Sctv2yWtIBtVWa0+zIeZw
+X-ME-Proxy: <xmx:NxZCavqymErkIRztjouBu-7V0slB3o25MfBbVM9KSCex8QOrTFeOZg>
+    <xmx:NxZCan2DdzgvxbYRzX6pYCwK3xwrIk-cU2tFN57SqHbLubX7sFp6RQ>
+    <xmx:NxZCaigvrzp3oRkZE6LwBiBQXYgj4l_X1hgb0NxTXofsjKmlb0-Pzg>
+    <xmx:NxZCamzJNW0pQlTHLc_D5xB2Wj8XraMxhsaupP8Tsn_eAmCJi2chTA>
+    <xmx:ORZCasPFEmYzO9oCU9bgbYUUKaJzQAtBQ2CkEcKsKYO_AOQRt9ou1Eza>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 54A63182007E; Mon, 29 Jun 2026 02:52:39 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: ApSqBjiSqQZ-
+Date: Mon, 29 Jun 2026 08:52:18 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Juergen Gross" <jgross@suse.com>, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, x86@kernel.org,
+ linux-acpi@vger.kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
+ linux-pci@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-ide@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-fbdev@vger.kernel.org, linux-crypto@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-mtd@lists.infradead.org,
+ platform-driver-x86@vger.kernel.org
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+ "Daniel Lezcano" <daniel.lezcano@kernel.org>,
+ "Zhang Rui" <rui.zhang@intel.com>,
+ "lukasz.luba@arm.com" <lukasz.luba@arm.com>,
+ "Jason Baron" <jbaron@akamai.com>, "Borislav Petkov" <bp@alien8.de>,
+ "Tony Luck" <tony.luck@intel.com>,
+ "Yazen Ghannam" <yazen.ghannam@amd.com>, "Len Brown" <lenb@kernel.org>,
+ "Pavel Machek" <pavel@kernel.org>, "Thomas Gleixner" <tglx@kernel.org>,
+ "Ingo Molnar" <mingo@redhat.com>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Sean Christopherson" <seanjc@google.com>,
+ "Paolo Bonzini" <pbonzini@redhat.com>,
+ "Kirill A. Shutemov" <kas@kernel.org>,
+ "Rick Edgecombe" <rick.p.edgecombe@intel.com>, "Pu Wen" <puwen@hygon.cn>,
+ "Bjorn Helgaas" <bhelgaas@google.com>,
+ "Ajay Kaher" <ajay.kaher@broadcom.com>,
+ "Alexey Makhalov" <alexey.makhalov@broadcom.com>,
+ "Broadcom internal kernel review list"
+ <bcm-kernel-feedback-list@broadcom.com>,
+ "Viresh Kumar" <viresh.kumar@linaro.org>,
+ "Reinette Chatre" <reinette.chatre@intel.com>,
+ "Dave Martin" <Dave.Martin@arm.com>, "James Morse" <james.morse@arm.com>,
+ "Babu Moger" <babu.moger@amd.com>,
+ "Tony W Wang-oc" <TonyWWang-oc@zhaoxin.com>,
+ "Damien Le Moal" <dlemoal@kernel.org>,
+ "Niklas Cassel" <cassel@kernel.org>, "Dave Airlie" <airlied@redhat.com>,
+ "Helge Deller" <deller@gmx.de>, linux-geode@lists.infradead.org,
+ "Olivia Mackall" <olivia@selenic.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ "Linus Walleij" <linusw@kernel.org>,
+ "Bartosz Golaszewski" <brgl@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ "Haiyang Zhang" <haiyangz@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
+ "Dexuan Cui" <decui@microsoft.com>, "Long Li" <longli@microsoft.com>,
+ "Guenter Roeck" <linux@roeck-us.net>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+ "Namhyung Kim" <namhyung@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>,
+ "Adrian Hunter" <adrian.hunter@intel.com>,
+ "James Clark" <james.clark@linaro.org>,
+ "Josh Poimboeuf" <jpoimboe@kernel.org>,
+ "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>,
+ "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+ "Andy Lutomirski" <luto@kernel.org>,
+ "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+ "Huang Rui" <ray.huang@amd.com>,
+ "Mario Limonciello" <mario.limonciello@amd.com>,
+ "Perry Yuan" <perry.yuan@amd.com>,
+ "K Prateek Nayak" <kprateek.nayak@amd.com>,
+ "srinivas.pandruvada@linux.intel.com"
+ <srinivas.pandruvada@linux.intel.com>,
+ "Artem Bityutskiy" <artem.bityutskiy@linux.intel.com>,
+ "Artem Bityutskiy" <dedekind1@gmail.com>,
+ "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>,
+ "Ashok Raj" <ashok.raj.linux@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Rajneesh Bhardwaj" <irenic.rajneesh@gmail.com>,
+ "David E Box" <david.e.box@intel.com>, xen-devel@lists.xenproject.org
+Message-Id: <d7c1db52-529a-43cc-ac7d-38b52627e8bc@app.fastmail.com>
+In-Reply-To: <20260629060526.3638272-1-jgross@suse.com>
+References: <20260629060526.3638272-1-jgross@suse.com>
+Subject: Re: [PATCH 00/32] x86/msr: Drop 32-bit MSR interfaces
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-struct __arch_ftrace_regs declares s0 unconditionally, and both
-ftrace_regs_get_frame_pointer() and ftrace_partial_regs() read it
-unconditionally. But the SAVE_ABI_REGS / RESTORE_ABI_REGS macros in
-mcount-dyn.S only stored s0 under HAVE_FUNCTION_GRAPH_FP_TEST
-(CONFIG_FUNCTION_GRAPH_TRACER && CONFIG_FRAME_POINTER). With
-CONFIG_FRAME_POINTER=n the slot held whatever was on the stack before,
-so any callback going through ftrace_partial_regs() saw a garbage
-regs->s0. RISC-V kernels default to FRAME_POINTER=y, which is why this
-has not bitten in practice.
+On Mon, Jun 29, 2026, at 08:04, Juergen Gross wrote:
+> For accessing the MSR registers on the local CPU, there are 2 types of
+> interfaces: the "modern" 64-bit ones (rdmsrq() etc.) and the 32-bit
+> ones (rdmsr() etc.) which are using the upper and lower 32-bit halves
+> of the 64-bit wide MSR register values.
+>
+> The 32-bit interfaces are not optimal for 3 reasons:
+>
+> - They are based on primitives using 64-bit sized values anyway.
+>
+> - Modern x86 CPUs have added support for MSR access instructions using
+>   an immediate value instead of a register for addressing the MSR,
+>   while the value is in a 64-bit register.
+>
+> - rdmsr() is a macro storing the upper and lower 32-bit halves in
+>   variables specified as macro parameters. This is obscuring variable
+>   assignment through a macro. Additionally rdmsrq() is mimicking this
+>   pattern by being a macro, too, with the target variable specified as
+>   a parameter as well.
+>
+> For those reasons drop the 32-bit interfaces for accessing the x86 MSR
+> registers completely and only use the 64-bit variants.
 
-Save and restore s0 unconditionally in the dynamic ftrace ABI register
-frame. This fixes the latent garbage-s0 case, brings the dynamic ftrace
-path in line with the static _mcount path (mcount.S SAVE_ABI_STATE
-already saves s0 unconditionally), and matches the frame layout already
-documented in the comment above SAVE_ABI_REGS. It is also a prerequisite
-for the upcoming reliable unwinder, which reads
-ftrace_regs_get_frame_pointer(fregs) directly.
+Hi J=C3=BCrgen,
 
-The cost is one extra REG_S/REG_L pair per traced call, negligible
-compared to the overall ftrace cost; the existing FREGS_SIZE_ON_STACK
-already reserved the slot, so no extra stack space is used.
+I assume this is fine, but since you don't mention it explicitly here,
+please clarify what this means for 32-bit CPUs without the rdmsrq
+instruction. Those will continue using the same instructions as before
+and just change the calling conventions, right?
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
----
- arch/riscv/kernel/mcount-dyn.S | 4 ----
- 1 file changed, 4 deletions(-)
+> Note that most patches of this series are independent from each other.
+> Only the patches removing a specific interface (patches 7, 15, 26 and
+> 30) and the last two patches of the series depend on all previous
+> patches.
 
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index 082fe0b0e3c0..26c55fba8fec 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -85,9 +85,7 @@
- 	addi	sp, sp, -FREGS_SIZE_ON_STACK
- 	REG_S	t0,  FREGS_EPC(sp)
- 	REG_S	x1,  FREGS_RA(sp)
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	REG_S	x8,  FREGS_S0(sp)
--#endif
- 	REG_S	x6,  FREGS_T1(sp)
- #ifdef CONFIG_CC_IS_CLANG
- 	REG_S	x7,  FREGS_T2(sp)
-@@ -113,9 +111,7 @@
- 	.macro RESTORE_ABI_REGS
- 	REG_L	t0, FREGS_EPC(sp)
- 	REG_L	x1, FREGS_RA(sp)
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	REG_L	x8, FREGS_S0(sp)
--#endif
- 	REG_L	x6,  FREGS_T1(sp)
- #ifdef CONFIG_CC_IS_CLANG
- 	REG_L	x7,  FREGS_T2(sp)
--- 
-2.43.0
+It looks like you are touching most files twice or more here, to
+first convert from rdmsr to rdmsrq and then to change the
+two-argument rdmsrq() macro to a single-argument inline. If you
+introduce the inline version of rdmsrq() first, you should be
+able to skip the second step (patch 31) as they could be able
+to coexist.
+
+     Arnd
