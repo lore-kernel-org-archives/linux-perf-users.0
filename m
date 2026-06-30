@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41F033AD9B
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 23:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BB529C327
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 23:57:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782863599; cv=none; b=Ctk/T1SqgG7Z6TQnR2EWAWSEZgpsolIb1Lv6oS8zGBExqhNGLX+lspCTjF4MFzZIVOElpDLfwm2KmMKOMlPDZkElkPgF8pBnaRYizccaVBSGP/S3QBjzu99FB853hrjKoY14+pb5pXQZMzCp6eE0qd0zt5cWdVBx7qqm99JzsYo=
+	t=1782863857; cv=none; b=eKYua4hI7VtenQtfPwuIIXIq+WmwH2DGDcpuNOXkjm0jIwtiN7r81uf9RzlhqzSgWwI2SNMR7AmvBlLk2iIlcailqpZCoWlIJ9QqJyjv+qe+81EKph8enjps7YuudXcEXCndRg4/07L7XQqk47FNuT5nCnd/slls+NUvwEdu8QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782863599; c=relaxed/simple;
-	bh=jbeigyJgmdJ95WdVS6ujhvxIW1iecOiddKzhK8+8/ro=;
+	s=arc-20240116; t=1782863857; c=relaxed/simple;
+	bh=x2ZZuVaiC2zr+BTS6zxzzK7ekvdv4n+hwgoVyVElBnI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=irbe+xxrj33FuSvAkp51FhjItf/AuODUiszy7ljI3ZK+sXMeqDyKuBZpQsD/EJpLaOgIJbA/Wd1vVI2Yddh3Ft/mlcHR+Aymi22kIk7MwagEV9+ML4OwcGPCcKPKtn3YwrpteHQYCDCn+ldObaaUCxIuOhDMZHvQ8812Nr9zJZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtvzx3QE; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=tmWvDfqOM0dEB4tMgyGfAXXcxC5mDyGIzfuTLDBohOHOI2v8KQBOc4Ahb3z2kGjxFgr7Kve6TblmlSOV1lmE0kLUJ720qOMRaZIdsjtL82KtQggq4GDVMSI1Tf7T0s2v/XBaVJfkgLZvYs8x+xBjRh5QYt/XkpoxL8FCnsgCzZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djzz9z6M; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtvzx3QE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020CA1F00A3A;
-	Tue, 30 Jun 2026 23:53:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djzz9z6M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6335F1F000E9;
+	Tue, 30 Jun 2026 23:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782863598;
-	bh=nJ0p6I+XWHcdzHTYTdQzvWsk4iQLdC8UOrlgSr+ISxk=;
+	s=k20260515; t=1782863856;
+	bh=TaUmh35sxDvqnamEeZFXqUgtr3RL3GsntqnPFMBABso=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=dtvzx3QEU3ga8Y4lGN+M7dTdEmQb6G8/Q3lne1hP0DJGrfAU7xuLN+qJzipWdZAVj
-	 hpMtH1jeyPl4weso8VHVj83ZoXZJhYNM/j7Xd+wuLV2gvl8kk196+KcswRvERDxgd8
-	 iYE1VkU/Ztb41Fhr8g3ULbagZQB+xIxkGs+nGLWfhZw/4XMCtyurTHUPJlj609tJf2
-	 pFp0YCf4+NGQbvEDGBwz6xCr6O2KYMLudXshInXtc7SG4eaKYHO1zJUOQ7L651L24L
-	 0jyoUMdd+COm1eBzU2nIt+cR9y8oe2SAzABneusKrQTndTJaNdsKi/q4RvItGEwXVQ
-	 oqYuSYVLkFTTw==
-Date: Tue, 30 Jun 2026 16:53:16 -0700
+	b=djzz9z6MaeeZ2zZWqEaUCyi3XnoC9wIGRb23nUT0LAMSA3FQm+D6f97gsGsR2QAkD
+	 LN27vCbG7SEVGF8A6vjBihlYrSU1tQAaIoVIpwhtAyPcvXu8riZiHsq6buApzZLLpg
+	 y8qzqalREwXjSRq/H73PBssqV06FXQ79ftZXRGPZVjVm7ehTOfTfKhZaVLYD1rs61N
+	 MJIK5vLD6hqtdsEnyex9msev7FufS6vShwmViONIuVyVfgtqrhMDhc4ek/LvL/N7SO
+	 x2lzclSQOCpYkNgnfu0I7Ys5D3JfeZJF0rzmOUxnKdz7hVNg9hrBCICrX0CPooe2CP
+	 TidhJfIXAgpMg==
+Date: Tue, 30 Jun 2026 16:57:34 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Leo Yan <leo.yan@arm.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -44,7 +44,7 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
 	Leo Yan <leo.yan@linux.dev>
 Subject: Re: [PATCH v10 0/9] perf cs-etm: Support thread stack and callchain
-Message-ID: <akRW7P-4UyfXz5GB@google.com>
+Message-ID: <akRX7gwfDh01AD4-@google.com>
 References: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
  <akMPoLNBbAEyNU64@google.com>
  <20260630082310.GE1812158@e132581.arm.com>
@@ -69,11 +69,8 @@ On Tue, Jun 30, 2026 at 09:23:10AM +0100, Leo Yan wrote:
 > > some remaining comments from Sashiko.
 > 
 > I prefer to merge this series.
-> 
-> Sashiko reported several critical issues in the common code, they are on
-> my to-do list.
 
-I see, I'll merge this and looking forward to seeing more fixes.
+Hmm.. it's not applying anymore..  Please rebase.
 
 Thanks,
 Namhyung
