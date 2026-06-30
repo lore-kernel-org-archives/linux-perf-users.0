@@ -1,99 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8B0331EC4
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 13:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D70B62809
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 15:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782826030; cv=none; b=h3wtalXPXmo+WChwYlO1UXLu9Lf+/HlnkEkxozX/DOet7il1wAodJTHGQSCA7N6yk/X7vuLbqXvNro/X2ZSDEQ2baMwYHd2gIIIGmT6sDGhs5V0aHWY+0WBb9JLCjvullGtBOtEkSA7CCXyNdtkAeCw//Bi8qtm3Sj+PL0SCuhw=
+	t=1782832769; cv=none; b=THLE89/HP+lr/sMx3B0cH3GyTar75fgaKQLo1XOCQNibeTdLTqQG9TWfwcpmX3WZGNrmbvlDNpQ7yzZLfP3V+ex7J+iIg9pfM9IUkjP85RrVXdqWmuBLA3og3LB2wg/3xcUPz8mm9lYKOvl7PKkgQ+opyGgHVjBSHutn5lYoSpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782826030; c=relaxed/simple;
-	bh=JR0hGwTifJi23hQUsyAsADVEClBXYGGkf9VvR/h2S04=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nXzm9mdq4Y8Vgvf2nPnRp1xYwQPczwzJwKiBiwiGe7l6vV51G8SxL86ACpCq0UdPX51WU0xA7Tdq3RHhTY1NqKhftT7Rm5xehwMMBKoNnHJJBb66ZxSkfIdf4hk7jNDNA/VViX4zJGKeKqvPkEo2mv2n1WKPGPm+qCnTrhuna/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMXfYWgi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782832769; c=relaxed/simple;
+	bh=K41LEd5qH/cATpPD8eHKSd94+tZhXjpUOWaoghGYl7o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bIkN2mlaFBzYm9F6zTQht51Ri32oje7w9qifbEboYYcTJhSdWT6QkfkwYb5/DijcWar4QKGLcca2ZLmhiXMFmBv+LF0X6T9lLrJvNcN7ctZO1ylLX6X6oZWdUPAGi9tuDz4GLFdMnp26aBw5Y9XjVwqHwplOfiaIlJsBh0Cifbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=S4FtgDc6; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMXfYWgi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 141751F01559;
-	Tue, 30 Jun 2026 13:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782826029;
-	bh=DU/Bw85yAGRkAgKfd7D4X6rowR2P8Ik/CFIUjc+ErJU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=aMXfYWgippeT+COL4lV6VHLJOEXSbyoSwbYU+9535qaA1cWD6ijJwGS0qxvzDE4WX
-	 QBtxzmh+UmcqoDp4tGUyykhCDA3lhgZLG6cp68IFKBXbHYtAlBl8IIuEeY037mh1+T
-	 aRqiw9dUdF7ozjUGBgneXQE3Oq/NST62khW7JGeVZk7WA8sv2gx7v9I1SlynMEV0FJ
-	 miuXjlX6ySJCFGIMEaK9veeqXlKJqBZFY9vnm8g5GLL/RR/vT8hpn0oibfS3Z8Hctj
-	 urnTo6r3KRFtsWkUTu1acdenuXF9PGPdZTlAwAA4XVZZ+pvQF2svCxtwTm459a5llJ
-	 Be0Ns4wz4rEOQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on
- Graviton5
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Robin Murphy" <robin.murphy@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <e9340d3a4385e6f1a6e80bda944a3ba6435472b6.1782824005.git.robin.murphy@arm.com>
-References: <cover.1782824005.git.robin.murphy@arm.com>
- <e9340d3a4385e6f1a6e80bda944a3ba6435472b6.1782824005.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 13:27:08 +0000
-Message-Id: <20260630132709.141751F01559@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="S4FtgDc6"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30AAD2F27;
+	Tue, 30 Jun 2026 08:19:23 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8A9483F66F;
+	Tue, 30 Jun 2026 08:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1782832767; bh=K41LEd5qH/cATpPD8eHKSd94+tZhXjpUOWaoghGYl7o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=S4FtgDc6QOE1fCJmvgeSY5h1LWdCE99eO2nMaf5bs2zdhHP+jJ98euTEenvy4/K0b
+	 jzti2LnyTWFa/2TZWNoem5w2QA59WfUWR8jN7UNDFp/QlUtr/tvJp5DVYfz6EJa94M
+	 fuEkI/EbIj9VsoOocPRu7iM2Xj4RhFC4zsdj8i5o=
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org,
+	mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	ilkka@os.amperecomputing.com
+Subject: [PATCH 0/5] perf/arm-cmn: Support CMN S3 r2
+Date: Tue, 30 Jun 2026 16:19:15 +0100
+Message-ID: <cover.1782830759.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.54.0.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The Graviton5 workaround sets the DTC node's logical ID to the X=
-P's mesh logical ID instead of the DTC domain ID, which can cross-wire PMU =
-event routing.
---
+Another year, another CMN - although arguably this was last year's
+CMN, and is still the same in name as the year before that, but in
+implementation the newer releases have significantly updated the HN-S
+PMU features, pushing the previous filtering abstraction beyond its
+breaking point. As before I've tried to break the refactoring and
+functional changes up into reasonably logical chunks so there's some
+vague hope of anyone being able to review it...
 
-commit d22a8571a1d86b4f3c00bde161d5fb2ce99fe43f
-Author: Aviv Bakal <avivb@amazon.com>
+Cheers,
+Robin.
 
-perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
 
-This patch adds workarounds for the CMN-S3 implementation on Graviton5,
-which reports zeroed fields in discovery registers. It introduces an ACPI
-HID for identification, derives the DTC domain from the XP node ID, and
-sets the DTC logical ID from the XP's logical ID.
+Robin Murphy (5):
+  perf/arm-cmn: Rename filter variables for clarity
+  perf/arm-cmn: Refactor event filter programming
+  perf/arm-cmn: Refactor event filter data
+  perf/arm-cmn: Add new filters
+  perf/arm-cmn: Support CMN S3 r2
 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-[ ... ]
-> @@ -2475,6 +2500,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, u=
-nsigned int rgn_offset)
-> =20
->  			switch (dn->type) {
->  			case CMN_TYPE_DTC:
-> +				if (graviton5_workaround) {
-> +					/* Node info logical ID is zeroed; use the XP's */
-> +					dn->logid =3D xp->logid;
+ drivers/perf/arm-cmn.c | 490 +++++++++++++++++++++++++++++------------
+ 1 file changed, 347 insertions(+), 143 deletions(-)
 
-[Severity: Medium]
-Does this code assign the host XP's mesh logical ID to the DTC node instead
-of the computed domain ID (xp->dtc)?
+-- 
+2.54.0.dirty
 
-If the DTC nodes' mesh logical IDs do not sort into the exact same order
-as their domain IDs, will the array indices be cross-wired, potentially
-misrouting PMU events?
-
-Event configuration looks up the cmn->dtc[] array using the node's domain
-ID (dn->dtc).
-
-Could this instead be dn->logid =3D xp->dtc; to restore the correct semantic
-meaning of a DTC's logical ID as its domain index?
-
-> +				}
->  				cmn->num_dtcs++;
->  				dn++;
->  				break;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1782824005.gi=
-t.robin.murphy@arm.com?part=3D2
