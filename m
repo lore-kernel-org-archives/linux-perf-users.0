@@ -1,113 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBD735A385
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 07:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 076FE386554
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 08:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782804758; cv=none; b=YPOQJwoXsYWQQFfojgYEifELTz+nKNkk5CDGL+kTv8sL5h0QcDp8mIEGh8X209bNcLx3I3xAKzje3tDR5o/+qhVrtB8/AD68EQoYua26+k+pX1MjpJgXZBRzhkVEHVMwOCccV572q4XqZka1mIT1sqMqSWdTMEbBa6WR7X851B8=
+	t=1782807795; cv=none; b=XFgIF+LSSqUYGKZ56p76ngSe173UGOx6ypTbjyRI1GznnuXR8gRuSdn3duhCs30cn70bA8g5z6C1H0ZXvBTFzpBYqSpomj9gLH3dGVpVMB+KjBOMCDh10MFVq5ypeCXiGD7d3Y6W2qvaOk69CL8z3X9PhYyXfg7KfiocNRok77U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782804758; c=relaxed/simple;
-	bh=4+568BpZFsNACr+GNVgJwgQyrW8Xj9C0ilafwINLsvg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=i87u4hFcqdnG2TRRrhHifYkxIJ/oO/CpL7zp0YrrPjkxffUfwAxU6CjxASlNNDZGk7WUHqy3cfRlgUMaqsfsP8drBcFzg0E/aQ6alGQR5LIriNvjQZp7ItdclGTSKuZE3NAvqZ0ZkUYLBAQBC7nVM6bFJbj159Wkk5FmgV9mb+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmjQtCKG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782807795; c=relaxed/simple;
+	bh=O032AETtd2QRdz8mAj4/zj+sMhndZd08wJhinDFxnVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ItUW+1zT+vGL3/ZryJIPKAORIlaF0E31yYxfaY/re5u/d8I9CKSYUaCeovBnoHadipzWE/5TphtFiRA3ChWb4Ey7NcEIY6Q+hT8Zo2u+ThRwumKJtzm331j6V4MwjKe3Df4naumpKz+0ZUujqWNh82p/gAgn0p06geFY4L38vuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=a16LguaA; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmjQtCKG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 450281F000E9;
-	Tue, 30 Jun 2026 07:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782804757;
-	bh=K/KFWpBL7DUI5A/FwALHJRHgrLy4oqU8v/fGFAVSoOM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PmjQtCKG5c2J5cfVr0vVs3v8ym/6z9zhRMWD2cfLAgvIBlI+MN+tJc5qKWwEyZbbx
-	 qusgjRuPeFnNeXykLcz0IXy5z5uwl0XfvTosijmryOMWDfdBfnU1qVu3J+9SLFjJWc
-	 AovnriFE6Ce5XX1LHt5y5IuSxPeVIKZDK8dnMcSasPtPVDmEhNKxHY6eLJ5Kmpaj7c
-	 ht3b1snkxtsRRPQ6dC0vFDydQsrJaL2qWQOjLhcbzZMXYHP2GrysBPFQAPDHWxca3Y
-	 AJCnYPtfdLquSIE0G/AP5uC2FzpvztbpQZvNIVelNfxa/dz0LL31Yx4emk1YxGv+Xd
-	 XaRy1Su+NX0Qg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/3] perf record: Fix multiple
- PERF_RECORD_COMPRESSED2 records per push
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dmitry Ilvokhin" <d@ilvokhin.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <079503c01a3e28d3775947f3449cadacfa1f4117.1782743187.git.d@ilvokhin.com>
-References: <cover.1782743187.git.d@ilvokhin.com>
- <079503c01a3e28d3775947f3449cadacfa1f4117.1782743187.git.d@ilvokhin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 07:32:36 +0000
-Message-Id: <20260630073237.450281F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="a16LguaA"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0BCF22D9;
+	Tue, 30 Jun 2026 01:23:08 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E46943F905;
+	Tue, 30 Jun 2026 01:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1782807793; bh=O032AETtd2QRdz8mAj4/zj+sMhndZd08wJhinDFxnVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a16LguaA70TV8S9pystkxlAS5iZpyVaTSV4nZx2qtSr4E3LT2Jn416WOEQsNVZrNC
+	 eH1ocv+EpYiZGaxmGvoqM6TlXX6h+zbqJ20PbMMLdB988oU4JBbTNQxQZ/9huY7knP
+	 2J9KLCb273d6n1N2JIyWtU5op0aqo/fxKz8U5DZo=
+Date: Tue, 30 Jun 2026 09:23:10 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Al Grant <al.grant@arm.com>,
+	Paschalis Mpeis <paschalis.mpeis@arm.com>,
+	Amir Ayupov <aaupov@fb.com>, linux-arm-kernel@lists.infradead.org,
+	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+	Leo Yan <leo.yan@linux.dev>
+Subject: Re: [PATCH v10 0/9] perf cs-etm: Support thread stack and callchain
+Message-ID: <20260630082310.GE1812158@e132581.arm.com>
+References: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
+ <akMPoLNBbAEyNU64@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <akMPoLNBbAEyNU64@google.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] Missing explicit `#include <string.h>` for `memset` in `builtin-rec=
-ord.c`.
---
+Hi Namhyung,
 
-commit cb8ac7d313a36a42601f85ffc5fb9a9061002bc0
-Author: Dmitry Ilvokhin <d@ilvokhin.com>
+On Mon, Jun 29, 2026 at 05:36:48PM -0700, Namhyung Kim wrote:
 
-perf record: Fix multiple PERF_RECORD_COMPRESSED2 records per push
+[...]
 
-This commit frames compressed records individually when produced rather
-than rewriting a single header for an entire blob. This prevents truncation
-of the header.size field when a compressed blob exceeds 64KB.
+> Will you send a new version or want to merge this?  It seems there are
+> some remaining comments from Sashiko.
 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 4a5eba498c025..2562c3177eae1 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
+I prefer to merge this series.
 
-[ ... ]
+Sashiko reported several critical issues in the common code, they are on
+my to-do list.
 
-> @@ -1590,18 +1577,29 @@ static void record__adjust_affinity(struct record=
- *rec, struct mmap *map)
->  	}
->  }
-> =20
-> -static size_t process_comp_header(void *record, size_t increment)
-> +/*
-> + * Called once with data_size =3D=3D 0 to start a record, then once with
-> + * data_size =3D=3D compressed payload size to finalize and 8-byte-pad it
-> + * (unaligned records trip ASan in the reader).
-> + */
-> +static size_t process_comp_header(void *record, size_t data_size)
->  {
->  	struct perf_record_compressed2 *event =3D record;
->  	size_t size =3D sizeof(*event);
-> =20
-> -	if (increment) {
-> -		event->header.size +=3D increment;
-> -		return increment;
-> +	if (data_size) {
-> +		size_t padding;
-> +
-> +		event->data_size =3D data_size;
-> +		event->header.size =3D PERF_ALIGN(size + data_size, sizeof(u64));
-> +		padding =3D event->header.size - size - data_size;
-> +		memset(record + size + data_size, 0, padding);
-
-[Severity: Low]
-Does this file need an explicit include for <string.h>?
-
-Relying on implicit header inclusion for POSIX libc functions like memset c=
-an
-cause build failures on systems using musl libc, where implicit header grap=
-hs
-differ from glibc.
-
-> +		return data_size + padding;
->  	}
-> =20
->  	event->header.type =3D PERF_RECORD_COMPRESSED2;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1782743187.gi=
-t.d@ilvokhin.com?part=3D1
+Thanks,
+Leo
