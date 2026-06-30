@@ -1,50 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B89264617;
-	Tue, 30 Jun 2026 03:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21E63E3150
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 05:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782789058; cv=none; b=k/hDcd5aXgkx2WRY7kjDALREsFOGjgtVAHnoqebai8ap+bjxq/ud5JbEVoiny1AXhuixnYVVepCGpqN8m9K7Fe+RU52Oery0ubkAR6U4pB/8iV42dNEwaHGFOTdSbwJ+O2Eba58EilZ6M8GkMdv2CJnMrNf1pQfyfoyb3XDeu3A=
+	t=1782798188; cv=none; b=hu0632PR12VI+I3r9aHFbk7Qsjg7L50VHWr/IFoechGotI30yEg7qPk98XhNk7W0dc7EdYH+i7yGdDhoIVzMfj3YT4mLq2Xh/X9G+QoThkgQfZFAlNJnNaZFxPbYGW83/jp4b7Qv1Ocmyg49ukk90xdwUo/3ire05lEDSx0SUTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782789058; c=relaxed/simple;
-	bh=kTEPPbJxVN5buc3F2nTCDSgkowYHC7ZBtLeJFcNH0h4=;
+	s=arc-20240116; t=1782798188; c=relaxed/simple;
+	bh=9rXZUBsGBmtMoEa+jKKzLo71wF5tmz2Z8X2eRMgLKC0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WpodrA/FZ2L/wwYcyUi9KZMgNOkJDHLCY0USqC1bau2R9KU+WQtQNeSbdwI+BWo8s/X2OB2kECH6sWAaD+Os740sKwML79j+HJDuWQfbkjzACQ10dhqTfYAlc9bRF0ew7WxVlcxJsX801KZfjsGSgMVv2ZDaQ7ECj4NDgJ3olrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aSbd9pXF; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=K3Hkmz0/H/zveuSkIiZEwhC41oHmHdSgzjii2hKYWPL67EAL9BwSVGpMPJhfY/Kcsv6I0Rm+4A+iHF7LtopH8eOPb1NM1d+bhNrsrkOpdqQyr5T9huAk2LXGZ+JyNwhRSrQ40Kn1MzkETdHQhNLNAVtetfiRLsB6g4hHtd4Lxgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dEGiTKHx; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=lZkDQkxM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aSbd9pXF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782789056; x=1814325056;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kTEPPbJxVN5buc3F2nTCDSgkowYHC7ZBtLeJFcNH0h4=;
-  b=aSbd9pXFkmH8KnGOYKVxoZYItuT3IYI8RcABhsyaKGCwK6ZrNRTI/HH6
-   T7LaJYEdJqB5pzmr55Tc7/BOjoFNVyUMXilA8fqEUdxgvU7eZ5pgR3YKG
-   ZGocOE91Soi0IkwQV6pP6cUJTq9VPp3bOdOcuBHggS1Nt8xtGpWHgI93j
-   +XcyU4Dewwh8UlAyqwt5bmmiRIv8rFUlLXrSvHjqBAyuEgy1Butm2bctf
-   l5E0iwQ05amiydLkFOFIzZgoB/0YlgFphnJ8vnVNDJkcktPlMp4zmirGu
-   smavuRNK4t3S5xd8Ga5jMYWTvtYAGEkEZmU0SjDNgF1mGAq/OaWYCCDso
-   Q==;
-X-CSE-ConnectionGUID: hafI7H6BQG6Cx0VN2/X/Bg==
-X-CSE-MsgGUID: fOcSO5MsRJyxmt1ue+jwRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="83270073"
-X-IronPort-AV: E=Sophos;i="6.24,233,1774335600"; 
-   d="scan'208";a="83270073"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 20:10:55 -0700
-X-CSE-ConnectionGUID: hKJBoE3LRaKI5VtXHrqsNg==
-X-CSE-MsgGUID: cv4r6+HHTY+1uO5cuXdsEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,233,1774335600"; 
-   d="scan'208";a="249497144"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 20:10:52 -0700
-Message-ID: <acea8b54-4887-4d59-9bd9-0fa7ff803d3a@linux.intel.com>
-Date: Tue, 30 Jun 2026 11:10:49 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dEGiTKHx";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="lZkDQkxM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782798186;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q/eDjU5MiOjexozee7SNJIrZyMlG/yERHTdQ3gey+uU=;
+	b=dEGiTKHxgYpo19D1e1rZh+4ZpLAKKxZ9SDibQrOWQljI8ludSHZG8jfTYNUbeJXVds8FPS
+	axP0nhZCbj3J30wCKpG31Q6HRzN/OO0xkPsu6K6WcUU2e/VTGWvkM1Fn38QBfuIjIRpUHS
+	x0LUbbOyThtUtK3xgx8RacU5hoX1Vfk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-227-4Jv-M9K9MBW7gOOcUrNaeg-1; Tue, 30 Jun 2026 01:43:03 -0400
+X-MC-Unique: 4Jv-M9K9MBW7gOOcUrNaeg-1
+X-Mimecast-MFC-AGG-ID: 4Jv-M9K9MBW7gOOcUrNaeg_1782798182
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4926d371224so24314025e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jun 2026 22:43:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1782798182; x=1783402982; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q/eDjU5MiOjexozee7SNJIrZyMlG/yERHTdQ3gey+uU=;
+        b=lZkDQkxMyIJQG+HdGrnGBqvHOFcYRDKCI+h7u8ijSTNYla4xfsh9La1RKXx+ip0pyB
+         6yONDkQNFffPxXQ/JbtDgeR5YNOaj1h3V21OVG8uGwA1sN/WA+2Q69NVBKtn+wQ94qpb
+         LmoV8hYf34dhi5s2dYVWm5JLIf4ehqTH1hoMPmsD6el/wcc8JG0OyriC4nySSRhL0Osw
+         Meivv/Km8HutWPZ5G5NnUWz8yTzcYdtrwoPNHBHmWNzmyR07m1dTXTNOzN5i+BA1feeX
+         tao/A5L2jG8+6/MPLP57kJoLvl8ezkwBYeDnWiRnzghcevhyrK0rSeyTNjZtKgNFmaYF
+         UPLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782798182; x=1783402982;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q/eDjU5MiOjexozee7SNJIrZyMlG/yERHTdQ3gey+uU=;
+        b=nQXLgwp7Xsub7WU0oCm/toeDvJwqOGvi9bVxIK8+qVHchyL//1xPQ3vi+34/989m0h
+         XmpsfR20tMIw0yqIvRGDaRBc/ZWKwGKjvXHTsVd4BbdzClAuV/7XThPqlwiPiFjU8MVB
+         YqMM0MyRCfwHEkPwBXofY+7w1Vt+aGf1QaLJ7nJ6mImJ6DS1EoGjXhvHyxTMjsC9zKwl
+         giYnNGBh1ZP3liUdHScOrQ9drE9ZjUOGqxBTnRSg76lbd3BZXgE1JMNXT4h2JQ/vnL3q
+         EtptlDBRJab4QgvZwEOvUrF0hOYpeQ2femze4u3tCsMU3w+KUh2Bijv49V152YMi3XRw
+         6Ixg==
+X-Forwarded-Encrypted: i=1; AFNElJ/2Ea1FROhIkSP9V7UIGJN/TmiwZZf+j+0oAF0hdXTnZ0zleFciWKnCGPoDwUj4sQvzZlR5pbKiSamqlyXMogdZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMVSHp5iZl1cMSGG607ta/0sa7Qs84bS73k6DJ9m0WQ0xzdUws
+	t4uMKOikb/6Lbm2dFBIdPAjAvNcpyr+Uqf5coYLqUnHnTGp7Q1N/CeoxDlqWJlfMoy+WIjwmCUN
+	3ZA7Th1PISMfpgvKVAuRr7SjEIhZZ9GaYTcrnOhMVKifd5l0RH4NnEdX9qL/h3b+Z30eOww==
+X-Gm-Gg: AfdE7ckOZDjryBZRn7r2YMCgJXe4B2C8CR8JQDwu/Cx2SdQoHNsMvftXK1ZZoy7oEYx
+	A8F7OcyGSs6CWb+ukCqRa/L5IFWg2CY9YaimzR+lSCADIeCdUBAHyIH/udXJX3Fj8R8dvQQEpss
+	9rKckprm3NDbtH1N5rHHkNcpp8VpoKN6p9o8XQ+ziqkGmMwF/QyHqcZCybXU2Wr7kXLzpHSZL4Q
+	IopWB9C2WX461gnh789SfEDUv7iML+s6b+7oQKAKBZEPoJrZL6Or8pfrJsDTKIH601/ZkZ9EJJp
+	Nr6Qs3FRv62YLAwNdUrtWOda3fuI4E7lFgs9YNcY9M+YciKg5+LT5VTGW94N8FUco8QgNfMpK1/
+	dlTHaLR84dpclAM1WvGJkgC/Bh7hqqP2/LzwA7M8e1UyP2g==
+X-Received: by 2002:a05:600c:848e:b0:490:3d62:f5e1 with SMTP id 5b1f17b1804b1-493b82b0f53mr33437915e9.22.1782798182358;
+        Mon, 29 Jun 2026 22:43:02 -0700 (PDT)
+X-Received: by 2002:a05:600c:848e:b0:490:3d62:f5e1 with SMTP id 5b1f17b1804b1-493b82b0f53mr33437635e9.22.1782798182012;
+        Mon, 29 Jun 2026 22:43:02 -0700 (PDT)
+Received: from [192.168.0.135] (185-219-167-205-static.vivo.cz. [185.219.167.205])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493b8cb62f1sm70244105e9.15.2026.06.29.22.42.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2026 22:43:01 -0700 (PDT)
+Message-ID: <c1666061-c3e7-4eda-82ca-d03daf05f4f8@redhat.com>
+Date: Tue, 30 Jun 2026 07:42:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,191 +87,86 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf/core: Fix group leader use-after-free after
- sibling detach
-To: Aditya Chillara <aditya.chillara@oss.qualcomm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+Subject: Re: [PATCH] perf trace: Refactor augmented_raw_syscalls using
+ bpf_loop
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@elte.hu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20260630-fix-group-leader-uaf-v2-1-9349121835ee@oss.qualcomm.com>
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Michael Petlan <mpetlan@redhat.com>, stable@vger.kernel.org
+References: <20260623112533.1151502-1-vmalik@redhat.com>
+ <DJGJ9F6WQZV9.2W4WBIHYLJQ97@gmail.com> <ajq98dm4gAwEzkMb@google.com>
+ <c2f4e45e-d5c9-42e9-a46b-25fb0cacb267@redhat.com>
+ <ajwu7xR6V6MAQOFw@google.com>
+ <3c221e35-d642-4036-88fd-d25df7f8807e@redhat.com>
+ <akLXCFpnum0WgXGf@google.com>
+From: Viktor Malik <vmalik@redhat.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260630-fix-group-leader-uaf-v2-1-9349121835ee@oss.qualcomm.com>
+In-Reply-To: <akLXCFpnum0WgXGf@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-LGTM.
+On 6/29/26 22:35, Namhyung Kim wrote:
+> On Thu, Jun 25, 2026 at 02:05:29PM +0200, Viktor Malik wrote:
+>> On 6/24/26 21:24, Namhyung Kim wrote:
+>>> On Wed, Jun 24, 2026 at 08:47:38AM +0200, Viktor Malik wrote:
+>>>> On 6/23/26 19:10, Namhyung Kim wrote:
+>>>>> Hello,
+>>>>>
+>>>>> On Tue, Jun 23, 2026 at 08:27:39AM -0700, Alexei Starovoitov wrote:
+>>>>>> On Tue Jun 23, 2026 at 4:25 AM PDT, Viktor Malik wrote:
+>>> [SNIP]
+>>>>>>> +	struct args_loop_ctx loop_ctx = {
+>>>>>>> +		.args = args,
+>>>>>>> +		.beauty_map = beauty_map,
+>>>>>>> +		.payload_offset = payload_offset,
+>>>>>>> +		.value_size = value_size,
+>>>>>>> +		.output = &output,
+>>>>>>> +		.do_output = &do_output
+>>>>>>> +	};
+>>>>>>> +	iters = bpf_loop(6, process_arg_cb, &loop_ctx, 0);
+>>>>>>
+>>>>>> bpf_loop() is old and generally not recommended.
+>>>>>> Please use bpf_for() then the diff will be one line change and
+>>>>>> can scale to any number of args. Not just 6.
+>>>>
+>>>> Thanks Alexei, I didn't know about this preference.
+>>>>
+>>>>> One thing we should take care is to support old kernels.  The oldest
+>>>>> LTS kernel in the kernel.org is 5.10 and bpf_loop() was introduced in
+>>>>> 5.17 and bpf_for (bpf_iter_num) was 6.4.
+>>>>
+>>>> The problematic loop was introduced in 6.12 by a68fd6a6cdd3 ("perf
+>>>> trace: Collect augmented data using BPF") so we should be good using
+>>>> bpf_for. Or is perf from 7.2 supposed to work on 5.10 LTS kernels?
+>>>
+>>> Yep, we'd like to support old kernels.
+>>
+>> How much strict are you on this requirement? IMHO, the very least we
+>> need to fix the verifier issue is bpf_loop, so that would still not work
+>> on 5.10 and 5.15 LTS kernels.
+> 
+> I don't think it's an absolute requirement, but I think we don't want to
+> break any existing working setup (old kernel + old compiler).
+> 
+>>
+>> We could probably keep the open-coded loop in case bpf_loop is not
+>> available but `perf trace` would still fail on kernels without bpf_loop
+>> for new perf built with Clang>=22. Also, the code would be a bit ugly
+>> and I'm not sure how well the feature check for helpers (bpf_loop) works
+>> on old kernels.
+>  
+> Any chance process_arg_cb() can be called directly in the regular for
+> loop on old kernels?
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+That's my thinking, too. Should be pretty straightforward, I'm going to
+give it a try in v2.
 
+Viktor
 
-On 6/30/2026 3:12 AM, Aditya Chillara wrote:
-> perf_group_detach() handles leader and sibling detach differently. When the
-> group leader is detached, all siblings are promoted to singleton events and
-> their group_leader pointer is reset to themselves. When a sibling is
-> detached, it is removed from the leader's sibling_list, but its
-> group_leader pointer is left pointing at the old leader.
->
-> That is harmless when the sibling is being closed and freed immediately, as
-> in the DETACH_DEAD path. It is not safe when the sibling is detached but
-> kept alive, such as during CPU hotplug with DETACH_GROUP. In that case the
-> sibling is removed from the context, while its file descriptor can still
-> keep it alive.
->
-> A typical failing sequence is:
->
->   - A group contains leader L and sibling S.
->   - CPU hot-unplug detaches S with DETACH_GROUP, removing it from
->     L->sibling_list but leaving S->group_leader == L.
->   - L is later closed and freed.
->   - A PERF_IOC_FLAG_GROUP ioctl on S follows S->group_leader and
->     dereferences the freed leader.
->
-> This was reproduced by running the perf event fuzzer, CPU hotplug, and a
-> stress workload concurrently:
->
-> Unable to handle kernel paging request at virtual address 006b6b6b6b6b6cdb
-> CPU: 2 PID: 12489 Comm: perf_fuzzer 6.18.7 PREEMPT
-> pc : perf_ioctl+0x34c/0xc68
-> x20: ffffff89a3fa2c70 x8 : 6b6b6b6b6b6b6b6b
-> Code: 943c4a0e 340047a0 f9404a94 f9411e88 (f940b908)
-> Call trace:
-> perf_ioctl+0x34c/0xc68 (P)
-> __arm64_sys_ioctl+0xa0/0xf4
-> invoke_syscall+0x58/0xe4
-> el0_svc_common+0xa8/0xdc
-> do_el0_svc+0x1c/0x28
-> el0_svc+0x40/0xc0
-> el0t_64_sync_handler+0x68/0xdc
-> el0t_64_sync+0x1c4/0x1c8
->
-> The fault happened in perf_ioctl(), where perf_event_for_each() follows
-> the stale group_leader pointer and perf_event_for_each_child() then
-> dereferences the freed leader's context.
->
-> Fix the use-after-free by promoting the detached sibling to a singleton.
->
-> Fixes: 8a49542c0554 ("perf_events: Fix races in group composition")
-> Assisted-by: PatchWise:gpt-5.5
-> Signed-off-by: Aditya Chillara <aditya.chillara@oss.qualcomm.com>
-> ---
-> Changes in v2:
-> - Moved the fix to perf_group_detach() with a small refactor
-> - Link to v1: https://patch.msgid.link/20260626-fix-group-leader-uaf-v1-1-ac54652ca944@oss.qualcomm.com
-> ---
->  kernel/events/core.c | 62 +++++++++++++++++++++++++++++++++++-----------------
->  1 file changed, 42 insertions(+), 20 deletions(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 954c36e28101..744643ada948 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2253,6 +2253,8 @@ static void put_event(struct perf_event *event);
->  static void __event_disable(struct perf_event *event,
->  			    struct perf_event_context *ctx,
->  			    enum perf_event_state state);
-> +static void event_sched_out(struct perf_event *event,
-> +			    struct perf_event_context *ctx);
->  
->  static void perf_put_aux_event(struct perf_event *event)
->  {
-> @@ -2343,6 +2345,44 @@ static inline struct list_head *get_event_list(struct perf_event *event)
->  				    &event->pmu_ctx->flexible_active;
->  }
->  
-> +/* @sibling must already be unlinked from its old leader's sibling_list. */
-> +static void perf_promote_sibling_to_leader(struct perf_event *sibling,
-> +					   struct perf_event_context *ctx,
-> +					   int group_caps)
-> +{
-> +	/*
-> +	 * Events that have PERF_EV_CAP_SIBLING require being part of
-> +	 * a group and cannot exist on their own, schedule them out
-> +	 * and move them into the ERROR state. Also see
-> +	 * _perf_event_enable(), it will not be able to recover this
-> +	 * ERROR state.
-> +	 */
-> +	if (sibling->event_caps & PERF_EV_CAP_SIBLING) {
-> +		event_sched_out(sibling, ctx);
-> +
-> +		/*
-> +		 * The guards keep this correct even when @sibling is already
-> +		 * disabled (see __perf_remove_from_context()).
-> +		 */
-> +		if (sibling->state > PERF_EVENT_STATE_OFF)
-> +			perf_cgroup_event_disable(sibling, ctx);
-> +		if (sibling->state > PERF_EVENT_STATE_ERROR)
-> +			perf_event_set_state(sibling, PERF_EVENT_STATE_ERROR);
-> +	}
-> +
-> +	sibling->group_leader = sibling;
-> +	sibling->group_caps = group_caps;
-> +
-> +	if (sibling->attach_state & PERF_ATTACH_CONTEXT) {
-> +		add_event_to_groups(sibling, ctx);
-> +
-> +		if (sibling->state == PERF_EVENT_STATE_ACTIVE)
-> +			list_add_tail(&sibling->active_list, get_event_list(sibling));
-> +	}
-> +
-> +	perf_event__header_size(sibling);
-> +}
-> +
->  static void perf_group_detach(struct perf_event *event)
->  {
->  	struct perf_event *leader = event->group_leader;
-> @@ -2368,6 +2408,7 @@ static void perf_group_detach(struct perf_event *event)
->  		list_del_init(&event->sibling_list);
->  		event->group_leader->nr_siblings--;
->  		event->group_leader->group_generation++;
-> +		perf_promote_sibling_to_leader(event, ctx, event->event_caps);
->  		goto out;
->  	}
->  
-> @@ -2377,29 +2418,10 @@ static void perf_group_detach(struct perf_event *event)
->  	 * to whatever list we are on.
->  	 */
->  	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
-> -
-> -		/*
-> -		 * Events that have PERF_EV_CAP_SIBLING require being part of
-> -		 * a group and cannot exist on their own, schedule them out
-> -		 * and move them into the ERROR state. Also see
-> -		 * _perf_event_enable(), it will not be able to recover this
-> -		 * ERROR state.
-> -		 */
-> -		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
-> -			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
-> -
-> -		sibling->group_leader = sibling;
->  		list_del_init(&sibling->sibling_list);
->  
->  		/* Inherit group flags from the previous leader */
-> -		sibling->group_caps = event->group_caps;
-> -
-> -		if (sibling->attach_state & PERF_ATTACH_CONTEXT) {
-> -			add_event_to_groups(sibling, event->ctx);
-> -
-> -			if (sibling->state == PERF_EVENT_STATE_ACTIVE)
-> -				list_add_tail(&sibling->active_list, get_event_list(sibling));
-> -		}
-> +		perf_promote_sibling_to_leader(sibling, ctx, event->group_caps);
->  
->  		WARN_ON_ONCE(sibling->ctx != event->ctx);
->  	}
->
-> ---
-> base-commit: ab9de95c9cf952332ab79453b4b5d1bfca8e514f
-> change-id: 20260626-fix-group-leader-uaf-c46960e525e0
->
-> Best regards,
-> --  
-> Aditya Chillara <aditya.chillara@oss.qualcomm.com>
->
->
