@@ -1,40 +1,40 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D14D279903
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 15:19:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68F7A3502A8
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 15:19:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782832774; cv=none; b=Sgi1468NdX1JhbYC1HZXfMajaEakOqE12Hn7NGzmCdv+4vT5ltWvwxLULTjCqaezvhsudGCPfUJ4aARwQ/gyjzOe3eR8leOGqy33F61rTzuvaFWKprVZjmnC8bpl16x29T4/ZgTmiSMrAVz+1GHJxlFsCl5/IG4hK0C/V8/bbJY=
+	t=1782832774; cv=none; b=Os06l0+c60bQ0as/bKxT+OweoTRSky87Nf7x49gpOTi/ft//pgKlddxa7Zr9Anb5VMrXyZVzQtBdqn9zNEMU2q1u0HK+G8SZSNLQJIJO7PM6CIWyepVp5Y+57PNOkqPU2NYjb1JrsFap2dOgg5CmVmtR3UJyVBJ1QVrMhuCrnqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1782832774; c=relaxed/simple;
-	bh=A+pfY02IleHDUbF8sfQ82TmTH9Rag7Uzdut4op5MvM0=;
+	bh=MZyRicMuoQY1LjnQeuCl5hEYf202UFUKt6oQfp/mZno=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZO1LjhwRcjc38sftNjKOODab8ZKEzmjNZ5IlvBWuCFyd0Cxy4VuG4WeuzJpvIkwatp5g8V1Yz3hxD8KQqn5+4QepZW1MVFBSYeMRPlsoEa3g6th5cXZDCMpzOoLWvyaFdAPqBEMx9PPf35310iBLUZZGfHUswv4JipY6I497E10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=BpSxz0FS; arc=none smtp.client-ip=217.140.110.172
+	 MIME-Version; b=SoN45OkJA8w9L2V6TxvUr9aJQd6Wc0cOOTgRll7aeuYdRJ92Mu6sovf1C1fml0aBmAQG3bD5smW9fvQtnSRgbRDVEFT5BsPeaPF+pULIQ3YMjJIVGRU6vttriJp8nrKbvUHPpPjnJChjtIkVdyNeh7U3aIXHHYSTjkfgzEe2BXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=CB+8eO1P; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="BpSxz0FS"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="CB+8eO1P"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50CA52F34;
-	Tue, 30 Jun 2026 08:19:27 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8E222F27;
+	Tue, 30 Jun 2026 08:19:28 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B37653F66F;
-	Tue, 30 Jun 2026 08:19:30 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1ACF73F66F;
+	Tue, 30 Jun 2026 08:19:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782832771; bh=A+pfY02IleHDUbF8sfQ82TmTH9Rag7Uzdut4op5MvM0=;
+	t=1782832773; bh=MZyRicMuoQY1LjnQeuCl5hEYf202UFUKt6oQfp/mZno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BpSxz0FSTwEg8YAYDAdOfiELFs81us0DgP/lMlYR2w4RqpyskNGVkwssiWNpbLyfS
-	 WggQ+mbGzBgh19jkAywwv4SqV4LkHGPySs+BdLXOPQyZ9GypASpZ5z5EzCqTA9vI2H
-	 +S5MKskgFvDp/NNF7Q9x5R/cP/rtZz/toY343r8w=
+	b=CB+8eO1PTNKnc/qfW6ETteKzaKEKED7eHWy9aV8tZmSceLkqPwY/L31grAy1XKB2p
+	 DmgAr5D5/vLWVKZWxjDLnu1TbP/SAInEBcDfoiFK7NE9qhyVi2MFoS91Iqxpe+DhKT
+	 F9bojNPOGMVYTyCQywl093avQxS4tCMzi/2Ubw48=
 From: Robin Murphy <robin.murphy@arm.com>
 To: will@kernel.org,
 	mark.rutland@arm.com
 Cc: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	ilkka@os.amperecomputing.com
-Subject: [PATCH 3/5] perf/arm-cmn: Refactor event filter data
-Date: Tue, 30 Jun 2026 16:19:18 +0100
-Message-ID: <d638212f5a5993eae5e262dd5be596b8d2b8fa5f.1782830759.git.robin.murphy@arm.com>
+Subject: [PATCH 4/5] perf/arm-cmn: Add new filters
+Date: Tue, 30 Jun 2026 16:19:19 +0100
+Message-ID: <5304caf0300992329742d22b746167b2f3e4174c.1782830759.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.54.0.dirty
 In-Reply-To: <cover.1782830759.git.robin.murphy@arm.com>
 References: <cover.1782830759.git.robin.murphy@arm.com>
@@ -46,209 +46,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ABI hole I have dug myself into requires the driver to know which
-event encodings are associated with which particular filter control.
-Since we will soon have a notion of multiple filters per event, refactor
-the event data to encapsulate filters in an explicit structure, which
-can then more easily scale as an array in future.
+Add the logic to handle events with the upcoming new filter controls.
+Since for now we will have the sole invariant of all EVICT_STATE_SEL
+events having HBT_LBT_SEL as a secondary filter, for the sake of
+simplicity we can just special-case that, and save the complication
+of a full abstraction until unavoidably necessary.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/perf/arm-cmn.c | 95 ++++++++++++++++++++++--------------------
- 1 file changed, 49 insertions(+), 46 deletions(-)
+ drivers/perf/arm-cmn.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 14c267d2e2f9..4ba78df87045 100644
+index 4ba78df87045..c935ddcf462a 100644
 --- a/drivers/perf/arm-cmn.c
 +++ b/drivers/perf/arm-cmn.c
-@@ -717,13 +717,17 @@ static void arm_cmn_clear_idx(struct arm_cmn_hw_event *hw)
- 		bitmap_zero(hw->wp_idx, CMN_MAX_XPS);
- }
+@@ -166,12 +166,14 @@
+ #define CMN_CONFIG_FILTER		GENMASK_ULL(30, 27)
+ #define CMN_CONFIG_BYNODEID		BIT_ULL(31)
+ #define CMN_CONFIG_NODEID		GENMASK_ULL(47, 32)
++#define CMN_CONFIG_FILTER2		GENMASK_ULL(51, 48)
  
-+struct arm_cmn_filter_attr {
-+	enum cmn_filter_select sel;
-+	u8 val;
-+};
+ #define CMN_EVENT_TYPE(event)		FIELD_GET(CMN_CONFIG_TYPE, (event)->attr.config)
+ #define CMN_EVENT_EVENTID(event)	FIELD_GET(CMN_CONFIG_EVENTID, (event)->attr.config)
+ #define CMN_EVENT_FILTER(event)		FIELD_GET(CMN_CONFIG_FILTER, (event)->attr.config)
+ #define CMN_EVENT_BYNODEID(event)	FIELD_GET(CMN_CONFIG_BYNODEID, (event)->attr.config)
+ #define CMN_EVENT_NODEID(event)		FIELD_GET(CMN_CONFIG_NODEID, (event)->attr.config)
++#define CMN_EVENT_FILTER2(event)	FIELD_GET(CMN_CONFIG_FILTER2, (event)->attr.config)
+ 
+ #define CMN_CONFIG_WP_COMBINE		GENMASK_ULL(30, 27)
+ #define CMN_CONFIG_WP_DEV_SEL		GENMASK_ULL(50, 48)
+@@ -284,6 +286,9 @@ enum cmn_filter_select {
+ 	SEL_CBUSY_SNTHROTTLE_SEL,
+ 	SEL_HBT_LBT_SEL,
+ 	SEL_SN_HOME_SEL,
++	SEL_SNP_VC_SEL,
++	SEL_ENHANCED_HBT_LBT_SEL,
++	SEL_EVICT_STATE_SEL,
+ 	SEL_MAX
+ };
+ 
+@@ -1377,6 +1382,7 @@ static struct attribute *arm_cmn_format_attrs[] = {
+ 	CMN_FORMAT_ATTR(filter, CMN_CONFIG_FILTER),
+ 	CMN_FORMAT_ATTR(bynodeid, CMN_CONFIG_BYNODEID),
+ 	CMN_FORMAT_ATTR(nodeid, CMN_CONFIG_NODEID),
++	CMN_FORMAT_ATTR(filter2, CMN_CONFIG_FILTER2),
+ 
+ 	CMN_FORMAT_ATTR(wp_dev_sel, CMN_CONFIG_WP_DEV_SEL),
+ 	CMN_FORMAT_ATTR(wp_chn_sel, CMN_CONFIG_WP_CHN_SEL),
+@@ -1745,6 +1751,8 @@ static void arm_cmn_val_add_event(struct arm_cmn *cmn, struct arm_cmn_val *val,
+ 
+ 		if (sel)
+ 			val->filter[dtm][sel] = CMN_EVENT_FILTER(event) + 1;
++		if (sel == SEL_EVICT_STATE_SEL)
++			val->filter[dtm][SEL_HBT_LBT_SEL] = CMN_EVENT_FILTER2(event) + 1;
+ 
+ 		if (type != CMN_TYPE_WP)
+ 			continue;
+@@ -1799,6 +1807,10 @@ static int arm_cmn_validate_group(struct arm_cmn *cmn, struct perf_event *event)
+ 		    val->filter[dtm][sel] != CMN_EVENT_FILTER(event) + 1)
+ 			goto done;
+ 
++		if (sel == SEL_EVICT_STATE_SEL && val->filter[dtm][SEL_HBT_LBT_SEL] &&
++		    val->filter[dtm][SEL_HBT_LBT_SEL] != CMN_EVENT_FILTER2(event) + 1)
++			goto done;
 +
- struct arm_cmn_event_attr {
- 	struct device_attribute attr;
- 	enum cmn_model model;
- 	enum cmn_node_type type;
--	enum cmn_filter_select fsel;
- 	u16 eventid;
--	u8 filter;
-+	struct arm_cmn_filter_attr filter[1];
- };
+ 		if (type != CMN_TYPE_WP)
+ 			continue;
  
- struct arm_cmn_format_attr {
-@@ -732,24 +736,25 @@ struct arm_cmn_format_attr {
- 	int config;
- };
+@@ -1943,6 +1955,8 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
  
--#define _CMN_EVENT_ATTR(_model, _name, _type, _eventid, _filter, _fsel)\
-+#define _CMN_EVENT_ATTR(_model, _name, _type, _eventid, _filter, ...)	\
- 	(&((struct arm_cmn_event_attr[]) {{				\
- 		.attr = __ATTR(_name, 0444, arm_cmn_event_show, NULL),	\
- 		.model = _model,					\
- 		.type = _type,						\
- 		.eventid = _eventid,					\
--		.filter = _filter,					\
--		.fsel = _fsel,						\
-+		.filter = {{_filter}},					\
- 	}})[0].attr.attr)
--#define CMN_EVENT_ATTR(_model, _name, _type, _eventid)			\
--	_CMN_EVENT_ATTR(_model, _name, _type, _eventid, 0, SEL_NONE)
-+#define CMN_EVENT_ATTR(_model, _name, _type, _eventid, _filter...)	\
-+	_CMN_EVENT_ATTR(_model, _name, _type, _eventid, ##_filter, 0, 0)
+ 		if (hw->filter_sel)
+ 			hw->dn[i].filter[hw->filter_sel].count--;
++		if (hw->filter_sel == SEL_EVICT_STATE_SEL)
++			hw->dn[i].filter[SEL_HBT_LBT_SEL].count--;
  
- static ssize_t arm_cmn_event_show(struct device *dev,
- 				  struct device_attribute *attr, char *buf)
- {
- 	struct arm_cmn_event_attr *eattr;
-+	struct arm_cmn_filter_attr *filter;
+ 		dtm->pmu_config_low &= ~CMN__PMEVCNT_PAIRED(dtm_idx);
+ 		writel_relaxed(dtm->pmu_config_low, dtm->base + CMN_DTM_PMU_CONFIG);
+@@ -1961,6 +1975,11 @@ static int arm_cmn_set_event_filter(struct arm_cmn_node *dn, struct perf_event *
+ 	if (fsel)
+ 		ret = arm_cmn_set_event_sel_hi(dn, fsel, CMN_EVENT_FILTER(event));
  
- 	eattr = container_of(attr, typeof(*eattr), attr);
-+	filter = eattr->filter;
- 
- 	if (eattr->type == CMN_TYPE_DTC)
- 		return sysfs_emit(buf, "type=0x%x\n", eattr->type);
-@@ -759,9 +764,9 @@ static ssize_t arm_cmn_event_show(struct device *dev,
- 				  "type=0x%x,eventid=0x%x,wp_dev_sel=?,wp_chn_sel=?,wp_grp=?,wp_val=?,wp_mask=?\n",
- 				  eattr->type, eattr->eventid);
- 
--	if (eattr->fsel)
-+	if (filter[0].sel)
- 		return sysfs_emit(buf, "type=0x%x,eventid=0x%x,filter=0x%x\n",
--				  eattr->type, eattr->eventid, eattr->filter);
-+				  eattr->type, eattr->eventid, filter[0].val);
- 
- 	return sysfs_emit(buf, "type=0x%x,eventid=0x%x\n", eattr->type,
- 			  eattr->eventid);
-@@ -849,8 +854,8 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
- 	return attr->mode;
- }
- 
--#define _CMN_EVENT_DVM(_model, _name, _event, _occup, _fsel)	\
--	_CMN_EVENT_ATTR(_model, dn_##_name, CMN_TYPE_DVM, _event, _occup, _fsel)
-+#define CMN_EVENT_DVM(_model, _name, _event, _filter...)	\
-+	CMN_EVENT_ATTR(_model, dn_##_name, CMN_TYPE_DVM, _event, ##_filter)
- #define CMN_EVENT_DTC(_name)					\
- 	CMN_EVENT_ATTR(CMN_ANY, dtc_##_name, CMN_TYPE_DTC, 0)
- #define CMN_EVENT_HNF(_model, _name, _event)			\
-@@ -880,32 +885,30 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
- #define CMN_EVENT_HNS(_name, _event)				\
- 	CMN_EVENT_ATTR(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event)
- 
--#define CMN_EVENT_DVM(_model, _name, _event)			\
--	_CMN_EVENT_DVM(_model, _name, _event, 0, SEL_NONE)
- #define CMN_EVENT_DVM_OCC(_model, _name, _event)			\
--	_CMN_EVENT_DVM(_model, _name##_all, _event, 0, SEL_OCCUP1_ID),	\
--	_CMN_EVENT_DVM(_model, _name##_dvmop, _event, 1, SEL_OCCUP1_ID),	\
--	_CMN_EVENT_DVM(_model, _name##_dvmsync, _event, 2, SEL_OCCUP1_ID)
-+	CMN_EVENT_DVM(_model, _name##_all, _event, SEL_OCCUP1_ID, 0),	\
-+	CMN_EVENT_DVM(_model, _name##_dvmop, _event, SEL_OCCUP1_ID, 1),	\
-+	CMN_EVENT_DVM(_model, _name##_dvmsync, _event, SEL_OCCUP1_ID, 2)
- 
- #define CMN_EVENT_HN_OCC(_model, _name, _type, _event)		\
--	_CMN_EVENT_ATTR(_model, _name##_all, _type, _event, 0, SEL_OCCUP1_ID), \
--	_CMN_EVENT_ATTR(_model, _name##_read, _type, _event, 1, SEL_OCCUP1_ID), \
--	_CMN_EVENT_ATTR(_model, _name##_write, _type, _event, 2, SEL_OCCUP1_ID), \
--	_CMN_EVENT_ATTR(_model, _name##_atomic, _type, _event, 3, SEL_OCCUP1_ID), \
--	_CMN_EVENT_ATTR(_model, _name##_stash, _type, _event, 4, SEL_OCCUP1_ID)
-+	CMN_EVENT_ATTR(_model, _name##_all, _type, _event, SEL_OCCUP1_ID, 0), \
-+	CMN_EVENT_ATTR(_model, _name##_read, _type, _event, SEL_OCCUP1_ID, 1), \
-+	CMN_EVENT_ATTR(_model, _name##_write, _type, _event, SEL_OCCUP1_ID, 2), \
-+	CMN_EVENT_ATTR(_model, _name##_atomic, _type, _event, SEL_OCCUP1_ID, 3), \
-+	CMN_EVENT_ATTR(_model, _name##_stash, _type, _event, SEL_OCCUP1_ID, 4)
- #define CMN_EVENT_HN_CLS(_model, _name, _type, _event)			\
--	_CMN_EVENT_ATTR(_model, _name##_class0, _type, _event, 0, SEL_CLASS_OCCUP_ID), \
--	_CMN_EVENT_ATTR(_model, _name##_class1, _type, _event, 1, SEL_CLASS_OCCUP_ID), \
--	_CMN_EVENT_ATTR(_model, _name##_class2, _type, _event, 2, SEL_CLASS_OCCUP_ID), \
--	_CMN_EVENT_ATTR(_model, _name##_class3, _type, _event, 3, SEL_CLASS_OCCUP_ID)
-+	CMN_EVENT_ATTR(_model, _name##_class0, _type, _event, SEL_CLASS_OCCUP_ID, 0), \
-+	CMN_EVENT_ATTR(_model, _name##_class1, _type, _event, SEL_CLASS_OCCUP_ID, 1), \
-+	CMN_EVENT_ATTR(_model, _name##_class2, _type, _event, SEL_CLASS_OCCUP_ID, 2), \
-+	CMN_EVENT_ATTR(_model, _name##_class3, _type, _event, SEL_CLASS_OCCUP_ID, 3)
- #define CMN_EVENT_HN_SNT(_model, _name, _type, _event)			\
--	_CMN_EVENT_ATTR(_model, _name##_all, _type, _event, 0, SEL_CBUSY_SNTHROTTLE_SEL), \
--	_CMN_EVENT_ATTR(_model, _name##_group0_read, _type, _event, 1, SEL_CBUSY_SNTHROTTLE_SEL), \
--	_CMN_EVENT_ATTR(_model, _name##_group0_write, _type, _event, 2, SEL_CBUSY_SNTHROTTLE_SEL), \
--	_CMN_EVENT_ATTR(_model, _name##_group1_read, _type, _event, 3, SEL_CBUSY_SNTHROTTLE_SEL), \
--	_CMN_EVENT_ATTR(_model, _name##_group1_write, _type, _event, 4, SEL_CBUSY_SNTHROTTLE_SEL), \
--	_CMN_EVENT_ATTR(_model, _name##_read, _type, _event, 5, SEL_CBUSY_SNTHROTTLE_SEL), \
--	_CMN_EVENT_ATTR(_model, _name##_write, _type, _event, 6, SEL_CBUSY_SNTHROTTLE_SEL)
-+	CMN_EVENT_ATTR(_model, _name##_all, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 0), \
-+	CMN_EVENT_ATTR(_model, _name##_group0_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 1), \
-+	CMN_EVENT_ATTR(_model, _name##_group0_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 2), \
-+	CMN_EVENT_ATTR(_model, _name##_group1_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 3), \
-+	CMN_EVENT_ATTR(_model, _name##_group1_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 4), \
-+	CMN_EVENT_ATTR(_model, _name##_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 5), \
-+	CMN_EVENT_ATTR(_model, _name##_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 6)
- 
- #define CMN_EVENT_HNF_OCC(_model, _name, _event)			\
- 	CMN_EVENT_HN_OCC(_model, hnf_##_name, CMN_TYPE_HNF, _event)
-@@ -916,21 +919,21 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
- 
- #define CMN_EVENT_HNS_OCC(_name, _event)				\
- 	CMN_EVENT_HN_OCC(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event),	\
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_rxsnp, CMN_TYPE_HNS, _event, 5, SEL_OCCUP1_ID), \
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_lbt, CMN_TYPE_HNS, _event, 6, SEL_OCCUP1_ID), \
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_hbt, CMN_TYPE_HNS, _event, 7, SEL_OCCUP1_ID)
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_rxsnp, CMN_TYPE_HNS, _event, SEL_OCCUP1_ID, 5), \
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_lbt, CMN_TYPE_HNS, _event, SEL_OCCUP1_ID, 6), \
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_hbt, CMN_TYPE_HNS, _event, SEL_OCCUP1_ID, 7)
- #define CMN_EVENT_HNS_CLS( _name, _event)				\
- 	CMN_EVENT_HN_CLS(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event)
- #define CMN_EVENT_HNS_SNT(_name, _event)				\
- 	CMN_EVENT_HN_SNT(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event)
- #define CMN_EVENT_HNS_HBT(_name, _event)				\
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_all, CMN_TYPE_HNS, _event, 0, SEL_HBT_LBT_SEL), \
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_hbt, CMN_TYPE_HNS, _event, 1, SEL_HBT_LBT_SEL), \
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_lbt, CMN_TYPE_HNS, _event, 2, SEL_HBT_LBT_SEL)
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_all, CMN_TYPE_HNS, _event, SEL_HBT_LBT_SEL, 0), \
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_hbt, CMN_TYPE_HNS, _event, SEL_HBT_LBT_SEL, 1), \
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_lbt, CMN_TYPE_HNS, _event, SEL_HBT_LBT_SEL, 2)
- #define CMN_EVENT_HNS_SNH(_name, _event)				\
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_all, CMN_TYPE_HNS, _event, 0, SEL_SN_HOME_SEL), \
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_sn, CMN_TYPE_HNS, _event, 1, SEL_SN_HOME_SEL), \
--	_CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_home, CMN_TYPE_HNS, _event, 2, SEL_SN_HOME_SEL)
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_all, CMN_TYPE_HNS, _event, SEL_SN_HOME_SEL, 0), \
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_sn, CMN_TYPE_HNS, _event, SEL_SN_HOME_SEL, 1), \
-+	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_home, CMN_TYPE_HNS, _event, SEL_SN_HOME_SEL, 2)
- 
- #define _CMN_EVENT_XP_MESH(_name, _event)			\
- 	__CMN_EVENT_XP(e_##_name, (_event) | (0 << 2)),		\
-@@ -1814,9 +1817,9 @@ static int arm_cmn_validate_group(struct arm_cmn *cmn, struct perf_event *event)
++	if (fsel == SEL_EVICT_STATE_SEL && !ret) {
++		ret = arm_cmn_set_event_sel_hi(dn, SEL_HBT_LBT_SEL, CMN_EVENT_FILTER2(event));
++		if (ret)
++			dn->filter[fsel].count--;
++	}
  	return ret;
  }
  
--static enum cmn_filter_select arm_cmn_filter_sel(const struct arm_cmn *cmn,
--						 enum cmn_node_type type,
--						 unsigned int eventid)
-+static enum cmn_filter_select arm_cmn_event_filter(const struct arm_cmn *cmn,
-+						   enum cmn_node_type type,
-+						   unsigned int eventid)
- {
- 	struct arm_cmn_event_attr *e;
- 	enum cmn_model model = arm_cmn_model(cmn);
-@@ -1824,7 +1827,7 @@ static enum cmn_filter_select arm_cmn_filter_sel(const struct arm_cmn *cmn,
- 	for (int i = 0; i < ARRAY_SIZE(arm_cmn_event_attrs) - 1; i++) {
- 		e = container_of(arm_cmn_event_attrs[i], typeof(*e), attr.attr);
- 		if (e->model & model && e->type == type && e->eventid == eventid)
--			return e->fsel;
-+			return e->filter[0].sel;
- 	}
- 	return SEL_NONE;
- }
-@@ -1889,7 +1892,7 @@ static int arm_cmn_event_init(struct perf_event *event)
- 	}
- 
- 	/* This is sufficiently annoying to recalculate, so cache it */
--	hw->filter_sel = arm_cmn_filter_sel(cmn, type, eventid);
-+	hw->filter_sel = arm_cmn_event_filter(cmn, type, eventid);
- 
- 	bynodeid = CMN_EVENT_BYNODEID(event);
- 	nodeid = CMN_EVENT_NODEID(event);
 -- 
 2.54.0.dirty
 
