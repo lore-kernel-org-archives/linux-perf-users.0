@@ -1,206 +1,417 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D943D4127
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 16:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A0F3DC4B6;
+	Tue, 30 Jun 2026 18:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782837388; cv=none; b=a32MRmJ12NVCWS92uhWVf1BomgK43Eh8i6dq6FGfBVdpcdfV9CCa1xq/1L0OXeUTTu8nlXNsfHnYNgZqRtVJdTyiXKnZXEpBxXdgMaZSpXFF4LhbOKPe8Wc/0HwNVWS3a59ZPeq2zoahK5yqVB0vz/PI3/hTzy0HBRo8uYBOVtI=
+	t=1782843194; cv=none; b=CEHWtyP/VkyLB0xvFkWsKNIbgCVOwJcyLxwbt/MwJY7OE+SyBpDmL1rI0NnBhf6nr+Zv790ooow1EgHOELJV0lxKFFgvx0unwnEgiknSh1NyHLEhYEmd6NKaMhrgAOvSQ2MKodWdx6wPQT0/B5LCymQRBjT5LpMb1c6ZsL8IbsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782837388; c=relaxed/simple;
-	bh=d9wug2nxL1uyn9+xDv1rDebfpG+gnaq49E2sbVFw0kg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dxnbc8QKNYswpEEKhgh7RnyiF1jPUjmkN3y1lhDOmg2RArTs1qMUQ4hu41qRgc9JtBlCPjIaN8BC7RZ6gko4RvrIksEfwtQ5yMOOi5SqlQ613jrdJXIlUH8gFL60FRf00zItzWTdjLNqo6eodUI7GSCqfjKkiizGPx1i5/BC/+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Csm/0TAQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SuTooq+C; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Csm/0TAQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SuTooq+C; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1782843194; c=relaxed/simple;
+	bh=7OA9qQCD9Fb/NIRvV7AfcgUKf4UMXY/C/7up7kPyIZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G50pFWkYkaLJU/Mh4abcAyEEOk1dzw6iGwF1Ly/ZX/A2wdxF3tzD99zM+eK9OH0RH0VVvJCAVhY+4BiVvgDzzgTuSn8Qjet1HEiH1RW0S5PssaR3ktn3Jd9ZtBmMrP8Y4e6TcJXnX0JwAQFQsI+uSsT+oaIktUCEtMEQYFTQD88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lPcVUTls; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Csm/0TAQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SuTooq+C";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Csm/0TAQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SuTooq+C"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9485D75953;
-	Tue, 30 Jun 2026 16:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782837384; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zwtvYcpEu3U9PLHqG7OTydVnRKJe82b04p0UFeAYHjA=;
-	b=Csm/0TAQDKcAqPahjvJm4t6wIygBvouh4o3HLWaKsgyk698bUArVP/FODSuGjNHcARgLTj
-	CJc2gPmeHEfliGZdWDOcmZZZ0vZ9z95eXBkXNuiEMJpmpW8Tp01B9gZwKHKhDLyJoN2tn+
-	chGgPP4YUFkHsmNHRAZUF9xPb+SnjMo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782837384;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zwtvYcpEu3U9PLHqG7OTydVnRKJe82b04p0UFeAYHjA=;
-	b=SuTooq+CQho1YfxuTrEUMCh69pnVtR5UtZwMeH7IAZfA6dmdObdMjx1/u2fLm2dXcH2Fos
-	1ruN1lCKBfY39zDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="Csm/0TAQ";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=SuTooq+C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782837384; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zwtvYcpEu3U9PLHqG7OTydVnRKJe82b04p0UFeAYHjA=;
-	b=Csm/0TAQDKcAqPahjvJm4t6wIygBvouh4o3HLWaKsgyk698bUArVP/FODSuGjNHcARgLTj
-	CJc2gPmeHEfliGZdWDOcmZZZ0vZ9z95eXBkXNuiEMJpmpW8Tp01B9gZwKHKhDLyJoN2tn+
-	chGgPP4YUFkHsmNHRAZUF9xPb+SnjMo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782837384;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zwtvYcpEu3U9PLHqG7OTydVnRKJe82b04p0UFeAYHjA=;
-	b=SuTooq+CQho1YfxuTrEUMCh69pnVtR5UtZwMeH7IAZfA6dmdObdMjx1/u2fLm2dXcH2Fos
-	1ruN1lCKBfY39zDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E748F779A8;
-	Tue, 30 Jun 2026 16:36:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GZUpNYPwQ2qifgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 30 Jun 2026 16:36:19 +0000
-Date: Tue, 30 Jun 2026 17:36:18 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 12/30] mm/vma: clean up anon_vma_compatible()
-Message-ID: <akPwbHbGiF1FxL6m@pedro-suse.lan>
-References: <cover.1782735110.git.ljs@kernel.org>
- <5a7a07bd2a774989849b0fea84f758059ed914df.1782735110.git.ljs@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lPcVUTls"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65UEIhq12171275;
+	Tue, 30 Jun 2026 18:13:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=tB3r6v
+	2e8RQJRl6khIbvkVRys1TAeMlqzh2UUBd/o0M=; b=lPcVUTlskNw0iix3B/8dwn
+	vXJlh+1hkZSUJ2Pnz0ybJcpAT9jMUoDkeptALSNHH09+3V/IOE1ccNjqMPpTWlnG
+	djZfVdhC7739EkHlOwEeh9o4lgSEitafH1qhuN8HHmnl9rmx6YCM4YeNqOdDM3fE
+	rWDdqU1Y2lmTUky/Q64i4YImKSEzvHe5EOs7NLWxTw0mQQkQtQOXmUXvTKcCyFp/
+	Qm1c8LccErOJ6DXXkQxJaa92LScuH2wfsK0PPADx1KFcuVTmQakYMZvzTU/74IFM
+	D4zM0zI9SDrnXkIZkS9fFsjs4V2xlMDoeyWP/LSE7vaCq3mvrr9EyDD6aG/3LpFQ
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26rf049s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jun 2026 18:13:07 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 65UI4eio025946;
+	Tue, 30 Jun 2026 18:13:06 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2s7w3qw6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 30 Jun 2026 18:13:06 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 65UID6iW32309838
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 30 Jun 2026 18:13:06 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3C3475805B;
+	Tue, 30 Jun 2026 18:13:06 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7042958058;
+	Tue, 30 Jun 2026 18:13:03 +0000 (GMT)
+Received: from [9.124.210.124] (unknown [9.124.210.124])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 30 Jun 2026 18:13:03 +0000 (GMT)
+Message-ID: <845b78ec-2385-4bb4-9ce1-900c266d2941@linux.ibm.com>
+Date: Tue, 30 Jun 2026 23:42:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a7a07bd2a774989849b0fea84f758059ed914df.1782735110.git.ljs@kernel.org>
-X-Spam-Flag: NO
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,kernel.org,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,mev.co.uk,visionengravers.com,pengutronix.de,gmail.com,ffwll.ch,suse.de,oss.qualcomm.com,ideasonboard.com,nvidia.com,amd.com,shazbot.org,zeniv.linux.org.uk,linux.dev,google.com,infradead.org,samsung.com,goodmis.org,huawei.com,vger.kernel.org,lists.infradead.org,lists.freedesktop.org,lists.linux.dev,kvack.org,googlegroups.com,surriel.com];
-	FROM_HAS_DN(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_GT_50(0.00)[75];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pedro-suse.lan:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 9485D75953
-X-Spam-Score: -3.01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/4] perf/trace-event: Write trace.dat metadata
+ sections during parsing
+To: sashiko-reviews@lists.linux.dev, Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-perf-users@vger.kernel.org
+References: <20260608125951.90425-4-tshah@linux.ibm.com>
+ <20260608131224.B448A1F00898@smtp.kernel.org>
+Content-Language: en-US
+From: Tanushree Shah <tshah@linux.ibm.com>
+In-Reply-To: <20260608131224.B448A1F00898@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=a4kAM0SF c=1 sm=1 tr=0 ts=6a440733 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=NuLJOUEpmZb_zQThiekA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: TvoFxI_l1-yB514Tj3KMeMmu5qmFRam8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDE3MCBTYWx0ZWRfX0bX/IQFz6Dy8
+ PVC5ZzvvbSQijpfDTTHX/8gaA3UfFhl/3T/fOzIqyOHEVmTmO7raR9dVvkCTy3HCJIZmy/8jpfK
+ 1HBK0wOT46spXc91Z9wfBasQ+4yQRVaqYG6Q64ql7mEdWClx7wy4kkyyL7OuwnPTmArbHssDH2a
+ OHN5Dbyk/5gVZo+OScs00vAZs4i9ZUg+0z3V9/P2HH1bVwOQxuIMqz6c6r9YOr+zNsbkOt4cAyo
+ 7gNAhXGY4Rl+WUfKVYIJTu7dmBA8RCmbUo5FSXveYZWEDUFOy7Xoc9z2UGQkZY7eUCZ6jJoQAG3
+ EuyvNDYxiEWP/I5OLLAVdYbzILG+w6QxggH1hpBaUG62GKCcAm3Zery62Cbr5WVqQ1gAJSFtv7r
+ 1BwJPvvKjQPM2IyYpKAV3QvFEIghNboGfqgoFqPa4F3ib3/A3zcrgVZWJ5Qxx9U2AAukonnsLtb
+ 0I+1I82EjE2PiOmvqnA==
+X-Proofpoint-GUID: 2x-e9VbJrg4KLyhfFZDmnMF-Fobu4pHX
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDE3MCBTYWx0ZWRfX5o4VU5NGc3bB
+ 7RpUM6px/WtzkZS+PIvKllhj95gW1lUeFNpfBLAe0wF4y/Clc1LjIm+DdZJa3p0UZt+Of3nqCp+
+ CZReZR+gAUCiD0RtH9y6knptgg0iTTs=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-30_04,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 bulkscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 malwarescore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606300170
 
-On Mon, Jun 29, 2026 at 01:23:23PM +0100, Lorenzo Stoakes wrote:
-> Break up the existing very large conditional, add comments and use
-> vma_[start/end]_pgoff() to make clearer what we're doing here.
+Thanks for the detailed review. I have verified the issues and will be 
+fixing it in v2.
+
+
+On 08/06/26 18:42, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 6 potential issue(s) to consider:
 > 
-> No functional change intended.
+> New issues:
+> - [High] Using `read()` directly instead of the subsystem's `do_read()` loop fails to handle short reads, causing stream desynchronization and uninitialized memory writes.
+> - [High] Integer truncation in `do_read()` causes massive uninitialized heap memory dumps to the output file.
+> - [Medium] Metadata fields and integers for the `trace.dat` file are written in the host's native byte order, causing cross-platform incompatibility.
+> - [Medium] Error paths in `fwrite` operations return directly without cleaning up allocated resources, leading to memory and state leaks.
+> - [Medium] Writing 2 bytes from a 1-byte `char` variable causes a stack out-of-bounds read and file corruption.
 > 
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-> ---
->  mm/vma.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
+> Pre-existing issues:
+> - [High] Unbounded string accumulation in `read_string()` causes a stack buffer overflow.
+> --
 > 
-> diff --git a/mm/vma.c b/mm/vma.c
-> index b60375c6c5c3..6296acecf3b7 100644
-> --- a/mm/vma.c
-> +++ b/mm/vma.c
-> @@ -1967,14 +1967,25 @@ static int anon_vma_compatible(struct vm_area_struct *a, struct vm_area_struct *
->  {
->  	vma_flags_t diff = vma_flags_diff_pair(&a->flags, &b->flags);
->  
-> +	/* Ignore flags that mprotect() can change. */
->  	vma_flags_clear_mask(&diff, VMA_ACCESS_FLAGS);
-> +	/* Ignore flags that do not impact merging. */
->  	vma_flags_clear_mask(&diff, VMA_IGNORE_MERGE_FLAGS);
->  
-> -	return a->vm_end == b->vm_start &&
-> -		mpol_equal(vma_policy(a), vma_policy(b)) &&
-> -		a->vm_file == b->vm_file &&
-> -		vma_flags_empty(&diff) &&
-> -		b->vm_pgoff == a->vm_pgoff + ((b->vm_start - a->vm_start) >> PAGE_SHIFT);
-> +	/* Must be adjacent. */
-> +	if (a->vm_end != b->vm_start)
-> +		return false;
-> +	/* Must have matching policy. */
-> +	if (!mpol_equal(vma_policy(a), vma_policy(b)))
-> +		return false;
-> +	/* Must both be anon or map the same file (MAP_PRIVATE case). */
-> +	if (a->vm_file != b->vm_file)
-> +		return false;
-> +	/* Flags must be equivalent modulo mprotect(). */
-> +	if (!vma_flags_empty(&diff))
-> +		return false;
-> +	/* Page offset must align. */
-> +	return vma_end_pgoff(a) == vma_start_pgoff(b);
+> commit f1360b22eb92ea64822af70555a808fd9d67ae93
+> Author: Tanushree Shah <tshah@linux.ibm.com>
+> Date:   Mon Jun 8 12:59:50 2026 +0000
+> 
+>      perf/trace-event: Write trace.dat metadata sections during parsing
+>      
+>      Perf already captures the tracing metadata as a part of
+>      data section in perf.data
+>      
+>      When trace_dat_fp is set, write trace.dat compatible metadata
+>      sections using the perf provided raw buffers.
+>      
+>      Sections written:
+>      - Initial format header (magic, version, endian, long_size,
+>        page_size, compression, options_offset placeholder)
+>      - Section 16: HEADER INFO (header_page + header_event)
+>      - Section 17: FTRACE EVENT FORMATS
+>      - Section 18: EVENT FORMATS (per system/event format files)
+>      - Section 19: KALLSYMS
+>      - Section 21: CMDLINES
+>      - Section 15: STRINGS (written last after all sections)
+>      
+>      Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+> 
+> This commit updates the trace-event parsing in perf to write trace.dat
+> compatible metadata sections when trace_dat_fp is set. It outputs sections
+> such as initial format headers, FTRACE EVENT FORMATS, EVENT FORMATS,
+> KALLSYMS, and CMDLINES using perf's raw buffers.
+> 
+>> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+>> index ecbbb93f01853..815577703c2e5 100644
+>> --- a/tools/perf/util/trace-event-read.c
+>> +++ b/tools/perf/util/trace-event-read.c
+> 
+> [ ... ]
+> 
+>> @@ -145,10 +146,9 @@ static char *read_string(void)
+> 
+> [Severity: High]
+> This isn't a bug introduced by this patch, but does read_string() allow a
+> stack buffer overflow when accumulating characters?
+> 
+> In read_string():
+>      buf[size++] = c;
+> 
+> If the input file contains a string longer than BUFSIZ without a null
+> terminator, will this increment the size index and write past the bounds
+> of the fixed-size array buf?
+> 
+Since, its a pre-existing issue and is unrelated to this feature 
+addition, will fix it in a separate patch.
+>>   static int read_proc_kallsyms(struct tep_handle *pevent)
+>>   {
+>>   	unsigned int size;
+>> +	char *buf;
+>>   
+>>   	size = read4(pevent);
+>> -	if (!size)
+>> -		return 0;
+> 
+> [ ... ]
+> 
+>> +	buf = malloc(size);
+>> +	if (buf == NULL)
+>> +		return -1;
+>> +	if (read(input_fd, buf, size) < 0) {
+>> +		free(buf);
+>> +		return -1;
+>> +	}
+>>   	trace_data_size += size;
+>> +	/* Write kallsyms section with data */
+>> +	if (trace_dat_fp) {
+>> +		unsigned short section_id = TRACE_DAT_SECTION_KALLSYMS;
+>> +		unsigned int string_id = STRID_KALLSYMS;
+>> +		unsigned long long section_size = sizeof(unsigned int) + size;
+>> +		unsigned short flags = 0;
+>> +
+>> +		trace_dat_kallsyms_offset = ftell(trace_dat_fp);
+>> +		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
+>> +		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
+>> +		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
+>> +		    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
+>> +		    !fwrite(&size, sizeof(unsigned int), 1, trace_dat_fp) ||
+>> +		    !fwrite(buf, 1, size, trace_dat_fp)) {
+> 
+> [Severity: High]
+> Could using read() instead of do_read() here cause uninitialized memory to
+> be written to the output file?
+> 
+> Unlike do_read(), read() can return a short read. If a short read occurs, the
+> return value might still be greater than 0, bypassing the error check.
+> 
+> Will this leave the remainder of buf uninitialized, failing to advance the
+> input_fd offset by the expected amount, and then dump the partially
+> uninitialized heap memory into trace_dat_fp during the fwrite() call?
+yes, will replace read() with do_read().
+> 
+>> +			free(buf);
+>> +			return -EIO;
+>> +		}
+>> +	}
+>> +	free(buf);
+>>   	return 0;
+>>   }
+> 
+> [ ... ]
+> 
+>> @@ -209,6 +261,7 @@ static int read_header_files(struct tep_handle *pevent)
+>>   
+>>   	size = read8(pevent);
+>>   
+>> +	header_page_size = size;
+>>   	header_page = malloc(size);
+>>   	if (header_page == NULL)
+>>   		return -1;
+>> @@ -227,19 +280,59 @@ static int read_header_files(struct tep_handle *pevent)
+>>   		 */
+>>   		tep_set_long_size(pevent, tep_get_header_page_size(pevent));
+>>   	}
+>> -	free(header_page);
+>>   
+>> -	if (do_read(buf, 13) < 0)
+>> +	if (do_read(buf, 13) < 0) {
+>> +		free(header_page);
+>>   		return -1;
+>> +	}
+> 
+> [Severity: High]
+> Can integer truncation in do_read() lead to massive uninitialized heap memory
+> dumps here?
+> 
+> Functions like read_header_files() allocate memory using the 64-bit size read
+> from the file:
+> 
+>      size = read8(pevent);
+>      header_page = malloc(size);
+> 
+> They then call do_read(header_page, size). Because do_read() takes an int
+> for the size argument, values over 4GB are truncated to their lower 32 bits.
+> If size is 0x100000004, do_read() will only read 4 bytes.
+> 
+> Later in the function, fwrite() is called with the full 64-bit size:
+> 
+>      !fwrite(header_page, 1, header_page_size, trace_dat_fp)
+> 
+> Will this result in dumping 4GB of uninitialized heap memory into the
+> output file?
+Confirmed.  do_read() takes int, truncates 64-bit sizes. Would need to 
+change parameter type from int to size_t.
+> 
+> [ ... ]
+> 
+>> @@ -298,8 +405,31 @@ static int read_ftrace_files(struct tep_handle *pevent)
+>>   	int count;
+>>   	int i;
+>>   	int ret;
+>> +	long section_size_pos = 0;
+>> +	long count_pos = 0;
+>> +	unsigned long long section_size = 0;
+>> +	long end_pos;
+>>   
+>>   	count = read4(pevent);
+>> +	/* Write ftrace formats section to trace.dat output file */
+>> +	if (trace_dat_fp) {
+>> +		unsigned short section_id = TRACE_DAT_SECTION_FTRACE;
+>> +		unsigned short flags = 0;
+>> +		unsigned int string_id = STRID_FTRACE_FORMATS;
+>> +
+>> +		trace_dat_ftrace_format_offset = ftell(trace_dat_fp);
+>> +
+>> +		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
+>> +		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
+>> +		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp))
+> 
+> [Severity: Medium]
+> Should these multi-byte integers be byte-swapped to match the output file's
+> endianness?
+> 
+> The trace.dat file endianness is explicitly declared to match the original
+> perf.data file (endian = file_bigendian).
+> 
+> However, variables like section_id, flags, and string_id are written using
+> fwrite(), which writes them in the host's native byte order. If a
+> little-endian host is processing a big-endian capture file, won't this corrupt
+> the section IDs and sizes in the resulting trace.dat file?
+> 
+>> +			return -EIO;
+>> +		section_size_pos = ftell(trace_dat_fp);
+>> +		if (!fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp))
+>> +			return -EIO;
+>> +		count_pos = ftell(trace_dat_fp);
+>> +		if (!fwrite(&count, sizeof(unsigned int), 1, trace_dat_fp))
+>> +			return -EIO;
+>> +	}
+> 
+> [ ... ]
+> 
+>> @@ -363,6 +557,23 @@ static int read_saved_cmdline(struct tep_handle *pevent)
+>>   		pr_debug("error reading saved cmdlines\n");
+>>   		goto out;
+>>   	}
+>> +	/* Write cmdlines section with data */
+>> +	if (trace_dat_fp) {
+>> +		unsigned short section_id = TRACE_DAT_SECTION_CMDLINE;
+>> +		unsigned short flags = 0;
+>> +		unsigned int string_id = STRID_CMDLINES;
+>> +		unsigned long long section_size = sizeof(unsigned long long) + size;
+>> +
+>> +		trace_dat_cmdline_offset = ftell(trace_dat_fp);
+>> +		if (!fwrite(&section_id, sizeof(unsigned short), 1, trace_dat_fp) ||
+>> +		    !fwrite(&flags, sizeof(unsigned short), 1, trace_dat_fp) ||
+>> +		    !fwrite(&string_id, sizeof(unsigned int), 1, trace_dat_fp) ||
+>> +		    !fwrite(&section_size, sizeof(unsigned long long), 1, trace_dat_fp) ||
+>> +		    !fwrite(&size, sizeof(unsigned long long), 1, trace_dat_fp) ||
+>> +		    !fwrite(buf, 1, size, trace_dat_fp))
+>> +			return -EIO;
+> 
+> [Severity: Medium]
+> Does returning directly bypass the cleanup block?
+> 
+> If fwrite() fails, this error path returns -EIO immediately instead of using
+> the "goto out" pattern established in this function.
+> 
+> Will this cause the allocated memory in buf to be leaked, since free(buf)
+> is skipped?
 
-Very nice.
+On fwrite error, close trace_dat_fp and set it to NULL to disable 
+further trace.dat writes, then continue normal parsing instead of 
+returning early, this ensures cleanup code runs and primary parsing 
+continues further.
+> 
+>> +	}
+>> +
+>>   	buf[ret] = '\0';
+>>   
+>>   	parse_saved_cmdline(pevent, buf, size);
+> 
+> [ ... ]
+> 
+>> @@ -440,6 +657,28 @@ ssize_t trace_report(int fd, struct trace_event *tevent, bool __repipe)
+>>   	tep_set_long_size(pevent, file_long_size);
+>>   	tep_set_page_size(pevent, file_page_size);
+>>   
+>> +	/* Write initial file header to trace.dat */
+>> +	if (trace_dat_fp) {
+>> +		unsigned char endian = file_bigendian;
+>> +		unsigned char long_size = file_long_size;
+>> +		unsigned int page_size = file_page_size;
+>> +		unsigned long long placeholder = 0;
+>> +		char trace_dat_version = TRACE_DAT_VERSION;
+>> +
+>> +		if (!fwrite(magic_buf, 1, 10, trace_dat_fp) ||    /* magic + "tracing" */
+>> +		    !fwrite(&trace_dat_version, 1, 2, trace_dat_fp) ||
+> 
+> [Severity: Medium]
+> Can this write out-of-bounds stack memory to the output file?
+> 
+> The variable trace_dat_version is declared as a 1-byte char:
+> 
+>      char trace_dat_version = TRACE_DAT_VERSION;
+> 
+> However, the fwrite call asks to write 2 bytes:
+> 
+>      !fwrite(&trace_dat_version, 1, 2, trace_dat_fp)
+> 
+> Will this read 1 byte past the trace_dat_version variable on the stack,
+> leaking uninitialized stack memory into the output file and potentially
+> failing to write the expected null terminator for the version string?
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+Confirmed. Writes 2 bytes from 1-byte char. Fix: Allocate 2-byte array 
+for version string with null terminator.
 
--- 
-Pedro
+
+> 
+>> +		    !fwrite(&endian, 1, 1, trace_dat_fp) ||
+>> +		    !fwrite(&long_size, 1, 1, trace_dat_fp) ||
+>> +		    !fwrite(&page_size, sizeof(unsigned int), 1, trace_dat_fp) ||
+>> +		    !fwrite("none", 1, 4, trace_dat_fp) ||
+>> +		    !fwrite("\0", 1, 1, trace_dat_fp) ||
+>> +		    !fwrite("\0", 1, 1, trace_dat_fp))
+>> +			return -EIO;
+>> +		trace_dat_options_offset = ftell(trace_dat_fp);
+>> +		if (!fwrite(&placeholder, sizeof(unsigned long long), 1, trace_dat_fp))
+>> +			return -EIO;
+>> +	}
+>> +
+>>   	err = read_header_files(pevent);
+>>   	if (err)
+>>   		goto out;
+> 
+
+
+
