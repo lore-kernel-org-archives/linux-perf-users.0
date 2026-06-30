@@ -1,520 +1,145 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4370133343B
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 15:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB8735DA76
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 15:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782832777; cv=none; b=Rn05w60IIwYgiigmabiYY5GwHdtT4KuesuAQcPNkBU1JyVC+R/Q2fr5McrytlsE2bMu76mUJnixGTdmmxo3TS2Bns8Ziduc1jw+JjQUSMcvtDDD9IKrKl/BvioboRSzqh0uLA4IVOOlMxCpCLjyruX6ilOgCQbzeR0dZq+vDNqA=
+	t=1782833463; cv=none; b=sY8HIAXWlP0q2cGyr9I4p7XatOcjC/blNEB/0BuSAWWJP78M+mGunX/IkjvqT8uKKpewS/8VyoXKGft8o4hnSdkrRGYZgg8D/8E39S3lRzHIRtTU97aWUT98X+1JFto7gggmhtlb153iTc8S3/4YhdbM40kNMMOC+gx4w3WKvZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782832777; c=relaxed/simple;
-	bh=boDakNG9ZLJHOxeb/vPXlkKfrib7c2DWs9BRJlgBcFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=msjvVJWyxRQ5V8gwVmslYF9qbpelEHAYUg3e+PyDfXCZk3qnr5HaP1Q9/5nMpP7wquDFlVb/NEmEEM2bkHMOw1rdPe7pdBUL3b6J/Tv62LeAdvIoO1DLL9hHQDQ4ne2iBjUTCKnhAFgK/ksBuCaQ18e+E3hmpB8x3FeYXRTtstI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Vh+fbEQ+; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1782833463; c=relaxed/simple;
+	bh=dsxaVzZxmHO2gtIU2TvsbwgiexrCHtWtBKWF+qAkz/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q7D2xgMjasnbOZEV3PmliH3XKheJGXpUez1uh+YBtktqDlA0AydF1a1E7jOW8H7N+c/QtaF8GF8Bw5TJIBg/ATAUhua9QZOPPanb7v78CL4wabmHaR7LVn6vIjyk3rH4Djq/Cvn7bqUbV+YyDomuTvJFwPCTgXcBMoOjTfgMwhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cukaVGMX; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Vh+fbEQ+"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 395F62F34;
-	Tue, 30 Jun 2026 08:19:30 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 76DA73FD09;
-	Tue, 30 Jun 2026 08:19:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782832774; bh=boDakNG9ZLJHOxeb/vPXlkKfrib7c2DWs9BRJlgBcFU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vh+fbEQ+Cl9S2aze26x6TfCADxFUgbaTrJH4/q1YbEKZZo5iXpfIdk5CPTlrb00kU
-	 jHXH2FTZsi0t2y59mMF+NsTERgYjjn41672KtAeCx0+uJVmZCJsFjaqzZw0DaBCRlZ
-	 Ji/GdIfCgv0wlq6ViensRsEAN3MUg/ZcefgyHwv4=
-From: Robin Murphy <robin.murphy@arm.com>
-To: will@kernel.org,
-	mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cukaVGMX"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-80814edb536so54542547b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 08:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1782833460; x=1783438260; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vvVAmqyImW7TQjYTHR7q/vQBEUZYJ1tMtKhaki/MPes=;
+        b=cukaVGMX7mBuccoBz6GSmp85lsZYZI0h/Lhjywx3ox40ZYV/6RAo0oHqTlK0ScWRQI
+         iRua8ON3MpvWirCOvcvRavW6eYJKrTMuMUuuTtm/KNFSwPYlolq7xaAbfwPkeHT6ysDh
+         9rHQE52G7RqtRlr9vm9GVcaENG8Urk7Eavnhn4akh1ulxmwJUgarDJr/Td8E2Cqxx99N
+         9Vm9fpdCMfDOPW3IkR0aOSSLJtch2aNnXZOza9aj/vPnhh+AVRovebJPw12MvhFZYooH
+         EOVuTi1jZEL7JXIJqIBXPFE7qbyK8qUoXOC1ROgCJGs0sOms/9ufN/ZoDMKcc9ZFj8Ml
+         Q8Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782833460; x=1783438260;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vvVAmqyImW7TQjYTHR7q/vQBEUZYJ1tMtKhaki/MPes=;
+        b=NQXCoSZc7ZmEUFabE0EiUAkAQInGAjsFG1QW1Xx3CMKEUcm/wRoDdTt8+pfucisW0y
+         bCk8C/pTxPaEFa/OIGBS2D6EzyjrTudC+Dek910I6/DHi/L1t+jstWbyDJptlVrjhkAw
+         cSzihqcz2ZM6JgVq1qOoY48NHkguxwDuPcTt9quevsR/jHZsskGSOArB/negOgpBbps1
+         3nVc0jlkBKezTyTMDZsnRL+RAPntz9rcigsQ12FW79plTtACvkK4/EZKsrOkTJJOFSpc
+         II4y0TIDNzzsbezZFrNA1J9Nu5CT6/LFm3kaS7Bur8rfovBcRIk1K7D1It9dZMkwvGyV
+         EgNw==
+X-Forwarded-Encrypted: i=1; AHgh+RqR6y7KWwHUqiMY6cWZyePFwKlB3Rtij2zUB8dc79OEbL46qs6mpkHGatoO8TzPCrWsQQCUo9G2ZvlJxlGjUZ6C@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX5IQTOeDGsVvNTAB10h/ASbuAJ1e7UkSdLLGesMlwzqBEThhU
+	JPsd8IIUzPPoT8RzAXyW6f26ppY3zvpicfCofjONB4Wcir1uPhJssBBoyaw1ncyrNA8=
+X-Gm-Gg: AfdE7cl8NxyUdFDdOSbTxwtHusgcpzCdAwjgT76shus45IhvZTzY0/SHD1epHVVd5y3
+	hBcL72xrdeCQPxcGWRjtfi8ErFuBHD9e/PgeK1xcu57mwNjhOL/f7XtFKsWSgwOcuYICKztLpPU
+	3mzcVOAxTnhwXNHJdSaFu2St+EAh1kU4ehYy6k6jvgxIaoxM8EnUXF7q/m3GVftxN+0bC/NRX6z
+	uxjC58p20xLXvYXqJscj/DbeD39xjTZZJlC/1zL4qajRAtZxQIzNeoXUVM9LUbPhstLWWzr1lop
+	uPcTkCLiAhZeVLS7DxciRQqYGB1rbwJzBqF6s4fqjeJ6gIH14Hor1f4IcniYtBNHFB+rxE7inPr
+	ncj0DAW4O1tjSQKwqj8CjhCB4lDQeksQnQHXweneI0W+Qr0XXmiXvYCyq4HoN3TefPqx8TZNh/O
+	SRmiZjURa/PZRMkSSJudDyTN/bwBxZihAbiQ6xK2WhYh9/Mi0Z/fiI0L15aYZ3f6HKH5/q
+X-Received: by 2002:a05:690c:6112:b0:80e:bd63:1780 with SMTP id 00721157ae682-810d7eb0bd6mr46000317b3.2.1782833460437;
+        Tue, 30 Jun 2026 08:31:00 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f1a783d9d7sm25574106d6.41.2026.06.30.08.30.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2026 08:30:59 -0700 (PDT)
+Date: Tue, 30 Jun 2026 11:30:54 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Simon Schuster <schuster.simon@siemens-energy.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Dan Williams <djbw@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>, Hugh Dickins <hughd@google.com>,
+	Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-mm@kvack.org, iommu@lists.linux.dev,
 	linux-perf-users@vger.kernel.org,
-	ilkka@os.amperecomputing.com
-Subject: [PATCH 5/5] perf/arm-cmn: Support CMN S3 r2
-Date: Tue, 30 Jun 2026 16:19:20 +0100
-Message-ID: <1ce69a1cb72da220caa6bc83eb8ce74e295b595e.1782830759.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.54.0.dirty
-In-Reply-To: <cover.1782830759.git.robin.murphy@arm.com>
-References: <cover.1782830759.git.robin.murphy@arm.com>
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	damon@lists.linux.dev, Pedro Falcato <pfalcato@suse.de>,
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+	Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 07/30] mm/rmap: elide unnecessary static inline's in
+ interval_tree.c
+Message-ID: <akPhLlv66ZqQ-jrw@gourry-fedora-PF4VCD3F>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <ed5fd5358382217a92f0a6afddcfaa030c933055.1782735110.git.ljs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed5fd5358382217a92f0a6afddcfaa030c933055.1782735110.git.ljs@kernel.org>
 
-If you were disappointed at how minimal the initial CMN S3 support
-looked compared to previous versions, then oh boy is it time to put your
-party hats on... The biggest batch of incompatible changes yet comes not
-with a new CMN product, but a point release of an existing one. We've
-got new filters, loads of changes to existing events, register fields
-moved around for no good reason, and much, much more! On the upside, we
-do at least gain a means of working around the isolation feature.
+On Mon, Jun 29, 2026 at 01:23:18PM +0100, Lorenzo Stoakes wrote:
+> It's not necessary to declare these functions static inline as they are
+> contained within a single compilation unit.
+> 
+> This makes the anonymous interval tree code consistent with the newly
+> updated file-backed interval tree code.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-As such, for the sake of sanity in the driver it is easiest to split it
-into a distict "model" for our internal abstractions despite it bearing
-the same part number as r0/r1.
-
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/perf/arm-cmn.c | 270 +++++++++++++++++++++++++++++------------
- 1 file changed, 193 insertions(+), 77 deletions(-)
-
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index c935ddcf462a..a03e2a8ca41e 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -29,6 +29,7 @@
- #define CMN_CI_CHILD_PTR_OFFSET		GENMASK_ULL(31, 16)
- 
- #define CMN_CHILD_NODE_ADDR		GENMASK(29, 0)
-+#define CMN_CHILD_NODE_ISOLATED		BIT(30)
- #define CMN_CHILD_NODE_EXTERNAL		BIT(31)
- 
- /* Some implementations use a mesh larger than the architectural max of 12 */
-@@ -48,11 +49,16 @@
- 
- #define CMN_CFGM_INFO_GLOBAL		0x0900
- #define CMN_INFO_MULTIPLE_DTM_EN	BIT_ULL(63)
-+#define CMN_S3_R2_MULTIPLE_DTM_EN	BIT_ULL(59)
- #define CMN_INFO_RSP_VC_NUM		GENMASK_ULL(53, 52)
- #define CMN_INFO_DAT_VC_NUM		GENMASK_ULL(51, 50)
- #define CMN_INFO_DEVICE_ISO_ENABLE	BIT_ULL(44)
- 
- #define CMN_CFGM_INFO_GLOBAL_1		0x0908
-+#define CMN_S3_R2_RSP_VC_NUM		GENMASK_ULL(11, 9)
-+#define CMN_S3_R2_DAT_VC_NUM		GENMASK_ULL(8, 6)
-+#define CMN_S3_R2_SNP_VC_NUM		GENMASK_ULL(5, 3)
-+#define CMN_S3_R2_REQ_VC_NUM		GENMASK_ULL(2, 0)
- #define CMN_INFO_SNP_VC_NUM		GENMASK_ULL(3, 2)
- #define CMN_INFO_REQ_VC_NUM		GENMASK_ULL(1, 0)
- 
-@@ -78,6 +84,16 @@
- /* Technically this is 4 bits wide on DNs, but we only use 2 there anyway */
- #define CMN__PMU_OCCUP1_ID		GENMASK_ULL(34, 32)
- 
-+/* But then... */
-+#define CMN__PMU_EVICT_STATE_SEL	GENMASK_ULL(54, 52)
-+#define CMN__PMU_ENHANCED_HBT_LBT_SEL	GENMASK_ULL(51, 48)
-+#define CMN__PMU_SNP_VC_SEL		GENMASK_ULL(47, 46)
-+#define CMN__S3_R2_CBUSY_SNTHROTTLE_SEL	GENMASK_ULL(45, 42)
-+#define CMN__S3_R2_SN_HOME_SEL		GENMASK_ULL(41, 40)
-+#define CMN__S3_R2_HBT_LBT_SEL		GENMASK_ULL(39, 38)
-+#define CMN__S3_R2_CLASS_OCCUP_ID	GENMASK_ULL(37, 36)
-+#define CMN__S3_R2_OCCUP1_ID		GENMASK_ULL(35, 32)
-+
- /* Some types are designed to coexist with another device in the same node */
- #define CMN_CCLA_PMU_EVENT_SEL		0x008
- #define CMN_HNP_PMU_EVENT_SEL		0x008
-@@ -202,12 +218,14 @@ enum cmn_model {
- 	CMN650 = 2,
- 	CI700 = 4,
- 	CMN700 = 8,
--	CMNS3 = 16,
-+	CMNS3R01 = 16,
-+	CMNS3R2 = 32,
- 	/* ...and then we can use bitmap tricks for commonality */
- 	CMN_ANY = -1,
- 	NOT_CMN600 = -2,
- 	CMN_700ON = ~(CMN700 - 1),
- 	CMN_650ON = CMN_700ON | CMN650,
-+	CMNS3 = CMNS3R01 | CMNS3R2,
- };
- 
- /* Actual part numbers and revision IDs defined by the hardware */
-@@ -243,6 +261,10 @@ enum cmn_revision {
- 	REV_CMNS3_R0P0 = 0,
- 	REV_CMNS3_R0P1,
- 	REV_CMNS3_R1P0,
-+	REV_CMNS3_R2P0,
-+	REV_CMNS3_R2P1,
-+	REV_CMNS3_R2P2,
-+	REV_CMNS3_R2P5,
- 	REV_CI700_R0P0 = 0,
- 	REV_CI700_R1P0,
- 	REV_CI700_R2P0,
-@@ -429,7 +451,9 @@ static enum cmn_model arm_cmn_model(const struct arm_cmn *cmn)
- 	case PART_CI700:
- 		return CI700;
- 	case PART_CMN_S3:
--		return CMNS3;
-+		if (cmn->rev >= REV_CMNS3_R2P0)
-+			return CMNS3R2;
-+		return CMNS3R01;
- 	default:
- 		return 0;
- 	};
-@@ -609,8 +633,10 @@ enum cmn_filter_type {
- 	FILT_OCCUP1_ID,
- 	FILT_HNF_700,
- 	FILT_HNS,
-+	FILT_HNS_S3R2,
- };
- #define CMN_FILTER(_sel)	[SEL_##_sel] = CMN__PMU_##_sel
-+#define CMN_FILTER_V2(_sel)	[SEL_##_sel] = CMN__S3_R2_##_sel
- 
- static const u64 arm_cmn_filters[][SEL_MAX] = {
- 	[FILT_NONE] = {},
-@@ -632,6 +658,17 @@ static const u64 arm_cmn_filters[][SEL_MAX] = {
- 		CMN_FILTER(HBT_LBT_SEL),
- 		CMN_FILTER(SN_HOME_SEL)
- 	},
-+	/* Newer HN-S */
-+	[FILT_HNS_S3R2] = {
-+		CMN_FILTER_V2(OCCUP1_ID),
-+		CMN_FILTER_V2(CLASS_OCCUP_ID),
-+		CMN_FILTER_V2(CBUSY_SNTHROTTLE_SEL),
-+		CMN_FILTER_V2(HBT_LBT_SEL),
-+		CMN_FILTER_V2(SN_HOME_SEL),
-+		CMN_FILTER(SNP_VC_SEL),
-+		CMN_FILTER(ENHANCED_HBT_LBT_SEL),
-+		CMN_FILTER(EVICT_STATE_SEL)
-+	}
- };
- 
- static enum cmn_filter_type arm_cmn_filter(enum cmn_node_type node,
-@@ -651,7 +688,9 @@ static enum cmn_filter_type arm_cmn_filter(enum cmn_node_type node,
- 			return FILT_OCCUP1_ID;
- 		return FILT_HNF_700;
- 	case CMN_TYPE_HNS:
--		return FILT_HNS;
-+		if (model < CMNS3R2)
-+			return FILT_HNS;
-+		return FILT_HNS_S3R2;
- 	};
- }
- 
-@@ -732,7 +771,7 @@ struct arm_cmn_event_attr {
- 	enum cmn_model model;
- 	enum cmn_node_type type;
- 	u16 eventid;
--	struct arm_cmn_filter_attr filter[1];
-+	struct arm_cmn_filter_attr filter[2];
- };
- 
- struct arm_cmn_format_attr {
-@@ -741,16 +780,16 @@ struct arm_cmn_format_attr {
- 	int config;
- };
- 
--#define _CMN_EVENT_ATTR(_model, _name, _type, _eventid, _filter, ...)	\
-+#define _CMN_EVENT_ATTR(_model, _name, _type, _eventid, _fa, _fb, _fc, _fd, ...) \
- 	(&((struct arm_cmn_event_attr[]) {{				\
- 		.attr = __ATTR(_name, 0444, arm_cmn_event_show, NULL),	\
- 		.model = _model,					\
- 		.type = _type,						\
- 		.eventid = _eventid,					\
--		.filter = {{_filter}},					\
-+		.filter = {{_fa, _fb}, {_fc, _fd}},			\
- 	}})[0].attr.attr)
- #define CMN_EVENT_ATTR(_model, _name, _type, _eventid, _filter...)	\
--	_CMN_EVENT_ATTR(_model, _name, _type, _eventid, ##_filter, 0, 0)
-+	_CMN_EVENT_ATTR(_model, _name, _type, _eventid, ##_filter, 0, 0, 0, 0)
- 
- static ssize_t arm_cmn_event_show(struct device *dev,
- 				  struct device_attribute *attr, char *buf)
-@@ -769,6 +808,10 @@ static ssize_t arm_cmn_event_show(struct device *dev,
- 				  "type=0x%x,eventid=0x%x,wp_dev_sel=?,wp_chn_sel=?,wp_grp=?,wp_val=?,wp_mask=?\n",
- 				  eattr->type, eattr->eventid);
- 
-+	if (filter[1].sel)
-+		return sysfs_emit(buf, "type=0x%x,eventid=0x%x,filter=0x%x,filter2=0x%x\n",
-+				  eattr->type, eattr->eventid, filter[0].val, filter[1].val);
-+
- 	if (filter[0].sel)
- 		return sysfs_emit(buf, "type=0x%x,eventid=0x%x,filter=0x%x\n",
- 				  eattr->type, eattr->eventid, filter[0].val);
-@@ -887,8 +930,8 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
- 	CMN_EVENT_ATTR(_model, ccha_##_name, CMN_TYPE_CCHA, _event)
- #define CMN_EVENT_CCLA(_name, _event)				\
- 	CMN_EVENT_ATTR(CMN_ANY, ccla_##_name, CMN_TYPE_CCLA, _event)
--#define CMN_EVENT_HNS(_name, _event)				\
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event)
-+#define _CMN_EVENT_HNS(_model, _name, _event, _filter...)		\
-+	CMN_EVENT_ATTR(_model, hns_##_name, CMN_TYPE_HNS, _event, ##_filter)
- 
- #define CMN_EVENT_DVM_OCC(_model, _name, _event)			\
- 	CMN_EVENT_DVM(_model, _name##_all, _event, SEL_OCCUP1_ID, 0),	\
-@@ -913,7 +956,12 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
- 	CMN_EVENT_ATTR(_model, _name##_group1_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 3), \
- 	CMN_EVENT_ATTR(_model, _name##_group1_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 4), \
- 	CMN_EVENT_ATTR(_model, _name##_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 5), \
--	CMN_EVENT_ATTR(_model, _name##_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 6)
-+	CMN_EVENT_ATTR(_model, _name##_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 6), \
-+	CMN_EVENT_ATTR(CMNS3R2, _name##_ccg_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 9), \
-+	CMN_EVENT_ATTR(CMNS3R2, _name##_ccg_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 10), \
-+	CMN_EVENT_ATTR(CMNS3R2, _name##_lbt_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 11), \
-+	CMN_EVENT_ATTR(CMNS3R2, _name##_lbt_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 12), \
-+	CMN_EVENT_ATTR(CMNS3R2, _name##_lbt, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 13)
- 
- #define CMN_EVENT_HNF_OCC(_model, _name, _event)			\
- 	CMN_EVENT_HN_OCC(_model, hnf_##_name, CMN_TYPE_HNF, _event)
-@@ -922,23 +970,75 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
- #define CMN_EVENT_HNF_SNT(_model, _name, _event)			\
- 	CMN_EVENT_HN_SNT(_model, hnf_##_name, CMN_TYPE_HNF, _event)
- 
--#define CMN_EVENT_HNS_OCC(_name, _event)				\
--	CMN_EVENT_HN_OCC(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event),	\
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_rxsnp, CMN_TYPE_HNS, _event, SEL_OCCUP1_ID, 5), \
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_lbt, CMN_TYPE_HNS, _event, SEL_OCCUP1_ID, 6), \
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_hbt, CMN_TYPE_HNS, _event, SEL_OCCUP1_ID, 7)
-+#define CMN_EVENT_HNS(_name, _event)					\
-+	_CMN_EVENT_HNS(CMN_ANY, _name, _event)
-+#define CMN_EVENT_HNSR0(_name, _event)					\
-+	_CMN_EVENT_HNS(CMN700 | CMNS3R01, _name, _event)
-+#define _CMN_EVENT_HNS_HBT(_model, _name, _event, _sel)			\
-+	_CMN_EVENT_HNS(_model, _name##_all, _event, _sel, 0),		\
-+	_CMN_EVENT_HNS(_model, _name##_hbt, _event, _sel, 1),		\
-+	_CMN_EVENT_HNS(_model, _name##_lbt, _event, _sel, 2)
-+#define _CMN_EVENT_HNS_HBT2(_model, _name, _event, _fsel1, f1)		\
-+	_CMN_EVENT_HNS(_model, _name##_all, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 0), \
-+	_CMN_EVENT_HNS(_model, _name##_hbt, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 1), \
-+	_CMN_EVENT_HNS(_model, _name##_lbt, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 2)
-+
-+#define CMN_EVENT_HNS_OCC(_model, _name, _event)			\
-+	CMN_EVENT_HN_OCC(_model, hns_##_name, CMN_TYPE_HNS, _event),	\
-+	_CMN_EVENT_HNS(_model, _name##_rxsnp, _event, SEL_OCCUP1_ID, 5), \
-+	_CMN_EVENT_HNS(_model, _name##_lbt, _event, SEL_OCCUP1_ID, 6),	\
-+	_CMN_EVENT_HNS(_model, _name##_hbt, _event, SEL_OCCUP1_ID, 7),	\
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_rnf, _event, SEL_OCCUP1_ID, 8),	\
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_rni, _event, SEL_OCCUP1_ID, 9),	\
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_ccglcn, _event, SEL_OCCUP1_ID, 10), \
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_ccgrn, _event, SEL_OCCUP1_ID, 11)
- #define CMN_EVENT_HNS_CLS( _name, _event)				\
- 	CMN_EVENT_HN_CLS(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event)
--#define CMN_EVENT_HNS_SNT(_name, _event)				\
--	CMN_EVENT_HN_SNT(CMN_ANY, hns_##_name, CMN_TYPE_HNS, _event)
--#define CMN_EVENT_HNS_HBT(_name, _event)				\
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_all, CMN_TYPE_HNS, _event, SEL_HBT_LBT_SEL, 0), \
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_hbt, CMN_TYPE_HNS, _event, SEL_HBT_LBT_SEL, 1), \
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_lbt, CMN_TYPE_HNS, _event, SEL_HBT_LBT_SEL, 2)
--#define CMN_EVENT_HNS_SNH(_name, _event)				\
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_all, CMN_TYPE_HNS, _event, SEL_SN_HOME_SEL, 0), \
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_sn, CMN_TYPE_HNS, _event, SEL_SN_HOME_SEL, 1), \
--	CMN_EVENT_ATTR(CMN_ANY, hns_##_name##_home, CMN_TYPE_HNS, _event, SEL_SN_HOME_SEL, 2)
-+#define CMN_EVENT_HNSR0_CLS( _name, _event)				\
-+	CMN_EVENT_HN_CLS(CMN700 | CMNS3R01, hns_##_name, CMN_TYPE_HNS, _event)
-+#define CMN_EVENT_HNS_SNT(_model, _name, _event)			\
-+	CMN_EVENT_HN_SNT(_model, hns_##_name, CMN_TYPE_HNS, _event)
-+#define CMN_EVENT_HNS_SNH(_model, _name, _event)			\
-+	_CMN_EVENT_HNS(_model, _name##_all, _event, SEL_SN_HOME_SEL, 0), \
-+	_CMN_EVENT_HNS(_model, _name##_sn, _event, SEL_SN_HOME_SEL, 1),	\
-+	_CMN_EVENT_HNS(_model, _name##_home, _event, SEL_SN_HOME_SEL, 2)
-+#define CMN_EVENT_HNS_VC(_name, _event)					\
-+	CMN_EVENT_HNSR0(_name, _event),					\
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_vc0, _event, SEL_SNP_VC_SEL, 0), \
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_vc1, _event, SEL_SNP_VC_SEL, 1), \
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_vc2, _event, SEL_SNP_VC_SEL, 2)
-+#define CMN_EVENT_HNS_ENHBT(_name, _event)				\
-+	_CMN_EVENT_HNS_HBT(CMNS3R2, _name, _event, SEL_ENHANCED_HBT_LBT_SEL), \
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_rnf, _event, SEL_ENHANCED_HBT_LBT_SEL, 3), \
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_rni, _event, SEL_ENHANCED_HBT_LBT_SEL, 4), \
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_ccglcn, _event, SEL_ENHANCED_HBT_LBT_SEL, 5), \
-+	_CMN_EVENT_HNS(CMNS3R2, _name##_ccgrn, _event, SEL_ENHANCED_HBT_LBT_SEL, 6)
-+#define CMN_EVENT_HNS_EVICT(_model, _name, _event)			\
-+	_CMN_EVENT_HNS_HBT2(_model, _name##_all, _event, SEL_EVICT_STATE_SEL, 0), \
-+	_CMN_EVENT_HNS_HBT2(_model, _name##_eu, _event, SEL_EVICT_STATE_SEL, 1), \
-+	_CMN_EVENT_HNS_HBT2(_model, _name##_en, _event, SEL_EVICT_STATE_SEL, 2), \
-+	_CMN_EVENT_HNS_HBT2(_model, _name##_su, _event, SEL_EVICT_STATE_SEL, 3), \
-+	_CMN_EVENT_HNS_HBT2(_model, _name##_sn, _event, SEL_EVICT_STATE_SEL, 4), \
-+	_CMN_EVENT_HNS_HBT2(_model, _name##_mu, _event, SEL_EVICT_STATE_SEL, 5), \
-+	_CMN_EVENT_HNS_HBT2(_model, _name##_mn, _event, SEL_EVICT_STATE_SEL, 6)
-+
-+#define CMN_EVENT_HNSR0_HBT(_name, _event)				\
-+	_CMN_EVENT_HNS_HBT(CMN700 | CMNS3R01, _name, _event, SEL_HBT_LBT_SEL)
-+#define CMN_EVENT_HNS_R2SNH(_name, _event)				\
-+	CMN_EVENT_HNSR0(_name, _event),					\
-+	CMN_EVENT_HNS_SNH(CMNS3R2, _name, _event)
-+#define CMN_EVENT_HNS_R2HBT(_name, _event)				\
-+	CMN_EVENT_HNSR0(_name, _event),					\
-+	_CMN_EVENT_HNS_HBT(CMNS3R2, _name, _event, SEL_HBT_LBT_SEL)
-+#define CMN_EVENT_HNS_HBT_ENHBT(_name, _event)				\
-+	CMN_EVENT_HNSR0_HBT(_name, _event),				\
-+	CMN_EVENT_HNS_ENHBT(_name, _event)
-+#define CMN_EVENT_HNS_HBT_OCC(_name, _event)				\
-+	CMN_EVENT_HNSR0_HBT(_name, _event),				\
-+	CMN_EVENT_HNS_OCC(CMNS3R2, _name, _event)
-+#define CMN_EVENT_HNS_HBT_EVICT(_name, _event)				\
-+	CMN_EVENT_HNSR0_HBT(_name, _event),				\
-+	CMN_EVENT_HNS_EVICT(CMNS3R2, _name, _event)
- 
- #define _CMN_EVENT_XP_MESH(_name, _event)			\
- 	__CMN_EVENT_XP(e_##_name, (_event) | (0 << 2)),		\
-@@ -1288,65 +1388,72 @@ static struct attribute *arm_cmn_event_attrs[] = {
- 	CMN_EVENT_CCLA(pfwd_sndr_stalls_static_crd,	0x2a),
- 	CMN_EVENT_CCLA(pfwd_sndr_stalls_dynmaic_crd,	0x2b),
- 
--	CMN_EVENT_HNS_HBT(cache_miss,			0x01),
--	CMN_EVENT_HNS_HBT(slc_sf_cache_access,		0x02),
--	CMN_EVENT_HNS_HBT(cache_fill,			0x03),
--	CMN_EVENT_HNS_HBT(pocq_retry,			0x04),
--	CMN_EVENT_HNS_HBT(pocq_reqs_recvd,		0x05),
--	CMN_EVENT_HNS_HBT(sf_hit,			0x06),
--	CMN_EVENT_HNS_HBT(sf_evictions,			0x07),
--	CMN_EVENT_HNS(dir_snoops_sent,			0x08),
--	CMN_EVENT_HNS(brd_snoops_sent,			0x09),
--	CMN_EVENT_HNS_HBT(slc_eviction,			0x0a),
--	CMN_EVENT_HNS_HBT(slc_fill_invalid_way,		0x0b),
--	CMN_EVENT_HNS(mc_retries_local,			0x0c),
--	CMN_EVENT_HNS_SNH(mc_reqs_local,		0x0d),
-+	CMN_EVENT_HNS_HBT_ENHBT(cache_miss,		0x01),
-+	CMN_EVENT_HNS_HBT_ENHBT(slc_sf_cache_access,	0x02),
-+	CMN_EVENT_HNS_HBT_ENHBT(cache_fill,		0x03),
-+	CMN_EVENT_HNS_HBT_OCC(pocq_retry,		0x04),
-+	CMN_EVENT_HNS_HBT_OCC(pocq_reqs_recvd,		0x05),
-+	CMN_EVENT_HNS_HBT_ENHBT(sf_hit,			0x06),
-+	CMN_EVENT_HNS_HBT_EVICT(sf_evictions,		0x07),
-+	CMN_EVENT_HNS_VC(dir_snoops_sent,		0x08),
-+	CMN_EVENT_HNS_VC(brd_snoops_sent,		0x09),
-+	CMN_EVENT_HNS_HBT_EVICT(slc_eviction,		0x0a),
-+	CMN_EVENT_HNS_HBT_ENHBT(slc_fill_invalid_way,	0x0b),
-+	CMN_EVENT_HNS_R2SNH(mc_retries_local,		0x0c),
-+	CMN_EVENT_HNS_SNH(CMN_ANY, mc_reqs_local,	0x0d),
- 	CMN_EVENT_HNS(qos_hh_retry,			0x0e),
--	CMN_EVENT_HNS_OCC(qos_pocq_occupancy,		0x0f),
--	CMN_EVENT_HNS(pocq_addrhaz,			0x10),
--	CMN_EVENT_HNS(pocq_atomic_addrhaz,		0x11),
--	CMN_EVENT_HNS(ld_st_swp_adq_full,		0x12),
--	CMN_EVENT_HNS(cmp_adq_full,			0x13),
-+	CMN_EVENT_HNS_OCC(CMN_ANY, qos_pocq_occupancy,	0x0f),
-+	CMN_EVENT_HNS_HBT_ENHBT(pocq_addrhaz,		0x10),
-+	CMN_EVENT_HNS_HBT_ENHBT(pocq_atomic_addrhaz,	0x11),
-+	CMN_EVENT_HNSR0(ld_st_swp_adq_full,		0x12),
-+	CMN_EVENT_HNSR0(cmp_adq_full,			0x13),
- 	CMN_EVENT_HNS(txdat_stall,			0x14),
- 	CMN_EVENT_HNS(txrsp_stall,			0x15),
--	CMN_EVENT_HNS(seq_full,				0x16),
-+	CMN_EVENT_HNSR0(seq_full,			0x16),
- 	CMN_EVENT_HNS(seq_hit,				0x17),
--	CMN_EVENT_HNS(snp_sent,				0x18),
--	CMN_EVENT_HNS(sfbi_dir_snp_sent,		0x19),
--	CMN_EVENT_HNS(sfbi_brd_snp_sent,		0x1a),
-+	CMN_EVENT_HNS_VC(snp_sent,			0x18),
-+	CMN_EVENT_HNS_VC(sfbi_dir_snp_sent,		0x19),
-+	CMN_EVENT_HNS_VC(sfbi_brd_snp_sent,		0x1a),
- 	CMN_EVENT_HNS(intv_dirty,			0x1c),
--	CMN_EVENT_HNS(stash_snp_sent,			0x1d),
--	CMN_EVENT_HNS(stash_data_pull,			0x1e),
--	CMN_EVENT_HNS(snp_fwded,			0x1f),
--	CMN_EVENT_HNS(atomic_fwd,			0x20),
-+	CMN_EVENT_HNSR0(stash_snp_sent,			0x1d),
-+	CMN_EVENT_HNSR0(stash_data_pull,		0x1e),
-+	CMN_EVENT_HNS_VC(snp_fwded,			0x1f),
-+	CMN_EVENT_HNSR0(atomic_fwd,			0x20),
- 	CMN_EVENT_HNS(mpam_hardlim,			0x21),
- 	CMN_EVENT_HNS(mpam_softlim,			0x22),
--	CMN_EVENT_HNS(snp_sent_cluster,			0x23),
--	CMN_EVENT_HNS(sf_imprecise_evict,		0x24),
-+	CMN_EVENT_HNS_VC(snp_sent_cluster,		0x23),
-+	CMN_EVENT_HNS_R2HBT(sf_imprecise_evict,		0x24),
- 	CMN_EVENT_HNS(sf_evict_shared_line,		0x25),
- 	CMN_EVENT_HNS_CLS(pocq_class_occup,		0x26),
- 	CMN_EVENT_HNS_CLS(pocq_class_retry,		0x27),
- 	CMN_EVENT_HNS_CLS(class_mc_reqs_local,		0x28),
--	CMN_EVENT_HNS_CLS(class_cgnt_cmin,		0x29),
--	CMN_EVENT_HNS_SNT(sn_throttle,			0x2a),
--	CMN_EVENT_HNS_SNT(sn_throttle_min,		0x2b),
-+	CMN_EVENT_HNSR0_CLS(class_cgnt_cmin,		0x29),
-+	CMN_EVENT_HNS_SNT(CMN_ANY, sn_throttle,		0x2a),
-+	CMN_EVENT_HNS_SNT(CMN_ANY, sn_throttle_min,	0x2b),
- 	CMN_EVENT_HNS(sf_precise_to_imprecise,		0x2c),
- 	CMN_EVENT_HNS(snp_intv_cln,			0x2d),
- 	CMN_EVENT_HNS(nc_excl,				0x2e),
--	CMN_EVENT_HNS(excl_mon_ovfl,			0x2f),
-+	CMN_EVENT_HNSR0(excl_mon_ovfl,			0x2f),
- 	CMN_EVENT_HNS(snp_req_recvd,			0x30),
- 	CMN_EVENT_HNS(snp_req_byp_pocq,			0x31),
- 	CMN_EVENT_HNS(dir_ccgha_snp_sent,		0x32),
- 	CMN_EVENT_HNS(brd_ccgha_snp_sent,		0x33),
--	CMN_EVENT_HNS(ccgha_snp_stall,			0x34),
-+	CMN_EVENT_HNSR0(ccgha_snp_stall,		0x34),
- 	CMN_EVENT_HNS(lbt_req_hardlim,			0x35),
- 	CMN_EVENT_HNS(hbt_req_hardlim,			0x36),
- 	CMN_EVENT_HNS(sf_reupdate,			0x37),
--	CMN_EVENT_HNS(excl_sf_imprecise,		0x38),
-+	CMN_EVENT_HNS_R2HBT(excl_sf_imprecise,		0x38),
- 	CMN_EVENT_HNS(snp_pocq_addrhaz,			0x39),
--	CMN_EVENT_HNS(mc_retries_remote,		0x3a),
--	CMN_EVENT_HNS_SNH(mc_reqs_remote,		0x3b),
-+	CMN_EVENT_HNS_R2SNH(mc_retries_remote,		0x3a),
-+	CMN_EVENT_HNS_SNH(CMN_ANY, mc_reqs_remote,	0x3b),
- 	CMN_EVENT_HNS_CLS(class_mc_reqs_remote,		0x3c),
-+	CMN_EVENT_HNS_ENHBT(readonce_hazard_detected,	0x3d),
-+	CMN_EVENT_HNS_ENHBT(readonce_fwd_data_completed, 0x3e),
-+	CMN_EVENT_HNS_SNT(CMNS3R2, cbusy00,		0x40),
-+	CMN_EVENT_HNS_SNT(CMNS3R2, cbusy01, 		0x41),
-+	CMN_EVENT_HNS_SNT(CMNS3R2, cbusy10,		0x42),
-+	CMN_EVENT_HNS_SNT(CMNS3R2, cbusy11,		0x43),
-+	CMN_EVENT_HNS_ENHBT(ro_rnsd_new_alloc_hint,	0x44),
- 
- 	NULL
- };
-@@ -2431,21 +2538,33 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 	/*
- 	 * With the device isolation feature, if firmware has neglected to enable
- 	 * an XP port then we risk locking up if we try to access anything behind
--	 * it; however we also have no way to tell from Non-Secure whether any
--	 * given port is disabled or not, so the only way to win is not to play...
-+	 * it; however prior to CMN S3 r2p0 we also have no way to tell from
-+	 * Non-Secure whether any given port is disabled or not, so in that case
-+	 * the only way to win is not to play...
- 	 */
- 	reg = readq_relaxed(cfg_region + CMN_CFGM_INFO_GLOBAL);
--	if (reg & CMN_INFO_DEVICE_ISO_ENABLE) {
-+	if (reg & CMN_INFO_DEVICE_ISO_ENABLE && model == CMNS3R01) {
- 		dev_err(cmn->dev, "Device isolation enabled, not continuing due to risk of lockup\n");
- 		return -ENODEV;
- 	}
--	cmn->multi_dtm = reg & CMN_INFO_MULTIPLE_DTM_EN;
--	cmn->rsp_vc_num = FIELD_GET(CMN_INFO_RSP_VC_NUM, reg);
--	cmn->dat_vc_num = FIELD_GET(CMN_INFO_DAT_VC_NUM, reg);
-+	if (model < CMNS3R2) {
-+		cmn->multi_dtm = reg & CMN_INFO_MULTIPLE_DTM_EN;
-+		cmn->rsp_vc_num = FIELD_GET(CMN_INFO_RSP_VC_NUM, reg);
-+		cmn->dat_vc_num = FIELD_GET(CMN_INFO_DAT_VC_NUM, reg);
-+	} else {
-+		cmn->multi_dtm = reg & CMN_S3_R2_MULTIPLE_DTM_EN;
-+	}
- 
- 	reg = readq_relaxed(cfg_region + CMN_CFGM_INFO_GLOBAL_1);
--	cmn->snp_vc_num = FIELD_GET(CMN_INFO_SNP_VC_NUM, reg);
--	cmn->req_vc_num = FIELD_GET(CMN_INFO_REQ_VC_NUM, reg);
-+	if (model < CMNS3R2) {
-+		cmn->snp_vc_num = FIELD_GET(CMN_INFO_SNP_VC_NUM, reg);
-+		cmn->req_vc_num = FIELD_GET(CMN_INFO_REQ_VC_NUM, reg);
-+	} else {
-+		cmn->rsp_vc_num = FIELD_GET(CMN_S3_R2_RSP_VC_NUM, reg);
-+		cmn->dat_vc_num = FIELD_GET(CMN_S3_R2_DAT_VC_NUM, reg);
-+		cmn->snp_vc_num = FIELD_GET(CMN_S3_R2_SNP_VC_NUM, reg);
-+		cmn->req_vc_num = FIELD_GET(CMN_S3_R2_REQ_VC_NUM, reg);
-+	}
- 
- 	reg = readq_relaxed(cfg_region + CMN_CHILD_INFO);
- 	child_count = FIELD_GET(CMN_CI_CHILD_COUNT, reg);
-@@ -2545,15 +2664,12 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
- 			reg = readq_relaxed(xp_region + child_poff + j * 8);
- 			/*
- 			 * Don't even try to touch anything external, since in general
--			 * we haven't a clue how to power up arbitrary CHI requesters.
--			 * As of CMN-600r1 these could only be RN-SAMs or CXLAs,
--			 * neither of which have any PMU events anyway.
--			 * (Actually, CXLAs do seem to have grown some events in r1p2,
--			 * but they don't go to regular XP DTMs, and they depend on
--			 * secure configuration which we can't easily deal with)
-+			 * we haven't a clue how to power up arbitrary CHI requesters,
-+			 * and none of them have standard PMU events anyway. Isolated
-+			 * nodes effectively just do not exist at all from our PoV.
- 			 */
--			if (reg & CMN_CHILD_NODE_EXTERNAL) {
--				dev_dbg(cmn->dev, "ignoring external node %llx\n", reg);
-+			if (reg & (CMN_CHILD_NODE_EXTERNAL | CMN_CHILD_NODE_ISOLATED)) {
-+				dev_dbg(cmn->dev, "ignoring external/isolated node %llx\n", reg);
- 				continue;
- 			}
- 			/*
--- 
-2.54.0.dirty
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
