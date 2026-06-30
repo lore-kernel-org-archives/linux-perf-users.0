@@ -1,224 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723FA1DB92C
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 00:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B89264617;
+	Tue, 30 Jun 2026 03:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782779811; cv=none; b=k1b/rRXldn72iAH8bHzGFCXdA7RdYinmVxXqQrq5vv+b4BSxTfrhwtWW6f/p7w745AglKOImLInTre32Ko9ZTNqayxGf+fdT8aMHu4yqcd7BSeLNcxo79DHBxIaem3OU5VxEwZV2qRMFXC7d00F0OEPStIQQ3h1RgOFmHWL82kY=
+	t=1782789058; cv=none; b=k/hDcd5aXgkx2WRY7kjDALREsFOGjgtVAHnoqebai8ap+bjxq/ud5JbEVoiny1AXhuixnYVVepCGpqN8m9K7Fe+RU52Oery0ubkAR6U4pB/8iV42dNEwaHGFOTdSbwJ+O2Eba58EilZ6M8GkMdv2CJnMrNf1pQfyfoyb3XDeu3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782779811; c=relaxed/simple;
-	bh=OmiPWjdHyzYZvP2Q1bi9EyjGAXySM1yNr0vGvYDovDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FchC1jNLNYVkex6UIwE9QWi+T/HGHqFevb0GZlpsjsYMNbVQSW20wMvBVU5sc4ERZGL9HryAtlw1ZGlMInTiV7PwYidcAkB+nOIug3zVsIVa9+3y+75j4bxqQYUlnSLPg23iAzgnkPqMcq59JOHCE7TNIWBx7LsKn3fSpaH7gnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1UMMah6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782789058; c=relaxed/simple;
+	bh=kTEPPbJxVN5buc3F2nTCDSgkowYHC7ZBtLeJFcNH0h4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WpodrA/FZ2L/wwYcyUi9KZMgNOkJDHLCY0USqC1bau2R9KU+WQtQNeSbdwI+BWo8s/X2OB2kECH6sWAaD+Os740sKwML79j+HJDuWQfbkjzACQ10dhqTfYAlc9bRF0ew7WxVlcxJsX801KZfjsGSgMVv2ZDaQ7ECj4NDgJ3olrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aSbd9pXF; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1UMMah6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DBEA1F00A3A;
-	Tue, 30 Jun 2026 00:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782779810;
-	bh=ZOlH0k64nXzoulGrqNZ8xRnSugCqzg2nnknXpcOTvOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=X1UMMah6r+Uj+zs0NTdwwtjDmoPta5VAXf2c5dtpK8WzkO13w4+kEPOsEd0DLT84F
-	 BZoWOlC4CSiIuurywqalHVK2s6mZjiqGCAXyzCXCTN/nWbcWZCFRY4hKaxtg1ro2d9
-	 oSE5v+8EA+dKHXfq8bR/uYeGuRpSsEjk7vH9NPVJcDV792QfnvlopAedf59f5D6ciJ
-	 PHyRKwc+auBD5yxBkwdZSBFvTDfWc61zp0hNCas1nJuwY2QvoN/idpKpml8vZgCfb6
-	 9O0PSPVQWYLaiMUoALxrprzsSi/jiqxo+XbMlrT4ZKXnsYfb7AKD4yhut418kVGvG7
-	 p4e7Cz9q1SyDA==
-Date: Mon, 29 Jun 2026 17:36:48 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Al Grant <al.grant@arm.com>,
-	Paschalis Mpeis <paschalis.mpeis@arm.com>,
-	Amir Ayupov <aaupov@fb.com>, linux-arm-kernel@lists.infradead.org,
-	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
-	Leo Yan <leo.yan@linux.dev>
-Subject: Re: [PATCH v10 0/9] perf cs-etm: Support thread stack and callchain
-Message-ID: <akMPoLNBbAEyNU64@google.com>
-References: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aSbd9pXF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782789056; x=1814325056;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kTEPPbJxVN5buc3F2nTCDSgkowYHC7ZBtLeJFcNH0h4=;
+  b=aSbd9pXFkmH8KnGOYKVxoZYItuT3IYI8RcABhsyaKGCwK6ZrNRTI/HH6
+   T7LaJYEdJqB5pzmr55Tc7/BOjoFNVyUMXilA8fqEUdxgvU7eZ5pgR3YKG
+   ZGocOE91Soi0IkwQV6pP6cUJTq9VPp3bOdOcuBHggS1Nt8xtGpWHgI93j
+   +XcyU4Dewwh8UlAyqwt5bmmiRIv8rFUlLXrSvHjqBAyuEgy1Butm2bctf
+   l5E0iwQ05amiydLkFOFIzZgoB/0YlgFphnJ8vnVNDJkcktPlMp4zmirGu
+   smavuRNK4t3S5xd8Ga5jMYWTvtYAGEkEZmU0SjDNgF1mGAq/OaWYCCDso
+   Q==;
+X-CSE-ConnectionGUID: hafI7H6BQG6Cx0VN2/X/Bg==
+X-CSE-MsgGUID: fOcSO5MsRJyxmt1ue+jwRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="83270073"
+X-IronPort-AV: E=Sophos;i="6.24,233,1774335600"; 
+   d="scan'208";a="83270073"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 20:10:55 -0700
+X-CSE-ConnectionGUID: hKJBoE3LRaKI5VtXHrqsNg==
+X-CSE-MsgGUID: cv4r6+HHTY+1uO5cuXdsEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,233,1774335600"; 
+   d="scan'208";a="249497144"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 20:10:52 -0700
+Message-ID: <acea8b54-4887-4d59-9bd9-0fa7ff803d3a@linux.intel.com>
+Date: Tue, 30 Jun 2026 11:10:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260617-b4-arm_cs_callchain_support_v1-v10-0-e8b6e5d63db5@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf/core: Fix group leader use-after-free after
+ sibling detach
+To: Aditya Chillara <aditya.chillara@oss.qualcomm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@elte.hu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260630-fix-group-leader-uaf-v2-1-9349121835ee@oss.qualcomm.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260630-fix-group-leader-uaf-v2-1-9349121835ee@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Leo,
+LGTM.
 
-On Wed, Jun 17, 2026 at 04:08:51PM +0100, Leo Yan wrote:
-> This series adds thread-stack and synthesized callchain support for Arm
-> CoreSight, which comes from older series [1] but heavily rewritten.
-> 
-> CS ETM previously kept last-branch state in a per-trace-queue buffer.
-> That effectively makes the state per CPU, while the call/return history
-> belongs to a thread. This series moves branch tracking to the common
-> thread-stack code.
-> 
-> The series records CoreSight branches with thread_stack__event(), uses
-> thread_stack__br_sample() for last branch entries, flushes thread stacks
-> after decoder resets.
-> 
-> A decoder reset between AUX trace buffers is treated as a global trace
-> discontinuity, so all thread stacks are flushed, so avoids carrying
-> stale call/return history across a trace discontinuity.
-> 
-> One limitation remains for instructions emulated by the kernel. In that
-> case the exception return address may not match the return address
-> stored in the thread stack, because after exception return can be one
-> instruction ahead. The stack can still recover when a later return
-> matches an upper caller. Given emulated instructions are not the common
-> target for performance callchain analysis. Supporting this would require
-> extending the common thread-stack path to accept both the real target
-> address and an adjusted address for stack matching, so this series
-> leaves that extra complexity out.
-> 
-> The series has been tested on Orion6 board:
-> 
->   perf test 136 -vvv
->   136: CoreSight synthesized callchain:
->   --- start ---
->   test child forked, pid 3539
->   ---- end(0) ----
->   136: CoreSight synthesized callchain			: Ok
-> 
->   perf script --itrace=g16i10il64
-> 
->   callchain_test   17468 [005] 1031003.229943:         10 instructions:
->               aaaac32507c4 main+0x8 (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
->               ffff90bd233c call_init+0x9c (inlined)
->               ffff90bd233c __libc_start_main_impl+0x9c (inlined)
->               aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-> 
->   callchain_test   17468 [005] 1031003.229943:         10 instructions:
->               aaaac3250774 do_svc+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               aaaac3250798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               aaaac32507b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               aaaac32507c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
->               ffff90bd233c call_init+0x9c (inlined)
->               ffff90bd233c __libc_start_main_impl+0x9c (inlined)
->               aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-> 
->   callchain_test   17468 [005] 1031003.229944:         10 instructions:
->           ffff800080010c20 vectors+0x420 ([kernel.kallsyms])
->               aaaac3250784 do_svc+0x1c (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               aaaac3250798 print+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               aaaac32507b0 foo+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               aaaac32507c8 main+0xc (/home/kernel/leoy/test_cs_callchain/callchain_test)
->               ffff90bd225c __libc_start_call_main+0x7c (/usr/lib/aarch64-linux-gnu/libc.so.6)
->               ffff90bd233c call_init+0x9c (inlined)
->               ffff90bd233c __libc_start_main_impl+0x9c (inlined)
->               aaaac3250670 _start+0x30 (/home/kernel/leoy/test_cs_callchain/callchain_test)
-> 
-> Note, the test fails on Juno board which is caused by many discontinuity
-> packets (mainly caused by NO_SYNC elem). This is likely caused by the
-> FIFO overflow on the path.
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20200220052701.7754-1-leo.yan@linaro.org/
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-
-Will you send a new version or want to merge this?  It seems there are
-some remaining comments from Sashiko.
-
-Thanks,
-Namhyung
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 
+On 6/30/2026 3:12 AM, Aditya Chillara wrote:
+> perf_group_detach() handles leader and sibling detach differently. When the
+> group leader is detached, all siblings are promoted to singleton events and
+> their group_leader pointer is reset to themselves. When a sibling is
+> detached, it is removed from the leader's sibling_list, but its
+> group_leader pointer is left pointing at the old leader.
+>
+> That is harmless when the sibling is being closed and freed immediately, as
+> in the DETACH_DEAD path. It is not safe when the sibling is detached but
+> kept alive, such as during CPU hotplug with DETACH_GROUP. In that case the
+> sibling is removed from the context, while its file descriptor can still
+> keep it alive.
+>
+> A typical failing sequence is:
+>
+>   - A group contains leader L and sibling S.
+>   - CPU hot-unplug detaches S with DETACH_GROUP, removing it from
+>     L->sibling_list but leaving S->group_leader == L.
+>   - L is later closed and freed.
+>   - A PERF_IOC_FLAG_GROUP ioctl on S follows S->group_leader and
+>     dereferences the freed leader.
+>
+> This was reproduced by running the perf event fuzzer, CPU hotplug, and a
+> stress workload concurrently:
+>
+> Unable to handle kernel paging request at virtual address 006b6b6b6b6b6cdb
+> CPU: 2 PID: 12489 Comm: perf_fuzzer 6.18.7 PREEMPT
+> pc : perf_ioctl+0x34c/0xc68
+> x20: ffffff89a3fa2c70 x8 : 6b6b6b6b6b6b6b6b
+> Code: 943c4a0e 340047a0 f9404a94 f9411e88 (f940b908)
+> Call trace:
+> perf_ioctl+0x34c/0xc68 (P)
+> __arm64_sys_ioctl+0xa0/0xf4
+> invoke_syscall+0x58/0xe4
+> el0_svc_common+0xa8/0xdc
+> do_el0_svc+0x1c/0x28
+> el0_svc+0x40/0xc0
+> el0t_64_sync_handler+0x68/0xdc
+> el0t_64_sync+0x1c4/0x1c8
+>
+> The fault happened in perf_ioctl(), where perf_event_for_each() follows
+> the stale group_leader pointer and perf_event_for_each_child() then
+> dereferences the freed leader's context.
+>
+> Fix the use-after-free by promoting the detached sibling to a singleton.
+>
+> Fixes: 8a49542c0554 ("perf_events: Fix races in group composition")
+> Assisted-by: PatchWise:gpt-5.5
+> Signed-off-by: Aditya Chillara <aditya.chillara@oss.qualcomm.com>
 > ---
-> Changes in v10:
-> - Change to syscall(SYS_gettid) for build failure on x86 (James).
-> - Extracted sample thread stack into cs_etm__sample_branch_stack().
-> - Link to v9: https://lore.kernel.org/r/20260616-b4-arm_cs_callchain_support_v1-v9-0-f8fad931c413@arm.com
-> 
-> Changes in v9:
-> - Added patch 01 to fixed thread leak during trace queue init (sashiko).
-> - Added check in instruction and branch samples in
->   cs_etm__add_stack_event() (sashiko).
-> - Released frontend_thread properly in cs_etm__context() (sashiko).
-> - Refined cs_etm__flush_all_stack() to use switch (sashiko).
-> - Gathered James' review tags.
-> - Rebased on the latest perf-tools-next.
-> - Link to v8: https://lore.kernel.org/r/20260611-b4-arm_cs_callchain_support_v1-v8-0-737948584fea@arm.com
-> 
-> Changes in v8:
-> - Updated test_arm_coresight_disasm.sh to pass "--itrace=b" and updated
->   examples in arm-cs-trace-disasm.py (James).
-> - Removed static annotation in callchain workload and renamed functions
->   with prefix "callchain_" to reduce naming conflict (James).
-> - For callchain test pre-condition check, removed the aarch64 check and
->   added the root permission check (James).
-> - Resolved the shellcheck errors (James).
-> - Link to v7: https://lore.kernel.org/r/20260611-b4-arm_cs_callchain_support_v1-v7-0-1ba770c862ae@arm.com
-> 
-> Changes in v7:
-> - Rebased on the latest perf-tools-next.
-> - Used struct_size() for allocation callchain struct (James).
-> - Added a helper cs_etm__packet_has_taken_branch() (James).
-> - Minor improvements for the callchain test (used record-ctl FIFO and
->   reworked the validation callstack push / pop).
-> - Link to v6: https://lore.kernel.org/r/20260526-b4-arm_cs_callchain_support_v1-v6-0-f9f49f53c9dd@arm.com
-> 
-> Changes in v6:
-> - Heavily rewrote the patches since restarted the work after 6 years.
-> - Changed to use the common thread-stack for branch stack and callchain
->   management.
-> - Added a callchain test.
-> - Link to v5: https://lore.kernel.org/linux-arm-kernel/20200220052701.7754-1-leo.yan@linaro.org/
-> 
-> Changes in v5:
-> - Addressed Mike's suggestion for performance improvement for function
->   cs_etm__instr_addr() for quick calculation for non T32;
-> - Removed the patch 'perf cs-etm: Synchronize instruction sample with
->   the thread stack' (Mike);
-> - Fixed the issue for exception is taken for branch target address
->   accessing, for the branch sample and stack thread handling, the
->   related patches are 01, 02, 07;
-> - Fixed the stack thread handling for instruction emulation and single
->   step with patches 08, 09.
-> - Link to v4: https://lore.kernel.org/linux-arm-kernel/20200203020716.31832-1-leo.yan@linaro.org/
-> 
+> Changes in v2:
+> - Moved the fix to perf_group_detach() with a small refactor
+> - Link to v1: https://patch.msgid.link/20260626-fix-group-leader-uaf-v1-1-ac54652ca944@oss.qualcomm.com
 > ---
-> Leo Yan (9):
->       perf cs-etm: Fix thread leaks on trace queue init failure
->       perf cs-etm: Filter synthesized branch samples
->       perf cs-etm: Decode ETE exception packets
->       perf cs-etm: Refactor instruction size handling
->       perf cs-etm: Use thread-stack for last branch entries
->       perf cs-etm: Flush thread stacks after decoder reset
->       perf cs-etm: Support call indentation
->       perf cs-etm: Synthesize callchains for instruction samples
->       perf test: Add Arm CoreSight callchain test
-> 
->  tools/perf/Documentation/perf-test.txt             |   6 +-
->  tools/perf/scripts/python/arm-cs-trace-disasm.py   |   9 +-
->  tools/perf/tests/builtin-test.c                    |   1 +
->  tools/perf/tests/shell/coresight/callchain.sh      | 172 ++++++++++
->  .../shell/coresight/test_arm_coresight_disasm.sh   |   4 +-
->  tools/perf/tests/tests.h                           |   1 +
->  tools/perf/tests/workloads/Build                   |   2 +
->  tools/perf/tests/workloads/callchain.c             |  33 ++
->  tools/perf/util/cs-etm.c                           | 377 +++++++++++++--------
->  9 files changed, 454 insertions(+), 151 deletions(-)
+>  kernel/events/core.c | 62 +++++++++++++++++++++++++++++++++++-----------------
+>  1 file changed, 42 insertions(+), 20 deletions(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 954c36e28101..744643ada948 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2253,6 +2253,8 @@ static void put_event(struct perf_event *event);
+>  static void __event_disable(struct perf_event *event,
+>  			    struct perf_event_context *ctx,
+>  			    enum perf_event_state state);
+> +static void event_sched_out(struct perf_event *event,
+> +			    struct perf_event_context *ctx);
+>  
+>  static void perf_put_aux_event(struct perf_event *event)
+>  {
+> @@ -2343,6 +2345,44 @@ static inline struct list_head *get_event_list(struct perf_event *event)
+>  				    &event->pmu_ctx->flexible_active;
+>  }
+>  
+> +/* @sibling must already be unlinked from its old leader's sibling_list. */
+> +static void perf_promote_sibling_to_leader(struct perf_event *sibling,
+> +					   struct perf_event_context *ctx,
+> +					   int group_caps)
+> +{
+> +	/*
+> +	 * Events that have PERF_EV_CAP_SIBLING require being part of
+> +	 * a group and cannot exist on their own, schedule them out
+> +	 * and move them into the ERROR state. Also see
+> +	 * _perf_event_enable(), it will not be able to recover this
+> +	 * ERROR state.
+> +	 */
+> +	if (sibling->event_caps & PERF_EV_CAP_SIBLING) {
+> +		event_sched_out(sibling, ctx);
+> +
+> +		/*
+> +		 * The guards keep this correct even when @sibling is already
+> +		 * disabled (see __perf_remove_from_context()).
+> +		 */
+> +		if (sibling->state > PERF_EVENT_STATE_OFF)
+> +			perf_cgroup_event_disable(sibling, ctx);
+> +		if (sibling->state > PERF_EVENT_STATE_ERROR)
+> +			perf_event_set_state(sibling, PERF_EVENT_STATE_ERROR);
+> +	}
+> +
+> +	sibling->group_leader = sibling;
+> +	sibling->group_caps = group_caps;
+> +
+> +	if (sibling->attach_state & PERF_ATTACH_CONTEXT) {
+> +		add_event_to_groups(sibling, ctx);
+> +
+> +		if (sibling->state == PERF_EVENT_STATE_ACTIVE)
+> +			list_add_tail(&sibling->active_list, get_event_list(sibling));
+> +	}
+> +
+> +	perf_event__header_size(sibling);
+> +}
+> +
+>  static void perf_group_detach(struct perf_event *event)
+>  {
+>  	struct perf_event *leader = event->group_leader;
+> @@ -2368,6 +2408,7 @@ static void perf_group_detach(struct perf_event *event)
+>  		list_del_init(&event->sibling_list);
+>  		event->group_leader->nr_siblings--;
+>  		event->group_leader->group_generation++;
+> +		perf_promote_sibling_to_leader(event, ctx, event->event_caps);
+>  		goto out;
+>  	}
+>  
+> @@ -2377,29 +2418,10 @@ static void perf_group_detach(struct perf_event *event)
+>  	 * to whatever list we are on.
+>  	 */
+>  	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
+> -
+> -		/*
+> -		 * Events that have PERF_EV_CAP_SIBLING require being part of
+> -		 * a group and cannot exist on their own, schedule them out
+> -		 * and move them into the ERROR state. Also see
+> -		 * _perf_event_enable(), it will not be able to recover this
+> -		 * ERROR state.
+> -		 */
+> -		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
+> -			__event_disable(sibling, ctx, PERF_EVENT_STATE_ERROR);
+> -
+> -		sibling->group_leader = sibling;
+>  		list_del_init(&sibling->sibling_list);
+>  
+>  		/* Inherit group flags from the previous leader */
+> -		sibling->group_caps = event->group_caps;
+> -
+> -		if (sibling->attach_state & PERF_ATTACH_CONTEXT) {
+> -			add_event_to_groups(sibling, event->ctx);
+> -
+> -			if (sibling->state == PERF_EVENT_STATE_ACTIVE)
+> -				list_add_tail(&sibling->active_list, get_event_list(sibling));
+> -		}
+> +		perf_promote_sibling_to_leader(sibling, ctx, event->group_caps);
+>  
+>  		WARN_ON_ONCE(sibling->ctx != event->ctx);
+>  	}
+>
 > ---
-> base-commit: 8c214ad8cb8d692c82c6466b8e88973dbfa8e064
-> change-id: 20260521-b4-arm_cs_callchain_support_v1-2c2a70719bcc
-> 
+> base-commit: ab9de95c9cf952332ab79453b4b5d1bfca8e514f
+> change-id: 20260626-fix-group-leader-uaf-c46960e525e0
+>
 > Best regards,
-> -- 
-> Leo Yan <leo.yan@arm.com>
-> 
+> --  
+> Aditya Chillara <aditya.chillara@oss.qualcomm.com>
+>
+>
