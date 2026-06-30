@@ -1,31 +1,31 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DAC5331EC6
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 13:01:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9606F331EC6
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jun 2026 13:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782824493; cv=none; b=YXmqvfwbmZCgGhn3ZPYq6K979Ij3v0qwFNpSP2jSNyu7MODMT+Cn0QyF3I5FzkGgJ3ORGKnoDxQ5o6Q0XPZYmlhLcT5LNCC9KKKEuFa5JjHRNxsWLanpQ1L6XW1iRZNqk8hVjt/+uyd7suqygxcntb2wN+TZ/NlHFErzzgDGEVE=
+	t=1782824495; cv=none; b=GNmcoxEiVEz4iAgpvoECZkqppnjzhFu30VH9KJb97lIuHN/q+mnD0EBCBgxZrb45O6C/lBNDL1IQ9HyualEPpDyKOuVhwzZmakNMlrZzuipBB6IjmjIblD+FDLfh4NmLBQdIbRrgh2vyEJA3Qjds1+AygDafQqUvWesye7AHetE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782824493; c=relaxed/simple;
-	bh=qGuu0lSS+/X+nZCL+k2fprMXpVDXfcyOlmytvr+C5Ms=;
+	s=arc-20240116; t=1782824495; c=relaxed/simple;
+	bh=kq2w50c2u6bD7KF6gETrdsfnJ9vCOBcPVpF7JOs8C4Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UfbkN8i8ERX5GQobsh5YpGq37xi0fR4lvGCNlsXgX4qZmxvY+VbjV9Kz+dLbfctTlVF+FWDZL/+krth95F3HkEw8CHG7sfXgufNsBhqp9qKrUFvMIkY1KMmgoH1oV2HkcrnakAZvITXcctqyFR2MdDlnjuvg4pqauyfPGr6VHkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=IiH/ERKk; arc=none smtp.client-ip=217.140.110.172
+	 MIME-Version; b=e/MRNlGz+HAiMg0QS+w1kDtE7HXV4PUwgOR2tsvRS7jPjTl6JBjNn1w4R7Jm6TW49fixdEXQT3q7wXMawOGUmw68yTrhYyrwcPL2dxAxSuD6QuNyn085ujrjILl8kAX9swoPvKaW5AYwpX38+TRKvU9GeuJB5Bz0CwlcdKwbUAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=BcyVjUD7; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="IiH/ERKk"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="BcyVjUD7"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5573B16F8;
-	Tue, 30 Jun 2026 06:01:27 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 982E82ED2;
+	Tue, 30 Jun 2026 06:01:29 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 809BC3F905;
-	Tue, 30 Jun 2026 06:01:30 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C569B3F905;
+	Tue, 30 Jun 2026 06:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782824491; bh=qGuu0lSS+/X+nZCL+k2fprMXpVDXfcyOlmytvr+C5Ms=;
+	t=1782824494; bh=kq2w50c2u6bD7KF6gETrdsfnJ9vCOBcPVpF7JOs8C4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IiH/ERKkZ4aQ03NRgX7Ymy20iEVIR/am1dbJzE+U3AFT5PUrs1kJFRzi5GQONc3kA
-	 LRl786YuMeQ/3MACJShXZnB/cD2z/97tTR0XZkDeSTx1Yj0famemBDJGq1/1jGRW0b
-	 x1TNDy5qh+v2p1mC//+Xlsxi5Jgnww6bQXIc8JCg=
+	b=BcyVjUD7Zqw9f1gmXonNnPoLC2XgU9+u4I7VT3HEIzngKYYL9tAaSB6DAS1ZLUyHo
+	 hogigEt6GPWKcuQz4G+C1TUboLa927T4KbZOi5cDhry+UMhhZQ6sqxrqumm0OkS/wn
+	 GXEbxToNjzPi05ut7ZYZiIq3XakQ4eEGxf4XQrnM=
 From: Robin Murphy <robin.murphy@arm.com>
 To: will@kernel.org
 Cc: mark.rutland@arm.com,
@@ -35,9 +35,9 @@ Cc: mark.rutland@arm.com,
 	blakgeof@amazon.com,
 	avivb@amazon.com,
 	ilkka@os.amperecomputing.com
-Subject: [PATCH v6 1/2] perf/arm-cmn: Move DTM index data out of hw_perf_event
-Date: Tue, 30 Jun 2026 14:01:17 +0100
-Message-ID: <4be7785df09ec798173400c09ded197e246e2c4a.1782824005.git.robin.murphy@arm.com>
+Subject: [PATCH v6 2/2] perf/arm-cmn: Add workarounds for CMN-S3 on Graviton5
+Date: Tue, 30 Jun 2026 14:01:18 +0100
+Message-ID: <e9340d3a4385e6f1a6e80bda944a3ba6435472b6.1782824005.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.54.0.dirty
 In-Reply-To: <cover.1782824005.git.robin.murphy@arm.com>
 References: <cover.1782824005.git.robin.murphy@arm.com>
@@ -49,257 +49,120 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The amount of data we need to store all the per-DTM counter and
-watchpoint allocations is already testing the limits of hw_perf_event,
-and future CMNs are only likely to keep growing larger, so move these
-arrays out to separate memory allocations. As part of that we can use
-an explicit union for allocating cycle counters to dtc_cycles events,
-which is arguably nicer anyway.
+From: Aviv Bakal <avivb@amazon.com>
 
+Graviton5 uses a customised CMN-S3 implementation where certain
+discovery registers report zeroed fields. Add the following workarounds:
+
+ - Introduce a dedicated ACPI HID to identify the Graviton5 CMN variant.
+ - Derive the DTC domain from the XP node ID, since the unit info
+   register reports it as zero.
+ - Set the DTC logical ID from the XP's logical ID, since the node info
+   register's logical ID field is also zeroed.
+
+Signed-off-by: Aviv Bakal <avivb@amazon.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
 
-v6: Use bitmap functions consistently for cleaner allocation/zeroing
+v6: No change
 
- drivers/perf/arm-cmn.c | 91 ++++++++++++++++++++++++++++--------------
- 1 file changed, 61 insertions(+), 30 deletions(-)
+ drivers/perf/arm-cmn.c | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 6e5cc4086a9e..9392838408ff 100644
+index 9392838408ff..50402bc4a21d 100644
 --- a/drivers/perf/arm-cmn.c
 +++ b/drivers/perf/arm-cmn.c
-@@ -598,17 +598,14 @@ static void arm_cmn_debugfs_init(struct arm_cmn *cmn, int id) {}
+@@ -31,7 +31,8 @@
+ #define CMN_CHILD_NODE_ADDR		GENMASK(29, 0)
+ #define CMN_CHILD_NODE_EXTERNAL		BIT(31)
  
- struct arm_cmn_hw_event {
- 	struct arm_cmn_node *dn;
--	u64 dtm_idx[DIV_ROUND_UP(CMN_MAX_NODES_PER_EVENT * 2, 64)];
-+	union {
-+		unsigned long *dtm_idx;
-+		int cc_idx;
-+	};
-+	unsigned long *wp_idx;
- 	s8 dtc_idx[CMN_MAX_DTCS];
- 	u8 num_dns;
- 	u8 dtm_offset;
--
--	/*
--	 * WP config registers are divided to UP and DOWN events. We need to
--	 * keep to track only one of them.
--	 */
--	DECLARE_BITMAP(wp_idx, CMN_MAX_XPS);
--
- 	bool wide_sel;
- 	enum cmn_filter_select filter_sel;
+-#define CMN_MAX_DIMENSION		12
++/* Some implementations use a mesh larger than the architectural max of 12 */
++#define CMN_MAX_DIMENSION		14
+ #define CMN_MAX_XPS			(CMN_MAX_DIMENSION * CMN_MAX_DIMENSION)
+ #define CMN_MAX_DTMS			(CMN_MAX_XPS + (CMN_MAX_DIMENSION - 1) * 4)
+ 
+@@ -215,6 +216,8 @@ enum cmn_part {
+ 	PART_CMN700 = 0x43c,
+ 	PART_CI700 = 0x43a,
+ 	PART_CMN_S3 = 0x43e,
++	/* Synthetic part number, overridden to PART_CMN_S3 during discovery */
++	PART_GRAVITON5 = 0xa5,
  };
-@@ -626,25 +623,44 @@ static struct arm_cmn_hw_event *to_cmn_hw(struct perf_event *event)
- 	return (struct arm_cmn_hw_event *)&event->hw;
+ 
+ /* CMN-600 r0px shouldn't exist in silicon, thankfully */
+@@ -2253,6 +2256,18 @@ static unsigned int arm_cmn_dtc_domain(struct arm_cmn *cmn, void __iomem *xp_reg
+ 	return FIELD_GET(CMN_DTM_UNIT_INFO_DTC_DOMAIN, readl_relaxed(xp_region + offset));
  }
  
--static void arm_cmn_set_index(u64 x[], unsigned int pos, unsigned int val)
-+#define BPL2 (BITS_PER_LONG / 2)
-+
-+static void arm_cmn_set_dtm_idx(struct arm_cmn_hw_event *hw, unsigned int pos, unsigned int val)
- {
--	x[pos / 32] |= (u64)val << ((pos % 32) * 2);
-+	hw->dtm_idx[pos / BPL2] |= (unsigned long)val << ((pos % BPL2) * 2);
- }
- 
--static unsigned int arm_cmn_get_index(u64 x[], unsigned int pos)
-+static unsigned int arm_cmn_get_dtm_idx(struct arm_cmn_hw_event *hw, unsigned int pos)
- {
--	return (x[pos / 32] >> ((pos % 32) * 2)) & 3;
-+	return (hw->dtm_idx[pos / BPL2] >> ((pos % BPL2) * 2)) & 3;
- }
- 
--static void arm_cmn_set_wp_idx(unsigned long *wp_idx, unsigned int pos, bool val)
-+static unsigned long *arm_cmn_alloc_dtm_idx(void)
++static unsigned int arm_cmn_graviton5_dtc_domain(u16 xp_id)
 +{
-+	return bitmap_zalloc(CMN_MAX_NODES_PER_EVENT * 2, GFP_KERNEL);
++	unsigned int x = (xp_id >> 7) & 0xf;
++	unsigned int y = (xp_id >> 3) & 0xf;
++
++	/*
++	 * The unit info register reads as zero; derive the DTC domain from
++	 * the XP's mesh coordinates over the 10x14 mesh.
++	 */
++	return (x / 5) + (y / 7) * 2;
 +}
 +
-+static void arm_cmn_set_wp_idx(struct arm_cmn_hw_event *hw, unsigned int pos, bool val)
+ static void arm_cmn_init_node_info(struct arm_cmn *cmn, u32 offset, struct arm_cmn_node *node)
  {
- 	if (val)
--		set_bit(pos, wp_idx);
-+		set_bit(pos, hw->wp_idx);
- }
+ 	int level;
+@@ -2298,6 +2313,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 	u64 reg;
+ 	int i, j;
+ 	size_t sz;
++	bool graviton5_workaround = false;
  
--static unsigned int arm_cmn_get_wp_idx(unsigned long *wp_idx, unsigned int pos)
-+static unsigned int arm_cmn_get_wp_idx(struct arm_cmn_hw_event *hw, unsigned int pos)
- {
--	return test_bit(pos, wp_idx);
-+	return test_bit(pos, hw->wp_idx);
-+}
+ 	arm_cmn_init_node_info(cmn, rgn_offset, &cfg);
+ 	if (cfg.type != CMN_TYPE_CFG)
+@@ -2308,6 +2324,13 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 	reg = readq_relaxed(cfg_region + CMN_CFGM_PERIPH_ID_01);
+ 	part = FIELD_GET(CMN_CFGM_PID0_PART_0, reg);
+ 	part |= FIELD_GET(CMN_CFGM_PID1_PART_1, reg) << 8;
 +
-+static unsigned long *arm_cmn_alloc_wp_idx(void)
-+{
-+	return bitmap_zalloc(CMN_MAX_XPS, GFP_KERNEL);
-+}
++	/* Graviton5 has a customised CMN-S3 which needs some fixups */
++	if (cmn->part == PART_GRAVITON5) {
++		cmn->part = PART_CMN_S3;
++		graviton5_workaround = true;
++	}
 +
-+static void arm_cmn_clear_idx(struct arm_cmn_hw_event *hw)
-+{
-+	bitmap_zero(hw->dtm_idx, CMN_MAX_NODES_PER_EVENT * 2);
-+	if (hw->wp_idx)
-+		bitmap_zero(hw->wp_idx, CMN_MAX_XPS);
- }
+ 	/* 600AE is close enough that it's not really worth more complexity */
+ 	if (part == PART_CMN600AE)
+ 		part = PART_CMN600;
+@@ -2397,6 +2420,8 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
  
- struct arm_cmn_event_attr {
-@@ -1377,7 +1393,7 @@ static int arm_cmn_get_assigned_wp_idx(struct perf_event *event,
- 				       struct arm_cmn_hw_event *hw,
- 				       unsigned int pos)
- {
--	return CMN_EVENT_EVENTID(event) + arm_cmn_get_wp_idx(hw->wp_idx, pos);
-+	return CMN_EVENT_EVENTID(event) + arm_cmn_get_wp_idx(hw, pos);
- }
+ 		if (cmn->part == PART_CMN600)
+ 			xp->dtc = -1;
++		else if (graviton5_workaround)
++			xp->dtc = arm_cmn_graviton5_dtc_domain(xp->id);
+ 		else
+ 			xp->dtc = arm_cmn_dtc_domain(cmn, xp_region);
  
- static void arm_cmn_claim_wp_idx(struct arm_cmn_dtm *dtm,
-@@ -1388,7 +1404,7 @@ static void arm_cmn_claim_wp_idx(struct arm_cmn_dtm *dtm,
- 	struct arm_cmn_hw_event *hw = to_cmn_hw(event);
+@@ -2475,6 +2500,10 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
  
- 	dtm->wp_event[wp_idx] = hw->dtc_idx[dtc];
--	arm_cmn_set_wp_idx(hw->wp_idx, pos, wp_idx - CMN_EVENT_EVENTID(event));
-+	arm_cmn_set_wp_idx(hw, pos, wp_idx - CMN_EVENT_EVENTID(event));
- }
- 
- static u32 arm_cmn_wp_config(struct perf_event *event, int wp_idx)
-@@ -1459,7 +1475,7 @@ static u64 arm_cmn_read_dtm(struct arm_cmn *cmn, struct arm_cmn_hw_event *hw,
- 			dtm = &cmn->dtms[dn->dtm] + hw->dtm_offset;
- 			reg = readq_relaxed(dtm->base + offset);
- 		}
--		dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
-+		dtm_idx = arm_cmn_get_dtm_idx(hw, i);
- 		count += (u16)(reg >> (dtm_idx * 16));
- 	}
- 	return count;
-@@ -1506,7 +1522,7 @@ static void arm_cmn_event_read(struct perf_event *event)
- 	unsigned long flags;
- 
- 	if (CMN_EVENT_TYPE(event) == CMN_TYPE_DTC) {
--		delta = arm_cmn_read_cc(cmn->dtc + hw->dtc_idx[0]);
-+		delta = arm_cmn_read_cc(cmn->dtc + hw->cc_idx);
- 		local64_add(delta, &event->count);
- 		return;
- 	}
-@@ -1573,7 +1589,7 @@ static void arm_cmn_event_start(struct perf_event *event, int flags)
- 	int i;
- 
- 	if (type == CMN_TYPE_DTC) {
--		struct arm_cmn_dtc *dtc = cmn->dtc + hw->dtc_idx[0];
-+		struct arm_cmn_dtc *dtc = cmn->dtc + hw->cc_idx;
- 
- 		writel_relaxed(CMN_DT_DTC_CTL_DT_EN | CMN_DT_DTC_CTL_CG_DISABLE,
- 			       dtc->base + CMN_DT_DTC_CTL);
-@@ -1591,7 +1607,7 @@ static void arm_cmn_event_start(struct perf_event *event, int flags)
- 			writeq_relaxed(mask, base + CMN_DTM_WPn_MASK(wp_idx));
- 		}
- 	} else for_each_hw_dn(hw, dn, i) {
--		int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
-+		int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
- 
- 		arm_cmn_set_event_sel_lo(dn, dtm_idx, CMN_EVENT_EVENTID(event),
- 					 hw->wide_sel);
-@@ -1607,7 +1623,7 @@ static void arm_cmn_event_stop(struct perf_event *event, int flags)
- 	int i;
- 
- 	if (type == CMN_TYPE_DTC) {
--		struct arm_cmn_dtc *dtc = cmn->dtc + hw->dtc_idx[0];
-+		struct arm_cmn_dtc *dtc = cmn->dtc + hw->cc_idx;
- 
- 		dtc->cc_active = false;
- 		writel_relaxed(CMN_DT_DTC_CTL_DT_EN, dtc->base + CMN_DT_DTC_CTL);
-@@ -1620,7 +1636,7 @@ static void arm_cmn_event_stop(struct perf_event *event, int flags)
- 			writeq_relaxed(~0ULL, base + CMN_DTM_WPn_VAL(wp_idx));
- 		}
- 	} else for_each_hw_dn(hw, dn, i) {
--		int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
-+		int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
- 
- 		arm_cmn_set_event_sel_lo(dn, dtm_idx, 0, hw->wide_sel);
- 	}
-@@ -1764,6 +1780,14 @@ static enum cmn_filter_select arm_cmn_filter_sel(const struct arm_cmn *cmn,
- }
- 
- 
-+static void arm_cmn_event_destroy(struct perf_event *event)
-+{
-+	struct arm_cmn_hw_event *hw = to_cmn_hw(event);
-+
-+	bitmap_free(hw->dtm_idx);
-+	bitmap_free(hw->wp_idx);
-+}
-+
- static int arm_cmn_event_init(struct perf_event *event)
- {
- 	struct arm_cmn *cmn = to_cmn(event->pmu);
-@@ -1788,6 +1812,11 @@ static int arm_cmn_event_init(struct perf_event *event)
- 	if (type == CMN_TYPE_DTC)
- 		return arm_cmn_validate_group(cmn, event);
- 
-+	event->destroy = arm_cmn_event_destroy;
-+	hw->dtm_idx = arm_cmn_alloc_dtm_idx();
-+	if (!hw->dtm_idx)
-+		return -ENOMEM;
-+
- 	eventid = CMN_EVENT_EVENTID(event);
- 	/* For watchpoints we need the actual XP node here */
- 	if (type == CMN_TYPE_WP) {
-@@ -1798,6 +1827,9 @@ static int arm_cmn_event_init(struct perf_event *event)
- 		/* ...but the DTM may depend on which port we're watching */
- 		if (cmn->multi_dtm)
- 			hw->dtm_offset = CMN_EVENT_WP_DEV_SEL(event) / 2;
-+		hw->wp_idx = arm_cmn_alloc_wp_idx();
-+		if (!hw->wp_idx)
-+			return -ENOMEM;
- 	} else if (type == CMN_TYPE_XP &&
- 		   (cmn->part == PART_CMN700 || cmn->part == PART_CMN_S3)) {
- 		hw->wide_sel = true;
-@@ -1848,7 +1880,7 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
- 
- 	while (i--) {
- 		struct arm_cmn_dtm *dtm = &cmn->dtms[hw->dn[i].dtm] + hw->dtm_offset;
--		unsigned int dtm_idx = arm_cmn_get_index(hw->dtm_idx, i);
-+		unsigned int dtm_idx = arm_cmn_get_dtm_idx(hw, i);
- 
- 		if (type == CMN_TYPE_WP) {
- 			int wp_idx = arm_cmn_get_assigned_wp_idx(event, hw, i);
-@@ -1862,8 +1894,7 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
- 		dtm->pmu_config_low &= ~CMN__PMEVCNT_PAIRED(dtm_idx);
- 		writel_relaxed(dtm->pmu_config_low, dtm->base + CMN_DTM_PMU_CONFIG);
- 	}
--	memset(hw->dtm_idx, 0, sizeof(hw->dtm_idx));
--	memset(hw->wp_idx, 0, sizeof(hw->wp_idx));
-+	arm_cmn_clear_idx(hw);
- 
- 	for_each_hw_dtc_idx(hw, j, idx)
- 		cmn->dtc[j].counters[idx] = NULL;
-@@ -1883,7 +1914,7 @@ static int arm_cmn_event_add(struct perf_event *event, int flags)
- 				return -ENOSPC;
- 
- 		cmn->dtc[i].cycles = event;
--		hw->dtc_idx[0] = i;
-+		hw->cc_idx = i;
- 
- 		if (flags & PERF_EF_START)
- 			arm_cmn_event_start(event, 0);
-@@ -1948,7 +1979,7 @@ static int arm_cmn_event_add(struct perf_event *event, int flags)
- 				goto free_dtms;
- 		}
- 
--		arm_cmn_set_index(hw->dtm_idx, i, dtm_idx);
-+		arm_cmn_set_dtm_idx(hw, i, dtm_idx);
- 
- 		dtm->input_sel[dtm_idx] = input_sel;
- 		shift = CMN__PMEVCNTn_GLOBAL_NUM_SHIFT(dtm_idx);
-@@ -1981,7 +2012,7 @@ static void arm_cmn_event_del(struct perf_event *event, int flags)
- 	arm_cmn_event_stop(event, PERF_EF_UPDATE);
- 
- 	if (type == CMN_TYPE_DTC)
--		cmn->dtc[hw->dtc_idx[0]].cycles = NULL;
-+		cmn->dtc[hw->cc_idx].cycles = NULL;
- 	else
- 		arm_cmn_event_clear(cmn, event, hw->num_dns);
- }
+ 			switch (dn->type) {
+ 			case CMN_TYPE_DTC:
++				if (graviton5_workaround) {
++					/* Node info logical ID is zeroed; use the XP's */
++					dn->logid = xp->logid;
++				}
+ 				cmn->num_dtcs++;
+ 				dn++;
+ 				break;
+@@ -2690,6 +2719,7 @@ static const struct acpi_device_id arm_cmn_acpi_match[] = {
+ 	{ "ARMHC650" },
+ 	{ "ARMHC700" },
+ 	{ "ARMHC003" },
++	{ "AMZN0070", PART_GRAVITON5 },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(acpi, arm_cmn_acpi_match);
 -- 
 2.54.0.dirty
 
