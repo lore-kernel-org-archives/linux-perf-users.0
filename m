@@ -1,66 +1,66 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8A924BBF0
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BA03DEADC
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782895326; cv=none; b=Sk7ak7QBSAmdpkwb31vXvx1DutkiayrdQLN39Ut/m9nRe0Z4sKsYf83reo8h8hrIeDMQ4pX2czYo/rhAQFS/t1IKtDq4TNZqCo5F7dn1lp+BwXdoAhsxhYaOglgbAiZ/E+tHmJvsO7seMTEtRAdeqPavIeqxMEz5YKtEVKEmXJI=
+	t=1782895329; cv=none; b=GmLTd0VuVowZcvixdmXZ9R6ixVpRxL9uthxapIP/6iBDiH5Z7AWp2OoQTBIRHTbnbrSWi6HZRu8yw3zEQ+eTgTjk6IXN2zo5HyhszIvdtn+cSoh7mB7QpaI8zzQ8UVtsoBXDJ1G9FVzNgTDwqFw2NkwAa7V72yaESDUi6caezww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782895326; c=relaxed/simple;
-	bh=8jX6QN1HuITLUW8YZ+f/Tl5IMXkw/NCYgq0XqmnO4jc=;
+	s=arc-20240116; t=1782895329; c=relaxed/simple;
+	bh=39FZCVMGumZTRxDDjBHCEvmLnmEbrU61duRrfOMb/YA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rZwZ8655lUYFwf5juKvH44Q4Aekm1x7JkbK9Bo0e4E5TYjQG92hK//4IxEtRMRBYxoZ7mxQHbdNzaluH6Qk7zYeyxB+siQnp9PQbmRd1OFq/GlU9WV1y9Mg/Jcbnl9sxyQ10QHLemjhvQ3fLT5Emxg+KPJ4D9BJdmFkR/Y0tKcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PzKWbdwB; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=leG9opThTPuchcrrENPVrFA4fBR4SMKCbwFnknF8JsMUzf6pvX4LXmIUOtWSxhD2if1J7LTK3iFoUfzGQ5lHSMgYgOiud59nREX70OM4EmuURq2fQbKDXNu4iUVSlE/m4GxHpakdnKSJ1nIUOIDWQwehfF4Kk6cxgj7RvwSxVu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=r0LN8hpP; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PzKWbdwB"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6618IBfL356282;
-	Wed, 1 Jul 2026 08:42:00 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="r0LN8hpP"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6618IGGa298737;
+	Wed, 1 Jul 2026 08:42:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=RzeaNFvdBAWLunX/y
-	VVDH77Cpxdi28XnoG+P+IGB4tg=; b=PzKWbdwBndppGfXdVDFshx8Zo8otboMQJ
-	mWTne/3CGAVOUjh53LEAw4OoxxeluXLfgkHCJ3SW6cxPUJfMc822bdYXvucnjmib
-	OOuScZNJpkCfwLkbsqlmLO+mgq0iGVuOBa4d0rYjrMQ8x0nOEx3f6+kSnR9CVIyJ
-	MzXCZg8G1r6h0rTf2fmoLJR+Qheg5dzmnfc3fs36aPgK8qx5q9JIbq4mC9sUUlxg
-	f5xRLfZ6Erl+aBRathHMPoTu7rodCUIrBn6Xa/xUNWiUw4iG/Q2MXoT80ecQF/Hv
-	gNmBcXXvCZn7vJs1KS+ocXMtzN4bWweSV3vB7erZcK0ph8mUuJOuQ==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26pe3ggn-1
+	:mime-version:references:subject:to; s=pp1; bh=g2T0wyrKfiEMk0Mon
+	yQUELxrAJMbhr4PjfD18naYzTQ=; b=r0LN8hpPsi4XUax1uJ2oC/vypuhgG93bf
+	SRzDQ3Mx3odp7Ng3FcUY9C8u5u/Na/tcABEIE3+BRvDxic2y8f4r4096rS9lh8bj
+	I2Jn5Kv8kLwKu3qsphv/Gz4GRfbqmH1jdBOueZgS7xha4ZLOzsTOM+SvWFsNFJig
+	BKLde4HJY+aEGYtQIJ67FjcDL1tPNsqnrD1W4IEt8HSeSJK1um6OAtYAs/w8OeNp
+	sl+NJCnWR/wldh9gA1TtwQqQvvOaUSsi0U/Al6MUxI+WZaaZtWwe7sOrJbhsc0RR
+	qbIjxsZnci3WRoPxeO5/6k6rfOhvLkMMUwMJ0ubOGfVmI/vRM9eEA==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26n5ufpe-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 Jul 2026 08:42:00 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6618YjJH001905;
-	Wed, 1 Jul 2026 08:41:58 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4f2tbhecht-1
+	Wed, 01 Jul 2026 08:42:03 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6618YoNk018135;
+	Wed, 1 Jul 2026 08:42:02 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f2ruqemp6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 Jul 2026 08:41:58 +0000 (GMT)
+	Wed, 01 Jul 2026 08:42:02 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6618fs8q29557034
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6618fwa553019034
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 1 Jul 2026 08:41:55 GMT
+	Wed, 1 Jul 2026 08:41:58 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CFEB020043;
-	Wed,  1 Jul 2026 08:41:54 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 9E1D320043;
+	Wed,  1 Jul 2026 08:41:58 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 36B8B20040;
-	Wed,  1 Jul 2026 08:41:51 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 3CD0820040;
+	Wed,  1 Jul 2026 08:41:55 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.124.212.11])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  1 Jul 2026 08:41:50 +0000 (GMT)
+	Wed,  1 Jul 2026 08:41:55 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
 Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
         tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com
-Subject: [PATCH 8/9] tools/perf/powerpc: Add event name as htm of PERF_TYPE_SYNTH type to present htm samples
-Date: Wed,  1 Jul 2026 14:11:14 +0530
-Message-Id: <20260701084115.80383-9-atrajeev@linux.ibm.com>
+Subject: [PATCH 9/9] tools/perf/powerpc: Add logical address in decoded traces
+Date: Wed,  1 Jul 2026 14:11:15 +0530
+Message-Id: <20260701084115.80383-10-atrajeev@linux.ibm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260701084115.80383-1-atrajeev@linux.ibm.com>
 References: <20260701084115.80383-1-atrajeev@linux.ibm.com>
@@ -73,259 +73,231 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: _JYhAfF-WqPF-ojp-RRJh1VCe1X9yKZo
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAxMDA4NCBTYWx0ZWRfX6uOyTwJafllR
- smjc2bJNhrVkhawde6m4fv7DukctcFvG4gYHssA+1o9TBE3RrPI5sCrLlFA/lW2vtTADP6u0JP+
- DAvMMWiQTd2pIcDJseiS8fH0FFEq6UM=
-X-Authority-Analysis: v=2.4 cv=edsNubEH c=1 sm=1 tr=0 ts=6a44d2d8 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAxMDA4NCBTYWx0ZWRfXwGsEZ4iLrKRo
+ lFcCn2kVAFVjkCD8ek1J+q2Vyq2Bq9yE6reN+aNwznyr2mhNpvdO+257eZeuK+3mHPIetO6aQ1Z
+ ex8+o8sJggkC2/f0Eb6p/BZfoepvRJ8IBMsCCGHNi703/fERUG7F47cSTxoW9njG8iv0DhhrZWA
+ OEjTi1HrMaAO4Zo4/eoh5kONGjz1M8CeGxsObvxk3K8dYhGIO5xbvIEG+PT926uORjEJA/cRHP9
+ YgJV4886SGA905XNtIS4Gzv7FbzK+CZNbkdhiYqyX65snmyxF1h9Owpvh6MqV2MF7CglI+sBwpL
+ lJTIjDYLfRK/6Xn3lWmPgcRholjuryApKajxnNn84e3Q/JVZxi3cmglokFSMAMj+6EWsBZ1U6BX
+ jPsxFpAUQVTmYzMGKscEIlTx7s+5/WNbzBhJ64db+jRbZwBujZcJvKiGpPEWbrhxrOtEf69blyY
+ /IKkxxk7y+Cdqihc1gQ==
+X-Authority-Analysis: v=2.4 cv=V45NF+ni c=1 sm=1 tr=0 ts=6a44d2db cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=iQ6ETzBq9ecOQQE5vZCe:22 a=VnNF1IyMAAAA:8 a=0c5kpZ5o8VaU0JCb9dwA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAxMDA4NCBTYWx0ZWRfX9lXj47uDJkC9
- x6rrVYAb0ZyV9AMplInBtAvb4fe/ymSxwDKkco0J29U172dksgXOhxEmoFOvinskaSoxYcV3ny2
- zABKcDOwfMLT6VNAF/RAHelRoeW5Hy0DWZfLUd5t9NU+vZdS+5BfoRkAz7mcKcCdRNNMDi3I7dR
- E9LZMAX804Q6qclrSKCm7L0sj9JZhlBqWA+T3pnPuWYj8g6+/8A3QxTDTVD1LVBuEP4IdKLdLwT
- J3i7PV9r3PyR3dm/KuCMkt/42EpIvptAq5EQ1qQWrHT5zf02ksw5U5TmjKnyJZwEhEeGBeOwyCE
- DV+X16vnLki8w4psPdg0lm3RxFo3bQFK1TrPkIDYs+27U93z54jnFXmuDKDFfqaGS9FdFZAGYuG
- Jq2ZsKFeUC815vFOSj25JBFvFjmagoPvayETclj+deauKt7PyaYx5gmprwAq9JxvzZBVSIgQi8Z
- wJU87cjhtfvQ4Pg2zUA==
-X-Proofpoint-ORIG-GUID: d9JEXpZqt7TD4DNlHP808Teuj7iK-6B3
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=A_eqvsjfpbeckq1sgSgA:9
+ a=O8hF6Hzn-FEA:10
+X-Proofpoint-ORIG-GUID: TWkO6yGqx3ZJjinLtuMyAR5Yy6jhjlWw
+X-Proofpoint-GUID: HTsi6dXjJNWA93BQP0rj2DZouVkNnmMw
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAxMDA4NCBTYWx0ZWRfX72+7p1A7vtHg
+ h1BAQkmIhzWoZnZOackR2NozL8QKsiXTra+MoSBRorG4Lt1ODJ3x4iFMLpsHXxJxSfeX7dNTQX2
+ 0VohpckMJ6tEndC/8CYkiwfkjfeMceM=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
  definitions=2026-07-01_02,2026-06-26_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 adultscore=0 impostorscore=0 bulkscore=0
- spamscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
+ phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 impostorscore=0 malwarescore=0 bulkscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607010084
 
-HTM trace details are captured as-is in PERF_RECORD_AUXTRACE
-records. To present htm entries as samples, create an event
-with name as "htm" and type PERF_TYPE_SYNTH.
+Enhance the post processing to translate physical addresses to logical
+addresses in the decoded output. This improves debuggability by
+allowing direct correlation with source code and debug symbols.
 
-Add perf_synth_id, "PERF_SYNTH_POWERPC_HTM" as config value for the
-event. Create a sample id to be a fixed offset from evsel id.
-Invoke powerpc_htm_create_sample() using the logical address
-as sample ip.
+The decoder now creates a .l output file with logical addresses,
+making it easier to analyze traces using symbol tables and debuggers.
+LP index filtering is made optional when dumping traces to show all
+addresses.
 
-This will help in understanding hot logical address from the
-traces.
+Add logical address translation in the post-processing step of
+process_trace_file(). For each physical address found in the decoded
+trace, find_logical_addr() is used to look up the corresponding
+logical address from the mem_entries array. The translated output is
+written to a new file with a ".l" suffix alongside the original
+decoded trace file.
 
-Usage:
+LP index filtering in find_logical_addr() is made optional via a
+new 'filter' parameter. When running with dump_trace (perf script -D),
+filtering is disabled so all addresses are translated regardless of
+LP index. This ensures complete coverage when dumping traces for
+analysis.
 
- # perf record -C 1 -e htm/nodalchipindex=2,nodeindex=0,htm_type=1/ -o perf_1.data ls 1>out
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 257.504 MB perf_1.data ]
-
- # ./perf report -i perf_1.data
-
- # Samples: 8M of event 'htm'
- # Event count (approx.): 8515199
- #
- # Children      Self  Command  Shared Object     Symbol
- # ........  ........  .......  ................  ......................
- #
-     0.61%     0.61%  swapper  [unknown]         [.] 0x00000006fd567fe0
-     0.33%     0.33%  swapper  [unknown]         [.] 0x00000006fc194b20
-     0.20%     0.20%  swapper  [unknown]         [.] 0x0000000066113f80
-     0.18%     0.18%  swapper  [unknown]         [.] 0x00000007fd888f20
-     0.15%     0.15%  swapper  [unknown]         [.] 0x00000006fd567fc0
-     0.08%     0.08%  swapper  [unknown]         [.] 0x00000006fc194b00
-     0.05%     0.05%  swapper  [unknown]         [.] 0x00000007fd888f00
-     0.03%     0.03%  swapper  [unknown]         [.] 0x0000000422510700
-     0.03%     0.03%  swapper  [unknown]         [.] 0x0000000422510820
-     0.03%     0.03%  swapper  [unknown]         [.] 0x00000007fd888b80
-     0.02%     0.02%  swapper  [unknown]         [.] 0x000000000a0ece40
-     0.02%     0.02%  swapper  [unknown]         [.] 0x000000000a0ed2e0
-     0.01%     0.01%  swapper  [unknown]         [.] 0x00000007fd888c40
-     0.01%     0.01%  swapper  [unknown]         [.] 0x00000007fd889000
-     0.01%     0.01%  swapper  [unknown]         [.] 0x00000007fd5bc200
-     0.01%     0.01%  swapper  [unknown]         [.] 0x00000007fd61c200
-     0.01%     0.01%  swapper  [unknown]         [.] 0x00000007fd28c200
-     0.01%     0.01%  swapper  [unknown]         [.] 0x00000007fd22c200
-     0.01%     0.01%  swapper  [unknown]         [.] 0x00000007fd1fc200
+Example output files after decoding:
+  htm.bin.n0.p2.c0.out   - decoded trace with physical addresses
+  htm.bin.n0.p2.c0.out.l - decoded trace with logical addresses
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 ---
- tools/perf/util/event.h       |   1 +
- tools/perf/util/powerpc-htm.c | 110 +++++++++++++++++++++++++++++++++-
- 2 files changed, 109 insertions(+), 2 deletions(-)
+ tools/perf/util/powerpc-htm.c | 81 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 74 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 2ea83fdf8a03..f5aa7eb9f5b7 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -118,6 +118,7 @@ enum perf_synth_id {
- 	PERF_SYNTH_INTEL_EVT,
- 	PERF_SYNTH_INTEL_IFLAG_CHG,
- 	PERF_SYNTH_POWERPC_VPA_DTL,
-+	PERF_SYNTH_POWERPC_HTM,
- };
- 
- /*
 diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
-index 83253850870c..050fbceac71e 100644
+index 050fbceac71e..1bd2664453c6 100644
 --- a/tools/perf/util/powerpc-htm.c
 +++ b/tools/perf/util/powerpc-htm.c
-@@ -42,6 +42,7 @@ struct powerpc_htm {
- 	char				trans_file[64];
- 	int				htm_mem_entries;
- 	int				mem_maps;
-+	u64				sample_id;
- };
+@@ -202,7 +202,7 @@ static int add_map_entry(struct addr_map **arr, size_t *count, size_t *cap, stru
+ static unsigned long find_logical_addr(unsigned long long given_addr,
+ 				struct mem_entries *mem_entries_array,
+ 				size_t n_entries,
+-				u32 lp_filter)
++				u32 lp_filter, int filter)
+ {
+ 	for (size_t i = 0; i < n_entries; i++) {
+ 		unsigned long long start = mem_entries_array[i].phy_addr & PHYS_ADDR_MASK;
+@@ -221,11 +221,13 @@ static unsigned long find_logical_addr(unsigned long long given_addr,
+ 		 * If so, calculate:
+ 		 * 'offset' and the 'logical address
+ 		 */
+-		if (start <= given_addr && given_addr < end &&
+-			mem_entries_array[i].lp_index == lp_filter) {
++		if (start <= given_addr && given_addr < end) {
+ 			unsigned long long offset = given_addr - start;
+ 			unsigned long logical = mem_entries_array[i].logical_addr + offset;
  
- struct htm_mem {
-@@ -128,6 +129,43 @@ static int run_htmdecode(const char *input_file, const char *output_file)
- 	return 0;
- }
- 
-+static int powerpc_htm_create_sample(unsigned long addr, struct perf_session *session,
-+		struct powerpc_htm *htm)
-+{
-+	struct perf_sample sample;
-+	union perf_event event;
++			if (filter && (mem_entries_array[i].lp_index != lp_filter))
++				continue;
 +
+ 			pr_debug("DEBUG: Condition hit at i=%zu given_addr=0x%llx start=0x%llx end=0x%llx lp_index=%u\n",
+ 				i, given_addr,
+ 				start, end,
+@@ -259,36 +261,60 @@ static struct addr_map *process_trace_file(const char *trace_file,
+ 	unsigned long logical_addr;
+ 	size_t total_phys = 0;
+ 	size_t total_phys_to_logical = 0;
+-
+ 	FILE *fp = fopen(trace_file, "r");
++	size_t prefix_len;
++	int found_match = 0;
++	FILE *fout;
++	int filter_lp = 1;
++	char *output = malloc(strlen(trace_file) + 3);  /* +3 for ".l" and null */
++
++	if (!output) {
++		pr_err("Failed to allocate memory for output filename\n");
++		fclose(fp);
++		return NULL;
++	}
+ 
+ 	if (!fp) {
+ 		pr_err("Failed to open trace file %s: %s\n", trace_file, strerror(errno));
+ 		return NULL;
+ 	}
+ 
++	snprintf(output, strlen(trace_file) + 3, "%s.l", trace_file);
++	fout = fopen(output, "w");
++	if (!fout) {
++		pr_err("Failed to open trace output file: %s\n", output);
++		fclose(fp);
++		return NULL;
++	}
++
+ 	if (regcomp(&addr_regex, "addr:0x[0-9A-Fa-f]+", REG_EXTENDED) != 0) {
+ 		pr_err("Failed to compile addr_regex\n");
+-		return NULL;
++		goto out;
+ 	}
+ 
+ 	if (regcomp(&label_regex,
+ 		   "^[[:space:]]*[0-9A-Fa-f]+ : [^[:space:]]+[[:space:]]+([^[:space:]]+)",
+ 		   REG_EXTENDED) != 0) {
+ 		pr_err("Failed to compile label_regex\n");
+-		return NULL;
++		regfree(&addr_regex);
++		goto out;
+ 	}
+ 
+ 	maps = NULL;
+ 	count = 0;
+ 	cap = 0;
+ 
++	/* When dumping traces, show all addresses regardless of LP index */
 +	if (dump_trace)
-+		return 0;
++		filter_lp = 0;
 +
-+	memset(&sample, 0, sizeof(sample));
-+	sample.cpumode = PERF_RECORD_MISC_USER;
-+
-+	if (!addr)
-+		return 0;
-+
-+	if (addr >= 0xc000000000000000)
-+		sample.cpumode = PERF_RECORD_MISC_KERNEL;
-+
-+	sample.ip = addr;
-+	sample.period = 1;
-+	sample.cpu = 0;
-+	sample.id = htm->sample_id;
-+	sample.callchain = NULL;
-+	sample.branch_stack = NULL;
-+	memset(&event, 0, sizeof(event));
-+	event.sample.header.type = PERF_RECORD_SAMPLE;
-+	event.sample.header.misc = sample.cpumode;
-+	event.sample.header.size = sizeof(struct perf_event_header);
-+
-+	if (perf_session__deliver_synth_event(session, &event, &sample)) {
-+		pr_debug("Failed to create sample for htm entry\n");
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
- static void *safe_realloc(void *ptr, size_t new_size)
- {
- 	void *tmp = realloc(ptr, new_size);
-@@ -309,7 +347,7 @@ static struct addr_map *process_trace_file(const char *trace_file,
- 	return maps;
- }
+ 	while (getline(&line, &len, fp) != -1) {
+ 		if (regexec(&label_regex, line, 2, pmatch, 0) == 0) {
+ 			char label[64] = {0};
+ 			int start = pmatch[1].rm_so;
+ 			int end   = pmatch[1].rm_eo;
+ 			int line_len   = end - start;
++			found_match = 0;
  
--static int create_mem_maps(struct powerpc_htm *htm)
-+static int create_mem_maps(struct perf_session *session, struct powerpc_htm *htm)
- {
- 	off_t file_size;
- 	void *htmdata, *mapped_data;
-@@ -422,6 +460,7 @@ static int create_mem_maps(struct powerpc_htm *htm)
- 			maps[i].event,
- 			maps[i].phys_addr,
- 			(unsigned long)maps[i].logical_addr);
-+		powerpc_htm_create_sample(maps[i].logical_addr, session, htm);
- 	}
+ 			if (line_len < 0)
+ 				line_len = 0;
+@@ -303,6 +329,10 @@ static struct addr_map *process_trace_file(const char *trace_file,
+ 			while (regexec(&addr_regex, ptr, 1, pmatch, 0) == 0) {
+ 				unsigned long long phys_addr = 0;
+ 				struct addr_map entry = {0};
++				char *hex_start = strstr(line, "addr:0x");
++				const char *target = "addr:0x";
++				char *old_val_ptr;
++				size_t written;
  
- 	free(maps);
-@@ -581,7 +620,7 @@ static int powerpc_htm_process_event(struct perf_session *session __maybe_unused
- 		}
- 		/* Only for power bus traces, we decode traces */
- 		if (config == 1)
--			create_mem_maps(htm);
-+			create_mem_maps(session, htm);
- 	}
- 
- 	return 0;
-@@ -636,6 +675,69 @@ static void powerpc_htm_print_info(__u64 *arr)
- 	fprintf(stdout, powerpc_htm_info_fmts[POWERPC_HTM_TYPE], arr[POWERPC_HTM_TYPE]);
- }
- 
-+static void set_event_name(struct evlist *evlist, u64 id,
-+			const char *name)
-+{
-+	struct evsel *evsel;
+ 				if (sscanf(ptr + pmatch[0].rm_so + strlen("addr:"),
+ 					  "%llx", &phys_addr) != 1) {
+@@ -315,7 +345,30 @@ static struct addr_map *process_trace_file(const char *trace_file,
+ 				logical_addr = find_logical_addr(phys_addr,
+ 							mem_entries_array,
+ 							n_entries,
+-							lp_filter);
++							lp_filter, filter_lp);
++				/* create output.txt with logical address */
++				if (dump_trace && hex_start) {
++					old_val_ptr = hex_start + strlen(target);
++					prefix_len = hex_start - line;
++					written = fwrite(line, 1, prefix_len, fout);
++					if (written != prefix_len) {
++						pr_err("Failed to write prefix to output file\n");
++						continue;
++					}
++					if (fprintf(fout, "addr:0x%llx\t", (unsigned long long)logical_addr) < 0) {
++						pr_err("Failed to write to output file\n");
++						continue;
++					}
++					while (*old_val_ptr != ' ' && *old_val_ptr != '\n' && *old_val_ptr != '\0') {
++						old_val_ptr++;
++					}
++					if (fprintf(fout, "%s", old_val_ptr) < 0) {
++						pr_err("Failed to write suffix to output file\n");
++						continue;
++					}
++					found_match = 1;
++				}
 +
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->core.id && evsel->core.id[0] == id) {
-+			if (evsel->name)
-+				zfree(&evsel->name);
-+			evsel->name = strdup(name);
-+			if (!evsel->name) {
-+				pr_err("Failed to allocate memory for event name\n");
-+				return;
+ 				if (logical_addr == 0) {
+ 					ptr += pmatch[0].rm_eo;
+ 					continue;
+@@ -335,6 +388,12 @@ static struct addr_map *process_trace_file(const char *trace_file,
+ 
+ 				ptr += pmatch[0].rm_eo;
+ 			}
++			if (dump_trace && (!found_match) && line) {
++				if (fprintf(fout, "%s", line) < 0) {
++					pr_err("Failed to write line to output file\n");
++					continue;
++				}
 +			}
-+			break;
-+		}
-+	}
-+}
-+
-+static int
-+powerpc_htm_synth_events(struct powerpc_htm *htm, struct perf_session *session)
-+{
-+	struct evlist *evlist = session->evlist;
-+	struct evsel *evsel;
-+	struct perf_event_attr attr;
-+	bool found = false;
-+	u64 id;
-+	int err;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (strstarts(evsel->name, "htm")) {
-+			found = true;
-+			break;
-+		}
-+	}
-+
-+	if (!found) {
-+		pr_debug("No selected events with HTM trace data\n");
-+		return 0;
-+	}
-+
-+	memset(&attr, 0, sizeof(struct perf_event_attr));
-+	attr.size = sizeof(struct perf_event_attr);
-+	attr.sample_type = evsel->core.attr.sample_type;
-+	attr.sample_id_all = evsel->core.attr.sample_id_all;
-+	attr.type = PERF_TYPE_SYNTH;
-+	attr.config = PERF_SYNTH_POWERPC_HTM;
-+
-+	/* create new id val to be a fixed offset from evsel id */
-+	id = evsel->core.id[0] + 1000000000;
-+	if (!id)
-+		id = 1;
-+
-+	err = perf_session__deliver_synth_attr_event(session, &attr, id);
-+	if (err)
-+		return err;
-+
-+	htm->sample_id = id;
-+	set_event_name(evlist, id, "htm");
-+
-+	return 0;
-+}
-+
- int powerpc_htm_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session)
- {
-@@ -698,6 +800,10 @@ int powerpc_htm_process_auxtrace_info(union perf_event *event,
- 	if (err)
- 		goto err_free_queues;
+ 		}
+ 	}
  
-+	err = powerpc_htm_synth_events(htm, session);
-+	if (err)
-+		goto err_free;
-+
- 	return 0;
+@@ -342,9 +401,17 @@ static struct addr_map *process_trace_file(const char *trace_file,
+ 	fclose(fp);
+ 	regfree(&addr_regex);
+ 	regfree(&label_regex);
++	fclose(fout);
++	free(output);
  
- err_free_queues:
+ 	*count_out = count;
+ 	return maps;
++
++out:
++	fclose(fp);
++	fclose(fout);
++	free(output);
++	return NULL;
+ }
+ 
+ static int create_mem_maps(struct perf_session *session, struct powerpc_htm *htm)
 -- 
 2.52.0
 
