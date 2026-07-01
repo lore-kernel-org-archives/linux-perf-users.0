@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8066E3BADB2
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7890839FCCC
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:55:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782896096; cv=none; b=N1J3m+ft9BjodI9F/C2adCRcUIBM0vG9eeGWE5v976EFeHR1E9Ihq8ALu9xArydEWvq2HmYaSMRZmiySYUf9XGv0ShhAmCl1G9l1xKxq+tS4gzInLx+14L+ck7PJRZrEvEM6IJbR2zt7p6Y67YJlKuLZDocwQ3+c7IHWyVMKs6M=
+	t=1782896114; cv=none; b=DVNhhWYS4XHsMURYX9J1kvyrrd/nsXtCk34ww0aEwXbj8PWBuSTydDuhOfdGZCA0+Zvf1h8tuHSlqXmivSDVn74y2z6mNFt7wZD5i0Zw2stTuKCr+w3LJaTGAHzpxvEJFkC3oWqgz2FnOm2B01UNYICnd9bPyo6L1E+PNwi/2nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782896096; c=relaxed/simple;
-	bh=cuHDcznxv/hoAeKTgcxelD5GBmTtpPY416NGe6dsnL8=;
+	s=arc-20240116; t=1782896114; c=relaxed/simple;
+	bh=r8B799Yxe+ykJ83FrUXeyL1bxtGWjfV5wtCsJaTOU10=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LA6pExdEP9Kd5XBKz1XKdDEI1bwOyEuUNc6a6bqA8csq5G507RzdFg7ntnJYgtTXRTiBvNSHClZbyXAz5QdfbrXpHoZpEPLncbI14eRDznIUbVpGwG/NtWW9kFp/V0/xEZY/tZKmHqyn9TS8zua4jwpwejWr9IUkUsdc8I5ZS3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XI72Di6o; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IzUCyDn1Bb1RJsK5AgMQH7i2+ftX8PkdMLx0uICp5oJEGulElx8hAvMlRfBmTlgNlAHn6f0L1I2hJ1eEK3HRphNK+n3+eL7dl6Ckp3D4V/DMkX6D3N49W8m+w8xM1L/UVKEzGe+MEwYaN/dqwyn8soSY2CKerES63rhRNCWn67A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1eRhhTZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XI72Di6o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECCB1F000E9;
-	Wed,  1 Jul 2026 08:54:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1eRhhTZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C3A1F000E9;
+	Wed,  1 Jul 2026 08:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782896095;
-	bh=n5yiSAqCddtFVCXQpYOZK9ouKbtXa+FVceJqwGkuJLM=;
+	s=k20260515; t=1782896113;
+	bh=9cWS/9rBJ7vrOmCx8NlH1R19cjCBRrY6GWR5BqIneU4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XI72Di6oLpDnKQmAo6W4qDYohyan7aY9mkHQ/vi19twRzvmYh/7w7QSOMncTekJ+A
-	 i2zEsxcrAeovcYXe/Fe3aCyKFVp7NLDwo0rZIjqSkAI2dRXndWQE1Qunl/iNwRrCD/
-	 rnRqJe6iQWSv4sGUTF/1U0etvSmprQ/JJsYznaAhMErkiXXcl2HajwwR9hcXW7xtTc
-	 8YY1M1bhNlNLEZdM5YNg7ALplv4Iwv27DBS0/Nu1f9DkiS4OoMTuzQGbF3XE+BD47a
-	 QeBJIU+C38ooMSckaVEJtc9o1aGIPVzPA94vvP/xVRyPufyaOiCI58LKjyZ2qJTAPD
-	 s32XfbBAhRQrg==
+	b=c1eRhhTZQ1IiEC6zDKdE7vwzP7ovtdbKuZKnQO4W5NNsuochmiv19v3Py5cJEYEhI
+	 fr8TnSHg1vD7pX/WO87C3EUBIBlaByVyrHumfWJJn26RLAa9NEmzNK9yZr81/vixjZ
+	 vwb0HDd3v83+N74aGwnFBcGSdYRazGG+cIskdhckmYlECyG3seXaLgIjJ4XVqiwisu
+	 Fwq8RL16EMV2pLtGQx6yrd68WzBtsRUvb9hlqztgXrxqFkCl9HehM8Rc8Yzqsx5KSn
+	 oar0twDUMgN6oyzXVnQYVeEXvjyQNvfLqjpu7XxOzg3PSoUg2naqlNQJhzZv3RAEPy
+	 ex70xAdG72Hxg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/9] tools/perf: Add arch_record__collect_final_data to
- collect additional data before closing the event
+Subject: Re: [PATCH 4/9] tools/perf: Add powerpc callback support for
+ arch_record__collect_final_data
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701084115.80383-4-atrajeev@linux.ibm.com>
+In-Reply-To: <20260701084115.80383-5-atrajeev@linux.ibm.com>
 References: <20260701084115.80383-1-atrajeev@linux.ibm.com>
- <20260701084115.80383-4-atrajeev@linux.ibm.com>
+ <20260701084115.80383-5-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 08:54:54 +0000
-Message-Id: <20260701085454.8ECCB1F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 08:55:12 +0000
+Message-Id: <20260701085512.E9C3A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,176 +47,133 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 6 potential issue(=
 s) to consider:
-- [High] `record__final_data` implements a defective busy-wait loop that ca=
-uses CPU pegging and infinite loops.
-- [High] Redundant and potentially harmful calls to `evlist__enable` during=
- the shutdown phase.
-- [High] Collection of final architecture-specific data is randomly skipped=
- due to an early loop break race condition.
-- [High] Final data collection is completely omitted when tracing child wor=
-kloads.
-- [Low] Unnecessary full header inclusions in `record.h` violate subsystem =
-guidelines.
-- [Low] The function name mentioned in the commit message does not match th=
-e actual code implementation.
+- [High] Direct access to `evsel->name` without NULL checks causes a segmen=
+tation fault.
+- [High] Premature loop termination in `arch_perf_record__need_read` due to=
+ artificial overwriting of loop variables.
+- [High] Unconditional compilation of PowerPC-specific execution logic glob=
+ally overrides a cross-platform weak symbol.
+- [High] The negative error return value from `perf_evsel__read()` is ignor=
+ed, leading to premature termination of trace data collection.
+- [Medium] The functions and callbacks described in the commit message are =
+completely missing from the implemented code.
+- [Low] Malformed include path directive `../../../util/record.h` causes a =
+build failure.
 --
 
-commit 4b101c454c9b203ae14e9902eb253bcd6be33523
+commit dee0b2f32508f51e2b57675240fda0c4192160d5
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-tools/perf: Add arch_record__collect_final_data to collect additional data =
-before closing the event
+tools/perf: Add powerpc callback support for arch_record__collect_final_data
 
-While collecting samples using "perf record", function
-"__cmd_record" checks if monitoring is done. Once recording
-is done, event list will be disabled using "evlist__disable".
-After this, event fd won't be read and event will be removed.
+This patch adds an architecture-specific hook to collect additional HTM tra=
+ce
+data before closing events. It reads the HTM event counts to determine if
+more data is available to be written to the perf data file.
 
-Before removing the event, if any additional data needs
-to be captured/written to perf.data, currently its not
-possible. Introduce arch_record__collect_final_data to
-collect additional data before closing the event
+>     Add arch_record__collect_final_data to collect additional
+>     data before closing the event. Define the callback in
+>     util/powerpc-htm.c
+[ ... ]
+>     the event using evlist__enable after reading event using
+>     htm_read_data function. The perf_evsel__read returns zero, when
 
-> Introduce arch_record__collect_final_data to
-> collect additional data before closing the event
+[Severity: Medium]
+The commit message mentions adding arch_record__collect_final_data and
+reading events using the htm_read_data function. However, the implemented
+code defines arch_perf_record__need_read and uses perf_evsel__read instead.
+Could the commit message be updated to match the actual implementation?
+
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 5e2265018826f..4d79662e88266 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -142,6 +142,7 @@ perf-util-y +=3D hisi-ptt.o
+>  perf-util-y +=3D hisi-ptt-decoder/
+>  perf-util-y +=3D s390-cpumsf.o
+>  perf-util-y +=3D powerpc-vpadtl.o
+> +perf-util-y +=3D powerpc-htm.o
+
+[Severity: High]
+Does unconditionally adding powerpc-htm.o here cause it to be compiled for
+all architectures? Since it defines arch_perf_record__need_read globally,
+this could override the weak symbol in builtin-record.c and incorrectly
+execute PowerPC-specific logic on other architectures like x86 or ARM.
+
+> diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
+> new file mode 100644
+> index 0000000000000..5043ff41a609e
+> --- /dev/null
+> +++ b/tools/perf/util/powerpc-htm.c
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * HTM support
+> + */
+> +
+> +#include "../../../util/record.h"
 
 [Severity: Low]
-This isn't a bug, but the commit message mentions introducing
-arch_record__collect_final_data, but the function added is actually named
-arch_perf_record__need_read.
-
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index e915390556752..a60bc039401a2 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -2425,6 +2425,34 @@ static unsigned long record__waking(struct record =
-*rec)
->  	return waking;
->  }
-> =20
-> +/*
-> + * Weak symbol - architecture can override to indicate if more
-> + * data needs to be collected before finishing output.
-> + *
-> + * Returns: 1 if more data exists, 0 if collection is complete
-> + */
-> +__weak int arch_perf_record__need_read(struct evlist *evlist __maybe_unu=
-sed)
-> +{
-> +	return 0;  /* Default: no arch-specific data to collect */
-> +}
-> +
-> +static void record__final_data(struct record *rec)
-> +{
-> +	/*
-> +	 * Collect any remaining architecture-specific data.
-> +	 * The arch code checks if more data exists, and we do the actual
-> +	 * reading here since we have access to record__mmap_read_all().
-> +	 */
-> +	while (arch_perf_record__need_read(rec->evlist)) {
-> +		if (record__mmap_read_all(rec, false) < 0)
-> +			break;
-
-[Severity: High]
-Does this create a busy-wait loop that pegs the CPU? This loop repeatedly c=
-alls
-record__mmap_read_all() without yielding or polling.
-
-Additionally, record__mmap_read_all() flushes mmap buffers based on the
-thread-local variable, so when running on the main thread it only flushes
-thread_data[0]. If the data to be consumed resides in a worker thread's buf=
-fer,
-could this starve the worker thread and cause an infinite loop?
-
-> +		/* Re-enable events for next batch */
-> +		evlist__enable(rec->evlist);
-
-[Severity: High]
-Is it intentional to re-enable the events here during the shutdown phase?
-
-Since this is called when done is true to drain the final buffers, calling
-evlist__enable() instructs the kernel to resume generating normal profiling
-samples. Could this continuously feed new samples into the buffers and trap
-the tool in an infinite loop while generating massive amounts of ioctls?
-
-> +	}
-> +
-> +	return;
-> +}
-> +
+Will this include path resolve correctly during the build? It appears to
+point outside the normal include directories for the perf tool, which might
+result in a compile-time failure.
 
 [ ... ]
-
-> @@ -2852,6 +2880,7 @@ static int __cmd_record(struct record *rec, int arg=
-c, const char **argv)
->  		 */
->  		if (done && !disabled && !target__none(&opts->target)) {
->  			trigger_off(&auxtrace_snapshot_trigger);
-> +			record__final_data(rec);
-
-[Severity: High]
-Could the early break condition earlier in the event loop cause this final =
-data
-collection to be silently bypassed?
-
-If the main thread's mmap buffers contain no new normal events during the
-iteration when the done flag is observed:
-
-__cmd_record() {
-    ...
-    if (hits =3D=3D thread->samples) {
-        if (done || draining)
-            break;
-    ...
-}
-
-It breaks out of the loop and skips over this block, randomly missing the
-final architecture-specific data.
-
-[Severity: High]
-Will this fail to collect final data when tracing child workloads?
-
-The condition !target__none(&opts->target) evaluates to false when a child
-workload is specified (e.g., perf record ./my_app). Because record__final_d=
-ata()
-is placed inside this pre-existing guard, won't it silently omit the data
-collection for normal child workloads?
-
->  			evlist__disable(rec->evlist);
->  			disabled =3D true;
->  		}
-> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-> index 93627c9a73387..21f51efd36fc7 100644
-> --- a/tools/perf/util/record.h
-> +++ b/tools/perf/util/record.h
-> @@ -8,6 +8,8 @@
->  #include <linux/stddef.h>
->  #include <linux/perf_event.h>
->  #include "util/target.h"
-> +#include "util/evlist.h"
-> +#include "util/util.h"
-
-[Severity: Low]
-Is it possible to use a forward declaration here instead of full header
-inclusions?
-
-Since arch_perf_record__need_read() only references struct evlist by pointe=
-r, a
-forward declaration like "struct evlist;" would avoid including these heavy
-headers, aligning with the perf subsystem guidelines.
-
-> =20
->  struct option;
-> =20
-> @@ -95,4 +97,6 @@ static inline bool record_opts__no_switch_events(const =
-struct record_opts *opts)
->  	return opts->record_switch_events_set && !opts->record_switch_events;
->  }
-> =20
-> +int arch_perf_record__need_read(struct evlist *evlist);
+> +int arch_perf_record__need_read(struct evlist *evlist)
+> +{
+> +	struct evsel *evsel;
+> +	int found_htm =3D 0;
 > +
->  #endif // _PERF_RECORD_H
+> +	/* there was an error during record__open */
+> +	if (!evlist)
+> +		return 0;
+> +
+> +	/* First, check if any HTM events exist */
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		if (strstr(evsel->name, "htm") !=3D NULL)
+
+[Severity: High]
+Can evsel->name be NULL here? For raw hardware events or events before
+parsing has dynamically assigned a name, passing a NULL pointer to strstr
+or strcmp will cause a segmentation fault.
+
+[ ... ]
+> +		for (int x =3D 0; x < xyarray__max_x(xy); x++) {
+> +			for (int y =3D 0; y < xyarray__max_y(xy); y++) {
+> +				struct perf_counts_values count;
+> +
+> +				if (!strcmp(evsel->name, "dummy:u"))
+> +					continue;
+> +
+> +				if (strstr(evsel->name, "htm")) {
+> +					perf_evsel__read(&evsel->core, x, y, &count);
+
+[Severity: High]
+Does this properly handle failures from perf_evsel__read()? It returns a
+negative error code on failure and leaves the count struct uninitialized or
+zeroed. If ignored, count.val could evaluate to 0 below, causing the trace
+data collection to terminate prematurely.
+
+> +					y =3D xyarray__max_y(xy);
+> +					x =3D xyarray__max_x(xy);
+
+[Severity: High]
+Are these assignments intentionally overwriting the loop iteration variable=
+s?
+This forcefully terminates both the inner and outer loops after checking
+only the very first CPU and thread index (0, 0), preventing the iteration
+from checking any of the remaining CPUs.
+
+> +				}
+> +				if (!count.val)
+> +					return 0;
+> +			}
+> +		}
+> +	}
+> +
+> +	return 1;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701084115.8038=
-3-1-atrajeev@linux.ibm.com?part=3D3
+3-1-atrajeev@linux.ibm.com?part=3D4
