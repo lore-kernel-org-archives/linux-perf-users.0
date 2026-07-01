@@ -1,162 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB37D372ED5
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2DA365A13
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:14:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782879133; cv=none; b=fU7o9FuwNV93pEJu8VpCo+vecCo/Q2HhLvQjc7mI3ME5J864raQAAjAqdhmLoiq1+0HMnBR43JStkQSOYUT4HgJuyGal8jCtgLJTx+DsKyklMK4Vs43XiTKwVMLU+z5oNH0dlPMenJRU8zR3umXz5a63VT3bGHFwtcA6dy+oh7U=
+	t=1782879292; cv=none; b=cphGevFWnd1ChSrkSLNfhkPEwjnytXppz//pTGHlnqyU5g/liFlWNLf7qstAGzcPnnFCqf/jFqGgtTnGRG8gldWj2W8KSdCJNlcnP0aWex1IifmX1t1GvQKT8RZ6+qpSNzR1hADiLFlevEoxJYC06EgY1oVh0o/nXcvvBIA6gDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782879133; c=relaxed/simple;
-	bh=MIaeCKbxU6WA6dTqOXn9oSSvmQ4dz7/1jxnRdMQbVFI=;
+	s=arc-20240116; t=1782879292; c=relaxed/simple;
+	bh=Df8NKL/TpJVdIp4feFFMtvuRA104Bis2ygZIs7pEmqI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=n9QnZztH0lD4go+pD7rZK4FkXqVFMbbadEsg8qZrp0K2NO7znnD37yFc6HJ6dvDLJEKmAenU8Dr5MyUVLQao6dikh+JawjqK2pRsroaaeJ0lmrCiosrrLqr4SHyCgqpBxUsWOtbv7B8b5wwzvNqlhonAOFI6sZHjZ2GDA9GkSEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xl/iqkD4; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=sOX9mvb16VV/FzZCLePaNs3eQqAx7QJOUo14jewuwTq+fPaTBu6czzKYKVS75Xt8YYSE08HIxAY2MceIra5na4JnV8wKoa7ct0UVAvUtGR86vr/nv9+El7Nk3pUTM7vYKBCQu01qET4j6ckFr2NhwEX4a6Fp+GVW58ay3nsSbMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArIgU3Ro; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xl/iqkD4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000111F000E9;
-	Wed,  1 Jul 2026 04:12:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArIgU3Ro"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091681F000E9;
+	Wed,  1 Jul 2026 04:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782879122;
-	bh=SBAYyDR8hH+hiP58yg/L6Kqyu414RZy/giMi8tuBHqE=;
+	s=k20260515; t=1782879285;
+	bh=7RLjhALOkip1lVVDaMmVUo0K7QOov84owyC2D9LuZRU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Xl/iqkD4oWnjse9iNzaxBIG64uUFKRsNz5rIwXfWf3cMu96Q29eoNduFyzJPJ5wws
-	 5fZFFnQ8p+NPSRH0UE5HRa7hWtsOauOtglWnvIjEfeojmiM7ugCNkx3BYU3PP6IOcI
-	 D+aKrrzGvtnzE7DNn4mrOSyYkFEN69tZ/cKyjCiR5FDks4EwS7j2JkQTpJatLGpVo+
-	 BokAAMbWd2Lt+bSZuF7mRDtsYTj5xA5TGmVMNgBO3suvVc/CtojBOlbvJ2Dq5lndBW
-	 uZPgLoW8j+EM6voAAuENkvxslrMAhH9FjipTdhe55END9cE2ge0nJQjwzqAIcXSt6b
-	 i3Jq+vufTS0tA==
+	b=ArIgU3Ro3x7B7cv4K7NJlWWcCDRwuVwjFCdK6FyF8QnIKMtUj/jM6vYKcv9rh6uiM
+	 b4c/wuZCmyefWdnrj/aJIgB+nYSanI4TP3vm23OxP/ocuu31XwvrBoxjIpCA6XeXxv
+	 CZ8d893jnsXj40HPeKA4tQqMHrrmn7wm1AuuON2iw5O+w3gIQJEon8zGPuBQ8FdHvf
+	 DQb+PjU92/IJWpCyG1qhMscWa9qZ+9ZimgXs8BJhsD4ESoYynYvGwEcJBj39N962XL
+	 a/cSIpOygija6yTubi6G5VbRxMwsUw5st+3EbcBijnvQrYAJYiQqQeoR3wOzIPcEyQ
+	 z4xsd69njDRpg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 13/21] perf annotate-arm64: Enable instruction
- tracking support
+Subject: Re: [PATCH v3 14/21] perf annotate-arm64: Support load instruction
+ tracking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701035355.752944-14-wutengda@huaweicloud.com>
+In-Reply-To: <20260701035355.752944-15-wutengda@huaweicloud.com>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-14-wutengda@huaweicloud.com>
+ <20260701035355.752944-15-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 04:12:01 +0000
-Message-Id: <20260701041202.000111F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 04:14:44 +0000
+Message-Id: <20260701041445.091681F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Missing function call register invalidation for ARM64 data type tr=
-acking.
-- [Medium] Failure to invalidate secondary destination registers (`reg2`) i=
-n multi-register instructions.
-
-Pre-existing issues:
-- [High] Missing `multi_regs` evaluation for register operands in load/stor=
-e instructions.
+- [Medium] Missing invalidation of the destination register on type resolut=
+ion failure during load instruction tracking.
+- [Medium] The data type profiling logic ignores the second destination reg=
+ister of load pair (ldp) instructions, leading to stale state retention.
 --
 
-commit a1f858405ccf3b88519235d7e08cb42762d969ac
+commit 579f01582f34ef50d993c4cb489f025353f8dbcc
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate-arm64: Enable instruction tracking support
+perf annotate-arm64: Support load instruction tracking
 
-Enable basic instruction tracking for arm64 by implementing three essential
-functions in the find_data_type_block() call path: arch_supports_insn_track=
-ing,
-init_type_state, and update_insn_state.
+This commit extends update_insn_state_arm64() to handle LDR instructions.
+It tracks register state changes when data is loaded from memory to registe=
+rs,
+supporting signed offset, pre-index, and post-index addressing modes.
 
 > diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
 util/annotate-arch/annotate-arm64.c
-> index 77b6f4841c849..48b1c94273eb6 100644
+> index 48b1c94273eb6..b48545f35620c 100644
 > --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 > +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
 
 [ ... ]
 
-> @@ -324,6 +326,31 @@ static int extract_op_location_arm64(const struct ar=
-ch *arch,
->  	return 0;
->  }
-> =20
-> +#ifdef HAVE_LIBDW_SUPPORT
-> +static void update_insn_state_arm64(struct type_state *state,
-> +				    struct data_loc_info *dloc, Dwarf_Die *cu_die __maybe_unused,
-> +				    struct disasm_line *dl)
+> +static void update_load_insn_state(struct type_state *state,
+> +				   struct disasm_line *dl,
+> +				   struct annotated_op_loc *src,
+> +				   struct annotated_op_loc *dst)
 > +{
-> +	struct annotated_insn_loc loc;
-> +	struct annotated_op_loc *dst =3D &loc.ops[INSN_OP_TARGET];
+> +	struct type_state_reg *tsr;
+> +	struct type_state_reg src_tsr;
+> +	Dwarf_Die type_die;
 > +	u32 insn_offset =3D dl->al.offset;
+> +	int reg_offset;
+> +	int sreg =3D src->reg1;
+> +	int dreg =3D dst->reg1;
+
+[Severity: Medium]
+Does this ignore the second destination register for load pair (ldp)
+instructions?
+
+If the instruction writes to two destination registers (e.g.,
+ldp x0, x1, [x2]), it seems dst->reg2 is not checked or invalidated here,
+which could leave it with stale type information. Does the parsing logic in
+arm64_ldst__parse() also need to set ops->target.multi_regs for this to be
+properly tracked?
+
 > +
-> +	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
-> +		return;
+> +	if (!has_reg_type(state, dreg))
+> +		goto out_adjust;
 > +
-
-[Severity: High]
-Does this function miss a check for function calls?
-
-When an instruction is a function call (e.g., bl or blr), this code does not
-check ins__is_call(&dl->ins). As a result, it fails to invalidate the
-caller-saved registers (x0-x17) and update the return type in x0.
-
-While init_type_state() correctly initializes the caller_saved flags for
-these registers, won't omitting the invalidation here cause subsequent
-accesses to inherit incorrect type states across function calls?
-
-> +	/*
-> +	 * For unsupported instructions with a destination register, invalidate
-> +	 * the destination register itself to prevent incorrect type propagatio=
-n.
-> +	 */
-> +	if (has_reg_type(state, dst->reg1)) {
-> +		pr_debug_dtp("%s [%x] invalidate reg%d\n",
-> +			     dl->ins.name, insn_offset, dst->reg1);
-> +		invalidate_reg_state(&state->regs[dst->reg1]);
+> +	tsr =3D &state->regs[dreg];
+> +	tsr->copied_from =3D -1;
+> +
+> +retry:
+> +	if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
+> +		invalidate_reg_state(tsr);
 > +		return;
+> +	}
+> +
+> +	src_tsr =3D state->regs[sreg];
+> +	reg_offset =3D get_reg_index_offset(src);
+> +
+> +	/* Dereference the pointer if it has one */
+> +	if (src_tsr.kind =3D=3D TSR_KIND_TYPE &&
+> +	    die_deref_ptr_type(&src_tsr.type,
+> +			       src_tsr.offset + reg_offset, &type_die)) {
+> +		tsr->type =3D type_die;
+> +		tsr->kind =3D TSR_KIND_TYPE;
+> +		tsr->offset =3D 0;
+> +		tsr->ok =3D true;
+> +
+> +		if (src->multi_regs) {
+> +			pr_debug_dtp("ldr [%x] %#x(reg%d, reg%d) -> reg%d",
+> +				     insn_offset, reg_offset, src->reg1,
+> +				     src->reg2, dreg);
+> +		} else {
+> +			pr_debug_dtp("ldr [%x] %#x(reg%d) -> reg%d",
+> +				     insn_offset, reg_offset, sreg, dreg);
+> +		}
+> +		pr_debug_type_name(&tsr->type, tsr->kind);
+> +	}
+> +	/* Or try another register if any */
+> +	else if (src->multi_regs && src->reg1 !=3D src->reg2 && sreg !=3D src->=
+reg2) {
+> +		sreg =3D src->reg2;
+> +		goto retry;
 > +	}
 
 [Severity: Medium]
-Does this fallback logic need to handle secondary destination registers?
+If the type resolution fails and execution bypasses both of these if/else
+blocks, it falls through to out_adjust.
 
-When an unsupported instruction modifies multiple registers (e.g., casp),
-this only checks and invalidates the primary destination register
-(dst->reg1).=20
+Should the destination register be invalidated here?
 
-If the instruction has a secondary register (where dst->multi_regs is
-true), should we also invalidate dst->reg2 so it doesn't retain an
-incorrect type state?
+It looks like tsr->ok could remain true from its previous state, leaving it
+with incorrect type information.
 
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential problem in
-arm64_ldst__parse() regarding multi-register instructions:
-
-tools/perf/util/annotate-arch/annotate-arm64.c:arm64_ldst__parse() {
-...
-	if (arm64__insn_is_source_first(dl)) {
-		ops->source.raw =3D left;
-		ops->source.mem_ref =3D false;
-		ops->target.raw =3D right;
-		ops->target.mem_ref =3D true;
-		ops->target.multi_regs =3D arm64__check_multi_regs(arch, ops->target.raw);
-	}
-...
-}
-
-Here, arm64__check_multi_regs() is only applied to the memory operand side
-(ops->target in this case). The register operand side is left with
-multi_regs =3D false.=20
-
-Because of this, extract_op_location_arm64() fails to parse the second
-register (reg2) for instructions like ldp and stp, leaving it as -1. Won't
-this cause the data type tracking logic to silently miss type updates and
-queries for the secondary register?
-
+> +
+> +out_adjust:
+> +	adjust_reg_index_state(state, src, "ldr", insn_offset);
 > +}
-> +#endif
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701035355.7529=
-44-1-wutengda@huaweicloud.com?part=3D13
+44-1-wutengda@huaweicloud.com?part=3D14
