@@ -1,36 +1,36 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B693F1672
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B6F3F075E;
+	Wed,  1 Jul 2026 08:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782895701; cv=none; b=HxSUVpQvJDt3F7yDIUTpcKMBovUZgRKK0V6NPcJiP7ryp69JqREG78SsQl9V2odYn9YOPWQLBDNZl6i8N8EcxC3y+Kz2vxNK/oNxfPpkN7OWKdp4sIPGj5XQEhTmuG9zxvseJQi7j6kO/gsIO7PHPP1A+aafu5GJOdjjwhSdrV8=
+	t=1782895706; cv=none; b=gNk5oAKNuUR/gOZ4sLnUsnydaVrHREJ70hVqDX7IuVKzoHIhaMaIouAwzcmWn0vQOh5qJhEYdJcEBfbsdxBLIZjvIT2oybcxkjsDom2LfHnz7zn9uVowpIc50kyXd6YICUoXbogvfgorWO08WO9Cwrr+mVue762qlNOe8QaTNq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782895701; c=relaxed/simple;
-	bh=CrawCWTeE/Q9CTbk39eP0maK8Ji7gPI1W3QcvTx6p2A=;
+	s=arc-20240116; t=1782895706; c=relaxed/simple;
+	bh=JLLXVjVqnLz32wfza32XxNG+wJtE/gFupupKjSwZ/Eo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mXapWdtV18ou9UcJyQX6NvHNHV32x/NOFU9e60fu4gTbXv1iWTkIx9tjDA7Z8oNjvN4/TSAEP3RcR+lt9CvGl1sGqy+O4dMLw6v7y7/TUMJRK0kDRbPhPQyzpQ7b0NVuL1k10iFI+ZSYqH1IN9XdIZbTJb2CmpofYl8NxXPAgeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HAtekGoX; arc=none smtp.client-ip=95.215.58.174
+	 In-Reply-To:To:Cc; b=OBP26QxYg2m8iGfhZ2N3PUuw+kY1uYwWsMbqQ1SnOl7HnpefbR7PRn5fVXEKeMtfRPFoITNai1ooT33YGM58NpITrOIC7GkQo3QaLis2Owgf5yNK4AkLa3MXFZX3VulXG6lbRmR1zlAtWeSvm+Yb9xFkkdZoj/kh1imMtc1OjJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jT4yqzK8; arc=none smtp.client-ip=95.215.58.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HAtekGoX"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jT4yqzK8"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782895697;
+	t=1782895703;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=EtqTOgDlLTl3/J04XYK88Q4DQK5pQiwKnJeyPQRo3/Q=;
-	b=HAtekGoXjhlhMx5H1+9v5OlzPy9w6d4f/aM2YI783FKHavo9IdCabyZLfd4Fdnh6XrZu4j
-	NPBlB34AZGc1mlpI2kIetNNnmiDgnXY3DKEKwJhXSpuZzvcx2QdYgzpcqfVQRAFd+k6pkv
-	CCupG0gGsb34+h2zYqJpR5KNb9PuhNs=
+	bh=+BZzbITC0E4sK8QIC43hKZGtTowm2ni8ynKK2Oo4rf0=;
+	b=jT4yqzK8h5SQM2MrxoYQcWfzv7NkZ8DTVFazZyRncW6Dhye6jut6jLOPubxu/Vp0ncTSZ7
+	8J/8GHrnabvVZ1665K57gB+8QOFc5rLjVgX06yoigEZq7Act35Y27NDMZRNEag7uLyrDGG
+	fR1b5GFTCxr/hU1DAajON0ngtqvOMQY=
 From: Atish Patra <atish.patra@linux.dev>
-Date: Wed, 01 Jul 2026 01:47:00 -0700
-Subject: [PATCH v8 12/22] RISC-V: perf: Modify the counter discovery
- mechanism
+Date: Wed, 01 Jul 2026 01:47:01 -0700
+Subject: [PATCH v8 13/22] RISC-V: perf: Add a mechanism to defined legacy
+ event encoding
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,7 +39,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260701-counter_delegation-v8-12-7909f863a645@meta.com>
+Message-Id: <20260701-counter_delegation-v8-13-7909f863a645@meta.com>
 References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
 In-Reply-To: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
 To: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
@@ -56,247 +56,115 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Atish Patra <atishp@rivosinc.com>
 
-If both counter delegation and SBI PMU is present, the counter
-delegation will be used for hardware pmu counters while the SBI PMU
-will be used for firmware counters. Thus, the driver has to probe
-the counters info via SBI PMU to distinguish the firmware counters.
+RISC-V ISA doesn't define any standard event encodings or specify
+any event to counter mapping. Thus, event encoding information
+and corresponding counter mapping fot those events needs to be
+provided in the driver for each vendor.
 
-The hybrid scheme also requires improvements of the informational
-logging messages to indicate the user about underlying interface
-used for each use case.
+Add a framework to support that. The individual platform events
+will be added later.
 
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- drivers/perf/riscv_pmu_sbi.c | 139 ++++++++++++++++++++++++++++++++-----------
- 1 file changed, 104 insertions(+), 35 deletions(-)
+ drivers/perf/riscv_pmu_sbi.c | 70 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 69 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 74d934238821..c20f1e33c65d 100644
+index c20f1e33c65d..2568c6808f5d 100644
 --- a/drivers/perf/riscv_pmu_sbi.c
 +++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -67,6 +67,20 @@ static bool sbi_v3_available;
- static DEFINE_STATIC_KEY_FALSE(sbi_pmu_snapshot_available);
- #define sbi_pmu_snapshot_available() \
- 	static_branch_unlikely(&sbi_pmu_snapshot_available)
-+static DEFINE_STATIC_KEY_FALSE(riscv_pmu_sbi_available);
-+static DEFINE_STATIC_KEY_FALSE(riscv_pmu_cdeleg_available);
-+
-+/* Avoid unnecessary code patching in the one time booting path*/
-+#define riscv_pmu_cdeleg_available_boot() \
-+	static_key_enabled(&riscv_pmu_cdeleg_available)
-+#define riscv_pmu_sbi_available_boot() \
-+	static_key_enabled(&riscv_pmu_sbi_available)
-+
-+/* Perform a runtime code patching with static key */
-+#define riscv_pmu_cdeleg_available() \
-+	static_branch_unlikely(&riscv_pmu_cdeleg_available)
-+#define riscv_pmu_sbi_available() \
-+		static_branch_likely(&riscv_pmu_sbi_available)
+@@ -10,6 +10,7 @@
  
- static struct attribute *riscv_arch_formats_attr[] = {
- 	&format_attr_event.attr,
-@@ -89,7 +103,8 @@ static int sysctl_perf_user_access __read_mostly = SYSCTL_USER_ACCESS;
+ #define pr_fmt(fmt) "riscv-pmu-sbi: " fmt
  
- /*
-  * This structure is SBI specific but counter delegation also require counter
-- * width, csr mapping. Reuse it for now.
-+ * width, csr mapping. Reuse it for now we can have firmware counters for
-+ * platfroms with counter delegation support.
-  * RISC-V doesn't have heterogeneous harts yet. This need to be part of
-  * per_cpu in case of harts with different pmu counters
-  */
-@@ -101,6 +116,8 @@ static unsigned int riscv_pmu_irq;
- 
- /* Cache the available counters in a bitmask */
- static unsigned long cmask;
-+/* Cache the available firmware counters in another bitmask */
-+static unsigned long firmware_cmask;
- 
- static int sbi_pmu_event_find_cache(u64 config);
- struct sbi_pmu_event_data {
-@@ -868,34 +885,38 @@ static int rvpmu_sbi_find_num_ctrs(void)
- 		return sbi_err_map_linux_errno(ret.error);
++#include <linux/limits.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/perf/riscv_pmu.h>
+ #include <linux/platform_device.h>
+@@ -379,6 +380,71 @@ static int pmu_sbi_check_event_info(void)
+ 	return result;
  }
  
--static int rvpmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
-+static u32 rvpmu_deleg_find_ctrs(void)
-+{
-+	/* TODO */
-+	return 0;
++/*
++ * Vendor specific PMU events.
++ */
++struct riscv_pmu_event {
++	u64 event_id;
++	u32 counter_mask;
++};
++
++#define HW_OP_UNSUPPORTED		U64_MAX
++#define CACHE_OP_UNSUPPORTED		U64_MAX
++
++#define PERF_MAP_ALL_UNSUPPORTED					\
++	[0 ... PERF_COUNT_HW_MAX - 1] = {HW_OP_UNSUPPORTED, 0x0}
++
++#define PERF_CACHE_MAP_ALL_UNSUPPORTED					\
++[0 ... PERF_COUNT_HW_CACHE_MAX - 1] = {					\
++	[0 ... PERF_COUNT_HW_CACHE_OP_MAX - 1] = {			\
++		[0 ... PERF_COUNT_HW_CACHE_RESULT_MAX - 1] = {		\
++			CACHE_OP_UNSUPPORTED, 0x0			\
++		},							\
++	},								\
 +}
 +
-+static int rvpmu_sbi_get_ctrinfo(u32 nsbi_ctr, u32 *num_fw_ctr, u32 *num_hw_ctr)
++struct riscv_vendor_pmu_events {
++	unsigned long vendorid;
++	unsigned long archid;
++	unsigned long implid;
++	const struct riscv_pmu_event *hw_event_map;
++	const struct riscv_pmu_event (*cache_event_map)[PERF_COUNT_HW_CACHE_OP_MAX]
++						       [PERF_COUNT_HW_CACHE_RESULT_MAX];
++};
++
++#define RISCV_VENDOR_PMU_EVENTS(_vendorid, _archid, _implid, _hw_event_map, _cache_event_map) \
++	{ .vendorid = _vendorid, .archid = _archid, .implid = _implid, \
++	  .hw_event_map = _hw_event_map, .cache_event_map = _cache_event_map },
++
++static struct riscv_vendor_pmu_events pmu_vendor_events_table[] = {
++};
++
++static const struct riscv_pmu_event *current_pmu_hw_event_map;
++static const struct riscv_pmu_event (*current_pmu_cache_event_map)[PERF_COUNT_HW_CACHE_OP_MAX]
++							   [PERF_COUNT_HW_CACHE_RESULT_MAX];
++
++static void __init rvpmu_vendor_register_events(void)
++{
++	int cpu = raw_smp_processor_id();
++	unsigned long vendor_id = riscv_cached_mvendorid(cpu);
++	unsigned long impl_id = riscv_cached_mimpid(cpu);
++	unsigned long arch_id = riscv_cached_marchid(cpu);
++
++	for (int i = 0; i < ARRAY_SIZE(pmu_vendor_events_table); i++) {
++		if (pmu_vendor_events_table[i].vendorid == vendor_id &&
++		    pmu_vendor_events_table[i].implid == impl_id &&
++		    pmu_vendor_events_table[i].archid == arch_id) {
++			current_pmu_hw_event_map = pmu_vendor_events_table[i].hw_event_map;
++			current_pmu_cache_event_map = pmu_vendor_events_table[i].cache_event_map;
++			break;
++		}
++	}
++
++	if (!current_pmu_hw_event_map || !current_pmu_cache_event_map) {
++		pr_info("No default PMU events found\n");
++	}
++}
++
+ static void rvpmu_sbi_check_event(struct sbi_pmu_event_data *edata)
  {
  	struct sbiret ret;
--	int i, num_hw_ctr = 0, num_fw_ctr = 0;
-+	int i;
- 	union sbi_pmu_ctr_info cinfo;
- 
--	pmu_ctr_list = kzalloc_objs(*pmu_ctr_list, nctr);
--	if (!pmu_ctr_list)
--		return -ENOMEM;
--
--	for (i = 0; i < nctr; i++) {
-+	for (i = 0; i < nsbi_ctr; i++) {
- 		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_GET_INFO, i, 0, 0, 0, 0, 0);
- 		if (ret.error)
- 			/* The logical counter ids are not expected to be contiguous */
- 			continue;
- 
--		*mask |= BIT(i);
--
- 		cinfo.value = ret.value;
--		if (cinfo.type == SBI_PMU_CTR_TYPE_FW)
--			num_fw_ctr++;
--		else
--			num_hw_ctr++;
--		pmu_ctr_list[i].value = cinfo.value;
-+		if (cinfo.type == SBI_PMU_CTR_TYPE_FW) {
-+			/* Track firmware counters in a different mask */
-+			firmware_cmask |= BIT(i);
-+			pmu_ctr_list[i].value = cinfo.value;
-+			*num_fw_ctr = *num_fw_ctr + 1;
-+		} else if (cinfo.type == SBI_PMU_CTR_TYPE_HW &&
-+			   !riscv_pmu_cdeleg_available_boot()) {
-+			*num_hw_ctr = *num_hw_ctr + 1;
-+			cmask |= BIT(i);
-+			pmu_ctr_list[i].value = cinfo.value;
-+		}
- 	}
- 
--	pr_info("%d firmware and %d hardware counters\n", num_fw_ctr, num_hw_ctr);
--
- 	return 0;
- }
- 
-@@ -906,7 +927,7 @@ static inline void rvpmu_sbi_stop_all(struct riscv_pmu *pmu)
- 	 * which may include counters that are not enabled yet.
+@@ -1670,8 +1736,10 @@ static int __init rvpmu_devinit(void)
  	 */
- 	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
--		  0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-+		  0, pmu->cmask | firmware_cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
- }
- 
- static inline void rvpmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
-@@ -1159,16 +1180,48 @@ static void rvpmu_ctr_stop(struct perf_event *event, unsigned long flag)
- 	/* TODO: Counter delegation implementation */
- }
- 
--static int rvpmu_find_num_ctrs(void)
-+static int rvpmu_find_ctrs(void)
- {
--	return rvpmu_sbi_find_num_ctrs();
--	/* TODO: Counter delegation implementation */
--}
-+	int num_sbi_counters = 0;
-+	u32 num_deleg_counters = 0;
-+	u32 num_hw_ctr = 0, num_fw_ctr = 0, num_ctr = 0;
-+	/*
-+	 * We don't know how many firmware counters are available. Just allocate
-+	 * for maximum counters the driver can support. The default is 64 anyways.
-+	 */
-+	pmu_ctr_list = kcalloc(RISCV_MAX_COUNTERS, sizeof(*pmu_ctr_list),
-+			       GFP_KERNEL);
-+	if (!pmu_ctr_list)
-+		return -ENOMEM;
- 
--static int rvpmu_get_ctrinfo(int nctr, unsigned long *mask)
--{
--	return rvpmu_sbi_get_ctrinfo(nctr, mask);
--	/* TODO: Counter delegation implementation */
-+	if (riscv_pmu_cdeleg_available_boot())
-+		num_deleg_counters = rvpmu_deleg_find_ctrs();
-+
-+	/* This is required for firmware counters even if the above is true */
-+	if (riscv_pmu_sbi_available_boot()) {
-+		num_sbi_counters = rvpmu_sbi_find_num_ctrs();
-+		if (num_sbi_counters < 0) {
-+			kfree(pmu_ctr_list);
-+			pmu_ctr_list = NULL;
-+			return num_sbi_counters;
-+		}
-+		if (num_sbi_counters > RISCV_MAX_COUNTERS)
-+			num_sbi_counters = RISCV_MAX_COUNTERS;
+ 	if (riscv_isa_extension_available(NULL, SSCCFG) &&
+ 	    riscv_isa_extension_available(NULL, SMCDELEG) &&
+-	    riscv_isa_extension_available(NULL, SSCSRIND))
++	    riscv_isa_extension_available(NULL, SSCSRIND)) {
+ 		static_branch_enable(&riscv_pmu_cdeleg_available);
++		rvpmu_vendor_register_events();
 +	}
-+
-+	/* cache all the information about counters now */
-+	if (riscv_pmu_sbi_available_boot())
-+		rvpmu_sbi_get_ctrinfo(num_sbi_counters, &num_fw_ctr, &num_hw_ctr);
-+
-+	if (riscv_pmu_cdeleg_available_boot()) {
-+		pr_info("%u firmware and %u hardware counters\n", num_fw_ctr, num_deleg_counters);
-+		num_ctr = num_fw_ctr + num_deleg_counters;
-+	} else {
-+		pr_info("%u firmware and %u hardware counters\n", num_fw_ctr, num_hw_ctr);
-+		num_ctr = num_sbi_counters;
-+	}
-+
-+	return num_ctr;
- }
  
- static int rvpmu_event_map(struct perf_event *event, u64 *econfig)
-@@ -1478,12 +1531,21 @@ static int rvpmu_device_probe(struct platform_device *pdev)
- 	int num_counters;
- 	bool irq_requested = false;
- 
--	pr_info("SBI PMU extension is available\n");
-+	if (riscv_pmu_cdeleg_available_boot()) {
-+		pr_info("hpmcounters will use the counter delegation ISA extension\n");
-+		if (riscv_pmu_sbi_available_boot())
-+			pr_info("Firmware counters will use SBI PMU extension\n");
-+		else
-+			pr_info("Firmware counters will not be available as SBI PMU extension is not present\n");
-+	} else if (riscv_pmu_sbi_available_boot()) {
-+		pr_info("Both hpmcounters and firmware counters will use SBI PMU extension\n");
-+	}
-+
- 	pmu = riscv_pmu_alloc();
- 	if (!pmu)
- 		return -ENOMEM;
- 
--	num_counters = rvpmu_find_num_ctrs();
-+	num_counters = rvpmu_find_ctrs();
- 	if (num_counters < 0) {
- 		pr_err("SBI PMU extension doesn't provide any counters\n");
- 		goto out_free;
-@@ -1495,9 +1557,6 @@ static int rvpmu_device_probe(struct platform_device *pdev)
- 		pr_info("SBI returned more than maximum number of counters. Limiting the number of counters to %d\n", num_counters);
- 	}
- 
--	/* cache all the information about counters now */
--	if (rvpmu_get_ctrinfo(num_counters, &cmask))
--		goto out_free;
- 
- 	ret = rvpmu_setup_irqs(pmu, pdev);
- 	if (ret < 0) {
-@@ -1599,13 +1658,23 @@ static int __init rvpmu_devinit(void)
- 	int ret;
- 	struct platform_device *pdev;
- 
--	if (sbi_spec_version < sbi_mk_version(0, 3) ||
--	    !sbi_probe_extension(SBI_EXT_PMU)) {
--		return 0;
--	}
-+	if (sbi_spec_version >= sbi_mk_version(0, 3) &&
-+	    sbi_probe_extension(SBI_EXT_PMU))
-+		static_branch_enable(&riscv_pmu_sbi_available);
- 
- 	if (sbi_spec_version >= sbi_mk_version(2, 0))
- 		sbi_v2_available = true;
-+	/*
-+	 * We need all three extensions to be present to access the counters
-+	 * in S-mode via Supervisor Counter delegation.
-+	 */
-+	if (riscv_isa_extension_available(NULL, SSCCFG) &&
-+	    riscv_isa_extension_available(NULL, SMCDELEG) &&
-+	    riscv_isa_extension_available(NULL, SSCSRIND))
-+		static_branch_enable(&riscv_pmu_cdeleg_available);
-+
-+	if (!(riscv_pmu_sbi_available_boot() || riscv_pmu_cdeleg_available_boot()))
-+		return 0;
- 
- 	if (sbi_spec_version >= sbi_mk_version(3, 0))
- 		sbi_v3_available = true;
+ 	if (!(riscv_pmu_sbi_available_boot() || riscv_pmu_cdeleg_available_boot()))
+ 		return 0;
 
 -- 
 2.53.0-Meta
