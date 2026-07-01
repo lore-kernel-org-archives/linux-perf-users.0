@@ -1,179 +1,203 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7890839FCCC
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C7B3F077C
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:55:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782896114; cv=none; b=DVNhhWYS4XHsMURYX9J1kvyrrd/nsXtCk34ww0aEwXbj8PWBuSTydDuhOfdGZCA0+Zvf1h8tuHSlqXmivSDVn74y2z6mNFt7wZD5i0Zw2stTuKCr+w3LJaTGAHzpxvEJFkC3oWqgz2FnOm2B01UNYICnd9bPyo6L1E+PNwi/2nM=
+	t=1782896152; cv=none; b=UtnFDXVtFUQs4HScvThxtLzWBOxzZX6GdrcnYA1X4sBZDCfNCvcLU22rGjmisNmABgruzS0h8uP44THdsmmj5+yeao8qExBWWkk2ICUioWMtcSxgB/XVyCCzvMQM9LLiwUlzobyJjlQYbIaBBf05wCv+YrUs5aD0oMAjIysDIvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782896114; c=relaxed/simple;
-	bh=r8B799Yxe+ykJ83FrUXeyL1bxtGWjfV5wtCsJaTOU10=;
+	s=arc-20240116; t=1782896152; c=relaxed/simple;
+	bh=4kNWGC/CQkMBf5uas5uoaqDR61Vhp04gK3hMhwr0Oq4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IzUCyDn1Bb1RJsK5AgMQH7i2+ftX8PkdMLx0uICp5oJEGulElx8hAvMlRfBmTlgNlAHn6f0L1I2hJ1eEK3HRphNK+n3+eL7dl6Ckp3D4V/DMkX6D3N49W8m+w8xM1L/UVKEzGe+MEwYaN/dqwyn8soSY2CKerES63rhRNCWn67A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1eRhhTZ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Kc6ltiIJzmeK2NIOH3v2bC+0qw1z3Rvm7eLos9UuiaP5crZeZa3F6csbvGZ9FFRuPltZ/bTy595+J5OZZ5K4I9Fp2Mcwl71koF5pvEBQJ3+6XJ36JH7uVkxFJsrB1oirKo4uLEhgrHUrUU2DhYPWP67/VBmEfsxcfygOkyUZbS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMlIzxlS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1eRhhTZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C3A1F000E9;
-	Wed,  1 Jul 2026 08:55:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMlIzxlS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3F01F00A3A;
+	Wed,  1 Jul 2026 08:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782896113;
-	bh=9cWS/9rBJ7vrOmCx8NlH1R19cjCBRrY6GWR5BqIneU4=;
+	s=k20260515; t=1782896150;
+	bh=Vinpt7MeoNdX7tgMcW75Vc8X+KPmVlWYqfHgUh9nSro=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=c1eRhhTZQ1IiEC6zDKdE7vwzP7ovtdbKuZKnQO4W5NNsuochmiv19v3Py5cJEYEhI
-	 fr8TnSHg1vD7pX/WO87C3EUBIBlaByVyrHumfWJJn26RLAa9NEmzNK9yZr81/vixjZ
-	 vwb0HDd3v83+N74aGwnFBcGSdYRazGG+cIskdhckmYlECyG3seXaLgIjJ4XVqiwisu
-	 Fwq8RL16EMV2pLtGQx6yrd68WzBtsRUvb9hlqztgXrxqFkCl9HehM8Rc8Yzqsx5KSn
-	 oar0twDUMgN6oyzXVnQYVeEXvjyQNvfLqjpu7XxOzg3PSoUg2naqlNQJhzZv3RAEPy
-	 ex70xAdG72Hxg==
+	b=GMlIzxlSXx6SkJmaUkdMiGBBY1haNebW3KaVjiqMZ1Rebs6VvIF77bCtRn+WciQXv
+	 JJvpk9vZFH6bIlsws335RMJfNZDbyzHBEnTnzJoiIOEnJJEZCHF8eEBzZFWTWOFyKA
+	 88ZCFE46baQNM9BNS6jYV9aPjHcJP/JcW9h2/aYv3skDyg8mt6b3iFpoojMEYQX+PH
+	 jv5ZRyN0CdJXtvjCItlIQ5hSNkhiF4oAVqHL9J+L1PXBOMCillztNsu08GXYRcTg/9
+	 bktFor+BLbzi47XGCFQ3X0VjxUKtypxKTddJQD7J7b+VhoBRLxiwxw9Xq8u3GDlxPo
+	 9KvlMOgKizU/w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/9] tools/perf: Add powerpc callback support for
- arch_record__collect_final_data
+Subject: Re: [PATCH 2/9] tools/perf: Add CONFIG_AUXTRACE support for HTM pmu
+ on powerpc
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701084115.80383-5-atrajeev@linux.ibm.com>
+In-Reply-To: <20260701084115.80383-3-atrajeev@linux.ibm.com>
 References: <20260701084115.80383-1-atrajeev@linux.ibm.com>
- <20260701084115.80383-5-atrajeev@linux.ibm.com>
+ <20260701084115.80383-3-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 08:55:12 +0000
-Message-Id: <20260701085512.E9C3A1F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 08:55:48 +0000
+Message-Id: <20260701085549.4A3F01F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Direct access to `evsel->name` without NULL checks causes a segmen=
-tation fault.
-- [High] Premature loop termination in `arch_perf_record__need_read` due to=
- artificial overwriting of loop variables.
-- [High] Unconditional compilation of PowerPC-specific execution logic glob=
-ally overrides a cross-platform weak symbol.
-- [High] The negative error return value from `perf_evsel__read()` is ignor=
-ed, leading to premature termination of trace data collection.
-- [Medium] The functions and callbacks described in the commit message are =
-completely missing from the implemented code.
-- [Low] Malformed include path directive `../../../util/record.h` causes a =
-build failure.
+
+New issues:
+- [Medium] Missing explicit inclusions of POSIX standard headers `<stdlib.h=
+>` and `<limits.h>` for standard libc symbols.
+- [Medium] Memory allocation failure during HTM auxtrace initialization is =
+silently dropped, causing a broken recording state.
+
+Pre-existing issues:
+- [High] Directly accessing `pos->name` with `strstarts()` causes a segment=
+ation fault when the event name is NULL.
 --
 
-commit dee0b2f32508f51e2b57675240fda0c4192160d5
+commit d4675d2351298802a38f0a4941c6bb4d86a4ed1f
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-tools/perf: Add powerpc callback support for arch_record__collect_final_data
+tools/perf: Add CONFIG_AUXTRACE support for HTM pmu on powerpc
 
-This patch adds an architecture-specific hook to collect additional HTM tra=
-ce
-data before closing events. It reads the HTM event counts to determine if
-more data is available to be written to the perf data file.
+The powerpc PMU collecting Hardware Trace Macro (HTM) entries makes use of
+AUX support in perf infrastructure. The PMU driver has the functionality
+to collect trace entries in the aux buffer. On the tools side, this data
+is made available as PERF_RECORD_AUXTRACE records. This record is
+generated by "perf record" command. To enable the creation of
+PERF_RECORD_AUXTRACE, add functions to initialize auxtrace records ie
+"htm_recording_init()". Fill in fields for other callbacks like
+info_priv_size, info_fill, free, recording options etc. Add header file
+to define htm pmu specific details.
 
->     Add arch_record__collect_final_data to collect additional
->     data before closing the event. Define the callback in
->     util/powerpc-htm.c
-[ ... ]
->     the event using evlist__enable after reading event using
->     htm_read_data function. The perf_evsel__read returns zero, when
-
-[Severity: Medium]
-The commit message mentions adding arch_record__collect_final_data and
-reading events using the htm_read_data function. However, the implemented
-code defines arch_perf_record__need_read and uses perf_evsel__read instead.
-Could the commit message be updated to match the actual implementation?
-
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 5e2265018826f..4d79662e88266 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -142,6 +142,7 @@ perf-util-y +=3D hisi-ptt.o
->  perf-util-y +=3D hisi-ptt-decoder/
->  perf-util-y +=3D s390-cpumsf.o
->  perf-util-y +=3D powerpc-vpadtl.o
-> +perf-util-y +=3D powerpc-htm.o
+> diff --git a/tools/perf/arch/powerpc/util/auxtrace.c b/tools/perf/arch/po=
+werpc/util/auxtrace.c
+> index 0053526329e0e..ec84f8876a4ad 100644
+> --- a/tools/perf/arch/powerpc/util/auxtrace.c
+> +++ b/tools/perf/arch/powerpc/util/auxtrace.c
+> @@ -31,13 +33,19 @@ struct auxtrace_record *auxtrace_record__init(struct =
+evlist *evlist,
+>  			found_vpa_dtl =3D 1;
+>  			pos->needs_auxtrace_mmap =3D true;
+>  			break;
+> +		} else if (strstarts(pos->name, "htm")) {
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 [Severity: High]
-Does unconditionally adding powerpc-htm.o here cause it to be compiled for
-all architectures? Since it defines arch_perf_record__need_read globally,
-this could override the weak symbol in builtin-record.c and incorrectly
-execute PowerPC-specific logic on other architectures like x86 or ARM.
+This isn't a bug introduced by this patch, but does accessing pos->name
+directly cause a segmentation fault if the event name is NULL?
 
-> diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
+If a standard hardware event is parsed without an explicit name (like
+"perf record -e cycles"), the name remains NULL until it is lazily generated
+via evsel__name(). Evaluating strncmp(NULL, "htm", 3) inside strstarts()
+would crash.
+
+Since this patch duplicates this pattern here and in htm_recording_options(=
+),
+should we use evsel__name() or check for NULL first?
+
+> +			found_htm =3D 1;
+> +			pos->needs_auxtrace_mmap =3D true;
+> +			break;
+>  		}
+>  	}
+> =20
+>  	if (found_vpa_dtl)
+>  		return vpa_dtl_recording_init(pos);
+> +	else if (found_htm)
+> +		return htm_recording_init(pos);
+
+[Severity: Medium]
+If htm_recording_init() fails to allocate memory, it returns NULL. Since we
+don't update the *err parameter before returning, does this propagate a fal=
+se
+success to the caller?
+
+If *err remains 0, builtin-record.c might assume auxtrace is simply not
+required and continue recording, silently dropping the HTM trace data inste=
+ad
+of aborting with -ENOMEM.
+
+>  	else {
+> -		*err =3D -EINVAL;
+> +		*err =3D 0;
+>  		return NULL;
+>  	}
+>  }
+
+> diff --git a/tools/perf/arch/powerpc/util/htm.c b/tools/perf/arch/powerpc=
+/util/htm.c
 > new file mode 100644
-> index 0000000000000..5043ff41a609e
+> index 0000000000000..cc733f45ac9b0
 > --- /dev/null
-> +++ b/tools/perf/util/powerpc-htm.c
-> @@ -0,0 +1,74 @@
+> +++ b/tools/perf/arch/powerpc/util/htm.c
+> @@ -0,0 +1,113 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
 > + * HTM support
 > + */
 > +
-> +#include "../../../util/record.h"
+> +#include <linux/kernel.h>
+> +#include <linux/types.h>
+> +#include <linux/bitops.h>
+> +#include <linux/log2.h>
+> +#include <linux/string.h>
+> +#include <time.h>
+> +
+> +#include "../../util/cpumap.h"
+> +#include "../../util/evsel.h"
+> +#include "../../util/evlist.h"
+> +#include "../../util/session.h"
+> +#include "../../util/util.h"
+> +#include "../../util/pmu.h"
+> +#include "../../util/debug.h"
+> +#include "../../util/auxtrace.h"
+> +#include "../../util/powerpc-htm.h"
+> +#include "../../util/record.h"
+> +#include <internal/lib.h> // page_size
+> +#include <errno.h>
 
-[Severity: Low]
-Will this include path resolve correctly during the build? It appears to
-point outside the normal include directories for the perf tool, which might
-result in a compile-time failure.
+[Severity: Medium]
+Are we missing the explicit inclusions of <stdlib.h> and <limits.h> here?
+
+This file uses UINT_MAX in htm_recording_options() and free() in htm_free().
+Without directly including <limits.h> and <stdlib.h>, building the perf too=
+ls
+with musl libc might fail due to missing declarations.
 
 [ ... ]
-> +int arch_perf_record__need_read(struct evlist *evlist)
-> +{
-> +	struct evsel *evsel;
-> +	int found_htm =3D 0;
+
+> +	/*
+> +	 * Set auxtrace_mmap_pages to minimum
+> +	 * two pages
+> +	 */
+> +	if (!opts->auxtrace_mmap_pages) {
+> +		opts->auxtrace_mmap_pages =3D KiB(128) / page_size;
+> +		if (opts->mmap_pages =3D=3D UINT_MAX)
+> +			opts->mmap_pages =3D KiB(256) / page_size;
+> +	}
 > +
-> +	/* there was an error during record__open */
-> +	if (!evlist)
-> +		return 0;
-> +
-> +	/* First, check if any HTM events exist */
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		if (strstr(evsel->name, "htm") !=3D NULL)
+> +	evlist__for_each_entry(evlist, pos) {
+> +		if (strstarts(pos->name, "htm")) {
 
 [Severity: High]
-Can evsel->name be NULL here? For raw hardware events or events before
-parsing has dynamically assigned a name, passing a NULL pointer to strstr
-or strcmp will cause a segmentation fault.
+This is a pre-existing issue, but as mentioned above, this could crash if
+pos->name is NULL.
 
-[ ... ]
-> +		for (int x =3D 0; x < xyarray__max_x(xy); x++) {
-> +			for (int y =3D 0; y < xyarray__max_y(xy); y++) {
-> +				struct perf_counts_values count;
-> +
-> +				if (!strcmp(evsel->name, "dummy:u"))
-> +					continue;
-> +
-> +				if (strstr(evsel->name, "htm")) {
-> +					perf_evsel__read(&evsel->core, x, y, &count);
-
-[Severity: High]
-Does this properly handle failures from perf_evsel__read()? It returns a
-negative error code on failure and leaves the count struct uninitialized or
-zeroed. If ignored, count.val could evaluate to 0 below, causing the trace
-data collection to terminate prematurely.
-
-> +					y =3D xyarray__max_y(xy);
-> +					x =3D xyarray__max_x(xy);
-
-[Severity: High]
-Are these assignments intentionally overwriting the loop iteration variable=
-s?
-This forcefully terminates both the inner and outer loops after checking
-only the very first CPU and thread index (0, 0), preventing the iteration
-from checking any of the remaining CPUs.
-
-> +				}
-> +				if (!count.val)
-> +					return 0;
-> +			}
+> +			pos->needs_auxtrace_mmap =3D true;
+> +			pos->core.attr.aux_watermark =3D opts->auxtrace_mmap_pages * (size_t)=
+page_size;
+> +			break;
 > +		}
 > +	}
 > +
-> +	return 1;
+> +	return 0;
 > +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701084115.8038=
-3-1-atrajeev@linux.ibm.com?part=3D4
+3-1-atrajeev@linux.ibm.com?part=3D2
