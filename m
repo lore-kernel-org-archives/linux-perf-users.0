@@ -1,203 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C7B3F077C
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B503EFFDA
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782896152; cv=none; b=UtnFDXVtFUQs4HScvThxtLzWBOxzZX6GdrcnYA1X4sBZDCfNCvcLU22rGjmisNmABgruzS0h8uP44THdsmmj5+yeao8qExBWWkk2ICUioWMtcSxgB/XVyCCzvMQM9LLiwUlzobyJjlQYbIaBBf05wCv+YrUs5aD0oMAjIysDIvg=
+	t=1782896174; cv=none; b=qWNHzgNtIBTlfgdDpm2ejgY1dGuInJJscMsRVUkn9PfnTON9wZKiSoNrvvWfCfCCUGWf5ol2YNtxJRWwjkcV4DTOVhpWf2z4P5BddrLrzs89nQZoUs6Syoy/LUNqrQA+hyswYnJ65T2cKXe2P61r7Y/PbI1RuSMJpuTvF9isGYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782896152; c=relaxed/simple;
-	bh=4kNWGC/CQkMBf5uas5uoaqDR61Vhp04gK3hMhwr0Oq4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Kc6ltiIJzmeK2NIOH3v2bC+0qw1z3Rvm7eLos9UuiaP5crZeZa3F6csbvGZ9FFRuPltZ/bTy595+J5OZZ5K4I9Fp2Mcwl71koF5pvEBQJ3+6XJ36JH7uVkxFJsrB1oirKo4uLEhgrHUrUU2DhYPWP67/VBmEfsxcfygOkyUZbS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMlIzxlS; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMlIzxlS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3F01F00A3A;
-	Wed,  1 Jul 2026 08:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782896150;
-	bh=Vinpt7MeoNdX7tgMcW75Vc8X+KPmVlWYqfHgUh9nSro=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GMlIzxlSXx6SkJmaUkdMiGBBY1haNebW3KaVjiqMZ1Rebs6VvIF77bCtRn+WciQXv
-	 JJvpk9vZFH6bIlsws335RMJfNZDbyzHBEnTnzJoiIOEnJJEZCHF8eEBzZFWTWOFyKA
-	 88ZCFE46baQNM9BNS6jYV9aPjHcJP/JcW9h2/aYv3skDyg8mt6b3iFpoojMEYQX+PH
-	 jv5ZRyN0CdJXtvjCItlIQ5hSNkhiF4oAVqHL9J+L1PXBOMCillztNsu08GXYRcTg/9
-	 bktFor+BLbzi47XGCFQ3X0VjxUKtypxKTddJQD7J7b+VhoBRLxiwxw9Xq8u3GDlxPo
-	 9KvlMOgKizU/w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/9] tools/perf: Add CONFIG_AUXTRACE support for HTM pmu
- on powerpc
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Athira Rajeev" <atrajeev@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701084115.80383-3-atrajeev@linux.ibm.com>
-References: <20260701084115.80383-1-atrajeev@linux.ibm.com>
- <20260701084115.80383-3-atrajeev@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 08:55:48 +0000
-Message-Id: <20260701085549.4A3F01F00A3A@smtp.kernel.org>
+	s=arc-20240116; t=1782896174; c=relaxed/simple;
+	bh=g124yqZ5EFLnNnJlPt2Gcywq38EklCpg/ihjICns+qE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k+iKxsoHqBNOqxQkIq8wGH+Dvxv4E12iLbFMvskHGl6NST3mBkABbRqfuek1/3cKWwQi9MYlXXBc2c+sL7jnznK5vHCx3idto8Twg/BG75JcLh5y8uIT4EJ9ScSKjAhhWbKJhymdWcrIjkcB17KBVq4VHiMRBOM6lFc32JLuz7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gqv4Y5rv3zKHMQN
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 16:55:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 3A53E40592
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 16:56:07 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgDnqf0m1kRqYNLbAQ--.50329S2;
+	Wed, 01 Jul 2026 16:56:07 +0800 (CST)
+Message-ID: <9b181384-028e-4597-8dae-4416b43c940c@huaweicloud.com>
+Date: Wed, 1 Jul 2026 16:56:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 21/21] perf annotate-arm64: Support 'mrs' instruction
+ to track 'current' pointer
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-22-wutengda@huaweicloud.com>
+ <20260701041636.7FEDC1F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20260701041636.7FEDC1F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgDnqf0m1kRqYNLbAQ--.50329S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxurykJrW3Wr4UuFy7AryDtrb_yoWrJFWrpa
+	4vka90kF48JF40gwnxXrW8ZrySg397W3W5Kr9093Z2yFZa9rn7GFn7tw42kw4rJr1rCw17
+	Zr4Dtr43Gw1kZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8oGQDUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
 
-New issues:
-- [Medium] Missing explicit inclusions of POSIX standard headers `<stdlib.h=
->` and `<limits.h>` for standard libc symbols.
-- [Medium] Memory allocation failure during HTM auxtrace initialization is =
-silently dropped, causing a broken recording state.
 
-Pre-existing issues:
-- [High] Directly accessing `pos->name` with `strstarts()` causes a segment=
-ation fault when the event name is NULL.
---
+On 2026/7/1 12:16, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] Memory leak of the dynamically allocated `type_name` string obtained from `strbuf_detach()`.
+> - [Medium] Cross-DSO contamination and potential type confusion due to globally caching a DWARF offset (`task_struct_dieoff`).
+> --
+> 
+> commit 0f7d6f3c161448b3cb967b47ee3887be3d974dc1
+> Author: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> perf annotate-arm64: Support 'mrs' instruction to track 'current' pointer
+> 
+> This commit adds support for parsing the 'mrs' instruction on arm64 in
+> 'perf annotate' to track the 'current' task pointer. It dynamically queries
+> the DWARF debug information for the 'get_current()' inline function's
+> return type to find 'struct task_struct', caching the DWARF offset for
+> subsequent lookups.
+> 
+>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> index ec6fd59d51a27..89e3997f6721b 100644
+>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> [ ... ]
+>> @@ -787,6 +789,81 @@ static void update_adrp_insn_state(struct type_state *state,
+>>  		     insn_offset, tsr->addr, dreg);
+>>  }
+>>  
+>> +static Dwarf_Off task_struct_dieoff;
+>> +
+>> +static void update_mrs_insn_state(struct type_state *state,
+>> +				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+>> +				  struct disasm_line *dl,
+>> +				  struct annotated_op_loc *dst)
+>> +{
+> [ ... ]
+>> +	/* Handle case difference: LLVM (SP_EL0) vs objdump (sp_el0) */
+>> +	if (!dso__kernel(map__dso(dloc->ms->map)) ||
+>> +	    strcasecmp(dl->ops.source.raw, "sp_el0")) {
+>> +		invalidate_reg_state(tsr);
+>> +		return;
+>> +	}
+>> +
+>> +	ip = dloc->ms->sym->start + dl->al.offset;
+>> +	pc = map__rip_2objdump(dloc->ms->map, ip);
+>> +
+>> +	if (!task_struct_dieoff ||
+>> +	    !dwarf_offdie(dloc->di->dbg, task_struct_dieoff, &type_die)) {
+> 
+> [Severity: Medium]
+> Since DWARF offsets are local to their .debug_info section, if perf annotate
+> processes a symbol in a different kernel module (where dso__kernel() is still
+> true), couldn't this global task_struct_dieoff be applied to the module's
+> Dwarf * handle?
+> 
+> Would this result in type confusion or returning an arbitrary, unrelated DIE
+> across different DSOs?
+> 
+>> +		struct strbuf sb;
+>> +		char *type_name;
+>> +		/*
+>> +		 * Find the inline function 'get_current()' Dwarf_Die
+>> +		 * and obtain its return value data type, which should
+>> +		 * be 'struct task_struct*'.
+>> +		 */
+>> +		if (!die_find_inlinefunc(cu_die, pc, &func_die) ||
+>> +			!dwarf_attr_integrate(&func_die, DW_AT_type, &attr) ||
+>> +			!dwarf_formref_die(&attr, &type_die)) {
+>> +			invalidate_reg_state(tsr);
+>> +			return;
+>> +		}
+>> +
+>> +		strbuf_init(&sb, 32);
+>> +		die_get_typename_from_type(&type_die, &sb);
+>> +		type_name = strbuf_detach(&sb, NULL);
+>> +
+>> +		if (!type_name || strcmp(type_name, "struct task_struct*")) {
+>> +			invalidate_reg_state(tsr);
+>> +			return;
+>> +		}
+> 
+> [Severity: Medium]
+> Does this code leak the type_name string?
+> 
+> strbuf_detach() allocates and transfers ownership of the string to type_name,
+> but it appears to never be freed on either the success path or the error path
+> returning here.
+> 
 
-commit d4675d2351298802a38f0a4941c6bb4d86a4ed1f
-Author: Athira Rajeev <atrajeev@linux.ibm.com>
+Agreed. Will fix it in next version.
 
-tools/perf: Add CONFIG_AUXTRACE support for HTM pmu on powerpc
+>> +
+>> +		/*
+>> +		 * Cache the 'struct task_struct*' die offset globally.
+>> +		 * This allows us to resolve stack canary accesses even
+>> +		 * in CUs that lack a full task_struct definition (e.g.,
+>> +		 * compiler-generated entry/exit code).
+>> +		 */
+>> +		task_struct_dieoff = dwarf_dieoffset(&type_die);
+>> +	}
+> 
 
-The powerpc PMU collecting Hardware Trace Macro (HTM) entries makes use of
-AUX support in perf infrastructure. The PMU driver has the functionality
-to collect trace entries in the aux buffer. On the tools side, this data
-is made available as PERF_RECORD_AUXTRACE records. This record is
-generated by "perf record" command. To enable the creation of
-PERF_RECORD_AUXTRACE, add functions to initialize auxtrace records ie
-"htm_recording_init()". Fill in fields for other callbacks like
-info_priv_size, info_fill, free, recording options etc. Add header file
-to define htm pmu specific details.
-
-> diff --git a/tools/perf/arch/powerpc/util/auxtrace.c b/tools/perf/arch/po=
-werpc/util/auxtrace.c
-> index 0053526329e0e..ec84f8876a4ad 100644
-> --- a/tools/perf/arch/powerpc/util/auxtrace.c
-> +++ b/tools/perf/arch/powerpc/util/auxtrace.c
-> @@ -31,13 +33,19 @@ struct auxtrace_record *auxtrace_record__init(struct =
-evlist *evlist,
->  			found_vpa_dtl =3D 1;
->  			pos->needs_auxtrace_mmap =3D true;
->  			break;
-> +		} else if (strstarts(pos->name, "htm")) {
-                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does accessing pos->name
-directly cause a segmentation fault if the event name is NULL?
-
-If a standard hardware event is parsed without an explicit name (like
-"perf record -e cycles"), the name remains NULL until it is lazily generated
-via evsel__name(). Evaluating strncmp(NULL, "htm", 3) inside strstarts()
-would crash.
-
-Since this patch duplicates this pattern here and in htm_recording_options(=
-),
-should we use evsel__name() or check for NULL first?
-
-> +			found_htm =3D 1;
-> +			pos->needs_auxtrace_mmap =3D true;
-> +			break;
->  		}
->  	}
-> =20
->  	if (found_vpa_dtl)
->  		return vpa_dtl_recording_init(pos);
-> +	else if (found_htm)
-> +		return htm_recording_init(pos);
-
-[Severity: Medium]
-If htm_recording_init() fails to allocate memory, it returns NULL. Since we
-don't update the *err parameter before returning, does this propagate a fal=
-se
-success to the caller?
-
-If *err remains 0, builtin-record.c might assume auxtrace is simply not
-required and continue recording, silently dropping the HTM trace data inste=
-ad
-of aborting with -ENOMEM.
-
->  	else {
-> -		*err =3D -EINVAL;
-> +		*err =3D 0;
->  		return NULL;
->  	}
->  }
-
-> diff --git a/tools/perf/arch/powerpc/util/htm.c b/tools/perf/arch/powerpc=
-/util/htm.c
-> new file mode 100644
-> index 0000000000000..cc733f45ac9b0
-> --- /dev/null
-> +++ b/tools/perf/arch/powerpc/util/htm.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * HTM support
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/types.h>
-> +#include <linux/bitops.h>
-> +#include <linux/log2.h>
-> +#include <linux/string.h>
-> +#include <time.h>
-> +
-> +#include "../../util/cpumap.h"
-> +#include "../../util/evsel.h"
-> +#include "../../util/evlist.h"
-> +#include "../../util/session.h"
-> +#include "../../util/util.h"
-> +#include "../../util/pmu.h"
-> +#include "../../util/debug.h"
-> +#include "../../util/auxtrace.h"
-> +#include "../../util/powerpc-htm.h"
-> +#include "../../util/record.h"
-> +#include <internal/lib.h> // page_size
-> +#include <errno.h>
-
-[Severity: Medium]
-Are we missing the explicit inclusions of <stdlib.h> and <limits.h> here?
-
-This file uses UINT_MAX in htm_recording_options() and free() in htm_free().
-Without directly including <limits.h> and <stdlib.h>, building the perf too=
-ls
-with musl libc might fail due to missing declarations.
-
-[ ... ]
-
-> +	/*
-> +	 * Set auxtrace_mmap_pages to minimum
-> +	 * two pages
-> +	 */
-> +	if (!opts->auxtrace_mmap_pages) {
-> +		opts->auxtrace_mmap_pages =3D KiB(128) / page_size;
-> +		if (opts->mmap_pages =3D=3D UINT_MAX)
-> +			opts->mmap_pages =3D KiB(256) / page_size;
-> +	}
-> +
-> +	evlist__for_each_entry(evlist, pos) {
-> +		if (strstarts(pos->name, "htm")) {
-
-[Severity: High]
-This is a pre-existing issue, but as mentioned above, this could crash if
-pos->name is NULL.
-
-> +			pos->needs_auxtrace_mmap =3D true;
-> +			pos->core.attr.aux_watermark =3D opts->auxtrace_mmap_pages * (size_t)=
-page_size;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701084115.8038=
-3-1-atrajeev@linux.ibm.com?part=3D2
