@@ -1,100 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04B9386541;
-	Wed,  1 Jul 2026 18:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0792F34678C
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 18:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782930506; cv=none; b=bqXn2bWSJt1foZamBPU03FV6538E58gIhmZ682gTOCDA9Y8S6xpmkzZ/B3oDAL5wAh3eu6xJ56m2Km1Up8dFukzOFeJhVYBLn8Cko+TZvKQOd3SjL0n8s4mV9LmW3wfYoavfCt/eFYJYMTldP8/kURKSxL1ArTCGBD7cuEMXuKY=
+	t=1782931112; cv=none; b=FoWMcfFpufFrTPxxzBL+7nQPlZtwPrFeoqEUwrBWR80qd25TQGfoSmQiEQWlqoPitoi5gXJ7sBizlw20Iq9YqJtxBsqujsgYvhqIW01UCIyk3mJylM68zE3qdzmOS6oNyMnZQpo1BDeNMc+FLGG5mVR88CBO10sXQYr83h5VPcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782930506; c=relaxed/simple;
-	bh=bV3TO4GSTV+rp/T+JLXp2cjeTU/FuWWeJaOCqj9OMnQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aEuGPAX2/x7Ny153vM72rtLnjO9QlpuVCLf9fodBIz1JVDZiVb8h5jJB8E/CQGTc4HcAjK7MFcXTFzdB6wFR3LNfNAuaMlOO6KJYnTxFi3yZ7DqXDZtlbcD9mjyjUKAPOyRQI7C4zFyHZ8ictmOzNkOP1tfDnR9c/1lMFvYfWUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZWKrerZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782931112; c=relaxed/simple;
+	bh=IYtxRGjLVzmjDpUndfMzgWCP+O3WeLhiIFqPgkxhOF0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=XoUUrDFvlBXBu/Dubq48ialuxv9YPirT5j+YhV9B0VBP231FYffZIbIRRwyqMRdl/smwJIniSaNpn+hFejA3Tkwo0lijBapP7UzzrSDF7zv9xpnY/a59y5W99f/AkV6QouuQkIc2MgZSo5hXnc9pY83jvFvDz8uWjN07D6rHV5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfeC6VQI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZWKrerZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276441F000E9;
-	Wed,  1 Jul 2026 18:28:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfeC6VQI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65EA21F000E9;
+	Wed,  1 Jul 2026 18:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782930505;
-	bh=mHQIOe/FVGav0bLaHdr+CZn+2ACoFSGayw63o1uDqXY=;
-	h=From:To:Cc:Subject:Date;
-	b=ZZWKrerZQ0L/iIs/ExmoUJFR37UwHQQCqXJIUFDnpvHkjkpwkjGShVftiFBHK3U1a
-	 gWd9KzrLDUaYzscxghhKUO/FYsGanfCbrFzQLzNGIH87KrdHu0XFOBrnS701utxRaa
-	 5LVP0y9DkNi83PtuJW0Huvauaa4HA40TrDAUumKVRtEtFprXAZgMpN75SLuhc84DxO
-	 DJB/PV7z7aiuvH3qi33e8q+BjNjKz5Q7+C21zs66WrPb4Z9HFeO45eHgODVB7iLzFI
-	 PRZtpKsgvrkZNq5gIrxXoh7v7l7nqY5DQiw5LkSdtqvTTKlgPqMOahClZjE1N61AKj
-	 eP0XxJmTZunHA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf build: Fix compiler errors with old capstone
-Date: Wed,  1 Jul 2026 11:28:24 -0700
-Message-ID: <20260701182824.347941-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
+	s=k20260515; t=1782931110;
+	bh=00e8layYW/wnrdqGaJ1Hl6GaRkjQAqM86B/TWjWFCcI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mfeC6VQIUxY5XDq2i3mRgNWTrcTN1c2bDKkansM4GmghYKrO9++0RJFmmHfclCSBT
+	 syDDTt060/g/EkijMgjBGCM5YbxJ0jR1wP9rOV0dcJY1QgvHRn0xCmxHIP+p5Cv2VC
+	 GyLSQOm5Xn++uFioxW7wW5bSeGsdgj5iVO29RRin1uEA35wWXmBFlBTtbx5RCGC3+g
+	 V9BAYo9Q2AHdM+ms5C8aGvZ+LYXPg4135xfGYRHBO3/DmPPA3DMr2g4WspE4RhGdoB
+	 13oTTXCBas5/MVnhJu60OQEJUsrSEXwk/Rin2f5j2+stPiuHcWGOfYO/Y7z2TxeVnP
+	 xplpeSY1sOJyA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf build: Fix compiler errors with old capstone
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260701182824.347941-1-namhyung@kernel.org>
+References: <20260701182824.347941-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 01 Jul 2026 18:38:29 +0000
+Message-Id: <20260701183830.65EA21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-It seems RISCV was added in capstone version 5.  Unfortunately they are
-enum constants so cannot check with #ifdef but anyway we can define the
-symbols.  Let's do it using the version number to avoid build errors.
-It'll fail at runtime though.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Defining CS_ARCH_RISCV as CS_ARCH_MAX causes incorrect architectur=
+e selection when dynamically loading newer Capstone versions.
+--
 
-  util/capstone.c: In function 'e_machine_to_capstone':
-  util/capstone.c:186:25: error: 'CS_ARCH_RISCV' undeclared (first use in this function);
-                                  did you mean 'CS_ARCH_SYSZ'?
-    186 |                 *arch = CS_ARCH_RISCV;
-        |                         ^~~~~~~~~~~~~
-        |                         CS_ARCH_SYSZ
-  util/capstone.c:186:25: note: each undeclared identifier is reported only once for each function it appears in
+commit c55db50010b415e5aa95bfca7819cc985aa51d2f
+Author: Namhyung Kim <namhyung@kernel.org>
 
-  util/capstone.c:187:34: error: 'CS_MODE_RISCV64' undeclared (first use in this function);
-                                  did you mean 'CS_MODE_MIPS64'?
-    187 |                 *mode |= (is64 ? CS_MODE_RISCV64 : CS_MODE_RISCV32) | CS_MODE_RISCVC;
-        |                                  ^~~~~~~~~~~~~~~
-        |                                  CS_MODE_MIPS64
+perf build: Fix compiler errors with old capstone
 
-Also note that capstone renamed CS_MODE_RISCVC to CS_MODE_RISCV_C which
-would cause a different build failure on latest versions.  It's reported
-in https://github.com/capstone-engine/capstone/issues/2977 so I think
-they will add compatibility layer to prevent the error.
+This commit fixes a build error on systems with Capstone versions older than
+5 by defining missing RISC-V architecture and mode constants. It uses the
+major version macro to conditionally define these symbols.
 
-Fixes: 12c4737f55f2 ("perf capstone: Determine architecture from e_machine")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/capstone.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+> index 5ad537fea4360..dd7cd97d0a380 100644
+> --- a/tools/perf/util/capstone.c
+> +++ b/tools/perf/util/capstone.c
+> @@ -24,6 +24,13 @@
+>  #include "symbol.h"
+>  #include "thread.h"
+> =20
+> +#if CS_VERSION_MAJOR < 5
+> +#define CS_ARCH_RISCV    CS_ARCH_MAX
 
-diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-index 5ad537fea4360e31..dd7cd97d0a38056e 100644
---- a/tools/perf/util/capstone.c
-+++ b/tools/perf/util/capstone.c
-@@ -24,6 +24,13 @@
- #include "symbol.h"
- #include "thread.h"
- 
-+#if CS_VERSION_MAJOR < 5
-+#define CS_ARCH_RISCV    CS_ARCH_MAX
-+#define CS_MODE_RISCV32  1
-+#define CS_MODE_RISCV64  2
-+#define CS_MODE_RISCVC   4
-+#endif
-+
- #ifdef LIBCAPSTONE_DLOPEN
- static void *perf_cs_dll_handle(void)
- {
--- 
-2.55.0.rc0.799.gd6f94ed593-goog
+[Severity: High]
+Does mapping CS_ARCH_RISCV to CS_ARCH_MAX cause ABI compatibility issues?
 
+If perf is compiled against Capstone headers < 5, it will use the integer
+value of CS_ARCH_MAX for CS_ARCH_RISCV. If the resulting binary is later run
+on a system where libcapstone.so has been upgraded to version 5+, passing
+this hardcoded value to cs_open() might silently initialize a completely
+different architecture that was appended to the enum in V5 (such as WASM or
+BPF).
+
+Could this result in cs_open() succeeding but silently producing garbage
+disassembly for RISC-V targets?
+
+> +#define CS_MODE_RISCV32  1
+> +#define CS_MODE_RISCV64  2
+> +#define CS_MODE_RISCVC   4
+> +#endif
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701182824.3479=
+41-1-namhyung@kernel.org?part=3D1
