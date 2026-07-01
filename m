@@ -1,27 +1,27 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF92B368293;
-	Wed,  1 Jul 2026 03:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C996B36A370;
+	Wed,  1 Jul 2026 03:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782878094; cv=none; b=rjhGLOhpsUhUeXXDLGKAL67gGojMi3WjPDA/QHSwQwEhZ18oqe+GH6LPJt9/Z+aP+3JRWIKRUEbeSNIUzkf/Jf+VWVNUiZ+DT56R0nV2RRcRsatUsHWFyMu4/sZfLvN65cqQl0Duu+13KEzjWlZNj67yftYa99+McgQF8lU9YOw=
+	t=1782878096; cv=none; b=YmrfKAmNMw1PYjxNY9DL6lHyQXHg9Q2Lt9Wxs9qy4HuDYbWP0biI0fbLAeT2sOTLy7CsSHb0Rhl9Xk+eK7ax8816vMxLOBjDJ4jpuAeUj/hUT8cFT/VkYdvagSqw9pxf/tWTHE3VvCUWNHxT8wV1CCSJwqzO0V+WxLyobBjUrzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782878094; c=relaxed/simple;
-	bh=bLezi/SX8MjrI+efADm45mrDQwz9ecAuBcCkgfyXWCI=;
+	s=arc-20240116; t=1782878096; c=relaxed/simple;
+	bh=+70x/ecQEOKmm3RSXwvxtfQLbWkszBP/qJA7UE63iio=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rKAz9wwB/cG5LfoPDEtJdOaJkdZWZyE1Izoa0jJrNyJRNt7Ql4oLE8z7JiSitVIkvaTLYsE0yzdkZ71yv7FOCKhL8gomSEqYO2T8T30JkIvbleFnG99nbC1rmTxUG7fzl2mLrJjQGFa+rzEvdAVRWSfUjkdfiOV05jEK+cwczNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=LHEUJW5LB6RhyZwgDannIXaOQf+Fn+gfDif5QbIhMEGHDlIDESFfwgsu5j66G2C+04vzIwburqBT8TNyXJsKllhVD/AFu2kuDA3oucYtsjY8EX+kJuGBqnWy570Z8ooMZF3623G9zLZ6LONyah37oCiVEjKO/4si6rzzRYqA6aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gqmN00QvFzYQtqq;
-	Wed,  1 Jul 2026 11:53:52 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gqmNs0LvtzKHMSC;
+	Wed,  1 Jul 2026 11:54:37 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id E417C40572;
-	Wed,  1 Jul 2026 11:54:45 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 1CB3A40AF0;
+	Wed,  1 Jul 2026 11:54:46 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgBXiyWAj0RqCne9AQ--.26189S12;
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgBXiyWAj0RqCne9AQ--.26189S14;
 	Wed, 01 Jul 2026 11:54:45 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v3 10/21] perf annotate: Deduplicate overlapping ARM SPE events for data type profiling
-Date: Wed,  1 Jul 2026 03:53:44 +0000
-Message-Id: <20260701035355.752944-11-wutengda@huaweicloud.com>
+Subject: [PATCH v3 12/21] perf annotate-data: Extract invalidate_reg_state() as a common helper
+Date: Wed,  1 Jul 2026 03:53:46 +0000
+Message-Id: <20260701035355.752944-13-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260701035355.752944-1-wutengda@huaweicloud.com>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
@@ -57,10 +57,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBXiyWAj0RqCne9AQ--.26189S12
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr4fWrWxGr4xtFW5Aw47Jwb_yoW5uFW8pF
-	srWw13KF48Xrs3Kw4fAw4xGr13K3yfXay5Grna93yqy3ZF9Fy0qFWxtw1YyFW5Xrnxt34a
-	vw4DKryUZ348taDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:_Ch0CgBXiyWAj0RqCne9AQ--.26189S14
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr1rJry8CF1ktr17urWDCFg_yoW5Gw17p3
+	yDC347Gw43Gr4FgwnxJFW3XFWF9r1fXa4Fk3sYywn7ZFWIyrn3JF97XFy5tFW7Xr93Cw12
+	yw1qgr4DJ3yxGaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -77,89 +77,72 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxGr4fWrWxGr4xtFW5Aw47Jwb_yoW5uFW8pF
 	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0piPkusUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-When data type profiling is enabled on ARM SPE, multiple overlapping
-events (e.g., l1d-miss, tlb-access) are synthesized for a single sampled
-instruction, as shown below:
+The invalidate_reg_state() function is currently static and only used
+within the x86 data type profiling implementation. To prepare for adding
+arm64 instruction tracking support, extract it as a common helper that
+can be shared across architectures.
 
-  Available samples
-  0 arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=30/
-  0 dummy:u
-  84K l1d-miss
-  95K l1d-access
-  77K llc-miss
-  58K llc-access
-  9K tlb-miss
-  108K tlb-access
-  0 branch
-  13K remote-access
-  108K memory
-  108K instructions
-
-While 'perf report' provides an interactive menu for users to select a
-specific event to prevent duplicate counting, 'perf annotate' lacks such
-a mechanism. Consequently, it counts all instructions across these
-overlapping events, which inflates the profile and distorts the data
-type statistics.
-
-Although using the '--itrace' option can work around this issue, for example:
-
-  # perf annotate --data-type --stdio --itrace=i1i
-
-it is inconvenient for users to specify this explicitly every time.
-
-To address this, implement automatic deduplication in process_sample_event()
-by retaining only the comprehensive "instructions" event when data type
-annotation is enabled and no explicit itrace options are configured.
-
-To achieve this, also set 'event->auxtrace_info.type' in arm_spe_prep_sample()
-so that 'perf annotate' can correctly identify ARM SPE events during
-sample processing.
+No functional change intended.
 
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- tools/perf/builtin-annotate.c | 13 +++++++++++++
- tools/perf/util/arm-spe.c     |  1 +
- 2 files changed, 14 insertions(+)
+ tools/perf/util/annotate-arch/annotate-x86.c | 9 ---------
+ tools/perf/util/annotate-data.c              | 9 +++++++++
+ tools/perf/util/annotate-data.h              | 1 +
+ 3 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 69cb72b2082a..46b2bd3fb201 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -283,9 +283,22 @@ static int process_sample_event(const struct perf_tool *tool,
- 				struct machine *machine)
- {
- 	struct perf_annotate *ann = container_of(tool, struct perf_annotate, tool);
-+	struct evsel *evsel = sample->evsel;
- 	struct addr_location al;
- 	int ret = 0;
- 
-+	/*
-+	 * ARM SPE synthesizes multiple overlapping events (e.g., l1d-miss,
-+	 * tlb-access) for a single sampled instruction. When data type is
-+	 * enabled, counting all of these overlapping events would inflate
-+	 * the profile and distort the data type statistics. To avoid this,
-+	 * deduplicate by retaining only the comprehensive "instructions" event.
-+	 */
-+	if (ann->data_type && !ann->session->itrace_synth_opts->set &&
-+	    event->auxtrace_info.type == PERF_AUXTRACE_ARM_SPE &&
-+	    strcmp(evsel->name, "instructions") != 0)
-+		return 0;
-+
- 	addr_location__init(&al);
- 	if (machine__resolve(machine, &al, sample) < 0) {
- 		pr_warning("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 552f063f126e..e027e3b200bf 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -403,6 +403,7 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
- 	event->sample.header.type = PERF_RECORD_SAMPLE;
- 	event->sample.header.misc = sample->cpumode;
- 	event->sample.header.size = sizeof(struct perf_event_header);
-+	event->auxtrace_info.type = PERF_AUXTRACE_ARM_SPE;
+diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+index 6a4b4bdcd7a7..ef84b9593a39 100644
+--- a/tools/perf/util/annotate-arch/annotate-x86.c
++++ b/tools/perf/util/annotate-arch/annotate-x86.c
+@@ -206,15 +206,6 @@ static int x86__cpuid_parse(struct arch *arch, const char *cpuid)
  }
  
- static void arm_spe__prep_branch_stack(struct arm_spe_queue *speq)
+ #ifdef HAVE_LIBDW_SUPPORT
+-static void invalidate_reg_state(struct type_state_reg *reg)
+-{
+-	reg->kind = TSR_KIND_INVALID;
+-	reg->ok = false;
+-	reg->lifetime_active = false;
+-	reg->lifetime_end = 0;
+-	reg->copied_from = -1;
+-}
+-
+ static void update_insn_state_x86(struct type_state *state,
+ 				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+ 				  struct disasm_line *dl)
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 4e4c58764082..104b80d471f1 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -638,6 +638,15 @@ struct type_state_stack *findnew_stack_state(struct type_state *state,
+ 	return stack;
+ }
+ 
++void invalidate_reg_state(struct type_state_reg *reg)
++{
++	reg->kind = TSR_KIND_INVALID;
++	reg->ok = false;
++	reg->lifetime_active = false;
++	reg->lifetime_end = 0;
++	reg->copied_from = -1;
++}
++
+ /* Maintain a cache for quick global variable lookup */
+ struct global_var_entry {
+ 	struct rb_node node;
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index c26130744260..453e13bbe3e2 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -258,6 +258,7 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+ 				Dwarf_Die *type_die, int ptr_offset);
+ struct type_state_stack *find_stack_state(struct type_state *state,
+ 						int offset);
++void invalidate_reg_state(struct type_state_reg *reg);
+ bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
+ 				u64 ip, u64 var_addr, int *var_offset,
+ 				Dwarf_Die *type_die);
 -- 
 2.34.1
 
