@@ -1,163 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B33B3905E0
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0378378826
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782878817; cv=none; b=e17VK/Lp2JjPs8vT40jF8pgXKB9Jl22SSf7F/Au6NJCR27MM9U7sb7P7C7KMi8z2BivN8wMFefyuAxdyjtXiyCQImHyJQFo1D2kzy64rRffdY+hEAwbRZyibI/CLAvibQayumjniQMAkYM+UBfxjCFwdPAyitl9V0JTUhR9loh0=
+	t=1782878851; cv=none; b=I+O0D3LDQrtDZuv2WQnH2fbs6/BcZCAKiQgzI2KQPbPIheb4irqAFyAzt3FLfYZOQS0QdRgt6/AcUAc+ZD3zFqj9JJZf6OkJIw0SxjC4F/69DXbciRf4emLzF/sOJxeNSvcCdCBfzA1E0TGmt5nX8b8joLjBRCgXt7gxS7J7A60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782878817; c=relaxed/simple;
-	bh=spIVhgN7lqYTOTRRpTFmLQX65lrxRoH1jyKRQ1KsZjk=;
+	s=arc-20240116; t=1782878851; c=relaxed/simple;
+	bh=2QK9ls35XNhwqNRIldGgpF1sbZX4hLc2ecMl4DxmnwM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RX1AIONipiSov013ZjRj7d+z3idRhDd+a4Zzu6uZ6xUZ3vnMsVakaSMk/laheTczdOjIj8/6KA4CXSPlK7ZXU/osNoMMjzlTMsMd+MS+ACyswvjn19wS54XEz3I2WZuKB0zwuj3zULtD4/fNjU0fq2Ag1mx+MAaq2MjJ6Bmli2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzmDCMY/; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YJVQ8FHzQ4ldBfAdohzotHqE0yWDN/CrWMrpNc0q+kZwnBbkRCMMnWM93U1RkMafnaeZJc6+xwCrMaJma95xj68N38XZOEE65eff2usrVumw14dnLY1NtkOFkwhutap9Q5xfhNUjv6oEFyWYsFpQ7du6nkH2YuC7R94Fgk3f3jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hexO64OM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzmDCMY/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23771F00A3A;
-	Wed,  1 Jul 2026 04:06:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hexO64OM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7C4F1F000E9;
+	Wed,  1 Jul 2026 04:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782878807;
-	bh=JaeHvTG/Pz13pMgcSe9yKSb2axLVO7KYWS9ZpKMJ2Ug=;
+	s=k20260515; t=1782878843;
+	bh=JWoEUcv60YRv1deSGz/Nxve0qG0cMOyRtlrkrHPTNgc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jzmDCMY/qowUI6zLUA85OPep+MI5TbQfhimVOcGySX5fz314CGMCebwQ4OD3GtDw8
-	 osEzdLRuTMeU0Y7v2nJcsLaNoOgJ1JB2bYE/KcLEkJnt5lY8uKYv/vLHy2sYS2TyqW
-	 JhvVlLQGu9rfynx/9tuEDLT8XgtFdz5Lgn12v5ogmr0OZMHR3t8skcQTX67q2Sisvr
-	 uU5fJSZH2193Y4vLRB1YpFFxp1oPxADAViIycUa+jqdRLNWsWnu/hmNUcTWJ9I3xrK
-	 NTsnnuQlddmFV5gu5k8mbTuqgERMX7fbvopG9wndyh0ErovI4aYCqMfpEQpzVJghCw
-	 g2KUNz0C6N8MQ==
+	b=hexO64OMiEnY3X8UfgL9MdlcFXdeVSU04FpbsxwAsmad3lU1GBl78nE7hcDLPZYr6
+	 CH5TG5bRB6RS+Rf7DLj5VlD7RIVVrV9QDKcTZgXf0h3GxVFLJZ70JZLBErrFkHTmYh
+	 uwOXvfTObHQGUOc7w9JBO7zhAWMrN+uagkIqy9VBOETfZNMZiqXseyAlYs81sSc95T
+	 zJ3dzO0PTwkGnBkKhYYGPe7Gi0LbkmXAA+lAT6JvgKTJKO9kKNFiUDPc4r0LS2X5RO
+	 7hVxHlxWlTlu3iYQkp7cKAZZgFc+o2oQE42o9Ods+ondesAqe82jWhxehNcy+wAulw
+	 Bwc2D7dAJ1Jkw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 08/21] perf annotate: Introduce extract_op_location
- callback for arch-specific parsing
+Subject: Re: [PATCH v3 06/21] perf dwarf-regs: Adapt get_dwarf_regnum() for
+ arm64
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701035355.752944-9-wutengda@huaweicloud.com>
+In-Reply-To: <20260701035355.752944-7-wutengda@huaweicloud.com>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-9-wutengda@huaweicloud.com>
+ <20260701035355.752944-7-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 04:06:47 +0000
-Message-Id: <20260701040647.A23771F00A3A@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 04:07:23 +0000
+Message-Id: <20260701040723.B7C4F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] Refactoring changes the error propagation behavior for memory op=
-erands with unrecognized registers, causing valid instructions to be incorr=
-ectly marked as bad.
-- [Low] Missing explicit inclusion of `<stdlib.h>` for the POSIX libc funct=
-ion `strtol()`, breaking musl compatibility.
+- [Medium] The zero registers ('wzr' and 'xzr') are incorrectly mapped to D=
+WARF register 31.
+- [Medium] The link register ('lr') alias is no longer recognized and will =
+unexpectedly return -ENOENT.
+- [Low] The functions strcmp and strtol are used without explicitly includi=
+ng <string.h> and <stdlib.h>.
 --
 
-commit a79e03a1004b442317df26b7478d0a1daed1e563
+commit cf10eca9678152514cc1354dc6997be3eec9f436
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate: Introduce extract_op_location callback for arch-specific par=
-sing
+perf dwarf-regs: Adapt get_dwarf_regnum() for arm64
 
-This patch refactors operand parsing by moving it from the central
-annotate_get_insn_location() into architecture-specific callbacks. By
-introducing extract_op_location callbacks for PowerPC and x86, it aims to
-simplify the core logic and improve maintainability without making function=
-al
-changes.
+This commit replaces the static string table lookup for arm64 DWARF registe=
+rs
+with a programmatic implementation in __get_dwarf_regnum_arm64(). This allo=
+ws
+resolving register names directly into their corresponding DWARF numbers
+during annotation.
 
-> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/ut=
-il/annotate-arch/annotate-x86.c
-> index 7e61365363938..6a4b4bdcd7a7c 100644
-> --- a/tools/perf/util/annotate-arch/annotate-x86.c
-> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-> @@ -2,6 +2,7 @@
->  #include <string.h>
->  #include <linux/compiler.h>
->  #include <linux/zalloc.h>
-> +#include <linux/ctype.h>
->  #include <assert.h>
->  #include <inttypes.h>
->  #include "../annotate-data.h"
+> diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c b/tools/p=
+erf/util/dwarf-regs-arch/dwarf-regs-arm64.c
+> index 593ca7d4fccca..be55fc2a4f385 100644
+> --- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
+> +++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <errno.h>
+> +#include <ctype.h>
 
 [Severity: Low]
-Does this file need an explicit include of <stdlib.h> for musl libc
-compatibility?
+Does omitting the explicit includes for <string.h> and <stdlib.h> break the
+build on musl libc?=20
 
-It appears strtol() is used later in extract_op_location_x86() without
-the required <stdlib.h> header being directly included here, which might
-lead to implicit function declaration errors on musl-based systems.
+This file now uses strcmp() and strtol() below, and musl strictly separates
+declarations without relying on implicit inclusions.
 
-[ ... ]
-
-> @@ -809,6 +810,86 @@ static void update_insn_state_x86(struct type_state =
-*state,
->  }
->  #endif
-> =20
-> +/*
-> + * Get register number and access offset from the given instruction.
-> + * It assumes AT&T x86 asm format like OFFSET(REG).  Maybe it needs
-> + * to revisit the format when it handles different architecture.
-> + * Fills @reg and @offset when return 0.
-> + */
-> +static int extract_reg_offset(const struct arch *arch, const char *str,
-> +			      struct annotated_op_loc *op_loc)
-> +{
+>  #include <dwarf-regs.h>
+>  #include "../../../arch/arm64/include/uapi/asm/perf_regs.h"
 
 [ ... ]
 
-> +static int extract_op_location_x86(const struct arch *arch,
-> +				   struct disasm_line *dl __maybe_unused,
-> +				   const char *op_str, int op_idx __maybe_unused,
-> +				   struct annotated_op_loc *op_loc)
+> +int __get_dwarf_regnum_arm64(const char *name)
 > +{
-> +	const char *s =3D op_str;
-> +	char *p =3D NULL;
+> +	int reg;
 > +
-> +	if (op_str =3D=3D NULL)
-> +		return 0;
-> +
-> +	if (strchr(op_str, arch->objdump.memory_ref_char)) {
-> +		op_loc->mem_ref =3D true;
-> +		return extract_reg_offset(arch, op_str, op_loc);
+> +	if (!strcmp(name, "sp") || !strcmp(name, "wzr") || !strcmp(name, "xzr"))
+> +		return 31;
 
 [Severity: Medium]
-Does returning the result of extract_reg_offset() here alter the error
-propagation behavior?
+Does this incorrectly map the zero registers (wzr and xzr) to DWARF
+register 31?
 
-In the previous annotate_get_insn_location() logic, the return value of
-extract_reg_offset() was safely ignored:
+The AArch64 DWARF ABI assigns register 31 strictly to the stack pointer (sp=
+),
+and zero registers have no valid DWARF mapping.
 
-        } else if (strchr(insn_str, arch->objdump.memory_ref_char)) {
-                op_loc->mem_ref =3D true;
-                op_loc->multi_regs =3D multi_regs;
-                extract_reg_offset(arch, insn_str, op_loc);
-        } else {
+Mapping wzr and xzr to 31 might cause perf annotate to conflate operations =
+on
+the zero register with stack pointer operations, leading to incorrect stack
+variable tracking and type profiling statistics.
 
-By returning it here, extract_op_location_x86() might return -1 if the
-register is unrecognized. This regression is now propagated back to the
-caller in annotate_get_insn_location():
-
-        if (arch->extract_op_location) {
-                ret =3D arch->extract_op_location(arch, dl, insn_str, i, op=
-_loc);
-                if (ret)
-                        return ret;
-        }
-
-Could this cause valid instructions to be completely skipped and
-incorrectly marked as bad?
-
-> +	}
 > +
-> +	/* FIXME: Handle other segment registers */
-> +	if (!strncmp(op_str, "%gs:", 4)) {
-> +		op_loc->segment =3D INSN_SEG_X86_GS;
-> +		op_loc->offset =3D strtol(op_str + 4,
-> +					&p, 0);
+> +	if (*name !=3D 'x' && *name !=3D 'w')
+> +		return -ENOENT;
+
+[Severity: Medium]
+Will this strict prefix check reject the link register alias lr?
+
+The previous static table lookup correctly mapped lr to register 30.
+Because lr does not start with x or w, it appears this will now return
+-ENOENT, which might break data type tracking for instructions that operate
+on the link register.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701035355.7529=
-44-1-wutengda@huaweicloud.com?part=3D8
+44-1-wutengda@huaweicloud.com?part=3D6
