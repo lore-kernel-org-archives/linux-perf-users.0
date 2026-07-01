@@ -1,140 +1,102 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9872F3BFAEE
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 07:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A59113B440E;
+	Wed,  1 Jul 2026 07:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782891394; cv=none; b=qzH6Ndf1gz1EoMEVXA4nlL13c7+/c5ZlPBxAlfVBLuBYf/uRVqy8UjQCxL6cz7RGpEV8BDbFlYBP9Q9CFSIEqMMogOeLsxUTwBSPLjqVeKlnzN5UeUI/DTW+0DhFAYsz1iq3lrQRYmrC0FaBT6CpV3N4PQ4Jh1fHo6cs2skBtgM=
+	t=1782892237; cv=none; b=FWSUZMkY92C19Ot4b5H6ihstVOiH5fwDE2XcvVTKwZdOFjiPWA8dujTM4tdc8bCNaADGpNkNoLkYGFi/Y5pMCaAUXEYnut+fRox1SvUKDZNSGg3jHLxhFVJP6u5ULdXPc8GnYQET6P0YNj5ePKJICW8k9cZDHv6ovcfFeU3J1zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782891394; c=relaxed/simple;
-	bh=PTuL6SZbklp1Gz60Jqay5+TjAIAerHb7yK/or20TelU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DWoyvt8Jbu0yXaiGMLUpOiOKV6MteBIZ92l3Jcg6qfNnv+20iP3q52qoKUHyQZkZna5GdiztSDesEsk4FscEybg6867+8j6Fr9+cdQ/OSMhnxVixzilU6LWdPRA1bq+xdkKVTehW4crn+ZtPs4a1ywd1I8Q4RUrG1qiUzFPY8bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gqsJf0VYNzKHLyd
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 15:36:18 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 6242C4056D
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 15:36:27 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP1 (Coremail) with UTF8SMTPA id cCh0CgB3mYZ7w0RqACLSAQ--.34240S2;
-	Wed, 01 Jul 2026 15:36:27 +0800 (CST)
-Message-ID: <9bd14d31-8792-4b20-a82f-454ea22ab815@huaweicloud.com>
-Date: Wed, 1 Jul 2026 15:36:27 +0800
+	s=arc-20240116; t=1782892237; c=relaxed/simple;
+	bh=fejFts/2NClDW3xAZCFKKkLbnnE5A9PMh0fEUTVKJ+A=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cJiovJIGwghIu1XLzSd0eNClqtSHcyvBnTluqPt3j+HMhuneKcfjeo8lrt8sdohMRvbs/1iZSfr/FKsHfRiM9v9IhSf6do/KHKP3m2Hcax0rRlIzTreqLahlIbFj4PB2E9+jh0A4IjjQnkjCzXmjB/uAjt/bqieSpqnibiAd3gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gqscn6Llkz1Q1td;
+	Wed,  1 Jul 2026 15:50:17 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gqscn2jVqz1Q1td;
+	Wed,  1 Jul 2026 15:50:17 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id 7A89C3008F68;
+	Wed,  1 Jul 2026 15:48:16 +0800 (CST)
+Received: from cncheex04.Hygon.cn (172.23.18.114) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 1 Jul
+ 2026 15:50:17 +0800
+Received: from cncheex04.Hygon.cn ([fe80::1b6f:6c58:58a4:430d]) by
+ cncheex04.Hygon.cn ([fe80::1b6f:6c58:58a4:430d%10]) with mapi id
+ 15.02.1544.036; Wed, 1 Jul 2026 15:50:17 +0800
+From: Qi Liu <liuqi@hygon.cn>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: "mingo@redhat.com" <mingo@redhat.com>, "namhyung@kernel.org"
+	<namhyung@kernel.org>, "alexander.shishkin@linux.intel.com"
+	<alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Jing Li <lijing@hygon.cn>, Zhenglang Hu
+	<huzhenglang@hygon.cn>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIDEvM10gcGVyZi94ODYvYW1kL3VuY29yZTogQWRkIGNv?=
+ =?gb2312?Q?mmon_PMU_helper_functions?=
+Thread-Topic: [PATCH 1/3] perf/x86/amd/uncore: Add common PMU helper functions
+Thread-Index: AQHdCQv6o68Qd8dC5kysbUObNUqjorZXtlKAgACTV6A=
+Date: Wed, 1 Jul 2026 07:50:16 +0000
+Message-ID: <dab0dd2b31d14bef9fdc9d0c887dc460@hygon.cn>
+References: <20260701034413.718872-1-liuqi@hygon.cn>
+ <20260701034413.718872-2-liuqi@hygon.cn>
+ <20260701070013.GJ48970@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260701070013.GJ48970@noisy.programming.kicks-ass.net>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 09/21] perf annotate-arm64: Implement
- extract_op_location() callback
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-10-wutengda@huaweicloud.com>
- <20260701041002.EBBC31F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260701041002.EBBC31F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgB3mYZ7w0RqACLSAQ--.34240S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDCw4ftFyUXrWUArWDArb_yoW5Xw1fpr
-	4j93y3Kry7tr45trnxXws7Gw1akwn3GF1agrWay3W3CFnIvFnagFs2kFn0gayrJrnxC3yj
-	vr4jqrWUXwn8CaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUglb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x07UWHqcUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-
-
-On 2026/7/1 12:10, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Post-index memory references with register offsets are incorrectly classified as SIGNED_OFFSET.
-> --
-> 
-> commit 1b03950d2edd24d57bf3a7ad6271aea1980c92e3
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> 
-> perf annotate-arm64: Implement extract_op_location() callback
-> 
-> Implement the extract_op_location() callback for the arm64 architecture
-> to handle its specific assembly syntax and addressing modes, enabling data
-> type profiling for this architecture.
-> 
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 451500def8c12..77b6f4841c849 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> [ ... ]
->> +static int extract_op_location_arm64(const struct arch *arch,
->> +				     struct disasm_line *dl __maybe_unused,
->> +				     const char *op_str, int op_idx __maybe_unused,
->> +				     struct annotated_op_loc *op_loc)
->> +{
->> +	const char *s = op_str;
->> +	char *p = NULL;
->> +
->> +	if (op_str == NULL)
->> +		return 0;
-> [ ... ]
->> +	/*
->> +	 * Handle memory references (e.g., [x0, #8]), identify
->> +	 * arm64 specific addressing modes
->> +	 */
->> +	if (*s == arch->objdump.memory_ref_char) {
->> +		op_loc->mem_ref = true;
->> +
->> +		p = strchr(s, ']');
->> +		if (p == NULL)
->> +			return -1;
->> +
->> +		/* Pre-index: [base, #imm]! */
->> +		if (p[1] == '!')
->> +			op_loc->addr_mode = PERF_ADDR_MODE_PRE_INDEX;
->> +		/* Post-index: [base], #imm */
->> +		else if (p[1] == ',' && strchr(p + 1, arch->objdump.imm_char))
->> +			op_loc->addr_mode = PERF_ADDR_MODE_POST_INDEX;
-> 
-> [Severity: Medium]
-> Does this incorrectly restrict post-index addressing classification to only
-> immediate offsets?
-> 
-> In ARM64, a comma immediately following the closing bracket (p[1] == ',') is
-> sufficient to identify a post-index addressing mode, regardless of whether
-> the offset is an immediate or a register (for example, Advanced SIMD
-> instructions like ld1 {v0.16b}, [x2], x5).
-> 
-> If the condition fails for register offsets, it appears it will incorrectly
-> fall through to PERF_ADDR_MODE_SIGNED_OFFSET. Could this cause the base
-> register write-back to be silently ignored in adjust_reg_index_state(),
-> leading to stale and corrupted type state tracking for the base register?
-> 
-
-I'd prefer to keep it as-is. SIMD instructions are not supported yet,
-and the current restriction is safer. We can revisit if needed.
-
->> +		/* Signed offset: [base{, #imm}] */
->> +		else
->> +			op_loc->addr_mode = PERF_ADDR_MODE_SIGNED_OFFSET;
->> +
->> +		s++;
->> +	}
-> 
+DQoNCi0tLS0t08q8/tStvP4tLS0tLQ0Kt6K8/sjLOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGlu
+ZnJhZGVhZC5vcmc+IA0Kt6LLzcqxvOQ6IDIwMjbE6jfUwjHI1SAxNTowMA0KytW8/sjLOiBRaSBM
+aXUgPGxpdXFpQGh5Z29uLmNuPg0Ks63LzTogbWluZ29AcmVkaGF0LmNvbTsgbmFtaHl1bmdAa2Vy
+bmVsLm9yZzsgYWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbTsgam9sc2FAa2VybmVs
+Lm9yZzsgeDg2QGtlcm5lbC5vcmc7IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBKaW5nIExpIDxsaWppbmdAaHlnb24uY24+OyBa
+aGVuZ2xhbmcgSHUgPGh1emhlbmdsYW5nQGh5Z29uLmNuPg0K1vfM4jogUmU6IFtQQVRDSCAxLzNd
+IHBlcmYveDg2L2FtZC91bmNvcmU6IEFkZCBjb21tb24gUE1VIGhlbHBlciBmdW5jdGlvbnMNCg0K
+T24gV2VkLCBKdWwgMDEsIDIwMjYgYXQgMDM6NDQ6MTFBTSArMDAwMCwgUWkgTGl1IHdyb3RlOg0K
+PiBBZGQgY29tbW9uIGhlbHBlciBmdW5jdGlvbnMgZm9yIEFNRC1mYW1pbHkgdW5jb3JlIFBNVSBo
+YW5kbGluZy4NCj4gDQo+IFRoZSBoZWxwZXJzIGNvdmVyIGV2ZW50IGluaXRpYWxpemF0aW9uLCBj
+b3VudGVyIGFsbG9jYXRpb24sIGNvdW50ZXIgDQo+IHJlYWQvdXBkYXRlLCBldmVudCBzdGFydC9z
+dG9wIGFuZCBwZXItQ1BVIGNvbnRleHQgbWFuYWdlbWVudC4gIFRoZXNlIA0KPiBwYXRocyBhcmUg
+bm90IHRpZWQgdG8gYSBzcGVjaWZpYyB1bmNvcmUgdW5pdCBhbmQgY2FuIGJlIHJldXNlZCBieSAN
+Cj4gZHJpdmVycyB3aXRoIGEgc2ltaWxhciB1bmNvcmUgUE1VIHByb2dyYW1taW5nIG1vZGVsLg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogUWkgTGl1IDxsaXVxaUBoeWdvbi5jbj4NCj4gVGVzdGVkLWJ5
+OiBaaGVuZ2xhbmcgSHUgPGh1emhlbmdsYW5nQGh5Z29uLmNuPg0KDQo+ICtFWFBPUlRfU1lNQk9M
+X0dQTCh1bmNvcmVfY29tbW9uX3NldF91cGRhdGVfaW50ZXJ2YWwpOw0KPiArRVhQT1JUX1NZTUJP
+TF9HUEwoZXZlbnRfdG9fdW5jb3JlX2NvbW1vbl9wbXUpOw0KPiArRVhQT1JUX1NZTUJPTF9HUEwo
+dW5jb3JlX2NvbW1vbl9hdHRyX2dyb3VwKTsNCj4gK0VYUE9SVF9TWU1CT0xfR1BMKHVuY29yZV9j
+b21tb25fc3RhcnRfaHJ0aW1lcik7DQo+ICtFWFBPUlRfU1lNQk9MX0dQTCh1bmNvcmVfY29tbW9u
+X3JlYWQpOw0KPiArRVhQT1JUX1NZTUJPTF9HUEwodW5jb3JlX2NvbW1vbl9zdGFydCk7DQo+ICtF
+WFBPUlRfU1lNQk9MX0dQTCh1bmNvcmVfY29tbW9uX3N0b3ApOw0KPiArRVhQT1JUX1NZTUJPTF9H
+UEwodW5jb3JlX2NvbW1vbl9ldmVudF9pbml0KTsNCj4gK0VYUE9SVF9TWU1CT0xfR1BMKHVuY29y
+ZV9jb21tb25fYWRkKTsNCj4gK0VYUE9SVF9TWU1CT0xfR1BMKHVuY29yZV9jb21tb25fZGVsKTsN
+Cj4gK0VYUE9SVF9TWU1CT0xfR1BMKHVuY29yZV9jb21tb25fY3R4X2luaXQpOw0KPiArRVhQT1JU
+X1NZTUJPTF9HUEwodW5jb3JlX2NvbW1vbl9jdHhfZnJlZSk7DQo+ICtFWFBPUlRfU1lNQk9MX0dQ
+TCh1bmNvcmVfY29tbW9uX2N0eF9tb3ZlKTsNCg0KSSBsaWtlIHRoZSBpZGVhLCBidXQgSSBkb24n
+dCBwYXJ0aWN1bGFybHkgbGlrZSB0aGUgbmFtZXNwYWNlLg0KJ3VuY29yZV9jb21tb24nIGlzIHRv
+byBnZW5lcmljLCB0aGVyZSBhcmUgYSB0b24gb2YgdW5jb3JlIGRyaXZlcnMsIGV2ZW4gb24geDg2
+IGFuZCB0aGVzZSBmdW5jdGlvbnMgYXJlIHNwZWNpZmljIHRvIHRoZSBBTUQgZmFtaWx5LiBUaGF0
+IGlzLCB0aGV5IGFyZW4ndCByZWFsbHkgY29tbW9uIGF0IGFsbC4NCg0KSGkgUGV0ZXIsDQoNClRo
+YW5rcyBmb3IgeW91ciByZXBseSENCg0KWWVzLCB0aGF0IG5hbWVzcGFjZSBpcyBhIGZhaXIgcG9p
+bnQgoaogImNvbW1vbiIgaXMgdG9vIGJyb2FkLiBIZXJlIGFyZSB0d28gb3B0aW9uczoNCkEpIGFt
+ZF91bmNvcmVfKiChqiBUaGUgcHJlZml4IGRlc2NyaWJlcyB0aGUgcHJvZ3JhbW1pbmcgbW9kZWwg
+b3JpZ2luLCBub3QgdGhlIHZlbmRvciBydW5uaW5nIGl0Lg0KQikgYW1kX2ZhbWlseV91bmNvcmVf
+KiChqiBtYWtlcyBpdCBleHBsaWNpdCB0aGF0IHRoaXMgaXMgQU1ELWZhbWlseSB1bmNvcmUgaW5m
+cmFzdHJ1Y3R1cmUuDQoNCkRvIHlvdSBoYXZlIGEgcHJlZmVyZW5jZT8gIE9yIHNvbWV0aGluZyBl
+bHNlIGVudGlyZWx5Pw0KDQpUaGFua3MsDQpRaSBMaXUNCg==
 
