@@ -1,289 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D715182D6
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:50:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D25339098C
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:50:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782895848; cv=none; b=Jt2mN2qI36W1VR/VZhMXrHqQIDZbwpfzSjG3HEsLy9rH5X6Pi1UIaIGwZTCLEap+9OWDv4SFDdTUr1ZbsCCKKYHHN86eARp31VPICtgyHCCK+BCosc549AGgrzUSBFoBFUTO9HvJTriVpmMTInZxeeTHzlQkqvQKVH2B/1SSPlA=
+	t=1782895860; cv=none; b=dT4aWe+xkwlfjFOTtvVNvp5rGGvTTM+QpktoWlFxzP0m94Foca28H8SkDdgzHDkOBD0POs/TXm2nC/wvj1HlBDCEHv4xrybpzIcN+ERMl4DgPCeeHXL8TGQEijdSH3Gd3MpZhKwJoxdbElwyVama5zO32/5YBuOvQH9r5QiYrRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782895848; c=relaxed/simple;
-	bh=zQvrI2A5tev+CFy7jVopfuK9Hl1ko4KYnyQpWvih40k=;
+	s=arc-20240116; t=1782895860; c=relaxed/simple;
+	bh=7PtOzlIIFBSPQ1qHriC3fLFZb5lu1/telrdWxXoCqRY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZIfOAN98PgN7QpalI16WUxTKVjETgLeDnZH2ResEqgZqAVt80JDHpWt9zVAnpMJ2uUsN/bSqzt4kFkiMEy0y1pQfxAK5ukM46r+josCCgcAaOj1Tgjm7WzR8J9joiEQhnZQ2/VY1F7U1eaMjaKUocmRbuN1kyslpCxO7hQGg4g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iH8ZnvfS; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=mpU2Mq5iT2uIXr949N5hXQK16Pq2cWRG9yBsoHrawqjnQpDakFDbxPeMsFeY4+J8ToowwnSWo1aL6XnV/7qGGu4KkvXAzcf4jXg0YREG7LbkYMXTIH0hJhy1RvVuGyBaAeg1PpVtWbqWqrHF0ghyIGd9DPtmgzu4LARIL4WbWgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSTauDFj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iH8ZnvfS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C2CE1F000E9;
-	Wed,  1 Jul 2026 08:50:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSTauDFj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC851F000E9;
+	Wed,  1 Jul 2026 08:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782895847;
-	bh=LVsVI11pIx5GBFm8knq+2I/TjxlqrTkpYxNTWMmod+s=;
+	s=k20260515; t=1782895859;
+	bh=mmRccjpjR39tfqeu70UQ85Evno1BT/zu1zaIdgxRbxI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iH8ZnvfS9FykLKyHox5KszIbcF7qIUdXvxt18IwUJRFWcSPvsJRC5e/0OTZutKVEU
-	 wpGfi6/UPJAqJzR/CSgugCgPlrMXb6+kED9e6F5yvJMw0OfhMqhBVq6aZVB1Z65wxY
-	 XFZVKlPvD8ftXd+YpIOAEUSDpooPFjlvRf6Nu/u++fF/tXF2nEW7cVDNvxPvuX/jBN
-	 6MBYlkJCwfiluD/+kR6aPP4bHwPP5OS7OqbmAmkgHnEs4XHVmWYZ389MRmZl0DtvQB
-	 l3RtxphhjDLfSr/DGMwqYRpNNs8WFnglyV7VgbkodPFz/84tyhkg/VmYAIitGCCpMk
-	 upvvP0KGhKKOQ==
+	b=cSTauDFjL5kN2bpD+2Z0SPetlR/TxNBtroQ6nkNkza8a9xk+U+GByu3byboCGE8ED
+	 9DzV1jKy0mxEk6z5qfEG5f3jO+CFh7M1H+MuG9Lzs/PDZI1xNmsYYyvXDgINZ6ZkJV
+	 t30r0sfC/bqYduyJG5e0Oxdv9FvD35fShOrKtG4aqqRRyPpp4E6EyeKlYg5esL4YXt
+	 +3o7s1B4HNQjy+CPYavMGI8F6GRd8KitDijA7/GC8fhLW5a8mvUWkIBKqLaKhzpakI
+	 O7vfDA8cmDhRmziLeSt3cOqEHpMkoZvgotDaZzGGOX55sPQKwaOE+sBXTpxEvaXHbT
+	 Pw7PhhzJImZvw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/5] powerpc/htm: Add interface to expose HTM trace data
- via perf
+Subject: Re: [PATCH 2/5] powerpc/htm: Add support to setup and free aux
+ buffer for capturing HTM data
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701083806.79358-2-atrajeev@linux.ibm.com>
+In-Reply-To: <20260701083806.79358-3-atrajeev@linux.ibm.com>
 References: <20260701083806.79358-1-atrajeev@linux.ibm.com>
- <20260701083806.79358-2-atrajeev@linux.ibm.com>
+ <20260701083806.79358-3-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 08:50:46 +0000
-Message-Id: <20260701085047.1C2CE1F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 08:50:57 +0000
+Message-Id: <20260701085058.DEC851F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 7 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Missing Firmware Feature Check allows PMU to register on bare-meta=
-l systems.
-- [High] Improper Error Handling treats unhandled hypervisor errors as succ=
-ess.
-- [High] Resource leak when `H_HTM_OP_START` fails.
-- [High] Missing cpumask attribute leads to concurrent identical hypercalls.
-- [Medium] Retry loops spin endlessly on deterministic errors.
-- [Medium] PMU API violation for start/stop operations.
-- [Medium] Improper handling of `sample_freq` corrupts the sampling logic.
+- [High] The driver violates the perf AUX ring buffer API by writing trace =
+data to independent offsets, ignoring the core perf ring buffer head.
+- [Medium] Signed integer overflow when calculating the AUX buffer size lea=
+ds to a massive 64-bit value.
 --
 
-commit 400fb092e994f5871c30e25b796b6ab855238ea4
+commit 10ce4df3e9571041276c72fea1e10e3955d5eea1
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
+Subject: powerpc/htm: Add support to setup and free aux buffer for capturin=
+g HTM data
 
-powerpc/htm: Add interface to expose HTM trace data via perf
-
-H_HTM (Hardware Trace Macro) hypervisor call is an HCALL to export data
-from Hardware Trace Macro (HTM) function. Add support for setup,
-configuration and control of HTM function via PMU.
+This commit adds PMU callbacks for setup_aux and free_aux to enable=20
+capturing HTM trace data into a perf auxiliary buffer. It allocates=20
+memory and records trace data directly into the provided pages for=20
+later post-processing.
 
 > diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
-> new file mode 100644
-> --- /dev/null
+> index e22a7fdce2f5d..ae7f469b6840d 100644
+> --- a/arch/powerpc/perf/htm-perf.c
 > +++ b/arch/powerpc/perf/htm-perf.c
-
-> [ ... ]
-
-> +static ssize_t htm_return_check(int rc)
+[ ... ]
+> @@ -126,6 +143,74 @@ static ssize_t htm_return_check(int rc)
+>  	return -EINVAL;
+>  }
+> =20
+> +static int htm_dump_sample_data(struct perf_event *event)
 > +{
-> +	switch (rc) {
-> +	case H_SUCCESS:
-> +		break;
-
-> [ ... ]
-
-> +	case H_AUTHORITY:
-> +		return -EPERM;
-> +	}
-> +
-> +	/*
-> +	 * Return 1 for H_SUCCESS/H_PARTIAL
-> +	 */
-> +	return 1;
-> +out:
-> +	return -EINVAL;
-> +}
-
-[Severity: High]
-Will unhandled hypercall return codes fall through the switch statement
-and return 1 (success)? If the hypervisor returns an unhandled error code,
-this code might silently interpret critical failures as successes.
-
-> [ ... ]
-
-> +static int htm_event_init(struct perf_event *event)
-> +{
-> +	struct hw_perf_event *hwc =3D &event->hw;
-> +	u64 config =3D event->attr.config;
-> +	u32 htmtype;
-
-> [ ... ]
-
-> +	if (event->attr.freq) {
-> +		hwc->sample_period =3D event->attr.sample_period;
-> +		local64_set(&hwc->period_left, hwc->sample_period);
-> +		hwc->last_period =3D hwc->sample_period;
-> +		event->attr.freq =3D 0;
-> +	}
-> +
-> +	return 0;
-> +}
-
-[Severity: Medium]
-Does copying the target frequency into the sample period break the sampling
-logic? Since frequency-based sampling does not appear to be supported, shou=
-ld
-this return -EINVAL instead of disabling dynamic frequency adjustment?
-
-> [ ... ]
-
-> +static int htm_event_add(struct perf_event *event, int flags)
-> +{
-> +	int rc, ret;
-> +	unsigned long param1 =3D -1, param2 =3D -1;
-> +	int retries =3D 0;
-> +	u64 config =3D event->attr.config;
-> +	u32 htmtype, nodeindex, nodalchipindex, coreindexonchip;
-> +
+[ ... ]
 > +	/*
 > +	 * Invoke H_HTM call with:
-> +	 * operation as htm configure (H_HTM_OP_CONFIGURE)
-> +	 * last three values are unused, hence set to zero
+> +	 * - operation as htm dump (H_HTM_OP_DUMP_DATA)
+> +	 * - last three values are address, size and offset
 > +	 */
-> +	htmtype =3D config & 0xf;
-> +	nodeindex =3D (config >> 4) & 0xff;
-> +	nodalchipindex =3D (config >> 12) & 0xff;
-> +	coreindexonchip =3D (config >> 20) & 0xff;
-> +	do {
-> +		rc =3D htm_hcall_wrapper(htmflags, nodeindex, nodalchipindex, coreinde=
-xonchip,
-> +			htmtype, H_HTM_OP_CONFIGURE, param1, param2, 0);
-> +		ret =3D htm_return_check(rc);
-> +	} while (ret <=3D 0 && ++retries < 100);
-
-[Severity: Medium]
-Does this loop retry 100 times for deterministic errors like -EINVAL and
--EPERM? The condition ret <=3D 0 causes it to spin needlessly on errors that
-will not succeed on retry.
-
-> +	if (ret <=3D 0)
-> +		return -1;
+> +	if (aux_buf->collect_htm_trace) {
+> +		do {
+> +			rc =3D htm_hcall_wrapper(htmflags, nodeindex, nodalchipindex, coreind=
+exonchip,
+> +				htmtype, H_HTM_OP_DUMP_DATA, virt_to_phys(aux_buf->base),
+> +				(aux_buf->nr_pages * PAGE_SIZE), aux_buf->head);
+> +			ret =3D htm_return_check(rc);
+> +		} while (ret =3D=3D -EBUSY && ++retries < 100);
 > +
-> +	/* Reset retries */
-> +	retries =3D 0;
-> +
-> +	/*
-> +	 * Invoke H_HTM call with:
-> +	 * operation as htm  start (H_HTM_OP_START)
-> +	 * last three values are unused, hence set to zero
-> +	 */
-> +	do {
-> +		rc =3D htm_hcall_wrapper(htmflags, nodeindex, nodalchipindex, coreinde=
-xonchip,
-> +				htmtype, H_HTM_OP_START, 0, 0, 0);
-> +		ret =3D htm_return_check(rc);
-> +	} while (ret =3D=3D -EBUSY && ++retries < 100);
-> +
-> +	if (htm_return_check(rc) <=3D 0)
-> +		return -1;
+> +		if (ret > 0) {
+> +			aux_buf->head +=3D (aux_buf->nr_pages * PAGE_SIZE);
+> +			perf_aux_output_end(&htm_ctx->handle, (aux_buf->nr_pages * PAGE_SIZE)=
+);
 
 [Severity: High]
-If H_HTM_OP_START fails, does this return without cleaning up the
-configuration? Because event_add fails, the perf core aborts event creation
-and won't call event_del, potentially leaving the hypervisor state permanen=
-tly
-configured and leaking tracing resources.
+Does this code write trace data to independent offsets, ignoring the core=20
+perf ring buffer head?
 
-[Severity: Medium]
-Is it expected to execute the start operation unconditionally during event_=
-add
-instead of using the standard pmu->start callback? If the event is created =
-in
-a disabled state, it will immediately start tracing anyway.
+If the user does not consume data fast enough, perf_aux_output_end() will=20
+truncate the write to the available space. Because the driver ignores=20
+htm_ctx->handle.head (the true write offset within the ring buffer) and=20
+tracks its own offsets via aux_buf->base and aux_buf->head, could any=20
+truncation desynchronize the driver from the perf core?
 
-> +	return 0;
-> +}
-> +
-> +static void htm_event_del(struct perf_event *event, int flags)
-> +{
-> +	long rc;
-> +	int ret;
-> +	int retries =3D 0;
-> +	u64 config =3D event->attr.config;
-> +	u32 htmtype, nodeindex, nodalchipindex, coreindexonchip;
+This could lead to subsequent writes going to the wrong offset while=20
+userspace is told the data is at a different offset, resulting in silent=20
+corruption of the perf AUX trace data.
 
-> [ ... ]
-
-> +	/* Reset retries */
-> +	retries =3D 0;
-> +
-> +	/*
-> +	 * Invoke H_HTM call with:
-> +	 * operation as htm configure (H_HTM_OP_DECONFIGURE)
-> +	 * last three values are unused, hence set to zero
-> +	 */
-> +	do {
-> +		rc =3D htm_hcall_wrapper(htmflags, nodeindex, nodalchipindex, coreinde=
-xonchip,
-> +			htmtype, H_HTM_OP_DECONFIGURE, 0, 0, 0);
-> +		ret =3D htm_return_check(rc);
-> +	} while (ret <=3D 0 && ++retries < 100);
-> +}
-
-[Severity: Medium]
-Similar to the configure path, does this loop needlessly spin on determinis=
-tic
-errors like -EINVAL and -EPERM?
-
-> [ ... ]
-
-> +static void htm_event_stop(struct perf_event *event, int flags)
-> +{
-> +}
-
-[Severity: Medium]
-Does providing an empty stop callback prevent users from disabling tracing =
-via
-the standard perf API? ioctl(PERF_EVENT_IOC_DISABLE) relies on this callback
-to pause the hardware.
-
-> +static struct pmu htm_pmu =3D {
-> +	.task_ctx_nr =3D perf_invalid_context,
-> +
-> +	.name =3D "htm",
-> +	.attr_groups =3D attr_groups,
-> +	.event_init  =3D htm_event_init,
-> +	.add         =3D htm_event_add,
-> +	.del         =3D htm_event_del,
-> +	.read        =3D htm_event_read,
-> +	.start	     =3D htm_event_start,
-> +	.stop	     =3D htm_event_stop,
-> +	.capabilities =3D PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_EXCLUSIVE,
-> +};
-
-[Severity: High]
-Does this system-wide PMU require a cpumask attribute to prevent concurrent
-access? Without a cpumask, running perf stat -a might attempt to open and
-start the HTM event on every CPU simultaneously, leading to race conditions
-on the hypervisor side for the same node/chip target.
-
-> +static int htm_init(void)
-> +{
-> +	int r;
-> +
-> +	/* This driver is intended only for L1 host. */
-> +	if (is_kvm_guest()) {
-> +		pr_debug("Only supported for L1 host system\n");
-> +		return -ENODEV;
+> +		} else {
+> +			aux_buf->collect_htm_trace =3D 0;
+> +			perf_aux_output_end(&htm_ctx->handle, 0);
+> +		}
 > +	}
 > +
-> +	r =3D perf_pmu_register(&htm_pmu, htm_pmu.name, -1);
-
-[Severity: High]
-Can this PMU register on bare-metal systems (PowerNV/OPAL) where the PAPR
-hypervisor isn't present? It might be necessary to verify the presence of t=
-he
-hypervisor using firmware_has_feature(FW_FEATURE_LPAR) to prevent system
-traps or panics when executing H_HTM.
-
-> +	if (r)
-> +		return r;
-> +
-> +	return 0;
+> +	return ret;
 > +}
+[ ... ]
+> +static void *htm_setup_aux(struct perf_event *event, void **pages,
+> +		int nr_pages, bool snapshot)
+> +{
+> +	int cpu =3D event->cpu;
+> +	struct htm_pmu_buf *buf;
 > +
-> +device_initcall(htm_init);
+> +	/* We need at least one page for this to work. */
+> +	if (!nr_pages)
+> +		return NULL;
+> +
+> +	if (cpu =3D=3D -1)
+> +		cpu =3D raw_smp_processor_id();
+> +
+> +	buf =3D kzalloc_node(sizeof(*buf), GFP_KERNEL, cpu_to_node(cpu));
+> +	if (!buf)
+> +		return NULL;
+> +
+> +	buf->base =3D pages[0];
+> +
+> +	if (!buf->base) {
+> +		kfree(buf);
+> +		return NULL;
+> +	}
+> +
+> +	buf->nr_pages =3D nr_pages;
+> +	buf->snapshot =3D false;
+> +	buf->size =3D nr_pages << PAGE_SHIFT;
+
+[Severity: Medium]
+Can the size calculation overflow for large values of nr_pages?
+
+Since both nr_pages and PAGE_SHIFT evaluate as 32-bit signed integers,=20
+a large AUX buffer allocation (e.g., nr_pages =3D 32768) could overflow int=
+o=20
+the sign bit. When assigned to the u64 size field, this would sign-extend=20
+to a massive 64-bit value.=20
+
+Could this result in bypassing internal bounds checks when the size is=20
+later returned to the perf subsystem?
+
+> +	buf->head =3D 0;
+> +	buf->head_size =3D 0;
+> +	buf->htm_stopped =3D 0;
+> +	buf->collect_htm_trace =3D 1;
+> +	return buf;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701083806.7935=
-8-1-atrajeev@linux.ibm.com?part=3D1
+8-1-atrajeev@linux.ibm.com?part=3D2
