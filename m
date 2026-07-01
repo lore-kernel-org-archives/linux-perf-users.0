@@ -1,104 +1,135 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D97B3BADB2
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8F73EFD14
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782895657; cv=none; b=Z86KwunoQtQmyUaw4s/Fwbl8/poO4cGtNYQGE3LWQV623iuQdBfYLR3VCluLoLqqPiRKqrKpcmoCtxfiEgpW7SAhIAiKkKkN7y3PFwj5KDHpPKa9WROEP5DAvvknP/hBeNnln6MVYbw+cTFrnuwX2AG8WUODe5ll09ynAliTTTk=
+	t=1782895658; cv=none; b=WMqYR9fTPS0SJQRg9Ltx9k1ljEwFUwMZ5DV0wZzpHOEUj6Kcu3AfSJFbmgtBf357/hFDG7l+W5X5cc+37KqffRQfx0q10yAAnmaLgks6ogTR1WdseJUsd8K0kW3OWFtxWkRIeT1uAaycM20lDlMFU2f83rqL4/sm9/ZXQP6ummY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782895657; c=relaxed/simple;
-	bh=A3gRyl4ltUH9yUsRKVqvAMCjF315BmzM3okD18OgTNY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eN4HieQm5eiFy/7Nl5nd4aWUv5BLAfHsK3vHinlLLIivIHubChIAHLYD/8nyR8ma4u5OrtMm/iJedfwys8Wp/HUZtuD5qps6Q68MqRbquxCcvS1R8I7gL+EaxAjVKSZnw18PXWS/7KMTYFyMu4VU+8K85RXQJe/usOBHwWuRBq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=h4ZVPuN7; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h4ZVPuN7"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782895652;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q3CU0znujUTwcxjeKNolaCbQsHD6AswnEQkiO1fL85Y=;
-	b=h4ZVPuN74ylcIjDvtDiE9C6IU/R16DyA59zWn/3nQKQidAqMCx8sdQv7Amia68ooxMEwQz
-	mlyA7yuRlFOjNn5Zblo29Zy1Fc2IxS+BQoaCEuJfeUsM4EwVv7ttTMZfZxwESQmUuCmocr
-	/6IkNJqlll6D/svFSUmOWZU2DxUo1po=
-From: Atish Patra <atish.patra@linux.dev>
-Date: Wed, 01 Jul 2026 01:46:52 -0700
-Subject: [PATCH v8 04/22] dt-bindings: riscv: add Sxcsrind ISA extension
- description
+	s=arc-20240116; t=1782895658; c=relaxed/simple;
+	bh=OEGq8VWOTXEeIoo8x9SdtNhKfEs9mdbzK6Xw1R9Lh6E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NPJnqfmmin5V2gbHNn6QfDV2cZNs+IXvEW62G9I5M5uxPIStEytDdVu5ldrHFGMOzWBM32HPZPpW/DoYpaUVdickMd4wo7X5NLEkLuNyNNmjOdfEd4X5Uo0Er7tRbj/UklCdxZwLpYv/ksv3NC0r80Y8fxIoyqv+41dDhEE4jPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gqtsp3962zYQtgR
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 16:46:38 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A44E64058C
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 16:47:32 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgB3iPwk1ERqHBnbAQ--.21225S2;
+	Wed, 01 Jul 2026 16:47:32 +0800 (CST)
+Message-ID: <da1cb02a-7a26-4866-af87-5a53b559dc2e@huaweicloud.com>
+Date: Wed, 1 Jul 2026 16:47:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 18/21] perf annotate-arm64: Support 'add' instruction
+ tracking
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-19-wutengda@huaweicloud.com>
+ <20260701041654.AD6F41F00A3A@smtp.kernel.org>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20260701041654.AD6F41F00A3A@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260701-counter_delegation-v8-4-7909f863a645@meta.com>
-References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
-In-Reply-To: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
-To: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
- Anup Patel <anup@brainfault.org>, Namhyung Kim <namhyung@kernel.org>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Atish Patra <atish.patra@linux.dev>, Ian Rogers <irogers@google.com>, 
- Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, Conor Dooley <conor@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:gCh0CgB3iPwk1ERqHBnbAQ--.21225S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxurWUXr4kJF1xCw47Cw1UAwb_yoW5Xw4xpa
+	43C34UGa17tr409Fn3tF48Zry7Cr4fJr909r98X39IyFsIvrn3Ka93KFW3KayrGr97Cw4j
+	qw1qqrWDZw48CaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2
+	KfnxnUUI43ZEXa7IU8oGQDUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-From: Atish Patra <atishp@rivosinc.com>
 
-Add the S[m|s]csrind ISA extension description.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
----
- Documentation/devicetree/bindings/riscv/extensions.yaml | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On 2026/7/1 12:16, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] Missing register invalidation when source registers are known non-pointer types, causing the destination register to incorrectly retain stale type information.
+> --
+> 
+> commit 5b1d520539dfc4b7d2f19958225cafb067fd8ce1
+> Author: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> perf annotate-arm64: Support 'add' instruction tracking
+> 
+> Extend update_insn_state() for arm64 to track 'add' instructions for
+> structure member address calculation, which commonly appear as:
+> 
+>   add  dreg, base, #offset
+>   add  dreg, base, reg2     (reg2 holds a constant)
+> 
+> For such instructions, determine the final offset value from either the
+> immediate or the constant in reg2.
+> 
+>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> index be07a85057c8c..1fed188117192 100644
+>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> [ ... ]
+>> +static void update_add_insn_state(struct type_state *state,
+>> +				  struct disasm_line *dl,
+>> +				  struct annotated_op_loc *src,
+>> +				  struct annotated_op_loc *dst)
+>> +{
+> [ ... ]
+>> +	/* Handle calculation of a register holding a typed pointer */
+>> +	if (src_tsr.kind == TSR_KIND_POINTER ||
+>> +	    (src_tsr.kind == TSR_KIND_TYPE &&
+>> +	     dwarf_tag(&src_tsr.type) == DW_TAG_pointer_type)) {
+> [ ... ]
+>> +		pr_debug_type_name(&tsr->type, tsr->kind);
+>> +	}
+>> +	/* Or try another register if any */
+>> +	else if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2) {
+>> +		sreg = src->reg2;
+>> +		goto retry;
+>> +	}
+>> +}
+> 
+> [Severity: Medium]
+> When the source registers are not tracked pointers or valid types, the code
+> falls through the if/else if chain and returns implicitly here without calling
+> invalidate_reg_state(tsr).
+> 
+> Since update_insn_state_arm64() specifically exempts "add" instructions from
+> generic register invalidation (as seen below), won't dreg incorrectly retain
+> its previous stale type information?
+> 
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 2b0a8a93bb21..15cf0e2ee3ed 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -181,6 +181,14 @@ properties:
-             changes to interrupts as frozen at commit ccbddab ("Merge pull
-             request #42 from riscv/jhauser-2023-RC4") of riscv-aia.
- 
-+        - const: smcsrind
-+          description: |
-+            The standard Smcsrind machine-level extension extends the
-+            indirect CSR access mechanism defined by the Smaia extension. This
-+            extension allows other ISA extensions to use indirect CSR access
-+            mechanism in M-mode as ratified in the 20240326 version of the
-+            privileged ISA specification.
-+
-         - const: smmpm
-           description: |
-             The standard Smmpm extension for M-mode pointer masking as
-@@ -226,6 +234,14 @@ properties:
-             Profiles Version 1.0, with commit b1d806605f87 ("Updated to
-             ratified state.")
- 
-+        - const: sscsrind
-+          description: |
-+            The standard Sscsrind supervisor-level extension extends the
-+            indirect CSR access mechanism defined by the Ssaia extension. This
-+            extension allows other ISA extensions to use indirect CSR access
-+            mechanism in S-mode as ratified in the 20240326 version of the
-+            privileged ISA specification.
-+
-         - const: ssnpm
-           description: |
-             The standard Ssnpm extension for next-mode pointer masking as
+Already covered in the earlier discussion. Will fix all in one go.
 
--- 
-2.53.0-Meta
+> [ ... ]
+>> @@ -589,7 +673,7 @@ static void update_insn_state_arm64(struct type_state *state,
+>>  	 * the destination register itself to prevent incorrect type propagation.
+>>  	 */
+>>  	if (has_reg_type(state, dst->reg1) &&
+>> -	    strcmp(dl->ins.name, "mov") &&
+>> +	    strcmp(dl->ins.name, "add") && strcmp(dl->ins.name, "mov") &&
+>>  	    strncmp(dl->ins.name, "ld", 2) && strncmp(dl->ins.name, "st", 2)) {
+>>  		pr_debug_dtp("%s [%x] invalidate reg%d\n",
+>>  			     dl->ins.name, insn_offset, dst->reg1);
+> 
+
 
