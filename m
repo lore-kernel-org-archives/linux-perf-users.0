@@ -1,128 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B00D367F5E
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 03:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FBD37267F
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:00:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782878188; cv=none; b=q5r0o8tp1jMR39lpGl9JjpFK2ummS412jHUofl0hLosoPp3fYCx+PvAGOc6wxlQvbKJNnvCiUHKCMEpMKCTf4P2jI/QQ/19K45OZTLKJX03jA4owbCG4uE7ooBAxpb9fdGssbcclOLmJf8Mdz/Bb5Pj6M4D/8O7N1D9E1wfRUqU=
+	t=1782878443; cv=none; b=DJfxRTEHR7gVh2hgMUe83fxhgM7cl6WhGn17F1tw9zpPft4mZsfoJAjKWtZ3xecwrkHwRN0T7XKqI0DC7bjLOpUCoxdLmz4rvxYBt+2CDI1F/gtJzo1AHqLTmf5tYqx/t+3EIMR9lFQxLJ3/XljH2ZOXd3mW12gzwP51I10BVWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782878188; c=relaxed/simple;
-	bh=DdU3S2Z9gsBeeBVMGqn/cJtNRxaZA5GJoRi+ChGRA3c=;
+	s=arc-20240116; t=1782878443; c=relaxed/simple;
+	bh=cJ99rWxtcIlwa/pPqVajrisliWsYyogV1NxjyQ10iU4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=q7T8cBBc7MqssEyuIakPgz3+iPoq1SDfphny7JJD9v64GDhaCDxey1XZ/lMkUol64xkIVszwRII/Hrb6idCH3DlT68Rc5FVrC+MSZH+VJuTwcg6Y/leo/gnae9j9cdEyErfSHkjWvFIr+6hlXWE+qG2xuSxPk7A43MCdGIR7M+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohN7Oqnm; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=eWIGJAYMkjgsEGEuOf1y4N9VJ/vI5yQljHmeJBJcPPiCl37f8kUJJTfAMtgXnAmgIhmCkloQzsHPG/nvUBSNzjslJHRJo/NP3jYB4lTPHtoVtuZyAfetnmKTt5w2EtBKrHgqPvyk8JPcw6fsd67Ct5LNQ/4upv0F2TOP/pWzEfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7guwWrn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohN7Oqnm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 026621F000E9;
-	Wed,  1 Jul 2026 03:56:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7guwWrn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A047D1F00A3A;
+	Wed,  1 Jul 2026 04:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782878185;
-	bh=l+NWSbBuxLgMhJ+8S4osXHiuDMofSGrGqbd6N5rGsdw=;
+	s=k20260515; t=1782878439;
+	bh=+uutt4nBXg0Tp8bfv3yDuH5OQPUq/hSt/3KM5+uVqws=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ohN7OqnmxVpD2EXO5DM6Ip9bDDlAoocf+k9mqyHFgZBkDGsB/VP7RPi8KD2r8vrsV
-	 ao2tZrvP6uWV/t2vES/zaYSGt2L28liWLfEHss8h1GnWTVJBvVtKLDAHRfWybKtrHG
-	 iKD0V+wLZNQ5BewYFjrSSYGufogselVN31uo767yDXyZfAzNohZSKNtQI6FPEbp7BF
-	 wbFMmpNDqNorlD4nEzb9R2TeTw3hJnjGXNW6bokpmzCvFhUv9tKoWeBjzaF8vR8nFU
-	 PBpuex7QgKGHanDHp9F8GUnxzxEjiVZvhFrPLfxsXNXVeoOFIuEj+P6D7vXqRKohqg
-	 VOppLSrNJxdpQ==
+	b=l7guwWrnQvx10tfFOFs2S/RLG8SHW6zrtlgDKHE23cmqVyEUh8PbigiZls7S+2vGL
+	 IEcClfjBNL3WCFFOH/CVXYgcGmpK5UPKinOxUugRWRL6ElPUAlKgQfS5KOzm08IDQ2
+	 P0qlg7yXCgUgKnmKCklao6gzOOmToixXPRfIwuNE/dmEANdPdsGE7qgRsHd90pPIYl
+	 BC0gwNfty46UTfV0T05oJku7P4tuc97n3x9fP2URuFVaC3Wnn2Z9A39y8v8zvr9qNw
+	 4DOUv0Che9Zv1T8OZBc++LS8Jx9yvGLurDDReMvoo3GkCIzdYVTc3OKmWeBHgA/r1c
+	 7b59bvlUyb3/Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/3] perf/x86/amd/uncore: Add Hygon uncore PMU support
+Subject: Re: [PATCH 2/3] perf/x86/amd/uncore: Convert AMD driver to common
+ PMU helpers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Qi Liu" <liuqi@hygon.cn>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701034413.718872-4-liuqi@hygon.cn>
+In-Reply-To: <20260701034413.718872-3-liuqi@hygon.cn>
 References: <20260701034413.718872-1-liuqi@hygon.cn>
- <20260701034413.718872-4-liuqi@hygon.cn>
+ <20260701034413.718872-3-liuqi@hygon.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 03:56:24 +0000
-Message-Id: <20260701035625.026621F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 04:00:39 +0000
+Message-Id: <20260701040039.A047D1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Inconsistency between sysfs format attribute and event mask for =
-unknown/future models (> 0x18) in the DF IOD PMU.
+
+Pre-existing issues:
+- [High] Context migration logic incorrectly alters the designated PMU CPU =
+when a non-designated sibling CPU goes offline, permanently breaking PMU hr=
+timers and event polling.
+- [High] Module initialization failure during CPU hotplug setup leaks previ=
+ously registered PMUs and their allocated structures, leading to a dangling=
+ pointer in the kernel's PMU list.
 --
 
-commit 7e45f23af16ead4a16cb506a64d18f3c1ad13f46
+commit 9535e3c8779a5fdb3921bce37f7ad4c941fd34c9
 Author: Qi Liu <liuqi@hygon.cn>
 
-perf/x86/amd/uncore: Add Hygon uncore PMU support
+perf/x86/amd/uncore: Convert AMD driver to common PMU helpers
+   =20
+Use the common uncore PMU helpers for AMD uncore event handling and
+per-CPU context management.
 
-Add uncore PMU support for Hygon processors based on the
-shared AMD-family uncore framework.
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index dbc00b6dd69ee..9cb8b0d1afe7a 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+[ ... ]
+> @@ -1087,41 +654,40 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *unc=
+ore, unsigned int cpu)
+[ ... ]
+> -static struct amd_uncore uncores[UNCORE_TYPE_MAX] =3D {
+> +static struct uncore_common uncores[UNCORE_TYPE_MAX] =3D {
+>  	/* UNCORE_TYPE_DF */
+>  	{
+>  		.scan =3D amd_uncore_df_ctx_scan,
+>  		.init =3D amd_uncore_df_ctx_init,
+> -		.move =3D amd_uncore_ctx_move,
+> -		.free =3D amd_uncore_ctx_free,
+> +		.move =3D uncore_common_ctx_move,
+> +		.free =3D uncore_common_ctx_free,
+>  	},
 
-> diff --git a/arch/x86/events/amd/hygon_uncore.c b/arch/x86/events/amd/hyg=
-on_uncore.c
-> new file mode 100644
-> index 0000000000000..7758a1dda21ae
-> --- /dev/null
-> +++ b/arch/x86/events/amd/hygon_uncore.c
+[Severity: High]
+This isn't a bug introduced by this patch, but while moving the context
+migration logic to uncore_common_ctx_move(), I noticed a potential issue
+when a sibling CPU is taken offline.
+
+In the migration loop, if the offline CPU is not the currently designated C=
+PU,
+will the loop pick the first online sibling CPU and forcibly update next->c=
+pu
+to it without checking if the offline CPU was the active one?
+
+If this happens, the hrtimer would never start on the newly designated CPU
+because no events were actually migrated. When the existing hrtimer fires
+on the originally designated CPU, it evaluates this check in
+uncore_common_hrtimer():
+
+    if (!ctx->nr_active || ctx->cpu !=3D smp_processor_id())
+        return HRTIMER_NORESTART;
+
+Would this mismatched CPU cause the pinned hrtimer to permanently return
+HRTIMER_NORESTART, stopping the PMU event polling?
 
 [ ... ]
+> @@ -1138,7 +706,7 @@ static int __init amd_uncore_init(void)
+>  		BUG_ON(!uncore->move);
+>  		BUG_ON(!uncore->free);
+> =20
+> -		uncore->info =3D alloc_percpu(union amd_uncore_info);
+> +		uncore->info =3D alloc_percpu(union uncore_common_info);
+>  		if (!uncore->info) {
+>  			ret =3D -ENOMEM;
+>  			goto fail;
+>  		}
 
-> +static u64 hygon_uncore_df_event_mask(void)
-> +{
-> +	if (boot_cpu_data.x86_model =3D=3D 0x4 ||
-> +	    boot_cpu_data.x86_model =3D=3D 0x5)
-> +		return HYGON_F18H_M4H_RAW_EVENT_MASK_DF;
-> +
-> +	if (boot_cpu_data.x86_model >=3D 0x6 &&
-> +	    boot_cpu_data.x86_model <=3D 0x18)
-> +		return HYGON_F18H_M6H_RAW_EVENT_MASK_DF;
-> +
-> +	return HYGON_F18H_RAW_EVENT_MASK_DF;
-> +}
+[Severity: High]
+This is a pre-existing issue, but I noticed a potential leak in the module
+initialization error path, such as at this goto fail or if cpuhp_setup_stat=
+e()
+fails later in amd_uncore_init().
 
-[ ... ]
+If setup fails for CPUHP_AP_PERF_X86_AMD_UNCORE_ONLINE, it jumps to the err=
+or
+handling labels (e.g., fail_start). However, the error path doesn't seem to
+unregister successfully registered PMUs or free uncore->pmus.
 
-> +static struct attribute *hygon_uncore_df_iod_format_attr[] =3D {
-> +	&format_attr_event.attr,
-> +	&format_attr_umask10.attr,
-> +	&format_attr_constid.attr,
-> +	&format_attr_iod.attr,
-> +	NULL,
-> +};
+Unlike amd_uncore_exit() which correctly cleans up the PMUs:
 
-[ ... ]
+    perf_pmu_unregister(&pmu->pmu);
+    free_percpu(pmu->ctx);
+    ...
+    kfree(uncore->pmus);
 
-> +static int hygon_uncore_df_iod_ctx_init(struct uncore_common *uncore,
-> +					unsigned int cpu)
-> +{
-
-[ ... ]
-
-> +	pmu->msr_base =3D MSR_HYGON_F18H_DF_IOD_CTL;
-> +	pmu->rdpmc_base =3D -1;
-> +	pmu->group =3D uncore_common_ctx_gid(uncore, cpu);
-> +	pmu->private =3D uncore;
-> +
-> +	if (boot_cpu_data.x86_model >=3D 0x6 &&
-> +	    boot_cpu_data.x86_model <=3D 0x18)
-> +		hygon_uncore_df_iod_format_attr[1] =3D &format_attr_umask12.attr;
-
-[Severity: Medium]
-For unknown or future CPU models (where x86_model > 0x18), this initializat=
-ion
-leaves the DF IOD format attribute as the default 10-bit umask
-(format_attr_umask10.attr).
-
-However, hygon_uncore_df_event_mask() above falls back to returning the 8-b=
-it
-mask HYGON_F18H_RAW_EVENT_MASK_DF for these models.
-
-Will this inconsistency cause userspace to believe a 10-bit umask is suppor=
-ted
-via sysfs, while the PMU driver silently truncates the top 2 bits when appl=
-ying
-the hardware mask in hygon_uncore_df_event_init()?
+Will failing during initialization leave dangling pointers in the global pm=
+us
+list and leak the allocated context memory, potentially causing a crash
+during subsequent PMU accesses?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701034413.7188=
-72-1-liuqi@hygon.cn?part=3D3
+72-1-liuqi@hygon.cn?part=3D2
