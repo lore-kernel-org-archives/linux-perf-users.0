@@ -1,36 +1,36 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DA53B19B5
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17973BADB2
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782895646; cv=none; b=gMryKtdEN3723QTC4O6iDOQ6aj5ILc6eHrgMpjZW462LsvEnJAP9Qcf31zDW6FKOZPIACrVjSi53v9ynlIOc0ZFiT4/HsntrsSHZrHouWC83tCp6toYC7p0YRZ1JxQtH0Ia8ZUwJ/jojoFo/6ueRBw7cVLSiwVtj+j0iyVAeEfQ=
+	t=1782895650; cv=none; b=biENvIUAvHUbxzfwfLoRWpkb7lhChCoUpurz/DJoYOu8MlBeXGu6DqmLYcBdnYqvwa50iUOPwKMfJyCimbdhSNtYY7ZJr1wP1iboOkdcxhg9E/wX1nasquWP7mr/m8Fqw/7AqUvKgc5uE3AwVOxUICtVq7eLXuLVUMQJhkevKv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782895646; c=relaxed/simple;
-	bh=9VOnVvzjsZzR8hJplWz7LMgbcZ7QnXk10tohv83NyKA=;
+	s=arc-20240116; t=1782895650; c=relaxed/simple;
+	bh=49sToyKTSjS66TuV/1Gvj6ise9Amt4gQHPByMHgSiiE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GwWy+cjTIfxtJu+XIrYDWGx5NtIQArAxR2UvDSWmuVGzGcek0DhODAc9a8DL5pzAm/lhBfl2NvwLHXONQ4uXoivBdMsul5PP9oT14DDAKar7dihSz2GCSnMD24qkUi7mqsuGkzlv2heLHKkvRK7G+D8NnVKOce3eopf4BUtIHqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=viR8aRra; arc=none smtp.client-ip=91.218.175.181
+	 In-Reply-To:To:Cc; b=rsDbx7FE7fR8DFkOGnccnq9derHxc1sMewa/Kfij3MnqlcUtkZvbKV/9LNcSdOaMdEnTof2kPFqkcrTqmFVjLgo1493/hLrdlHwzVb9/hFXBMM6/PPyEZxKmfHY8OR4sws89TSl7oqGp44Cklg9EhibIzTNV0udFDMzQaHyKb/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mGAu0O5p; arc=none smtp.client-ip=95.215.58.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="viR8aRra"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mGAu0O5p"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782895642;
+	t=1782895645;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9jkYTJZ76o1QfeUeruk/BApgLfDf2mjQsJprrfSgBCQ=;
-	b=viR8aRra2txaWnJTugOoW7+0kM9QWgabNryKjWO2M3CkuQ5Fxi/WApRf8MqOM3omSVqx8U
-	8yq/pM6cTJhEXNkauymsk1cZ7x8YNrpEOb5kfQeKBUV349+tUy0AMs5/15VmmvIgQEAVGe
-	QfG6yuER74q3Tt+b/Qsk/bmlP27zJUI=
+	bh=gg1b4NvG9irnTlONKFumTIckFqfflTt6uFIpf+8fltI=;
+	b=mGAu0O5p3zzJMOJu8qMNFgcSKrgX6osZU3GAoSLRlOMN10orW6+CZfaU9yfENWqMHTFSsP
+	8YFkH7Qt9+3dgkbpQpQdYAn0ouLmDSJtQMJCltLHCnJTEOrwsW4eaaCCpx4LALgw1sHTzt
+	1Qk1rPXD5165bCku5pIxwAFiDvCL690=
 From: Atish Patra <atish.patra@linux.dev>
-Date: Wed, 01 Jul 2026 01:46:49 -0700
-Subject: [PATCH v8 01/22] RISC-V: perf: fix resource cleanup on driver
- probe failure
+Date: Wed, 01 Jul 2026 01:46:50 -0700
+Subject: [PATCH v8 02/22] RISC-V: Add Sxcsrind ISA extension CSR
+ definitions
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,8 +38,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260701-counter_delegation-v8-1-7909f863a645@meta.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260701-counter_delegation-v8-2-7909f863a645@meta.com>
 References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
 In-Reply-To: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
 To: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
@@ -54,123 +54,89 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
  linux-perf-users@vger.kernel.org, Conor Dooley <conor@kernel.org>
 X-Migadu-Flow: FLOW_OUT
 
-From: Atish Patra <atishp@meta.com>
+From: Kaiwen Xue <kaiwenx@rivosinc.com>
 
-Sashiko pointed out various UAF and memory leak issues around
-pmu_sbi_device_probe() error paths.
+This adds definitions of new CSRs and bits defined in Sxcsrind ISA
+extension. These CSR enables indirect accesses mechanism to access
+any CSRs in M-, S-, and VS-mode. The range of the select values
+and ireg will be define by the ISA extension using Sxcsrind extension.
 
-If the probe fails, here are list of cleanups needed.
-a. Already registered pmu must be freed
-b. per cpu IRQ must be released
-c. pmu_ctr_list data structure must be freed
-d. cpu hotplug state must be cleaned up only if added.
-
-Fix the resource cleanup by reorganizing the code around probe failure.
-
-Reported-by: Sashiko AI <sashiko-bot@kernel.org>
-Signed-off-by: Atish Patra <atishp@meta.com>
+Signed-off-by: Kaiwen Xue <kaiwenx@rivosinc.com>
+Reviewed-by: Clément Léger <cleger@rivosinc.com>
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- drivers/perf/riscv_pmu_sbi.c | 33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ arch/riscv/include/asm/csr.h | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 385af5e6e6d0..5c8924ce1f38 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -1220,22 +1220,29 @@ static int pmu_sbi_setup_irqs(struct riscv_pmu *pmu, struct platform_device *pde
- 					  DOMAIN_BUS_ANY);
- 	if (!domain) {
- 		pr_err("Failed to find INTC IRQ root domain\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err;
- 	}
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index 31b8988f4488..b4551a6cf7cb 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -347,6 +347,12 @@
+ /* Supervisor-Level Window to Indirectly Accessed Registers (AIA) */
+ #define CSR_SISELECT		0x150
+ #define CSR_SIREG		0x151
++/* Supervisor-Level Window to Indirectly Accessed Registers (Sxcsrind) */
++#define CSR_SIREG2		0x152
++#define CSR_SIREG3		0x153
++#define CSR_SIREG4		0x155
++#define CSR_SIREG5		0x156
++#define CSR_SIREG6		0x157
  
- 	riscv_pmu_irq = irq_create_mapping(domain, riscv_pmu_irq_num);
- 	if (!riscv_pmu_irq) {
- 		pr_err("Failed to map PMU interrupt for node\n");
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err;
- 	}
+ /* Supervisor-Level Interrupts (AIA) */
+ #define CSR_STOPEI		0x15c
+@@ -394,6 +400,14 @@
+ /* VS-Level Window to Indirectly Accessed Registers (H-extension with AIA) */
+ #define CSR_VSISELECT		0x250
+ #define CSR_VSIREG		0x251
++/*
++ * VS-Level Window to Indirectly Accessed Registers (H-extension with Sxcsrind)
++ */
++#define CSR_VSIREG2		0x252
++#define CSR_VSIREG3		0x253
++#define CSR_VSIREG4		0x255
++#define CSR_VSIREG5		0x256
++#define CSR_VSIREG6		0x257
  
- 	ret = request_percpu_irq(riscv_pmu_irq, pmu_sbi_ovf_handler, "riscv-pmu", hw_events);
- 	if (ret) {
- 		pr_err("registering percpu irq failed [%d]\n", ret);
--		return ret;
-+		irq_dispose_mapping(riscv_pmu_irq);
-+		riscv_pmu_irq = 0;
-+		goto err;
- 	}
+ /* VS-Level Interrupts (H-extension with AIA) */
+ #define CSR_VSTOPEI		0x25c
+@@ -436,6 +450,12 @@
+ /* Machine-Level Window to Indirectly Accessed Registers (AIA) */
+ #define CSR_MISELECT		0x350
+ #define CSR_MIREG		0x351
++/* Machine-Level Window to Indirectly Accessed Registers (Sxcsrind) */
++#define CSR_MIREG2		0x352
++#define CSR_MIREG3		0x353
++#define CSR_MIREG4		0x355
++#define CSR_MIREG5		0x356
++#define CSR_MIREG6		0x357
  
- 	return 0;
-+err:
-+	riscv_pmu_use_irq = false;
-+	return ret;
- }
- 
- #ifdef CONFIG_CPU_PM
-@@ -1302,7 +1309,8 @@ static void riscv_pmu_destroy(struct riscv_pmu *pmu)
- 		}
- 	}
- 	riscv_pm_pmu_unregister(pmu);
--	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
-+	if (!hlist_unhashed(&pmu->node))
-+		cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
- }
- 
- static void pmu_sbi_event_init(struct perf_event *event)
-@@ -1424,6 +1432,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 	struct riscv_pmu *pmu = NULL;
- 	int ret = -ENODEV;
- 	int num_counters;
-+	bool irq_requested = false;
- 
- 	pr_info("SBI PMU extension is available\n");
- 	pmu = riscv_pmu_alloc();
-@@ -1452,6 +1461,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 		pmu->pmu.capabilities |= PERF_PMU_CAP_NO_INTERRUPT;
- 		pmu->pmu.capabilities |= PERF_PMU_CAP_NO_EXCLUDE;
- 	}
-+	irq_requested = (ret == 0);
- 
- 	pmu->pmu.attr_groups = riscv_pmu_attr_groups;
- 	pmu->pmu.parent = &pdev->dev;
-@@ -1470,11 +1480,11 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 
- 	ret = riscv_pm_pmu_register(pmu);
- 	if (ret)
--		goto out_unregister;
-+		goto out_destroy;
- 
- 	ret = perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
- 	if (ret)
--		goto out_unregister;
-+		goto out_destroy;
- 
- 	/* SBI PMU Snapsphot is only available in SBI v2.0 */
- 	if (sbi_v2_available) {
-@@ -1515,9 +1525,20 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 	return 0;
- 
- out_unregister:
-+	perf_pmu_unregister(&pmu->pmu);
-+
-+out_destroy:
- 	riscv_pmu_destroy(pmu);
-+	if (irq_requested) {
-+		free_percpu_irq(riscv_pmu_irq, pmu->hw_events);
-+		irq_dispose_mapping(riscv_pmu_irq);
-+		riscv_pmu_irq = 0;
-+	}
- 
- out_free:
-+	free_percpu(pmu->hw_events);
-+	kfree(pmu_ctr_list);
-+	pmu_ctr_list = NULL;
- 	kfree(pmu);
- 	return ret;
- }
+ /* Machine-Level Interrupts (AIA) */
+ #define CSR_MTOPEI		0x35c
+@@ -498,6 +518,11 @@
+ # define CSR_IEH		CSR_MIEH
+ # define CSR_ISELECT	CSR_MISELECT
+ # define CSR_IREG	CSR_MIREG
++# define CSR_IREG2	CSR_MIREG2
++# define CSR_IREG3	CSR_MIREG3
++# define CSR_IREG4	CSR_MIREG4
++# define CSR_IREG5	CSR_MIREG5
++# define CSR_IREG6	CSR_MIREG6
+ # define CSR_IPH		CSR_MIPH
+ # define CSR_TOPEI	CSR_MTOPEI
+ # define CSR_TOPI	CSR_MTOPI
+@@ -523,6 +548,11 @@
+ # define CSR_IEH		CSR_SIEH
+ # define CSR_ISELECT	CSR_SISELECT
+ # define CSR_IREG	CSR_SIREG
++# define CSR_IREG2	CSR_SIREG2
++# define CSR_IREG3	CSR_SIREG3
++# define CSR_IREG4	CSR_SIREG4
++# define CSR_IREG5	CSR_SIREG5
++# define CSR_IREG6	CSR_SIREG6
+ # define CSR_IPH		CSR_SIPH
+ # define CSR_TOPEI	CSR_STOPEI
+ # define CSR_TOPI	CSR_STOPI
 
 -- 
 2.53.0-Meta
