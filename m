@@ -1,41 +1,55 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A843369219;
-	Wed,  1 Jul 2026 03:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2C6286D70;
+	Wed,  1 Jul 2026 03:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782877520; cv=none; b=coC/b65Nh7FDLLSufgEGpKqDyDgVmNvuc1LO4Yql0RvFcjpcFX8zbpi4kl4sBRMTd1KHlMQamuOo4pkbsirtAfhu0h8Cok8YVyZKiD3amE0ncy9P9+sR2B97yKqvOwgEYO+xEFw1IQeA6tIhAuraZAv0JHPRYoeU8xsezexfzro=
+	t=1782878090; cv=none; b=SRcOR6DhCOwCuKiCfpj82YzszgmmCXbPTjRiKVEdXAjTfvDmz751YWfA3CODOPzlE9jCyPUPBSmi32iUCfL23AwWpF4d+infu721jE/DkJFgD1K5i50qpFX0VsidisBJjrnLHwWt+DGoc3crbPYIy2yalTyOSw97dMCqC2Mumnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782877520; c=relaxed/simple;
-	bh=Pakv2YIlw/qalXOaTQgQVzpPwXLG5hayUqrGn+H66rs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IbiA0m/DVSSrsFps2dyAeCDzAMeqQOf/FnFleccrQx0gdgIWGz53UtTpEMrZgQcsJvHUmkNKhbAtfMdiav+c26ojYxWm5Hseu5gXgPoAMmc1I5YF2DrNuAa6sG9mdY/OelYW2XMZM58k99Z595TG+G9Plqe1zyxNuCwao9lDzBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gqm9k3xwYz1p9sw;
-	Wed,  1 Jul 2026 11:44:58 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gqm9j0cpQz1p9sj;
-	Wed,  1 Jul 2026 11:44:57 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id 84C183008F68;
-	Wed,  1 Jul 2026 11:42:56 +0800 (CST)
-Received: from neptune.hygon.cn (172.22.228.106) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 1 Jul
- 2026 11:44:56 +0800
-From: Qi Liu <liuqi@hygon.cn>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>, <x86@kernel.org>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lijing@hygon.cn>, <liuqi@hygon.cn>, Zhenglang Hu <huzhenglang@hygon.cn>
-Subject: [PATCH 3/3] perf/x86/amd/uncore: Add Hygon uncore PMU support
-Date: Wed, 1 Jul 2026 03:44:13 +0000
-Message-ID: <20260701034413.718872-4-liuqi@hygon.cn>
+	s=arc-20240116; t=1782878090; c=relaxed/simple;
+	bh=fD/qtdM7o3zmVCYM4ViQc85cx31RTFVB78UPR7eXopE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kz4hAo3wj1r+oo9MPbiPtco/KzTAI/koPN8eSNGcaE+cmdJkUR574B8AtVAYNxjCEqSTPF0QRboGK4R7HhKPsSTuV4arApcCAms40Mkcrggno65oJbbat3JZKO4DiCEVI+avbV3XJ0Q3UuyYl8rFLvZtkDuLWjRQaI5ZAHiDNlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gqmMz3N4DzYQtn9;
+	Wed,  1 Jul 2026 11:53:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 5501C40561;
+	Wed,  1 Jul 2026 11:54:45 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.45])
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgBXiyWAj0RqCne9AQ--.26189S6;
+	Wed, 01 Jul 2026 11:54:45 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	james.clark@linaro.org,
+	xueshuai@linux.alibaba.com,
+	Li Huafei <lihuafei1@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	leo.yan@linux.dev,
+	Ian Rogers <irogers@google.com>,
+	Kim Phillips <kim.phillips@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Bill Wendling <morbo@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Zecheng Li <zli94@ncsu.edu>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Tengda Wu <wutengda@huaweicloud.com>
+Subject: [PATCH v3 04/21] perf annotate-arm64: Generalize arm64_mov__parse to support more instructions
+Date: Wed,  1 Jul 2026 03:53:38 +0000
+Message-Id: <20260701035355.752944-5-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260701034413.718872-1-liuqi@hygon.cn>
-References: <20260701034413.718872-1-liuqi@hygon.cn>
+In-Reply-To: <20260701035355.752944-1-wutengda@huaweicloud.com>
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,704 +57,209 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
- (172.23.18.114)
+X-CM-TRANSID:_Ch0CgBXiyWAj0RqCne9AQ--.26189S6
+X-Coremail-Antispam: 1UD129KBjvJXoWxGryrXr1ktrWftrWDZw13urg_yoWrKrWkpa
+	nFk345tr4FgrWrWanxJr4vvwn3Ww4I934Y9Fy8J3Z3Aw4SkrWrt3Z3KF1akF4rGF97ur4U
+	tFsYyr1rGrWDJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUHYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
+	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
+	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
+	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
+	xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
+	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6x
+	kF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28IcwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0piPkusUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Add uncore PMU support for Hygon processors based on the
-shared AMD-family uncore framework.
+As the default parser for arm64 instructions, arm64_mov__parse()
+currently only supports parsing instructions with the 'addr <symbol>'
+suffix. Other instructions are not supported, causing a lack of
+source and target information for most regular instructions.
 
-Hygon processors implement uncore PMUs for Data Fabric units
-with a programming model similar to AMD, but with several
-differences:
+Generalize arm64_mov__parse to extend its parsing capabilities:
+1. Parse 'ops->target.raw' and 'ops->source.raw' by default.
+2. Utilize arm64__check_multi_regs() to identify if 'ops->source.raw'
+   contains multiple registers.
+3. Maintain backward compatibility for instructions containing the
+   'addr <symbol>' suffix.
 
-  - Different MSR base addresses
-  - Vendor-specific event encoding and masks
-  - DF IOD counter allocation semantics
-  - Additional format attributes (e.g. iod, constid)
-
-Reuse the common uncore infrastructure introduced in the
-previous patch, this avoids duplicating the full uncore driver
-while keeping vendor-specific logic isolated.
-
-Signed-off-by: Qi Liu <liuqi@hygon.cn>
-Tested-by: Zhenglang Hu <huzhenglang@hygon.cn>
+Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- arch/x86/events/Kconfig            |  12 +
- arch/x86/events/amd/Makefile       |   2 +
- arch/x86/events/amd/hygon_uncore.c | 551 +++++++++++++++++++++++++++++
- arch/x86/include/asm/msr-index.h   |   2 +
- arch/x86/include/asm/perf_event.h  |  20 ++
- include/linux/cpuhotplug.h         |   3 +
- 6 files changed, 590 insertions(+)
- create mode 100644 arch/x86/events/amd/hygon_uncore.c
+ .../perf/util/annotate-arch/annotate-arm64.c  | 118 ++++++++++++++----
+ 1 file changed, 95 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
-index 466581535ae1..ebc1491be4fc 100644
---- a/arch/x86/events/Kconfig
-+++ b/arch/x86/events/Kconfig
-@@ -50,6 +50,18 @@ config PERF_EVENTS_AMD_UNCORE
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called 'amd-uncore'.
+diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+index 33080fdca125..a1667237114a 100644
+--- a/tools/perf/util/annotate-arch/annotate-arm64.c
++++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+@@ -4,6 +4,8 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <linux/zalloc.h>
++#include <linux/string.h>
++#include <linux/ctype.h>
+ #include <regex.h>
+ #include "../annotate.h"
+ #include "../disasm.h"
+@@ -14,59 +16,129 @@ struct arch_arm64 {
+ 	regex_t jump_insn;
+ };
  
-+config PERF_EVENTS_HYGON_UNCORE
-+	tristate "Hygon Uncore performance events"
-+	depends on PERF_EVENTS && CPU_SUP_HYGON
-+	select PERF_EVENTS_UNCORE_COMMON
-+	default y
-+	help
-+	  Include support for Hygon uncore performance events for use with
-+	  e.g., perf stat -e hygon_df/.../.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called 'hygon-uncore'.
-+
- config PERF_EVENTS_AMD_BRS
- 	depends on PERF_EVENTS && CPU_SUP_AMD
- 	bool "AMD Zen3 Branch Sampling support"
-diff --git a/arch/x86/events/amd/Makefile b/arch/x86/events/amd/Makefile
-index 0ddaa049b3b7..9d90b85e08d9 100644
---- a/arch/x86/events/amd/Makefile
-+++ b/arch/x86/events/amd/Makefile
-@@ -7,6 +7,8 @@ obj-$(CONFIG_PERF_EVENTS_UNCORE_COMMON) += uncore-common.o
- uncore-common-objs := uncore_common.o
- obj-$(CONFIG_PERF_EVENTS_AMD_UNCORE)	+= amd-uncore.o
- amd-uncore-objs				:= uncore.o
-+obj-$(CONFIG_PERF_EVENTS_HYGON_UNCORE)	+= hygon-uncore.o
-+hygon-uncore-objs			:= hygon_uncore.o
- ifdef CONFIG_AMD_IOMMU
- obj-$(CONFIG_CPU_SUP_AMD)		+= iommu.o
- endif
-diff --git a/arch/x86/events/amd/hygon_uncore.c b/arch/x86/events/amd/hygon_uncore.c
-new file mode 100644
-index 000000000000..7758a1dda21a
---- /dev/null
-+++ b/arch/x86/events/amd/hygon_uncore.c
-@@ -0,0 +1,551 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2026 Chengdu Haiguang IC Design Co., Ltd.
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/cpufeature.h>
-+#include <linux/cpumask.h>
-+#include <linux/init.h>
-+#include <linux/percpu.h>
-+#include <linux/perf_event.h>
-+#include <linux/slab.h>
-+#include <linux/smp.h>
-+#include <linux/types.h>
-+
-+#include <asm/amd/nb.h>
-+#include <asm/cpuid/api.h>
-+#include <asm/msr.h>
-+#include <asm/perf_event.h>
-+
-+#include "uncore_common.h"
-+
-+#define NUM_COUNTERS_DF		4
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt)	"hygon_uncore: " fmt
-+
-+enum {
-+	HYGON_UNCORE_TYPE_DF,
-+	HYGON_UNCORE_TYPE_DF_IOD,
-+	HYGON_UNCORE_TYPE_MAX,
-+};
-+
-+/* Interval for hrtimer, defaults to 60000 milliseconds */
-+static unsigned int update_interval = 60 * MSEC_PER_SEC;
-+module_param(update_interval, uint, 0444);
-+
-+static struct uncore_common hygon_uncores[HYGON_UNCORE_TYPE_MAX];
-+
-+static __always_inline bool hygon_uncore_is_df_iod(struct uncore_common_pmu *pmu)
+-static int arm64_mov__parse(const struct arch *arch __maybe_unused,
++static bool arm64__is_reg(const char *op)
 +{
-+	struct uncore_common *uncore = pmu->private;
++	if (!op || !*op)
++		return false;
 +
-+	return uncore == &hygon_uncores[HYGON_UNCORE_TYPE_DF_IOD];
++	/*
++	 * General-purpose registers: x0-x30, w0-w30.
++	 * Check for 'x' or 'w' prefix followed by a numeric index.
++	 */
++	if ((op[0] == 'x' || op[0] == 'w') && isdigit(op[1]))
++		return true;
++
++	/*
++	 * Special-purpose registers:
++	 * sp: stack pointer
++	 * xzr/wzr: zero registers
++	 */
++	if (!strncmp(op, "sp", 2) || !strncmp(op, "xzr", 3) ||
++	    !strncmp(op, "wzr", 3))
++		return true;
++
++	return false;
 +}
 +
-+static __always_inline int hygon_uncore_num_iods(struct uncore_common *uncore, unsigned int cpu)
++static bool arm64__check_multi_regs(const struct arch *arch, const char *op)
 +{
-+	union uncore_common_info *info = per_cpu_ptr(uncore->info, cpu);
++	const char *p = op;
++	int reg_count = 0;
 +
-+	return info->split.private;
-+}
++	while (p && *p) {
++		p = skip_spaces(p);
++		if (*p == arch->objdump.memory_ref_char)
++			p++;
 +
-+static u64 hygon_uncore_df_event_mask(void)
-+{
-+	if (boot_cpu_data.x86_model == 0x4 ||
-+	    boot_cpu_data.x86_model == 0x5)
-+		return HYGON_F18H_M4H_RAW_EVENT_MASK_DF;
++		if (arm64__is_reg(p))
++			reg_count++;
 +
-+	if (boot_cpu_data.x86_model >= 0x6 &&
-+	    boot_cpu_data.x86_model <= 0x18)
-+		return HYGON_F18H_M6H_RAW_EVENT_MASK_DF;
++		if (reg_count >= 2)
++			return true;
 +
-+	return HYGON_F18H_RAW_EVENT_MASK_DF;
-+}
-+
-+DEFINE_UNCORE_FORMAT_ATTR(event,	event,		"config:0-5");
-+DEFINE_UNCORE_FORMAT_ATTR(umask8,	umask,		"config:8-15");
-+DEFINE_UNCORE_FORMAT_ATTR(umask10,	umask,		"config:8-17");
-+DEFINE_UNCORE_FORMAT_ATTR(umask12,	umask,		"config:8-19");
-+DEFINE_UNCORE_FORMAT_ATTR(constid,	constid,	"config:6-7,32-35,61-62");
-+DEFINE_UNCORE_FORMAT_ATTR(iod,		iod,		"config1:0-1");
-+
-+static struct attribute *hygon_uncore_df_format_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask8.attr,
-+	&format_attr_constid.attr,
-+	NULL,
-+};
-+
-+static struct attribute *hygon_uncore_df_iod_format_attr[] = {
-+	&format_attr_event.attr,
-+	&format_attr_umask10.attr,
-+	&format_attr_constid.attr,
-+	&format_attr_iod.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group hygon_uncore_df_format_group = {
-+	.name = "format",
-+	.attrs = hygon_uncore_df_format_attr,
-+};
-+
-+static struct attribute_group hygon_uncore_df_iod_format_group = {
-+	.name = "format",
-+	.attrs = hygon_uncore_df_iod_format_attr,
-+};
-+
-+static const struct attribute_group *hygon_uncore_df_attr_groups[] = {
-+	&uncore_common_attr_group,
-+	&hygon_uncore_df_format_group,
-+	NULL,
-+};
-+
-+static const struct attribute_group *hygon_uncore_df_iod_attr_groups[] = {
-+	&uncore_common_attr_group,
-+	&hygon_uncore_df_iod_format_group,
-+	NULL,
-+};
-+
-+static int hygon_uncore_df_event_init(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct uncore_common_pmu *pmu;
-+	struct uncore_common *uncore;
-+	u64 event_mask;
-+	int ret;
-+
-+	ret = uncore_common_event_init(event);
-+	if (ret)
-+		return ret;
-+
-+	pmu = event_to_uncore_common_pmu(event);
-+	uncore = pmu->private;
-+
-+	if (hygon_uncore_is_df_iod(pmu) &&
-+	    event->attr.config1 >= hygon_uncore_num_iods(uncore, event->cpu))
-+		return -EINVAL;
-+
-+	event_mask = hygon_uncore_df_event_mask();
-+	hwc->config = event->attr.config & event_mask;
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_df_iod_add(struct perf_event *event, int flags)
-+{
-+	struct uncore_common_pmu *pmu = event_to_uncore_common_pmu(event);
-+	struct uncore_common_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int iod_idx;
-+	int i;
-+
-+	if (hwc->idx != -1 && ctx->events[hwc->idx] == event)
-+		goto out;
-+
-+	for (i = 0; i < pmu->num_counters; i++) {
-+		if (ctx->events[i] == event) {
-+			hwc->idx = i;
-+			goto out;
-+		}
++		/* Move to next operand after comma */
++		p = strchr(p, ',');
++		if (p)
++			p++;
 +	}
 +
-+	hwc->idx = -1;
-+	iod_idx = event->attr.config1;
-+
-+	if (iod_idx >= pmu->num_counters / NUM_COUNTERS_DF)
-+		return -EINVAL;
-+
-+	for (i = iod_idx * NUM_COUNTERS_DF; i < (iod_idx + 1) * NUM_COUNTERS_DF; i++) {
-+		struct perf_event *tmp = NULL;
-+
-+		if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
-+			hwc->idx = i;
-+			break;
-+		}
-+	}
-+
-+out:
-+	if (hwc->idx == -1)
-+		return -EBUSY;
-+
-+	hwc->config_base = pmu->msr_base + 2 * hwc->idx;
-+	hwc->event_base = pmu->msr_base + 1 + 2 * hwc->idx;
-+	hwc->event_base_rdpmc = -1;
-+	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
-+
-+	if (flags & PERF_EF_START)
-+		event->pmu->start(event, PERF_EF_RELOAD);
-+
-+	return 0;
++	return false;
 +}
 +
-+static int hygon_uncore_cpu_starting(unsigned int cpu)
-+{
-+	struct uncore_common *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &hygon_uncores[i];
-+		uncore->scan(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_online(unsigned int cpu)
-+{
-+	struct uncore_common *uncore;
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &hygon_uncores[i];
-+
-+		ret = uncore->init(uncore, cpu);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_down_prepare(unsigned int cpu)
-+{
-+	struct uncore_common *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &hygon_uncores[i];
-+		uncore->move(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_dead(unsigned int cpu)
-+{
-+	struct uncore_common *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &hygon_uncores[i];
-+		uncore->free(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_df_ctx_init(struct uncore_common *uncore,
-+				    unsigned int cpu)
-+{
-+	struct attribute *df_attr;
-+	struct uncore_common_pmu *pmu;
-+	int num_counters;
-+
-+	if (uncore->init_done)
-+		return uncore_common_ctx_init(uncore, cpu);
-+
-+	num_counters = uncore_common_ctx_num_pmcs(uncore, cpu);
-+	if (!num_counters)
-+		goto done;
-+
-+	uncore->pmus = kzalloc_obj(*uncore->pmus);
-+	if (!uncore->pmus)
-+		goto done;
-+
-+	pmu = &uncore->pmus[0];
-+	strscpy(pmu->name, "hygon_df", sizeof(pmu->name));
-+	pmu->num_counters = num_counters;
-+	pmu->msr_base = MSR_HYGON_F18H_DF_CTL;
-+	pmu->rdpmc_base = -1;
-+	pmu->group = uncore_common_ctx_gid(uncore, cpu);
-+	pmu->private = uncore;
-+
-+	df_attr = &format_attr_umask8.attr;
-+	if (boot_cpu_data.x86_model == 0x4 ||
-+	    boot_cpu_data.x86_model == 0x5)
-+		df_attr = &format_attr_umask10.attr;
-+	else if (boot_cpu_data.x86_model >= 0x6 &&
-+		 boot_cpu_data.x86_model <= 0x18)
-+		df_attr = &format_attr_umask12.attr;
-+	hygon_uncore_df_format_attr[1] = df_attr;
-+
-+	pmu->ctx = alloc_percpu(struct uncore_common_ctx *);
-+	if (!pmu->ctx)
-+		goto done;
-+
-+	pmu->pmu = (struct pmu) {
-+		.task_ctx_nr	= perf_invalid_context,
-+		.attr_groups	= hygon_uncore_df_attr_groups,
-+		.name		= pmu->name,
-+		.event_init	= hygon_uncore_df_event_init,
-+		.add		= uncore_common_add,
-+		.del		= uncore_common_del,
-+		.start		= uncore_common_start,
-+		.stop		= uncore_common_stop,
-+		.read		= uncore_common_read,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
-+		.module		= THIS_MODULE,
-+	};
-+
-+	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
-+		free_percpu(pmu->ctx);
-+		pmu->ctx = NULL;
-+		goto done;
-+	}
-+
-+	pr_info("%d %s counters detected\n", pmu->num_counters, pmu->pmu.name);
-+	uncore->num_pmus = 1;
-+
-+done:
-+	uncore->init_done = true;
-+	return uncore_common_ctx_init(uncore, cpu);
-+}
-+
-+static void hygon_uncore_df_ctx_scan(struct uncore_common *uncore,
-+				     unsigned int cpu)
-+{
-+	unsigned int eax, ebx, ecx, edx;
-+	union uncore_common_info info = {};
-+
-+	if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
-+		return;
-+
-+	info.split.gid = 0;
-+	info.split.aux_data = 0;
-+	info.split.num_pmcs = NUM_COUNTERS_DF;
-+
-+	cpuid(0x8000001e, &eax, &ebx, &ecx, &edx);
-+	info.split.cid = ecx & 0xff;
-+
-+	*per_cpu_ptr(uncore->info, cpu) = info;
-+}
-+
-+static void hygon_uncore_df_iod_ctx_scan(struct uncore_common *uncore,
-+					 unsigned int cpu)
-+{
-+	int num_packages, iods_per_package;
-+	union uncore_common_info info = {};
-+
-+	if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
-+		return;
-+
-+	if (boot_cpu_data.x86_model < 0x4 || boot_cpu_data.x86_model == 0x6)
-+		return;
-+
-+	num_packages = topology_max_packages();
-+	iods_per_package = amd_nb_num() / num_packages - topology_max_dies_per_package();
-+	/* Hardware does not support more than 2 IODs per package. */
-+	if (iods_per_package <= 0 || iods_per_package > 2)
-+		return;
-+
-+	info.split.cid = topology_physical_package_id(cpu);
-+	info.split.gid = 0;
-+	info.split.private = iods_per_package;
-+	info.split.num_pmcs = NUM_COUNTERS_DF * iods_per_package;
-+
-+	*per_cpu_ptr(uncore->info, cpu) = info;
-+}
-+
-+static int hygon_uncore_df_iod_ctx_init(struct uncore_common *uncore,
-+					unsigned int cpu)
-+{
-+	struct uncore_common_pmu *pmu;
-+	int num_counters;
-+
-+	if (uncore->init_done)
-+		return uncore_common_ctx_init(uncore, cpu);
-+
-+	num_counters = uncore_common_ctx_num_pmcs(uncore, cpu);
-+	if (!num_counters)
-+		goto done;
-+
-+	uncore->pmus = kzalloc_obj(*uncore->pmus);
-+	if (!uncore->pmus)
-+		goto done;
-+
-+	pmu = &uncore->pmus[0];
-+	strscpy(pmu->name, "hygon_df_iod", sizeof(pmu->name));
-+	pmu->num_counters = num_counters;
-+	pmu->msr_base = MSR_HYGON_F18H_DF_IOD_CTL;
-+	pmu->rdpmc_base = -1;
-+	pmu->group = uncore_common_ctx_gid(uncore, cpu);
-+	pmu->private = uncore;
-+
-+	if (boot_cpu_data.x86_model >= 0x6 &&
-+	    boot_cpu_data.x86_model <= 0x18)
-+		hygon_uncore_df_iod_format_attr[1] = &format_attr_umask12.attr;
-+
-+	pmu->ctx = alloc_percpu(struct uncore_common_ctx *);
-+	if (!pmu->ctx)
-+		goto done;
-+
-+	pmu->pmu = (struct pmu) {
-+		.task_ctx_nr	= perf_invalid_context,
-+		.attr_groups	= hygon_uncore_df_iod_attr_groups,
-+		.name		= pmu->name,
-+		.event_init	= hygon_uncore_df_event_init,
-+		.add		= hygon_uncore_df_iod_add,
-+		.del		= uncore_common_del,
-+		.start		= uncore_common_start,
-+		.stop		= uncore_common_stop,
-+		.read		= uncore_common_read,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
-+		.module		= THIS_MODULE,
-+	};
-+
-+	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
-+		free_percpu(pmu->ctx);
-+		pmu->ctx = NULL;
-+		goto done;
-+	}
-+
-+	pr_info("%d %s counters detected\n", pmu->num_counters, pmu->pmu.name);
-+	uncore->num_pmus = 1;
-+
-+done:
-+	uncore->init_done = true;
-+	return uncore_common_ctx_init(uncore, cpu);
-+}
-+
-+static struct uncore_common hygon_uncores[HYGON_UNCORE_TYPE_MAX] = {
-+	/* HYGON_UNCORE_TYPE_DF */
-+	{
-+		.scan = hygon_uncore_df_ctx_scan,
-+		.init = hygon_uncore_df_ctx_init,
-+		.move = uncore_common_ctx_move,
-+		.free = uncore_common_ctx_free,
-+	},
-+	/* HYGON_UNCORE_TYPE_DF IOD */
-+	{
-+		.scan = hygon_uncore_df_iod_ctx_scan,
-+		.init = hygon_uncore_df_iod_ctx_init,
-+		.move = uncore_common_ctx_move,
-+		.free = uncore_common_ctx_free,
-+	},
-+};
-+
-+static void hygon_uncore_pmus_unregister(void)
-+{
-+	struct uncore_common *uncore;
-+	struct uncore_common_pmu *pmu;
-+	int i, j;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &hygon_uncores[i];
-+
-+		for (j = 0; j < uncore->num_pmus; j++) {
-+			pmu = &uncore->pmus[j];
-+			if (!pmu->ctx)
-+				continue;
-+
-+			perf_pmu_unregister(&pmu->pmu);
-+			free_percpu(pmu->ctx);
-+			pmu->ctx = NULL;
-+		}
-+
-+		kfree(uncore->pmus);
-+		uncore->pmus = NULL;
-+		uncore->num_pmus = 0;
-+		uncore->init_done = false;
-+	}
-+}
-+
-+static void hygon_uncore_infos_free(void)
-+{
-+	struct uncore_common *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &hygon_uncores[i];
-+		if (!uncore->info)
-+			continue;
-+
-+		free_percpu(uncore->info);
-+		uncore->info = NULL;
-+	}
-+}
-+
-+static int __init hygon_uncore_init(void)
-+{
-+	struct uncore_common *uncore;
-+	int ret = -ENODEV;
-+	int i;
-+
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
-+		return -ENODEV;
-+
-+	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
-+		return -ENODEV;
-+
-+	uncore_common_set_update_interval(update_interval);
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &hygon_uncores[i];
-+
-+		if (WARN_ON_ONCE(!uncore->scan ||
-+				 !uncore->init ||
-+				 !uncore->move ||
-+				 !uncore->free)) {
-+			ret = -EINVAL;
-+			goto fail;
-+		}
-+
-+		uncore->info = alloc_percpu(union uncore_common_info);
-+		if (!uncore->info) {
-+			ret = -ENOMEM;
-+			goto fail;
-+		}
-+	}
-+
-+	ret = cpuhp_setup_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP,
-+				"perf/x86/hygon/uncore:prepare",
-+				NULL, hygon_uncore_cpu_dead);
-+	if (ret)
-+		goto fail;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING,
-+				"perf/x86/hygon/uncore:starting",
-+				hygon_uncore_cpu_starting, NULL);
-+	if (ret)
-+		goto fail_prep;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
-+				"perf/x86/hygon/uncore:online",
-+				hygon_uncore_cpu_online,
-+				hygon_uncore_cpu_down_prepare);
-+	if (ret)
-+		goto fail_start;
-+
-+	return 0;
-+
-+fail_start:
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
-+	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-+	hygon_uncore_pmus_unregister();
-+	goto fail;
-+fail_prep:
-+	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-+fail:
-+	hygon_uncore_infos_free();
-+
-+	return ret;
-+}
-+
-+static void __exit hygon_uncore_exit(void)
-+{
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE);
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
-+	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-+
-+	hygon_uncore_pmus_unregister();
-+	hygon_uncore_infos_free();
-+}
-+
-+module_init(hygon_uncore_init);
-+module_exit(hygon_uncore_exit);
-+
-+MODULE_DESCRIPTION("Hygon Uncore Driver");
-+MODULE_LICENSE("GPL");
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 18c4be75e927..d20338f0b2b2 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -851,6 +851,8 @@
- #define MSR_F15H_PTSC			0xc0010280
- #define MSR_F15H_IC_CFG			0xc0011021
- #define MSR_F15H_EX_CFG			0xc001102c
-+#define MSR_HYGON_F18H_DF_CTL		0xc0010240
-+#define MSR_HYGON_F18H_DF_IOD_CTL	0xc0010250
++static int arm64_mov__parse(const struct arch *arch,
+ 			    struct ins_operands *ops,
+ 			    struct map_symbol *ms __maybe_unused,
+ 			    struct disasm_line *dl __maybe_unused)
+ {
+-	char *s = strchr(ops->raw, ','), *target, *endptr;
++	char *s = strchr(ops->raw, ','), *source, *endptr, *comment, prev;
  
- /* Fam 10h MSRs */
- #define MSR_FAM10H_MMIO_CONF_BASE	0xc0010058
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 1eb13673e889..7c8c00ad56e9 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -124,6 +124,26 @@
- 	(AMD64_PERFMON_V2_EVENTSEL_EVENT_NB	|	\
- 	 AMD64_PERFMON_V2_EVENTSEL_UMASK_NB)
+ 	if (s == NULL)
+ 		return -1;
  
-+#define HYGON_F18H_EVENTSEL_EVENT_DF		0x0000003FULL
-+#define HYGON_F18H_EVENTSEL_UMASK_DF		0x0000FF00ULL
-+#define HYGON_F18H_M4H_EVENTSEL_UMASK_DF	0x0003FF00ULL
-+#define HYGON_F18H_M6H_EVENTSEL_UMASK_DF	0x000FFF00ULL
-+#define HYGON_F18H_EVENTSEL_CONSTID_DF			\
-+	(0x000000C0ULL | GENMASK_ULL(35, 32) | GENMASK_ULL(62, 61))
+ 	*s = '\0';
+-	ops->source.raw = strdup(ops->raw);
++	ops->target.raw = strdup(ops->raw);
+ 	*s = ',';
+ 
+-	if (ops->source.raw == NULL)
++	if (ops->target.raw == NULL)
+ 		return -1;
+ 
+-	target = ++s;
+-	ops->target.raw = strdup(target);
+-	if (ops->target.raw == NULL)
+-		goto out_free_source;
++	/* Parse source, discarding comment if present */
++	source = skip_spaces(++s);
++	comment = strchr(s, arch->objdump.comment_char);
 +
-+#define HYGON_F18H_RAW_EVENT_MASK_DF			\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_EVENTSEL_UMASK_DF		|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
-+#define HYGON_F18H_M4H_RAW_EVENT_MASK_DF		\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_M4H_EVENTSEL_UMASK_DF	|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
-+#define HYGON_F18H_M6H_RAW_EVENT_MASK_DF		\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_M6H_EVENTSEL_UMASK_DF	|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
++	if (comment != NULL)
++		s = comment - 1;
++	else
++		s = strchr(s, '\0') - 1;
+ 
+-	ops->target.addr = strtoull(target, &endptr, 16);
+-	if (endptr == target)
+-		goto out_free_target;
++	while (s > source && isspace(s[0]))
++		--s;
++	s++;
++	prev = *s;
++	*s = '\0';
++	ops->source.raw = strdup(source);
++	*s = prev;
+ 
++	if (ops->source.raw == NULL) {
++		zfree(&ops->target.raw);
++		return -1;
++	}
 +
- #define AMD64_PERFMON_V2_ENABLE_UMC			BIT_ULL(31)
- #define AMD64_PERFMON_V2_EVENTSEL_EVENT_UMC		GENMASK_ULL(7, 0)
- #define AMD64_PERFMON_V2_EVENTSEL_RDWRMASK_UMC		GENMASK_ULL(9, 8)
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 0fb3a2a62eb0..bccdb87a0c05 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -62,6 +62,7 @@ enum cpuhp_state {
- 	CPUHP_CREATE_THREADS,
- 	CPUHP_PERF_X86_PREPARE,
- 	CPUHP_PERF_X86_AMD_UNCORE_PREP,
-+	CPUHP_PERF_X86_HYGON_UNCORE_PREP,
- 	CPUHP_PERF_POWER,
- 	CPUHP_PERF_SUPERH,
- 	CPUHP_X86_HPET_DEAD,
-@@ -148,6 +149,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_RISCV_SBI_IPI_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
-+	CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING,
- 	CPUHP_AP_PERF_X86_STARTING,
- 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
- 	CPUHP_AP_PERF_XTENSA_STARTING,
-@@ -205,6 +207,7 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_X86_ONLINE,
- 	CPUHP_AP_PERF_X86_UNCORE_ONLINE,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_ONLINE,
-+	CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
- 	CPUHP_AP_PERF_X86_AMD_POWER_ONLINE,
- 	CPUHP_AP_PERF_S390_CF_ONLINE,
- 	CPUHP_AP_PERF_S390_SF_ONLINE,
++	ops->source.multi_regs = arm64__check_multi_regs(arch, ops->source.raw);
++
++	/* Parse address from source (if any) */
++	ops->source.addr = strtoull(source, &endptr, 16);
++	if (endptr == source)
++		return 0;
++
++	/* Parse a symbol followed by an address, if present */
+ 	s = strchr(endptr, '<');
+ 	if (s == NULL)
+-		goto out_free_target;
+-	endptr = strchr(s + 1, '>');
++		return 0;
++	endptr = strrchr(s + 1, '>');
+ 	if (endptr == NULL)
+-		goto out_free_target;
++		return 0;
+ 
+ 	*endptr = '\0';
+ 	*s = ' ';
+-	ops->target.name = strdup(s);
++	s = skip_spaces(++s);
++	ops->source.name = strdup(s);
+ 	*s = '<';
+ 	*endptr = '>';
+-	if (ops->target.name == NULL)
+-		goto out_free_target;
+ 
+ 	return 0;
++}
+ 
+-out_free_target:
+-	zfree(&ops->target.raw);
+-out_free_source:
+-	zfree(&ops->source.raw);
+-	return -1;
++static int arm64_mov__scnprintf(const struct ins *ins, char *bf, size_t size,
++				struct ins_operands *ops, int max_ins_name)
++{
++	return scnprintf(bf, size, "%-*s %s, %s", max_ins_name, ins->name,
++			 ops->target.raw, ops->source.name ?: ops->source.raw);
+ }
+ 
+ static const struct ins_ops arm64_mov_ops = {
+ 	.parse	   = arm64_mov__parse,
+-	.scnprintf = mov__scnprintf,
++	.scnprintf = arm64_mov__scnprintf,
+ };
+ 
+ static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
 -- 
 2.34.1
-
 
