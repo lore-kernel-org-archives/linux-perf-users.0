@@ -1,131 +1,87 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E183B2FCC
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 06:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556703B1EFC;
+	Wed,  1 Jul 2026 07:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782889063; cv=none; b=W8eRg5XhY6ox5nXXqFhbtGpRJKAP+jMlv5RHUM09k6X/wqYnBypysMaFJtP60naofqfJnkzFnUIvzhxYhBwFguRWuZ4yxvX/bCRl/LfSu4xM1lvlN4JYm07Gzd0e8pVAFQiG/ObTMO55DmPYi2yY4AmpUpvOv0A6JHodWnv+h6A=
+	t=1782889224; cv=none; b=gVqdx51bFAIqfYjzxqQ+JEgvdVsAjzuYr57fKtbGjxF5iG3mBnRcOtr++7ET8KKH3S6sDyN76XkIdLQXlmBC2Uvd5i8tKBZZNmoGxupELoQyqkCmfyHN904bvc+VlwjwuDZajBQNxYWpLm3MAzyhQMG63POs7GxWtcBi3i026Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782889063; c=relaxed/simple;
-	bh=QrzfUk9xgvcP+uM09kyibkhjt06rXvGK74nHVDv0wc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZnwubxmaldITCItqi2IF8zI0ixc0LiOdjcosIvPkBWEa1cl0EsQO7T1KYzvcoctUfkcLFnRZORrJOc219oO0mII91Zs3l50PoM3Lz73Z5OkMJH4F2a/CfqtD7T5eKt2Y/cbhV4i7yWu0l1qLkO1Xh9Mppk9xI8y2M+2oW8P7Abw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gqrRq2dSNzKHLxy
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 14:57:27 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 9F82A4058C
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 14:57:36 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgCnFvRfukRqZqnQAQ--.63175S2;
-	Wed, 01 Jul 2026 14:57:36 +0800 (CST)
-Message-ID: <11bb365f-3e31-4d91-8be1-162dae1936a5@huaweicloud.com>
-Date: Wed, 1 Jul 2026 14:57:35 +0800
+	s=arc-20240116; t=1782889224; c=relaxed/simple;
+	bh=Y9guv2F/oBqZGPTqN3QWMMt1gkXw0T2ueBHQuw37Mu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XjDN6rwaVxInMmBZ0uU9+96XAfJxtJJ0JvLZFRR3YCw8Lxz9tlQCfKrotHb+Si29Z074Yl/wmEtuv6mbp9Og8Za91iQY6Olw9829Dmawy/ssBpgSfQSLxGPTen0bx+NXiQpx3+twk09cq5TvCBhb3Tv0Qg1Xh0zIsiHqUBCGNNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JW+GAn2p; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JW+GAn2p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=R+LC/M4ET5h02A5BnsmhishvP9qZsxELfeidDn/MK20=; b=JW+GAn2p9ZIpHlXept2F5VNXAh
+	oPyVwq9xevU6R4FyQ+yxvGf++EolUla7PhPmuqFEQrAWfTMd5xArrye+XGkLtRcXBHS0givpJWQkw
+	SiL6HDG+QMqBy93A+fFI/HWsJpb+BqHWdswKEsBaqkWXU1fwVXDRQLAOz/zioOi1+iHGNl3dYuMCE
+	UcITiE4/xfefCk3EFvAoqCGaU8xReizpbzBC4gyOsvoAvNUd3BeQzOzq01Y+AnpRGXaKI4ZocTvAB
+	rM/0lsX7iQlhllzPyglets2OowZoHtfJb4kegi2Dk5aE/74l7J9msv2jI/Rscil5g6fR3wV3pthlN
+	dyLfX5MA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1weove-00000002S3Z-3eXs;
+	Wed, 01 Jul 2026 07:00:15 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0B33030035C; Wed, 01 Jul 2026 09:00:14 +0200 (CEST)
+Date: Wed, 1 Jul 2026 09:00:13 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Qi Liu <liuqi@hygon.cn>
+Cc: mingo@redhat.com, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	x86@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lijing@hygon.cn,
+	Zhenglang Hu <huzhenglang@hygon.cn>
+Subject: Re: [PATCH 1/3] perf/x86/amd/uncore: Add common PMU helper functions
+Message-ID: <20260701070013.GJ48970@noisy.programming.kicks-ass.net>
+References: <20260701034413.718872-1-liuqi@hygon.cn>
+ <20260701034413.718872-2-liuqi@hygon.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/21] perf annotate-arm64: Generalize arm64_mov__parse
- to support more instructions
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-5-wutengda@huaweicloud.com>
- <20260701040308.197B11F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260701040308.197B11F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgCnFvRfukRqZqnQAQ--.63175S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFW5WF48GFyDJF43GrWDXFb_yoW8KF4xpa
-	yv93y5KF4IgrWkKw4fAr43ZFWfWw4fWayfur1rJwn29anFvF18tF97KF42ka15Grs7C3yU
-	AanYyry5ZrykCaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU1QVy3UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260701034413.718872-2-liuqi@hygon.cn>
 
+On Wed, Jul 01, 2026 at 03:44:11AM +0000, Qi Liu wrote:
+> Add common helper functions for AMD-family uncore PMU handling.
+> 
+> The helpers cover event initialization, counter allocation, counter
+> read/update, event start/stop and per-CPU context management.  These
+> paths are not tied to a specific uncore unit and can be reused by
+> drivers with a similar uncore PMU programming model.
+> 
+> Signed-off-by: Qi Liu <liuqi@hygon.cn>
+> Tested-by: Zhenglang Hu <huzhenglang@hygon.cn>
 
+> +EXPORT_SYMBOL_GPL(uncore_common_set_update_interval);
+> +EXPORT_SYMBOL_GPL(event_to_uncore_common_pmu);
+> +EXPORT_SYMBOL_GPL(uncore_common_attr_group);
+> +EXPORT_SYMBOL_GPL(uncore_common_start_hrtimer);
+> +EXPORT_SYMBOL_GPL(uncore_common_read);
+> +EXPORT_SYMBOL_GPL(uncore_common_start);
+> +EXPORT_SYMBOL_GPL(uncore_common_stop);
+> +EXPORT_SYMBOL_GPL(uncore_common_event_init);
+> +EXPORT_SYMBOL_GPL(uncore_common_add);
+> +EXPORT_SYMBOL_GPL(uncore_common_del);
+> +EXPORT_SYMBOL_GPL(uncore_common_ctx_init);
+> +EXPORT_SYMBOL_GPL(uncore_common_ctx_free);
+> +EXPORT_SYMBOL_GPL(uncore_common_ctx_move);
 
-On 2026/7/1 12:03, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] The parsing logic permanently corrupts the raw instruction string buffer (`ops->raw`) when restoring the `<` character after extracting a source symbol name.
-> --
-> 
-> commit 13742d589ccf5a86dcfd0991f541a8f1d46f7e0f
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> 
-> perf annotate-arm64: Generalize arm64_mov__parse to support more instructions
-> 
-> This commit generalizes arm64_mov__parse() to parse source and target operands
-> for a wider variety of arm64 instructions. It utilizes arm64__check_multi_regs()
-> to identify multiple registers while attempting to preserve parsing behavior for
-> instructions containing the addr <symbol> suffix.
-> 
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 33080fdca125f..a1667237114a6 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> 
-> [ ... ]
-> 
->> @@ -14,59 +16,129 @@
->>  static int arm64_mov__parse(const struct arch *arch,
->>  			    struct ins_operands *ops,
->>  			    struct map_symbol *ms __maybe_unused,
->>  			    struct disasm_line *dl __maybe_unused)
->>  {
-> 
-> [ ... ]
-> 
->> +	/* Parse a symbol followed by an address, if present */
->>  	s = strchr(endptr, '<');
->>  	if (s == NULL)
->> -		goto out_free_target;
->> -	endptr = strchr(s + 1, '>');
->> +		return 0;
->> +	endptr = strrchr(s + 1, '>');
->>  	if (endptr == NULL)
->> -		goto out_free_target;
->> +		return 0;
->>  
->>  	*endptr = '\0';
->>  	*s = ' ';
->> -	ops->target.name = strdup(s);
->> +	s = skip_spaces(++s);
->> +	ops->source.name = strdup(s);
->>  	*s = '<';
->>  	*endptr = '>';
-> 
-> [Severity: Medium]
-> Does this code overwrite the first character of the symbol name?
-> 
-> Because s is advanced by skip_spaces(++s), s now points to the first character
-> of the symbol name. When *s = '<' is executed immediately after, it appears to
-> corrupt the ops->raw instruction string buffer instead of restoring the '<'
-> character at its original position. 
-> 
-> This could result in a visual glitch in the fallback raw instruction view
-> where the first character of the symbol name is overwritten (for example,
-> 0x1000 <sym> becomes 0x1000  <ym>).
-> 
+I like the idea, but I don't particularly like the namespace.
+'uncore_common' is too generic, there are a ton of uncore drivers, even
+on x86 and these functions are specific to the AMD family. That is, they
+aren't really common at all.
 
-Agreed.
 
