@@ -1,120 +1,183 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 331AB1DC98F;
-	Wed,  1 Jul 2026 07:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFD33C1414
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 07:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782892532; cv=none; b=i5E3xQ5D74yC3GtDMk68uT/Wxz3sC7SGQvg8gMKWE/jEjizY1s62MGV6dqKKE07p2CevWSLapYijE0VesQhcLWa/uHVB9lxbL1ZD3kfKS3QuI5+ISOchMMOkbgHr1qtZX6SBGIXsMyPXgeLdTGgpdIFkm6T+uz6xKFcSvqF8myE=
+	t=1782892610; cv=none; b=R0Zrvi6Al/oShtt7/VjRvPOlLRS0B+61zTEoqqa2saQX8y/HET5ta07j1KRuAwBj3uFuRZQ/BaneiGXGYbrleTGG+xupvdzyCi2ut7Ia46YUuvncPzqmzjniMUIXpmR6oGjqqpCY8c+oDZVVphu0031QBrutZDlP939G4DzRjJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782892532; c=relaxed/simple;
-	bh=b1YJoCECPw47UZqtcr8NXODQ0ZKHkObPGe+76heJ+dg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=laTMHmHV9Q6HqKU2ibpoR3FyWZoe/FzYfuCRAlfx1savb72kObq5RhXpwJM4v0AvNqqKIKR748ORAc8uPc4QdvSvz2RPvN0klYjiz9ez0wxUJMEcqTa3vxdodHEh2YTH1jz7fABywXLqvPTftzAsvwiqWr2WR6usdNScuPJeUlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gqskR6Trhz1k1vj;
-	Wed,  1 Jul 2026 15:55:11 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gqskR5pwVz1k1vj;
-	Wed,  1 Jul 2026 15:55:11 +0800 (CST)
-Received: from cncheex03.Hygon.cn (unknown [172.23.18.113])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id DEDDD3008F68;
-	Wed,  1 Jul 2026 15:53:10 +0800 (CST)
-Received: from cncheex04.Hygon.cn (172.23.18.114) by cncheex03.Hygon.cn
- (172.23.18.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 1 Jul
- 2026 15:55:11 +0800
-Received: from cncheex04.Hygon.cn ([fe80::1b6f:6c58:58a4:430d]) by
- cncheex04.Hygon.cn ([fe80::1b6f:6c58:58a4:430d%10]) with mapi id
- 15.02.1544.036; Wed, 1 Jul 2026 15:55:11 +0800
-From: Qi Liu <liuqi@hygon.cn>
-To: Peter Zijlstra <peterz@infradead.org>
-CC: "mingo@redhat.com" <mingo@redhat.com>, "namhyung@kernel.org"
-	<namhyung@kernel.org>, "alexander.shishkin@linux.intel.com"
-	<alexander.shishkin@linux.intel.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Jing Li <lijing@hygon.cn>, Zhenglang Hu
-	<huzhenglang@hygon.cn>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSCAxLzNdIHBlcmYveDg2L2FtZC91bmNv?=
- =?utf-8?Q?re:_Add_common_PMU_helper_functions?=
-Thread-Topic: =?utf-8?B?562U5aSNOiBbUEFUQ0ggMS8zXSBwZXJmL3g4Ni9hbWQvdW5jb3JlOiBBZGQg?=
- =?utf-8?Q?common_PMU_helper_functions?=
-Thread-Index: AQHdCQv6o68Qd8dC5kysbUObNUqjorZXtlKAgACTV6D//3rugIAAhrYA
-Date: Wed, 1 Jul 2026 07:55:11 +0000
-Message-ID: <fbe67fd6dd8f4521b529a2d816f64303@hygon.cn>
-References: <20260701034413.718872-1-liuqi@hygon.cn>
- <20260701034413.718872-2-liuqi@hygon.cn>
- <20260701070013.GJ48970@noisy.programming.kicks-ass.net>
- <dab0dd2b31d14bef9fdc9d0c887dc460@hygon.cn>
- <20260701075117.GO48970@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260701075117.GO48970@noisy.programming.kicks-ass.net>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1782892610; c=relaxed/simple;
+	bh=/C45rPrmZNkarfg895z8v26zFs6Irq9VBapX1psmPgk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AqsGVRXoUu9wW9Qp3fnKOjDvcZIlppQnsg3i37aeufHdcALu4Ma2xAwZJp31YZKAsR1Gk2u+EAIdhQw/5pV8E7tcH+nSS1eBC3B9/onY0LmwtYPr/wBXgkE3NeACEnBCrtp/E7EgeiKjgA/DBnh4Mmfc/jg3EacWvI5DFpygX+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gqsm264z8zKHMP9
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 15:56:34 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 3279140589
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 15:56:44 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgAXhvM7yERqX5fVAQ--.13115S2;
+	Wed, 01 Jul 2026 15:56:44 +0800 (CST)
+Message-ID: <25c17675-1299-454e-baca-6c483975eb9c@huaweicloud.com>
+Date: Wed, 1 Jul 2026 15:56:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 13/21] perf annotate-arm64: Enable instruction tracking
+ support
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-14-wutengda@huaweicloud.com>
+ <20260701041202.000111F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20260701041202.000111F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgAXhvM7yERqX5fVAQ--.13115S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxurWUWw4fWF4rGryUXrW5KFg_yoWrCF4fpa
+	yYk345JFWjqr4IgrnrZF48XFy3Ga1fG3yUury5tw1SvrnIvryktFs3tFy2kFWrCry5Cw4U
+	Xa1qqrWUA3yDCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-DQoNCi0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogUGV0ZXIgWmlqbHN0cmEgPHBl
-dGVyekBpbmZyYWRlYWQub3JnPiANCuWPkemAgeaXtumXtDogMjAyNuW5tDfmnIgx5pelIDE1OjUx
-DQrmlLbku7bkuro6IFFpIExpdSA8bGl1cWlAaHlnb24uY24+DQrmioTpgIE6IG1pbmdvQHJlZGhh
-dC5jb207IG5hbWh5dW5nQGtlcm5lbC5vcmc7IGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRl
-bC5jb207IGpvbHNhQGtlcm5lbC5vcmc7IHg4NkBrZXJuZWwub3JnOyBsaW51eC1wZXJmLXVzZXJz
-QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgSmluZyBMaSA8
-bGlqaW5nQGh5Z29uLmNuPjsgWmhlbmdsYW5nIEh1IDxodXpoZW5nbGFuZ0BoeWdvbi5jbj4NCuS4
-u+mimDogUmU6IOetlOWkjTogW1BBVENIIDEvM10gcGVyZi94ODYvYW1kL3VuY29yZTogQWRkIGNv
-bW1vbiBQTVUgaGVscGVyIGZ1bmN0aW9ucw0KDQpPbiBXZWQsIEp1bCAwMSwgMjAyNiBhdCAwNzo1
-MDoxNkFNICswMDAwLCBRaSBMaXUgd3JvdGU6DQo+IA0KPiANCj4gLS0tLS3pgq7ku7bljp/ku7Yt
-LS0tLQ0KPiDlj5Hku7bkuro6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4N
-Cj4g5Y+R6YCB5pe26Ze0OiAyMDI25bm0N+aciDHml6UgMTU6MDANCj4g5pS25Lu25Lq6OiBRaSBM
-aXUgPGxpdXFpQGh5Z29uLmNuPg0KPiDmioTpgIE6IG1pbmdvQHJlZGhhdC5jb207IG5hbWh5dW5n
-QGtlcm5lbC5vcmc7IA0KPiBhbGV4YW5kZXIuc2hpc2hraW5AbGludXguaW50ZWwuY29tOyBqb2xz
-YUBrZXJuZWwub3JnOyB4ODZAa2VybmVsLm9yZzsgDQo+IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBKaW5nIA0KPiBMaSA8bGlq
-aW5nQGh5Z29uLmNuPjsgWmhlbmdsYW5nIEh1IDxodXpoZW5nbGFuZ0BoeWdvbi5jbj4NCj4g5Li7
-6aKYOiBSZTogW1BBVENIIDEvM10gcGVyZi94ODYvYW1kL3VuY29yZTogQWRkIGNvbW1vbiBQTVUg
-aGVscGVyIA0KPiBmdW5jdGlvbnMNCj4gDQo+IE9uIFdlZCwgSnVsIDAxLCAyMDI2IGF0IDAzOjQ0
-OjExQU0gKzAwMDAsIFFpIExpdSB3cm90ZToNCj4gPiBBZGQgY29tbW9uIGhlbHBlciBmdW5jdGlv
-bnMgZm9yIEFNRC1mYW1pbHkgdW5jb3JlIFBNVSBoYW5kbGluZy4NCj4gPiANCj4gPiBUaGUgaGVs
-cGVycyBjb3ZlciBldmVudCBpbml0aWFsaXphdGlvbiwgY291bnRlciBhbGxvY2F0aW9uLCBjb3Vu
-dGVyIA0KPiA+IHJlYWQvdXBkYXRlLCBldmVudCBzdGFydC9zdG9wIGFuZCBwZXItQ1BVIGNvbnRl
-eHQgbWFuYWdlbWVudC4gIFRoZXNlIA0KPiA+IHBhdGhzIGFyZSBub3QgdGllZCB0byBhIHNwZWNp
-ZmljIHVuY29yZSB1bml0IGFuZCBjYW4gYmUgcmV1c2VkIGJ5IA0KPiA+IGRyaXZlcnMgd2l0aCBh
-IHNpbWlsYXIgdW5jb3JlIFBNVSBwcm9ncmFtbWluZyBtb2RlbC4NCj4gPiANCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBRaSBMaXUgPGxpdXFpQGh5Z29uLmNuPg0KPiA+IFRlc3RlZC1ieTogWmhlbmdsYW5n
-IEh1IDxodXpoZW5nbGFuZ0BoeWdvbi5jbj4NCj4gDQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKHVu
-Y29yZV9jb21tb25fc2V0X3VwZGF0ZV9pbnRlcnZhbCk7DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BM
-KGV2ZW50X3RvX3VuY29yZV9jb21tb25fcG11KTsNCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwodW5j
-b3JlX2NvbW1vbl9hdHRyX2dyb3VwKTsNCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwodW5jb3JlX2Nv
-bW1vbl9zdGFydF9ocnRpbWVyKTsNCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwodW5jb3JlX2NvbW1v
-bl9yZWFkKTsNCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwodW5jb3JlX2NvbW1vbl9zdGFydCk7DQo+
-ID4gK0VYUE9SVF9TWU1CT0xfR1BMKHVuY29yZV9jb21tb25fc3RvcCk7DQo+ID4gK0VYUE9SVF9T
-WU1CT0xfR1BMKHVuY29yZV9jb21tb25fZXZlbnRfaW5pdCk7DQo+ID4gK0VYUE9SVF9TWU1CT0xf
-R1BMKHVuY29yZV9jb21tb25fYWRkKTsNCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwodW5jb3JlX2Nv
-bW1vbl9kZWwpOw0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTCh1bmNvcmVfY29tbW9uX2N0eF9pbml0
-KTsNCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwodW5jb3JlX2NvbW1vbl9jdHhfZnJlZSk7DQo+ID4g
-K0VYUE9SVF9TWU1CT0xfR1BMKHVuY29yZV9jb21tb25fY3R4X21vdmUpOw0KPiANCj4gSSBsaWtl
-IHRoZSBpZGVhLCBidXQgSSBkb24ndCBwYXJ0aWN1bGFybHkgbGlrZSB0aGUgbmFtZXNwYWNlLg0K
-PiAndW5jb3JlX2NvbW1vbicgaXMgdG9vIGdlbmVyaWMsIHRoZXJlIGFyZSBhIHRvbiBvZiB1bmNv
-cmUgZHJpdmVycywgZXZlbiBvbiB4ODYgYW5kIHRoZXNlIGZ1bmN0aW9ucyBhcmUgc3BlY2lmaWMg
-dG8gdGhlIEFNRCBmYW1pbHkuIFRoYXQgaXMsIHRoZXkgYXJlbid0IHJlYWxseSBjb21tb24gYXQg
-YWxsLg0KPiANCj4gSGkgUGV0ZXIsDQo+IA0KPiBUaGFua3MgZm9yIHlvdXIgcmVwbHkhDQo+IA0K
-PiBZZXMsIHRoYXQgbmFtZXNwYWNlIGlzIGEgZmFpciBwb2ludCDigJQgImNvbW1vbiIgaXMgdG9v
-IGJyb2FkLiBIZXJlIGFyZSB0d28gb3B0aW9uczoNCj4gQSkgYW1kX3VuY29yZV8qIOKAlCBUaGUg
-cHJlZml4IGRlc2NyaWJlcyB0aGUgcHJvZ3JhbW1pbmcgbW9kZWwgb3JpZ2luLCBub3QgdGhlIHZl
-bmRvciBydW5uaW5nIGl0Lg0KPiBCKSBhbWRfZmFtaWx5X3VuY29yZV8qIOKAlCBtYWtlcyBpdCBl
-eHBsaWNpdCB0aGF0IHRoaXMgaXMgQU1ELWZhbWlseSB1bmNvcmUgaW5mcmFzdHJ1Y3R1cmUuDQo+
-IA0KPiBEbyB5b3UgaGF2ZSBhIHByZWZlcmVuY2U/ICBPciBzb21ldGhpbmcgZWxzZSBlbnRpcmVs
-eT8NCg0KJ2FtZF91bmNvcmVfJyB3b3JrcyBmb3IgbWUuDQoNClRoYW5rcywgSSdsbCByZW5hbWUg
-ZXZlcnl0aGluZyAodW5jb3JlX2NvbW1vbi5bY2hdIOKGkiBhbWRfdW5jb3JlLltjaF0gb3Igc2lt
-aWxhciwgYWxsIHN5bWJvbHMsIEtjb25maWcsIE1ha2VmaWxlKSBhbmQgc2VuZCBhIHYyLg0KDQpU
-aGFua3MgZm9yIHRoZSByZXZpZXcuDQpRaSBMaXUNCg==
+
+
+On 2026/7/1 12:12, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> 
+> New issues:
+> - [High] Missing function call register invalidation for ARM64 data type tracking.
+> - [Medium] Failure to invalidate secondary destination registers (`reg2`) in multi-register instructions.
+> 
+> Pre-existing issues:
+> - [High] Missing `multi_regs` evaluation for register operands in load/store instructions.
+> --
+> 
+> commit a1f858405ccf3b88519235d7e08cb42762d969ac
+> Author: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> perf annotate-arm64: Enable instruction tracking support
+> 
+> Enable basic instruction tracking for arm64 by implementing three essential
+> functions in the find_data_type_block() call path: arch_supports_insn_tracking,
+> init_type_state, and update_insn_state.
+> 
+>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> index 77b6f4841c849..48b1c94273eb6 100644
+>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> 
+> [ ... ]
+> 
+>> @@ -324,6 +326,31 @@ static int extract_op_location_arm64(const struct arch *arch,
+>>  	return 0;
+>>  }
+>>  
+>> +#ifdef HAVE_LIBDW_SUPPORT
+>> +static void update_insn_state_arm64(struct type_state *state,
+>> +				    struct data_loc_info *dloc, Dwarf_Die *cu_die __maybe_unused,
+>> +				    struct disasm_line *dl)
+>> +{
+>> +	struct annotated_insn_loc loc;
+>> +	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
+>> +	u32 insn_offset = dl->al.offset;
+>> +
+>> +	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
+>> +		return;
+>> +
+> 
+> [Severity: High]
+> Does this function miss a check for function calls?
+> 
+> When an instruction is a function call (e.g., bl or blr), this code does not
+> check ins__is_call(&dl->ins). As a result, it fails to invalidate the
+> caller-saved registers (x0-x17) and update the return type in x0.
+> 
+> While init_type_state() correctly initializes the caller_saved flags for
+> these registers, won't omitting the invalidation here cause subsequent
+> accesses to inherit incorrect type states across function calls?
+> 
+
+Agreed.
+
+>> +	/*
+>> +	 * For unsupported instructions with a destination register, invalidate
+>> +	 * the destination register itself to prevent incorrect type propagation.
+>> +	 */
+>> +	if (has_reg_type(state, dst->reg1)) {
+>> +		pr_debug_dtp("%s [%x] invalidate reg%d\n",
+>> +			     dl->ins.name, insn_offset, dst->reg1);
+>> +		invalidate_reg_state(&state->regs[dst->reg1]);
+>> +		return;
+>> +	}
+> 
+> [Severity: Medium]
+> Does this fallback logic need to handle secondary destination registers?
+> 
+> When an unsupported instruction modifies multiple registers (e.g., casp),
+> this only checks and invalidates the primary destination register
+> (dst->reg1). 
+> 
+> If the instruction has a secondary register (where dst->multi_regs is
+> true), should we also invalidate dst->reg2 so it doesn't retain an
+> incorrect type state?
+> 
+
+I'll leave it as-is. reg1 is enough for most cases, and multi-register
+instructions are rare. We can revisit if needed.
+
+> [Severity: High]
+> This is a pre-existing issue, but I noticed a potential problem in
+> arm64_ldst__parse() regarding multi-register instructions:
+> 
+> tools/perf/util/annotate-arch/annotate-arm64.c:arm64_ldst__parse() {
+> ...
+> 	if (arm64__insn_is_source_first(dl)) {
+> 		ops->source.raw = left;
+> 		ops->source.mem_ref = false;
+> 		ops->target.raw = right;
+> 		ops->target.mem_ref = true;
+> 		ops->target.multi_regs = arm64__check_multi_regs(arch, ops->target.raw);
+> 	}
+> ...
+> }
+> 
+> Here, arm64__check_multi_regs() is only applied to the memory operand side
+> (ops->target in this case). The register operand side is left with
+> multi_regs = false. 
+> 
+> Because of this, extract_op_location_arm64() fails to parse the second
+> register (reg2) for instructions like ldp and stp, leaving it as -1. Won't
+> this cause the data type tracking logic to silently miss type updates and
+> queries for the secondary register?
+> 
+
+I'll leave it as-is. We only care about mem_ref cases. Multi-register
+instructions without mem_ref are out of scope.
+
+>> +}
+>> +#endif
+> 
 
