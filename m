@@ -1,27 +1,27 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29D22FFF8B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AD92FDC27;
 	Wed,  1 Jul 2026 03:54:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782878091; cv=none; b=bvE/9ViuYECvGLOmOLeW8fadNEHkKoN0w/03mka9r0UlmtvR+cM+KEE5uQxGrF+CcJbPtD/+Sybl9ffHOm4WnEgZQlijdP7Pl3GyarMXsCk0RXPFUCh08cdEuzhdISFgVVk/SxZwvVx8QReycitsN0tWP0vQ55WmCBCEkAFUmSw=
+	t=1782878092; cv=none; b=LUB/Jb98DkCZSk4CAnWR4LnP9dCHIF3/0jrGwnGKq3OyAEVEzjXzknzhuTBQ/00zx+St6XBQkV6PCRMsCQz8heG0TjlnIFvxyMKFgPZQ4YsoUU42kA+45K+7J/NI8CGba1w9Jd9h6cNw0k9vEChEFN+MPFbfrpy62LARepaxtfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782878091; c=relaxed/simple;
-	bh=oLhAqwWv1/J5e8ZRIbHODcqFMh8X9NFJlRoCkLgSAZE=;
+	s=arc-20240116; t=1782878092; c=relaxed/simple;
+	bh=/rNSs9bLnzLwJMY5kCUzPfNPNIGc3IDwpcDfqFgsiPM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mKvTltlga0HrSr3yNGUPUTLN5Lv0o269cfJGazVyX0jsC/QpQ9jHSqa/JEaMZyf/X7C9UYKjUnIg53nJoQmTK1OGGDS8Y4zc1M52yCXJ+8NWxxEtkuQTmcmyigAvzTww9wxG5nQ2BEL8gEkD7YmQdpdHVZfl6fbFPRZSbPdPY3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=HWsIqUEciC/aN/xGJkjBPyBLwH40WKU52eeOQJ1I1faKC4ye4zt4ltsHOQ44T99hIVqion/bM57FUs7TXCcRpjFcmXZyZkZzQ/dh4z8upu1j0yLDNj+JF31eVRdSe97FrG0G5eP8Ds9CamhIFw8GZfu6blgs4cA8M2daWDLGRl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gqmMz4dbJzYQtpZ;
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gqmMz5Z48zYQtmy;
 	Wed,  1 Jul 2026 11:53:51 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 820A740AC4;
+	by mail.maildlp.com (Postfix) with ESMTP id A11BE4056D;
 	Wed,  1 Jul 2026 11:54:45 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgBXiyWAj0RqCne9AQ--.26189S8;
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgBXiyWAj0RqCne9AQ--.26189S9;
 	Wed, 01 Jul 2026 11:54:45 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v3 06/21] perf dwarf-regs: Adapt get_dwarf_regnum() for arm64
-Date: Wed,  1 Jul 2026 03:53:40 +0000
-Message-Id: <20260701035355.752944-7-wutengda@huaweicloud.com>
+Subject: [PATCH v3 07/21] perf annotate: Adapt arch__dwarf_regnum() for arm64
+Date: Wed,  1 Jul 2026 03:53:41 +0000
+Message-Id: <20260701035355.752944-8-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260701035355.752944-1-wutengda@huaweicloud.com>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
@@ -57,10 +57,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBXiyWAj0RqCne9AQ--.26189S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFyxGrW7trWDGw1fGF4kJFb_yoW5Cw4xpF
-	sxC347Jw4UW3WakwnxAF18WF1rJw48Zr4FyrW0vwsrCrsruFyUZw1fKr1j9F45X3yDJw10
-	kayqgr18Gr4rJF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:_Ch0CgBXiyWAj0RqCne9AQ--.26189S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7ury3uw48Cr47ZF1DGF1Utrb_yoW8ur45pw
+	47C343Jr18Cr4Fqw4fXFs3WFy3Gr1fAF15ur4kt3Z7Can7Wry8Ja1ftF1F9a13Jrs7Jr1j
+	yr4jqw18WF13AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -77,83 +77,69 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxAFyxGrW7trWDGw1fGF4kJFb_yoW5Cw4xpF
 	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0piPkusUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-The current arm64 DWARF register lookup relies on 'aarch64_regstr_tbl',
-a static string table. While this works for kprobe-tracer where register
-names start with '%', it is insufficient for parsing register numbers
-directly from raw instructions (e.g., extracting '6' from 'x6' or 'w6')
-during annotation.
+Currently, arch__dwarf_regnum() assumes that all architectures use a
+register prefix character (e.g., '%' for x86) defined by
+arch->objdump.register_char, and uses it to match register names in
+objdump output. However, this assumption does not hold for arm64,
+where assembly syntax uses bare register names like 'x0', 'w1'
+without any prefix.
 
-Since get_dwarf_regnum() is currently used only by 'perf annotate' and
-does not affect kprobe-tracer, replace the limited table-based lookup
-with a programmatic implementation in __get_dwarf_regnum_arm64(). This
-allows resolving arm64 register names (x0-x30, w0-w30, sp, etc.) directly
-into their corresponding DWARF register numbers.
+As a result, arm64 builds may fail to correctly recognize register
+names from objdump disassembly, leading to incomplete or incorrect
+annotation output.
+
+To address this:
+
+- Make the register prefix check optional, allowing architectures
+  without a prefix character to be parsed correctly.
+
+- Extend the delimiter set in strpbrk() to include the closing square
+  bracket ']'. In arm64 assembly, memory operands often use bracketed
+  syntax such as '[x1, #16]' or '[x2]'. Adding ']' ensures clean
+  extraction of register names like 'x2' without trailing characters.
+
+- Remove the 'static' qualifier from arch__dwarf_regnum() so that it
+  can be reused by other architecture-specific profiling components
+  in future changes.
 
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- .../util/dwarf-regs-arch/dwarf-regs-arm64.c   | 20 +++++++++++++++++++
- tools/perf/util/dwarf-regs.c                  |  2 +-
- tools/perf/util/include/dwarf-regs.h          |  1 +
- 3 files changed, 22 insertions(+), 1 deletion(-)
+ tools/perf/util/annotate.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-index 593ca7d4fccc..be55fc2a4f38 100644
---- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-+++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <errno.h>
-+#include <ctype.h>
- #include <dwarf-regs.h>
- #include "../../../arch/arm64/include/uapi/asm/perf_regs.h"
- 
-@@ -10,3 +11,22 @@ int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum)
- 
- 	return perf_regnum;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 53b2a224b21d..ecd367582315 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2449,21 +2449,23 @@ int annotate_check_args(void)
+ 	return 0;
  }
-+
-+int __get_dwarf_regnum_arm64(const char *name)
-+{
-+	int reg;
-+
-+	if (!strcmp(name, "sp") || !strcmp(name, "wzr") || !strcmp(name, "xzr"))
-+		return 31;
-+
-+	if (*name != 'x' && *name != 'w')
-+		return -ENOENT;
-+
-+	name++;
-+	if (!isdigit(*name))
-+		return -ENOENT;
-+
-+	reg = strtol(name, NULL, 10);
-+
-+	return reg >= 0 && reg <= 30 ? reg : -ENOENT;
-+}
-diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
-index 797f455eba0d..bacf5c13c3bc 100644
---- a/tools/perf/util/dwarf-regs.c
-+++ b/tools/perf/util/dwarf-regs.c
-@@ -114,7 +114,7 @@ int get_dwarf_regnum(const char *name, unsigned int machine, unsigned int flags)
- 		reg = _get_dwarf_regnum(arm_regstr_tbl, name);
- 		break;
- 	case EM_AARCH64:
--		reg = _get_dwarf_regnum(aarch64_regstr_tbl, name);
-+		reg = __get_dwarf_regnum_arm64(name);
- 		break;
- 	case EM_CSKY:
- 		reg = __get_csky_regnum(name, flags);
-diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-index 46a764cf322f..a25f038bbff2 100644
---- a/tools/perf/util/include/dwarf-regs.h
-+++ b/tools/perf/util/include/dwarf-regs.h
-@@ -105,6 +105,7 @@ int __get_dwarf_regnum_x86_64(const char *name);
- int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum);
- int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum);
  
-+int __get_dwarf_regnum_arm64(const char *name);
- int __get_dwarf_regnum_for_perf_regnum_arm(int perf_regnum);
- int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum);
+-static int arch__dwarf_regnum(const struct arch *arch, const char *str)
++int arch__dwarf_regnum(const struct arch *arch, const char *str)
+ {
+-	const char *p;
++	const char *p = str;
+ 	char *regname, *q;
+ 	int reg;
+ 
+-	p = strchr(str, arch->objdump.register_char);
+-	if (p == NULL)
+-		return -1;
++	if (arch->objdump.register_char) {
++		p = strchr(str, arch->objdump.register_char);
++		if (p == NULL)
++			return -1;
++	}
+ 
+ 	regname = strdup(p);
+ 	if (regname == NULL)
+ 		return -1;
+ 
+-	q = strpbrk(regname, ",) ");
++	q = strpbrk(regname, ",)] ");
+ 	if (q)
+ 		*q = '\0';
  
 -- 
 2.34.1
