@@ -1,27 +1,27 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93063368A5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005B136B04E;
 	Wed,  1 Jul 2026 03:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782878097; cv=none; b=OzO9oYHUyKsvsB4yzFQpmBscxnyMDr7/wYyQU1/BYHOKJ5IVadisjKOkUP5WKF/ALgSsRFSz0XxlOn1guQuMQTmQY0ZsNBYjOiI8E1K0+Qfw23TCCfa05G85xopeuGYGo/N1pwgWxwpuxwPZ8ADt0mJTDJuhOAQgyTdoD8oeHfw=
+	t=1782878098; cv=none; b=tIRcPSQBsxOzveYHAOqTAA4xn1hq3We2CJI3eIr5+zbg0y+2jlqXb+rncl/HHGh1RaBUuvRPam+F4AVNsvEBHdMt4XGuYjrd+b/wkp/v1bRPvYnGwo15gqSvyHC8bm1s8eX7+fsBAeYfw4gh9aUfsZwHY7etJsrvWJI21Na12WY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782878097; c=relaxed/simple;
-	bh=ADrfowPkLRf4ZXEM3AyAfzU5RoiI/brduXrsy8p8VVs=;
+	s=arc-20240116; t=1782878098; c=relaxed/simple;
+	bh=xl9labs792xEkN7k0Wk/NXufCudutXOTOJ+nHhG1IEs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JfgsCJfa6Ad+E2NHy1J55mD6rcFsvt8yAx3vX7qKvXiPsR8ftbi71GtzhGcRcMz4lzLHXE+Q49ND2jZqjZjjd/VldXop6yib4g9vWoYZKnmecEfRy73T9g/yfA5ms0/sgmFyZzad894K43S9+WBvRLmH0o12CnFFeG6hcSpbwis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=HA0T1K8WRS3pOgnA8zawFyKvGFC7XV5BiLnavVqPguJxfhWKcY6HJ9+AJQklBA+C+HhdtXWY5iQaSi5ybdPySWEGHLwqtJ0eGx+iV4ezowDvVjifr+4ll5EkRCu9lvHwsUs/9OsectiHYzkkNP3C3ACMqM0Yrk/vT+tBH5HvIAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4gqmNr5TL2zKHMTR;
-	Wed,  1 Jul 2026 11:54:36 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4gqmMz6ML8zYQtqs;
+	Wed,  1 Jul 2026 11:53:51 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id CD0C740AE3;
+	by mail.maildlp.com (Postfix) with ESMTP id BAAE54058F;
 	Wed,  1 Jul 2026 11:54:45 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgBXiyWAj0RqCne9AQ--.26189S11;
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgBXiyWAj0RqCne9AQ--.26189S10;
 	Wed, 01 Jul 2026 11:54:45 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v3 09/21] perf annotate-arm64: Implement extract_op_location() callback
-Date: Wed,  1 Jul 2026 03:53:43 +0000
-Message-Id: <20260701035355.752944-10-wutengda@huaweicloud.com>
+Subject: [PATCH v3 08/21] perf annotate: Introduce extract_op_location callback for arch-specific parsing
+Date: Wed,  1 Jul 2026 03:53:42 +0000
+Message-Id: <20260701035355.752944-9-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260701035355.752944-1-wutengda@huaweicloud.com>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
@@ -57,10 +57,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBXiyWAj0RqCne9AQ--.26189S11
-X-Coremail-Antispam: 1UD129KBjvJXoWxAr4rXw1rur4fAry5XF43ZFb_yoWrZF15pw
-	4j9345tr17tr4Yq3WfZFs7WFy3Cw1fGas09rWfA39xArs7ZF1kXa1IkF1a9Fy3Jr9xC34j
-	vF4UtrW8Zr1UGaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:_Ch0CgBXiyWAj0RqCne9AQ--.26189S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxtr13tF4kJw4kuF18Kw4UArb_yoWfKFW7pw
+	4Du345tr1rKr4YqwsrXFs5W3Wakw48WF1Y9r17K39rAFs2yrn5Jan2gF1ayF1rtrZxur1j
+	vF4qqr48XryrCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -77,39 +77,115 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxAr4rXw1rur4fAry5XF43ZFb_yoWrZF15pw
 	cVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0piPkusUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Implement the extract_op_location() callback for the arm64 architecture
-to handle its specific assembly syntax and addressing modes.
+Assembly syntax for operands varies significantly across different
+architectures, which prevents the operand location (op_loc) parsing
+logic in annotate_get_insn_location() from being directly reused.
 
-The extractor handles:
-1. Standalone immediate operands (e.g., #0x10).
-2. Memory references with diverse addressing modes:
-   - Signed offset: [base, #imm]
-   - Pre-index: [base, #imm]!
-   - Post-index: [base], #imm
-3. Multi-register operands and primary/secondary register extraction.
+To simplify the core logic and improve maintainability, move the
+operand parsing inside the for_each_insn_op_loc loop into arch-specific
+extract_op_location callbacks. This refactoring is intended to be a
+cleanup with no functional changes.
 
-With this callback in place, 'perf annotate' can now resolve memory
-locations and register types on arm64, marking the initial enablement
-of data type profiling for this architecture.
-
+Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- .../perf/util/annotate-arch/annotate-arm64.c  | 64 +++++++++++++++++++
- tools/perf/util/annotate.h                    | 10 +++
- 2 files changed, 74 insertions(+)
+ .../util/annotate-arch/annotate-powerpc.c     | 10 ++
+ tools/perf/util/annotate-arch/annotate-x86.c  | 82 ++++++++++++++++
+ tools/perf/util/annotate.c                    | 94 ++-----------------
+ tools/perf/util/annotate.h                    |  2 +
+ tools/perf/util/disasm.h                      |  4 +
+ 5 files changed, 105 insertions(+), 87 deletions(-)
 
-diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-index 451500def8c1..77b6f4841c84 100644
---- a/tools/perf/util/annotate-arch/annotate-arm64.c
-+++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-@@ -261,6 +261,69 @@ static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch,
- 	return ops;
+diff --git a/tools/perf/util/annotate-arch/annotate-powerpc.c b/tools/perf/util/annotate-arch/annotate-powerpc.c
+index 218207b52581..8d0b8def5955 100644
+--- a/tools/perf/util/annotate-arch/annotate-powerpc.c
++++ b/tools/perf/util/annotate-arch/annotate-powerpc.c
+@@ -390,6 +390,15 @@ static void update_insn_state_powerpc(struct type_state *state,
  }
+ #endif /* HAVE_LIBDW_SUPPORT */
  
-+static int extract_op_location_arm64(const struct arch *arch,
-+				     struct disasm_line *dl __maybe_unused,
-+				     const char *op_str, int op_idx __maybe_unused,
-+				     struct annotated_op_loc *op_loc)
++static int extract_op_location_powerpc(const struct arch *arch __maybe_unused,
++				       struct disasm_line *dl,
++				       const char *op_str __maybe_unused, int op_idx,
++				       struct annotated_op_loc *op_loc)
++{
++	get_powerpc_regs(dl->raw.raw_insn, !op_idx, op_loc);
++	return 0;
++}
++
+ const struct arch *arch__new_powerpc(const struct e_machine_and_e_flags *id,
+ 				     const char *cpuid __maybe_unused)
+ {
+@@ -406,5 +415,6 @@ const struct arch *arch__new_powerpc(const struct e_machine_and_e_flags *id,
+ #ifdef HAVE_LIBDW_SUPPORT
+ 	arch->update_insn_state = update_insn_state_powerpc;
+ #endif
++	arch->extract_op_location = extract_op_location_powerpc;
+ 	return arch;
+ }
+diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+index 7e6136536393..6a4b4bdcd7a7 100644
+--- a/tools/perf/util/annotate-arch/annotate-x86.c
++++ b/tools/perf/util/annotate-arch/annotate-x86.c
+@@ -2,6 +2,7 @@
+ #include <string.h>
+ #include <linux/compiler.h>
+ #include <linux/zalloc.h>
++#include <linux/ctype.h>
+ #include <assert.h>
+ #include <inttypes.h>
+ #include "../annotate-data.h"
+@@ -809,6 +810,86 @@ static void update_insn_state_x86(struct type_state *state,
+ }
+ #endif
+ 
++/*
++ * Get register number and access offset from the given instruction.
++ * It assumes AT&T x86 asm format like OFFSET(REG).  Maybe it needs
++ * to revisit the format when it handles different architecture.
++ * Fills @reg and @offset when return 0.
++ */
++static int extract_reg_offset(const struct arch *arch, const char *str,
++			      struct annotated_op_loc *op_loc)
++{
++	char *p;
++
++	if (arch->objdump.register_char == 0)
++		return -1;
++
++	/*
++	 * It should start from offset, but it's possible to skip 0
++	 * in the asm.  So 0(%rax) should be same as (%rax).
++	 *
++	 * However, it also start with a segment select register like
++	 * %gs:0x18(%rbx).  In that case it should skip the part.
++	 */
++	if (*str == arch->objdump.register_char) {
++		/* FIXME: Handle other segment registers */
++		if (!strncmp(str, "%gs:", 4))
++			op_loc->segment = INSN_SEG_X86_GS;
++
++		while (*str && !isdigit(*str) &&
++		       *str != arch->objdump.memory_ref_char)
++			str++;
++	}
++
++	op_loc->offset = strtol(str, &p, 0);
++	op_loc->reg1 = arch__dwarf_regnum(arch, p);
++	if (op_loc->reg1 == -1)
++		return -1;
++
++	/* Get the second register */
++	if (op_loc->multi_regs)
++		op_loc->reg2 = arch__dwarf_regnum(arch, p + 1);
++
++	return 0;
++}
++
++static int extract_op_location_x86(const struct arch *arch,
++				   struct disasm_line *dl __maybe_unused,
++				   const char *op_str, int op_idx __maybe_unused,
++				   struct annotated_op_loc *op_loc)
 +{
 +	const char *s = op_str;
 +	char *p = NULL;
@@ -117,103 +193,197 @@ index 451500def8c1..77b6f4841c84 100644
 +	if (op_str == NULL)
 +		return 0;
 +
-+	/* Handle standalone immediate operands (e.g., #0x10) */
-+	if (*s == arch->objdump.imm_char) {
-+		op_loc->offset = strtol(s + 1, &p, 0);
-+		if (p && p != s + 1)
++	if (strchr(op_str, arch->objdump.memory_ref_char)) {
++		op_loc->mem_ref = true;
++		return extract_reg_offset(arch, op_str, op_loc);
++	}
++
++	/* FIXME: Handle other segment registers */
++	if (!strncmp(op_str, "%gs:", 4)) {
++		op_loc->segment = INSN_SEG_X86_GS;
++		op_loc->offset = strtol(op_str + 4,
++					&p, 0);
++		if (p && p != op_str + 4)
 +			op_loc->imm = true;
 +		return 0;
 +	}
 +
-+	/*
-+	 * Handle memory references (e.g., [x0, #8]), identify
-+	 * arm64 specific addressing modes
-+	 */
-+	if (*s == arch->objdump.memory_ref_char) {
-+		op_loc->mem_ref = true;
-+
-+		p = strchr(s, ']');
-+		if (p == NULL)
-+			return -1;
-+
-+		/* Pre-index: [base, #imm]! */
-+		if (p[1] == '!')
-+			op_loc->addr_mode = PERF_ADDR_MODE_PRE_INDEX;
-+		/* Post-index: [base], #imm */
-+		else if (p[1] == ',' && strchr(p + 1, arch->objdump.imm_char))
-+			op_loc->addr_mode = PERF_ADDR_MODE_POST_INDEX;
-+		/* Signed offset: [base{, #imm}] */
-+		else
-+			op_loc->addr_mode = PERF_ADDR_MODE_SIGNED_OFFSET;
-+
-+		s++;
-+	}
-+
-+	/* Extract the primary register */
-+	op_loc->reg1 = arch__dwarf_regnum(arch, s);
-+	if (op_loc->reg1 == -1)
-+		return -1;
-+
-+	/* Move to the next symbol of the operand, if any */
-+	s = strchr(s, ',');
-+	if (s == NULL)
-+		return 0;
-+	s = skip_spaces(s + 1);
-+
-+	/* Parse secondary register or immediate offset */
-+	if (op_loc->multi_regs)
-+		op_loc->reg2 = arch__dwarf_regnum(arch, s);
-+	else if (*s == arch->objdump.imm_char)
++	if (*s == arch->objdump.register_char) {
++		op_loc->reg1 = arch__dwarf_regnum(arch, s);
++	} else if (*s == arch->objdump.imm_char) {
 +		op_loc->offset = strtol(s + 1, &p, 0);
++		if (p && p != s + 1)
++			op_loc->imm = true;
++	}
 +
 +	return 0;
 +}
 +
- const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
- 				   const char *cpuid __maybe_unused)
+ const struct arch *arch__new_x86(const struct e_machine_and_e_flags *id, const char *cpuid)
  {
-@@ -279,6 +342,7 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
- 	arch->objdump.memory_ref_char	  = '[';
- 	arch->objdump.imm_char		  = '#';
- 	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
-+	arch->extract_op_location	  = extract_op_location_arm64;
+ 	struct arch *arch = zalloc(sizeof(*arch));
+@@ -848,5 +929,6 @@ const struct arch *arch__new_x86(const struct e_machine_and_e_flags *id, const c
+ #ifdef HAVE_LIBDW_SUPPORT
+ 	arch->update_insn_state = update_insn_state_x86;
+ #endif
++	arch->extract_op_location = extract_op_location_x86;
+ 	return arch;
+ }
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index ecd367582315..7d5cf57a110d 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2474,51 +2474,6 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str)
+ 	return reg;
+ }
  
- 	/* bl, blr */
- 	err = regcomp(&arm->call_insn, "^blr?$", REG_EXTENDED);
+-/*
+- * Get register number and access offset from the given instruction.
+- * It assumes AT&T x86 asm format like OFFSET(REG).  Maybe it needs
+- * to revisit the format when it handles different architecture.
+- * Fills @reg and @offset when return 0.
+- */
+-static int extract_reg_offset(const struct arch *arch, const char *str,
+-			      struct annotated_op_loc *op_loc)
+-{
+-	char *p;
+-
+-	if (arch->objdump.register_char == 0)
+-		return -1;
+-
+-	/*
+-	 * It should start from offset, but it's possible to skip 0
+-	 * in the asm.  So 0(%rax) should be same as (%rax).
+-	 *
+-	 * However, it also start with a segment select register like
+-	 * %gs:0x18(%rbx).  In that case it should skip the part.
+-	 */
+-	if (*str == arch->objdump.register_char) {
+-		if (arch__is_x86(arch)) {
+-			/* FIXME: Handle other segment registers */
+-			if (!strncmp(str, "%gs:", 4))
+-				op_loc->segment = INSN_SEG_X86_GS;
+-		}
+-
+-		while (*str && !isdigit(*str) &&
+-		       *str != arch->objdump.memory_ref_char)
+-			str++;
+-	}
+-
+-	op_loc->offset = strtol(str, &p, 0);
+-	op_loc->reg1 = arch__dwarf_regnum(arch, p);
+-	if (op_loc->reg1 == -1)
+-		return -1;
+-
+-	/* Get the second register */
+-	if (op_loc->multi_regs)
+-		op_loc->reg2 = arch__dwarf_regnum(arch, p + 1);
+-
+-	return 0;
+-}
+-
+ /**
+  * annotate_get_insn_location - Get location of instruction
+  * @arch: the architecture info
+@@ -2549,6 +2504,7 @@ int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
+ 	struct ins_operands *ops;
+ 	struct annotated_op_loc *op_loc;
+ 	int i;
++	int ret;
+ 
+ 	if (ins__is_lock(&dl->ins))
+ 		ops = dl->ops.locked.ops;
+@@ -2574,49 +2530,13 @@ int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
+ 		/* Invalidate the register by default */
+ 		op_loc->reg1 = -1;
+ 		op_loc->reg2 = -1;
++		op_loc->mem_ref = mem_ref;
++		op_loc->multi_regs = multi_regs;
+ 
+-		if (insn_str == NULL) {
+-			if (!arch__is_powerpc(arch))
+-				continue;
+-		}
+-
+-		/*
+-		 * For powerpc, call get_powerpc_regs function which extracts the
+-		 * required fields for op_loc, ie reg1, reg2, offset from the
+-		 * raw instruction.
+-		 */
+-		if (arch__is_powerpc(arch)) {
+-			op_loc->mem_ref = mem_ref;
+-			op_loc->multi_regs = multi_regs;
+-			get_powerpc_regs(dl->raw.raw_insn, !i, op_loc);
+-		} else if (strchr(insn_str, arch->objdump.memory_ref_char)) {
+-			op_loc->mem_ref = true;
+-			op_loc->multi_regs = multi_regs;
+-			extract_reg_offset(arch, insn_str, op_loc);
+-		} else {
+-			const char *s = insn_str;
+-			char *p = NULL;
+-
+-			if (arch__is_x86(arch)) {
+-				/* FIXME: Handle other segment registers */
+-				if (!strncmp(insn_str, "%gs:", 4)) {
+-					op_loc->segment = INSN_SEG_X86_GS;
+-					op_loc->offset = strtol(insn_str + 4,
+-								&p, 0);
+-					if (p && p != insn_str + 4)
+-						op_loc->imm = true;
+-					continue;
+-				}
+-			}
+-
+-			if (*s == arch->objdump.register_char) {
+-				op_loc->reg1 = arch__dwarf_regnum(arch, s);
+-			}
+-			else if (*s == arch->objdump.imm_char) {
+-				op_loc->offset = strtol(s + 1, &p, 0);
+-				if (p && p != s + 1)
+-					op_loc->imm = true;
+-			}
++		if (arch->extract_op_location) {
++			ret = arch->extract_op_location(arch, dl, insn_str, i, op_loc);
++			if (ret)
++				return ret;
+ 		}
+ 	}
+ 
 diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 5a0a913af53a..670dc7944628 100644
+index 1aa6df7d1618..5a0a913af53a 100644
 --- a/tools/perf/util/annotate.h
 +++ b/tools/perf/util/annotate.h
-@@ -494,12 +494,21 @@ int annotate_check_args(void);
+@@ -492,6 +492,8 @@ int annotate_parse_percent_type(const struct option *opt, const char *_str,
  
- int arch__dwarf_regnum(const struct arch *arch, const char *str);
+ int annotate_check_args(void);
  
-+enum annotated_addr_mode {
-+	PERF_ADDR_MODE_NONE = 0,
-+
-+	PERF_ADDR_MODE_SIGNED_OFFSET,
-+	PERF_ADDR_MODE_PRE_INDEX,
-+	PERF_ADDR_MODE_POST_INDEX,
-+};
++int arch__dwarf_regnum(const struct arch *arch, const char *str);
 +
  /**
   * struct annotated_op_loc - Location info of instruction operand
   * @reg1: First register in the operand
-  * @reg2: Second register in the operand
-  * @offset: Memory access offset in the operand
-  * @segment: Segment selector register
-+ * @addr_mode: Addressing mode, only valid if @mem_ref is true
-  * @mem_ref: Whether the operand accesses memory
-  * @multi_regs: Whether the second register is used
-  * @imm: Whether the operand is an immediate value (in offset)
-@@ -509,6 +518,7 @@ struct annotated_op_loc {
- 	int reg2;
- 	int offset;
- 	u8 segment;
-+	u8 addr_mode;
- 	bool mem_ref;
- 	bool multi_regs;
- 	bool imm;
+diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
+index 06c664fd4fc2..8796f92769f9 100644
+--- a/tools/perf/util/disasm.h
++++ b/tools/perf/util/disasm.h
+@@ -16,6 +16,7 @@ struct symbol;
+ struct data_loc_info;
+ struct type_state;
+ struct disasm_line;
++struct annotated_op_loc;
+ 
+ struct e_machine_and_e_flags {
+ 	uint32_t e_flags;
+@@ -49,6 +50,9 @@ struct arch {
+ 				struct data_loc_info *dloc, Dwarf_Die *cu_die,
+ 				struct disasm_line *dl);
+ #endif
++	int		(*extract_op_location)(const struct arch *arch, struct disasm_line *dl,
++					       const char *op_str, int op_idx,
++					       struct annotated_op_loc *op_loc);
+ };
+ 
+ struct ins {
 -- 
 2.34.1
 
