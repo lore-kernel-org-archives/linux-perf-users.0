@@ -1,147 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FBD37267F
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D4F38E5ED
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782878443; cv=none; b=DJfxRTEHR7gVh2hgMUe83fxhgM7cl6WhGn17F1tw9zpPft4mZsfoJAjKWtZ3xecwrkHwRN0T7XKqI0DC7bjLOpUCoxdLmz4rvxYBt+2CDI1F/gtJzo1AHqLTmf5tYqx/t+3EIMR9lFQxLJ3/XljH2ZOXd3mW12gzwP51I10BVWs=
+	t=1782878593; cv=none; b=GooH7It3rZf46vZnzZpfDV8WNlLDxDWhs0CkpnUypE4dhDjToTqVwAyDZExJczj5P+MBavs0vWr+18nTEVUOArdYE9xwHgxb784NdSaiJUI3efe2fBBchyefjzIMYUynKOly790owXv9OVd9u+fC/hwRznZquf63+Xq+Q6eSS9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782878443; c=relaxed/simple;
-	bh=cJ99rWxtcIlwa/pPqVajrisliWsYyogV1NxjyQ10iU4=;
+	s=arc-20240116; t=1782878593; c=relaxed/simple;
+	bh=Bzbh//oNncA42fYgV21nNQ7GuX4D/uAakZe6Ygqs0QY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eWIGJAYMkjgsEGEuOf1y4N9VJ/vI5yQljHmeJBJcPPiCl37f8kUJJTfAMtgXnAmgIhmCkloQzsHPG/nvUBSNzjslJHRJo/NP3jYB4lTPHtoVtuZyAfetnmKTt5w2EtBKrHgqPvyk8JPcw6fsd67Ct5LNQ/4upv0F2TOP/pWzEfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7guwWrn; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=W1+iy1/QCIFhKPb7SzQ4bQkLife2LuCEfFCd+b+n56H2abXzuCqlq2E7hvRoAo5mQA31hFNxgAap24vMhkV5yrYMCtPzdzaKgyVEI8DG94iyM6rpTcE/BT1UOzbrnzcrHEfe3fzJqlh26MclvKdsm8IU/R6ZPQ6EwAm0hqzAKYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+kuEEeR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7guwWrn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A047D1F00A3A;
-	Wed,  1 Jul 2026 04:00:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+kuEEeR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 197B11F000E9;
+	Wed,  1 Jul 2026 04:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782878439;
-	bh=+uutt4nBXg0Tp8bfv3yDuH5OQPUq/hSt/3KM5+uVqws=;
+	s=k20260515; t=1782878588;
+	bh=hxJEqlQ3eGdIPvgtPmTJmFTENT/Q8RZCRSDZ/kls5Pw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=l7guwWrnQvx10tfFOFs2S/RLG8SHW6zrtlgDKHE23cmqVyEUh8PbigiZls7S+2vGL
-	 IEcClfjBNL3WCFFOH/CVXYgcGmpK5UPKinOxUugRWRL6ElPUAlKgQfS5KOzm08IDQ2
-	 P0qlg7yXCgUgKnmKCklao6gzOOmToixXPRfIwuNE/dmEANdPdsGE7qgRsHd90pPIYl
-	 BC0gwNfty46UTfV0T05oJku7P4tuc97n3x9fP2URuFVaC3Wnn2Z9A39y8v8zvr9qNw
-	 4DOUv0Che9Zv1T8OZBc++LS8Jx9yvGLurDDReMvoo3GkCIzdYVTc3OKmWeBHgA/r1c
-	 7b59bvlUyb3/Q==
+	b=X+kuEEeRkH0sePEgKrSv3JDmFgm8yl8uadfa1N3wpnxS6WCSZD0RBMSmPzb2bqdDI
+	 LwmqFEEFaLlZ3JoLQElohzQiYVcBXAIfUqIUIvb5FnGN4UXU0v/UqS9luamqlu4RX0
+	 OupSLvUzdick+W0zE7ibXk1DpFXAK9DxEZtVp0H3K31BrJNrsT8ytmBnLOSsMipMza
+	 BIjmZfG9UB/GfSV5MTJrTqQUU3qqIUMLVLOXb5Cm3LmTPzeXI9ZN9JVhy51ekeRbK9
+	 dUXvHeMtlBv/S9ssUDTOnHYF51vfpai4Kyab4H+sVeF4n5qPAyWde8WUT3QM9B8Cut
+	 EfOtT12u3n9aw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/3] perf/x86/amd/uncore: Convert AMD driver to common
- PMU helpers
+Subject: Re: [PATCH v3 04/21] perf annotate-arm64: Generalize
+ arm64_mov__parse to support more instructions
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Qi Liu" <liuqi@hygon.cn>
+To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701034413.718872-3-liuqi@hygon.cn>
-References: <20260701034413.718872-1-liuqi@hygon.cn>
- <20260701034413.718872-3-liuqi@hygon.cn>
+In-Reply-To: <20260701035355.752944-5-wutengda@huaweicloud.com>
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-5-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 04:00:39 +0000
-Message-Id: <20260701040039.A047D1F00A3A@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 04:03:07 +0000
+Message-Id: <20260701040308.197B11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Context migration logic incorrectly alters the designated PMU CPU =
-when a non-designated sibling CPU goes offline, permanently breaking PMU hr=
-timers and event polling.
-- [High] Module initialization failure during CPU hotplug setup leaks previ=
-ously registered PMUs and their allocated structures, leading to a dangling=
- pointer in the kernel's PMU list.
+- [Medium] The parsing logic permanently corrupts the raw instruction strin=
+g buffer (`ops->raw`) when restoring the `<` character after extracting a s=
+ource symbol name.
 --
 
-commit 9535e3c8779a5fdb3921bce37f7ad4c941fd34c9
-Author: Qi Liu <liuqi@hygon.cn>
+commit 13742d589ccf5a86dcfd0991f541a8f1d46f7e0f
+Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf/x86/amd/uncore: Convert AMD driver to common PMU helpers
-   =20
-Use the common uncore PMU helpers for AMD uncore event handling and
-per-CPU context management.
+perf annotate-arm64: Generalize arm64_mov__parse to support more instructio=
+ns
 
-> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-> index dbc00b6dd69ee..9cb8b0d1afe7a 100644
-> --- a/arch/x86/events/amd/uncore.c
-> +++ b/arch/x86/events/amd/uncore.c
-[ ... ]
-> @@ -1087,41 +654,40 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *unc=
-ore, unsigned int cpu)
-[ ... ]
-> -static struct amd_uncore uncores[UNCORE_TYPE_MAX] =3D {
-> +static struct uncore_common uncores[UNCORE_TYPE_MAX] =3D {
->  	/* UNCORE_TYPE_DF */
->  	{
->  		.scan =3D amd_uncore_df_ctx_scan,
->  		.init =3D amd_uncore_df_ctx_init,
-> -		.move =3D amd_uncore_ctx_move,
-> -		.free =3D amd_uncore_ctx_free,
-> +		.move =3D uncore_common_ctx_move,
-> +		.free =3D uncore_common_ctx_free,
->  	},
+This commit generalizes arm64_mov__parse() to parse source and target opera=
+nds
+for a wider variety of arm64 instructions. It utilizes arm64__check_multi_r=
+egs()
+to identify multiple registers while attempting to preserve parsing behavio=
+r for
+instructions containing the addr <symbol> suffix.
 
-[Severity: High]
-This isn't a bug introduced by this patch, but while moving the context
-migration logic to uncore_common_ctx_move(), I noticed a potential issue
-when a sibling CPU is taken offline.
-
-In the migration loop, if the offline CPU is not the currently designated C=
-PU,
-will the loop pick the first online sibling CPU and forcibly update next->c=
-pu
-to it without checking if the offline CPU was the active one?
-
-If this happens, the hrtimer would never start on the newly designated CPU
-because no events were actually migrated. When the existing hrtimer fires
-on the originally designated CPU, it evaluates this check in
-uncore_common_hrtimer():
-
-    if (!ctx->nr_active || ctx->cpu !=3D smp_processor_id())
-        return HRTIMER_NORESTART;
-
-Would this mismatched CPU cause the pinned hrtimer to permanently return
-HRTIMER_NORESTART, stopping the PMU event polling?
+> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
+util/annotate-arch/annotate-arm64.c
+> index 33080fdca125f..a1667237114a6 100644
+> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
 
 [ ... ]
-> @@ -1138,7 +706,7 @@ static int __init amd_uncore_init(void)
->  		BUG_ON(!uncore->move);
->  		BUG_ON(!uncore->free);
+
+> @@ -14,59 +16,129 @@
+>  static int arm64_mov__parse(const struct arch *arch,
+>  			    struct ins_operands *ops,
+>  			    struct map_symbol *ms __maybe_unused,
+>  			    struct disasm_line *dl __maybe_unused)
+>  {
+
+[ ... ]
+
+> +	/* Parse a symbol followed by an address, if present */
+>  	s =3D strchr(endptr, '<');
+>  	if (s =3D=3D NULL)
+> -		goto out_free_target;
+> -	endptr =3D strchr(s + 1, '>');
+> +		return 0;
+> +	endptr =3D strrchr(s + 1, '>');
+>  	if (endptr =3D=3D NULL)
+> -		goto out_free_target;
+> +		return 0;
 > =20
-> -		uncore->info =3D alloc_percpu(union amd_uncore_info);
-> +		uncore->info =3D alloc_percpu(union uncore_common_info);
->  		if (!uncore->info) {
->  			ret =3D -ENOMEM;
->  			goto fail;
->  		}
+>  	*endptr =3D '\0';
+>  	*s =3D ' ';
+> -	ops->target.name =3D strdup(s);
+> +	s =3D skip_spaces(++s);
+> +	ops->source.name =3D strdup(s);
+>  	*s =3D '<';
+>  	*endptr =3D '>';
 
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential leak in the module
-initialization error path, such as at this goto fail or if cpuhp_setup_stat=
-e()
-fails later in amd_uncore_init().
+[Severity: Medium]
+Does this code overwrite the first character of the symbol name?
 
-If setup fails for CPUHP_AP_PERF_X86_AMD_UNCORE_ONLINE, it jumps to the err=
-or
-handling labels (e.g., fail_start). However, the error path doesn't seem to
-unregister successfully registered PMUs or free uncore->pmus.
+Because s is advanced by skip_spaces(++s), s now points to the first charac=
+ter
+of the symbol name. When *s =3D '<' is executed immediately after, it appea=
+rs to
+corrupt the ops->raw instruction string buffer instead of restoring the '<'
+character at its original position.=20
 
-Unlike amd_uncore_exit() which correctly cleans up the PMUs:
-
-    perf_pmu_unregister(&pmu->pmu);
-    free_percpu(pmu->ctx);
-    ...
-    kfree(uncore->pmus);
-
-Will failing during initialization leave dangling pointers in the global pm=
-us
-list and leak the allocated context memory, potentially causing a crash
-during subsequent PMU accesses?
+This could result in a visual glitch in the fallback raw instruction view
+where the first character of the symbol name is overwritten (for example,
+0x1000 <sym> becomes 0x1000  <ym>).
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701034413.7188=
-72-1-liuqi@hygon.cn?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701035355.7529=
+44-1-wutengda@huaweicloud.com?part=3D4
