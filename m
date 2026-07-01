@@ -1,172 +1,159 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA0241325C
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 23:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782949167; cv=pass; b=Mt+OpEFYO10Pvf7U16yFljv5BTzW7GQSOKzHTTfsvh4UE47wRbfs3PQfJrtT4WL9sFZhA8C+i3tsYRpqFQdbvodHBW86g55uMl3588C6FYkuardxvuhHEWC1YpduVWQ/whqWnRaDqdcwqzEQLqLRehOTc8gIePGKc646mXHiKj4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782949167; c=relaxed/simple;
-	bh=wBiVX7//7d5FpdJPPde7ZteUsPCBSPvabOoQbgv1Rio=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mpdPewF8q4aBsUASbjfi73raOst4nAl3mEUVWy+yzgTnWEH3nN1F2AcLj6MD3nPZVKRwlgktE5oM/tLRFDbt1OGWiEaaQbW0U9/laz0A0uQmG7f5zWG0XEa3FCtgYVx1Ax6MobyBCKSiMeLHAHe4kreu1vtnOxMMqZ//uIDbZY4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SqTEBs9y; arc=pass smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB2632B13E;
+	Wed,  1 Jul 2026 23:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782950045; cv=none; b=BbuzyQBIvTe5hpEwIGH1o1DEtkbNfgJk4Y8ZCeeKxwoa/E8yGoIj/FYYoPChchY43M5AMezrtIx2WFg6OGGAifloQbh5CF/1DQMJIl3k6UlFoKOIgLRdpovvfJxrovVI7Ya9TJaVW6ixbLKqTCwcSUGgqLg4H2pRT5CXydBjMhE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782950045; c=relaxed/simple;
+	bh=p3ezXwrNdjRRY7TlGmHhCyhsYIU7/WYzR/e3JIoC/k0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QHC3M6Wq6a9+Wvwl545qvpL6mJYsXod9+6/ZD1E8o2FFDKepYNH9bFU45dge0mgfedEL/MD/vIYP0gvWEpCBoNqIA6sDUbYBKJt+h9jaxagn/GF8DrBoY/QtWjw/XngUP5eHtrFcsTDqNoF7sM0HRPavYAtwMQNl7PkwIExBjyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAygV4hI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SqTEBs9y"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2ca597093c0so114565ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jul 2026 16:39:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782949161; cv=none;
-        d=google.com; s=arc-20260327;
-        b=m8q663hw0+iA2F3S64KEB3Iaia7q3OXYkqQREL6PYCRHmhBAAoKnUpuEJcn6wJyvZS
-         PaDQ3+KUc18Z7uzUIiNZ8gtP5l6TGOEpXJCsh9y4Mvb3FT4sSCfLswlp8kFPiiHAVbBe
-         vJr1UpGN8TdmG+cmXHrcdnl+ruHMY47PhafI0T4GjuIly7YkX2T3S71NfHs5tQTrpfC2
-         Or1WDib7jiIqmQEbdq8n95J9GMtFQFN1RSI1gWAW0TD1aDyGEjB0PU8DDPhshY21PTMQ
-         sMxTe0EdfIM7Gr7XiVrFDTYDVzdWR7netXG753+wbj64ohQiQTCKEx+FR5xB41iyvrA0
-         JPkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=8vJZfyauQpukrkEtThsHmEBFLpG9IbxDLY1laSveUSs=;
-        fh=JFquZaYI9rEdbBWUD0O+GYwx6DYFx1LOuG6yqQZsPiA=;
-        b=Y+rcT7LQxul494/hyH6qqyAAmC9Wx5Alr2l+9k5PHYbjzFq9auYmzH1eXsiMtbA/gU
-         iodnMoBVRV60Nco2CMj74rnLvEClO4LYS/0uFMhu9OkAJ7LOCwF5oRl6/PpdGy5ag5UZ
-         OKiQdhe4kAYVVSNfHdvgKwYRenSoDyS99Wv4gCyV/fbRtegIDiLO5kQyGLbh3Xf2VYRI
-         iuxwGfgFi5MSFRfL0EElcUjYfk+WEPPMEAd3ud+2t3Hk09TLattl+72p8uPiEsYlvuFQ
-         euWCqGOb0flF8Zwa8fjHvLorTsOYSe6XierlHOBQHgjoppklSI1yQrNHE/3KnHgV/1sN
-         ycmw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782949161; x=1783553961; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=8vJZfyauQpukrkEtThsHmEBFLpG9IbxDLY1laSveUSs=;
-        b=SqTEBs9yQ7+8/cK9csIVEZyhSkOw689OcJYVtDPezruArCBZv2sV2xBDD9ShrcrTI9
-         n7HEinxtxY6XaQPnrQ09TCvoxoiempmuqeFOAhbnpp5gG7xDk9gghvxjBGgt+8WZ0kPd
-         bCvs3nr0NU8BqF1VTF5lNFP1aggovtJ5UjgyjCwDYmJmVkzgcajiEDRqTyTtxtsFaDzV
-         t37tqShBrfkJJal5YMxnKbL6QZRy32VR4rKbOzxiQ1scaWOyEY+7Du/MsIA5s3Kd/958
-         QhKFjfmtlYpQHfQOoCb4/nLooOnrc4+0FbtsT/c88/MpEjHh8CIa+cSZqJ65u1+zbOxB
-         yRvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782949161; x=1783553961;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=8vJZfyauQpukrkEtThsHmEBFLpG9IbxDLY1laSveUSs=;
-        b=a3bhQcTCxBnZfDV4VgBt7iAWs1e0ssME5qWw/yuc5ysuCjTtO3A1xSYIjj9ui75NeA
-         mNbTVkxjxgx1m4b3xjsL8LjKRAv1VgW1CwY6tvWU+N8TwRvrxCPu9lUO+dio9ALdsj+j
-         1pRLkL8nICgdvSBJMRwskR1Ut91bxQ7BcMYln3eNJQjx+HdATjBbVResdSOBO38D1DdC
-         +1s0IPkBdBhK7H9kPxG+gvn14GFnaY9Cc707y3+dVbjDGyhDSKju+EpzipvNvc0bLBhV
-         zjfc0OTXYxy9znTGTsOJHzOl3eKzQLZRH9S0JEvprMNuGje7zg8vFjwWA3esQG/v/rMZ
-         B/aw==
-X-Forwarded-Encrypted: i=1; AHgh+RrpTk2r5hzaFRIlop41cdZpB8PLnp9fHK9krsmVlEec3i1ecoLlNstV54BToz1ObGv05knJ/tOqZ5mU98zuvC60@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCEEfjpIK/ubU1/bDtVY61/OPPIsBJegVRjucW8/1YxiPLrqMR
-	8RY9s7TMBmENV1UTnsLFgkhBOoXK9frzHOiIUcT6S3oRm0aDZjNeTUh5KGkLfDAHKEmCcdHsd+x
-	8PZ+j9nXiXxl9O6EN91ByS/N36f/nK7RRzPwo0rz/
-X-Gm-Gg: AfdE7cnZq9ZQKToyUtLX1cL1THeaDQN9mch/zhiCCfZ1KkNekKtdMXqUdL6pN/Os+Y5
-	e67FN+FwXW8Do3Ik+2kRjaocY3XxUEeBC995mQ+NKylJ8B3lLqvPK7C4mjTvEvgB/s0kQwGKoJ+
-	2yT7C7uexr8WRlEPMWe6/q+fEXz6Cgop2j8HnJO8o5xn4HU6wYVki/1DKqP7rJ1l2AiUGrkMdgi
-	+W0/zRAeLmyJ1usQFL16wD5AAynnr1JsNNdEsJW2LF/83fI31fIdgClorQeHdPjG3gLsyTk7A==
-X-Received: by 2002:a17:902:d58d:b0:2c6:a078:bfb7 with SMTP id
- d9443c01a7336-2caa3fd7219mr331835ad.7.1782949160763; Wed, 01 Jul 2026
- 16:39:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAygV4hI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF711F000E9;
+	Wed,  1 Jul 2026 23:54:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782950043;
+	bh=u2PUelh4EikJk8VRL0BrzFZUq8c3iUvAtS1lbzPhPjM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=mAygV4hIV6YoyWb7/ecIGCOT08GKdyIneBmGL+osXMoVLENJRBm8A+wOpFyst6Nex
+	 C6ZuRpozBgYFj0ufvAbUht95C8MqOSp9VKXcvElrSAF+h9vVZ59bR7HxjsiM/f13yk
+	 /gxEOJb/nkLghcVsO9W5/0kO2qenjkSOU1tzsC+I8KIpi1+kdvcdLe1mSUyUhIbcw6
+	 +VemCi/iIanLDO72nOtYp5iH9Qy4Ha5SK7n35BziIx0zuo/tJNjBg8drT1cjnNuldO
+	 81YyQmyyvdaVTXPO4NDhvbBq50R6UT73EbV/DjSeoRicSWUT+G7LnReQDrdvaaVsRD
+	 pELSIJqmn1N8w==
+Date: Wed, 1 Jul 2026 16:54:02 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org,
+	Joe Lawrence <joe.lawrence@redhat.com>
+Subject: Re: [PATCH v2 0/2] perf symbols: skip livepatch symbols
+Message-ID: <akWomlgaxlvkBwkX@google.com>
+References: <20260626212140.1380094-1-joe.lawrence@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260701182824.347941-1-namhyung@kernel.org> <CAP-5=fUzfFkErqnDp4iJEgCQdAO1pFRKMKWn3mhEGK5z2qZvWA@mail.gmail.com>
- <akVqvG7amtP99cmE@google.com>
-In-Reply-To: <akVqvG7amtP99cmE@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 1 Jul 2026 16:39:07 -0700
-X-Gm-Features: AVVi8Cfv5s6XlbfdkzpF2x1eVFKbgorbhUHM5we_i6pr9mPMg2rAC6YAdmDWdeI
-Message-ID: <CAP-5=fXUzEzFjLoh9SuNSch5=NdCEAkw4Dx-+Xd883JKVGV65w@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Fix compiler errors with old capstone
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260626212140.1380094-1-joe.lawrence@redhat.com>
 
-On Wed, Jul 1, 2026 at 12:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi Ian,
->
-> On Wed, Jul 01, 2026 at 11:49:03AM -0700, Ian Rogers wrote:
-> > On Wed, Jul 1, 2026 at 11:28=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > It seems RISCV was added in capstone version 5.  Unfortunately they a=
-re
-> > > enum constants so cannot check with #ifdef but anyway we can define t=
-he
-> > > symbols.  Let's do it using the version number to avoid build errors.
-> > > It'll fail at runtime though.
-> > >
-> > >   util/capstone.c: In function 'e_machine_to_capstone':
-> > >   util/capstone.c:186:25: error: 'CS_ARCH_RISCV' undeclared (first us=
-e in this function);
-> > >                                   did you mean 'CS_ARCH_SYSZ'?
-> > >     186 |                 *arch =3D CS_ARCH_RISCV;
-> > >         |                         ^~~~~~~~~~~~~
-> > >         |                         CS_ARCH_SYSZ
-> > >   util/capstone.c:186:25: note: each undeclared identifier is reporte=
-d only once for each function it appears in
-> > >
-> > >   util/capstone.c:187:34: error: 'CS_MODE_RISCV64' undeclared (first =
-use in this function);
-> > >                                   did you mean 'CS_MODE_MIPS64'?
-> > >     187 |                 *mode |=3D (is64 ? CS_MODE_RISCV64 : CS_MOD=
-E_RISCV32) | CS_MODE_RISCVC;
-> > >         |                                  ^~~~~~~~~~~~~~~
-> > >         |                                  CS_MODE_MIPS64
-> > >
-> > > Also note that capstone renamed CS_MODE_RISCVC to CS_MODE_RISCV_C whi=
-ch
-> > > would cause a different build failure on latest versions.  It's repor=
-ted
-> > > in https://github.com/capstone-engine/capstone/issues/2977 so I think
-> > > they will add compatibility layer to prevent the error.
-> > >
-> > > Fixes: 12c4737f55f2 ("perf capstone: Determine architecture from e_ma=
-chine")
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Perhaps update the feature test from:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/build/feature/test-libcapstone.c?h=3Dperf-tools-next
-> > ```
-> > cs_open(CS_ARCH_X86, CS_MODE_64, &handle);
-> > ```
-> > to be CS_ARCH_RISCV? That way we won't detect old libcapstones and
-> > avoid cluttering up the code.
->
-> Then it'll drop support for capstone version 4 which works fine on some
-> architectures.  Maybe we can add another feature check for capstone
-> RISC-V support but I think it's better to define the RISCV symbols here.
->
-> What do you think?
+Hello,
 
-Arnaldo and I also discussed this in a thread, but I can't find it
-right now. I believe the RISC-V support in libcapstone is now 8 years
-old:
-https://github.com/capstone-engine/capstone/issues/966
-so it seemed unfortunate to add shims to support older libcapstone versions=
-.
+On Fri, Jun 26, 2026 at 05:21:38PM -0400, Joe Lawrence wrote:
+> This patchset fixes two minor perf bugs when livepatches containing
+> special so-called livepatch symbols are loaded.  In both cases, perf
+> should ignore these symbols as they resolve as relocations to kernel
+> addresses and not module space.
+> 
+> - Patch 1 fixes `perf test 1`
+> - Patch 2 fixes `perf record --kcore` bloat
+> 
+> 
+> Testing notes
+> =============
+> 
+> ("perf symbols: skip livepatch symbols when loading kallsyms"):
+> 
+>   Without patch:
+>   ./tools/perf/perf test 1
+>     1: vmlinux symtab matches kallsyms                     : FAILED!
+> 
+>   With patch:
+>   ./tools/perf/perf test 1
+>     1: vmlinux symtab matches kallsyms                     : Ok
+> 
+> ("perf symbols: skip livepatch symbols in kcore_copy")
+> 
+>   1. Baseline = pre-patch perf, no livepatch
+>   ------------------------------------------
+>   
+>   $ ./tools/perf/perf record --kcore -a -o /tmp/baseline.data -- sleep 1
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.221 MB /tmp/baseline.data (1717 samples) ]
+>   
+>   $ tree --noreport -h /tmp/baseline.data
+>   /tmp/baseline.data
+>   |-- [ 235K]  data
+>   `-- [   50]  kcore_dir
+>       |-- [  11M]  kallsyms
+>       |-- [  25M]  kcore
+>       `-- [ 1.7K]  modules
+>   
+>   
+>   2. Bloated kcore = pre-patch perf, with livepatch
+>   -------------------------------------------------
+>   
+>   $ insmod kpatch-5_14_0-570_94_1-1-3.ko
+>   $ ./tools/perf/perf record --kcore -a -o /tmp/klp-bloated.data -- sleep 1
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.274 MB /tmp/klp-bloated.data (2757 samples) ]
+>   
+>   $ tree --noreport  -h /tmp/klp-bloated.data
+>   /tmp/klp-bloated.data
+>   |-- [ 288K]  data
+>   `-- [   50]  kcore_dir
+>       |-- [  11M]  kallsyms
+>       |-- [  68M]  kcore
+>       `-- [ 1.8K]  modules
+>   
+>   
+>   3. Post-fix = patched perf, with livepatch
+>   ------------------------------------------
+>   
+>   [ kpatch-5_14_0-570_94_1-1-3.ko still loaded from test (2) ]
+>   
+>   $ ./tools/perf/perf record --kcore -a -o /tmp/postfix.data -- sleep 1
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.274 MB /tmp/postfix.data (2763 samples) ]
+>   
+>   $ tree --noreport -h /tmp/postfix.data
+>   /tmp/postfix.data
+>   |-- [ 289K]  data
+>   `-- [   50]  kcore_dir
+>       |-- [  11M]  kallsyms
+>       |-- [  25M]  kcore
+>       `-- [ 1.8K]  modules
+> 
+> Changes
+> =======
+> 
+> v2:
+> - Move klp symbol check into tools/perf/util/symbol.h alongside similar
+>   is_ignored_kernel_symbol() check [Petr]
+> - Use KLP_SYM_PREFIX instead of inlining it [Petr]
+> - Add similar check to kcore_copy__process_kallsyms() [Sashiko]
+> 
+> - Note: Sashiko flagged a pre-existing off-by-one in kallsyms__parse()
+>   where the symbol-name loop could write past symbol_name[] on overlong
+>   entries. That issue is unrelated to livepatch symbols and was already
+>   fixed by Rui Qi's 68018df3f55e ("perf: Fix off-by-one stack buffer
+>   overflow in kallsyms__parse()").
+
+Petr, are you ok with this change?
 
 Thanks,
-Ian
+Namhyung
 
-> Thanks,
-> Namhyung
->
+> 
+> v1: https://lore.kernel.org/linux-perf-users/ajzwjNncrI3Bob_o@pathway.suse.cz/T/#t
+> 
+> Joe Lawrence (2):
+>   perf symbols: skip livepatch symbols when loading kallsyms
+>   perf symbols: skip livepatch symbols in kcore_copy kallsyms processing
+> 
+>  tools/perf/util/symbol-elf.c |  4 ++++
+>  tools/perf/util/symbol.c     |  4 ++--
+>  tools/perf/util/symbol.h     | 12 ++++++++++++
+>  3 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.54.0
+> 
