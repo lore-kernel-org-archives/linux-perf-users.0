@@ -1,35 +1,36 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009EB3EF0A4;
-	Wed,  1 Jul 2026 08:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7017A3EEADE
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782895669; cv=none; b=nXjCEX0tHGHxbD/FcwKBbvjbs769Jd1iLlg8ud0reZopm5a1Nh+evtySFKuPMkBCGXvHfVqLL3h1oHeQyM0B3B9SA/zST03uoDc9fS+3dvRWt5+x56/l397spj0K0+CtR88Nz7bP2GhsavJRugpWayeeHIM9vJXy4hSvGHA6C8Y=
+	t=1782895681; cv=none; b=u+mKEPB/qCBoJhLD1EDDVLDoweaWSGneY3eSR/nq+iAmZft9FEwLc9QTcNO16++9KhQUZAeuZ81iaNTmiktLTCoECkgc173Btzo5Ab9XXOwYWnOJScuSHaiZCTrmNJOfwJknrCRgowegTWJjyx2qaDQkuVYGRmLzY9kdRbCLN4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782895669; c=relaxed/simple;
-	bh=V3JGAAEePdvjL1jOKXrT144NEjnftOft8iA7Fv7XtmA=;
+	s=arc-20240116; t=1782895681; c=relaxed/simple;
+	bh=3OO28ccJEwCgkWwCOHvCmAYVgiOqJBRQW0AyXwGFpog=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=idaJRT+sHg455kX+EO6mHQgIKK9z4TjF0TJv413a0ToVHlyZPsNAp4nymeUHc2stq/AV7sbWYn3d1Ho8qupyqjC2pbYU1AxuLNQ9sAD27irZ8o8c05X2oazeIXvmQHXjDeUhmaUUrqzhZWTFgSUwFtVuL3Jih3QlvM9uwufkiCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hA7Q7Ziq; arc=none smtp.client-ip=95.215.58.179
+	 In-Reply-To:To:Cc; b=QO/QwpiDnr+/9J9E5fogc2c6749PkQyjMUsgo4Zql8tqux6F4z7SP4zoMJK7tVsTEgoS96jAgSmJu+jZ6s1iWVkq7w8MHEXyc0kcH85LWNHOVT6vVHvT2XqIiO7OynI+SAvMCULkdCRI3CMlKNAdIwS9l+Hc+zDEK9SL4jzqcfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sLWDqQwB; arc=none smtp.client-ip=95.215.58.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hA7Q7Ziq"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sLWDqQwB"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782895666;
+	t=1782895678;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dCJ2r81edroj2Hmgi/7A55is/dQobvLAXnLASBXtpg8=;
-	b=hA7Q7Ziqj0FcrguHs1jTijVS/PGxrXPk8PqaMozHWTdozmjFOtcq7ATQjFyPUCbGURhvYA
-	aFVu3M5KBssn2Bge4t8fBCPEPxeowXkEh0MvOiS7rW1FLFu7Wxya8IBCOYcWSXCyWmAv6K
-	a75H3/1QG8AwXRVKhulLBPahHsqPxaw=
+	bh=8bnW4aRchUEMVnjaS3sJtvhYx7e7VZaYZUym5ODbnk8=;
+	b=sLWDqQwBf+App3Pu7RHBlkjSnfaG2rRct/pqV+ERk3rbG4LZOhOR4spFpRL+8i/aJrIm7m
+	J7hX2zImAVjM5dunqvNXhbt6+5T/hp3lNklFu/pVjvvDAPwuISEyk3Xudw2mqCmFvqiWAT
+	bO7+HZKS7QkzcWfUd4DKAXUO4MjJ0BM=
 From: Atish Patra <atish.patra@linux.dev>
-Date: Wed, 01 Jul 2026 01:46:54 -0700
-Subject: [PATCH v8 06/22] RISC-V: Add Smcntrpmf extension parsing
+Date: Wed, 01 Jul 2026 01:46:55 -0700
+Subject: [PATCH v8 07/22] dt-bindings: riscv: add Smcntrpmf ISA extension
+ description
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,8 +38,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260701-counter_delegation-v8-6-7909f863a645@meta.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260701-counter_delegation-v8-7-7909f863a645@meta.com>
 References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
 In-Reply-To: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
 To: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
@@ -55,44 +56,31 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Atish Patra <atishp@rivosinc.com>
 
-Smcntrpmf extension allows M-mode to enable privilege mode filtering
-for cycle/instret counters. However, the cyclecfg/instretcfg CSRs are
-available in Ssccfg only if Smcntrpmf is present.
+Add the description for Smcntrpmf ISA extension
 
-That's why, kernel needs to detect presence of Smcntrpmf extension and
-enable privilege mode filtering for cycle/instret counters.
-
-Reviewed-by: Clément Léger <cleger@rivosinc.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- arch/riscv/include/asm/hwcap.h | 1 +
- arch/riscv/kernel/cpufeature.c | 1 +
- 2 files changed, 2 insertions(+)
+ Documentation/devicetree/bindings/riscv/extensions.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-index d4a7b90e2d78..51ad55b9677a 100644
---- a/arch/riscv/include/asm/hwcap.h
-+++ b/arch/riscv/include/asm/hwcap.h
-@@ -114,6 +114,7 @@
- #define RISCV_ISA_EXT_ZICFISS		105
- #define RISCV_ISA_EXT_SSCSRIND		106
- #define RISCV_ISA_EXT_SMCSRIND		107
-+#define RISCV_ISA_EXT_SMCNTRPMF		108
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index 15cf0e2ee3ed..2493766e956d 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -181,6 +181,12 @@ properties:
+             changes to interrupts as frozen at commit ccbddab ("Merge pull
+             request #42 from riscv/jhauser-2023-RC4") of riscv-aia.
  
- #define RISCV_ISA_EXT_XLINUXENVCFG	127
- 
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index 3fa0a563fb21..1452521d740a 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -576,6 +576,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
- 	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksg, riscv_zvksg_bundled_exts, riscv_ext_vector_crypto_validate),
- 	__RISCV_ISA_EXT_DATA_VALIDATE(zvkt, RISCV_ISA_EXT_ZVKT, riscv_ext_vector_crypto_validate),
- 	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
-+	__RISCV_ISA_EXT_DATA(smcntrpmf, RISCV_ISA_EXT_SMCNTRPMF),
- 	__RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
- 	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
- 	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
++        - const: smcntrpmf
++          description: |
++            The standard Smcntrpmf machine-level extension for the machine mode
++            to enable privilege mode filtering for cycle and instret counters as
++            ratified in the 20240326 version of the privileged ISA specification.
++
+         - const: smcsrind
+           description: |
+             The standard Smcsrind machine-level extension extends the
 
 -- 
 2.53.0-Meta
