@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60C6420E65;
-	Wed,  1 Jul 2026 19:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB5A420E79;
+	Wed,  1 Jul 2026 19:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782934916; cv=none; b=k22VDpBXeo7iy1KbpfEnyBmFOoSjOO0Z50rt/yNrHYxBkSWpjqu4HNuA1z5vS7l8wJ1P7TGT3QPJ2sVFN6AF8LqxTGvhICUdBIdTxPBjMpKHnFGIqM50yyIX4nNzx10qoFAEcFTnIjqSgOBotWK8O1caikiVQItJ6EhAv+Hd5j8=
+	t=1782934917; cv=none; b=Wx7jGqPKwjnjS2BJtxR5+iQD6aNSqiwbyrz8ZJNt1JbSSOVkkInoDv7QSrymVffdW4HxDn5i3NlKsMOoml3Dxy42WuDKSEfCpjF1joFSX4qwlgIsLl01fFZU8JcuUda1RML6J+aVSGE6zTJGzzf1lXLoQwp+fopSeWHODGmd8zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782934916; c=relaxed/simple;
-	bh=rOEyspnpopa+0r3sDnFI4QQqzgFCrTdMmF3VsBGFiA0=;
+	s=arc-20240116; t=1782934917; c=relaxed/simple;
+	bh=5GPwVtM2RK9ZtuQSCKd9d3k409Kli+UuYVrVSoiH/SU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BlsYeH/BDxOUxi6cbn1IyabAoYVo+g04Is0kuyRFWiMafeInyU2lzjKeZQ2IFMWYa/HCyFVUGD5+O2zF2oGfqLy4m7dm4DM1awEdfMxs/IxBscUwKqpEnPXPLvWrBMGIVfUSs1k+9kyuaOk4+6wWTnd00wW/QNZSWfL9iQzbQyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aj16Bmnz; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=cw6BjoSFdiJDmVZs3udcWNsoho+cn4irsAVL0vbIoxhF+eLUxanJYII/HB4Niwnuod60fJkS2x0M33tFD9oD+pVZm075U/mKHqGHQGOKjpRQUyf72lTToa51QqL/4JBAuq7dCcq7UgoAEQu1iBVdM7mf9QkJukenoDTQ3reWWm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1jbXDZ0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aj16Bmnz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 098F81F00ACA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1jbXDZ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3AE1F000E9;
 	Wed,  1 Jul 2026 19:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782934915;
-	bh=1M/8JvaDJXivkYI+KW51Ks3DvSIAsX5LG8vEC4XGpFc=;
+	s=k20260515; t=1782934916;
+	bh=0HitbFM5GCHSs94ipN54RIIzFNOEq53ju1KsWUZezCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=aj16BmnzsIrf4DwUfVT1PhjUV8YrMEjO8Ck0qpMyyiKLtR4DxKi+f6bqpy+bDn71C
-	 OAs6K42nDZfAjuNi/OOHoWdQpLJ2JnUnRCYYHs2HvEmJVOu14WtQuyoBAWsAlRh3PE
-	 76bmO8B+t3hOFvvohgkaS7USTbLpqOqAj8QHI+kF6M0UPISK5pSzXJP8HA5uG5PL+y
-	 aJeiv+oGv3nMBhqizIOhIkYEnblXuiovLFmqeyUB4y/X05XQBPxrAs4GSbqzYt6BpR
-	 D2YdPhr8n8KLL5Br3hs7OYbUfdWr7bzVlWal6Hpp1jHui40vYXYftJTm7hDbsV5fWO
-	 orMlEt90DWXiA==
+	b=k1jbXDZ0P7mbYckRZklyR8GuiCwE+OkY+qKSzS7XQ7VNIR2Qntjcwu84JeKfS7czP
+	 YsFzLqNN8lUdpYkead47GrsQ0PvOWKLQ/cY95bl8WBTH2wOJBOtcgSlZ2MsEApdZx9
+	 Dq8LJ6ryDUiCFYFdhS9ObQW77TRObi8/q+9jjlFq8Vh+zqC94ziuLPZ7jhEbVSge9s
+	 F6BsaOVbrUbDPluZksmlx3ffdGBa3BfXgTd4wuKOJphgIlJ9pj7z98brhr9wjTHjah
+	 Pb7kmtj0cK3rl4JksalDHv7VRjbrAcKlOOgDo5Z1QYmMgL8QRupXcryJnCK0saCQ9l
+	 6E+xzEuN33fhg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 3/6] perf kvm: Kill STRDUP_FAIL_EXIT()
-Date: Wed,  1 Jul 2026 12:41:50 -0700
-Message-ID: <20260701194153.401218-4-namhyung@kernel.org>
+Subject: [PATCH v3 5/6] perf kvm: Fix a memory leak in the usage string
+Date: Wed,  1 Jul 2026 12:41:52 -0700
+Message-ID: <20260701194153.401218-6-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.rc0.799.gd6f94ed593-goog
 In-Reply-To: <20260701194153.401218-1-namhyung@kernel.org>
 References: <20260701194153.401218-1-namhyung@kernel.org>
@@ -50,217 +50,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's used to pass command line options to a copied argv.  But there's no
-reason to make the copies as it's all used in the same function.  It can
-simply use stack variables.
-
-In fact, it fixes a subtle double free issue.  As parse_options() can
-move contents in argv[], some entries may point to the same item.  So
-freeing all items in the argv could trigger a double free.  With stack
-variables, we don't need to allocate and free them.
+The first element of the kvm_usage string is allocated dynamically by
+parse_options_subcommand() if it's NULL.  Callers should free it after
+use.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-kvm.c                      | 54 +++++++------------
- .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  4 +-
- tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  9 ++--
- tools/perf/util/kvm-stat.h                    | 10 ----
- 4 files changed, 24 insertions(+), 53 deletions(-)
+ tools/perf/builtin-kvm.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 24576e4ebb02cade..eaf9297cc34d32c1 100644
+index 20ea59e59a4b65ba..00baafb056032970 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -1682,18 +1682,18 @@ kvm_events_record(struct perf_kvm_stat *kvm, int argc, const char **argv)
- 		return -ENOMEM;
+@@ -2135,6 +2135,7 @@ int cmd_kvm(int argc, const char **argv)
+ 	const char *const kvm_subcommands[] = { "top", "record", "report", "diff",
+ 						"buildid-list", "stat", NULL };
+ 	const char *kvm_usage[] = { NULL, NULL };
++	int ret;
  
- 	for (i = 0; i < ARRAY_SIZE(record_args); i++)
--		rec_argv[i] = STRDUP_FAIL_EXIT(record_args[i]);
-+		rec_argv[i] = record_args[i];
+ 	exclude_GH_default = true;
+ 	perf_host  = 0;
+@@ -2152,18 +2153,18 @@ int cmd_kvm(int argc, const char **argv)
+ 		file_name = get_filename_for_perf_kvm();
  
- 	for (j = 0; j < events_tp_size; j++) {
--		rec_argv[i++] = STRDUP_FAIL_EXIT("-e");
--		rec_argv[i++] = STRDUP_FAIL_EXIT(kvm_events_tp(e_machine)[j]);
-+		rec_argv[i++] = "-e";
-+		rec_argv[i++] = kvm_events_tp(e_machine)[j];
- 	}
+ 	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
+-		return __cmd_record(file_name, argc, argv);
++		ret = __cmd_record(file_name, argc, argv);
+ 	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
+-		return __cmd_report(file_name, argc, argv);
++		ret = __cmd_report(file_name, argc, argv);
+ 	else if (strlen(argv[0]) > 2 && strstarts("diff", argv[0]))
+-		return cmd_diff(argc, argv);
++		ret = cmd_diff(argc, argv);
+ 	else if (!strcmp(argv[0], "top"))
+-		return __cmd_top(argc, argv);
++		ret = __cmd_top(argc, argv);
+ 	else if (strlen(argv[0]) > 2 && strstarts("buildid-list", argv[0]))
+-		return __cmd_buildid_list(file_name, argc, argv);
++		ret = __cmd_buildid_list(file_name, argc, argv);
+ #if defined(HAVE_LIBTRACEEVENT)
+ 	else if (strlen(argv[0]) > 2 && strstarts("stat", argv[0]))
+-		return kvm_cmd_stat(file_name, argc, argv);
++		ret = kvm_cmd_stat(file_name, argc, argv);
+ #endif
+ 	else
+ 		usage_with_options(kvm_usage, kvm_options);
+@@ -2171,5 +2172,5 @@ int cmd_kvm(int argc, const char **argv)
+ 	/* free usage string allocated by parse_options_subcommand */
+ 	free((void *)kvm_usage[0]);
  
--	rec_argv[i++] = STRDUP_FAIL_EXIT("-o");
--	rec_argv[i++] = STRDUP_FAIL_EXIT(kvm->file_name);
-+	rec_argv[i++] = "-o";
-+	rec_argv[i++] = kvm->file_name;
- 
- 	for (j = 1; j < (unsigned int)argc; j++, i++)
--		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
-+		rec_argv[i] = argv[j];
- 
- 	set_option_flag(record_options, 'e', "event", PARSE_OPT_HIDDEN);
- 	set_option_flag(record_options, 0, "filter", PARSE_OPT_HIDDEN);
-@@ -1717,10 +1717,6 @@ kvm_events_record(struct perf_kvm_stat *kvm, int argc, const char **argv)
- 
- 	record_usage = kvm_stat_record_usage;
- 	ret = cmd_record(i, rec_argv);
--
--EXIT:
--	for (i = 0; i < rec_argc; i++)
--		free((void *)rec_argv[i]);
- 	free(rec_argv);
- 	return ret;
+-	return 0;
++	return ret;
  }
-@@ -2008,9 +2004,9 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
- 	if (!rec_argv)
- 		return -ENOMEM;
- 
--	rec_argv[i++] = STRDUP_FAIL_EXIT("record");
--	rec_argv[i++] = STRDUP_FAIL_EXIT("-o");
--	rec_argv[i++] = STRDUP_FAIL_EXIT(file_name);
-+	rec_argv[i++] = "record";
-+	rec_argv[i++] = "-o";
-+	rec_argv[i++] = file_name;
- 	if (need_arch_event) {
- 		ret = kvm_add_default_arch_event(EM_HOST, &i, rec_argv);
- 		if (ret)
-@@ -2018,15 +2014,13 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
- 	}
- 
- 	for (j = 1; j < argc; j++, i++)
--		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
-+		rec_argv[i] = argv[j];
- 
- 	BUG_ON(i != rec_argc);
- 
- 	ret = cmd_record(i, rec_argv);
- 
- EXIT:
--	for (j = 0; j < i; j++)
--		free((void *)rec_argv[j]);
- 	free(rec_argv);
- 	return ret;
- }
-@@ -2041,19 +2035,15 @@ static int __cmd_report(const char *file_name, int argc, const char **argv)
- 	if (!rec_argv)
- 		return -ENOMEM;
- 
--	rec_argv[i++] = STRDUP_FAIL_EXIT("report");
--	rec_argv[i++] = STRDUP_FAIL_EXIT("-i");
--	rec_argv[i++] = STRDUP_FAIL_EXIT(file_name);
-+	rec_argv[i++] = "report";
-+	rec_argv[i++] = "-i";
-+	rec_argv[i++] = file_name;
- 	for (j = 1; j < argc; j++, i++)
--		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
-+		rec_argv[i] = argv[j];
- 
- 	BUG_ON(i != rec_argc);
- 
- 	ret = cmd_report(i, rec_argv);
--
--EXIT:
--	for (i = 0; i < rec_argc; i++)
--		free((void *)rec_argv[i]);
- 	free(rec_argv);
- 	return ret;
- }
-@@ -2069,19 +2059,15 @@ __cmd_buildid_list(const char *file_name, int argc, const char **argv)
- 	if (!rec_argv)
- 		return -ENOMEM;
- 
--	rec_argv[i++] = STRDUP_FAIL_EXIT("buildid-list");
--	rec_argv[i++] = STRDUP_FAIL_EXIT("-i");
--	rec_argv[i++] = STRDUP_FAIL_EXIT(file_name);
-+	rec_argv[i++] = "buildid-list";
-+	rec_argv[i++] = "-i";
-+	rec_argv[i++] = file_name;
- 	for (j = 1; j < argc; j++, i++)
--		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
-+		rec_argv[i] = argv[j];
- 
- 	BUG_ON(i != rec_argc);
- 
- 	ret = cmd_buildid_list(i, rec_argv);
--
--EXIT:
--	for (i = 0; i < rec_argc; i++)
--		free((void *)rec_argv[i]);
- 	free(rec_argv);
- 	return ret;
- }
-@@ -2101,7 +2087,7 @@ static int __cmd_top(int argc, const char **argv)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < argc; i++)
--		rec_argv[i] = STRDUP_FAIL_EXIT(argv[i]);
-+		rec_argv[i] = argv[i];
- 
- 	BUG_ON(i != argc);
- 
-@@ -2114,8 +2100,6 @@ static int __cmd_top(int argc, const char **argv)
- 	ret = cmd_top(i, rec_argv);
- 
- EXIT:
--	for (i = 0; i < rec_argc; i++)
--		free((void *)rec_argv[i]);
- 	free(rec_argv);
- 	return ret;
- }
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-index 8d4133c35c12f14b..315b24f9a59297dc 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
-@@ -181,8 +181,8 @@ int __kvm_add_default_arch_event_powerpc(int *argc, const char **argv)
- 	if (!perf_pmus__have_event("trace_imc", "trace_cycles"))
- 		return -EINVAL;
- 
--	argv[j++] = strdup("-e");
--	argv[j++] = strdup("trace_imc/trace_cycles/");
-+	argv[j++] = "-e";
-+	argv[j++] = "trace_imc/trace_cycles/";
- 	*argc += 2;
- 
- 	return 0;
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-index 46f9a0adcb608aab..97041f5100fc812f 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
-@@ -210,16 +210,13 @@ int __cpu_isa_init_x86(struct perf_kvm_stat *kvm, const char *cpuid)
-  */
- int __kvm_add_default_arch_event_x86(int *argc, const char **argv)
- {
--	int ret = 0, j = *argc;
-+	int j = *argc;
- 
--	argv[j++] = STRDUP_FAIL_EXIT("-e");
--	argv[j++] = STRDUP_FAIL_EXIT("cycles");
-+	argv[j++] = "-e";
-+	argv[j++] = "cycles";
- 	*argc += 2;
- 
- 	return 0;
--
--EXIT:
--	return ret;
- }
- 
- const char * const *__kvm_events_tp_x86(void)
-diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-index 04f9f3193555972f..1db31c0751875875 100644
---- a/tools/perf/util/kvm-stat.h
-+++ b/tools/perf/util/kvm-stat.h
-@@ -229,14 +229,4 @@ static inline struct kvm_info *kvm_info__new(void)
- 	return ki;
- }
- 
--#define STRDUP_FAIL_EXIT(s)		\
--	({	char *_p;		\
--		_p = strdup(s);		\
--		if (!_p) {		\
--			ret = -ENOMEM;	\
--			goto EXIT;	\
--		}			\
--		_p;			\
--	})
--
- #endif /* __PERF_KVM_STAT_H */
 -- 
 2.55.0.rc0.799.gd6f94ed593-goog
 
