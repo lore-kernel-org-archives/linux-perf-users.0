@@ -1,155 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2DA365A13
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:14:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888EB22A817
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782879292; cv=none; b=cphGevFWnd1ChSrkSLNfhkPEwjnytXppz//pTGHlnqyU5g/liFlWNLf7qstAGzcPnnFCqf/jFqGgtTnGRG8gldWj2W8KSdCJNlcnP0aWex1IifmX1t1GvQKT8RZ6+qpSNzR1hADiLFlevEoxJYC06EgY1oVh0o/nXcvvBIA6gDU=
+	t=1782879326; cv=none; b=Q4ZjKFcbSsab2BjqX/N7hJ47LrJ4XWxE3wvfs6plXeXpLMwMFePqRXQUeI++X8NIIj4hOtP+l9inKwxbtTXVGRRb8FRWcljhF4HqPuq+Gt4X4GgsRWuVLpXob2GCyy90e6WJ8Coid2DyLi/oSXOWoljN29iQMd813rZ0bbBtQt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782879292; c=relaxed/simple;
-	bh=Df8NKL/TpJVdIp4feFFMtvuRA104Bis2ygZIs7pEmqI=;
+	s=arc-20240116; t=1782879326; c=relaxed/simple;
+	bh=NuiSsETeO2vG3ljhr7hGniPRSA/kIVmu4fj2TwveGZQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sOX9mvb16VV/FzZCLePaNs3eQqAx7QJOUo14jewuwTq+fPaTBu6czzKYKVS75Xt8YYSE08HIxAY2MceIra5na4JnV8wKoa7ct0UVAvUtGR86vr/nv9+El7Nk3pUTM7vYKBCQu01qET4j6ckFr2NhwEX4a6Fp+GVW58ay3nsSbMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArIgU3Ro; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=f9y9Z1IZgznUwNdBz48uW9gg0Cz/l4xpQnTt+F28yTbMWd75Cvgs8q702GreBsCEB8WkIsw+m3f9kPwamVXBcYMBYGhcu2+mPhq1z5v/d9gFUcyHeCAxVXJ8XVGJ83z+21wxGYqqxBFHYM3ryFIIdXjmRpyGofZWJGAlhx/rTQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OAOPoyPb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArIgU3Ro"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091681F000E9;
-	Wed,  1 Jul 2026 04:14:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OAOPoyPb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 585EF1F000E9;
+	Wed,  1 Jul 2026 04:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782879285;
-	bh=7RLjhALOkip1lVVDaMmVUo0K7QOov84owyC2D9LuZRU=;
+	s=k20260515; t=1782879317;
+	bh=UfbZHIvF+Z9gk8lK2mrVIayci3WMQeQUnKjIqYVBAAw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ArIgU3Ro3x7B7cv4K7NJlWWcCDRwuVwjFCdK6FyF8QnIKMtUj/jM6vYKcv9rh6uiM
-	 b4c/wuZCmyefWdnrj/aJIgB+nYSanI4TP3vm23OxP/ocuu31XwvrBoxjIpCA6XeXxv
-	 CZ8d893jnsXj40HPeKA4tQqMHrrmn7wm1AuuON2iw5O+w3gIQJEon8zGPuBQ8FdHvf
-	 DQb+PjU92/IJWpCyG1qhMscWa9qZ+9ZimgXs8BJhsD4ESoYynYvGwEcJBj39N962XL
-	 a/cSIpOygija6yTubi6G5VbRxMwsUw5st+3EbcBijnvQrYAJYiQqQeoR3wOzIPcEyQ
-	 z4xsd69njDRpg==
+	b=OAOPoyPblobLxqq9oK9P/HEGyWfCDHxxvIxqbU/jg1dr60NrwyLLIcjoduf8SUhYy
+	 VVdZfExg4wNE0RLLX/HOuOw+Wbcy3ZTR79vIajk6qbMeLtI90kLgP5IIvhTVzV6sU9
+	 PtXhbEuD0E6vdt/XNhmqWi83zTy3N+JcB27a08lDOrAGhOnCo1F++BHXBCJgckBSdY
+	 iiTAP4qb2OYDphUlTkta0EruXspnyhAbsmDTC795rcWInF4MG/rie6Vfdwje7/ROqJ
+	 d5KJWpCkR5jIk0aYs+tZ2LoOQWI4w69Hz2XpJI7yOMGB0oOcy56zlby36pkl4mBV3O
+	 pWSV53evl2Jiw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 14/21] perf annotate-arm64: Support load instruction
- tracking
+Subject: Re: [PATCH v3 19/21] perf annotate-arm64: Support 'adrp'
+ instruction to track global variables
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701035355.752944-15-wutengda@huaweicloud.com>
+In-Reply-To: <20260701035355.752944-20-wutengda@huaweicloud.com>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-15-wutengda@huaweicloud.com>
+ <20260701035355.752944-20-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 04:14:44 +0000
-Message-Id: <20260701041445.091681F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 04:15:16 +0000
+Message-Id: <20260701041517.585EF1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Missing invalidation of the destination register on type resolut=
-ion failure during load instruction tracking.
-- [Medium] The data type profiling logic ignores the second destination reg=
-ister of load pair (ldp) instructions, leading to stale state retention.
+- [Medium] Stale `type` field in register state causes `TSR_KIND_GLOBAL_ADD=
+R` to be corrupted across stack spills.
 --
 
-commit 579f01582f34ef50d993c4cb489f025353f8dbcc
+commit ddfb698eef878cf476210d72e082d8b79c811ecd
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate-arm64: Support load instruction tracking
+perf annotate-arm64: Support 'adrp' instruction to track global variables
 
-This commit extends update_insn_state_arm64() to handle LDR instructions.
-It tracks register state changes when data is loaded from memory to registe=
-rs,
-supporting signed offset, pre-index, and post-index addressing modes.
+This patch extends update_insn_state() for arm64 to track global variable
+types calculated via page-relative addressing. It introduces
+TSR_KIND_GLOBAL_ADDR to represent the partial page-aligned target address
+produced by adrp instructions. The address is later combined with the offset
+from a subsequent add or ldr instruction to resolve the variable's type.
 
 > diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
 util/annotate-arch/annotate-arm64.c
-> index 48b1c94273eb6..b48545f35620c 100644
+> index 1fed188117192..6f96e75d313dd 100644
 > --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 > +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-
 [ ... ]
-
-> +static void update_load_insn_state(struct type_state *state,
+> @@ -656,8 +700,37 @@ static void update_add_insn_state(struct type_state =
+*state,
+>  	}
+>  }
+> =20
+> +static void update_adrp_insn_state(struct type_state *state,
 > +				   struct disasm_line *dl,
-> +				   struct annotated_op_loc *src,
 > +				   struct annotated_op_loc *dst)
 > +{
 > +	struct type_state_reg *tsr;
-> +	struct type_state_reg src_tsr;
-> +	Dwarf_Die type_die;
 > +	u32 insn_offset =3D dl->al.offset;
-> +	int reg_offset;
-> +	int sreg =3D src->reg1;
 > +	int dreg =3D dst->reg1;
-
-[Severity: Medium]
-Does this ignore the second destination register for load pair (ldp)
-instructions?
-
-If the instruction writes to two destination registers (e.g.,
-ldp x0, x1, [x2]), it seems dst->reg2 is not checked or invalidated here,
-which could leave it with stale type information. Does the parsing logic in
-arm64_ldst__parse() also need to set ops->target.multi_regs for this to be
-properly tracked?
-
 > +
 > +	if (!has_reg_type(state, dreg))
-> +		goto out_adjust;
+> +		return;
 > +
 > +	tsr =3D &state->regs[dreg];
 > +	tsr->copied_from =3D -1;
 > +
-> +retry:
-> +	if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
+> +	if (!dl->ops.source.addr) {
 > +		invalidate_reg_state(tsr);
 > +		return;
 > +	}
 > +
-> +	src_tsr =3D state->regs[sreg];
-> +	reg_offset =3D get_reg_index_offset(src);
-> +
-> +	/* Dereference the pointer if it has one */
-> +	if (src_tsr.kind =3D=3D TSR_KIND_TYPE &&
-> +	    die_deref_ptr_type(&src_tsr.type,
-> +			       src_tsr.offset + reg_offset, &type_die)) {
-> +		tsr->type =3D type_die;
-> +		tsr->kind =3D TSR_KIND_TYPE;
-> +		tsr->offset =3D 0;
-> +		tsr->ok =3D true;
-> +
-> +		if (src->multi_regs) {
-> +			pr_debug_dtp("ldr [%x] %#x(reg%d, reg%d) -> reg%d",
-> +				     insn_offset, reg_offset, src->reg1,
-> +				     src->reg2, dreg);
-> +		} else {
-> +			pr_debug_dtp("ldr [%x] %#x(reg%d) -> reg%d",
-> +				     insn_offset, reg_offset, sreg, dreg);
-> +		}
-> +		pr_debug_type_name(&tsr->type, tsr->kind);
-> +	}
-> +	/* Or try another register if any */
-> +	else if (src->multi_regs && src->reg1 !=3D src->reg2 && sreg !=3D src->=
-reg2) {
-> +		sreg =3D src->reg2;
-> +		goto retry;
-> +	}
+> +	tsr->kind =3D TSR_KIND_GLOBAL_ADDR;
+> +	/* Partial page-relative address, finalized in next 'add/ldr' */
+> +	tsr->addr =3D dl->ops.source.addr;
+> +	tsr->offset =3D 0;
+> +	tsr->ok =3D true;
 
 [Severity: Medium]
-If the type resolution fails and execution bypasses both of these if/else
-blocks, it falls through to out_adjust.
+Does this leave tsr->type containing a stale Dwarf_Die?
 
-Should the destination register be invalidated here?
+If the register previously held a structure or union type, the type field
+isn't cleared here when switching to TSR_KIND_GLOBAL_ADDR.
 
-It looks like tsr->ok could remain true from its previous state, leaving it
-with incorrect type information.
+If this register is later spilled to the stack, set_stack_state() will
+evaluate the stale type_die. Since the type_die tag is DW_TAG_structure_typ=
+e,
+it will erroneously set stack->compound =3D true.
+
+When the register is loaded back via ldr, update_load_insn_state() will then
+branch into the compound type handling (die_get_member_type()) instead of
+restoring the TSR_KIND_GLOBAL_ADDR state.=20
+
+Could this destroy the tracking state and cause perf annotate to fail resol=
+ving
+the global variable's type?
 
 > +
-> +out_adjust:
-> +	adjust_reg_index_state(state, src, "ldr", insn_offset);
+> +	pr_debug_dtp("adrp [%x] global addr=3D%#"PRIx64" -> reg%d\n",
+> +		     insn_offset, tsr->addr, dreg);
 > +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701035355.7529=
-44-1-wutengda@huaweicloud.com?part=3D14
+44-1-wutengda@huaweicloud.com?part=3D19
