@@ -1,127 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888EB22A817
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:15:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CEB38B7A1
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782879326; cv=none; b=Q4ZjKFcbSsab2BjqX/N7hJ47LrJ4XWxE3wvfs6plXeXpLMwMFePqRXQUeI++X8NIIj4hOtP+l9inKwxbtTXVGRRb8FRWcljhF4HqPuq+Gt4X4GgsRWuVLpXob2GCyy90e6WJ8Coid2DyLi/oSXOWoljN29iQMd813rZ0bbBtQt8=
+	t=1782879401; cv=none; b=fuGh3IXD1Sf+CIlIrIjcVKltfGFf8oB6ullCuPDj7y+cYNUAzq8ZAY903DH6wt64QC5gCYGjj3uTW9RzcOtpcNbBja1uKT2q5Bt9jhVFvYSmk9XW84A3vsszHrd0A3t9lxARW3XcfLcMvTTBz4pSN/LFWaioSWt3MyIAT8qkQ7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782879326; c=relaxed/simple;
-	bh=NuiSsETeO2vG3ljhr7hGniPRSA/kIVmu4fj2TwveGZQ=;
+	s=arc-20240116; t=1782879401; c=relaxed/simple;
+	bh=l+b+lx4IGV/fW/ExFIyQRHDeNzgSq04I4kj3rb/lzS4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=f9y9Z1IZgznUwNdBz48uW9gg0Cz/l4xpQnTt+F28yTbMWd75Cvgs8q702GreBsCEB8WkIsw+m3f9kPwamVXBcYMBYGhcu2+mPhq1z5v/d9gFUcyHeCAxVXJ8XVGJ83z+21wxGYqqxBFHYM3ryFIIdXjmRpyGofZWJGAlhx/rTQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OAOPoyPb; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JFdjZcG7V4gYGsrvu9x1A19PTT2rhxiUCmafR30n+Tqz0HS9um/QYEBIqnLSSdLm4xy3oq5QpIMZaveguRxyFG2V/ysk7MzspzRxhrvhIF1PtJr4sdfEegCJ1OeQst0itVoB4v63mD/On50xL00BS0mvJrJxFQHYB50D51lAw4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IHy5tDxP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OAOPoyPb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 585EF1F000E9;
-	Wed,  1 Jul 2026 04:15:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IHy5tDxP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FEDC1F000E9;
+	Wed,  1 Jul 2026 04:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782879317;
-	bh=UfbZHIvF+Z9gk8lK2mrVIayci3WMQeQUnKjIqYVBAAw=;
+	s=k20260515; t=1782879396;
+	bh=shECaDoqBN0RnQtAHAsoR0yHlXxyAqLZfPsXTVm2T20=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OAOPoyPblobLxqq9oK9P/HEGyWfCDHxxvIxqbU/jg1dr60NrwyLLIcjoduf8SUhYy
-	 VVdZfExg4wNE0RLLX/HOuOw+Wbcy3ZTR79vIajk6qbMeLtI90kLgP5IIvhTVzV6sU9
-	 PtXhbEuD0E6vdt/XNhmqWi83zTy3N+JcB27a08lDOrAGhOnCo1F++BHXBCJgckBSdY
-	 iiTAP4qb2OYDphUlTkta0EruXspnyhAbsmDTC795rcWInF4MG/rie6Vfdwje7/ROqJ
-	 d5KJWpCkR5jIk0aYs+tZ2LoOQWI4w69Hz2XpJI7yOMGB0oOcy56zlby36pkl4mBV3O
-	 pWSV53evl2Jiw==
+	b=IHy5tDxPwMInw2zyCcOGWMd2Iu7FQVcCUwpFT4n3S21OhGscbvxbdzLr2Qqk7I4s3
+	 I+AbqFP5TqfNJkb76RJw5K2CTiextwPUipodGrzG08lERa1BkLlERSTSeVxVHmepPp
+	 8/vjvwDvGOd63wsH9rI4RqH2N6RsclsUzcxpRxXBrgKAibFhIv86HthysDFxsQyC+/
+	 iz0+NVh5idaWty15SfrFtLxEdNC6VBvCs1tnMkgFQWQ4dAZQDqzcfDv6Rj+hmGFYYM
+	 Wkf/L4DRigkH25HBrf7DFuqMnUNTVlXdKdU5wtyaKzJzmsxZ/D8KyJzu1LkjEAAL8G
+	 H7wejwUBkzLYA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 19/21] perf annotate-arm64: Support 'adrp'
- instruction to track global variables
+Subject: Re: [PATCH v3 21/21] perf annotate-arm64: Support 'mrs' instruction
+ to track 'current' pointer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701035355.752944-20-wutengda@huaweicloud.com>
+In-Reply-To: <20260701035355.752944-22-wutengda@huaweicloud.com>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-20-wutengda@huaweicloud.com>
+ <20260701035355.752944-22-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 04:15:16 +0000
-Message-Id: <20260701041517.585EF1F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 04:16:36 +0000
+Message-Id: <20260701041636.7FEDC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Stale `type` field in register state causes `TSR_KIND_GLOBAL_ADD=
-R` to be corrupted across stack spills.
+- [Medium] Memory leak of the dynamically allocated `type_name` string obta=
+ined from `strbuf_detach()`.
+- [Medium] Cross-DSO contamination and potential type confusion due to glob=
+ally caching a DWARF offset (`task_struct_dieoff`).
 --
 
-commit ddfb698eef878cf476210d72e082d8b79c811ecd
+commit 0f7d6f3c161448b3cb967b47ee3887be3d974dc1
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate-arm64: Support 'adrp' instruction to track global variables
+perf annotate-arm64: Support 'mrs' instruction to track 'current' pointer
 
-This patch extends update_insn_state() for arm64 to track global variable
-types calculated via page-relative addressing. It introduces
-TSR_KIND_GLOBAL_ADDR to represent the partial page-aligned target address
-produced by adrp instructions. The address is later combined with the offset
-from a subsequent add or ldr instruction to resolve the variable's type.
+This commit adds support for parsing the 'mrs' instruction on arm64 in
+'perf annotate' to track the 'current' task pointer. It dynamically queries
+the DWARF debug information for the 'get_current()' inline function's
+return type to find 'struct task_struct', caching the DWARF offset for
+subsequent lookups.
 
 > diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
 util/annotate-arch/annotate-arm64.c
-> index 1fed188117192..6f96e75d313dd 100644
+> index ec6fd59d51a27..89e3997f6721b 100644
 > --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 > +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
 [ ... ]
-> @@ -656,8 +700,37 @@ static void update_add_insn_state(struct type_state =
-*state,
->  	}
+> @@ -787,6 +789,81 @@ static void update_adrp_insn_state(struct type_state=
+ *state,
+>  		     insn_offset, tsr->addr, dreg);
 >  }
 > =20
-> +static void update_adrp_insn_state(struct type_state *state,
-> +				   struct disasm_line *dl,
-> +				   struct annotated_op_loc *dst)
+> +static Dwarf_Off task_struct_dieoff;
+> +
+> +static void update_mrs_insn_state(struct type_state *state,
+> +				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
+> +				  struct disasm_line *dl,
+> +				  struct annotated_op_loc *dst)
 > +{
-> +	struct type_state_reg *tsr;
-> +	u32 insn_offset =3D dl->al.offset;
-> +	int dreg =3D dst->reg1;
-> +
-> +	if (!has_reg_type(state, dreg))
-> +		return;
-> +
-> +	tsr =3D &state->regs[dreg];
-> +	tsr->copied_from =3D -1;
-> +
-> +	if (!dl->ops.source.addr) {
+[ ... ]
+> +	/* Handle case difference: LLVM (SP_EL0) vs objdump (sp_el0) */
+> +	if (!dso__kernel(map__dso(dloc->ms->map)) ||
+> +	    strcasecmp(dl->ops.source.raw, "sp_el0")) {
 > +		invalidate_reg_state(tsr);
 > +		return;
 > +	}
 > +
-> +	tsr->kind =3D TSR_KIND_GLOBAL_ADDR;
-> +	/* Partial page-relative address, finalized in next 'add/ldr' */
-> +	tsr->addr =3D dl->ops.source.addr;
-> +	tsr->offset =3D 0;
-> +	tsr->ok =3D true;
+> +	ip =3D dloc->ms->sym->start + dl->al.offset;
+> +	pc =3D map__rip_2objdump(dloc->ms->map, ip);
+> +
+> +	if (!task_struct_dieoff ||
+> +	    !dwarf_offdie(dloc->di->dbg, task_struct_dieoff, &type_die)) {
 
 [Severity: Medium]
-Does this leave tsr->type containing a stale Dwarf_Die?
+Since DWARF offsets are local to their .debug_info section, if perf annotate
+processes a symbol in a different kernel module (where dso__kernel() is sti=
+ll
+true), couldn't this global task_struct_dieoff be applied to the module's
+Dwarf * handle?
 
-If the register previously held a structure or union type, the type field
-isn't cleared here when switching to TSR_KIND_GLOBAL_ADDR.
+Would this result in type confusion or returning an arbitrary, unrelated DIE
+across different DSOs?
 
-If this register is later spilled to the stack, set_stack_state() will
-evaluate the stale type_die. Since the type_die tag is DW_TAG_structure_typ=
+> +		struct strbuf sb;
+> +		char *type_name;
+> +		/*
+> +		 * Find the inline function 'get_current()' Dwarf_Die
+> +		 * and obtain its return value data type, which should
+> +		 * be 'struct task_struct*'.
+> +		 */
+> +		if (!die_find_inlinefunc(cu_die, pc, &func_die) ||
+> +			!dwarf_attr_integrate(&func_die, DW_AT_type, &attr) ||
+> +			!dwarf_formref_die(&attr, &type_die)) {
+> +			invalidate_reg_state(tsr);
+> +			return;
+> +		}
+> +
+> +		strbuf_init(&sb, 32);
+> +		die_get_typename_from_type(&type_die, &sb);
+> +		type_name =3D strbuf_detach(&sb, NULL);
+> +
+> +		if (!type_name || strcmp(type_name, "struct task_struct*")) {
+> +			invalidate_reg_state(tsr);
+> +			return;
+> +		}
+
+[Severity: Medium]
+Does this code leak the type_name string?
+
+strbuf_detach() allocates and transfers ownership of the string to type_nam=
 e,
-it will erroneously set stack->compound =3D true.
-
-When the register is loaded back via ldr, update_load_insn_state() will then
-branch into the compound type handling (die_get_member_type()) instead of
-restoring the TSR_KIND_GLOBAL_ADDR state.=20
-
-Could this destroy the tracking state and cause perf annotate to fail resol=
-ving
-the global variable's type?
+but it appears to never be freed on either the success path or the error pa=
+th
+returning here.
 
 > +
-> +	pr_debug_dtp("adrp [%x] global addr=3D%#"PRIx64" -> reg%d\n",
-> +		     insn_offset, tsr->addr, dreg);
-> +}
+> +		/*
+> +		 * Cache the 'struct task_struct*' die offset globally.
+> +		 * This allows us to resolve stack canary accesses even
+> +		 * in CUs that lack a full task_struct definition (e.g.,
+> +		 * compiler-generated entry/exit code).
+> +		 */
+> +		task_struct_dieoff =3D dwarf_dieoffset(&type_die);
+> +	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701035355.7529=
-44-1-wutengda@huaweicloud.com?part=3D19
+44-1-wutengda@huaweicloud.com?part=3D21
