@@ -1,344 +1,245 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9C03F1654
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 09:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628311F2380
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 09:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782896772; cv=none; b=svqmfFKWsfewQa7wZ+ncgQQJk2q2Mx8akhWB8nWFPrvUkAoRDrFRQ/zXiJy3Fs3PQ9kfXBT/FxChtUIjn0rHZAepLnUMbm0FuwZeu8N3hSQlLeliHTg3RQXx3SDJSPsJMaybVxZvEgWzCRaBR84F+st+pjk8wxlUrVMvvnYB7fw=
+	t=1782896847; cv=none; b=MaoLxRsG2rTvzue+dw7wP0dZ0UCo+fsTWgM6e0CAg6M13ySbarQf83OiLQaRs4xOb05Y93nFWy60rGWUlzsAEl50eDujYNrK90CjYvVcZIjTiCOdaRS7vhhPZqhE93a9cIbJ8VSI29ODP+XnjOwD6SFJgMkAEUz3c2Z4/JdtRZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782896772; c=relaxed/simple;
-	bh=pfXMOlXQg0XnmLBRe5s7ZZ0STxkQuxzbp0R6Vastmls=;
+	s=arc-20240116; t=1782896847; c=relaxed/simple;
+	bh=wGtDSd2rYRx5Au+UHklqOvIT5RmWnB3J3JDHr2VZ4Ko=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=T+x8PkgyJ7ZiOe6lzlGYy7aBwwKTqqFj1svqvPOz4xRCp1wz3OpB++5b+CmeZxoVO6h+c+P0G51qx80XXbPdo1Xi9kNz6FRfDx/8vLPwQtCshjjW8CiF3xCVdVGyJXysnIA15nHlwlTrLLAPmLnNyzYlGGSu7QSecyDC3IP/L68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QGp71GpD; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=dTJKxa7KB5LbSDmR58YTz+uJrPR7ND/sA2joX03RAPRWSRhUs2bZU2FPLimskKGUi4/EP2zpu2h4BWLcq+U1YEpjmKX6MMFhAyPpxnZZ2UdDi+aFnJJSi+Uggp6etopV8O5P9myNOppSrWz6HoIMC9YPW6Jytq8nhjWdgXqjZ14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EeN1lA0O; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QGp71GpD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C54631F00A3A;
-	Wed,  1 Jul 2026 09:06:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EeN1lA0O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34FF71F00A3A;
+	Wed,  1 Jul 2026 09:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782896768;
-	bh=vNpAFtSc9XsYihmBvJvIGmCFN3mFvK0UEle1XXIfsIw=;
+	s=k20260515; t=1782896846;
+	bh=lpKaF6wG0udvbVfOwXeA3sJbnLjl5YPrcWK3DmRzj+0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QGp71GpDWvcrkObL0tjsY+bgdNG+8Y1HZqp1t08nRiOkymt8Fxn5KhknoSdhnwcJt
-	 fQ1i2e3zZAPV9KAcllepc4tTBgxisJP5YXUA7O/I9C13z7zuV9WqSDZ0a9xxtNv7lG
-	 ZV6y7TwlNo0QbZIcP4GS4qROZJYAIdFfCJ6Qmzedygd3auM6NtcUeIRmafHUIDPb0n
-	 2rBmsoCNdYruOkd3pK6YpKnQ6PTuPRMNxiEakvant/+FnMBbcjCeAuw8lIC0YiPxE/
-	 X6znULJAYGSgsa7+watEqVhg7s4TMz0QWYvHZPVkcVkQ5V07ml9sW9zI/iVznEZLy/
-	 gbGNFhUbQfGlw==
+	b=EeN1lA0OAOfaGfEH6CxMRo0P/F3rZPMGau/0AnAp+gBaogTYDjV0fFb0UIm6+St5E
+	 jiuMNv0C3LRgXCdw9300Ss78WXVEbbEaCVGRNgQOXjPIrlVHcKu0H63YVUxI1Ndxoq
+	 ldISXixs6RN1tDtewY6DlQoqvSpcUTeNyhbrTTey1xEajrX1rT22tW9i9xUnInqxx+
+	 VOG5SkLcc0vgVAOGhNx4w3L6UL4CMoLr2tjvlYiUTEb4LuWN6k9arrqI93tzAv38/V
+	 M0eSUmFMwwhqLYBQWmtmTwwExFPVIvREKVsvbwAVM7KduNVDKyok886se68b0e7Xz4
+	 LZB5OwdGkTHyg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 6/9] perf tools powerpc: Add HTM trace data processing
- and decoding support
+Subject: Re: [PATCH 7/9] perf tools powerpc: Add physical to logical address
+ mapping for HTM traces
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701084115.80383-7-atrajeev@linux.ibm.com>
+In-Reply-To: <20260701084115.80383-8-atrajeev@linux.ibm.com>
 References: <20260701084115.80383-1-atrajeev@linux.ibm.com>
- <20260701084115.80383-7-atrajeev@linux.ibm.com>
+ <20260701084115.80383-8-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 09:06:08 +0000
-Message-Id: <20260701090608.C54631F00A3A@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 09:07:25 +0000
+Message-Id: <20260701090726.34FF71F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 10 potential issue=
-(s) to consider:
-- [Critical] Use-after-free and inconsistent resource cleanup on error path=
-s in `powerpc_htm_process_auxtrace_info()`.
-- [Critical] Out-of-bounds read and information leak in `write_htm()` due t=
-o missing bounds checks against `buffer->size`.
-- [High] Missing size validation before dereferencing `sample->raw_data`.
-- [High] Stateless queue iteration logic causes redundant processing and ma=
-ssive trace duplication.
-- [High] Missing NULL checks for `evsel` pointer and `evsel->name`.
-- [High] Missing call to `auxtrace_buffer__get_data()` causes `buffer->data=
-` to be NULL when passed to `write_htm()`.
-- [High] Deadlock in child process after fork() due to non-async-signal-saf=
-e functions.
-- [High] Predictable filenames are created in the current working directory=
- without O_EXCL or O_NOFOLLOW flags, enabling arbitrary file overwrites via=
- symlink attacks.
-- [Medium] Cross-platform analysis broken due to native endianness assumpti=
-on on raw sample data.
-- [Low] Missing explicit inclusion of POSIX standard libc headers.
+Thank you for your contribution! Sashiko AI review found 8 potential issue(=
+s) to consider:
+- [Critical] Multiple integer overflows exist when calculating allocation s=
+izes on 32-bit systems, leading to severe heap buffer overflows.
+- [Critical] The `write_htm` function blindly trusts data from the untruste=
+d AUX buffer to determine how much memory to write to the translation file,=
+ allowing an attacker to leak sensitive heap memory.
+- [High] Trace analysis improperly queries the host machine's `/proc/powerp=
+c/lparcfg` rather than utilizing recorded trace metadata, breaking cross-pl=
+atform analysis.
+- [High] Missing bounds check and an off-by-one chunk error in `create_mem_=
+maps` lead to out-of-bounds memory reads and misinterpretation of chunk hea=
+ders.
+- [High] Logical addresses are truncated on 32-bit hosts, corrupting addres=
+ses greater than 4GB.
+- [High] Unconditional byte swapping of HTM memory map entries corrupts dat=
+a on matching-endian architectures.
+- [Medium] Missing explicit POSIX libc header inclusions will cause compila=
+tion failures under musl libc.
+- [Medium] The unchecked return value of `add_map_entry` silently drops tra=
+ce entries when memory allocation fails.
 --
 
-commit 699e32993a6b92ec36264eeaf2b99217af504b57
-Author: Athira Rajeev <atrajeev@linux.ibm.com>
+commit bb5ab27d1cf88495a27db7cca665426d73fc046d
+Author: Tanushree Shah <tshah@linux.ibm.com>
+Subject: perf tools powerpc: Add physical to logical address mapping for HT=
+M traces
 
-perf tools powerpc: Add HTM trace data processing and decoding support
-
-This patch adds support for processing Hardware Trace Macro (HTM) auxiliary
-trace data collected via perf AUX buffers. It allows post-processing of HTM
-traces, extracting bus traces and system memory configuration. It integrates
-with an external htmdecode tool for trace decoding.
+This commit adds support for mapping physical addresses from HTM traces
+to logical addresses. It reads the current partition ID and extracts memory
+map entries, then parses decoded HTM trace files to generate mappings.
 
 > diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
-> index ffddf0e59fc14..487989ca4fc7d 100644
+> index 487989ca4fc7d..83253850870c2 100644
 > --- a/tools/perf/util/powerpc-htm.c
 > +++ b/tools/perf/util/powerpc-htm.c
-> @@ -14,6 +14,12 @@
->  #include <inttypes.h>
->  #include "powerpc-htm.h"
->  #include <errno.h>
-> +#include <sys/stat.h>
-> +#include <unistd.h>
-> +#include <sys/mman.h>
-> +#include "sample.h"
-> +#include <sys/types.h>
-> +#include <sys/wait.h>
-
-[Severity: Low]
-Does this file compile successfully against musl libc?
-
-This code uses POSIX standard functions and constants like open, O_WRONLY,
-fopen, exit, malloc, and strerror. However, it looks like the explicit
-POSIX headers (<fcntl.h>, <stdio.h>, <stdlib.h>, <string.h>) are missing.
-Without these explicit inclusions, compilation under musl libc might fail.
-
-[ ... ]
-> @@ -26,8 +32,140 @@ struct powerpc_htm {
->  	struct machine			*machine;
->  	u32				pmu_type;
->  	char				htmbin_file[64];
-> +	char				trans_file[64];
-> +	int				htm_mem_entries;
-> +	int				mem_maps;
->  };
-[ ... ]
-> +static int run_htmdecode(const char *input_file, const char *output_file)
-> +{
-> +	pid_t pid;
-> +	int status;
-> +
-> +	pid =3D fork();
-> +	if (pid =3D=3D -1) {
-> +		pr_err("fork() failed: %s\n", strerror(errno));
-> +		return -errno;
-> +	}
-> +
-> +	if (pid =3D=3D 0) {
-> +		/* Child process */
-> +		int fd =3D open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-
-[Severity: High]
-Could creating this output file with a predictable name make it vulnerable =
-to
-a symlink attack?
-
-If this is executed in a world-writable directory like /tmp, and a user
-pre-creates a symlink matching the output filename, opening it without
-O_EXCL and O_NOFOLLOW might allow an attacker to overwrite arbitrary files.
-
-> +
-> +		if (fd =3D=3D -1) {
-> +			pr_err("Failed to open output file: %s\n", strerror(errno));
-> +			exit(1);
-> +		}
-> +
-> +		/* Redirect stdout to output file */
-> +		dup2(fd, STDOUT_FILENO);
-> +		close(fd);
-> +
-> +		/* Execute htmdecode - execlp searches PATH automatically */
-> +		execlp("htmdecode", "htmdecode", "-o", "-j", "-w", "1",
-> +			"-f", input_file, NULL);
-> +
-> +		/* If execlp returns, it failed */
-> +		pr_err("Failed to execute htmdecode: %s\n", strerror(errno));
-> +		if (errno =3D=3D ENOENT)
-> +			pr_err("htmdecode not found in PATH\n");
-> +
-> +		exit(127);  /* Standard "command not found" exit code */
-> +	}
-
-[Severity: High]
-Is there a risk of deadlocking the child process if perf is multi-threaded?
-
-The child process calls pr_err and exit if open or execlp fails. Since
-pr_err uses fprintf and exit flushes streams, these are not
-async-signal-safe functions.
-
-If another thread held a libc lock, like the stderr lock or malloc heap
-lock, when fork was called, the child process could deadlock trying to
-acquire it. Would it be safer to use write to file descriptor 2 and
-_exit here?
-
-[ ... ]
-> +static int write_htm(void *data, size_t size, struct powerpc_htm *htm)
-> +{
-> +	FILE *fp;
-> +	u64 *num_entries;
-> +	size_t entries;
-> +	size_t written;
-> +	int ret =3D -1;
-> +
-> +	if (htm->mem_maps) {
-> +		fp =3D fopen(htm->trans_file, "ab");
-> +		if (!fp) {
-> +			pr_err("Failed to open %s: %s\n", htm->trans_file, strerror(errno));
-> +			return ret;
-> +		}
-> +		num_entries =3D data + 0x10;
-> +		entries =3D be64_to_cpu(*num_entries);
-> +		entries++;
-> +		written =3D fwrite(data, 32, entries, fp);
-
-[Severity: Critical]
-Can this result in an out-of-bounds memory read?
-
-The code calculates the number of entries dynamically from data + 0x10 and
-then calls fwrite with entries as the count multiplier.
-
-If the trace data is malformed and contains an artificially large entry
-count, it seems we could write gigabytes of out-of-bounds heap or mapped
-memory to the file without verifying that the requested write length is
-bounded by the size parameter.
-
-> +		if (written !=3D entries) {
-> +			pr_err("Failed to write data: expected %zu, wrote %zu\n", entries, wr=
-itten);
-> +			fclose(fp);
-> +			return ret;
-> +		}
-> +		fclose(fp);
-> +		htm->htm_mem_entries +=3D entries;
-> +		return 0;
-> +	}
-[ ... ]
->  static int powerpc_htm_process_event(struct perf_session *session __mayb=
-e_unused,
->  				 union perf_event *event,
->  				 struct perf_sample *sample __maybe_unused,
->  				 const struct perf_tool *tool __maybe_unused)
->  {
-> +	struct powerpc_htm *htm =3D container_of(session->auxtrace, struct powe=
-rpc_htm,
-> +			auxtrace);
-> +
-> +	if ((event->header.type =3D=3D PERF_RECORD_SAMPLE) && sample->raw_data)=
- {
-> +		int *content =3D (int *)sample->raw_data;
-
-[Severity: High]
-Could casting sample->raw_data to an integer pointer cause an out-of-bounds
-read if the raw data is smaller than sizeof(int)?
-
-Should we verify that sample->raw_size is at least 4 bytes before
-dereferencing it?
-
-> +		struct evsel *evsel =3D evlist__event2evsel(session->evlist, event);
-> +		int config =3D (evsel->core.attr.config) & 0xF;
-
-[Severity: High]
-Is it possible for evlist__event2evsel to return NULL here?
-
-If it fails to find a matching event for the sample, dereferencing evsel
-immediately in the config assignment would cause a crash.
-
-> +		struct auxtrace_buffer *buffer =3D NULL;
-> +		struct auxtrace_queues *queues =3D &htm->queues;
-> +		unsigned int i =3D 0;
-> +		int j =3D 0;
-> +
-> +		if (strstr(evsel->name, "htm") =3D=3D NULL)
-> +			return 0;
-
-[Severity: High]
-Is it guaranteed that evsel->name is non-NULL?
-
-If the event is unnamed, passing evsel->name directly to strstr might
-trigger a NULL pointer dereference.
-
-> +
-> +		for (i =3D 0; i < queues->nr_queues; i++) {
-> +			buffer =3D auxtrace_buffer__next(&queues->queue_array[i], buffer);
-> +			for (; buffer;) {
-> +				if (j >=3D *content)
+> @@ -20,6 +20,13 @@
+>  #include "sample.h"
+>  #include <sys/types.h>
+>  #include <sys/wait.h>
+> +#include <regex.h>
+> +#include <ctype.h>
+> +#include <errno.h>
 
 [Severity: Medium]
-Does this code handle cross-endian analysis correctly?
+Could we include the standard posix headers here? Functions like fopen,
+malloc, free, and strerror are used in this file, but <stdio.h>,
+<stdlib.h>, <string.h>, and <fcntl.h> are missing. This causes build
+failures when compiling with musl libc.
 
-The trace data is read directly into content as a native integer. If a
-trace recorded on a big-endian system is analyzed on a little-endian
-host, it seems the value will have the wrong byte order and the
-comparison here will evaluate incorrectly.
-
-> +					htm->mem_maps =3D 1;
-> +				if (write_htm(buffer->data, buffer->size, htm))
-
-[Severity: High]
-Is it possible for buffer->data to be NULL here?
-
-Because the auxtrace subsystem lazily maps file payloads, passing
-buffer->data directly to write_htm without calling
-auxtrace_buffer__get_data first might pass a NULL pointer, leading to a
-crash when it is dereferenced inside write_htm.
-
-[Severity: High]
-Does this loop iteration lead to massive data duplication?
-
-The code iterates over all auxtrace_buffer elements starting from the
-queue head for every PERF_RECORD_SAMPLE event. Because buffers aren't
-marked as processed or dequeued, subsequent events will cause the same
-buffers to be appended to the output files multiple times.
-
-> +					return -1;
-> +				j++;
-> +				buffer =3D auxtrace_buffer__next(&queues->queue_array[i], buffer);
-> +			}
-> +		}
-> +		/* Only for power bus traces, we decode traces */
-> +		if (config =3D=3D 1)
-> +			create_mem_maps(htm);
-> +	}
-> +
->  	return 0;
->  }
 [ ... ]
-> @@ -205,6 +420,14 @@ int powerpc_htm_process_auxtrace_info(union perf_eve=
-nt *event,
->  	}
->  	fclose(fp);
-> =20
-> +	snprintf(htm->trans_file, sizeof(htm->trans_file), "translation.n%d.p%d=
-.c%d", nodeindex, nodalchipindex, coreindexonchip);
-> +	fp =3D fopen(htm->trans_file, "w");
+> +struct mem_entries {
+> +	unsigned long long phy_addr;
+> +	unsigned long logical_addr;
 
 [Severity: High]
-Are we vulnerable to symlink attacks here by using predictable filenames?
+Will this truncate logical addresses on 32-bit analysis hosts? PowerPC uses
+64-bit addresses, but logical_addr is defined as an unsigned long. This
+corrupts logical addresses over 4GB and causes the UINT64_MAX sentinel check
+to fail when analyzed on a 32-bit system.
 
-Creating files with predictable names like translation.n%d.p%d.c%d using
-fopen with the w flag without O_EXCL could allow arbitrary file
-overwrites if run in a shared directory.
+> +	u32 lp_index;
+> +	u64 size;
+> +};
 
-> +	if (!fp) {
-> +		pr_err("Failed to create %s: %s\n", htm->trans_file, strerror(errno));
-> +		return -errno;
+[ ... ]
+> +static int add_map_entry(struct addr_map **arr, size_t *count, size_t *c=
+ap, struct addr_map entry)
+> +{
+> +	if (*count >=3D *cap) {
+> +		size_t new_cap =3D (*cap =3D=3D 0) ? 1024 : (*cap * 2);
+> +		void *tmp =3D safe_realloc(*arr, new_cap * sizeof(struct addr_map));
 
 [Severity: Critical]
-Does returning directly here leak the htm struct allocated earlier in the
-function?
+Could this multiplication wrap around on 32-bit systems? If new_cap is
+sufficiently large from a large trace file, the size calculation can
+overflow. This allocates a smaller buffer than expected, leading to
+sequential out-of-bounds writes.
 
-Additionally, if the function jumps to the err_free label on other error
-paths, such as when powerpc_htm_synth_events fails, does it bypass the
-session->auxtrace =3D NULL assignment?
+> +
+> +		if (!tmp)
+> +			return -1;
+> +		*arr =3D tmp;
+> +		*cap =3D new_cap;
+> +
+> +	}
+> +
+> +	(*arr)[(*count)++] =3D entry;
+> +	return 0;
+> +}
 
-If session->auxtrace was set to &htm->auxtrace, leaving a dangling
-pointer could cause a use-after-free when the session is later deleted
-via perf_session__delete.
+[ ... ]
+> +static unsigned long find_logical_addr(unsigned long long given_addr,
+> +				struct mem_entries *mem_entries_array,
+> +				size_t n_entries,
+> +				u32 lp_filter)
+> +{
+> +	for (size_t i =3D 0; i < n_entries; i++) {
+[ ... ]
+> +		if (start <=3D given_addr && given_addr < end &&
+> +			mem_entries_array[i].lp_index =3D=3D lp_filter) {
+> +			unsigned long long offset =3D given_addr - start;
+> +			unsigned long logical =3D mem_entries_array[i].logical_addr + offset;
+
+[Severity: High]
+This variable also uses unsigned long, which truncates the 64-bit address on
+32-bit architectures. Does it make sense to use a fixed-width type like u64
+or unsigned long long here and in the structures?
+
+> +
+> +			pr_debug("DEBUG: Condition hit at i=3D%zu given_addr=3D0x%llx start=
+=3D0x%llx end=3D0x%llx lp_index=3D%u\n",
+
+[ ... ]
+> +				entry.phys_addr   =3D phys_addr;
+> +				entry.logical_addr =3D logical_addr;
+> +
+> +				add_map_entry(&maps, &count, &cap, entry);
+
+[Severity: Medium]
+Is it safe to ignore the return value here? If safe_realloc fails due to
+memory pressure, add_map_entry returns -1. Ignoring this silently drops
+trace entries without any error propagation.
+
+> +
+> +				ptr +=3D pmatch[0].rm_eo;
+
+[ ... ]
+> +	/* get the lp index */
+> +	fp =3D fopen(lpar_cfg, "r");
+
+[Severity: High]
+Does this correctly handle cross-platform analysis? Reading from the local
+host's /proc/powerpc/lparcfg means trace decoding might fail or misidentify
+the partition if the analysis is run on an x86 machine or a different
+system. Should this query the recorded trace metadata via perf_env instead?
+
+> +	if (!fp) {
+
+[ ... ]
+> +	mem_entries_array =3D malloc(n_entries * sizeof(struct mem_entries));
+
+[Severity: Critical]
+Could this allocation overflow on 32-bit systems? If n_entries is very
+large, the multiplication wraps around, leading to a small allocation that
+will be followed by out-of-bounds writes in the initialization loop below.
+
+> +	if (!mem_entries_array) {
+
+[ ... ]
+> +	/* get the HTM memory map data and store it in mem_entries_array
+> +	 * to use it later on for physical->logical mapping
+> +	 */
+> +	for (u64 i =3D 0; i < n_entries; i++, mem++) {
+
+[Severity: High]
+Can this loop read past the end of the memory mapped region? The variable m=
+em
+starts at mapped_data + 0x20. If htm->htm_mem_entries includes chunk headers
+across all auxiliary buffers, skipping the first 32-byte header but still
+iterating n_entries times could cause the loop to read out of bounds and
+misinterpret subsequent chunk headers.
+
+> +		mem_entries_array[i].phy_addr =3D bswap_64(mem->phy_real);
+> +		mem_entries_array[i].logical_addr =3D bswap_64(mem->logical_real);
+> +		mem_entries_array[i].lp_index =3D bswap_32(mem->lp_index);
+> +		mem_entries_array[i].size =3D bswap_64(mem->size);
+
+[Severity: High]
+Should this use endian-aware helpers like be64_to_cpu() instead of
+unconditional byte swapping? Applying bswap_64() unconditionally corrupts
+the native data format when the offline analysis is run on a big-endian host
+like ppc64.
 
 > +	}
-> +	fclose(fp);
-> +
->  	powerpc_htm_print_info(&auxtrace_info->priv[0]);
-> =20
->  	err =3D auxtrace_queues__process_index(&htm->queues, session);
+
+
+[Severity: Critical]
+Is it possible for write_htm() to read out of bounds from heap memory?
+
+The function extracts an unbounded size from an untrusted buffer and passes
+it directly to fwrite():
+
+write_htm() {
+    ...
+    num_entries =3D data + 0x10;
+    entries =3D be64_to_cpu(*num_entries);
+    entries++;
+    written =3D fwrite(data, 32, entries, fp);
+    ...
+}
+
+A trace file with a small size but massive num_entries could cause an
+out-of-bounds heap read, leaking sensitive memory into the translation file.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701084115.8038=
-3-1-atrajeev@linux.ibm.com?part=3D6
+3-1-atrajeev@linux.ibm.com?part=3D7
