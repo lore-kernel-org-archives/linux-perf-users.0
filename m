@@ -1,142 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DE33A48F4
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 09:48:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D592828CF6F;
+	Wed,  1 Jul 2026 09:56:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782899290; cv=none; b=cPUO+iNCmOe86EZB3LCgeEhMJP6Chy7Z/xKBprsKRPj7BeFh6u0aX1N83E3WmU7ZSFF05ieUPfNGZXHcNafylBXg+v3TNJmtxb3cg9WIMMCGV1jbFx0MLbMlg0XUZlEP8KETJ/Sd2hDlGe5XzlyNgpzZZAoKzaiht+8rfdj1Ylo=
+	t=1782899772; cv=none; b=kceDGGS7/QjytITP4egY5hcrlwbN67FoAmo1O66tDplQ0plZQeFL/XYkSBWipAf6gFATAgAPOua6qDwpG7rlbxgNpgHlH//l0Vqhv945jFsqKTuezd0iFJo6JHkowXRLXA+Ezx4lwDxwWk81I7WgBYtdvZNMig33vQ4YVAIbTKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782899290; c=relaxed/simple;
-	bh=cMtwKkFL+0uaggv5PTC671SyCo4YF5tfXmhqxmkrLZ8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=U7ai2jI04liZV5ySh12gJqheMb7ecCTib/CSk118pil/omRBNmWvzzjY8IK5ZH04RaR9/IiBOkr0bKZxC4V8HGvlnco6Vs4polXNRfBhUpxJGXDav94HOLEbjgJ7iAZQPdhlwpi7X1e4ij8pcUVIpOnXjPNiy+Q/TL9fR4kHxkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Plou8kxS; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782899772; c=relaxed/simple;
+	bh=uFnqjfO2nGnpQRfkiFUM7kAq9hpq2gQ/a+iAbNQdyDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LL6k1UXjE5Hgp/SbC5GV0H15sXL58BgCl1xFY3MSrSxyVmTNZf4/wXlMoGjuUly4vx/d1xl/uNqdoovM2Tks8EvgHd1vYmyfl6wSVeIHYwE3ZfJukVANhYleT21suTCUfwN4l3msgZyrPlDE8tPf7s36ss5/53gWLRuu71I+Jig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hn05lo+y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Plou8kxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8BC1F000E9;
-	Wed,  1 Jul 2026 09:48:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hn05lo+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EEB71F000E9;
+	Wed,  1 Jul 2026 09:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782899288;
-	bh=ygkXgYM/4IZGn0taYa8nG9m6Qf1mUsUJ8yPlVuJFfbY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Plou8kxSkGdcj0GRzkP4XB01fbDqhz3nMbCMG5aeF2A2kwrouRWZhCC88AYj94Xs9
-	 omIHzyHZv2hWuKWIHqShSKOgmVqBn7zkoMz0wcy1JK/jjFyU6CyuIz+OToa+drZNAx
-	 o9TJfQa1VdJLQ12jwYj6OaQ65AJhBxtYHs+yyHGZ2svhPGJgfG6iqXHsQtpbzRcb9y
-	 OxYhewagFXA+6tKL2mGRU0U/u2fAfIbQcY8o67eB8LgrWHBrNamSZ1r3sPEDR+NroB
-	 i1XqQLNgBMysE2jiIMVX181JCxxpXZhnCT9rk0Th43SfQn5s3C4DWQncxJP8DS7y4G
-	 TZ2IcYnwbCFnQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/3] perf/x86/amd/uncore: Add Hygon uncore PMU
- support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Qi Liu" <liuqi@hygon.cn>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701093417.1312443-4-liuqi@hygon.cn>
-References: <20260701093417.1312443-1-liuqi@hygon.cn>
- <20260701093417.1312443-4-liuqi@hygon.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 09:48:07 +0000
-Message-Id: <20260701094808.5C8BC1F000E9@smtp.kernel.org>
+	s=k20260515; t=1782899768;
+	bh=uFnqjfO2nGnpQRfkiFUM7kAq9hpq2gQ/a+iAbNQdyDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hn05lo+yqTo162vzSSvmLgoHkc8sZFXTO73a3zpugE032j41FtZRAcgR5cC/mIsWC
+	 oqb+WxZyigte/GQZKBkZXaiYmAep0fVWbliyTXXxFOHdLIA7ZB+tMSio0XPY3sBbJD
+	 xp1cndGs6No9+YfwSniB6tXQcpWnVEn7s0jLOOyrTHsS3hH1QGk++EdC7x7glsCzx2
+	 ooQPJops5d+rLUK2ebXz4gbnEltEwqB5O9z9G9A+zLJBaWmKUz/FSVMRs5+u0CJBcF
+	 9YJUExToRs6x/TXjrPjHcKoRJgS2PsOr32tKYv6tYSwkl+1flbn88u/WCVI5PjKVif
+	 CCXDS3L8jpcpw==
+Date: Wed, 1 Jul 2026 10:55:46 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Pedro Falcato <pfalcato@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
+	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 05/30] mm/rmap: update mm/interval_tree.c comments
+Message-ID: <akThthi2yrXY1meF@lucifer>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <80d482a927b2e9862487b812e0ab48ebc1289a70.1782735110.git.ljs@kernel.org>
+ <akPrTU96BwQJoygw@pedro-suse.lan>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <akPrTU96BwQJoygw@pedro-suse.lan>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Incorrect teardown order in the init error path causes NULL pointe=
-r dereferences and timer Use-After-Free.
---
+On Tue, Jun 30, 2026 at 05:16:51PM +0100, Pedro Falcato wrote:
+> On Mon, Jun 29, 2026 at 01:23:16PM +0100, Lorenzo Stoakes wrote:
+> > Update the file comment to clarify that both file-backed and anonymous
+> > interval trees are provided, referencing the relevant data types for
+> > clarity.
+> >
+> > Also add comments to indicate which parts of the file apply to each.
+> >
+> > While we're here, convert the VM_BUG_ON_VMA() to VM_WARN_ON_ONCE_VMA().
+> >
+> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+>
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+>
+> This is fine for now, but I'm wondering if it doesn't make sense to, in the
+> long term, have:
+>
+> mm/rmap.c - common rmap mechanisms
+> mm/anon_rmap.c - anon rmap gunk
+> mm/file_rmap.c - file rmap gunk
+>
+> or even something like mm/rmap/{core,anon,file,ksm??}.c
+>
+> While working on my file rmap patches I noticed there's so much stuff just
+> splurged all over rmap.c - interval_tree.c - fs.h - fs/inode.c.
+> It's a little silly.
 
-commit 757cc017754a489c37240b97dc4192801ef594af
-Author: Qi Liu <liuqi@hygon.cn>
+Well, Wei had something like this idea a way back, but I'd rather avoid it.
 
-perf/x86/amd/uncore: Add Hygon uncore PMU support
+Firstly, with scalable cow coming, I'd rather us not make anon_vma a special
+citizen in any way, and I'm going to be heavily modifying all this anyway.
 
-This patch adds uncore PMU support for Hygon processors based on the shared
-AMD-family uncore framework. It reuses the common uncore infrastructure whi=
-le
-accommodating Hygon-specific differences like MSR base addresses and event
-encodings.
+On the interval tree side, I'm simply going to get rid of the anon side of it
+altogether with scalable CoW also so that can live as it is now for the time
+being.
 
-> diff --git a/arch/x86/events/amd/hygon_uncore.c b/arch/x86/events/amd/hyg=
-on_uncore.c
-> new file mode 100644
-> --- /dev/null
-> +++ b/arch/x86/events/amd/hygon_uncore.c
+In general we try to have generalised rmap walk logic for file vs. anon with
+rmap_walk -> rmap_walk_[anon, file]() for one obviously.
 
-[ ... ]
+But obviously there's separate rmap walker logic for file vs. anon.
 
-> +static int __init hygon_uncore_init(void)
-> +{
+I used to harbour a belief that we could make anon like file-backed but now I'm
+kind of thinking that's not possible :)
 
-[ ... ]
+So I guess the real answer is - yeah, but let's revisit it after scalable CoW
+(and anyway I'm likely to do sensible architectural breakouts as part of that
+work anyway).
 
-> +	ret =3D cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
-> +				"perf/x86/hygon/uncore:online",
-> +				hygon_uncore_cpu_online,
-> +				hygon_uncore_cpu_down_prepare);
-> +	if (ret)
-> +		goto fail_start;
-> +
-> +	return 0;
-> +
-> +fail_start:
-> +	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
-> +	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-> +	hygon_uncore_pmus_unregister();
+>
+> --
+> Pedro
 
-[Severity: High]
-Is the teardown order inverted here?
-
-If initialization successfully registers the PMU on the first CPU but fails=
- on
-a subsequent CPU, the error path jumps to fail_start.
-
-If a user manages to open a perf event on this PMU during this small window,
-removing the CPUHP_PERF_X86_HYGON_UNCORE_PREP state first will free the PMU
-context and set it to NULL.
-
-When hygon_uncore_pmus_unregister() is then called, it triggers
-perf_pmu_unregister(), which attempts to detach the active event by calling
-amd_uncore_common_stop().
-
-Will amd_uncore_common_stop() then dereference the NULL context or cause a
-timer use-after-free?
-
-> +	goto fail;
-> +fail_prep:
-> +	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-> +fail:
-> +	hygon_uncore_infos_free();
-> +
-> +	return ret;
-> +}
-> +
-> +static void __exit hygon_uncore_exit(void)
-> +{
-> +	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE);
-> +	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
-> +	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-> +
-> +	hygon_uncore_pmus_unregister();
-
-[Severity: High]
-Does this exhibit the same inverted teardown order?
-
-Although module refcounting usually protects the module exit path from exec=
-uting
-while events are active, shouldn't we unregister the PMUs before removing t=
-he
-hotplug states to safely detach any resources and mirror the initialization
-order?
-
-> +	hygon_uncore_infos_free();
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701093417.1312=
-443-1-liuqi@hygon.cn?part=3D3
+Cheers, Lorenzo
