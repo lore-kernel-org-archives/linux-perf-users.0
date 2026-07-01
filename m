@@ -1,252 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EC83A48F4;
-	Wed,  1 Jul 2026 09:20:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE053F39CC;
+	Wed,  1 Jul 2026 09:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782897650; cv=none; b=klogvj3cX3YI5G9gim1vXPZY/KSqjCKoYWQBYqmmX4LJf+zWu5dOoUqhqzrI3zqZx5HEvsabDUfprs+T3EHkbB3Ce2K03zh2c2bQjTmQCC7lqd4QVLoAdPwjLPQErVY9LyEX2Q/ymUpVPbSFcGFl7jK8/v0dkuAYFtGNw1zWcDQ=
+	t=1782897995; cv=none; b=Mwi92D1mAEh7E/At+y4b45tns9Cco9ZQfcsiiWjHns3XpbDll7e0dWRXA4bMLxUnXBNc70NWqp09Cc7Gd6S2lBBLd7snPlg3NafwUwxPShDsy6kqus9S5SIwQaPvsDQqxoOx3o7+1WC0dZ87ZcC4uGH2f6SsZaGJyKF/Y+k71N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782897650; c=relaxed/simple;
-	bh=PIMoTpWEDv6PtVd6AZbffHeGKRgsNc9MHG0HSKGKeLM=;
+	s=arc-20240116; t=1782897995; c=relaxed/simple;
+	bh=Y0ErOcZ5llF/N8ZhL21i0qiwoTv8gzpjW0h0gZsvvzU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hWjYp99zct7FJi4Q9ozepEgOps2kcESB9lc8JiO4mY5I6/C02zX7UuOjc7P7Sjb8od9P5bE1LanMz7pGAIQFn/P/zDdUgzghSgW5mx48vcMV5Yv/v+pU9pX8BLO/uSZU2MjwQJ3tdHHBX02TTTCClSrurfRYXEFvnu2AZYAsMm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wq1jFYQ+; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=jHHpOjF44DBCiyd55Hzpg1bG2i0BVUA1/xxiSIFI4dUjcVYYUDqPIcPNjjFy18AEs5mCzXRy6+uKcakWx6NmeLUQURVLBxgL9rhbESfIwXCF94VDB4uLtU9ofUrfiufKwIXMk6Atc3TZn3US1a/S0bH1ZXgeHQJFpJdt9/UvMXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WYTELD+G; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wq1jFYQ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE991F00AC4;
-	Wed,  1 Jul 2026 09:20:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WYTELD+G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09F731F000E9;
+	Wed,  1 Jul 2026 09:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782897649;
-	bh=Q25jbUiUkD8jh5m/zMKgF/DrmWCsWp20fD/1JrDao/U=;
+	s=k20260515; t=1782897993;
+	bh=UOfFWUZ30P9bNJCKjVq8xiLG+nd6yVb8fJMf7LTMrw0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Wq1jFYQ+ZTutakzyFQODujgJ6PKAPMidQZxYr29gwoJmUo6eaIai5D8Xv0TRCUHKj
-	 35P1+OvKVpjBfKzbz4LEicGqwZcYXsJ0sfNDNOi8ACyEzzBRS2gN4yXUS8m5kffCvP
-	 F0x+ZTRsVAUihf9rD7Nc7lSbw3wyh9KvlkT0ZLDYSBUkhrauG603cGac8W1DeHGCR+
-	 Pq9KTTrAHLkf8VrWxnc2PEZvxmu47DX6l78lw/tJ6uC19bxBN7HDCulhM56kYsFxjv
-	 FmLhVSoCQyi3fpGXO9Fb02dQ2b/4AT1A1Jywdn7R5BYpmj3O9TIEkfMNi73shs1GMl
-	 3qtAITyfkZvwQ==
+	b=WYTELD+G28nKq8erUPYvzAxm3DlLtgQHkk9raQq6CGgUvDg/kGFTwunA3Xu0Md0tQ
+	 JBCpxzIa9jCNWCLrBs90LUfvYu+4wFPgVLp5/Y/ah/8LPMUW8rPGVmE6VqNubTdatY
+	 WmfLBFr1LW9JcoGdY3eWich5CnvhNZhKfiM0V385o5ge491xUA71vPptgaarnyu0P0
+	 9eOuzqTR7cbcpd1sUgStPivSpv5sRv6z0KYVAjUmIe7xGG8uQxQ96iaKyGh0tN2sVI
+	 7fRA/GoqMsTE8u/5TK3ABSZBtl8arD50E+RossMh/x29ma21K5pWJNBcjNZSOU4FM+
+	 MRJkgZDaw1cOg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 12/22] RISC-V: perf: Modify the counter discovery
- mechanism
+Subject: Re: [PATCH v8 15/22] RISC-V: perf: Skip PMU SBI extension when not
+ implemented
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Atish Patra" <atish.patra@linux.dev>
-Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org, conor+dt@kernel.org
-In-Reply-To: <20260701-counter_delegation-v8-12-7909f863a645@meta.com>
+Cc: conor+dt@kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20260701-counter_delegation-v8-15-7909f863a645@meta.com>
 References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
- <20260701-counter_delegation-v8-12-7909f863a645@meta.com>
+ <20260701-counter_delegation-v8-15-7909f863a645@meta.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 09:20:48 +0000
-Message-Id: <20260701092048.BBE991F00AC4@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 09:26:32 +0000
+Message-Id: <20260701092633.09F731F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Hardware counter CSR indices and firmware counter SBI logical indi=
-ces share the same index namespace, leading to silent overwriting of hardwa=
-re counters in `pmu_ctr_list`.
-- [High] Bitwise shift overflow on 32-bit architectures when processing PMU=
- firmware counters with indices >=3D 32.
-- [Medium] A failure to discover firmware counters unconditionally aborts P=
-MU initialization, erroneously discarding successfully delegated hardware c=
-ounters.
-
-Pre-existing issues:
-- [High] Invalid counter base index passed to `sbi_ecall` in `rvpmu_sbi_sta=
-rt_ovf_ctrs_snapshot`.
+- [High] Skipping standard event checking when SBI is unavailable leaves ev=
+ent maps with valid default encodings, causing false-positive event support.
 --
 
-commit 96c77115054b0358f4d8c8c58dd7977dd68ff1d2
-Author: Atish Patra <atishp@rivosinc.com>
+commit b28b4646a82db47f9cf2c2d617a8c7ae78dfb038
+Author: Charlie Jenkins <charlie@rivosinc.com>
 
-RISC-V: perf: Modify the counter discovery mechanism
+RISC-V: perf: Skip PMU SBI extension when not implemented
 
-This commit modifies the PMU counter discovery mechanism to support a hybrid
-scheme where hardware counters use counter delegation and firmware counters
-use the SBI PMU extension. It queries the counters info via SBI PMU to
-distinguish the firmware counters and track them in separate bitmasks.
+This commit modifies the RISC-V perf driver to skip the SBI extension for
+counter configuration matching and firmware counter reads when the PMU
+SBI extension is not implemented. It also prevents sbi_v2_available from
+being set to true when the extension is missing.
 
 > diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index 74d9342388212..c20f1e33c65d5 100644
 > --- a/drivers/perf/riscv_pmu_sbi.c
 > +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -495,27 +495,32 @@ static void rvpmu_sbi_check_event(struct sbi_pmu_ev=
+ent_data *edata)
 [ ... ]
-> @@ -868,34 +885,38 @@ static int rvpmu_sbi_find_num_ctrs(void)
->  		return sbi_err_map_linux_errno(ret.error);
->  }
-> =20
-> -static int rvpmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
-> +static u32 rvpmu_deleg_find_ctrs(void)
-> +{
-> +	/* TODO */
-> +	return 0;
-> +}
-> +
-> +static int rvpmu_sbi_get_ctrinfo(u32 nsbi_ctr, u32 *num_fw_ctr, u32 *num=
-_hw_ctr)
+> -static void rvpmu_sbi_check_std_events(struct work_struct *work)
+> +static void rvpmu_check_std_events(struct work_struct *work)
 >  {
->  	struct sbiret ret;
-> -	int i, num_hw_ctr =3D 0, num_fw_ctr =3D 0;
-> +	int i;
->  	union sbi_pmu_ctr_info cinfo;
+>  	int ret;
 > =20
-> -	for (i =3D 0; i < nctr; i++) {
-> +	for (i =3D 0; i < nsbi_ctr; i++) {
->  		ret =3D sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_GET_INFO, i, 0, 0, =
-0, 0, 0);
->  		if (ret.error)
->  			/* The logical counter ids are not expected to be contiguous */
->  			continue;
-> =20
->  		cinfo.value =3D ret.value;
-> -		if (cinfo.type =3D=3D SBI_PMU_CTR_TYPE_FW)
-> -			num_fw_ctr++;
-> -		else
-> -			num_hw_ctr++;
-> -		pmu_ctr_list[i].value =3D cinfo.value;
-> +		if (cinfo.type =3D=3D SBI_PMU_CTR_TYPE_FW) {
-> +			/* Track firmware counters in a different mask */
-> +			firmware_cmask |=3D BIT(i);
-
-[Severity: High]
-Does this code trigger a bitwise shift out of bounds on 32-bit architecture=
-s?
-
-The firmware_cmask variable is an unsigned long, which is 32 bits wide on R=
-V32.
-Since the SBI PMU specification allows up to 64 counters, and standard firm=
-ware
-implementations (like OpenSBI) typically assign firmware counters to logical
-indices 32 and above, the BIT(i) macro will execute a shift greater than or
-equal to the width of the type when i >=3D 32.=20
-
-Will this cause firmware counters to be dropped or corrupted on 32-bit
-platforms?
-
-> +			pmu_ctr_list[i].value =3D cinfo.value;
-
-[Severity: High]
-Can this overwrite hardware counter entries in the pmu_ctr_list array?
-
-The rvpmu_deleg_find_ctrs() function iterates over hardware counters and ma=
-ps
-them using their architectural CSR indices (0-31). The rvpmu_sbi_get_ctrinf=
-o()
-function then maps firmware counters using their SBI logical indices ('i'
-from 0 to N-1).
-
-Since the SBI PMU specification does not restrict firmware counters to indi=
-ces
->=3D 32, if a platform assigns a firmware counter to a logical index <=3D 3=
-1,
-wouldn't using 'i' directly here silently overwrite the delegated hardware
-counter entry?
-
-> +			*num_fw_ctr =3D *num_fw_ctr + 1;
-> +		} else if (cinfo.type =3D=3D SBI_PMU_CTR_TYPE_HW &&
-> +			   !riscv_pmu_cdeleg_available_boot()) {
-> +			*num_hw_ctr =3D *num_hw_ctr + 1;
-> +			cmask |=3D BIT(i);
-> +			pmu_ctr_list[i].value =3D cinfo.value;
+> -	if (sbi_v3_available) {
+> -		ret =3D pmu_sbi_check_event_info();
+> -		if (ret)
+> -			pr_err("pmu_sbi_check_event_info failed with error %d\n", ret);
+> -		return;
+> -	}
+> +	if (riscv_pmu_sbi_available()) {
+> +		if (sbi_v3_available) {
+> +			ret =3D pmu_sbi_check_event_info();
+> +			if (ret)
+> +				pr_err("pmu_sbi_check_event_info failed with error %d\n", ret);
+> +			return;
 > +		}
->  	}
 > =20
->  	return 0;
->  }
-[ ... ]
-> @@ -1159,16 +1180,48 @@ static void rvpmu_ctr_stop(struct perf_event *eve=
-nt, unsigned long flag)
->  	/* TODO: Counter delegation implementation */
->  }
+> -	for (int i =3D 0; i < ARRAY_SIZE(pmu_hw_event_sbi_map); i++)
+> -		rvpmu_sbi_check_event(&pmu_hw_event_sbi_map[i]);
+> +		for (int i =3D 0; i < ARRAY_SIZE(pmu_hw_event_sbi_map); i++)
+> +			rvpmu_sbi_check_event(&pmu_hw_event_sbi_map[i]);
 > =20
-> -static int rvpmu_find_num_ctrs(void)
-> +static int rvpmu_find_ctrs(void)
->  {
-> -	return rvpmu_sbi_find_num_ctrs();
-> -	/* TODO: Counter delegation implementation */
-> -}
-> +	int num_sbi_counters =3D 0;
-> +	u32 num_deleg_counters =3D 0;
-> +	u32 num_hw_ctr =3D 0, num_fw_ctr =3D 0, num_ctr =3D 0;
-> +	/*
-> +	 * We don't know how many firmware counters are available. Just allocate
-> +	 * for maximum counters the driver can support. The default is 64 anywa=
-ys.
-> +	 */
-> +	pmu_ctr_list =3D kcalloc(RISCV_MAX_COUNTERS, sizeof(*pmu_ctr_list),
-> +			       GFP_KERNEL);
-> +	if (!pmu_ctr_list)
-> +		return -ENOMEM;
-> =20
-> -static int rvpmu_get_ctrinfo(int nctr, unsigned long *mask)
-> -{
-> -	return rvpmu_sbi_get_ctrinfo(nctr, mask);
-> -	/* TODO: Counter delegation implementation */
-> +	if (riscv_pmu_cdeleg_available_boot())
-> +		num_deleg_counters =3D rvpmu_deleg_find_ctrs();
-> +
-> +	/* This is required for firmware counters even if the above is true */
-> +	if (riscv_pmu_sbi_available_boot()) {
-> +		num_sbi_counters =3D rvpmu_sbi_find_num_ctrs();
-> +		if (num_sbi_counters < 0) {
-> +			kfree(pmu_ctr_list);
-> +			pmu_ctr_list =3D NULL;
-> +			return num_sbi_counters;
-
-[Severity: Medium]
-Should this gracefully continue with the available delegated hardware count=
-ers
-instead of aborting PMU initialization?
-
-If counter delegation for hardware performance counters succeeds, but the
-optional firmware extension returns an error via rvpmu_sbi_find_num_ctrs(),
-this error path frees the entire pmu_ctr_list array and returns an error.
-
-This unnecessarily disables the system's hardware performance monitoring
-instead of simply ignoring the broken firmware counters.
-
-> +		}
-> +		if (num_sbi_counters > RISCV_MAX_COUNTERS)
-> +			num_sbi_counters =3D RISCV_MAX_COUNTERS;
+> -	for (int i =3D 0; i < ARRAY_SIZE(pmu_cache_event_sbi_map); i++)
+> -		for (int j =3D 0; j < ARRAY_SIZE(pmu_cache_event_sbi_map[i]); j++)
+> -			for (int k =3D 0; k < ARRAY_SIZE(pmu_cache_event_sbi_map[i][j]); k++)
+> -				rvpmu_sbi_check_event(&pmu_cache_event_sbi_map[i][j][k]);
+> +		for (int i =3D 0; i < ARRAY_SIZE(pmu_cache_event_sbi_map); i++)
+> +			for (int j =3D 0; j < ARRAY_SIZE(pmu_cache_event_sbi_map[i]); j++)
+> +				for (int k =3D 0; k < ARRAY_SIZE(pmu_cache_event_sbi_map[i][j]); k++)
+> +					rvpmu_sbi_check_event(&pmu_cache_event_sbi_map[i][j][k]);
+> +	} else {
+> +		DO_ONCE_LITE_IF(1, pr_info,
+> +				"Boot time config matching not required for smcdeleg\n");
 > +	}
-[ ... ]
+>  }
 
 [Severity: High]
-This is a pre-existing issue, but there appears to be a logic error in
-rvpmu_sbi_start_ovf_ctrs_snapshot() when passing the counter base index to
-the firmware:
+When riscv_pmu_sbi_available() is false, does skipping this loop leave the
+event map arrays like pmu_hw_event_sbi_map with valid default event codes?
 
-drivers/perf/riscv_pmu_sbi.c:rvpmu_sbi_start_ovf_ctrs_snapshot() {
-    ...
-    for (i =3D 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
-        ...
-        for_each_set_bit(idx, &cpu_hw_evt->used_hw_ctrs[i], BITS_PER_LONG)
-            sdata->ctr_values[idx] =3D
-                cpu_hw_evt->snapshot_cval_shcopy[idx + i * BITS_PER_LONG];
-       =20
-        /* Start all the counters in a single shot */
-        sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx * BITS_PER_LO=
-NG,
-                  cpu_hw_evt->used_hw_ctrs[i], flag, 0, 0, 0);
-    ...
-}
+If these standard events are not invalidated via the hardware verification
+step, riscv_pmu_get_event_info() could unconditionally return the default
+uninvalidated values or synthesize valid encodings for firmware events.
+Would this incorrectly signal to callers, such as KVM, that the events
+are supported?
 
-Because idx is the exhausted iterator of for_each_set_bit(), its value will=
- be
-BITS_PER_LONG. When multiplied by BITS_PER_LONG, the base index evaluates to
-an invalid out-of-bounds value (e.g., 4096 on RV64).=20
+[ ... ]
+> @@ -708,6 +713,9 @@ static int rvpmu_sbi_ctr_get_idx(struct perf_event *e=
+vent)
+> =20
+>  	cflags =3D rvpmu_sbi_get_filter_flags(event);
+> =20
+> +	if (!riscv_pmu_sbi_available())
+> +		return -ENOENT;
 
-Should this pass i * BITS_PER_LONG instead of idx * BITS_PER_LONG to correc=
-tly
-start the chunk?
+[Severity: High]
+If firmware events successfully map via riscv_pmu_get_event_info() because
+the mappings were left intact during initialization, they would be accepted
+by perf_event_open.=20
+
+Will they then fail silently here at schedule time instead of being
+appropriately rejected during event initialization?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701-counter_de=
-legation-v8-0-7909f863a645@meta.com?part=3D12
+legation-v8-0-7909f863a645@meta.com?part=3D15
