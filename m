@@ -1,35 +1,36 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157F73F5BE5
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22693F44F5
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 08:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782895740; cv=none; b=hR16c3TlHFYmQFQ2C8pvdsSqF4zwNKY93ja5jzSg4TjTwLh30SBY1d/P8AuhFxkHTYApOj9A5Kh4SvKiT/2J/zT3ERpsdp8/G2cYOjeQLQazxK0Zpc5tQxF6CUqy2xkyruNryTS9lhtJW7BEi4zdgg6RwMW/3jb0p8k2UjrKkVw=
+	t=1782895745; cv=none; b=AAn64jIpLh7Y6BRTHFaRBaa+aGbbYzsEeccKza9tfQTiafGpwOZfB1Ec1PtcxDxzQr4PjXnGkUNaxRAWy4G1rtgZ1PwE5JwDCDpeIZAj7SxuBFrsENmM/GlcjEw2+7rsDAcb0noF6/jJUEwLvXNgyVxZUo18aQqUyXHhfF5eNHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782895740; c=relaxed/simple;
-	bh=yvZmsI+YKkyKcpQOntY3K3DA5Carxis58c2zbF7uL+o=;
+	s=arc-20240116; t=1782895745; c=relaxed/simple;
+	bh=TRQUQK1N1laVmfi+/z8Tzbr63EM/xjtFPowISmSkmco=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JTo0Jtav3kLfREt4Xq117P+Qjk22be5MALPWuIAVetCDMaH7kAQqXik75nqWQfunRSizJmyCS5aTDSibYDAPcPagR2Pxh40tlElIVnrDsnpY1t6aP6Ha/Nwdbx3LASmpLQ2GMQShM0Jt6cCEz1vTsi9sGeTmk/EK/P4srntxb6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PVOo7ZBm; arc=none smtp.client-ip=91.218.175.177
+	 In-Reply-To:To:Cc; b=Swd8ZWHIIVsryzNVGxUnlKnhB+4PHAeuvXwGL8wF7532lqSWZ0muIa8bywNouiQoJksHuGK2W5QYdbisEUGAOPTNCl78BjpkuTvpuepTHQUO1xTaw2alcf+I/ymkvbuDrKOpCpTBlJObEEoyg6HVnqmJdJypn54bxK8y11uNAb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uiLH+Uh9; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PVOo7ZBm"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uiLH+Uh9"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782895737;
+	t=1782895740;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Vtg6gtjTXG/5kZ90vLQ3ZK8HeIu7FaVLNgb7sibmyzw=;
-	b=PVOo7ZBmM6YIM0NolMjtxLKfchiQEr7jsQyDsVfx1ILzRodHDDodTu/+8yZ/a8/ZWI+xsS
-	loVXakO8WmEY/K3R/2MI5d+kkGXuY6uZti8GYMEisHs+IN0qKtKhw3y1/G2iNRPhgF8yLE
-	bNBxjuDWrFbO0ZnwwXQ3Rtp1dmB6abc=
+	bh=S8V8xtoKAqPlqqdP66L19gg4AeWHREfPI94nLKFh6Tk=;
+	b=uiLH+Uh9dSNQoPC8h35NhiprnhamkymjKrSZfhp5i7VWRDdYEQfxzf1+izxnVLZHjMPFdW
+	Irb4Biq7+mvnafDeeOOeK+cLN8zFyvXbp+2h/MBYrmuZn6bRvcgDio4rKEq1dCP5yqytrR
+	boC+/qSkoW2lzlnlYwySyWjT3Gviwc8=
 From: Atish Patra <atish.patra@linux.dev>
-Date: Wed, 01 Jul 2026 01:47:08 -0700
-Subject: [PATCH v8 20/22] tools/perf: Add RISC-V CounterIDMask event field
+Date: Wed, 01 Jul 2026 01:47:09 -0700
+Subject: [PATCH v8 21/22] TEST(do-not-upstream): fake qemu-virt PMU events
+ for cdeleg counter-mask testing
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,7 +39,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260701-counter_delegation-v8-20-7909f863a645@meta.com>
+Message-Id: <20260701-counter_delegation-v8-21-7909f863a645@meta.com>
 References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
 In-Reply-To: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
 To: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
@@ -53,37 +54,44 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
  linux-perf-users@vger.kernel.org, Conor Dooley <conor@kernel.org>
 X-Migadu-Flow: FLOW_OUT
 
-From: Atish Patra <atishp@rivosinc.com>
+From: Atish Patra <atishp@meta.com>
 
-Counter delegation lets supervisor mode choose the hpmcounter for an event,
-but the hardware may only allow a given event on a subset of counters. Add
-a RISC-V specific "CounterIDMask" json event field, handled like the other
-arch-specific entries in event_fields[], that carries the allowed-counter
-bitmask through to the driver's existing counterid_mask (config2:0-31)
-format.
+Adds fake-any/fake-ctr3/fake-ctr34 (event codes 0xF0x QEMU doesn't model) with
+counterid_masks, to exercise the counter-delegation allocation + counter-mask
+constraint in QEMU (events read 0 = allocated/programmed, vs 'not supported').
 
-The value is the bitmask directly so no counter-list to bitmask
-conversion is needed, and because the field is RISC-V specific it is a
-no-op for every other architecture's events (unlike the shared "Counter"
-field).
-
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
+Signed-off-by: Atish Patra <atishp@meta.com>
 ---
- tools/perf/pmu-events/jevents.py | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/perf/riscv_pmu_sbi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 0cf9d26315b3..516fb73886ed 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -396,6 +396,7 @@ class JsonEvent:
-         ('EnAllSlices', 'enallslices='),
-         ('SliceId', 'sliceid='),
-         ('ThreadMask', 'threadmask='),
-+        ('CounterIDMask', 'counterid_mask='),
-     ]
-     for key, value in event_fields:
-       if key in jd and not is_zero(jd[key]):
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 6d528eafb525..725816c274e5 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -492,6 +492,12 @@ RVPMU_EVENT_CMASK_ATTR(instructions, instructions, 0x02, 0xFFFFFFF8);
+ RVPMU_EVENT_CMASK_ATTR(dTLB-load-misses, dTLB_load_miss, 0x10019, 0xFFFFFFF8);
+ RVPMU_EVENT_CMASK_ATTR(dTLB-store-misses, dTLB_store_miss, 0x1001B, 0xFFFFFFF8);
+ RVPMU_EVENT_CMASK_ATTR(iTLB-load-misses, iTLB_load_miss, 0x10021, 0xFFFFFFF8);
++/*
++ * FAKE events for cdeleg mechanism testing: event codes QEMU does NOT model.
++ */
++RVPMU_EVENT_CMASK_ATTR(fake-any, fake_any, 0xF00, 0xFFFFFFF8);
++RVPMU_EVENT_CMASK_ATTR(fake-ctr3, fake_ctr3, 0xF01, 0x8);
++RVPMU_EVENT_CMASK_ATTR(fake-ctr34, fake_ctr34, 0xF02, 0x18);
+ 
+ static struct attribute *qemu_virt_event_group[] = {
+ 	RVPMU_EVENT_ATTR_PTR(cycles),
+@@ -499,6 +505,9 @@ static struct attribute *qemu_virt_event_group[] = {
+ 	RVPMU_EVENT_ATTR_PTR(dTLB_load_miss),
+ 	RVPMU_EVENT_ATTR_PTR(dTLB_store_miss),
+ 	RVPMU_EVENT_ATTR_PTR(iTLB_load_miss),
++	RVPMU_EVENT_ATTR_PTR(fake_any),
++	RVPMU_EVENT_ATTR_PTR(fake_ctr3),
++	RVPMU_EVENT_ATTR_PTR(fake_ctr34),
+ 	NULL,
+ };
+ 
 
 -- 
 2.53.0-Meta
