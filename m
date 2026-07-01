@@ -1,151 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF23037189A
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:07:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FAF2370AEC
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 04:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782878864; cv=none; b=FjW92M7KT0MSp3CGyFjoSSjAxFuapY2PfWzNjj+pCqd7Q7AGtNOmS+gZvVzsopW2lm1QmRAPVG9ZNMqLQ+ycFeU9Jl+1+G+1sMfy0qS7eqLR7FEfnqPYMYmC+tpxgaolQgBsTfH81capcEotrg+6+ut3i2lXwA80EHe4Ll5aLbo=
+	t=1782878877; cv=none; b=taDqHcWZCvsxu3MVnUoEYg4hggidc0xuYn3VGgIlTq2vQB1cgjH4hkExQc20U54m+CejlGBf94e2ZB5kpoI0+JCJscXYJz+kNViGywo4nGKHu5eN1Lffp6JjOZiZkDFwNVS7Zh4x1dBiCcPoe0xIv616yNpBmlBsgYtTxbW/Wwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782878864; c=relaxed/simple;
-	bh=3Ok+Y6xcMgfkoHb/Enl7tb4VHq/wzYV9YOEUE0G8FPs=;
+	s=arc-20240116; t=1782878877; c=relaxed/simple;
+	bh=y437BNktkLawwW6d35yZgIE7OJ/r1uTJ1ZDrB62WFk0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kfx9P1SgmwL2jUrnkZ319mGvTToKSz/xo2UEz//cgQCm4OTyqTKw3EGYc6FGVwQMWZI3J/f52CqzKfqbnM3fNL2oOermoezaQ0WI73PNoLTBX26NVj9EBq1+uDXBj+xJXhhZAROOsKKn+PR4whywYZRDmZEnY83fVTawb7PQCcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=getBLm5A; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=L3IqaKAkx/6Upmss8fNpR3NdSUw4ppJ8doWSnLt/3HRgfr7BqxWvx2ipV9awAOiNsT5ux6RQ9jMVN7JyBgFFwQqmLLkph/YG97YRgs/tmxObSmM3A3ikt3FnL2zdNgavIYA+AJP87zRk6v2L9/gvpVGaCCwl4TawLzctAevKMuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaxRNIWF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="getBLm5A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 886DD1F000E9;
-	Wed,  1 Jul 2026 04:07:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaxRNIWF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64F631F000E9;
+	Wed,  1 Jul 2026 04:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782878856;
-	bh=2RoGYWAsQsKkyYHQ4ZHoAE7IcFIFJasW1OrTmaa8fCA=;
+	s=k20260515; t=1782878868;
+	bh=EwWsDcRTwaImabFO8ZXBuWpumvjCw/yN2LQ52Fa3oGo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=getBLm5AG9SgF0pJBHANJtD4ZNSjmP5I1saogWqapYfts4T3cdUAqn9T3YR8jQNP9
-	 NZf0IG7ySzQ+wvjGe47Pu0AViuzgRMx5vcfwp9VnN6fOxsJVeQME6T7+8c/v5haQCa
-	 tkNzoM6Za/bogqqGFVwz7DPY4DcT5yflFXoFCyDfS0ozrDJUp9beLIOSTpR7806p1d
-	 v9tZyMHktcTgRIUm1e68GhVcuPmYklwF6uIEIG1eas4d9Cd5J96FBhFjVLahZ12eur
-	 SWv4vBBY2xSKWhzEXYOvi99ri6bpCcm7cueiumAQY1vB5wG2yAlw7XMDKmwIl0086/
-	 mv0w8ywcOqNew==
+	b=CaxRNIWFtJv+m7sMEODN5K7bVbC3yY0/fpFoOzcubKtgRXJJ+m51D3J+neLD/uBx5
+	 INGT5AvBzVNIEyqhYCVkaPCzweiGH5dms5LiwMPqQni0zgqZUtZ6EfMMQtoZ8gz3Ys
+	 xHloqFDCLfKTopNKen8ECmzaeWpk1W6inEpClasvK49xZd5oUR5DlGLeXx1doHuijW
+	 NF2AibLJv/ov0KplV6JC//NYkbvy5+mh6PW8bOY9HsbWFI0I9bNSBWwltl3nUi/eTQ
+	 GKB+YW3226H7zF0dRq7Ne+PknFtVipMCeqwQ8t0YXLkaCXk64ZazsdNQQN1EkTVBs8
+	 Ymx1E0MfUKbjw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 05/21] perf annotate-arm64: Handle load and store
- instructions
+Subject: Re: [PATCH v3 02/21] perf capstone: Fix arm64 jump/adrp disassembly
+ mismatch with objdump
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701035355.752944-6-wutengda@huaweicloud.com>
+In-Reply-To: <20260701035355.752944-3-wutengda@huaweicloud.com>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-6-wutengda@huaweicloud.com>
+ <20260701035355.752944-3-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 04:07:36 +0000
-Message-Id: <20260701040736.886DD1F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 04:07:48 +0000
+Message-Id: <20260701040748.64F631F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [Medium] arm64_ldst__parse fails to parse PC-relative load instructions, =
-breaking operand extraction for literal pool loads.
-- [Medium] Failure to strip inline comments before parsing operands allows =
-comments to corrupt `multi_regs` evaluation.
+- [High] Symbol resolution fails for relocated kernels (KASLR) and user-spa=
+ce shared libraries due to mismatched address spaces.
+- [Low] Build failure due to undeclared `machine` variable and undefined `m=
+achine__normalized_is()` function in `capstone_init()`.
+- [Low] Missing `<stdlib.h>` inclusion causes musl libc build failure.
+- [Low] Usage of `ARM64_GRP_BRANCH_RELATIVE` causes build failures with Cap=
+stone versions prior to 5.0.
 --
 
-commit 9939a67ebc615cf049eb33c68f83aa3646abb3f0
+commit 1f9744f04e456b1209677658edb7f30a5b26e56d
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate-arm64: Handle load and store instructions
+perf capstone: Fix arm64 jump/adrp disassembly mismatch with objdump
 
-This commit adds ldst_ops to parse data types and offsets for ARM64 memory
-access instructions using regex prefix matching.
+The patch implements extended formatting for arm64 jump and adrp instructio=
+ns
+during symbol__disassemble_capstone() to match objdump's expected output st=
+yle.
+It adds instruction detail resolution in capstone_init() and formats the
+output with correct symbol and offset mappings.
 
-> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
-util/annotate-arch/annotate-arm64.c
-> index a1667237114a6..451500def8c12 100644
-> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+> index 9bba78ee0c5a2..a9c0a1d2eb036 100644
+> --- a/tools/perf/util/capstone.c
+> +++ b/tools/perf/util/capstone.c
+
 [ ... ]
-> @@ -141,6 +142,104 @@ static const struct ins_ops arm64_mov_ops =3D {
+
+> @@ -218,6 +218,12 @@ static int capstone_init(uint16_t e_machine, csh *cs=
+_handle, bool is64, bool is_
+>  		 * on x86 by investigating instruction details.
+>  		 */
+>  		perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+> +	} else if (machine__normalized_is(machine, "arm64")) {
+
+[Severity: Low]
+Does this code cause a build failure? The variable machine is not declared
+in capstone_init(), and the function machine__normalized_is() does not appe=
+ar
+to be defined in the codebase.
+
+> +		/*
+> +		 * Same as x86: arm64 needs instruction details to resolve
+> +		 * symbolic addresses
+> +		 */
+> +		perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+>  	}
+> =20
+>  	return 0;
+
 [ ... ]
-> +static int arm64_ldst__parse(const struct arch *arch,
-> +			     struct ins_operands *ops,
-> +			     struct map_symbol *ms __maybe_unused,
-> +			     struct disasm_line *dl)
+
+> +static bool is_pc_relative_insn(struct cs_insn *insn)
 > +{
-> +	char *s, *left, *right;
+> +	int i;
 > +
-> +	right =3D s =3D strchr(ops->raw, arch->objdump.memory_ref_char);
-> +	if (!s)
-> +		return -1;
+> +	if (insn->id =3D=3D ARM64_INS_ADR || insn->id =3D=3D ARM64_INS_ADRP)
+> +		return true;
+> +
+> +	if (insn->detail =3D=3D NULL)
+> +		return false;
+> +
+> +	for (i =3D 0; i < insn->detail->groups_count; i++) {
+> +		if (insn->detail->groups[i] =3D=3D ARM64_GRP_JUMP ||
+> +		    insn->detail->groups[i] =3D=3D ARM64_GRP_CALL ||
+> +		    insn->detail->groups[i] =3D=3D ARM64_GRP_BRANCH_RELATIVE)
 
-[Severity: Medium]
-Will this fail to parse PC-relative load instructions?
+[Severity: Low]
+Will this break compilation against Capstone versions prior to 5.0?
+ARM64_GRP_BRANCH_RELATIVE was introduced in Capstone 5.0. Since the perf
+tool's build feature detection doesn't mandate a specific Capstone version,
+relying on this enum might cause build failures on older setups.
 
-When processing a PC-relative load instruction (e.g., ldr x0, 4005c0 <sym>),
-the 'ld' prefix matches the new ldst_insn regex in arch__new_arm64() and
-routes it to arm64_ldst__parse().
-
-Since PC-relative loads lack a bracket ('['), strchr() will return NULL,
-causing the function to immediately return -1. Does this leave operands
-unpopulated and break annotation features like data type tracking for
-literal pool loads?
-
-> +
-> +	while (s > ops->raw && *s !=3D ',')
-> +		--s;
-> +
-> +	if (s =3D=3D ops->raw)
-> +		return -1;
-> +
-> +	*s =3D '\0';
-> +	left =3D strdup(ops->raw);
-> +
-> +	*s =3D ',';
-> +	if (!left)
-> +		return -1;
-> +
-> +	right =3D strdup(right);
-> +	if (!right) {
-> +		zfree(&left);
-> +		return -1;
+> +			return true;
 > +	}
 > +
-> +	if (arm64__insn_is_source_first(dl)) {
-> +		ops->source.raw =3D left;
-> +		ops->source.mem_ref =3D false;
-> +
-> +		ops->target.raw =3D right;
-> +		ops->target.mem_ref =3D true;
-> +		ops->target.multi_regs =3D arm64__check_multi_regs(arch, ops->target.r=
-aw);
-
-[Severity: Medium]
-Does this code incorrectly include inline comments when evaluating multi_re=
-gs?
-
-The string duplicated into 'right' includes trailing comments from the raw
-operand string because they are not stripped prior to parsing.
-
-If objdump outputs an inline comment containing a comma and a string
-resembling a register name (for example: // read, x2), could
-arm64__check_multi_regs() wrongly flag the operand as having multiple
-registers and corrupt data type profiling?
-
-> +	} else {
-> +		ops->source.raw =3D right;
-> +		ops->source.mem_ref =3D true;
-> +		ops->source.multi_regs =3D arm64__check_multi_regs(arch, ops->source.r=
-aw);
-> +
-> +		ops->target.raw =3D left;
-> +		ops->target.mem_ref =3D false;
-> +	}
-> +
-> +	return 0;
+> +	return false;
 > +}
+> +
+> +static void format_capstone_insn_arm64(struct cs_insn *insn, char *buf,
+> +				       size_t len, struct annotate_args *args,
+> +				       u64 addr)
+> +{
+
+[ ... ]
+
+> +	if (is_pc_relative_insn(insn)) {
+> +		/* Extract last immediate value as address */
+> +		last_imm =3D strrchr(buf, '#');
+> +		if (!last_imm)
+> +			return;
+> +
+> +		orig_addr =3D strtoull(last_imm + 1, &endptr, 16);
+
+[Severity: Low]
+Can this cause a build failure on musl libc? The POSIX standard function
+strtoull() is used here, but stdlib.h is not explicitly included in the
+file. Relying on implicit inclusions often works on glibc but breaks on
+musl libc.
+
+> +		if (endptr =3D=3D last_imm + 1)
+> +			return;
+> +
+> +		/* Relocate map that contains the address */
+> +		if (dso__kernel(map__dso(map))) {
+> +			found_map =3D maps__find(map__kmaps(map), orig_addr);
+> +			if (found_map =3D=3D NULL)
+> +				return;
+> +			map =3D found_map;
+> +		}
+> +
+> +		/* Convert it to map-relative address for search */
+> +		addr =3D map__map_ip(map, orig_addr);
+
+[Severity: High]
+Does this code fail to resolve symbols for relocated kernels (KASLR) or
+user-space shared libraries (PIE)?
+
+The extracted orig_addr is in the objdump address space. However,
+maps__find() and map__map_ip() expect absolute memory addresses. By omitting
+the translation step via map__objdump_2mem(map, orig_addr) (which the x86
+implementation handles correctly), KASLR relocated kernels will fail in
+maps__find(), and user-space shared libraries will underflow in
+map__map_ip().
+
+> +
+> +		sym =3D map__find_symbol(map, addr);
+> +		if (sym =3D=3D NULL) {
+> +			map__put(found_map);
+> +			return;
+> +		}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701035355.7529=
-44-1-wutengda@huaweicloud.com?part=3D5
+44-1-wutengda@huaweicloud.com?part=3D2
