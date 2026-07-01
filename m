@@ -1,199 +1,234 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955403C108E
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 09:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335BC3B47F9
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Jul 2026 09:13:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782897167; cv=none; b=M/ljdyGaOyeACaL8THEsQCQ029XvG41gQ9p7wIMw/5JBu+mc27Arj2yuSU7VsPdZYz4JCotCOICiKyoFYQjulyimtwwGf8W8oalreIw9N5VmC+kASGrculpfBhmAu+PrJRzhukrR17BqY8me1cCzqOpWUFxcI3UBrQkn6H+6xrQ=
+	t=1782897186; cv=none; b=gekjql2g86yJnbioa0NjDkd+J0lnWph4TzgcxFPfrGR1AjbKq9z4y5qaC3Ey1ZtRVNmuw3jx00intXn/BQjyQ88o8RjdFyuCOF0SSBE31oYWTvctFdVPpW3EHbqrKRXhUL6PECRdyfyOKAKl1J3TWIM60Esc8cmx34endfcA0Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782897167; c=relaxed/simple;
-	bh=O5bPxOppBWUJaSa+KN19rj2apzqoap5qX+lJP5ESxwA=;
+	s=arc-20240116; t=1782897186; c=relaxed/simple;
+	bh=qe/rlVWdcceYBVdF5sJBG03XnDx0k2oFkuzlI0Hm9eI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UdavEYa9rZhp4OETqeMsHNe0ozZnQFRr0fN6saLr92w0jJ38M8gq87r3jNd1NXXjEtsSBL5A2wJEzfnIfAhjLm/iUJbCleelwfJDUlmt9lg3PZoaSgZ/s8aPi3l+Gh+xJVDOK4lobUi1r1/TykTUoMD1wIqPPFq6n6tCp4PY8ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwJRtZgj; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ct8vPkTC8DTTFHs6ul740pAcb1p/RwsPL9veddVZQ1udJuDFeNZ1+h0LRV/AzCSSUmgD9YXhCdg8xxxr7ljebA6biDgzssZ8cdq5+CItVFHnwsFw+LJI9fc6JPeSD7UzBoD0POnVouZTOGQPblLSHdIAcM6i6s7hvZr5EH1+3FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zid1kM2j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwJRtZgj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6E21F000E9;
-	Wed,  1 Jul 2026 09:12:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zid1kM2j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD9761F000E9;
+	Wed,  1 Jul 2026 09:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782897166;
-	bh=O5bPxOppBWUJaSa+KN19rj2apzqoap5qX+lJP5ESxwA=;
+	s=k20260515; t=1782897184;
+	bh=3HB8kk6xHXPqtteJu2mCez9QY0UYGn1mslrVAhNbRH8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JwJRtZgj668s/17TvpRfqo2ERIF2lL2VfbITcVIeCB8Dr5o6tKg+zscYnSYJHgi+x
-	 6QVBPzx4ZKPSr/qUNau7dU/KxMqtKPrZ/DuhKrLGJwKsEbfhG8aQRnLQW7EbRZ+JcN
-	 YqHb7f0bn+kf3AXvUZLYud4WYLzqWnS0mo7lK9eiv4Fq9zaFRc5rjxh4MPQJTUDYhv
-	 KcBtdu/upvF/6xwq+rrr/HZlVHueLT55uGPcwG27ORPFc1r3QqjJsh+P0r8CbRF4X8
-	 phosPQGtGPUI/FHYOhlF3z7HmiHD4ukbFMcUIOGNjVU3VAxerQtkCUREtlrmnTrd4I
-	 e8gZNgV/7ODwg==
+	b=Zid1kM2jQOCFTXengI3gslYY8fn0HAzldyvnnNoj0zJS+JsklhnrOV9i9rkMFpo1q
+	 6WvoTVZGT3vYM1O9Tyvv5U9PLohleNBA25TScI1JNNtZl7V7QT9bTiJe8B93aczbU7
+	 8f0sl/FRMldDTbrmzzN/F9bUrhILbF1nv+uaN6kmKy/95K1zJlkPbhVXEU2dQemaQd
+	 hBjI5TSeePcMMotxQPxCOM22AMVOi0mFXeczgLQeSg7qTL/HDUscp4wfwY7oE6/waB
+	 ytLQj7Q3q7tPQJLNtZsZcfMbGgNMmAuWrDJ3YXyIj0W3zHsygRxCT0Wffmlv2fw/zY
+	 aUOCw7qLNYqMw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 8/9] tools/perf/powerpc: Add event name as htm of
- PERF_TYPE_SYNTH type to present htm samples
+Subject: Re: [PATCH 9/9] tools/perf/powerpc: Add logical address in decoded
+ traces
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701084115.80383-9-atrajeev@linux.ibm.com>
+In-Reply-To: <20260701084115.80383-10-atrajeev@linux.ibm.com>
 References: <20260701084115.80383-1-atrajeev@linux.ibm.com>
- <20260701084115.80383-9-atrajeev@linux.ibm.com>
+ <20260701084115.80383-10-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 09:12:45 +0000
-Message-Id: <20260701091246.5B6E21F000E9@smtp.kernel.org>
+Date: Wed, 01 Jul 2026 09:13:03 +0000
+Message-Id: <20260701091304.AD9761F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 11 potential issue=
-(s) to consider:
-- [High] Error handling path bypasses auxtrace_queues cleanup, causing a me=
-mory leak and leaving a dangling pointer that leads to Use-After-Free.
-- [High] Unchecked direct access to `evsel->name` passed to `strstarts()` w=
-ithin an event loop.
-- [High] Unchecked dereference of `evsel->core.id` when synthesizing event =
-IDs.
-- [High] Synthesized `PERF_RECORD_SAMPLE` events lack payload serialization=
-, causing downstream parser faults.
-- [High] Off-by-one accounting of translation file headers causes out-of-bo=
-unds mmap read and data corruption.
-- [High] Processing the auxtrace queues for every PERF_RECORD_SAMPLE duplic=
-ates trace data and heavily impacts performance.
-- [High] Missing POSIX libc headers violates musl compatibility guidelines.
-- [High] Massive out-of-bounds heap read in `write_htm` due to unvalidated =
-length field from untrusted auxtrace data.
-- [High] Missing `NULL` check on `evlist__event2evsel()` return value leads=
- to immediate crash on malformed events.
-- [Medium] Using strstr from the beginning of the line inside a regex match=
- loop corrupts the output when a trace line contains multiple addresses.
-- [Medium] Using `unsigned long` for 64-bit PowerPC addresses truncates the=
-m on 32-bit hosts, breaking cross-platform analysis.
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+s) to consider:
+
+New issues:
+- [High] Improper error handling causes memory leak and potential segfault =
+during initialization.
+- [High] File write failures cause an infinite loop in trace line parsing.
+- [High] String replacement logic corrupts output for trace lines with mult=
+iple addresses.
+- [Medium] Unmapped physical addresses are incorrectly overwritten with 0x0=
+, destroying trace information.
+- [Medium] Trace lines that do not match the event label regex are silently=
+ dropped from the translated dump.
+
+Pre-existing issues:
+- [High] Malformed physical addresses cause an infinite loop in trace line =
+parsing.
 --
 
-(Note: The standard patch quoting format has been altered to a free-form
-summary due to system recitation restrictions. No code diffs are quoted bel=
-ow.)
-
-commit bb9556f09003be87e7766614cf5cfdd9647bd477
+commit cce34e6215ec4758fecae703f279c8591debaca6
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
-Subject: tools/perf/powerpc: Add event name as htm of PERF_TYPE_SYNTH type =
-to present htm samples
 
-This commit creates a synthetic "htm" event to present hardware transaction=
-al
-memory entries as samples in perf. It adds configuration values and uses the
-logical address as the sample instruction pointer to aid in identifying hot
-logical addresses.
+tools/perf/powerpc: Add logical address in decoded traces
 
-[Severity: High]
-In powerpc_htm_process_auxtrace_info(), if powerpc_htm_synth_events() retur=
-ns
-an error, the code jumps to the err_free label. Does this skip the cleanup =
-of
-the auxtrace queues and leave a dangling pointer in session->auxtrace?=20
+This patch enhances post-processing to translate physical addresses to
+logical addresses in the decoded output. It creates a new .l output file
+with these translated addresses. It also allows optional LP index filtering
+when dumping traces.
 
-It looks like the err_free_queues label handles both auxtrace_queues__free()
-and setting session->auxtrace to NULL, which might be needed here to prevent
-a use-after-free during session teardown.
+> diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
+> index 050fbceac71eb..1bd2664453c66 100644
+> --- a/tools/perf/util/powerpc-htm.c
+> +++ b/tools/perf/util/powerpc-htm.c
 
-[Severity: High]
-In powerpc_htm_synth_events(), the loop iterates over evsel entries and che=
-cks
-if they start with "htm" using strstarts(evsel->name, "htm"). Could
-evsel->name be NULL for unnamed or dummy events?=20
+[ ... ]
 
-Passing a NULL name into strstarts() could trigger a segmentation fault.
-
-[Severity: High]
-Also in powerpc_htm_synth_events(), the synthesized event ID is generated by
-adding a fixed offset to evsel->core.id[0]. Is it possible for evsel->core.=
-id
-to be NULL if the event was recorded without sample IDs?=20
-
-Dereferencing it directly in that case might cause a crash.
-
-[Severity: High]
-Looking at powerpc_htm_create_sample(), the synthesized event size is hardc=
-oded
-to exactly sizeof(struct perf_event_header), which is 8 bytes. Does this om=
-it
-the actual sample payload serialization that perf_event__synthesize_sample()
-usually handles?=20
-
-Downstream tools parsing this PERF_RECORD_SAMPLE event might expect a paylo=
-ad
-based on the sample_type, potentially leading to out-of-bounds reads when
-they process the 8-byte event.
+> @@ -259,36 +261,60 @@ static struct addr_map *process_trace_file(const ch=
+ar *trace_file,
+>  	unsigned long logical_addr;
+>  	size_t total_phys =3D 0;
+>  	size_t total_phys_to_logical =3D 0;
+> -
+>  	FILE *fp =3D fopen(trace_file, "r");
+> +	size_t prefix_len;
+> +	int found_match =3D 0;
+> +	FILE *fout;
+> +	int filter_lp =3D 1;
+> +	char *output =3D malloc(strlen(trace_file) + 3);  /* +3 for ".l" and nu=
+ll */
+> +
+> +	if (!output) {
+> +		pr_err("Failed to allocate memory for output filename\n");
+> +		fclose(fp);
+> +		return NULL;
+> +	}
+> +
+>  	if (!fp) {
+>  		pr_err("Failed to open trace file %s: %s\n", trace_file, strerror(errn=
+o));
+>  		return NULL;
+>  	}
 
 [Severity: High]
-In write_htm(), the total number of entries is incremented to account for t=
-he
-32-byte header, and this is added to htm->htm_mem_entries. However, when
-create_mem_maps() later maps the file, it skips the first header but loops
-exactly htm->htm_mem_entries times.=20
+Does this logic mishandle failures from fopen() and malloc()?
 
-Will this result in reading past the end of the memory-mapped region?
-Additionally, if multiple chunks were written, would their embedded headers
-be misinterpreted as valid trace data?
+If trace_file cannot be opened, fopen() returns NULL. If malloc() for output
+succeeds, the subsequent if (!fp) block returns NULL without freeing output,
+leaking the allocated memory.
+
+Additionally, if malloc() fails when fp is NULL, the if (!output) block cal=
+ls
+fclose(fp), which would dereference the NULL pointer and crash the tool.
+
+[ ... ]
+
+> @@ -303,6 +329,10 @@ static struct addr_map *process_trace_file(const cha=
+r *trace_file,
+>  			while (regexec(&addr_regex, ptr, 1, pmatch, 0) =3D=3D 0) {
+>  				unsigned long long phys_addr =3D 0;
+>  				struct addr_map entry =3D {0};
+> +				char *hex_start =3D strstr(line, "addr:0x");
 
 [Severity: High]
-In powerpc_htm_process_event(), the code iterates through all auxtrace queu=
-es
-and writes their buffer contents to the file for every PERF_RECORD_SAMPLE
-event processed.=20
+Can this strstr() call corrupt the output for trace lines with multiple
+addresses?
 
-Does this repeatedly duplicate the entire trace data? Since the buffers are
-not consumed or marked as processed, this might result in an exponentially
-growing trace file and significant performance degradation.
+When a trace line contains multiple addresses, the inner loop iterates over
+each regex match. However, hex_start is calculated using
+strstr(line, "addr:0x"), which always finds the first occurrence in the
+entire line, ignoring the regex match bounds. This will cause the same pref=
+ix
+and suffix to be printed multiple times, duplicating portions of the line.
+
+> +				const char *target =3D "addr:0x";
+> +				char *old_val_ptr;
+> +				size_t written;
+> =20
+>  				if (sscanf(ptr + pmatch[0].rm_so + strlen("addr:"),
+>  					  "%llx", &phys_addr) !=3D 1) {
+>  					pr_debug("Failed to parse phys addr from trace line\n");
+>  					continue;
+>  				}
+
+[Severity: High]
+This is a pre-existing issue, but does this error path cause an infinite lo=
+op?
+
+If sscanf() fails to parse a physical address, it executes continue. This
+skips the ptr +=3D pmatch[0].rm_eo; offset advancement at the bottom of the=
+ loop.
+As a result, the next iteration of the while (regexec(&addr_regex, ptr...))
+loop will match the exact same string and fail to parse it again, looping
+indefinitely.
+
+> @@ -315,7 +345,30 @@ static struct addr_map *process_trace_file(const cha=
+r *trace_file,
+>  				logical_addr =3D find_logical_addr(phys_addr,
+>  							mem_entries_array,
+>  							n_entries,
+> -							lp_filter);
+> +							lp_filter, filter_lp);
+> +				/* create output.txt with logical address */
+> +				if (dump_trace && hex_start) {
+> +					old_val_ptr =3D hex_start + strlen(target);
+> +					prefix_len =3D hex_start - line;
+> +					written =3D fwrite(line, 1, prefix_len, fout);
+> +					if (written !=3D prefix_len) {
+> +						pr_err("Failed to write prefix to output file\n");
+> +						continue;
+> +					}
+
+[Severity: High]
+Can file write failures here cause an infinite loop in trace line parsing?
+
+If either the fwrite() or fprintf() calls fail (e.g., due to a full disk),
+the code logs an error and executes continue. Similar to the parsing error
+above, this skips the ptr +=3D pmatch[0].rm_eo; advancement at the bottom of
+the loop, causing regexec() to repeatedly match the same address string
+forever.
+
+> +					if (fprintf(fout, "addr:0x%llx\t", (unsigned long long)logical_addr=
+) < 0) {
 
 [Severity: Medium]
-In process_trace_file(), while iterating through regex matches for addresses
-on a line, the replacement logic uses strstr() from the beginning of the li=
-ne
-to find the "addr:0x" prefix.=20
+Are unmapped physical addresses incorrectly overwritten with 0x0 here?
 
-If a single trace line contains multiple addresses, won't strstr() repeated=
-ly
-find the first occurrence instead of the current match, potentially corrupt=
-ing
-the output?
+If find_logical_addr() fails to find a mapping, it returns 0. The code then
+unconditionally writes logical_addr to the output file. This replaces valid=
+ but
+unmapped physical addresses with addr:0x0, rather than preserving the origi=
+nal
+address.
+
+> +						pr_err("Failed to write to output file\n");
+> +						continue;
+> +					}
+
+[ ... ]
+
+> @@ -335,6 +388,12 @@ static struct addr_map *process_trace_file(const cha=
+r *trace_file,
+> =20
+>  				ptr +=3D pmatch[0].rm_eo;
+>  			}
+> +			if (dump_trace && (!found_match) && line) {
+> +				if (fprintf(fout, "%s", line) < 0) {
+> +					pr_err("Failed to write line to output file\n");
+> +					continue;
+> +				}
+> +			}
+>  		}
+>  	}
 
 [Severity: Medium]
-The physical and logical addresses from the HTM trace are 64-bit values, but
-powerpc_htm_create_sample() takes an unsigned long address.=20
+Are lines that do not match the event label regex dropped entirely from the
+translated dump?
 
-On 32-bit host systems performing cross-platform analysis, could this trunc=
-ate
-the 64-bit addresses? The boundary check for kernel addresses would also be
-optimized out on 32-bit hosts. The addr_map structure seems to share this
-same truncation issue.
-
-[Severity: High]
-This file utilizes several standard POSIX functions and constants such as
-fopen(), malloc(), strtoul(), and O_WRONLY.=20
-
-To comply with musl libc compatibility guidelines, shouldn't the standard
-headers like <stdio.h>, <stdlib.h>, and <fcntl.h> be explicitly included
-at the top of the file?
-
-[Severity: High]
-In write_htm(), the num_entries value is parsed from the incoming auxtrace
-data, converted to cpu endianness, incremented, and then passed directly to
-fwrite().=20
-
-Is there a missing bounds check to ensure that the calculated size does not
-exceed the buffer's actual bounds? An unvalidated length could lead to an
-out-of-bounds heap read if the trace data is malformed.
-
-[Severity: High]
-Both powerpc_htm_process_event() and powerpc_htm_process_auxtrace_info()
-fetch an evsel using evlist__event2evsel() and immediately dereference its
-config attribute.=20
-
-If the event's sample ID isn't found in the evlist, could
-evlist__event2evsel() return NULL? A check might be needed to avoid a
-segmentation fault on malformed perf.data files.
+The logic to dump lines to fout when dump_trace is enabled appears to be
+nested completely within this if (regexec(&label_regex, line, 2, pmatch, 0)=
+ =3D=3D 0)
+block. There is no corresponding else block, which would cause any
+non-matching lines (like headers or metadata) to be silently omitted from
+the .l output file.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701084115.8038=
-3-1-atrajeev@linux.ibm.com?part=3D8
+3-1-atrajeev@linux.ibm.com?part=3D9
