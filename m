@@ -1,98 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276903B52FA;
-	Wed,  1 Jul 2026 09:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300013F39C2;
+	Wed,  1 Jul 2026 09:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782898486; cv=none; b=h44QaYfs72J1TEgxzYMav8ZAY1GrLVikmLarsvIDGdIbImy4eLWShhjA2IkfSrsP6H0Ru7Zph80ckoxfdt9alIHL/SYHuwuZI2Od/mECx2Y5YD7lN4yT/z0Nu5PekbUFHxFe7l73q5DJP6UzK3QdI6FIANHuC6C1B6G5/+tdS0Q=
+	t=1782898490; cv=none; b=AN7UqQzIy3GHU4TFt6haAHP47i1LdavEomfXbg+auJcIBOyHRucppPXBvydmjeLQB03jv86M5se3Gmv1tEu9dKzM4zYoc1gEjwO93FXLJgiYyPzKBnWxe6Xxg5JGcIIpEAKDZZhjvQ5toQJ2FCnNGT8vtx17YLGIwyICy4RWd6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782898486; c=relaxed/simple;
-	bh=LomHJHSBbrbrPpJfgrszjuD/iO9ifK+o001M0/h4E24=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cNZCWY+p/CKP0ZlqrTA55i9OorADx+H6dyBpzZs160y7bfTguDVLp9MvCU0QWd1QmcJfwYbQITxf9EJKid5gwbD+H5vBTRkW66brXyGHApbqxi3SeYmIQgxNWJlZe/6A2knmJXgXeqcqijz/EYD92n9zkM4FiREj2RJpogol5C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hmLH5pxe; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hmLH5pxe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817D81F00AC4;
-	Wed,  1 Jul 2026 09:34:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782898484;
-	bh=8pToScgcy0iBzj4LPIt1TkgFIE6I0OLg9YG7jH/ubhk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hmLH5pxeRwG01g8EFUoECJCSm/tdr/cjgX3l5jR09+exFyQ1qGAAhF2iDdHnXatX5
-	 9GrTneTL2p6mnaWvFHB7/tP1pz38FZTLMMXiRqlplaNhQkeKc3aOEJrJakHhCaxtIH
-	 5H6Zl3r2KVOtttLmdZCYSxs0qYOS7T1tZRt2fW9cOHStCf13ELs7+VorQ3qfsmEniD
-	 ggcRYc6fghv//LjUNZ6znbLBMZUqsuQBvnkCfoN277j0fSp93+Du+eptk71PYRqq2R
-	 yb7xBW+Amx9MlJNl6KVg+7GM9QQlcNbyF38ftur8xusX8ILhB3V+Movb4K7EbsxA+M
-	 P8Nc6kZrtOzEg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 22/22] TEST(do-not-upstream): fake qemu vendor JSON +
- mapfile entry for CounterIDMask path
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Atish Patra" <atish.patra@linux.dev>
-Cc: devicetree@vger.kernel.org, conor+dt@kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org
-In-Reply-To: <20260701-counter_delegation-v8-22-7909f863a645@meta.com>
-References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
- <20260701-counter_delegation-v8-22-7909f863a645@meta.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 09:34:43 +0000
-Message-Id: <20260701093443.817D81F00AC4@smtp.kernel.org>
+	s=arc-20240116; t=1782898490; c=relaxed/simple;
+	bh=u48VYgkihDHwFxKladTXKlXCbqZuhgm4u8qRQgVl3nY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=otk3Fkf/FlJjRnIhYGb1D5HxZD8uUCRimxjB64b7oRbaYBc+LZq3BT3G9R9BuePfveVcgSv3sJFYtHyCfU3C96JYutLGWbPnFcNOr2fsM5fwKcyAAT8Ui4lEv5S1R+M+wRhA5+6xUB2hvtAXxMZ6QFW+j/JpXA+dTOwYvi+5leo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp1.hygon.cn (unknown [127.0.0.1])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gqvx238qszT0bc;
+	Wed,  1 Jul 2026 17:34:30 +0800 (CST)
+Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gqvx12DntzT0bc;
+	Wed,  1 Jul 2026 17:34:29 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp1.hygon.cn (Postfix) with ESMTPS id 8BDD2594B;
+	Wed,  1 Jul 2026 17:34:22 +0800 (CST)
+Received: from neptune.hygon.cn (172.22.228.106) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 1 Jul
+ 2026 17:34:28 +0800
+From: Qi Liu <liuqi@hygon.cn>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>, <x86@kernel.org>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lijing@hygon.cn>, <liuqi@hygon.cn>
+Subject: [PATCH v2 0/3] perf/x86/amd/uncore: Add common helpers and Hygon support
+Date: Wed, 1 Jul 2026 09:34:14 +0000
+Message-ID: <20260701093417.1312443-1-liuqi@hygon.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] This patch contains fake test data and is explicitly marked as '=
-do-not-upstream'.
-- [Medium] The patch adds a mapfile entry for '0x0-0x2a-0x0' which is not d=
-ocumented in the commit message.
---
+This series adds initial Hygon uncore PMU support.
 
-commit 2c14c47c4b1f0c0aa09f9d1287cb457e27674f5b
-Author: Atish Patra <atishp@meta.com>
-Subject: TEST(do-not-upstream): fake qemu vendor JSON + mapfile entry for C=
-ounterIDMask path
+Hygon uncore PMUs use a programming model close to the AMD uncore PMU,
+so this series factors out a small set of common helpers for perf event
+handling, counter assignment and per-CPU context management.
 
-This commit adds fake JSON events and mapfile entries for a QEMU virt
-environment to test the CounterIDMask path in jevents.
+The Hygon-specific support is kept in the Hygon driver. This series
+supports the Hygon DF and DF IOD PMUs. No Hygon-specific logic is
+added to the AMD driver.
 
-> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv b/tools/perf/pm=
-u-events/arch/riscv/mapfile.csv
-> --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
-> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
-> @@ -24,3 +24,5 @@
->  0x602-0x3-0x0,v1,openhwgroup/cva6,core
->  0x67e-0x80000000db0000[89]0-0x[[:xdigit:]]+,v1,starfive/dubhe-80,core
->  0x31e-0x8000000000008a45-0x[[:xdigit:]]+,v1,andes/ax45,core
-> +0x0-0x0-0x0,v1,qemu/virt,core
-> +0x0-0x2a-0x0,v1,qemu/virt,core
+Changes since RFC:
+  - Address sashiko bot review.
+Changes since v1:
+  - Rename the helper namespace to amd_uncore_common_* to avoid
+    an generic uncore_common_* prefix, and to keep it distinct
+    from the existing amd_uncore_* names.
 
-[Severity: Medium]
-The commit message explicitly states that it adds a mapfile entry for
-0x0-0x0-0x0, but it looks like a second entry for 0x0-0x2a-0x0 was also
-included here. Should this additional entry be documented in the commit
-message, or was it included by mistake?
 
-> diff --git a/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json b/too=
-ls/perf/pmu-events/arch/riscv/qemu/virt/events.json
-> new file mode 100644
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/riscv/qemu/virt/events.json
-> @@ -0,0 +1,26 @@
-> +[
-> +  {
-> +    "EventName": "fake-json-any",
+Qi Liu (3):
+  perf/x86/amd/uncore: Add common PMU helper functions
+  perf/x86/amd/uncore: Convert AMD driver to common PMU helpers
+  perf/x86/amd/uncore: Add Hygon uncore PMU support
 
-[Severity: Medium]
-Since the commit subject explicitly marks this as a test that should not be
-upstreamed, and it populates the PMU event list with artificial hardware
-events, was this patch included in the series by accident?
+ arch/x86/events/Kconfig                 |  17 +
+ arch/x86/events/amd/Makefile            |   4 +
+ arch/x86/events/amd/amd_uncore_common.c | 403 +++++++++++++++++
+ arch/x86/events/amd/amd_uncore_common.h | 114 +++++
+ arch/x86/events/amd/hygon_uncore.c      | 556 +++++++++++++++++++++++
+ arch/x86/events/amd/uncore.c            | 578 +++---------------------
+ arch/x86/include/asm/msr-index.h        |   2 +
+ arch/x86/include/asm/perf_event.h       |  20 +
+ include/linux/cpuhotplug.h              |   3 +
+ 9 files changed, 1192 insertions(+), 505 deletions(-)
+ create mode 100644 arch/x86/events/amd/amd_uncore_common.c
+ create mode 100644 arch/x86/events/amd/amd_uncore_common.h
+ create mode 100644 arch/x86/events/amd/hygon_uncore.c
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260701-counter_de=
-legation-v8-0-7909f863a645@meta.com?part=3D22
+-- 
+2.34.1
+
+
