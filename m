@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9C33B3894;
-	Wed,  1 Jul 2026 17:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4374BC004;
+	Wed,  1 Jul 2026 17:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782927813; cv=none; b=EJGJcyaohbPJHBPBPPU0sy4cxbiPRJiPGTdNSYFxlRt0N+U1+nP/G/xMWMs/nJx2t84IHwYMREtteFQpzPRYZF4YUOuLS7blHSsWnHcG5P9XC2+cWO3ZznHynjU8VVNOo6iEHhdPQf8kZ3897AVlMlFFrc+7drsxTFG5GVdQjW4=
+	t=1782927814; cv=none; b=H47mId2tnzmmaOFayNvvneR+wP3WYuzVlhWzcSWHNAfljrmQ3xMVaTirfkzvdlpywGGPus6t4YcVpDIhiXIk16Ftowtfx9casoBEGXL9zpn4khv/L0YdOr1i4abbu+M8BRnZOlqHy5fsQ2+dgCcsEPW99Fcd21WLEuaQ5Bws2g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782927813; c=relaxed/simple;
-	bh=FZZ3JX3Jt0wCJqDqMoWgne8Z9LRnOnHvXbdp/J2rFow=;
+	s=arc-20240116; t=1782927814; c=relaxed/simple;
+	bh=42s+ba/skarRxspE1zkfbTpIMQm4i0cMT4RXNY6SBT0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sUH65J96JlXEppZ3fBf8ik6Er0Kyx0NDs13xI+BCz30+jbYD0LigaH/QJnc1NzPVHx+dcw81RycNyUAdXLmVlCdDXOOrRF3cpi/spDAI7cTVPE5IMYvSS7Ube6OvLPeVZKZJiH4myFrbBSfLKZRuzgKTmwAJCnaNYsNxfGjG5Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f9YELE3F; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=jQ/FJ08jET2qR5aeIAdvUD1PR2jezYZoFKrQYURc8Wl6x7nBQvtAZAdI8QyDU18+b4A+4eaMaacwiHLgIHo7LoGPFRWshPLqx4uZu8L2vsHt6OekiTHH6KeunsgwG5SkKLE06ZWADERI4lExTW95324QQmDjjcsCTMRh/jIp9cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=asWba2MR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f9YELE3F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CEC1F00A3A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="asWba2MR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4B891F00A3E;
 	Wed,  1 Jul 2026 17:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1782927812;
-	bh=5SIRMQ8ZD7yHueLn/yhwsNwdxvUPxtf+KfkisPVfJss=;
+	bh=6E82IlZMeyVxzjVBybO0aS/92G2SUQNUTs8lxCI+aqk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=f9YELE3FbLR4yyviSmZupksSSkB9jHk6Ao1BqmFIXi3drP+PmF1FRFfRMoLYUiAIU
-	 Xl195egCIHoXPzYgp+3mVBbiKPrj+EtedMuqMh0rGoRSTElx6o45z9E+SmD6bZ5qtw
-	 nw237lMnpEyM6m0Saqptr9OjbNo6Po7v6iSldb0WqcjkpUKSGMDcTR2tl6xuh/g4fR
-	 srrTrbT9hZUcCs0w/MqCisYUC9Wc5BBvJBFlPNt3SHFeZ8oeAlFrBKpL8aRw7bcOs7
-	 okCCSFkbqKmMz31zqQ2ZZ+Y8mIbGk6XMMJGMSymnapnmB9p/rxI9v9O96K9R1I8XGK
-	 zCpl3pzj2uC2w==
+	b=asWba2MRWRF/Q1aFIxPeAIrf79a0a3nfpRzQ7lNcAI0n2VDvgS8nNoJv+zXJCi353
+	 ZL3KYPXuaY0Fkb+8a8eGC7AKJsvABrBrWuZ737HvBByiinlRUPbbcH6He/5dS17yvb
+	 4ij3dvKGHUev8jJBYLgbuY/wQa7MZEVHYL9/kqUw54x7KQzV8jxh6OP4oJHMKJD+YX
+	 oO7sLkMpaR3Dc2hCtAj/NLRg/ATMVQqAlB0DwItgyyJrV9wogae3DLJ64HO6x+oK7u
+	 deUeb5aO+0jstvwYqX1dzpjIzrpCeAYwa8MMcIFPvzpR0WGml7lVdFpcfoHWEUS3fx
+	 ISpmdPeaKsg6g==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
- linux-perf-users@vger.kernel.org
-In-Reply-To: <20260624205852.3864874-1-namhyung@kernel.org>
-References: <20260624205852.3864874-1-namhyung@kernel.org>
-Subject: Re: [PATCH v3 0/8] perf timechart: Fix memory leaks
-Message-Id: <178292781225.3559466.11302975633009015643.b4-ty@kernel.org>
+To: acme@kernel.org, Ian Rogers <irogers@google.com>
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+ leo.yan@arm.com, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+ thomas.falcon@intel.com, tmricht@linux.ibm.com
+In-Reply-To: <20260623012758.2291858-1-irogers@google.com>
+References: <20260616164819.370939-1-irogers@google.com>
+ <20260623012758.2291858-1-irogers@google.com>
+Subject: Re: [PATCH v4 00/13] perf tests: Robustness and performance
+ improvements
+Message-Id: <178292781264.3559466.14338601631249708304.b4-ty@kernel.org>
 Date: Wed, 01 Jul 2026 10:43:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -49,14 +49,31 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 24 Jun 2026 13:58:26 -0700, Namhyung Kim wrote:
-> This patchset fixes memory leaks in the perf timechart code.
-> I've extended and verified the timechart test with ASAN.
+On Mon, 22 Jun 2026 18:27:45 -0700, Ian Rogers wrote:
+> This patch series introduces several robustness and performance
+> improvements to the perf test suite, alongside fixes for long-standing
+> flakiness.
 > 
-> I'm sending it with my previous work on backtrace optimization.
-> 
-> v3)
->  * combine small optimization series
+> Key changes across the series:
+> - Introduces robust retry logic (`perf_record_with_retry`) to prevent
+>   spurious test failures due to transient `EPERM` issues during
+>   system-wide background profiling, safely extracting error messages from
+>   the PERF_RECORD_LOGS array.
+> - Significantly speeds up test execution across multiple scripts (such as
+>   kvm, record, trace, off-cpu, and lock contention) by supporting
+>   sub-second durations in the `noploop` and `thloop` workloads, reducing
+>   unnecessary wait times.
+> - Fixes flakiness in the BPF counters hybrid test by parsing `taskset` to
+>   determine valid CPUs rather than relying on `shuf`, which can fail under
+>   cgroups or missing binaries.
+> - Fixes JIT dump file leaks and TOCTOU vulnerabilities by securely staging
+>   with `mktemp -d` to guarantee cleanup.
+> - Decouples format alignments in `builtin-test.c` to gracefully truncate
+>   test descriptions without losing alignment or failing under non-TTY
+>   environments.
+> - Restricts uncore PMU bypass in event parsing strictly to `--cputype` to
+>   prevent unintended metric evaluation impacts.
+> - Injects trace output into JUnit XML `<skipped>` blocks to aid debugging.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
