@@ -1,160 +1,139 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010013.outbound.protection.outlook.com [52.101.85.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B0F3CA4B6
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 11:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782990282; cv=none; b=nz6AF54j5+HtK2kOPGv023sKtdEcYNcv/mO/AaQG5I5JoF7HqwyVUWy5d9mEBGqlmIt81g9rW9TPFkLjvSNl0dIgdzNGUwWeDbQHOcwoo65gAO1kgM+Wwb0BgjDFG13uiSoOcQtcbCTWOrjS+CZrboIqP1fzbpS/Ze6XzGtg58E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782990282; c=relaxed/simple;
-	bh=V5Qh3F0r7UKO4a2pst2HKAruYuCXs0d3M8jSNjL/Iog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=my7exX7J33NZv341ZVxCDz1SYRhLGp3EKP4kLKcXEBbijqsQmy8GnKfs8eW8XgAPDb1rz2xMahUSfGVGY7iXsWgrU89Ug87FoaYMkGA0h32s+xoEdIDuOxKXQL7YpDizGmEHTFvYSp9vwjrdhrltAzIPV6653wZ+9eZ544jsmJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FetH+lRX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5kLIclg2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bhSk6d6j; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DzHL3T70; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EA73D813A;
+	Thu,  2 Jul 2026 11:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782990697; cv=fail; b=DbVs4MBqKpBESn+BJVMrqT9oXPHw4SgwI9hp6dtgHQuHd2K+vx6LSZZpKcp4QUIpBtzWzUYE7Jt+NDJfGXVsYmKTYdTroSo1KIsq78Qtyfn2ze9C/Xh8NckOd81MNyuOk8DZAeWD85Ypg3R7sV8lU8wb8AEoMtJ+CJ5JN62QKgU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782990697; c=relaxed/simple;
+	bh=UZLRhafVMne+HODvjJrGkuf91msXnPD14pVoLuRCgLs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=h6qP0orHXJcr/ziuShwhfGUMt1wxTKLi3jl7cZr3bRbuAEP9Be/4XgwrAVNGIpNUyOkuQ7VtQyTC/iluJJ3L6kDPQMDktllfd6+0Fbz5Qz2HKsGwzFCYlKZ1Olngzzqhmgd04m49LRi4iZL0sB9lDAshGrgLZYk9mEl+pLZw5vg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bSojw8g/; arc=fail smtp.client-ip=52.101.85.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FetH+lRX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5kLIclg2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bhSk6d6j";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DzHL3T70"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B1FE674160;
-	Thu,  2 Jul 2026 11:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782990278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RM0VnXVk8zwqUTKTdqmIyIriscuAiRayUnMD17BOvjs=;
-	b=FetH+lRXOBR5XXV51imu9ljC+T70ZDce7ciLoxqyYuTD6SS6OE/OxwAIMpARPbGdjxFnt5
-	tguAcjKBFFBKfJQqcNxCxiB49art39Z64B/CyT6pni1Hh2MsWhyWhsw9eUMMj+mBJjKdRb
-	GvOBztPz7f29ZyV6W9PxsOTw30HZ3iU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782990278;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RM0VnXVk8zwqUTKTdqmIyIriscuAiRayUnMD17BOvjs=;
-	b=5kLIclg2rijKZ/Embq58dsde1+ak7vUB8mltc6mZF2C3u49t/xRP6KCUxlMLClQBas2jVj
-	ZIzAJ57qJBjPsbDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1782990276; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RM0VnXVk8zwqUTKTdqmIyIriscuAiRayUnMD17BOvjs=;
-	b=bhSk6d6jaJukAkLrM+k+465vPBcI9hqzsHCvCLWmQkUQSRCidrLbUQzozfIHUAifnIpyHH
-	F5rme4Pt5efSvrDUUGdxw+NgQtz0lcsoRb82lDT9zQZejRGWVNY2TphmghW1nTrZkSWz4v
-	UWI7ik0P5b1jidgqMj2IuXx2BOkP05k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1782990276;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RM0VnXVk8zwqUTKTdqmIyIriscuAiRayUnMD17BOvjs=;
-	b=DzHL3T70nLB6a6RbNb1r7Wrdb/fKTHMnmniCbTOBz/9Pu6d/JCPqV/khBXqqsiR77G0gN7
-	aSrbyy0yzOVqdaDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 516B0779AA;
-	Thu,  2 Jul 2026 11:04:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Q66hEMBFRmpLXQAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Thu, 02 Jul 2026 11:04:32 +0000
-Date: Thu, 2 Jul 2026 12:04:30 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 19/30] mm: use linear_page_[index, delta]() consistently
-Message-ID: <akZFmt9uAmOBqs2z@pedro-suse.lan>
-References: <cover.1782735110.git.ljs@kernel.org>
- <bf56e2e98b512962a2fb88900d535a0e9e6769d8.1782735110.git.ljs@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bSojw8g/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jZpoINoFTv3NYqH48O5G90JAHOaG8qmp1deygxI+0Qm8W4NoLj/2xiDbnHPltjysUZmrIuFEAmCRgZHQ8mLXZrsSlCrAlMtI44nsdTz6Zt3PjGYOrUzekXUTlRs6UtI7CLGVlvlG6Vfx1C9XzN+QkkjcykPxgWP+6Wcf4gzg6BPHsf5zupWSG/9+I2InDBcyXEQgxH1TXZiNypX1APgMW0H3bxmjsxrJNIDBIA5USoiM+JBZ03BL0TNAYFdnp84w480zT5qG5oV/ZT4FtuQSMUxPFBhV6SqV0hiSyW78Qa1OFFbrUofV+LCjAs72T7qz82W3ppWc+18iRs/U0RqTbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ns3SYMkZRVRuPa3Cedw7KYHNu7ZcugChQA6zF3FiWE0=;
+ b=t9xIvfF7UgkzTN+6C6C8cYrLCGe/xzEL1tbLfsokHJlHB2sUF3uz8NS4wcMge5GvkAP2AwEZVUPRL4mWYx75qFRqgsjrkf5Q1symzjbYHwhSIRUkEZzyQbdToirPynhcXfUBR4PpVX3PMxuownZrUOefwLSJboFHT0SsxdjRhGL0pDopURfuqh/y2ZCGIE42k9fqi4oqs3ZmXPIEOYooLjFvDszz4z5rD2tavKUKV0xnLfD11dizDJn5hhKGWV+J0oL8cod45XhF8JZWp8+oXYQbV16UmAyeurM2Az8U6QGN/nRGd2tGbNMVwhyHl0r84pSggrUYtG2WyDLM0JvDHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ns3SYMkZRVRuPa3Cedw7KYHNu7ZcugChQA6zF3FiWE0=;
+ b=bSojw8g/r+a8ubSyD8mhopERw6VNGvAZJ+Cjr1zRm26kVPiCMEcc4fU7iX2UWBT3/2Yi/etcajG/be48itZirB6kUtLUxK7GyllUBi0zOVH6SQMD55pYl6Ee9K14o0xnrU1oaKj5M83W3pCn6IMYLORoEmIdUezeB6GaJjitegY=
+Received: from MN0P221CA0028.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:52a::16)
+ by CY8PR12MB8193.namprd12.prod.outlook.com (2603:10b6:930:71::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Thu, 2 Jul
+ 2026 11:11:31 +0000
+Received: from BL6PEPF0001AB4B.namprd04.prod.outlook.com
+ (2603:10b6:208:52a:cafe::41) by MN0P221CA0028.outlook.office365.com
+ (2603:10b6:208:52a::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.10 via Frontend Transport; Thu, 2
+ Jul 2026 11:11:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF0001AB4B.mail.protection.outlook.com (10.167.242.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Thu, 2 Jul 2026 11:11:31 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 2 Jul
+ 2026 06:11:30 -0500
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 2 Jul
+ 2026 06:11:30 -0500
+Received: from [172.31.177.127] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.41 via Frontend
+ Transport; Thu, 2 Jul 2026 06:11:26 -0500
+Message-ID: <8bac16f7-4296-42cf-9a1f-db0e4f9ee534@amd.com>
+Date: Thu, 2 Jul 2026 16:41:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf56e2e98b512962a2fb88900d535a0e9e6769d8.1782735110.git.ljs@kernel.org>
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,kernel.org,siemens-energy.com,hansenpartnership.com,gmx.de,redhat.com,alien8.de,linux.intel.com,mev.co.uk,visionengravers.com,pengutronix.de,gmail.com,ffwll.ch,suse.de,oss.qualcomm.com,ideasonboard.com,nvidia.com,amd.com,shazbot.org,zeniv.linux.org.uk,linux.dev,google.com,infradead.org,samsung.com,goodmis.org,huawei.com,vger.kernel.org,lists.infradead.org,lists.freedesktop.org,lists.linux.dev,kvack.org,googlegroups.com,surriel.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[75];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,pedro-suse.lan:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf test amd ibs: avoid using executable heap
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Ondrej Mosnacek <omosnace@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, <linux-perf-users@vger.kernel.org>,
+	<selinux@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Ravi Bangoria
+	<ravi.bangoria@amd.com>
+References: <20260701062321.517351-1-omosnace@redhat.com>
+ <20260701064301.GH48970@noisy.programming.kicks-ass.net>
+ <43dd9d9f-2348-43c0-8af5-77ef260c64a3@amd.com>
+ <20260702101704.GG751831@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20260702101704.GG751831@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4B:EE_|CY8PR12MB8193:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad8d3397-a4a0-4483-ef70-08ded82aab91
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700016|7416014|1800799024|23010399003|376014|82310400026|22082099003|18002099003|4143699003|56012099006|11063799006|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	4uG7nO5SPP3+fPBJ2+Vy1paIoPJ7FbtCtJnd4SUVuWc8U0iPaVXsyqKV11vJaCheoMeTrSl6UjZ8HirMTMaemlfZ1ATFfR1NOydyRETYl3RwMeZ/iqj5BhyATsfs3zn1ca483RvIrseU6IahZhLA4mmRWXsNp0Sbp3vAtvcd8TS6OtKSoSiE2PhARLHMHpDbN5+fvs0/I1lP/+B6xOessROAcwIjGugfIr6hbfU9gge7l9xs1fXquu2O45Yavwmo1rDBWI28wxyd78LDfBETxO9IVyzqAf4Msxv8VTUsR/yfcKmHf53SJ1BW7AbD3nJ/wLiP3KOWx+tMORFMySs4ajQOxf0IcthrWjyaWRHGWkWLbM6S9BM0l4YwCUThQLswM4lTzhu+aIKDr3obBhMQ3gOl43hcnbmPOLvfgGePfVKoxex8xHeGiDUErU8TzkwFSzL3U7h/SKN2mUNk1t4NeRhwmWdqqK7bE1G82M0FavbHn9uCn+Dl7CG/DSvyZg1j3ZJ41ZrqDx3mSHzMYm10E/JGhRRc4TH09INeWcjDE592+iyFpso7maXwmuaEiOKQb1FQJQi8gN1WN6+tnxWMi6OPrsFitvwwi3p9DdvTqh75Stnl0rWQSkI6y5y1uJ7EmhEvsTFw3TsEfM++UOvd/E1ZeiZ3LFRMqygC9y592UppXsIZvDS17E0LhmReWrnBbkj6XbPmAALfroFOpeJLJQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(7416014)(1800799024)(23010399003)(376014)(82310400026)(22082099003)(18002099003)(4143699003)(56012099006)(11063799006)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	AigD6oTlmhnycoopB7RWJ9KWIu49ijACoS5FM1sgUu1zzAnOjlMnnCS0l+BjofA6htmIXl+wTafXEdskwGGxnoFnvm6yat3fp9EczOCTAREF5DMXL4XeqIo7plJ39AeFXuONLziNBZXueq75FoJsHGZIwjhdRPkgNxDKK4DVR9YJCdhYTZTF+EBOH5fXZRH+o4uL/lY+JqRO+VT9wnkUzTvSJT14JRWn6K47WAUjwRfuVeI7AV3Qi7t/mTugmvtGmWJzYRpbj8pwgBpAR4cNZCpJndkx1r1lnnSbXojdCiNYFziN254CgZ2ZIwrax1RJ8u/T+un/h8RNq1Sqxu1aajCUIc9UaV6fNwMm5UukGpV1QBBDz0mMDDgskO2GQOND5yzCdZhPw7ICKPnfbHn+UvlDrC0BdLG1YZ/4pdHvtqPEp9d2fV4QD8ayzmPK7Eao
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2026 11:11:31.1447
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad8d3397-a4a0-4483-ef70-08ded82aab91
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB4B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8193
 
-On Mon, Jun 29, 2026 at 01:23:30PM +0100, Lorenzo Stoakes wrote:
-> There are a number of places where we open code what linear_page_index()
-> and linear_page_delta() calculate.
+>>>> permission under SELinux (things like JIT or regex compilation need it
+>>>> as well). mmap() with MAP_ANONYMOUS will give us a zeroed mapping that
+>>>> begins on a page boundary, so the result is equivalent to the original
+>>>> code even without a memset() or the page-alignment dance.
+>>>
+>>> I would argue that having RWX is a problem, you really want RW->RO->RX
+>>> transitions, so even with mmap() you want to combine with mprotect().
+>>
+>> My original intent for using RWX was to generate sufficient Icache miss
+>> samples for the IBS Fetch unit by overwriting the code prior to execution.
+>> I am wondering whether it would be possible to achieve the same result
+>> by using CLFLUSH with RX permissions. Something like below (build tested
+>> only).
 > 
-> Replace this code with the appropriate functions for consistency.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+> So for a test it is fine to have RWX
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de> # mm
+Sure, makes sense.
 
--- 
-Pedro
+Thanks,
+Ravi
