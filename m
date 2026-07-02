@@ -1,130 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4408D30EF8F
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 20:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EB1199E89
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 20:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783022873; cv=none; b=lCPQDQu/HCc1D0e0Fy0x9viuBHGstcCmfmD5vmFAkQGQJK3EKqAQf9Lq4hgtnXgb5RE9I49HiDBjMLW2DUQjgJm+NfO9oikcid0bJ8LK7oY4Q8IOFr+6s8qivZinaftOZyCLp5HRkV3VP8rImtI0loJT0Id+qQhYel1Wvm+VMBM=
+	t=1783022873; cv=none; b=r6LFw0NBBRjBJqy7poBanHltZ09CVY77nxG1YzaXfqgiMrcUCcn1FG3EZPe9vAekJsldE84j35YMfAyFxGJZZPS7Y1Y9PbJ0KCawdw56r90a3LDZaU/Z9gy0szdOnkqDC/srQfGG6VIXPOvDsW0M0Ydxt+5rWMqX5nT05Dpq660=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783022873; c=relaxed/simple;
-	bh=yv57/dFfqqsowa+MrsmpfHjVpXAeV4P0GaRNFTqoNP4=;
+	bh=g3sdEftCCh4n9eWWJtWjEfYZGacQCHDQ9ZoN6mDJ7+M=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=V7Q3rFPTV17wjKw5ALohMaWSY5KMFEG/5JsWiSxQyIGl0LzBvofnHqv5YhLSL8THiuYfbjIh1Y6mqulZs9HFx4tTQFyM0k9HdMF5ZDRqfbimRZUqu8n0l6YM99UasoqQF+kIGMfwQrEeTDrbg5wRU68Dwpht521q4xCLmcHs/RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHC5ageY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=L6JRreSfLDO6vXakgyccOmk0Q9JsbL+Y95DzXgg/EvCS8FkLq9sfXg7Yx99NfR4mTNtbQWsYjGa5pHNM80cXFZYPmstjNXCUcbgvF4mw30Pw5rQd/i8ULLUjS2MPLJyB8lJRcbU/8WRWklCRAVVMEbSOMptXGjU2WikPS20vs7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZP8b9WU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHC5ageY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE1F1F000E9;
-	Thu,  2 Jul 2026 20:07:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZP8b9WU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 398871F00A3A;
+	Thu,  2 Jul 2026 20:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783022871;
-	bh=AkM5NY0MkIh+AuLJ0hrgV7neO9QDmosYIRePtFwdM6M=;
+	s=k20260515; t=1783022872;
+	bh=8husUu5nqEI6+sanTx/qeLZ/XdspcN0in1Dx7mOp8Vo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eHC5ageYMzFYWlOP23eB754fGaColsPhXXtu9zSHPO/FvzGwLETNF599UbSaztRfC
-	 OHg0xdA0z1WUUafXmClhqhL3ptQe+tbuXEKCEBl7wGF5oNt8T2oIA7mjpitagXJZe1
-	 tY7A+b/t9KebLZxQxXFL4/MHVIRzYr5zEe5EDxX8eSlGT/kj0tyu0YbfwaGAhcmXlw
-	 n/hJLakf+bfHHufM0MLm26AhLM9rETtL/OKy11IZC3OT9yS7vLUpbThuHjX4+mVziX
-	 l6cxYL/sFk3tKOUUpguMivp4lxnmYnbahhWiCw7MTyZXWWLnGTpaAB5/M/yqD5of9o
-	 0A4ks9753NPhQ==
+	b=ZZP8b9WUAvVb6mPHxqkT1wLqYJB7e1pd3jqQnRijI23BtoCc/SddsdFBsRef61rJs
+	 tBeWVcvvNp2nZcHl/J3RZdKJskIqW9r4/qL8rvNBK2dHxFTRPURRSrVKylyk9iOD4O
+	 KS7v+siZT+/fYd71EbupqAx6HGd+WVw8J54RYQvxa2EuZqLLYKbWDCjeCyyUrYnyEj
+	 YA/eXSdeFoht7EA+UU5SiiSo5812YbFfq2x6wd0p691HOctnZNI4Wv9zWTSVh7ktVj
+	 TkJ/9xRgfX2kFV/ThnCATB65kA83vABr97mpBhODw3+wiv3OP6S8bQaMfR5CZZUglK
+	 bjGL/5SZLmDFA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 5/9] perf cs-etm: Use thread-stack for last branch
- entries
+Subject: Re: [PATCH v11 1/9] perf cs-etm: Fix thread leaks on trace queue
+ init failure
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Leo Yan" <leo.yan@arm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260702-b4-arm_cs_callchain_support_v1-v11-5-846abbf600d7@arm.com>
+In-Reply-To: <20260702-b4-arm_cs_callchain_support_v1-v11-1-846abbf600d7@arm.com>
 References: <20260702-b4-arm_cs_callchain_support_v1-v11-0-846abbf600d7@arm.com>
- <20260702-b4-arm_cs_callchain_support_v1-v11-5-846abbf600d7@arm.com>
+ <20260702-b4-arm_cs_callchain_support_v1-v11-1-846abbf600d7@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Thu, 02 Jul 2026 20:07:51 +0000
-Message-Id: <20260702200751.7FE1F1F000E9@smtp.kernel.org>
+Message-Id: <20260702200752.398871F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Branch stack corruption and trace history loss in CPU-wide and idl=
-e-thread traces due to `thread_stack` sharing and global flushing.
+
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but a NULL pointer d=
+ereference occurs in the error path if `intlist__findnew()` fails.
+- [High] This problem wasn't introduced by this patch, but the `reallocarra=
+y` error path in `cs_etm__etmq_get_traceid_queue` leaks memory and thread r=
+eferences.
 --
 
-commit 2e2bc54f5f904af76d7d22b2bf5c9fcfc4cc32e8
+commit 7d838026b9aad27b43e259b084c832b06d7fc96a
 Author: Leo Yan <leo.yan@arm.com>
 
-perf cs-etm: Use thread-stack for last branch entries
+perf cs-etm: Fix thread leaks on trace queue init failure
 
-This commit replaces the private last branch circular array with the common
-thread_stack helpers. It records taken branches with thread_stack__event()
-and synthesizes PERF_SAMPLE_BRANCH_STACK data with thread_stack__br_sample(=
-).
+cs_etm__init_traceid_queue() allocates the frontend and decode threads,
+if a later allocation fails, the error path does not drop thread
+reference that was already acquired.
+
+Release both thread pointers with thread__zput() on the error path, so
+does not leak thread references or leave stale pointers behind.
 
 > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 2284cda78abe1..deca07d57282e 100644
 > --- a/tools/perf/util/cs-etm.c
 > +++ b/tools/perf/util/cs-etm.c
-
-[ ... ]
-
-> @@ -1637,6 +1550,57 @@ static inline u64 cs_etm__resolve_sample_time(stru=
-ct cs_etm_queue *etmq,
-> +static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
-> +				    struct cs_etm_traceid_queue *tidq)
-> +{
-> +	struct cs_etm_auxtrace *etm =3D etmq->etm;
-> +	u64 from, to;
-> +	int size;
-> +
-> +	if (!etm->synth_opts.branches && !etm->synth_opts.instructions)
-> +		return;
-> +
-> +	if (!cs_etm__packet_has_taken_branch(tidq->prev_packet))
-> +		return;
-> +
-> +	if (etmq->etm->synth_opts.last_branch) {
-> +		from =3D cs_etm__last_executed_instr(tidq->prev_packet);
-> +		to =3D cs_etm__first_executed_instr(tidq->packet);
-> +
-> +		size =3D cs_etm__instr_size(etmq, tidq, tidq->prev_packet, from);
-> +
-> +		/* Enable callchain so thread stack entry can be allocated */
-> +		thread_stack__event(tidq->frontend_thread, tidq->prev_packet->cpu,
-> +				    tidq->prev_packet->flags, from, to, size,
-> +				    etmq->buffer->buffer_nr + 1, false,
-> +				    tidq->br_stack_sz, 0);
-
-[Severity: High]
-In CPU-wide trace scenarios where queue->tid is -1,
-cs_etm__init_traceid_queue() assigns the same dummy thread (PID -1, TID -1)
-to tidq->frontend_thread across all queues.
-
-Since thread_stack__per_cpu() returns false for PID -1, will all CPUs end up
-sharing a single thread_stack?
-
-If they share a single stack, interleaving cross-CPU decoding will pass
-different etmq->buffer->buffer_nr + 1 trace numbers into
-thread_stack__event(). Can this cause the stack to be continuously flushed
-due to the mismatched trace numbers, leading to branch trace history loss?
-
-[ ... ]
-
-> @@ -2046,7 +1992,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+> @@ -645,6 +645,8 @@ static int cs_etm__init_traceid_queue(struct cs_etm_q=
+ueue *etmq,
+>  					       queue->tid);
+>  	tidq->decode_thread =3D machine__findnew_thread(&etm->session->machines=
+.host, -1,
+>  					       queue->tid);
+> +	if (!tidq->frontend_thread || !tidq->decode_thread)
+> +		goto out;
 > =20
->  	/* Reset last branches after flush the trace */
->  	if (etm->synth_opts.last_branch)
-> -		cs_etm__reset_last_branch_rb(tidq);
-> +		thread_stack__flush(tidq->frontend_thread);
+>  	tidq->packet =3D zalloc(sizeof(struct cs_etm_packet));
+>  	if (!tidq->packet)
+[ ... ]
+> @@ -679,6 +681,8 @@ static int cs_etm__init_traceid_queue(struct cs_etm_q=
+ueue *etmq,
+>  	zfree(&tidq->prev_packet);
+>  	zfree(&tidq->packet);
+>  out:
+> +	thread__zput(tidq->frontend_thread);
+> +	thread__zput(tidq->decode_thread);
+>  	return rc;
+>  }
 
 [Severity: High]
-For threads that do get per-CPU stacks, such as the idle thread (PID 0,
-TID 0), thread_stack__flush() unconditionally iterates over and flushes the
-stacks for all CPUs associated with that thread.
+This isn't a bug introduced by this patch, but there appears to be a
+pre-existing NULL pointer dereference in the error path of the caller
+cs_etm__etmq_get_traceid_queue() in tools/perf/util/cs-etm.c.
 
-Does calling thread_stack__flush() here inadvertently wipe the branch trace
-history for all CPUs on the idle thread, rather than performing a
-queue-local reset for just the one CPU being processed?
+If intlist__findnew() fails and returns NULL:
+
+tools/perf/util/cs-etm.c:cs_etm__etmq_get_traceid_queue() {
+    ...
+	inode =3D intlist__findnew(traceid_queues_list, trace_chan_id);
+	if (!inode)
+		goto out_free;
+    ...
+out_free:
+	intlist__remove(traceid_queues_list, inode);
+	free(tidq);
+
+	return NULL;
+}
+
+Can this crash? Passing a NULL inode to intlist__remove() eventually
+leads to rblist__remove_node(), which will try to dereference the pointer.
+
+[Severity: High]
+This is also a pre-existing issue, but does this same error path leak the
+internal resources of tidq?
+
+If reallocarray() fails after cs_etm__init_traceid_queue() succeeds:
+
+tools/perf/util/cs-etm.c:cs_etm__etmq_get_traceid_queue() {
+    ...
+	if (cs_etm__init_traceid_queue(etmq, tidq, trace_chan_id))
+		goto out_free;
+
+	traceid_queues =3D reallocarray(traceid_queues,
+				      idx + 1,
+				      sizeof(*traceid_queues));
+	if (!traceid_queues)
+		goto out_free;
+    ...
+out_free:
+	intlist__remove(traceid_queues_list, inode);
+	free(tidq);
+
+	return NULL;
+}
+
+Since cs_etm__init_traceid_queue() successfully allocated dynamic fields
+like packet and prev_packet, and acquired thread references that are stored
+in tidq, wouldn't free(tidq) leak these allocations and references?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260702-b4-arm_cs_=
-callchain_support_v1-v11-0-846abbf600d7@arm.com?part=3D5
+callchain_support_v1-v11-0-846abbf600d7@arm.com?part=3D1
