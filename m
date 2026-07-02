@@ -1,154 +1,95 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C45472764
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 09:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75ABB399365;
+	Thu,  2 Jul 2026 09:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782983096; cv=none; b=qQMdcTtZ1PIEK9U1w80WvlW5wjwh8bahzg7VTFhcVMIALsaT3Yy3dXYKUVZ8HmO4iVZCAmIw6rPXP3bf8oSvkJ+M8QU0MHU1kvONCMDxzJfp5ObyKFjMBXPuyk3b2GF1mrJaS/TE0t5dlZDA0XHkbnUzPp/2L08TAskJGWHF0io=
+	t=1782983789; cv=none; b=NpLLXStXp4liZ/8bkc822loq6wCf9XU9rpaUuwxykwiJytYXgw0fwGFIitzpROtEFo4WfrcOYYJ61iUbCVSiDpeMFvU4imQltyLU3IZc+DbEnDMZ756+4uWVf+1wK/8HuvHoy91DxqPjH8WO2phkHcHpIEkkMN7SssVj8TFZU58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782983096; c=relaxed/simple;
-	bh=KuUldqSBvNUBw35ye/ZZ9kP2NkGYAK2SlfUkqDDVXZo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z/Ylgmn13NaVtU47dc6lwa+KN/u093Tvy5aub6dOAVpjQRiB/xDTHuc5dfXJUb35/k+mg26unfxiQMPRCwg2XYsrjDZvWrSG0DgXM4/Dsb8nDaHQ4OFuIge6QSpvyN3MY2M5ngYcfl7+wYatKYaE+BFBya4V4rccoL0QXqhEBmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=CpFAchRf; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1782983789; c=relaxed/simple;
+	bh=1x1Hu3hedgMBwNq7SoCp9xSXmb6NokWC+v5iymNGrrQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=MiTkRHF2l5y8uEM3M7A2zHkQmIzRqmRpO+QdfQfPYEks7G2eD3mBKPifrGQOlOKFl15xoIt8/P78NL0RoOblQ+owvqHRufuncbk6ihcXazann35rle6LbDAwMA7pJalM0M24iTt5Qux+m2HVGJRTMMsdlPCP1j1LQdnEFnQqXI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/TMudwb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CpFAchRf"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-37f7a5a217fso1256749a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Jul 2026 02:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1782983094; x=1783587894; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=rYOUNaGMGZsPlGyhqLkbebVXqK7qfkK62tQGnVDlaQc=;
-        b=CpFAchRfQ+uNLyC3bracfodFVnQc0mUl8RT+FrY0il9+6tp7XLeptQk0nGgSBoZf/N
-         H7OBEnFB55VdLLyOs3QLAyGg7/5/YSBEvTleiNEFyVDhutPDc+KUf5udeyTKiGawBv4J
-         K/8wIWq+ErmC08sUcHhEFgh0SY0PNI2y0wdAFB1YRFIliEWqFds7Dg0Oe1GpZbeyMRpR
-         IzqcWWt5badk5pl/MNHhSFxGgO6HUyNeoCcCgUmZpJ3XoVwYzz6jqx4KErWvmC+ebJtj
-         vlP1ISW0+lh5Bm8dtdZ3beu2Cmps34d/De7c2H98DsyVVsFW04Jrw+QjfbO3Bm98CjQw
-         jgMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782983094; x=1783587894;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=rYOUNaGMGZsPlGyhqLkbebVXqK7qfkK62tQGnVDlaQc=;
-        b=k2Etx8olSz7G/WimzEmMoHv+H/cSaNFZBVAoGp7P9kRyuB/BWw+5ePsW0EdrSz7sct
-         ip+eTcl0IcC15Jjk7ACjlDcFgivpdQN+NJ51smXrOQlExvTE8LfdkEW5I4BitCJ4g11S
-         3WlvyMhWxH/3W3+80Mg6lhuwufhzu7wfBxd9XGC4FmP72Vs3pZreP12mYnykByf/tCIK
-         DhO6KZ9oq0hwJAAmGaO153fUS/MdUYdl89aBpPL6KHYtDhnA7K2wHvTGlUlglr3QU8Bc
-         4xmoWm6NK2r+CgsZ4+s0rtzXgJJ3SKOSaojjR5XGWd0Au/Yid1QBLeUVzauHkLT5mnDA
-         QiZQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpXdEVRQq3BoZUaTPy7PRvQQmiHa4lO0A3BYVQ5eA10pT4N3BA94En4GqXWQdRYC7ZRh91TEkafz/TL+NPf9zLl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxucb+/tw1VbxeHp6rdxUJR4dr3Kr/keEN0ozzU6EUHiFla+26w
-	aKZIpDf/lcVB/TaocwyICwbkFvuhLfjS/mqvuqYi9BmT4tYQLK0dUC/Nssm+kY+A2m0=
-X-Gm-Gg: AfdE7cmIeJVmh/XNgw4INa+FVy1RHcnBTROPJGnqiMzh6FYAjrX4NY8EeWPduVrdY0X
-	uetWCHFZLFw+VygIDX4TWdlntomC8DEai5ocVTZJnJeKBrUuJ05cbGpIsLMszaZkkLSIAm3HZbf
-	ELQ9ELlfKBMFHMcyLSZf7ntQXkX7DGDHh3ZzCey1SkPAkwTmnVVSBRQYB0fUHZvdpMntUA4/J8L
-	cnP75Zu6CN3fi6tEx+jKFHkEtDxtVRZEJ/PBqUMH2kjsqdlUIox5MeJQVNGNDSmG0iXZEkyIG+T
-	29TitWIG8w6x5ji8QikO4049TGM0dli9Nybz2u6nuk2w2PQpU6g+PTN4Sm6HNn5PcaPlijNz0Mi
-	sM7R9VClul8zOJmQe5t5zSre+5ED9aBmkMZln34JA+cTbk0jvbAAhTjjWN6Q+Y4yPUUa5mt+Obl
-	OIpynOtltKvj8YQ1LhIAII0KkUyO7dtx0=
-X-Received: by 2002:a17:90b:3e45:b0:37f:d27f:5186 with SMTP id 98e67ed59e1d1-380ba91d167mr4114967a91.25.1782983094001;
-        Thu, 02 Jul 2026 02:04:54 -0700 (PDT)
-Received: from EricL-ThinkPadX1-TW.local ([136.226.240.163])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-380e15c362asm725719a91.1.2026.07.02.02.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2026 02:04:53 -0700 (PDT)
-From: Eric Lin <eric.lin@sifive.com>
-Date: Thu, 02 Jul 2026 17:04:31 +0800
-Subject: [PATCH RFC] dt-bindings: perf: riscv,pmu: Add interrupts-extended
- property
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/TMudwb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B5D1F000E9;
+	Thu,  2 Jul 2026 09:16:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782983788;
+	bh=0Noc9bGmhd05/MNkTgzXEBsyrdl7wGq+DgJXxCN9idg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=L/TMudwb1IOYa6OegWtc432S5FrskqU9QVB2YLLzyH0ORyeljSyAEtfDdbHisQn65
+	 WUrW3Kohs43lM5JA67aaKR94SYwQMCgqEsSr4DFY5Kcd6vM1Vuw8hpd4X9yoBvhrgB
+	 wp9q13D/65FEUN73+r4dOwO8OsdDWVXKMVLzNp/iXtOLylM5R/Cjg36vDLof1BDDk/
+	 LVnrr9nnBEariJunqwzIi40DmE/WowKczeF6TOnTB076eNgurHVVA4Fdnx7Grsv/yR
+	 cExuJoDDPz7C9Bb88iuGaAuzDul0ltUzwhwQ75gqi7MVEH7r4q5rYBsWjfvuRn1UsR
+	 nFQRHq/UxDrpg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH RFC] dt-bindings: perf: riscv,pmu: Add
+ interrupts-extended property
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Eric Lin" <eric.lin@sifive.com>
+Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260702-pmu-dt-property-v1-1-a7a7737afb72@sifive.com>
+References: <20260702-pmu-dt-property-v1-1-a7a7737afb72@sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 02 Jul 2026 09:16:27 +0000
+Message-Id: <20260702091627.C5B5D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260702-pmu-dt-property-v1-1-a7a7737afb72@sifive.com>
-X-B4-Tracking: v=1; b=H4sIAJ4pRmoC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDcwND3YLcUt2UEt2CovyC1KKSSt20NEOjJGPTtFSDtGQloK6CotS0zAq
- widFKQW7OSrEQweLSpKzU5BKQWUq1tQBQgp8DeAAAAA==
-X-Change-ID: 20260701-pmu-dt-property-ff12b35fe0fc
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Atish Patra <atishp@rivosinc.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Nick Hu <nick.hu@sifive.com>, 
- Eric Lin <eric.lin@sifive.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1782983089; l=2327;
- i=eric.lin@sifive.com; s=20260630; h=from:subject:message-id;
- bh=KuUldqSBvNUBw35ye/ZZ9kP2NkGYAK2SlfUkqDDVXZo=;
- b=r6xyJqLl12BSFPk0mVYjvI1fgO5czZqFRAdildvZY941PKjeY6XoAQqsZmgQVjkkNpPNiA/st
- /OSxALCjIC8As7kr5tTMspJ7rxU3VdXQOpNyeo7jc8yONMLS0Jk9Ffa
-X-Developer-Key: i=eric.lin@sifive.com; a=ed25519;
- pk=RLPQN6uNJ1cSM8GhP+L++2j3pf5ohznFbkNdwIO1XDw=
 
-The interrupts-extended property is used to specify the connection
-between the PMU counter overflow interrupt and the corresponding CPU
-local interrupt controller (riscv,cpu-intc).
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Overloading `interrupts-extended` as the sole CPU affinity map f=
+ails when PMU interrupts are optional.
+--
 
-This property also allows the software to associate a PMU node with a
-specific CPU. To support future heterogeneous systems, where different
-CPUs may support different PMU events, this property allows the driver
-to identify the correct PMU capabilities for each hart.
+commit c04ae2b471021dd39ca8ccf1e788362245660a9d
+Author: Eric Lin <eric.lin@sifive.com>
 
-Reviewed-by: Nick Hu <nick.hu@sifive.com>
-Signed-off-by: Eric Lin <eric.lin@sifive.com>
----
- Documentation/devicetree/bindings/perf/riscv,pmu.yaml | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+dt-bindings: perf: riscv,pmu: Add interrupts-extended property
 
-diff --git a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-index d01c677ad3c7..13aceb3d42b9 100644
---- a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-+++ b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
-@@ -34,6 +34,13 @@ properties:
-   compatible:
-     const: riscv,pmu
- 
-+  interrupts-extended:
-+    minItems: 1
-+    maxItems: 4095
-+    description:
-+      Specifies the interrupt-parent and local interrupt index for each CPU's
-+      PMU counter overflow. Each item points to a riscv,cpu-intc node.
-+
-   riscv,event-to-mhpmevent:
-     $ref: /schemas/types.yaml#/definitions/uint32-matrix
-     description:
-@@ -101,6 +108,7 @@ examples:
-   - |
-     pmu {
-         compatible = "riscv,pmu";
-+        interrupts-extended = <&cpu0_intc 13>;
-         riscv,event-to-mhpmevent = <0x0000B 0x0000 0x0001>;
-         riscv,event-to-mhpmcounters = <0x00001 0x00001 0x00000001>,
-                                       <0x00002 0x00002 0x00000004>,
-@@ -127,6 +135,9 @@ examples:
-      */
-     pmu {
-           compatible = "riscv,pmu";
-+          interrupts-extended = <&cpu0_intc 13>,
-+                                <&cpu1_intc 13>,<&cpu2_intc 13>,
-+                                <&cpu3_intc 13>,<&cpu4_intc 13>;
-           riscv,event-to-mhpmevent =
-               /* SBI_PMU_HW_CACHE_REFERENCES -> Instruction or Data cache/ITIM busy */
-               <0x00003 0x00000000 0x1801>,
+This commit adds the interrupts-extended property to the riscv,pmu binding
+to define the connection between the PMU overflow interrupt and the CPU
+local interrupt controller. It also notes this property is used by software
+to associate a PMU node with a specific CPU on heterogeneous systems.
 
----
-base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
-change-id: 20260701-pmu-dt-property-ff12b35fe0fc
+> diff --git a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml b/Docu=
+mentation/devicetree/bindings/perf/riscv,pmu.yaml
+> --- a/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
+> +++ b/Documentation/devicetree/bindings/perf/riscv,pmu.yaml
+> @@ -34,6 +34,13 @@ properties:
+>    compatible:
+>      const: riscv,pmu
+> =20
+> +  interrupts-extended:
+> +    minItems: 1
+> +    maxItems: 4095
+> +    description:
+> +      Specifies the interrupt-parent and local interrupt index for each =
+CPU's
+> +      PMU counter overflow. Each item points to a riscv,cpu-intc node.
 
-Best regards,
---  
-Eric Lin <eric.lin@sifive.com>
+[Severity: Medium]
+Does overloading interrupts-extended as the sole CPU affinity map cause
+failures on systems without PMU interrupts?
 
+If a heterogeneous RISC-V SoC lacks the optional Sscofpmf extension, it
+would omit the interrupts-extended property entirely. Without this property,
+it seems the OS would have no mechanism to determine which PMU node belongs
+to which CPU, potentially breaking perf functionality on such hardware.
+
+Would it be safer to introduce a dedicated affinity property to prevent
+future fragmentation when PMU interrupts are absent?
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260702-pmu-dt-pro=
+perty-v1-1-a7a7737afb72@sifive.com?part=3D1
