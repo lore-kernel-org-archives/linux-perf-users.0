@@ -1,59 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074B954774;
-	Thu,  2 Jul 2026 00:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8525B30DD2F;
+	Thu,  2 Jul 2026 02:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782950436; cv=none; b=I9vy3ixNnN9pagDUK58ll2EmA6ooHLZUe8PzQ6DYuwfoaC+w3QtuNd9fLgiSbmT3gjmuaDVpf5bVNRQCOqwC2M0fFO+415CJpCL1f1gvh2C8Y1+/4xCwTamvsIitVnD+gK2zouoh6VQitGnsnZbWb86tl3PoG2c6mS9PVH9OvLw=
+	t=1782959814; cv=none; b=dNpgWAYMFm1DQ+kmSMnu4HTkUfhmqjMSK2NOM4ppyACeYUT/CWfJWpLVraw1r6NkzQt3OkAoK+lg5qq9tLf5emKmIvA1G7mnHIpx1ENS3h3RVpLdHjAx1l+g9Ap6Q6ZxRCOigS5vGluOqyYqMkLTvRHS3rXBKiZytJk+eQE/BbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782950436; c=relaxed/simple;
-	bh=49oNaBsWC1ibQFOVK2VcpZiHrR3tpRL6dBrdVrGD1bs=;
+	s=arc-20240116; t=1782959814; c=relaxed/simple;
+	bh=S6lFr1ncGH7pd1HRrKVDAKq+X429xEVtJJ7VS8y8+2M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TrCaClcx4CQQ0HIlsdxo81TeoaqZSshWFhzrZxKsuXPDMjjMFXq0zpZ73hP6VJDPkwPz4LfhMzto2z704j6JlLcz3NgPKIu4R6LN5wudMlMrTEcvxr4k2mMo3Q8M/TcQkYGf999o+d5qO3ayEcY2fqonakmEWqg1pGHi77KMDew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RAGaEWdv; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+Mcx/02u8G/d/sMPBOtZnI/+JVr5lDqov/y6tEYYo6YXQi8Lmi0BMCAAMSA4Q2PMNn6FV+xfB8ofAA6v/zz4T8Xi31cPIGBe/uRp/suDFxl7vlYM2XjBE9BYoCO5WSPoFmnZ1EABWQ0MeGMpOAp4bMXZxwR253EVrm3VedTgSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=H1nAGM0l; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RAGaEWdv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A291F000E9;
-	Thu,  2 Jul 2026 00:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782950434;
-	bh=4DxY+NveVlYpMYk9+8EzvprbIuiW7b27j/Q3O7UOpGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RAGaEWdvlnS9Lk1iGe3zDhYAk6CUI8rBdM1J/vFEMw1SLmdPLWnnT+uC42wd/nSmY
-	 0YhlR50K/drAQqj7QRUqMrkVzEkLYFAbSXGbdgnphLlmWnUk/KmPi0/7wRs48jlxUF
-	 gmmY3i5/gvTlNCpgHz9Buvpr6TZYOuU1wJyx3CXTVGLDeQKka/4OFN08+D+XCclhQo
-	 HafrnBWIukbhH+vk85drrar6sNt+oCdG96JicMekQQFhj9zhteAMvXe3rBLy3MwIwC
-	 dormm8qIrhHbCXV90PWTc0lPEdd07za8UzAP8qmMvD0offBS4IY1VXPH23bvU9ZOqM
-	 qGhR+rDHKZSYw==
-Date: Wed, 1 Jul 2026 17:00:33 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Viktor Malik <vmalik@redhat.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Refactor augmented_raw_syscalls using
- bpf_loop
-Message-ID: <akWqIfWPMCdaGgGg@google.com>
-References: <20260623112533.1151502-1-vmalik@redhat.com>
- <DJGJ9F6WQZV9.2W4WBIHYLJQ97@gmail.com>
- <ajq98dm4gAwEzkMb@google.com>
- <c2f4e45e-d5c9-42e9-a46b-25fb0cacb267@redhat.com>
- <ajwu7xR6V6MAQOFw@google.com>
- <3c221e35-d642-4036-88fd-d25df7f8807e@redhat.com>
- <akLXCFpnum0WgXGf@google.com>
- <c1666061-c3e7-4eda-82ca-d03daf05f4f8@redhat.com>
- <360bfd5c-b023-4952-9e24-53fcc26690d3@redhat.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="H1nAGM0l"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4E22C40E016E;
+	Thu,  2 Jul 2026 02:36:51 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 3pq55z7zS62Y; Thu,  2 Jul 2026 02:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1782959801; bh=9Eo3m2gBojQEgeS3YSAkOcuM+sTzJu4uhJOH8vh5P4Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H1nAGM0lCMp+QtJqXvfKA99vBWj4y8izUMiBoTntTuwjS6T7iqnR1qsJrtJ8sY3MF
+	 9Lct9DWXh06/MFgGeOgU6xj7rNXDwuE7s6iKL52a9eXw77icjBI1rwtf4JuETeNIKy
+	 1OOQV1vYczyW3PQMFnTX5z/U5Hu8wx4MjAse/KTnGaRRmajuJm/ixQCMSBtYExOC/o
+	 gtL6rxdADqp/0ketUkx1oZjRKEOhnQiAHLt0WX9kP+jh8DJfIp0Zb6YsvlQ/0zmmJM
+	 MRyppcmxvNzF24dVw6FO6B8B53FUD5ibULt4jMftznL00S5VqxRmuq8IsJFXosUB4m
+	 mw4OAWdQuIzGjHIXYziQUGwJKOnS57Z7LvqmEgxYEdLQLxXHDyY8PAsvGII4x85Wxq
+	 GeJpCWH9SfEBAMZI8MPKlk5ig46O15Zrcy/Qm55png0qNj1/hqvmUlyuryEMG5rkyl
+	 Vnra5aCj/+Sy86EXYm0fT/Kj/QGQoiYyfG0071Gq33VlDlwb85RJ8/lgp7BP0mrSfv
+	 3CSD5VydrgduOscrsMcoLtJWrX19CcXbsjoWBL8888d3BKvOezHDm9O9UW1UjDVlXW
+	 Dp9QFWXwqhJQ5YHS92laHi5O1BgDT9ROlX4g/iit3Pg5qF9gUQz9B50mikTAwbCxvC
+	 ZZuU8KItha32zRlTAZUlM6lI=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 894A740E0140;
+	Thu,  2 Jul 2026 02:36:28 +0000 (UTC)
+Date: Wed, 1 Jul 2026 19:36:25 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Qi Liu <liuqi@hygon.cn>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	x86@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lijing@hygon.cn,
+	Sandipan Das <sandipan.das@amd.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH v2 0/3] perf/x86/amd/uncore: Add common helpers and Hygon
+ support
+Message-ID: <20260702023625.GIakXOqdXpW3GVkk8E@fat_crate.local>
+References: <20260701093417.1312443-1-liuqi@hygon.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,73 +66,69 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <360bfd5c-b023-4952-9e24-53fcc26690d3@redhat.com>
+In-Reply-To: <20260701093417.1312443-1-liuqi@hygon.cn>
 
-On Wed, Jul 01, 2026 at 08:12:06AM +0200, Viktor Malik wrote:
-> On 6/30/26 07:42, Viktor Malik wrote:
-> > On 6/29/26 22:35, Namhyung Kim wrote:
-> >> On Thu, Jun 25, 2026 at 02:05:29PM +0200, Viktor Malik wrote:
-> >>> On 6/24/26 21:24, Namhyung Kim wrote:
-> >>>> On Wed, Jun 24, 2026 at 08:47:38AM +0200, Viktor Malik wrote:
-> >>>>> On 6/23/26 19:10, Namhyung Kim wrote:
-> >>>>>> Hello,
-> >>>>>>
-> >>>>>> On Tue, Jun 23, 2026 at 08:27:39AM -0700, Alexei Starovoitov wrote:
-> >>>>>>> On Tue Jun 23, 2026 at 4:25 AM PDT, Viktor Malik wrote:
-> >>>> [SNIP]
-> >>>>>>>> +	struct args_loop_ctx loop_ctx = {
-> >>>>>>>> +		.args = args,
-> >>>>>>>> +		.beauty_map = beauty_map,
-> >>>>>>>> +		.payload_offset = payload_offset,
-> >>>>>>>> +		.value_size = value_size,
-> >>>>>>>> +		.output = &output,
-> >>>>>>>> +		.do_output = &do_output
-> >>>>>>>> +	};
-> >>>>>>>> +	iters = bpf_loop(6, process_arg_cb, &loop_ctx, 0);
-> >>>>>>>
-> >>>>>>> bpf_loop() is old and generally not recommended.
-> >>>>>>> Please use bpf_for() then the diff will be one line change and
-> >>>>>>> can scale to any number of args. Not just 6.
-> >>>>>
-> >>>>> Thanks Alexei, I didn't know about this preference.
-> >>>>>
-> >>>>>> One thing we should take care is to support old kernels.  The oldest
-> >>>>>> LTS kernel in the kernel.org is 5.10 and bpf_loop() was introduced in
-> >>>>>> 5.17 and bpf_for (bpf_iter_num) was 6.4.
-> >>>>>
-> >>>>> The problematic loop was introduced in 6.12 by a68fd6a6cdd3 ("perf
-> >>>>> trace: Collect augmented data using BPF") so we should be good using
-> >>>>> bpf_for. Or is perf from 7.2 supposed to work on 5.10 LTS kernels?
-> >>>>
-> >>>> Yep, we'd like to support old kernels.
-> >>>
-> >>> How much strict are you on this requirement? IMHO, the very least we
-> >>> need to fix the verifier issue is bpf_loop, so that would still not work
-> >>> on 5.10 and 5.15 LTS kernels.
-> >>
-> >> I don't think it's an absolute requirement, but I think we don't want to
-> >> break any existing working setup (old kernel + old compiler).
-> >>
-> >>>
-> >>> We could probably keep the open-coded loop in case bpf_loop is not
-> >>> available but `perf trace` would still fail on kernels without bpf_loop
-> >>> for new perf built with Clang>=22. Also, the code would be a bit ugly
-> >>> and I'm not sure how well the feature check for helpers (bpf_loop) works
-> >>> on old kernels.
-> >>  
-> >> Any chance process_arg_cb() can be called directly in the regular for
-> >> loop on old kernels?
-> > 
-> > That's my thinking, too. Should be pretty straightforward, I'm going to
-> > give it a try in v2.
++ AMD people who work on this code.
+
+On Wed, Jul 01, 2026 at 09:34:14AM +0000, Qi Liu wrote:
+> This series adds initial Hygon uncore PMU support.
 > 
-> Btw, I just noticed that util/bpf_skel/lock_contention.bpf.c already
-> uses bpf_loop without any fallback so newer perf (at least `perf lock`)
-> won't be usable on kernels without bpf_loop anyways.
- 
-IIUC the lock contention tracepoints were added to v5.19 so it won't
-work on old kernels anyway. :)
+> Hygon uncore PMUs use a programming model close to the AMD uncore PMU,
+> so this series factors out a small set of common helpers for perf event
+> handling, counter assignment and per-CPU context management.
+> 
+> The Hygon-specific support is kept in the Hygon driver. This series
+> supports the Hygon DF and DF IOD PMUs. No Hygon-specific logic is
+> added to the AMD driver.
+> 
+> Changes since RFC:
+>   - Address sashiko bot review.
+> Changes since v1:
+>   - Rename the helper namespace to amd_uncore_common_* to avoid
+>     an generic uncore_common_* prefix, and to keep it distinct
+>     from the existing amd_uncore_* names.
+> 
+> 
+> Qi Liu (3):
+>   perf/x86/amd/uncore: Add common PMU helper functions
+>   perf/x86/amd/uncore: Convert AMD driver to common PMU helpers
+>   perf/x86/amd/uncore: Add Hygon uncore PMU support
+> 
+>  arch/x86/events/Kconfig                 |  17 +
+>  arch/x86/events/amd/Makefile            |   4 +
+>  arch/x86/events/amd/amd_uncore_common.c | 403 +++++++++++++++++
+>  arch/x86/events/amd/amd_uncore_common.h | 114 +++++
+>  arch/x86/events/amd/hygon_uncore.c      | 556 +++++++++++++++++++++++
+>  arch/x86/events/amd/uncore.c            | 578 +++---------------------
+>  arch/x86/include/asm/msr-index.h        |   2 +
+>  arch/x86/include/asm/perf_event.h       |  20 +
+>  include/linux/cpuhotplug.h              |   3 +
+>  9 files changed, 1192 insertions(+), 505 deletions(-)
+>  create mode 100644 arch/x86/events/amd/amd_uncore_common.c
+>  create mode 100644 arch/x86/events/amd/amd_uncore_common.h
+>  create mode 100644 arch/x86/events/amd/hygon_uncore.c
 
-Thanks,
-Namhyung
+I'm sure Ravi and Sandipan will give you more indepth comments but the general
+direction with reusing AMD code on Hygon is to copy it first for your purposes
+and, later, when it turns out the helpers do remain identical, then to merge
+them.
 
+Vs defining common helpers now and stifling your and AMD development by trying
+to shoehorn common helpers with an architecture which is here and there a bit
+different.
+
+Also, I'm not sure about all those export symbols gunk - why would common
+events helpers need exports to modules but meh, Peter will give his thoughts
+here.
+
+Also, Sashiko has comments:
+
+https://lore.kernel.org/r/20260701094808.5C8BC1F000E9@smtp.kernel.org
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
