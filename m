@@ -1,134 +1,147 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8525B30DD2F;
-	Thu,  2 Jul 2026 02:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782959814; cv=none; b=dNpgWAYMFm1DQ+kmSMnu4HTkUfhmqjMSK2NOM4ppyACeYUT/CWfJWpLVraw1r6NkzQt3OkAoK+lg5qq9tLf5emKmIvA1G7mnHIpx1ENS3h3RVpLdHjAx1l+g9Ap6Q6ZxRCOigS5vGluOqyYqMkLTvRHS3rXBKiZytJk+eQE/BbE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782959814; c=relaxed/simple;
-	bh=S6lFr1ncGH7pd1HRrKVDAKq+X429xEVtJJ7VS8y8+2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+Mcx/02u8G/d/sMPBOtZnI/+JVr5lDqov/y6tEYYo6YXQi8Lmi0BMCAAMSA4Q2PMNn6FV+xfB8ofAA6v/zz4T8Xi31cPIGBe/uRp/suDFxl7vlYM2XjBE9BYoCO5WSPoFmnZ1EABWQ0MeGMpOAp4bMXZxwR253EVrm3VedTgSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=H1nAGM0l; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA5C351C3D
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 04:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782965404; cv=pass; b=WzJUamd8drLtD3aMkHWvAahOEr0etjfTe7lYGK6wZVsDNPc/ljPkKvDHs+KmHB0m6a5Hn7c/K1UbRlGdPBVla71KhKt4uqTbI2DcrHEMvgyMJRQrP+fSgyUd/jYzR0HAANs9XE1U9yqaTsuymirP5SHqhcXdd7DvlTZLAjojc50=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782965404; c=relaxed/simple;
+	bh=Q+4Ej4+9fCjdhkaoclqMTkAz5hQBRxCHsaPlG7vG3K4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BEftBu7f935VxlZRzFtvA7zOx7bZoKG9ZgqSIwHDoCM3/E6fzraiOszzTLDEwrhGQFwXVXLShVcjMoPrvt+nX2B8d5yZ8Gdj/rpvG+QJZbO/NXD4DeQU91GVmLRV6Twm8AWSKnZXA6srUEY0WxSzSSeFRcHG6V6297heRgxhDT8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i3nJJnrb; arc=pass smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="H1nAGM0l"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4E22C40E016E;
-	Thu,  2 Jul 2026 02:36:51 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 3pq55z7zS62Y; Thu,  2 Jul 2026 02:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1782959801; bh=9Eo3m2gBojQEgeS3YSAkOcuM+sTzJu4uhJOH8vh5P4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H1nAGM0lCMp+QtJqXvfKA99vBWj4y8izUMiBoTntTuwjS6T7iqnR1qsJrtJ8sY3MF
-	 9Lct9DWXh06/MFgGeOgU6xj7rNXDwuE7s6iKL52a9eXw77icjBI1rwtf4JuETeNIKy
-	 1OOQV1vYczyW3PQMFnTX5z/U5Hu8wx4MjAse/KTnGaRRmajuJm/ixQCMSBtYExOC/o
-	 gtL6rxdADqp/0ketUkx1oZjRKEOhnQiAHLt0WX9kP+jh8DJfIp0Zb6YsvlQ/0zmmJM
-	 MRyppcmxvNzF24dVw6FO6B8B53FUD5ibULt4jMftznL00S5VqxRmuq8IsJFXosUB4m
-	 mw4OAWdQuIzGjHIXYziQUGwJKOnS57Z7LvqmEgxYEdLQLxXHDyY8PAsvGII4x85Wxq
-	 GeJpCWH9SfEBAMZI8MPKlk5ig46O15Zrcy/Qm55png0qNj1/hqvmUlyuryEMG5rkyl
-	 Vnra5aCj/+Sy86EXYm0fT/Kj/QGQoiYyfG0071Gq33VlDlwb85RJ8/lgp7BP0mrSfv
-	 3CSD5VydrgduOscrsMcoLtJWrX19CcXbsjoWBL8888d3BKvOezHDm9O9UW1UjDVlXW
-	 Dp9QFWXwqhJQ5YHS92laHi5O1BgDT9ROlX4g/iit3Pg5qF9gUQz9B50mikTAwbCxvC
-	 ZZuU8KItha32zRlTAZUlM6lI=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1a])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 894A740E0140;
-	Thu,  2 Jul 2026 02:36:28 +0000 (UTC)
-Date: Wed, 1 Jul 2026 19:36:25 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Qi Liu <liuqi@hygon.cn>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	x86@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lijing@hygon.cn,
-	Sandipan Das <sandipan.das@amd.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH v2 0/3] perf/x86/amd/uncore: Add common helpers and Hygon
- support
-Message-ID: <20260702023625.GIakXOqdXpW3GVkk8E@fat_crate.local>
-References: <20260701093417.1312443-1-liuqi@hygon.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i3nJJnrb"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2c9b1db4964so138275ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jul 2026 21:10:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782965401; cv=none;
+        d=google.com; s=arc-20260327;
+        b=qlxr4kF/EuVWFfOsysHGr2QqSQpvlKiRiSWzOeuYLV9W9esYT0xaRuRINl2+oDkXCX
+         GdLRgHUugdFehFZLvpDzMal5yC//eN4Z543jTkboEsChbL1sh7f+MXY3+z+91Hgd10Rw
+         05Vh+a6XZZ9OoWaCvh2U/JgQYQBey4LgmfU+o+aWGK54jdCLqWKyd5pTtZJdBzWsP5EB
+         eV5G+tDNYpp4ye5r9nLutU85MmpzOMzcBYEezNV+FHdZEhcJ6GPTL3Atz1Rj5YUXPnt0
+         AhMClW0K5R03Gk/3WXxsZaxXPRxlJ5CjWE7oWWHmjkHTmhplgUNOWfB4L0cw99Tx6uJK
+         hYxA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=RD3AU6vU2VPlUwVyGnznpArGQ8W5Q5jnjAkJqBE07sk=;
+        fh=RraW6B+kCVqKtz8TBWwcOVqRuiGoTMZIQojfY4dymRE=;
+        b=kPubukO9nwfuqqA6WsfB3LhY+wUfDKz/7mMk39Ful9WXhTc0trt/fz+kUikWwW/CVW
+         MKuPgtFEysVj9RBRS+VP4QpibGG/h/MBkOpF4USz08XglFThysVzdMz9lJVWxAVFz5JW
+         yiN7x/tuYV8bPMCNuGuWyS+SWQQvJ9TpuUxAfwH9u7vlWK7xSC/8+1cAXVBO6V2Q6Jys
+         yow7RkCEc1sSIAHhx5wbDdnckCpHIBlg8F2oHKBBkbKOd+llUqp7jPoKXLRDG+TAHZ9z
+         i08KGx9ysGOFBBK7rHVtLgfB4xOIo6D3wFC80kTamDezivyU7HVZf6EOoL+2uGo/cIJo
+         44fQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1782965401; x=1783570201; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=RD3AU6vU2VPlUwVyGnznpArGQ8W5Q5jnjAkJqBE07sk=;
+        b=i3nJJnrbHpQvRPeT7Uyj07gq0bunmkGHNRKSOThvaHMihZow683Bs84KhwupXVsfJ1
+         yJKo6iwoZwBfHnNIU1F9xd9ltHogfUt+izB/KB1oPyVSskWCtgPgWaxR5ymYCYvjwWu0
+         +2TzzvtQNhKjSRQL9fVWeiIGhiTozY/E9slADl6i+z4lN7c0z1Ltqh6t32Mr9b0d4EOq
+         a8qgqs1xXOd462JAC+6oWTALnbFOCsb/v6NDNhwjUKL3khmZPjHkkZJZtf4jRlYLhB7U
+         ubhLKVqV9C2DXRsl8N4zAHmJ7in1982QA1KaiNJ3/qcBk7Plq4ozHfUjBLepv5qoSwER
+         GHiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782965401; x=1783570201;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RD3AU6vU2VPlUwVyGnznpArGQ8W5Q5jnjAkJqBE07sk=;
+        b=n/8Re0Mla/XpX4laPRMuE7gTtrdPl2nnep5+5c79xuI6wGHYZJr2KVv4eprw+4T29M
+         0iqcMfIEmCLqONTCRuppm3LcQqKK/wcEmUw2s8ktvtFm+9ShJbHZDojAksIls3vsfZta
+         U59dQ+Ia2Fpf9Ly7FUIikRiVvTEuRMyTi7MHreXEKB2F4pMFQWCtWwjjZ2hdMIOodha5
+         scs0cee6uQIN6jgeCyARcWN9GweOirp8bCe2Wi6iBFy+FLqF2g9M9JHpRq6xzp6Xwd3G
+         GswMDGWYHpA/WlKjl9a7qOy84acTwA+IZcXnZD/FMPuKhOAFxZFNKIw0lD28ud9Ek92L
+         mKSw==
+X-Forwarded-Encrypted: i=1; AHgh+Ro+6GIP/u7BB0ZQmPVTyGs33n+MqqAcCrtng6zxfDa4SlLbumwfAyaUiiGGBb3P7Ei8vlr+v1aujw2G7HHz6SKi@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSe4TMQMvFBsgg8RpcW38WAIP0lD6Cx3wI+dsI6+x6LtyUEpDF
+	4SrS9iXswBn4J6Kj1286+TxSRj3ZHivG2hPvtmOQyW5B+wpZdXTbSqNU+HKQK4tEp45ma2yD4Mr
+	QMtYeUtDlvW1mbfM2GoPhGm732vzD2mUN8vopF4Tq
+X-Gm-Gg: AfdE7cl9xh1mHCNPs0GNTUqjRsPMTTIVQ4hn1+4ikzXkdDVE0/aras1TZ91m6D6VoKI
+	+Alzrnq1j/FHxMQEwIsTH65WKHS/k1OU3zuENimeAwMXEgA6vzPDWrPUb521Fnyo8e6nMZIPF90
+	AFC293oDdxMRzFa++7HWE6sR+riO11MxMdXOabPu5EfuiIBBHMWOsNQBMCb0oWKEy8t//NiTORs
+	Ft/NPtQin3rcaqIrJpEiydyYTupL3LV9K1vBO+1JvYs366oqTwO/PLhs3WYbwqTlz9VEmqtug==
+X-Received: by 2002:a17:902:c408:b0:2c7:f688:f22f with SMTP id
+ d9443c01a7336-2caa6fdab93mr470055ad.13.1782965399443; Wed, 01 Jul 2026
+ 21:09:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260701093417.1312443-1-liuqi@hygon.cn>
+References: <20260701194153.401218-1-namhyung@kernel.org>
+In-Reply-To: <20260701194153.401218-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 1 Jul 2026 21:09:47 -0700
+X-Gm-Features: AVVi8Cek5zXmvzINfB6odq1v1gvw2NR0PwqqU2wbewYXL5qtXeCCwTi-Txsu8MQ
+Message-ID: <CAP-5=fVvxW9u2qxrqiRR2PM54REs9A4Fta5anmT=WsjoqvR+DA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] perf kvm: A small update in the default arch event
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+ AMD people who work on this code.
+On Wed, Jul 1, 2026 at 12:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello,
+>
+> Ian said there's an issue in the perf kvm record command line option pars=
+ing.
+> This is my attempt to address the issue, simplify the code and fix memory=
+ leaks.
+>
+> v3 changes)
+>  * remove unnecessary error check  (Sashiko)
+>  * update test code after rebase
+>
+> v2 changes)
+>  * handle kvm top subcommand  (Sashiko)
+>  * handle other arch/condition for the default events  (Sashiko)
+>  * add <stdlib.h> for musl compatibility  (Sashiko)
+>  * fix some memory leaks
+>
+> Thanks,
+> Namhyung
 
-On Wed, Jul 01, 2026 at 09:34:14AM +0000, Qi Liu wrote:
-> This series adds initial Hygon uncore PMU support.
-> 
-> Hygon uncore PMUs use a programming model close to the AMD uncore PMU,
-> so this series factors out a small set of common helpers for perf event
-> handling, counter assignment and per-CPU context management.
-> 
-> The Hygon-specific support is kept in the Hygon driver. This series
-> supports the Hygon DF and DF IOD PMUs. No Hygon-specific logic is
-> added to the AMD driver.
-> 
-> Changes since RFC:
->   - Address sashiko bot review.
-> Changes since v1:
->   - Rename the helper namespace to amd_uncore_common_* to avoid
->     an generic uncore_common_* prefix, and to keep it distinct
->     from the existing amd_uncore_* names.
-> 
-> 
-> Qi Liu (3):
->   perf/x86/amd/uncore: Add common PMU helper functions
->   perf/x86/amd/uncore: Convert AMD driver to common PMU helpers
->   perf/x86/amd/uncore: Add Hygon uncore PMU support
-> 
->  arch/x86/events/Kconfig                 |  17 +
->  arch/x86/events/amd/Makefile            |   4 +
->  arch/x86/events/amd/amd_uncore_common.c | 403 +++++++++++++++++
->  arch/x86/events/amd/amd_uncore_common.h | 114 +++++
->  arch/x86/events/amd/hygon_uncore.c      | 556 +++++++++++++++++++++++
->  arch/x86/events/amd/uncore.c            | 578 +++---------------------
->  arch/x86/include/asm/msr-index.h        |   2 +
->  arch/x86/include/asm/perf_event.h       |  20 +
->  include/linux/cpuhotplug.h              |   3 +
->  9 files changed, 1192 insertions(+), 505 deletions(-)
->  create mode 100644 arch/x86/events/amd/amd_uncore_common.c
->  create mode 100644 arch/x86/events/amd/amd_uncore_common.h
->  create mode 100644 arch/x86/events/amd/hygon_uncore.c
+I built with -fsanitize=3Daddress and ran the kvm test. Everything passing.
 
-I'm sure Ravi and Sandipan will give you more indepth comments but the general
-direction with reusing AMD code on Hygon is to copy it first for your purposes
-and, later, when it turns out the helpers do remain identical, then to merge
-them.
+Tested-by: Ian Rogers <irogers@google.com>
 
-Vs defining common helpers now and stifling your and AMD development by trying
-to shoehorn common helpers with an architecture which is here and there a bit
-different.
+Thanks,
+Ian
 
-Also, I'm not sure about all those export symbols gunk - why would common
-events helpers need exports to modules but meh, Peter will give his thoughts
-here.
-
-Also, Sashiko has comments:
-
-https://lore.kernel.org/r/20260701094808.5C8BC1F000E9@smtp.kernel.org
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> Namhyung Kim (6):
+>   perf kvm: Factor out kvm_need_default_arch_event()
+>   perf kvm: Check kvm_need_default_arch_event() early
+>   perf kvm: Kill STRDUP_FAIL_EXIT()
+>   perf kvm: Do not copy filename string
+>   perf kvm: Fix a memory leak in the usage string
+>   perf test: Extend perf kvm tests to check default event
+>
+>  tools/perf/builtin-kvm.c                      | 109 ++++++++----------
+>  tools/perf/tests/shell/kvm.sh                 |  10 ++
+>  .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  31 +----
+>  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  37 +-----
+>  tools/perf/util/kvm-stat.c                    |  41 +++++++
+>  tools/perf/util/kvm-stat.h                    |  18 ++-
+>  6 files changed, 116 insertions(+), 130 deletions(-)
+>
+> --
+> 2.55.0.rc0.799.gd6f94ed593-goog
+>
