@@ -1,381 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E1E238E10F
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 19:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFCA33E355
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 20:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783021954; cv=none; b=WrhCbLdsJn77Jo7o62nhb+1WaDbyq9vO8HIxyoAxMl8NFYnuUVxNwyzto1AOET7eAfh9A72GiKpXnLQXLNbB6OlD2S8SZXA+9UOys7jR1Qtk5BXQ7/x7x8TroKoBpSBwtHFFOv0IxoVn3gHIRcBSXIl3/IMtE2/Owrggzznnkcg=
+	t=1783022795; cv=none; b=QIFmVHPnVmn/UylJNbGjq1CxU1uwswLhIWzZAYnVKSxC8oVF/xftR+DHMitwHMPhGwKoYjoBL0bQCF0ngKu8UQL+8wFg/aYUtnbFdT/Lfzzfn9ncJZgbxK5yBRrWu6AJHenakBCE2mpI33TiKin7Hhjo1fTQZAymaymPEwkp+d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783021954; c=relaxed/simple;
-	bh=AkZ+7S1AKCZlf6pDne3cf2cgaXjqpwdLtXTWC1CWkPw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N+ifY+INFo9Ziq94d40YWOVFou9X8NNZ44Ah66Hv3liGr8PWVZsDxB1p+wRPmHiNwS6glYqwNdxhcIu8mwbBaQcOscvAPYUJtF6HgX9Rl+sm4czxWj32wUalcI0ZEUS4Sl0UMqwnjiaipTAubZiKHRESfWVilMeq7wjfkV7WwiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=qCJVmUZ2; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1783022795; c=relaxed/simple;
+	bh=xkP/bctLelZFKuWMmzc1els3n2wcJs5hYHDpw0Zslgw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=KOQoo5x6PTQ1uFn9sfU2/UMG9i5ln/x9mcBjPDlUv0hM2GEpL9dJm0Vc9Io3MB4cI5a3rJ6gUhAbTDM77R1HBxEKewDBD/DfbDPdW5C/rSJ2sOzCgVNwyvWkgiQ2BqS4qXLJCb15v6N84WnkexNFi+5jabJJ7o7Z0ge+2mDa98o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cPsC8EPU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="qCJVmUZ2"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1D7C35B7;
-	Thu,  2 Jul 2026 12:52:27 -0700 (PDT)
-Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49C953FD63;
-	Thu,  2 Jul 2026 12:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1783021952; bh=AkZ+7S1AKCZlf6pDne3cf2cgaXjqpwdLtXTWC1CWkPw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qCJVmUZ2sIgsCSAgmecm5uLVsu8U1rlJ1a7xGpZAYMXzRvEvVMn/qjGck6/rqCj4u
-	 2Mpfi5WlkVXLQQ/zuprj1JWiwXku7MJzTZLAcFoxQBtJm3dY6uN7msGHtslNXxC6fY
-	 xIovYCJTWRUfIfZ8ZI75FsJbUP40HrnzpeKKQQSs=
-From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 02 Jul 2026 20:51:44 +0100
-Subject: [PATCH v11 9/9] perf test: Add Arm CoreSight callchain test
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPsC8EPU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10AE51F000E9;
+	Thu,  2 Jul 2026 20:06:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783022794;
+	bh=DcLMRn9xg/hh6BTLN/dhJMs7Tg+q286eB5EmN4htkoQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=cPsC8EPUhCGIyrbkQTZNqG0T2oGANx5Xc2lGKXFAcrweXiyuMrS5Ka0wJYWFFC7Yq
+	 yTykUhPLUz920vO3LVbKS3hgqxoYrnyrlMpwhqRH0R6S9ZMULZ5pwba9zwJGn00EUw
+	 EFhfYYtoR6X8LXwfjOBx3CMqiMR0B4f8dUmbTX3sANDMb/ARypp9TbCzau6TjBlpcZ
+	 03gYpYJ0uWlKDSDWvQt1Y7S8w79sLFxQiy68uFJ6U9Yr+pai43YiSats/ZqgLkG7S6
+	 usuanXqZQPmvRPaOTNIRBici05iw5lQq3cX2X2GzojqNj+I9Ckk00N3nuawQQJef05
+	 RMEKnH+S9T9KA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v11 6/9] perf cs-etm: Flush thread stacks after decoder
+ reset
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Leo Yan" <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260702-b4-arm_cs_callchain_support_v1-v11-6-846abbf600d7@arm.com>
+References: <20260702-b4-arm_cs_callchain_support_v1-v11-0-846abbf600d7@arm.com>
+ <20260702-b4-arm_cs_callchain_support_v1-v11-6-846abbf600d7@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 02 Jul 2026 20:06:33 +0000
+Message-Id: <20260702200634.10AE51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260702-b4-arm_cs_callchain_support_v1-v11-9-846abbf600d7@arm.com>
-References: <20260702-b4-arm_cs_callchain_support_v1-v11-0-846abbf600d7@arm.com>
-In-Reply-To: <20260702-b4-arm_cs_callchain_support_v1-v11-0-846abbf600d7@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>, 
- Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783021918; l=10399;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=AkZ+7S1AKCZlf6pDne3cf2cgaXjqpwdLtXTWC1CWkPw=;
- b=Su50YGZC5poCWo0XyYq7bb7dxLy/tiYpjumYquq1/6IdP0BXhrmij3ai6j4XmgEAD4l0BFzsy
- QSl7Dh46BZ1Dv26gj7UOGSp+liMSu7hIZkRe2eC1LeE3vGz194pn9hz
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Add a CoreSight shell test for synthesized callchains.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] cs_etm__flush_all_stack() explicitly skips flushing thread stack=
+s when the trace PID format is CS_ETM_PIDFMT_NONE.
+- [Medium] Globally flushing all thread stacks on a per-queue decoder reset=
+ indiscriminately destroys valid callchains for unrelated threads on other =
+CPUs.
+--
 
-The test uses the new callchain workload to generate trace and decodes
-it with synthesis callchain. It then verifies that the instruction
-samples show the expected callchain push and pop.
+commit 2fc83ea7678b445a0b66d5aa7740246139b71821
+Author: Leo Yan <leo.yan@arm.com>
 
-Use control FIFOs so tracing starts only around the workload, which
-keeps the trace data small. The test is limited to with the cs_etm
-event available and root permission.
+perf cs-etm: Flush thread stacks after decoder reset
 
-After:
+Perf resets the CoreSight decoder when moving to a new AUX trace buffer,
+causing global trace discontinuity. This patch flushes all host (and
+guest) thread stacks after a decoder reset to prevent stale call/return
+histories from being attached to threads that are decoded later.
 
-  perf test 138 -vvv
-  138: CoreSight synthesized callchain:
-  ---- start ----
-  test child forked, pid 35581
-  Callchain flow matched:
-    l1=4642868 l2=4642880 l3=4642895 l4=4642919 l5=4670494 l6=4670500 l7=4670520
-  ---- end(0) ----
-  138: CoreSight synthesized callchain                                                                           : Ok
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index ba9ffb7bdb4bd..996317687ce7b 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
 
-Assisted-by: Codex:GPT-5.5
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/Documentation/perf-test.txt        |   6 +-
- tools/perf/tests/builtin-test.c               |   1 +
- tools/perf/tests/shell/coresight/callchain.sh | 172 ++++++++++++++++++++++++++
- tools/perf/tests/tests.h                      |   1 +
- tools/perf/tests/workloads/Build              |   2 +
- tools/perf/tests/workloads/callchain.c        |  33 +++++
- 6 files changed, 213 insertions(+), 2 deletions(-)
+[ ... ]
 
-diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
-index 81c8525f594680d814f80e6f88bcce8d867bb350..859df74e62efc4b1e80da13ae8e053356f68ae54 100644
---- a/tools/perf/Documentation/perf-test.txt
-+++ b/tools/perf/Documentation/perf-test.txt
-@@ -57,7 +57,8 @@ OPTIONS
- --workload=::
- 	Run a built-in workload, to list them use '--list-workloads', current
- 	ones include: noploop, thloop, leafloop, sqrtloop, brstack, datasym,
--	context_switch_loop, deterministic, named_threads and landlock.
-+	context_switch_loop, deterministic, named_threads, landlock and
-+	callchain.
- 
- 	Used with the shell script regression tests.
- 
-@@ -69,7 +70,8 @@ OPTIONS
- 	'named_threads' accepts the number of threads and the number of loops to
- 	do in each thread.
- 
--	The datasym, landlock and deterministic workloads don't accept any.
-+	The datasym, landlock, deterministic and callchain workloads don't accept
-+	any.
- 
- --list-workloads::
- 	List the available workloads to use with -w/--workload.
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index d115a19e5f0f59ade91f1a743c08cae05d043ba8..7d18cb6021d37ec0a1ed47a0072ddb4e2ad99421 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -171,6 +171,7 @@ static struct test_workload *workloads[] = {
- 	&workload__jitdump,
- 	&workload__context_switch_loop,
- 	&workload__deterministic,
-+	&workload__callchain,
- 
- #ifdef HAVE_RUST_SUPPORT
- 	&workload__code_with_type,
-diff --git a/tools/perf/tests/shell/coresight/callchain.sh b/tools/perf/tests/shell/coresight/callchain.sh
-new file mode 100755
-index 0000000000000000000000000000000000000000..13cca7dc11184002e3ddc058c0d0ffa1c458c483
---- /dev/null
-+++ b/tools/perf/tests/shell/coresight/callchain.sh
-@@ -0,0 +1,172 @@
-+#!/bin/bash
-+# CoreSight synthesized callchain (exclusive)
-+# SPDX-License-Identifier: GPL-2.0
-+
-+glb_err=1
-+
-+if ! tmpdir=$(mktemp -d /tmp/perf-cs-callchain-test.XXXXXX); then
-+	echo "mktemp failed"
-+	exit 1
-+fi
-+
-+cleanup_files()
-+{
-+	rm -rf "$tmpdir"
-+}
-+
-+trap cleanup_files EXIT
-+trap 'cleanup_files; exit $glb_err' TERM INT
-+
-+skip_if_system_is_not_ready()
-+{
-+	perf list | grep -Pzq 'cs_etm//' || {
-+		echo "[Skip] cs_etm event is not available" >&2
-+		return 2
-+	}
-+
-+	# Requires root for trace in kernel
-+	[ "$(id -u)" = 0 ] || {
-+		echo "[Skip] No root permission" >&2
-+		return 2
-+	}
-+
-+	return 0
-+}
-+
-+record_trace()
-+{
-+	local data=$1
-+	local script=$2
-+
-+	local cf="$tmpdir/ctl"
-+	local af="$tmpdir/ack"
-+
-+	mkfifo "$cf" "$af"
-+
-+	perf record -o "$data" -e cs_etm// --per-thread -D -1 --control fifo:"$cf","$af" -- \
-+		perf test --record-ctl fifo:"$cf","$af" -w callchain >/dev/null 2>&1 &&
-+
-+	# It is safe to use 'i3i' with a three-instruction interval, since the
-+	# workload is compiled with -O0.
-+	perf script --itrace=g16i3il64 -i "$data" > "$script"
-+}
-+
-+callchain_regex_1()
-+{
-+	printf '%s' \
-+'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain_foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'
-+}
-+
-+callchain_regex_2()
-+{
-+	printf '%s' \
-+'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain_do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain_foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'
-+}
-+
-+callchain_regex_3()
-+{
-+	printf '%s' \
-+'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ syscall(@plt)?\+0x[[:xdigit:]]+ \(.*\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain_do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain_foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'
-+}
-+
-+callchain_regex_4()
-+{
-+	printf '%s' \
-+'perf[[:space:]]+[0-9]+[[:space:]]+\[[0-9]+\][[:space:]]+([0-9.]+:[[:space:]]+)?[0-9]+ instructions:[[:space:]]*\n'\
-+'[[:space:]]+[[:xdigit:]]+ .*\+0x[[:xdigit:]]+ \(\[kernel\.kallsyms\]\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ syscall(@plt)?\+0x[[:xdigit:]]+ \(.*\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain_do_syscall\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain_foo\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'[[:space:]]+[[:xdigit:]]+ callchain\+0x[[:xdigit:]]+ \(.*/perf\)\n'\
-+'([[:space:]]+[[:xdigit:]]+ .*\n)*'
-+}
-+
-+find_after_line()
-+{
-+	local regex="$1"
-+	local file="$2"
-+	local start="$3"
-+	local offset
-+	local line
-+
-+	# Search in byte offset
-+	offset=$(
-+		tail -n +"$start" "$file" |
-+		grep -Pzob -m1 "$regex" |
-+		tr '\0' '\n' |
-+		sed -n 's/^\([0-9][0-9]*\):.*/\1/p;q'
-+	)
-+
-+	if [ -z "$offset" ]; then
-+		echo "Failed to match regex after line $start" >&2
-+		echo "Regex:" >&2
-+		printf '%s\n' "$regex" >&2
-+		echo "Context from line $start:" >&2
-+		sed -n "${start},$((start + 100))p" "$file" >&2
-+		return 1
-+	fi
-+
-+	# Convert from offset to line
-+	line=$(
-+		tail -n +"$start" "$file" |
-+		head -c "$offset" |
-+		wc -l
-+	)
-+
-+	echo "$((start + line))"
-+}
-+
-+check_callchain_flow()
-+{
-+	local file="$1"
-+	local l1 l2 l3 l4 l5 l6 l7
-+
-+	# Callchain push
-+	l1=$(find_after_line "$(callchain_regex_1)" "$file" 1) || return 1
-+	l2=$(find_after_line "$(callchain_regex_2)" "$file" "$((l1 + 1))") || return 1
-+	l3=$(find_after_line "$(callchain_regex_3)" "$file" "$((l2 + 1))") || return 1
-+	l4=$(find_after_line "$(callchain_regex_4)" "$file" "$((l3 + 1))") || return 1
-+
-+	# Callchain pop
-+	l5=$(find_after_line "$(callchain_regex_3)" "$file" "$((l4 + 1))") || return 1
-+	l6=$(find_after_line "$(callchain_regex_2)" "$file" "$((l5 + 1))") || return 1
-+	l7=$(find_after_line "$(callchain_regex_1)" "$file" "$((l6 + 1))") || return 1
-+
-+	echo "Callchain flow matched:"
-+	echo "  l1=$l1 l2=$l2 l3=$l3 l4=$l4 l5=$l5 l6=$l6 l7=$l7"
-+
-+	return 0
-+}
-+
-+run_test()
-+{
-+	local data=$tmpdir/perf.data
-+	local script=$tmpdir/perf.script
-+
-+	if ! record_trace "$data" "$script"; then
-+		echo "perf record/script failed"
-+		return
-+	fi
-+
-+	check_callchain_flow "$script" || return
-+
-+	glb_err=0
-+}
-+
-+skip_if_system_is_not_ready || exit 2
-+
-+run_test
-+
-+exit $glb_err
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 7cedf05be544ad79a99e86d30dfa4f7b01ca0837..cee9e6b62dcc838c864bbe76efe3b638ed75b134 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -248,6 +248,7 @@ DECLARE_WORKLOAD(inlineloop);
- DECLARE_WORKLOAD(jitdump);
- DECLARE_WORKLOAD(context_switch_loop);
- DECLARE_WORKLOAD(deterministic);
-+DECLARE_WORKLOAD(callchain);
- 
- #ifdef HAVE_RUST_SUPPORT
- DECLARE_WORKLOAD(code_with_type);
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 7bb4b9829ba245740c8967e6bf3235614cdd55a3..048e371eb63e316453b6b46ebd0a02794c3d25d7 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -13,6 +13,7 @@ perf-test-y += inlineloop.o
- perf-test-y += jitdump.o
- perf-test-y += context_switch_loop.o
- perf-test-y += deterministic.o
-+perf-test-y += callchain.o
- 
- ifeq ($(CONFIG_RUST_SUPPORT),y)
-     perf-test-y += code_with_type.o
-@@ -27,3 +28,4 @@ CFLAGS_traploop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_inlineloop.o       = -g -O2
- CFLAGS_deterministic.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_named_threads.o    = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_callchain.o        = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-diff --git a/tools/perf/tests/workloads/callchain.c b/tools/perf/tests/workloads/callchain.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..abbb406ba90b30a012620f46c6e84a5661066b76
---- /dev/null
-+++ b/tools/perf/tests/workloads/callchain.c
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/compiler.h>
-+#include <sys/syscall.h>
-+#include <unistd.h>
-+#include "../tests.h"
-+
-+/*
-+ * Mark as noinline to establish the call chain, and avoid the static
-+ * annotation to prevent LTO from renaming the functions.
-+ */
-+noinline void callchain_do_syscall(void);
-+noinline void callchain_foo(void);
-+noinline int callchain(int argc, const char **argv);
-+
-+noinline void callchain_do_syscall(void)
-+{
-+	syscall(SYS_gettid);
-+}
-+
-+noinline void callchain_foo(void)
-+{
-+	callchain_do_syscall();
-+}
-+
-+noinline int callchain(int argc __maybe_unused,
-+		       const char **argv __maybe_unused)
-+{
-+	callchain_foo();
-+
-+	return 0;
-+}
-+
-+DEFINE_WORKLOAD(callchain);
+> +static int cs_etm__flush_stack_cb(struct thread *thread,
+> +				  void *data __maybe_unused)
+> +{
+> +	thread_stack__flush(thread);
+> +	return 0;
+> +}
+> +
+> +static void cs_etm__flush_machine_stack(struct cs_etm_queue *etmq, pid_t=
+ pid)
+> +{
+> +	struct machine *machine;
+> +
+> +	machine =3D machines__find(&etmq->etm->session->machines, pid);
+> +	if (machine)
+> +		machine__for_each_thread(machine, cs_etm__flush_stack_cb, NULL);
 
--- 
-2.34.1
+[Severity: Medium]
+Does this globally flush the stacks for all threads in the machine, even
+those executing on other CPUs?
 
+Since the decoder reset triggered in cs_etm__get_data_block() happens
+per-queue (per-CPU) when it hits a buffer discontinuity, wiping the stack
+for all threads indiscriminately might destroy the valid, continuous branch
+stacks of threads executing on unrelated CPUs.
+
+Should this flush be limited only to the threads actively traced by the
+queue undergoing the reset?
+
+> +}
+> +
+> +static void cs_etm__flush_all_stack(struct cs_etm_queue *etmq)
+> +{
+> +	enum cs_etm_pid_fmt pid_fmt =3D cs_etm__get_pid_fmt(etmq);
+> +
+> +	if (!etmq->etm->synth_opts.last_branch)
+> +		return;
+> +
+> +	switch (pid_fmt) {
+> +	case CS_ETM_PIDFMT_CTXTID2:
+> +		/* Clear the guest stack if virtualization is supported */
+> +		cs_etm__flush_machine_stack(etmq, DEFAULT_GUEST_KERNEL_ID);
+> +		fallthrough;
+> +	case CS_ETM_PIDFMT_CTXTID:
+> +		cs_etm__flush_machine_stack(etmq, HOST_KERNEL_ID);
+> +		break;
+> +	case CS_ETM_PIDFMT_NONE:
+> +	default:
+> +		break;
+
+[Severity: Medium]
+When tracing without hardware context IDs or in per-thread mode, pid_fmt
+evaluates to CS_ETM_PIDFMT_NONE.
+
+By explicitly breaking here, doesn't this skip the flush entirely for these
+traces? It seems this would leave the stale call and return histories intact
+for those workloads, skipping the exact fix this patch intends to apply.
+
+> +
+> +	}
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260702-b4-arm_cs_=
+callchain_support_v1-v11-0-846abbf600d7@arm.com?part=3D6
