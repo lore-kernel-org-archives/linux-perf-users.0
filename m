@@ -1,147 +1,143 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA5C351C3D
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 04:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782965404; cv=pass; b=WzJUamd8drLtD3aMkHWvAahOEr0etjfTe7lYGK6wZVsDNPc/ljPkKvDHs+KmHB0m6a5Hn7c/K1UbRlGdPBVla71KhKt4uqTbI2DcrHEMvgyMJRQrP+fSgyUd/jYzR0HAANs9XE1U9yqaTsuymirP5SHqhcXdd7DvlTZLAjojc50=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782965404; c=relaxed/simple;
-	bh=Q+4Ej4+9fCjdhkaoclqMTkAz5hQBRxCHsaPlG7vG3K4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BEftBu7f935VxlZRzFtvA7zOx7bZoKG9ZgqSIwHDoCM3/E6fzraiOszzTLDEwrhGQFwXVXLShVcjMoPrvt+nX2B8d5yZ8Gdj/rpvG+QJZbO/NXD4DeQU91GVmLRV6Twm8AWSKnZXA6srUEY0WxSzSSeFRcHG6V6297heRgxhDT8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i3nJJnrb; arc=pass smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63366338910
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Jul 2026 07:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782976638; cv=none; b=j0y9efK/ZkPNu1SdCJIJ2bRjNiCuK8wvEP0KC/g1gz3Qa3ogLPqXmpuNa88D+OGwW2fpvd1o7dZJK7xlFNrYBu4Unrr3hqZgyfYhl11TXJvijdMQUL43bNzNlDdTEu/mk8OCKqnvmvDfyRFaiuFTsAH4s4/zOjQrNIEni+VTAog=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782976638; c=relaxed/simple;
+	bh=MCbw34X9Y660ZAAyGkb8jnmxwHY3K9C/yxyfNVeCaDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j02CtMu7UNDEzSYbdb+N2vFRvtFXu39B99Pqh9GvzOSsEm6RqBjIKhRwh+HCc2oKYNS2vrYAJVfh6a6WnbF6xE0ZFz8qaK239hKYvRq5Lg5FZWOUvRObDcqU1kVWHnKf7tm8jzabkz3bx57TwZ/6YD0BxeT+KxgHp1vWfGur2Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iwhgKCa5; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i3nJJnrb"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2c9b1db4964so138275ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Jul 2026 21:10:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782965401; cv=none;
-        d=google.com; s=arc-20260327;
-        b=qlxr4kF/EuVWFfOsysHGr2QqSQpvlKiRiSWzOeuYLV9W9esYT0xaRuRINl2+oDkXCX
-         GdLRgHUugdFehFZLvpDzMal5yC//eN4Z543jTkboEsChbL1sh7f+MXY3+z+91Hgd10Rw
-         05Vh+a6XZZ9OoWaCvh2U/JgQYQBey4LgmfU+o+aWGK54jdCLqWKyd5pTtZJdBzWsP5EB
-         eV5G+tDNYpp4ye5r9nLutU85MmpzOMzcBYEezNV+FHdZEhcJ6GPTL3Atz1Rj5YUXPnt0
-         AhMClW0K5R03Gk/3WXxsZaxXPRxlJ5CjWE7oWWHmjkHTmhplgUNOWfB4L0cw99Tx6uJK
-         hYxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=RD3AU6vU2VPlUwVyGnznpArGQ8W5Q5jnjAkJqBE07sk=;
-        fh=RraW6B+kCVqKtz8TBWwcOVqRuiGoTMZIQojfY4dymRE=;
-        b=kPubukO9nwfuqqA6WsfB3LhY+wUfDKz/7mMk39Ful9WXhTc0trt/fz+kUikWwW/CVW
-         MKuPgtFEysVj9RBRS+VP4QpibGG/h/MBkOpF4USz08XglFThysVzdMz9lJVWxAVFz5JW
-         yiN7x/tuYV8bPMCNuGuWyS+SWQQvJ9TpuUxAfwH9u7vlWK7xSC/8+1cAXVBO6V2Q6Jys
-         yow7RkCEc1sSIAHhx5wbDdnckCpHIBlg8F2oHKBBkbKOd+llUqp7jPoKXLRDG+TAHZ9z
-         i08KGx9ysGOFBBK7rHVtLgfB4xOIo6D3wFC80kTamDezivyU7HVZf6EOoL+2uGo/cIJo
-         44fQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1782965401; x=1783570201; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=RD3AU6vU2VPlUwVyGnznpArGQ8W5Q5jnjAkJqBE07sk=;
-        b=i3nJJnrbHpQvRPeT7Uyj07gq0bunmkGHNRKSOThvaHMihZow683Bs84KhwupXVsfJ1
-         yJKo6iwoZwBfHnNIU1F9xd9ltHogfUt+izB/KB1oPyVSskWCtgPgWaxR5ymYCYvjwWu0
-         +2TzzvtQNhKjSRQL9fVWeiIGhiTozY/E9slADl6i+z4lN7c0z1Ltqh6t32Mr9b0d4EOq
-         a8qgqs1xXOd462JAC+6oWTALnbFOCsb/v6NDNhwjUKL3khmZPjHkkZJZtf4jRlYLhB7U
-         ubhLKVqV9C2DXRsl8N4zAHmJ7in1982QA1KaiNJ3/qcBk7Plq4ozHfUjBLepv5qoSwER
-         GHiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782965401; x=1783570201;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=RD3AU6vU2VPlUwVyGnznpArGQ8W5Q5jnjAkJqBE07sk=;
-        b=n/8Re0Mla/XpX4laPRMuE7gTtrdPl2nnep5+5c79xuI6wGHYZJr2KVv4eprw+4T29M
-         0iqcMfIEmCLqONTCRuppm3LcQqKK/wcEmUw2s8ktvtFm+9ShJbHZDojAksIls3vsfZta
-         U59dQ+Ia2Fpf9Ly7FUIikRiVvTEuRMyTi7MHreXEKB2F4pMFQWCtWwjjZ2hdMIOodha5
-         scs0cee6uQIN6jgeCyARcWN9GweOirp8bCe2Wi6iBFy+FLqF2g9M9JHpRq6xzp6Xwd3G
-         GswMDGWYHpA/WlKjl9a7qOy84acTwA+IZcXnZD/FMPuKhOAFxZFNKIw0lD28ud9Ek92L
-         mKSw==
-X-Forwarded-Encrypted: i=1; AHgh+Ro+6GIP/u7BB0ZQmPVTyGs33n+MqqAcCrtng6zxfDa4SlLbumwfAyaUiiGGBb3P7Ei8vlr+v1aujw2G7HHz6SKi@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSe4TMQMvFBsgg8RpcW38WAIP0lD6Cx3wI+dsI6+x6LtyUEpDF
-	4SrS9iXswBn4J6Kj1286+TxSRj3ZHivG2hPvtmOQyW5B+wpZdXTbSqNU+HKQK4tEp45ma2yD4Mr
-	QMtYeUtDlvW1mbfM2GoPhGm732vzD2mUN8vopF4Tq
-X-Gm-Gg: AfdE7cl9xh1mHCNPs0GNTUqjRsPMTTIVQ4hn1+4ikzXkdDVE0/aras1TZ91m6D6VoKI
-	+Alzrnq1j/FHxMQEwIsTH65WKHS/k1OU3zuENimeAwMXEgA6vzPDWrPUb521Fnyo8e6nMZIPF90
-	AFC293oDdxMRzFa++7HWE6sR+riO11MxMdXOabPu5EfuiIBBHMWOsNQBMCb0oWKEy8t//NiTORs
-	Ft/NPtQin3rcaqIrJpEiydyYTupL3LV9K1vBO+1JvYs366oqTwO/PLhs3WYbwqTlz9VEmqtug==
-X-Received: by 2002:a17:902:c408:b0:2c7:f688:f22f with SMTP id
- d9443c01a7336-2caa6fdab93mr470055ad.13.1782965399443; Wed, 01 Jul 2026
- 21:09:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iwhgKCa5"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6621KWmc2347149;
+	Thu, 2 Jul 2026 07:17:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=NG3+xt
+	Xz56VQfjwOkQbBJY41ys0ly/eQuy6E8KfCzJI=; b=iwhgKCa50vN3gyjnZDNuBS
+	P2S+TxTIHKjQ1E7KZBEQVhjG3HCRhetk6eFb1Xo02bKxB836eH4VXNtJ5VpAs3to
+	LkDo5IjkykKEVZABiEKfeDBNxITO0CZ5oZIpKmmMRlaK+8V+VGFWIAeCg/tQK7/X
+	SZ7Z+OTkr2HnTGYKA3r0V0eQgD3xOGn3RngsFJ1MGC/PKZiW+//DTFT9tum2VMY6
+	VqTUhTR8BAz/pepuaowtiBeWTLdKxRYqlb11p0aGijAikkfPY5j7FUA6f16Y/u0q
+	36lWOgwS+H/j97ev9EY060XwxaDMXOSZ/ao9NMvUetRVBfpOQR8vKO8X1HtEPKzA
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f26mk08pd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Jul 2026 07:17:04 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66274lKQ032357;
+	Thu, 2 Jul 2026 07:17:04 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f2ruqk4qg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 02 Jul 2026 07:17:04 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6627H1ER26149460
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 2 Jul 2026 07:17:01 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3DF545805C;
+	Thu,  2 Jul 2026 07:17:01 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6A9B658051;
+	Thu,  2 Jul 2026 07:16:56 +0000 (GMT)
+Received: from [9.123.15.94] (unknown [9.123.15.94])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  2 Jul 2026 07:16:56 +0000 (GMT)
+Message-ID: <bf12f3d6-7410-44da-b4c4-32dc21244a12@linux.ibm.com>
+Date: Thu, 2 Jul 2026 12:46:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260701194153.401218-1-namhyung@kernel.org>
-In-Reply-To: <20260701194153.401218-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 1 Jul 2026 21:09:47 -0700
-X-Gm-Features: AVVi8Cek5zXmvzINfB6odq1v1gvw2NR0PwqqU2wbewYXL5qtXeCCwTi-Txsu8MQ
-Message-ID: <CAP-5=fVvxW9u2qxrqiRR2PM54REs9A4Fta5anmT=WsjoqvR+DA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] perf kvm: A small update in the default arch event
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf data convert json: Fix trace_seq memory leak in
+ process_sample_event()
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, jolsa@kernel.org,
+        adrian.hunter@intel.com, vmolnaro@redhat.com, mpetlan@redhat.com,
+        tmricht@linux.ibm.com, maddy@linux.ibm.com, irogers@google.com,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
+References: <20260604065519.112101-1-tshah@linux.ibm.com>
+ <aiHuIBAIgv3L6TI7@x1> <f6937d04-6346-443b-8054-6f8a801a4fd8@linux.ibm.com>
+ <akWEgMBK7Y39sgc8@google.com>
+Content-Language: en-US
+From: Tanushree Shah <tshah@linux.ibm.com>
+In-Reply-To: <akWEgMBK7Y39sgc8@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAyMDA2OCBTYWx0ZWRfX/HFwXSnQGDN3
+ BC92Co0rPvetjhZBDoRD2gEnE6d3qNL1xp7JclQ35WExBHdcYjxgwDX3oFIwdla5080JHW7CUGW
+ oJylx+UlvaOWFBh0EC7fwrC3X6sLK7BAx0c3rONOLYwrPIYWh5TDg/h5a5ZEDsQ2RAD5OMwzN1Y
+ W7t28o4QvoKM0VKuiL2GTXiQv2WuUMg2gPCakKNT11wHZlnWZxgJqilytteOFEdIFXbZv/0+nNO
+ evSeduXCV1mZkTUXC9B97xb/6vo892MG7Alsc8JlkYBtgndTPtS8z83r5yqoh82171kLRFXBL4j
+ zI0zAWjWFAyrLDb2LN/XpulDkxsuSssOF8/K9UiB5jzs+wZG6rqPNzJ/w05fxtP9xgY66Zr9p2I
+ BjfO4F1tmQE9YFdqRW1lN+zyKBf0aT8qh2ifNxSWwDdUbEV+P2nwuHqG4dvmC9fFYLzFR8hUzq1
+ yQ006Y54eYV//mf2EQw==
+X-Proofpoint-GUID: bNGVK8reAw3Slcxldgndc61Xwf-K-z3g
+X-Authority-Analysis: v=2.4 cv=Z8bc2nRA c=1 sm=1 tr=0 ts=6a461071 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=zBZKncBSZSZn6rxDrEwA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAyMDA2OCBTYWx0ZWRfX2I/83O3LdYj8
+ M5NWPwdC8UpTa22q4XPzBvbcCAMe8cEMiY5zA8cWfVOzDQ3lkajBGa4nvXUA7zpskxYqypDiBZr
+ Pw6UTGZi6b5T6g9O9aNIag5pHr/eBGk=
+X-Proofpoint-ORIG-GUID: s3NMyxOoKnH6nP66GYEqlQ4w8tzPGUud
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-07-02_01,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 adultscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607020068
 
-On Wed, Jul 1, 2026 at 12:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> Ian said there's an issue in the perf kvm record command line option pars=
-ing.
-> This is my attempt to address the issue, simplify the code and fix memory=
- leaks.
->
-> v3 changes)
->  * remove unnecessary error check  (Sashiko)
->  * update test code after rebase
->
-> v2 changes)
->  * handle kvm top subcommand  (Sashiko)
->  * handle other arch/condition for the default events  (Sashiko)
->  * add <stdlib.h> for musl compatibility  (Sashiko)
->  * fix some memory leaks
->
-> Thanks,
-> Namhyung
+Hi Namhyung,
 
-I built with -fsanitize=3Daddress and ran the kvm test. Everything passing.
+Yes, I was planning to send a v2 based on the review comments to fix the 
+pre-existing issue.
 
-Tested-by: Ian Rogers <irogers@google.com>
+However, Arnaldo mentioned that the original patch had already been 
+merged before I got to send a v2, so I addressed the pre-existing issue 
+in a separate patch instead. The patch is available here:
+
+https://lore.kernel.org/linux-perf-users/20260606121528.406919-2-tshah@linux.ibm.com/
+
+That said, although Arnaldo mentioned that this patch had been merged, I 
+don't see it in perf-tools-next yet either. I'll wait for him to clarify 
+its current status.
 
 Thanks,
-Ian
+Tanushree Shah
 
-> Namhyung Kim (6):
->   perf kvm: Factor out kvm_need_default_arch_event()
->   perf kvm: Check kvm_need_default_arch_event() early
->   perf kvm: Kill STRDUP_FAIL_EXIT()
->   perf kvm: Do not copy filename string
->   perf kvm: Fix a memory leak in the usage string
->   perf test: Extend perf kvm tests to check default event
->
->  tools/perf/builtin-kvm.c                      | 109 ++++++++----------
->  tools/perf/tests/shell/kvm.sh                 |  10 ++
->  .../util/kvm-stat-arch/kvm-stat-powerpc.c     |  31 +----
->  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c  |  37 +-----
->  tools/perf/util/kvm-stat.c                    |  41 +++++++
->  tools/perf/util/kvm-stat.h                    |  18 ++-
->  6 files changed, 116 insertions(+), 130 deletions(-)
->
-> --
-> 2.55.0.rc0.799.gd6f94ed593-goog
->
+On 02/07/26 02:50, Namhyung Kim wrote:
+> Hello,
+> 
+> On Thu, Jun 11, 2026 at 05:23:45PM +0530, Tanushree Shah wrote:
+>> Hello Arnaldo
+>>
+>> Thanks for checking the patch. I cannot see this patch applied on
+>> perf-tools-next yet.
+> 
+> According to the other comment, I guess you're supposed to send v2.  No?
+> 
+> Thanks,
+> Namhyung
+> 
+
