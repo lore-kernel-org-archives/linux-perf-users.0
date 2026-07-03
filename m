@@ -1,180 +1,456 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010027.outbound.protection.outlook.com [52.101.56.27])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BEC36F8E5;
-	Fri,  3 Jul 2026 08:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783068142; cv=fail; b=cp4b/sU6DRGNxgWScO3woEaSkpk2G1OKFDfwbWz7dtryDakqgBuYA8hxXRmHa43G0jsrOgjBcTYLw88rV9OhgWWfZiAG/yvm5edyy65ePP58ZNTrXB50bOZWU9hLohwi+bQLLy/89rGaNxc3er+4Oev7n9NxfWc8tkha1bXBO5A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783068142; c=relaxed/simple;
-	bh=74o8e7G/WQRXj61ww9AZTUXoj8OeiP54kkKjEwf5ZBU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pTEKxwSrQGg1/5cGJ9WOsgMq9+4iny6M4p+Up2/4zwA9yH/wx2kV/5JbG1VbRAOJ/JavF2W18bA5pJsqSpSyQ34F/D1jnj8+ebL0IqYlCjrsNBAQBTP5jFdifHdY/iI1qQZSVs78wU+JiEZZB/uMVeMktDCRj40by5SX5ZzI+64=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yjhaUP1Z; arc=fail smtp.client-ip=52.101.56.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431893812F0
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Jul 2026 08:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783069150; cv=none; b=CCM9WkooNjBCTRiFSyyGwvBgfpJyzOfCK3vgZ1SlgimlANXvOYUDRyjwHP60xp5cJNgIlg7Q1j5cMw6OoqD0qx8Ir9UHqcm1XF+EEL9zWXb4gw/x0BE+to9y+Oe4zCVLX6Qwg4Z8mI+fqOT010puoCN2Z0dDDe6zwUJl1M68zdY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783069150; c=relaxed/simple;
+	bh=BGrT6mjr1QtUVwqrL2EvIrfKu7D1HtU94Yv2YrtU2MU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cDsZ3gHzo+XU8CO7x3SHM9Y61XWe82yUGR72S1NCAOX4+UF466USNAq80NunnfnWgX4E8V4W6aadfbFI6HzPWDNn28fFFE/fsMlU16v/9oCe0JcX8JiKVOZfSp9WfMRj3R74wb4395GidN7rWihdtXokKBxFgCewsCsPBJYcIws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EYQHRcxB; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=NCY02bPl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yjhaUP1Z"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h56LM0gJEbOt0V8GnBHxxilulI1MIBshE6aIrBxa7wOx0wc8A7j8ty9H0bztZL/rKI4ri1bABxXPzAUUdiIn9tJPRfaTbL+aItdooD5KPzlPmZ2xC0xCmrH8mq2V01zR0PmkKvw+YADiy/Zjsav91DjQqC1W7XHdjhb1fdkXmD2OvMRt4EE1CUbyN69OS3eJX+6swdC4lninDMic1xg3Z5ig8DxNrRj/cHCmBcelegm2xlan9bxfh7CXTF2y3P2TLyRfGjkAQdoJtPM4Fqj8RbreHIf65SYtmPUz1aXB0uu/NGpRPPlyZUYSANJHzUMXpxvQsAWtw3UA9Mc3etsgZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UCUNIcPYFUmRXk26/vYigUG6HP//OGPVTdJyUvN9Ekw=;
- b=NuRA0lL1DzBmrmOcWocXuk6SG90427ksk3VKxzxHgxnPJbz0aGS4NNIXIo9ph3iYFSZx02gEmr+GkLu5tNHDWRNSPty6OcCwuOeI4ApiWSqqQnwGGdv8eDAukg6fSprvEYolO27JMOdlkKjwJfBEyC+51MZ+oA5GKIJfoNguUeA5zP9aLNOzlCu4YwMabNwtpeQtPA1WRUk4jY27/9hjsACwtII623sU7q1WIaheXdH7DN0nZ84NPxitr95eRrJZw6jLDV5Jm4oe6Y0piC3H0uBrMKjkylzyMigwR06DHDFr/VanWORlDm4l946Ykf4mt0b2ihm+NPG4Uv/zpCrJHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UCUNIcPYFUmRXk26/vYigUG6HP//OGPVTdJyUvN9Ekw=;
- b=yjhaUP1ZMRu0OjaXK3/5msPn9EBi5eJH3W08Jkx2PASajbixnnXAe6GtDHK77Y1loDOVPF6cv75a+CzMfPn2deCtu2W6YQO+EmSPCQlbWV2OLt0R3CW+PMygYm5bkGnJ/TuQTty/k7jN6Fgwuntw+2LJBY3GwNz/1Ha7IYGweYo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by MN0PR12MB5762.namprd12.prod.outlook.com (2603:10b6:208:375::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Fri, 3 Jul
- 2026 08:42:15 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0181.008; Fri, 3 Jul 2026
- 08:42:14 +0000
-Message-ID: <44959c7f-fedd-413e-bb2f-07f97142aef8@amd.com>
-Date: Fri, 3 Jul 2026 14:11:58 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] perf/x86/amd/uncore: Add common helpers and Hygon
- support
-To: Qi Liu <liuqi@hygon.cn>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- lijing@hygon.cn, peterz@infradead.org, mingo@redhat.com,
- namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- x86@kernel.org
-References: <20260701093417.1312443-1-liuqi@hygon.cn>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <20260701093417.1312443-1-liuqi@hygon.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN0PR01CA0026.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:4e::20) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYQHRcxB";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCY02bPl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783069147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y2LTqgcZL5QIC6ifv5mhWJiQaon6VL2pkLdi6WE7h8A=;
+	b=EYQHRcxBBxRD7UzT2X+xlOwNeUiGfnvDgCiTZb4wKGsk3TljF9v188nYA91USo57OQwdCC
+	lzKUZbthjSaZIsvKm18bXPpAJFU95n4nVePtZ+EOOnyaSgkBDfOtbHsHcz3KwabhNS1IXE
+	j2jDcOzE1aq5ZNedn7VpTA2PWEXlH+I=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-528-S8UqxZriNPmzPjBWGVpYNg-1; Fri, 03 Jul 2026 04:59:06 -0400
+X-MC-Unique: S8UqxZriNPmzPjBWGVpYNg-1
+X-Mimecast-MFC-AGG-ID: S8UqxZriNPmzPjBWGVpYNg_1783069145
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-4754fc5c021so222537f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jul 2026 01:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1783069145; x=1783673945; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y2LTqgcZL5QIC6ifv5mhWJiQaon6VL2pkLdi6WE7h8A=;
+        b=NCY02bPljwIbzPY6zz3/irbdtzqYOxQX3xvl7UAtrXTZr7g9pDM5qLtVSQVEQwXAhk
+         xtgKGfLV0T1THkcSKCl2msx88VYfcKBbwh3l+JWkeH+CwJwwfievnEQPcrxSO+M1bL8Y
+         qd5n3IEn1AX5YfLYrxU4Ft4HKGsJR2sgaZIlcJp6JB13F66HhXZ/2QdAVRwkxI+gX4r2
+         POdo0+UUrVAjiah+SMNh4pBh8S5CBsnrEqcU67tBWsQHLZ/basymE4k0y1+g6ARbSXux
+         nmuNMcwKcB5pxyt6AUZ3fjEmhaPPef9mJiiO608E6X7C+EkWmIav/vezcMOtGV93o/0T
+         w5eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783069145; x=1783673945;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y2LTqgcZL5QIC6ifv5mhWJiQaon6VL2pkLdi6WE7h8A=;
+        b=RjrAMQ1BMK0WXqGIfN3+PGeNRPhYytzUu9Gr47Sk7c4UsrYiTTGwQsAcLWv15z91Rd
+         M2WslVNW1yp+kBlcj09bYJ9lVO80b7ooXX0heUb0Yx6TLWRXqAfmlnuh+1XdnmRovGEu
+         8sDKaWsrT5wFAa86fp9ZGsENoCBMbnzPU31yhl8Qr9tYz4/qbiNK72YjCUM+2EHg1O19
+         +TsewQEbFP/dL7gHKFwRT92yd8Lrtln2jRcJk9/xUKNhB9uty1yWbbQwzXC7JdoQWzKy
+         H0DyhONiObrWm3t5Wt0FdaVFv9OJ2cA1t5BHTy/VEENHE81rzct6eF0fbLO1XRuduIOv
+         raLg==
+X-Forwarded-Encrypted: i=1; AHgh+RpOTc/+9JIW8XC1JQiQ8z7RD00CT8svlDUFLjHdXupVFRoW4p+7q1BJ9MM4YQhcEKZxBLDC/wR9848A9BNQc6xv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM2+bhUpELS4P+wlocmUcOSACQ9TgK6G5UDqTrmXRQtC0sK7Dt
+	mUZUVRdyNwIW9zCe7Bj5PSgWfXYdMpB1AuL/1HfOKUhejZyIGPGpxd32bcmzxkrLPcRF5dFOAPO
+	cCiJWZX71rBLw5XjcnBbjy+botR2Vjx7JxMVU78pskA3Suv0XOscIfTBpl9GEk5ym5zjW9w==
+X-Gm-Gg: AfdE7ckcjR6nHKbgfhjTLRJqah/Lrj8dkW+cflHV35KYQ289zMRU6zezldeet3oOl8y
+	zoeTVcSAQ6n1gtVlj+5gGOZIgUG6LRuyosVGH67WM58xKJUjNdxE47MVXf3NaOVOSf/r0QS1L5F
+	Kjks+v35a1RXdw9N6UiCe74Qfr93Nqd64yI/bcsSqxAS7jQuxDnejC6bXy9jXAlp3FfE5Qi4Mwq
+	HL7jjn6+daL6H2HvOn/hUAtr9eaXk8RADcG7VHLS8x6A+aaomGDlGWdeSVOiX3kH1TbmT5Gk+ew
+	VrXzCDZ55Hn9mi9RZSgrbkOJeQ9eOxrPHDTVRDFWqxsk2IaGMibfccjSkyPgvs5UzB5Aaacjkhl
+	AT0w9WzEavQ0ekHaSwvdT7ATsZhTkfec0VopL5MC1
+X-Received: by 2002:a05:6000:2c0f:b0:46f:7d90:8121 with SMTP id ffacd0b85a97d-477583280e8mr14001435f8f.14.1783069144632;
+        Fri, 03 Jul 2026 01:59:04 -0700 (PDT)
+X-Received: by 2002:a05:6000:2c0f:b0:46f:7d90:8121 with SMTP id ffacd0b85a97d-477583280e8mr14001342f8f.14.1783069143587;
+        Fri, 03 Jul 2026 01:59:03 -0700 (PDT)
+Received: from [192.168.0.199] (adsl-dyn37.91-127-59.t-com.sk. [91.127.59.37])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-477ddf0f433sm19404119f8f.32.2026.07.03.01.59.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2026 01:59:02 -0700 (PDT)
+Message-ID: <918b004a-4184-44a0-ba36-ac0e0a43da71@redhat.com>
+Date: Fri, 3 Jul 2026 10:59:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|MN0PR12MB5762:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2422e2c9-8380-48d7-75d2-08ded8defb09
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|22082099003|18002099003|56012099006|6133799003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	UFPEM56ORY+jBaqa8n9B4P417sHfqGz3MSKhXrMWrpQBuyAQdvRaUtk/p9Z4c6l6AfoNjpsG2NBQRODK7bxzPNqrkRjhZLCyqJgqrOoLKPZcuNrnrVy5kBMJkYPDBMbEVlhCB0UpUO49eNnw+gRm+JZq0Egty6PNS+F+x8cjfj/6HPW7VMBZvwo4nNoJqMqTBgwJ7fjfxzVKBZOLRWMkF3xgDrpeWp85epsKPiDOCYM2LlfIpUsdmGniWUvLyceW3HM2PJDs4FQMwU5VqlC1q/wEz8tipA+jEkav0Ucc2waq9m9PcB77y523j8KKNkwhTzLy0Qx6ku6X1FTjPSjP1xPzoSmmDVf+MoKRyI5wY8nuMCgFYdl61PxPmD6AATWToX9dieiTlZlXlFElZoVzFL8UlhnDaSvno49VmLEIc6MQst99rzc2ar95ETIr6SiMKEujgtZ6Ts9HleWAc3UYEQtB/Z27QLgy7U8Ao8Jv200z65zsHSPKtADcbO2ndcD37V/wk1VfPll3z6mhv9NDEb5M+fTNMo/MVcn11XBtIDe8fJttIejR/c4OIPSbDWd1etSm4X7OoxYlijvVDb+E34pS3vL6UNQkDkd4FUTSum10kc9jnxjItWWsHFY+IkyttFeiu2L+usXczNpCIDt28BbpOUFUh1bZTwisUCjWCTc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(22082099003)(18002099003)(56012099006)(6133799003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VnpMQzdVUmdIU3M2d0EwanF5WVk5NEowcEhYbFVwb0l1TkRHS082SzVyMWY1?=
- =?utf-8?B?bm41K0EwNlVPWjViMS9PdFNFeXUvZEVTT1dmSk1Lc2JFWC9BNDBrb2FGeUZi?=
- =?utf-8?B?RnZYWjk4Sk14Qmt6WHV2TEIxM09OYWNIbUpRSytvN241Wnd2M2JtY0tqYnRk?=
- =?utf-8?B?T1ZTT3JSRGN0dWdpeXJOQ1JmM2kzenJFU1FXUHdDYUJKTlZRSk81TGRLYWI3?=
- =?utf-8?B?NzYyekxOLzdKWEtrZVR1dlorMVprSHR2UHZVODczVWtxZUdjTVlsRTYrdEVI?=
- =?utf-8?B?UXRGMWdnc25xVVZxUEZBcVhoWmtVdURITGpCQjhSSTRheXVkaFdqVUlNWWNM?=
- =?utf-8?B?Y2M3TE94NkdjSld0cXJOUmR1dWVPMFJ2ZTFObzZ1cW9iZVZrVUpBTWNqUHRp?=
- =?utf-8?B?S3VYbGhsVXY3VVpBcUdMZTkxVkdsUWNTd3NmaDVrSU9kTTZrampWWHhsTHZ4?=
- =?utf-8?B?SjZqTUhreU9JTUhLVDNwUmF5KzJpWitvZGsweWErV0xtbVZJamNGTTJUMDkz?=
- =?utf-8?B?ZFZBcXRydzR4VGlOdHRJYW9oQll1YkZnbDRkMkhPVU10OSsxYnhwWlA0RlFx?=
- =?utf-8?B?bXU1SVpoWVdtOG1jNHB2RnNtSUlOTjEzVXA3bklnY1pEeVpkeVI5STl4ODRO?=
- =?utf-8?B?clMvSmk2Y25Sc3JKWFVQaDBKRmdPZUc4OTFwclNKTjF3TkFvUVhHaVk4UEdH?=
- =?utf-8?B?UHNsSjhub0pVZHFqQ1pFUytFVGwvc0Uxd1czZUNOK2FrNGNtRjhQbENvUDU3?=
- =?utf-8?B?SDFESDJXb2ZVMHM3d0ljL0R3UlRyTmRxUFlxbzQzMzlwVWQ0NitUb0hocEpq?=
- =?utf-8?B?RFhma2VRQ1orRDJTOS9kNTFKeXBCOGdhSkZza21vaHVXMUg4eTlxSHlDbmk1?=
- =?utf-8?B?UGo2b1pvUW5ScHJaQUVMQytnYW51VHBYdnlZMFhhK0pvV1cwaW9BWFFLeGE0?=
- =?utf-8?B?anZrcnhBRjRKdDFqd3ZMc09tYlkzWStaKzVUQ2tnVlRuclBvcmN1WHIzNXJM?=
- =?utf-8?B?dkkrRWZGRlhZSm1ZU0dnN3V3VXVtTFduWjBEakNqaGdIcWpqSzdNSHJCWEpY?=
- =?utf-8?B?eXI1VzVmTU4ycVV0dzVCZG9iMkE4dGtlNmU1UDh4b0RoUG9RalRmSFloZXov?=
- =?utf-8?B?MUdrTml2K0duU201TnhFOXFRZmYrellrbzdTcVlyZDZqazV2Y0lyS2lERXFq?=
- =?utf-8?B?dE5hZUZQK2FnME1yYjJLSUVEbmd5N3BzTmpoRHROK2RMWnJFMHVrVFZKSUpp?=
- =?utf-8?B?aWxvVFlobzdNaC8wc0hnNzIrWCtoWjluZE5SZlB5cEo4eStKazNaU0RrMytl?=
- =?utf-8?B?aE9TTGtSYVJxdm9EYzlTSFIveGdKTGIyNy83YnplRUlZVEsvZU00dUdoTTdW?=
- =?utf-8?B?VmZGVDFkYStWQzluVys0YU9rR0pzNWppWnlMazdnY1FlekJ4K2d6QmdaWTdF?=
- =?utf-8?B?Qzc1OGpNaUNVY1hwcm45ODd1bVIzSVEvVnRYaXIrTy94NXVwS0k0eHNxeFNn?=
- =?utf-8?B?NEFZSnlITDFITTVoSk9TTGROSXNyblc0clRoNGdZdVhqb1RQYzZJbE0wQTFE?=
- =?utf-8?B?UXVkUURGTGhUdGpER08yWUZkanNRZjI0MS81MzhZaHg0bTZVNllPV29iMFRR?=
- =?utf-8?B?NkxUbTRvUHJZdTBLUWVwaUwvN04rN0crVzJBWVl1NGRjMFcraVF1VDV6MHZa?=
- =?utf-8?B?SVl6NDJlRjRzTXJvb1o5MTNhL24wUzVpZjVTelVMaXBxVjFDaDZpMlJJY3ZU?=
- =?utf-8?B?eEFEMUVRRkh6bTY5VTNSWE9NWXpGZkJ6UmNBWlVPWWtrckdEL0RURnBVZTZm?=
- =?utf-8?B?Q2RHMFdMNkFpMUJWbFM2OFlDSjUzTituRHpSMU9sNGwzcWMyZVIxYmRocWtq?=
- =?utf-8?B?bEZnZDJtYzRxUDRrYVpod1oyamMxSHNEV1pLdmNYb0ZWR05KYWwvdVhFSkRh?=
- =?utf-8?B?R25jeGhvbkJudnBHWXB0VU4yRFo4OGxIVUZyMzNTMUpwV0Y0czcwRWVhYlFT?=
- =?utf-8?B?WFFNY1RwVlFoZVVoUlQ1SmdCV1pwZ0FWQmN4NUFuSW5GQjYrYVBZSlZBU3Q1?=
- =?utf-8?B?c0N3bmZ0WDUrUllpQ2RxQkl5RXlreEdLWnFFZTNJUGZJYmlPVmRRTmlUNmZl?=
- =?utf-8?B?UjRXL3MwejFLU05kYk1CRkhvRXdIK1NTMG1FK0hvRit3NE94VGNQU2tha3ZH?=
- =?utf-8?B?T1ZNbysvbm9Bay90c3d4Zk51VTB2RkdpQVhodVRBeE0yZ2MvOHlVMVdFRU5V?=
- =?utf-8?B?QXJGZHNoYmhEWW1wRmxNQ0ZOakVqOXFvWWNRTFlOZmw2RStFQTVTR2JTMUZP?=
- =?utf-8?B?R0JaSE5xcyt1ZUdSOVQ4MExOQTY4dFQ5bmJuRHRCRm9kOW1VcGhzdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2422e2c9-8380-48d7-75d2-08ded8defb09
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2026 08:42:14.4899
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0PNY2G5GSHd0cup7epFRaCiiOI5S+tTzyqWymIyqJXFmbP0/uCNt9XJXN95SCtzRVjT10KqaxCRyz+X6mUoadQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5762
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf trace: Refactor augmented_raw_syscalls using
+ bpf_loop
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ Michael Petlan <mpetlan@redhat.com>, stable@vger.kernel.org
+References: <20260623112533.1151502-1-vmalik@redhat.com>
+ <DJGJ9F6WQZV9.2W4WBIHYLJQ97@gmail.com> <ajq98dm4gAwEzkMb@google.com>
+ <c2f4e45e-d5c9-42e9-a46b-25fb0cacb267@redhat.com>
+ <93e70dc7-e52f-444e-b57e-09d149dc4808@redhat.com>
+ <CAEf4BzYWdsBDQ3D41=+n_oCO68bVOtKuqQCqZOEVo=j7nK9Ozg@mail.gmail.com>
+ <82252ae0-133a-45dc-9622-315236a437ad@redhat.com>
+ <CAEf4Bza8vFSkuiD_Vd47-eGuDS40kKvTcHQR=V3OY=c505a9=g@mail.gmail.com>
+ <4f43e9aa-2444-407b-ae52-0f4bf889ec17@redhat.com>
+ <CAEf4Bzb4niXoqLDWvD211M9eJ+Wo5KT2ezVYtTVABVOGOLe=Ug@mail.gmail.com>
+From: Viktor Malik <vmalik@redhat.com>
+Content-Language: en-US
+In-Reply-To: <CAEf4Bzb4niXoqLDWvD211M9eJ+Wo5KT2ezVYtTVABVOGOLe=Ug@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 01-07-2026 15:04, Qi Liu wrote:
-> This series adds initial Hygon uncore PMU support.
+On 7/1/26 20:06, Andrii Nakryiko wrote:
+> On Thu, Jun 25, 2026 at 11:04 PM Viktor Malik <vmalik@redhat.com> wrote:
+>>
+>> On 6/25/26 19:55, Andrii Nakryiko wrote:
+>>> On Thu, Jun 25, 2026 at 4:58 AM Viktor Malik <vmalik@redhat.com> wrote:
+>>>>
+>>>> On 6/24/26 19:19, Andrii Nakryiko wrote:
+>>>>> On Wed, Jun 24, 2026 at 3:27 AM Viktor Malik <vmalik@redhat.com> wrote:
+>>>>>>
+>>>>>> On 6/24/26 08:47, Viktor Malik wrote:
+>>>>>>> On 6/23/26 19:10, Namhyung Kim wrote:
+>>>>>>>> Hello,
+>>>>>>>>
+>>>>>>>> On Tue, Jun 23, 2026 at 08:27:39AM -0700, Alexei Starovoitov wrote:
+>>>>>>>>> On Tue Jun 23, 2026 at 4:25 AM PDT, Viktor Malik wrote:
+>>>>>>>>>> The loop for processing syscall args in augment_raw_syscalls has a
+>>>>>>>>>> history of breaking with Clang updates, see e.g. commit 013eb043f37b
+>>>>>>>>>> ("perf trace: Fix BPF loading failure (-E2BIG)") from Clang 15 to 16.
+>>>>>>>>>>
+>>>>>>>>>> Now, a similar thing happened between Clang 21 and 22. While the issue
+>>>>>>>>>> is mitigated on the main line by a recent verifier update, it remains
+>>>>>>>>>> broken on the 6.12 and 6.18 stable branches:
+>>>>>>>>>>
+>>>>>>>>>>     [linux-6.18.y]# sudo perf trace true
+>>>>>>>>>>     libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
+>>>>>>>>>>     libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+>>>>>>>>>>     [...]
+>>>>>>>>>>     BPF program is too large. Processed 1000001 insn
+>>>>>>>>>>     processed 1000001 insns (limit 1000000) max_states_per_insn 40 total_states 37941 peak_states 232 mark_read 0
+>>>>>>>>>>     -- END PROG LOAD LOG --
+>>>>>>>>>>     libbpf: prog 'sys_enter': failed to load: -E2BIG
+>>>>>>>>>>     libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+>>>>>>>>>>     libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -E2BIG
+>>>>>>>>>>     Error: failed to get syscall or beauty map fd
+>>>>>>>>>>     [...]
+>>>>>>>>>>
+>>>>>>>>>> The reason is that the loop is quite complex and the BPF verifier often
+>>>>>>>>>> struggles to prove that it terminates.
+>>>>>>>>>>
+>>>>>>>>>> Fix the issue by refactoring the loop body into a callback function and
+>>>>>>>>>> calling the bpf_loop helper. This should prevent future breakages of
+>>>>>>>>>> this kind since the callback function has no loops. It also allows to
+>>>>>>>>>> drop a few artificial checks to help the verifier, including the changes
+>>>>>>>>>> introduced by 013eb043f37b.
+>>>>>>>>
+>>>>>>>> Thanks for working on this.  I encountered this issue before and never
+>>>>>>>> found time to take a deeper look yet.
+>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Viktor Malik <vmalik@redhat.com>
+>>>>>>>>>> Fixes: a68fd6a6cdd3 ("perf trace: Collect augmented data using BPF")
+>>>>>>>>>> Fixes: 013eb043f37b ("perf trace: Fix BPF loading failure (-E2BIG)")
+>>>>>>>>>> Cc: stable@vger.kernel.org
+>>>>>>>>>> ---
+>>>>>>>>>>  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 157 +++++++++++-------
+>>>>>>>>>>  1 file changed, 96 insertions(+), 61 deletions(-)
 > 
-> Hygon uncore PMUs use a programming model close to the AMD uncore PMU,
-> so this series factors out a small set of common helpers for perf event
-> handling, counter assignment and per-CPU context management.
+> [...]
 > 
-> The Hygon-specific support is kept in the Hygon driver. This series
-> supports the Hygon DF and DF IOD PMUs. No Hygon-specific logic is
-> added to the AMD driver.
+>>>>>>>>>> +  struct args_loop_ctx loop_ctx = {
+>>>>>>>>>> +          .args = args,
+>>>>>>>>>> +          .beauty_map = beauty_map,
+>>>>>>>>>> +          .payload_offset = payload_offset,
+>>>>>>>>>> +          .value_size = value_size,
+>>>>>>>>>> +          .output = &output,
+>>>>>>>>>> +          .do_output = &do_output
+>>>>>>>>>> +  };
+>>>>>>>>>> +  iters = bpf_loop(6, process_arg_cb, &loop_ctx, 0);
+>>>>>>>>>
+>>>>>>>>> bpf_loop() is old and generally not recommended.
+>>>>>>>>> Please use bpf_for() then the diff will be one line change and
+>>>>>>>>> can scale to any number of args. Not just 6.
+>>>>>>>
+>>>>>>> Thanks Alexei, I didn't know about this preference.
+>>>>>>>
+>>>>>>>> One thing we should take care is to support old kernels.  The oldest
+>>>>>>>> LTS kernel in the kernel.org is 5.10 and bpf_loop() was introduced in
+>>>>>>>> 5.17 and bpf_for (bpf_iter_num) was 6.4.
+>>>>>>>
+>>>>>>> The problematic loop was introduced in 6.12 by a68fd6a6cdd3 ("perf
+>>>>>>> trace: Collect augmented data using BPF") so we should be good using
+>>>>>>> bpf_for. Or is perf from 7.2 supposed to work on 5.10 LTS kernels?
+>>>>>>>
+>>>>>>> I'll refactor with bpf_for and will send v2.
+>>>>>>
+>>>>>> Or I won't. It turns out that just swapping the for loop for bpf_for
+>>>>>> leads to -E2BIG from the verifier again. Looking at the verifier log, it
+>>>>>> fails to find equivalence between states at the loop head:
+>>>>>>
+>>>>>>     [...]
+>>>>>>     78: (85) call bpf_iter_num_next#84922 [...]
+>>>>>> fp-56=map_value(map=beauty_payload_,ks=4,vs=24688,imm=112)
+>>>>>>     [...]
+>>>>>>     78: (85) call bpf_iter_num_next#84922 [...]
+>>>>>> fp-56=map_value(map=beauty_payload_,ks=4,vs=24688,imm=120)
+>>>>>>     [...]
+>>>>>>
+>>>>>> IMHO, the reason is that payload_offset, which points to the
+>>>>>> beauty_payload_enter_map entry, gets updated in every iteration.
+>>>>>>
+>>>>>> This could be probably fixed on the perf side by reworking how augmented
+>>>>>> args are stored but at this point, bpf_loop sounds like an easier and
+>>>>>> more reliable approach.
+>>>>>>
+>>>>>> Let me know if anyone has objections, otherwise I'll send v2 of the
+>>>>>> bpf_loop approach, with suggestions from Sashiko incorporated.
+>>>>>>
+>>>>>
+>>>>> I'd still try to adapt bpf_for(), it's a much better code structure.
+>>>>> You probably need to add a bounding checking/confirming `if ()`
+>>>>> condition validating that offset at which you access map_value is
+>>>>> always correct. And/or you might need barrier_var() before using i,
+>>>>> because bpf_for() macro does bounds checking (check the macro itself),
+>>>>> but compiler often will reorder instructions leading to verifier
+>>>>> complaints.
+>>>>
+>>>> I gave it a try but wasn't successful so far. I think that the problem
+>>>> is that while it would be possible to add an upper bound condition for
+>>>> `payload_offset`, the verifier tracks the value of `payload_offset` too
+>>>> precisely (as map_value(..., imm=X) with a concrete offset) and never
+>>>> merges states with different offsets. And since there are multiple
+>>>> branches inside the loop, each incrementing `payload_offset` by a
+>>>> different value, the verifier seems to fork its state on each branch,
+>>>> effectively leading to the amount of states growing exponentially and
+>>>> hitting the jump limit.
+>>>>
+>>>> To me, bpf_loop sounds like a more reliable choice in this situation.
+>>>
+>>> correctly verified bpf_loop would basically have to follow the same
+>>> logic, so if it works with bpf_loop, it should work with bpf_for.
+>>
+>> Are you sure about that? My perception is that the bpf_loop callback is
+>> only verified once in a single pass. On the contrary, bpf_for is a
+>> normal loop, for which the verifier needs to prove that after some
+>> iteration, we get to the state seen in a previous iteration (to prune
+>> the state). Which never happens here because the offset to
+>> beauty_payload_enter_map (the payload_offset var) is tracked precisely
+>> and causes state forks on every condition inside the loop.
 > 
-> Changes since RFC:
->   - Address sashiko bot review.
-> Changes since v1:
->   - Rename the helper namespace to amd_uncore_common_* to avoid
->     an generic uncore_common_* prefix, and to keep it distinct
->     from the existing amd_uncore_* names.
+> Hey Viktor,
+> 
+> Sorry for taking so long to get back.
+
+Hey Andrii,
+
+np, thanks for taking a look!
+
+> Answering your question about bpf_loop() vs bpf_for() they are
+> conceptually the same from verifier POV, so they are verified
+> similarly. Earlier (buggier) versions of verifier did have a loophole
+> where we verifier bpf_loop() in more laxed single-shot way, but that's
+> not correct. We have since fixed that and it (bpf_loop) now has to
+> "prove" convergence just like bpf_for().
+
+Right, this is the piece of the information that I was missing. It now
+makes much more sense.
+
+> Anyways, the biggest issue with "normal" unrolled BPF loop is that
+> people tend to write it such that there is some carry-over state
+> between each iteration (like output variable which tracks advancing
+> but bounded offset) which, with fixed number of iterations allows
+> verifier to prove everything is bounded.
+> 
+> This model is really-really bad for bpf_for() because it doesn't allow
+> convergence. The trick is to structure each iteration as independent
+> piece of calculation where the state outside of bpf_for() loop stays
+> as unspecific/imprecise as possible, which at the beginning of the
+> loop you revalidate invariants, if necessary (e.g., reestablish
+> map_value offset boundaries).
+>
+> Anyways, it needed a bit of persuasion, but here's the verification
+> result and gmail-butchered diff below. The trick is in making output
+> imprecise (force verifier to forget its tracked range), so it doesn't
+> differ between iterations from verifier POV. That's what the global
+> ZERO allows to do. (We've discussed w/ Alexei and Eduard adding
+> special instruction to force scalar register into imprecise, it would
+> be a cleaner solution here, alas we never got anywhere with this,
+> unfortunately).
+
+Many thanks for the patch! Looking at it, I got pretty close during my
+attempts, I only missed the ZERO trick, which is obviously crucial. I
+was worried I'll have to rewrite the logic much more to get rid of the
+concrete carry-over state but this is really neat.
+
+I'm wondering if we could teach the verifier to figure out that it's
+tracking a value too precisely in an iterator-based loop and convert it
+to a range (sort of a "widening" operation). But I guess that this part
+is going to be changed quite a bit with the upcoming verifier change
+that Alexei is working on.
+
+I'll take your change and send v2 of the patch (with a fall back to
+standard for loop to keep backwards compatibility).
+
+Thanks again!
+Viktor
+
+> Processing 'augmented_raw_syscalls.bpf.o'...
+> PROCESSING ./util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o/sys_enter,
+> DURATION US: 1129, VERDICT: success, VERIFIER LOG:
+> verification time 1129 usec
+> stack depth 64
+> processed 547 insns (limit 1000000) max_states_per_insn 4 total_states
+> 38 peak_states 67 mark_read 0
+> 
+> File                          Program    Verdict  Duration (us)  Insns
+>  States  Program size  Jited size
+> ----------------------------  ---------  -------  -------------  -----
+>  ------  ------------  ----------
+> augmented_raw_syscalls.bpf.o  sys_enter  success           1129    547
+>      38           172         917
+> ----------------------------  ---------  -------  -------------  -----
+>  ------  ------------  ----------
+> 
+> The diff:
+> 
+> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> index 2a6e61864ee0..8436368ba203 100644
+> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> @@ -429,15 +429,17 @@ static bool pid_filter__has(struct pids_filtered
+> *pids, pid_t pid)
+>         return bpf_map_lookup_elem(pids, &pid) != NULL;
+>  }
+> 
+> +u64 ZERO = 0;
+> +
+>  static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  {
+>         bool augmented, do_output = false;
+> -       int zero = 0, index, value_size = sizeof(struct augmented_arg)
+> - offsetof(struct augmented_arg, value);
+> +       int i, zero = 0, index, value_size = sizeof(struct
+> augmented_arg) - offsetof(struct augmented_arg, value);
+>         u64 output = 0; /* has to be u64, otherwise it won't pass the
+> verifier */
+>         s64 aug_size, size;
+>         unsigned int nr, *beauty_map;
+>         struct beauty_payload_enter *payload;
+> -       void *arg, *payload_offset;
+> +       void *arg;
+> 
+>         /* fall back to do predefined tail call */
+>         if (args == NULL)
+> @@ -449,7 +451,6 @@ static int augment_sys_enter(void *ctx, struct
+> syscall_enter_args *args)
+> 
+>         /* set up payload for output */
+>         payload        = bpf_map_lookup_elem(&beauty_payload_enter_map, &zero);
+> -       payload_offset = (void *)&payload->aug_args;
+> 
+>         if (beauty_map == NULL || payload == NULL)
+>                 return 1;
+> @@ -466,7 +467,7 @@ static int augment_sys_enter(void *ctx, struct
+> syscall_enter_args *args)
+>          * struct: size of struct             -> size of struct
+>          * buffer: -1 * (index of paired len) -> value of paired len
+> (maximum: TRACE_AUG_MAX_BUF)
+>          */
+> -       for (int i = 0; i < 6; i++) {
+> +       bpf_for(i, 0, 6) {
+>                 arg = (void *)args->args[i];
+>                 augmented = false;
+>                 size = beauty_map[i];
+> @@ -475,6 +476,11 @@ static int augment_sys_enter(void *ctx, struct
+> syscall_enter_args *args)
+>                 if (size == 0 || arg == NULL)
+>                         continue;
+> 
+> +               if (output > sizeof(payload->aug_args) -
+> sizeof(payload->aug_args[0]))
+> +                       break; /* can't/shouldn't happen */
+> +               barrier_var(output);
+> +               void *payload_offset = (void *)&payload->aug_args + output;
+> +
+>                 if (size == 1) { /* string */
+>                         aug_size = bpf_probe_read_user_str(((struct
+> augmented_arg *)payload_offset)->value, value_size, arg);
+>                         /* minimum of 0 to pass the verifier */
+> @@ -510,7 +516,7 @@ static int augment_sys_enter(void *ctx, struct
+> syscall_enter_args *args)
+> 
+>                         ((struct augmented_arg *)payload_offset)->size
+> = aug_size;
+>                         output += written;
+> -                       payload_offset += written;
+> +                       output += ZERO; /* forget range */
+>                         do_output = true;
+>                 }
+>         }
 > 
 > 
-> Qi Liu (3):
->   perf/x86/amd/uncore: Add common PMU helper functions
->   perf/x86/amd/uncore: Convert AMD driver to common PMU helpers
->   perf/x86/amd/uncore: Add Hygon uncore PMU support
-> 
->  arch/x86/events/Kconfig                 |  17 +
->  arch/x86/events/amd/Makefile            |   4 +
->  arch/x86/events/amd/amd_uncore_common.c | 403 +++++++++++++++++
->  arch/x86/events/amd/amd_uncore_common.h | 114 +++++
->  arch/x86/events/amd/hygon_uncore.c      | 556 +++++++++++++++++++++++
->  arch/x86/events/amd/uncore.c            | 578 +++---------------------
->  arch/x86/include/asm/msr-index.h        |   2 +
->  arch/x86/include/asm/perf_event.h       |  20 +
->  include/linux/cpuhotplug.h              |   3 +
->  9 files changed, 1192 insertions(+), 505 deletions(-)
->  create mode 100644 arch/x86/events/amd/amd_uncore_common.c
->  create mode 100644 arch/x86/events/amd/amd_uncore_common.h
->  create mode 100644 arch/x86/events/amd/hygon_uncore.c
+>>
+>>> Is
+>>> it possible to share your bpf_for-based code in some branch to try
+>>> locally? I'm sure it can be done one way or another.
+>>
+>> The change is super-simple, I can as well share it here. It's just the
+>> matter of using bpf_for with two additional suggested mechanisms,
+>> barrier_var and a bounds check for payload_offset:
+>>
+>> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+>> index 2a6e61864ee0..341d77a78949 100644
+>> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+>> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+>> @@ -432,7 +432,7 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
+>>  static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>>  {
+>>         bool augmented, do_output = false;
+>> -       int zero = 0, index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
+>> +       int zero = 0, i, index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
+>>         u64 output = 0; /* has to be u64, otherwise it won't pass the verifier */
+>>         s64 aug_size, size;
+>>         unsigned int nr, *beauty_map;
+>> @@ -466,12 +466,16 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>>          * struct: size of struct             -> size of struct
+>>          * buffer: -1 * (index of paired len) -> value of paired len (maximum: TRACE_AUG_MAX_BUF)
+>>          */
+>> -       for (int i = 0; i < 6; i++) {
+>> +       bpf_for(i, 0, 6) {
+>> +               barrier_var(i);
+>>                 arg = (void *)args->args[i];
+>>                 augmented = false;
+>>                 size = beauty_map[i];
+>>                 aug_size = size; /* size of the augmented data read from user space */
+>>
+>> +               if (payload_offset + sizeof(struct augmented_arg) > (void *)payload + sizeof(struct beauty_payload_enter))
+>> +                       break;
+>> +
+>>                 if (size == 0 || arg == NULL)
+>>                         continue;
+>>
+>>
+>> Thanks a lot for the help!
+>> Viktor
+>>
 > 
 
-I am trying to understand if the code movement is necessary.
-Wouldn't it be sufficient to just add the following?
- - new UNCORE_TYPE_HYGON_DF and UNCORE_TYPE_HYGON_DF_IOD types
- - Hygon-specific attr_groups, pmu->event_init(), pmu->add(),
-   amd_uncore->init() and amd_uncore->scan() implementations
-
-Using new PMU names will also require tools-side changes. Additionally,
-to make the PMUs actually useful, new JSON events and metrics need to
-be added. Are there plans for that?
