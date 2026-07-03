@@ -1,108 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91002184540
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Jul 2026 12:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52F93D647C
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Jul 2026 13:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783082903; cv=none; b=naGLpbf9tLU+kb7feNc1jErchR0S4lo/oomxfcD5ObKMyS5IDmxgS154trxY6GP6+fLOoWbem3G7pcmGFsaVkbuBhmr76RH/4Yfb7eUDZGW1BGPMeLvzJ5XgM+eolU1jO+8a3Peyi4IFXEAPNGjYgqXugyS9nk3rizqQPyxHeww=
+	t=1783085767; cv=none; b=Ay8oIJsNQ9tRu//m5Q/ydO30vUNFBh5/eZTk4deSH/eAH8BGi43GdwYD+nEDD/ZeLnkZ0HUZMb0duQJ10fli6FzFf6CBnS4tDLMnXaJEqn41TLl4R68hW+0EyId/FTxwmoyft4o9bKKcvKYDw2CAUTRTz+HZgVCP8Zk4MkI4aF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783082903; c=relaxed/simple;
-	bh=dceXvne/nCelBiKqglaEc9x7f2WnQBmzW+j2d9dOBQE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Sy0wVSCb1WmOnZMrPdK6wPE4OM1iGC2/aXTi0sclH9LY2ojxA64CqE9X7aWX4pd8xtGlZps9bgBruogrOHkZqPu+Dg/cuQEmebNDg25EKp7itcsD1aCflbn0OMTNUQBNe0Afgr1LlyQt5dwM41hUmZTSaAlau/ycYxDrTQiVG+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RzosZcZ+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783085767; c=relaxed/simple;
+	bh=3+iyZZJ72WgUSPLdNBTNWi2rabs+mKXDECi8R3MNjWs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AUbQU1PdFyjR6Ha0oxkPF1cb4dZBie9nhdJAQUm+OuMtnhiu+WUt1hgA7wZRfc5kmHlkBcHoKQI3W/9735pg1vlt2mr6PeXlTHSANIwnfLlKnMcSDv53B+O0XkWxxlpDvVvc9iw15d9/u9gahdJleJyOfITd81kAXoADUXYLkEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IL+OxW5n; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RzosZcZ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 130081F000E9;
-	Fri,  3 Jul 2026 12:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783082902;
-	bh=+2rgJJTrIiJpMKCp9FnEe5FXYmvE0Z11ZehcXLdhtnQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RzosZcZ+KUxn2fDnKgWHIwK4JbdyDW89pQ71Uwy0DnZqprE0b6WdpS1fJARaeUq9T
-	 FdZIQxBDViN+OIiRGL9BGnuMyHia1b41/c3B6RZRvBgqycg0fOXF60J9XUG+d7DqE8
-	 1H/MrYN4T9WADPgVrQmWqSokwG3N7Q/azCia9dkhmW7vXy7rFmqD3OdlIfmagqH2nU
-	 DOIqgbt/+KHz1me9f6+MyBGLvg0A+Swg5d8800F1bV956d+hhWucyV4qvSE1fTEfh3
-	 8SfNXIKMH03F2Duf7iOsxzjMRrRvS7EqTPjSFAChhmbHksFAfN17jvKBx/i0OV4CfR
-	 WH7QNzmQHPO3Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4] ARM: breakpoint: CFI breakpoints only on demand
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Linus Walleij" <linusw@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260703-arm32-cfi-bug-v4-1-c26acb640a8f@kernel.org>
-References: <20260703-arm32-cfi-bug-v4-1-c26acb640a8f@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 03 Jul 2026 12:48:21 +0000
-Message-Id: <20260703124822.130081F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IL+OxW5n"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-493bb0e2894so998505e9.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Jul 2026 06:36:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1783085763; x=1783690563; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FNBtslBmkdxYY8pJaB+biO9zOY0LMt3+psd/OnIDrZs=;
+        b=IL+OxW5neLn5t1qzQH0sjTS8g6WWnE1LSAY1otwpN++M+eYk+7Qb/eOyuH56JyZdsb
+         viO0GDl7TqRygk8yFdTH5ZPZHKLPmUcVS2uJHg6brbMcUAt4Mn1kIo5syIywXMuub5Ob
+         jk6ZdNIM55TxHOw/+h0uAGuHqbqEWcTM1gGlHNCLKnt+uY1gfrh8svmNObcr4YZUngUa
+         MpKoL/DuHGfSUPpflFRvfvKW8bas6qbb7gkUdwwUyLQjy3xnjOLYSBZOk/GkfZk44pV7
+         tC7teC6Zo7nCBlLbCkWw0nDGDFqSy1uvg9eNfGapGpBDIDU+UKgaEWo33gbkFNpAOFdx
+         EutQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783085763; x=1783690563;
+        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=FNBtslBmkdxYY8pJaB+biO9zOY0LMt3+psd/OnIDrZs=;
+        b=L/CBZ7luLjTgIT9iwKh3GgwqXhCqg92UJBMVS1QgXEnCbZSLA4no5TuXE/iWB2FZ+d
+         BhFXYqAyBCI0Lbl0NOZbx6gh7Q6eL3u9ZdEljLLITUKkhQefAXSpQeUGFH9SGXs2ARW0
+         bYCdYzBJB5UJxM6N+WKlDuEJbokNoUWvxQ5eJ0wqpDaGnTZ5V/pGUHob/vo9cTK7bRl9
+         22CtvcABQ2Tx0QzBslzK7HqZYwUIE7KHUtR0qfFzT67FawDq2GjVOsAgIo/Y1zlJPJZ7
+         eXldf4u6DVjHtukZWtIl7wtyvx6Kawjv+xLRkOKOh04DXAkHzVosg+XWg4dedIaqhd3z
+         fHBw==
+X-Forwarded-Encrypted: i=1; AFNElJ/UkVutgK+05An3qTbyBI6dpd7d12nieIUnQ/trkoszA/3jPMHRbNAFvXZoeZfguBoefxZSqGvjx+OpszOeX3zD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxznBXoiHO/+DTkc8du3h88hised8ARM7EYKn+k73Pu5LbY8f/9
+	woQqVhDKhzPuu1hwWvt7/G0XY0SS8hx5XesjhTT+2ydwXSqvcZfEEbLzsTw5Bf5KKBg=
+X-Gm-Gg: AfdE7cn+EJvvUYvsOSRWmzTz6zSiNR7nq2KqJQ+PE7EvZ2Hb2TMG65buBoVpM0z139T
+	mv5pO8joJZrncg9Ayxy3lEJWsp8WDd6byaBqjCkqI9N0jv81wOH71S/wId7oC9nIpmjpHeqSZlf
+	35xYIIhRS5UEyM/MTSdh4u8FvlOF7yQU4f1d6hqAh0uc5s4+xG4neN1S4JV9pOLNrsjjgt7K6dG
+	+t7jflyM4zOXOtaaH23MQyENZTqYFW6d5kWs8hA9vuRZMOotwf/wa9Qvrw6Ap2A9zqw6lFsHiyV
+	zOI0+mpRMuhRARTg9cpuYQe8iR4WPNGORDrUVA23WqJeSDuM3dOTn6t3TG+KgpBJR1ia1/bnPfx
+	MRmjpMPyVDBbMOO8Inc6TL61FxQWjpAo2an0e1gMYcCiFuDozAavMmhSNzTxnf0nMJ1p3YVslU3
+	A6qpEiuvI=
+X-Received: by 2002:a05:600c:1912:b0:493:bd67:315 with SMTP id 5b1f17b1804b1-493c2b91fe3mr73724125e9.5.1783085762867;
+        Fri, 03 Jul 2026 06:36:02 -0700 (PDT)
+Received: from ?IPV6:2001:1a48:8:903::e14? ([2001:1a48:8:903::e14])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493bef11338sm202929555e9.1.2026.07.03.06.36.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2026 06:36:02 -0700 (PDT)
+Message-ID: <f0110241-eb12-49f8-81ce-3acf12939f45@suse.com>
+Date: Fri, 3 Jul 2026 15:36:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/30] mm: move vma_start_pgoff() into mm.h and clean up
+Content-Language: en-US
+To: Lorenzo Stoakes <ljs@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>,
+ Simon Schuster <schuster.simon@siemens-energy.com>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>,
+ H Hartley Sweeten <hsweeten@visionengravers.com>,
+ Lucas Stach <l.stach@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov
+ <lumag@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Thierry Reding <thierry.reding@kernel.org>,
+ Mikko Perttunen <mperttunen@nvidia.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>,
+ Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ David Hildenbrand <david@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, "Liam R . Howlett" <liam@infradead.org>,
+ Matthew Wilcox <willy@infradead.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
+ Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>,
+ Kees Cook <kees@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org,
+ etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-tegra@vger.kernel.org, kvm@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org,
+ iommu@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+ damon@lists.linux.dev, Pedro Falcato <pfalcato@suse.de>,
+ Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+ Jann Horn <jannh@google.com>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <b28b698df4c009e85c4728446ca5863d8e633164.1782735110.git.ljs@kernel.org>
+From: Vlastimil Babka <vbabka@suse.com>
+Autocrypt: addr=vbabka@suse.com; keydata=
+ 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
+ pYekxJujNeEDkUlky0Y=
+In-Reply-To: <b28b698df4c009e85c4728446ca5863d8e633164.1782735110.git.ljs@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On 6/29/26 14:23, Lorenzo Stoakes wrote:
+> vma_last_pgoff() already lives there, so it's a bit odd to keep
+> vma_start_pgoff() in mm/interval_tree.c. Move them together.
+> 
+> These each return unsigned long, which pgoff_t is typedef'd to. Make this
+> consistent and have these functions return pgoff_t instead.
+> 
+> Additionally, express vma_last_pgoff() in terms of vma_start_pgoff(), since
+> we wrap the vma->vm_pgoff access, we may as well use it here.
+> 
+> Also while we're here, const-ify the VMA and cleanup a bit.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-Pre-existing issues:
-- [High] The CFI breakpoint handler incorrectly assumes the BKPT instructio=
-n is always 4 bytes long, which corrupts the instruction pointer in Thumb-2=
- mode.
---
+Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-commit 8a3d2d7e6aa4575ee54af7475a100d8d6db4f18a
-Author: Linus Walleij <linusw@kernel.org>
-
-ARM: breakpoint: CFI breakpoints only on demand
-   =20
-This removes the stub hw_breakpoint_cfi_handler() from ARM, making
-it not steal breakpoint type 0x03 unless CFI is actively used in
-the kernel. It falls through to return unhandled fault for userspace
-breakpoints.
-
-Closes: https://lore.kernel.org/lkml/kJqktbpLphg_Pk5I5SPptgTLjl3E3eq5mN5UzC=
-slyFj7Q1Irp-wDid4mj5eQVd2iZtRGXgeZd8goq195EkXdjyt864YMc8mVb2B9NGH91NQ=3D@pr=
-otonmail.com/
-
-> diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpo=
-int.c
-> index cd4b34c96e35e..38feb30dfb5f8 100644
-> --- a/arch/arm/kernel/hw_breakpoint.c
-> +++ b/arch/arm/kernel/hw_breakpoint.c
-> @@ -929,10 +929,6 @@ static void hw_breakpoint_cfi_handler(struct pt_regs=
- *regs)
->  		break;
->  	}
->  }
-
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential problem in
-hw_breakpoint_cfi_handler() right above this diff.
-
-When a CFI failure triggers a warning (such as when CONFIG_CFI_PERMISSIVE is
-enabled), the handler attempts to skip the breaking instruction:
-
-arch/arm/kernel/hw_breakpoint.c:hw_breakpoint_cfi_handler() {
-    ...
-	case BUG_TRAP_TYPE_WARN:
-		/* Skip the breaking instruction */
-		instruction_pointer(regs) +=3D 4;
-		break;
-    ...
-}
-
-Does this incorrectly assume the BKPT instruction is always 4 bytes long?
-
-In Thumb-2 mode, BKPT is a 16-bit (2-byte) instruction. If the instruction
-pointer is advanced by 4 bytes, wouldn't it skip the intended instruction
-and an additional 2 bytes of the following instruction, potentially corrupt=
-ing
-the execution stream and leading to an Oops?
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260703-arm32-cfi-=
-bug-v4-1-c26acb640a8f@kernel.org?part=3D1
