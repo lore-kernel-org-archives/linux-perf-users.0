@@ -1,251 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7648E3DEAC1
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Jul 2026 10:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637D83BA253;
+	Fri,  3 Jul 2026 10:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783074768; cv=none; b=kHlzbt23SGwR2lGObtjvCTlV4RdgeX0RThjTV7U8kVWCtECilK6mPjwJDi6vkDZUObXnBLBBWDa35PD1znFjKNMJWDp8A50jyGsDFjTUk17fMTtoivbHh3PUre3E2t791WyZXDdE/YDLvc5IXRmoZtBAiBEya/atNCzOA/hm6Kg=
+	t=1783075556; cv=none; b=fgUvh7aTOBEy4tO3AWqOjxkHJU2MZiBPYShXBNDzDKPDvtylZMhyOKooxI6IAPrxbPMwRcUjpWaL+J3uTSOHXCCoVfMBOkgtZvkrVsXjFLUx8aes3a9M/i1ZEQ115TcUIHq+mVdFBzz2/n1/fZkdvwaQ7NJeO546QyzF0seUWrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783074768; c=relaxed/simple;
-	bh=Tm8VgvFWvXiTmoyvRnjPUK67MVmbbmRSs7WoNfnh3iQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S11+ZlM1FWZUMm+Auj5uuN/movpVp3vX115xXqdqent2zvWLwBnReRU1XUQO48U6JVvHU0kXE5zl7EGFG7gRXZfqZIvXw7r0wAqNGV16dpw/zkp0v0ySssVHPdVCap7XSP1izBMqIxivvCBmLf1USk3hYy/J102VlL9EESM4Ws4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ThTX2vLv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783075556; c=relaxed/simple;
+	bh=868HwswZgp8w42/SnyrttQUqueU6BuQEvW0h6zHR8mQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ga21ZcmQkcE3zFdUq6XHbYpBiHePwV5cSAI+n52rCBmB1sp/GFvNm/EKBuIJt4+d7OFRlMTKFH+/cqWfvlbeHz3PRVU9PZdsJWS/BybGC6w7Fds+cGe4ezcDFu9qGssi9RkVPYhEuqJB7LNqd7ZALyp1RxTYuwG2ESayV+k8tr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+fcMjMS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ThTX2vLv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783074765;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NaKQdFI56yqpqD9iJJ20XQp95MNPvmZUW2GKpcwiGUk=;
-	b=ThTX2vLvoZnCBQDmiG3Z32BHugC/c/a0PoxDBPsijim1m48atcml2/S5hWDbfqGivYVSpv
-	INt6OTymSe+qpY+EfiLQAJUiqW5TZOgMrZ8Qwu5wp57ULDIliRXKpbZlYNJAjUkn9/MVYd
-	7rob7ASrOusDKW8l/p7atGOsFrNpTdE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-563-w5v3z22nPDGybJn8X80hkQ-1; Fri,
- 03 Jul 2026 06:32:41 -0400
-X-MC-Unique: w5v3z22nPDGybJn8X80hkQ-1
-X-Mimecast-MFC-AGG-ID: w5v3z22nPDGybJn8X80hkQ_1783074759
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DEACB1944AB4;
-	Fri,  3 Jul 2026 10:32:38 +0000 (UTC)
-Received: from vmalik-fedora.redhat.com (unknown [10.44.34.72])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 857BE1971E7D;
-	Fri,  3 Jul 2026 10:32:32 +0000 (UTC)
-From: Viktor Malik <vmalik@redhat.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Viktor Malik <vmalik@redhat.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Michael Petlan <mpetlan@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] perf trace: Refactor augmented_raw_syscalls using bpf_for
-Date: Fri,  3 Jul 2026 12:32:15 +0200
-Message-ID: <8ceb8f3323d0742163c42c343eb9d26843fe9e9b.1783070132.git.vmalik@redhat.com>
-In-Reply-To: <cover.1783070132.git.vmalik@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+fcMjMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE821F000E9;
+	Fri,  3 Jul 2026 10:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783075555;
+	bh=fEWkrw8IfjCEGS058nTVH8CD/aFNH2jOYCFo6gZas4Y=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=g+fcMjMSBIHcLhFK7aDtDRyXXARs3Mkx+3uSScCefvpc/ars1uevx8PeFeK0xLfnB
+	 wgW3i8ZdaGda4fIscSCbdwdCTrRBi3O0lBbt8IiEdeSqKdgKhmNpZXgDQILkxEFg+A
+	 0gmik+glkdnj3bEKvNTgnBCx9eGfe8sK7VSQa294uEM5bCD82R+CU42w7B0Bq2RPuS
+	 tAkRrI7O2Heh5IzciF3cJE6CxJbnxYG5xZy6ls34DOboDyAfwPrbfp4B+/jqJma+2Z
+	 z+n57S/LavyWAsrcJFaCd7iLxRE63k4uMjOmwg1rfJ23XQ9qwv1JL7kc+uFFuCc1R/
+	 TYELeTMRKiJ1Q==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 2/2] perf trace: Refactor augmented_raw_syscalls
+ using bpf_for
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Viktor Malik" <vmalik@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <8ceb8f3323d0742163c42c343eb9d26843fe9e9b.1783070132.git.vmalik@redhat.com>
 References: <cover.1783070132.git.vmalik@redhat.com>
+ <8ceb8f3323d0742163c42c343eb9d26843fe9e9b.1783070132.git.vmalik@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 03 Jul 2026 10:45:53 +0000
+Message-Id: <20260703104554.CAE821F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-The loop for processing syscall args in augment_raw_syscalls has a
-history of breaking with Clang updates, see e.g. commit 013eb043f37b
-("perf trace: Fix BPF loading failure (-E2BIG)") from Clang 15 to 16.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] Removing the `(int)` cast in the buffer augmentation condition mak=
+es it unconditionally false, completely breaking buffer payload collection.
+- [Medium] Huge buffer sizes (where the MSB is set) fail to be augmented, w=
+hereas previously they were safely clamped to `TRACE_AUG_MAX_BUF`.
+- [Low] Multi-line comment does not follow the required BPF subsystem style.
+--
 
-Now, a similar thing happened between Clang 21 and 22. While the issue
-is mitigated on the main line by a recent verifier update, it remains
-broken on the 6.12 and 6.18 stable branches:
+commit 0a122bc3ab16635b5165b20566e6e1890cba855b
+Author: Viktor Malik <vmalik@redhat.com>
 
-    [linux-6.18.y]# sudo perf trace true
-    libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
-    libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
-    [...]
-    BPF program is too large. Processed 1000001 insn
-    processed 1000001 insns (limit 1000000) max_states_per_insn 40 total_states 37941 peak_states 232 mark_read 0
-    -- END PROG LOAD LOG --
-    libbpf: prog 'sys_enter': failed to load: -E2BIG
-    libbpf: failed to load object 'augmented_raw_syscalls_bpf'
-    libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -E2BIG
-    Error: failed to get syscall or beauty map fd
-    [...]
+perf trace: Refactor augmented_raw_syscalls using bpf_for
 
-The reason is that the loop is quite complex and the BPF verifier often
-struggles to prove that it terminates.
+This commit replaces the standard loop in augment_sys_enter with a bpf_for
+loop to prevent BPF verifier -E2BIG errors. It also drops some workarounds
+previously added to help the verifier.
 
-Fix the issue by replacing the standard for loop by the bpf_for macro,
-which uses numeric BPF iterator. This should prevent future breakages of
-this kind since the verifier has much easier job proving that the loop
-terminates.
+> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tool=
+s/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> index cbdd5ce19a2f6..60babc06f3812 100644
+> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
 
-Small adjustments were necessary for the loop to make it work.  The main
-problem is that the verifier has sometimes problems with bpf_for loops
-that use a carry-over state, such as the `payload_offset` and `output`
-vars here, since the verifier tries to track their values too precisely
-and cannot prove loop convergence. To resolve the issue, we (1)
-explicitly recompute `payload_offset` in every iteration and (2) use a
-trick with adding a global zero to `output` to help verifier forget its
-precise state and use a range instead.
+[ ... ]
 
-In exchange, this also allows to drop a few artificial checks to help
-the verifier, including the changes introduced by 013eb043f37b.
+> @@ -464,11 +473,13 @@ static inline int augment_arg(struct syscall_enter_=
+args *args, int i,
+>  	} else if (size > 0 && size <=3D value_size) { /* struct */
+>  		if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->val=
+ue, size, arg))
+>  			augmented =3D true;
+> -	} else if ((int)size < 0 && size >=3D -6) { /* buffer */
+> +	} else if (size < 0 && size >=3D -6) { /* buffer */
 
-Finally, to keep backwards compatibility with older kernel versions
-which do not have bpf_for (i.e. numeric iterators), fall back to
-standard for loop in such a case.
+[Severity: High]
+Does removing the (int) cast make this condition unconditionally false?
 
-Signed-off-by: Viktor Malik <vmalik@redhat.com>
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Fixes: a68fd6a6cdd3 ("perf trace: Collect augmented data using BPF")
-Fixes: 013eb043f37b ("perf trace: Fix BPF loading failure (-E2BIG)")
-Cc: stable@vger.kernel.org
----
- .../bpf_skel/augmented_raw_syscalls.bpf.c     | 54 +++++++++++++------
- 1 file changed, 39 insertions(+), 15 deletions(-)
+Since size is an s64 assigned from an unsigned int beauty_map[i], a negative
+marker (e.g. 0xFFFFFFFF) is zero-extended to a positive s64 value.
+Without the (int) cast to truncate and sign-extend it back, size < 0 is
+always false, breaking buffer payload collection.
 
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index cbdd5ce19a2f..60babc06f381 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -429,6 +429,8 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
- 	return bpf_map_lookup_elem(pids, &pid) != NULL;
- }
- 
-+u64 ZERO = 0;
-+
- /*
-  * Determine what type of argument and how many bytes to read from user space, using the
-  * value in the beauty_map. This is the relation of parameter type and its corresponding
-@@ -439,12 +441,13 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
-  * buffer: -1 * (index of paired len) -> value of paired len (maximum: TRACE_AUG_MAX_BUF)
-  */
- static inline int augment_arg(struct syscall_enter_args *args, int i,
--			      unsigned int *beauty_map, void *payload_offset)
-+			      unsigned int *beauty_map,
-+			      struct beauty_payload_enter *payload, u64 offset)
- {
- 	int index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
- 	s64 aug_size, size;
- 	bool augmented;
--	void *arg;
-+	void *arg, *payload_offset;
- 
- 	arg = (void *)args->args[i];
- 	augmented = false;
-@@ -454,6 +457,12 @@ static inline int augment_arg(struct syscall_enter_args *args, int i,
- 	if (size == 0 || arg == NULL)
- 		return 0;
- 
-+	/* bounds check for the verifier */
-+	if (offset > sizeof(payload->aug_args) - sizeof(payload->aug_args[0]))
-+		return -1;
-+	barrier_var(offset);
-+	payload_offset = (void *)&payload->aug_args + offset;
-+
- 	if (size == 1) { /* string */
- 		aug_size = bpf_probe_read_user_str(((struct augmented_arg *)payload_offset)->value, value_size, arg);
- 		/* minimum of 0 to pass the verifier */
-@@ -464,11 +473,13 @@ static inline int augment_arg(struct syscall_enter_args *args, int i,
- 	} else if (size > 0 && size <= value_size) { /* struct */
- 		if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg))
- 			augmented = true;
--	} else if ((int)size < 0 && size >= -6) { /* buffer */
-+	} else if (size < 0 && size >= -6) { /* buffer */
- 		index = -(size + 1);
- 		barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
- 		index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels.
--		aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
-+		aug_size = args->args[index];
-+		if (aug_size > TRACE_AUG_MAX_BUF)
-+			aug_size = TRACE_AUG_MAX_BUF;
- 
- 		if (aug_size > 0) {
- 			if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
-@@ -497,11 +508,10 @@ static inline int augment_arg(struct syscall_enter_args *args, int i,
- static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- {
- 	bool do_output = false;
--	int zero = 0, written;
-+	int i, zero = 0, written;
- 	u64 output = 0; /* has to be u64, otherwise it won't pass the verifier */
- 	unsigned int nr, *beauty_map;
- 	struct beauty_payload_enter *payload;
--	void *payload_offset;
- 
- 	/* fall back to do predefined tail call */
- 	if (args == NULL)
-@@ -513,7 +523,6 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- 
- 	/* set up payload for output */
- 	payload        = bpf_map_lookup_elem(&beauty_payload_enter_map, &zero);
--	payload_offset = (void *)&payload->aug_args;
- 
- 	if (beauty_map == NULL || payload == NULL)
- 		return 1;
-@@ -521,14 +530,29 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- 	/* copy the sys_enter header, which has the syscall_nr */
- 	__builtin_memcpy(&payload->args, args, sizeof(struct syscall_enter_args));
- 
--	for (int i = 0; i < 6; i++) {
--		written = augment_arg(args, i, beauty_map, payload_offset);
--		if (written < 0)
--			return 1;
--		if (written > 0) {
--			output += written;
--			payload_offset += written;
--			do_output = true;
-+	if (bpf_ksym_exists(bpf_iter_num_new)) {
-+		bpf_for(i, 0, 6) {
-+			written = augment_arg(args, i, beauty_map, payload, output);
-+			if (written < 0)
-+				return 1;
-+			if (written > 0) {
-+				output += written;
-+				/* guide the verifier to forget range of `output`, which
-+				 * helps to prove convergence of the loop
-+				 */
-+				output += ZERO;
-+				do_output = true;
-+			}
-+		}
-+	} else {
-+		for (i = 0; i < 6; i++) {
-+			written = augment_arg(args, i, beauty_map, payload, output);
-+			if (written < 0)
-+				return 1;
-+			if (written > 0) {
-+				output += written;
-+				do_output = true;
-+			}
- 		}
- 	}
- 
--- 
-2.54.0
+>  		index =3D -(size + 1);
+>  		barrier_var(index); // Prevent clang (noticed with v18) from removing =
+the &=3D 7 trick.
+>  		index &=3D 7;	    // Satisfy the bounds checking with the verifier in =
+some kernels.
+> -		aug_size =3D args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF=
+ : args->args[index];
+> +		aug_size =3D args->args[index];
+> +		if (aug_size > TRACE_AUG_MAX_BUF)
+> +			aug_size =3D TRACE_AUG_MAX_BUF;
 
+[Severity: Medium]
+Will huge buffer sizes (where the most significant bit is set) fail to be
+augmented here?
+
+args->args[index] is an unsigned long. If the most significant bit is set,
+assigning it to the s64 aug_size makes it negative. The subsequent
+if (aug_size > TRACE_AUG_MAX_BUF) is a signed comparison and will evaluate
+to false. The length remains negative, causing the later if (aug_size > 0)
+check to fail, skipping buffer processing entirely instead of clamping it.
+
+> =20
+>  		if (aug_size > 0) {
+>  			if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->va=
+lue, aug_size, arg))
+
+[ ... ]
+
+> @@ -521,14 +530,29 @@ static int augment_sys_enter(void *ctx, struct sysc=
+all_enter_args *args)
+>  	/* copy the sys_enter header, which has the syscall_nr */
+>  	__builtin_memcpy(&payload->args, args, sizeof(struct syscall_enter_args=
+));
+> =20
+> -	for (int i =3D 0; i < 6; i++) {
+> -		written =3D augment_arg(args, i, beauty_map, payload_offset);
+> -		if (written < 0)
+> -			return 1;
+> -		if (written > 0) {
+> -			output +=3D written;
+> -			payload_offset +=3D written;
+> -			do_output =3D true;
+> +	if (bpf_ksym_exists(bpf_iter_num_new)) {
+> +		bpf_for(i, 0, 6) {
+> +			written =3D augment_arg(args, i, beauty_map, payload, output);
+> +			if (written < 0)
+> +				return 1;
+> +			if (written > 0) {
+> +				output +=3D written;
+> +				/* guide the verifier to forget range of `output`, which
+> +				 * helps to prove convergence of the loop
+> +				 */
+
+[Severity: Low]
+This isn't a bug, but this multi-line comment does not follow the preferred
+BPF subsystem style where the opening /* is on its own line.
+
+> +				output +=3D ZERO;
+> +				do_output =3D true;
+> +			}
+> +		}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1783070132.gi=
+t.vmalik@redhat.com?part=3D2
