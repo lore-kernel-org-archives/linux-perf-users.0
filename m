@@ -1,73 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DE93A4520
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 Jul 2026 16:11:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECCE13D891;
+	Sat,  4 Jul 2026 16:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783181464; cv=none; b=uZ+SSHdlCVuZxcn5pe9pCHVw79LXWjtAJ1tibvh3I+tnKmvs1OUYp8j/udgC3tZFseQ3Ee8lil/O/5gc1Fsge2glXzg2GiC5D0CI86asMopgg7SXfFCzcp99WrLHMDqvTMvKAuBvSLML04KnjQaIcEpUhDzvsD27c+Vtv6uLnOE=
+	t=1783181810; cv=none; b=dRi0MQ1yDGHDCDWUP5su4pwvNTGuQBTCC5lXc0/B+GMvoDeRscUh36UIHbI7bxkCopESahb2ERY/DtunVXPw/c11goisI2vZyI/wuZQ3Dj56y0z11Toy45yh6J8bpGQoVAmaQM2i38y4L5yGKA9O22i1KegxO737rNuoKT4UtWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783181464; c=relaxed/simple;
-	bh=/tXK/kuXuQJCrVdyfsUbxmVy7A6wl/+JLCsNx8LV6nA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jE93QTrrRkgeTLIQsOLwpSkQhamX14YlV4yyLTSsApUX3b5IO72u5Y4UZZRdpPqH07dwTMBcRJa3+4FRn6xQfOF6JZgaD6G4aKjFvj7ecxm8rX3NwyA468VSrvc3dQTJIVR8H4k/0W9310vAs82syL+NhWeocG+ZEbUHWN2lkfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYAHUVAo; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783181810; c=relaxed/simple;
+	bh=9cf3J09n7d21AiaS/704+qLyywH8NgM+GsH5lj7JNtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZO4/naMGLX9bt08pTONJosSe4HncaQ2VZWe/jtqmrEcppzx5IgDeJeA8F6RBpDHukhd2mr6u+ziZWNRlCMaCIrfVraY1bruHTnMFXKvYsvPKJ4J/tgkXAe2CXVscHvqueAOzKdRDiQhurKMiMfIhYKuMTdekBxlZbZOoSp9OT3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThisLgyZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYAHUVAo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A297D1F00ACA;
-	Sat,  4 Jul 2026 16:11:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThisLgyZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC2D1F000E9;
+	Sat,  4 Jul 2026 16:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783181463;
-	bh=QwB8FGCq3eCoQl3SKVpOQbv8DuiqoTDev9lDz7Av2U4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=oYAHUVAoFAGAcpfKtqekWqpffNDz+hwxnk5I3Q1D+I8295A3l8IX0I8eeft6zARIH
-	 nXEMMi2/E8LXi0/uhHWh5ka3UTZjKQtAA8TrMHetqWarEX7JD7XJ+O6sPWOWfiN0QN
-	 q5bgZqHULAuBgC8er0u1168POq/OWw8AJ+C5zM/uC69rSbeyzFjNXUSSQJ5VYQmgbc
-	 xhS0detE1cmPOPS9UCv9o2m5+yFf084VPqSQoamEQvQOkNvv860gUdLhaml39nbHcr
-	 1DU7HB8ZtzNbZAVo/zFFfhISkIfWzELg3koSx2NrrOa8whM8t0mgKpKgJ/VccbWL3A
-	 EAHl58FPpeewQ==
+	s=k20260515; t=1783181808;
+	bh=Yu2SypPL876PEV9aoxCcuXzto8/BMaas2Cd+wYKhEaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ThisLgyZ4A1XT+9oTsEruSBjdOWcTgoI2O3iADZ3w50Xvp1MpQyPk5CzaNWyszFiX
+	 r19G6W4cd5BjxmpNy7tHaYfBX18px0DG7tjtON1yemdkYM1OHIw06pW592D4W2Uijn
+	 ZAT2s/OGmiQEVfgOyglDSMFg3Yo7grlT/fRRycMnTWu6b2lYxIWtyQqAaFJguvNMcb
+	 5I14JYlkbzmZLa6EjRbhhAB+9m6UacrQ5dT4YarW7rJfY8fSgLJxl+YwtPAkZl9820
+	 D1VhIFXdyJDccHrdsRwZnmIM3SkAaMd4tH9bd0C14YnqguG5w0ZVIrD1yTYn+O27bf
+	 5yGZBRi4hCVmA==
+Date: Sat, 4 Jul 2026 09:16:45 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
- James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>, 
- Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>, 
- Leo Yan <leo.yan@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
- linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linux.dev>
-In-Reply-To: <20260702-b4-arm_cs_callchain_support_v1-v11-0-846abbf600d7@arm.com>
-References: <20260702-b4-arm_cs_callchain_support_v1-v11-0-846abbf600d7@arm.com>
-Subject: Re: [PATCH v11 0/9] perf cs-etm: Support thread stack and
- callchain
-Message-Id: <178318146263.1194818.17858862135868990368.b4-ty@kernel.org>
-Date: Sat, 04 Jul 2026 09:11:02 -0700
+To: sashiko-reviews@lists.linux.dev
+Cc: Trevor Allison <tallison@redhat.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf build: Add LDFLAGS to dlfilters .so link
+Message-ID: <akkx7cDfBb1pBdIw@google.com>
+References: <20260626182739.53294-1-tallison@redhat.com>
+ <20260626183423.ADD211F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260626183423.ADD211F000E9@smtp.kernel.org>
 
-On Thu, 02 Jul 2026 20:51:35 +0100, Leo Yan wrote:
-> This series adds thread-stack and synthesized callchain support for Arm
-> CoreSight, which comes from older series [1] but heavily rewritten.
+On Fri, Jun 26, 2026 at 06:34:23PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Low] Adding `$(LDFLAGS)` to the unconditionally built `dlfilters` shared library link rule breaks statically linked `perf` builds.
+> --
 > 
-> CS ETM previously kept last-branch state in a per-trace-queue buffer.
-> That effectively makes the state per CPU, while the call/return history
-> belongs to a thread. This series moves branch tracking to the common
-> thread-stack code.
+> commit 18f2c24db710920618ef1d894a2b24abff4dbeb9
+> Author: Trevor Allison <tallison@redhat.com>
 > 
-> [...]
-Applied to perf-tools-next, thanks!
+> perf build: Add LDFLAGS to dlfilters .so link
+>     
+> Build-time linker flags were not applied when linking dlfilters.
+> Pass LDFLAGS for consistency with the other link rules.
+> 
+> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > index 476b8dcaef58c..f2294a6d89604 100644
+> > --- a/tools/perf/Makefile.perf
+> > +++ b/tools/perf/Makefile.perf
+> > @@ -677,7 +677,7 @@ $(OUTPUT)dlfilters/%.o: dlfilters/%.c include/perf/perf_dlfilter.h
+> >  .SECONDARY: $(DLFILTERS:.so=.o)
+> >  
+> >  $(OUTPUT)dlfilters/%.so: $(OUTPUT)dlfilters/%.o
+> > -	$(QUIET_LINK)$(CC) $(EXTRA_CFLAGS) -shared -o $@ $<
+> > +	$(QUIET_LINK)$(CC) $(LDFLAGS) $(EXTRA_CFLAGS) -shared -o $@ $<
+> 
+> [Severity: Low]
+> Does this break static builds of perf?
+> 
+> If a user builds perf statically by setting LDFLAGS="-static", this rule
+> will pass both "-static" and "-shared" to the linker. Since these flags are
+> mutually exclusive, this results in a fatal linker error.
 
-Best regards,
+Oops, I missed this message and merged it.  It indeed caused a failure 
+in the build test.  It seems we should skip building dlfilters when the
+LDFLAGS has -static or remove -static from the LDFLAGS for dlfilters.
+
+Thanks,
 Namhyung
-
-
