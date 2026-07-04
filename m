@@ -1,291 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF96A1E9919;
-	Sat,  4 Jul 2026 17:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783184887; cv=none; b=sidkkXSaCHhdSYBsN9nFJl1rx/PBO2jPRv55PAbnOXJrLfUakNvoZusKKoz8ZllAzDyN8BTqUatckhk+xDlN7UM29Wo6Fj5Sy81Z56K0cvme2YkHiX6g514qbvLnO6BjEEdc0jp4pwWiQIOV9Yoe27hFwH/yT4aNFVBiJ107UzA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783184887; c=relaxed/simple;
-	bh=EWBT4hU7//0X1hV9mMHMOqeX+4OOwYshnIb4gV6S+nw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rPE6S/pO0U1ScBU8nV9ocorhIJtzddKl33tFep8lLqF3OooLRLKw7rHAwMSer0kgGruVIRiVBJnFl01ww6M+yuzZ2ZtreKmAsMPE87QU0uw1H2w0qNsJx6LEusxBWOzPWc/Q3OXm/GFsQI6bFtBQKi+nauysjYHQnWn3MTYlQ+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQGfGMqa; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139CC33F5AC
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 Jul 2026 23:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783206213; cv=pass; b=V4hdVf9MdqBHnnI9JbaGAbk1+AqRTFLnlzDaQh2hbDEjCQV+OurCgfVfyQOoRt58T+o3ztx9ZeNzoRkK41O//8jtRVCg1STr/talZpLs0dSz6Mrx+AI2rwGO3WKnjMKDMUg6Rea1CI0BYNRBpAPEB3CSz30FP28aDR12EMVwgws=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783206213; c=relaxed/simple;
+	bh=+0DN3z4e8iX8+bNNHBRVlsEy0UfFOC+jaEHEQd7Ovy0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=djQSQvf40SiehLnIHsQIrpqzhVk/QhPV/Qa902ej7R0WI3XFghhEGrOmexaFj8RPRFu5VzQWTRvFbxEvX0MuYUhV2eypnYmlJSRZi27R6Uf1pmF98XPdRTsmvdP45Xcx4tFOHJxjmtD9fcr0pHA2+0vt/LlqnQyQvCO6mpI4D9M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zzhbqix6; arc=pass smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQGfGMqa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0081D1F000E9;
-	Sat,  4 Jul 2026 17:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783184885;
-	bh=qLWiwUkt1+vBYTVchITj+exqqY8WMBRAS+J1Qrcsag4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=TQGfGMqavgUFnz58dPUoOKtbcVr3nolQXn8xl5cLR3DfRXVGHGgejYDl+vCdSXVGj
-	 b5/AL3p5ALf0tKevcukQcrE2Zf660/P488mpT9d52je/jYchmlScptcDmULnYt3UH4
-	 9C4YrbT1GAmZxqtklNJ/2D9U3tJZlpHA2hq6jRBhFa+ZLLKqDIw+E87Zr3MIG7mtVZ
-	 Bf3U44bEINKmPKGV4ctM6Z/lzYjb55nnrDzYSdjIjlXYLKmirS0ReKvaMrcAQXEylb
-	 VObD6nDGR5r3+xpDiLeRGGUaYEmBtiYHROQtjIEw4XzwK8zs1xj+zdf6464a0JZuQK
-	 PrYseeXTFYwwg==
-Date: Sat, 4 Jul 2026 10:08:03 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Ilvokhin <d@ilvokhin.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	kernel-team@meta.com, Farid Zakaria <fmzakari@meta.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] perf record: Fix multiple PERF_RECORD_COMPRESSED2
- records per push
-Message-ID: <akk98zIfF08BoADo@google.com>
-References: <cover.1782743187.git.d@ilvokhin.com>
- <079503c01a3e28d3775947f3449cadacfa1f4117.1782743187.git.d@ilvokhin.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zzhbqix6"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2cab97c86bdso270685ad.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 04 Jul 2026 16:03:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783206211; cv=none;
+        d=google.com; s=arc-20260327;
+        b=eFR5GpAM61vqr0ahgLsUUvsBzalxymX8Pik6FstzT7KN+kSqNiWt+y06QipfsOxsA6
+         x9BrfR5oi1AG6U/Oo30IPFqACqP9jTbE6mwosLozHPXU4SKjZZCyd3wexMHsPEtViTup
+         XhMy0gdLzW/nZm0XRbcHt49jxW1OuIW5r3C2I5HBrA4DFJUxqDIAqwN+SMrK38kpc+c3
+         ybWoPP7hM3WKikI070BG69jEmZ8/msY52rF1KII7xUg/zP9dlqhCeYpIWxNYLdJrDUdC
+         RAERCiNOsttNkpmkmWzw9seTg9/+yu7x7UtoBfw25w0RmARYkeGjkm2Ru2kJO9Ya6X4l
+         SRgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=NRoYBkGWb2Ymhsxn4Q9Uph+pMflWWye/JnWbb9YJrXE=;
+        fh=WsmiPNzpDfsPNAW7s0j1CmkDYkdJqaJpU1RG2qxKHDU=;
+        b=OaO657o4kpXQo/Xl//lcg3YmpmgMX+1vrJnJTkOA7EVrawYC84YzoDuupMUwg+7IQX
+         s4f9ERufi5witC+ezYm/s7PX7bsq82bhswaMBLP1WAEZZaMwdpQEkV87fOqYLfRBD+FK
+         E0bCLie/qtMQbMP+5EKr/B8iKPwOZUrP/r2PQoHOoDPrPp0PKFqM/+2pAnxz0IdYJEnu
+         ppkldkhjurB/0i71PduNrLNyuAq/XgPiynV01YLK3CodsIZgyk3MmnZODgiIqyz9pGCQ
+         gKBx5CrMmJQb08NtGy6dDZZnfXozGbzMy8LZmwMjzsf0Z2/PCdySSI5Y6bJCwJgoHoxK
+         10cQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783206211; x=1783811011; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=NRoYBkGWb2Ymhsxn4Q9Uph+pMflWWye/JnWbb9YJrXE=;
+        b=Zzhbqix66W65p8Uzxj6tQRj//PueK1G5umH2ru+AMDarNKdxcpZSzU13MBKlKV1aQ7
+         2cW2R8Rbq7oT2Lz/bxn+vEtQwYbHbjgkz2dXiX2ceUk39RdqQsl/qKJ3wg+UhuQ8IMcL
+         iCB/Pu3wEypl03oB8ikM5r5ejm0dy3SLOW92coCRGCSJEVgRjoNfp4Ksjiu7iCk7Xcnv
+         2g03rD/8qoE1tzFDe3gZ9l65mBjB2Z6j+S4SONeKbg6kWoX4OF3eM9Oil1IH4c7k1ERB
+         +0roFWBv+pjNpBeK+bSQ9vBiYNPffQkel6RE1PtLPxZhiLAMV7GKghfWrivF1Hv59fjT
+         1YWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783206211; x=1783811011;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=NRoYBkGWb2Ymhsxn4Q9Uph+pMflWWye/JnWbb9YJrXE=;
+        b=G6nm6CVLEKHeurgFkouNmWMhw770A8O7LY0xW75iLYhtVVsPtm9hl9H/xdsJTol2yp
+         LnXuLP7VKTzLsl9E24WC8ZaGz+ne6kyVWhg1a0273zw1v4AADwjLOFSlB+GI+ETiVdXM
+         rertco3KDZWm0OiIIVPl5mlYiCqpEc5Wx/UzxKoCTJ2Zzy8DS6F9hmB/al2CbhroNttp
+         VJstRTAjxTWfw/hHdnwyor9Jyx3O/KJym7LJKtokpdmI5FRofxlfGzXOCBODynqKSlwW
+         jpfX8U7+Xwxbfri1AHuXnEyKt2G58qC+tkTxmGPiqc2YHyCTA1vP4pVibqI7WvtXhhma
+         50Xw==
+X-Forwarded-Encrypted: i=1; AHgh+RpnSH823ra6R58geW1YL1EJ3YDIPQzbD+llR0b+RnmnDLMVkhfxdggTiwLIQ2uQcyZFe/98c39UTpd37iepNHDi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww6bqVtlDfgdJOuoSU7rxT9sR1G6TwNXQ2aYNnykCU0fnOH/1M
+	DfuioODsj5od2kO2s2uvoPUctWw+64bD0OZ0hFRwAx7bEuGlJdbXPw48mFWejlb+fmt7WClKiqj
+	29vkIQmNnJcff8NgqLRcyGtrSdmOZmtgwnkJjB6j0
+X-Gm-Gg: AfdE7clZwCTPkEdmkbRZPPpfd3gMqL9+cD1pNYLplOkVBESwmpaT9maMjf4ZNFGIIhi
+	fIa1hs+isHA5NnTSnr2syTYTrGTqYG/qjUIYw5H2GAnvKnTIl3Eudhj6BlZtn+AXNKW7oOIG+Kv
+	r4CPIUiVFnPgJ8ZkkGSumDOxndOdGl3mHH1O2+iCdnGL/vHsAMjJhckAxWCz33dZREgFqmhEGpO
+	oLBb/hPQsDvRztwP8bvGFcjUX/XLs2MD0Z0GvKdYXBu32QN1pCw0vSinv6xJXZcQzEoHomtUA==
+X-Received: by 2002:a17:903:41d1:b0:2c7:f0cc:dafa with SMTP id
+ d9443c01a7336-2cc61416ee6mr1186695ad.5.1783206210897; Sat, 04 Jul 2026
+ 16:03:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <079503c01a3e28d3775947f3449cadacfa1f4117.1782743187.git.d@ilvokhin.com>
+References: <20260623053515.2677888-1-irogers@google.com> <20260624051535.3584977-1-irogers@google.com>
+ <akk6yvqJuXWOrGUr@google.com>
+In-Reply-To: <akk6yvqJuXWOrGUr@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 4 Jul 2026 16:03:18 -0700
+X-Gm-Features: AVVi8CfHyGWdFSxXMeodjMVq2BmXF_Jj2D6ZyBy86GaX3ves9m5urN-Z64rOglc
+Message-ID: <CAP-5=fU4Q2zUQF1xKTdW_f6Z5eSpwQvRQCDtcVh6Z5BHXks4hQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/16] perf python: Fix python extension bugs from v19 review
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sat, Jul 4, 2026 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hi Ian,
+>
+> On Tue, Jun 23, 2026 at 10:15:17PM -0700, Ian Rogers wrote:
+> > Phase 1 of splitting the v19 review patches into smaller fixes.
+> > These patches address issues identified in the python extension during
+> > the review of the v19 script porting series, as well as fixing several
+> > pre-existing bugs and leaks.
+> >
+> > v2:
+> > - Addressed sashiko review feedback:
+> >   - Fixed 64-bit casting for counts_values by using T_ULONGLONG and PyL=
+ong_FromUnsignedLongLong.
+> >   - Replaced strict Py_TYPE checks with PyObject_TypeCheck for thread/c=
+pu maps.
+> >   - Fixed a missing CHECK_INITIALIZED for pyrf_thread__get_cpu, pyrf_pm=
+u__name, pyrf_pmu__events.
+> >   - Included <string.h> where memset was used.
+> > - Fixed line splitting formatting on PyObject_New in pyrf_evsel__read.
+> > - Added fixes for memory leaks and issues discovered during review:
+> >   - Fix memory leak of key and value in pyrf__metrics_cb
+> >   - Fix count_values memory leak in pyrf_evsel__read
+> >   - Fix sb_evlist leaks in both top and record paths.
+> >   - Fix potential divide by zero in perf_event__synthesize_threads
+> >
+> > v1:
+> > - Decomposed the single large "Fix python extension bugs" patch into 13=
+ individual fixes.
+> > - Added Fixes: tags for issues that date back to earlier commits.
+> > - Addressed checkpatch warnings (line lengths, Signed-off-by, etc).
+> >
+> >
+> > Ian Rogers (16):
+> >   perf script: Fix metric_evlist leak in script_find_metrics
+> >   perf stat: Fix evsel_list leak in cmd_stat
+> >   perf tools: Fix sb_evlist leaks in top and record
+> >   perf python: Fix memory leak in pyrf_evlist__get_pollfd
+> >   perf synthetic-events: Fix uninitialized pthread_join
+> >   perf data: Fix directory file descriptor leak in perf_data__switch
+> >   perf test: Fix skiplist leak in cmd_test
+> >   perf python: Check counts_values size in set_values
+> >   perf python: Validate CPU and thread maps in pyrf_evsel__open
+> >   perf python: Validate attribute setters in pyrf_evsel
+> >   perf python: Zero initialize perf_data in pyrf_data__init
+> >   perf python: Add thread and PMU uninitialized checks
+> >   perf python: Fix MetricGroup return type in perf.pyi
+> >   perf python: Fix count_values memory leak in pyrf_evsel__read
+> >   perf python: Fix memory leak in pyrf__metrics_cb
+> >   perf synthetic-events: Fix divide by zero in
+> >     perf_event__synthesize_threads
+>
+> Will you send v3?  You don't need to fix all pre-existing issues but we
+> should not introduce new bugs or regressions.  I think some of Sashiko
+> comments found them like data switch and pmu init checks.
 
-On Tue, Jun 30, 2026 at 07:17:00AM +0000, Dmitry Ilvokhin wrote:
-> With Zstd compression enabled ('perf record -z'), a single mmap push
-> whose compressed output exceeds the maximum record size makes
-> zstd_compress_stream_to_records() emit several PERF_RECORD_COMPRESSED2
-> records back to back. record__pushfn() however rewrote only the first
-> record's header to describe the whole blob as one record:
-> 
->   event->data_size   = compressed - sizeof(struct perf_record_compressed2);
->   event->header.size = PERF_ALIGN(compressed, sizeof(u64));
->   padding            = event->header.size - compressed;
->   ...
->   record__write(rec, map, &pad, padding);
-> 
-> perf_event_header::size is a __u16, so once the compressed blob no
-> longer fits in it the header.size assignment truncates and 'padding'
-> (size_t) underflows. write() is then handed that bogus length and fails
-> with EFAULT, aborting the recording:
-> 
->   failed to write perf data, error: Bad address
-> 
-> The bytes that did reach the file are mis-framed, so reading it back
-> cannot be decompressed.
-> 
-> This is easy to hit with a high event rate and a large buffer, e.g.:
-> 
->   perf record -z -F max -m 32M --per-thread -- perf test -w thloop 5 1
-> 
-> The single-record fixup is wrong by construction: because header.size is
-> 16 bits a compressed record cannot exceed 64KB, so the compressor must
-> split a push into a chain of records, and the session reader already
-> consumes them as such.
-> 
-> Frame each record where it is produced instead: make
-> process_comp_header() set the per-record data_size, 8-byte-align
-> header.size and zero the trailing padding, and let record__pushfn()
-> write the resulting blob, as the AIO path already does. Reduce
-> max_record_size by sizeof(u64) so the per-record alignment padding
-> cannot push header.size past its u16 field.
-> 
-> There is no on-disk format change; a perf.data written by the fixed tool
-> is still read by existing perf.
+Thanks Namhyung, I have a v3 coming. I'm working with Sashiko locally
+and trying to address as many issues as possible, including minor
+pre-existing ones=E2=80=94it's easier than remembering to clean them up lat=
+er.
 
-Thanks for working on this!
+Ian
 
-> 
-> Fixes: 208c0e168344 ("perf record: Add 8-byte aligned event type PERF_RECORD_COMPRESSED2")
-> Reported-by: Farid Zakaria <fmzakari@meta.com>
-> Signed-off-by: Dmitry Ilvokhin <d@ilvokhin.com>
-> Cc: stable@vger.kernel.org
-> ---
->  tools/perf/builtin-record.c                   | 41 ++++++------
->  .../record+zstd_comp_decomp_multi_record.sh   | 64 +++++++++++++++++++
->  tools/perf/util/zstd.c                        |  2 +-
->  3 files changed, 87 insertions(+), 20 deletions(-)
->  create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp_multi_record.sh
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 4a5eba498c02..2562c3177eae 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -652,27 +652,14 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
->  	struct record *rec = to;
->  
->  	if (record__comp_enabled(rec)) {
-> -		struct perf_record_compressed2 *event = map->data;
-> -		size_t padding = 0;
-> -		u8 pad[8] = {0};
->  		ssize_t compressed = zstd_compress(rec->session, map, map->data,
->  						   mmap__mmap_len(map), bf, size);
->  
->  		if (compressed < 0)
->  			return (int)compressed;
->  
-> -		bf = event;
->  		thread->samples++;
-> -
-> -		/*
-> -		 * The record from `zstd_compress` is not 8 bytes aligned, which would cause asan
-> -		 * error. We make it aligned here.
-> -		 */
-> -		event->data_size = compressed - sizeof(struct perf_record_compressed2);
-> -		event->header.size = PERF_ALIGN(compressed, sizeof(u64));
-> -		padding = event->header.size - compressed;
-> -		return record__write(rec, map, bf, compressed) ||
-> -		       record__write(rec, map, &pad, padding);
-> +		return record__write(rec, map, map->data, compressed);
->  	}
->  
->  	thread->samples++;
-> @@ -1590,18 +1577,29 @@ static void record__adjust_affinity(struct record *rec, struct mmap *map)
->  	}
->  }
->  
-> -static size_t process_comp_header(void *record, size_t increment)
-> +/*
-> + * Called once with data_size == 0 to start a record, then once with
-> + * data_size == compressed payload size to finalize and 8-byte-pad it
-> + * (unaligned records trip ASan in the reader).
-> + */
-> +static size_t process_comp_header(void *record, size_t data_size)
->  {
->  	struct perf_record_compressed2 *event = record;
->  	size_t size = sizeof(*event);
->  
-> -	if (increment) {
-> -		event->header.size += increment;
-> -		return increment;
-> +	if (data_size) {
-> +		size_t padding;
-> +
-> +		event->data_size = data_size;
-> +		event->header.size = PERF_ALIGN(size + data_size, sizeof(u64));
-> +		padding = event->header.size - size - data_size;
-> +		memset(record + size + data_size, 0, padding);
-> +		return data_size + padding;
->  	}
->  
->  	event->header.type = PERF_RECORD_COMPRESSED2;
->  	event->header.size = size;
-> +	event->data_size = 0;
->  
->  	return size;
->  }
-> @@ -1610,7 +1608,12 @@ static ssize_t zstd_compress(struct perf_session *session, struct mmap *map,
->  			    void *dst, size_t dst_size, void *src, size_t src_size)
->  {
->  	ssize_t compressed;
-> -	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct perf_record_compressed2) - 1;
-> +	/*
-> +	 * Reserve space so per-record PERF_ALIGN() padding keeps header.size
-> +	 * within u16.
-> +	 */
-> +	size_t max_record_size = PERF_SAMPLE_MAX_SIZE
-> +		- sizeof(struct perf_record_compressed2) - sizeof(u64);
->  	struct zstd_data *zstd_data = &session->zstd_data;
->  
->  	if (map && map->file)
-> diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp_multi_record.sh b/tools/perf/tests/shell/record+zstd_comp_decomp_multi_record.sh
-> new file mode 100755
-> index 000000000000..42efe7260def
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/record+zstd_comp_decomp_multi_record.sh
-> @@ -0,0 +1,64 @@
-> +#!/bin/bash
-> +# Zstd perf.data compression/decompression of multi-record data
-> +
-> +# SPDX-License-Identifier: GPL-2.0
-
-Can you please remove the blank line here?
-
-Also, this series cannot apply anymore.  Please rebase onto the latest
-perf-tools-next.
-
-Thanks,
-Namhyung
-
-> +
-> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> +recout=$(mktemp /tmp/__perf_test.zstd.rec.XXXXX)
-> +injout=$(mktemp /tmp/__perf_test.zstd.inj.XXXXX)
-> +perf_tool=perf
-> +
-> +cleanup() {
-> +	rm -f "${perfdata}" "${perfdata}".old "${perfdata}".decomp "${recout}" "${injout}"
-> +}
-> +trap cleanup EXIT TERM INT
-> +
-> +skip_if_no_z_record() {
-> +	$perf_tool record -h 2>&1 | grep -q -- '-z, --compression-level'
-> +}
-> +
-> +collect_z_record() {
-> +	echo "Collecting compressed record file:"
-> +	[ "$(uname -m)" != s390x ] && gflag='-g'
-> +	$perf_tool record -o "${perfdata}" $gflag -z -F max -m 32M --per-thread -- \
-> +		$perf_tool test -w thloop 5 1 \
-> +		>/dev/null 2>"${recout}"
-> +}
-> +
-> +check_record() {
-> +	echo "Checking record did not fail to write data:"
-> +	if grep -q "failed to write perf data" "${recout}"; then
-> +		cat "${recout}"
-> +		return 1
-> +	fi
-> +}
-> +
-> +check_decompress() {
-> +	echo "Checking compressed file decompresses cleanly:"
-> +	if ! $perf_tool inject -i "${perfdata}" -o "${perfdata}".decomp 2>"${injout}"; then
-> +		cat "${injout}"
-> +		return 1
-> +	fi
-> +	if grep -Eqi "decompress|corrupt|failed to process type" "${injout}"; then
-> +		cat "${injout}"
-> +		return 1
-> +	fi
-> +}
-> +
-> +skip_if_no_z_record || exit 2
-> +collect_z_record
-> +check_record || exit 1
-> +
-> +# Need >1 record, else the multi-record path wasn't exercised.
-> +# Skip rather than pass/fail spuriously.
-> +nr=$($perf_tool report -i "${perfdata}" --stats 2>/dev/null |
-> +	awk '/COMPRESSED2 events:/ { print $3 }')
-> +if [ -z "${nr}" ] || [ "${nr}" -lt 2 ]; then
-> +	echo "less than two compressed records (${nr:-0}), skipping"
-> +	exit 2
-> +fi
-> +echo "Produced ${nr} compressed records"
-> +
-> +check_decompress
-> +err=$?
-> +exit $err
-> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-> index 57027e0ac7b6..1955fa2431d1 100644
-> --- a/tools/perf/util/zstd.c
-> +++ b/tools/perf/util/zstd.c
-> @@ -30,7 +30,7 @@ int zstd_fini(struct zstd_data *data)
->  
->  ssize_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
->  				       void *src, size_t src_size, size_t max_record_size,
-> -				       size_t process_header(void *record, size_t increment))
-> +				       size_t process_header(void *record, size_t data_size))
->  {
->  	size_t ret, size, compressed = 0;
->  	ZSTD_inBuffer input = { src, src_size, 0 };
-> -- 
-> 2.53.0-Meta
-> 
+> Thanks,
+> Namhyung
+>
+> >
+> >  tools/perf/builtin-record.c        |   2 +
+> >  tools/perf/builtin-script.c        |   2 +-
+> >  tools/perf/builtin-stat.c          |   9 +-
+> >  tools/perf/builtin-top.c           |   2 +
+> >  tools/perf/python/perf.pyi         |   4 +-
+> >  tools/perf/tests/builtin-test.c    |   5 +-
+> >  tools/perf/util/data.c             |   3 +-
+> >  tools/perf/util/python.c           | 160 ++++++++++++++++++++++++-----
+> >  tools/perf/util/synthetic-events.c |   6 +-
+> >  9 files changed, 153 insertions(+), 40 deletions(-)
+> >
+> > --
+> > 2.55.0.rc0.799.gd6f94ed593-goog
+> >
