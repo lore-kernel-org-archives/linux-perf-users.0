@@ -1,44 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8745C345722;
-	Sat,  4 Jul 2026 16:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DE93A4520
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 Jul 2026 16:11:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783181463; cv=none; b=QTH3yWUhcJZd4nKB72MrWVbF2nz0pnoNfLEihZ4GN8Ay8N3I59QajfOKt3WybO0doqptxInWfPyKXtSR71upgD3yBe6vGMfnxiZ9d9q+KEbCHW1HHP3gZ9bIsVb7cqsPrOY8lF8WDKo2tnq7jO3nfGu0Jl+MbHxVFW0sGA8RWV4=
+	t=1783181464; cv=none; b=uZ+SSHdlCVuZxcn5pe9pCHVw79LXWjtAJ1tibvh3I+tnKmvs1OUYp8j/udgC3tZFseQ3Ee8lil/O/5gc1Fsge2glXzg2GiC5D0CI86asMopgg7SXfFCzcp99WrLHMDqvTMvKAuBvSLML04KnjQaIcEpUhDzvsD27c+Vtv6uLnOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783181463; c=relaxed/simple;
-	bh=8T7MQdJMKNs6n6/fyXQhasLB73I/OIFVgUIWdvlsOSg=;
+	s=arc-20240116; t=1783181464; c=relaxed/simple;
+	bh=/tXK/kuXuQJCrVdyfsUbxmVy7A6wl/+JLCsNx8LV6nA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JWUZRhV7+3CuQLqpE9839RQTmWKD8r6hzVzxvEsojZswXwopepnFKRbwMEzr/TNiAOAapSmTO7RJ4roRHqRIncQ0I2RqdV5p/h35VM8FyvAoKo7WKEu/qDt7NsWOawPoPZBBMZiMhmQ5V9qSgxviZcTFmT6w8cpQBR3J0cEfPeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKC1k1x8; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=jE93QTrrRkgeTLIQsOLwpSkQhamX14YlV4yyLTSsApUX3b5IO72u5Y4UZZRdpPqH07dwTMBcRJa3+4FRn6xQfOF6JZgaD6G4aKjFvj7ecxm8rX3NwyA468VSrvc3dQTJIVR8H4k/0W9310vAs82syL+NhWeocG+ZEbUHWN2lkfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYAHUVAo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKC1k1x8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3093F1F00A3A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYAHUVAo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A297D1F00ACA;
 	Sat,  4 Jul 2026 16:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783181462;
-	bh=B0CwLxfiqHsqVg8byxNSiwIA+WVcsN08HJ64y/nVgl4=;
+	s=k20260515; t=1783181463;
+	bh=QwB8FGCq3eCoQl3SKVpOQbv8DuiqoTDev9lDz7Av2U4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=gKC1k1x8W8YOSaJabutgw83AcMT6XJPpCi6XAkWruxgpvvof6N6HwYCNsYSJeROAw
-	 GT3EKP+fDUaDJaH1DVqJM6a4LfQoDe+s2lgEiqrjuEbm/VaGEORoWHMtkedEg/0lQi
-	 Btxqm7LcipoicfO8ncJhQL4JF508l/e+RpPX57JdI1brvtSOUiIokRW0HWJeAQnlFb
-	 iwKaVcEF/J47jJ7znQRLJV2ildxUiyDcP1QTNJ3Br7qJsIqdscmO2W5lBii2sJGalD
-	 NsybIkarnQ7HUeCd3xk7kv1ODQ7jVMBJg7Kr4DrGHws7l3ol3RD8Wff7jVshej2anE
-	 fyCWjDz335/Ww==
+	b=oYAHUVAoFAGAcpfKtqekWqpffNDz+hwxnk5I3Q1D+I8295A3l8IX0I8eeft6zARIH
+	 nXEMMi2/E8LXi0/uhHWh5ka3UTZjKQtAA8TrMHetqWarEX7JD7XJ+O6sPWOWfiN0QN
+	 q5bgZqHULAuBgC8er0u1168POq/OWw8AJ+C5zM/uC69rSbeyzFjNXUSSQJ5VYQmgbc
+	 xhS0detE1cmPOPS9UCv9o2m5+yFf084VPqSQoamEQvQOkNvv860gUdLhaml39nbHcr
+	 1DU7HB8ZtzNbZAVo/zFFfhISkIfWzELg3koSx2NrrOa8whM8t0mgKpKgJ/VccbWL3A
+	 EAHl58FPpeewQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
- linux-perf-users@vger.kernel.org
-In-Reply-To: <20260701194153.401218-1-namhyung@kernel.org>
-References: <20260701194153.401218-1-namhyung@kernel.org>
-Subject: Re: [PATCH v3 0/6] perf kvm: A small update in the default arch
- event
-Message-Id: <178318146216.1194818.559653917515294334.b4-ty@kernel.org>
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Al Grant <al.grant@arm.com>, 
+ Paschalis Mpeis <paschalis.mpeis@arm.com>, Amir Ayupov <aaupov@fb.com>, 
+ Leo Yan <leo.yan@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org, 
+ linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linux.dev>
+In-Reply-To: <20260702-b4-arm_cs_callchain_support_v1-v11-0-846abbf600d7@arm.com>
+References: <20260702-b4-arm_cs_callchain_support_v1-v11-0-846abbf600d7@arm.com>
+Subject: Re: [PATCH v11 0/9] perf cs-etm: Support thread stack and
+ callchain
+Message-Id: <178318146263.1194818.17858862135868990368.b4-ty@kernel.org>
 Date: Sat, 04 Jul 2026 09:11:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -50,13 +55,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 01 Jul 2026 12:41:47 -0700, Namhyung Kim wrote:
-> Ian said there's an issue in the perf kvm record command line option parsing.
-> This is my attempt to address the issue, simplify the code and fix memory leaks.
+On Thu, 02 Jul 2026 20:51:35 +0100, Leo Yan wrote:
+> This series adds thread-stack and synthesized callchain support for Arm
+> CoreSight, which comes from older series [1] but heavily rewritten.
 > 
-> v3 changes)
->  * remove unnecessary error check  (Sashiko)
->  * update test code after rebase
+> CS ETM previously kept last-branch state in a per-trace-queue buffer.
+> That effectively makes the state per CPU, while the call/return history
+> belongs to a thread. This series moves branch tracking to the common
+> thread-stack code.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
