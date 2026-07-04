@@ -1,143 +1,120 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96181238159;
-	Sat,  4 Jul 2026 02:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF8213AD1C
+	for <linux-perf-users@vger.kernel.org>; Sat,  4 Jul 2026 02:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783132897; cv=none; b=mDFbqePXQCtIf96vJuuJrbt38okD0aj4H5qrSkF+rNMAkhFq+lbry/T25PnRsRUHURf0Pw5J37rzU0dwvveClnEnsadqyuKUn9S0shQs4OrXg2NceASvFRCC+a8glvVI/EOl6eTQ2ikaZyrSu2tTNWEa35P3uxydWaRxV+INuBY=
+	t=1783133059; cv=none; b=sDxMY1+W02g7dgERE04Ehk+lNCmIn3pkjBw582RJgKjpJQUvfNEkjD6zaCG+KieirR2SWZAsd/XwhWI3AjAmCBEglXXXy4cbSLwUpsPneHUODAGIGsVPhsh0x2eS5Hbw0eq3nDaqPUTu3BkCXvb7QpjkX9DYpxIebcNAkew658I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783132897; c=relaxed/simple;
-	bh=Xs3tM7qfQm3lT25YtQSsbtO3kUabxeu3sLJHPS1uVVk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T8qvVm4UAtJ4sWhFpeV6CXeAfulyqS9bbw0Sz+1md4SPkC4Pa9KEVj4oSF5zFJZS9kDFADdTjFuRhbEjnyRkTq7x6ymrv74C2s6gQHSA4pOjf8eE+5q2E+xYKNGnL6M18DfoGQE18bICOEGJUeGQ8HfESG8X4fums26p9hUfxkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GjZtioYM; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1783133059; c=relaxed/simple;
+	bh=7prJADnQymn+rs1252TSn3BunTPxI2H4f6DIk2QJR9A=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=J1cLd4hMpa+suqfNt6o2fhMtO9cQbXCepdd8YDYbG6XkjuKUKM/2N2ZMQIh6HazaWYiPPQMu4fygzyv8BsbH1gQpnQzuz219m9drrCf7pApm0Ts59E1HveLI3ItDA44LHvZc4KUKPMtYc/ZbWaiR3TU5E8OhpZA81FIRXFJ1aiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3bkaOCG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GjZtioYM"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1783132892; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=uXcSSBqyEs6AmgiGt4HIlYfUa4BF9HhKnMFy5oK8LMg=;
-	b=GjZtioYM9Q4FUct+HfC0TPBFlapJP/EsoRiIbkjqIHN0ucVfysBxf06FMnAg/zBOOd5m+R1ztY6s7rkGDDeuanrvvilR2qGfuclCmcU2oWtTiFHX/IhIe3aWh16a4hu/sgYTOmCQOQH80wBvywH6pG3O1WUnvr7x/HoQCrMowwA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R851e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=fangyu.yu@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0X6KaS.7_1783132569;
-Received: from localhost.localdomain(mailfrom:fangyu.yu@linux.alibaba.com fp:SMTPD_---0X6KaS.7_1783132569 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 04 Jul 2026 10:36:11 +0800
-From: fangyu.yu@linux.alibaba.com
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Quan Zhou <zhouquan@iscas.ac.cn>,
-	Anup Patel <anup@brainfault.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	guoren@kernel.org,
-	Fangyu Yu <fangyu.yu@linux.alibaba.com>
-Subject: [PATCH] perf kvm/riscv: Fix event key collision between interrupts and exceptions
-Date: Sat,  4 Jul 2026 10:36:08 +0800
-Message-Id: <20260704023608.24971-1-fangyu.yu@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3bkaOCG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C25F21F000E9;
+	Sat,  4 Jul 2026 02:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783133057;
+	bh=/L4J7kqYCN7zXqVNto2FAFm+uDdNoMwjBA12wG/e+T0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Q3bkaOCGQwQ48YPTdGnepe4bNRCyzRXF79e+GJj8sJqVeJx8+khmzhYvNAeq1wIRy
+	 H+JkzaCmIKgG/7Y+8EWWQioz0BzoTSpsYQtnuVlSnrjl0T7aJ0671Ot/NxbvdxTgaw
+	 QGZuRwvclIgCfQ7FaCmH32FWpNIW4YWvYFJLQf1tiDnIrS8c9e7Wl0m7AH+uGdOYhp
+	 wLHEVH0IYow9gA9gVmTSREHcjQgD7RS5DKjrx0QLyDrPSp7tbgNACPCa7dtt5VLr0n
+	 O39/ydPPUgGhbCNJ/w0wrAozo6znEWEs4vx7DVLk5WtPkY5afV3UKCFio0eXViO+ip
+	 CtJ4EMRl63/zg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf kvm/riscv: Fix event key collision between
+ interrupts and exceptions
+Reply-To: sashiko-reviews@lists.linux.dev
+To: fangyu.yu@linux.alibaba.com
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260704023608.24971-1-fangyu.yu@linux.alibaba.com>
+References: <20260704023608.24971-1-fangyu.yu@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 04 Jul 2026 02:44:17 +0000
+Message-Id: <20260704024417.C25F21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Using the compiler predefined macro `__riscv_xlen` in a static a=
+rray initializer causes build failures on non-RISC-V architectures and brea=
+ks cross-architecture analysis.
+--
 
-RISC-V scause encodes interrupts and exceptions in the same
-cause field, with bit 63 on RV64 and bit 31 on RV32 used to
-distinguish interrupts from exceptions. The lower cause bits
-overlap between the two namespaces, so masking off the interrupt
-bit makes distinct IRQ and exception events map to the same key.
+commit e5247b904831a2084b1e8757d98d388a7fc008c0
+Author: Fangyu Yu <fangyu.yu@linux.alibaba.com>
 
-This affects perf kvm stat exit-reason decoding. For example,
-IRQ_S_TIMER and EXC_LOAD_ACCESS both use cause code 5, and can be
-misreported as the wrong exit reason.
+perf kvm/riscv: Fix event key collision between interrupts and exceptions
 
-Fix this by using the full scause value as the lookup key in
-event_get_key(). Also split TRAP() into TRAP_EXC() and
-TRAP_IRQ() so interrupt entries are encoded with the
-architecture-specific IRQ bit set, matching the value reported by
-hardware.
+This commit updates the RISC-V KVM stat exit-reason decoding to use the
+full scause value, avoiding key collisions between interrupts and exception=
+s.
+It splits the TRAP macro into TRAP_EXC and TRAP_IRQ to encode interrupts
+with the architecture-specific IRQ bit matching the hardware value.
 
-Fixes: ceea279f9376 ("perf kvm stat: Remove use of the arch directory")
-Signed-off-by: Fangyu Yu <fangyu.yu@linux.alibaba.com>
----
- .../perf/util/kvm-stat-arch/kvm-stat-riscv.c  |  4 +--
- .../util/kvm-stat-arch/riscv_trap_types.h     | 27 ++++++++++---------
- 2 files changed, 15 insertions(+), 16 deletions(-)
+> diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c b/tools/perf/=
+util/kvm-stat-arch/kvm-stat-riscv.c
+> index 967bba261a475..829096a41a3b2 100644
+> --- a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
+> +++ b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
+> @@ -23,10 +23,8 @@ static const char * const __kvm_events_tp[] =3D {
+>  static void event_get_key(struct perf_sample *sample,
+>  			  struct event_key *key)
+>  {
+> -	int xlen =3D 64; // TODO: 32-bit support.
+> -
+>  	key->info =3D 0;
+> -	key->key =3D perf_sample__intval(sample, kvm_exit_reason(EM_RISCV)) & ~=
+CAUSE_IRQ_FLAG(xlen);
+> +	key->key =3D perf_sample__intval(sample, kvm_exit_reason(EM_RISCV));
 
-diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-index 967bba261a47..829096a41a3b 100644
---- a/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-+++ b/tools/perf/util/kvm-stat-arch/kvm-stat-riscv.c
-@@ -23,10 +23,8 @@ static const char * const __kvm_events_tp[] = {
- static void event_get_key(struct perf_sample *sample,
- 			  struct event_key *key)
- {
--	int xlen = 64; // TODO: 32-bit support.
--
- 	key->info = 0;
--	key->key = perf_sample__intval(sample, kvm_exit_reason(EM_RISCV)) & ~CAUSE_IRQ_FLAG(xlen);
-+	key->key = perf_sample__intval(sample, kvm_exit_reason(EM_RISCV));
- 	key->exit_reasons = riscv_exit_reasons;
- }
- 
-diff --git a/tools/perf/util/kvm-stat-arch/riscv_trap_types.h b/tools/perf/util/kvm-stat-arch/riscv_trap_types.h
-index aa5d24fab4ee..da1f1ce55326 100644
---- a/tools/perf/util/kvm-stat-arch/riscv_trap_types.h
-+++ b/tools/perf/util/kvm-stat-arch/riscv_trap_types.h
-@@ -38,20 +38,21 @@
- #define EXC_VIRTUAL_INST_FAULT 22
- #define EXC_STORE_GUEST_PAGE_FAULT 23
- 
--#define TRAP(x) { x, #x }
-+#define TRAP_EXC(x) { x, #x }
-+#define TRAP_IRQ(x) { (x) | CAUSE_IRQ_FLAG(__riscv_xlen), #x }
- 
- #define kvm_riscv_trap_class \
--	TRAP(IRQ_S_SOFT), TRAP(IRQ_VS_SOFT), TRAP(IRQ_M_SOFT), \
--	TRAP(IRQ_S_TIMER), TRAP(IRQ_VS_TIMER), TRAP(IRQ_M_TIMER), \
--	TRAP(IRQ_S_EXT), TRAP(IRQ_VS_EXT), TRAP(IRQ_M_EXT), \
--	TRAP(IRQ_S_GEXT), TRAP(IRQ_PMU_OVF), \
--	TRAP(EXC_INST_MISALIGNED), TRAP(EXC_INST_ACCESS), TRAP(EXC_INST_ILLEGAL), \
--	TRAP(EXC_BREAKPOINT), TRAP(EXC_LOAD_MISALIGNED), TRAP(EXC_LOAD_ACCESS), \
--	TRAP(EXC_STORE_MISALIGNED), TRAP(EXC_STORE_ACCESS), TRAP(EXC_SYSCALL), \
--	TRAP(EXC_HYPERVISOR_SYSCALL), TRAP(EXC_SUPERVISOR_SYSCALL), \
--	TRAP(EXC_INST_PAGE_FAULT), TRAP(EXC_LOAD_PAGE_FAULT), \
--	TRAP(EXC_STORE_PAGE_FAULT), TRAP(EXC_INST_GUEST_PAGE_FAULT), \
--	TRAP(EXC_LOAD_GUEST_PAGE_FAULT), TRAP(EXC_VIRTUAL_INST_FAULT), \
--	TRAP(EXC_STORE_GUEST_PAGE_FAULT)
-+	TRAP_IRQ(IRQ_S_SOFT), TRAP_IRQ(IRQ_VS_SOFT), TRAP_IRQ(IRQ_M_SOFT), \
-+	TRAP_IRQ(IRQ_S_TIMER), TRAP_IRQ(IRQ_VS_TIMER), TRAP_IRQ(IRQ_M_TIMER), \
-+	TRAP_IRQ(IRQ_S_EXT), TRAP_IRQ(IRQ_VS_EXT), TRAP_IRQ(IRQ_M_EXT), \
-+	TRAP_IRQ(IRQ_S_GEXT), TRAP_IRQ(IRQ_PMU_OVF), \
-+	TRAP_EXC(EXC_INST_MISALIGNED), TRAP_EXC(EXC_INST_ACCESS), TRAP_EXC(EXC_INST_ILLEGAL), \
-+	TRAP_EXC(EXC_BREAKPOINT), TRAP_EXC(EXC_LOAD_MISALIGNED), TRAP_EXC(EXC_LOAD_ACCESS), \
-+	TRAP_EXC(EXC_STORE_MISALIGNED), TRAP_EXC(EXC_STORE_ACCESS), TRAP_EXC(EXC_SYSCALL), \
-+	TRAP_EXC(EXC_HYPERVISOR_SYSCALL), TRAP_EXC(EXC_SUPERVISOR_SYSCALL), \
-+	TRAP_EXC(EXC_INST_PAGE_FAULT), TRAP_EXC(EXC_LOAD_PAGE_FAULT), \
-+	TRAP_EXC(EXC_STORE_PAGE_FAULT), TRAP_EXC(EXC_INST_GUEST_PAGE_FAULT), \
-+	TRAP_EXC(EXC_LOAD_GUEST_PAGE_FAULT), TRAP_EXC(EXC_VIRTUAL_INST_FAULT), \
-+	TRAP_EXC(EXC_STORE_GUEST_PAGE_FAULT)
- 
- #endif /* ARCH_PERF_RISCV_TRAP_TYPES_H */
--- 
-2.50.1
+[Severity: Medium]
+Does this code introduce a regression by preventing dynamic cross-architect=
+ure
+bitness decoding when analyzing traces? With the dynamic mask removed here,
+the lookup now depends entirely on the statically sized table.
 
+[ ... ]
+
+> diff --git a/tools/perf/util/kvm-stat-arch/riscv_trap_types.h b/tools/per=
+f/util/kvm-stat-arch/riscv_trap_types.h
+> index aa5d24fab4ee3..da1f1ce55326c 100644
+> --- a/tools/perf/util/kvm-stat-arch/riscv_trap_types.h
+> +++ b/tools/perf/util/kvm-stat-arch/riscv_trap_types.h
+> @@ -38,20 +38,21 @@
+>  #define EXC_VIRTUAL_INST_FAULT 22
+>  #define EXC_STORE_GUEST_PAGE_FAULT 23
+> =20
+> -#define TRAP(x) { x, #x }
+> +#define TRAP_EXC(x) { x, #x }
+> +#define TRAP_IRQ(x) { (x) | CAUSE_IRQ_FLAG(__riscv_xlen), #x }
+
+[Severity: Medium]
+Does using the compiler predefined macro __riscv_xlen in this static array
+initializer cause a regression by breaking the build on non-RISC-V
+architectures?
+
+When building perf cross-platform, this macro is not defined on hosts like
+x86_64 or ARM64, and the static initialization in riscv_exit_reasons expands
+this macro.
+
+Also, does baking the host's compile-time word size into TRAP_IRQ introduce=
+ a
+regression for cross-platform analysis? For example, if a 64-bit perf binary
+processes a 32-bit KVM trace, it will expect bit 63 to be set for interrupt=
+s,
+which would fail to decode 32-bit KVM events using bit 31.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260704023608.2497=
+1-1-fangyu.yu@linux.alibaba.com?part=3D1
