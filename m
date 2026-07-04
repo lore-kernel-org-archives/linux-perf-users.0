@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C77432B9B5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8745C345722;
 	Sat,  4 Jul 2026 16:11:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783181463; cv=none; b=dRS0KhxAbHJ2hKfEbpCD1ZfTlp0VX0JebUNrrfQTizcwmRLq0qiYcsair+D7Ij/CrSZk7HFoGubgjXXaVdZl0giLF3//XAqH6T9thpiYJ7sPPcLA1sYBw2im0yTrmKNXBvYelkEw9N63XfGfKbVDaLgS1Uvyy70ilM5bE9iBKnU=
+	t=1783181463; cv=none; b=QTH3yWUhcJZd4nKB72MrWVbF2nz0pnoNfLEihZ4GN8Ay8N3I59QajfOKt3WybO0doqptxInWfPyKXtSR71upgD3yBe6vGMfnxiZ9d9q+KEbCHW1HHP3gZ9bIsVb7cqsPrOY8lF8WDKo2tnq7jO3nfGu0Jl+MbHxVFW0sGA8RWV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783181463; c=relaxed/simple;
-	bh=GIxnK5KNTpY08mnVXaUXeQr5XDCAdwvPwqH0Fl0SHXo=;
+	bh=8T7MQdJMKNs6n6/fyXQhasLB73I/OIFVgUIWdvlsOSg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AvufprvQwbxiJyxdf1MPT8yTOxa2kYzXf5hhoX1ypsr1ryX8rpZY1+I9x4yehbloV6deSJ2dPUkZX5VRMQcNvmCILUxycYIL6+YJc/gz0WmSaUp/WVac6iQ3aXOh623oKD7ACMlt2yHFhTBwp68LJ0N38jMo+HG8n1Cap++QRH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SagrakNp; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=JWUZRhV7+3CuQLqpE9839RQTmWKD8r6hzVzxvEsojZswXwopepnFKRbwMEzr/TNiAOAapSmTO7RJ4roRHqRIncQ0I2RqdV5p/h35VM8FyvAoKo7WKEu/qDt7NsWOawPoPZBBMZiMhmQ5V9qSgxviZcTFmT6w8cpQBR3J0cEfPeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKC1k1x8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SagrakNp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6E61F000E9;
-	Sat,  4 Jul 2026 16:11:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKC1k1x8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3093F1F00A3A;
+	Sat,  4 Jul 2026 16:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1783181462;
-	bh=9BCBxOMJjJb5UbDil90ZttRFVlP90VAZpDtTqO/OiGI=;
+	bh=B0CwLxfiqHsqVg8byxNSiwIA+WVcsN08HJ64y/nVgl4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=SagrakNpBM+ToOv8CO5kbgKMFlzOqrrwmw8uy0JXIx0j5Kq4CzqFbDPR0VkkP9sSv
-	 GONCjs4fFNEVwdcGPs0ah6lMzDC7b22/QHJCqxa2ntZusY8HbxMheOU50cj2QJPiwN
-	 v5gip6rEmpLwqwOdw5Eiei+/pjfLPzuRzWccuJy4CJHxcZ8O9ErgavWwJ+sSuga9Yt
-	 IknHZJ5uRJqvXp1oayxoTJtremztRHymcx9Rxe/nYZRe424fwlOsNOY5Rn51dfHBN3
-	 1UQQaozKIcuSRPI6VFIKz7P4lhClGp2lumukSwdEhf1JSHRBpyNivGcqWoInJMIsDI
-	 d+jYhoqF8HWgw==
+	b=gKC1k1x8W8YOSaJabutgw83AcMT6XJPpCi6XAkWruxgpvvof6N6HwYCNsYSJeROAw
+	 GT3EKP+fDUaDJaH1DVqJM6a4LfQoDe+s2lgEiqrjuEbm/VaGEORoWHMtkedEg/0lQi
+	 Btxqm7LcipoicfO8ncJhQL4JF508l/e+RpPX57JdI1brvtSOUiIokRW0HWJeAQnlFb
+	 iwKaVcEF/J47jJ7znQRLJV2ildxUiyDcP1QTNJ3Br7qJsIqdscmO2W5lBii2sJGalD
+	 NsybIkarnQ7HUeCd3xk7kv1ODQ7jVMBJg7Kr4DrGHws7l3ol3RD8Wff7jVshej2anE
+	 fyCWjDz335/Ww==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- live-patching@vger.kernel.org, Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Petr Mladek <pmladek@suse.com>
-In-Reply-To: <20260626212140.1380094-1-joe.lawrence@redhat.com>
-References: <20260626212140.1380094-1-joe.lawrence@redhat.com>
-Subject: Re: [PATCH v2 0/2] perf symbols: skip livepatch symbols
-Message-Id: <178318146185.1194818.28831173448483232.b4-ty@kernel.org>
-Date: Sat, 04 Jul 2026 09:11:01 -0700
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+ linux-perf-users@vger.kernel.org
+In-Reply-To: <20260701194153.401218-1-namhyung@kernel.org>
+References: <20260701194153.401218-1-namhyung@kernel.org>
+Subject: Re: [PATCH v3 0/6] perf kvm: A small update in the default arch
+ event
+Message-Id: <178318146216.1194818.559653917515294334.b4-ty@kernel.org>
+Date: Sat, 04 Jul 2026 09:11:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,14 +50,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 26 Jun 2026 17:21:38 -0400, Joe Lawrence wrote:
-> This patchset fixes two minor perf bugs when livepatches containing
-> special so-called livepatch symbols are loaded.  In both cases, perf
-> should ignore these symbols as they resolve as relocations to kernel
-> addresses and not module space.
+On Wed, 01 Jul 2026 12:41:47 -0700, Namhyung Kim wrote:
+> Ian said there's an issue in the perf kvm record command line option parsing.
+> This is my attempt to address the issue, simplify the code and fix memory leaks.
 > 
-> - Patch 1 fixes `perf test 1`
-> - Patch 2 fixes `perf record --kcore` bloat
+> v3 changes)
+>  * remove unnecessary error check  (Sashiko)
+>  * update test code after rebase
 > 
 > [...]
 Applied to perf-tools-next, thanks!
