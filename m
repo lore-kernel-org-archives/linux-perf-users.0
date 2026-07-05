@@ -1,181 +1,159 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139CC33F5AC
-	for <linux-perf-users@vger.kernel.org>; Sat,  4 Jul 2026 23:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783206213; cv=pass; b=V4hdVf9MdqBHnnI9JbaGAbk1+AqRTFLnlzDaQh2hbDEjCQV+OurCgfVfyQOoRt58T+o3ztx9ZeNzoRkK41O//8jtRVCg1STr/talZpLs0dSz6Mrx+AI2rwGO3WKnjMKDMUg6Rea1CI0BYNRBpAPEB3CSz30FP28aDR12EMVwgws=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783206213; c=relaxed/simple;
-	bh=+0DN3z4e8iX8+bNNHBRVlsEy0UfFOC+jaEHEQd7Ovy0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=djQSQvf40SiehLnIHsQIrpqzhVk/QhPV/Qa902ej7R0WI3XFghhEGrOmexaFj8RPRFu5VzQWTRvFbxEvX0MuYUhV2eypnYmlJSRZi27R6Uf1pmF98XPdRTsmvdP45Xcx4tFOHJxjmtD9fcr0pHA2+0vt/LlqnQyQvCO6mpI4D9M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zzhbqix6; arc=pass smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B746D7081F
+	for <linux-perf-users@vger.kernel.org>; Sun,  5 Jul 2026 00:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783213161; cv=none; b=DdIhWzgV5otHQqGM87uwtyRydYxRA1NgsdIMApuLM+NvTYDdGatlRqYa5qqKJOU8r/2EKgl7wV3Qo78VilbZMyCPiTOWfiP4doWgQjewcySg0GmPihVy/2r7VXUPNgwYhl4Y6hvXZnYfoYLEj0BfjN98JLIql5cwVSWU5Sol0k8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783213161; c=relaxed/simple;
+	bh=cO7KeLajt88zWj6/I8j6srjza3AyBwZkqVAlBytQiXg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hlc9rv04RWPdx+KL0y2lADhrkKh/baKgCd2s0R/cUGIhpR4uIM+EM2pDijGobXqgprB7+LPHVpftx+YR5oicbcmSXn6F6YzWYJ5YA/YYTCyKSRgyC8+iF6Us0XWSVRW7EdmrHqz4wTU53BqoTkbYG6LOnMDVHAV5qOLG6buRaFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rPd3Axkr; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zzhbqix6"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2cab97c86bdso270685ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 04 Jul 2026 16:03:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783206211; cv=none;
-        d=google.com; s=arc-20260327;
-        b=eFR5GpAM61vqr0ahgLsUUvsBzalxymX8Pik6FstzT7KN+kSqNiWt+y06QipfsOxsA6
-         x9BrfR5oi1AG6U/Oo30IPFqACqP9jTbE6mwosLozHPXU4SKjZZCyd3wexMHsPEtViTup
-         XhMy0gdLzW/nZm0XRbcHt49jxW1OuIW5r3C2I5HBrA4DFJUxqDIAqwN+SMrK38kpc+c3
-         ybWoPP7hM3WKikI070BG69jEmZ8/msY52rF1KII7xUg/zP9dlqhCeYpIWxNYLdJrDUdC
-         RAERCiNOsttNkpmkmWzw9seTg9/+yu7x7UtoBfw25w0RmARYkeGjkm2Ru2kJO9Ya6X4l
-         SRgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=NRoYBkGWb2Ymhsxn4Q9Uph+pMflWWye/JnWbb9YJrXE=;
-        fh=WsmiPNzpDfsPNAW7s0j1CmkDYkdJqaJpU1RG2qxKHDU=;
-        b=OaO657o4kpXQo/Xl//lcg3YmpmgMX+1vrJnJTkOA7EVrawYC84YzoDuupMUwg+7IQX
-         s4f9ERufi5witC+ezYm/s7PX7bsq82bhswaMBLP1WAEZZaMwdpQEkV87fOqYLfRBD+FK
-         E0bCLie/qtMQbMP+5EKr/B8iKPwOZUrP/r2PQoHOoDPrPp0PKFqM/+2pAnxz0IdYJEnu
-         ppkldkhjurB/0i71PduNrLNyuAq/XgPiynV01YLK3CodsIZgyk3MmnZODgiIqyz9pGCQ
-         gKBx5CrMmJQb08NtGy6dDZZnfXozGbzMy8LZmwMjzsf0Z2/PCdySSI5Y6bJCwJgoHoxK
-         10cQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rPd3Axkr"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-697bd21fdc2so2968963a12.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 04 Jul 2026 17:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783206211; x=1783811011; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=NRoYBkGWb2Ymhsxn4Q9Uph+pMflWWye/JnWbb9YJrXE=;
-        b=Zzhbqix66W65p8Uzxj6tQRj//PueK1G5umH2ru+AMDarNKdxcpZSzU13MBKlKV1aQ7
-         2cW2R8Rbq7oT2Lz/bxn+vEtQwYbHbjgkz2dXiX2ceUk39RdqQsl/qKJ3wg+UhuQ8IMcL
-         iCB/Pu3wEypl03oB8ikM5r5ejm0dy3SLOW92coCRGCSJEVgRjoNfp4Ksjiu7iCk7Xcnv
-         2g03rD/8qoE1tzFDe3gZ9l65mBjB2Z6j+S4SONeKbg6kWoX4OF3eM9Oil1IH4c7k1ERB
-         +0roFWBv+pjNpBeK+bSQ9vBiYNPffQkel6RE1PtLPxZhiLAMV7GKghfWrivF1Hv59fjT
-         1YWw==
+        d=gmail.com; s=20251104; t=1783213158; x=1783817958; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ryMBcxUXggyzl/qW7f/DH7Mf3hmnzZUv0RCLZTa8uB4=;
+        b=rPd3AxkrC3jidVOZbM05yaXU7yGja4758fVFX05/EdDz0tZe0A6ieVvf/dQY8ilab3
+         fVrWforAU5g1mLW2OpgCuJJG6tjx9bY1dS8hUmsI4yfpH3e/v9/dfDWvMWa9upnXDW7c
+         mi1MCBZ6doe66gM8t4W1VXrQc9iR9Wlpz9OQ3fTdbqud1+msO6L66X0uvfCP5PdhkbXJ
+         ZEUg2l3EooKkkhgQIfw4o6RvkAaN3BunkMiLLtSHTg6gd6PXZil+AYmEDR2xSxNqeQmA
+         uex411KuzBBZ7UuhHfmzK9St2DLAJ8FnEO/TQXYAtCOXO31C697WwREloC6hB4sQFDOn
+         KkkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783206211; x=1783811011;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=NRoYBkGWb2Ymhsxn4Q9Uph+pMflWWye/JnWbb9YJrXE=;
-        b=G6nm6CVLEKHeurgFkouNmWMhw770A8O7LY0xW75iLYhtVVsPtm9hl9H/xdsJTol2yp
-         LnXuLP7VKTzLsl9E24WC8ZaGz+ne6kyVWhg1a0273zw1v4AADwjLOFSlB+GI+ETiVdXM
-         rertco3KDZWm0OiIIVPl5mlYiCqpEc5Wx/UzxKoCTJ2Zzy8DS6F9hmB/al2CbhroNttp
-         VJstRTAjxTWfw/hHdnwyor9Jyx3O/KJym7LJKtokpdmI5FRofxlfGzXOCBODynqKSlwW
-         jpfX8U7+Xwxbfri1AHuXnEyKt2G58qC+tkTxmGPiqc2YHyCTA1vP4pVibqI7WvtXhhma
-         50Xw==
-X-Forwarded-Encrypted: i=1; AHgh+RpnSH823ra6R58geW1YL1EJ3YDIPQzbD+llR0b+RnmnDLMVkhfxdggTiwLIQ2uQcyZFe/98c39UTpd37iepNHDi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww6bqVtlDfgdJOuoSU7rxT9sR1G6TwNXQ2aYNnykCU0fnOH/1M
-	DfuioODsj5od2kO2s2uvoPUctWw+64bD0OZ0hFRwAx7bEuGlJdbXPw48mFWejlb+fmt7WClKiqj
-	29vkIQmNnJcff8NgqLRcyGtrSdmOZmtgwnkJjB6j0
-X-Gm-Gg: AfdE7clZwCTPkEdmkbRZPPpfd3gMqL9+cD1pNYLplOkVBESwmpaT9maMjf4ZNFGIIhi
-	fIa1hs+isHA5NnTSnr2syTYTrGTqYG/qjUIYw5H2GAnvKnTIl3Eudhj6BlZtn+AXNKW7oOIG+Kv
-	r4CPIUiVFnPgJ8ZkkGSumDOxndOdGl3mHH1O2+iCdnGL/vHsAMjJhckAxWCz33dZREgFqmhEGpO
-	oLBb/hPQsDvRztwP8bvGFcjUX/XLs2MD0Z0GvKdYXBu32QN1pCw0vSinv6xJXZcQzEoHomtUA==
-X-Received: by 2002:a17:903:41d1:b0:2c7:f0cc:dafa with SMTP id
- d9443c01a7336-2cc61416ee6mr1186695ad.5.1783206210897; Sat, 04 Jul 2026
- 16:03:30 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783213158; x=1783817958;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ryMBcxUXggyzl/qW7f/DH7Mf3hmnzZUv0RCLZTa8uB4=;
+        b=i+/30Wc3DOA9I1kp9/XwhiK+gKm0APofdfawNdTMN7tYqtJoKLCO0ZcIED98TL59IY
+         Ek79yV7CgF64KhdqUll4wLBYpfXWyYapKLalVM860GyNcN+rq5mNPi9XUPpi5e7qQwdP
+         5oe2hxqbQs54gVmQZpNwPDx5u3UvoEWc9VUBIO5CoRrWiTMKyJn+Z70k/Khm8j9mfLo9
+         FwKDek3XVXjx+nVUyFR6vI3WNndn8j9yTVc1rUzkvUi35yybg9juU2mphj136u+SYNU/
+         nFmvwRqtnEwqp08fmGb0gvVDwt9OTO8Me2S2Y6vAGlysOrlIdUcKXMFPtaw1uBOmqqGq
+         WatQ==
+X-Gm-Message-State: AOJu0YwPRxymEs8T8p7ZYJo3JJGu8mA1gV/6sS3HoVLnqLHJ63DxSvxQ
+	Bc4VCP1R3yhi/wEseu2QS54BMBah+eK/UEflm5F1ic5SptZ1LrNBBcsls0sAUw==
+X-Gm-Gg: AfdE7cm3PMCvSEdPDWcdGdmugNV6GkzadXg1r79Gwi36vOz7tYPab7uYUBi7BrSMJDC
+	PUoKDeaCM1FuFDQArEz0MIMAliaJ5obEVyZTvLeKoeza8eG3+xSXRdYzfxzYfLla0jDZS9Y/E4h
+	tKooNRGGGEV442ceutixE1TJgNIbusjxI/IHcbWHO+OmaWhfSMmaCb+GzQOjO94jWD7H9ai0ni/
+	eG+RJcq8q7gc5OB+R9yLXhE4xJ3ice9uLYDB8bPaJXudnTgsLceoVGyZgy9Ztm4NbvY6p/T+fe7
+	mfUpuvm2hRsLpmuANDgjYC98YURPVtdWzefwmLBNtEnH+BuO8ZzI1JAIBRpRPnIdKMjmX+iS1bo
+	pcjgbuMMUzwGAijsBKjgR1TNGzKlZMIdF+eP6fx1V7ll1rzpqNjH/y0nl0GG/sXeuapUFg2Wi0x
+	hHJFF+Gofhdwqqs4z9nWXQrFDXfOjVqyUuANBkdJ2vqHlO8RH5rz7EHnmPGQjU2TS5BiS3rgUU+
+	E41rxhxzvgzVNM5PzaZqGH1e5EfouQ9wJhmXZFYtaRkxWdmwReqmnD8RFozuN+B7tcHFq6OLVUS
+	9x9xvOMrIiN3ha/F5FHuG8Oumc5c1VUPqlZZaTuumOEnSvwdgqSIFbRiMLnmdJMiQOAb9ng=
+X-Received: by 2002:a17:907:1b17:b0:c12:5660:8bb3 with SMTP id a640c23a62f3a-c12e6ae1c1cmr156529666b.21.1783213157729;
+        Sat, 04 Jul 2026 17:59:17 -0700 (PDT)
+Received: from ilazaric-gram.arnhem.chello.nl (2001-1c00-4c85-8400-b177-2347-3868-c305.cable.dynamic.v6.ziggo.nl. [2001:1c00:4c85:8400:b177:2347:3868:c305])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c12b62f6e3dsm478126966b.62.2026.07.04.17.59.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2026 17:59:15 -0700 (PDT)
+From: Ivan Lazaric <ivan.lazaric1@gmail.com>
+To: linux-perf-users@vger.kernel.org
+Cc: irogers@google.com,
+	Ivan Lazaric <ivan.lazaric1@gmail.com>
+Subject: [PATCH] perf stat: reject --field-separator and --json-output combination
+Date: Sun,  5 Jul 2026 02:58:40 +0200
+Message-ID: <20260705005840.1252666-1-ivan.lazaric1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260623053515.2677888-1-irogers@google.com> <20260624051535.3584977-1-irogers@google.com>
- <akk6yvqJuXWOrGUr@google.com>
-In-Reply-To: <akk6yvqJuXWOrGUr@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 4 Jul 2026 16:03:18 -0700
-X-Gm-Features: AVVi8CfHyGWdFSxXMeodjMVq2BmXF_Jj2D6ZyBy86GaX3ves9m5urN-Z64rOglc
-Message-ID: <CAP-5=fU4Q2zUQF1xKTdW_f6Z5eSpwQvRQCDtcVh6Z5BHXks4hQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/16] perf python: Fix python extension bugs from v19 review
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jul 4, 2026 at 9:54=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hi Ian,
->
-> On Tue, Jun 23, 2026 at 10:15:17PM -0700, Ian Rogers wrote:
-> > Phase 1 of splitting the v19 review patches into smaller fixes.
-> > These patches address issues identified in the python extension during
-> > the review of the v19 script porting series, as well as fixing several
-> > pre-existing bugs and leaks.
-> >
-> > v2:
-> > - Addressed sashiko review feedback:
-> >   - Fixed 64-bit casting for counts_values by using T_ULONGLONG and PyL=
-ong_FromUnsignedLongLong.
-> >   - Replaced strict Py_TYPE checks with PyObject_TypeCheck for thread/c=
-pu maps.
-> >   - Fixed a missing CHECK_INITIALIZED for pyrf_thread__get_cpu, pyrf_pm=
-u__name, pyrf_pmu__events.
-> >   - Included <string.h> where memset was used.
-> > - Fixed line splitting formatting on PyObject_New in pyrf_evsel__read.
-> > - Added fixes for memory leaks and issues discovered during review:
-> >   - Fix memory leak of key and value in pyrf__metrics_cb
-> >   - Fix count_values memory leak in pyrf_evsel__read
-> >   - Fix sb_evlist leaks in both top and record paths.
-> >   - Fix potential divide by zero in perf_event__synthesize_threads
-> >
-> > v1:
-> > - Decomposed the single large "Fix python extension bugs" patch into 13=
- individual fixes.
-> > - Added Fixes: tags for issues that date back to earlier commits.
-> > - Addressed checkpatch warnings (line lengths, Signed-off-by, etc).
-> >
-> >
-> > Ian Rogers (16):
-> >   perf script: Fix metric_evlist leak in script_find_metrics
-> >   perf stat: Fix evsel_list leak in cmd_stat
-> >   perf tools: Fix sb_evlist leaks in top and record
-> >   perf python: Fix memory leak in pyrf_evlist__get_pollfd
-> >   perf synthetic-events: Fix uninitialized pthread_join
-> >   perf data: Fix directory file descriptor leak in perf_data__switch
-> >   perf test: Fix skiplist leak in cmd_test
-> >   perf python: Check counts_values size in set_values
-> >   perf python: Validate CPU and thread maps in pyrf_evsel__open
-> >   perf python: Validate attribute setters in pyrf_evsel
-> >   perf python: Zero initialize perf_data in pyrf_data__init
-> >   perf python: Add thread and PMU uninitialized checks
-> >   perf python: Fix MetricGroup return type in perf.pyi
-> >   perf python: Fix count_values memory leak in pyrf_evsel__read
-> >   perf python: Fix memory leak in pyrf__metrics_cb
-> >   perf synthetic-events: Fix divide by zero in
-> >     perf_event__synthesize_threads
->
-> Will you send v3?  You don't need to fix all pre-existing issues but we
-> should not introduce new bugs or regressions.  I think some of Sashiko
-> comments found them like data switch and pmu init checks.
+Specifying --field-separator option is stating you want CSV output.
+Passing both --field-separator and --json-output is then stating
+you want output to be in CSV and JSON format at same time.
 
-Thanks Namhyung, I have a v3 coming. I'm working with Sashiko locally
-and trying to address as many issues as possible, including minor
-pre-existing ones=E2=80=94it's easier than remembering to clean them up lat=
-er.
+Currently this combination is not rejected, and the outcome
+is a malformed combination of CSV and JSON output.
+This is because of inconsistencies in various printing functions,
+some of them have if-else chains that start with
+"Should I print JSON?", and some start with "Should I print CSV?".
 
-Ian
+Example of current output:
+$ tools/perf/perf stat -x , -j -e cpu-migrations true
+{"counter-value" : "0.000000", "unit" : "", "event" : "cpu-migrations", "event-runtime" : 474817, "pcnt-running" : 100.00,,
 
-> Thanks,
-> Namhyung
->
-> >
-> >  tools/perf/builtin-record.c        |   2 +
-> >  tools/perf/builtin-script.c        |   2 +-
-> >  tools/perf/builtin-stat.c          |   9 +-
-> >  tools/perf/builtin-top.c           |   2 +
-> >  tools/perf/python/perf.pyi         |   4 +-
-> >  tools/perf/tests/builtin-test.c    |   5 +-
-> >  tools/perf/util/data.c             |   3 +-
-> >  tools/perf/util/python.c           | 160 ++++++++++++++++++++++++-----
-> >  tools/perf/util/synthetic-events.c |   6 +-
-> >  9 files changed, 153 insertions(+), 40 deletions(-)
-> >
-> > --
-> > 2.55.0.rc0.799.gd6f94ed593-goog
-> >
+Instead reject the option combination,
+with a helpful error message and non-zero exit code.
+
+Example of new output:
+$ tools/perf/perf stat -x , -j true
+cannot use both --field-separator and --json-output
+
+ Usage: perf stat [<options>] [<command>]
+
+    -x, --field-separator <separator>
+                          print counts with custom separator
+    -j, --json-output     print counts in JSON format
+
+Signed-off-by: Ivan Lazaric <ivan.lazaric1@gmail.com>
+---
+ tools/perf/builtin-stat.c      |  7 +++++++
+ tools/perf/tests/shell/stat.sh | 12 ++++++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 99d7db372b48..5565351db756 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2637,6 +2637,13 @@ int cmd_stat(int argc, const char **argv)
+ 
+ 	stat_config.aggr_mode = opt_aggr_mode_to_aggr_mode(&opt_mode);
+ 
++	if (stat_config.csv_sep && stat_config.json_output) {
++		fprintf(stderr, "cannot use both --field-separator and --json-output\n");
++		parse_options_usage(stat_usage, stat_options, "x", 1);
++		parse_options_usage(NULL, stat_options, "j", 1);
++		goto out;
++	}
++
+ 	if (stat_config.csv_sep) {
+ 		stat_config.csv_output = true;
+ 		if (!strcmp(stat_config.csv_sep, "\\t"))
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index 4edb04039036..c4cd249d8e6a 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -483,6 +483,17 @@ test_stat_pid() {
+   wait $pid 2>/dev/null || true
+ }
+ 
++test_csv_json_fail() {
++  echo "stat -x <sep> -j test"
++  if perf stat -x , -j true > /dev/null 2>&1
++  then
++    echo "stat -x <sep> -j test [Failed - command should have errored]"
++    err=1
++  else
++    echo "stat -x <sep> -j test [Success]"
++  fi
++}
++
+ test_default_stat
+ test_null_stat
+ test_offline_cpu_stat
+@@ -498,6 +509,7 @@ test_stat_no_aggr
+ test_stat_detailed
+ test_stat_repeat
+ test_stat_pid
++test_csv_json_fail
+ 
+ cleanup
+ exit $err
+-- 
+2.43.0
+
