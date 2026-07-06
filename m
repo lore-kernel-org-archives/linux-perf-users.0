@@ -1,172 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3150429825
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 06:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB323E8326
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 08:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783320371; cv=none; b=E15f/l7yDwg1wk5Pg66t401hw6l7nMP0XzdoI3x3qofaFPjKG2aOdDLfJtbKA1eVnK86stSUVldybMOwmThX5x8XVEjTTXQuKJZDrJ1zKJ2TnAFSZa/847Er/SP6Dr2yMhdzYnAHDpOifQAt3TJfn/WRcT2oz1sEa9HpWZiHP0Y=
+	t=1783325145; cv=none; b=ouyJJaEMstnMvLLq9HxUFy4tQuAy+Zgj1GRW3H/8YoVpw8zx6VIV8zOTFb5zXkmMkOF8Ni7QSMPsWEpMhSEyQLMRhBEl8T2zxNDmYGYxbiesY+6ICHoiBP0i2Dp5UM9qKIXRJ7CgvPcAJyx8uC510wptBUibDPXpzuW+m85jKfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783320371; c=relaxed/simple;
-	bh=+V7abC0ANRLQsskLQSLJY+vhuVTJzwL5N88DyOSiBBc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=p1ALoLvsl5S6LdcZraG7sNfPwYyEG6c78XdwGlmstpRIzQxBp+SkdOvQ51BZVUBNKmDQWOdvG42xXKIFSxJ6sjrVNYz0n/5lXqBvfmEPxA6x01VwjDyXsr/734qUo2NjEqSRcKXfunicWD2/TMk+WWMTz9wq0pwN0J5t62elhEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaubzlue; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783325145; c=relaxed/simple;
+	bh=uHe1X7AB00jTLT6Dky5K6tyJqhbbbMBFAvtoajNyGAE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=scJj3xHjz+ddQ3ciMMF1T1jGebsYAH5XsDyp6sfXWlZoaUfNEoRlxm/Bemd4JCJK4eDSf/dtp/1Drp77YyJf28HywCtT3tm0VWg6ddIrgNNlA1LMXoq3N+udde4ipvdbu2Bb4920/qjFiPa6YAATeCudVFOCmxINUDmoEzWodnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h+CNFE2O; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaubzlue"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D7BA1F000E9;
-	Mon,  6 Jul 2026 06:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783320360;
-	bh=bykGrkNlIk0OiLoWbOCLgBumRnHA9JNlwk74gu4Zhlg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gaubzlueZXOSKC5aGY8OwvE9YUi9UT3dVDRKBayU6j9MCTouxhOxmlNwNW4qewFYW
-	 pBdm0aTGpz5vhVyJr3e8ya5Km0lCHed754wZN68QbG0q6hJTlRV92hHEfSkG7kCmbx
-	 4wmpaIoNKeRgCyj03BcKy45xvfsN9ZMwi9Fq7xLmBCVy84JBgMHFUuqUZlI5kBeTHa
-	 6NIROA8v5pG6hd0tq9CeuipgnSgHZfSP3t2K80IHK7JBq3ok5soplyCN8rfqmxKEof
-	 djTCSO55e0gv2/AI8NWqTyW3gxPFeg/j+bqF59RCLv1+iG3rKCkQxHDIN5QzQuQNMj
-	 kXWJy6VgrB8EQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [Patch v9 14/24] perf/x86: Support XMM sampling using
- sample_simd_vec_reg_* fields
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260706015439.3040804-15-dapeng1.mi@linux.intel.com>
-References: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
- <20260706015439.3040804-15-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 06:45:59 +0000
-Message-Id: <20260706064600.6D7BA1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h+CNFE2O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783325137; x=1814861137;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uHe1X7AB00jTLT6Dky5K6tyJqhbbbMBFAvtoajNyGAE=;
+  b=h+CNFE2OF/oYzY0a+Mn7c/Xr3fJkzngH0/Fkq5AcRFz08KNutPm2D1lZ
+   9Yzf1axkm8fOwH7q7dRuqzn4kKLn/J/X8ue9NOAPowHYC1rzN6lYTqMw5
+   gMh9Xsg2egYtR3ef74WQI2nfOHHy/HdJVrM9kV9PAMXiGifxRJ1qmwpe/
+   x6NXwbh0l6QoFoJ6HtFeLGsKZaINlv28tu47QOPni9kp672q7zgcNnOA1
+   mGlv5BIjkC7Js6KhxVDOJmSMa3oN/MLVju1t+Kz+FgBmL5EPBQvNDNpMA
+   YDqOMF3DtwvooUPVGOv/QDa8pmEdPn1lDlZmyqtvG4GwWz1bfB5471j1v
+   g==;
+X-CSE-ConnectionGUID: CKqK45wpSze/c15z87Kylw==
+X-CSE-MsgGUID: n3tON+VZSeekqcCDA2N2Gg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="95329632"
+X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
+   d="scan'208";a="95329632"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 01:05:33 -0700
+X-CSE-ConnectionGUID: mzeArXHPS4KkR0M2ZhL5Tg==
+X-CSE-MsgGUID: na2LPpCvR+Cj8nMdk4x7uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
+   d="scan'208";a="249657710"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 01:05:33 -0700
+Message-ID: <b4e681de-cd72-4801-8ead-904b13dc114c@linux.intel.com>
+Date: Mon, 6 Jul 2026 16:05:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v9 01/24] perf/x86: Fix two error-path and hybrid PMU
+ guard issues
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
+ <20260706015439.3040804-2-dapeng1.mi@linux.intel.com>
+ <20260706022123.480411F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260706022123.480411F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
 
-New issues:
-- [Medium] Validation logic unconditionally evaluates flag-gated syscall pa=
-rameters (`vec_mask_user`, `pred_mask_user`) without checking their respect=
-ive flag gates, leading to validation bypasses due to uninitialized garbage.
+On 7/6/2026 10:21 AM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
+>
+> Pre-existing issues:
+> - [High] The patch adds a check for `x86_pmu.num_hybrid_pmus` to prevent memory corruption in `intel_pmu_cpu_dead()` on error paths, but it is incomplete and still allows an out-of-bounds write during CPU hotplug rollback if the `CPUHP_AP_PERF_X86_STARTING` state setup fails.
+> - [High] If `alloc_arch_pebs_buf_on_cpu()` fails in `intel_pmu_cpu_prepare()`, resources allocated by `intel_cpuc_prepare()` are leaked.
+> - [High] Dangling `cpuc->pmu` pointer leads to Use-After-Free in `perf_event_print_debug()` when hybrid PMU registration fails.
+> - [High] Out-of-bounds read on the global `.bss` section in `perf_event_print_debug()` due to an invalid struct cast when `init_hw_perf_events()` fails early.
+> - [Medium] The dynamically allocated `x86_pmu.hybrid_pmu` array is permanently leaked on multiple error paths in `init_hw_perf_events()`.
+> --
+>
+> commit e4457672386c09fea418faeba61fc0c2418ad7e5
+> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>
+> perf/x86: Fix two error-path and hybrid PMU guard issues
+>
+> Fix an NMI handler leak in init_hw_perf_events(). When PMU
+> initialization fails after register_nmi_handler(), the error path
+> exits without calling unregister_nmi_handler(), leaving a stale
+> NMI_LOCAL "PMI" handler registered. Add the missing call before
+> clearing x86_pmu state.
+>
+> Also guard the hybrid PMU cpumask update in intel_pmu_cpu_dead()
+> with a check on x86_pmu.num_hybrid_pmus. Without this, hybrid_pmu()
+> may be called when the hybrid PMU array has not been allocated,
+> leading to an out-of-bounds access.
+>
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index af0b67ffb43d8..872d07a5fa80d 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+> [ ... ]
+>
+>> @@ -2273,6 +2273,8 @@ static int __init init_hw_perf_events(void)
+>>  	cpuhp_remove_state(CPUHP_AP_PERF_X86_STARTING);
+>>  out:
+>>  	cpuhp_remove_state(CPUHP_PERF_X86_PREPARE);
+>> +pmi_unregister:
+>> +	unregister_nmi_handler(NMI_LOCAL, "PMI");
+>>  out_bad_pmu:
+>>  	memset(&x86_pmu, 0, sizeof(x86_pmu));
+> [Severity: Medium]
+> This isn't a bug introduced by this patch, but does this memset cause a
+> memory leak?
+>
+> If cpuhp_setup_state() or check_hw_exists() fails during initialization,
+> the code jumps to the out_bad_pmu label and executes the memset without
+> freeing x86_pmu.hybrid_pmu. Could this permanently leak the dynamically
+> allocated hybrid PMU array?
 
-Pre-existing issues:
-- [Critical] The functions `perf_reg_value` and `perf_simd_reg_value` unsaf=
-ely assume the provided `pt_regs *` is always embedded within an `x86_perf_=
-regs` structure, leading to out-of-bounds reads and arbitrary pointer deref=
-erences for software events and `PERF_SAMPLE_REGS_USER`.
---
+Yeah, this is a true issue, need to free the x86_pmu.hybrid_pmu after the
+out_bad_pmu tag. Considering this patchset is quite large and close to
+mature, would fix it in a separate patch.
 
-commit 9c74aceec4401218b750679a5b08ba8009aa85a3
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-perf/x86: Support XMM sampling using sample_simd_vec_reg_* fields
 
-This commit adds support for sampling XMM registers by introducing a new ABI
-field and extracting XMM values through the sample_simd_vec_reg_* fields. It
-adds a new perf_simd_reg_value function to retrieve the values and updates
-the SIMD registration validation logic.
+>
+>
+> [Severity: High]
+> This is a pre-existing issue, but could this error path lead to an
+> out-of-bounds read in perf_event_print_debug()?
+>
+> If check_hw_exists() fails early during initialization, out_bad_pmu is
+> reached, but the perf_is_hybrid static key is never disabled. cpuc->pmu
+> defaults to the global &pmu.
+>
+> If a privileged user triggers sysrq-p, perf_event_print_debug() uses
+> hybrid(cpuc->pmu, cntr_mask). Because is_hybrid() evaluates to true, it
+> casts the global &pmu to the larger struct x86_hybrid_pmu and attempts to
+> read cntr_mask, reading memory well beyond the object bounds in the .bss
+> section.
 
-> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
-> index 81204cb7f7239..8514baefb400e 100644
-> --- a/arch/x86/kernel/perf_regs.c
-> +++ b/arch/x86/kernel/perf_regs.c
+Yeah, it's real issue too. Need to call
+"static_branch_disable(&perf_is_hybrid);" to disable the hybrid PMU
+after the out_bad_pmu tag,
 
-[ ... ]
 
-> @@ -63,6 +63,9 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
-> =20
->  	if (idx >=3D PERF_REG_X86_XMM0 && idx < PERF_REG_X86_XMM_MAX) {
->  		perf_regs =3D container_of(regs, struct x86_perf_regs, regs);
-> +		/* SIMD registers are moved to dedicated sample_simd_vec_reg */
-> +		if (perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
+>
+>
+> [Severity: High]
+> This is a pre-existing issue, but is there a use-after-free risk here if
+> hybrid PMU registration fails?
+>
+> If perf_pmu_register() fails for a hybrid PMU inside init_hw_perf_events(),
+> the x86_pmu.hybrid_pmu array is freed via kfree. However, cpuc->pmu was
+> already assigned to elements of this array during intel_pmu_cpu_starting().
+>
+> Since the teardown callbacks do not clear the cpuc->pmu pointers, they
+> remain dangling. A privileged user triggering sysrq-p will invoke
+> perf_event_print_debug(), which dereferences cpuc->pmu, potentially causing
+> a use-after-free.
 
-[Severity: Critical]
-This isn't a bug introduced by this patch, but evaluating perf_regs->abi
-here relies on an unsafe cast.
+Yes, real issue too. Need to reset the cpuc->pmu to static pmu in
+intel_pmu_cpu_dead().
 
-For tracepoints and PERF_SAMPLE_REGS_USER, regs points to a bare pt_regs
-instance rather than an embedded x86_perf_regs struct. The container_of()
-cast accesses memory outside the bounds of the pt_regs struct.
 
-Could this allow an attacker to control the out-of-bounds pointers (like
-xmm_regs) and read arbitrary kernel memory into the perf ring buffer?
 
-> +			return 0;
->  		if (!perf_regs->xmm_regs)
->  			return 0;
->  		return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
+>
+>>  	return err;
+>>  }
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index b39c6ce0efb5c..b8a6382dbb825 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+> [ ... ]
+>
+>> @@ -6479,7 +6479,7 @@ static void intel_pmu_cpu_dead(int cpu)
+>>  	release_arch_pebs_buf_on_cpu(cpu);
+>>  	intel_cpuc_finish(cpuc);
+>>  
+>> -	if (is_hybrid() && cpuc->pmu)
+>> +	if (is_hybrid() && x86_pmu.num_hybrid_pmus && cpuc->pmu)
+> [Severity: High]
+> This is a pre-existing issue, but does this incomplete guard still allow an
+> out-of-bounds write during CPU hotplug rollback?
+>
+> If CPUHP_AP_PERF_X86_STARTING hotplug setup fails, it rolls back the already
+> successful CPUHP_PERF_X86_PREPARE state by invoking intel_pmu_cpu_dead().
+>
+> Because cpuc->pmu defaults to the statically allocated &pmu, the condition
+> evaluates to true. hybrid_pmu() casts the global pmu to the much larger
+> struct x86_hybrid_pmu, which could result in an out-of-bounds write when
+> modifying supported_cpus.
 
-[ ... ]
+Yes, real issue. Need to check "cpuc->pmu != pmu" before accessing
+hybrid_pmu(cpuc->pmu).
 
-> @@ -74,6 +77,77 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
->  	return regs_get_register(regs, pt_regs_offset[idx]);
->  }
-> =20
-> +u64 perf_simd_reg_value(struct pt_regs *regs, int idx,
-> +			u16 qwords_idx, bool pred)
-> +{
-> +	struct x86_perf_regs *perf_regs =3D
-> +			container_of(regs, struct x86_perf_regs, regs);
-> +
-> +	if (!(perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD))
 
-[Severity: Critical]
-This is a pre-existing issue, but this new code copies the same unsafe
-container_of() cast pattern.
+>
+>>  		cpumask_clear_cpu(cpu, &hybrid_pmu(cpuc->pmu)->supported_cpus);
+>>  }
+>
+> [Severity: High]
+> This is a pre-existing issue, but can intel_pmu_cpu_prepare() leak memory
+> allocated by intel_cpuc_prepare() if alloc_arch_pebs_buf_on_cpu() fails?
+>
+> When the CPU hotplug core attempts to online a CPU, it runs the prepare
+> callback. If alloc_arch_pebs_buf_on_cpu() fails, the state transitions are
+> aborted without calling the teardown callback intel_pmu_cpu_dead() for this
+> specific CPU.
+>
+> Under memory pressure, could repeated CPU hotplug operations leak the
+> cpuc->shared_regs, cpuc->constraint_list, and cpuc->excl_cntrs structures?
 
-Since regs is not actually embedded in an x86_perf_regs struct when
-called for PERF_SAMPLE_REGS_USER, reading perf_regs->abi reads
-out-of-bounds memory.
+Yes, need to call intel_cpuc_finish() once alloc_arch_pebs_buf_on_cpu()
+fails in intel_pmu_cpu_prepare(). 
 
-> +		return 0;
-> +
-> +	if (pred)
-> +		return 0;
+Thanks.
 
-[ ... ]
 
-> +int perf_simd_reg_validate(u64 sample_type, u16 simd_enabled,
-> +			   u16 vec_qwords, u64 vec_mask_intr,
-> +			   u64 vec_mask_user, u16 pred_qwords,
-> +			   u32 pred_mask_intr, u32 pred_mask_user)
-> +{
-> +	u64 size =3D 0;
-> +
-> +	if (!(sample_type &
-> +	      (PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER)))
-> +		return 0;
-> +
-> +	if (!simd_enabled)
-> +		return 0;
-> +
-> +	if (vec_qwords) {
-> +		if (vec_qwords !=3D PERF_X86_XMM_QWORDS)
-> +			return -EINVAL;
-> +		if (!vec_mask_intr && !vec_mask_user)
-> +			return -EINVAL;
-
-[Severity: Medium]
-Does this logic evaluate flag-gated parameters without checking their
-respective flag gates?
-
-PERF_SAMPLE_REGS_INTR and PERF_SAMPLE_REGS_USER are independent flags. If a
-user sets INTR but not USER, vec_mask_user is outside its flag gate and
-can contain arbitrary garbage from userspace.
-
-If vec_mask_intr is 0 (an invalid configuration), but the garbage in
-vec_mask_user is non-zero, this check passes and the validation is bypassed.
-
-Should these masks be validated against their respective sample_type flags
-before checking if they are both empty?
-
-> +		if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
-> +		    (vec_mask_intr & ~PERF_X86_SIMD_VEC_MASK))
-> +			return -EINVAL;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706015439.3040=
-804-1-dapeng1.mi@linux.intel.com?part=3D14
+>
