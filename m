@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF4137D10E;
-	Mon,  6 Jul 2026 02:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFD737C926;
+	Mon,  6 Jul 2026 02:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783303387; cv=none; b=MOk2uV3jhBlpoZE7h39aOnH3akC6Z/e0XewGt+Iqe5B+3Izw+xJYq3KM86hyLE31F2adF7Bi2A+4D1ofjQym8FIUZa8OEPDlZXCEnLinzDEptPF2nLokZ2PoXocGPOOryv9MgmZbSiAM99k5wLlXRp+OxuPJhdfzFbWuM8TMX5Q=
+	t=1783303391; cv=none; b=jY9WIWXsPf5JrckfzW7/aDJ8SRFsfd8ZP8rXYy2g8Gs2i9F2EWUovN7jQwZDTiuXMqfT+WrmxiJZwnDyYFD7aOyhZtVmoWT6Zv+i/CUrWSZYTwISkLQoen3o+Zcg8XpKNxdrTwBLecNMsVlrbmz9K7EJL+T31KkIH/q+quiltV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783303387; c=relaxed/simple;
-	bh=+5GIxrvaRxU/HORkLJ0ovSjVnqRDaR7sZZXiacyDLDQ=;
+	s=arc-20240116; t=1783303391; c=relaxed/simple;
+	bh=dZi2f/N4te4xkySh9oCduYPPMVgT9b9YCHWEy//vr7s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=by5F/un1GEh3BbQY9UM55WYQ6BLGKZM3KzNsiPOHXLz+QiMBPNWABCo5/bZyTj1s0cVGb9cWYHWxceV7As8SCEHAOJdurOsM4whXjBDppK4DtvbiVk5lw3+qYIhD1CslF3UI6P6ZM2wPMKZVzdyufW6eDbSTxibw/jLSUh8jmLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NB1JjDqH; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=s1AXDRSRdrQ805NrN7/UX0n0UgyWeoanKGFjfa9nECDPv6gdzGCCLf6XdlUvyPc3XG9rY8uwAlmznEfdttNDBQCAnnpUOg32tA8kWFT33tdbL5d1+WTB9qxYyV1ym1KyqCcNAQQHjp7aQSOkp3yIV8fnJYJi2YB9jO0Nt8Lfn2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n584yQIE; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NB1JjDqH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n584yQIE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783303386; x=1814839386;
+  t=1783303391; x=1814839391;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+5GIxrvaRxU/HORkLJ0ovSjVnqRDaR7sZZXiacyDLDQ=;
-  b=NB1JjDqHbF6SL48kSiwrPcJEIX1uwJCKketsgpGtTCvOfzPi5+3OJwXZ
-   LnTqyMNXIUEeOlfTlPF+reKHSzEw997rX3sXvlH956YisqZUBCAabe+FD
-   mkcYd/sw+vMJ5nSmHLhYWaaMq6nWgW24zWuMyfsxl50q/oJ5EZ53JRNAa
-   eRcBXAfX7ndjc33cODXl1fk0KcL41JiQ2cfmscHW+9glzM/M7hNmrwmMG
-   HRHANFlMH1eKmmFhwKhDjavUyBBM3K8Bc2/MAmLo5A4+y4oWlgIgg4Y2l
-   rv0QI0IPffal3rWOWz29yv4eUZhMAZgMFm5TeF1ulYA4h4yP6dsfopI43
-   Q==;
-X-CSE-ConnectionGUID: j9B8LdTnSleYBBrbWOYupw==
-X-CSE-MsgGUID: T+GqSYsdS7eiihSVkJBpSg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="83911802"
+  bh=dZi2f/N4te4xkySh9oCduYPPMVgT9b9YCHWEy//vr7s=;
+  b=n584yQIEzN9zAj+bszSwccZ4HoCuKoWu2rphd+Nc5ZsI3jlCBCzAfATf
+   PUMIisBaKDM26ViZEcCg4AVKfFKDKgts1ZLTKBG36PBpmZFQaqMi/2+zn
+   rPKVxNIPpfENx5R3v9rCwj5HJwisgx5I/8ydw1ar7UnGFJ8C3KkXOer0I
+   tZlyoQpObNlhchFF7WeIWorXA3tmEHIPCHDQ//v0ZPkf0w7Wt/eOR/PPD
+   8DXeY5mq0GkQN6g9BNgcVXf7/7O0oTNZkJtUzQ2Ul17sAmoiAJunFCwTj
+   XzMuXUL7tlOdSOzPkk0EaI2fd27ej4PTptNSPvXC3NgtUWuNk5HTiQhQd
+   g==;
+X-CSE-ConnectionGUID: Q3Vb621zRBe8z/5pc14UsQ==
+X-CSE-MsgGUID: tYwiop+hSBi22Sf1VD8wuw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="83911811"
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="83911802"
+   d="scan'208";a="83911811"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2026 19:03:05 -0700
-X-CSE-ConnectionGUID: ZxsbWTviRciUZUPbO5M6EQ==
-X-CSE-MsgGUID: y/9qKOPzT/q9Z5AN7o2dqA==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2026 19:03:10 -0700
+X-CSE-ConnectionGUID: EYDyYRfKSYeNTu7/3W0JlQ==
+X-CSE-MsgGUID: yud398u8RjySTYmEI2vp8w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="247191514"
+   d="scan'208";a="247191522"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa009.fm.intel.com with ESMTP; 05 Jul 2026 19:03:00 -0700
+  by fmviesa009.fm.intel.com with ESMTP; 05 Jul 2026 19:03:05 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -66,9 +66,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v9 23/24] perf/x86: Activate back-to-back NMI detection for arch-PEBS induced NMIs
-Date: Mon,  6 Jul 2026 09:54:38 +0800
-Message-Id: <20260706015439.3040804-24-dapeng1.mi@linux.intel.com>
+Subject: [Patch v9 24/24] perf/x86/intel: Add sanity check for PEBS fragment size
+Date: Mon,  6 Jul 2026 09:54:39 +0800
+Message-Id: <20260706015439.3040804-25-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
 References: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
@@ -80,308 +80,221 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When two or more identical PEBS events with the same sampling period are
-programmed on a mix of PDIST and non-PDIST counters, multiple
-back-to-back NMIs can be triggered.
+Prevent potential infinite loops by adding a sanity check for the
+corrupted PEBS fragment sizes which could happen in theory.
 
-The Linux PMI handler processes the first NMI and clears the
-GLOBAL_STATUS MSR. If a second NMI is triggered immediately after
-the first, it is recognized as a "suspicious NMI" because no bits are set
-in the GLOBAL_STATUS MSR (cleared by the first NMI).
+If a corrupted PEBS fragment is detected, the entire PEBS record
+including the corrupted fragment and all subsequent records will be
+dropped and a NULL PEBS record is reported to user space. This ensures
+the integrity of PEBS data and prevents infinite loops in
+setup_arch_pebs_sample_data() again.
 
-This issue does not lead to PEBS data corruption or data loss, but it
-does result in an annoying warning message.
+Please note software has no way to figure out which events are impacted
+by the corrupted record, so the last record of each event would be
+discarded for all events if corrupted record is detected even though
+it may be a well-formed record for some events.
 
-The current NMI handler supports back-to-back NMI detection, but it
-requires the PMI handler to return the count of actually processed events,
-which the PEBS handler does not currently do.
-
-Thus, modify the PEBS handlers to return the count of actually processed
-events, thereby activating back-to-back NMI detection and avoiding the
-"suspicious NMI" warning.
-
-Suggested-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 31 +++++++++++++++++---------
- arch/x86/events/intel/ds.c   | 43 ++++++++++++++++++++++++------------
- arch/x86/events/perf_event.h |  2 +-
- 3 files changed, 50 insertions(+), 26 deletions(-)
+ arch/x86/events/intel/core.c |  2 +-
+ arch/x86/events/intel/ds.c   | 70 ++++++++++++++++++++++++++----------
+ 2 files changed, 52 insertions(+), 20 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 56997731dc83..a2d08f405a57 100644
+index a2d08f405a57..7fb0b53ed8b4 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3762,8 +3762,8 @@ static void intel_pmu_reset(void)
-  *
-  * The contents and other behavior of the guest event do not matter.
-  */
--static void x86_pmu_handle_guest_pebs(struct pt_regs *regs,
--				      struct perf_sample_data *data)
-+static int x86_pmu_handle_guest_pebs(struct pt_regs *regs,
-+				     struct perf_sample_data *data)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	u64 guest_pebs_idxs = cpuc->pebs_enabled & ~cpuc->intel_ctrl_host_mask;
-@@ -3771,11 +3771,11 @@ static void x86_pmu_handle_guest_pebs(struct pt_regs *regs,
- 	int bit;
- 
- 	if (!unlikely(perf_guest_state()))
--		return;
-+		return 0;
- 
- 	if (!x86_pmu.pebs_ept || !x86_pmu.pebs_active ||
- 	    !guest_pebs_idxs)
--		return;
-+		return 0;
- 
- 	for_each_set_bit(bit, (unsigned long *)&guest_pebs_idxs, X86_PMC_IDX_MAX) {
- 		event = cpuc->events[bit];
-@@ -3785,9 +3785,14 @@ static void x86_pmu_handle_guest_pebs(struct pt_regs *regs,
- 		perf_sample_data_init(data, 0, event->hw.last_period);
- 		perf_event_overflow(event, data, regs);
- 
--		/* Inject one fake event is enough. */
--		break;
-+		/*
-+		 * Inject one fake event is enough.
-+		 * Returning 1 to inform PMI is handled.
-+		 */
-+		return 1;
- 	}
-+
-+	return 0;
- }
+@@ -3797,7 +3797,7 @@ static int x86_pmu_handle_guest_pebs(struct pt_regs *regs,
  
  static int handle_pmi_common(struct pt_regs *regs, u64 status)
-@@ -3836,9 +3841,11 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	if (__test_and_clear_bit(GLOBAL_STATUS_BUFFER_OVF_BIT, (unsigned long *)&status)) {
- 		u64 pebs_enabled = cpuc->pebs_enabled;
- 
--		handled++;
--		x86_pmu_handle_guest_pebs(regs, &data);
--		static_call(x86_pmu_drain_pebs)(regs, &data);
-+		handled += x86_pmu_handle_guest_pebs(regs, &data);
-+		handled += static_call(x86_pmu_drain_pebs)(regs, &data);
-+		/* Ensure no "suspicious NMI" warning for empty PEBS buffer. */
-+		if (!handled)
-+			handled++;
- 
- 		/*
- 		 * PMI throttle may be triggered, which stops the PEBS event.
-@@ -3865,8 +3872,10 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	 */
- 	if (__test_and_clear_bit(GLOBAL_STATUS_ARCH_PEBS_THRESHOLD_BIT,
- 				 (unsigned long *)&status)) {
--		handled++;
--		static_call(x86_pmu_drain_pebs)(regs, &data);
-+		handled += static_call(x86_pmu_drain_pebs)(regs, &data);
-+		/* Ensure no "suspicious NMI" warning for empty PEBS buffer. */
-+		if (!handled)
-+			handled++;
- 
- 		if (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS] &&
- 		    is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS]))
+ {
+-	struct perf_sample_data data;
++	struct perf_sample_data data = {};
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	int bit;
+ 	int handled = 0;
 diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index c42c6f575a21..b38aed4f62b4 100644
+index b38aed4f62b4..7a8e61905539 100644
 --- a/arch/x86/events/intel/ds.c
 +++ b/arch/x86/events/intel/ds.c
-@@ -3031,7 +3031,7 @@ __intel_pmu_pebs_events(struct perf_event *event,
- 	__intel_pmu_pebs_last_event(event, iregs, regs, data, at, count, setup_sample);
- }
+@@ -1242,7 +1242,7 @@ int intel_pmu_drain_bts_buffer(void)
  
--static void intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_data *data)
-+static int intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_data *data)
+ void intel_pmu_drain_pebs_buffer(void)
  {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct debug_store *ds = cpuc->ds;
-@@ -3040,7 +3040,7 @@ static void intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_
- 	int n;
+-	struct perf_sample_data data;
++	struct perf_sample_data data = {};
  
- 	if (!x86_pmu.pebs_active)
--		return;
-+		return 0;
+ 	static_call(x86_pmu_drain_pebs)(NULL, &data);
+ }
+@@ -2659,6 +2659,9 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
  
- 	at  = (struct pebs_record_core *)(unsigned long)ds->pebs_buffer_base;
- 	top = (struct pebs_record_core *)(unsigned long)ds->pebs_index;
-@@ -3051,22 +3051,25 @@ static void intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_
- 	ds->pebs_index = ds->pebs_buffer_base;
- 
- 	if (!test_bit(0, cpuc->active_mask))
--		return;
-+		return 0;
- 
- 	WARN_ON_ONCE(!event);
- 
- 	if (!event->attr.precise_ip)
--		return;
-+		return 0;
- 
- 	n = top - at;
- 	if (n <= 0) {
- 		if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
- 			intel_pmu_save_and_restart_reload(event, 0);
--		return;
-+		return 0;
- 	}
- 
- 	__intel_pmu_pebs_events(event, iregs, data, at, top, 0, n,
- 				setup_pebs_fixed_sample_data);
+ again:
+ 	header = at;
++	if (!header->size)
++		return;
 +
-+	/* PMC0 only */
-+	return 1;
- }
+ 	next_record = at + sizeof(struct arch_pebs_header);
+ 	if (header->basic) {
+ 		struct arch_pebs_basic *basic = next_record;
+@@ -2940,13 +2943,21 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
+ 			    struct pt_regs *iregs,
+ 			    struct pt_regs *regs,
+ 			    struct perf_sample_data *data,
+-			    void *at,
+-			    int count,
++			    void *at, int count, bool corrupted,
+ 			    setup_fn setup_sample)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
  
- static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, u64 mask)
-@@ -3089,7 +3092,7 @@ static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, u64
+-	setup_sample(event, iregs, at, data, regs);
++	/* Skip parsing corrupted PEBS record. */
++	if (corrupted) {
++		/* Clear stale register states in previous records. */
++		memset(regs, 0, sizeof(*regs));
++		x86_pmu_clear_perf_regs(regs);
++		perf_sample_data_init(data, 0, event->hw.last_period);
++	} else {
++		setup_sample(event, iregs, at, data, regs);
++	}
++
+ 	if (iregs == &dummy_iregs) {
+ 		/*
+ 		 * The PEBS records may be drained in the non-overflow context,
+@@ -2964,12 +2975,16 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
  	}
+ 
+ 	if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD) {
+-		if ((is_pebs_counter_event_group(event))) {
+-			/*
+-			 * The value of each sample has been updated when setup
+-			 * the corresponding sample data.
+-			 */
+-			perf_event_update_userpage(event);
++		if (is_pebs_counter_event_group(event)) {
++			if (corrupted) {
++				intel_pmu_save_and_restart_reload(event, 1);
++			} else {
++				/*
++				 * The value of each sample has been updated
++				 * when setup the corresponding sample data.
++				 */
++				perf_event_update_userpage(event);
++			}
+ 		} else {
+ 			/*
+ 			 * Now, auto-reload is only enabled in fixed period mode.
+@@ -2993,7 +3008,7 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
+ 		 * counters-snapshotting record, only needs to set the new
+ 		 * period for the counter.
+ 		 */
+-		if (is_pebs_counter_event_group(event))
++		if (is_pebs_counter_event_group(event) && !corrupted)
+ 			static_call(x86_pmu_set_period)(event);
+ 		else
+ 			intel_pmu_save_and_restart(event);
+@@ -3022,13 +3037,15 @@ __intel_pmu_pebs_events(struct perf_event *event,
+ 		iregs = &dummy_iregs;
+ 
+ 	while (cnt > 1) {
+-		__intel_pmu_pebs_event(event, iregs, regs, data, at, setup_sample);
++		__intel_pmu_pebs_event(event, iregs, regs, data,
++				       at, setup_sample);
+ 		at += cpuc->pebs_record_size;
+ 		at = get_next_pebs_record_by_bit(at, top, bit);
+ 		cnt--;
+ 	}
+ 
+-	__intel_pmu_pebs_last_event(event, iregs, regs, data, at, count, setup_sample);
++	__intel_pmu_pebs_last_event(event, iregs, regs, data, at,
++				    count, false, setup_sample);
  }
  
--static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_data *data)
-+static int intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_data *data)
+ static int intel_pmu_drain_pebs_core(struct pt_regs *iregs, struct perf_sample_data *data)
+@@ -3244,7 +3261,8 @@ static __always_inline void
+ __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
+ 				    struct pt_regs *regs,
+ 				    struct perf_sample_data *data,
+-				    u64 mask, short *counts, void **last,
++				    u64 mask, short *counts,
++				    void **last, bool corrupted,
+ 				    setup_fn setup_sample)
  {
  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct debug_store *ds = cpuc->ds;
-@@ -3098,11 +3101,12 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
- 	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
- 	short error[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
- 	int max_pebs_events = intel_pmu_max_num_pebs(NULL);
-+	u64 events_bitmap = 0;
- 	int bit, i, size;
- 	u64 mask;
- 
- 	if (!x86_pmu.pebs_active)
--		return;
-+		return 0;
- 
- 	base = (struct pebs_record_nhm *)(unsigned long)ds->pebs_buffer_base;
- 	top = (struct pebs_record_nhm *)(unsigned long)ds->pebs_index;
-@@ -3118,7 +3122,7 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
- 
- 	if (unlikely(base >= top)) {
- 		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
--		return;
-+		return 0;
- 	}
- 
- 	for (at = base; at < top; at += x86_pmu.pebs_record_size) {
-@@ -3182,6 +3186,7 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
- 		if ((counts[bit] == 0) && (error[bit] == 0))
- 			continue;
- 
-+		events_bitmap |= BIT_ULL(bit);
+@@ -3258,7 +3276,7 @@ __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
  		event = cpuc->events[bit];
- 		if (WARN_ON_ONCE(!event))
- 			continue;
-@@ -3203,6 +3208,8 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
- 						setup_pebs_fixed_sample_data);
- 		}
- 	}
-+
-+	return hweight64(events_bitmap);
- }
  
- static __always_inline void
-@@ -3256,7 +3263,7 @@ __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
- 
- }
- 
--static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_data *data)
-+static int intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_data *data)
- {
- 	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
- 	void *last[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS];
-@@ -3266,10 +3273,11 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
- 	struct pt_regs *regs = &perf_regs->regs;
- 	struct pebs_basic *basic;
- 	void *base, *at, *top;
-+	u64 events_bitmap = 0;
- 	u64 mask;
- 
- 	if (!x86_pmu.pebs_active)
--		return;
-+		return 0;
- 
- 	base = (struct pebs_basic *)(unsigned long)ds->pebs_buffer_base;
- 	top = (struct pebs_basic *)(unsigned long)ds->pebs_index;
-@@ -3282,7 +3290,7 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
- 
- 	if (unlikely(base >= top)) {
- 		intel_pmu_pebs_event_update_no_drain(cpuc, mask);
--		return;
-+		return 0;
+ 		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
+-					    counts[bit], setup_sample);
++					    counts[bit], corrupted, setup_sample);
  	}
  
- 	if (!iregs)
-@@ -3297,6 +3305,7 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
+ }
+@@ -3301,6 +3319,8 @@ static int intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_da
+ 		u64 pebs_status;
+ 
+ 		basic = at;
++		if (WARN_ON_ONCE(!basic->format_size))
++			break;
+ 		if (basic->format_size != cpuc->pebs_record_size)
  			continue;
  
- 		pebs_status = mask & basic->applicable_counters;
-+		events_bitmap |= pebs_status;
- 		__intel_pmu_handle_pebs_record(iregs, regs, data, at,
- 					       pebs_status, counts, last,
- 					       setup_pebs_adaptive_sample_data);
-@@ -3304,10 +3313,12 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
+@@ -3312,7 +3332,7 @@ static int intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_da
+ 	}
  
  	__intel_pmu_handle_last_pebs_record(iregs, regs, data, mask, counts, last,
- 					    setup_pebs_adaptive_sample_data);
-+
-+	return hweight64(events_bitmap);
- }
+-					    setup_pebs_adaptive_sample_data);
++					    false, setup_pebs_adaptive_sample_data);
  
--static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
--				      struct perf_sample_data *data)
-+static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
-+				     struct perf_sample_data *data)
- {
- 	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
- 	void *last[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS];
-@@ -3316,13 +3327,14 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
- 	struct x86_perf_regs *perf_regs = this_cpu_ptr(&x86_pebs_regs);
+ 	return hweight64(events_bitmap);
+ }
+@@ -3328,6 +3348,7 @@ static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
  	struct pt_regs *regs = &perf_regs->regs;
  	void *base, *at, *top;
-+	u64 events_bitmap = 0;
+ 	u64 events_bitmap = 0;
++	bool corrupted = false;
  	u64 mask;
  
  	rdmsrq(MSR_IA32_PEBS_INDEX, index.whole);
+@@ -3362,8 +3383,10 @@ static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
  
- 	if (unlikely(!index.wr)) {
- 		intel_pmu_pebs_event_update_no_drain(cpuc, X86_PMC_IDX_MAX);
--		return;
-+		return 0;
+ 		header = at;
+ 
+-		if (WARN_ON_ONCE(!header->size))
+-			break;
++		if (WARN_ON_ONCE(!header->size)) {
++			corrupted = true;
++			goto done;
++		}
+ 
+ 		/* 1st fragment or single record must have basic group */
+ 		if (!header->basic) {
+@@ -3383,15 +3406,24 @@ static int intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
+ 			if (!header->size)
+ 				break;
+ 			at += header->size;
++			if (WARN_ON_ONCE(at >= top)) {
++				corrupted = true;
++				goto done;
++			}
+ 			header = at;
+ 		}
+ 
+ 		/* Skip last fragment or the single record */
+ 		at += header->size;
++		if (WARN_ON_ONCE(at > top)) {
++			corrupted = true;
++			goto done;
++		}
  	}
  
- 	base = cpuc->pebs_vaddr;
-@@ -3361,6 +3373,7 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
- 
- 		basic = at + sizeof(struct arch_pebs_header);
- 		pebs_status = mask & basic->applicable_counters;
-+		events_bitmap |= pebs_status;
- 		__intel_pmu_handle_pebs_record(iregs, regs, data, at,
- 					       pebs_status, counts, last,
- 					       setup_arch_pebs_sample_data);
-@@ -3380,6 +3393,8 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
++done:
  	__intel_pmu_handle_last_pebs_record(iregs, regs, data, mask,
- 					    counts, last,
+-					    counts, last,
++					    counts, last, corrupted,
  					    setup_arch_pebs_sample_data);
-+
-+	return hweight64(events_bitmap);
- }
  
- static void __init intel_arch_pebs_init(void)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index b1f9d17dddb6..1b22be540fde 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1059,7 +1059,7 @@ struct x86_pmu {
- 	int		pebs_record_size;
- 	int		pebs_buffer_size;
- 	u64		pebs_events_mask;
--	void		(*drain_pebs)(struct pt_regs *regs, struct perf_sample_data *data);
-+	int		(*drain_pebs)(struct pt_regs *regs, struct perf_sample_data *data);
- 	struct event_constraint *pebs_constraints;
- 	void		(*pebs_aliases)(struct perf_event *event);
- 	u64		(*pebs_latency_data)(struct perf_event *event, u64 status);
+ 	return hweight64(events_bitmap);
 -- 
 2.34.1
 
