@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CE6386C08
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 02:59:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA033890E4
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 03:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783306768; cv=none; b=QPaaorog9L0AHx9N6WWaZVF+BwyKq1ZkZdaAZ7ZUvQ2WP6GI/Qup8sJAcK0ytCqYL6I93U3TjQTkbNZIYl/Hml4EdySb5Hw8MzRc4R4uchB23GSGqrqovtoxynM6wblmenUGfB1T+rWetbWeyH1Y+gwaAYqQeGzhA/lqzyjrBLg=
+	t=1783306830; cv=none; b=WVvjnMtyb/+XJAa8hwb6i2y2D2v5kLs+icfUSrWC0bKR5mFPZZwUPLIMd3PIoK0hOlhbIbCmHreH2YVuL6pwauwc4AhxtxExZNbEG5Y4R3hwF6ruDOl+5TCWUv35c6Q0w0KUBxy25WzdWsQpf3I0yR8F/DeEW/sx0EVpFteTbfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783306768; c=relaxed/simple;
-	bh=uJfRhxqG7r1WMcz4kae7vLS2BpaQL5gL/hnKcbU0Wug=;
+	s=arc-20240116; t=1783306830; c=relaxed/simple;
+	bh=xNVEzi+UrRRTe8vIrjqOIbbtqJobm9+z5yuTNjMDzho=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=KFbD/3h2pFqS84ssT+Uy7QqrrZAh0r4vnJVaJRSVs4sYDcDPOGYZJ+vuuZUmJxbnYJM/tQqHM+mxoPlPCLzY6+LwaFlo5G78Gly4oow9O0TqI8G9Y4KFXTDoEOrHd1QuKz1HAl/kofBXPE7gzOnDFez6QwyIlw6Ga94auWVU3RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RB3z0HkY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=EMtc8eu71T1sGbHr2Q1SRcY6+Fq30cx8pemi/tSqX6sI0kEESLnIwk/ofYtnEmiFYhPxgLKZVMcDZZzfLDsNxaq3aK6BFHK5otDCtbcTsPWJ8bHwVmyuZ6YCjgqxzNBzvmyI3dPYQTi7VJMHpX2IsjQgVpaPOfwkLYW7/lb6NmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fzafw8xB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RB3z0HkY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA051F000E9;
-	Mon,  6 Jul 2026 02:59:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fzafw8xB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6731F000E9;
+	Mon,  6 Jul 2026 03:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783306766;
-	bh=cmSC6wnbC47s78UFZTss0WgfCx4IRdceBr5EwIDm7No=;
+	s=k20260515; t=1783306825;
+	bh=E5/aXxQQ/0uP/C8aewfSCWH4lyadSm6pwvS/2jRIFNA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RB3z0HkY9h3+bTtjLXR6PZNYSAIy5dwTaa1LWqh/LR2aB2ACh+nZQQR0z2h+fqckW
-	 3FMohpKxICHyROsrs2vkovMEIBQ2F4ydCzUi3hiTN1/9LQtWsacOc6M2hrZ98W6PKG
-	 TUTHvl8gj9ncXuwqxMDbeCJzJqrnvRZTnfvUpy9ELCeopZxSfaTJsshfJ/ymckao1D
-	 6hhtowW0pJwVW1IQulLvgyxfpjYU0MMWDr6d17c0QzizPDDKW4u8qeCjoKXMpy4wXF
-	 kPxZK/Okx2EJP2nCqS0eKLxql9LOi6Fv9rt3LSplhTfR/i57JP/FLdNXDnWGYM8Dhr
-	 xo35etGJR5U6A==
+	b=Fzafw8xBPqMl9ugc649rEPX8ixZgxP2OcCu8NjLRFftrtUO0sNud1L47sRNE7cxqq
+	 YvDxMBrzNbVqwa27blBwaXx59c8nbqn9dWn5giwGeIB0866b1Dy1tEGpz2BdkIbOhT
+	 lseDIQ5dCUWSRTrBMSG74JCYCGhPors/DtKcDkQlhx8EEwWwzYFBGWeEo4uluIiujz
+	 hY/1umg6D1T3QFHBPUO0vCrZ8yF+rOTuE5YWqGISHRBRYZc++4wmByifhkYWm/6rR1
+	 OGHolJlwitj3zz8uceLywsikmGybBW0Yd7nQFozyvNL0l0/S0OjkXJyGEcnCsQza2W
+	 ylIG0ML6Kj/jw==
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v9 05/10] perf regs: Support x86 eGPRs/SSP sampling
+Subject: Re: [Patch v9 09/10] perf tests: Add x86 eGPRs/SSP registers
+ sampling test
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260706023444.3067660-6-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260706023444.3067660-10-dapeng1.mi@linux.intel.com>
 References: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
- <20260706023444.3067660-6-dapeng1.mi@linux.intel.com>
+ <20260706023444.3067660-10-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 02:59:25 +0000
-Message-Id: <20260706025926.3AA051F000E9@smtp.kernel.org>
+Date: Mon, 06 Jul 2026 03:00:24 +0000
+Message-Id: <20260706030025.4A6731F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,61 +47,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Reclaiming XMM register space breaks explicit XMM register selec=
-tion on SIMD-capable hosts.
+- [Medium] The validation function `validate_gp_reg_sampling` executes a si=
+ngle hardcoded `perf record` pipeline instead of using the standard `perf_r=
+ecord_with_retry` helper, leading to test flakiness and untraceable failure=
+s.
 --
 
-commit 4a688e42468a5e89b85174c21cc87866b350369c
+commit 5bc6b87aa83194eef4aff3394561f1bdb19039e4
 Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-perf regs: Support x86 eGPRs/SSP sampling
+perf tests: Add x86 eGPRs/SSP registers sampling test
 
-This commit adds support for sampling x86 extended GP registers (R16-R31)
-and the shadow stack pointer (SSP) by reclaiming the original XMM register
-space. A new abi argument is introduced to distinguish the register layout,
-defaulting to the new SIMD layout on supported platforms.
+Validate that eGPRs (extended general purpose registers) and SSP
+(shadow stack pointer) registers can be sampled correctly on x86
+platforms with hardware support.
 
-> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse=
--regs-options.c
-> --- a/tools/perf/util/parse-regs-options.c
-> +++ b/tools/perf/util/parse-regs-options.c
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/re=
+cord.sh
+> index dd90fef2088b1..48c722e563e27 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+
 [ ... ]
-> @@ -87,14 +100,16 @@ __parse_regs(const struct option *opt, const char *s=
-tr, int unset, bool intr)
->  			*p =3D '\0';
-> =20
->  		if (!strcmp(s, "?")) {
-> -			list_perf_regs(stderr, mask);
-> +			list_perf_regs(stderr, mask, abi);
->  			goto error;
->  		}
-> =20
-> -		reg_mask =3D name_to_perf_reg_mask(s, mask);
-> -		if (reg_mask =3D=3D 0) {
-> -			ui__warning("Unknown register \"%s\", check man page or run \"perf re=
-cord %s?\"\n",
-> -				s, intr ? "-I" : "--user-regs=3D");
-> +		reg_mask =3D name_to_perf_reg_mask(s, mask, abi);
-> +		if (reg_mask) {
-> +			if (abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> +				opts->sample_simd_regs_enabled =3D 1;
-> +		} else {
-> +			ui__warning(warn, s, intr ? "-I" : "--user-regs=3D");
+
+> @@ -131,6 +131,131 @@ check_system_wide() {
+> +validate_gp_reg_sampling() {
+> +  local regs_opt=3D"$1"
+> +  local regs_value=3D"$2"
+> +  local script_field=3D"$3"
+> +  local sample_output
+> +  shift 3
+> +
+> +  if ! sample_output=3D$(perf record -o - "${regs_opt}=3D${regs_value}" \
+> +    -e br_inst_retired.near_call -c 1000 --per-thread ${testprog} 2> /de=
+v/null \
+> +    | perf script -F ip,sym,"${script_field}" -i - 2> /dev/null)
 
 [Severity: Medium]
-Will this change break explicit XMM register selection on SIMD-capable host=
-s?
+Could this hardcoded perf record pipeline lead to test flakiness on slower
+environments?
 
-Because PERF_SAMPLE_REGS_ABI_SIMD is set by default on platforms with SIMD
-support, the reclaimed register space means name_to_perf_reg_mask will now =
-map
-to eGPRs instead of XMM registers.=20
+By not using the standard perf_record_with_retry helper, a single execution
+might fail to generate the 1000 near calls required to trigger a hardware
+sample.
 
-If a user runs an existing script that explicitly requests individual XMM
-registers, such as perf record -I xmm0, won't this branch fail to match the
-string, return an Unknown register warning, and break backward compatibility
-for those CLI options?
+Additionally, does suppressing stderr with 2> /dev/null permanently hide
+error details from the CI pipelines by bypassing the PERF_RECORD_LOGS
+collection mechanism?
+
+> +  then
+> +    return 1
+> +  fi
+> +
+> +  if ! has_required_regs "${sample_output}" "$@"
+> +  then
+> +    return 1
+> +  fi
+> +
+> +  return 0
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706023444.3067=
-660-1-dapeng1.mi@linux.intel.com?part=3D5
+660-1-dapeng1.mi@linux.intel.com?part=3D9
