@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C35C3AA4E8;
-	Mon,  6 Jul 2026 02:40:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D323AA4E8;
+	Mon,  6 Jul 2026 02:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783305657; cv=none; b=hTXhTbZh83TW9v4MHeEkzZxwgYA6V8QPpjYV+/q3Iwn4sZpF9etQL4+6HgFeJc+mKnutcPCzkyN567rb3lS3g7BGIqnly0jg0kkm3WL1J3plLsTBmHxhkl18j5q7UxkGpVDHuNlSA8qgpHQNMMWc0JqlgnVlYTTVZ/L8hyn92XE=
+	t=1783305661; cv=none; b=HCt5vSNybNZMILoR0ActaEnSDP13CmtDIRsW/LBjd5Ua5+mG9SYfUL9zXeqZjpC0wKFAw/lYnsgTkimtMF58dkHnyP39utl7g2jxVlV29tzEQiDj6lHhiVkX03IHNuf4/eRQ9JLlWFGWIC9BRA/fEBUjIzoNM7CGHt3kewp7MJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783305657; c=relaxed/simple;
-	bh=cOpsfzLn3T2DF7wR1zj4s6ED/JWZ16GplY+0F1D+pg0=;
+	s=arc-20240116; t=1783305661; c=relaxed/simple;
+	bh=+cg7lfx5+zic5RuNZSpUk9l9f9sKa7d9SUDMJFVrdTY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s5Y2BCPS/kdoneXBA2xSeWCSUBL2Ws5M5Q/SqQLz/jm2eA3ShyzqUE3Wo/KnB38KW1PPPO5AlVt7YfemSv0dFLcQWaX3tGW3aJqvJDwiTGM/o+DthZUgWwC6eEQLyRTZoXDeG54gxV7n4jwzttJAFyqDtD4gca9EBg3DcpsTO94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZP08VHMt; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=ulhe9rEATA5fneeh359VJve0tGweQp+kjSV0uN0Sf/zNiXiBqRKYr+4qqZhUUjLPZupi4lgsxnE4FcdWcC6Jm7QbF59D1y1XZ/VZ0HSYQ3EkDQprEVaxsd77xa73ZLi8GXj0fSqd8tsufB+r31e5jq67pSIUhlfsFFA4o13XGmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCTo6zT9; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZP08VHMt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCTo6zT9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783305656; x=1814841656;
+  t=1783305660; x=1814841660;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=cOpsfzLn3T2DF7wR1zj4s6ED/JWZ16GplY+0F1D+pg0=;
-  b=ZP08VHMtOk2rXWBSMwWMGKjb4ETpHXASlQQUZZLzCPkdXoStF4ctSaAc
-   sCX8O0Gvl2gtSX8gDqQOdVkKUtXnuwPHpn/2kmfoPkYnknHj22djNrjiU
-   yTxi+bQ8k2yIrzawJ16PyBRJHr7IbH3KrH/9WwhwFr0VIbxvpQ3tJRXXj
-   c4EGEfVI1wQ4r4gvNmcVIGddQ8JYoVzkAifgYmaDr4S/Ir373Z7fZfqOv
-   qkO5i6ezNYTa3FXddrHEbmN4YcVmDM5fQLXplpY+Bftur2zSG0HZFm/XA
-   CxVhNat1dw4Io0rL5jThropAAFvDi6LEGQUrtiep6sn94u/00i4f4nfhb
+  bh=+cg7lfx5+zic5RuNZSpUk9l9f9sKa7d9SUDMJFVrdTY=;
+  b=hCTo6zT9Qq+LM38z0yPz57QezdjS0n80D0BY45zqWIkQqerFGfAuIXlQ
+   Qrs16g4hgm9Zk9x7aOUfAU6txSeFvuDgaXqM/1qcndlcTntnhzJjRFsLg
+   57LnZigwPflI7VFD/uITjmjK6CwNpkSoV9aJvRGwXrBia593euNic3y1Y
+   4iZL1Rk6vj2w11tUXefMs9uStuoPN9rAqOC0I+SDHk4AZbGw76957k2bt
+   0HMpDiM449LQ4YrcSXihmR8CtO+xjMHxo91bB9BSPFNmXzAYEUHSlMWd7
+   jAcP9BJpEyMhlfo5o0RPh/+9p3SjeKbpB+aE3R83QIJuzZtUAMLr6y3lo
    g==;
-X-CSE-ConnectionGUID: xnj9jrrxQpqAdHFwq1JyFw==
-X-CSE-MsgGUID: DlfkvfilRxm3Kr2M/o599g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="87614039"
+X-CSE-ConnectionGUID: +nbWFSZISbKSBS7ZU6I0dg==
+X-CSE-MsgGUID: U5QkmCAERUu7tJQb4bOZLw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="87614045"
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="87614039"
+   d="scan'208";a="87614045"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2026 19:40:56 -0700
-X-CSE-ConnectionGUID: OGTIR1QdQ/eQTo86JONQHg==
-X-CSE-MsgGUID: 9dfx6nRoQNa0D/IZZIuhwA==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2026 19:41:00 -0700
+X-CSE-ConnectionGUID: b9H88p9uRQi6Bcassl7R+A==
+X-CSE-MsgGUID: xrBKAK/QSUat1hpUpYJ3lQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="253716703"
+   d="scan'208";a="253716709"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa007.jf.intel.com with ESMTP; 05 Jul 2026 19:40:53 -0700
+  by orviesa007.jf.intel.com with ESMTP; 05 Jul 2026 19:40:56 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -57,10 +57,11 @@ Cc: linux-perf-users@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v9 03/10] tools headers: Sync x86 headers with kernel sources
-Date: Mon,  6 Jul 2026 10:34:37 +0800
-Message-Id: <20260706023444.3067660-4-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [Patch v9 04/10] perf headers: Sync perf_event.h/perf_regs.h with the kernel headers
+Date: Mon,  6 Jul 2026 10:34:38 +0800
+Message-Id: <20260706023444.3067660-5-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
 References: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
@@ -72,31 +73,248 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Sync newly introduced ARCH_PEBS_VECR_xxx macros from kernel.
+Sync the UAPI header changes of supporting SIMD/eGPRs/SSP sampling into
+corresponding tools UAPI headers.
 
+Additionally, support the new introduced perf_event_attr fields in the
+perf_event_attr__fprintf and perf_event__attr_swap() helpers, and add
+sanity check for the new introduced __reserved_4 field in
+perf_attr_check().
+
+Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/arch/x86/include/asm/msr-index.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/arch/x86/include/uapi/asm/perf_regs.h | 53 +++++++++++++++++++++
+ tools/include/uapi/linux/perf_event.h       | 49 +++++++++++++++++--
+ tools/perf/util/header.c                    |  3 +-
+ tools/perf/util/perf_event_attr_fprintf.c   | 11 ++++-
+ tools/perf/util/session.c                   |  7 +++
+ 5 files changed, 117 insertions(+), 6 deletions(-)
 
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index eff29645719b..8cbc4c499706 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -350,6 +350,13 @@
- #define ARCH_PEBS_LBR_SHIFT		40
- #define ARCH_PEBS_LBR			(0x3ull << ARCH_PEBS_LBR_SHIFT)
- #define ARCH_PEBS_VECR_XMM		BIT_ULL(49)
-+#define ARCH_PEBS_VECR_YMMH		BIT_ULL(50)
-+#define ARCH_PEBS_VECR_EGPRS		BIT_ULL(51)
-+#define ARCH_PEBS_VECR_OPMASK		BIT_ULL(53)
-+#define ARCH_PEBS_VECR_ZMMH		BIT_ULL(54)
-+#define ARCH_PEBS_VECR_H16ZMM		BIT_ULL(55)
-+#define ARCH_PEBS_VECR_EXT_SHIFT	49
-+#define ARCH_PEBS_VECR_EXT		(0x7full << ARCH_PEBS_VECR_EXT_SHIFT)
- #define ARCH_PEBS_GPR			BIT_ULL(61)
- #define ARCH_PEBS_AUX			BIT_ULL(62)
- #define ARCH_PEBS_EN			BIT_ULL(63)
+diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
+index 7c9d2bb3833b..faaa82df688d 100644
+--- a/tools/arch/x86/include/uapi/asm/perf_regs.h
++++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_PERF_REGS_H
+ #define _ASM_X86_PERF_REGS_H
+ 
++#include <linux/bits.h>
++
+ enum perf_event_x86_regs {
+ 	PERF_REG_X86_AX,
+ 	PERF_REG_X86_BX,
+@@ -27,9 +29,35 @@ enum perf_event_x86_regs {
+ 	PERF_REG_X86_R13,
+ 	PERF_REG_X86_R14,
+ 	PERF_REG_X86_R15,
++	/*
++	 * The eGPRs/SSP and XMM have overlaps. Only one can be used
++	 * at a time. The ABI PERF_SAMPLE_REGS_ABI_SIMD is used to
++	 * distinguish which one is used. If PERF_SAMPLE_REGS_ABI_SIMD
++	 * is set, then eGPRs/SSP is used, otherwise, XMM is used.
++	 *
++	 * Extended GPRs (eGPRs)
++	 */
++	PERF_REG_X86_R16,
++	PERF_REG_X86_R17,
++	PERF_REG_X86_R18,
++	PERF_REG_X86_R19,
++	PERF_REG_X86_R20,
++	PERF_REG_X86_R21,
++	PERF_REG_X86_R22,
++	PERF_REG_X86_R23,
++	PERF_REG_X86_R24,
++	PERF_REG_X86_R25,
++	PERF_REG_X86_R26,
++	PERF_REG_X86_R27,
++	PERF_REG_X86_R28,
++	PERF_REG_X86_R29,
++	PERF_REG_X86_R30,
++	PERF_REG_X86_R31,
++	PERF_REG_X86_SSP,
+ 	/* These are the limits for the GPRs. */
+ 	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+ 	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
++	PERF_REG_MISC_MAX = PERF_REG_X86_SSP + 1,
+ 
+ 	/* These all need two bits set because they are 128bit */
+ 	PERF_REG_X86_XMM0  = 32,
+@@ -54,5 +82,30 @@ enum perf_event_x86_regs {
+ };
+ 
+ #define PERF_REG_EXTENDED_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
++#define PERF_X86_EGPRS_MASK	__GENMASK_ULL(PERF_REG_X86_R31, PERF_REG_X86_R16)
++
++enum {
++	PERF_X86_SIMD_XMM_REGS      = 16,
++	PERF_X86_SIMD_YMM_REGS      = 16,
++	PERF_X86_SIMD_ZMM_REGS      = 32,
++	PERF_X86_SIMD_VEC_REGS_MAX  = PERF_X86_SIMD_ZMM_REGS,
++
++	PERF_X86_SIMD_OPMASK_REGS   = 8,
++	PERF_X86_SIMD_PRED_REGS_MAX = PERF_X86_SIMD_OPMASK_REGS,
++};
++
++#define PERF_X86_SIMD_PRED_MASK	__GENMASK(PERF_X86_SIMD_PRED_REGS_MAX - 1, 0)
++#define PERF_X86_SIMD_VEC_MASK	__GENMASK_ULL(PERF_X86_SIMD_VEC_REGS_MAX - 1, 0)
++
++#define PERF_X86_H16ZMM_BASE		16
++
++enum {
++	/* 1 qword = 8 bytes */
++	PERF_X86_OPMASK_QWORDS   = 1,
++	PERF_X86_XMM_QWORDS      = 2,
++	PERF_X86_YMM_QWORDS      = 4,
++	PERF_X86_ZMM_QWORDS      = 8,
++	PERF_X86_SIMD_QWORDS_MAX = PERF_X86_ZMM_QWORDS,
++};
+ 
+ #endif /* _ASM_X86_PERF_REGS_H */
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index fd10aa8d697f..c49fc76292f7 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -314,8 +314,9 @@ enum {
+  */
+ enum perf_sample_regs_abi {
+ 	PERF_SAMPLE_REGS_ABI_NONE		= 0,
+-	PERF_SAMPLE_REGS_ABI_32			= 1,
+-	PERF_SAMPLE_REGS_ABI_64			= 2,
++	PERF_SAMPLE_REGS_ABI_32			= (1 << 0),
++	PERF_SAMPLE_REGS_ABI_64			= (1 << 1),
++	PERF_SAMPLE_REGS_ABI_SIMD		= (1 << 2),
+ };
+ 
+ /*
+@@ -383,6 +384,7 @@ enum perf_event_read_format {
+ #define PERF_ATTR_SIZE_VER7			128	/* Add: sig_data */
+ #define PERF_ATTR_SIZE_VER8			136	/* Add: config3 */
+ #define PERF_ATTR_SIZE_VER9			144	/* add: config4 */
++#define PERF_ATTR_SIZE_VER10			176	/* Add: sample_simd_{vec|pred}_reg_* */
+ 
+ /*
+  * 'struct perf_event_attr' contains various attributes that define
+@@ -547,6 +549,29 @@ struct perf_event_attr {
+ 
+ 	__u64	config3; /* extension of config2 */
+ 	__u64	config4; /* extension of config3 */
++
++	/*
++	 * Defines the sampling SIMD/PRED(predicate) registers bitmap and
++	 * qwords (8 bytes) length.
++	 *
++	 * sample_simd_regs_enabled != 0 indicates there are SIMD/PRED
++	 * registers to be sampled, the SIMD/PRED registers bitmap and
++	 * qwords length are represented in
++	 * sample_simd_{vec|pred}_reg_{intr|user} and
++	 * sample_simd_{vec|pred}_reg_qwords fields separately.
++	 *
++	 * sample_simd_regs_enabled == 0 indicates no SIMD/PRED registers
++	 * are sampled.
++	 */
++	__u16	sample_simd_regs_enabled;
++	__u16	sample_simd_pred_reg_qwords;
++	__u16	sample_simd_vec_reg_qwords;
++	__u16	__reserved_4;
++
++	__u32	sample_simd_pred_reg_intr;
++	__u32	sample_simd_pred_reg_user;
++	__u64	sample_simd_vec_reg_intr;
++	__u64	sample_simd_vec_reg_user;
+ };
+ 
+ /*
+@@ -1020,7 +1045,15 @@ enum perf_event_type {
+ 	 *      } && PERF_SAMPLE_BRANCH_STACK
+ 	 *
+ 	 *	{ u64			abi; # enum perf_sample_regs_abi
+-	 *	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
++	 *	  u64			regs[weight(mask)];
++	 *	  struct {
++	 *		u64 nr_vectors;		# 0 ... weight(sample_simd_vec_reg_user)
++	 *		u64 vector_qwords;	# 0 ... sample_simd_vec_reg_qwords
++	 *		u64 nr_pred;		# 0 ... weight(sample_simd_pred_reg_user)
++	 *		u64 pred_qwords;	# 0 ... sample_simd_pred_reg_qwords
++	 *		u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
++	 *	  } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
++	 *	} && PERF_SAMPLE_REGS_USER
+ 	 *
+ 	 *	{ u64			size;
+ 	 *	  char			data[size];
+@@ -1047,7 +1080,15 @@ enum perf_event_type {
+ 	 *	{ u64			data_src; } && PERF_SAMPLE_DATA_SRC
+ 	 *	{ u64			transaction; } && PERF_SAMPLE_TRANSACTION
+ 	 *	{ u64			abi; # enum perf_sample_regs_abi
+-	 *	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
++	 *	  u64			regs[weight(mask)];
++	 *	  struct {
++	 *		u64 nr_vectors;		# 0 ... weight(sample_simd_vec_reg_intr)
++	 *		u64 vector_qwords;	# 0 ... sample_simd_vec_reg_qwords
++	 *		u64 nr_pred;		# 0 ... weight(sample_simd_pred_reg_intr)
++	 *		u64 pred_qwords;	# 0 ... sample_simd_pred_reg_qwords
++	 *		u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
++	 *	  } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
++	 *	} && PERF_SAMPLE_REGS_INTR
+ 	 *	{ u64			phys_addr;} && PERF_SAMPLE_PHYS_ADDR
+ 	 *	{ u64			cgroup;} && PERF_SAMPLE_CGROUP
+ 	 *	{ u64			data_page_size;} && PERF_SAMPLE_DATA_PAGE_SIZE
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index e90e541f546b..0adfb5b9af34 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2162,7 +2162,8 @@ static void free_event_desc(struct evsel *events)
+ 
+ static bool perf_attr_check(struct perf_event_attr *attr)
+ {
+-	if (attr->__reserved_1 || attr->__reserved_2 || attr->__reserved_3) {
++	if (attr->__reserved_1 || attr->__reserved_2 ||
++	    attr->__reserved_3 || attr->__reserved_4) {
+ 		pr_warning("Reserved bits are set unexpectedly. "
+ 			   "Please update perf tool.\n");
+ 		return false;
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index cc817294ad3d..2e8be9a357dc 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -407,8 +407,17 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	}
+ 	if (attr_size >= offsetof(struct perf_event_attr, config4))
+ 		PRINT_ATTRf(config3, p_hex);
+-	if (attr_size > offsetof(struct perf_event_attr, config4))
++	if (attr_size >= offsetof(struct perf_event_attr, sample_simd_regs_enabled))
+ 		PRINT_ATTRf(config4, p_hex);
++	if (attr_size > offsetof(struct perf_event_attr, sample_simd_vec_reg_user)) {
++		PRINT_ATTRf(sample_simd_regs_enabled, p_unsigned);
++		PRINT_ATTRf(sample_simd_pred_reg_qwords, p_unsigned);
++		PRINT_ATTRf(sample_simd_pred_reg_intr, p_hex);
++		PRINT_ATTRf(sample_simd_pred_reg_user, p_hex);
++		PRINT_ATTRf(sample_simd_vec_reg_qwords, p_unsigned);
++		PRINT_ATTRf(sample_simd_vec_reg_intr, p_hex);
++		PRINT_ATTRf(sample_simd_vec_reg_user, p_hex);
++	}
+ 
+ 	return ret;
+ }
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 212506aa8baa..c7ac0e7c5c04 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -639,6 +639,13 @@ do { 						\
+ 	bswap_field_64(sig_data);
+ 	bswap_field_64(config3);
+ 	bswap_field_64(config4);
++	bswap_field_16(sample_simd_regs_enabled);
++	bswap_field_16(sample_simd_pred_reg_qwords);
++	bswap_field_16(sample_simd_vec_reg_qwords);
++	bswap_field_32(sample_simd_pred_reg_intr);
++	bswap_field_32(sample_simd_pred_reg_user);
++	bswap_field_64(sample_simd_vec_reg_intr);
++	bswap_field_64(sample_simd_vec_reg_user);
+ 
+ 	/*
+ 	 * After read_format are bitfields. Check read_format because
 -- 
 2.34.1
 
