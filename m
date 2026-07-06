@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E783A7D91;
-	Mon,  6 Jul 2026 02:41:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22EE3AC0C6;
+	Mon,  6 Jul 2026 02:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783305681; cv=none; b=lUV41Qmd4Jh8JXQM1QGgowmLhs0kdr7MZTVxkKsB/dUl2knNnGg57b7c84JjAKox338zSsW3N496EnC1dIIevfGjUJycRjEuE9no7B/MEQApnjH16Re1PUAAoio6/rBQsP85JfcQ8SmNcjh2ZXuGQg3yJ7PXw17iFoMX4JQrzsU=
+	t=1783305685; cv=none; b=WOoB0ZZBaA8qzUOo+tp7jNTPRzJTeoTWaCOjjMIv05/gSEbaZb44hxPGCLPK5BoEjwqSeOZGtSCglvc5Srbf/TmW7xIuAmRzauyvD2oGL3hkODoumpZU59d20jrDGrnJpq6Zk6yD8g9KhvstoXJu9E/u+EbV2ukc90kO9/3lShQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783305681; c=relaxed/simple;
-	bh=4lE321g0AzFIJcvzdIAf28AYbTtPdeyBPo/CdN19Mo0=;
+	s=arc-20240116; t=1783305685; c=relaxed/simple;
+	bh=eGurDYf/D5z9eZ/1LtNwffYr/Apbq/wVscCnbbSgTls=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EfRCz8nU1U0XByShswU6u9smR722xU59zHAKZdvDJ5BDoS27uulAUhBTNoi8bwL7J1IkHgkHdrP8fgPKAImZEn2Em9vACUcLWw/7z368F0AQINxecYRkZ6GLU0wJNtsrzfQ+MfokUZoaOkYnk0ORDSzYaWToWIsZIwPbF0za4FY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HH+U9k3C; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=UmAEBzPW9f6DGg1Q8EOYbS+ZleJo8lLB1YoJAs5L3REBHMjPyDu5B+n+dzXnfAFCd2D2sPNW6UGvgqYjHNqRdHZMEGhwsGP+doXsZZ+128oR5mtTtd4RYJz5ep53VjmI9eJtDNi4A9mryOWMTO04i1xdLdoy3U6ZFXXmEcVoxns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bxSzzBv8; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HH+U9k3C"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxSzzBv8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783305680; x=1814841680;
+  t=1783305684; x=1814841684;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4lE321g0AzFIJcvzdIAf28AYbTtPdeyBPo/CdN19Mo0=;
-  b=HH+U9k3CItb65qpSZ03cK6XLhar/ZYNHt/i7/J2kuq0sAbw2oJlt+V1K
-   kTAqfuq+ufHixzYl9KDocdqiM/m0nA2kPc76sqVtkaPHVkqel0JRd2cZI
-   Zc8k0F2VeeYvCBM8OwriUEMEKog+Jyn930MQdEz9c574McUyCHWjldEkU
-   WgQdCzVafYG7qgNNfiZ0QS3wHgXQUTYBdUwR+kkHqMwqJ1Aaig+ql8FWL
-   7v+t3AP2JmAtrZooYzufQx0PfLu1Tl9WB3QJ0RisrMBkY7J3NqfFxoWbA
-   hijHie2zzv1zktTLN8E2q7ymfLN5aeaogQ54WK1/iJ8i8xWowH/VvdvM0
-   A==;
-X-CSE-ConnectionGUID: ptUCCI2TTNmVaVPa3Znx6g==
-X-CSE-MsgGUID: R1488DhdTXaOGXMtYuJ6Jg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="87614073"
+  bh=eGurDYf/D5z9eZ/1LtNwffYr/Apbq/wVscCnbbSgTls=;
+  b=bxSzzBv8L6ZQGB0dAnfE9eP5AKhl+LVg8JDLtY7RwzKR8KTtZDM6ySge
+   1N0SMA88BKuOVF0/qbYqmZbT7mE1uV4M1Z+ksWx4z7Ln8pXGlRnt5xPIi
+   j67MhqQ4j9M5bv7BahCNTXJxGgChCYjea/4yBDq1D0AZbzOIdK6A0zwaB
+   Ozyb7f1fLsO5kHqY4kmis4/Uz31C+k0trfyPlGVLfTDxX3tzwxAhDjaO7
+   SXN+VcsxZhu4Yf/dawZPMw6BM7wuhqMEDYUgyiFrEfjV+E3Tn/fF/O/Ph
+   Dz5Yyken7CLymm+Oi6tiJOKaRImG3Rbw2DpX2kdhlGp/U1HBIWEzhUyLP
+   g==;
+X-CSE-ConnectionGUID: iUOBFqF0T3ejB9WJQhqLFQ==
+X-CSE-MsgGUID: dR9AeKQvRBmnZ9HoTB6BXg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="87614080"
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="87614073"
+   d="scan'208";a="87614080"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2026 19:41:20 -0700
-X-CSE-ConnectionGUID: 9QvBAxJjQsepXx5AD2kkMA==
-X-CSE-MsgGUID: tvfLK8RlSE2gAV3hSNtGtw==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2026 19:41:24 -0700
+X-CSE-ConnectionGUID: e/T/4JTuRFqX1dRB5x5pDw==
+X-CSE-MsgGUID: +zBW605sQHGHwtkXWKIFxg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="253716745"
+   d="scan'208";a="253716751"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa007.jf.intel.com with ESMTP; 05 Jul 2026 19:41:16 -0700
+  by orviesa007.jf.intel.com with ESMTP; 05 Jul 2026 19:41:20 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v9 09/10] perf tests: Add x86 eGPRs/SSP registers sampling test
-Date: Mon,  6 Jul 2026 10:34:43 +0800
-Message-Id: <20260706023444.3067660-10-dapeng1.mi@linux.intel.com>
+Subject: [Patch v9 10/10] perf tests: Add SIMD registers sampling test
+Date: Mon,  6 Jul 2026 10:34:44 +0800
+Message-Id: <20260706023444.3067660-11-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
 References: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
@@ -72,31 +72,76 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Validate that eGPRs (extended general purpose registers) and SSP
-(shadow stack pointer) registers can be sampled correctly on x86
-platforms with hardware support.
+Validate that SIMD registers (XMM/YMM/ZMM on x86) can be sampled
+correctly with hardware support.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/perf/tests/shell/record.sh | 126 +++++++++++++++++++++++++++++++
- 1 file changed, 126 insertions(+)
+ tools/perf/tests/shell/record.sh | 131 +++++++++++++++++++++++++++++++
+ 1 file changed, 131 insertions(+)
 
 diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index dd90fef2088b..48c722e563e2 100755
+index 48c722e563e2..c98d8028d0b7 100755
 --- a/tools/perf/tests/shell/record.sh
 +++ b/tools/perf/tests/shell/record.sh
-@@ -131,6 +131,131 @@ check_system_wide() {
-   perf report -i "${perfdata}" -q | grep -q "${testsym}"
+@@ -256,6 +256,136 @@ test_egpr_register_capture() {
+   echo "eGPR/SSP register capture test [Success]"
  }
  
-+has_required_regs() {
++extract_x86_advertised_simd_classes() {
 +  local regs_output="$1"
-+  shift
 +
-+  for reg in "$@"
++  echo "${regs_output}" \
++    | grep -oE '(ZMM|YMM|XMM|OPMASK)[0-9]+-[0-9]+' \
++    | sed -E 's/[0-9]+-[0-9]+$//' \
++    | tr '[:upper:]' '[:lower:]' \
++    | sort -u
++}
++
++ordered_x86_simd_classes() {
++  local advertised_classes="$1"
++  local simd_classes=""
++
++  if echo "${advertised_classes}" | grep -qw zmm
++  then
++    simd_classes="${simd_classes} zmm"
++  fi
++  if echo "${advertised_classes}" | grep -qw ymm
++  then
++    simd_classes="${simd_classes} ymm"
++  fi
++  if echo "${advertised_classes}" | grep -qw xmm
++  then
++    simd_classes="${simd_classes} xmm"
++  fi
++  if echo "${advertised_classes}" | grep -qw opmask
++  then
++    simd_classes="${simd_classes} opmask"
++  fi
++
++  echo "${simd_classes}" | xargs
++}
++
++validate_simd_sampling_mode() {
++  local regs_opt="$1"
++  local simd_classes="$2"
++  local script_field="$3"
++  local simd_class
++  local sample_output
++
++  for simd_class in ${simd_classes}
 +  do
-+    if ! echo "${regs_output}" | grep -q -i "${reg}"
++    if ! sample_output=$(perf record -o - "${regs_opt}=${simd_class}" \
++      -e br_inst_retired.near_call -c 1000 --per-thread ${testprog} 2> /dev/null \
++      | perf script -F ip,sym,"${script_field}" -i - 2> /dev/null)
 +    then
++      echo "SIMD register capture test [Failed record ${regs_opt}=${simd_class}]"
++      return 1
++    fi
++
++    if ! has_required_regs "${sample_output}" "${simd_class}"
++    then
++      echo "SIMD register capture test [Failed missing ${simd_class} sampling data]"
 +      return 1
 +    fi
 +  done
@@ -104,124 +149,83 @@ index dd90fef2088b..48c722e563e2 100755
 +  return 0
 +}
 +
-+validate_gp_reg_sampling() {
-+  local regs_opt="$1"
-+  local regs_value="$2"
-+  local script_field="$3"
-+  local sample_output
-+  shift 3
-+
-+  if ! sample_output=$(perf record -o - "${regs_opt}=${regs_value}" \
-+    -e br_inst_retired.near_call -c 1000 --per-thread ${testprog} 2> /dev/null \
-+    | perf script -F ip,sym,"${script_field}" -i - 2> /dev/null)
-+  then
-+    return 1
-+  fi
-+
-+  if ! has_required_regs "${sample_output}" "$@"
-+  then
-+    return 1
-+  fi
-+
-+  return 0
-+}
-+
-+test_egpr_register_capture() {
++test_simd_register_capture() {
 +  local arch
 +  local intr_regs
 +  local user_regs
++  local simd_classes
++  local user_simd_classes
++  local advertised_intr_classes
++  local advertised_user_classes
 +  local tested=0
 +
-+  echo "eGPR/SSP register capture test"
-+
-+  arch=$(uname -m)
-+  case ${arch} in
-+  x86_64|i386)
-+    ;;
-+  *)
-+    echo "eGPR/SSP register capture test [Skipped non-x86 platform]"
-+    return
-+    ;;
-+  esac
-+
++  echo "SIMD register capture test"
 +  if ! perf list pmu | grep -q 'br_inst_retired.near_call'
 +  then
-+    echo "eGPR/SSP register capture test [Skipped missing event]"
++    echo "SIMD register capture test [Skipped missing event]"
 +    return
 +  fi
 +
 +  intr_regs=$(perf record --intr-regs=\? 2>&1 || true)
 +  user_regs=$(perf record --user-regs=\? 2>&1 || true)
 +
-+  if has_required_regs "${intr_regs}" R16 R31
++  simd_classes=""
++  user_simd_classes=""
++
++  arch=$(uname -m)
++  case ${arch} in
++  x86_64|i386)
++    advertised_intr_classes=$(extract_x86_advertised_simd_classes "${intr_regs}")
++    advertised_user_classes=$(extract_x86_advertised_simd_classes "${user_regs}")
++
++    simd_classes=$(ordered_x86_simd_classes "${advertised_intr_classes}")
++    user_simd_classes=$(ordered_x86_simd_classes "${advertised_user_classes}")
++    ;;
++  *)
++    ;;
++  esac
++
++  if [ -z "${simd_classes}" ]
 +  then
-+    if ! validate_gp_reg_sampling "--intr-regs" "r16,r31" "iregs" "R16:" "R31:"
-+    then
-+      echo "eGPR/SSP register capture test [Failed eGPR intr-regs validation]"
-+      err=1
-+      return
-+    fi
-+    tested=1
++    echo "SIMD register capture test [Skipped missing intr SIMD registers]"
++  elif ! validate_simd_sampling_mode "--intr-regs" "${simd_classes}" "iregs"
++  then
++    echo "SIMD register capture test [Failed missing intr SIMD register sampling data]"
++    err=1
++    return
 +  else
-+    echo "eGPR/SSP register capture test [Skipped missing eGPR intr-regs (R16/R31)]"
++    tested=1
 +  fi
 +
-+  if has_required_regs "${user_regs}" R16 R31
++  if [ -z "${user_simd_classes}" ]
 +  then
-+    if ! validate_gp_reg_sampling "--user-regs" "r16,r31" "uregs" "R16:" "R31:"
-+    then
-+      echo "eGPR/SSP register capture test [Failed eGPR user-regs validation]"
-+      err=1
-+      return
-+    fi
-+    tested=1
-+  else
-+    echo "eGPR/SSP register capture test [Skipped missing eGPR user-regs (R16/R31)]"
-+  fi
-+
-+  if has_required_regs "${intr_regs}" SSP
++    echo "SIMD register capture test [Skipped missing user SIMD registers]"
++  elif ! validate_simd_sampling_mode "--user-regs" "${user_simd_classes}" "uregs"
 +  then
-+    if ! validate_gp_reg_sampling "--intr-regs" "ssp" "iregs" "SSP:"
-+    then
-+      echo "eGPR/SSP register capture test [Failed SSP intr-regs validation]"
-+      err=1
-+      return
-+    fi
-+    tested=1
++    echo "SIMD register capture test [Failed missing user SIMD register sampling data]"
++    err=1
++    return
 +  else
-+    echo "eGPR/SSP register capture test [Skipped missing SSP intr-regs]"
-+  fi
-+
-+  if has_required_regs "${user_regs}" SSP
-+  then
-+    if ! validate_gp_reg_sampling "--user-regs" "ssp" "uregs" "SSP:"
-+    then
-+      echo "eGPR/SSP register capture test [Failed SSP user-regs validation]"
-+      err=1
-+      return
-+    fi
 +    tested=1
-+  else
-+    echo "eGPR/SSP register capture test [Skipped missing SSP user-regs]"
 +  fi
 +
 +  if [ ${tested} -eq 0 ]
 +  then
-+    echo "eGPR/SSP register capture test [Skipped missing eGPR/SSP registers]"
++    echo "SIMD register capture test [Skipped missing SIMD registers]"
 +    return
 +  fi
 +
-+  echo "eGPR/SSP register capture test [Success]"
++  echo "SIMD register capture test [Success]"
 +}
 +
  test_system_wide() {
    echo "Basic --system-wide mode test"
    local ret=0
-@@ -449,6 +574,7 @@ fi
- 
+@@ -575,6 +705,7 @@ fi
  test_per_thread
  test_register_capture
-+test_egpr_register_capture
+ test_egpr_register_capture
++test_simd_register_capture
  test_system_wide
  test_workload
  test_branch_counter
