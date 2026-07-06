@@ -1,51 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E062DEA68;
-	Mon,  6 Jul 2026 17:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31ED3AEF44;
+	Mon,  6 Jul 2026 17:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783358982; cv=none; b=TVA+ibwJq4QDU10bC9WrEGhgunFPXiysAj44pqwFucHWncOqtkONyAe8/7+OUGDU6u0nR/KstEWfn6aC9mCybiWyc36+xdE0CNVsk8+GBXLrvRDFf1QKaW19neGKqIgX1Tn/RXsYqyIS0sJB64reUz0gq08/dPaIvlKAgXv53bY=
+	t=1783359214; cv=none; b=S3v58BowXy2cE0XP19qwIR65kIH+U9Fd+CH5371Z5ruwyBm1Hg9mu40UQqfkjYFhUZ12ubMapzS4oxaHSu7jryFBJGCFn5jjkPWZGdW9+JTp7cQgPiIwtPe6SM9nV+P3sNOJ/lQmdBg+PkxzU65sWgwG3jBwGFrlP/8ERJ+Hksc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783358982; c=relaxed/simple;
-	bh=LUwnC/QA6xTgLEI+6ROL1tRVqzXKyLJm3hBs+MnmVEw=;
+	s=arc-20240116; t=1783359214; c=relaxed/simple;
+	bh=zQncDbcaqdgk6eifoy2ni/lnGvGN2gECL1xvOkuHIm4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CPHDyN4u0WF4NZpTgiuA/hyhKwfNvXelH5/OJMMGF3oyx91g26p+oIbV3I6QKV8FmNKKJMbh+K4u5xUsl8fD3jxVZBO+isFNInHhg5BUl/gxRRu3HtWYrSaA8TOD0YDA+hluRvbjFV+rm6ReQaDa/Uz4T3UHEq8nKdN9soMmME0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=miR56bID; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=on3+QPQL28YSDKE3QARmHD8kp9sDoIofo2xHRQQSUjPzcOyJ1clfJGdhEXR6eQiTaU8+ChjXK5dq0oOI13Y2BGDy/A1tdWOi3pN3PAe7h6Y14fHjpDrxs/WsYXi1d2lwNUNz2m3S1NtOskKr9hyx3NSjfs48KfUpfdENi3+eFW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ft+yV14M reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="miR56bID"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C885B1F000E9;
-	Mon,  6 Jul 2026 17:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783358981;
-	bh=aFA8rrR6A2/Rfxa14BcpRpNQ6z/JG+NvfpMZGVk2DD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=miR56bIDPwDHqaFbOA1DCsf5zz2tDH/XqKsYv88NbgdSZVa1DI5AR+LZqYAFb2NjZ
-	 KfiaAASSpcIOZc7QIGs7ePbmnLsHL4fYqEZV44gLkqS/UHm/ntIBhWC/DSOWlbidMJ
-	 m3hmpWOFrOEQ9yuBiwRyIMqWY60wcZeDGLvNy00SIT4CC2mwEUCZLSIhz3SVVwdtzH
-	 VlTTi49rNLd8ssipcmEa1rAxHuhp/5IxHhBIm/GUeu7QmFAp28JE7+27f4X0Zirwr5
-	 6tsdhuIyHWkQtVW3+Cc8YE4Y/tekGKa5h6ZpQN2hJWhsDfJFVztiOlsKUeGdqBGz4L
-	 XHs4Oe5iHZWCQ==
-Date: Mon, 6 Jul 2026 10:29:39 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>
-Subject: Re: [PATCH v2 1/2] perf vendor events amd: Update Zen 5 core events
-Message-ID: <akvmA_ondqn-lj9W@google.com>
-References: <619d0a273011c935b2654eab5121a4eba5ab1c03.1780383172.git.sandipan.das@amd.com>
- <CAP-5=fV_czvd-z4N7K+_SabxuOm9UUHRyBxNuchrtAgJL3OqOw@mail.gmail.com>
- <bf0b2ab8-c2b1-4020-8506-6e2188e78250@amd.com>
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ft+yV14M"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BB0BC40E0163;
+	Mon,  6 Jul 2026 17:33:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id qWq5n-OlK4_b; Mon,  6 Jul 2026 17:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1783359200; bh=Pb0MvunWQ+2l5DOak08vAfbsBKx+gJv+6HTcsR2W4mQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ft+yV14MgKjqRzdLeJdObK40HSCpPLeb4saFLHDnasQ1ZGWRvjaF3xYEJsnf9gXGF
+	 EiODC6UWHr8M1W9N/IoFQ4HywcwmYArHl2RvqFyA4LIQU0AKygA5uDuEDaq+WTOTFU
+	 eUIsQGBL4fIkFL3cTiIZ1hu+ogDI0bh3iP1sKxubEbaV3dn20JvtwYeuezvE5XnM+B
+	 fAd/zABVIkvEPhxvWjCZN2CnOi45JaDz2zMOn8cLv+C2cKiq/y4Bv4w3upFiKMmAov
+	 wczU38pZ5+WifAgC2MRGQKIGb+O63Myx8VmKABaueOZR26dXfOngcPxplRLt5dwCDU
+	 vuoRYpe6IjsfeYAA/61h+ln0sEkKSYC3E1J4Zv+XFef2/cohMxw542XXaGVci0U41o
+	 +Gv4uPuBIeFiMw8/ZlBnoGrB1Fn/BEClipXkd4TE6N2kQ52ob7gOfvnCV6hbFeVNFy
+	 lVilvJ2OdreCL9zIk1cWuw+q9nF50fLBWgvjOjh9QU7QHiKdVht5l5udhAsFSPSkMu
+	 gjq0nHXTkEdkDvjYU7HG8yUchTJnfCr7KiEm9r0o0AQ5ZdKFh4wRB1l8y2ZUuPCIA7
+	 VTZ7rdQE/7NRGJTayISr12ns7ZvnAoVkBJ/DpNyEB8rCmxuVR5PBTuQo5KfN5ymzmK
+	 GM3+0a0DzQeYZqxAu2El06MY=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1FE4740E016E;
+	Mon,  6 Jul 2026 17:33:07 +0000 (UTC)
+Date: Mon, 6 Jul 2026 10:33:04 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Qi Liu <liuqi@hygon.cn>
+Cc: "peterz@infradead.org" <peterz@infradead.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"namhyung@kernel.org" <namhyung@kernel.org>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Jing Li <lijing@hygon.cn>, Sandipan Das <sandipan.das@amd.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0ggdjIgMC8z?= =?utf-8?Q?=5D?=
+ perf/x86/amd/uncore: Add common helpers and Hygon support
+Message-ID: <20260706173304.GDakvm0P41x7Fo1H_K@fat_crate.local>
+References: <20260701093417.1312443-1-liuqi@hygon.cn>
+ <20260702023625.GIakXOqdXpW3GVkk8E@fat_crate.local>
+ <7a2ac50cf004421bb6dadfa7f488b70b@hygon.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,166 +72,37 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bf0b2ab8-c2b1-4020-8506-6e2188e78250@amd.com>
+In-Reply-To: <7a2ac50cf004421bb6dadfa7f488b70b@hygon.cn>
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, Jul 06, 2026 at 11:45:10AM +0000, Qi Liu wrote:
+> This makes sense. I see the concern about introducing common helpers to=
+o
+> early when AMD and Hygon may still evolve differently in details.  For =
+the
+> next revision, I can keep the Hygon support self-contained by copying t=
+he
+> needed AMD logic first, and avoid introducing a generic common layer at=
+ this
+> stage. If the helpers remain identical over time, we can always consoli=
+date
+> them later in a separate cleanup.  I=E2=80=99ll also revisit the symbol=
+ exports and
+> drop them unless there is a clear module boundary requirement
 
-On Mon, Jul 06, 2026 at 10:51:20PM +0530, Sandipan Das wrote:
-> On 06-07-2026 22:44, Ian Rogers wrote:
-> > On Mon, Jun 22, 2026 at 10:28 PM Sandipan Das <sandipan.das@amd.com> wrote:
-> >>
-> >> Update definitions for the following events.
-> >>   * PMCx00A - Add missing unit masks
-> >>   * PMCx00B - Add missing unit masks and fix descriptions
-> >>   * PMCx00C - Add missing unit masks
-> >>   * PMCx00D - Add missing unit masks
-> >>   * PMCx025 - Add missing unit masks and fix descriptions
-> >>
-> >> Fixes: 45c072f2537a ("perf vendor events amd: Add Zen 5 core events")
-> >> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> >> ---
-> >>
-> >> Previous versions can be found at:
-> >> v1: https://lore.kernel.org/all/f16d1391366762dee0d49f00697f5e6ea913e2c1.1780330378.git.sandipan.das@amd.com/
-> >>
-> >> Changes in v2:
-> >>   * Fix event description pointed out by sashiko.
-> >>
-> >> ---
-> >>  .../arch/x86/amdzen5/floating-point.json      | 130 +++++++++++++++---
-> >>  .../arch/x86/amdzen5/load-store.json          |   8 +-
-> >>  2 files changed, 120 insertions(+), 18 deletions(-)
-> >>
-> >> diff --git a/tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json b/tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json
-> >> index 9204bfb1d69e..569975b53cc3 100644
-> >> --- a/tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json
-> >> +++ b/tools/perf/pmu-events/arch/x86/amdzen5/floating-point.json
-> >> @@ -179,6 +179,30 @@
-> >>      "BriefDescription": "Retired scalar floating-point blend ops.",
-> >>      "UMask": "0x09"
-> >>    },
-> >> +  {
-> >> +    "EventName": "fp_ops_retired_by_type.scalar_mov",
-> >> +    "EventCode": "0x0a",
-> >> +    "BriefDescription": "Retired scalar floating-point MOV ops.",
-> >> +    "UMask": "0x0a"
-> >> +  },
-> >> +  {
-> >> +    "EventName": "fp_ops_retired_by_type.scalar_shuffle",
-> >> +    "EventCode": "0x0a",
-> >> +    "BriefDescription": "Retired scalar floating-point shuffle ops (may include instructions not necessarily thought of as including shuffles e.g. horizontal add, dot product, and certain MOV instructions).",
-> >> +    "UMask": "0x0b"
-> >> +  },
-> >> +  {
-> >> +    "EventName": "fp_ops_retired_by_type.scalar_bfloat",
-> >> +    "EventCode": "0x0a",
-> >> +    "BriefDescription": "Retired scalar floating-point bfloat ops.",
-> >> +    "UMask": "0x0c"
-> >> +  },
-> >> +  {
-> >> +    "EventName": "fp_ops_retired_by_type.scalar_logical",
-> >> +    "EventCode": "0x0a",
-> >> +    "BriefDescription": "Retired scalar floating-point logical ops.",
-> >> +    "UMask": "0x0d"
-> >> +  },
-> >>    {
-> >>      "EventName": "fp_ops_retired_by_type.scalar_other",
-> >>      "EventCode": "0x0a",
-> >> @@ -245,12 +269,24 @@
-> >>      "BriefDescription": "Retired vector floating-point blend ops.",
-> >>      "UMask": "0x90"
-> >>    },
-> >> +  {
-> >> +    "EventName": "fp_ops_retired_by_type.vector_mov",
-> >> +    "EventCode": "0x0a",
-> >> +    "BriefDescription": "Retired vector floating-point MOV ops.",
-> >> +    "UMask": "0xa0"
-> >> +  },
-> >>    {
-> >>      "EventName": "fp_ops_retired_by_type.vector_shuffle",
-> >>      "EventCode": "0x0a",
-> >>      "BriefDescription": "Retired vector floating-point shuffle ops (may include instructions not necessarily thought of as including shuffles e.g. horizontal add, dot product, and certain MOV instructions).",
-> >>      "UMask": "0xb0"
-> >>    },
-> >> +  {
-> >> +    "EventName": "fp_ops_retired_by_type.vector_bfloat",
-> >> +    "EventCode": "0x0a",
-> >> +    "BriefDescription": "Retired vector floating-point bfloat ops.",
-> >> +    "UMask": "0xc0"
-> >> +  },
-> >>    {
-> >>      "EventName": "fp_ops_retired_by_type.vector_logical",
-> >>      "EventCode": "0x0a",
-> >> @@ -278,7 +314,7 @@
-> >>    {
-> >>      "EventName": "sse_avx_ops_retired.mmx_add",
-> >>      "EventCode": "0x0b",
-> >> -    "BriefDescription": "Retired MMX integer add.",
-> >> +    "BriefDescription": "Retired MMX integer add ops.",
-> >>      "UMask": "0x01"
-> >>    },
-> >>    {
-> >> @@ -299,16 +335,34 @@
-> >>      "BriefDescription": "Retired MMX integer multiply-accumulate ops.",
-> >>      "UMask": "0x04"
-> >>    },
-> >> +  {
-> >> +    "EventName": "sse_avx_ops_retired.mmx_aes",
-> >> +    "EventCode": "0x0b",
-> >> +    "BriefDescription": "Retired MMX integer AES ops.",
-> >> +    "UMask": "0x05"
-> >> +  },
-> >> +  {
-> >> +    "EventName": "sse_avx_ops_retired.mmx_sha",
-> >> +    "EventCode": "0x0b",
-> >> +    "BriefDescription": "Retired MMX integer SHA ops.",
-> >> +    "UMask": "0x06"
-> >> +  },
-> >>    {
-> >>      "EventName": "sse_avx_ops_retired.mmx_cmp",
-> >>      "EventCode": "0x0b",
-> >>      "BriefDescription": "Retired MMX integer compare ops.",
-> >>      "UMask": "0x07"
-> >>    },
-> >> +  {
-> >> +    "EventName": "sse_avx_ops_retired.mmx_cvt",
-> >> +    "EventCode": "0x0b",
-> >> +    "BriefDescription": "Retired MMX integer convert or pack ops.",
-> >> +    "UMask": "0x08"
-> >> +  },
-> >>    {
-> >>      "EventName": "sse_avx_ops_retired.mmx_shift",
-> >>      "EventCode": "0x0b",
-> >> -    "BriefDescription": "Retired MMX integer shift ops.",
-> >> +    "BriefDescription": "Retired MMX integer shift or rotate ops.",
-> >>      "UMask": "0x09"
-> >>    },
-> >>    {
-> >> @@ -324,9 +378,9 @@
-> >>      "UMask": "0x0b"
-> >>    },
-> >>    {
-> >> -    "EventName": "sse_avx_ops_retired.mmx_pack",
-> >> +    "EventName": "sse_avx_ops_retired.mmx_vnni",
-> > 
-> > Just a heads up, when renaming events it may be a good idea to keep
-> > the old name and mark the event as deprecated, then add the event
-> > again with the new name. This avoids events breaking when the perf
-> > tool is updated. Personally I feel vendors should get to decide about
-> > this kind of thing, but there have been some strong sensitivities
-> > around event names in the past.
-> > 
-> 
-> Thanks for the suggestion. I agree that renames can be problematic
-> for existing scripted workflows.
-> 
-> Namhyung, please let me know if you want to revert these changes.
-> I can send out v3.
+Thanks.
 
-It'd be nice if you can send an incremental fix on top of the current
-perf-tools-next.
+Also, for the next time, please do not top-post. Just like I do, put your
+reply under the text you're replying to.
 
-Thanks,
-Namhyung
+You can read some more hints here:
 
+https://people.kernel.org/tglx/notes-about-netiquette
+
+Thx.
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
