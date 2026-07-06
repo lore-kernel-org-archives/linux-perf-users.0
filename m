@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077B02E6CB3
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 02:18:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1E72E6CB3
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 02:18:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783304323; cv=none; b=WGlHg0ovUbr0/GE1hlvRz4dhBtt7Qb69RaIr5KtyHRUJIdHrJQe1BCaJ60/telNyElsxib2IF3TzIDUv4xDnYxj7fWcWhB4RN8wC4dG9u4jgs6PmIIu7MwhRFjpq+0SqD6l1vR4dpE+w2VY0nKFsgzAPYCa2WA8hBzkYs0OMhyc=
+	t=1783304334; cv=none; b=oxIMVpOC40Se+OjoxRuteY/1B2Ffd+5kZJMaQ4f1W0z0XJJmIHFBM4W8fqAHe6QIKGz1MB+GERBElymnvHL5H4n/Vv86h1W3fy2w5mZHEdzAz9OuLdxcew+s94/SqfzcWa2tUYSwvyK4oYHyjHPly37JEI4wmP2MXHMGHosLgq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783304323; c=relaxed/simple;
-	bh=zlF4ZJireOzVfX3MW8a/YInSl/igrvm157TVFdlhULo=;
+	s=arc-20240116; t=1783304334; c=relaxed/simple;
+	bh=VoVqOkJqFjIQ5bcBLO84rCG/a5HOBBXItfbaJY4UU78=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=C65KFe/TQXz9wcuoq6TGLt+2sMTa+n4fohgGlV8Fum6HrYF/afCZuRNmRU0ojThoKXh+uZ5WhEBqEVCPNW6eT8g806yyl6fOAZVMHiFaL95U4QpNBBD2hvH2GCwDg06X0mMycK4kLgG9Mv5ZfQBQjLIjUuL1bNMYmOyhm1iEuxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kknPNxFq; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Ko2oPAYB+tfdOef8lUALk1HsDW/AiS6xnjJSvD/dQk45wB2F2G6DoTGCFs9T/FOCcGwBb0HUP2o98KAtVNQMpOpkBCOWD/j42jDCNiwvzVx9lz8v6rKNnwBiNokb6ASfAT40XpJkEtQ5dFVEcoxSa2y+9ZrKOyoNgzZxbo9Fr/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwZ2eUF3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kknPNxFq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1AC1F00A3A;
-	Mon,  6 Jul 2026 02:18:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwZ2eUF3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2ED1F000E9;
+	Mon,  6 Jul 2026 02:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783304321;
-	bh=MEpfKPVyl0WxDslra1DX3mf2BSbsR25tel3MfroNiGQ=;
+	s=k20260515; t=1783304333;
+	bh=u8JwoplwtKchUwbx/BKPhbtP3HdXsd67U1p5BSUHOds=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kknPNxFq9mulfns49k64qoSjWqo1yIDxnBUKuGgp/mlbpUwxLpkZBeljFCqDNA0vw
-	 E6VI1HflRSoTwesagIW2XLmA7imzhqdw+LD1ZI/ScKNYr0qMcxQ66btvDn9R4IChRj
-	 SI+RB+cIaZhO6DeMB1xEHiqitw5Cxo6Z+a7gVZTNGL4mkIqbgyQ4eXYHPPCRP+DdPt
-	 I4H02nDOwHJ1FHlTc12ANBmPIWx1UWx/UVPKztM2jblP6nUVulP662qDjLLgy7geTN
-	 rlSzo3I2jwaekiFClta6HgOnrDvXYkwEwu1reyiUotcaVVjrlOSrhP6HOd91homPrz
-	 UK/I9/ti85IvA==
+	b=bwZ2eUF3Qpdar2p4gNpKv9EmD9304u05z+3jadNk3jKexnCEXLA1trdiUXlRQm9r0
+	 EwfhZvTM0KQ2cPAPlzuBuqfLAgFDM7ZmRTrLPmFrS5C8ALqyH0PHxEW0zspOy9Wr6d
+	 mkHDydR1PuyW8G1/lefZqUhalRIcG03XCff2sgELKsB0w+eWgnjIdoq5dgtoW2u0qM
+	 f6OcW0XeC2Nx804wy1aOM4Wr9zLp9/+8+pphCr0OvOStKo7EAg6d32UmiG+toshLv+
+	 4cGzff/Kgeyf1X7ecCEog08dJq0YpXmhXSy2cUZFUOM0UM/6NPjndIhJSY1GRmOKL1
+	 jMZJmc8eMVqyw==
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v9 07/24] x86/fpu/xstate: Add xsaves_nmi() helper
+Subject: Re: [Patch v9 02/24] perf/x86: Move hybrid PMU initialization
+ before x86_pmu_starting_cpu()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260706015439.3040804-8-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260706015439.3040804-3-dapeng1.mi@linux.intel.com>
 References: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
- <20260706015439.3040804-8-dapeng1.mi@linux.intel.com>
+ <20260706015439.3040804-3-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 02:18:41 +0000
-Message-Id: <20260706021841.9F1AC1F00A3A@smtp.kernel.org>
+Date: Mon, 06 Jul 2026 02:18:52 +0000
+Message-Id: <20260706021852.DE2ED1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,55 +47,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] The use of the XSAVES instruction in xsaves_nmi() breaks FPU snaps=
-hotting to independent buffers due to the hardware's 'modified optimization=
-', leading to a cross-process information leak.
+
+Pre-existing issues:
+- [High] Preexisting out-of-bounds read in `check_hw_exists()` on hybrid pl=
+atforms due to an invalid `container_of()` cast on the global static `pmu` =
+struct via the `hybrid()` macro.
 --
 
-commit e8d6f39a5d4512be90e9976febc30b8f46c0ea64
-Author: Kan Liang <kan.liang@linux.intel.com>
+commit 8216e613cee4854e16daaa11279146d17bc7f313
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-x86/fpu/xstate: Add xsaves_nmi() helper
+perf/x86: Move hybrid PMU initialization before x86_pmu_starting_cpu()
 
-This commit adds a new xsaves_nmi() helper to safely save supported xsave
-states from within an NMI handler. The helper is intended for the perf
-subsystem to snapshot SIMD and APX eGPRs registers.
+The current approach initializes hybrid PMU structures immediately before
+registering them. This is risky as it can lead to key fields being
+inadvertently overwritten. This patch mitigates this by moving the
+default hybrid structure initialization before calling
+x86_pmu_starting_cpu().
 
-> diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-> index a7b6524a9dea2..d39c01546dee7 100644
-> --- a/arch/x86/kernel/fpu/xstate.c
-> +++ b/arch/x86/kernel/fpu/xstate.c
-
-[ ... ]
-
-> +void xsaves_nmi(struct xregs_state *xstate, u64 mask)
-> +{
-> +	int err;
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 872d07a5fa80d..0888d3b0923e1 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2195,8 +2195,20 @@ static int __init init_hw_perf_events(void)
+> =20
+>  	pmu.attr_update =3D x86_pmu.attr_update;
+> =20
+> -	if (!is_hybrid())
+> +	if (!is_hybrid()) {
+>  		x86_pmu_show_pmu_cap(NULL);
+> +	} else {
+> +		int i;
 > +
-> +	if (!in_nmi())
-> +		return;
-> +
-> +	XSTATE_OP(XSAVES, xstate, (u32)mask, (u32)(mask >> 32), err);
+> +		/*
+> +		 * Init default ops.
+> +		 * Must be called before registering x86_pmu_starting_cpu(),
+> +		 * otherwise some key PMU fields, e.g., capabilities
+> +		 * initialized in x86_pmu_starting_cpu(), would be overwritten.
+> +		 */
+> +		for (i =3D 0; i < x86_pmu.num_hybrid_pmus; i++)
+> +			x86_pmu.hybrid_pmu[i].pmu =3D pmu;
+> +	}
 
 [Severity: High]
-Does this code leak stale data into the perf samples?=20
+This is a pre-existing issue, but does passing the global pmu struct to
+check_hw_exists() earlier in this function cause an out-of-bounds read on
+hybrid platforms?
 
-The XSAVES instruction uses a hardware modified optimization that tracks
-whether a state component was modified since the last XRSTORS. If a
-component is unmodified, XSAVES skips writing it to memory while still
-setting its presence bit in the XSTATE_BV header.
+In init_hw_perf_events(), check_hw_exists(&pmu, ...) is called after
+perf_is_hybrid is enabled. Inside check_hw_exists(), it iterates over
+fixed counters and calls fixed_counter_disabled():
 
-When the perf subsystem calls xsaves_nmi() in x86_pmu_sample_xregs()
-with an independent per-CPU buffer like ext_regs_buf, skipping the memory
-write leaves whatever stale data was previously in that buffer.
+arch/x86/events/perf_event.h:fixed_counter_disabled() {
+    ...
+    u64 intel_ctrl =3D hybrid(pmu, intel_ctrl);
+    ...
+}
 
-Because the bit in XSTATE_BV is still set, won't the perf subsystem
-read this stale data (potentially from other tasks) and leak it to
-user-space?
+The hybrid() macro expands to a container_of() cast:
 
-> +	WARN_ON_ONCE(err);
-> +}
+    container_of(_pmu, struct x86_hybrid_pmu, pmu)->_field
+
+Because the pmu passed in is the standalone global struct pmu (not embedded
+within a struct x86_hybrid_pmu), this cast yields an invalid pointer.
+
+Could this read garbage data past the end of the global pmu struct when
+accessing intel_ctrl, potentially causing the BIOS hardware check to act on
+garbage data or trigger a kernel panic if it crosses an unmapped page
+boundary?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706015439.3040=
-804-1-dapeng1.mi@linux.intel.com?part=3D7
+804-1-dapeng1.mi@linux.intel.com?part=3D2
