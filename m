@@ -1,49 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5552B1CEAC2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C23434E2A;
 	Mon,  6 Jul 2026 16:58:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783357101; cv=none; b=i3VttpVJvyDEmBZvXyKBC5RFAzTPYLgCdm2W09yV8A4Io4NZ9LRIdTx/FNJm67JNEYuJzjrTax5mRExLbWQHXmg3Md4/LHOQV3E00K62Y6zLtFRv8YjiIHq27i8Bb0Qh6nJbKMfrnhF+YrdQT5eHManx26we9gUW5H8Lpo2cHNM=
+	t=1783357102; cv=none; b=SQXjyavQqITOIM+NF5YcfOuPRT/idlMN7NM17Cf81j6SKQA32ALG25BH2AZH5oOnfqTM4KIfklxq+xvdAKVfPZKYYAZqXYLCm88TnP6DqBaNHjau/2YPOhR7bxLlroqjjqYRvxtVx6iV5otUOT0VXWI7Zak5zJiwcJLAFqNShBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783357101; c=relaxed/simple;
-	bh=Vxq8wm1tuwg5ViUg5kBv/LtXnM8Cl0ZVEh3EzgzLfRA=;
+	s=arc-20240116; t=1783357102; c=relaxed/simple;
+	bh=iIkGRGBLO2AJq8oJuVduZ7tUm+/xRLpDbLt2gq1Jnxw=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kF8Cd6ghJcMJvC2moELVAl5F0T+QoT50bxlbsgr/3wLnmNxLUA2R+HMfEINTlNyU0/9ummamdPwxahSP8Z1IBNrvU86a/9/d3eghbGZ3F15Sj0oKp4HgrvbZiuatgiHK/BRxoiDLwauY0BZHNeA+e1+nIWenj0oRF//jlevrc5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDvoyNGJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=RxmYo0v0fcarete1RNf7xZkTi2I3nMjJZ9xI9jzibLdyIZ+h3pq7fK44GGui56SVTBoKl0s081p5h9yv1VHCmjVX8kcj2n8a5DZ/zGNNOKjaR6+PPzOgMucHwmLjlt1/kY245Zfm2JA+qb+xevrbdx53Rz96KPcwkyI0B+PDBPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0jTsi78; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDvoyNGJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54671F00ACA;
-	Mon,  6 Jul 2026 16:58:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0jTsi78"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E831F00ADB;
+	Mon,  6 Jul 2026 16:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1783357100;
-	bh=BELjauPHS4gd/xEhBh1cfXqn6iRUBInz8sqBuH7iNvA=;
+	bh=KtMI+bnhEY5C1yiytYHDoewRWdbn2hl0eJHaVKfrGv4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=WDvoyNGJqb7FQS1EYOprUaCsuMT+Y48BrYjMm6t23QQezKhv5GcNwdpfzrLY8Ah2y
-	 uD8aYEVbuZ69FG+36Z0T8HYAJ+dbeZ5ua7Adlk1MYjEYxj6oV2VJ0Nz8CIwtKDB7Lz
-	 RdM9lUiCAEo3mmtuUuFw8nF38pPEdv8rptGyUj5S9DNPMmZRHVGtZ3+4h5TkN5lOoC
-	 gsZ9ldfEFiLK082HSq/uP7hFwMYFinmJnZBQTyj8p9sw3ShHUnDB6g+aAGiwaRdgPV
-	 ghzpFx21u0JKcKSb+jQhWpyFaN/82w1R6crkz0FQQdat2WLI30a0LEdzd43CfjghmI
-	 k1yCgSTnRK6vQ==
+	b=P0jTsi787C+T1oZK3LVsciYcAjtK9VOGkg9mGuCMFuA0ee0lhwCFjB3GOQbL4gSuE
+	 ucZ06q7ag9lrNxp7hslNxj51WKDI6L+bDP9VJg3N/BhP3iZaSCHKl0ATjo++XFs7nF
+	 1Z+15N9JH0jfgLW0bKJMrsc91av1XBtAnOca0nf77mL1P/kdXkSM9QS19U+qWJJN4B
+	 TJo3SOoIGU2vGrlqCh7XEquejUnP3Esl+kIXtlD14CxsgT3rDV8oVac2XKZtZBqt4M
+	 MaKARRKJKn00sO5ovo/i/SgUXLMx9JCNaq6k5lJ22Gpd44PPE6nxJyEeDF/9yrfrbb
+	 txzEBhQIPfkRw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sandipan Das <sandipan.das@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
  Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, x86@kernel.org, 
- "H . Peter Anvin" <hpa@zytor.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
- Ananth Narayan <ananth.narayan@amd.com>
-In-Reply-To: <619d0a273011c935b2654eab5121a4eba5ab1c03.1780383172.git.sandipan.das@amd.com>
-References: <619d0a273011c935b2654eab5121a4eba5ab1c03.1780383172.git.sandipan.das@amd.com>
-Subject: Re: [PATCH v2 1/2] perf vendor events amd: Update Zen 5 core
- events
-Message-Id: <178335709983.2202965.9092443963678808556.b4-ty@kernel.org>
-Date: Mon, 06 Jul 2026 09:58:19 -0700
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>, 
+ Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
+In-Reply-To: <20260624093316.1439582-1-dapeng1.mi@linux.intel.com>
+References: <20260624093316.1439582-1-dapeng1.mi@linux.intel.com>
+Subject: Re: [Patch v4] perf tests: Add auto counter reload (ACR) sampling
+ test
+Message-Id: <178335710038.2202965.12531774755192340308.b4-ty@kernel.org>
+Date: Mon, 06 Jul 2026 09:58:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,15 +51,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 23 Jun 2026 10:58:31 +0530, Sandipan Das wrote:
-> Update definitions for the following events.
->   * PMCx00A - Add missing unit masks
->   * PMCx00B - Add missing unit masks and fix descriptions
->   * PMCx00C - Add missing unit masks
->   * PMCx00D - Add missing unit masks
->   * PMCx025 - Add missing unit masks and fix descriptions
+On Wed, 24 Jun 2026 17:33:16 +0800, Dapeng Mi wrote:
+> Add auto counter reload sampling test to verify that the intended event
+> records can be captured and the self-reloaded events won't generate any
+> records.
 > 
-> [...]
+> 
 Applied to perf-tools-next, thanks!
 
 Best regards,
