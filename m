@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA033890E4
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 03:00:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF5E171CD
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 05:04:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783306830; cv=none; b=WVvjnMtyb/+XJAa8hwb6i2y2D2v5kLs+icfUSrWC0bKR5mFPZZwUPLIMd3PIoK0hOlhbIbCmHreH2YVuL6pwauwc4AhxtxExZNbEG5Y4R3hwF6ruDOl+5TCWUv35c6Q0w0KUBxy25WzdWsQpf3I0yR8F/DeEW/sx0EVpFteTbfU=
+	t=1783314254; cv=none; b=spBRdXZnc9MuUxjVhi5Od66U/NKlrvMTOfL4MofFwC9l7xv1KK7OutJL2gcq+8SuVNLlpf/M3g24cJhLiCTwHbHMGTrQ//6RWy3lXO9DWog53jMu4siZ+8bJasBNxnHmCBUpN93Kg3/0+yJmm6ekMVMb3etidIcJkdNFGXYIOFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783306830; c=relaxed/simple;
-	bh=xNVEzi+UrRRTe8vIrjqOIbbtqJobm9+z5yuTNjMDzho=;
+	s=arc-20240116; t=1783314254; c=relaxed/simple;
+	bh=vuCShk2pqdOJqZ+MoR9bCJpciUQFNUBBQ5SbyDksqS8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=EMtc8eu71T1sGbHr2Q1SRcY6+Fq30cx8pemi/tSqX6sI0kEESLnIwk/ofYtnEmiFYhPxgLKZVMcDZZzfLDsNxaq3aK6BFHK5otDCtbcTsPWJ8bHwVmyuZ6YCjgqxzNBzvmyI3dPYQTi7VJMHpX2IsjQgVpaPOfwkLYW7/lb6NmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fzafw8xB; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=bs0ZXolLV282t6H5zJzN8QAuDyCx5fm3/G//AKkLAoGm2DOkdlMv1nxTvt5ycXjl3+KnPtVaK8t/vGne3UzJwpvfNQa/vb/b75Uwjln0MxxWMUPwwB9YyK109KIseaqdnxMp37t6V+vlOaRMxpHWsx2H8I+JwqrvnamSI5amiBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLxNl4bB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fzafw8xB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6731F000E9;
-	Mon,  6 Jul 2026 03:00:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLxNl4bB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999B31F000E9;
+	Mon,  6 Jul 2026 05:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783306825;
-	bh=E5/aXxQQ/0uP/C8aewfSCWH4lyadSm6pwvS/2jRIFNA=;
+	s=k20260515; t=1783314252;
+	bh=KrOH5wQ2LeXArCSvcjBwJPzsvqvt2LDyd7R67BLKn78=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fzafw8xBPqMl9ugc649rEPX8ixZgxP2OcCu8NjLRFftrtUO0sNud1L47sRNE7cxqq
-	 YvDxMBrzNbVqwa27blBwaXx59c8nbqn9dWn5giwGeIB0866b1Dy1tEGpz2BdkIbOhT
-	 lseDIQ5dCUWSRTrBMSG74JCYCGhPors/DtKcDkQlhx8EEwWwzYFBGWeEo4uluIiujz
-	 hY/1umg6D1T3QFHBPUO0vCrZ8yF+rOTuE5YWqGISHRBRYZc++4wmByifhkYWm/6rR1
-	 OGHolJlwitj3zz8uceLywsikmGybBW0Yd7nQFozyvNL0l0/S0OjkXJyGEcnCsQza2W
-	 ylIG0ML6Kj/jw==
+	b=nLxNl4bBSiH9ozBZH94EQESqINM3yPB6cAODKihJSbql19YpMOPvk78ibmUnhHJhd
+	 Ov2u3ptTQ6jzJnBX3enatPRAfOP5l629XWi5LzcAtKI2/qvSMg33utqJO/rJXl7gRR
+	 NdvuYeQrvl8GHnHausj4zg8PlcpVZB9ps1hLRhW5Jo0EWZvtz3rhrOftRjp2PdnGVP
+	 /829easAhFpu+VqfphmW7mVBL+04ouk8R2Byhw0ueE22bZTXCdcQp3w2HMIzqY/su5
+	 8aTERmgBEkjtqY5dB5vy+REQIoaZUrtxf7nyXBExdbXbQU4g8S8hJxyCGDEaqDqhaC
+	 9MF1WavZPSqKQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v9 09/10] perf tests: Add x86 eGPRs/SSP registers
- sampling test
+Subject: Re: [Patch v9 24/24] perf/x86/intel: Add sanity check for PEBS
+ fragment size
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260706023444.3067660-10-dapeng1.mi@linux.intel.com>
-References: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
- <20260706023444.3067660-10-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260706015439.3040804-25-dapeng1.mi@linux.intel.com>
+References: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
+ <20260706015439.3040804-25-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 03:00:24 +0000
-Message-Id: <20260706030025.4A6731F000E9@smtp.kernel.org>
+Date: Mon, 06 Jul 2026 05:04:12 +0000
+Message-Id: <20260706050412.999B31F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,66 +47,77 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The validation function `validate_gp_reg_sampling` executes a si=
-ngle hardcoded `perf record` pipeline instead of using the standard `perf_r=
-ecord_with_retry` helper, leading to test flakiness and untraceable failure=
-s.
+
+Pre-existing issues:
+- [High] Events without preceding valid records in a corrupted PEBS buffer =
+are permanently stalled.
 --
 
-commit 5bc6b87aa83194eef4aff3394561f1bdb19039e4
+commit e2dd3df4b73a7bfac8a1332ea38906750253ef38
 Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-perf tests: Add x86 eGPRs/SSP registers sampling test
+perf/x86/intel: Add sanity check for PEBS fragment size
 
-Validate that eGPRs (extended general purpose registers) and SSP
-(shadow stack pointer) registers can be sampled correctly on x86
-platforms with hardware support.
+This patch adds a sanity check for corrupted PEBS fragment sizes to prevent
+potential infinite loops. If a corrupted fragment is detected, the entire
+PEBS record and all subsequent records are dropped to ensure data integrity.
 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/re=
-cord.sh
-> index dd90fef2088b1..48c722e563e27 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index b38aed4f62b4c..7a8e619055393 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
 
 [ ... ]
 
-> @@ -131,6 +131,131 @@ check_system_wide() {
-> +validate_gp_reg_sampling() {
-> +  local regs_opt=3D"$1"
-> +  local regs_value=3D"$2"
-> +  local script_field=3D"$3"
-> +  local sample_output
-> +  shift 3
-> +
-> +  if ! sample_output=3D$(perf record -o - "${regs_opt}=3D${regs_value}" \
-> +    -e br_inst_retired.near_call -c 1000 --per-thread ${testprog} 2> /de=
-v/null \
-> +    | perf script -F ip,sym,"${script_field}" -i - 2> /dev/null)
+> @@ -3244,7 +3261,8 @@ static __always_inline void
+>  __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
+>  				    struct pt_regs *regs,
+>  				    struct perf_sample_data *data,
+> -				    u64 mask, short *counts, void **last,
+> +				    u64 mask, short *counts,
+> +				    void **last, bool corrupted,
+>  				    setup_fn setup_sample)
+>  {
+>  	struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
+> @@ -3258,7 +3276,7 @@ __intel_pmu_handle_last_pebs_record(struct pt_regs =
+*iregs,
+>  		event =3D cpuc->events[bit];
+> =20
+>  		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
+> -					    counts[bit], setup_sample);
+> +					    counts[bit], corrupted, setup_sample);
+>  	}
+> =20
+>  }
 
-[Severity: Medium]
-Could this hardcoded perf record pipeline lead to test flakiness on slower
-environments?
+[Severity: High]
+This is a pre-existing issue, but does this logic permanently stall PMU
+profiling for events without preceding valid records in a corrupted buffer?
 
-By not using the standard perf_record_with_retry helper, a single execution
-might fail to generate the 1000 near calls required to trigger a hardware
-sample.
+In arch/x86/events/intel/ds.c:__intel_pmu_handle_last_pebs_record(), we skip
+processing if the count is zero:
 
-Additionally, does suppressing stderr with 2> /dev/null permanently hide
-error details from the CI pipelines by bypassing the PERF_RECORD_LOGS
-collection mechanism?
+	for_each_set_bit(bit, (unsigned long *)&mask, X86_PMC_IDX_MAX) {
+		if (!counts[bit])
+			continue;
+		...
 
-> +  then
-> +    return 1
-> +  fi
-> +
-> +  if ! has_required_regs "${sample_output}" "$@"
-> +  then
-> +    return 1
-> +  fi
-> +
-> +  return 0
-> +}
+If a corrupted PEBS record is detected (e.g., via the newly added at >=3D t=
+op
+bounds checks) and the code exits the drain loop early, events that had no
+valid records parsed prior to the corruption will have a count of zero.
+
+Because these events are skipped here, __intel_pmu_pebs_last_event() is nev=
+er
+called, preventing intel_pmu_save_and_restart() from re-arming their hardwa=
+re
+counters. Furthermore, since handle_pmi_common() explicitly masks PEBS even=
+ts
+out of the global status, the generic NMI handler will also ignore them.
+
+Could this lead to the hardware counters remaining disabled, stopping
+profiling until the session is recreated?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706023444.3067=
-660-1-dapeng1.mi@linux.intel.com?part=3D9
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706015439.3040=
+804-1-dapeng1.mi@linux.intel.com?part=3D24
