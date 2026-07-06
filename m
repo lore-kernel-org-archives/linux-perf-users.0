@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243E22F8BC0;
-	Mon,  6 Jul 2026 02:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8973A872C;
+	Mon,  6 Jul 2026 02:40:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783305648; cv=none; b=eIkRk4QOItMD519B6rxDHt71+ztSGcQQLdKxd6V2G8++MI8mik8sDjFU0cPKKFtd2EsrKmzE/JWmmX7w+Ek+t7GS6oRuFq057/BUXcTH2tGJ/SbQq8/fQt3E81yoIOjvbU1fjiqXM7xDrxYFDyed9Hqc0L5twEfbOs3PLjbYj2o=
+	t=1783305650; cv=none; b=uRcUwbW496VwXS1zzk0idI29DzYQkIhD7ydmYw58Dh5qttXOGG9hVZArj5pv8jnjvJLmutWpaZ92QFTYy/TyOIfnNXcLX5vEO+HQxQZPJW7PBzLbgrjwflTdE53+66Bq80IuklvytFfrrQZ9cv7qex2Mc8gyWGmMzpuX25+Z73E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783305648; c=relaxed/simple;
-	bh=kBwgmFUjJhmSFEwQL+/71jlxQ2lUEEHpgrEuRn9wFDM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DB2V2+9xZ4ZFNXWmA4ovBjYFm2uQsc2gwIYsjBZv7PdJkYn6Qf6dnxeyyl1h0xLOe79cDaIskJb9ANTTMignJCa5R5uddaawQfN6TtqJs6G+BqDDW7mJFSR6Vs35EGUURAU3ahL/DrjB87qUyYhEPWr1WC853aorW9t4xlKMUMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GKbfuMz7; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1783305650; c=relaxed/simple;
+	bh=pxJzxFGmovWLPUDuWUNj9KZYnkLCj1OxBc/huuuNsV4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ohnEcSZqy2DQFijR3LFycYRkH0Dpq3ZWQD2XA4rWe2tMyfREgr4qsBDT8TTo0mSU/W9fiIiQHdDyPswSDwUq6siVZLlaYYWjoxAF4PPAua8/ju3oQQ6Fnit+Ku+YCpcrSmJIjvuAgjo3Tn1fnJHH2gWOrcGvEMHlv6EeSp6Y7HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XiZfiHvN; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GKbfuMz7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XiZfiHvN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783305646; x=1814841646;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kBwgmFUjJhmSFEwQL+/71jlxQ2lUEEHpgrEuRn9wFDM=;
-  b=GKbfuMz7uBmlLmigbYiaKNpl7KKFYltyzX+ibOTX+n0I3bxRmIQCIlKR
-   VEsAM0/9egzUlQhRgPTPs3PDRVBM7EHizfyIfh3z0XjnPLfh+GISI7DhZ
-   HJpuiFMSbTY2g44YWJzybh1ikWRtdKQ+Q6gfpb2IEqkHnM8yx15gelzv1
-   1/eqUOx871jPkmwiAdDUD78Tt6aCuZDAUI031YEwAHqqAgBjxmzM8G2KV
-   h74bvh/GSi04VOaAif7Sda7ciKvmT2hPjRaweSeG81rtuMvYN0/LtE/xm
-   lDMfCubjgSAd/efdxenFyq+XrrF399X6CzXdBldmXmaEHFe4Z5xjF7vKM
+  t=1783305649; x=1814841649;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=pxJzxFGmovWLPUDuWUNj9KZYnkLCj1OxBc/huuuNsV4=;
+  b=XiZfiHvNrXrgkqJ7ZoJjq0OqKKLZRkD5rhlp3G6HH29UD8bFwO+RS1Yi
+   xVFInQPSabUWE2RtV2Ciqu50dB5tyzPMNkTPolIOWULnZ5dIBNRRPVTwC
+   FE2mVvyr0ipzhh9z+V7dxrzzxF80H8iLyPjxxfm+RAxwuSK6z7vuBh78h
+   c/YopoAbBcYvgj809eZkaSeLGX7CNLARZdB24nogOxY4c3MJdJYB0DeJX
+   Ghewhpn1VxEn2B+59BO3oPewZQuJf/BSTZ5SdPan5ybaEh/nouna4YTwt
+   /SSlwAuor/1gPtNDAJmkw8o2eLyFodCHxFeHtT0WrNR10PduOcE0znPyv
    Q==;
-X-CSE-ConnectionGUID: WgYpkKCPQga23gs8gpwsbA==
-X-CSE-MsgGUID: x/hMnPoNQ6CkOt5aO7uO2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="87614020"
+X-CSE-ConnectionGUID: phrD7l+UQSio3xZsOLHYIg==
+X-CSE-MsgGUID: 2U6WIyRVRK6XaUey5TKssw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="87614027"
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="87614020"
+   d="scan'208";a="87614027"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2026 19:40:45 -0700
-X-CSE-ConnectionGUID: pcthy03LSQK9Vr71M656nQ==
-X-CSE-MsgGUID: 2wJTyNLZQE+OMZL0qmILPw==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2026 19:40:49 -0700
+X-CSE-ConnectionGUID: ryr4t7TLSDmcfKxpYOhrvA==
+X-CSE-MsgGUID: wo+jchQVQFSnLLQUl6DtlA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="253716681"
+   d="scan'208";a="253716687"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa007.jf.intel.com with ESMTP; 05 Jul 2026 19:40:42 -0700
+  by orviesa007.jf.intel.com with ESMTP; 05 Jul 2026 19:40:45 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -57,10 +58,12 @@ Cc: linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v9 00/10] Perf tools: Support eGPRs/SSP/SIMD registers sampling
-Date: Mon,  6 Jul 2026 10:34:34 +0800
-Message-Id: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
+Subject: [Patch v9 01/10] perf dwarf-regs: Fix DWARF register index bounds check
+Date: Mon,  6 Jul 2026 10:34:35 +0800
+Message-Id: <20260706023444.3067660-2-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
+References: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,111 +72,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Patch layout:
-- Patches 1-2: Fix two bugs in DWARF register bounds checking and event
-  attribute printing/swapping.
-- Patches 3-4: Sync tools and perf headers with the kernel sources.
-- Patches 5-8: Add SIMD/eGPR/SSP sampling and dump support.
-- Patches 9-10: Add unit tests for SIMD/eGPR/SSP sampling.
+Tighten bounds validation in __get_dwarf_regnum_for_perf_regnum_xxx()
+helpers by changing perf_regnum > ARRAY_SIZE() to
+perf_regnum >= ARRAY_SIZE().
 
-Changes since v8:
-- Patch 01/10: Fix incorrect DWARF register bounds checking.
-- Patch 02/10: Add missing event attribute printing and swapping support
-  (Sashiko).
-- Patch 07/10: Remove dead code ([idx++]) in SIMD register dumping
-  (Sashiko).
-- Patch 08/10: Restore the original x86 libdw_frame_nregs value (17), as
-  libdw still lacks x86 SIMD/eGPR support (Ian).
-- Patch 09/10: Add x86 eGPR/SSP sampling unit tests (Ian).
-- Patch 10/10: Add x86 SIMD register sampling unit tests (Ian).
+This fixes an off-by-one condition where perf_regnum == ARRAY_SIZE()
+could pass validation and cause out-of-bounds access for
+dwarf_xxx_regnums[].
 
-Changes since v7:
-- Address Sashiko's comments including,
-  * documents are not update availably; SIMD registers bitmask may be
-    overwritten by shorter mask; u16 type in sample meta-data break the
-    cross-endian conversion, etc.
-- Add SIMD/eGPRs/SSP support in dwarf-regs (Ian).
-- Misc enhancements.
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c    | 2 +-
+ tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c | 2 +-
+ tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c    | 2 +-
+ tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c     | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-Changes since v6:
-- Address Ian's comments including,
-  * Add more comments for newly added register indexes (patch 1/4).
-  * Several minor enhancements in patch 4/4.
-- Limit dwarf minimal regs to legacy GPRs (excluding APX eGPRs)
-  (patch 2/4).
-
-Changes since v5:
-- Split the sampling support for eGPRs/SSP registers and SIMD registers
-  into 2 patches.
-- Address Ian's comments including,
-  * Convert the architecture dependent functions into regular
-    architectural independent functions, like whatperf_reg_name() does.
-  * Refine the functions name to represent what the functions really do.
-  * Add comments for some key functions arguments.
-  * Misc enhancements.
-
-This patch-set adds sampling support for x86 eGPRs/SSP/SIMD registers in
-perf tools base on the corresponding sampling support for eGPRs/SSP/SIMD
-registers in kernel[1]. In versions before v6, these perf-tools patches
-are integrated as a whole patch-set with the kernel patches, but it's
-split and posted to an independent perf-tools patch-set for convenient
-review.
-
-History:
-v8: https://lore.kernel.org/all/20260529082451.591783-1-dapeng1.mi@linux.intel.com/
-v7: https://lore.kernel.org/all/20260324005706.3778057-1-dapeng1.mi@linux.intel.com/
-v6: https://lore.kernel.org/all/20260209083514.2225115-1-dapeng1.mi@linux.intel.com/
-v5: https://lore.kernel.org/all/20251203065500.2597594-1-dapeng1.mi@linux.intel.com/
-v4: https://lore.kernel.org/all/20250925061213.178796-1-dapeng1.mi@linux.intel.com/
-v3: https://lore.kernel.org/lkml/20250815213435.1702022-1-kan.liang@linux.intel.com/
-v2: https://lore.kernel.org/lkml/20250626195610.405379-1-kan.liang@linux.intel.com/
-v1: https://lore.kernel.org/lkml/20250613134943.3186517-1-kan.liang@linux.intel.com/
-
-Ref:
-[1] Kernel patches of supporting eGPRs/SSP/SIMD registers sampling:
-https://lore.kernel.org/all/20260706015439.3040804-1-dapeng1.mi@linux.intel.com/
-
-Dapeng Mi (10):
-  perf dwarf-regs: Fix DWARF register index bounds check
-  perf util: Add missed fields in _attr__fprintf() and __attr_swap()
-  tools headers: Sync x86 headers with kernel sources
-  perf headers: Sync perf_event.h/perf_regs.h with the kernel headers
-  perf regs: Support x86 eGPRs/SSP sampling
-  perf regs: Support x86 SIMD registers sampling
-  perf regs: Enable dumping of SIMD registers
-  perf dwarf-regs: Add SIMD/eGPRs support for x86 DWARF registers
-  perf tests: Add x86 eGPRs/SSP registers sampling test
-  perf tests: Add SIMD registers sampling test
-
- tools/arch/x86/include/asm/msr-index.h        |   7 +
- tools/arch/x86/include/uapi/asm/perf_regs.h   |  53 +++
- tools/include/uapi/linux/perf_event.h         |  49 ++-
- tools/perf/Documentation/perf-record.txt      |  10 +-
- tools/perf/builtin-script.c                   |  93 +++-
- tools/perf/tests/shell/record.sh              | 257 +++++++++++
- .../util/dwarf-regs-arch/dwarf-regs-csky.c    |   2 +-
- .../util/dwarf-regs-arch/dwarf-regs-powerpc.c |   2 +-
- .../util/dwarf-regs-arch/dwarf-regs-s390.c    |   2 +-
- .../util/dwarf-regs-arch/dwarf-regs-x86.c     | 140 +++++-
- tools/perf/util/dwarf-regs.c                  |   9 +-
- tools/perf/util/evsel.c                       | 104 ++++-
- tools/perf/util/header.c                      |   3 +-
- tools/perf/util/include/dwarf-regs.h          |   7 +-
- tools/perf/util/parse-regs-options.c          | 186 +++++++-
- .../perf/util/perf-regs-arch/perf_regs_x86.c  | 416 +++++++++++++++++-
- tools/perf/util/perf_event_attr_fprintf.c     |  13 +
- tools/perf/util/perf_regs.c                   |  84 +++-
- tools/perf/util/perf_regs.h                   |  21 +-
- tools/perf/util/record.h                      |   7 +
- tools/perf/util/sample.h                      |   5 +
- .../scripting-engines/trace-event-python.c    | 127 +++++-
- tools/perf/util/session.c                     | 112 ++++-
- tools/perf/util/synthetic-events.c            |  38 ++
- tools/perf/util/unwind-libdw.c                |   6 +-
- 25 files changed, 1643 insertions(+), 110 deletions(-)
-
-
-base-commit: ca0e19074bd6afcb9c7b23aa474ca17238cdb241
+diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c
+index cb44b774f8d9..7f976aa3cfa2 100644
+--- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c
++++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c
+@@ -118,7 +118,7 @@ int __get_dwarf_regnum_for_perf_regnum_csky(int perf_regnum, unsigned int flags)
+ 	if (flags & EF_CSKY_ABIV2)
+ 		idx++;
+ 
+-	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_csky_regnums) ||
++	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_csky_regnums) ||
+ 	    dwarf_csky_regnums[perf_regnum][idx] == 0)
+ 		return -ENOENT;
+ 
+diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c
+index 51892a09725b..98e7f2b2791c 100644
+--- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c
++++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c
+@@ -128,7 +128,7 @@ int __get_dwarf_regnum_for_perf_regnum_powerpc(int perf_regnum)
+ 	if (perf_regnum == 0)
+ 		return 0;
+ 
+-	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_powerpc_regnums) ||
++	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_powerpc_regnums) ||
+ 	    dwarf_powerpc_regnums[perf_regnum] == 0)
+ 		return -ENOENT;
+ 
+diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
+index 310a37451bdc..9cef846ef9c0 100644
+--- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
++++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
+@@ -45,7 +45,7 @@ int __get_dwarf_regnum_for_perf_regnum_s390(int perf_regnum)
+ 	if (perf_regnum == 0)
+ 		return 0;
+ 
+-	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_s390_regnums) ||
++	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_s390_regnums) ||
+ 	    dwarf_s390_regnums[perf_regnum] == 0)
+ 		return -ENOENT;
+ 
+diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
+index cadef120aeb4..c2a70e03b1a9 100644
+--- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
++++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
+@@ -197,7 +197,7 @@ int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum)
+ 	if (perf_regnum == 0)
+ 		return 0;
+ 
+-	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_i386_regnums) ||
++	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_i386_regnums) ||
+ 	    dwarf_i386_regnums[perf_regnum] == 0)
+ 		return -ENOENT;
+ 
+@@ -252,7 +252,7 @@ int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum)
+ 	if (perf_regnum == 0)
+ 		return 0;
+ 
+-	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_x86_64_regnums) ||
++	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_x86_64_regnums) ||
+ 	    dwarf_x86_64_regnums[perf_regnum] == 0)
+ 		return -ENOENT;
+ 
 -- 
 2.34.1
 
