@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55293F9F46
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 08:33:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9B23F6C3C
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 08:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783326840; cv=none; b=P5Xj9mgZHMq4kcZf5A5sZHgCyZASufpOwzIWqAAKzKECHAlww/9Y4v18deVGJH3caMOWKT6rkRFVTzRx25pM+AS6rdznFdxn2CwCXFBinkEbuaojOFHWJ78JgIOt/WRZ7kbcbwZ0uhJYlMm0X171aOBPdITGST9L58jxZEaEqrw=
+	t=1783327423; cv=none; b=ko66AvkdV5G3i5E29QANL7QKKqW3Baz7rUnq1VI/EbEdTDM0ITx4FnOiet5uAgIPYdhgEaqlyS98cMvhv+aK76haYtsgMPoB5FTmhq1rx9XtISgiybAvLYqQ/40UvEPspFNpgp8zezJ7dGKNE4fQ3yWYYA4K8D7HZQRahexhbPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783326840; c=relaxed/simple;
-	bh=qQ3liem5vpA5ZuIqtILAsKAqNrnkXCjL8lMe//qOLXw=;
+	s=arc-20240116; t=1783327423; c=relaxed/simple;
+	bh=TZlkPJX0n5KVotzkqQhqGMc9PslDrZM+LUo4K9eZYy0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MbOa8QoBZFrPnyvo5vmkTEwobt0Kt0kr3xL1ymFdQVAEmtgI4YiayKRWPxO7ExxvCYvYF6JVCqg12WxTkXa8xxpi9r0d9L7OcyvYVF8+uMYM2TucgJKhqEW7RlXxgX/4udJZ4SzeLGDHbPuksqJ4AmK5KIu/Vg5sCogW5DuqJps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gsoFFzq4; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=ejaz+Sw5fs6Wa0V2wDKdrIZfvWwTJHGGaE+0sy2U012EI9fQl5cU/8kwsn7Ax71so+rmbXVhOlPPFckPfsyqUcG/7OEpWK1rirgdrQXRJ6fustgWYRPE4by7Xp+i9BSgtf+al8BA+i16wsnIWBmuVZW5SL6ccb6ixTsemINLnb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ix5qnq5V; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gsoFFzq4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ix5qnq5V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783326830; x=1814862830;
+  t=1783327411; x=1814863411;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=qQ3liem5vpA5ZuIqtILAsKAqNrnkXCjL8lMe//qOLXw=;
-  b=gsoFFzq4vYW066RfL7RdsKIr3EhnHzBkNHmXfxaYe7fbSMYwaSMrWwc5
-   LYmatgkgTraTJMlHLrXaCjXq7jzDJPkf5a1CYnGOWFmSbPBv3y/atxpbz
-   WHK1td2hppGrOeHzlQU+qK0JEesLPfROHQhxyFqoLPYC6ZYdEsWAQGCAu
-   mvTkF2b4yQBxMCCuSa3Zr7acVumIH8c5FQ0aPbDwAeEcQ/pgzlt4/BaR0
-   24A3oYFumBxCu9ZSMOqixGDYY217SLirzMpMuabGs52J6oX+ARivivuGf
-   s5a3B7BTGhZgl9ImarJUdfs+mIg2wxoveE6RQxVg7vioAuGVFAKwxWeUD
-   g==;
-X-CSE-ConnectionGUID: LSe6XT+rS3+TTZtwUYsRKQ==
-X-CSE-MsgGUID: MiKmahJMRni01/BdWNEeVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="83934178"
+  bh=TZlkPJX0n5KVotzkqQhqGMc9PslDrZM+LUo4K9eZYy0=;
+  b=Ix5qnq5VYBuCIXh/qO7Akxyjfyw0vPpBHGKUMVJKaXLYYI2CiL0i3QZr
+   Zz85Kyefq62vb4IfHRvlpYBr44NRqidJ7S2zT8e7Vzb7yRG0POhG4O4+a
+   JaPAe38fshjH/xElUlpKA7KcxyUR0H3bHpnqeA+C3/xpES+duZGu9t2/1
+   TTXvvcxlnNyFLGFfCXFY0dQz1mrUf4IFuyfXuw/WbzPmhmdfaD0BtN9Q8
+   b8MZc2V+51FR8C6darlI1JqYBPtYSZo1dMonJSgRg0TwwLQ2fwhi+9KJ3
+   cfKuymW2psus7CjfqNuJrSDHzyGOgK7a30LTNQEccZvhtsvPTuY9xLv0d
+   A==;
+X-CSE-ConnectionGUID: e+c5INabRX+Y1qIsRvQsyA==
+X-CSE-MsgGUID: F+8KVIS4SdqeDI7QgLslTg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="83935172"
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="83934178"
+   d="scan'208";a="83935172"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 01:33:45 -0700
-X-CSE-ConnectionGUID: ZlU4xJcdTdyJM5q4iNTzAg==
-X-CSE-MsgGUID: AHhAbgMjT0C+p/miva6WoQ==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 01:43:25 -0700
+X-CSE-ConnectionGUID: NuuEANEGQ/mszdn/RFsBAA==
+X-CSE-MsgGUID: O/bl8s+iSICY+zYuHK94zg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="255594779"
+   d="scan'208";a="255597858"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 01:33:44 -0700
-Message-ID: <afa403c1-2594-49ec-ad12-f1dd1409e29e@linux.intel.com>
-Date: Mon, 6 Jul 2026 16:33:41 +0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 01:43:24 -0700
+Message-ID: <37a32555-8271-4413-8f94-406e21bbf330@linux.intel.com>
+Date: Mon, 6 Jul 2026 16:43:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,94 +52,97 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v9 02/24] perf/x86: Move hybrid PMU initialization before
- x86_pmu_starting_cpu()
+Subject: Re: [Patch v9 06/24] perf/x86: Use x86_perf_regs in NMI handlers
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
 References: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
- <20260706015439.3040804-3-dapeng1.mi@linux.intel.com>
- <20260706021852.DE2ED1F000E9@smtp.kernel.org>
+ <20260706015439.3040804-7-dapeng1.mi@linux.intel.com>
+ <20260706023135.63D411F000E9@smtp.kernel.org>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260706021852.DE2ED1F000E9@smtp.kernel.org>
+In-Reply-To: <20260706023135.63D411F000E9@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 7/6/2026 10:18 AM, sashiko-bot@kernel.org wrote:
+On 7/6/2026 10:31 AM, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->
-> Pre-existing issues:
-> - [High] Preexisting out-of-bounds read in `check_hw_exists()` on hybrid platforms due to an invalid `container_of()` cast on the global static `pmu` struct via the `hybrid()` macro.
+> - [High] Concurrent use of `x86_pebs_regs` and `x86_user_regs` per-CPU variables between NMI and IRQ-disabled contexts corrupts PEBS samples.
 > --
 >
-> commit 8216e613cee4854e16daaa11279146d17bc7f313
+> commit a90fb4d272f2182569ad5a2105f6b3f7c429263d
 > Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >
-> perf/x86: Move hybrid PMU initialization before x86_pmu_starting_cpu()
+> perf/x86: Use x86_perf_regs in NMI handlers
 >
-> The current approach initializes hybrid PMU structures immediately before
-> registering them. This is risky as it can lead to key fields being
-> inadvertently overwritten. This patch mitigates this by moving the
-> default hybrid structure initialization before calling
-> x86_pmu_starting_cpu().
+> Support for sampling additional register state in NMI context requires an
+> x86-specific register container. This switches x86 NMI handlers to use
+> the x86_perf_regs structure.
 >
 >> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 872d07a5fa80d..0888d3b0923e1 100644
+>> index 0888d3b0923e1..d83ea02e24577 100644
 >> --- a/arch/x86/events/core.c
 >> +++ b/arch/x86/events/core.c
->> @@ -2195,8 +2195,20 @@ static int __init init_hw_perf_events(void)
+>> @@ -1788,9 +1788,11 @@ void perf_put_guest_lvtpc(void)
+>>  EXPORT_SYMBOL_FOR_KVM(perf_put_guest_lvtpc);
+>>  #endif /* CONFIG_PERF_GUEST_MEDIATED_PMU */
 >>  
->>  	pmu.attr_update = x86_pmu.attr_update;
+>> +static DEFINE_PER_CPU(struct x86_perf_regs, x86_intr_regs);
+>>  static int
+>>  perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+>>  {
+>> +	struct x86_perf_regs *x86_regs = this_cpu_ptr(&x86_intr_regs);
+>>  	u64 start_clock;
+>>  	u64 finish_clock;
+>>  	int ret;
+>> @@ -1814,7 +1816,8 @@ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+>>  		return NMI_DONE;
 >>  
->> -	if (!is_hybrid())
->> +	if (!is_hybrid()) {
->>  		x86_pmu_show_pmu_cap(NULL);
->> +	} else {
->> +		int i;
->> +
->> +		/*
->> +		 * Init default ops.
->> +		 * Must be called before registering x86_pmu_starting_cpu(),
->> +		 * otherwise some key PMU fields, e.g., capabilities
->> +		 * initialized in x86_pmu_starting_cpu(), would be overwritten.
->> +		 */
->> +		for (i = 0; i < x86_pmu.num_hybrid_pmus; i++)
->> +			x86_pmu.hybrid_pmu[i].pmu = pmu;
->> +	}
+>>  	start_clock = sched_clock();
+>> -	ret = static_call(x86_pmu_handle_irq)(regs);
+>> +	x86_regs->regs = *regs;
+>> +	ret = static_call(x86_pmu_handle_irq)(&x86_regs->regs);
 > [Severity: High]
-> This is a pre-existing issue, but does passing the global pmu struct to
-> check_hw_exists() earlier in this function cause an out-of-bounds read on
-> hybrid platforms?
+> Is this call path safe from NMI reentrancy when accessing the per-CPU
+> variables introduced earlier in this series?
 >
-> In init_hw_perf_events(), check_hw_exists(&pmu, ...) is called after
-> perf_is_hybrid is enabled. Inside check_hw_exists(), it iterates over
-> fixed counters and calls fixed_counter_disabled():
+> If intel_pmu_drain_pebs_buffer() is called from a non-NMI context (e.g.
+> intel_pmu_read_event() via the perf_event_read syscall) with local IRQs
+> disabled, NMIs can still fire.
 >
-> arch/x86/events/perf_event.h:fixed_counter_disabled() {
+> If a hardware PMI fires during the execution of __intel_pmu_pebs_events(),
+> the CPU will jump here to perf_event_nmi_handler().
+>
+> The NMI handler calls x86_pmu_handle_irq() -> handle_pmi_common(), which
+> also calls x86_pmu_drain_pebs(). Since the earlier patch in this series
+> "perf/x86/intel: Convert x86_perf_regs to per-cpu variables" replaced stack
+> allocations with shared per-CPU variables:
+>
+> arch/x86/events/intel/ds.c:__intel_pmu_pebs_events() {
 >     ...
->     u64 intel_ctrl = hybrid(pmu, intel_ctrl);
+> 	struct x86_perf_regs *perf_regs = this_cpu_ptr(&x86_pebs_regs);
+> 	struct pt_regs *regs = &perf_regs->regs;
 >     ...
 > }
 >
-> The hybrid() macro expands to a container_of() cast:
+> And similarly for user regs:
 >
->     container_of(_pmu, struct x86_hybrid_pmu, pmu)->_field
+> arch/x86/events/core.c:x86_pmu_get_regs_user() {
+>     ...
+> 	struct x86_perf_regs *x86_regs_user = this_cpu_ptr(&x86_user_regs);
+>     ...
+> }
 >
-> Because the pmu passed in is the standalone global struct pmu (not embedded
-> within a struct x86_hybrid_pmu), this cast yields an invalid pointer.
->
-> Could this read garbage data past the end of the global pmu struct when
-> accessing intel_ctrl, potentially causing the BIOS hardware check to act on
-> garbage data or trigger a kernel panic if it crosses an unmapped page
-> boundary?
+> Will the NMI handler overwrite the same per-CPU structures the interrupted
+> non-NMI context was actively using, leading to corrupted PEBS samples when
+> the original context resumes?
 
-Yes, a real issue. It looks unnecessary to run fixed_counter_disabled()
-check since intel_ctrl always comes from the the bitwised-or between
-cntr_mask64 and fixed_cntr_mask64. Would drop fixed_counter_disabled() and
-all calling in a separate patch.
+That should never happen. When intel_pmu_drain_pebs_buffer() is called from
+non-NMI context, the whole PMU hardware has been disabled, so NMI can't be
+triggered and interrupt current running PEBS handler.
 
 Thanks.
+
 
 
 >
