@@ -1,127 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B00338939;
-	Mon,  6 Jul 2026 17:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88CA3AFCEE;
+	Mon,  6 Jul 2026 17:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783359764; cv=none; b=su1jPm4g3iHXSqQ2VNRnpTAuls5lKK6Y2McZGTwZVqcxf1L34mDLSz+/zoL/dB+PqvXBGifQViEQZj6q2fm2xtdKi5l0TwkOFfTWCyG2g+AWEL0VSB9XdGpcsc2S/+JGGyFdcYZQybAM+fVbapM2tw1OeBgZ0yD1+engnq+/3wI=
+	t=1783360669; cv=none; b=L1HnlnaPht2cpDUu/ZkQhu8Tk2F6kU6cfKaq4kg5vLUgONHysUHOmJPJT93QedyeL2LE4KT6afECu1H8sn7UpYLsFiglRrVfC4sMNSHYvo2BZSc05qKyFBHKYhZuhaPnweA6xeyWfNvKQzTOrJaHtXEc6Bst1QVHYoGC5wQE0bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783359764; c=relaxed/simple;
-	bh=fSRodVM2+qzfFq0roDFYnDJJRDH7phHpqBbBl+97z2o=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pCj2vz8lYzOm4D/8lO8kgJf2CzXEAeX99LGtDVYJMuNRlFH/UCGT8BIN2dJarI9lQpLiovpSH5furZvmCaSYJK0irDhfS0xyOPSBIkKpEX2ygDdkKKfR0Tsb7hzRyL0zJNsxx8KwGWZJ0rayMMbNtrqVVE8zrwsg3LzilxtA3FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lD2+PGnl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783360669; c=relaxed/simple;
+	bh=ytUcn7C/9v9104eYJgf4N2jL/BuhHVWLXSPtIsk7WbQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ncil0OuQBIKDBUKhvPAebULarrp2U+5Vf3lst59TzuysOmXoarzJFomG9vEy5nphBn9Z0tE4eHm96MYiNF9KfyVA/4LH7DlsIG/NWOglDOtX5nw4e93v/IF2O7NdEBHXhTqIVEcJI1WpLLq/fmjJdaWxFGmE95fO/H5r1VDt4GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=wdE81OGa; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lD2+PGnl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B791F000E9;
-	Mon,  6 Jul 2026 17:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783359762;
-	bh=oE4QMZ5+i1acv2iRvN/5qBcTrSG0q5J+yogBP70Htek=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lD2+PGnlwrcVMUYFSkuTUa5E51c8PfPlr9VHsZd6b1CMFtRMjA9OvgGoAfv5s4wYh
-	 BT0iSv2uBA8hGqiFAAP1jMLPEiFVtPmN1SzqtlyviGyM9XpRKFY5TibGIIxy1+P96C
-	 7LavkoKCvPAxMRazYZQxGLZNEnU/r3T1Um0BpOgS3w9pAuDHcKRj6h1K5ZzL8tuNtl
-	 L6UMU4haDTmnKWKMxxl68NDVkd2f0+0tPeYsxGGzGHjgvon1xMtTICAkujcmjVRLfg
-	 mAjfXzYbryKpNtNGp4m9+Qi4Vz2wtJMi2zA5HC+NJqRV4/qlLWC2rJpM/uZZh9oWAi
-	 tDnitGKA6iduA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH bpf-next 2/2] uprobes: Switch uretprobes_srcu to
- SRCU-fast-updown
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Puranjay Mohan" <puranjay@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260706172744.3920417-3-puranjay@kernel.org>
-References: <20260706172744.3920417-1-puranjay@kernel.org>
- <20260706172744.3920417-3-puranjay@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 17:42:41 +0000
-Message-Id: <20260706174242.25B791F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="wdE81OGa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:In-Reply-To:
+	References; bh=bVv//fo/WN5vyhT+kxelx4GNnfpfjo5yAQlsHXm2UOU=; b=wdE81OGaT374Mo
+	aCXOlXtbGd6MFdk2aBrC85F8x7SaLkqf7iGbg097ixWzTriM8+8lLtGmRcqTNW+BGlNfDAOEehjHQ
+	qNgAu4/NUK8ImyjUxWPjaruRCEirUsNsQQW5bMDI3YGOlrCWyD+XfP+7fvg7E22QHgWks07uMFOtO
+	8bKO6c+4wdqXhpdKfVz0FjcT3UNIkxlwgXL+fswmk3cp+ferdXzRrzJbk/aqfKFk8MoZK2W0H8tKT
+	CFACW0a/t16BtuseGU3stzpE3r5ryTJ/y3caRMVZVZTj+CIxVgZL5i5FB8iF5C2UWnwamih/sFY5m
+	LoIz/F4fmiQGF450b2Aw==;
+Received: from [167.98.27.226] (helo=nazar-ct.office.codethink.co.uk)
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1wgnZT-00Gmas-A6; Mon, 06 Jul 2026 18:57:31 +0100
+From: Nazar Kazakov <nazar.kazakov@codethink.co.uk>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>,
+	Nazar Kazakov <nazar.kazakov@codethink.co.uk>
+Subject: [PATCH] perf jevents: make events order more deterministic
+Date: Mon,  6 Jul 2026 18:56:24 +0100
+Message-ID: <20260706175624.692736-1-nazar.kazakov@codethink.co.uk>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: nazar.kazakov@codethink.co.uk
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+Some of the events have the same name, but differing descriptions. This
+leads to a non-deterministic sorting order, so fix by adding the
+description field to the order.
 
-Pre-existing issues:
-- [High] Concurrent hprobe_expire() and hprobe_consume() can cause a use-af=
-ter-free on uprobe due to misunderstood SRCU semantics.
---
+Signed-off-by: Nazar Kazakov <nazar.kazakov@codethink.co.uk>
+---
+ tools/perf/pmu-events/metric.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 86c857f0a70ec453b9e38c36e230b36b91bef460
-Author: Puranjay Mohan <puranjay@kernel.org>
+diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+index a91ccb5977f0..b3ab78a0ecb2 100644
+--- a/tools/perf/pmu-events/metric.py
++++ b/tools/perf/pmu-events/metric.py
+@@ -623,7 +623,7 @@ class Metric:
+ 
+   def __lt__(self, other):
+     """Sort order."""
+-    return self.name < other.name
++    return self.name < other.name or self.description < other.description
+ 
+   def AddToMetricGroup(self, group):
+     """Callback used when being added to a MetricGroup."""
+-- 
+2.54.0
 
-    uprobes: Switch uretprobes_srcu to SRCU-fast-updown
-   =20
-    uretprobes_srcu currently uses normal SRCU, which issues
-    two smp_mb() per read lock/unlock pair. This overhead is
-    paid on every uretprobe hit.
-   =20
-    Switch to SRCU-fast-updown, which eliminates the per-reader
-    memory barriers by moving the ordering cost to the
-    grace-period side.
-
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 4084e926e2844..afa491b0bd3f9 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-[ ... ]
-> @@ -2045,7 +2046,7 @@ static void ri_timer(struct timer_list *timer)
->  	struct return_instance *ri;
-> =20
->  	/* SRCU protects uprobe from reuse for the cmpxchg() inside hprobe_expi=
-re(). */
-> -	guard(srcu)(&uretprobes_srcu);
-> +	guard(srcu_fast_updown)(&uretprobes_srcu);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the new SRCU read lock
-acquired here actually protect the uprobe from being freed?
-
-If a uprobe is being unregistered, uprobe_free_deferred() calls
-call_srcu(&uretprobes_srcu, ...) to free the uprobe. This starts an SRCU
-grace period that waits only for pre-existing SRCU readers to finish.
-
-Concurrently, if ri_timer() or dup_utask() takes this new SRCU read lock,
-the grace period will not wait for it because the new lock started after the
-grace period began.
-
-If the traced task concurrently executes uprobe_handle_trampoline(), calls
-hprobe_consume() and hprobe_finalize(), and releases the original SRCU read
-lock, the grace period can complete and free the uprobe (via
-call_rcu_tasks_trace()).
-
-When ri_timer() then proceeds to call hprobe_expire(), which does:
-
-kernel/events/uprobes.c:hprobe_expire() {
-    ...
-    case HPROBE_LEASED: {
-        struct uprobe *uprobe =3D try_get_uprobe(hprobe->uprobe);
-    ...
-}
-
-Could this lead to a use-after-free on the uprobe? The comment in
-hprobe_expire() seems to assume the new lock prevents the free:
-
-        /*
-         * Even if hprobe_consume() or another hprobe_expire() wins
-         * the state update race and unlocks SRCU from under us, we
-         * still have a guarantee that underyling uprobe won't be
-         * freed due to ongoing caller's SRCU lock region, so we can
-         * return it regardless.
-         */
-
-Is this analysis accurate?
-
->  	/* RCU protects return_instance from freeing. */
->  	guard(rcu)();
->
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706172744.3920=
-417-1-puranjay@kernel.org?part=3D2
