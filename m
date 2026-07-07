@@ -1,236 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E5A3DC861;
-	Tue,  7 Jul 2026 10:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21E133DEAC0;
+	Tue,  7 Jul 2026 10:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783419787; cv=none; b=ppULIfLNeoOZXdly94D2vzSbEPZB3Ow0TR0HY7fb/C3zHQx0Z58kcRHXn4+OeLRINLpFvVaKGMS/q2Lhj5thIYNmUo6ud0nchG93lGlVYJNNfCM0DAbTfhSyrnJQvCd7HxEoimeWgHf/ghsXvNnOkl+aVuYobU55bqPM1djcL5o=
+	t=1783419940; cv=none; b=HOU/sQIALcZB0Wrpyp3vFAr3ukZY0zWu9fNWgIgffD75OYxCdsyJ+uvLNTWgwCAfsbMqC6RzTZJlgsj7cqU/UH/JeNrfrOmPV7gcz0PcL0M8o4m5nO7IeSwBakEHq5r+edZWUdtq07bSXArjX9afBDjU2NVLYYMkJ2F/+Wu4m74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783419787; c=relaxed/simple;
-	bh=v8FgcP/f2W7m0pP7PolC2zvUEFXbUmBTndmaaqJYyAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aAXMpzC5WKcqXD26GA2xTX55f8lcbFHNtTbxSaUAVnNahROOdQo1aBjgIj0REOdLH8psXry71AEg1ZYw20SqCq1UIqmKaY2+7vg+v5/dmXyqbOVwpUzCZC/g1CxzfR+DUGpFb9KxFbMlv7v9uCLLQei7AcTdY5UI/AcJ9S5EgKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwBekEDD; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwBekEDD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3940D1F000E9;
-	Tue,  7 Jul 2026 10:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783419785;
-	bh=uO9n1BXbcFKpE0ytmifaDUpJQYF7fOJjd6hhXMsbhnw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=MwBekEDDrqDWUBl7OB2GiRJo9KVaANF531LqDSCiYXdCwUfPfgV15P9ZY/fY6CVA6
-	 F8ic/FjF/V4shqvt1ft98lkWSY+mj6ovzE4pr5gR635QrF0JPDro+njddQUcumSdQh
-	 kZ2VtL+NJM1IHpwBv5iKE1Mc7Oizq03fbEHOGyZREuLCbOunsQHWCjKQPfsYIeYhTn
-	 nkzNe0/N0Uo+DMFOtkRTMhjaVVt0gFL67IW/5ZfXccVzW25bfqi117JnWf+/k8p1+/
-	 tBKgrRhHBxTqzBMhkUG4DH3unKVaBJ/A7PbihSPTdfDg8mw0xEEWq1UREm34Vk39Dl
-	 CNZCNxZb4WFjQ==
-Date: Tue, 7 Jul 2026 11:22:41 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 21/30] mm/vma: add and use vma_[add/sub]_pgoff()
-Message-ID: <akzTTCgF1_d7DDZZ@lucifer>
-References: <cover.1782735110.git.ljs@kernel.org>
- <794044881e454fd8ac13e59d5ff5fc86fca08b03.1782735110.git.ljs@kernel.org>
- <akZI0n1U32Ptd0ye@pedro-suse.lan>
+	s=arc-20240116; t=1783419940; c=relaxed/simple;
+	bh=/JKGvZAek80JgMohRPNx5B4QlkcpbDcffOkLSxtkIqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pon422ZvWnLlJxc+LB1gWMstcPVvrxZqUO5wj9XvtCLDM0GY76PX3o0HtWYLo1OBKovcvQ2Empmx0+SA3HKsIAHj+m+wnlGRr8PndHhxhw68LS84SXC7siDU0qYXnV00KTKoHCPD3BAk7sIvUVXlpNiUdVBuAyczFuexSf/Inh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gvcms1PtVz297jS;
+	Tue,  7 Jul 2026 18:25:17 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gvcmq4rZTz297jF;
+	Tue,  7 Jul 2026 18:25:15 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id DC98D30125A8;
+	Tue,  7 Jul 2026 18:23:04 +0800 (CST)
+Received: from [172.25.61.61] (172.25.61.61) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 7 Jul
+ 2026 18:25:16 +0800
+Message-ID: <1afcacd3-1be0-40f5-9b3b-adac8c2cb95b@hygon.cn>
+Date: Tue, 7 Jul 2026 18:25:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akZI0n1U32Ptd0ye@pedro-suse.lan>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] perf/x86/amd/uncore: Add common helpers and Hygon
+ support
+To: Sandipan Das <sandipan.das@amd.com>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lijing@hygon.cn>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<namhyung@kernel.org>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <x86@kernel.org>
+References: <20260701093417.1312443-1-liuqi@hygon.cn>
+ <44959c7f-fedd-413e-bb2f-07f97142aef8@amd.com>
+Content-Language: en-US
+From: Qi Liu <liuqi@hygon.cn>
+In-Reply-To: <44959c7f-fedd-413e-bb2f-07f97142aef8@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-On Thu, Jul 02, 2026 at 12:20:10PM +0100, Pedro Falcato wrote:
-> On Mon, Jun 29, 2026 at 01:23:32PM +0100, Lorenzo Stoakes wrote:
-> > Add helpers for adding or subtracting to a VMA's page offset, exposed
-> > internally for VMA users within mm in mm/vma.h.
-> >
-> > This is to lay the foundations for tracking anonymous page offset for
-> > MAP_PRIVATE file-backed mappings, where adding and subtracting from this
-> > value must be reflected in both the file and anonymous offsets.
-> >
-> > These are used on VMA split and downward stack expansion.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-> > ---
-> >  mm/nommu.c                      |  6 ++++--
-> >  mm/vma.c                        |  6 +++---
-> >  mm/vma.h                        | 12 ++++++++++++
-> >  tools/testing/vma/include/dup.h | 13 ++++++++++++-
-> >  4 files changed, 31 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/mm/nommu.c b/mm/nommu.c
-> > index 7333d855e974..c7fafcd87c14 100644
-> > --- a/mm/nommu.c
-> > +++ b/mm/nommu.c
-> > @@ -41,6 +41,7 @@
-> >  #include <asm/tlbflush.h>
-> >  #include <asm/mmu_context.h>
-> >  #include "internal.h"
-> > +#include "vma.h"
-> >
-> >  unsigned long highest_memmap_pfn;
-> >  int heap_stack_gap = 0;
-> > @@ -1338,7 +1339,8 @@ static int split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
-> >  		region->vm_top = region->vm_end = new->vm_end = addr;
-> >  	} else {
-> >  		region->vm_start = new->vm_start = addr;
-> > -		region->vm_pgoff = new->vm_pgoff += npages;
-> > +		vma_add_pgoff(new, npages);
-> > +		region->vm_pgoff = vma_start_pgoff(new);
-> >  	}
-> >
-> >  	vma_iter_config(vmi, new->vm_start, new->vm_end);
-> > @@ -1355,7 +1357,7 @@ static int split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
-> >  	delete_nommu_region(vma->vm_region);
-> >  	if (new_below) {
-> >  		vma->vm_region->vm_start = vma->vm_start = addr;
-> > -		vma->vm_pgoff += npages;
-> > +		vma_add_pgoff(vma, npages);
-> >  		vma->vm_region->vm_pgoff = vma_start_pgoff(vma);
-> >  	} else {
-> >  		vma->vm_region->vm_end = vma->vm_end = addr;
-> > diff --git a/mm/vma.c b/mm/vma.c
-> > index 185d07397ca6..cb7222e20c93 100644
-> > --- a/mm/vma.c
-> > +++ b/mm/vma.c
-> > @@ -517,7 +517,7 @@ __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
-> >  		new->vm_end = addr;
-> >  	} else {
-> >  		new->vm_start = addr;
-> > -		new->vm_pgoff += linear_page_delta(vma, addr);
-> > +		vma_add_pgoff(new, linear_page_delta(vma, addr));
-> >  	}
-> >
-> >  	err = -ENOMEM;
-> > @@ -556,7 +556,7 @@ __split_vma(struct vma_iterator *vmi, struct vm_area_struct *vma,
-> >
-> >  	if (new_below) {
-> >  		vma->vm_start = addr;
-> > -		vma->vm_pgoff += (addr - new->vm_start) >> PAGE_SHIFT;
-> > +		vma_add_pgoff(vma, (addr - new->vm_start) >> PAGE_SHIFT);
-> >  	} else {
-> >  		vma->vm_end = addr;
-> >  	}
-> > @@ -3305,7 +3305,7 @@ int expand_downwards(struct vm_area_struct *vma, unsigned long address)
-> >  				vm_stat_account(mm, vma->vm_flags, grow);
-> >  				anon_vma_interval_tree_pre_update_vma(vma);
-> >  				vma->vm_start = address;
-> > -				vma->vm_pgoff -= grow;
-> > +				vma_sub_pgoff(vma, grow);
-> >  				/* Overwrite old entry in mtree. */
-> >  				vma_iter_store_overwrite(&vmi, vma);
-> >  				anon_vma_interval_tree_post_update_vma(vma);
-> > diff --git a/mm/vma.h b/mm/vma.h
-> > index 2342516ce00e..47fe35e5307e 100644
-> > --- a/mm/vma.h
-> > +++ b/mm/vma.h
-> > @@ -247,6 +247,18 @@ static inline pgoff_t vmg_end_pgoff(const struct vma_merge_struct *vmg)
-> >  	return vmg_start_pgoff(vmg) + vmg_pages(vmg);
-> >  }
-> >
-> > +static inline void vma_add_pgoff(struct vm_area_struct *vma, pgoff_t delta)
-> > +{
-> > +	vma_assert_can_modify(vma);
-> > +	vma->vm_pgoff += delta;
-> > +}
-> > +
-> > +static inline void vma_sub_pgoff(struct vm_area_struct *vma, pgoff_t delta)
-> > +{
-> > +	vma_assert_can_modify(vma);
-> > +	vma->vm_pgoff -= delta;
-> > +}
-> > +
-> >  #define VMG_STATE(name, mm_, vmi_, start_, end_, vma_flags_, pgoff_)	\
-> >  	struct vma_merge_struct name = {				\
-> >  		.mm = mm_,						\
-> > diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
-> > index 7ed165c8d9bc..41fea90a344d 100644
-> > --- a/tools/testing/vma/include/dup.h
-> > +++ b/tools/testing/vma/include/dup.h
-> > @@ -1163,6 +1163,11 @@ static inline struct vm_area_struct *vma_next(struct vma_iterator *vmi)
-> >  	return mas_find(&vmi->mas, ULONG_MAX);
-> >  }
-> >
-> > +static inline bool vma_is_attached(struct vm_area_struct *vma)
-> > +{
-> > +	return refcount_read(&vma->vm_refcnt);
-> > +}
-> > +
-> >  /*
-> >   * WARNING: to avoid racing with vma_mark_attached()/vma_mark_detached(), these
-> >   * assertions should be made either under mmap_write_lock or when the object
-> > @@ -1170,7 +1175,13 @@ static inline struct vm_area_struct *vma_next(struct vma_iterator *vmi)
-> >   */
-> >  static inline void vma_assert_attached(struct vm_area_struct *vma)
-> >  {
-> > -	WARN_ON_ONCE(!refcount_read(&vma->vm_refcnt));
-> > +	WARN_ON_ONCE(!vma_is_attached(vma));
-> > +}
-> > +
-> > +static inline void vma_assert_can_modify(struct vm_area_struct *vma)
-> > +{
-> > +	if (vma_is_attached(vma))
-> > +		vma_assert_write_locked(vma);
-> >  }
->
-> These hunks in dup.h look lost. Should perhaps be on the previous patch
-> (adding the helpers).
+Hi Sandipan,
 
-Yeah, it's because the VMA code starts actually using them in a way that
-otherwise breaks the tests at this point, but you're right, functionally it'd be
-nicer to add them at the point they're introduced.
+Sorry for the late reply, and thanks for the review.
 
-Will fix that up on respin!
+On 7/3/2026 4:41 PM, Sandipan Das wrote:
+> On 01-07-2026 15:04, Qi Liu wrote:
+>> This series adds initial Hygon uncore PMU support.
+>>
+>> Hygon uncore PMUs use a programming model close to the AMD uncore PMU,
+>> so this series factors out a small set of common helpers for perf event
+>> handling, counter assignment and per-CPU context management.
+>>
+>> The Hygon-specific support is kept in the Hygon driver. This series
+>> supports the Hygon DF and DF IOD PMUs. No Hygon-specific logic is
+>> added to the AMD driver.
+>>
+>> Changes since RFC:
+>>    - Address sashiko bot review.
+>> Changes since v1:
+>>    - Rename the helper namespace to amd_uncore_common_* to avoid
+>>      an generic uncore_common_* prefix, and to keep it distinct
+>>      from the existing amd_uncore_* names.
+>>
+>>
+>> Qi Liu (3):
+>>    perf/x86/amd/uncore: Add common PMU helper functions
+>>    perf/x86/amd/uncore: Convert AMD driver to common PMU helpers
+>>    perf/x86/amd/uncore: Add Hygon uncore PMU support
+>>
+>>   arch/x86/events/Kconfig                 |  17 +
+>>   arch/x86/events/amd/Makefile            |   4 +
+>>   arch/x86/events/amd/amd_uncore_common.c | 403 +++++++++++++++++
+>>   arch/x86/events/amd/amd_uncore_common.h | 114 +++++
+>>   arch/x86/events/amd/hygon_uncore.c      | 556 +++++++++++++++++++++++
+>>   arch/x86/events/amd/uncore.c            | 578 +++---------------------
+>>   arch/x86/include/asm/msr-index.h        |   2 +
+>>   arch/x86/include/asm/perf_event.h       |  20 +
+>>   include/linux/cpuhotplug.h              |   3 +
+>>   9 files changed, 1192 insertions(+), 505 deletions(-)
+>>   create mode 100644 arch/x86/events/amd/amd_uncore_common.c
+>>   create mode 100644 arch/x86/events/amd/amd_uncore_common.h
+>>   create mode 100644 arch/x86/events/amd/hygon_uncore.c
+>>
+> I am trying to understand if the code movement is necessary.
+> Wouldn't it be sufficient to just add the following?
+>   - new UNCORE_TYPE_HYGON_DF and UNCORE_TYPE_HYGON_DF_IOD types
+>   - Hygon-specific attr_groups, pmu->event_init(), pmu->add(),
+>     amd_uncore->init() and amd_uncore->scan() implementations
 
->
-> Anyway, Obviously Correct(tm).
->
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+Yes, Use UNCORE_TYPE_HYGON_DF and UNCORE_TYPE_HYGON_DF_IOD would help 
+minimize code movement, but Hygon uncore will likely grow more 
+Hygon-specific L3/DF/UMC support over time. If we put these PMUs into 
+arch/x86/events/amd/uncore.c now, that file may need more Hygon-specific 
+types and checks later. So for now, it may be better to keep a separate 
+copy in hygon_uncore.c first, as suggested in the earlier review.
 
-Thanks!
+> Using new PMU names will also require tools-side changes. Additionally,
+> to make the PMUs actually useful, new JSON events and metrics need to
+> be added. Are there plans for that?
 
->
-> --
-> Pedro
+yes, new PMU names will need perf updates. New JSON events and metrics 
+are also needed,  I'll add them later. Thanks!
 
-Cheers, Lorenzo
+
+Qi Liu
+
+
