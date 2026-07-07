@@ -1,1232 +1,950 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-27.ptr.blmpb.com (va-2-27.ptr.blmpb.com [209.127.231.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9E5288C2F
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jul 2026 08:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7BB2045AD
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jul 2026 08:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783411519; cv=none; b=BSLqdXOF8gTJJrWM1Efj3JfhOwmmgqL1C8r8v3bRsQu+1onzTw2Kq2nfh4RTOaCKevstsyWLJcib/hhEdqPIvK1A+kKKPmnikslXo6PHhwDN586or3drdRD/kCSfxJm89koP6+Aww8cS7o8aeDUpNIFUal/Yz+Iszo5Sg9dcmXo=
+	t=1783412713; cv=none; b=I730wyV5uyxP/uBR0JbSQPT8Z400qU2Ubp/iUCvp7N3erQO7pjRwHf71ncQWPdjIMngzPVh66FocQCCsjKdHp5lblEsk6mtN9oh7nqfaEmkQLLVarMFgNtFy9/IWdxSRT2OegDiAH0NuS2Z+L9gWQ5wAjb2HPpGVOm8s9IQgGFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783411519; c=relaxed/simple;
-	bh=nb1tS3f2UtEenPuUl4iQqZGVHy/7jZxkjzViPB2/u2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lf0neEMhpd6oWCB0esH/CWUCa+9QA5C1eywBfn45wubbDP7U5lEKRRazyr09bHNj+BtJWkju0AuXY6dXD1X+9yL+c48eIv2X4TMBBovi49F3zGYlo5vNwLhWaUrwM98uOcE+85R9C0ZUBpxEG5ZU3rmfka7OaZOoC/KOHcGAFsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmT28M2o; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783412713; c=relaxed/simple;
+	bh=hvF/4DMqJFE0A5PWHWmtvX9lOBtVSwbgiDjmtabJOmw=;
+	h=To:Cc:Subject:Mime-Version:In-Reply-To:Date:References:From:
+	 Message-Id:Content-Type; b=cItORE4kzJTmYtf/+TLo+hCqzDrMEs4FPLSbhMs386MP/uqUOczPc292+wKkAw+/FPQeTwFNZExV2UiBFs8jKlViJ31Q8xGuChglzqAq3hIxC2Ynn5yUufUm8mXtmtNL9VDW52E0v07saLMms68h5fz1XpVJ4hweYe+UbIf7rjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=picoheart.com; spf=pass smtp.mailfrom=picoheart.com; dkim=pass (2048-bit key) header.d=picoheart.com header.i=@picoheart.com header.b=QyvKidgC; arc=none smtp.client-ip=209.127.231.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=picoheart.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=picoheart.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmT28M2o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A20FA1F00ADB
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jul 2026 08:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783411516;
-	bh=hGYWz3eBsNOkev8cMzZqLCoNeChM2Ii2pm67IuG0wU8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=CmT28M2oKFSSElJsRLAYemG6N7K6YfosmyqMVCTOjA3cKdvkfXHLaXbOUbqqKuAt7
-	 03HuvbCXedJcnIv2nZIjHVUKsg2Wr7/Qz5CLrrMsq4ZJc9rNOmjxpquZTgvbAS+G+M
-	 rUvv0E/B47QX2/I3HAR/lRrceavdM266J76tGN4VPVgiSHst3hJ/H1uwgx/Yr61BB0
-	 Y8RrII27ykHzp+Y3Yc4x6HJl3yDDVOG5oCLxZTh5868cBZeTj243jL577g1gccS/tA
-	 NYNFw0RXzgm5mTcQY/0wqBJ5qKNmJ/RPwDUISlphlCmZhE8i6o72eJd0UOFLAK3DM9
-	 TyQFjwOa9Zz/Q==
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-493bab44440so2084145e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2026 01:05:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RreyYgh1br7mPzmoCWWdzBc0swI/axFitMGwzEK2wUCctFjyngytCHa4rZ94NmlNe26ELM6Fp4h9ALniGvFjh5V@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw192dC5iA4Y1neaHvO6fwgEFXra0YnXqHuk97jZzqG93u6sND
-	c4sYNbXL72ocZrQj+pQBBXr90s3ZzbgpdBmK7o4bbOAb67iNpMSsl5g0fb/HXdHYj7Udg+xauxi
-	wfphNfeF+H+tscApmxPgFL9UTj+icLlA=
-X-Received: by 2002:a05:600c:8010:b0:493:d117:18a8 with SMTP id
- 5b1f17b1804b1-493e1011e8bmr15220435e9.9.1783411514882; Tue, 07 Jul 2026
- 01:05:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=picoheart.com header.i=@picoheart.com header.b="QyvKidgC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2604151535; d=picoheart.com; t=1783412701; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=cw19VphC2mP7ckJXdDxnF8cbRI55kv2xFSetp7MLX3c=;
+ b=QyvKidgCluIYr+MJzGvQQRboOzswlNKWxU7xCtdylKyvkhcD8DivVMdqqc1LywdUwMOArp
+ PH87ufmF+Un/fIS62stZkXubuYASWgo3RO7PNsH4zS2DkribafG3XRL/572DL4I8YCW8VU
+ bXG1cDkUJw5D4PHscbxR/YHXOkOINtLBl9wdhmlmFPmbnCcgbryIhDgTUlZAFfmsccqqiO
+ uKdFItLf2rF5nG1YrJiQ+pCyWj7qAN44Vl8v8hgibyLU3P1ii4aUinML2v8VxkDsad2pyf
+ 6SLR1uwlhpJjKnhL6BwrIBu017yoV8RmYaYyflooIWUTKCYBEpxmsOvx2DLzjA==
+To: "Atish Patra" <atish.patra@linux.dev>
+Cc: "Jiri Olsa" <jolsa@kernel.org>, "Paul Walmsley" <pjw@kernel.org>, 
+	"Mark Rutland" <mark.rutland@arm.com>, "Rob Herring" <robh@kernel.org>, 
+	"Anup Patel" <anup@brainfault.org>, "Namhyung Kim" <namhyung@kernel.org>, 
+	"Arnaldo Carvalho de Melo" <acme@kernel.org>, 
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
+	"Ian Rogers" <irogers@google.com>, "Will Deacon" <will@kernel.org>, 
+	"James Clark" <james.clark@linaro.org>, <yang.yicong@picoheart.com>, 
+	<linux-arm-kernel@lists.infradead.org>, 
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, 
+	<devicetree@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, 
+	"Conor Dooley" <conor@kernel.org>
+Subject: Re: [PATCH v8 14/22] RISC-V: perf: Implement supervisor counter delegation support
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260630083833.1275837-1-zong.li@sifive.com> <20260630083833.1275837-2-zong.li@sifive.com>
- <CAJF2gTTHnv3-JqWEZFbxmvkqWERsgRz5ecZOFFnieTicAODtQw@mail.gmail.com>
- <CANXhq0p6g+cgky8rt0p0NZgyA7=q7ZQ3BSXwSUnTamvS_jc=rg@mail.gmail.com>
- <CANXhq0pP2SJk9N-3SG-A5FL5v9omFxLmLybKsAQowtt=5+gn5Q@mail.gmail.com>
- <CAJF2gTRJQECs1SVRBaw72vZNH4b6Rh_mmoaZNpiApVKhaD0omw@mail.gmail.com> <CANXhq0qjW2TbwDWa6vfGsFJaKqs8DUSPLBtZOkrW=v_xfbAuiQ@mail.gmail.com>
-In-Reply-To: <CANXhq0qjW2TbwDWa6vfGsFJaKqs8DUSPLBtZOkrW=v_xfbAuiQ@mail.gmail.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Tue, 7 Jul 2026 16:05:02 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTopZpsgi6P89V5XO4qrcz0wYbuYXH_iXDenWh7Cvg4xw@mail.gmail.com>
-X-Gm-Features: AVVi8Cf4WZIokkHwEf0jMRQIhZJvcDce_8vXKik1dPurtJvhPxNdm8gulFSUedk
-Message-ID: <CAJF2gTTopZpsgi6P89V5XO4qrcz0wYbuYXH_iXDenWh7Cvg4xw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] drivers/perf: riscv-iommu: add risc-v iommu pmu driver
-To: Zong Li <zong.li@sifive.com>
-Cc: tjeznach@rivosinc.com, joro@8bytes.org, will@kernel.org, 
-	robin.murphy@arm.com, pjw@kernel.org, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, alex@ghiti.fr, mark.rutland@arm.com, 
-	andrew.jones@oss.qualcomm.com, david.laight.linux@gmail.com, 
-	iommu@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+In-Reply-To: <20260701-counter_delegation-v8-14-7909f863a645@meta.com>
+X-Lms-Return-Path: <lba+26a4cb7db+16e24b+vger.kernel.org+yang.yicong@picoheart.com>
+Content-Transfer-Encoding: 7bit
+X-Original-From: Yicong Yang <yang.yicong@picoheart.com>
+Date: Tue, 7 Jul 2026 16:24:55 +0800
+References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com> <20260701-counter_delegation-v8-14-7909f863a645@meta.com>
+Received: from [100.86.219.172] ([61.141.241.105]) by smtp.feishu.cn with ESMTPS; Tue, 07 Jul 2026 16:24:58 +0800
+Content-Language: en-US
+From: "Yicong Yang" <yang.yicong@picoheart.com>
+Message-Id: <46cc0a87-a6cf-44d0-87d0-187ae8f6791e@picoheart.com>
+Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
 
-On Tue, Jul 7, 2026 at 2:34=E2=80=AFPM Zong Li <zong.li@sifive.com> wrote:
->
-> On Tue, Jul 7, 2026 at 2:03=E2=80=AFPM Guo Ren <guoren@kernel.org> wrote:
-> >
-> > On Tue, Jul 7, 2026 at 10:01=E2=80=AFAM Zong Li <zong.li@sifive.com> wr=
-ote:
-> > >
-> > > On Fri, Jul 3, 2026 at 9:36=E2=80=AFAM Zong Li <zong.li@sifive.com> w=
-rote:
-> > > >
-> > > > On Tue, Jun 30, 2026 at 9:17=E2=80=AFPM Guo Ren <guoren@kernel.org>=
- wrote:
-> > > > >
-> > > > > Hi Zong Li,
-> > > > >
-> > > > > On Tue, Jun 30, 2026 at 4:38=E2=80=AFPM Zong Li <zong.li@sifive.c=
-om> wrote:
-> > > > > >
-> > > > > > Add a new driver to support the RISC-V IOMMU PMU. This is an au=
-xiliary
-> > > > > > device driver created by the parent RISC-V IOMMU driver.
-> > > > > >
-> > > > > > The RISC-V IOMMU PMU separates the cycle counter from the event=
- counters.
-> > > > > > The cycle counter is not associated with iohpmevt0, so a softwa=
-re-defined
-> > > > > > cycle event is required for the perf subsystem.
-> > > > > >
-> > > > > > The number and width of the counters are hardware-implemented a=
-nd must
-> > > > > > be detected at runtime.
-> > > > > >
-> > > > > > The performance monitor provides counters with filtering suppor=
-t to
-> > > > > > collect events for specific device ID/process ID, or GSCID/PSCI=
-D.
-> > > > > >
-> > > > > > PMU-related definitions are moved into the perf driver, where t=
-hey are
-> > > > > > used exclusively.
-> > > > > >
-> > > > > > Suggested-by: David Laight <david.laight.linux@gmail.com>
-> > > > > > Suggested-by: Guo Ren <guoren@kernel.org>
-> > > > > > Link: https://lore.kernel.org/linux-riscv/20260618143634.7f3dd6=
-c5@pumpkin/
-> > > > > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > > > > > ---
-> > > > > >  drivers/iommu/riscv/iommu-bits.h |  61 ---
-> > > > > >  drivers/perf/Kconfig             |  12 +
-> > > > > >  drivers/perf/Makefile            |   1 +
-> > > > > >  drivers/perf/riscv_iommu_pmu.c   | 703 +++++++++++++++++++++++=
-++++++++
-> > > > > >  4 files changed, 716 insertions(+), 61 deletions(-)
-> > > > > >  create mode 100644 drivers/perf/riscv_iommu_pmu.c
-> > > > > >
-> > > > > > diff --git a/drivers/iommu/riscv/iommu-bits.h b/drivers/iommu/r=
-iscv/iommu-bits.h
-> > > > > > index f2ef9bd3cde9..6b5de913a032 100644
-> > > > > > --- a/drivers/iommu/riscv/iommu-bits.h
-> > > > > > +++ b/drivers/iommu/riscv/iommu-bits.h
-> > > > > > @@ -192,67 +192,6 @@ enum riscv_iommu_ddtp_modes {
-> > > > > >  #define RISCV_IOMMU_IPSR_PMIP          BIT(RISCV_IOMMU_INTR_PM=
-)
-> > > > > >  #define RISCV_IOMMU_IPSR_PIP           BIT(RISCV_IOMMU_INTR_PQ=
-)
-> > > > > >
-> > > > > > -/* 5.19 Performance monitoring counter overflow status (32bits=
-) */
-> > > > > > -#define RISCV_IOMMU_REG_IOCOUNTOVF     0x0058
-> > > > > > -#define RISCV_IOMMU_IOCOUNTOVF_CY      BIT(0)
-> > > > > > -#define RISCV_IOMMU_IOCOUNTOVF_HPM     GENMASK_ULL(31, 1)
-> > > > > > -
-> > > > > > -/* 5.20 Performance monitoring counter inhibits (32bits) */
-> > > > > > -#define RISCV_IOMMU_REG_IOCOUNTINH     0x005C
-> > > > > > -#define RISCV_IOMMU_IOCOUNTINH_CY      BIT(0)
-> > > > > > -#define RISCV_IOMMU_IOCOUNTINH_HPM     GENMASK(31, 1)
-> > > > > > -
-> > > > > > -/* 5.21 Performance monitoring cycles counter (64bits) */
-> > > > > > -#define RISCV_IOMMU_REG_IOHPMCYCLES     0x0060
-> > > > > > -#define RISCV_IOMMU_IOHPMCYCLES_COUNTER        GENMASK_ULL(62,=
- 0)
-> > > > > > -#define RISCV_IOMMU_IOHPMCYCLES_OF     BIT_ULL(63)
-> > > > > > -
-> > > > > > -/* 5.22 Performance monitoring event counters (31 * 64bits) */
-> > > > > > -#define RISCV_IOMMU_REG_IOHPMCTR_BASE  0x0068
-> > > > > > -#define RISCV_IOMMU_REG_IOHPMCTR(_n)   (RISCV_IOMMU_REG_IOHPMC=
-TR_BASE + ((_n) * 0x8))
-> > > > > > -
-> > > > > > -/* 5.23 Performance monitoring event selectors (31 * 64bits) *=
-/
-> > > > > > -#define RISCV_IOMMU_REG_IOHPMEVT_BASE  0x0160
-> > > > > > -#define RISCV_IOMMU_REG_IOHPMEVT(_n)   (RISCV_IOMMU_REG_IOHPME=
-VT_BASE + ((_n) * 0x8))
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_EVENTID   GENMASK_ULL(14, 0)
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_DMASK     BIT_ULL(15)
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_PID_PSCID GENMASK_ULL(35, 16)
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_DID_GSCID GENMASK_ULL(59, 36)
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_PV_PSCV   BIT_ULL(60)
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_DV_GSCV   BIT_ULL(61)
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_IDT       BIT_ULL(62)
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_OF                BIT_ULL(63)
-> > > > > > -
-> > > > > > -/* Number of defined performance-monitoring event selectors */
-> > > > > > -#define RISCV_IOMMU_IOHPMEVT_CNT       31
-> > > > > > -
-> > > > > > -/**
-> > > > > > - * enum riscv_iommu_hpmevent_id - Performance-monitoring event=
- identifier
-> > > > > > - *
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_INVALID: Invalid event, do not count
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_URQ: Untranslated requests
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_TRQ: Translated requests
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_ATS_RQ: ATS translation requests
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_TLB_MISS: TLB misses
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_DD_WALK: Device directory walks
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_PD_WALK: Process directory walks
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_S_VS_WALKS: First-stage page table wa=
-lks
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_G_WALKS: Second-stage page table walk=
-s
-> > > > > > - * @RISCV_IOMMU_HPMEVENT_MAX: Value to denote maximum Event ID=
-s
-> > > > > > - */
-> > > > > > -enum riscv_iommu_hpmevent_id {
-> > > > > > -       RISCV_IOMMU_HPMEVENT_INVALID    =3D 0,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_URQ        =3D 1,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_TRQ        =3D 2,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_ATS_RQ     =3D 3,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_TLB_MISS   =3D 4,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_DD_WALK    =3D 5,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_PD_WALK    =3D 6,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_S_VS_WALKS =3D 7,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_G_WALKS    =3D 8,
-> > > > > > -       RISCV_IOMMU_HPMEVENT_MAX        =3D 9
-> > > > > > -};
-> > > > > > -
-> > > > > >  /* 5.24 Translation request IOVA (64bits) */
-> > > > > >  #define RISCV_IOMMU_REG_TR_REQ_IOVA     0x0258
-> > > > > >  #define RISCV_IOMMU_TR_REQ_IOVA_VPN    GENMASK_ULL(63, 12)
-> > > > > > diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-> > > > > > index 245e7bb763b9..8cce6c2ea626 100644
-> > > > > > --- a/drivers/perf/Kconfig
-> > > > > > +++ b/drivers/perf/Kconfig
-> > > > > > @@ -105,6 +105,18 @@ config RISCV_PMU_SBI
-> > > > > >           full perf feature support i.e. counter overflow, priv=
-ilege mode
-> > > > > >           filtering, counter configuration.
-> > > > > >
-> > > > > > +config RISCV_IOMMU_PMU
-> > > > > > +       depends on RISCV || COMPILE_TEST
-> > > > > > +       depends on RISCV_IOMMU
-> > > > > > +       bool "RISC-V IOMMU Hardware Performance Monitor"
-> > > > > > +       default y
-> > > > > > +       help
-> > > > > > +         Say Y if you want to use the RISC-V IOMMU performance=
- monitor
-> > > > > > +         implementation. The performance monitor is an optiona=
-l hardware
-> > > > > > +         feature, and whether it is actually enabled depends o=
-n IOMMU
-> > > > > > +         hardware support. If the underlying hardware does not=
- implement
-> > > > > > +         the PMU, this option will have no effect.
-> > > > > > +
-> > > > > >  config STARFIVE_STARLINK_PMU
-> > > > > >         depends on ARCH_STARFIVE || COMPILE_TEST
-> > > > > >         depends on 64BIT
-> > > > > > diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
-> > > > > > index eb8a022dad9a..90c75f3c0ac1 100644
-> > > > > > --- a/drivers/perf/Makefile
-> > > > > > +++ b/drivers/perf/Makefile
-> > > > > > @@ -20,6 +20,7 @@ obj-$(CONFIG_QCOM_L3_PMU) +=3D qcom_l3_pmu.o
-> > > > > >  obj-$(CONFIG_RISCV_PMU) +=3D riscv_pmu.o
-> > > > > >  obj-$(CONFIG_RISCV_PMU_LEGACY) +=3D riscv_pmu_legacy.o
-> > > > > >  obj-$(CONFIG_RISCV_PMU_SBI) +=3D riscv_pmu_sbi.o
-> > > > > > +obj-$(CONFIG_RISCV_IOMMU_PMU) +=3D riscv_iommu_pmu.o
-> > > > > >  obj-$(CONFIG_STARFIVE_STARLINK_PMU) +=3D starfive_starlink_pmu=
-.o
-> > > > > >  obj-$(CONFIG_THUNDERX2_PMU) +=3D thunderx2_pmu.o
-> > > > > >  obj-$(CONFIG_XGENE_PMU) +=3D xgene_pmu.o
-> > > > > > diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/risc=
-v_iommu_pmu.c
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..2e856289ddc9
-> > > > > > --- /dev/null
-> > > > > > +++ b/drivers/perf/riscv_iommu_pmu.c
-> > > > > > @@ -0,0 +1,703 @@
-> > > > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > > > +/*
-> > > > > > + * Copyright (C) 2026 SiFive
-> > > > > > + *
-> > > > > > + * Authors
-> > > > > > + *     Zong Li <zong.li@sifive.com>
-> > > > > > + */
-> > > > > > +
-> > > > > > +#include <linux/auxiliary_bus.h>
-> > > > > > +#include <linux/io-64-nonatomic-hi-lo.h>
-> > > > > > +#include <linux/perf_event.h>
-> > > > > > +
-> > > > > > +#include "../iommu/riscv/iommu.h"
-> > > > > > +
-> > > > > > +/* 5.19 Performance monitoring counter overflow status (32bits=
-) */
-> > > > > > +#define RISCV_IOMMU_REG_IOCOUNTOVF     0x0058
-> > > > > > +#define RISCV_IOMMU_IOCOUNTOVF_CY      BIT(0)
-> > > > > > +#define RISCV_IOMMU_IOCOUNTOVF_HPM     GENMASK_ULL(31, 1)
-> > > > > > +
-> > > > > > +/* 5.20 Performance monitoring counter inhibits (32bits) */
-> > > > > > +#define RISCV_IOMMU_REG_IOCOUNTINH     0x005C
-> > > > > > +#define RISCV_IOMMU_IOCOUNTINH_CY      BIT(0)
-> > > > > > +#define RISCV_IOMMU_IOCOUNTINH_HPM     GENMASK(31, 0)
-> > > > > > +
-> > > > > > +/* 5.21 Performance monitoring cycles counter (64bits) */
-> > > > > > +#define RISCV_IOMMU_REG_IOHPMCYCLES    0x0060
-> > > > > > +#define RISCV_IOMMU_IOHPMCYCLES_COUNTER        GENMASK_ULL(62,=
- 0)
-> > > > > > +#define RISCV_IOMMU_IOHPMCYCLES_OF     BIT_ULL(63)
-> > > > > > +#define RISCV_IOMMU_REG_IOHPMCTR(_n)   (RISCV_IOMMU_REG_IOHPMC=
-YCLES + ((_n) * 0x8))
-> > > > > > +
-> > > > > > +/* 5.22 Performance monitoring event counters (31 * 64bits) */
-> > > > > > +#define RISCV_IOMMU_REG_IOHPMCTR_BASE  0x0068
-> > > > > > +#define RISCV_IOMMU_IOHPMCTR_COUNTER   GENMASK_ULL(63, 0)
-> > > > > > +
-> > > > > > +/* 5.23 Performance monitoring event selectors (31 * 64bits) *=
-/
-> > > > > > +#define RISCV_IOMMU_REG_IOHPMEVT_BASE  0x0160
-> > > > > > +#define RISCV_IOMMU_REG_IOHPMEVT(_n)   (RISCV_IOMMU_REG_IOHPME=
-VT_BASE + ((_n) * 0x8))
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_EVENTID   GENMASK_ULL(14, 0)
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_DMASK     BIT_ULL(15)
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_PID_PSCID GENMASK_ULL(35, 16)
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_DID_GSCID GENMASK_ULL(59, 36)
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_PV_PSCV   BIT_ULL(60)
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_DV_GSCV   BIT_ULL(61)
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_IDT       BIT_ULL(62)
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_OF                BIT_ULL(63)
-> > > > > > +#define RISCV_IOMMU_IOHPMEVT_EVENT     GENMASK_ULL(62, 0)
-> > > > > > +
-> > > > > > +/* The total number of counters is 31 event counters plus 1 cy=
-cle counter */
-> > > > > > +#define RISCV_IOMMU_HPM_COUNTER_NUM    32
-> > > > > > +
-> > > > > > +static int cpuhp_state;
-> > > > > > +
-> > > > > > +/**
-> > > > > > + * enum riscv_iommu_hpmevent_id - Performance-monitoring event=
- identifier
-> > > > > > + *
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_CYCLE: Clock cycle counter
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_URQ: Untranslated requests
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_TRQ: Translated requests
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_ATS_RQ: ATS translation requests
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_TLB_MISS: TLB misses
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_DD_WALK: Device directory walks
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_PD_WALK: Process directory walks
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_S_VS_WALKS: First-stage page table wa=
-lks
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_G_WALKS: Second-stage page table walk=
-s
-> > > > > > + * @RISCV_IOMMU_HPMEVENT_MAX: Value to denote maximum Event ID=
-s
-> > > > > > + *
-> > > > > > + * The specification does not define an event ID for counting =
-the
-> > > > > > + * number of clock cycles, meaning there is no associated 'ioh=
-pmevt0'.
-> > > > > > + * Event ID 0 is an invalid event and does not overlap with an=
-y valid
-> > > > > > + * event ID. Let's repurpose ID 0 as the cycle for perf, the c=
-ycle
-> > > > > > + * event is not actually written into any register, it serves =
-solely
-> > > > > > + * as an identifier.
-> > > > > > + */
-> > > > > > +enum riscv_iommu_hpmevent_id {
-> > > > > > +       RISCV_IOMMU_HPMEVENT_CYCLE      =3D 0,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_URQ        =3D 1,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_TRQ        =3D 2,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_ATS_RQ     =3D 3,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_TLB_MISS   =3D 4,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_DD_WALK    =3D 5,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_PD_WALK    =3D 6,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_S_VS_WALKS =3D 7,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_G_WALKS    =3D 8,
-> > > > > > +       RISCV_IOMMU_HPMEVENT_MAX        =3D 9
-> > > > > > +};
-> > > > > > +
-> > > > > > +struct riscv_iommu_pmu {
-> > > > > > +       struct pmu pmu;
-> > > > > > +       struct hlist_node node;
-> > > > > > +       void __iomem *reg;
-> > > > > > +       unsigned int on_cpu;
-> > > > > > +       int num_counters;
-> > > > > > +       u64 cycle_cntr_mask;
-> > > > > > +       u64 event_cntr_mask;
-> > > > > > +       struct perf_event *events[RISCV_IOMMU_HPM_COUNTER_NUM];
-> > > > > > +       DECLARE_BITMAP(used_counters, RISCV_IOMMU_HPM_COUNTER_N=
-UM);
-> > > > > > +       u32 hi_prev[RISCV_IOMMU_HPM_COUNTER_NUM];
-> > > > > > +       u32 lo_prev[RISCV_IOMMU_HPM_COUNTER_NUM];
-> > > > > > +};
-> > > > > > +
-> > > > > > +#define to_riscv_iommu_pmu(p) (container_of(p, struct riscv_io=
-mmu_pmu, pmu))
-> > > > > > +
-> > > > > > +#define RISCV_IOMMU_PMU_ATTR_EXTRACTOR(_name, _mask)          =
-         \
-> > > > > > +       static inline u32 get_##_name(struct perf_event *event)=
-         \
-> > > > > > +       {                                                      =
-         \
-> > > > > > +               return FIELD_GET(_mask, event->attr.config);   =
-         \
-> > > > > > +       }                                                      =
-         \
-> > > > > > +
-> > > > > > +RISCV_IOMMU_PMU_ATTR_EXTRACTOR(event, RISCV_IOMMU_IOHPMEVT_EVE=
-NTID);
-> > > > > > +RISCV_IOMMU_PMU_ATTR_EXTRACTOR(partial_matching, RISCV_IOMMU_I=
-OHPMEVT_DMASK);
-> > > > > > +RISCV_IOMMU_PMU_ATTR_EXTRACTOR(pid_pscid, RISCV_IOMMU_IOHPMEVT=
-_PID_PSCID);
-> > > > > > +RISCV_IOMMU_PMU_ATTR_EXTRACTOR(did_gscid, RISCV_IOMMU_IOHPMEVT=
-_DID_GSCID);
-> > > > > > +RISCV_IOMMU_PMU_ATTR_EXTRACTOR(filter_pid_pscid, RISCV_IOMMU_I=
-OHPMEVT_PV_PSCV);
-> > > > > > +RISCV_IOMMU_PMU_ATTR_EXTRACTOR(filter_did_gscid, RISCV_IOMMU_I=
-OHPMEVT_DV_GSCV);
-> > > > > > +RISCV_IOMMU_PMU_ATTR_EXTRACTOR(filter_id_type, RISCV_IOMMU_IOH=
-PMEVT_IDT);
-> > > > > > +
-> > > > > > +/* Formats */
-> > > > > > +PMU_FORMAT_ATTR(event,            "config:0-14");
-> > > > > > +PMU_FORMAT_ATTR(partial_matching, "config:15");
-> > > > > > +PMU_FORMAT_ATTR(pid_pscid,        "config:16-35");
-> > > > > > +PMU_FORMAT_ATTR(did_gscid,        "config:36-59");
-> > > > > > +PMU_FORMAT_ATTR(filter_pid_pscid, "config:60");
-> > > > > > +PMU_FORMAT_ATTR(filter_did_gscid, "config:61");
-> > > > > > +PMU_FORMAT_ATTR(filter_id_type,   "config:62");
-> > > > > > +
-> > > > > > +static struct attribute *riscv_iommu_pmu_formats[] =3D {
-> > > > > > +       &format_attr_event.attr,
-> > > > > > +       &format_attr_partial_matching.attr,
-> > > > > > +       &format_attr_pid_pscid.attr,
-> > > > > > +       &format_attr_did_gscid.attr,
-> > > > > > +       &format_attr_filter_pid_pscid.attr,
-> > > > > > +       &format_attr_filter_did_gscid.attr,
-> > > > > > +       &format_attr_filter_id_type.attr,
-> > > > > > +       NULL,
-> > > > > > +};
-> > > > > > +
-> > > > > > +static const struct attribute_group riscv_iommu_pmu_format_gro=
-up =3D {
-> > > > > > +       .name =3D "format",
-> > > > > > +       .attrs =3D riscv_iommu_pmu_formats,
-> > > > > > +};
-> > > > > > +
-> > > > > > +/* Events */
-> > > > > > +static ssize_t riscv_iommu_pmu_event_show(struct device *dev,
-> > > > > > +                                         struct device_attribu=
-te *attr,
-> > > > > > +                                         char *page)
-> > > > > > +{
-> > > > > > +       struct perf_pmu_events_attr *pmu_attr;
-> > > > > > +
-> > > > > > +       pmu_attr =3D container_of(attr, struct perf_pmu_events_=
-attr, attr);
-> > > > > > +
-> > > > > > +       return sysfs_emit(page, "event=3D0x%02llx\n", pmu_attr-=
->id);
-> > > > > > +}
-> > > > > > +
-> > > > > > +#define RISCV_IOMMU_PMU_EVENT_ATTR(name, id)                  =
- \
-> > > > > > +       PMU_EVENT_ATTR_ID(name, riscv_iommu_pmu_event_show, id)
-> > > > > > +
-> > > > > > +static struct attribute *riscv_iommu_pmu_events[] =3D {
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(cycle, RISCV_IOMMU_HPMEVENT_=
-CYCLE),
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(untranslated_req, RISCV_IOMM=
-U_HPMEVENT_URQ),
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(translated_req, RISCV_IOMMU_=
-HPMEVENT_TRQ),
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(ats_trans_req, RISCV_IOMMU_H=
-PMEVENT_ATS_RQ),
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(tlb_miss, RISCV_IOMMU_HPMEVE=
-NT_TLB_MISS),
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(ddt_walks, RISCV_IOMMU_HPMEV=
-ENT_DD_WALK),
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(pdt_walks, RISCV_IOMMU_HPMEV=
-ENT_PD_WALK),
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(s_vs_pt_walks, RISCV_IOMMU_H=
-PMEVENT_S_VS_WALKS),
-> > > > > > +       RISCV_IOMMU_PMU_EVENT_ATTR(g_pt_walks, RISCV_IOMMU_HPME=
-VENT_G_WALKS),
-> > > > > > +       NULL,
-> > > > > > +};
-> > > > > > +
-> > > > > > +static const struct attribute_group riscv_iommu_pmu_events_gro=
-up =3D {
-> > > > > > +       .name =3D "events",
-> > > > > > +       .attrs =3D riscv_iommu_pmu_events,
-> > > > > > +};
-> > > > > > +
-> > > > > > +/* cpumask */
-> > > > > > +static ssize_t riscv_iommu_cpumask_show(struct device *dev,
-> > > > > > +                                       struct device_attribute=
- *attr,
-> > > > > > +                                       char *buf)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(dev_=
-get_drvdata(dev));
-> > > > > > +
-> > > > > > +       return cpumap_print_to_pagebuf(true, buf, cpumask_of(pm=
-u->on_cpu));
-> > > > > > +}
-> > > > > > +
-> > > > > > +static struct device_attribute riscv_iommu_cpumask_attr =3D
-> > > > > > +       __ATTR(cpumask, 0444, riscv_iommu_cpumask_show, NULL);
-> > > > > > +
-> > > > > > +static struct attribute *riscv_iommu_cpumask_attrs[] =3D {
-> > > > > > +       &riscv_iommu_cpumask_attr.attr,
-> > > > > > +       NULL
-> > > > > > +};
-> > > > > > +
-> > > > > > +static const struct attribute_group riscv_iommu_pmu_cpumask_gr=
-oup =3D {
-> > > > > > +       .attrs =3D riscv_iommu_cpumask_attrs,
-> > > > > > +};
-> > > > > > +
-> > > > > > +static const struct attribute_group *riscv_iommu_pmu_attr_grps=
-[] =3D {
-> > > > > > +       &riscv_iommu_pmu_cpumask_group,
-> > > > > > +       &riscv_iommu_pmu_format_group,
-> > > > > > +       &riscv_iommu_pmu_events_group,
-> > > > > > +       NULL,
-> > > > > > +};
-> > > > > > +
-> > > > > > +/* PMU Operations */
-> > > > > > +static void riscv_iommu_pmu_set_counter(struct riscv_iommu_pmu=
- *pmu, u32 idx,
-> > > > > > +                                       u64 value)
-> > > > > > +{
-> > > > > > +       u64 counter_mask =3D idx ? pmu->event_cntr_mask : pmu->=
-cycle_cntr_mask;
-> > > > > > +
-> > > > > > +       writeq(value & counter_mask, pmu->reg + RISCV_IOMMU_REG=
-_IOHPMCTR(idx));
-> > > > > #include <include/linux/io-64-nonatomic-lo-hi.h>
-> > > > > lo_hi_writeq(value & counter_mask, pmu->reg + RISCV_IOMMU_REG_IOH=
-PMCTR(idx));
-> > > > >
-> > > > > For better compatibility, it is recommended to use writel and rea=
-dl
-> > > > > instead of readq and writeq. Sorry for overlooking this last time=
- =E2=80=94
-> > > > > could you please make the change again?
-> > > > > In the future, your driver could support RV32 directly, as the RI=
-SC-V
-> > > > > IOMMU specification also supports RV32; it's just that the curren=
-t
-> > > > > RISC-V IOMMU driver's Kconfig depends on 64BIT.
-> > > >
-> > > > Hi Guo,
-> > > > Thank you for your review. In my implementation for RV32, readq and
-> > > > writeq are replaced by hi_lo_readq and hi_lo_writeq (from
-> > > > io-64-nonatomic-hi-lo.h). So, supporting RV32 should be fine.
-> > > > However, as you mentioned before: 64-bit access might be undefined =
-on
-> > > > some hardware. To be safe and compatible with all hardware, we shou=
-ld
-> > > > use 32-bit access instead of 64-bit access.
-> > > > I will modify them in the next version
-> > > >
-> > > > I'd like to make sure I didn't miss anything important. My original
-> > > > code uses the "hi-lo" order. May I ask if there is a specific reaso=
-n
-> > > > why you prefer the "lo-hi" order?
-> > > > Thanks
-> > > >
-> > >
-> > > Hi all,
-> > > I have been thinking more about the IOMMU register access behavior an=
-d
-> > > would like to share my thoughts regarding the lo-hi vs. hi-lo access
-> > > order.
-> > >
-> > > It seems to me that the correct 32-bit write order is strictly tied t=
-o
-> > > the underlying hardware implementation. From the software side, we
-> > > have no way of knowing whether a specific vendor designed their
-> > > hardware with a low-part trigger or a high-part trigger. Therefore,
-> > > hardcoding a fixed 32-bit write sequence could result in compatibilit=
-y
-> > > issues across different hardware designs.
-> > >
-> > > Revisiting the spec regarding the UNSPECIFIED 8-byte atomic access,
-> > > this might imply that the hardware itself will handle the split into
-> > > two 4-byte accesses and internally manage its own trigger logic.
-> > > Because of this, for RV64 systems, software might simply use standard
-> > > 8-byte writes (e.g., writeq). Delegating the access handling to the
-> > > hardware is likely the best way to maximize compatibility across all
-> > > vendor implementations. For the counter reading strategy (hi-lo-hi
-> > > pattern), I completely agree with using the hi-lo-hi pattern when
-> > > reading the PMU counters. Since this is a read operation and does not
-> > > alter hardware state.
-> > Apologies for overlooking this point. Using hi_lo_writeq/readq
-> > explicitly enforces access ordering to prevent hardware reordering,
-> > while maintaining RV32 compatibility. This ensures consistent 64-bit
-> > MMIO register access semantics across both RV32 and RV64. Falling back
-> > to 32-bit MMIO access remains the best approach, as it avoids any
-> > ambiguity or controversy.
-> >
->
-> I was originally a bit concerned that if our writing order is
-> different from the hardware design, it might cause some risks.
-> For example, if we write to the 64-bit register in a high-low order,
-> but the hardware is triggered by the high part, the hardware might
-> start working with the "new 32-bit high part" and the "old 32-bit low
-> part" before we write the new low part.
-> However, I checked the current driver code, and it seems we might not
-> need to worry about this for now. This is because we only write to
-> counter/event registers when the counter is inhibited.
-Yes, you give out the key point.
+On 7/1/26 4:47 PM, Atish Patra wrote:
+> From: Atish Patra <atishp@rivosinc.com>
+> 
+> There are few new RISC-V ISA exensions (ssccfg, sscsrind, smcntrpmf) which
+> allows the hpmcounter/hpmevents to be programmed directly from S-mode. The
+> implementation detects the ISA extension at runtime and uses them if
+> available instead of SBI PMU extension. SBI PMU extension will still be
+> used for firmware counters if the user requests it.
+> 
+> The current linux driver relies on event encoding defined by SBI PMU
+> specification for standard perf events. However, there are no standard
+> event encoding available in the ISA. In the future, we may want to
+> decouple the counter delegation and SBI PMU completely. In that case,
+> counter delegation supported platforms must rely on the event encoding
+> defined in the perf json file or in the pmu driver.
+> 
+> For firmware events, it will continue to use the SBI PMU encoding as
+> one can not support firmware event without SBI PMU.
+> 
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/csr.h   |   1 +
+>  drivers/perf/riscv_pmu_sbi.c   | 578 +++++++++++++++++++++++++++++++++--------
+>  include/linux/perf/riscv_pmu.h |   3 +
+>  3 files changed, 478 insertions(+), 104 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+> index a3b24b88e401..cd22b5168689 100644
+> --- a/arch/riscv/include/asm/csr.h
+> +++ b/arch/riscv/include/asm/csr.h
+> @@ -258,6 +258,7 @@
+>  #endif
+>  
+>  #define SISELECT_SSCCFG_BASE		0x40
+> +#define HPMEVENT_MASK			GENMASK_ULL(63, 56)
+>  
+>  /* mseccfg bits */
+>  #define MSECCFG_PMM			ENVCFG_PMM
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 2568c6808f5d..7995da4a98a1 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -28,6 +28,8 @@
+>  #include <asm/cpufeature.h>
+>  #include <asm/vendor_extensions.h>
+>  #include <asm/vendor_extensions/andes.h>
+> +#include <asm/hwcap.h>
+> +#include <asm/csr_ind.h>
+>  
+>  #define ALT_SBI_PMU_OVERFLOW(__ovl)					\
+>  asm volatile(ALTERNATIVE_2(						\
+> @@ -60,7 +62,20 @@ asm volatile(ALTERNATIVE(						\
+>  #define PERF_EVENT_FLAG_USER_ACCESS	BIT(SYSCTL_USER_ACCESS)
+>  #define PERF_EVENT_FLAG_LEGACY		BIT(SYSCTL_LEGACY)
+>  
+> -PMU_FORMAT_ATTR(event, "config:0-55");
+> +#define RVPMU_SBI_PMU_FORMAT_ATTR	"config:0-47"
+> +#define RVPMU_CDELEG_PMU_FORMAT_ATTR	"config:0-55"
+> +
+> +static ssize_t __maybe_unused rvpmu_format_show(struct device *dev, struct device_attribute *attr,
+> +						char *buf);
+> +
+> +#define RVPMU_ATTR_ENTRY(_name, _func, _config)	(			\
+> +	&((struct dev_ext_attribute[]) {				\
+> +		{ __ATTR(_name, 0444, _func, NULL), (void *)_config }	\
+> +	})[0].attr.attr)
+> +
+> +#define RVPMU_FORMAT_ATTR_ENTRY(_name, _config) \
+> +	RVPMU_ATTR_ENTRY(_name, rvpmu_format_show, (char *)_config)
+> +
+>  PMU_FORMAT_ATTR(firmware, "config:62-63");
+>  
+>  static bool sbi_v2_available;
+> @@ -68,7 +83,11 @@ static bool sbi_v3_available;
+>  static DEFINE_STATIC_KEY_FALSE(sbi_pmu_snapshot_available);
+>  #define sbi_pmu_snapshot_available() \
+>  	static_branch_unlikely(&sbi_pmu_snapshot_available)
+> +
+>  static DEFINE_STATIC_KEY_FALSE(riscv_pmu_sbi_available);
+> +#define riscv_pmu_sbi_available() \
+> +		static_branch_likely(&riscv_pmu_sbi_available)
+> +
+>  static DEFINE_STATIC_KEY_FALSE(riscv_pmu_cdeleg_available);
+>  
+>  /* Avoid unnecessary code patching in the one time booting path*/
+> @@ -83,19 +102,35 @@ static DEFINE_STATIC_KEY_FALSE(riscv_pmu_cdeleg_available);
+>  #define riscv_pmu_sbi_available() \
+>  		static_branch_likely(&riscv_pmu_sbi_available)
+>  
+> -static struct attribute *riscv_arch_formats_attr[] = {
+> -	&format_attr_event.attr,
+> +static struct attribute *riscv_sbi_pmu_formats_attr[] = {
+> +	RVPMU_FORMAT_ATTR_ENTRY(event, RVPMU_SBI_PMU_FORMAT_ATTR),
+>  	&format_attr_firmware.attr,
+>  	NULL,
+>  };
+>  
+> -static struct attribute_group riscv_pmu_format_group = {
+> +static struct attribute_group riscv_sbi_pmu_format_group = {
+>  	.name = "format",
+> -	.attrs = riscv_arch_formats_attr,
+> +	.attrs = riscv_sbi_pmu_formats_attr,
+>  };
+>  
+> -static const struct attribute_group *riscv_pmu_attr_groups[] = {
+> -	&riscv_pmu_format_group,
+> +static const struct attribute_group *riscv_sbi_pmu_attr_groups[] = {
+> +	&riscv_sbi_pmu_format_group,
+> +	NULL,
+> +};
+> +
+> +static struct attribute *riscv_cdeleg_pmu_formats_attr[] = {
+> +	RVPMU_FORMAT_ATTR_ENTRY(event, RVPMU_CDELEG_PMU_FORMAT_ATTR),
+> +	&format_attr_firmware.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group riscv_cdeleg_pmu_format_group = {
+> +	.name = "format",
+> +	.attrs = riscv_cdeleg_pmu_formats_attr,
+> +};
+> +
+> +static const struct attribute_group *riscv_cdeleg_pmu_attr_groups[] = {
+> +	&riscv_cdeleg_pmu_format_group,
+>  	NULL,
+>  };
+>  
+> @@ -482,6 +517,14 @@ static void rvpmu_sbi_check_std_events(struct work_struct *work)
+>  
+>  static DECLARE_WORK(check_std_events_work, rvpmu_sbi_check_std_events);
+>  
+> +static ssize_t rvpmu_format_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct dev_ext_attribute *eattr = container_of(attr,
+> +				struct dev_ext_attribute, attr);
+> +	return sysfs_emit(buf, "%s\n", (char *)eattr->var);
+> +}
+> +
+>  static int rvpmu_ctr_get_width(int idx)
+>  {
+>  	return pmu_ctr_list[idx].width;
+> @@ -599,6 +642,38 @@ static uint8_t rvpmu_csr_index(struct perf_event *event)
+>  	return pmu_ctr_list[event->hw.idx].csr - CSR_CYCLE;
+>  }
+>  
+> +static uint64_t get_deleg_priv_filter_bits(struct perf_event *event)
+> +{
+> +	u64 priv_filter_bits = 0;
 
-> Therefore, I think we can safely use the high-low order to rewrite the dr=
-iver.
-Great, I'm waiting for your next version.
+could we explicitly initialize the priv_filter_bits to MINH? though this bit
+is S-mode read-only and won't have any effects, but considering the semantic
+is to inhibit counting at certain privilege mode, initialize it to MINH will
+make it clear.
 
-> Thank you very much for your discussion.
->
-> > >
-> > > For RV32 support, we inevitably face the 32-bit access splitting
-> > > issue. For the RV32 case, maybe we can assume the hi-lo order as the
-> > > default fallback, because the IOMMU specification uses this sequence
-> > > as example: "an access may appear, internally to the IOMMU, as if two
-> > > separate 4 byte accesses - first to the high half and second to the
-> > > low half - were performed.". Or do you prefer to use the same
-> > > assumption (hi-lo pattern) in RV64 as well?
-> > >
-> > > Please let me know what you think about this.
-> > >
-> > > Thanks
-> > >
-> > >
-> > > > >
-> > > > > > +}
-> > > > > > +
-> > > > > > +/*
-> > > > > > + * As stated in the RISC-V IOMMU Specification, Chapter 6:
-> > > > > > + * Whether an 8 byte access to an IOMMU register is single-cop=
-y atomic
-> > > > > > + * is UNSPECIFIED, and such an access may appear, internally t=
-o the
-> > > > > > + * IOMMU, as if two separate 4 byte accesses -=E2=80=89first t=
-o the high half
-> > > > > > + * and second to the low half=E2=80=89-=E2=80=89were performed
-> > > > > > + *
-> > > > > > + * To make sure the driver works correctly on different hardwa=
-re,
-> > > > > > + * the software will always use two 4-byte access for the coun=
-ter.
-> > > > > > + *
-> > > > > > + * This function implements the hi-lo-hi pattern to detect and=
- handle
-> > > > > > + * wraparound during the read operation:
-> > > > > > + *   1. Read high half (hi)
-> > > > > > + *   2. Read low half (lo)
-> > > > > > + *   3. Check if low half wrapped or high half changed:
-> > > > > > + *      - If lo <=3D lo_prev: possible wraparound occurred
-> > > > > > + *      - If hi !=3D hi_prev: high half changed during read
-> > > > > > + *   4. If wraparound detected, re-read high half and assume l=
-ow half is 0
-> > > > > > + *   5. Update previous values for next read
-> > > > > > + */
-> > > > > > +static u64 riscv_iommu_pmu_get_counter(struct riscv_iommu_pmu =
-*pmu, u32 idx)
-> > > > > > +{
-> > > > > > +       void __iomem *addr =3D pmu->reg + RISCV_IOMMU_REG_IOHPM=
-CTR(idx);
-> > > > > > +       u64 value, counter_mask =3D idx ? pmu->event_cntr_mask =
-: pmu->cycle_cntr_mask;
-> > > > > > +       u32 hi, lo;
-> > > > > > +
-> > > > > > +       hi =3D readl(addr + 4);
-> > > > > > +       lo =3D readl(addr);
-> > > > > > +
-> > > > > > +       if (lo <=3D pmu->lo_prev[idx] || hi !=3D pmu->hi_prev[i=
-dx]) {
-> > > > > > +               u32 hi_tmp =3D readl(addr + 4);
-> > > > > > +
-> > > > > > +               /*
-> > > > > > +                * If hi changes, then hi+1:0 must have happene=
-d while
-> > > > > > +                * the code was running so it is a safe return =
-value
-> > > > > > +                */
-> > > > > > +               if (hi_tmp !=3D hi) {
-> > > > > > +                       hi =3D hi_tmp;
-> > > > > > +                       lo =3D 0;
-> > > > > > +               }
-> > > > > > +               pmu->lo_prev[idx] =3D ~0u;
-> > > > > > +               pmu->hi_prev[idx] =3D hi;
-> > > > > > +       }
-> > > > > > +       pmu->lo_prev[idx] =3D lo;
-> > > > > > +
-> > > > > > +       value =3D (((u64)hi << 32) | lo) & counter_mask;
-> > > > > > +
-> > > > > > +       /* The bit 63 of cycle counter (i.e., idx =3D=3D 0) is =
-OF bit */
-> > > > > > +       return idx ? value : (value & ~RISCV_IOMMU_IOHPMCYCLES_=
-OF);
-> > > > > > +}
-> > > > > Yes! Thanks for your implementation.
-> > > > >
-> > > > > > +
-> > > > > > +static bool is_cycle_event(u64 event)
-> > > > > > +{
-> > > > > > +       return event =3D=3D RISCV_IOMMU_HPMEVENT_CYCLE;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_set_event(struct riscv_iommu_pmu *=
-pmu, u32 idx,
-> > > > > > +                                     u64 value)
-> > > > > > +{
-> > > > > > +       /* There is no associtated IOHPMEVT0 for IOHPMCYCLES */
-> > > > > > +       if (is_cycle_event(value))
-> > > > > > +               return;
-> > > > > > +
-> > > > > > +       /* Event counter start from idx 1 */
-> > > > > > +       writeq(FIELD_GET(RISCV_IOMMU_IOHPMEVT_EVENT, value),
-> > > > > > +              pmu->reg + RISCV_IOMMU_REG_IOHPMEVT(idx - 1));
-> > > > >        lo_hi_writeq(FIELD_GET(RISCV_IOMMU_IOHPMEVT_EVENT, value),
-> > > > >               pmu->reg + RISCV_IOMMU_REG_IOHPMEVT(idx - 1));
-> > > > >
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_enable_counter(struct riscv_iommu_=
-pmu *pmu, u32 idx)
-> > > > > > +{
-> > > > > > +       void __iomem *addr =3D pmu->reg + RISCV_IOMMU_REG_IOCOU=
-NTINH;
-> > > > > > +       u32 value =3D readl(addr);
-> > > > > > +
-> > > > > > +       writel(value & ~BIT(idx), addr);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_disable_counter(struct riscv_iommu=
-_pmu *pmu, u32 idx)
-> > > > > > +{
-> > > > > > +       void __iomem *addr =3D pmu->reg + RISCV_IOMMU_REG_IOCOU=
-NTINH;
-> > > > > > +       u32 value =3D readl(addr);
-> > > > > > +
-> > > > > > +       writel(value | BIT(idx), addr);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_start_all(struct riscv_iommu_pmu *=
-pmu)
-> > > > > > +{
-> > > > > > +       void __iomem *addr =3D pmu->reg + RISCV_IOMMU_REG_IOCOU=
-NTINH;
-> > > > > > +       u32 used_cntr =3D 0;
-> > > > > > +
-> > > > > > +       /* The performance-monitoring counter inhibits is a 32-=
-bit WARL register */
-> > > > > > +       bitmap_to_arr32(&used_cntr, pmu->used_counters, pmu->nu=
-m_counters);
-> > > > > > +
-> > > > > > +       writel(~used_cntr, addr);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_stop_all(struct riscv_iommu_pmu *p=
-mu)
-> > > > > > +{
-> > > > > > +       writel(GENMASK_ULL(pmu->num_counters - 1, 0),
-> > > > > > +              pmu->reg + RISCV_IOMMU_REG_IOCOUNTINH);
-> > > > > > +}
-> > > > > > +
-> > > > > > +/* PMU APIs */
-> > > > > > +static void riscv_iommu_pmu_set_period(struct perf_event *even=
-t)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(even=
-t->pmu);
-> > > > > > +       struct hw_perf_event *hwc =3D &event->hw;
-> > > > > > +       u64 counter_mask =3D hwc->idx ? pmu->event_cntr_mask : =
-pmu->cycle_cntr_mask;
-> > > > > > +       u64 period;
-> > > > > > +
-> > > > > > +       /*
-> > > > > > +        * Limit the maximum period to prevent the counter valu=
-e
-> > > > > > +        * from overtaking the one we are about to program.
-> > > > > > +        * In effect we are reducing max_period to account for
-> > > > > > +        * interrupt latency (and we are being very conservativ=
-e).
-> > > > > > +        */
-> > > > > > +       period =3D counter_mask >> 1;
-> > > > > > +       riscv_iommu_pmu_set_counter(pmu, hwc->idx, period);
-> > > > > > +       local64_set(&hwc->prev_count, period);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int riscv_iommu_pmu_event_init(struct perf_event *event=
-)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(even=
-t->pmu);
-> > > > > > +       struct hw_perf_event *hwc =3D &event->hw;
-> > > > > > +       struct perf_event *sibling;
-> > > > > > +       int total_event_counters =3D pmu->num_counters - 1;
-> > > > > > +       int counters =3D 0;
-> > > > > > +
-> > > > > > +       if (event->attr.type !=3D event->pmu->type)
-> > > > > > +               return -ENOENT;
-> > > > > > +
-> > > > > > +       if (hwc->sample_period)
-> > > > > > +               return -EOPNOTSUPP;
-> > > > > > +
-> > > > > > +       if (event->cpu < 0)
-> > > > > > +               return -EOPNOTSUPP;
-> > > > > > +
-> > > > > > +       event->cpu =3D pmu->on_cpu;
-> > > > > > +
-> > > > > > +       hwc->idx =3D -1;
-> > > > > > +       hwc->config =3D event->attr.config;
-> > > > > > +
-> > > > > > +       if (event->group_leader =3D=3D event)
-> > > > > > +               return 0;
-> > > > > > +
-> > > > > > +       if (is_cycle_event(get_event(event->group_leader)))
-> > > > > > +               if (++counters > total_event_counters)
-> > > > > > +                       return -EINVAL;
-> > > > > > +
-> > > > > > +       for_each_sibling_event(sibling, event->group_leader) {
-> > > > > > +               if (is_cycle_event(get_event(sibling)))
-> > > > > > +                       continue;
-> > > > > > +
-> > > > > > +               if (sibling->pmu !=3D event->pmu && !is_softwar=
-e_event(sibling))
-> > > > > > +                       return -EINVAL;
-> > > > > > +
-> > > > > > +               if (++counters > total_event_counters)
-> > > > > > +                       return -EINVAL;
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       return 0;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_update(struct perf_event *event)
-> > > > > > +{
-> > > > > > +       struct hw_perf_event *hwc =3D &event->hw;
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(even=
-t->pmu);
-> > > > > > +       u64 delta, prev, now;
-> > > > > > +       u32 idx =3D hwc->idx;
-> > > > > > +       u64 counter_mask =3D idx ? pmu->event_cntr_mask : pmu->=
-cycle_cntr_mask;
-> > > > > > +
-> > > > > > +       do {
-> > > > > > +               prev =3D local64_read(&hwc->prev_count);
-> > > > > > +               now =3D riscv_iommu_pmu_get_counter(pmu, idx);
-> > > > > > +       } while (local64_cmpxchg(&hwc->prev_count, prev, now) !=
-=3D prev);
-> > > > > > +
-> > > > > > +       delta =3D (now - prev) & counter_mask;
-> > > > > > +       local64_add(delta, &event->count);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_start(struct perf_event *event, in=
-t flags)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(even=
-t->pmu);
-> > > > > > +       struct hw_perf_event *hwc =3D &event->hw;
-> > > > > > +
-> > > > > > +       if (WARN_ON_ONCE(!(event->hw.state & PERF_HES_STOPPED))=
-)
-> > > > > > +               return;
-> > > > > > +
-> > > > > > +       if (flags & PERF_EF_RELOAD)
-> > > > > > +               WARN_ON_ONCE(!(event->hw.state & PERF_HES_UPTOD=
-ATE));
-> > > > > > +
-> > > > > > +       hwc->state =3D 0;
-> > > > > > +       riscv_iommu_pmu_set_period(event);
-> > > > > > +       riscv_iommu_pmu_set_event(pmu, hwc->idx, hwc->config);
-> > > > > > +       riscv_iommu_pmu_enable_counter(pmu, hwc->idx);
-> > > > > > +
-> > > > > > +       perf_event_update_userpage(event);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_stop(struct perf_event *event, int=
- flags)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(even=
-t->pmu);
-> > > > > > +       struct hw_perf_event *hwc =3D &event->hw;
-> > > > > > +       int idx =3D hwc->idx;
-> > > > > > +
-> > > > > > +       if (hwc->state & PERF_HES_STOPPED)
-> > > > > > +               return;
-> > > > > > +
-> > > > > > +       riscv_iommu_pmu_disable_counter(pmu, idx);
-> > > > > > +
-> > > > > > +       if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES=
-_UPTODATE))
-> > > > > > +               riscv_iommu_pmu_update(event);
-> > > > > > +
-> > > > > > +       hwc->state |=3D PERF_HES_STOPPED | PERF_HES_UPTODATE;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int riscv_iommu_pmu_add(struct perf_event *event, int f=
-lags)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(even=
-t->pmu);
-> > > > > > +       struct hw_perf_event *hwc =3D &event->hw;
-> > > > > > +       unsigned int num_counters =3D pmu->num_counters;
-> > > > > > +       int idx;
-> > > > > > +
-> > > > > > +       /* Reserve index zero for iohpmcycles */
-> > > > > > +       if (is_cycle_event(get_event(event)))
-> > > > > > +               idx =3D 0;
-> > > > > > +       else
-> > > > > > +               idx =3D find_next_zero_bit(pmu->used_counters, =
-num_counters, 1);
-> > > > > > +
-> > > > > > +       /* All event counters or cycle counter are in use */
-> > > > > > +       if (idx =3D=3D num_counters || pmu->events[idx])
-> > > > > > +               return -EAGAIN;
-> > > > > > +
-> > > > > > +       set_bit(idx, pmu->used_counters);
-> > > > > > +
-> > > > > > +       pmu->events[idx] =3D event;
-> > > > > > +       hwc->idx =3D idx;
-> > > > > > +       hwc->state =3D PERF_HES_STOPPED | PERF_HES_UPTODATE;
-> > > > > > +       local64_set(&hwc->prev_count, 0);
-> > > > > > +
-> > > > > > +       if (flags & PERF_EF_START)
-> > > > > > +               riscv_iommu_pmu_start(event, flags);
-> > > > > > +
-> > > > > > +       /* Propagate changes to the userspace mapping. */
-> > > > > > +       perf_event_update_userpage(event);
-> > > > > > +
-> > > > > > +       return 0;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_read(struct perf_event *event)
-> > > > > > +{
-> > > > > > +       riscv_iommu_pmu_update(event);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_del(struct perf_event *event, int =
-flags)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(even=
-t->pmu);
-> > > > > > +       struct hw_perf_event *hwc =3D &event->hw;
-> > > > > > +       int idx =3D hwc->idx;
-> > > > > > +
-> > > > > > +       riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
-> > > > > > +       pmu->events[idx] =3D NULL;
-> > > > > > +       clear_bit(idx, pmu->used_counters);
-> > > > > > +
-> > > > > > +       perf_event_update_userpage(event);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int riscv_iommu_pmu_online_cpu(unsigned int cpu, struct=
- hlist_node *node)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *iommu_pmu;
-> > > > > > +
-> > > > > > +       iommu_pmu =3D hlist_entry_safe(node, struct riscv_iommu=
-_pmu, node);
-> > > > > > +
-> > > > > > +       if (iommu_pmu->on_cpu =3D=3D -1)
-> > > > > > +               iommu_pmu->on_cpu =3D cpu;
-> > > > > > +
-> > > > > > +       return 0;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int riscv_iommu_pmu_offline_cpu(unsigned int cpu, struc=
-t hlist_node *node)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *iommu_pmu;
-> > > > > > +       unsigned int target_cpu;
-> > > > > > +
-> > > > > > +       iommu_pmu =3D hlist_entry_safe(node, struct riscv_iommu=
-_pmu, node);
-> > > > > > +
-> > > > > > +       if (cpu !=3D iommu_pmu->on_cpu)
-> > > > > > +               return 0;
-> > > > > > +
-> > > > > > +       iommu_pmu->on_cpu =3D -1;
-> > > > > > +
-> > > > > > +       target_cpu =3D cpumask_any_but(cpu_online_mask, cpu);
-> > > > > > +       if (target_cpu >=3D nr_cpu_ids)
-> > > > > > +               return 0;
-> > > > > > +
-> > > > > > +       perf_pmu_migrate_context(&iommu_pmu->pmu, cpu, target_c=
-pu);
-> > > > > > +       iommu_pmu->on_cpu =3D target_cpu;
-> > > > > > +
-> > > > > > +       return 0;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static irqreturn_t riscv_iommu_pmu_handle_irq(struct riscv_iom=
-mu_pmu *pmu)
-> > > > > > +{
-> > > > > > +       u32 ovf =3D readl(pmu->reg + RISCV_IOMMU_REG_IOCOUNTOVF=
-);
-> > > > > > +       int idx;
-> > > > > > +
-> > > > > > +       if (!ovf)
-> > > > > > +               return IRQ_NONE;
-> > > > > > +
-> > > > > > +       riscv_iommu_pmu_stop_all(pmu);
-> > > > > > +
-> > > > > > +       for_each_set_bit(idx, (unsigned long *)&ovf, pmu->num_c=
-ounters) {
-> > > > > > +               struct perf_event *event =3D pmu->events[idx];
-> > > > > > +
-> > > > > > +               if (WARN_ON_ONCE(!event))
-> > > > > > +                       continue;
-> > > > > > +
-> > > > > > +               riscv_iommu_pmu_update(event);
-> > > > > > +               riscv_iommu_pmu_set_period(event);
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       riscv_iommu_pmu_start_all(pmu);
-> > > > > > +
-> > > > > > +       return IRQ_HANDLED;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static irqreturn_t riscv_iommu_pmu_irq_handler(int irq, void *=
-dev_id)
-> > > > > > +{
-> > > > > > +       struct riscv_iommu_pmu *pmu =3D (struct riscv_iommu_pmu=
- *)dev_id;
-> > > > > > +       irqreturn_t ret;
-> > > > > > +
-> > > > > > +       /* Check whether this interrupt is for PMU */
-> > > > > > +       if (!(readl_relaxed(pmu->reg + RISCV_IOMMU_REG_IPSR) & =
-RISCV_IOMMU_IPSR_PMIP))
-> > > > > > +               return IRQ_NONE;
-> > > > > > +
-> > > > > > +       /* Process PMU IRQ */
-> > > > > > +       ret =3D riscv_iommu_pmu_handle_irq(pmu);
-> > > > > > +
-> > > > > > +       /* Clear performance monitoring interrupt pending bit *=
-/
-> > > > > > +       writel_relaxed(RISCV_IOMMU_IPSR_PMIP, pmu->reg + RISCV_=
-IOMMU_REG_IPSR);
-> > > > > > +
-> > > > > > +       return ret;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static unsigned int riscv_iommu_pmu_get_irq_num(struct riscv_i=
-ommu_device *iommu)
-> > > > > > +{
-> > > > > > +       /* Reuse ICVEC.CIV mask for all interrupt vectors mappi=
-ng */
-> > > > > > +       int vec =3D (iommu->icvec >> (RISCV_IOMMU_IPSR_PMIP * 4=
-)) & RISCV_IOMMU_ICVEC_CIV;
-> > > > > > +
-> > > > > > +       return iommu->irqs[vec];
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int riscv_iommu_pmu_request_irq(struct riscv_iommu_devi=
-ce *iommu,
-> > > > > > +                                      struct riscv_iommu_pmu *=
-pmu)
-> > > > > > +{
-> > > > > > +       unsigned int irq =3D riscv_iommu_pmu_get_irq_num(iommu)=
-;
-> > > > > > +
-> > > > > > +       /*
-> > > > > > +        * Set the IRQF_ONESHOT flag because this IRQ can be sh=
-ared with
-> > > > > > +        * other threaded IRQs by other queues.
-> > > > > > +        */
-> > > > > > +       return devm_request_irq(iommu->dev, irq, riscv_iommu_pm=
-u_irq_handler,
-> > > > > > +                               IRQF_ONESHOT | IRQF_SHARED, dev=
-_name(iommu->dev), pmu);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void riscv_iommu_pmu_free_irq(struct riscv_iommu_device=
- *iommu,
-> > > > > > +                                    struct riscv_iommu_pmu *pm=
-u)
-> > > > > > +{
-> > > > > > +       unsigned int irq =3D riscv_iommu_pmu_get_irq_num(iommu)=
-;
-> > > > > > +
-> > > > > > +       free_irq(irq, pmu);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int riscv_iommu_pmu_probe(struct auxiliary_device *auxd=
-ev,
-> > > > > > +                                const struct auxiliary_device_=
-id *id)
-> > > > > > +{
-> > > > > > +       struct  riscv_iommu_device *iommu_dev =3D dev_get_platd=
-ata(&auxdev->dev);
-> > > > > > +       struct riscv_iommu_pmu *iommu_pmu;
-> > > > > > +       void __iomem *addr;
-> > > > > > +       char *name;
-> > > > > > +       int ret;
-> > > > > > +
-> > > > > > +       iommu_pmu =3D devm_kzalloc(&auxdev->dev, sizeof(*iommu_=
-pmu), GFP_KERNEL);
-> > > > > > +       if (!iommu_pmu)
-> > > > > > +               return -ENOMEM;
-> > > > > > +
-> > > > > > +       iommu_pmu->reg =3D iommu_dev->reg;
-> > > > > > +
-> > > > > > +       /* Counter number and width are hardware-implemented. D=
-etect them by write 1s */
-> > > > > > +       addr =3D iommu_pmu->reg + RISCV_IOMMU_REG_IOCOUNTINH;
-> > > > > > +       writel(RISCV_IOMMU_IOCOUNTINH_HPM, addr);
-> > > > > > +       iommu_pmu->num_counters =3D hweight32(readl(addr));
-> > > > > > +
-> > > > > > +       addr =3D iommu_pmu->reg + RISCV_IOMMU_REG_IOHPMCYCLES;
-> > > > > > +       writeq(RISCV_IOMMU_IOHPMCYCLES_COUNTER, addr);
-> > > > >     lo_hi_writeq(RISCV_IOMMU_IOHPMCYCLES_COUNTER, addr);
-> > > > >
-> > > > > > +       iommu_pmu->cycle_cntr_mask =3D readq(addr);
-> > > > > iommu_pmu->cycle_cntr_mask =3D lo_hi_readq(addr);
-> > > > >
-> > > > > > +
-> > > > > > +       /* Assume the width of all event counters are the same =
-*/
-> > > > > > +       addr =3D iommu_pmu->reg + RISCV_IOMMU_REG_IOHPMCTR_BASE=
-;
-> > > > > > +       writeq(RISCV_IOMMU_IOHPMCTR_COUNTER, addr);
-> > > > >     lo_hi_writeq(RISCV_IOMMU_IOHPMCTR_COUNTER, addr);
-> > > > >
-> > > > > > +       iommu_pmu->event_cntr_mask =3D readq(addr);
-> > > > >  iommu_pmu->event_cntr_mask =3D lo_hi_readq(addr);
-> > > > >
-> > > > > > +
-> > > > > > +       iommu_pmu->pmu =3D (struct pmu) {
-> > > > > > +               .module         =3D THIS_MODULE,
-> > > > > > +               .parent         =3D &auxdev->dev,
-> > > > > > +               .task_ctx_nr    =3D perf_invalid_context,
-> > > > > > +               .event_init     =3D riscv_iommu_pmu_event_init,
-> > > > > > +               .add            =3D riscv_iommu_pmu_add,
-> > > > > > +               .del            =3D riscv_iommu_pmu_del,
-> > > > > > +               .start          =3D riscv_iommu_pmu_start,
-> > > > > > +               .stop           =3D riscv_iommu_pmu_stop,
-> > > > > > +               .read           =3D riscv_iommu_pmu_read,
-> > > > > > +               .attr_groups    =3D riscv_iommu_pmu_attr_grps,
-> > > > > > +               .capabilities   =3D PERF_PMU_CAP_NO_EXCLUDE,
-> > > > > > +       };
-> > > > > > +
-> > > > > > +       auxiliary_set_drvdata(auxdev, iommu_pmu);
-> > > > > > +
-> > > > > > +       name =3D devm_kasprintf(&auxdev->dev, GFP_KERNEL,
-> > > > > > +                             "riscv_iommu_pmu_%s", dev_name(io=
-mmu_dev->dev));
-> > > > > > +       if (!name) {
-> > > > > > +               dev_err(&auxdev->dev, "Failed to create name ri=
-scv_iommu_pmu_%s\n",
-> > > > > > +                       dev_name(iommu_dev->dev));
-> > > > > > +               return -ENOMEM;
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       /* Bind all events to the same cpu context to avoid rac=
-e enabling */
-> > > > > > +       iommu_pmu->on_cpu =3D raw_smp_processor_id();
-> > > > > > +
-> > > > > > +       ret =3D cpuhp_state_add_instance_nocalls(cpuhp_state, &=
-iommu_pmu->node);
-> > > > > > +       if (ret) {
-> > > > > > +               dev_err(&auxdev->dev, "Failed to register hotpl=
-ug %s: %d\n", name, ret);
-> > > > > > +               return ret;
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       ret =3D riscv_iommu_pmu_request_irq(iommu_dev, iommu_pm=
-u);
-> > > > > > +       if (ret) {
-> > > > > > +               dev_err(&auxdev->dev, "Failed to request irq %s=
-: %d\n", name, ret);
-> > > > > > +               goto err_cpuhp_remove;
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       ret =3D perf_pmu_register(&iommu_pmu->pmu, name, -1);
-> > > > > > +       if (ret) {
-> > > > > > +               dev_err(&auxdev->dev, "Failed to registe %s: %d=
-\n", name, ret);
-> > > > > > +               goto err_free_irq;
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       dev_info(&auxdev->dev, "%s: Registered with %d counters=
-\n",
-> > > > > > +                name, iommu_pmu->num_counters);
-> > > > > > +
-> > > > > > +       return 0;
-> > > > > > +
-> > > > > > +err_free_irq:
-> > > > > > +       riscv_iommu_pmu_free_irq(iommu_dev, iommu_pmu);
-> > > > > > +err_cpuhp_remove:
-> > > > > > +       cpuhp_state_remove_instance_nocalls(cpuhp_state, &iommu=
-_pmu->node);
-> > > > > > +       return ret;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static const struct auxiliary_device_id riscv_iommu_pmu_id_tab=
-le[] =3D {
-> > > > > > +       { .name =3D "iommu.pmu" },
-> > > > > > +       {}
-> > > > > > +};
-> > > > > > +MODULE_DEVICE_TABLE(auxiliary, riscv_iommu_pmu_id_table);
-> > > > > > +
-> > > > > > +static struct auxiliary_driver iommu_pmu_driver =3D {
-> > > > > > +       .probe          =3D riscv_iommu_pmu_probe,
-> > > > > > +       .id_table       =3D riscv_iommu_pmu_id_table,
-> > > > > > +};
-> > > > > > +
-> > > > > > +static int __init riscv_iommu_pmu_init(void)
-> > > > > > +{
-> > > > > > +       int ret;
-> > > > > > +
-> > > > > > +       cpuhp_state =3D cpuhp_setup_state_multi(CPUHP_AP_ONLINE=
-_DYN,
-> > > > > > +                                             "perf/riscv/iommu=
-:online",
-> > > > > > +                                             riscv_iommu_pmu_o=
-nline_cpu,
-> > > > > > +                                             riscv_iommu_pmu_o=
-ffline_cpu);
-> > > > > > +       if (cpuhp_state < 0)
-> > > > > > +               return cpuhp_state;
-> > > > > > +
-> > > > > > +       ret =3D auxiliary_driver_register(&iommu_pmu_driver);
-> > > > > > +       if (ret)
-> > > > > > +               cpuhp_remove_multi_state(cpuhp_state);
-> > > > > > +
-> > > > > > +       return ret;
-> > > > > > +}
-> > > > > > +module_init(riscv_iommu_pmu_init);
-> > > > > > +
-> > > > > > +MODULE_DESCRIPTION("RISC-V IOMMU PMU");
-> > > > > > +MODULE_LICENSE("GPL");
-> > > > > > --
-> > > > > > 2.43.7
-> > > > > >
-> > > > >
-> > > > > --
-> > > > > Best Regards
-> > > > >  Guo Ren
-> >
-> >
-> >
-> > --
-> > Best Regards
-> >  Guo Ren
+> +	bool guest_events = false;
+> +
+> +	if (event->attr.config1 & RISCV_PMU_CONFIG1_GUEST_EVENTS)
+> +		guest_events = true;
 
+use attr::config1 to distinguish the KVM events looks incorrect. it's a user
+visible interface and could be set explicitly by the user and break the
+logic here.. e.g. perf stat -e cycles/config1=0x1/
 
+> +	if (event->attr.exclude_kernel)
+> +		priv_filter_bits |= guest_events ? HPMEVENT_VSINH : HPMEVENT_SINH;
+> +	if (event->attr.exclude_user)
+> +		priv_filter_bits |= guest_events ? HPMEVENT_VUINH : HPMEVENT_UINH;
+> +	if (guest_events && event->attr.exclude_hv)
+> +		priv_filter_bits |= HPMEVENT_SINH;
+> +	if (event->attr.exclude_host)
+> +		priv_filter_bits |= HPMEVENT_UINH | HPMEVENT_SINH;
+> +	if (event->attr.exclude_guest)
+> +		priv_filter_bits |= HPMEVENT_VSINH | HPMEVENT_VUINH;
+> +
+> +	return priv_filter_bits;
+> +}
+> +
+> +static bool pmu_sbi_is_fw_event(struct perf_event *event)
+> +{
+> +	u32 type = event->attr.type;
+> +	u64 config = event->attr.config;
+> +
+> +	if (type == PERF_TYPE_RAW && ((config >> 63) == 1))
+> +		return true;
+> +	else
+> +		return false;
+> +}
+> +
+>  static unsigned long rvpmu_sbi_get_filter_flags(struct perf_event *event)
+>  {
+>  	unsigned long cflags = 0;
+> @@ -627,7 +702,8 @@ static int rvpmu_sbi_ctr_get_idx(struct perf_event *event)
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
+>  	struct sbiret ret;
+>  	int idx;
+> -	uint64_t cbase = 0, cmask = rvpmu->cmask;
+> +	u64 cbase = 0;
+> +	unsigned long ctr_mask = rvpmu->cmask;
+>  	unsigned long cflags = 0;
+>  
+>  	cflags = rvpmu_sbi_get_filter_flags(event);
+> @@ -640,21 +716,23 @@ static int rvpmu_sbi_ctr_get_idx(struct perf_event *event)
+>  	if ((hwc->flags & PERF_EVENT_FLAG_LEGACY) && (event->attr.type == PERF_TYPE_HARDWARE)) {
+>  		if (event->attr.config == PERF_COUNT_HW_CPU_CYCLES) {
+>  			cflags |= SBI_PMU_CFG_FLAG_SKIP_MATCH;
+> -			cmask = 1;
+> +			ctr_mask = 1;
+>  		} else if (event->attr.config == PERF_COUNT_HW_INSTRUCTIONS) {
+>  			cflags |= SBI_PMU_CFG_FLAG_SKIP_MATCH;
+> -			cmask = BIT(CSR_INSTRET - CSR_CYCLE);
+> +			ctr_mask = BIT(CSR_INSTRET - CSR_CYCLE);
+>  		}
+> +	} else if (pmu_sbi_is_fw_event(event)) {
+> +		ctr_mask = firmware_cmask;
+>  	}
+>  
+>  	/* retrieve the available counter index */
+>  #if defined(CONFIG_32BIT)
+>  	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
+> -			cmask, cflags, hwc->event_base, hwc->config,
+> +			ctr_mask, cflags, hwc->event_base, hwc->config,
+>  			hwc->config >> 32);
+>  #else
+>  	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
+> -			cmask, cflags, hwc->event_base, hwc->config, 0);
+> +			ctr_mask, cflags, hwc->event_base, hwc->config, 0);
+>  #endif
+>  	if (ret.error) {
+>  		pr_debug("Not able to find a counter for event %lx config %llx\n",
+> @@ -663,7 +741,7 @@ static int rvpmu_sbi_ctr_get_idx(struct perf_event *event)
+>  	}
+>  
+>  	idx = ret.value;
+> -	if (!test_bit(idx, &rvpmu->cmask) || !pmu_ctr_list[idx].value)
+> +	if (!test_bit(idx, &ctr_mask) || !pmu_ctr_list[idx].value)
+>  		return -ENOENT;
+>  
+>  	/* Additional sanity check for the counter id */
+> @@ -713,29 +791,98 @@ static int sbi_pmu_event_find_cache(u64 config)
+>  	return ret;
+>  }
+>  
+> -static bool pmu_sbi_is_fw_event(struct perf_event *event)
+> +static int rvpmu_sbi_event_map(struct perf_event *event, u64 *econfig)
+>  {
+>  	u32 type = event->attr.type;
+>  	u64 config = event->attr.config;
+>  
+> -	if ((type == PERF_TYPE_RAW) && ((config >> 63) == 1))
+> -		return true;
+> -	else
+> -		return false;
+> +	/*
+> +	 * Ensure we are finished checking standard hardware events for
+> +	 * validity before allowing userspace to configure any events.
+> +	 */
+> +	flush_work(&check_std_events_work);
+> +
+> +	return riscv_pmu_get_event_info(type, config, econfig);
+>  }
+>  
+> -static int rvpmu_sbi_event_map(struct perf_event *event, u64 *econfig)
+> +static int cdeleg_pmu_event_find_cache(u64 config, u64 *eventid, uint32_t *counter_mask)
+> +{
+> +	unsigned int cache_type, cache_op, cache_result;
+> +
+> +	if (!current_pmu_cache_event_map)
+> +		return -ENOENT;
+> +
+> +	cache_type = (config >>  0) & 0xff;
+> +	if (cache_type >= PERF_COUNT_HW_CACHE_MAX)
+> +		return -EINVAL;
+> +
+> +	cache_op = (config >>  8) & 0xff;
+> +	if (cache_op >= PERF_COUNT_HW_CACHE_OP_MAX)
+> +		return -EINVAL;
+> +
+> +	cache_result = (config >> 16) & 0xff;
+> +	if (cache_result >= PERF_COUNT_HW_CACHE_RESULT_MAX)
+> +		return -EINVAL;
+> +
+> +	if (eventid)
+> +		*eventid = current_pmu_cache_event_map[cache_type][cache_op]
+> +						      [cache_result].event_id;
+> +	if (counter_mask)
+> +		*counter_mask = current_pmu_cache_event_map[cache_type][cache_op]
+> +							   [cache_result].counter_mask;
+> +
+> +	return 0;
+> +}
+> +
+> +static int rvpmu_cdeleg_event_map(struct perf_event *event, u64 *econfig)
+>  {
+>  	u32 type = event->attr.type;
+>  	u64 config = event->attr.config;
+> +	int ret = 0;
+>  
+>  	/*
+> -	 * Ensure we are finished checking standard hardware events for
+> -	 * validity before allowing userspace to configure any events.
+> +	 * There are two ways standard perf events can be mapped to platform specific
+> +	 * encoding.
+> +	 * 1. The vendor may specify the encodings in the driver.
+> +	 * 2. The Perf tool for RISC-V may remap the standard perf event to platform
+> +	 * specific encoding.
+> +	 *
+> +	 * As RISC-V ISA doesn't define any standard event encoding. Thus, perf tool allows
+> +	 * vendor to define it via json file. The encoding defined in the json will override
+> +	 * the perf legacy encoding. However, some user may want to run performance
+> +	 * monitoring without perf tool as well. That's why, vendors may specify the event
+> +	 * encoding in the driver as well if they want to support that use case too.
+> +	 * If an encoding is defined in the json, it will be encoded as a raw event.
+>  	 */
+> -	flush_work(&check_std_events_work);
+>  
+> -	return riscv_pmu_get_event_info(type, config, econfig);
+> +	switch (type) {
+> +	case PERF_TYPE_HARDWARE:
+> +		if (config >= PERF_COUNT_HW_MAX)
+> +			return -EINVAL;
+> +		if (!current_pmu_hw_event_map)
+> +			return -ENOENT;
+> +
+> +		*econfig = current_pmu_hw_event_map[config].event_id;
+> +		if (*econfig == HW_OP_UNSUPPORTED)
+> +			ret = -ENOENT;
+> +		break;
+> +	case PERF_TYPE_HW_CACHE:
+> +		ret = cdeleg_pmu_event_find_cache(config, econfig, NULL);
+> +		if (ret)
+> +			break;
+> +		if (*econfig == CACHE_OP_UNSUPPORTED)
+> +			ret = -ENOENT;
+> +		break;
+> +	case PERF_TYPE_RAW:
+> +		*econfig = config & RISCV_PMU_DELEG_RAW_EVENT_MASK;
+> +		break;
+> +	default:
+> +		ret = -ENOENT;
+> +		break;
+> +	}
+> +
+> +	/* event_base is not used for counter delegation */
+> +	return ret;
+>  }
+>  
+>  static void pmu_sbi_snapshot_free(struct riscv_pmu *pmu)
+> @@ -821,7 +968,7 @@ static int pmu_sbi_snapshot_setup(struct riscv_pmu *pmu, int cpu)
+>  	return 0;
+>  }
+>  
+> -static u64 rvpmu_sbi_ctr_read(struct perf_event *event)
+> +static u64 rvpmu_ctr_read(struct perf_event *event)
+>  {
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	int idx = hwc->idx;
 
---=20
-Best Regards
- Guo Ren
+the counter read logic need to coordinate the counter delegation
+and SBI PMU snapshot, since the diff here doesn't show the logic,
+so I paste the final applied code below:
+
+static u64 rvpmu_ctr_read(struct perf_event *event)
+{
+	struct hw_perf_event *hwc = &event->hw;
+	int idx = hwc->idx;
+	[...variables declarations and initilizations]
+
+	/* Read the value from the shared memory directly only if counter is stopped */
+	if (sbi_pmu_snapshot_available() && (hwc->state & PERF_HES_STOPPED)) {
+		val = sdata->ctr_values[idx];
+		return val;
+	}
+
+seems we shouldn't read from the SBI PMU snapshot memory for delegated
+counter, but here we always read from the snapshot memory if available.
+
+> @@ -898,10 +1045,6 @@ static void rvpmu_sbi_ctr_start(struct perf_event *event, u64 ival)
+>  	if (ret.error && (ret.error != SBI_ERR_ALREADY_STARTED))
+>  		pr_err("Starting counter idx %d failed with error %d\n",
+>  			hwc->idx, sbi_err_map_linux_errno(ret.error));
+> -
+> -	if ((hwc->flags & PERF_EVENT_FLAG_USER_ACCESS) &&
+> -	    (hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
+> -		rvpmu_set_scounteren((void *)event);
+>  }
+>  
+>  static void rvpmu_sbi_ctr_stop(struct perf_event *event, unsigned long flag)
+> @@ -912,10 +1055,6 @@ static void rvpmu_sbi_ctr_stop(struct perf_event *event, unsigned long flag)
+>  	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
+>  	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
+>  
+> -	if ((hwc->flags & PERF_EVENT_FLAG_USER_ACCESS) &&
+> -	    (hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
+> -		rvpmu_reset_scounteren((void *)event);
+> -
+>  	if (sbi_pmu_snapshot_available())
+>  		flag |= SBI_PMU_STOP_FLAG_TAKE_SNAPSHOT;
+>  
+> @@ -951,12 +1090,6 @@ static int rvpmu_sbi_find_num_ctrs(void)
+>  		return sbi_err_map_linux_errno(ret.error);
+>  }
+>  
+> -static u32 rvpmu_deleg_find_ctrs(void)
+> -{
+> -	/* TODO */
+> -	return 0;
+> -}
+> -
+>  static int rvpmu_sbi_get_ctrinfo(u32 nsbi_ctr, u32 *num_fw_ctr, u32 *num_hw_ctr)
+>  {
+>  	struct sbiret ret;
+> @@ -1034,55 +1167,75 @@ static inline void rvpmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
+>  	}
+>  }
+>  
+> -/*
+> - * This function starts all the used counters in two step approach.
+> - * Any counter that did not overflow can be start in a single step
+> - * while the overflowed counters need to be started with updated initialization
+> - * value.
+> - */
+> -static inline void rvpmu_sbi_start_ovf_ctrs_sbi(struct cpu_hw_events *cpu_hw_evt,
+> -						u64 ctr_ovf_mask)
+> +static void rvpmu_deleg_ctr_start_mask(unsigned long mask)
+>  {
+> -	int idx = 0, i;
+> -	struct perf_event *event;
+> -	unsigned long flag = SBI_PMU_START_FLAG_SET_INIT_VALUE;
+> -	unsigned long ctr_start_mask = 0;
+> -	uint64_t max_period;
+> -	struct hw_perf_event *hwc;
+> -	u64 init_val = 0;
+> +	unsigned long scountinhibit_val = 0;
+>  
+> -	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+> -		ctr_start_mask = cpu_hw_evt->used_hw_ctrs[i] & ~ctr_ovf_mask;
+> -		/* Start all the counters that did not overflow in a single shot */
+> -		if (ctr_start_mask) {
+> -			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, i * BITS_PER_LONG,
+> -				  ctr_start_mask, 0, 0, 0, 0);
+> -		}
+> -	}
+> +	scountinhibit_val = csr_read(CSR_SCOUNTINHIBIT);
+> +	scountinhibit_val &= ~mask;
+> +
+> +	csr_write(CSR_SCOUNTINHIBIT, scountinhibit_val);
+> +}
+> +
+> +static void rvpmu_deleg_ctr_enable_irq(struct perf_event *event)
+> +{
+> +	unsigned long hpmevent_curr;
+> +	unsigned long of_mask;
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	int counter_idx = hwc->idx;
+> +	unsigned long sip_val = csr_read(CSR_SIP);
+> +
+> +	if (!is_sampling_event(event) || (sip_val & SIP_LCOFIP))
+
+we should also consider overflow for counters of non-sampling events..
+
+> +		return;
+>  
+> -	/* Reinitialize and start all the counter that overflowed */
+> -	while (ctr_ovf_mask) {
+> -		if (ctr_ovf_mask & 0x01) {
+> -			event = cpu_hw_evt->events[idx];
+> -			hwc = &event->hw;
+> -			max_period = riscv_pmu_ctr_get_width_mask(event);
+> -			init_val = local64_read(&hwc->prev_count) & max_period;
+>  #if defined(CONFIG_32BIT)
+> -			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx, 1,
+> -				  flag, init_val, init_val >> 32, 0);
+> +	hpmevent_curr = csr_ind_read(CSR_SIREG5, SISELECT_SSCCFG_BASE, counter_idx);
+> +	of_mask = (u32)~HPMEVENTH_OF;
+>  #else
+> -			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx, 1,
+> -				  flag, init_val, 0, 0);
+> +	hpmevent_curr = csr_ind_read(CSR_SIREG2, SISELECT_SSCCFG_BASE, counter_idx);
+> +	of_mask = ~HPMEVENT_OF;
+>  #endif
+> -			perf_event_update_userpage(event);
+> -		}
+> -		ctr_ovf_mask = ctr_ovf_mask >> 1;
+> -		idx++;
+> -	}
+> +
+> +	hpmevent_curr &= of_mask;
+> +#if defined(CONFIG_32BIT)
+> +	csr_ind_write(CSR_SIREG5, SISELECT_SSCCFG_BASE, counter_idx, hpmevent_curr);
+> +#else
+> +	csr_ind_write(CSR_SIREG2, SISELECT_SSCCFG_BASE, counter_idx, hpmevent_curr);
+> +#endif
+> +}
+> +
+> +static void rvpmu_deleg_ctr_start(struct perf_event *event, u64 ival)
+> +{
+> +	unsigned long scountinhibit_val = 0;
+> +	struct hw_perf_event *hwc = &event->hw;
+> +
+> +#if defined(CONFIG_32BIT)
+> +	csr_ind_write(CSR_SIREG, SISELECT_SSCCFG_BASE, hwc->idx, ival & 0xFFFFFFFF);
+> +	csr_ind_write(CSR_SIREG4, SISELECT_SSCCFG_BASE, hwc->idx, ival >> BITS_PER_LONG);
+> +#else
+> +	csr_ind_write(CSR_SIREG, SISELECT_SSCCFG_BASE, hwc->idx, ival);
+> +#endif
+> +
+> +	rvpmu_deleg_ctr_enable_irq(event);
+> +
+> +	scountinhibit_val = csr_read(CSR_SCOUNTINHIBIT);
+> +	scountinhibit_val &= ~BIT(hwc->idx);
+> +
+> +	csr_write(CSR_SCOUNTINHIBIT, scountinhibit_val);
+> +}
+> +
+> +static void rvpmu_deleg_ctr_stop_mask(unsigned long mask)
+> +{
+> +	unsigned long scountinhibit_val = 0;
+> +
+> +	scountinhibit_val = csr_read(CSR_SCOUNTINHIBIT);
+> +	scountinhibit_val |= mask;
+> +
+> +	csr_write(CSR_SCOUNTINHIBIT, scountinhibit_val);
+>  }
+>  
+> -static inline void rvpmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_evt,
+> -						     u64 ctr_ovf_mask)
+> +static void rvpmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_evt,
+> +					      u64 ctr_ovf_mask)
+>  {
+>  	int i, idx = 0;
+>  	struct perf_event *event;
+> @@ -1116,15 +1269,53 @@ static inline void rvpmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_h
+>  	}
+>  }
+>  
+> -static void rvpmu_sbi_start_overflow_mask(struct riscv_pmu *pmu,
+> -					  u64 ctr_ovf_mask)
+> +/*
+> + * This function starts all the used counters in two step approach.
+> + * Any counter that did not overflow can be start in a single step
+> + * while the overflowed counters need to be started with updated initialization
+> + * value.
+> + */
+> +static void rvpmu_start_overflow_mask(struct riscv_pmu *pmu, u64 ctr_ovf_mask)
+>  {
+> +	int idx = 0, i;
+> +	struct perf_event *event;
+> +	unsigned long ctr_start_mask = 0;
+> +	u64 max_period, init_val = 0;
+> +	struct hw_perf_event *hwc;
+>  	struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
+>  
+>  	if (sbi_pmu_snapshot_available())
+> -		rvpmu_sbi_start_ovf_ctrs_snapshot(cpu_hw_evt, ctr_ovf_mask);
+> -	else
+> -		rvpmu_sbi_start_ovf_ctrs_sbi(cpu_hw_evt, ctr_ovf_mask);
+> +		return rvpmu_sbi_start_ovf_ctrs_snapshot(cpu_hw_evt, ctr_ovf_mask);
+> +
+> +	/* Start all the counters that did not overflow */
+> +	if (riscv_pmu_cdeleg_available()) {
+> +		ctr_start_mask = cpu_hw_evt->used_hw_ctrs[0] & ~ctr_ovf_mask;
+> +		rvpmu_deleg_ctr_start_mask(ctr_start_mask);
+> +	} else {
+> +		for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+> +			ctr_start_mask = cpu_hw_evt->used_hw_ctrs[i] & ~ctr_ovf_mask;
+> +			/* Start all the counters that did not overflow in a single shot */
+> +			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, i * BITS_PER_LONG,
+> +				  ctr_start_mask, 0, 0, 0, 0);
+> +		}
+> +	}
+> +
+> +	/* Reinitialize and start all the counter that overflowed */
+> +	while (ctr_ovf_mask) {
+> +		if (ctr_ovf_mask & 0x01) {
+> +			event = cpu_hw_evt->events[idx];
+> +			hwc = &event->hw;
+> +			max_period = riscv_pmu_ctr_get_width_mask(event);
+> +			init_val = local64_read(&hwc->prev_count) & max_period;
+> +			if (riscv_pmu_cdeleg_available())
+> +				rvpmu_deleg_ctr_start(event, init_val);
+> +			else
+> +				rvpmu_sbi_ctr_start(event, init_val);
+> +			perf_event_update_userpage(event);
+> +		}
+> +		ctr_ovf_mask = ctr_ovf_mask >> 1;
+> +		idx++;
+> +	}
+>  }
+>  
+>  static irqreturn_t rvpmu_ovf_handler(int irq, void *dev)
+> @@ -1159,10 +1350,18 @@ static irqreturn_t rvpmu_ovf_handler(int irq, void *dev)
+>  	}
+>  
+>  	pmu = to_riscv_pmu(event->pmu);
+> -	rvpmu_sbi_stop_hw_ctrs(pmu);
+> +	if (riscv_pmu_cdeleg_available())
+> +		rvpmu_deleg_ctr_stop_mask(cpu_hw_evt->used_hw_ctrs[0]);
+> +	else
+> +		rvpmu_sbi_stop_hw_ctrs(pmu);
+>  
+> -	/* Overflow status register should only be read after counter are stopped */
+> -	if (sbi_pmu_snapshot_available())
+> +	/*
+> +	 * Overflow status register should only be read after counter are stopped.
+> +	 * In counter delegation mode the overflows are reported in scountovf, not
+> +	 * in the SBI snapshot area, so read the CSR directly even when an SBI PMU
+> +	 * snapshot is also available.
+> +	 */
+> +	if (sbi_pmu_snapshot_available() && !riscv_pmu_cdeleg_available())
+>  		overflow = sdata->ctr_overflow_mask;
+>  	else
+>  		ALT_SBI_PMU_OVERFLOW(overflow);
+> @@ -1228,22 +1427,183 @@ static irqreturn_t rvpmu_ovf_handler(int irq, void *dev)
+>  		hw_evt->state = 0;
+>  	}
+>  
+> -	rvpmu_sbi_start_overflow_mask(pmu, overflowed_ctrs);
+> +	rvpmu_start_overflow_mask(pmu, overflowed_ctrs);
+>  	perf_sample_event_took(sched_clock() - start_clock);
+>  
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static int get_deleg_hw_ctr_width(int counter_offset)
+> +{
+> +	unsigned long hpm_warl;
+> +	int num_bits;
+> +
+> +	if (counter_offset < 3 || counter_offset > 31)
+> +		return 0;
+> +
+> +	hpm_warl = csr_ind_warl(CSR_SIREG, SISELECT_SSCCFG_BASE, counter_offset, -1);
+> +	if (!hpm_warl)
+> +		return 0;
+> +	num_bits = __fls(hpm_warl);
+> +
+> +#if defined(CONFIG_32BIT)
+> +	/*
+> +	 * The low half contributes a full BITS_PER_LONG bits when the counter is
+> +	 * wider than 32 bits; the high half's __fls() gives the remaining width.
+> +	 */
+> +	hpm_warl = csr_ind_warl(CSR_SIREG4, SISELECT_SSCCFG_BASE, counter_offset, -1);
+> +	if (hpm_warl)
+> +		num_bits = BITS_PER_LONG + __fls(hpm_warl);
+> +#endif
+> +	return num_bits;
+> +}
+> +
+> +static int rvpmu_deleg_find_ctrs(void)
+> +{
+> +	int i, num_hw_ctr = 0;
+> +	union sbi_pmu_ctr_info cinfo;
+> +	unsigned long scountinhibit_old = 0;
+> +
+> +	/* Do a WARL write/read to detect which hpmcounters have been delegated */
+> +	scountinhibit_old = csr_read(CSR_SCOUNTINHIBIT);
+> +	csr_write(CSR_SCOUNTINHIBIT, -1);
+> +	cmask = csr_read(CSR_SCOUNTINHIBIT);
+> +
+> +	csr_write(CSR_SCOUNTINHIBIT, scountinhibit_old);
+> +
+> +	for_each_set_bit(i, &cmask, RISCV_MAX_HW_COUNTERS) {
+> +		if (unlikely(i == 1))
+> +			continue; /* This should never happen as TM is read only */
+> +		cinfo.value = 0;
+> +		cinfo.type = SBI_PMU_CTR_TYPE_HW;
+> +		/*
+> +		 * If counter delegation is enabled, the csr stored to the cinfo will
+> +		 * be a virtual counter that the delegation attempts to read.
+> +		 */
+> +		cinfo.csr = CSR_CYCLE + i;
+> +		if (i == 0 || i == 2)
+> +			cinfo.width = 63;
+> +		else
+> +			cinfo.width = get_deleg_hw_ctr_width(i);
+> +
+> +		num_hw_ctr++;
+> +		pmu_ctr_list[i].value = cinfo.value;
+> +	}
+> +
+> +	return num_hw_ctr;
+> +}
+> +
+> +static int get_deleg_fixed_hw_idx(struct cpu_hw_events *cpuc, struct perf_event *event)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static int get_deleg_next_hpm_hw_idx(struct cpu_hw_events *cpuc, struct perf_event *event)
+> +{
+> +	unsigned long hw_ctr_mask = 0;
+> +
+> +	/*
+> +	 * TODO: Treat every hpmcounter can monitor every event for now.
+> +	 * The event to counter mapping should come from the json file.
+> +	 * The mapping should also tell if sampling is supported or not.
+> +	 */
+> +
+> +	/* Select only hpmcounters */
+> +	hw_ctr_mask = cmask & (~0x7);
+> +	hw_ctr_mask &= ~(cpuc->used_hw_ctrs[0]);
+> +	return __ffs(hw_ctr_mask);
+> +}
+> +
+> +static void update_deleg_hpmevent(int counter_idx, uint64_t event_value, uint64_t filter_bits)
+> +{
+> +	u64 hpmevent_value = 0;
+> +
+> +	/* OF bit should be enable during the start if sampling is requested */
+> +	hpmevent_value = (event_value & ~HPMEVENT_MASK) | filter_bits | HPMEVENT_OF;
+> +#if defined(CONFIG_32BIT)
+> +	csr_ind_write(CSR_SIREG2, SISELECT_SSCCFG_BASE, counter_idx, hpmevent_value & 0xFFFFFFFF);
+> +	if (riscv_isa_extension_available(NULL, SSCOFPMF))
+> +		csr_ind_write(CSR_SIREG5, SISELECT_SSCCFG_BASE, counter_idx,
+> +			      hpmevent_value >> BITS_PER_LONG);
+> +#else
+> +	csr_ind_write(CSR_SIREG2, SISELECT_SSCCFG_BASE, counter_idx, hpmevent_value);
+> +#endif
+> +}
+> +
+> +static int rvpmu_deleg_ctr_get_idx(struct perf_event *event)
+> +{
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
+> +	unsigned long hw_ctr_max_id;
+> +	u64 priv_filter;
+> +	int idx;
+> +
+> +	/*
+> +	 * TODO: We should not rely on SBI Perf encoding to check if the event
+> +	 * is a fixed one or not.
+> +	 */
+> +	if (!is_sampling_event(event)) {
+> +		idx = get_deleg_fixed_hw_idx(cpuc, event);
+> +		if (idx == 0 || idx == 2) {
+> +			/* Priv mode filter bits are only available if smcntrpmf is present */
+> +			if (riscv_isa_extension_available(NULL, SMCNTRPMF))
+> +				goto found_idx;
+> +			else
+> +				goto skip_update;
+> +		}
+> +	}
+> +
+> +	if (!cmask)
+> +		goto out_err;> +	hw_ctr_max_id = __fls(cmask);
+> +	idx = get_deleg_next_hpm_hw_idx(cpuc, event);
+> +	if (idx < 3 || idx > hw_ctr_max_id)
+> +		goto out_err;
+> +found_idx:
+> +	priv_filter = get_deleg_priv_filter_bits(event);
+> +	update_deleg_hpmevent(idx, hwc->config, priv_filter);
+> +skip_update:
+> +	if (!test_and_set_bit(idx, cpuc->used_hw_ctrs))
+
+test is redundant, get_*_idx() above already gives a free idx
+
+> +		return idx;
+> +out_err:
+> +	return -ENOENT;
+> +}
+> +
+>  static void rvpmu_ctr_start(struct perf_event *event, u64 ival)
+>  {
+> -	rvpmu_sbi_ctr_start(event, ival);
+> -	/* TODO: Counter delegation implementation */
+> +	struct hw_perf_event *hwc = &event->hw;
+> +
+> +	if (riscv_pmu_cdeleg_available() && !pmu_sbi_is_fw_event(event))
+> +		rvpmu_deleg_ctr_start(event, ival);
+> +	else
+> +		rvpmu_sbi_ctr_start(event, ival);
+> +
+> +	if ((hwc->flags & PERF_EVENT_FLAG_USER_ACCESS) &&
+> +	    (hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
+> +		rvpmu_set_scounteren((void *)event);
+>  }
+>  
+>  static void rvpmu_ctr_stop(struct perf_event *event, unsigned long flag)
+>  {
+> -	rvpmu_sbi_ctr_stop(event, flag);
+> -	/* TODO: Counter delegation implementation */
+> +	struct hw_perf_event *hwc = &event->hw;
+> +
+> +	if ((hwc->flags & PERF_EVENT_FLAG_USER_ACCESS) &&
+> +	    (hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT))
+> +		rvpmu_reset_scounteren((void *)event);
+> +
+> +	if (riscv_pmu_cdeleg_available() && !pmu_sbi_is_fw_event(event)) {
+> +		/*
+> +		 * The counter is already stopped. No need to stop again. Counter
+> +		 * mapping will be reset in clear_idx function.
+> +		 */
+> +		if (flag != RISCV_PMU_STOP_FLAG_RESET)
+> +			rvpmu_deleg_ctr_stop_mask(BIT(hwc->idx));
+> +		else
+> +			update_deleg_hpmevent(hwc->idx, 0, 0);
+
+will crash here if idx=0x1 (CY counter) and !SMCNTRPMF.
+
+thanks.
+
+> +	} else {
+> +		rvpmu_sbi_ctr_stop(event, flag);
+> +	}
+>  }
+>  
+>  static int rvpmu_find_ctrs(void)
+> @@ -1292,20 +1652,18 @@ static int rvpmu_find_ctrs(void)
+>  
+>  static int rvpmu_event_map(struct perf_event *event, u64 *econfig)
+>  {
+> -	return rvpmu_sbi_event_map(event, econfig);
+> -	/* TODO: Counter delegation implementation */
+> +	if (riscv_pmu_cdeleg_available() && !pmu_sbi_is_fw_event(event))
+> +		return rvpmu_cdeleg_event_map(event, econfig);
+> +	else
+> +		return rvpmu_sbi_event_map(event, econfig);
+>  }
+>  
+>  static int rvpmu_ctr_get_idx(struct perf_event *event)
+>  {
+> -	return rvpmu_sbi_ctr_get_idx(event);
+> -	/* TODO: Counter delegation implementation */
+> -}
+> -
+> -static u64 rvpmu_ctr_read(struct perf_event *event)
+> -{
+> -	return rvpmu_sbi_ctr_read(event);
+> -	/* TODO: Counter delegation implementation */
+> +	if (riscv_pmu_cdeleg_available() && !pmu_sbi_is_fw_event(event))
+> +		return rvpmu_deleg_ctr_get_idx(event);
+> +	else
+> +		return rvpmu_sbi_ctr_get_idx(event);
+>  }
+>  
+>  static int rvpmu_starting_cpu(unsigned int cpu, struct hlist_node *node)
+> @@ -1323,7 +1681,16 @@ static int rvpmu_starting_cpu(unsigned int cpu, struct hlist_node *node)
+>  		csr_write(CSR_SCOUNTEREN, 0x2);
+>  
+>  	/* Stop all the counters so that they can be enabled from perf */
+> -	rvpmu_sbi_stop_all(pmu);
+> +	if (riscv_pmu_cdeleg_available()) {
+> +		rvpmu_deleg_ctr_stop_mask(cmask);
+> +		if (riscv_pmu_sbi_available()) {
+> +			/* Stop the firmware counters as well */
+> +			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, 0, firmware_cmask,
+> +				  0, 0, 0, 0);
+> +		}
+> +	} else {
+> +		rvpmu_sbi_stop_all(pmu);
+> +	}
+>  
+>  	if (riscv_pmu_use_irq) {
+>  		cpu_hw_evt->irq = riscv_pmu_irq;
+> @@ -1632,8 +1999,11 @@ static int rvpmu_device_probe(struct platform_device *pdev)
+>  	}
+>  	irq_requested = (ret == 0);
+>  
+> -	pmu->pmu.attr_groups = riscv_pmu_attr_groups;
+>  	pmu->pmu.parent = &pdev->dev;
+> +	if (riscv_pmu_cdeleg_available_boot())
+> +		pmu->pmu.attr_groups = riscv_cdeleg_pmu_attr_groups;
+> +	else
+> +		pmu->pmu.attr_groups = riscv_sbi_pmu_attr_groups;
+>  	pmu->cmask = cmask;
+>  	pmu->ctr_start = rvpmu_ctr_start;
+>  	pmu->ctr_stop = rvpmu_ctr_stop;
+> diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
+> index f82a28040594..3c64151cb038 100644
+> --- a/include/linux/perf/riscv_pmu.h
+> +++ b/include/linux/perf/riscv_pmu.h
+> @@ -20,6 +20,7 @@
+>   */
+>  
+>  #define RISCV_MAX_COUNTERS	64
+> +#define RISCV_MAX_HW_COUNTERS	32
+>  #define RISCV_OP_UNSUPP		(-EOPNOTSUPP)
+>  #define RISCV_PMU_SBI_PDEV_NAME	"riscv-pmu-sbi"
+>  #define RISCV_PMU_LEGACY_PDEV_NAME	"riscv-pmu-legacy"
+> @@ -28,6 +29,8 @@
+>  
+>  #define RISCV_PMU_CONFIG1_GUEST_EVENTS 0x1
+>  
+> +#define RISCV_PMU_DELEG_RAW_EVENT_MASK GENMASK_ULL(55, 0)
+> +
+>  struct cpu_hw_events {
+>  	/* currently enabled events */
+>  	int			n_events;
