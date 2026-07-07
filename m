@@ -1,120 +1,228 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21E133DEAC0;
-	Tue,  7 Jul 2026 10:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E233E559B;
+	Tue,  7 Jul 2026 10:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783419940; cv=none; b=HOU/sQIALcZB0Wrpyp3vFAr3ukZY0zWu9fNWgIgffD75OYxCdsyJ+uvLNTWgwCAfsbMqC6RzTZJlgsj7cqU/UH/JeNrfrOmPV7gcz0PcL0M8o4m5nO7IeSwBakEHq5r+edZWUdtq07bSXArjX9afBDjU2NVLYYMkJ2F/+Wu4m74=
+	t=1783420322; cv=none; b=MNuMzYjGAvWVuZe195QtdDKGhFlW5o40p/9REoNT+mCM3FBjpEsuBsr4/LRqMfoUDtZRtR1guUid0FQtnxgwOmVrkwLYAll9khTSfq9jRgc4NphyRfaFN9Bm6i3Rds0io4MOmi//9Qr6qfUXLf4FBbQCN9X4MEbqLdH7X1eTImk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783419940; c=relaxed/simple;
-	bh=/JKGvZAek80JgMohRPNx5B4QlkcpbDcffOkLSxtkIqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pon422ZvWnLlJxc+LB1gWMstcPVvrxZqUO5wj9XvtCLDM0GY76PX3o0HtWYLo1OBKovcvQ2Empmx0+SA3HKsIAHj+m+wnlGRr8PndHhxhw68LS84SXC7siDU0qYXnV00KTKoHCPD3BAk7sIvUVXlpNiUdVBuAyczFuexSf/Inh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gvcms1PtVz297jS;
-	Tue,  7 Jul 2026 18:25:17 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gvcmq4rZTz297jF;
-	Tue,  7 Jul 2026 18:25:15 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id DC98D30125A8;
-	Tue,  7 Jul 2026 18:23:04 +0800 (CST)
-Received: from [172.25.61.61] (172.25.61.61) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 7 Jul
- 2026 18:25:16 +0800
-Message-ID: <1afcacd3-1be0-40f5-9b3b-adac8c2cb95b@hygon.cn>
-Date: Tue, 7 Jul 2026 18:25:16 +0800
+	s=arc-20240116; t=1783420322; c=relaxed/simple;
+	bh=pDxLEo/cl9IYFDktw/cfvgT+KDM5jg2wTfNcAyCdpAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VWtjFSSWujuCwqtV1RcZB6wfOCRRi2BaRwdXq2Mlk+U7Q/4chEoh+nrqXjoT4O2gvZpKbDM8/8CpoE7BCk94YdTxU88PTRW0U6DCSyUrMfSPn3pFBEHQ3L0elE6HhBBuIhIZBuCcQUKHOraOSp1R+oLFJ5asgtWky+kPmhh/wTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJQD7ZPp; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJQD7ZPp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E76161F000E9;
+	Tue,  7 Jul 2026 10:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783420321;
+	bh=soT56A/TsitxOPYJdfdItvncnq3Epp2rkiDUFibzwAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=CJQD7ZPpnY0LATwFP4HY6e99mGG6GCfwtV8prggnPIqZJoBT7sw1qkGBcMUymGabb
+	 thMKdB37j3Mngsn9NR0xZM3ngVTkWAKFGJ1phdZyrmdRqTmT//SItbTSX5gLMuvCGh
+	 h03dHdDBVKfa160LAt0yaBWio5lu77qjq0yudAYfiJObv5RjqQLRDbmptoyC6hGNHW
+	 E8y81BbE7fqCE9Ns7/a0r4BVgl44yGmApnpjPyV6g+rojpwE7+I26L2qbh+RXETO8y
+	 +yjDFpLtM0uRECmpnCPEvJUaccNc37yoAjGG17lTCIWiiaHTnl5i2XvNsouOomVvyo
+	 X9ITIQzR+3YOQ==
+Date: Tue, 7 Jul 2026 11:31:37 +0100
+From: Lorenzo Stoakes <ljs@kernel.org>
+To: Pedro Falcato <pfalcato@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Russell King <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
+	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
+	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
+	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 22/30] mm/vma: move __install_special_mapping() to vma.c
+Message-ID: <akzTj7Xv8kiUU2-w@lucifer>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <b3254231831037ca3e9757e3e05c90072e04a6aa.1782735110.git.ljs@kernel.org>
+ <akZJjNic8u0pDxgD@pedro-suse.lan>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] perf/x86/amd/uncore: Add common helpers and Hygon
- support
-To: Sandipan Das <sandipan.das@amd.com>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lijing@hygon.cn>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<namhyung@kernel.org>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <x86@kernel.org>
-References: <20260701093417.1312443-1-liuqi@hygon.cn>
- <44959c7f-fedd-413e-bb2f-07f97142aef8@amd.com>
-Content-Language: en-US
-From: Qi Liu <liuqi@hygon.cn>
-In-Reply-To: <44959c7f-fedd-413e-bb2f-07f97142aef8@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
- (172.23.18.114)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <akZJjNic8u0pDxgD@pedro-suse.lan>
 
-Hi Sandipan,
+On Thu, Jul 02, 2026 at 12:22:56PM +0100, Pedro Falcato wrote:
+> On Mon, Jun 29, 2026 at 01:23:33PM +0100, Lorenzo Stoakes wrote:
+> > This function is operating on VMAs and rightly belongs in vma.c, where it
+> > can be subject to VMA userland testing and allows us to isolate it from the
+> > rest of mm.
+> >
+> > The _install_special_mapping() function will remain in mmap.c as a wrapper,
+> > since this is used by architecture-specific code.
+> >
+> > Doing so allows us to isolate more functions in vma.c for the same reasons.
+> >
+> > This forms part of work to allow for tracking MAP_PRIVATE file-backed
+> > mappings by their anonymous virtual page offset, as doing so allows us to
+> > isolate and keep code that interacts with this together.
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+> > ---
+> >  mm/mmap.c | 38 --------------------------------------
+> >  mm/vma.c  | 38 ++++++++++++++++++++++++++++++++++++++
+> >  mm/vma.h  |  5 +++++
+> >  3 files changed, 43 insertions(+), 38 deletions(-)
+> >
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index 2d09a57e3620..46174e706bbe 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -1447,44 +1447,6 @@ static vm_fault_t special_mapping_fault(struct vm_fault *vmf)
+> >  	return VM_FAULT_SIGBUS;
+> >  }
+> >
+> > -static struct vm_area_struct *__install_special_mapping(
+> > -	struct mm_struct *mm,
+> > -	unsigned long addr, unsigned long len,
+> > -	vm_flags_t vm_flags, void *priv,
+> > -	const struct vm_operations_struct *ops)
+> > -{
+> > -	int ret;
+> > -	struct vm_area_struct *vma;
+> > -
+> > -	vma = vm_area_alloc(mm);
+> > -	if (unlikely(vma == NULL))
+> > -		return ERR_PTR(-ENOMEM);
+> > -
+> > -	vma_set_range(vma, addr, addr + len, 0);
+> > -	vm_flags |= mm->def_flags | VM_DONTEXPAND;
+> > -	if (pgtable_supports_soft_dirty())
+> > -		vm_flags |= VM_SOFTDIRTY;
+> > -	vm_flags_init(vma, vm_flags & ~VM_LOCKED_MASK);
+> > -	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+> > -
+> > -	vma->vm_ops = ops;
+> > -	vma->vm_private_data = priv;
+> > -
+> > -	ret = insert_vm_struct(mm, vma);
+> > -	if (ret)
+> > -		goto out;
+> > -
+> > -	vm_stat_account(mm, vma->vm_flags, len >> PAGE_SHIFT);
+> > -
+> > -	perf_event_mmap(vma);
+> > -
+> > -	return vma;
+> > -
+> > -out:
+> > -	vm_area_free(vma);
+> > -	return ERR_PTR(ret);
+> > -}
+> > -
+> >  bool vma_is_special_mapping(const struct vm_area_struct *vma,
+> >  	const struct vm_special_mapping *sm)
+> >  {
+> > diff --git a/mm/vma.c b/mm/vma.c
+> > index cb7222e20c93..f4de706a2728 100644
+> > --- a/mm/vma.c
+> > +++ b/mm/vma.c
+> > @@ -3399,3 +3399,41 @@ __weak unsigned long vma_mmu_pagesize(struct vm_area_struct *vma)
+> >  {
+> >  	return vma_kernel_pagesize(vma);
+> >  }
+> > +
+> > +struct vm_area_struct *__install_special_mapping(
+> > +	struct mm_struct *mm,
+> > +	unsigned long addr, unsigned long len,
+> > +	vm_flags_t vm_flags, void *priv,
+> > +	const struct vm_operations_struct *ops)
+> > +{
+> > +	int ret;
+> > +	struct vm_area_struct *vma;
+> > +
+> > +	vma = vm_area_alloc(mm);
+> > +	if (unlikely(vma == NULL))
+> > +		return ERR_PTR(-ENOMEM);
+> > +
+> > +	vma_set_range(vma, addr, addr + len, 0);
+> > +	vm_flags |= mm->def_flags | VM_DONTEXPAND;
+> > +	if (pgtable_supports_soft_dirty())
+> > +		vm_flags |= VM_SOFTDIRTY;
+> > +	vm_flags_init(vma, vm_flags & ~VM_LOCKED_MASK);
+> > +	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+> > +
+> > +	vma->vm_ops = ops;
+> > +	vma->vm_private_data = priv;
+> > +
+> > +	ret = insert_vm_struct(mm, vma);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	vm_stat_account(mm, vma->vm_flags, len >> PAGE_SHIFT);
+> > +
+> > +	perf_event_mmap(vma);
+> > +
+> > +	return vma;
+> > +
+> > +out:
+> > +	vm_area_free(vma);
+> > +	return ERR_PTR(ret);
+> > +}
+> > diff --git a/mm/vma.h b/mm/vma.h
+> > index 47fe35e5307e..14f026bf3be4 100644
+> > --- a/mm/vma.h
+> > +++ b/mm/vma.h
+> > @@ -775,4 +775,9 @@ static inline bool map_deny_write_exec(const vma_flags_t *old,
+> >  }
+> >  #endif
+> >
+> > +struct vm_area_struct *__install_special_mapping(struct mm_struct *mm,
+> > +		unsigned long addr, unsigned long len,
+> > +		vm_flags_t vm_flags, void *priv,
+> > +		const struct vm_operations_struct *ops);
+> > +
+> >  #endif	/* __MM_VMA_H */
+>
+> I'm really annoyed that _install_special_mapping has a leading underscore.
+> That's it.
 
-Sorry for the late reply, and thanks for the review.
+Yeah it's horrible :)
 
-On 7/3/2026 4:41 PM, Sandipan Das wrote:
-> On 01-07-2026 15:04, Qi Liu wrote:
->> This series adds initial Hygon uncore PMU support.
->>
->> Hygon uncore PMUs use a programming model close to the AMD uncore PMU,
->> so this series factors out a small set of common helpers for perf event
->> handling, counter assignment and per-CPU context management.
->>
->> The Hygon-specific support is kept in the Hygon driver. This series
->> supports the Hygon DF and DF IOD PMUs. No Hygon-specific logic is
->> added to the AMD driver.
->>
->> Changes since RFC:
->>    - Address sashiko bot review.
->> Changes since v1:
->>    - Rename the helper namespace to amd_uncore_common_* to avoid
->>      an generic uncore_common_* prefix, and to keep it distinct
->>      from the existing amd_uncore_* names.
->>
->>
->> Qi Liu (3):
->>    perf/x86/amd/uncore: Add common PMU helper functions
->>    perf/x86/amd/uncore: Convert AMD driver to common PMU helpers
->>    perf/x86/amd/uncore: Add Hygon uncore PMU support
->>
->>   arch/x86/events/Kconfig                 |  17 +
->>   arch/x86/events/amd/Makefile            |   4 +
->>   arch/x86/events/amd/amd_uncore_common.c | 403 +++++++++++++++++
->>   arch/x86/events/amd/amd_uncore_common.h | 114 +++++
->>   arch/x86/events/amd/hygon_uncore.c      | 556 +++++++++++++++++++++++
->>   arch/x86/events/amd/uncore.c            | 578 +++---------------------
->>   arch/x86/include/asm/msr-index.h        |   2 +
->>   arch/x86/include/asm/perf_event.h       |  20 +
->>   include/linux/cpuhotplug.h              |   3 +
->>   9 files changed, 1192 insertions(+), 505 deletions(-)
->>   create mode 100644 arch/x86/events/amd/amd_uncore_common.c
->>   create mode 100644 arch/x86/events/amd/amd_uncore_common.h
->>   create mode 100644 arch/x86/events/amd/hygon_uncore.c
->>
-> I am trying to understand if the code movement is necessary.
-> Wouldn't it be sufficient to just add the following?
->   - new UNCORE_TYPE_HYGON_DF and UNCORE_TYPE_HYGON_DF_IOD types
->   - Hygon-specific attr_groups, pmu->event_init(), pmu->add(),
->     amd_uncore->init() and amd_uncore->scan() implementations
+>
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-Yes, Use UNCORE_TYPE_HYGON_DF and UNCORE_TYPE_HYGON_DF_IOD would help 
-minimize code movement, but Hygon uncore will likely grow more 
-Hygon-specific L3/DF/UMC support over time. If we put these PMUs into 
-arch/x86/events/amd/uncore.c now, that file may need more Hygon-specific 
-types and checks later. So for now, it may be better to keep a separate 
-copy in hygon_uncore.c first, as suggested in the earlier review.
+Thanks!
 
-> Using new PMU names will also require tools-side changes. Additionally,
-> to make the PMUs actually useful, new JSON events and metrics need to
-> be added. Are there plans for that?
+>
+> --
+> Pedro
 
-yes, new PMU names will need perf updates. New JSON events and metrics 
-are also needed,  I'll add them later. Thanks!
-
-
-Qi Liu
-
-
+Cheers, Lorenzo
