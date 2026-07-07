@@ -1,195 +1,145 @@
-Received: from mail-pj2-f3.google.com (mail-pj2-f3.google.com [74.125.227.131])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72511233955
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jul 2026 15:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C760434E26
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jul 2026 16:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783438672; cv=none; b=dsqMMa9ihKIQ+A8M7JeWGaTM5QcZC9niSmkProhFaRStbgF/gG3KqutP7P3L83yHqAxky/Mju1ACg/8L9QIgNfXVNPm4gEKZSD13Wqgbx+OEuRW55/vR2R+9NVr/HTWJxrrJ434pIOiF0VEGohxdlahakYYZER1RHf6Te9ddVw0=
+	t=1783441568; cv=none; b=F6Hp1v2QvffECLD6lS4ph4YoXF+t60pp0Eq20rC15eEvCXrd7ubEjKz5DjecnK3w/sqshzTcB2lHgoXArSnr9aFInrCGHLslLzJBG7+x8X+s4V1XAMzGyosY8pQaLyl39+GHHdl8yaqtf3FGoMEw0u484U4cL8Zj7WMCnMW6Ehc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783438672; c=relaxed/simple;
-	bh=UDhBcy8UopcmOudo5nCjj/OcYUEQq4tOCj1qE7hb+1o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u0E+avcdQEwFow3zJR+rS9nmm8HOSiS5RxiK90MJahtYzho8CWSbYtFOVAXM9VkJwAnQdw6T+47e8ityU/Flj5Q725z73mpCHpZ5z+O3g07bya5KGsCkEvH3rJM8W7W7afS9z1vwe2eYOdioLyVjHLZWPlOZiwEjZ278vc6vLms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gAgekMlu; arc=none smtp.client-ip=74.125.227.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783441568; c=relaxed/simple;
+	bh=lrYSArpP0iVuUgDVG3d1222jafWM2daRLlBprnwN79M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YHpBnTLquCq5pNTSYMuZDra01ZbXuvn1TfK0sMbL3cva1JBzaAb0k5fkO7eQtV2mFL9fpjFm+gpAE+OMTiOnu60KXkAjKNoAeWd+weS8FKIUeYllkaTVqTeMZV5mWC6jQVADX9JONh1ipdVaUxKf62EIbCrxBRqd2jaZsEsX6pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VSYseg+e; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAgekMlu"
-Received: by mail-pj2-f3.google.com with SMTP id d9443c01a7336-2cc8ed77bbcso19725045ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2026 08:37:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VSYseg+e"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8eeb4508f29so34316036d6.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2026 09:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783438671; x=1784043471; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=jUE12U0ZtKD/R5fHUWrML9k5S58+wFk0Rczl2WIByXA=;
-        b=gAgekMluZj/wE/g1fU9tIr7iQCfzDSbPP5M2mZfYA8w8tPOH4oXj7LaGFpCAKkE+9o
-         BlucJc55IifKsER+YRbYCD+cYZqqKsAg1tD0oBeekTr0I+NfThOylsLh1JaVNGSoAy0p
-         GOq5LiH1kXcUvMntyqsnnmENR6jOxjPWQEggEiF/9p/2xAiQkH5vV1pAT6eo93dRAmlS
-         W72xmQUCjfXAarZnxQ6bv78O8PRqzmS/ZCNO4x1lepWfd4WcnSxpM/m9ez/UGx/qu525
-         Lj8zAGIzJZJ6qRD+4Ap+m6MoOp16t5f48nqIfev92dZc11GohdHTL9ZH3qhv4oItItJ4
-         b3pg==
+        d=gourry.net; s=google; t=1783441564; x=1784046364; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Abd7yWEQE6Vuyzvr8uj66ic6dsI9yDvEtRp+r0f0v0Y=;
+        b=VSYseg+exNpfuLKbFDvFmj+FXgMynIyaIJLTmqKE5xqjn4RWfOb4YgC9WUBqaHGIou
+         r0dE4B3Y0O2oC3ByyeA1No08p9fHPItCEXg7wn4B2ke+O/DTBtdwANvowyfAejANR7yG
+         L/jMUvsK1S0TdEcwUbGCsUiYh0RCVKsFCrEVatCGj6+cv+GvddNIuRa2S05KYdqn1/fb
+         Gq8/W4c5zgHkm5jy7FH6iwnVjsl7/l4bphOIL12amaPZEhRct0ugJV7Tm/CESAC+TkJo
+         Tra++G1pnsToJV+fPMk8aqsSKixNZz1TiK86GTer9SCvTKiK3hii9NDa6lTPfNFKPCJq
+         nMxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783438671; x=1784043471;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=jUE12U0ZtKD/R5fHUWrML9k5S58+wFk0Rczl2WIByXA=;
-        b=AGz+QOlt8oCvhs//GVdbVEAOKFcAgSIfsNinGum21WojSHosUTW/CMn+yybjE4ohyR
-         IHmP6ABsi7AitZKcyRpFQ2N8WmIi0qh4NpcKLcTfdde4yuKmgzzJCY0ecgTHNpS61xfG
-         NKixAWoGDhLPoW401livzwasfHsGVz6i8tmVZzniQDgktpvkjMbn2tix3AS0MGvxVypy
-         9sW80hC5HgU/f0IdWvPXRQm/vIN53PNlRGFeF8rNEeJe/8AJs6AXpH+SZK6OMW98wUAb
-         yL6aQTF1+ECs1ZgIIChe/541BqmjBCmAyX/4jkxwHae56rOdB6iC559m9SGIfGRODweE
-         Ru2g==
-X-Gm-Message-State: AOJu0YziykRapfoQwesQdZd7S9ZFh7hKaxmSWFFaDgi/JAAIfxiLjpY4
-	zrir4VYyOeaG4WchLVGAA9Lnc9C0w4daAiFcVEM+bqRF166ZpEAZGYS3UaDsxrBkwng=
-X-Gm-Gg: AfdE7cmKCkk3OVPSUxiPVUA06g5cW5UDZiH1t+llMbF06BjAeZWWDy2vkjeaCHu1SA+
-	P8b/tU/jrchmPQclBf6Izn4R+HM42QiDUvwlkY8NK+w56/jNHVTqCMghKb2QNNHyN90nX33gsr/
-	TEJGxTNHMCboby5JtLHuym+zBDIrdUVic24FpG9/s2bcNXe5ePkT94vgV5MyfAD/SUFSFBdYIzl
-	EWZ8aF1iffkvPhYw0njs2bL8RzC1zkBbUm03zktXiaCfQBdU3YqkAfXD4+4sd9h708qivgCwnew
-	8TdNQAOb7SjB5hkV1tWP8CVXXUiCafNDmcEnilL9sm+ESidV/kQQkTh+rNXxGxk5UfHwRR2iFVa
-	SQDFgwCb8dN+SreF+kNk9ssxnCzByPw+pO8lJX/FW07X80G5HNpYXZIAFjMfNi4vtEkuYNpKcxg
-	S3DsuG7YXvpbYXGkaMS1fAE/M5
-X-Received: by 2002:a17:902:dac8:b0:2ca:f20f:4c50 with SMTP id d9443c01a7336-2ccbf184f9bmr54706725ad.38.1783438670757;
-        Tue, 07 Jul 2026 08:37:50 -0700 (PDT)
-Received: from h74server.game.ntes ([103.126.92.83])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d3bcc0sm14130875ad.67.2026.07.07.08.37.47
+        d=1e100.net; s=20251104; t=1783441564; x=1784046364;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Abd7yWEQE6Vuyzvr8uj66ic6dsI9yDvEtRp+r0f0v0Y=;
+        b=TBMdK2ZiR0/A0aCk1wpFezbkuNx+IorMZvpeU3QAxQ/QY3K6KTBoP2IGMnIKaqAN7u
+         0VZQPuYJCqAdFWZItWb9n6evjXr6ly9+G3NK7f3Y6gXM/D70xcG1+W8n0xqA9NaOgsKQ
+         rE4xnUODD/mnHk9DKzd0k3+MhxU8R4A/cBWHrCtGKCTAUbc/NZk7LJnfJy7sc6Xex4Rf
+         JyzXuTGs0qyJw8d/1w4Eh0ZmwVk7CS9pnve7ykEimgegp0nX6e/9A3MgtFoSbH1ptdg7
+         PuNemWQS3EJAXLjTxWgV0+nxMNY5cU58eCG4AXTsHxJAdPa8pKy9vCm5li/Hb52GIST2
+         30+A==
+X-Forwarded-Encrypted: i=1; AHgh+Ropdbidw3wJOeWrdkerUH4DnRZ+U/DWSvtYSPz3rV751ukz0He05CDsTHzhCMPHnga6fglPWgvx1f/Vuhx+2vvK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSR2SgUBsYVSs2UVLVleuOZv67m/KoteHbKY8nqfWBAPGvnvDX
+	CoXT+7+0AV5aMI21bjorTZq15aHr7qhSPw/YUSk6DpZ507x/D7jzSP8MGr4WsQM4fKg=
+X-Gm-Gg: AfdE7cmwRkFF3X3fgk+GNfdmEiKrwxXVed7O+O6XOkxIKErZ0FwqMxS4ZlZBczrvj+H
+	mHpW1hKEQIfAnsjOMkd7TYbeWZk9xtysMJjzxeMelVFKUrP4EfHfkOIRkXx1q02lbBSs/e7b7CC
+	qlIV2PC2Pl/yfDNbsuUrVtEOJKJ76wGo6oJ1KcoSwjJ0ex81cvSEnb4qlqimHvoT6FK7zt5AZe/
+	NZFh1zSdEM7X0iJrmEJfADAA/FF4PB9dYroqDOkZD7rjzTn/4PeNA8PmAxQMoyawxfhczJZQWxr
+	BTTa0kn/2cVeDYjThf/3DuBm4dQSqGvOjk09unekRDLkSEt8pz4vqaM5kWBAODhXyuBmenpqunJ
+	DC036gG5vnQtpBrJYq/eKCO2I8ls2/OEtJkA7V+1mSRkbWbMXza7xxT/ZH5Q/YdJyIha65OL5kW
+	UtZdHkquNtRB5D6ad2yFHue9vhIR0gpJFBf5grvMMuA7gCsbuRClnFqhJ5eMHZhTsxYEntCNlly
+	oOoixs=
+X-Received: by 2002:a05:6214:6011:b0:8fd:6de3:bbaa with SMTP id 6a1803df08f44-8fd6de3be6emr28372996d6.64.1783441563961;
+        Tue, 07 Jul 2026 09:26:03 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f46f306123sm181382626d6.20.2026.07.07.09.26.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 08:37:50 -0700 (PDT)
-From: Jiawei Sun <abyssmystery@gmail.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jiawei Sun <abyssmystery@gmail.com>,
-	namhyung@kernel.org,
-	acme@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	mark.rutland@arm.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	james.clark@linaro.org,
-	alexey.budankov@linux.intel.com
-Subject: [PATCH] perf record: fix poll storm when monitored threads exit
-Date: Tue,  7 Jul 2026 23:38:00 +0800
-Message-Id: <20260707153801.315352-1-abyssmystery@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Tue, 07 Jul 2026 09:26:03 -0700 (PDT)
+Date: Tue, 7 Jul 2026 12:25:58 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Simon Schuster <schuster.simon@siemens-energy.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Dan Williams <djbw@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>, Hugh Dickins <hughd@google.com>,
+	Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-mm@kvack.org, iommu@lists.linux.dev,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	damon@lists.linux.dev, Pedro Falcato <pfalcato@suse.de>,
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+	Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 11/30] mm/vma: introduce and use vmg_pages(), vmg_[start,
+ end]_pgoff()
+Message-ID: <ak0olp9zA6ERCXtO@gourry-fedora-PF4VCD3F>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <f7b4f8a611ab4d36eb3cf2e394610a3744a93895.1782735110.git.ljs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7b4f8a611ab4d36eb3cf2e394610a3744a93895.1782735110.git.ljs@kernel.org>
 
-When `perf record` samples a multi-threaded process and one of the
-target threads exits during the session, perf itself may start burning
-100% CPU (up to 200% across two cores) until the session ends.  A
-single dead fd is sufficient to trigger this; it can be reproduced with
-15 pthreads in a compute loop where one thread exits halfway through.
+On Mon, Jun 29, 2026 at 01:23:22PM +0100, Lorenzo Stoakes wrote:
+> In the VMA logic we often need to determine the number of pages in the
+> specified merge range, as well as the start and end page offsets of that
+> range.
+> 
+> Introduce and use helpers for these purposes.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-The root cause is two independent instances of the same defect: dead
-perf_event ring-buffer fds are left in a pollfd array.  When a monitored
-thread exits, the kernel closes its ring-buffer fd, which then returns
-POLLHUP.  POSIX specifies that poll() always reports POLLHUP and POLLERR
-regardless of the events mask, so any dead fd left in the array makes
-poll() return immediately every time, spinning in a tight loop:
-
-  3 seconds: 256,600 poll() calls, 0 context switches, only 21 write()
-  Woken up count goes from ~0 to 1,300,000+
-
-There are two affected poll paths, fixed together here:
-
-1. Record main loop, via fdarray__filter() (tools/lib/api/fd/array.c).
-   Since commit 59b4412f27f1 ("libperf: Avoid internal moving of
-   fdarray fds") it only zeroes events/revents without setting fd to
-   -1, so poll() keeps reporting POLLHUP for the entry.  Setting
-   fd = -1 makes poll() skip it, matching the pattern already used in
-   the control-fd path at tools/perf/builtin-record.c:1673.
-
-2. BPF sideband thread, perf_evlist__poll_thread()
-   (tools/perf/util/sideband_evlist.c).  This thread polls for
-   PERF_RECORD_BPF_EVENT but, unlike the main record loop, never calls
-   fdarray__filter() at all, so dead fds accumulate forever and it
-   spins at 100% CPU:
-
-     Before fix: dJiffies=101, wchan=0 (running)
-     After fix:  dJiffies=0,   wchan=do_sys_poll (blocking)
-
-   Fixed by calling the existing evlist__filter_pollfd() helper after
-   evlist__poll(), mirroring the main record loop.  <poll.h> is
-   included for the POLLERR/POLLHUP macros (previously unused there).
-
-The two fixes compose: fix 1 makes poll() ignore dead fds (fd=-1); fix
-2 ensures the sideband thread actually performs the filtering.  Both
-paths are affected in all kernels from v5.1/v5.9 to the current master
-(7.2-rc1); the source of both functions is byte-identical across them.
-
-BPF event recording is preserved: after the fix, perf.data still
-contains PERF_RECORD_BPF_EVENT records and bpf_prog_info entries.
-
-Verified on perf 6.1.76, 6.6.143 and 7.2-rc1 with a minimal reproducer
-(Woken up 1,300,000 -> 3, CPU 100% -> 0%) and an A/B orthogonal test:
-keeping the unpatched binary but preventing the target thread from
-exiting also makes the storm disappear, confirming the trigger.
-
-Fixes: 59b4412f27f1 ("libperf: Avoid internal moving of fdarray fds")
-Fixes: 657ee5531903 ("perf evlist: Introduce side band thread")
-Signed-off-by: Jiawei Sun <abyssmystery@gmail.com>
----
- tools/lib/api/fd/array.c          |  6 ++++++
- tools/perf/util/sideband_evlist.c | 14 ++++++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-index f0f195207..ffe8272af 100644
---- a/tools/lib/api/fd/array.c
-+++ b/tools/lib/api/fd/array.c
-@@ -122,6 +122,12 @@ int fdarray__filter(struct fdarray *fda, short revents,
- 			if (entry_destructor)
- 				entry_destructor(fda, fd, arg);
- 
-+			/*
-+			 * Set fd to -1 so poll() ignores this entry; otherwise
-+			 * POLLHUP/POLLERR are still reported for events=0 fds
-+			 * (POSIX: always checked), causing a poll storm.
-+			 */
-+			fda->entries[fd].fd = -1;
- 			fda->entries[fd].revents = fda->entries[fd].events = 0;
- 			continue;
- 		}
-diff --git a/tools/perf/util/sideband_evlist.c b/tools/perf/util/sideband_evlist.c
-index c07dacf3c..ba043db6c 100644
---- a/tools/perf/util/sideband_evlist.c
-+++ b/tools/perf/util/sideband_evlist.c
-@@ -8,6 +8,7 @@
- #include <perf/mmap.h>
- #include <linux/perf_event.h>
- #include <limits.h>
-+#include <poll.h>
- #include <pthread.h>
- #include <sched.h>
- #include <stdbool.h>
-@@ -55,6 +56,19 @@ static void *perf_evlist__poll_thread(void *arg)
- 		if (!draining)
- 			evlist__poll(evlist, 1000);
- 
-+		/*
-+		 * When a thread of the monitored target exits, its per-cpu
-+		 * ring-buffer fd is closed and starts returning POLLHUP. Such
-+		 * dead fds are never requested for POLLIN, but poll() reports
-+		 * POLLHUP/POLLERR unconditionally, so leaving them in the
-+		 * pollfd array makes the following evlist__poll() return
-+		 * immediately forever, spinning this thread at 100% CPU.
-+		 *
-+		 * Filter them out here, mirroring what the 'perf record' main
-+		 * loop does after fdarray__poll().
-+		 */
-+		evlist__filter_pollfd(evlist, POLLERR | POLLHUP);
-+
- 		for (i = 0; i < evlist__core(evlist)->nr_mmaps; i++) {
- 			struct mmap *map = &evlist__mmap(evlist)[i];
- 			union perf_event *event;
--- 
-2.39.5
-
+Reviewed-by: Gregory Price <gourry@gourry.net>
