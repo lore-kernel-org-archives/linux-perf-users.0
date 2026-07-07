@@ -1,227 +1,323 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-40.ptr.blmpb.com (va-2-40.ptr.blmpb.com [209.127.231.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B971D3BD659
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jul 2026 06:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0DB266B72
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jul 2026 07:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783407209; cv=none; b=KoVz7KpIPEWbi+tdiIxx8E6pohVVeaoShq7rn8LG5BkgA9FMrCMWLG5UDMFkKp+Fxr51ZONc2Cvd73mZYDzvS2OuDfLzjZESWnwrK29nIQnobTAN1JKenDGwr52mRMnQgTTJxrPdwkvHd/FY23C301JNVbekCSQIeilJsdClnK8=
+	t=1783410329; cv=none; b=rmwT4GrmiaVb7fqmUeEW7Rs4XWB6da6DeGc2VUdbMZoFKZo9NIacIw+6TedGfzvdeZQZKFgCA7ZTjsL7JO/i8mSNndNQn4slcITuPRBK6O8PE9H7t/dZf0kbxBAm1UnRlob2D52nLFrN9wVZ9yGRXsPIJhzmWX9Os7ufU3pj3tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783407209; c=relaxed/simple;
-	bh=UUi7ZPY68FzydqFXLRJx1F35K1cv91nvZLrM7pj5Gus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Br1nioZcVd+VoTchAOiyMkCE20/P5Vjr3kYktfVvQ4WOv5BJI9BuLboKbPGi2cLEUKi3fn0OrLvjSQzZ6Rz7ppN1JfpxMg/f0htLhOBWnAs8Q+5al4K0jH5gXWod9CIfJn5g7YAoxalvmBaVCDPWsZRaiCdJ+Phgrv6OLAUklYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JSS8N5Wx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783410329; c=relaxed/simple;
+	bh=Bhfo04qUdFx3YG/ieMRMaehsX4sYLz59RACNPM+OfAc=;
+	h=Cc:Message-Id:Mime-Version:To:Date:References:Subject:From:
+	 In-Reply-To:Content-Type; b=Cbdd7v27QJTkfVVasf1zHJK49TLL89atKGo5QnZ00oBPgMTh5oOBsjjz56aaBzPI9lrdgw/NIg3GgAjz+iXPpnkxBHxxiMBtV/BvNmBv6QQTZtXpl8dBxCLI3wF2iVwTiT/VUF6yc0QWMKk77EKf57i15YWohl50tW5GFVfYyxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=picoheart.com; spf=pass smtp.mailfrom=picoheart.com; dkim=pass (2048-bit key) header.d=picoheart.com header.i=@picoheart.com header.b=DiBENkEB; arc=none smtp.client-ip=209.127.231.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=picoheart.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=picoheart.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JSS8N5Wx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783407201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KKyrkRQAO2eoY3ppvINPzoApwyh1I0vLGhy15gwEZ/I=;
-	b=JSS8N5WxqwsLavrGbqruTV2xDvxmzXPcupNjKwAKd9kkpyQ6nNf9g9m9rzTAPaHn4Uu5/L
-	/Jduv5hp3fGp0KmaF+WWKWApm6vzB0hhZ3iiDV/kkwNjFFlJO4NF4j/zIAuYWAIMOdUhah
-	4hu32fFKKHc0XqR+lSASmU2bwUEQwvQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-12-PvVAgK-PPmW7IURXm9HiZg-1; Tue,
- 07 Jul 2026 02:53:16 -0400
-X-MC-Unique: PvVAgK-PPmW7IURXm9HiZg-1
-X-Mimecast-MFC-AGG-ID: PvVAgK-PPmW7IURXm9HiZg_1783407194
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 532EB1920C2E;
-	Tue,  7 Jul 2026 06:53:04 +0000 (UTC)
-Received: from vmalik-fedora.brq.redhat.com (unknown [10.43.17.109])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 70CCA19560A6;
-	Tue,  7 Jul 2026 06:53:00 +0000 (UTC)
-From: Viktor Malik <vmalik@redhat.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Viktor Malik <vmalik@redhat.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Michael Petlan <mpetlan@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH v4 2/2] perf trace: Refactor augmented_raw_syscalls using bpf_for
-Date: Tue,  7 Jul 2026 08:52:47 +0200
-Message-ID: <a4a363ae325a670ba122fee2cabcebc7ecd236bd.1783406979.git.vmalik@redhat.com>
-In-Reply-To: <cover.1783406979.git.vmalik@redhat.com>
-References: <cover.1783406979.git.vmalik@redhat.com>
+	dkim=pass (2048-bit key) header.d=picoheart.com header.i=@picoheart.com header.b="DiBENkEB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2604151535; d=picoheart.com; t=1783410315; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=khtBI9vvcocUFT3RIs3nuQxcI7AYB07xM0J6QTM+nSs=;
+ b=DiBENkEB/nHVMY3VhsTt9ws6lB0tygp1A7/l0vmFLlOb5yTKqRN7qGPqEPl6Kae/wtlkEK
+ 1Ofwds7w++gtlsb3dE7yHhLzeEh+myv67P75N1gDB+A/KOquSFS8+P3zXGolOcuwtrrYp0
+ JMjj9Y9RtPhwXi9cGOUmlxceAxujpq0nQVy7K5SZXBGm+cURHcVte5M++6xN81ZLLl2nr9
+ ajduU6g6ZC76qYYDtSSuNxgC+V4jBTilSMiNDbo6j1s/WMa2wwh8AuRTDAsvpYt3mNCwdb
+ etKGkVxBBzUuzg91+eh8h3VKeGQ/hO6dD+oFssVsjyCr3xrIrnepU8eyIlSNOw==
+Cc: "Jiri Olsa" <jolsa@kernel.org>, "Paul Walmsley" <pjw@kernel.org>, 
+	"Mark Rutland" <mark.rutland@arm.com>, "Rob Herring" <robh@kernel.org>, 
+	"Anup Patel" <anup@brainfault.org>, "Namhyung Kim" <namhyung@kernel.org>, 
+	"Arnaldo Carvalho de Melo" <acme@kernel.org>, 
+	"Krzysztof Kozlowski" <krzk+dt@kernel.org>, 
+	"Ian Rogers" <irogers@google.com>, "Will Deacon" <will@kernel.org>, 
+	"James Clark" <james.clark@linaro.org>, <yang.yicong@picoheart.com>, 
+	<linux-arm-kernel@lists.infradead.org>, 
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, 
+	<devicetree@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, 
+	"Conor Dooley" <conor@kernel.org>
+Message-Id: <90c1a299-617d-4b6d-8aa7-b776cb7c0c46@picoheart.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Mime-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: "Atish Patra" <atish.patra@linux.dev>
+Date: Tue, 7 Jul 2026 15:45:10 +0800
+References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com> <20260701-counter_delegation-v8-12-7909f863a645@meta.com>
+Subject: Re: [PATCH v8 12/22] RISC-V: perf: Modify the counter discovery mechanism
+X-Lms-Return-Path: <lba+26a4cae89+6e5315+vger.kernel.org+yang.yicong@picoheart.com>
+Received: from [100.86.219.172] ([58.250.106.115]) by smtp.feishu.cn with ESMTPS; Tue, 07 Jul 2026 15:45:12 +0800
+Content-Transfer-Encoding: 7bit
+From: "Yicong Yang" <yang.yicong@picoheart.com>
+X-Original-From: Yicong Yang <yang.yicong@picoheart.com>
+In-Reply-To: <20260701-counter_delegation-v8-12-7909f863a645@meta.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
 
-The loop for processing syscall args in augment_raw_syscalls has a
-history of breaking with Clang updates, see e.g. commit 013eb043f37b
-("perf trace: Fix BPF loading failure (-E2BIG)") from Clang 15 to 16.
+On 7/1/26 4:47 PM, Atish Patra wrote:
+> From: Atish Patra <atishp@rivosinc.com>
+> 
+> If both counter delegation and SBI PMU is present, the counter
+> delegation will be used for hardware pmu counters while the SBI PMU
+> will be used for firmware counters. Thus, the driver has to probe
+> the counters info via SBI PMU to distinguish the firmware counters.
+> 
+> The hybrid scheme also requires improvements of the informational
+> logging messages to indicate the user about underlying interface
+> used for each use case.
+> 
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  drivers/perf/riscv_pmu_sbi.c | 139 ++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 104 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 74d934238821..c20f1e33c65d 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -67,6 +67,20 @@ static bool sbi_v3_available;
+>  static DEFINE_STATIC_KEY_FALSE(sbi_pmu_snapshot_available);
+>  #define sbi_pmu_snapshot_available() \
+>  	static_branch_unlikely(&sbi_pmu_snapshot_available)
+> +static DEFINE_STATIC_KEY_FALSE(riscv_pmu_sbi_available);
+> +static DEFINE_STATIC_KEY_FALSE(riscv_pmu_cdeleg_available);
+> +
+> +/* Avoid unnecessary code patching in the one time booting path*/
+> +#define riscv_pmu_cdeleg_available_boot() \
+> +	static_key_enabled(&riscv_pmu_cdeleg_available)
+> +#define riscv_pmu_sbi_available_boot() \
+> +	static_key_enabled(&riscv_pmu_sbi_available)
+> +
+> +/* Perform a runtime code patching with static key */
+> +#define riscv_pmu_cdeleg_available() \
+> +	static_branch_unlikely(&riscv_pmu_cdeleg_available)
+> +#define riscv_pmu_sbi_available() \
+> +		static_branch_likely(&riscv_pmu_sbi_available)
+>  
+>  static struct attribute *riscv_arch_formats_attr[] = {
+>  	&format_attr_event.attr,
+> @@ -89,7 +103,8 @@ static int sysctl_perf_user_access __read_mostly = SYSCTL_USER_ACCESS;
+>  
+>  /*
+>   * This structure is SBI specific but counter delegation also require counter
+> - * width, csr mapping. Reuse it for now.
+> + * width, csr mapping. Reuse it for now we can have firmware counters for
+> + * platfroms with counter delegation support.
+>   * RISC-V doesn't have heterogeneous harts yet. This need to be part of
+>   * per_cpu in case of harts with different pmu counters
+>   */
+> @@ -101,6 +116,8 @@ static unsigned int riscv_pmu_irq;
+>  
+>  /* Cache the available counters in a bitmask */
+>  static unsigned long cmask;
+> +/* Cache the available firmware counters in another bitmask */
+> +static unsigned long firmware_cmask;
+>  
+>  static int sbi_pmu_event_find_cache(u64 config);
+>  struct sbi_pmu_event_data {
+> @@ -868,34 +885,38 @@ static int rvpmu_sbi_find_num_ctrs(void)
+>  		return sbi_err_map_linux_errno(ret.error);
+>  }
+>  
+> -static int rvpmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
+> +static u32 rvpmu_deleg_find_ctrs(void)
+> +{
+> +	/* TODO */
+> +	return 0;
+> +}
+> +
+> +static int rvpmu_sbi_get_ctrinfo(u32 nsbi_ctr, u32 *num_fw_ctr, u32 *num_hw_ctr)
+>  {
+>  	struct sbiret ret;
+> -	int i, num_hw_ctr = 0, num_fw_ctr = 0;
+> +	int i;
+>  	union sbi_pmu_ctr_info cinfo;
+>  
+> -	pmu_ctr_list = kzalloc_objs(*pmu_ctr_list, nctr);
+> -	if (!pmu_ctr_list)
+> -		return -ENOMEM;
+> -
+> -	for (i = 0; i < nctr; i++) {
+> +	for (i = 0; i < nsbi_ctr; i++) {
+>  		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_GET_INFO, i, 0, 0, 0, 0, 0);
+>  		if (ret.error)
+>  			/* The logical counter ids are not expected to be contiguous */
+>  			continue;
+>  
+> -		*mask |= BIT(i);
+> -
+>  		cinfo.value = ret.value;
+> -		if (cinfo.type == SBI_PMU_CTR_TYPE_FW)
+> -			num_fw_ctr++;
+> -		else
+> -			num_hw_ctr++;
+> -		pmu_ctr_list[i].value = cinfo.value;
+> +		if (cinfo.type == SBI_PMU_CTR_TYPE_FW) {
+> +			/* Track firmware counters in a different mask */
+> +			firmware_cmask |= BIT(i);
+> +			pmu_ctr_list[i].value = cinfo.value;
 
-Now, a similar thing happened between Clang 21 and 22. While the issue
-is mitigated on the main line by a recent verifier update, it remains
-broken on the 6.12 and 6.18 stable branches:
+could this override the counter info initialized by rvpmu_deleg_find_ctrs()? 
+the initialization from counter delegation performs prior to sbi, should we
+check first here?
 
-    [linux-6.18.y]# sudo perf trace true
-    libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
-    libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
-    [...]
-    BPF program is too large. Processed 1000001 insn
-    processed 1000001 insns (limit 1000000) max_states_per_insn 40 total_states 37941 peak_states 232 mark_read 0
-    -- END PROG LOAD LOG --
-    libbpf: prog 'sys_enter': failed to load: -E2BIG
-    libbpf: failed to load object 'augmented_raw_syscalls_bpf'
-    libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -E2BIG
-    Error: failed to get syscall or beauty map fd
-    [...]
+> +			*num_fw_ctr = *num_fw_ctr + 1;
+> +		} else if (cinfo.type == SBI_PMU_CTR_TYPE_HW &&
+> +			   !riscv_pmu_cdeleg_available_boot()) {
+> +			*num_hw_ctr = *num_hw_ctr + 1;
+> +			cmask |= BIT(i);
+> +			pmu_ctr_list[i].value = cinfo.value;
+> +		}
+>  	}
+>  
+> -	pr_info("%d firmware and %d hardware counters\n", num_fw_ctr, num_hw_ctr);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -906,7 +927,7 @@ static inline void rvpmu_sbi_stop_all(struct riscv_pmu *pmu)
+>  	 * which may include counters that are not enabled yet.
+>  	 */
+>  	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
+> -		  0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
+> +		  0, pmu->cmask | firmware_cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
+>  }
+>  
+>  static inline void rvpmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
+> @@ -1159,16 +1180,48 @@ static void rvpmu_ctr_stop(struct perf_event *event, unsigned long flag)
+>  	/* TODO: Counter delegation implementation */
+>  }
+>  
+> -static int rvpmu_find_num_ctrs(void)
+> +static int rvpmu_find_ctrs(void)
+>  {
+> -	return rvpmu_sbi_find_num_ctrs();
+> -	/* TODO: Counter delegation implementation */
+> -}
+> +	int num_sbi_counters = 0;
+> +	u32 num_deleg_counters = 0;
+> +	u32 num_hw_ctr = 0, num_fw_ctr = 0, num_ctr = 0;
+> +	/*
+> +	 * We don't know how many firmware counters are available. Just allocate
+> +	 * for maximum counters the driver can support. The default is 64 anyways.
+> +	 */
+> +	pmu_ctr_list = kcalloc(RISCV_MAX_COUNTERS, sizeof(*pmu_ctr_list),
+> +			       GFP_KERNEL);
+> +	if (!pmu_ctr_list)
+> +		return -ENOMEM;
+>  
+> -static int rvpmu_get_ctrinfo(int nctr, unsigned long *mask)
+> -{
+> -	return rvpmu_sbi_get_ctrinfo(nctr, mask);
+> -	/* TODO: Counter delegation implementation */
+> +	if (riscv_pmu_cdeleg_available_boot())
+> +		num_deleg_counters = rvpmu_deleg_find_ctrs();
+> +
+> +	/* This is required for firmware counters even if the above is true */
 
-The reason is that the loop is quite complex and the BPF verifier often
-struggles to prove that it terminates.
+does counter delegation depend on SBI PMU? may need further explanation here,
+not sure if it's a rule from the spec or if it's the driver's policy.
 
-Fix the issue by replacing the standard for loop with the bpf_for macro,
-which uses a numeric BPF iterator. This should prevent future breakages
-of this kind since the verifier has a much easier job proving that the
-loop terminates.
+> +	if (riscv_pmu_sbi_available_boot()) {
+> +		num_sbi_counters = rvpmu_sbi_find_num_ctrs();
+> +		if (num_sbi_counters < 0) {
+> +			kfree(pmu_ctr_list);
+> +			pmu_ctr_list = NULL;
+> +			return num_sbi_counters;
+> +		}
+> +		if (num_sbi_counters > RISCV_MAX_COUNTERS)
+> +			num_sbi_counters = RISCV_MAX_COUNTERS;
+> +	}
+> +
+> +	/* cache all the information about counters now */
+> +	if (riscv_pmu_sbi_available_boot())
+> +		rvpmu_sbi_get_ctrinfo(num_sbi_counters, &num_fw_ctr, &num_hw_ctr);
+> +
+> +	if (riscv_pmu_cdeleg_available_boot()) {
+> +		pr_info("%u firmware and %u hardware counters\n", num_fw_ctr, num_deleg_counters);
+> +		num_ctr = num_fw_ctr + num_deleg_counters;
+> +	} else {
+> +		pr_info("%u firmware and %u hardware counters\n", num_fw_ctr, num_hw_ctr);
+> +		num_ctr = num_sbi_counters;
+> +	}
+> +
+> +	return num_ctr;
+>  }
+>  
+>  static int rvpmu_event_map(struct perf_event *event, u64 *econfig)
+> @@ -1478,12 +1531,21 @@ static int rvpmu_device_probe(struct platform_device *pdev)
+>  	int num_counters;
+>  	bool irq_requested = false;
+>  
+> -	pr_info("SBI PMU extension is available\n");
+> +	if (riscv_pmu_cdeleg_available_boot()) {
+> +		pr_info("hpmcounters will use the counter delegation ISA extension\n");
+> +		if (riscv_pmu_sbi_available_boot())
+> +			pr_info("Firmware counters will use SBI PMU extension\n");
+> +		else
+> +			pr_info("Firmware counters will not be available as SBI PMU extension is not present\n");
+> +	} else if (riscv_pmu_sbi_available_boot()) {
+> +		pr_info("Both hpmcounters and firmware counters will use SBI PMU extension\n");
+> +	}
+> +
+>  	pmu = riscv_pmu_alloc();
+>  	if (!pmu)
+>  		return -ENOMEM;
+>  
+> -	num_counters = rvpmu_find_num_ctrs();
+> +	num_counters = rvpmu_find_ctrs();
+>  	if (num_counters < 0) {
+>  		pr_err("SBI PMU extension doesn't provide any counters\n");
+>  		goto out_free;
+> @@ -1495,9 +1557,6 @@ static int rvpmu_device_probe(struct platform_device *pdev)
+>  		pr_info("SBI returned more than maximum number of counters. Limiting the number of counters to %d\n", num_counters);
+>  	}
+>  
+> -	/* cache all the information about counters now */
+> -	if (rvpmu_get_ctrinfo(num_counters, &cmask))
+> -		goto out_free;
+>  
+>  	ret = rvpmu_setup_irqs(pmu, pdev);
+>  	if (ret < 0) {
+> @@ -1599,13 +1658,23 @@ static int __init rvpmu_devinit(void)
+>  	int ret;
+>  	struct platform_device *pdev;
+>  
+> -	if (sbi_spec_version < sbi_mk_version(0, 3) ||
+> -	    !sbi_probe_extension(SBI_EXT_PMU)) {
+> -		return 0;
+> -	}
+> +	if (sbi_spec_version >= sbi_mk_version(0, 3) &&
+> +	    sbi_probe_extension(SBI_EXT_PMU))
+> +		static_branch_enable(&riscv_pmu_sbi_available);
+>  
+>  	if (sbi_spec_version >= sbi_mk_version(2, 0))
+>  		sbi_v2_available = true;
+> +	/*
+> +	 * We need all three extensions to be present to access the counters
+> +	 * in S-mode via Supervisor Counter delegation.
+> +	 */
+> +	if (riscv_isa_extension_available(NULL, SSCCFG) &&
+> +	    riscv_isa_extension_available(NULL, SMCDELEG) &&
+> +	    riscv_isa_extension_available(NULL, SSCSRIND))
+> +		static_branch_enable(&riscv_pmu_cdeleg_available);
 
-Small adjustments were necessary for the loop to make it work.  The main
-problem is that the verifier sometimes has problems with bpf_for loops
-that use a carry-over state, such as the `payload_offset` and `output`
-vars here, since the verifier tries to track their values too precisely
-and cannot prove loop convergence. To resolve the issue, we (1)
-explicitly recompute `payload_offset` in every iteration and (2) use a
-trick with adding a global zero to `output` to help the verifier forget
-its precise state and use a range instead.
+Ssccfg is the necessary extension needed here, is it possible to handle the
+dependencies in cpufeatures.c so we can only check the Ssccfg here? (I see
+we've already made Ssccfg to depend on Smcdeleg there)
 
-Finally, to keep backwards compatibility with older kernel versions that
-don't have bpf_for (i.e. numeric iterators), fall back to standard loop.
+> +
+> +	if (!(riscv_pmu_sbi_available_boot() || riscv_pmu_cdeleg_available_boot()))
+> +		return 0;
+>  
+>  	if (sbi_spec_version >= sbi_mk_version(3, 0))
+>  		sbi_v3_available = true;
+> 
 
-Signed-off-by: Viktor Malik <vmalik@redhat.com>
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Fixes: a68fd6a6cdd3 ("perf trace: Collect augmented data using BPF")
-Cc: stable@vger.kernel.org
----
- .../bpf_skel/augmented_raw_syscalls.bpf.c     | 47 ++++++++++++++-----
- 1 file changed, 35 insertions(+), 12 deletions(-)
+this should stay with the SBI PMU probe block above.
 
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index bc036a348079..3bc9e28a9b8a 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -429,6 +429,8 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
- 	return bpf_map_lookup_elem(pids, &pid) != NULL;
- }
- 
-+u64 ZERO = 0;
-+
- /*
-  * Determine what type of argument and how many bytes to read from user space, using the
-  * value in the beauty_map. This is the relation of parameter type and its corresponding
-@@ -440,9 +442,10 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
-  */
- static inline int augment_arg(struct syscall_enter_args *args, int i,
- 			      unsigned int *beauty_map,
--			      struct augmented_arg *payload_offset)
-+			      struct beauty_payload_enter *payload, u64 offset)
- {
- 	int index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
-+	struct augmented_arg *payload_offset;
- 	s64 aug_size, size;
- 	bool augmented;
- 	void *arg;
-@@ -455,6 +458,12 @@ static inline int augment_arg(struct syscall_enter_args *args, int i,
- 	if (size == 0 || arg == NULL)
- 		return 0;
- 
-+	/* bounds check for the verifier */
-+	if (offset > sizeof(payload->aug_args) - sizeof(payload->aug_args[0]))
-+		return -1;
-+	barrier_var(offset);
-+	payload_offset = (struct augmented_arg *)((void *)&payload->aug_args + offset);
-+
- 	if (size == 1) { /* string */
- 		aug_size = bpf_probe_read_user_str(payload_offset->value, value_size, arg);
- 		/* minimum of 0 to pass the verifier */
-@@ -498,11 +507,10 @@ static inline int augment_arg(struct syscall_enter_args *args, int i,
- static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- {
- 	bool do_output = false;
--	int zero = 0, written;
-+	int i, zero = 0, written;
- 	u64 output = 0; /* has to be u64, otherwise it won't pass the verifier */
- 	unsigned int nr, *beauty_map;
- 	struct beauty_payload_enter *payload;
--	void *payload_offset;
- 
- 	/* fall back to do predefined tail call */
- 	if (args == NULL)
-@@ -514,7 +522,6 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- 
- 	/* set up payload for output */
- 	payload        = bpf_map_lookup_elem(&beauty_payload_enter_map, &zero);
--	payload_offset = (void *)&payload->aug_args;
- 
- 	if (beauty_map == NULL || payload == NULL)
- 		return 1;
-@@ -522,14 +529,30 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- 	/* copy the sys_enter header, which has the syscall_nr */
- 	__builtin_memcpy(&payload->args, args, sizeof(struct syscall_enter_args));
- 
--	for (int i = 0; i < 6; i++) {
--		written = augment_arg(args, i, beauty_map, (struct augmented_arg *)payload_offset);
--		if (written < 0)
--			return 1;
--		if (written > 0) {
--			output += written;
--			payload_offset += written;
--			do_output = true;
-+	if (bpf_ksym_exists(bpf_iter_num_new)) {
-+		bpf_for(i, 0, 6) {
-+			written = augment_arg(args, i, beauty_map, payload, output);
-+			if (written < 0)
-+				return 1;
-+			if (written > 0) {
-+				output += written;
-+				/*
-+				 * guide the verifier to forget range of `output`, which
-+				 * helps to prove convergence of the loop
-+				 */
-+				output += ZERO;
-+				do_output = true;
-+			}
-+		}
-+	} else {
-+		for (i = 0; i < 6; i++) {
-+			written = augment_arg(args, i, beauty_map, payload, output);
-+			if (written < 0)
-+				return 1;
-+			if (written > 0) {
-+				output += written;
-+				do_output = true;
-+			}
- 		}
- 	}
- 
--- 
-2.54.0
-
+Thanks.
