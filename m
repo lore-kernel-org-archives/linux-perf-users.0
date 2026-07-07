@@ -1,234 +1,269 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012039.outbound.protection.outlook.com [52.101.53.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1121E434E51
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Jul 2026 17:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAFD1E492D;
+	Tue,  7 Jul 2026 18:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.39
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783447142; cv=pass; b=Sc5GDpLZ9gdio+je723TVbrSOW5bKlmQx8ztV3SYB8DieXGlYhUdN+4JBjNpfdGkFMViJ5C00pQ5CX73od1Dt2MV1HjrbobHIIa4ZscrkPKsufW2vwI2uiBnRuRwempuvclEj70/zdv9ASVfByTh0kslTyO/SA+mrD4TMinsuVQ=
+	t=1783449767; cv=fail; b=cNiKMHOWVUy5urnFr2HnIISExOAublPzRAE+0v/UGPw0idLywp/CaolFogcL49ayII3ku8OF2FjAtL8CcONQFX7/Sugvk9Ujs8y/e64onO0nxJzl9vDC75ASMVnq1beELnQ0+cSDhPt69uKUCWlOWaE+0b/NIxFytL77tZtvYbk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783447142; c=relaxed/simple;
-	bh=gWTeSD9poTg46O4+IeCw/XsrxHlO/aMfCHPgEBmo+wQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yk11htwwA/JTSznFoIQmNSgfTVbKvmJF/tqbmd1pgk0sN6vGRP2byzlmNAN2rfK7qCLFxPM39LNkrFdbMiyxy+PeZBX3aUcHZ2/bKkrh8zHV4IqOolWxQCFuJs2EMLyBVPvK6TbCqDZIX07Xcw3y08vi1OdhqvuDMyR8pUBodfA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gPsOhiyr; arc=pass smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1783449767; c=relaxed/simple;
+	bh=JmgLcGbYd1opqxH/2KwpP34ePsMKIANWKCZzYFvqmRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fN8dYOhTsT/dBmJrgy6BVV5+RQn+b0uTXzqXBKRJMJhEHWhCFOC7bt5n8PyyIJ/dQrlf/u0zoDGJGOHuUM3czvMXXpHqKcJEZXc8wNyZc2QNDjAQRH6mAQ/Hiu2SSAnsfB5Tv3vkeOk+6/sUGChkLhfLLLfO1FhKzt8XwfhCLEM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Hfvhbpny; arc=fail smtp.client-ip=52.101.53.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gPsOhiyr"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ccdf36f63dso9335ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Jul 2026 10:59:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783447140; cv=none;
-        d=google.com; s=arc-20260327;
-        b=hGbUs7pWZaix7Mk70Kk9OxZhsCO+HFgQJ7SEK97MFIbnuWJKtqOw9EX29KjLtSmPoo
-         fJ5DDB1XEirOVJAotfkg3ATKCapZYZfiuLRJ8ae9GJOgjMgiknBKPO38ZWhgh7nJbIg1
-         u//3E26IcRE6SbKJRl+dm1JCPKOj4JI5AGdPqIuY2LArjBrhBey6vlh1E8FqwyeCYbCz
-         wH24pWNikymSaUp2yVsW/Kz854RVYdo5IQNrd9xU4/ppUUo1t9OKestN2hRUtayTRVr6
-         8Tc+i5fjAPhuqWzZ4SoXyW+nU7WOYW5q2zp2HgkJ88ak5Hi5rhcbb2BSfrr0lYF/zACh
-         7G7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=lJpmSCQb7JPh8DN3AUk0v9N/JxhqbqclIPM8uoArkRs=;
-        fh=c3LNkZH3giN8H0LzNrGmXtk1Iqtmdw+mEVYGjPp7yqU=;
-        b=scc9uRRNphAeennk4a/PfBhDzXuAVEw8Fl06rXkHaHiimOEucYoasju3rB9SwmjIOF
-         grQSm4zqVDJmmwC5DQ+f9xMgKZhfmB/RgfD8ojbGIokjmS6Qqd1OAqTLxxN146fQYMkr
-         kUpf8y/VF85AfPEdlkpeLd6eKwvqNa4ui/lvOopnCwKAGuwPUkQvChGQnwhEUtSDFx9r
-         J3MO8ocjP43ftKTrosrtgSy6Ld5uNbAl2XfcL+nZBgh68TiKiNG9EhSWtlKU56HdLl4r
-         zFQ9VtJBPHrJs3XF1FJqLqvAmZPbnTych+JI2P6FnCRGqWQB+VZVRq71giLleWxM5cjX
-         7/3A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783447140; x=1784051940; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=lJpmSCQb7JPh8DN3AUk0v9N/JxhqbqclIPM8uoArkRs=;
-        b=gPsOhiyrP5jKXX1I29sOcaJVAfxW8BE8VHTFmRQqiCNUmS5gSIp85LX/mYaZ4QOeKf
-         4khxdhqBuejKWD307uKInHHm+xCWhtIti3yRY+hqaCFERkC0ZbfBM7lad9p6tihp38b8
-         IJgBNPTyBnS2aqTk4r87jmr384csakswq79HezVQB8ukMDm0ntQ5DGsGHvwNB+bnTgW0
-         HRcbyFytdZxuo5WFOX9iAEYaJzPki+NkOX8r8l4lx4jrEDKLqdTbsv3QLwxO4klkT3yi
-         abF6wRGFbLfHp++40Mmil/Xwfjgc6AmpZUjhVtxYG4U9+ZtxODLysnVJpQu7koOhj6TK
-         vbdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783447140; x=1784051940;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lJpmSCQb7JPh8DN3AUk0v9N/JxhqbqclIPM8uoArkRs=;
-        b=qpyNbFrAd7BkDazQIoLfRSFoK1gEC5WxlcqBw7a8bn7Qxnd5VJJ8udu27y3em1fW5/
-         VRQngG756OM2FRfc2jvS/TPRt2BV4fSUAol8b5NPBGLnuxU8aCLFU9QACSaY9fK9ZKOx
-         +tAshs/fQIIFsh20D9R/AyE0L3nBhsrqKtecmtuOPGhS9WtolquYpVkBRkoCwVOIy6Ir
-         tMUjgcJubx6XPqDES6iiZjeZc6MGvv7tW8Q/IJobs58JAmKapvuukjeu64FKoj4z1iYj
-         rkiNQI6OWXMzfi8OYB6syHehVxgwDSl7gHJmZ2Resl0FLTbisS8FtftAxyxaD4LWz6MA
-         F1hw==
-X-Gm-Message-State: AOJu0Yz0aJuPC8MUrSs9wXLLVZxb/bqTRO2p/k/wz9MCWDftlVYT8HkV
-	17Izg0DHm+5IWDX4HWD7EIj0smuM6SLtoTc0IVDDl2cJqiwUTPinbOFFHKt9RxgRxh89cuN4SQ7
-	knXn7EsHnEqGktUaoNCsTT41YxuG5KR9QMWZcFY6n
-X-Gm-Gg: AfdE7clBvU01rEuENzBwQNmw6Hb3jZJKXvmjGoEoBp1wcVfmenWgZdtnOpnXVXvPyZ+
-	U2wySVCE/Po5lVU9DXsPbDrlwc/bCXJcLhW5rTmDCQgZyCRuHjCrKC1JdM4uipmnb2Y51zn8tVc
-	WKSOmpAagsCH8GUKHeZ/N/wjgvYdtYdb4fw6QHtl7egaORdrtYNNXaSLHKlVR6+8oebZ+DLBVPR
-	xRFkCxkeefFNNjhkToZuiPlJdfd4pMqDvgsxs/ePqnN3kEwzwgi5rugdoM5yTQfc5ug3BO0zWdm
-	+pX6tlotprHKAHR3Yvq62+M1nD0=
-X-Received: by 2002:a17:902:d4c1:b0:2ca:d9ec:322c with SMTP id
- d9443c01a7336-2ccc9cdcd8fmr3998845ad.24.1783447139875; Tue, 07 Jul 2026
- 10:58:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Hfvhbpny"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RmTJ31Ct0+CUX97U2ZHkeLIC67kfdPmYljzcXQ24Eq72xGvEkrOtI5yYaSIcjiHbryxlfnUFDud1qPikhfgpVu7Asg8LGw6knYwEEg8Pzom6XlH2ceskkAzSLH5v3jrQgg1s5Bgw9tLFp35yTot6FPpxBIsmAVDepUo5ctsL7Mpjyk6F+GpBBjPrzOXEFL2SEDinpGyeriMRCNOLviJd4eBw68XjXDp66QBz61anrl2L/iRh8/Oczp02fWDutLzbS9XCtt+fJaxqMCAmxj0fvuCs26sgk6TWHspLoc+BfOtL6aQIKtE4MRkL/+VcecqPeXQzlNngHSPngoouWm//VQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8IIIY9pm8QsmrcsmVwRwM6OzE1/6nUvrPB27JfGzzx8=;
+ b=iylyzlrc4c/wmEyxxb8Osn2/wtpafvvsCC4yT1r+wG5zsQPF2wh6HkBkM9OAJhlxz5LPDzMOPMANYrEm5CQOTvDQVIaEno6XoyquLlVFPZQ0sKLMU5bdvXvr5k687h1vgKzr38U8ahF7YdhKA4hch8SCEm9v40FJU7pggxGWvZK2DYop7sNI2X3rIOiiP61cxO08Xr6Hf5rfJS1OEPGA4klO21Ti/wFJPTXP5hCOjlBmxZc2ma+GNnyo5mxFbv1/5UG3Lpd8z94APxmJMd2e97c9CUaE2B15/y5aIw8wwm2H3Y/RCHSG7ucBIUVVdII3cgRRH6pUvQHMZOErMp/1kA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8IIIY9pm8QsmrcsmVwRwM6OzE1/6nUvrPB27JfGzzx8=;
+ b=HfvhbpnyNLIK283FnMtZc11O7Q568YHI2HJyZywHF4FZU91KTHyI2dejIn4X+I9JA0QOZ1fyNOXLr8M+FaY+TmLhGnWcHkyhFkwpuW/CyplekBCXy89HNQz5i8E2jFXPBGnH2CL+9yxvK+UZzphQILbyhnWGqJhz25pPkmovuxLYedWY4hGNNS38+MTND4n+SDLSE9jlb1mWPaaW3JRd9rE6Ktgyn1r1VDMA+DbC/cbvH/w5wLRTKe07lZqN+gmMSfyPykUWyrnbNf7xs5O/41MRn7c2owKJQ65zXETneeefJHbqrGoS8cg3ppgxh744YDa2DfvuTqIZpAHOP8QdyQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV3PR12MB9356.namprd12.prod.outlook.com (2603:10b6:408:20c::21)
+ by DM6PR12MB4281.namprd12.prod.outlook.com (2603:10b6:5:21e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.14; Tue, 7 Jul
+ 2026 18:42:32 +0000
+Received: from LV3PR12MB9356.namprd12.prod.outlook.com
+ ([fe80::1c36:31b4:c420:6286]) by LV3PR12MB9356.namprd12.prod.outlook.com
+ ([fe80::1c36:31b4:c420:6286%5]) with mapi id 15.21.0181.009; Tue, 7 Jul 2026
+ 18:42:32 +0000
+Date: Tue, 7 Jul 2026 14:42:30 -0400
+From: Yury Norov <ynorov@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Heiko Stuebner <heiko@sntech.de>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>,
+	Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Xu Yang <xu.yang_2@nxp.com>, Linu Cherian <lcherian@marvell.com>,
+	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
+	Chengwen Feng <fengchengwen@huawei.com>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Yushan Wang <wangyushan12@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-perf-users@vger.kernel.org, x86@kernel.org,
+	driver-core@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-amlogic@lists.infradead.org, linux-cxl@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] lib/cpumask: get rid of
+ cpumap_print_to_pagebuf()
+Message-ID: <ak1IltLSvhw2xj2H@yury>
+References: <20260702154725.185376-1-ynorov@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260702154725.185376-1-ynorov@nvidia.com>
+X-ClientProxiedBy: CH0PR03CA0037.namprd03.prod.outlook.com
+ (2603:10b6:610:b3::12) To LV3PR12MB9356.namprd12.prod.outlook.com
+ (2603:10b6:408:20c::21)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260707153801.315352-1-abyssmystery@gmail.com>
-In-Reply-To: <20260707153801.315352-1-abyssmystery@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 7 Jul 2026 10:58:48 -0700
-X-Gm-Features: AVVi8CctjJRtHvex5DkZjTA7u_bIxjQULf4vC8epBj2Tqpex7qm6NtK2C8a6-mI
-Message-ID: <CAP-5=fXPD84ni_Db=P=18t88wmXAM7iwBXkXJYU7kgQFYO4VtA@mail.gmail.com>
-Subject: Re: [PATCH] perf record: fix poll storm when monitored threads exit
-To: Jiawei Sun <abyssmystery@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	namhyung@kernel.org, acme@kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, james.clark@linaro.org, 
-	alexey.budankov@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR12MB9356:EE_|DM6PR12MB4281:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9fe8075-5163-4391-bea2-08dedc578130
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|7416014|22082099003|18002099003|11063799006|56012099006|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	NxpmzHpLRHbkpQwIcSIbqnmUt1oSohXxde2OGgxei0cGQUG0PntrEJZuhETYGiDkfQkSrhL90K9iaUdXgb7Lmvk0FpHYsDiYegAwjmh2PYkgS0paPwYWxovWF3etkfsvgC575c2uC1+AbSZpPyGFkKmHBp+8heQlQk+XM0m8V/Q4U0R/3OJt7VTQOFdWp9d7ZJe0EBl6gk6QsSA9C2TMr0mzQtt7Ct6iOa15KPkm1Y0/ZqfWFdmqyokl4lUlN2Fk6oODKPoNdEE4lvVcTRkb0GrkPs/TgpabINay7QUgayipdxmKGlRlA9m5FAxHlC1sJi04lllmjuBKXH5wU2Qyhi1rhUWcMYHj03k1IAFTkf+HmnbfatkjtlJ3EjjOApqrTtFDB77Ooj+AZwuVgQiSWM7xnri+o50Qgk4F8z/U2ph2aKq5avzKyscbhLgQOZVTYlmBjD0eC5EuMoSWXycvW02femTwdL/v3wOTei+1H+kd44iQGMmrm4nM/vjs9Nzs1WDDMsKgnl0x+gonK8YTnZ+BXD4Bo5ugM8PSFWQYWvd97C/o/ZTyHhYg+WlMUQW5J+IkC7GufPiM7MTS1v9rbnH7Cb0c0iKYBTDQQnvZJi/PWnUGIWIAZuMzaC8jdKZvjM79sihzbWiN9syqiR7IFhfSyz0F0uFXoKUMrRPYM6U=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(7416014)(22082099003)(18002099003)(11063799006)(56012099006)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SiQzI8ohKs62x9Az4vlIly7jtkeb1zq7fA+N8Y4QXsU61R7rOL2lPYxQZrJV?=
+ =?us-ascii?Q?jP7N+OUGHezZWOqNG/LoH5SUHQzpeU3DN2iv01A5qCWtqxiGFrUdkP/WVTYY?=
+ =?us-ascii?Q?ag86fU/SBiF26PIDjxOXkIVIkOJYXWeSE/+U8dUBQHXI38pTnU3cLgtR5k3a?=
+ =?us-ascii?Q?TMDzZ5ajUwGstujZN4hJi+nGZlMJEfmPUHGHl4Ug8FNXlkisEhdIO2IqDJLl?=
+ =?us-ascii?Q?WAU8x41BDPDuwLYkSn3tKoWz94Rq7eBA/+kx3cMg8AQXhvIaxDpq+BbbEyLD?=
+ =?us-ascii?Q?WyXKA0Bg1L/ob8eaQiAp07uaxAzOaEKWPXHEb4y93BXynfLoR4lV4maDG0RT?=
+ =?us-ascii?Q?FMCiiZrmoJr5seo0du/jwMovnBkeer4TV8WCj4xcMKR9YkgOP/t2NN97u7x9?=
+ =?us-ascii?Q?wtKEIKN3Exs79ezHOg8haKhW7f5JcCmi+Jr60sYIbJCeRaF4TKnQi2NZgrcQ?=
+ =?us-ascii?Q?mbU86xNacK2UJ4u5QriD33CiMjlgwbd9/ZqSgdg0Xfz6wK6r8mlhYx2mdEYQ?=
+ =?us-ascii?Q?e8NV3+VcqyPrqTzlOKpHONruyACX5W6UNaBUNCnGfpj4RVETdhU4FwKq/l7E?=
+ =?us-ascii?Q?HizgZWA87T+4saJQ1OHCw0zy7xo9QAoprQUxOkZj/x8zlYsa8olqBooTThug?=
+ =?us-ascii?Q?XtXTolV/G6yN0dhX9idQ/qb9pJVV4+YYcUhXldKPUNZxo6sR6PAenoS4UkMR?=
+ =?us-ascii?Q?qvGypU0jO1wGKVOkQI75LusZ6WvOrQqrGJjxbzktl7Bzcb3+UCq7W4YMI8Tn?=
+ =?us-ascii?Q?+0SCpqUjGVWeQJH5a/0jTuxeG1TGJzJAcnC5Dl0TU4BIB7Njy/A3BX8YXH/R?=
+ =?us-ascii?Q?WcusWrkSKkU4CxJICvLYbUrCEOwfyLG5gMMBsz75Wa7vKmWMRoJ/HajiSwDt?=
+ =?us-ascii?Q?sLWXsO20+oAFm3BQg7ewE5Ugc8OAGL00DBfH3Nw0JefnNNwCW3PThWs/Wwer?=
+ =?us-ascii?Q?eWEo3cnHdPCm0KVOxcjfk3ICWg7aRFT1ULay1y4c4L5vZyxr2ltI8d/hp1lW?=
+ =?us-ascii?Q?HIoa65wmbpVUmFT6DggUgCq6iuyks3jl7nJ0xkRRIrsZ3sDVLSdf/I4tXemx?=
+ =?us-ascii?Q?SLwRekoK0bn9gx6cQFVQ6XZV0xuMDVSdZYfaMwjAbp2KtxjJMGenE/hi6T2D?=
+ =?us-ascii?Q?Dp3wF5Rm01fFzulYcl0r8IvrQm2ip7ZazotHt/zQ4UZ2JVgJZYmK4IHgBVh/?=
+ =?us-ascii?Q?BBUeK+5nJrCyfYxUsF35C8Itc7M4cH4QiICtKk9lNVxIc2Q4JqODoKdMdtDB?=
+ =?us-ascii?Q?hpfmREYiRPwHE1T+2dmMWX7WCGcfXNCKvFLv2tMRWiVPIINgd4b66QYUPQUY?=
+ =?us-ascii?Q?dWXcDUfKkC5TyFXUdYLt2vX/72zJS6qJP/ZfuVxMn9MJHYtHrNID0W2fVu9S?=
+ =?us-ascii?Q?gALekxfX/Y6MVNjd0sdzCajc7HIFptn3zGIUeB4Qh4JIB8q2o5lwBLu/a1yc?=
+ =?us-ascii?Q?7KGU+O8XVRe0gMr5V1lctB/X9rDPIaRlKdYjyP/+stqcqdnWHE4diBFIgR7D?=
+ =?us-ascii?Q?TevUlbhUhTGr1Dk4bAUoWJB91OS+m9yM5lE3sIjZ9d3eRlkjsPdomyWKViYr?=
+ =?us-ascii?Q?gjjLcSVlh6It5NIVUojhSIgRw7rKXIfUpDN1R7WYShiCww6NVRlD+h63FQlO?=
+ =?us-ascii?Q?7BPZLNOTGSDFbZ4G6/lgY2dIqJnIX85aJwFrns6W8Bq2TEISe+AOc0Ge38Tz?=
+ =?us-ascii?Q?GTq5lrSUyvCAF+HoUWUAk2uh8pytRVQ5bMGCvLEP4IDtgX5B?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9fe8075-5163-4391-bea2-08dedc578130
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9356.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2026 18:42:32.3185
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uJ94FGIl5fGyIsMqJde9xM/7YwLuqHPmfqSuXko5YdDmTTaQuMcbWQZX6PT8XmAvMMaaqUt/VzshdNwEyjxqQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4281
 
-On Tue, Jul 7, 2026 at 8:37=E2=80=AFAM Jiawei Sun <abyssmystery@gmail.com> =
-wrote:
->
-> When `perf record` samples a multi-threaded process and one of the
-> target threads exits during the session, perf itself may start burning
-> 100% CPU (up to 200% across two cores) until the session ends.  A
-> single dead fd is sufficient to trigger this; it can be reproduced with
-> 15 pthreads in a compute loop where one thread exits halfway through.
->
-> The root cause is two independent instances of the same defect: dead
-> perf_event ring-buffer fds are left in a pollfd array.  When a monitored
-> thread exits, the kernel closes its ring-buffer fd, which then returns
-> POLLHUP.  POSIX specifies that poll() always reports POLLHUP and POLLERR
-> regardless of the events mask, so any dead fd left in the array makes
-> poll() return immediately every time, spinning in a tight loop:
->
->   3 seconds: 256,600 poll() calls, 0 context switches, only 21 write()
->   Woken up count goes from ~0 to 1,300,000+
->
-> There are two affected poll paths, fixed together here:
->
-> 1. Record main loop, via fdarray__filter() (tools/lib/api/fd/array.c).
->    Since commit 59b4412f27f1 ("libperf: Avoid internal moving of
->    fdarray fds") it only zeroes events/revents without setting fd to
->    -1, so poll() keeps reporting POLLHUP for the entry.  Setting
->    fd =3D -1 makes poll() skip it, matching the pattern already used in
->    the control-fd path at tools/perf/builtin-record.c:1673.
->
-> 2. BPF sideband thread, perf_evlist__poll_thread()
->    (tools/perf/util/sideband_evlist.c).  This thread polls for
->    PERF_RECORD_BPF_EVENT but, unlike the main record loop, never calls
->    fdarray__filter() at all, so dead fds accumulate forever and it
->    spins at 100% CPU:
->
->      Before fix: dJiffies=3D101, wchan=3D0 (running)
->      After fix:  dJiffies=3D0,   wchan=3Ddo_sys_poll (blocking)
->
->    Fixed by calling the existing evlist__filter_pollfd() helper after
->    evlist__poll(), mirroring the main record loop.  <poll.h> is
->    included for the POLLERR/POLLHUP macros (previously unused there).
->
-> The two fixes compose: fix 1 makes poll() ignore dead fds (fd=3D-1); fix
-> 2 ensures the sideband thread actually performs the filtering.  Both
-> paths are affected in all kernels from v5.1/v5.9 to the current master
-> (7.2-rc1); the source of both functions is byte-identical across them.
->
-> BPF event recording is preserved: after the fix, perf.data still
-> contains PERF_RECORD_BPF_EVENT records and bpf_prog_info entries.
->
-> Verified on perf 6.1.76, 6.6.143 and 7.2-rc1 with a minimal reproducer
-> (Woken up 1,300,000 -> 3, CPU 100% -> 0%) and an A/B orthogonal test:
-> keeping the unpatched binary but preventing the target thread from
-> exiting also makes the storm disappear, confirming the trigger.
->
-> Fixes: 59b4412f27f1 ("libperf: Avoid internal moving of fdarray fds")
-> Fixes: 657ee5531903 ("perf evlist: Introduce side band thread")
-> Signed-off-by: Jiawei Sun <abyssmystery@gmail.com>
+Added in bitmap-for-next. Thanks.
 
-This all makes sense and reviewing the surrounding code I don't see
-issues. Sashiko is also happy:
-https://sashiko.dev/#/patchset/20260707153801.315352-1-abyssmystery%40gmail=
-.com
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
-> ---
->  tools/lib/api/fd/array.c          |  6 ++++++
->  tools/perf/util/sideband_evlist.c | 14 ++++++++++++++
->  2 files changed, 20 insertions(+)
->
-> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> index f0f195207..ffe8272af 100644
-> --- a/tools/lib/api/fd/array.c
-> +++ b/tools/lib/api/fd/array.c
-> @@ -122,6 +122,12 @@ int fdarray__filter(struct fdarray *fda, short reven=
-ts,
->                         if (entry_destructor)
->                                 entry_destructor(fda, fd, arg);
->
-> +                       /*
-> +                        * Set fd to -1 so poll() ignores this entry; oth=
-erwise
-> +                        * POLLHUP/POLLERR are still reported for events=
-=3D0 fds
-> +                        * (POSIX: always checked), causing a poll storm.
-> +                        */
-> +                       fda->entries[fd].fd =3D -1;
->                         fda->entries[fd].revents =3D fda->entries[fd].eve=
-nts =3D 0;
->                         continue;
->                 }
-> diff --git a/tools/perf/util/sideband_evlist.c b/tools/perf/util/sideband=
-_evlist.c
-> index c07dacf3c..ba043db6c 100644
-> --- a/tools/perf/util/sideband_evlist.c
-> +++ b/tools/perf/util/sideband_evlist.c
-> @@ -8,6 +8,7 @@
->  #include <perf/mmap.h>
->  #include <linux/perf_event.h>
->  #include <limits.h>
-> +#include <poll.h>
->  #include <pthread.h>
->  #include <sched.h>
->  #include <stdbool.h>
-> @@ -55,6 +56,19 @@ static void *perf_evlist__poll_thread(void *arg)
->                 if (!draining)
->                         evlist__poll(evlist, 1000);
->
-> +               /*
-> +                * When a thread of the monitored target exits, its per-c=
-pu
-> +                * ring-buffer fd is closed and starts returning POLLHUP.=
- Such
-> +                * dead fds are never requested for POLLIN, but poll() re=
-ports
-> +                * POLLHUP/POLLERR unconditionally, so leaving them in th=
-e
-> +                * pollfd array makes the following evlist__poll() return
-> +                * immediately forever, spinning this thread at 100% CPU.
-> +                *
-> +                * Filter them out here, mirroring what the 'perf record'=
- main
-> +                * loop does after fdarray__poll().
-> +                */
-> +               evlist__filter_pollfd(evlist, POLLERR | POLLHUP);
-> +
->                 for (i =3D 0; i < evlist__core(evlist)->nr_mmaps; i++) {
->                         struct mmap *map =3D &evlist__mmap(evlist)[i];
->                         union perf_event *event;
-> --
-> 2.39.5
->
+On Thu, Jul 02, 2026 at 11:47:13AM -0400, Yury Norov wrote:
+> cpumap_print_to_pagebuf() is the equivalent for the "&*pb[l]" notation
+> in printk-like functions. In some cases, it makes people to create
+> temporary buffers for the printed cpumasks, where it can be avoided.
+> 
+> Get rid of it in a favor of more standard printing API.
+> 
+> Each patch, except for the last one, is independent and may be moved with
+> the corresponding subsystem. Or I can take it in bitmap-for-next, at
+> maintainers' discretion.
+> 
+> On top of -next.
+> 
+> This is the resend of:
+> 
+> https://lore.kernel.org/all/20260528183625.870813-1-ynorov@nvidia.com/
+> 
+> Except the patches merged in 7.1 cycle. I'm going to apply the material
+> in 7.2 unless explicit NAKs received.
+> 
+> Yury Norov (11):
+>   arm: Use sysfs_emit() for cpumask show callbacks
+>   powerpc: Use sysfs_emit() for cpumask show callbacks
+>   x86/events: Use sysfs_emit() for cpumask show callbacks
+>   cpu: Use sysfs_emit() for cpumask show callback
+>   devfreq: Use sysfs_emit() for cpumask show callbacks
+>   fpga: dfl-fme-perf: Use sysfs_emit() for cpumask show
+>   hwtracing: hisi_ptt: Use sysfs_emit() for cpumask show
+>   RDMA/hfi1: Use sysfs_emit() for cpumask show helper
+>   PCI/sysfs: Use sysfs_emit() for cpumask show callbacks
+>   perf: Use sysfs_emit() for cpumask show callbacks
+>   lib/bitmap-str: get rid of cpumap_print_to_pagebuf()
+> 
+>  arch/arm/mach-imx/mmdc.c                    |  2 +-
+>  arch/arm/mm/cache-l2x0-pmu.c                |  2 +-
+>  arch/powerpc/kernel/cacheinfo.c             |  3 ++-
+>  arch/powerpc/perf/hv-24x7.c                 |  2 +-
+>  arch/powerpc/perf/hv-gpci.c                 |  2 +-
+>  arch/powerpc/perf/imc-pmu.c                 |  2 +-
+>  arch/x86/events/amd/iommu.c                 |  2 +-
+>  arch/x86/events/amd/power.c                 |  2 +-
+>  arch/x86/events/amd/uncore.c                |  2 +-
+>  arch/x86/events/intel/core.c                |  2 +-
+>  arch/x86/events/intel/uncore.c              |  2 +-
+>  drivers/base/cpu.c                          |  2 +-
+>  drivers/devfreq/event/rockchip-dfi.c        |  2 +-
+>  drivers/devfreq/hisi_uncore_freq.c          |  2 +-
+>  drivers/fpga/dfl-fme-perf.c                 |  2 +-
+>  drivers/hwtracing/ptt/hisi_ptt.c            |  2 +-
+>  drivers/infiniband/hw/hfi1/sdma.c           |  3 ++-
+>  drivers/pci/pci-sysfs.c                     |  7 ++++---
+>  drivers/perf/alibaba_uncore_drw_pmu.c       |  2 +-
+>  drivers/perf/amlogic/meson_ddr_pmu_core.c   |  2 +-
+>  drivers/perf/arm-cci.c                      |  2 +-
+>  drivers/perf/arm-ccn.c                      |  2 +-
+>  drivers/perf/arm-cmn.c                      |  2 +-
+>  drivers/perf/arm-ni.c                       |  2 +-
+>  drivers/perf/arm_cspmu/arm_cspmu.c          |  2 +-
+>  drivers/perf/arm_dmc620_pmu.c               |  4 ++--
+>  drivers/perf/arm_dsu_pmu.c                  |  2 +-
+>  drivers/perf/arm_pmu.c                      |  2 +-
+>  drivers/perf/arm_smmuv3_pmu.c               |  2 +-
+>  drivers/perf/arm_spe_pmu.c                  |  2 +-
+>  drivers/perf/cxl_pmu.c                      |  2 +-
+>  drivers/perf/dwc_pcie_pmu.c                 |  2 +-
+>  drivers/perf/fsl_imx8_ddr_perf.c            |  2 +-
+>  drivers/perf/fsl_imx9_ddr_perf.c            |  2 +-
+>  drivers/perf/fujitsu_uncore_pmu.c           |  2 +-
+>  drivers/perf/hisilicon/hisi_pcie_pmu.c      |  2 +-
+>  drivers/perf/hisilicon/hisi_uncore_pmu.c    |  2 +-
+>  drivers/perf/marvell_cn10k_ddr_pmu.c        |  2 +-
+>  drivers/perf/marvell_cn10k_tad_pmu.c        |  2 +-
+>  drivers/perf/marvell_pem_pmu.c              |  2 +-
+>  drivers/perf/nvidia_t410_c2c_pmu.c          |  2 +-
+>  drivers/perf/nvidia_t410_cmem_latency_pmu.c |  2 +-
+>  drivers/perf/qcom_l2_pmu.c                  |  2 +-
+>  drivers/perf/qcom_l3_pmu.c                  |  2 +-
+>  drivers/perf/starfive_starlink_pmu.c        |  2 +-
+>  drivers/perf/thunderx2_pmu.c                |  2 +-
+>  drivers/perf/xgene_pmu.c                    |  2 +-
+>  include/linux/cpumask.h                     | 19 -------------------
+>  kernel/events/core.c                        |  2 +-
+>  lib/bitmap-str.c                            |  9 ++++-----
+>  50 files changed, 58 insertions(+), 75 deletions(-)
+> 
+> -- 
+> 2.53.0
