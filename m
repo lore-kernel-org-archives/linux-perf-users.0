@@ -1,106 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B5D3B19D0
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Jul 2026 23:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3DC20ED;
+	Tue,  7 Jul 2026 00:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783382221; cv=none; b=lIZBbWpfEMOaJek51gqCth8DXtYsJo8ouQsM7nLvskB+cme/3/VXtBtt7jvU9D5550ETa6+mmZ0tSZSvhRJLhToCAid1sNMxiTtZ2ls20a23/t8k0/kKtS7vNJ1nPO/QdLa6IsqzFdfhIpX4llcRzM2Tsa23Mb8CimQV3sotit0=
+	t=1783382644; cv=none; b=IngIRMJnnxkQX1+C1nzGOHS6WxTQq4cvMsYp0V82Dh29RwHBpvzMRa1FzeQdSJvofUi9fTyMzv2kQRk/She8/LgQBG8Xv6FF0mIP+3HJQqHf1TVmey0xjGza/F18w9RooCa2ejjNsG0ZYMT949UrkltTb5/EabNk+Ml9awBjPCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783382221; c=relaxed/simple;
-	bh=VDdsrnbxJ9QqIz358NP5YGE9BLyGpteiLkhyt0iz7K0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FCH6DE5D7gtxGSIgKBWy1/ca6YOw9oRLfDGBY3KydCFfG7UgLYKVOyQ4zCWIlfEWe44kThqirPA+fd1+N9ZjcuyVDIKbccCHomwygUIiX47AUqQbUTi1cQ+Aa24fo0rJII0dlTzvXAX++dcgk+MJyEgo7r1MA4u4fJeb2G4FlJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEUdhWZp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783382644; c=relaxed/simple;
+	bh=5sWnK/mcwU5EFxKfsnOovqiNa0uzDvY2yMgQ2zmzkik=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gguOJChNRtM/8XRSxbaOyDz/aNZ1dKkVgvsEPJzIpd/Q/8LkvE6jJLVrkM2rsfxiXw8szbh9vOT7GlKwoxnFHTYK5tFA07qIOoqLPnJrtRUFHzOf69AGPCqbpvb8UPf8d5WtJrzVt33FaAwFLvOkZi1JXfdM4NIKusOIBE6Wvd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGHqVHj5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nEUdhWZp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B941F000E9;
-	Mon,  6 Jul 2026 23:57:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGHqVHj5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B501F000E9;
+	Tue,  7 Jul 2026 00:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783382220;
-	bh=8llISZPmnBVGc18M2ls3cVxLmlT3N9mBJIyIvncwwNA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nEUdhWZpWou1uMbE9OHqnj9WhcdCpTVwxG5N6Tu0J/Xe8BP2HQJnPASwIwWqhW3QB
-	 IJ4NQ8QCz7v+IGmb+r2wh8f58PLaO41wyldpuBXCpMTWRNANDJrv4U4C+Bq+zmvyCn
-	 D5ULqQaLKVKUVNvKN6rbrYJbwhCRrWZj7X/lICv0my9G630kpwt34hptT835zwXBkW
-	 VtbhPuEyNzLLDZFSsIXnagnc35dqYixlBJkQGbqjUgi1slkZaDhZ0H+sTAIRoHhBYn
-	 V2BVGz4YAe0cFy3fMqZOBfffzfL0hc8GpjpMQOcw+szMHfj5y6R959NiHQhC0diG94
-	 j7I8w9EYRpT0Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf build: Fix compiler errors with old capstone
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260706234836.815254-1-namhyung@kernel.org>
-References: <20260706234836.815254-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 23:56:59 +0000
-Message-Id: <20260706235700.53B941F000E9@smtp.kernel.org>
+	s=k20260515; t=1783382643;
+	bh=XE+LT6QRcIQzeTOm4EXRVFr8jNU4pb6cI6PGB6HIxmo=;
+	h=From:To:Cc:Subject:Date;
+	b=IGHqVHj50gF1ozQlZrpYY1tVdYGkAA2Kce/f2QJU5N43tmNxp0t9P++FpwPN0d3/T
+	 x8rfLJtb/Eo7c7gxeW29MKrT2Ty8PCjny5PivcHZv/irbJPpumN6AdlAlL1l0dn95y
+	 OMurx2fnRTIsDCAq8+P+GMRep3juzRrkAhQJeg3aTtxvkK4AkKj9nZIoH8ecxAC9aR
+	 +0WLN3T3vystc+92qHO6XDX4RPMIqqoCO30cTOufqK2Eyg33ECFCxDuvs1xJUUHzkW
+	 UZcyXpL3D/3fO2sddDl/NgGZqvl8Nac8nD3sTnLD2YyMpDDqKumn1XxdqS4yaq0/ZV
+	 UR/Yldf+tqFlA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Trevor Allison <tallison@redhat.com>
+Subject: [PATCH] perf build: Do not pass -static to dlfilters
+Date: Mon,  6 Jul 2026 17:03:57 -0700
+Message-ID: <20260707000357.823509-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.rc2.803.g1fd1e6609c-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+The recent commit caused a failure in make build-test for static builds.
+Let's not pass -static the option to dlfilters which is dynamically
+loaded as it's hard-coded with -shared even for static builds.
 
-Pre-existing issues:
-- [High] Leaked `struct map *` reference in `print_capstone_detail` due to =
-missing `map__put()`.
---
+Fixes: e1065ed188cf ("perf build: Add LDFLAGS to dlfilters .so link")
+Cc: Trevor Allison <tallison@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Makefile.perf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- Patch [1]: [PATCH v2] perf build: Fix compiler errors with old capstone=
- ---
-commit 290412dd8be8c32690d86ead2197a90f8b8eb074
-Author: Namhyung Kim <namhyung@kernel.org>
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 2b53d9e0c73b3382..0031112c036e830e 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -680,7 +680,7 @@ $(OUTPUT)dlfilters/%.o: dlfilters/%.c include/perf/perf_dlfilter.h
+ .SECONDARY: $(DLFILTERS:.so=.o)
+ 
+ $(OUTPUT)dlfilters/%.so: $(OUTPUT)dlfilters/%.o
+-	$(QUIET_LINK)$(CC) $(LDFLAGS) $(EXTRA_CFLAGS) -shared -o $@ $<
++	$(QUIET_LINK)$(CC) $(filter-out -static,$(LDFLAGS)) $(EXTRA_CFLAGS) -shared -o $@ $<
+ 
+ ifndef NO_JVMTI
+ LIBJVMTI_IN := $(OUTPUT)jvmti/jvmti-in.o
+-- 
+2.55.0.rc2.803.g1fd1e6609c-goog
 
-perf build: Fix compiler errors with old capstone
-
-This commit fixes build failures on older capstone versions (prior to v5) by
-defining missing RISC-V architectural and mode constants.
-
-> diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-> index 5ad537fea4360..0247142a77ba3 100644
-> --- a/tools/perf/util/capstone.c
-> +++ b/tools/perf/util/capstone.c
-> @@ -24,6 +24,13 @@
->  #include "symbol.h"
->  #include "thread.h"
-> =20
-> +#if CS_VERSION_MAJOR < 5
-> +#define CS_ARCH_RISCV    15
-> +#define CS_MODE_RISCV32  1
-> +#define CS_MODE_RISCV64  2
-> +#define CS_MODE_RISCVC   4
-> +#endif
-
-[ ... ]
-
-Later in tools/perf/util/capstone.c:print_capstone_detail():
-
-> 		if (dso__kernel(map__dso(map))) {
-> 			/*
-> 			 * The kernel maps can be split into sections, let's
-> 			 * find the map first and the search the symbol.
-> 			 */
-> 			map =3D maps__find(map__kmaps(map), addr);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does this code leak the map
-reference?
-
-When disassembling instructions with X86 memory operands using RIP-relative
-addressing, maps__find() returns a new reference to the kernel section map.
-Since this new reference is assigned to the local map variable, is there a
-missing map__put() before the function returns or the loop continues? This
-might lead to a resource leak and reference count imbalance.
-
-> 			if (map =3D=3D NULL)
-> 				continue;
-> 		}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706234836.8152=
-54-1-namhyung@kernel.org?part=3D1
