@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454851F03DE
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 02:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB48D27BF93
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 02:06:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783476237; cv=none; b=FJMyKNdoJn5zZEJILKgdWM1Tc52+DB87LkpxzI2OJfZIGB9pLg4Z+G7eqY6DVxb44m0iNvncOUb/y3YgbUrmCSQ8kcF63cZrOoRBevxkbCa1grXnN81JQBN/fuTKj8r5+3SrUhLg81hthArcZNaiii7mbl+OjhUwEQlVCI+mCd0=
+	t=1783476362; cv=none; b=CxvGJ0Cuk9zW5567mPW0itUsUFHwTNw23LTQnDI90fx3gvO6juuuz3t/o754B96TzjzZhqtwlKQZRmlOeFb/KtKOHFG31Z1SlNe/tA/+KntUZHSig25a1PZjN+6NLrAADqhMA7VO9WhiHz5efoMLeQndqvahhpG7EA1XEOG8/Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783476237; c=relaxed/simple;
-	bh=s1F7iiYl+e2ehnWxft0m6Lu/ICgDcRvObJfE8gLOZdU=;
+	s=arc-20240116; t=1783476362; c=relaxed/simple;
+	bh=mMPry6uRTy2lPY2gsm7mpDr69MtIalJaD3Aq9rikVlk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SgRE71o5q/M/DXhoD/yujZM8TH+KRjSxiss8qarvl/XgKgzLtGoROhY9pNrzQA5oCp2bpP6j1xkrMKi1h8hLQ5685WUdLacU0pq5T6qBxLngiXXbSfYo2fR9aERdQjobamgPMZgTwHrXa51Oo5TFVJjYPRuGRwMmV/UkAXOnwC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NFeHaGXa; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=DS7b1w7IBHoKyBQyTakLalWy7RQtYsdZUOFAwWT4w0hNYb0ZE1xbXOz1o6WeCYJabVApYlVVRxPexHXS5Of9fPiYGOTt5fUj7SlxGpHIGz2I3k/QfMka+bdxL8H9lbKVbEDw3WCmsbyuDVx2MxMW5E/dZqjMS6G71SkuyQzSbGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VyEAPmf4; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NFeHaGXa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VyEAPmf4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783476236; x=1815012236;
+  t=1783476361; x=1815012361;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=s1F7iiYl+e2ehnWxft0m6Lu/ICgDcRvObJfE8gLOZdU=;
-  b=NFeHaGXaeubVz2t8gRVzFGC70GGn954zZJmtPqdd7AG+3s7iLNqaBaas
-   dhY5GoxtyIImTSdYUVXqqiJId7lbPc7QRIAi0tgvUjJk1IMsPccnE4jjl
-   L5UuMqpmJoWNWPo1Wni3MXrP5RY+UEe3R/d917VRrQIhwiYZYoqa8pcAx
-   UP4bAG9WrBltcsKCay2jJ9Ez52CGgNA0Mscc/m1Vx9AKNq7RZX2WtrsDt
-   UYSrd3rc37LRHrRybLBYgoWZ1cW4MmiFEZDnCkH5LK26zhC+V1i9TMOZG
-   p9KuehBYJW97060IOU9kiFjxBmfkgiAhF6LAk0Fm/UsuUG8jOMhqiG2Mq
+  bh=mMPry6uRTy2lPY2gsm7mpDr69MtIalJaD3Aq9rikVlk=;
+  b=VyEAPmf4XeoY/bXcL2WNVWYga5BKmceRj3z1U6eNfxGUY+EBYzUolpN6
+   qqA6cfdVcv5HvZOAyTfMxw2dimQQEsFw4Ok3w/eDAxkNrvh8zcCuBOLt5
+   2BkngQUM5y8ZP3yla7ajYfADv1xxhht+/os9krqjzyUxtZ1TUEFt4uc9b
+   XYSD6SuSwK1BM8tUOlg7FCV+FdJk0HxDQyDWhBvqI09y1RW8CZin8Iww9
+   HOpaV4+Yr8WKgNcvN2xhTusDKnmkW06eZ1OdkSbOMpwGtHqAhsPQM/uly
+   1l7MZKY/ZSJmUrwDvt3oZUJkL0akTdOm7BsAd4l0Wdb6BGakQMQlXnfVe
    A==;
-X-CSE-ConnectionGUID: f7NBib+8SK+fc8A6e1Dccg==
-X-CSE-MsgGUID: poHnQ3V0QbaG4QWaP0MJsg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="84191081"
+X-CSE-ConnectionGUID: AG01rrXbR7+zQMYexA9a5Q==
+X-CSE-MsgGUID: AEkBd1EwSqiK8nevkBwCjg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="84191169"
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="84191081"
+   d="scan'208";a="84191169"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 19:03:56 -0700
-X-CSE-ConnectionGUID: GLzOYxxHShSW3VAoTlOkwg==
-X-CSE-MsgGUID: UUK2CVpZQf626xPl8O3VSA==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 19:06:00 -0700
+X-CSE-ConnectionGUID: QIQ7CzJ6TJ6r3X+FGar3xw==
+X-CSE-MsgGUID: bj3BMOEiSliGi9vkmO9Ezg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="277361012"
+   d="scan'208";a="277361279"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 19:03:55 -0700
-Message-ID: <516cf877-6d6f-4cc8-b4bf-fe8e616e8a47@linux.intel.com>
-Date: Wed, 8 Jul 2026 10:03:52 +0800
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 19:05:59 -0700
+Message-ID: <83893ff1-cc40-45dd-a14f-4ce6f66bcc4b@linux.intel.com>
+Date: Wed, 8 Jul 2026 10:05:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,87 +52,60 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v9 24/24] perf/x86/intel: Add sanity check for PEBS
- fragment size
+Subject: Re: [Patch v9 03/10] tools headers: Sync x86 headers with kernel
+ sources
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
-References: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
- <20260706015439.3040804-25-dapeng1.mi@linux.intel.com>
- <20260706050412.999B31F000E9@smtp.kernel.org>
+References: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
+ <20260706023444.3067660-4-dapeng1.mi@linux.intel.com>
+ <20260706025423.D60241F000E9@smtp.kernel.org>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260706050412.999B31F000E9@smtp.kernel.org>
+In-Reply-To: <20260706025423.D60241F000E9@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 7/6/2026 1:04 PM, sashiko-bot@kernel.org wrote:
+On 7/6/2026 10:54 AM, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->
-> Pre-existing issues:
-> - [High] Events without preceding valid records in a corrupted PEBS buffer are permanently stalled.
+> - [Low] Modifying a tools header without a corresponding kernel header update causes a synchronization divergence and triggers build warnings.
 > --
 >
-> commit e2dd3df4b73a7bfac8a1332ea38906750253ef38
+> commit f29e894bc895095793a45b66351922174d49d6a4
 > Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >
-> perf/x86/intel: Add sanity check for PEBS fragment size
+> tools headers: Sync x86 headers with kernel sources
 >
-> This patch adds a sanity check for corrupted PEBS fragment sizes to prevent
-> potential infinite loops. If a corrupted fragment is detected, the entire
-> PEBS record and all subsequent records are dropped to ensure data integrity.
+> This commit attempts to synchronize the x86 msr-index.h header in the
+> tools directory with the kernel sources by adding ARCH_PEBS_VECR_xxx
+> macros.
 >
->> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->> index b38aed4f62b4c..7a8e619055393 100644
->> --- a/arch/x86/events/intel/ds.c
->> +++ b/arch/x86/events/intel/ds.c
+>> diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+>> index eff29645719bc..8cbc4c4997065 100644
+>> --- a/tools/arch/x86/include/asm/msr-index.h
+>> +++ b/tools/arch/x86/include/asm/msr-index.h
+>> @@ -350,6 +350,13 @@
+>>  #define ARCH_PEBS_LBR_SHIFT		40
+>>  #define ARCH_PEBS_LBR			(0x3ull << ARCH_PEBS_LBR_SHIFT)
+>>  #define ARCH_PEBS_VECR_XMM		BIT_ULL(49)
+>> +#define ARCH_PEBS_VECR_YMMH		BIT_ULL(50)
+> [Severity: Low]
+> Will this trigger a Kernel ABI header differences warning during the perf build?
+>
+> If the corresponding kernel-side macros are not already present in the
+> arch/x86/include/asm/msr-index.h header of the tree this patch is applied
+> against, check-headers.sh will flag a synchronization divergence. 
+>
+> Are these macros being merged in a separate patch series that needs to be
+> applied first, or did the kernel counterpart miss getting included in this
+> series?
+
+The kernel header update is in a separate patchset which the cover letter
+has mentioned.
+
+
+>
+>> +#define ARCH_PEBS_VECR_EGPRS		BIT_ULL(51)
+>> +#define ARCH_PEBS_VECR_OPMASK		BIT_ULL(53)
 > [ ... ]
->
->> @@ -3244,7 +3261,8 @@ static __always_inline void
->>  __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
->>  				    struct pt_regs *regs,
->>  				    struct perf_sample_data *data,
->> -				    u64 mask, short *counts, void **last,
->> +				    u64 mask, short *counts,
->> +				    void **last, bool corrupted,
->>  				    setup_fn setup_sample)
->>  {
->>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> @@ -3258,7 +3276,7 @@ __intel_pmu_handle_last_pebs_record(struct pt_regs *iregs,
->>  		event = cpuc->events[bit];
->>  
->>  		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
->> -					    counts[bit], setup_sample);
->> +					    counts[bit], corrupted, setup_sample);
->>  	}
->>  
->>  }
-> [Severity: High]
-> This is a pre-existing issue, but does this logic permanently stall PMU
-> profiling for events without preceding valid records in a corrupted buffer?
->
-> In arch/x86/events/intel/ds.c:__intel_pmu_handle_last_pebs_record(), we skip
-> processing if the count is zero:
->
-> 	for_each_set_bit(bit, (unsigned long *)&mask, X86_PMC_IDX_MAX) {
-> 		if (!counts[bit])
-> 			continue;
-> 		...
->
-> If a corrupted PEBS record is detected (e.g., via the newly added at >= top
-> bounds checks) and the code exits the drain loop early, events that had no
-> valid records parsed prior to the corruption will have a count of zero.
->
-> Because these events are skipped here, __intel_pmu_pebs_last_event() is never
-> called, preventing intel_pmu_save_and_restart() from re-arming their hardware
-> counters. Furthermore, since handle_pmi_common() explicitly masks PEBS events
-> out of the global status, the generic NMI handler will also ignore them.
->
-> Could this lead to the hardware counters remaining disabled, stopping
-> profiling until the session is recreated?
-
-The issue won't really happen on real hardware. Fixing it would introduce
-large complexity and seems unworthy ...
-
-
 >
