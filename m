@@ -1,139 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179C31F03DE
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 05:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135293BE165;
+	Wed,  8 Jul 2026 05:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783487321; cv=none; b=Gp1Y737ExuDVS8fngrhadwdUE62RckmRmAKc3B1EmoJFxYq/5lofbYFzPsmxMrc6oRcxXgOT8Kat4HMhUz60H148nytxmg0AwkdeXQadqSvgClSScXGkaCosJuygisllcpWN2jo3WN10sCJ2mHL+3Qj+FkURyXr/uD5s6svJGOU=
+	t=1783489148; cv=none; b=kMRap0wvflC5K2t36bA7weHU72kOVM4910SCycO8sdBcF58vhheTtxppeUFYPZSdYetqvfbTygXCpf/wqAkZuzVjp00TU26Xc66En59eO+gH2YhJjgcn7+aIC9DOzTXRtfCJ9ZGzUDRvAolwDdP+6a5lTydYkPOFEJB6cFUlijM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783487321; c=relaxed/simple;
-	bh=8MblFwsm1i/+oUCTx3jDufSe6sql+3Uz9pefM8R2g5U=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=j/monmOgfHtaQdDl6Ge7essUOEAZ/gpKDCYDd+zv1mNsusNxkA0yi8Zr3GZ4J4Vk2sw1VOvseECDiF1GxrHo8kZjTi9aLuhQDM+PwSv5leSyZ7Skjz4ujHcqoAZRQE8fPQG/Xo0mkO9ZBtcOSIRK9sVaTp0e+LIrQWBjTXbiK6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DX5/SpnD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783489148; c=relaxed/simple;
+	bh=3QoFQofQo/PqCjBVaF+LBcDBtmYjDMkQ/Xo0oKbUO2E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oDs1P9T0AAsuPoHu8Wiqjldet5VVtmwOxBRqrfRLUMq8Xmb42AFcNgrOGRFtIsjt0TC17HlRjoXvZi9uv35gB2GYky0RzUQQsAFKPM1QXqNXFSCsFWcX0rCwlqeoktLM+bEsUDsTu/IQf2BIyihKLxlsomP12s/scGEKA6073+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X1AJXKDb; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DX5/SpnD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9491F000E9;
-	Wed,  8 Jul 2026 05:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783487320;
-	bh=aucPiRXKi15UeE+PobWgOp9xjxp7o7E/miOD1kmnhjY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DX5/SpnDW1iSY6JIsvLVu4gu13LsnIsTLbFFWwlF5+eEOWTZPsCE1nXQ8V99PNskg
-	 +FPtf0hbnyba7efwDPCJFZUWqgl3O6vFU9e5I9iXKpf5Nh83PVbugOJLbqrsurWpa0
-	 lIlbdieTmZAnBHglT3MWIwd+Xt2I6VPnBG2KFOil8MNjdLB5hy5EXh/+w9mRTnpxnb
-	 4CfkY0oO1e64P3ow6NAcDKGG35RjWTkqmJbUkUXZRKm3NY0CTgvucGh09hwEre30jj
-	 /bsS3qIkTTQRMdLR8HjKwL9T55iNrI8pVYp8XQB//fXBlHJuGaGW2CvaRzl4o6rxmT
-	 MnatBVqa6lWWQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/3] perf x86: Add .note.gnu.property to assembly linked
- into perf
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Trevor Allison" <tallison@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260708045606.43649-4-tallison@redhat.com>
-References: <20260708045606.43649-1-tallison@redhat.com>
- <20260708045606.43649-4-tallison@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 05:08:39 +0000
-Message-Id: <20260708050839.BD9491F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X1AJXKDb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783489147; x=1815025147;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3QoFQofQo/PqCjBVaF+LBcDBtmYjDMkQ/Xo0oKbUO2E=;
+  b=X1AJXKDbnjWuj2lmnYIXxKsPt6CgRZgXnvBOfI1F1Bu3E4FF9n7arj6c
+   Ovm6D/UG7vhLnvrOGqIyrn8ko8Oab4hXtN1Vnax+Vt7uoVEfutsz4nO+Y
+   3C9j25vuVQKNoGgpkyFn5ANshFe9xd5Jo3QfSv1X6WchiHeDLiR1L38pV
+   eHCXgXdJYbF2T19d4U9zC9qb6txMRrGTAbaXxooB4p2NQUovhS5RhiCdF
+   hu9aLJJFnD6frw68nmQh+6IfneWczf+3rAY9LT4wo1RXPHnPLLUgDbSLX
+   WudJ9LaDi+T6odslb0Ur8x5G4jmft0/Y7A4fzvokNl/h+AktVmteN5mBR
+   Q==;
+X-CSE-ConnectionGUID: J5JiI1lVTFOayyCc8ImyYg==
+X-CSE-MsgGUID: XTadi1ytTYmJZ+wOY8UsTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="83922120"
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="83922120"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 22:39:07 -0700
+X-CSE-ConnectionGUID: ytcZkJUgQR6mS1FEjKrBUg==
+X-CSE-MsgGUID: LjBDKEWVT06GydrB/BvS3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="253099585"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by orviesa010.jf.intel.com with ESMTP; 07 Jul 2026 22:39:03 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH] perf jevents: Add Intel OMR MSR mappings
+Date: Wed,  8 Jul 2026 13:32:26 +0800
+Message-Id: <20260708053226.3776183-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] Adding .note.gnu.property asserts IBT support without providing =
-ENDBR64 instructions, causing a #CP crash in perf memory benchmarks.
-- [Medium] The .note.gnu.property section hardcodes 8-byte alignment, viola=
-ting the 32-bit x86 ELF specification.
---
+New OMR MSRs are introduced for OMR events on DMR and NVL. Perf continues
+to reuse the existing offcore_rsp attribute to encode the MSR value,
+similar to existing OCR event handling.
 
---- Patch [3]: [PATCH 3/3] perf x86: Add .note.gnu.property to assembly lin=
-ked into perf ---
-commit b48d7edb7fb18bc3dace2af272de108eb561d69b
-Author: Trevor Allison <tallison@redhat.com>
+Add the corresponding OMR MSR mappings in lookup_msr() so jevents can
+translate these events and generate the correct offcore_rsp attribute.
 
-perf x86: Add .note.gnu.property to assembly linked into perf
+Link: https://lore.kernel.org/all/20260114011750.350569-2-dapeng1.mi@linux.intel.com/
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ tools/perf/pmu-events/jevents.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-This commit adds `.note.gnu.property` to x86 assembly files linked into
-perf to indicate CET properties support. This is intended to prevent static
-linking from dropping CET from the final binary.
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 376dc2d24162..2bb51cc621b5 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -249,6 +249,10 @@ class JsonEvent:
+           0x3F6: 'ldlat=',
+           0x1A6: 'offcore_rsp=',
+           0x1A7: 'offcore_rsp=',
++          0x3E0: 'offcore_rsp=',
++          0x3E1: 'offcore_rsp=',
++          0x3E2: 'offcore_rsp=',
++          0x3E3: 'offcore_rsp=',
+           0x3F7: 'frontend=',
+       }
+       return msrmap[int(num.split(',', 1)[0], 0)]
+-- 
+2.34.1
 
-> diff --git a/tools/perf/arch/x86/tests/regs_load.S b/tools/perf/arch/x86/=
-tests/regs_load.S
-> index 80f14f52e3f60..1947f95cceda5 100644
-> --- a/tools/perf/arch/x86/tests/regs_load.S
-> +++ b/tools/perf/arch/x86/tests/regs_load.S
-[ ... ]
-> @@ -97,3 +97,27 @@ SYM_FUNC_END(perf_regs_load)
->   * the ELF stack should not be restricted at all and set it RWX.
->   */
->  .section .note.GNU-stack,"",@progbits
-> +
-> +/*
-> + * We need to provide .note.gnu.property section with IBT and SHSTK,
-> + * saying that this object supports the same CET properties as C code
-> + * built with -fcf-protection. Otherwise static linking drops CET from
-> + * the final perf binary when other objects are CET-enabled.
-> + */
-> +	.pushsection .note.gnu.property, "a"
-> +	.p2align 3
-
-[Severity: Medium]
-Does this unconditionally hardcode 8-byte alignment for 32-bit x86 builds?
-
-The assembly file `regs_load.S` can be compiled for 32-bit x86, which requi=
-res
-4-byte alignment (`.p2align 2`) for ELF notes. When the linker merges these,
-the forced 8-byte alignment can create zero-byte padding gaps between notes,
-corrupting the contiguous ELF note structure.
-
-Could this cause the dynamic loader or tools like `readelf` to fail to parse
-the ELF notes properly?
-
-[ ... ]
-> diff --git a/tools/perf/bench/mem-memcpy-x86-64-asm.S b/tools/perf/bench/=
-mem-memcpy-x86-64-asm.S
-> index 1b9fef7efcdcc..e7b84aa43ab44 100644
-> --- a/tools/perf/bench/mem-memcpy-x86-64-asm.S
-> +++ b/tools/perf/bench/mem-memcpy-x86-64-asm.S
-[ ... ]
-> @@ -18,3 +18,27 @@
->   * the ELF stack should not be restricted at all and set it RWX.
->   */
->  .section .note.GNU-stack,"",@progbits
-> +
-> +/*
-> + * We need to provide .note.gnu.property section with IBT and SHSTK,
-> + * saying that this object supports the same CET properties as C code
-> + * built with -fcf-protection. Otherwise static linking drops CET from
-> + * the final perf binary when other objects are CET-enabled.
-> + */
-> +	.pushsection .note.gnu.property, "a"
-> +	.p2align 3
-
-[Severity: Medium]
-Will this cause a Control Protection Exception (#CP) crash on IBT-capable
-hardware when running `perf bench mem memcpy`?
-
-Adding this section artificially claims IBT support and forces the linker to
-enable CET on the final `perf` binary. However, `perf`'s local linkage head=
-ers
-do not automatically emit `endbr64` instructions for `SYM_FUNC_START`.
-
-When `do_memcpy()` in `tools/perf/bench/mem-functions.c` indirectly calls
-these assembly entry points like `memcpy_orig`:
-
-	fn(dst, src, size);
-
-the hardware may detect the missing `endbr64` on the indirect branch target
-and throw a #CP fault.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708045606.4364=
-9-1-tallison@redhat.com?part=3D3
