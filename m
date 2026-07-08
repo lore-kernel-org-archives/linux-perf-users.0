@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D083E1A9F82
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 05:03:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179C31F03DE
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 05:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783486994; cv=none; b=ihHQvDXMO9OavagcN/BOnrAzAsmD1EIot469gqL+xtDxZtGzwhocYHWHQeNXFAbYO2ZIeHGhvSHHOuB2/AkxlxbSb/6ttA7DakcOEC0w23VZ4eYS1Z3uwyzOGjLtSBOJUQYudwLiHnpgg4vH93wj0WtAhafC94fyX1E3Md9yxwY=
+	t=1783487321; cv=none; b=Gp1Y737ExuDVS8fngrhadwdUE62RckmRmAKc3B1EmoJFxYq/5lofbYFzPsmxMrc6oRcxXgOT8Kat4HMhUz60H148nytxmg0AwkdeXQadqSvgClSScXGkaCosJuygisllcpWN2jo3WN10sCJ2mHL+3Qj+FkURyXr/uD5s6svJGOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783486994; c=relaxed/simple;
-	bh=0s7BJ+FxK/YFD3+S83bx6PCvXT8fkgxarVDsfVtsuLA=;
+	s=arc-20240116; t=1783487321; c=relaxed/simple;
+	bh=8MblFwsm1i/+oUCTx3jDufSe6sql+3Uz9pefM8R2g5U=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DkpLCmv1j9/6hJnolNQI8vZ5/qSVdYUCmVZt6XOKjUaur4f7mRKMnJ/BhcLyLdjHIMeRRb4/ORad9mIHiygurqalpTpWIT1OhRO/vm9dc0ZWbrkAR0Nj5iQl1RGkEnzM4AWepNJrm2MUxvbx7uKzVKw4fQKzHigo+LcyHss8eYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVV6TEmP; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=j/monmOgfHtaQdDl6Ge7essUOEAZ/gpKDCYDd+zv1mNsusNxkA0yi8Zr3GZ4J4Vk2sw1VOvseECDiF1GxrHo8kZjTi9aLuhQDM+PwSv5leSyZ7Skjz4ujHcqoAZRQE8fPQG/Xo0mkO9ZBtcOSIRK9sVaTp0e+LIrQWBjTXbiK6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DX5/SpnD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVV6TEmP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4005F1F000E9;
-	Wed,  8 Jul 2026 05:03:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DX5/SpnD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9491F000E9;
+	Wed,  8 Jul 2026 05:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783486993;
-	bh=bdKcydcJ5OaDmKzHwgJ7cgxHKCy8madTwla4XzbMNic=;
+	s=k20260515; t=1783487320;
+	bh=aucPiRXKi15UeE+PobWgOp9xjxp7o7E/miOD1kmnhjY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OVV6TEmPRse02mXvSAngaAIX7CMrX/87CsH1l+vNXtExE9phbGLd2gkb855KK2Kai
-	 LPJAtF4qgnQZ+dI03u8PF6JGxP1185W4PpXfTvfCH3/rwbodAxFd00hkJUoekkmNTr
-	 CUUpCoOeGboZzrDCur57pvjrmKGQ6IwfA8/H32RAVUZ2NFgqnChmmtd1OPA0AEQQq8
-	 4rbQ+srTmYFfSitNNYDLVsMGmDo8BB7+uGa+PR6hbXJzxKbvRvXiLavXl+AV3ZNIOm
-	 U5Q/kKW5dmku6lskF9O1xJnF2QDHGrDJMleAemSIq+I8QbS9AChMDtlqVD9heDhY9T
-	 EZfPW9syMcKtg==
+	b=DX5/SpnDW1iSY6JIsvLVu4gu13LsnIsTLbFFWwlF5+eEOWTZPsCE1nXQ8V99PNskg
+	 +FPtf0hbnyba7efwDPCJFZUWqgl3O6vFU9e5I9iXKpf5Nh83PVbugOJLbqrsurWpa0
+	 lIlbdieTmZAnBHglT3MWIwd+Xt2I6VPnBG2KFOil8MNjdLB5hy5EXh/+w9mRTnpxnb
+	 4CfkY0oO1e64P3ow6NAcDKGG35RjWTkqmJbUkUXZRKm3NY0CTgvucGh09hwEre30jj
+	 /bsS3qIkTTQRMdLR8HjKwL9T55iNrI8pVYp8XQB//fXBlHJuGaGW2CvaRzl4o6rxmT
+	 MnatBVqa6lWWQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/3] perf build: Apply EXTRA_CXXFLAGS to C++ builds
+Subject: Re: [PATCH 3/3] perf x86: Add .note.gnu.property to assembly linked
+ into perf
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Trevor Allison" <tallison@redhat.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260708045606.43649-3-tallison@redhat.com>
+In-Reply-To: <20260708045606.43649-4-tallison@redhat.com>
 References: <20260708045606.43649-1-tallison@redhat.com>
- <20260708045606.43649-3-tallison@redhat.com>
+ <20260708045606.43649-4-tallison@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 05:03:12 +0000
-Message-Id: <20260708050313.4005F1F000E9@smtp.kernel.org>
+Date: Wed, 08 Jul 2026 05:08:39 +0000
+Message-Id: <20260708050839.BD9491F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,60 +47,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] C++ feature detection tests do not receive `EXTRA_CFLAGS`, causi=
-ng a structural mismatch between feature detection and actual build compila=
-tion flags.
-- [Low] Injecting `EXTRA_CFLAGS` into `CXXFLAGS` breaks C++ builds when C-s=
-pecific flags are present.
+- [Medium] Adding .note.gnu.property asserts IBT support without providing =
+ENDBR64 instructions, causing a #CP crash in perf memory benchmarks.
+- [Medium] The .note.gnu.property section hardcodes 8-byte alignment, viola=
+ting the 32-bit x86 ELF specification.
 --
 
---- Patch [2]: [PATCH 2/3] perf build: Apply EXTRA_CXXFLAGS to C++ builds -=
---
-commit 4b2b9e4dd8644e0e1fa95ec876a875596e1e9178
+--- Patch [3]: [PATCH 3/3] perf x86: Add .note.gnu.property to assembly lin=
+ked into perf ---
+commit b48d7edb7fb18bc3dace2af272de108eb561d69b
 Author: Trevor Allison <tallison@redhat.com>
 
-perf build: Apply EXTRA_CXXFLAGS to C++ builds
+perf x86: Add .note.gnu.property to assembly linked into perf
 
-The commit initializes CXXFLAGS in tools/perf/Makefile.config with both
-EXTRA_CXXFLAGS and EXTRA_CFLAGS so that C++ objects receive the same builder
-flags as the rest of perf.
+This commit adds `.note.gnu.property` to x86 assembly files linked into
+perf to indicate CET properties support. This is intended to prevent static
+linking from dropping CET from the final binary.
 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 0ba307e78fe1f..052a6cc7942f9 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -17,6 +17,7 @@ detected     =3D $(shell echo "$(1)=3Dy"       >> $(OUT=
-PUT).config-detected)
->  detected_var =3D $(shell echo "$(1)=3D$($(1))" >> $(OUTPUT).config-detec=
-ted)
-> =20
->  CFLAGS :=3D $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNIN=
-GS))
-> +CXXFLAGS :=3D $(EXTRA_CXXFLAGS) $(EXTRA_CFLAGS)
-
-[Severity: Low]
-Could this cause a build regression if EXTRA_CFLAGS contains C-only flags?
-
-If EXTRA_CFLAGS contains flags that are only valid for C/ObjC (such as
--Wstrict-prototypes), applying them to C++ files causes compiler warnings.
-With -Werror enabled, this results in a build failure.
+> diff --git a/tools/perf/arch/x86/tests/regs_load.S b/tools/perf/arch/x86/=
+tests/regs_load.S
+> index 80f14f52e3f60..1947f95cceda5 100644
+> --- a/tools/perf/arch/x86/tests/regs_load.S
+> +++ b/tools/perf/arch/x86/tests/regs_load.S
+[ ... ]
+> @@ -97,3 +97,27 @@ SYM_FUNC_END(perf_regs_load)
+>   * the ELF stack should not be restricted at all and set it RWX.
+>   */
+>  .section .note.GNU-stack,"",@progbits
+> +
+> +/*
+> + * We need to provide .note.gnu.property section with IBT and SHSTK,
+> + * saying that this object supports the same CET properties as C code
+> + * built with -fcf-protection. Otherwise static linking drops CET from
+> + * the final perf binary when other objects are CET-enabled.
+> + */
+> +	.pushsection .note.gnu.property, "a"
+> +	.p2align 3
 
 [Severity: Medium]
-Does this create a mismatch between feature detection and the main build?
+Does this unconditionally hardcode 8-byte alignment for 32-bit x86 builds?
 
-While CXXFLAGS here receives EXTRA_CFLAGS, the C++ feature detection tests =
-in
-tools/build/Makefile.feature still only use:
+The assembly file `regs_load.S` can be compiled for 32-bit x86, which requi=
+res
+4-byte alignment (`.p2align 2`) for ELF notes. When the linker merges these,
+the forced 8-byte alignment can create zero-byte padding gaps between notes,
+corrupting the contiguous ELF note structure.
 
-CXXFLAGS=3D"$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))"
+Could this cause the dynamic loader or tools like `readelf` to fail to parse
+the ELF notes properly?
 
-If EXTRA_CFLAGS contains mandatory compiler flags like --sysroot or -m32,
-the C++ feature detection tests will fail without EXTRA_CFLAGS. This causes
-false negatives where the perf binary silently lacks supported features,
-despite the main build succeeding.
+[ ... ]
+> diff --git a/tools/perf/bench/mem-memcpy-x86-64-asm.S b/tools/perf/bench/=
+mem-memcpy-x86-64-asm.S
+> index 1b9fef7efcdcc..e7b84aa43ab44 100644
+> --- a/tools/perf/bench/mem-memcpy-x86-64-asm.S
+> +++ b/tools/perf/bench/mem-memcpy-x86-64-asm.S
+[ ... ]
+> @@ -18,3 +18,27 @@
+>   * the ELF stack should not be restricted at all and set it RWX.
+>   */
+>  .section .note.GNU-stack,"",@progbits
+> +
+> +/*
+> + * We need to provide .note.gnu.property section with IBT and SHSTK,
+> + * saying that this object supports the same CET properties as C code
+> + * built with -fcf-protection. Otherwise static linking drops CET from
+> + * the final perf binary when other objects are CET-enabled.
+> + */
+> +	.pushsection .note.gnu.property, "a"
+> +	.p2align 3
 
->  HOSTCFLAGS :=3D $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
+[Severity: Medium]
+Will this cause a Control Protection Exception (#CP) crash on IBT-capable
+hardware when running `perf bench mem memcpy`?
+
+Adding this section artificially claims IBT support and forces the linker to
+enable CET on the final `perf` binary. However, `perf`'s local linkage head=
+ers
+do not automatically emit `endbr64` instructions for `SYM_FUNC_START`.
+
+When `do_memcpy()` in `tools/perf/bench/mem-functions.c` indirectly calls
+these assembly entry points like `memcpy_orig`:
+
+	fn(dst, src, size);
+
+the hardware may detect the missing `endbr64` on the indirect branch target
+and throw a #CP fault.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708045606.4364=
-9-1-tallison@redhat.com?part=3D2
+9-1-tallison@redhat.com?part=3D3
