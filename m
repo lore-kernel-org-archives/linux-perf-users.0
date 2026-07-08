@@ -1,69 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7E137C900
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 19:25:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BFB3A2576;
+	Wed,  8 Jul 2026 20:04:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783538744; cv=none; b=km5N/Jq0OoiDjtw4NxwYl923NYOjLLrA1eqNJWcXqh5hLQgli0Acow+Dr2ETkTg3f2Hc8WkmMtck0q6kL+kycy0vNulIoF5Ng3vCbQ7bH2jMY87j5+qMkkxCHDJ2DZpy03y0iFizdevnvVZ+ntka96urydbPlZHslv07z5IPTTM=
+	t=1783541049; cv=none; b=p9D4+itcNECJKFHpog45T4DOOL/Z1zkT+WTmmpKmEL6x/IBbt3z7YH7Oe4fNPUGBdJJcq6U1aEUKvFsHfqVO7oUwvYmzHTABQQ1I1XPO7c6UvEanG2QXWMcMDYEPm53zwzwelJ54DpDsvtVnq415XHJY4grpEk9zuftbcU/nEQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783538744; c=relaxed/simple;
-	bh=6piyt5i8Ixcybl8fjjFPf+MEJVSZvrKECzuyziKDZvQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JRMQ3d8FSBtB68NdgAtSE/fT1A1cmoJ8TZbnDxmOOhaXO2ChFBF9T1Xm/4CA+89K7r76+CNF6vU0aOmsovlxsPXlSsFy8kHcJtJpmuPeBHe6+gKHZr0wwJk4lhFhtO+fwxeknNU54i1Qi9MUbJ/z51vnBh8dLM8MtZCkc8TsO2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mULnlvx0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783541049; c=relaxed/simple;
+	bh=Es/hOEe2eha3oLo/j4ZG3FR5SzzwXwIWb//KDz1MAFM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j73y/rTPoAoV0Vq9gKQOhGdz6L76hA5KFWvh93SEvhX5SBNiUQnWByN5dned0OmXG81pn68bs36FFQdpQ8X/HnfLc97L7pSGHfah6KnkaE2Uarx10V8x1BXQ6EARLxpyxNUS6Hy/ZSjOHBc5F5Toa9UvsA3ooMqOrkvbWrSY++w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=onbRef2p; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mULnlvx0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8BB31F00A3D;
-	Wed,  8 Jul 2026 19:25:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="onbRef2p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 425801F000E9;
+	Wed,  8 Jul 2026 20:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783538743;
-	bh=EE4vI/piTDLsoauUfA6gjJmO0J2gvrIIdPjhWXkf7NM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=mULnlvx0Cqt+mQYewMLD8bqRaMo7PRiALU5WRJDaEEE1yAoKxTBi8Q8e0xLtgYN/L
-	 UoWmwEkQ5zK9gzJxtH3Fi6wUYjxRPTPjB/1l2hQqBL/U+dz74edl16xhMQ3/gDCMGs
-	 Vl70Gv1EUNURnRE5tZAd5qhWhtTCZM/VPOlYccRGsSfCM9PU5ycvmcJQLpvsZLQKyJ
-	 vPwDsNYyfoVRywNYRpvAu6CRVb9DLhL0aQe7S3vBqV+qA+yOUjSEup7JeIsLnw/oTA
-	 NrAaYUyulxRXuyzRVisyqp66zq9Kk4fpZiBtpClir2xtqq68/gEHy5+ZsSW6KwO/96
-	 /4hJJrtNUzF8Q==
+	s=k20260515; t=1783541048;
+	bh=ZGqSq4qLXg5b8NNaWFCVf8IMNDeie67LZTqKvF/FjeQ=;
+	h=From:To:Cc:Subject:Date;
+	b=onbRef2pkJmpUd7g6erRQmezU3aB0rwr9Tpd+oU5XkUx2XqMw7AV01PveLN17iFDb
+	 COFD9UcKcFBP6YBxAGrAdi0RfKZGvrPHO+GS7i65ghyGSN80oyAjxn2Kd/w2NovP/I
+	 6hufd5C1nUIquda3VDro0t0rKsksXGiUcz6qf+ePbOs0fg8FjvURB8/eeLj/AlpHOV
+	 ME23IIk8n4qjcSzfHI9WzVZJHsr6ar4rOA0nLbmJv80nWDRlKiliO4pLulnw7y/WIJ
+	 mhHbIqg1hWJPhoOUJdXeA/zeJF26YW6HSnhzYXSMbJ84bPCxaOMimU1GPa6EJlkj64
+	 7XssBudxgzPdg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
- vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com, 
- maddy@linux.ibm.com, irogers@google.com, 
- Tanushree Shah <tshah@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com, 
- Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com
-In-Reply-To: <20260604065519.112101-1-tshah@linux.ibm.com>
-References: <20260604065519.112101-1-tshah@linux.ibm.com>
-Subject: Re: [PATCH] perf data convert json: Fix trace_seq memory leak in
- process_sample_event()
-Message-Id: <178353874278.478719.17250628813855454145.b4-ty@kernel.org>
-Date: Wed, 08 Jul 2026 12:25:42 -0700
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf stat: Do not open cgroups for BPF counters
+Date: Wed,  8 Jul 2026 13:04:07 -0700
+Message-ID: <20260708200407.1240640-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Transfer-Encoding: 8bit
 
-On Thu, 04 Jun 2026 12:25:19 +0530, Tanushree Shah wrote:
-> Unlike the in-kernel trace_seq which uses a statically allocated buffer,
-> the userspace traceevent library's trace_seq uses a dynamically allocated
-> one. Therefore, every trace_seq_init() call must be paired with a
-> trace_seq_destroy(), otherwise it produces a memory leak.
-> 
-> In process_sample_event(), a trace_seq is initialized for each field when
-> formatting tracepoint raw_data, but the matching trace_seq_destroy() is
-> never called, leaking memory for every field of every sample processed.
-> 
-> [...]
-Applied to perf-tools-next, thanks!
+The --bpf-counters and --for-each-cgroup options use a set of shared
+events among the given cgroups rather than adding events for each cgroup
+respectively.  It only uses cgroup-ID to compare and calculate the
+result.  So no need to open and keep FDs for cgroups in BPF mode.
 
-Best regards,
-Namhyung
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-stat.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 92cdb2df7285befb..49e523058185b753 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2888,7 +2888,8 @@ int cmd_stat(int argc, const char **argv)
+ 			goto out;
+ 		}
+ 
+-		if (evlist__expand_cgroup(evsel_list, stat_config.cgroup_list, true) < 0) {
++		if (evlist__expand_cgroup(evsel_list, stat_config.cgroup_list,
++					  !target.use_bpf) < 0) {
+ 			parse_options_usage(stat_usage, stat_options,
+ 					    "for-each-cgroup", 0);
+ 			goto out;
+-- 
+2.55.0.795.g602f6c329a-goog
 
