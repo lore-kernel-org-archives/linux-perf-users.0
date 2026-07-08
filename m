@@ -1,83 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA658420876
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 06:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531353E6DD8;
+	Wed,  8 Jul 2026 07:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783491699; cv=none; b=IAl/uoH94X7r/fkprdIW6UPuaAeVp1LAjtZ1oMLz61/kj1oP2dOW3YCBj4ttMK6wXlqFr5/9okGd20DYWBROHj18xtQ9NVX/Mi2ugIG0h1eNA38Flca2adaIGuEr26hZkFhEoWRj0Vpud7W3l+UjDE7MQ9Zwm56icPQQ9eU8pCI=
+	t=1783494310; cv=none; b=lwWG6HFUgqJDEzA44/9lHNAJ8rMjadZRHvtQjMqC/3P6eCsGazeXq0IK1EReubVaQ+fROxHemPGqso+6xGBS3V79WKkLuH6+LVRVWE6C1b3rjBiIXtZWZPhwZ+2uq48wgXcotKMUZEyctgEa5PNVHvMrYTnbCiIEh402P/ShwfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783491699; c=relaxed/simple;
-	bh=6+SqlFVjvTqXaj+J5fndg/SAfXVQm0tyFoAdh0EAazw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gRH3LqnFadydDiPPKrj7zynbPGjI4rvE+nUqcHdMoHSm/1maDOUq624waoJqk0YyJTt4xqsK24tIh+bIYBHsSht2K4gmP0QAyM7znjlSh2yRRbpI29CDfaxsF8mZBXwSWjWOCv2oZOmoIDL96K+wfrUnLmXE1X3svU/u66cVMXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPCZXiIV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783494310; c=relaxed/simple;
+	bh=Kfrb3+5tYPOiLtvz4HJtKv6RKCL/qDqvGfR0DV4LxG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rfcs8RGURAXefMa4tLHfhjCfZMvU/USe4Q9FIWx5aykqchHhySf9DH1u5H3wqO8sm/jZ+zybsznFvm9rmGBXy98+XmvhHfgvMPv/AoewzB0wkVYAIBF93zIyMQQXaFJ4yo61wgjo2SQ7v7vBKRKfgEhZEsB98wfX1Xjx0F2opfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ldyH6F58; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPCZXiIV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D7871F000E9;
-	Wed,  8 Jul 2026 06:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783491698;
-	bh=oJ/cJ3COZlIuVedjRUSSgt9XaIa7i7ArTUDrC6rt0aM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DPCZXiIVRMEawPoCfhPeWMRc7W3Hp1bSyzeCy+j9VIr+WCiIgyH0K4kXL0ImMLTPV
-	 2ngDOWTqUhV+MMjpeNBaS669fLEJJtDBaS4m8yIxRtP9HmHY12EpZd7Ch5b+rlxDpl
-	 87W0KLJaqJJCd7ANfy1DfBCIquGQzKgUhCusAX/TKF61mpZmuK1NfbC4/SwyTM5/Or
-	 4TgPWUNhL1njBWXUYBEWp4ulbIYSf4ZHs1mec+CuDwF0KwYhKMQM8qafIPTYfXkbMS
-	 nqUQEUA37ZxpTYCnrQrDTg5j+/v624br2Jsb8txSUtI2Ufk+9oACz+u/oeCR1Wv709
-	 zFHFWs32PFMZw==
-Date: Tue, 7 Jul 2026 23:21:36 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ivan Lazaric <ivan.lazaric1@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, irogers@google.com
-Subject: Re: [PATCH] perf stat: reject --field-separator and --json-output
- combination
-Message-ID: <ak3scJT4MfbAg0G4@google.com>
-References: <20260705005840.1252666-1-ivan.lazaric1@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ldyH6F58"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1783494285; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=VqOzBHcezIdJbCw9H20f4ApkMFhu+ojhnSlVxGo7tKM=;
+	b=ldyH6F58hjVNhnMeZOfXhTo4aBYq11lEHFs+602BQUdrjf3OxaHRpFCr3mJwm120e22u8mM0r99KRz3T4Zxx4yALrToHw7sbXOdQfyR+AVEPXCUx84dzb/XwDOnj4gnJOkBOBjax/baNiaaKv7NoURMDXsSWTjKRVJ0E3cLHAo0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0X6gnBaq_1783493952;
+Received: from 30.246.161.237(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X6gnBaq_1783493952 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 08 Jul 2026 14:59:14 +0800
+Message-ID: <9228c07a-8879-41de-ba87-b9f879648ba8@linux.alibaba.com>
+Date: Wed, 8 Jul 2026 14:59:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260705005840.1252666-1-ivan.lazaric1@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 RESEND 4/7] riscv: stacktrace: introduce stack-bound
+ tracking helpers
+To: Wang Han <wanghan@linux.alibaba.com>, Paul Walmsley <pjw@kernel.org>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
+ Oleg Nesterov <oleg@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+ Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, oliver.yang@linux.alibaba.com,
+ zhuo.song@linux.alibaba.com, jkchen@linux.alibaba.com,
+ Marcos Paulo de Souza <mpdesouza@suse.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20260629072713.3273743-1-wanghan@linux.alibaba.com>
+ <20260629072713.3273743-5-wanghan@linux.alibaba.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260629072713.3273743-5-wanghan@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Sun, Jul 05, 2026 at 02:58:40AM +0200, Ivan Lazaric wrote:
-> Specifying --field-separator option is stating you want CSV output.
-> Passing both --field-separator and --json-output is then stating
-> you want output to be in CSV and JSON format at same time.
-> 
-> Currently this combination is not rejected, and the outcome
-> is a malformed combination of CSV and JSON output.
-> This is because of inconsistencies in various printing functions,
-> some of them have if-else chains that start with
-> "Should I print JSON?", and some start with "Should I print CSV?".
-> 
-> Example of current output:
-> $ tools/perf/perf stat -x , -j -e cpu-migrations true
-> {"counter-value" : "0.000000", "unit" : "", "event" : "cpu-migrations", "event-runtime" : 474817, "pcnt-running" : 100.00,,
-> 
-> Instead reject the option combination,
-> with a helpful error message and non-zero exit code.
-> 
-> Example of new output:
-> $ tools/perf/perf stat -x , -j true
-> cannot use both --field-separator and --json-output
-> 
->  Usage: perf stat [<options>] [<command>]
-> 
->     -x, --field-separator <separator>
->                           print counts with custom separator
->     -j, --json-output     print counts in JSON format
-> 
-> Signed-off-by: Ivan Lazaric <ivan.lazaric1@gmail.com>
 
-Thanks for the patch, but it doesn't apply cleanly.  Can you please
-rebase it on to the latest perf-tools-next branch?
+On 6/29/26 3:27 PM, Wang Han wrote:
+> A reliable unwinder needs to validate that every frame record it reads
+> is fully contained in a known kernel stack, and it needs to refuse to
+> walk back into a stack it has already left. Add the building blocks
+> for that:
+> 
+>    * struct stack_info / struct unwind_state in a new
+>      asm/stacktrace/common.h, modelled on the arm64 reference
+>      implementation.
+>    * stackinfo_get_irq() / stackinfo_get_task() / stackinfo_get_overflow()
+>      plus the corresponding on_*_stack() predicates in asm/stacktrace.h,
+>      so callers can ask "is this object on stack X?" by stack kind
+>      rather than open-coded address arithmetic.
+>    * unwind_init_common(), unwind_find_stack() and
+>      unwind_consume_stack() helpers that enforce the
+>      forward-progress-only invariant required for reliability.
+> 
+> No existing user is wired up to these helpers in this commit; the
+> unwinder switch comes in a follow-up. The header changes leave
+> on_thread_stack() with the same semantics as before, just expressed in
+> terms of the new helpers.
+> 
+> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
+> ---
+>   arch/riscv/include/asm/stacktrace.h        |  65 ++++++++-
+>   arch/riscv/include/asm/stacktrace/common.h | 159 +++++++++++++++++++++
+>   2 files changed, 222 insertions(+), 2 deletions(-)
+>   create mode 100644 arch/riscv/include/asm/stacktrace/common.h
+> 
+> diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm/stacktrace.h
+> index b1495a7e06ce..bc87c4940379 100644
+> --- a/arch/riscv/include/asm/stacktrace.h
+> +++ b/arch/riscv/include/asm/stacktrace.h
+> @@ -3,8 +3,13 @@
+>   #ifndef _ASM_RISCV_STACKTRACE_H
+>   #define _ASM_RISCV_STACKTRACE_H
+>   
+> +#include <linux/percpu.h>
+>   #include <linux/sched.h>
+> +#include <linux/sched/task_stack.h>
+> +
+> +#include <asm/irq_stack.h>
+>   #include <asm/ptrace.h>
+> +#include <asm/stacktrace/common.h>
+>   
+>   struct stackframe {
+>   	unsigned long fp;
+> @@ -16,14 +21,70 @@ extern void notrace walk_stackframe(struct task_struct *task, struct pt_regs *re
+>   extern void dump_backtrace(struct pt_regs *regs, struct task_struct *task,
+>   			   const char *loglvl);
+>   
+> -static inline bool on_thread_stack(void)
+> +/*
+> + * IRQ stack accessors
+> + */
+> +static inline struct stack_info stackinfo_get_irq(void)
+> +{
+> +	unsigned long low = (unsigned long)raw_cpu_read(irq_stack_ptr);
 
-Thanks,
-Namhyung
+ From https://sashiko.dev/#/patchset/20260629072713.3273743-1-wanghan%40linux.alibaba.com
+
+Will this cause a link error when CONFIG_IRQ_STACKS is disabled?
+Looking at arch/riscv/kernel/irq.c, irq_stack_ptr is defined inside an
+#ifdef CONFIG_IRQ_STACKS block. Since stackinfo_get_irq() unconditionally
+references it here, it seems this might result in an undefined reference
+to irq_stack_ptr during linking.
+
+Should this accessor be conditionally compiled, or should it provide a
+fallback when CONFIG_IRQ_STACKS is not set?
+
+Thanks.
+Shuai
