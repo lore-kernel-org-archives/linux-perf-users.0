@@ -1,101 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8464C38B12F;
-	Wed,  8 Jul 2026 23:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC4B43933E
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 23:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783554066; cv=none; b=d7h4kWVFS5I9U7oqgdqNcAErP4mTz9Y7pzui6KKdqRFHnrIopIjg5ACZu/bVBb/gZrlvOB13QqUYXr5XJfL+CmBcTWq11JrB1vVHv8O0hDYlQsMjWm3uB8GIcA3GDCVlF+PQjDqsrpnsGc0abRPUlMrGIxwdrWZklf5y/2IrFX0=
+	t=1783554167; cv=none; b=XdjK9viZ/HrXVz4rpJocsr5n17fFVAKDDQiM+zk65FcmKgpg95X/OWoIp7zXuiXQwrt/HyC0qJVkAVnkwzqAKsMO44Pq/T4SxlBic7XGYInpnbO90dv5jLNNM9Z9kFwhRUvtUI0j8D1gIcKI/2c2cWKmIR8bBRmPUbvMT+1qfAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783554066; c=relaxed/simple;
-	bh=MqgnQR2IhngHT0tSVjp0X8uJaVghyFuxobtWUdkIOHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vl+lF3RhkQVlFPJbTFtuEKb1lA1jSVMhhlgK1ilIJ5d07iv4I7QegDdAQjfzh1oozyllxPbuHhnQd82qeoMJTZbS518AROdD2OQmEndxElHPvNDGZ3stcYV59Gaa1sk+qE+GP3yHUFpTxAcsBMgOv2xtorV0qFZ6qbhREeJFAcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXr1Ww1W; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783554167; c=relaxed/simple;
+	bh=xww+1ZiqVFDUz4jTIBprU83fellfjAmGMoMIqMLeEBI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=twHaoMPH9KLY12mwodAxW7AV5R3zUnZH9OccntrouU72NvexH8bAtUWpQByZwuDBWjTKKg9vx9BjPROI9bvtgkSVwZFX5sYQih546akfR1y44eKDAfN8E3fT4R/fEAX4UyKQvUZpLzDY/h2ZsjJovYgyNLQAgZbKEH97Wu1m2sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQk+Np/8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXr1Ww1W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10ADF1F000E9;
-	Wed,  8 Jul 2026 23:41:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQk+Np/8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C66011F000E9;
+	Wed,  8 Jul 2026 23:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783554065;
-	bh=lrlgyio4LLb/bAWF+O2R0MU6fah4CsfXynnnc8OZ4uE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aXr1Ww1WaQDbSpVRc8BociBWboqWjijuIT2mNWqsfkqh0iK47jtyLS27ACKVCmCf7
-	 lUHhzN+ijGjM0f2mquLI5jFzYVyXc5ICAd1xRmBz84naTpPiAcHBpCZhZtQjbP03xD
-	 0wWJ8nYTTDqm3FUfWSeBApFivqTCgSuHKWz7FDJLXXyiWLowGOywu5BjK7CBNJAk+2
-	 jPOpOq2NhBh5XvxNtwxMnrDeMMprLzvrjIuAE0+b6NB1eRIJUtZlMSd4zcYgj95LYS
-	 lbzzbZqUNeDF3iqkUia8MlA/3KxNageF43BqxtY5mpsfY3cK2e7xOqRael/iwl8zmY
-	 E/+7nKlKxEgNg==
-Date: Wed, 8 Jul 2026 16:41:02 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1] perf tests: Restore -p flag to lock contention test
-Message-ID: <ak7gDlPRhIL3MviB@google.com>
-References: <20260708175311.858850-1-irogers@google.com>
- <20260708175948.567701F000E9@smtp.kernel.org>
+	s=k20260515; t=1783554166;
+	bh=v4mVlkHBonMi35cCkLwMyJGb+rd4kCUJZkB0FaG/FDc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SQk+Np/8a80sf7U6eouCy08aNpzYVV6qp3v73vicMpvpp+LcfyJnOuuTF8qu/wyuZ
+	 1gxGNDjsIY5K3du7Mf3xMNc9d2zOHH2T/AZNsiV9EeZ0IAiQ2Fvg6wPG9Xp4yQGPmo
+	 +zWbLg1wtYQRkxLbr6pGPr9qrDZZPN0ov5sgEJH8btER+lyNwnyvExvBWdZyZBMiDh
+	 HtScEPxDR75IfRNHKAS/Ttql9cgU7WhSdRZ13h0cwi2OxESInWXvLDqbNYEWucHpTs
+	 zLJAgkeXEh/736ADKAttcFuYMwb9toe7Urf+H8kBhFbdkY3HMw7qFgbAcXh2Dbp2pw
+	 VqF9HNgf2UBVA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 1/2] perf stat: Fix duplicate output with
+ --for-each-cgroup
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260708233103.1359713-1-namhyung@kernel.org>
+References: <20260708233103.1359713-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 Jul 2026 23:42:45 +0000
+Message-Id: <20260708234245.C66011F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260708175948.567701F000E9@smtp.kernel.org>
 
-On Wed, Jul 08, 2026 at 05:59:47PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Adding the `-p` (pipe) flag to the global workload unconditionally disables the stack filter tests.
-> --
-> 
-> --- Patch [1]: [PATCH v1] perf tests: Restore -p flag to lock contention test ---
-> commit b4bb7054950dea7123c601308622ddcd596c94cf
-> Author: Ian Rogers <irogers@google.com>
-> 
-> perf tests: Restore -p flag to lock contention test
-> 
-> This commit restores the -p flag to the perf bench sched messaging workload
-> used by the lock contention test. By defaulting to pipes instead of
-> socketpairs, it ensures architectures like s390 generate sufficient lock
-> events for the BPF trace filtering logic to pass.
-> 
-> > diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-> > index ba598370be738..5df9a0cd48a34 100755
-> > --- a/tools/perf/tests/shell/lock_contention.sh
-> > +++ b/tools/perf/tests/shell/lock_contention.sh
-> > @@ -11,7 +11,8 @@ errout=$(mktemp /tmp/__perf_test.errout.XXXXX)
-> >  
-> >  # Workload to generate lock contention.
-> >  # Using 1 group (-g 1) keeps runtime low while generating sufficient lock events.
-> > -msg_workload="perf bench sched messaging -g 1"
-> > +# We include -p (pipes) because socketpairs don't generate enough lock events on s390.
-> > +msg_workload="perf bench sched messaging -g 1 -p"
-> 
-> [Severity: Medium]
-> Will adding the -p flag cause test_stack_filter() and 
-> test_aggr_task_stack_filter() to unconditionally skip?
-> 
-> These tests explicitly verify filtering behavior by searching for unix_stream 
-> locks in tools/perf/tests/shell/lock_contention.sh:
-> 
-> test_stack_filter()
-> {
-> 	echo "Testing perf lock contention --callstack-filter (w/ unix_stream)"
-> 	perf lock contention -i ${perfdata} -v -q 2> ${result}
-> 	if [ "$(grep -c unix_stream "${result}")" = "0" ]; then
-> 		echo "[Skip] Could not find 'unix_stream'"
-> 		return
-> 	fi
-> 
-> Since pipes use pipe locks instead of AF_UNIX stream socket locks 
-> (unix_stream), the shared perfdata profile will no longer contain these locks. 
-> 
-> Does this mean we lose test suite coverage for the --callstack-filter option 
-> across all architectures because the grep will always return 0?
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Incomplete state cloning in `evsel__clone()` breaks TPEBS latenc=
+y fallback metrics and BPF counters for duplicated events.
+--
 
-I think it's a valid concern but it didn't come from this change.
-Maybe we need to check different symbols like "pipe_".
+--- Patch [1]: [PATCH v1 1/2] perf stat: Fix duplicate output with --for-ea=
+ch-cgroup ---
+commit 10359224b851cd21a00edee0e074af745faf63be
+Author: Namhyung Kim <namhyung@kernel.org>
 
-Thanks,
-Namhyung
+perf stat: Fix duplicate output with --for-each-cgroup
+
+This commit fixes duplicate event output in perf stat when using the
+--for-each-cgroup option. It addresses the issue by copying several
+fields that were previously missed during evsel__clone().
+
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index ea9fa04429f08..ee0b5b4c536c8 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -610,12 +610,18 @@ struct evsel *evsel__clone(struct evsel *dest, stru=
+ct evsel *orig)
+>  	evsel->percore =3D orig->percore;
+>  	evsel->precise_max =3D orig->precise_max;
+>  	evsel->is_libpfm_event =3D orig->is_libpfm_event;
+> +	evsel->skippable =3D orig->skippable;
+> +	evsel->retire_lat =3D orig->retire_lat;
+
+[Severity: Medium]
+When copying the retire_lat flag, do we also need to copy the associated
+retirement_latency struct and the bpf_counter flag to avoid a regression?
+
+Without copying the retirement_latency struct (mean, min, max), a cloned
+event falling back to TPEBS might use a zeroed struct and incorrectly
+calculate 0.0 latency instead of using the parsed values.=20
+
+Similarly, omitting the bpf_counter flag might cause cloned BPF events
+to silently bypass BPF counting.
+
+> +	evsel->dont_regroup =3D orig->dont_regroup;
+> =20
+>  	evsel->exclude_GH =3D orig->exclude_GH;
+>  	evsel->sample_read =3D orig->sample_read;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708233103.1359=
+713-1-namhyung@kernel.org?part=3D1
