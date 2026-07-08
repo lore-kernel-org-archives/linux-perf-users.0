@@ -1,94 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC4B43933E
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 23:42:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493473998BE;
+	Wed,  8 Jul 2026 23:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783554167; cv=none; b=XdjK9viZ/HrXVz4rpJocsr5n17fFVAKDDQiM+zk65FcmKgpg95X/OWoIp7zXuiXQwrt/HyC0qJVkAVnkwzqAKsMO44Pq/T4SxlBic7XGYInpnbO90dv5jLNNM9Z9kFwhRUvtUI0j8D1gIcKI/2c2cWKmIR8bBRmPUbvMT+1qfAo=
+	t=1783554197; cv=none; b=J4SaNcc9oqVXLEEhJ4AsxdRvgqqgpMwg+wQh4w5sBdnR2D+EHaW9uppVeb6TejUpgSJe7EgeWvGifkioKIjBUD9dtcVHN1jDFItNUIocvG6hNzKQRB6B4IUQbrLq7hg+tGTp0rdn1nKgC8j3AHPvoHS324ZiNAYMa0QRByG9NKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783554167; c=relaxed/simple;
-	bh=xww+1ZiqVFDUz4jTIBprU83fellfjAmGMoMIqMLeEBI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=twHaoMPH9KLY12mwodAxW7AV5R3zUnZH9OccntrouU72NvexH8bAtUWpQByZwuDBWjTKKg9vx9BjPROI9bvtgkSVwZFX5sYQih546akfR1y44eKDAfN8E3fT4R/fEAX4UyKQvUZpLzDY/h2ZsjJovYgyNLQAgZbKEH97Wu1m2sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQk+Np/8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783554197; c=relaxed/simple;
+	bh=dKV40IkxDFvmXmyaFKNM4Wn+2KdWPEgXVAwjkUlxr70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=obv0nX5B+Cx1YYk1twR8yIB93AVAcqUUS8Otp532x5i9dqqJ7Iq/l7M4QvPb6/YIp7vubJVXh/M+Xn4TO+nygQiem7YlCTbMnjWhGgnFOnGc+17WDrY39TxlSW5L+7oB41r6Vg6OLFXn7S7bCC7HQY6NWUa58ekduCgbnRAJxk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ay4w8p/b; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQk+Np/8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C66011F000E9;
-	Wed,  8 Jul 2026 23:42:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ay4w8p/b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFF1F1F000E9;
+	Wed,  8 Jul 2026 23:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783554166;
-	bh=v4mVlkHBonMi35cCkLwMyJGb+rd4kCUJZkB0FaG/FDc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SQk+Np/8a80sf7U6eouCy08aNpzYVV6qp3v73vicMpvpp+LcfyJnOuuTF8qu/wyuZ
-	 1gxGNDjsIY5K3du7Mf3xMNc9d2zOHH2T/AZNsiV9EeZ0IAiQ2Fvg6wPG9Xp4yQGPmo
-	 +zWbLg1wtYQRkxLbr6pGPr9qrDZZPN0ov5sgEJH8btER+lyNwnyvExvBWdZyZBMiDh
-	 HtScEPxDR75IfRNHKAS/Ttql9cgU7WhSdRZ13h0cwi2OxESInWXvLDqbNYEWucHpTs
-	 zLJAgkeXEh/736ADKAttcFuYMwb9toe7Urf+H8kBhFbdkY3HMw7qFgbAcXh2Dbp2pw
-	 VqF9HNgf2UBVA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 1/2] perf stat: Fix duplicate output with
- --for-each-cgroup
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260708233103.1359713-1-namhyung@kernel.org>
-References: <20260708233103.1359713-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 23:42:45 +0000
-Message-Id: <20260708234245.C66011F000E9@smtp.kernel.org>
+	s=k20260515; t=1783554195;
+	bh=T6E2V2liXmf3D3Qf+A1o/ILW3dsRFuxf1/QLUD09rsM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Ay4w8p/bKgNDb/e76PamgunNTyVcWHWKyuML8nOYz9HxthGDTLGbwkhOvLL9jQMbx
+	 +visb2lLHvBDKeQcB9bABtUgt97QBHuJYEyT+Jn/Z0Z2qWaL2As6tNCbdaxhSmZSnA
+	 Ei60zuxlBFYwEIXsF11jUVpJgjNBGPCRnE7oIA5M8GD92h7rGwIMwThM/hyMpm1Jni
+	 GeTvh+Z1zYfx88ixuVS5gQMrW/ESdCG03S3JJrlakGxx9K3z8ZNl1LyuZNtimGxqUu
+	 sQOS37wrsDUB7eM2aVbitUsGTx+6U68JwGslVJnukXexRZ6z/97rlp1zTRfd/MMku+
+	 4uC7WhOSVyIww==
+Date: Wed, 8 Jul 2026 16:43:13 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: Ivan Lazaric <ivan.lazaric1@gmail.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf stat: reject --field-separator and --json-output
+ combination
+Message-ID: <ak7gkZaEahlRlgvA@google.com>
+References: <ak3scJT4MfbAg0G4@google.com>
+ <20260708131359.71732-3-ivan.lazaric1@gmail.com>
+ <20260708133656.107611F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260708133656.107611F000E9@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Incomplete state cloning in `evsel__clone()` breaks TPEBS latenc=
-y fallback metrics and BPF counters for duplicated events.
---
+On Wed, Jul 08, 2026 at 01:36:55PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Low] Missing explicit inclusion of `<stdio.h>` for standard I/O functions and types.
+> --
+> 
+> --- Patch [1]: [PATCH v2] perf stat: reject --field-separator and --json-output combination ---
+> commit 14ca4ce3700a93ed48a3336a633292f7e45ae462
+> Author: Ivan Lazaric <ivan.lazaric1@gmail.com>
+> 
+> perf stat: reject --field-separator and --json-output combination
+> 
+> This patch explicitly rejects using both the --field-separator and
+> --json-output options in perf stat. It adds a check to output an error
+> message and exit cleanly, preventing malformed mixed formats.
+> 
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index a04466ea3b0a0..6ec82752d71c6 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -2643,6 +2643,13 @@ int cmd_stat(int argc, const char **argv)
+> >  
+> >  	stat_config.aggr_mode = opt_aggr_mode_to_aggr_mode(&opt_mode);
+> >  
+> > +	if (stat_config.csv_sep && stat_config.json_output) {
+> > +		fprintf(stderr, "cannot use both --field-separator and --json-output\n");
+>                 ^^^^^^^
+> 
+> [Severity: Low]
+> Could this cause a build failure when compiling perf with musl libc?
+> 
+> While glibc often implicitly includes standard headers, musl has stricter
+> header separation.
+> 
+> Since this code introduces a new call to fprintf and uses stderr, does
+> builtin-stat.c need an explicit #include <stdio.h> in its global includes
+> block to guarantee musl compatibility?
 
---- Patch [1]: [PATCH v1 1/2] perf stat: Fix duplicate output with --for-ea=
-ch-cgroup ---
-commit 10359224b851cd21a00edee0e074af745faf63be
-Author: Namhyung Kim <namhyung@kernel.org>
+It should be fine as it's used in other places already.
 
-perf stat: Fix duplicate output with --for-each-cgroup
+Thanks,
+Namhyung
 
-This commit fixes duplicate event output in perf stat when using the
---for-each-cgroup option. It addresses the issue by copying several
-fields that were previously missed during evsel__clone().
-
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ea9fa04429f08..ee0b5b4c536c8 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -610,12 +610,18 @@ struct evsel *evsel__clone(struct evsel *dest, stru=
-ct evsel *orig)
->  	evsel->percore =3D orig->percore;
->  	evsel->precise_max =3D orig->precise_max;
->  	evsel->is_libpfm_event =3D orig->is_libpfm_event;
-> +	evsel->skippable =3D orig->skippable;
-> +	evsel->retire_lat =3D orig->retire_lat;
-
-[Severity: Medium]
-When copying the retire_lat flag, do we also need to copy the associated
-retirement_latency struct and the bpf_counter flag to avoid a regression?
-
-Without copying the retirement_latency struct (mean, min, max), a cloned
-event falling back to TPEBS might use a zeroed struct and incorrectly
-calculate 0.0 latency instead of using the parsed values.=20
-
-Similarly, omitting the bpf_counter flag might cause cloned BPF events
-to silently bypass BPF counting.
-
-> +	evsel->dont_regroup =3D orig->dont_regroup;
-> =20
->  	evsel->exclude_GH =3D orig->exclude_GH;
->  	evsel->sample_read =3D orig->sample_read;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708233103.1359=
-713-1-namhyung@kernel.org?part=3D1
+> 
+> > +		parse_options_usage(stat_usage, stat_options, "x", 1);
+> > +		parse_options_usage(NULL, stat_options, "j", 1);
+> > +		goto out;
+> > +	}
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260708131359.71732-3-ivan.lazaric1@gmail.com?part=1
