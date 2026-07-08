@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D103B3AC0F3
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 01:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7A93264FD
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 01:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783473237; cv=none; b=kqXm5xV7gzKsBQAoHgp4Lmp4n0hAF7+9tzIFXPNIJC9xj5KFUoNbmQ20QgMEnC2P8yZY0fgxmPQTSt6YtiOayEwLr/4VHQOifTHjTLdNbcPcC4QlAgNrh/xKMkhg9/p5oLRymyFtIqcAnc6gKffrFVywjdBybputiB/OznSmOWI=
+	t=1783474047; cv=none; b=VlpsCGaF4N8buLQfg7EqC2cWhhAlN6B/mdwRKi1sV0gGK2m1ktFY8kcI7gOvYD7J0pcXAfss4C34sDPQR4EQVk6e+17ZSxwyszl7rYg15DefcuH560Kb+7mt8+wZ+JMMrJuNEoVs/hkSMYCbQ7bRnZ6FOYsBxWc4fdmfK/cnx10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783473237; c=relaxed/simple;
-	bh=o3BNBAr+EbQXF4PwScM6kNTmPr1SBLLVV2GnegWMlOo=;
+	s=arc-20240116; t=1783474047; c=relaxed/simple;
+	bh=yBG5PM6JYI8Pn7vjHVqVJ5cRlfNBGbpJi08+sRY33Uc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O2iZscZwxderJoUXKRTJ0/aPm7ZOfQ1sjKHVL9+35CxxH93n9r2OJMyVOWJkD/zhBDqVXuzKDPpzeAPhX7FnlBB5XkL6vg6b+d2CBWFJlIYqFx8ZmnnPjtNi39zXrDmS5UaZOYQ37irskjCnmofNhCuVRfN1VqGZzgl/PQDucWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uw0HySDT; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=c6duOaKxZwoEcINjB+qq0E2gkd1lyybZp1teC6R0l3F/D6K4GDNLb5eFMBRSwuIQQiILUTqIAD6OohrQXEdSwefN53iXDyJixuzrI2UCsssuMP9fNdmFu+gRYX9Mj75qEWMFtb2mIiUpfCQJ7yQozumX5+ojOaKQ6sVcW1vVPJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J/cIeGCf; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uw0HySDT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J/cIeGCf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783473235; x=1815009235;
+  t=1783474047; x=1815010047;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=o3BNBAr+EbQXF4PwScM6kNTmPr1SBLLVV2GnegWMlOo=;
-  b=Uw0HySDT0BdnrT+58URzV9MI5uT46hyHceAZT9VW3y4A2646zw+uofKZ
-   wyoGoYYzm9mWkazX5sofXRNxXPmqrnUpvyoANlQPzLb8a6vWyZ/CRwEIA
-   gTKdA8pNTSr3Ql0ri1FOdTpGyqpwJQue7SqIK4dCjRkJT0PKQ5SVwAaAe
-   eKFjUQJGiblF1ThG4r4tnEcp/wgiI5h2lTmk/vNUNkscsELXgulcPu6rH
-   DCP7zCV8OSzGbKX2Ix2JjqLGmVrUtV5iIJ3szNK3vWGhi0dum6cLA2Jvv
-   NADKVJsP/SSP5e3j2vi0CCqvnT3A643wHJFD+UkncfV8JhtaMHOPkzFqR
-   Q==;
-X-CSE-ConnectionGUID: N6lJ7xslTzyoIulKwED1UA==
-X-CSE-MsgGUID: 7A0CXstUQkeJ3htKtGxMiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="84188258"
+  bh=yBG5PM6JYI8Pn7vjHVqVJ5cRlfNBGbpJi08+sRY33Uc=;
+  b=J/cIeGCfpf5t/XDxPLlxGqKseGadpoUkEQpC7LdmFgbdkWBcfi9bwWni
+   ld2jlfMFLnYzGUEYqE7IbG7KdkkDJPHfHlX7/neLvYnU3FwWUpldOl0UH
+   C1VPJWDokgFbVnmFy5/WMFiPWoQjsy1/FHNlfl5JuM+zhJhE/pYDILvIE
+   7y3JWtsVqjPJruKfFLHkxhmGg4/MvEDPfvzEpZoqPA7YMGFU0Z0yoDjHy
+   T+Tu0EYckFADOLoP9wg1ROv7Yn8SVMtlxdJ8Wal3RgZnXjbKRfDNu24Ft
+   Z+EGuW+Q2stLlsdFd/ifnoxzKhkxIYOYH6vAS3od+OVdTz9XalPQ6hLC9
+   A==;
+X-CSE-ConnectionGUID: u53fWdWeRbOgC8aUPKHFQQ==
+X-CSE-MsgGUID: KV8rn4ZWRJeEaQ+iP8SDSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="83908204"
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="84188258"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 18:13:55 -0700
-X-CSE-ConnectionGUID: ZABfYRbxSqm37uHIY49PBQ==
-X-CSE-MsgGUID: DjNC7vcTQVShPkhE08dPvg==
+   d="scan'208";a="83908204"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 18:27:26 -0700
+X-CSE-ConnectionGUID: US24AGCRQYagt7NYU2MnMA==
+X-CSE-MsgGUID: 5W6xo2XgQgKpsw/VUFQ6IQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="292331724"
+   d="scan'208";a="258026960"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 18:13:54 -0700
-Message-ID: <b27063e8-b230-40e0-a5ae-a902612e8845@linux.intel.com>
-Date: Wed, 8 Jul 2026 09:13:51 +0800
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 18:27:25 -0700
+Message-ID: <73610adf-97b4-4144-87a3-3053be778cbf@linux.intel.com>
+Date: Wed, 8 Jul 2026 09:27:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,109 +52,144 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v9 13/24] perf: Add sampling support for SIMD registers
+Subject: Re: [Patch v9 14/24] perf/x86: Support XMM sampling using
+ sample_simd_vec_reg_* fields
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
 References: <20260706015439.3040804-1-dapeng1.mi@linux.intel.com>
- <20260706015439.3040804-14-dapeng1.mi@linux.intel.com>
- <20260706023436.5DFDD1F00A3A@smtp.kernel.org>
+ <20260706015439.3040804-15-dapeng1.mi@linux.intel.com>
+ <20260706064600.6D7BA1F000E9@smtp.kernel.org>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260706023436.5DFDD1F00A3A@smtp.kernel.org>
+In-Reply-To: <20260706064600.6D7BA1F000E9@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 7/6/2026 10:34 AM, sashiko-bot@kernel.org wrote:
+On 7/6/2026 2:45 PM, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
 >
 > New issues:
-> - [Medium] Uninitialized, flag-gated syscall parameters are unconditionally passed to and evaluated by the validation function `perf_simd_reg_validate()`, breaking trust boundaries.
+> - [Medium] Validation logic unconditionally evaluates flag-gated syscall parameters (`vec_mask_user`, `pred_mask_user`) without checking their respective flag gates, leading to validation bypasses due to uninitialized garbage.
 >
 > Pre-existing issues:
-> - [High] The dynamic size added by PERF_SAMPLE_REGS_INTR (and exacerbated by SIMD registers) bypasses the size capping applied during PERF_SAMPLE_STACK_USER, leading to a U16_MAX integer overflow and ring buffer corruption.
+> - [Critical] The functions `perf_reg_value` and `perf_simd_reg_value` unsafely assume the provided `pt_regs *` is always embedded within an `x86_perf_regs` structure, leading to out-of-bounds reads and arbitrary pointer dereferences for software events and `PERF_SAMPLE_REGS_USER`.
 > --
 >
-> commit 8a8cf6dc3b640f823c8a7990b8c46e78cd38719e
-> Author: Kan Liang <kan.liang@linux.intel.com>
+> commit 9c74aceec4401218b750679a5b08ba8009aa85a3
+> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >
-> perf: Add sampling support for SIMD registers
+> perf/x86: Support XMM sampling using sample_simd_vec_reg_* fields
 >
-> This commit introduces support for sampling SIMD registers during profiling
-> by adding new attribute fields to the perf_event_attr structure. It provides
-> a new output format and the PERF_SAMPLE_REGS_ABI_SIMD ABI to represent the
-> number and width of these registers based on user configuration.
+> This commit adds support for sampling XMM registers by introducing a new ABI
+> field and extracting XMM values through the sample_simd_vec_reg_* fields. It
+> adds a new perf_simd_reg_value function to retrieve the values and updates
+> the SIMD registration validation logic.
 >
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 0239864029bec..ce93c23b3a33f 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -8773,6 +8877,10 @@ void perf_prepare_sample(struct perf_sample_data *data,
->>  			u64 mask = event->attr.sample_regs_intr;
+>> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+>> index 81204cb7f7239..8514baefb400e 100644
+>> --- a/arch/x86/kernel/perf_regs.c
+>> +++ b/arch/x86/kernel/perf_regs.c
+> [ ... ]
+>
+>> @@ -63,6 +63,9 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
 >>  
->>  			size += hweight64(mask) * sizeof(u64);
->> +			if (event_has_simd_regs(event)) {
->> +				size += perf_update_xregs_size(event, true);
->> +				data->regs_intr.abi |= PERF_SAMPLE_REGS_ABI_SIMD;
->> +			}
->>  		}
+>>  	if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_XMM_MAX) {
+>>  		perf_regs = container_of(regs, struct x86_perf_regs, regs);
+>> +		/* SIMD registers are moved to dedicated sample_simd_vec_reg */
+>> +		if (perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
+> [Severity: Critical]
+> This isn't a bug introduced by this patch, but evaluating perf_regs->abi
+> here relies on an unsafe cast.
+>
+> For tracepoints and PERF_SAMPLE_REGS_USER, regs points to a bare pt_regs
+> instance rather than an embedded x86_perf_regs struct. The container_of()
+> cast accesses memory outside the bounds of the pt_regs struct.
+>
+> Could this allow an attacker to control the out-of-bounds pointers (like
+> xmm_regs) and read arbitrary kernel memory into the perf ring buffer?
+
+This is not a bug. The software PMU has no such caps,
+PERF_PMU_CAP_EXTENDED_REGS or PERF_PMU_CAP_SIMD_REGS, so if software events
+want to sample these extended regs, the event creation would fail.
+
+
+>
+>> +			return 0;
+>>  		if (!perf_regs->xmm_regs)
+>>  			return 0;
+>>  		return perf_regs->xmm_regs[idx - PERF_REG_X86_XMM0];
+> [ ... ]
+>
+>> @@ -74,6 +77,77 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+>>  	return regs_get_register(regs, pt_regs_offset[idx]);
+>>  }
 >>  
->>  		data->dyn_size += size;
-> [Severity: High]
-> This is a pre-existing issue, but does adding this new SIMD register size
-> cause a buffer overrun by overflowing data->dyn_size past USHRT_MAX?
+>> +u64 perf_simd_reg_value(struct pt_regs *regs, int idx,
+>> +			u16 qwords_idx, bool pred)
+>> +{
+>> +	struct x86_perf_regs *perf_regs =
+>> +			container_of(regs, struct x86_perf_regs, regs);
+>> +
+>> +	if (!(perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD))
+> [Severity: Critical]
+> This is a pre-existing issue, but this new code copies the same unsafe
+> container_of() cast pattern.
 >
-> Earlier in perf_prepare_sample(), when PERF_SAMPLE_STACK_USER is processed,
-> perf_sample_ustack_size() caps the stack dump size so that the total dynamic
-> size precisely reaches USHRT_MAX. 
->
-> Since PERF_SAMPLE_REGS_INTR is unconditionally processed after
-> PERF_SAMPLE_STACK_USER, adding its size (which can now be significantly
-> larger with SIMD registers) to data->dyn_size will exceed 65535 bytes.
->
-> Could this truncate the 16-bit header size and cause perf_output_sample()
-> to write far more data than was allocated in the ring buffer?
+> Since regs is not actually embedded in an x86_perf_regs struct when
+> called for PERF_SAMPLE_REGS_USER, reading perf_regs->abi reads
+> out-of-bounds memory.
 
-The function perf_simd_reg_validate() would check if SIMD register size
-exceeds USHRT_MAX. If so, the event creation would fail before sampling.
+Ditto.
 
 
 >
->> [ ... ]
->> @@ -13694,6 +13809,16 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
->>  		ret = perf_reg_validate(attr->sample_regs_user);
->>  		if (ret)
->>  			return ret;
->> +		ret = perf_simd_reg_validate(attr->sample_type,
->> +					     attr->sample_simd_regs_enabled,
->> +					     attr->sample_simd_vec_reg_qwords,
->> +					     attr->sample_simd_vec_reg_intr,
->> +					     attr->sample_simd_vec_reg_user,
->> +					     attr->sample_simd_pred_reg_qwords,
->> +					     attr->sample_simd_pred_reg_intr,
->> +					     attr->sample_simd_pred_reg_user);
->> +		if (ret)
->> +			return ret;
->>  	}
+>> +		return 0;
+>> +
+>> +	if (pred)
+>> +		return 0;
+> [ ... ]
+>
+>> +int perf_simd_reg_validate(u64 sample_type, u16 simd_enabled,
+>> +			   u16 vec_qwords, u64 vec_mask_intr,
+>> +			   u64 vec_mask_user, u16 pred_qwords,
+>> +			   u32 pred_mask_intr, u32 pred_mask_user)
+>> +{
+>> +	u64 size = 0;
+>> +
+>> +	if (!(sample_type &
+>> +	      (PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER)))
+>> +		return 0;
+>> +
+>> +	if (!simd_enabled)
+>> +		return 0;
+>> +
+>> +	if (vec_qwords) {
+>> +		if (vec_qwords != PERF_X86_XMM_QWORDS)
+>> +			return -EINVAL;
+>> +		if (!vec_mask_intr && !vec_mask_user)
+>> +			return -EINVAL;
 > [Severity: Medium]
-> Could this pass uninitialized syscall parameters to the validation logic?
+> Does this logic evaluate flag-gated parameters without checking their
+> respective flag gates?
 >
-> When PERF_SAMPLE_REGS_USER is set but PERF_SAMPLE_REGS_INTR is not, the user
-> is not required to initialize the sample_simd_vec_reg_intr or
-> sample_simd_pred_reg_intr fields. 
+> PERF_SAMPLE_REGS_INTR and PERF_SAMPLE_REGS_USER are independent flags. If a
+> user sets INTR but not USER, vec_mask_user is outside its flag gate and
+> can contain arbitrary garbage from userspace.
 >
-> If perf_simd_reg_validate() evaluates these uninitialized fields:
+> If vec_mask_intr is 0 (an invalid configuration), but the garbage in
+> vec_mask_user is non-zero, this check passes and the validation is bypassed.
 >
-> arch/x86/kernel/perf_regs.c:perf_simd_reg_validate() {
->     if (!vec_mask_intr && !vec_mask_user)
->         return -EINVAL;
-> }
->
-> Does this allow an invalid configuration where vec_mask_user is zero to
-> bypass validation because vec_mask_intr contains non-zero garbage data?
+> Should these masks be validated against their respective sample_type flags
+> before checking if they are both empty?
 
-Hmm, it looks a overkill here. It would be fair enough to check REGS_USER
-and REGS_INTR separately. Thanks.
+Yes, the perf_simd_reg_validate() would be enhanced to validate the
+REGS_USER and REGS_INTR configuration separately.
+
+Thanks.
 
 
 >
+>> +		if ((sample_type & PERF_SAMPLE_REGS_INTR) &&
+>> +		    (vec_mask_intr & ~PERF_X86_SIMD_VEC_MASK))
+>> +			return -EINVAL;
