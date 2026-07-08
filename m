@@ -1,110 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70A33C09E4
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 20:14:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214AE21CA02;
+	Wed,  8 Jul 2026 23:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783541676; cv=none; b=agPUz+DXYXs5bRbN7+VkH+II7kEBGx2vBCz1/wh2pOJZXlIM2QPcp+2D+x/7MNd/lcj7C1ks4Gr9eIWqJYztTUpq6iZquZRS2I1eEO6cbkRDEQmdx8azYN32B9dXJVpPBaxmGtipcgYfotuMsVtjz1yxlEo5RlQq5+qZogvzO4M=
+	t=1783553466; cv=none; b=rsG87lbx+rYLP1rRXiT9lInplevsKhq0iOZCsR6op09nsSyVa5EygGhrh3pTjfayqhY9W79WNCxQVjfRvxqp+5yUYGl1NwYoJrmQgsDOwomJP2aF9n0+XYaoiR3Q+c2Wip8l17Y8BFEseUtSajFx7pBWHLw3v82LgdZK67db4wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783541676; c=relaxed/simple;
-	bh=KB7xuMsmpM+swXL9l+mY7UE0yt4HW+2Pn+FFgixCAQw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BfaQ59JQ4y8t4GBAn/Ug48dIe2N+L/MxXLLCFVzZrT9HnUi426/PSLDSDur2S6pCNXn5A0JE3EZKXNcMq8SiOSdPwRKIxpRqbjqOl6DqZpisXCFUHGmD2Z+rnlWZs2MSpaR1Ejt0LnN3Bu3mf23NppSOlFbtRWscVLurh1+UDMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgQWR1u1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783553466; c=relaxed/simple;
+	bh=tBZZacDPJqJWjaVKBQ0YpT7JDhpbuo8FOZA6wilkrHM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r0Rrqof/GwCltMlg6QPHM0FYgIVApS4k33+/8afJ/uevZwdUNy3APOhT/WFz6YsHfP4v7kmaaYnF+8oVvRq1bqGX2qjSNMCtDmSSN04IZ0B0cSkVg32rNYWcE6lYfgeEuR4+Yy7FfMBQgrKyJ0RV8qRNoE1jJ2QgHSRWP36ASxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QU0gvSwn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgQWR1u1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5831F000E9;
-	Wed,  8 Jul 2026 20:14:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QU0gvSwn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 836A21F00A3A;
+	Wed,  8 Jul 2026 23:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783541674;
-	bh=J2HVAZy0jFRzIcH2V++Ph+l/YS/GWKkd/8DgoFPoELM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JgQWR1u1dlMqwEKbSu2/36tGUUTru7W9uk/F3oLxxMqqw6K7KOsbAmVeBe9o0gxez
-	 7FvUQCk0mUM8M2AcLC8oZqK1C+4LU23SJXoS15R+tD1prqR5ji/pBLlMQcG+QYigs5
-	 2/6ffb7fJY8Pp4YK6ZXnnwr/6A71Cu/YCPi0suqZURjvv3BTBbJEOTamx2nlz3I11/
-	 Z+BSq2y/s6AGK7eiQ/o0yoGV7OMTIsxJDDSnfBAp1divKsCSSEsz5NXfptjhwzeKMl
-	 OCtr7jwceZdM2Bdimu24YrvLIATAYzemoEdXCJvT6oTyW+NDPecp86CPvda8hTuHhs
-	 Z3QAQCJi1+xrQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf stat: Do not open cgroups for BPF counters
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260708200407.1240640-1-namhyung@kernel.org>
-References: <20260708200407.1240640-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 20:14:33 +0000
-Message-Id: <20260708201434.5C5831F000E9@smtp.kernel.org>
+	s=k20260515; t=1783553464;
+	bh=vZQ5N4OBrTl0dNJ0Es2C1NPSUXJXAxYwYULRieuYpq0=;
+	h=From:To:Cc:Subject:Date;
+	b=QU0gvSwnpCQqvwu9kXbFkYh/FV2iYH+hsnfs3/H6ydhUAsxemry6eaUtnRNjcGktZ
+	 IbrC4c9DlPE9VQosd5BDWlUgTNeHLgiBLwhQe5ldNTxX6H7ifaYQ7bdWzfPckuh/zF
+	 RwwuTkwjFOOK96+jU9Izm2ZmaJpKxJXDVWCoDnJhepNlcvhM37ZI1HsuCCkVoLcB2M
+	 Fq3A3AQ+3iVjjMRky4CgJdc1dwa3zgSkHXaayoeIuS98d9VQg4ADOhHzq+AGkr/vJr
+	 itGIaocwUb+AleR9JFFeoJs14JLxccMCFt5SGEiG5cdvjSJJ3zlos7u2Hicoyol0TD
+	 yMRUYmRifIsNQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v1 1/2] perf stat: Fix duplicate output with --for-each-cgroup
+Date: Wed,  8 Jul 2026 16:31:02 -0700
+Message-ID: <20260708233103.1359713-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Fallback from BPF counter mode to standard cgroup mode leaves cg=
-roup file descriptors uninitialized (-1), causing standard perf event openi=
-ng to fail with -EBADF.
---
+Currently it produces following output with duplicate events when
+ --for-each-cgroup option is used.  It seems perf stat adds them when
+it handles default events but didn't copy some fields in evsel__clone().
 
---- Patch [1]: [PATCH] perf stat: Do not open cgroups for BPF counters ---
-commit 510c63ce03b2362940d1f693b45d5faa86cf3bc1
-Author: Namhyung Kim <namhyung@kernel.org>
+  $ sudo perf stat -a --for-each-cgroup / true
 
-perf stat: Do not open cgroups for BPF counters
+   Performance counter stats for 'system wide':
 
-This commit prevents opening and keeping file descriptors for cgroups
-when using the --bpf-counters and --for-each-cgroup options. BPF mode
-uses a set of shared events and compares cgroup-IDs, so it doesn't need
-individual cgroup file descriptors.
+           8,440,165      duration_time                    /
+           8,439,895      duration_time                    /
+           8,440,015      duration_time                    /
+           8,440,024      duration_time                    /
+           8,440,075      duration_time                    /
+           8,440,095      duration_time                    /
+                 330      context-switches                 /             #    679.4 cs/sec  cs_per_second
+              485.69 msec cpu-clock                        /             #     57.5 CPUs  CPUs_utilized
+                  70      cpu-migrations                   /             #    144.1 migrations/sec  migrations_per_second
+                  71      page-faults                      /             #    146.2 faults/sec  page_faults_per_second
+          12,183,711      branch-misses                    /             #     10.9 %  branch_miss_rate         (5.15%)
+         111,981,297      branches                         /                                                       (5.15%)
+          95,844,809      branches                         /             #    197.3 M/sec  branch_frequency     (35.49%)
+          65,611,429      cpu-cycles                       /             #      0.1 GHz  cycles_frequency       (98.32%)
+          24,170,987      cpu-cycles                       /                                                       (95.12%)
+          18,552,509      instructions                     /             #      0.8 instructions  insn_per_cycle  (95.12%)
+          22,405,293      cpu-cycles                       /                                                       (64.78%)
+           6,840,383      stalled-cycles-frontend          /             #     0.31 frontend_cycles_idle        (64.78%)
+       <not counted>      cpu-cycles                       /
+     <not supported>      stalled-cycles-backend           /             #      nan backend_cycles_idle
+     <not supported>      stalled-cycles-backend           /             #      nan stalled_cycles_per_instruction
+     <not supported>      instructions                     /
+     <not supported>      stalled-cycles-frontend          /
 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2874,7 +2874,8 @@ int cmd_stat(int argc, const char **argv)
->  			goto out;
->  		}
-> =20
-> -		if (evlist__expand_cgroup(evsel_list, stat_config.cgroup_list, true) <=
- 0) {
-> +		if (evlist__expand_cgroup(evsel_list, stat_config.cgroup_list,
-> +					  !target.use_bpf) < 0) {
+         0.006546057 seconds time elapsed
 
-[Severity: Medium]
-Will this break the fallback path when we exceed BPERF_CGROUP__MAX_EVENTS?
+  Some events weren't counted. Try disabling the NMI watchdog:
+  	echo 0 > /proc/sys/kernel/nmi_watchdog
+  	perf stat ...
+  	echo 1 > /proc/sys/kernel/nmi_watchdog
 
-Later in cmd_stat(), we have a fallback that disables BPF counters if there
-are too many events:
+But I'm worrying about opening same events multiple times.  Probably due
+to grouping, but I'm not sure if it's beneficial in the end.  Without
+duplication, it seems it won't cause multiplexing (assuming no other
+users at the same time).
 
-	if (target.use_bpf && nr_cgroups &&
-	    (evsel_list->core.nr_entries / nr_cgroups) > BPERF_CGROUP__MAX_EVENTS)=
- {
-		pr_warning("Disabling BPF counters due to more events...");
-		target.use_bpf =3D false;
-	}
+Fixes: a3248b5b5427d ("perf jevents: Add metric DefaultShowEvents")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/evsel.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-If this fallback is triggered, target.use_bpf becomes false, but the cgroups
-were already expanded with !target.use_bpf (which was false at the time),
-leaving the cgroup file descriptors uninitialized (-1).
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d0484e4ee679e635..fefa5c73a474ff87 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -612,12 +612,18 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 	evsel->percore = orig->percore;
+ 	evsel->precise_max = orig->precise_max;
+ 	evsel->is_libpfm_event = orig->is_libpfm_event;
++	evsel->skippable = orig->skippable;
++	evsel->retire_lat = orig->retire_lat;
++	evsel->dont_regroup = orig->dont_regroup;
+ 
+ 	evsel->exclude_GH = orig->exclude_GH;
+ 	evsel->sample_read = orig->sample_read;
+ 	evsel->collect_stat = orig->collect_stat;
+ 	evsel->weak_group = orig->weak_group;
+ 	evsel->use_config_name = orig->use_config_name;
++	evsel->default_metricgroup = orig->default_metricgroup;
++	evsel->default_show_events = orig->default_show_events;
++
+ 	evsel->pmu = orig->pmu;
+ 	evsel->first_wildcard_match = orig->first_wildcard_match;
+ 
+-- 
+2.55.0.795.g602f6c329a-goog
 
-When the standard event opening later calls evsel__open_cpu() in
-tools/perf/util/evsel.c:
-
-	if (evsel->cgrp)
-		pid =3D evsel->cgrp->fd;
-
-Could it attempt to use the uninitialized cgroup file descriptor (-1) with
-the perf_event_open syscall, causing it to fail with -EBADF? Should the
-cgroup file descriptors be reopened if the fallback to standard mode is
-taken?
-
->  			parse_options_usage(stat_usage, stat_options,
->  					    "for-each-cgroup", 0);
->  			goto out;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708200407.1240=
-640-1-namhyung@kernel.org?part=3D1
