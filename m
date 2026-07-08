@@ -1,127 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1830630D406
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 02:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F51187346
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 04:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783477814; cv=none; b=QulBLvnCBopj9yD7Y2tY8UNAiR9MTQHpoaHVwuMQR8iW++dWoqL+zsQHk9YSVeRgwmHgZaM1ozp2wrQpoaBZmOPKk1aICUpSedU2IGAYQHlBlj67/oMB2OGLZbcnKP0p2Z0DruEm9td7ILqIZpVElQMyHP3ssAEHiv9Q5gGz2Hk=
+	t=1783486611; cv=none; b=ZjzR8RDFzog+4TT0b2T34NYtc4bPoOHdtWY1Kb+5UcvvjSZ107EoSstTPrw5FvKi988D9Px8mtFX6z+3Ol1qiZV6jV0A60qMFfK1wUt3UzotaQ6KnRVT9e7Bk2HLI9OjrBa/pPoEvdlUaR5hLebInrch6V/d2g+f0+yfJkaP7P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783477814; c=relaxed/simple;
-	bh=7Qw+uUL36LO2eE4xRdqMv9qoCyI6GLJ/5veOFprZnfQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dUr9kpHbe2+w9q/2p7Evsy3zarqhPyhtFsGeDC1FMTGUfVcjvpsJwMhpSBBu8FDVsZG3VEvytmPgyEJOaeH76CLzRuoCcFpt3KUSiYGhFox8QYrCvvMDZE4xLosH7WB+SnrZyJs4Ra8FPoLQ6LEzDbicFCl/p2UpVpEcfEGUt74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RuOdqLjf; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1783486611; c=relaxed/simple;
+	bh=CUfN0bFl2Zvp9IrBajxsRt/TgANcKTQh8m/9eQmpinQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QlKy97fcykNeBNx/fPuKtPs8FZ3byTyWWj8Q52uZtf84tix4zCYzSD2zzyJVzO7oSSvSIhW6kV24z+2QpEnvac2dHj4r5kt/9agCj0l1dsT5/zJ+cY53hEbhPgAJhJYeNLw91x9ng0W+I70Qdz8EJZJVm9qqbkRIMS2BmHWcG98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L5NXGDmL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RuOdqLjf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783477812; x=1815013812;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7Qw+uUL36LO2eE4xRdqMv9qoCyI6GLJ/5veOFprZnfQ=;
-  b=RuOdqLjfNsTStHejlOFwn+Uj+FxR8nD1GcMxK1fXY/Gm1JKrBCzxX/vz
-   7yfsCNhCj+jiKfkkxnj9OOm0ek5pLIBShyTcJa4jfye8J9FYaLwZhvmoF
-   wp4dJviQRltniZnYK0u3/Qlbcfo1ptVu8AVrToTX8sf/ztf0HuZWGFPHU
-   LCFrhNwFWZKkOCR9FnC+gh8ybKwSxPw2nm2vv+fCVJuL2Py3tGa4NBg0J
-   MPl91WVNO4cjDMIiwv+eMRYaElkWM9QqG9mPzeA85jVelEmhmMDqJSvUy
-   Qx6FBp1jX2q3asU80mbKQfX/7snCCulv/VF6x9OyuTVVaoLcl+cOCCs6D
-   Q==;
-X-CSE-ConnectionGUID: 1nW8CTkuQSuX6cr8FkkTYA==
-X-CSE-MsgGUID: oU5cmd34Q8+P5Ln9nGmQ1g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="94739919"
-X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="94739919"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 19:30:11 -0700
-X-CSE-ConnectionGUID: 392Nq0gvSFiBbL5/LfW+Rw==
-X-CSE-MsgGUID: WO0VtwR+QimpldWV6nsJgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="259066655"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 19:30:10 -0700
-Message-ID: <a9ad6d88-f693-48f2-84b5-8c76eabd0a75@linux.intel.com>
-Date: Wed, 8 Jul 2026 10:30:07 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L5NXGDmL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783486609;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PB/gGCaLeqjcMDaBfkThoG37D339GATgqjTdiU7aoOU=;
+	b=L5NXGDmL2qbynT5/ASlJE+h6A8XnO+mX4R+ASMa8kKayyaauY169egXVkHpZTqiPGfR0um
+	EEWz/nsPT3QSLlMfft63YlOaKdiJKFlR7JZBLobLnkOzhzfZjRoXFYa+22Jdlyihu7ZFC2
+	y9XHaB5i4zHXPJEaI2Nu4Mg/KVgVyj0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-584-zBjz_oHANNCE9l8RRrZm4Q-1; Wed,
+ 08 Jul 2026 00:56:46 -0400
+X-MC-Unique: zBjz_oHANNCE9l8RRrZm4Q-1
+X-Mimecast-MFC-AGG-ID: zBjz_oHANNCE9l8RRrZm4Q_1783486595
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9B37C18005A2;
+	Wed,  8 Jul 2026 04:56:32 +0000 (UTC)
+Received: from tallison-mac.redhat.com (unknown [10.22.81.130])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6A5621800664;
+	Wed,  8 Jul 2026 04:56:29 +0000 (UTC)
+From: Trevor Allison <tallison@redhat.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	tallison@redhat.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf: Fix missing CET property notes on x86 with -fcf-protection
+Date: Wed,  8 Jul 2026 00:56:03 -0400
+Message-ID: <20260708045606.43649-1-tallison@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v9 09/10] perf tests: Add x86 eGPRs/SSP registers sampling
- test
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260706023444.3067660-1-dapeng1.mi@linux.intel.com>
- <20260706023444.3067660-10-dapeng1.mi@linux.intel.com>
- <20260706030025.4A6731F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260706030025.4A6731F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+When perf is built with -fcf-protection, the x86 binary can lack CET
+(IBT/SHSTK) in .note.gnu.property because perf links several static
+archives whole-archive: if any input object lacks matching property
+notes, the linker drops CET from the final binary.
 
-On 7/6/2026 11:00 AM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] The validation function `validate_gp_reg_sampling` executes a single hardcoded `perf record` pipeline instead of using the standard `perf_record_with_retry` helper, leading to test flakiness and untraceable failures.
-> --
->
-> commit 5bc6b87aa83194eef4aff3394561f1bdb19039e4
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> perf tests: Add x86 eGPRs/SSP registers sampling test
->
-> Validate that eGPRs (extended general purpose registers) and SSP
-> (shadow stack pointer) registers can be sampled correctly on x86
-> platforms with hardware support.
->
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index dd90fef2088b1..48c722e563e27 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
-> [ ... ]
->
->> @@ -131,6 +131,131 @@ check_system_wide() {
->> +validate_gp_reg_sampling() {
->> +  local regs_opt="$1"
->> +  local regs_value="$2"
->> +  local script_field="$3"
->> +  local sample_output
->> +  shift 3
->> +
->> +  if ! sample_output=$(perf record -o - "${regs_opt}=${regs_value}" \
->> +    -e br_inst_retired.near_call -c 1000 --per-thread ${testprog} 2> /dev/null \
->> +    | perf script -F ip,sym,"${script_field}" -i - 2> /dev/null)
-> [Severity: Medium]
-> Could this hardcoded perf record pipeline lead to test flakiness on slower
-> environments?
->
-> By not using the standard perf_record_with_retry helper, a single execution
-> might fail to generate the 1000 near calls required to trigger a hardware
-> sample.
->
-> Additionally, does suppressing stderr with 2> /dev/null permanently hide
-> error details from the CI pipelines by bypassing the PERF_RECORD_LOGS
-> collection mechanism?
+Fix libbpf EXTRA_CFLAGS handling, C++ flag propagation, and missing
+.note.gnu.property sections in x86 assembly (like .note.GNU-stack).
+All three are needed for CET to survive the link.
 
-This comment seems a false positive. There is no perf_record_with_retry
-helper in kernel code base.
+Trevor Allison (3):
+  perf build: Preserve EXTRA_CFLAGS when building in-tree libbpf
+  perf build: Apply EXTRA_CXXFLAGS to C++ builds
+  perf x86: Add .note.gnu.property to assembly linked into perf
 
+ tools/perf/Makefile.config               |  1 +
+ tools/perf/Makefile.perf                 |  2 +-
+ tools/perf/arch/x86/tests/regs_load.S    | 24 ++++++++++++++++++++++++
+ tools/perf/bench/mem-memcpy-x86-64-asm.S | 24 ++++++++++++++++++++++++
+ tools/perf/bench/mem-memset-x86-64-asm.S | 24 ++++++++++++++++++++++++
+ 5 files changed, 74 insertions(+), 1 deletion(-)
 
->
->> +  then
->> +    return 1
->> +  fi
->> +
->> +  if ! has_required_regs "${sample_output}" "$@"
->> +  then
->> +    return 1
->> +  fi
->> +
->> +  return 0
->> +}
+-- 
+2.50.1 (Apple Git-155)
+
