@@ -1,95 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.ilvokhin.com (mail.ilvokhin.com [178.62.254.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F50309EE7
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Jul 2026 13:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79CF17D6;
+	Wed,  8 Jul 2026 13:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.62.254.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783517817; cv=none; b=JHogQF8QWeq1cAtJiR96Z0ApZlaOlQ5RWlOxH7amh/PUk8Lxyaoo82g8yfbhza5oXQ2xrJIQjyMBXlFApy9Iaz1oOHTw7N0P1CJcD4gcfxmtQ8IqPxUZ1cPSoJA09cvGfPhDxbQA9Wn9BTGDesNXCOSvSfXXqSc9Bg6Fbhoq8ak=
+	t=1783517952; cv=none; b=DHFVaipQ1a0/3zntR0dEqU97W4co+OLVjeyyMEEEbULP9poTPzyjdRvIsuMBKhkbQWHaOt1Z/EBpSFD9uZO+G3IwbKenIW7JQq6RJaauNeZgPCEmDMfojH6LFQMAeWtCyQ8lgSWlzzuenBmpw/k77EGQWXxWxnmX7j2Vwx2If3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783517817; c=relaxed/simple;
-	bh=YiBc00cE4gIf4hvYV/D+tTzU2KTSlMuOVy0UJ0GYdp4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=p5Gk7S3D/4Um5yfLIjzJYtQR6WCCp5HPSPNRfGlTZ/T1wXmz3NKMeUuwr4WAUV9gRn9+Go+xcpR9WCfu4zs6yB7ocj/qDpF5mpE3ZyME90r1q0+/YYk1+FRqyncV+QvINn0M19NoH2vm8hTPNKUVbtc0SnwzgxcLj5Eb5+A1tA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rcat3iGI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783517952; c=relaxed/simple;
+	bh=dEhFxfCahr31L1F5SntJAmUomlK/XzGUpK8CQw5o44A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t4s/+NHkIwEEq4uMmn2zgp0sLy3YZgAuWZXtQeoLBzH2PNoMJuVYYcu/vTdNKUE+olecGWx3QJQMuX4CpM5iAVfu5jVKHR9Ad2aaO1b8lodpE0GdIuGC3q+lKuZr9gR3jSatoBt0VMIHqk8Wl1etFAGM51umjrjFhdLgD+jltks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com; spf=pass smtp.mailfrom=ilvokhin.com; dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b=FoOSjvtT; arc=none smtp.client-ip=178.62.254.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ilvokhin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ilvokhin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rcat3iGI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 107611F000E9;
-	Wed,  8 Jul 2026 13:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783517816;
-	bh=2EAOlsl5H9VQzeDpft/+hFJe+aSz+5FtnfHhFU+LGHk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Rcat3iGIEKj0cpXRxDiDQF0/b6fzzSkNSzAj+ota1u7i34/g2jEXFokaezHjcZQZU
-	 TCucjwKE+k9Fi+EypwRTGTZW5ut7q7W5E1sL6ZeQ4H5bX1Ynf++jeCzBEMxE/h4J44
-	 PsZ9i7eDrhej7htBA3hc+o24/Df+sHjgoFEz2bNGbQlxZ8xKSiYpCejoNK9u308lt1
-	 J1Z29Q3U268OPnLOyPPcBws/H7ooM2kYzoH/ehKDNQptCKPiUgqEsfFDojpoH851he
-	 YwP+6amYU6sj5NQeiHP7azk9k8IbmwvwpYtjLRlFcm/fERNM5Vdac40yERfCezOnog
-	 LqA1VG1G45xBw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf stat: reject --field-separator and
- --json-output combination
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ivan Lazaric" <ivan.lazaric1@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260708131359.71732-3-ivan.lazaric1@gmail.com>
-References: <ak3scJT4MfbAg0G4@google.com>
- <20260708131359.71732-3-ivan.lazaric1@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 13:36:55 +0000
-Message-Id: <20260708133656.107611F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=ilvokhin.com header.i=@ilvokhin.com header.b="FoOSjvtT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ilvokhin.com;
+	s=mail; t=1783517942;
+	bh=zfTLYOGz2115pWO5Bctt530M/nLnfY1+cdIa5cV87gs=;
+	h=From:To:Cc:Subject:Date;
+	b=FoOSjvtTFm510CWw4P8ZhOQFXp5gbKhuz8Qrv3M7DBWlNHcrzViz6YPL0qDHUDfVd
+	 S4dNeCRnrAEVW9HZZ8Is4lpVjSUkhuy2LeKoV3bWlqFe53i5OlTtZ0SUbHSvxD95jN
+	 h2/TNqzb1n+iQO+B/+3nCOoLz9jPx3+UDODjbzs8=
+Received: from localhost.localdomain (shell.ilvokhin.com [138.68.190.75])
+	(Authenticated sender: d@ilvokhin.com)
+	by mail.ilvokhin.com (Postfix) with ESMTPSA id BD90EDB5BB;
+	Wed, 08 Jul 2026 13:39:02 +0000 (UTC)
+From: Dmitry Ilvokhin <d@ilvokhin.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Nick Terrell <terrelln@fb.com>,
+	David Sterba <dsterba@suse.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	kernel-team@meta.com,
+	Farid Zakaria <fmzakari@meta.com>,
+	Dmitry Ilvokhin <d@ilvokhin.com>
+Subject: [PATCH v3 0/2] perf record: fix multi-record Zstd compression
+Date: Wed,  8 Jul 2026 13:38:32 +0000
+Message-ID: <cover.1783513665.git.d@ilvokhin.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] Missing explicit inclusion of `<stdio.h>` for standard I/O function=
-s and types.
---
+Fix a 'perf record -z' regression that aborts recording and writes a perf.data
+that cannot be decompressed (see full analysis in patch 2).
 
---- Patch [1]: [PATCH v2] perf stat: reject --field-separator and --json-ou=
-tput combination ---
-commit 14ca4ce3700a93ed48a3336a633292f7e45ae462
-Author: Ivan Lazaric <ivan.lazaric1@gmail.com>
+v2 -> v3:
 
-perf stat: reject --field-separator and --json-output combination
+- Dropped "perf record: Avoid overrunning the zstd output buffer" and "perf
+  record: Don't store raw data on zstd compression failure": both are now fixed
+  in perf-tools-next.
+- Added "perf record: Return the written size from process_comp_header()", a
+  no-functional-change prep patch, so the fix's per-record padding can't
+  overrun 'dst'
+- Removed blank line from record+zstd_comp_decomp_multi_record.sh between test
+  description and license (Namhyung Kim).
+- Added missing <string.h> include (Sashiko).
+- Rebased onto perf-tools-next (Namhyung Kim).
 
-This patch explicitly rejects using both the --field-separator and
---json-output options in perf stat. It adds a check to output an error
-message and exit cleanly, preventing malformed mixed formats.
+v1 -> v2:
 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index a04466ea3b0a0..6ec82752d71c6 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2643,6 +2643,13 @@ int cmd_stat(int argc, const char **argv)
-> =20
->  	stat_config.aggr_mode =3D opt_aggr_mode_to_aggr_mode(&opt_mode);
-> =20
-> +	if (stat_config.csv_sep && stat_config.json_output) {
-> +		fprintf(stderr, "cannot use both --field-separator and --json-output\n=
-");
-                ^^^^^^^
+- Patch 2 ("perf record: Avoid overrunning the zstd output buffer"):
+  rework the overly strict output buffer check to pass the remaining dst
+  size to process_comp_header() and bail only when a record won't fit
+  (Sashiko).
 
-[Severity: Low]
-Could this cause a build failure when compiling perf with musl libc?
+v1: https://lore.kernel.org/all/cover.1781797544.git.d@ilvokhin.com/
+v2: https://lore.kernel.org/all/cover.1782743187.git.d@ilvokhin.com/
 
-While glibc often implicitly includes standard headers, musl has stricter
-header separation.
+Dmitry Ilvokhin (2):
+  perf record: Return the written size from process_comp_header()
+  perf record: Fix multiple PERF_RECORD_COMPRESSED2 records per push
 
-Since this code introduces a new call to fprintf and uses stderr, does
-builtin-stat.c need an explicit #include <stdio.h> in its global includes
-block to guarantee musl compatibility?
+ tools/perf/builtin-record.c                   | 49 +++++++++------
+ .../record+zstd_comp_decomp_multi_record.sh   | 63 +++++++++++++++++++
+ tools/perf/util/compress.h                    |  6 +-
+ tools/perf/util/zstd.c                        | 25 ++++----
+ 4 files changed, 111 insertions(+), 32 deletions(-)
+ create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp_multi_record.sh
 
-> +		parse_options_usage(stat_usage, stat_options, "x", 1);
-> +		parse_options_usage(NULL, stat_options, "j", 1);
-> +		goto out;
-> +	}
+-- 
+2.53.0-Meta
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708131359.7173=
-2-3-ivan.lazaric1@gmail.com?part=3D1
