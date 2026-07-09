@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53893D34AB;
-	Thu,  9 Jul 2026 22:17:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEECC3DE429;
+	Thu,  9 Jul 2026 22:17:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783635471; cv=none; b=Hxg9zXUVYkbB/cOH2aTXMu1kgrkswh7nUwnu9YQKt9ev22FudZjZHUEHmqTPebZDmf5d8Sr+9PesIDtbQQOPnHn5PGnHSgqFtUmq4GgvO0zbKTRoc5mqEtUyNfoPL4IRuEVT+NSqB0mU009aPX2nZrronTg9RVPjdgqdXS4z2ys=
+	t=1783635473; cv=none; b=Rg6IWFJVbnnpfinh7zftzhG0HWmQAa7FPeQs9aVX4/bCr/moJDSsXU164Dgs6KbEQHsckQdUASksdONz+xwPqk1bZFU6VBYjQVu9n24Bdj9GGuM86rQiKOOIO+9S9xRMC/kz+6CDz0cKXskrlQn+jx90rBu36bdyZaWtSbox77Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783635471; c=relaxed/simple;
-	bh=7K+mVOAfd7O7mBrvuCC+ocZBM74EZhw605+3UoxF3Sg=;
+	s=arc-20240116; t=1783635473; c=relaxed/simple;
+	bh=/5hsfENeOEAJaPXIi53/k71Z8g4IBYqmgq7Y9Imm1AY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RqJeVy2Zp43146e2nJNpZalxvQ9Hgias7cGh/98MEO8YSUX2NLFfGvv3RHMrFDkyLtAkayp2LezwCzifm+DiKgM0gVn5P2HwQ+QgdNx7fUblX95Z6rSqTw7dpa0UGB6hyTLNY5RaX7EYNhAQUdtEq3AeZjcQHRvsaFLiSejv1j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fnLjyAcv; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=n3uBvPsS8I5jBIDZGSZz+Xl08R8ykmWGplJlAVtAJpIWmot/QGBIonc9u5YPYHIs8rcHDzE6IQt9up695SXe4Kylnit2NqMP7d4q3cGNgxnpQvQx37k2H7yD/37+CSL0ozG4qwjqpnpBj3cvhIRYGjYKB+52PMmCYf1G2dMAKr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aMZnIB2i; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnLjyAcv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aMZnIB2i"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783635470; x=1815171470;
+  t=1783635472; x=1815171472;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7K+mVOAfd7O7mBrvuCC+ocZBM74EZhw605+3UoxF3Sg=;
-  b=fnLjyAcv9XkhiejJvvClygrGEQ/IHW6U+mq6XM2ilEh7TH/ZJT/d7nq9
-   3Oy2+pJyPcdpyAHMKJ8a7jHU9qQr/6hdgosOngQka8dpoAqu1W5X6FlOm
-   tjTTXfzXYiDQrBOBQ8h9UY+gLmQhp6uH5wexNCSy6mOKbJvppWHBabVkk
-   cCsG5tAtqPDrDIai7MgDlDE+ofm08yTtWubZ4SDkYce+9BsiKh9bfyK0L
-   zTs/Z1jStGjxw/6/vmUn7k40VomfhK51wvdlar0bvKZp49KugVPnXK+W6
-   fkpvRPaLqcVykh46UVSHF5lIyVirypMPvDdENxik1ALspGuTMU8d9XAoz
+  bh=/5hsfENeOEAJaPXIi53/k71Z8g4IBYqmgq7Y9Imm1AY=;
+  b=aMZnIB2i3SCbX3vNaJfsUpVppZm+5fII27hf6UNSXopjddRoXO1FWrVU
+   q4SzKntZvFwaN8eTJufOoGKPros7AwCniqA8EjyZ0Oeew29voPB7bsBeK
+   /bO95CYfxyiusrHIR51LYtaHPfcl02+VZYyGrpqC6Rwo4IpgoO+N4iqgP
+   DFibYWnx9MaQf0ge0GaH0x1/WJosfXP0GJWpWqxdwTB1MiMUhdzKROunO
+   Z0zqKTS5MqhOhKYJSwh9kZRGDSrCThrksZLjBefLdIUAX+S87USSq+/c/
+   EgE8gyI33/gAKDc7ikOPUzGFcKjGNOIoWS3hLmv+KjoA2tYER1glfEiUT
    w==;
-X-CSE-ConnectionGUID: kulhTw4gRhi6KuB4J1oe+w==
-X-CSE-MsgGUID: NSncNk5jQziX1MnymursDQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88163366"
+X-CSE-ConnectionGUID: X/BF044tQIym8KlQ6YLRVA==
+X-CSE-MsgGUID: niB+Hr9gQpKUUThQQs1d8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88163373"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="88163366"
+   d="scan'208";a="88163373"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 15:17:49 -0700
-X-CSE-ConnectionGUID: nMtNcN1BRziGrTy6/l5pnA==
-X-CSE-MsgGUID: p1FPGW+pSCWWG5nbJP56cg==
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 15:17:51 -0700
+X-CSE-ConnectionGUID: pTTpb4hyTZWVztOusHhc1w==
+X-CSE-MsgGUID: Dsu5+FaBQBKlTVXa4UHYyw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="259620880"
+   d="scan'208";a="259620888"
 Received: from khuang2-desk.gar.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.223.97])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 15:17:47 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 15:17:49 -0700
 From: Thomas Falcon <thomas.falcon@intel.com>
 To: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -57,9 +57,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 1/6] perf mem: Fix size tracking for mem_lvl's in perf_script__meminfo_scnprintf()
-Date: Thu,  9 Jul 2026 17:17:31 -0500
-Message-ID: <20260709221736.33446-2-thomas.falcon@intel.com>
+Subject: [PATCH 2/6] perf mem: Add support for printing PERF_MEM_LVLNUM_L0
+Date: Thu,  9 Jul 2026 17:17:32 -0500
+Message-ID: <20260709221736.33446-3-thomas.falcon@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260709221736.33446-1-thomas.falcon@intel.com>
 References: <20260709221736.33446-1-thomas.falcon@intel.com>
@@ -71,32 +71,87 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When printing memory info in perf script, the entire size of the
-buffer is passed to perf_mem__lvl_scnprintf() instead of the remaining
-size. Pass the remaining buffer size instead.
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-This issue was detected by sashiko during an internal code review.
+Add support for printing PERF_MEM_LVLNUM_L0 in perf mem report.
 
 Assisted-by: Sashiko:gemini-3.1-pro-preview
-Fixes: fdefc3750e847 ("perf mem: Print memory operation type")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
 ---
- tools/perf/util/mem-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/perf-record.txt | 2 +-
+ tools/perf/util/bpf-filter.l             | 1 +
+ tools/perf/util/mem-events.c             | 5 +++++
+ tools/perf/util/mem-events.h             | 1 +
+ 4 files changed, 8 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 178f483140ed..b54032efe41c 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -212,7 +212,7 @@ OPTIONS
+ 	The <value> can be one of:
+ 	  <number> (for any term)
+ 	  na, load, store, pfetch, exec (for mem_op)
+-	  l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
++	  l0, l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
+ 	  na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
+ 	  remote (for mem_remote)
+ 	  na, locked (for mem_locked)
+diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
+index 6aa65ade3385..1be9df6550fc 100644
+--- a/tools/perf/util/bpf-filter.l
++++ b/tools/perf/util/bpf-filter.l
+@@ -131,6 +131,7 @@ store		{ return constant(PERF_MEM_OP_STORE); }
+ pfetch		{ return constant(PERF_MEM_OP_PFETCH); }
+ exec		{ return constant(PERF_MEM_OP_EXEC); }
+ 
++l0		{ return constant(PERF_MEM_LVLNUM_L0); }
+ l1		{ return constant(PERF_MEM_LVLNUM_L1); }
+ l2		{ return constant(PERF_MEM_LVLNUM_L2); }
+ l3		{ return constant(PERF_MEM_LVLNUM_L3); }
 diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 0b49fce251fc..4e490f9cd348 100644
+index 4e490f9cd348..4fd48fd20055 100644
 --- a/tools/perf/util/mem-events.c
 +++ b/tools/perf/util/mem-events.c
-@@ -610,7 +610,7 @@ int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *
- 	i += scnprintf(out, sz, "|OP ");
- 	i += perf_mem__op_scnprintf(out + i, sz - i, mem_info);
- 	i += scnprintf(out + i, sz - i, "|LVL ");
--	i += perf_mem__lvl_scnprintf(out + i, sz, mem_info);
-+	i += perf_mem__lvl_scnprintf(out + i, sz - i, mem_info);
- 	i += scnprintf(out + i, sz - i, "|SNP ");
- 	i += perf_mem__snp_scnprintf(out + i, sz - i, mem_info);
- 	i += scnprintf(out + i, sz - i, "|TLB ");
+@@ -391,6 +391,7 @@ static const char * const mem_lvlnum[] = {
+ 	[PERF_MEM_LVLNUM_L4] = "L4",
+ 	[PERF_MEM_LVLNUM_L2_MHB] = "L2 MHB",
+ 	[PERF_MEM_LVLNUM_MSC] = "Memory-side Cache",
++	[PERF_MEM_LVLNUM_L0] = "L0",
+ 	[PERF_MEM_LVLNUM_UNC] = "Uncached",
+ 	[PERF_MEM_LVLNUM_CXL] = "CXL",
+ 	[PERF_MEM_LVLNUM_IO] = "I/O",
+@@ -831,6 +832,8 @@ int mem_stat_index(const enum mem_stat_type mst, const u64 val)
+ 		}
+ 	case PERF_MEM_STAT_CACHE:
+ 		switch (src.mem_lvl_num) {
++		case PERF_MEM_LVLNUM_L0:
++			return MEM_STAT_CACHE_L0;
+ 		case PERF_MEM_LVLNUM_L1:
+ 			return MEM_STAT_CACHE_L1;
+ 		case PERF_MEM_LVLNUM_L2:
+@@ -915,6 +918,8 @@ const char *mem_stat_name(const enum mem_stat_type mst, const int idx)
+ 		}
+ 	case PERF_MEM_STAT_CACHE:
+ 		switch (idx) {
++		case MEM_STAT_CACHE_L0:
++			return "L0";
+ 		case MEM_STAT_CACHE_L1:
+ 			return "L1";
+ 		case MEM_STAT_CACHE_L2:
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index 5b98076904b0..daa22748f9fe 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -109,6 +109,7 @@ enum mem_stat_op {
+ };
+ 
+ enum mem_stat_cache {
++	MEM_STAT_CACHE_L0,
+ 	MEM_STAT_CACHE_L1,
+ 	MEM_STAT_CACHE_L2,
+ 	MEM_STAT_CACHE_L3,
 -- 
 2.43.0
 
