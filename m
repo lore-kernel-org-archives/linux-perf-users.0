@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EF3396588;
-	Thu,  9 Jul 2026 07:11:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9E0365A17;
+	Thu,  9 Jul 2026 07:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783581119; cv=none; b=A1936x92p0x6Iv/fHkbHFwxDUbPxbYFSXHBdLEoVwlBmIMaBQ7BD2mW/NDQNIv7SffmypIdeJ51n5IFqyhNrtGqDKA7ofX9CJ4rzy3nYxjiCFkip3mP7KEWZ7VjBDVcBGrb6ITV18HwuA4D0mNJtF8M2xeS53xBJbamrk+sXZ34=
+	t=1783581455; cv=none; b=jSm6PJ9Alwf5CDH3OrChLfT6TvaTqIMTtVYgaWRZz0A3o+uxVkTmPzZ5151AyUi3JF+w3mE1G2ukEIpIMQQwAl7fsthY6EvJFbEE1jKlT5TzQLxygFWkHsOK6nodqCBmdIN/MFjX/rhuN5Jna1CPsnVMOzGb2L3eUT0Y/XEj1Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783581119; c=relaxed/simple;
-	bh=1bFrl0vlltxeAap/2rx9ASRmCqfX14/3dXfXo+34v5Q=;
+	s=arc-20240116; t=1783581455; c=relaxed/simple;
+	bh=Bqo0uoRSlE6EkmhNLxqF4nRijEAU3pLvxs6Uw2fk6/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QiFWz8rOwx5k32OrixMxayCG5BNkbnyIVo39ju/YAGQ2EuQGu5P1o8yvHHm+2xYzNVGf303fZR6D2zYWFQlqurW9N5svseNTCgcKPylgo+82qRuTHFJnMjEze0DroCb6YjCmTbbDL02ARMYXN/hYe8xX4zX/nnZqyG3xN2Y6AsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hegS0QMH; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=iVkhD/QrEWOQbVjtmwkj0FiY6izWRN9bwc6ZW35HMsfdeXxiSW11DcdZ6Z28GicHZIMC4WoEOkUoGEXka1m2yEfHUgvRsWxh2TAwxOwjN2R7TzTn+OHQeFNQZO9V5FRZs2dKBaECIxfG47iDPmYc6t0bbO36PdrurcfgcTIfqY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Auh5r01n; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hegS0QMH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8180C1F000E9;
-	Thu,  9 Jul 2026 07:11:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Auh5r01n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D03F1F00A3A;
+	Thu,  9 Jul 2026 07:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783581117;
-	bh=DpiuIY+i0+5VHAO+YolzyXVb4B+73lrHLlUgE3fFKfc=;
+	s=k20260515; t=1783581454;
+	bh=GJiK3L3oRRiN3d8ICHLHs7dvqb9hVUGKtEiTpqWX+oo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hegS0QMHfmHqyD1SVSULKH2TvjcUZ43IvcINseRRD7rRdLat19kjytmFiWm0eNYrp
-	 W+HTUUb2fdr+uAwTgxnEn/C+hbIYZfE28UeiVOO8eDFX3ViP6qntum3aUTvb/sTfA3
-	 msEZAcFVLVwa+okviIHbCeLGiNMzuyRdDtR8nwyNQIFc50uV6NsxPHyL5naMS9ndNj
-	 06h5PuTt0O5YUkj/i8M0BQeFqrGAauQx+M/65WTi2arM9SXlAP4byscEyXK+8/LvfF
-	 DHsMNRGqDb+1DRwuXuXFhr9aeAxe5Gb+lUe3e88bjEH+PoEnx0SUNgZvCYbT8bsS4w
-	 N+U7hkIY8PGBw==
-Date: Thu, 9 Jul 2026 00:11:56 -0700
+	b=Auh5r01n0MdeEFfxafkHCQPtn+P7ucr3BwW/T0NHblPbd7Cth398B8mu0bVRHloYV
+	 TgHfKm6SYdxVfRY+1PV+i3qso5+it98JN+CtKGL7SGPDpZ+53Ts53glyShk2ySj2Of
+	 LhafSMByjnx751n+bp1cOgY9Ds1lsNHyStacSCHc/dVxpWtGuxFvQWUdKAcXCXKCAQ
+	 +joM7F/ZLThUYUDg5EuQbMmKWt5WFEUNXxG2BJLCdsFklw7J5UQ5i6J4qdMGp9GAet
+	 3+BC3hmIRqprmzr2i8cz+x69Jd56EAYNT5ZeU0V56NDyiID2gq9bzeCM5mnQwkbllq
+	 s/rebnucJjPNQ==
+Date: Thu, 9 Jul 2026 00:17:33 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 16/21] perf annotate-arm64: Support stack variable
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 17/21] perf annotate-arm64: Support 'mov' instruction
  tracking
-Message-ID: <ak9JvKYdnyI6N-ba@z2>
+Message-ID: <ak9LDT7NL2bWTkdv@z2>
 References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-17-wutengda@huaweicloud.com>
- <20260701041647.81CE41F000E9@smtp.kernel.org>
+ <20260701035355.752944-18-wutengda@huaweicloud.com>
+ <20260701042109.565541F000E9@smtp.kernel.org>
+ <7cd2afbf-51a6-4c47-8212-87fba14876ce@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,150 +45,73 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260701041647.81CE41F000E9@smtp.kernel.org>
+In-Reply-To: <7cd2afbf-51a6-4c47-8212-87fba14876ce@huaweicloud.com>
 
-On Wed, Jul 01, 2026 at 04:16:47AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
-> - [Medium] Incomplete handling of ARM64 load/store pair instructions (ldp/stp) causes type tracking corruption by ignoring the second register.
-> - [Medium] Missing invalidation of destination register when type resolution fails during a memory load.
-> - [Medium] Missing invalidation of stack state when storing an unknown register type.
-> - [Medium] Incorrect stack offset calculation when accessing memory via the stack pointer while a different frame base register is active.
-> --
+On Wed, Jul 01, 2026 at 04:46:02PM +0800, Tengda Wu wrote:
 > 
-> commit 3e734515747646c2063edf487f47005c1433cf1a
-> Author: Tengda Wu <wutengda@huaweicloud.com>
 > 
-> perf annotate-arm64: Support stack variable tracking
+> On 2026/7/1 12:21, sashiko-bot@kernel.org wrote:
+> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > - [Medium] Type state corruption due to DWARF register overloading for the stack pointer (`sp`) and zero registers (`xzr`/`wzr`).
+> > --
+> > 
+> > commit 8b77f0fe5f1ec7e9d14eee63f44f48d6c55f7234
+> > Author: Tengda Wu <wutengda@huaweicloud.com>
+> > 
+> > perf annotate-arm64: Support 'mov' instruction tracking
+> > 
+> > This commit extends update_insn_state() for arm64 to track register-to-register
+> > and immediate-to-register 'mov' instructions. It propagates data type
+> > information or immediate values to the destination register to improve type
+> > inference.
+> > 
+> >> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+> >> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> >> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> > 
+> > [ ... ]
+> > 
+> >> +static void update_mov_insn_state(struct type_state *state,
+> >> +				  struct disasm_line *dl,
+> >> +				  struct annotated_op_loc *src,
+> >> +				  struct annotated_op_loc *dst)
+> >> +{
+> > 
+> > [ ... ]
+> > 
+> >> +	if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
+> >> +		invalidate_reg_state(tsr);
+> >> +		return;
+> >> +	}
+> >> +
+> >> +	tsr->type = state->regs[sreg].type;
+> > 
+> > [Severity: Medium]
+> > Will this code corrupt the stack pointer's type state if the zero register
+> > (xzr or wzr) is used in a mov instruction?
+> > 
+> > Looking at tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c, the function
+> > __get_dwarf_regnum_arm64() maps sp, wzr, and xzr all to DWARF register 31:
+> > 
+> >     if (!strcmp(name, "sp") || !strcmp(name, "wzr") || !strcmp(name, "xzr"))
+> >         return 31;
+> > 
+> > If a zero register is used as a destination (e.g., mov xzr, x0), does its
+> > tracked state overwrite the tracked state of the stack pointer?
+> > 
+> > Conversely, if a zero register is used as a source (e.g., mov x0, xzr),
+> > does the destination register incorrectly inherit the type of the stack
+> > pointer instead of being treated as a constant 0?
+> > 
 > 
-> This commit extends update_insn_state() for arm64 to track data types
-> stored on the stack. It handles stack loads and stores to update the
-> register's type state or stack state. This allows 'perf annotate' to
-> maintain type information for local variables as they move between registers
-> and memory.
-> 
-> > diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-> > index f283596bb0589..255ccaf331309 100644
-> > --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> > +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> [ ... ]
-> > @@ -368,6 +371,8 @@ static void update_load_insn_state(struct type_state *state,
-> >  	int reg_offset;
-> >  	int sreg = src->reg1;
-> >  	int dreg = dst->reg1;
->         ^^^^^^^^^^^^^^^^^^^^
-> [Severity: Medium]
-> When handling ARM64 load pair instructions (ldp), does this code ignore the
-> second destination register (dst->reg2)? The second register of a load pair
-> could retain its stale type instead of being updated, which might lead to
-> false type propagation.
+> I'll drop wzr/xzr register support to avoid this confusion.
+ 
+Yep, that'd be right.
 
-Splitting "ldp" case would prevent this kind of issue.
-
-> 
-> > +	int fbreg = dloc->fbreg;
-> > +	int fboff = 0;
-> >  
-> >  	if (!has_reg_type(state, dreg))
-> >  		goto out_adjust;
-> > @@ -375,7 +380,52 @@ static void update_load_insn_state(struct type_state *state,
-> >  	tsr = &state->regs[dreg];
-> >  	tsr->copied_from = -1;
-> >  
-> > +	if (dloc->fb_cfa) {
-> > +		u64 ip = dloc->ms->sym->start + dl->al.offset;
-> > +		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
-> > +
-> > +		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
-> > +			fbreg = -1;
-> > +	}
-> > +
-> >  retry:
-> > +	/* Check stack variables with offset */
-> > +	if (sreg == fbreg || sreg == state->stack_reg) {
-> > +		struct type_state_stack *stack;
-> > +		int offset = src->offset - fboff;
->                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> [Severity: Medium]
-> Will this subtract the frame base offset even when the access is relative to
-> the stack pointer (when sreg == state->stack_reg)? If the stack pointer is
-> used and fbreg is different (e.g., x29), this could yield an incorrect
-> internal stack offset and lose type information.
-
-I think it's a common issue that can happen on other arch.  On x86, I
-never saw where stack pointer is used when fbreg is RBP.  Generally I
-think it won't generate code to use RSP for memory access when frame
-base register is set to RBP.
+But I'm curious how we interpret 'mov x0, xzr' when x0 has a pointer
+type.  Maybe intention of the source code is to initialize the pointer
+to NULL, but this function may set it to const 0 and drop the type info.
 
 Thanks,
 Namhyung
 
-> 
-> > +
-> > +		stack = find_stack_state(state, offset);
-> [ ... ]
-> > @@ -413,6 +463,70 @@ static void update_load_insn_state(struct type_state *state,
-> >  	adjust_reg_index_state(state, src, "ldr", insn_offset);
->         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> [Severity: Medium]
-> Is the destination register left uninvalidated if type resolution fails
-> during a memory load and the code falls through the multi-regs retry logic
-> to the out_adjust label? The destination register could retain its prior type
-> instead of being invalidated, even though its value was overwritten by an
-> unknown memory load.
-> 
-> >  }
-> >  
-> > +static void update_store_insn_state(struct type_state *state,
-> > +				    struct data_loc_info *dloc,
-> > +				    struct disasm_line *dl,
-> > +				    struct annotated_op_loc *src,
-> > +				    struct annotated_op_loc *dst)
-> > +{
-> > +	struct type_state_reg *tsr;
-> > +	u32 insn_offset = dl->al.offset;
-> > +	int sreg = src->reg1;
-> > +	int dreg = dst->reg1;
->         ^^^^^^^^^^^^^^^^^^^^
-> [Severity: Medium]
-> Similar to the load instructions, does this logic ignore the second source
-> register (src->reg2) for ARM64 store pair instructions (stp)? The second
-> register of a store pair wouldn't be saved to the stack.
-> 
-> > +	int fbreg = dloc->fbreg;
-> > +	int fboff = 0;
-> > +
-> > +	if (!has_reg_type(state, sreg) || !state->regs[sreg].ok)
-> > +		goto out_adjust;
->         ^^^^^^^^^^^^^^^^
-> [Severity: Medium]
-> By skipping the rest of the function here, are we bypassing the invalidation
-> of the stack state? If an untracked register is stored into a stack slot that
-> previously held a tracked type, the stale type might persist on the stack.
-> 
-> > +
-> > +	if (dloc->fb_cfa) {
-> > +		u64 ip = dloc->ms->sym->start + dl->al.offset;
-> > +		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
-> > +
-> > +		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
-> > +			fbreg = -1;
-> > +	}
-> > +
-> > +	/* Check stack variables with offset */
-> > +	if (dreg == fbreg || dreg == state->stack_reg) {
-> > +		struct type_state_stack *stack;
-> > +		int offset = dst->offset - fboff;
->                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> [Severity: Medium]
-> Could this calculation yield an incorrect internal stack offset by
-> subtracting the frame base offset even when the access is relative to the
-> stack pointer? This could happen if the frame base register is different from
-> the stack pointer.
-> 
-> > +
-> > +		tsr = &state->regs[sreg];
-> [ ... ]
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260701035355.752944-1-wutengda@huaweicloud.com?part=16
