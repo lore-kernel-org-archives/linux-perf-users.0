@@ -1,175 +1,115 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB0B423372C
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jul 2026 02:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A691391512
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jul 2026 03:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783562987; cv=none; b=lmKq21ACx5BgtXSUopAfrR8EceV++pJSvbMZ8bHlG+Qn8WLZj1/SDsHqV0DOCG0G/SocY5Xbo1vJVk96K2GpG+Lt1UG2FjjN8W9JiNJwNnW2GzExoCYIolvWnO5b1Ewt2bUwvxsD8AD7oDQgcrcf+FVBTJAMUwwULBpl732Y8tk=
+	t=1783568253; cv=none; b=HkWKxZDhaVJ0Dx/Q5NOi2BYKMZRBqqKN3DQZ0zGHQ4cz6fy9uYBU5B7dRJorqhClied1vtzIhYe3bZKZuRwTkTUyRLoIP3xmZlIO/ELn4fGM8F+2YaSH7PiKBBsB/Zhf8Oaf46KflkZmGZ2a3MyHRD1nF7XcyvTVs5jNL4e+Jxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783562987; c=relaxed/simple;
-	bh=ByyfsO+oybVxGImcwOwMAd2J+crIhdjtXGqoawgXPR8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=B+zwR3arkfou8IXwaM+iPFh0hjfOcTQF91tXWUZOQcLH4EqWpM5tGALN5NJmv7llGQLDX8jfmpJS/oGJgjt0BiuYeGZoZP3o6iKqDWkCZVN8OUIUeeTsQZlCcKwzuAuw/KEljbyxkzgL1dUxuTRuVFNJpJ4pmGNa7dZp8e0Lv7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gwdgn0XKCz27RGB;
-	Thu,  9 Jul 2026 10:09:25 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gwdgk21wwz27RGB;
-	Thu,  9 Jul 2026 10:09:22 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id 7E6B9301C0DA;
-	Thu,  9 Jul 2026 10:07:08 +0800 (CST)
-Received: from [172.25.61.61] (172.25.61.61) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 9 Jul
- 2026 10:09:23 +0800
-Message-ID: <ac3eca97-1a29-4d5c-9cfa-19cbc4dcb9e9@hygon.cn>
-Date: Thu, 9 Jul 2026 10:09:22 +0800
+	s=arc-20240116; t=1783568253; c=relaxed/simple;
+	bh=zqhII9pIIg1up9u2s0T3nyYMp8Nuwcx+oic1cmCY3Og=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZnUQMyt/uWnlGrVSqm9qrd1eMhhhcDa7lWclyiRIVcZkM4x6Tfgwc4ME8g7tNJG/BcbjuvlqoTW8w1LQnzCKkbHMofkjBwdk/gJEsTA8aYiLYZca8+cqf0D7ykBzB5GKKgwg/Ui/B59Rup/zMb3q7iOQ1KykdIkDzvghSpDHSs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JWgYof0p; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JWgYof0p"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2ca3b314193so11191035ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jul 2026 20:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1783568251; x=1784173051; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=IW2Krk1JBTo+ci2ZZx0kx/gVLoo7HWWPBLR16dqq0Y0=;
+        b=JWgYof0pZ+l+GZobxlTG1Kmm4cxajo3AosjuInuc7cFfYJ56wDFYiZ746+BHnyewG+
+         kMj1Af2KNS37ysGAu2b7qht3P9i39FrjWMnocowI2ELh6va7J9znGP4qY5QTUQq0OMTo
+         PNHAHSqqhmhR+LCZ8EMK8J4FSrnF0zyjqBNIGQdbw3207OapserukSvRBrsIXKhCuv2K
+         1Y+RAo9osYfV01d4bGqbdAI846KBThfOD5v6kJC88g/7ykwmsBpUvmN0CmpEKYhwKTEQ
+         dhJa8ECKqmvkbOqIftsNwcZtqYHHCCGJY1JUPtd5X1rbtAkKrzMM3PGyUHcYdCugweOj
+         8kZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783568251; x=1784173051;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IW2Krk1JBTo+ci2ZZx0kx/gVLoo7HWWPBLR16dqq0Y0=;
+        b=YErZDN8znopcyAWm4jDBNRXtucuYEGRta68ivy/Z2kCxgvvjyd/+vWNGAsQJD5856X
+         APhdy6pvdSzK9fkzXQT4SxefKOdnTJrbuyEGSX9ZHNbpKo3/5jpH2XuuO6jK0r2J10np
+         4Cx2Y3V4MYcMQ7ME3PMQ5Ot+2IZiKXELH7S29ShJAny4Ow2Vv2AmscL1JK/T3RCIZH65
+         KUDRyBNyL2Xyq+hwsMLE6voIJw1O9X68D8VlGoZ0dDMW1f5/NiHIqDClBZgsbiiKfVxe
+         y/6qhnLXcVvds/N0wGQVwej3N/c4vyeeX0CnaYHa9QptLdiImPeH7yKTRf3mLL3iItTW
+         UFZw==
+X-Forwarded-Encrypted: i=1; AHgh+RreT9s3Byh3RDiSJdHXYGm0YKgawUxAO/eRAqCb6whMB81p7OIG/jtY9EE5fy4sIdhYofJEMqzuMNL+mb9Elksg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzENXBhORxtVYH2WKT5sxf3MuScadZ3W/oBm7TUoUDP0xvG3xhx
+	P3wh92AhMCeNt6clIebD92Lu0ltYsMiG0cotsePiZWnN0AYzJy66qyYio96WMwNsRrCE3vIdQUa
+	fjxlsi3wjbQ==
+X-Received: from dleb8-n2.prod.google.com ([2002:a05:701b:4248:20b0:13b:2930:18fa])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4e02:b0:3bf:d1f9:b1db
+ with SMTP id adf61e73a8af0-3c0bd158f8fmr6517730637.52.1783568251072; Wed, 08
+ Jul 2026 20:37:31 -0700 (PDT)
+Date: Wed,  8 Jul 2026 20:36:58 -0700
+In-Reply-To: <20260708234646.1040003-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] perf/x86/amd/uncore: Add Hygon uncore PMU support
-To: <sashiko-reviews@lists.linux.dev>
-CC: <linux-perf-users@vger.kernel.org>
-References: <20260708131315.13766-1-liuqi@hygon.cn>
- <20260708131315.13766-2-liuqi@hygon.cn>
- <20260708132741.9DF131F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Qi Liu <liuqi@hygon.cn>
-In-Reply-To: <20260708132741.9DF131F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
- (172.23.18.114)
+Mime-Version: 1.0
+References: <20260708234646.1040003-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
+Message-ID: <20260709033701.1117943-1-irogers@google.com>
+Subject: [PATCH v2 1/4] perf ui hists: In report UI ensure thread is set
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, jistone@redhat.com, 
+	namhyung@kernel.org
+Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
+	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	tianyou.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+A map_symbol contains a thread that provides access to the wider perf
+session. Recent changes used the thread to get the e_machine to better
+support cross-platform disassembly. Unfortunately the UI code wasn't
+populating the thread and so the e_machine lookup failed early
+breaking the 'a' for annotate TUI action. Populate the map_symbol
+thread to fix this.
 
-On 7/8/2026 9:27 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
-> - [High] Module initialization error path fails to unregister PMUs and leaks per-CPU arrays, leading to a Use-After-Free.
-> - [Medium] The CPU online callback aborts PMU initialization on the first failure, leaving remaining independent PMUs uninitialized.
-> - [Medium] The patch removes L3 cache uncore PMU support for Hygon processors without providing a replacement.
-> - [Medium] The `update_interval` module parameter lacks bounds checking, allowing a value of 0 to cause a CPU-locking interrupt storm.
-> --
-> 
-> --- Patch [1]: [PATCH v3 1/2] perf/x86/amd/uncore: Add Hygon uncore PMU support ---
-> commit 451a8d6c91c9ade8b2dbc942f864d5c36dc872c9
-> Author: Qi Liu <liuqi@hygon.cn>
-> Subject: perf/x86/amd/uncore: Add Hygon uncore PMU support
-> 
-> This commit adds a new uncore PMU driver specifically for Hygon Family 18h
-> processors, supporting Data Fabric and IO Die counters. It also removes the
-> Hygon-specific checks from the AMD uncore driver to keep the vendor
-> implementations separate.
-> 
->> diff --git a/arch/x86/events/amd/hygon_uncore.c b/arch/x86/events/amd/hygon_uncore.c
->> new file mode 100644
->> --- /dev/null
->> +++ b/arch/x86/events/amd/hygon_uncore.c
->> @@ -0,0 +1,863 @@
-> 
-> [ ... ]
-> 
->> +/* Interval for hrtimer, defaults to 60000 milliseconds */
->> +static unsigned int update_interval = 60 * MSEC_PER_SEC;
->> +module_param(update_interval, uint, 0444);
-> 
-> [Severity: Medium]
-> Could setting this to 0 cause an interrupt storm? If a privileged user loads
-> the module with update_interval=0, hrtimer_duration becomes 0. When this is
-> passed to hrtimer_forward_now(), it is clamped to the minimum resolution,
-> causing the high-resolution timer to fire continuously in a loop. Should
-> there be a minimum bounds check here to prevent a CPU lockup?
-will fix this.>
-> [ ... ]
-> 
->> +static int hygon_uncore_cpu_online(unsigned int cpu)
->> +{
->> +	struct hygon_uncore *uncore;
->> +	int i;
->> +
->> +	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
->> +		uncore = &uncores[i];
->> +		if (uncore->init(uncore, cpu))
->> +			break;
-> 
-> [Severity: Medium]
-> Should this be a continue instead of a break? If the first PMU type (e.g.,
-> hygon_df) fails to initialize, this break aborts the loop, which prevents
-> any subsequent independent PMUs (like hygon_df_iod) from initializing on
-> this CPU. The same patch corrects this exact logic flaw in
-> amd_uncore_cpu_online(), but it seems to have been reintroduced here.
-> 
-will fix this.>> +	}
->> +
->> +	return 0;
->> +}
-> 
-> [ ... ]
-> 
->> +fail_start:
->> +	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
->> +fail_prep:
->> +	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
->> +fail:
->> +	hygon_uncore_info_cleanup();
->> +	return ret;
->> +}
-> 
-> [Severity: High]
-> Does this error path leak the registered PMUs? If cpuhp_setup_state()
-> fails for the ONLINE state, we remove the previous hotplug states but it
-> looks like hygon_uncore_pmu_cleanup() is never called.
-> 
-> Any PMUs successfully registered during the initial CPU online callbacks
-> would remain registered, and their per-CPU arrays would not be freed. When
-> the module unloads, could this lead to a use-after-free if the perf
-> subsystem tries to access the freed module memory?
-> 
-hygon_uncore_cpu_online() always returns 0, so cpuhp_setup_state() for the 
-ONLINE state will never fail due to a callback error. The only failure mode is 
-that the state slot itself cannot be registered — in which case the startup 
-callbacks were never invoked and no PMUs were ever registered.
+Reported-by: Josh Stone <jistone@redhat.com>
+Fixes: 0e26ba5a8774 ("perf disasm: Refactor arch__find and initialization of arch structs")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/ui/browsers/hists.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> [ ... ]
-> 
->> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
->> index dbc00b6dd69ee..3f8e40abba736 100644
->> --- a/arch/x86/events/amd/uncore.c
->> +++ b/arch/x86/events/amd/uncore.c
-> 
-> [ ... ]
-> 
->> @@ -1120,8 +1116,7 @@ static int __init amd_uncore_init(void)
->>   	int ret = -ENODEV;
->>   	int i;
->>   
->> -	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
->> -	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
->> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
->>   		return -ENODEV;
-> 
-> [Severity: Medium]
-> Does this intentionally drop L3 cache uncore support for Hygon? By
-> removing Hygon support here in amd_uncore.c, the previous L3 cache
-> counters are no longer available. Looking at the new hygon_uncore.c, it
-> only implements the Data Fabric and IO Die PMUs, meaning L3 PMU support
-> appears to be lost completely.
-> 
-
-Yes, this is intentional. L3 and UMC PMU support for Hygon will be added in 
-follow-up series. This series focuses specifically on Data Fabric uncore PMU 
-support as the initial step.
-
-Thanks,
-Qi>>   	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
->>   		return -ENODEV;
-> 
-
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index da7cc195b9f4..f8ffd9b73582 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3155,10 +3155,12 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 						continue;
+ 
+ 					actions->ms.sym = symbol__new_unresolved(bi->to.al_addr, bi->to.ms.map);
++					actions->ms.thread = bi->to.ms.thread;
+ 					actions->ms.map = bi->to.ms.map;
+ 				} else {
+ 					actions->ms.sym = symbol__new_unresolved(browser->he_selection->ip,
+ 										 browser->selection->map);
++					actions->ms.thread = browser->selection->thread;
+ 					actions->ms.map = browser->selection->map;
+ 				}
+ 
+@@ -3173,6 +3175,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 					continue;
+ 				}
+ 
++				actions->ms.thread = browser->selection->thread;
+ 				actions->ms.map = browser->selection->map;
+ 				actions->ms.sym = browser->selection->sym;
+ 			}
+-- 
+2.55.0.795.g602f6c329a-goog
 
