@@ -1,165 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839CA3D0BFB;
-	Thu,  9 Jul 2026 06:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7453D75C2;
+	Thu,  9 Jul 2026 06:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783578679; cv=none; b=K9sdHOLe/OBg8c2SebCh1jRZQTVS753HtmD97hcOJDGQB/e9PqPWiJk2q6lWHMdSEohB+ZhUoHaU/FOZx+yOBwjoX+GYzGCPU7aU1rIJ/Zi0Z0yp7K1UrGQWbbPLlovIhGh0FZM6sVJBYvZBYZhFm2bslbO2gf/g+3SXdFG8LAM=
+	t=1783578977; cv=none; b=PCtSKI+fMAKJyP/wrQFd6yU4Ovca7WoUYowZ9LzzbQsGML8+m2p1nuNsNQbaA/6qvB6a54aQRnIAluPlXvWHsYySLy7EU++qgUHMH2UYeW29Z+s1jKV9cj3/HYChC1AziRzAuKbOHFsr+cIAzGoZoEDlDg5nbQ/fyKEMbcxudvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783578679; c=relaxed/simple;
-	bh=lLkL0NxPUHqBmph0qy84Ge/mM4CGIqnRoPdohQhSn4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lJVnTHW3CaujcvsvbTUjLfheUQA6unxxJgFQicrZ4u3CLRMyOG5h0iJ4HMSExmzJbxqvGOQeYzKo9NfiDOe8KV1kDXlcs/5cvAqTlnltlCBbGEf0lk9FqUMimSHEarzA2VPlD4ZFaOOmXAjRsnouZ1lJrlPv0fFfI22pKdzcncg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fL6A9Rbz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783578977; c=relaxed/simple;
+	bh=hIKd/yYXx8ic1qCFRpxBNFQ+yyfryDF+DAlRXXXmY5A=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=kCHVUCc9kk6R8XZAdarozsuju/3ZbEqYvz/jsrhIVri5gLUj1lcInuEDuO7ZdD37E5JRFoGRAr6qCOZ3o+E2YO9p2rljJZyjjyXIZ+7IWqBIvsqyejbLy15aXbcdJk2m0dcXMyaBcQueRkwD7rV5G3aJOLojC7KXHK7lE/avJI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmt6ShrD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fL6A9Rbz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E13C1F000E9;
-	Thu,  9 Jul 2026 06:31:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmt6ShrD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53DCC1F000E9;
+	Thu,  9 Jul 2026 06:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783578678;
-	bh=KVJwuhlHvCDuJa9PR+rRLEyjKK5uhjQqGp5xXlj+GkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fL6A9Rbzu3JEZwyXs34vfUKAlZmFQJXUZzmQyAN1bvih6rgLhP2GdEEYQDuvb5Yrk
-	 CwCGB9jq/hUqQjsavNftVviCVNEcoMD42EjOKyb/rZn9zsDlyWe6de6ExZ7tM8uic7
-	 w+VO8pb6ij39dnMjuoeAjHDsCtdVdY/8+O9n5Tl9WVEUSJ3w3L0AeLyESLIGB+wRcz
-	 1FlBJU/egGh+65IcDm+NiR6bIkYamGGJscijz+DIamqwJ1W18u2UUJi9Ig1jB7gYYm
-	 ftG7OJCDplcf4SUNfgfoqfmvSByo0HKpVhhAV94L+vsjAxg6R9GlcbsIdKUzVEw8zm
-	 p0T/SlprOhPIw==
-Date: Wed, 8 Jul 2026 23:31:16 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 08/21] perf annotate: Introduce extract_op_location
- callback for arch-specific parsing
-Message-ID: <ak9ANIuZLqWvAJWa@z2>
-References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-9-wutengda@huaweicloud.com>
- <20260701040647.A23771F00A3A@smtp.kernel.org>
- <2da387b1-ff15-4d7a-9cfe-062a9aa55368@huaweicloud.com>
+	s=k20260515; t=1783578966;
+	bh=XFVw/ud5gV5sJPHi7cyqYaqLPYoS2/nf/WgIyDkET4o=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=dmt6ShrD03rRtBSVUSOfFit2NhGzQF4AZ63P59HPPT6BXv3c13mhLY91dNHKC5KIy
+	 TSm11DtTFvvaOalErsEHHaKeJOHyoutL/6D4OmmVF4ugmuidOm8znCfStHDsDL/S5k
+	 N4liV9xI34h2KJR6IF3067qscAa8wpaNMapgbUFzYIIJDmcuo8Hn+T8aAK78aqBu7W
+	 15TTF7jf6aNtnZakUELxtu5QJTfl+y2hij9W0rIO9w1rWYzGqrHPE2BPByYRY2UeVf
+	 s5tbYRX78RECcSM/8BXk6cNewP7QPtqGYGgqeMScw/m/CGhZaz+81nJv4GqH0ZDsaG
+	 yPHeSarc9tT+g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf test: perftool-testsuite-report fails on s390
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Thomas Richter" <tmricht@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, linux-perf-users@vger.kernel.org, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>
+In-Reply-To: <20260709062724.2663228-1-tmricht@linux.ibm.com>
+References: <20260709062724.2663228-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 09 Jul 2026 06:36:05 +0000
+Message-Id: <20260709063606.53DCC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2da387b1-ff15-4d7a-9cfe-062a9aa55368@huaweicloud.com>
 
-On Wed, Jul 01, 2026 at 03:29:57PM +0800, Tengda Wu wrote:
-> 
-> 
-> On 2026/7/1 12:06, sashiko-bot@kernel.org wrote:
-> > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> > - [Medium] Refactoring changes the error propagation behavior for memory operands with unrecognized registers, causing valid instructions to be incorrectly marked as bad.
-> > - [Low] Missing explicit inclusion of `<stdlib.h>` for the POSIX libc function `strtol()`, breaking musl compatibility.
-> > --
-> > 
-> > commit a79e03a1004b442317df26b7478d0a1daed1e563
-> > Author: Tengda Wu <wutengda@huaweicloud.com>
-> > 
-> > perf annotate: Introduce extract_op_location callback for arch-specific parsing
-> > 
-> > This patch refactors operand parsing by moving it from the central
-> > annotate_get_insn_location() into architecture-specific callbacks. By
-> > introducing extract_op_location callbacks for PowerPC and x86, it aims to
-> > simplify the core logic and improve maintainability without making functional
-> > changes.
-> > 
-> >> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-> >> index 7e61365363938..6a4b4bdcd7a7c 100644
-> >> --- a/tools/perf/util/annotate-arch/annotate-x86.c
-> >> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-> >> @@ -2,6 +2,7 @@
-> >>  #include <string.h>
-> >>  #include <linux/compiler.h>
-> >>  #include <linux/zalloc.h>
-> >> +#include <linux/ctype.h>
-> >>  #include <assert.h>
-> >>  #include <inttypes.h>
-> >>  #include "../annotate-data.h"
-> > 
-> > [Severity: Low]
-> > Does this file need an explicit include of <stdlib.h> for musl libc
-> > compatibility?
-> > 
-> > It appears strtol() is used later in extract_op_location_x86() without
-> > the required <stdlib.h> header being directly included here, which might
-> > lead to implicit function declaration errors on musl-based systems.
-> > 
-> 
-> Agreed.
-> 
-> > [ ... ]
-> > 
-> >> @@ -809,6 +810,86 @@ static void update_insn_state_x86(struct type_state *state,
-> >>  }
-> >>  #endif
-> >>  
-> >> +/*
-> >> + * Get register number and access offset from the given instruction.
-> >> + * It assumes AT&T x86 asm format like OFFSET(REG).  Maybe it needs
-> >> + * to revisit the format when it handles different architecture.
-> >> + * Fills @reg and @offset when return 0.
-> >> + */
-> >> +static int extract_reg_offset(const struct arch *arch, const char *str,
-> >> +			      struct annotated_op_loc *op_loc)
-> >> +{
-> > 
-> > [ ... ]
-> > 
-> >> +static int extract_op_location_x86(const struct arch *arch,
-> >> +				   struct disasm_line *dl __maybe_unused,
-> >> +				   const char *op_str, int op_idx __maybe_unused,
-> >> +				   struct annotated_op_loc *op_loc)
-> >> +{
-> >> +	const char *s = op_str;
-> >> +	char *p = NULL;
-> >> +
-> >> +	if (op_str == NULL)
-> >> +		return 0;
-> >> +
-> >> +	if (strchr(op_str, arch->objdump.memory_ref_char)) {
-> >> +		op_loc->mem_ref = true;
-> >> +		return extract_reg_offset(arch, op_str, op_loc);
-> > 
-> > [Severity: Medium]
-> > Does returning the result of extract_reg_offset() here alter the error
-> > propagation behavior?
-> > 
-> > In the previous annotate_get_insn_location() logic, the return value of
-> > extract_reg_offset() was safely ignored:
-> > 
-> >         } else if (strchr(insn_str, arch->objdump.memory_ref_char)) {
-> >                 op_loc->mem_ref = true;
-> >                 op_loc->multi_regs = multi_regs;
-> >                 extract_reg_offset(arch, insn_str, op_loc);
-> >         } else {
-> > 
-> > By returning it here, extract_op_location_x86() might return -1 if the
-> > register is unrecognized. This regression is now propagated back to the
-> > caller in annotate_get_insn_location():
-> > 
-> >         if (arch->extract_op_location) {
-> >                 ret = arch->extract_op_location(arch, dl, insn_str, i, op_loc);
-> >                 if (ret)
-> >                         return ret;
-> >         }
-> > 
-> > Could this cause valid instructions to be completely skipped and
-> > incorrectly marked as bad?
-> > 
-> 
-> I don't think this is a problem. If we don't return an error here,
-> extract_reg_offset() would continue with an uninitialized or invalid
-> offset, which would then cause update_insn_state() to make incorrect
-> judgments. Returning -1 and marking it as bad is actually safer than
-> silently propagating wrong information.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Uninitialized variable `perf_config_tmp` is passed to `rm -f`, l=
+eading to potential arbitrary file deletion via environment variable inject=
+ion.
+--
 
-I agree.  I'm not sure if there's actual case it fails there, but I
-prefer not to process when it failed.
+--- Patch [1]: [PATCH] perf test: perftool-testsuite-report fails on s390 -=
+--
+commit dcb55bb63ed0f15c0433bf20e85a5b7ffe77aedd
+Author: Thomas Richter <tmricht@linux.ibm.com>
 
-Thanks,
-Namhyung
+perf test: perftool-testsuite-report fails on s390
 
+This commit fixes a test failure on s390 by creating a temporary perf
+configuration file that disables addr2line warnings, working around a
+timeout issue.
+
+> diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/=
+perf/tests/shell/perftool-testsuite_report.sh
+> index a8cf75b4e77ec..997573f0e74c5 100755
+> --- a/tools/perf/tests/shell/perftool-testsuite_report.sh
+> +++ b/tools/perf/tests/shell/perftool-testsuite_report.sh
+> @@ -6,6 +6,14 @@ test -d "$(dirname "$0")/base_report" || exit 2
+>  cd "$(dirname "$0")/base_report" || exit 2
+>  status=3D0
+> =20
+> +# On s390 the default timeout for addr2line is too short, disable warnin=
+gs
+> +if [ $(uname -m) =3D s390x ]
+> +then
+> +	perf_config_tmp=3D$(mktemp /tmp/.perfconfig_XXXXX)
+> +	export PERF_CONFIG=3D"${perf_config_tmp}"
+> +	perf config 'core.addr2line-disable-warn =3D true'
+> +fi
+> +
+
+[ ... ]
+
+> @@ -19,5 +27,6 @@ if ! [ "$PERFTEST_KEEP_LOGS" =3D "y" ]; then
+>  	rm -rf "$PERFSUITE_RUN_DIR"
+>  fi
+> =20
+> +rm -f "${perf_config_tmp}"
+
+[Severity: Medium]
+Is it possible for perf_config_tmp to be read from the environment on
+non-s390x architectures?
+
+Since perf_config_tmp is only initialized inside the s390x if-block above,
+if this script runs on another architecture, the variable remains
+uninitialized locally. Could an inherited environment variable of the same
+name cause an unintended file to be deleted here?
+
+Additionally, executing rm -f "" on non-s390x systems is sloppy and can
+sometimes produce spurious errors depending on the rm implementation. Would
+it be better to unconditionally initialize the variable to empty at the sta=
+rt
+of the script, or check if it is set before calling rm?
+
+>  test $status -ne 0 && exit 1
+>  exit 0
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709062724.2663=
+228-1-tmricht@linux.ibm.com?part=3D1
