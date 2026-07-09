@@ -1,112 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7453D75C2;
-	Thu,  9 Jul 2026 06:36:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72953D7A18;
+	Thu,  9 Jul 2026 06:47:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783578977; cv=none; b=PCtSKI+fMAKJyP/wrQFd6yU4Ovca7WoUYowZ9LzzbQsGML8+m2p1nuNsNQbaA/6qvB6a54aQRnIAluPlXvWHsYySLy7EU++qgUHMH2UYeW29Z+s1jKV9cj3/HYChC1AziRzAuKbOHFsr+cIAzGoZoEDlDg5nbQ/fyKEMbcxudvA=
+	t=1783579655; cv=none; b=hz0xFqq6YQz3sVkjAKh1EleyZwU5ihE3qfRa85RdCyRS6vAUE23h7U028shCs9r8W2cNUoULOwcK0KFzDDttczRbA/bj09Db3KgoUGVyTraUr1yt+zo1leN6vNiKdF5NGsoI0FeJCnlhPuQe9aaAvVO1X6EedZFBYw9ou+56LuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783578977; c=relaxed/simple;
-	bh=hIKd/yYXx8ic1qCFRpxBNFQ+yyfryDF+DAlRXXXmY5A=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kCHVUCc9kk6R8XZAdarozsuju/3ZbEqYvz/jsrhIVri5gLUj1lcInuEDuO7ZdD37E5JRFoGRAr6qCOZ3o+E2YO9p2rljJZyjjyXIZ+7IWqBIvsqyejbLy15aXbcdJk2m0dcXMyaBcQueRkwD7rV5G3aJOLojC7KXHK7lE/avJI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmt6ShrD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783579655; c=relaxed/simple;
+	bh=MdU/wNVVBYqXc42Pab5uoBjN2kX6B6qAfeErF943Jbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RwcuANpBi8qr8gs4v9j1nW2WWWta44g7RogYLV6LtzTr/fBnLoZASXTEj+5UkArcCect0qmrZA8ZrxMx+A8AJ/wjDMUJIiGhXRYTGV+xIO+3Y9Xt2sxSjwJNSNOLgchDLF0nX1vEJjz/Q07m9SDeYr5MuUxWsAW7tDuF6qHoiPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCRNvTHO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmt6ShrD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53DCC1F000E9;
-	Thu,  9 Jul 2026 06:36:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCRNvTHO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A731F000E9;
+	Thu,  9 Jul 2026 06:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783578966;
-	bh=XFVw/ud5gV5sJPHi7cyqYaqLPYoS2/nf/WgIyDkET4o=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dmt6ShrD03rRtBSVUSOfFit2NhGzQF4AZ63P59HPPT6BXv3c13mhLY91dNHKC5KIy
-	 TSm11DtTFvvaOalErsEHHaKeJOHyoutL/6D4OmmVF4ugmuidOm8znCfStHDsDL/S5k
-	 N4liV9xI34h2KJR6IF3067qscAa8wpaNMapgbUFzYIIJDmcuo8Hn+T8aAK78aqBu7W
-	 15TTF7jf6aNtnZakUELxtu5QJTfl+y2hij9W0rIO9w1rWYzGqrHPE2BPByYRY2UeVf
-	 s5tbYRX78RECcSM/8BXk6cNewP7QPtqGYGgqeMScw/m/CGhZaz+81nJv4GqH0ZDsaG
-	 yPHeSarc9tT+g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf test: perftool-testsuite-report fails on s390
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thomas Richter" <tmricht@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, linux-perf-users@vger.kernel.org, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Heiko Carstens" <hca@linux.ibm.com>
-In-Reply-To: <20260709062724.2663228-1-tmricht@linux.ibm.com>
-References: <20260709062724.2663228-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 06:36:05 +0000
-Message-Id: <20260709063606.53DCC1F000E9@smtp.kernel.org>
+	s=k20260515; t=1783579653;
+	bh=VAS7h2YmHQEjz4IwBx3vm3tL7iezOxoJk/jcErcJPr0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RCRNvTHOYYSSwrV6GgGqMP6SMW4XeWAKZGNT/BaL7Ri6+dN8P2QVxwmh0MpyG8xKT
+	 iPNWlbGekeiDCCOCoDN+Cn/y+x+GT6b4ozsh+pxbAIhUIuaKujG4qKTTXn1CGmVJmW
+	 GOFzbz4yGcYyT9HGPm7ffwwk2CCNeGt/WkGe7eW7mOLhEoHljptHVIaKvuPMyA/ElN
+	 n/hAvLSzLtEU2htsEWw1rPFjeopfXzXO6DWjRbjrk+kL9o43AXw58L1VlPv0K5QIKB
+	 5Ockemxbzi1LCjb6sKZyf3lsucZB0Dx4SVy2UbuVsIVo5xKB75HtSNJTcAruzCx+Kp
+	 bj56HgWLjT06A==
+Date: Wed, 8 Jul 2026 23:47:31 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 10/21] perf annotate: Deduplicate overlapping ARM SPE
+ events for data type profiling
+Message-ID: <ak9EAwRizNby2Tvu@z2>
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-11-wutengda@huaweicloud.com>
+ <20260701040606.2C96B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260701040606.2C96B1F000E9@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Uninitialized variable `perf_config_tmp` is passed to `rm -f`, l=
-eading to potential arbitrary file deletion via environment variable inject=
-ion.
---
+On Wed, Jul 01, 2026 at 04:06:05AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] Invalid union access causes severe type punning, false positive event dropping, and logic failure.
+> - [Medium] Unprotected dereference of potentially NULL `evsel->name` causing a segmentation fault.
+> --
+> 
+> commit 21f6f127e80c94aececac4065deebfce02da27b3
+> Author: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> perf annotate: Deduplicate overlapping ARM SPE events for data type profiling
+> 
+> When data type profiling is enabled on ARM SPE, multiple overlapping
+> events are synthesized for a single sampled instruction. This patch
+> implements automatic deduplication in process_sample_event() by retaining
+> only the "instructions" event when data type annotation is enabled and no
+> explicit itrace options are configured.
+> 
+> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> > index 69cb72b2082a6..46b2bd3fb2013 100644
+> > --- a/tools/perf/builtin-annotate.c
+> > +++ b/tools/perf/builtin-annotate.c
+> > @@ -283,9 +283,22 @@ static int process_sample_event(const struct perf_tool *tool,
+> >  				struct machine *machine)
+> >  {
+> >  	struct perf_annotate *ann = container_of(tool, struct perf_annotate, tool);
+> > +	struct evsel *evsel = sample->evsel;
+> >  	struct addr_location al;
+> >  	int ret = 0;
+> >  
+> > +	/*
+> > +	 * ARM SPE synthesizes multiple overlapping events (e.g., l1d-miss,
+> > +	 * tlb-access) for a single sampled instruction. When data type is
+> > +	 * enabled, counting all of these overlapping events would inflate
+> > +	 * the profile and distort the data type statistics. To avoid this,
+> > +	 * deduplicate by retaining only the comprehensive "instructions" event.
+> > +	 */
+> > +	if (ann->data_type && !ann->session->itrace_synth_opts->set &&
+> > +	    event->auxtrace_info.type == PERF_AUXTRACE_ARM_SPE &&
+> 
+> [Severity: Medium]
+> Since event is a union of all perf events, does checking
+> event->auxtrace_info.type on a PERF_RECORD_SAMPLE event read the sample data
+> payload as if it were an auxtrace type?
+> 
+> If a normal event's first 32-bit payload (like PID 4 when PERF_SAMPLE_TID
+> is the first element) equals 4 (PERF_AUXTRACE_ARM_SPE), could this falsely
+> match and silently drop the event?
 
---- Patch [1]: [PATCH] perf test: perftool-testsuite-report fails on s390 -=
---
-commit dcb55bb63ed0f15c0433bf20e85a5b7ffe77aedd
-Author: Thomas Richter <tmricht@linux.ibm.com>
+Right, you should not access event->auxtrace in process_sample_event().
+You need to find other way to detect if it's processing an ARM SPE
+synthesized sample.
 
-perf test: perftool-testsuite-report fails on s390
+> 
+> > +	    strcmp(evsel->name, "instructions") != 0)
+> 
+> [Severity: Medium]
+> Could evsel->name be NULL here if the event is unnamed or if we are
+> processing a perf.data file missing the HEADER_EVENT_DESC feature?
+> 
+> Passing NULL to strcmp() would cause a segmentation fault. Would it be safer
+> to use the evsel__name(evsel) wrapper instead?
 
-This commit fixes a test failure on s390 by creating a temporary perf
-configuration file that disables addr2line warnings, working around a
-timeout issue.
+Agreed.
 
-> diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/=
-perf/tests/shell/perftool-testsuite_report.sh
-> index a8cf75b4e77ec..997573f0e74c5 100755
-> --- a/tools/perf/tests/shell/perftool-testsuite_report.sh
-> +++ b/tools/perf/tests/shell/perftool-testsuite_report.sh
-> @@ -6,6 +6,14 @@ test -d "$(dirname "$0")/base_report" || exit 2
->  cd "$(dirname "$0")/base_report" || exit 2
->  status=3D0
-> =20
-> +# On s390 the default timeout for addr2line is too short, disable warnin=
-gs
-> +if [ $(uname -m) =3D s390x ]
-> +then
-> +	perf_config_tmp=3D$(mktemp /tmp/.perfconfig_XXXXX)
-> +	export PERF_CONFIG=3D"${perf_config_tmp}"
-> +	perf config 'core.addr2line-disable-warn =3D true'
-> +fi
-> +
+> 
+> > +		return 0;
+> > +
+> >  	addr_location__init(&al);
+> 
+> [ ... ]
+> 
+> > diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> > index 552f063f126e6..e027e3b200bfb 100644
+> > --- a/tools/perf/util/arm-spe.c
+> > +++ b/tools/perf/util/arm-spe.c
+> > @@ -403,6 +403,7 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
+> >  	event->sample.header.type = PERF_RECORD_SAMPLE;
+> >  	event->sample.header.misc = sample->cpumode;
+> >  	event->sample.header.size = sizeof(struct perf_event_header);
+> > +	event->auxtrace_info.type = PERF_AUXTRACE_ARM_SPE;
+> 
+> [Severity: Medium]
+> Writing to auxtrace_info.type modifies offset 8 of the event union, which
+> aliases the sample payload.
+> 
+> If trace injection is used, does perf_event__synthesize_sample() subsequently
+> overwrite this offset with the actual sample payload (such as sample->id),
+> erasing this magic value and breaking the deduplication entirely?
 
-[ ... ]
+Right, please don't do this.
 
-> @@ -19,5 +27,6 @@ if ! [ "$PERFTEST_KEEP_LOGS" =3D "y" ]; then
->  	rm -rf "$PERFSUITE_RUN_DIR"
->  fi
-> =20
-> +rm -f "${perf_config_tmp}"
+Thanks,
+Namhyung
 
-[Severity: Medium]
-Is it possible for perf_config_tmp to be read from the environment on
-non-s390x architectures?
-
-Since perf_config_tmp is only initialized inside the s390x if-block above,
-if this script runs on another architecture, the variable remains
-uninitialized locally. Could an inherited environment variable of the same
-name cause an unintended file to be deleted here?
-
-Additionally, executing rm -f "" on non-s390x systems is sloppy and can
-sometimes produce spurious errors depending on the rm implementation. Would
-it be better to unconditionally initialize the variable to empty at the sta=
-rt
-of the script, or check if it is set before calling rm?
-
->  test $status -ne 0 && exit 1
->  exit 0
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709062724.2663=
-228-1-tmricht@linux.ibm.com?part=3D1
