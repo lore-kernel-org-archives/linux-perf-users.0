@@ -1,209 +1,464 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDFF3E3DA5;
-	Thu,  9 Jul 2026 07:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE5B3E6DE8;
+	Thu,  9 Jul 2026 07:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783582282; cv=none; b=VYNAe45ybDf7n5rEbBiFO1y1PwymxRhIxCz/Z20n7y87oLdtet6JvnrqfZIs/WkT0CGrplD5LpvIgxnUTWLKzkjr8wCYCWncud00IoWPN5PYz9DzYhG+QQ58A9vJaXu7jmIS+XxXVovVymfe/HJNUh2wong2K1DKP4FrVvhOQrw=
+	t=1783582323; cv=none; b=OH7qknUJc2y4FsuffxfSv2KZG6yg71FKPg1YyuhXlX9HVuXXtTtBr9Wa7vijKT9uoDuqEY22hiHoDkz56NxjAj9uOPHyo9e9icZ7GcwHNY9dd2Newmq51KRx93BNEbPlSxAC6qJAydE+tVAPrI5EewUcF1MC/VL6KrFo/WieTcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783582282; c=relaxed/simple;
-	bh=eVg5u4zEndtRSTGlqcnZCPKYnh0W+ufC2fQMrLSEXJw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PiJqXkNJPLOcJodv9QvRaQOQeas2mJ9857iAJZs1CSBJ9oCCu8fDbJN8GqgI/egLWXPYYF66gq9OudnXQsQBh2uZvF1snDu871DcsSHhiPM8SUcETm14xdVkmSgc1X+aZTzl6OeaLT62BpxZxL7naNX3P34pq1NHgA23NPVa57A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fvSX0VhD; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1783582323; c=relaxed/simple;
+	bh=UxLIHkTH2yeB+EF/ksg1gF9OH18JGmMOu7IhGtDdi0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WBKknz4BUP7iQ5KWleJtS/2B4YWNdaKNeOvXizOq/Nk6+1PTpMqh9czSBKx1gf+vMRs9LxY5rDyxOjks58oTcpnYK8Q0RidhgQUe56v8klbN3U0DyIXeFSX7akQfWa6Vf08CtMBYjgZZoRhCQpIoKA/sN5tQQ8RQn5vuKzx7/MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+Oc3HAL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fvSX0VhD"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6696INSS1154744;
-	Thu, 9 Jul 2026 07:31:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=/lN2d+sIVq02Kt9OZ9btD/fDbtjM8RrHJdXUp1wo/
-	zc=; b=fvSX0VhDQ9PJPZJRKmSX3nJjeXuTHQ92Duqc1opAIXs6vbDouus4CtW9i
-	+/J3rTuspHtF0ql70RUo1POo/1ejRWrC2+YscnCSqPa7MspVJiszWQZj88+ZC7ck
-	Xq5yEsYy88JQN0HoAl07Y+6bAX6ExIkBPaU9eZMWRNedWnh33hDCyt+a/G5RXcDT
-	LTx692dEdTknkWhqXqWiKtymXMotoTY+VwLLj2fHPKvYv6cabVnOqBdsXqnDQB9W
-	4o8AvjiP5tGxrKDqEoT/9s0Z9g/OvJq4r/jCWRXomr0K/oiER9zaQsGXfuJz4Mzg
-	4nyaMV7qyjm2lTsWvDK3ET6qHGclA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4f6sw50jgg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jul 2026 07:31:11 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6697Je07007282;
-	Thu, 9 Jul 2026 07:31:11 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4f7eqgbv97-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jul 2026 07:31:10 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6697V70V31195534
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 Jul 2026 07:31:07 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4782C2004B;
-	Thu,  9 Jul 2026 07:31:07 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 13C172004D;
-	Thu,  9 Jul 2026 07:31:07 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  9 Jul 2026 07:31:07 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, iii@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v2] perf test: perftool-testsuite-report fails on s390
-Date: Thu,  9 Jul 2026 09:30:24 +0200
-Message-ID: <20260709073024.3778237-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+Oc3HAL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364B51F000E9;
+	Thu,  9 Jul 2026 07:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783582321;
+	bh=c2mR9o2oP4+E4z/Ns0Dwd0hg346+epCoDyVttTbwUvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=d+Oc3HALjJvDcUNAEBl7KV+upRZ8I4oazHllsqpX32EBlM5CoY4d1jg6mG2l67Ysr
+	 jWUxNk6UKpBNWJ7cv9G4nqKPooylK+GDXONCuIsddRWdm17GSHeyKXHUqqxiOlWkkK
+	 tejzmzq65EjR1zVUw6JPgOpfg0FtW0JnXoDmCAierqRrymrw+PJHe3GXEXvA9lmqYx
+	 EG0P5Q/KnyQlq43lz2kgmAlXoUpBcLVQgFSmGvfvlGkxyyonGCn0uKnWWOBQ8c9k+J
+	 LTzkI1mIHRUv67nek+HomYnseV45Z7iZz9XOSfFqJp1Qn30VVh0hdEiDZIPtxujhOQ
+	 o5lWU9XVk8g2w==
+Date: Thu, 9 Jul 2026 00:31:59 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: james.clark@linaro.org, xueshuai@linux.alibaba.com,
+	Li Huafei <lihuafei1@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+	Ian Rogers <irogers@google.com>,
+	Kim Phillips <kim.phillips@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Bill Wendling <morbo@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v3 19/21] perf annotate-arm64: Support 'adrp' instruction
+ to track global variables
+Message-ID: <ak9Ob0ZTjN0Nrn1E@z2>
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-20-wutengda@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fYdxwtUQQpw2o7pdZaUdp2jusDdFBfCk
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDA2OCBTYWx0ZWRfX19lQ0rZYyFZa
- iLJpVb09IJsgp2NL2wzCa4bVW1kC78JXDkoKiIilUtRfm4Hn/WnqRKPKzdpNgHyBkAf4uesjE77
- XNJyKGyCJPsMBHTiK5on5t/D+Frj6UyHCBSTZc+KWl6FXsIprgHztBcgJ/5XueRS/gKWNCSCEWU
- rI9nCIyfkpFpEgZl6ZT5rTbyMW812g46TEIiGMj3QB7x/4mglZ5OxN8aP+0jEbvjB5JPTpHzbd/
- r0DqlUKdBWNAC3Wf1Q8pmLxQMUpiZ7Ihb8/WoaqzlddrZRejZElMv9D0p+GKVlZk7t7v4+82lkQ
- bom17DtNt6xGe+8Naglt4TTKfLrdNwA42RHV/6ScufI8trgB7gHlJWqy5t+imrybVsNTgTgq9vA
- 2TNX2udk/AQzynohLsPnxdej+Mrdvo8HdKm175L0QEL3vKicyjViy5JR/yVgcDd7E1LO6Z/PwBK
- zDQ+JGcXv0pyZ2Xgsmw==
-X-Proofpoint-ORIG-GUID: fYdxwtUQQpw2o7pdZaUdp2jusDdFBfCk
-X-Authority-Analysis: v=2.4 cv=FqQ1OWrq c=1 sm=1 tr=0 ts=6a4f4e3f cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=jH-Eb8NthfFIkY4C4agA:9
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA5MDA2OCBTYWx0ZWRfXyGDyXCflP532
- 991Ovd/D+BpJ9F10QCYfTuKFGOWQ1e0COXKhrXEb5tmZNegvpLAzZHwOpyejmQXxLUTJ4gwRz3m
- 2veGbHWgNu8QjTiX3xhR1WTJ/hjy9Kk=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-09_01,2026-07-08_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 impostorscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 spamscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607090068
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260701035355.752944-20-wutengda@huaweicloud.com>
 
-V1 --> V2: Add finding from sashiko
-   Add check for non-zero string length to avoid 'rm -f'
-   command without file name.
+On Wed, Jul 01, 2026 at 03:53:53AM +0000, Tengda Wu wrote:
+> Extend update_insn_state() for arm64 to track global variable types
+> calculated via page-relative addressing.
+> 
+> On arm64, global variables are typically accessed by first calculating
+> the page address using 'adrp', followed by an 'add' or 'ldr' to get the
+> specific symbol address. Without tracking 'adrp', the instruction
+> tracker loses the base address, making it impossible to resolve
+> global symbols and their associated DWARF types.
+> 
+> Introduce TSR_KIND_GLOBAL_ADDR to represent a partial global address
+> state. When encountering 'adrp', store the page-aligned target address
+> in the register's type state. Upon a subsequent 'add' or 'ldr'
+> instruction that references a TSR_KIND_GLOBAL_ADDR register, combine
+> the page address with the immediate offset.
+> 
+> A real-world example is shown below:
+> 
+>   ffff80008032e008 <folios_put_refs>:
+>   ffff80008032e048:  adrp  x24, ffff80008202f000 <nr_cpu_ids>
+>   ffff80008032e050:  add   x24, x24, #0xd40
+> * ffff80008032e078:  ldr   x0, [x24]
+> 
+> Before this commit, x24 was unknown, leading to no type information:
+> 
+>   chk [70] reg24 offset=0 ok=0 kind=0 cfa : no type information
+>   final result: no type information
+> 
+> After this commit, the tracker correctly follows the adrp/add flow:
+> 
+>   adrp [40] global addr=0xffff80008202f000 -> reg24
+>   add [48] global 0xd40(reg24) -> reg24
+>   chk [70] reg24 offset=0 ok=1 kind=7 global addr : Good!
+>   final result: type='struct folio*'
+> 
+> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  .../perf/util/annotate-arch/annotate-arm64.c  | 89 +++++++++++++++++--
+>  tools/perf/util/annotate-arch/annotate-x86.c  |  6 +-
+>  tools/perf/util/annotate-data.c               | 33 +++++--
+>  tools/perf/util/annotate-data.h               |  7 +-
+>  4 files changed, 121 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+> index 1fed18811719..6f96e75d313d 100644
+> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/string.h>
+>  #include <linux/ctype.h>
+>  #include <regex.h>
+> +#include <inttypes.h>
+>  #include "../annotate.h"
+>  #include "../disasm.h"
+>  #include "../annotate-data.h"
+> @@ -359,7 +360,7 @@ static void adjust_reg_index_state(struct type_state *state,
+>  }
+>  
+>  static void update_load_insn_state(struct type_state *state,
+> -				   struct data_loc_info *dloc,
+> +				   struct data_loc_info *dloc, Dwarf_Die *cu_die,
+>  				   struct disasm_line *dl,
+>  				   struct annotated_op_loc *src,
+>  				   struct annotated_op_loc *dst)
+> @@ -402,6 +403,7 @@ static void update_load_insn_state(struct type_state *state,
+>  			tsr->type = stack->type;
+>  			tsr->kind = stack->kind;
+>  			tsr->offset = stack->ptr_offset;
+> +			tsr->addr = stack->addr;
+>  			tsr->ok = true;
+>  		} else if (die_get_member_type(&stack->type,
+>  					       offset - stack->offset,
+> @@ -409,6 +411,7 @@ static void update_load_insn_state(struct type_state *state,
+>  			tsr->type = type_die;
+>  			tsr->kind = TSR_KIND_TYPE;
+>  			tsr->offset = 0;
+> +			tsr->addr = 0;
+>  			tsr->ok = true;
+>  		} else {
+>  			invalidate_reg_state(tsr);
+> @@ -441,6 +444,7 @@ static void update_load_insn_state(struct type_state *state,
+>  		tsr->type = type_die;
+>  		tsr->kind = TSR_KIND_TYPE;
+>  		tsr->offset = 0;
+> +		tsr->addr = 0;
+>  		tsr->ok = true;
+>  
+>  		if (src->multi_regs) {
+> @@ -453,6 +457,33 @@ static void update_load_insn_state(struct type_state *state,
+>  		}
+>  		pr_debug_type_name(&tsr->type, tsr->kind);
+>  	}
+> +	/* Or check if it's a global variable */
+> +	else if (src_tsr.kind == TSR_KIND_GLOBAL_ADDR) {
+> +		u64 ip = dloc->ms->sym->start + dl->al.offset;
+> +		u64 addr = src_tsr.addr + reg_offset;
+> +		int offset;
+> +
+> +		if (!get_global_var_type(cu_die, dloc, ip, addr, &offset, &type_die) ||
+> +		    !die_get_member_type(&type_die, offset, &type_die)) {
+> +			invalidate_reg_state(tsr);
+> +			goto out_adjust;
+> +		}
+> +
+> +		tsr->type = type_die;
+> +		tsr->kind = TSR_KIND_TYPE;
+> +		tsr->offset = 0;
+> +		tsr->addr = 0;
+> +		tsr->ok = true;
+> +
+> +		if (src->multi_regs) {
+> +			pr_debug_dtp("ldr [%x] global (reg%d, reg%d) -> reg%d",
+> +				     insn_offset, src->reg1, src->reg2, dreg);
+> +		} else {
+> +			pr_debug_dtp("ldr [%x] global (reg%d) -> reg%d",
+> +				     insn_offset, sreg, dreg);
+> +		}
+> +		pr_debug_type_name(&tsr->type, tsr->kind);
+> +	}
+>  	/* Or try another register if any */
+>  	else if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2) {
+>  		sreg = src->reg2;
+> @@ -498,10 +529,10 @@ static void update_store_insn_state(struct type_state *state,
+>  		if (stack) {
+>  			if (!stack->compound)
+>  				set_stack_state(stack, offset, tsr->kind,
+> -						&tsr->type, tsr->offset);
+> +						&tsr->type, tsr->offset, tsr->addr);
+>  		} else {
+>  			findnew_stack_state(state, offset, tsr->kind,
+> -					    &tsr->type, tsr->offset);
+> +					    &tsr->type, tsr->offset, tsr->addr);
+>  		}
+>  
+>  		if (dst->reg1 == fbreg) {
+> @@ -547,6 +578,7 @@ static void update_mov_insn_state(struct type_state *state,
+>  		tsr->kind = TSR_KIND_CONST;
+>  		tsr->imm_value = src->offset;
+>  		tsr->offset = 0;
+> +		tsr->addr = 0;
+>  		tsr->ok = true;
+>  
+>  		pr_debug_dtp("mov [%x] imm=%#x -> reg%d\n",
+> @@ -563,6 +595,7 @@ static void update_mov_insn_state(struct type_state *state,
+>  	tsr->kind = state->regs[sreg].kind;
+>  	tsr->imm_value = state->regs[sreg].imm_value;
+>  	tsr->offset = state->regs[sreg].offset;
+> +	tsr->addr = state->regs[sreg].addr;
+>  	tsr->ok = state->regs[sreg].ok;
+>  
+>  	if (tsr->kind == TSR_KIND_TYPE || tsr->kind == TSR_KIND_POINTER)
+> @@ -641,6 +674,7 @@ static void update_add_insn_state(struct type_state *state,
+>  		tsr->type = src_tsr.type;
+>  		tsr->kind = src_tsr.kind;
+>  		tsr->offset = offset;
+> +		tsr->addr = 0;
+>  		tsr->ok = src_tsr.ok;
+>  
+>  		pr_debug_dtp("add [%x] address of %s%#x(reg%d) -> reg%d",
+> @@ -649,6 +683,16 @@ static void update_add_insn_state(struct type_state *state,
+>  
+>  		pr_debug_type_name(&tsr->type, tsr->kind);
+>  	}
+> +	/* Handle page-relative global address calculation */
+> +	else if (src_tsr.kind == TSR_KIND_GLOBAL_ADDR) {
+> +		tsr->kind = src_tsr.kind;
+> +		tsr->addr = src_tsr.addr + reg_offset;
+> +		tsr->offset = 0;
+> +		tsr->ok = true;
+> +
+> +		pr_debug_dtp("add [%x] global %#x(reg%d) -> reg%d\n",
+> +			     insn_offset, reg_offset, sreg, dreg);
+> +	}
+>  	/* Or try another register if any */
+>  	else if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2) {
+>  		sreg = src->reg2;
+> @@ -656,8 +700,37 @@ static void update_add_insn_state(struct type_state *state,
+>  	}
+>  }
+>  
+> +static void update_adrp_insn_state(struct type_state *state,
+> +				   struct disasm_line *dl,
+> +				   struct annotated_op_loc *dst)
+> +{
+> +	struct type_state_reg *tsr;
+> +	u32 insn_offset = dl->al.offset;
+> +	int dreg = dst->reg1;
+> +
+> +	if (!has_reg_type(state, dreg))
+> +		return;
+> +
+> +	tsr = &state->regs[dreg];
+> +	tsr->copied_from = -1;
+> +
+> +	if (!dl->ops.source.addr) {
+> +		invalidate_reg_state(tsr);
+> +		return;
+> +	}
+> +
+> +	tsr->kind = TSR_KIND_GLOBAL_ADDR;
 
-Test case perftool-testsuite-report.sh always fails on s390.
-Root cause is a default timeout for addr2line command which is too
-short for s390. Function cmd_addr2line() invokes addr2line command
-and reads via pipe the function name on stdout, after writing
-an address to stdin. There is a default timeout for the expected
-reply, but very often this timeout is too short and nothing is
-returned. This leads to the error message listed in
-util/addr2line.c:
+I was wondering if it could use TSR_KIND_CONST but imm_value is u32.
 
-   switch (read_addr2line_record(&io, cmd_a2l_style, dso_name, ..) {
-   case -1:
-          if (!symbol_conf.addr2line_disable_warn)
-                 pr_warning("%s %s: could not read first record\n",
-				   ...)
-          goto out;
-   ...
+Anyway, probably we need to increase it to u64 to handle 64-bit
+immediate values regardless of this.
 
-As the test case emits warnings, it is reported as failed.
-Fix this for s390 and create a temporary perf configuration file to
-suppress these warnings. (An alternative would be to increase
-the default timeout to a larger value).
+Thanks,
+Namhyung
 
-Output before:
- # bash perftool-testsuite_report.sh
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
- ==================
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.087 MB (402 samples) ]
- ==================
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data.1 file
- ## [ PASS ] ## perf_report :: setup SUMMARY
- -- [ SKIP ] -- perf_report :: test_basic :: help message :: \
- 		testcase skipped
- Line did not match any pattern: "cmd__addr2line <file> could not \
-	read first record"
- -- [ FAIL ] -- perf_report :: test_basic :: basic execution \
-	 (output regexp parsing)
- Line did not match any pattern: "cmd__addr2line <file> could not \
-	read first record"
- ...
- ## [ FAIL ] ## perf_report :: test_basic SUMMARY :: 6 failures found
 
-All six tests fail for the same reason, addr2line did not respond in
-time.
-
-Output after:
- # bash perftool-testsuite_report.sh
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
- ==================
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.086 MB .... (380 samples) ]
- ==================
- -- [ PASS ] -- perf_report :: setup :: prepare the perf.data.1 file
- ## [ PASS ] ## perf_report :: setup SUMMARY
- -- [ SKIP ] -- perf_report :: test_basic :: help message :: \
- 				testcase skipped
- -- [ PASS ] -- perf_report :: test_basic :: basic execution
- -- [ PASS ] -- perf_report :: test_basic :: number of samples
- -- [ PASS ] -- perf_report :: test_basic :: header
- -- [ PASS ] -- perf_report :: test_basic :: header timestamp
- -- [ PASS ] -- perf_report :: test_basic :: show CPU utilization
- -- [ PASS ] -- perf_report :: test_basic :: pid
- -- [ PASS ] -- perf_report :: test_basic :: non-existing symbol
- -- [ PASS ] -- perf_report :: test_basic :: symbol filter
- -- [ PASS ] -- perf_report :: test_basic :: latency header
- -- [ PASS ] -- perf_report :: test_basic :: default report for \
-						 latency profile
- -- [ PASS ] -- perf_report :: test_basic :: latency report for \
- 						latency profile
- -- [ PASS ] -- perf_report :: test_basic :: parallelism histogram
- ## [ PASS ] ## perf_report :: test_basic SUMMARY
- #
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Jan Polensky <japo@linux.ibm.com>
----
- tools/perf/tests/shell/perftool-testsuite_report.sh | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/perf/tests/shell/perftool-testsuite_report.sh
-index a8cf75b4e77e..3c4d0d268d80 100755
---- a/tools/perf/tests/shell/perftool-testsuite_report.sh
-+++ b/tools/perf/tests/shell/perftool-testsuite_report.sh
-@@ -6,6 +6,14 @@ test -d "$(dirname "$0")/base_report" || exit 2
- cd "$(dirname "$0")/base_report" || exit 2
- status=0
- 
-+# On s390 the default timeout for addr2line is too short, disable warnings
-+if [ $(uname -m) = s390x ]
-+then
-+	perf_config_tmp=$(mktemp /tmp/.perfconfig_XXXXX)
-+	export PERF_CONFIG="${perf_config_tmp}"
-+	perf config 'core.addr2line-disable-warn = true'
-+fi
-+
- PERFSUITE_RUN_DIR=$(mktemp -d /tmp/"$(basename "$0" .sh)".XXX)
- export PERFSUITE_RUN_DIR
- 
-@@ -19,5 +27,6 @@ if ! [ "$PERFTEST_KEEP_LOGS" = "y" ]; then
- 	rm -rf "$PERFSUITE_RUN_DIR"
- fi
- 
-+[ -n "${perf_config_tmp}" ] && rm -f "${perf_config_tmp}"
- test $status -ne 0 && exit 1
- exit 0
--- 
-2.55.0
-
+> +	/* Partial page-relative address, finalized in next 'add/ldr' */
+> +	tsr->addr = dl->ops.source.addr;
+> +	tsr->offset = 0;
+> +	tsr->ok = true;
+> +
+> +	pr_debug_dtp("adrp [%x] global addr=%#"PRIx64" -> reg%d\n",
+> +		     insn_offset, tsr->addr, dreg);
+> +}
+> +
+>  static void update_insn_state_arm64(struct type_state *state,
+> -				    struct data_loc_info *dloc, Dwarf_Die *cu_die __maybe_unused,
+> +				    struct data_loc_info *dloc, Dwarf_Die *cu_die,
+>  				    struct disasm_line *dl)
+>  {
+>  	struct annotated_insn_loc loc;
+> @@ -673,6 +746,7 @@ static void update_insn_state_arm64(struct type_state *state,
+>  	 * the destination register itself to prevent incorrect type propagation.
+>  	 */
+>  	if (has_reg_type(state, dst->reg1) &&
+> +	    strcmp(dl->ins.name, "adrp") &&
+>  	    strcmp(dl->ins.name, "add") && strcmp(dl->ins.name, "mov") &&
+>  	    strncmp(dl->ins.name, "ld", 2) && strncmp(dl->ins.name, "st", 2)) {
+>  		pr_debug_dtp("%s [%x] invalidate reg%d\n",
+> @@ -681,6 +755,11 @@ static void update_insn_state_arm64(struct type_state *state,
+>  		return;
+>  	}
+>  
+> +	if (!strcmp(dl->ins.name, "adrp")) {
+> +		update_adrp_insn_state(state, dl, dst);
+> +		return;
+> +	}
+> +
+>  	if (!strcmp(dl->ins.name, "add")) {
+>  		update_add_insn_state(state, dl, src, dst);
+>  		return;
+> @@ -694,7 +773,7 @@ static void update_insn_state_arm64(struct type_state *state,
+>  
+>  	/* Memory to register transfers */
+>  	if (!strncmp(dl->ins.name, "ld", 2)) {
+> -		update_load_insn_state(state, dloc, dl, src, dst);
+> +		update_load_insn_state(state, dloc, cu_die, dl, src, dst);
+>  		return;
+>  	}
+>  
+> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+> index ef84b9593a39..9977ca079143 100644
+> --- a/tools/perf/util/annotate-arch/annotate-x86.c
+> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
+> @@ -772,10 +772,12 @@ static void update_insn_state_x86(struct type_state *state,
+>  				 */
+>  				if (!stack->compound)
+>  					set_stack_state(stack, offset, tsr->kind,
+> -							&tsr->type, tsr->offset);
+> +							&tsr->type, tsr->offset,
+> +							tsr->addr);
+>  			} else {
+>  				findnew_stack_state(state, offset, tsr->kind,
+> -						    &tsr->type, tsr->offset);
+> +						    &tsr->type, tsr->offset,
+> +						    tsr->addr);
+>  			}
+>  
+>  			if (dst->reg1 == fbreg) {
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index c51b20a7af9b..6fa5cd373a46 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -70,6 +70,9 @@ void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
+>  	case TSR_KIND_CANARY:
+>  		pr_info(" stack canary\n");
+>  		return;
+> +	case TSR_KIND_GLOBAL_ADDR:
+> +		pr_info(" global address\n");
+> +		return;
+>  	case TSR_KIND_TYPE:
+>  	default:
+>  		break;
+> @@ -590,7 +593,7 @@ struct type_state_stack *find_stack_state(struct type_state *state,
+>  }
+>  
+>  void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+> -			    Dwarf_Die *type_die, int ptr_offset)
+> +			    Dwarf_Die *type_die, int ptr_offset, u64 addr)
+>  {
+>  	int tag;
+>  	Dwarf_Word size;
+> @@ -607,6 +610,7 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+>  	stack->offset = offset;
+>  	stack->ptr_offset = ptr_offset;
+>  	stack->kind = kind;
+> +	stack->addr = addr;
+>  
+>  	if (kind == TSR_KIND_POINTER) {
+>  		stack->compound = false;
+> @@ -629,18 +633,18 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+>  struct type_state_stack *findnew_stack_state(struct type_state *state,
+>  						    int offset, u8 kind,
+>  						    Dwarf_Die *type_die,
+> -						    int ptr_offset)
+> +						    int ptr_offset, u64 addr)
+>  {
+>  	struct type_state_stack *stack = find_stack_state(state, offset);
+>  
+>  	if (stack) {
+> -		set_stack_state(stack, offset, kind, type_die, ptr_offset);
+> +		set_stack_state(stack, offset, kind, type_die, ptr_offset, addr);
+>  		return stack;
+>  	}
+>  
+>  	stack = malloc(sizeof(*stack));
+>  	if (stack) {
+> -		set_stack_state(stack, offset, kind, type_die, ptr_offset);
+> +		set_stack_state(stack, offset, kind, type_die, ptr_offset, addr);
+>  		list_add(&stack->list, &state->stack_vars);
+>  	}
+>  	return stack;
+> @@ -935,7 +939,7 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
+>  				continue;
+>  
+>  			findnew_stack_state(state, offset, TSR_KIND_TYPE,
+> -					    &mem_die, /*ptr_offset=*/0);
+> +					    &mem_die, /*ptr_offset=*/0, /*addr=*/0);
+>  
+>  			if (var->reg == state->stack_reg) {
+>  				pr_debug_dtp("var [%"PRIx64"] %#x(reg%d)",
+> @@ -1278,6 +1282,25 @@ static enum type_match_result check_matching_type(struct type_state *state,
+>  		if (dloc->op->offset < 0 && reg != state->stack_reg && reg != dloc->fbreg)
+>  			goto check_kernel;
+>  	}
+> +
+> +	if (state->regs[reg].kind == TSR_KIND_GLOBAL_ADDR) {
+> +		u64 var_addr = state->regs[reg].addr + dloc->op->offset;
+> +		int var_offset;
+> +
+> +		pr_debug_dtp("global addr");
+> +
+> +		/*
+> +		 * The register holds the address of a global variable. Try to
+> +		 * find the variable by the address and get its type.
+> +		 */
+> +		if (get_global_var_type(cu_die, dloc, dloc->ip, var_addr,
+> +					&var_offset, type_die)) {
+> +			dloc->type_offset = var_offset;
+> +			return PERF_TMR_OK;
+> +		}
+> +		/* No need to retry global variables */
+> +		return PERF_TMR_BAIL_OUT;
+> +	}
+>  check_non_register:
+>  	if (reg == dloc->fbreg || reg == state->stack_reg) {
+>  		struct type_state_stack *stack;
+> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+> index 453e13bbe3e2..a3e1ef7097f0 100644
+> --- a/tools/perf/util/annotate-data.h
+> +++ b/tools/perf/util/annotate-data.h
+> @@ -37,6 +37,7 @@ enum type_state_kind {
+>  	TSR_KIND_PERCPU_POINTER,
+>  	TSR_KIND_POINTER,
+>  	TSR_KIND_CANARY,
+> +	TSR_KIND_GLOBAL_ADDR,
+>  };
+>  
+>  /**
+> @@ -187,6 +188,7 @@ struct type_state_reg {
+>  	u64 lifetime_end;
+>  	u8 kind;
+>  	u8 copied_from;
+> +	u64 addr;
+>  };
+>  
+>  /* Type information in a stack location, dynamically allocated */
+> @@ -199,6 +201,7 @@ struct type_state_stack {
+>  	int size;
+>  	bool compound;
+>  	u8 kind;
+> +	u64 addr;
+>  };
+>  
+>  /*
+> @@ -253,9 +256,9 @@ bool has_reg_type(struct type_state *state, int reg);
+>  struct type_state_stack *findnew_stack_state(struct type_state *state,
+>  						int offset, u8 kind,
+>  						Dwarf_Die *type_die,
+> -						int ptr_offset);
+> +						int ptr_offset, u64 addr);
+>  void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+> -				Dwarf_Die *type_die, int ptr_offset);
+> +				Dwarf_Die *type_die, int ptr_offset, u64 addr);
+>  struct type_state_stack *find_stack_state(struct type_state *state,
+>  						int offset);
+>  void invalidate_reg_state(struct type_state_reg *reg);
+> -- 
+> 2.34.1
+> 
