@@ -1,167 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E74836728B
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jul 2026 14:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B2E3672A7
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jul 2026 15:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783608758; cv=none; b=teEybnvlOxES6WaZOqzbyDdXM4u8bBmfabI6ORQ+anXoye6KDLLJSSGnxDPDvq4jKQUUEE7gzMLkhvJg4x+JCAJVFX1XZ0UdAVNmhQJF+hnDRjFK5utLqoIQshOLx3c3hAbuZvSlJT7nCtAT57hDbcm6H9ftxlqtUlMbqwNtyRQ=
+	t=1783610331; cv=none; b=u2Vb+c+ZOGOio3mmWwsDA9UMd16aA/G+grIY4+4oFahgkfAz/A5GB35xg54tMxDjD7J188/nk6YLNkWfVPqY0Sti+4/nXcm96cAr1Zd5L0EalEXDJEzXT2eo9UZVk39Ucg+NpuLjLZ5GVSWelj0oRkls5ofRgWTa+OEZOYorkP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783608758; c=relaxed/simple;
-	bh=tPVvbk0o7ptakcKiiqg1o5WqWP3GKZLv6O2ZcSk1G6E=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=V1kJVxM6E/4lVDOJML+dIEu/la/3y+5IgVYuRFl2eXA6GHzhgD1trMZB8joVC3swpMRLJUwZFGX15v+kESn4abG26sL/n3l/jAabf1meAwZ/mbOkzXsKQGc3ePLThyx9hIVvZYq1cN3GPu8x2IDJfhZi/zR2TyTrVll0JGP4J14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TrU6vQwu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783610331; c=relaxed/simple;
+	bh=EmhDmZEzfDqtz+/wM5OYtSnBNKhNR5z6WmgKAnKqYZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b6IRr/hWaJZww+koLV4wsba0EcYhIoGXliS7LHHfdt2Xql6/VHGqPxC2ZkQ6Xq3xQRIxNjCi0ngb1fCcMB08phLiXfTrJ/2Qt8f59T19jRSyjXvMbTkrzdBPxuZxKdj2gS8mbg/yO9Tvpm+ogZeOxyelSslOo1XO4YJDp+711Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=XYuSc5IC; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TrU6vQwu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAD221F000E9;
-	Thu,  9 Jul 2026 14:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783608757;
-	bh=PXboZRmuEfb0tjTejkszXSbaDDV5TiMGeT1Uu6JPPgk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TrU6vQwuL876hdD1g3V5K35XAEc5l5xbMaTvyp2fDLJqbzTbER0n8eAccvTCSSiT4
-	 aZe4MPLRrm+fJmPVwq2or9MfLNu/mGZ/jdTE/KFiSbHsbXo+h8dwPZVLjbknARo0Kq
-	 nzgvYrFdY8lkJXZIiIXSBlMtSZbdDB0Dmg3LeIESnvjNOEK+8EskUD2HrkhgRnvFa6
-	 5HueTyALASH3BnNZNbx2uymup4UiIlhNrGLKRvjbxqtksbm9VqOspBhxjMxkXpA6el
-	 92N+uC84jNc908eCejevI1VCDJmmFpqM3Z6LMscaJu7ZCxSanI4NEe7tGSaoiA97s9
-	 WXG6RzXdinwAg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/4] ACPI/APMT: Use stable device ID
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Robin Murphy" <robin.murphy@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <c113eff51124250fc5798589ce905052046b43b3.1783605641.git.robin.murphy@arm.com>
-References: <cover.1783605641.git.robin.murphy@arm.com>
- <c113eff51124250fc5798589ce905052046b43b3.1783605641.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 14:52:36 +0000
-Message-Id: <20260709145236.EAD221F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="XYuSc5IC"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-51c08df8513so11890271cf.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jul 2026 08:18:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1783610327; x=1784215127; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=D66HPeIJnm5ZDnK+VorUOpyiniaZPeUCt2fPIKMnyb4=;
+        b=XYuSc5IC+EVJbDWikpVPC9cDKrnWwVwEAM4vxRerghx9T5cLKor0lZn/3xvEy8MYvH
+         P4G8QPzYbfEZ/SuD19iQ/Y1IHWEN8FQYvrl4gGGNvM85yYx5CoTWRnrwozvd8buW/yZu
+         rTLr0Kl5kFm/eeBRVjl2lZuNMDx5WC8PeGDIx78E6vBCLlaGrNT+PUtAJ/u8INBmJnMf
+         RbCmKrzJydlT8MQRk1duN94/X88hvDTJtAhpiVN/Uddledvv9UkLMBn9POBFDX+NJflU
+         wUwaXNQ4tD3o84h7GQtBbwvEsPtUxnWPlr1FHKAANE+13sbK/9le7ZhU64POCONVaFwl
+         Syjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783610327; x=1784215127;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=D66HPeIJnm5ZDnK+VorUOpyiniaZPeUCt2fPIKMnyb4=;
+        b=gm6dm0zp92NdDzMYIiPlzI5HwuHmZXbFyV4GYaeIDlcvAjmAIwS8HF3h2HUZteQoLc
+         wtlaoKBQCD8ut4cokS4+OK1W4HZJ/j2NrN+vg/R+Wg2T59F/IexvfNsPrWt4qUqxJQqM
+         cnHnb8jdxN2JdiKTUbli+74ZECMviL3R89YvoR4dutYOfmLAW71QCrY7Xqgtqv/go7EM
+         tKntJOOZF7loalaTaeRHr6teteyzD21fjom4ITTTvH5hqPmieGXTctnVzjn+jkoP402d
+         2BkcsxiFcDKQKl3CLNGfDyl/yVTsXvXl9dqudbKtMB6+IDlsDVjQIsdYWuT5VgVcIBXL
+         dFRQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpAgx5rRcm/NGzcGoHkrDbELwtg2675ANYj4bcE6GXA+1+kTy5v9l8+hj9d2KeD3yEXFamIh3jpP2WRmEk8wLwR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSK66u4auJ5qoQT2rhOMsB1hQNACa0dtXbLy4tgSNGvNJV0RnU
+	rv2EnhCZ0gj+K5hONsvb7JIzV6zQVaHpI14HIaUVCZAgSOQXQAHHn2qY3Q2BsJ7HlCI=
+X-Gm-Gg: AfdE7clb3joAvF0AQpthoS7D6bHgDPHXZrzhq4Y69xn9j2tunKg6Tibwn8AZMlTpg2b
+	M2rhQKzI+eXsHjwGvQSc8vkQqrAF6/RCWW0P/gxJDe6jLPAlSM4lpj6NjSpAme6zXbc7ydOOSK+
+	lixnHQdJD7F6brL3TCRSqYsz/jr+cXIJ1Ug+HOqJqz3DrCFLnJjzYNsejCLaZW9c7U5M5BE9zHt
+	1HwbmfEQe7/k2RZmf9b4PTmL6OXEMJ+eluPVOVOHoLD9xR/KG4A2GQ6O6FiAyTPAFHGRowgqsdq
+	vMPDDQknIA3yZQq5nABErhciEOQzpTYIr2KTXkL/8QNOz8pHkujf7U2AkPeGLYCNwSikVVJKkZa
+	AalO3g1MGCkvR1zQSRs5t+fY4VHgS6DBJG6NZRJof82fABjEiYKKklVOKIHHB7eVbzOeqy3pudq
+	ClfYF2sUek04lQ2aHMvFjvfYJY1/JhJ6f7dIRxWmQTmpaPNPzHd/PADn5VJjTRPgtEKvhI6Q3i1
+	YuVJHE=
+X-Received: by 2002:ac8:5cd4:0:b0:51c:1c2c:a8c9 with SMTP id d75a77b69052e-51c8b3e2e32mr79753441cf.43.1783610327278;
+        Thu, 09 Jul 2026 08:18:47 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51c41db4fb5sm158006781cf.25.2026.07.09.08.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jul 2026 08:18:45 -0700 (PDT)
+Date: Thu, 9 Jul 2026 11:18:40 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Simon Schuster <schuster.simon@siemens-energy.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Thierry Reding <thierry.reding@kernel.org>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>,
+	Alex Williamson <alex@shazbot.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Dan Williams <djbw@kernel.org>, Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	"Liam R . Howlett" <liam@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>,
+	Miaohe Lin <linmiaohe@huawei.com>, Hugh Dickins <hughd@google.com>,
+	Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+	linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+	kvm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-mm@kvack.org, iommu@lists.linux.dev,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	damon@lists.linux.dev, Pedro Falcato <pfalcato@suse.de>,
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
+	Jann Horn <jannh@google.com>
+Subject: Re: [PATCH 13/30] mm/vma: refactor vmg_adjust_set_range() for clarity
+Message-ID: <ak-70CHGujkI5jJI@gourry-fedora-PF4VCD3F>
+References: <cover.1782735110.git.ljs@kernel.org>
+ <ada7972f49ea7f1ff1df6d11e4651f270444f8fd.1782735110.git.ljs@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ada7972f49ea7f1ff1df6d11e4651f270444f8fd.1782735110.git.ljs@kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
+On Mon, Jun 29, 2026 at 01:23:24PM +0100, Lorenzo Stoakes wrote:
+> Add comments with ASCII diagrams to describe what we're doing, avoid
+> dubious use of PHYS_PFN(), and use vma_start_pgoff().
+> 
+> The most complicated scenario represented here is vmg->__adjust_next_start
+> - when this is set, vmg->[start, end] actually indicate the range to be
+> retained, so take special care to describe this accurately.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-New issues:
-- [High] Unvalidated u32 ACPI node ID is passed to a signed int parameter, =
-causing unintended collisions with platform bus sentinel values and negativ=
-e sysfs device names.
-- [Medium] Lack of collision handling for firmware-supplied IDs causes comp=
-lete APMT initialization failure on duplicate IDs.
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-Pre-existing issues:
-- [High] Failure to cleanly unregister resources and platform devices on er=
-ror paths leaks IRQ mappings and creates dangling pointers to unmapped ACPI=
- tables (Use-After-Free).
-- [High] Missing structural bounds checking on APMT node length allows infi=
-nite loops or out-of-bounds reads.
---
+> +		/*
+> +		 * vmg->start    vmg->end
+> +		 * |             |
+> +		 * v    merge    v
+> +		 * <------------->
+> +		 *         delta
+> +		 *        <------>
+> +		 * |------|----------------|
+> +		 * | prev |    middle      |
+> +		 * |------|----------------|
+> +		 *        ^
+> +		 *        |
+> +		 *        middle->vm_start
+> +		 */
 
---- Patch [1]: [PATCH 1/4] ACPI/APMT: Use stable device ID ---
-commit 5ad772664b7900cfeb996b91d7d0c6ff27d931d6
-Author: Robin Murphy <robin.murphy@arm.com>
+Even with these diagrams, it's a bit difficult to understand what the
+actual intent/result of this chunk is (but that may be a limitation of
+me not spending enough time reading the surrounding code, not a comment
+of your work here).
 
-ACPI/APMT: Use stable device ID
+~Gregory
 
-The APMT node format includes a unique identifier, so we can use this as
-the platform device ID to give userspace stable and identifiable device
-names, rather than auto numbering dependent on how the table is parsed.
-
-> --- a/drivers/acpi/arm64/apmt.c
-> +++ b/drivers/acpi/arm64/apmt.c
-> @@ -79,7 +79,7 @@ static int __init apmt_add_platform_device(struct acpi_=
-apmt_node *node,
->  	int ret, count;
->  	struct resource res[DEV_MAX_RESOURCE_COUNT];
-> =20
-> -	pdev =3D platform_device_alloc(DEV_NAME, PLATFORM_DEVID_AUTO);
-> +	pdev =3D platform_device_alloc(DEV_NAME, node->id);
-
-[Severity: High]
-Because node->id is a u32 and platform_device_alloc() takes a signed int
-for the id parameter, could this cause unintended collisions?
-
-If the firmware provides a large ID like 0xFFFFFFFE, this would be cast to
--2 (PLATFORM_DEVID_AUTO), which seems to defeat the goal of using stable
-identifiers by falling back to auto-numbering.
-
-Similarly, a value of 0xFFFFFFFF would become -1 (PLATFORM_DEVID_NONE),
-causing the ID to be omitted from the device name entirely, and other large
-values would result in negative sysfs device names.
-
-[Severity: Medium]
-By relying on the firmware for the ID rather than auto-numbering, is it
-possible for duplicate IDs to cause initialization failures?
-
-If firmware provides two APMT nodes with the same id, platform_device_add()
-will return -EEXIST. When this propagates up to apmt_init_platform_devices(=
-):
-
-apmt_init_platform_devices() {
-    ...
-    ret =3D apmt_add_platform_device(apmt_node, fwnode);
-    if (ret) {
-        acpi_free_fwnode_static(fwnode);
-        return ret;
-    }
-    ...
-}
-
-Will this abort the entire APMT initialization and prevent all subsequent
-PMUs from being registered?
-
-[Severity: High]
-This is a pre-existing issue, but this patch might make it more reachable
-if duplicate firmware IDs trigger the error path.
-
-If apmt_add_platform_device() fails, the loop in apmt_init_platform_devices=
-()
-returns an error without unregistering the platform devices that were alrea=
-dy
-successfully added during previous iterations.
-
-When this error propagates to acpi_apmt_init(), it unmaps the table:
-
-acpi_apmt_init() {
-    ...
-    ret =3D apmt_init_platform_devices();
-    if (ret) {
-        pr_err("Failed to initialize APMT platform devices...\n");
-        acpi_put_table(apmt_table);
-    }
-}
-
-Since the registered platform devices hold a pointer to the ACPI node in th=
-eir
-platform_data, will unmapping the table leave them with dangling pointers t=
-hat
-could cause a use-after-free when the arm_cspmu driver probes?
-
-Additionally, the error path inside apmt_add_platform_device() does not app=
-ear
-to call acpi_unregister_gsi() to clean up the IRQ mapped by
-apmt_init_resources(), which might leak the GSI mapping.
-
-[Severity: High]
-This is another pre-existing issue, but looking at the table parsing loop in
-apmt_init_platform_devices():
-
-apmt_init_platform_devices() {
-    ...
-    offset +=3D apmt_node->length;
-    ...
-}
-
-Does the loop inherently trust apmt_node->length without validating it agai=
-nst
-the structural bounds? If firmware provides a node with a length of 0, could
-this result in an infinite loop during early boot?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1783605641.gi=
-t.robin.murphy@arm.com?part=3D1
+> +		/*
+> +		 *                Originally:
+> +		 *
+> +		 *            vmg->start   vmg->end
+> +		 *            |            |
+> +		 *            v    merge   v
+> +		 *            <------------>
+> +		 *            .            .
+> +		 * merge_existing_range() updates to:
+> +		 *            .            .
+> +		 * vmg->start vmg->end     .
+> +		 * |          |            .
+> +		 * v  retain  v            .
+> +		 * <---------->            .
+> +		 *             delta       .
+> +		 *            <----->      .
+> +		 * |----------------|------|
+> +		 * |    middle      | next |
+> +		 * |----------------|------|
+> +		 *                  ^
+> +		 *                  |
+> +		 *                  next->vm_start
+> +		 */
