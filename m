@@ -1,162 +1,175 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6185C214812
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jul 2026 01:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783561801; cv=pass; b=Xw2bGBzVuDr0996XEvfcUoyax41f+9wGxMFdLJ+UM2SCjZpabac1t9eqpoD/LiRdGroIYyh0T4tTCx9IgQyUw8eFfiUm1xwaY4mH2Bw6hOEdyf7vj4uarEh0y5R1fFgr1FUka2m5T3JDtGTfte0v41tqLvbNtnPWatUqYFEf/QI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783561801; c=relaxed/simple;
-	bh=5X8gEOufajX/k3LMXa53quluxWlweCjVeDS5ZzyxYSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IHypxyDjUEgcpHjb2uTZFg2/AUlUCv3exAqoNxbhOJbpqcxF9pQ0LvexO3vLa/ntfBdMgfwi4uURWRW/vQLPF5KFwZk6DzaPGA18UWeudmEhrsndJ3F/RdSC2tvo+TbFFA1WjF7dv+Ew936nEm4FjCn7qtB08sYn86N95PJLa/8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mYY3kESp; arc=pass smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mYY3kESp"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2cacef7d299so33875ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Jul 2026 18:50:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783561800; cv=none;
-        d=google.com; s=arc-20260327;
-        b=QN46/Ue+28ECIgI/PKD7ucFUTrmPXM4fPBdQmlcwT37nvDrSiocT2E/9+0082Ci6SZ
-         STWhDsqXa/nFkFfztgi9u4QaNHpLduIhR0OV+1XNvJbO10ssr0yt1SMKqRbxmcaSM6oN
-         PqyRFFV52TrzPw4faCTN4vy2VjieqCupr1VYpqC3A2J/cwM9mlR4M50VIQqV4AX33blw
-         Sp2OCl2c06SzxG9TfCcEHXIAfCYw1XrVnM7hgkpaw+itvzts7Jf+YehfErPfHd3keO/n
-         GYn2E+56gM2Y+2UmhAFPR4E7414U9RwMVRIPqaQUSCQTd0w5oSMNrxiMleaVA5zzasrP
-         nMIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=W17fW+C3mHL0CbDL0yXl4m7DTkzXAKvbJHBtth2Jzsk=;
-        fh=pi30lagK+Df0bi+zZbwpLVX+z+HnVuWQRbrDstpfjaM=;
-        b=g6nklgF5dOdt8JhxEec3wASVPqxYhCzic74KDZxRFZt4M26ugBJzKrdcjZFbIjuPRq
-         723OiunzJC2CmCuRkPr9SFBPaG3IEsFwpwPkW2eL+pR/j1TGD44uKT/A+Y6NKPAiFYgs
-         Ob9UyTK1rX+7xgI9D6XD6xcWnIVK+t0f1P3xsxm4SodsFJ3hvJmArfSpD8KhXkOuDEvm
-         462vNSWcYvcei+e1djBFkWVexXXxKPC/eUajfn/12V0MHjTO6Dc4xS1sWGxztGoYBt1H
-         9sreTGgZs9zNadMw8Cr702QR7mLNbAMwO2xOnXJ9F5VjubQzvDR7j9yR1eC/GvQloUir
-         cavQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783561800; x=1784166600; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=W17fW+C3mHL0CbDL0yXl4m7DTkzXAKvbJHBtth2Jzsk=;
-        b=mYY3kESple3DbxcPy0JpLmBfmzQEt7uPEFYFKsVti4iQJcgUpnLhJYXLguBGx0FMe/
-         2W4dXvlb+py3/EHoE+PIL0ri0TWz2sU0Uq7cjfFDRI6OGDhBvu1WHfBP3sZLSQUd7Yxu
-         R443pVhHRxDYVhh99AsN8AImVpv8oh9/RCXWr+yJU8m1Ve5nI5xE7QheQpJQBkF5sSBP
-         WOwo3JIZXomsxr6RfZkanBdU3UfltvYJKojgy5ZRc4fwVVof8leV8hlwFkv2gO9xizWr
-         v+UcfNXAcUSJQ9i5Kl+jtJHOrTRdgTAv8fvqzZN1JtSFvUSG86l0lOlUkMkT4yPlizBi
-         rwPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783561800; x=1784166600;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=W17fW+C3mHL0CbDL0yXl4m7DTkzXAKvbJHBtth2Jzsk=;
-        b=SI74e4ilctj9xcpEQe0bmPkeMm/RU6+kfxjtNOalXy7hHbSswYBnS3UA9LLdX3iSN1
-         phkpYv4JEf/vpGjhCtbaWpdQ7XhX8s8i9p3S12UixIePitr02g6lKI+s3k1DkYWm4VOG
-         ycOZpfXwzyDVD95KjUrrT/zh+27diFcsPHzEpJt7vvZxN+QBhcNDv5Lw3zDBAuEz6NhZ
-         rKHKSckjMN9Hz/m5CfVZIRvYTDul2vzJ13/jVT1ofjlTLaEwErAvV4rH+az5gi743Rh6
-         tstCORejyY2JWN9e3bkB4K0y8sdqMZya8MG/GViO7y5QOaEcMTi1EyAxWXFu2I5NN2m5
-         9U0g==
-X-Forwarded-Encrypted: i=1; AHgh+RoI5ZcbYAF756Dig5Jxo8/8J5fFR1flgeaZxxad0IxLfV+kN8/CXJFllwoa3ADvHYPil0f81NcVq1NPuLsBpGSg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKaS795xnUaeQo4zftNmcWGRiL3nOjodhYhfQh3GysBnBhHHO3
-	NaaCmNST1oJwgg34UWVOR7pURFM81Ty4E3dNLGs7iZ1CeMcLWb2fz0qGX7NjMpeYZmjU27VUODO
-	UjIWcT7dJqG7utZIACDwoppJfJt5omhSwlskqXR3z
-X-Gm-Gg: AfdE7ck+QN4JKcBBG+yWaEcuNjB5xHi0kGfDVYcC+wH1ImD4IgGCyFZmTSgie5KVUNj
-	hSXVR2KkygMxpkSPHnPiQOWHaLqiNWqjQMwL9zboiisXsZmHRtI3ZE9VC8BmPGlQiT/yXcN9NQW
-	/fXTyAJUwNtiUpIA5MeCKwuRz4fPgjOnJpaHOi52Z5F4kF/FLsgqwTmB3MV7Kj3VnsDkwv3d1g9
-	OmaKpggQVWZAEIOpHQNwXewoTmfL+6T4MvYJgKUYCLQvX+7f+ehGFfr+uUe6GfFGwaIIp+814VS
-	85QY4W1l
-X-Received: by 2002:a17:902:e948:b0:2bd:6dad:7ccd with SMTP id
- d9443c01a7336-2ce6661353amr429915ad.25.1783561799151; Wed, 08 Jul 2026
- 18:49:59 -0700 (PDT)
+Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB0B423372C
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jul 2026 02:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783562987; cv=none; b=lmKq21ACx5BgtXSUopAfrR8EceV++pJSvbMZ8bHlG+Qn8WLZj1/SDsHqV0DOCG0G/SocY5Xbo1vJVk96K2GpG+Lt1UG2FjjN8W9JiNJwNnW2GzExoCYIolvWnO5b1Ewt2bUwvxsD8AD7oDQgcrcf+FVBTJAMUwwULBpl732Y8tk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783562987; c=relaxed/simple;
+	bh=ByyfsO+oybVxGImcwOwMAd2J+crIhdjtXGqoawgXPR8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=B+zwR3arkfou8IXwaM+iPFh0hjfOcTQF91tXWUZOQcLH4EqWpM5tGALN5NJmv7llGQLDX8jfmpJS/oGJgjt0BiuYeGZoZP3o6iKqDWkCZVN8OUIUeeTsQZlCcKwzuAuw/KEljbyxkzgL1dUxuTRuVFNJpJ4pmGNa7dZp8e0Lv7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gwdgn0XKCz27RGB;
+	Thu,  9 Jul 2026 10:09:25 +0800 (CST)
+Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id 4gwdgk21wwz27RGB;
+	Thu,  9 Jul 2026 10:09:22 +0800 (CST)
+Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
+	by maildlp2.hygon.cn (Postfix) with ESMTPS id 7E6B9301C0DA;
+	Thu,  9 Jul 2026 10:07:08 +0800 (CST)
+Received: from [172.25.61.61] (172.25.61.61) by cncheex04.Hygon.cn
+ (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 9 Jul
+ 2026 10:09:23 +0800
+Message-ID: <ac3eca97-1a29-4d5c-9cfa-19cbc4dcb9e9@hygon.cn>
+Date: Thu, 9 Jul 2026 10:09:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260701042145.71595-1-tallison@redhat.com> <ak7neuxFS3ZuGL4F@google.com>
-In-Reply-To: <ak7neuxFS3ZuGL4F@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 Jul 2026 18:49:48 -0700
-X-Gm-Features: AVVi8Cc30BTZyhJ-0yZ7XQhtGONH8wJpA8ctzU82Na7W-0VShUU66nsIlDrnnxo
-Message-ID: <CAP-5=fV7Ei0gBneNvBb87a8pWbjrxpCy-rVrLACbk7OBLXR+OQ@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Fix LTO build of libperf-jvmti.so
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Trevor Allison <tallison@redhat.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] perf/x86/amd/uncore: Add Hygon uncore PMU support
+To: <sashiko-reviews@lists.linux.dev>
+CC: <linux-perf-users@vger.kernel.org>
+References: <20260708131315.13766-1-liuqi@hygon.cn>
+ <20260708131315.13766-2-liuqi@hygon.cn>
+ <20260708132741.9DF131F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: Qi Liu <liuqi@hygon.cn>
+In-Reply-To: <20260708132741.9DF131F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
+ (172.23.18.114)
 
-On Wed, Jul 8, 2026 at 5:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hello,
->
-> On Wed, Jul 01, 2026 at 12:21:45AM -0400, Trevor Allison wrote:
-> > Linking libperf-jvmti.so through jvmti-in.o (ld -r) breaks LTO when
-> > -flto is passed via LDFLAGS.  Link the JVMTI object files directly
-> > instead, and pass any LTO flags from LDFLAGS to the JVMTI compile step
->
-> Can you share the error message and put it in the commit message?
->
-> I think my build is fine with LDFLAGS=3D-flto.
+Hi,
 
-I had to do many manual steps to make LTO work in the past (IIRC,
-using clang and lld). We do have an LTO option in the Makefiles:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/Makefile.config?h=3Dperf-tools-next#n266
+On 7/8/2026 9:27 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
+> - [High] Module initialization error path fails to unregister PMUs and leaks per-CPU arrays, leading to a Use-After-Free.
+> - [Medium] The CPU online callback aborts PMU initialization on the first failure, leaving remaining independent PMUs uninitialized.
+> - [Medium] The patch removes L3 cache uncore PMU support for Hygon processors without providing a replacement.
+> - [Medium] The `update_interval` module parameter lacks bounds checking, allowing a value of 0 to cause a CPU-locking interrupt storm.
+> --
+> 
+> --- Patch [1]: [PATCH v3 1/2] perf/x86/amd/uncore: Add Hygon uncore PMU support ---
+> commit 451a8d6c91c9ade8b2dbc942f864d5c36dc872c9
+> Author: Qi Liu <liuqi@hygon.cn>
+> Subject: perf/x86/amd/uncore: Add Hygon uncore PMU support
+> 
+> This commit adds a new uncore PMU driver specifically for Hygon Family 18h
+> processors, supporting Data Fabric and IO Die counters. It also removes the
+> Hygon-specific checks from the AMD uncore driver to keep the vendor
+> implementations separate.
+> 
+>> diff --git a/arch/x86/events/amd/hygon_uncore.c b/arch/x86/events/amd/hygon_uncore.c
+>> new file mode 100644
+>> --- /dev/null
+>> +++ b/arch/x86/events/amd/hygon_uncore.c
+>> @@ -0,0 +1,863 @@
+> 
+> [ ... ]
+> 
+>> +/* Interval for hrtimer, defaults to 60000 milliseconds */
+>> +static unsigned int update_interval = 60 * MSEC_PER_SEC;
+>> +module_param(update_interval, uint, 0444);
+> 
+> [Severity: Medium]
+> Could setting this to 0 cause an interrupt storm? If a privileged user loads
+> the module with update_interval=0, hrtimer_duration becomes 0. When this is
+> passed to hrtimer_forward_now(), it is clamped to the minimum resolution,
+> causing the high-resolution timer to fire continuously in a loop. Should
+> there be a minimum bounds check here to prevent a CPU lockup?
+will fix this.>
+> [ ... ]
+> 
+>> +static int hygon_uncore_cpu_online(unsigned int cpu)
+>> +{
+>> +	struct hygon_uncore *uncore;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
+>> +		uncore = &uncores[i];
+>> +		if (uncore->init(uncore, cpu))
+>> +			break;
+> 
+> [Severity: Medium]
+> Should this be a continue instead of a break? If the first PMU type (e.g.,
+> hygon_df) fails to initialize, this break aborts the loop, which prevents
+> any subsequent independent PMUs (like hygon_df_iod) from initializing on
+> this CPU. The same patch corrects this exact logic flaw in
+> amd_uncore_cpu_online(), but it seems to have been reintroduced here.
+> 
+will fix this.>> +	}
+>> +
+>> +	return 0;
+>> +}
+> 
+> [ ... ]
+> 
+>> +fail_start:
+>> +	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
+>> +fail_prep:
+>> +	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
+>> +fail:
+>> +	hygon_uncore_info_cleanup();
+>> +	return ret;
+>> +}
+> 
+> [Severity: High]
+> Does this error path leak the registered PMUs? If cpuhp_setup_state()
+> fails for the ONLINE state, we remove the previous hotplug states but it
+> looks like hygon_uncore_pmu_cleanup() is never called.
+> 
+> Any PMUs successfully registered during the initial CPU online callbacks
+> would remain registered, and their per-CPU arrays would not be freed. When
+> the module unloads, could this lead to a use-after-free if the perf
+> subsystem tries to access the freed module memory?
+> 
+hygon_uncore_cpu_online() always returns 0, so cpuhp_setup_state() for the 
+ONLINE state will never fail due to a callback error. The only failure mode is 
+that the state slot itself cannot be registered — in which case the startup 
+callbacks were never invoked and no PMUs were ever registered.
 
-If LTO is ready, maybe we can add it to the build tests:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/make?h=3Dperf-tools-next
+> [ ... ]
+> 
+>> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+>> index dbc00b6dd69ee..3f8e40abba736 100644
+>> --- a/arch/x86/events/amd/uncore.c
+>> +++ b/arch/x86/events/amd/uncore.c
+> 
+> [ ... ]
+> 
+>> @@ -1120,8 +1116,7 @@ static int __init amd_uncore_init(void)
+>>   	int ret = -ENODEV;
+>>   	int i;
+>>   
+>> -	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
+>> -	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
+>> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
+>>   		return -ENODEV;
+> 
+> [Severity: Medium]
+> Does this intentionally drop L3 cache uncore support for Hygon? By
+> removing Hygon support here in amd_uncore.c, the previous L3 cache
+> counters are no longer available. Looking at the new hygon_uncore.c, it
+> only implements the Data Fabric and IO Die PMUs, meaning L3 PMU support
+> appears to be lost completely.
+> 
+
+Yes, this is intentional. L3 and UMC PMU support for Hygon will be added in 
+follow-up series. This series focuses specifically on Data Fabric uncore PMU 
+support as the initial step.
 
 Thanks,
-Ian
+Qi>>   	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
+>>   		return -ENODEV;
+> 
 
-> Thanks,
-> Namhyung
->
-> >
-> > Signed-off-by: Trevor Allison <tallison@redhat.com>
-> > ---
-> >  tools/perf/Makefile.perf | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index 3f0544d37a7f..bc66d711fa39 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -686,10 +686,12 @@ ifndef NO_JVMTI
-> >  LIBJVMTI_IN :=3D $(OUTPUT)jvmti/jvmti-in.o
-> >
-> >  $(LIBJVMTI_IN): prepare FORCE
-> > -     $(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3Djvmti =
-obj=3Djvmti
-> > +     $(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=3Djvmti =
-obj=3Djvmti \
-> > +             CFLAGS=3D"$(CFLAGS) $(filter -flto% -ffat-lto-objects,$(L=
-DFLAGS))"
-> >
-> >  $(OUTPUT)$(LIBJVMTI): $(LIBJVMTI_IN)
-> > -     $(QUIET_LINK)$(CC) $(LDFLAGS) -shared -Wl,-soname -Wl,$(LIBJVMTI)=
- -o $@ $<
-> > +     $(QUIET_LINK)$(CC) $(LDFLAGS) -shared -Wl,-soname -Wl,$(LIBJVMTI)=
- -o $@ \
-> > +             $(addprefix $(OUTPUT)jvmti/,libjvmti.o jvmti_agent.o libs=
-tring.o libctype.o)
-> >  endif
-> >
-> >  $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
-> > --
-> > 2.50.1 (Apple Git-155)
-> >
+
