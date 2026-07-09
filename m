@@ -1,163 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C973E3D89;
-	Thu,  9 Jul 2026 07:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD4F3C1F5B;
+	Thu,  9 Jul 2026 07:42:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783582585; cv=none; b=oqYF4F5+Z6M+4hGXDyAH5gFId6w9hOMGnO1QnSOYJzelatfwYdtn72nCNzp5kx/dqoNlE5ZkndQFYRF9w3oJ/3AGPrvDrNibvCEWvGP/3ZoGj+y19hGqeQFauQeWId0V8/vWzCXzAcZT9HtuTwAojk4SebWudTbDRaitoU/KGJ8=
+	t=1783582937; cv=none; b=O37Ge7yJc9zjyr9+EXWRawOTW2aDP9aOS3TU6/b0dfQMeqAbwoD/uTZIDuabI/ZOtIGD9p4ylT3oY4dTOjuKS6eLR4fefVGNq+iE7iYUfbWuYhNWZjnaKr0Q8F49QmtSzsfzJ65PR6/BNaw3fS9U5Bf7e7zDz5H+kna5ozR/HTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783582585; c=relaxed/simple;
-	bh=UNxg9kiympo3qvn/tmDRZa/UEh/7A4xSn6rAkFrxkR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OGRpk939+IEu3VBeRxmRkRRNgjTW/3QNRFhQpL1Ps6xgzh0zY8Z9dVr2baSkk1JQmJG81Ej4/keVX9MgyL8uYqmOEl60ou5PMy2dqh624h4G8eKlPEnbM7pevhu08TRe4CaFrV0gQwunGpkxVGtN9VvABbEGcAeNepRR4p8VG9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYLa4EKZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783582937; c=relaxed/simple;
+	bh=TiGN7VUSZCUiD/nMf39RROduPFOG9QGyyOxlHTG5shk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=IJh+rCuVxPug1smxPHsxNFuQ9Ut8FIN197VkvlYqTmI2xWcwCJX3iBYkOurbKyixDQh1qi4SmwYuaTPIQ/IzO4xOs1DVUKl2sBBDsR28csIZrFj3SjVI9bZFa1f4XbTDGY6WB3eG74civ08//xlg/8Yu4uhV6y0gaGI70/VqtdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZmCkIgC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYLa4EKZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4211F000E9;
-	Thu,  9 Jul 2026 07:36:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZmCkIgC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594AE1F000E9;
+	Thu,  9 Jul 2026 07:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783582580;
-	bh=N4rv3rv3aDuiM2X7qoF4jvMFoMubFY32zS0YnHJnaJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YYLa4EKZifVsSY5FcAoE+f+AGMQ6abIoEvH1L1LRaCTCE2oe9CE/+tNT+gcCQFhTz
-	 Tn/SYuLgprSOwzLg5TRW685N9+ZePcTNSSw5l0IownLP8m8cFWQwUz7PL7j1vmyjK/
-	 Y8g0gH0oTpNQnxS2Gy4lzGopuiM3zkl+rINJoKlBLF8IVau80lYz06ab2gviMbIS6n
-	 ERDFuEohQZrj8S7qI2+hWMpOJqnn6FdOVrIEp83EJmyItQ/kpEJRBs0XunfORLUcdx
-	 DPpL9yqV2NZOyjVhKcqgWIolApX3RiuHts+VLVqw8YlMSf4u0M+Y6/GYQ7LmekGuFJ
-	 70K4zrff/B+Lg==
-Date: Thu, 9 Jul 2026 00:36:19 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 21/21] perf annotate-arm64: Support 'mrs' instruction
- to track 'current' pointer
-Message-ID: <ak9Pc1Gq_eSvsoek@z2>
-References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-22-wutengda@huaweicloud.com>
- <20260701041636.7FEDC1F000E9@smtp.kernel.org>
- <9b181384-028e-4597-8dae-4416b43c940c@huaweicloud.com>
+	s=k20260515; t=1783582935;
+	bh=PcTUsyRcWz0/MptQOb6h6C538Pf85Z4mtd8pVsDuN/c=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=oZmCkIgCLUUDiJERu55D5iNyCSOHq11g8FpgOoV5oVX2fIuMCDf8LhNP8i+HgwJ9W
+	 BntTNKjes038Bs665RVzUegv/H2IXXwl/5iNTtrN14wY72Hxj/5mmjgjy2TMp80B+m
+	 Rdl6jRnikHYvojQAJALRJcZU4yf7i3j0sIpqXnfDGbBR1i8OEuFNOkoly8vC3P6ahA
+	 QLEVl7INQK3pfRgOWNJHsuJu3P2rBDfCXZ954v7gLChcbUEdN5luRnPEyfRH7asYWC
+	 fty8Gd9tjwcVinomhwHgcztP0NxCsYgS471bysD0xa7hSet2SAIf0UpFNIQpt3/W5c
+	 SBUmDBgiQmgdQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] perf test: perftool-testsuite-report fails on s390
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Thomas Richter" <tmricht@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, linux-perf-users@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
+In-Reply-To: <20260709073024.3778237-1-tmricht@linux.ibm.com>
+References: <20260709073024.3778237-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 09 Jul 2026 07:42:14 +0000
+Message-Id: <20260709074215.594AE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9b181384-028e-4597-8dae-4416b43c940c@huaweicloud.com>
 
-On Wed, Jul 01, 2026 at 04:56:06PM +0800, Tengda Wu wrote:
-> 
-> 
-> On 2026/7/1 12:16, sashiko-bot@kernel.org wrote:
-> > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> > - [Medium] Memory leak of the dynamically allocated `type_name` string obtained from `strbuf_detach()`.
-> > - [Medium] Cross-DSO contamination and potential type confusion due to globally caching a DWARF offset (`task_struct_dieoff`).
-> > --
-> > 
-> > commit 0f7d6f3c161448b3cb967b47ee3887be3d974dc1
-> > Author: Tengda Wu <wutengda@huaweicloud.com>
-> > 
-> > perf annotate-arm64: Support 'mrs' instruction to track 'current' pointer
-> > 
-> > This commit adds support for parsing the 'mrs' instruction on arm64 in
-> > 'perf annotate' to track the 'current' task pointer. It dynamically queries
-> > the DWARF debug information for the 'get_current()' inline function's
-> > return type to find 'struct task_struct', caching the DWARF offset for
-> > subsequent lookups.
-> > 
-> >> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-> >> index ec6fd59d51a27..89e3997f6721b 100644
-> >> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> >> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> > [ ... ]
-> >> @@ -787,6 +789,81 @@ static void update_adrp_insn_state(struct type_state *state,
-> >>  		     insn_offset, tsr->addr, dreg);
-> >>  }
-> >>  
-> >> +static Dwarf_Off task_struct_dieoff;
-> >> +
-> >> +static void update_mrs_insn_state(struct type_state *state,
-> >> +				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
-> >> +				  struct disasm_line *dl,
-> >> +				  struct annotated_op_loc *dst)
-> >> +{
-> > [ ... ]
-> >> +	/* Handle case difference: LLVM (SP_EL0) vs objdump (sp_el0) */
-> >> +	if (!dso__kernel(map__dso(dloc->ms->map)) ||
-> >> +	    strcasecmp(dl->ops.source.raw, "sp_el0")) {
-> >> +		invalidate_reg_state(tsr);
-> >> +		return;
-> >> +	}
-> >> +
-> >> +	ip = dloc->ms->sym->start + dl->al.offset;
-> >> +	pc = map__rip_2objdump(dloc->ms->map, ip);
-> >> +
-> >> +	if (!task_struct_dieoff ||
-> >> +	    !dwarf_offdie(dloc->di->dbg, task_struct_dieoff, &type_die)) {
-> > 
-> > [Severity: Medium]
-> > Since DWARF offsets are local to their .debug_info section, if perf annotate
-> > processes a symbol in a different kernel module (where dso__kernel() is still
-> > true), couldn't this global task_struct_dieoff be applied to the module's
-> > Dwarf * handle?
-> > 
-> > Would this result in type confusion or returning an arbitrary, unrelated DIE
-> > across different DSOs?
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Uninitialized `perf_config_tmp` leads to arbitrary file deletion v=
+ia environment injection on non-s390x architectures.
+--
 
-Right, you need to invalidate the cache when the current debug info is
-closed.
+--- Patch [1]: [PATCH v2] perf test: perftool-testsuite-report fails on s39=
+0 ---
+commit f7fabccf09a26131ccc43cc43ec7cc1971402aa3
+Author: Thomas Richter <tmricht@linux.ibm.com>
 
-> > 
-> >> +		struct strbuf sb;
-> >> +		char *type_name;
-> >> +		/*
-> >> +		 * Find the inline function 'get_current()' Dwarf_Die
-> >> +		 * and obtain its return value data type, which should
-> >> +		 * be 'struct task_struct*'.
-> >> +		 */
-> >> +		if (!die_find_inlinefunc(cu_die, pc, &func_die) ||
+perf test: perftool-testsuite-report fails on s390
 
-Probably better to check the name of the function.
+This commit addresses a timeout failure in the perftool-testsuite-report
+test on s390 architectures. It creates a temporary perf configuration file
+to suppress addr2line warnings specifically for s390x systems.
 
-Thanks,
-Namhyung
+> diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/=
+perf/tests/shell/perftool-testsuite_report.sh
+> --- a/tools/perf/tests/shell/perftool-testsuite_report.sh
+> +++ b/tools/perf/tests/shell/perftool-testsuite_report.sh
+> @@ -6,6 +6,14 @@ test -d "$(dirname "$0")/base_report" || exit 2
+>  cd "$(dirname "$0")/base_report" || exit 2
+>  status=3D0
+> =20
+> +# On s390 the default timeout for addr2line is too short, disable warnin=
+gs
+> +if [ $(uname -m) =3D s390x ]
+> +then
+> +	perf_config_tmp=3D$(mktemp /tmp/.perfconfig_XXXXX)
+> +	export PERF_CONFIG=3D"${perf_config_tmp}"
+> +	perf config 'core.addr2line-disable-warn =3D true'
+> +fi
+> +
+>  PERFSUITE_RUN_DIR=3D$(mktemp -d /tmp/"$(basename "$0" .sh)".XXX)
 
+[ ... ]
 
-> >> +			!dwarf_attr_integrate(&func_die, DW_AT_type, &attr) ||
-> >> +			!dwarf_formref_die(&attr, &type_die)) {
-> >> +			invalidate_reg_state(tsr);
-> >> +			return;
-> >> +		}
-> >> +
-> >> +		strbuf_init(&sb, 32);
-> >> +		die_get_typename_from_type(&type_die, &sb);
-> >> +		type_name = strbuf_detach(&sb, NULL);
-> >> +
-> >> +		if (!type_name || strcmp(type_name, "struct task_struct*")) {
-> >> +			invalidate_reg_state(tsr);
-> >> +			return;
-> >> +		}
-> > 
-> > [Severity: Medium]
-> > Does this code leak the type_name string?
-> > 
-> > strbuf_detach() allocates and transfers ownership of the string to type_name,
-> > but it appears to never be freed on either the success path or the error path
-> > returning here.
-> > 
-> 
-> Agreed. Will fix it in next version.
-> 
-> >> +
-> >> +		/*
-> >> +		 * Cache the 'struct task_struct*' die offset globally.
-> >> +		 * This allows us to resolve stack canary accesses even
-> >> +		 * in CUs that lack a full task_struct definition (e.g.,
-> >> +		 * compiler-generated entry/exit code).
-> >> +		 */
-> >> +		task_struct_dieoff = dwarf_dieoffset(&type_die);
-> >> +	}
-> > 
-> 
+> @@ -19,5 +27,6 @@ if ! [ "$PERFTEST_KEEP_LOGS" =3D "y" ]; then
+>  	rm -rf "$PERFSUITE_RUN_DIR"
+>  fi
+> =20
+> +[ -n "${perf_config_tmp}" ] && rm -f "${perf_config_tmp}"
+
+[Severity: High]
+Could this lead to unintended file deletion on non-s390x architectures?
+
+Since perf_config_tmp is only conditionally initialized if the architecture
+is s390x, any value passed in via the environment will be retained on other
+systems.
+
+If a user or orchestration environment sets perf_config_tmp before running
+the script, this cleanup path will execute rm -f against that arbitrary
+file path.
+
+Would it be safer to explicitly initialize perf_config_tmp to an empty
+string at the start of the script?
+
+>  test $status -ne 0 && exit 1
+>  exit 0
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709073024.3778=
+237-1-tmricht@linux.ibm.com?part=3D1
