@@ -1,133 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9442F8EAD
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jul 2026 17:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22B66399360
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Jul 2026 17:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783616926; cv=none; b=j65+UYaw1/ZcEi0GZP1nWhjSMqTlXNutNf+V9VuDw5St33gpKiq0iCAF80hjacazTKK4cb1NiFPH5yAFamTOTa/oBzcd6x4tgVkVUI+GoftkTwli9jmrTEwkvqWiY7p+AoTmNjz+op0DfKaiCfp96XWpV1dyT/Ju0asD0Ea5m/A=
+	t=1783616999; cv=none; b=L+mGoTkuANRVe88tQC/DbX+su6yGbybKsxzEo0qbHSV4Wlip865CPo/GSzqM46v6u2PR4pPjNXMhMcFnU2UF5KJR9NVO+2QGcSHyoxzt4XYaGDVa3OxQfAgx6eBN6qqOK6AEXWDgV1XqQc11nnrj54d3NAgbi3vYmFcVPnanonk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783616926; c=relaxed/simple;
-	bh=3Fv+DR3GORz8ovW6SqvxK5KAt0oX2CpHYHA0uJw3kKk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=a3oavl7OYjXEqMeH3Ec2IJvqCfUyX+OE4rvNfJent625ifC23QYGQ9pwbLulK9IktpbNCKEhyuHy82DsX/cDgBK1LlYLKema3qQlMoE/Q5mHrJH+2J09PLipaK8QlbjYNEqOipGzjNcYulHP+45EEuyw/0y+fIAC5zU5gPZ7FP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbWKHTMO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783616999; c=relaxed/simple;
+	bh=UvjBYqdtUCKuhuDcyr4WMno31MOA6IlpDIkFftW5S9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eE4c8FT75nO25QDwjiZfu2JQkI7mtXe4QgRVqjW+yEiDw3xl70XpS/m9DVQveEd2IG97CEkUeut7dXuaN5DnN6BUxfrG1jAOLulOGo7DL4qSeKgbm3W7hivjuvhw4FQbW3jIAtNlSJB7hTWl4UZUjcJ5jtsH+xIdJSAHtSXkBSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=uXWwsPxG; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbWKHTMO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F39651F000E9;
-	Thu,  9 Jul 2026 17:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783616925;
-	bh=GqLTqF4MRMPemOqStanOkoq+aepqf3dXmhJ74Laavog=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TbWKHTMOj8E1KRs0GaJkPO6U+gR7StwkhtSWUdrHZUSIkyDLXMCheadcJgFvjja0L
-	 K8OM+oYSJlYKVsHtTKyHDy49wPtL3uBBK6WD6Wdknh2B3R0aRqpd3QcwghLZBJ14yl
-	 JSJVLKuwp6A8SUTHKbN4jfHdirrPfTbf5AKu59oJgqyW1n2zHqdfZwEsWGlVabrdNW
-	 wuoG0o3EcIbUHw0QnKlegc1qHaU/iSU78KlqFwbResDnKQaRsvwDSHJTA4u0yl1anU
-	 xXZhaAKKDfOxp61rJtfsRMTOjzCk6rHBDUavgm75c80iFcUfIoGk6r8bqWHPvf1Irm
-	 W+M91MxPAdrMw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/4] perf ui hists: In report UI ensure thread is set
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260709165220.1411149-1-irogers@google.com>
-References: <20260709033701.1117943-1-irogers@google.com>
- <20260709165220.1411149-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 17:08:44 +0000
-Message-Id: <20260709170844.F39651F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="uXWwsPxG"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 355DD26A4;
+	Thu,  9 Jul 2026 10:09:52 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E7343FC81;
+	Thu,  9 Jul 2026 10:09:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1783616996; bh=UvjBYqdtUCKuhuDcyr4WMno31MOA6IlpDIkFftW5S9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uXWwsPxGlH7SnVogQrforXaYBysq1Cp1ew3FhWzYp2NFg/ZYp2Lmf0hfRozVwFl0c
+	 9eKzXOmm6QKLKEd01LpF+/Es1/gXEePYKwVs5l9KpsFOV7x1hB89ze+ixvsqKXxpzz
+	 SzTz6OyfbScsB4Vbk7q4i+KnTXe3bp6jH9QtI4lU=
+Date: Thu, 9 Jul 2026 18:09:54 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: will@kernel.org, mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, ilkka@os.amperecomputing.com
+Subject: Re: [PATCH 5/5] perf/arm-cmn: Support CMN S3 r2
+Message-ID: <20260709170954.GH1024232@e132581.arm.com>
+References: <cover.1782830759.git.robin.murphy@arm.com>
+ <1ce69a1cb72da220caa6bc83eb8ce74e295b595e.1782830759.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ce69a1cb72da220caa6bc83eb8ce74e295b595e.1782830759.git.robin.murphy@arm.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Tue, Jun 30, 2026 at 04:19:20PM +0100, Robin Murphy wrote:
 
-Pre-existing issues:
-- [Critical] Stack buffer overflow in `evsel__hists_browse()` due to unboun=
-ded popup menu options
---
+[...]
 
---- Patch [1]: [PATCH v3 1/4] perf ui hists: In report UI ensure thread is =
-set ---
-commit 6b0cc8c7dd2c933b2c9f1bf775218027677c766a
-Author: Ian Rogers <irogers@google.com>
+> @@ -913,7 +956,12 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
+>  	CMN_EVENT_ATTR(_model, _name##_group1_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 3), \
+>  	CMN_EVENT_ATTR(_model, _name##_group1_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 4), \
+>  	CMN_EVENT_ATTR(_model, _name##_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 5), \
+> -	CMN_EVENT_ATTR(_model, _name##_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 6)
+> +	CMN_EVENT_ATTR(_model, _name##_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 6), \
+> +	CMN_EVENT_ATTR(CMNS3R2, _name##_ccg_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 9), \
+> +	CMN_EVENT_ATTR(CMNS3R2, _name##_ccg_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 10), \
+> +	CMN_EVENT_ATTR(CMNS3R2, _name##_lbt_read, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 11), \
+> +	CMN_EVENT_ATTR(CMNS3R2, _name##_lbt_write, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 12), \
+> +	CMN_EVENT_ATTR(CMNS3R2, _name##_lbt, _type, _event, SEL_CBUSY_SNTHROTTLE_SEL, 13)
 
-perf ui hists: In report UI ensure thread is set
+If these CMN_EVENT_ATTR(CMNS3R2, ...) entries are appended to
+CMN_EVENT_HN_SNT(), they will extend the CMNS3R2 attributes for other
+models as well. For example:
 
-This commit populates the thread field in map_symbol within the hists brows=
-er
-UI to fix cross-platform disassembly. It intentionally uses raw pointers for
-thread and map to avoid reference counting issues tied to the bounded lifec=
-ycle
-of the actions array.
+  CMN_EVENT_HNF_SNT(CMN700, sn_throttle, 0x2a),
 
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
-s.c
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -3155,10 +3155,12 @@ static int evsel__hists_browse(struct evsel *evse=
-l, int nr_events, const char *h
->  						continue;
-> =20
->  					actions->ms.sym =3D symbol__new_unresolved(bi->to.al_addr, bi->to.m=
-s.map);
-> +					actions->ms.thread =3D bi->to.ms.thread;
->  					actions->ms.map =3D bi->to.ms.map;
->  				} else {
->  					actions->ms.sym =3D symbol__new_unresolved(browser->he_selection->i=
-p,
->  										 browser->selection->map);
-> +					actions->ms.thread =3D browser->selection->thread;
->  					actions->ms.map =3D browser->selection->map;
->  				}
-> =20
-> @@ -3173,6 +3175,7 @@ static int evsel__hists_browse(struct evsel *evsel,=
- int nr_events, const char *h
->  					continue;
->  				}
-> =20
-> +				actions->ms.thread =3D browser->selection->thread;
+This would also add the CMNS3R2 attributes to CMN700. Is this intended?
 
-[Severity: Critical]
-This is a pre-existing issue, but does the unbounded accumulation of options
-risk overflowing the actions[] and options[] arrays on the stack?
+> +#define CMN_EVENT_HNS_OCC(_model, _name, _event)			\
+> +	CMN_EVENT_HN_OCC(_model, hns_##_name, CMN_TYPE_HNS, _event),	\
+> +	_CMN_EVENT_HNS(_model, _name##_rxsnp, _event, SEL_OCCUP1_ID, 5), \
+> +	_CMN_EVENT_HNS(_model, _name##_lbt, _event, SEL_OCCUP1_ID, 6),	\
+> +	_CMN_EVENT_HNS(_model, _name##_hbt, _event, SEL_OCCUP1_ID, 7),	\
+> +	_CMN_EVENT_HNS(CMNS3R2, _name##_rnf, _event, SEL_OCCUP1_ID, 8),	\
+> +	_CMN_EVENT_HNS(CMNS3R2, _name##_rni, _event, SEL_OCCUP1_ID, 9),	\
+> +	_CMN_EVENT_HNS(CMNS3R2, _name##_ccglcn, _event, SEL_OCCUP1_ID, 10), \
+> +	_CMN_EVENT_HNS(CMNS3R2, _name##_ccgrn, _event, SEL_OCCUP1_ID, 11)
 
-Looking at evsel__hists_browse(), the arrays are fixed to MAX_OPTIONS (16):
+I have a similar question here. My impression is that this is mainly for
+the convenience of appending CMNS3R2 specific attributes, but it doesn't
+necessarily mean those attributes should be added for every model.
 
-tools/perf/ui/browsers/hists.c:evsel__hists_browse() {
-    ...
-#define MAX_OPTIONS  16
-    char *options[MAX_OPTIONS];
-    struct popup_action actions[MAX_OPTIONS];
-    int nr_options =3D 0;
+> @@ -1288,65 +1388,72 @@ static struct attribute *arm_cmn_event_attrs[] = {
 
-Later in the function when building the popup menu, there is a long sequence
-of add_*_opt() calls without any bounds checking on nr_options:
+> +	CMN_EVENT_HNS_HBT_ENHBT(cache_miss,		0x01),
 
-    nr_options +=3D add_annotate_opt(&actions[nr_options], ...);
-    ...
-    nr_options +=3D add_annotate_type_opt(&actions[nr_options], ...);
-    nr_options +=3D add_thread_opt(browser, &actions[nr_options], ...);
-    nr_options +=3D add_dso_opt(browser, &actions[nr_options], ...);
-    nr_options +=3D add_callchain_toggle_opt(browser, &actions[nr_options],=
- ...);
-    nr_options +=3D add_map_opt(browser, &actions[nr_options], ...);
-    nr_options +=3D add_socket_opt(browser, &actions[nr_options], ...);
+I manually extend the macro and got the result:
 
-If enough of these conditions are met simultaneously (e.g. branch annotatio=
-ns,
-type, thread, DSO, callchain, map, socket, and multiple scripts), couldn't
-nr_options exceed 16 and corrupt the stack?
+  CMN_EVENT_ATTR(CMN700 | CMNS3R01, hns_cache_miss_all, CMN_TYPE_HNS, 0x1, SEL_HBT_LBT_SEL, 0),
+  CMN_EVENT_ATTR(CMN700 | CMNS3R01, hns_cache_miss_hbt, CMN_TYPE_HNS, 0x1, SEL_HBT_LBT_SEL, 1),
+  CMN_EVENT_ATTR(CMN700 | CMNS3R01, hns_cache_miss_lbt, CMN_TYPE_HNS, 0x1, SEL_HBT_LBT_SEL, 2),
+  CMN_EVENT_ATTR(CMNS3R2, hns_cache_miss_all, CMN_TYPE_HNS, 0x1, SEL_ENHANCED_HBT_LBT_SEL, 0),
+  CMN_EVENT_ATTR(CMNS3R2, hns_cache_miss_hbt, CMN_TYPE_HNS, 0x1, SEL_ENHANCED_HBT_LBT_SEL, 1),
+  CMN_EVENT_ATTR(CMNS3R2, hns_cache_miss_lbt, CMN_TYPE_HNS, 0x1, SEL_ENHANCED_HBT_LBT_SEL, 2),
+  CMN_EVENT_ATTR(CMNS3R2, hns_cache_miss_rnf, CMN_TYPE_HNS, 0x1, SEL_ENHANCED_HBT_LBT_SEL, 3),
+  CMN_EVENT_ATTR(CMNS3R2, hns_cache_miss_rni, CMN_TYPE_HNS, 0x1, SEL_ENHANCED_HBT_LBT_SEL, 4),
+  CMN_EVENT_ATTR(CMNS3R2, hns_cache_miss_ccglcn, CMN_TYPE_HNS, 0x1, SEL_ENHANCED_HBT_LBT_SEL, 5),
+  CMN_EVENT_ATTR(CMNS3R2, hns_cache_miss_ccgrn, CMN_TYPE_HNS, 0x1, SEL_ENHANCED_HBT_LBT_SEL, 6),
 
->  				actions->ms.map =3D browser->selection->map;
->  				actions->ms.sym =3D browser->selection->sym;
->  			}
+CMNS3R2 has added items like rnf/rni/ccglcn/ccgrn, not sure if this is
+purposed or not ...
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709165220.1411=
-149-1-irogers@google.com?part=3D1
+> @@ -2431,21 +2538,33 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+>  	/*
+>  	 * With the device isolation feature, if firmware has neglected to enable
+>  	 * an XP port then we risk locking up if we try to access anything behind
+> -	 * it; however we also have no way to tell from Non-Secure whether any
+> -	 * given port is disabled or not, so the only way to win is not to play...
+> +	 * it; however prior to CMN S3 r2p0 we also have no way to tell from
+> +	 * Non-Secure whether any given port is disabled or not, so in that case
+> +	 * the only way to win is not to play...
+>  	 */
+>  	reg = readq_relaxed(cfg_region + CMN_CFGM_INFO_GLOBAL);
+> -	if (reg & CMN_INFO_DEVICE_ISO_ENABLE) {
+> +	if (reg & CMN_INFO_DEVICE_ISO_ENABLE && model == CMNS3R01) {
+
+As the comment claims "prior to CMN S3 r2p0", would here be:
+
+  if (reg & CMN_INFO_DEVICE_ISO_ENABLE && model < CMNS3R2) {
+
+>  		dev_err(cmn->dev, "Device isolation enabled, not continuing due to risk of lockup\n");
+>  		return -ENODEV;
+>  	}
+
+Thanks,
+Leo
