@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D107377566;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A123B71A9;
 	Fri, 10 Jul 2026 23:41:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783726905; cv=none; b=HF4o1nhOLCfiYR3LDAHmPyER7cxv5prWcR/OMoRocsfdKE8m1IDOpKCMvw2Ju40RpF9TScb7m1clooJSx2TAVvu9X1hbDzkjG4GyJaKcZs8pFCTvx8L9YW3bPiLIF8ZbU7ZEQ0f+EeduEMikfUHWkaeNS6572jkT6dEUwxIsnIQ=
+	t=1783726905; cv=none; b=Z0tc5Jxrnp/aafh+Sb/S8vLRIRoDkWYpSPAyhBQXnomhb5C7FRARmsO1pY1aeJDc/uRN8KJ7FrFLI1n3TRtMVMCwGSxLAjonHzfzOaaTsVJqy7XI02/ZU3zDG4pB3INhQ9xG1jDRrSSgjPCd89AcoZn3vTgUXYLuMCFJC0y7fQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783726905; c=relaxed/simple;
-	bh=yz5jqrtxVLelTtHJolVRKvcLd+BYVWDLI5stcB+1Vmw=;
+	bh=Nb4mW2+P12q8XWk+nuuLnQD1fpdTQGKfFTCKS2PeGB8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hSnwtU1n5Z+GdAYz1eulqHYuGo7Iwryu1Z0sZwmpqe7uwawkK6O3zyTSl9dqkOA/CY/Q7pnvvzlsJqhH8bVl/FUAuZVP6v1zGCaBaOLNbEono4XxrIEH3PvRaccxou2b6IJUO4HrjCCNDjxjSa3bQXnLZZoJDhuPJSFYZw7e6lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joDUoUow; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=dBMpy5M2gAoHfQSbzOb0zdh1jwjJsBuWFSrE+R3OduzHpRg8tcLzSgKK8RDm/xA5Mk6mbCgLbdupTpc0OAYLAzA4vddOQ8xb7DK4lVk4msDzsuxBu6bGtF+qlVRajkYb0CD9QTJSnI1h2jgn1LxxaOEvRjCtt3UdXuvAqCVPG3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fuj6b7RB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joDUoUow"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CA81F00A3F;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fuj6b7RB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A941F00A3D;
 	Fri, 10 Jul 2026 23:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1783726904;
-	bh=e9r9U2xICAZHeMeDiKWKT+ZXt7ERy51hmXjZcSzYXxs=;
+	bh=MPYKTNBGH6FgS58l2JJwNQ+PfQGYT1OEPLxuX3+aeNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=joDUoUowzbZSvgI6/JDdFxanOZyJjJIcq6Tfhff+8sSj2npDI0g8pNRpcAWMewJY0
-	 oqzB2dppW4Z73L64eWDNifRegjm5Fcc5VvsGrtz9mQ2/4Pxb6/L5OmhJIe1ieeo/Xo
-	 1ZELj+TN63WUF8dx/suY66gAdjRwtDhdHQqMOnLJiKE7aGBP3DBrha8+spd5G3EjYU
-	 BA6iQWTbjtmnKiplgkbdgDFYGWqNl6p34T9RIiHjAPEFy+BXhczcCMyZ8ErQlKQQiu
-	 +2Q/fuuv2CExaby+rhFBjJlU68JI3x+yBreKQZYCP5KGrkM5Cfs4gj2b1/KdPuwLXN
-	 qf+A0+c6eBgOA==
+	b=Fuj6b7RBXQcbRw+7PV8CG6ic4XZJTOKulJHA9mtR+ssrF7LVQTK8ssoulovk4NhS+
+	 x7V87fbAAxcdrp/UB25ilcjgbonaWmNMHAcf1mBgKqw5QhImNcpsHqTXWiz7v0TPEa
+	 o2bA36/SiXefOar7tDzqtGy1IZgIB/ou8e7gpDMwIwstH5zKDmFONn+mdFXD4Jbhvi
+	 pMgLEJhVWdQiiz8FydMQ0ZGSZX0WpDLmXID7xQZDoWX50jaBG99utXO9/ysQ1/FcQN
+	 kjKlJM8mi5alkTgmJCGhn1VseHbG/E9UPX8gTb73EHTzbY9XEfXZB5TYSuOLacaUiN
+	 WwzSgJTRrzUwQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 2/4] perf evsel: Remove unused BPF related fields
-Date: Fri, 10 Jul 2026 16:41:41 -0700
-Message-ID: <20260710234143.1934263-2-namhyung@kernel.org>
+Subject: [PATCH v2 3/4] perf evsel: Arrange some fields that should be cloned
+Date: Fri, 10 Jul 2026 16:41:42 -0700
+Message-ID: <20260710234143.1934263-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
 In-Reply-To: <20260710234143.1934263-1-namhyung@kernel.org>
 References: <20260710234143.1934263-1-namhyung@kernel.org>
@@ -50,75 +50,58 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-IIUC bpf_fd and bpf_obj fields are not used anymore.  It seems like
-leftover from 3d6dfae889174340 ("perf parse-events: Remove BPF event
-support").
+In the evsel, there's an internal struct to put fields need copy when
+the evsel is cloned.  This is purely to make it easier track those
+fields even if it sometimes failed to do so. :)
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/evsel.c | 21 ---------------------
- tools/perf/util/evsel.h |  2 --
- 2 files changed, 23 deletions(-)
+ tools/perf/util/evsel.h | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 82399a3eb96e3ce7..ea97efc58e206e70 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -455,8 +455,6 @@ static void evsel__init(struct evsel *evsel,
- 	evsel->scale	   = 1.0;
- 	evsel->max_events  = ULONG_MAX;
- 	evsel->evlist	   = NULL;
--	evsel->bpf_obj	   = NULL;
--	evsel->bpf_fd	   = -1;
- 	INIT_LIST_HEAD(&evsel->config_terms);
- 	INIT_LIST_HEAD(&evsel->bpf_counter_list);
- 	INIT_LIST_HEAD(&evsel->bpf_filters);
-@@ -540,10 +538,6 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	BUG_ON(orig->priv);
- 	BUG_ON(orig->per_pkg_mask);
- 
--	/* cannot handle BPF objects for now */
--	if (orig->bpf_obj)
--		return NULL;
--
- 	evsel = evsel__new(&orig->core.attr);
- 	if (evsel == NULL)
- 		return NULL;
-@@ -3079,21 +3073,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 			/* Debug message used by test scripts */
- 			pr_debug2_peo(" = %d\n", fd);
- 
--			if (evsel->bpf_fd >= 0) {
--				int evt_fd = fd;
--				int bpf_fd = evsel->bpf_fd;
--
--				err = ioctl(evt_fd,
--					    PERF_EVENT_IOC_SET_BPF,
--					    bpf_fd);
--				if (err && errno != EEXIST) {
--					pr_err("failed to attach bpf fd %d: %m\n",
--					       bpf_fd);
--					err = -EINVAL;
--					goto out_close;
--				}
--			}
--
- 			set_rlimit = NO_CHANGE;
- 
- 			/*
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 6b0c08958616bf04..27af0c4f294efb30 100644
+index 27af0c4f294efb30..42b95933632ae32d 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -94,8 +94,6 @@ struct evsel {
+@@ -74,6 +74,10 @@ struct evsel {
+ 		const char		*unit;
+ 		struct cgroup		*cgrp;
+ 		const char		*metric_id;
++
++		/* The PMU the event is from. Used for missing_features, PMU name, etc. */
++		struct perf_pmu		*pmu;
++
+ 		/*
+ 		 * This point to the first evsel with the same name, intended to store the
+ 		 * aggregated counts in aggregation mode.
+@@ -94,6 +98,8 @@ struct evsel {
  		bool			skippable;
  		bool			retire_lat;
  		bool			dont_regroup;
--		int			bpf_fd;
--		struct bpf_object	*bpf_obj;
++		bool			default_metricgroup; /* A member of the Default metricgroup */
++		bool			default_show_events; /* If a default group member, show the event */
  		struct list_head	config_terms;
  		u64			alternate_hw_config;
  	};
+@@ -123,8 +129,6 @@ struct evsel {
+ 	bool			cmdline_group_boundary;
+ 	bool			reset_group;
+ 	bool			needs_auxtrace_mmap;
+-	bool			default_metricgroup; /* A member of the Default metricgroup */
+-	bool			default_show_events; /* If a default group member, show the event */
+ 	bool			needs_uniquify;
+ 	bool			fallenback_eacces;
+ 	bool			fallenback_eopnotsupp;
+@@ -180,9 +184,6 @@ struct evsel {
+ 	unsigned long		open_flags;
+ 	int			precise_ip_original;
+ 
+-	/* The PMU the event is from. Used for missing_features, PMU name, etc. */
+-	struct perf_pmu		*pmu;
+-
+ 	/* For tool events */
+ 	/* Beginning time subtracted when the counter is read. */
+ 	union {
 -- 
 2.55.0.795.g602f6c329a-goog
 
