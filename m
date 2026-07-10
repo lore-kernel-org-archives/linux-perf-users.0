@@ -1,51 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF393C10B8;
-	Fri, 10 Jul 2026 21:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22AB34405B;
+	Fri, 10 Jul 2026 22:02:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783720500; cv=none; b=siJr0tVVNgKky9itGVD+n/1F7m3R/7nshRMfgNL0wyOS12eGHsUVE8gQwnWmy/tPaCaps3XOp4f8G4f01MhO+qtAnAWapatRf2TEDem3EAWCrlOVWdkIoj+kjQC48trqQL3Huhi0cIFYBnvrzIuwzcOKsZBwcdzwZ8CWlFzld04=
+	t=1783720938; cv=none; b=W4MeJ/8SbVaAqVO4DKaweEAbhW9ZOUDn0ZaBTvXWLYLexqFJSQwKfJo2E/Wwo9CnLdMMR1jZ6J2VZT0yyeFitMFO2v7Bn/vnNBL01Ii+fUzSaEqojRd15lBZzMD1bEChFPGBQasEsE3cCHmplufvGENUPL/JoSkbzHpawQPxHGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783720500; c=relaxed/simple;
-	bh=ySWMY6pa6qvECfhq7dbBy1StuwfgAq9lGdO7R+L1Nvk=;
+	s=arc-20240116; t=1783720938; c=relaxed/simple;
+	bh=sln1EBZU/JoWeeaA6yeHfO4hSs5G6UB8geQ3XynTQkg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aJP+7pPK7TJ7H3qKn+lLSbpHJzB2ByditzVR+8WFadrxYh/OfEEGZTw/AotkpC+WpqhgA02kSRQuD7arhOgzmpS59hYAcbUXzlwjIN3TxrO9ENp5l7anO93fvrkVlyyMRxNp6pINz3BaKE+zP6Dto+KcvsBzlKLf2c5SC3SSsdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZGXwzWP; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=rLM+Ip0zV1Gue0G1rqY1ZT5fwHpkZPEdz5GnXt95YEkk/sRYoW8ftygmnfiXJITUQGHTgA/td5C4eJE3fZah5mFrLVqp7cTcLa5eV2/GJiqW0/goi9VrPcT1tIC2a01xpH5MaA9iCJUhJCY+rwmiyA/7AEs5G7gPT9ZmRn9BsvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3aKZtn8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZGXwzWP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B4E81F00AC4;
-	Fri, 10 Jul 2026 21:54:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3aKZtn8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39B3B1F000E9;
+	Fri, 10 Jul 2026 22:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783720498;
-	bh=bgnzsDi2O6UwX9w+N43jEgZmeGBGJPYFPG7kS7jjoNk=;
+	s=k20260515; t=1783720936;
+	bh=s6Xb+B6LGTc/LN2KrI9+Oc9Vx+c7m/TrTZSUZqyom8U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EZGXwzWPTjLL2T811C2s+MdwBZf/+ZaxKHqF/nsPqAcrK6r/4p5wkdo3jCk/S3Gr/
-	 GbrDZ/RA4nWEHySZBTawBFTxT1m+YRY8cgV2/err/b5IgtiK5SIKRzLzmj3m2IiDC3
-	 uIcVHOpAIobN8r+he/NKM9BOesbS3vYEiZernnzmZ6x+t3On1mzjEYQ4BfnbYsupTc
-	 05NFFHq9US/uC6MyExGdlPiaYmjJJ1tHCEt59fLpRw0Mw+z2SoPN84tiqqJLB8WWoc
-	 Y+BaxyusdM1DV0VK7uuf1lClL4zhQDWqEAgH5ojtKMh4SjRFHLlcMLU158VstbtHlX
-	 a/VxFkz1rhU8A==
-Date: Fri, 10 Jul 2026 14:54:57 -0700
+	b=h3aKZtn8phA+rFTiqecWLzDIcEVDku5OoYxRtUoLxACwZCycP+mLrwPTHs5Pj/q4/
+	 zubsM/9xquHW1ERlQ1USgVHAqF8VN/88KQl6e7/R4PBYmD9mwLKkA0MHYhZG5CdF1Z
+	 JSG4sF75iRUysjqr9MYCBMGhyBRvpZL5sULxxyonxpoLnizMSY5o79V7w+UmogyZkV
+	 ug9JcKKEC4F8n3Eti4LSHAbO5sMOwvHngdDIl9Mr+N42LnBumpaiC82plaaiWZrL00
+	 GU5AIslrDIt5sJy3FUF/wQiaBLNBcnFnkA7J5qu/3BcbbJwKnpUSjPG70MvPEGKeHT
+	 ZfoUd3WddLv4Q==
+Date: Fri, 10 Jul 2026 15:02:14 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Jiebin Sun <jiebin.sun@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Tianyou Li <tianyou.li@intel.com>,
-	Wangyang Guo <wangyang.guo@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/14] perf c2c: add a function view
-Message-ID: <alFqMY_q3mIhd-qN@google.com>
-References: <akxLJvJvkD022Trl@google.com>
- <20260710084920.3579079-1-jiebin.sun@intel.com>
+	James Clark <james.clark@linaro.org>,
+	Jiawei Sun <abyssmystery@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf record: Fix teardown hang on system-wide
+ multi-threaded sessions
+Message-ID: <alFr5s97ZsgWXoTC@google.com>
+References: <20260710053927.1864021-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,56 +48,92 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260710084920.3579079-1-jiebin.sun@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260710053927.1864021-1-irogers@google.com>
 
-Hello,
+Hi Ian,
 
-On Fri, Jul 10, 2026 at 04:49:20PM +0800, Jiebin Sun wrote:
-> Hi Namhyung,
+On Thu, Jul 09, 2026 at 10:39:06PM -0700, Ian Rogers wrote:
+> Under system-wide (-a) parallel streaming mode (--threads=cpu),
+> background recording threads can be inundated by a continuous
+> firehose of hardware samples generated by the OS. In this state,
+> a background thread's local hit count remains unequal to its
+> sample count, causing it to bypass the blocking fdarray__poll()
+> call entirely on each iteration of its recording loop.
 > 
-> Thank you very much for the review and the suggestions.
+> Because the termination check relies on the POLLHUP event status
+> populated specifically by fdarray__poll(), bypassing it prevents
+> the background thread from ever recognizing that its control pipe
+> was closed by the main thread. This traps the background thread
+> in an infinite recording loop, hanging the main thread indefinitely
+> as it awaits a termination acknowledgment that never arrives.
 > 
-> > It'd be great if you can add this to the documentation.
+> Ensure teardown completion by adding explicit evlist__disable()
+> calls in the main thread's cleanup paths at out_child: and
+> out_child_no_flush:. Additionally, patch fdarray__filter() to
+> respect the fdarray_flag__nonfilterable flag, preventing it
+> from incorrectly setting the background thread's control pipe
+> file descriptor to -1 and clearing its revents mask upon
+> processing termination POLLHUP signals.
 > 
-> Sure. I've added the worked example to
-> tools/perf/Documentation/perf-c2c.txt in the v2 I just sent.
+> Fixes: f94563fac269 ("perf record: fix poll storm when monitored threads exit")
+> Assisted-by: Antigravity:gemini-3.5-flash
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Thanks!
-
-> 
-> > Any chance it can share the code?  We have `perf mem report` as well,
-> > which deals with similar kind of data.
-> 
-> The function view does reuse the common infrastructure: it shares the
-> c2c data structures (moved into c2c.h), the perf_hpp_fmt column
-> framework, hists__collapse_resort()/hists__output_resort(),
-> hists__add_entry_ops() for dedup, and the hist_browser (including the
-> generic fold/expand handling).
-> 
-> The part it does not reuse is the generic report hierarchy builder. That
-> nests a single sample's own sort keys, while the function view pairs
-> functions that share a cacheline -- the entries are (function A,
-> function B) pairs that don't map to one sample. That's why the hierarchy
-> is built explicitly rather than from a sort-key list.
-
-I see.  Yeah I think it's a different model but it may be possible to
-have a cacheline in a parent node and functions that accessed it in
-the children.
-
-> 
-> > Also data type profiling would give more meaningful data once DWARF is
-> > available.  It'd be nice if c2c could support the type analysis or c2c
-> > could be implemented on top of `perf mem report` which already supports
-> > the data type profiling.
-> 
-> Agreed, data-type profiling is a great fit here -- naming the exact
-> struct field being contended is often the most actionable part of a
-> false-sharing fix. I'd like to explore this as a follow-up after this
-> series, reusing perf mem report's type/typeoff support to add a "which
-> data structure" view to c2c.
-
-Sounds good.
+I didn't know you already sent the fix so I was doing the same.  It
+seems your fix is better as it added evlist__disable().  I'll test this
+and pick up if it's ok.
 
 Thanks,
 Namhyung
 
+> ---
+>  tools/lib/api/fd/array.c    | 6 ++++--
+>  tools/perf/builtin-record.c | 2 ++
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+> index ffe8272af59b..16a047f1906e 100644
+> --- a/tools/lib/api/fd/array.c
+> +++ b/tools/lib/api/fd/array.c
+> @@ -115,6 +115,9 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>  		return 0;
+>  
+>  	for (fd = 0; fd < fda->nr; ++fd) {
+> +		if (fda->priv[fd].flags & fdarray_flag__nonfilterable)
+> +			continue;
+> +
+>  		if (!fda->entries[fd].events)
+>  			continue;
+>  
+> @@ -132,8 +135,7 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>  			continue;
+>  		}
+>  
+> -		if (!(fda->priv[fd].flags & fdarray_flag__nonfilterable))
+> -			++nr;
+> +		++nr;
+>  	}
+>  
+>  	return nr;
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index ebd3ed0c9b3e..d1276382b77a 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -2890,11 +2890,13 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  		record__synthesize_workload(rec, true);
+>  
+>  out_child:
+> +	evlist__disable(rec->evlist);
+>  	record__stop_threads(rec);
+>  	record__mmap_read_all(rec, true);
+>  	goto out_free_threads;
+>  out_child_no_flush:
+>  	/* mmap read already failed — retrying would just fail again */
+> +	evlist__disable(rec->evlist);
+>  	record__stop_threads(rec);
+>  out_free_threads:
+>  	record__free_thread_data(rec);
+> -- 
+> 2.55.0.795.g602f6c329a-goog
+> 
