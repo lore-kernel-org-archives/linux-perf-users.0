@@ -1,122 +1,210 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7C83955FF
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 09:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172BF3955FF
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 09:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783674077; cv=none; b=uhD3VQTRRwQZBBk12XZUi2hJhuEnK5mGHKvnOkw48eYOeQlqMA3vrq/UcoBucYXyPjVtu1mWBm2PEqijiB8XWx214qjXI4oOUtgDPseDfl8olDMAwK74yEI4elnflDqBc5FpudLxqXu4OaX+TLb4YiGr31Zq9BrrxTky9/eH8i0=
+	t=1783674119; cv=none; b=jmWKCVIIdV7f3/Ir+NMFJAdlzD25xB/Kewufm23mewQVEvnam37ngV/SANgXWOYDubXnz+krq1nsFpjztaP6q3ttAHrMJuVYUvlu9a/n6BtLQ6/i3EjTHBI1r7XPh2bbLEf+ybVAgEqBFqJbU96jqjB8gnXlp439jGDvyYfilzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783674077; c=relaxed/simple;
-	bh=FxMOOEQuRPIHHmPfLMlfkOxzFWf5+oQ3Ld5JKNdjTik=;
+	s=arc-20240116; t=1783674119; c=relaxed/simple;
+	bh=6Vr96M88LmG9/L9HMnB46VeOLAo0wBJpdx4M1x3Nkig=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HmYEznxa/Uzy6rBfeMElP1Z3IED9I+Iwef7xch28Tg4silhU43JDz+u/0IgZPlDfo96SWZyOEPe7jjVn7d3sicMbRO4aGlj7yOv0mHJe0lQxR/xum22LwXBBDEJjnT3GY6NyGmTyk+uLmnqSm+P1pIJIQqPi8ZKzufta99KPR4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gr+Q5yCO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ElbJ/glV3Ywb/6qtaBFfWURtgrhokG7f7EocBQ+eK/tHldisACEWnPwMOQ7uzZ9aPkoeIDZHA5Otv9WC6Uh7qXdY7PWC9mPD6VOzc4P4nE4567eyJExinum2qkACq1uExEtLYhLwyL4QWlH6ck/Brrolxn9BY2sDkw2XdEdH1TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIWlJZ9e; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gr+Q5yCO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9DA71F00A3A;
-	Fri, 10 Jul 2026 09:01:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIWlJZ9e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6E71F000E9;
+	Fri, 10 Jul 2026 09:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783674075;
-	bh=99ASRrrlVYZ/s3cXipadHn2v5fOdVrHxllGL1LMEpCA=;
+	s=k20260515; t=1783674118;
+	bh=5ApaiVs3J17+q5Wif6EIuw1N8id035uggF+p20SmRSI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Gr+Q5yCOuy1HuInFpzZbqHxeY4gRPvctc1tYdJ2SJKZPwKMXDx95SVMYBs/x2kxoY
-	 hPGAUFrNOL0rFrXRXBwMT8mcyk4eD9CuMLd3RBxYWdjLAFZUWzFvLowQ8E9xqSry8Y
-	 nRZeQHI3FZiX1ikv9EMbi9Jge3CEq3eNX8xu+9bE6TwWCplpRMmduEnhsa4bwFQOKw
-	 q+X1g9wZ60nn3/sP6V4D6OXkeESTFhO7dHEpzEkwTMGXZCr42Duk/J1yRW442wDHNT
-	 /HWEgTctvrnDnQXzYEWLxrH57sxzgV/ZYxeMt45j1fRBiuOfax4QawOV9aLc81FZol
-	 num897RTFDHsQ==
+	b=oIWlJZ9eoMvDZYyP4Bffau7iO8VFvFgZSya+uEl+Iu3BCUKE3OQGsVOwaRzyrNuTj
+	 MWNTORula1F8xuGW4pu/r+DOLMwvpok5BqYkL4hUKC8WW0Ncs+KTQrJgajPised++B
+	 gDg33VNLtGK/VSvcdNOLm5SlF8PNyU1wYIfYvBH88P+unIkUlwx89b4LsyOz4h1kdt
+	 E82HYIO6C1eMwxL+hcod1nXacIGiEyDmyXZGKbj0Wg6jjPevl2eqQxcVJoJk5Tphk2
+	 DnnVOw/Eu9afzHohxHL/Al+kvLftMUIfFUW8+c9283Fl35SMuZdv2oV5fYWnyUN08X
+	 sHSAs3DFaUJTA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 11/14] perf c2c: add function view hierarchy builder
+Subject: Re: [PATCH v2 08/14] perf c2c: add HPP list parsing for function
+ view histograms
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jiebin Sun" <jiebin.sun@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260710084247.3576706-12-jiebin.sun@intel.com>
+In-Reply-To: <20260710084247.3576706-9-jiebin.sun@intel.com>
 References: <20260626070355.1556721-1-jiebin.sun@intel.com>
  <20260710084247.3576706-1-jiebin.sun@intel.com>
- <20260710084247.3576706-12-jiebin.sun@intel.com>
+ <20260710084247.3576706-9-jiebin.sun@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 09:01:15 +0000
-Message-Id: <20260710090115.B9DA71F00A3A@smtp.kernel.org>
+Date: Fri, 10 Jul 2026 09:01:57 +0000
+Message-Id: <20260710090157.DC6E71F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] Stranded entries in `entries_in` are leaked on the error path be=
-cause `hists__collapse_resort` can abort early.
+- [Medium] Calling `reset_dimensions()` for every fallback token in `c2c_fu=
+nction_hists__init_output` and `c2c_function_hists__init_sort` clears the g=
+lobal `taken` flags during string parsing, defeating duplicate field protec=
+tion.
+- [Medium] `function_hpp_list__parse` leaks dynamically allocated `c2c_fmt`=
+ elements if token parsing fails midway.
+- [Low] Missing newline character in error log in `function_hpp_list__add_t=
+okens`.
 --
 
---- Patch [11]: [PATCH v2 11/14] perf c2c: add function view hierarchy buil=
-der ---
-commit 7fa08f7966668758027f5725f57fcfebac5eaf48
+--- Patch [8]: [PATCH v2 08/14] perf c2c: add HPP list parsing for function=
+ view histograms ---
+commit 7b3a4ebd5658b8b4b899fd6fb0008adeb8109767
 Author: Jiebin Sun <jiebin.sun@intel.com>
 
-perf c2c: add function view hierarchy builder
+perf c2c: add HPP list parsing for function view histograms
 
-This patch adds the core algorithm to construct a 3-level function view
-for perf c2c. It traverses cacheline entries to build the hierarchy and
-aggregates C2C statistics at each level.
+This commit adds the histogram initialization and column parsing
+infrastructure to bridge the function view's custom dimensions with the perf
+HPP list infrastructure. This enables dynamic column configuration during
+hierarchy construction.
 
 > diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
 rs/c2c-function.c
-> index 47d6fdf66b47b..80e032d5e31c5 100644
+> index 7c2bb8f9e1139..0f21cf39f0ce6 100644
 > --- a/tools/perf/ui/browsers/c2c-function.c
 > +++ b/tools/perf/ui/browsers/c2c-function.c
 
 [ ... ]
 
-> +static __maybe_unused int build_function_view_hierarchy(void)
-> +{
+> @@ -502,7 +513,156 @@ static __maybe_unused struct c2c_fmt *get_function_=
+format(const char *name)
 
 [ ... ]
 
-> +out_err:
-> +	/*
-> +	 * On error, migrate any entries still in entries_in to entries and
-> +	 * delete them, so a later rebuild does not strand them (the top-level
-> +	 * __hists__init() memset would otherwise lose the pointers).
-> +	 */
-> +	hists__collapse_resort(&c2c_ext.function_hists.hists, NULL);
-> +	hists__output_resort(&c2c_ext.function_hists.hists, NULL);
-> +	hists__delete_entries(&c2c_ext.function_hists.hists);
+> +static int
+> +c2c_function_hists__init_output(struct perf_hpp_list *hpp_list, char *na=
+me,
+> +				struct perf_env *env __maybe_unused)
+> +{
+> +	struct c2c_fmt *c2c_fmt;
+> +	int level =3D 0;
+> +	int ret;
+> +
+> +	ret =3D get_function_format(name, &c2c_fmt);
+> +	if (ret =3D=3D -ENOMEM)
+> +		return ret;
+> +	if (ret =3D=3D -ENOENT) {
+> +		reset_dimensions();
 
 [Severity: Medium]
-Does this error path leak memory if hists__collapse_resort() aborts early?
+Does calling reset_dimensions() here wipe out the global taken flag for all
+previously processed tokens? If a user provides a string with multiple
+fallback tokens, it seems this clears the flags and defeats the duplicate
+field protection, which might allow duplicate columns and lead to
+double-frees or list corruption during teardown.
 
-Looking at hists__collapse_resort() in tools/perf/util/hist.c, it can exit
-early if session_done() is true or if hists__collapse_insert_entry() fails:
+> +		return output_field_add(hpp_list, name, &level);
+> +	}
 
-tools/perf/util/hist.c:hists__collapse_resort() {
-    ...
-	while (next) {
-		if (session_done())
-			break;
-		n =3D rb_entry(next, struct hist_entry, rb_node_in);
-		next =3D rb_next(&n->rb_node_in);
+[ ... ]
 
-		rb_erase_cached(&n->rb_node_in, root);
-		ret =3D hists__collapse_insert_entry(hists, &hists->entries_collapsed, n);
-		if (ret < 0)
-			return -1;
-    ...
-}
+> +static int
+> +c2c_function_hists__init_sort(struct perf_hpp_list *hpp_list, char *name,
+> +			      struct perf_env *env)
+> +{
+> +	struct c2c_fmt *c2c_fmt;
+> +	int ret;
+> +
+> +	ret =3D get_function_format(name, &c2c_fmt);
+> +	if (ret =3D=3D -ENOMEM)
+> +		return ret;
+> +	if (ret =3D=3D -ENOENT) {
+> +		reset_dimensions();
 
-If it exits early, the remaining unprocessed nodes are left behind in
-entries_in. Since hists__delete_entries() only deletes from the main
-entries trees, these stranded nodes will be permanently leaked.
+[Severity: Medium]
+Does this repeated call to reset_dimensions() for sort tokens also cause the
+same state corruption as in the output field initialization?
 
-Would it be better to use hists__delete_all_entries(&c2c_ext.function_hists=
-.hists)
-here instead to ensure both entries and entries_in are properly cleaned up?
+> +		return sort_dimension__add(hpp_list, name, /*evlist=3D*/NULL, env, /*l=
+evel=3D*/0);
+> +	}
 
+[ ... ]
+
+> +static int function_hpp_list__add_tokens(struct perf_hpp_list *hpp_list,=
+ char *list,
+> +					 struct perf_env *env, hpp_list_add_fn add)
+> +{
+> +	char *tok, *tmp;
+> +	int ret;
+> +
+> +	if (!list)
+> +		return 0;
+> +
+> +	for (tok =3D strtok_r(list, ", ", &tmp); tok; tok =3D strtok_r(NULL, ",=
+ ", &tmp)) {
+> +		ret =3D add(hpp_list, tok, env);
+> +		if (ret) {
+> +			if (ret =3D=3D -EINVAL || ret =3D=3D -ESRCH)
+> +				pr_err("Invalid c2c function-view field: %s", tok);
+
+[Severity: Low]
+This isn't a bug, but does this pr_err() need a trailing '\n' to prevent
+garbled terminal output? The pr_err() macro in tools/perf wraps eprintf
+and does not implicitly append a newline.
+
+> +			return ret;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int
+> +function_hpp_list__parse(struct perf_hpp_list *hpp_list,
+> +			 const char *output_str,
+> +			 const char *sort_str,
+> +			 struct perf_env *env)
+> +{
+> +	char *output =3D output_str ? strdup(output_str) : NULL;
+> +	char *sort   =3D sort_str   ? strdup(sort_str)   : NULL;
+> +	int ret =3D 0;
+> +
+> +	if ((output_str && !output) || (sort_str && !sort)) {
+> +		ret =3D -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	ret =3D function_hpp_list__add_tokens(hpp_list, output, env,
+> +					    c2c_function_hists__init_output);
+> +	if (ret)
+> +		goto out;
+
+[Severity: Medium]
+If function_hpp_list__add_tokens() fails midway and returns an error, does
+this goto out leak the dynamically allocated c2c_fmt elements? It appears
+the previously allocated and registered elements in hpp_list are not freed
+when bypassing the normal cleanup path.
+
+> +
+> +	ret =3D function_hpp_list__add_tokens(hpp_list, sort, env,
+> +					    c2c_function_hists__init_sort);
+> +	if (ret)
+> +		goto out;
+
+[Severity: Medium]
+Does returning early here if the sort string parsing fails also leak the
+allocations already made during the output string parsing?
+
+> +
+> +	perf_hpp__setup_output_field(hpp_list);
+> +out:
+> +	free(output);
+> +	free(sort);
 > +	return ret;
 > +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710084247.3576=
-706-1-jiebin.sun@intel.com?part=3D11
+706-1-jiebin.sun@intel.com?part=3D8
