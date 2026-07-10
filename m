@@ -1,122 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA423233958
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 05:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB6B3955D0
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 05:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783662901; cv=none; b=Xp4nKjRBYvIfGeSAsqKUyQP6u8GNZHp5M/92tY1l2WL08V/E4uk494vXVaqBLNJsKPlEqqnUQmW9lYhuz3O+60/W1uhkqQHMMa30VJdkxmf6vomFnz+8gelkohFjHyyLVuFKMsbN4W3XxF8Uayr4VMCLfjrK2RZRajNl5EcNPxs=
+	t=1783662944; cv=none; b=UmKOjzc3OTlE1aczKw5Tnh48dnZgaqUW3OLwpu1cBPgPVLPdyITCh/jRJi14mjF42UgxvllBp+Mkzt6Mz07xEY1uUkBO6aBhUaAfQF1QSrvjm5jJbdptSSkc+thHkmRJ/CY0z58HonRgLiprkg7D0nniDTvtSJ8AJWhoMCWQvVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783662901; c=relaxed/simple;
-	bh=uRPUb2m8c4dEDYi/D3KENgAww6fxmKzCtLAjxgcAXrg=;
+	s=arc-20240116; t=1783662944; c=relaxed/simple;
+	bh=9mMGTm6PtG6VM2dE7Dg325OxhJk7ajxV9t99F+a3UDg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QtftERccXvCYu8oflr9LDdDnVyJ/xs/F9ri8HXlArxmV1UOOu1mZorFqD1RLgc2tPiak0p9xj9wztg6nF6f3YHG7jJTVaV1yw5s/G8CcmC1pOyut0LyhscpzreUqS8Sqx9kL0DXKP81XHpCtrA+v6GDNyBY2xSm7lHnr/a1wGTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkOhgkMD; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=G7eCpUWMwdNPQl2ec3d1RAs13ZdL4W9VaryhD2YVXuvGGGfF/JTfmn1sq3JQUDiDiSGjCYCyCEVquAQTFFYuu/NA1esfyvfL6jsJBvRWTb3+InBVzYRKmilYOwHCP3LyPfq2DuC99UvANiFrdXl9rDUz/SHZhCUJFCWT+HP2OX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YISoAz7g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkOhgkMD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664FF1F000E9;
-	Fri, 10 Jul 2026 05:55:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YISoAz7g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F3E1F000E9;
+	Fri, 10 Jul 2026 05:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783662900;
-	bh=M3IgImK1oeQf9moLRa27qiVRye3+FTI+56sZ9UF0+zI=;
+	s=k20260515; t=1783662942;
+	bh=C9V1x/qTanhb5eUGW1Flt2NUk0NAQV+tTlPMxZ2Oroo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jkOhgkMDLMSIW+TPU2A3keEirnS5MVWNssos8i3oOpVQ2MUgGo7K8R293EJTEkHnk
-	 aMz/c1dH+sCnUu5B53cRz8PuqI5sIga2RwqrMGFd+iVKyS9Wm9H0JeEcpSbz16uUom
-	 QiC7I6+qzX11n8Bt17x2e8hwMJ3xkznTnN/to0CF9roQPhTMfvhM/GU+6I3PsLXIwO
-	 81Z8wHDAbTDjqCaFHOdLBSfGQ7MZZgNu8driF0bOB+hwHnnX7/9Q/87hyPCond1C4K
-	 4PSAU0zx3jDjl/7X+XOl6CNfnD7Zo3in+eaoDkbBlmdNyXbiqKZNLSf+gVyZB6i5mf
-	 Tp07i6ft12YPw==
+	b=YISoAz7g7PkFMBAm48vjpdIlF95lThdD0LjgsQ7yjxttdPBZ2326dn6JQLTHP7bTR
+	 f3NxM/hk8xIOsI146DczFntHUiUSwG2UQCO3fnfeilS4gPBu1i02psdPejVY4+wuso
+	 pleun8lWDX6CRqfI++cTYpt3FnykyNnRWYET4UL6ROh69tylPeSE5/YmtPtQUs/bZB
+	 fTTQ3aB3KGxL2Eq59KusJ+MqMCsLrLhtYW4PWVGEvTtyKQIkUcAqFQxjZ6U591JxBK
+	 iFe0rVx0QG3g7vIEfykKSmCYj+ikbGCfj7wSioMV/n/RGtzxNjoXRTv6WbCuATc8RM
+	 /a05WN6ttztBg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 01/10] perf hists browser: Increase MAX_OPTIONS to
- prevent stack buffer overflow
+Subject: Re: [PATCH v5 02/10] perf ui hists: Fix uninitialized stack memory
+ free on pstack allocation failure
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260710053628.1861645-1-irogers@google.com>
+In-Reply-To: <20260710053628.1861645-2-irogers@google.com>
 References: <20260710024952.1668911-1-irogers@google.com>
  <20260710053628.1861645-1-irogers@google.com>
+ <20260710053628.1861645-2-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 05:54:59 +0000
-Message-Id: <20260710055500.664FF1F000E9@smtp.kernel.org>
+Date: Fri, 10 Jul 2026 05:55:42 +0000
+Message-Id: <20260710055542.92F3E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] A pointer to a local stack array is assigned to a longer-lived str=
-ucture field (`hists->symbol_filter_str`), leading to a Use-After-Free.
+- [Medium] Memory leak of dynamically allocated popup menu options during m=
+ain interaction loop.
+- [Medium] Unconditional pointer increments leave uninitialized or undefine=
+d array slots on allocation failure.
+- [Low] Missing explicit POSIX header inclusions breaking musl libc compati=
+bility.
 --
 
---- Patch [1]: [PATCH v5 01/10] perf hists browser: Increase MAX_OPTIONS to=
- prevent stack buffer overflow ---
-commit b1c79545734c108ba31495cc1454bc12dd7ce4ad
+--- Patch [2]: [PATCH v5 02/10] perf ui hists: Fix uninitialized stack memo=
+ry free on pstack allocation failure ---
+commit 77f870443b8c814782369da867fcd967bbc78bdf
 Author: Ian Rogers <irogers@google.com>
 
-perf hists browser: Increase MAX_OPTIONS to prevent stack buffer overflow
+perf ui hists: Fix uninitialized stack memory free on pstack allocation fai=
+lure
 
-In evsel__hists_browse(), the options and actions arrays are statically
-allocated on the stack with a size of MAX_OPTIONS. Depending on the context,
-the sum of added options can theoretically exceed 16, potentially leading to
-a stack buffer overflow. This patch increases MAX_OPTIONS to 32 to safely
-accommodate the maximum possible number of options.
+Fixes heap corruption by initializing the options and actions arrays before
+the pstack allocation check, preventing an uninitialized stack pointer from
+being passed to free_popup_options() if the allocation fails.
 
-Link: https://lore.kernel.org/linux-perf-users/20260708235834.3FB771F00A3A@=
+Link: https://lore.kernel.org/linux-perf-users/20260709035230.6DBEE1F000E9@=
 smtp.kernel.org/
 
 > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
 s.c
-> index cfa6386e6e1da..671961946d56c 100644
+> index 671961946d56c..45958bbe45092 100644
 > --- a/tools/perf/ui/browsers/hists.c
 > +++ b/tools/perf/ui/browsers/hists.c
-> @@ -3003,7 +3003,7 @@ static int evsel__hists_browse(struct evsel *evsel,=
- int nr_events, const char *h
->  	struct hists *hists =3D evsel__hists(evsel);
->  	struct hist_browser *browser =3D perf_evsel_browser__new(evsel, hbt, en=
-v);
->  	struct branch_info *bi =3D NULL;
-> -#define MAX_OPTIONS  16
-> +#define MAX_OPTIONS  32
->  	char *options[MAX_OPTIONS];
->  	struct popup_action actions[MAX_OPTIONS];
->  	int nr_options =3D 0;
+> @@ -3064,15 +3064,15 @@ static int evsel__hists_browse(struct evsel *evse=
+l, int nr_events, const char *h
+>  		browser->min_pcnt =3D min_pcnt;
+>  	hist_browser__update_nr_entries(browser);
+> =20
+> +	memset(options, 0, sizeof(options));
+> +	memset(actions, 0, sizeof(actions));
+> +
+>  	browser->pstack =3D pstack__new(3);
+>  	if (browser->pstack =3D=3D NULL)
+>  		goto out;
+> =20
+>  	ui_helpline__push(helpline);
+> =20
+> -	memset(options, 0, sizeof(options));
+> -	memset(actions, 0, sizeof(actions));
+> -
+>  	if (symbol_conf.col_width_list_str)
+>  		perf_hpp__set_user_width(symbol_conf.col_width_list_str);
 
-[Severity: High]
-This isn't a bug introduced by this patch, but since we are looking at
-evsel__hists_browse(), can this cause a use-after-free later?
+[Severity: Medium]
+This is a pre-existing issue, but does this code leak dynamically allocated
+popup menu options during the main interaction loop?
 
-Just below this context, there is a local stack array declared:
+Looking at evsel__hists_browse() when returning to the do_hotkey label:
 
-    char buf[128];
+tools/perf/ui/browsers/hists.c:evsel__hists_browse() {
+    ...
+do_hotkey:       // key came straight from options ui__popup_menu()
+        choice =3D nr_options =3D 0;
+    ...
+}
 
-Later in the function, when handling the '/' key for symbol filtering,
-a pointer to this local stack array is assigned to a persistent field:
+It appears nr_options is reset to 0 without freeing the strings previously
+allocated and stored in the options array. The subsequent iteration might
+overwrite the string pointers, permanently leaking the previously allocated
+strings. Could we ensure the strings are freed here?
 
-    case '/':
-        if (ui_browser__input_window("Symbol to show",
-                ...
-                buf, "ENTER: OK, ESC: Cancel",
-                delay_secs * 2) =3D=3D K_ENTER) {
-            hists->symbol_filter_str =3D *buf ? buf : NULL;
-            ...
+[Severity: Low]
+This is a pre-existing issue, but could missing explicit POSIX header
+inclusions break musl libc compatibility?
 
-When the function returns and the user exits the browser, buf is destroyed,
-but hists->symbol_filter_str will still point to this invalid stack memory.
+For example, hist_browser__dump() uses access() and F_OK without explicitly
+including <unistd.h>:
 
-In a multi-threaded context like perf top, if background processing threads=
- or
-subsequent timer-driven UI refreshes (via hists__filter_by_symbol() ->
-hists__filter_entry_by_symbol() -> strstr()) read from it:
+tools/perf/ui/browsers/hists.c:hist_browser__dump() {
+    ...
+    if (access(filename, F_OK))
+    ...
+}
 
-    strstr(he->ms.sym->name, hists->symbol_filter_str)
+Similarly, switch_data_file() relies on PATH_MAX without explicitly includi=
+ng
+<limits.h>:
 
-Could this lead to memory corruption or crashes?
+tools/perf/ui/browsers/hists.c:switch_data_file() {
+    ...
+    char path[PATH_MAX];
+    ...
+}
+
+Could these headers be explicitly included to ensure musl libc builds don't
+fail?
+
+[Severity: Medium]
+This is a pre-existing issue, but do unconditional pointer increments here
+leave uninitialized array slots on allocation failure?
+
+Looking at add_script_opt():
+
+tools/perf/ui/browsers/hists.c:add_script_opt() {
+    ...
+        optstr++;
+        act++;
+    ...
+}
+
+If a previous call to add_script_opt_2() fails (e.g., asprintf fails and
+returns 0), the target string pointer is left unpopulated. However, this
+code unconditionally increments the array pointers. If a subsequent allocat=
+ion
+succeeds, the array gets populated with a gap, but nr_options is still
+incremented.
+
+Might this cause the UI menu iteration to dereference an undefined or NULL
+pointer at the gap?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710053628.1861=
-645-1-irogers@google.com?part=3D1
+645-1-irogers@google.com?part=3D2
