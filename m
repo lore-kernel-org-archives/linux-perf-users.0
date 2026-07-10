@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429DA23EAA0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D107377566;
 	Fri, 10 Jul 2026 23:41:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783726905; cv=none; b=Chg+8wj033bQ1o9ZXi+I/xo7JXdUuTJqy7ToIt+s6CyOP7xEiChqzBnfd+Nq7bzmHvqqFMOkkwymHeuRZig7HfAFsWVTml8yMMAZbkJ7xhT3MQRMohKrYXk7ENDJ93+AzjWNDbu8xWXtv42l+MWiUzQim+MLjsliWbE8FdZZg8M=
+	t=1783726905; cv=none; b=HF4o1nhOLCfiYR3LDAHmPyER7cxv5prWcR/OMoRocsfdKE8m1IDOpKCMvw2Ju40RpF9TScb7m1clooJSx2TAVvu9X1hbDzkjG4GyJaKcZs8pFCTvx8L9YW3bPiLIF8ZbU7ZEQ0f+EeduEMikfUHWkaeNS6572jkT6dEUwxIsnIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783726905; c=relaxed/simple;
-	bh=6GDQ4tpzcFgdlui1/2X7Ef+GTHbHDVkm2ervvRHdwcM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZnF3hcP+xw2sAYXwO7Q1zbFkk6wlMG/Jg5oh2bdCjpmTyqMJuvcTUjkbsBUleD9DtaVEiQCtKnEGwg2V9eX0oEINcOrb/ebDzBLZyNy1cS7FpPhxcuRIHr61meSGmxvrpsoK5ydQTPDP8lCYUyEzgh4Zg1f3HZinKObUs0XROMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPqDCykM; arc=none smtp.client-ip=100.103.45.18
+	bh=yz5jqrtxVLelTtHJolVRKvcLd+BYVWDLI5stcB+1Vmw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hSnwtU1n5Z+GdAYz1eulqHYuGo7Iwryu1Z0sZwmpqe7uwawkK6O3zyTSl9dqkOA/CY/Q7pnvvzlsJqhH8bVl/FUAuZVP6v1zGCaBaOLNbEono4XxrIEH3PvRaccxou2b6IJUO4HrjCCNDjxjSa3bQXnLZZoJDhuPJSFYZw7e6lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joDUoUow; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPqDCykM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A80CB1F000E9;
-	Fri, 10 Jul 2026 23:41:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joDUoUow"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CA81F00A3F;
+	Fri, 10 Jul 2026 23:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783726903;
-	bh=zNgVaTD2OZvcRG2Qmpvcf1qF4AZv/SJs0N6ooTotRyw=;
-	h=From:To:Cc:Subject:Date;
-	b=LPqDCykMROzX97eazWKW8G/LE5ajLs4bhz3K/X8oSBgxEEM+CBovyUD9LQMB5xrNl
-	 YLQdu6CQgBDEqUsjdhsLKP4pzXLTXm9DKU1Dut9rmeOmNLdXZQtKZNgkrZhS/CP2DK
-	 10cvgG/aB4J38NENosz3plRQ3elflowknnI1dOQo5dT050Ira06WjdQRbvEDk6Hhxl
-	 1eJx/JxNIX5/G+GJjt8kz91fP0fwfNdPdxr45Y5q3dVk4catTn0br18x96pFg1NJGE
-	 ZB9eMqxkc4HxFHcbd3xAoC0WuMSivm6iRBqn2D/iGPce+kpZmQbRo/WIOnEMERYovL
-	 9GZ5wZPjsgnqw==
+	s=k20260515; t=1783726904;
+	bh=e9r9U2xICAZHeMeDiKWKT+ZXt7ERy51hmXjZcSzYXxs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=joDUoUowzbZSvgI6/JDdFxanOZyJjJIcq6Tfhff+8sSj2npDI0g8pNRpcAWMewJY0
+	 oqzB2dppW4Z73L64eWDNifRegjm5Fcc5VvsGrtz9mQ2/4Pxb6/L5OmhJIe1ieeo/Xo
+	 1ZELj+TN63WUF8dx/suY66gAdjRwtDhdHQqMOnLJiKE7aGBP3DBrha8+spd5G3EjYU
+	 BA6iQWTbjtmnKiplgkbdgDFYGWqNl6p34T9RIiHjAPEFy+BXhczcCMyZ8ErQlKQQiu
+	 +2Q/fuuv2CExaby+rhFBjJlU68JI3x+yBreKQZYCP5KGrkM5Cfs4gj2b1/KdPuwLXN
+	 qf+A0+c6eBgOA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -35,10 +36,12 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 1/4] perf stat: Fix duplicate output with --for-each-cgroup
-Date: Fri, 10 Jul 2026 16:41:40 -0700
-Message-ID: <20260710234143.1934263-1-namhyung@kernel.org>
+Subject: [PATCH v2 2/4] perf evsel: Remove unused BPF related fields
+Date: Fri, 10 Jul 2026 16:41:41 -0700
+Message-ID: <20260710234143.1934263-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
+In-Reply-To: <20260710234143.1934263-1-namhyung@kernel.org>
+References: <20260710234143.1934263-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,88 +50,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently it produces following output with duplicate events when
- --for-each-cgroup option is used.  It seems perf stat adds them when
-it handles default events but didn't copy some fields in evsel__clone().
+IIUC bpf_fd and bpf_obj fields are not used anymore.  It seems like
+leftover from 3d6dfae889174340 ("perf parse-events: Remove BPF event
+support").
 
-  $ sudo perf stat -a --for-each-cgroup / true
-
-   Performance counter stats for 'system wide':
-
-           8,440,165      duration_time                    /
-           8,439,895      duration_time                    /
-           8,440,015      duration_time                    /
-           8,440,024      duration_time                    /
-           8,440,075      duration_time                    /
-           8,440,095      duration_time                    /
-                 330      context-switches                 /             #    679.4 cs/sec  cs_per_second
-              485.69 msec cpu-clock                        /             #     57.5 CPUs  CPUs_utilized
-                  70      cpu-migrations                   /             #    144.1 migrations/sec  migrations_per_second
-                  71      page-faults                      /             #    146.2 faults/sec  page_faults_per_second
-          12,183,711      branch-misses                    /             #     10.9 %  branch_miss_rate         (5.15%)
-         111,981,297      branches                         /                                                       (5.15%)
-          95,844,809      branches                         /             #    197.3 M/sec  branch_frequency     (35.49%)
-          65,611,429      cpu-cycles                       /             #      0.1 GHz  cycles_frequency       (98.32%)
-          24,170,987      cpu-cycles                       /                                                       (95.12%)
-          18,552,509      instructions                     /             #      0.8 instructions  insn_per_cycle  (95.12%)
-          22,405,293      cpu-cycles                       /                                                       (64.78%)
-           6,840,383      stalled-cycles-frontend          /             #     0.31 frontend_cycles_idle        (64.78%)
-       <not counted>      cpu-cycles                       /
-     <not supported>      stalled-cycles-backend           /             #      nan backend_cycles_idle
-     <not supported>      stalled-cycles-backend           /             #      nan stalled_cycles_per_instruction
-     <not supported>      instructions                     /
-     <not supported>      stalled-cycles-frontend          /
-
-         0.006546057 seconds time elapsed
-
-  Some events weren't counted. Try disabling the NMI watchdog:
-  	echo 0 > /proc/sys/kernel/nmi_watchdog
-  	perf stat ...
-  	echo 1 > /proc/sys/kernel/nmi_watchdog
-
-But I'm worrying about opening same events multiple times.  Probably due
-to grouping, but I'm not sure if it's beneficial in the end.  Without
-duplication, it seems it won't cause multiplexing (assuming no other
-users at the same time).
-
-Fixes: a3248b5b5427d ("perf jevents: Add metric DefaultShowEvents")
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
-v2 changes)
- * add missing bpf_counter and retire_lat fields
-
- tools/perf/util/evsel.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ tools/perf/util/evsel.c | 21 ---------------------
+ tools/perf/util/evsel.h |  2 --
+ 2 files changed, 23 deletions(-)
 
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d0484e4ee679e635..82399a3eb96e3ce7 100644
+index 82399a3eb96e3ce7..ea97efc58e206e70 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -617,7 +617,13 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	evsel->sample_read = orig->sample_read;
- 	evsel->collect_stat = orig->collect_stat;
- 	evsel->weak_group = orig->weak_group;
-+	evsel->bpf_counter = orig->bpf_counter;
- 	evsel->use_config_name = orig->use_config_name;
-+	evsel->skippable = orig->skippable;
-+	evsel->dont_regroup = orig->dont_regroup;
-+	evsel->default_metricgroup = orig->default_metricgroup;
-+	evsel->default_show_events = orig->default_show_events;
-+
- 	evsel->pmu = orig->pmu;
- 	evsel->first_wildcard_match = orig->first_wildcard_match;
+@@ -455,8 +455,6 @@ static void evsel__init(struct evsel *evsel,
+ 	evsel->scale	   = 1.0;
+ 	evsel->max_events  = ULONG_MAX;
+ 	evsel->evlist	   = NULL;
+-	evsel->bpf_obj	   = NULL;
+-	evsel->bpf_fd	   = -1;
+ 	INIT_LIST_HEAD(&evsel->config_terms);
+ 	INIT_LIST_HEAD(&evsel->bpf_counter_list);
+ 	INIT_LIST_HEAD(&evsel->bpf_filters);
+@@ -540,10 +538,6 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 	BUG_ON(orig->priv);
+ 	BUG_ON(orig->per_pkg_mask);
  
-@@ -626,6 +632,10 @@ struct evsel *evsel__clone(struct evsel *orig)
+-	/* cannot handle BPF objects for now */
+-	if (orig->bpf_obj)
+-		return NULL;
+-
+ 	evsel = evsel__new(&orig->core.attr);
+ 	if (evsel == NULL)
+ 		return NULL;
+@@ -3079,21 +3073,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 			/* Debug message used by test scripts */
+ 			pr_debug2_peo(" = %d\n", fd);
  
- 	evsel->alternate_hw_config = orig->alternate_hw_config;
+-			if (evsel->bpf_fd >= 0) {
+-				int evt_fd = fd;
+-				int bpf_fd = evsel->bpf_fd;
+-
+-				err = ioctl(evt_fd,
+-					    PERF_EVENT_IOC_SET_BPF,
+-					    bpf_fd);
+-				if (err && errno != EEXIST) {
+-					pr_err("failed to attach bpf fd %d: %m\n",
+-					       bpf_fd);
+-					err = -EINVAL;
+-					goto out_close;
+-				}
+-			}
+-
+ 			set_rlimit = NO_CHANGE;
  
-+	evsel->retire_lat = orig->retire_lat;
-+	if (evsel->retire_lat)
-+		evsel->retirement_latency = orig->retirement_latency;
-+
- 	return evsel;
- 
- out_err:
+ 			/*
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 6b0c08958616bf04..27af0c4f294efb30 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -94,8 +94,6 @@ struct evsel {
+ 		bool			skippable;
+ 		bool			retire_lat;
+ 		bool			dont_regroup;
+-		int			bpf_fd;
+-		struct bpf_object	*bpf_obj;
+ 		struct list_head	config_terms;
+ 		u64			alternate_hw_config;
+ 	};
 -- 
 2.55.0.795.g602f6c329a-goog
 
