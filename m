@@ -1,175 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DECC149DF1
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 03:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08C2367287;
+	Fri, 10 Jul 2026 03:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783653445; cv=none; b=tBn5GJ3SARJYI5vhtbQphURcH4RMQ3jf66lObqK6HCH4svG/DpWmA9wTEsHme42ZdxkuBATczzEN/STYs9bQTMe2kPjqwjWhMRK8xuVL7Ch5hhofld+mWvx8Pr282agRCuM753Co8h5gZ0On1yh77oRm9nNQe/R6TaesxRVXmUk=
+	t=1783653774; cv=none; b=KHe/Ah7kr6lTZi7dl6PS+EsCRwriq1U/hpAiQdgCozYckbFzmLi3kifz4aCaETV9sw2RRyq3xRWd82GsI15EIMW8tPxJHjv7lSTRrMHkycXCqMu4FjN4f+p7Bka40pMjDOst+U+Ub15OQD/1yB+87gVEHV5pMlkEXvy881YTyVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783653445; c=relaxed/simple;
-	bh=p5jyTzOXexJsZSHEhJ0fwxzLRh8MmBenj1sqslcDXAA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mH7LF+yr1RE1XgNS3Zs2irLAneVGaLeIgpdtrg8v6CBs9OmDDSZeUiSErzTeN3EOQJS/kMtYBQU2sYRy9RPf2XJz6AfX8xNrS1ru28AZUBdhrpkVj+zsSPZsWMeCIr8KCAbP2nKzxy/INcCXMU6E8FTZ12m3fnRBivO0C0EUZjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHsu2gLd; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHsu2gLd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF3F1F000E9;
-	Fri, 10 Jul 2026 03:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783653442;
-	bh=qH68QyJJCLkDqdHMwNUpsaXaQo2Lq238JqMJ1ngcPVM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kHsu2gLdyFH50lXnZLxz4iVRWZ0mqaZbeECV7t0C8ObMNIfqFFLKYQSAn+9SDQEIp
-	 audsY7X2tjtAsXZnBO1zLbSdg6fJgfnrphi/XxV01JRM3mNRtGe/Jz6ZC7BzL9spnM
-	 AdwEjSvEGwXpooEUZF0qxOXyWTdALxEZkkhMLwnlnrBueFfMGB/bFpvHeJ6nnWT3m4
-	 gclzhWFhzqa2GsQZIetRL3ECafY3h8SA3Xw8XiekmzX0XFKv6mVe53XCsXAFYl4R66
-	 sgUCPOAMMjsjgGYXSkt82e2ihmEi6DXLoItrA25veqNSZ+wvTzXPrrz3S3ElfmgJy8
-	 A6EauKm3go90g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 9/9] perf annotate: Be robust to annotating without a
- thread
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260710024952.1668911-9-irogers@google.com>
-References: <20260709165220.1411149-1-irogers@google.com>
- <20260710024952.1668911-1-irogers@google.com>
- <20260710024952.1668911-9-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 03:17:22 +0000
-Message-Id: <20260710031722.8EF3F1F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1783653774; c=relaxed/simple;
+	bh=tQGQmTYQOW2EOERRw4Q9NtImUqij+puMg2E4xB2s2jw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nWPmLHfPznun/RkTI0pHDWkWGEIX7vuob+xFEnx2E4PlHJKFPlanijI/EPQNBRfAX7PrAQishsdxjKC24wMsGYFwRH6/+1J/BnorgLE2+sSxsmWojla7V6WwwVq0iaezL8vL2MADBxmCbxh26McD7yXt7UbGoWY8O9Hlhjl1Uso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 9ea9d1d67c0e11f1aa26b74ffac11d73-20260710
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_UNTRUSTED, SRC_UNTRUSTED, IP_UNFAMILIAR, SRC_UNFAMILIAR, DN_TRUSTED
+	SRC_TRUSTED, SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_GOOD_SPF, CIE_UNKNOWN, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:b9d6356d-ac7f-48a0-9149-0ce5902c244a,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:35
+X-CID-INFO: VERSION:1.3.12,REQID:b9d6356d-ac7f-48a0-9149-0ce5902c244a,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:35
+X-CID-META: VersionHash:e7bac3a,CLOUDID:2bdd40dd227cc0c47f60b4fa5608d219,BulkI
+	D:260710111547XSWKYOFA,BulkQuantity:1,Recheck:0,SF:17|19|38|66|78|102|127|
+	850|865|898,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:
+	40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BR
+	E:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 9ea9d1d67c0e11f1aa26b74ffac11d73-20260710
+X-User: wangyan01@kylinos.cn
+Received: from localhost.localdomain [(39.144.190.24)] by mailgw.kylinos.cn
+	(envelope-from <wangyan01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1787203181; Fri, 10 Jul 2026 11:22:45 +0800
+From: Wang Yan <wangyan01@kylinos.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org
+Cc: leo.yan@arm.com,
+	wangyan01@kylinos.cn,
+	xiaqinxin@huawei.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf metricgroup: Fix memory leak of metric_name in metricgroup__copy_metric_events
+Date: Fri, 10 Jul 2026 11:22:41 +0800
+Message-Id: <20260710032241.119031-1-wangyan01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] The newly added error check for `map_symbol__get_arch` returns e=
-arly and leaves malformed output on stdout.
-- [Medium] Inconsistent fallback logic for `e_machine` causes capstone init=
-ialization to fail when a DSO architecture cannot be determined.
---
+In metricgroup__copy_metric_events(), new_expr->metric_name is allocated
+via strdup() but is not freed in all error paths, leading to a memory
+leak when subsequent allocations or evsel lookups fail.
 
---- Patch [9]: [PATCH v4 9/9] perf annotate: Be robust to annotating withou=
-t a thread ---
-commit 0c50b4f94a148dd6a11cef4fb5824f4934eab627
-Author: Ian Rogers <irogers@google.com>
-Subject: perf annotate: Be robust to annotating without a thread
+Add the missing zfree() calls:
 
-If a thread isn't given to thread__get_arch, try harder to determine the ar=
-ch
-for disassembly by falling back to reading e_machine from a map's dso or
-defaulting to the host. Ensure other uses of map_symbol thread don't assume
-it is non-NULL.
+  - On strdup() failure, free the already allocated new_expr.
+  - On metric_refs allocation failure, free metric_name before freeing
+    new_expr.
+  - On metric_events allocation failure, free metric_name in addition
+    to existing freeing of metric_refs and new_expr.
+  - On evsel lookup failure, free metric_name along with the other
+    resources already freed.
 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 02505222d8c2d..b6041f8608164 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-[ ... ]
-> @@ -1266,7 +1291,10 @@ int hist_entry__annotate_printf(struct hist_entry =
-*he, struct evsel *evsel)
-> =20
->  	apd.addr_fmt_width =3D annotated_source__addr_fmt_width(&notes->src->so=
-urce,
->  							      notes->src->start);
-> -	thread__get_arch(ms->thread, &apd.arch);
-> +	if (map_symbol__get_arch(ms, &apd.arch)) {
-> +		free(filename);
-> +		return -ENOTSUP;
-> +	}
+Fixes: b214ba8c4275 ("perf tools: Copy metric events properly when expand cgroups")
+Signed-off-by: Wang Yan <wangyan01@kylinos.cn>
+---
+ tools/perf/util/metricgroup.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-[Severity: Medium]
-Does returning early here leave the console output in a malformed state?
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 69bfa2a723b2..96dd780a5601 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1693,8 +1693,10 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+ 			new_expr->metric_expr = old_expr->metric_expr;
+ 			new_expr->metric_threshold = old_expr->metric_threshold;
+ 			new_expr->metric_name = strdup(old_expr->metric_name);
+-			if (!new_expr->metric_name)
++			if (!new_expr->metric_name) {
++				free(new_expr);
+ 				return -ENOMEM;
++			}
+ 
+ 			new_expr->metric_unit = old_expr->metric_unit;
+ 			new_expr->runtime = old_expr->runtime;
+@@ -1707,6 +1709,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+ 				alloc_size = sizeof(*new_expr->metric_refs);
+ 				new_expr->metric_refs = calloc(nr + 1, alloc_size);
+ 				if (!new_expr->metric_refs) {
++					zfree(&new_expr->metric_name);
+ 					free(new_expr);
+ 					return -ENOMEM;
+ 				}
+@@ -1724,6 +1727,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+ 			new_expr->metric_events = calloc(nr + 1, alloc_size);
+ 			if (!new_expr->metric_events) {
+ 				zfree(&new_expr->metric_refs);
++				zfree(&new_expr->metric_name);
+ 				free(new_expr);
+ 				return -ENOMEM;
+ 			}
+@@ -1735,6 +1739,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+ 				if (evsel == NULL) {
+ 					zfree(&new_expr->metric_events);
+ 					zfree(&new_expr->metric_refs);
++					zfree(&new_expr->metric_name);
+ 					free(new_expr);
+ 					return -EINVAL;
+ 				}
+-- 
+2.25.1
 
-Looking at hist_entry__annotate_printf(), we've already printed the
-"Source code & Disassembly..." header and a dotted line to stdout before
-reaching this point. Aborting here without a newline might leave the
-user's console output half-printed and corrupted.
-
->  	apd.dbg =3D dso__debuginfo(dso);
-> =20
->  	list_for_each_entry(pos, &notes->src->source, node) {
-[ ... ]
-> diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-> index 5ad537fea4360..15152a2c1b25c 100644
-> --- a/tools/perf/util/capstone.c
-> +++ b/tools/perf/util/capstone.c
-> @@ -411,9 +411,18 @@ int symbol__disassemble_capstone(const char *filenam=
-e, struct symbol *sym,
->  	    !strcmp(args->options->disassembler_style, "att"))
->  		disassembler_style =3D true;
-> =20
-> -	e_machine =3D thread__e_machine_endian(args->ms->thread,
-> -					     /*machine=3D*/NULL,
-> -					     /*e_flags=3D*/NULL, &is_big_endian);
-> +	if (args->ms->thread) {
-> +		e_machine =3D thread__e_machine_endian(args->ms->thread,
-> +						     /*machine=3D*/NULL,
-> +						     /*e_flags=3D*/NULL, &is_big_endian);
-> +	} else if (dso) {
-> +		e_machine =3D dso__e_machine_endian(dso, /*machine=3D*/NULL, /*e_flags=
-=3D*/NULL,
-> +						  &is_big_endian);
-> +	} else {
-> +		e_machine =3D thread__e_machine_endian(NULL,
-> +						     /*machine=3D*/NULL,
-> +						     /*e_flags=3D*/NULL, &is_big_endian);
-> +	}
-
-[Severity: Medium]
-If dso__e_machine_endian() returns EM_NONE, does this bypass the host
-architecture fallback?
-
-When annotating without a thread but with a valid DSO, we take this path.
-If the DSO's ELF header is missing or unreadable and yields EM_NONE, the
-if/else structure prevents us from executing the thread__e_machine_endian(N=
-ULL)
-fallback. This could cause capstone_init() to fail and force a fallback to
-the slower objdump.
-
->  	if (capstone_init(e_machine, &handle, is_64bit, is_big_endian, disassem=
-bler_style) < 0)
->  		goto err;
-> =20
-> @@ -526,9 +535,18 @@ int symbol__disassemble_capstone_powerpc(const char =
-*filename __maybe_unused,
->  	    !strcmp(args->options->disassembler_style, "att"))
->  		disassembler_style =3D true;
-> =20
-> -	e_machine =3D thread__e_machine_endian(args->ms->thread,
-> -					     /*machine=3D*/NULL,
-> -					     /*e_flags=3D*/NULL, &is_big_endian);
-> +	if (args->ms->thread) {
-> +		e_machine =3D thread__e_machine_endian(args->ms->thread,
-> +						     /*machine=3D*/NULL,
-> +						     /*e_flags=3D*/NULL, &is_big_endian);
-> +	} else if (dso) {
-> +		e_machine =3D dso__e_machine_endian(dso, /*machine=3D*/NULL, /*e_flags=
-=3D*/NULL,
-> +						  &is_big_endian);
-> +	} else {
-> +		e_machine =3D thread__e_machine_endian(NULL,
-> +						     /*machine=3D*/NULL,
-> +						     /*e_flags=3D*/NULL, &is_big_endian);
-> +	}
-
-[Severity: Medium]
-Does this have the same fallback logic issue as symbol__disassemble_capston=
-e()?
-
-If dso__e_machine_endian() returns EM_NONE, it appears we will skip the
-fallback here as well.
-
->  	if (capstone_init(e_machine, &handle, is_64bit, is_big_endian, disassem=
-bler_style) < 0)
->  		goto err;
->
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710024952.1668=
-911-1-irogers@google.com?part=3D9
