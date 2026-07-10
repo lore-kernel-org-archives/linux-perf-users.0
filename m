@@ -1,162 +1,123 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6878C337BAB;
-	Fri, 10 Jul 2026 22:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F50E4499A6;
+	Fri, 10 Jul 2026 22:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783722674; cv=none; b=K/gFSt7g1ws62WN5nLKRRborGNPwk3WhmcOXFm5RM0JkdOcxC63GI8XZz3dTFziTdUb2RSnmPKLT6vwAG9P7b3GDTZ8mmFg/fEYnMXSRFv//oSBvI50HMXpIpTR77bZUKjilYbxNsKaxr0lz0vL8FhP8yc3osLCZawU6cRSPKGk=
+	t=1783723527; cv=none; b=SlzS9tfSC6p3tbPajrQWA0AZdF3WLWGn5YW9uxK8np0bnHzeA8pOonqbpARd/4jy86IDVwjmOFDFNB0WOloyQmbl1bm2UYqHzqf+FzXnN1UAquq+YAFrj8YyotF+ulqK5wno65mdPf0rLj9XcfPQJ3w4pzP5Iu59UAuPuER7RYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783722674; c=relaxed/simple;
-	bh=KNU956WbXUTuSnCzMU/9cD+JnhsZzaznC141dmSOsok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PLXEVuRTPUMDIFGka4vEURcapcTREOkT9fXsGNfVxxYSsfzKDipJ86/5oUVDe9eLaO8EEnnfsanRS8uGFMBeF/WRq1SJgm4dnl/NOB9aGoRQJb9ybUUoBIqrScR/w50aDVgEz5Ofx+hAsVDR+6Cm+xLYo8oQnjK6V3UnLsUhRZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v/h/SoCI; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1783723527; c=relaxed/simple;
+	bh=hCZkEMaSNg91BSp9lPUnfEVv5lLLPtH93/eR1BiWlDo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=RBSFGV0OBxO+paqutAdCctxdiMU+2Wida7p6GAX/repCyt3bMoDU8KxaSTzj4wfGWfoL0qwxTflTbFFtHDNTdrKNs2W4ZvsUQsijY/t0F5NFa71/qVcUj2CdWhItDqYYOwcP3bySFEAS/2IDlEKUYE6gAo3zy9opH1eGHFaFP8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZSx7QPoS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v/h/SoCI"
-Message-ID: <dc6cc14c-3ec8-48ee-8152-f24643679dfc@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783722670;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VoPzMG2SN6nIvki88FrSOBZdQ9DO7hqanhNeX70pujM=;
-	b=v/h/SoCIzt0ttRzOTf0222LerJN6TpFZXUrDgl+0eaDO49Meyn7V51LJkPhmIkJ1FcCWyS
-	P4WLRknp2ItKTuDgEAhKJHBOI4vK/UuJc+tOA8uAxFXXfWzJ+eLuzgLM6JITt1PyDwU8xP
-	uauauAP2P4eUuFfJEIcSonEnsZw7+rk=
-Date: Fri, 10 Jul 2026 15:30:58 -0700
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZSx7QPoS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28FA61F000E9;
+	Fri, 10 Jul 2026 22:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1783723525;
+	bh=Yq17DLw8B7m0Ic0jrotN2vK5MclACu0PBR+dyFlWO78=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=ZSx7QPoSol/yIwMXKEmUJhTjHYhOTBLc5mXwwU3UwAh9roiwGFOEkEGDc9BHD66gH
+	 ol4A8UhH1Qv4PL+p4SHToO2ow21dRlKuMhNHReG860Gc0SP2DYkvm0I7ZKgAi4s3Wk
+	 nNh7xrNAGItIywqfA1/YCTySczvPZbj9fgWwv5ao=
+Date: Fri, 10 Jul 2026 15:45:21 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: David Hildenbrand <david@kernel.org>, "Liam R. Howlett"
+ <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo
+ <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang
+ <lance.yang@linux.dev>, Pedro Falcato <pfalcato@suse.de>, Russell King
+ <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster
+ <schuster.simon@siemens-energy.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Dan Williams
+ <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, Muchun Song
+ <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
+ Clark <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, Ryan
+ Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
+ <baohua@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
+ <nao.horiguchi@gmail.com>, Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou
+ <chengming.zhou@linux.dev>, SJ Park <sj@kernel.org>, Matthew Brost
+ <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim
+ <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price
+ <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, Alistair
+ Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu
+ <peterx@redhat.com>, Kees Cook <kees@kernel.org>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Andrey
+ Konovalov <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jarkko Sakkinen
+ <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Thomas
+ Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, H Hartley
+ Sweeten <hsweeten@visionengravers.com>, Lucas Stach
+ <l.stach@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Patrik
+ Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark
+ <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>, Jessica Zhang
+ <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, Marijn Suijten
+ <marijn.suijten@somainline.org>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, Thierry Reding
+ <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig
+ <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew Auld
+ <matthew.auld@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas
+ <yishaih@nvidia.com>, Shameer Kolothum <skolothumtho@nvidia.com>, Kevin
+ Tian <kevin.tian@intel.com>, Ankit Agrawal <ankita@nvidia.com>, Alex
+ Williamson <alex@shazbot.org>, Paolo Bonzini <pbonzini@redhat.com>, Shakeel
+ Butt <shakeel.butt@linux.dev>, Usama Arif <usama.arif@linux.dev>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ damon@lists.linux.dev, iommu@lists.linux.dev, kasan-dev@googlegroups.com,
+ linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+ kvm@vger.kernel.org, Russell King <linux+etnaviv@armlinux.org.uk>, Ackerley
+ Tng <ackerleytng@google.com>, Kai Huang <kai.huang@intel.com>
+Subject: Re: [PATCH v2 00/33] mm: make VMA page offset handling more
+ consistent
+Message-Id: <20260710154521.435f67cc7b03ed3a9ccd423a@linux-foundation.org>
+In-Reply-To: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
+References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 5/6] tools/build: selftests: Allow versioning LLVM lld
-To: James Clark <james.clark@linaro.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Andrii Nakryiko
- <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- linux-input@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260518-james-perf-llvm-version-v2-0-f12cc4f031d8@linaro.org>
- <20260518-james-perf-llvm-version-v2-5-f12cc4f031d8@linaro.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ihor Solodrai <ihor.solodrai@linux.dev>
-In-Reply-To: <20260518-james-perf-llvm-version-v2-5-f12cc4f031d8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 5/18/26 2:03 AM, James Clark wrote:
-> Building with LLVM=... could result in a different version of lld being
-> used than the main toolchain for liburandom_read.so because it's
-> hardcoded to "lld" in this makefile.
-> 
-> Make it consistent with the rest of the LLVM toolchain by adding an LLD
-> variable to Makefile.include. Keep the fallback for other architectures
-> in tools/testing/selftests/bpf/Makefile as it seems like it's something
-> specific to this make rule and shouldn't be global.
-> 
-> Clang only accepts either a full path to "/x/x/ld.lld" or "lld-15" style
-> inputs to "-fuse-ld=", so the only way to make it work with both
-> prefixed and postfixed paths is to always take the full path. Also I
-> don't think the original use of "lld" over "ld.lld" was significant as
-> this is always a linux build, so that can be changed to make it work in
-> both cases.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  tools/scripts/Makefile.include       | 2 ++
->  tools/testing/selftests/bpf/Makefile | 8 ++++----
->  2 files changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-> index 380ad84ac51e..5c2d505cba62 100644
-> --- a/tools/scripts/Makefile.include
-> +++ b/tools/scripts/Makefile.include
-> @@ -67,6 +67,7 @@ ifneq ($(LLVM),)
->    $(call allow-override,HOSTAR,$(LLVM_PREFIX)llvm-ar$(LLVM_SUFFIX))
->    $(call allow-override,LD,$(LLVM_PREFIX)ld.lld$(LLVM_SUFFIX))
->    $(call allow-override,HOSTLD,$(LLVM_PREFIX)ld.lld$(LLVM_SUFFIX))
-> +  $(call allow-override,LLD,$(LLVM_PREFIX)ld.lld$(LLVM_SUFFIX))
->    $(call allow-override,CXX,$(LLVM_PREFIX)clang++$(LLVM_SUFFIX))
->    $(call allow-override,STRIP,$(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX))
->    $(call allow-override,LLVM_STRIP,$(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX))
-> @@ -91,6 +92,7 @@ else
->    # Some tools still require Clang, LLC and/or LLVM utils
->    $(call allow-override,CLANG,clang)
->    $(call allow-override,LLC,llc)
-> +  $(call allow-override,LLD,ld.lld)
->    $(call allow-override,LLVM_CONFIG,llvm-config)
->    $(call allow-override,LLVM_OBJCOPY,llvm-objcopy)
->    $(call allow-override,LLVM_STRIP,llvm-strip)
-> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-> index 6ef6872adbc3..836e783f0170 100644
-> --- a/tools/testing/selftests/bpf/Makefile
-> +++ b/tools/testing/selftests/bpf/Makefile
-> @@ -245,9 +245,9 @@ $(OUTPUT)/%:%.c
->  
->  # LLVM's ld.lld doesn't support all the architectures, so use it only on x86
->  ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 riscv))
-> -LLD := lld
-> +USE_LD := $(shell command -v $(LLD))
->  else
-> -LLD := $(shell command -v $(LD))
-> +USE_LD := $(shell command -v $(LD))
+On Fri, 10 Jul 2026 21:16:41 +0100 Lorenzo Stoakes <ljs@kernel.org> wrote:
 
-Can confirm v2 fixes the v1 breakage I reported.
+> This series performs a series of cleanups and improvements around how the
+> vma->vm_pgoff field is used.
 
-One nit on the empty USE_LD case the bot raised. It isn't actually a
-build failure: if command -v finds nothing, USE_LD is empty and clang
-gets a bare "-fuse-ld=".
+Thanks, I'll add this to mm-new.
 
-Since it's unintentional, how about we just add a check to ensure the
-linker was found?
+Sashiko wasn't able to apply it :(
 
-Something like:
+There were some minor collisions in ksm.c, thanks to
+https://lore.kernel.org/20260703162510242nxmjbcLy5ccp1dbZSK3EU@zte.com.cn.
 
-    $(Q)test -n "$(USE_LD)" || { \
-        echo "$@: linker '$(LINKER)' not found - add it to PATH, or pass \
-        LLVM=/path/ or LLD=/abs/ld.lld" >&2; exit 1; }
-
-
->  endif
->  
->  # Filter out -static for liburandom_read.so and its dependent targets so that static builds
-> @@ -258,7 +258,7 @@ $(OUTPUT)/liburandom_read.so: urandom_read_lib1.c urandom_read_lib2.c liburandom
->  		     $(filter-out -static,$(CFLAGS) $(LDFLAGS)) \
->  		     $(filter %.c,$^) $(filter-out -static,$(LDLIBS)) \
->  		     -Wno-unused-command-line-argument \
-> -		     -fuse-ld=$(LLD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
-> +		     -fuse-ld=$(USE_LD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
->  		     -Wl,--version-script=liburandom_read.map \
->  		     -fPIC -shared -o $@
->  
-> @@ -268,7 +268,7 @@ $(OUTPUT)/urandom_read: urandom_read.c urandom_read_aux.c $(OUTPUT)/liburandom_r
->  		     $(filter-out -static,$(CFLAGS) $(LDFLAGS)) $(filter %.c,$^) \
->  		     -Wno-unused-command-line-argument \
->  		     -lurandom_read $(filter-out -static,$(LDLIBS)) -L$(OUTPUT) \
-> -		     -fuse-ld=$(LLD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
-> +		     -fuse-ld=$(USE_LD) -Wl,-znoseparate-code -Wl,--build-id=sha1 \
->  		     -Wl,-rpath=. -o $@
->  
->  $(OUTPUT)/sign-file: ../../../../scripts/sign-file.c
-> 
-
+(You'd think His Royal AIness could figure out how to resolve a few
+dopey patch rejects.  Oh well.)
