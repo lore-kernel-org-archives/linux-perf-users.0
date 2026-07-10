@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22AB34405B;
-	Fri, 10 Jul 2026 22:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053EF431E6B;
+	Fri, 10 Jul 2026 22:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783720938; cv=none; b=W4MeJ/8SbVaAqVO4DKaweEAbhW9ZOUDn0ZaBTvXWLYLexqFJSQwKfJo2E/Wwo9CnLdMMR1jZ6J2VZT0yyeFitMFO2v7Bn/vnNBL01Ii+fUzSaEqojRd15lBZzMD1bEChFPGBQasEsE3cCHmplufvGENUPL/JoSkbzHpawQPxHGc=
+	t=1783722271; cv=none; b=mI6iirq+czn1v+5J11RZO3Im8wHLJMsk0TtDkjjQw2XBZcWcZZzTyDnZFrm3qYv1Unoe/h0hDswHIbn8aJf6t6AgpnM69Ehm02BybCTw6YKKYOrcpsEbAEegxIniZVYaLqwlmhZCto1X+4QqNAPOK+KxU2EHZjDvhXCKIexpBuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783720938; c=relaxed/simple;
-	bh=sln1EBZU/JoWeeaA6yeHfO4hSs5G6UB8geQ3XynTQkg=;
+	s=arc-20240116; t=1783722271; c=relaxed/simple;
+	bh=2rj7dHUIkNbVT0lWrogyknBfkEtkmPdr/DEXKjK8+sg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rLM+Ip0zV1Gue0G1rqY1ZT5fwHpkZPEdz5GnXt95YEkk/sRYoW8ftygmnfiXJITUQGHTgA/td5C4eJE3fZah5mFrLVqp7cTcLa5eV2/GJiqW0/goi9VrPcT1tIC2a01xpH5MaA9iCJUhJCY+rwmiyA/7AEs5G7gPT9ZmRn9BsvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h3aKZtn8; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=uJs/k01sN29bfqHt5z7SdIsB19SLrOjKGgGzbCuhq3WkKueqXHw4/nUF+o2+a7Igmp+jX3kxhxWqoJfEJ8Hc5b9wtFV/ElCONiAYry41v56glA3zn6pXn2u+L95eWYCdIRN9AYHBMxEnYZPBal5CyvPO8rEMKQAnx4Zp8xwr/2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hw7Nv4Qi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h3aKZtn8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39B3B1F000E9;
-	Fri, 10 Jul 2026 22:02:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hw7Nv4Qi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C5371F000E9;
+	Fri, 10 Jul 2026 22:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783720936;
-	bh=s6Xb+B6LGTc/LN2KrI9+Oc9Vx+c7m/TrTZSUZqyom8U=;
+	s=k20260515; t=1783722269;
+	bh=yjG6AjtLNcbZOeO7vqkQSQcQNWKqeiL7W846xPJ4oRs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=h3aKZtn8phA+rFTiqecWLzDIcEVDku5OoYxRtUoLxACwZCycP+mLrwPTHs5Pj/q4/
-	 zubsM/9xquHW1ERlQ1USgVHAqF8VN/88KQl6e7/R4PBYmD9mwLKkA0MHYhZG5CdF1Z
-	 JSG4sF75iRUysjqr9MYCBMGhyBRvpZL5sULxxyonxpoLnizMSY5o79V7w+UmogyZkV
-	 ug9JcKKEC4F8n3Eti4LSHAbO5sMOwvHngdDIl9Mr+N42LnBumpaiC82plaaiWZrL00
-	 GU5AIslrDIt5sJy3FUF/wQiaBLNBcnFnkA7J5qu/3BcbbJwKnpUSjPG70MvPEGKeHT
-	 ZfoUd3WddLv4Q==
-Date: Fri, 10 Jul 2026 15:02:14 -0700
+	b=hw7Nv4QiuzXvpz6I2zgo/BRocfbAIXDg2Io9+lXxAQH0zcCSJi9MQRSz5/Wm+vCQH
+	 KzhIk4Lv/zSxtZgg7qy8uxlL/UXTmmlofm3I6O5PiecmWg1TIn9YWaSjmIUUhJLnnC
+	 KtOxF5sFjwydq3Knad1oy8NalFvlWMveFp2Ez1AkKgS5LySROngzaztREtwsm4ac25
+	 hEujYv7kt67Hr/UEs//uAo8/SapZrG6CpQn8cchNX0TtiVArWIOf+RIbGIgCEtsCTp
+	 87HIf5vOEZR0pOvFS2DwOg0y0BlV7Dxtl7WbFzXCMB4WeCHo/n8MxuaSiie2zGbQ9m
+	 seocIbhjSYLzg==
+Date: Fri, 10 Jul 2026 15:24:28 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiawei Sun <abyssmystery@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf record: Fix teardown hang on system-wide
- multi-threaded sessions
-Message-ID: <alFr5s97ZsgWXoTC@google.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] perf cap: If capability is missing still perform
+ root test
+Message-ID: <alFxHPCouXNWkLie@google.com>
 References: <20260710053927.1864021-1-irogers@google.com>
+ <20260710053927.1864021-2-irogers@google.com>
+ <20260710054711.5FF731F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,92 +44,90 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260710053927.1864021-1-irogers@google.com>
+In-Reply-To: <20260710054711.5FF731F000E9@smtp.kernel.org>
 
-Hi Ian,
+On Fri, Jul 10, 2026 at 05:47:10AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] The capability fallback logic overrides valid capability checks for root users and incorrectly short-circuits sequential capability checks for non-root users by improperly setting the `used_root` flag.
+> --
+> 
+> --- Patch [2]: [PATCH v1 2/2] perf cap: If capability is missing still perform root test ---
+> commit 8515c6747c6ffb6d27af14829f03c002334e5c67
+> Author: Ian Rogers <irogers@google.com>
+> 
+> perf cap: If capability is missing still perform root test
+> 
+> This commit refines the capability checking logic in perf_cap__capable() to
+> fallback to the used_root test if a capability is missing, rather than only
+> doing so when the capget syscall fails.
 
-On Thu, Jul 09, 2026 at 10:39:06PM -0700, Ian Rogers wrote:
-> Under system-wide (-a) parallel streaming mode (--threads=cpu),
-> background recording threads can be inundated by a continuous
-> firehose of hardware samples generated by the OS. In this state,
-> a background thread's local hit count remains unequal to its
-> sample count, causing it to bypass the blocking fdarray__poll()
-> call entirely on each iteration of its recording loop.
-> 
-> Because the termination check relies on the POLLHUP event status
-> populated specifically by fdarray__poll(), bypassing it prevents
-> the background thread from ever recognizing that its control pipe
-> was closed by the main thread. This traps the background thread
-> in an infinite recording loop, hanging the main thread indefinitely
-> as it awaits a termination acknowledgment that never arrives.
-> 
-> Ensure teardown completion by adding explicit evlist__disable()
-> calls in the main thread's cleanup paths at out_child: and
-> out_child_no_flush:. Additionally, patch fdarray__filter() to
-> respect the fdarray_flag__nonfilterable flag, preventing it
-> from incorrectly setting the background thread's control pipe
-> file descriptor to -1 and clearing its revents mask upon
-> processing termination POLLHUP signals.
-> 
-> Fixes: f94563fac269 ("perf record: fix poll storm when monitored threads exit")
-> Assisted-by: Antigravity:gemini-3.5-flash
-> Signed-off-by: Ian Rogers <irogers@google.com>
+I think we can process this independently.  It's not related to patch 1,
+right?
 
-I didn't know you already sent the fix so I was doing the same.  It
-seems your fix is better as it added evlist__disable().  I'll test this
-and pick up if it's ok.
+> 
+> > diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
+> > --- a/tools/perf/util/cap.c
+> > +++ b/tools/perf/util/cap.c
+> 
+> [ ... ]
+> 
+> > @@ -37,12 +38,21 @@ bool perf_cap__capable(int cap, bool *used_root)
+> >  	if (cap >= 32) {
+> >  		if (header.version == _LINUX_CAPABILITY_VERSION_3) {
+> >  			cap_val = data[1].effective;
+> > +			has_cap = (cap_val & (1U << (cap & 0x1f))) != 0;
+> >  		} else {
+> >  			/* Capability beyond 32 is requested but only 32 are supported. */
+> > -			return false;
+> > +			has_cap = false;
+> >  		}
+> >  	} else {
+> >  		cap_val = data[0].effective;
+> > +		has_cap = (cap_val & (1U << (cap & 0x1f))) != 0;
+> >  	}
+> > -	return (cap_val & (1 << (cap & 0x1f))) != 0;
+> > +
+> > +	if (has_cap) {
+> > +		*used_root = false;
+> > +		return true;
+> > +	}
+> > +
+> > +	*used_root = true;
+> > +	return geteuid() == 0;
+> >  }
+> 
+> [Severity: High]
+> Does setting *used_root = true unconditionally here when a capability is
+> missing break sequential capability checks for non-root users?
+> 
+> For example, if an unprivileged user lacks CAP_SYS_ADMIN, this will return
+> false but set used_root to true. In callers like perf_event_paranoid_check():
+> 
+> tools/perf/util/util.c:perf_event_paranoid_check() {
+>     ...
+>     if (!used_root && perf_cap__capable(CAP_PERFMON, &used_root))
+>     ...
+> }
+> 
+> If a previous check for CAP_SYS_ADMIN failed and poisoned the used_root
+> flag, won't it cause the subsequent check for CAP_PERFMON to be skipped
+> entirely?
+> 
+> This pattern appears in other locations as well, such as
+> check_bpf_filter_capable() where a failed CAP_BPF check might skip the
+> fallback for non-root users to access root-pinned BPF filters because
+> !used_root evaluates to false.
+> 
+> Additionally, could this override valid capability drops for root users
+> in containers? Because geteuid() == 0 evaluates to true, it seems this might
+> falsely claim root users still possess the capability even if it was
+> explicitly dropped, potentially leading to later failures instead of
+> graceful fallbacks.
+
+Can we simply remove the used_root parameter from perf_cap__capable()?
+Normally I think root would have the capability.  If not, maybe we need
+to reject the operation as it may happen in a container setup.
 
 Thanks,
 Namhyung
 
-> ---
->  tools/lib/api/fd/array.c    | 6 ++++--
->  tools/perf/builtin-record.c | 2 ++
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> index ffe8272af59b..16a047f1906e 100644
-> --- a/tools/lib/api/fd/array.c
-> +++ b/tools/lib/api/fd/array.c
-> @@ -115,6 +115,9 @@ int fdarray__filter(struct fdarray *fda, short revents,
->  		return 0;
->  
->  	for (fd = 0; fd < fda->nr; ++fd) {
-> +		if (fda->priv[fd].flags & fdarray_flag__nonfilterable)
-> +			continue;
-> +
->  		if (!fda->entries[fd].events)
->  			continue;
->  
-> @@ -132,8 +135,7 @@ int fdarray__filter(struct fdarray *fda, short revents,
->  			continue;
->  		}
->  
-> -		if (!(fda->priv[fd].flags & fdarray_flag__nonfilterable))
-> -			++nr;
-> +		++nr;
->  	}
->  
->  	return nr;
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index ebd3ed0c9b3e..d1276382b77a 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -2890,11 +2890,13 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->  		record__synthesize_workload(rec, true);
->  
->  out_child:
-> +	evlist__disable(rec->evlist);
->  	record__stop_threads(rec);
->  	record__mmap_read_all(rec, true);
->  	goto out_free_threads;
->  out_child_no_flush:
->  	/* mmap read already failed — retrying would just fail again */
-> +	evlist__disable(rec->evlist);
->  	record__stop_threads(rec);
->  out_free_threads:
->  	record__free_thread_data(rec);
-> -- 
-> 2.55.0.795.g602f6c329a-goog
-> 
