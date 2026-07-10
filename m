@@ -1,41 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC80F126C03
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 00:41:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC85518CC13;
+	Fri, 10 Jul 2026 00:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783644079; cv=none; b=iKFqjciBOS2yp45qL6hKYP7DpDSO4DoYS8ljXeXwka3h+XPwmk16QeMR/Yq1dZ/QorxZZO908ct+BWA4P2RHReh8B7NKepRmvTYw/UvePEaIy8/ED/JYD6y1N8MUicCxvNxxSCB0Z8E6yQgC0kGXN0721zeVmRrvBS2lkwhNhSw=
+	t=1783644079; cv=none; b=WmUVdOadrgmaadbzOIpdSv8Njs1WI+qbmM9wc7ywV2fel2BJ6XFLYr0HfrNiaaAl91zQonzj21zw07nxDp6WwaWB5ATJn9ah6sG0MCr4Lncp0SKf7pRvWsR9CLGxToKUo21wkt27pQPW15jgrkXFRPQEFAe/e0W+3B6G4KVhBD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783644079; c=relaxed/simple;
-	bh=h7dGUDsPHwFpK1rJJAv2vgzE82KNFl0TxXI+8/Ph2Ww=;
+	bh=deLXuKSavgLYZI27T8Ba8B3U8pVg46u4hOLrJtg19IQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VpLrSoG7lZhNEKRFT8BVugSBEKhHib33Sp8hZT+vBWXRYyea0daItMygP7jZmay5FIEUScNLOx0uwo6iJCvYQJVSXPGMdEmDfHxXt4WyAuiKems0G0HBQWMGHVH7oX92yLEhdAd84rgqU2+AZL+ZYh2cYp1bbdxInev8+vHYbyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buHLoKsl; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=rvzdmoIMq2RF+CBMprqrznKhGmtdP5zVFyK9WW1guP+puRa06PFCIw9/QA80M+ZQNlW0y9KyJCwLOSt/U6zbZtT9ZoF2e2VweuXcqk/8mohAw6nIU3Dm5eMx2Tq0riC/KSUQ6TQw7hnKS5zb8pNh8331EFqrk05OYBJ55yj+T6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQ3rC78G; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buHLoKsl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E95E1F00A3E;
-	Fri, 10 Jul 2026 00:41:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQ3rC78G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED66D1F000E9;
+	Fri, 10 Jul 2026 00:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1783644078;
-	bh=WWcQodI24+5dpyj927QkmrAqq9qp/P4Mgjg5xIYPu0I=;
+	bh=tveVP1kxcK9hTDBWb3H+Tiiahq5uleK+ELLfi0GV6UE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=buHLoKslWixcSphIwn429/LhEaYgO90Z+y69CLtSAWwQ0MN/2HnWOwl99i1pHVAgR
-	 N2xHYVqm4KWbjQUpiOwbEIFDZX2r8n5nGCv/fWITuNQ3ZJTpLbdc59P9DC2brcdeaR
-	 z0J2CtDTkhzLOybYS697SRwyw9HPz1Zcfy04f2CjSNoZJPm/mScC+Wrre6EItdp94F
-	 ASjhVV9zRXFLdw2CHS7k4NKIOjjMj4mPc3DKxvRBHC8ufzoZ72KHiAzqjJ0Smk8tmG
-	 1WVS8Y6HeiCm0wZrBoN+Z1sQY+VJmItR0JxT/hEX+UOQNPFGHmrSS5hMpIKXINkFJY
-	 8KBJYweietl+w==
+	b=FQ3rC78GH54WcQWvPBP+aJPUXQ0S8prRw4DlgrF4ElEQVUa5x58wYXgP7ePf5Q9zb
+	 dx9wQiolKR8iwRPfdpKe1xVz+wZHjIQ0go15XTF+sCv6tGauRfg9Wi5xsd3b2TOdJa
+	 2lkZCDmxLULsOCnqpwbPCt8y4R+0r1EQnSvlnYH0MiflDAGdzSJnbFeimzDKw4JHnu
+	 MhVHLbsOfFe69Lqy6+Un6rSynsuwHtVw4xuitL9BGkZnzo73TIKpLQ+wPy+T2B8HEf
+	 jvqByqffYMp3UsIQE1/u+3bvclUtqOxN8rmUzHgQLzozVQfqrxfu2Pfh3pJtZUgiF9
+	 V4pJEdVNeXkNw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ivan Lazaric <ivan.lazaric1@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, irogers@google.com
-In-Reply-To: <20260708131359.71732-3-ivan.lazaric1@gmail.com>
-References: <ak3scJT4MfbAg0G4@google.com>
- <20260708131359.71732-3-ivan.lazaric1@gmail.com>
-Subject: Re: [PATCH v2] perf stat: reject --field-separator and
- --json-output combination
-Message-Id: <178364407841.1457655.15665844687515027767.b4-ty@kernel.org>
-Date: Thu, 09 Jul 2026 17:41:18 -0700
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sandipan Das <sandipan.das@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+ Ananth Narayan <ananth.narayan@amd.com>
+In-Reply-To: <20260707190401.1427329-1-sandipan.das@amd.com>
+References: <20260707190401.1427329-1-sandipan.das@amd.com>
+Subject: Re: [PATCH] perf vendor events amd: Reintroduce deprecated Zen 5
+ core events
+Message-Id: <178364407793.1457655.9012811225786351296.b4-ty@kernel.org>
+Date: Thu, 09 Jul 2026 17:41:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,18 +53,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 08 Jul 2026 15:14:01 +0200, Ivan Lazaric wrote:
-> Specifying --field-separator option is stating you want CSV output.
-> Passing both --field-separator and --json-output is then stating
-> you want output to be in CSV and JSON format at same time.
+On Wed, 08 Jul 2026 00:34:01 +0530, Sandipan Das wrote:
+> Maintain backward compatibility by reintroducing the events that were
+> previously removed by commit 047979af3bf6 ("perf vendor events amd:
+> Update Zen 5 core events"). Also set the deprecated flag and update
+> the descriptions to point users to the correct alternative.
 > 
-> Currently this combination is not rejected, and the outcome
-> is a malformed combination of CSV and JSON output.
-> This is because of inconsistencies in various printing functions,
-> some of them have if-else chains that start with
-> "Should I print JSON?", and some start with "Should I print CSV?".
 > 
-> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
