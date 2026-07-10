@@ -1,39 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046993C1992;
-	Fri, 10 Jul 2026 21:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF393C10B8;
+	Fri, 10 Jul 2026 21:54:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783720274; cv=none; b=qXb1BRmhULm20+7OhbPVwg35+WwfepTU9qXWfmy9tssqyTMcUC4krjc0AtWSTNtfdIK/5tRD+lXemHNGlQkKuLjcFZj1mHw746P0nsLdbLyTjrYAxV+0eow49upNnXP1p0BHkvqZwFJG3zGCoGFS8Nwqfwa2y9kGH3VJHknqJg4=
+	t=1783720500; cv=none; b=siJr0tVVNgKky9itGVD+n/1F7m3R/7nshRMfgNL0wyOS12eGHsUVE8gQwnWmy/tPaCaps3XOp4f8G4f01MhO+qtAnAWapatRf2TEDem3EAWCrlOVWdkIoj+kjQC48trqQL3Huhi0cIFYBnvrzIuwzcOKsZBwcdzwZ8CWlFzld04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783720274; c=relaxed/simple;
-	bh=qaSg0AcdrVfin2VTQYj8En9FMp/D1W4qkhzxD2RZYfA=;
+	s=arc-20240116; t=1783720500; c=relaxed/simple;
+	bh=ySWMY6pa6qvECfhq7dbBy1StuwfgAq9lGdO7R+L1Nvk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ddPrMZBdFgZQfQdpTKBVbuISFzWPu4dw2d0GHgqDYTPOgP88C7B51vnoAVlWQZO/03aTVqd/nvvc0FWfLswjZ8z+tcUyMDQtBzorF4ppX1SLPN4KbC8ARoWMrVg11X6TJ1dYe78cTnrf9Z/0oELBRlE1ERU/6CUDY+E2XK4y/SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9zGu/47; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=aJP+7pPK7TJ7H3qKn+lLSbpHJzB2ByditzVR+8WFadrxYh/OfEEGZTw/AotkpC+WpqhgA02kSRQuD7arhOgzmpS59hYAcbUXzlwjIN3TxrO9ENp5l7anO93fvrkVlyyMRxNp6pINz3BaKE+zP6Dto+KcvsBzlKLf2c5SC3SSsdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZGXwzWP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9zGu/47"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 860791F00A3E;
-	Fri, 10 Jul 2026 21:51:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZGXwzWP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B4E81F00AC4;
+	Fri, 10 Jul 2026 21:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783720272;
-	bh=unrAKW3KktwtxmHC0X0GH8biwBItg8oMt9srSf1ShXM=;
+	s=k20260515; t=1783720498;
+	bh=bgnzsDi2O6UwX9w+N43jEgZmeGBGJPYFPG7kS7jjoNk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=n9zGu/47DmtzmWC+UQnj42ShnSpJDMhdgGRPQMTz6JnF6tfJ7iD1G4e+V8G6P5xSV
-	 VZcLBLaJeFQ3dvuFMDrRoOcb+Q2lPJsc7Su5Rmpumc+PUv/4yZQfoWh4ybKLPCRq3l
-	 8wXYGWp3ERIiPkvSbKTud5Ig+VKdhTt5XQq0XuOgkmivvQ/IbZAF9jLVOzjEKwupVF
-	 lnRfWmH1BefFC2t1NZKRxp5TYcKkW2djwo/eoYFJjKmFf8r18PdTB6a4Tgh3nmb6Rt
-	 z8YJOCiC4FEdkbuSXURLSvbpZ0Sp+bHxfh6Dr/jfefdaxHBsU1ZYTWzYjulyWu+ogC
-	 ZTU4C3lh8nJSQ==
-Date: Fri, 10 Jul 2026 14:51:11 -0700
+	b=EZGXwzWPTjLL2T811C2s+MdwBZf/+ZaxKHqF/nsPqAcrK6r/4p5wkdo3jCk/S3Gr/
+	 GbrDZ/RA4nWEHySZBTawBFTxT1m+YRY8cgV2/err/b5IgtiK5SIKRzLzmj3m2IiDC3
+	 uIcVHOpAIobN8r+he/NKM9BOesbS3vYEiZernnzmZ6x+t3On1mzjEYQ4BfnbYsupTc
+	 05NFFHq9US/uC6MyExGdlPiaYmjJJ1tHCEt59fLpRw0Mw+z2SoPN84tiqqJLB8WWoc
+	 Y+BaxyusdM1DV0VK7uuf1lClL4zhQDWqEAgH5ojtKMh4SjRFHLlcMLU158VstbtHlX
+	 a/VxFkz1rhU8A==
+Date: Fri, 10 Jul 2026 14:54:57 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] tools/lib/api: Check nonfilterable in fdarray__filter()
-Message-ID: <alFpTwZSuYR6eh0u@google.com>
-References: <20260710194222.1788638-1-namhyung@kernel.org>
- <20260710200150.11FE71F00A3A@smtp.kernel.org>
+To: Jiebin Sun <jiebin.sun@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Tianyou Li <tianyou.li@intel.com>,
+	Wangyang Guo <wangyang.guo@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] perf c2c: add a function view
+Message-ID: <alFqMY_q3mIhd-qN@google.com>
+References: <akxLJvJvkD022Trl@google.com>
+ <20260710084920.3579079-1-jiebin.sun@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,77 +54,56 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260710200150.11FE71F00A3A@smtp.kernel.org>
+In-Reply-To: <20260710084920.3579079-1-jiebin.sun@intel.com>
 
-On Fri, Jul 10, 2026 at 08:01:49PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> 
-> Pre-existing issues:
-> - [High] If `realloc` for `fda->priv` fails in `fdarray__grow()`, a dangling pointer is left in `fda->entries`, leading to a double-free during error cleanup.
-> --
-> 
-> --- Patch [1]: [PATCH] tools/lib/api: Check nonfilterable in fdarray__filter() ---
-> commit f87f1b3c291ca03e96598f96697566a328711de3
-> Author: Namhyung Kim <namhyung@kernel.org>
-> 
->     tools/lib/api: Check nonfilterable in fdarray__filter()
->     
->     IIUC fdarray__filter() should check filterable events only and leave
->     non-filterable events to be handled outside.  The recent change to set
->     fd to -1 made perf record test stuck forever.  Adding the check the flag
->     fixes the problem for me.
-> 
-> > diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> > index ffe8272af59b2..b4570e4981492 100644
-> > --- a/tools/lib/api/fd/array.c
-> > +++ b/tools/lib/api/fd/array.c
-> > @@ -117,6 +117,8 @@ int fdarray__filter(struct fdarray *fda, short revents,
-> >  	for (fd = 0; fd < fda->nr; ++fd) {
-> >  		if (!fda->entries[fd].events)
-> >  			continue;
-> > +		if (fda->priv[fd].flags & fdarray_flag__nonfilterable)
-> > +			continue;
-> 
-> [Severity: High]
-> This is a pre-existing issue, but while looking at this file I noticed a
-> potential double-free in fdarray__grow() during error handling.
+Hello,
 
-I'll handle this in a separate patch.
+On Fri, Jul 10, 2026 at 04:49:20PM +0800, Jiebin Sun wrote:
+> Hi Namhyung,
+> 
+> Thank you very much for the review and the suggestions.
+> 
+> > It'd be great if you can add this to the documentation.
+> 
+> Sure. I've added the worked example to
+> tools/perf/Documentation/perf-c2c.txt in the v2 I just sent.
+
+Thanks!
+
+> 
+> > Any chance it can share the code?  We have `perf mem report` as well,
+> > which deals with similar kind of data.
+> 
+> The function view does reuse the common infrastructure: it shares the
+> c2c data structures (moved into c2c.h), the perf_hpp_fmt column
+> framework, hists__collapse_resort()/hists__output_resort(),
+> hists__add_entry_ops() for dedup, and the hist_browser (including the
+> generic fold/expand handling).
+> 
+> The part it does not reuse is the generic report hierarchy builder. That
+> nests a single sample's own sort keys, while the function view pairs
+> functions that share a cacheline -- the entries are (function A,
+> function B) pairs that don't map to one sample. That's why the hierarchy
+> is built explicitly rather than from a sort-key list.
+
+I see.  Yeah I think it's a different model but it may be possible to
+have a cacheline in a parent node and functions that accessed it in
+the children.
+
+> 
+> > Also data type profiling would give more meaningful data once DWARF is
+> > available.  It'd be nice if c2c could support the type analysis or c2c
+> > could be implemented on top of `perf mem report` which already supports
+> > the data type profiling.
+> 
+> Agreed, data-type profiling is a great fit here -- naming the exact
+> struct field being contended is often the most actionable part of a
+> false-sharing fix. I'd like to explore this as a follow-up after this
+> series, reusing perf mem report's type/typeoff support to add a "which
+> data structure" view to c2c.
+
+Sounds good.
 
 Thanks,
 Namhyung
 
-> 
-> If the realloc for fda->entries succeeds but the realloc for fda->priv
-> fails, the error path frees the newly allocated entries:
-> 
-> tools/lib/api/fd/array.c:fdarray__grow() {
->     ...
-> 	struct pollfd *entries = realloc(fda->entries, size);
-> 
-> 	if (entries == NULL)
-> 		return -ENOMEM;
-> 
-> 	priv = realloc(fda->priv, psize);
-> 	if (priv == NULL) {
-> 		free(entries);
-> 		return -ENOMEM;
-> 	}
->     ...
-> }
-> 
-> However, fda->entries is neither updated to point to the new entries block
-> nor cleared to NULL. If realloc moved the allocation to a new block, the
-> old fda->entries pointer is now freed memory.
-> 
-> When fdarray__exit() is later called to clean up, it executes
-> free(fda->entries), which would trigger a double-free on that old pointer.
-> 
-> Would it be better to clear fda->entries to NULL here, or avoid modifying
-> the struct state until both allocations succeed?
-> 
-> [ ... ]
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260710194222.1788638-1-namhyung@kernel.org?part=1
