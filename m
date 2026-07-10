@@ -1,114 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70EB378833;
-	Fri, 10 Jul 2026 08:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A1B341ADF
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 08:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783673347; cv=none; b=ZX2OOoBMrKwb2skCgm/CGtoOb9Jk2ruD5+5vrXP5ikzSwDtiaNcrP2qn06qBx1arRZKRNcJBD1wHqHaTu8w4JFx0A+jjEc4KBXgj/PS4VY3SReJ3zvs7qugnFGtPvj9j72wj0K38z09I6toXiqg/JfD4PJT9ilqWv2ubk6GV6+M=
+	t=1783673447; cv=none; b=l01DQ7ngzrJbL9+wGl2PUUkDjCXBWtT6LEBRAkcGBGoAwndW9XY0cqF6OdkeoR1C3uacakBLpsgViExFxYL24n8AeQmNtTNsFYcsOO7ExLyrWIUrEN7JnrDmjQhTjEcM1uAHlYGwhpf3B3lRnFllA5BkI8MdqMeqNzc83v4DHqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783673347; c=relaxed/simple;
-	bh=A1TeuydoPMf4AAHW+DPP6yUhKz+UaxBwjmSQ8N9P97w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NuLeDcfD/sd/5XsK5yJXAgNphbmQg82jYBSPgAnBV2JCpVF8Y7TxyaOnF/bTccasNKq8/rzHKjm6nNqb4R3yHRW+UEeQ80d/+PXLJb2ytdRIOjZsUS9c7wYHwRYDiH62QU9iKLj5cuH43MNXPv3WSULzPyBzgnsZ02svNLVEWdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TRERTxh1; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1783673447; c=relaxed/simple;
+	bh=KvjWLghmsN2cOHqHD9HeVMBZ4QHn5dCdGMTRryIWysY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ox0AkRnjBzqlb++2WH17sM0W8h5fQnCSY3N1sLS18iVfPJ+IGEWrx9OQvxq9U049Zr29kSRVZA9OWPsTIyk8ydLaGbvVaHnleyl47HjhC+F8SXLqwyJJ0V4adXqVApWlsaqA38CjqcLUguPB7LRQLBHNv4sPrx15/6SdunT9/IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCukejhV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TRERTxh1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783673346; x=1815209346;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=A1TeuydoPMf4AAHW+DPP6yUhKz+UaxBwjmSQ8N9P97w=;
-  b=TRERTxh17Mn7JVqXeXcbMKUNNDCkkiTyLARM+2fMaCMm3uFGO/0GTXcX
-   Uk/kG0F7g5EzOM2p915CHbSe4T1hrAa2ZEbwclqYNs0ifTgSaRNNj+XKJ
-   W1lfHIErXyJYWpq5lvltHcA0v8mQMOqDGvhMyY7lkkr3DKZEoMZAsgY78
-   Xk7AnXwrUpYgZNW37gtAvhzuR+WZDSshNryKC/PfV34mJJpHStM1T3JY4
-   eZM1GtBwEzbOTLFYUBvWIYyUK+kePLN4OUPrMljhNBYArkB+VMuwJMi8X
-   AYV9oU6vivgxpfOzYA3dT1f9vgkG2ul6hbNpBEfl2WlDVbAra6mZctc/W
-   Q==;
-X-CSE-ConnectionGUID: KFUHO0ZmSw+2JxgWJ3Z0lQ==
-X-CSE-MsgGUID: yOem6T0vSQCVkSJuYk00gQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88284130"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="88284130"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 01:49:06 -0700
-X-CSE-ConnectionGUID: aReHqsGyRVyPLVCcIY97Bw==
-X-CSE-MsgGUID: wUl7L/QeRl6Vwgihnqcxlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="278066073"
-Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa002.fm.intel.com with ESMTP; 10 Jul 2026 01:49:01 -0700
-From: Jiebin Sun <jiebin.sun@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Tianyou Li <tianyou.li@intel.com>,
-	Wangyang Guo <wangyang.guo@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiebin Sun <jiebin.sun@intel.com>
-Subject: Re: [PATCH 00/14] perf c2c: add a function view
-Date: Fri, 10 Jul 2026 16:49:20 +0800
-Message-ID: <20260710084920.3579079-1-jiebin.sun@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <akxLJvJvkD022Trl@google.com>
-References: <akxLJvJvkD022Trl@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCukejhV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF271F000E9;
+	Fri, 10 Jul 2026 08:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783673446;
+	bh=8zKSp8BGW4Cs3P/Doo3lKy7sNo1hosVtU7kEuJgV9Co=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=oCukejhVuehLy78Tpo3I3Bt88bbzfVMBRJ/rPddwgCxkzJCztZmx9kJVyqL7iThJ5
+	 CsZCYC9MzC32ySZ3VEOVGVZZPkaXNcKoD9yOggTPPHS3dALZWkcOC0IuVjfO8ThVDu
+	 wmmk/NdzqvL9rH90WEG/xt7JBRhmFtz9ZWrcS8pjc5/hIfPNAE9n5gz6xE0jIwUY+z
+	 pO03nGst/Ia0MxCSWZVqH7+kOIB2vJba1VNZ34VlkE09O/+PITBCMODq+mR8VhjlME
+	 7fmuO7FVaVlA9YOSHZl8F4mVcUkhpJQVB6jKeH2qpCQ6MNhUoBetRr3BLyxrWlGRcD
+	 Uhq0Ph4GGgBjg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 02/14] perf c2c: add function view browser skeleton
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Jiebin Sun" <jiebin.sun@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260710084247.3576706-3-jiebin.sun@intel.com>
+References: <20260626070355.1556721-1-jiebin.sun@intel.com>
+ <20260710084247.3576706-1-jiebin.sun@intel.com>
+ <20260710084247.3576706-3-jiebin.sun@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 10 Jul 2026 08:50:45 +0000
+Message-Id: <20260710085046.5AF271F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Namhyung,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Missing header fallback stub for `perf_c2c__browse_function_view` w=
+hen `HAVE_SLANG_SUPPORT` is not defined.
+--
 
-Thank you very much for the review and the suggestions.
+--- Patch [2]: [PATCH v2 02/14] perf c2c: add function view browser skeleto=
+n ---
+commit 9be68ac51631d03c2d6030c665e95226db59b140
+Author: Jiebin Sun <jiebin.sun@intel.com>
 
-> It'd be great if you can add this to the documentation.
+perf c2c: add function view browser skeleton
 
-Sure. I've added the worked example to
-tools/perf/Documentation/perf-c2c.txt in the v2 I just sent.
+This commit adds c2c-function.c with a stub entry point and registers it
+in the build system. It also declares the function prototype in c2c.h
+to lay the groundwork for a future function-level cacheline browser.
 
-> Any chance it can share the code?  We have `perf mem report` as well,
-> which deals with similar kind of data.
+> diff --git a/tools/perf/c2c.h b/tools/perf/c2c.h
+> index 5c3f6ae633ea8..ffcd43d4c9038 100644
+> --- a/tools/perf/c2c.h
+> +++ b/tools/perf/c2c.h
+> @@ -142,6 +142,7 @@ bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hp=
+p_fmt *b);
+> =20
+>  #ifdef HAVE_SLANG_SUPPORT
+>  int perf_c2c__browse_cacheline(struct hist_entry *he);
+> +int perf_c2c__browse_function_view(struct hists *hists);
+>  #endif
 
-The function view does reuse the common infrastructure: it shares the
-c2c data structures (moved into c2c.h), the perf_hpp_fmt column
-framework, hists__collapse_resort()/hists__output_resort(),
-hists__add_entry_ops() for dedup, and the hist_browser (including the
-generic fold/expand handling).
+[Severity: Low]
+Should there be an #else fallback stub provided for this new function?
 
-The part it does not reuse is the generic report hierarchy builder. That
-nests a single sample's own sort keys, while the function view pairs
-functions that share a cacheline -- the entries are (function A,
-function B) pairs that don't map to one sample. That's why the hierarchy
-is built explicitly rather than from a sort-key list.
+When HAVE_SLANG_SUPPORT is not defined, perf_c2c__browse_function_view()
+won't be declared. Providing a dummy inline stub that returns an error
+like -ENOTSUPP would ensure compilation doesn't break if future code calls
+this function unconditionally.
 
-> Also data type profiling would give more meaningful data once DWARF is
-> available.  It'd be nice if c2c could support the type analysis or c2c
-> could be implemented on top of `perf mem report` which already supports
-> the data type profiling.
+[ ... ]
 
-Agreed, data-type profiling is a great fit here -- naming the exact
-struct field being contended is often the most actionable part of a
-false-sharing fix. I'd like to explore this as a follow-up after this
-series, reusing perf mem report's type/typeoff support to add a "which
-data structure" view to c2c.
-
-Thanks,
-Jiebin
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710084247.3576=
+706-1-jiebin.sun@intel.com?part=3D2
