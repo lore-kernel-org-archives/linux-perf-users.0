@@ -1,119 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC2138C2BF
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 05:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1A839A7F2
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 05:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783662981; cv=none; b=V6taeAjIvGt4l8UgGmSvxqiFH9hpvO0XWyntuURPgfknTjJa1wRzb6RnfTCCbyOBnXXBPqoH+n0zlMoTlSsmUlgkFyLcCPXE9bofGYSLOqSEZvUm8rdXqrhR5WpOTovwDUucHAmI2Wn52QmMhpukkWPn+9i5A2RmWdwDE0Tqg+w=
+	t=1783663136; cv=none; b=b6edxZom8pUigXLNHh1puX2DSUga5s7zCQHHykwJdwAqxdacO1s3c6NYPFpr8XgZljPm0ughnwZPX2WSHmt1ROzbzK4WezXugSrjyjEvxPYNPDaX87+hw682U4FrVtVzYCpjqm8AM23jSR75aXV8VrQ/9+bNUE2ARzKRH5opOvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783662981; c=relaxed/simple;
-	bh=qgzOm9cppt6UGcUdhjgLR3tBqRm9h5Xat8df0OqYvFE=;
+	s=arc-20240116; t=1783663136; c=relaxed/simple;
+	bh=Y/54mXXrPQyB+3BCa26XY4XJ1V5zMixyC23IGc4MVtM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cLJZQ6NGMSa24pN6nOMR4O7MmrL9BVJc+oUyPqx2g3e0J6wyTkovfBs+N7hIeBRkuqZog1FfTwA92Dcj6AaQODMtNFMT2AxI0bM4p0VXJU1DcOkLl/Hpnr+RbPHIvLGnWooNVgeMWehkQ8070VokMEt0sfQqBQ7OjllBlse9sTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfPJLMY9; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=cD5QAeydXIV4yjwaY1OZSSaLJq+8/I3GKCNNY90J625E6G4oG1g2qlyiq+DNnQoFz4nvHYIyB5Tk+6y4UKQb2qcAObfZmmv5qGaDLLkkw+xqeX0lv8Yrr8Kp8i0BuqgfVY7OziWvWEX6hXYiHCyh0+PnQw9Bvn9rbW/kT3Os+ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOfjg01j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfPJLMY9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B0FC1F000E9;
-	Fri, 10 Jul 2026 05:56:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOfjg01j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55FEA1F000E9;
+	Fri, 10 Jul 2026 05:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783662980;
-	bh=F1Qb6aE4mhuVsxAzc//JtIOKkASsyhU7tnhpCsPwhbQ=;
+	s=k20260515; t=1783663134;
+	bh=nyBVOOsAVnguQoKRuIzyJoPp6lsChKY+N7xU3pnpqJw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GfPJLMY9OmnG7lrOvz0X60sHgUq2c2dCxl9SCsV9+MpKqxPPABoVb34WMAKUVxiCR
-	 VWj7PrttbZMvMX6Q40ZjMeSRp3dCx9rshOVfuVMjDh0xYwPJFyOQy6GyoBcqtM6wv9
-	 4zlaaozwbjG9+dvquHuCOKnr6BkgULn8RPlxph/weYyJ3HT7/1Zlu9DTR3rpCgJX7p
-	 F3b0BIuTW2Hh9dUl3r+8KIGRYNqjg+xZc+YeyWebIInzwWLbOehI0X3p1gS8a2Xwam
-	 9jxe2UC2vcYp3wdhHX5bhuNdzIBRkQy4gV51PWNShvms1SK92OrHWcqJhtUy6JU8vT
-	 KS4Wp689lNFyA==
+	b=QOfjg01j8j5RD26IumgGoACgPyojZHaOwGntJa9dsxJMlVmSqcroT2ObsZ4TAi1km
+	 joc3l3ggYewqI1bsDMVcNSHKPsb2yJnjuKbT0sTKHkhfnAvSyG2ZBOfgpBr4uWtng0
+	 13K8oUhp93IQce+FVEqw0xLAE/8ok0JZDuP2uUEk3OyReCTlN4kzNTCdvB3cK46Kuq
+	 WDkBs5C4mPg47ZDEeLcMeFG5xEFHpcMkTJ6OgDVKtNZrnjFyanpVZgNF95Pza/1XAQ
+	 B7phf4VfF9dY81fQZ57A87iPrK+u0OKsQZOBZY2QEmwo2rFXJisQ7Cg4SXNt90VkBq
+	 hc1B31oNilZkw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 1/2] perf record: Fix teardown hang on system-wide
- multi-threaded sessions
+Subject: Re: [PATCH v5 09/10] perf ui hists: Fix dso_filter reference leak
+ and exit zoom cleanup
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260710053927.1864021-1-irogers@google.com>
-References: <20260710053927.1864021-1-irogers@google.com>
+In-Reply-To: <20260710053628.1861645-9-irogers@google.com>
+References: <20260710024952.1668911-1-irogers@google.com>
+ <20260710053628.1861645-1-irogers@google.com>
+ <20260710053628.1861645-9-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 05:56:19 +0000
-Message-Id: <20260710055620.3B0FC1F000E9@smtp.kernel.org>
+Date: Fri, 10 Jul 2026 05:58:53 +0000
+Message-Id: <20260710055854.55FEA1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] The patch unconditionally skips `fdarray_flag__nonfilterable` file=
- descriptors in `fdarray__filter()`, causing a memory leak of `perf_mmap` r=
-eferences and an infinite busy loop if a system-wide event or other nonfilt=
-erable file descriptor receives an error (e.g., POLLERR, POLLHUP).
+- [Medium] Unconditional free of non-heap memory causes a crash when exitin=
+g the browser or replacing a command-line symbol filter.
+- [Medium] Unconditionally clearing hists filters and un-eliding columns on=
+ browser exit permanently destroys persistent command-line configurations.
 --
 
---- Patch [1]: [PATCH v1 1/2] perf record: Fix teardown hang on system-wide=
- multi-threaded sessions ---
-commit 6940fed42e3ec7ba75ed80d3ab8c1cc4f0aad35d
+--- Patch [9]: [PATCH v5 09/10] perf ui hists: Fix dso_filter reference lea=
+k and exit zoom cleanup ---
+commit 1af645505e5c140a87449557e914e317c6cf9b3b
 Author: Ian Rogers <irogers@google.com>
 
-perf record: Fix teardown hang on system-wide multi-threaded sessions
+perf ui hists: Fix dso_filter reference leak and exit zoom cleanup
 
-This patch attempts to resolve a hang during teardown in system-wide stream=
-ing
-mode by adding explicit evlist disables. It also modifies the fdarray filter
-logic to bypass nonfilterable file descriptors when processing POLLHUP sign=
-als.
+In hists_browser__zoom_map(), the active dso is assigned as a raw pointer
+to hists->dso_filter without acquiring a reference using dso__get(). This
+patch properly acquires a reference when assigning the filter, and releases
+it when clearing it, while also resetting the persistent hists structure
+upon exit.
 
-> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> index f0f195207fca9..3bfcd2aa7c07f 100644
-> --- a/tools/lib/api/fd/array.c
-> +++ b/tools/lib/api/fd/array.c
-> @@ -115,6 +115,9 @@ int fdarray__filter(struct fdarray *fda, short revent=
-s,
->  		return 0;
-> =20
->  	for (fd =3D 0; fd < fda->nr; ++fd) {
-> +		if (fda->priv[fd].flags & fdarray_flag__nonfilterable)
-> +			continue;
-> +
+Closes: https://lore.kernel.org/linux-perf-users/20260709170834.52F1A1F000E=
+9@smtp.kernel.org/
 
-[Severity: High]
-Does skipping the filter logic for non-filterable file descriptors here cau=
-se
-an infinite poll loop if a system-wide event receives an error?
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
+s.c
+> index 89c3d3dc69a27..e0ef756d95367 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
 
-In tools/lib/perf/evlist.c:mmap_per_evsel(), system-wide event file
-descriptors are marked with fdarray_flag__nonfilterable:
+[ ... ]
 
-    flgs =3D evsel->system_wide ? fdarray_flag__nonfilterable : fdarray_fla=
-g__default;
+> @@ -3491,6 +3492,16 @@ static int evsel__hists_browse(struct evsel *evsel=
+, int nr_events, const char *h
+>  out_free_stack:
+>  	pstack__delete(browser->pstack);
+>  	free_popup_actions(actions, MAX_OPTIONS);
+> +	thread__zput(hists->thread_filter);
+> +	dso__put((struct dso *)hists->dso_filter);
+> +	hists->dso_filter =3D NULL;
+> +	hists->socket_filter =3D -1;
+> +	perf_hpp__set_elide(HISTC_DSO, false);
+> +	perf_hpp__set_elide(HISTC_THREAD, false);
+> +	perf_hpp__set_elide(HISTC_SOCKET, false);
+> +	hists__filter_by_dso(hists);
+> +	hists__filter_by_thread(hists);
+> +	hists__filter_by_socket(hists);
 
-If one of these file descriptors encounters an error like POLLERR or POLLHU=
-P,
-it seems this new continue statement bypasses the block that clears the eve=
-nts
-mask and invokes the entry_destructor.
+[Severity: Medium]
+Could unconditionally clearing the hists filters and un-eliding columns here
+permanently destroy persistent command-line configurations?
 
-Could this cause poll() to continuously return immediately with the same
-error, leading to a CPU busy loop and leaking perf_mmap references since the
-destructor is skipped?
+If a user launches perf report with persistent global filters like
+--socket-filter 0, hists->socket_filter is initialized. When navigating into
+the TUI for a specific event and then exiting back to the main menu (tab
+switching), this teardown path unconditionally clears the filters (e.g.,
+hists->socket_filter =3D -1) and un-elides the columns.
 
->  		if (!fda->entries[fd].events)
->  			continue;
-> =20
-> @@ -126,8 +129,7 @@ int fdarray__filter(struct fdarray *fda, short revent=
-s,
->  			continue;
->  		}
-> =20
-> -		if (!(fda->priv[fd].flags & fdarray_flag__nonfilterable))
-> -			++nr;
-> +		++nr;
->  	}
-> =20
->  	return nr;
+Could this destroy the user's requested command-line configuration for the
+remainder of the session?
+
+>  	zfree(&hists->symbol_filter_str);
+
+[Severity: Medium]
+Will this unconditional free cause a crash when exiting the browser or
+replacing a command-line symbol filter?
+
+When a user runs perf report --symbol-filter <sym>, the argv pointer is
+assigned directly without strdup():
+
+tools/perf/builtin-report.c:cmd_report() {
+    ...
+	report.symbol_filter_str =3D argv[0];
+    ...
+}
+
+When exiting the browser, or when applying a new inline filter inside the T=
+UI
+via evsel__hists_browse(), this zfree() attempts to free the non-heap argv
+string. Can this trigger a glibc abort?=20
+
+This unconditional free was introduced by commit "perf ui hists: Fix stack
+use-after-return in symbol_filter_str".
+
+>  	hists__filter_by_symbol(hists);
+>  out:
+>  	hist_browser__delete(browser);
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710053927.1864=
-021-1-irogers@google.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710053628.1861=
+645-1-irogers@google.com?part=3D9
