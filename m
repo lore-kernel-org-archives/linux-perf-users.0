@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A254D3B38BE;
-	Fri, 10 Jul 2026 06:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE4F3B27CD;
+	Fri, 10 Jul 2026 06:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783666681; cv=none; b=h1rEz7QvvNzGrS+XfIONz95/MBOdTpfMa10o2OsoQEtWWL8Qryegm/mxONO746D/0hlRQXEhHnhpeFtPQBaJIAt4cIy+iDHC0GJio78F8m4cp4eUlK4IVD8h6PoEdoGi5nhLhPmenWChQcQr9FVqNcwJNUdVjuqxt+IQh169b58=
+	t=1783666687; cv=none; b=RDjo0UPpu4kIw8kKWIm3Nowqo5yfKTf9VbUTc+0uKfLPRfWIVXZm0siHa9zSMVJ5g1hnkvmE2k9uiIENU00PBOHRqHQkcyxAsLZ6XboCK7lag2HM8KqsiLHY2gFWoVzBMZNZmaey7VLAfTBwFaut6zaRqoJ8AWHDf9eOg3lxbMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783666681; c=relaxed/simple;
-	bh=vZ0EJwDOuH1uBpTTGpUp/6DImqmBT4NinNT/N/xe2zA=;
+	s=arc-20240116; t=1783666687; c=relaxed/simple;
+	bh=n0Fae5Rj+3md9tmmvWVa18spRFGOar03Ygxdg0l4BRY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t7NSVAQOE+wZSc2f/uqldEHSrtNsgIkS4/4NRb6ZUcjMFiO1cAOcgHMEyAxsptmSHIP3u8Bc5j+2OsujTbSFPStnbhtsoUuAL81s9wtLynvqNdTk5CaldeZxBJGdrsm1skpUHWiW8rQTDQGf0QHfyIpoBZ8E1htJNsSu0XQFEBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jFHf8yg1; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=GQR72YuwX2li3Wwo/uVacGkmG2loZ1K2jxLCU1q6K/myuBb8AkUqbcqOZdqWCB4zIer61sbU9F4Uno+EpUgmxY6O5UUosybgYZr/M9l7e9xlbkR7eneY/Q1TV8Pg1AehK4en94J0DUGm6PMVyjHx5AjF5PT6hPs/e0LCBE02vM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EHAOrzzG; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jFHf8yg1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EHAOrzzG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783666676; x=1815202676;
+  t=1783666683; x=1815202683;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vZ0EJwDOuH1uBpTTGpUp/6DImqmBT4NinNT/N/xe2zA=;
-  b=jFHf8yg1ahpK8NtrI1Eg1HhmGgsuyCOWXM3buorYk8w9sywb8aEqHC5x
-   nos9TpsdVEKzowz3PUpbKHmHRNwhpde3XRkRaZpARi9C+5bdSbf2xjsof
-   Flg0D4EEu85SjcOujB9V6MKrIVBC4i+ZoJqyte/uS/6fWSYNlFtfU8D61
-   2EYxy+Z2a6ny3kzvt9VovRIWEcQlRND+EB6OwaMJIGqsCSebdegThpKte
-   ZFsvMIOufemHWbrKcN53HACVIDTQMZ50OO4dP16zfnqTLU1xyXuYJm9f4
-   oFDeEtvkhInZ1lubXOYRG2Xazf8bJkq2NvETyxY5i5VpsmH0bC5Mp8lzj
-   A==;
-X-CSE-ConnectionGUID: nmxz+jTJQUOcovso8jNCoQ==
-X-CSE-MsgGUID: F/xAG1gcTEOkE/yrnxYSDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84554227"
+  bh=n0Fae5Rj+3md9tmmvWVa18spRFGOar03Ygxdg0l4BRY=;
+  b=EHAOrzzG/bHWfqnxZ42SYxDYF7RYSwYNOm7KF9dxKAZdv+Cxsrb8Zm/x
+   7KU7V+xWm56UO238DccVxVIMgzmRiPgCTnin18VPGbmZVtISz/k/iDKej
+   aqPcvmZQTBmIKaDHnplbwY7YGYqz8dKMirXPiPwkkVwy6dsJS0dkeNeeY
+   diVGjEYatrt+vEr3GsBHa5WoenR71OMqsthSsp92kPH0rbD5gjSAokbCu
+   49FS99b8E1kmoX1NHx91WAwpbU89t5uIcfmTRzpzGe2Ah43xj0Mjkraiq
+   ZtXFgCFaR/ojC0rz8967pSAtsdHRXlJeRNKpJFOmxE5DBk9/DlQG6UB9F
+   g==;
+X-CSE-ConnectionGUID: LF3tQTnfQEm4TgAWOtOV7Q==
+X-CSE-MsgGUID: VjtVGGK6S9KEMxUv7K9bPQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84554233"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84554227"
+   d="scan'208";a="84554233"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 23:57:55 -0700
-X-CSE-ConnectionGUID: o+1SlUTeT/eZFP2LtU/AoQ==
-X-CSE-MsgGUID: hXkQkMmhRsmg7TEvraR3Gw==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 23:58:00 -0700
+X-CSE-ConnectionGUID: M75OH8A+RT6KElYFuxDrbQ==
+X-CSE-MsgGUID: 2L9b/ZPMQjmRw/a8j85wiA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="252159238"
+   d="scan'208";a="252159252"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 09 Jul 2026 23:57:50 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 09 Jul 2026 23:57:55 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 5/7] perf/x86: Remove stale fixed counter helper and fix hybrid PMU access
-Date: Fri, 10 Jul 2026 14:51:26 +0800
-Message-Id: <20260710065128.1799838-6-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 6/7] perf/x86/intel: Fix intel_cap handling on hybrid PMUs
+Date: Fri, 10 Jul 2026 14:51:27 +0800
+Message-Id: <20260710065128.1799838-7-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260710065128.1799838-1-dapeng1.mi@linux.intel.com>
 References: <20260710065128.1799838-1-dapeng1.mi@linux.intel.com>
@@ -74,118 +74,105 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On hybrid systems, init_hw_perf_events() can call check_hw_exists() with
-the global PMU pointer after perf_is_hybrid is set. In that case,
-fixed_counter_disabled() uses hybrid() on a non-hybrid PMU object, so the
-intel_ctrl access is taken from the wrong layout and can read out of
-bounds.
+intel_cap (IA32_PERF_CAPABILITIES) updates are currently tied to
+X86_FEATURE_ARCH_PERFMON_EXT, but these are independent feature paths.
+As a result, hybrid PMU capability state can be updated under the wrong
+condition.
 
-fixed_counter_disabled() was added in commit 32451614da2a
-("perf/x86/intel: Support CPUID 10.ECX to disable fixed counters"), when
-fixed counters were tracked via num_fixed_counters. Today fixed counters
-are represented by fixed_cntr_mask, so this helper is obsolete.
+Also, intel_pmu_broken_perf_cap() is too narrow. Per RPL018, the missing
+PERF_METRICS_AVAILABLE bit affects both Raptor Lake and Meteor Lake
+parts, not only the currently covered subset.
 
-Remove fixed_counter_disabled() and its callers, and rely directly on the
-fixed-counter bitmask. With the helper gone, check_hw_exists() no longer
-needs a PMU argument, so drop that parameter as well. This removes the
-invalid hybrid access and closes the out-of-bounds read risk.
+Move intel_cap updates out of the ARCH_PERFMON_EXT-gated path, extend
+intel_pmu_broken_perf_cap() coverage to both RPL and MTL families, and
+introduce intel_update_pmu_caps() to centralize PMU capability updates.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/core.c       | 8 ++------
- arch/x86/events/intel/core.c | 4 +---
- arch/x86/events/perf_event.h | 9 +--------
- 3 files changed, 4 insertions(+), 17 deletions(-)
+ arch/x86/events/intel/core.c | 41 ++++++++++++++++++++++++++----------
+ 1 file changed, 30 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 6c63b27e11e6..0bd3798b6e33 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -265,7 +265,7 @@ static void release_pmc_hardware(void) {}
- 
- #endif
- 
--bool check_hw_exists(struct pmu *pmu, unsigned long *cntr_mask,
-+bool check_hw_exists(unsigned long *cntr_mask,
- 		     unsigned long *fixed_cntr_mask)
- {
- 	u64 val, val_fail = -1, val_new= ~0;
-@@ -297,8 +297,6 @@ bool check_hw_exists(struct pmu *pmu, unsigned long *cntr_mask,
- 		if (ret)
- 			goto msr_fail;
- 		for_each_set_bit(i, fixed_cntr_mask, X86_PMC_IDX_MAX) {
--			if (fixed_counter_disabled(i, pmu))
--				continue;
- 			if (val & (0x03ULL << i*4)) {
- 				bios_fail = 1;
- 				val_fail = val;
-@@ -1613,8 +1611,6 @@ void perf_event_print_debug(void)
- 			cpu, idx, prev_left);
- 	}
- 	for_each_set_bit(idx, fixed_cntr_mask, X86_PMC_IDX_MAX) {
--		if (fixed_counter_disabled(idx, cpuc->pmu))
--			continue;
- 		rdmsrq(x86_pmu_fixed_ctr_addr(idx), pmc_count);
- 
- 		pr_info("CPU#%d: fixed-PMC%d count: %016llx\n",
-@@ -2175,7 +2171,7 @@ static int __init init_hw_perf_events(void)
- 	pmu_check_apic();
- 
- 	/* sanity check that the hardware exists or is emulated */
--	if (!check_hw_exists(&pmu, x86_pmu.cntr_mask, x86_pmu.fixed_cntr_mask))
-+	if (!check_hw_exists(x86_pmu.cntr_mask, x86_pmu.fixed_cntr_mask))
- 		goto out_bad_pmu;
- 
- 	pr_cont("%s PMU driver.\n", x86_pmu.name);
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 737c5a070379..83c60ad00085 100644
+index 83c60ad00085..36de21484ada 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3713,8 +3713,6 @@ static void intel_pmu_reset(void)
- 		wrmsrq_safe(x86_pmu_event_addr(idx),  0ull);
- 	}
- 	for_each_set_bit(idx, fixed_cntr_mask, INTEL_PMC_MAX_FIXED) {
--		if (fixed_counter_disabled(idx, cpuc->pmu))
--			continue;
- 		wrmsrq_safe(x86_pmu_fixed_ctr_addr(idx), 0ull);
- 	}
+@@ -6147,8 +6147,15 @@ static void intel_pmu_check_extra_regs(struct extra_reg *extra_regs);
  
-@@ -6336,7 +6334,7 @@ static bool init_hybrid_pmu(int cpu)
+ static inline bool intel_pmu_broken_perf_cap(void)
+ {
+-	/* The Perf Metric (Bit 15) is always cleared */
+-	if (boot_cpu_data.x86_vfm == INTEL_METEORLAKE ||
++	/*
++	 * The Perf Metric (Bit 15) is always cleared on P-core of
++	 * PRL and MTL. Details can be found in RPL018 Errata Details.
++	 * https://edc.intel.com/content/www/us/en/design/products/platforms/details/raptor-lake-s/13th-generation-core-processor-specification-update/errata-details/
++	 */
++	if (boot_cpu_data.x86_vfm == INTEL_RAPTORLAKE ||
++	    boot_cpu_data.x86_vfm == INTEL_RAPTORLAKE_P ||
++	    boot_cpu_data.x86_vfm == INTEL_RAPTORLAKE_S ||
++	    boot_cpu_data.x86_vfm == INTEL_METEORLAKE ||
+ 	    boot_cpu_data.x86_vfm == INTEL_METEORLAKE_L)
+ 		return true;
  
- 	intel_pmu_check_hybrid_pmus(pmu);
+@@ -6183,7 +6190,7 @@ static inline void __intel_update_large_pebs_flags(struct pmu *pmu)
  
--	if (!check_hw_exists(&pmu->pmu, pmu->cntr_mask, pmu->fixed_cntr_mask)) {
-+	if (!check_hw_exists(pmu->cntr_mask, pmu->fixed_cntr_mask)) {
- 		cpuc->pmu = NULL;
- 		return false;
+ #define counter_mask(_gp, _fixed) ((_gp) | ((u64)(_fixed) << INTEL_PMC_IDX_FIXED))
+ 
+-static void update_pmu_cap(struct pmu *pmu)
++static void update_pmu_cap_from_perfmonext(struct pmu *pmu)
+ {
+ 	unsigned int eax, ebx, ecx, edx;
+ 	union cpuid35_eax eax_0;
+@@ -6241,10 +6248,24 @@ static void update_pmu_cap(struct pmu *pmu)
+ 		WARN_ON(x86_pmu.arch_pebs == 1);
+ 		x86_pmu.arch_pebs = 0;
  	}
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index a8afea8d38f0..088f7ce715df 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1242,7 +1242,7 @@ static inline int x86_pmu_rdpmc_index(int index)
- 	return x86_pmu.rdpmc_index ? x86_pmu.rdpmc_index(index) : index;
++}
++
++static void intel_update_pmu_caps(struct pmu *pmu)
++{
++	if (this_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
++		update_pmu_cap_from_perfmonext(pmu);
+ 
+-	if (!intel_pmu_broken_perf_cap()) {
+-		/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+-		rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
++	if (is_hybrid() && this_cpu_has(X86_FEATURE_PDCM)) {
++		rdmsrq(MSR_IA32_PERF_CAPABILITIES,
++		       hybrid(pmu, intel_cap).capabilities);
++
++		/*
++		 * Restore perf_metrics on platforms with broken
++		 * perf_capablities.
++		 */
++		if (intel_pmu_broken_perf_cap() &&
++		    hybrid_pmu(pmu)->pmu_type == hybrid_big)
++			hybrid(pmu, intel_cap).perf_metrics = 1;
+ 	}
  }
  
--bool check_hw_exists(struct pmu *pmu, unsigned long *cntr_mask,
-+bool check_hw_exists(unsigned long *cntr_mask,
- 		     unsigned long *fixed_cntr_mask);
+@@ -6329,9 +6350,7 @@ static bool init_hybrid_pmu(int cpu)
+ 	if (!cpumask_empty(&pmu->supported_cpus))
+ 		goto end;
  
- int x86_add_exclusive(unsigned int what);
-@@ -1455,13 +1455,6 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
- 				 struct device_attribute *attr,
- 				 char *page);
- 
--static inline bool fixed_counter_disabled(int i, struct pmu *pmu)
--{
--	u64 intel_ctrl = hybrid(pmu, intel_ctrl);
+-	if (this_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
+-		update_pmu_cap(&pmu->pmu);
 -
--	return !(intel_ctrl >> (i + INTEL_PMC_IDX_FIXED));
--}
--
- #ifdef CONFIG_CPU_SUP_AMD
++	intel_update_pmu_caps(&pmu->pmu);
+ 	intel_pmu_check_hybrid_pmus(pmu);
  
- int amd_pmu_init(void);
+ 	if (!check_hw_exists(pmu->cntr_mask, pmu->fixed_cntr_mask)) {
+@@ -8827,8 +8846,8 @@ __init int intel_pmu_init(void)
+ 	 * from the leaf 0xa. The core specific update will be done later
+ 	 * when a new type is online.
+ 	 */
+-	if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
+-		update_pmu_cap(NULL);
++	if (!is_hybrid())
++		intel_update_pmu_caps(NULL);
+ 
+ 	if (x86_pmu.arch_pebs) {
+ 		static_call_update(intel_pmu_disable_event_ext,
 -- 
 2.34.1
 
