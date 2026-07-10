@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE4F3B27CD;
-	Fri, 10 Jul 2026 06:58:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B8F3B42D8;
+	Fri, 10 Jul 2026 06:58:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783666687; cv=none; b=RDjo0UPpu4kIw8kKWIm3Nowqo5yfKTf9VbUTc+0uKfLPRfWIVXZm0siHa9zSMVJ5g1hnkvmE2k9uiIENU00PBOHRqHQkcyxAsLZ6XboCK7lag2HM8KqsiLHY2gFWoVzBMZNZmaey7VLAfTBwFaut6zaRqoJ8AWHDf9eOg3lxbMo=
+	t=1783666690; cv=none; b=d2PAn4mEK+R0LKy5n4alko3AciK66TVuGuttmjVbb4KmmWrVL9ONI+PXfM4LcdvQ6Ohgk/oxO8lBFlTEh7VxzvuMIxEkLo5OdFbA2kxGcfTtJiNkrU56v01jNAv5SqSWIaUsm2CFAuZKjJ8hHktXr07goDFeyXb/z7jaKiZecF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783666687; c=relaxed/simple;
-	bh=n0Fae5Rj+3md9tmmvWVa18spRFGOar03Ygxdg0l4BRY=;
+	s=arc-20240116; t=1783666690; c=relaxed/simple;
+	bh=8S09QdWdLrgZxEpSqXviQuROpHFyDeq3D96u2IBgg3M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GQR72YuwX2li3Wwo/uVacGkmG2loZ1K2jxLCU1q6K/myuBb8AkUqbcqOZdqWCB4zIer61sbU9F4Uno+EpUgmxY6O5UUosybgYZr/M9l7e9xlbkR7eneY/Q1TV8Pg1AehK4en94J0DUGm6PMVyjHx5AjF5PT6hPs/e0LCBE02vM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EHAOrzzG; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=UkvkufBKP2+lN5sSo/SAfi0f+zEBlbC5QJosihnlFU5AYP/lO/vGrAP5s6awj33a7HAPUWbH7i1mNnJHQLZNgBSLBLLd+IvRCZjSO6tZ+bQSGS0ZMZv0aqk7dqAV7pk2feMwqaQ0FATYW8l/Owih5BFoYMm35aq7FxCb4dbWgoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PsjoDA3S; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EHAOrzzG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PsjoDA3S"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783666683; x=1815202683;
+  t=1783666686; x=1815202686;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=n0Fae5Rj+3md9tmmvWVa18spRFGOar03Ygxdg0l4BRY=;
-  b=EHAOrzzG/bHWfqnxZ42SYxDYF7RYSwYNOm7KF9dxKAZdv+Cxsrb8Zm/x
-   7KU7V+xWm56UO238DccVxVIMgzmRiPgCTnin18VPGbmZVtISz/k/iDKej
-   aqPcvmZQTBmIKaDHnplbwY7YGYqz8dKMirXPiPwkkVwy6dsJS0dkeNeeY
-   diVGjEYatrt+vEr3GsBHa5WoenR71OMqsthSsp92kPH0rbD5gjSAokbCu
-   49FS99b8E1kmoX1NHx91WAwpbU89t5uIcfmTRzpzGe2Ah43xj0Mjkraiq
-   ZtXFgCFaR/ojC0rz8967pSAtsdHRXlJeRNKpJFOmxE5DBk9/DlQG6UB9F
+  bh=8S09QdWdLrgZxEpSqXviQuROpHFyDeq3D96u2IBgg3M=;
+  b=PsjoDA3Sk1vYobR83rMRKGtVe8VJVLCu1vMwEV2u54KCzciSCwSqYfSj
+   iHW3q9pOMxErdj6xEkVT92jLO/OumPVY0ExCNJg2CKWnOJENIHuGZohYt
+   CB8Ad3K3Cy7FnqqXKdnXkVoNyh0Sn8+ge6Q0Ba+VYu+Tt2EpVrJ0JK6En
+   aZjAgn5+jiG1NKecxAHb0+0xM96IL5GRvIPnNdi9MYy+UwMfUp+RZOF8n
+   AaiSt6FOdEticediCVXnuDFcFz4QDV7SAHrbLJPvguDix0azdc8HRzC0F
+   V4dJnTx2hQwWgyZNuBmO4s6FgsUxMxc1L/l3s3m6F1Ho8pjZTRXz1na/1
    g==;
-X-CSE-ConnectionGUID: LF3tQTnfQEm4TgAWOtOV7Q==
-X-CSE-MsgGUID: VjtVGGK6S9KEMxUv7K9bPQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84554233"
+X-CSE-ConnectionGUID: cD6FukV5TpumB0tlzyKCUA==
+X-CSE-MsgGUID: uKBzKBvKT7WgmX7bTa4qlQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84554239"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84554233"
+   d="scan'208";a="84554239"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 23:58:00 -0700
-X-CSE-ConnectionGUID: M75OH8A+RT6KElYFuxDrbQ==
-X-CSE-MsgGUID: 2L9b/ZPMQjmRw/a8j85wiA==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 23:58:04 -0700
+X-CSE-ConnectionGUID: fL4J414KSpuIfUCW1FVQWQ==
+X-CSE-MsgGUID: aVoqNAbHTGuWCRVjC9fN6w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="252159252"
+   d="scan'208";a="252159274"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 09 Jul 2026 23:57:55 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 09 Jul 2026 23:57:59 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH 6/7] perf/x86/intel: Fix intel_cap handling on hybrid PMUs
-Date: Fri, 10 Jul 2026 14:51:27 +0800
-Message-Id: <20260710065128.1799838-7-dapeng1.mi@linux.intel.com>
+Subject: [PATCH 7/7] perf/x86: Optimize ACR handling in match_prev_assignment()
+Date: Fri, 10 Jul 2026 14:51:28 +0800
+Message-Id: <20260710065128.1799838-8-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260710065128.1799838-1-dapeng1.mi@linux.intel.com>
 References: <20260710065128.1799838-1-dapeng1.mi@linux.intel.com>
@@ -74,105 +74,69 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-intel_cap (IA32_PERF_CAPABILITIES) updates are currently tied to
-X86_FEATURE_ARCH_PERFMON_EXT, but these are independent feature paths.
-As a result, hybrid PMU capability state can be updated under the wrong
-condition.
+match_prev_assignment() currently forces a mismatch for ACR events, so
+ACR counter indices are reprogrammed on every scheduling pass. That
+causes avoidable overhead because disable and enable paths must touch
+multiple MSRs.
 
-Also, intel_pmu_broken_perf_cap() is too narrow. Per RPL018, the missing
-PERF_METRICS_AVAILABLE bit affects both Raptor Lake and Meteor Lake
-parts, not only the currently covered subset.
+The previous ACR assignment is already cached in acr_cfg_b[]. Use that
+state to compare the newly computed ACR counter indices in hwc->config1
+against the cached value in acr_cfg_b[hwc->idx]. If they match, skip
+unnecessary disable and enable work.
 
-Move intel_cap updates out of the ARCH_PERFMON_EXT-gated path, extend
-intel_pmu_broken_perf_cap() coverage to both RPL and MTL families, and
-introduce intel_update_pmu_caps() to centralize PMU capability updates.
+Also tighten is_acr_self_reload_event() so it first verifies the event
+is an ACR event before testing for the self-reload case.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 41 ++++++++++++++++++++++++++----------
- 1 file changed, 30 insertions(+), 11 deletions(-)
+ arch/x86/events/core.c       | 13 ++++++++++++-
+ arch/x86/events/perf_event.h |  2 +-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 83c60ad00085..36de21484ada 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -6147,8 +6147,15 @@ static void intel_pmu_check_extra_regs(struct extra_reg *extra_regs);
- 
- static inline bool intel_pmu_broken_perf_cap(void)
- {
--	/* The Perf Metric (Bit 15) is always cleared */
--	if (boot_cpu_data.x86_vfm == INTEL_METEORLAKE ||
-+	/*
-+	 * The Perf Metric (Bit 15) is always cleared on P-core of
-+	 * PRL and MTL. Details can be found in RPL018 Errata Details.
-+	 * https://edc.intel.com/content/www/us/en/design/products/platforms/details/raptor-lake-s/13th-generation-core-processor-specification-update/errata-details/
-+	 */
-+	if (boot_cpu_data.x86_vfm == INTEL_RAPTORLAKE ||
-+	    boot_cpu_data.x86_vfm == INTEL_RAPTORLAKE_P ||
-+	    boot_cpu_data.x86_vfm == INTEL_RAPTORLAKE_S ||
-+	    boot_cpu_data.x86_vfm == INTEL_METEORLAKE ||
- 	    boot_cpu_data.x86_vfm == INTEL_METEORLAKE_L)
- 		return true;
- 
-@@ -6183,7 +6190,7 @@ static inline void __intel_update_large_pebs_flags(struct pmu *pmu)
- 
- #define counter_mask(_gp, _fixed) ((_gp) | ((u64)(_fixed) << INTEL_PMC_IDX_FIXED))
- 
--static void update_pmu_cap(struct pmu *pmu)
-+static void update_pmu_cap_from_perfmonext(struct pmu *pmu)
- {
- 	unsigned int eax, ebx, ecx, edx;
- 	union cpuid35_eax eax_0;
-@@ -6241,10 +6248,24 @@ static void update_pmu_cap(struct pmu *pmu)
- 		WARN_ON(x86_pmu.arch_pebs == 1);
- 		x86_pmu.arch_pebs = 0;
- 	}
-+}
-+
-+static void intel_update_pmu_caps(struct pmu *pmu)
-+{
-+	if (this_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
-+		update_pmu_cap_from_perfmonext(pmu);
- 
--	if (!intel_pmu_broken_perf_cap()) {
--		/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
--		rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
-+	if (is_hybrid() && this_cpu_has(X86_FEATURE_PDCM)) {
-+		rdmsrq(MSR_IA32_PERF_CAPABILITIES,
-+		       hybrid(pmu, intel_cap).capabilities);
-+
-+		/*
-+		 * Restore perf_metrics on platforms with broken
-+		 * perf_capablities.
-+		 */
-+		if (intel_pmu_broken_perf_cap() &&
-+		    hybrid_pmu(pmu)->pmu_type == hybrid_big)
-+			hybrid(pmu, intel_cap).perf_metrics = 1;
- 	}
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 0bd3798b6e33..6a7502d2ae6e 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1292,6 +1292,17 @@ int x86_perf_rdpmc_index(struct perf_event *event)
+ 	return event->hw.event_base_rdpmc;
  }
  
-@@ -6329,9 +6350,7 @@ static bool init_hybrid_pmu(int cpu)
- 	if (!cpumask_empty(&pmu->supported_cpus))
- 		goto end;
++static inline bool acr_match_prev_indices(struct perf_event *event,
++					  struct cpu_hw_events *cpuc)
++{
++	struct hw_perf_event *hwc = &event->hw;
++
++	if (!is_acr_event_group(event))
++		return true;
++	/* ACR counter indices don't change. */
++	return hwc->config1 == cpuc->acr_cfg_b[hwc->idx];
++}
++
+ static inline int match_prev_assignment(struct perf_event *event,
+ 					struct cpu_hw_events *cpuc,
+ 					int i)
+@@ -1301,7 +1312,7 @@ static inline int match_prev_assignment(struct perf_event *event,
+ 	return hwc->idx == cpuc->assign[i] &&
+ 	       hwc->last_cpu == smp_processor_id() &&
+ 	       hwc->last_tag == cpuc->tags[i] &&
+-	       !is_acr_event_group(event);
++	       acr_match_prev_indices(event, cpuc);
+ }
  
--	if (this_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
--		update_pmu_cap(&pmu->pmu);
--
-+	intel_update_pmu_caps(&pmu->pmu);
- 	intel_pmu_check_hybrid_pmus(pmu);
+ static void x86_pmu_start(struct perf_event *event, int flags);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 088f7ce715df..d382e5ed72a8 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -141,7 +141,7 @@ static inline bool is_acr_self_reload_event(struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
  
- 	if (!check_hw_exists(pmu->cntr_mask, pmu->fixed_cntr_mask)) {
-@@ -8827,8 +8846,8 @@ __init int intel_pmu_init(void)
- 	 * from the leaf 0xa. The core specific update will be done later
- 	 * when a new type is online.
- 	 */
--	if (!is_hybrid() && boot_cpu_has(X86_FEATURE_ARCH_PERFMON_EXT))
--		update_pmu_cap(NULL);
-+	if (!is_hybrid())
-+		intel_update_pmu_caps(NULL);
+-	if (hwc->idx < 0)
++	if (hwc->idx < 0 || !is_acr_event_group(event))
+ 		return false;
  
- 	if (x86_pmu.arch_pebs) {
- 		static_call_update(intel_pmu_disable_event_ext,
+ 	return test_bit(hwc->idx, (unsigned long *)&hwc->config1);
 -- 
 2.34.1
 
