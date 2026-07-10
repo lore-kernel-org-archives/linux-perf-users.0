@@ -1,56 +1,56 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0210A35A38C
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 02:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21A33254A5
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 02:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783651817; cv=none; b=T5Vx6SXAa1qiIVPk7qUaEVpxW1vJdOhvJo/AA+Nd0vqF2Rfx+vuU89FLxa22nQIiSfeIupJboTtvEtdDmrznwXmbZHKvjTpycrdHh2WcU1UQq/ZkmeoSYE0VvRE3+/P91oqUTvLTNf4v4BQHCZP9btAOGS5v+NnpUDCr8SDOFGQ=
+	t=1783651818; cv=none; b=WooBz45VHCzX7iiqj7KJGM1V1dQjQf0+T3Vg8VMdgByMk7sWDUkj2j79Y0V6H/vbuaNWVWGw97k8DUAXtaWZ//xED3poWlaR2fZHtvEfzuAAF0dfzIGw5qQAhbsiOsDmzBCKwcUdMBLBO8hwv1AX7q9erue+Yjgr4rFzpSPQGTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783651817; c=relaxed/simple;
-	bh=zYm3bLKUty/WV2+kKihBBgugI8V81g1JwrJzaQrFFks=;
+	s=arc-20240116; t=1783651818; c=relaxed/simple;
+	bh=5+hFsYtXq05IaOOn6iMdJSPJ+p/Qf0zuBGd5YWR176A=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cIRcL63YHgq5K9huFo3Im6hPtPjdw5nLoVAfw67hm3wlKUqn/QX1I++0Z94Z5AcBu3BSA6aPUVVEChLjh4CKS6zoQtJkcL9OMHRU43IZBX4rsDL5u+2yDDd98As564nwJ5Z8hPcDsOxacalxXo3hnfYXZUab7vnDKAFzzpATOYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lidw0OIc; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=GFztoZSoE2OXKpxOS6J/btT4j3X035jUhMijz8GZH/iy4TWO5uZCj1hTBRpeTqwixgwmsNRe7OF0FwBzT0vHsAZ+wVK2VcySsrnjjNtCV/xHx6r0aBIv4aDYCg0VFRAMSm4+LInk7DpCQCe38ayO3zrnWtZb/uhESitCjovH8do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZXu++Q/c; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lidw0OIc"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c894391f000so1076986a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jul 2026 19:50:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZXu++Q/c"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-384636ba25dso802455a91.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jul 2026 19:50:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783651813; x=1784256613; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1783651815; x=1784256615; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=eCmZOwEWZATUU/3QYtzfI9njbQsTGpIGno+eX0+5jmk=;
-        b=lidw0OIcjy/+EVo8TEpZmJ/lHiwfa4zB0etOT+6pRYc2JEWBiAoJYscswT+ltts5Z3
-         o1HLxUkyAFVo2ceYVbGvY1bg2QlkshjPBiiUfGnuRgSUnhmxbnIig2W+gS5vyoJV7ilB
-         KcqPdTCfxUrU5ZO/2P8+nO0pw2PX8Yn91OXj1hUNV3ua2ZgNRGotYVNu924OfdGVABnf
-         39aimHYcATeiQBk/gETIuwZ/iFeS3d6R7jWGKRGCyPdunKSdVzs9SQ6weKVphGZh8AZi
-         D+0NBeH5Ea0d/lYWIhlEL/Q9toapV7fGV2/UzZE09YzMokAgCo4ZbRUGYgFBdxVf4kBK
-         fHZg==
+        bh=pA9Op4Hwz3i31jefMvgPRLUHIl3t8wAVDRT47WA7a0A=;
+        b=ZXu++Q/cREdY8VdWwuZiZkjAN8eK0dwQz5hebR1Uj8dARLBH/J1Dgx2vUZJQ9M56Wu
+         GJdI4Sbkk1dEKZgUw43/LH5/e8MGWSBLcbeNeCJBt1bSl20GhEkW6912zDdzwlu506oy
+         7X3FaITnwXR5GkfeH9wEppEN/crnryMmlPTL5jg/p78bvBN1mm9R1zYEgLJTz9CG3zgA
+         pVcJ1Fe7MKMLD2c3rbuga8uhp/05NJvvykFSjzRyc3n0wQWJl/Li1fHL8VeDx+htPssb
+         1rXF6UM1DQh9JwhI2U4TzBIue3QDU+M241J0IR5S5vNu315GEfLWufzopYtbgGcHoBki
+         Ck6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783651813; x=1784256613;
+        d=1e100.net; s=20251104; t=1783651815; x=1784256615;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=eCmZOwEWZATUU/3QYtzfI9njbQsTGpIGno+eX0+5jmk=;
-        b=NqWPiAFXN3uoq3GclVV6LylhbVMNVOLty4f+ETy0RWQm/T5FgjfYRsiDoEt4ATmvfR
-         rMB1ppHPPQGZgzIYlzveR6QUsNeJA/9UUcF8E6gzpwO0j3cpO0H8lwpB7j+W412zF27u
-         CdPTrlCEArkuvLToQKX9DONAhlBDqBjwcK2UXO/4igtGDGpKamLP4IAwJu05Y/uy7F30
-         8XhBGFjrtDWyezDEPP3OnY+56tabd0GqyR0ON0lgxhp4qF5jhNUWrvrpa3i4ojk29iRl
-         uPF7xgETWcMWxHdhoMYmDoSOX6jcDa/MIPAmI5VO9T5P+HQVuFROZqJE4STyGVCVahGz
-         CSjQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rp9yKXObBfimzT4f7hK5o0RONh0l66VdurAtqvLvf6IQalZ7xsFUZp+qO/FPO2NA+mPCrJ/m2EG+wZWwCpt2ExT@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSG7EGFW8fvXUEgM0hsaFJY0YkptzUTOHYPa4SvH569GoLENb3
-	Ptzz+6+++tLI0AWWXrnYNGKKEHqMaTiRLJV8GZjcdcQDWhbmsKW9S3844X03ABR+aDTTkDaysNT
-	Spnh6dbJDmw==
-X-Received: from dybmx3.prod.google.com ([2002:a05:7300:d403:b0:30e:ead4:7b1b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d0c:b0:3b4:93b9:2b91
- with SMTP id adf61e73a8af0-3c0bcf16364mr11507220637.12.1783651813064; Thu, 09
- Jul 2026 19:50:13 -0700 (PDT)
-Date: Thu,  9 Jul 2026 19:49:50 -0700
+        bh=pA9Op4Hwz3i31jefMvgPRLUHIl3t8wAVDRT47WA7a0A=;
+        b=GTvpQN85qhVKEuFqmUwf+o4CeXxcPeBcOvep+iF6o7IhlMdxddoWk/B6khVik8PfJa
+         1/fFZcyns6ipmALaq8OvWwQ73gv1Fk33pCZRo1P+rHBm+nlhU5BGLW0dow6xBwZeA1Jf
+         zS5aloL5XMLbWlAPdQV2bEENQ53FkzEeOL+WAHF2Wlcjcu/ueRFMMYoMJs5YPrTEDbGi
+         oaOdfdOVYgw+I7ddMDDq29TR5Bl/I3ESTw2eVoCTv3D9YODAwf6F1//cyTFxJ0VxB6dX
+         MgAJS1pj43jC3e/v8k88u8MzGOeJrWv6pf1ZuVrWHQuxHcN1eMXRg1fMp+Eic/7MFyok
+         JNFw==
+X-Forwarded-Encrypted: i=1; AHgh+RrynzC7zZCag/ovrqYkv5Ni3Sq6+S7A0y7+oB71NPauQDzE4AMvdAdNxrIv/ncwOzYYk9aLucpA7cXo4u+KObXE@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAOV7kxdN0sBjaOyv1HGyZv7HEsTr+1j72psnTA+i2+6Ecumve
+	P3fcHpxX+1wg8iI4SVOGQw1Wz0bWaSVJj7THkMTFDgsR1lfTiKez3k56Yz32CGRo7B0JBVTv3ar
+	KoQqsF7rvIg==
+X-Received: from dycc3.prod.google.com ([2002:a05:693c:60c3:b0:311:afe7:27])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:33c8:b0:37f:9ce1:cdb3
+ with SMTP id 98e67ed59e1d1-3894279ba33mr9607592a91.33.1783651815158; Thu, 09
+ Jul 2026 19:50:15 -0700 (PDT)
+Date: Thu,  9 Jul 2026 19:49:51 -0700
 In-Reply-To: <20260710024952.1668911-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,79 +60,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260709165220.1411149-1-irogers@google.com> <20260710024952.1668911-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260710024952.1668911-7-irogers@google.com>
-Subject: [PATCH v4 7/9] perf ui hists: Fix NULL pointer array gap in add_script_opt()
+Message-ID: <20260710024952.1668911-8-irogers@google.com>
+Subject: [PATCH v4 8/9] perf ui hists: Remove duplicated thread in popup_action
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, jistone@redhat.com, 
 	namhyung@kernel.org
 Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
 	james.clark@linaro.org, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	tianyou.li@intel.com, sashiko-bot <sashiko-bot@kernel.org>
+	tianyou.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-In add_script_opt(), the function unconditionally increments the optstr
-and act pointers for a second optional 'time' popup action before
-attempting to invoke add_script_opt_2(). If the first add_script_opt_2()
-call failed (for example, due to an asprintf allocation failure), this
-leaves a NULL pointer gap in the options array at the prior index. When
-ui__popup_menu() is later displayed, it dereferences this gap and
-crashes.
+struct popup_action has a thread but this is duplicated in the
+map_symbol. Remove the non-map_symbol version so that there's only ever
+1 thread with a popup_action.
 
-Fix it by avoiding unconditional pointer increments. Only advance the
-optstr and act pointers if the first script addition actually succeeded,
-and safely attach the time parameter to the correct assigned action.
-
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/linux-perf-users/20260709170834.52F1A1F000E9@smtp.kernel.org/
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/ui/browsers/hists.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ tools/perf/ui/browsers/hists.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 316db603bf25..28f1abdd87da 100644
+index 28f1abdd87da..0005e454255d 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -2811,7 +2811,7 @@ add_script_opt(struct hist_browser *browser,
- 	       struct popup_action *act, char **optstr,
- 	       struct thread *thread, struct symbol *sym)
+@@ -2455,7 +2455,6 @@ static int switch_data_file(void)
+ 
+ struct popup_action {
+ 	unsigned long		time;
+-	struct thread 		*thread;
+ 	int (*fn)(struct hist_browser *browser, struct popup_action *act);
+ 	struct map_symbol 	ms;
+ 	int			socket;
+@@ -2572,7 +2571,7 @@ add_annotate_type_opt(struct popup_action *act, char **optstr,
+ static int
+ do_zoom_thread(struct hist_browser *browser, struct popup_action *act)
  {
--	int n, j;
-+	int n, j, ret;
- 	struct hist_entry *he;
+-	struct thread *thread = act->thread;
++	struct thread *thread = act->ms.thread;
  
- 	n = add_script_opt_2(act, optstr, thread, sym, "");
-@@ -2819,17 +2819,24 @@ add_script_opt(struct hist_browser *browser,
- 	he = hist_browser__selected_entry(browser);
- 	if (sort_order && strstr(sort_order, "time")) {
- 		char tstr[128];
-+		struct popup_action *time_act = act;
-+		char **time_optstr = optstr;
+ 	if ((!hists__has(browser->hists, thread) &&
+ 	     !hists__has(browser->hists, comm)) || thread == NULL)
+@@ -2627,7 +2626,7 @@ add_thread_opt(struct hist_browser *browser, struct popup_action *act,
+ 	if (ret < 0)
+ 		return 0;
  
--		optstr++;
--		act++;
-+		if (n > 0) {
-+			time_optstr++;
-+			time_act++;
-+		}
- 		j = sprintf(tstr, " in ");
- 		j += timestamp__scnprintf_usec(he->time, tstr + j,
- 					       sizeof tstr - j);
- 		j += sprintf(tstr + j, "-");
- 		timestamp__scnprintf_usec(he->time + symbol_conf.time_quantum,
- 				          tstr + j, sizeof tstr - j);
--		n += add_script_opt_2(act, optstr, thread, sym, tstr);
--		act->time = he->time;
-+		ret = add_script_opt_2(time_act, time_optstr, thread, sym, tstr);
-+		if (ret > 0) {
-+			time_act->time = he->time;
-+			n += ret;
-+		}
- 	}
- 	return n;
+-	act->thread = thread;
++	act->ms.thread = thread;
+ 	act->fn = do_zoom_thread;
+ 	return 1;
  }
+@@ -2734,8 +2733,8 @@ do_run_script(struct hist_browser *browser,
+ 	int n = 0;
+ 
+ 	len = 100;
+-	if (act->thread)
+-		len += strlen(thread__comm_str(act->thread));
++	if (act->ms.thread)
++		len += strlen(thread__comm_str(act->ms.thread));
+ 	else if (act->ms.sym)
+ 		len += strlen(act->ms.sym->name);
+ 	script_opt = malloc(len);
+@@ -2743,9 +2742,9 @@ do_run_script(struct hist_browser *browser,
+ 		return -1;
+ 
+ 	script_opt[0] = 0;
+-	if (act->thread) {
++	if (act->ms.thread) {
+ 		n = scnprintf(script_opt, len, " -c %s ",
+-			  thread__comm_str(act->thread));
++			  thread__comm_str(act->ms.thread));
+ 	} else if (act->ms.sym) {
+ 		n = scnprintf(script_opt, len, " -S %s ",
+ 			  act->ms.sym->name);
+@@ -2800,7 +2799,7 @@ add_script_opt_2(struct popup_action *act, char **optstr,
+ 			return 0;
+ 	}
+ 
+-	act->thread = thread;
++	act->ms.thread = thread;
+ 	act->ms.sym = sym;
+ 	act->fn = do_run_script;
+ 	return 1;
+@@ -3211,7 +3210,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 					   verbose);
+ 			continue;
+ 		case 't':
+-			actions->thread = thread;
++			actions->ms.thread = thread;
+ 			do_zoom_thread(browser, actions);
+ 			continue;
+ 		case 'S':
+@@ -3231,7 +3230,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 			continue;
+ 		case 'r':
+ 			if (is_report_browser(hbt)) {
+-				actions->thread = NULL;
++				actions->ms.thread = NULL;
+ 				actions->ms.sym = NULL;
+ 				do_run_script(browser, actions);
+ 			}
+@@ -3314,7 +3313,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 				 */
+ 				do_zoom_dso(browser, actions);
+ 			} else if (top == &browser->hists->thread_filter) {
+-				actions->thread = thread;
++				actions->ms.thread = thread;
+ 				do_zoom_thread(browser, actions);
+ 			} else if (top == &browser->hists->socket_filter) {
+ 				do_zoom_socket(browser, actions);
 -- 
 2.55.0.795.g602f6c329a-goog
 
