@@ -1,123 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013008.outbound.protection.outlook.com [40.93.196.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E88175A7C;
-	Fri, 10 Jul 2026 15:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783696573; cv=none; b=L/KpRLMB5pHoIYmAmJbS1der7CCB84HtD90PQjamatR9KE1LypltaZcLlEfM5ZLg112SGyetW5Zu0sooKlSvjBJ6/WHMJh1I6AT+XNZ42NOgGl9E4BDSOFqtfaZuvpuWxfA0dBmAuwfO8m4jaHCmSvXYDuHQGqlPCcqBnD+vHCk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783696573; c=relaxed/simple;
-	bh=UikHL7SaRQhcW9jgP94Aas0kJna+z1e/sa7fJz0VgVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SrxYFwK1wtCaWBjMGxzygordwysV8cGmLIYRZKDkZt/7TSGNKaqtW0xZHoPKK7uAbfQ0NibUAt0tanjVONK6fsAqViyyYCneqhCRuer/XsfyBKyg4dDTx7xtIGVRTNLS622F1pdD+xT0AuIm7MgRf6RisHKK6kO0ahFGz/Ld/QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHGTVQQh; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3098C2D3A7C;
+	Fri, 10 Jul 2026 16:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783701311; cv=fail; b=Oc0pLHi91si1BE1hfkGQh/nLWZfVXUKFAT5ykR0uI5HdND1clm0dI897GD2br/WJ2xlTE0w/kBpdS6yqIesGzRnxgX5wGAR+l/Ds1pcnf2FeWcjMpLTQZsCiSHMeS6lZsspKVQTfYFpmLmiJfC9ubfr6qidOU4hIdMHP9edpEw4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783701311; c=relaxed/simple;
+	bh=ZY1XvCfXTNd0MZUXnnzCBZsgxIlnU+nFopm5zt88CVg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AClw6tzD8hhpwfHSvpmAOIbeihj1JEt9oTR0KCemotdwroCE6WLsCFVVk/zm00zCcBA/o7ti4XOh/db3zBWrCmY5uqO9yDlFnE3GfvC/BJStbV0WNKtIkItgyLieWd8pEKJnsTLwE0vcKSzcNEQjJeqijj7telAbItuSHYYAMS0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Q9O/CtSc; arc=fail smtp.client-ip=40.93.196.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHGTVQQh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C39A61F000E9;
-	Fri, 10 Jul 2026 15:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783696570;
-	bh=4r0Cc9l2aAmZyRZIk2/aSrghpeZfvwxavhupSZVEeMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DHGTVQQhWaTrPzJXRhL+eOlPh3mjgM3TYm3BACmuvjIRndZXufi/DOhVvVPUUmShz
-	 pMaTajqPd2DgQBSgWuLiUyl1vIFajO3tcup29tN2rA+oZElUGBQ1IGgnnzXislM27I
-	 7CvnkGOpI5896VQOz3W8Gmxeu3uzmNGoxn7r0l7pBdQ0sONYuYGXeAzxoC3tQ9/wUH
-	 UEFxz/qEn3hiXt8kPfwHLqlEerVkyRZiznIxE9j6rS+w6Jb2/IyIAdhgUn87BZzWbP
-	 pGVPtXCokUhc0BUp8Nl0bg7ctkDVndBAE1whxwQffv6MbiL/O4PIdb6JwCyyrjCy4K
-	 eJhH8u+Rek3lQ==
-Date: Fri, 10 Jul 2026 16:15:46 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Gregory Price <gourry@gourry.net>
-Cc: Pedro Falcato <pfalcato@suse.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Russell King <linux@armlinux.org.uk>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Thierry Reding <thierry.reding@kernel.org>, 
-	Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Alex Williamson <alex@shazbot.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	David Hildenbrand <david@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	"Liam R . Howlett" <liam@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, SeongJae Park <sj@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Hugh Dickins <hughd@google.com>, Mike Rapoport <rppt@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-sgx@vger.kernel.org, 
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev, linux-mm@kvack.org, 
-	iommu@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com, damon@lists.linux.dev, 
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 17/30] mm: prefer vma_[start,end]_pgoff() to
- vma->vm_pgoff in kernel/
-Message-ID: <alEMciQmyQA7wdua@lucifer>
-References: <cover.1782735110.git.ljs@kernel.org>
- <ea87349d63205bf4c26ea79854f179a9bf8cfb0b.1782735110.git.ljs@kernel.org>
- <akZCg73F-oGzDp1a@pedro-suse.lan>
- <akZGqclqQ6gS12Vv@lucifer>
- <ak_C_o2ehS17Q5HV@gourry-fedora-PF4VCD3F>
- <alEHy1raICek7imv@lucifer>
- <alELDgm258nhjk3b@gourry-fedora-PF4VCD3F>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Q9O/CtSc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bVP6fFX7qah+57eAaSvphTFtPgqdp2oIOVpoAMtHSaqLaA7rcYWHPOAB0VgsWV1sEYdbxGl/ygHp2XFQ/wpnbjMoEhYHMTn8eGx3T0N4BIh5Cs7Q0kkwP0pmxPMCB2dglW6GvdnqVvgg3AH0AsMa7HkAsuroFc6shqKsu/36NdAsBJocArwJ0Pe+J7e77jRcYlS7DU4/Pe01m3sBPQpKhBhNmlnepSJp1m00qqDOUQCev2pPnJLU0m+cAHWhghTsZLY4/W4zhs3XmfBbjKozamg0PuwVUWlNjaFNk9OK/TnnvUKgPSebjaaDaKZa5Bg00XPgz7iJDKRVCm7IZD0k+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7cXhx2ma7nvCiDu5qXfb9SnL1a87mOXWDHBBM7YFiJU=;
+ b=X8tjXEpGhcU7JdDP3sjBTXneInaxnZB6AnX8TRpGCMcGL5weC2MuVSqUKHt2yGpNvkcQ+yixdgkTca6/y5m8wn9pSgDmKA7edRpbvkWV3TnZfF8zT6cfgoXpr0ftBA2pZCDLT6q2ROkeK12nRWPZ6GPVWax3a8sMLwUpy78axSdPWDh5TboRih5m95i5cJOLmVrxkaPa6AtSsXAT1y51ENxfG1jJxM1zPYAHFFM3sa2N2G3oAQkLqkDCSATzSiAbCjL2ZdTnNNNbim1MibNd3XYELk/0y3bdlknLwTMZh/mJybGKa6Qb1XWjgjZjHoEBB6JHl0f1xMyEOV3EH8IzrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7cXhx2ma7nvCiDu5qXfb9SnL1a87mOXWDHBBM7YFiJU=;
+ b=Q9O/CtScquqmmBpG+216kDm56x9MmRliJx+wiV0azPmsHy4l/+gBa++fQnX+3CNZqpK+P5Tc7i41Two53RLoKHXde4JlKTjAV0rJg6H2n1bTjlr9s/gS/Zkk4p7x7ZTIXvIcJvU5oHq5gW54SHcYXGMHV5FczLNc297DvqRmddo=
+Received: from SJ2PR07CA0017.namprd07.prod.outlook.com (2603:10b6:a03:505::17)
+ by MN2PR12MB4288.namprd12.prod.outlook.com (2603:10b6:208:1d2::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.18; Fri, 10 Jul
+ 2026 16:35:03 +0000
+Received: from CO1PEPF00012E7F.namprd03.prod.outlook.com
+ (2603:10b6:a03:505:cafe::9d) by SJ2PR07CA0017.outlook.office365.com
+ (2603:10b6:a03:505::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.14 via Frontend Transport; Fri,
+ 10 Jul 2026 16:35:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CO1PEPF00012E7F.mail.protection.outlook.com (10.167.249.54) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Fri, 10 Jul 2026 16:35:02 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Fri, 10 Jul
+ 2026 11:34:56 -0500
+From: Sandipan Das <sandipan.das@amd.com>
+To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Stephane Eranian
+	<eranian@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Ananth Narayan
+	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Subject: [PATCH] perf/x86/amd/brs: Fix kernel address leakage
+Date: Fri, 10 Jul 2026 22:04:49 +0530
+Message-ID: <f05931c4f89a146c364bd5dc6b8170b1ac611c65.1783701239.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alELDgm258nhjk3b@gourry-fedora-PF4VCD3F>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF00012E7F:EE_|MN2PR12MB4288:EE_
+X-MS-Office365-Filtering-Correlation-Id: be295ff4-1a73-498d-ae05-08dedea13133
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|23010399003|7416014|376014|82310400026|36860700016|18002099003|11063799006|6133799003|56012099006|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	qXADIGTkU483qtJFAWDgyyp8/DiuSBTJ4RiPCJJgN3fBAROqJc8O2ldZUACOPKfSCpCAFpPmgMg84VZsGruB0l8Hz6KeZHJYnPpbG/+8F6fugiUGJy/kduGLx5wZBA3FCadm7VT3kKxmeGB4NZj1YAUUS8wLMS3TlM7oNlqQweNLufuaMdLcnZshM6quVl9uPYsVMkqHkbvTg9vUmm7N93owOxlJGesyqZlmFQb48jM0m9Yw9kL1C6rcZdV2j0HbEg16W/fcjWKfnzSCugICvce2KljmCIj3UfLNPnPGhKHBQZ3AM+IQK2m7KVWvGOF5kygLLHQq1AXrHztqN4zyiJ3EzrjQ1U/8mzwN2yO4RlhF8c8Y8NohzwncXUI1CLL/Rw/G2MR68Qk0pefLJoTyUydgo9KJKeieUIkSuoU+5W3OXvZQJS9GJ6TlIDnnZhg824XipuucDzt8XisDu1fey5Fb9JHeMXpCYqzJvNFW945d2ckHqIVLHBYNTvub1BanaKopRzlVhob4FrbW1dtOfj1430WcB+5xdk7yMWfis82QwJB0+z754XH5rgpM0/rfzD5mLEolfKgsg+BHUmkPejEdOsUtFQOdACNg+w4olQRDmucYICFOTz2+CeGEbgixGd1NTHE+/ey1VUVq6hsT8tv95pmoEJxmwdbzonK0ehh+RGK01s7fBHU975L+A2RNlOsUNuW8gpq1O0jhhAsX5Q==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(7416014)(376014)(82310400026)(36860700016)(18002099003)(11063799006)(6133799003)(56012099006)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	XDOne8SATQBa7Ywck74oX2FASEU1C9tFpcM50V8cqtKAiLbCmBT7yd/bWfkoHuuDcF83sgP03/bfepoGHW2uu4iFTUnoh7xuk6qVYYJUP/gN7bmo3/8ylftrBP1dBmWfmIQb2A7l1EKfRnhL8DqffS67AgoFpQnh74zLtZtxdp5kiAruADMMQevVSTF+8Xwo/Zm09OHnrI0uToHlKRfGQSdV82joxF/b11pRjkesmu8tU7CgnEdLaB3JxTCI7IKSsDGHE9uXFDorA7OSriZ46fezxMRoAnwVddb6WXugvc10zU4UjZf6PfJq+yduS8yeLtTcgw82+z7gNdAYoJBdOXVw6j1TQDpkQnFRN09L2uz03CymFSgg/KMUhOFzaQ+GqCmd3TFLZrGY8nb4R6QCtd5+XVnmFieT7VsD5Y7K7Qkq009QOG5gNTx6ZVZXSXfS
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 16:35:02.8415
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: be295ff4-1a73-498d-ae05-08dedea13133
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF00012E7F.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4288
 
-On Fri, Jul 10, 2026 at 11:09:02AM -0400, Gregory Price wrote:
-> On Fri, Jul 10, 2026 at 03:56:33PM +0100, Lorenzo Stoakes wrote:
-> > On Thu, Jul 09, 2026 at 11:49:18AM -0400, Gregory Price wrote:
-> > >
-> > > Silly question:
-> >
-> > There's no such thing :)
-> >
->
-> All my questions are silly.  That's my secret :]
+A user-only branch stack can contain branches that originate from
+the kernel. As a result, kernel addresses are exposed to user space
+even when PERF_SAMPLE_BRANCH_USER is requested. On AMD processors
+supporting X86_FEATURE_BRS (Zen 3 only), perf can still report entries
+such as SYSRET/interrupt returns for which the branch-from addresses
+are in the kernel.
 
-Mine too ;)
+E.g.
 
->
-> > >
-> > >    What's the purpose of retaining tags in a non-address value?
-> >
-> > Well if you want to reconstitute an address from it later then that'd be the
-> > intent, but I'm being hand wavey here for sure.
-> >
-> > Main thing is to retain stuff under the page mask
-> >
->
-> Right, which ...
->
-> vvvvvv
-> > > That sounds like there's fragility just waiting to be broken.
->
-> If that's an actual issue, then our relationship with tags is painful :[
+  $ perf record -j any,u -c 4000 -e branch-brs -o - -- \
+        perf bench syscall basic --loop 1000 | \
+        perf script -i - -F brstack|tr ' ' '\n'| \
+        grep -E '0x[89a-f][0-9a-f]{15}'
 
-Yeah, I'm just not sure tbh.
+  ...
+  0xffffffff810001c4/0x72e2e32955eb/-/-/-/0//-
+  0xffffffff810001c4/0x72e2d94a9821/-/-/-/0//-
+  0xffffffff810001c4/0x72e2d94ffa1b/-/-/-/0//-
+  ...
 
-But all that is stuf for future masochism^Wfun anyway ;) focusing on the 'respin
-the monster series' fun^Wmasochism atm...
+BRS provides no hardware branch filtering, so privilege level
+filtering is performed entirely in software. However, amd_brs_match_plm()
+only validates the branch-to address against the requested privilege
+levels. For branches from the kernel to user space, the branch-from
+address is left unchecked and is leaked. Extend the software filter to
+also validate the branch-from address, so that any branch record whose
+branch-from address is in the kernel is dropped when
+PERF_SAMPLE_BRANCH_USER is requested.
 
->
-> ~Gregory
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/all/20260710110235.F3FD81F000E9@smtp.kernel.org/
+Fixes: 8910075d61a3 ("perf/x86/amd: Enable branch sampling priv level filtering")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+---
+ arch/x86/events/amd/brs.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Cheers, Lorenzo
+diff --git a/arch/x86/events/amd/brs.c b/arch/x86/events/amd/brs.c
+index 06f35a6b58a5..dc564688f3d7 100644
+--- a/arch/x86/events/amd/brs.c
++++ b/arch/x86/events/amd/brs.c
+@@ -259,13 +259,13 @@ void amd_brs_disable_all(void)
+ 		amd_brs_disable();
+ }
+ 
+-static bool amd_brs_match_plm(struct perf_event *event, u64 to)
++static bool amd_brs_match_plm(struct perf_event *event, u64 from, u64 to)
+ {
+ 	int type = event->attr.branch_sample_type;
+ 	int plm_k = PERF_SAMPLE_BRANCH_KERNEL | PERF_SAMPLE_BRANCH_HV;
+ 	int plm_u = PERF_SAMPLE_BRANCH_USER;
+ 
+-	if (!(type & plm_k) && kernel_ip(to))
++	if (!(type & plm_k) && (kernel_ip(to) || kernel_ip(from)))
+ 		return 0;
+ 
+ 	if (!(type & plm_u) && !kernel_ip(to))
+@@ -338,11 +338,11 @@ void amd_brs_drain(void)
+ 		 */
+ 		to = (u64)(((s64)to << shift) >> shift);
+ 
+-		if (!amd_brs_match_plm(event, to))
+-			continue;
+-
+ 		rdmsrq(brs_from(brs_idx), from);
+ 
++		if (!amd_brs_match_plm(event, from, to))
++			continue;
++
+ 		perf_clear_branch_entry_bitfields(br+nr);
+ 
+ 		br[nr].from = from;
+-- 
+2.53.0
+
