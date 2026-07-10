@@ -1,73 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073063F20F4;
-	Fri, 10 Jul 2026 08:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70EB378833;
+	Fri, 10 Jul 2026 08:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783673023; cv=none; b=QbcFr2Mz5q2zE0/xXsPcOifEQ8ixRqgePVYp378xL08GLhAMa/MFIqAodsWA6ovGuYq7EG96MD/baMM8S2anzKSNZOXP8esKflJyXC+xRvfOU7cLEFfcRuVFPhj1Zmt8f7qi53CEQ/kyPlAoagyEok0FXyPSpsWhzo/HxQ3ts70=
+	t=1783673347; cv=none; b=ZX2OOoBMrKwb2skCgm/CGtoOb9Jk2ruD5+5vrXP5ikzSwDtiaNcrP2qn06qBx1arRZKRNcJBD1wHqHaTu8w4JFx0A+jjEc4KBXgj/PS4VY3SReJ3zvs7qugnFGtPvj9j72wj0K38z09I6toXiqg/JfD4PJT9ilqWv2ubk6GV6+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783673023; c=relaxed/simple;
-	bh=Mm/vrSGZHFmbT5s4VKo2mi6DurGi7q5CM4ASEQyOr9c=;
+	s=arc-20240116; t=1783673347; c=relaxed/simple;
+	bh=A1TeuydoPMf4AAHW+DPP6yUhKz+UaxBwjmSQ8N9P97w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LLdGd7PDf67xGa74u7pp0yp12rrNJypxqQt8trsAj/JJAqk/bbtmsgCqtzAPykLfT57fOpoCFRuYOebB+/LomHN5LgO1WDUy86G8ftkL/zhVl4cKDWqQ5FM1jPBESxFOMJQ5bdvrHKNFs7a6U8O6zZayvKKUwvhE0+EHDWrTIqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bj7LXhrO; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=NuLeDcfD/sd/5XsK5yJXAgNphbmQg82jYBSPgAnBV2JCpVF8Y7TxyaOnF/bTccasNKq8/rzHKjm6nNqb4R3yHRW+UEeQ80d/+PXLJb2ytdRIOjZsUS9c7wYHwRYDiH62QU9iKLj5cuH43MNXPv3WSULzPyBzgnsZ02svNLVEWdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TRERTxh1; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bj7LXhrO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TRERTxh1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783673021; x=1815209021;
+  t=1783673346; x=1815209346;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Mm/vrSGZHFmbT5s4VKo2mi6DurGi7q5CM4ASEQyOr9c=;
-  b=Bj7LXhrOLaBuyo3B0Spx5OAeTbAsktyU8QmT+fh5xtbS/V3a1T1+bPk0
-   ETELNE6zOBq5zhOEPufW0CnEHNbUdXCDGDO6BPeWEjCL9P1oJsnfeYu35
-   NbOKJVy7jUp9N4opJ7kyu01LcqG8ZDMe/wP1gTlaMztDxYsMelwS3p5Sr
-   OVGKmSco2TXjCUTM6z5FGg6Pdyzo/6Bsjw6H6Z0H8kEyrmmzTcG87A2xl
-   lPt13DFfkdF6OsawLEadh22Fs9h685CC38ZT66V3ugza7WjG01BFpcf9t
-   JeNZowF7d2WVz3v2bqI3mWUN24CD14zVQoq6JluulmSOzrxx2qkOfATNx
-   g==;
-X-CSE-ConnectionGUID: 461TuO4XT96jAB0FUlksPQ==
-X-CSE-MsgGUID: nv2lZMwqQTSknlXZpt5UnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84390928"
+  bh=A1TeuydoPMf4AAHW+DPP6yUhKz+UaxBwjmSQ8N9P97w=;
+  b=TRERTxh17Mn7JVqXeXcbMKUNNDCkkiTyLARM+2fMaCMm3uFGO/0GTXcX
+   Uk/kG0F7g5EzOM2p915CHbSe4T1hrAa2ZEbwclqYNs0ifTgSaRNNj+XKJ
+   W1lfHIErXyJYWpq5lvltHcA0v8mQMOqDGvhMyY7lkkr3DKZEoMZAsgY78
+   Xk7AnXwrUpYgZNW37gtAvhzuR+WZDSshNryKC/PfV34mJJpHStM1T3JY4
+   eZM1GtBwEzbOTLFYUBvWIYyUK+kePLN4OUPrMljhNBYArkB+VMuwJMi8X
+   AYV9oU6vivgxpfOzYA3dT1f9vgkG2ul6hbNpBEfl2WlDVbAra6mZctc/W
+   Q==;
+X-CSE-ConnectionGUID: KFUHO0ZmSw+2JxgWJ3Z0lQ==
+X-CSE-MsgGUID: yOem6T0vSQCVkSJuYk00gQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88284130"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84390928"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 01:43:40 -0700
-X-CSE-ConnectionGUID: YB/7jqPwRoeBECB+LLRoGw==
-X-CSE-MsgGUID: jQpiTLV4SHW3m1F3j/0Fag==
+   d="scan'208";a="88284130"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 01:49:06 -0700
+X-CSE-ConnectionGUID: aReHqsGyRVyPLVCcIY97Bw==
+X-CSE-MsgGUID: wUl7L/QeRl6Vwgihnqcxlg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="258435503"
+   d="scan'208";a="278066073"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by orviesa003.jf.intel.com with ESMTP; 10 Jul 2026 01:43:36 -0700
+  by fmviesa002.fm.intel.com with ESMTP; 10 Jul 2026 01:49:01 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiebin Sun <jiebin.sun@intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Ian Rogers <irogers@google.com>,
 	James Clark <james.clark@linaro.org>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
 	Thomas Falcon <thomas.falcon@intel.com>,
 	Tianyou Li <tianyou.li@intel.com>,
-	Wangyang Guo <wangyang.guo@intel.com>
-Subject: [PATCH v2 14/14] perf c2c: document function view in perf-c2c man page
-Date: Fri, 10 Jul 2026 16:42:47 +0800
-Message-ID: <20260710084247.3576706-15-jiebin.sun@intel.com>
+	Wangyang Guo <wangyang.guo@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiebin Sun <jiebin.sun@intel.com>
+Subject: Re: [PATCH 00/14] perf c2c: add a function view
+Date: Fri, 10 Jul 2026 16:49:20 +0800
+Message-ID: <20260710084920.3579079-1-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260710084247.3576706-1-jiebin.sun@intel.com>
-References: <20260626070355.1556721-1-jiebin.sun@intel.com>
- <20260710084247.3576706-1-jiebin.sun@intel.com>
+In-Reply-To: <akxLJvJvkD022Trl@google.com>
+References: <akxLJvJvkD022Trl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -76,73 +75,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Describe the three-level function-view hierarchy (primary function,
-sharing functions, shared cachelines) and the TAB/ESC/d/e key
-bindings that drive it.
+Hi Namhyung,
 
-Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Falcon <thomas.falcon@intel.com>
-Reviewed-by: Tianyou Li <tianyou.li@intel.com>
-Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
----
- tools/perf/Documentation/perf-c2c.txt | 33 +++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+Thank you very much for the review and the suggestions.
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index e57a122b8719..43a3f195048a 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -365,6 +365,39 @@ TUI OUTPUT
- The TUI output provides interactive interface to navigate
- through cachelines list and to display offset details.
- 
-+Pressing the 'TAB' key in the cacheline view switches to the function
-+view.  The function view shows a three-level hierarchy of the same data,
-+organized around functions rather than cachelines:
-+
-+  Level 1: primary functions, sorted by Cycles % (estimated load cycles:
-+           HITM, peer-snoop and other-load cycles -- on systems whose
-+           default display mode is peer, such as Arm64, the peer-snoop
-+           component dominates)
-+  Level 2: other functions that share cachelines with the level-1 function
-+  Level 3: the specific shared cachelines for each function pair
-+
-+In the function view the 'd' key opens the detail view of the selected
-+cacheline, 'e'/'+' expands or collapses the current entry, and 'TAB',
-+'ESC' or 'q' returns to the cacheline view.
-+
-+For example, expanding a level-1 function reveals the functions it shares
-+cachelines with, and expanding one of those reveals the specific shared
-+cachelines:
-+
-+  Shared Data Functions Table   (27 entries, sorted on Cycles %)
-+   Cycles  Store
-+        %  count  Code address        Symbol           Cacheline
-+  ----------------------------------------------------------------------
-+  - 39.03%   541  - 0xffffffffa2fc5b08  - [k] cpupri_set
-+             450  - 0xffffffffa2fa28a5  - [k] pull_rt_task
-+             450                                      0xff2d0082809da080
-+
-+Here cpupri_set is the most contended function (39.03% of the estimated
-+load cycles); it shares data with pull_rt_task (450 stores into the shared
-+data); and the contention is on the single cacheline 0xff2d0082809da080.
-+This is the false-sharing chain that the cacheline view otherwise leaves
-+to be reconstructed by hand.
-+
- For details please refer to the help window by pressing '?' key.
- 
- CREDITS
--- 
-2.52.0
+> It'd be great if you can add this to the documentation.
 
+Sure. I've added the worked example to
+tools/perf/Documentation/perf-c2c.txt in the v2 I just sent.
+
+> Any chance it can share the code?  We have `perf mem report` as well,
+> which deals with similar kind of data.
+
+The function view does reuse the common infrastructure: it shares the
+c2c data structures (moved into c2c.h), the perf_hpp_fmt column
+framework, hists__collapse_resort()/hists__output_resort(),
+hists__add_entry_ops() for dedup, and the hist_browser (including the
+generic fold/expand handling).
+
+The part it does not reuse is the generic report hierarchy builder. That
+nests a single sample's own sort keys, while the function view pairs
+functions that share a cacheline -- the entries are (function A,
+function B) pairs that don't map to one sample. That's why the hierarchy
+is built explicitly rather than from a sort-key list.
+
+> Also data type profiling would give more meaningful data once DWARF is
+> available.  It'd be nice if c2c could support the type analysis or c2c
+> could be implemented on top of `perf mem report` which already supports
+> the data type profiling.
+
+Agreed, data-type profiling is a great fit here -- naming the exact
+struct field being contended is often the most actionable part of a
+false-sharing fix. I'd like to explore this as a follow-up after this
+series, reusing perf mem report's type/typeoff support to add a "which
+data structure" view to c2c.
+
+Thanks,
+Jiebin
