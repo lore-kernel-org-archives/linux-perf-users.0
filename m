@@ -1,123 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F50E4499A6;
-	Fri, 10 Jul 2026 22:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429DA23EAA0;
+	Fri, 10 Jul 2026 23:41:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783723527; cv=none; b=SlzS9tfSC6p3tbPajrQWA0AZdF3WLWGn5YW9uxK8np0bnHzeA8pOonqbpARd/4jy86IDVwjmOFDFNB0WOloyQmbl1bm2UYqHzqf+FzXnN1UAquq+YAFrj8YyotF+ulqK5wno65mdPf0rLj9XcfPQJ3w4pzP5Iu59UAuPuER7RYU=
+	t=1783726905; cv=none; b=Chg+8wj033bQ1o9ZXi+I/xo7JXdUuTJqy7ToIt+s6CyOP7xEiChqzBnfd+Nq7bzmHvqqFMOkkwymHeuRZig7HfAFsWVTml8yMMAZbkJ7xhT3MQRMohKrYXk7ENDJ93+AzjWNDbu8xWXtv42l+MWiUzQim+MLjsliWbE8FdZZg8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783723527; c=relaxed/simple;
-	bh=hCZkEMaSNg91BSp9lPUnfEVv5lLLPtH93/eR1BiWlDo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RBSFGV0OBxO+paqutAdCctxdiMU+2Wida7p6GAX/repCyt3bMoDU8KxaSTzj4wfGWfoL0qwxTflTbFFtHDNTdrKNs2W4ZvsUQsijY/t0F5NFa71/qVcUj2CdWhItDqYYOwcP3bySFEAS/2IDlEKUYE6gAo3zy9opH1eGHFaFP8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZSx7QPoS; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783726905; c=relaxed/simple;
+	bh=6GDQ4tpzcFgdlui1/2X7Ef+GTHbHDVkm2ervvRHdwcM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZnF3hcP+xw2sAYXwO7Q1zbFkk6wlMG/Jg5oh2bdCjpmTyqMJuvcTUjkbsBUleD9DtaVEiQCtKnEGwg2V9eX0oEINcOrb/ebDzBLZyNy1cS7FpPhxcuRIHr61meSGmxvrpsoK5ydQTPDP8lCYUyEzgh4Zg1f3HZinKObUs0XROMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPqDCykM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZSx7QPoS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28FA61F000E9;
-	Fri, 10 Jul 2026 22:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1783723525;
-	bh=Yq17DLw8B7m0Ic0jrotN2vK5MclACu0PBR+dyFlWO78=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ZSx7QPoSol/yIwMXKEmUJhTjHYhOTBLc5mXwwU3UwAh9roiwGFOEkEGDc9BHD66gH
-	 ol4A8UhH1Qv4PL+p4SHToO2ow21dRlKuMhNHReG860Gc0SP2DYkvm0I7ZKgAi4s3Wk
-	 nNh7xrNAGItIywqfA1/YCTySczvPZbj9fgWwv5ao=
-Date: Fri, 10 Jul 2026 15:45:21 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: David Hildenbrand <david@kernel.org>, "Liam R. Howlett"
- <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo
- <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang
- <lance.yang@linux.dev>, Pedro Falcato <pfalcato@suse.de>, Russell King
- <linux@armlinux.org.uk>, Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster
- <schuster.simon@siemens-energy.com>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Dan Williams
- <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, Muchun Song
- <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Masami
- Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
- Clark <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, Ryan
- Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
- <baohua@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou
- <chengming.zhou@linux.dev>, SJ Park <sj@kernel.org>, Matthew Brost
- <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim
- <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price
- <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, Alistair
- Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu
- <peterx@redhat.com>, Kees Cook <kees@kernel.org>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Andrey
- Konovalov <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>,
- Dmitry Vyukov <dvyukov@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jarkko Sakkinen
- <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Thomas
- Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, H Hartley
- Sweeten <hsweeten@visionengravers.com>, Lucas Stach
- <l.stach@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Patrik
- Jakobsson <patrik.r.jakobsson@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark
- <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>,
- Abhinav Kumar <abhinav.kumar@linux.dev>, Jessica Zhang
- <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, Marijn Suijten
- <marijn.suijten@somainline.org>, Tomi Valkeinen
- <tomi.valkeinen@ideasonboard.com>, Thierry Reding
- <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig
- <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew Auld
- <matthew.auld@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas
- <yishaih@nvidia.com>, Shameer Kolothum <skolothumtho@nvidia.com>, Kevin
- Tian <kevin.tian@intel.com>, Ankit Agrawal <ankita@nvidia.com>, Alex
- Williamson <alex@shazbot.org>, Paolo Bonzini <pbonzini@redhat.com>, Shakeel
- Butt <shakeel.butt@linux.dev>, Usama Arif <usama.arif@linux.dev>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- damon@lists.linux.dev, iommu@lists.linux.dev, kasan-dev@googlegroups.com,
- linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
- kvm@vger.kernel.org, Russell King <linux+etnaviv@armlinux.org.uk>, Ackerley
- Tng <ackerleytng@google.com>, Kai Huang <kai.huang@intel.com>
-Subject: Re: [PATCH v2 00/33] mm: make VMA page offset handling more
- consistent
-Message-Id: <20260710154521.435f67cc7b03ed3a9ccd423a@linux-foundation.org>
-In-Reply-To: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
-References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPqDCykM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A80CB1F000E9;
+	Fri, 10 Jul 2026 23:41:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783726903;
+	bh=zNgVaTD2OZvcRG2Qmpvcf1qF4AZv/SJs0N6ooTotRyw=;
+	h=From:To:Cc:Subject:Date;
+	b=LPqDCykMROzX97eazWKW8G/LE5ajLs4bhz3K/X8oSBgxEEM+CBovyUD9LQMB5xrNl
+	 YLQdu6CQgBDEqUsjdhsLKP4pzXLTXm9DKU1Dut9rmeOmNLdXZQtKZNgkrZhS/CP2DK
+	 10cvgG/aB4J38NENosz3plRQ3elflowknnI1dOQo5dT050Ira06WjdQRbvEDk6Hhxl
+	 1eJx/JxNIX5/G+GJjt8kz91fP0fwfNdPdxr45Y5q3dVk4catTn0br18x96pFg1NJGE
+	 ZB9eMqxkc4HxFHcbd3xAoC0WuMSivm6iRBqn2D/iGPce+kpZmQbRo/WIOnEMERYovL
+	 9GZ5wZPjsgnqw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 1/4] perf stat: Fix duplicate output with --for-each-cgroup
+Date: Fri, 10 Jul 2026 16:41:40 -0700
+Message-ID: <20260710234143.1934263-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 10 Jul 2026 21:16:41 +0100 Lorenzo Stoakes <ljs@kernel.org> wrote:
+Currently it produces following output with duplicate events when
+ --for-each-cgroup option is used.  It seems perf stat adds them when
+it handles default events but didn't copy some fields in evsel__clone().
 
-> This series performs a series of cleanups and improvements around how the
-> vma->vm_pgoff field is used.
+  $ sudo perf stat -a --for-each-cgroup / true
 
-Thanks, I'll add this to mm-new.
+   Performance counter stats for 'system wide':
 
-Sashiko wasn't able to apply it :(
+           8,440,165      duration_time                    /
+           8,439,895      duration_time                    /
+           8,440,015      duration_time                    /
+           8,440,024      duration_time                    /
+           8,440,075      duration_time                    /
+           8,440,095      duration_time                    /
+                 330      context-switches                 /             #    679.4 cs/sec  cs_per_second
+              485.69 msec cpu-clock                        /             #     57.5 CPUs  CPUs_utilized
+                  70      cpu-migrations                   /             #    144.1 migrations/sec  migrations_per_second
+                  71      page-faults                      /             #    146.2 faults/sec  page_faults_per_second
+          12,183,711      branch-misses                    /             #     10.9 %  branch_miss_rate         (5.15%)
+         111,981,297      branches                         /                                                       (5.15%)
+          95,844,809      branches                         /             #    197.3 M/sec  branch_frequency     (35.49%)
+          65,611,429      cpu-cycles                       /             #      0.1 GHz  cycles_frequency       (98.32%)
+          24,170,987      cpu-cycles                       /                                                       (95.12%)
+          18,552,509      instructions                     /             #      0.8 instructions  insn_per_cycle  (95.12%)
+          22,405,293      cpu-cycles                       /                                                       (64.78%)
+           6,840,383      stalled-cycles-frontend          /             #     0.31 frontend_cycles_idle        (64.78%)
+       <not counted>      cpu-cycles                       /
+     <not supported>      stalled-cycles-backend           /             #      nan backend_cycles_idle
+     <not supported>      stalled-cycles-backend           /             #      nan stalled_cycles_per_instruction
+     <not supported>      instructions                     /
+     <not supported>      stalled-cycles-frontend          /
 
-There were some minor collisions in ksm.c, thanks to
-https://lore.kernel.org/20260703162510242nxmjbcLy5ccp1dbZSK3EU@zte.com.cn.
+         0.006546057 seconds time elapsed
 
-(You'd think His Royal AIness could figure out how to resolve a few
-dopey patch rejects.  Oh well.)
+  Some events weren't counted. Try disabling the NMI watchdog:
+  	echo 0 > /proc/sys/kernel/nmi_watchdog
+  	perf stat ...
+  	echo 1 > /proc/sys/kernel/nmi_watchdog
+
+But I'm worrying about opening same events multiple times.  Probably due
+to grouping, but I'm not sure if it's beneficial in the end.  Without
+duplication, it seems it won't cause multiplexing (assuming no other
+users at the same time).
+
+Fixes: a3248b5b5427d ("perf jevents: Add metric DefaultShowEvents")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+v2 changes)
+ * add missing bpf_counter and retire_lat fields
+
+ tools/perf/util/evsel.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d0484e4ee679e635..82399a3eb96e3ce7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -617,7 +617,13 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 	evsel->sample_read = orig->sample_read;
+ 	evsel->collect_stat = orig->collect_stat;
+ 	evsel->weak_group = orig->weak_group;
++	evsel->bpf_counter = orig->bpf_counter;
+ 	evsel->use_config_name = orig->use_config_name;
++	evsel->skippable = orig->skippable;
++	evsel->dont_regroup = orig->dont_regroup;
++	evsel->default_metricgroup = orig->default_metricgroup;
++	evsel->default_show_events = orig->default_show_events;
++
+ 	evsel->pmu = orig->pmu;
+ 	evsel->first_wildcard_match = orig->first_wildcard_match;
+ 
+@@ -626,6 +632,10 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 
+ 	evsel->alternate_hw_config = orig->alternate_hw_config;
+ 
++	evsel->retire_lat = orig->retire_lat;
++	if (evsel->retire_lat)
++		evsel->retirement_latency = orig->retirement_latency;
++
+ 	return evsel;
+ 
+ out_err:
+-- 
+2.55.0.795.g602f6c329a-goog
+
