@@ -1,210 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172BF3955FF
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 09:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0422F3D1A8E
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 10:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783674119; cv=none; b=jmWKCVIIdV7f3/Ir+NMFJAdlzD25xB/Kewufm23mewQVEvnam37ngV/SANgXWOYDubXnz+krq1nsFpjztaP6q3ttAHrMJuVYUvlu9a/n6BtLQ6/i3EjTHBI1r7XPh2bbLEf+ybVAgEqBFqJbU96jqjB8gnXlp439jGDvyYfilzM=
+	t=1783678135; cv=none; b=sDVmFke/zKZoIu8MJ8EZkaeYBcaaAjTlaSpN9rCtIz83SO2ti7D63hIc44t0oWIiGa1ZXdIN474PWnNdDd9sGQz8qAWgie6VRNYjI51uQSX887YP8XEeBY8xTzSJKy3WOmWIAqVBevp3WWF09GSihiIFTBTrcgy8Y+xTRzB1c7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783674119; c=relaxed/simple;
-	bh=6Vr96M88LmG9/L9HMnB46VeOLAo0wBJpdx4M1x3Nkig=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ElbJ/glV3Ywb/6qtaBFfWURtgrhokG7f7EocBQ+eK/tHldisACEWnPwMOQ7uzZ9aPkoeIDZHA5Otv9WC6Uh7qXdY7PWC9mPD6VOzc4P4nE4567eyJExinum2qkACq1uExEtLYhLwyL4QWlH6ck/Brrolxn9BY2sDkw2XdEdH1TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oIWlJZ9e; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783678135; c=relaxed/simple;
+	bh=AhjmgdCr6ZA23t+PouDdsy0jZEVrZCgXxFZp9YVJ/sg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rccwan3JiFcoaEovJ1XizZxTDVeN7665tZtvjXSZHUbw9gIyW0rOpXYt3ooE7qKoKx454GAzGOoXTOd495ikjr7CJpq/3Zlr0wLPbHpbGljxQEKgS5xAHSJsayggX3qck5tgoxonJL7jTB2sxEgbWHLgSZI/fp0Sewmxv7+/NrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TisDmcjK; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oIWlJZ9e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6E71F000E9;
-	Fri, 10 Jul 2026 09:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783674118;
-	bh=5ApaiVs3J17+q5Wif6EIuw1N8id035uggF+p20SmRSI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oIWlJZ9eoMvDZYyP4Bffau7iO8VFvFgZSya+uEl+Iu3BCUKE3OQGsVOwaRzyrNuTj
-	 MWNTORula1F8xuGW4pu/r+DOLMwvpok5BqYkL4hUKC8WW0Ncs+KTQrJgajPised++B
-	 gDg33VNLtGK/VSvcdNOLm5SlF8PNyU1wYIfYvBH88P+unIkUlwx89b4LsyOz4h1kdt
-	 E82HYIO6C1eMwxL+hcod1nXacIGiEyDmyXZGKbj0Wg6jjPevl2eqQxcVJoJk5Tphk2
-	 DnnVOw/Eu9afzHohxHL/Al+kvLftMUIfFUW8+c9283Fl35SMuZdv2oV5fYWnyUN08X
-	 sHSAs3DFaUJTA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 08/14] perf c2c: add HPP list parsing for function
- view histograms
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jiebin Sun" <jiebin.sun@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260710084247.3576706-9-jiebin.sun@intel.com>
-References: <20260626070355.1556721-1-jiebin.sun@intel.com>
- <20260710084247.3576706-1-jiebin.sun@intel.com>
- <20260710084247.3576706-9-jiebin.sun@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 09:01:57 +0000
-Message-Id: <20260710090157.DC6E71F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TisDmcjK"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-493ece78b0cso5616925e9.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 03:08:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783678132; x=1784282932; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lRikmQyOKgqKnyLuQ+vxx3W3W3hQlqGIgJrN16gls5I=;
+        b=TisDmcjKaVQ3flTDwR+loTuBumxdNobIpxYcUVbfn0Y0tm0A/gnkwObbLWFtt284yW
+         eEG9LVd+jZLzT+Bo1h/bVU6kTMKdLQjuxt2G7CbL56KR2Z5pBuVVzEf6h7bua2ZbSL5c
+         YpA/P8X4YvNN/+gcm8or5GAYJguY+bipFaWi95aOHEtHPvebXmw+DGzncmx51UtboN3g
+         JW0/rIyNePO1IOzd+dq3kAYGHkzPD5w9PVCyjQd50+KnTETSKhoey8AJ5BECNyP8h6Hq
+         jrUWNw86AxEeCY8intWfv4xaSmvyrbD6oyURYm4pMIyQm90MxxtzWm8pAgrQkFvTZFX8
+         JwaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783678132; x=1784282932;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lRikmQyOKgqKnyLuQ+vxx3W3W3hQlqGIgJrN16gls5I=;
+        b=Z82oW3tqZLDn7UY0AB5qyJKLtphSxGhEFKFq2QreEl29RlDo7ZS/yiZ8/+4YeQ8hvt
+         q7Ce8oLm333P2pw8oKSdmTRnCS5r44GqT8Hm5lfLjflDlZQJyUZHmFsmdKlLIccUqrG3
+         C942kFrfU39qxGKVOp7wEA1oMS9A84qs5ekXFF2rS0B79Lfy4AeHQld9GfWMyNK2mzxN
+         61cDvwc3RCq+ieySFON8d0jQNNPsffGTWEOYR3a21AK4RyPYOKNo0cTZYZGYVllJCG8R
+         1TIej417zWjGuNM2lonDMD0dzUKRlNxwdvJDiMjt/lBuYzENj03AD5H4SYyX05DAhox3
+         JOsw==
+X-Forwarded-Encrypted: i=1; AHgh+RrwFzJ8XKx6iq2CYS1d2zmUdodM1Va2HA5ydIh8y6Z2XMyAjYQO9VZWw39H6LI9HjzR3YmalM5kTC4RW0KZ2I5b@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHfNQusCM1SiAgIZ3/kZmmSCw2YqE989u4C7phji0+fdB+Lp0V
+	oyV+wIJ49A+yxN4QKihawAyxL9KgoMu9jxoMEPI9dHJuxJGCafMszbJB
+X-Gm-Gg: AfdE7ck7kbp5wgIEqvgdAaUwFk9QZBTphpXKelKrOqr5dg7XV25xoRNmXoKtomsbhdO
+	ELjQNVd1HizqmLmQt3eFfZAK4HjQxnOUjRLLi+stjN9kiFkw2M5yzxz1/wT61Wc5IlbtrnYfSyv
+	Rve8zKMixAi8Lc6Nr0cH+W1MDwYEasKv67qHcgQjcBFDI6lcLGF4jDgfI2kGKFeRhtSyz1Rl5On
+	6MR98UbzL/PH0n+rtrnAKR+qSJnCjw54tGd8Ab4qk/6kwzV37GLPPWbX/fXR3ohGHTx6YKKvXEy
+	A2W1OwLBV588NtVOZHTney2XzEY4QnbDGFtTpfL2YzNdHuPE4acaEvzmT2UtQhz/AY4D6omu5Wl
+	O1nNg7uLMZ8hcSnJ1IB6meWM0OzDpz+3Cqs2G65OD+DtBCUf6Qlv08xES4NRUvxkp0QvsSRS5WR
+	x9gBOWO0bpwV6UG02h
+X-Received: by 2002:a05:600c:6208:b0:492:3e44:214b with SMTP id 5b1f17b1804b1-493e6843fb6mr101057725e9.13.1783678132163;
+        Fri, 10 Jul 2026 03:08:52 -0700 (PDT)
+Received: from curiosity ([80.211.22.60])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-493eb6f3b85sm207711765e9.2.2026.07.10.03.08.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2026 03:08:51 -0700 (PDT)
+From: Sergey Matyukevich <geomatsi@gmail.com>
+To: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Atish Patra <atish.patra@linux.dev>,
+	Anup Patel <anup@brainfault.org>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Sergey Matyukevich <geomatsi@gmail.com>
+Subject: [PATCH] drivers/perf: riscv: handle legacy fallback in event check
+Date: Fri, 10 Jul 2026 13:08:35 +0300
+Message-ID: <20260710100837.1362558-1-geomatsi@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] Calling `reset_dimensions()` for every fallback token in `c2c_fu=
-nction_hists__init_output` and `c2c_function_hists__init_sort` clears the g=
-lobal `taken` flags during string parsing, defeating duplicate field protec=
-tion.
-- [Medium] `function_hpp_list__parse` leaks dynamically allocated `c2c_fmt`=
- elements if token parsing fails midway.
-- [Low] Missing newline character in error log in `function_hpp_list__add_t=
-okens`.
---
+Common events PERF_COUNT_HW_CPU_CYCLES and PERF_COUNT_HW_INSTRUCTIONS
+can fall back to the legacy counters. So do not mark them as invalid
+if OpenSBI reports that they are not mapped to sampling counters
+in PMU DT node.
 
---- Patch [8]: [PATCH v2 08/14] perf c2c: add HPP list parsing for function=
- view histograms ---
-commit 7b3a4ebd5658b8b4b899fd6fb0008adeb8109767
-Author: Jiebin Sun <jiebin.sun@intel.com>
+Signed-off-by: Sergey Matyukevich <geomatsi@gmail.com>
+---
+ drivers/perf/riscv_pmu_sbi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-perf c2c: add HPP list parsing for function view histograms
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index dfc886dee5ad..8f7aa71dc96f 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -335,7 +335,8 @@ static int pmu_sbi_check_event_info(void)
+ 		goto free_mem;
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(pmu_hw_event_map); i++) {
++	/* skip check for cycles and instructions as they can fall back to legacy counters */
++	for (i = 2; i < ARRAY_SIZE(pmu_hw_event_map); i++) {
+ 		if (!(event_info_shmem[i].output & RISCV_PMU_EVENT_INFO_OUTPUT_MASK))
+ 			pmu_hw_event_map[i].event_idx = -ENOENT;
+ 	}
 
-This commit adds the histogram initialization and column parsing
-infrastructure to bridge the function view's custom dimensions with the perf
-HPP list infrastructure. This enables dynamic column configuration during
-hierarchy construction.
+base-commit: a635d6748234582ea287c5ffeae28b9b23f91c7e
+-- 
+2.54.0
 
-> diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
-rs/c2c-function.c
-> index 7c2bb8f9e1139..0f21cf39f0ce6 100644
-> --- a/tools/perf/ui/browsers/c2c-function.c
-> +++ b/tools/perf/ui/browsers/c2c-function.c
-
-[ ... ]
-
-> @@ -502,7 +513,156 @@ static __maybe_unused struct c2c_fmt *get_function_=
-format(const char *name)
-
-[ ... ]
-
-> +static int
-> +c2c_function_hists__init_output(struct perf_hpp_list *hpp_list, char *na=
-me,
-> +				struct perf_env *env __maybe_unused)
-> +{
-> +	struct c2c_fmt *c2c_fmt;
-> +	int level =3D 0;
-> +	int ret;
-> +
-> +	ret =3D get_function_format(name, &c2c_fmt);
-> +	if (ret =3D=3D -ENOMEM)
-> +		return ret;
-> +	if (ret =3D=3D -ENOENT) {
-> +		reset_dimensions();
-
-[Severity: Medium]
-Does calling reset_dimensions() here wipe out the global taken flag for all
-previously processed tokens? If a user provides a string with multiple
-fallback tokens, it seems this clears the flags and defeats the duplicate
-field protection, which might allow duplicate columns and lead to
-double-frees or list corruption during teardown.
-
-> +		return output_field_add(hpp_list, name, &level);
-> +	}
-
-[ ... ]
-
-> +static int
-> +c2c_function_hists__init_sort(struct perf_hpp_list *hpp_list, char *name,
-> +			      struct perf_env *env)
-> +{
-> +	struct c2c_fmt *c2c_fmt;
-> +	int ret;
-> +
-> +	ret =3D get_function_format(name, &c2c_fmt);
-> +	if (ret =3D=3D -ENOMEM)
-> +		return ret;
-> +	if (ret =3D=3D -ENOENT) {
-> +		reset_dimensions();
-
-[Severity: Medium]
-Does this repeated call to reset_dimensions() for sort tokens also cause the
-same state corruption as in the output field initialization?
-
-> +		return sort_dimension__add(hpp_list, name, /*evlist=3D*/NULL, env, /*l=
-evel=3D*/0);
-> +	}
-
-[ ... ]
-
-> +static int function_hpp_list__add_tokens(struct perf_hpp_list *hpp_list,=
- char *list,
-> +					 struct perf_env *env, hpp_list_add_fn add)
-> +{
-> +	char *tok, *tmp;
-> +	int ret;
-> +
-> +	if (!list)
-> +		return 0;
-> +
-> +	for (tok =3D strtok_r(list, ", ", &tmp); tok; tok =3D strtok_r(NULL, ",=
- ", &tmp)) {
-> +		ret =3D add(hpp_list, tok, env);
-> +		if (ret) {
-> +			if (ret =3D=3D -EINVAL || ret =3D=3D -ESRCH)
-> +				pr_err("Invalid c2c function-view field: %s", tok);
-
-[Severity: Low]
-This isn't a bug, but does this pr_err() need a trailing '\n' to prevent
-garbled terminal output? The pr_err() macro in tools/perf wraps eprintf
-and does not implicitly append a newline.
-
-> +			return ret;
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int
-> +function_hpp_list__parse(struct perf_hpp_list *hpp_list,
-> +			 const char *output_str,
-> +			 const char *sort_str,
-> +			 struct perf_env *env)
-> +{
-> +	char *output =3D output_str ? strdup(output_str) : NULL;
-> +	char *sort   =3D sort_str   ? strdup(sort_str)   : NULL;
-> +	int ret =3D 0;
-> +
-> +	if ((output_str && !output) || (sort_str && !sort)) {
-> +		ret =3D -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	ret =3D function_hpp_list__add_tokens(hpp_list, output, env,
-> +					    c2c_function_hists__init_output);
-> +	if (ret)
-> +		goto out;
-
-[Severity: Medium]
-If function_hpp_list__add_tokens() fails midway and returns an error, does
-this goto out leak the dynamically allocated c2c_fmt elements? It appears
-the previously allocated and registered elements in hpp_list are not freed
-when bypassing the normal cleanup path.
-
-> +
-> +	ret =3D function_hpp_list__add_tokens(hpp_list, sort, env,
-> +					    c2c_function_hists__init_sort);
-> +	if (ret)
-> +		goto out;
-
-[Severity: Medium]
-Does returning early here if the sort string parsing fails also leak the
-allocations already made during the output string parsing?
-
-> +
-> +	perf_hpp__setup_output_field(hpp_list);
-> +out:
-> +	free(output);
-> +	free(sort);
-> +	return ret;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710084247.3576=
-706-1-jiebin.sun@intel.com?part=3D8
