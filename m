@@ -1,56 +1,56 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622D835E1D9
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 02:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14AA31F9B1
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 02:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783651807; cv=none; b=V+ZQ8rrheXxit/cVxxZgcmcnbFBnKxhy3sma7ifB3nCbscYe2VFLK3K3Q+UGKiNWMxIItIhUjNkNwIzT4+K3z/baAdGbuoOnfnL1BnS4h+4Z+OhaNLmte1BXuwJC8UMUfCiA4/4B/TsXMLfPi9gJo0kVfQiHf+VdBBBrd0RDXxI=
+	t=1783651810; cv=none; b=NaR0PUjgaCzOPb4C9AOZHX64TP5JcTfR0mVtl0nkqG7mkYtJ1hwJ6B3YA6KrEs/JOwAjIioTSIFMxoFKjpiLhjG+zA1rva0SSDYymD+jI4LehU/1qJD/Pb1hRW5rw1nsRzjR/FqSU8fPYBAi2jINzWdC62Qe/czHsplKfFyBjKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783651807; c=relaxed/simple;
-	bh=SQMZd0/JTv7/ke4j0fldBwIAE57DdyFJQTMdZf40glg=;
+	s=arc-20240116; t=1783651810; c=relaxed/simple;
+	bh=J/WAjM4T7uHEs6XPshQ9cey2jVcGpBYqBPb3ET1dZao=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XELb5Uhhz7sp4nWEH+t+/mszBYlgRuIr3Y8L7rGfzMX6evJCeXfn7eZj1ooT1z4O7EgP3Zv0Zy//5bRRZag4qMtCfymdUH2V2PpfW3937FmHPuk0swvOmrm0wE391L6lHcGsYZ2J35O/cfmzAH0vYKatmX/iMW7/CmDIcUM8hAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lNYoSscW; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=RweNec9z95URVoQXS+djK2q+uDsHZ65lAnwjMmQ4vKw+46WCTehOku5dMPHzOyasNBSIxJZKTshhdzYRED+qyan58jMqZBkBAfsWPu7oM7T34ft/ZYBGO+4bi6Dhl+4sid/hZyATXJa3FrVGeBZwcl+0KqihP/XHXFbw4GT7H8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WuHOuzKM; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lNYoSscW"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2cd01a14e81so5850715ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jul 2026 19:50:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WuHOuzKM"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c9667280edeso709628a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Jul 2026 19:50:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1783651805; x=1784256605; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1783651807; x=1784256607; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Qk3BfndcOOfHmgQUeQDDoPMTMcTvyVlnIzCKYI7XOqk=;
-        b=lNYoSscWyC2Ttljwz+7gOOgUWh1a0qAfv+S3yHWRaZ6mZe/bvPbkz8ghrJJ93gTjnR
-         Qiw3AnLI8v9AzDP3NhieDEmu4unSeZqWLdtHH0/OiiG+kj3OskSllWgEYRvehsnGBNjp
-         Suo1Xilx/NnYfmpzXZjMP7Z3wKiPuRaGDpNzeHXKgwwHdZ3WXBmY+igpQEKJlLraoPob
-         xw2jmMTicwXDdYCdHu4guwgMzLgsCgP5bb6cIrRaBd6Ue8qoGUKbDEK28vETrEtWQVFZ
-         G8OvIcts1DXUw6E3ceEyujH1UFoq7x4L/concWXr59BreCBnT2ZPX8efABQyDbzzfFdj
-         YUAw==
+        bh=Msvps8u4Exs31W4moeqD2kBAj5mse78bpQTpQrgt/LM=;
+        b=WuHOuzKMNbo1zyft/blQmE2tBGjevMfx5386NHc/yf9PZC+tpKouaaTmaAj1J28Ruf
+         jcXP5+ZKEGcWZLdnozFXd6W+Fh6TFJXjmBNxTdTtViKvT7gZNJVTi+ZWdnvtHcP1uXVH
+         +cjJce4p227CR0h56ymdTx0FWHCQuTzpG1w9ZBh1KQqvmPzF9LbvzskhFIRqcMmviohj
+         J9+vyiIIPjLZEDWEApZTcF/RdSJidRYoCZ8AS0pLdPFzAhb9gUM11KFi8kDSJtSt7WSD
+         tfD6H/CAau4uXcsjl2hHUy2cGmMm4XSqhR76ZSRBFVNwcNwTXAXZJG91vrc+nGtU25NN
+         VpjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783651805; x=1784256605;
+        d=1e100.net; s=20251104; t=1783651807; x=1784256607;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Qk3BfndcOOfHmgQUeQDDoPMTMcTvyVlnIzCKYI7XOqk=;
-        b=Lv8IfLdNCc2m2g5yGEyQrFIUE+4AkUali5d5c+RuRuX/KJH7ZKZd5oP8t0zb0ccqBQ
-         bpsaxeXYnTPaRnaDtxFxWfdtaRGBepWsjbO1q9B8VXZv45nlV794fyMdRqOrRWFnyIzP
-         96zj7LzR9WljCiRs3SakJoOcMJ9vyLwDJtQ6OPzmQm6VpVq9KVRO3Nyt5R0/AAkODQNQ
-         P8ht8UN52kCB+jP8orTFNLEu16Mr08pDq1PPbE0ttuGXzlkX+ehRgJ2ur54E+Bl1l3Vz
-         GDFoL0QyYdeGisW9NiZyyBF69ElSVK+qenLJJFttmHZQ4X5QAD4kP4l9G0NdZNqtZ7ae
-         9buw==
-X-Forwarded-Encrypted: i=1; AHgh+RpOSnIScRJQiO1W32F/tmcRJXzOc4dsagipP9FbJMuGACT7Nr8qyxYt03JSUj2j//IibymuNtRN0/Km4Bvu28+S@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/5srUKbNqAUbPCONFkvMdrOi2rS4zUzo0m+5sAeLC7ZbGXOno
-	bt1noJSPmubUXT/Ao2jL8+ux390IRPVB6HBSFcvolQOj8v9pzN8Twh+vyibVIia+uUq8JvFUBHQ
-	T3KjYpObZxQ==
-X-Received: from dldyr15-n2.prod.google.com ([2002:a05:701b:450f:20b0:139:b637:8de6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4506:b0:39b:d937:8020
- with SMTP id adf61e73a8af0-3c0bd0f9e18mr10476203637.42.1783651804341; Thu, 09
- Jul 2026 19:50:04 -0700 (PDT)
-Date: Thu,  9 Jul 2026 19:49:46 -0700
+        bh=Msvps8u4Exs31W4moeqD2kBAj5mse78bpQTpQrgt/LM=;
+        b=c5R0wFwtV4XfyLMQREZLoWsbLPYFwv/TYxhO0YWV5G7HdmMYDhIHonsgLfJv1tjQUP
+         LTizbFTTqCwj1sdCqyxKR+t0XFO2JALmqio58H0pYCS/4ZZYrPK+EwkcQ0AB5a91X6a7
+         qAS4r+PGcekyYq1JAlOlAsp/C5R49jEb7I8qf+76dswWR+LVU1snWdWIxHH3NQi7GzCG
+         AydGl3dB5zwEMnfIyDuPpoyJ/8z7T4SsU0KoxJrIj1R7maHnMssoqvyJZwnY27+p9QGS
+         uYIdO3vT1QKq4d+ziA/VOEwIM4lUarsAzmkZCoplXYpNaWjfIYL14G7HVIWk8mssBIKi
+         pTPg==
+X-Forwarded-Encrypted: i=1; AHgh+RrvMNUEq+mqM7moWZUO8QYv6Ti/W9favB+YwaupEPZ/OfVVVbv9d4hiT/TEKITzvb+NnTfG8oa4zboP6HdFNQQB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWeYMCOdc1+kYkVFxWT4pfLbRm2e+j7mlmP8Oc+shM0NTDI840
+	szdsjWkJwqO9uYphWWPfXjiczxPKcD3aEjvMRhTzXoOyVUHYlGhRlarB26ezmy8RcxfR4Nhig0e
+	8O/5IDl/xDg==
+X-Received: from dlf19.prod.google.com ([2002:a05:7022:413:b0:13b:2d46:494d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7343:b0:3bf:76d5:cc2b
+ with SMTP id adf61e73a8af0-3c0bcec1928mr10932457637.22.1783651806280; Thu, 09
+ Jul 2026 19:50:06 -0700 (PDT)
+Date: Thu,  9 Jul 2026 19:49:47 -0700
 In-Reply-To: <20260710024952.1668911-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260709165220.1411149-1-irogers@google.com> <20260710024952.1668911-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-Message-ID: <20260710024952.1668911-3-irogers@google.com>
-Subject: [PATCH v4 3/9] perf disasm: Fix potential NULL pointer dereference in arch__find()
+Message-ID: <20260710024952.1668911-4-irogers@google.com>
+Subject: [PATCH v4 4/9] perf ui hists: Fix uninitialized stack memory free on
+ pstack allocation failure
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, jistone@redhat.com, 
 	namhyung@kernel.org
@@ -71,35 +72,48 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	tianyou.li@intel.com, sashiko-bot <sashiko-bot@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-If arch_new_fn[e_machine]() fails (e.g., returning NULL to reject an
-architecture or upon allocation failure), the error path attempts to
-print result->name, dereferencing a NULL pointer and leading to a
-segmentation fault. Fix it by printing the numeric e_machine value
-instead.
+In evsel__hists_browse(), if browser->pstack allocation fails, the
+function jumps to the 'out:' cleanup label which invokes
+free_popup_options(options, MAX_OPTIONS). Because the options array is
+allocated on the stack and wasn't initialized until after the pstack
+check, this passes uninitialized stack pointers to free(), causing heap
+corruption.
+
+Fix it by moving the memset() of options and actions to the beginning of
+the setup sequence, before the first potential error bailout.
 
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/linux-perf-users/20260709035721.9EE901F000E9@smtp.kernel.org/
+Closes: https://lore.kernel.org/linux-perf-users/20260709035230.6DBEE1F000E9@smtp.kernel.org/
+Fixes: f2b487db45f2 ("perf hists browser: Fix possible memory leak")
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/disasm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/ui/browsers/hists.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 0a1a7e9cf3ef..5b114f089d56 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -182,8 +182,8 @@ const struct arch *arch__find(uint16_t e_machine, uint32_t e_flags, const char *
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 6edea27f4f30..7842f228435d 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3064,15 +3064,15 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 		browser->min_pcnt = min_pcnt;
+ 	hist_browser__update_nr_entries(browser);
  
- 	result = arch_new_fn[e_machine](&key, cpuid);
- 	if (!result) {
--		pr_err("%s: failed to initialize %s (%u) arch priv area\n",
--			__func__, result->name, e_machine);
-+		pr_err("%s: failed to initialize %u arch priv area\n",
-+			__func__, e_machine);
- 		free(tmp);
- 		return NULL;
- 	}
++	memset(options, 0, sizeof(options));
++	memset(actions, 0, sizeof(actions));
++
+ 	browser->pstack = pstack__new(3);
+ 	if (browser->pstack == NULL)
+ 		goto out;
+ 
+ 	ui_helpline__push(helpline);
+ 
+-	memset(options, 0, sizeof(options));
+-	memset(actions, 0, sizeof(actions));
+-
+ 	if (symbol_conf.col_width_list_str)
+ 		perf_hpp__set_user_width(symbol_conf.col_width_list_str);
+ 
 -- 
 2.55.0.795.g602f6c329a-goog
 
