@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA852E974D
-	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 03:09:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B28431BCAE
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Jul 2026 03:09:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783652962; cv=none; b=Xi04ya4D8w4DrscR9oFO75sMatW1IZsPMOsKfvSB7QmCnBMClINuUllNMede5+rC27Xf7X5+1Gh1CFdhnJVor/Wf3VCCYooGtEzM0x9SgekuWhyyS0CqZpCm5ubaLmTMPAQ/O3f09uwuZQwT8yHycBaxOS1SALk/Qj3CM8VHzpY=
+	t=1783652998; cv=none; b=Vv0sY84KioPfCppKV7AAmFVaKuaHueY1aTwpiDkF4wQqmga+lxFXhCts+aHzdZrPKGqdDZP3io+VTpS6IzoGR6swHzG6d3RFFyoELfUdXS5/uw58LK6TT0Hr7/CgHyX5PCHiBAX4ZicXyB5CcOd0RxSR7IySSndpuv757eMKMtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783652962; c=relaxed/simple;
-	bh=0XLR6AAyQLtWoXrcNxPlRZL82NrD3tSmjAWF+2+8Ea8=;
+	s=arc-20240116; t=1783652998; c=relaxed/simple;
+	bh=X3vfG/P15QOJLnrnV/453Q/srtko3AbJ11VAuLeem2o=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Vh2h2zk++zsmZ6fCmyoXuRFkTqFknPPOTjtMUQ5B3bxp7gozFk0geU+nOCPrieP3ZO0jEngU2yyy1hhl2J5ycFppfEqkjaAqkcrifpQicTqravpIRvAF/j5GCk3A2pUFAsQc6oYbHszeTZ123cSWeNGMt6Qxfw44q8HAyl/VBRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imjETXJO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=TJ9esZSaU11GdzfSZeJK371dKpZ/X4DOme0oliLDnDkcNc2k5ClI6rLlydU24VCnbI8l8rrBU+syjnZhTvZ6TY6j0l9GaJNS4rVuaEHK/7pVywywFI2A20NJS5dQQC3ZAKZCOaAMlVzrmlaJh3N8BgwRbH05C4ZWiqUzbpWXQ9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzGsX3Jv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imjETXJO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FFB31F000E9;
-	Fri, 10 Jul 2026 03:09:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzGsX3Jv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 024021F000E9;
+	Fri, 10 Jul 2026 03:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783652960;
-	bh=HekEdWK28GDhIZL7aWIDIGhvkGQ7KFRRi5GCznxuGNY=;
+	s=k20260515; t=1783652997;
+	bh=WdNfvH3wgS6K5wnjtgBs9esRJ7wstc0rxDtNpqYobkM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=imjETXJOZm9btWdvgWjd4TpCWVxz3uN1ZkqN1FkKvDGAcq3abv4KSOPpJYkrjzEZt
-	 W7Pxfzm7hAGRRe9bwu9Z7O4eNfF6BYSPGtXUWdGgf5biM2icRE16OIsIIaZ9y13gjK
-	 H/Kixu89J8rJ0OffPiSDfbNHYiaYEtPh4ERkiDcOFq1Dc0AszzNHqVuqAXDni6Pcys
-	 nj7k7qKCbOf56dJ2c+nSeU2DxLG9pF93LSMkqZf2hJiui3Y1MmD41btu08JHq/YVak
-	 LBNz34u7Kl8nBFN7YIL/8ASsrBAbGHrvIRnafL+dYDa8Gj5ypivCHUpxeFPID5MYx6
-	 4pYgMuuiogofw==
+	b=bzGsX3JvcB0C4saTkS3ocrWpMen7jWSzGJdgktNppqIZn9/SXnq9oB/6ZGqy7y8An
+	 dnCvM5bUDokYm5qYIZgwiMIy5rCZfMdHFLp8Mb8jNA6DS5fjEqB8WPkY1k41AKdmDo
+	 psvv+OgPX98g+AQniqbm40deT0Gk9E95qFz8e9IoB+jNergRmg5bVpAA+YpKQ9DKfz
+	 Fx6dCDh34Ij/lklsZscPombC0q5CaezX06DuyGrwYCl5hA95N1xBByCIhAcKJ5iWpp
+	 kVNSyNBQwOJsMxCpOzoi+YzDf50Srzj628lQDaIGPvuH+k4oiN2gpzB+2lE7uEydFa
+	 V5GYQMoyDkKYw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 4/9] perf ui hists: Fix uninitialized stack memory
- free on pstack allocation failure
+Subject: Re: [PATCH v4 8/9] perf ui hists: Remove duplicated thread in
+ popup_action
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260710024952.1668911-4-irogers@google.com>
+In-Reply-To: <20260710024952.1668911-8-irogers@google.com>
 References: <20260709165220.1411149-1-irogers@google.com>
  <20260710024952.1668911-1-irogers@google.com>
- <20260710024952.1668911-4-irogers@google.com>
+ <20260710024952.1668911-8-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jul 2026 03:09:20 +0000
-Message-Id: <20260710030920.8FFB31F000E9@smtp.kernel.org>
+Date: Fri, 10 Jul 2026 03:09:56 +0000
+Message-Id: <20260710030957.024021F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,73 +50,50 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Stack Use-After-Free (Dangling Pointer) in symbol filter string.
+- [Low] Missing `<limits.h>` inclusion causes a musl libc build failure due=
+ to `PATH_MAX` usage.
 --
 
---- Patch [4]: [PATCH v4 4/9] perf ui hists: Fix uninitialized stack memory=
- free on pstack allocation failure ---
-commit afaaff3407afa197242fdd0b413eb9b246beadbe
+--- Patch [8]: [PATCH v4 8/9] perf ui hists: Remove duplicated thread in po=
+pup_action ---
+commit cf81872962e43b7c33b75762f7881111734c277c
 Author: Ian Rogers <irogers@google.com>
 
-perf ui hists: Fix uninitialized stack memory free on pstack allocation fai=
-lure
+perf ui hists: Remove duplicated thread in popup_action
 
-Fixes heap corruption by initializing the options and actions arrays before
-the pstack allocation check, preventing an uninitialized stack pointer from
-being passed to free_popup_options() if the allocation fails.
-
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/linux-perf-users/20260709035230.6DBEE1F000E=
-9@smtp.kernel.org/
-Fixes: f2b487db45f2 ("perf hists browser: Fix possible memory leak")
+struct popup_action has a thread but this is duplicated in the
+map_symbol. Remove the non-map_symbol version so that there's only ever
+1 thread with a popup_action.
 
 > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
 s.c
-> index c6cfbcc580617..8b4c7510991f3 100644
+> index d61ebe4f6a6a4..0713e3ddcf1f0 100644
 > --- a/tools/perf/ui/browsers/hists.c
 > +++ b/tools/perf/ui/browsers/hists.c
-> @@ -3064,15 +3064,15 @@ static int evsel__hists_browse(struct evsel *evse=
-l, int nr_events, const char *h
->  		browser->min_pcnt =3D min_pcnt;
->  	hist_browser__update_nr_entries(browser);
+> @@ -2455,7 +2455,6 @@ static int switch_data_file(void)
+
+[Severity: Low]
+This isn't a bug introduced by this patch, but should limits.h be explicitly
+included at the top of tools/perf/ui/browsers/hists.c?
+
+Looking at switch_data_file(), it uses the POSIX constant PATH_MAX:
+
+static int switch_data_file(void)
+{
+        char path[PATH_MAX];
+        ...
+
+Does omitting the explicit inclusion of limits.h cause build failures on mu=
+sl
+libc systems, which do not implicitly include headers in the same way glibc
+does?
+
 > =20
-
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential stack use-after-free
-involving the local variable buf that is defined in evsel__hists_browse().
-
-Later in evsel__hists_browse(), the local stack array buf is assigned to
-the persistent hists->symbol_filter_str:
-
-hists->symbol_filter_str =3D *buf ? buf : NULL;
-
-If the user presses TAB to switch to another event, evsel__hists_browse()
-returns and pops its stack frame.
-
-Can this dangling pointer be accessed by the background timer? It looks
-like perf_top__sort_new_samples() periodically iterates over events and
-calls hists__filter_entry_by_symbol(), which then dereferences the pointer:
-
-tools/perf/util/hist.c:hists__filter_entry_by_symbol() {
-    ...
-    if (hists->symbol_filter_str !=3D NULL &&
-        (!he->ms.sym || strstr(he->ms.sym->name,
-                   hists->symbol_filter_str) =3D=3D NULL)) {
-    ...
-}
-
-Could this read uninitialized or overwritten stack memory from the current
-frame if a timer fires after the symbol filter string is set?
-
-> +	memset(options, 0, sizeof(options));
-> +	memset(actions, 0, sizeof(actions));
-> +
->  	browser->pstack =3D pstack__new(3);
->  	if (browser->pstack =3D=3D NULL)
->  		goto out;
-
-[ ... ]
+>  struct popup_action {
+>  	unsigned long		time;
+> -	struct thread 		*thread;
+>  	int (*fn)(struct hist_browser *browser, struct popup_action *act);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260710024952.1668=
-911-1-irogers@google.com?part=3D4
+911-1-irogers@google.com?part=3D8
