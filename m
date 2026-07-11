@@ -1,109 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF232417D1;
-	Fri, 10 Jul 2026 23:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC1C625;
+	Sat, 11 Jul 2026 00:04:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783727952; cv=none; b=rgTVw1RI/Zf8Sm/QYh6pbIZ2DenLAxdQe8shwn6qlKoPl5m1md6HYEHlJWZoafAujMKlHYoygnLqdqMAq5dgzwDUvz1Mv9XXzpDSGQbNoF3D8FjTFDu9bFRBzrWcZTel14Hz5RRL7k9z8wzZI1i+I45glBYsatZUO4iH6xLD4rk=
+	t=1783728261; cv=none; b=JKv3NFhR+aPIL3td8gEs7UYZQLX8LFPLAa+QDtHu+mh2qklFtbZlXur+a7Q7em3I2VB6Xt12GxgiVO2WL76bi7kTcUdePUHK8dvk2G48lHN7OvU48AMm5Ygj7rb6SJqYnGUEjb2VDvaw4zWI/l8BkhxDC9t6KXZly47AgKmdqp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783727952; c=relaxed/simple;
-	bh=WHYYwucTe11dB45s1sZVCa8gttZiZkJRY1wP09y7f90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNVhfqUKA9tC+0nP5/BsTOHarqPcOG9wfcvD0SluIhRJ8Vb1nbhAl58qFpI3jN9k4l1TKm4MNXYFamv439IAVipFcbwc3bMDiVB/w92d4rEc366VAz0MJ+jqOkRIad3oaOJlk2SRyK2PfkkaWCnDt70K7DcyGdFYOiw1iGN031g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pcm+9C2H; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783728261; c=relaxed/simple;
+	bh=Zt1B6VPovhfVpyX9UR5NUHnE8Zvo81vAsDCnUOP2zCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gzY6KC/WzhFHmLQK915v8oIp/Xcp7zL4azf8rEtxodjd9IPP06iVKENUHD1N09kQVe7aq0rFKv2uAatBJbS3vkHYizCZYYPnYAPAySY0pZMTAo0Stt+OFvJInKiV/PjSZILQVpuwx5YFnJS+0fJX6R9GrBU4NeJ4r4oR1bXMblQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cp450Uyp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pcm+9C2H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76DED1F000E9;
-	Fri, 10 Jul 2026 23:59:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cp450Uyp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B48641F000E9;
+	Sat, 11 Jul 2026 00:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783727950;
-	bh=cvw17waFqhDuQD5ugBaIHJjyIhxrCUcXQ68EElDLgTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Pcm+9C2HHrP+VOD8fHipCvwwb1q2+A2l2hKimALC/Ky0yyodztKMB1A9bdlzPgbZF
-	 /Y/bJZb0mNUN90DuFqyyV16BGyY+ooCTmHzSG5Myq3gXgOPfMRr93GVmkyyK6joHpy
-	 gqQAonSKgn/2JOFMDUBNcrUkclM85+76p0URjJQzrEptcBcy7zutnE7x24xLMKQPVp
-	 /Fe/qAw43mRX0xSz4b34tSPv2FSaQbhv5jHx2/39xX2+H6vjIhHhNtXELOVhMKx4UZ
-	 GXejZFsVws9Qw3V2d8twBasQIP0VPQD1hxQjhGTEZgc+m/QTVYlxQP8D6pdiyk8Dgt
-	 x2cIBPadSqUGg==
-Date: Fri, 10 Jul 2026 16:59:09 -0700
+	s=k20260515; t=1783728260;
+	bh=SCZvCCsl0w6sqrYLip6wnTNjQbhXuaUOrlcJCvHIG+E=;
+	h=From:To:Cc:Subject:Date;
+	b=cp450UypPSi2Hk6ra0m9SWOzeUORauprRlwlUKaA57iSGk1N8b29CmVp03MZuRT9m
+	 6k7YDhsPQfj2cF6PKPDldwJTvgj3FRL/ikYm5IEV/qdtXBQgXJ7x8oM+BvVzRizjGG
+	 qlbdlruDEUEwWkCGnDvsGT/tlbO+cDDtfHrOwP3xCNOLn5V48ITGpQO2bVpwlach4V
+	 i3kT0oh0aR0KPqUnAExEr6z0FKgucoVYiu46R61o68aruiI36myHjDfUFw8ixlufQy
+	 cdyXQs4LQOVjsyxwrPlHc6Z/DIhVK6dHwqdXYOM0821p37qOELXouSF64SWyMiWtjO
+	 +tYeY2YaOg8aA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] perf test: Update test for --for-each-cgroup
- option
-Message-ID: <alGHTR25xLliMEUJ@google.com>
-References: <20260710234143.1934263-1-namhyung@kernel.org>
- <20260710234143.1934263-4-namhyung@kernel.org>
- <20260710235200.CD3001F000E9@smtp.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 1/4] perf stat: Fix duplicate output with --for-each-cgroup
+Date: Fri, 10 Jul 2026 17:04:16 -0700
+Message-ID: <20260711000419.1949161-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260710235200.CD3001F000E9@smtp.kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 10, 2026 at 11:52:00PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] The `check_evlist_expand()` test fails to exercise the bug it intends to verify because it specifies `-e cpu-clock`.
-> - [Medium] Bash pipeline semantics mask `perf stat` command failures, potentially causing false test passes.
-> --
-> 
-> --- Patch [4]: [PATCH v2 4/4] perf test: Update test for --for-each-cgroup option ---
-> commit b42b21fdf494fb61acde3f563ac29e9b49df9327
-> Author: Namhyung Kim <namhyung@kernel.org>
-> 
-> perf test: Update test for --for-each-cgroup option
-> 
-> This commit updates the stat_bpf_counters_cgrp.sh test to simply check the
-> number of output lines with and without the --for-each-cgroup option.
-> 
-> > diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-> > index ff2e06c408bc6..17b17b112169c 100755
-> > --- a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-> > +++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-> [ ... ]
-> > @@ -58,9 +58,24 @@ check_system_wide_counted()
-> >  	fi
-> >  }
-> >  
-> > +# Missing flags in evlist__clone() resulted in different output.
-> > +# Just check the number of output lines for simple verification.
-> > +check_evlist_expand()
-> > +{
-> > +	normal_output=$(perf stat -a -e cpu-clock -x, true 2>&1 | wc -l)
-> > +	expand_output=$(perf stat -a -e cpu-clock -x, --bpf-counters --for-each-cgroup / true 2>&1 | wc -l)
-> 
-> [Severity: Medium]
-> Will this actually test the bug with evlist__clone() missing flags?
-> 
-> By specifying -e cpu-clock, the loading of default events is disabled,
-> meaning default_metricgroup and default_show_events are false. This prevents
-> the duplication bug from occurring during evsel__clone(), rendering the test
-> ineffective at catching the regression it was meant to verify.
+Currently it produces following output with duplicate events when
+ --for-each-cgroup option is used.  It seems perf stat adds them when
+it handles default events but didn't copy some fields in evsel__clone().
 
-Oops, that's right.  It should have this on top.
+  $ sudo perf stat -a --for-each-cgroup / true
 
-Thanks,
-Namhyung
+   Performance counter stats for 'system wide':
 
+           8,440,165      duration_time                    /
+           8,439,895      duration_time                    /
+           8,440,015      duration_time                    /
+           8,440,024      duration_time                    /
+           8,440,075      duration_time                    /
+           8,440,095      duration_time                    /
+                 330      context-switches                 /             #    679.4 cs/sec  cs_per_second
+              485.69 msec cpu-clock                        /             #     57.5 CPUs  CPUs_utilized
+                  70      cpu-migrations                   /             #    144.1 migrations/sec  migrations_per_second
+                  71      page-faults                      /             #    146.2 faults/sec  page_faults_per_second
+          12,183,711      branch-misses                    /             #     10.9 %  branch_miss_rate         (5.15%)
+         111,981,297      branches                         /                                                       (5.15%)
+          95,844,809      branches                         /             #    197.3 M/sec  branch_frequency     (35.49%)
+          65,611,429      cpu-cycles                       /             #      0.1 GHz  cycles_frequency       (98.32%)
+          24,170,987      cpu-cycles                       /                                                       (95.12%)
+          18,552,509      instructions                     /             #      0.8 instructions  insn_per_cycle  (95.12%)
+          22,405,293      cpu-cycles                       /                                                       (64.78%)
+           6,840,383      stalled-cycles-frontend          /             #     0.31 frontend_cycles_idle        (64.78%)
+       <not counted>      cpu-cycles                       /
+     <not supported>      stalled-cycles-backend           /             #      nan backend_cycles_idle
+     <not supported>      stalled-cycles-backend           /             #      nan stalled_cycles_per_instruction
+     <not supported>      instructions                     /
+     <not supported>      stalled-cycles-frontend          /
 
-diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-index 17b17b112169c8ba..febe3af0644157f3 100755
---- a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-@@ -62,8 +62,8 @@ check_system_wide_counted()
- # Just check the number of output lines for simple verification.
- check_evlist_expand()
- {
--       normal_output=$(perf stat -a -e cpu-clock -x, true 2>&1 | wc -l)
--       expand_output=$(perf stat -a -e cpu-clock -x, --bpf-counters --for-each-cgroup / true 2>&1 | wc -l)
-+       normal_output=$(perf stat -a -x, true 2>&1 | wc -l)
-+       expand_output=$(perf stat -a -x, --bpf-counters --for-each-cgroup / true 2>&1 | wc -l)
-        if [ "${normal_output}" != "${expand_output}" ]; then
-                if [ "${verbose}" = "1" ]; then
-                        echo "Normal output has ${normal_output} lines, but it now has ${expand_output}"
+         0.006546057 seconds time elapsed
+
+  Some events weren't counted. Try disabling the NMI watchdog:
+  	echo 0 > /proc/sys/kernel/nmi_watchdog
+  	perf stat ...
+  	echo 1 > /proc/sys/kernel/nmi_watchdog
+
+But I'm worrying about opening same events multiple times.  Probably due
+to grouping, but I'm not sure if it's beneficial in the end.  Without
+duplication, it seems it won't cause multiplexing (assuming no other
+users at the same time).
+
+Fixes: a3248b5b5427d ("perf jevents: Add metric DefaultShowEvents")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+v2 changes)
+ * add missing bpf_counter and retire_lat fields  (Sashiko)
+
+ tools/perf/util/evsel.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d0484e4ee679e635..82399a3eb96e3ce7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -617,7 +617,13 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 	evsel->sample_read = orig->sample_read;
+ 	evsel->collect_stat = orig->collect_stat;
+ 	evsel->weak_group = orig->weak_group;
++	evsel->bpf_counter = orig->bpf_counter;
+ 	evsel->use_config_name = orig->use_config_name;
++	evsel->skippable = orig->skippable;
++	evsel->dont_regroup = orig->dont_regroup;
++	evsel->default_metricgroup = orig->default_metricgroup;
++	evsel->default_show_events = orig->default_show_events;
++
+ 	evsel->pmu = orig->pmu;
+ 	evsel->first_wildcard_match = orig->first_wildcard_match;
+ 
+@@ -626,6 +632,10 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 
+ 	evsel->alternate_hw_config = orig->alternate_hw_config;
+ 
++	evsel->retire_lat = orig->retire_lat;
++	if (evsel->retire_lat)
++		evsel->retirement_latency = orig->retirement_latency;
++
+ 	return evsel;
+ 
+ out_err:
+-- 
+2.55.0.795.g602f6c329a-goog
 
