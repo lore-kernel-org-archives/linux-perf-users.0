@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E797260F;
-	Sat, 11 Jul 2026 00:23:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82A57262E;
+	Sat, 11 Jul 2026 00:32:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783729384; cv=none; b=AmpDnomPDdBnLUD24nAMCDGtDhqpLtiSuGtX854qWcGbsXsfE4+fFgDRaLKnTu1TXrlBu9onJ7+v28WQdAW8Ax+cXMeXsnAPibqY5F/lQCXZFrT/K4EkAFliLScEpgOny1ZaJPRLmFBf3+y5STkk9Iifi07SuMJj5878pMmBm9c=
+	t=1783729958; cv=none; b=K8v0R6eIjKvOq/HxElIiC/lhw3ksRTpNPhcTemHlpKkNza9SoX6lp2fnw4YzkYQKYMvbD+YufCHbW8JpQdqm0qCin3hlhn8nTk1L3aiUdFO1nus7DkV53nVDY8/jxnxoslIhhYx0aMveOsHA2zJe5ONeDK0NaRGxuFZ8Jp+YGRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783729384; c=relaxed/simple;
-	bh=OynS5KP+TuEbPjvJJGJilCR7CR00tC7rY5wY/7zXumU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iVY6gPH43k34y3Nlgl0u7ElCmKfnPmqGMHhaiBeUBe5iLdqu8oBhCeUTIaMaAnvktbS0xcM27BB29r998ORs3LvbFU3+RqaeIiQBb7Bw01B7g/LNPcHy/Bf70VsbPjCAWwgh84RGuGx2PB4PMsjz+cl+f0GyRkAQ1SA4J189MmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADsFCPMZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783729958; c=relaxed/simple;
+	bh=Ly68Tfd4D5vR00qocuFl3myZHSA/r66yrnYN/zwJRC8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YFGv5YvReyxvRNpgjt70kEIfKEr/gyyAju/amgSrqx87U/SWmLk8lWtpQwnTy2/vhhPV5mBcWAOAvVnFS+uRDIlN+F8v7FO09nOuM+BhujsR1awDllqRDsGIrVKrJp4hQjx2ihXSL+TJ3PMWBcSvOozboDY1F7ik+S66sdu7IRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EryyZCc9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADsFCPMZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 084061F00A3A;
-	Sat, 11 Jul 2026 00:23:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EryyZCc9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4AB1F000E9;
+	Sat, 11 Jul 2026 00:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783729383;
-	bh=Sfs/cPBhe3QHac9glPIBd9heFrlOp34K0spoYg0gEMc=;
+	s=k20260515; t=1783729957;
+	bh=bwlPmL772MXnPG81IbEeOXuXQxPHrxdMoZqTsvv1hOw=;
 	h=From:To:Cc:Subject:Date;
-	b=ADsFCPMZq/hNN/7B8A3rhsoyk1TM7xpyj6rwTCMJrSxKwqU9pq5fvZ5wuxmMXDzeS
-	 9puW/cZCG96fd94beEPawXUrMbWV/6/uXWVU2VxOvKpahlhTYbrKlnO/r9ScWO+SUD
-	 694pHcSCFgJwJpG2D1fCX6TFUiTrUnc38b1VMnksYoIxghzY89P4+g7xKKo8T5+b72
-	 lp7cbv4Jovx1cMYfMoYrzs27Ewh6w6VOS/PsFoCqFjo1AO0nMB5w6iaXuhDPEY+VNn
-	 ncrmEyOVqTHgd7kycoVztGd1bg+SJK3qi37HJTyrngMK5GnK56v5TkN8784f4wR0N2
-	 QwZaGANnWh+Ww==
+	b=EryyZCc9tFtCADKkjKIr1g942KbtFY+YUYXZVKT0rRUmZhvoJOAnQ03XwwRBIw+oH
+	 ztEElnRbLlZej4iT41v8XadGgMLImy8Ynj6vdYiT4tTnsDLpHOJAMAwBpnWh0RcPEc
+	 aobD+djU/rHGOUrJSZCA2nI1PxVs8NDLZGGXYE8yEy+GS3TNVzHX1EfdAgdJHW/NQA
+	 dgWjlBR9foOs6XOPSq9OKxumTe9dmmvZH+FQdXwXIzsab9X8Vev4x1QjLPkwAoNzbo
+	 Zp2uNViSI20RHxmvwwWMD6CpCt7QvJpf/wH1I0HY7N+Qr+skFVB2engzvWAlQjod0Y
+	 cCZX/VreWbIsw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Sashiko Review <sashiko-bot@kernel.org>
-Subject: [PATCH v1] lib/api/fd: Fix potential double-free from fdarray__grow()
-Date: Fri, 10 Jul 2026 17:22:59 -0700
-Message-ID: <20260711002259.1958597-1-namhyung@kernel.org>
+Subject: [PATCH v2] tools/lib/api: Fix potential double-free from fdarray__grow()
+Date: Fri, 10 Jul 2026 17:32:35 -0700
+Message-ID: <20260711003235.1963043-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -62,6 +62,9 @@ Reported-by: Sashiko Review <sashiko-bot@kernel.org>
 Closes: https://lore.kernel.org/linux-perf-users/20260710200150.11FE71F00A3A@smtp.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
+v2 changes)
+ * update the patch subject
+
  tools/lib/api/fd/array.c | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
