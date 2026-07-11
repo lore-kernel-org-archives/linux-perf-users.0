@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF96171AF;
-	Sat, 11 Jul 2026 00:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E797260F;
+	Sat, 11 Jul 2026 00:23:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783728262; cv=none; b=ols149J7XnxsgBqJGlkf64q8gFdJ60F06mOSK96NhLohgY39b5I03D/koKFv3KQ+cdllYHyjARRgOzSi9VHsWpmQrJ9tkhEYWUaahgJUdWqq0m8qCwFqS0Zwl4HNsaRzwNNC44IRzWcomFwXYTJ5u4HKVWOKEVI3IE6u/aobQUw=
+	t=1783729384; cv=none; b=AmpDnomPDdBnLUD24nAMCDGtDhqpLtiSuGtX854qWcGbsXsfE4+fFgDRaLKnTu1TXrlBu9onJ7+v28WQdAW8Ax+cXMeXsnAPibqY5F/lQCXZFrT/K4EkAFliLScEpgOny1ZaJPRLmFBf3+y5STkk9Iifi07SuMJj5878pMmBm9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783728262; c=relaxed/simple;
-	bh=t0zCdJPCY0umKlabiK4k//u874o+EtTpNNaRW/V8txY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B7ND/oMu5AyhKr61O0p4dKz7VMvLog2aq4V8e/n77+C01sevZzsrP3zj9NRzt63jmoSB+aETiWzH+Sx27efbZO3Yftt3zKy8Fc7aQtCJ07gSgIEZ3tMkBP3+03qYMBCy92rADFzmOr3mkpotL8RzPaYhC18/3XFFFURUBVGS0T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KR02H16U; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783729384; c=relaxed/simple;
+	bh=OynS5KP+TuEbPjvJJGJilCR7CR00tC7rY5wY/7zXumU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iVY6gPH43k34y3Nlgl0u7ElCmKfnPmqGMHhaiBeUBe5iLdqu8oBhCeUTIaMaAnvktbS0xcM27BB29r998ORs3LvbFU3+RqaeIiQBb7Bw01B7g/LNPcHy/Bf70VsbPjCAWwgh84RGuGx2PB4PMsjz+cl+f0GyRkAQ1SA4J189MmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADsFCPMZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KR02H16U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF05E1F00A3F;
-	Sat, 11 Jul 2026 00:04:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADsFCPMZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 084061F00A3A;
+	Sat, 11 Jul 2026 00:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783728261;
-	bh=///HlrNtKGOHMcGboCUDcGbIyE6v6Cl86N7NMA5FY+g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KR02H16U83bvA6O5+/ghzuhNDQxZdRSi4Lzml1d3+WbZJsX2Yz1JAVBY6OIfF9Cj0
-	 4lglWylK5Vv9AP074upA1243ZIUpEJLmR45XSPkTGB/CCp7vy1Z9o2CSA1GiHnGh8T
-	 0A9HoWeX/+1DXLWWVt8LvuKNIz20volYnO7Z2jmeRTSA/TiSF3GOhSTHj4s4HdKuH/
-	 qIk98n1W7Cjhr2LRlDp7OwDaduaODuxHFkQikBMK0NUA3CQZbt0pXQIslnNodKbbWs
-	 7vD8pwM0kkbpobqXpM4TmKJIDDSWoDvnqonVr3WoyHqZY8W/Sc35PSOrvhawVEqTwt
-	 c8PBfrmwXByiA==
+	s=k20260515; t=1783729383;
+	bh=Sfs/cPBhe3QHac9glPIBd9heFrlOp34K0spoYg0gEMc=;
+	h=From:To:Cc:Subject:Date;
+	b=ADsFCPMZq/hNN/7B8A3rhsoyk1TM7xpyj6rwTCMJrSxKwqU9pq5fvZ5wuxmMXDzeS
+	 9puW/cZCG96fd94beEPawXUrMbWV/6/uXWVU2VxOvKpahlhTYbrKlnO/r9ScWO+SUD
+	 694pHcSCFgJwJpG2D1fCX6TFUiTrUnc38b1VMnksYoIxghzY89P4+g7xKKo8T5+b72
+	 lp7cbv4Jovx1cMYfMoYrzs27Ewh6w6VOS/PsFoCqFjo1AO0nMB5w6iaXuhDPEY+VNn
+	 ncrmEyOVqTHgd7kycoVztGd1bg+SJK3qi37HJTyrngMK5GnK56v5TkN8784f4wR0N2
+	 QwZaGANnWh+Ww==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -35,13 +34,12 @@ Cc: Ian Rogers <irogers@google.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 4/4] perf test: Update test for --for-each-cgroup option
-Date: Fri, 10 Jul 2026 17:04:19 -0700
-Message-ID: <20260711000419.1949161-4-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	Sashiko Review <sashiko-bot@kernel.org>
+Subject: [PATCH v1] lib/api/fd: Fix potential double-free from fdarray__grow()
+Date: Fri, 10 Jul 2026 17:22:59 -0700
+Message-ID: <20260711002259.1958597-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-In-Reply-To: <20260711000419.1949161-1-namhyung@kernel.org>
-References: <20260711000419.1949161-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,56 +48,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To simply check the number of output lines with and without the option.
+If the realloc for fda->entries succeeds but the realloc for fda->priv
+fails, the error path frees the newly allocated entries.
 
-Before this series, it failed like below:
+However, fda->entries is neither updated to point to the new entries block
+nor cleared to NULL. If realloc moved the allocation to a new block, the
+old fda->entries pointer is now freed memory.
 
-  $ perf test -v 125
-  125: perf stat --bpf-counters --for-each-cgroup test:
-  ---- start ----
-  test child forked, pid 1941516
-  Normal output has 22 lines, but it now has 54
-  ---- end(-1) ----
-  125: perf stat --bpf-counters --for-each-cgroup test         : FAILED!
+When fdarray__exit() is later called to clean up, it executes
+free(fda->entries), which would trigger a double-free on that old pointer.
 
+Reported-by: Sashiko Review <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/linux-perf-users/20260710200150.11FE71F00A3A@smtp.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
-v3 changes)
- * use default events and metrics  (Sashiko)
- * update the commit description
+ tools/lib/api/fd/array.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
- tools/perf/tests/shell/stat_bpf_counters_cgrp.sh | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-index ff2e06c408bc6be1..febe3af0644157f3 100755
---- a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-+++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
-@@ -58,9 +58,24 @@ check_system_wide_counted()
- 	fi
- }
+diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+index ffe8272af59b2da0..23b476a35de477fe 100644
+--- a/tools/lib/api/fd/array.c
++++ b/tools/lib/api/fd/array.c
+@@ -31,7 +31,8 @@ int fdarray__grow(struct fdarray *fda, int nr)
  
-+# Missing flags in evlist__clone() resulted in different output.
-+# Just check the number of output lines for simple verification.
-+check_evlist_expand()
-+{
-+	normal_output=$(perf stat -a -x, true 2>&1 | wc -l)
-+	expand_output=$(perf stat -a -x, --bpf-counters --for-each-cgroup / true 2>&1 | wc -l)
-+	if [ "${normal_output}" != "${expand_output}" ]; then
-+		if [ "${verbose}" = "1" ]; then
-+			echo "Normal output has ${normal_output} lines, but it now has ${expand_output}"
-+		fi
-+		exit 1
-+	fi
-+}
-+
- check_bpf_counter
- find_cgroups
+ 	priv = realloc(fda->priv, psize);
+ 	if (priv == NULL) {
+-		free(entries);
++		/* this will be freed by fdarray__exit() */
++		fda->entries = entries;
+ 		return -ENOMEM;
+ 	}
  
- check_system_wide_counted
-+check_evlist_expand
+@@ -50,7 +51,7 @@ struct fdarray *fdarray__new(int nr_alloc, int nr_autogrow)
  
- exit 0
+ 	if (fda != NULL) {
+ 		if (fdarray__grow(fda, nr_alloc)) {
+-			free(fda);
++			fdarray__delete(fda);
+ 			fda = NULL;
+ 		} else {
+ 			fda->nr_autogrow = nr_autogrow;
 -- 
 2.55.0.795.g602f6c329a-goog
 
