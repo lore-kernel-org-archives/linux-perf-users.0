@@ -1,43 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35291294A10;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996F52AEE4;
 	Sun, 12 Jul 2026 06:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783839375; cv=none; b=qbCWWATQgm52e2gn6TjBsjeVEPbfgenUrMVD2swBrxOivrJsNPP17+SZBGADoE9SXgayKjbz6ElTX3nLGPvGNDJWQI6QyYfrAiy5zWUlIGJvbJEcWVENiwlrbhuSCaFpon3P1xNpJH3NcLV+UpLs/4vE7eTvbg6nrKOy0j/9nDM=
+	t=1783839375; cv=none; b=LBJ8shM2EtGKl8JmKS8ME+QdYOt5gZwPhoNCvtqiAKGUg61PHzNRt4kwYN6yommA9RTODjAcqHuiL/nYBawV4x1fbrfVKkovybFP2LshA5tpDH3JMq7W50Q2rsOvE4cHi1NjxhU3vgFV9k5SYkAU7f/Ndg25gYRSq1iZU9n1P4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783839375; c=relaxed/simple;
-	bh=lo/qhT4bCsL04i0vJeNBq7GP7snjxj8ehJULA3QGng0=;
+	bh=WZHYUVM7Iws9lMPF7n/EUApgnfcYqAhmxOI+KuQN8KM=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Q/BnjCI7MaunHahL0TBo1VYtqM8KArz5g0OKZiq8lMaVadGacfdCCWmaTwjesTGafUHZzuo+gWPy80JnvLCGRgqkI9fLSsRc7AWVrCe8XCjeebhZvMA0KRkhKDbumnQ4+HklED9thZfvNI+Tec1w696CmjsIewhr8jppRhwuY1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YedHCjp8; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Lyojm5EZBuRrF39s1z6KSaTKTES81hMQ0Y/sXMBgZW8zMvkOv7PS2O3yLj8KTGHStDvFXmDnmBI/92SagYmLB/ugn/6kBJyLSDaUU53j5ob+nwunAJDvH/cN9zpwNUxIYUij6hJIw4xEjdfO32TysBmOGJylQjgdLNJJsTLrjUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TmGGRCEu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YedHCjp8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D731F00A3E;
-	Sun, 12 Jul 2026 06:56:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TmGGRCEu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C441F00A3D;
+	Sun, 12 Jul 2026 06:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1783839374;
-	bh=TpuGGpVj1TvWmkFFKE/QOmWtRup8Hpl573vjY4wcRgo=;
+	bh=xYgMOxTZVQ45f5Fd+Zh6bIbq+IS4ycKwNxuQBQg2pRs=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=YedHCjp8RJep6eN1Opv6r4yJC5Hc83jYVPxqGIkp5nazi2JmnUjH/wQ/AMJaSKqvZ
-	 IRyUrJCshBgwblPl5KvXQqGI1d7bvxMfhd6NbxxNzfhiXCPurSRPZc+kbtfLIvxQ2Q
-	 020qhyKRzDA/kiRQAmCPQ0wm9D7G9fGs+KYuqm464tkrWK7Fq74WozIEjtHabEdCg3
-	 ownG9EQCKtLUhPRJxOrbEc/pFX9anQ4XqG7DKLSrUPdmdM4D6tWWINo35/B3m0SM7/
-	 QnXcosPtQYhvOIZUY0TVfsWCWjCh82xdZjpYCXOqjEigWTZQO9SceTUdLZBQ+s22FK
-	 pbmVws3n5uz4Q==
+	b=TmGGRCEuLhvHG2GgvUklrWYs2/m3bRxUGr86C/9LO8MiwAD2IvsAz1Wg/Q8PRO2uD
+	 XNLnhlHv6i7UxPmEUZzW4d8bIvZmTVuqhX32xUvLWUJWt0ItZn9XnxETFpHB5AiTVc
+	 2hzI2sZ8UMZ5gDU10Uq3INbc6aGV/C0HKAl4sVFfatu8GhkgFdkl1+41uNxLxMjAjs
+	 +epXI+09Wj6O5P/lwxg7Oip2lArRD3O4fr62InpEh+PGAHOsCYco9ue5EsUwm5HRNn
+	 HtPQwFj5sRY5V6ah4RYruqd3QHUJtjFwqOaHDtlKsOmHdXt1qNtqjiEVGbNo1H3QTg
+	 HTegI9ZoFJ3ZQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, Ian Rogers <irogers@google.com>
-Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- mingo@redhat.com, peterz@infradead.org
-In-Reply-To: <20260605062418.1540615-1-irogers@google.com>
-References: <20260526224241.4016312-1-irogers@google.com>
- <20260605062418.1540615-1-irogers@google.com>
-Subject: Re: [PATCH v3] perf clang-format: Prioritize Python.h and expand
- other categories
-Message-Id: <178383937371.3162711.361240211609345201.b4-ty@kernel.org>
-Date: Sat, 11 Jul 2026 23:56:13 -0700
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Yu Peng <pengyu@kylinos.cn>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+ Qinxin Xia <xiaqinxin@huawei.com>, Andi Kleen <ak@linux.intel.com>, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260602081104.271325-1-pengyu@kylinos.cn>
+References: <20260602081104.271325-1-pengyu@kylinos.cn>
+Subject: Re: perf metricgroup: Fix metric expression copy leaks
+Message-Id: <178383937411.3162711.8798252992104512729.b4-ty@kernel.org>
+Date: Sat, 11 Jul 2026 23:56:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,20 +51,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 04 Jun 2026 23:24:18 -0700, Ian Rogers wrote:
-> This commit updates the .clang-format rules for the perf tools.
-> It prioritizes Python.h sorting and expands the regex lists for C
-> standard library and OS specific headers.
+On Tue, 02 Jun 2026 16:11:04 +0800, Yu Peng wrote:
+> metricgroup__copy_metric_events() allocates a new metric expression and
+> duplicates metric_name before linking the expression into the destination
+> metric event.
 > 
-> - Prioritize Python.h by sorting it first (Priority -1), ensuring it
->   is sorted before even the main header (Priority 0).
-> - Keep other header priorities (1 and 2) to maintain their relative
->   order.
-> - Sanity check and complete "C Standard Library Headers" up to C23
->   (added stdbit.h, stdckdint.h).
-> - Sanity check and complete "OS/System-Specific Headers" based on
->   actual usage in tools/perf (added asm-generic, uapi, and various
->   flat POSIX/system headers).
+> Free new_expr when strdup() fails, and free the duplicated metric_name on
+> the later error paths.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
