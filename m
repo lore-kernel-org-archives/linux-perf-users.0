@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1409023EA84;
-	Sun, 12 Jul 2026 06:56:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35291294A10;
+	Sun, 12 Jul 2026 06:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783839375; cv=none; b=nWqC7HMoWxYv18W1i2gUQRTkR0ZeEWMWo3JdVecnCSCCIGvDjVlthE7LDW58XBCUEIeRs9b+Qyt4BvojJbdCE1HWLlWj5loTFRl1V4xeVBfeO2HRDhXFboPKqW/E25CnTAY0nz956kJXF26m3gWXCFX63qre4q6v1Qq6+NP3SsM=
+	t=1783839375; cv=none; b=qbCWWATQgm52e2gn6TjBsjeVEPbfgenUrMVD2swBrxOivrJsNPP17+SZBGADoE9SXgayKjbz6ElTX3nLGPvGNDJWQI6QyYfrAiy5zWUlIGJvbJEcWVENiwlrbhuSCaFpon3P1xNpJH3NcLV+UpLs/4vE7eTvbg6nrKOy0j/9nDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783839375; c=relaxed/simple;
-	bh=tdiMg7wU7TchM+2MtSGK0KsP+llIRgaOdMG/VlN8+T8=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mXHQ3bB+9zi/e4KRdl8P6481b4RZPgNvII8bmkesjRJZdRgaC64YEPlhlpsFgCxoOw+XyX/1nefO4H3uad7STzocm2veixzzEQUutxACPW/le5g03fy7PqxU48FWExm5vcFJhXzC6HEKH/1kzc8X8T25JzidOIWBOPz3l/ETVdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5PJw5oP; arc=none smtp.client-ip=100.103.45.18
+	bh=lo/qhT4bCsL04i0vJeNBq7GP7snjxj8ehJULA3QGng0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Q/BnjCI7MaunHahL0TBo1VYtqM8KArz5g0OKZiq8lMaVadGacfdCCWmaTwjesTGafUHZzuo+gWPy80JnvLCGRgqkI9fLSsRc7AWVrCe8XCjeebhZvMA0KRkhKDbumnQ4+HklED9thZfvNI+Tec1w696CmjsIewhr8jppRhwuY1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YedHCjp8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5PJw5oP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CA51F000E9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YedHCjp8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D731F00A3E;
 	Sun, 12 Jul 2026 06:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783839373;
-	bh=kUKnfA/1eR70p204AysdRGvPN65gXv9tJ/cgtFYH61Q=;
-	h=From:To:In-Reply-To:References:Subject:Date;
-	b=M5PJw5oP6B9zIVLqBvpOncSbOPme50eH/lUf/rIQuPb0m5g5bI8ZE1Y+6YzfAuzjS
-	 HKWkmjvMkvxiGBYquO7nQ7YuCYUZ9azT9k2I0tgrK3Ht/WgKbAA0jZ9o5izfin9IKb
-	 B0L744M45ATjI1B9ELXh3dWDsiSyTrBIo+5Kq8EhQvuZU7LN9adzx5JHk21GVHFRzU
-	 fgi2VBEpoqvewS68UrkGHJQy9BTjMDdsjG0cs11yL4WIOesnVbGZOG9CcDhmcNLDdz
-	 cDA9a+j5EwPnpvA8IqQzb4k7l3tkm6vYTE4EKbCwNLyVLp3c0U5M068ivi8TFuQUjW
-	 d0fvHZgkowm6Q==
+	s=k20260515; t=1783839374;
+	bh=TpuGGpVj1TvWmkFFKE/QOmWtRup8Hpl573vjY4wcRgo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=YedHCjp8RJep6eN1Opv6r4yJC5Hc83jYVPxqGIkp5nazi2JmnUjH/wQ/AMJaSKqvZ
+	 IRyUrJCshBgwblPl5KvXQqGI1d7bvxMfhd6NbxxNzfhiXCPurSRPZc+kbtfLIvxQ2Q
+	 020qhyKRzDA/kiRQAmCPQ0wm9D7G9fGs+KYuqm464tkrWK7Fq74WozIEjtHabEdCg3
+	 ownG9EQCKtLUhPRJxOrbEc/pFX9anQ4XqG7DKLSrUPdmdM4D6tWWINo35/B3m0SM7/
+	 QnXcosPtQYhvOIZUY0TVfsWCWjCh82xdZjpYCXOqjEigWTZQO9SceTUdLZBQ+s22FK
+	 pbmVws3n5uz4Q==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Jiawei Sun <abyssmystery@gmail.com>, 
+To: acme@kernel.org, Ian Rogers <irogers@google.com>
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20260710053927.1864021-1-irogers@google.com>
-References: <20260710053927.1864021-1-irogers@google.com>
-Subject: Re: (subset) [PATCH v1 1/2] perf record: Fix teardown hang on
- system-wide multi-threaded sessions
-Message-Id: <178383937332.3162711.15710064516636108862.b4-ty@kernel.org>
+ mingo@redhat.com, peterz@infradead.org
+In-Reply-To: <20260605062418.1540615-1-irogers@google.com>
+References: <20260526224241.4016312-1-irogers@google.com>
+ <20260605062418.1540615-1-irogers@google.com>
+Subject: Re: [PATCH v3] perf clang-format: Prioritize Python.h and expand
+ other categories
+Message-Id: <178383937371.3162711.361240211609345201.b4-ty@kernel.org>
 Date: Sat, 11 Jul 2026 23:56:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -49,13 +48,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 09 Jul 2026 22:39:06 -0700, Ian Rogers wrote:
-> Under system-wide (-a) parallel streaming mode (--threads=cpu),
-> background recording threads can be inundated by a continuous
-> firehose of hardware samples generated by the OS. In this state,
-> a background thread's local hit count remains unequal to its
-> sample count, causing it to bypass the blocking fdarray__poll()
-> call entirely on each iteration of its recording loop.
+On Thu, 04 Jun 2026 23:24:18 -0700, Ian Rogers wrote:
+> This commit updates the .clang-format rules for the perf tools.
+> It prioritizes Python.h sorting and expands the regex lists for C
+> standard library and OS specific headers.
+> 
+> - Prioritize Python.h by sorting it first (Priority -1), ensuring it
+>   is sorted before even the main header (Priority 0).
+> - Keep other header priorities (1 and 2) to maintain their relative
+>   order.
+> - Sanity check and complete "C Standard Library Headers" up to C23
+>   (added stdbit.h, stdckdint.h).
+> - Sanity check and complete "OS/System-Specific Headers" based on
+>   actual usage in tools/perf (added asm-generic, uapi, and various
+>   flat POSIX/system headers).
 > 
 > [...]
 Applied to perf-tools-next, thanks!
