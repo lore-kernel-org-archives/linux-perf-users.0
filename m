@@ -1,113 +1,66 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C4937A830
-	for <linux-perf-users@vger.kernel.org>; Sat, 11 Jul 2026 13:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1409023EA84;
+	Sun, 12 Jul 2026 06:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783774999; cv=none; b=EoFJH2dZ2Dk/daMr2M0VNjiVIp1hIUe/FC5F2kl+nFOQRxqmhefTqs+1i2Hg6HfolKKv2vGlyJfx6qT7VYwf+/e/VnF7vFVMBNoB48Ou/8ruNsLtnfj4mmgCfeR2APbiyNExWz8ggaDz0RiAG0jCf6uBK/qdu3CXANxgLldhbBo=
+	t=1783839375; cv=none; b=nWqC7HMoWxYv18W1i2gUQRTkR0ZeEWMWo3JdVecnCSCCIGvDjVlthE7LDW58XBCUEIeRs9b+Qyt4BvojJbdCE1HWLlWj5loTFRl1V4xeVBfeO2HRDhXFboPKqW/E25CnTAY0nz956kJXF26m3gWXCFX63qre4q6v1Qq6+NP3SsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783774999; c=relaxed/simple;
-	bh=Uvf14jRvuJ1O3eHThoDT9f+Un6LPNgJ6LTmsd8EcjdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fU1JRL+/qew+wm30/sUjtiTXp/fQdD68ws8U8GCcoiRWZhtgZ36bFE003JEv4PxZbnfiWWRTmTP4tB+9nLBwZ85TqsPGB1Pf4AdNXGDqZZqWoftu+eLjr2IU4IlfcRKDAGod6+YsWMS6q071C82/5TVZc3Ss0+8Vi1E7ZzUigKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G2yVHni8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783839375; c=relaxed/simple;
+	bh=tdiMg7wU7TchM+2MtSGK0KsP+llIRgaOdMG/VlN8+T8=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mXHQ3bB+9zi/e4KRdl8P6481b4RZPgNvII8bmkesjRJZdRgaC64YEPlhlpsFgCxoOw+XyX/1nefO4H3uad7STzocm2veixzzEQUutxACPW/le5g03fy7PqxU48FWExm5vcFJhXzC6HEKH/1kzc8X8T25JzidOIWBOPz3l/ETVdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5PJw5oP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G2yVHni8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783774997;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aFpBP/DfDzpcxl3K+IjgP1qlssgGkcilk5K5TKskscE=;
-	b=G2yVHni8YLne+6NTQ8DlfhTrJ2EfRjDYCGtGXiSKmjuY4EMCe7MQ+7Ca8ggOegAzlzPiVn
-	2GZcccMRTtcKalDVeZu0H38U2FZ2GCSh08EfZrc9kWHPfzcjLGGwajiluAZMClc2JOy8tj
-	yjix1O8Ig8Q9+UWjnlj4ue+otZiTGrc=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-198-gmpZbOxONLaxakcC-SZQqg-1; Sat,
- 11 Jul 2026 09:03:13 -0400
-X-MC-Unique: gmpZbOxONLaxakcC-SZQqg-1
-X-Mimecast-MFC-AGG-ID: gmpZbOxONLaxakcC-SZQqg_1783774990
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74BFE18009CA;
-	Sat, 11 Jul 2026 13:03:09 +0000 (UTC)
-Received: from fedora (unknown [10.44.49.164])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8F30B1800598;
-	Sat, 11 Jul 2026 13:03:00 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat, 11 Jul 2026 15:03:08 +0200 (CEST)
-Date: Sat, 11 Jul 2026 15:02:58 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next 1/2] srcu: Add lock guard for srcu_fast_updown
- flavor
-Message-ID: <alI_Ajs6q65m8MNT@redhat.com>
-References: <20260706172744.3920417-1-puranjay@kernel.org>
- <20260706172744.3920417-2-puranjay@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5PJw5oP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CA51F000E9;
+	Sun, 12 Jul 2026 06:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783839373;
+	bh=kUKnfA/1eR70p204AysdRGvPN65gXv9tJ/cgtFYH61Q=;
+	h=From:To:In-Reply-To:References:Subject:Date;
+	b=M5PJw5oP6B9zIVLqBvpOncSbOPme50eH/lUf/rIQuPb0m5g5bI8ZE1Y+6YzfAuzjS
+	 HKWkmjvMkvxiGBYquO7nQ7YuCYUZ9azT9k2I0tgrK3Ht/WgKbAA0jZ9o5izfin9IKb
+	 B0L744M45ATjI1B9ELXh3dWDsiSyTrBIo+5Kq8EhQvuZU7LN9adzx5JHk21GVHFRzU
+	 fgi2VBEpoqvewS68UrkGHJQy9BTjMDdsjG0cs11yL4WIOesnVbGZOG9CcDhmcNLDdz
+	 cDA9a+j5EwPnpvA8IqQzb4k7l3tkm6vYTE4EKbCwNLyVLp3c0U5M068ivi8TFuQUjW
+	 d0fvHZgkowm6Q==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Jiawei Sun <abyssmystery@gmail.com>, 
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Ian Rogers <irogers@google.com>
+In-Reply-To: <20260710053927.1864021-1-irogers@google.com>
+References: <20260710053927.1864021-1-irogers@google.com>
+Subject: Re: (subset) [PATCH v1 1/2] perf record: Fix teardown hang on
+ system-wide multi-threaded sessions
+Message-Id: <178383937332.3162711.15710064516636108862.b4-ty@kernel.org>
+Date: Sat, 11 Jul 2026 23:56:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260706172744.3920417-2-puranjay@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On 07/06, Puranjay Mohan wrote:
->
-> Add a guard(srcu_fast_updown) definition for scoped
-> SRCU-fast-updown read-side critical sections, following the
-> existing pattern of guard(srcu) and guard(srcu_fast).
->
-> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
-> ---
->  include/linux/srcu.h | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/include/linux/srcu.h b/include/linux/srcu.h
-> index a54ce9e808b92..72c86d3b23f2e 100644
-> --- a/include/linux/srcu.h
-> +++ b/include/linux/srcu.h
-> @@ -638,4 +638,11 @@ DEFINE_LOCK_GUARD_1(srcu_fast_notrace, struct srcu_struct,
->  DECLARE_LOCK_GUARD_1_ATTRS(srcu_fast_notrace, __acquires_shared(_T), __releases_shared(*(struct srcu_struct **)_T))
->  #define class_srcu_fast_notrace_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(srcu_fast_notrace, _T)
->
-> +DEFINE_LOCK_GUARD_1(srcu_fast_updown, struct srcu_struct,
-> +		    _T->scp = srcu_read_lock_fast_updown(_T->lock),
-> +		    srcu_read_unlock_fast_updown(_T->lock, _T->scp),
-> +		    struct srcu_ctr __percpu *scp)
-> +DECLARE_LOCK_GUARD_1_ATTRS(srcu_fast_updown, __acquires_shared(_T), __releases_shared(*(struct srcu_struct **)_T))
-> +#define class_srcu_fast_updown_constructor(_T) WITH_LOCK_GUARD_1_ATTRS(srcu_fast_updown, _T)
+On Thu, 09 Jul 2026 22:39:06 -0700, Ian Rogers wrote:
+> Under system-wide (-a) parallel streaming mode (--threads=cpu),
+> background recording threads can be inundated by a continuous
+> firehose of hardware samples generated by the OS. In this state,
+> a background thread's local hit count remains unequal to its
+> sample count, causing it to bypass the blocking fdarray__poll()
+> call entirely on each iteration of its recording loop.
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-Looks "obviously correct" to me. FWIW,
+Best regards,
+Namhyung
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
