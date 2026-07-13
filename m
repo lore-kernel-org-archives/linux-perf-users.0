@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABE43B2FF7;
-	Mon, 13 Jul 2026 08:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE1F3B3BF1;
+	Mon, 13 Jul 2026 08:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783931619; cv=none; b=PuWdJ9xIU3LdIUlXRS8JJsGUZEQYuoKiAaFAZWmhgSaCkKojxtWbax9Ceh0xE/5vDtwBbQrzi8jxv7PydvStOYJSV5Nf5bsBEmUE3HjLjoQgE2GVyKlrEsNXufpAlRRIY8DNV6OlOWsR5sQ1yJPydq81KBCGa947dvwXZX/j4o8=
+	t=1783931622; cv=none; b=OrjhG1q4sv1lVD6sngeS0wczAFDJa0TYgukZlS0fPLxiyeAkvMVMYBb3bwp+EsjF2ZB/ADBLaPzF6OhQQ+xQSbG7c3PVBFPvYuNcYHHpvkVbOChDuNd65D3HBpCVsML2X+Ya7DDHNVDHcUjxbVXRkwfChseyVhj0s4yNGWIwCTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783931619; c=relaxed/simple;
-	bh=9xbJSv1SMk/1yXM8aWvs+76XrC+eEQsJ0ouuPohqP3Y=;
+	s=arc-20240116; t=1783931622; c=relaxed/simple;
+	bh=/kmQ6nX1x9XecdGPLCdGgXcUKCfODdy7o0FiL7JzYQE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nBjmJQfMDdhk0g20U+bbzo6tuuu12eYsNieO+6pjIkoRMBs0qa130wyyYM23ZvQSupY0vgy+Ija3v3YJJRdfoGclmthqJ3agnmZ9mjNWEQ8ioVnGl03vfodT3F2Xe5V/ZbQoXHxzRdH97RZpsuu6ouwjfGH3LJ+52VojThGPqYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UAf7MpKd; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=pefH5ahx472elU41InUfCfvg8vxq70UjZSriUF12xcNLr/20j2iskShrbNgPWnMkPNQPhnNuiTmHeVp4Xg8pw4vRBJPklWkFnr6pBSZdwu29eE3wOupUKpN5UgXraMLuq4ZKm1Y4q0rd5nLYeAm9YxfSsDzmokptNAoN8p+nzIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OYyeIPUB; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UAf7MpKd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OYyeIPUB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783931615; x=1815467615;
+  t=1783931618; x=1815467618;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=9xbJSv1SMk/1yXM8aWvs+76XrC+eEQsJ0ouuPohqP3Y=;
-  b=UAf7MpKdcR69SN3S1WlhRRSYqE8bAgb5Vhy5SkwRNEHw71q2D5Lgc7hc
-   rPd3OcYDgcnQDp1+ByYEII+wkoY/deNLhXNOMa4XijGd0WQWpeFZTIf4y
-   22qXfHV9p7Xowgnn2Cyqj9ur8jk5vTpesaRVDoYy+eidsLH110DqAFjRg
-   4ZUz638m1WXl2ERlRireQQn+f4uBdVI6TgIt6p3zm4lbE06quai2iNmlC
-   0yotcjrRwFACkk8tqu4elFJa9i9FE+2g8WFHKwshxHb0XVSt1Jatoit/k
-   kb+EFEOomNXoMq/+mrZQU0yvPQ4cJuw3fIEf63SnPDgDqz8auTdSy5zDY
-   g==;
-X-CSE-ConnectionGUID: Aff13TKHRoC3mvryP0S7pg==
-X-CSE-MsgGUID: fcts9QwwT4qbny5gLNMbXg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84390088"
+  bh=/kmQ6nX1x9XecdGPLCdGgXcUKCfODdy7o0FiL7JzYQE=;
+  b=OYyeIPUBIIlC1P6TCUKUUpR9NJh0ARv7i7DP99rsWX6MnfLcZzK8AVyW
+   oz4YIeehpLFuxrKWQN3mSKqaKYYlSyWIjNw5lKdjZ6qcd9L01uLWq/lri
+   WCPcM8w5F7me/KBkCFtmLCcnZY8lYw+dUD/Z+7rXJitEk7qNY/kyHjxAA
+   42HIwvu2Jfhq1HCC6BimdJxVhRDp5DZi/yR1iVh34ipFghF/mXgzYmIn4
+   v772kAhYiFu/7vJ3I//duhBUY4n6OlBdQ8gBPQwHNdOJtt7KatLs8mN3f
+   3hmGrBJVbpvnNEfjG6ix7BmU+ZbzOCHo0H3uJEsFIV9j6+zaO8+YPDCa3
+   w==;
+X-CSE-ConnectionGUID: hgLsQaFZRoOBrB78Uz3KcQ==
+X-CSE-MsgGUID: fmwmS2K5SuOELmvf8ysaYA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84390093"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84390088"
+   d="scan'208";a="84390093"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 01:33:34 -0700
-X-CSE-ConnectionGUID: uqKxKKhQQ/yZnFNoEBMQCw==
-X-CSE-MsgGUID: ETVMkzDqRISHzo4kl6TYtQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 01:33:37 -0700
+X-CSE-ConnectionGUID: uHBWmmtyRgqkB1d/1mxMuw==
+X-CSE-MsgGUID: yEV4ZLQpTEGSXUPeW4r6NQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="255560756"
+   d="scan'208";a="255560761"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa007.jf.intel.com with ESMTP; 13 Jul 2026 01:33:30 -0700
+  by orviesa007.jf.intel.com with ESMTP; 13 Jul 2026 01:33:33 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 3/7] perf/x86: Guard intel_pmu_cpu_dead() against invalid hybrid PMU casts
-Date: Mon, 13 Jul 2026 16:27:30 +0800
-Message-Id: <20260713082734.3162099-4-dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 4/7] perf/x86/intel: Unwind cpuc state if PEBS buffer setup fails
+Date: Mon, 13 Jul 2026 16:27:31 +0800
+Message-Id: <20260713082734.3162099-5-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260713082734.3162099-1-dapeng1.mi@linux.intel.com>
 References: <20260713082734.3162099-1-dapeng1.mi@linux.intel.com>
@@ -72,88 +72,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In failure paths, cpuc->pmu can still point to the global static pmu
-instead of an embedded x86_hybrid_pmu::pmu. Calling hybrid_pmu() on
-that pointer causes an invalid container conversion and may lead to
-out-of-bounds access.
+intel_pmu_cpu_prepare() allocates per-CPU perf state first and then sets
+up the arch PEBS buffer. If alloc_arch_pebs_buf_on_cpu() fails,
+the previously allocated cpuc resources are left behind.
 
-This can happen in at least two cases:
-- init_hybrid_pmu() fails check_hw_exists() and leaves cpuc->pmu as-is.
-- CPU hotplug fails between CPUHP_PERF_X86_PREPARE and
-CPUHP_AP_PERF_X86_STARTING, and rollback invokes intel_pmu_cpu_dead().
-
-Fix both paths by:
-- Clear cpuc->pmu to NULL when check_hw_exists() fails.
-- Validat that cpuc->pmu is not the global static pmu before calling
-  hybrid_pmu() in intel_pmu_cpu_dead().
-
-A new helper x86_get_static_pmu() is added to get the global static pmu.
+Make the failure path call intel_cpuc_finish(cpuc) to release the per-CPU
+state allocated by intel_cpuc_prepare().
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/core.c       | 5 +++++
- arch/x86/events/intel/core.c | 7 +++++--
- arch/x86/events/perf_event.h | 1 +
- 3 files changed, 11 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/core.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 6c63b27e11e6..a02f303a9151 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -790,6 +790,11 @@ int is_x86_event(struct perf_event *event)
- 	return false;
- }
- 
-+inline struct pmu *x86_get_static_pmu(void)
-+{
-+	return &pmu;
-+}
-+
- struct pmu *x86_get_pmu(unsigned int cpu)
- {
- 	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index b39c6ce0efb5..a991fc4f1575 100644
+index a991fc4f1575..b47d2f00ac13 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -6329,8 +6329,10 @@ static bool init_hybrid_pmu(int cpu)
+@@ -5924,13 +5924,20 @@ int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
  
- 	intel_pmu_check_hybrid_pmus(pmu);
- 
--	if (!check_hw_exists(&pmu->pmu, pmu->cntr_mask, pmu->fixed_cntr_mask))
-+	if (!check_hw_exists(&pmu->pmu, pmu->cntr_mask, pmu->fixed_cntr_mask)) {
-+		cpuc->pmu = NULL;
- 		return false;
-+	}
- 
- 	pr_info("%s PMU driver: ", pmu->name);
- 
-@@ -6475,11 +6477,12 @@ void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- static void intel_pmu_cpu_dead(int cpu)
+ static int intel_pmu_cpu_prepare(int cpu)
  {
- 	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
-+	struct pmu *pmu = x86_get_static_pmu();
++	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 	int ret;
  
- 	release_arch_pebs_buf_on_cpu(cpu);
- 	intel_cpuc_finish(cpuc);
+-	ret = intel_cpuc_prepare(&per_cpu(cpu_hw_events, cpu), cpu);
++	ret = intel_cpuc_prepare(cpuc, cpu);
+ 	if (ret)
+ 		return ret;
  
--	if (is_hybrid() && cpuc->pmu)
-+	if (is_hybrid() && cpuc->pmu && cpuc->pmu != pmu)
- 		cpumask_clear_cpu(cpu, &hybrid_pmu(cpuc->pmu)->supported_cpus);
+-	return alloc_arch_pebs_buf_on_cpu(cpu);
++	ret = alloc_arch_pebs_buf_on_cpu(cpu);
++	if (ret) {
++		intel_cpuc_finish(cpuc);
++		return ret;
++	}
++
++	return 0;
  }
  
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index a8afea8d38f0..01ae287cde16 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1161,6 +1161,7 @@ static struct perf_pmu_format_hybrid_attr format_attr_hybrid_##_name = {\
- 	.pmu_type	= _pmu,						\
- }
- 
-+struct pmu *x86_get_static_pmu(void);
- struct pmu *x86_get_pmu(unsigned int cpu);
- extern struct x86_pmu x86_pmu __read_mostly;
- 
+ static void flip_smm_bit(void *data)
 -- 
 2.34.1
 
