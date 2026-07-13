@@ -1,139 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BD23B47D7
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jul 2026 08:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EB633260B;
+	Mon, 13 Jul 2026 09:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783933169; cv=none; b=INU1s4g49txF4e5JtvwnLssAvp7pCW11q/mFT90LPsusJHWmSe4zcp6/nCZkLnIm+hgrOJRymoG8ADQxa/AZVwDftBRNpLwd50rKNcsjuewcm5rto0/DTnr7VhDT6NlU9QEQGR8w3QinVoLV+bTOTS+k6TYwyoZzFCHPQoQIej8=
+	t=1783934572; cv=none; b=H1VQ81GOPCQ3XyZPDt2bWpvdX5d0g5jHM84NBsQRXZ3CPr6dDFrjZj7GxoErFCH7mnn77ydhpGw6kBvBCNC/H20CdhPF+5EQvBzbKYwX/sNUyHqzatSyJrikyZ4u1PrtkB6xf+cjjP4OUB8oz+9owddNhkpLpiHCGetsVhGE0uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783933169; c=relaxed/simple;
-	bh=oDFqAToPuaVTrPc0sct/nwWQy1wI69YCevy4I1pNqGM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Kf0u0ZS90JjqSrtfCbbLKsxsscFkMkb5GrGSPxDib3XMgbIot1621qSxXYvCuqewbtluM8EcPqThX3O8jaQCu8f1MVXlkx7Xi4ZFWNDsfeTKmSU2I2ImAYdUKHCkvMzTageRyGYOL2GGB6ewye17D0qkik6YXTeFH42wzDFxUh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FL14bv49; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783934572; c=relaxed/simple;
+	bh=UXanRqBjfcTzF3SPF5mbTKVPLs9mAvK5k+FodHwRMzw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Eo9SSpo959axcz+2JWHd8R0aUbIMK/53bOb08Cd/rnA5RYaP5s6uNv6OfegYQJdn3H6EgGxNjgVSwvN7WyHc7bLyWxg8aMDQlIEncXT5L17J6AID5DO0Eno8TuIzSecPl6hLXt24G0fDtoCdrxpwhc9IQogUN62pHAFytE3ERPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gspSWSKl; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FL14bv49"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C281F000E9;
-	Mon, 13 Jul 2026 08:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783933167;
-	bh=/9CJMg0uYY6Exg4pLjDgAfw9Q24yJa21Hh54zqPBCXk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FL14bv49+ntumsB8ZvPKJd8kHduaZPhn/oWZUaDhgmxubA+2jMGFo4L4WmCc4ibPi
-	 YkJDedIgyLRBiTsbsx+ez8ywRLn0wz0ny1kUDK5LE5/m1pQz2hn5T1lAbEcgo191/Z
-	 uh1Ghi9FdQXOHb9yhCerbx4FkoZGGyEF3CNvJpvREuQCugiMvN5/fEa6ULzkunIYCC
-	 1XgKOGXDicdMaLbijF6itBoW1G07QORvozNRQiit0MVtfCGktQIN7OTjSe9fCLy9di
-	 01PfA6FjIcLNr6BtTFWFTWuri0L6Xv/3HshPBpJGGna6KZ9YE6kWp9tWK13/k84pmq
-	 LavUayzGo+4FQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [Patch v2 3/7] perf/x86: Guard intel_pmu_cpu_dead() against
- invalid hybrid PMU casts
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260713082734.3162099-4-dapeng1.mi@linux.intel.com>
-References: <20260713082734.3162099-1-dapeng1.mi@linux.intel.com>
- <20260713082734.3162099-4-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Jul 2026 08:59:26 +0000
-Message-Id: <20260713085927.48C281F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gspSWSKl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783934570; x=1815470570;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=UXanRqBjfcTzF3SPF5mbTKVPLs9mAvK5k+FodHwRMzw=;
+  b=gspSWSKlhB2NlN11kvMteSgMUF09ct2JhcIyoX2YwHHAb5sfBEbLLOYO
+   QsAMhnpNFtxovAK1CEgXxcDxUQXHLb4UFF/6UrDuuvrQuJwXsIsQMoK1u
+   GXNPhENs+Khmi6UIHHvfP/JGD1UBfTnxgCFpiZg/e7dydI/d/fRYjZx9r
+   UAe5/Miq2fNGyDPOGQYihQjhvsb+wqxUKLF7/6Umbrbx9HaTP/jIrRNFa
+   kPIpg2QLHIBBrylP8dRlQmJS1sGLvzJppJU+IpqxXn9fJ9k4FPnreh5QX
+   w9Ly751Cp8KDNBzKa3elSIQCVDlllqoZgmqNEFTPUWDaJlx+4M+i7NgUr
+   A==;
+X-CSE-ConnectionGUID: /EmCCFLoQJya51699HebLA==
+X-CSE-MsgGUID: kDPpkh8CRIybC6vTxMFrVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84732961"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="84732961"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 02:22:49 -0700
+X-CSE-ConnectionGUID: EwEQ3DfmTDW7eSyoAasLVA==
+X-CSE-MsgGUID: eDwPgmM8R1WhDZffCAcBfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="252113792"
+Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
+  by fmviesa007.fm.intel.com with ESMTP; 13 Jul 2026 02:22:45 -0700
+From: Jiebin Sun <jiebin.sun@intel.com>
+To: namhyung@kernel.org,
+	acme@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org
+Cc: adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	mark.rutland@arm.com,
+	thomas.falcon@intel.com,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiebin Sun <jiebin.sun@intel.com>
+Subject: Re: [PATCH 00/14] perf c2c: add a function view
+Date: Mon, 13 Jul 2026 17:22:49 +0800
+Message-ID: <20260713092249.340613-1-jiebin.sun@intel.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <alFqMY_q3mIhd-qN@google.com>
+References: <alFqMY_q3mIhd-qN@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+Hi Namhyung,
 
-Pre-existing issues:
-- [High] Race condition in NMI handler causing out-of-bounds access during =
-hybrid CPU bring-up.
-- [High] Unhandled #GP exceptions (kernel panic) in NMI and hotplug paths i=
-f hybrid PMU initialization fails.
---
+Thank you, and thanks for the idea.
 
---- Patch [3]: [Patch v2 3/7] perf/x86: Guard intel_pmu_cpu_dead() against =
-invalid hybrid PMU casts ---
-commit 419f89d32dfc7abe942483376114f8e4845bc1a8
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> On Fri, Jul 10, 2026 at 04:49:20PM +0800, Jiebin Sun wrote:
+> > > Any chance it can share the code?  We have `perf mem report` as well,
+> > > which deals with similar kind of data.
+> >
+> > The part it does not reuse is the generic report hierarchy builder. That
+> > nests a single sample's own sort keys, while the function view pairs
+> > functions that share a cacheline -- the entries are (function A,
+> > function B) pairs that don't map to one sample. That's why the hierarchy
+> > is built explicitly rather than from a sort-key list.
+>
+> I see.  Yeah I think it's a different model but it may be possible to
+> have a cacheline in a parent node and functions that accessed it in
+> the children.
 
-perf/x86: Guard intel_pmu_cpu_dead() against invalid hybrid PMU casts
+You're right that a cacheline-parent / accessing-functions-children
+layout maps cleanly onto a single sample's own keys, so that one could be
+expressed with the generic hierarchy (e.g. sorting on dcacheline then
+symbol).
 
-In failure paths, cpuc->pmu can point to the global static pmu instead of
-an embedded x86_hybrid_pmu::pmu. This commit clears cpuc->pmu to NULL when
-check_hw_exists() fails and validates cpuc->pmu before hybrid container
-conversion during CPU rollback paths.
+That organization is cacheline-centric, and fairly close to what the
+cacheline view already offers -- the cacheline list, and the
+per-cacheline detail ('d') that lists the accesses and the symbols
+touching a given cacheline.
 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index b39c6ce0efb5c..a991fc4f1575f 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-[ ... ]
-> @@ -6329,8 +6329,10 @@ static bool init_hybrid_pmu(int cpu)
-> =20
->  	intel_pmu_check_hybrid_pmus(pmu);
-> =20
-> -	if (!check_hw_exists(&pmu->pmu, pmu->cntr_mask, pmu->fixed_cntr_mask))
-> +	if (!check_hw_exists(&pmu->pmu, pmu->cntr_mask, pmu->fixed_cntr_mask)) {
-> +		cpuc->pmu =3D NULL;
->  		return false;
-> +	}
+The function view is function-centric instead: starting from a function
+and showing which other functions it contends with, and over which
+cachelines. That "which functions contend with each other" pairing is
+what needs the explicit build rather than a sort-key list.
 
-[Severity: High]
-This is a pre-existing issue, but is it possible for an NMI to fire before
-this initialization completes during hybrid CPU bring-up?
+Aggregating by function also helps to rank functions by their total HITM
+penalty (HITM count times per-access latency). The cacheline view shows
+the per-access HITM percentages and the latency, but not that product
+summed per function.
 
-If a secondary CPU unmasks NMIs early and an NMI fires before the
-CPUHP_AP_PERF_X86_STARTING callback executes init_hybrid_pmu(),
-perf_event_nmi_handler() will run.
+A real false-sharing case we are working on is a good example. One of the
+functions involved, cpupri_set, has its accesses split across several
+cachelines, and within any single cacheline each access is only a small
+share of that line's HITM (a few percent per access), so it doesn't stand
+out in the per-cacheline view. Its cost only becomes apparent once summed
+across the cachelines it touches, which is what the function view does --
+it surfaces as a top per-function entry and points straight at the
+function to investigate, without the user piecing it together across
+cachelines by hand.
 
-If active_events is greater than zero globally, intel_pmu_handle_irq()
-executes:
+  https://lore.kernel.org/all/cover.1753076363.git.pan.deng@intel.com/
 
-arch/x86/events/intel/core.c:intel_pmu_handle_irq() {
-    ...
-    bool late_ack =3D hybrid_bit(cpuc->pmu, late_ack);
-    ...
-}
-
-Since cpuc->pmu is statically initialized to the global &pmu at this stage,
-could this cause hybrid_pmu() to perform an invalid container_of cast and
-lead to an out-of-bounds access?
-
-[Severity: High]
-This is a pre-existing issue, but if check_hw_exists() fails and we return
-false here, leaving the CPU online without a functioning PMU, could this le=
-ad
-to unhandled #GP exceptions?
-
-If an NMI fires while active_events is greater than zero globally,
-intel_pmu_handle_irq() unconditionally reads PMU MSRs:
-
-arch/x86/events/intel/core.c:intel_pmu_handle_irq() {
-    ...
-    status =3D intel_pmu_get_status();
-    ...
-}
-
-Since check_hw_exists() failed, the MSRs are likely inaccessible. Would
-executing rdmsrl() trigger a #GP exception and a kernel panic?
-
-Similarly, during CPU teardown, does intel_pmu_cpu_dying() blindly write to
-MSRs without checking if the PMU was successfully initialized?
-
-arch/x86/events/intel/ds.c:fini_arch_pebs_on_cpu() {
-    ...
-    wrmsrq_on_cpu(cpu, MSR_IA32_PEBS_BASE, 0);
-    ...
-}
-
-Could this wrmsrq_on_cpu() without fault protection also cause a #GP panic =
-if
-PMU initialization had failed?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713082734.3162=
-099-1-dapeng1.mi@linux.intel.com?part=3D3
+Thanks,
+Jiebin
